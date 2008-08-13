@@ -793,7 +793,7 @@ class FarmSliceManager:
     return self.detName
 
 # =============================================================================
-def test_RecoFarm(name='Reco'):
+def test_RecoFarm(name='Farm'):
   manager = Online.PVSSSystems.controlsMgr('RECOTEST')
   sys = manager.name()
   infoCreator = FarmSliceInfoCreator('Storage')

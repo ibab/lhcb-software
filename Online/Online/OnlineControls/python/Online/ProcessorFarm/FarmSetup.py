@@ -1,8 +1,12 @@
 import os, socket
 pvss_system = 'RECOTEST'
-Name = 'Calibration'
+storage_system = 'RECSTORAGE'
+reco_control = 'RECFARM'
+
+gaudiScript = '/group/online/dataflow/scripts/runReco.sh'
+
 Name = 'Farm'
-Name = 'Trigger'
+
 numFarm = 6
 numSubFarm = 6
 _numNodePerSubFarm = 10
@@ -17,8 +21,7 @@ for i in xrange(numSubFarm):
 pvss_system = 'RECMON'
 dns = os.environ['DIM_DNS_NODE']
 pvss_system = 'REC'+dns.upper()
-Name = 'Reco'
-sf = socket.gethostname().upper()
+sf = dns.upper() # socket.gethostname().upper()
 nodes = [sf+'01',sf+'02']
 nodes= []
 lines=os.popen("tmLs -u zzzzzzzzz").readlines()

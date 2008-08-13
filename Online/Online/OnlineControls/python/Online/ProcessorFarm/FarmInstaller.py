@@ -133,7 +133,7 @@ class Installer(Online.InstallerBase.InstallerBase):
   def createPartitions(self):
     typ = self.typeMgr.type('FarmRunInfo')
     for i in xrange(16):
-      nam = '%s_Farm%02X'%(self.myName,i)
+      nam = '%s_Reco%02X'%(self.myName,i)
       dev = self.devMgr.createDevice(nam,typ,1)
       if dev.get() is None:
         warning('Failed to create farm Slice "'+nam+'"',timestamp=1)

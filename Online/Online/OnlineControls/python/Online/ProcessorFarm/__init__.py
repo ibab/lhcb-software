@@ -6,7 +6,7 @@ Online PVSS module for prompt reconstruction
 
 """
 import sys, time
-import Online.SetupParams as Params
+import FarmSetup
 
 def _mgr(name):
   "Access PVSS controls manager by name"
@@ -21,8 +21,19 @@ def _dbg(val):
   import Online.PVSS as PVSS;
   PVSS.setDebug(val);
 
-  
-def runTheStorage(name,mgr,sim):
+# =============================================================================
+def _startupInfo(self,task_typ):
+  " Return startup script of a given task type."
+  script  = FarmSetup.gaudiScript
+  account = 'online'
+  detector = 'ANY'
+  return (script,account,detector)
+
+# =============================================================================
+def _optsFile(self,name,type):
+  return type+'.opts'
+
+def runStorage(project,name='Storage'):
   """
   Execute Storage system streaming component to
    - allocate execution slots and
@@ -35,20 +46,21 @@ def runTheStorage(name,mgr,sim):
 
    @author M.Frank
   """
-  import Online.RunInfoClasses.Storage as RI
-  import Online.AllocatorControl    as Control
-  import Online.Streaming.Allocator as StreamAllocator
-  # import Online.JobOptions.OptionsWriter as JobOptions
+  import Online.RunInfoClasses.RecStorage  as RI
+  import Online.AllocatorControl           as Control
+  import Online.Streaming.Allocator        as StreamAllocator
+  #import Online.ProcessorFarm.FarmDescriptor as Farm
 
+  mgr      = _mgr(FarmSetup.storage_system)
   info     = RI.StorageInfoCreator()
+  print 'Starting storage'
   streamer = StreamAllocator.Allocator(mgr,name,info)
-  #writer   = JobOptions.StorageOptionsWriter(mgr,name,info)
+  streamer.fsmManip._startupInfo = _startupInfo
+  streamer.fsmManip._optsFile = _optsFile
+  #writer   = Farm.RecStorageOptionsWriter(mgr,name,info)
   #ctrl = Control.Control(mgr,name,'Alloc',[streamer,writer]).run()
   ctrl = Control.Control(mgr,name,'Alloc',[streamer]).run()
-  return (ctrl,run(name,mgr,sim))
-
-def runStorage(project,name='Storage',sim=None):
-  return runTheStorage(name,_mgr(Params.recstorage_system_name),sim)
+  return (ctrl,mgr)
 
 def runSubfarm(project,name):
   """
@@ -132,6 +144,7 @@ def execute(args):
       print 'Ignored option ',args[i]
 
   if typ == 'Storage':
+    if nam is None: nam = 'Storage'
     function = runStorage
   elif typ == 'Subfarm':
     if nam is None: nam = 'Unknown'

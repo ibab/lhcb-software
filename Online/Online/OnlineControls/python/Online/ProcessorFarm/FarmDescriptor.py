@@ -1,6 +1,14 @@
 import Online.RunInfoClasses.General
 import Online.AllocatorControl, Online.DatapointLoader, Online.Utils, Online.PVSS, Online.PVSSSystems
+import Online.Streaming.PartitionInfo
 from   Online.Streaming.Allocator import FSMmanip as FSMmanip
+import Online.ProcessorFarm.FarmSetup as FarmSetup
+import Online.RunInfoClasses.RecStorage as RunInfo
+import Online.SetupParams as Params
+import Online.JobOptions.JobOptions as JobOptions
+import socket, time
+
+PartitionInfo = Online.Streaming.PartitionInfo.PartitionInfo
 DP     = Online.PVSS.DataPoint
 std    = Online.PVSS.gbl.std
 log    = Online.Utils.log
@@ -127,7 +135,6 @@ class FarmRunInfo(Online.RunInfoClasses.General.General):
       deviceIO.add(self.strInfra)
       deviceIO.add(self.streams)
       deviceIO.add(self.strMult)
-      print 'MULT:',self.strMult.data,self.strMult.name()
     return self
     
   # ===========================================================================
@@ -214,8 +221,8 @@ class FarmActivity(Online.DatapointLoader.DatapointLoader):
 
 # =============================================================================
 class FarmDescriptor(Online.DatapointLoader.DatapointLoader):
-  """ @class StreamingDescriptor
-      This class describes the shared streaming control structure.
+  """ @class FarmDescriptor
+      This class describes the shared farm control structure.
    
       @author  M.Frank
       @version 1.0
@@ -471,7 +478,7 @@ class SubFarmDescriptor(Online.DatapointLoader.DatapointLoader):
       nodes = self.processors()
       sys   = self.manager.name()
       sfn   = self.manager.hostName().upper()
-      part  = activity.activityName.data
+      part  = self.usedBy()  #activity.activityName.data
       #
       # node/task-name/short-name/task-type/class/dim-dns/partition/sub-farm
       # MONA0801/LHCb_MONA0801_MBMRelay/MBMRelay/MBMRelay/Class0/mona08/MONITORING/("MBMRelay",)
@@ -527,6 +534,39 @@ class SubFarmConfigurator(Online.AllocatorControl.AllocatorClient,Online.Datapoi
     return self.dp2(self.name+'Alloc',name)
 
   # ===========================================================================
+  def _configureTask(self, fsm_node, item, task):
+    "Configure single task object"
+    node    = task[0]
+    utgid   = task[1]
+    sysname = task[6]
+    dimdns  = task[5]
+    type    = task[3]
+    clazz   = task[4]
+    script,account,detector = self.startupInfo(type)
+    if len(account) == 0: account = 'online'
+    opts    = self.optionsFile(utgid,type)
+    cmd = sysname+'#-e -o -c -u '+utgid+' -n '+account+\
+          ' -D TASKTYPE='+type+\
+          ' -D TASKCLASS='+clazz+\
+          ' -D PARTITION='+self.info.detectorName()
+    if len(detector)>0: cmd = cmd + ' -D DETECTOR='+detector
+    cmd = cmd + ' '+script+' '+opts+' '+clazz+' '+type+' '+dimdns
+    self.setupTask(item,node=fsm_node,name=utgid,type=type,inUse=1,prio=0,cmd=cmd,sysname=sysname,dimdns=dimdns,nodename=node)
+    return self
+
+  # ===========================================================================
+  def _startupInfo(self,task_typ):
+    " Return startup script of a given task type."
+    script  = FarmSetup.gaudiScript
+    account = 'online'
+    detector = 'ANY'
+    return (script,account,detector)
+  
+  # ===========================================================================
+  def _optsFile(self,name,type):
+    return type+'.opts'
+  
+  # ===========================================================================
   def configure(self,rundp_name,partition):
     "Configure partition content after all information is set."
     sfn = self.name
@@ -535,7 +575,8 @@ class SubFarmConfigurator(Online.AllocatorControl.AllocatorClient,Online.Datapoi
       tasks = sfDesc.defineTasks()
       if tasks:
         fsm_manip = FSMmanip(sfDesc,'_FwFsmDevice',match='*')
-        fsm_manip.setStartupInfoData({})
+        fsm_manip.startupInfo = self._startupInfo
+        fsm_manip.optionsFile = self._optsFile
         slots = fsm_manip.collectTaskSlots()
         if slots:
           used_tasks = {}
@@ -561,6 +602,7 @@ class SubFarmConfigurator(Online.AllocatorControl.AllocatorClient,Online.Datapoi
       return None
     error('Failed to access config info of subfarm:'+sfn+' for partition:'+partition,timestamp=1)
     return None
+
 
 # =============================================================================
 class FarmConfigurator(FarmDescriptor):
@@ -589,7 +631,7 @@ class FarmConfigurator(FarmDescriptor):
       self.loadRunInfo       = self.loadRecoRunInfo
       self.runInfo_type      = self.typeMgr.type('RunFarmInfo')
       self.runinfos = Online.PVSS.DpVectorActor(self.manager)
-      self.runinfos.lookupOriginal(self.name+'_Farm??.general.partName',self.runInfo_type)
+      self.runinfos.lookupOriginal(self.name+'_Reco??.general.partName',self.runInfo_type)
       for i in self.runinfos.container:
         print 'RunInfo:',i.name()
     else:
@@ -646,7 +688,7 @@ class FarmConfigurator(FarmDescriptor):
     rdr = self.manager.devReader()
 
     infos = Online.PVSS.DpVectorActor(self.manager)
-    infos.lookupOriginal(self.name+'_Farm??.general.partName',self.runInfo_type)
+    infos.lookupOriginal(self.name+'_Reco??.general.partName',self.runInfo_type)
     inuse = Online.PVSS.DpVectorActor(self.manager)
     inuse.lookupOriginal(self.name+'_Slice??.InUse',self.sliceType)
 
@@ -683,17 +725,21 @@ class FarmConfigurator(FarmDescriptor):
 
   # ===========================================================================
   def loadRecoRunInfo(self,manager,dp):
+    do_load = 0
     info = FarmRunInfo(manager,dp)
     info.addBasic()
     info.addHLT()
     if info.load():
       activity_name = self.manager.dpSysElementName(dp)
-      activity_info = FarmRunInfo(self.manager,info.runTyp.data).load()
-      info.copyFrom(activity_info)
-      wr = self.manager.devWriter()
-      info.addDp(wr)
-      if wr.execute() is None:
-        return None
+      print 'Loading run info from ',info.runTyp.data,' to ',dp
+      print 'Storeflag:',info.storeFlag.data,info.storeFlag.name()
+      if do_load:
+        activity_info = FarmRunInfo(self.manager,info.runTyp.data).load()
+        info.copyFrom(activity_info)
+        wr = self.manager.devWriter()
+        info.addDp(wr)
+        if wr.execute() is None:
+          return None
       info.show()
     return info
   
@@ -767,6 +813,7 @@ class FarmConfigurator(FarmDescriptor):
           
         elt = mgr.dpElementName(dp.name())
         dpv.push_back(self.dp2(farm_name+'|'+elt+'|'+elt,'mode.enabled'))
+        print dp.name(),elt
         if dp.data==partition and action=='ENABLE':
           dpv.back().data = 1
           cmd = 'ENABLE/DEVICE(S)='+elt+'::'+elt
@@ -786,7 +833,33 @@ class FarmConfigurator(FarmDescriptor):
     return self.error('Failed to read subfarm information for partition:'+partition,timestamp=1)
   
   # ===========================================================================
+  def configure(self,rundp_name,partition):
+    # import Online.ProcessorFarm.Sopts as Sopts
+    print '-------------------------------------- 1'
+    time.sleep(5)
+    res = self.getPartition(rundp_name,partition)
+    print '-------------------------------------- 2'
+    if res:
+      name,dp = res
+      print '-------------------------------------- 3'
+      run_info = self.loadRunInfo(self.manager,name)
+      if run_info:
+        print '-------------------------------------- 4'
+        numSF = run_info.nSubFarm.data
+        activity = run_info.runTyp.data
+        print 'Writing job options to to /group/online/dataflow/options/RECO'
+        nam = run_info.storageSlice.data
+        storage = PartitionInfo(Online.PVSSSystems.controlsMgr(FarmSetup.storage_system),nam).load()
+        if storage:
+          Online.Streaming.PartitionInfo.showRecStorage(storage,extended=1)
+          if not writeOptions(run_info, storage, self):
+            return None
+          return self
+    return None
+  
+  # ===========================================================================
   def allocate(self,rundp_name,partition):
+    #partition = rundp_name
     res = self.allocatePartition(rundp_name,partition)
     if res:
       name,dp = res
@@ -804,6 +877,7 @@ class FarmConfigurator(FarmDescriptor):
   
   # ===========================================================================
   def free(self,rundp_name,partition):
+    #partition = rundp_name
     res = self.getPartition(rundp_name,partition)
     if res:
       name,context = res
@@ -826,11 +900,6 @@ class FarmConfigurator(FarmDescriptor):
   def recover_slice(self,rundp_name,partition):
     return self.recover(rundp_name,partition)
 
-  # ===========================================================================
-  def configure(self,rundp_name, partition):
-    "Default client callback on the command 'configure'"
-    return self
-  
 # =============================================================================
 def testAllocation(name):
   mgr=Online.PVSS.controlsMgr()
@@ -906,6 +975,219 @@ def testConfigure(name):
     cfg=SubFarmConfigurator(mgr,sfn)
     cfg.configure(run_info,run_info)
   return (mgr,cfg)
+
+
+# =============================================================================
+def _addTasks(data):
+  tasks = []
+  for i in data:
+    for j in i:
+      tasks.append(j)
+  return tasks
+
+# =============================================================================
+class Options:
+  # ===========================================================================
+  def __init__(self,msg=''):
+    "Object constructor"
+    self.value = msg
+    self.object = 'OnlineEnv'
+    if len(self.value)>0: self.value = self.value+'\n'
+  # ===========================================================================
+  def add(self,name,value=None,operator='='):
+    "Add a new options item"
+    if value is not None:
+      v = str(value)
+      if isinstance(value,str): v = '"'+v+'"'
+      v = v.replace("'",'"').replace('[','{').replace(']','}')      
+      s = '%s.%-16s %s %s;\n'%(self.object,name,operator,v)
+      self.value = self.value + s
+    elif len(name)>0:
+      self.value = self.value + name + '\n'
+    return self
+  # ===========================================================================
+  def append(self,name,value):
+    "Append items to existing options"
+    return self.add(name,value,'+=')
+
+# =============================================================================
+class FarmOptionsWriter:
+  """
+  OptionsWriter class.
+  Base class to writing job options to file
+
+  @author M.Frank
+  """
+  # ===========================================================================
+  def __init__(self, run_info, storage_info, farm_info):
+    "Object constructor."
+    self.run = run_info
+    self.farm = farm_info
+    self.storage = storage_info
+    self.optionsMgr = None
+    self.optionsDir = Params.jobopts_optsdir
+
+  # ===========================================================================
+  def optionsManager(self):
+    if self.optionsMgr is None:
+      self.optionsMgr = Online.PVSSSystems.controlsMgr(Params.jobopts_system_name)
+    return self.optionsMgr
+
+  # ===========================================================================
+  def getTasks(self):
+    good = 1
+    names = []
+    task_list = []
+    i = self.storage
+    a = FarmActivity(self.run.manager,self.run.runType()).load()
+    tasks = _addTasks([i.recvSenders(),i.recvReceivers(),i.recvInfrastructure(),\
+                       i.streamReceivers(),i.streamSenders(),i.streamInfrastructure()])
+    mgr = self.optionsManager()
+    names = [i.split('/')[3] for i in tasks]
+    tasks = _addTasks([a.farmInfrastructure.data,\
+                       [a.farmWorker.data],\
+                       a.ctrlInfrastructure.data])
+    for i in tasks: names.append(i.split('/')[0])
+    for name in names:
+      task = JobOptions.TaskType(mgr,name)
+      if task.exists():
+        task_list.append(task)
+        continue
+      PVSS.error('The task '+name+' does not exist!',timestamp=1,type=Online.PVSS.ILLEGAL_VALUE)
+      good = None
+    if good is None: task_list = []
+    return task_list
+
+  # ===========================================================================
+  def writeOptions(self, opts, partition, task):
+    return self.writeOptionsFile(partition, task.name, opts.value)
+
+  # ===========================================================================
+  def writeOptionsFile(self, partition, name, opts):
+    import os
+    if self.optionsDir is not None:
+      try:
+        fd = self.optionsDir+os.sep+partition
+        fn = fd+os.sep+name+'.opts'
+        log('###   Writing options: '+fn,timestamp=1)
+        try:
+          os.stat(fd)
+        except:
+          os.mkdir(fd)
+        desc = open(fn, 'w')
+        print >>desc, opts
+        desc.close()
+      except Exception,X:
+        PVSS.error('Failed to write options for task:'+name+' ['+str(X)+']',timestamp=1,type=Online.PVSS.FILEOPEN)
+        return None
+      return self
+    PVSS.error('Failed to write options for task:'+name+' [No Directory]',timestamp=1,type=Online.PVSS.FILEOPEN)
+    return None
+
+  # ===========================================================================
+  def configure(self):
+    tasks = self.getTasks()
+    if tasks is not None:
+      partition = self.run.partitionName()
+      run_type = self.run.runType()
+      for task in tasks:
+        opts = Options('//  Auto generated options for partition:'+partition+\
+               ' activity:'+run_type+' task:'+task.name+'  '+time.ctime()+'\n' +\
+               '#include "$PREAMBLE_OPTS"')
+        if task.defaults.data:
+          rt = run_type.lower()
+          opts.add('//\n// ---------------- General partition information:  ')
+          opts.add('PartitionID',    self.run.partitionID())
+          opts.add('PartitionName',  self.run.partitionName())
+          opts.add('PartitionIDName','%04X'%self.run.partitionID())
+          opts.add('Activity',       run_type);
+          opts.add('TaskType',       task.name)
+          opts.add('OutputLevel',    self.run.outputLevel())
+        else: opts.add('// ---------------- NO partition information')
+        if task.options.data:
+          opts.add('//\n// ---------------- Task specific information:')
+          opts.add(task.options.data)
+        else: opts.add('// ---------------- NO task specific information')
+        if not self.writeOptions(opts,partition,task):
+          return None
+      if len(tasks)==0:
+        log('No tasks found for activity:'+activity,timestamp=1)
+      farmOpts=self.farmOptions(self.run,self.storage)
+      if not farmOpts:
+        return None
+      for nodeOptions in farmOpts.values():
+        opts = Options( '//  Farm options for partition:'+partition+\
+               ' activity:'+run_type+'  '+time.ctime()+'\n' )        
+        opts.add( 'reqNode', nodeOptions['reqNode'] )
+        opts.add( 'targetNode', nodeOptions['targetNode'] )
+        if not self.writeOptionsFile( partition, nodeOptions['opts'], opts.value ):
+          return None
+      return self.run
+    PVSS.error('Cannot retrieve tasks for activity:'+self.run.runType())
+    return None
+
+  def farmOptions(self, run_info, storage_info):
+    ret = {}
+    recvSenders=storage_info.recvSenders()
+    if not recvSenders:
+      return None
+    for recvSender in recvSenders:
+      item     = recvSender.split('/')
+      reqNode  = item[0]
+      info     = item[1]
+      task     = item[2]
+      exec('nodeInfo = %s' %item[7])
+      node      = nodeInfo[0]
+      nodeIndex = nodeInfo[1]
+      nodeName  = run_info.subFarms.data[nodeIndex]
+      ret[nodeName.lower()] = {}
+      print "%s.opts %s::%s" %(nodeName.lower(),reqNode,info)
+      ret[nodeName.lower()][ 'opts' ] =  nodeName.lower()
+      ret[nodeName.lower()][ 'reqNode' ] = reqNode
+
+    streamReceivers=storage_info.streamReceivers()
+    if not streamReceivers:
+      return None
+    for streamReceiver in streamReceivers:
+      item       = streamReceiver.split('/')
+      targetNode = item[0]
+      info       = item[1]
+      task       = item[2]
+      exec('nodeInfo = %s' %item[7])
+      node      = nodeInfo[0]
+      nodeIndex = nodeInfo[1]
+      nodeName  = run_info.subFarms.data[nodeIndex]
+      print "%s.opts: %s::%s" %(nodeName.lower(),targetNode,info)
+      if not nodeName.lower() in ret:
+        print "Node name does not match!!"
+        return None
+      ret[nodeName.lower()][ 'targetNode' ] = targetNode
+    return ret  
+
+def writeOptions(run_info,storage_info,farm_info):
+  wr = FarmOptionsWriter(run_info,storage_info,farm_info)
+  res = wr.configure()
+  return res
+
+import Online.JobOptions.OptionsWriter as OptionsWriter
+# =============================================================================
+class RecStorageOptionsWriter(OptionsWriter.StreamingOptionsWriter):
+  """ Specialized options writer for the storage control node.
+  
+      @author  M.Frank
+  """
+  # ===========================================================================
+  def __init__(self, manager, name, info):
+    OptionsWriter.StreamingOptionsWriter.__init__(self, manager, 'RECV', name, info, manager, ['RECV','STREAM'])
+  # ===========================================================================
+  def setupLayer(self, layer):
+    i = self.streamInfo
+    if layer == self.streamingLayers[0]:
+      return OptionsWriter._addTasks([i.recvSenders(),i.recvReceivers(),i.recvInfrastructure()])
+    elif layer == self.streamingLayers[1]:
+      return OptionsWriter._addTasks([i.streamReceivers(),i.streamSenders(),i.streamInfrastructure()])
+    return []
+      
 
 if __name__ == "__main__":
   name = 'Trigger'
