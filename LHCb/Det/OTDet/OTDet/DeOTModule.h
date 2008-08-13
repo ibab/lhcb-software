@@ -1,4 +1,4 @@
-// $Id: DeOTModule.h,v 1.31 2008-05-29 10:50:41 smenzeme Exp $
+// $Id: DeOTModule.h,v 1.32 2008-08-13 08:30:12 janos Exp $
 #ifndef OTDET_DEOTMODULE_H
 #define OTDET_DEOTMODULE_H 1
 
@@ -573,8 +573,8 @@ inline Gaudi::XYZPoint DeOTModule::globalPoint(const double x,
 /// This gives you the x position of the wire
 inline double DeOTModule::localUOfStraw(const unsigned int aStraw) const {
   unsigned int tmpStraw = (!monoLayerB(aStraw)?aStraw-1u:aStraw-m_nStraws-1u);
-  double uLeftStraw = (!monoLayerB(aStraw)?-(0.5*m_nStraws-0.25)
-		       :(-(0.5*m_nStraws-0.25)+0.5))*m_xPitch;
+  double uLeftStraw = (!monoLayerB(aStraw)?(-(0.5*m_nStraws-0.25)+0.5)
+                       :-(0.5*m_nStraws-0.25))*m_xPitch;
   return uLeftStraw + tmpStraw * m_xPitch;
 }
 
