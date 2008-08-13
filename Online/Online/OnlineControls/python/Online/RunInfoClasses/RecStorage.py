@@ -34,15 +34,17 @@ class StorageInfo(General):
 
         @return reference to initialized object
     """
-    General.__init__(self,manager,name,complete=None)
+    General.__init__(self,manager,name,complete=None,postfix='')
+    self.addBasic()
     self.addStorage()
+    self.addHLT()
   # ===========================================================================
   def doStreaming(self):
     "Access to the use-flag"
     return self.storeFlag.data != 0
   # ===========================================================================
   def numLayer2Slots(self):
-    return sum(self.strMult.data)
+    return self.nSubFarm.data  
   # ===========================================================================
   def numLayer1Slots(self):
     return self.nSubFarm.data  
@@ -55,80 +57,55 @@ class StorageInfo(General):
     """
     recv_slots = partition.recvSlices()
     strm_slots = partition.streamSlices()
-    streams = []
-    for j in xrange(len(self.streams.data)):
-      for i in xrange(self.strMult.data[j]):
-        streams.append([self.streams.data[j],i])
     recvNodes = partition.recvNodesFromSlots()
     strmNodes = partition.streamNodesFromSlots()
-    dimDns    = self.manager.hostName()
-    streamers = []
-    strmSenders = []
-    strmReceivers = []
-    strmInfrastructure = []
-    recvReceivers = []
-    recvSenders = []
-    recvInfrastructure = []
-    dataSources = []
-    opt = '/'+dimDns+'/'+partition.manager.name()+'/'
+    opt = '/'+self.manager.hostName()+'/'+partition.manager.name()+'/'
     cl0 = '/Class0'+opt
     cl1 = '/Class1'+opt
     cl2 = '/Class2'+opt
+
+
+    partition.setDataSources([])
+    tasks = []
+    pn = self.partitionName()
+    print '---------------------- Partition name is:',pn
     for i in xrange(len(recv_slots)):
       slot = recv_slots[i]
       node = slot[:slot.find(':')]
       sub_farm = 'SF%02d'%(i,)
-      short_name = sub_farm+'_HLT'
-      task = self.name+'_'+node+'_'+short_name
-      recvReceivers.append(node+'/'+task+'/'+short_name+'/HLTRec'+cl1+'("'+sub_farm+'",)')
-      dataSources.append(sub_farm+'/'+self.name+'_'+sub_farm+'_Sender/'+sub_farm+'_Sender/HLTSend'+cl2+'("'+node+','+task+'",)')
-      
+      short_name = 'Send_'+sub_farm
+      task = pn+'_'+node+'_'+short_name
+      tasks.append(node+'/'+task+'/'+short_name+'/RecStorageSend'+cl1+'("'+sub_farm+'",'+str(i)+',)')
+    partition.setRecvSenders(tasks)
+    tasks = []
     for i in xrange(len(strm_slots)):
       slot = strm_slots[i]
       node = slot[:slot.find(':')]
-      item = streams[i][0]+('_%02d'%streams[i][1])
-      short_name = 'WRT'+item
-      task = self.name+'_'+node+'_WRT'+item
-      strmSenders.append(node+'/'+task+'/'+short_name+'/WRT'+streams[i][0]+cl1+'("'+item+'",)')
-      short_name = 'RCV'+item
-      task = self.name+'_'+node+'_RCV'+item
-      strmReceivers.append(node+'/'+task+'/'+short_name+'/RCV'+streams[i][0])
-      streamers.append([self.name,node,slot,'%02d'%streams[i][1],streams[i][0]])
-
-    for j in strmNodes:
-      for i in self.strInfra.data:
-        strmInfrastructure.append(j+'/'+self.name+'_'+j+'_'+i+'/'+i+'/'+i+cl0+'("'+i+'",)')
-    rcv_targets = {}
-    for i in xrange(len(streamers)):
-      rcv_targets[i] = []
+      sub_farm = 'SF%02d'%(i,)
+      short_name = 'Recv_'+sub_farm
+      task = pn+'_'+node+'_'+short_name
+      tasks.append(node+'/'+task+'/'+short_name+'/RecStorageRecv'+cl1+'("'+sub_farm+'",'+str(i)+',)')
+    partition.setStreamReceivers(tasks)
+    cnt = 0
+    tasks = []
+    infra = []
     for j in recvNodes:
-      for i in xrange(len(streamers)):
-        part,node,slot,ident,type = streamers[i]
-        short_name = type+'_'+ident
-        sender = part+'_'+j+'_SND'+short_name
-        target = part+'_'+node+'_RCV'+short_name
-        rcv_targets[i].append((j+'-d1',sender))
-        recvSenders.append(j+'/'+sender+'/SND'+short_name+'/SND'+type+cl2+'[("'+node+'-d1","'+target+'")]')
+      tasks.append(j+'/'+pn+'_'+j+'_Reader/Reader/RecStorageRead'+cl1+'[]')
       for i in self.rcvInfra.data:
-        recvInfrastructure.append(j+'/'+self.name+'_'+j+'_'+i+'/'+i+'/'+i+cl0+'("'+i+'",)')
-
-    for i,data in rcv_targets.items():
-      strmReceivers[i] = strmReceivers[i]+cl1+str(data)
-
-    if self.storeFlag.data == 0:
-      # If we do not store the data, the streaming layer
-      # does not have to be instrumented.
-      recvSenders = PVSS.StringVector()
-      strmInfrastructure = PVSS.StringVector()
-      strmReceivers = PVSS.StringVector()
-      strmSenders = PVSS.StringVector()
-    partition.setDataSources(dataSources)
-    partition.setRecvInfrastructure(recvInfrastructure)
-    partition.setRecvReceivers(recvReceivers)
-    partition.setRecvSenders(recvSenders)
-    partition.setStreamInfrastructure(strmInfrastructure)
-    partition.setStreamReceivers(strmReceivers)
-    partition.setStreamSenders(strmSenders)
+        infra.append(j+'/'+pn+'_'+j+'_'+i+'/'+i+'/'+i+cl0+'("'+str(cnt)+'",)')
+      cnt = cnt + 1
+    partition.setRecvInfrastructure(infra)
+    partition.setRecvReceivers(tasks)
+    cnt = 0
+    tasks = []
+    infra = []
+    for j in strmNodes:
+      tasks.append(node+'/'+pn+'_'+node+'_Writer/Writer/RecStorageWrite'+cl1+'[]')
+      for i in self.strInfra.data:
+        infra.append(j+'/'+pn+'_'+j+'_'+i+'/'+i+'/'+i+cl0+'("'+str(cnt)+'",)')
+      cnt = cnt + 1
+    partition.setStreamInfrastructure(infra)
+    partition.setStreamSenders(tasks)
     if partition.saveTasks():
       tasks = partition.collectTasks(tasks={},with_data_sources=0)
       return tasks
@@ -140,9 +117,9 @@ class StorageInfoCreator:
     pass
   def create(self,rundp_name,partition):
     items = rundp_name.split(':')
-    # partition = items[1][:items[1].find('_')]
+    print 'Creating StorageInfoCreator',items[0],rundp_name,partition
     mgr = Systems.controlsMgr(items[0])
-    return StorageInfo(mgr,partition)
+    return StorageInfo(mgr,items[1])
   def showPartition(self,partition,extended=None):
     import Online.Streaming.PartitionInfo as Info
-    partition.show(method=Info.showStorage,extended=extended)
+    partition.show(method=Info.showRecStorage,extended=extended)
