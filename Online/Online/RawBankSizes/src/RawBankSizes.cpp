@@ -1,4 +1,4 @@
-// $Id: RawBankSizes.cpp,v 1.5 2008-07-17 13:27:27 jost Exp $
+// $Id: RawBankSizes.cpp,v 1.6 2008-08-13 12:01:12 jost Exp $
 // Include files 
 
 // from Gaudi
@@ -176,7 +176,10 @@ StatusCode RawBankSizes::execute()
       double rms;
       double smin,smax;
       Banks[bnkid].stat(mean,rms,smin,smax);
-      plot1D((double)bs,bname+" Size in Bytes",mean-m_nRMS*rms,mean+m_nRMS*rms,m_bin);
+      if (rms < 1.0) rms=100.0;
+      double bmin = mean-m_nRMS*rms;
+      if (bmin<0.0) bmin=0.0;
+      plot1D((double)bs,bname+" Size in Bytes",bmin,mean+m_nRMS*rms,m_bin);
     }
   }
   double tmean,trms,tsmin,tsmax,total;
@@ -184,7 +187,10 @@ StatusCode RawBankSizes::execute()
   total = tots;
   //printf ("totsize Class: %f %f \n", totsize.sum, totsize.sum2);
   //printf("Total Size: %f %f %f\n",total,tmean,trms);
-  plot1D(total,"Total Event Size [Bytes]",tmean-m_nRMS*trms,tmean+m_nRMS*trms,m_bin);
+  if (trms < 1.0) trms=100.0;
+  double bmin = tmean-m_nRMS*trms;
+  if (bmin<0.0) bmin=0.0;
+  plot1D(total,"Total Event Size [Bytes]",bmin,tmean+m_nRMS*trms,m_bin);
   return StatusCode::SUCCESS;
 }
 

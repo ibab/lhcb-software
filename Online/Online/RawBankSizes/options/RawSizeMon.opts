@@ -6,6 +6,7 @@ Runable.MEPManager                   = "LHCb::MEPManager/MEPManager";
 MEPManager.Buffers                   = { "Events" };
 MEPManager.PartitionName             = @OnlineEnv.PartitionName;
 MEPManager.PartitionBuffers          = true;
+MEPManager.PartitionID		     = @OnlineEnv.PartitionID;
 EventSelector.Input                  = "Events";
 EventSelector.AllowSuspend           = false;
 EventSelector.Decode                 = false;
