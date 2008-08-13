@@ -41,6 +41,7 @@ class Monitoring(General):
     self.storage = storage
     self.streamManager = stream
     #print '+++++++++++++',self.streamManager.name()
+
   # ===========================================================================
   def doStreaming(self):
     "Access to the use-flag"
@@ -51,6 +52,15 @@ class Monitoring(General):
   # ===========================================================================
   def numLayer1Slots(self):
     return 2*len(self.monStreams.data)
+  # ===========================================================================
+  def monitoringTypes(self):
+    return self.monTypes.data
+  # ===========================================================================
+  def monitoringMultiplicity(self):
+    return self.monMult.data
+  # ===========================================================================
+  def monitoringStreams(self):
+    return self.monStreams.data
   # ===========================================================================
   def defineTasks(self,partition):
     """
@@ -72,9 +82,12 @@ class Monitoring(General):
     jo_mgr = Systems.controlsMgr(Params.jobopts_system_name)
     #log('Detectors in readout:'+str(self.detectorsInReadout()))
     monStreams = set()
-    for j in xrange(len(self.monTypes.data)):
-      for i in xrange(self.monMult.data[j]):
-        typ = self.monTypes.data[j]
+    mon_types  = self.monitoringTypes()
+    mon_mult   = self.monitoringMultiplicity()
+    mon_stream = self.monitoringStreams()
+    for j in xrange(len(mon_types)):
+      for i in xrange(mon_mult[j]):
+        typ = mon_types[j]
         task = JobOptions.TaskType(jo_mgr,typ)
         if task.exists():
           # Check if the detector is in the readout
@@ -82,8 +95,8 @@ class Monitoring(General):
           detector = task.getDetector()
           det_used = self.isDetectorInReadout(detector)
           if detector.upper()=='ANY' or det_used is not None:
-            monStreams.add(self.monStreams.data[j])
-            streams.append([typ,self.monStreams.data[j],i])
+            monStreams.add(mon_stream[j])
+            streams.append([typ,mon_stream[j],i])
             if detector.upper()=='ANY':
               log('USE  monitoring task:%-16s [Task started for all detectors]'%(typ,))
             else:
@@ -236,7 +249,7 @@ class MonitoringInfoCreator:
   def create(self,rundp_name,partition):
     items = rundp_name.split(':')
     mgr = Systems.controlsMgr(items[0])
-    sto = Systems.controlsMgr('STORAGE')
+    sto = Systems.controlsMgr(Params.storage_system_name)
     return Monitoring(mgr,partition,self.storage,sto)
   def showPartition(self,partition,extended=None):
     import Online.Streaming.PartitionInfo as Info
