@@ -79,11 +79,7 @@ StatusCode MonitorSvc::queryInterface(const InterfaceID& riid, void** ppvIF) {
 StatusCode MonitorSvc::initialize() {
 
   MsgStream msg(msgSvc(),"MonitorSvc");
-//  if( IService::INITIALIZED == this->state() ) {
-//    msg << MSG::INFO << "MonitorSvc already initialized" << endreq;
-//    return StatusCode::SUCCESS; 
-//  }
-  Service::initialize(); 
+
   //const std::string& utgid = RTL::processName();
   m_utgid = RTL::processName();
   msg << MSG::INFO << "initialize: Setting up DIM for UTGID " << m_utgid << endreq;
@@ -92,13 +88,13 @@ StatusCode MonitorSvc::initialize() {
     m_dimpropsvr= new DimPropServer(m_utgid, serviceLocator());
     msg << MSG::INFO << "DimPropServer created with name " << m_utgid << endreq;
   }
-  else msg << MSG::INFO << "DimPropServer process is disable." << endreq;
+  else msg << MSG::INFO << "DimPropServer process is disabled." << endreq;
 
   if ( 0 == m_disableDimPropServer) {
     m_dimcmdsvr = new DimCmdServer( (m_utgid+"/"), serviceLocator(), this);
     msg << MSG::INFO << "DimCmdServer created with name " << (m_utgid+"/") << endreq;
   }
-  else msg << MSG::INFO << "DimCmdServer process is disable." << endreq; 
+  else msg << MSG::INFO << "DimCmdServer process is disabled." << endreq; 
 
   if ( 0 == m_disableMonRate) {
     msg << MSG::INFO << "new MonRate " << endreq;
@@ -482,7 +478,7 @@ void MonitorSvc::undeclareInfo( const std::string& name, const IInterface* owner
   MsgStream msg(msgSvc(),"MonitorSvc");
   std::set<std::string> * infoNamesSet = getInfos( owner );
   if( 0 == infoNamesSet ) {
-    msg << MSG::WARNING << "undeclareInfo: Info  " << name 
+    msg << MSG::DEBUG << "undeclareInfo: Info  " << name 
         << ": No info to undeclare for " << infoOwnerName(owner) 
         << ". Empty set" << endreq;
     return;
@@ -499,7 +495,7 @@ void MonitorSvc::undeclareInfo( const std::string& name, const IInterface* owner
         << ownerName  << " undeclared" << endreq;
   }  
   else{
-    msg << MSG::WARNING << "undeclareInfo: Info  " << name << " declared by " 
+    msg << MSG::DEBUG << "undeclareInfo: Info  " << name << " declared by " 
         << infoOwnerName(owner) << " not found" << endreq;
     msg << MSG::DEBUG << infoOwnerName(owner) << " infoNames: " << endreq;
     for( std::set<std::string>::iterator infoNamesIt = (*infoNamesSet).begin();
@@ -539,7 +535,7 @@ void MonitorSvc::updateSvc( const std::string& name, bool endOfRun, const IInter
   MsgStream msg(msgSvc(),"MonitorSvc");
   std::set<std::string> * infoNamesSet = getInfos( owner );
   if( 0 == infoNamesSet ) {
-    msg << MSG::WARNING << "update: Info  " << name << ": Nothing to update for " << infoOwnerName(owner) << ". Empty set" << endreq;
+    msg << MSG::DEBUG << "update: Info  " << name << ": Nothing to update for " << infoOwnerName(owner) << ". Empty set" << endreq;
     return;
   }
   std::string ownerName = infoOwnerName( owner );
@@ -550,7 +546,7 @@ void MonitorSvc::updateSvc( const std::string& name, bool endOfRun, const IInter
     //msg << MSG::DEBUG << "update: " << name << " from owner " << ownerName  << " updated" << endreq;
   }  
   else{
-    msg << MSG::WARNING << "update: Info  " << name << " declared by " << infoOwnerName(owner) << " not found" << endreq;
+    msg << MSG::DEBUG << "update: Info  " << name << " declared by " << infoOwnerName(owner) << " not found" << endreq;
     msg << MSG::DEBUG << infoOwnerName(owner) << " infoNames: " << endreq;
     for( std::set<std::string>::iterator infoNamesIt = (*infoNamesSet).begin(); infoNamesIt!=(*infoNamesSet).end();++infoNamesIt)
       msg << MSG::DEBUG << "\t" <<  (*infoNamesIt) << endreq;
@@ -564,7 +560,7 @@ void MonitorSvc::undeclareAll( const IInterface* owner)
     std::string ownerName = infoOwnerName( owner );
     std::set<std::string> * infoNamesSet = getInfos( owner );
     if( 0 == infoNamesSet ) {
-      msg << MSG::WARNING << "undeclareAll: No infos to  undeclare for " 
+      msg << MSG::DEBUG << "undeclareAll: No infos to  undeclare for " 
           << ownerName << endreq;
       return;
     }
@@ -599,7 +595,7 @@ void MonitorSvc::updateAll( bool endOfRun, const IInterface* owner)
     std::string ownerName = infoOwnerName( owner );
     std::set<std::string> * infoNamesSet = getInfos( owner );
     if( 0 == infoNamesSet ) {
-      msg << MSG::WARNING << "updateAll: No infos to update for " << ownerName << endreq;
+      msg << MSG::DEBUG << "updateAll: No infos to update for " << ownerName << endreq;
       return;
     }
     std::set<std::string>::iterator infoNamesIt;
@@ -629,7 +625,7 @@ void MonitorSvc::resetHistos( const IInterface* owner )
     std::string ownerName = infoOwnerName( owner );
     std::set<std::string> * infoNamesSet = getInfos( owner );
     if( 0 == infoNamesSet ) {
-      msg << MSG::WARNING << "resethistos: No histograms to reset for " 
+      msg << MSG::DEBUG << "resethistos: No histograms to reset for " 
           << ownerName << endreq;
       return;
     }
@@ -677,6 +673,6 @@ void MonitorSvc::updateService(std::string infoName, bool endOfRun)
     //msg << MSG::DEBUG << "updateSvc: Service " + infoName + " updated" << endreq;
     return;
   }
-  msg << MSG::WARNING << "updateSvc: No DimServiceMonObject found with the name:" + infoName << endreq;
+  msg << MSG::DEBUG << "updateSvc: No DimServiceMonObject found with the name:" + infoName << endreq;
 }
 

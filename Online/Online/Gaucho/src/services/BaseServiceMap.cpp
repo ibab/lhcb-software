@@ -260,10 +260,21 @@ void BaseServiceMap::deleteDimService(const std::string &serviceName){
 
 std::string BaseServiceMap::createTermServiceName (const std::string &serviceName, const std::string &serverName)
 {
+  MsgStream msg(msgSvc(), name());
+
   std::size_t first_slash = serviceName.find("/");
   std::size_t second_slash = serviceName.find("/", first_slash + 1);
-  
-  return serviceName.substr(0, first_slash + 1) + serverName + serviceName.substr(second_slash);
+  if (serverName.find("Bridge")!= std::string::npos) {
+    std::vector<std::string> parts = Misc::splitString(serviceName, "/");
+    std::vector<std::string> parts2 = Misc::splitString(parts[1], "_");
+    std::string subfarmName = parts2[0];
+    msg << MSG::DEBUG << " subfarmName = " << subfarmName <<endreq;  
+    return serviceName.substr(0, first_slash + 1) + subfarmName + "_Adder_1" + serviceName.substr(second_slash);
+  }
+  else{
+    return serviceName.substr(0, first_slash + 1) + serverName + serviceName.substr(second_slash);
+  }
+
 }    
     
 std::string BaseServiceMap::createAdderName (const std::string &serviceName){

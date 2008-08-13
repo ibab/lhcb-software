@@ -88,7 +88,27 @@ void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> 
     if (oper.compare("-") == 0) includeService = false;
     
     msg << MSG::DEBUG << "Verifying service = " << serviceName<< endreq;
-    if (serviceName.find("/" + m_nodeName) == std::string::npos) continue;
+    msg << MSG::DEBUG << "Verifying service2 = " << serviceName<< endreq;
+
+    std::vector<std::string>::const_iterator it;
+    if (m_subfarmName.size() != 0){
+      bool chooseIt=false;
+      for(it=m_subfarmName.begin(); it!=m_subfarmName.end(); ++it){
+        msg << MSG::DEBUG << "verifying subfarmName in serviceName "<< serviceName << endreq;
+        if (serviceName.find("/" + (*it)) == std::string::npos){
+         chooseIt=true;
+         break;
+        }
+      }
+      if (!chooseIt) {
+        msg << MSG::DEBUG << "REFUSED because subfarmName NOT OK" << endreq;
+        continue;
+      }
+      else msg << MSG::DEBUG << "subfarmName OK" << endreq;
+    }
+    else {
+      if (serviceName.find("/" + m_nodeName) == std::string::npos) continue;
+    }
 
     std::vector<std::string> serviceParts = Misc::splitString(serviceName, "/");
 
