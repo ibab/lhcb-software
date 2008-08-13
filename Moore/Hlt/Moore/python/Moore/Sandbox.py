@@ -1,26 +1,43 @@
-import sys, os, pickle
+import sys, os, pickle, traceback
 
+
+def _exceptHook(type, value, tb):
+   global _tb
+   sys.__excepthook__(type, value, tb)
+   _tb = ''.join(traceback.format_exception(type, value, tb))
+
+# we don't use try except, but instead set the exceptHook so
+# we can catch the traceback and route it to the parent...
 def _child(p,fun,*args,**keyw) :
     sys.stdin.close() 
-    try: 
-        os.write(p,pickle.dumps(fun(*args,**keyw),-1))
+    sys.excepthook = _exceptHook
+    global _tb
+    _tb = ''
+    os.write(p,pickle.dumps(fun(*args,**keyw),-1))
+    if (len(_tb)==0) :
         os.close(p)
         os._exit(0)
-    except:
-        print 'Unexpected error:', sys.exc_info()[0]
-        os.write(p,'__ERROR_ERROR__')
-        os.close(p)
-        os._exit(1)
+    print 'Unexpected error:', sys.exc_info()[0]
+    os.write(p,_tb)
+    os.close(p)
+    os._exit(1)
 
-def _parent(pid,p):
+def _readpipe(p,blocksize=1024) :
     s = ''
     while True:
-        r = os.read(p,1024)
-        if r == '__ERROR_ERROR__' : return
+        r = os.read(p,blocksize)
         s+=r
-        if len(r) < 1024 : break
+        if len(r) < blocksize : break
     os.close(p)
-    x = os.waitpid(pid,0)
+    return s
+
+def _parent(pid,p):
+    s = _readpipe(p)
+    (rpid,stat) = os.waitpid(pid,0)
+    if stat != 0 : 
+        print 'child exit status: ' + str(stat>>8)
+        print s
+        return
     return pickle.loads(s)
 
 def execInSandbox(fun,*args,**keyw) :
