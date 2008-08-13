@@ -5,15 +5,18 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
-! 2008-08-08 - Tomasz Skwarnicki
- - add Hlt1PhotonDiTrackDecision to HltInit.opts 
-
 </PRE><H1><A NAME=v4r0>2008-08-06 HltSys v4r0</A></H1><PRE>
 
  This version uses LHCb v25r0 and Gaudi v20r2
  . Many changes for Gaudi state machine and use of TCK. 
  . Hlt1: New packages HltEcalAlley, HltLuminosity, HltGlobalMonitor, HltRawData
  . Hlt2: Removed all .opts files and replaced by .py. 
+
+! 2008-08-13 - Jaap Panman
+ - add options files for onlyLumi 
+
+! 2008-08-08 - Tomasz Skwarnicki
+ - add Hlt1PhotonDiTrackDecision to HltInit.opts 
 
 !========================== HltSys v4r0 2008-08-06 ===================
 ! 2008-08-06 - Patrick Koppenburg
