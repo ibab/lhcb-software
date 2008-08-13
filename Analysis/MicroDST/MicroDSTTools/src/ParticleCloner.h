@@ -1,4 +1,4 @@
-// $Id: ParticleCloner.h,v 1.1.1.1 2007-12-10 09:32:24 jpalac Exp $
+// $Id: ParticleCloner.h,v 1.2 2008-08-13 16:56:18 jpalac Exp $
 #ifndef MICRODST_PARTICLECLONER_H 
 #define MICRODST_PARTICLECLONER_H 1
 
@@ -6,8 +6,11 @@
 // from Gaudi
 #include <MicroDST/MicroDSTTool.h>
 #include <MicroDST/ICloneParticle.h>            // Interface
-#include <MicroDST/ICloneVertex.h>
+
 #include <MicroDST/Functors.hpp>
+
+class ICloneVertex;
+class ICloneProtoParticle;
 
 /** @class ParticleCloner ParticleCloner.h src/ParticleCloner.h
  *  
@@ -29,8 +32,6 @@ public:
 
   virtual LHCb::Particle* operator() (const LHCb::Particle* particle);
 
-protected:
-
 private:
 
   LHCb::Particle* clone(const LHCb::Particle* particle);
@@ -46,6 +47,10 @@ private:
   ICloneVertex* m_vertexCloner;
 
   std::string m_vertexClonerName;
+
+  ICloneProtoParticle* m_ppCloner;
+
+  std::string m_ppClonerName;
 
 };
 #endif // MICRODST_PARTICLECLONER_H
