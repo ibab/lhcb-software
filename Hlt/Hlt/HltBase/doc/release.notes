@@ -3,6 +3,13 @@
 ! Responsible : Jose Angel Hernando Morata
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+! 2008-08-13 - Gerhard Raven
+ - move TES callback for Selections from HltSelectionsContainer to 
+   HltAlgorithm
+ - add (back) option to specify that not all input selections have to
+   be positive in HltAlgorithm
+ - add IHltSelectionCombinerFactory interface: creates an object which
+   can perform boolean combinations of Hlt::Selections
 
 !========================== HltBase v5r0 2008-08-06 ===================
 ! 2008-08-05 - Gerhard Raven

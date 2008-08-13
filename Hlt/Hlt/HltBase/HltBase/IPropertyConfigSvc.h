@@ -1,4 +1,4 @@
-// $Id: IPropertyConfigSvc.h,v 1.3 2008-07-08 14:15:58 graven Exp $
+// $Id: IPropertyConfigSvc.h,v 1.4 2008-08-13 07:11:15 graven Exp $
 #ifndef IPROPERTYCONFIGSVC_H 
 #define IPROPERTYCONFIGSVC_H 1
 
@@ -48,6 +48,8 @@ public:
   virtual const ConfigTreeNode* resolveConfigTreeNode(const ConfigTreeNode::digest_type& ref) const = 0;
   virtual const ConfigTreeNode* resolveConfigTreeNode(const ConfigTreeNodeAlias::alias_type& alias) const = 0;
 
+  //TODO: these four need to move to the IConfigAccessSvc layer to allow for
+  //      bulk transaction optimization... note: only allow for alias in that case?
   virtual const std::list<ConfigTreeNode::digest_type>& collectNodeRefs(const ConfigTreeNode::digest_type& nodeRef) const = 0;
   virtual const std::list<ConfigTreeNode::digest_type>& collectNodeRefs(const ConfigTreeNodeAlias::alias_type& alias) const = 0;
   virtual const std::vector<PropertyConfig::digest_type>& collectLeafRefs(const ConfigTreeNode::digest_type& nodeRef) const = 0;

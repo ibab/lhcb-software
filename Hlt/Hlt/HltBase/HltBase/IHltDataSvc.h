@@ -21,7 +21,7 @@ public:
     //       get access to everything, the latter inheriting from the former...
     //@TODO: extend the query capabilities: who uses what as input, who produced which output..
     //@TODO: move the {register,retrieve}{,T}selection overhere...
-    virtual StatusCode addSelection(Hlt::Selection* sel,IAlgorithm* parent,bool originatesFromTES=false) = 0;
+    virtual StatusCode addSelection(Hlt::Selection* sel,IAlgorithm* parent, bool originatesFromTES = false) = 0;
     virtual bool hasSelection(const stringKey& id) const = 0;
     //@TODO: make typesafe, i.e. allow getting of derived classes 
     virtual Hlt::Selection& selection(const stringKey& id,IAlgorithm* parent) =0;

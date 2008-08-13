@@ -1,4 +1,4 @@
-// $Id: HltSelection.h,v 1.4 2008-07-30 13:33:16 graven Exp $
+// $Id: HltSelection.h,v 1.5 2008-08-13 07:11:15 graven Exp $
 #ifndef HLTBASE_HLTSELECTION_H 
 #define HLTBASE_HLTSELECTION_H 1
 
@@ -89,5 +89,6 @@ namespace Hlt
   
   typedef TSelection<LHCb::Track>      TrackSelection;
   typedef TSelection<LHCb::RecVertex> VertexSelection;
+
 }
 #endif 

@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.39 2008-07-30 13:33:17 graven Exp $
+// $Id: HltAlgorithm.cpp,v 1.40 2008-08-13 07:11:15 graven Exp $
 // Include files 
 
 #include "HltBase/HltAlgorithm.h"
@@ -23,6 +23,7 @@ HltAlgorithm::HltAlgorithm( const std::string& name,
   , m_outputSelection(0)
   , m_outputHisto(0)
 {
+  declareProperty("RequirePositiveInputs", m_requireInputsToBeValid );
   declareProperty("HistogramUpdatePeriod" , m_histogramUpdatePeriod = 0 );
   declareProperty("SaveConfiguration", m_saveConf = true);
 
@@ -33,7 +34,7 @@ HltAlgorithm::HltAlgorithm( const std::string& name,
 
 HltAlgorithm::~HltAlgorithm()
 {
-  delete m_outputSelection;
+  delete m_outputSelection; m_outputSelection = 0;
 } 
 
 
@@ -141,6 +142,9 @@ StatusCode HltAlgorithm::sysExecute() {
 StatusCode HltAlgorithm::beginExecute() {
 
   setDecision(false);
+
+  // we always process callbacks first...
+  BOOST_FOREACH( CallBack* i, m_callbacks ) i->process();
   
   increaseCounter( m_counterEntries );
   
@@ -170,7 +174,7 @@ bool HltAlgorithm::verifyInput()
   if (!m_requireInputsToBeValid) return true;
   bool ok = true;
   BOOST_FOREACH( Hlt::Selection* i, m_inputSelections ) {
-    ok = ok &&  ( i->decision() || ( i->id().str().substr(0,4)=="TES:" )); // TES selection could be faulted when requested...
+    ok = ok &&  i->decision() ;
     if (m_debug) 
       debug() << " input selection " << i->id()
               << " decision " << i->decision() 
@@ -196,7 +200,6 @@ bool HltAlgorithm::verifyInput()
     warning() << endreq;
     return StatusCode::FAILURE;
   }
-  // verbose() << " consider inputs " << ok <<endreq;
   return ok;
 }
 
@@ -266,7 +269,7 @@ Hlt::Selection& HltAlgorithm::retrieveSelection(const stringKey& selname) {
                      cmp_by_id(sel))==m_inputSelections.end() ) {
       m_inputSelections.push_back(&sel);
       if (produceHistos()) {
-        Assert(m_inputHistos.find(sel.id()) == m_inputHistos.end(),"setInputSelection() already input selection "+sel.id().str());
+        Assert(m_inputHistos.find(sel.id()) == m_inputHistos.end(),"retrieveSelection() already input selection "+sel.id().str());
         m_inputHistos[sel.id()] = initializeHisto(sel.id().str());
       }
       debug() << " Input selection " << sel.id() << endreq;

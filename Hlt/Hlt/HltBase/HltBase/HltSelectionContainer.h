@@ -1,4 +1,4 @@
-// $Id: HltSelectionContainer.h,v 1.1 2008-07-30 13:33:16 graven Exp $
+// $Id: HltSelectionContainer.h,v 1.2 2008-08-13 07:11:15 graven Exp $
 #ifndef HLTBASE_HLTSELECTIONCONTAINER_H 
 #define HLTBASE_HLTSELECTIONCONTAINER_H 1
 #include "HltBase/HltSelection.h"
@@ -9,8 +9,10 @@
 #include "boost/utility.hpp"
 #include "boost/tuple/tuple.hpp"
 #include "boost/static_assert.hpp"
+#include "boost/assign/list_of.hpp"
 #include <utility>
 #include <cassert>
+#include <map>
 //
 //  This file declares the templates SelectionContainerN<T1,T2,...TN> where
 //  T1,T2, ..., TN are the type of candidate lists.
@@ -39,49 +41,15 @@
 
 namespace Hlt {
     namespace detail {
-        template <typename T> class callback_ ;
 
         template <typename Candidate> struct data_ {
                 typedef Hlt::TSelection<Candidate> selection_type;
                 typedef Candidate                  candidate_type;
                 selection_type*             selection;
                 stringKey                   property;
-                callback_<Candidate>*       callback;
-                data_() : selection(0),callback(0) {}
+                data_() : selection(0) {}
         };
 
-        /// TES callback
-        template <typename T> 
-        class callback_ : boost::noncopyable {
-        public:
-            callback_( detail::data_<T>& data, HltAlgorithm& owner) : m_owner(owner), m_data(data) 
-            {
-                typedef Hlt::TSelection<T> selection_type;
-                //FIXME: this doesn't work for multiple clients of a TES selection,
-                //       as each client is considered an owner, and multiple
-                //       owners are not allowed...
-                m_data.selection = new selection_type( m_data.property );
-                if (m_owner.registerTESInputSelection( m_data.selection ).isFailure()) {
-                    m_owner.error() << " Failed to register TES selection " << endmsg;
-                    throw GaudiException("Failed to add Selection",m_data.selection->id().str(),StatusCode::FAILURE);
-                }
-            }
-            ~callback_() { delete m_data.selection; m_data.selection = 0; m_data.callback = 0;} // unregister ourselves...
-
-            void operator()() const {
-                assert(m_data.callback==this); // check we are the right callback...
-                typedef typename T::Container  container_type;
-                assert(std::string(m_data.selection->id().str(),0,4)=="TES:");
-                std::string location( m_data.selection->id().str(),4 );
-                container_type *obj = m_owner.get<container_type>( m_owner.evtSvc(), location );
-                m_data.selection->clean(); //TODO: check if/why this is needed??
-                m_data.selection->insert( m_data.selection->end(),obj->begin(),obj->end());
-                m_data.selection->setDecision( !m_data.selection->empty() ); // force it processed...
-            }
-        private:
-            HltAlgorithm&       m_owner;
-            detail::data_<T>&   m_data;
-        };
         
         /// retrieve selection
         class retrieve_ { 
@@ -89,10 +57,6 @@ namespace Hlt {
             retrieve_(HltAlgorithm &owner) : m_owner(owner) {}
             template <typename U> void operator()(U& u) {
                 assert(u.selection==0);
-                const static std::string tes("TES:");
-                if (u.property.str().substr(0,4) == tes ) {
-                    u.callback = new callback_<typename U::candidate_type>( u, m_owner );
-                }
                 u.selection = &m_owner.retrieveTSelection<typename U::candidate_type>(u.property);
             }
         private:
@@ -106,15 +70,20 @@ namespace Hlt {
         template <unsigned N>
         class declare_ {
         public:
-            declare_(HltAlgorithm &alg) : m_alg(alg), m_counter(0) {}
+            declare_(HltAlgorithm &alg, std::map<int,std::string> defaults) : m_alg(alg), m_counter(0),m_defs(defaults) {}
             template <typename U> void operator()(U& t) {
+                std::string def = m_defs[m_counter];
                 if (m_counter==0) {
-                    StringProperty x(m_alg.name());
+                    StringProperty x(def.empty() ? m_alg.name() : def );
                     t.property.updateHandler( x ); // set default output name...
                     m_alg.declareProperty( "OutputSelection",t.property.property() );
                 } else {
                     std::string prop( "InputSelection" );
                     if (N>2) prop += boost::lexical_cast<std::string>(m_counter);
+                    if (!def.empty()) {
+                        StringProperty x( def );
+                        t.property.updateHandler( x ); // set default input name...
+                    }
                     m_alg.declareProperty( prop,
                                            t.property.property() ); //TODO: add callback, locked as soon as corresponding TSelection* is non-zero...
                                                                     //WARNING: stringKey already _has_ a callback...
@@ -125,6 +94,7 @@ namespace Hlt {
         private:
             HltAlgorithm& m_alg;
             unsigned int m_counter;
+            std::map<int,std::string> m_defs;
         };
                 
 
@@ -140,8 +110,9 @@ namespace Hlt {
             // make sure only derived classes can be instantiated...
             SelectionContainer_(HltAlgorithm& alg) : m_owner(alg) { zero_ x; for_each_selection(m_data,x); }
         public:
-            void declareProperties(){
-                declare_<boost::tuples::length<T>::value> x(m_owner); for_each_selection(m_data,x); 
+            typedef std::map<int,std::string> map_t;
+            void declareProperties( map_t defaults = map_t() ){
+                declare_<boost::tuples::length<T>::value> x(m_owner,defaults); for_each_selection(m_data,x); 
             }
             // could move to postInitialize hook
             void registerSelection() {
@@ -158,17 +129,10 @@ namespace Hlt {
             //TODO: check if register/retrieve has been called...
             typename helper_<0>::selection_type* output() { return boost::get<0>(m_data).selection; }
 
-            //TODO: this isn't called for 'bound' selections -- MUST move callback into Selection itself...
-            //      (or replace the Selection with this class...)
-            //      or into from the preExecute hook in HltAlgorithm...
-            //      note: can also move a 'flush into TES' hook into the postExecute hook in HltAlgorithm...
             template <unsigned N> 
             typename helper_<N>::selection_type* input() { 
                 BOOST_STATIC_ASSERT(N>0); // N=0 corresponds to the output....
                 typename helper_<N>::data_type& d = boost::get<N>(m_data); 
-                if (!d.selection->processed() && d.callback!=0 ) {
-                    (*d.callback)();
-                }
                 if (!d.selection->processed()) {
                     m_owner.debug() << "requesting stale selection " << d.selection->id() << endmsg;
                     m_owner.warning() << "requesting stale selection...  most likely a misconfiguration" << endmsg;

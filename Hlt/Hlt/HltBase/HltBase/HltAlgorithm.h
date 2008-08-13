@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.h,v 1.30 2008-07-30 13:33:16 graven Exp $
+// $Id: HltAlgorithm.h,v 1.31 2008-08-13 07:11:15 graven Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
@@ -46,40 +46,36 @@ public:
   // finalize algorithm
   virtual StatusCode finalize  ();
 
-public:
   //@TODO: move the {retrieve,register}{,T}Selection into IHltDataSvc...
   // retrieve a selection
   Hlt::Selection& retrieveSelection(const stringKey& selname);
 
+public:
   // retrieve a selection with candidates of type T (e.g. Track)
   template <class T>
-  Hlt::TSelection<T>& retrieveTSelection(const stringKey& selname) {
-    Hlt::Selection& sel = retrieveSelection(selname);
-    Hlt::TSelection<T> *tsel = sel.down_cast<T>();
-    if (tsel==0) throw GaudiException("Failed to down_cast Selection",selname.str(),StatusCode::FAILURE);
-    return *tsel;
+  Hlt::TSelection<T>& retrieveTSelection(const stringKey& key) {
+        Hlt::TSelection<T> *sel = (key.str().substr(0,4) == "TES:")  ?
+                                  this->registerTESSelection<T>(key) :
+                                  retrieveSelection(key).template down_cast<T>();
+        if (sel==0) throw GaudiException("Failed to down_cast Selection",key.str(),StatusCode::FAILURE);
+        return *sel;
   }
 
   // register an output selection of no candidates
-  Hlt::Selection& registerSelection(const stringKey& selname) 
-  {
-    Hlt::Selection* tsel = new Hlt::Selection(selname);
-    setOutputSelection(tsel);
-    return *tsel;
+  Hlt::Selection& registerSelection(const stringKey& key) {
+        Hlt::Selection* tsel = new Hlt::Selection(key);
+        setOutputSelection(tsel);
+        return *tsel;
   }
 
   // register an output selection with candidates of T type (e.g. Track)
-  template <class T>
-  Hlt::TSelection<T>& registerTSelection(const stringKey& selname)
-  {
-    Hlt::TSelection<T>* tsel = new Hlt::TSelection<T>(selname);
-    setOutputSelection(tsel);
-    return *tsel;
+  template <typename T>
+  Hlt::TSelection<T>& registerTSelection(const stringKey& key) {
+        Hlt::TSelection<T>* tsel = new Hlt::TSelection<T>(key);
+        setOutputSelection(tsel);
+        return *tsel;
   }
 
-  StatusCode registerTESInputSelection(Hlt::Selection* sel) {
-    return dataSvc().addSelection(sel,this,true);
-  }
 
 protected:
 
@@ -114,6 +110,21 @@ private:
   
   // driver of the execute()
   StatusCode sysExecute();
+
+  template <typename T> 
+  Hlt::TSelection<T>* registerTESSelection(const stringKey& key) {
+       // must ALWAYS add a callback to our stack for this 
+       if (!dataSvc().hasSelection(key) 
+           && dataSvc().addSelection( new Hlt::TSelection<T>(key), this, true).isFailure()) {
+            throw GaudiException("Failed to register TES Selection",key.str(),StatusCode::FAILURE);
+       }
+       Hlt::TSelection<T>* selection = retrieveSelection(key).template down_cast<T>();
+       if (selection==0) {
+            throw GaudiException("Failed to retrieve TES-backed Selection",key.str(),StatusCode::FAILURE);
+       }
+       m_callbacks.push_back( new HltAlgorithm::TESSelectionCallBack<Hlt::TSelection<T> >( *selection,*this ) ); 
+       return selection;
+  }
 
 private:
   // must inputs be valid?
@@ -166,5 +177,35 @@ private:
   // map of the output selection candidates
   Hlt::Histo* m_outputHisto;
 
+
+  struct CallBack {
+    virtual ~CallBack() {}
+    virtual void process() {}
+  };
+
+  template<typename T>
+  class TESSelectionCallBack : public CallBack {
+  public:
+      TESSelectionCallBack(T &selection,HltAlgorithm &parent) : m_selection(selection),m_parent(parent) {
+        assert(m_selection.id().str().substr(0,4)=="TES:");
+      }
+      void process() {
+        typedef typename T::candidate_type::Container  container_type;
+        container_type *obj = m_parent.get<container_type>( m_parent.evtSvc(), m_selection.id().str().substr(4) );
+        m_selection.clean(); //TODO: check if/why this is needed??
+        m_selection.insert(m_selection.end(),obj->begin(),obj->end());
+        m_selection.setDecision( !m_selection.empty() ); // force it processed...
+      }
+  private:
+      T&            m_selection;
+      HltAlgorithm& m_parent;
+  };
+
+  std::vector<CallBack*> m_callbacks;
+
 };
+
+
+
+
 #endif // HLTBASE_HLTALGORITHM_H
