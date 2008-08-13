@@ -1,4 +1,4 @@
-// $Id: HltSelectionFilter.cpp,v 1.7 2008-07-30 13:37:32 graven Exp $
+// $Id: HltSelectionFilter.cpp,v 1.8 2008-08-13 07:26:54 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -24,7 +24,8 @@ DECLARE_ALGORITHM_FACTORY( HltSelectionFilter );
 //=============================================================================
 HltSelectionFilter::HltSelectionFilter( const std::string& name,
                     ISvcLocator* pSvcLocator)
-  : HltAlgorithm ( name , pSvcLocator, false )
+  : HltAlgorithm ( name , pSvcLocator, false ) 
+  // false: do not require all input selections to have passed...
 {
   declareProperty("OutputSelection", m_outputSelectionName = name);
   declareProperty("InputSelections", m_inputSelectionNames);
@@ -43,8 +44,7 @@ StatusCode HltSelectionFilter::initialize() {
 
   debug() << "==> Initialize" << endmsg;
 
-  const std::vector<std::string>& values = m_inputSelectionNames.value();
-  BOOST_FOREACH( const std::string& name, values ) {
+  BOOST_FOREACH( const std::string& name, m_inputSelectionNames.value() ) {
     m_input.push_back(&retrieveSelection(name));
     m_scounters.push_back(0);
   }
