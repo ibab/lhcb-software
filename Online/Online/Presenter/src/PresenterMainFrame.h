@@ -270,7 +270,6 @@ class PresenterMainFrame : public TGMainFrame
     void toggleReferenceOverlay();
     void paintHist(DbRootHist* histogram);
 
-    std::string assembleCurrentDimServiceName(OnlineHistogram* OnlineHistogram);
 
     void removeHistogramsFromPage();
     void EventInfo(int event, int px, int py, TObject *selected);
@@ -450,6 +449,7 @@ class PresenterMainFrame : public TGMainFrame
     TObject*   m_histogramIdItem;
 
     std::string convDimToHistoID(const std::string & dimSvcName);
+
 
     TGCompositeFrame* m_editorCanvasMainFrame;
 
