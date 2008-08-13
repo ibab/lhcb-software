@@ -1,4 +1,4 @@
-// $Id: ProtoParticleCloner.cpp,v 1.3 2008-08-11 16:02:10 jpalac Exp $
+// $Id: ProtoParticleCloner.cpp,v 1.4 2008-08-13 16:56:32 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -65,8 +65,13 @@ LHCb::ProtoParticle* ProtoParticleCloner::operator() (const LHCb::ProtoParticle*
 //=============================================================================
 LHCb::ProtoParticle* ProtoParticleCloner::clone(const LHCb::ProtoParticle* protoParticle)
 {
+
+  if (0==protoParticle) return 0;
+
   LHCb::ProtoParticle* protoParticleClone = 
     cloneKeyedContainerItem<LHCb::ProtoParticle, BasicProtoParticleCloner>(protoParticle);
+
+  if (0==protoParticleClone) return 0;
 
   if ( m_trackCloner!=0 )
     protoParticleClone->setTrack( (*m_trackCloner)(protoParticle->track() ) );
@@ -79,8 +84,11 @@ LHCb::ProtoParticle* ProtoParticleCloner::clone(const LHCb::ProtoParticle* proto
 
   if (clonedRichPID) clonedRichPID->setTrack(protoParticleClone->track());
   
-  if (clonedMuonPID) clonedRichPID->setTrack(protoParticleClone->track());
-
+  if (clonedMuonPID) {
+    clonedMuonPID->setIDTrack(protoParticleClone->track());
+    clonedMuonPID->setMuonTrack(protoParticleClone->track());
+  }
+  
   protoParticleClone->setRichPID(clonedRichPID);  
   protoParticleClone->setMuonPID(clonedMuonPID);
 

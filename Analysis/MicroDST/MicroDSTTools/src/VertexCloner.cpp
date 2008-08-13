@@ -1,4 +1,4 @@
-// $Id: VertexCloner.cpp,v 1.2 2008-02-11 22:42:26 jpalac Exp $
+// $Id: VertexCloner.cpp,v 1.3 2008-08-13 16:56:32 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -68,6 +68,8 @@ LHCb::Vertex* VertexCloner::operator() (const LHCb::Vertex* vertex)
 //=============================================================================
 LHCb::Vertex* VertexCloner::clone(const LHCb::Vertex* vertex)
 {
+
+  if (0==vertex) return 0;
   
   LHCb::Vertex* vertexClone = 
     cloneKeyedContainerItem<LHCb::Vertex, BasicVertexCloner>(vertex);
