@@ -77,7 +77,6 @@ class FSMmanip:
     self.setupTask         = self._setupTask
     self.configureTask     = self._configureTask
     self.allocateProcesses = self._allocateProcesses
-    #print '+++++++++++++++++++++++ NAME:',self.name
     for i in xrange(self.names.container.size()):
       nam = self.names.container[i].name()
       node = nam[nam.find(':')+1:]

@@ -72,6 +72,8 @@ def runStorage(name='Storage',sim=None):
   ctrl = Control.Control(mgr,name,'Alloc',[streamer,writer]).run()
   return (ctrl,run(name,mgr,sim))
 
+runRecStorage = runStorage
+
 def runMonitoring(name='Monitoring',sim=None):
   """
   Execute Monitoring system streaming component to

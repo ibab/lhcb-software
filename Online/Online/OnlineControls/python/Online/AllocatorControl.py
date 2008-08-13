@@ -123,9 +123,9 @@ class Control(PVSS.PyDeviceListener):
         result = getattr(i,function)(runDpName, partition)
         if r0 is None: r0 = result
         if result is None:
-          PVSS.error('The controlled object '+i.name+' failed.',timestamp=1,type=PVSS.ILLEGAL_ARG)
+          PVSS.error('The controlled object '+i.name+' failed: '+function,timestamp=1,type=PVSS.ILLEGAL_ARG)
           return result
-        PVSS.info('The controlled object '+i.name+' succeeded.',timestamp=1)
+        PVSS.info('The controlled object '+i.name+' succeeded: '+function,timestamp=1)
     return r0
 
   # ===========================================================================
