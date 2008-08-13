@@ -1,4 +1,4 @@
-// $Id: ParticleCloner.cpp,v 1.3 2008-02-15 13:05:57 jpalac Exp $
+// $Id: ParticleCloner.cpp,v 1.4 2008-08-13 16:55:27 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -7,6 +7,10 @@
 // from LHCb
 #include "Event/Particle.h"
 #include "Event/Vertex.h"
+
+// From MicroDST
+#include <MicroDST/ICloneVertex.h>
+#include <MicroDST/ICloneProtoParticle.h>
 
 // local
 #include "ParticleCloner.h"
@@ -30,12 +34,15 @@ ParticleCloner::ParticleCloner( const std::string& type,
   : 
   MicroDSTTool ( type, name , parent ),
   m_vertexCloner(0),
-  m_vertexClonerName("VertexCloner")
+  m_vertexClonerName("VertexCloner"),
+  m_ppCloner(0),
+  m_ppClonerName("ProtoParticleCloner")
 {
 
   declareInterface<ICloneParticle>(this);
 
   declareProperty("ICloneVertex", m_vertexClonerName);
+  declareProperty("ICloneProtoParticle", m_ppClonerName);
 
 }
 //=============================================================================
@@ -45,11 +52,21 @@ StatusCode ParticleCloner::initialize()
   debug() << "==> Initialize" << endmsg;
 
   StatusCode sc = MicroDSTTool::initialize();
+
+  debug() << "Going to initialise ICloneProtoParticle and ICloneVertex" << endmsg;
   
   if (! sc.isSuccess() ) return sc;
   
   m_vertexCloner = tool<ICloneVertex>(m_vertexClonerName, this->parent() );
 
+  m_ppCloner = (m_ppClonerName=="NONE") ? 0 : tool<ICloneProtoParticle>(m_ppClonerName, this->parent() );
+
+  if (m_ppCloner) {
+    verbose() << "Found ICloneProtoParticle " << m_ppClonerName << endmsg;
+  } else {
+    warning() << "Did not find ICloneProtoParticle " << m_ppClonerName 
+              <<". ProtoParticle cloning de-activated."<< endmsg;
+  }
   return StatusCode::SUCCESS;
 }
 //=============================================================================
@@ -60,14 +77,22 @@ LHCb::Particle* ParticleCloner::operator() (const LHCb::Particle* particle)
 //=============================================================================
 LHCb::Particle* ParticleCloner::clone(const LHCb::Particle* particle)
 {
+
+  if (0==particle) return 0;
+
   LHCb::Particle* particleClone = 
     cloneKeyedContainerItem<LHCb::Particle, BasicParticleCloner>(particle);
 
-  if (particle->endVertex() && particleClone) {
-    LHCb::Vertex* vertexClone = (*m_vertexCloner)( particle->endVertex() );
-    if (vertexClone) particleClone->setEndVertex(vertexClone);
-    storeDaughters( particleClone, particle->daughters() );
-  }
+  if ( 0 == particleClone ) return 0;
+
+  if (m_vertexCloner)
+    particleClone->setEndVertex( (*m_vertexCloner)(particle->endVertex()) );
+
+  storeDaughters( particleClone, particle->daughters() );
+
+  if (m_ppCloner)
+    particleClone->setProto( (*m_ppCloner)( particle->proto() ) );
+  
   return particleClone;
   
 }
