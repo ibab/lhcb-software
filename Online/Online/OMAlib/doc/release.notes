@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.7 2008-08-11 08:05:16 ggiacomo Exp $
+! $Id: release.notes,v 1.8 2008-08-13 14:07:07 ggiacomo Exp $
 ! Package     : OMAlib
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
 
-! 20080808 - OMAlib v1r2
+! 20080813 - OMAlib v1r2
+  - make OMAEfficiency and OMADivide work for both THXF/THXD inputs
+  - bug fixes in OMAGaussFit and OMAlib
+
+! 20080808 - OMAlib 
   - support for loading reference histograms
   - some reshuffling of class inheritance
   - new check algorithms: OMACheckEmptyBins, OMACompareToReference,

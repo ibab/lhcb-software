@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMADivide.cpp,v 1.2 2008-08-11 08:05:15 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMADivide.cpp,v 1.3 2008-08-13 14:07:07 ggiacomo Exp $
 #include <TH1F.h>
 #include <TH2F.h>
 #include "OMAlib/OMAAlgorithms.h"
@@ -37,12 +37,12 @@ TH1* OMADivide::exec(TH1* okH,
       outHist= dynamic_cast<TH2D*>(existingHisto);
   }
   if (!outHist) {
-    if (dynamic_cast<TH1D*>(okH)) 
+    if ( 1 == okH->GetDimension() ) 
       outHist = (TH1*) ( new TH1D (outName.data(), outTitle.data(), 
 				   okH->GetNbinsX(), 
 				   okH->GetXaxis()->GetXmin(),
 				   okH->GetXaxis()->GetXmax()) );  
-    else if(dynamic_cast<TH2D*>(okH))
+    else if(2 == okH->GetDimension())
       outHist = (TH1*) ( new TH2D (outName.data(), outTitle.data(), 
 				   okH->GetNbinsX(), 
 				   okH->GetXaxis()->GetXmin(),
