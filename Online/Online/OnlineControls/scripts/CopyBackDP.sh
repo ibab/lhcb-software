@@ -1,33 +1,5 @@
 #/bin/sh
 none=1
-checkFiles()
-{
-  for i in `ls $2/$3`; 
-    do
-    #if  test -n "`diff $1/$i $i`";
-    if test -L $1/$i;
-	then 
-	echo "---> Unchanged [Link]: $i";
-    elif test -z "`diff $1/$i $i`";
-	then 
-	echo "---> Unchanged [File]: $i";
-	if test "${none}" = 0;
-	    then
-	    rm $1/$i;
-	    ln -s ${ONLINECONTROLSROOT}/pvss/$i $1/$i;
-	fi;
-    elif test $1/$i -nt $i;
-	then 
-	echo "---> CHANGED:   $i";
-	if test "${none}" = 0;
-	    then
-	    cp --preserve=context $1/$i $i; 
-	fi;
-    else
-	echo "---> Unchanged: $i";
-    fi;
-  done;
-}
 #
 #
 export PVSS_PROJECT_NAME=
@@ -85,16 +57,6 @@ export PVSS_PROJECT_BASE=/localdisk/pvss/${PVSS_PROJECT_NAME}
 #
 cd ${ONLINECONTROLSROOT}/pvss
 #
-checkFiles ${PVSS_PROJECT_BASE} scripts *.cpp
-checkFiles ${PVSS_PROJECT_BASE} scripts/libs *.cpp
-checkFiles ${PVSS_PROJECT_BASE} panels/Reco *.pnl
-checkFiles ${PVSS_PROJECT_BASE} panels/ProcessorFarm *.pnl
-checkFiles ${PVSS_PROJECT_BASE} panels/JobOptions *.pnl
-checkFiles ${PVSS_PROJECT_BASE} panels/StreamControl *.pnl
-checkFiles ${PVSS_PROJECT_BASE} panels/visionUtils *.pnl
-#checkFiles ${PVSS_PROJECT_BASE} panels/fwFSMuser *.pnl
-#checkFiles ${PVSS_PROJECT_BASE} panels/fwFSM/ui *.pnl
-#
 
 if test "${none}" = 0;
     then
@@ -119,6 +81,25 @@ elif test ${PVSS_PROJECT_NAME} = STORAGE -o ${PVSS_PROJECT_NAME} = MONITORING;
 	-filterDp fwOT_StreamConfigurator.* \
 	-filterDp fwOT_JobOptionsControl.* \
 	-filterDp fwOT_FSM_*.*;
+    echo Omit: ${PVSS_II_HOME}/bin/PVSS00ascii \
+	-proj ${PVSS_PROJECT_NAME} \
+	-out  ${ONLINECONTROLSROOT}/pvss/dplist/ProcessorFarm.dpl \
+	-filter DOP \
+	-filterDp fwOT_StreamConfigurator.* \
+	-filterDp fwOT_FSM_Slice.* \
+	-filterDp fwOT_FSM_Tasks.* \
+	-filterDp fwOT_FSM_DimTask.* ;
+elif test ${PVSS_PROJECT_NAME} = RECHLTA01 -o ${PVSS_PROJECT_NAME} = RECHLTB01;
+    then
+    echo "Extracting FSM types for project ${PVSS_PROJECT_NAME}"
+    ${PVSS_II_HOME}/bin/PVSS00ascii \
+	-proj ${PVSS_PROJECT_NAME} \
+	-out  ${ONLINECONTROLSROOT}/pvss/dplist/ProcessorFarm.dpl \
+	-filter DOP \
+	-filterDp fwOT_StreamConfigurator.* \
+	-filterDp fwOT_FSM_Slice.* \
+	-filterDp fwOT_FSM_Tasks.* \
+	-filterDp fwOT_FSM_DimTask.* ;
 elif test ${PVSS_PROJECT_NAME} = RECOTEST -o ${PVSS_PROJECT_NAME} = RECFARM;
     then
     echo "Extracting FSM types for project ${PVSS_PROJECT_NAME}"
@@ -131,6 +112,17 @@ elif test ${PVSS_PROJECT_NAME} = RECOTEST -o ${PVSS_PROJECT_NAME} = RECFARM;
 	-filterDp fwOT_StreamConfigurator.* \
 	-filterDp fwOT_JobOptionsControl.* \
 	-filterDp fwOT_FSM_*.*;
+elif test ${PVSS_PROJECT_NAME} = RECMONA08;
+    then
+    echo "Extracting FSM types for project ${PVSS_PROJECT_NAME}"
+    ${PVSS_II_HOME}/bin/PVSS00ascii \
+	-proj ${PVSS_PROJECT_NAME} \
+	-out  ${ONLINECONTROLSROOT}/pvss/dplist/ProcessorFarm.dpl \
+	-filter DOP \
+	-filterDp fwOT_StreamConfigurator.* \
+	-filterDp fwOT_FSM_Slice.* \
+	-filterDp fwOT_FSM_Tasks.* \
+	-filterDp fwOT_FSM_DimTask.* ;
 elif test ${PVSS_PROJECT_NAME} = RECCTRL;
     then
     echo "Extracting FSM types for project ${PVSS_PROJECT_NAME}"

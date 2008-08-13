@@ -1,13 +1,16 @@
 #!/usr/bin/python
-import os, sys
+import os, sys, time
 
 def pvssDir():         return os.environ['PVSS_SYSTEM_ROOT']
 def projectName():     return os.environ['PVSS_PROJECT_NAME']
 def projectBaseDir():  return '/localdisk/pvss/'+projectName()
 def componentsDir():   return os.environ['PVSS_COMPONENTS_DIR']
 def sourceDir():       return os.environ['ONLINECONTROLSROOT']
+def systemNumber():    return int(os.environ['PVSS_SYSTEM_NUMBER'])
 
 def pvssCTRL():        return os.environ['PVSS_SYSTEM_ROOT']+'/bin/PVSS00ctrl -proj '+projectName()+' '
+def pvssPMON():        return os.environ['PVSS_SYSTEM_ROOT']+'/bin/PVSS00pmon -proj '+projectName()+' '
+#def pvssPMON():        return os.environ['PVSS_SYSTEM_ROOT']+'/bin/PVSS00pmon '
 def pvssASCII():       return os.environ['PVSS_SYSTEM_ROOT']+'/bin/PVSS00ascii -proj '+projectName()+' '
 
 def usage():
@@ -17,7 +20,7 @@ def usage():
   print "  -install       <name>: Choose one of: JOBOPTIONS"
   print "  -componentsdir <name>: Installation directory of components"
   sys.exit(1)
-  
+
 def parseOpts():
   print sys.argv
   args = sys.argv[2:]
@@ -26,6 +29,7 @@ def parseOpts():
     a = str(args[i]).upper()[:2]
     if a=='-P':
       os.environ['PVSS_PROJECT_NAME'] = args[i+1]
+      os.environ['PVSS_II'] = projectBaseDir()+'/config/config'
       i = i + 2
     elif a=='-I':
       os.environ['PVSS_INSTALL_NAME'] = args[i+1]
@@ -33,13 +37,17 @@ def parseOpts():
     elif a=='-C':
       os.environ['PVSS_COMPONENTS_DIR'] = args[i+1]
       i = i + 2
+    elif a=='-N':
+      os.environ['PVSS_SYSTEM_NUMBER'] = args[i+1]
+      print 'PVSS System number: ',systemNumber()
+      i = i + 2
     else:
       print 'Unknown option:'+args[i]
       usage()
   if not os.environ.has_key('PVSS_PROJECT_NAME'):
     print "No Project name given!"
     usage()
-  print 'PVSS Project name: '+projectName()
+  print 'PVSS Project name: ',projectName()
   
   if os.environ.has_key('PVSS_INSTALL_NAME'):
     print 'PVSS Install name:'+os.environ['PVSS_INSTALL_NAME']
@@ -114,12 +122,15 @@ def installFiles():
 
 def installDpList():
   print 'Installing datapoint list...'
-  try:
+  if projectName()[:6]=='RECMON' or projectName()[:6]=='RECHLT':
+    dplist = sourceDir()+'/pvss/dplist/ProcessorFarm.dpl'
+  else:
     dplist = sourceDir()+'/pvss/dplist/'+projectName()+'.dpl'
+  try:
     os.stat(dplist)
     execCmd(pvssASCII()+' -in '+dplist)
   except:
-    print 'No datapoints to be imported ....'
+    print 'No datapoints to be imported ....:',dplist
   
 def install():
   print 'Installing...'
@@ -127,68 +138,138 @@ def install():
   installDpList()
   pro = projectName()
   if pro=="MONITORING":
-    print 'Executing PVSS setup controller for project '+pro
+    print '......... --> Executing PVSS setup controller for project '+pro
     execCmd(pvssCTRL()+'InstallMonitoring.cpp')
-    print 'Executing python setup....'
+    print '......... --> Executing python setup....'
     execCmd("""python -c "import Online.Streaming.MonitoringInstaller as IM; IM.install('Monitoring','"""+pro+"""')";""")
-    print 'Executing final PVSS setup controller for project '+pro
+    print '......... --> Executing final PVSS setup controller for project '+pro
     execCmd(pvssCTRL()+'InstallMonitoring2.cpp')
-  if pro=="MONITORING2":
-    print 'Executing PVSS setup controller for project '+pro
+  elif pro=="MONITORING2":
+    print '......... --> Executing PVSS setup controller for project '+pro
     execCmd(pvssCTRL()+'InstallMonitoring.cpp')
-    print 'Executing python setup....'
+    print '......... --> Executing python setup....'
     execCmd("""python -c "import Online.Streaming.MonitoringInstaller as IM; IM.install('Monitoring2','"""+pro+"""')";""")
-    print 'Executing final PVSS setup controller for project '+pro
+    print '......... --> Executing final PVSS setup controller for project '+pro
     execCmd(pvssCTRL()+'InstallMonitoring2.cpp')
   elif pro=='RECONSTRUCTION':
-    print 'Executing PVSS setup controller for project '+pro
+    print '......... --> Executing PVSS setup controller for project '+pro
     execCmd(pvssCTRL()+'InstallMonitoring.cpp')
-    print 'Executing python setup....'
+    print '......... --> Executing python setup....'
     execCmd("""python -c "import Online.Streaming.MonitoringInstaller as IM; IM.install('Reconstruction','"""+pro+"""')";""")
-    print 'Executing final PVSS setup controller for project '+pro
+    print '......... --> Executing final PVSS setup controller for project '+pro
     execCmd(pvssCTRL()+'InstallMonitoring2.cpp')
   elif pro=="STORAGE":
-    print 'Executing PVSS setup controller for project '+pro
+    print '......... --> Executing PVSS setup controller for project '+pro
     execCmd(pvssCTRL()+'InstallStorage.cpp')
-    print 'Executing python setup....'
+    print '......... --> Executing python setup....'
     execCmd("""python -c "import Online.Streaming.StorageInstaller as IM; IM.install('Storage','"""+pro+"""')";""")
-    print 'Executing final PVSS setup controller for project '+pro
+    print '......... --> Executing final PVSS setup controller for project '+pro
     execCmd(pvssCTRL()+'InstallStorage2.cpp')
-  elif projectName()=="RECSTORAGE":
-    print 'Executing PVSS setup controller for project '+projectName()
+  elif pro=="RECSTORAGE":
+    print '......... --> Executing PVSS setup controller for project '+pro
     #execCmd(pvssCTRL()+'InstallStorage.cpp')
-    print 'Executing python setup....'
-    #execCmd("""python -c "import Online.Streaming.StorageInstaller as IM; IM.install('Storage','"""+projectName()+"""')";""")
-    print 'Executing final PVSS setup controller for project '+projectName()
+    print '......... --> Executing python setup....'
+    #execCmd("""python -c "import Online.Streaming.StorageInstaller as IM; IM.install('Storage','"""+pro+"""')";""")
+    print '......... --> Executing final PVSS setup controller for project '+pro
     execCmd(pvssCTRL()+'InstallRecStorage2.cpp')
-  elif projectName()[:6]=='RECMON' or projectName()[:6]=='RECHLT':
-    print 'Executing PVSS setup controller for project '+projectName()
+  elif pro[:6]=='RECMON' or pro[:6]=='RECHLT':
+    print '......... --> Executing PVSS setup controller for project '+pro
     execCmd(pvssCTRL()+'InstallSubFarm.cpp')
-    print 'Executing python setup....'
-    execCmd("""python -c "import Online.ProcessorFarm.FarmInstaller as IM; IM.installSubFarm('Reco','"""+projectName()+"""')";""")
-    print 'Executing final PVSS setup controller for project '+projectName()
+    print '......... --> Executing python setup....'
+    execCmd("""python -c "import Online.ProcessorFarm.FarmInstaller as IM; IM.installSubFarm('Farm','"""+pro+"""')";""")
+    print '......... --> Executing final PVSS setup controller for project '+pro
     execCmd(pvssCTRL()+'InstallSubFarm2.cpp')
-  elif projectName()=='RECFARM':
-    print 'Executing PVSS setup controller for project '+projectName()
+  elif pro=='RECFARM':
+    print '......... --> Executing PVSS setup controller for project '+pro
     execCmd(pvssCTRL()+'InstallFarm.cpp')
-  elif projectName()[:4]=='RECO':
-    print 'Executing PVSS setup controller for project '+projectName()
+  elif pro=='RECCTRL':
+    print '......... --> Executing PVSS setup controller for project '+pro
+    execCmd(pvssCTRL()+'InstallRecCtrl.cpp')
+  elif pro[:4]=='RECO':
+    print '......... --> Executing PVSS setup controller for project '+pro
     execCmd(pvssCTRL()+'InstallReco.cpp')
-    print 'Executing python setup....'
-    execCmd("""python -c "import Online.Reco.FarmInstaller as IM; IM.install('Reco','"""+pro+"""')";""")
-    print 'Executing final PVSS setup controller for project '+pro
+    print '......... --> Executing python setup....'
+    execCmd("""python -c "import Online.Reco.FarmInstaller as IM; IM.install('Farm','"""+pro+"""')";""")
+    print '......... --> Executing final PVSS setup controller for project '+pro
     execCmd(pvssCTRL()+'InstallReco2.cpp')
   elif pro=="LBECS":
-    print 'Executing PVSS setup controller for project '+pro
+    print '......... --> Executing PVSS setup controller for project '+pro
     execCmd(pvssCTRL()+'InstallJobOptions.cpp')
-    print 'Executing python setup....'
+    print '......... --> Executing python setup....'
     execCmd('python '+sourceDir()+'/python/InstallLBECS.py')
   elif os.environ.has_key('PVSS_INSTALL_NAME') and os.environ['PVSS_INSTALL_NAME']:
     execCmd(pvssASCII()+' -in '+sourceDir()+'/pvss/dplist/JobOptionsControl.dpl')
-    print 'Executing PVSS setup controller ...'
+    print '......... --> Executing PVSS setup controller ...'
     execCmd(pvssCTRL()+'InstallJobOptionsControl.cpp')
 
-if __name__ == "__main__":
+def copyProject():
+  start = time.time()
+  src = sourceDir()+os.sep+'farmTemplate'
+  nam = projectName()
+  sysN = systemNumber()
+  cfg = '/localdisk/pvss/'+nam+'/config/config'
+  execCmd(pvssPMON()+' -stopWait')
+  execCmd('rm -rf /localdisk/pvss'+os.sep+nam)
+  execCmd('cp -r '+src+' /localdisk/pvss'+os.sep+nam)
+  print '......... --> Patching project configuration file'
+  lines = open(cfg,'r').readlines()
+  fout  = open(cfg,'w')
+  for line in lines:
+    content = line[:-1]
+    if content.find('proj_path = "/localdisk/pvss/TEMPLATE"')==0:
+      content = 'proj_path = "/localdisk/pvss/'+nam+'"'
+    print >>fout,content
+    if content=='distributed = 1':
+      print >>fout, 'pmonPort = '+str(sysN+100)+'00'
+      print >>fout, 'dataPort = '+str(sysN+100)+'01'
+      print >>fout, 'eventPort = '+str(sysN+100)+'02'
+      print >>fout, '[dist]'
+      print >>fout, 'distPort = '+str(sysN+100)+'10'
+    elif content.find('[dist]')==0:
+      pass
+    elif content.find('pmonPort = ')==0:
+      pass
+    elif content.find('dataPort = ')==0:
+      pass
+    elif content.find('eventPort = ')==0:
+      pass
+    elif content.find('distPort = ')==0:
+      pass
+  print '......... --> Patching project name and project number'
+  execCmd('/opt/pvss/pvss2_v3.6/bin/PVSStoolSyncTypes -proj '+nam+\
+          ' -config '+cfg+' -report -autoreg -system '+str(sysN)+' '+nam)
+  print '......... --> Project',nam,' System number',sysN,' is ready for farm installation'
+  print '......... 1rst. Installation step finished. This took %d seconds.'%(time.time()-start,)
+
+def copyProject2():
+  start = time.time()
+  src = sourceDir()+os.sep+'farmTemplate'
+  nam = projectName()
+  sysN = systemNumber()
+  cfg = '/localdisk/pvss/'+nam+'/config/config'
+  execCmd(pvssPMON()+' -autoreg &')
+  print '......... --> Project',nam,' System number',sysN,' started.'
+  print '......... --> Project',nam,' Continue to install after the project is up....'
+  time.sleep(5)
+  execCmd('/usr/local/bin/startConsole')
+  time.sleep(15)
+  install()
+  print '......... --> Project',nam,' All installation actions have finished. The subfarm should be operational.'
+  print '......... 2nd. Installation step finished. This took %d seconds.'%(time.time()-start,)
+
+def installSubFarm():
+  nam = projectName()
+  sysN = systemNumber()
+  print 'python ../scripts/Install.py COPY -project '+nam+' -number '+str(sysN)
+  print 'python ../scripts/Install.py COPY2 -project '+nam+' -number '+str(sysN)
+  
+def updateFarm():
+  print 'Updateting...'
+  if projectName()=='RECFARM':
+    print '......... --> Executing PVSS setup controller for project '+projectName()
+    execCmd(pvssCTRL()+'UpdateFarm.cpp')
+
+def run():
   os.chdir(sourceDir()+'/cmt')
   parseOpts()
   if sys.argv[1].upper()=='INSTALL':
@@ -197,5 +278,16 @@ if __name__ == "__main__":
     installFiles()
   if sys.argv[1].upper()=='DPLIST':
     installDpList()
+  if sys.argv[1].upper()=='COPY':
+    copyProject()
+  if sys.argv[1].upper()=='COPY2':
+    copyProject2()
+  if sys.argv[1].upper()=='SUBFARM':
+    installSubFarm()
+  if sys.argv[1].upper()=='UPDATEFARM':
+    updateFarm()
   if sys.argv[1].upper()=='COPYBACK':
     pass
+
+if __name__ == "__main__":
+  run()
