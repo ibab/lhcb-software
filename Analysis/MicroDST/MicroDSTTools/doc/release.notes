@@ -3,8 +3,17 @@
 ! Responsible : Juan Palacios juan.palacios@nikhef.nl
 ! Purpose     : Implementation of cloner MicroDSTTools
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.14 2008-08-11 16:02:51 jpalac Exp $
+! $Id: release.notes,v 1.15 2008-08-13 16:56:46 jpalac Exp $
 !-----------------------------------------------------------------------------
+
+! 2008-08-13 - Juan PALACIOS
+ - src/ParticleCloner.h
+  . Add ICloneProtoParticle* data member
+ - src/ParticleCloner.cpp
+  . Clone related LHCb::ProtoParticle using instance of ICloneProtoParticle.
+  . Add safety for NULL pointers
+ - src/ProtoParticleCloner.cpp, src/VertexCloner.cpp
+  . Add safety for NULL pointers
 
 ! 2008-08-11 - Juan PALACIOS
  - src/TrackCloner.h, src/ProtoParticleCloner.h
