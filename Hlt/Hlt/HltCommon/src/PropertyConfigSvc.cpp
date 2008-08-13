@@ -1,4 +1,4 @@
-// $Id: PropertyConfigSvc.cpp,v 1.15 2008-07-30 13:37:33 graven Exp $
+// $Id: PropertyConfigSvc.cpp,v 1.16 2008-08-13 07:24:59 graven Exp $
 // Include files 
 
 #include <sstream>
@@ -35,13 +35,6 @@ namespace bl = boost::lambda;
 DECLARE_SERVICE_FACTORY( PropertyConfigSvc );
 
 
-//@TODO: keep track of what we pushed for whom, (and when...)
-//       we know which kind, so when 'reconfiguring', could issue 'setProperties'
-//       of the relevant component... (need to pick up component, which depends on
-//       'kind', and issue call to setProperties, which also depends on 'kind', as
-//       components don't share an interface for that... (even though all kinds 
-//       derive from the IProperty interface! -- but still there is a difference
-//       in how to pick up the components depending on their kind...)
 namespace {
 
     class property2jos {
@@ -54,7 +47,25 @@ namespace {
                 }
                 const Property *p = (m_properties !=0 ? find(prop.first): 0);
                 if ( p==0 || p->toString() != prop.second ) {  // only update if non-existant or not up-to-date
-                   m_jos->addPropertyToCatalogue(m_name, StringProperty(prop.first,prop.second));
+                    // resolve references
+                    // this is done in order to support the online use case, where we have options
+                    // of the form foo.something = @OnlineEnv.somethingElse
+                    // Note: values are substituted when seen, so there is a possibility that they are 
+                    //       substituted just prior to the reference changing -- this is not the case
+                    //       in the online scenario, as the reference comes from PVSS...
+                   if (!prop.second.empty() && prop.second[0]=='@') {
+                       std::string::size_type dot = prop.second.find_first_of('.');
+                       assert(dot!=std::string::npos);
+                       const Property * refProp = Gaudi::Utils::getProperty( m_jos->getProperties(prop.second.substr(0,dot)),
+                                                                                                  prop.second.substr(dot+1));
+                       assert(refProp!=0);
+                       m_jos->addPropertyToCatalogue(m_name, StringProperty(prop.first,refProp->toString()));
+                       // Q: we do not chase references (to references, to ... ) -- should we?
+                       // A: no, as the JobOptionsSvc parser substitutes values, so what we get back from
+                       //    the jos NEVER has references in it...
+                   } else {
+                       m_jos->addPropertyToCatalogue(m_name, StringProperty(prop.first,prop.second));
+                   }
                 }
 
             }
@@ -62,8 +73,8 @@ namespace {
             const Property* find(const string& name) {
                vector<const Property*>::const_iterator i =
                   find_if(m_properties->begin(),
-                               m_properties->end(),
-                               bl::bind(&Property::name,bl::_1)==name);
+                          m_properties->end(),
+                          bl::bind(&Property::name,bl::_1)==name);
                return i==m_properties->end() ? 0 : *i;
             }
             IJobOptionsSvc*                m_jos;

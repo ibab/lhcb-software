@@ -5,6 +5,7 @@
 !----------------------------------------------------------------------------
 
 !2008-08-11 - Gerhard Raven
+  - PropertyConfigSvc: add support for references ( foo.prop = @bar.otherprop)
   - HltL0{Muon,Calo}Prepare now get their input through HltDataSvc
   - refactor RoutingBits: RoutingBitsWriter is moved to HltRawData,
     the RoutingBitEvaluatorFactory is renamed to HltSelectionCombinerFactory,
