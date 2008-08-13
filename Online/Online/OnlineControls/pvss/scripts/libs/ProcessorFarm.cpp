@@ -1,5 +1,53 @@
 #uses "ctrlUtils.cpp"
+#uses "StreamTaskMgr.cpp"
 
+//=============================================================================
+void ProcessorFarm_installSubfarm(int flag) {
+  string name = "Farm", ctrl_node = strtoupper(getHostname());
+  dyn_string farms = dpNames("Farm_*","FarmSubInfo");
+  if ( flag == 1 ) {
+    for(int i=1; i<=dynlen(farms); ++i) {    
+      DebugN("+++++ Removing subfarm:"+farms[i]);
+      StreamTaskMgr_uninstallStream(farms[i]);
+      fwFsmTree_removeNode("FSM",farms[i],1);
+      ctrlUtils_deleteAllTree(farms[i]);
+      dpDelete(farms[i]);
+    }
+    ProcessorFarm_uninstallDataTypes();
+    ProcessorFarm_uninstallStreamTypes();
+    StreamTaskMgr_install();
+    DebugN("Stream Control  type installation finished for "+name);
+    ProcessorFarm_installSubFarmDataTypes();  
+    DebugN("Procesor Farm   type installation finished for "+name);
+    return;
+  }
+  else if ( dynlen(farms) == 1 ) {
+    string dp = dpSubStr(farms[1],DPSUB_DP);
+    name = substr(dp,0,strpos(dp,"_"));
+    ctrl_node = substr(dp,strlen(name)+1);
+    DebugN("Sub farm installation starting: "+name+"_"+ctrl_node);
+    ctrlUtils_stopAllTree();
+    ProcessorFarm_createTree(name,ctrl_node,-1,16,0);
+    DebugN("Connecting task manager");
+    ProcessorFarm_connectTaskManager(name,ctrl_node);
+    // Finally generate all FSMs
+    DebugN("Install DIM and python managers manager");
+    fwInstallation_addManager("PVSS00dim","always", 30, 3, 3, "-num 40 -dim_dp_config "+ctrlUtils_dimMapName()+" -dim_dns_node "+ctrl_node);
+    ctrlUtils_installPythonManager(58,"PVSS00SubFarm","../python/PVSS00SubFarm.py");
+    DebugN("Sub farm installation (2) FINISHED.");
+    DebugN("Sub farm installation (3) starting: "+name+"_"+ctrl_node);
+    ctrlUtils_stopAllTree();
+    DebugN("Generating FSMs.....");
+    ctrlUtils_genAllFSM();
+    ctrlUtils_startAllTree();
+    DebugN("Sub farm installation (3) FINISHED.");
+  }
+  else {
+    DebugN("Sub farm installation (2) FAILED. SubFarmInfo missing."+farms);
+  }
+  exit(0);
+}
+//=============================================================================
 ProcessorFarm_installAllocator(string stream, bool refresh=0)  {
   string stream_node = ctrlUtils_addFsmTreeNode("FSM", "Data"+stream, "StreamCluster", 1);
   string stream_alloc = stream+"Alloc";
@@ -13,6 +61,34 @@ ProcessorFarm_installAllocator(string stream, bool refresh=0)  {
   fwFsmTree_refreshTree();
 }
 //=============================================================================
+int ProcessorFarm_connectTaskManager(string type, string ctrl_node)  {
+  dyn_string nodes;
+  string cfg = ctrlUtils_dimMapName();
+  fwDim_createConfig(cfg);
+  int res = dpGet(type+"_"+ctrl_node+".Nodes",nodes);
+  if ( 0 == res )  {
+    dynAppend(nodes, strtoupper(ctrl_node+"/1")); 
+    DebugN("ProcessorFarm_connectTaskManager> Got "+dynlen(nodes)+
+           " nodes from "+type+"_"+ctrl_node+" to connect.");
+    for(int i=1; i<=dynlen(nodes); ++i)  {
+      string name = strtoupper(strsplit(nodes[i],"/")[1]);
+      string dp_name = name+"_StreamTaskCreator";
+      string svc_name = "/" + name + "/task_manager";
+      if ( !dpExists(dp_name) ) dpCreate(dp_name,"StreamTaskCreator");
+      fwDim_unSubscribeCommandsByDp(cfg,dp_name+"*");
+      fwDim_unSubscribeServicesByDp(cfg,dp_name+"*");
+      dpSet(dp_name+".Name",name);
+      fwDim_subscribeCommand(cfg,svc_name+"/start",dp_name+".Start");
+      fwDim_subscribeCommand(cfg,svc_name+"/stop",dp_name+".Stop");
+      fwDim_subscribeCommand(cfg,svc_name+"/kill",dp_name+".Kill");
+      DebugN("ProcessorFarm_connectTaskManager> Connect "+svc_name+" to "+dp_name);
+    }
+    DebugN("ProcessorFarm_connectTaskManager> All Done.");
+  }
+  ctrlUtils_checkErrors(res);
+  return 1;
+}
+//=============================================================================
 int ProcessorFarm_uninstallStream(string stream)  {
   DebugN("Delete tree:"+"Data"+stream);
   fwFsmTree_removeNode("FSM","Data"+stream,1);
@@ -21,24 +97,26 @@ int ProcessorFarm_uninstallStream(string stream)  {
   return 1;
 }
 
-ProcessorFarmInstallation_createFarm(string farmName,int numFarm, bool refresh=0)  {
+ProcessorFarmInstallation_createFarm(string farmName,string farmType,int numFarm, bool refresh=0)  {
   dyn_string subfarms = dpNames("*:"+farmName+"_*","FarmSubInfo");
   string panel = "ProcessorFarm/FarmConfigurator.pnl";
-  string name, node, dev;
-  sprintf(name,"%s_Farm%02X",farmName,numFarm);
+  string name, node, dev, config;
+  sprintf(name,"%s_%s%02X",farmName,farmType,numFarm);
   node = ctrlUtils_addFsmTreeNode("FSM", name, "FSM_Farm", 1);
   DebugN(name,node);
   fwFsmTree_setNodePanel(node,panel);
-/*
+  DebugN("Adding farm configurator");
   dev = node+"_Config";
-  ctrlUtils_addFsmTreeNode(node, dev, "StreamConfigurator", 0);
-  fwFsmTree_setNodeLabel(dev,"Configurator");
-  fwFsmTree_setNodePanel(dev,panel);
   if ( !dpExists(dev) )  {
     dpCreate(dev,"StreamConfigurator");
-  }  
+  }
   dpSet(dev+".State","NOT_READY");
-*/
+  DebugN("Adding farm configurator");
+  config=ctrlUtils_addFsmTreeNode(node, dev, "StreamConfigurator", 0);
+  DebugN("Customizing farm configurator");
+  fwFsmTree_setNodeLabel(dev,"Configurator");
+  fwFsmTree_setNodePanel(dev,panel);
+  DebugN("Adding subfarms");
   for(int i=1; i<=dynlen(subfarms); ++i)  {
     dyn_string items = strsplit(subfarms[i],":");
     name = subfarms[i]+"::"+items[2];
@@ -132,22 +210,9 @@ int ProcessorFarm_deleteTree(string stream, string slice_name, int refresh=1)  {
   DebugN("All Done.");
 }
 //=============================================================================
-int ProcessorFarm_installDataTypes()  {
+int ProcessorFarm_installSubFarmDataTypes()  {
   dyn_dyn_string names;
   dyn_dyn_int types;
-  names[1]  = makeDynString ("FarmInfo","","","");
-  names[2]  = makeDynString ("","Name","","");
-  names[3]  = makeDynString ("","SubFarms","","");
-  names[4]  = makeDynString ("","InUse","","");
-  names[5]  = makeDynString ("","Command","","");
-  names[6]  = makeDynString ("","State","","");
-  types[1]  = makeDynInt (DPEL_STRUCT,0,0,0);
-  types[2]  = makeDynInt (0,DPEL_STRING,0,0);
-  types[3]  = makeDynInt (0,DPEL_DYN_STRING,0,0);
-  types[4]  = makeDynInt (0,DPEL_DYN_STRING,0,0);
-  types[5]  = makeDynInt (0,DPEL_STRING,0,0);
-  types[6]  = makeDynInt (0,DPEL_STRING,0,0);
-  ctrlUtils_installDataType(names,types);
   names[1]  = makeDynString ("FarmSubInfo","","","");
   names[2]  = makeDynString ("","Name","","");
   names[3]  = makeDynString ("","Nodes","","");
@@ -158,6 +223,26 @@ int ProcessorFarm_installDataTypes()  {
   types[2]  = makeDynInt (0,DPEL_STRING,0,0);
   types[3]  = makeDynInt (0,DPEL_DYN_STRING,0,0);
   types[4]  = makeDynInt (0,DPEL_STRING,0,0);
+  types[5]  = makeDynInt (0,DPEL_STRING,0,0);
+  types[6]  = makeDynInt (0,DPEL_STRING,0,0);
+  ctrlUtils_installDataType(names,types);
+}
+
+//=============================================================================
+int ProcessorFarm_installDataTypes()  {
+  dyn_dyn_string names;
+  dyn_dyn_int types;
+  ProcessorFarm_installSubFarmDataTypes();
+  names[1]  = makeDynString ("FarmInfo","","","");
+  names[2]  = makeDynString ("","Name","","");
+  names[3]  = makeDynString ("","SubFarms","","");
+  names[4]  = makeDynString ("","InUse","","");
+  names[5]  = makeDynString ("","Command","","");
+  names[6]  = makeDynString ("","State","","");
+  types[1]  = makeDynInt (DPEL_STRUCT,0,0,0);
+  types[2]  = makeDynInt (0,DPEL_STRING,0,0);
+  types[3]  = makeDynInt (0,DPEL_DYN_STRING,0,0);
+  types[4]  = makeDynInt (0,DPEL_DYN_STRING,0,0);
   types[5]  = makeDynInt (0,DPEL_STRING,0,0);
   types[6]  = makeDynInt (0,DPEL_STRING,0,0);
   ctrlUtils_installDataType(names,types);
@@ -186,8 +271,9 @@ int ProcessorFarm_installDataTypes()  {
   names[14] = makeDynString ("","","streamMultiplicity","");
   names[15] = makeDynString ("","","strmStrategy","");
   names[16] = makeDynString ("","","dataDirectory","");
-  names[17] = makeDynString ("","Control","","");
-  names[18] = makeDynString ("","","Infrastructure","");
+  names[17] = makeDynString ("","","storeSlice","");
+  names[18] = makeDynString ("","Control","","");
+  names[19] = makeDynString ("","","Infrastructure","");
   types[1]  = makeDynInt (DPEL_STRUCT,0,0,0);
   types[2]  = makeDynInt (0,DPEL_STRING,0,0);
   types[3]  = makeDynInt (0,DPEL_STRUCT,0,0);
@@ -203,9 +289,10 @@ int ProcessorFarm_installDataTypes()  {
   types[13] = makeDynInt (0,0,DPEL_DYN_STRING,0);
   types[14] = makeDynInt (0,0,DPEL_DYN_INT,0);
   types[15] = makeDynInt (0,0,DPEL_INT,0);
-  types[16] = makeDynInt (0,0,DPEL_DYN_STRING,0);
-  types[17] = makeDynInt (0,DPEL_STRUCT,0,0);
-  types[18] = makeDynInt (0,0,DPEL_DYN_STRING,0);
+  types[16] = makeDynInt (0,0,DPEL_STRING,0);
+  types[17] = makeDynInt (0,0,DPEL_STRING,0);
+  types[18] = makeDynInt (0,DPEL_STRUCT,0,0);
+  types[19] = makeDynInt (0,0,DPEL_DYN_STRING,0);
   ctrlUtils_installDataType(names,types);
   names[1]  = makeDynString ("FarmRunInfo","","","");
   names[2]  = makeDynString ("","general","","");
@@ -222,11 +309,12 @@ int ProcessorFarm_installDataTypes()  {
   names[13] = makeDynString ("","","dataDirectory","");
   names[14] = makeDynString ("","","fileName","");
   names[15] = makeDynString ("","","recvStrategy","");
-  names[16] = makeDynString ("","","recvInfraStructure","");
+  names[16] = makeDynString ("","","recvInfrastructure","");
   names[17] = makeDynString ("","","strmStrategy","");
   names[18] = makeDynString ("","","streamInfrastructure","");
   names[19] = makeDynString ("","","streamMultiplicity","");
   names[20] = makeDynString ("","","streamTypes","");
+  names[21] = makeDynString ("","","storeSlice","");
   types[1]  = makeDynInt (DPEL_STRUCT,0,0,0);
   types[2]  = makeDynInt (0,DPEL_STRUCT,0,0);
   types[3]  = makeDynInt (0,0,DPEL_STRING,0,0);
@@ -247,6 +335,7 @@ int ProcessorFarm_installDataTypes()  {
   types[18] = makeDynInt (0,0,DPEL_DYN_STRING,0);
   types[19] = makeDynInt (0,0,DPEL_DYN_INT,0);
   types[20] = makeDynInt (0,0,DPEL_DYN_STRING,0);
+  types[21] = makeDynInt (0,0,DPEL_STRING,0);
   ctrlUtils_installDataType(names,types);
   return 1;
 }

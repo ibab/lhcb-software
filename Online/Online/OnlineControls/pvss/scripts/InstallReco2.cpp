@@ -21,7 +21,7 @@ main()   {
   ctrlUtils_startAllTree();
 
   // Finally generate all FSMs
-  fwInstallation_addManager("PVSS00dim","always", 30, 3, 3, "-num 40 -dim_dp_config DimStorage -dim_dns_node "+ctrl_node);
+  fwInstallation_addManager("PVSS00dim","always", 30, 3, 3, "-num 40 -dim_dp_config "+ctrlUtils_dimMapName()+" -dim_dns_node "+ctrl_node);
   ctrlUtils_installPythonManager(58,"PVSS00Reco","../python/PVSS00RecoFarm.py");
   exit(0);
 }
