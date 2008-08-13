@@ -1,4 +1,4 @@
-// $Id: HltL0Filter.cpp,v 1.5 2008-07-30 13:37:32 graven Exp $
+// $Id: HltL0Filter.cpp,v 1.6 2008-08-13 15:08:03 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -67,6 +67,7 @@ StatusCode HltL0Filter::initialize() {
 //=============================================================================
 StatusCode HltL0Filter::execute() {
 
+  //TODO: add to input selection...
   LHCb::L0DUReport* l0 = get<L0DUReport>(m_l0Location);
 
   long L0TCK = l0->tck();

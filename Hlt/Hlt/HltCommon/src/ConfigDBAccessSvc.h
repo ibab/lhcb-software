@@ -1,4 +1,4 @@
-// $Id: ConfigDBAccessSvc.h,v 1.7 2008-07-11 12:19:57 graven Exp $
+// $Id: ConfigDBAccessSvc.h,v 1.8 2008-08-13 15:08:03 graven Exp $
 #ifndef CONFIGDBACCESSSVC_H 
 #define CONFIGDBACCESSSVC_H 1
 
@@ -70,6 +70,11 @@ private:
   
   StatusCode openConnection();
   StatusCode createSchema();
+
+  void generateCacheTableEntries(const ConfigTreeNode& target);
+  bool hasCacheEntries( const std::string&, const std::string&);
+  template <typename iter> void writeCacheEntries( const std::string&, const std::string&, iter, iter);
+  void createCacheTables();
 
   mutable std::auto_ptr<MsgStream>     m_msg;
   std::string                          m_connection;

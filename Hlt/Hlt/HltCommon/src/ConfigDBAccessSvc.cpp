@@ -48,15 +48,30 @@ namespace {
        return out;
     }
 
+    class Mutex {
+        public:
+            Mutex() { if (mutex()) std::cout << "cannot acquire" << std::endl;
+                      else mutex()=true;
+                    }
+            ~Mutex() { if (!mutex()) std::cout << "cannot release" << std::endl;
+                       else mutex()=false;
+                    }
+        private:
+            static bool& mutex() { static bool m = false; return m; }
+    };
+
     class Transaction {
         public:
-            Transaction(coral::ISessionProxy& session,bool readonly=true) : m_trans(session.transaction()) { 
+            //TODO: deal with nested transactions... upgrading read to write...
+            Transaction(coral::ISessionProxy& session,bool readonly=true) : m_trans(session.transaction()), m_readonly(readonly) { 
                if (!m_trans.isActive()) m_trans.start(readonly); }
             void abort() { m_trans.rollback(); }
-            void commit() { m_trans.commit(); }
-            ~Transaction() { if (m_trans.isActive())  m_trans.commit(); }
+            void commit() { m_trans.commit();  }
+            ~Transaction() { if (m_trans.isActive())  m_trans.commit();  }
         private:
+            Mutex m_mutex; // forbid nested transactions;
             coral::ITransaction& m_trans;
+            bool m_readonly;
     };
 }
 
@@ -262,6 +277,7 @@ StatusCode ConfigDBAccessSvc::initialize() {
        createTable<PropertyConfig>();
        createTable<ConfigTreeNode>();
        createTable<ConfigTreeNodeAlias>();
+       createCacheTables();
   }
   return sc;
 }
@@ -327,8 +343,7 @@ ConfigDBAccessSvc::write(const T& value) {
         return key;
     } 
 
-    coral::ITransaction& trans = m_session->transaction();
-    trans.start(false);
+    Transaction transaction(*m_session,false);
     coral::ITable& ctable = m_session->nominalSchema().tableHandle( ConfigDBAccessSvc::table_traits<T>::tableName() );
     coral::AttributeList row;
     ctable.dataEditor().rowBuffer(row);
@@ -336,7 +351,6 @@ ConfigDBAccessSvc::write(const T& value) {
     ConfigDBAccessSvc::table_traits<T>::write(value,row);
     row["InsertionTime"] .setValue<coral::TimeStamp>( coral::TimeStamp::now() ); 
     ctable.dataEditor().insertRow( row );
-    trans.commit();
     return key;
 }
 
@@ -369,13 +383,118 @@ ConfigTreeNodeAlias::alias_type
 ConfigDBAccessSvc::writeConfigTreeNodeAlias(const ConfigTreeNodeAlias& alias)
 {
   // insure the target already exists; if not, return invalid alias_type...
-  if ( !read<ConfigTreeNode>(alias.ref()) ) return ConfigTreeNodeAlias::alias_type();
+  boost::optional<ConfigTreeNode> target = read<ConfigTreeNode>(alias.ref());
+  if ( !target ) return ConfigTreeNodeAlias::alias_type();
   // and perfrom the write 
-  return write<ConfigTreeNodeAlias>(alias);
+  ConfigTreeNodeAlias::alias_type ret = write<ConfigTreeNodeAlias>(alias);
   //@TODO: if writing a toplevel alias, add entry in a 'cache' table with all nodes & leafs
   //       used for this toplevel so we can read the entire tree with a single SQL querry..
   //       note: if cache table absent, should still be able to read, albeit with multiple
   //       querries...
+
+  // see if target is already in cache table
+  // if not, create entries in cache table
+  if (!hasCacheEntries( "ConfigTreeNode2ConfigTreeNode",  target->digest().str())) {
+     generateCacheTableEntries(*target);
+  }
+  return ret;
+}
+
+
+template <typename iterator>
+void ConfigDBAccessSvc::writeCacheEntries(const std::string& tableName, const std::string& parent, 
+                                          iterator i, iterator end ) {
+    debug() << " requested to write " << std::distance(i,end) 
+            << " cache entries for " << parent 
+            << " in table " << tableName << endmsg;
+
+    Transaction trans(*m_session,false) ;
+    coral::ITable& table = m_session->nominalSchema().tableHandle(tableName);
+    coral::AttributeList data;
+    table.dataEditor().rowBuffer(data);
+    data["parent"].data<std::string>() = parent; 
+    coral::IBulkOperation* op = table.dataEditor().bulkInsert(data,std::distance(i,end));
+    //TODO: use binding...
+    while ( i!=end ) {
+        data["daughter"].data<std::string>() = i->str();
+        op->processNextIteration();
+        ++i;
+    }
+    op->flush();
+}
+
+bool ConfigDBAccessSvc::hasCacheEntries(const std::string& tableName, const std::string& parent) {
+    Transaction transaction(*m_session,true);
+    coral::AttributeList condData;
+    condData.extend<std::string>("key");
+    condData["key"].setValue<std::string>(parent);
+    coral::IQuery* q = m_session->nominalSchema().tableHandle( tableName ).newQuery();
+    q->setCondition(  " parent = :key", condData);
+    q->limitReturnedRows(1); // one match is enough...
+    coral::ICursor& c = q->execute();
+    bool x = false;
+    while ( c.next() ) { x=true; } // make sure we finish the statement...
+    return x;
+}
+
+void ConfigDBAccessSvc::generateCacheTableEntries(const ConfigTreeNode& target) {
+    // first check cache...
+
+    std::list<ConfigTreeNode::digest_type> nodeRefs; // note: we use list, as appending to a list
+                                             // does not invalidate iterators!!!!
+    nodeRefs.push_back(target.digest()); //TODO: remove this one at the end...
+    std::vector<PropertyConfig::digest_type> leafRefs;
+    std::list<ConfigTreeNode::digest_type>::iterator i = nodeRefs.begin();
+    while(i!=nodeRefs.end()) {
+        boost::optional<ConfigTreeNode> node = read<ConfigTreeNode>(*i);
+        if (!node) {
+            throw GaudiException("failed to resolve node ", name() + "::generateCacheTableEntries",StatusCode::FAILURE);
+        }
+        PropertyConfig::digest_type leafRef = node->leaf();
+        //TODO: use equal_range instead of find...
+        if (leafRef.valid() && std::find(leafRefs.begin(),leafRefs.end(),leafRef)==leafRefs.end()) { 
+            leafRefs.push_back(leafRef);
+        }
+
+        const ConfigTreeNode::NodeRefs& nodes = node->nodes();
+        for (ConfigTreeNode::NodeRefs::const_iterator j=nodes.begin();j!=nodes.end();++j) {
+            //FIXME: this is not going to be very fast, as it going to 
+            // make this operation quadratic...  should keep list sorted... but then
+            // we have to rescan the entire range, as right now we keep going forward...
+            // std::pair< > r = std::equal_range(nodeRefs.begin(),nodeRefs.end(),*j);
+            // if (r.first!=r.second) nodeRefs.insert(r.first,*j);
+            if (std::find(nodeRefs.begin(),nodeRefs.end(),*j)==nodeRefs.end()) {
+                nodeRefs.push_back(*j);
+            }
+        }
+        ++i;
+    }
+    nodeRefs.pop_front(); // remove initial dependency on self...
+
+    // now we have a list of digests referenced by this node. 
+    // fill table with parent/daughter entries for each daughter
+    // as one single bulk operation
+    writeCacheEntries( "ConfigTreeNode2ConfigTreeNode",  target.digest().str(),  nodeRefs.begin(),nodeRefs.end() );
+    writeCacheEntries( "ConfigTreeNode2PropertyConfig",  target.digest().str(),  leafRefs.begin(),leafRefs.end() );
+}
+
+void ConfigDBAccessSvc::createCacheTables() {
+    const char *names[] = { "ConfigTreeNode2ConfigTreeNode", "ConfigTreeNode2PropertyConfig" };
+    for (unsigned i=0;i<2;++i) {
+        coral::TableDescription descr( std::string("Table_")+names[i] );
+        descr.setName( std::string(names[i]) );
+        descr.insertColumn( "parent",
+                           coral::AttributeSpecification::typeNameForId( typeid(std::string) ),
+                           32 );
+        descr.setNotNullConstraint( "parent" );
+        descr.insertColumn( "daughter",
+                           coral::AttributeSpecification::typeNameForId( typeid(std::string) ),
+                           32 );
+        descr.setNotNullConstraint( "daughter" );
+        m_session->nominalSchema().dropIfExistsTable( descr.name() );
+        coral::ITable& table = m_session->nominalSchema().createTable( descr );
+        table.privilegeManager().grantToPublic( coral::ITablePrivilegeManager::Select );
+    }
 }
 
 MsgStream& ConfigDBAccessSvc::msg(MSG::Level level) const {
