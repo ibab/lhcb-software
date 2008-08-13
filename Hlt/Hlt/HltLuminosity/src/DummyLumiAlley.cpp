@@ -1,4 +1,4 @@
-// $Id: DummyLumiAlley.cpp,v 1.2 2008-08-01 08:13:21 graven Exp $
+// $Id: DummyLumiAlley.cpp,v 1.3 2008-08-13 16:03:52 panmanj Exp $
 // Include files 
 
 // from Gaudi
@@ -30,7 +30,6 @@ DummyLumiAlley::DummyLumiAlley( const std::string& name,
   : HltAlgorithm ( name , pSvcLocator )
   , m_selection(*this)
 {
-  declareProperty("L0DULocation", m_l0Location = L0DUReportLocation::Default );
   m_selection.declareProperties();
 }
 //=============================================================================
@@ -59,9 +58,6 @@ StatusCode DummyLumiAlley::initialize() {
 StatusCode DummyLumiAlley::execute() {
 
   debug() << " Entering the execute " << endreq;
-
-  LHCb::L0DUReport *l0 = get<L0DUReport>(m_l0Location);
-
   m_selection.output()->setDecision(true);
 
   return StatusCode::SUCCESS;

@@ -1,4 +1,4 @@
-// $Id: LumiFromL0DU.cpp,v 1.2 2008-08-12 20:33:36 graven Exp $
+// $Id: LumiFromL0DU.cpp,v 1.3 2008-08-13 16:03:52 panmanj Exp $
 // Include files 
 
 // from Gaudi
@@ -33,7 +33,7 @@ LumiFromL0DU::LumiFromL0DU( const std::string& name,
   declareProperty( "InputSelection" ,      m_InputSelectionName  = "Trig/L0/L0DUReport");
   declareProperty( "CounterName"    ,      m_CounterName);
   declareProperty( "ValueName"      ,      m_ValueName);
-  declareProperty( "OutputContainer",      m_OutputContainerName =  "Hlt/LumiSummary");
+  declareProperty( "OutputContainer",      m_OutputContainerName =  LHCb::HltLumiSummaryLocation::Default );
 
 }
 //=============================================================================
@@ -114,28 +114,29 @@ StatusCode LumiFromL0DU::execute() {
       return StatusCode::FAILURE ;
     }
     // get the value using its name from the L0Report
-    const LHCb::L0DUConfig* m_configuration = m_L0DUReport->configuration();
     double value = m_L0DUReport->dataValue(m_ValueName);
-    debug() << "found value for " << m_ValueName << " " << value << endreq ;
-    
-    if(NULL == m_configuration) { 
-      debug() << "cannot find L0DUConfig" << endreq ;
-    }
-    else {
-      LHCb::L0DUElementaryData::Map data = m_configuration->data();
-      LHCb::L0DUElementaryData::Map::const_iterator it = data.find( m_ValueName );
-      if( it == data.end() ) {
-	debug() << "cannot find map element for " << m_ValueName << endreq ;
+    info() << "found value for " << m_ValueName << " " << value << endreq ;
+
+    if ( msgLevel(MSG::DEBUG) ) {
+      // for debugging, get also value in alternative way
+      const LHCb::L0DUConfig* m_configuration = m_L0DUReport->configuration();
+      if ( NULL == m_configuration ) { 
+        debug() << "cannot find L0DUConfig" << endreq ;
       }
       else {
-	double other_value = ((*it).second)->value();
-	debug() << "found other value for " << m_ValueName << " " << other_value << endreq ;
+        LHCb::L0DUElementaryData::Map data = m_configuration->data();
+        LHCb::L0DUElementaryData::Map::const_iterator it = data.find( m_ValueName );
+        if( it == data.end() ) {
+          debug() << "cannot find map element for " << m_ValueName << endreq ;
+        }
+        else {
+          double other_value = ((*it).second)->value();
+          debug() << "found other value for " << m_ValueName << " " << other_value << endreq ;
+        }
       }
     }
     nCounter = (int) value;
   }
-  debug() << "Found value " << nCounter << " at " << m_ValueName 
-	  << " in " << m_InputSelectionName <<  endreq ;
 
 
   // ------------------------------------------

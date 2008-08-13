@@ -1,4 +1,4 @@
-// $Id: LumiCountTracks.cpp,v 1.2 2008-08-12 20:33:36 graven Exp $
+// $Id: LumiCountTracks.cpp,v 1.3 2008-08-13 16:03:52 panmanj Exp $
 // Include files 
 
 // from Gaudi
@@ -32,7 +32,7 @@ LumiCountTracks::LumiCountTracks( const std::string& name,
 {
   declareProperty( "InputSelection" ,      m_InputSelectionName);
   declareProperty( "CounterName"    ,      m_CounterName);
-  declareProperty( "OutputContainer",      m_OutputContainerName =    "Hlt/LumiSummary");
+  declareProperty( "OutputContainer",      m_OutputContainerName = LHCb::HltLumiSummaryLocation::Default );
 
 }
 //=============================================================================

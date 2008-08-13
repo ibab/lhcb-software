@@ -1,4 +1,4 @@
-// $Id: DummyLumiAlley.h,v 1.2 2008-08-01 08:13:21 graven Exp $
+// $Id: DummyLumiAlley.h,v 1.3 2008-08-13 16:03:52 panmanj Exp $
 #ifndef DUMMYLUMIALLEY_H 
 #define DUMMYLUMIALLEY_H 1
 
@@ -37,9 +37,6 @@ public:
 
 private:
 
-  std::string m_l0Location;
-
-  StringArrayProperty m_l0ChannelsName;
   Hlt::SelectionContainer0 m_selection;
 
 };

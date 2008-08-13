@@ -1,4 +1,4 @@
-// $Id: HltLumiFillRawBuffer.cpp,v 1.2 2008-08-12 20:33:36 graven Exp $
+// $Id: HltLumiFillRawBuffer.cpp,v 1.3 2008-08-13 16:03:52 panmanj Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
@@ -30,7 +30,7 @@ HltLumiFillRawBuffer::HltLumiFillRawBuffer( const std::string& name,
                                       ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
-  declareProperty( "InputBank", m_inputBank = "Hlt/LumiSummary" );
+  declareProperty( "InputBank", m_inputBank = LHCb::HltLumiSummaryLocation::Default );
 }
 //=============================================================================
 // Destructor
@@ -116,7 +116,8 @@ StatusCode HltLumiFillRawBuffer::finalize() {
   
   if ( 0 < m_nbEvents ) {
     m_totDataSize /= m_nbEvents;
-    info() << "Average event size : " << format( "%7.1f words", m_totDataSize );
+    info() << "Average event size : " << format( "%7.1f words", m_totDataSize ) 
+	   << endreq;
   }
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 };

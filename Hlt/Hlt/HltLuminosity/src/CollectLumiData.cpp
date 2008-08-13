@@ -1,4 +1,4 @@
-// $Id: CollectLumiData.cpp,v 1.4 2008-07-31 21:34:47 panmanj Exp $
+// $Id: CollectLumiData.cpp,v 1.5 2008-08-13 16:03:52 panmanj Exp $
 // Include files 
 
 // from Gaudi
@@ -35,7 +35,7 @@ CollectLumiData::CollectLumiData( const std::string& name,
   declareProperty( "RZVeloContainer",      m_RZVeloContainerName =    "Hlt/Track/RZVelo");
   declareProperty( "PV2DContainer",        m_PV2DContainerName   =    "Hlt/Vertex/PV2D");
 
-  declareProperty( "OutputContainer",      m_OutputContainerName =    "Hlt/LumiSummary");
+  declareProperty( "OutputContainer",      m_OutputContainerName = LHCb::HltLumiSummaryLocation::Default );
 
 }
 //=============================================================================
