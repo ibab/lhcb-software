@@ -1,4 +1,4 @@
-// $Id: HltSummaryWriter.cpp,v 1.14 2008-07-30 13:37:32 graven Exp $
+// $Id: HltSummaryWriter.cpp,v 1.15 2008-08-13 06:38:43 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -58,11 +58,12 @@ StatusCode HltSummaryWriter::initialize() {
     }
   }
   
+  info() << "writing following selections to summary: " ;
   for (std::vector<stringKey>::iterator it = m_selectionIDs.begin();
        it != m_selectionIDs.end(); ++it) {
-    info() << " write selection " << it->str() 
-           << " in HltSummary " << endreq;
+    info() << " " << it->str() ;
   }
+  info() << endreq;
   
   return StatusCode::SUCCESS;
 }
