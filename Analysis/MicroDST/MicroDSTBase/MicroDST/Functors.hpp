@@ -1,4 +1,4 @@
-// $Id: Functors.hpp,v 1.3 2008-04-16 10:16:35 jpalac Exp $
+// $Id: Functors.hpp,v 1.4 2008-08-13 16:51:23 jpalac Exp $
 #ifndef MICRODST_FUNCTORS_HPP 
 #define MICRODST_FUNCTORS_HPP 1
 
@@ -41,9 +41,10 @@ namespace MicroDST {
     
     T* operator() ( const T* item )
     {
+      if (0==item) return 0;
       if ( !m_to->object( item->key() ) ) {
         T* clonedItem = itemCloner::clone(item);
-        m_to->insert( clonedItem, item->key()) ;
+        if (0!=clonedItem) m_to->insert( clonedItem, item->key()) ;
         return clonedItem;
       }
       return m_to->object( item->key() );
@@ -61,7 +62,7 @@ namespace MicroDST {
   {
     T* operator () (const T* item)    { return clone(item);   }
     static T* copy(const T* item) { return clone(item); }
-    static T* clone(const T* item) { return item->clone(); }
+    static T* clone(const T* item) { return item ? item->clone() : 0; }
   };
 
   /**
@@ -70,7 +71,7 @@ namespace MicroDST {
   struct BasicCopy 
   {
     T* operator () (const T* item)    { return copy(item);   }
-    static T* copy(const T* item) { return new T(*item); }
+    static T* copy(const T* item) { return item ? new T(*item) : 0; }
     static T* clone(const T* item) { return copy(item); }
   };
 

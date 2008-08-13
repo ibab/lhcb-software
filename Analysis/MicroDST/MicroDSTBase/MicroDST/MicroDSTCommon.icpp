@@ -1,4 +1,4 @@
-// $Id: MicroDSTCommon.icpp,v 1.2 2007-12-11 16:44:37 jpalac Exp $
+// $Id: MicroDSTCommon.icpp,v 1.3 2008-08-13 16:51:23 jpalac Exp $
 //-----------------------------------------------------------------------------
 // Implementation file for templated methods of class : MicroDSTCommon
 //
@@ -116,14 +116,15 @@ template <class PBASE>
 template <class T, class itemCloner>
 T* MicroDSTCommon<PBASE>::cloneKeyedContainerItem( const T* item )
 {
+  if (0==item) return 0;
   const std::string cloneLocation = 
     outputTESLocation( MicroDST::objectLocation( item->parent()) );
   typename T::Container* clones = getOutputContainer<typename T::Container>(cloneLocation);
   if (0==clones) return 0;
-  this->verbose() << "cloneKeyedContainerItem to " << cloneLocation << endmsg;
+  this->verbose() << "cloneKeyedContainerItem to location " << cloneLocation << endmsg;
   MicroDST::CloneKeyedContainerItem<T, itemCloner> cloner(clones);
   return cloner(item);
-    
+  
 }
 //=============================================================================
 template <class PBASE>
