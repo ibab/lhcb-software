@@ -29,10 +29,10 @@ HistogramPersistencySvc().OutputFile = 'Moore_minbias.root'
 #Moore().PrefetchTCK = [ 0x00010000,0x00020000,0x00030000 ]
 #HltConfigSvc().OutputLevel = DEBUG
 #
-Moore().runType = 'Physics_Hlt1'
-Moore().runType = 'Physics_Lumi'
-Moore().runType = 'Lumi'
-#Moore().runType = 'Physics_Hlt1+Hlt2'
+Moore().hltType = 'Physics_Hlt1'
+Moore().hltType = 'Physics_Lumi'
+Moore().hltType = 'Lumi'
+#Moore().hltType = 'Physics_Hlt1+Hlt2'
 #Moore().DDDBtag = 'head-20080422'
 #Moore().condDBtag = 'head-20080422'
 ## Moore().DDDBtag       = "2008-default"

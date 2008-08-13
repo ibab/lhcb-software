@@ -1,7 +1,7 @@
 """
 High level configuration tools for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.17 2008-08-09 12:05:52 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.18 2008-08-13 16:18:48 panmanj Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -29,6 +29,7 @@ class Moore(ConfigurableUser):
         , "TCKData" :          '$TCKDATAROOT' # where do we read TCK data from?
         , "TCKpersistency" :   'file' # which method to use for TCK data? valid is 'file' and 'sqlite'
         , "enableAuditor" :    [ ]  # put here eg . [ NameAuditor(), ChronoAuditor(), MemoryAuditor() ]
+        , "userAlgorithms":    [ ]  # put here user algorithms to add
         }   
                 
     def getProp(self,name):
@@ -48,8 +49,8 @@ class Moore(ConfigurableUser):
             else:
                 setattr(other,name,self.getProp(name))
 
-    def validHltTypes(self):
-        return [ 'PHYSICS_Hlt1+Hlt2', 'PHYSICS_Hlt1', 'DEFAULT' ] 
+    def validRunTypes(self):
+        return [ 'Physics_Hlt1+Hlt2', 'Physics_Hlt1', 'Commissioning', 'Physics_Lumi', 'Lumi' , 'DEFAULT' ] 
 
     def getRelease(self):
         import re,fileinput
@@ -79,7 +80,7 @@ class Moore(ConfigurableUser):
         importOptions('$STDOPTS/DstDicts.opts')
 
         inputType = self.getProp('inputType').upper()
-        if inputType not in [ 'MDF','DST' ] : raise TypeError("Invalid input type '%s'"%inputType)
+        if inputType not in [ 'MDF','DST','RAW' ] : raise TypeError("Invalid input type '%s'"%inputType)
         if inputType != 'DST' : 
             EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
         importOptions('$STDOPTS/DecodeRawEvent.opts')
@@ -124,15 +125,26 @@ class Moore(ConfigurableUser):
             else :
                 importOptions('$HLTSYSROOT/options/HltInit.opts')
                 hlttype = self.getProp('hltType')
-                if hlttype not in self.validHltTypes() :  raise TypeError("Unknown hlttype '%s'"%hlttype)
-                if inputType == 'DST' and hlttype in [ 'PHYSICS_Hlt1+Hlt2', 'PHYSICS_Hlt1' ] : 
+                if hlttype not in self.validRunTypes() :  raise TypeError("Unknown runtype '%s'"%hlttype)
+                if inputType == 'DST' and hlttype in [ 'Physics_Hlt1+Hlt2', 'Physics_Hlt1' , 'Physics_Lumi', 'Lumi'] : 
                         importOptions('$L0DUROOT/options/ReplaceL0DUBankWithEmulated.opts')
                 if hlttype in [ 'PHYSICS_Hlt1+Hlt2', 'PHYSICS_Hlt1' ] : importOptions('$HLTSYSROOT/options/Hlt1.opts')
                 if hlttype in [ 'PHYSICS_Hlt1+Hlt2' ] :                 importOptions('$HLTSYSROOT/options/Hlt2.opts')
+                if hlttype in [ 'Commissioning' ] :                     importOptions('$HLTSYSROOT/options/RandomPrescaling.opts')
+                if hlttype in [ 'Physics_Lumi' ] :
+                    importOptions('$HLTSYSROOT/options/HltJob_withLumi.opts')
+                if hlttype in [ 'Lumi' ] :
+                    importOptions('$HLTSYSROOT/options/HltJob_onlyLumi.opts')
                 if hlttype in [ 'DEFAULT' ] :                     importOptions('$HLTSYSROOT/options/RandomPrescaling.opts')
+
             if self.getProp('runTiming') :
                 importOptions('$HLTSYSROOT/options/HltAlleysTime.opts')
                 importOptions('$HLTSYSROOT/options/HltAlleysHistos.opts')
+
+        if self.getProp("userAlgorithms"):
+            for userAlg in self.getProp("userAlgorithms"):
+                ApplicationMgr().TopAlg += [userAlg]
+            
         if self.getProp("generateConfig") :
             # TODO: add properties for ConfigTop and ConfigSvc...
             gen = HltGenConfig( ConfigTop = [ i.rsplit('/')[-1] for i in ApplicationMgr().TopAlg ]
@@ -143,4 +155,6 @@ class Moore(ConfigurableUser):
                               , label = self.getProp('configLabel'))
             # make sure gen is the very first Top algorithm...
             ApplicationMgr().TopAlg = [ gen.getFullName() ] + ApplicationMgr().TopAlg
+
+            
         LHCbApp().applyConf()
