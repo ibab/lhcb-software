@@ -28,11 +28,9 @@ class HLTFarmInfo(General):
     """
     General.__init__(self,manager,name)
     self.nodes       = self.dp('HLTFarm.nodeList')
-    self.subFarms    = self.dp('HLTFarm.subFarms')
     self.odinData    = self.dp('TFC.OdinData')
     self.odinRequest = self.dp('TFC.OdinMEPRequest')
     self.reader.add(self.nodes)
-    self.reader.add(self.subFarms)
     self.reader.add(self.odinData)
     self.reader.add(self.odinRequest)
 

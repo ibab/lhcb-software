@@ -324,10 +324,10 @@ class HLTOptionsWriter(OptionsWriter):
         opts.add('Activity',       run_type)
         opts.add('SubFarms',       farm_names)
         opts.add('OutputLevel',    self.run.outputLevel())
-        opts.add('MessageSvc.OutputLevel     = '+str(self.run.outputLevel())+';\n')
+        opts.add('MessageSvc.OutputLevel     = '+str(self.run.outputLevel())+';')
         if self.run.acceptRate() is None:
           print 'Rate is None!!!!!'
-        opts.add('AcceptRate',     self.run.acceptRate())
+        opts.add('AcceptRate',     float('%.7f'%(self.run.acceptRate(),)))
         
         fname = partition+'_Info'
         if self.writeOptionsFile(partition, fname, opts.value) is None:

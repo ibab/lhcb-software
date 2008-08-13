@@ -125,19 +125,34 @@ def install():
   print 'Installing...'
   installFiles()
   installDpList()
-  if projectName()=="MONITORING":
-    print 'Executing PVSS setup controller for project '+projectName()
+  pro = projectName()
+  if pro=="MONITORING":
+    print 'Executing PVSS setup controller for project '+pro
     execCmd(pvssCTRL()+'InstallMonitoring.cpp')
     print 'Executing python setup....'
-    execCmd("""python -c "import Online.Streaming.MonitoringInstaller as IM; IM.install('Monitoring','"""+projectName()+"""')";""")
-    print 'Executing final PVSS setup controller for project '+projectName()
+    execCmd("""python -c "import Online.Streaming.MonitoringInstaller as IM; IM.install('Monitoring','"""+pro+"""')";""")
+    print 'Executing final PVSS setup controller for project '+pro
     execCmd(pvssCTRL()+'InstallMonitoring2.cpp')
-  elif projectName()=="STORAGE":
-    print 'Executing PVSS setup controller for project '+projectName()
+  if pro=="MONITORING2":
+    print 'Executing PVSS setup controller for project '+pro
+    execCmd(pvssCTRL()+'InstallMonitoring.cpp')
+    print 'Executing python setup....'
+    execCmd("""python -c "import Online.Streaming.MonitoringInstaller as IM; IM.install('Monitoring2','"""+pro+"""')";""")
+    print 'Executing final PVSS setup controller for project '+pro
+    execCmd(pvssCTRL()+'InstallMonitoring2.cpp')
+  elif pro=='RECONSTRUCTION':
+    print 'Executing PVSS setup controller for project '+pro
+    execCmd(pvssCTRL()+'InstallMonitoring.cpp')
+    print 'Executing python setup....'
+    execCmd("""python -c "import Online.Streaming.MonitoringInstaller as IM; IM.install('Reconstruction','"""+pro+"""')";""")
+    print 'Executing final PVSS setup controller for project '+pro
+    execCmd(pvssCTRL()+'InstallMonitoring2.cpp')
+  elif pro=="STORAGE":
+    print 'Executing PVSS setup controller for project '+pro
     execCmd(pvssCTRL()+'InstallStorage.cpp')
     print 'Executing python setup....'
-    execCmd("""python -c "import Online.Streaming.StorageInstaller as IM; IM.install('Storage','"""+projectName()+"""')";""")
-    print 'Executing final PVSS setup controller for project '+projectName()
+    execCmd("""python -c "import Online.Streaming.StorageInstaller as IM; IM.install('Storage','"""+pro+"""')";""")
+    print 'Executing final PVSS setup controller for project '+pro
     execCmd(pvssCTRL()+'InstallStorage2.cpp')
   elif projectName()=="RECSTORAGE":
     print 'Executing PVSS setup controller for project '+projectName()
@@ -160,11 +175,11 @@ def install():
     print 'Executing PVSS setup controller for project '+projectName()
     execCmd(pvssCTRL()+'InstallReco.cpp')
     print 'Executing python setup....'
-    execCmd("""python -c "import Online.Reco.FarmInstaller as IM; IM.install('Reco','"""+projectName()+"""')";""")
-    print 'Executing final PVSS setup controller for project '+projectName()
+    execCmd("""python -c "import Online.Reco.FarmInstaller as IM; IM.install('Reco','"""+pro+"""')";""")
+    print 'Executing final PVSS setup controller for project '+pro
     execCmd(pvssCTRL()+'InstallReco2.cpp')
-  elif projectName()=="LBECS":
-    print 'Executing PVSS setup controller for project '+projectName()
+  elif pro=="LBECS":
+    print 'Executing PVSS setup controller for project '+pro
     execCmd(pvssCTRL()+'InstallJobOptions.cpp')
     print 'Executing python setup....'
     execCmd('python '+sourceDir()+'/python/InstallLBECS.py')
