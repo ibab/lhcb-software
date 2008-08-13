@@ -1,4 +1,4 @@
-// $Id: HltDecReportsWriter.cpp,v 1.1.1.1 2008-08-02 16:40:07 tskwarni Exp $
+// $Id: HltDecReportsWriter.cpp,v 1.2 2008-08-13 07:15:23 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -101,7 +101,7 @@ StatusCode HltDecReportsWriter::execute() {
 
   // order according to the values, essentially orders by intSelectionID 
   // this is important since it will put "*Global" reports at the beginning of the bank
-  if( bankBody.size() )std::sort( bankBody.begin(), bankBody.end(), UDless() );
+  if( !bankBody.empty() ) std::sort( bankBody.begin(), bankBody.end(), UDless() );
 
   
   rawEvent->addBank(  kSourceID, RawBank::HltDecReports, kVersionNumber, bankBody );

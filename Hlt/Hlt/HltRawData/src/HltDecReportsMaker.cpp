@@ -1,4 +1,4 @@
-// $Id: HltDecReportsMaker.cpp,v 1.1.1.1 2008-08-02 16:40:07 tskwarni Exp $
+// $Id: HltDecReportsMaker.cpp,v 1.2 2008-08-13 07:15:23 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -117,12 +117,9 @@ StatusCode HltDecReportsMaker::execute() {
   // get string-to-int selection ID map
   std::vector<IANNSvc::minor_value_type> selectionNameToIntMap;  
 
-  // std::vector<IANNSvc::minor_value_type> hlt = m_hltANNSvc->items("SelectionID"); // old style
-  // selectionNameToIntMap.insert( selectionNameToIntMap.end(),hlt.begin(),hlt.end() );
-
   std::vector<IANNSvc::minor_value_type> hlt1 = m_hltANNSvc->items("Hlt1SelectionID"); // new style
   selectionNameToIntMap.insert( selectionNameToIntMap.end(),hlt1.begin(),hlt1.end() );
-  if( !hlt1.size() ){ errorsHlt1 |= kNotConfigured;  }
+  if( hlt1.empty() ){ errorsHlt1 |= kNotConfigured;  }
 
   for( std::vector<IANNSvc::minor_value_type>::const_iterator si=hlt1.begin();
        si!=hlt1.end();++si){

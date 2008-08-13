@@ -3,6 +3,8 @@
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Writers and Readers, Makers of persisted TES info
 !-----------------------------------------------------------------------------
+! 2008-08-13 - Gerhard Raven
+ - add HltRoutingBitsWriter
 
 !========================== HltRawData v1r0 2008-08-07 ===================
 ! 2008-08-07 - Tomasz Skwarnicki
