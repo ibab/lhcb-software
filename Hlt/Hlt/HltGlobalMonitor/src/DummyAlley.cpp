@@ -1,4 +1,4 @@
-// $Id: DummyAlley.cpp,v 1.2 2008-08-01 11:03:04 graven Exp $
+// $Id: DummyAlley.cpp,v 1.3 2008-08-14 20:44:16 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -6,9 +6,10 @@
 
 // local
 #include "DummyAlley.h"
-#include "Event/HltSummary.h"
 // from LHCb core
 #include "Event/ODIN.h"
+#include "Event/L0DUReport.h"
+
 
 using namespace LHCb;
 
@@ -27,10 +28,12 @@ DECLARE_ALGORITHM_FACTORY( DummyAlley );
 DummyAlley::DummyAlley( const std::string& name,
                     ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
+   , m_selection(*this)
 {
   declareProperty("L0DULocation", m_l0Location = L0DUReportLocation::Default );
   declareProperty("RightType", m_RightType = -1 );
   declareProperty("WrongType", m_WrongType = -1 );
+  m_selection.declareProperties();
 }
 //=============================================================================
 // Destructor
@@ -46,11 +49,7 @@ StatusCode DummyAlley::initialize() {
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  // default configuration
-  // TODO; this needs to be solved with the TCK!!
-//  registerSelection(m_outputSelectionName);
-  // registerSelection();
-
+  m_selection.registerSelection();
   return StatusCode::SUCCESS;
 };
 
@@ -59,14 +58,9 @@ StatusCode DummyAlley::initialize() {
 //=============================================================================
 StatusCode DummyAlley::execute() {
 
-//  m_l0 = get<L0DUReport>(m_l0Location);
-  
   debug() << " Entering the execute " << endreq;
-//  LHCb::HltSummary *summary = get<LHCb::HltSummary>(LHCb::HltSummaryLocation::Default);
-//  summary->setDecision(true);
   if (!exist<LHCb::ODIN> ( LHCb::ODINLocation::Default )) {
     // m_incidentSvc->fireIncident(Incident(name(),IncidentType::AbortEvent));
-   setFilterPassed( false );
    return Error( "ODIN missing, skipping event", StatusCode::SUCCESS );
   }
   LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
@@ -75,16 +69,14 @@ StatusCode DummyAlley::execute() {
     warning() << "You are setting both the wanted and the unwanted trigger type. No events accepted" << endreq;
   } else if (m_WrongType == -1 && odin->triggerType()== m_RightType){
     debug() << "This choses trigger type " << m_RightType << endreq; 
-    //setDecision(true);
-    setFilterPassed( true );
+    m_selection.output()->setDecision(true);
   } else if (m_RightType == -1 && odin->triggerType()!= m_WrongType){
     debug() << "This ignores trigger type " << m_WrongType << endreq; 
-    //setDecision(true);
-    setFilterPassed( true );
+    m_selection.output()->setDecision(true);
   } else if (m_RightType == -1 && m_WrongType==-1) {
     debug() << "No specific trigger type. All events accepted" << endreq;
-    //setDecision(true);
-    setFilterPassed( true );
+    m_selection.output()->setDecision(true);
+
   }
   
 

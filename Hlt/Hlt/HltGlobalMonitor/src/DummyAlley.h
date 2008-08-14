@@ -1,4 +1,4 @@
-// $Id: DummyAlley.h,v 1.1 2008-08-01 10:49:09 graven Exp $
+// $Id: DummyAlley.h,v 1.2 2008-08-14 20:44:16 graven Exp $
 #ifndef DUMMYALLEY_H 
 #define DUMMYALLEY_H 1
 
@@ -6,10 +6,8 @@
 // from Gaudi
 
 
-#include "Event/HltSummary.h"
-#include "Event/L0DUReport.h"
 #include "HltBase/HltAlgorithm.h"
-#include "Kernel/IWriteSelResult.h"
+#include "HltBase/HltSelectionContainer.h"
 
 /** @class DummyAlley DummyAlley.h
  *  
@@ -36,18 +34,16 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
+
+private:
+
+  std::string m_l0Location;
   int m_RightType;
   int m_WrongType;
 
-protected:
-
-  std::string m_l0Location;
-
   StringArrayProperty m_l0ChannelsName;
+  Hlt::SelectionContainer0 m_selection;
 
-protected:
-
-  LHCb::L0DUReport* m_l0;
 
 };
 #endif // DUMMYALLEY_H

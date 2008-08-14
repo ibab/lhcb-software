@@ -2,6 +2,9 @@ Package     : Hlt/HltGlobalMonitor
 Package Coordinator : Bruno Souza de Paula 
 Purpose     : LHCb HLT Global Monitoring
 
+! 2008-08-06 - Gerhard Raven
+ - update to Hlt v4r0
+
 !========================== HltGlobalMonitor v1r1 2008-08-06 ===================
 - remove explicit Gaucho dependency, update to work with Hlt v3r4
 
