@@ -2,6 +2,9 @@ Package     : Hlt/Moore
 Package Coordinator : Patrick Koppenburg and Marco Cattaneo
 Purpose     : LHCb HLT application
 
+! 2008-08-14 - Gerhard Raven
+ - move TCK utilities to TCKData package 
+
 ! 2008-08-13 - Jaap Panman
  - add MyMoore.py to do the lumiAlly only, should be merged later with Moore.py
  - add features to Configuration.py for lumi and for user algorithm
