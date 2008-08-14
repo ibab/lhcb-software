@@ -1,4 +1,4 @@
-// $Id: L0DUReportMonitor.cpp,v 1.13 2008-07-17 16:16:07 odescham Exp $
+// $Id: L0DUReportMonitor.cpp,v 1.14 2008-08-14 09:30:44 odescham Exp $
 // Include files 
 #include <cmath>
 // from Gaudi
@@ -131,7 +131,7 @@ StatusCode L0DUReportMonitor::execute() {
     }
     if(m_prevTCK != -1){
       if( !m_split){
-        Warning("New configuration tck found : reset all histos").ignore();
+        Warning("New configuration tck found : reset all histos",StatusCode::SUCCES).ignore();
         debug() << "New configuration : " << tck << " (previous was : " << m_prevTCK << ")" <<endreq;
         debug() << "Reset all histograms (number of histos : " << totalNumberOfHistos() << ")" << endreq;
         // reset all 1D histos
