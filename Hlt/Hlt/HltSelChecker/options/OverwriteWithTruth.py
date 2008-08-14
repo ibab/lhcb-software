@@ -21,7 +21,7 @@ ChargedProtoPAlg("Hlt2ChargedProtoPAlg").InputTrackLocation = "Hlt/Track/Signal"
 GaudiSequencer("SeqHlt2TruthFilter").Members += [ TESCheck("CheckSignalTracks"),
                                                   TrackAssociator("HltSignalTrackAssociator") ]
 
-TESCheck("CheckSignalTracks").Inputs = ["Hlt/Track/Signal"];
+TESCheck("CheckSignalTracks").Inputs = ["Hlt/Track/Signal"]
 TESCheck("CheckSignalTracks").Stop = FALSE
 TrackAssociator("HltSignalTrackAssociator").TracksInContainer = "Hlt/Track/Signal"
 

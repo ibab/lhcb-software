@@ -37,8 +37,6 @@ tuple.TupleToolTrigger.VerboseHlt2 = TRUE
 NTupleSvc().Output = ["FILE1 DATAFILE='Hlt12StatsTuple.root' TYP='ROOT' OPT='NEW'"]
 
 
-# Hlt2Statistics().OutputLevel = 1 ;
-
 importOptions("$HLTSELECTIONSROOT/options/MinimumBiasDst.py")
 
 ApplicationMgr().EvtMax = 100000
