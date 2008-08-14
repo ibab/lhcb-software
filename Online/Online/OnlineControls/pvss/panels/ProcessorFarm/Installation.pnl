@@ -899,7 +899,7 @@ T
 LANG:1 11 Connect FMC
 "int ProcessorFarmInstallation_connectTaskManager(string stream)  {
   if ( dpExists(stream) )  {
-    string cfg = \"DimStorage\";
+    string cfg = ctrlUtils_dimMapName();
     dyn_string subFarms, inUse;
     int res = dpGet(stream+\".SubFarms\",subFarms,stream+\".InUse\",inUse);
     if ( res == 0 )  {

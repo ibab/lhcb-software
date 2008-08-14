@@ -62,7 +62,7 @@ void StreamControlPanel_initTasksPanel(string stream, string partition, string n
 }
 //=============================================================================
 void StreamControl_trace(string msg)  {
-  DebugN(msg);
+  //DebugN(msg);
 }
 //=============================================================================
 //
@@ -136,7 +136,7 @@ void StreamControlPanel_initPartitionDisplay(string stream, string partition)  {
   StreamControl_trace("StreamControlPanel_initPartitionDisplay:"+stream+" Partition:"+partition+" Name:"+name+" Typ:"+dp_type+" DP:"+dp);
   recv_slices = ctrlUtils_getStringVectors(dp+".RecvSlices",dp_type);
   strm_slices = ctrlUtils_getStringVectors(dp+".StreamSlices",dp_type);
-  bool isMonitoring = strtoupper(stream) == "MONITORING";
+  bool isMonitoring = substr(strtoupper(stream),0,strlen("MONITORING")) == "MONITORING";
   m_frame.text     = "Partition: "+partition;
   ctrlUtils_setListItems("m_recvSlots",recv_slices);
   ctrlUtils_setListItems("m_strmSlots",strm_slices);
