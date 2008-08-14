@@ -3,8 +3,12 @@
 ! Responsible : Juan Palacios juan.palacios@nikhef.nl
 ! Purpose     : Implementation of cloner MicroDSTTools
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.15 2008-08-13 16:56:46 jpalac Exp $
+! $Id: release.notes,v 1.16 2008-08-14 19:33:20 jpalac Exp $
 !-----------------------------------------------------------------------------
+
+! 2008-08-14 - Juan PALACIOS
+ - src/ProtoParticleCloner.cpp
+  . Set cloned MuonPID's IDTrack with SmartRef to original's IDTrack.
 
 ! 2008-08-13 - Juan PALACIOS
  - src/ParticleCloner.h
