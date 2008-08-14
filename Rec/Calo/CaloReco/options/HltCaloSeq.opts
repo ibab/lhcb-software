@@ -8,18 +8,13 @@
 
 HltRecoCALOSeq.Context = "HLT";
 
-// The main stream (same as in Brunel : just change the instance name and the default locations)
-HltRecoCALOSeq.Members +=     { 	"GaudiSequencer/HltCaloDigits" ,
-                                  "GaudiSequencer/HltCaloClusters",
+// The main stream 
+// almost the same as in Brunel : just change the instance name and the default locations + CaloDigits on-Demand
+#include "$CALODAQROOT/options/CaloDigitsOnDemand.opts"
+HltRecoCALOSeq.Members +=     { 	"GaudiSequencer/HltCaloClusters",
                                   "GaudiSequencer/HltCaloTrackMatch" ,
                                   "GaudiSequencer/HltCaloRec",
                                   "GaudiSequencer/HltCaloPIDs" };
-
-//------ Unpack the rawBanks & create CaloDigit on TES 
-HltCaloDigits.Members = {  "CaloZSupAlg/EcalHltZSup",                 
-                           "CaloZSupAlg/HcalHltZSup",                  
-                           "CaloDigitsFromRaw/PrsHltFromRaw",        
-                           "CaloDigitsFromRaw/SpdHltFromRaw"};
 
 
 //------ Clusterize, clean & compute cluster parameters 
