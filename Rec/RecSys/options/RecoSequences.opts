@@ -16,11 +16,11 @@ Reco.DetectorList += {
                     };
 
 // Primary vertex
-RecoVertexSeq.Members   += { "PatPVOffline" };
+//RecoVertexSeq.Members   += { "PatPVOffline" };
 
 // Rich
-#include "$RICHRECSYSOPTS/RecoOfflineToolPara.opts"
-#include "$RICHRECSYSOPTS/RecoOfflineAlgs.opts"
+//#include "$RICHRECSYSOPTS/RecoOfflineToolPara.opts"
+//#include "$RICHRECSYSOPTS/RecoOfflineAlgs.opts"
 
 // Calorimeter reconstruction
 #include "$CALORECOOPTS/Brunel.opts"

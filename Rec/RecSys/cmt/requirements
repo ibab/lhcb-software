@@ -1,7 +1,7 @@
 package RecSys
-version v5r10
+version v5r11
 
-branches cmt doc
+branches cmt doc python
  
 #=======================================================
 # LHCb reconstruction packages
@@ -74,6 +74,9 @@ use RichRecTrackTools   v1r5    Rich  # Chris Jones
 
 # Global reco
 use GlobalReco          v6r17   Rec   # Chris Jones
+
+# Setup Python Configurables
+apply_pattern install_python_modules
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
