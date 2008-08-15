@@ -1,4 +1,4 @@
-// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.25 2008-07-18 09:37:26 mneedham Exp $
+// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.26 2008-08-15 08:21:44 mneedham Exp $
 
 
 #include <algorithm>
@@ -101,7 +101,9 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt) const{
     }
   } 
 
+
   const unsigned int pcn = pcnVote(tBanks);
+  debug() << "PCN was voted to be " << pcn << endmsg;
   if (pcn == STDAQ::inValidPcn) {
     counter("skipped Banks") += tBanks.size();
     return Warning("PCN vote failed", StatusCode::SUCCESS);
@@ -167,8 +169,7 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt) const{
       STClusterWord aWord = *iterDecoder;
       unsigned int fracStrip = aWord.fracStripBits();
       
-      STTell1Board::chanPair chan = aBoard->DAQToOffline(aWord.channelID(),fracStrip,
-                                                         version);
+      STTell1Board::chanPair chan = aBoard->DAQToOffline(version, fracStrip, aWord.channelID());
 
       STLiteCluster liteCluster(chan.second,
                                 aWord.pseudoSizeBits(),

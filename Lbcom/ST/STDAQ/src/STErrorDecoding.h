@@ -1,4 +1,4 @@
-// $Id: STErrorDecoding.h,v 1.2 2008-07-04 15:52:22 mneedham Exp $
+// $Id: STErrorDecoding.h,v 1.3 2008-08-15 08:21:44 mneedham Exp $
 #ifndef STERRORDECODING_H 
 #define STERRORDECODING_H 1
 
@@ -7,7 +7,6 @@
 // from Gaudi
 #include "STDecodingBaseAlg.h"
 
-#include "Event/RawBank.h"
 
 /** @class STErrorDecoding STErrorDecoding.h public/STErrorDecoding.h
  *   
@@ -23,13 +22,11 @@ public:
 
   virtual ~STErrorDecoding( ); ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
  
 private:
 
 
-  std::string m_outputLocation;
   
   bool m_PrintErrorInfo;
 

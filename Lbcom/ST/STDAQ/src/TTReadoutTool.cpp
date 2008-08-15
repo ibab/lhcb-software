@@ -1,4 +1,4 @@
-// $Id: TTReadoutTool.cpp,v 1.12 2008-07-25 11:45:14 jvantilb Exp $
+// $Id: TTReadoutTool.cpp,v 1.13 2008-08-15 08:21:44 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -71,6 +71,7 @@ StatusCode TTReadoutTool::createBoards() {
   // const std::vector<std::string>& layers = rInfo->paramAsStringVect("layers");
   const std::vector<std::string> layers =  rInfo->param<std::vector<std::string> >("layers");
   const std::vector<int>& nBoards = rInfo->paramAsIntVect("nBoardsPerLayer");
+
   m_hybridsPerBoard = rInfo->param<int>("hybridsPerBoard");
   m_nRegionA = rInfo->param<int>("nRegionsInTTa");
   unsigned int nStripsPerHybrid =  STDAQ::nStripsPerBoard/m_hybridsPerBoard;
@@ -83,6 +84,9 @@ StatusCode TTReadoutTool::createBoards() {
    const std::vector<int>& tMap = rInfo->param<std::vector<int> >(layers[iReg]);
    std::string orLoc = layers[iReg]+"HybridOrientation";
    const std::vector<int>& orientation = rInfo->param<std::vector<int> >(orLoc);
+  const std::vector<std::string>& serviceBoxes = rInfo->param<std::vector<std::string> >(layers[iReg]+"ServiceBox");
+
+
    unsigned int vecLoc = 0;
    if ( iReg == 0){
      STChannelID firstChan = STChannelID(tMap[0]);
@@ -97,7 +101,7 @@ StatusCode TTReadoutTool::createBoards() {
 
      for (unsigned iH = 0 ; iH < m_hybridsPerBoard; ++iH, ++vecLoc){
        STChannelID sectorID((unsigned int)tMap[vecLoc]);
-       aBoard->addSector(sectorID, (unsigned int)orientation[vecLoc]);
+       aBoard->addSector(sectorID, (unsigned int)orientation[vecLoc], serviceBoxes[vecLoc]);
      } // iH
 
      m_boards.push_back(aBoard);

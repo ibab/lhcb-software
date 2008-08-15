@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.36 2008-08-05 12:01:29 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.37 2008-08-15 08:21:43 mneedham Exp $
 
 #include <algorithm>
 
@@ -12,6 +12,8 @@
 // Event
 #include "Event/RawEvent.h"
 #include "Event/STCluster.h"
+#include "Event/STSummary.h"
+
 #include "Event/STLiteCluster.h"
 #include "Kernel/STDataFunctor.h"
 #include "Kernel/ISTReadoutTool.h"
@@ -95,6 +97,7 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
   // create Clusters from this type 
   bool pcnSync = true;
   std::vector<unsigned int> bankList;
+  STSummary::RecoveredInfo recoveredBanks;
 
   const std::vector<RawBank* >&  tBanks = rawEvt->banks(bankType());
 
@@ -102,7 +105,7 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
   if (missing.empty() == false){
     counter("lost Banks") += missing.size();
     if (tBanks.size() == 0){
-      createSummaryBlock(0, STDAQ::inValidPcn, false, bankList, missing);
+      createSummaryBlock(0, STDAQ::inValidPcn, false, bankList, missing, recoveredBanks);
       ++counter("no banks found");
       return StatusCode::SUCCESS;
     }
@@ -110,6 +113,7 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
 
   // vote on the pcns
   const unsigned int pcn = pcnVote(tBanks);
+  debug() << "PCN was voted to be " << pcn << endmsg;
   if (pcn == STDAQ::inValidPcn && !m_skipErrors) {
     counter("skipped Banks") += tBanks.size();
     debug() << "PCN vote failed with " << tBanks.size() << endmsg; 
@@ -151,13 +155,22 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
 
     debug() << "decoding bank version " << version << endmsg;
 
+    bool recover = false;
     if (decoder.hasError() == true && !m_skipErrors){
-      bankList.push_back((*iterBank)->sourceID());
-      std::string errorBank = "bank has errors, skip sourceID "+
-	boost::lexical_cast<std::string>((*iterBank)->sourceID());
-      Warning(errorBank, StatusCode::SUCCESS);
-      ++counter("skipped Banks");
-      continue;
+      if (!recoverMode()){
+        bankList.push_back((*iterBank)->sourceID());
+        std::string errorBank = "bank has errors, skip sourceID "+
+	  boost::lexical_cast<std::string>((*iterBank)->sourceID());
+        Warning(errorBank, StatusCode::SUCCESS);
+        ++counter("skipped Banks");
+        continue;
+      }
+      else {
+	// flag that need to recover....
+        recover = true;
+        recoveredBanks[(*iterBank)->sourceID()] = 1.0;
+        ++counter("recovered banks");
+      }
     }
 
     const unsigned bankpcn = decoder.header().pcn();
@@ -177,17 +190,32 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
       continue;
     }
 
+    // ok this is a bit ugly.....
+    STTELL1BoardErrorBank* errorBank = 0;
+    if (recover == true){
+      errorBank = findErrorBank((*iterBank)->sourceID());
+    } 
+
     // iterator over the data....
     STDecoder::posadc_iterator iterDecoder = decoder.posAdcBegin();
     for ( ;iterDecoder != decoder.posAdcEnd(); ++iterDecoder){
+      if (recover == false){
        createCluster(iterDecoder->first,aBoard,
                      iterDecoder->second,version, clusCont);
+      }
+      else {
+	// check that this cluster is ok to be recovered
+        if (errorBank && canBeRecovered(errorBank,iterDecoder->first, pcn) == true){
+         createCluster(iterDecoder->first,aBoard,
+                        iterDecoder->second,version, clusCont); 
+	} 
+      }
     } // iterDecoder
     
 
   } // iterBank
    
-  createSummaryBlock(clusCont->size(), pcn, pcnSync, bankList, missing);
+  createSummaryBlock(clusCont->size(), pcn, pcnSync, bankList, missing, recoveredBanks);
 
   return StatusCode::SUCCESS;
 
@@ -222,8 +250,7 @@ StatusCode RawBankToSTClusterAlg::createCluster(const STClusterWord& aWord,
     adcs.push_back(std::make_pair(i-offset,(int)tWords[i].adc()));
   } // iDigit
 
-  STTell1Board::chanPair nearestChan = aBoard->DAQToOffline(aWord.channelID(),fracStrip,
-                                                            version);
+  STTell1Board::chanPair nearestChan = aBoard->DAQToOffline(fracStrip,version,aWord.channelID());
 
   aBoard->ADCToOffline(aWord.channelID(),adcs,version,offset,interStripPos);
 

@@ -1,4 +1,4 @@
-// $Id: STReadoutTool.cpp,v 1.10 2008-07-18 09:37:26 mneedham Exp $
+// $Id: STReadoutTool.cpp,v 1.11 2008-08-15 08:21:44 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -78,11 +78,34 @@ StatusCode STReadoutTool::initialize() {
   return StatusCode::SUCCESS;
 }
 
-
 unsigned int STReadoutTool::nBoard() const {
   // number of boards
   return m_nBoard;
 }
+
+unsigned int STReadoutTool::nServiceBox() const{
+  return m_nServiceBox;
+}
+
+std::string STReadoutTool::serviceBox(const LHCb::STChannelID& aChan) const{
+
+  // find the board
+
+  static const std::string InValidBox = "Unknown";
+  bool isFound = false;
+  unsigned int waferIndex = 999u; 
+  unsigned int iBoard = m_firstBoardInRegion[region(aChan)];
+  while ((iBoard != m_nBoard)&&(isFound == false)){
+     if (m_boards[iBoard]->isInside(aChan,waferIndex)) {
+      isFound = true;
+    }
+    else {
+      ++iBoard;
+    }
+  } // iBoard
+
+  return(  isFound ? m_boards[iBoard]->serviceBoxes()[waferIndex] : InValidBox);
+} 
 
 std::vector<STTell1ID> STReadoutTool::boardIDs() const{
   std::vector<STTell1Board*>::const_iterator iterBoard = m_boards.begin();
@@ -193,8 +216,6 @@ void STReadoutTool::printMapping() const{
   for (; iterBoard != m_boards.end() ;++iterBoard){
     std::cout << **iterBoard << std::endl;
   } // print loop
-  std::cout << " ----------------" << std::endl; 
- 
 }
 
 
@@ -231,6 +252,32 @@ std::vector<DeSTSector*> STReadoutTool::sectors(const STTell1ID board) const{
   std::vector<LHCb::STChannelID> sectors = sectorIDs(board);
   return m_tracker->findSectors(sectors);
 }
+
+std::vector<DeSTSector*> STReadoutTool::sectorsOnServiceBox(const std::string& serviceBox) const{ 
+
+  std::vector<LHCb::STChannelID> sectors = sectorIDsOnServiceBox(serviceBox);
+  return m_tracker->findSectors(sectors);
+}
+
+std::vector<LHCb::STChannelID> STReadoutTool::sectorIDsOnServiceBox(const std::string& serviceBox) const{
+  // loop over all boards
+  std::vector<LHCb::STChannelID> sectors; sectors.reserve(16);
+  std::vector<STTell1Board*>::const_iterator iterB = m_boards.begin();
+  for (; iterB != m_boards.end(); ++iterB){
+    const STTell1Board* board = *iterB;
+    const std::vector<LHCb::STChannelID>& sectorVec = board->sectorIDs();
+    const std::vector<std::string>& sBoxes = board->serviceBoxes();
+    for (unsigned int iS = 0u ; iS < board->nSectors(); ++iS){
+      if (sBoxes[iS] == serviceBox) sectors.push_back(sectorVec[iS]);
+    } // iS
+  } // iterB  
+  return sectors;
+}
+
+const std::vector<std::string>& STReadoutTool::serviceBoxes() const{
+  return m_serviceBoxes;
+}
+
 
 
 

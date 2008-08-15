@@ -1,4 +1,4 @@
-// $Id: STDecodingBaseAlg.cpp,v 1.16 2008-07-18 09:37:26 mneedham Exp $
+// $Id: STDecodingBaseAlg.cpp,v 1.17 2008-08-15 08:21:44 mneedham Exp $
 
 #include <algorithm>
 
@@ -39,13 +39,20 @@ using namespace LHCb;
 
 STDecodingBaseAlg::STDecodingBaseAlg( const std::string& name,
                                            ISvcLocator* pSvcLocator ):
-GaudiAlgorithm (name , pSvcLocator){
+GaudiAlgorithm (name , pSvcLocator),
+m_bankTypeString(""){
  
  // Standard constructor, initializes variables
  declareProperty("readoutTool", m_readoutToolName = "TTReadoutTool");     
  declareProperty("detType", m_detType = "TT" );
+ 
+ declareProperty("ErrorLocation",m_errorLocation=STTELL1BoardErrorBankLocation::TTErrors );
  declareProperty("summaryLocation", m_summaryLocation = STSummaryLocation::TTSummary);
+ declareProperty("ErrorBank", m_errorBankString = "TTError"); 
+ 
  declareProperty("skipBanksWithErrors", m_skipErrors = false );
+ declareProperty("recoverMode", m_recoverMode = false);
+ 
  declareProperty("rawEventLocation",m_rawEventLocation = RawEventLocation::Default);
  declareProperty("forcedVersion", m_forcedVersion = -1);
 }
@@ -64,15 +71,26 @@ StatusCode STDecodingBaseAlg::initialize() {
 
   STDetSwitch::flip(m_detType,m_readoutToolName);
   STDetSwitch::flip(m_detType,m_summaryLocation);
-  STDetSwitch::flip(m_detType,m_bankTypeString);
+  STDetSwitch::flip(m_detType,m_errorLocation);
+  STDetSwitch::flip(m_detType,m_errorBankString);
   
   // readout tool
   m_readoutTool = tool<ISTReadoutTool>(m_readoutToolName,m_readoutToolName);
    
   // bank type
-  m_bankType =  STRawBankMap::stringToType(m_bankTypeString);
-  if (m_bankType ==  LHCb::RawBank::Velo){
-   fatal() << "Wrong detector type: only IT or TT !"<< endmsg;
+  if (m_bankTypeString != "") {
+    STDetSwitch::flip(m_detType,m_bankTypeString);
+    m_bankType =  STRawBankMap::stringToType(m_bankTypeString);
+    if (m_bankType ==  LHCb::RawBank::Velo){
+      fatal() << "Wrong detector type: only IT or TT !"<< endmsg;
+      return StatusCode::FAILURE; 
+    }
+  } 
+
+  // bank type
+  m_errorType =  STRawBankMap::stringToType(m_errorBankString);
+  if (m_errorType ==  LHCb::RawBank::Velo){
+   fatal() << "Wrong detector type: only IT or TT error banks!"<< endmsg;
    return StatusCode::FAILURE; 
   } 
 
@@ -80,11 +98,12 @@ StatusCode STDecodingBaseAlg::initialize() {
 }
     
 
-void STDecodingBaseAlg::createSummaryBlock(const unsigned int nclus, const unsigned int pcn, 
+void STDecodingBaseAlg::createSummaryBlock(const unsigned int& nclus, const unsigned int& pcn, 
                                            const bool pcnsync, const std::vector<unsigned int>& bankList, 
-                                           const std::vector<unsigned int>& missing) const{
+                                           const std::vector<unsigned int>& missing,
+                                           const LHCb::STSummary::RecoveredInfo& recoveredBanks) const{
 
-  STSummary* sum = new STSummary(nclus,pcn,pcnsync,bankList, missing);   
+  STSummary* sum = new STSummary(nclus,pcn,pcnsync,bankList, missing, recoveredBanks);   
   put(sum, m_summaryLocation);
 }
 
@@ -129,7 +148,7 @@ bool STDecodingBaseAlg::checkDataIntegrity(STDecoder& decoder, const STTell1Boar
       unsigned int fracStrip = aWord.fracStripBits();
       debug() << "adc values do not match ! " << iterDecoder->second.size()-1u << " "
               << aWord.pseudoSize() << " offline chan "
-              << aBoard->DAQToOffline(aWord.channelID(),fracStrip,version) 
+              << aBoard->DAQToOffline(fracStrip,version,aWord.channelID()) 
               << " source ID  " << aBoard->boardID()  <<  " chan "  << aWord.channelID()   
               << endmsg ;
       Warning("ADC values do not match", StatusCode::FAILURE);
@@ -179,6 +198,141 @@ std::vector<unsigned int> STDecodingBaseAlg::missingInAction(const std::vector<R
   }
   return missing;
 }
+
+LHCb::STTELL1BoardErrorBanks* STDecodingBaseAlg::getErrorBanks() const{
+  if (!exist<STTELL1BoardErrorBanks>(m_errorLocation)) {
+    // we have to do the decoding
+    StatusCode sc = decodeErrors();
+    if (sc.isFailure()){
+      Warning("Error Bank Decoding failed",StatusCode::FAILURE,100);
+      return 0;
+    }
+  }
+  return get<STTELL1BoardErrorBanks>(m_errorLocation);
+}
+
+StatusCode STDecodingBaseAlg::decodeErrors() const{
+
+ debug() << "==> Execute " << endmsg;
+
+ // get the raw event + odin info
+ RawEvent* raw = get<RawEvent>(RawEventLocation::Default );
+
+ // make an empty output vector
+ STTELL1BoardErrorBanks* outputErrors = new STTELL1BoardErrorBanks();
+ 
+ // Pick up ITError bank 
+ const std::vector<LHCb::RawBank*>& itf = raw->banks(LHCb::RawBank::BankType(m_errorType)); 
+ 
+ if (itf.size() == 0u){
+   debug() <<"event has no error banks " << endmsg;
+ }
+ else {
+    ++counter("events with error banks");
+    counter("total # error banks") += itf.size(); 
+ }
+
+ debug() << "Starting to decode " << itf.size() << detType() <<"Error bank(s)" <<  endmsg;
+  
+ for( std::vector<LHCb::RawBank*>::const_iterator itB = itf.begin(); itB != itf.end(); ++itB ) {
+
+   std::string errorBank = "sourceID "+
+	boost::lexical_cast<std::string>((*itB)->sourceID());  
+   ++counter(errorBank);
+
+   if ((*itB)->magic() != RawBank::MagicPattern) {
+     std::string pattern = "wrong magic pattern "+
+	boost::lexical_cast<std::string>((*itB)->sourceID());  
+     Warning(pattern, StatusCode::SUCCESS); 
+     continue;
+   }
+
+   const unsigned int* p = (*itB)->data();
+   unsigned int w=0;
+   const unsigned int bankEnd = (*itB)->size()/sizeof(unsigned int);
+
+   // bank has to be at least 28 words 
+   if (bankEnd < STDAQ::minErrorBankWords){
+     Warning("Error bank too short --> not decoded", StatusCode::SUCCESS);
+     continue;
+   }
+
+   // and less than 52 words
+   if (bankEnd > STDAQ::maxErrorBankWords){
+     Warning("Error bank too long --> not decoded", StatusCode::SUCCESS);
+     continue;
+   }
+
+   debug() << "Decoding bank number of type "<< detType() << "Error (TELL1 ID: " <<  (*itB)->sourceID() 
+           << ", Size: " <<  (*itB)->size() << " bytes)" << endmsg;
+
+       
+   // make an empty tell1 data object
+   STTELL1BoardErrorBank* myData = new STTELL1BoardErrorBank();
+   outputErrors->insert(myData, (*itB)->sourceID()); 
+   
+   for (unsigned int ipp = 0; ipp < STDAQ::npp && w != bankEnd ; ++ipp ){
+
+     debug() << "#######  Parsing now data from PP " << ipp << " #####################"<< endmsg; 
+
+     // we must find 5 words
+     if (bankEnd - w < 5 ){
+       Warning("Ran out of words to read", StatusCode::SUCCESS);
+       break;
+     }
+ 
+     STTELL1Error* errorInfo = new STTELL1Error(p[w], p[w+1], p[w+2], p[w+3], p[w+4]);
+     myData->addToErrorInfo(errorInfo); 
+     w +=5; // read 5 first words
+
+     const unsigned int  nOptional = errorInfo->nOptionalWords();
+
+     // we must find the optional words + 2 more control words
+     if (bankEnd - w < nOptional + 2 ){
+        Warning("Ran out of words to read", StatusCode::SUCCESS);
+        break;
+      }
+
+     const unsigned int *eInfo;
+     eInfo = 0;
+
+     if (errorInfo->hasErrorInfo()){
+       //errorInfo->setOptionalErrorWords(p[w], p[w+1], p[w+2], p[w+3], p[w+4]);
+       eInfo = &p[w];
+       w+= 5;
+     } // has error information
+
+     errorInfo->setWord10(p[w]); ++w;
+     errorInfo->setWord11(p[w]); ++w;
+ 
+     // then some more optional stuff
+     if (errorInfo->hasNZS() == true){
+       errorInfo->setWord12(p[w]); ++w;
+     }  // nsz info...
+
+     // then some more optional stuff
+     if (errorInfo->hasPed() == true){
+       errorInfo->setWord13(p[w]); ++w;
+     }
+
+     if (errorInfo->hasErrorInfo()){
+       errorInfo->setOptionalErrorWords(eInfo[0], eInfo[1], eInfo[2], eInfo[3], eInfo[4]);
+     } // has error information
+      
+   } //  loop ip [ppx's]
+     
+   if (w != bankEnd){
+     error() << "read " << w << " words, expected: " << bankEnd << endmsg;
+   }  
+
+  }// end of loop over banks of a certain type
+
+ put(outputErrors, m_errorLocation);
+ 
+ return StatusCode::SUCCESS;
+} 
+
+
 
 StatusCode STDecodingBaseAlg::finalize() {
     

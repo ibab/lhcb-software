@@ -1,4 +1,4 @@
-// $Id: STReadoutTool.h,v 1.6 2008-07-14 08:18:03 mneedham Exp $
+// $Id: STReadoutTool.h,v 1.7 2008-08-15 08:21:44 mneedham Exp $
 #ifndef _STReadoutTool_H
 #define _STReadoutTool_H
 
@@ -73,6 +73,21 @@ public:
   /// list of the readout sectors
   virtual std::vector<DeSTSector*> sectors(const STTell1ID board) const;
 
+  /// service box
+  virtual unsigned int nServiceBox() const;
+
+  /// service box number
+  virtual std::string serviceBox(const LHCb::STChannelID& aChan) const; 
+
+  /// list of the readout sectors ids in a service box 
+  virtual std::vector<LHCb::STChannelID> sectorIDsOnServiceBox(const std::string& serviceBox) const;
+  
+  /// list of the readout sectors in a service box
+  virtual std::vector<DeSTSector*> sectorsOnServiceBox(const std::string& serviceBox) const;
+
+  /// list of service boxes
+  virtual const std::vector<std::string>& serviceBoxes() const;
+
   /// print mapping
   void printMapping() const;
 
@@ -81,10 +96,12 @@ protected:
   void clear();
 
   StatusCode validate() const;
-  
+
   unsigned int m_hybridsPerBoard;
   unsigned int m_nBoard;
+  unsigned int m_nServiceBox;
   std::vector<STTell1Board*> m_boards;
+  std::vector<std::string> m_serviceBoxes;
   std::vector<unsigned int> m_firstBoardInRegion;
 
   bool m_printMapping;
