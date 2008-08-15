@@ -1,4 +1,4 @@
-// $Id: ISTReadoutTool.h,v 1.5 2008-07-14 07:32:30 mneedham Exp $
+// $Id: ISTReadoutTool.h,v 1.6 2008-08-15 08:01:06 mneedham Exp $
 #ifndef _ISTReadoutTool_H
 #define _ISTReadoutTool_H
 
@@ -66,6 +66,12 @@ public:
   /// get region
   virtual unsigned int region(const LHCb::STChannelID aChan) const = 0;
 
+  /// service box
+  virtual unsigned int nServiceBox() const = 0;
+
+  /// service box number
+  virtual std::string serviceBox(const LHCb::STChannelID& aChan) const = 0; 
+
   /// printout
   virtual void printMapping() const = 0;
 
@@ -74,7 +80,16 @@ public:
   
   /// list of the readout sectors in a board
   virtual std::vector<DeSTSector*> sectors(const STTell1ID board) const = 0;
+
+ /// list of the readout sectors ids in a service box 
+  virtual std::vector<LHCb::STChannelID> sectorIDsOnServiceBox(const std::string& serviceBox) const = 0;
   
+ /// list of the readout sectors in a service box
+ virtual std::vector<DeSTSector*> sectorsOnServiceBox(const std::string& serviceBox) const = 0;
+
+ /// list of service boxes
+ virtual const std::vector<std::string>& serviceBoxes() const = 0;
+ 
 };
 
 

@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.26 2008-08-04 07:19:44 mneedham Exp $
+! $Id: release.notes,v 1.27 2008-08-15 08:01:06 mneedham Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
+
+! 2008-08-15 M Needham
+ - Add functionality to STTell1Board
+ - Add functionality to ITSTReadoutTool, STTell1Board related to service box
+   mapping
 
 ! 2008-08-04 M Needham
  - Add functionality to STTell1Board

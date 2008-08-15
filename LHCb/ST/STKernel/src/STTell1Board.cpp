@@ -1,4 +1,4 @@
-// $Id: STTell1Board.cpp,v 1.6 2008-08-04 07:19:44 mneedham Exp $
+// $Id: STTell1Board.cpp,v 1.7 2008-08-15 08:01:06 mneedham Exp $
 #include "Kernel/STTell1Board.h"
 #include "Kernel/STDAQDefinitions.h"
 #include "Kernel/LHCbConstants.h"
@@ -20,38 +20,42 @@ STTell1Board::~STTell1Board(){
   // destructer
 }
 
-STTell1Board::chanPair STTell1Board::DAQToOffline(const unsigned int beetle,
-                                   const unsigned int port,
-                                   const unsigned int strip,
-			           const unsigned int fracStrip,
-		      	           const int version) const{
+STTell1Board::chanPair STTell1Board::BeetleRepDAQToOffline(
+                                   const unsigned int fracStrip,
+		      	           const int version,
+                                   const unsigned int beetle,
+                                   unsigned int port,
+                                   unsigned int strip) const{
 
   const unsigned int  tell1Chan = strip + (port * LHCbConstants::nStripsInPort) + (beetle*LHCbConstants::nStripsInBeetle) ; 
 
-  return DAQToOffline(tell1Chan, fracStrip, version);
+  return DAQToOffline(fracStrip,version, tell1Chan);
 }
 
 
-STTell1Board::chanPair STTell1Board::DAQToOffline(const unsigned int pp,
-                                   const unsigned int beetle,
-                                   const unsigned int port,
-                                   const unsigned int strip,
-			           const unsigned int fracStrip,
-		      	           const int version) const{
+STTell1Board::chanPair STTell1Board::PPRepDAQToOffline(
+                                   const unsigned int fracStrip,
+		      	           const int version,
+                                   const unsigned int pp,
+                                   unsigned int beetle,
+                                   unsigned int port,
+                                   unsigned int strip) const{
 
   const unsigned int  tell1Chan = strip +
                               + (STDAQ::nStripPerPPx *pp) 
                               + (port * LHCbConstants::nStripsInPort)
                               + (beetle*LHCbConstants::nStripsInBeetle) ; 
 
-  return DAQToOffline(tell1Chan, fracStrip, version);
+  return DAQToOffline(fracStrip, version, tell1Chan);
 }
 
 
-void STTell1Board::addSector(STChannelID aOfflineChan, unsigned int orientation){
+void STTell1Board::addSector(STChannelID aOfflineChan, unsigned int orientation, 
+                             const std::string& serviceBox){
  // add sector to vector
  m_orientation.push_back(orientation);
  m_sectorsVector.push_back(aOfflineChan);
+ m_serviceBoxVector.push_back(serviceBox);
 }
 
 
@@ -69,9 +73,8 @@ bool STTell1Board::isInside(const STChannelID aOfflineChan,
 }
 
 
-STTell1Board::chanPair STTell1Board::DAQToOffline(const unsigned int aDAQChan,
-                                       const unsigned int fracStrip,
-                                       const int version) const{
+STTell1Board::chanPair STTell1Board::DAQToOffline(const unsigned int fracStrip,
+                                                  const int version, const unsigned int aDAQChan) const{
 
   // convert a DAQ channel to offline !
   const unsigned int index = aDAQChan/m_nStripsPerHybrid;
@@ -152,6 +155,22 @@ unsigned int STTell1Board::offlineToDAQ(const STChannelID aOfflineChan,
   return (waferIndex*m_nStripsPerHybrid) + strip;
 }
 
+std::string STTell1Board::BeetleRepServiceBox(const unsigned int beetle) const{
+
+  const unsigned int  tell1Chan = beetle*LHCbConstants::nStripsInBeetle; 
+  const unsigned int index = tell1Chan/m_nStripsPerHybrid;
+  return serviceBox(index);
+}
+
+std::string STTell1Board::PPRepServiceBox(const unsigned int pp, const unsigned int beetle) const{
+
+  const unsigned int  tell1Chan = 
+                              STDAQ::nStripPerPPx *pp
+                              + (beetle*LHCbConstants::nStripsInBeetle); 
+  const unsigned int index = tell1Chan/m_nStripsPerHybrid;
+  return serviceBox(index);
+}
+
 std::ostream& STTell1Board::fillStream( std::ostream& os ) const{
 
   // print function
@@ -159,9 +178,11 @@ std::ostream& STTell1Board::fillStream( std::ostream& os ) const{
      << " subID" <<  m_boardID.subID() << std::endl;
   os << "# readout sectors " << m_sectorsVector.size() << std::endl;
   std::vector<STChannelID>::const_iterator iterW = m_sectorsVector.begin();
-  for (; iterW !=  m_sectorsVector.end() ;++iterW){
+  unsigned int wafer = 0u;
+  for (; iterW !=  m_sectorsVector.end() ;++iterW, ++wafer){
     os << "Station: " << (*iterW).station() << "Layer: " << (*iterW).layer() 
-       << "Region: " << (*iterW).detRegion() <<"Sector: " << (*iterW).sector() << std::endl;
+       << "Region: " << (*iterW).detRegion() <<"Sector: " << (*iterW).sector() << " ServiceBox "
+       << serviceBox(wafer) << std::endl;
   }   // iW 
   os << " -----------" << std::endl; 
 
