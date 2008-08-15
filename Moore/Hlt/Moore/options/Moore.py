@@ -21,8 +21,8 @@ HistogramPersistencySvc().OutputFile = 'Moore_minbias.root'
 #---------------------------------------------------------------------------
 
 # if you want to generate a configuration, uncomment the following lines:
-#Moore().generateConfig = True
-#Moore().configLabel = 'standard_hlt1'
+Moore().generateConfig = True
+Moore().configLabel = 'out of the box'
 
 # if you want to run, using a (set of) TCK(s), uncomment the following two
 # lines, and input the (list of ) TCK(s)
@@ -31,9 +31,9 @@ HistogramPersistencySvc().OutputFile = 'Moore_minbias.root'
 #HltConfigSvc().OutputLevel = DEBUG
 #HltConfigSvc().checkOdin = False
 #
-Moore().hltType = 'PHYSICS_Hlt1'
+#Moore().hltType = 'PHYSICS_Hlt1'
 #Moore().hltType = 'PHYSICS_Hlt1+Hlt2'
-#Moore().hltType = 'DEFAULT'  # current commissioning setup
+Moore().hltType = 'DEFAULT'  # current commissioning setup
 
 #Moore().DDDBtag = '2008-default'
 #Moore().condDBtag = '2008-default'
@@ -41,7 +41,7 @@ Moore().hltType = 'PHYSICS_Hlt1'
 
 files= [ '/data/bfys/lhcb/MinBias-L0strip/DC06_L0_v1_lumi2_MuonHadron_40000ev_' + str(f) +'.mdf'  for f in range(1,3) ]
 
-#files= [ '/data/bfys/lhcb/MinBias-L0strip/MBL0-lumi2-' + str(f) +'.dst'  for f in range(1,5) ]
+#files = [ '/data/bfys/lhcb/MinBias-L0strip/MBL0-lumi2-' + str(f) +'.dst'  for f in range(1,5) ]
 
 #files = [ '/afs/cern.ch/lhcb/group/trigger/vol1/dijkstra/Selections/MBL0-lumi2-1.dst',
 #          '/afs/cern.ch/lhcb/group/trigger/vol1/dijkstra/Selections/MBL0-lumi2-2.dst',
@@ -60,7 +60,7 @@ EventSelector().Input = [ "DATAFILE='PFN:"+ f + extensions[ filetype ] for f in 
 
 EventSelector().PrintFreq = 100
 
-Moore().EvtMax = 10000
+Moore().EvtMax = 1000
 
 
 # optionally, we can enable some auditors...
