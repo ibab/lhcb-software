@@ -1,6 +1,0 @@
-#pragma print on
-// Options file provided for use with .exe executable. 
-// Obsolete, please switch to Reco.py
-#pragma print off
-#include $RECSYSROOT/options/RecoSequences.opts
-#include $TRACKSYSROOT/options/RecoTracking.opts

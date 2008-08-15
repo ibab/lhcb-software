@@ -6,7 +6,9 @@ Purpose: LHCb reconstruction packages.
          by one or more LHCb applications. 
 
 ! 2008-08-15 - Chris Jones
- - Add new python Configurable RecSys()
+ - Add new python Configurable RecSys(). This configurable replaces the old 
+   options and python files previously in the options sub-directory, and thus 
+   have been removed.
 
 </PRE><H1><A NAME=v5r10>2008-07-30 RecSys v5r10</A></H1><PRE>
 This version uses Gaudi v20r2 and LHCb v2r50.
