@@ -5,7 +5,7 @@
  *  Implementation file for RICH algorithm : RichHierarchicalPIDMerge
  *
  *  CVS Log :-
- *  $Id: RichHierarchicalPIDMerge.cpp,v 1.9 2007-12-03 15:23:14 jonrob Exp $
+ *  $Id: RichHierarchicalPIDMerge.cpp,v 1.10 2008-08-15 14:33:29 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-10
@@ -120,7 +120,8 @@ StatusCode HierarchicalPIDMerge::execute()
     SmartDataPtr<LHCb::RichGlobalPIDs> gPIDs( eventSvc(), m_richGlobalPIDLocation );
     if ( !gPIDs )
     {
-      Warning("Cannot locate RichGlobalPIDs at "+m_richGlobalPIDLocation);
+      if ( msgLevel(MSG::DEBUG) )
+        debug() << "Cannot locate RichGlobalPIDs at " << m_richGlobalPIDLocation << endreq;
     }
     else
     {
@@ -132,7 +133,7 @@ StatusCode HierarchicalPIDMerge::execute()
             gPID != gPIDs->end(); ++gPID )
       {
         // Form new PID object, using existing RichPID as template
-        newPIDs->insert( new LHCb::RichPID(*gPID), (*gPID)->key() );
+        newPIDs->insert( new LHCb::RichPID(**gPID), (*gPID)->key() );
         ++nUsedglobalPIDs;
       }
 
@@ -147,7 +148,8 @@ StatusCode HierarchicalPIDMerge::execute()
     SmartDataPtr<LHCb::RichLocalPIDs> lPIDs(eventSvc(), m_richLocalPIDLocation);
     if ( !lPIDs )
     {
-      Warning("Cannot locate RichLocalPIDs at "+m_richLocalPIDLocation);
+      if ( msgLevel(MSG::DEBUG) )
+        debug() << "Cannot locate RichLocalPIDs at " << m_richLocalPIDLocation << endreq;
     }
     else
     {
@@ -162,7 +164,7 @@ StatusCode HierarchicalPIDMerge::execute()
         if ( !( newPIDs->object((*lPID)->key()) ) )
         {
           // Form new PID object, using existing RichPID as template
-          newPIDs->insert( new LHCb::RichPID(*lPID), (*lPID)->key() );
+          newPIDs->insert( new LHCb::RichPID(**lPID), (*lPID)->key() );
           ++nUsedlocalPIDs;
         }
       }

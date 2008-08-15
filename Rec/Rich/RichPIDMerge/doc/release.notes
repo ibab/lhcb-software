@@ -4,6 +4,9 @@
 ! Purpose     : Contains the merging algorithms for final RICH PID results
 !-----------------------------------------------------------------------------
 
+! 2008-08-15 - Chris Jones
+ - Adapt to change in RichPID copy constructor (pointer to reference)
+
 !======================= RichPIDMerge v2r5 2007-09-20 =======================
 ! 2007-08-09 - Chris Jones
  - Use context() to configure HLT and Offline modes
