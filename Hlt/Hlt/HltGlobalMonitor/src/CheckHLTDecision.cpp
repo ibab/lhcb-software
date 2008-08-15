@@ -49,7 +49,11 @@ StatusCode CheckHLTDecision::initialize() {
 // Main execution
 //=============================================================================
 StatusCode CheckHLTDecision::execute() {  
-
+    if (!exist<LHCb::HltSummary>(LHCb::HltSummaryLocation::Default)){
+      info() << "No HLT Summary" << endreq; 
+      setFilterPassed( false );
+      return StatusCode::SUCCESS;
+    }
    LHCb::HltSummary* summary = get<LHCb::HltSummary>(LHCb::HltSummaryLocation::Default);
 //  if (summary->decision()) info() << "HLT decision yes" << endreq; 
   // IN THE EFF you can use the hltData() the FULL summary!
