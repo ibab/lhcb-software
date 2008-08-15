@@ -367,7 +367,13 @@ int GaudiTask::stopApplication()  {
 	return 0;
       }
     }
+    catch(const std::exception& e) {
+      MsgStream log(msgSvc(), name());
+      log << MSG::ERROR << "Crash while stopping 2nd.Layer:" << e.what() << endmsg;
+    }
     catch(...) {
+      MsgStream log(msgSvc(), name());
+      log << MSG::ERROR << "Unknown crash while stopping 2nd.Layer." << endmsg;
     }
     gauditask_task_unlock();
   }
@@ -379,13 +385,27 @@ int GaudiTask::finalizeApplication()  {
   if ( m_subMgr )  {
     try {
       gauditask_task_lock();
+      // If e.g.Class1 processes are reset() before start(), then the incident service 
+      // is still connected, and a later cancel() would access violate.
+      // Hence check again if the incident service is still present.
+      if ( m_incidentSvc ) {
+	m_incidentSvc->removeListener(this);
+	m_incidentSvc->release();
+      }
+      m_incidentSvc= 0;
       StatusCode sc = m_subMgr ? m_subMgr->finalize() : StatusCode::SUCCESS;
       if ( !sc.isSuccess() )   {
 	gauditask_task_unlock();
 	return 0;
       }
     }
+    catch(const std::exception& e) {
+      MsgStream log(msgSvc(), name());
+      log << MSG::ERROR << "Crash while finalizing 2nd.Layer:" << e.what() << endmsg;
+    }
     catch(...) {
+      MsgStream log(msgSvc(), name());
+      log << MSG::ERROR << "Unknown crash finalizing 2nd.Layer." << endmsg;
     }
     gauditask_task_unlock();
   }
@@ -396,6 +416,11 @@ int GaudiTask::finalizeApplication()  {
 int GaudiTask::terminateApplication()  {
   if ( m_subMgr )  {
     try {
+      if ( m_incidentSvc ) {
+	m_incidentSvc->removeListener(this);
+	m_incidentSvc->release();
+      }
+      m_incidentSvc= 0;
       StatusCode sc = m_subMgr->terminate();
       if ( sc.isSuccess() )   {
 	// Release is called by Gaudi::setInstance; danger of releasing twice?
@@ -407,7 +432,13 @@ int GaudiTask::terminateApplication()  {
       }
       return 0;
     }
+    catch(const std::exception& e) {
+      MsgStream log(msgSvc(), name());
+      log << MSG::ERROR << "Crash while terminating 2nd.Layer:" << e.what() << endmsg;
+    }
     catch(...) {
+      MsgStream log(msgSvc(), name());
+      log << MSG::ERROR << "Unknown crash terminating 2nd.Layer." << endmsg;
     }
   }
   return 1;
