@@ -235,6 +235,7 @@ ConfigFileAccessSvc::configTreeNodeAliases(const ConfigTreeNodeAlias::alias_type
         fs::directory_iterator end; // default construction yields past-the-end
         for ( fs::directory_iterator i( *dir ); i!= end; ++i) {
             if ( fs::is_directory(i->status()) ) {
+              if ( i->leaf()  == "CVS" ) continue;
               // push back on stack of directories...
               dirs.push_back(*i);
               debug() << " configTreeNodeAliases: adding dir " << *i << endmsg;
