@@ -1,9 +1,14 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.101 2008-08-11 13:53:24 jpalac Exp $
+! $Id: release.notes,v 1.102 2008-08-15 07:56:28 mneedham Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
+
+
+! 2008-08-15 M Needham
+ - Add list of recovered banks to STSummary class 
+
 
 ! 2008-08-11 - Juan PALACIOS
  - xml/RichPID.h
@@ -13,6 +18,7 @@
   . Add LHCb::RichPID(const LHCb::RichPID&) copy constructor.
  - xml/MuonPID.h
   . Add LHCb::MuonPID(const LHCb::MuonPID&) copy constructor.
+
 
 !========================= RecEvent v2r14 2008-07-16 =========================
 ! 2008-07-14 M Needham 
