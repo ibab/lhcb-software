@@ -1,4 +1,4 @@
-// $Id: STPerformanceMonitor.cpp,v 1.2 2008-08-08 07:31:27 mneedham Exp $
+// $Id: STPerformanceMonitor.cpp,v 1.3 2008-08-15 08:23:02 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -108,6 +108,8 @@ StatusCode STPerformanceMonitor::execute()
   // get the occupancy
   const double occ = clusterCont->size()/(m_tracker->nStrip()*frac); 
   plot(occ, 2,"occupancy", 0., 1., 200);
+  plot2D(m_event, occ, 12,"occ versus time", 0., m_expectedEvents, 0., 0.5e-3, 50, 200);
+
 
   return StatusCode::SUCCESS;
 }

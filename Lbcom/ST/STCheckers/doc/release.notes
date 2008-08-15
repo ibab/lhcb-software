@@ -2,6 +2,9 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2008-08-15 M Needham
+ - Add functionality to performance monitor
+
 ! 2008-08-08 M Needham
  - Add functionality to performance monitor
 
