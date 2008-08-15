@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.119 2008-08-05 10:24:15 robbep Exp $
+! $Id: release.notes,v 1.120 2008-08-15 08:10:57 robbep Exp $
 ! Package	        : L0/L0Calo
 ! Package Manager : Patrick Robbe & M-H. Schune
 !--------------------------------------------------------------------------
+
+! 2008-08-15 - Patrick Robbe
+ - src/L0CaloCandidatesFromRaw.cpp: initialize raw bank status
 
 ! 2008-08-05 - Patrick Robbe
  - src/L0CaloCandidatesFromRaw.cpp: improve speed following Gerhard Raven

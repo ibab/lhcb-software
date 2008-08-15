@@ -1,4 +1,4 @@
-// $Id: L0CaloCandidatesFromRaw.cpp,v 1.16 2008-08-05 10:24:15 robbep Exp $
+// $Id: L0CaloCandidatesFromRaw.cpp,v 1.17 2008-08-15 08:08:56 robbep Exp $
 // Include files 
 
 // from Gaudi
@@ -64,6 +64,8 @@ StatusCode L0CaloCandidatesFromRaw::execute() {
   std::vector<std::vector<unsigned int> > data;
 
   LHCb::RawBankReadoutStatus readoutStatus( LHCb::RawBank::L0Calo ) ;
+  readoutStatus.addStatus( 0 , LHCb::RawBankReadoutStatus::OK ) ;
+  readoutStatus.addStatus( 1 , LHCb::RawBankReadoutStatus::OK ) ;
   
   if ( exist< LHCb::RawEvent >( LHCb::RawEventLocation::Default ) ) {
 
