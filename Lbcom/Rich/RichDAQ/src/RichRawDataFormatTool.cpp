@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.73 2008-07-25 15:27:55 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.74 2008-08-15 14:22:56 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -44,7 +44,6 @@ RawDataFormatTool::RawDataFormatTool( const std::string& type,
     m_timeTool      ( NULL                 ),
     m_evtCount      ( 0                    ),
     m_hasBeenCalled ( false                ),
-    m_maxHPDOc      ( 999999               ),
     m_richIsActive  ( Rich::NRiches, true  )
 {
   // interface
@@ -54,8 +53,8 @@ RawDataFormatTool::RawDataFormatTool( const std::string& type,
   declareProperty( "ZeroSuppressHitCut", m_zeroSuppresCut = 96 );
   declareProperty( "RawEventLocation",
                    m_rawEventLoc = LHCb::RawEventLocation::Default );
-  declareProperty( "PrintSummary",       m_summary   = true );
-  declareProperty( "MaxHPDOccupancy",    m_maxHPDOc );
+  declareProperty( "PrintSummary",       m_summary   = true  );
+  declareProperty( "MaxHPDOccupancy",    m_maxHPDOc = 999999 );
   declareProperty( "DumpRawBanks",       m_dumpBanks          = false );
   declareProperty( "UseZeroSuppression", m_zeroSupp           = true  );
   declareProperty( "UseExtendedFormat",  m_extendedFormat     = false );

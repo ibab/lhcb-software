@@ -4,7 +4,10 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
-!========================== RichDAQ v3r18 2008-07-29 =========================
+! 2008-08-15 - Chris Jones
+ - Some minor changes to help migration to python Configurables
+
+!========================== RichDAQ v3r19 2008-07-29 =========================
 ! 2008-07-25 - Chris Jones
  - Adapt to new distinction between L1 hardware and logical ID numbers
 
