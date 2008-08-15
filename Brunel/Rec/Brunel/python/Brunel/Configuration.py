@@ -1,23 +1,30 @@
-"""
-High level configuration tools for Brunel
-"""
-__version__ = "$Id: Configuration.py,v 1.11 2008-07-30 15:30:00 cattanem Exp $"
+
+## @package Brunel
+#  High level configuration tools for Brunel
+#  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
+#  @date   15/08/2008
+
+__version__ = "$Id: Configuration.py,v 1.12 2008-08-15 15:04:21 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
-from Gaudi.Configuration import *
-from GaudiConf.Configuration import *
-from TrackSys.Configuration import *
+from LHCbKernel.Configuration import *
+from GaudiConf.Configuration  import *
+from RecSys.Configuration     import *
 import GaudiKernel.ProcessJobOptions
-from Configurables import ( ProcessPhase, CondDBCnvSvc, MagneticFieldSvc, ReadStripETC )
+from Configurables import ( ProcessPhase, CondDBCnvSvc, MagneticFieldSvc,
+                            ReadStripETC, RecInit )
 
-
-
-class Brunel(ConfigurableUser):
+## @class Brunel
+#  Configurable for Brunel application
+#  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
+#  @date   15/08/2008
+class Brunel(LHCbConfigurableUser):
 
     # Steering options
     __slots__ = {
         "EvtMax":          -1 # Maximum number of events to process
        ,"skipEvents":   0     # events to skip
+       ,"printFreq":   -1     # The frequency at which to print event numbers
        ,"withMC":       True  # set to False for real data or to ignore MC truth
        ,"recL0Only":    False # set to True to reconstruct only L0-yes events
        ,"inputType":    "DIGI"# or "MDF" or "ETC" or "RDST" or "DST"
@@ -29,36 +36,29 @@ class Brunel(ConfigurableUser):
        ,"DDDBtag":      ""    # geometry database tag
        ,"condDBtag":    ""    # conditions database tag
        ,"useOracleCondDB": False  # if False, use SQLDDDB instead
+       ,"mainSequence": [ "ProcessPhase/Init",
+                          "ProcessPhase/Reco",
+                          "ProcessPhase/Moni",
+                          "ProcessPhase/MCLinks",
+                          "ProcessPhase/Check",
+                          "ProcessPhase/Output" ]
+       ,"mcCheckSequence": ["Pat","RICH","MUON"] # The default MC Check sequence
+       ,"initSequence": ["Reproc", "Brunel", "Calo"] # The default init sequence
+       ,"moniSequence": []    # The default Moni sequence
        ,"monitors": []        # list of monitors to execute, see KnownMonitors
-        # Following are options forwarded to TrackSys
+        # Following are options forwarded to RecSys
+       ,"recoSequence"   : [] # The Sub-detector reconstruction sequencing. See RecSys for default
        ,"fieldOff":     False # set to True for magnetic field off data
        ,"veloOpen":     False # set to True for Velo open data
+        # Following are options forwarded to TrackSys
        ,"expertTracking": []  # list of expert Tracking options, see KnownExpertTracking
         }
-
-    def getProp(self,name):
-        if hasattr(self,name):
-            return getattr(self,name)
-        else:
-            return self.getDefaultProperties()[name]
-
-    def setProp(self,name,value):
-        return setattr(self,name,value)
-
-    def setOtherProp(self,other,name):
-        # Function to propagate properties to other component, if not already set
-        if hasattr(self,name):
-            if hasattr(other,name) and len(other.getProp(name)) > 0 :
-                print "# %s().%s already defined, ignoring Brunel().%s"%(other.name(),name,name)
-            else:
-                other.setProp(name,self.getProp(name))
 
     def defineGeometry(self):
         self.setOtherProp(LHCbApp(),"condDBtag") 
         self.setOtherProp(LHCbApp(),"DDDBtag") 
         if LHCbApp().getProp("DDDBtag").find("DC06") != -1 :
             ApplicationMgr().Dlls += [ "HepMCBack" ]
-
 
     def defineEvents(self):
         evtMax = self.getProp("EvtMax")
@@ -91,6 +91,7 @@ class Brunel(ConfigurableUser):
                 GaudiSequencer("InitBrunelSeq").Members.append("ReadStripETC/TagReader")
                 ReadStripETC("TagReader").CollectionName = "TagCreator"
                 IODataManager().AgeLimit += 1
+                
         elif ( inputType == "MDF" ):
             withMC = False # Force it, MDF never contains MC truth
 
@@ -98,7 +99,9 @@ class Brunel(ConfigurableUser):
             withMC = False # Force it, RDST never contains MC truth
 
         if withMC:
+            ProcessPhase("Check").DetectorList += self.getProp("mcCheckSequence")
             importOptions( "$BRUNELOPTS/BrunelMC.opts" )
+            
         elif inputType not in [ "DIGI", "DST" ]:
             # In case raw data resides in MDF file
             EventPersistencySvc().CnvServices.append("LHCb::RawDataCnvSvc")
@@ -112,7 +115,7 @@ class Brunel(ConfigurableUser):
         """
         expertHistos = self.getProp("expertHistos")
         if expertHistos:
-            TrackSys().setProp( "expertHistos", expertHistos )
+            RecSysConf().setProp( "expertHistos", expertHistos )
             importOptions( "$BRUNELOPTS/ExpertCheck.opts" )
             IODataManager().AgeLimit += 1
 
@@ -171,24 +174,31 @@ class Brunel(ConfigurableUser):
         else:
             return ApplicationMgr().getDefaultProperties()["EvtMax"]
 
+    ## Apply the configuration
     def applyConf(self):
         GaudiKernel.ProcessJobOptions.printing_level += 1
         # Propagate the useOracleCondDB property to LHCbApp before it is used by DDDB.py
-        self.setOtherProp(LHCbApp(),"useOracleCondDB") 
+        self.setOtherProp(LHCbApp(),"useOracleCondDB")
         # Next line has to be before mainOptions - TODO: why?
         importOptions( "$DDDBROOT/options/DDDB.py" )
         self.setOtherProp(TrackSys(),"expertTracking") 
-        self.setOtherProp(TrackSys(),"fieldOff") 
-        self.setOtherProp(TrackSys(),"veloOpen") 
+        self.setOtherProps(RecSysConf(),["fieldOff","veloOpen","recoSequence"])
+        # Set main sequence
+        brunelSeq = GaudiSequencer("BrunelSequencer")
+        ApplicationMgr().TopAlg = [ brunelSeq ]
+        brunelSeq.Members += self.getProp("mainSequence")
         importOptions( self.getProp( "mainOptions" ) )
+        ProcessPhase("Init").DetectorList += self.getProp("initSequence")
+        ProcessPhase("Moni").DetectorList += self.getProp("moniSequence")
         self.defineGeometry()
         self.defineEvents()
         self.defineOptions()
         self.defineHistos()
         self.defineOutput()
         self.defineMonitors()
-        TrackSys().applyConf()
+        RecSysConf().applyConf()
         LHCbApp().applyConf()
+        RecInit("BrunelInit").PrintFreq = self.getProp("printFreq")
         # Use SIMCOND for Simulation, if not DC06
         if self.getProp("withMC") and LHCbApp().getProp("condDBtag").find("DC06") == -1:
             CondDBCnvSvc( CondDBReader = allConfigurables["SimulationCondDBReader"] )

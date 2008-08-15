@@ -20,20 +20,22 @@ IODataManager.AgeLimit = 0;
 EventClockSvc.EventTimeDecoder = "OdinTimeDecoder";
 
 // Run the full job inside a single sequencer TopAlg
-ApplicationMgr.TopAlg = { "GaudiSequencer/BrunelSequencer" };
+// CRJ : Now in Configurable
+//ApplicationMgr.TopAlg = { "GaudiSequencer/BrunelSequencer" };
 
 //----------------------------------------------------------------------------
 // Instantiate all Brunel phases. MC specific phases not populated in this file
 //----------------------------------------------------------------------------
-BrunelSequencer.Members = { "ProcessPhase/Init",
-                            "ProcessPhase/Reco",
-                            "ProcessPhase/Moni",
-                            "ProcessPhase/MCLinks", // Links to MC truth
-                            "ProcessPhase/Check",   // Checking with MC truth
-                            "ProcessPhase/Output" };
+// CRJ : Now in Configurable
+//BrunelSequencer.Members = { "ProcessPhase/Init",
+//                            "ProcessPhase/Reco",
+//                            "ProcessPhase/Moni",
+//                            "ProcessPhase/MCLinks", // Links to MC truth
+//                            "ProcessPhase/Check",   // Checking with MC truth
+//                            "ProcessPhase/Output" };
 
 // Initialisation phase
-Init.DetectorList += { "Reproc", "Brunel", "Calo" };
+//Init.DetectorList += { "Reproc", "Brunel", "Calo" }; // CRJ : Now done in python
 InitBrunelSeq.Members += { "RecInit/BrunelInit" };
 
 // Convert Calo 'packed' banks to 'short' banks if needed
@@ -52,7 +54,8 @@ TESCheck.OutputLevel  = 5;
 EventNodeKiller.Nodes = { "Rec", "Raw", "Link/Rec" };
 
 // Reconstruction phase
-#include "$RECSYSROOT/options/Reco.py"
+// CRJ : No longer needed. Applied via RecSys().applyConf()
+//#include "$RECSYSROOT/options/Reco.py"
 //#include "$RECSYSROOT/options/Reco.opts"
 
 // Monitoring phase (monitoring independent of MC truth)

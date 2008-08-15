@@ -3,6 +3,15 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2008-08-15 - Chris Jones
+ - Changes to python Configurable:
+  + Use new RecSys Configurable
+  + Add option printFreq to allow control over the event printing frequency
+  + Add options to allow the various sequences to be modified. Allows, for 
+    instance, sub-detectors to be disabled for specialist studies.
+  + Use new Configurable base class in LHCbKernel (shares some methods)
+  + Add some doxygen comments
+
 </PRE><H1><A NAME=v33r1>2008-07-30 Brunel v33r1</A></H1><PRE>
  - Changes to Configurable:
    . Load the HepMCBack Dll for DC06 data (HepMC 1.26 compatibility)
