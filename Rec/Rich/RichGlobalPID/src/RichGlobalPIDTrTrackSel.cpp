@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::TrackSel
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDTrTrackSel.cpp,v 1.34 2008-03-25 16:26:44 jonrob Exp $
+ *  $Id: RichGlobalPIDTrTrackSel.cpp,v 1.35 2008-08-15 14:30:22 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -43,8 +43,8 @@ TrackSel::TrackSel( const std::string& name,
   declareProperty( "MinimumPhysicsMomentum",  m_minPhysPtot = 0.0*Gaudi::Units::GeV );
   declareProperty( "MinimumLikelihoodMomentum", m_minLLPtot = 0.0*Gaudi::Units::GeV );
   declareProperty( "ResetTracksToPion", m_resetToPion = false );
-  declareProperty( "MaxUsedTracks", m_maxUsedTracks = 250 );
-  declareProperty( "MaxInputTracks", m_maxInputTracks = 350 );
+  declareProperty( "MaxUsedTracks", m_maxUsedTracks = 400 );
+  declareProperty( "MaxInputTracks", m_maxInputTracks = 99999 );
   declareProperty( "FreezeSelectedTracks", m_freezeTracks = false );
   declareProperty( "FrozenTrackMassHypo",  m_frozenType = (int)Rich::Pion );
 }

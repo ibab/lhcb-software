@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID tool : Rich::Rec::GlobalPID::LikelihoodTool
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDLikelihoodTool.cpp,v 1.4 2008-06-05 09:06:19 jonrob Exp $
+ *  $Id: RichGlobalPIDLikelihoodTool.cpp,v 1.5 2008-08-15 14:30:22 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2008-03-01
@@ -41,32 +41,31 @@ LikelihoodTool::LikelihoodTool( const std::string& type,
   declareInterface<IRichGlobalPID> ( this );
   declareInterface<IRichPID>       ( this );
 
-  // Threshold for likelihood maximisation
-  declareProperty( "LikelihoodThreshold", m_epsilon = -1e-5 );
+  declareProperty( "LikelihoodThreshold", m_epsilon = -1e-3,
+                   "Threshold for likelihood maximisation" );
 
-  // Maximum number of track iterations
-  declareProperty( "MaxEventIterations", m_maxEventIterations = 500 );
+  declareProperty( "MaxEventIterations", m_maxEventIterations = 500,
+                   "Maximum number of track iterations" );
 
-  // Minimum signal value for full calculation of log(1-exp(-signal))
-  declareProperty( "MinSignalForNoLLCalc", m_minSig = 1e-3 );
+  declareProperty( "MinSignalForNoLLCalc", m_minSig = 1e-3,
+                   "Minimum signal value for full calculation of log(1-exp(-signal))" );
 
-  // Track freeze out value ( the point at which it is no longer considered for change)
-  declareProperty( "TrackFreezeOutDLL", m_freezeOutDll = 999999 );
+  declareProperty( "TrackFreezeOutDLL", m_freezeOutDll = 4,
+                   "Track freeze out value ( the point at which it is no longer considered for change)" );
 
-  // Track DLL Thresdhold for forced change
-  declareProperty( "TrackForceChangeDLL", m_forceChangeDll = -999999 );
+  declareProperty( "TrackForceChangeDLL", m_forceChangeDll = -2,
+                   "Track DLL Thresdhold for forced change" );
 
-  // Flag to turn on final DLL and hypothesis check
-  declareProperty( "FinalDLLCheck", m_doFinalDllCheck = false );
+  declareProperty( "FinalDLLCheck", m_doFinalDllCheck = false,
+                   "Flag to turn on final DLL and hypothesis check" );
 
-  // Flag to turn on RICH check in LL minimisation (turn off for max precision)
-  declareProperty( "RichDetCheck", m_richCheck = true );
+  declareProperty( "RichDetCheck", m_richCheck = true,
+                   "Flag to turn on RICH check in LL minimisation (turn off for max precision)" );
 
-  // Maximum number of tracks to change in a single event iteration
-  declareProperty( "MaxTrackChangesPerIt", m_maxTkChanges = 5 );
+  declareProperty( "MaxTrackChangesPerIt", m_maxTkChanges = 5,
+                   "Maximum number of tracks to change in a single event iteration" );
 
-  // Maximum retries
-  declareProperty( "MaxIterationRetries", m_maxItRetries = 10 );
+  declareProperty( "MaxIterationRetries", m_maxItRetries = 10, "Maximum retries" );
 }
 
 //=============================================================================
