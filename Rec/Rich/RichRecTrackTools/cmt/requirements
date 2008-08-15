@@ -2,8 +2,9 @@
 # Created    : 2007-10-31
 # Maintainer : Chris Jones   Christopher.Rob.Jones@cern.ch
 #============================================================================
+
 package           RichRecTrackTools
-version           v1r5
+version           v1r6
 
 #============================================================================
 # Structure

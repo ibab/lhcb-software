@@ -1,30 +1,44 @@
-"""
-Segment creator options for RICH Reconstruction
-"""
-__version__ = "$Id: SegmentCreator.py,v 1.1 2008-08-07 20:56:54 jonrob Exp $"
+
+## @package SegmentCreator
+#  RichRecSegment creator options for RICH Reconstruction
+#  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
+#  @date   15/08/2008
+
+__version__ = "$Id: SegmentCreator.py,v 1.2 2008-08-15 14:41:23 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
 from Configurables import ( Rich__Rec__SegmentCreator )
 
+# ----------------------------------------------------------------------------------
+
+## @class RichSegmentCreatorConf
+#  RichRecSegment creator options for RICH Reconstruction
+#  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
+#  @date   15/08/2008
 class RichSegmentCreatorConf(RichConfigurableUser):
 
-    DefaultEnergyBins = [ 5, 5, 5 ]
+    ## Default number of energy bins for each radiator
+    DefaultEnergyBins = { "Offline" : [ 5, 5, 5 ],
+                          "HLT"     : [ 2, 2, 2 ] }
 
-  # Steering options
+    ## Steering options
     __slots__ = {
         "context": "Offline"  # The context within which to run
        ,"energyBins": [ ]
         }
-    
+
+    ## @brief Apply the configuration
+    #
     def applyConf(self):
 
-        # Check settings
-        self.checkRadData("energyBins",self.DefaultEnergyBins)
+        context = self.getProp("context")
 
-        type     = "Rich::Rec::SegmentCreator"
+        # Check settings
+        self.checkRadData("energyBins",self.DefaultEnergyBins[context])
+
         nickname = "RichSegmentCreator"
         
-        segCreator = Rich__Rec__SegmentCreator( "ToolSvc."+self.getProp("context")+"_"+nickname )
+        segCreator = Rich__Rec__SegmentCreator( "ToolSvc."+context+"_"+nickname )
 
         segCreator.EnergyBins = self.getProp("energyBins")

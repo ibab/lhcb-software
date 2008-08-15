@@ -22,37 +22,38 @@ RecoRICHSeq.Context = "Offline";
 //-----------------------------------------------------------------------------
 // Initialisation (Technically not needed, but useful for timing studies)
 //-----------------------------------------------------------------------------
-RecoRICHSeq.Members += { "GaudiSequencer/RichRecInitSeq" };
-RichRecInitSeq.MeasureTime = true;
+RecoRICHSeq.Members += { "GaudiSequencer/RichRecInitOfflineSeq" };
+RichRecInitOfflineSeq.MeasureTime = true;
 
-RichRecInitSeq.Members += { "GaudiSequencer/RichPixelsSeq" };
-RichPixelsSeq.MeasureTime      = true;
-RichPixelsSeq.Members += { "Rich::DAQ::RawBufferToRichDigitsAlg/DecodeRawRich" };
-DecodeRawRich.DecodeBufferOnly = true;
-RichPixelsSeq.Members += { "Rich::Rec::Initialise/CreatePixels" };
-CreatePixels.CheckProcStatus   = false;
-CreatePixels.CreatePixels      = true;
+RichRecInitOfflineSeq.Members += { "Rich::Rec::Initialise/CheckProcOfflineStatus" };
 
-RichRecInitSeq.Members += { "GaudiSequencer/RichTracksSeq" };
-RichTracksSeq.MeasureTime     = true;
-RichTracksSeq.Members += { "Rich::Rec::Initialise/CheckProcStatus" };
-RichTracksSeq.Members += { "Rich::Rec::Initialise/CreateTracks" };
-CreateTracks.CheckProcStatus  = false;
-CreateTracks.CreateTracks     = true;
+RichRecInitOfflineSeq.Members += { "GaudiSequencer/RichOfflinePixelsSeq" };
+RichOfflinePixelsSeq.MeasureTime      = true;
+RichOfflinePixelsSeq.Members += { "Rich::DAQ::RawBufferToRichDigitsAlg/DecodeRawRichOffline" };
+DecodeRawRichOffline.DecodeBufferOnly = true;
+RichOfflinePixelsSeq.Members += { "Rich::Rec::Initialise/CreateOfflinePixels" };
+CreateOfflinePixels.CheckProcStatus   = false;
+CreateOfflinePixels.CreatePixels      = true;
 
-RichRecInitSeq.Members += { "GaudiSequencer/RichPhotonsSeq" };
-RichPhotonsSeq.MeasureTime    = true;
-RichPhotonsSeq.Members += { "Rich::Rec::Initialise/CreatePhotons" };
-CreatePhotons.CheckProcStatus = false;
-CreatePhotons.CreatePhotons   = true;
+RichRecInitOfflineSeq.Members += { "GaudiSequencer/RichOfflineTracksSeq" };
+RichOfflineTracksSeq.MeasureTime     = true;
+RichOfflineTracksSeq.Members += { "Rich::Rec::Initialise/CreateOfflineTracks" };
+CreateOfflineTracks.CheckProcStatus  = false;
+CreateOfflineTracks.CreateTracks     = true;
+
+RichRecInitOfflineSeq.Members += { "GaudiSequencer/RichOfflinePhotonsSeq" };
+RichOfflinePhotonsSeq.MeasureTime    = true;
+RichOfflinePhotonsSeq.Members += { "Rich::Rec::Initialise/CreateOfflinePhotons" };
+CreateOfflinePhotons.CheckProcStatus = false;
+CreateOfflinePhotons.CreatePhotons   = true;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
 // General PID sequence
 //-----------------------------------------------------------------------------
 
-RecoRICHSeq.Members += { "GaudiSequencer/RichPIDSeq" };
-RichPIDSeq.MeasureTime   = true;
+RecoRICHSeq.Members += { "GaudiSequencer/RichOfflinePIDSeq" };
+RichOfflinePIDSeq.MeasureTime   = true;
 
 //-----------------------------------------------------------------------------
 // Local PID algorithm
@@ -65,40 +66,40 @@ RichPIDSeq.MeasureTime   = true;
 //-----------------------------------------------------------------------------
 // Global PID algorithm
 //-----------------------------------------------------------------------------
-RichPIDSeq.Members += { "GaudiSequencer/RichGlobalPIDSeq" };
-RichGlobalPIDSeq.MeasureTime   = true;
+RichOfflinePIDSeq.Members += { "GaudiSequencer/RichOfflineGPIDSeq" };
+RichGPIDSeq.MeasureTime   = true;
 
 // Initialise Global PID algorithm for each event
-RichGlobalPIDSeq.Members += { "GaudiSequencer/RichGlobalPIDInitSeq" };
-RichGlobalPIDInitSeq.MeasureTime   = true;
-RichGlobalPIDInitSeq.Members += { "Rich::Rec::GlobalPID::Initialize/RichGloPIDInit",
-                                  "Rich::Rec::GlobalPID::DigitSel/RichGloPIDDigSel",
-                                  "Rich::Rec::GlobalPID::TrackSel/RichGloPIDTrSel" };
+RichOfflineGPIDSeq.Members += { "GaudiSequencer/RichOfflineGPIDInitSeq" };
+RichOfflineGPIDInitSeq.MeasureTime   = true;
+RichOfflineGPIDInitSeq.Members += { "Rich::Rec::GlobalPID::Initialize/RichOfflineGPIDInit",
+                                         "Rich::Rec::GlobalPID::DigitSel/RichOfflineGPIDDigSel",
+                                         "Rich::Rec::GlobalPID::TrackSel/RichOfflineGPIDTrSel" };
 // Likelihood
-RichGlobalPIDSeq.Members += { "GaudiSequencer/RichGlobalPIDLikelihoodSeq" };
-RichGlobalPIDLikelihoodSeq.MeasureTime   = true;
+RichOfflineGPIDSeq.Members += { "GaudiSequencer/RichOfflineGPIDLLSeq" };
+RichOfflineGPIDLLSeq.MeasureTime   = true;
 
 // First iteration of background estimation then Global PID iteration
-RichGlobalPIDLikelihoodSeq.Members += { 
-  "Rich::Rec::PixelBackgroundAlg/RichBckEstPreIt",
-  "Rich::Rec::GlobalPID::Likelihood/RichGloPIDPreIt" 
+RichOfflineGPIDLLSeq.Members += {
+  "Rich::Rec::PixelBackgroundAlg/RichOfflineBckEstIt0",
+  "Rich::Rec::GlobalPID::Likelihood/RichOfflineGPIDLLIt0"
 };
 
 // Second iteration of background estimation then Global PID iteration
-RichGlobalPIDLikelihoodSeq.Members += { 
-  "Rich::Rec::PixelBackgroundAlg/RichBckEstFinalIt",
-  "Rich::Rec::GlobalPID::Likelihood/RichGloPIDFinalIt" 
+RichOfflineGPIDLLSeq.Members += {
+  "Rich::Rec::PixelBackgroundAlg/RichOfflineBckEstIt1",
+  "Rich::Rec::GlobalPID::Likelihood/RichOfflineGPIDLLIt1"
 };
 
 // Finalise Global PID algorithm each event
-RichGlobalPIDSeq.Members += { "Rich::Rec::GlobalPID::Finalize/RichGloPIDFin" };
+RichOfflineGPIDSeq.Members += { "Rich::Rec::GlobalPID::Finalize/RichOfflineGPIDFin" };
 
 //-----------------------------------------------------------------------------
 
 // Make final output PID results
 // Current uses for each track Global PID if it exists,
 // otherwise local if that exists
-RichPIDSeq.Members += { "Rich::Rec::HierarchicalPIDMerge/MergeRichPIDs" };
+RichOfflinePIDSeq.Members += { "Rich::Rec::HierarchicalPIDMerge/MergeOfflineRichPIDs" };
 
 // Reconstruction summary
 //RecoRICHSeq.Members += { "Rich::Rec::SummaryAlg/RichRecSummary" };
@@ -122,18 +123,18 @@ ToolSvc.RichLocPIDTool.CherenkovThetaRes     = { 0.002, 0.0014, 0.0007   };
 ToolSvc.Offline_RichToolRegistry.Tools += { "Rich::Rec::LocalPID::PIDToolAngleSpace/RichLocPIDTool" };
 
 // Global PID digit selection
-RichGloPIDDigSel.MaxUsedPixels            = 8000;
+RichOfflineGPIDDigSel.MaxUsedPixels            = 8000;
 
 // Global PID track selection
-RichGloPIDTrSel.TrackSelector.TrackAlgs = { "Seed","Match","Forward","KsTrack","VeloTT" };
-RichGloPIDTrSel.TrackSelector.TrackAlgs += {"MCRichTrack"}; // uncomment to add MC tracks to be used by GPID
-RichGloPIDTrSel.TrackSelector.KsTrack.MinPCut = 0;
-RichGloPIDTrSel.TrackSelector.VeloTT.MinPCut  = 0;
-RichGloPIDTrSel.MaxUsedTracks             = 400;
-RichGloPIDTrSel.MaxInputTracks            = 99999;
-RichGloPIDTrSel.MinimumPhysicsMomentum    = 0.0*GeV;
-RichGloPIDTrSel.MinimumLikelihoodMomentum = 0.0*GeV;
-RichGloPIDTrSel.ResetTracksToPion         = false;
+RichOfflineGPIDTrSel.TrackSelector.TrackAlgs = { "Forward","Match","Seed","VeloTT","KsTrack" };
+//RichOfflineGPIDTrSel.TrackSelector.TrackAlgs += {"MCRichTrack"}; // uncomment to add MC tracks to be used by GPID
+//RichOfflineGPIDTrSel.TrackSelector.KsTrack.MinPCut = 0;
+//RichOfflineGPIDTrSel.TrackSelector.VeloTT.MinPCut  = 0;
+RichOfflineGPIDTrSel.MaxUsedTracks             = 400;
+RichOfflineGPIDTrSel.MaxInputTracks            = 99999;
+RichOfflineGPIDTrSel.MinimumPhysicsMomentum    = 0.0*GeV;
+RichOfflineGPIDTrSel.MinimumLikelihoodMomentum = 0.0*GeV;
+RichOfflineGPIDTrSel.ResetTracksToPion         = false;
 
 // options to 'freeze' some tracks in the global PID selection
 //RichGloPIDTrSel.FreezeSelectedTracks = true;
@@ -145,25 +146,25 @@ RichGloPIDTrSel.ResetTracksToPion         = false;
 //RichGloPIDTrSel.FrozenTrackMassHypo = 0;
 
 // Global Algorithm parameters - phase 1
-RichGloPIDPreIt.GPIDLikelihoodTool.TrackFreezeOutDLL           = 2;
-RichGloPIDPreIt.GPIDLikelihoodTool.TrackForceChangeDLL         = -1;
-RichGloPIDPreIt.GPIDLikelihoodTool.LikelihoodThreshold         = -1e-2;
-RichGloPIDPreIt.GPIDLikelihoodTool.MaxTrackChangesPerIt        = 5;
-RichGloPIDPreIt.GPIDLikelihoodTool.MinSignalForNoLLCalc        = 1e-3;
+RichOfflineGPIDLLIt0.GPIDLikelihoodTool.TrackFreezeOutDLL           = 2;
+RichOfflineGPIDLLIt0.GPIDLikelihoodTool.TrackForceChangeDLL         = -1;
+RichOfflineGPIDLLIt0.GPIDLikelihoodTool.LikelihoodThreshold         = -1e-2;
+RichOfflineGPIDLLIt0.GPIDLikelihoodTool.MaxTrackChangesPerIt        = 5;
+RichOfflineGPIDLLIt0.GPIDLikelihoodTool.MinSignalForNoLLCalc        = 1e-3;
 
 // Global Algorithm parameters - phase 2
-RichGloPIDFinalIt.GPIDLikelihoodTool.TrackFreezeOutDLL         = 4;
-RichGloPIDFinalIt.GPIDLikelihoodTool.TrackForceChangeDLL       = -2;
-RichGloPIDFinalIt.GPIDLikelihoodTool.LikelihoodThreshold       = -1e-3;
-RichGloPIDFinalIt.GPIDLikelihoodTool.MaxTrackChangesPerIt      = 5;
-RichGloPIDFinalIt.GPIDLikelihoodTool.MinSignalForNoLLCalc      = 1e-3;
+RichOfflineGPIDLLIt1.GPIDLikelihoodTool.TrackFreezeOutDLL         = 4;
+RichOfflineGPIDLLIt1.GPIDLikelihoodTool.TrackForceChangeDLL       = -2;
+RichOfflineGPIDLLIt1.GPIDLikelihoodTool.LikelihoodThreshold       = -1e-3;
+RichOfflineGPIDLLIt1.GPIDLikelihoodTool.MaxTrackChangesPerIt      = 5;
+RichOfflineGPIDLLIt1.GPIDLikelihoodTool.MinSignalForNoLLCalc      = 1e-3;
 
 // Final iteration must have this option set
-RichGloPIDFinalIt.GPIDLikelihoodTool.FinalDLLCheck = true;
+RichOfflineGPIDLLIt1.GPIDLikelihoodTool.FinalDLLCheck = true;
 
 // PID merging
-MergeRichPIDs.UseLocalPIDs     = false;
-MergeRichPIDs.UseGlobalPIDs    = true;
+MergeOfflineRichPIDs.UseLocalPIDs     = false;
+MergeOfflineRichPIDs.UseGlobalPIDs    = true;
 //MergeRichPIDs.OutputPIDLocation = "Rec/Rich/NewPIDs";
 
 // summary maker parameters

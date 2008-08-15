@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::CKthetaBandsPhotonPredictor
  *
  *  CVS Log :-
- *  $Id: RichCKthetaBandsPhotonPredictor.cpp,v 1.2 2008-05-08 13:21:32 jonrob Exp $
+ *  $Id: RichCKthetaBandsPhotonPredictor.cpp,v 1.3 2008-08-15 14:37:39 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   26/07/2007
@@ -35,7 +35,6 @@ CKthetaBandsPhotonPredictor( const std::string& type,
     m_ckAngle       ( NULL ),
     m_ckRes         ( NULL ),
     m_richPartProp  ( NULL ),
-    m_minROI        ( Rich::NRadiatorTypes, 0 ),
     m_maxROI        ( Rich::NRadiatorTypes, 0 ),
     m_ckThetaMax    ( Rich::NRadiatorTypes, 0 ),
     m_sepGMax       ( Rich::NRadiatorTypes, 0 ),
@@ -44,45 +43,35 @@ CKthetaBandsPhotonPredictor( const std::string& type,
     m_minXlocal     ( Rich::NRadiatorTypes, 0 ),
     m_minYlocal     ( Rich::NRadiatorTypes, 0 )
 {
+  using namespace boost::assign;
+  using namespace Gaudi::Units;
 
   // interface
   declareInterface<IPhotonPredictor>(this);
 
+  // default values          Aero    R1Gas   R2Gas
+  m_minROI     =    list_of  (110)   (0)     (0)     ;
+  m_maxROI     =    list_of  (390)   (86)    (165)   ;
+  m_ckThetaMax =    list_of  (0.24)  (0.052) (0.03)  ;
+  m_sepGMax    =    list_of  (342)   (75)    (130)   ;
+  m_minXlocal  =    list_of  (-1*mm) (-1*mm) (-1*mm) ;
+  m_minYlocal  =    list_of  (-1*mm) (-1*mm) (-1*mm) ;
+  if ( context() == "HLT" || context() == "Hlt" )
+  {
+    m_nSigma   =    list_of  (4.5)   (4.5)   (10.5)  ;
+  }
+  else // Offline
+  {
+    m_nSigma   =    list_of  (5.5)   (5.5)   (11.5)  ;
+  }
+
   // job options
-
-  m_minROI[Rich::Aerogel]  = 110; // aerogel
-  m_minROI[Rich::Rich1Gas] = 0;   // rich1Gas
-  m_minROI[Rich::Rich2Gas] = 0;   // rich2Gas
   declareProperty( "MinTrackROI", m_minROI );
-
-  m_maxROI[Rich::Aerogel]  = 390;   // aerogel
-  m_maxROI[Rich::Rich1Gas] =  86;   // rich1Gas
-  m_maxROI[Rich::Rich2Gas] = 165;   // rich2Gas
   declareProperty( "MaxTrackROI", m_maxROI );
-
-  m_ckThetaMax[Rich::Aerogel]  = 0.24;
-  m_ckThetaMax[Rich::Rich1Gas] = 0.0520;
-  m_ckThetaMax[Rich::Rich2Gas] = 0.03;
   declareProperty( "CKthetaMax", m_ckThetaMax );
-
-  m_sepGMax[Rich::Aerogel]   = 342;
-  m_sepGMax[Rich::Rich1Gas]  = 75;
-  m_sepGMax[Rich::Rich2Gas]  = 130;
   declareProperty( "SepGMax", m_sepGMax );
-
-  m_nSigma[Rich::Aerogel]   = 6.5;
-  m_nSigma[Rich::Rich1Gas]  = 6.5;
-  m_nSigma[Rich::Rich2Gas]  = 12;
   declareProperty( "NSigma", m_nSigma );
-
-  m_minXlocal[Rich::Aerogel]  = -1*Gaudi::Units::mm;
-  m_minXlocal[Rich::Rich1Gas] = -1*Gaudi::Units::mm;
-  m_minXlocal[Rich::Rich2Gas] = -1*Gaudi::Units::mm;
   declareProperty( "MinPixelXLocal", m_minXlocal );
-
-  m_minYlocal[Rich::Aerogel]  = -1*Gaudi::Units::mm;
-  m_minYlocal[Rich::Rich1Gas] = -1*Gaudi::Units::mm;
-  m_minYlocal[Rich::Rich2Gas] = -1*Gaudi::Units::mm;
   declareProperty( "MinPixelYLocal", m_minYlocal );
 
 }

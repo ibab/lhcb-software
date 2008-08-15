@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::CKthetaBandsPhotonPredictor
  *
  *  CVS Log :-
- *  $Id: RichCKthetaBandsPhotonPredictor.h,v 1.2 2008-05-08 13:21:32 jonrob Exp $
+ *  $Id: RichCKthetaBandsPhotonPredictor.h,v 1.3 2008-08-15 14:37:39 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   26/07/2007
@@ -37,6 +37,7 @@
 
 // boost
 #include "boost/format.hpp"
+#include "boost/assign/list_of.hpp"
 
 namespace Rich
 {

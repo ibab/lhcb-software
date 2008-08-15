@@ -4,7 +4,7 @@
  *
  *  Implementation file for tool : Rich::Rec::FunctionalCKResForRecoTracks
  *
- *  $Id: RichFunctionalCKResForRecoTracks.cpp,v 1.1.1.1 2007-11-26 17:28:18 jonrob Exp $
+ *  $Id: RichFunctionalCKResForRecoTracks.cpp,v 1.2 2008-08-15 14:45:28 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/10/2004
@@ -70,6 +70,10 @@ FunctionalCKResForRecoTracks ( const std::string& type,
   declareProperty( "Rich2GasAsymptopicErr", m_asmpt[Rich::Rich2Gas] );
 
   declareProperty( "UseTransportService", m_useTS = false );
+
+  // default to having histograms disabled
+  setProduceHistos ( false );
+  setHistoDir( "CKRes" );
 
 }
 

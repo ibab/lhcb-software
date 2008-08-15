@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::RayTraceCherenkovCone
  *
  *  CVS Log :-
- *  $Id: RichRayTraceCherenkovCone.h,v 1.19 2008-03-27 11:03:59 jonrob Exp $
+ *  $Id: RichRayTraceCherenkovCone.h,v 1.20 2008-08-15 14:43:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -32,6 +32,9 @@
 // RichKernel
 #include "RichKernel/FastMaths.h"
 #include "RichKernel/RichMap.h"
+
+// boost
+#include "boost/assign/list_of.hpp"
 
 namespace Rich
 {

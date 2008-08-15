@@ -5,7 +5,7 @@
 ToolSvc.Offline_RichToolRegistry.Tools += { "Rich::Rec::TrackCreatorFromRecoTracks/RichTrackCreator" };
 
 // Track agls
-ToolSvc.Offline_RichTrackCreator.TrackSelector.TrackAlgs = { "Seed","Match","Forward","KsTrack","VeloTT" };
+ToolSvc.Offline_RichTrackCreator.TrackSelector.TrackAlgs = { "Forward","Match","Seed","VeloTT","KsTrack" };
 // Momentum cuts (the defaults)
 //ToolSvc.Offline_RichTrackCreator.TrackSelector.VeloTT.MinPCut  = 1;
 //ToolSvc.Offline_RichTrackCreator.TrackSelector.KsTrack.MinPCut = 1;

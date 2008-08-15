@@ -15,8 +15,6 @@ ToolSvc.Offline_RichTrackCreator.ToolsByTrackType = { "Forward/RichTrackCreatorM
                                                       "KsTrack/RichTrackCreatorMC",
                                                       "Velo/RichTrackCreatorMC" };
 
-
-
 // The delegated RichTrackCreator that uses full reco information
 ToolSvc.Offline_RichToolRegistry.Tools += { "Rich::Rec::TrackCreatorFromRecoTracks/RichTrackCreatorReco" };
 ToolSvc.Offline_RichTrackCreator.RichTrackCreatorReco.TrackSelector.TrackAlgs = { "Seed","Match","Forward","KsTrack","VeloTT" };

@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::PhotonCreator
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreator.cpp,v 1.2 2008-01-25 13:33:29 jonrob Exp $
+ *  $Id: RichPhotonCreator.cpp,v 1.3 2008-08-15 14:37:39 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -33,7 +33,7 @@ PhotonCreator::PhotonCreator( const std::string& type,
     m_photonReco          ( NULL )
 {
   // job options
-  declareProperty( "PhotonRecoTool", m_photonRecoName = "RichDetPhotonReco" );
+  declareProperty( "PhotonRecoTool", m_photonRecoName = "PhotonParams" );
 }
 
 StatusCode PhotonCreator::initialize()

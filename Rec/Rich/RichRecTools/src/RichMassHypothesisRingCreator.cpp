@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::MassHypothesisRingCreator
  *
  *  CVS Log :-
- *  $Id: RichMassHypothesisRingCreator.cpp,v 1.20 2008-01-25 13:40:15 jonrob Exp $
+ *  $Id: RichMassHypothesisRingCreator.cpp,v 1.21 2008-08-15 14:43:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -37,16 +37,29 @@ MassHypothesisRingCreator( const std::string& type,
     m_maxPoint      ( Rich::NRadiatorTypes, 100 ),
     m_minPoint      ( Rich::NRadiatorTypes, 10  )
 {
+  using namespace boost::assign;
 
   // tool interface
   declareInterface<IMassHypothesisRingCreator>(this);
 
   // Define job option parameters
+  // context specific defaults
+  if ( context() == "HLT" || context() == "Hlt" )
+  {
+    //                    Aero   R1Gas  R2Gas
+    m_maxPoint = list_of  (50)   (50)   (50)  ;
+    m_minPoint = list_of  (50)   (50)   (50)  ;
+  }
+  else // offline
+  {
+    m_maxPoint = list_of  (100)  (100)  (100) ;
+    m_minPoint = list_of  (100)  (100)  (100) ;
+  }
   declareProperty( "RingsLocation",
                    m_ringLocation = LHCb::RichRecRingLocation::SegmentHypoRings );
   declareProperty( "MaxRingPoints", m_maxPoint  );
   declareProperty( "MinRingPoints", m_minPoint  );
-  declareProperty( "CheckBeamPipe", m_checkBeamPipe = false );
+  declareProperty( "CheckBeamPipe", m_checkBeamPipe = true );
   declareProperty( "UseDetailedHPDsInRayTracing", m_useDetailedHPDsForRayT = false );
 
 }

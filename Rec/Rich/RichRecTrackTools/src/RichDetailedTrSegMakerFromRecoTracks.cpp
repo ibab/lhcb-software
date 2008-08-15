@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::DetailedTrSegMakerFromRecoTracks
  *
  * CVS Log :-
- * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.5 2008-06-05 09:06:26 jonrob Exp $
+ * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.6 2008-08-15 14:45:28 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -36,18 +36,35 @@ DetailedTrSegMakerFromRecoTracks( const std::string& type,
     m_rayTracing         ( NULL                         ),
     m_richPartProp       ( NULL                         ),
     m_radTool            ( NULL                         ),
-    m_zTolerance         ( Rich::NRadiatorTypes, 0      ),
     m_nomZstates         ( 2*Rich::NRiches,      0      ),
-    m_mirrShift          ( Rich::NRiches,        0      ),
-    m_minStateDiff       ( Rich::NRadiatorTypes, 0      ),
     m_trExt1             ( NULL                         ),
     m_trExt2             ( NULL                         ),
-    m_trExt1Name         ( "TrackHerabExtrapolator"     ),
-    m_trExt2Name         ( "TrackParabolicExtrapolator" ),
-    m_extrapFromRef      ( true                         ),
-    m_minZmove           ( 1 * Gaudi::Units::mm         ),
-    m_minRadLength       ( Rich::NRadiatorTypes         )
+    m_trExt1Name         ( ""                           ),
+    m_trExt2Name         ( ""                           ),
+    m_extrapFromRef      ( false                        ),
+    m_minZmove           ( 1 * Gaudi::Units::mm         )
 {
+  using namespace boost::assign;
+  using namespace Gaudi::Units;
+
+  // context specific defaults
+  if ( context() == "HLT" || context() == "Hlt" )
+  {
+    m_trExt1Name   = "TrackFastParabolicExtrapolator";    
+    m_trExt2Name   = "TrackLinearExtrapolator";
+    // Rads                  Aerogel   Rich1Gas  Rich2Gas
+    m_zTolerance   = list_of (3000*mm) (3000*mm) (4000*mm) ;
+    m_minRadLength = list_of (0*mm)    (500*mm)  (1500*mm) ;
+  }
+  else // offline
+  { 
+    m_trExt1Name   = "TrackHerabExtrapolator";
+    m_trExt2Name   = "TrackParabolicExtrapolator";
+    // Rads                  Aerogel   Rich1Gas  Rich2Gas
+    m_zTolerance   = list_of (800*mm)  (2000*mm) (3000*mm) ;
+    m_minRadLength = list_of (0*mm)    (500*mm)  (1500*mm) ;
+  }
+
   // job options
 
   declareProperty( "PrimaryTrackExtrapolator", m_trExt1Name    );
@@ -64,29 +81,18 @@ DetailedTrSegMakerFromRecoTracks( const std::string& type,
   declareProperty( "NominalStateZ", m_nomZstates );
 
   // tolerances on z positions
-  // old
-  m_zTolerance[Rich::Aerogel]  =  800*Gaudi::Units::mm;
-  m_zTolerance[Rich::Rich1Gas] = 2000*Gaudi::Units::mm;
-  m_zTolerance[Rich::Rich2Gas] = 3000*Gaudi::Units::mm;
   declareProperty( "ZTolerances", m_zTolerance );
 
   // sanity checks on state information
-  m_minStateDiff[Rich::Aerogel]  =  1*Gaudi::Units::mm;
-  m_minStateDiff[Rich::Rich1Gas] = 25*Gaudi::Units::mm;
-  m_minStateDiff[Rich::Rich2Gas] = 50*Gaudi::Units::mm;
-  declareProperty( "ZSanityChecks", m_minStateDiff );
+  declareProperty( "ZSanityChecks", m_minStateDiff = list_of(1*mm)(25*mm)(50*mm) );
 
   // shifts for mirror correction
-  m_mirrShift[Rich::Rich1] =  35*Gaudi::Units::cm;
-  m_mirrShift[Rich::Rich2] = 150*Gaudi::Units::cm;
-  declareProperty( "MirrorShiftCorr", m_mirrShift );
+  declareProperty( "MirrorShiftCorr", m_mirrShift = list_of(35*cm)(150*cm) );
 
   // Type of track segments to create
   declareProperty( "SegmentType", m_trSegTypeJO = "AllStateVectors" );
 
-  m_minRadLength[Rich::Aerogel]  =   20*Gaudi::Units::mm;
-  m_minRadLength[Rich::Rich1Gas] =  800*Gaudi::Units::mm;
-  m_minRadLength[Rich::Rich2Gas] = 1500*Gaudi::Units::mm;
+  // min path length
   declareProperty( "MinRadiatorPathLength", m_minRadLength );
 
 }

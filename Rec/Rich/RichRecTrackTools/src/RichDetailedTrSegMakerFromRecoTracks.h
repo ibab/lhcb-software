@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::DetailedTrSegMakerFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichDetailedTrSegMakerFromRecoTracks.h,v 1.2 2007-12-11 14:17:42 jonrob Exp $
+ *  $Id: RichDetailedTrSegMakerFromRecoTracks.h,v 1.3 2008-08-15 14:45:28 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   14/01/2002
@@ -27,6 +27,9 @@
 
 // Track Extrapolator
 #include "TrackInterfaces/ITrackExtrapolator.h"
+
+// boost
+#include "boost/assign/list_of.hpp"
 
 namespace Rich
 {

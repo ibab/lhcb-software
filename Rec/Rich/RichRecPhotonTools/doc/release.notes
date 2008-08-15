@@ -4,6 +4,9 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2008-08-15 - Chris Jones
+ - Update default properties to aid python Configuration
+
 !======================= RichRecPhotonTools v1r4 2008-06-05 ==================
 ! 2008-06-05 - Marco Cattaneo
  - Fix doxygen warnings

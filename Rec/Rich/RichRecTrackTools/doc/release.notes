@@ -4,6 +4,9 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2008-08-15 - Chris Jones
+ - Update default property values
+
 !======================== RichRecTrackTools v1r5 2008-06-05 ==================
 ! 2008-06-05 - Chris Jones
  - Fix some unchecked StatusCodes

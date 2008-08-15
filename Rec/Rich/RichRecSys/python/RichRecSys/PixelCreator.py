@@ -1,49 +1,55 @@
 
-"""
-Pixel creator options for RICH Reconstruction
-"""
-__version__ = "$Id: PixelCreator.py,v 1.1 2008-08-07 20:56:54 jonrob Exp $"
+## @package PixelCreator
+#  Pixel creator options for RICH Reconstruction
+#  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
+#  @date   15/08/2008
+
+__version__ = "$Id: PixelCreator.py,v 1.2 2008-08-15 14:41:23 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
-from Configurables import ( Rich__Rec__PixelCreatorFromRawBuffer,
-                            Rich__DAQ__HPDPixelClusterSuppressionTool,
+from Configurables import ( Rich__DAQ__HPDPixelClusterSuppressionTool,
                             Rich__DAQ__HPDPixelClusteringTool )
-    
-class RichPixelCreator(RichConfigurableUser):
 
-    # Known pixel cleaning schemes
+# ----------------------------------------------------------------------------------
+
+## @class RichPixelCreatorConfig
+#  Pixel creator options for RICH Reconstruction
+#  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
+#  @date   15/08/2008   
+class RichPixelCreatorConfig(RichConfigurableUser):
+
+    ## Known pixel cleaning schemes
     KnownPixelCleaning = [ "HotClusters", "HotHPDs", "None" ]
-   
+
+    ## Default options
     __slots__ = {
-        "configuration": "RawBuffer" # The pixel handling
-       ,"context":       "Offline"   # The context within which to run
+        "context":       "Offline"   # The context within which to run
        ,"detectors": [True,True]     # Which RICH detectors to use (RICH1/RICH2)
        ,"pixelCleaning": "HotClusters" # Turn on RICH pixel cleaning (hot HPDs etc.)
        ,"findClusters": True # Find clusters in the HPD data
-       ,"useClustersAsPixels": [ False, False ] # Use clusters as the raw pixel objects 
+       ,"useClustersAsPixels": [ False, False ] # Use clusters as the raw pixel objects
+       ,"bookKeeping": False
         }
 
+    ## @brief Check the configuration is OK
+    #
     def checkConfiguration(self):
         dets = self.getProp("detectors")
         if len(dets) != 2 : raise RuntimeError("ERROR : Invalid Detectors '%s'"%config)
-    
+
+    ## @brief Apply the configuration
+    #
     def applyConf(self):
 
         # Check the configuration
         self.checkConfiguration()
-        config  = self.getProp("configuration")
         context = self.getProp("context")
-        nickname = "RichPixelCreator"
 
-        # basic pixel creator type
-        if config == "RawBuffer":
-            type = "Rich::Rec::PixelCreatorFromRawBuffer"
-            self.toolRegistry().Tools += [type+"/"+nickname]
-            pixmaker = Rich__Rec__PixelCreatorFromRawBuffer("ToolSvc."+context+"_"+nickname)
-            pixmaker.UseDetectors = self.getProp("detectors")
-        else:
-            raise RuntimeError("Unknown Pixel configuration '%s'"%config)
+        # Pixel Creator
+        pixmaker = RichTools().pixelCreator()
+        pixmaker.UseDetectors  = self.getProp("detectors")
+        pixmaker.DoBookKeeping = self.getProp("bookKeeping")
 
         # pixel cleaning
         # -------------------------------------------------------------------------------------------
@@ -51,30 +57,31 @@ class RichPixelCreator(RichConfigurableUser):
         pixmaker.ApplyPixelSuppression = True
         pixCleanMode = self.getProp("pixelCleaning")
         if pixCleanMode == "HotClusters" :
-            cleaner = "Rich::DAQ::HPDPixelClusterSuppressionTool"
-
+ 
             # RICH1 cleaning
-            self.toolRegistry().Tools += [cleaner+"/PixelSuppressRich1"]
-            pixmaker.addTool( Rich__DAQ__HPDPixelClusterSuppressionTool, name="PixelSuppressRich1" )
-            pixmaker.PixelSuppressRich1.addTool( Rich__DAQ__HPDPixelClusteringTool, name="ClusteringTool" )
-            pixmaker.PixelSuppressRich1.ClusteringTool.AllowDiagonalsInClusters = True
-            pixmaker.PixelSuppressRich1.WhichRich = "RICH1"
-            pixmaker.PixelSuppressRich1.AbsoluteMaxHPDOcc      = 200
-            pixmaker.PixelSuppressRich1.OccCutScaleFactor      = 14
-            pixmaker.PixelSuppressRich1.MaxPixelClusterSize    = 10
-            pixmaker.PixelSuppressRich1.MinHPDOccForClustering = 10
-                   
+            r1Cleaner = Rich__DAQ__HPDPixelClusterSuppressionTool("PixelSuppressRich1")
+            self.toolRegistry().Tools += [r1Cleaner]
+            r1Cleaner.addTool( Rich__DAQ__HPDPixelClusteringTool, name="ClusteringTool" )
+            r1Cleaner.ClusteringTool.AllowDiagonalsInClusters = True
+            r1Cleaner.WhichRich = "RICH1"
+            r1Cleaner.AbsoluteMaxHPDOcc      = 200
+            r1Cleaner.OccCutScaleFactor      = 14
+            r1Cleaner.MaxPixelClusterSize    = 10
+            r1Cleaner.MinHPDOccForClustering = 10
+            pixmaker.addTool( r1Cleaner )
+                               
             # RICH2 cleaning
-            self.toolRegistry().Tools += [cleaner+"/PixelSuppressRich2"]
-            pixmaker.addTool( Rich__DAQ__HPDPixelClusterSuppressionTool, name="PixelSuppressRich2" )
-            pixmaker.PixelSuppressRich2.addTool( Rich__DAQ__HPDPixelClusteringTool, name="ClusteringTool" )
-            pixmaker.PixelSuppressRich2.ClusteringTool.AllowDiagonalsInClusters = True
-            pixmaker.PixelSuppressRich2.WhichRich = "RICH2"
-            pixmaker.PixelSuppressRich2.AbsoluteMaxHPDOcc      = 200
-            pixmaker.PixelSuppressRich2.OccCutScaleFactor      = 14
-            pixmaker.PixelSuppressRich2.MaxPixelClusterSize    = 8
-            pixmaker.PixelSuppressRich2.MinHPDOccForClustering = 8
-
+            r2Cleaner = Rich__DAQ__HPDPixelClusterSuppressionTool("PixelSuppressRich2")
+            self.toolRegistry().Tools += [r2Cleaner]
+            r2Cleaner.addTool( Rich__DAQ__HPDPixelClusteringTool, name="ClusteringTool" )
+            r2Cleaner.ClusteringTool.AllowDiagonalsInClusters = True
+            r2Cleaner.WhichRich = "RICH2"
+            r2Cleaner.AbsoluteMaxHPDOcc      = 200
+            r2Cleaner.OccCutScaleFactor      = 14
+            r2Cleaner.MaxPixelClusterSize    = 8
+            r2Cleaner.MinHPDOccForClustering = 8
+            pixmaker.addTool( r2Cleaner )
+  
         elif pixCleanMode == "HotHPDs" :
             
             cleaner = "Rich::DAQ::HighOccHPDSuppressionTool"
@@ -94,3 +101,10 @@ class RichPixelCreator(RichConfigurableUser):
         self.toolRegistry().Tools += ["Rich::DAQ::HPDPixelClusteringTool/PixelCreatorClustering"]
         pixmaker.SuppressClusterFinding = self.getProp("findClusters") != True
         pixmaker.ApplyPixelClustering   = self.getProp("useClustersAsPixels")
+        pixmaker.addTool( Rich__DAQ__HPDPixelClusteringTool, name="PixelClusteringRich1" )
+        pixmaker.addTool( Rich__DAQ__HPDPixelClusteringTool, name="PixelClusteringRich2" )
+        pixmaker.PixelClusteringRich1.AllowDiagonalsInClusters = False
+        pixmaker.PixelClusteringRich2.AllowDiagonalsInClusters = False
+        pixmaker.PixelClusteringRich1.MaxClusterSize = 9999
+        pixmaker.PixelClusteringRich2.MaxClusterSize = 9999
+        

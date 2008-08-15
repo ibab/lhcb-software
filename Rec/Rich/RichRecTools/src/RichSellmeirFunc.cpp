@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::SellmeirFunc
  *
  *  CVS Log :-
- *  $Id: RichSellmeirFunc.cpp,v 1.19 2008-05-06 15:33:38 jonrob Exp $
+ *  $Id: RichSellmeirFunc.cpp,v 1.20 2008-08-15 14:43:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -26,12 +26,14 @@ DECLARE_TOOL_FACTORY( SellmeirFunc );
 SellmeirFunc::SellmeirFunc ( const std::string& type,
                              const std::string& name,
                              const IInterface* parent )
-  : Rich::Rec::ToolBase( type, name, parent ) {
+  : Rich::Rec::ToolBase( type, name, parent ) 
+{
 
   declareInterface<ISellmeirFunc>(this);
 
   // Aerogel specific parameters... Should be in XML
-  declareProperty( "WaveIndpTrans", m_waveIndepTrans = 0.78 );
+  //declareProperty( "WaveIndpTrans", m_waveIndepTrans = 0.78 );
+  declareProperty( "WaveIndpTrans", m_waveIndepTrans = 1.00 );
 
 }
 

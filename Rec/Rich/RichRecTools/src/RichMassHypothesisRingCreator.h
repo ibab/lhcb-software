@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::MassHypothesisRingCreator
  *
  *  CVS Log :-
- *  $Id: RichMassHypothesisRingCreator.h,v 1.12 2008-01-25 13:40:15 jonrob Exp $
+ *  $Id: RichMassHypothesisRingCreator.h,v 1.13 2008-08-15 14:43:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -32,6 +32,9 @@
 // Event
 #include "Event/RichRecRing.h"
 #include "Event/RichRecSegment.h"
+
+// boost
+#include "boost/assign/list_of.hpp"
 
 namespace Rich
 {

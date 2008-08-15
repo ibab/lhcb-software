@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::PhotonRecoUsingQuarticSoln
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.6 2008-05-14 09:55:11 jonrob Exp $
+ * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.7 2008-08-15 14:37:39 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -15,6 +15,9 @@
 
 // local
 #include "RichPhotonRecoUsingQuarticSoln.h"
+
+// boost
+#include "boost/assign/list_of.hpp"
 
 // All code is in general Rich reconstruction namespace
 using namespace Rich::Rec;
@@ -38,17 +41,27 @@ PhotonRecoUsingQuarticSoln( const std::string& type,
     m_testForUnambigPhots ( Rich::NRadiatorTypes, true  ),
     m_rejectAmbigPhots    ( Rich::NRadiatorTypes, false ),
     m_useAlignedMirrSegs  ( Rich::NRadiatorTypes, true  ),
-    m_nQits               ( Rich::NRadiatorTypes, 3     ),
     m_deBeam              ( Rich::NRiches               ),
     m_checkBeamPipe       ( Rich::NRadiatorTypes, true  ),
     m_checkPrimMirrSegs   ( Rich::NRadiatorTypes, false ),
     m_minActiveFrac       ( Rich::NRadiatorTypes, 0.2   ),
     m_minSphMirrTolIt     ( Rich::NRadiatorTypes        )
 {
+  using namespace boost::assign;
 
   // Initialise
   m_deBeam[Rich::Rich1] = NULL;
   m_deBeam[Rich::Rich2] = NULL;
+  
+  // context specific defaults
+  if ( context() == "HLT" || context() == "Hlt" )
+  {
+    m_nQits = list_of (3) (3) (3) ;
+  }
+  else // offline
+  { 
+    m_nQits = list_of (3) (3) (3) ;
+  }
 
   // job options
   declareProperty( "FindUnambiguousPhotons",    m_testForUnambigPhots         );
@@ -64,6 +77,9 @@ PhotonRecoUsingQuarticSoln( const std::string& type,
   m_minSphMirrTolIt[Rich::Rich1Gas] = std::pow(0.08 * Gaudi::Units::mm,2);
   m_minSphMirrTolIt[Rich::Rich2Gas] = std::pow(0.05 * Gaudi::Units::mm,2);
   declareProperty( "MinSphMirrTolIt", m_minSphMirrTolIt );
+
+  // default fudge factors for this impl.
+  m_ckFudge = list_of (-0.000358914) (-0.000192933) (-3.49182e-05) ;
 
 }
 

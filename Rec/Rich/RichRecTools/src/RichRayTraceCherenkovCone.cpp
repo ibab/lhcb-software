@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::RayTraceCherenkovCone
  *
  *  CVS Log :-
- *  $Id: RichRayTraceCherenkovCone.cpp,v 1.26 2008-03-27 11:03:59 jonrob Exp $
+ *  $Id: RichRayTraceCherenkovCone.cpp,v 1.27 2008-08-15 14:43:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -34,12 +34,21 @@ RayTraceCherenkovCone::RayTraceCherenkovCone( const std::string& type,
     m_rayTrace      ( NULL ),
     m_ckAngle       ( NULL ),
     m_smartIDTool   ( NULL ),
-    m_geomTool      ( NULL ),
-    m_nBailout      ( Rich::NRadiatorTypes, 50 )
+    m_geomTool      ( NULL )
 {
+  using namespace boost::assign;
   // Define interface for this tool
   declareInterface<IRayTraceCherenkovCone>(this);
   // JOs
+  if ( context() == "HLT" || context() == "Hlt" )
+  {
+    //                    Aero   R1Gas  R2Gas           
+    m_nBailout = list_of  (10)   (15)   (20) ;
+  }
+  else
+  {
+    m_nBailout = list_of  (50)   (50)   (50) ;
+  }
   declareProperty( "BailoutTries", m_nBailout );
 }
 

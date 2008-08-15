@@ -1,63 +1,37 @@
-"""
-Geometrical Efficiency options for RICH Reconstruction
-"""
-__version__ = "$Id: CKThetaResolution.py,v 1.1 2008-08-07 20:56:54 jonrob Exp $"
+
+## @package CKThetaResolution
+#  Configurables for RICH CK theta resolution tools
+#  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
+#  @date   15/08/2008
+
+__version__ = "$Id: CKThetaResolution.py,v 1.2 2008-08-15 14:41:23 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
-from Configurables import ( Rich__Rec__BinnedCKResVthetaForRecoTracks,
-                            Rich__Rec__InterpCKResVthetaForRecoTracks,
-                            Rich__Rec__FunctionalCKResForRecoTracks )
 
 # ----------------------------------------------------------------------------------
 
-class CKThetaResolutionConf(RichConfigurableUser):
+## @class CKThetaResolutionConfig
+#  Configurable for RICH CK theta resolution tools
+#  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
+#  @date   15/08/2008
+class CKThetaResolutionConfig(RichConfigurableUser):
 
-    __slots__ = {
-        "context":  "Offline"
-        ,"type":    "Binned"
-        }
+    __slots__ = { "context":  "Offline" }
 
+    ## @brief Apply the configuration
+    #
     def applyConf(self):
 
-        type = self.getProp("type")
-        nickname = "RichCherenkovResolution"
+        ckRes = RichTools().ckResolution()
+        if ckRes.getType() == "Rich::Rec::BinnedCKResVthetaForRecoTracks" :
+            self.setBinnedProperties(ckRes)
+        elif ckRes.getType() == "Rich::Rec::InterpCKResVthetaForRecoTracks" :
+            self.setInterpProperties(ckRes)
 
-        if type == "Binned" :
-            CKThetaResBinned().createInstance(self,nickname)
-        elif type == "Interpolated" :
-            CKThetaResInterp().createInstance(self,nickname)
-        elif type == "Functional" :
-            CKThetaResFunctional().createInstance(self,nickname)
-        else:
-            raise RuntimeError("Unknown CK theta resolution tool '%s'"%type)
-
-# ----------------------------------------------------------------------------------
-
-class CKThetaResFunctional(RichConfigurableUser):
-
-    def createInstance(self,parent,nickname):
-        type = "Rich::Rec::FunctionalCKResForRecoTracks"
-        context = parent.getProp("context")
-        self.setProp("context",context)
-        gEff = Rich__Rec__FunctionalCKResForRecoTracks("ToolSvc."+context+"_"+nickname)
-        self.toolRegistry().Tools += [type+"/"+nickname]
-        return gEff       
-
-# ----------------------------------------------------------------------------------
-
-class CKThetaResInterp(RichConfigurableUser):
-
-    def createInstance(self,parent,nickname):
-        type = "Rich::Rec::InterpCKResVthetaForRecoTracks"
-        context = parent.getProp("context")
-        self.setProp("context",context)
-        gEff = Rich__Rec__InterpCKResVthetaForRecoTracks("ToolSvc."+context+"_"+nickname)
-        self.setDefaultOptions(gEff)
-        self.toolRegistry().Tools += [type+"/"+nickname]
-        return gEff
-
-    def setDefaultOptions(self,gEff):
+    ## @brief Set properties for the interpolated resolution tool
+    #  @todo Find a better way to handle this
+    def setInterpProperties(self,gEff):
         
         # CRJ Need to find a better way to handle this
         gEff.ForwardAerogel = [ (0.113636,0.00524541), (0.159584,0.0038708), (0.214024,0.00267393), (0.237273,0.0023797) ]
@@ -73,20 +47,9 @@ class CKThetaResInterp(RichConfigurableUser):
         gEff.VeloTTAerogel = [ (0.114533,0.0172506), (0.16356,0.0378092), (0.216632,0.00961744), (0.236653,0.00272289) ]
         gEff.VeloTTRich1Gas = [ (0.0249591,0.00245855), (0.0417991,0.00339135), (0.0504094,0.00169416) ]
 
-# ----------------------------------------------------------------------------------
-
-class CKThetaResBinned(RichConfigurableUser):
-
-    def createInstance(self,parent,nickname):
-        type = "Rich::Rec::BinnedCKResVthetaForRecoTracks"
-        context = parent.getProp("context")
-        self.setProp("context",context)
-        gEff = Rich__Rec__BinnedCKResVthetaForRecoTracks("ToolSvc."+context+"_"+nickname)
-        self.setDefaultOptions(gEff)
-        self.toolRegistry().Tools += [type+"/"+nickname]
-        return gEff
-
-    def setDefaultOptions(self,gEff):
+    ## @brief Set properties for the binned resolution tool
+    #  @todo Find a better way to handle this
+    def setBinnedProperties(self,gEff):
 
         gEff.NormaliseRes = True
 
