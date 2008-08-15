@@ -8,12 +8,15 @@
 
 // local
 #include "HltGlobalMonitor.h"
+//#include "InitHistos.h"
+#include "Event/HltEnums.h"
+//#include "Event/HltSummary.h"
+#include "Event/ODIN.h"
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
 #include "AIDA/IHistogram3D.h"
 #include "AIDA/IProfile1D.h"
 #include "AIDA/IProfile2D.h"
-#include "Event/ODIN.h"
 
 using namespace LHCb;
 
@@ -71,23 +74,26 @@ StatusCode HltGlobalMonitor::initialize() {
   muhadallacc=0;
   hadronallacc=0;
   orallacc=0;
-  first=false;
 
   info() << " Declaring infos to be published " << endreq;
 
   m_histoalleycall = m_histosvc->book("m_histoalleycall","Alleys Called",6, 0., 6.);
-  m_gpstime = m_histosvc->book("m_gpstime","GPS time of last event",6, 0., 6.);
+  m_histoodintype = m_histosvc->book("m_histoodintype","Trigger Type",8, 0., 8.);
+  m_histoodinentry = m_histosvc->book("m_histoodinentry","Trigger Type Entry",8, 0., 8.);
+  m_histoL0 = m_histosvc->book("m_histoL0","L0 bits",14,0.,14.);
   
   declareInfo("counter1",_counter1,"All events");
   declareInfo("counter2",_counter2,"L0 accepted evts");
   declareInfo("efficiency",_efficiency,"Ratio counter2/counter1");
-  declareInfo("COUNTER_TO_RATE[Hlt1AlleyOr]", orallacc, "Hlt1 Alleys Or Call");
-  declareInfo("COUNTER_TO_RATE[Hlt1MuonAlley]", muonallacc, "Hlt1 Muon Alley Call");
-  declareInfo("COUNTER_TO_RATE[Hlt1MuHadAlley]", muhadallacc, "Hlt1 MuHad Alley Call");
-  declareInfo("COUNTER_TO_RATE[Hlt1HadronAlley]", hadronallacc, "Hlt1 Hadron Alley Call");
-//   declareInfo("m_histoL0",m_histoL0,"Successful L0 bits");
-//   declareInfo("m_histoL0corr",m_histoL0corr,"Correlated L0 bits");
-   declareInfo("m_histoalleycall", m_histoalleycall,"Called Alleys");
+//  declareInfo("COUNTER_TO_RATE[Hlt1AlleyOr]", orallacc, "Hlt1 Alleys Or Call");
+//  declareInfo("COUNTER_TO_RATE[Hlt1MuonAlley]", muonallacc, "Hlt1 Muon Alley Call");
+//  declareInfo("COUNTER_TO_RATE[Hlt1MuHadAlley]", muhadallacc, "Hlt1 MuHad Alley Call");
+//  declareInfo("COUNTER_TO_RATE[Hlt1HadronAlley]", hadronallacc, "Hlt1 Hadron Alley Call");
+   declareInfo("m_histoL0",m_histoL0,"Successful L0 bits");
+   declareInfo("m_histoL0corr",m_histoL0corr,"Correlated L0 bits");
+   declareInfo("m_histoalleycall", m_histoalleycall,"Physics and Random Trigger");
+   declareInfo("m_histoodintype", m_histoodintype,"ODIN Trigger Type Accept");
+   declareInfo("m_histoodinentry", m_histoodinentry,"ODIN Trigger Type Entries");
 //   declareInfo("m_histoalleyacc",m_histoalleyacc,"Accepted by Alley");
 //   declareInfo("m_hcorrallcall",m_hcorrallcall,"Calls Correlation");
 //   declareInfo("m_hcorrallacc",m_hcorrallacc,"Correlated Success");
@@ -105,17 +111,10 @@ StatusCode HltGlobalMonitor::execute() {
 //  if (!m_l0) error() << " No L0 in TES!" << endreq;
   
   _counter1++;  // count all evts
-  monitorL0();
-  LHCb::ODIN* odin = 0;
-  odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
+//  monitorL0();
 
  //  LHCb::HltSummary* sum = get<LHCb::HltSummary>(LHCb::
 //        HltSummaryLocation::Default);
-   if (!first && odin->gpsTime()!=0){
-     first=true;
-     gpsfirst=odin->gpsTime();
-     info() << "Gps of first event" << gpsfirst << endreq;
-   } 
    monitorHLT();
 
 //  monitorAlleysinput(sum);
@@ -131,10 +130,18 @@ void HltGlobalMonitor::monitorL0() {
   // Passed ?
   // bool ok = m_l0->decision();
   // if (!ok) return;
-  m_l0 = get<L0DUReport>(m_L0DUReportLocation);
+  L0DUReport* m_l0 =0;
+  if (exist<L0DUReport>(m_L0DUReportLocation)){
+    m_l0 = get<L0DUReport>(m_L0DUReportLocation);
+  }
+  else {
+   debug() << "L0DU missing, skipping L0 mon" << endreq;
+   return;
+  }
+
   if (!m_l0) error() << " No L0 in TES!" << endreq;
   if (m_l0->decision()) debug() << "L0 is true" << endreq; 
-  if (m_l0->forceBit()) info() << "L0 is forced" << endreq; 
+  if (m_l0->forceBit()) debug() << "L0 is forced" << endreq; 
 
   if (!m_l0->decision()) return;
   
@@ -143,23 +150,22 @@ void HltGlobalMonitor::monitorL0() {
   _efficiency= float(_counter2)/_counter1;
   bool first=true;
 
-
   for (int i = 0; i<14; i+=1){ 
     if (m_l0->channelDecision(i)) {
-      fillHisto(*m_histoL0, 1.*i , 1.);
-       if (i!=0){ 
-        for (int j = i+1; j<14; j+=1){ 
-         if (m_l0->channelDecision(j)) {
-            fill( m_histoL0corr, i , j, 1.);
-            if (first){ 
-             fill( m_histoL0corr, 0., 0., 1.);
-             first=false;
-            } // book only one entry for a correlated trigger
-         } //if there was more than one trigger in the event
-        } // loop over channels to check if there is an overlap of triggers 
-       } // just to avoid entering loop for bin 0
-     } // if there is a bit different of 0
-    }//loop over the channels report
+      fill(m_histoL0, i , 1.);
+//      if (i!=0){ 
+//        for (int j = i+1; j<14; j+=1){ 
+//	  if (m_l0->channelDecision(j)) {
+//            fill( m_histoL0corr, i , j, 1.);
+ //           if (first){ 
+//	      fill( m_histoL0corr, 0., 0., 1.);
+//	      first=false;
+ //           } // book only one entry for a correlated trigger
+//	  } //if there was more than one trigger in the event
+ //       } // loop over channels to check if there is an overlap of triggers 
+  //    } // just to avoid entering loop for bin 0
+    } // if there is a bit different of 0
+  }//loop over the channels report
   
   debug() << " accepted  l0 entry " << endreq;
 };
@@ -168,10 +174,6 @@ void HltGlobalMonitor::monitorHLT() {
 
 //  monitorAlleySpecific(sum);
   monitorAlleysinput();
-  LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
-  gpst=odin->gpsTime();
-  gpst=gpst-gpsfirst;
-  info() << "Gps time = " << gpst << "of event" << odin->eventNumber() << endreq;
 //  monitoracceptAlleys(sum);
 };
 /*
@@ -270,18 +272,38 @@ void HltGlobalMonitor::monitorAlleysinput() {
 //   stringKey keymu("HltMuonAlley");
 //   stringKey keymuhad("HltMuHadAlley");
 //   stringKey keyhad("HltHadAlley");
-   //TODO: pick up _all_ 'decisions' ....
+ LHCb::ODIN* odin = 0;
+ if (exist<LHCb::ODIN> ( LHCb::ODINLocation::Default)){
+// try {
+   odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
+ }
+ else {
+// catch( const GaudiException& Exception ) {
+  // m_incidentSvc->fireIncident(Incident(name(),IncidentType::AbortEvent));
+   this->setFilterPassed( false );
+//   return Error( "ODIN missing, skipping event", StatusCode::SUCCESS );
+   info() << "ODIN missing, skipping event" << endreq;
+   return;
+ }
+   fill(m_histoodinentry, odin->triggerType(), 1.);
    stringKey keyphys("PhysicsTrigger");
    stringKey keyrand("RandomTrigger");
+   debug() << "ODIN trigger type" << odin->triggerType() << endreq;
    if (dataSvc().selection(keyphys,this).decision()) {
 //      m_histoalleycall = plot1D(binMuonAlley,"AlleyCalls", "Alleys Called", 0, 6., 6, 1.);
+      if (odin->triggerType()!=0){ 
+        debug() << "ODIN trigger type" << odin->triggerType() << endreq;
+      }
       fill(m_histoalleycall, binMuonAlley, 1.);
+      fill(m_histoodintype, odin->triggerType(), 1.);
       muonallacc=muonallacc+1;
    }
     if (dataSvc().selection(keyrand,this).decision()){ 
 //      Hlt::Histo* m_histoalleycall = plot1D(binMuonHadAlley,"AlleyCalls", "Alleys Called", 0, 6., 6, 1.);
 //      m_histoalleycall = plot1D(binMuonHadAlley,"AlleyCalls", "Alleys Called", 0, 6., 6, 1.);
+      debug() << "ODIN trigger type" << odin->triggerType() << endreq;
       fill(m_histoalleycall, binMuonHadAlley, 1.);
+      fill(m_histoodintype, odin->triggerType(), 1.);
       muhadallacc=muhadallacc+1;
    }
 

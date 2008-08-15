@@ -55,19 +55,17 @@ protected:
 //  void monitorCaloAlley(LHCb::HltSummary* sum);
   void monitorGlobalEvent(){;}
 //  bool CheckDecision(LHCb::HltSummary* sum, int sumid);
-  bool first;
-  double gpsfirst;
 
   void starthistos(){
 //L0 output histograms
-  m_histoL0 = initializeHisto("L0 bits",0.,14.,14);
+//  m_histoL0 = initializeHisto("L0 bits",0.,14.,14);
   m_histoL0corr = this->book2D("Correlated L0 bits",0.,14.,14,0.,14.,14);
 //Alley specific histograms
-  m_histomuonalley = initializeHisto("Muon Alley fonctioning",0.,10.,10);
-  m_histoMuonTrigCorr = this->book2D("Correlated Muon Alley Triggers", 4.,10.,6,4.,10.,6);
-  m_histohadronalley = initializeHisto("Hadron Alley fonctioning",0.,10.,10);
-  m_histomuonhadalley = initializeHisto("Muon+Hadron Alley fonctioning",0.,10.,10);
-  m_histocaloalley = initializeHisto("Calo Alley fonctioning",0.,10.,10);
+//  m_histomuonalley = initializeHisto("Muon Alley fonctioning",0.,10.,10);
+//  m_histoMuonTrigCorr = this->book2D("Correlated Muon Alley Triggers", 4.,10.,6,4.,10.,6);
+//  m_histohadronalley = initializeHisto("Hadron Alley fonctioning",0.,10.,10);
+//  m_histomuonhadalley = initializeHisto("Muon+Hadron Alley fonctioning",0.,10.,10);
+//  m_histocaloalley = initializeHisto("Calo Alley fonctioning",0.,10.,10);
 //Standard Bins
 #define binL0entry 0.5  
 #define binL0conf 1.5  
@@ -82,9 +80,9 @@ protected:
 //Interalley overview
   //m_histoalleycall = initializeHisto("Alleys Called",0.,6.,6);
 //  m_histoalleycall = initializeHisto("m_histoalleycall",0.,6.,6);
-  m_histoalleyacc = initializeHisto("Accepted by Alley",0.,6.,6);
-  m_hcorrallcall = this->book2D("Correlation Calls",0.,6.,6,0.,6.,6);
-  m_hcorrallacc = this->book2D("Correlated Alleys",0.,6.,6,0.,6.,6);
+//  m_histoalleyacc = initializeHisto("Accepted by Alley",0.,6.,6);
+//  m_hcorrallcall = this->book2D("Correlation Calls",0.,6.,6,0.,6.,6);
+//  m_hcorrallacc = this->book2D("Correlated Alleys",0.,6.,6,0.,6.,6);
 
 //Bin assigned to each Alley
 #define binAlleyOr 0.5
@@ -97,23 +95,23 @@ protected:
   // hists
 protected:
   
-  Hlt::Histo* m_histoL0;
+  AIDA::IHistogram1D* m_histoL0;
   AIDA::IHistogram1D* m_histoalleycall; 
-  AIDA::IHistogram1D* m_gpstime; 
-  Hlt::Histo* m_histoalleyacc;
-  Hlt::Histo* m_histomuonalley;
-  Hlt::Histo* m_histomuonhadalley;
-  Hlt::Histo* m_histocaloalley;
-  Hlt::Histo* m_histohadronalley;
+  AIDA::IHistogram1D* m_histoodintype; 
+  AIDA::IHistogram1D* m_histoodinentry; 
+//  Hlt::Histo* m_histoalleyacc;
+//  Hlt::Histo* m_histomuonalley;
+//  Hlt::Histo* m_histomuonhadalley;
+//  Hlt::Histo* m_histocaloalley;
+//  Hlt::Histo* m_histohadronalley;
 
   AIDA::IHistogram2D* m_histoL0corr;
-  AIDA::IHistogram2D* m_histoMuonTrigCorr;
-  AIDA::IHistogram2D* m_hcorrallcall;
-  AIDA::IHistogram2D* m_hcorrallacc;
+//  AIDA::IHistogram2D* m_histoMuonTrigCorr;
+//  AIDA::IHistogram2D* m_hcorrallcall;
+//  AIDA::IHistogram2D* m_hcorrallacc;
 
  private:
 
-  double gpst;
   int _counter1;        // "All events"
   int _counter2;       // "L0 accepted evts"
   float _efficiency;  // "Ratio counter2/counter1"
