@@ -4,6 +4,11 @@
 ! Purpose     : Exposing Hlt tools to Python, share common python tools
 !-----------------------------------------------------------------------------
 
+! 2008-8-15 Jose A. Hernando
+   - python/examples hltalleymonitor.py updating main alley monitor script
+   - python/modules ostools.py tools to deal with the os
+   - python/modules datacard_dstL0_ mblumi2_2 datacards for the stripped L0 for hltbchannels.py
+
 !========================== HltPython v1r8 2008-08-06 ===================
 ! 2008-7-31 - Antonio Perez-Calero and Hugo Ruiz
    - renamed hltbchannels.py module to benchmarkchannels.py and added some more methods taken from descriptors.py

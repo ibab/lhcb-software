@@ -10,6 +10,8 @@
 """
 # =============================================================================
 
+import datacard_dst06L0_mblumi2_2 as mblumi2
+
 def configuration(channel):
     """ for a given channel returns the list of files needs for the selection,
     the extraopts to include the data cards with the DSTs, and a dictionary with some extra data information, i.e path in the TES of the selection, number of evetns etc
@@ -55,7 +57,8 @@ dstDataCards = {
                           '/l/lshchuts/phigamma2b.dst',
                           '/l/lshchuts/phigamma2c.dst',
                           '/l/lshchuts/phigamma2d.dst',
-                          '/l/lshchuts/phigamma2e.dst']
+                          '/l/lshchuts/phigamma2e.dst'],
+    'mblumi2': mblumi2.DATACARDS
     }
 
 #---------------------------------------------------
@@ -70,7 +73,9 @@ dstDataCards = {
 def createOptLines(sample):
     dataOptline='EventSelector.Input = {'
     for ifile in dstDataCards[sample]:
-        line='"'+'DATAFILE='+"'"+"PFN:castor:/castor/cern.ch/user"+ifile+"'"+" TYP="+"'"+"POOL_ROOTTREE"+"'"+" OPT="+"'"+"READ"+"'"+'",'
+        main = "user"
+        if (ifile.find("lhcb")>0): main = "grid"
+        line='"'+'DATAFILE='+"'"+"PFN:castor:/castor/cern.ch/"+main+ifile+"'"+" TYP="+"'"+"POOL_ROOTTREE"+"'"+" OPT="+"'"+"READ"+"'"+'",'
         dataOptline+=line
     return str(dataOptline[:-1]+'}')
         
@@ -124,6 +129,7 @@ selectionOptsFiles = {
                           '/afs/cern.ch/user/d/dijkstra/python/offline-sel/PreselBu2LLK.opts',
                           StandardParticles, StandardJPsi],
     'Bs2PhiGamma'      : [''], #??
+    'mblumi2'      : [''], #??
     }
 
 
@@ -152,8 +158,8 @@ TESPath = {
     'Bs2DsDs'          : '', #??
     'Dstar2D2hhPi'     : '/Event/Phys/SelDstar2D0Pi_D02HH/Particles',
     'Bu2eeK'           : '/Event/Phys/DC06SelBu2eeK/Particles',
-    'Bs2PhiGamma'      : '' #??
-                         
+    'Bs2PhiGamma'      : '',
+    'mblumi2'      : '' 
     }
 
 #-------------------------------------------------------------

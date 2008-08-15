@@ -31,11 +31,12 @@ from ROOT import *
 # Set the alleys to monitor, the entry po,
 # Save all the HLT selections in the HltSummary
 
-
+NOEXIT = False
 DEBUG = arguments.argument("dbg"," debug ",False)
 NEVENTS = arguments.argument("n"," number of events ",10)
 CHANNEL = arguments.argument("c"," channel name ","Bd2KPi")
 PROD = arguments.argument("prod"," production version ","")
+INTERNALMONITOR = arguments.argument("imon"," options for alley internal monitoring ",False)
 
 WRITEOPTS = True
 MONITOR_TIME = arguments.argument("mtime"," monitor time ", True)
@@ -53,7 +54,9 @@ JOB = "$HLTSYSROOT/options/HltJob.opts"
 #DATACARD = "$HLTSYSROOT/options/dst06_bkpi_sel.opts"
 #DATACARD = "$HLTSYSROOT/options/dst06_bsmumu_sel.opts"
 FILES = [JOB,]
-
+if (INTERNALMONITOR):
+    map(lambda x: FILES.append("$HLTSYSROOT/options/Hlt1"+x+"InternalMonitor.opts"),ALLEYS)
+print " Files to RUN: ",FILES
 
 EFILES,EOPTS,EDATA = hltbchannels.configuration(CHANNEL);
 print " configuration files ",EFILES
@@ -64,7 +67,9 @@ print " configuration data ",EDATA
 
 EOPTS.append("HltSummaryWriter.SaveAll = true")
 EOPTS.append("ApplicationMgr.StatusCodeCheck=false")
-EOPTS.append('HistogramPersistencySvc.OutputFile = "hltalleymonitor'+CHANNEL+PROD+'.root"')
+XPROD = ""
+if (PROD): XPROD = PROD+"/"
+EOPTS.append('HistogramPersistencySvc.OutputFile = "'+XPROD+'hltalleymonitor_'+CHANNEL+'.root"')
 #EOPTS.append('HistogramPersistencySvc.OutputFile = "'+CHANNEL+'hltalleymonitor.root";')
 
 HIS = desktop.ROOTOBJECTS
@@ -139,15 +144,26 @@ def bookRateTOS(alley):
     desktop.register( h2 )
     return    
 
+def hltalgos(alley):
+    algos = []
+    for algo in ALGOS[alley]:
+        if (algo.property("OutputSelection") != None): algos.append(algo)
+    return algos
+
 def bookCandidates(alley):
     """ book number of candidates per algo in the alley
     @ param the name of the alley, i.e HadronSingle
     """
+    algos = hltalgos(alley)
+    sels = map(lambda x: x.property("OutputSelection"),algos)
+    n = len(algos)+1
+    title = alley+":CandidatesProfile"
+    h = TProfile(title,title,n,0.,1.*n,0.,100.)
+    histotools.setXLabels(h,sels)
+    desktop.register( h )
     xf = 100.
-    n = len(ALGOS[alley])+1
-    for algo in ALGOS[alley]:
+    for algo in algos:
         sel = algo.property("OutputSelection")
-        if (not sel): continue
         title = algo.name+":"+sel
         if (sel and not HIS.has_key(title)):
             hi = TH1F(title,title,100,0.,100.)
@@ -256,15 +272,18 @@ def anaRateTOS(alley):
     """
     Bs = TES[CHANNELPATH]
     if (not Bs): return
-    print Bs[0]
-    TISTOS.addToOfflineInput(Bs[0])
-    ok = 1
+    Bs = Bs[0]
+    TISTOS.setOfflineInput()
+    n = Bs.daughters().size()
+    print " number of daughters ",n
+    for i in range(n): TISTOS.addToOfflineInput(Bs.daughters()[i].clone())
+    ok = True
     for i in range(len(ALGOS[alley])):
-        if (not ok): continue
         algo = ALGOS[alley][i]
         sel = algo.property("OutputSelection")
         if (sel): ok = HLTSUM.selectionDecision(sel)
         if (not ok): continue
+        print " TISTOS at selection ",sel
         btistos = TISTOS.triggerTisTos(sel,TISTOS.kAllTriggerSelections)
         if (btistos.tis()):
             desktop.my(alley+":RateTIS").Fill(i,1.)
@@ -303,6 +322,14 @@ def anaTime(alley):
     if (t>0. and nstep>0): desktop.my(alley+":Time").Fill(t,1.)
     return
 
+def typeCandidates(algo):
+    """ return the type of candidates
+    """
+    if (algo.type.find("Track")>0): return "Track"
+    if (algo.type.find("L0Calo")>0): return "Track"
+    if (algo.type.find("Vert")>0): return "Vertex"
+    return ""
+    
 def getCandidates(algo,sel=None):
     """ return the candidates of an algorithm
     @param algo, hltalgo class
@@ -311,24 +338,26 @@ def getCandidates(algo,sel=None):
     can = []
     if (not sel): sel = algo.property("OutputSelection")
     if (not sel): return can
-    if (algo.type.find("Track")>0):
-        can = HLTSUM.selectionTracks(sel)
-    if (algo.type.find("Vertex")>0):
-        can = HLTSUM.selectionTracks(sel)
-    return can
+    type = typeCandidates(algo)
+    if (not type): return can
+    if (type == "Track"): return HLTSUM.selectionTracks(sel)
+    if (type == "Vertex"): return HLTSUM.selectionVertices(sel)
 
 def anaCandidates(alley):
     """ ana the candidates
     @param: name of the alley
     """
-    for algo in ALGOS[alley]:
+    algos = hltalgos(alley)
+    for i in range(len(algos)):
+        algo = algos[i]
         sel = algo.property("OutputSelection")
-        if (not sel): continue
         can = getCandidates(algo)
-        if (len(can)<=0): return
+        ncan = len(can)
+        if (ncan<=0): continue
         title = algo.name+":"+sel
-        desktop.hfill(title,1.*len(can),1.,True)
-        if (DEBUG): print " Candidates: algo",sel," Candidates ",len(can)
+        desktop.hfill(title,1.*ncan,1.,True)
+        desktop.my(alley+":CandidatesProfile").Fill(i,1.*ncan)
+        if (DEBUG): print" Candidates: algo",i,sel," Candidates ",ncan
     return
 
 def anaFilters(alley):
@@ -444,6 +473,8 @@ def plotRateTOS(alley):
     return
 
 def plotCandidates(alley):
+    hs = [HIS[alley+":CandidatesProfile"]]
+    C = plotHistos(hs,name=alley,prefix="CandidatesProfile")
     his = []
     for algo in ALGOS[alley]:
         sel = algo.property("OutputSelection")
@@ -474,6 +505,7 @@ def plotDecision():
 def run():
     ini()
     go(NEVENTS)
+    if (NOEXIT): return
     fin()
     plot()
     gaudi.exit()
