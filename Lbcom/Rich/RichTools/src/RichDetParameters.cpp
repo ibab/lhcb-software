@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::DetParameters
  *
  * CVS Log :-
- * $Id: RichDetParameters.cpp,v 1.8 2007-02-01 17:51:10 jonrob Exp $
+ * $Id: RichDetParameters.cpp,v 1.9 2008-08-15 14:27:28 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -38,19 +38,19 @@ namespace Rich
 
     declareInterface<IDetParameters>(this);
 
-    m_maxPhotEn[Rich::Aerogel] = 3.8;
-    m_maxPhotEn[Rich::Rich1Gas]   = 7.0;
-    m_maxPhotEn[Rich::Rich2Gas]     = 7.0;
+    m_maxPhotEn[Rich::Aerogel]  = 4.0;
+    m_maxPhotEn[Rich::Rich1Gas] = 7.0;
+    m_maxPhotEn[Rich::Rich2Gas] = 7.0;
     declareProperty( "MaxPhotonEnergy", m_maxPhotEn );
 
-    m_minPhotEn[Rich::Aerogel] = 1.75;
-    m_minPhotEn[Rich::Rich1Gas]   = 1.75;
-    m_minPhotEn[Rich::Rich2Gas]     = 1.75;
+    m_minPhotEn[Rich::Aerogel]  = 1.75;
+    m_minPhotEn[Rich::Rich1Gas] = 1.75;
+    m_minPhotEn[Rich::Rich2Gas] = 1.75;
     declareProperty( "MinPhotonEnergy", m_minPhotEn );
 
-    m_meanPhotEn[Rich::Aerogel] = 2.89;
-    m_meanPhotEn[Rich::Rich1Gas]   = 4.29;
-    m_meanPhotEn[Rich::Rich2Gas]     = 4.34;
+    m_meanPhotEn[Rich::Aerogel]  = 2.89;
+    m_meanPhotEn[Rich::Rich1Gas] = 4.29;
+    m_meanPhotEn[Rich::Rich2Gas] = 4.34;
     declareProperty( "MeanPhotonEnergy", m_meanPhotEn );
 
   }

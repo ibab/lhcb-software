@@ -5,7 +5,7 @@
  * Implementation file for class : RichToolRegistry
  *
  * CVS Log :-
- * $Id: RichToolRegistry.cpp,v 1.24 2008-05-14 09:47:53 jonrob Exp $
+ * $Id: RichToolRegistry.cpp,v 1.25 2008-08-15 14:27:28 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -138,7 +138,7 @@ Rich::ToolRegistry::toolType( const std::string & nickname ) const
 const std::string
 Rich::ToolRegistry::toolName( const std::string & nickname ) const
 {
-  return ( context().empty() ? nickname : context()+"."+nickname );
+  return ( context().empty() ? nickname : context()+"_"+nickname );
 }
 
 void Rich::ToolRegistry::addEntry( const std::string & nickname,

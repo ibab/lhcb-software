@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::SnellsLawRefraction
  *
  * CVS Log :-
- * $Id: RichSnellsLawRefraction.cpp,v 1.2 2008-04-28 09:32:28 jonrob Exp $
+ * $Id: RichSnellsLawRefraction.cpp,v 1.3 2008-08-15 14:27:28 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -112,7 +112,7 @@ void SnellsLawRefraction::aerogelToGas( Gaudi::XYZPoint & startPoint,
       else           { dir = dir*Rratio + m_aeroNormVect*(cosT2-(Rratio*cosT1)); }
     }
   }
-  else { Warning( "aerogelToGas:: photonEnergy = 0" ); }
+  else { Warning( "aerogelToGas:: photonEnergy = 0" ).ignore(); }
 }
 
 void SnellsLawRefraction::gasToAerogel( Gaudi::XYZVector & dir,
@@ -136,5 +136,5 @@ void SnellsLawRefraction::gasToAerogel( Gaudi::XYZVector & dir,
     newDir.SetY( R*newDir.X() );
     dir = newDir;
   }
-  else { Warning( "gasToAerogel:: photonEnergy = 0" ); }
+  else { Warning( "gasToAerogel:: photonEnergy = 0" ).ignore(); }
 }
