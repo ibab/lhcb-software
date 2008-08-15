@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2008-08-15 - Chris Jones
+ - Add python/LHCbKernel/Configurable.py containing base class Configurable
+
 ! 2008-08-03 - Vanya BELYAEV 
 
  - src/Inspectors.cpp
@@ -18,8 +21,8 @@
       New utility class LHCb::Inspector 
       for (recursive) inspection of the 
       major properties of various Gaudi components, including 
-      the application itself. It is especially suited for 
-      inspection of "algorithmic" part.  
+      the application itself. It is especially suited for
+      inspection of the "algorithmic" part.  
    
 - python/LHCbKernel/Inspector.py
 
@@ -40,8 +43,8 @@
  - src/ParticleID.h
 
    Small update for LHCb::ParticleID::digit function 
-   to take into account upodated Gaudi::Math::digit function 
-   (The least significat digit i snumberes now as #0)
+   to take into account updated Gaudi::Math::digit function 
+   (The least significant digit i numbered now as #0)
 
  - cmt/requirements 
    version increment to v9r1 
