@@ -83,15 +83,7 @@ bool LHCb::STTELL1Error::badLink ( const unsigned int beetle,
                                    const unsigned int port, 
                                    const unsigned int testpcn ) const{
 
-  const unsigned int key = linkID(beetle,port);
-  LHCb::STTELL1Error::FailureInfo::iterator i = m_badLinks.find( key ) ; 
-  if (m_badLinks.end() != i) {
-    return true; 
-  }
-
-  // we have to look at the pcn if the bit is set 
-  const unsigned int pcn = findPCN(beetle);
-  return (pcn != testpcn ? true : false); 
+  return (linkInfo(beetle,port,testpcn) == STTELL1Error::kNone ? false : true); 
 }
 
 bool  LHCb::STTELL1Error::addLinkInfo (const unsigned int key,  

@@ -12,8 +12,8 @@
 	   desc='Error Bank from a Tell1 board'
            serializers = 'FALSE'>
       <base name='KeyedObject&lt; int &gt; '/>  
-      <location name="TTErrorTELL1"   place="Raw/TT/ErrorTELL1"   />
-      <location name="ITErrorTELL1"   place="Raw/IT/ErrorTELL1"   />
+      <location name="TTErrors"   place="Raw/TT/Errors"   />
+      <location name="ITErrors"   place="Raw/IT/Errors"   />
       
       &KeyedContainer;
       
@@ -72,6 +72,16 @@
       </code>
       </method>
       
+      <method 
+       name = "ppErrorInfo"
+       desc = "get the error info for a given pp"
+       argList = "const unsigned int&amp; pp"
+       type = "LHCb::STTELL1Error*"
+       const = "TRUE">
+          <code>
+            return (pp &lt; m_errorInfo.size() ?  m_errorInfo[pp]: 0 );
+	  </code>
+      </method>
 
     <method 
         name    = "fillStream" 
