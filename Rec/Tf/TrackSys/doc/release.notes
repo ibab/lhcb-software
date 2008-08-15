@@ -4,6 +4,10 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2008-08-15 - Chris Jones
+ - Minor improvements to python configurable TrackSys, to fit in with changes
+   in RecSys
+
 !============================ TrackSys v4r16 2008-07-29 ======================
 ! 2008-07-28 - Marco Cattaneo
  - Add a TrackSys configurable, with options expertHistos, fieldOff, veloOpen, 

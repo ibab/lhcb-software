@@ -1,12 +1,19 @@
-"""
-High level configuration for Tracking
-"""
-__version__ = "$Id: Configuration.py,v 1.1 2008-07-28 16:13:10 cattanem Exp $"
+
+## @package TrackSys
+#  High level configuration for LHCb Tracking software
+#  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
+#  @date   15/08/2008
+
+__version__ = "$Id: Configuration.py,v 1.2 2008-08-15 14:48:53 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
-from Gaudi.Configuration import *
+from LHCbKernel.Configuration import *
 
-class TrackSys(ConfigurableUser):
+## @class TrackSys
+#  High level configuration for LHCb Tracking software
+#  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
+#  @date   15/08/2008
+class TrackSys(LHCbConfigurableUser):
 
     # Steering options
     __slots__ = {
@@ -18,19 +25,12 @@ class TrackSys(ConfigurableUser):
 
     KnownExpertTracking = ["usePatSeeding", "noDrifttimes", "simplifiedGeometry"]
 
-    def getProp(self,name):
-        if hasattr(self,name):
-            return getattr(self,name)
-        else:
-            return self.getDefaultProperties()[name]
-
-    def setProp(self,name,value):
-        return setattr(self,name,value)
-
     def defineOptions(self):
         for prop in self.getProp("expertTracking"):
             if prop not in self.KnownExpertTracking:
                 raise RuntimeError("Unknown expertTracking option '%s'"%prop)
 
+    ## @brief Apply the configuration
     def applyConf(self):
+        importOptions( "$TRACKSYSROOT/options/RecoTracking.py" )
         self.defineOptions()
