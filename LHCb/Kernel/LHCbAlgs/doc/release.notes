@@ -4,6 +4,9 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2008-08-17 Gerhard Raven
+ - make sure DeterministicPrescaler does not crash on events without ODIN
+
 !======================== LHCbAlgs v2r20 2008-07-21 ==========================
 ! 2008-07-21 - Marco Cattaneo
  - Adapt to new locations of IEventTimeDecoder and IGenericTool interfaces

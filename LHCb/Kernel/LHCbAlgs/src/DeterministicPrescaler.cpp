@@ -162,6 +162,12 @@ DeterministicPrescaler::accept(const ulonglong& evtNr) const
 StatusCode
 DeterministicPrescaler::execute()
 {
+  if (!exist<LHCb::ODIN>( LHCb::ODINLocation::Default)) {
+        setFilterPassed(false);
+        error() << "ODIN missing" << endreq;
+        return StatusCode::SUCCESS;
+  }
+
   LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
 
   bool acc = ( m_accFrac >= 0 ? accept(*odin)
