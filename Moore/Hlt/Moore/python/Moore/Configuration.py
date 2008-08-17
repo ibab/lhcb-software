@@ -1,7 +1,7 @@
 """
 High level configuration tools for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.18 2008-08-13 16:18:48 panmanj Exp $"
+__version__ = "$Id: Configuration.py,v 1.19 2008-08-17 18:55:48 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -50,7 +50,13 @@ class Moore(ConfigurableUser):
                 setattr(other,name,self.getProp(name))
 
     def validRunTypes(self):
-        return [ 'Physics_Hlt1+Hlt2', 'Physics_Hlt1', 'Commissioning', 'Physics_Lumi', 'Lumi' , 'DEFAULT' ] 
+        return [ 'PHYSICS_Lumi', 
+                 'PHYSICS_Hlt1', 
+                 'PHYSICS_Hlt2', 
+                 'PHYSICS_Hlt1+Hlt2', 
+                 'PHYSICS_Lumi+Hlt1', 
+                 'PHYSICS_Lumi+Hlt1+Hlt2', 
+                 'DEFAULT' ] 
 
     def getRelease(self):
         import re,fileinput
@@ -126,16 +132,12 @@ class Moore(ConfigurableUser):
                 importOptions('$HLTSYSROOT/options/HltInit.opts')
                 hlttype = self.getProp('hltType')
                 if hlttype not in self.validRunTypes() :  raise TypeError("Unknown runtype '%s'"%hlttype)
-                if inputType == 'DST' and hlttype in [ 'Physics_Hlt1+Hlt2', 'Physics_Hlt1' , 'Physics_Lumi', 'Lumi'] : 
+                if inputType == 'DST' and hlttype in [ 'PHYSICS_Hlt1+Hlt2', 'PHYSICS_Hlt1' , 'PHYSICS_Lumi', 'Lumi'] : 
                         importOptions('$L0DUROOT/options/ReplaceL0DUBankWithEmulated.opts')
-                if hlttype in [ 'PHYSICS_Hlt1+Hlt2', 'PHYSICS_Hlt1' ] : importOptions('$HLTSYSROOT/options/Hlt1.opts')
-                if hlttype in [ 'PHYSICS_Hlt1+Hlt2' ] :                 importOptions('$HLTSYSROOT/options/Hlt2.opts')
-                if hlttype in [ 'Commissioning' ] :                     importOptions('$HLTSYSROOT/options/RandomPrescaling.opts')
-                if hlttype in [ 'Physics_Lumi' ] :
-                    importOptions('$HLTSYSROOT/options/HltJob_withLumi.opts')
-                if hlttype in [ 'Lumi' ] :
-                    importOptions('$HLTSYSROOT/options/HltJob_onlyLumi.opts')
-                if hlttype in [ 'DEFAULT' ] :                     importOptions('$HLTSYSROOT/options/RandomPrescaling.opts')
+                if hlttype.find('Lumi') != -1 :   importOptions('$HLTSYSROOT/options/Lumi.opts')
+                if hlttype.find('Hlt1') != -1 :   importOptions('$HLTSYSROOT/options/Hlt1.opts')
+                if hlttype.find('Hlt2') != -1 :   importOptions('$HLTSYSROOT/options/Hlt2.opts')
+                if hlttype ==  'DEFAULT'      :   importOptions('$HLTSYSROOT/options/RandomPrescaling.opts')
 
             if self.getProp('runTiming') :
                 importOptions('$HLTSYSROOT/options/HltAlleysTime.opts')
@@ -143,7 +145,7 @@ class Moore(ConfigurableUser):
 
         if self.getProp("userAlgorithms"):
             for userAlg in self.getProp("userAlgorithms"):
-                ApplicationMgr().TopAlg += [userAlg]
+                ApplicationMgr().TopAlg += [ userAlg ]
             
         if self.getProp("generateConfig") :
             # TODO: add properties for ConfigTop and ConfigSvc...
