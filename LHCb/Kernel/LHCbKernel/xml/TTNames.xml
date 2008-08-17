@@ -79,6 +79,44 @@
 
       </method>
 
+  <method
+        name = "allStations"
+        type = "std::vector &lt; std::string &gt;"
+        desc = "vector of string names for all stations"> 
+   </method>
+ 
+  <method
+        name = "allDetRegions"
+        type = "std::vector &lt; std::string &gt;"
+        desc = "vector of string names for all regions"> 
+   </method>
+
+  <method
+        name = "allLayers"
+        type = "std::vector &lt; std::string &gt;"
+        desc = "vector of string names for all layers"> 
+   </method>
+ 
+
+  <method
+        name = "stations"
+        type = "std::vector &lt; std::string &gt;"
+        desc = "vector of string names for stations"> 
+   </method>
+ 
+  <method
+        name = "detRegions"
+        type = "std::vector &lt; std::string &gt;"
+        desc = "vector of string names for regions"> 
+   </method>
+
+  <method
+        name = "layers"
+        type = "std::vector &lt; std::string &gt;"
+        desc = "vector of string names for layers"> 
+  </method>
+ 
+
   
      </class>
   </package>

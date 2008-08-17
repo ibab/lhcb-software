@@ -109,10 +109,46 @@
         type = "std::string"
         argList = "LHCb::STChannelID chan"
         desc = "unique sector string from id"> 
-
       </method>
+ 
 
-    
+   <method
+        name = "allStations"
+        type = "std::vector &lt; std::string &gt;"
+        desc = "vector of string names for all stations"> 
+   </method>
+ 
+  <method
+        name = "allBoxes"
+        type = "std::vector &lt; std::string &gt;"
+        desc = "vector of string names for all boxes"> 
+   </method>
+
+  <method
+        name = "allLayers"
+        type = "std::vector &lt; std::string &gt;"
+        desc = "vector of string names for all layers"> 
+   </method>
+ 
+
+  <method
+        name = "stations"
+        type = "std::vector &lt; std::string &gt;"
+        desc = "vector of string names for stations"> 
+   </method>
+ 
+  <method
+        name = "boxes"
+        type = "std::vector &lt; std::string &gt;"
+        desc = "vector of string names for boxes"> 
+   </method>
+
+  <method
+        name = "layers"
+        type = "std::vector &lt; std::string &gt;"
+        desc = "vector of string names for layers"> 
+  </method>
+ 
 
      </class>
   </package>

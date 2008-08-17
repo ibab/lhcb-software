@@ -4,8 +4,14 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2008-08-17 M Needham
+ - Extend functionality in TT and ITNames 
+ - [add methods to return station, layer, ... names + all valid possibilities]
+
+
 ! 2008-08-15 - Chris Jones
  - Add python/LHCbKernel/Configurable.py containing base class Configurable
+
 
 ! 2008-08-03 - Vanya BELYAEV 
 
