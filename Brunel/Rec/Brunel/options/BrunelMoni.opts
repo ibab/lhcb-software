@@ -17,15 +17,13 @@ ToolSvc.SequencerTimerTool.OutputLevel = 4;
 // Detectors to monitor (uncomment to use)
 // CRJ : Now done via python Configurable
 //--------------------------------------------------------------
-//Moni.DetectorList += {
-//                     "CALO"
-//                    ,"MUON"
-//                     };
+Moni.DetectorList += {
+                     "CALO"
+                     //                     ,"MUON"
+                     };
 
 //--------------------------------------------------------------
 // Monitoring algorithms
 //--------------------------------------------------------------
 #include "$CALOMONIDSTOPTS/CaloMonitor.opts"
 
-// Muon reconstruction
-MoniMUONSeq.Members += { "MuonRecChecker" };
