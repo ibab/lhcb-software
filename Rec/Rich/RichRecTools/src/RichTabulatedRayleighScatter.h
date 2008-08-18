@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::TabulatedRayleighScatter
  *
  *  CVS Log :-
- *  $Id: RichTabulatedRayleighScatter.h,v 1.14 2008-05-06 15:33:38 jonrob Exp $
+ *  $Id: RichTabulatedRayleighScatter.h,v 1.15 2008-08-18 19:40:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -62,19 +62,11 @@ namespace Rich
       /// Destructor
       virtual ~TabulatedRayleighScatter() {};
 
-      // Initialize method
-      StatusCode initialize();
-
     public: // methods (and doxygen comments) inherited from public interface
 
       // Rayleigh scattering probability for given pathlength (segment) and photon energy
       double photonScatteredProb( const LHCb::RichRecSegment * segment,
                                   const double energy ) const;
-
-    private:  // Private data
-
-      /// Pointer to aerogel detector element
-      const DeRichAerogelRadiator * m_aero;
 
     };
 

@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::SellmeirFunc
  *
  *  CVS Log :-
- *  $Id: RichSellmeirFunc.h,v 1.15 2008-05-06 15:33:38 jonrob Exp $
+ *  $Id: RichSellmeirFunc.h,v 1.16 2008-08-18 19:40:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -33,6 +33,7 @@
 
 // Detector Description
 #include "RichDet/DeRich1.h"
+#include "RichDet/DeRichAerogelRadiator.h"
 
 // interfaces
 #include "RichRecBase/IRichSellmeirFunc.h"
@@ -77,16 +78,8 @@ namespace Rich
 
       // Computes the number of photons emitted in the given energy range for a
       // given RichRecSegment under a certain mass hypothesis
-      double photonsInEnergyRange( LHCb::RichRecSegment * segment,
+      double photonsInEnergyRange( const LHCb::RichRecSegment * segment,
                                    const Rich::ParticleIDType id,
-                                   const double botEn,
-                                   const double topEn ) const;
-
-      // Computes the number of photons emitted in the given energy range per
-      // unit pathlength for a given momentum, mass hypothesis and radiator
-      double photonsInEnergyRange( const Rich::RadiatorType rad,
-                                   const Rich::ParticleIDType id,
-                                   const double momentum,
                                    const double botEn,
                                    const double topEn ) const;
 
@@ -104,9 +97,6 @@ namespace Rich
       double m_selE2[Rich::NRadiatorTypes];
       double m_molW[Rich::NRadiatorTypes];
       double m_rho[Rich::NRadiatorTypes];
-
-      // Aerogel specific parameters
-      double m_waveIndepTrans;
 
       // cached parameters for speed
       double m_RXSPscale[Rich::NRadiatorTypes];

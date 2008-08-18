@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::SellmeirFunc
  *
  *  CVS Log :-
- *  $Id: RichSellmeirFunc.cpp,v 1.20 2008-08-15 14:43:33 jonrob Exp $
+ *  $Id: RichSellmeirFunc.cpp,v 1.21 2008-08-18 19:40:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -26,15 +26,10 @@ DECLARE_TOOL_FACTORY( SellmeirFunc );
 SellmeirFunc::SellmeirFunc ( const std::string& type,
                              const std::string& name,
                              const IInterface* parent )
-  : Rich::Rec::ToolBase( type, name, parent ) 
+  : Rich::Rec::ToolBase( type, name, parent )
 {
-
+  // interface
   declareInterface<ISellmeirFunc>(this);
-
-  // Aerogel specific parameters... Should be in XML
-  //declareProperty( "WaveIndpTrans", m_waveIndepTrans = 0.78 );
-  declareProperty( "WaveIndpTrans", m_waveIndepTrans = 1.00 );
-
 }
 
 StatusCode SellmeirFunc::initialize()
@@ -120,7 +115,7 @@ StatusCode SellmeirFunc::initialize()
   return sc;
 }
 
-double SellmeirFunc::photonsInEnergyRange( LHCb::RichRecSegment * segment,
+double SellmeirFunc::photonsInEnergyRange( const LHCb::RichRecSegment * segment,
                                            const Rich::ParticleIDType id,
                                            const double botEn,
                                            const double topEn ) const
@@ -129,27 +124,45 @@ double SellmeirFunc::photonsInEnergyRange( LHCb::RichRecSegment * segment,
   const double momentum = std::sqrt(segment->trackSegment().bestMomentum().Mag2());
   const double length   = segment->trackSegment().pathLength();
   const Rich::RadiatorType rad = segment->trackSegment().radiator();
-  return length * photonsInEnergyRange ( rad, id, momentum, botEn, topEn );
-}
-
-double SellmeirFunc::photonsInEnergyRange( const Rich::RadiatorType rad,
-                                           const Rich::ParticleIDType id,
-                                           const double momentum,
-                                           const double botEn,
-                                           const double topEn ) const
-{
   const double Esq      = momentum*momentum + m_particleMassSq[id];
   const double betaSq   = ( Esq>0 ? momentum*momentum/Esq : 0 );
   const double gammaSq  = Esq/m_particleMassSq[id];
 
-   // Compute number of photons
+  // Compute number of photons
   double nPhot = ( 37.0 / betaSq ) * ( paraW(rad,topEn) -
                                        paraW(rad,botEn) -
                                        (topEn-botEn)/gammaSq );
 
   // correct for wavelength independant transmission coeff. in aerogel
-  if ( Rich::Aerogel == rad ) nPhot *= m_waveIndepTrans;
+  if ( Rich::Aerogel == rad )
+  {
+    // get the radiator intersections
+    const Rich::RadIntersection::Vector & radInts
+      = segment->trackSegment().radIntersections();
+
+    // normalise over each intersection
+    double totPlength(0), waveIndepTrans(0);
+    if ( !radInts.empty() )
+    {
+      // average energy for this range
+      const double avEn = 0.5 * (botEn+topEn) * Gaudi::Units::eV;
+
+      // average over all intersections
+      for ( Rich::RadIntersection::Vector::const_iterator iR = radInts.begin();
+            iR != radInts.end(); ++iR )
+      {
+        const double pLen = (*iR).pathLength();
+        const double absL = (*iR).radiator()->absorption()->value(avEn);
+        totPlength       += pLen;
+        waveIndepTrans   += pLen * std::exp( -pLen / absL );
+      }
+      if ( totPlength>0 ) waveIndepTrans /= totPlength;
+
+      // scale the expected photon yield
+      nPhot *= waveIndepTrans;
+    }
+  }
 
   // return
-  return ( nPhot < 0 ? 0 : nPhot );
+  return length * ( nPhot < 0 ? 0 : nPhot );
 }

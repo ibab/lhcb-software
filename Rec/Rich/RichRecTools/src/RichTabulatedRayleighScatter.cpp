@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::TabulatedRayleighScatter
  *
  *  CVS Log :-
- *  $Id: RichTabulatedRayleighScatter.cpp,v 1.13 2008-05-06 15:33:38 jonrob Exp $
+ *  $Id: RichTabulatedRayleighScatter.cpp,v 1.14 2008-08-18 19:40:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -36,36 +36,49 @@ TabulatedRayleighScatter::TabulatedRayleighScatter ( const std::string& type,
   declareInterface<IRayleighScatter>(this);
 }
 
-StatusCode TabulatedRayleighScatter::initialize()
-{
-
-  // Sets up various tools and services
-  const StatusCode sc = RichRecToolBase::initialize();
-  if ( sc.isFailure() ) { return sc; }
-
-  // Get aerogel radiator
-  // for aero, get the "0" file, as the multisolid does not have any properties
-  // this whole scheme needs reworking to cope properly with different aerogel tiles.
-  m_aero = getDet<DeRichAerogelRadiator>( DeRichLocations::Aerogel+"T0:0" );
-
-  return sc;
-}
-
 double
 TabulatedRayleighScatter::photonScatteredProb( const LHCb::RichRecSegment * segment,
                                                const double energy ) const
 {
+  double prob(0);
+
   // check this is aerogel
-  if ( Rich::Aerogel != segment->trackSegment().radiator() ) return 0;
+  if ( Rich::Aerogel == segment->trackSegment().radiator() )
+  {
 
-  // check energy is valid
-  if ( energy <= 0 ) return 0;
+    // check energy is valid
+    if ( energy > 0 )
+    {
 
-  // check path length is valid
-  const double path = segment->trackSegment().pathLength();
-  if ( path <= 0 ) return 0;
+      // check path length is valid
+      const double path = segment->trackSegment().pathLength();
+      if ( path > 0 )
+      {
 
-  // compute and return prob
-  const double scatLeng = (*(m_aero->rayleigh()))[energy*Gaudi::Units::eV];
-  return ( 1 - (scatLeng/path)*(1.0-exp(-path/scatLeng)) );
+        // get the radiators
+        const Rich::RadIntersection::Vector & radInts = segment->trackSegment().radIntersections();
+
+        if ( !radInts.empty() )
+        {
+          // normalise over each intersection
+          double totPlength(0), rayleigh(0);
+          for ( Rich::RadIntersection::Vector::const_iterator iR = radInts.begin();
+                iR != radInts.end(); ++iR )
+          {
+            const double len = (*iR).pathLength();
+            totPlength += len;
+            rayleigh   += len * (*iR).radiator()->rayleigh()->value(energy*Gaudi::Units::eV);
+          }
+          if ( totPlength > 0 ) rayleigh /= totPlength;
+
+          // compute
+          prob = ( 1.0 - (rayleigh/path)*(1.0-std::exp(-path/rayleigh)) );
+        }
+
+      }
+    }
+  }
+
+  // return the final probability of rayleigh scattering
+  return prob;
 }

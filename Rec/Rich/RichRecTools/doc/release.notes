@@ -4,6 +4,10 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2008-08-18 - Chris Jones
+ - Improve use of aerogel properties in RichSellmeirFunc and 
+   RichTabulatedRayleighScatter.
+
 ! 2008-08-15 - Chris Jones
  - Update default properties
 
