@@ -4,7 +4,7 @@ import os, sys, tempfile, re, sys
 from stat import S_ISDIR
 import getopt
 
-_cvs_id = "$Id: SetupProject.py,v 1.19 2008-08-12 11:46:48 hmdegaud Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.20 2008-08-18 16:52:46 hmdegaud Exp $"
 
 ########################################################################
 # Useful constants
@@ -1064,6 +1064,11 @@ class SetupProject:
         #  must win)
         for e in self.ext_versions:
             req.write('macro %s_config_version "%s"\n'%(e,self.ext_versions[e]))
+
+        # use external location relative to the LCG Interfaces for the local installation
+
+        req.write('macro LCG_home "$(LCG_home)" LOCAL&Unix "$(LCG_SETTINGSROOT)/../../../../../lcg" LOCAL&Unix "$(LCG_SETTINGSROOT)\\..\\..\\..\\..\\..\\lcg"\n')
+
         req.flush()
         del req
 
