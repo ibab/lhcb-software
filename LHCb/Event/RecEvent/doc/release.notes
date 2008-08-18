@@ -1,24 +1,24 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.102 2008-08-15 07:56:28 mneedham Exp $
+! $Id: release.notes,v 1.103 2008-08-18 18:50:01 jonrob Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+! 2008-08-18 - Chris Jones
+ - Extend type flags in RichPID
 
 ! 2008-08-15 M Needham
  - Add list of recovered banks to STSummary class 
 
-
 ! 2008-08-11 - Juan PALACIOS
- - xml/RichPID.h
+ - xml/RichPID.xml
   . Remove LHCb::RichPID(const LHCb::RichPID*) copy constructor.
 ! 2008-08-11 - Juan PALACIOS
- - xml/RichPID.h
+ - xml/RichPID.xml
   . Add LHCb::RichPID(const LHCb::RichPID&) copy constructor.
- - xml/MuonPID.h
+ - xml/MuonPID.xml
   . Add LHCb::MuonPID(const LHCb::MuonPID&) copy constructor.
-
 
 !========================= RecEvent v2r14 2008-07-16 =========================
 ! 2008-07-14 M Needham 

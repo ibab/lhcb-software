@@ -5,7 +5,7 @@
  *  Implementation file for class : RichPID
  *
  *  CVS Log :-
- *  $Id: RichPID.cpp,v 1.4 2007-08-09 15:25:37 jonrob Exp $
+ *  $Id: RichPID.cpp,v 1.5 2008-08-18 18:50:01 jonrob Exp $
  *
  *  @author  Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date    2002-06-10
@@ -22,11 +22,11 @@ std::string LHCb::RichPID::pidType() const
 {
   std::string hist;
   int cnt = 0;
-  if ( this->global()     ) { hist+=(cnt>0?"+":""); hist+="Global";     ++cnt; }
-  if ( this->local()      ) { hist+=(cnt>0?"+":""); hist+="Local";      ++cnt; }
-  if ( this->ringRefit()  ) { hist+=(cnt>0?"+":""); hist+="RingRefit";  ++cnt; }
-  if ( this->trigGlobal() ) { hist+=(cnt>0?"+":""); hist+="TrigGlobal"; ++cnt; }
-  if ( this->trigLocal()  ) { hist+=(cnt>0?"+":""); hist+="TrigLocal";  ++cnt; }
+  if ( this->offlineGlobal() ) { hist+=(cnt>0?"+":""); hist+="OfflineGlobal"; ++cnt; }
+  if ( this->offlineLocal()  ) { hist+=(cnt>0?"+":""); hist+="OfflineLocal";  ++cnt; }
+  if ( this->ringRefit()     ) { hist+=(cnt>0?"+":""); hist+="RingRefit";     ++cnt; }
+  if ( this->hltGlobal()     ) { hist+=(cnt>0?"+":""); hist+="HltGlobal";     ++cnt; }
+  if ( this->hltLocal()      ) { hist+=(cnt>0?"+":""); hist+="HltLocal";      ++cnt; }
   return hist;
 }
 
