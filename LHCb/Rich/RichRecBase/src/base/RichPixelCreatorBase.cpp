@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichPixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.cpp,v 1.32 2008-06-11 09:12:02 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.cpp,v 1.33 2008-08-18 19:09:07 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -116,7 +116,7 @@ namespace Rich
       if ( m_applyPixelSuppression && m_usedDets[Rich::Rich1] ) { hpdSuppTool(Rich::Rich1); }
       if ( m_applyPixelSuppression && m_usedDets[Rich::Rich2] ) { hpdSuppTool(Rich::Rich2); }
       // load clustering tools
-      if ( !m_noClusterFinding ) { hpdClusTool(Rich::Rich1); hpdClusTool(Rich::Rich1); }
+      if ( !m_noClusterFinding ) { hpdClusTool(Rich::Rich1); hpdClusTool(Rich::Rich2); }
 
       return sc;
     }

@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : Rich::Rec::PhotonCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorBase.cpp,v 1.26 2008-04-16 17:31:38 jonrob Exp $
+ *  $Id: RichPhotonCreatorBase.cpp,v 1.27 2008-08-18 19:09:07 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -17,6 +17,7 @@
 
 // boost
 #include "boost/format.hpp"
+#include "boost/assign/list_of.hpp"
 
 //-----------------------------------------------------------------------------
 
@@ -38,57 +39,44 @@ namespace Rich
         m_ckRes                 ( NULL ),
         m_richPartProp          ( NULL ),
         m_Nevts                 ( 0 ),
-        m_bookKeep              ( true ),
         m_photons               ( NULL ),
         m_richRecPhotonLocation ( LHCb::RichRecPhotonLocation::Default ),
-        m_photPredName          ( "RichPhotonPredictor" ),
         m_photCount             ( Rich::NRadiatorTypes, 0 ),
         m_photCountLast         ( Rich::NRadiatorTypes, 0 )
-      //m_useNearHPD            ( Rich::NRadiatorTypes )
     {
+      using namespace boost::assign;
 
       // Define the interface
       declareInterface<IPhotonCreator>(this);
 
-      if      ( context() == "Offline" )
-      {
-        m_richRecPhotonLocation = LHCb::RichRecPhotonLocation::Offline;
-      }
-      else if ( context() == "HLT" )
+      // defaults                 Aero   R1Gas   R2Gas
+      m_minCKtheta     = list_of (0.075) (0.005) (0.005) ;
+      m_maxCKtheta     = list_of (0.290) (0.075) (0.035) ;
+      m_minPhotonProb  = list_of (1e-15) (1e-15) (1e-15) ;
+      if ( context() == "HLT" || context() == "Hlt" )
       {
         m_richRecPhotonLocation = LHCb::RichRecPhotonLocation::HLT;
+        m_nSigma = list_of (3.5) (2.8) (3.0) ;
+      
       }
-
-      // job options
-
-      declareProperty( "DoBookKeeping", m_bookKeep );
-
-      declareProperty( "PhotonPredictor", m_photPredName );
-
-      m_minCKtheta.push_back( 0 );  // aerogel
-      m_minCKtheta.push_back( 0 );  // rich1Gas
-      m_minCKtheta.push_back( 0 );  // rich2Gas
-      declareProperty( "MinAllowedCherenkovTheta", m_minCKtheta );
-
-      m_maxCKtheta.push_back( 999 ); // aerogel
-      m_maxCKtheta.push_back( 999 ); // rich1Gas
-      m_maxCKtheta.push_back( 999 ); // rich2Gas
-      declareProperty( "MaxAllowedCherenkovTheta", m_maxCKtheta );
-
-      m_minPhotonProb.push_back( 1e-15 ); // aerogel
-      m_minPhotonProb.push_back( 1e-15 ); // rich1Gas
-      m_minPhotonProb.push_back( 1e-15 ); // rich2Gas
-      declareProperty( "MinPhotonProbability", m_minPhotonProb );
-
-      m_nSigma.push_back( 6.5 ); // aerogel
-      m_nSigma.push_back( 6.5 ); // rich1Gas
-      m_nSigma.push_back( 12  ); // rich2Gas
-      declareProperty( "NSigma", m_nSigma );
-
-      //m_useNearHPD[Rich::Aerogel]  = false;
-      //m_useNearHPD[Rich::Rich1Gas] = false;
-      //m_useNearHPD[Rich::Rich2Gas] = false;
-      //declareProperty( "UseNearestHPD", m_useNearHPD );
+      else // Offline settings
+      {
+        m_richRecPhotonLocation = LHCb::RichRecPhotonLocation::Offline;
+        m_nSigma = list_of (3.8) (3.3) (3.3) ;
+      }
+      // set properties
+      declareProperty( "DoBookKeeping", m_bookKeep = true,
+                       "Turn on/off the book keeping of which pixels have been made" );
+      declareProperty( "PhotonPredictor", m_photPredName = "RichPhotonPredictor",
+                       "The photon predictor(pre-selection) tool name" );
+      declareProperty( "MinAllowedCherenkovTheta", m_minCKtheta,
+                       "The minimum allowed CK theta values for each radiator (Aero/R1Gas/R2Gas)" );
+      declareProperty( "MaxAllowedCherenkovTheta", m_maxCKtheta,
+                       "The maximum allowed CK theta values for each radiator (Aero/R1Gas/R2Gas)" );
+      declareProperty( "MinPhotonProbability", m_minPhotonProb,
+                       "The minimum allowed photon probability values for each radiator (Aero/R1Gas/R2Gas)" );
+      declareProperty( "NSigma", m_nSigma,
+                       "The CK theta # sigma selection range for each radiator (Aero/R1Gas/R2Gas)");
 
     }
 

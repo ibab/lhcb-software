@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichTrackSelectorBase
  *
  *  CVS Log :-
- *  $Id: RichTrackSelectorBase.cpp,v 1.10 2008-05-14 09:45:46 jonrob Exp $
+ *  $Id: RichTrackSelectorBase.cpp,v 1.11 2008-08-18 19:09:07 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -38,11 +38,20 @@ namespace Rich
       declareInterface<ITrackSelector>(this);
 
       // Default track types to select
-      m_trNames =
-        boost::assign::list_of("Forward")("Match")("Seed")("VeloTT")("KsTrack");
+      if ( context() == "HLT" || context() == "Hlt" )
+      {
+        m_minPCut = 2.0;
+        m_trNames = boost::assign::list_of("Forward");
+      }
+      else // offline
+      { 
+        m_minPCut = 0.0;
+        m_trNames =
+          boost::assign::list_of("Forward")("Match")("Seed")("VeloTT")("KsTrack");
+      }
       declareProperty( "TrackAlgs", m_trNames );
 
-      declareProperty( "MinPCut",       m_minPCut     = 0.0 ); // in GeV
+      declareProperty( "MinPCut",       m_minPCut           ); // in GeV
       declareProperty( "MinPtCut",      m_minPtCut    = 0.0 ); // in GeV
       declareProperty( "MinFitChi2Cut", m_minChi2Cut  = 0.0 );
       declareProperty( "MaxPCut",       m_maxPCut     = 200 ); // in GeV

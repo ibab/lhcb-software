@@ -5,7 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2008-08-18 - Chris Jones
- - Remove redundant methof from IRichSellmeirFunc interface
+ - Remove redundant method from IRichSellmeirFunc interface
  - Improve default property values in various base classes
 
 ! 2008-07-29 - Hubert Degaudenzi
