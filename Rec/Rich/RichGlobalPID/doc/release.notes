@@ -4,6 +4,9 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+! 2008-08-18 - Chris Jones
+ - Adapt to changes in RichPID from RecEvent
+
 ! 2008-08-15 - Chris Jones
  - Update property default values
 

@@ -18,7 +18,16 @@
             <base name="RichPID"/>
             <import name="Event/RichPID"/>
             <constructor desc="Default constructor">
-                <code>this-&gt;setGlobal(true);</code>
+                <code> setOfflineGlobal(true); </code>
+            </constructor>
+            <constructor desc="Constructor with processing context" explicit="TRUE">
+                <arg name="hltMode" type="bool"/>
+                <code>
+                      if (hltMode)
+                      { setHltGlobal(true);     }
+                      else
+                      { setOfflineGlobal(true); }
+                </code>
             </constructor>
             <location name="Offline" place="Rec/Rich/GlobalPID/OfflinePIDs"/>
             <location name="HLT"     place="Rec/Rich/GlobalPID/HltPIDs"/>
