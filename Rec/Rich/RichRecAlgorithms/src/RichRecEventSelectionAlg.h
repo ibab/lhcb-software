@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::EventSelectionAlg
  *
  *  CVS Log :-
- *  $Id: RichRecEventSelectionAlg.h,v 1.1 2008-07-28 16:08:11 jonrob Exp $
+ *  $Id: RichRecEventSelectionAlg.h,v 1.2 2008-08-18 19:28:37 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
@@ -46,12 +46,11 @@ namespace Rich
 
       virtual ~EventSelectionAlg();   ///< Destructor
 
-      virtual StatusCode initialize(); ///< Algorithm initialisation
-      virtual StatusCode execute();    ///< Algorithm execution
+      virtual StatusCode execute();   ///< Algorithm execution
 
     private:
 
-      unsigned int m_minPixels; ///< Min number of RICH pixels
+      int m_minPixels; ///< Minimum number of RICH pixels
       
     };
 

@@ -4,6 +4,9 @@
 ! Purpose     : Common reconstruction algorithms for the RICH
 !-----------------------------------------------------------------------------
 
+! 2008-08-17 - Chris Jones
+ - Fix compilation warning in EventSelectionAlg
+
 !===================== RichRecAlgorithms v2r12 2008-07-29 ====================
 ! 2008-07-28 - Chris Jones
  - Add two new algorithms

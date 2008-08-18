@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : Rich::Rec::EventSelectionAlg
  *
  *  CVS Log :-
- *  $Id: RichRecEventSelectionAlg.cpp,v 1.1 2008-07-28 16:08:11 jonrob Exp $
+ *  $Id: RichRecEventSelectionAlg.cpp,v 1.2 2008-08-18 19:28:37 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -34,28 +34,17 @@ EventSelectionAlg::EventSelectionAlg( const std::string& name,
 // Destructor
 EventSelectionAlg::~EventSelectionAlg() {}
 
-StatusCode EventSelectionAlg::initialize()
-{
-  const StatusCode sc = RichRecAlgBase::initialize();
-  if ( sc.isFailure() ) return sc;
-
-  return sc;
-}
-
 StatusCode EventSelectionAlg::execute()
 {
-  // select event ?
-  bool OK = true;
-
   // Event Status
-  if ( !richStatus()->eventOK() ) OK = false;
-
+  bool OK = richStatus()->eventOK();
+  
   // Pixels
   if ( OK )
   {
     if ( !pixelCreator()->newPixels() ) return StatusCode::FAILURE;
     // enough hits ?
-    if ( richPixels()->size() < m_minPixels ) OK = false;
+    OK = ( richPixels()->size() >= m_minPixels );
   }
 
   // set if this events is selected
