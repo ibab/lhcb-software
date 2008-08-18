@@ -5,6 +5,10 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+! 2008-08-18 - Chris Jones
+ - Remove dependency on Rich/RichHLTSys. Obsoleted by new python Configuration
+   in Rich/RichRecSys.
+
 ! 2008-08-15 - Chris Jones
  - Add new python Configurable RecSys(). This configurable replaces the old 
    options and python files previously in the options sub-directory, and thus 
