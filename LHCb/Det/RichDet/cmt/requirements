@@ -2,7 +2,7 @@
 # Created    : 2003-11-06
 # Maintainer : Antonis Papanestis, Christopher Rob Jones
 #============================================================================
-# $Id: requirements,v 1.64 2008-08-18 18:30:39 jonrob Exp $
+# $Id: requirements,v 1.65 2008-08-18 19:50:50 jonrob Exp $
 #============================================================================
 
 package RichDet
@@ -11,7 +11,7 @@ version v11r1
 # ================ structure =================================================
 branches src RichDet dict doc cmt
 
- ================ dependencies ==============================================
+# ================ dependencies ==============================================
 use RichKernel  v*   Rich
 use DetDescCnv  v*   Det
 use Boost       v*   LCG_Interfaces
