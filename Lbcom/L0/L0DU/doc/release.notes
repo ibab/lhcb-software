@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.118 2008-08-14 09:30:44 odescham Exp $
+! $Id: release.notes,v 1.119 2008-08-18 13:58:01 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
+
+! 2008-08-18 - Olivier Deschamps
+ - L0DUConfig_0x000X.opts : add new TCKs 
 
 ! 2008-08-14 - Olivier Deschamps
  - improve printout

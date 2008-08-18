@@ -128,7 +128,7 @@ ToolSvc.L0DUConfig.TCK_0x0006.Channels ={
 { "name=[Spd]" , "rate==[100]" , "conditions= [SpdMult]" }
 };
   
-ToolSvc.L0DUConfig.TCK_0x0005.Triggers +={ 
+ToolSvc.L0DUConfig.TCK_0x0006.Triggers +={ 
   {"name=[L0Calo]"     , "channels=[Spd]" }
 }; 
 
@@ -145,7 +145,81 @@ ToolSvc.L0DUConfig.TCK_0x0007.Conditions = {
 ToolSvc.L0DUConfig.TCK_0x0007.Channels ={
 { "name=[spd_and_mu]" , "rate==[100]" , "conditions= [SpdMult]      && [Muon]" }
 }; 
-ToolSvc.L0DUConfig.TCK_0x0005.Triggers +={ 
+ToolSvc.L0DUConfig.TCK_0x0007.Triggers +={ 
   {"name=[L0Calo]"     , "channels=[spd_and_mu]" },
   {"name=[L0Muon]"     , "channels=[spd_and_mu]" }
 }; 
+
+
+//-------------------------------------------------------
+// Created by PVSS / L0DU  : 2008-08-04 15:14:23
+//-------------------------------------------------------
+
+//------------------------- TCK = 0x000A / Recipe name : Cosmics_SpdAndHcal_0x000A
+ToolSvc.L0DUConfig.registerTCK += {"0x000A"};
+ToolSvc.L0DUConfig.TCK_0x000A.Name = "Cosmics_SpdAndHcal_0x000A";
+ToolSvc.L0DUConfig.TCK_0x000A.Description ="Spd and Hcal";
+
+
+ToolSvc.L0DUConfig.TCK_0x000A.Conditions = {
+{ "name=[Hadron(Et)1]" , "data=[Hadron(Et)]" , "comparator=[>]" , "threshold=[5]" },
+{ "name=[Spd(Mult)1]"  , "data=[Spd(Mult)]"  , "comparator=[>]" , "threshold=[0]" }
+};
+
+ToolSvc.L0DUConfig.TCK_0x000A.Channels ={
+{ "name=[SPD and HCAL]" , "rate==[100.0]" , "conditions= [Hadron(Et)1] && [Spd(Mult)1]" }
+};
+ToolSvc.L0DUConfig.TCK_0x000A.Triggers +={ 
+  {"name=[L0Calo]"     , "channels=[SPD and HCAL]" }
+}; 
+
+
+//------------------------- TCK = 0x000B / Recipe name : Calo_and_Muon_0x000b
+ToolSvc.L0DUConfig.registerTCK += {"0x000B"};
+ToolSvc.L0DUConfig.TCK_0x000B.Name = "Calo_and_Muon_0x000b";
+ToolSvc.L0DUConfig.TCK_0x000B.Description ="ECAL and HCAL and Muon";
+
+
+ToolSvc.L0DUConfig.TCK_0x000B.Conditions = {
+{ "name=[Electron(Et)1]" , "data=[Electron(Et)]" , "comparator=[>]" , "threshold=[20]" },
+{ "name=[Hadron(Et)1]"   , "data=[Hadron(Et)]"   , "comparator=[>]" , "threshold=[5]"  },
+{ "name=[Muon1(Pt)1]"    , "data=[Muon1(Pt)]"    , "comparator=[>]" , "threshold=[0]"  }
+};
+
+ToolSvc.L0DUConfig.TCK_0x000B.Channels ={
+{ "name=[Algo01]" , "rate==[100.0]" , "conditions= [Electron(Et)1] && [Hadron(Et)1] && [Muon1(Pt)1]" }
+};
+ToolSvc.L0DUConfig.TCK_0x000B.Triggers +={ 
+  {"name=[L0Calo]"     , "channels=[Algo01]"},
+  {"name=[L0Muon]"     , "channels=[Algo01]"}
+}; 
+
+
+//------------------------- TCK = 0x000C / Recipe name : Cosmics_Electron
+ToolSvc.L0DUConfig.registerTCK += {"0x000C"};
+ToolSvc.L0DUConfig.TCK_0x000C.Name = "Cosmics_Electron";
+ToolSvc.L0DUConfig.TCK_0x000C.Description ="Electron(Et) > 20";
+
+
+ToolSvc.L0DUConfig.TCK_0x000C.Conditions = {
+{ "name=[Electron(Et)]" , "data=[Electron(Et)]" , "comparator=[>]" , "threshold=[20]" }
+};
+ToolSvc.L0DUConfig.TCK_0x000C.Channels ={
+{ "name=[Algo01]" , "rate==[100.0]" , "conditions= [Electron(Et)]" }
+};
+ToolSvc.L0DUConfig.TCK_0x000C.Triggers +={ 
+  {"name=[L0Calo]"     , "channels=[Algo01]"}
+  }; 
+//------------------------- TCK = 0x000D / Recipe name : Cosmics_Photon
+ToolSvc.L0DUConfig.registerTCK += {"0x000D"};
+ToolSvc.L0DUConfig.TCK_0x000D.Name = "Cosmics_Photon";
+ToolSvc.L0DUConfig.TCK_0x000D.Description ="Photon(Et) > 20";
+ToolSvc.L0DUConfig.TCK_0x000D.Conditions = {
+{ "name=[Photon(Et)]" , "data=[Photon(Et)]" , "comparator=[>]" , "threshold=[20]" }
+};
+ToolSvc.L0DUConfig.TCK_0x000D.Channels ={
+{ "name=[Algo01]" , "rate==[100.0]" , "conditions= [Photon(Et)]" }
+};
+ToolSvc.L0DUConfig.TCK_0x000D.Triggers +={ 
+  {"name=[L0Calo]"     , "channels=[Algo01]"}
+  }; 
