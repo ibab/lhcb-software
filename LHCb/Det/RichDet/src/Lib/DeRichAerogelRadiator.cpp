@@ -5,7 +5,7 @@
  *  Implementation file for detector description class : DeRichAerogelRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichAerogelRadiator.cpp,v 1.9 2007-04-03 15:42:32 papanest Exp $
+ *  $Id: DeRichAerogelRadiator.cpp,v 1.10 2008-08-18 18:30:39 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-03-02
@@ -77,8 +77,9 @@ StatusCode DeRichAerogelRadiator::initialize ( )
   // aerogel parameters from cond DB
   m_AerogelCond = condition( "AerogelParameters" );
   if ( m_AerogelCond ) {
-    updMgrSvc()->registerCondition(this,m_AerogelCond.path(),
-                                   &DeRichAerogelRadiator::updateProperties ); }
+    updMgrSvc()->registerCondition( this,
+                                    m_AerogelCond.path(),
+                                    &DeRichAerogelRadiator::updateProperties ); }
   else
   { msg << MSG::WARNING << "Cannot load Condition AerogelParameters" << endmsg; }
 
@@ -89,9 +90,6 @@ StatusCode DeRichAerogelRadiator::initialize ( )
     msg << MSG::ERROR << "First UMS update failed" << endreq;
     return sc;
   }
-
-  // Hack - Update interpolators in base class after first update
-  sc = initTabPropInterpolators();
 
   msg << MSG::DEBUG << "Initialisation Complete" << endreq;
   m_firstUpdate = false;
@@ -110,9 +108,9 @@ StatusCode DeRichAerogelRadiator::updateProperties ( )
     msg << MSG::INFO << "Refractive index update triggered" << endreq;
 
   // load various parameters
-  const double photonEnergyLowLimit = m_deRich1->param<double>("PhotonMinimumEnergyAerogel");
-  const double photonEnergyHighLimit = m_deRich1->param<double>("PhotonMaximumEnergyAerogel");
-  const double ckvPhotonEnergyLowLimit = m_deRich1->param<double>("PhotonCkvMinimumEnergyAerogel");
+  const double photonEnergyLowLimit     = m_deRich1->param<double>("PhotonMinimumEnergyAerogel");
+  const double photonEnergyHighLimit    = m_deRich1->param<double>("PhotonMaximumEnergyAerogel");
+  const double ckvPhotonEnergyLowLimit  = m_deRich1->param<double>("PhotonCkvMinimumEnergyAerogel");
   const double ckvPhotonEnergyHighLimit = m_deRich1->param<double>("PhotonCkvMaximumEnergyAerogel");
   const unsigned int photonEnergyNumBins  = m_deRich1->param<int>("PhotonEnergyNumBins");
   const unsigned int ckvPhotonEnergyNumBins = m_deRich1->param<int>("CkvPhotonEnergyNumBins");
@@ -151,6 +149,9 @@ StatusCode DeRichAerogelRadiator::updateProperties ( )
   // calculate the refractive index CKVRNDX and update Tabulated property
   sc = calcSellmeirRefIndex( ckvPhotonMomentumVect, m_chkvRefIndexTabProp );
   if ( !sc ) return sc;
+
+  // Hack - Update interpolators in base class after first update
+  sc = initTabPropInterpolators();
 
   return sc;
 }

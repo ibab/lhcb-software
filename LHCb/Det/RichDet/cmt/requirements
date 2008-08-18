@@ -1,22 +1,32 @@
-package RichDet
-version v11r0
+#============================================================================
+# Created    : 2003-11-06
+# Maintainer : Antonis Papanestis, Christopher Rob Jones
+#============================================================================
+# $Id: requirements,v 1.64 2008-08-18 18:30:39 jonrob Exp $
+#============================================================================
 
+package RichDet
+version v11r1
+
+# ================ structure =================================================
 branches src RichDet dict doc cmt
 
+ ================ dependencies ==============================================
 use RichKernel  v*   Rich
 use DetDescCnv  v*   Det
 use Boost       v*   LCG_Interfaces
 use GSL         v*   LCG_Interfaces
 
+# ================ environment ===============================================
 apply_pattern install_more_includes more=RichDet
 
+# ======================== Libraries ========================================
 library  RichDetLib  Lib/*.cpp 
 library  RichDet     component/*.cpp
-
 apply_pattern component_library library=RichDet
 apply_pattern linker_library    library=RichDetLib
 
-# =============== LCG Dictionaries ============================================
+# =============== LCG Dictionaries ===========================================
 apply_pattern     reflex_dictionary                                 \
                   dictionary=RichDet                                \
                   headerfiles=$(RICHDETROOT)/dict/RichDetDict.h     \

@@ -5,7 +5,7 @@
  *  Header file for utility class : Rich::TabulatedFunction1D
  *
  *  CVS Log :-
- *  $Id: Rich1DTabFunc.h,v 1.11 2008-06-14 20:43:56 jonrob Exp $
+ *  $Id: Rich1DTabFunc.h,v 1.12 2008-08-18 18:30:39 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-08-13
@@ -297,7 +297,12 @@ namespace Rich
     gsl_spline       * m_mainDistSpline;     ///< The spline for the main y(x) distribution
     gsl_interp_accel * m_weightedDistAcc;    ///< The accelerator for the weighted x.y(x) distribution
     gsl_spline       * m_weightedDistSpline; ///< The spline for the weighted x.y(x) distribution
-    const gsl_interp_type * m_interType;     ///< The interpolator type
+
+
+  protected:
+
+    /// The interpolator type
+    const gsl_interp_type * m_interType;  
 
   };
 

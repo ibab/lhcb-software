@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich1
  *
- *  $Id: DeRich1.cpp,v 1.32 2008-01-29 07:58:28 papanest Exp $
+ *  $Id: DeRich1.cpp,v 1.33 2008-08-18 18:30:39 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -254,7 +254,6 @@ StatusCode DeRich1::alignSecMirrors()
 
   return StatusCode::SUCCESS;
 }
-
 
 //=========================================================================
 //  nominalCentreOfCurvature

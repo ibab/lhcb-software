@@ -5,7 +5,7 @@
  *  Header file for detector description class : DeRichSingleSolidRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichSingleSolidRadiator.h,v 1.15 2007-02-28 18:31:07 marcocle Exp $
+ *  $Id: DeRichSingleSolidRadiator.h,v 1.16 2008-08-18 18:30:39 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -120,7 +120,6 @@ public:
     return m_material;
   }
 
-
 protected:
 
   /// prepare the momentum vector for the calculation of the
@@ -129,9 +128,6 @@ protected:
                                     double min,
                                     double max,
                                     unsigned int nbins );
-
-  /// Initialise Tab Property Interpolators
-  StatusCode initTabPropInterpolators();
 
 private:
 

@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichSingleSolidRadiator
  *
- *  $Id: DeRichSingleSolidRadiator.cpp,v 1.23 2007-09-13 13:10:55 jpalac Exp $
+ *  $Id: DeRichSingleSolidRadiator.cpp,v 1.24 2008-08-18 18:30:39 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -28,15 +28,10 @@ const CLID CLID_DeRichSingleSolidRadiator = 12040;  // User defined
 
 // Standard Constructor
 DeRichSingleSolidRadiator::DeRichSingleSolidRadiator()
-  : DeRichRadiator()
-{}
+  : DeRichRadiator() {}
 
 // Standard Destructor
-DeRichSingleSolidRadiator::~DeRichSingleSolidRadiator()
-{
-  if ( m_refIndex ) delete m_refIndex;
-  if ( m_rayleigh) delete m_rayleigh;
-}
+DeRichSingleSolidRadiator::~DeRichSingleSolidRadiator() { }
 
 // Retrieve Pointer to class defininition structure
 const CLID& DeRichSingleSolidRadiator::classID()
@@ -97,39 +92,9 @@ StatusCode DeRichSingleSolidRadiator::initialize()
   }
 
   const Gaudi::XYZPoint zero(0.0, 0.0, 0.0);
-  log << MSG::DEBUG <<" Centre:" << geometry()->toGlobal(zero) << endreq;
+  log << MSG::DEBUG <<" Centre " << geometry()->toGlobal(zero) << endreq;
 
   return initSC;
-}
-
-StatusCode DeRichSingleSolidRadiator::initTabPropInterpolators()
-{
-  MsgStream log( msgSvc(), "DeRichSingleSolidRadiator" );
-  log << MSG::DEBUG << "Initialising interpolators" << endreq;
-
-  if ( m_refIndexTabProp )
-  {
-    m_refIndex = new RichTabulatedProperty1D( m_refIndexTabProp );
-    if ( !m_refIndex->valid() )
-    {
-      log << MSG::ERROR
-          << "Invalid RINDEX RichTabulatedProperty1D for " << m_refIndexTabProp->name() << endreq;
-      return StatusCode::FAILURE;
-    }
-  }
-
-  if ( m_rayleighTabProp )
-  {
-    m_rayleigh = new RichTabulatedProperty1D( m_rayleighTabProp );
-    if ( !m_rayleigh->valid() )
-    {
-      log << MSG::ERROR
-          << "Invalid RAYLEIGH RichTabulatedProperty1D for " << m_rayleighTabProp->name() << endreq;
-      return StatusCode::FAILURE;
-    }
-  }
-
-  return StatusCode::SUCCESS;
 }
 
 //=========================================================================
@@ -173,9 +138,8 @@ prepareMomentumVector ( std::vector<double>& photonMomentumVect,
 StatusCode
 DeRichSingleSolidRadiator::nextIntersectionPoint( const Gaudi::XYZPoint&  pGlobal,
                                                   const Gaudi::XYZVector& vGlobal,
-                                                  Gaudi::XYZPoint&  returnPoint ) const
+                                                  Gaudi::XYZPoint& returnPoint ) const
 {
-
   const Gaudi::XYZPoint pLocal( geometry()->toLocal(pGlobal) );
   Gaudi::XYZVector vLocal( geometry()->toLocalMatrix()*vGlobal );
 
@@ -188,7 +152,6 @@ DeRichSingleSolidRadiator::nextIntersectionPoint( const Gaudi::XYZPoint&  pGloba
 
   returnPoint = geometry()->toGlobal( pLocal + ticks[0] * vLocal );
   return StatusCode::SUCCESS;
-
 }
 
 //=========================================================================
@@ -200,7 +163,6 @@ DeRichSingleSolidRadiator::intersectionPoints( const Gaudi::XYZPoint&  position,
                                                Gaudi::XYZPoint& entryPoint,
                                                Gaudi::XYZPoint& exitPoint ) const
 {
-
   const Gaudi::XYZPoint pLocal( geometry()->toLocal(position) );
   Gaudi::XYZVector vLocal( geometry()->toLocalMatrix()*direction );
 
@@ -212,7 +174,6 @@ DeRichSingleSolidRadiator::intersectionPoints( const Gaudi::XYZPoint&  position,
   entryPoint = geometry()->toGlobal( pLocal + ticks[0] * vLocal );
   exitPoint  = geometry()->toGlobal( pLocal + ticks[noTicks-1] * vLocal );
   return StatusCode::SUCCESS;
-
 }
 
 
@@ -225,7 +186,6 @@ DeRichSingleSolidRadiator::intersectionPoints( const Gaudi::XYZPoint& pGlobal,
                                                std::vector<Gaudi::XYZPoint>&
                                                points) const
 {
-
   const Gaudi::XYZPoint pLocal( geometry()->toLocal(pGlobal) );
   Gaudi::XYZVector vLocal( geometry()->toLocalMatrix()*vGlobal );
 
@@ -251,7 +211,6 @@ intersections( const Gaudi::XYZPoint& pGlobal,
                const Gaudi::XYZVector& vGlobal,
                std::vector<RichRadIntersection>& intersections ) const
 {
-
   const Gaudi::XYZPoint pLocal( geometry()->toLocal(pGlobal) );
   const Gaudi::XYZVector vLocal( geometry()->toLocalMatrix()*vGlobal );
 

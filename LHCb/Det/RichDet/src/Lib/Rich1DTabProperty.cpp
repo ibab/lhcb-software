@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::TabulatedProperty1D
  *
  *  CVS Log :-
- *  $Id: Rich1DTabProperty.cpp,v 1.9 2007-02-01 16:41:13 jonrob Exp $
+ *  $Id: Rich1DTabProperty.cpp,v 1.10 2008-08-18 18:30:39 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-26
@@ -39,23 +39,12 @@ TabulatedProperty1D::~TabulatedProperty1D( )
 TabulatedProperty1D::TabulatedProperty1D( const TabulatedProperty * tab,
                               const bool registerUMS,
                               const gsl_interp_type * interType )
-  : TabulatedFunction1D     ( interType ),
-    m_tabProp     ( tab       ),
+  : TabulatedFunction1D ( interType ),
+    m_tabProp     ( tab  ),
     m_svcLocator  ( NULL ),
     m_msgSvc      ( NULL ),
     m_updMgrSvc   ( NULL )
 {
-
-  // Check the data is valid
-  if ( !tab ) throw GaudiException("Null TabulatedProperty",
-                                   "*TabulatedProperty1D*", StatusCode::FAILURE );
-
-  // copy data to internal container
-  for ( TabulatedProperty::Table::const_iterator it = tab->table().begin();
-        it != tab->table().end(); ++it )
-  {
-    m_data[ (*it).first ] = (*it).second;
-  }
 
   if ( registerUMS )
   {
@@ -67,7 +56,8 @@ TabulatedProperty1D::TabulatedProperty1D( const TabulatedProperty * tab,
     try
     {
       TabulatedProperty * nonconsttab = const_cast<TabulatedProperty*>(tab);
-      updMgrSvc()->registerCondition( this, nonconsttab,
+      updMgrSvc()->registerCondition( this, 
+                                      nonconsttab,
                                       &TabulatedProperty1D::updateTabProp );
     }
     catch ( const GaudiException & excp )
@@ -79,17 +69,42 @@ TabulatedProperty1D::TabulatedProperty1D( const TabulatedProperty * tab,
   }
 
   // initialise the underlying GSL interpolator
-  m_OK = initInterpolator( interType );
+  m_OK = initInterpolator( tab, interType );
 
+}
+
+bool 
+TabulatedProperty1D::initInterpolator( const TabulatedProperty * tab,
+                                       const gsl_interp_type * interType )
+{ 
+  // Check the data is valid
+  if ( !tab ) throw GaudiException("Null TabulatedProperty",
+                                   "*TabulatedProperty1D*", StatusCode::FAILURE );
+
+  // set interpolator type
+  if ( NULL != interType ) m_interType = interType;
+  
+  // copy data to internal container
+  m_data.clear();
+  for ( TabulatedProperty::Table::const_iterator it = tab->table().begin();
+        it != tab->table().end(); ++it )
+  {
+    m_data[ (*it).first ] = (*it).second;
+  }
+
+  // init the underlying GSL interpolator
+  return m_OK = ( this->TabulatedFunction1D::initInterpolator(interType) );
 }
 
 StatusCode TabulatedProperty1D::updateTabProp()
 {
   // make a message object
-  MsgStream msg( msgSvc(), "TabulatedProperty1D" );
+  MsgStream msg( msgSvc(), "Rich::TabulatedProperty1D" );
   msg << MSG::INFO << "Update triggered for " << tabProperty()->name() << endreq;
+
   // run the update
-  m_OK = initInterpolator( interType() );
+  m_OK = initInterpolator( tabProperty(), interType() );
+
   // check status of update
   if ( !m_OK )
   {

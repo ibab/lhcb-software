@@ -5,7 +5,7 @@
  *  Header file for detector description class : DeRichRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichRadiator.h,v 1.23 2007-04-03 15:42:32 papanest Exp $
+ *  $Id: DeRichRadiator.h,v 1.24 2008-08-18 18:30:39 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -83,16 +83,17 @@ public:
   }
 
   /**
-   * Retrieves the refractive index of the radiator
-   * @return A pointer to the refractive index of the radiator
+   * Retrieves The refractive index of the radiator
+   * @return A pointer to the refractive index  interpolated function of the radiator
+   * @retval NULL No interpolation function
    */
-  inline const RichTabulatedProperty1D* refIndex() const
+  inline const Rich::TabulatedProperty1D* refIndex() const
   {
     return m_refIndex;
   }
 
   /**
-   * Retrieves the refractive index of the radiator
+   * Retrieves The refractive index of the radiator
    * @return A pointer to the refractive index of the radiator
    */
   inline const TabulatedProperty* refIndexTabProp() const
@@ -102,10 +103,10 @@ public:
 
   /**
    * Retrieves the Rayleigh properties of the radiator
-   * @return A pointer to the Rayleigh tab property
-   * @retval NULL No Rayleigh tab property
+   * @return A pointer to the Rayleigh interpolated function
+   * @retval NULL No interpolation function
    */
-  inline const RichTabulatedProperty1D* rayleigh() const
+  inline const Rich::TabulatedProperty1D* rayleigh() const
   {
     return m_rayleigh;
   }
@@ -118,6 +119,26 @@ public:
   inline const TabulatedProperty* rayleighTabProp() const
   {
     return m_rayleighTabProp;
+  }
+
+  /**
+   * Retrieves the absorption properties of the radiator
+   * @return A pointer to the absorption interpolated function
+   * @retval NULL No interpolation function
+   */
+  inline const Rich::TabulatedProperty1D* absorption() const
+  {
+    return m_absorption;
+  }
+
+  /**
+   * Retrieves the absorption properties of the radiator
+   * @return A pointer to the absorption tab property
+   * @retval NULL No tab property
+   */
+  inline const TabulatedProperty* absorptionTabProp() const
+  {
+    return m_absorptionTabProp;
   }
 
   /**
@@ -171,11 +192,16 @@ public:
 
 protected:
 
+  /// Initialise Tab Property Interpolators
+  StatusCode initTabPropInterpolators();
+
+protected:
+
   Rich::RadiatorType m_radiatorID;  ///< The radiator id (Aerogel, CF4, C4F10)
   Rich::DetectorType m_rich;        ///< The Rich detector of this radiator
 
   /// pointer to the refractive index of the material
-  const RichTabulatedProperty1D* m_refIndex;
+  Rich::TabulatedProperty1D* m_refIndex;
 
   /// pointer to the Tabulated property refractive index
   const TabulatedProperty* m_refIndexTabProp;
@@ -184,10 +210,13 @@ protected:
   const TabulatedProperty* m_chkvRefIndexTabProp;
 
   /// pointer to the Rayleigh scattering properties
-  const RichTabulatedProperty1D* m_rayleigh;
+  Rich::TabulatedProperty1D* m_rayleigh;
 
   /// pointer to the Tabulated property Rayleigh
   const TabulatedProperty* m_rayleighTabProp;
+
+  /// pointer to the absorption tabulated function
+  Rich::TabulatedProperty1D* m_absorption;
 
   /// pointer to the Tabulated property for the absoption
   const TabulatedProperty* m_absorptionTabProp;

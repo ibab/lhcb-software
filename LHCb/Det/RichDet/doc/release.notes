@@ -4,6 +4,15 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2008-08-18 - Chris Jones
+ - Add method to DeRichRadiator to provide interpolated function for the 
+   effective absorption length, as a function of photon energy.
+ - Make sure interpolators in DeRichRadiator are re-initialised when the 
+   underlying tables are updated.
+ - Move the method initTabPropInterpolators() to the DeRichRadiator base class.
+ - Add the public method initInterpolator to Rich::TabulatedProperty1D to 
+   allow the forced re-initialisation of the interpolator.
+
 !======================== RichDet v11r0 2008-07-27 ===========================
 ! 2008-07-25 - Chris Jones
  - Add to DeRichSystem mapping between L1 hardware and logical IDs

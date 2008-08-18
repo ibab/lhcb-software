@@ -4,7 +4,7 @@
  *  Header file for utility class : Rich::TabulatedProperty1D
  *
  *  CVS Log :-
- *  $Id: Rich1DTabProperty.h,v 1.7 2008-06-14 20:43:56 jonrob Exp $
+ *  $Id: Rich1DTabProperty.h,v 1.8 2008-08-18 18:30:39 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-08-13
@@ -42,7 +42,7 @@ namespace Rich
 
     /** Constructor from tabulated property and gsl interpolator type
      *
-     *  @param tab         Pointer to a tabulated proper
+     *  @param tab         Pointer to a tabulated property
      *  @param registerUMS Flag to indicate if this interpolator should register
      *                     itself to the UMS, so that it is automatically updated
      *                     when the underlying TabulatedProperty is updated
@@ -76,6 +76,14 @@ namespace Rich
      *  @return StatusCode indicating if the update was successfully or not
      */
     StatusCode updateTabProp();
+
+    /** Initialisation from Tabulated Property
+     *
+     *  @param tab         Pointer to a tabulated property
+     *  @param interType GSL Interpolator type (If not given, currently configured type is used)
+     */
+    bool initInterpolator( const TabulatedProperty * tab,
+                           const gsl_interp_type * interType = NULL );
 
   private: // methods
 

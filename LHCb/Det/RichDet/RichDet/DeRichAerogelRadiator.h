@@ -5,7 +5,7 @@
  *  Header file for detector description class : DeRichAerogelRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichAerogelRadiator.h,v 1.3 2006-04-03 08:57:10 jonrob Exp $
+ *  $Id: DeRichAerogelRadiator.h,v 1.4 2008-08-18 18:30:39 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-03-02
@@ -57,8 +57,6 @@ public:
    * terminate
    */
   virtual StatusCode initialize();
-
-protected:
 
 private:
 

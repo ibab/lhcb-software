@@ -5,7 +5,7 @@
  *  Implementation file for detector description class : DeRichGasRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichGasRadiator.cpp,v 1.9 2007-02-28 18:31:07 marcocle Exp $
+ *  $Id: DeRichGasRadiator.cpp,v 1.10 2008-08-18 18:30:39 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-03-02
@@ -84,9 +84,6 @@ StatusCode DeRichGasRadiator::initialize ( )
     return sc;
   }
 
-  // Hack - Update interpolators in base class after first update
-  sc = initTabPropInterpolators();
-
   msg << MSG::DEBUG << "Initialisation Complete" << endreq;
   m_firstUpdate = false;
 
@@ -114,7 +111,7 @@ StatusCode DeRichGasRadiator::updateProperties ( )
   if ( (photonEnergyHighLimit < ckvPhotonEnergyHighLimit ) ||
        (ckvPhotonEnergyLowLimit < photonEnergyLowLimit ) )
   {
-    msg << MSG::ERROR << "Inadimissible photon energy limits "
+    msg << MSG::ERROR << "Inadmissible photon energy limits "
         << photonEnergyHighLimit << " " << ckvPhotonEnergyHighLimit
         << ckvPhotonEnergyLowLimit << " " << photonEnergyLowLimit << endmsg;
     return StatusCode::FAILURE;
@@ -136,6 +133,9 @@ StatusCode DeRichGasRadiator::updateProperties ( )
 
   sc = calcSellmeirRefIndex( ckvPhotonMomentumVect, m_chkvRefIndexTabProp );
   if ( !sc ) return sc;
+
+  // Hack - Update interpolators in base class after first update
+  sc = initTabPropInterpolators();
 
   return sc;
 }
