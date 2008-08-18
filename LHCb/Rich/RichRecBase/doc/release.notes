@@ -4,6 +4,10 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2008-08-18 - Chris Jones
+ - Remove redundant methof from IRichSellmeirFunc interface
+ - Improve default property values in various base classes
+
 ! 2008-07-29 - Hubert Degaudenzi
  - use of the god_headers pattern instead of the plain obj2doth document. It
    allows to fix the dependencies between the components and thus enables the

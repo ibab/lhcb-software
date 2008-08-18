@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool interface : Rich::Rec::ISellmeirFunc
  *
  *  CVS Log :-
- *  $Id: IRichSellmeirFunc.h,v 1.10 2008-05-02 21:35:10 jonrob Exp $
+ *  $Id: IRichSellmeirFunc.h,v 1.11 2008-08-18 19:09:07 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -63,29 +63,11 @@ namespace Rich
        *
        *  @return The number of emitted photons in the given energy range
        */
-      virtual double photonsInEnergyRange( LHCb::RichRecSegment * segment,
+      virtual double photonsInEnergyRange( const LHCb::RichRecSegment * segment,
                                            const Rich::ParticleIDType id,
                                            const double botEn,
                                            const double topEn ) const = 0;
 
-      /** Computes the number of photons emitted in the given energy range per
-       *  unit pathlength for a given momentum, mass hypothesis and radiator
-       *
-       *  @param[in] rad      The radiator type
-       *  @param[in] id       The assumed mass hypothesis
-       *  @param[in] momentum The particle momentum
-       *  @param[in] botEn    The lower bound to the energy range
-       *  @param[in] topEn    The upper bound to the energy range
-       *
-       *  @return The number of emitted photons in the given energy range per unit
-       *          path-length
-       */
-      virtual double photonsInEnergyRange( const Rich::RadiatorType rad,
-                                           const Rich::ParticleIDType id,
-                                           const double momentum,
-                                           const double botEn,
-                                           const double topEn ) const = 0;
-      
     };
 
   }
