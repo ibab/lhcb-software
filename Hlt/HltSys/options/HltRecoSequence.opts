@@ -108,7 +108,7 @@ Hlt1RecoRZVeloTracksSequence.Members += {
 Hlt1RecoRZPVSequence.MeasureTime = true;
 Hlt1RecoRZPVSequence.Members += { 
   "GaudiSequencer/HltRecoRZPVSequence",
-  "HltVertexPrepare/Hlt1PreparePV2D"
+  "HltVertexFilter/Hlt1PreparePV2D"
 };
 
 
