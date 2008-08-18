@@ -1,0 +1,35 @@
+#============================================================================
+# Created    : 2008-08-15
+# Maintainer : Eduardo Rodrigues
+#============================================================================
+package           VeloRecMonitors
+version           v1r0
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src
+
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+# use   Package      v1r*    Hat
+
+use  GaudiAlg     v*
+
+use  VeloDet      v*   Det
+use  DigiEvent    v*   Event
+use  TrackEvent   v*   Event
+
+include_path      none
+
+#============================================================================
+# Component library building rule
+#============================================================================
+library          VeloRecMonitors    ../src/*.cpp 
+
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=VeloRecMonitors

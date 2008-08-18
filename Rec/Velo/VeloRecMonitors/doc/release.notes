@@ -1,0 +1,10 @@
+!-----------------------------------------------------------------------------
+! Package     : Velo/VeloRecMonitors
+! Responsible : VELO monitoring group
+! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
+!-----------------------------------------------------------------------------
+
+! 2008-08-15 - Eduardo Rodrigues
+ - creation of the package
+ - creation of a base class for all VELO reconstruction monitoring algorithms
+
