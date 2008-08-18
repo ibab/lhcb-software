@@ -168,11 +168,6 @@ ToolSvc.Offline_RichToolRegistry.Tools += { "Rich::Rec::GeomEffCKMassRing/RichGe
 // Rayleigh scattering using analytic function
 //ToolSvc.Offline_RichToolRegistry.Tools += { "Rich::Rec::FunctionalRayleighScatter/RichRayleighScatter" };
 
-// Sellmeir function
-//ToolSvc.Offline_RichToolRegistry.Tools += { "Rich::Rec::SellmeirFunc/RichSellmeirFunc" };
-ToolSvc.Offline_RichSellmeirFunc.WaveIndpTrans = 1.0;
-//ToolSvc.Offline_RichSellmeirFunc.WaveIndpTrans = 0.9368;
-
 // Detector Parameters
 //ToolSvc.Offline_RichToolRegistry.Tools += { "Rich::DetParameters/RichDetParameters" };
 //                                                    Aerogel  C4F10   CF4

@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.3 2008-08-15 14:41:23 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.4 2008-08-18 19:33:00 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -15,7 +15,6 @@ from RichRecSys.CKThetaResolution import *
 from Configurables import ( GaudiSequencer,
                             Rich__DAQ__HPDPixelClusteringTool,
                             Rich__ParticleProperties )
-from RichRecSys.RichGlobalPID import *
 
 # ----------------------------------------------------------------------------------
 
@@ -35,21 +34,21 @@ class RichRecSysConf(RichConfigurableUser):
     
     ## Steering options
     __slots__ = {
-        "fieldOff":       False # set to True for magnetic field off data
-       ,"veloOpen":       False # set to True for Velo open data
-       ,"context":    "Offline" # The context within which to run
-       ,"radiators": []         # The radiators to use
-       ,"particles": []
-       ,"configureTools": True
-       ,"configureAlgs": True
-       ,"preloadRawEvent": False
-       ,"preloadTracks": False
-       ,"initPixels": True
-       ,"initTracks": True
-       ,"initPhotons": True
-       ,"checkProcStatus": True
-       ,"pidConfig": "FullGlobal"
-       ,"makeSummaryObjects": False
+        "fieldOff":       False   # set to True for magnetic field off data
+       ,"veloOpen":       False   # set to True for Velo open data
+       ,"context":    "Offline"   # The context within which to run
+       ,"radiators": []           # The radiators to use
+       ,"particles": []           # The particle species to consider. Default is (el,mu,pi,ka,pr)
+       ,"configureTools":  True   # Configure the general RICH reconstruction tools
+       ,"configureAlgs":   True   # Configure the reconstruction algorithms
+       ,"preloadRawEvent": False  # Preload the RawEvent prior to the RICH algorithms
+       ,"preloadTracks":   False  # Preload the input tracks prior to the RICH algorithms
+       ,"initPixels":      True   # Run an initialisation algorithm to create the pixels
+       ,"initTracks":      True   # Run an initialisation algorithm to create the tracks
+       ,"initPhotons":     True   # Run an initialisation algorithm to create the photons
+       ,"checkProcStatus": True   # Check the status of the ProcStatus object
+       ,"pidConfig": "FullGlobal" # The PID algorithm configuration
+       ,"makeSummaryObjects": False # Make the reconstruction summary TES data objects
        ,"testOldOpts": False
         }
 
@@ -65,7 +64,7 @@ class RichRecSysConf(RichConfigurableUser):
             self.setProp("particles",self.KnownParticleTypes[context])
 
     ## @brief The RICH radiators to use
-    #  @return a vector of bools indicating if (Aero,Rich1Gas,Rich2Gas) should be used
+    #  @return a vector of bools indicating if (Aerogel,Rich1Gas,Rich2Gas) should be used
     def usedRadiators(self):
         usedRads = [ False, False, False ]
         for rad in self.getProp("radiators"):
@@ -108,10 +107,8 @@ class RichRecSysConf(RichConfigurableUser):
     #  @param sequence The GaudiSequencer to add the RICH reconstruction to      
     def configureAlgorithms(self,sequence):
 
-        from Configurables import (Rich__DAQ__RawBufferToRichDigitsAlg,
-                                   Rich__DAQ__LoadRawEvent,
-                                   Rich__Rec__Initialise,
-                                   Rich__Rec__HierarchicalPIDMerge )
+        from Configurables import ( Rich__DAQ__RawBufferToRichDigitsAlg,
+                                    Rich__Rec__Initialise )
 
         # Set the context
         cont = self.getProp("context")
@@ -122,6 +119,7 @@ class RichRecSysConf(RichConfigurableUser):
         # Useful for timing studies
         #-----------------------------------------------------------------------------
         if self.getProp("preloadRawEvent"):
+            from Configurables import Rich__DAQ__LoadRawEvent
             sequence.Members += [ Rich__DAQ__LoadRawEvent("LoadRawRichEvent"+cont) ]
         if self.getProp("preloadTracks"):
             sequence.Members += [ Rich__Rec__Initialise("LoadRawTracks"+cont) ]
@@ -185,28 +183,33 @@ class RichRecSysConf(RichConfigurableUser):
         #-----------------------------------------------------------------------------
         # PID
         #-----------------------------------------------------------------------------
-        pidConf = self.getProp("pidConfig")
-        if pidConf != "None" :
+        pidMode = self.getProp("pidConfig")
+        if pidMode != "None" :
 
             pidSeq = GaudiSequencer("Rich"+cont+"PIDSeq")
             pidSeq.MeasureTime = True
             sequence.Members += [ pidSeq ]
             
-            if pidConf == "FullGlobal" or pidConf == "FastGlobal":
-                gpidConf = RichGlobalPIDConfig()
-                if pidConf == "FastGlobal": gpidConf.mode = "Fast"
-                self.setOtherProps(gpidConf,["context"])
-                gpidSeq = GaudiSequencer("Rich"+cont+"GPIDSeq")
-                pidSeq.Members += [ gpidSeq ]
-                gpidConf.applyConf(gpidSeq)
-                del gpidConf
+            if pidMode == "FullGlobal" or pidMode == "FastGlobal":
+                from RichRecSys.RichGlobalPID import RichGlobalPIDConfig
+                pidConf = RichGlobalPIDConfig()
+                if pidMode == "FastGlobal": pidConf.mode = "Fast"
+            elif pidMode == "FastLocal" :
+                from RichRecSys.RichHLTLocalPID import RichHLTLocalPIDConfig
+                pidConf = RichHLTLocalPIDConfig()
             else:
                 raise RuntimeError("ERROR : Unknown PID config '%s'"%pidConf)
 
+            self.setOtherProps(pidConf,["context"])
+            pidConf.applyConf(pidSeq)
+            del pidConf
+
         #-----------------------------------------------------------------------------
-        # Finalise
+        # Finalise (merge results from various algorithms)
         #-----------------------------------------------------------------------------
-        pidSeq.Members += [ Rich__Rec__HierarchicalPIDMerge("Merge"+cont+"RichPIDs") ]
+        if pidMode != "FastLocal" :
+            from Configurables import Rich__Rec__HierarchicalPIDMerge
+            pidSeq.Members += [Rich__Rec__HierarchicalPIDMerge("Merge"+cont+"RichPIDs")]
         
         #-----------------------------------------------------------------------------
         # Summary objects

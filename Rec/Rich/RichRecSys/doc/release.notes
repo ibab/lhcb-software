@@ -4,9 +4,13 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2008-08-18 - Chris Jones
+ - Remove dependency on Rich/RichHLTSys. Obsoleted by python configuration in
+   RichRecSys.
+
 ! 2008-08-07 - Chris Jones
- - Add python Configuration. Job Option files remain, but will be removed in
-   a future release.
+ - Add python Configuration. Job Option files remain for the moment to allow, 
+   testing whilst moving over, but will be removed in a future release.
 
 !====================== RichRecSys v3r12 2008-07-29 ==========================
 ! 2008-07-22 - Chris Jones
