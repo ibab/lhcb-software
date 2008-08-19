@@ -1,5 +1,5 @@
-// $Id: Fidel.h,v 1.8 2008-08-04 11:05:52 sfurcas Exp $
-// $Id: Fidel.h,v 1.8 2008-08-04 11:05:52 sfurcas Exp $
+// $Id: Fidel.h,v 1.9 2008-08-19 11:47:35 pkoppenb Exp $
+// $Id: Fidel.h,v 1.9 2008-08-19 11:47:35 pkoppenb Exp $
 #ifndef FIDEL_H 
 #define FIDEL_H 1
 
@@ -11,6 +11,9 @@
 
 /** @class Fidel Fidel.h
  *  
+ *  Algorithm selecting Xb -> 2 body, where the tow bodies can be any
+ *  Final state particle or resonance. Quantum number conservations 
+ *  are checked.
  *
  *  @author Sara Furcas
  *  @date   2007-11-12
@@ -30,15 +33,8 @@ protected:
     
 private:
   
-  double     m_minPt;           ///< Minimum B candidate Pt
-  double     m_minP;            ///< Minimum B candidate P
-  double     m_minMass;         ///< Minimum B candidate range mass
-  double     m_maxMass;         ///< Maximum B candidate range mass
   double     m_inputParticles;  ///< Max number particles in the loop
-  double     m_maxPointing;     ///< Max pointing angle 
-  double     m_maxChi2;         ///< Max Chi2 of B vertex
   bool       m_basicparticle;   ///< Enable particles couple in loop
-  double     m_maxIpchi2;       ///< Maximum Chi2 Impact parameter
   bool       m_checkQ;          ///< Check quantum numbers-Charge 
   int        m_minQ;            ///< Minimum range charge
   int        m_maxQ;            ///< Maximum range charge
@@ -52,7 +48,6 @@ private:
   int        m_pid;             ///< Default Pid to save B candidate
   double     m_minCts;          ///< Minimum Flight Significance
   bool       m_muonReq;         ///< Enable to simulate Hlt single muon
-  double     m_minProb;         ///< Minimum Probability of Chi2 vertex
   double     m_minFsB1Res;      ///< Minimum Flight Significance between B and Res 1
   double     m_minFsB2Res;      ///< Minimum Flight Significance between B and Res 2
   double     m_minFsB1ch;       ///< Minimum Flight Significance between B and Charmed particle 1
@@ -62,7 +57,11 @@ private:
   double     m_minFs;           ///< Minimum Flight Significance between PV and Res
   double     m_minChFs;         ///< Minimum Flight Significance between PV and Charmed particle
   
-  
+  std::string m_combinationCut ; ///< the cut for the combination of daughters
+  std::string  m_motherCut     ; ///< the cut to be applied to the constructed mother particle
+  LoKi::Types::ACut m_acut     ; ///< the actual cut for combination of good daughters
+  LoKi::Types::Cut  m_cut      ; ///< the actual 'final' cut for the mother particle
+  std::string  m_factory       ; ///< the type/name of hybrid C++/Python factory
   
 };
 #endif // FIDEL_H

@@ -4,7 +4,11 @@
 ! Purpose     : Fidel
 !-----------------------------------------------------------------------------
 
-!!========================== Fidel v1r2 2008-08-06 ===================
+! 2008-08-19 - Patrick Koppenburg
+ - Changes in Fidel.cpp. Use LoKi cuts to apply all cuts available in LoKi.
+ - Increment v1r3
+
+!========================== Fidel v1r2 2008-08-06 ===================
  2008-08-04 - Patrick Koppenburg
  - Removed Hlt2SelB2TwoBody.py. Use the one in HltSelections.
  - Check StatusCodes

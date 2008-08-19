@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           Fidel
-version           v1r2
+version           v1r3
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -17,6 +17,8 @@ branches          cmt doc src options
 # Used packages.
 #============================================================================
 use DaVinciKernel      v*    Phys
+use LoKiPhys           v*    Phys
+use  LoKiArrayFunctors     v* Phys
 #============================================================================
 # Component library building rule
 #============================================================================
