@@ -1,4 +1,4 @@
-// $Id: OMAMsgInterface.h,v 1.2 2008-08-11 08:05:15 ggiacomo Exp $
+// $Id: OMAMsgInterface.h,v 1.3 2008-08-19 22:45:32 ggiacomo Exp $
 #ifndef OMALIB_OMAMSGINTERFACE_H 
 #define OMALIB_OMAMSGINTERFACE_H 1
 
@@ -10,28 +10,29 @@
  */
 
 #include <string>
+#include <vector>
+#include "OMAlib/OMAMessage.h"
 class TH1;
+class IOMAMsgTool;
 
 class OMAMsgInterface {
 public: 
-  /// Standard constructor
   OMAMsgInterface( ); 
+  virtual ~OMAMsgInterface( ); 
 
-  virtual ~OMAMsgInterface( ); ///< Destructor
-
-  
-  typedef enum { INFO=3, WARNING, ALARM} OMAMsgLevel;
-  typedef enum { LOCAL=0, ECS} OMAMsgMode;
-  virtual void raiseMessage(OMAMsgLevel level,
-                            std::string message,
-                            std::string histogramName); 
-  /// set output message interface
-  void setMessageMode(OMAMsgMode mode) {
-    m_msgMode = mode;}
-  /// get output message interface
-  inline OMAMsgInterface::OMAMsgMode messageMode() {
-    return m_msgMode;}
+  /// unconfirm all messages (to be called before starting new analysis) 
+  void resetMessages(std::string& TaskName);
+  /// lower and delete all unconfirmed messages  (to be called at the end of analysis)
+  void refreshMessageList(std::string& TaskName);
+  /// declare a message, that is sent to output only if new or if level is higher
+  virtual void raiseMessage(unsigned int Id,
+                            OMAMessage::OMAMsgLevel level,
+                            std::string& message,
+                            std::string& histogramName,
+                            std::string& TaskName); 
 protected:
-  OMAMsgMode m_msgMode;
+  IOMAMsgTool* m_msgTool;
+private:
+  std::vector<OMAMessage*> m_MessageStore;
 };
 #endif // OMALIB_OMAMSGINTERFACE_H

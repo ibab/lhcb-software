@@ -14,6 +14,7 @@ ApplicationMgr.EvtMax = 0;
 ApplicationMgr.EvtSel = "NONE";
 
 DBDrivenAnalysisTask.OutputLevel = 3;
+DBDrivenAnalysisTask.MessageTool = "OMAMsgStdOut";
 DBDrivenAnalysisTask.useHistDB   = true;
 DBDrivenAnalysisTask.InputFiles   = {
   "/afs/cern.ch/user/g/ggiacomo/cmtuser/Online_v4r5/Muon/MuonMonitor/v2r0/options/pulseQ4_multibunch/monitor_ns.root",

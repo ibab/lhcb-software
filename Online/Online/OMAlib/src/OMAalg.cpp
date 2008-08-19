@@ -1,4 +1,4 @@
-// $Id: OMAalg.cpp,v 1.3 2008-08-11 08:05:16 ggiacomo Exp $
+// $Id: OMAalg.cpp,v 1.4 2008-08-19 22:45:32 ggiacomo Exp $
 #include "OMAlib/OMAalg.h"
 
 OMAalg::OMAalg(std::string Name, OMAcommon* OMAenv) 
@@ -6,10 +6,10 @@ OMAalg::OMAalg(std::string Name, OMAcommon* OMAenv)
     m_type(CHECK),
     m_npars(0),
     m_omaEnv(OMAenv),
-    m_needRef(false),
-    m_ref(NULL)
+    m_needRef(false)
 {
   m_parnames.clear(); 
+  m_parDefValues.clear(); 
 }
 
 OMAalg::~OMAalg() {
@@ -29,24 +29,15 @@ void OMAalg::setParNames(std::vector<std::string> &ParNames) {
     m_parnames.push_back(*i);  
 }
 
-void OMAalg::raiseMessage(OMAMsgInterface::OMAMsgLevel level,
+void OMAalg::raiseMessage(unsigned int ID,
+                          OMAMessage::OMAMsgLevel level,
                           std::string message,
-                          std::string histogramName ) {
+                          std::string& histogramName ,
+                          std::string& taskName) {
   if(m_omaEnv) {
-    std::string msgstring;
-    switch (level) {
-    case OMAMsgInterface::WARNING:
-      msgstring = "WARNING";
-      break;
-    case OMAMsgInterface::ALARM:
-      msgstring = "ALARM";
-      break;
-    default:
-      msgstring = "message";
-      break;
-    }
-    msgstring += (" from "+ m_name + " : "+message);
-    m_omaEnv->raiseMessage(level, msgstring, histogramName);
+    std::string msgstring = (" algorithm "+ m_name + " : "+message);
+    m_omaEnv->raiseMessage(ID, level, msgstring, 
+                           histogramName, taskName);
   }
 }
 

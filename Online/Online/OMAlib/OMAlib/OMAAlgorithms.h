@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAAlgorithms.h,v 1.6 2008-08-11 08:05:15 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAAlgorithms.h,v 1.7 2008-08-19 22:45:31 ggiacomo Exp $
 #ifndef OMALIB_OMAALGORITHMS_H
 #define OMALIB_OMAALGORITHMS_H 1
 
@@ -17,12 +17,17 @@ class OMACheckXRange : public OMACheckAlg
   virtual void exec(TH1 &Histo,
                     std::vector<float> & warn_thresholds,
                     std::vector<float> & alarm_thresholds,
-                    std::vector<float> & input_pars);
+                    std::vector<float> & input_pars,
+                    unsigned int anaID,
+                    std::string& taskName,
+                    TH1* Ref);
   void exec(TH1 &Histo,
             float warn_min,
             float warn_max,
             float alarm_min,
-            float alarm_max);
+            float alarm_max,
+            unsigned int anaID,
+            std::string& taskName);
  private:
   bool check(TH1 &Histo,
              float min,
@@ -36,7 +41,10 @@ class OMACheckMeanAndSigma : public OMACheckAlg
   virtual void exec(TH1 &Histo,
                     std::vector<float> & warn_thresholds,
                     std::vector<float> & alarm_thresholds,
-                    std::vector<float> & input_pars);
+                    std::vector<float> & input_pars,
+                    unsigned int anaID,
+                    std::string& taskName,
+                    TH1* Ref);
  private:
   bool checkMean(TH1 &Histo,
                  float min,
@@ -55,7 +63,10 @@ class OMAGaussFit : public OMACheckAlg
   virtual void exec(TH1 &Histo,
                     std::vector<float> & warn_thresholds,
                     std::vector<float> & alarm_thresholds,
-                    std::vector<float> & input_pars);
+                    std::vector<float> & input_pars,
+                    unsigned int anaID,
+                    std::string& taskName,
+                    TH1* Ref);
  private:
   bool checkParam( TF1* fit,
                    int ipar,
@@ -72,7 +83,10 @@ class OMACheckHolesAndSpikes  : public OMACheckAlg
   virtual void exec(TH1 &Histo,
                     std::vector<float> & warn_thresholds,
                     std::vector<float> & alarm_thresholds,
-                    std::vector<float> & input_pars);
+                    std::vector<float> & input_pars,
+                    unsigned int anaID,
+                    std::string& taskName,
+                    TH1* Ref);
 };
 
 class OMACheckEmptyBins  : public OMACheckAlg
@@ -82,7 +96,10 @@ class OMACheckEmptyBins  : public OMACheckAlg
   virtual void exec(TH1 &Histo,
                     std::vector<float> & warn_thresholds,
                     std::vector<float> & alarm_thresholds,
-                    std::vector<float> & input_pars);
+                    std::vector<float> & input_pars,
+                    unsigned int anaID,
+                    std::string& taskName,
+                    TH1* Ref);
 };
 
 class OMACompareToReference : public OMACheckAlg
@@ -92,7 +109,10 @@ class OMACompareToReference : public OMACheckAlg
   virtual void exec(TH1 &Histo,
                     std::vector<float> & warn_thresholds,
                     std::vector<float> & alarm_thresholds,
-                    std::vector<float> & input_pars);
+                    std::vector<float> & input_pars,
+                    unsigned int anaID,
+                    std::string& taskName,
+                    TH1* Ref);
 };
 
 //------ Histogram Creator Algorithms ------------------//

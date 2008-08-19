@@ -1,7 +1,15 @@
-! $Id: release.notes,v 1.8 2008-08-13 14:07:07 ggiacomo Exp $
+! $Id: release.notes,v 1.9 2008-08-19 22:45:32 ggiacomo Exp $
 ! Package     : OMAlib
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
+
+
+! 20080819 - OMAlib v1r3
+  - alarm logger mechanism
+  - output interface defined via a GaudiTool, for the moment there is only
+    the trivial OMAMsgStdOut
+  - bug fix in OMACheckMeanandSigma, small improvements with algorithms messages
+  - job option for reference path
 
 ! 20080813 - OMAlib v1r2
   - make OMAEfficiency and OMADivide work for both THXF/THXD inputs

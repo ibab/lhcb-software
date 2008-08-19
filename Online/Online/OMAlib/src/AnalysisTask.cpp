@@ -1,10 +1,11 @@
-// $Id: AnalysisTask.cpp,v 1.3 2008-08-11 08:05:16 ggiacomo Exp $
+// $Id: AnalysisTask.cpp,v 1.4 2008-08-19 22:45:32 ggiacomo Exp $
 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 // local
 #include "OMAlib/OMAlib.h"
+#include "OMAlib/IOMAMsgTool.h"
 #include "OMAlib/AnalysisTask.h"
 #include "OMAlib/SavesetFinder.h"
 
@@ -26,9 +27,10 @@ AnalysisTask::AnalysisTask( const std::string& name,
   declareProperty ( "HistDB"       , m_DB = OnlineHistDBEnv_constants::DB );
   declareProperty ( "HistDBuser"   , m_DBuser = OnlineHistDBEnv_constants::ACCOUNT );
   declareProperty ( "HistDBpw"     , m_DBpw = OnlineHistDBEnv_constants::PASSWORD );
+  declareProperty ( "HistRefRoot"  , m_myRefRoot = "default");
   declareProperty ( "InputFiles"   , m_inputFiles);
   declareProperty ( "InputTasks"   , m_inputTasks);
-  declareProperty ( "MessageMode"  , m_MessageMode = 0 );
+  declareProperty ( "MessageTool"  , m_MessageTool = "OMAMsgStdOut" );
 }
 
 AnalysisTask::~AnalysisTask() {
@@ -44,11 +46,15 @@ StatusCode AnalysisTask::initialize() {
   if ( sc.isFailure() ) return sc;  
 
   // where to send messages 
-  setMessageMode( (OMAMsgMode) m_MessageMode);
+  m_msgTool = tool<IOMAMsgTool>(m_MessageTool);
 
   // use HistDB if requested
   if(m_useDB)
     openDBSession( m_DBpw, m_DBuser, m_DB );
+
+  if( "default" != m_myRefRoot) 
+    setRefRoot(m_myRefRoot);
+
 
   if ( ! m_inputFiles.empty() ) {
     // single shot: analyze these files now 

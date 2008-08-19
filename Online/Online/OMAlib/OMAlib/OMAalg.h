@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAalg.h,v 1.5 2008-08-11 08:05:15 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAalg.h,v 1.6 2008-08-19 22:45:32 ggiacomo Exp $
 #ifndef OMALIB_OMAALG_H
 #define OMALIB_OMAALG_H 1
 /** @class  OMAalg OMAalg.h OMAlib/OMAalg.h
@@ -8,6 +8,7 @@
  *  @date 3/10/2007
  */
 #include "OMAlib/OMAcommon.h"
+#include "OMAlib/OMAMessage.h"
 #include <TH1.h>
 
 class OMAalg 
@@ -23,18 +24,20 @@ class OMAalg
   inline int ninput() const {return m_ninput;}
   inline std::string& doc() {return m_doc;}
   inline std::string& parName(int i)  { return m_parnames[i];}
+  inline float parDefValue(int i)  { return m_parDefValues[i];}
   inline bool needRef() { return m_needRef; }
-  inline void setRef(TH1* ReferenceHist) { m_ref = ReferenceHist; }
-  
+
  protected:
   inline void setType(AlgType type) {m_type = type;}
   inline void setNpars(int N) {m_npars = N;}
   void setNinput(int N) {m_ninput = N;}
   inline void setDoc(std::string Doc) {m_doc = Doc;}
   void setParNames(std::vector<std::string> &ParNames);
-  void raiseMessage(OMAMsgInterface::OMAMsgLevel level,
+  void raiseMessage(unsigned int Id,
+                    OMAMessage::OMAMsgLevel level,
                     std::string message,
-                    std::string histogramName );
+                    std::string& histogramName,
+                    std::string& taskName );
   inline void setNeedRef() { m_needRef = true; }
 
   std::string m_name;
@@ -42,10 +45,10 @@ class OMAalg
   unsigned int m_npars;
   unsigned int m_ninput;
   std::vector<std::string> m_parnames;
+  std::vector<float> m_parDefValues;
   std::string m_doc;
   OMAcommon* m_omaEnv;
   bool m_needRef;
-  TH1* m_ref;
  private:
    // private dummy copy constructor and assignment operator 
   OMAalg(const OMAalg&) {}
@@ -56,18 +59,28 @@ class OMAalg
 class OMACheckAlg : public OMAalg
 {
  public:
-  OMACheckAlg(std::string Name, OMAcommon* OMAenv) : OMAalg(Name,OMAenv) {
-    setType(OMAalg::CHECK); }
+  OMACheckAlg(std::string Name, OMAcommon* OMAenv) : OMAalg(Name,OMAenv),
+    m_minEntries(50) {
+    setType(OMAalg::CHECK); 
+    m_inputNames.clear(); 
+    m_inputDefValues.clear(); 
+  }
   virtual ~OMACheckAlg() {}
   inline std::string inputName(int i) const { return m_inputNames[i];}
+  inline float inputDefValue(int i) const { return m_inputDefValues[i];}
 
   virtual void exec(TH1 &Histo,
                     std::vector<float> & warn_thresholds,
                     std::vector<float> & alarm_thresholds,
-                    std::vector<float> & input_pars) =0;
+                    std::vector<float> & input_pars,
+                    unsigned int anaID,
+                    std::string& taskName,
+                    TH1* Ref) =0;
 
  protected:
   std::vector<std::string> m_inputNames;
+  std::vector<float> m_inputDefValues;
+  int m_minEntries; // minimum entries for this test
  private:
    // private dummy copy constructor and assignment operator 
   OMACheckAlg(const OMACheckAlg&) : OMAalg(m_name, NULL) {}

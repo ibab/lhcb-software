@@ -1,4 +1,4 @@
-// $Id: DBDrivenAnalysisTask.cpp,v 1.4 2008-08-11 08:05:16 ggiacomo Exp $
+// $Id: DBDrivenAnalysisTask.cpp,v 1.5 2008-08-19 22:45:32 ggiacomo Exp $
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "OMAlib/DBDrivenAnalysisTask.h"
 #include "OnlineHistDB/OnlineHistDB.h"
@@ -49,7 +49,8 @@ StatusCode DBDrivenAnalysisTask::analyze(std::string& SaveSet,
       }
       else {
         rooth = (TH1*) f->Get(((*ih)->hname()).c_str());
-      }
+	if(rooth) rooth->SetName(((*ih)->hname()).c_str()); // avoid cutting of histogram name
+       }
       if (rooth) {
         debug() <<"   histogram found in source"<<endmsg;
         (*ih)->getAnalyses(anaIDs,anaAlgs);
@@ -64,12 +65,13 @@ StatusCode DBDrivenAnalysisTask::analyze(std::string& SaveSet,
               OMAalg* thisalg= getAlg(anaAlgs[iana]);
               if (thisalg) {
                 if (OMACheckAlg* cka = dynamic_cast<OMACheckAlg*>(thisalg) ) {
-                  if( thisalg->needRef() ) 
-                    thisalg->setRef( getReference((*ih)) );
                   cka->exec(*(rooth),
                             warningThr,
                             alarmThr,
-                            inputs);
+                            inputs,
+                            anaIDs[iana],
+                            Task,
+                            thisalg->needRef() ? getReference((*ih)) : NULL);
                 }
                 else {
                   err()<<"algorithm "<<anaAlgs[iana]<< " is not a check algorithm"<<endmsg;
@@ -90,7 +92,7 @@ StatusCode DBDrivenAnalysisTask::analyze(std::string& SaveSet,
         } // end loop on analyses to be done on this histogram
       } // end check on root object existence
       else {
-        err() << " histogram NOT FOUND in source"<<endmsg;
+        err() << " histogram "<< (*ih)->hname() << " NOT FOUND in source file"<<endmsg;
       }
     } // end loop on histograms to be analyzed
     f->Close();
