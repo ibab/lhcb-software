@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::TabulatedGasQuartzWindowAbs
  *
  *  CVS Log :-
- *  $Id: RichTabulatedGasQuartzWindowAbs.cpp,v 1.12 2008-05-06 15:33:38 jonrob Exp $
+ *  $Id: RichTabulatedGasQuartzWindowAbs.cpp,v 1.13 2008-08-19 12:54:46 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -28,8 +28,8 @@ TabulatedGasQuartzWindowAbs ( const std::string& type,
                               const std::string& name,
                               const IInterface* parent )
   : RichRecToolBase ( type, name, parent ),
-    m_riches        ( Rich::NRiches ),
-    m_qWinZSize     ( Rich::NRiches )
+    m_riches        ( Rich::NRiches      ),
+    m_qWinZSize     ( Rich::NRiches      )
 {
   // interface
   declareInterface<IGasQuartzWindowAbs>(this);
@@ -38,18 +38,35 @@ TabulatedGasQuartzWindowAbs ( const std::string& type,
 StatusCode TabulatedGasQuartzWindowAbs::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecToolBase::initialize();
+  StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Rich1 and Rich2
   m_riches[Rich::Rich1] = getDet<DeRich1>( DeRichLocations::Rich1 );
   m_riches[Rich::Rich2] = getDet<DeRich2>( DeRichLocations::Rich2 );
 
-  // Quartz window thicknesses.
-  m_qWinZSize[Rich::Rich1] = m_riches[Rich::Rich1]->param<double>("Rich1GasQuartzWindowThickness");
-  m_qWinZSize[Rich::Rich2] = m_riches[Rich::Rich2]->param<double>("Rich2GasQuartzWindowThickness");
+  // register for UMS updates
+  updMgrSvc()->registerCondition( this,  
+                                  m_riches[Rich::Rich1]->condition("Rich1GasQuartzWindowThickness").path(),
+                                  &TabulatedGasQuartzWindowAbs::umsUpdate );
+  updMgrSvc()->registerCondition( this, 
+                                  m_riches[Rich::Rich2]->condition("Rich2GasQuartzWindowThickness").path(), 
+                                  &TabulatedGasQuartzWindowAbs::umsUpdate );
+  
+  // force first updates
+  sc = updMgrSvc()->update(this);
 
-  return sc;
+  // return
+  return ( sc.isSuccess() ? sc : Error ("Failed first UMS update",sc) );
+}
+
+StatusCode TabulatedGasQuartzWindowAbs::umsUpdate()
+{
+  m_qWinZSize[Rich::Rich1] = 
+    m_riches[Rich::Rich1]->param<double>("Rich1GasQuartzWindowThickness"); 
+  m_qWinZSize[Rich::Rich2] = 
+    m_riches[Rich::Rich2]->param<double>("Rich2GasQuartzWindowThickness"); 
+  return StatusCode::SUCCESS;
 }
 
 double

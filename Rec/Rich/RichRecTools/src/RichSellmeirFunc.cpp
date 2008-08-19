@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::SellmeirFunc
  *
  *  CVS Log :-
- *  $Id: RichSellmeirFunc.cpp,v 1.21 2008-08-18 19:40:59 jonrob Exp $
+ *  $Id: RichSellmeirFunc.cpp,v 1.22 2008-08-19 12:54:46 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -26,7 +26,9 @@ DECLARE_TOOL_FACTORY( SellmeirFunc );
 SellmeirFunc::SellmeirFunc ( const std::string& type,
                              const std::string& name,
                              const IInterface* parent )
-  : Rich::Rec::ToolBase( type, name, parent )
+  : Rich::Rec::ToolBase( type, name, parent ),
+    m_Rich1DE  ( NULL ),
+    m_partProp ( NULL )
 {
   // interface
   declareInterface<ISellmeirFunc>(this);
@@ -34,48 +36,55 @@ SellmeirFunc::SellmeirFunc ( const std::string& type,
 
 StatusCode SellmeirFunc::initialize()
 {
-
   // Sets up various tools and services
-  const StatusCode sc = Rich::Rec::ToolBase::initialize();
+  StatusCode sc = Rich::Rec::ToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  // Acquire instances of tools
-  const IParticleProperties * partProp;
-  acquireTool( "RichParticleProperties", partProp );
-
-  // Retrieve square of particle masses
-  m_particleMassSq[Rich::Electron] = partProp->massSq( Rich::Electron );
-  m_particleMassSq[Rich::Muon]     = partProp->massSq( Rich::Muon );
-  m_particleMassSq[Rich::Pion]     = partProp->massSq( Rich::Pion );
-  m_particleMassSq[Rich::Kaon]     = partProp->massSq( Rich::Kaon );
-  m_particleMassSq[Rich::Proton]   = partProp->massSq( Rich::Proton );
-
-  // release particle properties tool
-  releaseTool( partProp );
-
   // Get Rich1 Detector element
-  DeRich1 * Rich1DE = getDet<DeRich1>( DeRichLocations::Rich1 );
+  m_Rich1DE = getDet<DeRich1>( DeRichLocations::Rich1 );
+
+  // Acquire instances of tools
+  acquireTool( "RichParticleProperties", m_partProp );
+
+  // register for UMS updates
+  updMgrSvc()->registerCondition( this, m_Rich1DE, &SellmeirFunc::umsUpdate );
+
+  // force first updates
+  sc = updMgrSvc()->update(this);
+  
+  // return
+  return ( sc.isSuccess() ? sc : Error ("Failed first UMS update",sc) );
+}
+
+StatusCode SellmeirFunc::umsUpdate()
+{
+  // Retrieve square of particle masses
+  m_particleMassSq[Rich::Electron] = m_partProp->massSq( Rich::Electron );
+  m_particleMassSq[Rich::Muon]     = m_partProp->massSq( Rich::Muon );
+  m_particleMassSq[Rich::Pion]     = m_partProp->massSq( Rich::Pion );
+  m_particleMassSq[Rich::Kaon]     = m_partProp->massSq( Rich::Kaon );
+  m_particleMassSq[Rich::Proton]   = m_partProp->massSq( Rich::Proton );
 
   // Load radiator parameters from XML
-  m_selF1[Rich::Aerogel]  = Rich1DE->param<double>("SellAgelF1Param");
-  m_selF1[Rich::Rich1Gas] = Rich1DE->param<double>("SellC4F10F1Param");
-  m_selF1[Rich::Rich2Gas] = Rich1DE->param<double>("SellCF4F1Param");
-  m_selF2[Rich::Aerogel]  = Rich1DE->param<double>("SellAgelF2Param");
-  m_selF2[Rich::Rich1Gas] = Rich1DE->param<double>("SellC4F10F2Param");
-  m_selF2[Rich::Rich2Gas] = Rich1DE->param<double>("SellCF4F2Param");
-  m_selE1[Rich::Aerogel]  = Rich1DE->param<double>("SellAgelE1Param");
-  m_selE1[Rich::Rich1Gas] = Rich1DE->param<double>("SellC4F10E1Param");
-  m_selE1[Rich::Rich2Gas] = Rich1DE->param<double>("SellCF4E1Param");
-  m_selE2[Rich::Aerogel]  = Rich1DE->param<double>("SellAgelE2Param");
-  m_selE2[Rich::Rich1Gas] = Rich1DE->param<double>("SellC4F10E2Param");
-  m_selE2[Rich::Rich2Gas] = Rich1DE->param<double>("SellCF4E2Param");
-  m_molW[Rich::Aerogel]   = 0;
-  m_molW[Rich::Rich1Gas]  = Rich1DE->param<double>("GasMolWeightC4F10Param");
-  m_molW[Rich::Rich2Gas]  = Rich1DE->param<double>("GasMolWeightCF4Param");
-  m_rho[Rich::Aerogel]    = 0;
-  m_rho[Rich::Rich1Gas]   = Rich1DE->param<double>("RhoEffectiveSellC4F10Param");
-  m_rho[Rich::Rich2Gas]   = Rich1DE->param<double>("RhoEffectiveSellCF4Param");
-  const double selLorGasFac = Rich1DE->param<double>("SellLorGasFacParam");
+  m_selF1[Rich::Aerogel]    = m_Rich1DE->param<double>("SellAgelF1Param");
+  m_selF1[Rich::Rich1Gas]   = m_Rich1DE->param<double>("SellC4F10F1Param");
+  m_selF1[Rich::Rich2Gas]   = m_Rich1DE->param<double>("SellCF4F1Param");
+  m_selF2[Rich::Aerogel]    = m_Rich1DE->param<double>("SellAgelF2Param");
+  m_selF2[Rich::Rich1Gas]   = m_Rich1DE->param<double>("SellC4F10F2Param");
+  m_selF2[Rich::Rich2Gas]   = m_Rich1DE->param<double>("SellCF4F2Param");
+  m_selE1[Rich::Aerogel]    = m_Rich1DE->param<double>("SellAgelE1Param");
+  m_selE1[Rich::Rich1Gas]   = m_Rich1DE->param<double>("SellC4F10E1Param");
+  m_selE1[Rich::Rich2Gas]   = m_Rich1DE->param<double>("SellCF4E1Param");
+  m_selE2[Rich::Aerogel]    = m_Rich1DE->param<double>("SellAgelE2Param");
+  m_selE2[Rich::Rich1Gas]   = m_Rich1DE->param<double>("SellC4F10E2Param");
+  m_selE2[Rich::Rich2Gas]   = m_Rich1DE->param<double>("SellCF4E2Param");
+  m_molW[Rich::Aerogel]     = 0;
+  m_molW[Rich::Rich1Gas]    = m_Rich1DE->param<double>("GasMolWeightC4F10Param");
+  m_molW[Rich::Rich2Gas]    = m_Rich1DE->param<double>("GasMolWeightCF4Param");
+  m_rho[Rich::Aerogel]      = 0;
+  m_rho[Rich::Rich1Gas]     = m_Rich1DE->param<double>("RhoEffectiveSellC4F10Param");
+  m_rho[Rich::Rich2Gas]     = m_Rich1DE->param<double>("RhoEffectiveSellCF4Param");
+  const double selLorGasFac = m_Rich1DE->param<double>("SellLorGasFacParam");
 
   // Initialise the calculations and cache as much as possible for efficiency
   for ( int iRad = 0; iRad < Rich::NRadiatorTypes; ++iRad )
@@ -112,8 +121,9 @@ StatusCode SellmeirFunc::initialize()
     m_X[rad] = (RC3*std::sqrt(RE02)/(4.*RT));
   }
 
-  return sc;
+  return StatusCode::SUCCESS;
 }
+
 
 double SellmeirFunc::photonsInEnergyRange( const LHCb::RichRecSegment * segment,
                                            const Rich::ParticleIDType id,

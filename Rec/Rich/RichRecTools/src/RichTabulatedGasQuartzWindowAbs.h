@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::TabulatedGasQuartzWindowAbs
  *
  *  CVS Log :-
- *  $Id: RichTabulatedGasQuartzWindowAbs.h,v 1.11 2008-02-15 10:21:16 jonrob Exp $
+ *  $Id: RichTabulatedGasQuartzWindowAbs.h,v 1.12 2008-08-19 12:54:46 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -74,10 +74,15 @@ namespace Rich
       double photonTransProb( const LHCb::RichRecSegment * segment,
                               const double energy ) const;
 
-    private:  // Private data
+    private: // methods
+
+      /// Update the cached parameters
+      StatusCode umsUpdate(); 
+
+    private: // Private data
 
       /// Pointers to RICHes
-      std::vector<const DeRich*> m_riches;
+      std::vector<DeRich*> m_riches;
 
       /// Thickness of windows in each RICH
       std::vector<double> m_qWinZSize;

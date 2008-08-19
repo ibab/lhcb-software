@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::SellmeirFunc
  *
  *  CVS Log :-
- *  $Id: RichSellmeirFunc.h,v 1.16 2008-08-18 19:40:59 jonrob Exp $
+ *  $Id: RichSellmeirFunc.h,v 1.17 2008-08-19 12:54:46 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -85,6 +85,9 @@ namespace Rich
 
     private: // methods
 
+      /// Update the cached parameters
+      StatusCode umsUpdate();
+
       /// internal calculation for photon yield
       double paraW( const Rich::RadiatorType rad, const double energy ) const;
 
@@ -107,6 +110,12 @@ namespace Rich
 
       // particle hypothesis masses squared
       boost::array<double,Rich::NParticleTypes> m_particleMassSq;
+
+      // Rich1 Detector element
+      DeRich1 * m_Rich1DE;
+
+      // particle properties
+      const IParticleProperties * m_partProp;
 
     };
 
