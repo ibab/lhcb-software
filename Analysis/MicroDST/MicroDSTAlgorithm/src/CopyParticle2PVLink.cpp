@@ -1,4 +1,4 @@
-// $Id: CopyParticle2PVLink.cpp,v 1.8 2008-02-26 15:47:45 jpalac Exp $
+// $Id: CopyParticle2PVLink.cpp,v 1.9 2008-08-19 19:33:34 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -64,11 +64,11 @@ StatusCode CopyParticle2PVLink::execute() {
   {
     verbose() << "Retrieving relations table from " 
               << inputTESLocation() << endmsg;
-    Particle2Vertex::Table* table = get<Particle2Vertex::Table>(inputTESLocation());
+    const Particle2Vertex::Table* table = get<Particle2Vertex::Table>(inputTESLocation());
     if (table) {
       verbose() << "found table!" << endmsg;
       Particle2Vertex::Table* cloneTable = tableOfClones(table);
-      verbose() << "Going to store relations table from " << inputTESLocation()
+       verbose() << "Going to store relations table from " << inputTESLocation()
                 << " into " << fullOutputTESLocation() << endmsg;
       put( cloneTable, fullOutputTESLocation() );
       return StatusCode::SUCCESS;
@@ -88,70 +88,45 @@ Particle2Vertex::Table* CopyParticle2PVLink::tableOfClones(const Particle2Vertex
 
   Particle2Vertex::Table* cloneTable = new Particle2Vertex::Table();
 
-  // Step 1. Get TES address of Particles from table location.
-  const std::string partLocation = particleLocation( inputTESLocation() );
+  Particle2Vertex::Range relations = table->relations();
+  verbose() << "Found " << relations.size() 
+            << " Particle -> PV relations" << endmsg;
 
-  LHCb::Particle::Container* particles = 
-    get<LHCb::Particle::Container>(partLocation);
-
-  if (particles) {    
-    // Step 2. Get TES of PVs from PVs related to original particles.
-    verbose() << "Found " << particles->size() << " particles" << endmsg;
-    for (LHCb::Particle::Container::const_iterator iParts = particles->begin();
-         iParts != particles->end();
-         ++iParts) {
-      // get related PVs and weight
-      Particle2Vertex::Range range = table->relations(*iParts);
-      verbose() << "Found " << range.size() << " related PVs" << endmsg;
+  for (Particle2Vertex::Range::const_iterator iRel = relations.begin();
+       iRel != relations.end();
+       ++iRel ) {
+    const LHCb::Particle* part = iRel->from();
+    if (part) {
+      Particle2Vertex::Range range = table->relations(part);
       for (Particle2Vertex::Range::const_iterator iRange = range.begin();
            iRange != range.end();
            ++iRange) {
         verbose() << "\nParticle with PID "    
-                  << (*iParts)->particleID().pid() 
+                  << part->particleID().pid() 
                   << " is related to PV at " << (iRange->to())->position()
                   << " #tracks "             
                   << (dynamic_cast<const LHCb::RecVertex*>(iRange->to()))->tracks().size() 
-
+        
                   << " with weight "         << iRange->weight() << endmsg;
-
         const LHCb::Particle* clonedParticle = 
-          getStoredClone<LHCb::Particle>(*iParts);
-
+          getStoredClone<LHCb::Particle>(part);
         const LHCb::RecVertex* clonedVertex = 
           getStoredClone<LHCb::RecVertex>(dynamic_cast<LHCb::RecVertex*>( iRange->to()) );
-
         if (clonedParticle&&clonedVertex) {
           cloneTable->relate(clonedParticle, clonedVertex, iRange->weight());
           verbose() << "\nclonedParticle with PID "    
                     << clonedParticle->particleID().pid() 
                     << " is related to cloned PV at " << clonedVertex->position()
                     << " #tracks "             
-                    << clonedVertex->tracks().size() 
-
+                    << clonedVertex->tracks().size()
                     << " with weight "         << iRange->weight() << endmsg;
-        }
-      }
-    }
-  } else {
-    error() << "No particles found in " << partLocation << endmsg;
-  }
-  
+        } // if cloned particle AND cloned vertex
+      } // loop on related vertices
+    } // if From Particle* found
+  } // loop on all relations
   
   return cloneTable;
 
-}
-//=============================================================================
-const std::string CopyParticle2PVLink::particleLocation(const std::string& tableLocation) 
-{
-  const std::string tmpString = "Particle2VertexRelations";
-  std::string location(tableLocation);
-  const std::string::size_type loc = location.find(tmpString);
-  if ( loc != std::string::npos) {
-    location.replace(loc, tmpString.length(), "Particles");
-    verbose() << "relations location is " << tableLocation << endmsg;
-    verbose() << "particle locationis   " << location << endmsg;
-  }
-  return std::string(location);
 }
 //=============================================================================
 //  Finalize
