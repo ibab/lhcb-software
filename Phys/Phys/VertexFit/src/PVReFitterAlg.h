@@ -1,10 +1,10 @@
-// $Id: PVReFitterAlg.h,v 1.2 2008-07-07 16:37:27 jpalac Exp $
+// $Id: PVReFitterAlg.h,v 1.3 2008-08-19 19:39:26 jpalac Exp $
 #ifndef PVREFITTERALG_H 
 #define PVREFITTERALG_H 1
 
 // Include files
 // from Gaudi
-#include "Kernel/DVAlgorithm.h"
+#include "GaudiAlg/GaudiTupleAlg.h"
 
 
 // From LHCb
@@ -13,6 +13,8 @@
 class IPVReffitter;
 class IPVOfflineTool;
 class ILifetimeFitter;
+class IRelatedPVFinder;
+class IOnOffline;
 
 /** @class PVReFitterAlg PVReFitterAlg.h
  *  
@@ -56,7 +58,7 @@ class ILifetimeFitter;
  *  @author Juan PALACIOS
  *  @date   2008-06-25
  */
-class PVReFitterAlg : public DVAlgorithm {
+class PVReFitterAlg : public GaudiTupleAlg {
 public: 
   /// Standard constructor
   PVReFitterAlg( const std::string& name, ISvcLocator* pSvcLocator );
@@ -67,13 +69,12 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-protected:
-
 private:
+
   LHCb::RecVertex* refitVertex(const LHCb::RecVertex* v,
                                const LHCb::Particle* p  ) const;
   
-  const LHCb::RecVertex* getRelatedVertex(const LHCb::Particle* p) const;
+  const LHCb::RecVertex* getRelatedVertex(const LHCb::Particle* p);
   
 
   void getTracks(const LHCb::Particle* p,
@@ -81,18 +82,23 @@ private:
 
 private:
 
+  IOnOffline* m_onOfflineTool;
   IPVOfflineTool* m_pvOfflineTool;
   IPVReFitter* m_pvReFitter;
   ILifetimeFitter* m_lifetimeFitter;
+  IRelatedPVFinder* m_relatedPVFinder;
+
   std::string m_pvOfflinetoolType;
   std::string m_pvReFitterType;
   std::string m_lifetimeFitterType;
+  std::string m_relatedPVFinderType;
   std::string m_particleInputLocation;
   std::string m_particle2VertexRelationsInputLocation;
   std::string m_particle2VertexRelationsOutputLocation;
   std::string m_vertexOutputLocation;
   
   LHCb::RecVertex::Container* m_vertexContainer;
-
+  Particle2Vertex::Table m_p2VtxTable;
+  
 };
 #endif // PVREFITTERALG_H
