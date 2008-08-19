@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID tool : Rich::Rec::GlobalPID::MultiStepTool
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDMultiStepTool.cpp,v 1.1 2008-03-25 16:26:44 jonrob Exp $
+ *  $Id: RichGlobalPIDMultiStepTool.cpp,v 1.2 2008-08-19 11:01:46 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2008-03-01
@@ -57,11 +57,11 @@ StatusCode MultiStepTool::initialize()
   {
     const IPixelBackgroundEsti * bkgEst(0);
     m_bckTools.push_back( acquireTool( "PixelBackgroundTool",
-                                       "BackEsti"+boost::lexical_cast<std::string>(iStep+1),
+                                       "BackEsti"+boost::lexical_cast<std::string>(iStep),
                                        bkgEst, this ) );
     const IRichGlobalPID * pidLike(0);
     m_pidTools.push_back( acquireTool( "GPIDLikelihoodTool",
-                                       "Likelihood"+boost::lexical_cast<std::string>(iStep+1),
+                                       "Likelihood"+boost::lexical_cast<std::string>(iStep),
                                        pidLike, this ) );
   }
 
