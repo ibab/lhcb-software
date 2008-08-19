@@ -1,7 +1,19 @@
-! $Id: release.notes,v 1.64 2008-08-08 12:41:52 jpalac Exp $
+! $Id: release.notes,v 1.65 2008-08-19 19:33:52 jpalac Exp $
 ! Package     : MicroDST/MicroDSTAlgorithm
 ! Responsible : Ulrich Kerzel, Juan Palacios
 !============================================================
+
+! 2008-19-08 - Juan PALACIOS
+ - srd/CopyParticle2PVLink.h
+  . Remove fragile 
+      const std::string particleLocation(const std::string& tableLocation);
+    method
+  . Correct errors in doxygen documentation
+ - src/CopyParticle2PVLink.cpp
+  . Change logic of tableOfClones(const Particle2Vertex::Table* table) method.
+    Now take all information from relations table, and check that From and To 
+    objects have already been cloned and stored in the TES by other algorithms.
+    Only clone associations if this is the case.
 
 ! 2008-08-08 - Juan PALACIOS
  - cmt/requirements
