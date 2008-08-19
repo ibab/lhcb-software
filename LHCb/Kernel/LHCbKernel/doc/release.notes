@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2008-08-19 - Chris Jones
+ - Fix some doxygen warnings from the python Configurable
+
 ! 2008-08-17 M Needham
  - Extend functionality in TT and ITNames 
  - [add methods to return station, layer, ... names + all valid possibilities]
