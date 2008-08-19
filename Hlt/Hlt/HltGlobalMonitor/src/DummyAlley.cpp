@@ -1,4 +1,4 @@
-// $Id: DummyAlley.cpp,v 1.3 2008-08-14 20:44:16 graven Exp $
+// $Id: DummyAlley.cpp,v 1.4 2008-08-19 09:42:38 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -28,9 +28,8 @@ DECLARE_ALGORITHM_FACTORY( DummyAlley );
 DummyAlley::DummyAlley( const std::string& name,
                     ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
-   , m_selection(*this)
+  , m_selection(*this)
 {
-  declareProperty("L0DULocation", m_l0Location = L0DUReportLocation::Default );
   declareProperty("RightType", m_RightType = -1 );
   declareProperty("WrongType", m_WrongType = -1 );
   m_selection.declareProperties();
@@ -50,6 +49,11 @@ StatusCode DummyAlley::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   m_selection.registerSelection();
+  if (m_RightType!= -1 && m_WrongType!=-1){ 
+    error() << "You are setting both the wanted and the unwanted trigger type. This is an error" << endreq;
+    return StatusCode::FAILURE;
+  }
+
   return StatusCode::SUCCESS;
 };
 
@@ -65,21 +69,16 @@ StatusCode DummyAlley::execute() {
   }
   LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
   debug() << " Trigger type =  " << odin->triggerType() << endreq;
-  if (m_RightType!= -1 && m_WrongType!=-1){ 
-    warning() << "You are setting both the wanted and the unwanted trigger type. No events accepted" << endreq;
-  } else if (m_WrongType == -1 && odin->triggerType()== m_RightType){
-    debug() << "This choses trigger type " << m_RightType << endreq; 
+  if (m_WrongType == -1 && odin->triggerType()== m_RightType){
+    debug() << "This accepts trigger type " << m_RightType << endreq; 
     m_selection.output()->setDecision(true);
   } else if (m_RightType == -1 && odin->triggerType()!= m_WrongType){
-    debug() << "This ignores trigger type " << m_WrongType << endreq; 
+    debug() << "This rejects trigger type " << m_WrongType << endreq; 
     m_selection.output()->setDecision(true);
   } else if (m_RightType == -1 && m_WrongType==-1) {
     debug() << "No specific trigger type. All events accepted" << endreq;
     m_selection.output()->setDecision(true);
-
   }
-  
-
   return StatusCode::SUCCESS;
 };
 
@@ -92,6 +91,3 @@ StatusCode DummyAlley::finalize() {
 }
 
 //=============================================================================
-
-
-

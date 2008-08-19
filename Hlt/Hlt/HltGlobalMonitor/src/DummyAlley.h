@@ -1,4 +1,4 @@
-// $Id: DummyAlley.h,v 1.2 2008-08-14 20:44:16 graven Exp $
+// $Id: DummyAlley.h,v 1.3 2008-08-19 09:42:38 graven Exp $
 #ifndef DUMMYALLEY_H 
 #define DUMMYALLEY_H 1
 
@@ -43,7 +43,6 @@ private:
 
   StringArrayProperty m_l0ChannelsName;
   Hlt::SelectionContainer0 m_selection;
-
 
 };
 #endif // DUMMYALLEY_H
