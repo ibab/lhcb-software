@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.4 2008-08-12 13:19:28 ibelyaev Exp $ 
+# $Id: HltLine.py,v 1.5 2008-08-19 11:38:41 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'    ,  ## the Hlt line itself 
