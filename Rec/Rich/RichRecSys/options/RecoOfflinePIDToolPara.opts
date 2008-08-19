@@ -1,7 +1,7 @@
 
 // Set tool context
-ToolSvc.RichPIDTool.Context = "Offline_;
-ToolSvc.Offline_RichPIDTool.Context = "Offline_;
+ToolSvc.RichPIDTool.Context = "Offline";
+ToolSvc.Offline_RichPIDTool.Context = "Offline";
 
 // turn on book-keeping
 ToolSvc.Offline_RichTrackCreator.DoBookKeeping  = true;

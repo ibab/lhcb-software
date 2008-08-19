@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: RichGlobalPID.py,v 1.2 2008-08-18 19:33:00 jonrob Exp $"
+__version__ = "$Id: RichGlobalPID.py,v 1.3 2008-08-19 10:43:52 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -15,7 +15,8 @@ from Configurables import ( GaudiSequencer,
                             Rich__Rec__PixelBackgroundAlg,
                             Rich__Rec__GlobalPID__Likelihood,
                             Rich__Rec__GlobalPID__LikelihoodTool,
-                            Rich__Rec__GlobalPID__Finalize )
+                            Rich__Rec__GlobalPID__Finalize,
+                            Rich__Rec__GlobalPID__MultiStepTool )
 
 # ----------------------------------------------------------------------------------
 
@@ -47,6 +48,8 @@ class RichGlobalPIDConfig(RichConfigurableUser):
     __slots__ = {
         "context":  "Offline",
         "mode": "Full",
+        "initAlgorithms": True,
+        "initTools": True,
         "nIterations": 0,
         "maxUsedPixels": 8000,
         "finalDLLCheck": [ False, True, True, True ],
@@ -72,16 +75,23 @@ class RichGlobalPIDConfig(RichConfigurableUser):
             self.setProp("maxTrackChangesPerIt",self.DefaultMaxTrackChangesPerIt[cont])
         if len(self.getProp("minSignalForNoLLCalc")) == 0 :
             self.setProp("minSignalForNoLLCalc",self.DefaultMinSignalForNoLLCalc[cont])
-            
-    ## @brief Configure the algorithms, adding them to the supplied sequencer
+
+    ## @brief Apply the configuration
     #  @param sequence The sequencer to add the PID algorithms to
     def applyConf(self,sequence):
 
-        # Context
-        cont = self.getProp("context")
-
         # Check configuration
         self.checkConf()
+
+        if self.getProp("initAlgorithms") : self.applyConfAlgs(sequence)
+        if self.getProp("initTools")      : self.applyConfTools()
+
+    ## @brief Configure the algorithms, adding them to the supplied sequencer
+    #  @param sequence The sequencer to add the PID algorithms to
+    def applyConfAlgs(self,sequence):
+        
+        # Context
+        cont = self.getProp("context")
 
         # Initialisation
         initSeq = GaudiSequencer("Rich"+cont+"GPIDInitSeq")
@@ -119,6 +129,33 @@ class RichGlobalPIDConfig(RichConfigurableUser):
 
             # Add the algs to the sequence
             likSeq.Members += [ bckEsti, lik ]
-        
+
         # Finalise Global PID results
         sequence.Members += [ Rich__Rec__GlobalPID__Finalize("Rich"+cont+"GPIDFin") ]
+
+    ## @brief Configure the tools
+    #
+    def applyConfTools(self):
+
+        # Context
+        cont = self.getProp("context")
+
+        # PID tool
+        tool = Rich__Rec__GlobalPID__MultiStepTool("ToolSvc.Rich"+cont+"PIDTool")
+
+        tool.Context = cont
+        tool.NSteps  = self.getProp("nIterations")
+
+        for it in range(0,self.getProp("nIterations")):
+
+            # configure the likelihood minimisation
+            pidTool = Rich__Rec__GlobalPID__LikelihoodTool( "Likelihood" + `it` )
+            pidTool.TrackFreezeOutDLL    = self.getProp("trackFreezeOutDLL")[it]
+            pidTool.FinalDLLCheck        = self.getProp("finalDLLCheck")[it]
+            pidTool.TrackForceChangeDLL  = self.getProp("trackForceChangeDLL")[it]
+            pidTool.LikelihoodThreshold  = self.getProp("likelihoodThreshold")[it]
+            pidTool.MaxTrackChangesPerIt = self.getProp("maxTrackChangesPerIt")[it]
+            pidTool.MinSignalForNoLLCalc = self.getProp("minSignalForNoLLCalc")[it]
+
+            # add to main tool
+            tool.addTool(pidTool)
