@@ -1,11 +1,11 @@
-// $Id: ForcedBDecayTool.cpp,v 1.2 2008-07-22 13:01:43 cattanem Exp $
+// $Id: ForcedBDecayTool.cpp,v 1.3 2008-08-19 17:16:53 musy Exp $
 #include "ForcedBDecayTool.h"
 #include "GaudiKernel/ToolFactory.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : ForcedBDecayTool v1.0
 //
-// 2007-02-06 : Marco Musy (Milano)
+// 2007-02-06 : Marco Musy 
 //-----------------------------------------------------------------------------
 
 using namespace LHCb;
@@ -57,13 +57,28 @@ MCParticle* ForcedBDecayTool::associatedofHEP(HepMC::GenParticle* hepmcp) {
   int mid = hepmcp->pdg_id();
   double mothmom = hepmcp->momentum().mag();
   double moththeta = hepmcp->momentum().theta();
+//   debug()<<mid<<"  mothmom="<<mothmom<<"   moththeta="<<moththeta<<endreq;
+//   debug()<< hepmcp->production_vertex ()->position().z()<<endreq;
+
   MCParticles::const_iterator imc;
+//   for ( imc = mcpart->begin(); imc != mcpart->end(); ++imc ) {
+//     if( mid == (*imc)->particleID().pid() ) {
+//       if( fabs(mothmom - (*imc)->momentum().P())< 1.0){
+// 	if( fabs(moththeta -(*imc)->momentum().Theta())< 0.0001){
+// 	  return (*imc);
+// 	}
+//       }
+//     }
+//   }
   for ( imc = mcpart->begin(); imc != mcpart->end(); ++imc ) {
-    if( mid == (*imc)->particleID().pid() ) {
-      if( fabs(mothmom - (*imc)->momentum().P())< 1.0){
-	if( fabs(moththeta -(*imc)->momentum().Theta())< 0.0001){
+    if((*imc)->particleID().hasBottom() ) {
+
+      //always zero momentum?
+      hepmcp->print();
+
+
+      if( mid == (*imc)->particleID().pid() ) {
 	  return (*imc);
-	}
       }
     }
   }
