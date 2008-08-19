@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.143 2008-08-05 16:01:12 pkoppenb Exp $
+! $Id: release.notes,v 1.144 2008-08-19 19:39:29 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
 
+! 2008-08-19 - Juan PALACIOS
+ - src/PVReFitterAlg{.cpp, .h}
+  . No longer a DVAlgorithm, now a GaudiTupleAlg.
+  . Add an IRelatedPVFinder and an IOnOffline.
+ - cmt/requirements
+  . Increase version to v5r4
 !========================== VertexFit v5r3 2008-08-05 ===================
 ! 2008-07-07 - Juan PALACIOS
  - src/PVReFitterAlg.cpp, src/PVReFitterAlg.h
