@@ -4,6 +4,12 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2008-08-19 - Eduardo Rodrigues
+ - added functionality to deal with clusters in non-default paths
+   (e.g.: VeloClusterMonitor will produce histograms under "/Velo/Next/" if
+   the clusters are in "Raw/Velo/Next/Clusters" or "Next/Raw/Velo/Clusters")
+ - Python options added to run the default VELO monitoring in Brunel
+
 ! 2008-08-18 - Eduardo Rodrigues
  - first version of the clusters monitoring algorithm VeloClusterMonitor,
    largely based on the versions in the to-become-obsolete monitoring packages

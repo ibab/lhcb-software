@@ -1,11 +1,11 @@
-// $Id: VeloClusterMonitor.h,v 1.1 2008-08-19 11:30:52 erodrigu Exp $
-#ifndef VELORECMONITOR_VELOCLUSTERMONITOR_H 
-#define VELORECMONITOR_VELOCLUSTERMONITOR_H 1
+// $Id: VeloClusterMonitor.h,v 1.2 2008-08-19 17:08:15 erodrigu Exp $
+#ifndef VELORECMONITORS_VELOCLUSTERMONITOR_H 
+#define VELORECMONITORS_VELOCLUSTERMONITOR_H 1
 
 // Include files
 // -------------
 
-// DigiEvent
+// from DigiEvent
 #include "Event/VeloCluster.h"
 
 // local
@@ -19,7 +19,7 @@
  *  @author Mark Tobin, Kazu Akiba
  *  @date   2008-06-28
  *
- *  Based on original (slow) version by
+ *  Based on original version by
  *  @author Aras Papadelis, Thijs Versloot
  *  @date   2006-04-30
  *
@@ -29,11 +29,12 @@ namespace Velo
 {
   
   class VeloClusterMonitor : public VeloMonitorBase {
-  public: 
+    
+  public:
     /// Standard constructor
     VeloClusterMonitor( const std::string& name, ISvcLocator* pSvcLocator );
     
-    virtual ~VeloClusterMonitor( ); ///< Destructor
+    virtual ~VeloClusterMonitor( );     ///< Destructor
     
     virtual StatusCode initialize();    ///< Algorithm initialization
     virtual StatusCode execute   ();    ///< Algorithm execution
@@ -49,13 +50,15 @@ namespace Velo
     // Monitor the VeloClusters
     void monitorClusters();
 
+    // Return a /Prev, /Next or alike if present in the VeloClusters location string
+    std::string prevsOrNexts();
+    
     // Data members
     LHCb::VeloClusters* m_clusters;
 
     // Job options
     std::string m_clusterCont;
-    
   };
 }
 
-#endif // VELORECMONITOR_VELOCLUSTERMONITOR_H
+#endif // VELORECMONITORS_VELOCLUSTERMONITOR_H

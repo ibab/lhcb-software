@@ -1,4 +1,4 @@
-// $Id: VeloClusterMonitor.cpp,v 1.1 2008-08-19 11:30:52 erodrigu Exp $
+// $Id: VeloClusterMonitor.cpp,v 1.2 2008-08-19 17:08:15 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -10,7 +10,7 @@
 //-----------------------------------------------------------------------------
 // Implementation file for class : VeloClusterMonitor
 //
-// VELO Cluster monitoring algorithm.
+// VELO clusters monitoring algorithm.
 // Produces a set of histograms from the clusters bank in the TES.
 //
 // 2008-08-18 : Eduardo Rodrigues
@@ -21,7 +21,7 @@
 
 // Declaration of the Algorithm Factory
 namespace Velo {
-DECLARE_ALGORITHM_FACTORY( VeloClusterMonitor );
+  DECLARE_ALGORITHM_FACTORY( VeloClusterMonitor );
 }
 
 //=============================================================================
@@ -44,9 +44,15 @@ Velo::VeloClusterMonitor::~VeloClusterMonitor() {}
 // Initialization
 //=============================================================================
 StatusCode Velo::VeloClusterMonitor::initialize() {
+
   StatusCode sc = VeloMonitorBase::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;
 
+  // Check for /Prev, /Next or structure alike in the TES and react accordingly
+  std::string subdir = prevsOrNexts();
+  if ( subdir != "" )
+    setHistoTopDir( "Velo/" + subdir + "/" );
+  
   return StatusCode::SUCCESS;
 }
 
@@ -114,7 +120,7 @@ void Velo::VeloClusterMonitor::monitorClusters() {
 
   // Loop over the VeloClusters
   LHCb::VeloClusters::const_iterator itVC;
-  for ( itVC = m_clusters -> begin(); itVC != m_clusters -> end(); ++itVC) {
+  for ( itVC = m_clusters -> begin(); itVC != m_clusters -> end(); ++itVC ) {
     
     LHCb::VeloCluster* cluster = (*itVC);
 
@@ -140,6 +146,28 @@ void Velo::VeloClusterMonitor::monitorClusters() {
             -0.5, 105.5, -0.5, 128*4+0.5, 106, 128*4+1 );
   }
 
+}
+
+//=============================================================================
+// Return a /Prev, /Next or alike if present in the VeloClusters location string
+//=============================================================================
+std::string Velo::VeloClusterMonitor::prevsOrNexts() {
+  
+  size_t pos;
+
+  pos = m_clusterCont.find( "Prev" );
+  if ( pos != std::string::npos ) {
+    std::string substr = m_clusterCont.substr( pos );
+    return substr.substr( 0, substr.find( "/" ) );
+  }
+
+  pos = m_clusterCont.find( "Next" );
+  if ( pos != std::string::npos ) {
+    std::string substr = m_clusterCont.substr( pos );
+    return substr.substr( 0, substr.find( "/" ) );
+  }  
+
+  return "";
 }
 
 //=============================================================================

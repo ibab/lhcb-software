@@ -1,4 +1,4 @@
-// $Id: VeloMonitorBase.h,v 1.1.1.1 2008-08-18 10:17:53 erodrigu Exp $
+// $Id: VeloMonitorBase.h,v 1.2 2008-08-19 17:08:15 erodrigu Exp $
 #ifndef VELORECMONITORS_VELOMONITORBASE_H 
 #define VELORECMONITORS_VELOMONITORBASE_H 1
 
@@ -7,7 +7,7 @@
 // from Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
 
-// VeloDet
+// from VeloDet
 #include "VeloDet/DeVelo.h"
 
 /** @class VeloMonitorBase VeloMonitorBase.h Velo/VeloMonitorBase.h
