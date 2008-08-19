@@ -4,6 +4,10 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2008-08-18 - Eduardo Rodrigues
+ - first version of the clusters monitoring algorithm VeloClusterMonitor,
+   largely based on the versions in the to-become-obsolete monitoring packages
+
 ! 2008-08-15 - Eduardo Rodrigues
  - creation of the package
  - creation of a base class for all VELO reconstruction monitoring algorithms
