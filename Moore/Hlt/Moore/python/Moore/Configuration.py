@@ -1,7 +1,7 @@
 """
 High level configuration tools for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.19 2008-08-17 18:55:48 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.20 2008-08-19 19:04:42 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -49,7 +49,7 @@ class Moore(ConfigurableUser):
             else:
                 setattr(other,name,self.getProp(name))
 
-    def validRunTypes(self):
+    def validHltTypes(self):
         return [ 'PHYSICS_Lumi', 
                  'PHYSICS_Hlt1', 
                  'PHYSICS_Hlt2', 
@@ -131,7 +131,7 @@ class Moore(ConfigurableUser):
             else :
                 importOptions('$HLTSYSROOT/options/HltInit.opts')
                 hlttype = self.getProp('hltType')
-                if hlttype not in self.validRunTypes() :  raise TypeError("Unknown runtype '%s'"%hlttype)
+                if hlttype not in self.validHltTypes() :  raise TypeError("Unknown hlttype '%s'"%hlttype)
                 if inputType == 'DST' and hlttype in [ 'PHYSICS_Hlt1+Hlt2', 'PHYSICS_Hlt1' , 'PHYSICS_Lumi', 'Lumi'] : 
                         importOptions('$L0DUROOT/options/ReplaceL0DUBankWithEmulated.opts')
                 if hlttype.find('Lumi') != -1 :   importOptions('$HLTSYSROOT/options/Lumi.opts')
