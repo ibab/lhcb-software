@@ -1,4 +1,4 @@
-// $Id: HltLumiWriter.cpp,v 1.2 2008-08-20 14:36:03 graven Exp $
+// $Id: HltLumiWriter.cpp,v 1.3 2008-08-20 17:58:23 graven Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
@@ -136,14 +136,13 @@ void HltLumiWriter::fillDataBankShort ( ) {
   BOOST_FOREACH( IANNSvc::minor_value_type iKey, m_items )  {
     // check for existing counters
     int s_value = hltLS->info( iKey.second, -1);
-    if ( !(s_value<0) ) {
-      // handle overflow
-      int i_value = (s_value < 0xFFFF) ? (int) s_value : (int)0xFFFF;
-      unsigned int word = ( iKey.second << 16 ) | ( i_value & 0xFFFF );
-      m_bank.push_back( word );
-      if ( MSG::VERBOSE >= msgLevel() ) {
-        verbose() << format ( " %8x %11d %11d %11d ", word, word, iKey.second, i_value ) << endreq;
-      }
+    if ( s_value<0) continue;
+    // handle overflow
+    int i_value = (s_value < 0xFFFF) ? (int) s_value : (int)0xFFFF;
+    unsigned int word = ( iKey.second << 16 ) | ( i_value & 0xFFFF );
+    m_bank.push_back( word );
+    if ( MSG::VERBOSE >= msgLevel() ) {
+      verbose() << format ( " %8x %11d %11d %11d ", word, word, iKey.second, i_value ) << endreq;
     }
   }
   
