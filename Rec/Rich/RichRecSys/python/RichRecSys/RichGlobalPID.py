@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: RichGlobalPID.py,v 1.4 2008-08-20 09:04:08 jonrob Exp $"
+__version__ = "$Id: RichGlobalPID.py,v 1.5 2008-08-20 09:09:55 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -135,7 +135,7 @@ class RichGlobalPIDConfig(RichConfigurableUser):
         sequence.Members += [ Rich__Rec__GlobalPID__Finalize("Rich"+cont+"GPIDFin") ]
 
     ## @brief Configure the tools
-    #
+    #  @return The Configurable for the PID tool
     def applyConfTools(self):
 
         # Context
@@ -143,11 +143,11 @@ class RichGlobalPIDConfig(RichConfigurableUser):
 
         # PID tool
         tool = Rich__Rec__GlobalPID__MultiStepTool("ToolSvc.Rich"+cont+"PIDTool")
-
         tool.Context = cont
         tool.NSteps  = self.getProp("nIterations")
 
-        for it in range(0,self.getProp("nIterations")):
+        # Configure each iteration
+        for it in range(0,tool.NSteps):
 
             # configure the likelihood minimisation
             pidTool = Rich__Rec__GlobalPID__LikelihoodTool( "Likelihood" + `it` )
@@ -160,3 +160,7 @@ class RichGlobalPIDConfig(RichConfigurableUser):
 
             # add to main tool
             tool.addTool(pidTool)
+
+        # Return the PID tool
+        return tool
+    
