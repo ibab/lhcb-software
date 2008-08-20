@@ -1,4 +1,4 @@
-// $Id: ROMonDimPublish.cpp,v 1.2 2008-04-22 15:50:02 frankb Exp $
+// $Id: ROMonDimPublish.cpp,v 1.3 2008-08-20 19:49:31 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonDimPublish.cpp,v 1.2 2008-04-22 15:50:02 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonDimPublish.cpp,v 1.3 2008-08-20 19:49:31 frankb Exp $
 // C++ include files
 #include <stdexcept>
 
@@ -88,8 +88,11 @@ void ROMonDimPublish::publish() {
 }
 
 extern "C" int romon_dimserver(int argc, char** argv) {
+  RTL::CLI cli(argc, argv, ROMonPublish::help);
+  std::string svc;
+  cli.getopt("publish",1,svc);
   ROMonDimPublish romon(argc,argv);
-  DimServer::start(RTL::processName().c_str());
+  DimServer::start(svc.c_str());
   print_startup("information SERVER");
   return romon.monitor();
 }
