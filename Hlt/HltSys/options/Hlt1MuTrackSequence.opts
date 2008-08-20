@@ -20,6 +20,7 @@ HltAlleys.InputSelections += {"Hlt1MuTrackDecision"};
 HltMuHadAlleySequence.Members = {
   "GaudiSequencer/PrepareL0MuonORMuonNoGlobSeq",
   "HltSelectionFilter/Hlt1MuTrackSFEntry",  //L0 + muon confirmation 
+  "GaudiSequencer/Hlt1RecoRZPVSequence",// make sure PV2D is available...
   "HltTrackFilter/Hlt1MuTrackMuonTF",     //IP and pT muon track filter
   "HltTrackUpgrade/Hlt1RecoVelo",      // Velo reco  
   "HltTrackFilter/Hlt1MuTrackVeloCompanionTF",  //IP and DOCA filter for velo tracks
