@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.41 2008-07-04 21:43:17 gligorov Exp $
+// $Id: BackgroundCategory.cpp,v 1.42 2008-08-20 18:28:54 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -842,7 +842,7 @@ bool BackgroundCategory::isTheMotherCorrectlyIdentified(const LHCb::Particle* re
 {
   bool carryon;
 
-  if (m_ppSvc->findByPythiaID(m_commonMother->particleID().pid())->charge() == 0) 
+  if (m_ppSvc->findByStdHepID(m_commonMother->particleID().pid())->charge() == 0) 
     carryon = ( m_commonMother->particleID().abspid() == reconstructed_mother->particleID().abspid() );
   else
     carryon = ( m_commonMother->particleID().pid() == reconstructed_mother->particleID().pid() );
