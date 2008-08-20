@@ -4,6 +4,9 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+! 2008-08-20 - Gerhard Raven
+ - simplify LumiCountHltTracks
+ 
 ! 2008-08-13 - Jaap Panman
  - correct use of default container
  - add HltLumiSummaryDecoder

@@ -1,4 +1,4 @@
-// $Id: LumiCountTracks.cpp,v 1.3 2008-08-13 16:03:52 panmanj Exp $
+// $Id: LumiCountTracks.cpp,v 1.4 2008-08-20 08:47:25 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -125,16 +125,4 @@ StatusCode LumiCountTracks::execute() {
 
   return StatusCode::SUCCESS;
 }
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode LumiCountTracks::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
-}
-
-//=============================================================================
 

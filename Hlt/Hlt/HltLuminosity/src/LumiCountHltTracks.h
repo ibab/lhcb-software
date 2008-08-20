@@ -1,4 +1,4 @@
-// $Id: LumiCountHltTracks.h,v 1.1 2008-07-31 21:34:47 panmanj Exp $
+// $Id: LumiCountHltTracks.h,v 1.2 2008-08-20 08:47:25 graven Exp $
 #ifndef LUMICOUNTHLTTRACKS_H 
 #define LUMICOUNTHLTTRACKS_H 1
 
@@ -6,6 +6,7 @@
 // from Gaudi
 #include "GaudiAlg/ISequencerTimerTool.h"
 #include "HltBase/HltBaseAlg.h"
+#include "HltBase/stringKey.h"
 
 /** @class LumiCountHltTracks LumiCountHltTracks.h
  *  
@@ -24,19 +25,14 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
   
-  std::string m_InputSelectionName;
-  const LHCb::Tracks* m_InputContainer;
+  stringKey   m_InputSelectionName;
   std::string m_CounterName;
   int m_Counter;
 
-  // Hlt::Selection& m_sel;
-
   std::string m_OutputContainerName;
-  LHCb::HltLumiSummarys* m_HltLumiSummarys;
 
 };
 #endif // LUMICOUNTHLTTRACKS_H

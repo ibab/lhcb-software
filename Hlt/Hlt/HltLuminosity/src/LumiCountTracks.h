@@ -1,4 +1,4 @@
-// $Id: LumiCountTracks.h,v 1.1 2008-07-31 21:34:47 panmanj Exp $
+// $Id: LumiCountTracks.h,v 1.2 2008-08-20 08:47:25 graven Exp $
 #ifndef LUMICOUNTTRACKS_H 
 #define LUMICOUNTTRACKS_H 1
 
@@ -27,7 +27,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
   std::string m_InputSelectionName;
