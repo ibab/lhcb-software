@@ -10,24 +10,9 @@ from Configurables import OdinTypesFilter
 from Configurables import HltTrackFilter, HltSelectionFilter
 from Configurables import LumiCountVertices, LumiCountTracks, LumiFromL0DU, LumiCountHltTracks, HltLumiOdinReader, HltLumiWriter
 
-# HLT Reconstruction
-importOptions('$HLTSYSROOT/options/HltRecoSequence.opts')
-# init is needed for ANNSvc
-importOptions('$HLTSYSROOT/options/HltLumiInit.opts')
-
-LumiSequence = Sequence('HltLumiSequence', MeasureTime = True )
-LumiSequence.Members.append( OdinTypesFilter( TriggerTypes=['Reserve'],  # should become 'Random'
-                                              BXTypes= ['NoBeam','BeamCrossing','SingleBeamRight','SingleBeamLeft'] ) )
-
-LumiSequence.Members.append( Sequence( 'Hlt1LumiRecoSequence'
-                                     , Members = [ Sequence('HltRecoSequence') ]
-                                     , ModeOR = True
-                                     , ShortCircuit = False
-                                     , IgnoreFilterPassed = True
-                                     , MeasureTime = True ) )
-
-def combine( op, arg ) :
-    for key,value in arg.iteritems() : op(key,value)
+####### create binders...
+def sequenceAppender( seq ) :
+    return lambda x : seq.Members.append( x )
 
 def createCounter( counterKind, seqName, seq ) : 
     return lambda name, input  : seq.Members.append( counterKind( seqName + name
@@ -40,6 +25,27 @@ def createL0Counter( seqName, seq ) :
                                                                  , CounterName=name
                                                                  , ValueName=value
                                                                  , OutputContainer='Hlt/LumiSummary' ) )
+####### operator, meet arguments...
+def combine( op, arg ) :
+    for key,value in arg.iteritems() : op(key,value)
+
+# HLT Reconstruction
+importOptions('$HLTSYSROOT/options/HltRecoSequence.opts')
+# init is needed for ANNSvc
+importOptions('$HLTSYSROOT/options/HltLumiInit.opts')
+
+LumiSequence = sequenceAppender( Sequence('HltLumiSequence', MeasureTime = True ) )
+
+LumiSequence( OdinTypesFilter( TriggerTypes=['Reserve'],  # should become 'Random'
+                               BXTypes= ['NoBeam','BeamCrossing','SingleBeamRight','SingleBeamLeft'] ) )
+LumiSequence( Prescale( 'HltLumiPrescaler', AcceptFraction = 1.0 ) )
+LumiSequence( Sequence( 'Hlt1LumiRecoSequence'
+                      , Members = [ Sequence('HltRecoSequence') ]
+                      , ModeOR = True
+                      , ShortCircuit = False
+                      , IgnoreFilterPassed = True
+                      , MeasureTime = True ) )
+
 
 
 seqName = 'LumiCount'
@@ -94,8 +100,8 @@ LumiCountSequence.Members.append( LumiCountTracks(seqName+'VeloTwo',
                                                   CounterName='Velo',
                                                   OutputContainer='Hlt/LumiSummaryTwo') )
 
-LumiSequence.Members.append( LumiCountSequence )
-LumiSequence.Members.append( HltLumiOdinReader( ) )
+LumiSequence( LumiCountSequence )
+LumiSequence( HltLumiOdinReader( ) )
 
 #for i in [ 'NoBeam', 'BeamCrossing'] :
 #x = Hlt1Line( prescale = 0.5, ODIN = { BXTypes = [ i ] }, postscale = 0.1 )
@@ -114,12 +120,12 @@ BXTypes = Sequence( 'Hlt1LumiBXTypesSequence'
                   , ShortCircuit = False
                   , IgnoreFilterPassed = True
                   , MeasureTime = True)
-LumiSequence.Members.append( BXTypes )
-LumiSequence.Members.append( Prescale( 'PrescaleLumiDecision', AcceptFraction = 0.5 ) )
-LumiSequence.Members.append( Dummy( 'Hlt1LumiDecision' ) )
+LumiSequence( BXTypes )
+LumiSequence( Prescale( 'PrescaleLumiDecision', AcceptFraction = 0.5 ) )
+LumiSequence( Dummy( 'Hlt1LumiDecision' ) )
 
 # TODO: move writer into dedicated rawbank sequence
-LumiSequence.Members.append( HltLumiWriter( ) )
+LumiSequence( HltLumiWriter( ) )
 
 # register with global decision (which is the OR of its input)
 for i in   [ 'Hlt1LumiDecision' ] : 

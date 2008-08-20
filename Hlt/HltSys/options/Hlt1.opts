@@ -34,8 +34,10 @@ Hlt1.Members += {  "GaudiSequencer/Hlt1EleAlleySequence" };
 Hlt1.Members += {  "GaudiSequencer/Hlt1PhoAlleySequence" };
 #include "$HLTSYSROOT/options/HltPhoAlleySequence.opts"
 
-Hlt1.Members += {  "GaudiSequencer/Hlt1LumiAlleySequence" };
-#include "$HLTSYSROOT/options/HltLumiAlleyConfSequence.opts"
+//Hlt1.Members += {  "GaudiSequencer/Hlt1LumiAlleySequence" };
+//#include "$HLTSYSROOT/options/HltLumiAlleyConfSequence.opts"
+Hlt1.Members += {  "GaudiSequencer/HltLumiSequence" };
+#include "$HLTSYSROOT/options/HltLumiAlleyConfSequence.py"
 
 Hlt1.Members += {  "HltSelectionFilter/Hlt1Global" };
 

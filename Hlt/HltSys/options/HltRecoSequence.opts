@@ -1,6 +1,8 @@
 //------------------------------
 // Definition of the Hlt Reconstruction
 //-----------------------------
+#units "$STDOPTS/units.opts"
+
 
 HltRecoSequence.MeasureTime = true;
 
@@ -78,9 +80,11 @@ createITLiteClusters.detType = "IT";
 
 HltPrepareVelo.InputSelection = "TES:Hlt/Track/Velo";
 HltPrepareVelo.OutputSelection = "Velo1";
+HltPrepareVelo.RequirePositiveInputs = false;
 
 HltPrepareForward.InputSelection = "TES:Hlt/Track/Forward";
 HltPrepareForward.OutputSelection = "Forward1";
+HltPrepareForward.RequirePositiveInputs = false;
 
 
 
@@ -120,11 +124,13 @@ Hlt1RecoRZVeloSequence.Members += {
 };
 
 Hlt1PrepareRZVelo.InputSelection   = "TES:Hlt/Track/RZVelo";
+Hlt1PrepareRZVelo.RequirePositiveInputs = false;
 Hlt1PrepareRZVelo.AddInfo = false;
 Hlt1PrepareRZVelo.FilterDescriptor = {"IsBackward,<,0.5"};
 Hlt1PrepareRZVelo.OutputSelection     = "RZVelo";
 
 Hlt1PreparePV2D.InputSelection = "TES:Hlt/Vertex/PV2D";
+Hlt1PreparePV2D.RequirePositiveInputs = false;
 Hlt1PreparePV2D.OutputSelection   = "PV2D";
 
 Hlt1RecoVelo.InputSelection = "RZVelo";

@@ -14,6 +14,8 @@ Purpose: LHCb High Level Trigger packages.
  - rename HltLumiFillRawBuffer with HltLumiWriter
  - make sure PV2D is available in MuHad alley
  - add HltConf to requirements
+ - first python config: lumi 
+ - make sure that 'prepare' doesn't require positive inputs
 
 ! 2008-08-18 - Sandra Amato
  - HltMuonAlleyConfSequence.opts and HltRecoSequence.opts to avoid PV reco in muon alleys without IP cut
