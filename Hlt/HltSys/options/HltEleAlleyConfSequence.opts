@@ -12,7 +12,7 @@ HltSummaryWriter.Save += {"L0ElectronDecision",
                           "Hlt1ElectronEleTrkDecision"
 };
 
-HltAlleys.InputSelections += {"Hlt1ElectronSingleDecision",
+Hlt1Global.InputSelections += {"Hlt1ElectronSingleDecision",
                               "Hlt1ElectronEleTrkDecision"
 };
 

@@ -6,7 +6,7 @@
  *  @date 2006-02-01
  */
 //---------------------------------------------------------------------
-//Common stuff. Probably already included in HltAlleys.
+//Common stuff. Probably already included in Hlt1.
 //---------------------------------------------------------------------
 #include "$HLTSYSROOT/options/HltMainSequence.opts"
 //---------------------------------------------------------------------

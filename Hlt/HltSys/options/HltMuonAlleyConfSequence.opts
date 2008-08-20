@@ -23,7 +23,7 @@ HltSummaryWriter.Save += {
 
 
 // to declare as input for the OR of the muon alley
-HltAlleys.InputSelections += {
+Hlt1Global.InputSelections += {
   "Hlt1MuonSingleDecision",
   "Hlt1MuonSingleNoIPDecision",
   "Hlt1MuonDiMuonNoIPDecision",
@@ -307,6 +307,7 @@ Hlt1MuonSFSingleTMVeloT.InputSelections = {"Hlt1MuonSingleTMVeloT"};
 Hlt1RecoMuonSeg.OutputMuonTracksName="Hlt/Track/MuonSegmentForL0Single";
 Hlt1RecoMuonSeg.DecodingFromCoord=true;
 
+Hlt1PrepareMuonSeg.RequirePositiveInputs = false;
 Hlt1PrepareMuonSeg.InputSelection = "TES:Hlt/Track/MuonSegmentForL0Single";
 Hlt1PrepareMuonSeg.FilterDescriptor = {
   "DoShareM3_Hlt1MuonSingleTUTConf,<,0.5"

@@ -7,6 +7,7 @@ branches cmt doc options
 # HLT1 and common packages
 #=======================================================
 
+use HltConf             v1r0    Hlt   # Vanya Belyaev
 use HltCommon           v4r0    Hlt   # Jose Angel Hernando-Morata
 use HltTracking         v3r5    Hlt   # Jose Angel Hernando-Morata
 use HltHadAlley         v3r3    Hlt   # Jose Angel Hernando-Morata

@@ -16,7 +16,7 @@ HltSummaryWriter.Save += {
   "HadTrigger"
 };
 
-HltAlleys.InputSelections += {"HadTriggerSingle","HadTrigger"};
+Hlt1Global.InputSelections += {"HadTriggerSingle","HadTrigger"};
 
 HltHadAlleySequence.MeasureTime = true;
 HltHadAlleySequence.Members = {

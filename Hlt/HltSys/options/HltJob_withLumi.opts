@@ -11,14 +11,13 @@
 //
 
 #include "$STDOPTS/LHCbApplication.opts"
-#include "$STDOPTS/SimDicts.opts" // (replaces obsolete DstDicts.opts)
+#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
 #include "$DDDBROOT/options/DC06.opts"
 
 //
 // L0 and HLT sequences
 //
 
-// #include "$HLTSYSROOT/options/L0_withLumi.opts"  // need not to modify L0
 #include "$HLTSYSROOT/options/L0.opts"
 #include "$HLTSYSROOT/options/Hlt1_withLumi.opts"
 #ApplicationMgr.TopAlg += {"GaudiSequencer/HltRecoSequence"};

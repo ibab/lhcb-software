@@ -5,43 +5,34 @@
 /**
  * the Alleys sequencer
  */
-Hlt.Members += { "GaudiSequencer/HltAllAlleysSequence" };
+Hlt.Members += { "GaudiSequencer/Hlt1" };
 
-HltAllAlleysSequence.ModeOr=true; 
-HltAllAlleysSequence.ShortCircuit=false; 
+Hlt1.ModeOr=true; 
+Hlt1.ShortCircuit=false; 
 
-//
-// NOTE:
-// To switch off an alley, please comment out the sequencer and the options
-//
-
-
-HltAllAlleysSequence.Members += {  "GaudiSequencer/HltPhysics" };
-HltAllAlleysSequence.Members += {  "GaudiSequencer/HltRandom" };
-
-HltAllAlleysSequence.Members += {  "HltGlobalMonitor" };
-
-HltRandom.Members = {
-  "DeterministicPrescaler/PrescaleRandom",
-  "DummyAlley/RandomTrigger"
- };
-
-//PrescaleRandom.AcceptFraction=1;
-PrescaleRandom.AcceptFraction=@OnlineEnv.AcceptRate;
-RandomTrigger.RightType=3;
-  
+Hlt1.Members += {  "GaudiSequencer/HltPhysics" };
 HltPhysics.Members = {
   "DeterministicPrescaler/PrescalePhysics",
   "DummyAlley/PhysicsTrigger"
- };
-
+};
 PrescalePhysics.AcceptFraction=1.0;
 PhysicsTrigger.WrongType=3;
+HltSummaryWriter.Save += { "PhysicsTrigger" };
 
-HltSummaryWriter.Save += { "PhysicsTrigger",
-                           "RandomTrigger"};
 
-HltAllAlleysSequence.Members += {  "HltSelectionFilter/HltAlleys" };
+Hlt1.Members += {  "GaudiSequencer/HltRandom" };
+HltRandom.Members = {
+  "DeterministicPrescaler/PrescaleRandom",
+  "DummyAlley/RandomTrigger"
+};
+// to be overruled later...
+PrescaleRandom.AcceptFraction=1;
+// PrescaleRandom.AcceptFraction=@OnlineEnv.AcceptRate;
+RandomTrigger.RightType=3;
+HltSummaryWriter.Save += { "RandomTrigger"};
+
+Hlt1.Members += {  "HltGlobalMonitor" };
+Hlt1.Members += {  "HltSelectionFilter/Hlt1Global" };
 
 
 /**
@@ -49,7 +40,6 @@ HltAllAlleysSequence.Members += {  "HltSelectionFilter/HltAlleys" };
  */
 
 Hlt.Members += { "GaudiSequencer/HltEndSequence" };
-HltMuonAlley.OutputLevel = 3;
 HltGlobalMonitor.OutputLevel = 3;
 HltEndSequence.ModeOr = true;
 HltEndSequence.ShortCircuit = false;
@@ -59,12 +49,12 @@ HltSelectionToTES.OutputLevel = 3;
 HltEndSequence.Members += { "HltSummaryWriter"};
 // If you want to save all the Hlt selections in the summary uncomment
 HltSummaryWriter.SaveAll = true;
-//HltSummaryWriter.Save += {"HltAlleys"};
+//HltSummaryWriter.Save += {"Hlt1Global"};
 
 HltSummaryWriter.OutputLevel=3;
 
 /**
- *  If HltAlleys are run, check that they passed in selections.
+ *  If Hlt1Global are run, check that they passed in selections.
  *  If selections are not run this does not harm.
  */
-PassedAlleys.Members += { "HltSelectionFilter/HltAlleys" } ;
+PassedAlleys.Members += { "HltSelectionFilter/Hlt1Global" } ;

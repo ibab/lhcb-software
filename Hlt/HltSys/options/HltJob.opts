@@ -11,7 +11,7 @@
 //
 
 #include "$STDOPTS/LHCbApplication.opts"
-#include "$STDOPTS/DstDicts.opts"
+#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
 #include "$DDDBROOT/options/DC06.opts"
 
 //

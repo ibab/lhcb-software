@@ -14,7 +14,7 @@ HltSummaryWriter.Save += {"PV2D",
                           "Hlt1MuTrackDecision" //filtered vertices
 
 };
-HltAlleys.InputSelections += {"Hlt1MuTrackDecision"};
+Hlt1Global.InputSelections += {"Hlt1MuTrackDecision"};
 
 
 HltMuHadAlleySequence.Members = {

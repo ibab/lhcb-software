@@ -1,6 +1,7 @@
 /**
  * Steering file for Hlt1 
  */
+#include "$HLTSYSROOT/options/HltInit.opts"
 #include "$HLTSYSROOT/options/HltMainSequence.opts"
 /**
  * the Hlt1 sequencer
@@ -33,7 +34,10 @@ Hlt1.Members += {  "GaudiSequencer/Hlt1EleAlleySequence" };
 Hlt1.Members += {  "GaudiSequencer/Hlt1PhoAlleySequence" };
 #include "$HLTSYSROOT/options/HltPhoAlleySequence.opts"
 
-Hlt1.Members += {  "HltSelectionFilter/HltAlleys" };
+Hlt1.Members += {  "GaudiSequencer/Hlt1LumiAlleySequence" };
+#include "$HLTSYSROOT/options/HltLumiAlleyConfSequence.opts"
+
+Hlt1.Members += {  "HltSelectionFilter/Hlt1Global" };
 
 
 
@@ -50,11 +54,11 @@ HltSelectionToTES.OutputLevel = 3;
 HltEndSequence.Members += { "HltSummaryWriter"};
 // If you want to save all the Hlt selections in the summary uncomment
 // HltSummaryWriter.SaveAll = true;
-HltSummaryWriter.Save += {"HltAlleys"};
+HltSummaryWriter.Save += {"Hlt1Global"};
 HltSummaryWriter.OutputLevel=3;
 
 /**
- *  If HltAlleys are run, check that they passed in selections.
+ *  If HltGlobal are run, check that they passed in selections.
  *  If selections are not run this does not harm.
  */
-PassedAlleys.Members += { "HltSelectionFilter/HltAlleys" } ;
+PassedAlleys.Members += { "HltSelectionFilter/Hlt1Global" } ;

@@ -9,7 +9,7 @@
 //--------------------------
 
 // decision is part of the OR of alleys
-HltAlleys.InputSelections += {"Hlt1LumiDecision"};
+Hlt1Global.InputSelections += {"Hlt1LumiDecision"};
 
 
 // *************************************************
@@ -30,7 +30,7 @@ Hlt1LumiAlleySequence.Members = {
   "DeterministicPrescaler/PrescaleLumiDecision",
   "DummyLumiAlley/Hlt1LumiDecision",
   // writing the bank
-  "HltLumiFillRawBuffer/HltLumiFillRawBuffer",
+  "HltLumiWriter/HltLumiWriter",
 
   // reading back the bank (creates second instance of the class)
   //"HltLumiSummaryDecoder/HltLumiSummaryDecoder",
@@ -152,7 +152,7 @@ PrescaleLumiDecision.AcceptFraction=0.5;
 Hlt1LumiAlleySequence.MeasureTime = true;
 Hlt1LumiAlleySequence.OutputLevel=3;
 
-HltLumiFillRawBuffer.OutputLevel=3;
+HltLumiWriter.OutputLevel=3;
 
 //HltLumiSummaryDecoder.OutputLevel=3;
 

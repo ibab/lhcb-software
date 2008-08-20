@@ -5,13 +5,13 @@
 /**
  * the Alleys sequencer
  */
-Hlt.Members += { "GaudiSequencer/HltAllAlleysSequence" };
+Hlt.Members += { "GaudiSequencer/Hlt1" };
+Hlt.Members += {  "HltSelectionFilter/Hlt1Global" };
 
+Hlt1.Members += {  "GaudiSequencer/Hlt1LumiAlleySequence" };
+Hlt1.ModeOr=true; 
+Hlt1.ShortCircuit=false; 
 #include "$HLTSYSROOT/options/HltLumiAlleyonly.opts"
-HltAllAlleysSequence.Members += {  "GaudiSequencer/Hlt1LumiAlleySequence" };
-HltAllAlleysSequence.Members += {  "HltSelectionFilter/HltAlleys" };
-HltAllAlleysSequence.ModeOr=true; 
-HltAllAlleysSequence.ShortCircuit=false; 
 
 
 /**
@@ -28,4 +28,4 @@ HltSelectionToTES.OutputLevel = 3;
  *  If HltAlleys are run, check that they passed in selections.
  *  If selections are not run this does not harm.
  */
-PassedAlleys.Members += { "HltSelectionFilter/HltAlleys" } ;
+PassedAlleys.Members += { "HltSelectionFilter/Hlt1Global" } ;

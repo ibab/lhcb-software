@@ -13,7 +13,7 @@ HltSummaryWriter.Save += {"PV2D",
                           "Hlt1MuTrack"
 };
 
-HltAlleys.InputSelections += {"Hlt1MuTrack"};
+Hlt1Global.InputSelections += {"Hlt1MuTrack"};
 
 HltMuHadAlleySequence.Members = {
   "HltL0Filter/MuonEntry",

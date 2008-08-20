@@ -54,7 +54,7 @@ HltAllAlleysSequence.Members += {  "GaudiSequencer/HltHadAlleySequence" };
 //HltAllAlleysSequence.Members += {  "GaudiSequencer/HltPhoAlleySequence" };
 //#include "$HLTSYSROOT/options/HltPhoAlleySequence.opts"
 
-HltAllAlleysSequence.Members += {  "HltSelectionFilter/HltAlleys" };
+HltAllAlleysSequence.Members += {  "HltSelectionFilter/Hlt1Global" };
 
 
 
@@ -71,7 +71,7 @@ HltSelectionToTES.OutputLevel = 3;
 HltEndSequence.Members += { "HltSummaryWriter"};
 // If you want to save all the Hlt selections in the summary uncomment
 // HltSummaryWriter.SaveAll = true;
-HltSummaryWriter.Save += {"HltAlleys"};
+HltSummaryWriter.Save += {"Hlt1Global"};
 HltSummaryWriter.OutputLevel=3;
 
 /**

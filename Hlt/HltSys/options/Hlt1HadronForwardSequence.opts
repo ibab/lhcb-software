@@ -11,7 +11,7 @@ HltSummaryWriter.Save += {
 };
 
 // to declare as input for the OR of the muon alley
-HltAlleys.InputSelections += {
+Hlt1Global.InputSelections += {
   "Hlt1HadronForwardSingle",
   "Hlt1HadronForwardDi"
 };

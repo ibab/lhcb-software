@@ -11,7 +11,7 @@ HltSummaryWriter.Save += {"L0PhotonDecision",
                           "Hlt1PhotonDiTrackDecision"
 };
 
-HltAlleys.InputSelections += {"Hlt1PhotonDiTrackDecision"};
+Hlt1Global.InputSelections += {"Hlt1PhotonDiTrackDecision"};
 
 Hlt1PhoAlleySequence.Members = {
   "GaudiSequencer/PrepareL0PhotonDecisionSeq",

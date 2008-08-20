@@ -5,9 +5,18 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+
+! 2008-08-20 - Gerhard Raven
+ - replace HltAlleys by Hlt1Global following TISTOS naming convention 
+ - include HltInit.opts in Hlt1.opts (TODO: rename Hlt1Init once
+   it isn't used externally anymore)
+ - use GaudiPoolDbRoot.opts directly instead of obsolete DstDicts.opts
+ - rename HltLumiFillRawBuffer with HltLumiWriter
+ - make sure PV2D is available in MuHad alley
+ - add HltConf to requirements
+
 ! 2008-08-18 - Sandra Amato
  - HltMuonAlleyConfSequence.opts and HltRecoSequence.opts to avoid PV reco in muon alleys without IP cut
-
 
 </PRE><H1><A NAME=v4r0>2008-08-06 HltSys v4r0</A></H1><PRE>
 

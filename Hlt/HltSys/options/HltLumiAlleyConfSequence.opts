@@ -2,7 +2,6 @@
 // HLT Reconstruction
 //--------------------------
 #include "$HLTSYSROOT/options/HltRecoSequence.opts"
-//#include "$HLTSYSROOT/options/HltMuonAlleySequence.opts"
 // init is needed for ANNSvc
 #include "$HLTSYSROOT/options/HltLumiInit.opts"
 
@@ -16,8 +15,8 @@ HltSummaryWriter.Save += {
 };
 
 // decision is part of the OR of alleys
-HltAlleys.InputSelections += {"Hlt1LumiDecision"};
-HltAlleys.InputSelections += {"Hlt1LumiDecision2"};
+Hlt1Global.InputSelections += {"Hlt1LumiDecision"};
+Hlt1Global.InputSelections += {"Hlt1LumiDecision2"};
 
 
 
@@ -40,7 +39,7 @@ Hlt1LumiAlleySequence.Members = {
   "DeterministicPrescaler/PrescaleLumiDecision",
   "DummyLumiAlley/Hlt1LumiDecision",
   // writing the bank
-  "HltLumiFillRawBuffer/HltLumiFillRawBuffer",
+  "HltLumiWriter/HltLumiWriter",
   // another prescaler, just to try
   "DeterministicPrescaler/PrescaleLumiDecision2",
   "DummyLumiAlley/Hlt1LumiDecision2"
@@ -50,16 +49,10 @@ Hlt1LumiAlleySequence.Members = {
 // *************************************************
 // Reconstruction envelope
 Hlt1LumiRecoSequence.Members = {
-  "GaudiSequencer/Hlt1LumiPreRecoSequence",
+  "GaudiSequencer/HltRecoSequence",
   "DummyLumiAlley/HltDummyReco"
 };
 
-// *************************************************
-// Reconstruction (always pass)
-Hlt1LumiPreRecoSequence.Members = {
-  "GaudiSequencer/HltRecoSequence",
-  //"GaudiSequencer/HltMuonAlley"
-};
 
 
 // *************************************************
@@ -116,22 +109,22 @@ Hlt1LumiBeamCrossingSequence.Members = {
 Hlt1LumiRecoSequence.ModeOr = true;         // should always pass
 Hlt1LumiRecoSequence.ShortCircuit = false;  // execute the last always
 Hlt1LumiRecoSequence.MeasureTime = true;
-Hlt1LumiRecoSequence.OutputLevel=3;
+// Hlt1LumiRecoSequence.OutputLevel=3;
 
 Hlt1LumiPreRecoSequence.MeasureTime = true;
-Hlt1LumiPreRecoSequence.OutputLevel=3;
+// Hlt1LumiPreRecoSequence.OutputLevel=3;
 
 HltLumiCountSequence.ModeOr = true;         // should always pass
 HltLumiCountSequence.ShortCircuit = false;  // execute the last always
 HltLumiCountSequence.MeasureTime = true;
-HltLumiCountSequence.OutputLevel=3;
+// HltLumiCountSequence.OutputLevel=3;
 
-LumiCountVelo.OutputLevel=2;
+// LumiCountVelo.OutputLevel=2;
 LumiCountVelo.InputSelection="Hlt/Track/Velo";
 LumiCountVelo.CounterName="Velo";
 LumiCountVelo.OutputContainer="Hlt/LumiSummary";
 
-LumiCountRZVelo.OutputLevel=2;
+// LumiCountRZVelo.OutputLevel=2;
 LumiCountRZVelo.InputSelection="Hlt/Track/RZVelo";
 LumiCountRZVelo.CounterName="RZVelo";
 LumiCountRZVelo.OutputContainer="Hlt/LumiSummary";
@@ -143,46 +136,47 @@ HltPrepareBWRZVelo.InputSelection   = "TES:Hlt/Track/RZVelo";
 HltPrepareBWRZVelo.AddInfo = false;
 HltPrepareBWRZVelo.FilterDescriptor = {"IsBackward,>,0.5"};
 HltPrepareBWRZVelo.OutputSelection     = "BWRZVelo";
+HltPrepareBWRZVelo.RequirePositiveInputs = false;
 
-LumiCountHltBWRZVelo.OutputLevel=2;
+// LumiCountHltBWRZVelo.OutputLevel=2;
 LumiCountHltBWRZVelo.InputSelection="BWRZVelo";
 LumiCountHltBWRZVelo.CounterName="RZVeloBW";
 LumiCountHltBWRZVelo.OutputContainer="Hlt/LumiSummary";
 
-LumiCountMuon.OutputLevel=2;
+// LumiCountMuon.OutputLevel=2;
 LumiCountMuon.InputSelection="Rec/Track/Muons";
 LumiCountMuon.CounterName="Muon";
 LumiCountMuon.OutputContainer="Hlt/LumiSummary";
 
-LumiCountPV2D.OutputLevel=2;
+// LumiCountPV2D.OutputLevel=2;
 LumiCountPV2D.InputSelection="Hlt/Vertex/PV2D";
 LumiCountPV2D.CounterName="PV2D";
 LumiCountPV2D.OutputContainer="Hlt/LumiSummary";
 
-LumiCountPV3D.OutputLevel=2;
+// LumiCountPV3D.OutputLevel=2;
 LumiCountPV3D.InputSelection="Hlt/Vertex/PV3D";
 LumiCountPV3D.CounterName="PV3D";
 LumiCountPV3D.OutputContainer="Hlt/LumiSummary";
 
-LumiCountSpd.OutputLevel=2;
+// LumiCountSpd.OutputLevel=2;
 LumiCountSpd.InputSelection="Trig/L0/L0DUReport";
 LumiCountSpd.CounterName="SPD";
 LumiCountSpd.ValueName="Spd(Mult)";
 LumiCountSpd.OutputContainer="Hlt/LumiSummary";
 
-LumiCountPU.OutputLevel=2;
+// LumiCountPU.OutputLevel=2;
 LumiCountPU.InputSelection="Trig/L0/L0DUReport";
 LumiCountPU.CounterName="PUMult";
 LumiCountPU.ValueName="PUHits(Mult)";
 LumiCountPU.OutputContainer="Hlt/LumiSummary";
 
-LumiCountET.OutputLevel=2;
+// LumiCountET.OutputLevel=2;
 LumiCountET.InputSelection="Trig/L0/L0DUReport";
 LumiCountET.CounterName="Calo";
 LumiCountET.ValueName="Sum(Et)";
 LumiCountET.OutputContainer="Hlt/LumiSummary";
 
-LumiCountVeloTwo.OutputLevel=2;
+// LumiCountVeloTwo.OutputLevel=2;
 LumiCountVeloTwo.InputSelection="Hlt/Track/Velo";
 LumiCountVeloTwo.CounterName="Velo";
 LumiCountVeloTwo.OutputContainer="Hlt/LumiSummaryTwo";
@@ -190,22 +184,22 @@ LumiCountVeloTwo.OutputContainer="Hlt/LumiSummaryTwo";
 Hlt1LumiBXTypesSequence.ModeOr = true;         // should always pass
 Hlt1LumiBXTypesSequence.ShortCircuit = false;  // execute the last always
 Hlt1LumiBXTypesSequence.MeasureTime = true;
-Hlt1LumiBXTypesSequence.OutputLevel=3;
+// Hlt1LumiBXTypesSequence.OutputLevel=3;
 
 FilterNoBeam.BXTypes={"NoBeam"};
-OdinReaderNoBeam.OutputLevel=3;
+// OdinReaderNoBeam.OutputLevel=3;
 Hlt1LumiNoBeamSequence.MeasureTime = true;
-Hlt1LumiNoBeamSequence.OutputLevel=3;
+// Hlt1LumiNoBeamSequence.OutputLevel=3;
 
 FilterBeamCrossing.BXTypes={"BeamCrossing"};
-OdinReaderBeamCrossing.OutputLevel=3;
+// OdinReaderBeamCrossing.OutputLevel=3;
 Hlt1LumiBeamCrossingSequence.MeasureTime = true;
-Hlt1LumiBeamCrossingSequence.OutputLevel=3;
+// Hlt1LumiBeamCrossingSequence.OutputLevel=3;
 
 //CollectLumiData.OutputLevel=3;
-HltLumiOdinReader.OutputLevel=3;
+// HltLumiOdinReader.OutputLevel=3;
 
-OdinTypesFilter.OutputLevel=3;
+// OdinTypesFilter.OutputLevel=3;
 //OdinTypesFilter.TriggerTypes="ALL";
 //OdinTypesFilter.TriggerTypes={"Reserve","PhysicsTrigger","RandomTrigger","TimingTrigger","CalibrationTrigger"};
 OdinTypesFilter.TriggerTypes={"Reserve"};  // should become "Random"
@@ -215,14 +209,14 @@ PrescaleLumiDecision.AcceptFraction=0.5;
 PrescaleLumiDecision2.AcceptFraction=0.5;
 
 Hlt1LumiAlleySequence.MeasureTime = true;
-Hlt1LumiAlleySequence.OutputLevel=3;
+// Hlt1LumiAlleySequence.OutputLevel=3;
 
-HltLumiFillRawBuffer.OutputLevel=1;
+// HltLumiWriter.OutputLevel=1;
 
 //-------------------------------------------------------------------------
 // HLT Hlt1LumiDecision is empty to always pass
 //-------------------------------------------------------------------------
-Hlt1LumiDecision.OutputLevel=3;
+// Hlt1LumiDecision.OutputLevel=3;
 
 // // L0 entry: random prescaler
 // LumiEntry.L0Channels = {"Random"};
