@@ -3,6 +3,10 @@
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Writers and Readers, Makers of persisted TES info
 !-----------------------------------------------------------------------------
+! 2008-08-20 - Gerhard Raven
+ - streamline HltLumiWriter: don't require a 'lastKey' entry, support 'restart'
+! 2008-08-19 - Gerhard Raven
+ - add HltLumiWriter on behalf of Jaap
 ! 2008-08-13 - Gerhard Raven
  - add HltRoutingBitsWriter
 

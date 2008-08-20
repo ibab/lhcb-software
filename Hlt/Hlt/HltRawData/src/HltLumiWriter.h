@@ -1,10 +1,11 @@
-// $Id: HltLumiWriter.h,v 1.1 2008-08-19 11:03:23 graven Exp $
+// $Id: HltLumiWriter.h,v 1.2 2008-08-20 14:36:03 graven Exp $
 #ifndef HLTLUMIWRITER_H 
 #define HLTLUMIWRITER_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
+#include "Kernel/IANNSvc.h"
 
 #include "Event/RawEvent.h"
 
@@ -22,6 +23,7 @@ public:
   virtual ~HltLumiWriter( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
+  virtual StatusCode restart();    ///< Algorithm restart
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
@@ -32,7 +34,7 @@ protected:
 private:
   std::string m_inputBank;
 
-  int m_LastKey;
+  std::vector<IANNSvc::minor_value_type> m_items;
   // Statistics  
   double m_totDataSize;
   int m_nbEvents;

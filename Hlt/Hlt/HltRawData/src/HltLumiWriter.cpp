@@ -1,8 +1,11 @@
-// $Id: HltLumiWriter.cpp,v 1.1 2008-08-19 11:03:23 graven Exp $
+// $Id: HltLumiWriter.cpp,v 1.2 2008-08-20 14:36:03 graven Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 #include "HltBase/ANNSvc.h"
+
+#include "boost/foreach.hpp"
+
 
 // local
 #include "Event/HltLumiSummary.h"
@@ -45,19 +48,19 @@ StatusCode HltLumiWriter::initialize() {
   m_bank.reserve(20);
   m_bankType  = LHCb::RawBank::HltLumiSummary;
 
-  IANNSvc* annSvc = svc<IANNSvc>("LumiANNSvc");
-  boost::optional<IANNSvc::minor_value_type> 
-    x = annSvc->value("LumiCounters", "LastKey");
-  if (!x) {
-    error() << "LastKey not found in LumiCounters. " <<  endmsg;
-    m_LastKey = 0;
-  } else {
-    m_LastKey = x->second;
-    info() << "ExtraInfo LastKey key value: " << m_LastKey << endmsg;
-  }
+  m_items = svc<IANNSvc>("LumiANNSvc")->items("LumiCounters");
 
   return StatusCode::SUCCESS;
 };
+
+//=============================================================================
+// Restart
+//=============================================================================
+StatusCode HltLumiWriter::restart() {
+  debug() << "==> Restart" << endmsg;
+  m_items = svc<IANNSvc>("LumiANNSvc")->items("LumiCounters");
+  return StatusCode::SUCCESS;
+}
 
 //=============================================================================
 // Main execution
@@ -130,16 +133,16 @@ void HltLumiWriter::fillDataBankShort ( ) {
   LHCb::HltLumiSummary* hltLS = *m_HltLumiSummarys->begin();
   debug() << m_inputBank << " found" << endmsg ;
 
-  for ( int iKey = 0; iKey < m_LastKey; ++iKey ) {
+  BOOST_FOREACH( IANNSvc::minor_value_type iKey, m_items )  {
     // check for existing counters
-    int s_value = hltLS->info( iKey, -1);
+    int s_value = hltLS->info( iKey.second, -1);
     if ( !(s_value<0) ) {
       // handle overflow
       int i_value = (s_value < 0xFFFF) ? (int) s_value : (int)0xFFFF;
-      unsigned int word = ( iKey << 16 ) | ( i_value & 0xFFFF );
+      unsigned int word = ( iKey.second << 16 ) | ( i_value & 0xFFFF );
       m_bank.push_back( word );
       if ( MSG::VERBOSE >= msgLevel() ) {
-        verbose() << format ( " %8x %11d %11d %11d ", word, word, iKey, i_value ) << endreq;
+        verbose() << format ( " %8x %11d %11d %11d ", word, word, iKey.second, i_value ) << endreq;
       }
     }
   }
