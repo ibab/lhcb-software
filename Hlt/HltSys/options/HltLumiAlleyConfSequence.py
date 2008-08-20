@@ -19,65 +19,72 @@ LumiSequence = Sequence('HltLumiSequence', MeasureTime = True )
 LumiSequence.Members.append( OdinTypesFilter( TriggerTypes=['Reserve'],  # should become 'Random'
                                               BXTypes= ['NoBeam','BeamCrossing','SingleBeamRight','SingleBeamLeft'] ) )
 
-LumiSequence.Members.append( Sequence( 'Hlt1LumiRecoSequence',
-                                         Members = [ Sequence('HltRecoSequence') ]
-                                         ModeOR = True, ShortCircuit = False, IgnoreFilterPassed = True, MeasureTime = True
-                                         ) )
+LumiSequence.Members.append( Sequence( 'Hlt1LumiRecoSequence'
+                                     , Members = [ Sequence('HltRecoSequence') ]
+                                     , ModeOR = True
+                                     , ShortCircuit = False
+                                     , IgnoreFilterPassed = True
+                                     , MeasureTime = True ) )
 
-trackCounters = {   'Velo'   : 'Hlt/Track/Velo'
-                , 'RZVelo'   : 'Hlt/Track/RZVelo'
-                #, 'Muon'    : 'Rec/Tracks/Muons' 
-                }
-vertexCounters = {  'PV2D'  : 'Hlt/Vertex/PV2D'
-                 #,  'PV3D'  : 'Hlt/Vertex/PV3D' 
-                 }
-L0Counters = { 'SPDMult'  : 'Spd(Mult)'
-             , 'PUMult'   : 'PUHits(Mult)'
-             , 'CaloEt'   : 'Sum(Et)' 
-             }
+def combine( op, arg ) :
+    for key,value in arg.iteritems() : op(key,value)
+
+def createCounter( counterKind, seqName, seq ) : 
+    return lambda name, input  : seq.Members.append( counterKind( seqName + name
+                                                                , InputSelection = input
+                                                                , CounterName = name
+                                                                , OutputContainer='Hlt/LumiSummary' ) )
+def createL0Counter( seqName, seq ) :
+    return lambda name, value : seq.Members.append(  LumiFromL0DU(seqName+name
+                                                                 , InputSelection='Trig/L0/L0DUReport'
+                                                                 , CounterName=name
+                                                                 , ValueName=value
+                                                                 , OutputContainer='Hlt/LumiSummary' ) )
+
 
 seqName = 'LumiCount'
+
 LumiCountSequence = Sequence('Hlt'+seqName +'Sequence'
                             , ModeOR = True
                             , ShortCircuit = False
                             , IgnoreFilterPassed = True
                             , MeasureTime = True)
 
-for name,location in vertexCounters.iteritems() :
-    LumiCountSequence.Members.append( LumiCountVertices(seqName+name,
-                                                        InputSelection = location,
-                                                        CounterName = name,
-                                                        OutputContainer = 'Hlt/LumiSummary' ) )
-for name,location in trackCounters.iteritems() :
-    LumiCountSequence.Members.append( LumiCountTracks(seqName+name,
-                                                      InputSelection = location,
-                                                      CounterName = name,
-                                                      OutputContainer = 'Hlt/LumiSummary' ) )
-# filter to get backward tracks (always pass)
-LumiCountSequence.Members.append( Sequence('HltBWRZVeloSequence'
-                                          , Members  = [ HltTrackFilter('HltPrepareBWRZVelo',
-                                                                        InputSelection   = 'TES:Hlt/Track/RZVelo',
-                                                                        AddInfo = False,
-                                                                        FilterDescriptor = ['IsBackward,>,0.5'],
-                                                                        OutputSelection     = 'BWRZVelo',
-                                                                        RequirePositiveInputs = False
-                                                                        ) ]
+combine( createCounter( LumiCountTracks,   seqName , LumiCountSequence),
+         {   'Velo'   : 'Hlt/Track/Velo'
+         , 'RZVelo'   : 'Hlt/Track/RZVelo'
+         #, 'Muon'    : 'Rec/Tracks/Muons' 
+         } )
+
+combine( createCounter( LumiCountVertices, seqName, LumiCountSequence ),
+       {  'PV2D'  : 'Hlt/Vertex/PV2D'
+       #,  'PV3D'  : 'Hlt/Vertex/PV3D' 
+       } )
+
+# filter to get backward tracks (make sure it always passes by wrapping inside a sequence)
+LumiCountSequence.Members.append( Sequence('HltRZVeloBWSequence'
+                                          , Members  = [ HltTrackFilter('HltPrepareRZVeloBW'
+                                                                       , InputSelection   = 'TES:Hlt/Track/RZVelo'
+                                                                       , AddInfo = False
+                                                                       , FilterDescriptor = ['IsBackward,>,0.5']
+                                                                       , OutputSelection     = 'RZVeloBW'
+                                                                       , RequirePositiveInputs = False
+                                                                       ) ]
                                           , MeasureTime = True
                                           , ModeOR = True
                                           , ShortCircuit = False
                                           , IgnoreFilterPassed = True ) )
 
-LumiCountSequence.Members.append( LumiCountHltTracks( 'LumiCountHltBWRZVelo',
-                                                      InputSelection='BWRZVelo',
+LumiCountSequence.Members.append( LumiCountHltTracks( 'LumiCountHltRZVeloBW',
+                                                      InputSelection='RZVeloBW',
                                                       CounterName='RZVeloBW',
                                                       OutputContainer='Hlt/LumiSummary' ) )
 
-for name,value in L0Counters.iteritems() :
-    LumiCountSequence.Members.append( LumiFromL0DU(seqName+name,
-                                                   InputSelection='Trig/L0/L0DUReport',
-                                                   CounterName=name,
-                                                   ValueName=value,
-                                                   OutputContainer='Hlt/LumiSummary' ) )
+combine( createL0Counter( seqName, LumiCountSequence ),
+         { 'SPDMult'  : 'Spd(Mult)'
+         , 'PUMult'   : 'PUHits(Mult)'
+         , 'CaloEt'   : 'Sum(Et)' 
+         } )
 
 
 
@@ -89,6 +96,10 @@ LumiCountSequence.Members.append( LumiCountTracks(seqName+'VeloTwo',
 
 LumiSequence.Members.append( LumiCountSequence )
 LumiSequence.Members.append( HltLumiOdinReader( ) )
+
+#for i in [ 'NoBeam', 'BeamCrossing'] :
+#x = Hlt1Line( prescale = 0.5, ODIN = { BXTypes = [ i ] }, postscale = 0.1 )
+#              
 
 BXMembers = []
 for i in [ 'NoBeam', 'BeamCrossing'] :
@@ -111,7 +122,7 @@ LumiSequence.Members.append( Dummy( 'Hlt1LumiDecision' ) )
 LumiSequence.Members.append( HltLumiWriter( ) )
 
 # register with global decision (which is the OR of its input)
-for i in   [ 'Hlt1LumiDecision','Hlt1LumiDecision2'] :
+for i in   [ 'Hlt1LumiDecision' ] : 
      HltSelectionFilter('Hlt1Global').InputSelections.append( i ) 
 
 # print LumiSequence
