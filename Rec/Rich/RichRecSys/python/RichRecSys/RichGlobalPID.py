@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: RichGlobalPID.py,v 1.3 2008-08-19 10:43:52 jonrob Exp $"
+__version__ = "$Id: RichGlobalPID.py,v 1.4 2008-08-20 09:04:08 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -57,7 +57,7 @@ class RichGlobalPIDConfig(RichConfigurableUser):
         "trackForceChangeDLL":  [ ],
         "likelihoodThreshold":  [ ],
         "maxTrackChangesPerIt": [ ],
-        "minSignalForNoLLCalc": [ 1e-3, 1e-3, 1e-3, 1e-3 ]
+        "minSignalForNoLLCalc": [ ]
         }
 
     ## @brief Check the configuration
@@ -83,6 +83,7 @@ class RichGlobalPIDConfig(RichConfigurableUser):
         # Check configuration
         self.checkConf()
 
+        # Setup the tools and algs
         if self.getProp("initAlgorithms") : self.applyConfAlgs(sequence)
         if self.getProp("initTools")      : self.applyConfTools()
 
