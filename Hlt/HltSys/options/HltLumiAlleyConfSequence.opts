@@ -62,9 +62,9 @@ HltLumiCountSequence.Members = {
   "LumiCountTracks/LumiCountRZVelo",
   "GaudiSequencer/HltBWRZVeloSequence",
   "LumiCountHltTracks/LumiCountHltBWRZVelo",
-  "LumiCountTracks/LumiCountMuon",
+//  "LumiCountTracks/LumiCountMuon",
   "LumiCountVertices/LumiCountPV2D",
-  "LumiCountVertices/LumiCountPV3D",
+//  "LumiCountVertices/LumiCountPV3D",
   "LumiFromL0DU/LumiCountSpd",
   "LumiFromL0DU/LumiCountPU",
   "LumiFromL0DU/LumiCountET",
@@ -160,7 +160,7 @@ LumiCountPV3D.OutputContainer="Hlt/LumiSummary";
 
 // LumiCountSpd.OutputLevel=2;
 LumiCountSpd.InputSelection="Trig/L0/L0DUReport";
-LumiCountSpd.CounterName="SPD";
+LumiCountSpd.CounterName="SPDMult";
 LumiCountSpd.ValueName="Spd(Mult)";
 LumiCountSpd.OutputContainer="Hlt/LumiSummary";
 
@@ -172,7 +172,7 @@ LumiCountPU.OutputContainer="Hlt/LumiSummary";
 
 // LumiCountET.OutputLevel=2;
 LumiCountET.InputSelection="Trig/L0/L0DUReport";
-LumiCountET.CounterName="Calo";
+LumiCountET.CounterName="CaloEt";
 LumiCountET.ValueName="Sum(Et)";
 LumiCountET.OutputContainer="Hlt/LumiSummary";
 

@@ -8,12 +8,11 @@ LumiANNSvc.LumiCounters = {
     "Velo"       : 3   , 
     "Muon"       : 4   , 
     "BKMuon"     : 5   , 
-    "SPD"        : 6   , 
-    "Calo"       : 7   , 
+    "SPDMult"    : 6   , 
+    "CaloEt"     : 7   , 
     "PV2D"       : 10  , 
     "PV3D"       : 11  , 
     "PU"         : 13  , 
-    "LastKey"    : 16  
 };
 
 LumiANNSvc.OutputLevel=2;
