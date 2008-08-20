@@ -18,6 +18,7 @@
 // 08-08-2006 : M. Gandelman, E. Polycarpo
 // 12-01-2007 : M. Gandelman, E. Polycarpo
 // 15-08-2007 : M. Gandelman
+// 20-08-2008 : M. Gandelman, E. Polycarpo
 //--------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
@@ -41,15 +42,22 @@ MuonPIDChecker::MuonPIDChecker( const std::string& name,
   // Source of MuonPID
   declareProperty("MuonIDLocation",
                   m_MuonPIDsPath = LHCb::MuonPIDLocation::Default);
+  // Source of Muon Tracks
+  declareProperty("MuonTrackLocation",
+                  m_MuonTracksPath = LHCb::TrackLocation::Muon);
 
   // Z threshold to define decay (in cm) 
-  declareProperty( "DecayVxCut", m_zOriginCut = 100.);
+  declareProperty( "DecayVxCut", m_zOriginCut = 100. );
 
   // DLL value to define efficiency  
-  declareProperty( "DLLCut", m_DLLCut = -4.2 );
+  declareProperty( "DLLCut", m_DLLCut = -1.0 );
 
   // NShared value to define efficiency  
   declareProperty( "NSHCut", m_NSHCut = 1 );
+
+  // Swap between real and MC data   
+  declareProperty( "RunningMC", m_RunningMC = false );
+
 }
 
 //===================================================================
@@ -71,6 +79,7 @@ StatusCode MuonPIDChecker::initialize() {
 
   debug()  << "==> Initialise" << endreq;
 
+  // Get Geometry parameters
   m_NStation = 0;
   m_NRegion = 0;
   MuonBasicGeometry basegeometry( detSvc(),msgSvc());
@@ -88,21 +97,18 @@ StatusCode MuonPIDChecker::initialize() {
     m_stationZ.push_back(m_mudet->getStationZ(station));
   }
 
-  // Count events
+  // Zero Counters (for all events)
 
   m_neventsTest = 0;
-  for (unsigned int i=0; i<4 ; i++){
+  for (unsigned int i=0; i<5 ; i++){
     m_cpresel[i] = 0;
     m_cisMuon[i] = 0;
     m_cDLL[i] = 0;
     m_cnShared[i] = 0;
   }
-    m_cmisID = 0;
-    m_cmisIDDLL = 0;
-    m_cmisIDnShared = 0;
-
-  info() << " Z used to define decays = " << m_zOriginCut << " cm"<< endreq;
-  
+  m_cmisID = 0;
+  m_cmisIDDLL = 0;
+  m_cmisIDnShared = 0;
 
   return StatusCode::SUCCESS;
 };
@@ -126,24 +132,34 @@ StatusCode MuonPIDChecker::execute() {
   }
 
   // MC association 
-  LinkedTo<LHCb::MCParticle,LHCb::MuonDigit> myLink(eventSvc(),
+   LinkedTo<LHCb::MCParticle,LHCb::MuonDigit> myLink(eventSvc(),
                                   msgSvc(),LHCb::MuonDigitLocation::MuonDigit); 
 
-  LinkedTo<LHCb::MCParticle, LHCb::Track> myLinkToTrack( eventSvc(), msgSvc(),
+   LinkedTo<LHCb::MCParticle, LHCb::Track> myLinkToTrack( eventSvc(), msgSvc(),
                                          m_TracksPath );
-
   // Get tracks to loop over
   LHCb::Tracks* trTracks = get<LHCb::Tracks>(m_TracksPath);
+  // Get muon tracks to loop over
+  LHCb::Tracks* muTracks = get<LHCb::Tracks>(m_MuonTracksPath);
 
   if (!trTracks){
     error() << " Failed to get Track container "
         <<  m_TracksPath << endreq;
     return StatusCode::FAILURE;
   }
+  if (!muTracks){
+    error() << " Failed to get muon Track container "
+        <<  m_MuonTracksPath << endreq;
+    return StatusCode::FAILURE;
+  }
 
-  m_nTr = 0;
-  m_nPSTr = 0;
-  m_nPSGhosts = 0;
+
+  // Zero Track multiplicities after each selection step (per event)
+  unsigned int m_nTr = 0;
+  unsigned int m_nPSTr = 0;
+  unsigned int m_nIMTr = 0;
+  unsigned int m_nPSGhosts = 0;
+  unsigned int m_nIMGhosts = 0;
 
   LHCb::Tracks::const_iterator iTrack;
 
@@ -176,24 +192,32 @@ StatusCode MuonPIDChecker::execute() {
 	   m_TrMuonLhd= (*imuid)->MuonLLMu();
 	   m_TrNMuonLhd = (*imuid)->MuonLLBg();
 	   m_TrNShared = (*imuid)->nShared();
-	   m_Trp0 = stateP0->p()/Gaudi::Units::GeV; 
+	   m_Trp0 = (1./stateP0->qOverP())/Gaudi::Units::GeV; 
 
 	   // Retrieve track type (MC)
-	   LHCb::MCParticle* mcP = myLinkToTrack.first(*iTrack);
-	   LHCb::MCParticle* mcPnext = mcP;
-	   while ( mcPnext != NULL ){
-	     m_TrnLinks++;
-	     if ( abs(mcPnext->particleID().pid()) == 13 ) mcP = mcPnext;
-	     mcPnext = myLinkToTrack.next();
-	   }
-	   const LHCb::MCParticle* thismcP = mcP; 
-	   m_TrType = getTrType( pTrack, thismcP ); 
-	   if (m_TrType == 0 ) m_nPSGhosts++;
-
+           if (m_RunningMC) {
+	     LHCb::MCParticle* mcP = myLinkToTrack.first(*iTrack);
+	     LHCb::MCParticle* mcPnext = mcP;
+	     while ( mcPnext != NULL ){
+	       m_TrnLinks++;
+	       if ( abs(mcPnext->particleID().pid()) == 13 ) mcP = mcPnext;
+	       mcPnext = myLinkToTrack.next();
+	     }
+	     const LHCb::MCParticle* thismcP = mcP; 
+	     m_TrType = getTrType( pTrack, thismcP ); 
+	     if (m_TrType == 0 ) m_nPSGhosts++;
+           }
+           else {
+             m_TrType = 4;
+           }
 	   // Fill Track Info
 	   fillTrHistos(0);
 	   m_cpresel[m_TrType]++;
-	   if (m_TrIsMuon == 1) fillTrHistos(1);
+	   if (m_TrIsMuon == 1) {
+	     fillTrHistos(1);
+	     m_nIMTr++;
+	     if (m_TrType == 0 ) m_nIMGhosts++;
+	   }
 
 	 } // Pre-selection
        } // Association to Track
@@ -202,18 +226,44 @@ StatusCode MuonPIDChecker::execute() {
   } // loop over tracks 
 
   // Plot track multiplicity
-  plot1D(m_nTr, "hNtracks","Track multiplicity", 0, 400, 400);
-  plot1D(m_nPSTr, "hNPStracks","Pre-selected Track multiplicity", 0, 400, 400);
-  plot1D(m_nPSGhosts, "hNPSGhosts","Pre-selected ghost multiplicity", 0, 400, 400);
+  plot1D(m_nTr, "hNtracks","Track multiplicity", 0, 200, 200);
+  plot1D(m_nPSTr, "hNPStracks","Pre-selected Track multiplicity", 0, 200, 200);
+  plot1D(m_nIMTr, "hNIMtracks","IsMuon=1 Track multiplicity", 0, 20, 20);
+  if (m_RunningMC) {
+    plot1D(m_nPSGhosts, "hNPSGhosts","Pre-selected ghost multiplicity", 0, 200, 400);
+    plot1D(m_nIMGhosts, "hNIMGhosts","IsMuon=1 ghost multiplicity", 0, 20, 20);
+  }
 
+  // loop over muon Tracks
+  LHCb::Tracks::const_iterator imuTrack;
+
+  for (imuTrack = muTracks->begin() ; imuTrack != muTracks->end() ; imuTrack++){
+    std::vector<LHCb::LHCbID> mucoords = (*imuTrack) -> lhcbIDs();
+    std::vector<LHCb::LHCbID>::iterator iID;
+    int nhitsfoi[20]={0};
+    for (iID = mucoords.begin(); iID != mucoords.end(); iID++) {
+      if (!(iID->isMuon())) continue;
+      LHCb::MuonTileID mutile = iID->muonID();
+      int region = mutile.region();
+      int station = mutile.station();
+      int nStatReg = station*m_NRegion+region;
+      nhitsfoi[nStatReg]++;
+    } //end of loop over lhcbIDs 
+    for (unsigned int i=0; i<m_NRegion*m_NStation; i++){
+      plot2D(i, nhitsfoi[i],
+      "hNhitsFOIReg", "Hits in FOI per region (per track)", 0, 21, 0, 5, 21, 5);
+    }
+
+  } //end of muTrack loop
+
+    
   LHCb::MuonCoords* coords = get<LHCb::MuonCoords>(LHCb::MuonCoordLocation::MuonCoords);
   if ( coords==0 ) {
        err() << " Cannot retrieve MuonCoords " << endreq;
        return StatusCode::FAILURE;
   }
-    
   // loop over the coords
-  m_nHit = 0;
+  unsigned int m_nHit = 0;
   LHCb::MuonCoords::const_iterator iCoord;
 
   for ( iCoord = coords->begin() ; iCoord != coords->end() ; iCoord++ ){
@@ -221,7 +271,7 @@ StatusCode MuonPIDChecker::execute() {
     int station = (*iCoord)->key().station();
     int nStatReg = station*m_NRegion+region;
     m_nHit++;   
-    plot1D(nStatReg, "hNhitsReg", "Hit multiplicity per region", 0, 21, 21);
+    plot1D(nStatReg, "hNhitsReg", "Total Hit multiplicity per region", 0, 21, 21);
 
   } // loop over station coords 
   plot1D(m_nHit, "hNhits","Hit Multiplicity", 0, 3000, 500);
@@ -230,36 +280,42 @@ StatusCode MuonPIDChecker::execute() {
 
 }
 //=====================================================================
-//  MC association and info
+//  Fill track info
 //====================================================================
 void MuonPIDChecker::fillTrHistos(const int Level){ 
   // Level 0 => preselection
   // Level 1 => IsMuon = 1  
   char hname[10];
 
-  sprintf ( hname, "hp_%d_%d", Level, m_TrType);
-  plot1D( m_Trp0, hname , " Momentum (GeV) - PreSel", 0. , 200., 200 ); 
+  if (Level<1) { 
+    sprintf ( hname, "Mom_PS_%d", m_TrType);
+  } else {
+    sprintf ( hname, "Mom_IM_%d", m_TrType);
+  }
 
-  sprintf ( hname, "hIM_%d_%d", Level, m_TrType);
-  plot1D( m_TrIsMuon, hname , " IsMuon ", 0. , 2., 2 ); 
+  plot1D( m_Trp0, hname , " Momentum (GeV) ", -200. , 200., 400 ); 
 
   if (Level==1) {
     m_cisMuon[m_TrType]++;
 
-    if ( m_TrType ==  0 || m_TrType == 2 || m_TrType == 3 ) m_cmisID++ ;
-    if ( (m_TrType ==  0 || m_TrType == 2 || m_TrType == 3) && 
+    if ( m_TrType == 2 || m_TrType == 3 ) m_cmisID++ ;
+    if ( (m_TrType == 2 || m_TrType == 3) && 
          (m_TrMuonLhd - m_TrNMuonLhd) > m_DLLCut ) m_cmisIDDLL++ ;
-    if ( (m_TrType ==  0 || m_TrType == 2 || m_TrType == 3) && 
+    if ( ( m_TrType == 2 || m_TrType == 3) && 
          m_TrNShared < m_NSHCut ) m_cmisIDnShared++ ;
 
     if ( (m_TrMuonLhd - m_TrNMuonLhd) > m_DLLCut) m_cDLL[m_TrType]++;
     if ( m_TrNShared < m_NSHCut) m_cnShared[m_TrType]++;
 
-    sprintf ( hname, "hNShared_%d_%d", Level, m_TrType);
+    sprintf ( hname, "hNShared_%d", m_TrType);
     plot1D( m_TrNShared, hname , "Tracks sharing hits", 0., 10., 10 ); 
 
-    sprintf ( hname, "hDLL_%d_%d", Level, m_TrType);
+    sprintf ( hname, "hDLL_%d", m_TrType);
     plot1D( (m_TrMuonLhd - m_TrNMuonLhd) ,hname, "DLL", -10., 10., 200 ); 
+  } else {
+    sprintf ( hname, "hIM_%d", m_TrType);
+    plot1D( m_TrIsMuon, hname , " IsMuon ", 0. , 2., 2 ); 
+    
   }
 
   return;
@@ -321,12 +377,14 @@ void MuonPIDChecker::resetTrInfo() {
 //  1 = muon from origin
 //  2 = muon from decay/interaction
 //  3 = non-muon
+//  4 = real data
 //====================================================================
 int MuonPIDChecker::getTrType( const LHCb::Track *pTrack, 
                                const  LHCb::MCParticle* mcP ) {
+  int type = -1;
+
   // MCParticle Association 
   StatusCode sc = checkMCAss( pTrack , mcP);
-  int type = -1;
 
   // Fill Histograms
   if ( sc.isFailure() ) {      // ghost
@@ -337,16 +395,18 @@ int MuonPIDChecker::getTrType( const LHCb::Track *pTrack,
 
     m_TrMCp0 = mcP->p()/Gaudi::Units::GeV;
 
-    if ( abs (mcP->particleID().pid()) == 13  && 
-	(m_TrnLinks == 1 && m_TrzOrigin < m_zOriginCut) ){ 
-        
-      type = 1;  
-
-    } else if ( ((abs (mcP->particleID().pid()) == 13)  &&
-	  ( (m_TrnLinks==1 && m_TrzOrigin>=m_zOriginCut) || m_TrnLinks==2)) ||
-	       (abs (mcP->particleID().pid()) !=13 && m_TrzDecay > 0 )){
+    if (( abs (mcP->particleID().pid()) == 13) && ((m_TrnLinks==1 &&
+	  ( abs (mcP->mother()->particleID().pid()) == 211 || 
+	    abs (mcP->mother()->particleID().pid()) == 321 )) || 
+	    m_TrnLinks==2) ||
+	( abs (mcP->particleID().pid()) !=13 && 
+	    (m_TrzDecay > 0 && m_TrzDecay<20000.)) ){
 
       type = 2;  
+
+    }else if ( abs (mcP->particleID().pid()) == 13  && m_TrnLinks == 1 ){ 
+        
+      type = 1;  
 
     } else {
 
@@ -367,6 +427,7 @@ StatusCode MuonPIDChecker::finalize() {
 
 
   debug() << "==> Finalize" << endreq;
+if (m_RunningMC) {
   double Ef1[4];
   double Ef2[4];
   double Ef3[4];
@@ -384,7 +445,7 @@ StatusCode MuonPIDChecker::finalize() {
       Ef2[ityp] = -1.;
     }
   }
-  unsigned int sumPresel = m_cpresel[0]+m_cpresel[1]+m_cpresel[2]+m_cpresel[3];
+  unsigned int sumPresel = m_cpresel[2]+m_cpresel[3];
   if( 0 < sumPresel ) {
     misID        = 100. * (double)m_cmisID        / (double)sumPresel;
     misIDDLL     = 100. * (double)m_cmisIDDLL     / (double)sumPresel;
@@ -409,15 +470,15 @@ StatusCode MuonPIDChecker::finalize() {
   info()<<"------------------------------------------------------------------"
         <<  endreq;
   info()<<" Muons      :   "<<  format( " %7.2f ", Ef1[1] ) <<
-                      "    :    (96.49+-0.06 - (95.3 +- 0.2)" << endreq;
+                      "    :    (98.95+-0.06) - (97.6 +- 0.2)" << endreq;
   info()<<" Decays     :   "<<  format( " %7.2f ", Ef1[2] )<< 
-                      "    :    (66.1 +- 0.2) - (63.0 +- 0.2)" << endreq;
+                      "    :    (64.2 +- 0.2) - (65.8 +- 0.2)" << endreq;
   info()<<" Non-muons  :   "<<  format( " %7.2f ", Ef1[3] ) << 
-                      "    :    (2.48 +-0.01) - (1.78+- 0.01)" << endreq;
+                      "    :    (2.68 +-0.01) - (2.85+- 0.01)" << endreq;
   info()<<" Ghosts     :   "<<  format( " %7.2f ", Ef1[0] ) << 
-                      "    :    (6.08 +-0.03) - (4.81+- 0.02)" << endreq;
+                      "    :    (6.24 +-0.03) - (6.10+- 0.02)" << endreq;
   info()<<" Total MisID:   "<<  format( " %7.2f ", misID ) <<
-                      "    :    (4.85 +-0.01) - (3.91+- 0.01)" << endreq;
+                      "    :    (4.34 +-0.01) - (4.64+- 0.01)" << endreq;
   info()<<"------------------------------------------------------------------"
         <<  endreq;
   info()<<"-------------------        DLL performance      ------------------"
@@ -425,15 +486,15 @@ StatusCode MuonPIDChecker::finalize() {
   info()<<"------------------------------------------------------------------"
         <<  endreq;
   info()<<" Muons      :   "<<  format( " %7.2f ", Ef2[1] ) <<
-                      "    :    (90.5 +-0.1) - (80.4 +- 0.3)" << endreq;
+                      "    :    (93.0 +-0.1) - (88.0 +- 0.3)" << endreq;
   info()<<" Decays     :   "<<  format( " %7.2f ", Ef2[2] )<< 
-                      "    :    (43.4 +-0.2) - (40.2 +- 0.2)" << endreq;
+                      "    :    (37.1 +-0.2) - (39.4 +- 0.2)" << endreq;
   info()<<" Non-muons  :   "<<  format( " %7.2f ", Ef2[3] ) << 
-                      "    :    (0.52+-0.01) - (0.33+- 0.01)" << endreq;
+                      "    :    (0.52+-0.01) - (0.47+- 0.01)" << endreq;
   info()<<" Ghosts     :   "<<  format( " %7.2f ", Ef2[0] ) << 
-                      "    :    (2.07+-0.01) - (1.66+- 0.01)" << endreq;
+                      "    :    (2.04+-0.01) - (1.60+- 0.01)" << endreq;
   info()<<" Total MisID:   "<<  format( " %7.2f ", misIDDLL ) <<
-                      "    :    (1.69+-0.01) - (1.37+- 0.01)" << endreq;
+                      "    :    (1.51+-0.01) - (1.57+- 0.01)" << endreq;
   info()<<"------------------------------------------------------------------"
         <<  endreq;
   info()<<"-------------------      nShared performance    ------------------"
@@ -441,18 +502,24 @@ StatusCode MuonPIDChecker::finalize() {
   info()<<"------------------------------------------------------------------"
         <<  endreq;
   info()<<" Muons      :   "<<  format( " %7.2f ", Ef3[1] ) <<
-                      "    :    (83.3 +-0.1) - (88.5 +- 0.2)" << endreq;
+                      "    :    (95.5 +-0.1) - (91.0 +- 0.2)" << endreq;
   info()<<" Decays     :   "<<  format( " %7.2f ", Ef3[2] )<< 
-                      "    :    (48.4 +-0.2) - (51.1 +- 0.1)" << endreq;
+                      "    :    (47.9 +-0.2) - (49.2 +- 0.1)" << endreq;
   info()<<" Non-muons  :   "<<  format( " %7.2f ", Ef3[3] ) << 
-                      "    :    (0.76+-0.01) - (0.91 +-0.01)" << endreq;
+                      "    :    (0.85+-0.01) - (1.15 +-0.01)" << endreq;
   info()<<" Ghosts     :   "<<  format( " %7.2f ", Ef3[0] ) << 
-                      "    :    (2.33+-0.02) - (2.37 +-0.01)" << endreq;
+                      "    :    (2.39+-0.02) - (2.24 +-0.01)" << endreq;
   info()<<" Total MisID:   "<<  format( " %7.2f ", misIDnShared) << 
-                      "    :    (2.15+-0.01) - (2.30 +-0.01)" << endreq;
+                      "    :    (2.12+-0.01) - (2.51 +-0.01)" << endreq;
   info()<<"------------------------------------------------------------------"
         <<  endreq;
-
+}
+else {
+  info()<< "Total number of Tracks after the pre-selection: " << m_cpresel[4]
+<< endreq;
+  info()<< "Total number of Tracks with IsMuon = true: " << m_cisMuon[4]
+<< endreq;
+}
   return  GaudiHistoAlg::finalize();
 }
 

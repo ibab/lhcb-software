@@ -2,6 +2,12 @@
 ! Responsible : E. Polycarpo, M. Gandelman
 !----------------------------------------------------------------------------
 
+!====================== MuonPIDChecker v2r3 2008-08-20 ====================
+! 2008-08-20 -  E. Polycarpo, M. Gandelman
+ - Edit reference numbers 
+ - Add the possibility to save monitoring or checking histos
+ - Modify some histos
+
 !====================== MuonPIDChecker v2r2 2007-11-01 ====================
 ! 2007-11-01 - Marco Cattaneo
  - Protect against divide by zero when zero or few events processed

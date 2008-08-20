@@ -1,4 +1,4 @@
-// $Id: MuonPIDChecker.h,v 1.5 2007-11-01 15:29:08 cattanem Exp $
+// $Id: MuonPIDChecker.h,v 1.6 2008-08-20 15:50:34 miriamg Exp $
 #ifndef TUNEMUONID_H 
 #define TUNEMUONID_H 1
 
@@ -35,6 +35,9 @@
  *
  *  @author M. Gandelman, E. Polycarpo
  *  @date   08-08-2006
+ *
+ *  @author M. Gandelman, E. Polycarpo
+ *  @date   20-08-2008
  */
 
 
@@ -74,15 +77,29 @@ private:
   std::string m_HitsPath;
   /// TES path to MuonPIDs
   std::string m_MuonPIDsPath;
+  /// TES path to Muon Tracks
+  std::string m_MuonTracksPath;
 
   double m_zOriginCut; ///< cut on origin of the muon used to define decays 
   double m_DLLCut; ///< cut on DLL value used to define efficiency      
   double m_NSHCut; ///< cut on  nShared value used to define efficiency      
+  bool   m_RunningMC; ///< swap between running on data and MC
 
   unsigned int m_eventNumber,m_runNumber;
+               // total number of 
+               //preselected tracks
+               //tracks  with IsMuon=1
+               //tracks  with DLL> m_DLLCut
+               //tracks  with NShared> m_NSHCut
+               // indices are:
+               //  0 = ghost
+               //  1 = muons
+               //  2 = muons from decays in flight
+               //  3 = non-muons  
   unsigned int m_cpresel[4],m_cisMuon[4], m_cDLL[4], m_cnShared[4];
+               // total number of tracks mis-id-ed (0+2+3) 
   unsigned int m_cmisID, m_cmisIDDLL, m_cmisIDnShared;
-  unsigned int m_nTr, m_nPSTr, m_nPSGhosts, m_nHit;     // counters 
+               // Track info
   unsigned int m_TrIsMuon;
   int          m_TrNShared;
   double       m_TrMuonLhd,m_TrNMuonLhd,m_TrzDecay,m_TrzOrigin; 
@@ -107,3 +124,4 @@ private:
 };
 
 #endif // TUNEMUONID_H
+             // Track info
