@@ -1,8 +1,11 @@
-// $Id: VeloClusterMonitor.cpp,v 1.2 2008-08-19 17:08:15 erodrigu Exp $
+// $Id: VeloClusterMonitor.cpp,v 1.3 2008-08-20 11:23:18 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
+
+// from VeloDet
+#include "VeloDet/DeVeloSensor.h"
 
 // local
 #include "VeloClusterMonitor.h"
@@ -48,11 +51,6 @@ StatusCode Velo::VeloClusterMonitor::initialize() {
   StatusCode sc = VeloMonitorBase::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;
 
-  // Check for /Prev, /Next or structure alike in the TES and react accordingly
-  std::string subdir = prevsOrNexts();
-  if ( subdir != "" )
-    setHistoTopDir( "Velo/" + subdir + "/" );
-  
   return StatusCode::SUCCESS;
 }
 
@@ -140,34 +138,28 @@ void Velo::VeloClusterMonitor::monitorClusters() {
 
     plot2D( sensorNumber, nstrips, "Cluster size vs sensor",
             "Number of strips per cluster versus sensor",
-            -0.5, 105.5, -0.5, 5.5, 106, 6 );
+            -0.5, 131.5, -0.5, 5.5, 132, 6 );
     plot2D( sensorNumber, adc, "Cluster ADC values vs sensor",
             "Cluster ADC values versus sensor",
-            -0.5, 105.5, -0.5, 128*4+0.5, 106, 128*4+1 );
+            -0.5, 131.5, -0.5, 128*4+0.5, 132, 128*4+1 );
+
+    // Active chip links versus sensor number
+    // --------------------------------------
+    const DeVeloSensor* veloSensor = m_veloDet -> sensor( sensorNumber );
+
+    unsigned int stripNumber   = cluster -> channelID().strip();
+    unsigned int chipChannel   = veloSensor -> StripToChipChannel( stripNumber ); // 0 -> 2047
+    unsigned int chip          = veloSensor -> ChipFromChipChannel( chipChannel ); // 0 -> 15
+    unsigned int channelInChip = chipChannel % 128; // 0 -> 127
+    unsigned int linkInChip    = static_cast<int>( channelInChip / 32 ); // 0 -> 3
+    // number 6 introduced to have 2 bins separating every 4 links per chip
+    unsigned int activeLink = chip*6 + linkInChip;
+    plot2D( sensorNumber, activeLink, "Active chip links vs sensor",
+            "Active chip links versus sensor",
+            -0.5, 131.5, -0.5, 95.5, 132, 96 );
+
   }
 
-}
-
-//=============================================================================
-// Return a /Prev, /Next or alike if present in the VeloClusters location string
-//=============================================================================
-std::string Velo::VeloClusterMonitor::prevsOrNexts() {
-  
-  size_t pos;
-
-  pos = m_clusterCont.find( "Prev" );
-  if ( pos != std::string::npos ) {
-    std::string substr = m_clusterCont.substr( pos );
-    return substr.substr( 0, substr.find( "/" ) );
-  }
-
-  pos = m_clusterCont.find( "Next" );
-  if ( pos != std::string::npos ) {
-    std::string substr = m_clusterCont.substr( pos );
-    return substr.substr( 0, substr.find( "/" ) );
-  }  
-
-  return "";
 }
 
 //=============================================================================

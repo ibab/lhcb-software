@@ -1,4 +1,4 @@
-// $Id: VeloClusterMonitor.h,v 1.2 2008-08-19 17:08:15 erodrigu Exp $
+// $Id: VeloClusterMonitor.h,v 1.3 2008-08-20 11:23:18 erodrigu Exp $
 #ifndef VELORECMONITORS_VELOCLUSTERMONITOR_H 
 #define VELORECMONITORS_VELOCLUSTERMONITOR_H 1
 
@@ -50,9 +50,6 @@ namespace Velo
     // Monitor the VeloClusters
     void monitorClusters();
 
-    // Return a /Prev, /Next or alike if present in the VeloClusters location string
-    std::string prevsOrNexts();
-    
     // Data members
     LHCb::VeloClusters* m_clusters;
 

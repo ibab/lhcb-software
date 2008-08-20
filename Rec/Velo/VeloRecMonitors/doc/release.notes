@@ -4,6 +4,10 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2008-08-20 - Eduardo Rodrigues
+ - added histogram to monitor active chip links versus sensor number
+ - some bins adjusted
+
 ! 2008-08-19 - Eduardo Rodrigues
  - added functionality to deal with clusters in non-default paths
    (e.g.: VeloClusterMonitor will produce histograms under "/Velo/Next/" if
