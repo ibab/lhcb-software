@@ -1,4 +1,4 @@
-// $Id: HltL0Filter.cpp,v 1.6 2008-08-13 15:08:03 graven Exp $
+// $Id: HltL0Filter.cpp,v 1.7 2008-08-20 18:01:17 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -37,7 +37,7 @@ HltL0Filter::HltL0Filter( const std::string& name,
 HltL0Filter::~HltL0Filter() {}; 
 
 //=============================================================================
-// Restart -- we explicitly support restart... woho!
+// Restart -- indicate explicitly that we support restart... wohooo!
 //=============================================================================
 StatusCode HltL0Filter::restart() 
 {

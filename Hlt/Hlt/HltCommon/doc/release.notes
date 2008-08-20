@@ -4,6 +4,8 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!2008-08-20 - Gerhard Raven
+  - Add DummySelection courtesy of Jaap Panman
 !2008-08-11 - Gerhard Raven
   - ConfigDBAccessSvc: create cache tables (not yet used)
   - PropertyConfigSvc: add support for references ( foo.prop = @bar.otherprop)
