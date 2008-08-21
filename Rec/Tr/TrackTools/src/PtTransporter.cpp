@@ -1,4 +1,4 @@
-// $Id: PtTransporter.cpp,v 1.5 2008-06-05 06:42:57 cattanem Exp $
+// $Id: PtTransporter.cpp,v 1.6 2008-08-21 18:13:19 smenzeme Exp $
 // Include files 
 
 // from Gaudi
@@ -69,8 +69,8 @@ double PtTransporter::ptAtOrigin(double zref, double xref, double /* yref */,
   // assume B field conserves magnitude of p, and assume that py is
   // not altered; model effect of magnetic field using kick in center
   // of magnet plane
-  double xmag = xref + tx * (m_zMagnet - zref);
-  double r = std::sqrt(xmag * xmag + m_zMagnet * m_zMagnet);
+  const double xmag = xref + tx * (m_zMagnet - zref);
+  const double r = std::sqrt(xmag * xmag + m_zMagnet * m_zMagnet);
   double py = p * ty / std::sqrt(1. + tx * tx + ty * ty);
   p *= xmag / r; p *= p;
   py *= m_zMagnet / r; py *= py;
@@ -79,6 +79,8 @@ double PtTransporter::ptAtOrigin(double zref, double xref, double /* yref */,
 
 double PtTransporter::ptAtOrigin(const LHCb::State& state) const
 {
+  // protect against division by zero
+  if (std::abs(state.qOverP()) < 1e-42) return HUGE_VAL;
   return ptAtOrigin(state.z(), state.x(), state.y(), state.tx(), state.ty(),
             1. / std::abs(state.qOverP()));
 }

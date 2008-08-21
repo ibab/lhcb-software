@@ -88,9 +88,9 @@ StatusCode FastMomentumEstimate::calculate( const LHCb::State* tState, double& q
 {
   double p;
 
-  double tx = tState->tx(); 
-  double ty = tState->ty();
-  double x0   = tState->x() - tx * tState->z();   
+  const double tx = tState->tx(); 
+  const double ty = tState->ty();
+  const double x0   = tState->x() - tx * tState->z();   
   
   if(tCubicFit){
     p = m_paramsTCubic[0] +
@@ -103,8 +103,15 @@ StatusCode FastMomentumEstimate::calculate( const LHCb::State* tState, double& q
       m_paramsTParab[2] * ty * ty +
       m_paramsTParab[3] * x0 * x0;
   }
-   
-  qOverP = x0/(p*1000000*m_magFieldSvc->scaleFactor());
+    
+  const double scaleFactor = m_magFieldSvc->scaleFactor();
+  const double denom = p * scaleFactor * 1e6;
+
+  if (std::abs(scaleFactor) < 1e-6)
+    qOverP = 1.0/Gaudi::Units::GeV;
+  else
+    qOverP = x0/denom;
+    
   sigmaQOverP = m_tResolution * std::fabs(qOverP);
 
   return StatusCode::SUCCESS;
@@ -118,9 +125,9 @@ StatusCode FastMomentumEstimate::calculate( const LHCb::State* veloState, const 
  
   double coef;
 
-  double txT = tState->tx();
-  double txV = veloState->tx();
-  double tyV = veloState->ty();
+  const double txT = tState->tx();
+  const double txV = veloState->tx();
+  const double tyV = veloState->ty();
 
   if(tCubicFit){
     coef = ( m_paramsVeloTCubic[0] +
@@ -140,7 +147,14 @@ StatusCode FastMomentumEstimate::calculate( const LHCb::State* veloState, const 
     
   double proj = sqrt( ( 1. + txV*txV + tyV*tyV ) / ( 1. + txV*txV ) );
 
-  qOverP = (txV-txT)/( coef * Gaudi::Units::GeV * proj * m_magFieldSvc->scaleFactor());
+
+  const double scaleFactor = m_magFieldSvc->scaleFactor();
+
+  if (std::abs(scaleFactor) < 1e-6)
+    qOverP = 1.0/Gaudi::Units::GeV;
+  else
+    qOverP = (txV-txT)/( coef * Gaudi::Units::GeV * proj);
+ 
   sigmaQOverP = m_veloPlusTResolution * std::fabs(qOverP);
   
   return StatusCode::SUCCESS;

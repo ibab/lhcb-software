@@ -3,6 +3,9 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
+! 2008-08-20 - Stephanie Hansmann-Menzemer
+ - make FastMomentumTool and PtTransporter safe for 0 b field
+
 ! 2008-08-11 - Thomas Ruf
  - StateSimpleBetheBlochEnergyCorrectionTool.cpp, correction never applied,
    added missing tX[4] = 1.0/newP;
