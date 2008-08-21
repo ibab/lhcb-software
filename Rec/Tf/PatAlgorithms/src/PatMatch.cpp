@@ -1,4 +1,4 @@
-// $Id: PatMatch.cpp,v 1.6 2008-05-08 12:49:43 albrecht Exp $
+// $Id: PatMatch.cpp,v 1.7 2008-08-21 18:11:27 smenzeme Exp $
 // Include files 
 
 // from Gaudi
@@ -42,7 +42,7 @@ StatusCode PatMatch::initialize() {
 
   debug() << "==> Initialize" << endmsg;
 
-  m_matchTool = tool<IMatchTool>("PatMatchTool");
+  m_matchTool = tool<IMatchTool>("PatMatchTool", this);
   return StatusCode::SUCCESS;
 }
 

@@ -1,4 +1,4 @@
-// $Id: PatForward.cpp,v 1.3 2007-11-19 15:06:30 aperiean Exp $
+// $Id: PatForward.cpp,v 1.4 2008-08-21 18:11:27 smenzeme Exp $
 // Include files
 
 // from Gaudi
@@ -57,7 +57,7 @@ StatusCode PatForward::initialize() {
     m_trackSelector = tool<ITrackSelector>(m_trackSelectorName, this);
   }
 
-  m_forwardTool = tool<IPatForwardTool>( "PatForwardTool" );
+  m_forwardTool = tool<IPatForwardTool>( "PatForwardTool", this );
   m_forwardTool->setNNSwitch( m_writeNNVariables); // pass the NN switch to PatForwardTool
 
   if ( msgLevel( MSG::DEBUG ) ) {

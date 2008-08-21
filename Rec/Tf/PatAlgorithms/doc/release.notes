@@ -3,7 +3,10 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
-
+! 2008-08-20 - Stepanie Hansmann-Menzemer
+- move public tools private, to allow for seperate configuration in HLT and
+  offline in same job
+ 
 !========================== PatAlgorithms v3r9 2008-07-29 ====================
 ! 2008-07-29 - Marco Cattaneo
  - Use TrackSys instead of Brunel configurable in python options

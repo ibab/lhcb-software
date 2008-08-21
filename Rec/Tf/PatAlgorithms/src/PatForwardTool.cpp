@@ -1,4 +1,4 @@
-// $Id: PatForwardTool.cpp,v 1.11 2008-07-17 13:16:49 smenzeme Exp $
+// $Id: PatForwardTool.cpp,v 1.12 2008-08-21 18:11:27 smenzeme Exp $
 // Include files
 
 // from Gaudi
@@ -90,10 +90,10 @@ StatusCode PatForwardTool::initialize ( ) {
 
 
   m_tHitManager  = tool<Tf::TStationHitManager<PatForwardHit> >("PatTStationHitManager");
-  m_fwdTool      = tool<PatFwdTool>( "PatFwdTool");
+  m_fwdTool      = tool<PatFwdTool>( "PatFwdTool", this);
 
   if ( "" != m_addTtToolName ) {
-    m_addTTClusterTool = tool<IAddTTClusterTool>( m_addTtToolName );
+    m_addTTClusterTool = tool<IAddTTClusterTool>( m_addTtToolName, this );
   } else {
     m_addTTClusterTool = NULL;
   }
