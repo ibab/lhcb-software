@@ -1,4 +1,4 @@
-// $Id: ROMonServer.cpp,v 1.3 2008-07-02 14:55:09 frankb Exp $
+// $Id: ROMonServer.cpp,v 1.4 2008-08-21 14:04:17 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonServer.cpp,v 1.3 2008-07-02 14:55:09 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonServer.cpp,v 1.4 2008-08-21 14:04:17 frankb Exp $
 
 // C++ include files
 #include "sys/timeb.h"
@@ -75,7 +75,7 @@ int ROMonServer::handle(void* buff, size_t /* len */)  {
     ::mbm_unmap_global_buffer_info(bm_all,false);
     return 1;
   }
-  //::lib_rtl_output(LIB_RTL_ALWAYS,"Cannot map global MBM buffer information....\n");
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"Cannot map global MBM buffer information....\n");
   return 0;
 }
 

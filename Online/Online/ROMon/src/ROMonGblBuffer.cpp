@@ -1,4 +1,4 @@
-// $Id: ROMonGblBuffer.cpp,v 1.4 2008-08-20 19:49:31 frankb Exp $
+// $Id: ROMonGblBuffer.cpp,v 1.5 2008-08-21 14:04:17 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonGblBuffer.cpp,v 1.4 2008-08-20 19:49:31 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonGblBuffer.cpp,v 1.5 2008-08-21 14:04:17 frankb Exp $
 
 // Framework includes
 #include "ROMonDefs.h"
@@ -39,7 +39,6 @@ ROMonGblBuffer::ROMonGblBuffer(int argc, char** argv, void (*help_fun)())
   m_print = cli.getopt("print",1) != 0;
   m_mapOnly = cli.getopt("maponly",3) != 0;
   m_verbose = cli.getopt("verbose",1) != 0;
-
   m_section_size *= 1024;
   initialize();
 }
@@ -50,14 +49,15 @@ int ROMonGblBuffer::initialize() {
     ? ::lib_rtl_map_section(m_section_name.c_str(),m_section_size,&m_gbl)
     : ::lib_rtl_create_section(m_section_name.c_str(),m_section_size,&m_gbl);
   if ( !lib_rtl_is_success(sc) ) {
-    ::lib_rtl_output(LIB_RTL_ERROR,"Failed to %s ROMON global section:%s of size:%d bytes\n",
-		     m_mapOnly ? "map" : "create", m_section_name.c_str(), m_section_size);
+    std::string typ = (const char*)(m_mapOnly ? "map" : "create");
+    std::string err = "Failed to "+typ+" ROMON global section:"+m_section_name;
+    ::lib_rtl_output(LIB_RTL_ERROR,"%s of size:%d bytes\n",err.c_str(), m_section_size);
+    throw std::runtime_error(err);
     return 0;
   }
   if ( m_verbose )    {
     log() << "Global section " << m_section_name << ((const char*)m_mapOnly ? " mapped" : " created")
 	  << " successfully:" << m_gbl << std::endl;
-    throw std::runtime_error("Failed to access global section:"+m_section_name);
   }
 #ifdef _WIN32
   sc = ::lib_rtl_create_lock(m_section_name.c_str(),&m_lock);
