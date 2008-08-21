@@ -1,4 +1,4 @@
-// $Id: RecVertexCloner.h,v 1.2 2008-04-03 14:45:08 jpalac Exp $
+// $Id: RecVertexCloner.h,v 1.3 2008-08-21 14:45:38 jpalac Exp $
 #ifndef RECVERTEXCLONER_H 
 #define RECVERTEXCLONER_H 1
 
@@ -12,6 +12,9 @@
 
 /** @class RecVertexCloner RecVertexCloner.h
  *  
+ *  MicroDSTTool that clones an LHCb::RecVertex for storage on the MicroDST.
+ *  The LHCb::RecVertex's constituent LHCb::Tracks are not cloned for storage.
+ *  SmartRefs to them are stored instead.
  *
  *  @author Juan PALACIOS
  *  @date   2007-12-05
