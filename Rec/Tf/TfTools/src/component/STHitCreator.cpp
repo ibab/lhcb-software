@@ -4,7 +4,7 @@
  *
  *  Implementation file for class : Tf::STHitCreator
  *
- *  $Id: STHitCreator.cpp,v 1.6 2008-06-02 13:48:38 smenzeme Exp $
+ *  $Id: STHitCreator.cpp,v 1.7 2008-08-21 18:03:18 smenzeme Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -281,4 +281,18 @@ namespace Tf
   
   typedef STHitCreator<TT> TTHitCreator ;
   DECLARE_TOOL_FACTORY( TTHitCreator );
+
+
+  // RestUsed flag for all OT hits 
+  template<class Trait>
+  void STHitCreator<Trait>::resetUsedFlagOfHits() const
+   {
+     Tf::STHitRange hits = m_detectordata->hits() ;
+   
+     for( Tf::STHits::const_iterator it = hits.begin(); it != hits.end() ; ++it){
+       const Tf::STHit* hit = (*it);
+       hit->resetUsedFlag();
+     }
+   }
 }
+

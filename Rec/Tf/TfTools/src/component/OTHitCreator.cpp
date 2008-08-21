@@ -415,4 +415,16 @@ namespace Tf
   // or null if that is not desired
   const OTDet::RtRelation* OTHitCreator::getRtRelation() const
   { return m_rtrel; }
+
+
+// RestUsed flag for all OT hits
+  void OTHitCreator::resetUsedFlagOfHits() const
+   {
+     Tf::OTHitRange hits = m_detectordata->hits() ;
+   
+     for( Tf::OTHits::const_iterator it = hits.begin(); it != hits.end() ; ++it){
+       const Tf::OTHit* hit = (*it);
+       hit->resetUsedFlag();
+     }
+   }
 }

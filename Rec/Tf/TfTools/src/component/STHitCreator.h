@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::STHitCreator
  *
- *  $Id: STHitCreator.h,v 1.2 2008-05-29 10:55:36 smenzeme Exp $
+ *  $Id: STHitCreator.h,v 1.3 2008-08-21 18:03:18 smenzeme Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -32,7 +32,7 @@ namespace Tf
 
   /** @class STHitCreator STHitCreator.h
    *
-   *  Implementation of Tf::ISTHitCreator.
+   *  Implementation of Tf::IITHitCreator and Tf::ITTHitCreator
    *
    *  Creates the Tf::STHit objects for the Tf tracking framework
    *
@@ -67,6 +67,9 @@ namespace Tf
 
     /// incident service handle
     virtual void handle( const Incident& incident ) ;
+
+    // RestUsed flag for all OT hits
+    virtual  void resetUsedFlagOfHits() const;
 
     // Load all the IT hits
     virtual STHitRange hits() const ;

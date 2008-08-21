@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::OTHitCreator
  *
- *  $Id: OTHitCreator.h,v 1.4 2008-05-29 10:55:36 smenzeme Exp $
+ *  $Id: OTHitCreator.h,v 1.5 2008-08-21 18:03:18 smenzeme Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -69,6 +69,9 @@ namespace Tf
 
     /// incident service handle
     virtual void handle( const Incident& incident ) ;
+
+    // RestUsed flag for all OT hits
+    virtual  void resetUsedFlagOfHits() const;
 
     // Load all the OT hits
     virtual OTHitRange hits() const ;
