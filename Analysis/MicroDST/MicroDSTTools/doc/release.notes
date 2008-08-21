@@ -3,8 +3,17 @@
 ! Responsible : Juan Palacios juan.palacios@nikhef.nl
 ! Purpose     : Implementation of cloner MicroDSTTools
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.16 2008-08-14 19:33:20 jpalac Exp $
+! $Id: release.notes,v 1.17 2008-08-21 14:46:12 jpalac Exp $
 !-----------------------------------------------------------------------------
+
+! 2008-08-21 - Juan PALACIOS
+ - src/RecVertexClonerWithTracks{.cpp, .h}
+  . Add ICloneTrack property controlling implementation of ICloneTrack 
+    interface to be used in track cloning.
+  . Add code to clone tracks!
+  . Add some doxygen documentation
+  - src/RecVertexCloner.h
+  . Add some doxygen documentation
 
 ! 2008-08-14 - Juan PALACIOS
  - src/ProtoParticleCloner.cpp
