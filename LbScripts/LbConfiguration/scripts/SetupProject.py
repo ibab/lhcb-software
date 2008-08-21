@@ -4,7 +4,7 @@ import os, sys, tempfile, re, sys
 from stat import S_ISDIR
 import getopt
 
-_cvs_id = "$Id: SetupProject.py,v 1.20 2008-08-18 16:52:46 hmdegaud Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.21 2008-08-21 13:15:26 hmdegaud Exp $"
 
 ########################################################################
 # Useful constants
@@ -1386,6 +1386,19 @@ class SetupProject:
             else:
                 messages.append("Using CMTPATH = '%s'" % CMTPATH)
             
+        
+        # normalize relative path introduced for the location the externals relatively
+        # to the LCGCMT project
+        path2normalize = ["PYTHONPATH", "PATH", "LD_LIBRARY_PATH"]
+        for k in env.keys() :
+            for p in path2normalize :
+                if k == p :
+                    pthlist = env[k].split(os.pathsep)
+                    newlist = []
+                    for l in pthlist :
+                        newlist.append(os.path.realpath(l))
+                    env[k] = os.pathsep.join(newlist)
+                    break
         
         output_script = env.gen_script(self.shell)
         output_script += script
