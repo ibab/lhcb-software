@@ -4,6 +4,11 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+
+! 2008-08-21 - Olivier Deschamps
+ - componenet/OdinTypeFilter : extend OdinTypeFiltering to ReadoutType and TAEWindow
+
+
 !================ DAQEvent v7r13 2008-07-29 ===========================
 ! 2008-07-28 - Tomasz Skwarnicki
  - Added RawBank::HltLumiSummary bank type on Jaap Panman's request

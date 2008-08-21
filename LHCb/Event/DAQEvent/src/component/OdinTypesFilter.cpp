@@ -1,4 +1,4 @@
-// $Id: OdinTypesFilter.cpp,v 1.2 2008-07-17 09:24:54 panmanj Exp $
+// $Id: OdinTypesFilter.cpp,v 1.3 2008-08-21 16:33:08 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -30,10 +30,14 @@ OdinTypesFilter::OdinTypesFilter( const std::string& name,
 
   declareProperty("BXTypes"      , m_bxs);
   declareProperty("TriggerTypes" , m_trs);
+  declareProperty("ReadoutTypes" , m_ros);
+  declareProperty("TAEWindowLessThan" , m_winmax=99);
+  declareProperty("TAEWindowMoreThan" , m_winmin=-1);
   declareProperty("Logical"      , m_log="AND");
 
   m_bxs.push_back("ALL");
   m_trs.push_back("ALL");
+  m_ros.push_back("ALL");
 }
 //=============================================================================
 // Destructor
@@ -93,28 +97,54 @@ StatusCode OdinTypesFilter::initialize() {
       return StatusCode::FAILURE;
     }
   }
-  
 
-  
+
+  for(std::vector<std::string>::iterator iro = m_ros.begin(); iro != m_ros.end() ; ++iro){
+    if(*iro == "ALL")continue;
+    int k = 0;
+    std::string  ro;
+    bool ok = false;
+    int max = LHCb::ODIN::ReadoutTypeMask >> LHCb::ODIN::ReadoutTypeBits;
+    while(k <= max && !ok){
+      std::stringstream s("");
+      s << (LHCb::ODIN::ReadoutTypes) k;
+      ro = s.str();
+      if( ro == *iro)ok=true;
+      k++;
+    }
+    if( !ok ){
+      error() << "The requested ReadoutType '" << *iro << "' is not a valid type" << endreq;
+      return StatusCode::FAILURE;
+    }
+  }  
 
   // selection :
   info() << "Accepted BXTypes : " << m_bxs << endreq;
   info() << m_log << endreq;
   info() << "Accepted TriggerTypes : " << m_trs << endreq;
+  info() << m_log << endreq;
+  info() << "Accepted ReadoutTypes : " << m_ros << endreq;
+  info() << m_log << endreq;
+  info() << "TAE Window in [" << m_winmin << "," << m_winmax <<"]"<< endreq;
 
 
 
   // warns trivial requests 
-  if((m_bxs.empty() || m_trs.empty()) && m_log == "AND")
-    Warning("BXTypes or TriggerTypes is empty : ALL events will be rejected !!"
+  if((m_bxs.empty() || m_trs.empty()) || m_ros.empty() || m_winmin>=m_winmax && m_log == "AND")
+    Warning("BXTypes, TriggerTypes, ReadoutTypes or TAEWindow is empty : ALL events will be rejected !!"
             ,StatusCode::SUCCESS).ignore();
-  if((m_bxs.empty() && m_trs.empty()) && m_log == "OR")
-    Warning("BXTypes and TriggerTypes are empties : ALL events will be rejected !!"
+  if((m_bxs.empty() && m_trs.empty()) && m_ros.empty() && m_winmin>=m_winmax && m_log == "OR")
+    Warning("BXTypes, TriggerTypes, ReadoutTypes and TAEWindow are empties : ALL events will be rejected !!"
             ,StatusCode::SUCCESS).ignore();
-  if( *(m_bxs.begin()) == "ALL" && *(m_trs.begin()) == "ALL" && m_log == "AND")
+  if( *(m_bxs.begin()) == "ALL" 
+      && *(m_trs.begin()) == "ALL" 
+      && *(m_ros.begin()) == "ALL" 
+      && m_winmin<0 && m_winmax>7
+      && m_log == "AND")
     Warning("OdinTypesFilter has no effect : ALL events will be accepted !!"
             ,StatusCode::SUCCESS).ignore();
-  if(( *(m_bxs.begin()) == "ALL" || *(m_trs.begin()) == "ALL") && m_log == "OR")
+  if(( *(m_bxs.begin()) == "ALL"       || *(m_trs.begin()) == "ALL"  || *(m_ros.begin()) == "ALL" || (m_winmin<0&&m_winmax>7)) 
+     && m_log == "OR")
     Warning("OdinTypesFilter has no effect : ALL events will be accepted !!"
             ,StatusCode::SUCCESS).ignore();
 
@@ -135,19 +165,21 @@ StatusCode OdinTypesFilter::execute() {
 
   // treat trivial requests
   setFilterPassed(true);
-  if( *(m_bxs.begin()) == "ALL" && *(m_trs.begin()) == "ALL" && m_log == "AND"){
+  if( *(m_bxs.begin()) == "ALL" && *(m_trs.begin()) == "ALL" && *(m_ros.begin()) == "ALL" &&  (m_winmin<0 && m_winmax>7) 
+      && m_log == "AND"){
     m_acc++;
     return StatusCode::SUCCESS;
   }
   
-  if(( *(m_bxs.begin()) == "ALL" || *(m_trs.begin()) == "ALL") && m_log == "OR"){
+  if(( *(m_bxs.begin()) == "ALL" || *(m_trs.begin()) == "ALL" || *(m_ros.begin()) == "ALL" || (m_winmin<0 && m_winmax>7)) 
+     && m_log == "OR"){
     m_acc++;
     return StatusCode::SUCCESS;
   }
   
   setFilterPassed(false);
-  if( (m_bxs.empty() || m_trs.empty()) && m_log =="AND")return StatusCode::SUCCESS;
-  if( (m_bxs.empty() && m_trs.empty()) && m_log =="OR")return StatusCode::SUCCESS;
+  if( (m_bxs.empty() || m_trs.empty() || m_ros.empty() || m_winmin>=m_winmax) && m_log =="AND")return StatusCode::SUCCESS;
+  if( (m_bxs.empty() && m_trs.empty() && m_ros.empty() && m_winmin>=m_winmax) && m_log =="OR")return StatusCode::SUCCESS;
 
   
 
@@ -163,8 +195,12 @@ StatusCode OdinTypesFilter::execute() {
   
   std::stringstream bxType("");
   std::stringstream trType("");
+  std::stringstream roType("");
   bxType << (LHCb::ODIN::BXTypes) odin->bunchCrossingType();
   trType << (LHCb::ODIN::TriggerType) odin->triggerType();
+  roType << (LHCb::ODIN::ReadoutTypes) odin->readoutType();
+
+
   debug() << " Trigger Type : " << trType.str() << " BXType : " << bxType.str() << endreq;
 
   bool bxPass =  false;
@@ -182,9 +218,21 @@ StatusCode OdinTypesFilter::execute() {
       break;
     }    
   }
+
+  bool roPass = false;
+  for(std::vector<std::string>::iterator iro = m_ros.begin(); iro != m_ros.end() ; ++iro){
+    if( roType.str() == *iro || "ALL" == *iro ){
+      roPass = true;
+      break;
+    }    
+  }
+
+  bool taePass = false;
+  if(odin->timeAlignmentEventWindow()>m_winmin && odin->timeAlignmentEventWindow()<m_winmax)taePass=true;
+
   
-  if(m_log == "AND")setFilterPassed( trPass && bxPass);
-  if(m_log == "OR")setFilterPassed( trPass || bxPass);
+  if(m_log == "AND")setFilterPassed( trPass && bxPass && roPass && taePass);
+  if(m_log == "OR")setFilterPassed( trPass || bxPass || roPass && taePass);
 
   if(filterPassed() )m_acc++;
   
