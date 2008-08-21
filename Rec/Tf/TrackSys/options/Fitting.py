@@ -14,11 +14,14 @@
 #    Forward, Seed, Match, KsTrack, VeloTT, PreparedVelo
 # --------------------------------------------------------------------
 
-from Configurables import ( TrackEventFitter, TrackMasterFitter, TrackKalmanFilter,
+from Configurables import ( ToolSvc, TrackEventFitter, TrackMasterFitter, TrackKalmanFilter,
                             TrackProjectorSelector, TrajOTProjector, TrackMasterExtrapolator,
                             TrackSimpleExtraSelector, SimplifiedMaterialLocator, DetailedMaterialLocator)
 
 from TrackSys.Configuration import *
+
+ToolSvc().addTool(TrajOTProjector, "OTNoDrifttimesProjector")
+ToolSvc().OTNoDrifttimesProjector.UseDrift = False
  
 # Forward fit
 TrackEventFitter("FitForward").TracksInContainer = "Rec/Track/Forward"
@@ -54,8 +57,9 @@ else:
     TrackEventFitter("FitForward").Fitter.NodeFitter.Extrapolator.MaterialLocator="DetailedMaterialLocator"
 
 if "noDrifttimes" in TrackSys().getProp("expertTracking"):
+    TrackEventFitter("FitForward").Fitter.NodeFitter.addTool(TrackProjectorSelector, "Projector")
     TrackEventFitter("FitForward").Fitter.NodeFitter.Projector.OT = "TrajOTProjector/OTNoDrifttimesProjector"
-    TrajOTProjector("OTNoDrifttimesProjector").UseDrift = False
+    
 
 
 TrackEventFitter("PreFitForward").TracksInContainer = "Rec/Track/Forward"
@@ -68,7 +72,6 @@ TrackEventFitter("PreFitForward").Fitter.ErrorTy2 = 2e-3
 TrackEventFitter("PreFitForward").Fitter.addTool(TrackKalmanFilter, name="NodeFitter")
 TrackEventFitter("PreFitForward").Fitter.NodeFitter.addTool(TrackProjectorSelector, name="Projector")
 TrackEventFitter("PreFitForward").Fitter.NodeFitter.Projector.OT = "TrajOTProjector/OTNoDrifttimesProjector"
-TrajOTProjector("OTNoDrifttimesProjector").UseDrift = False
 TrackEventFitter("PreFitForward").Fitter.addTool(TrackMasterExtrapolator,name="Extrapolator")
 TrackEventFitter("PreFitForward").Fitter.NodeFitter.addTool(TrackMasterExtrapolator, name="Extrapolator")
 
@@ -113,9 +116,9 @@ else:
     TrackEventFitter("FitSeed").Fitter.NodeFitter.Extrapolator.MaterialLocator="DetailedMaterialLocator"
 
 if "noDrifttimes" in TrackSys().getProp("expertTracking"):
+    TrackEventFitter("FitSeed").Fitter.NodeFitter.addTool(TrackProjectorSelector, name="Projector")
     TrackEventFitter("FitSeed").Fitter.NodeFitter.Projector.OT = "TrajOTProjector/OTNoDrifttimesProjector"
-    TrajOTProjector("OTNoDrifttimesProjector").UseDrift = False
-
+    
       
 # Match fit
 TrackEventFitter("FitMatch").TracksInContainer = "Rec/Track/Match"
@@ -146,8 +149,8 @@ else:
     TrackEventFitter("FitMatch").Fitter.NodeFitter.Extrapolator.MaterialLocator="DetailedMaterialLocator"
 
 if "noDrifttimes" in TrackSys().getProp("expertTracking"):
+    TrackEventFitter("FitMatch").Fitter.NodeFitter.addTool(TrackProjectorSelector, name="Projector")
     TrackEventFitter("FitMatch").Fitter.NodeFitter.Projector.OT = "TrajOTProjector/OTNoDrifttimesProjector"
-    TrajOTProjector("OTNoDrifttimesProjector").UseDrift = False
     
 TrackEventFitter("PreFitMatch").TracksInContainer = "Rec/Track/Match"
 TrackEventFitter("PreFitMatch").addTool( TrackMasterFitter, name = "Fitter" )
@@ -159,7 +162,6 @@ TrackEventFitter("PreFitMatch").Fitter.ErrorTy2 = 2e-3
 TrackEventFitter("PreFitMatch").Fitter.addTool(TrackKalmanFilter, name="NodeFitter")
 TrackEventFitter("PreFitMatch").Fitter.NodeFitter.addTool(TrackProjectorSelector, name="Projector")
 TrackEventFitter("PreFitMatch").Fitter.NodeFitter.Projector.OT = "TrajOTProjector/OTNoDrifttimesProjector"
-TrajOTProjector("OTNoDrifttimesProjector").UseDrift = False
 TrackEventFitter("PreFitMatch").Fitter.addTool(TrackMasterExtrapolator, name="Extrapolator")
 TrackEventFitter("PreFitMatch").Fitter.NodeFitter.addTool(TrackMasterExtrapolator, name="Extrapolator")
 
@@ -192,8 +194,8 @@ else:
     TrackEventFitter("FitDownstream").Fitter.NodeFitter.Extrapolator.MaterialLocator="DetailedMaterialLocator"
 
 if "noDrifttimes" in TrackSys().getProp("expertTracking"):
+    TrackEventFitter("FitDownstream").Fitter.NodeFitter.addTool(TrackProjectorSelector, name="Projector")
     TrackEventFitter("FitDownstream").Fitter.NodeFitter.Projector.OT = "TrajOTProjector/OTNoDrifttimesProjector"
-    TrajOTProjector("OTNoDrifttimesProjector").UseDrift = False
 
 TrackEventFitter("PreFitDownstream").TracksInContainer = "Rec/Track/Downstream"
 TrackEventFitter("PreFitDownstream").addTool( TrackMasterFitter, name = "Fitter" )
@@ -206,7 +208,6 @@ TrackEventFitter("PreFitDownstream").Fitter.ErrorTy2 = 2e-3
 TrackEventFitter("PreFitDownstream").Fitter.addTool(TrackKalmanFilter, name="NodeFitter")
 TrackEventFitter("PreFitDownstream").Fitter.NodeFitter.addTool(TrackProjectorSelector, name="Projector")
 TrackEventFitter("PreFitDownstream").Fitter.NodeFitter.Projector.OT = "TrajOTProjector/OTNoDrifttimesProjector"
-TrajOTProjector("OTNoDrifttimesProjector").UseDrift = False
 TrackEventFitter("PreFitDownstream").Fitter.addTool(TrackMasterExtrapolator, name="Extrapolator")
 TrackEventFitter("PreFitDownstream").Fitter.NodeFitter.addTool(TrackMasterExtrapolator, name="Extrapolator")
 

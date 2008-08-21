@@ -3,6 +3,8 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
+! 2008-08-20 - Stephanie Hansmann-Menzemer
+ - fix bug for nonDrifttimes and BfieldOff in Fitting.py and RecoTracking.opts
 
 ! 2008-08-15 - Chris Jones
  - Minor improvements to python configurable TrackSys, to fit in with changes

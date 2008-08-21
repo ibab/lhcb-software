@@ -6,7 +6,8 @@ from TrackSys.Configuration import *
 from GaudiKernel.SystemOfUnits import mm
 
 from Configurables import ( ProcessPhase, MagneticFieldSvc,
-                            DecodeVeloRawBuffer, Tf__PatVeloRTracking, Tf__PatVeloSpaceTool,
+                            DecodeVeloRawBuffer,
+                            Tf__PatVeloRTracking, Tf__PatVeloSpaceTool,
                             Tf__PatVeloSpaceTracking, Tf__PatVeloGeneralTracking,
                             Tf__PatVeloTrackTool,
                             RawBankToSTClusterAlg, RawBankToSTLiteClusterAlg,
@@ -17,7 +18,8 @@ from Configurables import ( ProcessPhase, MagneticFieldSvc,
                             PatSeeding,
                             TrackMatchVeloSeed, PatDownstream, PatVeloTT,
                             TrackEventCloneKiller, TrackPrepareVelo, TrackContainerCopy,
-                            TrackAddLikelihood, TrackLikelihood, NeuralNetTmva, Tf__OTHitCreator)
+                            TrackAddLikelihood, TrackLikelihood, NeuralNetTmva, Tf__OTHitCreator
+                           )
 
 ## Start TransportSvc, needed by track fit
 ApplicationMgr().ExtSvc.append("TransportSvc")
@@ -26,18 +28,17 @@ ApplicationMgr().ExtSvc.append("TransportSvc")
 ## Pattern Recognition and Fitting
 ## --------------------------------------------------------------------
 
+
 ## Velo tracking
 
 patVeloSpaceTracking = Tf__PatVeloSpaceTracking("PatVeloSpaceTracking");
-
-
 
 if TrackSys().getProp( "veloOpen" ):
    GaudiSequencer("RecoVELOSeq").Members += [ DecodeVeloRawBuffer(), Tf__PatVeloGeneralTracking("PatVeloGeneralTracking")]
    Tf__PatVeloGeneralTracking("PatVeloGeneralTracking").PointErrorMin = 2*mm;
    Tf__PatVeloGeneralTracking("PatVeloGeneralTracking").addTool(Tf__PatVeloTrackTool("PatVeloTrackTool"))
    Tf__PatVeloTrackTool("PatVeloTrackTool").highChargeFract = 0.5;
-else:   
+else:
    GaudiSequencer("RecoVELOSeq").Members += [ DecodeVeloRawBuffer(), Tf__PatVeloRTracking("PatVeloRTracking"),
                                               Tf__PatVeloSpaceTracking("PatVeloSpaceTracking"),
                                               Tf__PatVeloGeneralTracking("PatVeloGeneralTracking")]
@@ -71,34 +72,27 @@ track = ProcessPhase("Track");
 GaudiSequencer("RecoTrSeq").Members += [ track ]
 
 if TrackSys().getProp("fieldOff"):
-   track.DetectorList = [ "ForwardPat",   "ForwardPreFit",   "ForwardFit"
-                      , "SeedPat",      "SeedPreFit",      "SeedFit"
-                      , "MatchPat",     "MatchPreFit",     "MatchFit"
-                      , "VeloTTPat",    "VeloTTPreFit",    "VeloTTFit"
-                      , "PostFit"
-                      , "VeloPreFit", "VeloFit"
-                      , "AddExtraInfo"
-                      ]
-   MagneticFieldSvc.UseConstantField = True;
-else: 
-   track.DetectorList  = [ "ForwardPat",   "ForwardPreFit",   "ForwardFit"
-                           , "SeedPat",      "SeedPreFit",      "SeedFit"
-                           , "MatchPat",     "MatchPreFit",     "MatchFit"
-                           , "DownstreamPat","DownstreamPreFit","DownstreamFit"
-                           , "VeloTTPat",    "VeloTTPreFit",    "VeloTTFit"
-                           , "PostFit"
-                           , "VeloPreFit", "VeloFit"
-                           , "AddExtraInfo"
-                           ]
+  track.DetectorList += [ "ForwardPat",   "ForwardPreFit",   "ForwardFit"
+                        , "SeedPat",      "SeedPreFit",      "SeedFit"
+                        , "MatchPat",     "MatchPreFit",     "MatchFit"] 
+ 
+else:
+  track.DetectorList += [ "ForwardPat",   "ForwardPreFit",   "ForwardFit"
+                        , "SeedPat",      "SeedPreFit",      "SeedFit"
+                        , "MatchPat",     "MatchPreFit",     "MatchFit"
+                        ,  "DownstreamPat","DownstreamPreFit","DownstreamFit"]
+
+track.DetectorList += [ "VeloTTPat",    "VeloTTPreFit",    "VeloTTFit"
+                        , "PostFit"
+                        , "VeloPreFit", "VeloFit"
+                        , "AddExtraInfo"
+                        ]
                
 ## Set of standard fitting options
 importOptions( "$TRACKSYSROOT/options/Fitting.py" )
 
-
 if "noDrifttimes" in TrackSys().getProp("expertTracking"):
-  otHitCreator = OTHitCreator("OTHitCreator")
-  otHitCreator.NoDriftTimes = True
-
+   Tf__OTHitCreator("OTHitCreator").NoDriftTimes = True
 
 ## Forward pattern
 GaudiSequencer("TrackForwardPatSeq").Members +=  [ PatForward("PatForward") ]
@@ -173,16 +167,15 @@ copyVelo = TrackContainerCopy( "CopyVelo" )
 copyVelo.inputLocation = "Rec/Track/PreparedVelo";
 GaudiSequencer("TrackVeloFitSeq").Members += [ copyVelo ]
 
-## Add the likelihood information & ghost probability using TMVA package
-trackAddLikelihood = TrackAddLikelihood()
-trackAddLikelihood.addTool( TrackLikelihood, name = "TrackMatching_likTool" )
-trackAddLikelihood.TrackMatching_likTool.otEff = 0.9
-GaudiSequencer("TrackAddExtraInfoSeq").Members += [ trackAddLikelihood, NeuralNetTmva() ]
-importOptions ("$NNTOOLSROOT/options/NeuralNetTmva.opts")
-
 ## Clone finding and flagging
 trackClones = GaudiSequencer("TrackClonesSeq")
 GaudiSequencer("TrackAddExtraInfoSeq").Members += [ trackClones ];
 trackClones.MeasureTime = True;
 importOptions( "$TRACKSYSROOT/options/TrackClones.opts" )
 
+## Add the likelihood information & ghost probability using TMVA package
+trackAddLikelihood = TrackAddLikelihood()
+trackAddLikelihood.addTool( TrackLikelihood, name = "TrackMatching_likTool" )
+trackAddLikelihood.TrackMatching_likTool.otEff = 0.9
+GaudiSequencer("TrackAddExtraInfoSeq").Members += [ trackAddLikelihood, NeuralNetTmva() ]
+importOptions ("$NNTOOLSROOT/options/NeuralNetTmva.opts")
