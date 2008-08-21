@@ -1,4 +1,4 @@
-// $Id: RecVertexClonerWithTracks.h,v 1.1.1.1 2007-12-10 09:32:24 jpalac Exp $
+// $Id: RecVertexClonerWithTracks.h,v 1.2 2008-08-21 14:45:55 jpalac Exp $
 #ifndef RECVERTEXCLONERWITHTRACKS_H 
 #define RECVERTEXCLONERWITHTRACKS_H 1
 
@@ -11,6 +11,11 @@ class ICloneTrack;
 
 /** @class RecVertexClonerWithTracks RecVertexClonerWithTracks.h
  *  
+ *  MicroDSTTool that clones an LHCb::RecVertex and its consituent
+ *  LHCb::Tracks for storage on the MicroDST.
+ *  The LHCb::Track cloning is performed by an implementation of the
+ *  ICloneTrack interface. This is configurable via the ICloneTrack
+ *  property, with default value "TrackCloner".
  *
  *  @author Juan PALACIOS
  *  @date   2007-12-05
@@ -38,6 +43,7 @@ private:
 private:
 
   ICloneTrack* m_trackCloner;
-
+  std::string m_trackClonerType;
+  
 };
 #endif // RECVERTEXCLONERWITHTRACKS_H

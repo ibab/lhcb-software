@@ -1,4 +1,4 @@
-// $Id: RecVertexClonerWithTracks.cpp,v 1.1.1.1 2007-12-10 09:32:24 jpalac Exp $
+// $Id: RecVertexClonerWithTracks.cpp,v 1.2 2008-08-21 14:45:55 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -25,9 +25,14 @@ DECLARE_TOOL_FACTORY( RecVertexClonerWithTracks );
 RecVertexClonerWithTracks::RecVertexClonerWithTracks( const std::string& type,
                                                       const std::string& name,
                                                       const IInterface* parent )
-  : MicroDSTTool ( type, name , parent )
+  : 
+  MicroDSTTool ( type, name , parent ),
+  m_trackCloner(0),
+  m_trackClonerType("TrackCloner")
 {
   declareInterface<ICloneRecVertex>(this);
+
+  declareProperty("ICloneTrack", m_trackClonerType);
 
 }
 //=============================================================================
@@ -38,7 +43,7 @@ StatusCode RecVertexClonerWithTracks::initialize()
 
   debug() << "Going to get TrackCloner" << endmsg;
 
-  m_trackCloner = tool<ICloneTrack>("TrackCloner", 
+  m_trackCloner = tool<ICloneTrack>(m_trackClonerType, 
                                     this->parent() );
 
   if (m_trackCloner) {
@@ -61,8 +66,17 @@ LHCb::RecVertex* RecVertexClonerWithTracks::clone(const LHCb::RecVertex* vertex)
   LHCb::RecVertex* vertexClone = 
     cloneKeyedContainerItem<LHCb::RecVertex, MicroDST::BasicRecVertexCloner>(vertex);
 
-  // and now do something about the tracks!
+  const SmartRefVector< LHCb::Track >& tracks = vertex->tracks();
 
+  if (!tracks.empty()) {
+    typedef SmartRefVector<LHCb::Track>::const_iterator tk_iterator;
+    for (tk_iterator iTrack = tracks.begin(); 
+         iTrack != tracks.end();
+         iTrack++) {
+      vertexClone->addToTracks( (*m_trackCloner)( iTrack->target() ) );
+    }
+  }
+  
   return vertexClone;
   
 }
