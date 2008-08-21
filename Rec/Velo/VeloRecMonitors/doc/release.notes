@@ -4,6 +4,12 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2008-08-21 - Eduardo Rodrigues
+ - VeloClusterMonitor: added R correlation plots for a few
+   consecutive R sensors
+ - new algorithm, VeloSamplingMonitor, to monitor ADC distributions versus
+   the time sampling (as stored in Prev, Next, etc.)
+
 ! 2008-08-20 - Eduardo Rodrigues
  - added histogram to monitor active chip links versus sensor number
  - some bins adjusted
@@ -21,4 +27,3 @@
 ! 2008-08-15 - Eduardo Rodrigues
  - creation of the package
  - creation of a base class for all VELO reconstruction monitoring algorithms
-

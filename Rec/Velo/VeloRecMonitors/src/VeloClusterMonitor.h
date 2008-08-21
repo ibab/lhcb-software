@@ -1,4 +1,4 @@
-// $Id: VeloClusterMonitor.h,v 1.3 2008-08-20 11:23:18 erodrigu Exp $
+// $Id: VeloClusterMonitor.h,v 1.4 2008-08-21 11:39:38 erodrigu Exp $
 #ifndef VELORECMONITORS_VELOCLUSTERMONITOR_H 
 #define VELORECMONITORS_VELOCLUSTERMONITOR_H 1
 
@@ -49,6 +49,11 @@ namespace Velo
 
     // Monitor the VeloClusters
     void monitorClusters();
+
+    // R correlation distributions
+    void rCorrelations( unsigned int sensorNumber1,
+                        double localR1,
+                        unsigned int sensorNumber2 );
 
     // Data members
     LHCb::VeloClusters* m_clusters;
