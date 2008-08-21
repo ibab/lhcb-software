@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::IITHitCreator
  *
- *  $Id: IITHitCreator.h,v 1.2 2008-05-29 10:55:11 smenzeme Exp $
+ *  $Id: IITHitCreator.h,v 1.3 2008-08-21 18:08:32 smenzeme Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -118,6 +118,9 @@ namespace Tf
     /// Retrieve interface ID
     static const InterfaceID& interfaceID() { return IID_IITHitCreator ; }
 
+    /* Reset used flags of hits */
+    virtual void resetUsedFlagOfHits() const = 0;
+    
     /** Load all the IT hits
      *  @return Range object for the hits ion the selected region of interest
      */

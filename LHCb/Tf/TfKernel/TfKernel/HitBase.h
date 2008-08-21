@@ -5,7 +5,7 @@
  *  Header file for track find hit base class Tf::HitBase
  *
  *  CVS Log :-
- *  $Id: HitBase.h,v 1.15 2008-05-29 11:53:56 cattanem Exp $
+ *  $Id: HitBase.h,v 1.16 2008-08-21 18:08:32 smenzeme Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -97,6 +97,7 @@ namespace Tf
     /// The hit type tag 
     typedef hit_base_tag hit_type_tag;
 
+
   public:
 
     //== Simple accessors to internal data members
@@ -144,6 +145,10 @@ namespace Tf
      */
     inline void         setStatus ( const EStatus stat,
                                     const bool val = true ) const { m_status.set(stat,val) ; }
+
+    /** Rest USED Flag, e.g. needed to start from scratch offline reco after HLT */
+    
+    inline void         resetUsedFlag () const { m_status = 0; }
 
     /** Test if the hit has been used by any algorithm
      *  @retval TRUE  The hit has been used by at least one algorithm
