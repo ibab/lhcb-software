@@ -1,4 +1,4 @@
- $Id: release.notes,v 1.229 2008-08-06 10:55:53 jonrob Exp $
+ $Id: release.notes,v 1.230 2008-08-21 12:54:34 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,9 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2008-08-21 - Patrick Koppenburg
+ - Remove DaVinci.exe from release. Ganga does not need it anymore.
 
 ! 2008-08-06 - Chris Jones
  - Fix typo in DaVinci_Ganga.py and add usage suggestion from Ulrik.
