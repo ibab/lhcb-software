@@ -4,7 +4,7 @@ import os, sys, tempfile, re, sys
 from stat import S_ISDIR
 import getopt
 
-_cvs_id = "$Id: SetupProject.py,v 1.21 2008-08-21 13:15:26 hmdegaud Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.22 2008-08-22 11:32:43 hmdegaud Exp $"
 
 ########################################################################
 # Useful constants
@@ -1067,7 +1067,7 @@ class SetupProject:
 
         # use external location relative to the LCG Interfaces for the local installation
 
-        req.write('macro LCG_home "$(LCG_home)" LOCAL&Unix "$(LCG_SETTINGSROOT)/../../../../../lcg" LOCAL&Unix "$(LCG_SETTINGSROOT)\\..\\..\\..\\..\\..\\lcg"\n')
+        req.write('macro LCG_home "$(LCG_home)" LOCAL&Unix "$(LCG_SETTINGSROOT)/../../../.." LOCAL&Unix "$(LCG_SETTINGSROOT)\\..\\..\\..\\.."\n')
 
         req.flush()
         del req
@@ -1386,20 +1386,21 @@ class SetupProject:
             else:
                 messages.append("Using CMTPATH = '%s'" % CMTPATH)
             
-        
         # normalize relative path introduced for the location the externals relatively
         # to the LCGCMT project
         path2normalize = ["PYTHONPATH", "PATH", "LD_LIBRARY_PATH"]
-        for k in env.keys() :
-            for p in path2normalize :
-                if k == p :
-                    pthlist = env[k].split(os.pathsep)
-                    newlist = []
-                    for l in pthlist :
-                        newlist.append(os.path.realpath(l))
-                    env[k] = os.pathsep.join(newlist)
-                    break
-        
+        for p in path2normalize :
+            if p in env.keys() :
+                pthlist = env[p].split(os.pathsep)
+                newlist = []
+                for l in pthlist :
+                    newpath = os.path.normpath(l)
+                    if os.path.exists(newpath) and l.find("..") != -1 :
+                        newlist.append(newpath)
+                    else : 
+                        newlist.append(l)
+                env[p] = os.pathsep.join(newlist)
+                
         output_script = env.gen_script(self.shell)
         output_script += script
         for m in messages:
