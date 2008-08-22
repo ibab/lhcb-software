@@ -1,4 +1,4 @@
-// $Id: MCParticleCloner.h,v 1.5 2008-08-22 12:21:32 jpalac Exp $
+// $Id: MCParticleCloner.h,v 1.6 2008-08-22 12:24:33 jpalac Exp $
 #ifndef MCPARTICLECLONER_H 
 #define MCPARTICLECLONER_H 1
 
@@ -22,7 +22,8 @@
  *  ICloneMCVertex: string. Implementation of the ICloneMCVertex used to clone
  *  decay end vertices, that is, end vertices with 
  *  LHCb::MCVertex::isDecay() = true. 
- *  Default: "NONE". No cloning of decay vertices performed.
+ *  Default: "NONE". No cloning of decay vertices performed. Only SmartRefs
+ *  are copied.
  *
  *  @see ICloneMCVertex
  *  @see MCVertexCloner
