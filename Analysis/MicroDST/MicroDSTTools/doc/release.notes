@@ -3,8 +3,17 @@
 ! Responsible : Juan Palacios juan.palacios@nikhef.nl
 ! Purpose     : Implementation of cloner MicroDSTTools
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.17 2008-08-21 14:46:12 jpalac Exp $
+! $Id: release.notes,v 1.18 2008-08-22 12:26:32 jpalac Exp $
 !-----------------------------------------------------------------------------
+
+! 2008-08-22 - Juan PALACIOS
+ - src/MCParticleCloner.h
+  . Improve doxygen.
+  . Remove m_cloneDecayVertices boolean data member.
+ - src/MCParticleCloner.cpp
+  . Remove CloneDecayVertices property. Now the cloning of decay vertices is
+    steered by the value of the ICloneMCVertex property. If set to "NONE" no
+    end vertex cloning is performed, and only the SmartRefs are copied.
 
 ! 2008-08-21 - Juan PALACIOS
  - src/RecVertexClonerWithTracks{.cpp, .h}

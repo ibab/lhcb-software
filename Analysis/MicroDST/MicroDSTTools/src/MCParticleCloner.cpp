@@ -1,4 +1,4 @@
-// $Id: MCParticleCloner.cpp,v 1.5 2008-08-07 14:08:29 jpalac Exp $
+// $Id: MCParticleCloner.cpp,v 1.6 2008-08-22 12:24:22 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -30,13 +30,10 @@ MCParticleCloner::MCParticleCloner( const std::string& type,
                                     const IInterface* parent )
   : 
   MicroDSTTool ( type, name , parent ),
-  m_vertexClonerName("MCVertexCloner"),
-  m_cloneDecayVertices(false)
+  m_vertexClonerName("NONE") 
 {
   declareInterface<ICloneMCParticle>(this);
   declareProperty("ICloneMCVertex", m_vertexClonerName);
-  declareProperty("CloneDecayVertices", m_cloneDecayVertices);
-  
 }
 //=============================================================================
 StatusCode MCParticleCloner::initialize()
@@ -48,8 +45,10 @@ StatusCode MCParticleCloner::initialize()
   
   if (! sc.isSuccess() ) return sc;
 
-  m_vertexCloner = this->tool<ICloneMCVertex>( m_vertexClonerName, 
-                                               this->parent()    );
+  m_vertexCloner = m_vertexClonerName != "NONE"      ? 
+    this->tool<ICloneMCVertex>( m_vertexClonerName, 
+                                this->parent()    )  :
+    0;
 
   return StatusCode::SUCCESS;
   
@@ -80,7 +79,6 @@ LHCb::MCParticle* MCParticleCloner::clone(const LHCb::MCParticle* mcp)
       originVertexClone->addToProducts(clone);
       debug() << "Now clone mother" << endmsg;
       const LHCb::MCParticle* mother = mcp->mother();
-      //      LHCb::MCParticle* motherClone = (mother) ? this->clone(mother) : 0;
       LHCb::MCParticle* motherClone = (mother) ? (*this)(mother) : 0;
       debug() << "Cloned mother" << endmsg;
 
@@ -93,9 +91,8 @@ LHCb::MCParticle* MCParticleCloner::clone(const LHCb::MCParticle* mcp)
 
   clone->clearEndVertices();
 
-  if (m_cloneDecayVertices) cloneDecayVertices(mcp->endVertices(),
-                                               clone);
-  
+  cloneDecayVertices(mcp->endVertices(), clone);
+
   return clone;
 
 }
@@ -107,11 +104,17 @@ void  MCParticleCloner::cloneDecayVertices(const SmartRefVector<LHCb::MCVertex>&
        iEndVtx!=endVertices.end(); 
        ++iEndVtx) {
     if ((*iEndVtx)->isDecay() && !((*iEndVtx)->products().empty()) ) {
-      verbose() << "Cloning Decay Vertex\n" << *(*iEndVtx) 
-                << "\n with " << (*iEndVtx)->products().size() << " products!"<< endmsg;
-      LHCb::MCVertex* decayVertexClone = (*m_vertexCloner)(*iEndVtx);
-      clonedParticle->addToEndVertices(decayVertexClone);
-      verbose() << "Cloned it!\n" <<  *(*iEndVtx) << endmsg;
+      if (m_vertexCloner) {
+        verbose() << "Cloning Decay Vertex\n" << *(*iEndVtx) 
+                  << "\n with " << (*iEndVtx)->products().size() 
+                  << " products!"<< endmsg;
+        LHCb::MCVertex* decayVertexClone = (*m_vertexCloner)(*iEndVtx);
+        clonedParticle->addToEndVertices(decayVertexClone);
+        verbose() << "Cloned it!\n" <<  *(*iEndVtx) << endmsg;
+      } else {
+        verbose() << "Copying decay vertex SmartRefs" << endmsg;
+        clonedParticle->addToEndVertices(*iEndVtx);
+      }      
     }
   }
 }
