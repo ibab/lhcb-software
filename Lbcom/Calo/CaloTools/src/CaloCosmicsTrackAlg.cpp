@@ -1,4 +1,4 @@
-// $Id: CaloCosmicsTrackAlg.cpp,v 1.4 2008-06-30 08:32:18 odescham Exp $
+// $Id: CaloCosmicsTrackAlg.cpp,v 1.5 2008-08-22 10:48:33 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -62,10 +62,9 @@ StatusCode CaloCosmicsTrackAlg::initialize() {
     book2D( "Rec/Forward/2"   ,  "Ecal versus Hcal timing slot (forward)" ,  -25 , 25. , 2  , -25. , 25. , 2 );
     book1D( "Rec/Backward/1"  ,  "Reconstruction performance (backward)"   ,  0. , 5.   , 5);
     book2D( "Rec/Backward/2"  ,  "Ecal versus Hcal timing slot (backward)" ,  -25 , 25. , 2  , -25. , 25. , 2 );
-
+    book2D( "Rec/3"  ,  "Cosmics track (phi,theta)" ,  -3.2 , 0 , 50  , 0 , 3.2 , 50 );
     book1D( "Asymmetry/1",  " Ecal asymmetry" ,  -1., 1.,50);
     book1D( "Asymmetry/2",  " Hcal asymmetry" ,  -1., 1.,50);
-
     book1D( "Kernel/1",  " Ecal Kernel" ,  0., 1., 50);
     book1D( "Kernel/2",  " Hcal Kernel" ,  0., 1., 50);
   }
@@ -135,6 +134,16 @@ StatusCode CaloCosmicsTrackAlg::execute() {
     fill( histo1D(HistoID("Asymmetry/2")), m_caloTrack->hcal()->asymmetry(), 1.);
     fill( histo1D(HistoID("Kernel/1")), m_caloTrack->ecal()->kernel(), 1.);
     fill( histo1D(HistoID("Kernel/2")), m_caloTrack->hcal()->kernel(), 1.);
+
+
+    double phi   =  m_caloTrack->phi();
+    double theta =  m_caloTrack->theta();
+    if( !m_caloTrack->forward() ){
+      phi   += acos(-1.);
+      if( phi > acos(-1.)) phi -= 2*acos(-1.); // phi in [-pi,pi]
+      theta = acos(-1.) - theta; // theta in [0,pi]
+    }    
+    fill( histo2D(HistoID("Rec/3")), phi, theta, 1.);
   }
   if(m_monitor && m_caloTrack->timed()){
     fill( histo1D(HistoID("Rec/"+dir.str()+"1"))  ,  2. , 1.); // bin2 = timed (ecal or hcal)

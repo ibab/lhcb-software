@@ -1,4 +1,4 @@
-// $Id: CaloCosmicsTool.cpp,v 1.5 2008-06-30 08:32:18 odescham Exp $
+// $Id: CaloCosmicsTool.cpp,v 1.6 2008-08-22 10:48:33 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -570,6 +570,7 @@ StatusCode CaloCosmicsTool::tupling(unsigned int unit){
   std::vector<float> x;
   std::vector<float> y;
   std::vector<int> a;
+  std::vector<int> ids;
   for(std::vector<LHCb::CaloAdc>::iterator iadc = eAdcs.begin();iadc!=eAdcs.end();iadc++){
     if(iadc-eAdcs.begin() > m_maxAdc){
       Warning("Ntupling :  digits vector too large - will be truncated").ignore();
@@ -577,10 +578,12 @@ StatusCode CaloCosmicsTool::tupling(unsigned int unit){
     }
     
     LHCb::CaloCellID id = (*iadc).cellID();
+    ids.push_back(  id.all()  );
     x.push_back( det()->cellCenter( id ).X() );
     y.push_back( det()->cellCenter( id ).Y() );
     a.push_back( (*iadc).adc() );
   }
+  sc = ntp->farray("id"   , ids      ,"NAdcs", m_maxAdc);
   sc = ntp->farray("x"   , x      ,"NAdcs", m_maxAdc);
   sc = ntp->farray("y"   , y      ,"NAdcs", m_maxAdc);
   sc = ntp->farray("adc" , a      ,"NAdcs", m_maxAdc);
