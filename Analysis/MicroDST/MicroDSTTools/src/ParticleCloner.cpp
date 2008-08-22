@@ -1,4 +1,4 @@
-// $Id: ParticleCloner.cpp,v 1.4 2008-08-13 16:55:27 jpalac Exp $
+// $Id: ParticleCloner.cpp,v 1.5 2008-08-22 15:32:20 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -57,9 +57,11 @@ StatusCode ParticleCloner::initialize()
   
   if (! sc.isSuccess() ) return sc;
   
-  m_vertexCloner = tool<ICloneVertex>(m_vertexClonerName, this->parent() );
+  m_vertexCloner = (m_vertexClonerName!="NONE") ?  
+    tool<ICloneVertex>(m_vertexClonerName, this->parent() ) : 0;
 
-  m_ppCloner = (m_ppClonerName=="NONE") ? 0 : tool<ICloneProtoParticle>(m_ppClonerName, this->parent() );
+  m_ppCloner = (m_ppClonerName!="NONE") ? 
+    tool<ICloneProtoParticle>(m_ppClonerName, this->parent() ) : 0;
 
   if (m_ppCloner) {
     verbose() << "Found ICloneProtoParticle " << m_ppClonerName << endmsg;
@@ -85,14 +87,20 @@ LHCb::Particle* ParticleCloner::clone(const LHCb::Particle* particle)
 
   if ( 0 == particleClone ) return 0;
 
-  if (m_vertexCloner)
+  if (m_vertexCloner) {
     particleClone->setEndVertex( (*m_vertexCloner)(particle->endVertex()) );
+  } else {
+    particleClone->setEndVertex(SmartRef<LHCb::Vertex>(particle->endVertex()));
+  }
 
   storeDaughters( particleClone, particle->daughters() );
 
-  if (m_ppCloner)
+  if (m_ppCloner) {
     particleClone->setProto( (*m_ppCloner)( particle->proto() ) );
-  
+  } else {
+    particleClone->setProto(SmartRef<LHCb::ProtoParticle>(particle->proto()));
+  }
+
   return particleClone;
   
 }
