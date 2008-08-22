@@ -1,4 +1,4 @@
-// $Id: MCParticleCloner.h,v 1.4 2008-04-23 13:01:55 jpalac Exp $
+// $Id: MCParticleCloner.h,v 1.5 2008-08-22 12:21:32 jpalac Exp $
 #ifndef MCPARTICLECLONER_H 
 #define MCPARTICLECLONER_H 1
 
@@ -11,22 +11,21 @@
  *  
  *  MicroDSTTool to clone an LHCb::MCParticle and place it in a TES location
  *  parallel to that of the parent. It clones and stores the origin vertex
- *  using an ICloneMCVertex, and the origin vertex's LHCb::Particle products.
- *  The end vertices receive a special treatment. By default, only SmartRefs
+ *  using simple copy, and copies the origin vertex's LHCb::MCParticle products.
+ *  End vertices receive a special treatment. By default, only SmartRefs
  *  are stored, so an XML catalogue to the original DST is required for access.
  *  It is possible to clone and store end vertices that are also decay 
- *  vertices using the <b>CloneDecayVertices</b> property.
- *  All LHCb::Vertex cloning is performed by the ICloneVertex implementation,
- *  which is set via the ICloneMCVertex property.
+ *  vertices setting the <b>ICloneMCVertex</b> property to an existing 
+ *  implementation of ICloneMCVertex.
  *
- * <b>Extra options</b>
- * CloneDecayVertices: bool. Clone any of the LHCb::MCParticle's endVertices
- * if they are decay vertices, that is, if their LHCb::MCVertex::isDecay() 
- * method returns true. Default: false.
- * ICloneMCVertex: string.
+ *  <b>Options</b>
+ *  ICloneMCVertex: string. Implementation of the ICloneMCVertex used to clone
+ *  decay end vertices, that is, end vertices with 
+ *  LHCb::MCVertex::isDecay() = true. 
+ *  Default: "NONE". No cloning of decay vertices performed.
  *
- * @see ICloneMCVertex
- * @see MCVertexCloner
+ *  @see ICloneMCVertex
+ *  @see MCVertexCloner
  *
  *  @author Juan PALACIOS
  *  @date   2007-11-30
@@ -66,8 +65,6 @@ private:
   ICloneMCVertex* m_vertexCloner;
 
   std::string m_vertexClonerName;
-
-  bool m_cloneDecayVertices;
 
 };
 #endif // MCPARTICLECLONER_H
