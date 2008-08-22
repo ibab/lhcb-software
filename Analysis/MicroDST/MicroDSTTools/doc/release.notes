@@ -3,10 +3,15 @@
 ! Responsible : Juan Palacios juan.palacios@nikhef.nl
 ! Purpose     : Implementation of cloner MicroDSTTools
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.18 2008-08-22 12:26:32 jpalac Exp $
+! $Id: release.notes,v 1.19 2008-08-22 15:34:03 jpalac Exp $
 !-----------------------------------------------------------------------------
 
 ! 2008-08-22 - Juan PALACIOS
+ - src/ParticleCloner.cpp
+  . Store SmartRefs to end vertex and ProtoParticle is ICloneVertex and 
+    ICloneProtoParticle are set to "NONE".
+ - src/ParticleCloner.h
+  . Improve doxygen
  - src/MCParticleCloner.h
   . Improve doxygen.
   . Remove m_cloneDecayVertices boolean data member.
