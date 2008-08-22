@@ -1,4 +1,4 @@
-// $Id: ParticleCloner.h,v 1.2 2008-08-13 16:56:18 jpalac Exp $
+// $Id: ParticleCloner.h,v 1.3 2008-08-22 15:32:28 jpalac Exp $
 #ifndef MICRODST_PARTICLECLONER_H 
 #define MICRODST_PARTICLECLONER_H 1
 
@@ -14,6 +14,18 @@ class ICloneProtoParticle;
 
 /** @class ParticleCloner ParticleCloner.h src/ParticleCloner.h
  *  
+ *  Clone an LHCb::Particle. Recursively clone it's daughter LHCb::Particles.
+ *  Depending on the value of the ICloneVertex and ICloneProtoParticle
+ *  properties, clone the end vertex and associated LHCb::ProtoParticle.
+ *
+ *  <b>Oprions</b>
+ *  ICloneVertex: string, implementation of ICloneVertex interface used to 
+ *                clone end vertes. Default = "VertexCloner". If set to "NONE",
+ *                only a SmartRef to the end LHCb::Vertex is stored.
+ *  ICloneProtoParticle: string, implementation of ICloneVertex interface used 
+ *                to clone the particle's LHCb::ProtoParticle. 
+ *                Default = "ProtoParticleCloner". If set to "NONE",
+ *                only a SmartRef to the end LHCb::ProtoParticle is stored.
  *
  *  @author Juan PALACIOS
  *  @date   2007-11-30
