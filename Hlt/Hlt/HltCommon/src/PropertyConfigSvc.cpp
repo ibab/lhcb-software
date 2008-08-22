@@ -1,4 +1,4 @@
-// $Id: PropertyConfigSvc.cpp,v 1.16 2008-08-13 07:24:59 graven Exp $
+// $Id: PropertyConfigSvc.cpp,v 1.17 2008-08-22 12:04:18 graven Exp $
 // Include files 
 
 #include <sstream>
@@ -6,6 +6,7 @@
 #include <list>
 
 #include "boost/filesystem/fstream.hpp"
+#include "boost/filesystem/convenience.hpp"
 #include "boost/lambda/lambda.hpp"
 #include "boost/lambda/bind.hpp"
 
@@ -338,16 +339,24 @@ PropertyConfigSvc::collectLeafRefs(const ConfigTreeNode::digest_type& nodeRef) c
 StatusCode 
 PropertyConfigSvc::loadConfig(const ConfigTreeNode::digest_type& nodeRef) 
 {
-     if (!nodeRef.valid()) return StatusCode::FAILURE;
-     info() << "loading config " << nodeRef.str() << endmsg;
-     const vector<PropertyConfig::digest_type>& list = collectLeafRefs(nodeRef);
-     for (vector<PropertyConfig::digest_type>::const_iterator i = list.begin();i!=list.end();++i) {
-            resolvePropertyConfig(*i);
+     try {
+         if (!nodeRef.valid()) return StatusCode::FAILURE;
+         info() << "loading config " << nodeRef.str() << endmsg;
+         const vector<PropertyConfig::digest_type>& list = collectLeafRefs(nodeRef);
+         for (vector<PropertyConfig::digest_type>::const_iterator i = list.begin();i!=list.end();++i) {
+                resolvePropertyConfig(*i);
+         }
+    //     for_each(list.begin(),
+    //                   list.end(), 
+    //                   bl::bind(&PropertyConfigSvc::resolvePropertyConfig,this,bl::_1) );
+         return validateConfig( nodeRef );
+
+     } catch ( const boost::filesystem::basic_filesystem_error<boost::filesystem::path>& x )  {
+         error() << boost::filesystem::what( x)  << endmsg;
+         throw x;
      }
-//     for_each(list.begin(),
-//                   list.end(), 
-//                   bl::bind(&PropertyConfigSvc::resolvePropertyConfig,this,bl::_1) );
-     return validateConfig( nodeRef );
+     return StatusCode::FAILURE;
+
 }
 
 //=============================================================================

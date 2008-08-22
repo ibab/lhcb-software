@@ -1,4 +1,4 @@
-// $Id: HltConfigSvc.h,v 1.7 2008-08-04 12:09:34 graven Exp $
+// $Id: HltConfigSvc.h,v 1.8 2008-08-22 12:04:18 graven Exp $
 #ifndef HLTCONFIGSVC_H 
 #define HLTCONFIGSVC_H 1
 
@@ -48,6 +48,7 @@ private:
   IDataProviderSvc            *m_evtSvc;          ///< get Evt Svc to get ODIN (which contains TCK)
   IIncidentSvc                *m_incidentSvc;     ///< 
   bool                         m_checkOdin;
+  bool                         m_maskL0TCK;
 
   // resolve TCK -> toplevel config ID, then call method with ID
   ConfigTreeNode::digest_type tck2id(const TCK_t& tck) const;

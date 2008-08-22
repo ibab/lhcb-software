@@ -1,4 +1,4 @@
-// $Id: HltConfigSvc.cpp,v 1.16 2008-08-04 12:15:09 graven Exp $
+// $Id: HltConfigSvc.cpp,v 1.17 2008-08-22 12:04:18 graven Exp $
 // Include files 
 
 #include <algorithm>
@@ -41,6 +41,7 @@ HltConfigSvc::HltConfigSvc( const string& name, ISvcLocator* pSvcLocator)
   declareProperty("initialTCK", m_initialTCK = TCK_t(0));
   declareProperty("prefetchTCK", m_prefetchTCK);
   declareProperty("checkOdin", m_checkOdin = true);
+  declareProperty("maskL0TCK", m_maskL0TCK = false);
 }
 //=============================================================================
 // Destructor
@@ -165,6 +166,9 @@ void HltConfigSvc::checkOdin() {
 
     debug() << "checkOdin: TCK in ODIN bank: " << TCK << endmsg;
     debug() << "checkOdin: currently configured TCK: " << m_configuredTCK << endmsg;
+
+    if ( m_maskL0TCK ) TCK &= 0xFFFF0000;
+    debug() << "checkOdin: requested TCK: " << TCK << endmsg;
 
     if ( m_configuredTCK == TCK ) return;
 

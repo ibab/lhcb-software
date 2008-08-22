@@ -4,8 +4,13 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!2008-08-22 - Gerhard Raven
+  - PropertyConfigSvc: catch filesystem errors & print diagnositc
+  - HltConfigSvc: allow masking of L0 part of TCK prior to lookup
+
 !2008-08-20 - Gerhard Raven
   - Add DummySelection courtesy of Jaap Panman
+
 !2008-08-11 - Gerhard Raven
   - ConfigDBAccessSvc: create cache tables (not yet used)
   - PropertyConfigSvc: add support for references ( foo.prop = @bar.otherprop)
