@@ -1,5 +1,5 @@
 ##############################
-#     HLT Lumi Lines
+#     HLT Lumi Line(s)
 ##############################
 import GaudiPython
 from Gaudi.Configuration import *
@@ -29,6 +29,8 @@ def createL0Counter( seqName, seq ) :
 def combine( op, arg ) :
     for key,value in arg.iteritems() : op(key,value)
 
+############# start building the lumi line(s)...
+
 # HLT Reconstruction
 importOptions('$HLTSYSROOT/options/HltRecoSequence.opts')
 # init is needed for ANNSvc
@@ -39,17 +41,14 @@ LumiSequence = sequenceAppender( Sequence('HltLumiSequence', MeasureTime = True 
 LumiSequence( OdinTypesFilter( TriggerTypes=['Reserve'],  # should become 'Random'
                                BXTypes= ['NoBeam','BeamCrossing','SingleBeamRight','SingleBeamLeft'] ) )
 LumiSequence( Prescale( 'HltLumiPrescaler', AcceptFraction = 1.0 ) )
-LumiSequence( Sequence( 'Hlt1LumiRecoSequence'
+LumiSequence( Sequence( 'HltLumiRecoSequence'
                       , Members = [ Sequence('HltRecoSequence') ]
                       , ModeOR = True
                       , ShortCircuit = False
                       , IgnoreFilterPassed = True
                       , MeasureTime = True ) )
 
-
-
 seqName = 'LumiCount'
-
 LumiCountSequence = Sequence('Hlt'+seqName +'Sequence'
                             , ModeOR = True
                             , ShortCircuit = False
@@ -61,11 +60,10 @@ combine( createCounter( LumiCountTracks,   seqName , LumiCountSequence),
          , 'RZVelo'   : 'Hlt/Track/RZVelo'
          #, 'Muon'    : 'Rec/Tracks/Muons' 
          } )
-
 combine( createCounter( LumiCountVertices, seqName, LumiCountSequence ),
-       {  'PV2D'  : 'Hlt/Vertex/PV2D'
-       #,  'PV3D'  : 'Hlt/Vertex/PV3D' 
-       } )
+         {  'PV2D'  : 'Hlt/Vertex/PV2D'
+         #,  'PV3D'  : 'Hlt/Vertex/PV3D' 
+         } )
 
 # filter to get backward tracks (make sure it always passes by wrapping inside a sequence)
 LumiCountSequence.Members.append( Sequence('HltRZVeloBWSequence'
@@ -77,8 +75,6 @@ LumiCountSequence.Members.append( Sequence('HltRZVeloBWSequence'
                                                                        , RequirePositiveInputs = False
                                                                        ) ]
                                           , MeasureTime = True
-                                          , ModeOR = True
-                                          , ShortCircuit = False
                                           , IgnoreFilterPassed = True ) )
 
 LumiCountSequence.Members.append( LumiCountHltTracks( 'LumiCountHltRZVeloBW',
@@ -92,43 +88,27 @@ combine( createL0Counter( seqName, LumiCountSequence ),
          , 'CaloEt'   : 'Sum(Et)' 
          } )
 
-
-
-# try to write other/new TES container   (TEMP)
-LumiCountSequence.Members.append( LumiCountTracks(seqName+'VeloTwo',
-                                                  InputSelection='Hlt/Track/Velo',
-                                                  CounterName='Velo',
-                                                  OutputContainer='Hlt/LumiSummaryTwo') )
-
 LumiSequence( LumiCountSequence )
 LumiSequence( HltLumiOdinReader( ) )
 
-#for i in [ 'NoBeam', 'BeamCrossing'] :
-#x = Hlt1Line( prescale = 0.5, ODIN = { BXTypes = [ i ] }, postscale = 0.1 )
-#              
-
 BXMembers = []
 for i in [ 'NoBeam', 'BeamCrossing'] :
-    BXMembers.append( Sequence('Hlt1Lumi'+i+'Sequence', 
+    BXMembers.append( Sequence('HltLumi'+i+'Sequence', 
                                Members = [ OdinTypesFilter('Filter'+i, BXTypes = [i]),
                                            HltLumiOdinReader('OdinReader'+i) ] ,
                                MeasureTime = True
                                ) )
-BXTypes = Sequence( 'Hlt1LumiBXTypesSequence'
-                  , Members = BXMembers
-                  , ModeOR = True
-                  , ShortCircuit = False
-                  , IgnoreFilterPassed = True
-                  , MeasureTime = True)
-LumiSequence( BXTypes )
-LumiSequence( Prescale( 'PrescaleLumiDecision', AcceptFraction = 0.5 ) )
-LumiSequence( Dummy( 'Hlt1LumiDecision' ) )
+LumiSequence( Sequence( 'HltLumiBXTypesSequence'
+                      , Members = BXMembers
+                      , ModeOR = True
+                      , ShortCircuit = False
+                      , IgnoreFilterPassed = True
+                      , MeasureTime = True) )
+LumiSequence( Prescale( 'HltLumiPrescaleDecision', AcceptFraction = 0.5 ) )
+LumiSequence( Dummy( 'HltLumiDecision' ) )
 
 # TODO: move writer into dedicated rawbank sequence
 LumiSequence( HltLumiWriter( ) )
 
 # register with global decision (which is the OR of its input)
-for i in   [ 'Hlt1LumiDecision' ] : 
-     HltSelectionFilter('Hlt1Global').InputSelections.append( i ) 
-
-# print LumiSequence
+HltSelectionFilter('Hlt1Global').InputSelections.append( 'HltLumiDecision' ) 
