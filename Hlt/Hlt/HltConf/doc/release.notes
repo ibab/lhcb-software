@@ -1,9 +1,17 @@
-! $Id: release.notes,v 1.3 2008-08-12 13:19:28 ibelyaev Exp $ 
+! $Id: release.notes,v 1.4 2008-08-23 22:56:42 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : 
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2008-08-23 - Gerhard Raven
+ - python/HltConfig/Hlt1Line.py
+    o add new keyword ODIN into line constructors.
+      similar to HLT an L0, put takes BXTypes & TriggerTypes
+    o add a few more algorithms to the list of known algorithms
+    o make name of current last outputselection available
+    o if an input selection is another line, use its outputSelection as name
 
 ! 2008-08-12 - Vanya Belyaev
  - python/HltConf/Hlt1Line.py

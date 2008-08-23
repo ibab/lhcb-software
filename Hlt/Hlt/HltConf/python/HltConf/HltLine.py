@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.5 2008-08-19 11:38:41 graven Exp $ 
+# $Id: HltLine.py,v 1.6 2008-08-23 22:56:42 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'    ,  ## the Hlt line itself 
@@ -76,6 +76,7 @@ from Configurables import DeterministicPrescaler as PreScaler
 
 from Configurables import HltL0Filter            as L0Filter 
 from Configurables import HltSelectionFilter     as HLTFilter 
+from Configurables import OdinTypesFilter        as ODINFilter 
 
 from Configurables import HltTrackUpgrade        as TrackUpgrade 
 from Configurables import HltTrackMatch          as TrackMatch   
@@ -83,6 +84,9 @@ from Configurables import HltTrackFilter         as TrackFilter
 from Configurables import HltVertexMaker1        as VertexMaker1 
 from Configurables import HltVertexMaker2        as VertexMaker2 
 from Configurables import HltVertexFilter        as VertexFilter 
+from Configurables import HltL0MuonPrepare       as L0MuonPrepare 
+from Configurables import HltL0CaloPrepare       as L0CaloPrepare 
+from Configurables import HltVertexToTracks      as VertexToTracks 
 
 ## @todo introduce the proper decision 
 from Configurables import HelloWorld             as LineDecision 
@@ -96,6 +100,10 @@ def prescalerName  ( line ) :
 def postscalerName ( line ) :
     """ Convention: the name of 'PostScaler' algorithm inside HltLine """
     return 'Hlt1%sPostScaler' % line
+## Convention: the name of 'ODINFilter' algorithm inside HltLine
+def odinentryName    ( line ) :
+    """ Convention: the name of 'ODINFilter' algorithm inside HltLine """
+    return 'Hlt1%sODINFilter'   % line
 ## Convention: the name of 'L0Filter' algorithm inside HltLine
 def l0entryName    ( line ) :
     """ Convention: the name of 'L0Filter' algorithm inside HltLine """
@@ -249,12 +257,15 @@ _types_ = { TrackUpgrade    : 'TU'
             , VertexMaker1  : 'VM1' 
             , VertexMaker2  : 'VM2'
             , VertexFilter  : 'VF'
+            , VertexToTracks: 'VT'
+            , L0CaloPrepare : 'L0CaloPrepare'
+            , L0MuonPrepare : 'L0MuonPrepare'
             } 
 
 ## protected attributes 
 _protected_ = ( 'IgnoreFilterPassed' , 'Members' , 'ModeOR' )
 ## own slots for HltLine 
-_myslots_   = ( 'name' , 'prescale'  , 'postscale' , 'L0' , 'algos' , 'HLT' ) 
+_myslots_   = ( 'name' , 'prescale'  , 'postscale' , 'ODIN' , 'L0' , 'HLT' , 'algos' ) 
 
 # =============================================================================
 ## Get the full algorithm type from short nick
@@ -283,6 +294,8 @@ def _selectionName ( name ,      ## the selection name or pattern
     Construct the full selection name.
     
     The convention is
+
+    - if the selection is of type Hlt1Line, replace it by its output selection
     
     - if the selection name is defined as  'pattern', e.g. '%RZVelo',
       the full name would include the Hlt line name: 'Hlt1SingleMuonRZVelo'
@@ -300,6 +313,7 @@ def _selectionName ( name ,      ## the selection name or pattern
     
     """
     if not name : return None
+    if type(name) is Hlt1Line : name = name.outputSelection()
     if '%' != name[0] : return name 
     return 'Hlt1' + line + name[1:]
 
@@ -316,12 +330,14 @@ def _checkSelection ( sel   ,     ## the selection
                       name  ,     ## algorihtm(member) name
                       line  )  :  ## Hlt1 line name 
     """
-    Check the certain selection:
-    
-    - The selection is required to be in the dictionary
-    
+    Check specified selection:
+
+    - If selection is an Hlt1Line, substitute its output selection
+
     - If selection has a 'pattern' form (starts from %) ,
           it is expanded properly and replaced in the dictionary
+
+    - The selection is required to be in the dictionary
     
     @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
     @date   2008-08-06
@@ -433,7 +449,7 @@ class Hlt1Member ( object ) :
 #  The structure of each line is fixed to be
 # 
 #    - Prescaler
-#    - L0Filter
+#    - ODINFilter | L0Filter | HLTFilter
 #       - Member_1
 #       - Member_2
 #       - ...
@@ -454,6 +470,7 @@ class Hlt1Line(object):
     #  The major arguments
     #    - 'name'      : short name of the line, e.g, 'SingleMuon'
     #    - 'prescale'  : the prescaler factor
+    #    - 'ODIN'      : the list of ODINtype names for ODINFilter 
     #    - 'L0'        : the list of L0Channels names for L0Filter 
     #    - 'HLT'       : the list of HLT selections for HLTFilter
     #    - 'algos'     : the list of actual members 
@@ -461,7 +478,8 @@ class Hlt1Line(object):
     def __init__ ( self           ,
                    name           ,   # the base name for the Line
                    prescale  = 1  ,   # prescale factor
-                   L0        = [] ,   # list of L0 cnannels  
+                   ODIN      = [] ,   # list of ODIN types  
+                   L0        = [] ,   # list of L0 channels  
                    HLT       = [] ,   # list of HLT selections  
                    postscale = 1  ,   # prescale factor
                    algos     = [] ,   # the list of algorithms/members
@@ -472,8 +490,9 @@ class Hlt1Line(object):
         The major arguments
         - 'name'      : short name of the line, e.g, 'SingleMuon'
         - 'prescale'  : the prescaler factor
-        - 'L0'        : the list of L0Channels names for L0Filter 
-        - 'HLT'       : the list of HLT selections for HLTFilter  
+        - 'ODIN'      : the list of ODIN types for ODINFilter (mutally exclusive with L0 and HLT)
+        - 'L0'        : the list of L0Channels names for L0Filter (mutally exclusive with ODIN and HLT)
+        - 'HLT'       : the list of HLT selections for HLTFilter (mutally exclusive with ODIN and L0)
         - 'algos'     : the list of actual members 
         - 'postscale' : the postscale factor
         
@@ -482,11 +501,14 @@ class Hlt1Line(object):
         self._name      = name
         self._prescale  = prescale
         
-        if str is type(L0)  : L0  = [L0]
+        if list is not type(L0)  : L0  = [L0]
         self._L0        = L0
         
-        if str is type(HLT) : HLT = [HLT] 
-        self._HLT       = HLT
+        if list is not type(HLT) : HLT = [HLT] 
+        self._HLT       = [ i if Hlt1Line is not type(i) else i.outputSelection() for i in HLT ]
+
+        #if str is type(ODIN) : ODIN = [ODIN] 
+        self._ODIN      = ODIN
         
         self._postscale = postscale
         self._algos     = algos
@@ -494,6 +516,10 @@ class Hlt1Line(object):
 
         if L0 and HLT :
             raise AttributeError, "The attribute L0 and HLT are exclusive %s" % name 
+        if L0 and ODIN :
+            raise AttributeError, "The attribute L0 and ODIN are exclusive %s" % name 
+        if HLT and ODIN :
+            raise AttributeError, "The attribute HLT and ODIN are exclusive %s" % name 
         
         # terminus:
         self._terminus  = None 
@@ -510,83 +536,90 @@ class Hlt1Line(object):
         line = self.subname()
         
         _members += [ PreScaler ( prescalerName  ( line ) , AcceptFraction = self._prescale  ) ]
-        if   L0  :
-            _members += [ L0Filter   ( l0entryName  ( line ) , L0Channels      = self._L0  ) ]
+        if ODIN  :
+            BXTypes_ = [ ]
+            if 'BXTypes' in self._ODIN : BXTypes_ = self._ODIN['BXTypes']
+            TriggerTypes_ = [ ]
+            if 'TriggerTypes' in self._ODIN : TriggersTypes_ = self._ODIN['TriggerTypes']
+            _members += [ ODINFilter ( odinentryName( line ) , TriggerTypes = TriggersTypes_ , BXTypes = BXTypes_  ) ]
+        elif L0  :
+            _members += [ L0Filter   ( l0entryName  ( line ) , L0Channels      = self._L0    ) ]
         elif HLT : 
-            _members += [ HLTFilter  ( hltentryName ( line ) , InputSelections = self._HLT ) ]
+            _members += [ HLTFilter  ( hltentryName ( line ) , InputSelections = self._HLT   ) ]
         
-        _outputsel = None
+        # most recent output selection
+        self._outputsel = None
 
         # algos_ = algos.copy()
         algos_ = algos 
         for alg in algos_ :
 
-            if not Hlt1Member is type(alg) :
+            if type(alg) is not Hlt1Member:
                 _members += [ alg ]
                 continue
+                
+            margs = alg.Args.copy() 
+            algName = alg.name ( line )
+            print 'processing ' + algName
+            
+            ## need input selection?
+            if   'InputSelection3' in alg.Type.__slots__ :
+                # check input selections
+                _checkSelections ( margs ,  # arguments
+                                   # must be: 
+                                   [ 'InputSelection3' , 'InputSelection2' , 'InputSelection1' ] ,
+                                   # not allowed:
+                                   [ 'InputSelection'  , 'InputSelections' ] ,
+                                   algName , line ) ;
+                #
+            elif 'InputSelection2' in alg.Type.__slots__ :
+                # check input selections
+                _checkSelections ( margs ,  # arguments
+                                   # must be: 
+                                   [ 'InputSelection2' , 'InputSelection1' ] ,
+                                   # not allowed:
+                                   [ 'InputSelection'  , 'InputSelections' , 'InputSelection3' ] ,
+                                   algName , line ) ;
+                # 
+            elif 'InputSelections' in alg.Type.__slots__ :
+                # check input selections
+                _checkSelections ( margs ,  # arguments
+                                   # must be: 
+                                   [ 'InputSelections' ] ,
+                                   # not allowed:
+                                   [ 'InputSelection'  , 'InputSelection1' , 'InputSelection2' , 'InputSelection3' ] ,
+                                   algName , line ) ;
+                #
+            elif 'InputSelection' in alg.Type.__slots__ :
+                # come manual work 
+                _inputsel = self._outputsel
+                if margs.has_key ( 'InputSelection' ) :
+                    _checkSelection ( 'InputSelection' , margs , algName , line )
+                    _inputsel = margs['InputSelection']
+                if not _inputsel :
+                    raise AttributeError, 'Cannot deduce InputSelection neither from argument nor from previous alg'
+                margs['InputSelection'] = _inputsel
+                # here start the machinery check input selections
+                _checkSelections ( margs ,  # arguments
+                                   # must be: 
+                                   [ 'InputSelection' ] ,
+                                   # not allowed:
+                                   [ 'InputSelections'  , 'InputSelection1' , 'InputSelection2' , 'InputSelection3' ] ,
+                                   algName , line ) ;
+                #
             else :
-                
-                margs = alg.Args.copy() 
-                algName = alg.name ( line )
-                
-                ## need input selection?
-                if   'InputSelection3' in alg.Type.__slots__ :
-                    # check input selections
-                    _checkSelections ( margs ,  # arguments
-                                       # must be: 
-                                       [ 'InputSelection3' , 'InputSelection2' , 'InputSelection1' ] ,
-                                       # not allowed:
-                                       [ 'InputSelection'  , 'InputSelections' ] ,
-                                       algName , line ) ;
-                    #
-                elif 'InputSelection2' in alg.Type.__slots__ :
-                    # check input selections
-                    _checkSelections ( margs ,  # arguments
-                                       # must be: 
-                                       [ 'InputSelection2' , 'InputSelection1' ] ,
-                                       # not allowed:
-                                       [ 'InputSelection'  , 'InputSelections' , 'InputSelection3' ] ,
-                                       algName , line ) ;
-                    # 
-                elif 'InputSelections' in alg.Type.__slots__ :
-                    # check input selections
-                    _checkSelections ( margs ,  # arguments
-                                       # must be: 
-                                       [ 'InputSelections' ] ,
-                                       # not allowed:
-                                       [ 'InputSelection'  , 'InputSelection1' , 'InputSelection2' , 'InputSelection3' ] ,
-                                       algName , line ) ;
-                    #
-                elif 'InputSelection' in alg.Type.__slots__ :
-                    # come manual work 
-                    _inputsel = _outputsel
-                    if margs.has_key ( 'InputSelection' ) :
-                        _checkSelection ( 'InputSelection' , margs , algName , line )
-                        _inputsel = margs['InputSelection']
-                    if not _inputsel :
-                        raise AttributeError, 'Cannot deduce InputSelection neither from argument nor from previous alg'
-                    margs['InputSelection'] = _inputsel
-                    # here start the machinery check input selections
-                    _checkSelections ( margs ,  # arguments
-                                       # must be: 
-                                       [ 'InputSelection' ] ,
-                                       # not allowed:
-                                       [ 'InputSelections'  , 'InputSelection1' , 'InputSelection2' , 'InputSelection3' ] ,
-                                       algName , line ) ;
-                    #
-                else :
-                    print "%s WARNING: HtlMember('%s') with strange configuration " % ( self.name() , algName )
+                print "%s WARNING: HtlMember('%s') with strange configuration " % ( self.name() , algName )
 
-                
-                ## output selection ( the algorithm name)
-                if 'OutputSelection' in alg.Type.__slots__ : 
-                    _outputsel = algName
-                    if margs.has_key ( 'OutputSelection' ) :
-                        _checkSelection ( 'OutputSelection' , margs , algName , line ) 
-                        _outputsel = margs['OutputSelection']
-                
-                # create the algorithm:
-                _members += [ alg.Type( memberName ( alg , line )  , **margs ) ]         
+            
+            ## output selection ( the algorithm name)
+            if 'OutputSelection' in alg.Type.__slots__ : 
+                self._outputsel = algName
+                if margs.has_key ( 'OutputSelection' ) :
+                    _checkSelection ( 'OutputSelection' , margs , algName , line ) 
+                    self._outputsel = margs['OutputSelection']
+            
+            # create the algorithm:
+            _members += [ alg.Type( memberName ( alg , line )  , **margs ) ]         
         
         _members += [ PreScaler    ( postscalerName ( line ) , AcceptFraction = self._postscale ) ]
 
@@ -595,17 +628,16 @@ class Hlt1Line(object):
         self._terminus = decisionName ( line )
 
         # register selections:
+        _input_selection_properties_ = [ 'InputSelection'
+                                       , 'InputSelection1'
+                                       , 'InputSelection2'
+                                       , 'InputSelection3' 
+                                       , 'InputSelections'
+                                       ] 
         for _m in _members :
-            if hasattr ( _m , 'InputSelection'  ) :
-                _add_to_hlt1_input_selections_ ( _m.InputSelection  )
-            if hasattr ( _m , 'InputSelections' ) :
-                _add_to_hlt1_input_selections_ ( _m.InputSelections )
-            if hasattr ( _m , 'InputSelection1' ) :
-                _add_to_hlt1_input_selections_ ( _m.InputSelection1 )
-            if hasattr ( _m , 'InputSelection2' ) :
-                _add_to_hlt1_input_selections_ ( _m.InputSelection2 )
-            if hasattr ( _m , 'InputSelection3' ) :
-                _add_to_hlt1_input_selections_ ( _m.InputSelection3 )
+            for attr in _input_selection_properties_ :
+                if hasattr ( _m , attr  ) :
+                    _add_to_hlt1_input_selections_ ( getattr( _m, attr ) )
             if hasattr ( type(_m) , 'OutputSelection' ) :
                 if hasattr ( _m , 'OutputSelection' ) :
                     _add_to_hlt1_output_selections_ ( _m.OutputSelection )
@@ -684,6 +716,19 @@ class Hlt1Line(object):
         if not self._terminus :
             raise AttributeError, "The line %s does not define valid terminus " % self.subname()
         return self._terminus
+    ## get the last output selection of the line
+    def outputSelection ( self ) :
+        """
+        Get the name of last outputSelection of the line
+
+        >>> line = ...
+        >>> selection = line.outputSelection()
+        
+        """
+        if not self._outputsel :
+            raise AttributeError, "The line %s does not define valid outputSelection " % self.subname()
+        return self._outputsel
+    
     
     ## Clone the line  
     def clone ( self , name , **args ) :
@@ -699,22 +744,22 @@ class Hlt1Line(object):
         _seq   = {} # arguments for sequencer
         _other = {} # the rest (probably reconfiguration of members)
         for key in args :
-            if    key in GaudiSequencer.__slots__ : _seq[keq] = args[key]
-            elif  key in  _myslots_               : _own[key] = args[key] 
-            else : _other[key] = args[key]
+            if    key in GaudiSequencer.__slots__ : _seq[keq]   = args[key]
+            elif  key in  _myslots_               : _own[key]   = args[key] 
+            else                                  : _other[key] = args[key]
 
         # Explictly copy all major structural parameters 
         __name       = name
         __prescale   = args.get ( 'prescale'  , self._prescale  ) 
         __postscale  = args.get ( 'postscale' , self._postscale )  
+        __ODIN       = args.get ( 'ODIN'      , self._ODIN      )         
         __L0         = args.get ( 'L0'        , self._L0        )         
         __HLT        = args.get ( 'HLT'       , self._HLT       )         
         __algos      = args.get ( 'algos'     , self._algos     )      
         __args       = self._args
 
         # Check the parameters, reponsible for reconfiguration:
-        for alg in __algos :
-            if not Hlt1Member is type(alg) : continue 
+        for alg in [ i for i in __algos if type(i) is Hlt1Member ] :
             id = alg.id()
             if id in _other :
                 alg.Args.update( _other [id] ) 
@@ -730,6 +775,7 @@ class Hlt1Line(object):
 
         return Hlt1Line ( name      = __name       ,
                           prescale  = __prescale   ,
+                          ODIN      = __ODIN       ,
                           L0        = __L0         ,
                           HLT       = __HLT        ,
                           postscale = __postscale  ,
@@ -869,7 +915,8 @@ def __enroll__ ( self       ,   ## the object
 
     _indent_ = ('%-3d'%level) + level * '   ' 
     line = _indent_ + self.name ()
-    while len(line) < 40 : line = line + ' '
+    if len(line)>39: line = line + '\n'+ 40*' '
+    else :           line = line + (40-len(line))*' '
     line = line + '%-25.25s'%self.getType()
 
     line = prnt ( self , lst , line )
