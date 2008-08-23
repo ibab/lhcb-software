@@ -15,10 +15,10 @@
       
       <attribute 
        name="liteCluster" 
-       type="&liteClusterName;" 
+       type="LHCb::&liteClusterName;" 
        desc="TELL1 cluster without ADC values"
        setMeth="FALSE"
-       getMeth="FALSE"
+       getMeth="TRUE"
       />
 
       <attribute 
