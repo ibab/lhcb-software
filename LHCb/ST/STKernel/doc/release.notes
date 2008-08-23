@@ -1,10 +1,17 @@
-! $Id: release.notes,v 1.28 2008-08-18 13:03:32 jluisier Exp $
+! $Id: release.notes,v 1.29 2008-08-23 08:22:46 mneedham Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
 
+
+! 2008-08-23 M Needham
+ - Remove some of the functionality from STTell1Board
+ - Add Strip,Beetle and PPRepresentation classes
+
+
 ! 2008-08-18 J Luisier
  - Bug fix in STBoardMapping.h (first IT TELL1 number is 1, not 0)
+
 
 ! 2008-08-15 M Needham
  - Add functionality to STTell1Board

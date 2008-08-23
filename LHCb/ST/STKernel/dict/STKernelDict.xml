@@ -5,8 +5,13 @@
   <class name = "STTell1ID" />
   <class name = "STTell1Board" />
   <class name = "STBitsPolicy" />
+  <class name = "STDAQ::BeetleRepresentation" />
+  <class name = "STDAQ::PPRepresentation" />
+  <class name = "STDAQ::StripRepresentation" />
+
   <enum pattern="STBitsPolicy::bits" />
   <enum pattern="STBitsPolicy::masks" />
   <function pattern="STFun::*" />
+
 
 </lcgdict>

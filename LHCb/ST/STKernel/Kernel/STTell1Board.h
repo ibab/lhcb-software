@@ -1,4 +1,4 @@
-// $Id: STTell1Board.h,v 1.9 2008-08-15 08:01:06 mneedham Exp $
+// $Id: STTell1Board.h,v 1.10 2008-08-23 08:22:45 mneedham Exp $
 #ifndef _STTell1Board_H
 #define _STTell1Board_H 1
 
@@ -49,32 +49,8 @@ public:
 			const int version,
                         const unsigned int aDAQChan) const;
 
-    /** construct LHCb::STChannelID from 
-    *   beetle [0 - 23]
-    *   port [0 -3]
-    *   strip [0 -31]
-    */
-    STTell1Board::chanPair BeetleRepDAQToOffline(const unsigned int fracStrip,
-					const int version,
-                                        const unsigned int beetle,
-                                        unsigned int port = 0,
-					 unsigned int strip = 0) const;
-
-   /** construct LHCb::STChannelID from 
-   *   pp [0-3]
-   *   beetle [0 - 5]
-   *   port [0 -3]
-   *   strip [0 -31]
-   */
-   STTell1Board::chanPair PPRepDAQToOffline(const unsigned int fracStrip,
- 			              const int version,
-                                      const unsigned int pp,
-                                      unsigned int beetle =0,
-                                      unsigned int port = 0,
-                                      unsigned int strip = 0) const;
-
   /// fill adc values offline 
-    void ADCToOffline(const unsigned int aDAQChan,
+  void ADCToOffline(const unsigned int aDAQChan,
 		      LHCb::STCluster::ADCVector& adcs,
 		      const int version,
 		      const unsigned int offset,
