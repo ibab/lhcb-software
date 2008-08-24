@@ -1,0 +1,32 @@
+MoniVELOSeq.Members += {   "Velo::VeloClusterMonitor/VCMPrev7"
+                         , "Velo::VeloClusterMonitor/VCMPrev6"
+                         , "Velo::VeloClusterMonitor/VCMPrev5"
+                         , "Velo::VeloClusterMonitor/VCMPrev4"
+                         , "Velo::VeloClusterMonitor/VCMPrev3"
+                         , "Velo::VeloClusterMonitor/VCMPrev2"
+                         , "Velo::VeloClusterMonitor/VCMPrev1"
+                         , "Velo::VeloClusterMonitor/VCMDefault"
+                         , "Velo::VeloClusterMonitor/VCMNext1"
+                         , "Velo::VeloClusterMonitor/VCMNext2"
+                         , "Velo::VeloClusterMonitor/VCMNext3"
+                         , "Velo::VeloClusterMonitor/VCMNext4"
+                         , "Velo::VeloClusterMonitor/VCMNext5"
+                         , "Velo::VeloClusterMonitor/VCMNext6"
+                         , "Velo::VeloClusterMonitor/VCMNext7"
+                         , "Velo::VeloSamplingMonitor/VSM"
+};
+
+VCMPrev7.VeloClusterLocation = "Raw/Velo/Prev7/Clusters";
+VCMPrev6.VeloClusterLocation = "Raw/Velo/Prev6/Clusters";
+VCMPrev5.VeloClusterLocation = "Raw/Velo/Prev5/Clusters";
+VCMPrev4.VeloClusterLocation = "Raw/Velo/Prev4/Clusters";
+VCMPrev3.VeloClusterLocation = "Raw/Velo/Prev3/Clusters";
+VCMPrev2.VeloClusterLocation = "Raw/Velo/Prev2/Clusters";
+VCMPrev1.VeloClusterLocation = "Raw/Velo/Prev1/Clusters";
+VCMNext1.VeloClusterLocation = "Raw/Velo/Next1/Clusters";
+VCMNext2.VeloClusterLocation = "Raw/Velo/Next2/Clusters";
+VCMNext3.VeloClusterLocation = "Raw/Velo/Next3/Clusters";
+VCMNext4.VeloClusterLocation = "Raw/Velo/Next4/Clusters";
+VCMNext5.VeloClusterLocation = "Raw/Velo/Next5/Clusters";
+VCMNext6.VeloClusterLocation = "Raw/Velo/Next6/Clusters";
+VCMNext7.VeloClusterLocation = "Raw/Velo/Next7/Clusters";

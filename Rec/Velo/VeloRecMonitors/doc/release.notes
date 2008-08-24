@@ -7,6 +7,7 @@
 ! 2008-08-24 - Eduardo Rodrigues
  - settings to run over Friday 22nd LHC injection test: settings to look at
    specific sensors on
+ - related options file added
  - improvements to R-correlation plot
    
 ! 2008-08-21 - Eduardo Rodrigues
