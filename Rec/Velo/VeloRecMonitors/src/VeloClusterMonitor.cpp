@@ -1,4 +1,4 @@
-// $Id: VeloClusterMonitor.cpp,v 1.4 2008-08-21 11:39:38 erodrigu Exp $
+// $Id: VeloClusterMonitor.cpp,v 1.5 2008-08-24 07:47:03 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -11,6 +11,7 @@
 #include "VeloClusterMonitor.h"
 
 // from Boost
+#include <boost/assign/list_of.hpp>
 #include <boost/lexical_cast.hpp>
 
 //-----------------------------------------------------------------------------
@@ -37,8 +38,11 @@ Velo::VeloClusterMonitor::VeloClusterMonitor( const std::string& name,
                                               ISvcLocator* pSvcLocator)
   : Velo::VeloMonitorBase ( name , pSvcLocator )
 {
+  m_sensorNumbers = boost::assign::list_of(1)(3)(5)(7)(9)(20)(24)(26)(28)(30);
+
   declareProperty( "VeloClusterLocation",
                    m_clusterCont = LHCb::VeloClusterLocation::Default );
+  declareProperty( "SensorNumbersForRPlots", m_sensorNumbers );
 }
 
 //=============================================================================
@@ -163,71 +167,93 @@ void Velo::VeloClusterMonitor::monitorClusters() {
 
     // Produce the R correlation plots
     // -------------------------------
-    if ( sensorNumber == 0 ||
-         sensorNumber == 2 ||
-         sensorNumber == 4 ||
-         sensorNumber == 6 ||
-         sensorNumber == 8 ||
-         sensorNumber == 1 ||
-         sensorNumber == 3 ||
-         sensorNumber == 5 ||
-         sensorNumber == 7 ||
-         sensorNumber == 9
-         ) {
+    if ( m_sensorNumbers.end()
+	 != std::find( m_sensorNumbers.begin(), m_sensorNumbers.end(), sensorNumber ) ) {
+      
       const DeVeloRType* rSensor1 = dynamic_cast<const DeVeloRType*>( veloSensor );
       double localR1 = rSensor1 -> rOfStrip( stripNumber );
-      rCorrelations( sensorNumber, localR1, sensorNumber+2 );
+      rDifferences( sensorNumber, localR1, sensorNumber+2 );
+
+      if ( sensorNumber == 24 ) rCorrelations( sensorNumber, localR1 );
     }
-
-//     if ( sensorNumber==0 && veloSensor->isR() ) {
-//       const DeVeloRType* rSensor1 = dynamic_cast<const DeVeloRType*>( veloSensor );
-//       double localR1 = rSensor1 -> rOfStrip( stripNumber );
-
-//       LHCb::VeloClusters::const_iterator itVC2;
-//       for ( itVC2 = m_clusters -> begin(); itVC2 != m_clusters -> end(); ++itVC2 ) {
-//         LHCb::VeloCluster* cluster2 = (*itVC2);
-//         unsigned int sensorNumber2 = cluster2 -> channelID().sensor();
-//         const DeVeloSensor* veloSensor2 = m_veloDet -> sensor( sensorNumber2 );        
-//         if (sensorNumber2==2 && veloSensor2->isR() ) {
-//           const DeVeloRType* rSensor2 = dynamic_cast<const DeVeloRType*>( veloSensor2 );
-//           unsigned int stripNumber2 = cluster2 -> channelID().strip(); 
-//           double localR2 = rSensor2 -> rOfStrip( stripNumber2 );
-          
-//           plot1D( localR1-localR2, "R difference plot (02)",
-//                   "R difference plot (02)", 0., 20., 40 );
-//         }
-//       }
-//     }
   }
 }
 
 //=============================================================================
-//  R correlation distributions
+//  R_i -R_j difference distributions
 //=============================================================================
-void Velo::VeloClusterMonitor::rCorrelations( unsigned int sensorNumber1,
-                                              double localR1,
-                                              unsigned int sensorNumber2 ) {
+void Velo::VeloClusterMonitor::rDifferences( unsigned int sensorNumber1,
+                                             double localR1,
+                                             unsigned int sensorNumber2 ) {
 
   LHCb::VeloClusters::const_iterator itVC;
-  
+ 
+  std::string sn  = boost::lexical_cast<std::string>( sensorNumber1 )
+                  + "-"
+                  + boost::lexical_cast<std::string>( sensorNumber2 );
+
   for ( itVC = m_clusters -> begin(); itVC != m_clusters -> end(); ++itVC ) {
     
     unsigned int sensorNumber = (*itVC) -> channelID().sensor();
     const DeVeloSensor* veloSensor = m_veloDet -> sensor( sensorNumber );
-
+    
     if ( sensorNumber==sensorNumber2 ) {
       const DeVeloRType* rSensor = dynamic_cast<const DeVeloRType*>( veloSensor );
       unsigned int stripNumber = (*itVC) -> channelID().strip(); 
-      double localR2           = rSensor -> rOfStrip( stripNumber );
-
-      std::string sn  = boost::lexical_cast<std::string>( sensorNumber1 )
-                      + "-"
-                      + boost::lexical_cast<std::string>( sensorNumber2 );
+      double localR2           = rSensor -> rOfStrip( stripNumber );      
 
       plot1D( localR1-localR2, "Sensors R diff. (" + sn + ")",
               "Sensors R difference (sensors " + sn + ")", -10.5, 10.5, 41 );
     }
   }
+}
+
+//=============================================================================
+//  R_i -R_j difference distributions
+//=============================================================================
+void Velo::VeloClusterMonitor::rCorrelations( unsigned int sensorNumber1,
+					      double localR1 ) {
+
+  LHCb::VeloClusters::const_iterator itVC;
+
+  std::vector<LHCb::VeloCluster*> clusters2;
+  std::vector<LHCb::VeloCluster*> clusters4;
+  
+  for ( itVC = m_clusters -> begin(); itVC != m_clusters -> end(); ++itVC ) {
+    
+    unsigned int sensorNumber = (*itVC) -> channelID().sensor();
+  
+    if      ( sensorNumber == sensorNumber1+2 ) clusters2.push_back( (*itVC) );
+    else if ( sensorNumber == sensorNumber1+4 ) clusters4.push_back( (*itVC) );
+    
+  }
+
+  std::string sn = boost::lexical_cast<std::string>( sensorNumber1 );
+
+  std::vector<LHCb::VeloCluster*>::const_iterator it2, it4;
+
+  for ( it2 = clusters2.begin(); it2 != clusters2.end(); ++it2 ) {
+    
+    for ( it4 = clusters4.begin(); it4 != clusters4.end(); ++it4 ) {
+      
+      const DeVeloSensor* veloSensor2 = m_veloDet -> sensor( sensorNumber1 + 2 );
+      const DeVeloSensor* veloSensor4 = m_veloDet -> sensor( sensorNumber1 + 4 );
+      const DeVeloRType* rSensor2 = dynamic_cast<const DeVeloRType*>( veloSensor2 );
+      const DeVeloRType* rSensor4 = dynamic_cast<const DeVeloRType*>( veloSensor4 );
+      unsigned int stripNumber2 = (*it2) -> channelID().strip();
+      unsigned int stripNumber4 = (*it4) -> channelID().strip();
+      double localR2 = rSensor2 -> rOfStrip( stripNumber2 );
+      double localR4 = rSensor4 -> rOfStrip( stripNumber4 );
+
+      plot2D( localR1-localR2, localR2-localR4,
+              "R-Sensors R_s(i+2)-R_s(i+4) vs R_s(i)-R_s(i+2), i=" + sn,
+	      "R-Sensors R_s(i+2)-R_s(i+4) versus R_s(i)-R_s(i+2), i=" + sn,
+              -10.5, 10.5, -10.5, 10.5, 41, 41 );
+
+    }
+    
+  }
+
 }
 
 //=============================================================================

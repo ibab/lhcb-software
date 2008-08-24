@@ -4,6 +4,11 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2008-08-24 - Eduardo Rodrigues
+ - settings to run over Friday 22nd LHC injection test: settings to look at
+   specific sensors on
+ - improvements to R-correlation plot
+   
 ! 2008-08-21 - Eduardo Rodrigues
  - VeloClusterMonitor: added R correlation plots for a few
    consecutive R sensors
