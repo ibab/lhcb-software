@@ -22,7 +22,7 @@ public:
   DimServiceMonObject(std::string svcName, MonObject *monObject);
   virtual ~DimServiceMonObject();
   
-  void updateServiceMonObject(bool endOfRun);
+  void updateService(bool endOfRun);
   void setDataFromMonObject();
   MonObject* monObject(){return m_monObject;};
 };

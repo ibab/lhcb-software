@@ -17,9 +17,11 @@ class DimInfoMonObject;
 class DimServiceMonObject;
 class BaseServiceMap {
 public:
-  BaseServiceMap(std::string name, ProcessMgr *processMgr); 
+  BaseServiceMap(ProcessMgr *processMgr); 
   virtual ~BaseServiceMap();
-  
+  void removeMap();
+
+
   IMessageSvc* msgSvc();
   std::string name() { return m_name;}
   

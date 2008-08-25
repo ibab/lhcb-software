@@ -15,15 +15,19 @@ MonObject(msgSvc, source, version)
 MonProfile::~MonProfile(){
 //   MsgStream msgStream = createMsgStream();
 //   msgStream <<MSG::DEBUG<<"deleting binCont" << endreq;
-  delete binCont;
+  if (binCont) {delete binCont;binCont=0;}
 //   msgStream <<MSG::DEBUG<<"deleting binErr" << endreq;
-  delete binErr;
+  if (binErr) {delete binErr;binErr=0;}
 //   msgStream <<MSG::DEBUG<<"deleting binLabelX" << endreq;
-  if (bBinLabelX) delete binLabelX;
+  if (bBinLabelX) {
+    if (binLabelX) {delete binLabelX;binLabelX=0;}
+  }
 //   msgStream <<MSG::DEBUG<<"deleting binLabelY" << endreq;
-  if (bBinLabelY) delete binLabelY;
+  if (bBinLabelY) {
+    if (binLabelY) {delete binLabelY;binLabelY=0;}
+  }
 //   msgStream <<MSG::DEBUG<<"deleting m_fSumw2" << endreq;
-  delete m_fSumw2;
+  if (m_fSumw2) {delete m_fSumw2;m_fSumw2=0;}
 // BUGG...I dont know yet why I can't do it..  
 /*  if (m_profile!=0) {
     msgStream <<MSG::DEBUG<<"deleting m_profile" << endreq;

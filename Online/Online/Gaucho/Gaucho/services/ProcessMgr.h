@@ -3,6 +3,7 @@
 
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IMessageSvc.h"
+#include "Gaucho/IGauchoMonitorSvc.h"
 #include <string>
 #include <set>
 #include <map>
@@ -23,7 +24,7 @@ class Interactor;
 class DimTimerProcess;
 class ProcessMgr {
 public:
-  ProcessMgr(std::string name, IMessageSvc* msgSvc, Interactor *service); 
+  ProcessMgr(IMessageSvc* msgSvc, Interactor *service); 
   virtual ~ProcessMgr();
   DimInfoServers*  dimInfoServers() {return m_dimInfoServers;}
   DimInfoServices* dimInfoServices(){return m_dimInfoServices;}
@@ -58,7 +59,12 @@ public:
   void setSaveDir(const std::string &saveDir){m_saveDir = saveDir;}
   void timerHandler();
 
+  
+  void setMonitorSvc(IGauchoMonitorSvc* pGauchoMonitorSvc){m_pGauchoMonitorSvc = pGauchoMonitorSvc;}
+  void setFileStaus(std::string& file) {m_pFile = &file;}
+  void setFileSizeStaus(int& fileSize) {m_pFileSize = &fileSize;}
 
+  
 private:
   std::set<std::string> decodeServerList(const std::string &serverListS);
 
@@ -70,6 +76,10 @@ protected:
   
   std::string m_utgid;
   std::string m_nodeName;
+  
+  std::string *m_pFile;
+  int *m_pFileSize;
+  IGauchoMonitorSvc* m_pGauchoMonitorSvc; ///< Online Gaucho Monitoring Service
   
   bool m_withPartitionName;
   std::vector<std::string> m_partName;

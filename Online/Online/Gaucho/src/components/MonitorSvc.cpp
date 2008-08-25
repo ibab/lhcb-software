@@ -52,7 +52,11 @@ MonitorSvc::MonitorSvc(const std::string& name, ISvcLocator* sl):
    declareProperty("disableDeclareInfoString", m_disableDeclareInfoString = 0);
    declareProperty("disableDeclareInfoPair", m_disableDeclareInfoPair = 0);
    declareProperty("disableDeclareInfoFormat", m_disableDeclareInfoFormat = 0);
-   declareProperty("disableDeclareInfoHistos", m_disableDeclareInfoHistos = 0);
+   declareProperty("disableDeclareInfoHistos", m_disableDeclareInfoHistos);
+ 
+  MsgStream msg(msgSvc(),"MonitorSvc");
+  msg << MSG::DEBUG << "Constructor===>m_disableDeclareInfoHistos : " << m_disableDeclareInfoHistos << endreq;
+
 }
 
 
@@ -80,29 +84,32 @@ StatusCode MonitorSvc::initialize() {
 
   MsgStream msg(msgSvc(),"MonitorSvc");
 
+  msg << MSG::DEBUG << "Initialize=====>m_disableDeclareInfoHistos : " << m_disableDeclareInfoHistos << endreq;
+
+
   //const std::string& utgid = RTL::processName();
   m_utgid = RTL::processName();
-  msg << MSG::INFO << "initialize: Setting up DIM for UTGID " << m_utgid << endreq;
+  msg << MSG::DEBUG << "initialize: Setting up DIM for UTGID " << m_utgid << endreq;
 
   if ( 0 == m_disableDimPropServer) {
     m_dimpropsvr= new DimPropServer(m_utgid, serviceLocator());
-    msg << MSG::INFO << "DimPropServer created with name " << m_utgid << endreq;
+    msg << MSG::DEBUG << "DimPropServer created with name " << m_utgid << endreq;
   }
-  else msg << MSG::INFO << "DimPropServer process is disabled." << endreq;
+  else msg << MSG::DEBUG << "DimPropServer process is disabled." << endreq;
 
   if ( 0 == m_disableDimPropServer) {
     m_dimcmdsvr = new DimCmdServer( (m_utgid+"/"), serviceLocator(), this);
-    msg << MSG::INFO << "DimCmdServer created with name " << (m_utgid+"/") << endreq;
+    msg << MSG::DEBUG << "DimCmdServer created with name " << (m_utgid+"/") << endreq;
   }
-  else msg << MSG::INFO << "DimCmdServer process is disabled." << endreq; 
+  else msg << MSG::DEBUG << "DimCmdServer process is disabled." << endreq; 
 
   if ( 0 == m_disableMonRate) {
-    msg << MSG::INFO << "new MonRate " << endreq;
+    msg << MSG::DEBUG << "new MonRate " << endreq;
     m_monRate = new MonRate(msgSvc(), "MonitorSvc", 0);
     m_monRateDeclared = false;
-    msg << MSG::INFO << "End of new MonRate Information" << endreq;
+    msg << MSG::DEBUG << "End of new MonRate Information" << endreq;
   }
-  else  msg << MSG::INFO << "MonRate process is disable." << endreq; 
+  else  msg << MSG::DEBUG << "MonRate process is disabled." << endreq; 
 
   return StatusCode::SUCCESS;
 }
@@ -112,23 +119,23 @@ StatusCode MonitorSvc::finalize() {
   
   //dim_lock();
   MsgStream msg(msgSvc(),"MonitorSvc");
-  msg << MSG::INFO << "MonitorSvc Destructor" << endreq;
+  msg << MSG::DEBUG << "MonitorSvc Destructor" << endreq;
 //  m_InfoNamesMap.clear();
   if ( 0 == m_disableDimCmdServer){
-    msg << MSG::INFO << "delete m_dimcmdsvr" << endreq;
-    delete m_dimcmdsvr;  m_dimcmdsvr = 0;
+    msg << MSG::DEBUG << "delete m_dimcmdsvr" << endreq;
+    if (m_dimcmdsvr) delete m_dimcmdsvr;  m_dimcmdsvr = 0;
   }
   if ( 0 == m_disableDimPropServer){
-    msg << MSG::INFO << "delete m_dimpropsvr" << endreq;
-    delete m_dimpropsvr; m_dimpropsvr = 0;
+    msg << MSG::DEBUG << "delete m_dimpropsvr" << endreq;
+    if (m_dimpropsvr) delete m_dimpropsvr; m_dimpropsvr = 0;
   }
 
   if ( 0 == m_disableMonRate){
-    msg << MSG::INFO << "delete m_monRate" << endreq;
-    delete m_monRate; m_monRate = 0;
+    msg << MSG::DEBUG << "delete m_monRate" << endreq;
+    //if (m_monRate) delete m_monRate; m_monRate = 0;
   }
   //dim_unlock();
-  msg << MSG::INFO << "finalized successfully" << endreq;
+  msg << MSG::DEBUG << "finalized successfully" << endreq;
   
   return StatusCode::SUCCESS;
 }
@@ -235,20 +242,20 @@ void MonitorSvc::declareInfo(const std::string& name, const double& var,
     std::string newName = extract("COUNTER_TO_RATE", name);
     if ( 0 == m_disableMonRate) {
       if (!m_monRateDeclared) {
-        msg << MSG::INFO << "Declaring MonRate " << endreq; 
+        msg << MSG::DEBUG << "Declaring MonRate " << endreq; 
         if (!registerName("monRate", this)) return;
-        msg << MSG::INFO << "Setting comments in MonRate " << endreq; 
+        msg << MSG::DEBUG << "Setting comments in MonRate " << endreq; 
         m_monRate->setComments("My name is MonRate. Nice to meet you !!");
-        msg << MSG::INFO << "Registering MonRate " << endreq; 
+        msg << MSG::DEBUG << "Registering MonRate " << endreq; 
         std::pair<std::string, std::string> dimSvcName = registerDimSvc("monRate", "MonR/", this, false);
         if ("" == dimSvcName.second) return;
-        msg << MSG::INFO << "Printing MonRate " << endreq;
+        msg << MSG::DEBUG << "Printing MonRate " << endreq;
         m_monRate->print();
-        msg << MSG::INFO << "Creating DimServiceMonObject for MonRate " << endreq;
+        msg << MSG::DEBUG << "Creating DimServiceMonObject for MonRate " << endreq;
         m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, m_monRate);
         m_monRateDeclared = true;
       }
-      msg << MSG::INFO << "Adding Counter to MonRate"<< newName << ", whit description: " << desc << endreq; 
+      msg << MSG::DEBUG << "Adding Counter to MonRate"<< newName << ", whit description: " << desc << endreq; 
       m_monRate->addCounter(newName, desc, var);
     }
     else msg << MSG::INFO << "Counter "<< newName << " can not be declared because MonRate process is disable." << endreq; 
@@ -372,9 +379,11 @@ void MonitorSvc::declareInfo(const std::string& name, const std::string& format,
 void MonitorSvc::declareInfo(const std::string& name, const AIDA::IBaseHistogram* var, 
                              const std::string& desc, const IInterface* owner) 
 {
+  MsgStream msg(msgSvc(),"MonitorSvc");
+  msg << MSG::DEBUG << "m_disableDeclareInfoHistos : " << m_disableDeclareInfoHistos << endreq;
+
   if (0 != m_disableDeclareInfoHistos) return;
 
-  MsgStream msg(msgSvc(),"MonitorSvc");
   MonObject *monObject=0;
   bool isMonObject = false;
   std::string prefix = "";
@@ -459,7 +468,7 @@ bool MonitorSvc::registerName(const std::string& name, const IInterface* owner)
   std::string ownerName = infoOwnerName(owner);
   if( m_InfoNamesMapIt != m_InfoNamesMap.end()) {
     std::pair<std::set<std::string>::iterator,bool> p = (*m_InfoNamesMapIt).second.insert(name);
-    if( p.second) msg << MSG::INFO << "Declaring info: Owner: " << ownerName << " Name: " << name << endreq;
+    if( p.second) msg << MSG::DEBUG << "Declaring info: Owner: " << ownerName << " Name: " << name << endreq;
     else 
     { // Insertion failed: Name already exists
       msg << MSG::ERROR << "Already existing info " << name << " from owner " << ownerName << " not published" << endreq;
@@ -491,7 +500,7 @@ void MonitorSvc::undeclareInfo( const std::string& name, const IInterface* owner
     undeclService( dimName ) ;
     undeclService( dimName + "/gauchocomment") ;
     (*infoNamesSet).erase(name);
-    msg << MSG::INFO << "undeclareInfo: " << name << " from owner " 
+    msg << MSG::DEBUG << "undeclareInfo: " << name << " from owner " 
         << ownerName  << " undeclared" << endreq;
   }  
   else{
@@ -668,7 +677,7 @@ void MonitorSvc::updateService(std::string infoName, bool endOfRun)
   m_dimSrvIt = m_dimSrv.find(infoName);
   if(m_dimSrvIt != m_dimSrv.end()) {
     DimServiceMonObject* dimSvcMO = dynamic_cast<DimServiceMonObject*>((*m_dimSrvIt).second);
-    if (0 != dimSvcMO) dimSvcMO->updateServiceMonObject(endOfRun);
+    if (0 != dimSvcMO) dimSvcMO->updateService(endOfRun);
     else (*m_dimSrvIt).second->updateService(); //THIS IS WRONG
     //msg << MSG::DEBUG << "updateSvc: Service " + infoName + " updated" << endreq;
     return;

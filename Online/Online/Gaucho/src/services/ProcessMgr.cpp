@@ -7,13 +7,18 @@
 #include "CPP/Interactor.h"
 #include "TFile.h"
 
-ProcessMgr::ProcessMgr(std::string name, IMessageSvc* msgSvc, Interactor *service):m_name("ProcessMgr"), m_msgSvc(msgSvc), m_service(service)
+ProcessMgr::ProcessMgr(IMessageSvc* msgSvc, Interactor *service):m_name("ProcessMgr"), m_msgSvc(msgSvc), m_service(service)
 {
   m_isAdder = false;
   m_withPartitionName = false;
 }
 
 ProcessMgr::~ProcessMgr() {
+  m_dimTimerProcess->stop();
+  if (m_dimTimerProcess) {delete m_dimTimerProcess; m_dimTimerProcess=0;}
+  if (m_dimInfoServices) {delete m_dimInfoServices; m_dimInfoServices=0;}
+  if (m_dimInfoServers) {delete m_dimInfoServers; m_dimInfoServers=0;}
+  if (m_serviceMap) {delete m_serviceMap; m_serviceMap=0;}
 }
 
 void ProcessMgr::updateMap(){
@@ -22,7 +27,7 @@ void ProcessMgr::updateMap(){
 
 void ProcessMgr::createInfoServers() {
   MsgStream msg(msgSvc(), name());
-  m_serviceMap = new BaseServiceMap(name(), this);
+  m_serviceMap = new BaseServiceMap(this);
   msg << MSG::DEBUG << "Creating Server Status"<< endreq;
   m_dimInfoServers = new DimInfoServers(this);
 }
@@ -51,9 +56,11 @@ void ProcessMgr::timerHandler(){
   }
   else { //it's a saver May be we have to save every deltaT
     msg << MSG::DEBUG << "isSaver"<< endreq;
-    std::string fileName = "from timerHandler";
-    int fileSize = 0;
-    m_serviceMap->write(m_saveDir, fileName, fileSize);
+    //std::string fileName = "from timerHandler";
+    //int fileSize = 0;
+    m_serviceMap->write(m_saveDir, *m_pFile, *m_pFileSize);
+    //m_pGauchoMonitorSvc->updateService(infoName, false);
+    m_pGauchoMonitorSvc->updateAll(false);
   }
 }
 
@@ -91,7 +98,7 @@ void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> 
     msg << MSG::DEBUG << "Verifying service2 = " << serviceName<< endreq;
 
     std::vector<std::string>::const_iterator it;
-    if (m_subfarmName.size() != 0){
+    if (m_subfarmName.size() != 0) {
       bool chooseIt=false;
       for(it=m_subfarmName.begin(); it!=m_subfarmName.end(); ++it){
         msg << MSG::DEBUG << "verifying subfarmName in serviceName "<< serviceName << endreq;
@@ -115,7 +122,19 @@ void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> 
     //it should be possible to have an unlimited number of slashes im the histogram names
     if (serviceParts.size() < 4 ) continue; 
     std::string svctype = serviceParts[0];
-    msg << MSG::DEBUG << "svctype = " << svctype << endreq;
+    msg << MSG::INFO << "svctype = " << svctype << endreq;
+
+    std::string pfxSvcType = svctype.substr(0, 3);
+    if ((pfxSvcType.compare("MON")!=0)&&(pfxSvcType.compare("mon")!=0)&&(pfxSvcType.compare("Mon")!=0)) {
+      msg << MSG::INFO << "REFUSED because this service is not a MonObject: "<< pfxSvcType << endreq;
+      continue;  
+    }
+    pfxSvcType = svctype.substr(3, 1);
+    if ((pfxSvcType.compare("H")!=0)&&(pfxSvcType.compare("h")!=0)&&(pfxSvcType.compare("R")!=0)&&(pfxSvcType.compare("r")!=0)  ) {
+      msg << MSG::INFO << "REFUSED because this MonObject Service is not a MonH nor a MonR: " << pfxSvcType << endreq;
+      continue;  
+    }
+    
     std::string utgid = serviceParts[1];
     msg << MSG::DEBUG << "utgid = " << utgid << endreq;
     
@@ -319,13 +338,14 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
         }
       }
       else { // This is a Saver
-        if ((taskName != "Adder")&&(taskName != "ADDER")) {
-          msg << MSG::DEBUG << "REFUSED because savers can save only adders."<< endreq;
+        msg << MSG::DEBUG << "checking taskname= "<< taskName << endreq;
+        if ((taskName.compare("Adder")!=0)&&(taskName.compare("ADDER")!=0)) {
+          msg << MSG::DEBUG << "REFUSED because savers can save only adders. Taskname= "<< taskName << endreq;
           continue; // Savers can save only one Adder results
         }
         if (nodeName.size() !=  m_nodeName.size()){
-          msg << MSG::DEBUG << "REFUSED because it is saving adders and the node name size has to be the same."<< endreq;
-          continue; // In the case of servers the nodeName has to be the same
+          //msg << MSG::DEBUG << "REFUSED because it is saving adders and the node name size has to be the same."<< endreq;
+          //continue; // In the case of servers the nodeName has to be the same
         }
       }
     }
@@ -357,7 +377,7 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
       else msg << MSG::DEBUG << "nodeName OK" << endreq;
 
 
-      if ((taskName != "Adder")&&(taskName != "ADDER")) {
+      if ((taskName.compare("Adder")!=0)&&(taskName.compare("ADDER")!=0)) {
         // when the server is not an adder we can check the task name here.
 
         bool chooseIt=true;
@@ -383,4 +403,3 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
   
   return serverList;
 }
-	

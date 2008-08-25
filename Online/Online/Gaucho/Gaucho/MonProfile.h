@@ -54,7 +54,6 @@ public:
   // data   
   /**********/
   int nbinsx;
-  int nbinsy;
 
   double Xmin;
   double Xmax;

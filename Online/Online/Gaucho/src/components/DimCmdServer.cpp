@@ -1,4 +1,4 @@
-// $Id: DimCmdServer.cpp,v 1.13 2008-08-06 15:40:59 evh Exp $
+// $Id: DimCmdServer.cpp,v 1.14 2008-08-25 08:04:49 evh Exp $
 
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/MsgStream.h"
@@ -46,13 +46,13 @@ DimCmdServer::DimCmdServer(std::string name, ISvcLocator* svclocator, IGauchoMon
   sc = m_svcloc->service("MessageSvc", m_msgsvc);
   MsgStream log(m_msgsvc, "DimCmdServer");  
 
-  log << MSG::INFO << "Creating DimCmdServer for thisnodename " << name 
+  log << MSG::DEBUG << "Creating DimCmdServer for thisnodename " << name 
       << endreq;
 
   // to walk the transient store  
   sc = svclocator->service("HistogramDataSvc",m_histogramSvc,true); 
   if (sc.isSuccess()){
-    log << MSG::INFO << "Found the HistogramDataService" << endreq;
+    log << MSG::DEBUG << "Found the HistogramDataService" << endreq;
   }
   else {
     log << MSG::WARNING << "Unable to locate the HistogramDataService" 
@@ -62,7 +62,7 @@ DimCmdServer::DimCmdServer(std::string name, ISvcLocator* svclocator, IGauchoMon
   //to traverse the transient store
 /*  sc = svclocator->service("MonitorSvc", m_publishSvc, true );
   if( sc.isSuccess() )   {
-    log << MSG::INFO << "Found the IPublish interface" << endreq;
+    log << MSG::DEBUG << "Found the IPublish interface" << endreq;
   }
   else {
     log << MSG::WARNING << "Unable to locate the IPublish interface." 
@@ -70,7 +70,7 @@ DimCmdServer::DimCmdServer(std::string name, ISvcLocator* svclocator, IGauchoMon
   }*/
   sc = svclocator->service("IncidentSvc", m_incidentSvc, true );
   if( sc.isSuccess() )   {
-    log << MSG::INFO << "Found the Incident interface" << endreq;
+    log << MSG::DEBUG << "Found the Incident interface" << endreq;
   }
   else {
     log << MSG::WARNING << "Unable to locate the Incident interface." 
@@ -103,7 +103,7 @@ void DimCmdServer::commandHandler() {
         m_incidentSvc->fireIncident(incident2);
      }
   }
-  log << MSG::INFO << "received command " << m_nextcommand << endreq;
+  log << MSG::DEBUG << "received command " << m_nextcommand << endreq;
   if (strncmp(m_nextcommand,"/stat/",6)==0) {
     std::string  m_rootName;
     SmartDataPtr<DataObject> root(m_histogramSvc,m_rootName);
@@ -124,23 +124,23 @@ void DimCmdServer::commandHandler() {
       sc=m_histogramSvc->retrieveObject(m_nextcommand,mydataobject);
       myhisto=dynamic_cast<AIDA::IHistogram*>(mydataobject);
       if ( sc.isSuccess() ) {
-        log << MSG::INFO << "Histogram retrieved id: " << m_nextcommand << endreq;
+        log << MSG::DEBUG << "Histogram retrieved id: " << m_nextcommand << endreq;
         // now subscribe to it
-        log << MSG::INFO << "Subscribing to service "<< m_nextcommand << endreq;
+        log << MSG::DEBUG << "Subscribing to service "<< m_nextcommand << endreq;
         
         ((IMonitorSvc*) m_publishSvc)->declareInfo(m_nextcommand,myhisto,myhisto->title(),m_histogramSvc);
       }
       else {
-        log << MSG::INFO << "Problem retrieving histogram "
+        log << MSG::DEBUG << "Problem retrieving histogram "
             << m_nextcommand  <<endreq;  
       }
     }
     else{
-      log << MSG::INFO << "Can't get to the histogram service. "  << endreq;
+      log << MSG::DEBUG << "Can't get to the histogram service. "  << endreq;
     }
   }
 
-  log << MSG::INFO << "Leaving commandHandler. "  << endreq;
+  log << MSG::DEBUG << "Leaving commandHandler. "  << endreq;
 
   //  delete [] m_nextcommand;
 

@@ -1,4 +1,4 @@
-// $Id: DimPropServer.cpp,v 1.13 2008-08-06 15:40:59 evh Exp $
+// $Id: DimPropServer.cpp,v 1.14 2008-08-25 08:04:49 evh Exp $
 
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/MsgStream.h"
@@ -58,7 +58,7 @@ DimPropServer::DimPropServer(std::string name, ISvcLocator* svclocator) :  DimRp
   // to walk the transient store  
   sc = svclocator->service("HistogramDataSvc", m_histogramSvc,true); 
   if (sc.isSuccess()){    
-    log << MSG::INFO << "Found the HistogramDataService" << endreq;
+    log << MSG::DEBUG << "Found the HistogramDataService" << endreq;
   }
   else {    
     log << MSG::FATAL << "Unable to locate the HistogramDataService" << endreq;
@@ -79,7 +79,7 @@ DimPropServer::DimPropServer(std::string name, ISvcLocator* svclocator) :  DimRp
 
   if( sc.isSuccess() ) {
     m_appmgr=appmgr;
-    log << MSG::INFO << "Found ApplicationMgr"<< endreq;
+    log << MSG::DEBUG << "Found ApplicationMgr"<< endreq;
   }
   else
     log << MSG::FATAL << "Unable to locate the ApplicationMgr" << endreq;
@@ -88,7 +88,7 @@ DimPropServer::DimPropServer(std::string name, ISvcLocator* svclocator) :  DimRp
   SmartIF<IAlgManager> algman ( IID_IAlgManager, appmgr );
   if( algman.isValid() ) {
     m_algman=algman;
-    log << MSG::INFO << "Found the AlgoritmFactory" << endreq;
+    log << MSG::DEBUG << "Found the AlgoritmFactory" << endreq;
   }
   else {
     log << MSG::FATAL << "Unable to locate the AlgorithmFactory" << endreq;
@@ -119,7 +119,7 @@ void DimPropServer::rpcHandler() {
 
   IHistogramSvc* histoSvc();
 
-  log << MSG::INFO << "received command " << nextRPCcommand << endreq;
+  log << MSG::DEBUG << "received command " << nextRPCcommand << endreq;
   if (strcmp(nextRPCcommand,"list")==0) {
     int size=0;   
    
@@ -133,7 +133,7 @@ void DimPropServer::rpcHandler() {
       std::string theName =(*nextAlg)->name();
       StatusCode result = m_algman->getAlgorithm( theName, theIAlg );
       if ( result.isSuccess( ) ) {
-        log << MSG::INFO << " Next algorithm name: "<<theName<< endreq;
+        log << MSG::DEBUG << " Next algorithm name: "<<theName<< endreq;
         //	      try (
         alg = dynamic_cast<Algorithm*>(theIAlg);
         //	      }
@@ -147,7 +147,7 @@ void DimPropServer::rpcHandler() {
         itend = theSubAlgs->end();
         for ( it=theSubAlgs->begin();it!=itend;it++) {
 	        // Algorithm* theSubAlgorithm = (*it);
-          log << MSG::INFO << " Next sub algorithm: "<<(*it)->name()<< endreq;
+          log << MSG::DEBUG << " Next sub algorithm: "<<(*it)->name()<< endreq;
         }
         //	      }	 
       }   
@@ -158,13 +158,13 @@ void DimPropServer::rpcHandler() {
       size+=strlen(tmp)+1; 
     } 
 
-    log << MSG::INFO << " Size of list: "<<size<< " Setting data." << endreq;
+    log << MSG::DEBUG << " Size of list: "<<size<< " Setting data." << endreq;
     setData(nextdata,size);
 
   }
   else {   
     if (strcmp(nextRPCcommand,"wait")==0)   {
-      log << MSG::INFO << " Wait found. Setting data to null. "<< endreq;   
+      log << MSG::DEBUG << " Wait found. Setting data to null. "<< endreq;   
       setData("");
     }
     else {        
@@ -189,11 +189,11 @@ void DimPropServer::rpcHandler() {
           Leaves leaves;
           StatusCode sc = mgr->objectLeaves(pObj, leaves);
           if ( sc.isSuccess() )  {
-            log << MSG::INFO << "Found leaves. "  << endreq;
+            log << MSG::DEBUG << "Found leaves. "  << endreq;
             for ( Leaves::const_iterator i=leaves.begin(); 
                   i != leaves.end(); i++ )   {
               const std::string& id = (*i)->identifier();
-              log << MSG::INFO << "Histogram found with id " << id 
+              log << MSG::DEBUG << "Histogram found with id " << id 
                   << " char 6 "<< id.substr(6,1)	       <<endreq;
               char ch=id[6];
               if (isdigit(ch))
@@ -210,12 +210,12 @@ void DimPropServer::rpcHandler() {
                 if (sc.isSuccess()) {
                   myhisto=dynamic_cast<AIDA::IHistogram*>(mydataobject);
 		  if ((strcmp(nextRPCcommand,"resethistos")==0)||(strstr(nextRPCcommand,myhisto->title().c_str())!=0)) {
-                     log << MSG::INFO << " Resetting histogram : "
+                     log << MSG::DEBUG << " Resetting histogram : "
                       << myhisto->title()<<endreq;  
 		      myhisto->reset();
 		  }    
 		  else {
-		      log << MSG::INFO << " Histogram found with title : "
+		      log << MSG::DEBUG << " Histogram found with title : "
                       << myhisto->title()<<endreq;  
 		  }       
                   strcpy(ptr,myhisto->title().c_str());
@@ -251,9 +251,9 @@ void DimPropServer::rpcHandler() {
           nextval=nextval+1;
           strncpy(nextcommand,nextRPCcommand,clen-vlen);
           nextcommand[clen-vlen]='\0';
-          log << MSG::INFO << "algorithm.property to set = " 
+          log << MSG::DEBUG << "algorithm.property to set = " 
               << nextcommand << endreq;
-          log << MSG::INFO << "value to set = " << nextval << endreq;
+          log << MSG::DEBUG << "value to set = " << nextval << endreq;
         }
         else {
           strcpy(nextcommand,nextRPCcommand);
@@ -265,8 +265,8 @@ void DimPropServer::rpcHandler() {
           nextprop=nextprop+1;
           strncpy(nextalg,nextcommand,clen-plen);
           nextalg[clen-plen]='\0';
-          log << MSG::INFO << "algorithm to call = " << nextalg << endreq;
-          log << MSG::INFO << "property  to call = " << nextprop << endreq;
+          log << MSG::DEBUG << "algorithm to call = " << nextalg << endreq;
+          log << MSG::DEBUG << "property  to call = " << nextprop << endreq;
         }
         else {
           strcpy(nextalg,nextcommand);
@@ -281,7 +281,7 @@ void DimPropServer::rpcHandler() {
           if (sc.isSuccess()){
             SmartIF<IProperty>  algprop(ialg);
             iprop=algprop;
-            log << MSG::INFO << "successfully set iprop for nextalg "  
+            log << MSG::DEBUG << "successfully set iprop for nextalg "  
                 << nextalg << endreq;
           }
           else
@@ -295,7 +295,7 @@ void DimPropServer::rpcHandler() {
               sc = iprop->setProperty(nextprop, nextval);
               ialg->initialize();
               if (sc.isSuccess()) {
-                log << MSG::INFO << "set property data to value: " 
+                log << MSG::DEBUG << "set property data to value: " 
                     << nextval << endreq;
               }
               else {
@@ -315,7 +315,7 @@ void DimPropServer::rpcHandler() {
                 if (len>0) len=len-1;
                 strncpy(nextdata,cvalue,len);
                 setData(nextdata);
-                log << MSG::INFO << "sent property data " 
+                log << MSG::DEBUG << "sent property data " 
                     << nextdata << endreq;
               }
               else {
@@ -337,7 +337,7 @@ void DimPropServer::rpcHandler() {
               char proptmp[2000];
               char proptmpdata[2000];
 	       
-              log << MSG::INFO << "Listing all properties."<< endreq;
+              log << MSG::DEBUG << "Listing all properties."<< endreq;
 
               propptr=nextdata;
               const std::vector<Property*> allprops = iprop->getProperties();
@@ -346,7 +346,7 @@ void DimPropServer::rpcHandler() {
                 std::string propvalue="";
                 std::string propname=(*iter)->name();		 
                 iprop->getProperty(propname, propvalue);
-                log << MSG::INFO << "next property name " 
+                log << MSG::DEBUG << "next property name " 
                     << propname << "=" << propvalue << endreq;
                 if (propvalue != "") {
                   strcpy(proptmpdata,propname.c_str());
@@ -360,13 +360,13 @@ void DimPropServer::rpcHandler() {
 		     
                 }
                 else {
-                  log << MSG::INFO << "obtained empty value for property "
+                  log << MSG::DEBUG << "obtained empty value for property "
                       << propname.c_str() << endreq;
                 }
               }
               if (strcmp(nextdata,"")!=0) {
                 setData(nextdata,propsize);
-                log << MSG::INFO << "sent property data. length" 
+                log << MSG::DEBUG << "sent property data. length" 
                     << propsize	 << endreq;
               }
               else {
@@ -379,13 +379,13 @@ void DimPropServer::rpcHandler() {
           } // endif iprop!==0
         } 
         else {
-          log << MSG::INFO << "Setting data to null." << endreq;
+          log << MSG::DEBUG << "Setting data to null." << endreq;
           setData("");
         } // endif to make sense of nextcommand    
       }
     } 
   }
-  log << MSG::INFO << "Leaving rpchandler. Deleting pointers. "  << endreq;
+  log << MSG::DEBUG << "Leaving rpchandler. Deleting pointers. "  << endreq;
 
   delete [] nextdata;
   delete [] nextcommand;

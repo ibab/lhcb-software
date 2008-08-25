@@ -38,18 +38,18 @@ void DimInfoServers::infoHandler() {
 
 void DimInfoServers::chooseServer() {
   
-  //std::cout << "choosing server from " << m_serverMap.size() << std::endl;
+ // std::cout << "choosing server from " << m_serverMap.size() << std::endl;
   
   for (m_it = m_serverMap.begin(); m_it != m_serverMap.end(); ++m_it){
     
-    //std::cout << "server " << m_it->second << " is ";
+   // std::cout << "server " << m_it->second << " is ";
   
     if (m_it->second) {
-      //std::cout <<  " active" << std::endl;
+    //  std::cout <<  " active" << std::endl;
       m_serverChoosed = m_it->first;
       return ;
     }
-     //std::cout <<  " inactive" << std::endl;
+    // std::cout <<  " inactive" << std::endl;
   }
 }
 

@@ -14,7 +14,7 @@
 #include "TFile.h"
 
 
-BaseServiceMap::BaseServiceMap(std::string name, ProcessMgr *processMgr): 
+BaseServiceMap::BaseServiceMap(ProcessMgr *processMgr): 
   m_name("BaseServiceMap"),
   m_processMgr(processMgr)
 {
@@ -22,7 +22,20 @@ BaseServiceMap::BaseServiceMap(std::string name, ProcessMgr *processMgr):
 }
 
 BaseServiceMap::~BaseServiceMap() {
+  removeMap();
+}
 
+void BaseServiceMap::removeMap() {
+  MsgStream msg(m_processMgr->msgSvc(), name());
+  msg << MSG::DEBUG<< "***************************************************************" << endreq;
+  msg << MSG::INFO << " Removing Servers from Maps because the Process was Stoped" << endreq;
+  msg << MSG::DEBUG << "***************************************************************" << endreq;
+  std::map<std::string, bool, std::less<std::string> >::iterator svrMapIt;
+  for (svrMapIt=m_serverMap.begin() ; svrMapIt != m_serverMap.end(); ++svrMapIt){
+    if (!svrMapIt->second) continue; // is already inactive in local dimInfo
+    msg << MSG::INFO << "   Removing Server : " << svrMapIt->first << " from Adder" << endreq;
+    excludeServerInMaps(svrMapIt->first);
+  }
 }
 
 IMessageSvc* BaseServiceMap::msgSvc() 
@@ -154,7 +167,8 @@ void BaseServiceMap::insertDimInfo(const std::string &serviceName, const std::st
   m_dimInfo[groupName][elementName]->setMsgSvc(msgSvc());
       
   msg << MSG::DEBUG << "creating MonObject in DimInfoMonObject " << endreq;
-  m_dimInfo[groupName][elementName]->createMonObject();
+  m_dimInfo[groupName][elementName]->createMonObject();  
+  msg << MSG::DEBUG << "after creating MonObject in DimInfoMonObject " << endreq;
   if (!m_processMgr->isAdder()) {// If it's a Saver we also create the object
     if (0 != m_dimInfo[groupName][elementName]->monObject())
       m_dimInfo[groupName][elementName]->monObject()->createObject();
@@ -311,6 +325,7 @@ std::string BaseServiceMap::createAdderName (const std::string &serviceName){
 void BaseServiceMap::write(std::string saveDir, std::string &fileName, int &fileSize)
 {
   MsgStream msg(msgSvc(), name());
+  msg << MSG::INFO << " We will try to Write " << endreq;
 
   if ((0 == m_serverMap.size())||(0 == m_serviceSet.size())||(0 == m_dimInfo.size())) {
     msg << MSG::INFO << " Writer can't write because ServerMap, ServiceMap or DimInfoMap is empty " << endreq;
@@ -341,7 +356,7 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName, int &file
     f = new TFile(fileName.c_str(),"create");
     //TFile f(fileName.c_str(),"create");
 
-    msg << MSG::DEBUG << "Writing MonObjects"<< endreq;
+    msg << MSG::INFO << "Writing MonObjects"<< endreq;
 
     std::string groupName = it->first;
 
@@ -350,7 +365,7 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName, int &file
       if(0 == it2->second->monObject()) continue;
       it2->second->loadMonObject();
       std::string type = it2->second->monObject()->typeName();
-      msg << MSG::DEBUG << " Service " << it2->first << " is a " << type <<endreq;
+      msg << MSG::INFO << " Service " << it2->first << " is a " << type <<endreq;
       if ((s_monH1F == type)||(s_monH1D == type)||(s_monH1F == type)||(s_monH2D == type)||(s_monProfile == type)) {
         it2->second->monObject()->loadObject();
         it2->second->monObject()->write();
@@ -408,7 +423,7 @@ void BaseServiceMap::add() {
       m_dimSrv[m_dimInfoIt->first].second->combine(it->second->monObject());
     }
     //m_dimSrv[m_dimInfoIt->first].second->print();
-    m_dimSrv[m_dimInfoIt->first].first->updateServiceMonObject(m_dimSrv[m_dimInfoIt->first].second->endOfRun());
+    m_dimSrv[m_dimInfoIt->first].first->updateService(m_dimSrv[m_dimInfoIt->first].second->endOfRun());
     
     std::cout << "==============================================================" << std::endl;
     
