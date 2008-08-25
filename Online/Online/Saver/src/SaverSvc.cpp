@@ -60,7 +60,7 @@ StatusCode SaverSvc::initialize() {
   }
   
   msg << MSG::DEBUG << "***************************************************** " << endreq;
-  msg << MSG::DEBUG << "******************Welcome to Saver******************* " << endreq;
+  msg << MSG::DEBUG << "******************Welcome to Saver test******************* " << endreq;
   msg << MSG::DEBUG << "***************************************************** " << endreq;
   msg << MSG::DEBUG << "This Saver will save data published in : " << m_dimClientDns << endreq;
   
@@ -107,7 +107,7 @@ StatusCode SaverSvc::initialize() {
   msg << MSG::DEBUG << "***************************************************** " << endreq;
     
   msg << MSG::DEBUG << "creating ProcessMgr" << endreq;
-  m_processMgr = new ProcessMgr (name(), msgSvc(), this);
+  m_processMgr = new ProcessMgr (msgSvc(), this);
   if (m_withPartitionName) m_processMgr->setPartVector(m_partName);
   m_processMgr->setTaskVector(m_taskName);
   m_processMgr->setAlgorithmVector(m_algorithmName);
@@ -122,14 +122,20 @@ StatusCode SaverSvc::initialize() {
   m_file="Waiting for command to save histograms............."; 
   m_fileSize=0;
 
-  sc = service("MonitorSvc",m_monitorSvc,true);
+  //sc = service("MonitorSvc",m_monitorSvc,true);
+  sc = service("MonitorSvc",m_pGauchoMonitorSvc,true);
   if ( !sc.isSuccess() )  {
     msg << MSG::ERROR << "Cannot access monitoring service." << endmsg;
     return StatusCode::FAILURE;
   }
+  
+  m_processMgr->setMonitorSvc(m_pGauchoMonitorSvc);
   declareInfo("file",m_file,"Filename of latest saveset");
-  declareInfo("filesize",m_fileSize,"Filesize of latest saveset");
+  //declareInfo("filesize",m_fileSize,"Filesize of latest saveset");
 
+  m_processMgr->setFileStaus(m_file);
+  m_processMgr->setFileSizeStaus(m_fileSize);
+  
   msg << MSG::DEBUG << "Activing PostEvent to StartTimer............." << endreq;
   IocSensor::instance().send(this, s_startTimer, this); //start Timer*/
   
@@ -144,12 +150,12 @@ void SaverSvc::handle(const Event&  ev) {
     save().ignore();
   }
   else if(s_startTimer == ev.type) {
-    msg << MSG::INFO << " We are inside a PostEvent to Start the Timer " << endreq;
+    msg << MSG::DEBUG << " We are inside a PostEvent to Start the Timer " << endreq;
     m_processMgr->dimTimerProcess()->start(m_refreshTime);
-    msg << MSG::INFO << " End PostEvent to Start the Timer " << endreq;
+    msg << MSG::DEBUG << " End PostEvent to Start the Timer " << endreq;
   }
   else if(s_createInfoServices == ev.type ){
-    msg << MSG::INFO << " We are inside a PostEvent to Create the DimInfoServices " << endreq;
+    msg << MSG::DEBUG << " We are inside a PostEvent to Create the DimInfoServices " << endreq;
     msg << MSG::DEBUG << "Choosing Server to get ServicesSet.........." << endreq;
 
     std::string serverChoosed;
@@ -165,22 +171,22 @@ void SaverSvc::handle(const Event&  ev) {
     m_processMgr->createInfoServices(serverChoosed);
 
    // IocSensor::instance().send(this, s_updateServiceMap, ev.data); //start Timer*/
-    msg << MSG::INFO << " End PostEvent to Create the DimInfoServices " << endreq;
+    msg << MSG::DEBUG << " End PostEvent to Create the DimInfoServices " << endreq;
   }
   else if(s_updateSvcMapFromInfoServer == ev.type) {
-    msg << MSG::INFO << " We are inside a PostEvent to UpdateServiceMapFromInfoServer " << endreq;
+    msg << MSG::DEBUG << " We are inside a PostEvent to UpdateServiceMapFromInfoServer " << endreq;
     std::map<std::string, bool, std::less<std::string> >* serverMap = (std::map<std::string, bool, std::less<std::string> >*) ev.data;
     m_processMgr->serviceMap()->updateMap(*serverMap);
     m_processMgr->serviceMap()->printMap();
-    msg << MSG::INFO << " End PostEvent to UpdateServiceMap " << endreq;
+    msg << MSG::DEBUG << " End PostEvent to UpdateServiceMap " << endreq;
   }
   else if(s_updateSvcMapFromInfoService == ev.type) {
-    msg << MSG::INFO << " We are inside a PostEvent to UpdateServiceMapFromInfoService " << endreq;
+    msg << MSG::DEBUG << " We are inside a PostEvent to UpdateServiceMapFromInfoService " << endreq;
     std::set<std::string>* serviceSet = (std::set<std::string>*) ev.data;
     m_processMgr->serviceMap()->setServiceSet(*serviceSet);
     m_processMgr->updateMap();
     m_processMgr->serviceMap()->printMap();
-    msg << MSG::INFO << " End PostEvent to UpdateServiceMapFromInfoService " << endreq;
+    msg << MSG::DEBUG << " End PostEvent to UpdateServiceMapFromInfoService " << endreq;
   }
 }
 
@@ -188,7 +194,7 @@ void SaverSvc::handle(const Event&  ev) {
 void SaverSvc::handle(const Incident& inc) {
 //------------------------------------------------------------------------------
   MsgStream msg(msgSvc(), name());
-  msg << MSG::INFO << "Got incident " << inc.type() << " from " << inc.source() <<endreq;
+  msg << MSG::DEBUG << "Got incident " << inc.type() << " from " << inc.source() <<endreq;
   IocSensor::instance().send(this, s_saveHistos, this);
   
 }
@@ -198,7 +204,7 @@ void SaverSvc::handle(const Incident& inc) {
 StatusCode SaverSvc::finalize() {
 //------------------------------------------------------------------------------
   MsgStream msg(msgSvc(), name());
-  msg << MSG::INFO << "Save historgams on finalized..... " << endmsg;
+  msg << MSG::INFO<< "Save historgams on finalized..... " << endmsg;
   // No linger accept incidents!
   if ( m_incidentSvc ) {
     m_incidentSvc->removeListener(this);
@@ -208,12 +214,13 @@ StatusCode SaverSvc::finalize() {
   // Save histos
   save().ignore();
   // Disconnect NOW from monitoring service
-  if ( m_monitorSvc ) {
-    m_monitorSvc->undeclareAll(this);
-    m_monitorSvc->release();
-    m_monitorSvc = 0;
+  if ( m_pGauchoMonitorSvc ) {
+    m_pGauchoMonitorSvc->undeclareAll(this);
+    m_pGauchoMonitorSvc->release();
+    m_pGauchoMonitorSvc = 0;
   }
   
+  if (m_processMgr) {delete m_processMgr; m_processMgr=0;}
   return Service::finalize();
 }
 
@@ -224,12 +231,13 @@ StatusCode SaverSvc::save() {
   //msg << MSG::INFO << "executing Saver....command " << m_command << endreq;
 
   //if (m_command=="SAVE_HISTOS") {
-    msg << MSG::DEBUG << "SAVE_HISTOS" << endreq;
+    msg << MSG::DEBUG << "save_histos command received." << endreq;
     if (m_processMgr->isAdder()) {
-      msg << MSG::DEBUG << "Sorry Adders can't save." << endreq;
+      msg << MSG::INFO << "Sorry Adders can't save." << endreq;
       return StatusCode::SUCCESS;
     }
     m_processMgr->serviceMap()->write(m_saveDir, m_file, m_fileSize);
+    msg << MSG::INFO << "Finished saving histograms. "<< endreq;
   //}
   
   return StatusCode::SUCCESS;

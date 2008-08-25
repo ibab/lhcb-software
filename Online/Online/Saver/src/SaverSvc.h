@@ -4,7 +4,8 @@
 // Include files
 #include "CPP/Interactor.h"
 #include "GaudiKernel/Service.h"
-#include "GaudiKernel/IMonitorSvc.h"
+//#include "GaudiKernel/IMonitorSvc.h"
+#include "Gaucho/IGauchoMonitorSvc.h"
 #include "GaudiKernel/IIncidentListener.h"
 
 class IIncidentSvc;
@@ -35,12 +36,13 @@ namespace LHCb {
       */
      template <class T>
      void declareInfo(const std::string& nam,const T& var,const std::string& dsc) const {
-       m_monitorSvc->declareInfo(nam, var, dsc, this);
+       m_pGauchoMonitorSvc->declareInfo(nam, var, dsc, this);
      }
 
 private:
   /// Reference to monitoring service
-  IMonitorSvc*  m_monitorSvc;
+  //IMonitorSvc*  m_monitorSvc;
+  IGauchoMonitorSvc* m_pGauchoMonitorSvc; ///< Online Gaucho Monitoring Service
   /// Reference to incident service
   IIncidentSvc* m_incidentSvc;
   
