@@ -1,17 +1,18 @@
-// $Id: LumiFromL0DU.cpp,v 1.3 2008-08-13 16:03:52 panmanj Exp $
+// $Id: LumiFromL0DU.cpp,v 1.4 2008-08-25 10:59:04 panmanj Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
-#include "Kernel/IOnOffline.h"
-// from LHCB
-#include "Event/Track.h"
+#include "GaudiKernel/IAlgManager.h"
+
 #include "Event/HltLumiSummary.h"
 
 #include "HltBase/ANNSvc.h"
 
 // local
 #include "LumiFromL0DU.h"
+
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : LumiFromL0DU
@@ -80,26 +81,6 @@ StatusCode LumiFromL0DU::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
-  // ------------------------------------------
-  // get (existing) container
-  LHCb::HltLumiSummary* hltLS;
-  if ( !exist<LHCb::HltLumiSummarys>(m_OutputContainerName) ){
-    // create output container on the TES
-    m_HltLumiSummarys = new LHCb::HltLumiSummarys();
-    // locate them in the TES
-    put(m_HltLumiSummarys, m_OutputContainerName); 
-    // initialize output class
-    hltLS = new LHCb::HltLumiSummary();
-    m_HltLumiSummarys->insert( hltLS );
-    debug() << m_OutputContainerName << " not found, made a new one" << endmsg ;
-  }
-  else {
-    m_HltLumiSummarys = get<LHCb::HltLumiSummarys>(m_OutputContainerName);
-    hltLS = *m_HltLumiSummarys->begin();
-    debug() << m_OutputContainerName << " found, used the old one" << endmsg ;
-  }
-
-  // ------------------------------------------
   // load the L0DU configuration
   int nCounter =  0;
   if ( !exist<LHCb::L0DUReport>(m_InputSelectionName) ){
@@ -115,7 +96,7 @@ StatusCode LumiFromL0DU::execute() {
     }
     // get the value using its name from the L0Report
     double value = m_L0DUReport->dataValue(m_ValueName);
-    info() << "found value for " << m_ValueName << " " << value << endreq ;
+    debug() << "found value for " << m_ValueName << " " << value << endreq ;
 
     if ( msgLevel(MSG::DEBUG) ) {
       // for debugging, get also value in alternative way
@@ -138,10 +119,11 @@ StatusCode LumiFromL0DU::execute() {
     nCounter = (int) value;
   }
 
-
-  // ------------------------------------------
+  // get container
+  LHCb::HltLumiSummarys* sums = getOrCreate<HltLumiSummarys,HltLumiSummarys>(m_OutputContainerName);
+  if (sums->empty()) sums->insert(new LHCb::HltLumiSummary() );
   // add track counter
-  hltLS->addInfo( m_Counter, nCounter);
+  (*sums->begin())->addInfo( m_Counter, nCounter);
 
   setFilterPassed(true);
 

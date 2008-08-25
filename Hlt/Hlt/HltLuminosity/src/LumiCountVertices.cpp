@@ -1,10 +1,10 @@
-// $Id: LumiCountVertices.cpp,v 1.3 2008-08-13 16:03:52 panmanj Exp $
+// $Id: LumiCountVertices.cpp,v 1.4 2008-08-25 10:59:04 panmanj Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
-#include "Kernel/IOnOffline.h"
-// from LHCB
+#include "GaudiKernel/IAlgManager.h"
+
 #include "Event/Vertex.h"
 #include "Event/RecVertex.h"
 #include "Event/HltLumiSummary.h"
@@ -13,6 +13,8 @@
 
 // local
 #include "LumiCountVertices.h"
+
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : LumiCountVertices
@@ -79,30 +81,10 @@ StatusCode LumiCountVertices::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
-  // ------------------------------------------
-  // get (existing) container
-  LHCb::HltLumiSummary* hltLS;
-  if ( !exist<LHCb::HltLumiSummarys>(m_OutputContainerName) ){
-    // create output container on the TES
-    m_HltLumiSummarys = new LHCb::HltLumiSummarys();
-    // locate them in the TES
-    put(m_HltLumiSummarys, m_OutputContainerName); 
-    // initialize output class
-    hltLS = new LHCb::HltLumiSummary();
-    m_HltLumiSummarys->insert( hltLS );
-    debug() << m_OutputContainerName << " not found, made a new one" << endmsg ;
-  }
-  else {
-    m_HltLumiSummarys = get<LHCb::HltLumiSummarys>(m_OutputContainerName);
-    hltLS = *m_HltLumiSummarys->begin();
-    debug() << m_OutputContainerName << " found, used the old one" << endmsg ;
-  }
-
-  // ------------------------------------------
   // load the track objects
   int nCounter =  0;
   if ( !exist<LHCb::RecVertices>(m_InputSelectionName) ){
-    error() << m_InputSelectionName << " not found" << endmsg ;
+    warning() << m_InputSelectionName << " not found" << endmsg ;
   } else {
     // get the container
     m_InputContainer = get<LHCb::RecVertices>(m_InputSelectionName);
@@ -118,9 +100,11 @@ StatusCode LumiCountVertices::execute() {
   debug() << "There are " << nCounter << " vertices in " << m_InputSelectionName <<  endreq ;
 
 
-  // ------------------------------------------
-  // add track counter
-  hltLS->addInfo( m_Counter, nCounter);
+  // get container
+  LHCb::HltLumiSummarys* sums = getOrCreate<HltLumiSummarys,HltLumiSummarys>(m_OutputContainerName);
+  if (sums->empty()) sums->insert(new LHCb::HltLumiSummary() );
+  // add counter
+  (*sums->begin())->addInfo( m_Counter, nCounter);
 
   setFilterPassed(true);
 

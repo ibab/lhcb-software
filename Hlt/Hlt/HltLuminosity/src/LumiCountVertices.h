@@ -1,17 +1,13 @@
-// $Id: LumiCountVertices.h,v 1.1 2008-07-31 21:34:47 panmanj Exp $
+// $Id: LumiCountVertices.h,v 1.2 2008-08-25 10:59:04 panmanj Exp $
 #ifndef LUMICOUNTVERTICES_H 
 #define LUMICOUNTVERTICES_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
-#include "GaudiKernel/SystemOfUnits.h"
-#include "GaudiAlg/GaudiTool.h"
 // from LHCB
 #include "Event/Vertex.h"
 #include "Event/RecVertex.h"
-#include "Event/HltLumiSummary.h"
-
 
 /** @class LumiCountVertices LumiCountVertices.h
  *  
@@ -37,7 +33,6 @@ protected:
   int m_Counter;
 
   std::string m_OutputContainerName;
-  LHCb::HltLumiSummarys* m_HltLumiSummarys;
 
 private:
 

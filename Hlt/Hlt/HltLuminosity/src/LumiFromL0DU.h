@@ -1,16 +1,12 @@
-// $Id: LumiFromL0DU.h,v 1.1 2008-07-31 21:34:47 panmanj Exp $
+// $Id: LumiFromL0DU.h,v 1.2 2008-08-25 10:59:04 panmanj Exp $
 #ifndef LUMIFROML0DU_H 
 #define LUMIFROML0DU_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
-#include "GaudiKernel/SystemOfUnits.h"
-#include "GaudiAlg/GaudiTool.h"
 // from LHCB
 #include "Event/L0DUReport.h"
-#include "Event/HltLumiSummary.h"
-
 
 /** @class LumiFromL0DU LumiFromL0DU.h
  *  
@@ -37,7 +33,6 @@ protected:
   int m_Counter;
 
   std::string m_OutputContainerName;
-  LHCb::HltLumiSummarys* m_HltLumiSummarys;
 
 private:
 
