@@ -2,6 +2,12 @@
 ! Package     : VeloDAQ
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
+
+! 2008-08-25 Malcolm John
+ - add a cluster filter algorithm that filters the [lite]clusters into 
+   new TES locations according to a few pre-defined criteria like 
+   "is R", is phi", etc. Also maximum and and minimum limits can be required
+
 !=========================  VeloDAQ v4r2 2008-05-26 =======================
 ! 2008-05-26 T Szumlak
  - adapt VeloFull decoding to run without ODIN bank; this behaviour
