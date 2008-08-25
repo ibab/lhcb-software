@@ -9,7 +9,7 @@
 //--------------------------
 
 // decision is part of the OR of alleys
-Hlt1Global.InputSelections += {"Hlt1LumiDecision"};
+HltAlleys.InputSelections += {"Hlt1LumiDecision"};
 
 
 // *************************************************
@@ -30,10 +30,19 @@ Hlt1LumiAlleySequence.Members = {
   "DeterministicPrescaler/PrescaleLumiDecision",
   "DummyLumiAlley/Hlt1LumiDecision",
   // writing the bank
-  "HltLumiWriter/HltLumiWriter",
+  "HltLumiFillRawBuffer/HltLumiFillRawBuffer",
 
   // reading back the bank (creates second instance of the class)
-  //"HltLumiSummaryDecoder/HltLumiSummaryDecoder",
+  "HltLumiSummaryDecoder/HltLumiSummaryDecoder",
+
+  // raw dump
+  "RawEventDump/RawEventDump",
+
+  // testing the bankKiller
+  "bankKiller/bankKiller",
+
+  // raw dump
+  "RawEventDump/NanoEventDump",
 };
 
 
@@ -147,14 +156,24 @@ OdinTypesFilter.TriggerTypes={"ALL"};
 //OdinTypesFilter.TriggerTypes={"Reserve","PhysicsTrigger","RandomTrigger"};  // should become "Random"
 OdinTypesFilter.BXTypes={"NoBeam","BeamCrossing","SingleBeamRight","SingleBeamLeft"};
 
-PrescaleLumiDecision.AcceptFraction=0.5;
+PrescaleLumiDecision.AcceptFraction=1.00;
 
 Hlt1LumiAlleySequence.MeasureTime = true;
 Hlt1LumiAlleySequence.OutputLevel=3;
 
-HltLumiWriter.OutputLevel=3;
+HltLumiFillRawBuffer.OutputLevel=3;
 
-//HltLumiSummaryDecoder.OutputLevel=3;
+HltLumiSummaryDecoder.OutputLevel=3;
+
+bankKiller.OutputLevel=2;
+bankKiller.BankTypes={"ODIN","HltLumiSummary"};
+bankKiller.DefaultIsKill=true;
+
+RawEventDump.DumpData=false;
+RawEventDump.OutputLevel=2;
+
+NanoEventDump.DumpData=false;
+NanoEventDump.OutputLevel=2;
 
 //-------------------------------------------------------------------------
 // HLT Hlt1LumiDecision is empty to always pass
