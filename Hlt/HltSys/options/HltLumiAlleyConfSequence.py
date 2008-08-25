@@ -130,7 +130,7 @@ BXTypes = Sequence( 'Hlt1LumiBXTypesSequence'
                   , MeasureTime = True)
 LumiSequence( BXTypes )
 LumiSequence( Prescale( 'PrescaleLumiDecision', AcceptFraction = 1.0 ) )
-LumiSequence( Dummy( 'Hlt1LumiDecision' ) )
+LumiSequence( Dummy( 'HltLumiDecision' ) )
 
 # TODO: move writer into dedicated rawbank sequence
 if debugging: LumiSequence( RawEventDump('FullRawDataDump' ) )
