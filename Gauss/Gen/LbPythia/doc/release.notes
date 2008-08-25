@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================= LbPythia v8r0 2008-08-25 ==========================
 ! 2008-07-26 - Patrick Robbe
  - PythiaProduction.cpp: set new tune for Pythia6.4 as default
    options
