@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.4 2008-08-23 22:56:42 graven Exp $ 
+! $Id: release.notes,v 1.5 2008-08-25 12:37:52 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : 
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2008-08-25 - Gerhard Raven
+ - python/HltConfig/Hlt1Line.py
+    o allow one to specify 'lines' that should NOT contribute (directly) 
+      to the trigger decision
+    o allow one to specify tool configurations (highly experimental!)
 
 ! 2008-08-23 - Gerhard Raven
  - python/HltConfig/Hlt1Line.py

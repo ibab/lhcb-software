@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.6 2008-08-23 22:56:42 graven Exp $ 
+# $Id: HltLine.py,v 1.7 2008-08-25 12:37:52 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'    ,  ## the Hlt line itself 
@@ -251,16 +251,16 @@ def _add_to_hlt1_lines_( line ) :
         
 # =============================================================================
 ## the list of valid members of Hlt1 sequencer 
-_types_ = { TrackUpgrade    : 'TU'  
-            , TrackMatch    : 'TM'  
-            , TrackFilter   : 'TF'  
-            , VertexMaker1  : 'VM1' 
-            , VertexMaker2  : 'VM2'
-            , VertexFilter  : 'VF'
-            , VertexToTracks: 'VT'
-            , L0CaloPrepare : 'L0CaloPrepare'
-            , L0MuonPrepare : 'L0MuonPrepare'
-            } 
+_types_ = { TrackUpgrade  : 'TU'  
+          , TrackMatch    : 'TM'  
+          , TrackFilter   : 'TF'  
+          , VertexMaker1  : 'VM1' 
+          , VertexMaker2  : 'VM2'
+          , VertexFilter  : 'VF'
+          , VertexToTracks: 'VT'
+          , L0CaloPrepare : 'L0CaloPrepare'
+          , L0MuonPrepare : 'L0MuonPrepare'
+          } 
 
 ## protected attributes 
 _protected_ = ( 'IgnoreFilterPassed' , 'Members' , 'ModeOR' )
@@ -381,7 +381,43 @@ def _checkSelections ( args      ,   # the dictionary with arguments
     if list is not type(check)     and tuple is not type(check)     : check     =  (check,) 
     for _c in check : _checkSelection ( _c , args , name , line )
         
+# =============================================================================
+## @class Hlt1Tool
+#  Simple class to represent the settings for a tool used by an Hlt1Member
+#  Note: in case of a tool used by a tool, we support recursion...
+#  @author Gerhard Raven Gerhard.Raven@nikhef.nl
+#  @date   2008-08-23  
+class Hlt1Tool (object ) :  
+    """
+    Simple class to represent the settings for a tool used by an Hlt1Member
+    @author Gerhard Raven Gerhard.Raven@nikhef.nl
+    @date   2008-08-23  
+    """
+    __slots__ = ( 'Type' , 'Name' , 'Args' )
+
+    ### The standard constructor to create an Hlt1Tool instance:
+    def __init__ ( self      , ## ...
+                   type = None , ## the type of the (configurable corresponding to the) tool
+                   name = '' , ## the instance name of the tool
+                   **Args ) :  ## other arguments 
+        if type  == None : raise AttributeError, "Tool must have a type"
+        self.Type = type
+        self.Name = name if len(name) > 0 else type().getType()
+        self.Args = Args
+        ### need to deal with recursion on 2nd (and higher) level tools
+        ### eg. when Args contains anything of type Hlt1Tool...
+        ### TODO/FIXME: what if this is a private tool???
     
+    def createConfigurable( self, parent ) :
+        # TODO: check that we don't try to generate two (different) configs for the same instance?
+        #       (which wouldn't work, and would only result in the 2nd instance overruling
+        #        the settings of the first)
+        # TODO: do we need addTool??? (only if recursive? only if private tool?)
+        conf = self.Type( self.Name, self.Args )
+        for k,v in self.Args.iteritems() : setattr(conf,k,v)
+        return conf
+        
+   
 
 # =============================================================================
 ## @class Hlt1Member
@@ -402,12 +438,13 @@ class Hlt1Member ( object ) :
     >>> m1 = Member ( 'TU' , 'Velo'   , RecoName = 'Velo' ) # 'HltTrackUpgrade'
     
     """
-    __slots__ = ( 'Type' , 'Name' , 'Args' )
+    __slots__ = ( 'Type' , 'Name' , 'Args', 'Tools' )
     
     ### The standard constructor to create the  Hlt1Member instance:
     def __init__ ( self      , ## ...
                    Type      , ## short type of members, e.g. 'TF' HltTrackFilter
                    name = '' , ## the specific part of the algorithm name 
+                   tools = [] , ## list of tool options for this algorithm
                    **Args ) :  ## arguments 
         """
         The standard constructor to create the  Hlt1Member instance:
@@ -418,15 +455,18 @@ class Hlt1Member ( object ) :
                                          'Calo3DChi2_L0TriggerHadron,<,4' ] ) 
         """
         Name = name
-        if type(Type) is str : 
-            Type = typeFromNick ( Type ) 
+        if type(Type) is str : Type = typeFromNick ( Type ) 
         if not Type in _types_ :
             raise AttributeError, "The type  %s is not known for Hlt1Member"%Type
         self.Type = Type 
         self.Name = Name 
         self.Args = Args
+        self.Tools = tools
+        #TODO/FIXME: 
+        #    expand '%' in FilterDescriptor to allow bound selections
+        #    check if any Args are of type 'Tool', and convert them accordingly
         for key in Args :
-            if not key in self.Type.__slots__ :
+            if  key not in self.Type.__slots__  :
                 raise AttributeError, "The key %s is not allowed"%key
 
     def subtype( self )        :
@@ -441,6 +481,12 @@ class Hlt1Member ( object ) :
     def subname( self )        :
         " Return the specific part of the name "        
         return self.id()
+    def createConfigurable( self, line, **args ) :
+        " Create the configurable, and, if needed, deal with tool configuration "        
+        # see if alg has any special Tool requests...
+        name = memberName( self, line )
+        for tool in self.Tools : tool.createConfigurable( parent = name )
+        return self.Type( name, **args)
 
 # ============================================================================
 ## @class Hl1Line
@@ -482,6 +528,7 @@ class Hlt1Line(object):
                    L0        = [] ,   # list of L0 channels  
                    HLT       = [] ,   # list of HLT selections  
                    postscale = 1  ,   # prescale factor
+                   makesDecision = True, # whether or not this line 
                    algos     = [] ,   # the list of algorithms/members
                    **args         ) : # other configuration parameters
         """
@@ -618,14 +665,15 @@ class Hlt1Line(object):
                     _checkSelection ( 'OutputSelection' , margs , algName , line ) 
                     self._outputsel = margs['OutputSelection']
             
-            # create the algorithm:
-            _members += [ alg.Type( memberName ( alg , line )  , **margs ) ]         
-        
-        _members += [ PreScaler    ( postscalerName ( line ) , AcceptFraction = self._postscale ) ]
+            # create (the configurable for) the algorithm and add it to the sequencer:
+            _members += [ alg.createConfigurable( line , **margs ) ]
 
+        
         ## finally add the decision algorithm!
-        _members += [ LineDecision ( decisionName ( line ) ) ]   
-        self._terminus = decisionName ( line )
+        if  makesDecision  :
+            _members += [ PreScaler    ( postscalerName ( line ) , AcceptFraction = self._postscale ) 
+                        , LineDecision ( decisionName   ( line ) ) ]   
+            self._terminus = decisionName ( line )
 
         # register selections:
         _input_selection_properties_ = [ 'InputSelection'
@@ -794,8 +842,7 @@ def len1 ( line ) :
     which is thw length from the last '\n'-symbol 
     """
     _i = line.rfind('\n')
-    if 0 > _i : return len(line)
-    return len(line) - _i
+    return len(line) if _i < 0 else len(line) - _i
 
 ## the major properties/attributes  
 _hlt1_props_   = [ 'AcceptFraction'    , 
