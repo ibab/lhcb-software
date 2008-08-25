@@ -4,6 +4,12 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+! 2008-08-25 - Jaap Panman
+ - component/bankKiller : can now work in exclusion mode, i.e. kill all that is not specified
+
+! 2008-08-25 - Jaap Panman
+ - component/OdinTypeFilter : small correction needed when comparing to negative TAE limits
+
 
 ! 2008-08-21 - Olivier Deschamps
  - componenet/OdinTypeFilter : extend OdinTypeFiltering to ReadoutType and TAEWindow

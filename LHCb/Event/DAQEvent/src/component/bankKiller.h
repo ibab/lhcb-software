@@ -1,4 +1,4 @@
-// $Id: bankKiller.h,v 1.3 2008-01-23 18:24:25 odescham Exp $
+// $Id: bankKiller.h,v 1.4 2008-08-25 11:05:05 panmanj Exp $
 #ifndef BANKKILLER_H
 #define BANKKILLER_H 1
 
@@ -30,8 +30,12 @@ class bankKiller : public GaudiAlgorithm {
   virtual StatusCode execute   ();
   
  protected:
+  void  killBankType( LHCb::RawBank::BankType bankType, 
+		      bool warningmsg ); // kill all banks of given type
   
  private:   
   std::vector< std::string > m_bankTypes;
+  bool m_defaultIsKill;
+  LHCb::RawEvent* m_rawEvt;
 };
 #endif //    BANKKILLER_H

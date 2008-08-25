@@ -1,4 +1,4 @@
-// $Id: OdinTypesFilter.cpp,v 1.3 2008-08-21 16:33:08 odescham Exp $
+// $Id: OdinTypesFilter.cpp,v 1.4 2008-08-25 11:05:05 panmanj Exp $
 // Include files 
 
 // from Gaudi
@@ -228,8 +228,7 @@ StatusCode OdinTypesFilter::execute() {
   }
 
   bool taePass = false;
-  if(odin->timeAlignmentEventWindow()>m_winmin && odin->timeAlignmentEventWindow()<m_winmax)taePass=true;
-
+  if((int) odin->timeAlignmentEventWindow()>m_winmin && (int) odin->timeAlignmentEventWindow()<m_winmax)taePass=true;
   
   if(m_log == "AND")setFilterPassed( trPass && bxPass && roPass && taePass);
   if(m_log == "OR")setFilterPassed( trPass || bxPass || roPass && taePass);

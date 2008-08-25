@@ -1,4 +1,4 @@
-// $Id: bankKiller.cpp,v 1.5 2008-01-23 18:24:25 odescham Exp $
+// $Id: bankKiller.cpp,v 1.6 2008-08-25 11:05:05 panmanj Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -23,8 +23,8 @@ bankKiller::bankKiller( const std::string& name, ISvcLocator* pSvcLocator)
     ,m_bankTypes()
 {
 
-
-  declareProperty("BankTypes"   , m_bankTypes      ) ;
+  declareProperty("BankTypes"     , m_bankTypes      ) ;
+  declareProperty("DefaultIsKill" , m_defaultIsKill = false  ) ;
 
 };
 
@@ -41,11 +41,21 @@ StatusCode bankKiller::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize();
   if( sc.isFailure() ) return sc;
   
-  if(m_bankTypes.size() == 0)warning() << "bankKiller : nothing to be removed " << endreq;
-  
-  for(std::vector< std::string >::iterator ityp = m_bankTypes.begin() ; 
-      ityp!= m_bankTypes.end() ; ++ ityp ){
-    info() << "bankKiller : all banks of type '" << *ityp << "' will be removed." <<endreq;
+  if( m_defaultIsKill ) {
+    if(m_bankTypes.size() == 0)warning() << "bankKiller : nothing specified to be kept - all will be removed " 
+					 << endreq;
+    
+    for(std::vector< std::string >::iterator ityp = m_bankTypes.begin() ; 
+	ityp!= m_bankTypes.end() ; ++ ityp ){
+      info() << "bankKiller : all banks of type '" << *ityp << "' will be kept." <<endreq;
+    }
+  } else {
+    if(m_bankTypes.size() == 0)warning() << "bankKiller : nothing to be removed " << endreq;
+    
+    for(std::vector< std::string >::iterator ityp = m_bankTypes.begin() ; 
+	ityp!= m_bankTypes.end() ; ++ ityp ){
+      info() << "bankKiller : all banks of type '" << *ityp << "' will be removed." <<endreq;
+    }
   }
 
   return StatusCode::SUCCESS;
@@ -56,40 +66,67 @@ StatusCode bankKiller::initialize() {
 //=============================================================================
 StatusCode bankKiller::execute() {
 
-  LHCb::RawEvent* rawEvt = get<LHCb::RawEvent> ( LHCb::RawEventLocation::Default );
-
-  for(std::vector< std::string >::iterator ityp = m_bankTypes.begin() ; 
-      ityp!= m_bankTypes.end() ; ++ ityp ){
-
-    LHCb::RawBank::BankType bankType = LHCb::RawBank::LastType;
+  m_rawEvt = get<LHCb::RawEvent> ( LHCb::RawEventLocation::Default );
+  if( m_defaultIsKill ) {
     for( unsigned int ibank = 0 ; ibank < (unsigned int) LHCb::RawBank::LastType ; ++ibank){
-      bankType = (LHCb::RawBank::BankType) ibank;
-      if( *ityp == LHCb::RawBank::typeName( bankType ) )break;
+      LHCb::RawBank::BankType bankType = (LHCb::RawBank::BankType) ibank;
+      bool keep = false;
+      for(std::vector<std::string>::const_iterator ityp = m_bankTypes.begin(); 
+	  ityp != m_bankTypes.end(); ++ityp ){
+	if( *ityp == LHCb::RawBank::typeName( bankType ) ) {
+	  keep = true;
+	  break;
+	}
+      }
+      if ( !keep ) {
+	// kill al banks of this type
+	killBankType( bankType, false );
+      }
     }
-
-    std::vector<LHCb::RawBank*> banks = rawEvt->banks( bankType );
-    if( bankType == LHCb::RawBank::LastType || 0 == banks.size() ){
-      std::stringstream s("");
-      s<< " No bank of type '" << *ityp		<< "' has been found - nothing to be removed";
-      Error(s.str()).ignore();
-      continue;
-    }
-
-    debug() << "All banks of type '" << *ityp << "'  are to be removed - banks size =  " << banks.size() << endreq;
-
-
-    for(std::vector<LHCb::RawBank*>::const_iterator itB = banks.begin() ; itB !=  banks.end() ; ++itB ) {
-
-      bool success = rawEvt -> removeBank ( *itB );
-      if( !success )warning() << "The bank " << * itB << " of type '" << *ityp << "' has not been found to be removed " << endreq;
+  } else {
+    for(std::vector<std::string>::const_iterator ityp = m_bankTypes.begin(); 
+	ityp != m_bankTypes.end(); ++ityp ){
       
-    }
-    debug() << "All banks of type '" << *ityp 
-            << "' have been removed  - " 
-            << " banks size is now : " << ( rawEvt->banks( bankType ) ).size() << endreq;
-    
+      LHCb::RawBank::BankType bankType = LHCb::RawBank::LastType;
+      for( unsigned int ibank = 0 ; ibank < (unsigned int) LHCb::RawBank::LastType ; ++ibank){
+	bankType = (LHCb::RawBank::BankType) ibank;
+	if( *ityp == LHCb::RawBank::typeName( bankType ) )break;
+      }
+      // kill al banks of this type
+      killBankType( bankType, true );
+	}
   }
   return StatusCode::SUCCESS;
 };
 
 //=============================================================================
+
+void  bankKiller::killBankType( LHCb::RawBank::BankType bankType, 
+				bool warningmsg ) {
+  const std::string bankTypeName = LHCb::RawBank::typeName( bankType );
+  // look for all banks of this type and remove them 
+  std::vector<LHCb::RawBank*> banks = m_rawEvt->banks( bankType );
+  if( bankType == LHCb::RawBank::LastType || 0 == banks.size() ){
+    if (warningmsg) {
+      std::stringstream s("");
+      s<< " No bank of type '" << bankTypeName		<< "' has been found - nothing to be removed";
+      Error(s.str()).ignore();
+    }
+    return;
+  }
+  
+  debug() << "All banks of type '" << bankTypeName << "'  are to be removed - banks size =  " << banks.size() << endreq;
+
+  
+  for(std::vector<LHCb::RawBank*>::const_iterator itB = banks.begin() ; itB !=  banks.end() ; ++itB ) {
+    
+    bool success = m_rawEvt -> removeBank ( *itB );
+    if( !success && warningmsg) 
+      warning() << "The bank " << * itB << " of type '" << bankTypeName << "' has not been found to be removed " << endreq;
+    
+  }
+  debug() << "All banks of type '" << bankTypeName 
+	  << "' have been removed  - " 
+	  << " banks size is now : " << ( m_rawEvt->banks( bankType ) ).size() << endreq;
+  
+};
