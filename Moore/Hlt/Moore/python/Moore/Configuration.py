@@ -1,7 +1,7 @@
 """
 High level configuration tools for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.20 2008-08-19 19:04:42 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.21 2008-08-25 11:11:07 panmanj Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -55,7 +55,9 @@ class Moore(ConfigurableUser):
                  'PHYSICS_Hlt2', 
                  'PHYSICS_Hlt1+Hlt2', 
                  'PHYSICS_Lumi+Hlt1', 
-                 'PHYSICS_Lumi+Hlt1+Hlt2', 
+                 'PHYSICS_Lumi+Hlt1+Hlt2',
+                 'writeLumi' ,
+                 'readBackLumi',
                  'DEFAULT' ] 
 
     def getRelease(self):
@@ -134,10 +136,12 @@ class Moore(ConfigurableUser):
                 if hlttype not in self.validHltTypes() :  raise TypeError("Unknown hlttype '%s'"%hlttype)
                 if inputType == 'DST' and hlttype in [ 'PHYSICS_Hlt1+Hlt2', 'PHYSICS_Hlt1' , 'PHYSICS_Lumi', 'Lumi'] : 
                         importOptions('$L0DUROOT/options/ReplaceL0DUBankWithEmulated.opts')
-                if hlttype.find('Lumi') != -1 :   importOptions('$HLTSYSROOT/options/Lumi.opts')
-                if hlttype.find('Hlt1') != -1 :   importOptions('$HLTSYSROOT/options/Hlt1.opts')
-                if hlttype.find('Hlt2') != -1 :   importOptions('$HLTSYSROOT/options/Hlt2.opts')
-                if hlttype ==  'DEFAULT'      :   importOptions('$HLTSYSROOT/options/RandomPrescaling.opts')
+                if hlttype.find('Hlt1') != -1   :   importOptions('$HLTSYSROOT/options/Hlt1.opts')
+                if hlttype.find('Hlt2') != -1   :   importOptions('$HLTSYSROOT/options/Hlt2.opts')
+                if hlttype ==  'DEFAULT'        :   importOptions('$HLTSYSROOT/options/RandomPrescaling.opts')
+                if hlttype == 'readBackLumi'    :   importOptions('$HLTSYSROOT/options/HltJob_readLumiPy.opts')
+                elif hlttype == 'writeLumi'     :   importOptions('$HLTSYSROOT/options/HltJob_onlyLumi.opts')
+                elif hlttype.find('Lumi') != -1 :   importOptions('$HLTSYSROOT/options/Lumi.opts')
 
             if self.getProp('runTiming') :
                 importOptions('$HLTSYSROOT/options/HltAlleysTime.opts')

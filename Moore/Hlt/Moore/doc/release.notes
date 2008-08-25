@@ -2,6 +2,11 @@ Package     : Hlt/Moore
 Package Coordinator : Patrick Koppenburg and Marco Cattaneo
 Purpose     : LHCb HLT application
 
+! 2008-08-25 - Jaap Panman
+ - lumiMoore (new in options) : job to test/run lumiAlley 
+ - Configuration.py : mods to run lumiAlley
+ - lumiChecker.py (in python/Moore) : algorithm to analyse lumiAlley histos
+
 ! 2008-08-14 - Gerhard Raven
  - move TCK utilities to TCKData package 
 
