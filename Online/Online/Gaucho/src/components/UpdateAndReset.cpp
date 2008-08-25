@@ -217,7 +217,7 @@ std::pair<int, bool> UpdateAndReset::currentRunNumber() {
   }
   else {
     msg << MSG::DEBUG<< "===============> Reading Odin bank is disabled. " <<endreq;
-    ulonglong currentTime = GauchoTimer::currentTime();
+    //ulonglong currentTime = GauchoTimer::currentTime();
     //runNumber = currentTime/(m_deltaTRunTest*1000);
   }
 
