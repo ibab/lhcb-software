@@ -60,20 +60,20 @@ StatusCode AdderSvc::initialize() {
     return StatusCode::FAILURE;
   }
 
-  msg << MSG::INFO << "***************************************************** " << endreq;
+  msg << MSG::DEBUG << "***************************************************** " << endreq;
 
-  msg << MSG::INFO << "****************** Welcome to Adder Test************* " << endreq;
-  msg << MSG::INFO << "***************************************************** " << endreq;
-  msg << MSG::INFO << "This Adder will add data published in : " << m_dimClientDns << endreq;
+  msg << MSG::DEBUG << "****************** Welcome to Adder Test************* " << endreq;
+  msg << MSG::DEBUG << "***************************************************** " << endreq;
+  msg << MSG::DEBUG << "This Adder will add data published in : " << m_dimClientDns << endreq;
 
-  msg << MSG::INFO << "Consider node " << m_nodeName << endreq;
+  msg << MSG::DEBUG << "Consider node " << m_nodeName << endreq;
 
-  msg << MSG::INFO << "TaskNames: " << endreq;
+  msg << MSG::DEBUG << "TaskNames: " << endreq;
 
   std::vector<std::string>::iterator it;
 
   for(it = m_taskName.begin(); it != m_taskName.end(); ++it) {
-    msg << MSG::INFO << "         taskName: " << *it << endreq;
+    msg << MSG::DEBUG << "         taskName: " << *it << endreq;
   }
 
   msg << MSG::DEBUG << "Properties: " << endreq;
@@ -99,10 +99,10 @@ StatusCode AdderSvc::initialize() {
 
   m_processMgr->createTimerProcess(m_refreshTime);
 
-  msg << MSG::INFO << "Activing PostEvent to StartTimer............." << endreq;
+  msg << MSG::DEBUG << "Activing PostEvent to StartTimer............." << endreq;
   IocSensor::instance().send(this, s_startTimer, this); //start Timer*/
 
-  msg << MSG::INFO << "Finishing the initialize method." << endreq;
+  msg << MSG::DEBUG << "Finishing the initialize method." << endreq;
   return StatusCode::SUCCESS;
 }
 
@@ -110,12 +110,12 @@ void AdderSvc::handle(const Event&  ev) {
   MsgStream msg(msgSvc(), name());
 
   if(s_startTimer == ev.type) {
-    msg << MSG::INFO << " We are inside a PostEvent to Start the Timer " << endreq;
+    msg << MSG::DEBUG << " We are inside a PostEvent to Start the Timer " << endreq;
     m_processMgr->dimTimerProcess()->start(m_refreshTime);
-    msg << MSG::INFO << " End PostEvent to Start the Timer " << endreq;
+    msg << MSG::DEBUG << " End PostEvent to Start the Timer " << endreq;
   }
   else if(s_createInfoServices == ev.type ){
-    msg << MSG::INFO << " We are inside a PostEvent to Create the DimInfoServices " << endreq;
+    msg << MSG::DEBUG << " We are inside a PostEvent to Create the DimInfoServices " << endreq;
     msg << MSG::DEBUG << "Choosing Server to get ServicesSet.........." << endreq;
 
     std::string serverChoosed;
@@ -123,7 +123,7 @@ void AdderSvc::handle(const Event&  ev) {
       m_processMgr->dimInfoServers()->chooseServer();
       serverChoosed = m_processMgr->dimInfoServers()->serverChoosed();
       if ("" != serverChoosed) {
-        msg << MSG::DEBUG << "Server Choosed = " << m_processMgr->dimInfoServers()->serverChoosed() << endreq;
+        msg << MSG::DEBUG << "Server choosen = " << m_processMgr->dimInfoServers()->serverChoosed() << endreq;
         break;
       }
     }
@@ -131,34 +131,34 @@ void AdderSvc::handle(const Event&  ev) {
     m_processMgr->createInfoServices(serverChoosed);
 
    // IocSensor::instance().send(this, s_updateServiceMap, ev.data); //start Timer*/
-    msg << MSG::INFO << " End PostEvent to Create the DimInfoServices " << endreq;
+    msg << MSG::DEBUG << " End PostEvent to Create the DimInfoServices " << endreq;
   }
   else if(s_updateSvcMapFromInfoServer == ev.type) {
-    msg << MSG::INFO << " We are inside a PostEvent to UpdateServiceMapFromInfoServer " << endreq;
+    msg << MSG::DEBUG << " We are inside a PostEvent to UpdateServiceMapFromInfoServer " << endreq;
     std::map<std::string, bool, std::less<std::string> >* serverMap = (std::map<std::string, bool, std::less<std::string> >*) ev.data;
     m_processMgr->serviceMap()->updateMap(*serverMap);
     m_processMgr->serviceMap()->printMap();
-    msg << MSG::INFO << " End PostEvent to UpdateServiceMap " << endreq;
+    msg << MSG::DEBUG << " End PostEvent to UpdateServiceMap " << endreq;
   }
   else if(s_updateSvcMapFromInfoService == ev.type) {
-    msg << MSG::INFO << " We are inside a PostEvent to UpdateServiceMapFromInfoService " << endreq;
+    msg << MSG::DEBUG << " We are inside a PostEvent to UpdateServiceMapFromInfoService " << endreq;
     std::set<std::string>* serviceSet = (std::set<std::string>*) ev.data;
     m_processMgr->serviceMap()->setServiceSet(*serviceSet);
     m_processMgr->updateMap();
     m_processMgr->serviceMap()->printMap();
-    msg << MSG::INFO << " End PostEvent to UpdateServiceMapFromInfoService " << endreq;
+    msg << MSG::DEBUG << " End PostEvent to UpdateServiceMapFromInfoService " << endreq;
   }
 }
 
 void AdderSvc::handle(const Incident& inc) {
   MsgStream msg(msgSvc(), name());
-  msg << MSG::INFO << "Got incident " << inc.type() << " from " << inc.source() <<endreq;
+  msg << MSG::DEBUG << "Got incident " << inc.type() << " from " << inc.source() <<endreq;
   //IocSensor::instance().send(this, s_COMMAND_IN_PROCESSMGR, this);
 }
 
 StatusCode AdderSvc::finalize() {
   MsgStream msg(msgSvc(), name());
-  msg << MSG::INFO << "Finalize Adder..... " << endmsg;
+  msg << MSG::DEBUG << "Finalize Adder..... " << endmsg;
   if (m_processMgr) {delete m_processMgr; m_processMgr=0;}
   return Service::finalize();
 }
