@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactories.cpp,v 1.11 2008-07-16 17:05:43 witekma Exp $
+// $Id: HltFunctionFactories.cpp,v 1.12 2008-08-25 22:44:35 mjohn Exp $
 // Include files 
 
 // from Gaudi
@@ -40,6 +40,8 @@ StatusCode HltTrackFunctionFactory::initialize() {
   declare<Hlt::PT>("PT");
   declare<Hlt::PT>("PT0");
   declare<Hlt::TrackFlag>("IsBackward");
+  declare<Hlt::NumberOfASideVeloHits>("NumberOfASideVeloHits");
+  declare<Hlt::NumberOfCSideVeloHits>("NumberOfCSideVeloHits");
 
   declare<Hlt::rIP,zen::abs_min,Hlt::VertexSelection>("rIP");
   declare<Hlt::IP,zen::abs_min,Hlt::VertexSelection>("IP");
@@ -62,8 +64,6 @@ StatusCode HltTrackFunctionFactory::initialize() {
   declare<ITrackFunctionTool>("IsMuon","HltIsMuonTool");
 
   declare<ITrackFunctionTool>("ptAtOrigin","PtTransporter");
-
-  declare<ITrackFunctionTool>("IsPhoton","HltIsPhotonTool");
 
   return sc;
 }
@@ -97,6 +97,9 @@ StatusCode HltVertexFunctionFactory::initialize() {
   declare<Hlt::VertexSumPT>("VertexSumPT");
   declare<Hlt::VertexMinPT>("VertexMinPT");
   declare<Hlt::VertexMaxPT>("VertexMaxPT");
+
+  declare<Hlt::VertexNumberOfASideTracks>("VertexNumberOfASideTracks");
+  declare<Hlt::VertexNumberOfCSideTracks>("VertexNumberOfCSideTracks");
 
   return sc;
 }

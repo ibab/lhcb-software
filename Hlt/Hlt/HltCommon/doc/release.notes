@@ -4,6 +4,11 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!2008-08-25 - Malcolm John
+  - add some simple filters that return:
+    the number of left/right tracks contributing to a vertex
+    the number of left/right sensors contributing to a track
+
 !2008-08-22 - Gerhard Raven
   - PropertyConfigSvc: catch filesystem errors & print diagnositc
   - HltConfigSvc: allow masking of L0 part of TCK prior to lookup

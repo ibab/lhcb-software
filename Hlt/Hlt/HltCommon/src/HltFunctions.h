@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.6 2008-07-04 12:45:33 graven Exp $
+// $Id: HltFunctions.h,v 1.7 2008-08-25 22:44:35 mjohn Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -80,7 +80,38 @@ namespace Hlt {
     Hlt::TrackFunction* clone() const {return new TrackFlag(flag);}
     LHCb::Track::Flags flag;      
   };
-  
+
+  class NumberOfASideVeloHits : public Hlt::TrackFunction {
+  public:
+    explicit NumberOfASideVeloHits(){}
+    double operator()(const LHCb::Track& t) const{
+      int nLeft=0;
+      int nRight=0;
+      for( std::vector<LHCb::LHCbID>::const_iterator iId = t.lhcbIDs().begin(); t.lhcbIDs().end() != iId; ++iId ) {
+        unsigned int sensor = (*iId).veloID().sensor();
+        if(0==sensor%2) nLeft++;
+        if(1==sensor%2) nRight++;
+      }
+      return (double) nLeft;
+    }
+    Hlt::TrackFunction* clone() const {return new NumberOfASideVeloHits();}
+  };
+
+  class NumberOfCSideVeloHits : public Hlt::TrackFunction {
+  public:
+    explicit NumberOfCSideVeloHits(){}
+    double operator()(const LHCb::Track& t) const{
+      int nLeft=0;
+      int nRight=0;
+      for( std::vector<LHCb::LHCbID>::const_iterator iId = t.lhcbIDs().begin(); t.lhcbIDs().end() != iId; ++iId ) {
+        unsigned int sensor = (*iId).veloID().sensor();
+        if(0==sensor%2) nLeft++;
+        if(1==sensor%2) nRight++;
+      }
+      return (double) nRight;
+    }
+    Hlt::TrackFunction* clone() const {return new NumberOfCSideVeloHits();}
+  };
   
   class Charge : public Hlt::TrackFunction {
   public:
@@ -328,7 +359,68 @@ namespace Hlt {
     {return new VertexSumPT();}
   };
   
+  ///* Return the number of tracks of a vertex
+  class VertexNumberOfASideTracks : public Hlt::VertexFunction {
+  public:
+    explicit VertexNumberOfASideTracks() {}
+    double operator() (const LHCb::RecVertex& vertex) const {
+      int nLeft=0;
+      int nRight=0;
+      int nOverlap=0;
+      const SmartRefVector<LHCb::Track>& tracks = vertex.tracks();
+      for (unsigned int it = 0; it < tracks.size(); it++ ) {
+        unsigned int count=0;
+        const LHCb::Track* track =  tracks[it];
+        for( std::vector<LHCb::LHCbID>::const_iterator iId = track->lhcbIDs().begin();
+             track->lhcbIDs().end() != iId; ++iId ) {
+          unsigned int sensor = (*iId).veloID().sensor();
+          count+=sensor%2;
+        }
+        if(count==0){
+          nLeft++;
+        }else if(count==track->lhcbIDs().size()){
+          nRight++;
+        }else{
+          nOverlap++;
+        }
+      }
+      return double(nLeft);
+    }
+    zen::function<LHCb::RecVertex>* clone() const
+    {return new VertexNumberOfASideTracks();}
+  };
 
+  ///* Return the number of tracks of a vertex
+  class VertexNumberOfCSideTracks : public Hlt::VertexFunction {
+  public:
+    explicit VertexNumberOfCSideTracks() {}
+    double operator() (const LHCb::RecVertex& vertex) const {
+      int nLeft=0;
+      int nRight=0;
+      int nOverlap=0;
+      const SmartRefVector<LHCb::Track>& tracks = vertex.tracks();
+      for (unsigned int it = 0; it < tracks.size(); it++ ) {
+        unsigned int count=0;
+        const LHCb::Track* track =  tracks[it];
+        for( std::vector<LHCb::LHCbID>::const_iterator iId = track->lhcbIDs().begin();
+             track->lhcbIDs().end() != iId; ++iId ) {
+          unsigned int sensor = (*iId).veloID().sensor();
+          count+=sensor%2;
+        }
+        if(count==0){
+          nLeft++;
+        }else if(count==track->lhcbIDs().size()){
+          nRight++;
+        }else{
+          nOverlap++;
+        }
+      }
+      return double(nRight);
+    }
+    zen::function<LHCb::RecVertex>* clone() const
+    {return new VertexNumberOfCSideTracks();}
+  };
+  
   /* matchIDsFraction
    */
   class MatchIDsFraction : public Hlt::TrackBiFunction {
