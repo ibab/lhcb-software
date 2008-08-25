@@ -67,7 +67,7 @@ namespace Al
     declareInterface<IAlignUpdateTool>(this); 
     declareProperty("MatrixSolverTool"            , m_matrixSolverToolName         = "SpmInvTool"            );
     declareProperty("MinNumberOfHits"             , m_minNumberOfHits              = 100u                    ); 
-    declareProperty("UsePreconditioning"          , m_usePreconditioning           = false                   );
+    declareProperty("UsePreconditioning"          , m_usePreconditioning           = true                    );
     declareProperty("LogFile"                     , m_logFileName                  = "alignlog.txt" ) ;
   }
 
@@ -116,20 +116,53 @@ namespace Al
     // This is just not sufficiently fool proof!
     size_t size = halfDChi2DAlpha.size() ;
     scale.reSize(size) ;
-    for (size_t i = 0u, iEnd = size; i< iEnd; ++i) scale[i] = 1 ;
+    size_t ipar(0) ;
+    // initialize all scales with 1
+    for (ipar = 0u; ipar<size; ++ipar) scale[ipar] = 1 ;
+    // now set the scales for the elements
     int iElem(0u) ;
-    for (Elements::const_iterator it = elements.begin(), itEnd = elements.end(); it != itEnd; ++it, ++iElem) {
+    for (Elements::const_iterator it = elements.begin(); it != elements.end(); ++it, ++iElem) {
       int offset = it->activeParOffset() ;
       if ( 0<=offset ) {
 	size_t ndof = (*it).dofMask().nActive() ;
 	size_t N = equations.numHits(iElem) ;
-	for (size_t i = offset; i< offset+ndof; ++i) {
-	  assert( i < size ) ;
-	  if ( halfD2Chi2DAlpha2[i][i] > 0 ) scale[i] = std::sqrt( N / halfD2Chi2DAlpha2[i][i] ) ;
+	for (ipar = offset; ipar< offset+ndof; ++ipar) {
+	  assert( ipar < size ) ;
+	  if ( halfD2Chi2DAlpha2[ipar][ipar] > 0 ) scale[ipar] = std::sqrt( N / halfD2Chi2DAlpha2[ipar][ipar] ) ;
 	}
       }
     }
-    
+
+    // Now determine the scales for the constraint. If the constraint
+    // equation fixes an eigenmode with eigenvalue 'w', then the
+    // two new eigenvalues become
+    //  w_1 = w/2 - sqrt(norm^2 + w^2/4)
+    //  w_2 = w/2 + sqrt(norm^2 + w^2/4)
+    // where norm is the size of the derivative to the constraint. The
+    // first eigenvalue is negative: that's a property of lagrange
+    // constraints.
+    //
+    // Now, to make sure we can still identify which eigenvalue
+    // corresponds to which constraints, we scale 'norm' such that it
+    // is large and proportional to the index of the constraint:
+    //   norm = 1e4 * (constraintindex + 1 )
+
+    const double defaultnorm = 1e4 ;
+    size_t numParameters(ipar) ;
+    for(; ipar<size; ++ipar) {
+      // first compute the length of the derivative vector (taking
+      // into account the scales of the parameters)
+      double norm2(0) ;
+      for(size_t jpar=0; jpar<numParameters; ++jpar) {
+	double derivative = halfD2Chi2DAlpha2[ipar][jpar] * scale[jpar] ;
+	norm2 += derivative * derivative ;
+      }
+      // now set the scale
+      if( norm2 > 0 ) 
+	scale[ipar] = defaultnorm / std::sqrt(norm2) * (ipar - numParameters + 1) ;
+    }
+
+    // now apply the scales
     for (size_t i = 0u, iEnd = size; i < iEnd; ++i) {
       halfDChi2DAlpha[i] *= scale[i] ;
       for (size_t j = 0u; j <= i; ++j) halfD2Chi2DAlpha2[i][j] *= scale[i] * scale[j] ;
