@@ -35,7 +35,7 @@ AdderSvc::~AdderSvc() {}
 
 StatusCode AdderSvc::initialize() {
   StatusCode sc = Service::initialize(); // must be executed first
-
+  lib_rtl_sleep(1000);
   MsgStream msg(msgSvc(), name());
   if ( !sc.isSuccess() )  {
     msg << MSG::ERROR << "Cannot initialize service base class." << endmsg;
@@ -60,21 +60,20 @@ StatusCode AdderSvc::initialize() {
     return StatusCode::FAILURE;
   }
 
-  msg << MSG::DEBUG << "***************************************************** " << endreq;
+  msg << MSG::INFO << "***************************************************** " << endreq;
 
-  msg << MSG::DEBUG << "****************** Welcome to Adder ***************** " << endreq;
-  msg << MSG::DEBUG << "***************************************************** " << endreq;
-  msg << MSG::DEBUG << "This Adder will add data published in : " << m_dimClientDns << endreq;
+  msg << MSG::INFO << "****************** Welcome to Adder Test************* " << endreq;
+  msg << MSG::INFO << "***************************************************** " << endreq;
+  msg << MSG::INFO << "This Adder will add data published in : " << m_dimClientDns << endreq;
 
-  msg << MSG::DEBUG << "Consider node " << m_nodeName << endreq;
+  msg << MSG::INFO << "Consider node " << m_nodeName << endreq;
 
-  msg << MSG::DEBUG << "TaskNames: " << endreq;
+  msg << MSG::INFO << "TaskNames: " << endreq;
 
   std::vector<std::string>::iterator it;
 
   for(it = m_taskName.begin(); it != m_taskName.end(); ++it) {
-    msg << MSG::DEBUG << "         taskName: " << *it << endreq;
-    msg << MSG::DEBUG << endreq;
+    msg << MSG::INFO << "         taskName: " << *it << endreq;
   }
 
   msg << MSG::DEBUG << "Properties: " << endreq;
@@ -89,7 +88,7 @@ StatusCode AdderSvc::initialize() {
   msg << MSG::DEBUG << "***************************************************** " << endreq;
 
   msg << MSG::DEBUG << "creating ProcessMgr" << endreq;
-  m_processMgr = new ProcessMgr (name(), msgSvc(), this);
+  m_processMgr = new ProcessMgr (msgSvc(), this);
   m_processMgr->setSubFarmVector(m_subfarmName);
   m_processMgr->setTaskVector(m_taskName);
   m_processMgr->setAlgorithmVector(m_algorithmName);
@@ -100,10 +99,10 @@ StatusCode AdderSvc::initialize() {
 
   m_processMgr->createTimerProcess(m_refreshTime);
 
-  msg << MSG::DEBUG << "Activing PostEvent to StartTimer............." << endreq;
+  msg << MSG::INFO << "Activing PostEvent to StartTimer............." << endreq;
   IocSensor::instance().send(this, s_startTimer, this); //start Timer*/
 
-  msg << MSG::DEBUG << "Finishing the initialize method." << endreq;
+  msg << MSG::INFO << "Finishing the initialize method." << endreq;
   return StatusCode::SUCCESS;
 }
 
@@ -155,13 +154,12 @@ void AdderSvc::handle(const Incident& inc) {
   MsgStream msg(msgSvc(), name());
   msg << MSG::INFO << "Got incident " << inc.type() << " from " << inc.source() <<endreq;
   //IocSensor::instance().send(this, s_COMMAND_IN_PROCESSMGR, this);
-
 }
 
 StatusCode AdderSvc::finalize() {
   MsgStream msg(msgSvc(), name());
   msg << MSG::INFO << "Finalize Adder..... " << endmsg;
-
+  if (m_processMgr) {delete m_processMgr; m_processMgr=0;}
   return Service::finalize();
 }
 
