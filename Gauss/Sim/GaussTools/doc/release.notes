@@ -4,6 +4,7 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+!======================== GaussTools v15r0 2008-08-25 ========================
 ! 2008-07-25 - Patrick Robbe
  - MCTruthManager.h/.cpp: Adapt to HEPMC2
 
