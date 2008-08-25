@@ -4,7 +4,7 @@
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
 
-!========================= GaussRICH v9r0 2008-06-26 =========================
+!========================= GaussRICH v9r1 2008-08-26 =========================
 ! 2008-08-08 - Sajan Easo
   Modified the RichG4Cerenkov to be a poststep process , similar to
   what is suggested in the recent G4.9. This needed a modification in 
@@ -12,6 +12,8 @@
 ! 2008-07-30 - Sajan Easo 
   Updated the RichHpdProperties.cpp to be compatible with the latest RichDet when
   accesing the HPD QE info from the DataBase.
+
+!========================= GaussRICH v9r0 2008-06-26 =========================
 ! 2008-06-26 - Gloria CORTI
  - Adapt to change in Geant4 v92r0 (9.0.p02) where kCarTolerance is no
    longer available and has to be replaced by GetSurfaceTolerance() method
