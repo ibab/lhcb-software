@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.4 2008-08-18 19:33:00 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.5 2008-08-26 19:50:32 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -12,6 +12,7 @@ from RichRecSys.TrackCreator  import *
 from RichRecSys.PixelCreator  import *
 from RichRecSys.PhotonCreator import *
 from RichRecSys.CKThetaResolution import *
+from RichMarkovRingFinder.Configuration import *
 from Configurables import ( GaudiSequencer,
                             Rich__DAQ__HPDPixelClusteringTool,
                             Rich__ParticleProperties )
@@ -26,19 +27,14 @@ class RichRecSysConf(RichConfigurableUser):
 
     ## Known contexts
     KnownContexts      = [ "Offline", "HLT" ]
-    ## Known RICH radiators
-    KnownRadiators     = [ "Aerogel", "Rich1Gas", "Rich2Gas" ]
-    ## Default Particle Types
-    KnownParticleTypes = { "Offline" : [ "electron","muon","pion","kaon","proton" ],
-                           "HLT"     : [ "pion","kaon" ] }
     
     ## Steering options
     __slots__ = {
         "fieldOff":       False   # set to True for magnetic field off data
        ,"veloOpen":       False   # set to True for Velo open data
        ,"context":    "Offline"   # The context within which to run
-       ,"radiators": []           # The radiators to use
-       ,"particles": []           # The particle species to consider. Default is (el,mu,pi,ka,pr)
+       ,"radiators": None         # The radiators to use
+       ,"particles": None         # The particle species to consider. Default is (el,mu,pi,ka,pr)
        ,"configureTools":  True   # Configure the general RICH reconstruction tools
        ,"configureAlgs":   True   # Configure the reconstruction algorithms
        ,"preloadRawEvent": False  # Preload the RawEvent prior to the RICH algorithms
@@ -46,11 +42,20 @@ class RichRecSysConf(RichConfigurableUser):
        ,"initPixels":      True   # Run an initialisation algorithm to create the pixels
        ,"initTracks":      True   # Run an initialisation algorithm to create the tracks
        ,"initPhotons":     True   # Run an initialisation algorithm to create the photons
+       ,"tracklessRings":  False  # Run the trackless ring finding algorithms
        ,"checkProcStatus": True   # Check the status of the ProcStatus object
        ,"pidConfig": "FullGlobal" # The PID algorithm configuration
        ,"makeSummaryObjects": False # Make the reconstruction summary TES data objects
        ,"testOldOpts": False
         }
+
+    ## Initialise 
+    def initialise(self):
+        # default values
+        self.setRichDefault("particles","Offline",["electron","muon","pion","kaon","proton"])
+        self.setRichDefault("particles","HLT",    ["pion","kaon"])
+        self.setRichDefault("radiators","Offline",[ "Aerogel", "Rich1Gas", "Rich2Gas" ])
+        self.setRichDefault("radiators","HLT",    [ "Aerogel", "Rich1Gas", "Rich2Gas" ])
 
     ## @brief Check the configuration is sensible
     #
@@ -58,10 +63,6 @@ class RichRecSysConf(RichConfigurableUser):
         context = self.getProp("context")
         if context not in self.KnownContexts:
             raise RuntimeError("ERROR : Unknown RichRecSys context '%s'"%context)
-        if len(self.getProp("radiators")) == 0 :
-            self.setProp("radiators",self.KnownRadiators)
-        if len(self.getProp("particles")) == 0 :
-            self.setProp("particles",self.KnownParticleTypes[context])
 
     ## @brief The RICH radiators to use
     #  @return a vector of bools indicating if (Aerogel,Rich1Gas,Rich2Gas) should be used
@@ -85,7 +86,7 @@ class RichRecSysConf(RichConfigurableUser):
 
     ## @brief Apply the configuration to the given GaudiSequencer
     #  @param sequence The GaudiSequencer to add the RICH reconstruction to
-    def applyConf(self,sequence):
+    def applyConf(self,sequence=None):
         
         # Check configuration is sane
         self.checkConfiguration()
@@ -98,14 +99,14 @@ class RichRecSysConf(RichConfigurableUser):
             importOptions( "$RICHRECSYSOPTS/RecoOfflineToolPara.opts" )
             importOptions( "$RICHRECSYSOPTS/RecoOfflineAlgs.opts")
         else:
-            if self.getProp("configureAlgs") :
-                self.configureAlgorithms(sequence)
             if self.getProp("configureTools") :
-                self.configureTools()
+                self.configTools()
+            if sequence != None and self.getProp("configureAlgs") :
+                self.configAlgorithms(sequence)
         
     ## @brief Configure the RICH algorithms
     #  @param sequence The GaudiSequencer to add the RICH reconstruction to      
-    def configureAlgorithms(self,sequence):
+    def configAlgorithms(self,sequence):
 
         from Configurables import ( Rich__DAQ__RawBufferToRichDigitsAlg,
                                     Rich__Rec__Initialise )
@@ -180,6 +181,17 @@ class RichRecSysConf(RichConfigurableUser):
             recoPhotons.CreatePhotons     = True
             photonSeq.Members += [ recoPhotons ]
 
+
+        #-----------------------------------------------------------------------------
+        # Trackless rings
+        #-----------------------------------------------------------------------------
+        if self.getProp("tracklessRings"):
+            finderSeq = GaudiSequencer("Rich"+cont+"RingFinderSeq")
+            finderSeq.MeasureTime = True
+            sequence.Members += [ finderSeq ]
+            self.setOtherProp(RichMarkovRingFinderConf(),"context")
+            RichMarkovRingFinderConf().applyConf(finderSeq)
+            
         #-----------------------------------------------------------------------------
         # PID
         #-----------------------------------------------------------------------------
@@ -204,12 +216,12 @@ class RichRecSysConf(RichConfigurableUser):
             pidConf.applyConf(pidSeq)
             del pidConf
 
-        #-----------------------------------------------------------------------------
-        # Finalise (merge results from various algorithms)
-        #-----------------------------------------------------------------------------
-        if pidMode != "FastLocal" :
-            from Configurables import Rich__Rec__HierarchicalPIDMerge
-            pidSeq.Members += [Rich__Rec__HierarchicalPIDMerge("Merge"+cont+"RichPIDs")]
+            #-------------------------------------------------------------------------
+            # Finalise (merge results from various algorithms)
+            #-------------------------------------------------------------------------
+            if pidMode != "FastLocal" :
+                from Configurables import Rich__Rec__HierarchicalPIDMerge
+                pidSeq.Members += [Rich__Rec__HierarchicalPIDMerge("Merge"+cont+"RichPIDs")]
         
         #-----------------------------------------------------------------------------
         # Summary objects
@@ -220,7 +232,7 @@ class RichRecSysConf(RichConfigurableUser):
         
     ## @brief Configure the RICH tools
     #
-    def configureTools(self):
+    def configTools(self):
 
         # The context
         context = self.getProp("context")

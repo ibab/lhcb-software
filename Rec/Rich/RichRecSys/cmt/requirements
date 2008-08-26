@@ -2,7 +2,7 @@
 # Created    : 2003-07-01
 # Maintainer : Chris Jones   Christopher.Rob.Jones@cern.ch
 #============================================================================
-# $Id: requirements,v 1.77 2008-08-15 14:41:23 jonrob Exp $
+# $Id: requirements,v 1.78 2008-08-26 19:50:32 jonrob Exp $
 #============================================================================
 
 package           RichRecSys
@@ -19,11 +19,15 @@ set RICHRECSYSOPTS $(RICHRECSYSROOT)/options
 # Common RICH reconstruction packages
 use RichRecBase         v3r*   Rich
 use RichRecTools        v4r*   Rich
-use RichRecAlgorithms   v2r*    Rich
+use RichRecTrackTools   v1r*   Rich
+use RichRecPhotonTools  v1r*   Rich
+use RichRecAlgorithms   v2r*   Rich
+use RichRecStereoTools  v1r*   Rich
 
-# "Offline" PID packages
+# PID packages
 use RichGlobalPID       v3r*   Rich
 use RichLocalPID        v3r*   Rich
+use RichHLTLocalPID     v1r*   Rich
 
 # Result merging algorithms
 use RichPIDMerge        v2r*    Rich

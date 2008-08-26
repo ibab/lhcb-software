@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: RichGlobalPID.py,v 1.5 2008-08-20 09:09:55 jonrob Exp $"
+__version__ = "$Id: RichGlobalPID.py,v 1.6 2008-08-26 19:50:32 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -26,24 +26,6 @@ from Configurables import ( GaudiSequencer,
 #  @date   15/08/2008
 class RichGlobalPIDConfig(RichConfigurableUser):
 
-    ## Default number of iterations
-    DefaultNiterations          = { "Offline" : 2, "HLT" : 2 }
-    ## Default trackFreezeOutDLL options per iteration
-    DefaultTrackFreezeOutDLL    = { "Offline" : [ 2, 4, 5, 6 ],
-                                    "HLT"     : [ 2, 4, 5, 6 ] }
-    ## Default trackForceChangeDLL options per iteration
-    DefaultTrackForceChangeDLL  = { "Offline" : [ -1, -2, -3, -4 ],
-                                    "HLT"     : [ -1, -2, -3, -4 ] }
-    ## Default likelihoodThreshold options per iteration
-    DefaultLikelihoodThreshold  = { "Offline" : [ -1e-2, -1e-3, -1e-4, -1e-5 ],
-                                    "HLT"     : [ -1e-2, -1e-3, -1e-4, -1e-5 ] }
-    ## Default maxTrackChangesPerIt options per iteration
-    DefaultMaxTrackChangesPerIt = { "Offline" : [ 5, 5, 4, 3 ],
-                                    "HLT"     : [ 5, 5, 5, 5 ] }
-    ## Default minSignalForNoLLCalc options per iteration
-    DefaultMinSignalForNoLLCalc = { "Offline" : [ 1e-3, 1e-3, 1e-3, 1e-3 ],
-                                    "HLT"     : [ 1e-3, 1e-3, 1e-3, 1e-3 ] }
-
     ## The default options
     __slots__ = {
         "context":  "Offline",
@@ -53,35 +35,36 @@ class RichGlobalPIDConfig(RichConfigurableUser):
         "nIterations": 0,
         "maxUsedPixels": 8000,
         "finalDLLCheck": [ False, True, True, True ],
-        "trackFreezeOutDLL":    [ ],
-        "trackForceChangeDLL":  [ ],
-        "likelihoodThreshold":  [ ],
-        "maxTrackChangesPerIt": [ ],
-        "minSignalForNoLLCalc": [ ]
+        "trackFreezeOutDLL":    None,
+        "trackForceChangeDLL":  None,
+        "likelihoodThreshold":  None,
+        "maxTrackChangesPerIt": None,
+        "minSignalForNoLLCalc": None
         }
 
-    ## @brief Check the configuration
-    def checkConf(self):
-        cont = self.getProp("context")
-        if self.getProp("nIterations") == 0 :
-            self.setProp("nIterations",self.DefaultNiterations[cont])
-        if len(self.getProp("trackFreezeOutDLL")) == 0 :
-            self.setProp("trackFreezeOutDLL",self.DefaultTrackFreezeOutDLL[cont])
-        if len(self.getProp("trackForceChangeDLL")) == 0 :
-            self.setProp("trackForceChangeDLL",self.DefaultTrackForceChangeDLL[cont])
-        if len(self.getProp("likelihoodThreshold")) == 0 :
-            self.setProp("likelihoodThreshold",self.DefaultLikelihoodThreshold[cont])
-        if len(self.getProp("maxTrackChangesPerIt")) == 0 :
-            self.setProp("maxTrackChangesPerIt",self.DefaultMaxTrackChangesPerIt[cont])
-        if len(self.getProp("minSignalForNoLLCalc")) == 0 :
-            self.setProp("minSignalForNoLLCalc",self.DefaultMinSignalForNoLLCalc[cont])
+    ## Initialise 
+    def initialise(self):
+        # default values
+        self.setRichDefaults("nIterations",{"Offline":2,"HLT":2})
+        self.setRichDefaults("trackFreezeOutDLL",
+                             { "Offline" : [ 2, 4, 5, 6 ],
+                               "HLT"     : [ 2, 4, 5, 6 ] } )
+        self.setRichDefaults("trackForceChangeDLL",
+                             { "Offline" : [ -1, -2, -3, -4 ],
+                               "HLT"     : [ -1, -2, -3, -4 ] } )
+        self.setRichDefaults("likelihoodThreshold",
+                             { "Offline" : [ -1e-2, -1e-3, -1e-4, -1e-5 ],
+                               "HLT"     : [ -1e-2, -1e-3, -1e-4, -1e-5 ] } )
+        self.setRichDefaults("maxTrackChangesPerIt",
+                             { "Offline" : [ 5, 5, 4, 3 ],
+                               "HLT"     : [ 5, 5, 5, 5 ] } )
+        self.setRichDefaults("minSignalForNoLLCalc",
+                             { "Offline" : [ 1e-3, 1e-3, 1e-3, 1e-3 ],
+                               "HLT"     : [ 1e-3, 1e-3, 1e-3, 1e-3 ] } )
 
     ## @brief Apply the configuration
     #  @param sequence The sequencer to add the PID algorithms to
     def applyConf(self,sequence):
-
-        # Check configuration
-        self.checkConf()
 
         # Setup the tools and algs
         if self.getProp("initAlgorithms") : self.applyConfAlgs(sequence)

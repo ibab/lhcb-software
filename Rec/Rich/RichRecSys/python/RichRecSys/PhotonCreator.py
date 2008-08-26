@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: PhotonCreator.py,v 1.2 2008-08-15 14:41:23 jonrob Exp $"
+__version__ = "$Id: PhotonCreator.py,v 1.3 2008-08-26 19:50:32 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -17,24 +17,22 @@ from RichKernel.Configuration import *
 #  @date   15/08/2008
 class RichPhotonCreatorConfig(RichConfigurableUser):
 
-    ## Default radiators to use for each context
-    DefaultRadiators = { "Offline" : [True,True,True],
-                         "HLT"     : [True,True,True] }
-
     ## Default options
     __slots__ = {
         "context": "Offline" # The context within which to run
        ,"radiators":  [] # The radiators to use (Aerogel/Rich1Gas/Rich2Gas)
         }
 
+        ## Initialise 
+    def initialise(self):
+        # default values
+        self.setRichDefault("radiators","Offline",[True,True,True])
+        self.setRichDefault("radiators","HLT",    [True,True,True])
+
     ## Apply configurations
     def applyConf(self):
 
         context = self.getProp("context")
-
-        # -----------------------------------------------------------------------
-        # Check configuration
-        self.checkRadData("radiators",self.DefaultRadiators[context])
       
         # -----------------------------------------------------------------------
         # Photon maker
