@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.74 2008-08-15 14:22:56 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.75 2008-08-26 19:29:21 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -157,7 +157,7 @@ RawDataFormatTool::printL1Stats( const L1TypeCount & count,
     const StatDivFunctor occ1("%7.2f +-%5.2f"), occ2("%8.2f +-%5.2f");
 
     // Printout
-    info() << LINES << endreq
+    always() << LINES << endreq
            << "                             " << title << " : " << m_evtCount << " events" << endreq;
 
     std::map<Rich::DetectorType,unsigned long> totWordSize, totBanks, totHits;
@@ -189,36 +189,40 @@ RawDataFormatTool::printL1Stats( const L1TypeCount & count,
       if ( rich != lastrich )
       {
         lastrich = rich;
-        info() << lines << endreq;
+        always() << lines << endreq;
       }
 
-      info() << " " << rich << " L1ID(log/hard) " << boost::format("%2i/%2i") % L1HardID.data() % L1LogID.data();
-      info() << " V" << boost::format("%3i") % version;
-      info() << " | L1 size ="
+      always() << " " << rich << " L1ID(log/hard) " << boost::format("%2i/%2i") % L1HardID.data() % L1LogID.data();
+      always() << " V" << boost::format("%3i") % version;
+      always() << " | L1 size ="
              << occ1(nBanks,m_evtCount) << " hpds :"
              << occ2(words,m_evtCount) << " words :"
              << occ2(hits,m_evtCount) << " hits / event" << endreq;
     }
 
-    info() << lines << endreq;
+    always() << lines << endreq;
     if ( totBanks[Rich::Rich1]>0 )
     {
-      info() << " Rich1 Average                   | L1 size =" 
+      always() << " Rich1 Average                   | L1 size =" 
              << occ1(totBanks[Rich::Rich1],m_evtCount) << " hpds :"
              << occ2(totWordSize[Rich::Rich1],m_evtCount) << " words :"
              << occ2(totHits[Rich::Rich1],m_evtCount) << " hits / event" << endreq;
     }
     if ( totBanks[Rich::Rich2]>0 )
     {
-      info() << " Rich2 Average                   | L1 size =" 
+      always() << " Rich2 Average                   | L1 size =" 
              << occ1(totBanks[Rich::Rich2],m_evtCount) << " hpds :"
              << occ2(totWordSize[Rich::Rich2],m_evtCount) << " words :"
              << occ2(totHits[Rich::Rich2],m_evtCount) << " hits / event" << endreq;
     }
 
-    info() << LINES << endreq;
+    always() << LINES << endreq;
 
   } // end stats available
+  else
+  {
+    always() << "No statistics available" << endreq;
+  }
 
 }
 
