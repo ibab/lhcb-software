@@ -1,4 +1,4 @@
- $Id: release.notes,v 1.230 2008-08-21 12:54:34 pkoppenb Exp $
+ $Id: release.notes,v 1.231 2008-08-26 09:15:56 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,10 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2008-08-26 - Juan PALACIOS
+ - add options/MicroDSTCommon.opts
+  . Options file with minimum required to run a MicroDST DaVinci job.
 
 ! 2008-08-21 - Patrick Koppenburg
  - Remove DaVinci.exe from release. Ganga does not need it anymore.
