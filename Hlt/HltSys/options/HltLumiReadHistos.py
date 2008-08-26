@@ -52,13 +52,19 @@ readLumiSequence( OdinTypesFilter( 'OdinTriggerTypes', TriggerTypes=['TimingTrig
 readLumiSequence( HltLumiSummaryDecoder( OutputLevel = debugOPL ) ) 
 
 BXMembers = []
+createdCounters = []
+#createdCounters.extend(['Velo','RZVelo'])
+#createdCounters.extend(['PV2D'])
+#createdCounters.extend(['RZVeloBW'])
+createdCounters.extend(['SPDMult','PUMult','CaloEt' ])
+
 for i in [ 'NoBeam', 'BeamCrossing','SingleBeamRight','SingleBeamLeft'] :
 
     HistoMembers=[]
     if debugging: HistoMembers.append(HltLumiOdinReader('OdinReaderBefore'+i, OutputLevel = debugOPL ))
     HistoMembers.append(OdinTypesFilter('Filter'+i, BXTypes = [i], OutputLevel = debugOPL ))
     if debugging: HistoMembers.append(HltLumiOdinReader('OdinReaderAfter'+i, OutputLevel = debugOPL ))
-    HistoMembers.append(LumiHistoMaker('Histo'+i, OutputLevel = debugOPL ))
+    HistoMembers.append(LumiHistoMaker('Histo'+i, InputVariables = createdCounters, OutputLevel = 3 ))
     
     BXMembers.append( Sequence('Hlt1Lumi'+i+'Sequence', 
                                Members = HistoMembers,

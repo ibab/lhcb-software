@@ -5,6 +5,9 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+! 2008-08-26 - Jaap Panman
+ - add a list of histos to plot to HltLumiReadHistos.py 
+
 ! 2008-08-25 - Jaap Panman
  - add HltLumiReadHistos.py to read back lumi-nano files
  - modify HltLumiAlleyConfSequence.py to write nano files
