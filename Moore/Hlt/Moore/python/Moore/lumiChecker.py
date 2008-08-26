@@ -29,8 +29,12 @@ class LumiAlg(GaudiPython.PyAlgorithm):
     # set up the naming in the TES etc. - would be nice to get from configurables
     self.histbase='/stat/'
     self.histbaselumi='/stat/'#HltLumi/'
-    self.histbaselumisums='/stat/HltLumiSums/'
-    self.histbaselumiprev='/stat/HltLumiPrev/'
+    self.histbaselumisumsdir='HltLumiSums'
+    self.histbaselumisums=self.histbaselumi+self.histbaselumisumsdir+'/'
+    self.histbaselumiprevdir='HltLumiPrev'
+    self.histbaselumiprev=self.histbaselumi+self.histbaselumiprevdir+'/'
+    self.histbaselumitrenddir='HltLumiTrend'
+    self.histbaselumitrend=self.histbaselumi+self.histbaselumitrenddir+'/'
 
     # set up the local pointers to the histos - would be nice to get from configurables
     self.hStore={}
@@ -89,7 +93,18 @@ class LumiAlg(GaudiPython.PyAlgorithm):
     '''
     allHistos=self.getHistSvcDump()
     self.allCounters=self.getCounterList(allHistos,self.histbaselumi + self.btype['BB'] +'/')
-    #print 'allCounters:',self.allCounters
+    self.bookTrendHistos()
+  
+#----------------------------------
+  def bookTrendHistos(self):
+    '''
+    book the histograms for the trends
+    '''
+    trendTypes=['mean','logZero']
+    for TrT in trendTypes:
+      for cn in self.allCounters:
+        cntrend=TrT+'_'+cn
+        self.HistSvc.book(self.histbaselumitrenddir,cntrend,cntrend,100,0.,100.)
                                     
 #----------------------------------
   def getCounterList(self, ls, prefix):
@@ -147,17 +162,13 @@ class LumiAlg(GaudiPython.PyAlgorithm):
       else:
         hP=self.hStore[ct][BT]
 
-      # print now the entries in the present and previous
-      # print 'present ',ct,BT,BTV,h1.entries(),h1.sumAllBinHeights(),h1.mean()
-      # print 'previous',ct,BT,BTV,hP.entries(),hP.sumAllBinHeights(),hP.mean()
-
       # subtract previous from present
       hP.scale(-1.)
       hP.add(h1)
       ## print 'delta   ',ct,BT,BTV,hP.entries(),hP.sumAllBinHeights(),hP.mean()
       mean=hP.mean()
       # count number of entries above the cut (by subtracting below)
-      cutBins=4
+      cutBins=7
       nBelow=0
       for b in range(cutBins):
         nBelow+=hP.binHeight(b)
@@ -179,8 +190,35 @@ class LumiAlg(GaudiPython.PyAlgorithm):
     # at this stage we should make the subtractions to get corrected "R"
     corr_mean=bx_mean['BB']-bx_mean['BL']-bx_mean['BR']+bx_mean['EE']
     corr_frac=bx_frac['BB']-bx_frac['BL']-bx_frac['BR']+bx_frac['EE']
+    try:
+      corr_logs = math.log(1.-bx_frac['BB']) + \
+                  math.log(1.-bx_frac['EE']) - \
+                  math.log(1.-bx_frac['BL']) - \
+                  math.log(1.-bx_frac['BR'])
+    except:
+      corr_logs=0
     print 'python algorithm',self.name,': R-Results background corrected',ct,\
-          'mean',corr_mean,'fraction',corr_frac,'at',self.nevents
+          'mean',corr_mean,'fraction',corr_frac,'log-fraction',corr_logs,'at',self.nevents
+
+    # store trends for ['mean','logZero']
+    hM=self.HistSvc[self.histbaselumitrend+'mean_'+ct]
+    hZ=self.HistSvc[self.histbaselumitrend+'logZero_'+ct]
+    axis=hM.axis()
+    bins=axis.bins()
+    for b in range(bins):
+      valM=hM.binHeight(b)
+      valZ=hZ.binHeight(b)
+      if b<bins-1:
+        valNextM=hM.binHeight(b+1)
+        valNextZ=hZ.binHeight(b+1)
+      else:
+        valNextM=corr_mean
+        valNextZ=-corr_logs
+      x=0.5*(axis.binUpperEdge(b)+axis.binLowerEdge(b))
+      hM.fill(x,valNextM-valM)
+      hZ.fill(x,valNextZ-valZ)
+    
+    
 
 #----------------------------------
   def cloneHisto1D(self, h1, s1, ct, reset=False):
@@ -218,18 +256,18 @@ class LumiAlg(GaudiPython.PyAlgorithm):
       print '.... NB', histSPD['NB'].sumBinHeights(), histSPD['NB'].axis().bins()
 
     # create new histos for summing
-    if self.HistSvc['/stat/HltLumiSums/SPD'] == None :
-      XXX=self.HistSvc.book('HltLumiSums','SPD','SPD',100,0.,100.)
+    if self.HistSvc[self.histbaselumisums+'SPD'] == None :
+      XXX=self.HistSvc.book(self.histbaselumisumsdir,'SPD','SPD',100,0.,100.)
       print 'XXX',XXX
       axis=histSPD['NB'].axis()
-      YYY=histSPD['s1']=self.HistSvc.book('HltLumiSums','SPD1','SPD1',
+      YYY=histSPD['s1']=self.HistSvc.book(self.histbaselumisumsdir,'SPD1','SPD1',
                                           axis.bins(),axis.lowerEdge(),axis.upperEdge())
       print 'YYY',YYY
       ##if prflag: self.HistSvc.dump()
     else:
-      XXX=self.HistSvc['/stat/HltLumiSums/SPD']
-      YYY=self.HistSvc['/stat/HltLumiSums/SPD1']
-    histSPD['SUM']=self.HistSvc['/stat/HltLumiSums/SPD']
+      XXX=self.HistSvc[self.histbaselumisums+'SPD']
+      YYY=self.HistSvc[self.histbaselumisums+'SPD1']
+    histSPD['SUM']=self.HistSvc[self.histbaselumisums+'SPD']
     histSPD['SUM'].fill(5.,11.)
     print '.... SUM', histSPD['SUM'].sumBinHeights()
 
@@ -242,7 +280,7 @@ class LumiAlg(GaudiPython.PyAlgorithm):
 
 
     ## need a "clone" algorithm for histograms
-    histSPD['clone']=self.cloneHisto1D(histSPD['NB'], '/stat/HltLumiSums/', 'clone', 'clone')
+    histSPD['clone']=self.cloneHisto1D(histSPD['NB'], self.histbaselumisums, 'clone', 'clone')
     print '.... CL', histSPD['clone'].sumBinHeights(),histSPD['clone'].entries(),\
           histSPD['clone'].sumExtraBinHeights(),histSPD['clone'].extraEntries()
     

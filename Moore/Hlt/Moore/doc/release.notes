@@ -2,6 +2,9 @@ Package     : Hlt/Moore
 Package Coordinator : Patrick Koppenburg and Marco Cattaneo
 Purpose     : LHCb HLT application
 
+! 2008-08-26 - Jaap Panman
+ - lumiChecker.py : calculate R and put in trend histo
+
 ! 2008-08-25 - Jaap Panman
  - lumiMoore (new in options) : job to test/run lumiAlley 
  - Configuration.py : mods to run lumiAlley

@@ -32,7 +32,7 @@ HistogramPersistencySvc().OutputFile = 'Moore_minbias.root'
 #HltConfigSvc().OutputLevel = DEBUG
 #
 jobType='readLumi'
-jobType='readRaw'
+#jobType='readRaw'
 
 if jobType=='readRaw':
   Moore().hltType = 'Physics_Hlt1'
@@ -74,7 +74,7 @@ if jobType=='readRaw':
 
 elif jobType=='readLumi':
   Moore().hltType = 'readBackLumi'
-  files = [ 'mdfData_run_1.mdf' ]   # this is a local test file of nano events
+  files = [ 'mdfData_run_2.mdf' ]   # this is a local test file of nano events
   
 
 filetype = files[0][-3:].upper()
@@ -89,29 +89,14 @@ extensions = {
 EventSelector().Input =[ "DATAFILE='PFN:"+ f + extensions[ filetype ] for f in files ]
 EventSelector().PrintFreq = 100
 
-ApplicationMgr().EvtMax = 200
+ApplicationMgr().EvtMax = 500
 
 import GaudiPython
 ########################################
-# bizarre: the following 4 lines are needed
-class MyAlg(GaudiPython.PyAlgorithm):
-  def __init__ ( self , name ) :
-    """ Constructor """
+# bizarre: the following lines are needed
+class AnyAlg(GaudiPython.PyAlgorithm):
+  def __init__(self,name):
     pass
-##     GaudiPython.PyAlgorithm.__init__( self , name )
-##     self.name=name
-
-##   def initialize(self):
-##     return True
-
-##   def restart(self):
-##     return True
-  
-##   def finalize(self):
-##     return True
-        
-##   def execute(self):
-##     return True
 ########################################
 
 # instantiate the user algorithms
