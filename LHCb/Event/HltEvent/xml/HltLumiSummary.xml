@@ -9,19 +9,11 @@
       name        = 'HltLumiSummary'
       author      = 'Jaap Panman'
       desc        = 'Summary class for Lumi in Hlt'
-      stdVectorTypeDef="TRUE"
-      keyedContTypeDef = "TRUE"
       id = '7520'
       serializers = 'TRUE'>
 
       <location name="Default"   place="Hlt/LumiSummary"/>
  
-      <import name="vector" std="TRUE"/>
-      <!-- <base name='DataObject' /> -->
-      <!-- &DataObject; -->
-
-      <!-- &KeyedObject; -->
-
       <typedef
         type="GaudiUtils::VectorMap&lt;  int, int&gt;"
         def="ExtraInfo"
@@ -29,19 +21,17 @@
         access="PUBLIC"
 	/>
 
-      <import name='GaudiKernel/GaudiException' />
-      <import name="GaudiKernel/KeyedObject"/>
       <import name='GaudiKernel/VectorMap' />
 
-      <base name="KeyedObject&lt;int&gt;"/>
-       &KeyedObject; 
-
+      &DataObject;
+      <base name="DataObject"/>
+<!-- 
       <constructor
         argList="HltLumiSummary rhs"
         desc="Copy constructor"
-        initList="KeyedObject&lt;int&gt;(), m_extraInfo(rhs.m_extraInfo)"
+        initList="m_extraInfo(rhs.m_extraInfo)"
 	/>
-
+-->
       <method
         name="clone"
         desc="Clone LumiSummary"
@@ -67,26 +57,7 @@
    return *this;
         </code>
       </method>
-<!-- 
-      <enum
-        desc="Additional information. Contains nTuple style information"
-        name="additionalInfo"
-        access="PUBLIC" >
 
-        <enumval name="RZVelo"     value = "1"   desc="number of RZVelo tracks"/>
-        <enumval name="RZVeloBW"   value = "2"   desc="number of backward RZVelo tracks"/>
-        <enumval name="Velo"       value = "3"   desc="number of 3D Velo tracks"/>
-        <enumval name="PVMuon"     value = "4"   desc="number of muon tracks pointing to PV"/>
-        <enumval name="BKMuon"     value = "5"   desc="number of muon tracks NOT pointing to PV"/>
-        <enumval name="SPD"        value = "6"   desc="number of SPD hits"/>
-        <enumval name="Calo"       value = "7"   desc="number of Calo hits"/>
-        <enumval name="PV2D"       value = "10"  desc="number of 2D vertices"/>
-        <enumval name="PV3D"       value = "11"  desc="number of 3D vertices"/>
-        <enumval name="PU"         value = "13"  desc="number of PU vertices"/>
-        <enumval name="LastGlobal" value = "20"  desc="The last official flag value. Private user variables should use flags greater than this value"/>
-
-      </enum>
--->
       <attribute
         name="extraInfo"
         desc="Some addtional user information. Don't use directly. Use *Info() methods."

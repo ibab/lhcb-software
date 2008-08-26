@@ -4,6 +4,9 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+! 2008-08-26 - Jaap Panman
+ - LumiSummary container is now a single object
+
 ! 2008-08-06 - Tomasz Skwarnicki
  - added HltVertexReports.xml
 
