@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.7 2008-08-25 12:37:52 graven Exp $ 
+# $Id: HltLine.py,v 1.8 2008-08-26 12:47:06 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'    ,  ## the Hlt line itself 
@@ -528,7 +528,7 @@ class Hlt1Line(object):
                    L0        = [] ,   # list of L0 channels  
                    HLT       = [] ,   # list of HLT selections  
                    postscale = 1  ,   # prescale factor
-                   makesDecision = True, # whether or not this line 
+                   makesDecision = True, # whether or not this line contributes to the overall HLT decision
                    algos     = [] ,   # the list of algorithms/members
                    **args         ) : # other configuration parameters
         """
@@ -584,11 +584,17 @@ class Hlt1Line(object):
         
         _members += [ PreScaler ( prescalerName  ( line ) , AcceptFraction = self._prescale  ) ]
         if ODIN  :
-            BXTypes_ = [ ]
-            if 'BXTypes' in self._ODIN : BXTypes_ = self._ODIN['BXTypes']
-            TriggerTypes_ = [ ]
-            if 'TriggerTypes' in self._ODIN : TriggersTypes_ = self._ODIN['TriggerTypes']
-            _members += [ ODINFilter ( odinentryName( line ) , TriggerTypes = TriggersTypes_ , BXTypes = BXTypes_  ) ]
+            for key in self._ODIN.keys():
+                if key not in [ 'BXTypes','TriggerTypes' ] :
+                    raise AttributeError, 'Unknown key %s for ODIN Filter configuration '%key
+            BXTypes_       = self._ODIN['BXTypes']      if 'BXTypes'      in self._ODIN else [ ]
+            TriggerTypes_  = self._ODIN['TriggerTypes'] if 'TriggerTypes' in self._ODIN else [ ]
+            if type(BXTypes_)      is not list : BXTypes_      = list( BXTypes_      )
+            if type(TriggerTypes_) is not list : TriggerTypes_ = list( TriggerTypes_ )
+            _members += [ ODINFilter ( odinentryName( line ) 
+                                     , TriggerTypes = TriggerTypes_ 
+                                     , BXTypes = BXTypes_  
+                                     ) ]
         elif L0  :
             _members += [ L0Filter   ( l0entryName  ( line ) , L0Channels      = self._L0    ) ]
         elif HLT : 
@@ -962,8 +968,8 @@ def __enroll__ ( self       ,   ## the object
 
     _indent_ = ('%-3d'%level) + level * '   ' 
     line = _indent_ + self.name ()
-    if len(line)>39: line = line + '\n'+ 40*' '
-    else :           line = line + (40-len(line))*' '
+    if len1(line)>39: line = line + '\n'+ 40*' '
+    else :            line = line + (40-len1(line))*' '
     line = line + '%-25.25s'%self.getType()
 
     line = prnt ( self , lst , line )
