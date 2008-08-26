@@ -1,5 +1,6 @@
 from LbUtils import Env
-from LbUtils.CMT import Package
+from LbUtils.CMT.Package import getPackagesFromDir, Package
+from LbUtils.CMT.Common import doesDirMatchNameAndVersion, isDirSelected, setCMTPathEnv
 from LbUtils.Set import Set
 import logging
 import os
@@ -20,6 +21,14 @@ class ProjectFile(object):
         if filename is not None:
             self._setLocation(filename)
         return self._location
+    def container(self):
+        if self._container is None :
+            m = re.compile("container\s+(.+)\s*").search(self.content())
+            if m :
+                self._container = m.group(1)
+            else :
+                self._container = ""
+        return self._container
     def _setContent(self):
         f = open(self.location(), "r")
         self._content = f.read()
@@ -30,211 +39,363 @@ class ProjectFile(object):
         return self._content
 
 class Project(object):
-    def __init__(self, projectpath, versiondir=False):
-        self._location = self.location(projectpath)
-        self._name = self.name(versiondir)
-        self._version = self.version(versiondir)
-        self._projectfile = self.projectFile()
-        self._basenamelist = []
-        self._baselist = Set()
-        self._clientlist = Set()
-        self._packagelist = []
-        self._containedpackagelist = Set()
-        self._usedpackagelist = {}
-        
+    def __init__(self, projectpath):
+        projectpath = os.path.realpath(projectpath)
+        self._fulllocation = projectpath
+        self._pkgclass = Package
+        self._name = None
+        self._projectfile = None
+        self._version = None
+        self._location = None
+        self._baselist = None
+        self._clientlist = None
+        self._packagelist = None
+        self._binarylist = None
+        self._usedpaklist = None
+        self._allusedpaklist = None
+        self._extpaklist = None
+        self._allextpaklist = None
+        self._container = None
     def __eq__(self, other):
-        return self.location() == other.location()
+        return self.fullLocation() == other.fullLocation()
     
-    def name(self, versiondir=None):
-        if not hasattr(self, "_name") or versiondir is not None:
-            self._setName(versiondir)
+    def fullLocation(self):
+        return self._fulllocation
+    
+    def name(self):
+        log = logging.getLogger()
+        if self._name is None:
+            wdir = self.fullLocation()
+            os.chdir(wdir)
+            env = Env.getDefaultEnv()
+            env["PWD"] = wdir
+            p = Popen(["cmt", "show", "macro_value", "project"], stdout=PIPE, stderr=PIPE, close_fds=True)
+            for line in p.stdout:
+                self._name = line[:-1]
+            for line in p.stderr:
+                if line.startswith("#CMT> Warning:") and line.find("not found") != -1 :
+                    log.debug(line[:-1])
+                else : 
+                    log.warning(line[:-1])
+            retcode = os.waitpid(p.pid, 0)[1]
+            log.debug("return code of 'cmt show macro_value project' in %s is %s", wdir, retcode)
+            if retcode != 0: 
+                # for local packages: one has to go in the "cmt" directory
+                wdir = os.path.join(self.fullLocation(), "cmt" )
+                os.chdir(wdir)
+                env["PWD"] = wdir
+                p = Popen(["cmt", "show", "macro_value", "project"], stdout=PIPE, stderr=PIPE, close_fds=True)
+                for line in p.stdout:
+                    self._name = line[:-1]
+                for line in p.stderr:
+                    if line.startswith("#CMT> Warning:") and line.find("not found") != -1 :
+                        log.debug(line[:-1])
+                    else : 
+                        log.warning(line[:-1])
+                retcode = os.waitpid(p.pid, 0)[1]
+                log.debug("return code of 'cmt show macro_value project' in %s is %s", wdir, retcode)
+                if retcode != 0 :
+                    log.warning("No macro 'project' found - using 'cmt show project' in %s " % wdir)
+                    # fallback on "cmt show project" if it fails. Geant4 is one example
+                    p = Popen(["cmt", "show", "projects"], stdout=PIPE, stderr=PIPE, close_fds=True)
+                    line = p.stdout.readline()[:-1]
+                    self._name = line.split()[0]
+                    for line in p.stderr:
+                        if line.startswith("#CMT> Warning:") and line.find("not found") != -1 :
+                            log.debug(line[:-1])
+                        else : 
+                            log.warning(line[:-1])
+                    retcode = os.waitpid(p.pid, 0)[1]
+                    log.debug("return code of 'cmt show projects' in %s is %s", wdir, retcode)
+                    if retcode != 0 :
+                        log.warning("return code of 'cmt show projects' in %s is %s", wdir, retcode)
         return self._name
-    def _setName(self, versiondir):
-        dirspl = os.path.split(self.location())
-        if versiondir :
-            self._name = os.path.split(dirspl[0])[1]
-        else : 
-            self._name = dirspl[1]
-
-    def version(self, versiondir=None):
-        if versiondir is not None:
-            self._setVersion(versiondir)
-        return self._version
-    def _setVersion(self, versiondir):
-        if versiondir : 
-            self._version = os.path.split(self.location())[1]
-        else :
-            self._version = None
-            
-    def location(self, projectpath=None):
-        if not hasattr(self, "_location") or projectpath is not None:
-            self._setLocation(projectpath)
-        return self._location
-    def _setLocation(self, projectpath):
-        self._location = os.path.realpath(projectpath)
 
     def projectFile(self):
-        if not hasattr(self, "_projectfile") or not self._projectfile :
-            self._setProjectFile()
-        return self._projectfile 
-    def _setProjectFile(self):
-        pfname = os.path.join(self.location(), "cmt", "project.cmt")
-        self._projectfile = ProjectFile(pfname)
-        
-    def packages(self):
-        return self._packagelist
-    def getDependencies(self):
-        log = logging.getLogger()
-        wdir = os.path.join(self.location(),"cmt")
-        os.chdir(wdir)
-        env = Env.getDefaultEnv()
-        env["PWD"] = wdir
-        p = Popen(["cmt", "show", "projects"], stdout=PIPE, stderr=PIPE, 
-                  close_fds=True)
-        for line in p.stdout:
-            print line[:-1]
-        for line in p.stderr:
-            log.warning(line[:-1])
-        retcode = os.waitpid(p.pid, 0)[1]
-        log.debug("return code of 'cmt show projects' in %s is %s", wdir, retcode)
-        if retcode != 0:
-            log.warning("return code of 'cmt show projects' in %s is %s", wdir, retcode)
-    def getBaseNameList(self):
-        log = logging.getLogger()
-        wdir = os.path.join(self.location(),"cmt")
-        os.chdir(wdir)
-        env = Env.getDefaultEnv()
-        env["PWD"] = wdir
-        parentlist = []
-        p = Popen(["cmt", "show", "projects"], stdout=PIPE, stderr=PIPE, close_fds=True)
-        for line in p.stdout:
-            if re.compile("^"+self.name()).match(line):
-                parmatch = re.compile("C=[a-zA-Z]+").findall(line)
-                for w in parmatch :
-                    parentlist.append(w.replace("C=",""))
-            elif parentlist :
-                for par in parentlist:
-                    if re.compile("\s+" + par).match(line):
-                        m = re.compile("\(in\s+(.+)\s*\)").search(line)
-                        if m : 
-                            self._basenamelist.append(m.group(1))
-        for line in p.stderr:
-            log.warning(line[:-1])
-        retcode = os.waitpid(p.pid, 0)[1]
-        log.debug("return code of 'cmt show projects' in %s is %s", wdir, retcode)
-        if retcode != 0:
-            log.warning("return code of 'cmt show projects' in %s is %s", wdir, retcode)
-    def baseNameList(self):
-        if not self._basenamelist :
-            self.getBaseNameList()
-        return self._basenamelist
-    def showBaseNameList(self):
-        for pn in self.baseNameList() :
-            print "\t%s" % pn
-    def addClient(self, proj):
-        self._clientlist.add(proj)
-    def getBase(self, projectlist):
-        for bn in self.baseNameList() :
-            for p in projectlist :
-                if p.location() == bn :
-                    self._baselist.add(p)
-                    p.addClient(self)
-    def showBase(self):
-        if self._baselist :
-            for b in self._baselist :
-                print "\t%s" % b.location()
-    def base(self):
+        if self._projectfile is None :
+            self._projectfile = ProjectFile(os.path.join(self.fullLocation(), "cmt", "project.cmt"))
+        return self._projectfile
+
+    def container(self):
+        if self._container is None : 
+            self._container = self.projectFile().container()
+        return self._container
+
+    def version(self):
+        if self._version is None :
+            tmlist = self.fullLocation().split(os.sep)
+            if tmlist[-2] == self.name():
+                self._version = tmlist[-1]
+            else :
+                self._version = ""
+        return self._version
+
+    def location(self):
+        if self._location is None :
+            tmlist = self.fullLocation().split(os.sep)
+            if self.version() == "":
+                self._location = tmlist[-1]
+            else :
+                self._location = os.sep.join([tmlist[-2],tmlist[-1]])
+        return self._location
+
+    def _setCMTPathEnv(self, cmtpath=None, cmtprojectpath=None):
+        if cmtprojectpath is None:
+            tmlist = self.fullLocation().split(os.sep)
+            if self.version() == "" :
+                cmtprojectpath = os.sep.join(tmlist[:-1])
+            else :
+                cmtprojectpath = os.sep.join(tmlist[:-2])
+        setCMTPathEnv(cmtpath, cmtprojectpath)
+        return cmtprojectpath
+
+    def base(self, cmtpath=None, cmtprojectpath=None):
+        self._setCMTPathEnv(cmtpath, cmtprojectpath)
+        if self._baselist is None :
+            self._baselist = Set()
+            log = logging.getLogger()
+            wdir = os.path.join(self.fullLocation(),"cmt")
+            os.chdir(wdir)
+            env = Env.getDefaultEnv()
+            env["PWD"] = wdir
+            parentlist = []
+            p = Popen(["cmt", "show", "projects"], stdout=PIPE, stderr=PIPE, close_fds=True)
+            for line in p.stdout:
+                if re.compile("^"+self.name()).match(line):
+                    parmatch = re.compile("C=[a-zA-Z]+").findall(line)
+                    for w in parmatch :
+                        parentlist.append(w.replace("C=",""))
+                elif parentlist :
+                    for par in parentlist:
+                        if re.compile("\s+" + par).match(line):
+                            m = re.compile("\(in\s+(.+)\s*\)").search(line)
+                            if m : 
+                                self._baselist.add(self.__class__(m.group(1)))
+            for line in p.stderr:
+                log.debug(line[:-1])
+            retcode = os.waitpid(p.pid, 0)[1]
+            log.debug("return code of 'cmt show projects' in %s is %s", wdir, retcode)
         return self._baselist
-    def clients(self):
+    
+    def overrideBaseProject(self, other, cmtpath=None, cmtprojectpath=None):
+        self._setCMTPathEnv(cmtpath, cmtprojectpath)
+        self._baselist.override(other)
+    
+    def clients(self, cmtpath=None, cmtprojectpath=None):
+        """ get all the client projects. Pretty slow. Use with care """
+        cmtprojectpath = self._setCMTPathEnv(cmtpath, cmtprojectpath)
+        if self._clientlist is None:
+            self._clientlist = Set()
+            tmplist = Set()
+            projectpath_list = cmtprojectpath.split(os.pathsep)
+            for c in projectpath_list :
+                tmplist |= getProjectsFromDir(directory=c)
+            for p in tmplist :
+                for b in p.base() :
+                    if b == self:
+                        self._clientlist.add(p)
         return self._clientlist
-    def showClient(self):
-        if self._clientlist :
-            for c in self._clientlist :
-                print "\t%s" % c.location()
-    def show(self, showdeps=False, 
-             showbase=False, 
-             showclient=False, 
-             showcontainedpackages=False, 
-             showusedpackages= False,
-             binary_list=None,
-             project_list=None):
-        print self.location()
-        if showdeps : 
-            self.getDependencies()
-        if showbase :
-            self.showBase()
-        if showclient :
-            self.showClient()
-        if showcontainedpackages and not showusedpackages:
-            self.showContainedPackages()
-        if showusedpackages :
-            self.getUsedPackages(binary_list, project_list)
-            self.printUsedPackages(binary_list, showcontainedpackages)
-    def addContainedPackage(self, packagepath):
-        newpack = Package.Package(packagepath, self)
-        self._containedpackagelist.add(newpack)
-    def getContainedPackages(self):
+
+    def packages(self, force=False):
+        if self._packagelist is None :
+            self._packagelist = getPackagesFromDir(directory=self.fullLocation(), parentproject=self, pkgclass=self._pkgclass)
+        elif force :
+            self.updatePackages(getPackagesFromDir(directory=self.fullLocation(), parentproject=self, pkgclass=self._pkgclass))
+        return self._packagelist
+
+    def hasPackages(self):
+        haspack = False
+        if self._packagelist is not None :
+            haspack = True
+        return haspack
+
+    def addPackage(self, pak):
+        if self._packagelist is None :
+            self._packagelist = Set()
+        if pak.parentProjectPath() == self.fullLocation() :
+            self._packagelist.add(pak)
+
+    def updatePackages(self, paklist):
+        if self._packagelist is None :
+            self._packagelist = Set()
+        for p in paklist :
+            if p.parentProjectPath() == self.fullLocation() :
+                self._packagelist.add(p)
+
+    def hasPackage(self, package):
+        return package in self._packagelist
+
+    def binaryList(self):
+        if self._binarylist is None :
+            self._binarylist = Set()
+            for p in self.packages() :
+                self._binarylist |= p.binaryList()
+        return self._binarylist
+    
+    
+    def binaryUsedPackages(self, cmtpath=None, cmtprojectpath=None, binary="default"):
+        env = Env.getDefaultEnv()
         log = logging.getLogger()
-        for dn in os.walk(self.location(), 
-                          topdown=True, 
-                          onerror=Package.onPackagePathError):
-            fullname = dn[0]
-            if Package.isPackage(fullname):
-                log.debug("found package: %s", fullname)
-                self.addContainedPackage(fullname)
-                dn[1][:] = []
-    def hasContainedPackage(self, package):
-        return package in self._containedpackagelist
-    def containedPackages(self):
-        if not self._containedpackagelist:
-            self.getContainedPackages()
-        return self._containedpackagelist
-    def showContainedPackages(self):
-        for p in self.containedPackages() :
-            print "  %s" % p.location()
-    def showUsedPackages(self, binary_list):
-        for p in self.containedPackages() :
-            p.showUsedPackages(binary_list)
-    def getUsedPackages(self, binarylist, projectlist=None):
-        if not projectlist :
-            projectlist = Set()
-            projectlist.add(self)
-        for b in binarylist :
-            self._usedpackagelist[b] = Set()
-            for p in self.containedPackages() :
-                self._usedpackagelist[b] |= p.getBinaryUsedPackages(b, projectlist)
-        return self._usedpackagelist
-    def printUsedPackages(self, binarylist, showcontained=False ):
-        if not showcontained:
-            all_packs = Set()
-            for b in binarylist:
-                all_packs |= self._usedpackagelist[b]
-            for p in all_packs :
-                if p.parentProject() == self:
-                    print "    %s" % p.location(),
-                else :
-                    print "    %s" % p.fullLocation(),
-                print "( ",
-                for b in binarylist :
-                    if p in self._usedpackagelist[b] :
-                        print "%s " % b,
-                print ")"
+        self._setCMTPathEnv(cmtpath, cmtprojectpath)
+        if binary == "default" :
+            if env.has_key("CMTCONFIG"):
+                del env["CMTCONFIG"] # ensures that no cmtconfig is set
         else :
-            for c in self.containedPackages() :
-                print "  %s" %c.location()
-                all_packs = Set()
-                for b in binarylist:
-                    all_packs |= c.binaryUsedPackages(b)
-                for p in all_packs :
-                    if p.parentProject() == self:
-                        print "    %s" % p.location(),
+            env["CMTCONFIG"] = binary
+        if self._usedpaklist is None :
+            self._usedpaklist = dict()
+        if self._allusedpaklist is None :
+            self._allusedpaklist = Set()
+        indx = cmtpath, cmtprojectpath, binary 
+        if not self._usedpaklist.has_key(indx):
+            self._usedpaklist[indx] = Set()
+        if not self._usedpaklist[indx] :
+            containedpackages = self.packages()
+            if self.container() == "" :
+                log.warning("No container package found @ %s" % self.fullLocation())
+                log.warning("Parsing all packages for %s binary" % binary)
+                for p in containedpackages :
+                    tmplist = p.binaryUsedPackages(cmtpath, cmtprojectpath, binary)
+                    # override the found packages by the one in the contained package list
+                    tmplist.override(containedpackages)
+                    # update the packages of the base projects
+                    for data in walk(top=self, cmtpath=cmtpath, cmtprojectpath=cmtprojectpath):
+                        deps = data[1]
+                        for b in deps :
+                            if b.hasPackages() :
+                                tmplist.override(b.packages())
+                            b.updatePackages(tmplist)
+                    for t in tmplist :
+                        t.addUsedByBinary(binary)
+                    self._allusedpaklist |= tmplist
+                    self._usedpaklist[indx] |= tmplist
+            else : 
+                log.info("Container package %s found @ %s" % (self.container(), self.fullLocation()))
+                log.info("Extracting used packages for %s binary" % binary)
+                for p in containedpackages :
+                    if p.name() == self.container() :
+                        tmplist = p.binaryUsedPackages(cmtpath, cmtprojectpath, binary)
+                        # override the found packages by the one in the contained package list
+                        tmplist.override(containedpackages)
+                        # update the packages of the base projects
+                        for data in walk(top=self, cmtpath=cmtpath, cmtprojectpath=cmtprojectpath):
+                            deps = data[1]
+                            for b in deps :
+                                if b.hasPackages() :
+                                    tmplist.override(b.packages())
+                                b.updatePackages(tmplist)
+                        for t in tmplist :
+                            t.addUsedByBinary(binary)
+                        self._allusedpaklist |= tmplist
+                        self._usedpaklist[indx] |= tmplist 
+                        
+        return self._usedpaklist[indx]
+    
+    def usedPackages(self, binary_list=None, cmtpath=None, cmtprojectpath=None): 
+        # require one of CMTPATH or CMTPROJECTPATH (or use current project path) 
+        self._setCMTPathEnv(cmtpath, cmtprojectpath)
+        if self._usedpaklist is None:
+            self._usedpaklist = dict()
+        if binary_list is None :
+            binary_list = self.binaryList()
+        for b in binary_list :
+            indx = cmtpath, cmtprojectpath, b
+            if not self._usedpaklist.has_key(indx) :
+                self._usedpaklist[indx] = self.binaryUsedPackages(cmtpath, cmtprojectpath, b)
+        if not self._usedpaklist.has_key((cmtpath, cmtprojectpath, "default")) :
+            self._usedpaklist[(cmtpath, cmtprojectpath, "default")] = self.binaryUsedPackages(cmtpath, cmtprojectpath)
+        return self._usedpaklist
+    
+    def allUsedPackages(self):
+        return self._allusedpaklist
+
+
+    def binaryExternalPackages(self, cmtpath=None, cmtprojectpath=None, binary="default"):
+        env = Env.getDefaultEnv()
+        self._setCMTPathEnv(cmtpath, cmtprojectpath)
+        if binary == "default" :
+            if env.has_key("CMTCONFIG"):
+                del env["CMTCONFIG"] # ensures that no cmtconfig is set
+        else :
+            env["CMTCONFIG"] = binary
+        if self._extpaklist is None :
+            self._extpaklist = dict()
+        if self._allextpaklist is None :
+            self._allextpaklist = Set()
+        indx = cmtpath, cmtprojectpath, binary 
+        if not self._extpaklist.has_key(indx):
+            self._extpaklist[indx] = Set()
+        if not self._extpaklist[indx] :
+            for p in self.binaryUsedPackages(cmtpath, cmtprojectpath, binary):
+                if self.fullLocation() != p.parentProjectPath():
+                    self._allextpaklist.add(p)
+                    self._extpaklist[indx].add(p)
+        return self._extpaklist[indx]
+
+
+    def externalPackages(self, cmtpath=None, cmtprojectpath=None, binary_list=None):
+        # require one of CMTPATH or CMTPROJECTPATH (or use current project path) 
+        self._setCMTPathEnv(cmtpath, cmtprojectpath)
+        if self._extpaklist is None:
+            self._extpaklist = dict()
+        if binary_list is None :
+            binary_list = self.binaryList()
+        for b in binary_list :
+            indx = cmtpath, cmtprojectpath, b
+            if not self._extpaklist.has_key(indx) :
+                self._extpaklist[indx] = self.binaryExternalPackages(cmtpath, cmtprojectpath, b)
+        if not self._extpaklist.has_key((cmtpath, cmtprojectpath, "default")) :
+            self._extpaklist[(cmtpath, cmtprojectpath, "default")] = self.binaryExternalPackages(cmtpath, cmtprojectpath)
+        return self._extpaklist
+
+    def allExternalPackages(self):
+        return self._allextpaklist
+    def summary(self, cmtpath=None, cmtprojectpath=None, dependent=False, showpackages=False):
+        summary  = "Name                 : %s\n" % self.name()
+        summary += "Version              : %s\n" % self.version()
+        summary += "Location             : %s\n" % self.fullLocation()
+        summary += "Used projects        : "
+        tmplist = []
+        for p in self.base(cmtpath, cmtprojectpath) :
+            tmplist.append("%s %s" % (p.name(), p.version()) )
+        summary += ", ".join(tmplist) + "\n"
+        if not dependent :
+            summary += "Built configurations : "
+            tmplist = []
+            for b in self.binaryList() :
+                tmplist.append("%s" % b )
+            summary += ", ".join(tmplist) + "\n"
+            tmpacksum = ""
+            if showpackages :
+                tmpacksum += "Contained packages:\n"
+                for p in self.packages():
+                    tmpacksum += "  %-35s%s" % (p.name(), p.version())
+                    if not p.hasUsedByBinary() :
+                        tmpacksum += "\n"
                     else :
-                        print "    %s" % p.fullLocation(),
-                    print "( ",
-                    for b in binarylist :
-                        if p in self._usedpackagelist[b] :
-                            print "%s " % b,
-                    print ")"
+                        tmpacksum += ", ".join(p.usedByBinary()) + "\n"
+                self.usedPackages(cmtpath=cmtpath, cmtprojectpath=cmtprojectpath)
+        else :
+            tmpacksum = ""
+            if showpackages :
+                tmpacksum += "Used packages:\n"
+                if self.hasPackages() :
+                    for p in self.packages() :
+                        tmpacksum += "  %-35s%s  " % (p.name(), p.version())
+                        if not p.hasUsedByBinary() :
+                            tmpacksum += "\n"
+                        else :
+                            tmpacksum += ", ".join(p.usedByBinary()) + "\n"
+        if self._packagelist is not None :
+            summary += "Number of Packages   : %s\n" % len(self._packagelist)
+            summary += tmpacksum
+        if dependent :
+            sumlist = summary.split("\n")
+            summary2 = "" 
+            for l in sumlist :
+                summary2 += "     %s\n" % l
+            summary = summary2
+        return summary
     
 def hasProjectFile(dirpath):
     hasfile = False
@@ -266,55 +427,87 @@ def isProject(path):
             isproj = True
     return isproj
 
-def getProjectsFromPath(path, name=None, version=None, casesense=False, select=None):
+def getProjectsFromPath(path, name=None, version=None, casesense=False, select=None, prjclass=Project):
     projlist = Set()
-    selected = Set()
     log = logging.getLogger()
     try:
         lsdir = os.listdir(path)
         for f in lsdir:
             fullname = os.path.join(path,f)
             if isProject(fullname):
-                if not select :
-                    log.debug("%s has no project version directory", fullname)
-                    projlist.add(Project(fullname))
-                else :
-                    if fullname.find(select) != -1 :
-                        log.debug("%s has no project version directory", fullname)
-                        projlist.add(Project(fullname))                        
+                
+                tobeadded = False
+                tmproj = prjclass(fullname)
+                if name is None :
+                    tobeadded = True
+                elif doesDirMatchNameAndVersion(fullname, name, version, casesense) :
+                    tobeadded = True
+                if select is not None and tobeadded:
+                    if isDirSelected(fullname, select, casesense):
+                        tobeadded = True
+                if tobeadded :
+                    projlist.add(tmproj)
+                    log.debug("Found project at %s" % fullname)
+                                                        
             if os.path.isdir(fullname):
                 lsintdir = os.listdir(fullname)
                 for ff in lsintdir:
                     fn = os.path.join(fullname, ff)
                     if isProject(fn):
-                        if not select :
-                            log.debug("%s has a project version directory", fn)
-                            projlist.add(Project(fn, True))
-                        else :
-                            if fn.find(select) != -1 :
-                                log.debug("%s has a project version directory", fn)
-                                projlist.add(Project(fn, True))
+                        tobeadded = False
+                        tmproj = prjclass(fn)
+                        if name is None :
+                            tobeadded = True
+                        elif doesDirMatchNameAndVersion(fn, name, version, casesense) :
+                            tobeadded = True
+                        if select is not None and tobeadded:
+                            if isDirSelected(fn, select, casesense):
+                                tobeadded = True
+                        if tobeadded :
+                            projlist.add(tmproj)
+                            log.debug("Found project at %s" % fn)
+
     except OSError, msg:
         log.warning("Cannot open path %s" % msg)
-    if not name and not version:
-        return projlist
     
-    # filter according to name and version
-    if not casesense:
-        name = name.upper()
-    for p in projlist:
-        if not casesense:
-            prname = p.name().upper()
-        else:
-            prname = p.name()
-        if prname == name:
-            if not version:
-                selected.add(p)
-            else :
-                if p.version() == version:
-                    selected.add(p)
-    return selected
+    log.info("Found %s projects in %s" % (len(projlist), path))
+
+    return projlist
             
+
+def getProjectsFromDir(directory, name=None, version=None, casesense=True, select=None, prjclass=Project):
+    projlist = Set()
+    log = logging.getLogger()
+    try:
+        for data in os.walk(directory):
+            root, dirs = data[0], data[1]
+            log.debug("Entering directory %s" % root)
+            if isProject(root):
+                tobeadded = False
+                tmproj = prjclass(root)
+                if name is None :
+                    tobeadded = True
+                elif doesDirMatchNameAndVersion(root, name, version, casesense) :
+                    tobeadded = True
+                if select is not None and tobeadded:
+                    if isDirSelected(root, select, casesense):
+                        tobeadded = True
+                if tobeadded :
+                    projlist.add(tmproj)
+                    log.debug("Found project at %s" % root)
+                dirs[:] = [] # don't visit anything else: a CMT package cannot contains another one.
+            else :
+                if 'CVS' in dirs:
+                    dirs.remove('CVS')  # don't visit CVS directories
+                for d in dirs : # don't visit hidden directories
+                    if d.startswith(".") :
+                        dirs.remove(d)
+    except OSError, msg:
+        log.warning("Cannot open path %s" % msg)
+
+    log.info("Found %s projects in %s" % (len(projlist), directory))
+
+    return projlist
 
 
 def _getProjects(cmtprojectpath, name=None, version=None, casesense=False, select=None):
@@ -377,23 +570,30 @@ def getProjects(cmtprojectpath, name=None, version=None,
     return FilterProjects(projlist, name=name, version=version, casesense=casesense)
 
 
-def walk(top, topdown=True, toclients=True, onerror=None, alreadyfound=None):
+
+def walk(top, topdown=True, toclients=False, 
+         onerror=None, alreadyfound=None, 
+         cmtpath=None, cmtprojectpath=None):
     if not alreadyfound:
         alreadyfound = Set()
     alreadyfound.add(top)
     proj = top
     if toclients :
-        deps = proj.clients()
+        deps = proj.clients(cmtpath, cmtprojectpath)
     else :
-        deps = proj.base()
-    packs = proj.packages()
+        deps = proj.base(cmtpath, cmtprojectpath)
+    if proj.hasPackages() :
+        packs = proj.packages()
+    else :
+        packs = Set()
     if topdown :
         yield (proj, deps, packs)
     for d in deps :
         if d not in alreadyfound :
-            for w in walk(d, topdown, toclients, onerror, alreadyfound) :
+            for w in walk(d, topdown, toclients, onerror, alreadyfound, cmtpath, cmtprojectpath) :
                 yield w
     if not topdown :
         yield (proj, deps, packs)
+
 
 

@@ -1,13 +1,12 @@
 #!/usr/bin/env python
-# $Id: showCMTProjects.py,v 1.12 2008-05-09 15:53:15 hmdegaud Exp $
+# $Id: showCMTProjects.py,v 1.13 2008-08-26 08:46:53 hmdegaud Exp $
 
-from LbUtils.CMT import Project
+from LbUtils.CMT import Project, Graph
 from LbUtils.Script import Script
-from LbUtils.Cache import File as Cache
 from LbUtils.Set import Set
 
-import copy
 
+import copy
 import os
 
 class showCMTProjScript(Script):
@@ -34,130 +33,55 @@ class showCMTProjScript(Script):
                           dest = "selection",
                           help = "filter project path according to the selection")
         
-        parser.set_defaults(showdependencies=False)
+        parser.set_defaults(dependencies=False)
         parser.add_option("-d", "--dependencies",
                           action = "store_true",
-                          dest = "showdependencies",
+                          dest = "dependencies",
                           help = "show project dependencies")
-        parser.set_defaults(showbase=False)
-        parser.add_option("-b", "--base",
+
+        parser.set_defaults(packages=False)
+        parser.add_option("-p","--packages",
                           action = "store_true",
-                          dest = "showbase",
-                          help = "show base projects")
-
-        parser.set_defaults(showclient=False)
-        parser.add_option("-c", "--client",
-                          action = "store_true",
-                          dest = "showclient",
-                          help = "show client projects")
-
-        parser.set_defaults(recursebase=False)
-        parser.add_option("-B", "--recurse-base",
-                          action = "store_true",
-                          dest = "recursebase",
-                          help = "recurse in the base direction")
-
-
-        parser.set_defaults(recurseclient=False)
-        parser.add_option("-C", "--recurse-clients",
-                          action = "store_true",
-                          dest = "recurseclient",
-                          help = "recurse in the client direction")
-
-        parser.set_defaults(showcontainedpackages=False)
-        parser.add_option("--show-contained-packages",
-                          action = "store_true",
-                          dest = "showcontainedpackages",
-                          help = "show contained packages in the selected project(s)")
-
-        parser.set_defaults(showusedpackages=False)
-        parser.add_option("--show-used-packages",
-                          action = "store_true",
-                          dest = "showusedpackages",
-                          help = "show used packages in the selected project(s) according to the list of binaries")
-
-        parser.add_option("--binaries",
-                          dest="binaries",
-                          help="set binaries platforms", 
-                          fallback_env="CMTCONFIG")
+                          dest = "packages",
+                          help = "show packages in the selected project(s)")
 
         parser.add_option("-t", "--tags",
                           dest="tags",
                           help="set CMT extra tags" )
 
-        parser.set_defaults(usecache=True)
-        parser.add_option("--no-cache",
-                          action = "store_false",
-                          dest = "usecache",
-                          help = "prevent the use of the cache for the project list")
+
+        parser.set_defaults(directory=None)
+        parser.add_option("-D", "--directory",
+                          dest = "directory",
+                          help = "directory to look for projects")
+
 
 #------------------------------------------------------------------------------ 
 
     def main(self):
-        
         if self.env.has_key("CMTPATH"): 
             del self.env["CMTPATH"]
     
-        projname = None
+        name = None
         if len(self.args) > 0:
-            projname = self.args[0]
+            name = self.args[0]
         
-        projvers = None
+        version = None
         if len(self.args) > 1:
-            projvers = self.args[1]
+            version = self.args[1]
         
         options = self.options
-
-        cache = Cache("cmt","projects")
-    
-        projlist = Set()
-    
-        if options.usecache:
-            for p in cache.load():
-                projlist |= p
-        else :
-            projlist = Project.getProjects(options.cmtprojectpath, 
-                                       projname, projvers, 
-                                       options.casesensitive, 
-                                       options.selection)
-
-        intern_projlist = copy.copy(projlist)
-
-        if options.binaries :
-            binary_list = options.binaries.split(",")
-        if options.tags :
-            tag_list = options.tags.split(",")
         
-        for p in projlist:
-            if not options.recurseclient and not options.recursebase:
-                p.show(options.showdependencies, 
-                       options.showbase, 
-                       options.showclient,
-                       options.showcontainedpackages,
-                       options.showusedpackages,
-                       binary_list,
-                       intern_projlist)
-            else :
-                if options.recurseclient :
-                    for proj, deps, packs in Project.walk(p, topdown=True, toclients=True):
-                        proj.show(options.showdependencies, 
-                                  options.showbase, 
-                                  True,
-                                  options.showcontainedpackages,
-                                  options.showusedpackages,
-                                  binary_list,
-                                  intern_projlist)
-                else :
-                    for proj, deps, packs in Project.walk(p, topdown=True, toclients=False):
-                        proj.show(options.showdependencies, 
-                                  True, 
-                                  options.showclient,
-                                  options.showcontainedpackages,
-                                  options.showusedpackages,
-                                  binary_list,
-                                  intern_projlist)
+        g=Graph(options.cmtprojectpath)
+    
+        g.getStartProjectsFromDir(directory=options.directory, 
+                                  name=name, version=version,
+                                  casesense=options.casesensitive,
+                                  select=options.selection)
 
-        cache.dump(projlist)
+        if options.dependencies is not None:
+            g.dependencies()
+        g.show(options.packages)
         
 #------------------------------------------------------------------------------ 
 if __name__ == '__main__':

@@ -88,7 +88,8 @@ def fixRoot(basedirectory, fromtxt, totxt, recursive=False, dryrun=False):
         rc = fixRootFile(basedirectory, fromtxt, totxt, dryrun)
     else :
         rc = 0
-        for root, dirs, files in os.walk(basedirectory):
+        for data in os.walk(basedirectory):
+            root, dirs = data[0], data[1]
             if 'CVS' in dirs:
                 dirs.remove('CVS')  # don't visit CVS directories
                 if os.path.exists(os.path.join(root, "CVS", "Root")) :

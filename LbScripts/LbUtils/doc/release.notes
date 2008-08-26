@@ -1,3 +1,16 @@
+2008-08-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/CMT/Common.py: New file.
+	* python/LbUtils/CMT/Graph.py: New file.
+	* python/LbUtils/__init__.py: 
+	* python/LbUtils/CMT/__init__.py: 
+	* python/LbUtils/CMT/Package.py: 
+	* python/LbUtils/CMT/Project.py: 
+	* scripts/showCMTProjects.py: refactored completely the way to access CMT projects 
+	with their dependencies
+	* python/LbUtils/CVS.py: fixed warning about unused variable
+	* python/LbUtils/Set.py: added a few access and update methods
+
 2008-08-01  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbUtils/Env.py: added the methods "Environment.get()" (same as
