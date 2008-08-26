@@ -65,13 +65,11 @@ public:
   std::string sTitle;
 
   bool bBinLabelX;
-  bool bBinLabelY;
 
   double *binCont;
   double *binErr;
   double *binEntries;
   std::string *binLabelX;
-  std::string *binLabelY;
 
   int m_fDimension;
   //double m_fIntegral;
@@ -90,7 +88,6 @@ public:
   bool isLoaded;
   bool objectCreated;
   /**********/
-
 };
 
 #endif //GAUCHO_MONPROFILE_H

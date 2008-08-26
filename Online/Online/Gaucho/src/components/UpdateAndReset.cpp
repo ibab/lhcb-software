@@ -67,7 +67,7 @@ StatusCode UpdateAndReset::initialize() {
   
   sc = serviceLocator()->service("MonitorSvc", m_pGauchoMonitorSvc, false);
   if( sc.isSuccess() ) msg << MSG::DEBUG << "Found the IGauchoMonitorSvc interface" << endreq;
-  else { 
+  else {
     msg << MSG::FATAL << "Unable to locate the IGauchoMonitorSvc interface." << endreq;
     return StatusCode::FAILURE;
   }

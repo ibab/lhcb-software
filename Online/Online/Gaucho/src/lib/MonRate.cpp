@@ -11,69 +11,94 @@ MonRate::MonRate(IMessageSvc* msgSvc, const std::string& source, int version):
   m_timeFirstEvInRun = new ulonglong(0);
   m_timeLastEvInCycle = new ulonglong(0);
   m_gpsTimeLastEvInCycle = new ulonglong(0);
+  isServer = true;
 }
   
 MonRate::~MonRate(){
-  
 }
 
 void MonRate::save(boost::archive::binary_oarchive & ar, const unsigned int version){
   MonObject::save(ar, version);
-  ar & (*m_runNumber);
-  ar & (*m_cycleNumber);
-  ar & (*m_deltaT);
-  ar & (*m_timeFirstEvInRun);
-  ar & (*m_timeLastEvInCycle);
-  ar & (*m_gpsTimeLastEvInCycle);
-
-  int size = m_counterMap.size();
-  ar & size;
-  for (m_counterMapIt = m_counterMap.begin(); m_counterMapIt != m_counterMap.end(); ++m_counterMapIt) {
-    ar & m_counterMapIt->first;
-    ar & (*(m_counterMapIt->second.first));
-    ar & (*(m_counterMapIt->second.second));
-  }
+  MsgStream msg = createMsgStream();
+//   msg <<MSG::INFO<<"**********************************************" << endreq;
   
-  m_profile = new TProfile("profile","MonRate Profile", size, 0, size);
-  m_profile->Fill(0.00, 1.00, 1.00);
-  int i = 1;
-  for (m_counterMapIt = m_counterMap.begin(); m_counterMapIt != m_counterMap.end(); m_counterMapIt++) {
-    //m_profile->Fill(i, (*m_counterMapIt->second), 1);
-    m_profile->Fill((double)i, (double)(*(m_counterMapIt->second.first)), 1.00);
-    i++;
+  if (isServer) {
+//     msg <<MSG::INFO<<"THIS IS A SERVER " << endreq;
+    int size = m_counterMap.size();
+//     msg <<MSG::INFO<<"size: " << size << endreq;
+    m_profile = new TProfile("profile","MonRate Profile", size+7, 0, size+7);
+    m_profile->Fill(0.50, (double) (*m_timeFirstEvInRun), 1.00);
+    m_profile->Fill(1.50, (double) (*m_timeLastEvInCycle), 1.00);
+    m_profile->Fill(2.50, (double) (*m_gpsTimeLastEvInCycle), 1.00);
+    m_profile->Fill(3.50, 1.00, 1.00);
+    m_profile->Fill(4.50, (double) (*m_runNumber), 1.00);
+    m_profile->Fill(5.60, (double) (*m_cycleNumber), 1.00);
+    m_profile->Fill(6.50, (double) (*m_deltaT), 1.00);
+    
+/*    msg <<MSG::INFO<<"bin[1]=" << (*m_timeFirstEvInRun) << ", TimeFirstEvInRun" << endreq;    
+    msg <<MSG::INFO<<"bin[2]=" << (*m_timeLastEvInCycle) << ", TimeLastEvInCycle" << endreq;
+    msg <<MSG::INFO<<"bin[3]=" << (*m_gpsTimeLastEvInCycle) << ", GpsTimeLastEvInCycle" << endreq;
+    msg <<MSG::INFO<<"bin[4]=" << 1 << ", one" << endreq;
+    msg <<MSG::INFO<<"bin[5]=" << (*m_runNumber) << ", RunNumber" << endreq;
+    msg <<MSG::INFO<<"bin[6]=" << (*m_cycleNumber) << ", CycleNumber" << endreq;
+    msg <<MSG::INFO<<"bin[7]=" << (*m_deltaT) << ", deltaT" << endreq;*/
+    int i = 8;
+    for (m_counterMapIt = m_counterMap.begin(); m_counterMapIt != m_counterMap.end(); m_counterMapIt++) {
+      m_profile->Fill((double)i - 0.5, (double)(*(m_counterMapIt->second.first)), 1.00);
+//       msg <<MSG::INFO<<"bin [" << i << "]="<< (double)(*(m_counterMapIt->second.first)) << endreq;
+      i++;
+    }
+    m_profile->GetXaxis()->SetBinLabel(1, "TimeFirstEvInRun");
+    m_profile->GetXaxis()->SetBinLabel(2, "TimeLastEvInCycle");
+    m_profile->GetXaxis()->SetBinLabel(3, "GpsTimeLastEvInCycle");
+    m_profile->GetXaxis()->SetBinLabel(4, "One");
+    m_profile->GetXaxis()->SetBinLabel(5, "RunNumber");
+    m_profile->GetXaxis()->SetBinLabel(6, "CycleNumber");
+    m_profile->GetXaxis()->SetBinLabel(7, "deltaT");
+        
+    i = 8;
+    for (m_counterMapIt = m_counterMap.begin(); m_counterMapIt != m_counterMap.end(); m_counterMapIt++) {
+      //msg <<MSG::INFO<<"name: " << m_counterMapIt->first.c_str()<< endreq;
+      //m_profile->GetXaxis()->SetBinLabel(i, m_counterMapIt->first.c_str());
+      m_profile->GetXaxis()->SetBinLabel(i, (*(m_counterMapIt->second.second)).c_str());
+/*      msg <<MSG::INFO<<"description: " << (*(m_counterMapIt->second.second)).c_str() << endreq;
+      m_profile->GetYaxis()->SetBinLabel(i, (*(m_counterMapIt->second.second)).c_str());*/
+      i++;
+    }
+  }  
+  else{
+//     msg <<MSG::INFO<<"THIS IS A CLIENT " << endreq;
+    m_profile =  profile();
   }
 
+/*  msg <<MSG::INFO<<"**********************************************" << endreq;
+  
+  msg <<MSG::INFO<<"size" << endreq;
+  msg <<MSG::INFO<<m_profile->GetNbinsX() << endreq;
+  for (int j = 0; j< m_profile->GetNbinsX()+2; j++) {
+    msg <<MSG::INFO<<"bin["<<j<<"] = " << (ulonglong) m_profile->GetBinContent(j) << ", name: "<< m_profile->GetXaxis()->GetBinLabel(j) << ", entries: " << m_profile->GetBinEntries(j) << endreq;
+  }*/
+  
   MonProfile::save(ar, version);
-  delete m_profile; m_profile = 0;
+  
+  if (isServer) {
+    delete m_profile; m_profile = 0;
+  }
 }
 
 void MonRate::load(boost::archive::binary_iarchive  & ar, const unsigned int version)
 {
   MonObject::load(ar, version);
-  
-  ar & (*m_runNumber);
-  ar & (*m_cycleNumber);
-  ar & (*m_deltaT);
-  ar & (*m_timeFirstEvInRun);
-  ar & (*m_timeLastEvInCycle);
-  ar & (*m_gpsTimeLastEvInCycle);
-  
-  int size = 0;
-  MsgStream msg = createMsgStream();
-  ar & size;
-  for (int i = 0; i < size; i++)
-  {
-    std::string name;
-    double val = 0.00;
-    std::string title;
-    ar & name;
-    ar & val;
-    ar & title;
-    //m_counterMap[name] = new double(val);
-    m_counterMap[name] = std::pair<double*, std::string*>(new double(val), new std::string(title));
-  }
-  
   MonProfile::load(ar, version);
+  
+/*  m_profile = profile();
+  
+  for (int j = 0; j< size+9; j++) {
+    msg <<MSG::INFO<<"bin content: " << m_profile->GetBinContent(j) << endreq;
+    msg <<MSG::INFO<<"bin entries: " << m_profile->GetBinEntries(j) << endreq;
+    msg <<MSG::INFO<<"name       : " << m_profile->GetXaxis()->GetBinLabel(j) << endreq;
+  }*/
+  
 }
 
 void MonRate::combine(MonObject * monObject) {
@@ -86,75 +111,27 @@ void MonRate::combine(MonObject * monObject) {
     msg <<MSG::WARNING<<"Trying to combine two objects with diferent endOfRun flag failed." << endreq;
     return;
   }
-  if (((MonRate*)monObject)->counterMap().size() != this->counterMap().size()){
-    MsgStream msgStream = createMsgStream();
-    msgStream <<MSG::ERROR<<"Trying to combine MonRate MonObject with counter's size "<<this->counterMap().size() <<" and "<< ((MonRate*)monObject)->counterMap().size() << " failed." << endreq;
-    return;
-  }
-  
-  MonRate* monRate = (MonRate*) monObject;
-  
-  //if (m_int !=NULL)
-  for (m_counterMapIt = m_counterMap.begin(); m_counterMapIt != m_counterMap.end(); ++m_counterMapIt){
-    //(*m_counterMapIt->second) =+  monRate->counter(m_counterMapIt->first);
-    (*m_counterMapIt->second.first) =+ monRate->counter(m_counterMapIt->first);
-  }
-  (*m_runNumber) =+ monRate->runNumber();  
-  (*m_cycleNumber) =+ monRate->cycleNumber();
-  (*m_deltaT) =+ monRate->deltaT();
-  (*m_timeFirstEvInRun) =+ monRate->timeFirstEvInRun();
-  (*m_timeLastEvInCycle) =+ monRate->timeLastEvInCycle();  
-  (*m_gpsTimeLastEvInCycle) =+ monRate->gpsTimeLastEvInCycle();  
-  
   MonProfile::combine(monObject);  
-  
 }
 
 void MonRate::copyFrom(MonObject * monObject){
-
+  isServer = false;
   if (monObject->typeName() != this->typeName()) {
     MsgStream msgStream = createMsgStream();
     msgStream <<MSG::ERROR<<"Trying to copy "<<this->typeName() <<" and "<<monObject->typeName() << " failed." << endreq;
     return;
   }
-  
-  MonRate *mo = (MonRate*) monObject;
-  m_endOfRun = mo->endOfRun();
-  m_counterMap = mo->counterMap();
-  m_comments = mo->comments();
-  
-  (*m_runNumber) = mo->runNumber();  
-  (*m_cycleNumber) = mo->cycleNumber();
-  (*m_deltaT) = mo->deltaT();
-  (*m_timeFirstEvInRun) = mo->timeFirstEvInRun();
-  (*m_timeLastEvInCycle) = mo->timeLastEvInCycle();  
-  (*m_gpsTimeLastEvInCycle) = mo->gpsTimeLastEvInCycle();  
-  
   MonProfile::copyFrom(monObject);
-  
 }
 
 void MonRate::reset(){
-//TODO How reset counters ?
-//  for (m_counterMapIt = m_counterMap.begin(); m_counterMapIt != m_counterMap.end(); ++m_counterMapIt)
-//    (*m_counterMapIt->second) = 0;
-  
-  (*m_runNumber) = 0;
-  (*m_cycleNumber) = 0;
-  (*m_deltaT) = 0;
-  (*m_timeFirstEvInRun) = 0; // This is a Time may be we have to let it with the last value 
-  (*m_timeLastEvInCycle) = 0; // This is a Time may be we have to let it with the last value 
-  (*m_gpsTimeLastEvInCycle) = 0; // This is a Time may be we have to let it with the last value 
-  
   MonProfile::reset();
-  
 }
-
 
 void MonRate::print(){
   //MonObject::print();
   MonProfile::print();
-  MsgStream msgStream = createMsgStream();
+/*  MsgStream msgStream = createMsgStream();
   msgStream << MSG::INFO << "*************************************"<<endreq;
   msgStream << MSG::INFO << " runNumber: "<<  runNumber() << endreq;
   msgStream << MSG::INFO << " cycleNumber: "<<  cycleNumber() << endreq;
@@ -168,8 +145,6 @@ void MonRate::print(){
   
   for (m_counterMapIt = m_counterMap.begin(); m_counterMapIt != m_counterMap.end(); ++m_counterMapIt)
     msgStream << MSG::INFO << " counter: "<<  m_counterMapIt->first << ", value: " << (*m_counterMapIt->second.first) << ", description: "<< (*m_counterMapIt->second.second) << endreq;
-  msgStream << MSG::INFO << "*************************************"<<endreq;
-  
-  
+  msgStream << MSG::INFO << "*************************************"<<endreq;*/
 }
 
