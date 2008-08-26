@@ -4,6 +4,9 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2008-08-26 - Chris Jones
+ - Don't abort processing when input Tracks are missing.
+
 ! 2008-08-15 - Chris Jones
  - Update default property values
 

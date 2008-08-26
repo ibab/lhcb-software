@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::TrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.5 2008-06-04 16:32:02 jonrob Exp $
+ *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.6 2008-08-26 19:56:06 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -84,11 +84,14 @@ const StatusCode TrackCreatorFromRecoTracks::newTracks() const
     // Iterate over all reco tracks, and create new RichRecTracks
     richTracks()->reserve( nInputTracks() );
     const LHCb::Tracks * tracks = trTracks();
-    for ( LHCb::Tracks::const_iterator track = tracks->begin();
-          track != tracks->end(); ++track )
+    if ( tracks )
     {
-      LHCb::RichRecTrack * tmpTrack = newTrack( *track );
-      if ( m_makeOneTrack && tmpTrack ) { Warning("Only making ONE track"); break; }
+      for ( LHCb::Tracks::const_iterator track = tracks->begin();
+            track != tracks->end(); ++track )
+      {
+        LHCb::RichRecTrack * tmpTrack = newTrack( *track );
+        if ( m_makeOneTrack && tmpTrack ) { Warning("Only making ONE track"); break; }
+      }
     }
 
   }
@@ -108,11 +111,18 @@ TrackCreatorFromRecoTracks::trTracks() const
   if ( !m_trTracks )
   {
     // Obtain smart data pointer to Tracks
-    m_trTracks = get<LHCb::Tracks>( m_trTracksLocation );
-    if ( msgLevel(MSG::DEBUG) )
+    if ( exist<LHCb::Tracks>(m_trTracksLocation) )
     {
-      debug() << "located " << m_trTracks->size() << " Tracks at "
-              << m_trTracksLocation << endreq;
+      m_trTracks = get<LHCb::Tracks>( m_trTracksLocation );
+      if ( msgLevel(MSG::DEBUG) )
+      {
+        debug() << "located " << m_trTracks->size() << " Tracks at "
+                << m_trTracksLocation << endreq;
+      }
+    }
+    else
+    {
+      Warning( "No input Tracks at '"+m_trTracksLocation+"'" ).ignore();
     }
   }
 
