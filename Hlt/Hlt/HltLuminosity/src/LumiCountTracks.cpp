@@ -1,4 +1,4 @@
-// $Id: LumiCountTracks.cpp,v 1.5 2008-08-25 10:59:04 panmanj Exp $
+// $Id: LumiCountTracks.cpp,v 1.6 2008-08-26 14:03:14 panmanj Exp $
 // Include files 
 
 // from Gaudi
@@ -99,10 +99,9 @@ StatusCode LumiCountTracks::execute() {
 
 
   // get container
-  LHCb::HltLumiSummarys* sums = getOrCreate<HltLumiSummarys,HltLumiSummarys>(m_OutputContainerName);
-  if (sums->empty()) sums->insert(new LHCb::HltLumiSummary() );
+  LHCb::HltLumiSummary* sums = getOrCreate<HltLumiSummary,HltLumiSummary>(m_OutputContainerName);
   // add track counter
-  (*sums->begin())->addInfo( m_Counter, nCounter);
+  sums->addInfo( m_Counter, nCounter);
 
   setFilterPassed(true);
 

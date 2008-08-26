@@ -1,4 +1,4 @@
-// $Id: HltLumiSummaryDecoder.cpp,v 1.1 2008-08-13 16:03:52 panmanj Exp $
+// $Id: HltLumiSummaryDecoder.cpp,v 1.2 2008-08-26 14:03:14 panmanj Exp $
 // Include files
 #include <algorithm>
 
@@ -59,17 +59,17 @@ StatusCode HltLumiSummaryDecoder::execute() {
   
   // ------------------------------------------
   // get (existing) container  >>>>>>>>>>>>>>>>>>>> later: if exists: return!!!!!!!!!!
-  if ( !exist<LHCb::HltLumiSummarys>(m_OutputContainerName) ){
+  if ( !exist<LHCb::HltLumiSummary>(m_OutputContainerName) ){
     // create output container on the TES
-    m_HltLumiSummarys = new LHCb::HltLumiSummarys();
+    m_HltLumiSummary = new LHCb::HltLumiSummary();
     // locate them in the TES
-    put(m_HltLumiSummarys, m_OutputContainerName); 
+    put(m_HltLumiSummary, m_OutputContainerName); 
     info() << m_OutputContainerName << " not found, made a new one" << endmsg ;
   }
   else {
     // in this case should just do nothing!!!
-    m_HltLumiSummarys = get<LHCb::HltLumiSummarys>(m_OutputContainerName);
-    info() << m_OutputContainerName << " found, used the old one" << endmsg ;
+    info() << m_OutputContainerName << " found, do nothing" << endmsg ;
+    return StatusCode::SUCCESS;
   }
   
   // Retrieve the RawEvent:
@@ -80,9 +80,6 @@ StatusCode HltLumiSummaryDecoder::execute() {
   bool decodingerror(false) ;
   for (std::vector<RawBank*>::const_iterator  ibank = banks.begin();
        ibank != banks.end() ; ++ibank) {
-    // initialize output class and insert to the TES location
-    LHCb::HltLumiSummary* hltLS = new LHCb::HltLumiSummary();
-    m_HltLumiSummarys->insert( hltLS );
     // get now the raw data
     const unsigned int* idata = (*ibank)->data() ;
     
@@ -98,7 +95,7 @@ StatusCode HltLumiSummaryDecoder::execute() {
 		  << endreq;
       }
       // add this counter
-      hltLS->addInfo( iKey, iVal);
+      m_HltLumiSummary->addInfo( iKey, iVal);
     }
     
     // keep statistics

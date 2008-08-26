@@ -4,6 +4,9 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+! 2008-08-26 - Jaap Panman
+ - LumiSummary container is now a single object: change in all Algos
+
 ! 2008-08-25 - Jaap Panman
  - simplify LumiFromL0DU, LumiCountVertices, LumiCountTracks similarly
  - streamline LumiHistoMaker and make configurable

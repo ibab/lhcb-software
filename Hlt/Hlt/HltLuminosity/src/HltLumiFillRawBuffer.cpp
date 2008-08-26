@@ -1,4 +1,4 @@
-// $Id: HltLumiFillRawBuffer.cpp,v 1.3 2008-08-13 16:03:52 panmanj Exp $
+// $Id: HltLumiFillRawBuffer.cpp,v 1.4 2008-08-26 14:03:14 panmanj Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
@@ -127,14 +127,13 @@ StatusCode HltLumiFillRawBuffer::finalize() {
 //=========================================================================
 void HltLumiFillRawBuffer::fillDataBankShort ( ) {
 
-  if ( exist<LHCb::HltLumiSummarys>(m_inputBank) ){
-    LHCb::HltLumiSummarys* m_HltLumiSummarys = get<LHCb::HltLumiSummarys>(m_inputBank);
-    LHCb::HltLumiSummary* hltLS = *m_HltLumiSummarys->begin();
+  if ( exist<LHCb::HltLumiSummary>(m_inputBank) ){
+    LHCb::HltLumiSummary* HltLumiSummary = get<LHCb::HltLumiSummary>(m_inputBank);
     debug() << m_inputBank << " found" << endmsg ;
 
     for ( int iKey = 0; iKey < m_LastKey; ++iKey ) {
       // check for existing counters
-      int s_value = hltLS->info((int) iKey, -1);
+      int s_value = HltLumiSummary->info((int) iKey, -1);
       if (s_value != -1) {
         // handle overflow
         int i_value = 0xFFFF;

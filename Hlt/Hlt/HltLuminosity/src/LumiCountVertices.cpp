@@ -1,4 +1,4 @@
-// $Id: LumiCountVertices.cpp,v 1.4 2008-08-25 10:59:04 panmanj Exp $
+// $Id: LumiCountVertices.cpp,v 1.5 2008-08-26 14:03:14 panmanj Exp $
 // Include files 
 
 // from Gaudi
@@ -101,10 +101,9 @@ StatusCode LumiCountVertices::execute() {
 
 
   // get container
-  LHCb::HltLumiSummarys* sums = getOrCreate<HltLumiSummarys,HltLumiSummarys>(m_OutputContainerName);
-  if (sums->empty()) sums->insert(new LHCb::HltLumiSummary() );
+  LHCb::HltLumiSummary* sums = getOrCreate<HltLumiSummary,HltLumiSummary>(m_OutputContainerName);
   // add counter
-  (*sums->begin())->addInfo( m_Counter, nCounter);
+  sums->addInfo( m_Counter, nCounter);
 
   setFilterPassed(true);
 

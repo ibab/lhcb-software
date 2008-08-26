@@ -1,4 +1,4 @@
-// $Id: LumiHistoMaker.h,v 1.2 2008-08-25 10:59:04 panmanj Exp $
+// $Id: LumiHistoMaker.h,v 1.3 2008-08-26 14:03:14 panmanj Exp $
 #ifndef LUMIHISTOMAKER_H 
 #define LUMIHISTOMAKER_H 1
 
@@ -66,7 +66,7 @@ protected:
 
   // name of the input data to lumi histos->should become a vector of strings (option)
   std::string m_DataName;
-  LHCb::HltLumiSummarys* m_HltLumiSummarys;
+  LHCb::HltLumiSummary* m_HltLumiSummary;
 
   std::vector<std::string> m_Variables;
   

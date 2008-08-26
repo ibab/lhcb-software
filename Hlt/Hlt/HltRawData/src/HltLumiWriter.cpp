@@ -1,4 +1,4 @@
-// $Id: HltLumiWriter.cpp,v 1.3 2008-08-20 17:58:23 graven Exp $
+// $Id: HltLumiWriter.cpp,v 1.4 2008-08-26 13:59:44 panmanj Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
@@ -124,18 +124,17 @@ StatusCode HltLumiWriter::finalize() {
 //=========================================================================
 void HltLumiWriter::fillDataBankShort ( ) {
 
-  if (!exist<LHCb::HltLumiSummarys>(m_inputBank) ){
+  if (!exist<LHCb::HltLumiSummary>(m_inputBank) ){
     error() << m_inputBank << " not found" << endmsg ;
     return;
   }
 
-  LHCb::HltLumiSummarys* m_HltLumiSummarys = get<LHCb::HltLumiSummarys>(m_inputBank);
-  LHCb::HltLumiSummary* hltLS = *m_HltLumiSummarys->begin();
+  LHCb::HltLumiSummary* HltLumiSummary = get<LHCb::HltLumiSummary>(m_inputBank);
   debug() << m_inputBank << " found" << endmsg ;
 
   BOOST_FOREACH( IANNSvc::minor_value_type iKey, m_items )  {
     // check for existing counters
-    int s_value = hltLS->info( iKey.second, -1);
+    int s_value = HltLumiSummary->info( iKey.second, -1);
     if ( s_value<0) continue;
     // handle overflow
     int i_value = (s_value < 0xFFFF) ? (int) s_value : (int)0xFFFF;

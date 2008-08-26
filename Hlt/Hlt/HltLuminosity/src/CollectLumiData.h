@@ -1,4 +1,4 @@
-// $Id: CollectLumiData.h,v 1.3 2008-07-31 21:34:47 panmanj Exp $
+// $Id: CollectLumiData.h,v 1.4 2008-08-26 14:03:14 panmanj Exp $
 #ifndef COLLECTLUMIDATA_H 
 #define COLLECTLUMIDATA_H 1
 
@@ -43,7 +43,7 @@ protected:
   int m_iPV2D;
 
   std::string m_OutputContainerName;
-  LHCb::HltLumiSummarys* m_HltLumiSummarys;
+  LHCb::HltLumiSummary* m_HltLumiSummary;
 
   virtual void collect   ();    ///< collect data
   

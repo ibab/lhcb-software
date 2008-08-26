@@ -1,4 +1,4 @@
-// $Id: LumiHistoMaker.cpp,v 1.2 2008-08-25 10:59:04 panmanj Exp $
+// $Id: LumiHistoMaker.cpp,v 1.3 2008-08-26 14:03:14 panmanj Exp $
 // Include files 
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -87,16 +87,14 @@ StatusCode LumiHistoMaker::execute() {
   increaseCounter(m_counterEntries,1);
 
   // get data container
-  m_HltLumiSummarys = get<LHCb::HltLumiSummarys>(m_DataName);
-  LHCb::HltLumiSummary* hltLS;
-  hltLS = *m_HltLumiSummarys->begin();
+  m_HltLumiSummary = get<LHCb::HltLumiSummary>(m_DataName);
 
   // fill histos
   for ( unsigned int i = 0; i < m_Histos.size(); ++i) {
     std::string cname = m_names[i];
     int counter = m_keys[i];
     Hlt::Histo *histo = m_Histos[i];
-    int ivalue = hltLS->info(counter,-1);
+    int ivalue = m_HltLumiSummary->info(counter,-1);
     fillHisto(*histo, (double) ivalue, 1.);
     debug() << "histo:" << cname << " filled with " << ivalue << endmsg;
   }

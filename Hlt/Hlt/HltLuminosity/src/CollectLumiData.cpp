@@ -1,4 +1,4 @@
-// $Id: CollectLumiData.cpp,v 1.5 2008-08-13 16:03:52 panmanj Exp $
+// $Id: CollectLumiData.cpp,v 1.6 2008-08-26 14:03:14 panmanj Exp $
 // Include files 
 
 // from Gaudi
@@ -99,9 +99,9 @@ StatusCode CollectLumiData::execute() {
 
   // ------------------------------------------
   // create output container on the TES
-  m_HltLumiSummarys = new LHCb::HltLumiSummarys();
+  m_HltLumiSummary = new LHCb::HltLumiSummary();
   // locate them in the TES
-  put(m_HltLumiSummarys, m_OutputContainerName); 
+  put(m_HltLumiSummary, m_OutputContainerName); 
 
   // ------------------------------------------
   // load the track objects
@@ -176,14 +176,12 @@ void CollectLumiData::collect() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Collect" << endmsg;
 
   // initialize output class
-  LHCb::HltLumiSummary* hltLS= new LHCb::HltLumiSummary();
+  LHCb::HltLumiSummary* hltLS=m_HltLumiSummary;
 
   // add tracks
   hltLS->addInfo( m_iRZVelo, m_nRZVelo);
   
   // add vertices
   hltLS->addInfo( m_iPV2D, m_nPV2D);
-
-  m_HltLumiSummarys->insert( hltLS );
 
 }

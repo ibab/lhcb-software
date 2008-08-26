@@ -1,4 +1,4 @@
-// $Id: LumiFromL0DU.cpp,v 1.4 2008-08-25 10:59:04 panmanj Exp $
+// $Id: LumiFromL0DU.cpp,v 1.5 2008-08-26 14:03:14 panmanj Exp $
 // Include files 
 
 // from Gaudi
@@ -120,10 +120,9 @@ StatusCode LumiFromL0DU::execute() {
   }
 
   // get container
-  LHCb::HltLumiSummarys* sums = getOrCreate<HltLumiSummarys,HltLumiSummarys>(m_OutputContainerName);
-  if (sums->empty()) sums->insert(new LHCb::HltLumiSummary() );
-  // add track counter
-  (*sums->begin())->addInfo( m_Counter, nCounter);
+  LHCb::HltLumiSummary* sums = getOrCreate<HltLumiSummary,HltLumiSummary>(m_OutputContainerName);
+  // add counter
+  sums->addInfo( m_Counter, nCounter);
 
   setFilterPassed(true);
 

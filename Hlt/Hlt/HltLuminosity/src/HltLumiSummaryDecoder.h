@@ -1,4 +1,4 @@
-// $Id: HltLumiSummaryDecoder.h,v 1.1 2008-08-13 16:03:52 panmanj Exp $
+// $Id: HltLumiSummaryDecoder.h,v 1.2 2008-08-26 14:03:14 panmanj Exp $
 #ifndef HLTLUMISUMMARYDECODER_H
 #define HLTLUMISUMMARYDECODER_H 1
 
@@ -46,8 +46,7 @@ private:
   double m_totDataSize;
   int m_nbEvents;
   LHCb::RawBank::BankType m_bankType;  
-
-  LHCb::HltLumiSummarys* m_HltLumiSummarys;
+  LHCb::HltLumiSummary* m_HltLumiSummary;
 
 };
 
