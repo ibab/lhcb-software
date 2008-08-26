@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.2 2008-08-19 13:04:08 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.3 2008-08-26 19:25:08 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -16,6 +16,20 @@ from Gaudi.Configuration import *
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 class LHCbConfigurableUser(ConfigurableUser):
+
+    ## @brief Object 'Constructor'
+    def __init__( self, name = Configurable.DefaultName, **kwargs ):
+        # base class
+        initVal = ConfigurableUser.__init__(self,name,**kwargs)
+        # Call custom initialise method
+        self.initialise()
+        # return
+        return initVal
+
+    ## @brief Default initialise method
+    #  Derived classes can reimplement this method, to run any object
+    #  initialisation tasks they wish
+    def initialise(self): None
 
     ## @brief Returns the value of the given property
     #  @param name The property name
