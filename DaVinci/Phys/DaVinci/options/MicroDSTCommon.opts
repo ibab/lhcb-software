@@ -1,9 +1,10 @@
-// $Id: MicroDSTCommon.opts,v 1.1 2008-08-26 09:15:40 jpalac Exp $
+// $Id: MicroDSTCommon.opts,v 1.2 2008-08-26 09:28:36 jpalac Exp $
 /** @file MicroDSTCommon.opts
  * 
  *  Minimal options required to run a MicroDST DaVinci job.
  *
  *  @author Ulrich Kerzel
+ *  @author Juan Palacios juan.palacios@nikhef.nl
  */
 // ====================================================
 //                  OUTPUT STREAM
