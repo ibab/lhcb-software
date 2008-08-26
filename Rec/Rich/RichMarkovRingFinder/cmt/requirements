@@ -2,16 +2,16 @@
 # Created    : 2003-12-02
 # Maintainer : Chris Jones
 #============================================================================
-# $Id: requirements,v 1.19 2008-06-24 11:06:14 jonrob Exp $
+# $Id: requirements,v 1.20 2008-08-26 19:36:46 jonrob Exp $
 #============================================================================
 
 package           RichMarkovRingFinder
-version           v2r0
+version           v2r1
 
 #============================================================================
 # Structure
 #============================================================================
-branches          cmt doc src DataFiles root
+branches          cmt doc src DataFiles root options python
 
 #============================================================================
 # Environment
@@ -26,6 +26,11 @@ use   RichRecBase      v*    Rich
 use   GSL              v*    LCG_Interfaces 
 # Needs CLHEP for the moment. Need to decide how to remove this in the long run
 use   CLHEP            v*    LCG_Interfaces  -no_auto_imports
+
+#============================================================================
+# Setup Python Configurables
+#============================================================================
+apply_pattern install_python_modules
 
 #============================================================================
 # Component library building rule

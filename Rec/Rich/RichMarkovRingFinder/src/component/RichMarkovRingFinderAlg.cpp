@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.71 2008-07-07 15:42:52 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.72 2008-08-26 19:36:46 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -83,8 +83,6 @@ AlgBase<SAMPLER>::AlgBase( const std::string& name,
   declareProperty( "TargetHits",           m_TargetHits        );
   declareProperty( "AbsMaxIts",            m_AbsMaxIts         );
   declareProperty( "AbsMinIts",            m_AbsMinIts         );
-  declareProperty( "DoubleTest", m_dtest );
-  //declareProperty( "FloatTest", m_ftest );
   // Disable histograms by default
   setProduceHistos( false );
   // data maps
@@ -106,10 +104,6 @@ StatusCode AlgBase<SAMPLER>::initialize()
 {
   const StatusCode sc = RichRecHistoAlgBase::initialize();
   if ( sc.isFailure() ) return sc;
-
-  //info() << "Float  " << m_ftest << endreq;
-  info() << "Double " << std::setprecision(15) << m_dtest << endreq;
-  return StatusCode::FAILURE;
 
   // Acquire instances of tools
   acquireTool( "RichSmartIDTool",    m_smartIDTool );

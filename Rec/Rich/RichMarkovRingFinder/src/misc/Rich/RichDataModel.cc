@@ -69,11 +69,12 @@ namespace Lester
 
   void RichDataModel::printCache()
   {
+    Lester::messHandle().debug() << "Printing cache values :-" << Lester::endmsg;
     for ( CacheMap::const_iterator iM = m_cache.begin();
           iM != m_cache.end(); ++iM )
     {
-      Lester::messHandle().info() << "( " << iM->first << " , " << iM->second << " )"
-                                  << Lester::endmsg;
+      Lester::messHandle().debug() << "( " << iM->first << " , " << iM->second << " )"
+                                   << Lester::endmsg;
     }
   }
 
