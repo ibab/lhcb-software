@@ -3,6 +3,10 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+!2008-08-26 - Gerhard Raven
+  - PropertyConfigSvc now supports substitution of 'reference' properties,
+    eg. foo.bar = @baz.kaboom sets the property bar of component foo to the
+    value of the property kaboom of baz specified in the job options svc.
 
 !2008-08-25 - Malcolm John
   - add some simple filters that return:

@@ -1,4 +1,4 @@
-// $Id: PropertyConfigSvc.cpp,v 1.17 2008-08-22 12:04:18 graven Exp $
+// $Id: PropertyConfigSvc.cpp,v 1.18 2008-08-26 09:15:33 graven Exp $
 // Include files 
 
 #include <sstream>
@@ -9,6 +9,8 @@
 #include "boost/filesystem/convenience.hpp"
 #include "boost/lambda/lambda.hpp"
 #include "boost/lambda/bind.hpp"
+
+
 
 // from Gaudi
 #include "GaudiKernel/System.h"
@@ -56,10 +58,14 @@ namespace {
                     //       in the online scenario, as the reference comes from PVSS...
                    if (!prop.second.empty() && prop.second[0]=='@') {
                        std::string::size_type dot = prop.second.find_first_of('.');
-                       assert(dot!=std::string::npos);
-                       const Property * refProp = Gaudi::Utils::getProperty( m_jos->getProperties(prop.second.substr(0,dot)),
-                                                                                                  prop.second.substr(dot+1));
-                       assert(refProp!=0);
+                       if (dot==std::string::npos) {
+                            throw GaudiException(prop.second,"badly formatted reference property ", StatusCode::FAILURE);
+                       }
+                       const Property * refProp = Gaudi::Utils::getProperty( m_jos->getProperties(prop.second.substr(1,dot-1)),
+                                                                                                 prop.second.substr(dot+1));
+                       if (refProp==0) {
+                           throw GaudiException(prop.second,"failed to find reference property ", StatusCode::FAILURE);
+                       }
                        m_jos->addPropertyToCatalogue(m_name, StringProperty(prop.first,refProp->toString()));
                        // Q: we do not chase references (to references, to ... ) -- should we?
                        // A: no, as the JobOptionsSvc parser substitutes values, so what we get back from
@@ -415,10 +421,11 @@ PropertyConfigSvc::configure(const ConfigTreeNode::digest_type& configID, bool c
         string name = (*i)->name();
         debug() << " configuring " << name << " using " << (*i)->digest() << endmsg;
         const PropertyConfig::Properties& map = (*i)->properties();
-        //@TODO: push changes only...
+
         for_each(map.begin(),
                  map.end(),
                  property2jos(m_joboptionsSvc,name,m_os.get())) ;
+
         m_configPushed[name] = (*i)->digest();
     }
     //  _after_ pushing all configurations, invoke 'setProperties'...
