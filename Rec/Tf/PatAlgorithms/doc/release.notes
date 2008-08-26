@@ -3,6 +3,22 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2008-08-26 - Manuel Tobias Schiller
+ - PatSeedingTool: fix for L0 confirmation: account properly for tilt in
+   search windows derived from state given by caller
+ - PatSeedingTool: use newly introduced PatRange object to represent search
+   windows (PatRange consists of upper and lower edge of an interval and
+   was mainly introduced to help debugging the previous issue)
+ - PatSeedingTool: fix for cosmics: in X search, try all combinations of
+   regions to find initial three x hits (allowing hits in IT to be found)
+ - PatSeedingTool: fix for fallback momentum estimate: if FastMomentumTool
+   returns failure for some reason and we run without magnetic field, return
+   momentum 1 GeV with uncertainty on q/p = 1 / 1MeV
+ - PatSeedingTool: when specifying track model parameters as options, make
+   sure that initialize() does not overwrite them
+ - PatSeedTool, PatSeedTrack, PatSeedingTool: use unsigned instead of int
+   if we know that a number is positive
+
 ! 2008-08-20 - Stepanie Hansmann-Menzemer
 - move public tools private, to allow for seperate configuration in HLT and
   offline in same job

@@ -1,4 +1,4 @@
-// $Id: PatSeedTrack.h,v 1.3 2008-07-13 22:05:48 mschille Exp $
+// $Id: PatSeedTrack.h,v 1.4 2008-08-26 09:57:02 mschille Exp $
 #ifndef PATSEEDTRACK_H
 #define PATSEEDTRACK_H 1
 
@@ -74,18 +74,18 @@ class PatSeedTrack {
     PatFwdHits::iterator coordEnd()               { return m_coords.end(); }
     const PatFwdHits& coords() const		  { return m_coords; }
 
-    int nCoords() const ///< return number of hits on the track
+    unsigned nCoords() const ///< return number of hits on the track
     { return m_coords.size(); }
 
-    int nPlanes() const ///< return number of planes on the track
+    unsigned nPlanes() const ///< return number of planes on the track
     { return m_nbPlanes; }
 
     double cosine() const ///< return cosine of track angle in xz projection
     { return m_cosine; }
 
-    int nbOnSide() const ///< weighted number of hits (hits in clusters count twice)
+    unsigned nbOnSide() const ///< weighted number of hits (hits in clusters count twice)
     { 
-      int nb = 0;
+      unsigned nb = 0;
       BOOST_FOREACH(const PatFwdHit* hit, m_coords) {
 	if (hit->hasNext()) ++nb;
 	if (hit->hasPrevious()) ++nb;
@@ -93,7 +93,7 @@ class PatSeedTrack {
       return nb;
     }
 
-    int nbHighThreshold() const ///< number of hits above ST high threshold
+    unsigned nbHighThreshold() const ///< number of hits above ST high threshold
     { return std::count_if( m_coords.begin(), m_coords.end(),
 	countIfHighThreshold() ); }
 
@@ -232,7 +232,7 @@ class PatSeedTrack {
 
   private:
     bool   m_valid;
-    int    m_nbPlanes;
+    unsigned    m_nbPlanes;
 
     double m_z0;
     double m_bx;

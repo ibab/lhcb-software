@@ -1,4 +1,4 @@
-// $Id: PatSeedTool.cpp,v 1.6 2008-07-13 22:05:47 mschille Exp $
+// $Id: PatSeedTool.cpp,v 1.7 2008-08-26 09:57:02 mschille Exp $
 // Include files
 
 #include <cmath>
@@ -49,7 +49,7 @@ PatSeedTool::~PatSeedTool() {}
 //  Fit a Seed track
 //=========================================================================
 bool PatSeedTool::fitTrack( PatSeedTrack& track,
-    double maxChi2, int minPlanes, bool xOnly, bool forceDebug ) const
+    double maxChi2, unsigned minPlanes, bool xOnly, bool forceDebug ) const
 {
   bool isDebug = msgLevel( MSG::DEBUG ) || forceDebug;
 

@@ -1,4 +1,4 @@
-// $Id: PatSeedTool.h,v 1.4 2008-07-13 22:05:48 mschille Exp $
+// $Id: PatSeedTool.h,v 1.5 2008-08-26 09:57:02 mschille Exp $
 #ifndef PATSEEDTOOL_H
 #define PATSEEDTOOL_H 1
 
@@ -47,7 +47,7 @@ class PatSeedTool : public GaudiTool {
      * @param forceDebug force printing debugging information
      * @return false if fit failed to satisfy criteria given by arguments, true otherwise
      */
-    bool fitTrack( PatSeedTrack& track, double maxChi2, int minPlanes,
+    bool fitTrack( PatSeedTrack& track, double maxChi2, unsigned minPlanes,
 	bool xOnly, bool forceDebug ) const;
 
   protected:
