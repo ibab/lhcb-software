@@ -1,4 +1,4 @@
-// $Id: OTRawBankDecoder.h,v 1.10 2008-06-03 13:15:14 wouter Exp $
+// $Id: OTRawBankDecoder.h,v 1.11 2008-08-26 09:10:12 wouter Exp $
 #ifndef OTRAWBANKDECODER_H
 #define OTRAWBANKDECODER_H 1
 
@@ -70,6 +70,11 @@ public:
   
   /// Translate the raw bank in an ot-specific raw bank.
   StatusCode decode( OTDAQ::RawEvent& otevent ) const ;
+
+  /// Retrieve the total number of hits in the OT without actually
+  /// decoding the modules. Useful in pattern reco to remove full
+  /// events.
+  size_t totalNumberOfHits() const ;
 
   /// Get the conversion factor
   double nsPerTdcCount() const { return m_nsPerTdcCount ; }

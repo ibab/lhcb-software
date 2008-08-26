@@ -2,6 +2,9 @@ Package         : OTDAQ
 Package manager : J.Amoraal
 !---------------------------------------------------------------------
 
+! 2008-08-26 - Wouter Hulsbergen
+ - Added method to get total number of hits (without 'decoding' the full bank)
+
 !======================= OTDAQ v7r1 2008-07-27 =======================
 ! 2008-07-22 - Jan Amoraal
  - Added bank version for simulation (SIM=63). Currently the decoding of

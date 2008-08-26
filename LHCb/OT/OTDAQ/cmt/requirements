@@ -1,5 +1,5 @@
 package OTDAQ
-version v7r1
+version v7r2
 
 branches OTDAQ cmt dict doc src options Event
 

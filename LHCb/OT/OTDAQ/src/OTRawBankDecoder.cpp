@@ -1,4 +1,4 @@
-// $Id: OTRawBankDecoder.cpp,v 1.17 2008-07-22 13:17:02 janos Exp $
+// $Id: OTRawBankDecoder.cpp,v 1.18 2008-08-26 09:10:12 wouter Exp $
 // Include files
 #include <algorithm>
 
@@ -180,10 +180,19 @@ namespace OTRawBankDecoderHelpers
     typedef Module* iterator  ;
     iterator begin() { return &(m_modules[0][0][0][0]) ; }
     iterator end() { return &(m_modules[NumStations-1][NumLayers-1][NumQuadrants-1][NumModules]); }
+    typedef const Module* const_iterator  ;
+    const_iterator begin() const { return &(m_modules[0][0][0][0]) ; }
+    const_iterator end() const { return &(m_modules[NumStations-1][NumLayers-1][NumQuadrants-1][NumModules]); }
 
     bool isvalidID(const unsigned int station, const unsigned int layer, 
                    const unsigned int quarter, const unsigned int module) const {
       return station-1<=NumStations-1 && layer<=NumLayers-1  && quarter<=NumQuadrants-1 && module-1<=NumModules-1 ; }
+
+    size_t totalNumberOfHits() const {
+      size_t rc(0) ;
+      for(const_iterator imod = begin() ; imod != end(); ++imod) rc += imod->size() ;
+      return rc ;
+    }
 
   private: 
     enum { OffsetStations=1, OffsetLayers=1, OffsetQuadrants=1, OffsetModules=0 } ;
@@ -452,6 +461,12 @@ StatusCode OTRawBankDecoder::decodeGolHeaders() const
   }
   
   return StatusCode::SUCCESS ;
+}
+
+size_t OTRawBankDecoder::totalNumberOfHits() const 
+{
+  if( !m_detectordata->golHeadersLoaded() ) decodeGolHeaders().ignore() ;
+  return m_detectordata->totalNumberOfHits() ;
 }
 
 size_t OTRawBankDecoder::decodeModule( OTRawBankDecoderHelpers::Module& moduledata ) const 
