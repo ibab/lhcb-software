@@ -2,11 +2,11 @@
 # Created    : 2002-06-13
 # Maintainer : Chris Jones
 #============================================================================
-# $Id: requirements,v 1.42 2008-07-22 11:17:14 jonrob Exp $
+# $Id: requirements,v 1.43 2008-08-26 19:43:17 jonrob Exp $
 #============================================================================
 
 package           RichRecQC
-version           v2r21
+version           v2r22
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -22,9 +22,11 @@ use MCEvent       v*    Event
 use RichRecBase   v*    Rich
 use MCInterfaces  v*    Kernel
 
-
 # Component library building rule
 #============================================================================
 library          RichRecQC  ../src/*.cpp  -import=AIDA
-
 apply_pattern component_library library=RichRecQC
+
+# Setup Python Configurables
+#============================================================================
+apply_pattern install_python_modules
