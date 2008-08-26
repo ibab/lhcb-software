@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::EventSelectionAlg
  *
  *  CVS Log :-
- *  $Id: RichRecEventSelectionAlg.h,v 1.2 2008-08-18 19:28:37 jonrob Exp $
+ *  $Id: RichRecEventSelectionAlg.h,v 1.3 2008-08-26 19:39:48 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
@@ -51,6 +51,12 @@ namespace Rich
     private:
 
       int m_minPixels; ///< Minimum number of RICH pixels
+      
+      int m_minRings;  ///< Minimum number of rings
+
+      int m_minTracks; ///< Minimum number of tracks
+
+      std::string m_ringLoc; ///< Location of RichRecRings in TES
       
     };
 

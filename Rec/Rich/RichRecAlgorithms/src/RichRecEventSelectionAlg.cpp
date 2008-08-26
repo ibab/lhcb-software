@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : Rich::Rec::EventSelectionAlg
  *
  *  CVS Log :-
- *  $Id: RichRecEventSelectionAlg.cpp,v 1.2 2008-08-18 19:28:37 jonrob Exp $
+ *  $Id: RichRecEventSelectionAlg.cpp,v 1.3 2008-08-26 19:39:48 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -29,6 +29,9 @@ EventSelectionAlg::EventSelectionAlg( const std::string& name,
   : Rich::Rec::AlgBase ( name, pSvcLocator )
 {
   declareProperty( "MinPixels", m_minPixels = 10 );
+  declareProperty( "MinRings",  m_minRings  = 0  );
+  declareProperty( "MinTracks", m_minTracks = 0  );
+  declareProperty( "RingLocation", m_ringLoc = "Rec/Rich/Markov/RingsIsolated" );
 }
 
 // Destructor
@@ -45,6 +48,23 @@ StatusCode EventSelectionAlg::execute()
     if ( !pixelCreator()->newPixels() ) return StatusCode::FAILURE;
     // enough hits ?
     OK = ( richPixels()->size() >= m_minPixels );
+  }
+
+  // rings
+  if ( OK && m_minRings > 0 )
+  {
+    // get the rings
+    const LHCb::RichRecRings * rings = get<LHCb::RichRecRings>(m_ringLoc);
+    // enough rings ?
+    OK = ( rings->size() >= m_minRings );
+  }
+
+  // tracks
+  if ( OK && m_minTracks > 0 )
+  {
+    if ( !trackCreator()->newTracks() ) return StatusCode::FAILURE;
+    // enough hits ?
+    OK = ( richTracks()->size() >= m_minTracks );
   }
 
   // set if this events is selected
