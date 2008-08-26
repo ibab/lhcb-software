@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::SellmeirFunc
  *
  *  CVS Log :-
- *  $Id: RichSellmeirFunc.cpp,v 1.22 2008-08-19 12:54:46 jonrob Exp $
+ *  $Id: RichSellmeirFunc.cpp,v 1.23 2008-08-26 19:52:28 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -47,17 +47,19 @@ StatusCode SellmeirFunc::initialize()
   acquireTool( "RichParticleProperties", m_partProp );
 
   // register for UMS updates
-  updMgrSvc()->registerCondition( this, m_Rich1DE, &SellmeirFunc::umsUpdate );
-
+  //updMgrSvc()->registerCondition( this, m_Rich1DE, &SellmeirFunc::umsUpdate );
   // force first updates
-  sc = updMgrSvc()->update(this);
-  
+  //sc = updMgrSvc()->update(this);
+  umsUpdate();
+ 
   // return
   return ( sc.isSuccess() ? sc : Error ("Failed first UMS update",sc) );
 }
 
 StatusCode SellmeirFunc::umsUpdate()
 {
+  info() << "Sellmeir parameter update triggered" << endreq;
+
   // Retrieve square of particle masses
   m_particleMassSq[Rich::Electron] = m_partProp->massSq( Rich::Electron );
   m_particleMassSq[Rich::Muon]     = m_partProp->massSq( Rich::Muon );
