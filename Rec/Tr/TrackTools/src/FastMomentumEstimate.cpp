@@ -107,12 +107,14 @@ StatusCode FastMomentumEstimate::calculate( const LHCb::State* tState, double& q
   const double scaleFactor = m_magFieldSvc->scaleFactor();
   const double denom = p * scaleFactor * 1e6;
 
-  if (std::abs(scaleFactor) < 1e-6)
+  if (std::abs(scaleFactor) < 1e-6){
     qOverP = 1.0/Gaudi::Units::GeV;
-  else
+    sigmaQOverP = 1.0/Gaudi::Units::MeV;
+  }
+  else {
     qOverP = x0/denom;
-    
-  sigmaQOverP = m_tResolution * std::fabs(qOverP);
+    sigmaQOverP = m_tResolution * std::fabs(qOverP);
+  }
 
   return StatusCode::SUCCESS;
 }
@@ -150,12 +152,15 @@ StatusCode FastMomentumEstimate::calculate( const LHCb::State* veloState, const 
 
   const double scaleFactor = m_magFieldSvc->scaleFactor();
 
-  if (std::abs(scaleFactor) < 1e-6)
+  if (std::abs(scaleFactor) < 1e-6){
     qOverP = 1.0/Gaudi::Units::GeV;
-  else
+    sigmaQOverP = 1.0/Gaudi::Units::MeV;
+  }
+  else {
     qOverP = (txV-txT)/( coef * Gaudi::Units::GeV * proj);
- 
-  sigmaQOverP = m_veloPlusTResolution * std::fabs(qOverP);
+    sigmaQOverP = m_veloPlusTResolution * std::fabs(qOverP);
+  }
+  
   
   return StatusCode::SUCCESS;
 }
