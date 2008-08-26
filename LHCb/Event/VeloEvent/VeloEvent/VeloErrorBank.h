@@ -1,4 +1,4 @@
-// $Id: VeloErrorBank.h,v 1.4 2008-02-27 14:43:18 jonrob Exp $
+// $Id: VeloErrorBank.h,v 1.5 2008-08-26 09:59:45 szumlat Exp $
 #ifndef VELOERRORBANK_H 
 #define VELOERRORBANK_H 1
 
@@ -36,6 +36,14 @@ public:
   void setEvtInfoSection(EvtInfo& inInfo);
   void setErrorInfoSection(VeloTELL1::allError& inSec);
   void setErrorSources(VeloTELL1::dataVec& sources);
+  void setBankLength(const unsigned int bl);
+  void setBankType(const unsigned int bt);
+  void setBankVersion(const unsigned int bv);
+  void setMagicPattern(const unsigned int mp);
+  unsigned int bankLength() const;
+  unsigned int bankType() const;
+  unsigned int bankVersion() const;
+  unsigned int magicPattern() const;
   unsigned int eventInformation(const int PPFPGA=0) const;
   unsigned int bankList(const int PPFPGA=0) const;
   unsigned int detectorID(const int PPFPGA=0) const;
@@ -50,7 +58,7 @@ public:
   unsigned int PCN(const int PPFPGA=0) const;
   unsigned int numberOfCluster(const int PPFPGA=0) const;
   unsigned int errorBankLength(const int PPFPGA=0) const;
-  unsigned int bankLength(const int PPFPGA=0) const;
+  unsigned int nzsBankLength(const int PPFPGA=0) const;
 
 protected:
 
@@ -59,12 +67,56 @@ private:
   EvtInfo m_evtInfoData;
   VeloTELL1::allError m_errorInfoData;
   VeloTELL1::dataVec m_errorSources;
+  unsigned int m_bankLength;
+  unsigned int m_bankType;
+  unsigned int m_bankVersion;
+  unsigned int m_magicPattern;
 
 };
 //
 inline void VeloErrorBank::setEvtInfoSection(EvtInfo& inInfo)
 {
   m_evtInfoData=inInfo;
+}
+//
+inline void VeloErrorBank::setBankLength(unsigned int bl)
+{
+  m_bankLength=bl;
+}
+//
+inline void VeloErrorBank::setBankType(unsigned int bt)
+{
+  m_bankType=bt;
+}
+//
+inline void VeloErrorBank::setBankVersion(unsigned int bv)
+{
+  m_bankVersion=bv;
+}
+//
+inline void VeloErrorBank::setMagicPattern(unsigned int mp)
+{
+  m_magicPattern=mp;
+}
+//
+inline unsigned int VeloErrorBank::bankVersion() const
+{
+  return ( m_bankVersion );
+}
+//
+inline unsigned int VeloErrorBank::bankLength() const
+{
+  return ( m_bankLength );
+}
+//
+inline unsigned int VeloErrorBank::bankType() const
+{
+  return ( m_bankType );
+}
+//
+inline unsigned int VeloErrorBank::magicPattern() const
+{
+  return ( m_magicPattern );
 }
 //
 inline void VeloErrorBank::setErrorInfoSection(VeloTELL1::allError& inSec)
@@ -171,9 +223,10 @@ inline unsigned int VeloErrorBank::errorBankLength(const int PPFPGA) const
 {
   VeloTELL1::errorInfo anInfo=m_errorInfoData[PPFPGA];
   // 
+  unsigned int errorBankLength=0;
   try{
-    if(((anInfo[4]>>VeloTELL1::bitShift8)&VeloTELL1::bitMask8)==0x8e){
-      std::cout<< " ==> Data structure is coherent up to first marker! ";
+    if(((anInfo[4])&VeloTELL1::bitMask8)==0x00){
+      errorBankLength=(anInfo[4]>>VeloTELL1::bitShift16)&VeloTELL1::bitMask16;
     }else{
       throw std::string(" ==> Error Bank data corruption at first marker!");
     }
@@ -181,24 +234,27 @@ inline unsigned int VeloErrorBank::errorBankLength(const int PPFPGA) const
     std::cout<< ( str ) <<std::endl;
   }
   //
-  return ( (anInfo[4]>>VeloTELL1::bitShift16)&VeloTELL1::bitMask16 );
+  return ( errorBankLength );
 }
-inline unsigned int VeloErrorBank::bankLength(const int PPFPGA) const
+inline unsigned int VeloErrorBank::nzsBankLength(const int PPFPGA) const
 {
   VeloTELL1::errorInfo anInfo=m_errorInfoData[PPFPGA];
+  unsigned int bankSize=0;
   try{
     if((anInfo[7]&VeloTELL1::bitMask8)==0x03){
       std::cout<< " non-zero suppressed data bank length: ";
+      bankSize=(anInfo[7]>>VeloTELL1::bitShift16)&VeloTELL1::bitMask16;
     }else if((anInfo[7]&VeloTELL1::bitMask8)==0x04){
-      std::cout<< " pedestal bank length: ";
+      std::cout<< " pedestal bank length: " <<std::endl;
+      bankSize=(anInfo[7]>>VeloTELL1::bitShift16)&VeloTELL1::bitMask16;
     }else{
-      throw std::string(" ==> Error Bank data corruption (second marker)!");
+      throw std::string(" ==> No NZS data bank present in file");
     }
   }catch (std::string& str){
     std::cout<< ( str ) <<std::endl;
   }
   //
-  return ( (anInfo[7]>>VeloTELL1::bitShift16)&VeloTELL1::bitMask16 );
+  return ( bankSize );
 }
 //
 typedef KeyedContainer<VeloErrorBank, Containers::HashMap> VeloErrorBanks;
