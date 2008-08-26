@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::TabulatedProperty1D
  *
  *  CVS Log :-
- *  $Id: Rich1DTabProperty.cpp,v 1.10 2008-08-18 18:30:39 jonrob Exp $
+ *  $Id: Rich1DTabProperty.cpp,v 1.11 2008-08-26 19:22:12 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-26
@@ -37,8 +37,8 @@ TabulatedProperty1D::~TabulatedProperty1D( )
 
 // Constructor from a tabulated property pointer
 TabulatedProperty1D::TabulatedProperty1D( const TabulatedProperty * tab,
-                              const bool registerUMS,
-                              const gsl_interp_type * interType )
+                                          const bool registerUMS,
+                                          const gsl_interp_type * interType )
   : TabulatedFunction1D ( interType ),
     m_tabProp     ( tab  ),
     m_svcLocator  ( NULL ),
@@ -48,7 +48,7 @@ TabulatedProperty1D::TabulatedProperty1D( const TabulatedProperty * tab,
 
   if ( registerUMS )
   {
-    MsgStream msg( msgSvc(), "TabulatedProperty1D" );
+    MsgStream msg( msgSvc(), "Rich::TabulatedProperty1D" );
     msg << MSG::DEBUG << "Registering UMS dependency for "
         << tabProperty()->name() << endreq;
 
@@ -56,7 +56,7 @@ TabulatedProperty1D::TabulatedProperty1D( const TabulatedProperty * tab,
     try
     {
       TabulatedProperty * nonconsttab = const_cast<TabulatedProperty*>(tab);
-      updMgrSvc()->registerCondition( this, 
+      updMgrSvc()->registerCondition( this,
                                       nonconsttab,
                                       &TabulatedProperty1D::updateTabProp );
     }
@@ -73,17 +73,17 @@ TabulatedProperty1D::TabulatedProperty1D( const TabulatedProperty * tab,
 
 }
 
-bool 
+bool
 TabulatedProperty1D::initInterpolator( const TabulatedProperty * tab,
                                        const gsl_interp_type * interType )
-{ 
+{
   // Check the data is valid
-  if ( !tab ) throw GaudiException("Null TabulatedProperty",
+  if ( !tab ) throw GaudiException("Null Rich::TabulatedProperty",
                                    "*TabulatedProperty1D*", StatusCode::FAILURE );
 
   // set interpolator type
   if ( NULL != interType ) m_interType = interType;
-  
+
   // copy data to internal container
   m_data.clear();
   for ( TabulatedProperty::Table::const_iterator it = tab->table().begin();
