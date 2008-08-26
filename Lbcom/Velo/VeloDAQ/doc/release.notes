@@ -3,6 +3,14 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+! 2008-08-26 Tomasz Szumlak
+ - add a new algoritm to deal with complicated error bank 
+   SmartVeloErrorBankDecoder, this piece of code is able
+   to check which fpga processors sent errors and deal with
+   different size of the bank that depends on a raw file content
+ - update PrepareVeloFullRawBuffer - error decoding is now decoupled
+   from NZS data
+
 ! 2008-08-25 Malcolm John
  - add a cluster filter algorithm that filters the [lite]clusters into 
    new TES locations according to a few pre-defined criteria like 

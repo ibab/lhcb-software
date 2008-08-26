@@ -1,4 +1,4 @@
-// $Id: PrepareVeloFullRawBuffer.h,v 1.3 2008-05-27 13:40:07 szumlat Exp $
+// $Id: PrepareVeloFullRawBuffer.h,v 1.4 2008-08-26 09:42:55 szumlat Exp $
 #ifndef PREPAREVELOFULLRAWBUFFER_H 
 #define PREPAREVELOFULLRAWBUFFER_H 1
 
@@ -13,8 +13,8 @@
 #include "Kernel/VeloChannelID.h"
 #include "Tell1Kernel/VeloDecodeCore.h"
 #include "Tell1Kernel/VeloDecodeConf.h"
+#include "Tell1Kernel/VeloTell1Core.h"
 #include "VeloEvent/VeloFullBank.h"
-#include "VeloEvent/VeloErrorBank.h"
 
 /** @class PrepareVeloFullRawBuffer PrepareVeloFullRawBuffer.h
  *  
@@ -43,9 +43,6 @@ using namespace LHCb;
 class PrepareVeloFullRawBuffer : public GaudiTupleAlg {
 public: 
 
-  // define structure of the data sections, look at the code of 
-  // writeErrorBanks() method and EDMS document with desciption 
-  // of the Velo Error raw bank
   enum parameters{
     ERROR_HEADER_1=1,
     ERROR_HEADER_2=2,
@@ -60,9 +57,11 @@ public:
   enum bitMasks{
     ADCMask=0x000003ff
   };  
+
   enum bitShifts{
     ADCShift=10
   };  
+
   //
   /// Standard constructor
   PrepareVeloFullRawBuffer( const std::string& name, ISvcLocator* pSvcLocator );
@@ -94,13 +93,6 @@ public:
   unsigned int* data(int noOfSensor);
   // return pointer to the pedestal bank
   unsigned int* pedestals(int noOfSensor);
-  // return pointer to the error bank
-  unsigned int* errors(int noOfSensor);
-  // check for errors and write out the error banks
-  void writeErrorBanks(int noOfBank);
-  // check if PPFPGA segment of the given error bank is empty or not
-  // return vector with PPFPGA numbers for which error was sent
-  dataVec countErrorBanks(int noOfSensor);
   // find object function
   bool findObject(const dataVec& inCont, const unsigned int obj) const;
 
@@ -108,13 +100,10 @@ protected:
 
   void setADCBankFlag();
   void setPedBankFlag();
-  void setErrorBankFlag();
   void unsetADCBankFlag();
   void unsetPedBankFlag();
-  void unsetErrorBankFlag();
   bool adcBankFlag();
   bool pedBankFlag();
-  bool errorBankFlag();
 
 private:
 
@@ -122,18 +111,14 @@ private:
   std::string m_rawEventLoc;           /// location of RawEvent container
   rawVec m_data;                       /// pointers to non-zero suppressed data body
   rawVec m_ped;                        /// pointers to pedestal bank body
-  rawVec m_error;                      /// vector of pointers to error bank body
   int m_numberOfSensors;               /// number of read-out sensors
   std::vector<int> m_sensors;          /// vector to keep sensors number
   VeloFullBanks* m_veloADCData;        /// container to store ordered data
   VeloFullBanks* m_veloPedestals;      /// container to store ordered pedestals
-  VeloErrorBanks* m_errorBank;             /// container to store error banks
   std::string m_veloADCDataContainer;  /// TES locations of decoded data
   std::string m_veloPedestalsContainer;
-  std::string m_errorBankContainer;
   bool m_adcBankPresent;               /// flag to check if data is sent out
   bool m_pedBankPresent;               /// flag to check if ped is sent out
-  bool m_errorBankPresent;             /// flag to check if error is present
   bool m_runWithODIN;
   
 };

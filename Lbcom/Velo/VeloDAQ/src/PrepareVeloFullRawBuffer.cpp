@@ -1,4 +1,4 @@
-// $Id: PrepareVeloFullRawBuffer.cpp,v 1.2 2008-05-27 13:40:07 szumlat Exp $
+// $Id: PrepareVeloFullRawBuffer.cpp,v 1.3 2008-08-26 09:42:55 szumlat Exp $
 // Include files 
 #include <stdexcept>
 #include <exception>
@@ -34,18 +34,14 @@ PrepareVeloFullRawBuffer::PrepareVeloFullRawBuffer( const std::string& name,
     m_rawEventLoc ( LHCb::RawEventLocation::Default ),
     m_data ( ),
     m_ped ( ),
-    m_error ( ),
     m_numberOfSensors ( 0 ),
     m_sensors ( ),
     m_veloADCData ( 0 ),
     m_veloPedestals ( 0 ),
-    m_errorBank ( 0 ),
     m_veloADCDataContainer ( VeloFullBankLocation::Default ),
     m_veloPedestalsContainer ( VeloFullBankLocation::Pedestals ),
-    m_errorBankContainer ( VeloErrorBankLocation::Default ),
     m_adcBankPresent ( false ),
-    m_pedBankPresent ( false ),
-    m_errorBankPresent ( false )
+    m_pedBankPresent ( false )
 {
   declareProperty("RunWithODIN", m_runWithODIN=true);  
 }
@@ -77,12 +73,11 @@ StatusCode PrepareVeloFullRawBuffer::execute() {
     getRawBanks();
     // if there is adc bank or pedestal bank begin ordering
     // for all read-out sensors
-    if(adcBankFlag()||pedBankFlag()||errorBankFlag()){      
+    if(adcBankFlag()||pedBankFlag()){      
       int readedSensors=numberOfSensors();
-      debug()<< " readed sens: " << readedSensors <<endmsg;
+      debug()<< " read sens: " << readedSensors <<endmsg;
       for(int sensor=0; sensor<readedSensors; sensor++){
         if(adcBankFlag()||pedBankFlag()) createOrderedSections(sensor);
-        if(errorBankFlag()) writeErrorBanks(sensor);
       }
       writeVeloFull();
       // flush the vectors with pointers 
@@ -108,7 +103,7 @@ StatusCode PrepareVeloFullRawBuffer::finalize() {
 //=============================================================================
 StatusCode PrepareVeloFullRawBuffer::getRawEvent()
 {
-  debug()<< " ==> getRawBuffer() " <<endmsg;
+  debug()<< " ==> getRawEvent() " <<endmsg;
   debug()<< "--------------------" <<endmsg;
   //
   if(!exist<LHCb::RawEvent>(m_rawEventLoc)){
@@ -189,43 +184,18 @@ StatusCode PrepareVeloFullRawBuffer::getRawBanks()
       m_ped.push_back(data);
     }
   }
-  // check if there is error bank present
-  const std::vector<LHCb::RawBank*>& errorBank=
-    m_rawEvent->banks(LHCb::RawBank::VeloError);
-  // if so write out the banks
-  if(errorBank.size()!=0){
-    setErrorBankFlag();
-    // check if number of sensor is set up
-    if(adcBankFlag()==0&&pedBankFlag()==0) 
-      setNumberOfSensors(errorBank.size());
-    m_errorBank=new VeloErrorBanks();
-    //
-    debug()<< "Error bank detected of size: " << errorBank.size() <<endmsg;
-    for(bIt=errorBank.begin(); bIt!=errorBank.end(); ++bIt){
-      LHCb::RawBank* aBank=(*bIt);
-      // get the sensor number == sourceID if there is no full data
-      if(adcBankFlag()==0&&pedBankFlag()==0){
-        int sensor=aBank->sourceID();
-        debug()<< " sensor number: " << sensor <<endmsg;
-        m_sensors.push_back(sensor);
-      }
-      // get pointer to the bank data
-      unsigned int* data=aBank->data();
-      m_error.push_back(data);
-    }
-  }
   // check if there is ODIN bank present
   const std::vector<LHCb::RawBank*>& odinBank=
     m_rawEvent->banks(LHCb::RawBank::ODIN);
   // cache the bank if present
   if(odinBank.empty()){
     if(m_runWithODIN){
-      Error(" ==> Data stream corrupted!");
+      Error(" ==> ODIN bank missing!");
       return ( StatusCode::FAILURE );
     }
   }
   //
-  if(m_data.empty()) return ( StatusCode::FAILURE );
+  if(m_data.empty()) Warning(" --> The file does not contain the NZS data");
   //
   return ( StatusCode::SUCCESS );
 }
@@ -292,13 +262,6 @@ StatusCode PrepareVeloFullRawBuffer::writeVeloFull()
           << m_veloPedestalsContainer <<endmsg;
   }
   //
-  if(errorBankFlag()){
-    put(m_errorBank, m_errorBankContainer);
-    debug()<< "Registered container with error bank of size: "
-          << m_errorBank->size() << ", at: "
-          << m_errorBankContainer <<endmsg;
-  }
-  //
   return ( StatusCode::SUCCESS );
 }
 //=============================================================================
@@ -316,10 +279,8 @@ void PrepareVeloFullRawBuffer::resetMemory()
   m_data.clear();
   m_sensors.clear();
   m_ped.clear();
-  m_error.clear();
   if(adcBankFlag()) unsetADCBankFlag();
   if(pedBankFlag()) unsetPedBankFlag();
-  if(errorBankFlag()) unsetErrorBankFlag();
 }
 //=============================================================================
 void PrepareVeloFullRawBuffer::dumpADCs(const dataVec& inADCs)
@@ -348,11 +309,6 @@ unsigned int* PrepareVeloFullRawBuffer::pedestals(int noOfSensor)
   return ( m_ped[noOfSensor] );
 }
 //=============================================================================
-unsigned int* PrepareVeloFullRawBuffer::errors(int noOfSensor)
-{
-  return ( m_error[noOfSensor] );
-}
-//=============================================================================
 void PrepareVeloFullRawBuffer::setADCBankFlag()
 {
   m_adcBankPresent=true;
@@ -373,16 +329,6 @@ void PrepareVeloFullRawBuffer::unsetPedBankFlag()
   m_pedBankPresent=false;
 }
 //=============================================================================
-void PrepareVeloFullRawBuffer::setErrorBankFlag()
-{
-  m_errorBankPresent=true;
-}
-//=============================================================================
-void PrepareVeloFullRawBuffer::unsetErrorBankFlag()
-{
-  m_errorBankPresent=false;
-}
-//=============================================================================
 bool PrepareVeloFullRawBuffer::adcBankFlag()
 {
   return ( m_adcBankPresent );
@@ -391,133 +337,6 @@ bool PrepareVeloFullRawBuffer::adcBankFlag()
 bool PrepareVeloFullRawBuffer::pedBankFlag()
 {
   return ( m_pedBankPresent );
-}
-//=============================================================================
-bool PrepareVeloFullRawBuffer::errorBankFlag()
-{
-  return ( m_errorBankPresent );
-}
-//=============================================================================
-void PrepareVeloFullRawBuffer::writeErrorBanks(int noOfBank)
-{
-  debug()<< " ==> writeErrorBank() " <<endmsg;
-  // get the pointer to the current error bank
-  unsigned int* errorData=errors(noOfBank);
-  const int tell1=sourceID(noOfBank);
-  debug()<< "pointers to error bank: " << errorData <<endmsg;  
-  dataVec sources;
-  // check how many errors were sent, sources == number of PPFPGA
-  sources=countErrorBanks(noOfBank);
-  // if there are errors create EvtInfo object to cache
-  // EvtInfo sections from ErrorBank
-  EvtInfo anEvtInfo(tell1);
-  allEvt evtInfoData;
-  // create allError vector always for default ErrorBank content
-  allError errorInfoData;
-  // create new ErrorBank object for the current sensor
-  VeloErrorBank* anBank=new VeloErrorBank(tell1);  
-  // initialize error bank using sources
-  if(sources.size()!=0){
-    for(int PPFPGA=0; PPFPGA<NumberOfPPFPGA; PPFPGA++){
-      bool isError=findObject(sources, PPFPGA);
-      if(isError){
-        evtInfo anInfo;
-        errorInfo anErrorData;
-        // fill the errorInfo section
-        anInfo.push_back(*errorData);      
-        anInfo.push_back(*(errorData+ERROR_HEADER_1));
-        int tempWord=((*(errorData+ERROR_HEADER_2))>>bitShift16)&bitMask16;
-        anInfo.push_back(tempWord);
-        for(int word=0; word<ERROR_FIRST_SECTION; word++){
-          anInfo.push_back(*(errorData+ERROR_FIRST_SECTION+word));
-        }
-        //
-        evtInfoData.push_back(anInfo);
-        //
-        for(int word=0; word<ERROR_FIRST_SECTION; word++){
-          anErrorData.push_back(*(errorData+word));
-        }
-        for(int word=0; word<ERROR_SECOND_SECTION; word++){
-          anErrorData.push_back(*(errorData+ERROR_THIRD_SECTION+word));
-        }
-        //
-        errorInfoData.push_back(anErrorData);
-        //
-        errorData+=PPFPGASectionJump;
-        debug()<< " jump: " << PPFPGASectionJump <<endmsg;
-        debug()<< " errorData after jump: " << errorData <<endmsg;
-        
-      }
-    } 
-    anEvtInfo.setEvtInfo(evtInfoData);
-    //
-    anBank->setEvtInfoSection(anEvtInfo);
-    anBank->setErrorInfoSection(errorInfoData);
-    anBank->setErrorSources(sources);
-  }else{
-    for(int PPFPGA=0; PPFPGA<NumberOfPPFPGA; PPFPGA++){
-      errorInfo anErrorData;
-      for(int word=0; word<ERROR_EVT_INFO; word++){
-        anErrorData.push_back(*(errorData+word));
-      }
-      errorInfoData.push_back(anErrorData);
-      errorData+=BankJump;
-    }
-    anBank->setErrorInfoSection(errorInfoData);
-  }
-  //
-  m_errorBank->insert(anBank);
-}
-//=============================================================================
-dataVec PrepareVeloFullRawBuffer::countErrorBanks(int noOfBank)
-{
-  debug()<< " ==> countErrorBanks() " <<endmsg;
-  // get pointer to the current error bank
-  unsigned int* errorData=errors(noOfBank);
-  debug()<< "ptr err bank: " << errorData <<endmsg;
-  // number of PPFPGA
-  unsigned int PPFPGA=0;
-  // vector for PPFPGA for which error ocurred
-  dataVec sources;
-  try{
-    while(PPFPGA<NumberOfPPFPGA){
-      // go to the first marker
-      /// @DEBUG: look at the content of the mem. cell using pointers
-      debug()<< "ptr err bank: " << errorData <<endmsg;
-      debug()<< " no of PP: " << PPFPGA <<endmsg;
-      debug()<< "bnt cnt: " << ((*errorData)&bitMask12) <<endmsg;
-      debug()<< "l0: " << (*(errorData+ERROR_HEADER_1)) <<endmsg;
-      errorData+=FirstMarkerLocation;
-      debug()<< " first marker: "
-             << std::hex <<(((*errorData)>>bitShift8)&bitMask8)
-             << " second marker: " << ((*errorData)&bitMask8) 
-             << std::dec <<endmsg;      
-      /// @DEBUG
-      if(((((*errorData)>>bitShift8)&bitMask8)==EBMarker)&&
-         ((*errorData)&bitMask8)==EBMarker0){
-        errorData+=NextMarker;
-         if(((((*errorData)>>bitShift8)&bitMask8)==EBMarker)&&
-           ((*errorData)&bitMask8)==EBMarker1 ){
-          // error bank is empty, do not write the PPFPGA number!
-          PPFPGA++;
-          errorData+=NextBankIfEmptyJump;
-        }else{
-          // bank is not empty, write the number of PPFPGA
-          sources.push_back(PPFPGA);
-          PPFPGA++;
-          errorData+=BankJump;
-        }
-      }else{
-        debug()<< "value: 0" << ((*errorData)&bitMask8) <<endmsg;
-        debug()<< "value: 1" << (((*errorData)>>bitShift8)&bitMask8) <<endmsg;
-        throw std::string(" ==> Data corruption!");
-      }
-    }
-  }catch (std::string& str){
-    info()<< ( str ) <<endmsg;
-  }
-  //
-  return ( sources );
 }
 //=============================================================================
 bool PrepareVeloFullRawBuffer::findObject(const dataVec& inCont,
