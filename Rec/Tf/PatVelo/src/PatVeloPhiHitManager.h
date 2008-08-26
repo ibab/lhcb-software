@@ -1,4 +1,4 @@
-// $Id: PatVeloPhiHitManager.h,v 1.2 2008-01-20 15:46:37 krinnert Exp $
+// $Id: PatVeloPhiHitManager.h,v 1.3 2008-08-26 17:52:20 dhcroft Exp $
 #ifndef INCLUDE_TF_PATVELOPHIHITMANAGER_H
 #define INCLUDE_TF_PATVELOPHIHITMANAGER_H 1
 
@@ -36,6 +36,8 @@ namespace Tf {
       void prepareHits(StationIterator it) { prepareHits(*it); }          ///< Prepare hits for one station only
       void prepareHits(StationReverseIterator rit) { prepareHits(*rit); } ///< Prepare hits for one station only
       void prepareHits(Station* station);        ///< Prepare hits for one station only, implementation
+
+      void resetUsedFlagOfHits(); ///< Reset all used flags to unused
       
   };
 }

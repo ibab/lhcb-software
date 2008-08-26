@@ -1,4 +1,4 @@
-// $Id: PatVeloPhiHitManager.cpp,v 1.2 2008-01-20 15:46:36 krinnert Exp $
+// $Id: PatVeloPhiHitManager.cpp,v 1.3 2008-08-26 17:52:20 dhcroft Exp $
 
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRegistry.h"
@@ -110,6 +110,27 @@ namespace Tf {
     station->setHitsPrepared(true);
   }
 
+  //=============================================================================
+  // Reset all used flags to unused
+  //=============================================================================
+  void PatVeloPhiHitManager::resetUsedFlagOfHits() 
+  {
+    for (unsigned int half=0; half<m_nHalfs; ++half) { // loop over velo halfs
+      DefaultStationIterator si   = m_defaultHitManager->stationsHalfBegin(half);
+      DefaultStationIterator send = m_defaultHitManager->stationsHalfEnd(half);
+
+      for ( ; si != send; ++si) {
+        for (unsigned int zone=0; zone<m_nZones; ++zone) { // loop over inner/outer zones
+          Tf::VeloPhiHitRange hits = (*si)->hits(zone);
+          Tf::VeloPhiHits::const_iterator hi   = hits.begin();
+          Tf::VeloPhiHits::const_iterator hend = hits.end();
+          for ( ; hi != hend; ++hi ) { // import all hits
+	    (*hi)->resetUsedFlag();
+          }
+        }
+      }
+    }
+  }
 }
 
 

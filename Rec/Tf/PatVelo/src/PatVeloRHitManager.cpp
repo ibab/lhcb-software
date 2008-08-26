@@ -1,4 +1,4 @@
-// $Id: PatVeloRHitManager.cpp,v 1.3 2008-06-03 07:14:24 cattanem Exp $
+// $Id: PatVeloRHitManager.cpp,v 1.4 2008-08-26 17:52:20 dhcroft Exp $
 
 #include "GaudiKernel/ToolFactory.h"
 
@@ -48,6 +48,28 @@ namespace Tf {
     debug() << "==> Finalize" << endmsg;
 
     return Tf::ExtendedVeloRHitManager<PatVeloRHit>::finalize();  // must be called after all other actions
+  }
+
+  //=============================================================================
+  // Reset all used flags to unused
+  //=============================================================================
+  void PatVeloRHitManager::resetUsedFlagOfHits() 
+  {
+    for (unsigned int half=0; half<m_nHalfs; ++half) { // loop over velo halfs
+      DefaultStationIterator si   = m_defaultHitManager->stationsHalfBegin(half);
+      DefaultStationIterator send = m_defaultHitManager->stationsHalfEnd(half);
+
+      for ( ; si != send; ++si) {
+        for (unsigned int zone=0; zone<m_nZones; ++zone) { // loop over inner/outer zones
+          Tf::VeloRHitRange hits = (*si)->hits(zone);
+          Tf::VeloRHits::const_iterator hi   = hits.begin();
+          Tf::VeloRHits::const_iterator hend = hits.end();
+          for ( ; hi != hend; ++hi ) { // import all hits
+	    (*hi)->resetUsedFlag();
+          }
+        }
+      }
+    }
   }
 
   //=============================================================================
