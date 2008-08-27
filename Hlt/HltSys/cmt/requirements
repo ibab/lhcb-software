@@ -35,6 +35,7 @@ use HltPython	        v1r9    Hlt   # Jose Angel Hernando-Morata
 use HltSelections       v8r1    Hlt   # Patrick Koppenburg
 use Fidel               v1r3    Phys  # Sara Furcas    
 use HltKshort           v1r4    Hlt   # Jaap Panman
+use HltHidValley        v1r0    Hlt   # Marcin Kucharczyk
 
 use HltSelChecker       v7r1    Hlt   # Patrick Koppenburg
 
