@@ -3,6 +3,10 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+!2008-08-27 - Gerhard Raven
+  - set RequirePositiveInputs to False for HltL0{Calo,Muon}Prepare -- to be 
+    investigated why this is required.
+   
 !2008-08-26 - Gerhard Raven
   - PropertyConfigSvc now supports substitution of 'reference' properties,
     eg. foo.bar = @baz.kaboom sets the property bar of component foo to the
