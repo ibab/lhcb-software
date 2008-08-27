@@ -1,0 +1,149 @@
+// $Id: CtrlSubfarmDisplay.cpp,v 1.1 2008-08-27 19:15:55 frankb Exp $
+//====================================================================
+//  ROMon
+//--------------------------------------------------------------------
+//
+//  Package    : ROMon
+//
+//  Description: Readout monitoring in the LHCb experiment
+//
+//  Author     : M.Frank
+//  Created    : 29/1/2008
+//
+//====================================================================
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CtrlSubfarmDisplay.cpp,v 1.1 2008-08-27 19:15:55 frankb Exp $
+
+// C++ include files
+#include <cstdlib>
+#include <iostream>
+
+// Framework include files
+#include "RTL/Lock.h"
+#include "ROMon/CtrlSubfarmDisplay.h"
+#include "TaskSupervisorParser.h"
+
+#include "dic.hxx"
+
+using namespace ROMon;
+static void help() {
+  std::cout <<"  romon_storage -option [-option]" << std::endl
+	    <<"       -h[eaderheight]=<number>     Height of the header        display.                      " << std::endl
+	    <<"       -d[elay]=<number>            Time delay in millisecond between 2 updates.              " << std::endl
+	    <<"       -s[ervicename]=<name>        Name of the DIM service  providing monitoring information." << std::endl
+	    << std::endl;
+}
+
+/// Standard constructor
+CtrlSubfarmDisplay::CtrlSubfarmDisplay(int width, int height, int posx, int posy, int argc, char** argv)
+: ClusterDisplay(width,height)
+{
+  m_position = Position(posx,posy);
+  init(argc, argv);
+}
+
+/// Standard constructor
+CtrlSubfarmDisplay::CtrlSubfarmDisplay(int argc, char** argv)   {
+  init(argc, argv);
+}
+
+void CtrlSubfarmDisplay::init(int argc, char** argv)   {
+  RTL::CLI cli(argc,argv,help);
+  int hdr_height;
+  cli.getopt("headerheight",  1, hdr_height    =   5);
+  cli.getopt("delay",         1, m_delay       = 1000);
+  cli.getopt("servicename",   1, m_svcName     = "/HLTE01/TaskSupervisor/Status");
+  m_readAlways = true;
+  setup_window();
+  int width    = m_area.width;
+  int height   = m_area.height;
+  int posx     = m_position.x-2;
+  int posy     = m_position.y-2;
+  m_nodes      = createSubDisplay(Position(posx,posy+hdr_height),Area(width,height-hdr_height),"Processing Cluster Information");
+  m_clusterData.pointer = (char*)&m_cluster;
+  showHeader();
+  end_update();
+}
+
+/// Standard destructor
+CtrlSubfarmDisplay::~CtrlSubfarmDisplay()  {
+  m_clusterData.pointer = 0;
+  begin_update();
+  delete m_nodes;
+  end_update();
+}
+
+/// Display the node information
+void CtrlSubfarmDisplay::showNodes()  {
+  Cluster& c = m_cluster;
+  MonitorDisplay* disp = m_nodes;
+  size_t taskCount=0, missCount=0;
+  const char* fmt = " %-24s %12s %17zd %17zd    %s";
+
+  //disp->draw_line_reverse(" ----------------------------------   Cluster information   ----------------------------------");
+  disp->draw_line_normal("");
+  disp->draw_line_bold(   " %-24s %12s %17s %17s    %s","Node","Status","Found Tasks","Missing tasks","Timestamp");
+  for(Cluster::Nodes::const_iterator i=c.nodes.begin(); i!=c.nodes.end();++i) {
+    const Cluster::Node& n = (*i).second;
+    taskCount += n.taskCount;
+    missCount += n.missCount;
+    disp->draw_line_normal(fmt,n.name.c_str(),n.status.c_str(),n.taskCount,n.missCount,n.time.c_str());
+  }
+  disp->draw_line_normal("");
+  disp->draw_line_bold(fmt, "Total:", c.status.c_str(), taskCount, missCount, c.time.c_str());
+}
+
+/// Update header information
+void CtrlSubfarmDisplay::showHeader()   {
+  draw_line_normal ("");
+  draw_line_reverse("         Task control monitoring on %s   [%s]", m_cluster.name.c_str(), ::lib_rtl_timestr());    
+  draw_line_reverse("         Information service:%s data size:%zd", m_svcName.c_str(),m_data.actual);
+  draw_line_normal ("");
+}
+
+/// Update all displays
+void CtrlSubfarmDisplay::update()   {
+  dim_lock();
+  RTL::Lock lock(m_lock);
+  begin_update();
+  m_nodes->begin_update();
+  if ( m_data.actual>0 ) {
+    const char* ptr = m_data.data<const char>();
+    XML::TaskSupervisorParser ts;
+    if ( ts.parseBuffer(m_svcName, ptr,::strlen(ptr)+1) ) {
+      m_cluster.nodes.clear();
+      ts.getClusterNodes(m_cluster);
+      showNodes();
+    }
+    else {
+      m_nodes->draw_line_normal ("");
+      m_nodes->draw_line_bold("   ..... Failed to parse XML information .....");
+      m_nodes->draw_line_normal ("");
+    }
+  }
+  else {
+    m_nodes->draw_line_normal ("");
+    m_nodes->draw_line_bold("   ..... No XML information present .....");
+    m_nodes->draw_line_normal ("");
+  }
+  m_nodes->end_update();
+  showHeader();
+  end_update();
+  dim_unlock();
+}
+
+/// Retrieve node name from cluster display by offset
+std::string CtrlSubfarmDisplay::nodeName(size_t offset) {
+  size_t cnt = 0;
+  const Cluster::Nodes& nodes = m_cluster.nodes;
+  for (Cluster::Nodes::const_iterator n=nodes.begin(); n!=nodes.end(); ++n, ++cnt)  {
+    if ( cnt == offset ) return (*n).first;
+  }
+  return "";
+}
+
+extern "C" int romon_ctrlsubfarm(int argc,char** argv) {
+  CtrlSubfarmDisplay disp(argc,argv);
+  disp.initialize();
+  disp.run();
+  return 1;
+}

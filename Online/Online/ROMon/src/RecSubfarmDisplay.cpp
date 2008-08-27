@@ -1,4 +1,4 @@
-// $Id: RecSubfarmDisplay.cpp,v 1.1 2008-07-10 16:59:01 frankb Exp $
+// $Id: RecSubfarmDisplay.cpp,v 1.2 2008-08-27 19:15:20 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/RecSubfarmDisplay.cpp,v 1.1 2008-07-10 16:59:01 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/RecSubfarmDisplay.cpp,v 1.2 2008-08-27 19:15:20 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -66,7 +66,7 @@ static void help() {
 
 /// Standard constructor
 RecSubfarmDisplay::RecSubfarmDisplay(int width, int height, int posx, int posy, int argc, char** argv)
-: ROMonDisplay(width, height)
+: ClusterDisplay(width, height)
 {
   m_position = Position(posx,posy);
   init(argc, argv);
@@ -262,6 +262,22 @@ size_t RecSubfarmDisplay::numNodes()  {
     ::dim_unlock();
   }
   return n;
+}
+
+/// Retrieve node name from cluster display by offset
+std::string RecSubfarmDisplay::nodeName(size_t offset) {
+  const Nodeset* ns = (const Nodeset*)data().pointer;
+  if ( ns ) {
+    size_t cnt;
+    Nodes::const_iterator n;
+    const Nodes& nodes = ns->nodes;
+    for (n=nodes.begin(), cnt=0; n!=nodes.end(); n=nodes.next(n), ++cnt)  {
+      if ( cnt == offset ) {
+	return (*n).name;
+      }
+    }
+  }
+  return "";
 }
 
 /// Update all displays

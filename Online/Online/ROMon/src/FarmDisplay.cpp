@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.cpp,v 1.15 2008-08-13 07:27:37 frankb Exp $
+// $Id: FarmDisplay.cpp,v 1.16 2008-08-27 19:15:20 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,8 +11,9 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.15 2008-08-13 07:27:37 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.16 2008-08-27 19:15:20 frankb Exp $
 
+#include "ROMon/CtrlSubfarmDisplay.h"
 #include "ROMon/RecSubfarmDisplay.h"
 #include "ROMon/SubfarmDisplay.h"
 #include "ROMon/FarmDisplay.h"
@@ -97,6 +98,15 @@ static void help() {
 	    << std::endl;
 }
 
+static std::string strUpper(const std::string& src) {
+  std::string r=src;
+  for(size_t i=0;i<r.length();++i)r[i]=::toupper(r[i]);
+  return r;
+}
+
+namespace ROMon {
+  InternalDisplay* createCtrlFarmSubDisplay(FarmDisplay* parent, const std::string& title);
+}
 namespace {
   const char* _procNam(const char* nam) {
     char* p;
@@ -173,6 +183,11 @@ size_t InternalDisplay::draw_bar(int x, int y, float f1, int scale)  {
   return 1;
 }
 
+/// Update display content
+void InternalDisplay::update(const void* data, size_t /* len */) {
+  return update(data);
+}
+
 /// DIM command service callback
 void InternalDisplay::dataHandler(void* tag, void* address, int* size) {
   if ( address && tag && *size > 0 ) {
@@ -182,7 +197,7 @@ void InternalDisplay::dataHandler(void* tag, void* address, int* size) {
     RTL::Lock lock(s_lock);
     ::scrc_cursor_off(pb);
     ::scrc_begin_pasteboard_update (pb);
-    disp->update(address);
+    disp->update(address, *size);
     ::scrc_end_pasteboard_update(pb);
     if ( fd ) fd->set_cursor();
     ::scrc_cursor_on(pb);
@@ -335,6 +350,71 @@ void BufferDisplay::update(const void* data) {
     while(line<m_display->rows)
       ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
   }
+}
+
+CtrlDisplay::CtrlDisplay(FarmDisplay* parent, const std::string& title) 
+  : InternalDisplay(parent,title), m_node(0)
+{
+  ::scrc_create_display(&m_display,55,130,MAGENTA,ON,"Node Control display for node:");
+}
+
+void CtrlDisplay::update(const void* data) {
+  char txt[255], name[255];
+  time_t tim = ::time(0);
+  int node=0, cnt=0, line=1;
+  Cluster* c = (Cluster*)data;
+  if ( c ) {
+    const Cluster::Nodes& n = c->nodes;
+    const char* fmt = "  %-24s %12s %17zd %17zd    %s";
+
+    ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
+    ::sprintf(txt, "  Cluster:%s  status:%12s  last update:%s",c->name.c_str(),c->status.c_str(),c->time.c_str());
+    ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
+    ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
+    for(Cluster::Nodes::const_iterator i=n.begin(); i!=n.end();++i, ++node) {
+      if ( node == m_node ) {
+	const Cluster::Node& n = (*i).second;
+	Cluster::Node::Tasks::const_iterator j;
+	::strftime(name,sizeof(name),"%H:%M:%S",::localtime(&tim));
+	::sprintf(txt,"Task Control display for node:%s  [%s]",n.name.c_str(),name);
+	::scrc_set_border(m_display,txt,BLUE|INVERSE);
+	::sprintf(txt,"  %-24s %12s %17s %17s    %s","Node","Status","Found Tasks","Missing tasks","Timestamp");
+	::scrc_put_chars(m_display,txt,INVERSE,++line,1,1);
+	::sprintf(txt,fmt,n.name.c_str(),n.status.c_str(),n.taskCount,n.missCount,n.time.c_str());
+	::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
+	if ( n.status == "DEAD" ) {
+	  ::scrc_put_chars(m_display,"",INVERSE|RED|BOLD,++line,1,1);
+	  ::scrc_put_chars(m_display,"  -------------------------------------",INVERSE|RED|BOLD,++line,1,1);
+	  ::scrc_put_chars(m_display,"  Node is DEAD. Severe problem present.",INVERSE|RED|BOLD,++line,1,1);
+	  ::scrc_put_chars(m_display,"  -------------------------------------",INVERSE|RED|BOLD,++line,1,1);
+	  ::scrc_put_chars(m_display,"",INVERSE|RED|BOLD,++line,1,1);
+	}
+	else if ( n.missing.size() > 0 ) {
+	  ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
+	  ::scrc_put_chars(m_display,"  Missing tasks:",INVERSE|BOLD|RED,++line,1,1);
+	  for(j=n.missing.begin(); j != n.missing.end(); ++j,++cnt) {
+	    ::sprintf(txt,"   [%d]  %s",cnt,(*j).c_str());
+	    ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
+	  }
+	}
+	else {
+	  ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
+	  ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
+	  ::scrc_put_chars(m_display,"  Node looks fine. No missing tasks found.",INVERSE|GREEN,++line,1,1);
+	}
+      }
+    }
+  }
+  else {
+    ::scrc_put_chars(m_display,"   Unknown Node. No data found.",INVERSE|BOLD,++line,1,1);
+    ::strftime(txt,sizeof(txt),"           %H:%M:%S",::localtime(&tim));
+    ::scrc_put_chars(m_display,txt,INVERSE|BOLD,++line,1,1);
+    ::scrc_set_border(m_display,"Unknown Node. No data found.",INVERSE|RED|BOLD);
+  }
+  ::memset(txt,' ',m_display->cols);
+  txt[m_display->cols-1]=0;
+  while(line<m_display->rows)
+    ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
 }
 
 ProcessDisplay::ProcessDisplay(FarmDisplay* parent, const std::string& title, int height, int width)
@@ -1044,6 +1124,7 @@ FarmDisplay::FarmDisplay(int argc, char** argv)
   m_dense = 0 != cli.getopt("dense",2);
   all = 0 != cli.getopt("all",2);
   m_mode = cli.getopt("reconstruction",2) == 0 ? HLT_MODE : RECO_MODE;
+  if ( cli.getopt("taskmonitor",2) != 0 ) m_mode = CTRL_MODE;
   s_fd = this;
   ::lib_rtl_create_lock(0,&s_lock);
   if ( m_mode == RECO_MODE && all && m_match=="*" )
@@ -1052,6 +1133,12 @@ FarmDisplay::FarmDisplay(int argc, char** argv)
     ::sprintf(txt," Reconstruction farm display of all known subfarms with name '%s'",m_match.c_str());
   else if ( m_mode == RECO_MODE )
     ::sprintf(txt," Reconstruction farm display of partition %s ",m_name.c_str());
+  else if ( m_mode == CTRL_MODE && all && m_match=="*" )
+    ::sprintf(txt," Task Control farm display of all known subfarms ");
+  else if ( m_mode == CTRL_MODE && all )
+    ::sprintf(txt," Task Control farm display of all known subfarms with name '%s'",m_match.c_str());
+  else if ( m_mode == CTRL_MODE )
+    ::sprintf(txt," Task Control farm display of partition %s ",m_name.c_str());
   else if ( m_match == "*" && all )
     ::sprintf(txt," HLT Farm display of all known subfarms ");
   else if ( all )
@@ -1089,6 +1176,7 @@ FarmDisplay::~FarmDisplay()  {
   disconnect();
   m_listener = std::auto_ptr<PartitionListener>(0);
   ::scrc_begin_pasteboard_update(m_pasteboard);
+  m_ctrlDisplay = std::auto_ptr<CtrlDisplay>(0);
   m_mbmDisplay = std::auto_ptr<BufferDisplay>(0);
   if ( m_subfarmDisplay ) {
     MouseSensor::instance().remove(m_subfarmDisplay->display());
@@ -1160,23 +1248,35 @@ int FarmDisplay::showSubfarm()    {
     m_subfarmDisplay = 0;
     m_cpuDisplay = std::auto_ptr<CPUDisplay>(0);
     m_mbmDisplay = std::auto_ptr<BufferDisplay>(0);
+    m_ctrlDisplay = std::auto_ptr<CtrlDisplay>(0);
     m_procDisplay = std::auto_ptr<ProcessDisplay>(0);
     m_subPosCursor = 8;
     m_nodeSelector = 0;
   }
   else if ( (d=currentDisplay()) != 0 ) {
     std::string title = "Sub farm info:" + d->name();
-    std::string svc = "-servicename=/"+d->name()+"/ROpublish";
-    const char* argv[] = {"",svc.c_str(), "-delay=300"};
-    if ( m_mode == RECO_MODE ) {
-      RecSubfarmDisplay* dis = new RecSubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
-      m_nodeSelector = dynamic_cast<ScrDisplay*>(dis->nodeDisplay());
-      m_subfarmDisplay = dis;
+    if ( m_mode == CTRL_MODE ) {
+      std::string svc = "-servicename=/"+strUpper(d->name())+"/TaskSupervisor/Status";
+      const char* argv[] = {"",svc.c_str(), "-delay=300"};
+      m_subfarmDisplay = new CtrlSubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
+      m_nodeSelector = dynamic_cast<ScrDisplay*>(m_subfarmDisplay->nodeDisplay());
+    }
+    else if ( m_mode == RECO_MODE ) {
+      std::string svc = "-servicename=/"+d->name()+"/ROpublish";
+      const char* argv[] = {"",svc.c_str(), "-delay=300"};
+      m_subfarmDisplay = new RecSubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
+      m_nodeSelector = dynamic_cast<ScrDisplay*>(m_subfarmDisplay->nodeDisplay());
+    }
+    else if ( m_mode == HLT_MODE ) {
+      std::string svc = "-servicename=/"+d->name()+"/ROpublish";
+      const char* argv[] = {"",svc.c_str(), "-delay=300"};
+      m_subfarmDisplay = new SubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
+      m_nodeSelector = dynamic_cast<ScrDisplay*>(m_subfarmDisplay->nodeDisplay());
     }
     else {
-      SubfarmDisplay* dis = new SubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
-      m_nodeSelector = dynamic_cast<ScrDisplay*>(dis->nodeDisplay());
-      m_subfarmDisplay = dis;
+      m_nodeSelector = 0;
+      m_subfarmDisplay = 0;
+      return WT_SUCCESS;
     }
     m_subfarmDisplay->initialize();
     ::lib_rtl_sleep(200);
@@ -1199,6 +1299,8 @@ int FarmDisplay::showHelpWindow() {
   }
   else if ( m_mbmDisplay.get() ) 
     m_helpDisplay = std::auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","mbm"));
+  else if ( m_ctrlDisplay.get() ) 
+    m_helpDisplay = std::auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","ctrl"));
   else if ( m_procDisplay.get() ) 
     m_helpDisplay = std::auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","procs"));
   else if ( m_cpuDisplay.get() ) 
@@ -1222,19 +1324,12 @@ int FarmDisplay::showProcessWindow() {
     m_procDisplay = std::auto_ptr<ProcessDisplay>(0);
   }
   else if ( m_subfarmDisplay ) {
-    const Nodeset* ns = (const Nodeset*)m_subfarmDisplay->data().pointer;
-    if ( ns ) {
-      size_t cnt;
-      Nodes::const_iterator n;
-      const Nodes& nodes = ns->nodes;
-      for (n=nodes.begin(), cnt=0; n!=nodes.end(); n=nodes.next(n), ++cnt)  {
-	if ( cnt == m_subPosCursor-SUBFARM_NODE_OFFSET ) {
-	  m_procDisplay = std::auto_ptr<ProcessDisplay>(new ProcessDisplay(this, (*n).name));
-	  m_procDisplay->show(m_anchorY+5,m_anchorX+12);
-	  MouseSensor::instance().add(this,m_procDisplay->display());
-	  return WT_SUCCESS;
-	}
-      }
+    std::string node_name = m_subfarmDisplay->nodeName(m_subPosCursor-SUBFARM_NODE_OFFSET);
+    if ( !node_name.empty() ) {
+      m_procDisplay = std::auto_ptr<ProcessDisplay>(new ProcessDisplay(this,node_name));
+      m_procDisplay->show(m_anchorY+5,m_anchorX+12);
+      MouseSensor::instance().add(this,m_procDisplay->display());
+      return WT_SUCCESS;
     }
   }
   return WT_SUCCESS;
@@ -1254,6 +1349,24 @@ int FarmDisplay::showMbmWindow() {
     m_mbmDisplay->update(m_subfarmDisplay->data().pointer);
     m_mbmDisplay->show(m_anchorY+5,m_anchorX+12);
     MouseSensor::instance().add(this,m_mbmDisplay->display());
+  }
+  return WT_SUCCESS;
+}
+
+/// Show window with buffer information of a given node
+int FarmDisplay::showCtrlWindow() {
+  DisplayUpdate update(this,true);
+  if ( m_ctrlDisplay.get() ) {
+    if ( m_helpDisplay.get() ) showHelpWindow();
+    MouseSensor::instance().remove(this,m_ctrlDisplay->display());
+    m_ctrlDisplay = std::auto_ptr<CtrlDisplay>(0);
+  }
+  else if ( m_subfarmDisplay ) {
+    m_ctrlDisplay = std::auto_ptr<CtrlDisplay>(new CtrlDisplay(this,"CTRL Monitor display"));
+    m_ctrlDisplay->setNode(m_subPosCursor-SUBFARM_NODE_OFFSET);
+    m_ctrlDisplay->update(m_subfarmDisplay->data().pointer);
+    m_ctrlDisplay->show(m_anchorY+5,m_anchorX+12);
+    MouseSensor::instance().add(this,m_ctrlDisplay->display());
   }
   return WT_SUCCESS;
 }
@@ -1332,8 +1445,6 @@ int FarmDisplay::handleKeyboard(int key)    {
   InternalDisplay* d = 0;
   Display* d1;
   SubDisplays& sd = subDisplays();
-  SubfarmDisplay* sfd = (m_mode==HLT_MODE) ? (SubfarmDisplay*)m_subfarmDisplay : 0;
-  RecSubfarmDisplay* rsfd = (m_mode==RECO_MODE) ? (RecSubfarmDisplay*)m_subfarmDisplay : 0;
   RTL::Lock lock(s_lock);
   try {
     switch (key)    {
@@ -1352,11 +1463,16 @@ int FarmDisplay::handleKeyboard(int key)    {
     case 'c':
     case 'C':
       return showCpuWindow();
+    case 'k':
+    case 'K':
+      IocSensor::instance().send(this,CMD_SHOWCTRL,this);
+      return WT_SUCCESS;
     case 'm':
     case 'M':
     case '.':
     case KPD_PERIOD:
-      return showMbmWindow();
+      IocSensor::instance().send(this,CMD_SHOWMBM,this);
+      return WT_SUCCESS;
     case 'p':
     case 'P':
     case CTRL_P:
@@ -1408,9 +1524,7 @@ int FarmDisplay::handleKeyboard(int key)    {
     case MOVE_DOWN:
       if ( 0 == m_subfarmDisplay && m_posCursor < subDisplays().size()-1 )
 	++m_posCursor;
-      else if ( 0 != sfd && sfd->numNodes()>(m_subPosCursor-SUBFARM_NODE_OFFSET) )
-	++m_subPosCursor;
-      else if ( 0 != rsfd && rsfd->numNodes()>(m_subPosCursor-SUBFARM_NODE_OFFSET) )
+      else if ( 0 != m_subfarmDisplay && m_subfarmDisplay->numNodes()>(m_subPosCursor-SUBFARM_NODE_OFFSET) )
 	++m_subPosCursor;
       break;
     case PAGE_UP:
@@ -1473,6 +1587,8 @@ void FarmDisplay::handle(const Event& ev) {
     else if ( m->msec != (unsigned int)-1 ) {
       if ( m_helpDisplay.get() )//&& m_helpDisplay->display() == m->display )
 	IocSensor::instance().send(this,CMD_SHOWHELP,this);
+      else if ( m_ctrlDisplay.get() )//&& m_ctrlDisplay->display() == m->display )
+	IocSensor::instance().send(this,CMD_SHOWCTRL,this);
       else if ( m_mbmDisplay.get() )//&& m_mbmDisplay->display() == m->display )
 	IocSensor::instance().send(this,CMD_SHOWMBM,this);
       else if ( m_procDisplay.get() )//&& m_procDisplay->display() == m->display )
@@ -1485,15 +1601,8 @@ void FarmDisplay::handle(const Event& ev) {
     else if ( m_subfarmDisplay && m->msec == (unsigned int)-1 ) {
       Display* disp = m_nodeSelector->display();
       if ( m->display == disp ) {
-	SubfarmDisplay* sfd = (m_mode==HLT_MODE) ? (SubfarmDisplay*)m_subfarmDisplay : 0;
-	RecSubfarmDisplay* rsfd = (m_mode==RECO_MODE) ? (RecSubfarmDisplay*)m_subfarmDisplay : 0;
-	size_t cur = m->y - disp->row - 2;
-	size_t pos = -1UL;
-	if ( sfd && sfd->numNodes()>cur )
-	  pos = cur;
-	else if ( rsfd && rsfd->numNodes()>cur )
-	  pos = cur;
-	if ( pos != -1UL ) {
+	size_t pos = m->y - disp->row - 2;
+	if ( m_subfarmDisplay->numNodes()>pos ) {
 	  RTL::Lock unlock(s_lock,true);
 	  m_subPosCursor = pos + SUBFARM_NODE_OFFSET;
 	  handleKeyboard(m->button == 0 ? KPD_PERIOD : CTRL_P);
@@ -1503,13 +1612,7 @@ void FarmDisplay::handle(const Event& ev) {
     return;
   case TimeEvent:
     if (ev.timer_data == m_subfarmDisplay ) {
-      m_subfarmDisplay->update();
-      if ( m_mbmDisplay.get() ) {
-	const void* data = m_subfarmDisplay->data().pointer;
-	m_mbmDisplay->setNode(m_subPosCursor-SUBFARM_NODE_OFFSET);
-	m_mbmDisplay->update(data);
-      }
-      TimeSensor::instance().add(this,1,m_subfarmDisplay);
+      IocSensor::instance().send(this,CMD_UPDATE,this);
     }
     return;
   case IocEvent:
@@ -1528,8 +1631,10 @@ void FarmDisplay::handle(const Event& ev) {
     case CMD_SHOWCPU:
       showCpuWindow();
       return;
+    case CMD_SHOWCTRL:
     case CMD_SHOWMBM:
-      showMbmWindow();
+      if ( m_mode == CTRL_MODE ) showCtrlWindow();
+      else showMbmWindow();
       return;
     case CMD_SHOWPROCS:
       showProcessWindow();
@@ -1564,6 +1669,11 @@ void FarmDisplay::handle(const Event& ev) {
 	const void* data = m_subfarmDisplay->data().pointer;
 	m_mbmDisplay->setNode(m_subPosCursor-SUBFARM_NODE_OFFSET);
 	m_mbmDisplay->update(data);
+      }
+      else if ( m_ctrlDisplay.get() ) {
+	const void* data = m_subfarmDisplay->data().pointer;
+	m_ctrlDisplay->setNode(m_subPosCursor-SUBFARM_NODE_OFFSET);
+	m_ctrlDisplay->update(data);
       }
       TimeSensor::instance().add(this,1,m_subfarmDisplay);
       break;
@@ -1621,6 +1731,8 @@ void FarmDisplay::connect(const std::vector<std::string>& farms) {
     if ( k == m_farmDisplays.end() ) {
       if ( m_mode == RECO_MODE )
 	copy.insert(std::make_pair(*i,new RecFarmSubDisplay(this,*i)));
+      else if ( m_mode == CTRL_MODE )
+	copy.insert(std::make_pair(*i,createCtrlFarmSubDisplay(this,*i)));
       else
 	copy.insert(std::make_pair(*i,new FarmSubDisplay(this,*i)));
     }

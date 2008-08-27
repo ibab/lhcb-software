@@ -1,4 +1,4 @@
-// $Id: ROMonDisplay.h,v 1.4 2008-06-24 15:13:19 frankb Exp $
+// $Id: ROMonDisplay.h,v 1.5 2008-08-27 19:15:20 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ROMonDisplay.h,v 1.4 2008-06-24 15:13:19 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ROMonDisplay.h,v 1.5 2008-08-27 19:15:20 frankb Exp $
 #ifndef ROMON_ROMONDISPLAY_H
 #define ROMON_ROMONDISPLAY_H 1
 
@@ -66,6 +66,8 @@ namespace ROMon {
     lib_rtl_lock_t m_lock;
     /// Variable size data buffer
     Descriptor     m_data;
+    /// Flag to retrieve data under all circumstances
+    bool           m_readAlways;
 
   public:
     /// Initializing constructor
@@ -77,6 +79,9 @@ namespace ROMon {
     /// Standard destructor
     virtual ~ROMonDisplay();
 
+    /// Access to lock handle
+    lib_rtl_lock_t lock() const    {    return m_lock; }
+
     /// Initialize the data access
     virtual void initialize();
 
@@ -84,13 +89,10 @@ namespace ROMon {
     virtual void finalize();
 
     /// Access to data buffer
-    Descriptor& data()             {    return m_data; }
+    virtual Descriptor& data()             {    return m_data; }
 
     /// Access to data buffer
-    const Descriptor& data() const {    return m_data; }
-
-    /// Access to lock handle
-    lib_rtl_lock_t lock() const    {    return m_lock; }
+    virtual const Descriptor& data() const {    return m_data; }
 
     /// Start the update cycle
     virtual void update();

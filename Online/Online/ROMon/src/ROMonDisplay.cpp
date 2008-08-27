@@ -1,4 +1,4 @@
-// $Id: ROMonDisplay.cpp,v 1.7 2008-07-10 16:31:12 frankb Exp $
+// $Id: ROMonDisplay.cpp,v 1.8 2008-08-27 19:15:20 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonDisplay.cpp,v 1.7 2008-07-10 16:31:12 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonDisplay.cpp,v 1.8 2008-08-27 19:15:20 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -37,12 +37,12 @@ char* ROMonDisplay::Descriptor::reserve(size_t siz) {
 
 /// Initializing constructor
 ROMonDisplay::ROMonDisplay(int width, int height)
-: ScrDisplay(width,height), m_svcID(0), m_delay(1000), m_lock(0)
+: ScrDisplay(width,height), m_svcID(0), m_delay(1000), m_lock(0), m_readAlways(false)
 {
 }
 
 /// Standard constructor
-ROMonDisplay::ROMonDisplay() : m_svcID(0), m_delay(1000), m_lock(0)
+ROMonDisplay::ROMonDisplay() : m_svcID(0), m_delay(1000), m_lock(0), m_readAlways(false)
 {
 }
 
@@ -55,7 +55,7 @@ void ROMonDisplay::initialize()   {
   int sc = ::lib_rtl_create_lock(0,&m_lock);
   if ( !lib_rtl_is_success(sc) ) {
     begin_update();
-    draw_line_reverse("Files to initialize display: %s",::lib_rtl_error_message(::lib_rtl_get_error()));
+    draw_line_reverse("Failed to initialize display: %s",::lib_rtl_error_message(::lib_rtl_get_error()));
     end_update();
     return;
   }
@@ -136,14 +136,13 @@ void ROMonDisplay::infoHandler(void* tag, void* address, int* size) {
     size_t len = *size;
     ROMonData data(address);
     ROMonDisplay* display = *(ROMonDisplay**)tag;
-    Descriptor& d = display->data();
+    Descriptor& d = display->m_data;
     switch(data.type())  {
     case Node::TYPE:
     case Nodeset::TYPE:
       break;
     default:
-      // if ( !d.data ) d.data = (char;
-      return;
+      if ( !display->m_readAlways ) return;
     }
     RTL::Lock lock(display->lock());
     if ( d.length < len ) {

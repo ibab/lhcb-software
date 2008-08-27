@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.h,v 1.8 2008-08-12 14:00:11 frankb Exp $
+// $Id: FarmDisplay.h,v 1.9 2008-08-27 19:15:20 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,12 +12,12 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmDisplay.h,v 1.8 2008-08-12 14:00:11 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmDisplay.h,v 1.9 2008-08-27 19:15:20 frankb Exp $
 #ifndef ROMON_FARMDISPLAY_H
 #define ROMON_FARMDISPLAY_H 1
 
 // Framework includes
-#include "ROMon/ROMonDisplay.h"
+#include "ROMon/ClusterDisplay.h"
 #include "CPP/Interactor.h"
 
 // C++ include files
@@ -52,6 +52,7 @@ namespace ROMon {
     CMD_POSCURSOR,
     CMD_SHOW,
     CMD_SHOWSUBFARM,
+    CMD_SHOWCTRL,
     CMD_SHOWMBM,
     CMD_SHOWCPU,
     CMD_SHOWPROCS,
@@ -105,6 +106,8 @@ namespace ROMon {
     void disconnect();
     /// Update display content
     virtual void update(const void* data) = 0;
+    /// Update display content
+    virtual void update(const void* data, size_t len);
     /// Check display for errors
     virtual void check(time_t /* stamp */) {}
     /// Set the focus to this display
@@ -269,6 +272,27 @@ namespace ROMon {
     virtual void update(const void* data);
   };
 
+  /**@class CtrlDisplay ROMon.h GaudiOnline/FarmDisplay.h
+   *
+   *   Internal Task control display, when spying on individual nodes.
+   *
+   *   @author M.Frank
+   */
+  class CtrlDisplay : public InternalDisplay {
+  protected:
+    /// Node number in node set
+    int m_node;
+  public:
+    /// Initializing constructor
+    CtrlDisplay(FarmDisplay* parent, const std::string& title);
+    /// Standard destructor
+    virtual ~CtrlDisplay() {}
+    /// Set the node number for the display
+    void setNode(int which) { m_node = which; }
+    /// Update display content
+    virtual void update(const void* data);
+  };
+
   /**@class PartitionListener ROMon.h GaudiOnline/FarmDisplay.h
    *
    *   Listen to RunInfo datapoints published by DIM
@@ -289,6 +313,7 @@ namespace ROMon {
     static void subFarmHandler(void* tag, void* address, int* size);
   };
 
+
   /**@class FarmDisplay ROMon.h GaudiOnline/FarmDisplay.h
    *
    *   Monitoring display for the LHCb storage system.
@@ -297,13 +322,14 @@ namespace ROMon {
    */
   class FarmDisplay : public InternalDisplay, public Interactor  {
   protected:
-    enum { HLT_MODE, RECO_MODE };
+    enum { HLT_MODE, RECO_MODE, CTRL_MODE };
     typedef std::map<std::string, InternalDisplay*> SubDisplays;
     typedef std::vector<std::string> Farms;
     SubDisplays                      m_farmDisplays;
     std::auto_ptr<PartitionListener> m_listener;
-    ROMonDisplay*                    m_subfarmDisplay;
+    ClusterDisplay*                  m_subfarmDisplay;
     std::auto_ptr<ProcessDisplay>    m_procDisplay;
+    std::auto_ptr<CtrlDisplay>       m_ctrlDisplay;
     std::auto_ptr<BufferDisplay>     m_mbmDisplay;
     std::auto_ptr<HelpDisplay>       m_helpDisplay;
     std::auto_ptr<CPUDisplay>        m_cpuDisplay;
@@ -354,7 +380,8 @@ public:
     int showCpuWindow();
     /// Show window with buffer information of a given node
     int showMbmWindow();
+    /// Show window with node control information
+    int showCtrlWindow();
   };
 }      // End namespace ROMon
 #endif /* ROMON_FARMDISPLAY_H */
-

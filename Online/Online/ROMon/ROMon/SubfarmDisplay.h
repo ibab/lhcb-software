@@ -1,4 +1,4 @@
-// $Id: SubfarmDisplay.h,v 1.3 2008-07-15 12:18:34 frankb Exp $
+// $Id: SubfarmDisplay.h,v 1.4 2008-08-27 19:15:20 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,12 +12,12 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/SubfarmDisplay.h,v 1.3 2008-07-15 12:18:34 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/SubfarmDisplay.h,v 1.4 2008-08-27 19:15:20 frankb Exp $
 #ifndef ROMON_SUBFARMDISPLAY_H
 #define ROMON_SUBFARMDISPLAY_H 1
 
 // Framework includes
-#include "ROMon/ROMonDisplay.h"
+#include "ROMon/ClusterDisplay.h"
 
 /*
  *   ROMon namespace declaration
@@ -30,7 +30,7 @@ namespace ROMon {
    *
    *   @author M.Frank
    */
-  class SubfarmDisplay : public ROMonDisplay  {
+  class SubfarmDisplay : public ClusterDisplay  {
   protected:
 
     /// reference to the node display
@@ -61,7 +61,10 @@ namespace ROMon {
     virtual ~SubfarmDisplay();
 
     /// Number of nodes in the dataset
-    size_t numNodes();
+    virtual size_t numNodes();
+
+    /// Retrieve node name from cluster display by offset
+    virtual std::string nodeName(size_t offset);
 
     /// Access Node display
     MonitorDisplay* nodeDisplay() const {    return m_nodes; }
