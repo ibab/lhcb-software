@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2008-08-27 - Wouter Hulsbergen
+ - fixed bug in HeraBExtrapolator::rk5numde which would make it fail for q/p=0
+  
 !======================= TrackExtrapolators v2r19 2008-07-29 =================
 ! 2008-07-10 - Wouter Hulsbergen
  - Small change in MaterialLocator base to protect it against 'null' extrapolations
