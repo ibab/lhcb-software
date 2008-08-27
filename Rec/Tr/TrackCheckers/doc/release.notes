@@ -3,6 +3,10 @@
 ! Responsible : Edwin Bos
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
+! 2008-08-27 - Stephanie Hansmann-Menzemer
+- added output to finalize job
+- added some safety checks for division by zero
+- replace number of histograms by names
 
 !======================= TrackCheckers v4r1 2008-07-02 =======================
 ! 2008-06-17 - Louis Nicolas
@@ -40,7 +44,7 @@
  - Add hit-track residuals to Monitoring classes
 
 !======================= TrackCheckers v3r3 2007-11-30 =======================
-! 2007-11-19 Wouter Hulsbergen
+em! 2007-11-19 Wouter Hulsbergen
  - Adapted to change in OTMeasurement interface
 
 !======================= TrackCheckers v3r2 2007-10-22 =======================

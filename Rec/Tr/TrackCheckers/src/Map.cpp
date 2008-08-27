@@ -48,18 +48,18 @@ const TrackMaps::InfoHistMap& TrackMaps::infoHistDescription()
 {
    static InfoHistMap s_map ;
    if ( s_map.empty() ) { 
-     s_map = boost::assign::map_list_of(LHCb::Track::Likelihood,HistoRange("1",-100., 10.))
-       (LHCb::Track::PatQuality,HistoRange("2",0., 20.))
-       (LHCb::Track::MatchChi2,HistoRange("3", 0., 1000.))    
-       (LHCb::Track::nExpectedVelo,HistoRange("4", 0., 50.))
-       (LHCb::Track::nExpectedTT,HistoRange("5", 0., 50.))
-       (LHCb::Track::nExpectedOT,HistoRange("6", 0., 50.))
-       (LHCb::Track::nExpectedIT,HistoRange("7", 0., 50.))
-       (LHCb::Track::FitTChi2,HistoRange("8", 0., 100.))
-       (LHCb::Track::FitTNDoF,HistoRange("9", 0., 50.))
-       (LHCb::Track::FitVeloChi2,HistoRange("10", 0., 100.))
-       (LHCb::Track::FitVeloNDoF,HistoRange("11", 0., 50.))
-       (LHCb::Track::FitMatchChi2,HistoRange("12", 0., 100.));
+     s_map = boost::assign::map_list_of(LHCb::Track::Likelihood,HistoRange("Likelihood",-100., 10.))
+       (LHCb::Track::PatQuality,HistoRange("PatQuality",0., 20.))
+       (LHCb::Track::MatchChi2,HistoRange("MatchChi2", 0., 1000.))    
+       (LHCb::Track::nExpectedVelo,HistoRange("nExpectedVelo", 0., 50.))
+       (LHCb::Track::nExpectedTT,HistoRange("nExpectedTT", 0., 50.))
+       (LHCb::Track::nExpectedOT,HistoRange("nExpectedOT", 0., 50.))
+       (LHCb::Track::nExpectedIT,HistoRange("nExpectedIT", 0., 50.))
+       (LHCb::Track::FitTChi2,HistoRange("FitTChi2", 0., 100.))
+       (LHCb::Track::FitTNDoF,HistoRange("FitTNDof", 0., 50.))
+       (LHCb::Track::FitVeloChi2,HistoRange("FitVeloChi2", 0., 100.))
+       (LHCb::Track::FitVeloNDoF,HistoRange("FitVeloNDoF", 0., 50.))
+       (LHCb::Track::FitMatchChi2,HistoRange("FitMatchChi2", 0., 100.));
    }
    return s_map ;
 }

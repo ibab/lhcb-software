@@ -1,4 +1,4 @@
-// $Id: TrackResChecker.cpp,v 1.3 2007-11-30 14:36:02 wouter Exp $
+// $Id: TrackResChecker.cpp,v 1.4 2008-08-27 19:47:31 smenzeme Exp $
 // Include files 
 #include "TrackResChecker.h"
 
@@ -10,6 +10,9 @@
 #include "Event/StateTraj.h"
 #include "Event/OTMeasurement.h"
 #include "Kernel/LHCbID.h"
+#include "GaudiAlg/GaudiHistos.h"
+#include "GaudiUtils/HistoStats.h"
+#include "AIDA/IHistogram1D.h"
 
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/ToStream.h"
@@ -98,7 +101,7 @@ StatusCode TrackResChecker::execute()
        resolutionHistos(aTrack,*iterPart, type);
 
        // prob chi^2
-       plot(aTrack->probChi2(),type+"/1","probChi2", -0.01, 1.01, 51);
+       plot(aTrack->probChi2(),type+"/probChi2","probChi2", -0.01, 1.01, 51);
 
        // resolution of drift ambiguity 
        if (m_checkAmbiguity == true) checkAmbiguity(aTrack,*iterPart, type); 
@@ -127,21 +130,26 @@ void TrackResChecker::resolutionHistos(const LHCb::Track* track,
   if (sc.isSuccess()) pullplots(trueStateVertex,vtxState,type+"/vertex");
 
   // for vertex also make some 2-d plots
-  if (fullDetail() == true){
+  
+  const double errP =  sqrt(track->firstState().errP2());  
 
-    const double errP =  sqrt(track->firstState().errP2()); 
+  if (!track->history() == LHCb::Track::PatVeloR && 
+      !track->history() == LHCb::Track::PatVeloGeneric &&
+      !track->history() == LHCb::Track::PatVeloGeneral &&
+      !track->history() == LHCb::Track::PatVeloOpen){
     plot2D(track->p()/Gaudi::Units::GeV , (track->p() - mcPart->p()) / track->p(), 
-          type+"/vertex/100", "dp/p vs p", 0., 200., -0.1,0.1, 20, 50);
-
+	   type+"/vertex/dpoverp_vs_p", "dp/p vs p", 0., 200., -0.1,0.1, 20, 50);
+    
+    
     plot2D( track->p()/Gaudi::Units::GeV, (track->p() - mcPart->p())/errP, 
-          type+"/vertex/101","p pull vs p", 0., 200., -10.,10., 20, 50);
-
+	    type+"/vertex/p_pull_vs_p","p pull vs p", 0., 200., -10.,10., 20, 50);
+    
     const double eta = track->pseudoRapidity();
     plot2D( eta, (track->p() - mcPart->p()) / track->p(), 
-          type+"/vertex/102", "dp/p vs eta", 2., 5., -0.05,0.05, 20, 50);
+	    type+"/vertex/dpoverp_vs_eta", "dp/p vs eta", 2., 5., -0.05,0.05, 20, 50);
     plot2D( eta, (track->p() - mcPart->p()) /errP, 
-          type+"/vertex/103","p pull vs eta", 2., 5., -10.,10., 20, 50);
-  } 
+	    type+"/vertex/p_pull_vs_eta","p pull vs eta", 2., 5., -10.,10., 20, 50);
+  }
 
   // pulls at first measurement
   if (fullDetail() == true && track->nMeasurements() > 0u){
@@ -188,25 +196,30 @@ void TrackResChecker::pullplots(const LHCb::State& trueState, const LHCb::State&
   const double mcP  = trueState.p();
 
   // fill the histograms
-  plot1D( dx/Gaudi::Units::cm, location+"/1", "x resolution", -2.5, 2.5, 100 );
-  plot1D( dy/Gaudi::Units::cm, location+"/2","y resolution", -50.5, 50.5, 100 );
-  plot1D( dtx, location+"/3", "tx resolution", -0.1, 0.1, 100 );
-  plot1D( dty, location+"/4", "ty resolution", -0.1, 0.1, 100 );
-  plot1D(1.0  - mcP / trkP,
-         location+"/5", "dp/p", -0.05, 0.05, 100 );
+  plot1D( dx/Gaudi::Units::cm, location+"/x_res", "x resolution", -2.5, 2.5, 100 );
+  plot1D( dy/Gaudi::Units::cm, location+"/y_res","y resolution", -1.005, 1.005, 101 );
+  plot1D( dtx, location+"/tx_res", "tx resolution", -0.01, 0.01, 100 );
+  plot1D( dty, location+"/ty_res", "ty resolution", -0.01, 0.01, 100 );
+
+  if (fabs(trkP) > 1.0 * Gaudi::Units::keV)
+    plot1D(1.0  - mcP / trkP,
+	   location+"/dpoverp", "dp/p", -0.05, 0.05, 100 );
 
   plot1D( dx / sqrt(cov(0,0)+trueCov(0,0)),
-          location+"/11", "x pull", -5., 5., 100 );
+          location+"/xpull", "x pull", -5., 5., 100 );
   plot1D( dy / sqrt(cov(1,1)+trueCov(1,1)),
-          location+"/12", "y pull", -5., 5., 100 );
+          location+"/ypull", "y pull", -5., 5., 100 );
   plot1D( dtx / sqrt(cov(2,2)+trueCov(2,2)),
-          location+"/13", "tx pull", -5., 5., 100 );
+          location+"/txpull", "tx pull", -5., 5., 100 );
   plot1D( dty / sqrt(cov(3,3)+trueCov(3,3)),
-          location+"/14", "ty pull", -5., 5., 100 );
-  plot1D(( fabs(vec(4)) - 1.0/mcP ) / sqrt(cov(4,4)+trueCov(4,4)),
-         location+"/15", "p pull", -5., 5., 100 ); 
-  plot1D(sqrt(recState.errP2()) / trkP,
-         location+"/22", "expected dp/p", 0., 0.01, 100 );
+          location+"/typull", "ty pull", -5., 5., 100 );
+
+  if (fabs(trkP) > 1.0 * Gaudi::Units::keV && fabs(cov(4,4)+trueCov(4,4)) > 1e-20){
+    plot1D(( fabs(vec(4)) - 1.0/mcP ) / sqrt(cov(4,4)+trueCov(4,4)),
+	   location+"/ppull", "p pull", -5., 5., 100 ); 
+    plot1D(sqrt(recState.errP2()) / trkP,
+	   location+"/dpoverp", "expected dp/p", 0., 0.01, 100 );
+  }
 }
 
 //=============================================================================
@@ -252,7 +265,7 @@ void TrackResChecker::checkAmbiguity(const LHCb::Track* track,
   const double sum = wrongOnTrack + correctOnTrack;
 
   if (sum > m_minToCountAmb){
-    plot1D(correctOnTrack/double(sum),type+"/100" , 
+    plot1D(correctOnTrack/double(sum),type+"/frac_corr_amb" , 
            "frac correct ambiguity",-0.005, 1.005, 101);
   }
 
@@ -321,11 +334,11 @@ void TrackResChecker::plotsByMeasType(const LHCb::Track* track,
           const double res       = proj -> residual();
           const double errorMeas = proj -> errMeasure();
           const double chi2      = proj -> chi2();
-          plot1D( res, dir+"/30", 
+          plot1D( res, dir+"/meas_res", 
                   " Measurement resolution", -0.5, 0.5, 100 );
-          plot1D( res/errorMeas,dir+"/31", 
+          plot1D( res/errorMeas,dir+"/meas_pull", 
                   " Measurement pull", -5., 5., 100 );
-          plot1D( chi2, dir+"/32", 
+          plot1D( chi2, dir+"/meas_chi2", 
                   " Measurement chi2", 0., 10., 200 );
 	}
       }
@@ -336,14 +349,31 @@ void TrackResChecker::plotsByMeasType(const LHCb::Track* track,
   } // iterate measurements
 }
 
+StatusCode TrackResChecker::finalize () {
 
+  info() << "     ************************************    "<<endreq;
 
+ for ( Histo1DMapLitID::const_iterator entry = histo1DMapLitID().begin() ;
+ histo1DMapLitID().end() != entry ; ++entry ){
+         
+   AIDA::IHistogram1D* aida = entry->second ;
+   if ( 0 != aida ) {
+     if( aida->title() == "p pull" ||
+	 aida->title() == "x pull" ||
+	 aida->title() == "y pull" ||
+	 aida->title() == "tx pull" ||
+	 aida->title() == "ty pull")  
 
+       info() << aida->title() << format( ":  mean =  %5.3f +/- %5.3f",
+					  aida->mean(), Gaudi::Utils::HistoStats::meanErr(aida)) << endreq;
+     
+     if (aida->title() == "y resolution" ||
+	 aida->title() == "x resolution" )
+       info() << aida->title() << format( ":  RMS =  %5.3f +/- %5.3f micron",
+					   aida->rms()*1000, Gaudi::Utils::HistoStats::rmsErr(aida)*1000) << endreq; 
+   }
+ }
 
-
-
-
-
-
-
-
+ return TrackCheckerBase::finalize();
+ 
+}

@@ -1,4 +1,4 @@
-// $Id: TrackResChecker.h,v 1.3 2008-06-03 06:39:08 cattanem Exp $
+// $Id: TrackResChecker.h,v 1.4 2008-08-27 19:47:31 smenzeme Exp $
 #ifndef TRACKRESCHECKER_H
 #define TRACKRESCHECKER_H 1
  
@@ -42,6 +42,10 @@ class TrackResChecker : public TrackCheckerBase {
 
   /** Algorithm execute */
   virtual StatusCode execute();
+
+  /** Algorithm finalize */
+  virtual StatusCode finalize();
+ 
 
  private:
 

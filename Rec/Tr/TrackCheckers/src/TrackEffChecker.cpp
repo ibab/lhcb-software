@@ -1,4 +1,4 @@
-// $Id: TrackEffChecker.cpp,v 1.7 2008-06-17 13:46:35 lnicolas Exp $
+// $Id: TrackEffChecker.cpp,v 1.8 2008-08-27 19:47:31 smenzeme Exp $
 // Include files 
 #include "TrackEffChecker.h"
 
@@ -53,7 +53,7 @@ StatusCode TrackEffChecker::execute()
   // get the input data
   LHCb::Tracks* tracks = get<LHCb::Tracks>(inputContainer());
   counter("nTrack") += tracks->size();
-
+  
   // we want to count ghosts etc
   ghostInfo(tracks);
 
@@ -69,6 +69,7 @@ void TrackEffChecker::ghostInfo(const LHCb::Tracks* tracks) {
   std::string type = "";
   LHCb::Tracks::const_iterator iterT = tracks->begin();
   for (; iterT != tracks->end(); ++iterT){
+    
     const LHCb::MCParticle* particle = mcTruth(*iterT);
 
     splitByAlgorithm() == true ? 
@@ -109,29 +110,54 @@ void TrackEffChecker::effInfo(){
 
   unsigned int nToFind = 0u;
   unsigned int nFound = 0u;
+  unsigned int nToFindG5 = 0u;
+  unsigned int nFoundG5 = 0u;
+
   const LHCb::MCParticles* partCont = get<LHCb::MCParticles>(LHCb::MCParticleLocation::Default); 
   LHCb::MCParticles::const_iterator iterP = partCont->begin();
   for (; iterP != partCont->end(); ++iterP){
-     if (selected(*iterP) == true){
-       plots("mcSelected", *iterP);
-       ++nToFind;
-       TrackCheckerBase::LinkInfo info = reconstructed(*iterP);
-       if (info.track != 0) {
-         ++nFound;
-         counter("clone") += info.clone;
-         plots("selected",info.track);
-         plots("mcSelectedAndRec", *iterP);
-       }
+    if (selected(*iterP) == true){ 
+
+      TrackCheckerBase::LinkInfo info = reconstructed(*iterP);
+
+      plots("mcSelected", *iterP);
+      ++nToFind;
+      if ((*iterP)->p() > 5*Gaudi::Units::GeV)
+	++nToFindG5;
+      
+      if (info.track != 0) {
+	++nFound;
+	if ((*iterP)->p() > 5*Gaudi::Units::GeV)
+	  ++nFoundG5;
+	
+	plots("selected",info.track);
+	plots("mcSelectedAndRec", *iterP);
+	
+	plot(info.purity, "hitpurity",-0.01, 1.01, 51);
+	if ((*iterP)->p() > 5*Gaudi::Units::GeV)
+	  plot(info.purity, "hitpurityG5",-0.01, 1.01, 51);
+
+	counter("nClone") += info.clone;
+	if ((*iterP)->p() > 5*Gaudi::Units::GeV)
+	  counter("nCloneG5") += info.clone;
+      }
     }
+    
   } // loop particles 
 
   // update counters 
   counter("nToFind") += nToFind;
   counter("nFound") += nFound;
 
+  counter("nToFindG5") += nToFindG5;
+  counter("nFoundG5") += nFoundG5;
+
   // event efficiency 
   if (nToFind !=0u)
     plot(nFound/double(nToFind),"eff", -0.01, 1.01, 51);
+  if (nToFindG5 != 0u)
+    plot(nFoundG5/double(nToFindG5),"effG5", -0.01, 1.01, 51);
+
   if (fullDetail() == true) {
     // ghost rate versus # interactions
     long nVert = visPrimVertTool()->countVertices();
@@ -145,9 +171,9 @@ void TrackEffChecker::effInfo(){
 void TrackEffChecker::plots(const std::string& type, 
                             const LHCb::MCParticle* part) const{
 
-  plot(part->p()/Gaudi::Units::GeV,type+"/1","p", 0., 100., 20);
-  plot(part->pt()/Gaudi::Units::GeV,type+"/2","pt", 0., 10., 20);
-  plot(part->pseudoRapidity(),type+"/3","eta",1., 6., 20);
+  plot(part->p()/Gaudi::Units::GeV,type+"/p","p", 0., 100., 20);
+  plot(part->pt()/Gaudi::Units::GeV,type+"/pt","pt", 0., 10., 20);
+  plot(part->pseudoRapidity(),type+"/eta","eta",1., 6., 20);
 }
 
 
@@ -155,12 +181,17 @@ void TrackEffChecker::plots(const std::string& type,
                             const LHCb::Track* track ) const{
 
   const double nMeas = weightedMeasurementSum(track);
-  plot(nMeas, type+"/1","meas", 0., 100., 100);
-  plot(track->pt()/Gaudi::Units::GeV,type+"/2","pt", 0., 10., 100);
-  plot(track->p()/Gaudi::Units::GeV,type+"/3","p", 0., 100., 100);
-  plot(track->chi2PerDoF(),type+"/4","chi2", 0., 500., 100);
-  plot(track->probChi2(),type+"/5","probChi2", 0., 1., 100);
-  plot(track->pseudoRapidity(),type+"/6" ,"eta" ,1., 6., 100);
+  
+  if (!track->history() == LHCb::Track::PatVeloR && 
+      !track->history() == LHCb::Track::PatVeloGeneric &&
+      !track->history() == LHCb::Track::PatVeloGeneral &&
+      !track->history() == LHCb::Track::PatVeloOpen){
+    plot(track->pt()/Gaudi::Units::GeV,type+"/pt","pt", 0., 10., 100);
+    plot(track->p()/Gaudi::Units::GeV,type+"/p","p", 0., 100., 100);
+  }
+  plot(track->chi2PerDoF(),type+"/chi2","chi2", 0., 500., 100);
+  plot(track->probChi2(),type+"/probchi2","probChi2", 0., 1., 100);
+  plot(track->pseudoRapidity(),type+"/eta" ,"eta" ,1., 6., 100);
 
   // information from the extra info list
   const LHCb::Track::ExtraInfo& info = track->extraInfo();
@@ -212,20 +243,44 @@ StatusCode TrackEffChecker::finalize(){
                         double(counter("nGhost").flag())
                         /double(counter("nTrack").flag());
   
-  // efficiency
-  histName = "eff";
+  histName = "hitpurity";
   hist = histo1D(histName);
-  double eEff = 0;
-  if (hist != 0) eEff = hist->mean();
+  double pur = 0;
+  if (hist != 0) pur = hist->mean();
+
+  histName = "hitpurityG5";
+  hist = histo1D(histName);
+  double purG5 = 0;
+  if (hist != 0) purG5 = hist->mean();
+
   const double tEff = counter("nToFind").flag() == 0 ? 0.0 :
                       double(counter("nFound").flag())
                       /double(counter("nToFind").flag());
 
-  info() << "***Ghost Rate:" << tGhost <<"(Track weighted) " << 
-         eGhost << "(Event weighted)" << endmsg;
+  const double tEffG5 = counter("nToFindG5").flag() == 0 ? 0.0 :
+                        double(counter("nFoundG5").flag())
+                      /double(counter("nToFindG5").flag());
 
-  info() << "***Efficiency:" << tEff <<"(Track weighted) " << 
-            eEff << "(Event weighted)" << endmsg;
+  
+  const double tCloneG5 = counter("nToFindG5").flag() == 0 ? 0.0 :
+                          double(counter("nCloneG5").flag())
+                      /double(counter("nToFindG5").flag());  
+
+  const double tClone  = counter("nToFind").flag() == 0 ? 0.0 :
+                         double(counter("nClone").flag())
+                        /double(counter("nToFind").flag());
+  
+  info() << "             **************         " 
+         << format( "       %8.0f tracks including %8.0f ghosts [%5.1f %%] Event average %5.1f  ****",
+                    double(counter("nTrack").flag()), double(counter("nGhost").flag()), tGhost*100) << endreq;
+
+   info() << "     all  long     "
+	  << format( " :     %8.0f from %8.0f [%5.1f %%]; %5.1f %% clones; %5.1f %% hit purity",
+             double(counter("nFound").flag()), double(counter("nToFind").flag()), tEff*100, tClone*100, pur*100) << endreq;
+  
+  info() << "   long, p > 5 GeV "
+         << format( " :     %8.0f from %8.0f [%5.1f %%]; %5.1f %% clones; %5.1f %% hit purity",
+                      double(counter("nFoundG5").flag()), double(counter("nToFindG5").flag()), tEffG5*100, tCloneG5*100, purG5*100) << endreq;
 
   return TrackCheckerBase::finalize();
 }
