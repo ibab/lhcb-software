@@ -1,5 +1,6 @@
 2008-08-27  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbUtils/Storage.py: added Unit class
 	* python/LbUtils/__init__.py: 
 	* python/LbUtils/CMT/__init__.py: 
 	* python/LbUtils/CMT/Common.py: 
