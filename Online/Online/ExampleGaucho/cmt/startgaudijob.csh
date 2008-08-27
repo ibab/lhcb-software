@@ -66,11 +66,12 @@ echo "DIM_DNS_NODE set to " $DIM_DNS_NODE
 
 setenv LHCBHOME /afs/cern.ch/lhcb
 source $LHCBHOME/scripts/CMT.csh
+setenv User_release_area /afs/cern.ch/user/e/evh/w0/newcmt
+
+SetupProject Online v4r12
 
 
-#SetupProject Online v4r10
-
-cd /afs/cern.ch/user/e/evh/w0/test/Online_v4r10/Online/ExampleGaucho/v3r0/cmt
+cd /afs/cern.ch/user/e/evh/w0/newcmt/Online_v4r12/Online/ExampleGaucho/v3r0/cmt
 source setup.csh
 
 echo EXAMPLEGAUCHOROOT = $EXAMPLEGAUCHOROOT

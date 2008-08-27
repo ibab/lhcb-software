@@ -1,4 +1,4 @@
-// $Id: GaudiExample.cpp,v 1.9 2008-08-04 09:02:04 evh Exp $
+// $Id: GaudiExample.cpp,v 1.10 2008-08-27 14:22:41 evh Exp $
 
 // Include files
 #include "GaudiKernel/AlgFactory.h"
@@ -218,12 +218,12 @@ StatusCode GaudiExample::execute() {
                                      HistoProf_ID, HistoProf_Title, 0., 400., 10);
     
     // Debug info:
-/*    msg << MSG::DEBUG << Histo1Db_ID << " All entries: " << my1Dhisto2->allEntries() << " mean: " << my1Dhisto2->mean() 
+    msg << MSG::DEBUG << Histo1Db_ID << " All entries: " << my1Dhisto2->allEntries() << " mean: " << my1Dhisto2->mean() 
         << " rms: " << my1Dhisto2->rms() << endreq;
     msg << MSG::DEBUG << Histo2D_ID << " All entries: " << my2Dhisto->allEntries() << " meanX: " << my2Dhisto->meanX() 
         << " rmsX: " << my2Dhisto->rmsX() << " meanY: " << my2Dhisto->meanY() << " rmsY: " << my2Dhisto->rmsY() << endreq;
     msg << MSG::DEBUG << HistoProf_ID << " All entries: " << my1Dhprof->allEntries() << " mean: " << my1Dhprof->mean() 
-        << " rms: " << my1Dhprof->rms() << endreq;*/
+        << " rms: " << my1Dhprof->rms() << endreq;
     
     // Track calculations for bin 3 in last my1Dhprof:
     int ixBin=3;

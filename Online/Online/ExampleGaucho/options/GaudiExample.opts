@@ -11,6 +11,7 @@ MessageSvc.OutputLevel=1;
 MonitorSvc.OutputLevel=1;
 UpdateAndReset.OutputLevel=3;
 UpdateAndReset.desiredDeltaTCycle=20;  // in seconds
+UpdateAndReset.disableReadOdin=1;
 ApplicationMgr.EvtSel   = "NONE"; // do not use any event input
 
 //---------------------------------------------------------------------------
