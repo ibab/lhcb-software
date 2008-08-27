@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.12 2008-08-15 15:04:21 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.13 2008-08-27 14:59:52 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -12,7 +12,7 @@ from GaudiConf.Configuration  import *
 from RecSys.Configuration     import *
 import GaudiKernel.ProcessJobOptions
 from Configurables import ( ProcessPhase, CondDBCnvSvc, MagneticFieldSvc,
-                            ReadStripETC, RecInit )
+                            ReadStripETC, RecInit, GaudiSequencer )
 
 ## @class Brunel
 #  Configurable for Brunel application
@@ -99,9 +99,27 @@ class Brunel(LHCbConfigurableUser):
             withMC = False # Force it, RDST never contains MC truth
 
         if withMC:
+            #importOptions( "$BRUNELOPTS/BrunelMC.opts" )
+            # CRJ : explicitly include the options from above here
+            importOptions("$STDOPTS/MCDstContent.opts")
+            ProcessPhase("MCLinks").DetectorList += [ "L0", "Unpack", "Tr" ]
+            # Unpack Sim data
+            GaudiSequencer("MCLinksUnpackSeq").Members += [ "UnpackMCParticle",
+                                                            "UnpackMCVertex" ]
+            GaudiSequencer("MCLinksTrSeq").Members += [ "TrackAssociator" ]
+            # MC checks
             ProcessPhase("Check").DetectorList += self.getProp("mcCheckSequence")
-            importOptions( "$BRUNELOPTS/BrunelMC.opts" )
-            
+            # Tracking
+            GaudiSequencer("CheckPatSeq").Members += [ "PatLHCbID2MCParticle"
+                                                       ,"PatTrack2MCParticle"
+                                                       ,"PatChecker" ]
+            # Muon
+            importOptions("$MUONPIDCHECKERROOT/options/MuonPIDChecker.opts")
+            # RICH
+            from RichRecQC.Configuration import RichRecQCConf
+            RichRecQCConf().context = "Offline"
+            RichRecQCConf().applyConf(GaudiSequencer("CheckRICHSeq"))
+
         elif inputType not in [ "DIGI", "DST" ]:
             # In case raw data resides in MDF file
             EventPersistencySvc().CnvServices.append("LHCb::RawDataCnvSvc")
