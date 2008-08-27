@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::EventSelectionAlg
  *
  *  CVS Log :-
- *  $Id: RichRecEventSelectionAlg.h,v 1.3 2008-08-26 19:39:48 jonrob Exp $
+ *  $Id: RichRecEventSelectionAlg.h,v 1.4 2008-08-27 15:08:16 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
@@ -15,11 +15,17 @@
 #ifndef RICHRECALGORITHMS_RichRecEventSelectionAlg_H
 #define RICHRECALGORITHMS_RichRecEventSelectionAlg_H 1
 
+// STD
+#include <set>
+
 // Base class
 #include "RichRecBase/RichRecAlgBase.h"
 
 // gaudi
 #include "GaudiKernel/AlgFactory.h"
+
+// Kernel
+#include "RichKernel/RichMap.h"
 
 namespace Rich
 {
@@ -57,7 +63,11 @@ namespace Rich
       int m_minTracks; ///< Minimum number of tracks
 
       std::string m_ringLoc; ///< Location of RichRecRings in TES
+
+      unsigned int m_minHPDsWithHits; ///< The minimum number of HPDs to have more that 'MinHPDHits' in them
       
+      unsigned int m_minHPDHits; ///< The minimum number of hits to have in at least 'MinHPDsWithHits' HPDs
+
     };
 
   }

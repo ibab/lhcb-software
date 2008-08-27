@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : Rich::Rec::EventSelectionAlg
  *
  *  CVS Log :-
- *  $Id: RichRecEventSelectionAlg.cpp,v 1.3 2008-08-26 19:39:48 jonrob Exp $
+ *  $Id: RichRecEventSelectionAlg.cpp,v 1.4 2008-08-27 15:08:16 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -28,10 +28,18 @@ EventSelectionAlg::EventSelectionAlg( const std::string& name,
                                       ISvcLocator* pSvcLocator )
   : Rich::Rec::AlgBase ( name, pSvcLocator )
 {
-  declareProperty( "MinPixels", m_minPixels = 10 );
-  declareProperty( "MinRings",  m_minRings  = 0  );
-  declareProperty( "MinTracks", m_minTracks = 0  );
-  declareProperty( "RingLocation", m_ringLoc = "Rec/Rich/Markov/RingsIsolated" );
+  declareProperty( "MinPixels", m_minPixels = 10, 
+                   "The minimum number of total RICH hits" );
+  declareProperty( "MinRings",  m_minRings  = 0,
+                   "The minimum number of rings at the given TES location" );
+  declareProperty( "MinTracks", m_minTracks = 0,
+                   "The minimum number of tracks"  );
+  declareProperty( "MinHPDsWithHits",  m_minHPDsWithHits = 0,
+                   "The minimum number of HPDs to have more that 'MinHPDHits' in them" );
+  declareProperty( "MinHPDHits", m_minHPDHits = 0, 
+                   "The minimum number of hits to have in at least 'MinHPDsWithHits' HPDs");
+  declareProperty( "RingLocation", m_ringLoc = "Rec/Rich/Markov/RingsIsolated",
+                   "The TES location in which to count the number of ring objects" );
 }
 
 // Destructor
@@ -41,13 +49,26 @@ StatusCode EventSelectionAlg::execute()
 {
   // Event Status
   bool OK = richStatus()->eventOK();
-  
+
   // Pixels
   if ( OK )
   {
     if ( !pixelCreator()->newPixels() ) return StatusCode::FAILURE;
-    // enough hits ?
+    // enough hits overall ?
     OK = ( richPixels()->size() >= m_minPixels );
+    if ( OK && m_minHPDsWithHits > 0 )
+    {
+      Rich::Map<LHCb::RichSmartID,unsigned int> hpdCount;
+      std::set<LHCb::RichSmartID> selectedHPDs;
+      // loop over pixels
+      for ( LHCb::RichRecPixels::const_iterator iP = richPixels()->begin();
+            iP != richPixels()->end(); ++iP )
+      {
+        // count hits in each HPD
+        if ( ++hpdCount[(*iP)->hpd()] > m_minHPDHits ) selectedHPDs.insert((*iP)->hpd());
+      }
+      OK = ( selectedHPDs.size() >= m_minHPDsWithHits );
+    }
   }
 
   // rings
@@ -63,7 +84,7 @@ StatusCode EventSelectionAlg::execute()
   if ( OK && m_minTracks > 0 )
   {
     if ( !trackCreator()->newTracks() ) return StatusCode::FAILURE;
-    // enough hits ?
+    // enough tracks ?
     OK = ( richTracks()->size() >= m_minTracks );
   }
 
