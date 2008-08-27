@@ -1,7 +1,14 @@
+
+# local import
+from Package import Package, getPackagesFromDir
+from Common import doesDirMatchNameAndVersion, isDirSelected, setCMTPathEnv
+
+# package imports
 from LbUtils import Env
-from LbUtils.CMT.Package import getPackagesFromDir, Package
-from LbUtils.CMT.Common import doesDirMatchNameAndVersion, isDirSelected, setCMTPathEnv
 from LbUtils.Set import Set
+from LbUtils.afs.directory import isAFSDir, Directory, isMountPoint
+
+# global import
 import logging
 import os
 import re
@@ -56,6 +63,7 @@ class Project(object):
         self._extpaklist = None
         self._allextpaklist = None
         self._container = None
+        self._afsmount = None
     def __eq__(self, other):
         return self.fullLocation() == other.fullLocation()
     
@@ -350,7 +358,21 @@ class Project(object):
 
     def allExternalPackages(self):
         return self._allextpaklist
-    def summary(self, cmtpath=None, cmtprojectpath=None, dependent=False, showpackages=False):
+    
+    def afsMountPoint(self):
+        log = logging.getLogger()
+        if self._afsmount is None :
+            if isAFSDir(self.fullLocation()) :
+                if isMountPoint(self.fullLocation()):
+                    self._afsmount = Directory(self.fullLocation())
+                else :
+                    log.info("Directory %s in not a mount point" % self.fullLocation())                        
+            else :
+                log.info("Directory %s in not on AFS" % self.fullLocation())
+    
+        return self._afsmount
+        
+    def summary(self, cmtpath=None, cmtprojectpath=None, dependent=False, showpackages=False, afsinfo=False):
         summary  = "Name                 : %s\n" % self.name()
         summary += "Version              : %s\n" % self.version()
         summary += "Location             : %s\n" % self.fullLocation()
@@ -375,6 +397,10 @@ class Project(object):
                     else :
                         tmpacksum += ", ".join(p.usedByBinary()) + "\n"
                 self.usedPackages(cmtpath=cmtpath, cmtprojectpath=cmtprojectpath)
+            if afsinfo :
+                afsmount = self.afsMountPoint()
+                if afsmount is not None :
+                    summary += "AFS Mount Point      : %s\n" % afsmount.getVolumeName()
         else :
             tmpacksum = ""
             if showpackages :
@@ -403,7 +429,7 @@ def hasProjectFile(dirpath):
     try:
         subfiles = os.listdir(dirpath)
         for f in subfiles:
-            if f == "cmt" :
+            if f == "cmt" and os.path.isdir(os.path.join(dirpath, f)):
                 try :
                     ssubf = os.listdir(os.path.join(dirpath, f))
                     for i in ssubf:

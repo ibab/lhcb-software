@@ -1,7 +1,12 @@
+# local imports
+from Common import setCMTPathEnv, doesDirMatchNameAndVersion, isDirSelected
+from Common import addCMTTag
+
+# package imports
 from LbUtils import Env
 from LbUtils.Set import Set
-from LbUtils.CMT.Common import setCMTPathEnv, doesDirMatchNameAndVersion, isDirSelected
-from LbUtils.CMT.Common import addCMTTag
+
+# global imports
 import os, re, sys
 import logging
 from subprocess import Popen, PIPE
@@ -398,7 +403,7 @@ def hasRequirementsFile(dirpath):
     try:
         subfiles = os.listdir(dirpath)
         for f in subfiles:
-            if f == "cmt" :
+            if f == "cmt" and os.path.isdir(os.path.join(dirpath,f)) :
                 try :
                     ssubf = os.listdir(os.path.join(dirpath,f))
                     for i in ssubf:

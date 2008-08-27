@@ -1,3 +1,16 @@
+2008-08-27  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/__init__.py: 
+	* python/LbUtils/CMT/__init__.py: 
+	* python/LbUtils/CMT/Common.py: 
+	* python/LbUtils/CMT/Graph.py: 
+	* python/LbUtils/CMT/Package.py: 
+	* python/LbUtils/CMT/Project.py: reorganised the packages imports statements
+		- relative imports for local modules
+		- relative imports for __init__ frontends
+		- absolute imports in any other case  
+	* scripts/showCMTProjects.py: placed the script in the Graph module.
+
 2008-08-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/CMT/Common.py: New file.
