@@ -1,4 +1,4 @@
-// $Id: TrackHerabExtrapolator.cpp,v 1.24 2008-02-08 07:52:43 cattanem Exp $
+// $Id: TrackHerabExtrapolator.cpp,v 1.25 2008-08-27 19:57:18 wouter Exp $
 
 // from Gaudi
 #include "GaudiKernel/PhysicalConstants.h"
@@ -746,7 +746,7 @@ void TrackHerabExtrapolator::rk5numde(   // Numerical Derivatives ( quite slow )
 
 {
   double qp;
-  static double delta[5] = {2.5, 2.5, 0.01, 0.01, 0.05};
+  static double delta[5] = {1e-3,1e-3,1e-5,1e-5,1e-8};
   double p1_out[5],p1_in[5],d_p[5];
 
   //----------------------------------------------------------------
@@ -762,11 +762,9 @@ void TrackHerabExtrapolator::rk5numde(   // Numerical Derivatives ( quite slow )
 
   rk5fast(z_in  , p_in,   error, z_out, p_out);
 
-  for(i=0; i < 4; ++i){
+  for(i=0; i < 5; ++i){
     d_p[i] = delta[i];
   } // loop i
-
-  d_p[4] = qp * delta[4];
 
   for(j=0; j < 5 ; ++j){
 
