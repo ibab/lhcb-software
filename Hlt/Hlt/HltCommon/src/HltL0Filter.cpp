@@ -1,4 +1,4 @@
-// $Id: HltL0Filter.cpp,v 1.7 2008-08-20 18:01:17 graven Exp $
+// $Id: HltL0Filter.cpp,v 1.8 2008-08-27 13:36:07 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -124,7 +124,11 @@ HltL0Filter::getL0Map( const LHCb::L0DUChannel::Map& channels) const {
     for (iter_t i  = m_l0Channels.value().begin();
                 i != m_l0Channels.value().end(); ++i ) {
         LHCb::L0DUChannel::Map::const_iterator chan = channels.find(*i);
-        Assert(chan != channels.end(),"Could not find requested L0channel");
+        if ( chan == channels.end() ) {
+            error() << "could not find requested L0Channel" << endmsg;
+            debug() << "could not find requested L0Channel " << *i << endmsg;
+            throw GaudiException("Requested L0 Channel not known",*i,StatusCode::FAILURE);
+        }
         m.insert( *i, chan->second->id() );
     }
     return m;
