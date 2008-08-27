@@ -1,18 +1,18 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltMuonAlleyConfSequence.py,v 1.1 2008-08-23 22:59:57 graven Exp $
+# $Id: HltMuonAlleyConfSequence.py,v 1.2 2008-08-27 09:31:56 graven Exp $
 # =============================================================================
 ## @file
-#  Simple script to test the class Hlt1Line
-#  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-#  @date 2008-08-07
+#  Configuration of Muon Lines
+#  @author Gerhard Raven Gerhard.Raven@nikhef.nl
+#  @date 2008-08-25
 # =============================================================================
 """
  script to configure Muon trigger lines
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.1 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -20,9 +20,11 @@ from Gaudi.Configuration import *
 from Configurables import GaudiSequencer
 from Configurables import HltMuonRec
 from Configurables import HltL0MuonPrepare
+from Configurables import PatMatchTool
 
 from HltConf.HltLine import Hlt1Line   as Line
 from HltConf.HltLine import Hlt1Member as Member
+from HltConf.HltLine import Hlt1Tool   as Tool
 from HltConf.HltLine import hlt1Lines, addHlt1Prop, rmHlt1Prop , hlt1Termini
 
 
@@ -42,6 +44,7 @@ currentLines = hlt1Lines()
 TConfMatchVelo = [ decodeT
                  , Member ('TU', 'TConf' , RecoName = 'TConf' )
                  , Member ('TF', 'TConf' , FilterDescriptor = ['IsMuon,>,0.'] )
+                 , RZVelo
                  , Member ('TF', 'RZVelo'
                           , InputSelection = 'RZVelo'
                           ### TODO/FIXME: make sure that we expand the % in FilterDescriptors for bound selections...
@@ -51,22 +54,14 @@ TConfMatchVelo = [ decodeT
                           , InputSelection1 = '%TUVelo'
                           , InputSelection2 = '%TFTConf'
                           , MatchName = 'VeloT'
-                          ) # TODO/FIXME:, PatMatchTool.maxMatchChi2 = 6 )
+                          , tools = [ Tool( PatMatchTool, maxMatchChi2 = 6 ) ]
+                          ) 
                  ]
 
-muonSegPrep = Line ('muonSegPrepare'
-                   , HLT = [ singleMuonPrep ]
-                   , algos = 
-                   [ RecoMuonSeg
-                   , Member ('TF', 'PrepareMuonSeg'
-                            , RequirePositiveInputs = False
-                            , InputSelection = 'TES:' + RecoMuonSeg.OutputMuonTracksName # if has else RecoMuonSeg.getDi
-                            # TODO/FIXME: needs the outputSelection name of singleMuonPrep..
-                            , FilterDescriptor = [ 'DoShareM3_'+singleMuonPrep.outputSelection()+',<,0.5' ] )
-                   ] + TConfMatchVelo 
-                   )
+#### lines which are shared inputs, and which do NOT make decisions
 
 singleMuonPrep = Line( 'singleMuonPrepare' 
+                   , makesDecision = False
                    , L0 = [ 'Muon','MuonNoGlob' ]
                    , algos = 
                    [ Member ( 'L0MuonPrepare' , 'MuonORMuonNoGlob'
@@ -75,33 +70,28 @@ singleMuonPrep = Line( 'singleMuonPrepare'
                             , MinPt = 1300.0  
                             )
                    , Member ( 'TF', 'L0'
-                            ,  InputSelection = 'L0AllMuons' # did we mean L0AllMuons and not the above???
-                            ,  FilterDescriptor = [ 'PT0,||>,1300' ] )
+                            , InputSelection = 'L0AllMuons' # did we mean L0AllMuons and not the above???
+                            , FilterDescriptor = [ 'PT0,||>,1300' ] )
                    ] + TConfMatchVelo 
                    )
 
-SingleMuonNoIP = Line( 'SingleMuonNoIP'
-                   ,  HLT = [ singleMuonPrep ]
-                   ,  algos = [ Member( 'TF', 'Decision'
-                            , InputSelection = singleMuonPrep
-                            , FilterDescriptor = ['PT,>,6000']
-                            )
-                   ] )
-
-SingleMuonIPandPT = Line ( 'SingleMuonIPandPT'
-                   ,  HLT = [ singleMuonPrep ]
-                   ,  algos = 
-                   [  RecoRZPV
-                   ,  Member ( 'TF', 'Decision'
-                             ,  InputSelection = singleMuonPrep
-                             ,  FilterDescriptor = [ 'IP_PV2D,||[],0.08,30.', 'PT,>,1300' ] 
-                             )
-                   ] )
+muonSegPrep = Line ('muonSegPrepare'
+                   , makesDecision = False
+                   , HLT = [ singleMuonPrep ]
+                   , algos = 
+                   [ RecoMuonSeg
+                   , Member ('TF', 'PrepareMuonSeg'
+                            , RequirePositiveInputs = False
+                            , InputSelection = 'TES:' + RecoMuonSeg.OutputMuonTracksName # if has else RecoMuonSeg.getDefaults('OutputMuonTracksName')
+                            , FilterDescriptor = [ 'DoShareM3_'+singleMuonPrep.outputSelection()+',<,0.5' ] )
+                   ] + TConfMatchVelo 
+                   )
 
 DiMuonFromL0DiMuonPrepare = Line( 'DiMuonFromL0DiMuonPrepare'
+                   , makesDecision = False
                    , L0 = [ 'DiMuon' ]
                    , algos = 
-                   [ HltL0MuonPrepare('L0AllMuons')
+                   [ HltL0MuonPrepare('L0AllMuons') # WARNING: we require dimuon, but use L0AllMuons
                    , Member( 'VM1', 'L0DiMuon'
                            , InputSelection = 'L0AllMuons'
                            , FilterDescriptor = [ 'SumPT,>,1500.' ]
@@ -120,13 +110,35 @@ DiMuonFromL0DiMuonPrepare = Line( 'DiMuonFromL0DiMuonPrepare'
                            , InputSelection1 =  '%TUVelo'
                            , InputSelection2 =  '%TFTConf'
                            , MatchName = 'VeloT'
-                           #TODO/FIXME, PatMatchTool.maxMatchChi2 = 6
+                           , tools = [ Tool( PatMatchTool, maxMatchChi2 = 6 ) ]
                            )
                    , Member( 'VM1', 'VeloT' , FilterDescriptor   = ['DOCA,<,0.5' ])
                    , Member( 'VF', 'VeloT'
                            , FilterDescriptor = [ 'VertexMatchIDsFraction_L0DiMuonDecision,>,1.9']
                            )
                    ] )
+
+#### these are the lines which actually make decisions...
+
+SingleMuonNoIP = Line( 'SingleMuonNoIP'
+                   ,  HLT = [ singleMuonPrep ]
+                   ,  algos = 
+                   [ Member( 'TF', 'Decision'
+                           , InputSelection = singleMuonPrep
+                           , FilterDescriptor = ['PT,>,6000']
+                           )
+                   ] )
+
+SingleMuonIPandPT = Line ( 'SingleMuonIPandPT'
+                   ,  HLT = [ singleMuonPrep ]
+                   ,  algos = 
+                   [  RecoRZPV
+                   ,  Member ( 'TF', 'Decision'
+                             ,  InputSelection = singleMuonPrep
+                             ,  FilterDescriptor = [ 'IP_PV2D,||[],0.08,30.', 'PT,>,1300' ] 
+                             )
+                   ] )
+
 
 DiMuonFromL0DiMuonNoIP = Line( 'DiMuonFromL0DiMuoNoIP'
                    ,  HLT = [ DiMuonFromL0DiMuonPrepare ]
@@ -184,6 +196,7 @@ DiMuonFrom2L0NoIP = Line( 'DiMuonFrom2L0NoIP'
 DiMuonFromMuonSegIP  = Line( 'DiMuonFromMuonSegIP' 
                    ,  HLT = [ singleMuonPrep
                             , muonSegPrep ] # TODO: this is OR, should be AND
+                                            # but OK for now: muonSegPrep requires singleMuonPrep
                    , algos =
                    [  Member ( 'VM2', 'VeloT'
                            , InputSelection1 = singleMuonPrep
