@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.1 2008-08-26 23:44:42 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.2 2008-08-27 11:26:02 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -31,25 +31,25 @@ class RichMarkovRingFinderConf(RichConfigurableUser):
     def rich1TopFinder(self):
         from Configurables import Rich__Rec__MarkovRingFinder__Rich1TopPanel
         cont = self.getProp("context")
-        return Rich__Rec__MarkovRingFinder__Rich1TopPanel(cont+"MFinderRich1Top")
+        return Rich__Rec__MarkovRingFinder__Rich1TopPanel(cont+"MFinderR1Top")
 
     ## Access the finder for RICH1 bottom panel
     def rich1BottomFinder(self):
         from Configurables import Rich__Rec__MarkovRingFinder__Rich1BottomPanel
         cont = self.getProp("context")
-        return Rich__Rec__MarkovRingFinder__Rich1BottomPanel(cont+"FinderRich1Bottom")
+        return Rich__Rec__MarkovRingFinder__Rich1BottomPanel(cont+"MFinderR1Bottom")
 
     ## Access the finder for RICH2 left panel
     def rich2LeftFinder(self):
         from Configurables import Rich__Rec__MarkovRingFinder__Rich2LeftPanel
         cont = self.getProp("context")
-        return Rich__Rec__MarkovRingFinder__Rich2LeftPanel(cont+"MFinderRich2Left")
+        return Rich__Rec__MarkovRingFinder__Rich2LeftPanel(cont+"MFinderR2Left")
 
     ## Access the finder for RICH2 right panel
     def rich2RightFinder(self):
         from Configurables import Rich__Rec__MarkovRingFinder__Rich2RightPanel
         cont = self.getProp("context")
-        return Rich__Rec__MarkovRingFinder__Rich2RightPanel(cont+"MFinderRich2Right")
+        return Rich__Rec__MarkovRingFinder__Rich2RightPanel(cont+"MFinderR2Right")
 
     ## @brief Apply the configuration to the given GaudiSequencer
     #  @param sequence The GaudiSequencer to add the RICH ring finding to
