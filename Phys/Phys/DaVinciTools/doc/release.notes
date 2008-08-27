@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.346 2008-08-07 11:32:16 pkoppenb Exp $
+! $Id: release.notes,v 1.347 2008-08-27 14:15:26 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-08-27 - Patrick Koppenburg
+ - Moved ParticleFilter from DaVinciFilter.
 
 ! 2008-08-07 - Patrick Koppenburg
  - CombineParticles : Set default value of MotherCut to "Configure me!". This 
