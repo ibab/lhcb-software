@@ -1,0 +1,143 @@
+// Track checking on long tracks in the "best" container
+// -----------------------------------------------------
+
+
+CheckPatSeq.Members  += { "TrackAssociator/AssocVeloRZ",
+		          "TrackAssociator/AssocVelo",
+                          "TrackAssociator/AssocVeloTT",
+			  "TrackAssociator/AssocForward",
+			  "TrackAssociator/AssocTTrack",
+			  "TrackAssociator/AssocMatch",
+			  "TrackAssociator/AssocDownstream"};
+	 
+AssocVeloRZ.TracksInContainer     = "Rec/Track/RZVelo";
+AssocVelo.TracksInContainer       = "Rec/Track/Velo";
+AssocVeloTT.TracksInContainer     = "Rec/Track/VeloTT";
+AssocForward.TracksInContainer    = "Rec/Track/Forward";
+AssocTTrack.TracksInContainer     = "Rec/Track/Seed";
+AssocMatch.TracksInContainer      = "Rec/Track/Match";
+AssocDownstream.TracksInContainer = "Rec/Track/Downstream";
+
+
+CheckPatSeq.Members  += { "TrackResChecker/CheckFitForward",
+			  "TrackResChecker/CheckFitMatch",
+			  "TrackResChecker/CheckFitTTrack",
+			  "TrackResChecker/CheckFitVelo"};
+
+CheckFitForward.fullDetail = false;
+CheckFitForward.TracksInContainer = "Rec/Track/Forward";
+CheckFitForward.Selector.Selector.rejectElectrons = true;
+CheckFitForward.Selector.Selector.rejectInteractions = true;
+CheckFitForward.Selector.Selector.zInteraction = 9400.;
+CheckFitForward.HistoPrint = false;
+CheckFitForward.SelectionCriteria = "ChargedLong";
+
+CheckFitMatch.fullDetail = false;
+CheckFitMatch.TracksInContainer = "Rec/Track/Match";
+CheckFitMatch.Selector.Selector.rejectElectrons = true;
+CheckFitMatch.Selector.Selector.rejectInteractions = true;
+CheckFitMatch.Selector.Selector.zInteraction = 9400.;
+CheckFitMatch.HistoPrint = false;
+CheckFitMatch.SelectionCriteria = "ChargedLong";
+
+CheckFitTTrack.fullDetail = false;
+CheckFitTTrack.TracksInContainer = "Rec/Track/Seed";
+CheckFitTTrack.Selector.Selector.rejectElectrons = true;
+CheckFitTTrack.Selector.Selector.rejectInteractions = true;
+CheckFitTTrack.Selector.Selector.zInteraction = 9400.;
+CheckFitTTrack.HistoPrint = false;
+CheckFitTTrack.SelectionCriteria = "ChargedLong";
+
+CheckFitVelo.fullDetail = false;
+CheckFitVelo.TracksInContainer = "Rec/Track/Velo";
+CheckFitVelo.Selector.Selector.rejectElectrons = true;
+CheckFitVelo.Selector.Selector.rejectInteractions = true;
+CheckFitVelo.Selector.Selector.zInteraction = 9400.;
+CheckFitVelo.HistoPrint = false;
+CheckFitVelo.SelectionCriteria = "ChargedLong";
+
+
+// example of how to use the 
+CheckPatSeq.Members  += { "TrackEffChecker/VeloRZ",
+		         "TrackEffChecker/Velo",
+			 "TrackEffChecker/VeloTT",
+			 "TrackEffChecker/Forward",
+			 "TrackEffChecker/TTrack",
+			 "TrackEffChecker/Match",
+			 "TrackEffChecker/Downstream",
+			 "TrackEffChecker/BestTracks"};
+
+
+BestTracks.fullDetail = false;
+BestTracks.TracksInContainer = "Rec/Track/Best";
+BestTracks.Selector.Selector.rejectElectrons = true;
+BestTracks.Selector.Selector.rejectInteractions = true;
+BestTracks.Selector.Selector.zInteraction = 9400.;
+BestTracks.SelectionCriteria = "ChargedLong";
+BestTracks.HistoPrint = false;
+BestTracks.StatPrint = false;
+
+
+VeloRZ.fullDetail = false;
+VeloRZ.TracksInContainer = "Rec/Track/RZVelo";
+VeloRZ.Selector.Selector.rejectElectrons = true;
+VeloRZ.Selector.Selector.rejectInteractions = true;
+VeloRZ.Selector.Selector.zInteraction = 9400.;
+VeloRZ.SelectionCriteria = "ChargedLong";
+VeloRZ.HistoPrint = false;
+VeloRZ.StatPrint = false;
+
+
+Velo.fullDetail = false;
+Velo.TracksInContainer = "Rec/Track/Velo";
+Velo.Selector.Selector.rejectElectrons = true;
+Velo.Selector.Selector.rejectInteractions = true;
+Velo.Selector.Selector.zInteraction = 9400.;
+Velo.SelectionCriteria = "ChargedLong";
+Velo.HistoPrint = false;
+Velo.StatPrint = false;
+
+VeloTT.fullDetail = false;
+VeloTT.TracksInContainer = "Rec/Track/VeloTT";
+VeloTT.Selector.Selector.rejectElectrons = true;
+VeloTT.Selector.Selector.rejectInteractions = true;
+VeloTT.Selector.Selector.zInteraction = 9400.;
+VeloTT.SelectionCriteria = "ChargedLong";
+VeloTT.HistoPrint = false;
+VeloTT.StatPrint = false;
+
+Forward.fullDetail = false;
+Forward.TracksInContainer = "Rec/Track/Forward";
+Forward.Selector.Selector.rejectElectrons = true;
+Forward.Selector.Selector.rejectInteractions = true;
+Forward.Selector.Selector.zInteraction = 9400.;
+Forward.SelectionCriteria = "ChargedLong";
+Forward.HistoPrint = false;
+Forward.StatPrint = false;
+
+TTrack.fullDetail = false;
+TTrack.TracksInContainer = "Rec/Track/Seed";
+TTrack.Selector.Selector.rejectElectrons = true;
+TTrack.Selector.Selector.rejectInteractions = true;
+TTrack.Selector.Selector.zInteraction = 9400.;
+TTrack.SelectionCriteria = "ChargedLong";
+TTrack.HistoPrint = false;
+TTrack.StatPrint = false;
+
+Match.fullDetail = false;
+Match.TracksInContainer = "Rec/Track/Match";
+Match.Selector.Selector.rejectElectrons = true;
+Match.Selector.Selector.rejectInteractions = true;
+Match.Selector.Selector.zInteraction = 9400.;
+Match.SelectionCriteria = "ChargedLong";
+Match.HistoPrint = false;
+Match.StatPrint = false;
+
+Downstream.fullDetail = false;
+Downstream.TracksInContainer = "Rec/Track/Downstream";
+Downstream.Selector.Selector.rejectElectrons = true;
+Downstream.Selector.Selector.rejectInteractions = true;
+Downstream.Selector.Selector.zInteraction = 9400.;
+Downstream.SelectionCriteria = "ChargedLong";
+Downstream.HistoPrint = false;
+Downstream.StatPrint = false;
