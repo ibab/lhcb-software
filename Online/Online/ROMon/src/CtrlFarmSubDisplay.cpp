@@ -101,8 +101,8 @@ CtrlFarmSubDisplay::~CtrlFarmSubDisplay() {
 /// Initialize default display text
 void CtrlFarmSubDisplay::init(bool) {
   ::scrc_put_chars(m_display,"                     UNKNOWN ",COL_WARNING,1,1,1);
-  ::scrc_put_chars(m_display,"     No information availible",COL_ALARM,2,1,1);
-  ::scrc_put_chars(m_display,"                             ",COL_ALARM,3,1,1);
+  ::scrc_put_chars(m_display,"                             ",COL_ALARM,2,1,1);
+  ::scrc_put_chars(m_display,"     No information availible",COL_ALARM,3,1,1);
   ::scrc_put_chars(m_display,"                             ",COL_ALARM,4,1,1);
   ::scrc_set_border(m_display,m_title.c_str(),COL_WARNING);
 }
