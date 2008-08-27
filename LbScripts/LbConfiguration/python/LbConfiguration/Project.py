@@ -9,22 +9,19 @@ project_names = ["Gaudi", "LHCb", "Lbcom", "Rec", "Boole", "Brunel" ,
                  "Gauss", "Phys", "Analysis", "Hlt", "Alignment", "Moore",
                  "Online", "Euler", "Geant4", "DaVinci", "Bender", "Orwell",
                  "Panoramix", "LbScripts"]
-binaries = []
+
+binary_list = ["slc3_ia32_gcc323", "slc3_ia32_gcc323_dbg",
+               "slc4_ia32_gcc34", "slc4_ia32_gcc34_dbg",
+               "slc4_amd64_gcc34", "slc4_amd64_gcc34_dbg",
+               "win32_vc71", "win32_vc71_dbg"]
 
 class ProjectConfException(Exception):
     pass
 
-class ProjectConf(object):
+class ProjectBaseConf(object):
     def __init__(self, projectname):
         """ default constructor """
         self._name = projectname
-        self._cmtextratags = []
-        self._fullsize = 5000000
-        self._steeringpackage = projectname + "Sys"
-        self._aliases = dict()
-        self._applicationpackage = projectname
-        self._aliases["setenv%s" % projectname] = "setenvProject %s" % projectname
-        self._aliases["Setup%s" % projectname] = "SetupProject %s" % projectname
         if os.environ.has_key("LHCBRELEASES") :
             self._release_area = os.environ["LHCBRELEASES"]
         else :
@@ -38,6 +35,31 @@ class ProjectConf(object):
     def NAME(self):
         """ return name in uppercase """
         return self._name.upper()
+    def setReleaseArea(self, release_area):
+        self._release_area = release_area
+    def ReleaseArea(self):
+        return self._release_area
+    def __str__(self):
+        """ return string representation for printing """
+        rep = ""
+        if self._name: 
+            rep += "Name\t\t\t: %s\n" % self._name
+        if self._release_area :
+            rep += "Release Area\t\t: %s\n" % self._release_area
+        return rep
+
+
+class ProjectConf(ProjectBaseConf):
+    def __init__(self, projectname):
+        """ default constructor """
+        super(ProjectConf, self).__init__(projectname)
+        self._cmtextratags = []
+        self._fullsize = 5000000
+        self._steeringpackage = projectname + "Sys"
+        self._aliases = dict()
+        self._applicationpackage = projectname
+        self._aliases["setenv%s" % projectname] = "setenvProject %s" % projectname
+        self._aliases["Setup%s" % projectname] = "SetupProject %s" % projectname
     def setCMTExtraTags(self, taglist):
         """ set the list of CMTEXTRATAGS needed for the project build """
         self._cmtextratags = taglist
@@ -73,16 +95,12 @@ class ProjectConf(object):
         return self._release_area
     def __str__(self):
         """ return string representation for printing """
-        rep = ""
-        if self._name: 
-            rep += "Name\t\t\t: %s\n" % self._name
+        rep = super(ProjectConf, self).__str__()
         rep += "Size\t\t\t: %s\n" % self._fullsize
         rep += "Steering Package\t: %s\n" % self._steeringpackage
         rep += "Application Package\t: %s\n" % self._applicationpackage
         if self._cmtextratags:
             rep += "CMT Extra Tags\t\t: %s\n" % ", ".join(self._cmtextratags)
-        if self._release_area :
-            rep += "Release Area\t\t: %s\n" % self._release_area
         return rep
 
 project_list = []
@@ -108,32 +126,47 @@ del _pn
 
 
 # Extra configuration for selected projects
+# Gaudi
 Gaudi.setSteeringPackage("GaudiRelease") #IGNORE:E0602
 Gaudi.setApplicationPackage("GaudiExamples")#IGNORE:E0602
 if os.environ.has_key("GAUDISOFT") :
     Gaudi.setReleaseArea(os.environ["GAUDISOFT"])#IGNORE:E0602
 
+
+# LHCb
 LHCb.setApplicationPackage("Ex")#IGNORE:E0602
 
+
+#Gauss
 Gauss.addCMTExtraTags("Hijing", "Herwig", #IGNORE:E0602
                       "BcVegPy", "HidValley", "AlpGen")#IGNORE:E0602
 Gauss.setApplicationPackage("Sim/Gauss")#IGNORE:E0602
 
+
+# Boole
 Boole.setApplicationPackage("Digi/Boole")#IGNORE:E0602
 
+# Brunel
 Brunel.setApplicationPackage("Rec/Brunel")#IGNORE:E0602
 
+#DaVinci
 DaVinci.setApplicationPackage("Phys/DaVinci")#IGNORE:E0602
 
+#Moore
 Moore.setApplicationPackage("Hlt/Moore")#IGNORE:E0602
 
+# Euler
 Euler.setApplicationPackage("Trig/Euler")#IGNORE:E0602
 
+# Alignment
 Alignment.setApplicationPackage("Alignment/Escher")#IGNORE:E0602
 
+# Orwell
 Orwell.setApplicationPackage("Calib/Orwell")#IGNORE:E0602
 
+# Panoramix
 Panoramix.setApplicationPackage("Vis/Panoramix")#IGNORE:E0602
 
+# Bender
 Bender.setApplicationPackage("Phys/Bender")#IGNORE:E0602
 

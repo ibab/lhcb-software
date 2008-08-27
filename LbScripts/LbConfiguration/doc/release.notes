@@ -1,3 +1,10 @@
+2008-08-27  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/Project.py: Factor out some methods of the ProjectConf
+	class into the ProjectBaseConf class. This could be reused for other kind of 
+	projects like data projects (DBASE, PARAM) or LCG projects (LCGCMT). They need 
+	anyway some special treatment.
+	
 2008-08-06  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* scripts/SetupProject.py:
@@ -54,7 +61,7 @@
 
 2008-06-03  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-        * scripts/CreateBatAliases.py: fixed carriage return in the generated files.
+    * scripts/CreateBatAliases.py: fixed carriage return in the generated files.
 
 2008-06-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
