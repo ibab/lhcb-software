@@ -95,10 +95,9 @@ void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> 
     if (oper.compare("-") == 0) includeService = false;
     
     msg << MSG::DEBUG << "Verifying service = " << serviceName<< endreq;
-    msg << MSG::DEBUG << "Verifying service2 = " << serviceName<< endreq;
 
     std::vector<std::string>::const_iterator it;
-    if (m_subfarmName.size() != 0) {
+    if (m_subfarmName.size() != 0) { // Only for Adders
       bool chooseIt=false;
       for(it=m_subfarmName.begin(); it!=m_subfarmName.end(); ++it){
         msg << MSG::DEBUG << "verifying subfarmName in serviceName "<< serviceName << endreq;
@@ -114,7 +113,12 @@ void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> 
       else msg << MSG::DEBUG << "subfarmName OK" << endreq;
     }
     else {
-      if (serviceName.find("/" + m_nodeName) == std::string::npos) continue;
+      if (m_withPartitionName) {
+        if (serviceName.find(m_nodeName) == std::string::npos) continue;
+      }
+      else {
+        if (serviceName.find("/" + m_nodeName) == std::string::npos) continue;
+      }
     }
 
     std::vector<std::string> serviceParts = Misc::splitString(serviceName, "/");
@@ -212,11 +216,11 @@ void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> 
     if (!matched) continue;
         
     if (includeService) {
-      msg << MSG::DEBUG << "service INCLUDED => " << serviceName << endreq;
+      msg << MSG::DEBUG << "service INCLUDED =======> " << serviceName << endreq;
       serviceSet.insert(serviceName);
     }
     else {
-      msg << MSG::DEBUG << "service EXCLUDED => " << serviceName << endreq;
+      msg << MSG::DEBUG << "service EXCLUDED =======> " << serviceName << endreq;
       serviceSet.erase(serviceName);
     }
   }
@@ -397,7 +401,7 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
       }
     }
     std::string serverName = (*serverListTotIt).substr(0, (*serverListTotIt).find("@"));
-    msg << MSG::DEBUG << "Server="<<serverName << " will be considered"<< endreq;
+    msg << MSG::DEBUG << "We will consider -----------> Server = "<<serverName << endreq;
     serverList.insert(serverName);
   }
   

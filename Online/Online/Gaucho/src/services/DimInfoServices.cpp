@@ -26,9 +26,9 @@ void DimInfoServices::infoHandler()
   std::string value = getString();
   
   m_processMgr->updateServiceSet(value, m_serviceSet);
-  
   //IocSensor::instance().send(m_processMgr->service(), s_createServiceMap , m_processMgr->service());
   //IocSensor::instance().send(m_processMgr->service(), s_updateServiceMap, m_processMgr->dimInfoServers()); //start Timer*/
+  if (m_serviceSet.size() <= 0) return;
   IocSensor::instance().send(m_processMgr->service(), s_updateSvcMapFromInfoService, (void *) &m_serviceSet);
   alreadyDone = true;
 }

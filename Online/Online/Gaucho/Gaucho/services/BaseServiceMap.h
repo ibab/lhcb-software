@@ -39,11 +39,13 @@ public:
   
   std::string createTermServiceName (const std::string &serviceName, const std::string &serverName);
   std::string createAdderName (const std::string &serviceName);
+  std::string createSaverName (const std::string &serviceName);
 
   void printMap();
   void printServiceSet();
   
   void write(std::string saveDir, std::string &fileName, int &fileSize);
+  void writeOld(std::string saveDir, std::string &fileName, int &fileSize);
   void add();
   
   void setServiceSet(const std::set<std::string>& serviceSet){m_serviceSet = serviceSet;}

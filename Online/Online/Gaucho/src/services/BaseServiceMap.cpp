@@ -152,7 +152,7 @@ void BaseServiceMap::insertDimInfo(const std::string &serviceName, const std::st
     elementName = serverName;
   }
   else {
-    groupName = serverName;
+    groupName = createSaverName (termSvcName);// in the case of Saving Adders it should return "serverName"
     elementName = termSvcName;
   }
   
@@ -165,7 +165,7 @@ void BaseServiceMap::insertDimInfo(const std::string &serviceName, const std::st
   m_dimInfo[groupName][elementName]->setSourceName(name());
   //msg << MSG::DEBUG << "setMsgSvc" << endreq;
   m_dimInfo[groupName][elementName]->setMsgSvc(msgSvc());
-      
+           
   msg << MSG::DEBUG << "creating MonObject in DimInfoMonObject " << endreq;
   m_dimInfo[groupName][elementName]->createMonObject();  
   msg << MSG::DEBUG << "after creating MonObject in DimInfoMonObject " << endreq;
@@ -322,7 +322,22 @@ std::string BaseServiceMap::createAdderName (const std::string &serviceName){
   return adderName;
 }
 
-void BaseServiceMap::write(std::string saveDir, std::string &fileName, int &fileSize)
+std::string BaseServiceMap::createSaverName (const std::string &serviceName){
+  // Creating the task name for the saver
+  std::vector<std::string> serviceParts = Misc::splitString(serviceName, "/");
+  std::string svctype = serviceParts[0];
+  std::string utgid = serviceParts[1];
+  std::vector<std::string> utgidParts = Misc::splitString(utgid, "_");
+  if (utgidParts.size() == 4) {
+    std::string partName = utgidParts[0];
+    std::string taskName = utgidParts[2];
+    return partName + "-" + taskName;
+  }
+  return utgid; // it should be equal to the serverName
+}
+
+
+void BaseServiceMap::writeOld(std::string saveDir, std::string &fileName, int &fileSize)
 {
   MsgStream msg(msgSvc(), name());
   msg << MSG::INFO << " We will try to Write " << endreq;
@@ -374,6 +389,63 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName, int &file
         msg << MSG::ERROR << "MonObject of type " << type << " can not be writed."<< endreq; 
       }
     }
+    fileSize=(int)f->GetSize();
+    f->Close();
+    delete f;f=0;
+  }
+}
+
+void BaseServiceMap::write(std::string saveDir, std::string &fileName, int &fileSize)
+{
+  MsgStream msg(msgSvc(), name());
+  msg << MSG::INFO << " We will try to Write " << endreq;
+
+  if ((0 == m_serverMap.size())||(0 == m_serviceSet.size())||(0 == m_dimInfo.size())) {
+    msg << MSG::INFO << " Writer can't write because ServerMap, ServiceMap or DimInfoMap is empty " << endreq;
+    return;
+  }
+
+  std::map<std::string, DimInfoMonObject*>::iterator it;
+
+  TFile *f=0;
+
+  char timestr[64];
+  time_t rawTime=time(NULL);
+  struct tm* timeInfo = localtime(&rawTime);
+  ::strftime(timestr, sizeof(timestr),"%Y%m%dT%H%M%S", timeInfo);
+
+  for (m_dimInfoIt=m_dimInfo.begin(); m_dimInfoIt!=m_dimInfo.end(); ++m_dimInfoIt) 
+  {
+    std::cout << "========================SAVER=================================" << std::endl;
+    
+    fileSize=0;
+    std::string tmpfile = saveDir + "/" +  m_dimInfoIt->first + "-" + timestr + ".root";
+    fileName.replace(0, fileName.length(), tmpfile);
+    msg << MSG::INFO << "SaverSvc will save histograms in file " << fileName << endreq;
+
+    f = new TFile(fileName.c_str(),"create");
+
+    msg << MSG::INFO << "Writing MonObjects"<< endreq;
+    
+    for (it=m_dimInfoIt->second.begin(); it!=m_dimInfoIt->second.end(); ++it) {
+      std::string serverName = Misc::splitString(it->first, "/")[1];
+      if (!m_processMgr->dimInfoServers()->isActive(serverName)) continue;
+      if(0 == it->second->monObject()) continue;
+      //msg << MSG::DEBUG << "Term : " << it->first << endreq;
+      msg << MSG::DEBUG << "Term : " << it->second->dimInfo()->getName() << endreq;
+
+      it->second->loadMonObject();
+      std::string type = it->second->monObject()->typeName();
+      msg << MSG::INFO << " Service " << it->first << " is a " << type <<endreq;
+      if ((s_monH1F == type)||(s_monH1D == type)||(s_monH1F == type)||(s_monH2D == type)||(s_monProfile == type)) {
+        it->second->monObject()->loadObject();
+        it->second->monObject()->write();
+      }
+      else {
+        msg << MSG::ERROR << "MonObject of type " << type << " can not be writed."<< endreq; 
+      }
+    }
+  
     fileSize=(int)f->GetSize();
     f->Close();
     delete f;f=0;
