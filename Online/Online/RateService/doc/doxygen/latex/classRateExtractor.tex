@@ -1,0 +1,221 @@
+\section{Rate\-Extractor Class Reference}
+\label{classRateExtractor}\index{RateExtractor@{RateExtractor}}
+{\tt \#include $<$Rate\-Extractor.h$>$}
+
+\subsection*{Public Member Functions}
+\begin{CompactItemize}
+\item 
+{\bf Rate\-Extractor} (std::string rate\-Id, Mon\-Rate $\ast$p\-Mon\-Rate)
+\item 
+{\bf $\sim$Rate\-Extractor} ()
+\item 
+double \& {\bf get\-Rate\-Value} ()
+\item 
+char $\ast$ {\bf get\-Rate\-Comment} ()
+\item 
+std::string {\bf get\-Rate\-Id} ()
+\item 
+bool {\bf extract\-Data} (longlong time)
+\item 
+void {\bf publish\-Services} (std::string name\-Header)
+\end{CompactItemize}
+\subsection*{Private Member Functions}
+\begin{CompactItemize}
+\item 
+std::string {\bf make\-Service\-Name} (std::string name\-Header)
+\item 
+void {\bf reshape\-Comment} ()
+\item 
+int {\bf sent\-Data\-Size} ()
+\end{CompactItemize}
+\subsection*{Private Attributes}
+\begin{CompactItemize}
+\item 
+Dim\-Service $\ast$ {\bf m\_\-structured\-Service}
+\item 
+std::string {\bf m\_\-rate\-Id}
+\item 
+Mon\-Rate $\ast$ {\bf m\_\-p\-Mon\-Rate}
+\item 
+{\bf Rate\-Extractor\-Data} {\bf m\_\-data}
+\item 
+int {\bf m\_\-comment\-Size}
+\item 
+double {\bf m\_\-counter\-Old\-Value}
+\item 
+double {\bf m\_\-counter\-New\-Value}
+\item 
+longlong {\bf m\_\-old\-Time}
+\item 
+longlong {\bf m\_\-new\-Time}
+\end{CompactItemize}
+\subsection*{Classes}
+\begin{CompactItemize}
+\item 
+struct {\bf Rate\-Extractor\-Data}
+\end{CompactItemize}
+
+
+\subsection{Detailed Description}
+Class extracting rate from a given counter in a Mon\-Rate object. Publishes a pair of DIM services (rate value and rate comment).
+
+\begin{Desc}
+\item[Author:]Jean-Francois Menou \end{Desc}
+
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{RateExtractor@{Rate\-Extractor}!RateExtractor@{RateExtractor}}
+\index{RateExtractor@{RateExtractor}!RateExtractor@{Rate\-Extractor}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}Rate\-Extractor::Rate\-Extractor (std::string {\em rate\-Id}, Mon\-Rate $\ast$ {\em p\-Mon\-Rate})}\label{classRateExtractor_a0}
+
+
+Constructor
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em rate\-Id}]Identifier of the processed counter in the Mon\-Rate. \item[{\em p\-Mon\-Rate}]Pointer to the Mon\-Rate owning the processed counter. \end{description}
+\end{Desc}
+\index{RateExtractor@{Rate\-Extractor}!~RateExtractor@{$\sim$RateExtractor}}
+\index{~RateExtractor@{$\sim$RateExtractor}!RateExtractor@{Rate\-Extractor}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}Rate\-Extractor::$\sim${\bf Rate\-Extractor} ()}\label{classRateExtractor_a1}
+
+
+Destructor 
+
+\subsection{Member Function Documentation}
+\index{RateExtractor@{Rate\-Extractor}!extractData@{extractData}}
+\index{extractData@{extractData}!RateExtractor@{Rate\-Extractor}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool Rate\-Extractor::extract\-Data (longlong {\em time})}\label{classRateExtractor_a5}
+
+
+Extraction method, based on time of the new event.
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em time}]Time of the last event in the processed cycle.\end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]True if no error. \end{Desc}
+\index{RateExtractor@{Rate\-Extractor}!getRateComment@{getRateComment}}
+\index{getRateComment@{getRateComment}!RateExtractor@{Rate\-Extractor}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ Rate\-Extractor::get\-Rate\-Comment ()\hspace{0.3cm}{\tt  [inline]}}\label{classRateExtractor_a3}
+
+
+Get the current comment. \begin{Desc}
+\item[Returns:]A pointer on the current comment. \end{Desc}
+\index{RateExtractor@{Rate\-Extractor}!getRateId@{getRateId}}
+\index{getRateId@{getRateId}!RateExtractor@{Rate\-Extractor}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}std::string Rate\-Extractor::get\-Rate\-Id ()\hspace{0.3cm}{\tt  [inline]}}\label{classRateExtractor_a4}
+
+
+Get the processed counter name. \begin{Desc}
+\item[Returns:]The processed counter name. \end{Desc}
+\index{RateExtractor@{Rate\-Extractor}!getRateValue@{getRateValue}}
+\index{getRateValue@{getRateValue}!RateExtractor@{Rate\-Extractor}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}double\& Rate\-Extractor::get\-Rate\-Value ()\hspace{0.3cm}{\tt  [inline]}}\label{classRateExtractor_a2}
+
+
+Get a reference on the value container. \begin{Desc}
+\item[Returns:]Reference on m\_\-data.value. \end{Desc}
+\index{RateExtractor@{Rate\-Extractor}!makeServiceName@{makeServiceName}}
+\index{makeServiceName@{makeServiceName}!RateExtractor@{Rate\-Extractor}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}std::string Rate\-Extractor::make\-Service\-Name (std::string {\em name\-Header})\hspace{0.3cm}{\tt  [private]}}\label{classRateExtractor_d0}
+
+
+Trivial method to create the name of the services.
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em name\-Header}]Header to add before the counter name.\end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]The service name. \end{Desc}
+\index{RateExtractor@{Rate\-Extractor}!publishServices@{publishServices}}
+\index{publishServices@{publishServices}!RateExtractor@{Rate\-Extractor}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Rate\-Extractor::publish\-Services (std::string {\em name\-Header})}\label{classRateExtractor_a6}
+
+
+Method publishing the structured service.
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em name\-Header}]Header of the complete service name (header+counter name). \end{description}
+\end{Desc}
+\index{RateExtractor@{Rate\-Extractor}!reshapeComment@{reshapeComment}}
+\index{reshapeComment@{reshapeComment}!RateExtractor@{Rate\-Extractor}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Rate\-Extractor::reshape\-Comment ()\hspace{0.3cm}{\tt  [private]}}\label{classRateExtractor_d1}
+
+
+Method formating the comment. 
+
+\begin{Desc}
+\item[{\bf Deprecated}]Comment does not contain label to recognize rate services. \end{Desc}
+\index{RateExtractor@{Rate\-Extractor}!sentDataSize@{sentDataSize}}
+\index{sentDataSize@{sentDataSize}!RateExtractor@{Rate\-Extractor}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int Rate\-Extractor::sent\-Data\-Size ()\hspace{0.3cm}{\tt  [private]}}\label{classRateExtractor_d2}
+
+
+Calculate the size of the data (value+comment) to send.
+
+\begin{Desc}
+\item[Returns:]Size of the data to send. \end{Desc}
+
+
+\subsection{Member Data Documentation}
+\index{RateExtractor@{Rate\-Extractor}!m_commentSize@{m\_\-commentSize}}
+\index{m_commentSize@{m\_\-commentSize}!RateExtractor@{Rate\-Extractor}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int {\bf Rate\-Extractor::m\_\-comment\-Size}\hspace{0.3cm}{\tt  [private]}}\label{classRateExtractor_r4}
+
+
+Size of the comment including null character. Max size defined by s\_\-max\-Rate\-Comment\-Size \index{RateExtractor@{Rate\-Extractor}!m_counterNewValue@{m\_\-counterNewValue}}
+\index{m_counterNewValue@{m\_\-counterNewValue}!RateExtractor@{Rate\-Extractor}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}double {\bf Rate\-Extractor::m\_\-counter\-New\-Value}\hspace{0.3cm}{\tt  [private]}}\label{classRateExtractor_r6}
+
+
+\index{RateExtractor@{Rate\-Extractor}!m_counterOldValue@{m\_\-counterOldValue}}
+\index{m_counterOldValue@{m\_\-counterOldValue}!RateExtractor@{Rate\-Extractor}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}double {\bf Rate\-Extractor::m\_\-counter\-Old\-Value}\hspace{0.3cm}{\tt  [private]}}\label{classRateExtractor_r5}
+
+
+Counter values got from Mon\-Rate, used to make counter's value comparisons \index{RateExtractor@{Rate\-Extractor}!m_data@{m\_\-data}}
+\index{m_data@{m\_\-data}!RateExtractor@{Rate\-Extractor}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf Rate\-Extractor\-Data} {\bf Rate\-Extractor::m\_\-data}\hspace{0.3cm}{\tt  [private]}}\label{classRateExtractor_r3}
+
+
+Data extracted of the Mon\-Rate counter and stored to be sent by DIM. \index{RateExtractor@{Rate\-Extractor}!m_newTime@{m\_\-newTime}}
+\index{m_newTime@{m\_\-newTime}!RateExtractor@{Rate\-Extractor}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}longlong {\bf Rate\-Extractor::m\_\-new\-Time}\hspace{0.3cm}{\tt  [private]}}\label{classRateExtractor_r8}
+
+
+\index{RateExtractor@{Rate\-Extractor}!m_oldTime@{m\_\-oldTime}}
+\index{m_oldTime@{m\_\-oldTime}!RateExtractor@{Rate\-Extractor}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}longlong {\bf Rate\-Extractor::m\_\-old\-Time}\hspace{0.3cm}{\tt  [private]}}\label{classRateExtractor_r7}
+
+
+Time values got from Mon\-Rate, used to make time comparisons. \index{RateExtractor@{Rate\-Extractor}!m_pMonRate@{m\_\-pMonRate}}
+\index{m_pMonRate@{m\_\-pMonRate}!RateExtractor@{Rate\-Extractor}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}Mon\-Rate$\ast$ {\bf Rate\-Extractor::m\_\-p\-Mon\-Rate}\hspace{0.3cm}{\tt  [private]}}\label{classRateExtractor_r2}
+
+
+Pointer to the Mon\-Rate object containing the counter to tranform. \index{RateExtractor@{Rate\-Extractor}!m_rateId@{m\_\-rateId}}
+\index{m_rateId@{m\_\-rateId}!RateExtractor@{Rate\-Extractor}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}std::string {\bf Rate\-Extractor::m\_\-rate\-Id}\hspace{0.3cm}{\tt  [private]}}\label{classRateExtractor_r1}
+
+
+Identifier of the converted counter in the given Mon\-Rate object. \index{RateExtractor@{Rate\-Extractor}!m_structuredService@{m\_\-structuredService}}
+\index{m_structuredService@{m\_\-structuredService}!RateExtractor@{Rate\-Extractor}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}Dim\-Service$\ast$ {\bf Rate\-Extractor::m\_\-structured\-Service}\hspace{0.3cm}{\tt  [private]}}\label{classRateExtractor_r0}
+
+
+Pointer to the publishded structured. 
+
+The documentation for this class was generated from the following files:\begin{CompactItemize}
+\item 
+/afs/cern.ch/user/j/jmenou/cmtuser/Online\_\-v4r10/Online/Rate\-Service/v2r1/src/{\bf Rate\-Extractor.h}\item 
+/afs/cern.ch/user/j/jmenou/cmtuser/Online\_\-v4r10/Online/Rate\-Service/v2r1/src/{\bf Rate\-Extractor.cpp}\end{CompactItemize}

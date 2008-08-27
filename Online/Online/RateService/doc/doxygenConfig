@@ -1,0 +1,9 @@
+PROJECT_NAME = "RateService_v2r1"
+
+#OUTPUT_DIRECTORY = "/afs/cern.ch/user/j/jmenou/cmtuser/Online_v4r10/Online/RateService/v2r1/doc/doxygen"
+OUTPUT_DIRECTORY = "./doxygen"
+
+INPUT = "../src"
+
+HTML_DOCUMENTATION = YES
+HTML_FILES_EXTENSION = .html

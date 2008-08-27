@@ -1,0 +1,30 @@
+// Job options file. Simple Online monitoring example
+
+// copied from ExampleGaucho v3r0
+// edited to match the Converter project
+
+//==============================================================
+
+
+// ApplicationMgr.ExtSvc = { "MonitorSvc" };
+
+
+AuditorSvc.Auditors = { "ChronoAuditor" };
+
+ApplicationMgr.TopAlg  = { "RateService" };
+//ApplicationMgr.TopAlg  = { "RateService" };
+RateService.SleepTime = 15;  // in seconds
+
+RateService.MonRateServiceName = "MonR/Moore/MonitorSvc/monRate";
+RateService.OutputLevel = 3;
+//RateService.svcname = "MonR/Moore/MonitorSvc/monRate"; // the MonRate to be subscribed
+
+MonitorSvc.OutputLevel=3;
+//MonitorSvc.refreshtime=10;  // in seconds
+
+// Modify Message Format to print algorithm name with 20 characters
+MessageSvc.Format = "% F%20W%S%7W%R%T %0W%M";
+
+ApplicationMgr.EvtMax    = -1;   // events to be processed (default is 10)
+//ApplicationMgr.EvtMax    = 5;   // events to be processed (default is 10)
+ApplicationMgr.EvtSel   = "NONE"; // do not use any event input

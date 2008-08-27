@@ -1,0 +1,164 @@
+\section{Rate\-Service Class Reference}
+\label{classRateService}\index{RateService@{RateService}}
+{\tt \#include $<$Rate\-Service.h$>$}
+
+\subsection*{Public Member Functions}
+\begin{CompactItemize}
+\item 
+{\bf Rate\-Service} (const std::string \&name, ISvc\-Locator $\ast$p\-Svc\-Locator)
+\begin{CompactList}\small\item\em Constructor of this form must be provided. \item\end{CompactList}\item 
+Status\-Code {\bf initialize} ()
+\begin{CompactList}\small\item\em Initialize mandatory member functions of any algorithm. \item\end{CompactList}\item 
+Status\-Code {\bf execute} ()
+\begin{CompactList}\small\item\em Execute mandatory member functions of any algorithm. \item\end{CompactList}\item 
+Status\-Code {\bf finalize} ()
+\begin{CompactList}\small\item\em Finalize mandatory member functions of any algorithm. \item\end{CompactList}\end{CompactItemize}
+\subsection*{Private Member Functions}
+\begin{CompactItemize}
+\item 
+bool {\bf is\-Handled\-Service} (std::string service\-Name)
+\item 
+Status\-Code {\bf find\-Services} ()
+\end{CompactItemize}
+\subsection*{Private Attributes}
+\begin{CompactItemize}
+\item 
+std::string {\bf m\_\-UTGID}
+\item 
+std::string {\bf m\_\-dim\-Name}
+\begin{CompactList}\small\item\em ??? \item\end{CompactList}\item 
+std::string {\bf m\_\-mon\-Rate\-Service\-Name}
+\item 
+bool {\bf m\_\-found}
+\item 
+std::vector$<$ {\bf Dim\-Info\-Mon\-Rate} $\ast$ $>$ {\bf m\_\-dim\-Info\-Mon\-Rate}
+\item 
+time\_\-t {\bf time\_\-old}
+\begin{CompactList}\small\item\em not used anymore. \item\end{CompactList}\item 
+time\_\-t {\bf time\_\-new}
+\begin{CompactList}\small\item\em not used anymore. \item\end{CompactList}\item 
+int {\bf sleep\-Time}
+\begin{CompactList}\small\item\em Time to sleep betwen. \item\end{CompactList}\end{CompactItemize}
+
+
+\subsection{Detailed Description}
+Rate\-Service is an Algorithm subscribing to Mon\-Rate services and publishing structured services to PVSS.
+
+\begin{Desc}
+\item[Author:]Jean-Francois Menou \end{Desc}
+
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{RateService@{Rate\-Service}!RateService@{RateService}}
+\index{RateService@{RateService}!RateService@{Rate\-Service}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}Rate\-Service::Rate\-Service (const std::string \& {\em name}, ISvc\-Locator $\ast$ {\em p\-Svc\-Locator})}\label{classRateService_a0}
+
+
+Constructor of this form must be provided. 
+
+
+
+\subsection{Member Function Documentation}
+\index{RateService@{Rate\-Service}!execute@{execute}}
+\index{execute@{execute}!RateService@{Rate\-Service}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}Status\-Code Rate\-Service::execute ()}\label{classRateService_a2}
+
+
+Execute mandatory member functions of any algorithm. 
+
+\index{RateService@{Rate\-Service}!finalize@{finalize}}
+\index{finalize@{finalize}!RateService@{Rate\-Service}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}Status\-Code Rate\-Service::finalize ()}\label{classRateService_a3}
+
+
+Finalize mandatory member functions of any algorithm. 
+
+\index{RateService@{Rate\-Service}!findServices@{findServices}}
+\index{findServices@{findServices}!RateService@{Rate\-Service}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}Status\-Code Rate\-Service::find\-Services ()\hspace{0.3cm}{\tt  [private]}}\label{classRateService_d1}
+
+
+Discovers Mon\-Rate services
+
+\begin{Desc}
+\item[Returns:]A Status\-Code. \end{Desc}
+\index{RateService@{Rate\-Service}!initialize@{initialize}}
+\index{initialize@{initialize}!RateService@{Rate\-Service}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}Status\-Code Rate\-Service::initialize ()}\label{classRateService_a1}
+
+
+Initialize mandatory member functions of any algorithm. 
+
+\index{RateService@{Rate\-Service}!isHandledService@{isHandledService}}
+\index{isHandledService@{isHandledService}!RateService@{Rate\-Service}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool Rate\-Service::is\-Handled\-Service (std::string {\em service\-Name})\hspace{0.3cm}{\tt  [private]}}\label{classRateService_d0}
+
+
+Checks if a Mon\-Rate service is already being processed by a Dim\-In\-Fo\-Mon\-Rate.
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em service\-Name}]The DIM service name to be checked.\end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]True if the service is already handled. \end{Desc}
+
+
+\subsection{Member Data Documentation}
+\index{RateService@{Rate\-Service}!m_dimInfoMonRate@{m\_\-dimInfoMonRate}}
+\index{m_dimInfoMonRate@{m\_\-dimInfoMonRate}!RateService@{Rate\-Service}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}std::vector$<${\bf Dim\-Info\-Mon\-Rate} $\ast$$>$ {\bf Rate\-Service::m\_\-dim\-Info\-Mon\-Rate}\hspace{0.3cm}{\tt  [private]}}\label{classRateService_r4}
+
+
+Pointers to the Dim\-Info\-Mon\-Object handling the Mon\-Rate services. \index{RateService@{Rate\-Service}!m_dimName@{m\_\-dimName}}
+\index{m_dimName@{m\_\-dimName}!RateService@{Rate\-Service}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}std::string {\bf Rate\-Service::m\_\-dim\-Name}\hspace{0.3cm}{\tt  [private]}}\label{classRateService_r1}
+
+
+??? 
+
+\index{RateService@{Rate\-Service}!m_found@{m\_\-found}}
+\index{m_found@{m\_\-found}!RateService@{Rate\-Service}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool {\bf Rate\-Service::m\_\-found}\hspace{0.3cm}{\tt  [private]}}\label{classRateService_r3}
+
+
+if the service has been found then don't ; if the service has been found then don't \index{RateService@{Rate\-Service}!m_monRateServiceName@{m\_\-monRateServiceName}}
+\index{m_monRateServiceName@{m\_\-monRateServiceName}!RateService@{Rate\-Service}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}std::string {\bf Rate\-Service::m\_\-mon\-Rate\-Service\-Name}\hspace{0.3cm}{\tt  [private]}}\label{classRateService_r2}
+
+
+name of the service puclishing the Mon\-Rate object to be subscribed \index{RateService@{Rate\-Service}!m_UTGID@{m\_\-UTGID}}
+\index{m_UTGID@{m\_\-UTGID}!RateService@{Rate\-Service}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}std::string {\bf Rate\-Service::m\_\-UTGID}\hspace{0.3cm}{\tt  [private]}}\label{classRateService_r0}
+
+
+utgid given to this algorithm. \index{RateService@{Rate\-Service}!sleepTime@{sleepTime}}
+\index{sleepTime@{sleepTime}!RateService@{Rate\-Service}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int {\bf Rate\-Service::sleep\-Time}\hspace{0.3cm}{\tt  [private]}}\label{classRateService_r7}
+
+
+Time to sleep betwen. 
+
+\index{RateService@{Rate\-Service}!time_new@{time\_\-new}}
+\index{time_new@{time\_\-new}!RateService@{Rate\-Service}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}time\_\-t {\bf Rate\-Service::time\_\-new}\hspace{0.3cm}{\tt  [private]}}\label{classRateService_r6}
+
+
+not used anymore. 
+
+\index{RateService@{Rate\-Service}!time_old@{time\_\-old}}
+\index{time_old@{time\_\-old}!RateService@{Rate\-Service}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}time\_\-t {\bf Rate\-Service::time\_\-old}\hspace{0.3cm}{\tt  [private]}}\label{classRateService_r5}
+
+
+not used anymore. 
+
+
+
+The documentation for this class was generated from the following files:\begin{CompactItemize}
+\item 
+/afs/cern.ch/user/j/jmenou/cmtuser/Online\_\-v4r10/Online/Rate\-Service/v2r1/src/{\bf Rate\-Service.h}\item 
+/afs/cern.ch/user/j/jmenou/cmtuser/Online\_\-v4r10/Online/Rate\-Service/v2r1/src/{\bf Rate\-Service.cpp}\end{CompactItemize}

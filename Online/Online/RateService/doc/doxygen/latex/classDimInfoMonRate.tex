@@ -1,0 +1,247 @@
+\section{Dim\-Info\-Mon\-Rate Class Reference}
+\label{classDimInfoMonRate}\index{DimInfoMonRate@{DimInfoMonRate}}
+{\tt \#include $<$Dim\-Info\-Mon\-Rate.h$>$}
+
+\subsection*{Public Member Functions}
+\begin{CompactItemize}
+\item 
+{\bf Dim\-Info\-Mon\-Rate} (std::string mon\-Rate\-Svc\-Name, int refresh\-Time, std::string source)
+\item 
+virtual {\bf $\sim$Dim\-Info\-Mon\-Rate} ()
+\item 
+void {\bf create\-Mon\-Rate} ()
+\item 
+void {\bf load\-Mon\-Rate} ()
+\item 
+virtual void {\bf info\-Handler} ()
+\item 
+Mon\-Rate $\ast$ {\bf get\-Mon\-Rate} ()
+\item 
+bool {\bf is\-Mon\-Rate\-Created} ()
+\item 
+void {\bf set\-Msg\-Service} (IMessage\-Svc $\ast$ims)
+\item 
+std::string {\bf get\-Service\-Name} ()
+\end{CompactItemize}
+\subsection*{Private Member Functions}
+\begin{CompactItemize}
+\item 
+void {\bf extract\-Data} ()
+\item 
+int {\bf look\-For\-New\-Rates} ()
+\item 
+std::string {\bf make\-Service\-Name\-Header} ()
+\end{CompactItemize}
+\subsection*{Private Attributes}
+\begin{CompactItemize}
+\item 
+bool {\bf m\_\-constructor\-Done}
+\item 
+bool {\bf m\_\-has\-Data}
+\item 
+std::string {\bf m\_\-name}
+\item 
+bool {\bf m\_\-mon\-Rate\-Created}
+\item 
+std::string {\bf m\_\-mon\-Rate\-Service\-Name}
+\item 
+Mon\-Rate $\ast$ {\bf m\_\-mon\-Rate}
+\item 
+int {\bf m\_\-current\-Cycle\-Number}
+\item 
+IMessage\-Svc $\ast$ {\bf m\_\-msg\-Svc}
+\item 
+int {\bf m\_\-string\-Size}
+\item 
+std::string {\bf m\_\-source\-Name}
+\item 
+{\bf Extractor\-Map} {\bf m\_\-extractor\-Map}
+\item 
+std::string {\bf service\-Name\-Header}
+\end{CompactItemize}
+
+
+\subsection{Detailed Description}
+A Dim\-Info based class subscribing to a Mon\-Rate service. Uses {\bf Rate\-Extractor}{\rm (p.\,\pageref{classRateExtractor})} objects to publish services included in the Mon\-Rate.
+
+\begin{Desc}
+\item[Author:]Jean-Francois Menou \end{Desc}
+
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{DimInfoMonRate@{Dim\-Info\-Mon\-Rate}!DimInfoMonRate@{DimInfoMonRate}}
+\index{DimInfoMonRate@{DimInfoMonRate}!DimInfoMonRate@{Dim\-Info\-Mon\-Rate}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}Dim\-Info\-Mon\-Rate::Dim\-Info\-Mon\-Rate (std::string {\em mon\-Rate\-Svc\-Name}, int {\em refresh\-Time}, std::string {\em source})}\label{classDimInfoMonRate_a0}
+
+
+Constructor.
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em mon\-Rate\-Svc\-Name}]Name of the DIM service to subscribe and handle. \item[{\em refresh\-Time}]Dim\-Info refresh\-Time parameter. \item[{\em source}]Name of the algorithm creating this instance.\end{description}
+\end{Desc}
+\index{DimInfoMonRate@{Dim\-Info\-Mon\-Rate}!~DimInfoMonRate@{$\sim$DimInfoMonRate}}
+\index{~DimInfoMonRate@{$\sim$DimInfoMonRate}!DimInfoMonRate@{Dim\-Info\-Mon\-Rate}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}Dim\-Info\-Mon\-Rate::$\sim${\bf Dim\-Info\-Mon\-Rate} ()\hspace{0.3cm}{\tt  [virtual]}}\label{classDimInfoMonRate_a1}
+
+
+
+
+\subsection{Member Function Documentation}
+\index{DimInfoMonRate@{Dim\-Info\-Mon\-Rate}!createMonRate@{createMonRate}}
+\index{createMonRate@{createMonRate}!DimInfoMonRate@{Dim\-Info\-Mon\-Rate}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Dim\-Info\-Mon\-Rate::create\-Mon\-Rate ()}\label{classDimInfoMonRate_a2}
+
+
+Initialize the Mon\-Rate from the subscribed DIM service.\index{DimInfoMonRate@{Dim\-Info\-Mon\-Rate}!extractData@{extractData}}
+\index{extractData@{extractData}!DimInfoMonRate@{Dim\-Info\-Mon\-Rate}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Dim\-Info\-Mon\-Rate::extract\-Data ()\hspace{0.3cm}{\tt  [private]}}\label{classDimInfoMonRate_d0}
+
+
+Method processing the Mon\-Rate object : call the {\bf extract\-Data()}{\rm (p.\,\pageref{classDimInfoMonRate_d0})} method for each rate contained in the Mon\-Rate.\index{DimInfoMonRate@{Dim\-Info\-Mon\-Rate}!getMonRate@{getMonRate}}
+\index{getMonRate@{getMonRate}!DimInfoMonRate@{Dim\-Info\-Mon\-Rate}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}Mon\-Rate$\ast$ Dim\-Info\-Mon\-Rate::get\-Mon\-Rate ()\hspace{0.3cm}{\tt  [inline]}}\label{classDimInfoMonRate_a5}
+
+
+Get a pointer on the Mon\-Rate object receiving data from the DIM service.
+
+\begin{Desc}
+\item[Returns:]The pointer on the Mon\-Rate.\end{Desc}
+\index{DimInfoMonRate@{Dim\-Info\-Mon\-Rate}!getServiceName@{getServiceName}}
+\index{getServiceName@{getServiceName}!DimInfoMonRate@{Dim\-Info\-Mon\-Rate}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}std::string Dim\-Info\-Mon\-Rate::get\-Service\-Name ()\hspace{0.3cm}{\tt  [inline]}}\label{classDimInfoMonRate_a8}
+
+
+Get the name of the DIM service handled by the instance.
+
+\begin{Desc}
+\item[Returns:]The service name.\end{Desc}
+\index{DimInfoMonRate@{Dim\-Info\-Mon\-Rate}!infoHandler@{infoHandler}}
+\index{infoHandler@{infoHandler}!DimInfoMonRate@{Dim\-Info\-Mon\-Rate}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Dim\-Info\-Mon\-Rate::info\-Handler ()\hspace{0.3cm}{\tt  [virtual]}}\label{classDimInfoMonRate_a4}
+
+
+Callback on Mon\-Rate service changes.\index{DimInfoMonRate@{Dim\-Info\-Mon\-Rate}!isMonRateCreated@{isMonRateCreated}}
+\index{isMonRateCreated@{isMonRateCreated}!DimInfoMonRate@{Dim\-Info\-Mon\-Rate}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool Dim\-Info\-Mon\-Rate::is\-Mon\-Rate\-Created ()\hspace{0.3cm}{\tt  [inline]}}\label{classDimInfoMonRate_a6}
+
+
+Checks if the Mon\-Rate ha been created.
+
+\begin{Desc}
+\item[Returns:]True if the Mon\-Rate has been created.\end{Desc}
+\index{DimInfoMonRate@{Dim\-Info\-Mon\-Rate}!loadMonRate@{loadMonRate}}
+\index{loadMonRate@{loadMonRate}!DimInfoMonRate@{Dim\-Info\-Mon\-Rate}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Dim\-Info\-Mon\-Rate::load\-Mon\-Rate ()}\label{classDimInfoMonRate_a3}
+
+
+Updates the Mon\-Rate content from the subscribed DIM service.\index{DimInfoMonRate@{Dim\-Info\-Mon\-Rate}!lookForNewRates@{lookForNewRates}}
+\index{lookForNewRates@{lookForNewRates}!DimInfoMonRate@{Dim\-Info\-Mon\-Rate}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int Dim\-Info\-Mon\-Rate::look\-For\-New\-Rates ()\hspace{0.3cm}{\tt  [private]}}\label{classDimInfoMonRate_d1}
+
+
+Looks for new counters (not beeing converted into rate by a {\bf Rate\-Extractor}{\rm (p.\,\pageref{classRateExtractor})} object yet).
+
+\begin{Desc}
+\item[Returns:]The number of new counters found.\end{Desc}
+\index{DimInfoMonRate@{Dim\-Info\-Mon\-Rate}!makeServiceNameHeader@{makeServiceNameHeader}}
+\index{makeServiceNameHeader@{makeServiceNameHeader}!DimInfoMonRate@{Dim\-Info\-Mon\-Rate}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}std::string Dim\-Info\-Mon\-Rate::make\-Service\-Name\-Header ()\hspace{0.3cm}{\tt  [private]}}\label{classDimInfoMonRate_d2}
+
+
+Create a header string (stored in service\-Name\-Header) based on algorithm name and Mon\-Rate service name.
+
+\begin{Desc}
+\item[Returns:]The header.\end{Desc}
+\index{DimInfoMonRate@{Dim\-Info\-Mon\-Rate}!setMsgService@{setMsgService}}
+\index{setMsgService@{setMsgService}!DimInfoMonRate@{Dim\-Info\-Mon\-Rate}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void Dim\-Info\-Mon\-Rate::set\-Msg\-Service (IMessage\-Svc $\ast$ {\em ims})\hspace{0.3cm}{\tt  [inline]}}\label{classDimInfoMonRate_a7}
+
+
+Set the message service.
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em ims}]The message service interface to use.\end{description}
+\end{Desc}
+
+
+\subsection{Member Data Documentation}
+\index{DimInfoMonRate@{Dim\-Info\-Mon\-Rate}!m_constructorDone@{m\_\-constructorDone}}
+\index{m_constructorDone@{m\_\-constructorDone}!DimInfoMonRate@{Dim\-Info\-Mon\-Rate}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool {\bf Dim\-Info\-Mon\-Rate::m\_\-constructor\-Done}\hspace{0.3cm}{\tt  [private]}}\label{classDimInfoMonRate_r0}
+
+
+Dumy flag supposed to show if constructor is done, to prevent info\-Handler to be executed detween service subscription and constructor's end.\index{DimInfoMonRate@{Dim\-Info\-Mon\-Rate}!m_currentCycleNumber@{m\_\-currentCycleNumber}}
+\index{m_currentCycleNumber@{m\_\-currentCycleNumber}!DimInfoMonRate@{Dim\-Info\-Mon\-Rate}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int {\bf Dim\-Info\-Mon\-Rate::m\_\-current\-Cycle\-Number}\hspace{0.3cm}{\tt  [private]}}\label{classDimInfoMonRate_r6}
+
+
+Indication on the last processed cycle. updated in extract\-Date() method.\index{DimInfoMonRate@{Dim\-Info\-Mon\-Rate}!m_extractorMap@{m\_\-extractorMap}}
+\index{m_extractorMap@{m\_\-extractorMap}!DimInfoMonRate@{Dim\-Info\-Mon\-Rate}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}{\bf Extractor\-Map} {\bf Dim\-Info\-Mon\-Rate::m\_\-extractor\-Map}\hspace{0.3cm}{\tt  [private]}}\label{classDimInfoMonRate_r10}
+
+
+List of object in charge of extracting and republishing rates from Mon\-Rate.\index{DimInfoMonRate@{Dim\-Info\-Mon\-Rate}!m_hasData@{m\_\-hasData}}
+\index{m_hasData@{m\_\-hasData}!DimInfoMonRate@{Dim\-Info\-Mon\-Rate}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool {\bf Dim\-Info\-Mon\-Rate::m\_\-has\-Data}\hspace{0.3cm}{\tt  [private]}}\label{classDimInfoMonRate_r1}
+
+
+Flag set to true if the Mon\-Rate has data.
+
+\begin{Desc}
+\item[{\bf Deprecated}]\end{Desc}
+\index{DimInfoMonRate@{Dim\-Info\-Mon\-Rate}!m_monRate@{m\_\-monRate}}
+\index{m_monRate@{m\_\-monRate}!DimInfoMonRate@{Dim\-Info\-Mon\-Rate}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}Mon\-Rate$\ast$ {\bf Dim\-Info\-Mon\-Rate::m\_\-mon\-Rate}\hspace{0.3cm}{\tt  [private]}}\label{classDimInfoMonRate_r5}
+
+
+Pointer on the Mon\-Object actually owned by the Dim\-Info\-Mon\-Object object\index{DimInfoMonRate@{Dim\-Info\-Mon\-Rate}!m_monRateCreated@{m\_\-monRateCreated}}
+\index{m_monRateCreated@{m\_\-monRateCreated}!DimInfoMonRate@{Dim\-Info\-Mon\-Rate}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}bool {\bf Dim\-Info\-Mon\-Rate::m\_\-mon\-Rate\-Created}\hspace{0.3cm}{\tt  [private]}}\label{classDimInfoMonRate_r3}
+
+
+Flag indicating if the Mon\-Rate object has correctly been initialized in the {\bf create\-Mon\-Rate()}{\rm (p.\,\pageref{classDimInfoMonRate_a2})} method.\index{DimInfoMonRate@{Dim\-Info\-Mon\-Rate}!m_monRateServiceName@{m\_\-monRateServiceName}}
+\index{m_monRateServiceName@{m\_\-monRateServiceName}!DimInfoMonRate@{Dim\-Info\-Mon\-Rate}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}std::string {\bf Dim\-Info\-Mon\-Rate::m\_\-mon\-Rate\-Service\-Name}\hspace{0.3cm}{\tt  [private]}}\label{classDimInfoMonRate_r4}
+
+
+The name of the Mon\-Rate service that is processed by the instance\index{DimInfoMonRate@{Dim\-Info\-Mon\-Rate}!m_msgSvc@{m\_\-msgSvc}}
+\index{m_msgSvc@{m\_\-msgSvc}!DimInfoMonRate@{Dim\-Info\-Mon\-Rate}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}IMessage\-Svc$\ast$ {\bf Dim\-Info\-Mon\-Rate::m\_\-msg\-Svc}\hspace{0.3cm}{\tt  [private]}}\label{classDimInfoMonRate_r7}
+
+
+Pointer to the message service...\index{DimInfoMonRate@{Dim\-Info\-Mon\-Rate}!m_name@{m\_\-name}}
+\index{m_name@{m\_\-name}!DimInfoMonRate@{Dim\-Info\-Mon\-Rate}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}std::string {\bf Dim\-Info\-Mon\-Rate::m\_\-name}\hspace{0.3cm}{\tt  [private]}}\label{classDimInfoMonRate_r2}
+
+
+Name of the Mon\-Rate.
+
+\begin{Desc}
+\item[{\bf Deprecated}]\end{Desc}
+\index{DimInfoMonRate@{Dim\-Info\-Mon\-Rate}!m_sourceName@{m\_\-sourceName}}
+\index{m_sourceName@{m\_\-sourceName}!DimInfoMonRate@{Dim\-Info\-Mon\-Rate}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}std::string {\bf Dim\-Info\-Mon\-Rate::m\_\-source\-Name}\hspace{0.3cm}{\tt  [private]}}\label{classDimInfoMonRate_r9}
+
+
+Name of the algorithm owning this object...\index{DimInfoMonRate@{Dim\-Info\-Mon\-Rate}!m_stringSize@{m\_\-stringSize}}
+\index{m_stringSize@{m\_\-stringSize}!DimInfoMonRate@{Dim\-Info\-Mon\-Rate}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int {\bf Dim\-Info\-Mon\-Rate::m\_\-string\-Size}\hspace{0.3cm}{\tt  [private]}}\label{classDimInfoMonRate_r8}
+
+
+Length of the last read DIM buffer for the subscribed service.\index{DimInfoMonRate@{Dim\-Info\-Mon\-Rate}!serviceNameHeader@{serviceNameHeader}}
+\index{serviceNameHeader@{serviceNameHeader}!DimInfoMonRate@{Dim\-Info\-Mon\-Rate}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}std::string {\bf Dim\-Info\-Mon\-Rate::service\-Name\-Header}\hspace{0.3cm}{\tt  [private]}}\label{classDimInfoMonRate_r11}
+
+
+This string is to be used by {\bf Rate\-Extractor}{\rm (p.\,\pageref{classRateExtractor})} object to publish their services. in a coherent way.
+
+The documentation for this class was generated from the following files:\begin{CompactItemize}
+\item 
+/afs/cern.ch/user/j/jmenou/cmtuser/Online\_\-v4r10/Online/Rate\-Service/v2r1/src/{\bf Dim\-Info\-Mon\-Rate.h}\item 
+/afs/cern.ch/user/j/jmenou/cmtuser/Online\_\-v4r10/Online/Rate\-Service/v2r1/src/{\bf Dim\-Info\-Mon\-Rate.cpp}\end{CompactItemize}
