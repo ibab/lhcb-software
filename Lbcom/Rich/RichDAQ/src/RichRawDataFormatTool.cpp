@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.75 2008-08-26 19:29:21 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.76 2008-08-27 15:08:56 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -219,10 +219,6 @@ RawDataFormatTool::printL1Stats( const L1TypeCount & count,
     always() << LINES << endreq;
 
   } // end stats available
-  else
-  {
-    always() << "No statistics available" << endreq;
-  }
 
 }
 
