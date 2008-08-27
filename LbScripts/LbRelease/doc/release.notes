@@ -1,3 +1,14 @@
+2008-08-27  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbRelease/CMT/__init__.py: New file.
+	* python/LbRelease/CMT/LbGraph.py: New file.
+	* python/LbRelease/CMT/LbPackage.py: New file.
+	* python/LbRelease/CMT/LbProject.py: New file.
+	* python/LbRelease/CMT/Version.py: New file. Module to convert between CMT and LHCb version
+	scheme for the projects (LHCb v25r0 <-> LHCB LHCB_v25r0).
+	* scripts/showProjects.py: added specializations of the Package, Project and Graph class from
+	LbUtils.CMT. It uses the LHCb conventions and thus runs faster.
+
 2008-06-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/Benchmark.py:
