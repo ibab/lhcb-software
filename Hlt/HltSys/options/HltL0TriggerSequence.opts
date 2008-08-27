@@ -78,7 +78,9 @@ PrepareL0MuonDecisionSeq.Members = {
   "HltL0MuonPrepare/L0MuonDecision"
 };
 
+// L0DiMuonDecision uses L0AllMuons as InputSelection, so it should make sure it is run!
 PrepareL0DiMuonDecisionSeq.Members = {
+  "GaudiSequencer/PrepareL0AllMuonsSeq",
   "HltL0Filter/Hlt1L0DiMuon",
   "HltVertexMaker1/L0DiMuonDecision"
 };
