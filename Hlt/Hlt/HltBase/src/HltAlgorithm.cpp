@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.40 2008-08-13 07:11:15 graven Exp $
+// $Id: HltAlgorithm.cpp,v 1.41 2008-08-27 09:26:40 graven Exp $
 // Include files 
 
 #include "HltBase/HltAlgorithm.h"
@@ -122,10 +122,13 @@ StatusCode HltAlgorithm::sysExecute() {
       restore=true;
   }
   
-  //TODO: move callbacks here...
   sc = beginExecute();
   if (sc.isFailure()) return sc;
   
+  //TODO: add try/catch around this, and set error flags...
+  //      need to know the 'terminus' of the current sequence (probably
+  //      need an explicit property for that, cannot discover ourselves),
+  //      and execute that one explicitly so it can record the problem...
   sc = HltBaseAlg::sysExecute();
   if (sc.isFailure()) return sc;
   
@@ -234,6 +237,12 @@ void HltAlgorithm::setDecision() {
 
 void HltAlgorithm::setDecision(bool accept) {
   setFilterPassed(accept);
+  // the next forces the 'processed' flag to be set -- even if in some 
+  // cases 'accept' is obtained from m_outputSelection!!!
+  // (basically, if we are of type TSelection<X>, and have no selected
+  // candidates, we never explicitly set 'false', and hence would otherwise
+  // not set 'processed'
+  m_outputSelection->setDecision(accept);
   if (accept) increaseCounter(m_counterAccepted);
 }
 
