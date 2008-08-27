@@ -28,7 +28,7 @@ HltMuonAlley.Members = {   "HltL0Filter/L0MuonEntry",
 };
 HltMuonAlley.MeasureTime = true;
 
-HltMuonPreTrigger.ModeOr = true;
+HltMuonPreTrigger.ModeOR = true;
 HltMuonPreTrigger.ShortCircuit = false;
 HltMuonPreTrigger.Members += {"GaudiSequencer/HltMuonPreTriggerSingleMuon",
                               "HltMuonPreTriggerDiMuons"
@@ -38,7 +38,7 @@ HltMuonPreTriggerSingleMuon.Members +={"HltTrackIPSelection/HltTrackMuonIPSelect
                                         "HltMuonPreTriggerSingle"
 };
 
-HltMuonTrigger.ModeOr = true;
+HltMuonTrigger.ModeOR = true;
 HltMuonTrigger.ShortCircuit = false;
 HltMuonTrigger.Members += {"GaudiSequencer/HltMuonTriggerSingleMuon"
                            ,"HltMuonTriggerDiMuons"

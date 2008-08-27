@@ -27,6 +27,6 @@ HltRecoSequence.Members += { "CreateHltVzero/HltV0LL", };
  */
 ApplicationMgr.TopAlg += {"GaudiSequencer/Hlt"};
 
-Hlt.ModeOr = true;
+Hlt.ModeOR = true;
 Hlt.ShortCircuit = false;
 

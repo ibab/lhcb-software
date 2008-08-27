@@ -106,7 +106,7 @@ Hlt1LumiBeamCrossingSequence.Members = {
 //-------------------------------------------------------------------------
 // HLT LumiAlley options
 //-------------------------------------------------------------------------
-Hlt1LumiRecoSequence.ModeOr = true;         // should always pass
+Hlt1LumiRecoSequence.ModeOR = true;         // should always pass
 Hlt1LumiRecoSequence.ShortCircuit = false;  // execute the last always
 Hlt1LumiRecoSequence.MeasureTime = true;
 // Hlt1LumiRecoSequence.OutputLevel=3;
@@ -114,7 +114,7 @@ Hlt1LumiRecoSequence.MeasureTime = true;
 Hlt1LumiPreRecoSequence.MeasureTime = true;
 // Hlt1LumiPreRecoSequence.OutputLevel=3;
 
-HltLumiCountSequence.ModeOr = true;         // should always pass
+HltLumiCountSequence.ModeOR = true;         // should always pass
 HltLumiCountSequence.ShortCircuit = false;  // execute the last always
 HltLumiCountSequence.MeasureTime = true;
 // HltLumiCountSequence.OutputLevel=3;
@@ -130,7 +130,7 @@ LumiCountRZVelo.CounterName="RZVelo";
 LumiCountRZVelo.OutputContainer="Hlt/LumiSummary";
 
 HltBWRZVeloSequence.MeasureTime = true;
-HltBWRZVeloSequence.ModeOr = true;         // should always pass
+HltBWRZVeloSequence.ModeOR = true;         // should always pass
 
 HltPrepareBWRZVelo.InputSelection   = "TES:Hlt/Track/RZVelo";
 HltPrepareBWRZVelo.AddInfo = false;
@@ -181,7 +181,7 @@ LumiCountVeloTwo.InputSelection="Hlt/Track/Velo";
 LumiCountVeloTwo.CounterName="Velo";
 LumiCountVeloTwo.OutputContainer="Hlt/LumiSummaryTwo";
 
-Hlt1LumiBXTypesSequence.ModeOr = true;         // should always pass
+Hlt1LumiBXTypesSequence.ModeOR = true;         // should always pass
 Hlt1LumiBXTypesSequence.ShortCircuit = false;  // execute the last always
 Hlt1LumiBXTypesSequence.MeasureTime = true;
 // Hlt1LumiBXTypesSequence.OutputLevel=3;

@@ -7,7 +7,7 @@
  */
 Hlt.Members += { "GaudiSequencer/Hlt1" };
 
-Hlt1.ModeOr=true; 
+Hlt1.ModeOR=true; 
 Hlt1.ShortCircuit=false; 
 
 Hlt1.Members += {  "GaudiSequencer/HltPhysics" };
@@ -41,7 +41,7 @@ Hlt1.Members += {  "HltSelectionFilter/Hlt1Global" };
 
 Hlt.Members += { "GaudiSequencer/HltEndSequence" };
 HltGlobalMonitor.OutputLevel = 3;
-HltEndSequence.ModeOr = true;
+HltEndSequence.ModeOR = true;
 HltEndSequence.ShortCircuit = false;
 HltEndSequence.Members += {"HltSelectionToTES"};
 HltSelectionToTES.OutputLevel = 3;
