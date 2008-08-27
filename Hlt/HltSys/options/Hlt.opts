@@ -3,11 +3,6 @@
  */
 
 /**
- * common initialization between HLT1 and HLT2
- */
-#include "$HLTSYSROOT/options/HltInit.opts"
-
-/**
  * Hlt alleys - HLT 1 (this requires L0 to have been run)
  */
 #include "$HLTSYSROOT/options/Hlt1.opts"
