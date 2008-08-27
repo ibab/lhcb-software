@@ -100,10 +100,10 @@ CtrlFarmSubDisplay::~CtrlFarmSubDisplay() {
 
 /// Initialize default display text
 void CtrlFarmSubDisplay::init(bool) {
-  ::scrc_put_chars(m_display,"                  UNKNOWN ",COL_WARNING,1,1,1);
-  ::scrc_put_chars(m_display,"No information availible",COL_WARNING,2,1,1);
-  ::scrc_put_chars(m_display,"Nodes     <Unknown>", NORMAL,3,1,1);
-  ::scrc_put_chars(m_display,"           ------- ", NORMAL,4,1,1);
+  ::scrc_put_chars(m_display,"                     UNKNOWN ",COL_WARNING,1,1,1);
+  ::scrc_put_chars(m_display,"     No information availible",COL_ALARM,2,1,1);
+  ::scrc_put_chars(m_display,"                             ",COL_ALARM,3,1,1);
+  ::scrc_put_chars(m_display,"                             ",COL_ALARM,4,1,1);
   ::scrc_set_border(m_display,m_title.c_str(),COL_WARNING);
 }
 
@@ -140,22 +140,20 @@ void CtrlFarmSubDisplay::update(const void* address) {
     ::sprintf(txt,"%s",c.status.c_str());
     ::scrc_put_chars(m_display,c.status.c_str(),col,1,22,1);
     ::sprintf(txt,"%2zd Nodes %3zd Tasks running, %2zd missing",c.nodes.size(),taskCount,missCount);
-    ::scrc_put_chars(m_display,txt,col,2,1,1);
+    ::scrc_put_chars(m_display,txt,col&~BOLD,2,1,1);
     if ( c.status == "DEAD" ) {
-      ::scrc_put_chars(m_display,"Nodes down - Please check.",COL_ALARM,4,1,1);    
-      ::scrc_set_border(m_display,m_title.c_str(),col);
+      ::scrc_put_chars(m_display,"Nodes down - Please check.",RED|BOLD,4,1,1);    
+      //::scrc_set_border(m_display,m_title.c_str(),col);
     }
     else if ( c.status == "MIXED" ) {
-      ::scrc_put_chars(m_display,"Some nodes down - Please check.",YELLOW|INVERSE,4,1,1);    
-      ::scrc_set_border(m_display,m_title.c_str(),col);
+      ::scrc_put_chars(m_display,"Some nodes down - Please check.",BOLD,4,1,1);    
+      //::scrc_set_border(m_display,m_title.c_str(),col);
     }
     else if ( missCount>0 ) {
-      ::scrc_put_chars(m_display,"Tasks missing - Please check.",YELLOW|INVERSE,4,1,1);    
-      ::scrc_set_border(m_display,m_title.c_str(),col);
+      ::scrc_put_chars(m_display,"Tasks missing - Please check.",NORMAL,4,1,1);    
+      //::scrc_set_border(m_display,m_title.c_str(),col);
     }
-    else {
-      ::scrc_set_border(m_display,m_title.c_str(),NORMAL|BOLD);
-    }
+    ::scrc_set_border(m_display,m_title.c_str(),NORMAL|BOLD);
     IocSensor::instance().send(m_parent,CMD_CHECK,this);
     return;
   }
