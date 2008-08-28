@@ -7,6 +7,9 @@
   <class name = "LHCb::RichRecRing" />
   <class name = "LHCb::RichRecStatus" />
 
+  <class name = "Rich::Rec::FastRingFitter" />
+  <class name = "Rich::Rec::FastRingFitter::Result" />
+
   <class name = "Rich::Rec::RadCorrLocalPositions" />
   <class name = "Rich::ObjPtn&lt;Rich::Rec::RadCorrLocalPositions&gt;" />
 

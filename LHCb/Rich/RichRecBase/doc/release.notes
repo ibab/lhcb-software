@@ -4,6 +4,10 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2008-08-29 - Chris Jones
+ - Resurrect the old FastRingFitter class, that provides a simple and fast 
+   circle fit to a set of (x,y) data points.
+
 ! 2008-08-18 - Chris Jones
  - Remove redundant method from IRichSellmeirFunc interface
  - Improve default property values in various base classes

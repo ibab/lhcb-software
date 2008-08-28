@@ -10,6 +10,7 @@
 
 #include "RichRecBase/RichRecPhotonKey.h"
 #include "RichRecBase/RichRadCorrLocalPositions.h"
+#include "RichRecBase/FastRingFitter.h"
 
 #include "RichRecBase/IRichBaseTrackSelector.h"
 #include "RichRecBase/IRichCherenkovAngle.h"
