@@ -1,4 +1,17 @@
 
+//-----------------------------------------------------------------------------
+/** @file FastRingFitter.h
+ *
+ *  Header file for class : Rich::Rec::FastRingFitter
+ *
+ *  CVS Log :-
+ *  $Id: FastRingFitter.h,v 1.2 2008-08-28 23:30:47 jonrob Exp $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   2003-05-01
+ */
+//-----------------------------------------------------------------------------
+
 #ifndef RichRecBase_FASTRINGFITTER_H
 #define RichRecBase_FASTRINGFITTER_H 1
 
