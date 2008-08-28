@@ -1,4 +1,4 @@
-// $Id: MuonRawBuffer.cpp,v 1.20 2008-07-15 17:39:18 asatta Exp $
+// $Id: MuonRawBuffer.cpp,v 1.21 2008-08-28 08:45:59 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -1248,7 +1248,11 @@ StatusCode MuonRawBuffer::checkAllHeaders(LHCb::RawEvent* raw)
   std::vector<unsigned int>::iterator  iList;
   const std::vector<RawBank*>& b = raw->banks(RawBank::Muon);
   std::vector<RawBank*>::const_iterator itB;  
-  
+  if(b.size()==0){
+    if ( msgLevel(MSG::VERBOSE) )  verbose()<<" no muon banks in event"<<endreq;
+    return StatusCode::SUCCESS;
+    
+  }
   //first decode data and insert in buffer
   for( itB = b.begin(); itB != b.end(); itB++ ) {    
   

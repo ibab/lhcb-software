@@ -4,6 +4,9 @@
 ! Purpose     : Muon System Raw Buffer coding and decoding algorithms
 !-----------------------------------------------------------------------------
 
+! 2008-08-28 - Alessia Satta
+ - fix for empty raw bank during check of tell1 headers ( version and source id) 
+   thanks to T Ruf
 !========================== MuonDAQ v4r3 2008-07-16 ==========================
 ! 2008-07-14 - Alessia Satta
  - add check that all tell1 headers are consistent ( version and source id)
