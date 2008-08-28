@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.cpp,v 1.16 2008-08-27 19:15:20 frankb Exp $
+// $Id: FarmDisplay.cpp,v 1.17 2008-08-28 08:14:38 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.16 2008-08-27 19:15:20 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.17 2008-08-28 08:14:38 frankb Exp $
 
 #include "ROMon/CtrlSubfarmDisplay.h"
 #include "ROMon/RecSubfarmDisplay.h"
@@ -777,14 +777,17 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
     ::scrc_put_chars(m_display," No DAQ activity visible.",BOLD|RED,4,1,1);
   }
   else if ( evt_moore <= m_evtMoore && evt_prod[1] > m_totMoore ) {
-    ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
-    ::scrc_put_chars(m_display," Some MOORE(s) stuck.",BOLD|RED|INVERSE,4,1,1);
+    // This check does not work properly....
+    //::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
+    //::scrc_put_chars(m_display," Some MOORE(s) stuck.",BOLD|RED|INVERSE,4,1,1);
+    ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
+    ::scrc_put_chars(m_display,"",NORMAL,4,1,1);
   }
   else if ( inuse && evt_moore <= m_evtMoore && evt_prod[1] == m_totMoore ) {
     ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
     ::scrc_put_chars(m_display," No HLT activity visible.",BOLD|RED,4,1,1);
   }
-  else if ( evt_sent <= m_evtSent && evt_prod[2] > m_totSent ) {
+  el4se if ( evt_sent <= m_evtSent && evt_prod[2] > m_totSent ) {
     ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
     ::scrc_put_chars(m_display," Some Sender(s) stuck.",BOLD|RED|INVERSE,4,1,1);
   }
@@ -794,7 +797,6 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
   }
   else {
     ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
-    ::scrc_put_chars(m_display,"",NORMAL,4,1,1);
     ::scrc_put_chars(m_display," No obvious Errors detected....",NORMAL|INVERSE|GREEN,4,1,1);
     m_hasProblems = false;
   }
