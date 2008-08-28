@@ -38,7 +38,10 @@ void OMACheckHolesAndSpikes::exec(TH1 &Histo,
   DeltaMode mode = static_cast<DeltaMode> ((int)(input_pars[1] + .1 ) );
   if (mode <= MinMode || mode>= MaxMode ) return;
   
-  double refValues[Histo.GetNbinsX()][Histo.GetNbinsY()];
+  std::vector<double> refValues;
+  int nBx = Histo.GetNbinsX();
+  int nBy = Histo.GetNbinsY();
+  refValues.resize(nBx * nBy);
   
   if( ipoly>=0 ) { //polynomial fit
     // only 1-dim histograms are supported for the moment
@@ -47,16 +50,16 @@ void OMACheckHolesAndSpikes::exec(TH1 &Histo,
     ss << "pol"<<ipoly;
     Histo.Fit(ss.str().c_str(),"Q");
     TF1 *fit = Histo.GetFunction(ss.str().c_str());
-    for (int ih=1 ; ih<= Histo.GetNbinsX() ; ih++) {
-      refValues[ih-1][0] = fit->Eval(Histo.GetBinCenter(ih));
+    for (int ih=1 ; ih<= nBx ; ih++) {
+      refValues[ih-1] = fit->Eval(Histo.GetBinCenter(ih));
     }
   }
   else if(Ref) { // compare with reference 
-    for (int ihx=1 ; ihx<= Histo.GetNbinsX() ; ihx++) {
-      for (int ihy=1 ; ihy<= Histo.GetNbinsY() ; ihy++) {
+    for (int ihx=1 ; ihx<= nBx ; ihx++) {
+      for (int ihy=1 ; ihy<= nBy ; ihy++) {
         if( ihx <=  Ref->GetNbinsX() &&
             ihy <=  Ref->GetNbinsY() )
-          refValues[ihx-1][ihy-1] = Ref->GetBinContent(ihx,ihy);
+          refValues[(ihx-1)*nBy + (ihy-1)] = Ref->GetBinContent(ihx,ihy);
       }
     }
   }
@@ -67,31 +70,31 @@ void OMACheckHolesAndSpikes::exec(TH1 &Histo,
   double MinDelta=9999., MaxDelta=-9999.;
   int minbin=-1,maxbin=-1;
   // now compare bin contents with reference
-  for (int ihx=1 ; ihx<= Histo.GetNbinsX() ; ihx++) {
-    for (int ihy=1 ; ihy<= Histo.GetNbinsY() ; ihy++) {
-      double delta=0.;
+  for (int ihx=1 ; ihx<= nBx ; ihx++) {
+    for (int ihy=1 ; ihy<= nBy ; ihy++) {
+      double delta=0.,err=0.;
       double content = Histo.GetBinContent(ihx,ihy);
-      double &xref=refValues[ihx-1][ihy-1];
+      double &xref=refValues[(ihx-1)*nBy +(ihy-1)];
       switch(mode) {
       case Ratio:
-	// take the ratio, except for cases where both values are very small 
-	delta=1.;
-	if (xref < 0.1 ) {
-	  if (content > 0.99)
-	    delta= (xref>0.01) ? content/xref : 99.;
-	}
-	else {
-	  if (content > 0.1) 
-	    delta = content/xref;
-	  else if(xref > 0.99)
-	    delta= (content>0.01) ? content/xref : .01;
-	}
+        // take the ratio, except for cases where both values are very small 
+        delta=1.;
+        if (xref < 0.1 ) {
+          if (content > 0.99)
+            delta= (xref>0.01) ? content/xref : 99.;
+        }
+        else {
+          if (content > 0.1) 
+            delta = content/xref;
+          else if(xref > 0.99)
+            delta= (content>0.01) ? content/xref : .01;
+        }
         break;
       case AbsDiff:
         delta = content - xref;
         break;
       case SigmaDiff:
-        double err = Histo.GetBinError(ihx,ihy);
+        err = Histo.GetBinError(ihx,ihy);
         // assuming error=1.2 in case of 0 content 
         delta= (err > 0.) ? (content - xref)/err : (content - xref)/1.2;
         break;
