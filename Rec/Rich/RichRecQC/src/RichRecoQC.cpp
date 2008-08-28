@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::RecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.cpp,v 1.40 2008-08-28 17:09:37 jonrob Exp $
+ *  $Id: RichRecoQC.cpp,v 1.41 2008-08-28 22:31:33 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -114,6 +114,7 @@ StatusCode RecoQC::execute()
 
     // Radiator info
     const Rich::RadiatorType rad = segment->trackSegment().radiator();
+    const std::string& RAD = Rich::text(rad);
 
     // segment momentum
     const double pTot = std::sqrt(segment->trackSegment().bestMomentum().Mag2());
@@ -153,7 +154,7 @@ StatusCode RecoQC::execute()
       if ( fitR.status == IStereoFitter::Result::Succeeded )
         plot1D( fitR.thcFit-thetaExpTrue,
                 hid(rad,"ckResAllStereoRefit"),
-                "Rec-Exp Cktheta : beta=1 : All photons : Stereographic Refit",
+                RAD+" Rec-Exp Cktheta : All photons : Stereographic Refit",
                 -m_ckResRange[rad], m_ckResRange[rad], m_nBins );
     }
 
@@ -171,23 +172,23 @@ StatusCode RecoQC::execute()
       // reconstructed phi
       const double phiRec   = photon->geomPhoton().CherenkovPhi();
 
-      plot1D( thetaRec, hid(rad,"thetaRec"), "Reconstructed Ch Theta : All photons",
+      plot1D( thetaRec, hid(rad,"thetaRec"), RAD+" Reconstructed Ch Theta : All photons",
               m_ckThetaMin[rad], m_ckThetaMax[rad], m_nBins );
-      plot1D( phiRec, hid(rad,"phiRec"), "Reconstructed Ch Phi : All photons",
+      plot1D( phiRec, hid(rad,"phiRec"), RAD+" Reconstructed Ch Phi : All photons",
               0.0, 2*Gaudi::Units::pi, m_nBins );
       plot1D( thetaRec-thetaExpTrue,
-              hid(rad,"ckResAll"), "Rec-Exp Cktheta : beta=1 : All photons",
+              hid(rad,"ckResAll"), RAD+" Rec-Exp Cktheta : beta=1 : All photons",
               -m_ckResRange[rad], m_ckResRange[rad], m_nBins );
 
       // isolated segment ?
       if ( isolated )
       {
         plot1D( thetaRec, hid(rad,"thetaRecIsolated"), 
-                "Reconstructed Ch Theta : All photons : Isolated Tracks",
+                RAD+" Reconstructed Ch Theta : All photons : Isolated Tracks",
                 m_ckThetaMin[rad], m_ckThetaMax[rad], m_nBins );
         plot1D( thetaRec-thetaExpTrue,
                 hid(rad,"ckResAllIsolated"),
-                "Rec-Exp Cktheta : beta=1 : All photons : Isolated Tracks",
+                RAD+" Rec-Exp Cktheta : beta=1 : All photons : Isolated Tracks",
                 -m_ckResRange[rad], m_ckResRange[rad], m_nBins );
       }
 
@@ -201,19 +202,21 @@ StatusCode RecoQC::execute()
           avRecTrueTheta += thetaRec;
           // resolution plot
           plot1D( thetaRec-thetaExpTrue,
-                  hid(rad,"ckResTrue"), "Rec-Exp Cktheta : beta=1 : MC true photons",
+                  hid(rad,"ckResTrue"), RAD+" Rec-Exp Cktheta : beta=1 : MC true photons",
                   -m_ckResRange[rad], m_ckResRange[rad], m_nBins );
           if ( resExpTrue>0 )
           {
             // pull plot
             const double ckPull = (thetaRec-thetaExpTrue)/resExpTrue;
-            plot1D( ckPull, hid(rad,"ckPull"), "(Rec-Exp)/Res Cktheta : beta=1", -4, 4, m_nBins );
+            plot1D( ckPull, hid(rad,"ckPull"), 
+                    RAD+" (Rec-Exp)/Res Cktheta : beta=1", -4, 4, m_nBins );
           }
         }
         else // fake photon
         {
           plot1D( thetaRec-thetaExpTrue,
-                  hid(rad,"ckResFake"), "Rec-Exp Cktheta : beta=1 : MC fake photons",
+                  hid(rad,"ckResFake"), 
+                  RAD+" Rec-Exp Cktheta : beta=1 : MC fake photons",
                   -m_ckResRange[rad], m_ckResRange[rad], m_nBins );
         }
       } // MC is available
@@ -222,22 +225,24 @@ StatusCode RecoQC::execute()
 
     plot1D( segment->richRecPhotons().size(),
             hid(rad,"totalPhotons"),
-            "Photon Yield : All Tracks",
+            RAD+" Photon Yield : All Tracks",
               -0.5, 30.5, 31 );
     if ( isolated )
     {
       plot1D( segment->richRecPhotons().size(),
               hid(rad,"totalPhotonsIsolated"),
-              "Photon Yield : Isolated Tracks",
+              RAD+" Photon Yield : Isolated Tracks",
               -0.5, 30.5, 31 );
     }
     
       // number of true photons
     if ( truePhotons > 0 )
     {
-      plot1D( truePhotons, hid(rad,"nCKphots"), "True # p.e.s : beta=1", -0.5, 50, 51 );
+      plot1D( truePhotons, hid(rad,"nCKphots"), 
+              RAD+" True # p.e.s : beta=1", -0.5, 50, 51 );
       profile1D( avRecTrueTheta/(double)truePhotons,
-                 truePhotons, hid(rad,"nCKphotsVcktheta"), "True # p.e.s Versus CK theta : beta=1",
+                 truePhotons, hid(rad,"nCKphotsVcktheta"),
+                 RAD+" True # p.e.s Versus CK theta : beta=1",
                  m_ckThetaMin[rad], m_ckThetaMax[rad] );
       m_truePhotCount[rad] += truePhotons;
       ++m_nSegs[rad];

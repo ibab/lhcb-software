@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichMarkovRingFinderMoni
  *
- *  $Id: RichMarkovRingFinderMoni.cpp,v 1.34 2008-08-28 17:14:22 jonrob Exp $
+ *  $Id: RichMarkovRingFinderMoni.cpp,v 1.35 2008-08-28 22:30:56 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -73,14 +73,7 @@ StatusCode Moni::execute()
 
     // Radiator info
     const Rich::RadiatorType rad = ring->radiator();
-    const std::string RAD = Rich::text(rad);
-
-    // Plot centre points of rings
-    //const Gaudi::XYZPoint & RingCentreLocal = (*iR)->centrePointLocal();
-    //plot2D( RingCentreLocal.x(), RingCentreLocal.y(),
-    //        hid(rad,"ringCentres"), RAD+" Trackless Ring Centres",
-    //       -2*Gaudi::Units::m, 2*Gaudi::Units::m,
-    //        -2*Gaudi::Units::m, 2*Gaudi::Units::m, m_nBins, m_nBins );
+    const std::string& RAD = Rich::text(rad);
 
     // Ring knows if it is associated or not
     RichRecSegment * nearestSeg = ring->richRecSegment();
