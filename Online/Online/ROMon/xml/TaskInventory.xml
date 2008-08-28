@@ -1,0 +1,168 @@
+<TaskInventory>
+
+<!--  Standard FMC tasks:                  -->
+<Task name="fmcLog"/>
+<Task name="tmSrv_u"/>
+<Task name="fsSrv_u"/>
+<Task name="smartSrv_u"/>
+<Task name="tcpipSrv_u"/>
+<Task name="psSrv_u"/>
+<Task name="nifSrv_u"/>
+<Task name="memSrv_u"/>
+<Task name="irqSrv_u"/>
+<Task name="cpustatSrv_u"/>
+<Task name="coalSrv_u"/>
+
+<!--  Standard infrastructure tasks:       -->
+<Task name="TANSrv"/>
+
+<!--  Standard Readout worker tasks:       -->
+<Task name="ROcollect"/>
+<Task name="ROpublish"/>
+<Task name="LogGaudiSrv"/>
+<Task name="MBMMON_0"/>
+
+<!--  Standard Readout controlsPC tasks:   -->
+<Task name="CPUmon"/>
+<Task name="CPUcollect"/>
+<Task name="PROCmon"/>
+<Task name="PROCcollect"/>
+<Task name="LogGaudi"/>
+<Task name="LogGaudiSumSrv"/>
+<Task name="LogGaudiSumSrvaaaa"/>
+
+<Task name="Monitoring_Slice00Srv" type="logViewer">
+  <Path>/opt/FMC/bin/logViewer</Path>
+  <MachineName>&lt;Node&gt;</MachineName>
+  <Responsible>Radu Stoica</Responsible>
+  <UserName>rStoica</UserName>
+  <DimServiceName>MonTestDim2</DimServiceName>
+  <DimDnsNode>LocalHost2</DimDnsNode>
+</Task>
+<Task name="Monitoring_Slice01Srv" type="logViewer"/>
+<Task name="Monitoring_Slice02Srv" type="logViewer"/>
+<Task name="Monitoring_Slice03Srv" type="logViewer"/>
+<Task name="Monitoring_Slice04Srv" type="logViewer"/>
+<Task name="Monitoring_Slice05Srv" type="logViewer"/>
+<Task name="Monitoring_Slice06Srv" type="logViewer"/>
+<Task name="Monitoring_Slice07Srv" type="logViewer"/>
+<Task name="Monitoring_Slice08Srv" type="logViewer"/>
+<Task name="Monitoring_Slice09Srv" type="logViewer"/>
+<Task name="Monitoring_Slice0ASrv" type="logViewer"/>
+<Task name="Monitoring_Slice0BSrv" type="logViewer"/>
+<Task name="Monitoring_Slice0CSrv" type="logViewer"/>
+<Task name="Monitoring_Slice0DSrv" type="logViewer"/>
+<Task name="Monitoring_Slice0ESrv" type="logViewer"/>
+<Task name="Monitoring_Slice0FSrv" type="logViewer"/>
+
+
+<TaskList>
+ <Name>FMC</Name>
+ <Task>fmcLog</Task>
+ <Task>tmSrv_u</Task>
+ <Task>fsSrv_u</Task>
+ <Task>smartSrv_u</Task>
+ <Task>tcpipSrv_u</Task>
+ <Task>psSrv_u</Task>
+ <Task>nifSrv_u</Task>
+ <Task>memSrv_u</Task>
+ <Task>irqSrv_u</Task>
+ <Task>cpustatSrv_u</Task>
+ <Task>coalSrv_u</Task>
+</TaskList>
+
+<TaskList>
+ <Name>StandardHLT</Name>
+ <Task>TANSrv</Task>
+ <Task>ROcollect</Task>
+ <Task>ROpublish</Task>
+ <Task>LogGaudiSrv</Task>
+</TaskList>
+
+<TaskList>
+ <Name>StandardMonitoring</Name>
+ <Task>Monitoring_Slice00Srv</Task>
+ <Task>Monitoring_Slice01Srv</Task>
+ <Task>Monitoring_Slice02Srv</Task>
+ <Task>Monitoring_Slice03Srv</Task>
+ <Task>Monitoring_Slice04Srv</Task>
+ <Task>Monitoring_Slice05Srv</Task>
+ <Task>Monitoring_Slice06Srv</Task>
+ <Task>Monitoring_Slice07Srv</Task>
+ <Task>Monitoring_Slice08Srv</Task>
+ <Task>Monitoring_Slice09Srv</Task>
+ <Task>Monitoring_Slice0ASrv</Task>
+ <Task>Monitoring_Slice0BSrv</Task>
+ <Task>Monitoring_Slice0CSrv</Task>
+ <Task>Monitoring_Slice0DSrv</Task>
+ <Task>Monitoring_Slice0ESrv</Task>
+ <Task>Monitoring_Slice0FSrv</Task>
+</TaskList>
+
+<TaskList>
+ <Name>StandardStorage</Name>
+ <Task>Storage_Slice00Srv</Task>
+ <Task>Storage_Slice01Srv</Task>
+ <Task>Storage_Slice02Srv</Task>
+ <Task>Storage_Slice03Srv</Task>
+ <Task>Storage_Slice04Srv</Task>
+ <Task>Storage_Slice05Srv</Task>
+ <Task>Storage_Slice06Srv</Task>
+ <Task>Storage_Slice07Srv</Task>
+ <Task>Storage_Slice08Srv</Task>
+ <Task>Storage_Slice09Srv</Task>
+ <Task>Storage_Slice0ASrv</Task>
+ <Task>Storage_Slice0BSrv</Task>
+ <Task>Storage_Slice0CSrv</Task>
+ <Task>Storage_Slice0DSrv</Task>
+ <Task>Storage_Slice0ESrv</Task>
+ <Task>Storage_Slice0FSrv</Task>
+</TaskList>
+
+<TaskList>
+ <Name>MonitoringWorker</Name>
+</TaskList>
+
+<TaskList>
+ <Name>MonitoringControl</Name>
+</TaskList>
+
+<TaskList>
+  <Name>ControlsPC</Name>
+</TaskList>
+
+
+<NodeType>
+  <Name>HLTControl</Name>
+  <TaskList>FMC</TaskList>
+  <TaskList>StandardHLT</TaskList>
+  <Task>CPUmon</Task>
+  <Task>CPUcollect</Task>
+  <Task>PROCmon</Task>
+  <Task>PROCcollect</Task>
+  <Task>LogGaudi</Task>
+  <Task>LogGaudiSumSrv</Task>
+  <Task>LogGaudiSumSrvaaaa</Task>
+</NodeType>
+
+<NodeType>
+  <Name>HLTWorker</Name>
+  <TaskList>FMC</TaskList>
+  <TaskList>StandardHLT</TaskList>
+  <Task>MBMMON_0</Task>
+</NodeType>
+
+<NodeType>
+  <Name>MonitoringControl</Name>
+  <TaskList>FMC</TaskList>
+  <TaskList>StandardMonitoring</TaskList>
+  <TaskList>MonitoringControl</TaskList>
+</NodeType>
+<NodeType>
+  <Name>MonitoringWorker</Name>
+  <TaskList>FMC</TaskList>
+  <TaskList>StandardMonitoring</TaskList>
+  <TaskList>MonitoringWorker</TaskList>
+</NodeType>
+
+</TaskInventory>

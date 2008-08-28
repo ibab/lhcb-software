@@ -1,0 +1,113 @@
+Cluster Monitor
+by: Raul Duran Bravo, 2008
+
+    This script collects the information of the TaskSupervisors
+    that are running in the clusters and then publishes the
+    collective information creating a service called
+    'ClusterCollector' in the cluster where it was invoked.
+
+    Failing status for Clusters are DEAD and MIXED.
+    
+    A cluster is declared DEAD when its TaskSupervisor
+    could not be interrogated for whatever reason.
+
+    A cluster is declared MIXED when its TaskSupervisor
+    exists but has error messages, then it proceeds to
+    publish the information obtained from the corresponding
+    TaskSupervisor.
+
+
+    Functions that are similar to those in the TaskSupervisor
+    script are:
+      - error
+      - info
+      - debug
+      - clearscreen
+
+    Classes that are similar to those in the TaskSupervisor
+    script are:
+      - DimClient
+
+    Classes that are exclusive of ClusterMonitor are:
+    - TaskSupervisorClient
+    - ClusterSupervisor
+    - ClusterCollector
+
+    Note: It uses an external script named XMLTaskList to
+    decode the XML information
+
+
+
+
+FUNCTIONS:
+
+
+    error(*args)
+
+        The error function labels the information as
+        [ERROR] to be properly identified when showed
+
+
+    info(*args)
+
+        The info function labels the information as
+        [INFO] to be properly identified when showed
+
+
+    debug(*args)
+
+        The debug function labels the information as an
+        [DEBUG] to be properly identified when showed
+
+
+    clearscreen()
+
+        The clearscreen function is invoked each second
+        to sweep the old information from the screen and
+        permits the updates to be posted without displacing
+        the info from its regular place, it also takes into
+        account the type of operating system to do it.
+
+
+    clusterMonitor()
+
+        The clusterMonitor function loads the necessary lists,
+        for now, the XML Nodelists are static. After that, the
+        ClusterCollector is started
+
+
+
+
+CLASSES:
+
+
+    DimClient
+
+        The DimClient class sets the constructor and the
+        destructor for a future DIM Service as well as
+        the cleanup after stopping a service. Also, the
+        base parameters for starting the service are
+        declared here.
+    
+        TaskSupervisor and ClusterSupervisor inherit from
+        this class
+
+
+    TaskSupervisorClient(DimClient)
+
+        An instance of the TaskSupervisorClient class subscribes
+        to the TaskSupervisor service in a node.
+
+
+    ClusterCollector
+
+        An instance of the ClusterCollector class suscribes
+        to the DIS_DNS/SERVER_LIST service and extracts the
+        list of processes that are running in each node of
+        the cluster.
+
+        It also looks for added and removed processes to put
+        them in the ALIVE or DEAD lists.
+
+        Then the information is formatted in XML and
+        published by a process called ClusterCollector

@@ -1,0 +1,159 @@
+Task Supervisor
+by: Raul Duran Bravo, 2008
+
+    It gathers the errors of each Node in a Cluster,
+    then the summary is published by a service named
+    /XXXXXX/TaskSupervisor,
+    where XXXXXX is the name of the Cluster.
+
+    The status for each Node can be DEAD and ALIVE.
+
+    A Node is declared DEAD if there is no response from it.
+
+    A Node is declared ALIVE if it responds, anyway if one
+    or more Tasks are missing, their names will be specified
+    and tagged one by one.
+
+
+    Functions that are similar to those in the ClusterMonitor
+    script are:
+      - error
+      - info
+      - debug
+      - clearscreen
+
+    Classes that are similar to those in the ClusterMonitor
+    script are:
+      - DimClient
+
+    Classes that are exclusive of TaskSupervisor are:
+      - TaskList
+      - TmTask
+      - NodeMonitor
+      - TaskSupervisor
+
+    Note: It uses an external script named XMLTaskList to
+    decode the XML information
+
+
+
+
+FUNCTIONS:
+
+
+    error(*args)
+
+        The error function labels the information as
+        [ERROR] to be properly identified when showed
+
+
+    info(*args)
+
+        The info function labels the information as
+        [INFO] to be properly identified when showed
+
+
+    debug(*args)
+
+        The debug function labels the information as an
+        [DEBUG] to be properly identified when showed
+
+
+    clearscreen()
+
+        The clearscreen function is invoked each second
+        to sweep the old information from the screen and
+        permits the updates to be posted without displacing
+        the info from its regular place, it also takes into
+        account the type of operating system to do it.
+
+
+    callTaskSupervisor()
+
+        The callTaskSupervisor function loads the Master Tasklist,
+        the TaskInventory and the Nodelist. It also starts the
+        TaskSupervisor
+
+
+
+
+CLASSES:
+
+
+    DimClient
+
+        The DimClient class sets the constructor and the
+        destructor for a future DIM Service as well as
+        the cleanup after stopping a service. Also, the
+        base parameters for starting the service are
+        declared here.
+    
+        TaskSupervisor and ClusterSupervisor inherit from
+        this class
+
+
+    TaskList(list)
+
+        An instance of the TaskList class represents a collection of
+        task object as it results from reading the XML database.
+
+
+    TmTask
+
+        The TmTask class  initializes the structure of the 'Task'
+        object with the 34 attributes of each task and when its
+        fill function is invoked it assigns a number to each one of the
+        attributes to be filled.
+
+        HEADER and SHOW are samples of the information that can
+        be displayed.
+
+
+    NodeMonitor(DimClient)
+
+        An instance of the NodeMonitor class polls the /ps/data
+        service in the current Node to see what tasks are being
+        executed in that moment.
+
+        The callback function defined in the class splits the
+        arguments read from /ps/data into 34 pieces which is
+        the number of attributes each task has. A TmTask
+        structure is then filled with all the 34 attributes for
+        each existing task.
+
+        The utgid names are then put together in a list that is
+        compared against the Master Tasklist. The Master
+        Tasklist is  provided with anticipation, right now they
+        are static XML files.
+
+        If at the end of the comparison, there is a difference
+        between the MasterList and the created utgid list, the
+        tasks from the Masterlist that were not found in the
+        utgid list will be formatted as XML information for
+        later publishing
+
+        The NodeMonitor class inherits from the DimClient. 
+
+
+    TaskSupervisor
+
+        An instance of the TaskSupervisor class is able to
+        start the NodeMonitors in each node and then retrieve
+        their informations to publish it in each node in a
+        service called after it: TaskSupervisor.
+
+        First, the constructor initializes the necessary values,
+        one of them is the name of the service (with the node
+        name included).
+
+        The initialize function using the XMLTaskList script
+        checks the existance of nodes. Then the start function
+        makes each NodeMonitor begin their work.
+
+        The run function invokes the publish function each
+        second. Then the publish function polls for the status
+        of the NodeMonitors, based on their response, it
+        assigns DEAD, MIXED or ALIVE  status and publishes.
+
+        The results are framed in XML tags to match the
+        information received from the NodeMonitors
