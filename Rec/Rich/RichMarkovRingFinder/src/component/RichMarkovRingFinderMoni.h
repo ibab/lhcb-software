@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichMarkovRingFinderMoni
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderMoni.h,v 1.24 2008-08-28 17:14:22 jonrob Exp $
+ *  $Id: RichMarkovRingFinderMoni.h,v 1.25 2008-08-28 23:48:10 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -25,6 +25,7 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
+
 // Event
 #include "Event/RichRecStatus.h"
 #include "Event/RichRecTrack.h"
@@ -34,6 +35,9 @@
 #include "RichKernel/IRichRayTracing.h"
 #include "RichKernel/IRichSmartIDTool.h"
 #include "MCInterfaces/IRichRecMCTruthTool.h"
+
+// Kernel
+#include "RichRecBase/FastRingFitter.h"
 
 // boost
 #include "boost/assign/list_of.hpp"

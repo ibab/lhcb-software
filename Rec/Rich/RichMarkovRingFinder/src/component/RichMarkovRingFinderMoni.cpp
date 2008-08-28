@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichMarkovRingFinderMoni
  *
- *  $Id: RichMarkovRingFinderMoni.cpp,v 1.35 2008-08-28 22:30:56 jonrob Exp $
+ *  $Id: RichMarkovRingFinderMoni.cpp,v 1.36 2008-08-28 23:48:14 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -109,6 +109,26 @@ StatusCode Moni::execute()
               m_ckThetaMin[rad], m_ckThetaMax[rad],
               m_nBins, m_nBins );
     }
+
+    // refit the ring ...
+    FastRingFitter fitter;
+    // loop over hits on the ring
+    for ( LHCb::RichRecPixelOnRing::Vector::iterator iP = (*iR)->richRecPixels().begin();
+          iP != (*iR)->richRecPixels().end(); ++iP )
+    {
+      // get pixel from pixelOnRing
+      LHCb::RichRecPixel * pixel = (*iP).pixel();
+      // pixel hit
+      const Gaudi::XYZPoint & PixelLocal = pixel->localPosition();
+      // add (x,y) point to the fitter
+      fitter.addPoint( PixelLocal.x(), PixelLocal.y() );
+    }
+    // run the fit
+    fitter.fit();
+    // plot the fitted radius
+    plot1D( fitter.result().Radius, hid(rad,"ringRadiiRefitted"), 
+            RAD+" Refitted Trackless Ring Radii",
+            m_ckThetaMin[rad], m_ckThetaMax[rad], m_nBins );
 
   }//outer ring loop
 
