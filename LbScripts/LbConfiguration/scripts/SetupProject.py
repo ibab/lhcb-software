@@ -4,7 +4,7 @@ import os, sys, tempfile, re, sys
 from stat import S_ISDIR
 import getopt
 
-_cvs_id = "$Id: SetupProject.py,v 1.22 2008-08-22 11:32:43 hmdegaud Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.23 2008-08-28 14:34:42 hmdegaud Exp $"
 
 ########################################################################
 # Useful constants
@@ -1388,7 +1388,7 @@ class SetupProject:
             
         # normalize relative path introduced for the location the externals relatively
         # to the LCGCMT project
-        path2normalize = ["PYTHONPATH", "PATH", "LD_LIBRARY_PATH"]
+        path2normalize = ["PYTHONPATH", "PATH", "LD_LIBRARY_PATH", "ROOTSYS"]
         for p in path2normalize :
             if p in env.keys() :
                 pthlist = env[p].split(os.pathsep)
