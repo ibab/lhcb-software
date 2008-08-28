@@ -23,7 +23,7 @@ void MonRate::save(boost::archive::binary_oarchive & ar, const unsigned int vers
 //   msg <<MSG::INFO<<"**********************************************" << endreq;
   
   if (isServer) {
-//     msg <<MSG::INFO<<"THIS IS A SERVER " << endreq;
+    //msg <<MSG::INFO<<"THIS IS A SERVER " << endreq;
     int size = m_counterMap.size();
 //     msg <<MSG::INFO<<"size: " << size << endreq;
     m_profile = new TProfile("profile","MonRate Profile", size+7, 0, size+7);
@@ -67,20 +67,18 @@ void MonRate::save(boost::archive::binary_oarchive & ar, const unsigned int vers
     }
   }  
   else{
-//     msg <<MSG::INFO<<"THIS IS A CLIENT " << endreq;
+    //msg <<MSG::INFO<<"THIS IS A CLIENT " << endreq;
     m_profile =  profile();
   }
 
-/*  msg <<MSG::INFO<<"**********************************************" << endreq;
+  //msg <<MSG::INFO<<"**********************************************" << endreq;
   
-  msg <<MSG::INFO<<"size" << endreq;
-  msg <<MSG::INFO<<m_profile->GetNbinsX() << endreq;
-  for (int j = 0; j< m_profile->GetNbinsX()+2; j++) {
+  //msg <<MSG::INFO<<"size" << endreq;
+  //msg <<MSG::INFO<<m_profile->GetNbinsX() << endreq;
+/*  for (int j = 0; j< m_profile->GetNbinsX()+2; j++) {
     msg <<MSG::INFO<<"bin["<<j<<"] = " << (ulonglong) m_profile->GetBinContent(j) << ", name: "<< m_profile->GetXaxis()->GetBinLabel(j) << ", entries: " << m_profile->GetBinEntries(j) << endreq;
   }*/
-  
   MonProfile::save(ar, version);
-  
   if (isServer) {
     delete m_profile; m_profile = 0;
   }
@@ -88,15 +86,14 @@ void MonRate::save(boost::archive::binary_oarchive & ar, const unsigned int vers
 
 void MonRate::load(boost::archive::binary_iarchive  & ar, const unsigned int version)
 {
+  MsgStream msg = createMsgStream();
+  isServer = false;
   MonObject::load(ar, version);
   MonProfile::load(ar, version);
   
 /*  m_profile = profile();
-  
-  for (int j = 0; j< size+9; j++) {
-    msg <<MSG::INFO<<"bin content: " << m_profile->GetBinContent(j) << endreq;
-    msg <<MSG::INFO<<"bin entries: " << m_profile->GetBinEntries(j) << endreq;
-    msg <<MSG::INFO<<"name       : " << m_profile->GetXaxis()->GetBinLabel(j) << endreq;
+  for (int j = 0; j< m_profile->GetNbinsX()+2; j++) {
+    msg <<MSG::INFO<<"bin["<<j<<"] = " << (ulonglong) m_profile->GetBinContent(j) << ", name: "<< m_profile->GetXaxis()->GetBinLabel(j) << ", entries: " << m_profile->GetBinEntries(j) << endreq;
   }*/
   
 }

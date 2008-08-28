@@ -165,7 +165,7 @@ void MonProfile::setProfile(TProfile * tProfile){
 
 TProfile* MonProfile::profile(){  
   if (!objectCreated) createObject(sName);
-  print();
+  //print();
   loadObject();
   return m_profile;
 }

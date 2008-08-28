@@ -139,6 +139,15 @@ public:
   int m_disableMonRate;
   int m_disableDimPropServer;
   int m_disableDimCmdServer;
+  
+  int m_disableMonObjectsForBool;
+  int m_disableMonObjectsForInt;
+  int m_disableMonObjectsForLong;
+  int m_disableMonObjectsForDouble;
+  int m_disableMonObjectsForString;
+  int m_disableMonObjectsForPairs;
+  int m_disableMonObjectsForHistos;
+  
   int m_disableDeclareInfoBool;
   int m_disableDeclareInfoInt;
   int m_disableDeclareInfoLong;
@@ -147,7 +156,8 @@ public:
   int m_disableDeclareInfoPair;
   int m_disableDeclareInfoFormat;
   int m_disableDeclareInfoHistos;
-
+  
+  std::string m_teste;
 };
 
 #endif // GAUDIKERNEL_MONITORSVC_H

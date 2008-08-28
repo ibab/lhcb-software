@@ -212,7 +212,7 @@ std::pair<int, bool> UpdateAndReset::currentRunNumber() {
       msg << MSG::DEBUG<< "ODIN Bank doesn't exist. " <<endreq;
       // this is only for test when Odin doesn't work
       ulonglong currentTime = GauchoTimer::currentTime();
-      runNumber = currentTime/(m_deltaTRunTest*1000);
+      runNumber = currentTime/(m_deltaTRunTest*1000000);
     }
   }
   else {
@@ -246,16 +246,16 @@ ulonglong UpdateAndReset::gpsTime() {
   // this is only for test when Odin doesn't work
   ulonglong currentTime = GauchoTimer::currentTime();
 
-  int cycleNumber = currentTime/(m_desiredDeltaTCycle*1000);
+  int cycleNumber = currentTime/(m_desiredDeltaTCycle*1000000);
 
-  ulonglong gpsTime = ((ulonglong)cycleNumber)*((ulonglong) m_desiredDeltaTCycle*1000);
+  ulonglong gpsTime = ((ulonglong)cycleNumber)*((ulonglong) m_desiredDeltaTCycle*1000000);
 
   return gpsTime;
 }
 
 std::pair<int, bool> UpdateAndReset::currentCycleNumber(ulonglong currentTime) {
   bool changed = false;
-  int cycleNumber = currentTime/(m_desiredDeltaTCycle*1000);
+  int cycleNumber = currentTime/(m_desiredDeltaTCycle*1000000);
   if (m_cycleNumber != cycleNumber ) changed = true;
   return std::pair<int, bool>(cycleNumber,changed);
 }
@@ -273,24 +273,25 @@ void UpdateAndReset::updateData(bool isRunNumberChanged) {
   MsgStream msg( msgSvc(), name() );
   ulonglong currentTime = GauchoTimer::currentTime();
   msg << MSG::DEBUG << "**********************************************************************" << endreq;
-  msg << MSG::DEBUG << "************Updating data " << (currentTime - m_timeStart) << " milliseconds after start **********" << endreq;
+  msg << MSG::DEBUG << "************Updating data " << (currentTime - m_timeStart) << " microseconds after start **********" << endreq;
   msg << MSG::DEBUG << "m_runNumber        = " << m_runNumber << endreq;
   msg << MSG::DEBUG << "m_cycleNumber      = " << m_cycleNumber << endreq;
   msg << MSG::DEBUG << "m_timeFirstEvInRun      = " << m_timeFirstEvInRun << endreq;
   m_deltaTCycle = currentTime - m_timeLastEvInCycle;
-  msg << MSG::DEBUG << "m_deltaTCycle = " << m_deltaTCycle << " milliseconds" << endreq;
+  msg << MSG::DEBUG << "m_deltaTCycle = " << m_deltaTCycle << " microseconds" << endreq;
   m_timeLastEvInCycle = currentTime;
   msg << MSG::DEBUG << "m_timeLastEvInCycle     = " << m_timeLastEvInCycle << endreq;
-  msg << MSG::DEBUG << "deltaT error = " << m_deltaTCycle - m_desiredDeltaTCycle*1000 << " milliseconds" << endreq;
+  msg << MSG::DEBUG << "deltaT error = " << m_deltaTCycle - m_desiredDeltaTCycle*1000000 << " microseconds" << endreq;
   m_gpsTimeLastEvInCycle = gpsTime();
   msg << MSG::DEBUG << "m_gpsTimeLastEvInCycle  = " << m_gpsTimeLastEvInCycle << endreq;
-  msg << MSG::DEBUG << "TimeLastEvent error = " << (m_timeLastEvInCycle - m_gpsTimeLastEvInCycle) << " milliseconds" << endreq;
+  msg << MSG::DEBUG << "TimeLastEvent error = " << (m_timeLastEvInCycle - m_gpsTimeLastEvInCycle) << " microseconds" << endreq;
 
   if (isRunNumberChanged) {
     if (0 == m_disableUpdateData) m_pGauchoMonitorSvc->updateAll(true); //the first parameter is the endOfRun flag
     else msg << MSG::DEBUG << "===============> Data was not updated because the UpdateData process is disable." << endreq;
-    if (0 == m_disableResetHistos) m_pGauchoMonitorSvc->resetHistos();
-    else  msg << MSG::DEBUG << "===============> Histos were not reset because the ResetHistos process is disable." << endreq;
+    // if (0 == m_disableResetHistos) m_pGauchoMonitorSvc->resetHistos();
+    //else  
+    msg << MSG::DEBUG << "===============> Histos were not reset because IT'S NOT IMPLEMENTED." << endreq;
   }
   else{
     if (0 == m_disableUpdateData) m_pGauchoMonitorSvc->updateAll(false);
