@@ -1,4 +1,4 @@
-// $Id: PVSeed3DTool.cpp,v 1.2 2008-07-11 10:13:22 witekma Exp $
+// $Id: PVSeed3DTool.cpp,v 1.3 2008-08-28 17:38:45 witekma Exp $
 // Include files 
 
 // from Gaudi
@@ -56,6 +56,9 @@ PVSeed3DTool::PVSeed3DTool( const std::string& type,
   : GaudiTool ( type, name , parent )
 {
   declareInterface<IPVSeeding>(this);
+  declareProperty("TrackPairMaxDistance", m_TrackPairMaxDistance = 1. * Gaudi::Units::mm );
+  declareProperty("MinCloseTracks",  m_MinCloseTracks  = 4);
+  declareProperty("zMaxSpread",   m_zMaxSpread   = 5. * Gaudi::Units::mm);
 
 }
 //=============================================================================
@@ -98,7 +101,7 @@ void PVSeed3DTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks, std::v
         EPoint closestPoint;
         double distance;
         bool ok = xPointParameters(*lbtr1, *lbtr2, distance, closestPoint);
-        if (ok && distance < 1.) {
+        if (ok && distance < m_TrackPairMaxDistance) {
 	  its1->nclose++;
 	  its2->nclose++;
         }
@@ -109,7 +112,7 @@ void PVSeed3DTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks, std::v
 
   for(its1 = seed_tracks.begin(); its1 != seed_tracks.end(); its1++) {
 
-    if(its1->nclose<4) break;
+    if(its1->nclose<m_MinCloseTracks) break;
     if ( its1->used > 0 ) continue;
 
     std::vector<closeNode> close_nodes;
@@ -122,7 +125,7 @@ void PVSeed3DTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks, std::v
        const Track* lbtr2 = its2->lbtrack;
        bool ok = xPointParameters(*lbtr1, *lbtr2, distance, closest_point);
        double costh = thetaTracks(*lbtr1, *lbtr2);
-       if (ok && distance < 1. && costh<0.999) {
+       if (ok && distance < m_TrackPairMaxDistance && costh<0.999) {
          closeNode closetr; 
          closetr.take           = 1;
          closetr.seed_track    =  &(*its2); 
@@ -131,6 +134,16 @@ void PVSeed3DTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks, std::v
          close_nodes.push_back( closetr );
        }
     }  // its2
+
+    if(msgLevel(MSG::DEBUG))  {
+      debug() << " close nodes (pairs of tracks wrt one track): " << endreq;
+      std::vector<closeNode>::iterator itd;
+      for ( itd = close_nodes.begin(); itd != close_nodes.end(); itd++ ) { 
+        debug() << format(" xyz %7.3f %7.3f %7.3f distance %7.3f ",
+			  itd->closest_point.X(),  itd->closest_point.Y(), itd->closest_point.Z(),
+                          itd->distance) << endmsg;           
+      }
+    }
 
     seedPoint mean_point;
     seedPoint mean_point_w;
@@ -145,7 +158,7 @@ void PVSeed3DTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks, std::v
           multi++;
 	}
       }   
-      if ( multi < 4 ) continue;
+      if ( multi < m_MinCloseTracks ) continue;
       seedTrack* base_track = &(*its1); 
       wMean(close_nodes, base_track, mean_point_w);
       seeds.push_back(mean_point_w.position);
@@ -337,7 +350,7 @@ bool PVSeed3DTool::simpleMean(std::vector<closeNode> & close_nodes, seedPoint & 
    double y = 0.;
    double z = 0.;
 
-   double  spread2_max = 5.*5.;
+   double  spread2_max = m_zMaxSpread*m_zMaxSpread;
 
    EPoint pmean;
    std::vector<closeNode>::iterator it;
@@ -357,7 +370,7 @@ bool PVSeed3DTool::simpleMean(std::vector<closeNode> & close_nodes, seedPoint & 
         y += it->closest_point.Y();
         z += it->closest_point.Z();
      }
-     if ( ng < 4 ) return false;
+     if ( ng < m_MinCloseTracks ) return false;
      x /= ng;
      y /= ng;
      z /= ng;
@@ -382,7 +395,7 @@ bool PVSeed3DTool::simpleMean(std::vector<closeNode> & close_nodes, seedPoint & 
 
    } // end while
 
-   if ( ngood < 4 ) return false;
+   if ( ngood < m_MinCloseTracks ) return false;
    pseed.position = pmean;
    pseed.multiplicity = ngood;
    return true;

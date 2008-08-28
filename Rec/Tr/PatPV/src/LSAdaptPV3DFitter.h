@@ -1,4 +1,4 @@
-// $Id: LSAdaptPV3DFitter.h,v 1.1 2008-06-11 19:28:24 witekma Exp $
+// $Id: LSAdaptPV3DFitter.h,v 1.2 2008-08-28 17:38:45 witekma Exp $
 #ifndef LSADAPTPVFITTER_H
 #define LSADAPTPVFITTER_H 1
 // from Gaudi
@@ -38,6 +38,7 @@ private:
   double m_minTrackWeight;// Minimum Tukey's weight to accept a track
   double m_detectorResolutionCoeff; ///< detector resolution
   double m_multipleScatteringCoeff; ///< multiple scattering resolution
+  double m_TrackErrorScaleFactor;
   DeVelo* m_velo;
   PVTracks m_pvTracks;
 

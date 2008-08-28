@@ -1,14 +1,25 @@
-// options for reconstruction all PV including displaced PVs
+//=== options for reconstruction all PV including displaced PVs
 
-// using PatPV3D algorithm and SpaceVelo tracks
+//=== using PatPV3D algorithm and SpaceVelo tracks
 ApplicationMgr.TopAlg += { "PatPV3D/PVDisplaced" };
 PVDisplaced.PVOfflineTool.InputTracks = {"Rec/Track/Velo"};
 PVDisplaced.PVOfflineTool.PVFitterName = "LSAdaptPV3DFitter";
 PVDisplaced.PVOfflineTool.PVSeedingName = "PVSeed3DTool";
 PVDisplaced.OutputVerticesName = "Rec/Vertices/myPVs";
 
-//  using PatPVOffline algorithm and Best tracks
+//=== to monitor seeding performance
+// PVDisplaced.PVOfflineTool.SaveSeedsAsPV = true;
+
+//=== relaxed conditions for low multiplicity PVs and bad quality tracks
+// PVDisplaced.PVOfflineTool.PVSeed3DTool.TrackPairMaxDistance = 2.;
+// PVDisplaced.PVOfflineTool.PVSeed3DTool.MinCloseTracks = 2;
+// PVDisplaced.PVOfflineTool.PVSeed3DTool.zMaxSpread = 10.;
+// PVDisplaced.PVOfflineTool.LSAdaptPV3DFitter.MinTracks = 3;
+// PVDisplaced.PVOfflineTool.LSAdaptPV3DFitter.TrackErrorScaleFactor = 2.;
+
+//===  using PatPVOffline algorithm and Best tracks
 //  ApplicationMgr.TopAlg += { "PatPVOffline/PVDisplacedOff" };
+//  PVDisplacedOff.PVOfflineTool.InputTracks = {"Rec/Track/Best"};
 //  PVDisplacedOff.PVOfflineTool.PVSeedingName = "PVSeed3DTool";
 //  PVDisplacedOff.OutputVertices = "Rec/Vertices/myPVsOff";
 

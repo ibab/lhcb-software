@@ -1,4 +1,4 @@
-// $Id: PVOfflineTool.cpp,v 1.3 2008-06-11 19:28:24 witekma Exp $
+// $Id: PVOfflineTool.cpp,v 1.4 2008-08-28 17:38:45 witekma Exp $
 // Include files:
 // from Gaudi
 #include "GaudiKernel/SystemOfUnits.h"
@@ -201,9 +201,7 @@ void PVOfflineTool::readTracks(std::vector<const LHCb::Track*>& rtracks)
     for(LHCb::Tracks::iterator istrack = stracks->begin(); 
         stracks->end() != istrack; istrack++) {
       const LHCb::Track* str = (*istrack);
-      if(((str->type() == LHCb::Track::Velo) && m_useVelo) || 
-         ((str->type() == LHCb::Track::Long) && m_useLong) || 
-         ((str->type() == LHCb::Track::Upstream) && m_useUpstream)) {
+      if ( str->hasVelo() ) {
 	rtracks.push_back(*istrack);
       }
     }

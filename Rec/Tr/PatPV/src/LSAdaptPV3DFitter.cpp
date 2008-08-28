@@ -1,4 +1,4 @@
-// $Id: LSAdaptPV3DFitter.cpp,v 1.3 2008-06-17 18:01:50 pkoppenb Exp $
+// $Id: LSAdaptPV3DFitter.cpp,v 1.4 2008-08-28 17:38:45 witekma Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
@@ -32,6 +32,10 @@ LSAdaptPV3DFitter::LSAdaptPV3DFitter(const std::string& type,
 
   declareProperty( "DetectorResolutionCoeff",      m_detectorResolutionCoeff =15e-3 );
   declareProperty( "MultipleScatteringCoeff",      m_multipleScatteringCoeff =0.0001 ) ;
+
+  declareProperty("TrackErrorScaleFactor", m_TrackErrorScaleFactor = 1.0 );
+
+
 }
 
 //=========================================================================
@@ -343,7 +347,7 @@ double LSAdaptPV3DFitter::getTukeyWeight(double trchi2, int iter)
 {
   double ctrv = 9. - 3. * iter;
   if (ctrv < 3.) ctrv = 3.;
-  double cT2 = trchi2 / (ctrv*ctrv);
+  double cT2 = trchi2 / (ctrv*ctrv*m_TrackErrorScaleFactor*m_TrackErrorScaleFactor);
   double weight = 0.;
   if(cT2 < 1.) {
     weight = 1. - cT2;

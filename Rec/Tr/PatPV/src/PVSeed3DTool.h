@@ -1,4 +1,4 @@
-// $Id: PVSeed3DTool.h,v 1.1 2008-06-11 19:28:25 witekma Exp $
+// $Id: PVSeed3DTool.h,v 1.2 2008-08-28 17:38:45 witekma Exp $
 #ifndef NEWTOOL_PVSEED3DTOOL_H 
 #define NEWTOOL_PVSEED3DTOOL_H 1
 
@@ -59,6 +59,10 @@ private:
 
   void wMean(std::vector<closeNode> & close_nodes, seedTrack* base_track, seedPoint & pseed);
 
+  double m_TrackPairMaxDistance; // maximus distance between tracks to come from same seed
+  int    m_MinCloseTracks;
+
+  double m_zMaxSpread;  // for truncated mean
 };
 
 #endif // NEWTOOL_PVSEED3DTOOL_H
