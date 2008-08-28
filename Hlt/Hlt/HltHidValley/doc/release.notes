@@ -4,6 +4,9 @@
 ! Purpose     : Holds algorithms for selections of Hidden Valley particles
 !-----------------------------------------------------------------------------
 
+! 2008-08-28 - Patrick Koppenburg
+ - Protect debug()
+
 !========================== HidValley v1r0 2008-08-21 =================
 
 
