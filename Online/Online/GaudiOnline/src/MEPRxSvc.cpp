@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.64 2008-06-05 19:01:59 niko Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.65 2008-08-28 10:52:20 niko Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -235,7 +235,7 @@ void MEPRx::incompleteEvent() {
   MEPEVENT* e = (MEPEVENT*)event().data;
   m_parent->addIncompleteEvent();
   for (i = 0; i < m_nSrc; ++i) nmiss += (m_seen[i] ? 0 : 1); 
-  if (nmiss <= 5) {
+  if (nmiss <= 15) {
     m_log << MSG::ERROR << "Incomplete Event #" << e->evID 
 	  << "  No packet from: ";
     for (int i = 0; i < m_nSrc; ++i) 
@@ -243,7 +243,7 @@ void MEPRx::incompleteEvent() {
 	m_log << HOSTNAME(i) << " "; 
 	m_parent->m_misPkt[i]++;
       }
-  } else if ((m_nSrc - nmiss) < 5) {
+  } else  {
     m_log << MSG::ERROR << "Incomplete Event #" << e->evID 
 	  << "  Only packets from: ";
     for (int i = 0; i < m_nSrc; ++i) 
@@ -251,10 +251,11 @@ void MEPRx::incompleteEvent() {
 	m_log << HOSTNAME(i) << " "; 
 	m_parent->m_misPkt[i]++;
       }
-  } else {
-    m_log << MSG::ERROR << "Incomplete Event #" << e->evID 
-	  << " More than 5 sources missing";
-  }
+  } 
+//else {
+//    m_log << MSG::ERROR << "Incomplete Event #" << e->evID 
+//	  << " More than 5 sources missing";
+//  }
   m_log << endmsg;
   if (m_parent->m_dropIncompleteEvents) { // added on Kazu's demand
     m_eventType = EVENT_TYPE_ERROR;
