@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.65 2008-08-28 10:52:20 niko Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.66 2008-08-28 17:34:19 niko Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -61,7 +61,7 @@
 #endif
 
 #define PUBCNT(name, desc) do {m_ ## name = 0; m_monSvc->declareInfo(#name, m_ ## name, desc, this);} while(0);
-#define PUBARRAYCNT(name, desc) do {m_monSvc->declareInfo(#name, "I:", & m_ ## name [0], sizeof(m_ ## name), desc, this);} while(0);
+#define PUBARRAYCNT(name, desc) do {m_monSvc->declareInfo(#name, "I", & m_ ## name [0], m_ ## name.size() * sizeof(int), desc, this);} while(0);
 
 #define printnum(n,s)     n << s << ((char*)(n == 1 ? "" : "s"))
 
@@ -133,8 +133,9 @@ namespace LHCb  {
     void multipleSrc(int srcid ) {
       m_eventType = EVENT_TYPE_ERROR;
       m_log << MSG::ERROR << "Multiple event from " << 
-	m_parent->m_srcName[srcid] << " (" << m_parent->m_srcDottedAddr[srcid]
-      << ")" << endmsg; 
+      m_parent->m_srcName[srcid] << " (" << m_parent->m_srcDottedAddr[srcid]
+      << ")" << endmsg;
+      m_parent->m_multipleEvt[srcid]++;
     } 
     void badPkt(DAQErrorEntry::DAQErrorType type , int srcid ) {
       m_eventType = EVENT_TYPE_ERROR;
@@ -167,6 +168,7 @@ namespace LHCb  {
     void incompleteEvent();
     int spaceAction();
     int addMEP(int sockfd, const MEPHdr *hdr, int srcid);
+    int analyzeMEP(MEPHdr *mep, int &nfrag);  
   };
 
 }
@@ -229,6 +231,33 @@ int MEPRx::setupDAQErrorBankHdr() {
   m_rawBufHdr->setSize(size);
   return (size%4) ? size+4 - (size%4) : size;
 } 
+
+// 0 MEP syntactically correct
+// 1 syntactically corrupted (pointers don't work out)
+// 2 low word of l0_id's wrong
+// assumes that length in MEP header has been verified 
+int MEPRx::analyzeMEP(MEPHdr *mep, int &nfrag){
+  unsigned int len = mep->m_totLen;
+  u_int32_t l0id = mep->m_l0ID;
+  unsigned int n = sizeof(MEPHdr);
+  const u_int8_t *buf = (u_int8_t *) mep;
+  int err = 0;
+  
+  nfrag = 0;
+  while (n + MEPFHDRSIZ < len) {
+    MEPFrgHdr *fh = (MEPFrgHdr *) (buf + n);
+    if (fh->m_l0IDlow - nfrag != l0id) {
+        err |= 1;
+    }
+    nfrag++; n += fh->m_len + MEPFHDRSIZ;
+  }
+  if (n + MEPFHDRSIZ > len) {
+      // warn about bad MEP
+      err |= 2;
+  }
+ return err;
+}
+
 
 void MEPRx::incompleteEvent() {
   int i, nmiss = 0;
@@ -384,6 +413,7 @@ int MEPRx::addMEP(int sockfd, const MEPHdr *hdr, int srcid) {
   }    
   MEPHdr *newhdr = (MEPHdr*) ((u_int8_t*)e->data + m_brx + 4 + IP_HEADER_LEN);
   m_parent->m_totRxOct += len;
+  m_parent->m_rxOct[srcid];
   m_brx += len;
   m_nrx++; 
 
@@ -671,6 +701,8 @@ StatusCode MEPRxSvc::run() {
       continue;
     }
     m_totRxPkt++; 
+    	//Don't have sourceID yet, count per source later...
+
     m_numMEPRecvTimeouts = 0;
     if (len < (int) HDR_LEN) {
       // somebody sends us a badly truncated packet 
@@ -720,6 +752,7 @@ StatusCode MEPRxSvc::run() {
         }
       } 
     }
+    m_rxPkt[srcid]++; //recieved packets per source
     if ((*rxit)->addMEP(m_dataSock, mephdr, srcid) == MEP_SENT) {
       rx = *rxit;
       m_workDsc.erase(rxit);
@@ -880,6 +913,23 @@ void MEPRxSvc::ageEvents() {
 
 void MEPRxSvc::publishCounters()
 {
+  PUBCNT(totRxOct,           "Total received bytes");
+  PUBCNT(totRxPkt,           "Total received packets");
+  PUBCNT(incEvt,             "Incomplete events");
+  PUBCNT(totBadMEP,          "Total bad MEPs");
+  PUBCNT(totMEPReq,          "Total requested MEPs");
+  PUBCNT(totMEPReqPkt,       "Total Sent MEP-request packets");
+  PUBCNT(numMEPRecvTimeouts, "MEP-receive Timeouts");
+  PUBCNT(notReqPkt,          "Total unsolicited packets");
+  PUBCNT(totWrongPartID,     "Packets with wrong partition-ID");
+  PUBARRAYCNT(badLenPkt,     "MEPs with mismatched length");
+  PUBARRAYCNT(misPkt,        "Missing MEPs");
+  PUBARRAYCNT(badPckFktPkt,  "MEPs with wrong packing (MEP) factor");
+  PUBARRAYCNT(truncPkt,      "Truncated (empty) MEPs");
+  PUBARRAYCNT(multipleEvt,   "Duplicate Events");
+  PUBARRAYCNT(rxOct,	     "Received bytes");
+  PUBARRAYCNT(rxPkt,         "Received packets");
+  PUBARRAYCNT(rxEvt,         "Received events");
 }
 
 void MEPRxSvc::clearCounters() {
@@ -890,6 +940,7 @@ void MEPRxSvc::clearCounters() {
   resetCounters(m_badLenPkt, m_nSrc);
   resetCounters(m_misPkt, m_nSrc);
   resetCounters(m_truncPkt, m_nSrc);
+  resetCounters(m_multipleEvt, m_nSrc);
   m_totMEPReq          = 0;
   m_totMEPReqPkt       = 0;
   m_numMEPRecvTimeouts = 0;
@@ -907,19 +958,8 @@ void MEPRxSvc::clearCounters() {
 int MEPRxSvc::setupCounters() {
   MsgStream log(msgSvc(),"MEPRx");
   clearCounters();
-  PUBCNT(totRxOct,           "Total received bytes");
-  PUBCNT(totRxPkt,           "Total received packets");
-  PUBCNT(incEvt,             "Incomplete events");
-  PUBCNT(totBadMEP,          "Total bad MEPs");
-  PUBCNT(totMEPReq,          "Total requested MEPs");
-  PUBCNT(totMEPReqPkt,       "Total Sent MEP-request packets");
-  PUBCNT(numMEPRecvTimeouts, "MEP-receive Timeouts");
-  PUBCNT(notReqPkt,          "Total unsolicited packets");
-  PUBCNT(totWrongPartID,     "Packets with wrong partition-ID");
-  PUBARRAYCNT(badLenPkt,     "MEPs with mismatched length");
-  PUBARRAYCNT(misPkt,        "Missing MEPs");
-  PUBARRAYCNT(badPckFktPkt,  "MEPs with wrong packing (MEP) factor");
-  PUBARRAYCNT(truncPkt,      "Truncated MEPs");
+  publishCounters();
+
   // create cstring for source names
   std::string all_names = "";
   for (unsigned i = 0; i < m_srcName.size(); ++i)  all_names = all_names + '\0' + m_srcName[i];
@@ -929,7 +969,7 @@ int MEPRxSvc::setupCounters() {
   
   m_monSvc->declareInfo("srcName", "C:", m_allNames, sizeof(m_srcName), "Source IP names", this);
   log << MSG::INFO << all_names << all_names.size() << endmsg;
-  clearCounters();
+  //clearCounters();
   return 0;
 }
 

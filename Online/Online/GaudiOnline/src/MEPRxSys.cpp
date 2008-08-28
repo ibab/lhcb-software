@@ -185,6 +185,82 @@ int send_msg(int sockfd, u_int32_t addr, u_int8_t protocol, void *buf, int len, 
 #endif
 }
 
+/** Special function for sending messages with arbitrary source ip address.
+ * Currently used by MEPInjector
+ */
+int
+send_msg_arb_source(int raw_socket, u_int8_t proto, u_int32_t srcAddr, u_int32_t destAddr, void *buf, int len) {
+
+  int n;
+
+  struct sockaddr_in in;
+  struct iphdr *hdr = (struct iphdr *) buf;
+  hdr->saddr = srcAddr; //inet_addr(srcAddr);
+  hdr->daddr = destAddr; //inet_addr(destAddr);
+  hdr->version = 4;
+  hdr->ihl = 5;
+  hdr->ttl = 4;
+  hdr->protocol = proto;
+  in.sin_family = AF_INET;
+  in.sin_port = proto;
+  memcpy(&(in.sin_addr), &(hdr->daddr), 4);
+
+  if ((n = sendto(raw_socket, buf, len, 0, (struct sockaddr *) &in, sizeof(in))) != len) {
+    perror("send");
+    exit(errno);
+  }
+
+  return n;
+
+}
+
+//Also socket need some special treatment.
+int
+open_sock_arb_source(int ipproto, int rxbufsiz, std::string &errmsg) {
+  int raw_socket;
+
+  int fd;
+  if ((fd = open("/proc/raw_cap_hack", O_RDONLY)) != -1) {
+    ioctl(fd, 0, 0);
+    close(fd);
+  } // if we can't open the raw_cap_hack we have to be root
+
+  if ((raw_socket = socket(PF_INET, SOCK_RAW, IPPROTO_RAW)) == -1) {
+    errmsg = "socket";
+    return -1;
+  }
+
+  if (setsockopt(raw_socket, SOL_SOCKET, SO_SNDBUF, (const char *)
+     &rxbufsiz, sizeof(rxbufsiz))) {
+     errmsg = "setsockopt SO_SNDBUF";
+     return -1;
+     //RCVBUF not needed
+  }
+
+  if (setsockopt(raw_socket, SOL_IP, IP_HDRINCL, &ipproto, 4)) { // any non-zero value is fine.
+    errmsg = "setsockopt";
+    return -1;
+  }
+
+  char netdev_name[10];
+  int netdev = 1;
+  sprintf(netdev_name, netdev < 0 ? "lo" : "eth%d", netdev);
+  if (setsockopt(raw_socket, SOL_SOCKET, SO_BINDTODEVICE, (void *) netdev_name,
+      1 + strlen(netdev_name))) {
+    errmsg = "setsockopt SO_BINDTODEVICE";
+    return -1;
+  }
+
+  int val;
+  val = MEP_REQ_TTL;
+  if (setsockopt(raw_socket, SOL_IP, IP_TTL, (const char *) &val, sizeof(int))) {
+    errmsg = "setsockopt SOL_IP TTL";
+    return -1;
+  }
+
+  return raw_socket;
+}
+
 
 int parse_addr(const std::string &straddr, u_int32_t &addr)
 {
