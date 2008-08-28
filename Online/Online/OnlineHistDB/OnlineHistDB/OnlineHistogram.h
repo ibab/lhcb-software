@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.23 2008-05-14 15:00:56 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.24 2008-08-28 09:55:49 ggiacomo Exp $
 #ifndef ONLINEHISTOGRAM_H
 #define ONLINEHISTOGRAM_H 1
 /** @class  OnlineHistogram OnlineHistogram.h OnlineHistDB/OnlineHistogram.h
@@ -60,10 +60,10 @@ class  OnlineHistogram : public OnlineHistDBEnv
   }
   /// histogram name
   inline std::string hname() const {return (m_subname == "") ? 
-      m_hsname : m_hsname + OnlineHistDBEnv_constants::m_SetSeparator + m_subname;}
+      m_hsname : (m_hsname + OnlineHistDBEnv_constants::m_SetSeparator + m_subname);}
   /// standard DB histogram title (not necessarly equal to the published ROOT title)
   inline std::string htitle() const {return (m_subname == "") ? 
-      m_hsname : m_hsname + " " + m_subname;} 
+      m_hsname : (m_hsname + " " + m_subname);} 
   /// histogram set name
   inline std::string& hsname() {return m_hsname;}
   /// subname
