@@ -3,6 +3,8 @@
 ! Responsible : Jose Angel Hernando Morata
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+
+!========================== HltBase v5r1 2008-08-28 ===================
 ! 2008-08-13 - Gerhard Raven
  - move TES callback for Selections from HltSelectionsContainer to 
    HltAlgorithm
