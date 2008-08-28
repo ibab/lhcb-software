@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichMarkovRingFinderMoni
  *
- *  $Id: RichMarkovRingFinderMoni.cpp,v 1.33 2008-06-20 09:54:22 jonrob Exp $
+ *  $Id: RichMarkovRingFinderMoni.cpp,v 1.34 2008-08-28 17:14:22 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -29,10 +29,15 @@ Moni::Moni( const std::string& name,
   : RichRecHistoAlgBase ( name, pSvcLocator )
 {
   declareProperty( "RingLocation", m_ringLoc = LHCb::RichRecRingLocation::MarkovRings+"All" );
+  declareProperty( "ChThetaRecHistoLimitMin",
+                   m_ckThetaMin = boost::assign::list_of(0.1)(0.03)(0.01) );
+  declareProperty( "ChThetaRecHistoLimitMax",
+                   m_ckThetaMax = boost::assign::list_of(0.3)(0.08)(0.05) );
+  declareProperty( "NumberBins", m_nBins = 100 );
 }
 
 // Destructor
-Moni::~Moni() {};
+Moni::~Moni() {}
 
 //  Initialize
 StatusCode Moni::initialize()
@@ -41,7 +46,7 @@ StatusCode Moni::initialize()
   const StatusCode sc = RichRecHistoAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  info() << "Monitoring Trackless rings " << m_ringLoc << endreq;
+  debug() << "Monitoring Trackless rings " << m_ringLoc << endreq;
 
   return sc;
 }
@@ -49,14 +54,13 @@ StatusCode Moni::initialize()
 // Main execution
 StatusCode Moni::execute()
 {
-  debug() << "Execute" << endreq;
-
   // Check event status
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
 
   // Retrieve rings
   if ( !exist<LHCb::RichRecRings>(m_ringLoc) ) return StatusCode::SUCCESS;
   const LHCb::RichRecRings * rings = get<LHCb::RichRecRings>( m_ringLoc );
+  debug() << "Found " << rings->size() << " rings at " << m_ringLoc << endreq;
 
   // Rich Histo ID
   const RichHistoID hid;
@@ -69,18 +73,14 @@ StatusCode Moni::execute()
 
     // Radiator info
     const Rich::RadiatorType rad = ring->radiator();
+    const std::string RAD = Rich::text(rad);
 
-    // Plot centre points of "isolated" rings
-    const Gaudi::XYZPoint & RingCentreLocal = (*iR)->centrePointLocal();
-    plot2D( RingCentreLocal.x(), RingCentreLocal.y(),
-            hid(rad,"ringCentres"), "Ring centres",
-            -2*Gaudi::Units::m, 2*Gaudi::Units::m,
-            -2*Gaudi::Units::m, 2*Gaudi::Units::m, 200, 200 );
-
-    // Ring radius
-    //const LHCb::RichRecRing::FloatType ringRadius = ring->radius();//RADIUS IN RADIANS!
-    //double ringRadius = 130.0;//set to saturated RICH2 ring size
-    //debug() << "Ring radius" << ringRadius<< endmsg;
+    // Plot centre points of rings
+    //const Gaudi::XYZPoint & RingCentreLocal = (*iR)->centrePointLocal();
+    //plot2D( RingCentreLocal.x(), RingCentreLocal.y(),
+    //        hid(rad,"ringCentres"), RAD+" Trackless Ring Centres",
+    //       -2*Gaudi::Units::m, 2*Gaudi::Units::m,
+    //        -2*Gaudi::Units::m, 2*Gaudi::Units::m, m_nBins, m_nBins );
 
     // Ring knows if it is associated or not
     RichRecSegment * nearestSeg = ring->richRecSegment();
@@ -89,23 +89,33 @@ StatusCode Moni::execute()
     const bool mcTrackOK = richRecMCTool()->trackToMCPAvailable();
     // Get the Cherenkov angle for the nearest segment and ring radius
     Rich::ParticleIDType mcType = Pion;
+    bool hasMC = false;
     if ( mcTrackOK )
     {
       // True particle type
       mcType = richRecMCTool()->mcParticleType(nearestSeg);
-      if ( Rich::Unknown  == mcType ) continue; // skip tracks with unknown MC type
+      hasMC  = ( Rich::Unknown != mcType );
+      //if ( Rich::Unknown  == mcType ) continue; // skip tracks with unknown MC type
+      if ( Rich::Unknown  == mcType ) mcType = Pion;
       if ( Rich::Electron == mcType ) continue; // skip electrons which are reconstructed badly.
     }
-    else continue; // the rest needs MC info !
 
-    const RichRecSegment::FloatType avChTheta = nearestSeg->averageCKTheta ( mcType);
     const RichRecRing::FloatType rRadius = ring->radius();//RADIUS IN RADIANS!
 
-    // Plot nearest segment Ch theta against ring radius (both in radians)
-    plot2D( rRadius, avChTheta, hid(rad,"MCChThetaVRingRadius"),
-            "MCChThetaVRingRadius",
-            0.015, 0.035,
-            0.015, 0.035, 300, 300 );
+    // radius plot
+    plot1D( rRadius, hid(rad,"ringRadii"), RAD+" Trackless Ring Radii",
+            m_ckThetaMin[rad], m_ckThetaMax[rad], m_nBins );
+
+    if ( hasMC && nearestSeg )
+    {
+      const RichRecSegment::FloatType avChTheta = nearestSeg->averageCKTheta(mcType);
+      // Plot nearest segment Ch theta against ring radius (both in radians)
+      plot2D( rRadius, avChTheta, hid(rad,"MCChThetaVRingRadius"),
+              RAD+" MCChThetaVRingRadius",
+              m_ckThetaMin[rad], m_ckThetaMax[rad],
+              m_ckThetaMin[rad], m_ckThetaMax[rad],
+              m_nBins, m_nBins );
+    }
 
   }//outer ring loop
 

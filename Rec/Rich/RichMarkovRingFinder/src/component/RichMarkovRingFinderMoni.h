@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichMarkovRingFinderMoni
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderMoni.h,v 1.23 2008-06-20 09:54:22 jonrob Exp $
+ *  $Id: RichMarkovRingFinderMoni.h,v 1.24 2008-08-28 17:14:22 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -33,8 +33,10 @@
 #include "RichRecBase/IRichTrackSelector.h"
 #include "RichKernel/IRichRayTracing.h"
 #include "RichKernel/IRichSmartIDTool.h"
-//#include "MCInterfaces/IRichMCTruthTool.h"//causes compile error
 #include "MCInterfaces/IRichRecMCTruthTool.h"
+
+// boost
+#include "boost/assign/list_of.hpp"
 
 namespace Rich
 {
@@ -84,6 +86,12 @@ namespace Rich
 
           /// Location of Rings in TES
           std::string m_ringLoc;
+
+          std::vector<double> m_ckThetaMax; ///< Max theta limit for histos for each rad
+          std::vector<double> m_ckThetaMin; ///< Min theta limit for histos for each rad
+
+          /// Number of histogram bins
+          unsigned int m_nBins;
 
         };
 
