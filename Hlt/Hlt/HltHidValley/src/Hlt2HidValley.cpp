@@ -17,16 +17,18 @@
 #include "Hlt2HidValley.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : HidValley
+// Implementation file for class : Hlt2HidValley
 //
 // 2008-08-21 : Marcin Kucharczyk
 //-----------------------------------------------------------------------------
 
 DECLARE_ALGORITHM_FACTORY(Hlt2HidValley);
 
-// Sorting
-bool sortPVz(LHCb::RecVertex* first, LHCb::RecVertex* second) {
+bool sortPVz(const LHCb::RecVertex* first, const LHCb::RecVertex* second) {
   return first->position().z() < second->position().z();
+}
+bool sortPartPt(const LHCb::Particle* first, const LHCb::Particle* second) {
+  return first->pt() > second->pt();
 }
 //=============================================================================
 // Standard constructor, initializes variables
@@ -36,11 +38,9 @@ Hlt2HidValley::Hlt2HidValley(const std::string& name,
   : DVAlgorithm(name,pSvcLocator)
 {
   declareProperty("InputTracks", m_inputTracks = 
-                                 LHCb::TrackLocation::HltForward);
-  declareProperty("InputPrimaryVertices", m_inputPrimaryVertices = 
-                                          "Hlt/Vertex/PV2D");
+                  LHCb::TrackLocation::HltForward);
   declareProperty("InputDisplacedVertices", m_inputDisplacedVertices = 
-                                            "Rec/Vertices/myVrtcsOff");
+                  "Rec/Vertices/displacedOffVertices");
 }
 
 //=============================================================================
@@ -53,7 +53,7 @@ Hlt2HidValley::~Hlt2HidValley() {};
 //=============================================================================
 StatusCode Hlt2HidValley::initialize() {
 
-  debug() << "Hlt2HidValley initialize" << endreq;
+  if(msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
 
   return StatusCode::SUCCESS;
 };
@@ -63,68 +63,75 @@ StatusCode Hlt2HidValley::initialize() {
 //=============================================================================
 StatusCode Hlt2HidValley::execute() {
 
-  if (msgLevel(MSG::DEBUG)) debug() << "Hlt2HidValley execute"<< endreq;
+  if(msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
+
   setFilterPassed(false);
-  LHCb::Tracks* tracks = get<LHCb::Tracks>(m_inputTracks);
-  LHCb::RecVertices* primVrtcs =
-                     get<LHCb::RecVertices>(m_inputPrimaryVertices);
+
+  LHCb::Tracks* inputTracks = get<LHCb::Tracks>(m_inputTracks);
+  const LHCb::Particle::ConstVector& inputParts = desktop()->particles();
+  const LHCb::RecVertex::ConstVector& primVertices = 
+                                      desktop()->primaryVertices();
   LHCb::RecVertices* displacedVrtcs = 
                      get<LHCb::RecVertices>(m_inputDisplacedVertices);
-  // Real PV
-  std::sort(primVrtcs->begin(),primVrtcs->end(),sortPVz);
-  const LHCb::RecVertex* realPV = 0;
-  int minzPV = 0;
-  for(std::vector<LHCb::RecVertex*>::const_iterator itPV = primVrtcs->begin(); 
-       itPV != primVrtcs->end(); itPV++) {
-    minzPV++;
-    const LHCb::RecVertex* pvtx = *itPV;
-    if(minzPV == 1) {
-      realPV = pvtx;
+  if((primVertices.size() > 0) && inputParts.size() > 0) {
+    std::vector<const LHCb::RecVertex*> primVrtcs;
+    for(LHCb::RecVertex::ConstVector::const_iterator 
+        itPV = primVertices.begin(); primVertices.end() != itPV; ++itPV) {
+      const LHCb::RecVertex* pvtx = *itPV;
+      primVrtcs.push_back(pvtx);
     }
-  }
-  //===========================================================================
-  // Hlt2 Hidden Valley selection
-  //===========================================================================
-  // Require at least 1 PV
-  if((primVrtcs->size() > 0)) {
-    // Tracks
-    double sumPtTracks = 0.0;
-    double sumXYTrackfirstStates = 0.0;
-    for(LHCb::Track::Container::const_iterator itr = tracks->begin(); 
-        tracks->end() != itr; itr++) {
+    std::sort(primVrtcs.begin(),primVrtcs.end(),sortPVz);
+    const LHCb::RecVertex* realPV = *(primVrtcs.begin());
+    std::vector<const LHCb::Particle*> parts;
+    for(LHCb::Particle::ConstVector::const_iterator ip = inputParts.begin();
+        inputParts.end() != ip; ++ip) {
+      const LHCb::Particle* part = *ip;
+      parts.push_back(part);
+    }
+    std::sort(parts.begin(),parts.end(),sortPartPt);
+    const LHCb::Particle* highestPtPion = *(parts.begin());
+    //=========================================================================
+    // Hlt2 Hidden Valley selection
+    //=========================================================================
+    double sumPtTracks = 0.;
+    double sumXYTrackfirstStates = 0.;
+    for(LHCb::Track::Container::const_iterator itr = inputTracks->begin(); 
+        inputTracks->end() != itr; itr++) {
       const LHCb::Track* trk = *itr;
       double xyfState = sqrt(trk->firstState().x() * trk->firstState().x() +
                              trk->firstState().y() * trk->firstState().y());
-      sumPtTracks += trk->pt() / 1000.0;
+      sumPtTracks += trk->pt();
       sumXYTrackfirstStates += xyfState;
     }
-    // Vertices
     int nrDisplacedOffVrtcs = 0;
-    double sumSVxyDist = 0.0;
+    double sumSVxyDist = 0.;
     for(LHCb::RecVertices::const_iterator itRV = displacedVrtcs->begin();
         displacedVrtcs->end() != itRV; itRV++) {
       const LHCb::RecVertex* dVtx = *itRV;
       double distVtcs = sqrt((realPV->position().x() - dVtx->position().x()) * 
                              (realPV->position().x() - dVtx->position().x()) +
-	                     (realPV->position().y() - dVtx->position().y()) * 
+      	                     (realPV->position().y() - dVtx->position().y()) * 
                              (realPV->position().y() - dVtx->position().y()) +
                              (realPV->position().z() - dVtx->position().z()) * 
                              (realPV->position().z() - dVtx->position().z()));
       double xyDist = sqrt(dVtx->position().x() * dVtx->position().x() +
                            dVtx->position().y() * dVtx->position().y());
-      if(distVtcs > 0.001) {
-      	nrDisplacedOffVrtcs++;
+      if(distVtcs > .001) {
       	sumSVxyDist += xyDist;
+        nrDisplacedOffVrtcs++;
       }
     }    
     // Cuts
-    if((sumPtTracks > 250) && (sumXYTrackfirstStates > 30.0) && 
-       (nrDisplacedOffVrtcs > 1) && (sumSVxyDist > 0.7)) {
+    if((sumPtTracks > 250. * Gaudi::Units::GeV) && 
+       (sumXYTrackfirstStates > 30. * Gaudi::Units::mm) && 
+       (nrDisplacedOffVrtcs > 1) && 
+       (sumSVxyDist > 0.7 * Gaudi::Units::mm)) {
       setFilterPassed(true);
+      desktop()->keep(highestPtPion);
     }			 
   }
-
-  return StatusCode::SUCCESS;
+ 
+  return desktop()->saveDesktop();
 }
 
 //=============================================================================
@@ -132,7 +139,7 @@ StatusCode Hlt2HidValley::execute() {
 //=============================================================================
 StatusCode Hlt2HidValley::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "==> Finalize" << endmsg;
 
   return StatusCode::SUCCESS;
 }

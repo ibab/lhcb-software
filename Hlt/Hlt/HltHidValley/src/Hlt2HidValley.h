@@ -30,7 +30,6 @@ public:
 
 private:
   std::string m_inputTracks;
-  std::string m_inputPrimaryVertices;
   std::string m_inputDisplacedVertices;
 
 };
