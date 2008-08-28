@@ -33,6 +33,10 @@ namespace Rich
       virtual StatusCode finalize           ()                                 = 0; 
       virtual void       SetDisableThreshold(int threshold = 10)               = 0;
       virtual void       DisableHPD         (const LHCb::RichSmartID &smartID) = 0; 
+      virtual void       DisableHPD         (const Rich::DAQ::Level1LogicalID      &l1LogicalID,
+                                             const Rich::DAQ::L1InputWithinIngress &l1InputIngress,
+                                             const Rich::DAQ::L1IngressID          &ingressID,
+                                             const Rich::DetectorType              &richDetector) =0;
       virtual void       ClearHPDList       ()                                 = 0;
 
                    
