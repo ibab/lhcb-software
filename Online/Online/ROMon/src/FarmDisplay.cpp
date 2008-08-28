@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.cpp,v 1.20 2008-08-28 13:44:57 frankb Exp $
+// $Id: FarmDisplay.cpp,v 1.21 2008-08-28 13:50:40 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.20 2008-08-28 13:44:57 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.21 2008-08-28 13:50:40 frankb Exp $
 
 #include "ROMon/CtrlSubfarmDisplay.h"
 #include "ROMon/RecSubfarmDisplay.h"
@@ -1685,6 +1685,7 @@ void FarmDisplay::handle(const Event& ev) {
       break;
     case CMD_UPDATE:
       if ( m_subfarmDisplay )   {
+	//m_subfarmDisplay->update();
 	IocSensor::instance().send(m_subfarmDisplay,ROMonDisplay::CMD_UPDATEDISPLAY,this);
       }
       if ( m_mbmDisplay.get() )  {
