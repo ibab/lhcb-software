@@ -63,7 +63,7 @@ StatusCode Hlt2HidValley::initialize() {
 //=============================================================================
 StatusCode Hlt2HidValley::execute() {
 
-  if (magLevel(MSG::DEBUG)) debug() << "Hlt2HidValley execute"<< endreq;
+  if (msgLevel(MSG::DEBUG)) debug() << "Hlt2HidValley execute"<< endreq;
   setFilterPassed(false);
   LHCb::Tracks* tracks = get<LHCb::Tracks>(m_inputTracks);
   LHCb::RecVertices* primVrtcs =
