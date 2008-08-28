@@ -4,6 +4,7 @@
 ! Purpose     : Fidel
 !-----------------------------------------------------------------------------
 
+!========================== Fidel v1r3 2008-08-28 ===================
 ! 2008-08-19 - Patrick Koppenburg
  - Changes in Fidel.cpp. Use LoKi cuts to apply all cuts available in LoKi.
  - Increment v1r3
