@@ -1,9 +1,16 @@
-	<PRE>
+<PRE>
 Package: HltSys
 Package Coordinator: Jose Angel Hernando Morata, P. Koppenburg
 Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
+
+</PRE><H1><A NAME=v4r1>2008-08-28 HltSys v4r1</A></H1><PRE>
+
+ This version uses LHCb v25r0 and Gaudi v20r2
+ . Many changes to get pythonized configuration. 
+ . Prepare for working version in the pit.
+ . New packages HltConf, HltHidValley
 
 ! 2008-08-27 - Patrick Koppenburg
  - Add HidValley package
