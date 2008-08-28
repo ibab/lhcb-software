@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.120 2008-08-28 09:07:37 odescham Exp $
+! $Id: release.notes,v 1.121 2008-08-28 15:34:38 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
@@ -11,6 +11,12 @@
                                      commissioning data taken before 2008/08/20 (run <30406)  
 
  - L0DUConfig_0xDEBX.opts : produced by L0DU PVSS on 25th august 2008
+ - L0DUBankSwap.opts : add missing default TCK for simulation (including DefaultTCK.opts)
+ - L0DUTriggerSet.opts : new options containing trigger set definition.
+  @TODO : 
+    - automatic definition for trigger from data/condition/channels
+    - check configuration against hardware constraints
+    - independant separate package for TCK files (DBASE/)
 
 
 ! 2008-08-18 - Olivier Deschamps

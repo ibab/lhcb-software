@@ -49,13 +49,3 @@ ToolSvc.L0DUConfig.TCK_0xDC06.Channels ={
 
 
 
-// -> 3 Triggers sets
-ToolSvc.L0DUConfig.TCK_0xDC06.Triggers +={ 
-  {"name=[L0Ecal]" , "channels=[Electron] || [Photon] || [LocalPi0] || [GlobalPi0] || [Electron,down] || [Photon,down] || [LocalPi0,down] || [GlobalPi0,down]"},
-  {"name=[L0Hcal]" , "channels=[Hadron] || [Hadron,down]" },
-  {"name=[L0Muon]" , "channels=[Muon] || [DiMuon] || [Muon,down] || [DiMuon,down]"}
-};
-
-
-
-

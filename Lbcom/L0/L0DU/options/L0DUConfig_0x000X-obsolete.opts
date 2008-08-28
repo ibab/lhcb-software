@@ -30,10 +30,6 @@ ToolSvc.L0DUConfig.TCK_0x0001.Channels ={
   { "name=[MuonCOSMICS]" , "rate==[100]" , "conditions= [Muon1,Pt]" }
 };
 
-ToolSvc.L0DUConfig.TCK_0x0001.Triggers +={ 
-  {"name=[L0Calo]"     , "channels=[CaloCOSMICS]"},
-  {"name=[L0Muon]"     , "channels=[MuonCOSMICS]"}
-}; 
 
 //----------------------------------------------------//
 //------------------------- TCK = 0x0002 / Recipe name : COSMICS_CaloOnly_0x0002
@@ -48,9 +44,6 @@ ToolSvc.L0DUConfig.TCK_0x0002.Conditions = {
 ToolSvc.L0DUConfig.TCK_0x0002.Channels ={
 { "name=[CaloCOSMICS]" , "rate==[100]" , "conditions= [Electron,Et] && [Hadron,Et]" }
 };
-ToolSvc.L0DUConfig.TCK_0x0002.Triggers +={ 
-  {"name=[L0Calo]"     , "channels=[CaloCOSMICS]"}
-}; 
 
 
 //----------------------------------------------------//
@@ -69,9 +62,6 @@ ToolSvc.L0DUConfig.TCK_0x0003.Channels ={
   { "name=[Muon1]" , "rate==[100]" , "conditions= [Muon1,Pt]" }
 };
 
-ToolSvc.L0DUConfig.TCK_0x0003.Triggers +={ 
-  {"name=[L0Muon]"     , "channels=[Muon1]"}
-}; 
 
 //----------------------------------------------------//
 //------------------------- TCK = 0x0004 / Recipe name : COSMICS_Calo_OR_MuonPresdaled_0x0004
@@ -89,10 +79,6 @@ ToolSvc.L0DUConfig.TCK_0x0004.Channels ={
   { "name=[MuonCOSMICS]" , "rate==[0.1]" , "conditions= [Muon1,Pt]" }
 };
 
-ToolSvc.L0DUConfig.TCK_0x0004.Triggers +={ 
-  {"name=[L0Calo]"     , "channels=[CaloCOSMICS]"},
-  {"name=[L0Muon]"     , "channels=[MuonCOSMICS]"}
-}; 
 
 
 //----------------------------------------------------//
@@ -117,10 +103,6 @@ ToolSvc.L0DUConfig.TCK_0x0005.Channels ={
   { "name=[had_and_mu]" , "rate==[100]" , "conditions= [Hadron]      && [Muon]" }
 };
 
-ToolSvc.L0DUConfig.TCK_0x0005.Triggers +={ 
-  {"name=[L0Calo]"     , "channels=[el_and_mu] || [had_and_mu]"},
-  {"name=[L0Muon]"     , "channels=[el_and_mu] || [had_and_mu]"}
-}; 
 
 
 
@@ -137,9 +119,6 @@ ToolSvc.L0DUConfig.TCK_0x0006.Channels ={
 { "name=[Spd]" , "rate==[100]" , "conditions= [SpdMult]" }
 };
   
-ToolSvc.L0DUConfig.TCK_0x0006.Triggers +={ 
-  {"name=[L0Calo]"     , "channels=[Spd]" }
-}; 
 
 //----------------------------------------------------//
 //------------------------- TCK = 0x007
@@ -153,10 +132,6 @@ ToolSvc.L0DUConfig.TCK_0x0007.Conditions = {
 };
 ToolSvc.L0DUConfig.TCK_0x0007.Channels ={
 { "name=[spd_and_mu]" , "rate==[100]" , "conditions= [SpdMult]      && [Muon]" }
-}; 
-ToolSvc.L0DUConfig.TCK_0x0007.Triggers +={ 
-  {"name=[L0Calo]"     , "channels=[spd_and_mu]" },
-  {"name=[L0Muon]"     , "channels=[spd_and_mu]" }
 }; 
 
 
@@ -178,9 +153,6 @@ ToolSvc.L0DUConfig.TCK_0x000A.Conditions = {
 ToolSvc.L0DUConfig.TCK_0x000A.Channels ={
 { "name=[SPD and HCAL]" , "rate==[100.0]" , "conditions= [Hadron(Et)1] && [Spd(Mult)1]" }
 };
-ToolSvc.L0DUConfig.TCK_0x000A.Triggers +={ 
-  {"name=[L0Calo]"     , "channels=[SPD and HCAL]" }
-}; 
 
 
 //------------------------- TCK = 0x000B / Recipe name : Calo_and_Muon_0x000b
@@ -198,10 +170,6 @@ ToolSvc.L0DUConfig.TCK_0x000B.Conditions = {
 ToolSvc.L0DUConfig.TCK_0x000B.Channels ={
 { "name=[Algo01]" , "rate==[100.0]" , "conditions= [Electron(Et)1] && [Hadron(Et)1] && [Muon1(Pt)1]" }
 };
-ToolSvc.L0DUConfig.TCK_0x000B.Triggers +={ 
-  {"name=[L0Calo]"     , "channels=[Algo01]"},
-  {"name=[L0Muon]"     , "channels=[Algo01]"}
-}; 
 
 
 //------------------------- TCK = 0x000C / Recipe name : COSMICS_Electron
@@ -216,9 +184,6 @@ ToolSvc.L0DUConfig.TCK_0x000C.Conditions = {
 ToolSvc.L0DUConfig.TCK_0x000C.Channels ={
 { "name=[Algo01]" , "rate==[100.0]" , "conditions= [Electron(Et)]" }
 };
-ToolSvc.L0DUConfig.TCK_0x000C.Triggers +={ 
-  {"name=[L0Calo]"     , "channels=[Algo01]"}
-  }; 
 //------------------------- TCK = 0x000D / Recipe name : COSMICS_Photon
 ToolSvc.L0DUConfig.registerTCK += {"0x000D"};
 ToolSvc.L0DUConfig.TCK_0x000D.Name = "COSMICS_Photon";
@@ -229,6 +194,3 @@ ToolSvc.L0DUConfig.TCK_0x000D.Conditions = {
 ToolSvc.L0DUConfig.TCK_0x000D.Channels ={
 { "name=[Algo01]" , "rate==[100.0]" , "conditions= [Photon(Et)]" }
 };
-ToolSvc.L0DUConfig.TCK_0x000D.Triggers +={ 
-  {"name=[L0Calo]"     , "channels=[Algo01]"}
-  }; 

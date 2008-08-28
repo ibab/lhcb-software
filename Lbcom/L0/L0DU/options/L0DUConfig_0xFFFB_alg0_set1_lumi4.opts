@@ -33,9 +33,3 @@ ToolSvc.L0DUConfig.TCK_0xFFFB.Channels ={
   {"name=[DiMuon]"         , "rate==[100]", "conditions= [DiMuon,HighPt]      && [SumEt]"}
 };
 
-// -> 3 Triggers sets
-ToolSvc.L0DUConfig.TCK_0xFFFB.Triggers +={ 
-  {"name=[L0Ecal]" , "channels=[Electron] || [Photon] || [LocalPi0] || [GlobalPi0]"},
-  {"name=[L0Hcal]" , "channels=[Hadron]" },
-  {"name=[L0Muon]" , "channels=[Muon] || [DiMuon]"}
-};

@@ -15,6 +15,7 @@ ReRunL0.Members      = {"L0CaloAlg/L0Calo",       // Produce (NEW) rawBank
                         "PuVetoAlg/L0PuVeto",     // DOES NOT produce any bank
                         "L0DUAlg/L0DU"};          // Produce NEW rawBank (LHCb::RawBank::L0DU v1)
 
+#include "$L0DUROOT/options/DefaultTCK.opts"
 #include "$L0DUROOT/options/L0DUConfig.opts"
 #include "$L0MUONROOT/options/l0muonAlg.opts"
 

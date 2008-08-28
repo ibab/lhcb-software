@@ -20,10 +20,6 @@ ToolSvc.L0DUConfig.TCK_0x0001.Channels ={
 { "name=[Calo]"     , "rate==[100.0]" , "conditions= [Electron]    && [Hadron]" },
 { "name=[Muon]"     , "rate==[100.0]" , "conditions= [Muon1,Pt]" }
 };
-ToolSvc.L0DUConfig.TCK_0x0001.Triggers +={ 
-  {"name=[L0Calo]"     , "channels=[Calo]"},
-  {"name=[L0Muon]"     , "channels=[Muon]"}
-}; 
 
 
 //------------------------- TCK = 0x0002 / Recipe name : COSMICS_CaloOnly_0x0002
@@ -42,9 +38,6 @@ ToolSvc.L0DUConfig.TCK_0x0002.Channels ={
 { "name=[Hadron]"   , "rate==[100.0]" , "conditions= [Hadron,Et]" , "DISABLE=[TRUE]" },
 { "name=[Calo]"     , "rate==[100.0]" , "conditions= [Electron]    && [Hadron]" }
 };
-ToolSvc.L0DUConfig.TCK_0x0002.Triggers +={ 
-  {"name=[L0Calo]"     , "channels=[Calo]"}
-}; 
 
 //------------------------- TCK = 0x0003 / Recipe name : COSMICS_MuonOnly_0x0003
 ToolSvc.L0DUConfig.registerTCK += {"0x0003"};
@@ -60,9 +53,6 @@ ToolSvc.L0DUConfig.TCK_0x0003.Channels ={
 { "name=[Muon1]" , "rate==[100.0]" , "conditions= [Muon1,Pt]" }
 };
 
-ToolSvc.L0DUConfig.TCK_0x0003.Triggers +={ 
-  {"name=[L0Muon]"     , "channels=[Muon1]"}
-}; 
 
 //------------------------- TCK = 0x0004 / Recipe name : COSMICS_Calo_OR_MuonPresdaled_0x0004
 ToolSvc.L0DUConfig.registerTCK += {"0x0004"};
@@ -82,10 +72,6 @@ ToolSvc.L0DUConfig.TCK_0x0004.Channels ={
 { "name=[Calo]"     , "rate==[100.0]" , "conditions= [Electron]    && [Hadron]" },
 { "name=[Muon]"     , "rate==[0.1]"   , "conditions= [Muon1,Pt]" }
 };
-ToolSvc.L0DUConfig.TCK_0x0004.Triggers +={ 
-  {"name=[L0Calo]"     , "channels=[Calo]"},
-  {"name=[L0Muon]"     , "channels=[Muon]"}
-}; 
 
 //------------------------- TCK = 0x0005 / Recipe name : COSMICS_elPmu_OR_hadPmu_0x0005
 ToolSvc.L0DUConfig.registerTCK += {"0x0005"};
@@ -106,10 +92,6 @@ ToolSvc.L0DUConfig.TCK_0x0005.Channels ={
 { "name=[el_and_mu]"  , "rate==[100.0]" , "conditions= [Electron]    && [Muon]" },
 { "name=[had_and_mu]" , "rate==[100.0]" , "conditions= [Hadron]      && [Muon]" }
 };
-ToolSvc.L0DUConfig.TCK_0x0005.Triggers +={ 
-  {"name=[L0Calo]"     , "channels=[el_and_mu] || [had_and_mu]"},
-  {"name=[L0Muon]"     , "channels=[el_and_mu] || [had_and_mu]"}
-}; 
 
 //------------------------- TCK = 0x0006 / Recipe name : COSMICS_Spd_0x0006
 ToolSvc.L0DUConfig.registerTCK += {"0x0006"};
@@ -124,9 +106,6 @@ ToolSvc.L0DUConfig.TCK_0x0006.Conditions = {
 ToolSvc.L0DUConfig.TCK_0x0006.Channels ={
 { "name=[Spd]" , "rate==[100.0]" , "conditions= [SpdMult]" }
 };
-ToolSvc.L0DUConfig.TCK_0x0006.Triggers +={ 
-  {"name=[L0Calo]"     , "channels=[Spd]" }
-}; 
 
 //------------------------- TCK = 0x0007 / Recipe name : COSMICS_Spd_AND_Muon_0x0007
 ToolSvc.L0DUConfig.registerTCK += {"0x0007"};
@@ -144,10 +123,6 @@ ToolSvc.L0DUConfig.TCK_0x0007.Channels ={
 { "name=[Muon]"       , "rate==[100.0]" , "conditions= [Muon1,Pt]" , "DISABLE=[TRUE]" },
 { "name=[SpdAndMuon]" , "rate==[100.0]" , "conditions= [Spd]      && [Muon]" }
 };
-ToolSvc.L0DUConfig.TCK_0x0007.Triggers +={ 
-  {"name=[L0Calo]"     , "channels=[SpdAndMuon]" },
-  {"name=[L0Muon]"     , "channels=[SpdAndMuon]" }
-}; 
 
 
 //------------------------- TCK = 0x0008 / Recipe name : COSMICS_Calo_OR_SpdGt2_0x0008
@@ -168,10 +143,6 @@ ToolSvc.L0DUConfig.TCK_0x0008.Channels ={
 { "name=[Calo]"     , "rate==[100.0]" , "conditions= [Electron]    && [Hadron]" },
 { "name=[Spd]"      , "rate==[100.0]" , "conditions= [SpdMult]" }
 };
-ToolSvc.L0DUConfig.TCK_0x0008.Triggers +={ 
-  {"name=[L0Calo]"     , "channels=[Calo] || [Spd]" }
-}; 
-
 //------------------------- TCK = 0x0009 / Recipe name : COSMICS_SpdGt10_0x0009
 ToolSvc.L0DUConfig.registerTCK += {"0x0009"};
 ToolSvc.L0DUConfig.TCK_0x0009.Name = "COSMICS_SpdGt10_0x0009";
@@ -185,9 +156,6 @@ ToolSvc.L0DUConfig.TCK_0x0009.Conditions = {
 ToolSvc.L0DUConfig.TCK_0x0009.Channels ={
 { "name=[Spd]" , "rate==[100.0]" , "conditions= [SpdMult]" }
 };
-ToolSvc.L0DUConfig.TCK_0x0009.Triggers +={ 
-  {"name=[L0Calo]"     , "channels=[Spd]" }
-}; 
 
 
 //------------------------- TCK = 0x000A / Recipe name : COSMICS_Spd_AND_Hcal_0x000A
@@ -207,9 +175,6 @@ ToolSvc.L0DUConfig.TCK_0x000A.Channels ={
 { "name=[SpdAndHcal]" , "rate==[100.0]" , "conditions= [Hadron]    && [Spd]" }
 };
 
-ToolSvc.L0DUConfig.TCK_0x000A.Triggers +={ 
-  {"name=[L0Calo]"     , "channels=[SpdAndHcal]" }
-}; 
 
 //------------------------- TCK = 0x000B / Recipe name : COSMICS_Calo_AND_Muon_0x000b
 ToolSvc.L0DUConfig.registerTCK += {"0x000B"};
@@ -230,10 +195,6 @@ ToolSvc.L0DUConfig.TCK_0x000B.Channels ={
 { "name=[CaloAndMuon]" , "rate==[100.0]" , "conditions= [Electron]    && [Hadron] && [Muon]" }
 };
 
-ToolSvc.L0DUConfig.TCK_0x000B.Triggers +={ 
-  {"name=[L0Calo]"     , "channels=[CaloAndMuon]"},
-  {"name=[L0Muon]"     , "channels=[CaloAndMuon]"}
-}; 
 
 //------------------------- TCK = 0x000C / Recipe name : COSMICS_Electron_0x000C
 ToolSvc.L0DUConfig.registerTCK += {"0x000C"};
@@ -249,9 +210,6 @@ ToolSvc.L0DUConfig.TCK_0x000C.Channels ={
 { "name=[Electron]" , "rate==[100.0]" , "conditions= [Electron,Et]" }
 };
 
-ToolSvc.L0DUConfig.TCK_0x000C.Triggers +={ 
-  {"name=[L0Calo]"     , "channels=[Electron]"}
-  }; 
 
 //------------------------- TCK = 0x000D / Recipe name : COSMICS_Photon_0x000D
 ToolSvc.L0DUConfig.registerTCK += {"0x000D"};
@@ -267,9 +225,6 @@ ToolSvc.L0DUConfig.TCK_0x000D.Channels ={
 { "name=[Photon]" , "rate==[10.0]" , "conditions= [Photon,Et]" }
 };
 
-ToolSvc.L0DUConfig.TCK_0x000D.Triggers +={ 
-  {"name=[L0Calo]"     , "channels=[Photon]"}
-  }; 
 
 
 
@@ -288,9 +243,6 @@ ToolSvc.L0DUConfig.TCK_0x000E.Channels ={
 { "name=[Muon1]" , "rate==[100.0]" , "conditions= [Muon1,Pt]" },
 { "name=[Muon2]" , "rate==[100.0]" , "conditions= [Muon2,Pt]" }
 };
-ToolSvc.L0DUConfig.TCK_0x000E.Triggers +={ 
-  {"name=[L0Muon]"     , "channels=[Muon1] || [Muon2]"}
-  }; 
 
 //------------------------- TCK = 0x000F / Recipe name : COSMICS_mu2Only_0x000F
 ToolSvc.L0DUConfig.registerTCK += {"0x000F"};
@@ -307,9 +259,6 @@ ToolSvc.L0DUConfig.TCK_0x000F.Channels ={
 { "name=[Muon1]" , "rate==[100.0]" , "conditions= [Muon1,Pt]" , "DISABLE=[TRUE]" },
 { "name=[Muon2]" , "rate==[100.0]" , "conditions= [Muon2,Pt]" }
 };
-ToolSvc.L0DUConfig.TCK_0x000F.Triggers +={ 
-  {"name=[L0Muon]"     , "channels=[Muon2]"}
-  }; 
 
 
 

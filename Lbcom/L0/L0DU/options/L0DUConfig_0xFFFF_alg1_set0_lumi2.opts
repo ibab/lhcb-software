@@ -54,11 +54,5 @@ ToolSvc.L0DUConfig.TCK_0xFFFF.Channels ={
 };
 
 //------------------
-// -> 3 Triggers sets
-ToolSvc.L0DUConfig.TCK_0xFFFF.Triggers +={ 
-  {"name=[L0Ecal]"     , "channels=[Electron] || [Photon] || [LocalPi0] || [GlobalPi0] || [Electron,down] || [Photon,down] || [LocalPi0,down] || [GlobalPi0,down]"},
-  {"name=[L0Hcal]"     , "channels=[Hadron] || [Hadron,down]" },
-  {"name=[L0Muon]"     , "channels=[Muon] || [DiMuon] || [MuonNoGlob] || [Muon,down] || [DiMuon,down] || [MuonNoGlob,down]"}
-};
 
 
