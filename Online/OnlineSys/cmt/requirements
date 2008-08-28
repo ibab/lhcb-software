@@ -21,7 +21,7 @@ use ExampleGaucho     v2r5     Online
 # Does not work on WIN32
 # use FarmMonitor       v1r0     Online
 use Gaucho            v5r6p3   Online
-use GaudiOnline       v2r19    Online
+use GaudiOnline       v2r20    Online
 use GaudiUPI          v1r9     Online
 use GaudiSerialize    v0r1     Online
 use HPDMonitor        v1r5     Online
@@ -35,10 +35,10 @@ use OnlineTasks       v1r13    Online
 use Presenter         v0r10    Online
 use PyDIM             v2r5     Online
 use RawBankSizes      v1r3     Online
-use ROMon             v1r6     Online
-use ROLogger          v0r4     Online
+use ROMon             v1r7     Online
+use ROLogger          v0r5     Online
 use Saver             v1r5     Online
-use UPI               v1r11    Online
+use UPI               v1r12    Online
 use UPIR              v1r1     Online
 use Viewer            v1r5     Online
 use Writer            v1r8     Online
