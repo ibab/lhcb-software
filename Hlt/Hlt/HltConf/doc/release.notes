@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.6 2008-08-28 07:10:32 graven Exp $ 
+! $Id: release.notes,v 1.7 2008-08-28 08:16:25 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : 
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+!========================== HltConf v1r1 2008-08-28 ===================
 ! 2008-08-28 - Gerhard Raven
  - python/HltConfig/Hlt1Line.py
     catch error on printout when a (sub)sequence is configured with old-style options

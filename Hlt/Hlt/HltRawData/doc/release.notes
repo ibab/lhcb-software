@@ -4,6 +4,7 @@
 ! Purpose     : Hlt Raw Data Writers and Readers, Makers of persisted TES info
 !-----------------------------------------------------------------------------
 
+!========================== HltRawData v1r1 2008-08-28 ===================
 ! 2008-08-26 - Jaap Panman
  - HltLumiWriter: LumiSummary container is now a single object
 
