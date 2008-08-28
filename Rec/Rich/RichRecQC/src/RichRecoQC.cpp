@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::RecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.cpp,v 1.39 2008-06-24 11:19:57 jonrob Exp $
+ *  $Id: RichRecoQC.cpp,v 1.40 2008-08-28 17:09:37 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -103,6 +103,7 @@ StatusCode RecoQC::execute()
   const bool mcRICHOK  = richRecMCTool()->pixelMCHistoryAvailable();
 
   // Iterate over segments
+  debug() << "Found " << richSegments()->size() << " segments" << endreq;
   for ( LHCb::RichRecSegments::const_iterator iSeg = richSegments()->begin();
         iSeg != richSegments()->end(); ++iSeg )
   {
@@ -123,9 +124,11 @@ StatusCode RecoQC::execute()
     {
       // True particle type
       mcType = richRecMCTool()->mcParticleType( segment );
-      if ( Rich::Unknown  == mcType ) continue; // skip tracks with unknown MC type
+      //if ( Rich::Unknown  == mcType ) continue; // skip tracks with unknown MC type
+      if ( Rich::Unknown  == mcType ) mcType = Rich::Pion;
       if ( Rich::Electron == mcType ) continue; // skip electrons which are reconstructed badly..
     }
+    verbose() << "   => type = " << mcType << endreq;
 
     // Expected Cherenkov theta angle for 'true' particle type
     thetaExpTrue = m_ckAngle->avgCherenkovTheta( segment, mcType );
@@ -154,9 +157,10 @@ StatusCode RecoQC::execute()
                 -m_ckResRange[rad], m_ckResRange[rad], m_nBins );
     }
 
-    // loop over photons for this segment
+    // loop over photons for this segment 
     unsigned int truePhotons(0);
     double avRecTrueTheta(0);
+    verbose() << " -> Found " << segment->richRecPhotons().size() << " photons" << endreq;
     for ( LHCb::RichRecSegment::Photons::const_iterator iPhot = segment->richRecPhotons().begin();
           iPhot != segment->richRecPhotons().end(); ++iPhot )
     {
@@ -178,9 +182,12 @@ StatusCode RecoQC::execute()
       // isolated segment ?
       if ( isolated )
       {
+        plot1D( thetaRec, hid(rad,"thetaRecIsolated"), 
+                "Reconstructed Ch Theta : All photons : Isolated Tracks",
+                m_ckThetaMin[rad], m_ckThetaMax[rad], m_nBins );
         plot1D( thetaRec-thetaExpTrue,
                 hid(rad,"ckResAllIsolated"),
-                "Rec-Exp Cktheta : beta=1 : All photons : Isolated Track",
+                "Rec-Exp Cktheta : beta=1 : All photons : Isolated Tracks",
                 -m_ckResRange[rad], m_ckResRange[rad], m_nBins );
       }
 
@@ -213,6 +220,18 @@ StatusCode RecoQC::execute()
 
     } // photon loop
 
+    plot1D( segment->richRecPhotons().size(),
+            hid(rad,"totalPhotons"),
+            "Photon Yield : All Tracks",
+              -0.5, 30.5, 31 );
+    if ( isolated )
+    {
+      plot1D( segment->richRecPhotons().size(),
+              hid(rad,"totalPhotonsIsolated"),
+              "Photon Yield : Isolated Tracks",
+              -0.5, 30.5, 31 );
+    }
+    
       // number of true photons
     if ( truePhotons > 0 )
     {

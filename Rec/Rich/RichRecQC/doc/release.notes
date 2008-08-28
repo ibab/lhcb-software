@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2008-08-28 - Chris Jones
+ - Add a couple new plots to RichRecoQC to fill photon yield plots
+ - Make sure some plots are filled in MC-free mode.
+
 ! 2008-08-26 - Chris Jones
  - Add python configurable
 
