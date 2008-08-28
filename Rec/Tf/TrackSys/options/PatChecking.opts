@@ -22,7 +22,8 @@ AssocDownstream.TracksInContainer = "Rec/Track/Downstream";
 CheckPatSeq.Members  += { "TrackResChecker/CheckFitForward",
 			  "TrackResChecker/CheckFitMatch",
 			  "TrackResChecker/CheckFitTTrack",
-			  "TrackResChecker/CheckFitVelo"};
+			  "TrackResChecker/CheckFitVelo",
+                          "TrackResChecker/CheckFitBest" };
 
 CheckFitForward.fullDetail = false;
 CheckFitForward.TracksInContainer = "Rec/Track/Forward";
@@ -31,6 +32,14 @@ CheckFitForward.Selector.Selector.rejectInteractions = true;
 CheckFitForward.Selector.Selector.zInteraction = 9400.;
 CheckFitForward.HistoPrint = false;
 CheckFitForward.SelectionCriteria = "ChargedLong";
+
+CheckFitBest.fullDetail = false;
+CheckFitBest.TracksInContainer = "Rec/Track/Best";
+CheckFitBest.Selector.Selector.rejectElectrons = true;
+CheckFitBest.Selector.Selector.rejectInteractions = true;
+CheckFitBest.Selector.Selector.zInteraction = 9400.;
+CheckFitBest.HistoPrint = false;
+CheckFitBest.SelectionCriteria = "ChargedLong";
 
 CheckFitMatch.fullDetail = false;
 CheckFitMatch.TracksInContainer = "Rec/Track/Match";
