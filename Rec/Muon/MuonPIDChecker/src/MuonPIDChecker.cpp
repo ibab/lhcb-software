@@ -132,11 +132,11 @@ StatusCode MuonPIDChecker::execute() {
   }
 
   // MC association 
-   LinkedTo<LHCb::MCParticle,LHCb::MuonDigit> myLink(eventSvc(),
-                                  msgSvc(),LHCb::MuonDigitLocation::MuonDigit); 
-
-   LinkedTo<LHCb::MCParticle, LHCb::Track> myLinkToTrack( eventSvc(), msgSvc(),
+  LinkedTo<LHCb::MCParticle, LHCb::Track>* myLinkToTrack = NULL;
+  if (m_RunningMC) {
+   myLinkToTrack = new LinkedTo<LHCb::MCParticle, LHCb::Track>( eventSvc(), msgSvc(),
                                          m_TracksPath );
+  }
   // Get tracks to loop over
   LHCb::Tracks* trTracks = get<LHCb::Tracks>(m_TracksPath);
   // Get muon tracks to loop over
@@ -196,12 +196,12 @@ StatusCode MuonPIDChecker::execute() {
 
 	   // Retrieve track type (MC)
            if (m_RunningMC) {
-	     LHCb::MCParticle* mcP = myLinkToTrack.first(*iTrack);
+	     LHCb::MCParticle* mcP = myLinkToTrack->first(*iTrack);
 	     LHCb::MCParticle* mcPnext = mcP;
 	     while ( mcPnext != NULL ){
 	       m_TrnLinks++;
 	       if ( abs(mcPnext->particleID().pid()) == 13 ) mcP = mcPnext;
-	       mcPnext = myLinkToTrack.next();
+	       mcPnext = myLinkToTrack->next();
 	     }
 	     const LHCb::MCParticle* thismcP = mcP; 
 	     m_TrType = getTrType( pTrack, thismcP ); 
@@ -275,6 +275,8 @@ StatusCode MuonPIDChecker::execute() {
 
   } // loop over station coords 
   plot1D(m_nHit, "hNhits","Hit Multiplicity", 0, 3000, 500);
+  // delete myLinToTrack object if created (RunningMC == true)
+  if ( NULL != myLinkToTrack ) delete myLinkToTrack;
 
   return StatusCode::SUCCESS;
 
