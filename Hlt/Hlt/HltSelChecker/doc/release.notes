@@ -4,6 +4,7 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
+!========================== HltSelChecker v7r1 2008-08-28 ===================
 ! 2008-08-14 - Patrick Koppenburg
  - Remove all ; in .py files
 
