@@ -309,19 +309,23 @@ void upic_erase_screen () {
 }
 //---------------------------------------------------------------------------
 int upic_move_cursor (Menu* m, Page* d, Item* i, int line)  {
-  Sys.menu.cur = m;  
-  if (!i->enabled)  {
-    Item* j;
-    if (!((j = upic_find_next_item (i, &line)) ||
-          (j = upic_find_prev_item (i, &line)))) return (0);
-    i = j;
-    d = Page_address (i->father);    
+  Sys.menu.cur = m;
+  if ( i != 0 ) {
+    if (!i->enabled)  {
+      Item* j;
+      if (!((j = upic_find_next_item (i, &line)) ||
+	    (j = upic_find_prev_item (i, &line)))) return (0);
+      i = j;
+      d = Page_address (i->father);    
+    }
+    if ( i != 0 && d != 0 ) {
+      if (m->page.cur != d) m->page.cur = d;
+      Sys.item.cur = i;
+      Sys.param.cur = i->param.cur;
+      d->item.cur  = i;
+      d->cur_line  = line;
+    }
   }
-  if (m->page.cur != d) m->page.cur = d;
-  Sys.item.cur = i;
-  Sys.param.cur = i->param.cur;
-  d->item.cur  = i;
-  d->cur_line  = line;
   return UPI_NORMAL;
 }
 

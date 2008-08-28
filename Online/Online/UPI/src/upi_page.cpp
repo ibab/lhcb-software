@@ -87,7 +87,7 @@ Page* upic_open_page (void* root) {
   Page* p = (Page*) list_add_entry (root, sizeof(Page));
   list_init (&p->item);
   p->id       = 0;
-  p->item.cur = (Item*) 0;
+  p->item.cur = 0;
   p->lines    = 0;
   p->cur_line = 0;
   p->cols     = 0;
