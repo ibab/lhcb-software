@@ -14,6 +14,7 @@
 // Include files
 #include "DimInfoMonRate.h"
 #include "RateExtractor.h"
+#include "NOPExtractor.h"
 #include "Gaucho/MonRate.h"
 #include "Gaucho/MonObjectCreator.h"
 #include <string>
@@ -71,23 +72,33 @@ DimInfoMonRate::DimInfoMonRate(std::string monRateSvcName,
 	      (float)-1),
     m_sourceName(source),
     
-    m_constructorDone(false),
-    m_hasData(false),
-    m_name("DimInfoMonRate"),
     m_monRateServiceName(monRateSvcName),
     m_monRate(0),
     m_stringSize(-1),
     m_currentCycleNumber(0),
-    m_monRateCreated(false)
+    m_monRateCreated(false),
+    m_pNOPExtractor(0)
 {
   //COUT_DEBUG("m_doubleServiceName = " << m_doubleServiceName)
+}
+
+int DimInfoMonRate::getCycleNumberFromMonRate()
+{
+  return m_profile->GetBinContent(6);
+}
+
+longlong DimInfoMonRate::getTimeLastEventInCycleFromMonRate()
+{
+  //COUT_DEBUG("getTimeLastEventInCycleFromMonRate");
+  longlong time = m_profile->GetBinContent(3);
+  //COUT_DEBUG("getTimeLastEventInCycleFromMonRate DONE");
   
-  m_constructorDone = true;
+  return time;
 }
 
 void DimInfoMonRate::createMonRate()
 {
-  COUT_DEBUG("createMonRate");
+  //COUT_DEBUG("createMonRate");
   
   int tmpStringSize = -1;
   while( (tmpStringSize = getSize()) <= 0)
@@ -98,7 +109,7 @@ void DimInfoMonRate::createMonRate()
   char * c = const_cast<char *>((const char *)getString());
   
   m_stringSize = tmpStringSize;
-  printChar(c, m_stringSize);
+  //printChar(c, m_stringSize);
   
   /* test phase to ensure we have a valid MonRate
    */
@@ -172,7 +183,7 @@ void DimInfoMonRate::createMonRate()
     throw e;
   }
   
-  COUT_DEBUG("cleanup");
+  //COUT_DEBUG("createMonRate DONE");
   
 //  if(ia) delete ia;
   
@@ -182,7 +193,7 @@ void DimInfoMonRate::createMonRate()
 
 void DimInfoMonRate::loadMonRate()
 {
-  //COUT_DEBUG("loadMonRate");
+ // COUT_DEBUG("loadMonRate");
   int tmpStringSize = -1;
   while( (tmpStringSize = getSize()) <= 0)
     usleep(10000);  
@@ -191,7 +202,7 @@ void DimInfoMonRate::loadMonRate()
 
   char * c = const_cast<char *>((const char *)getString());
   
-  printChar(c, m_stringSize);
+  //printChar(c, m_stringSize);
   
   /* just reset differs from createMonDouble
    */
@@ -202,7 +213,11 @@ void DimInfoMonRate::loadMonRate()
   boost::archive::binary_iarchive * ia = new boost::archive::binary_iarchive(is);
   m_monRate->load(*ia, 0);
   
+  m_profile = m_monRate->profile();
+  
   if(ia) delete ia; 
+  
+ // COUT_DEBUG("loadMonRate DONE");
 }
 
 //destructor
@@ -233,21 +248,10 @@ DimInfoMonRate::~DimInfoMonRate()
  */
 void DimInfoMonRate::infoHandler() 
 {
-  //COUT_DEBUG("infoHandler");
+ // COUT_DEBUG("infoHandler");
   try
   {
     //COUT_DEBUG("void DimInfoMonRate::infoHandler() ")
-  
-    /* dirty way to avoid infoHandler execution
-     * whenever the construction has not finished.
-     * maybe works if default value of the flag is
-     * false before initialization in the constructor
-     */
-    if(!m_constructorDone)
-    {
-      COUT_DEBUG("m_constructorDone = " << m_constructorDone << " > infoHandler skiped")
-      return;
-    }
   
     /* updating the MonDouble from the service
      */
@@ -256,13 +260,26 @@ void DimInfoMonRate::infoHandler()
       /* if the MonRate is not created then do nothing.
          it's up to the user to call createDouble().
        */
-    }else{
+   //   COUT_DEBUG("infoHandler   MonRate has not been created (createMonRate not called yet)");
+    }else{    
       /* else : reload it
        */
       loadMonRate();
+          
+    //  COUT_DEBUG("infoHandler   MonRate loaded");
       
-      //m_monRate->print();
+      if(!m_pNOPExtractor)
+      {
+        COUT_DEBUG("infoHandler   NOP extractor not created yet");
+        m_pNOPExtractor = new NOPExtractor(m_monRate);
+	m_pNOPExtractor->publishService(serviceNameHeader);
+        COUT_DEBUG("infoHandler   NOP has been created");
+      }
+
+      
+     // m_monRate->print();
     }
+    
 
     /* updating the double value from the MonDouble
      */
@@ -274,7 +291,10 @@ void DimInfoMonRate::infoHandler()
     COUT_DEBUG(e.what());
     COUT_DEBUG("exception in infoHandler : " << m_monRateServiceName);
   }
+  
+ // COUT_DEBUG("infoHandler DONE");
 }
+
 
 /* stores the double value contained in the MonDouble
  * into the "equivalent" variable.
@@ -282,25 +302,46 @@ void DimInfoMonRate::infoHandler()
  */
 void DimInfoMonRate::extractData()
 {
-  COUT_DEBUG("extractData");
+ // COUT_DEBUG("extractData");
   
   if(m_monRate)
   {
-    lookForNewRates();
+    //COUT_DEBUG("extractData   m_monRate != 0");
     
-    //m_monRate->print();
+    if(m_pNOPExtractor)
+    {
+      m_pNOPExtractor->extractData();
+   //   COUT_DEBUG("extractData   NOP extracted");
+    }else{
+  //    COUT_DEBUG("extractData   NOP doesn not exist !!!!");
+    }
+    
+    //COUT_DEBUG("extractData    <=================");
+    int newRates = lookForNewRates();
+    //COUT_DEBUG("extractData    new = " << newRates << "<=================");
+    
+    //COUT_DEBUG("extractData   new counters search done");
+    
+    int gotCycleNumber = getCycleNumberFromMonRate();
+    
+    COUT_DEBUG("extractData   got cycle number ===> " << gotCycleNumber);
     
     /* if the current cycle has finished
      */
-    if(m_monRate->cycleNumber() != m_currentCycleNumber)
+    if(gotCycleNumber != m_currentCycleNumber)
     {
-      m_currentCycleNumber = m_monRate->cycleNumber();
-      COUT_DEBUG("NEW CYCLE " << m_currentCycleNumber);
+      m_currentCycleNumber = gotCycleNumber;
+      
+      COUT_DEBUG("extractData   ---------- >>> NEW CYCLE " << m_currentCycleNumber);
       
       /* get the time reference
        */
-      longlong time = m_monRate->timeLastEvInCycle();
+      longlong time = getTimeLastEventInCycleFromMonRate();
       
+      //COUT_DEBUG("extractData   got last evt in cycle ===> " << time);
+
+
+      COUT_DEBUG("Rates calculated after counters:");
       /* try to extract the rate value for each counter
        */
       for(ExtractorMap::iterator it = m_extractorMap.begin();
@@ -310,66 +351,115 @@ void DimInfoMonRate::extractData()
         try{
 	  RateExtractor * extractor = it->second;
 	  extractor->extractData(time);
-	  double value = extractor->getRateValue();
-	  COUT_DEBUG(extractor->getRateId() << " = " << value);
+	  double value = extractor->getValue();
+	  COUT_DEBUG("counter #" << extractor->getCounterId() << " ===> " << value << "Hz");
 	}catch(const std::exception & e){
 	  COUT_DEBUG(e.what());
 	  /* unable to process this counter
 	   */
 	}
       }
+      
+    //  COUT_DEBUG("extractData   loop done");
+      
     }else
     {
-      COUT_DEBUG("SAME CYCLE " << m_monRate->cycleNumber());
+      COUT_DEBUG("extractData   SAME CYCLE " << gotCycleNumber);
     }
-  }else
-  {
-    COUT_DEBUG("NO MON RATE");  
   }
+  else
+  {
+    COUT_DEBUG("extractData   NO MON RATE");  
+  }
+  
+ // COUT_DEBUG("extractData DONE");
 }
 
+
+// THIS IS A COMPLETELY DUMMY IMPLEMENTATION OF lookForNewRates()
+// ASSUMING THAT THE NUMBER OF COUNTERS IS FIXED TO 4 AND WILL NEVER CHANGE.
 int DimInfoMonRate::lookForNewRates()
 {
-  //COUT_DEBUG("lookForNewRates");
+  //COUT_DEBUG("lookForNewRates <=================");
   
-  if(m_monRate == 0)
+  int currentNumberOfCounters = 0;
+  
+  for(ExtractorMap::iterator it = m_extractorMap.begin();
+          it != m_extractorMap.end();
+          it++)
+  {
+    currentNumberOfCounters++;
+  }
+    
+  //COUT_DEBUG("lookForNewRates   currentNumberOfCounters = " << currentNumberOfCounters);
+    
+  if(currentNumberOfCounters == 4)
     return 0;
     
-  int newRates = 0;
-    
-  MonRateMap monRateCounters = m_monRate->counterMap();
-  MonRateMap::iterator browserIt = monRateCounters.begin();
-  
-  ExtractorMap::iterator checkIt;
-  
-  while(browserIt != monRateCounters.end())
+  for(int i = 0; i < 4; i++)
   {
-    checkIt = m_extractorMap.find(browserIt->first);
-    
-    /* if service is not converted yet
-     * then add an entry in the extractor map
-     */
-    if(checkIt == m_extractorMap.end())
-    {
-      COUT_DEBUG("NEW ONE : " << browserIt->first << "<==================");
-      
-      RateExtractor * newExtractor = new RateExtractor(
-                                              browserIt->first,
-					      m_monRate);
-      m_extractorMap[browserIt->first] = newExtractor;
-      
-      newExtractor->publishServices(serviceNameHeader);
-      
-      newRates++;
-    }else{
-      //COUT_DEBUG("OLD ONE : " << browserIt->first << "<------------------");
-    }
-    
-    browserIt++;
-  } 
+    m_extractorMap[i] = new RateExtractor(i, m_monRate);
+    m_extractorMap[i]->publishService(serviceNameHeader);
+  }
   
-  return newRates;
+  currentNumberOfCounters = 0;
+  
+  for(ExtractorMap::iterator it = m_extractorMap.begin();
+          it != m_extractorMap.end();
+          it++)
+  {
+    currentNumberOfCounters++;
+  }
+  
+  //COUT_DEBUG("lookForNewRates   after adding currentNumberOfCounters = " << currentNumberOfCounters);
+  
+  //COUT_DEBUG("lookForNewRates DONE <=================");
+  
+  return 4;
 }
+
+// int DimInfoMonRate::lookForNewRates()
+// {
+//   //COUT_DEBUG("lookForNewRates");
+//   
+//   if(m_monRate == 0)
+//     return 0;
+//     
+//   int newRates = 0;
+//     
+//   MonRateMap monRateCounters = m_monRate->counterMap();
+//   MonRateMap::iterator browserIt = monRateCounters.begin();
+//   
+//   ExtractorMap::iterator checkIt;
+//   
+//   while(browserIt != monRateCounters.end())
+//   {
+//     checkIt = m_extractorMap.find(browserIt->first);
+//     
+//     /* if service is not converted yet
+//      * then add an entry in the extractor map
+//      */
+//     if(checkIt == m_extractorMap.end())
+//     {
+//       COUT_DEBUG("NEW ONE : " << browserIt->first << "<==================");
+//       
+//       RateExtractor * newExtractor = new RateExtractor(
+//                                               browserIt->first,
+// 					      m_monRate);
+//       m_extractorMap[browserIt->first] = newExtractor;
+//       
+//       newExtractor->publishServices(serviceNameHeader);
+//       
+//       newRates++;
+//     }else{
+//       //COUT_DEBUG("OLD ONE : " << browserIt->first << "<------------------");
+//     }
+//     
+//     browserIt++;
+//   } 
+//   
+//   return newRates;
+// }
 
 
 std::string DimInfoMonRate::makeServiceNameHeader()
@@ -394,4 +484,3 @@ std::string DimInfoMonRate::makeServiceNameHeader()
   
   return header;
 }
-

@@ -1,5 +1,5 @@
-#ifndef RATESERVICE_RATEEXTRACTOR_H_
-#define RATESERVICE_RATEEXTRACTOR_H_
+#ifndef RATESERVICE_NOPEXTRACTOR_H_
+#define RATESERVICE_NOPEXTRACTOR_H_
 
 
 #include "dis.hxx"
@@ -8,14 +8,17 @@
 
 class MonRate;
 
+/* format of structured data sent by DIM
+ */
+static const std::string s_NOPServiceNameEnd("NUMBER_OF_PROCESSES");
 
 /** Class extracting rate from a given counter in a MonRate object.
   * Publishes a pair of DIM services (rate value and rate comment).
   * 
-  * @class RateExtractor 
+  * @class NOPExtractor 
   * @author Jean-Francois Menou    
   */
-class RateExtractor : public RatePublisher
+class NOPExtractor : public RatePublisher
 {
     
 public:
@@ -25,25 +28,20 @@ public:
     * @param counter Identifier of the processed counter in the MonRate.
     * @param pMonRate Pointer to the MonRate owning the processed counter.
     */
-  RateExtractor(int counterId, MonRate * pMonRate);
+  NOPExtractor(MonRate * pMonRate);
   
   
   /** Destructor
     */
-  ~RateExtractor();
-    
-  /** Get the processed counter id.
-    * @return The processed counter id.
-    */
-  int getCounterId(){ return m_counterId; }
-    
+  ~NOPExtractor();
+        
   /** Extraction method, based on time of the new event.
     * 
     * @param time Time of the last event in the processed cycle.
     *
     * @return True if no error.
    */
-  bool     extractData(longlong time);
+  bool     extractData();
   
   /** Method publishing the structured service.
     * 
@@ -61,35 +59,14 @@ private:
     */
   std::string makeServiceName(std::string nameHeader);
   
-  int getCounterFromMonRate();
-  std::string getCommentFromMonRate();
+  int getNOPFromMonRate();
   
   /*====================================================*/
   /*======= MONRATE RELATED INFORMATION ================*/
-  /*====================================================*/
-  /** Identifier of the converted counter in the given MonRate object.
-    */
-  int m_counterId;
-  
+  /*====================================================*/  
   /** Pointer to the MonRate object containing the counter to tranform.
     */
   MonRate * m_pMonRate;
-  /*====================================================*/
-  /*====================================================*/
-      
-    
-  /*====================================================*/
-  /*======= COUNTERS AND TIME ==========================*/
-  /*====================================================*/
-  /** Counter values got from MonRate, used to make counter's value comparisons
-    */
-  int  m_counterOldValue;
-  int m_counterNewValue;
-  
-  /** Time values got from MonRate, used to make time comparisons.
-    */
-  longlong m_oldTime;
-  longlong m_newTime;
   /*====================================================*/
   /*====================================================*/
 };

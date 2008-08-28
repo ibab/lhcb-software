@@ -3,6 +3,7 @@
 
 
 #include "dic.hxx"
+#include "dis.hxx"
 #include <string>
 #include <iostream>
 #include <vector>
@@ -21,14 +22,17 @@ using namespace std;
 
 //forward declaration
 class RateExtractor;
+class NOPExtractor;
+
 class MonRate;
+class TProfile;
 
 /* useful typedefs to make code easier to read.
  */
  
 /** Map associating a counter name to a RateExtractor.
   */
-typedef std::map<std::string, RateExtractor *> ExtractorMap;
+typedef std::map<int, RateExtractor *> ExtractorMap;
 
 /** Map associating a counter name to a "value-comment' pair.
   * Used to get the MonRate counter map.
@@ -103,28 +107,13 @@ public :
 	std::string getServiceName(){ return m_monRateServiceName; }
 	
 private :
-
-	/** Dumy flag supposed to show if constructor is done,
-	  * to prevent infoHandler to be executed detween service
-	  * subscription and constructor's end.
+	/** those 2 functions do stuff that MonRate should do for us...
 	  */
-	bool m_constructorDone;
+	int getCycleNumberFromMonRate();
+	
+	longlong getTimeLastEventInCycleFromMonRate();
 
 
-	/** Flag set to true if the MonRate has data.
-	  *
-	  * @deprecated
-	  */
-	bool m_hasData;
-	
-	
-	/** Name of the MonRate.
-	  *
-	  * @deprecated
-	  */
-	std::string m_name;
-
-	
 	/** Flag indicating if the MonRate object has correctly been
 	  * initialized in the createMonRate() method.
 	  */
@@ -141,7 +130,7 @@ private :
 	  * owned by the DimInfoMonObject object
 	  */
 	MonRate * m_monRate;
-	
+	TProfile *m_profile;
 	
 	/** Indication on the last processed cycle.
 	  * updated in extractDate() method.
@@ -173,6 +162,8 @@ private :
 	/** List of object in charge of extracting and republishing rates from MonRate.
 	  */
 	ExtractorMap m_extractorMap;
+	
+	NOPExtractor * m_pNOPExtractor;
 	
 	/** Looks for new counters (not beeing converted into rate by a RateExtractor object yet).
 	  *
