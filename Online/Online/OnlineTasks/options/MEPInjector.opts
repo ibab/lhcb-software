@@ -1,0 +1,43 @@
+//#include "$GAUDIONLINEROOT/options/OnlineEnvironment.opts"
+ApplicationMgr.SvcOptMapping += { "Gaudi::MultiFileCatalog/FileCatalog", "Gaudi::IODataManager/IODataManager" };
+
+EventSelector.PrintFreq              = 1;
+EventSelector.Input                  = {
+   "DATA='PFN:root:file:///home/dsvantes/021089_0000001658.raw' SVC='LHCb::MDFSelector'"   
+   //"DATA='PFN:root:file:///afs/cern.ch/user/d/dsvantes/021089_0000001658.raw' SVC='LHCb::MDFSelector'"
+};  //Choose file
+
+
+// ApplicationMgr.ExtSvc               += {"LHCb::OnlineEvtSelector/EventSelector"};  
+ApplicationMgr.TopAlg                = {"StoreExplorerAlg","LHCb::MEPInjector"}; 
+ApplicationMgr.Dlls                  = { "MDF", "GaudiOnline", "Gaucho"};
+
+LHCb::MEPInjector.PackingFactor = 2; //max pk. factor currently 2, due to fragmentisation problems... 
+LHCb::MEPInjector.IPAddrTo = "192.168.200.2";
+LHCb::MEPInjector.IPAddrFrom = {"192.168.201.1","192.168.201.2","192.168.201.3","192.168.201.4","192.168.201.5","192.168.201.6","192.168.201.7","192.168.201.8"};
+LHCb::MEPInjector.ethInterface = 1;
+
+//ApplicationMgr.Runable               = "LHCb::MEPRxSvc/Runable";
+//Runable.OutputLevel      = 1;
+//Runable.MEPBuffers       = 1;          // concurrently built events
+//Runable.maxBadPktRatio   = 0.1;     // maximum fraction of erroneous packets during sampling time before going into state ERROR
+//Runable.pktSamplingCount = 100;  // number of packets to sample to determine error ratio
+//Runable.maxMsForGetSpace = 100;  // milliseconds to wait to get buffer memory from BM
+//Runable.partitionID      = 333;       
+//Runable.MEPBufSize       = 21000000;
+//Runable.refCount         = 2;
+//Runable.RTTCCompat       = false;       // for RTTC backward compatibility
+//Runable.sockBuf           = 30000000;     // receive socket size
+//Runable.IPNameOdin       = "";
+
+
+StoreExplorerAlg.Load                = 1;
+StoreExplorerAlg.PrintFreq           = 1;
+// EventSelector.Decode                 = false;
+EventDataSvc.RootCLID                = 1;
+EventDataSvc.EnableFaultHandler      = true ;
+EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc/RawDataCnvSvc" };
+// EventSelector.REQ1 = // "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0";
+Sender.OutputLevel = 1;
+
+MessageSvc.OutputLevel = 2;

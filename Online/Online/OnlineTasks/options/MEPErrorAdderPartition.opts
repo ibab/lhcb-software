@@ -1,0 +1,29 @@
+//
+// MEPErrorAdderPartition.opts
+// Sample options for the MEPErrorAdder, when in summing mode
+// David Svantesson, 2008/08
+
+ApplicationMgr.EventLoop	= "LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.Runable		= "LHCb::MEPErrorAdder/Runable";
+ApplicationMgr.SvcOptMapping	= { "LHCb::OnlineRunable/EmptyEventLoop" , "LHCb::MEPErrorAdder/Runable" };
+
+ApplicationMgr.Dlls		= {"GaudiOnline", "Gaucho"};
+ApplicationMgr.ExtSvc		= { "IncidentSvc" };
+ApplicationMgr.ExtSvc		+= {"MonitorSvc"};
+
+Runable.listenerDnsNode	= "plus19";
+Runable.senderDnsNode	= "plus19";
+Runable.updateFrequency	= 5; //seconds
+Runable.nSrc		= 20; //number of TELL1-srcs in this partition
+
+//Is this a sum over a whole partiton (or over SubFarm)?
+Runable.sumPartition	= TRUE;	
+//Options for partition sum
+Runable.partitionName	= "MUON";
+Runable.runInfoDnsNode	= "ECS03"; //if different from listenerDnsNode 
+//Options for subFarm sum
+Runable.nrSubNodes	= 4;
+
+
+MessageSvc.OutputLevel = 2;
+
