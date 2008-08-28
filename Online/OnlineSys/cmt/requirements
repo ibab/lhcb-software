@@ -11,16 +11,16 @@ branches cmt doc
 #=======================================================
 # LHCb Online packages
 #=======================================================
-use Adder             v4r6     Online
+use Adder             v5r0     Online
 use confDB            v1r6     Online
 use confDBpython      v1r7     Online
 use $(CCPCHist_use)
 macro CCPCHist_use "CCPCHist v2r6 Online" slc4-amd64 ""
 use DIM               v17r7    Online
-use ExampleGaucho     v2r5     Online
+use ExampleGaucho     v3r0     Online
 # Does not work on WIN32
-# use FarmMonitor       v1r0     Online
-use Gaucho            v5r6p3   Online
+# use FarmMonitor     v1r0     Online
+use Gaucho            v6r0     Online
 use GaudiOnline       v2r20    Online
 use GaudiUPI          v1r9     Online
 use GaudiSerialize    v0r1     Online
@@ -37,7 +37,7 @@ use PyDIM             v2r5     Online
 use RawBankSizes      v1r3     Online
 use ROMon             v1r7     Online
 use ROLogger          v0r5     Online
-use Saver             v1r5     Online
+use Saver             v2r0     Online
 use UPI               v1r12    Online
 use UPIR              v1r1     Online
 use Viewer            v1r5     Online
