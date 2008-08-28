@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.h,v 1.9 2008-08-27 19:15:20 frankb Exp $
+// $Id: FarmDisplay.h,v 1.10 2008-08-28 10:17:41 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmDisplay.h,v 1.9 2008-08-27 19:15:20 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmDisplay.h,v 1.10 2008-08-28 10:17:41 frankb Exp $
 #ifndef ROMON_FARMDISPLAY_H
 #define ROMON_FARMDISPLAY_H 1
 
@@ -149,7 +149,10 @@ namespace ROMon {
     int               m_totBuilt;
     int               m_totMoore;
     int               m_totSent;
+    int               m_numUpdate;
     bool              m_hasProblems;
+    bool              m_inUse;
+
   public:
     /// Access to problem flag
     bool hasProblems() const { return m_hasProblems; }

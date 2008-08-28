@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.cpp,v 1.18 2008-08-28 08:15:45 frankb Exp $
+// $Id: FarmDisplay.cpp,v 1.19 2008-08-28 10:17:41 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.18 2008-08-28 08:15:45 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.19 2008-08-28 10:17:41 frankb Exp $
 
 #include "ROMon/CtrlSubfarmDisplay.h"
 #include "ROMon/RecSubfarmDisplay.h"
@@ -74,6 +74,7 @@ typedef Node::Tasks                  Tasks;
 #define SUBFARM_DISP_HEIGHT_DENSE     4
 #define SUBFARM_DISP_TOP              4
 #define SUBFARM_DISP_LEFT             3
+#define NUM_UPDATE_DIFF               5
 
 #define SLOTS_MIN                     .1
 #define SPACE_MIN                     .1
@@ -110,8 +111,9 @@ namespace ROMon {
 namespace {
   const char* _procNam(const char* nam) {
     char* p;
-    if (0 == ::strstr(nam,"MEPRx") ) return nam;
-    else if ( 0 != (p=::strchr(nam,'_')) ) return ++p;
+    if (0 != ::strstr(nam,"MEPRx") ) return nam;
+    p = ::strchr(nam,'_');
+    if ( 0 != p ) return ++p;
     return "Unknown";
   }
 
@@ -554,6 +556,7 @@ void CPUDisplay::updateContent(const CPUfarm& f) {
 FarmSubDisplay::FarmSubDisplay(FarmDisplay* parent, const std::string& title, bool bad) 
 : InternalDisplay(parent, title)
 {
+  m_numUpdate = 0;
   m_evtSent  = m_totSent = 0;
   m_evtMoore = m_totMoore = 0;
   m_evtBuilt = m_totBuilt = 0;
@@ -730,6 +733,13 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
   ::sprintf(text," %s %s [%d nodes %d buffers %d clients] ",
 	    m_name.c_str(),b1,numNodes,numBuffs,numClients);
   m_title = text;
+
+  bool check_tasks = ++m_numUpdate>NUM_UPDATE_DIFF;
+  if ( m_inUse != inuse ) {
+    check_tasks = true;
+    m_inUse = inuse;
+  }
+
   if ( numNodes != 0 ) {
     m_lastUpdate = t1;
   }
@@ -765,47 +775,55 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
     ::strcat(txt,text);
     ::scrc_put_chars(m_display,txt,BOLD|RED|INVERSE,4,1,1);
   }
-  /* This dows not work!
   else if ( evt_built <= m_evtBuilt && evt_prod[0]<m_totBuilt ) {
-    ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
-    ::sprintf(txt," Some MEPRx(s) stuck.");
-    ::scrc_put_chars(m_display,txt,BOLD|RED|INVERSE,4,1,1);
+    if ( check_tasks ) {
+      ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
+      ::sprintf(txt," Some MEPRx(s) stuck.");
+      ::scrc_put_chars(m_display,txt,BOLD|RED|INVERSE,4,1,1);
+    }
   }
-  */
-  else if ( inuse && evt_built <= m_evtBuilt && evt_prod[0] == m_totBuilt ) {
+  else if ( evt_built <= m_evtBuilt && evt_prod[0] == m_totBuilt ) {
     ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
     ::scrc_put_chars(m_display," No DAQ activity visible.",BOLD|RED,4,1,1);
   }
   else if ( evt_moore <= m_evtMoore && evt_prod[1] > m_totMoore ) {
-    // This check does not work properly....
-    //::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
-    //::scrc_put_chars(m_display," Some MOORE(s) stuck.",BOLD|RED|INVERSE,4,1,1);
-    ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
-    ::scrc_put_chars(m_display,"",NORMAL,4,1,1);
+    if ( check_tasks ) {
+      ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
+      ::scrc_put_chars(m_display," Some MOORE(s) stuck.",BOLD|RED|INVERSE,4,1,1);
+    }
   }
-  else if ( inuse && evt_moore <= m_evtMoore && evt_prod[1] == m_totMoore ) {
+  else if ( evt_moore <= m_evtMoore && evt_prod[1] == m_totMoore ) {
     ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
     ::scrc_put_chars(m_display," No HLT activity visible.",BOLD|RED,4,1,1);
   }
-  else if ( evt_sent <= m_evtSent && evt_prod[2] > m_totSent ) {
-    ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
-    ::scrc_put_chars(m_display," Some Sender(s) stuck.",BOLD|RED|INVERSE,4,1,1);
+  /*
+  else if ( check_tasks && evt_sent <= m_evtSent && evt_prod[2] > m_totSent ) {
+    if ( check_tasks ) {
+      ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
+      ::scrc_put_chars(m_display," Some Sender(s) stuck.",BOLD|RED|INVERSE,4,1,1);
+    }
   }
-  else if ( inuse && evt_sent <= m_evtSent && evt_prod[0] == m_totSent ) {
-    ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
-    ::scrc_put_chars(m_display," No STORAGE activity visible.",BOLD|RED,4,1,1);
+  */
+  else if ( evt_sent <= m_evtSent && evt_prod[0] == m_totSent ) {
+    if ( check_tasks ) {
+      ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
+      ::scrc_put_chars(m_display," No STORAGE activity visible.",BOLD|RED,4,1,1);
+    }
   }
   else {
     ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
     ::scrc_put_chars(m_display," No obvious Errors detected....",NORMAL|INVERSE|GREEN,4,1,1);
     m_hasProblems = false;
   }
-  m_evtBuilt = evt_built;
-  m_evtMoore = evt_moore;
-  m_evtSent  = evt_sent;
-  m_totBuilt = evt_prod[0];
-  m_totMoore = evt_prod[1];
-  m_totSent  = evt_prod[2];
+  if ( check_tasks ) {
+    m_numUpdate = 0;
+    m_evtBuilt  = evt_built;
+    m_evtMoore  = evt_moore;
+    m_evtSent   = evt_sent;
+    m_totBuilt  = evt_prod[0];
+    m_totMoore  = evt_prod[1];
+    m_totSent   = evt_prod[2];
+  }
   if ( evt_prod[0] != 0 )
     ::sprintf(txt,"%9d%4d%9d %2d%4d%9d%4d",
 	      evt_prod[0],used_slots[0],
