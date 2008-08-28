@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichMarkovRingFinderMoni
  *
- *  $Id: RichMarkovRingFinderMoni.cpp,v 1.36 2008-08-28 23:48:14 jonrob Exp $
+ *  $Id: RichMarkovRingFinderMoni.cpp,v 1.37 2008-08-28 23:56:52 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -126,9 +126,12 @@ StatusCode Moni::execute()
     // run the fit
     fitter.fit();
     // plot the fitted radius
-    plot1D( fitter.result().Radius, hid(rad,"ringRadiiRefitted"), 
-            RAD+" Refitted Trackless Ring Radii",
-            m_ckThetaMin[rad], m_ckThetaMax[rad], m_nBins );
+    if ( fitter.result().Status == 0 )
+    {
+      plot1D( fitter.result().Radius, hid(rad,"ringRadiiRefitted"), 
+              RAD+" Refitted Trackless Ring Radii (mm on HPD plane)",
+              0, 200, m_nBins );
+    }
 
   }//outer ring loop
 
