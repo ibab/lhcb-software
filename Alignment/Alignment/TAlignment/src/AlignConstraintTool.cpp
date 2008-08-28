@@ -82,11 +82,19 @@ namespace Al
   private:
     void fillConstraintDerivatives(const Elements& elements,
 				   const Al::Equations& equations ) const ;
-    
+    void addConstraintToNominal(const Elements& elements,
+				AlVec& halfDChi2DAlpha, AlSymMat& halfD2Chi2DAlpha2) const ;
   private:
     mutable Al::Constraints* m_constraints ;
     std::vector<std::string> m_constraintNames ;
     bool m_useWeightedAverage ;
+    bool m_constrainToNominal ;
+    double m_sigmaNominalTx ;
+    double m_sigmaNominalTy ;
+    double m_sigmaNominalTz ;
+    double m_sigmaNominalRx ;
+    double m_sigmaNominalRy ;
+    double m_sigmaNominalRz ;
   } ;
   
   DECLARE_TOOL_FACTORY( AlignConstraintTool );
@@ -101,6 +109,13 @@ namespace Al
     declareInterface<IAlignConstraintTool>(this);
     declareProperty("Constraints", m_constraintNames ) ;
     declareProperty("UseWeightedAverage", m_useWeightedAverage = false ) ;
+    declareProperty("ConstrainToNominal", m_constrainToNominal = false ) ;
+    declareProperty("SigmaNominalTx",m_sigmaNominalTx = 1*Gaudi::Units::mm) ;
+    declareProperty("SigmaNominalTy",m_sigmaNominalTy = 1*Gaudi::Units::mm) ;
+    declareProperty("SigmaNominalTz",m_sigmaNominalTz = 1*Gaudi::Units::mm) ;
+    declareProperty("SigmaNominalRx",m_sigmaNominalRx = 0.01 ) ;
+    declareProperty("SigmaNominalRy",m_sigmaNominalRy = 0.01 ) ;
+    declareProperty("SigmaNominalRz",m_sigmaNominalRz = 0.01 ) ;
   }
 
   AlignConstraintTool::~AlignConstraintTool()
@@ -242,35 +257,42 @@ namespace Al
   {
     // fill the constraint derivatives
     fillConstraintDerivatives( elements, equations ) ;
-
-    // now add them
     assert( m_constraints->derivatives().ncol() == halfDChi2DAlpha.size() ) ;
-    
-    // create new matrices
-    size_t size = halfDChi2DAlpha.size() ;
-    size_t dim = size + m_constraints->nActive() ;
-    AlVec halfDChi2DAlphaNew( dim ) ;
-    AlSymMat halfD2Chi2DAlpha2New( dim ) ;
-    
-    // copy the old matrices in there
-    for(size_t irow=0; irow< halfDChi2DAlpha.size(); ++irow) {
-      halfDChi2DAlphaNew(irow) = halfDChi2DAlpha(irow) ;
-      for(size_t icol=0; icol<=irow; ++icol) 
-	halfD2Chi2DAlpha2New.fast(irow,icol) = halfD2Chi2DAlpha2.fast(irow,icol) ;
-    }
-    
-    // now add the constraints, only to the 2nd derivative (residuals are zero for now)
-    for(size_t irow=0; irow<Al::Constraints::NumConstraints; ++irow) {
-      int iactive = m_constraints->activeParIndex(irow) ;
-      if( 0 <= iactive ) {
-	for(size_t jrow=0; jrow<size; ++jrow)
-	  halfD2Chi2DAlpha2New.fast( iactive + size, jrow ) = m_constraints->derivatives()(irow,jrow) ;
+
+    // now add them, if any constraints are active
+    if( m_constraints->nActive() > 0 ) {
+
+      // create new matrices
+      size_t size = halfDChi2DAlpha.size() ;
+      size_t dim = size + m_constraints->nActive() ;
+      AlVec halfDChi2DAlphaNew( dim ) ;
+      AlSymMat halfD2Chi2DAlpha2New( dim ) ;
+      
+      // copy the old matrices in there
+      for(size_t irow=0; irow< halfDChi2DAlpha.size(); ++irow) {
+	halfDChi2DAlphaNew(irow) = halfDChi2DAlpha(irow) ;
+	for(size_t icol=0; icol<=irow; ++icol) 
+	  halfD2Chi2DAlpha2New.fast(irow,icol) = halfD2Chi2DAlpha2.fast(irow,icol) ;
       }
+      
+      // now add the constraints, only to the 2nd derivative (residuals are zero for now)
+      for(size_t irow=0; irow<Al::Constraints::NumConstraints; ++irow) {
+	int iactive = m_constraints->activeParIndex(irow) ;
+	if( 0 <= iactive ) {
+	  for(size_t jrow=0; jrow<size; ++jrow)
+	    halfD2Chi2DAlpha2New.fast( iactive + size, jrow ) = m_constraints->derivatives()(irow,jrow) ;
+	}
+      }
+      
+      // copy the result back
+      halfDChi2DAlpha = halfDChi2DAlphaNew ;
+      halfD2Chi2DAlpha2 = halfD2Chi2DAlpha2New ;
     }
-    
-    // copy the result back
-    halfDChi2DAlpha = halfDChi2DAlphaNew ;
-    halfD2Chi2DAlpha2 = halfD2Chi2DAlpha2New ;
+
+    // eventually, add also the chisquare constraints
+    if( m_constrainToNominal ) 
+      addConstraintToNominal(elements,halfDChi2DAlpha,halfD2Chi2DAlpha2) ;
+
     return m_constraints->nActive() ;
   }
   
@@ -331,5 +353,37 @@ namespace Al
       
     }
   }
-  
+
+  void AlignConstraintTool::addConstraintToNominal(const Elements& elements,
+						   AlVec& halfDChi2DAlpha, AlSymMat& halfD2Chi2DAlpha2) const
+  {
+    info() << "Adding constraint to nominal geometry" << endreq ;
+    // this adds chisquare constraints for the survey. since we don't
+    // really have the survey we constrain to the 'nomina; position.
+    double sigma[6] ;
+    sigma[0] = m_sigmaNominalTx ;
+    sigma[1] = m_sigmaNominalTy ;
+    sigma[2] = m_sigmaNominalTz ;
+    sigma[3] = m_sigmaNominalRx ;
+    sigma[4] = m_sigmaNominalRy ;
+    sigma[5] = m_sigmaNominalRz ;
+
+    for(Elements::const_iterator ielem = elements.begin() ;
+	ielem != elements.end(); ++ielem) {
+      // get the current difference with nominal
+      AlParameters currentdelta = (*ielem).currentActiveDelta() ;
+      // now assign errors. for the moment we choose errors that are
+      // constant: 1mm for all positions and 1mrad for all rotations.
+      // update the first and second derivative
+      for(size_t iactive = 0; iactive<(*ielem).dofMask().nActive(); ++iactive) {
+	double thissigma = sigma[(*ielem).dofMask().parIndex(iactive)] ;
+	double weight = 1/(thissigma*thissigma) ;
+	// this is tricky: need to get the sign right!
+	double residual = -currentdelta.parameters()(iactive) ;
+	size_t ipar = iactive + (*ielem).activeParOffset() ;
+	halfDChi2DAlpha(ipar) += weight * residual; 
+	halfD2Chi2DAlpha2.fast(ipar,ipar) += weight ;
+      }
+    }
+  }
 }
