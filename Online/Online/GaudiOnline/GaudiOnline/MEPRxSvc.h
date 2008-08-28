@@ -133,7 +133,8 @@ namespace LHCb  {
     lib_rtl_lock_t              m_freeDscLock;
     lib_rtl_lock_t              m_usedDscLock;
     MEPRQCommand                *m_mepRQCommand;
-
+    //SourceStatService           *m_statService;
+    
     IIncidentSvc*               m_incidentSvc; 
     IMonitorSvc*                m_monSvc;
 
@@ -152,6 +153,9 @@ namespace LHCb  {
     // Error counters
     // u_int64_t m_notReqPkt, m_incEvt; // 64-bit not yet supported in IMonitorSvc
 
+    DimService * m_test;
+    int * m_testint;
+
   public:
     int                         m_totRxPkt;
     int                         m_totRxOct;
@@ -168,6 +172,8 @@ namespace LHCb  {
     std::vector<int>            m_misPkt;
     std::vector<int>            m_badPckFktPkt;
     std::vector<int>            m_truncPkt;
+    std::vector<int>            m_emptyPkt;
+    std::vector<int>		m_multipleEvt;
 
     /// Standard Constructor
     MEPRxSvc(const std::string& name, ISvcLocator* svc);
@@ -236,7 +242,7 @@ namespace LHCb  {
     virtual void commandHandler(void);
   };
 
-  
+
 }      // End namespace LHCb
 
 #endif //  GAUDIONLINE_MEPRXSVC_H
