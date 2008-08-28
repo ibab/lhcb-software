@@ -3,6 +3,9 @@ Package     : Phys/DaVinci
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v20r1>2008-08-28 DaVinci v20r1. Version with Updated Hlt.</A></H1><PRE>
+Based on Phys v7r0, Analysis v2r0, Rec v5r10, HLT v4r1, Lbcom v6r21, LHCb v25r0, Gaudi v20r2, LCGCMT 55
+
 </PRE><H1><A NAME=v20r0>2008-08-06 DaVinci v20r0. First version with LHCb v25 series</A></H1><PRE>
 Based on Phys v7r0, Analysis v2r0, Rec v5r10, HLT v4r0, Lbcom v6r21, LHCb v25r0, Gaudi v20r2, LCGCMT 55
 

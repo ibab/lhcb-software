@@ -1,4 +1,4 @@
- $Id: release.notes,v 1.231 2008-08-26 09:15:56 jpalac Exp $
+ $Id: release.notes,v 1.232 2008-08-28 10:17:48 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,10 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+!!========================== DaVinci v20r1 2008-08-28 ===================
+ 2008-08-27 - Patrick Koppenburg
+ - New L0 options.
 
 ! 2008-08-26 - Juan PALACIOS
  - add options/MicroDSTCommon.opts

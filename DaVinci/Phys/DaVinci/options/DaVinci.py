@@ -20,9 +20,7 @@ importOptions( "$DAVINCIROOT/options/DaVinciCommon.opts" )
 #
 # Trigger. Uncomment what you need. Hlt1 needs L0, Hlt2 doesn't.
 #
-# @todo load a file from L0DU, not HLTSYS
-#
-importOptions( "$HLTSYSROOT/options/L0.opts" )
+importOptions( "$L0DUROOT/options/ReplaceL0DUBankWithEmulated.opts" )
 importOptions( "$HLTSYSROOT/options/Hlt1.opts" )
 importOptions( "$HLTSYSROOT/options/Hlt2.opts" )
 ########################################################################
