@@ -1,4 +1,4 @@
-// $Id: Calo2Dview.cpp,v 1.10 2008-06-09 09:48:43 odescham Exp $
+// $Id: Calo2Dview.cpp,v 1.11 2008-08-28 09:10:57 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -281,7 +281,6 @@ AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::CaloCellID
           double x = m_xsize *  ((double) iic+0.5 ) /(double) m_reg ;
           double y = m_ysize *  ((double) iir+0.5 ) /(double) m_reg ;
           if ( msgLevel(MSG::VERBOSE) ){
-            verbose() << " FILLING " << x << " " << y << " " << value+m_offset << endreq;
           }
           GaudiHistoAlg::fill( histo2D(unit) ,  x, y , value + m_offset);
         }
