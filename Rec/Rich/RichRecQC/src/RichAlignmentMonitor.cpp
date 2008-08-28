@@ -4,7 +4,7 @@
  *  Implementation file for algorithm class : RichAlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.cpp,v 1.3 2008-02-15 10:13:36 jonrob Exp $
+ *  $Id: RichAlignmentMonitor.cpp,v 1.4 2008-08-28 19:08:43 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2004-02-19
@@ -85,13 +85,15 @@ StatusCode AlignmentMonitor::initialize()
   else
     rad = Rich::Rich2Gas;
 
+  const std::string RAD = Rich::text(rad);
+
   // Rich Histo ID
   const RichHistoID hid;
 
   // prebook histograms
   for ( unsigned int hi=0; hi<m_preBookHistos.size(); ++hi ) {
     int combi = m_preBookHistos[hi];
-    std::string title = "Alignment Histogram: Sph " +
+    std::string title = RAD+" Alignment Histogram: Sph " +
       boost::lexical_cast<std::string>(combi/100) + " flat " +
       boost::lexical_cast<std::string>(combi%100) + " R" +
       boost::lexical_cast<std::string>(m_rich+1);
@@ -120,7 +122,7 @@ StatusCode AlignmentMonitor::initialize()
   if (m_HPDList.size() == 1)
     if (m_HPDList[0] == 0 )
       m_plotAllHPDs = true;
-  
+
   debug() << "Finished Initialization" << endmsg;
   return sc;
 };
@@ -176,6 +178,7 @@ StatusCode AlignmentMonitor::execute() {
     // Radiator info
     const Rich::RadiatorType rad = segment->trackSegment().radiator();
     if (rad == Rich::Aerogel || rich != m_rich) continue;
+    const std::string RAD = Rich::text(rad);
 
     // track selection
     if ( !m_trSelector->trackSelected(segment->richRecTrack()) ) continue;
@@ -287,7 +290,7 @@ StatusCode AlignmentMonitor::execute() {
                 2*Gaudi::Units::pi, -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50);
 
       // now for individual mirror combinations
-      std::string title = "Alignment Histogram: Sph " +
+      std::string title = RAD+" Alignment Histogram: Sph " +
         boost::lexical_cast<std::string>(sphMirNum) + " flat " +
         boost::lexical_cast<std::string>(flatMirNum) + " R" +
         boost::lexical_cast<std::string>(rich+1);
@@ -302,7 +305,7 @@ StatusCode AlignmentMonitor::execute() {
       plot2D( phiRec, delTheta, hid(rad,h_id), title, 0.0, 2*Gaudi::Units::pi,
               -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50 );
 
-      const int hpd = ( m_plotAllHPDs ? Rich::DAQ::HPDIdentifier( gPhoton.smartID() ).number() 
+      const int hpd = ( m_plotAllHPDs ? Rich::DAQ::HPDIdentifier( gPhoton.smartID() ).number()
                         : makePlotForHPD(gPhoton.smartID()) );
 
       if ( hpd != 0 )
