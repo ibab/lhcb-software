@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.2 2008-08-28 19:08:43 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.3 2008-08-28 22:32:08 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -28,7 +28,9 @@ class RichRecQCConf(RichConfigurableUser):
        ,"mirrorAlignmentMonitoring": False
        ,"pidMomentumRanges": [ [2,100], [2,10], [10,70], [70,100] ]
        ,"pidTrackTypes":  [ ["All"] ]
-       ,"recoTrackTypes": [ ["All"],["Forward"],["Match"],["KsTrack"],["VeloTT"],["Seed"] ]
+       ,"recoTrackTypes": [ ["All"],
+                            ["Forward","Match"],
+                            ["Forward"],["Match"],["KsTrack"],["VeloTT"],["Seed"] ]
         }
 
     ## Apply the configuration to the given sequence
