@@ -40,7 +40,7 @@ namespace ROMon {
    *
    *   @author M.Frank
    */
-  class CtrlFarmSubDisplay : public InternalDisplay, public Interactor  {
+  class CtrlFarmSubDisplay : public InternalDisplay {
     bool                m_hasProblems;
     /// Extracted cluster information for all contained nodes
     Cluster             m_cluster;
@@ -195,9 +195,10 @@ void CtrlFarmSubDisplay::handle(const Event& ev) {
     const MouseEvent* m = ev.get<MouseEvent>();
     setFocus();
     IocSensor::instance().send(parent(),m->msec == (unsigned int)-1 ? CMD_POSCURSOR : CMD_SHOW,this);
-    break;
+    return;
   }
   default:
     break;
   }
+  InternalDisplay::handle(ev);
 }

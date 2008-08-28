@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.cpp,v 1.21 2008-08-28 13:50:40 frankb Exp $
+// $Id: FarmDisplay.cpp,v 1.22 2008-08-28 16:39:14 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.21 2008-08-28 13:50:40 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.22 2008-08-28 16:39:14 frankb Exp $
 
 #include "ROMon/CtrlSubfarmDisplay.h"
 #include "ROMon/RecSubfarmDisplay.h"
@@ -194,15 +194,38 @@ void InternalDisplay::update(const void* data, size_t /* len */) {
 void InternalDisplay::dataHandler(void* tag, void* address, int* size) {
   if ( address && tag && *size > 0 ) {
     InternalDisplay* disp = *(InternalDisplay**)tag;
-    Pasteboard* pb = disp->pasteboard();
-    FarmDisplay* fd = disp->parent();
-    RTL::Lock lock(s_lock);
-    ::scrc_cursor_off(pb);
-    ::scrc_begin_pasteboard_update (pb);
-    disp->update(address, *size);
-    ::scrc_end_pasteboard_update(pb);
-    if ( fd ) fd->set_cursor();
-    ::scrc_cursor_on(pb);
+    unsigned char* ptr = new unsigned char[*size+sizeof(int)];
+    *(int*)ptr = *size;
+    ::memcpy(ptr+sizeof(int),address,*size);
+    IocSensor::instance().send(disp,CMD_UPDATE,ptr);
+  }
+}
+
+/// Interactor overload: Display callback handler
+void InternalDisplay::handle(const Event& ev)    {
+  switch(ev.eventtype) {
+  case IocEvent: {
+    switch(ev.type) {
+    case CMD_UPDATE: {
+      RTL::Lock lock(s_lock);
+      Pasteboard* pb = pasteboard();
+      unsigned char* ptr = (unsigned char*)ev.data;
+      ::scrc_cursor_off(pb);
+      ::scrc_begin_pasteboard_update (pb);
+      update(ptr + sizeof(int), *(int*)ptr);
+      ::scrc_end_pasteboard_update(pb);
+      if ( parent() ) parent()->set_cursor();
+      ::scrc_cursor_on(pb);
+      delete [] ptr;
+      break;
+    }
+    default:
+      break;
+    }
+    break;
+  }
+  default:
+    break;
   }
 }
 
@@ -644,6 +667,7 @@ void FarmSubDisplay::handle(const Event& ev) {
   default:
     break;
   }
+  InternalDisplay::handle(ev);
 }
 
 /// Update display content
@@ -733,12 +757,7 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
   ::sprintf(text," %s %s [%d nodes %d buffers %d clients] ",
 	    m_name.c_str(),b1,numNodes,numBuffs,numClients);
   m_title = text;
-
-  bool check_tasks = ++m_numUpdate>NUM_UPDATE_DIFF;
-  if ( m_inUse != inuse ) {
-    check_tasks = true;
-    m_inUse = inuse;
-  }
+  m_inUse = inuse;
 
   if ( numNodes != 0 ) {
     m_lastUpdate = t1;
@@ -776,54 +795,42 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
     ::scrc_put_chars(m_display,txt,BOLD|RED|INVERSE,4,1,1);
   }
   else if ( evt_built <= m_evtBuilt && evt_prod[0]<m_totBuilt ) {
-    if ( check_tasks ) {
-      ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
-      ::sprintf(txt," Some MEPRx(s) stuck.");
-      ::scrc_put_chars(m_display,txt,BOLD|RED|INVERSE,4,1,1);
-    }
+    ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
+    ::sprintf(txt," Some MEPRx(s) stuck.");
+    ::scrc_put_chars(m_display,txt,BOLD|RED|INVERSE,4,1,1);
   }
   else if ( evt_built <= m_evtBuilt && evt_prod[0] == m_totBuilt ) {
     ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
     ::scrc_put_chars(m_display," No DAQ activity visible.",BOLD|RED,4,1,1);
   }
-  else if ( evt_moore <= m_evtMoore && evt_prod[1] > m_totMoore ) {
-    if ( check_tasks ) {
-      ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
-      ::scrc_put_chars(m_display," Some MOORE(s) stuck.",BOLD|RED|INVERSE,4,1,1);
-    }
+  else if ( evt_moore+2 <= m_evtMoore && evt_prod[1] > m_totMoore ) {
+    ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
+    ::scrc_put_chars(m_display," Some MOORE(s) stuck.",BOLD|RED|INVERSE,4,1,1);
   }
   else if ( evt_moore <= m_evtMoore && evt_prod[1] == m_totMoore ) {
     ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
     ::scrc_put_chars(m_display," No HLT activity visible.",BOLD|RED,4,1,1);
   }
-  /*
-  else if ( check_tasks && evt_sent <= m_evtSent && evt_prod[2] > m_totSent ) {
-    if ( check_tasks ) {
-      ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
-      ::scrc_put_chars(m_display," Some Sender(s) stuck.",BOLD|RED|INVERSE,4,1,1);
-    }
+  else if ( evt_sent+2 <= m_evtSent && evt_prod[2] > m_totSent ) {
+    ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
+    ::scrc_put_chars(m_display," Some Sender(s) stuck.",BOLD|RED|INVERSE,4,1,1);
   }
-  */
   else if ( evt_sent <= m_evtSent && evt_prod[0] == m_totSent ) {
-    if ( check_tasks ) {
-      ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
-      ::scrc_put_chars(m_display," No STORAGE activity visible.",BOLD|RED,4,1,1);
-    }
+    ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
+    ::scrc_put_chars(m_display," No STORAGE activity visible.",BOLD|RED,4,1,1);
   }
   else {
     ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
     ::scrc_put_chars(m_display," No obvious Errors detected....",NORMAL|INVERSE|GREEN,4,1,1);
     m_hasProblems = false;
   }
-  if ( check_tasks ) {
-    m_numUpdate = 0;
-    m_evtBuilt  = evt_built;
-    m_evtMoore  = evt_moore;
-    m_evtSent   = evt_sent;
-    m_totBuilt  = evt_prod[0];
-    m_totMoore  = evt_prod[1];
-    m_totSent   = evt_prod[2];
-  }
+  m_evtBuilt  = evt_built;
+  m_evtMoore  = evt_moore;
+  m_evtSent   = evt_sent;
+  m_totBuilt  = evt_prod[0];
+  m_totMoore  = evt_prod[1];
+  m_totSent   = evt_prod[2];
+
   if ( evt_prod[0] != 0 )
     ::sprintf(txt,"%9d%4d%9d %2d%4d%9d%4d",
 	      evt_prod[0],used_slots[0],
@@ -923,11 +930,12 @@ void RecFarmSubDisplay::handle(const Event& ev) {
     const MouseEvent* m = ev.get<MouseEvent>();
     setFocus();
     IocSensor::instance().send(parent(),m->msec == (unsigned int)-1 ? CMD_POSCURSOR : CMD_SHOW,this);
-    break;
+    return;
   }
   default:
     break;
   }
+  InternalDisplay::handle(ev);
 }
 
 /// Update display content

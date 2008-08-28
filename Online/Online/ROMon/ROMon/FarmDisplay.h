@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.h,v 1.10 2008-08-28 10:17:41 frankb Exp $
+// $Id: FarmDisplay.h,v 1.11 2008-08-28 16:39:14 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmDisplay.h,v 1.10 2008-08-28 10:17:41 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmDisplay.h,v 1.11 2008-08-28 16:39:14 frankb Exp $
 #ifndef ROMON_FARMDISPLAY_H
 #define ROMON_FARMDISPLAY_H 1
 
@@ -68,7 +68,7 @@ namespace ROMon {
    *
    *   @author M.Frank
    */
-  class InternalDisplay   {
+  class InternalDisplay : public Interactor   {
   protected:
     SCR::Pasteboard*  m_pasteboard;
     SCR::Display*     m_display;
@@ -116,6 +116,8 @@ namespace ROMon {
     virtual void releaseFocus() {}
     /// DIM command service callback
     static void dataHandler(void* tag, void* address, int* size);
+    /// Interactor overload: Display callback handler
+    virtual void handle(const Event& ev);
   };
 
   /**@class HelpDisplay ROMon.h GaudiOnline/FarmDisplay.h
@@ -142,7 +144,7 @@ namespace ROMon {
    *
    *   @author M.Frank
    */
-  class FarmSubDisplay : public InternalDisplay, public Interactor  {
+  class FarmSubDisplay : public InternalDisplay  {
     int               m_evtBuilt;
     int               m_evtMoore;
     int               m_evtSent;
@@ -185,7 +187,7 @@ namespace ROMon {
    *
    *   @author M.Frank
    */
-  class RecFarmSubDisplay : public InternalDisplay, public Interactor  {
+  class RecFarmSubDisplay : public InternalDisplay  {
     int               m_evtRecv;
     int               m_evtReco;
     int               m_evtSent;
@@ -323,7 +325,7 @@ namespace ROMon {
    *
    *   @author M.Frank
    */
-  class FarmDisplay : public InternalDisplay, public Interactor  {
+  class FarmDisplay : public InternalDisplay  {
   protected:
     enum { HLT_MODE, RECO_MODE, CTRL_MODE };
     typedef std::map<std::string, InternalDisplay*> SubDisplays;
