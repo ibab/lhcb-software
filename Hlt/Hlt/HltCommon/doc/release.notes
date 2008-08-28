@@ -3,6 +3,8 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+
+!========================== HltCommon v4r1 2008-08-28 ===================
 !2008-08-27 - Gerhard Raven
   - set RequirePositiveInputs to False for HltL0{Calo,Muon}Prepare -- to be 
     investigated why this is required.
