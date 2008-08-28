@@ -1,7 +1,17 @@
-! $Id: release.notes,v 1.119 2008-08-18 13:58:01 odescham Exp $
+! $Id: release.notes,v 1.120 2008-08-28 09:07:37 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
+
+! 2008-08-27 - Olivier Deschamps
+ - L0DUConfig_0x000X.opts : produced by L0DU PVSS on 25th august 2008
+                            after configurations cleaning (naming + algorithm rewritting)
+                            -> Warning : not backward compatible
+ - L0DUConfig_0x000X-obsolete.opts : to be used instead of  L0DUConfig_0x000X.opts for
+                                     commissioning data taken before 2008/08/20 (run <30406)  
+
+ - L0DUConfig_0xDEBX.opts : produced by L0DU PVSS on 25th august 2008
+
 
 ! 2008-08-18 - Olivier Deschamps
  - L0DUConfig_0x000X.opts : add new TCKs 
