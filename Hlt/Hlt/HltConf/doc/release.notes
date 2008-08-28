@@ -1,10 +1,13 @@
-! $Id: release.notes,v 1.5 2008-08-25 12:37:52 graven Exp $ 
+! $Id: release.notes,v 1.6 2008-08-28 07:10:32 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : 
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2008-08-28 - Gerhard Raven
+ - python/HltConfig/Hlt1Line.py
+    catch error on printout when a (sub)sequence is configured with old-style options
 ! 2008-08-25 - Gerhard Raven
  - python/HltConfig/Hlt1Line.py
     o allow one to specify 'lines' that should NOT contribute (directly) 

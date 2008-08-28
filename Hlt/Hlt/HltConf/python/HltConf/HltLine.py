@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.8 2008-08-26 12:47:06 graven Exp $ 
+# $Id: HltLine.py,v 1.9 2008-08-28 07:10:32 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'    ,  ## the Hlt line itself 
@@ -967,10 +967,14 @@ def __enroll__ ( self       ,   ## the object
         return __enroll__ ( self.sequencer() , level )
 
     _indent_ = ('%-3d'%level) + level * '   ' 
-    line = _indent_ + self.name ()
+    try:     line = _indent_ + self.name ()
+    except:  line = _indent_ + '<UNKNOWN>'
+        
     if len1(line)>39: line = line + '\n'+ 40*' '
     else :            line = line + (40-len1(line))*' '
-    line = line + '%-25.25s'%self.getType()
+    try: line = line + '%-25.25s'%self.getType()
+    except: line = line + '<UNKNOWN>'
+
 
     line = prnt ( self , lst , line )
     
