@@ -1,4 +1,4 @@
-// $Id: TrackEffChecker.cpp,v 1.8 2008-08-27 19:47:31 smenzeme Exp $
+// $Id: TrackEffChecker.cpp,v 1.9 2008-08-28 16:59:45 smenzeme Exp $
 // Include files 
 #include "TrackEffChecker.h"
 
@@ -171,9 +171,9 @@ void TrackEffChecker::effInfo(){
 void TrackEffChecker::plots(const std::string& type, 
                             const LHCb::MCParticle* part) const{
 
-  plot(part->p()/Gaudi::Units::GeV,type+"/p","p", 0., 100., 20);
+  plot(part->p()/Gaudi::Units::GeV,type+"/p","p", 0., 50., 25);
   plot(part->pt()/Gaudi::Units::GeV,type+"/pt","pt", 0., 10., 20);
-  plot(part->pseudoRapidity(),type+"/eta","eta",1., 6., 20);
+  plot(part->pseudoRapidity(),type+"/eta","eta",1., 6., 25);
 }
 
 
@@ -187,11 +187,11 @@ void TrackEffChecker::plots(const std::string& type,
       !track->history() == LHCb::Track::PatVeloGeneral &&
       !track->history() == LHCb::Track::PatVeloOpen){
     plot(track->pt()/Gaudi::Units::GeV,type+"/pt","pt", 0., 10., 100);
-    plot(track->p()/Gaudi::Units::GeV,type+"/p","p", 0., 100., 100);
+    plot(track->p()/Gaudi::Units::GeV,type+"/p","p", 0., 50., 25);
   }
   plot(track->chi2PerDoF(),type+"/chi2","chi2", 0., 500., 100);
   plot(track->probChi2(),type+"/probchi2","probChi2", 0., 1., 100);
-  plot(track->pseudoRapidity(),type+"/eta" ,"eta" ,1., 6., 100);
+  plot(track->pseudoRapidity(),type+"/eta" ,"eta" ,1., 6., 25);
 
   // information from the extra info list
   const LHCb::Track::ExtraInfo& info = track->extraInfo();

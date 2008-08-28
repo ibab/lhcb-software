@@ -1,4 +1,4 @@
-// $Id: TrackResChecker.cpp,v 1.4 2008-08-27 19:47:31 smenzeme Exp $
+// $Id: TrackResChecker.cpp,v 1.5 2008-08-28 16:59:45 smenzeme Exp $
 // Include files 
 #include "TrackResChecker.h"
 
@@ -133,16 +133,13 @@ void TrackResChecker::resolutionHistos(const LHCb::Track* track,
   
   const double errP =  sqrt(track->firstState().errP2());  
 
-  if (!track->history() == LHCb::Track::PatVeloR && 
-      !track->history() == LHCb::Track::PatVeloGeneric &&
-      !track->history() == LHCb::Track::PatVeloGeneral &&
-      !track->history() == LHCb::Track::PatVeloOpen){
+  if (track->history() != LHCb::Track::PatVelo){
     plot2D(track->p()/Gaudi::Units::GeV , (track->p() - mcPart->p()) / track->p(), 
-	   type+"/vertex/dpoverp_vs_p", "dp/p vs p", 0., 200., -0.1,0.1, 20, 50);
+	   type+"/vertex/dpoverp_vs_p", "dp/p vs p", 0., 50., -0.1,0.1, 25, 50);
     
     
     plot2D( track->p()/Gaudi::Units::GeV, (track->p() - mcPart->p())/errP, 
-	    type+"/vertex/p_pull_vs_p","p pull vs p", 0., 200., -10.,10., 20, 50);
+	    type+"/vertex/p_pull_vs_p","p pull vs p", 0., 50., -10.,10., 25, 50);
     
     const double eta = track->pseudoRapidity();
     plot2D( eta, (track->p() - mcPart->p()) / track->p(), 
@@ -177,7 +174,7 @@ void TrackResChecker::resolutionHistos(const LHCb::Track* track,
         if (sc.isSuccess()) pullplots(trueState,state,type+"/"+location);
       } // succes
     } // loop zpos
-  } // full detail
+  } // full deta
 }
 
 void TrackResChecker::pullplots(const LHCb::State& trueState, const LHCb::State& recState,
@@ -196,8 +193,8 @@ void TrackResChecker::pullplots(const LHCb::State& trueState, const LHCb::State&
   const double mcP  = trueState.p();
 
   // fill the histograms
-  plot1D( dx/Gaudi::Units::cm, location+"/x_res", "x resolution", -2.5, 2.5, 100 );
-  plot1D( dy/Gaudi::Units::cm, location+"/y_res","y resolution", -1.005, 1.005, 101 );
+  plot1D( dx/Gaudi::Units::cm, location+"/x_res", "x resolution", -0.06, 0.06, 101 );
+  plot1D( dy/Gaudi::Units::cm, location+"/y_res","y resolution", -0.06,0.06, 101 );
   plot1D( dtx, location+"/tx_res", "tx resolution", -0.01, 0.01, 100 );
   plot1D( dty, location+"/ty_res", "ty resolution", -0.01, 0.01, 100 );
 
