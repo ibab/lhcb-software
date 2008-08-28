@@ -1,11 +1,11 @@
 from Gaudi.Configuration import *
 
-nEvents            = 50
-nIter              = 1
+nEvents            = 100
+nIter              = 3
 alignlevel         = 'sensors'
 alignlevel = 'halves'
 #alignlevel = 'all'
-computeVertexCorrelations =False
+computeVertexCorrelations = False
 
 from OTAlElements import *
 
@@ -24,20 +24,23 @@ if alignlevel == 'sensors':
    conddepths = []
    condname = "Detectors.xml"
 elif alignlevel == 'halves':
-   elements.VeloLeft("TxTyRz")
-   elements.VeloRight("TxTyRz")
+#   elements.VeloLeft("TxTyRxRy")
+#   elements.VeloRight("TxTyRxRy")
+#   constraints = ["Tx","Ty","Rx","Ry"]
+   elements.VeloLeft("Tx")
+   elements.VeloRight("Tx")
+   constraints = ["Tx"]
 #   constraints = ["Tx","Ty","Tz","Szz","Szx","Szy"]
 #   elements.VeloLeft("TxTyTz")
 #   elements.VeloRight("TxTyTz")
-   constraints = ["Tz","Tx","Ty","Rx"]
    conddepths = [0,1]
    condname   = "Global.xml"
 else :
-   elements.Velo("Tz")
+   elements.Velo("TxTyRxRy")
 #   elements.TT("Tz")
 #   elements.IT("Tz")
 #   elements.OT("Tz")
-   constraints = []#["Tz"]
+   constraints = []#["TxTyRxRy"]
    conddepths = [0,1]
    condname   = "Global.xml"
 
@@ -232,7 +235,7 @@ AlConfigurable().CondDepths                   = conddepths
 #AlConfigurable().TopLevelElement              = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo"
 AlConfigurable().Precision                    = 8
 AlConfigurable().SimplifiedGeom               = True
-AlConfigurable().VertexLocation = "Rec/Vertex/Primary"
+#AlConfigurable().VertexLocation = "Rec/Vertex/Primary"
 AlConfigurable().Chi2Outlier = 10000
 #AlConfigurable().RegularizationFactor = 1
 
@@ -241,7 +244,7 @@ AlConfigurable().applyConf()
 
 MisAlCh1COND = CondDBAccessSvc("MisAlCh1COND")
 #MisAlCh1COND.ConnectionString = "sqlite_file:/afs/cern.ch/user/m/marcocle/public/Wouter/LHCBCOND_MisAlCh1.db/LHCBCOND"
-MisAlCh1COND.ConnectionString = "sqlite_file:/afs/cern.ch/lhcb/group/tracking/vol7/wouter/DB/VeloSliceMisaligned.db/LHCBCOND"
+MisAlCh1COND.ConnectionString = "sqlite_file:/afs/cern.ch/lhcb/group/tracking/vol7/wouter/DB/VeloSliceMisalignedTest3.db/LHCBCOND"
 #MisAlCh1COND.ConnectionString = "sqlite_file:/afs/cern.ch/lhcb/group/tracking/vol7/wouter/DB/VeloSliceAlignedHalvesNoCorr.db/LHCBCOND"
 addCondDBLayer(MisAlCh1COND)
 
@@ -255,7 +258,8 @@ trackselectortool = TrackSelector( "AlignTrackSelectorTool",
                                    MinNDoF=2,
                                    MinNVeloPhiHits=5,
                                    MinNVeloRHits=5,
-                                   TrackTypes = [ "Long","Velo","Upstream" ] ) 
+                                   #TrackTypes = [ "Long","Velo","Upstream" ]
+                                   TrackTypes = [ "Velo" ] ) 
 
 trackselectoralg = TrackContainerCopy("AlignTrackSelector",
                                       inputLocation = "Rec/Track/Best",
@@ -272,10 +276,23 @@ vertexresidualtool.MyTrackSelector.TrackTypes = [ "Long" ]
 #vertexresidualtool.MyTrackSelectorHandle = trkselector 
 vertexresidualtool.ComputeCorrelations = computeVertexCorrelations
 
+## run some monitoring code
+from Configurables import ( TrackMonitor,TrackVertexMonitor )
+trackmonitor = TrackMonitor("AlignTrackMonitor", TracksInContainer = "Alignment/AlignmentTracks" )
+AlConfigurable().filterSeq().Members.append( trackmonitor )
+AlConfigurable().filterSeq().Members.append(TrackVertexMonitor())
 
 ## To load parts of the database from a particular xml location
 #DetectorDataSvc().DetDbLocation = "/data/bfys/janos/LHCbDB/lhcb.xml"
 
+#constrainttool = Al__AlignConstraintTool("Al::AlignConstraintTool")
+#constrainttool.ConstrainToNominal = True
+#constrainttool.SigmaNominalTx = 0.0001 ;
+#constrainttool.SigmaNominalTy = 0.0001 ;
+#constrainttool.SigmaNominalTz = 0.0001 ;
+#constrainttool.SigmaNominalRx = 1e-6 ;
+#constrainttool.SigmaNominalRy = 1e-6 ;
+#constrainttool.SigmaNominalRz = 1e-6 ;
 
 ## Now lets run it
 from GaudiPython import *
