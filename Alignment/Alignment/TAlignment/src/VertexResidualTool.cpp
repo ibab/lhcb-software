@@ -214,6 +214,7 @@ namespace Al
     Al::Residuals::NodeContainer allnodes ;
     double totalchisq(0) ;
     size_t totalndof(0) ;
+    size_t nacceptedtracks(0) ;
 
     for( TrackResidualContainer::const_iterator itrack = tracks.begin() ;
 	 itrack != tracks.end() && success; ++itrack) {
@@ -227,13 +228,15 @@ namespace Al
 	allnodes.insert(allnodes.end(), (*itrack)->nodes().begin(), (*itrack)->nodes().end()) ;
 	totalchisq += (*itrack)->chi2() ;
 	totalndof  += (*itrack)->nDoF() ;
+	++nacceptedtracks ;
       }
       else {
-	warning() << "Extrapolation failed" << endreq ;
-	success = false ;
+	warning() << "Extrapolation failed. Will not add track to vertex." << endreq ;
       }
     }
     
+    success = nacceptedtracks>=2 ;
+
     if(success) {
       // now vertex the states
       LHCb::TrackStateVertex vertex ;
@@ -307,23 +310,23 @@ namespace Al
 	      double c = rc->HCH(irow,irow) ;
 	      error = ! (0<=c) ;
 	      if(error) warning() << "found negative element on diagonal: " << c << endreq ;
-	      error = ! ( c<rc->V(irow)) ;
+	      error = ! ( c<=rc->V(irow)) ;
 	      if(error) warning() << "found too large element on diagonal: " << c/rc->V(irow) << endreq ;
 	      
 	      HCHdiagroots.push_back( std::sqrt(c) ) ;
-	      Rdiagroots.push_back( std::sqrt(rc->V(irow) - c) ) ;
+	      Rdiagroots.push_back( c<rc->V(irow) ? std::sqrt(rc->V(irow) - c) :0 ) ;
 	    }
 	    
 	    bool offdiagerror(false) ;
 	    for(size_t irow=0; irow<rc->size() && !error; ++irow) {
 	      for(size_t icol=0; icol<irow && !error; ++icol) {
 		double c = rc->HCH(irow,icol) / (HCHdiagroots[irow]*HCHdiagroots[icol]) ;
-		double d = rc->HCH(irow,icol) / (Rdiagroots[irow]*Rdiagroots[icol]) ;
-		bool thiserror =  ! (-1-tol < c && c <1+tol) || ! (-1-tol < d && d <1+tol) ;
+		//double d = rc->HCH(irow,icol) / (Rdiagroots[irow]*Rdiagroots[icol]) ;
+		bool thiserror =  ! (-1-tol < c && c <1+tol) ;//|| ! (-1-tol < d && d <1+tol) ;
 		if(thiserror) {
 		  warning() << "found bad element on offdiagonal: " 
 			    << irow << " " << icol << " " 
-			    << c << " " << d << endreq ;
+			    << c << endreq ;
 		}
 		offdiagerror |= thiserror;
 	      }
@@ -340,7 +343,9 @@ namespace Al
       } else {
 	warning() << "rejected vertex with chisqu/dof: "
 		  << vchi2 / vertex.nDoF() << endreq ;
-      }
+      } 
+    } else {
+	warning() << "not enough tracks for vertex anymore" << endreq ;
     }
     return rc ;
   }
