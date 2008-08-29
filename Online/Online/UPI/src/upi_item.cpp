@@ -76,8 +76,8 @@ int upic_delete_command (int menu_id, int item_id)  {
     upic_wakeup();
   }
 
+  if (i == d->item.cur) d->item.cur = i->next;
   upic_drop_item (i);
-
   m->items--;
 
 #ifdef SCREEN
