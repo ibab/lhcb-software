@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichMarkovRingFinderMoni
  *
- *  $Id: RichMarkovRingFinderMoni.cpp,v 1.38 2008-08-29 00:08:13 jonrob Exp $
+ *  $Id: RichMarkovRingFinderMoni.cpp,v 1.39 2008-08-29 10:46:59 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -111,6 +111,12 @@ StatusCode Moni::execute()
               m_nBins, m_nBins );
     }
 
+    // photon yield
+    plot1D( (*iR)->richRecPixels().size(),
+            hid(rad,"totalPhotons"),
+            RAD+" Photon Yield : All Tracks",
+            -0.5, 50.5, 51 );
+    
     // refit the ring ...
     FastRingFitter fitter;
     // loop over hits on the ring
@@ -120,7 +126,8 @@ StatusCode Moni::execute()
       // get pixel from pixelOnRing
       LHCb::RichRecPixel * pixel = (*iP).pixel();
       // pixel hit
-      const Gaudi::XYZPoint & PixelLocal = pixel->localPosition();
+      //const Gaudi::XYZPoint & PixelLocal = pixel->localPosition();
+      const Gaudi::XYZPoint & PixelLocal = pixel->radCorrLocalPositions().position(rad);
       // add (x,y) point to the fitter
       fitter.addPoint( PixelLocal.x(), PixelLocal.y() );
     }
