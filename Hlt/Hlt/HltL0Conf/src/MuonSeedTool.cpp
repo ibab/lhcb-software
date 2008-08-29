@@ -1,4 +1,4 @@
-// $Id: MuonSeedTool.cpp,v 1.8 2008-07-21 17:02:13 albrecht Exp $
+// $Id: MuonSeedTool.cpp,v 1.9 2008-08-29 14:30:18 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -35,7 +35,8 @@ DECLARE_TOOL_FACTORY( MuonSeedTool );
 MuonSeedTool::MuonSeedTool( const std::string& type,
                             const std::string& name,
                             const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : GaudiTool ( type, name , parent ),
+    m_fieldOff(false)
 {
   declareInterface<IMuonSeedTool>(this);
 
@@ -86,6 +87,16 @@ StatusCode MuonSeedTool::initialize()
     return StatusCode::FAILURE;
   }
   
+  m_magFieldSvc = svc<ILHCbMagnetSvc>( "MagneticFieldSvc", true );
+
+  if( m_magFieldSvc->scaleFactor() < 0.1 ) {
+    info()<<"magnetic field is: "<<m_magFieldSvc->scaleFactor()
+          <<" %, below 10% of nominal field! \n Use options for no field!"<<endmsg;
+    m_fieldOff=true;
+    warning()<<"Tool configured for no B field!"<<endmsg;
+    warning()<<"Position and slope is set correctly, covariance and momemtum _not_!"<<endmsg;
+  }
+ 
   return StatusCode::SUCCESS;
 }
 
@@ -134,12 +145,16 @@ StatusCode MuonSeedTool::makeTrack( const LHCb::Track& inputTrack,
   }
 
   double dxdz   = (xM2 - xM3)/ ( zM2 - zM3);
-  double dydz   = (yM2 - yM3)/ ( zM2 - zM3);
+  double dydz   = yM2 / double(zM2);
+  //double dydz   = (yM2 - yM3)/ ( zM2 - zM3);
+
+  if(m_fieldOff) dxdz   = xM2 / double(zM2);
 
   LHCb::State seedState;
   seedState.setState( xM2 , yM2 , zM2 , dxdz , dydz , 0 );
   double qOverP = 0;
   double sigmaQOverP = 0;
+  //NOTE: B=0 --> p will be 1 GeV with huge errors
   sc = m_momentumTool->calculate(&seedState ,qOverP, sigmaQOverP , false );
   if( sc.isFailure() ) {
     Warning( "MomentumEstimate tool  failed, but still adding State" );
@@ -253,8 +268,9 @@ StatusCode MuonSeedTool::makeTrack( const LHCb::L0MuonCandidate& muonL0Cand,
   if( hasM1 ){
     //valid M1 info available -> more accurate seed state
     dxdz   = (xM2 - xM1)/ ( zM2 - zM1);
-    dydz   = (yM2 - yM1)/ ( zM2 - zM1);
-    
+    //dydz   = (yM2 - yM1)/ ( zM2 - zM1);
+    dydz = yM2/  zM2;
+
     stateCov(0,0) = m_sigmaX2[regionL0Cand];
     stateCov(1,1) = m_sigmaY2[regionL0Cand];
     stateCov(2,2) = m_sigmaTx2[regionL0Cand];
@@ -264,15 +280,18 @@ StatusCode MuonSeedTool::makeTrack( const LHCb::L0MuonCandidate& muonL0Cand,
   else{
     //no valid M1 info available -> bigger uncertainties
     dxdz   = (xM3 - xM2)/ ( zM3 - zM2);
-    dydz   = (yM3 - yM2)/ ( zM3 - zM2);
-    
+    //dydz   = (yM3 - yM2)/ ( zM3 - zM2);
+    dydz = yM2/  zM2;
+
     stateCov(0,0) = m_sigmaX2NoM1[regionL0Cand];
     stateCov(1,1) = m_sigmaY2NoM1[regionL0Cand];
     stateCov(2,2) = m_sigmaTx2NoM1[regionL0Cand];
     stateCov(3,3) = m_sigmaTy2NoM1[regionL0Cand];
     stateCov(4,4) = 8.41e-6;
   }
-  
+
+  if(m_fieldOff) dxdz = xM2 / double(zM2);
+
   LHCb::State seedState;
   seedState.setState( xM2 , yM2 , zM2 , dxdz , dydz , 0 );
 
