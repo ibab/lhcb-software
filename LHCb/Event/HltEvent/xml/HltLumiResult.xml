@@ -1,0 +1,127 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE gdd SYSTEM 'gdd.dtd'>
+<gdd>
+  <package name='HltEvent'>
+    
+<!-- HltLumiResult Class -->
+
+    <class
+      name        = 'HltLumiResult'
+      author      = 'Jaap Panman'
+      desc        = 'Result class for Lumi in Hlt'
+      id = '7515'
+      serializers = 'TRUE'>
+
+      <location name="Default"   place="Hlt/LumiResult"/>
+ 
+      <typedef
+        type="GaudiUtils::VectorMap&lt;  int, double&gt;"
+        def="ExtraInfo"
+        desc="User information"
+        access="PUBLIC"
+	/>
+
+      <import name='GaudiKernel/VectorMap' />
+
+      &DataObject;
+      <base name="DataObject"/>
+
+      <method
+        name="clone"
+        desc="Clone LumiResult"
+        type="LHCb::HltLumiResult*"
+        const="TRUE"
+	virtual="TRUE"
+	>
+	<code>
+          return new HltLumiResult(*this);
+	</code>
+      </method>
+
+      <method
+        desc="Assignment operator"
+        name="operator="
+        type="LHCb::HltLumiResult&amp;"
+	>
+	<arg name="rhs" type="HltLumiResult" const='TRUE'/>
+        <code>
+   if ( this != &amp;rhs ) {
+      m_extraInfo         = rhs.m_extraInfo;
+   }
+   return *this;
+        </code>
+      </method>
+
+      <attribute
+        name="extraInfo"
+        desc="Some addtional user information. Don't use directly. Use *Info() methods."
+        type="ExtraInfo"
+        setMeth="TRUE"
+        getMeth="FALSE"
+	/>
+
+      <method
+        name="extraInfo"
+        const="TRUE"
+        desc="ExtraInformation. Don't use directly, use hasInfo, info, addInfo..."
+        type="const ExtraInfo"
+	> 
+	<code>
+	  return m_extraInfo ;
+	</code>
+      </method>
+
+      <method
+        name="hasInfo"
+        const="TRUE"
+        desc="has information for specified key"
+        argList="int key"
+        type="bool"
+	> 
+	<code>
+	  return m_extraInfo.end() != m_extraInfo.find( key ) ;
+	</code>
+      </method>
+
+      <method
+        name="addInfo"
+        desc=" Add new information associated with the specified key. This method cannot be used to modify information for a pre-existing key."
+        argList="const int key, const double info"
+        type="bool"
+	> 
+	<code>
+	  return m_extraInfo.insert( key , info ).second ;
+	</code>
+      </method>
+
+      <method
+        name="info"
+        desc="extract the information associated with the given key. If there is no such infomration the default value will be returned."
+        argList="const int key, const double def"
+        type="double"
+        const="TRUE"
+	> 
+	<code>
+	  ExtraInfo::iterator i = m_extraInfo.find( key ) ;
+	  return m_extraInfo.end() == i ? def : i->second ;
+	</code>
+      </method>
+
+      <method
+        name="eraseInfo"
+        desc="erase the information associated with the given key"
+        argList="int key"
+        type="unsigned long"
+	> 
+	<code>
+	  return m_extraInfo.erase( key ) ; 
+	</code>
+      </method>
+
+      
+
+    </class>
+
+  </package>
+
+</gdd>

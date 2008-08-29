@@ -4,6 +4,9 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+! 2008-08-29 - Jaap Panman
+ - LumiResult container added to hold "R" results in extraInfo
+
 ! 2008-08-26 - Jaap Panman
  - LumiSummary container is now a single object
 
