@@ -75,7 +75,8 @@ if TrackSys().getProp("fieldOff"):
   track.DetectorList += [ "ForwardPat",   "ForwardPreFit",   "ForwardFit"
                         , "SeedPat",      "SeedPreFit",      "SeedFit"
                         , "MatchPat",     "MatchPreFit",     "MatchFit"] 
- 
+
+  MagneticFieldSvc().ScaleFactor = 0;
 else:
   track.DetectorList += [ "ForwardPat",   "ForwardPreFit",   "ForwardFit"
                         , "SeedPat",      "SeedPreFit",      "SeedFit"
