@@ -34,6 +34,7 @@ use OnlineKernel      v1r19    Online
 use OnlineTasks       v1r13    Online
 use Presenter         v0r10    Online
 use PyDIM             v2r5     Online
+use RateService       v2r2     Online
 use RawBankSizes      v1r3     Online
 use ROMon             v1r7     Online
 use ROLogger          v0r5     Online
