@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.65 2008-08-19 19:33:52 jpalac Exp $
+! $Id: release.notes,v 1.66 2008-08-29 07:09:16 jpalac Exp $
 ! Package     : MicroDST/MicroDSTAlgorithm
 ! Responsible : Ulrich Kerzel, Juan Palacios
 !============================================================
 
-! 2008-19-08 - Juan PALACIOS
+! 2008-08-29 - Juan PALACIOS
+ - cmt/requirements, src/MicroDSTAlgorithm_dll.cpp
+  . Change library name from MicroDST to MicroDSTAlgorithm
+ - CopyHLTSummary, CopyL0DUReport, CopyMCHeader, CopyODIN, CopyRecHeader
+  . Make into simple MicroDST::ObjectClonerAlgs.
+
+! 2008-08-19 - Juan PALACIOS
  - srd/CopyParticle2PVLink.h
   . Remove fragile 
       const std::string particleLocation(const std::string& tableLocation);
