@@ -1,3 +1,5 @@
 #include "$HLTOPTS/MEPRxSvc.opts"
 //disable MEP requests from Calib farm
-Runable.IPNameOdin = "0.0.0.0";
+
+//MessageSvc.OutputLevel               = 1;
+Runable.IPNameOdin = "192.168.254.194";
