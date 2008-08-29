@@ -1,46 +1,47 @@
 CMTROOT="/sw/lib/contrib/CMT/v1r20p20070208"; export CMTROOT
 CMTCONFIG=slc4_amd64_gcc34; export CMTCONFIG
-EXAMPLEGAUCHOROOT="/sw/lib/lhcb/ONLINE/ONLINE_v4r10/Online/ExampleGaucho/v2r5"; export EXAMPLEGAUCHOROOT
-SAVERROOT="/home/online/Online_v4r10/Online/Saver/v1r5"; export SAVERROOT
-GAUDIONLINEROOT="/sw/lib/lhcb/ONLINE/ONLINE_v4r10/Online/GaudiOnline/v2r17"; export GAUDIONLINEROOT
-WRITERROOT="/sw/lib/lhcb/ONLINE/ONLINE_v4r10/Online/Writer/v1r7"; export WRITERROOT
-MDFROOT="/sw/lib/lhcb/ONLINE/ONLINE_v4r10/DAQ/MDF/v3r10"; export MDFROOT
-GAUCHOROOT="/sw/lib/lhcb/ONLINE/ONLINE_v4r10/Online/Gaucho/v5r6"; export GAUCHOROOT
-GAUDIALGROOT="/sw/lib/lhcb/GAUDI/GAUDI_v19r9/GaudiAlg/v10r5"; export GAUDIALGROOT
-GAUDIUTILSROOT="/sw/lib/lhcb/GAUDI/GAUDI_v19r9/GaudiUtils/v1r6"; export GAUDIUTILSROOT
-GAUDISVCROOT="/sw/lib/lhcb/GAUDI/GAUDI_v19r9/GaudiSvc/v16r5"; export GAUDISVCROOT
-AIDAROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_54e/LCG_Interfaces/AIDA"; export AIDAROOT
-DAQEVENTROOT="/sw/lib/lhcb/ONLINE/ONLINE_v4r10/Event/DAQEvent/v7r11"; export DAQEVENTROOT
-LHCBKERNELROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Kernel/LHCbKernel/v8r4"; export LHCBKERNELROOT
-GAUDIKERNELROOT="/sw/lib/lhcb/GAUDI/GAUDI_v19r9/GaudiKernel/v24r0"; export GAUDIKERNELROOT
-DIMROOT="/sw/lib/lhcb/ONLINE/ONLINE_v4r10/Online/DIM/v17r5"; export DIMROOT
-ONLINEKERNELROOT="/home/online/Online_v4r10/Online/OnlineKernel"; export ONLINEKERNELROOT
-ONLINEHISTDBROOT="/sw/lib/lhcb/ONLINE/ONLINE_v4r10/Online/OnlineHistDB/v4r9"; export ONLINEHISTDBROOT
-GAUDIPOLICYROOT="/sw/lib/lhcb/GAUDI/GAUDI_v19r9/GaudiPolicy/v8r2"; export GAUDIPOLICYROOT
-REFLEXROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_54e/LCG_Interfaces/Reflex"; export REFLEXROOT
-ROOTROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_54e/LCG_Interfaces/ROOT"; export ROOTROOT
-PYTHONROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_54e/LCG_Interfaces/Python"; export PYTHONROOT
-GCCXMLROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_54e/LCG_Interfaces/GCCXML"; export GCCXMLROOT
-BOOSTROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_54e/LCG_Interfaces/Boost"; export BOOSTROOT
-UUIDROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_54e/LCG_Interfaces/uuid"; export UUIDROOT
-XERCESCROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_54e/LCG_Interfaces/XercesC"; export XERCESCROOT
-ORACLEROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_54e/LCG_Interfaces/oracle"; export ORACLEROOT
-CLHEPROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_54e/LCG_Interfaces/CLHEP"; export CLHEPROOT
-PCREROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_54e/LCG_Interfaces/PCRE"; export PCREROOT
-ONLINETASKSROOT="/home/online/Online_v4r10/Online/OnlineTasks/v1r12"; export ONLINETASKSROOT
-CMTPATH="/home/online/Online_v4r10:/sw/lib/lhcb/ONLINE/ONLINE_v4r10:/sw/lib/lhcb/LHCB/LHCB_v23r7:/sw/lib/lhcb/GAUDI/GAUDI_v19r9:/sw/lib/lhcb/DBASE:/sw/lib/lhcb/PARAM:/sw/lib/lcg/external/LCGCMT/LCGCMT_54e"; export CMTPATH
-PATH="/home/online/Online_v4r10/InstallArea/scripts:/sw/lib/lhcb/ONLINE/ONLINE_v4r10/InstallArea/scripts:/sw/lib/lhcb/LHCB/LHCB_v23r7/InstallArea/scripts:/sw/lib/lhcb/GAUDI/GAUDI_v19r9/InstallArea/scripts:/home/online/Online_v4r10/InstallArea/slc4_amd64_gcc34/bin:/sw/lib/lhcb/ONLINE/ONLINE_v4r10/InstallArea/slc4_amd64_gcc34/bin:/sw/lib/lhcb/LHCB/LHCB_v23r7/InstallArea/slc4_amd64_gcc34/bin:/sw/lib/lhcb/GAUDI/GAUDI_v19r9/InstallArea/slc4_amd64_gcc34/bin:/sw/lib/lcg/external/pcre/4.4/slc4_amd64_gcc34/bin:/sw/lib/lcg/external/oracle/10.2.0.3-full/slc4_amd64_gcc34/bin:/sw/lib/lcg/external/XercesC/2.8.0/slc4_amd64_gcc34/bin:/sw/lib/lcg/external/root/5.18.00a/slc4_amd64_gcc34/root/bin:/sw/lib/lcg/external/gccxml/0.7.0_20070615/slc4_amd64_gcc34/bin:/sw/lib/lcg/external/Python/2.5/slc4_amd64_gcc34/bin:/sw/lib/contrib/CMT/v1r20p20070208/Linux-x86_64:/home/online/bin:/home/online/scripts:/usr/sue/bin:/usr/local/bin:/usr/local/bin/X11:/usr/bin:/bin:/usr/bin/X11:/cern/pro/bin:/usr/kerberos/bin:/usr/X11R6/bin:/opt/fmc/bin:/usr/sbin:/group/online/bin:/group/online/scripts:/group/online/dataflow/scripts:/usr/lib64/libgksu1.2:/opt/FMC/bin"; export PATH
+EXAMPLEGAUCHOROOT="/sw/lib/lhcb/ONLINE/ONLINE_v4r12/Online/ExampleGaucho/v2r5"; export EXAMPLEGAUCHOROOT
+GAUDIONLINEROOT="/home/online/Online_v4r12/Online/GaudiOnline"; export GAUDIONLINEROOT
+WRITERROOT="/sw/lib/lhcb/ONLINE/ONLINE_v4r12/Online/Writer/v1r8"; export WRITERROOT
+MDFROOT="/sw/lib/lhcb/LHCB/LHCB_v25r0/DAQ/MDF/v3r12"; export MDFROOT
+SAVERROOT="/sw/lib/lhcb/ONLINE/ONLINE_v4r12/Online/Saver/v1r5"; export SAVERROOT
+GAUCHOROOT="/sw/lib/lhcb/ONLINE/ONLINE_v4r12/Online/Gaucho/v5r6p3"; export GAUCHOROOT
+GAUDIALGROOT="/sw/lib/lhcb/GAUDI/GAUDI_v20r2/GaudiAlg/v11r1"; export GAUDIALGROOT
+GAUDIUTILSROOT="/sw/lib/lhcb/GAUDI/GAUDI_v20r2/GaudiUtils/v2r0"; export GAUDIUTILSROOT
+GAUDISVCROOT="/sw/lib/lhcb/GAUDI/GAUDI_v20r2/GaudiSvc/v17r1"; export GAUDISVCROOT
+AIDAROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_55a/LCG_Interfaces/AIDA"; export AIDAROOT
+DAQEVENTROOT="/sw/lib/lhcb/LHCB/LHCB_v25r0/Event/DAQEvent/v7r13"; export DAQEVENTROOT
+GAUDIAUDROOT="/sw/lib/lhcb/GAUDI/GAUDI_v20r2/GaudiAud/v8r6"; export GAUDIAUDROOT
+GAUDIKERNELROOT="/sw/lib/lhcb/GAUDI/GAUDI_v20r2/GaudiKernel/v25r2"; export GAUDIKERNELROOT
+DIMROOT="/sw/lib/lhcb/ONLINE/ONLINE_v4r12/Online/DIM/v17r7"; export DIMROOT
+ONLINEKERNELROOT="/sw/lib/lhcb/ONLINE/ONLINE_v4r12/Online/OnlineKernel/v1r19"; export ONLINEKERNELROOT
+ONLINEHISTDBROOT="/sw/lib/lhcb/ONLINE/ONLINE_v4r12/Online/OnlineHistDB/v4r10"; export ONLINEHISTDBROOT
+GAUDIPOLICYROOT="/sw/lib/lhcb/GAUDI/GAUDI_v20r2/GaudiPolicy/v8r5"; export GAUDIPOLICYROOT
+REFLEXROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_55a/LCG_Interfaces/Reflex"; export REFLEXROOT
+ROOTROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_55a/LCG_Interfaces/ROOT"; export ROOTROOT
+PYTHONROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_55a/LCG_Interfaces/Python"; export PYTHONROOT
+GCCXMLROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_55a/LCG_Interfaces/GCCXML"; export GCCXMLROOT
+BOOSTROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_55a/LCG_Interfaces/Boost"; export BOOSTROOT
+UUIDROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_55a/LCG_Interfaces/uuid"; export UUIDROOT
+XERCESCROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_55a/LCG_Interfaces/XercesC"; export XERCESCROOT
+ORACLEROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_55a/LCG_Interfaces/oracle"; export ORACLEROOT
+CLHEPROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_55a/LCG_Interfaces/CLHEP"; export CLHEPROOT
+PCREROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_55a/LCG_Interfaces/PCRE"; export PCREROOT
+ONLINETASKSROOT="/home/online/Online_v4r12/Online/OnlineTasks/v1r13"; export ONLINETASKSROOT
+CMTPATH="/home/online/Online_v4r12:/sw/lib/lhcb/ONLINE/ONLINE_v4r12:/sw/lib/lhcb/LHCB/LHCB_v25r0:/sw/lib/lhcb/GAUDI/GAUDI_v20r2:/sw/lib/lhcb/DBASE:/sw/lib/lhcb/PARAM:/sw/lib/lcg/external/LCGCMT/LCGCMT_55a"; export CMTPATH
+PATH="/home/online/Online_v4r12/InstallArea/scripts:/sw/lib/lhcb/ONLINE/ONLINE_v4r12/InstallArea/scripts:/sw/lib/lhcb/LHCB/LHCB_v25r0/InstallArea/scripts:/sw/lib/lhcb/GAUDI/GAUDI_v20r2/InstallArea/scripts:/home/online/Online_v4r12/InstallArea/slc4_amd64_gcc34/bin:/sw/lib/lhcb/ONLINE/ONLINE_v4r12/InstallArea/slc4_amd64_gcc34/bin:/sw/lib/lhcb/LHCB/LHCB_v25r0/InstallArea/slc4_amd64_gcc34/bin:/sw/lib/lhcb/GAUDI/GAUDI_v20r2/InstallArea/slc4_amd64_gcc34/bin:/sw/lib/lcg/external/pcre/4.4/slc4_amd64_gcc34/bin:/sw/lib/lcg/external/oracle/10.2.0.3-full/slc4_amd64_gcc34/bin:/sw/lib/lcg/external/XercesC/2.8.0/slc4_amd64_gcc34/bin:/sw/lib/lcg/external/root/5.18.00d/slc4_amd64_gcc34/root/bin:/sw/lib/lcg/external/gccxml/0.7.0_20070615/slc4_amd64_gcc34/bin:/sw/lib/lcg/external/Python/2.5/slc4_amd64_gcc34/bin:/sw/lib/contrib/CMT/v1r20p20070208/Linux-x86_64:/sw/lib/lcg/external/POOL/POOL_2_8_0/slc4_amd64_gcc34/bin:/usr/local/bin:/usr/bin:/bin:/usr/bin/X11:/usr/kerberos/bin:/usr/X11R6/bin:/usr/sbin:/group/online/scripts:/group/online/dataflow/scripts:/usr/lib64/libgksu1.2:/opt/FMC/bin"; export PATH
 CLASSPATH="/sw/lib/contrib/CMT/v1r20p20070208/java"; export CLASSPATH
 unset include
 unset lib
 NEWCMTCONFIG="x86_64-slc46-gcc346"; export NEWCMTCONFIG
 SITEROOT="/sw/lib"; export SITEROOT
-LD_LIBRARY_PATH="/home/online/Online_v4r10/InstallArea/slc4_amd64_gcc34/lib:/sw/lib/lhcb/ONLINE/ONLINE_v4r10/InstallArea/slc4_amd64_gcc34/lib:/sw/lib/lhcb/LHCB/LHCB_v23r7/InstallArea/slc4_amd64_gcc34/lib:/sw/lib/lhcb/GAUDI/GAUDI_v19r9/InstallArea/slc4_amd64_gcc34/lib:/sw/lib/lcg/external/pcre/4.4/slc4_amd64_gcc34/lib:/sw/lib/lcg/external/clhep/1.9.3.1/slc4_amd64_gcc34/lib:/sw/lib/lcg/external/oracle/10.2.0.3-full/slc4_amd64_gcc34/lib:/sw/lib/lcg/external/XercesC/2.8.0/slc4_amd64_gcc34/lib:/sw/lib/lcg/external/uuid/1.38/slc4_amd64_gcc34/lib:/sw/lib/lcg/external/Boost/1.34.1_python2.5/slc4_amd64_gcc34/lib:/sw/lib/lcg/external/root/5.18.00a/slc4_amd64_gcc34/root/lib:/sw/lib/lcg/external/Python/2.5/slc4_amd64_gcc34/lib"; export LD_LIBRARY_PATH
+ATLAS_TAGS_MAP="x86_64-slc4-gcc34-opt"; export ATLAS_TAGS_MAP
+LD_LIBRARY_PATH="/home/online/Online_v4r12/InstallArea/slc4_amd64_gcc34/lib:/sw/lib/lhcb/ONLINE/ONLINE_v4r12/InstallArea/slc4_amd64_gcc34/lib:/sw/lib/lhcb/LHCB/LHCB_v25r0/InstallArea/slc4_amd64_gcc34/lib:/sw/lib/lhcb/GAUDI/GAUDI_v20r2/InstallArea/slc4_amd64_gcc34/lib:/sw/lib/lcg/external/pcre/4.4/slc4_amd64_gcc34/lib:/sw/lib/lcg/external/clhep/1.9.3.1/slc4_amd64_gcc34/lib:/sw/lib/lcg/external/oracle/10.2.0.3-full/slc4_amd64_gcc34/lib:/sw/lib/lcg/external/XercesC/2.8.0/slc4_amd64_gcc34/lib:/sw/lib/lcg/external/uuid/1.38/slc4_amd64_gcc34/lib:/sw/lib/lcg/external/Boost/1.34.1_python2.5/slc4_amd64_gcc34/lib:/sw/lib/lcg/external/root/5.18.00d/slc4_amd64_gcc34/root/lib:/sw/lib/lcg/external/RELAX/RELAX_1_1_12/slc4_amd64_gcc34/lib:/sw/lib/lcg/external/POOL/POOL_2_8_0/slc4_amd64_gcc34/lib:/sw/lib/lcg/external/CORAL/CORAL_2_0_0/slc4_amd64_gcc34/lib:/sw/lib/lcg/external/Python/2.5/slc4_amd64_gcc34/lib"; export LD_LIBRARY_PATH
 unset DYLD_LIBRARY_PATH
-PYTHONPATH="/home/online/Online_v4r10/InstallArea/python:/sw/lib/lhcb/ONLINE/ONLINE_v4r10/InstallArea/python:/sw/lib/lhcb/LHCB/LHCB_v23r7/InstallArea/python:/sw/lib/lhcb/GAUDI/GAUDI_v19r9/InstallArea/python:/sw/lib/lcg/external/root/5.18.00a/slc4_amd64_gcc34/root/lib:/sw/lib/lcg/external/Python/2.5/slc4_amd64_gcc34/lib/python2.5:/sw/oracle/linux/python:/home/online/Online_v4r10/Online/OnlineKernel/python"; export PYTHONPATH
-MANPATH="/home/online/man:/usr/sue/man:/usr/local/man:/cern/man:/sw/lib/lcg/external/gccxml/0.7.0_20070615/slc4_amd64_gcc34/man:/sw/lib/lcg/external/root/5.18.00a/slc4_amd64_gcc34/root/man:/sw/lib/lcg/external/root/5.18.00a/src/root/man:/sw/lib/lcg/external/pcre/4.4/slc4_amd64_gcc34/man:/sw/lib/lcg/external/Python/2.5/slc4_amd64_gcc34/man:/sw/lib/lcg/external/uuid/1.38/slc4_amd64_gcc34/man"; export MANPATH
+MANPATH="/home/online/man:/usr/sue/man:/usr/local/man:/cern/man:/sw/lib/lcg/external/gccxml/0.7.0_20070615/slc4_amd64_gcc34/man:/sw/lib/lcg/external/root/5.18.00/slc4_amd64_gcc34/root/man:/sw/lib/lcg/external/root/5.18.00/src/root/man:/sw/lib/lcg/external/pcre/4.4/slc4_amd64_gcc34/man:/sw/lib/lcg/external/root/5.18.00d/slc4_amd64_gcc34/root/man:/sw/lib/lcg/external/root/5.18.00d/src/root/man:/sw/lib/lcg/external/Python/2.5/slc4_amd64_gcc34/man:/sw/lib/lcg/external/uuid/1.38/slc4_amd64_gcc34/man"; export MANPATH
 unset QMTEST_CLASS_PATH
-ROOTSYS="/sw/lib/lcg/external/root/5.18.00a/slc4_amd64_gcc34/root"; export ROOTSYS
+ROOTSYS="/sw/lib/lcg/external/root/5.18.00d/slc4_amd64_gcc34/root"; export ROOTSYS
+PYTHONPATH="/home/online/Online_v4r12/InstallArea/slc4_amd64_gcc34/python:/sw/lib/lhcb/ONLINE/ONLINE_v4r12/InstallArea/slc4_amd64_gcc34/python:/sw/lib/lhcb/LHCB/LHCB_v25r0/InstallArea/slc4_amd64_gcc34/python:/sw/lib/lhcb/GAUDI/GAUDI_v20r2/InstallArea/slc4_amd64_gcc34/python:/home/online/Online_v4r12/InstallArea/python:/sw/lib/lhcb/ONLINE/ONLINE_v4r12/InstallArea/python:/sw/lib/lhcb/LHCB/LHCB_v25r0/InstallArea/python:/sw/lib/lhcb/GAUDI/GAUDI_v20r2/InstallArea/python:/sw/lib/lcg/external/root/5.18.00d/slc4_amd64_gcc34/root/lib:/sw/lib/lhcb/ONLINE/ONLINE_v4r12/InstallArea/slc4_amd64_gcc34/lib:/sw/lib/lhcb/LHCB/LHCB_v25r0/InstallArea/slc4_amd64_gcc34/lib:/sw/lib/lhcb/GAUDI/GAUDI_v20r2/InstallArea/slc4_amd64_gcc34/lib:/sw/lib/lcg/external/CORAL/CORAL_2_0_0/slc4_amd64_gcc34/python:/sw/lib/lcg/external/CORAL/CORAL_2_0_0/slc4_amd64_gcc34/lib:/sw/oracle/linux64/python:/sw/lib/lcg/external/Python/2.5/slc4_amd64_gcc34/bin:/usr/local/bin:/usr/bin:/bin:/usr/bin/X11:/usr/kerberos/bin:/usr/X11R6/bin:/usr/sbin:/group/online/scripts:/sw/lib/contrib/CMT/v1r20p20070208/Linux-x86_64:/sw/oracle/linux64/bin:/group/online/dataflow/scripts:/usr/lib64/libgksu1.2:/opt/FMC/bin:/sw/lib/lcg/external/Python/2.5/slc4_amd64_gcc34/lib:/sw/oracle/linux64/lib:/sw/lib/lhcb/ONLINE/ONLINE_v4r12/Online/OnlineKernel/v1r19/python"; export PYTHONPATH
 unset DAQEventShr
 unset GaudiUtilsShr
 unset GaudiAlgShr
@@ -51,5 +52,10 @@ unset GauchoShr
 unset GaudiSvcShr
 unset GaudiSvcTestShr
 unset ExampleGauchoShr
+unset GaudiAudShr
 unset SaverShr
+if test -f /sw/lib/lhcb/GAUDI/GAUDI_v20r2/GaudiPolicy/v8r5/scripts/StripPath.sh; then
+  . /sw/lib/lhcb/GAUDI/GAUDI_v20r2/GaudiPolicy/v8r5/scripts/StripPath.sh
+fi
+
 
