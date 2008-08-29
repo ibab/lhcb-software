@@ -15,13 +15,4 @@ apply_pattern install_more_includes more=ROMon
 # ==================== component libraries ==================================
 library ROMon *.cpp -import=DIM -import=XercesC
 apply_pattern linker_library   library=ROMon
-
-apply_pattern reflex_dictionary dictionary=ROMon \
-                                headerfiles=$(ROMONROOT)/dict/dictionary.h \
-                                selectionfile=$(ROMONROOT)/dict/dictionary.xml \
-                                imports=Python
-macro_append ROMon_reflex_options " -D__GCCXML"
-
-# Gnerate dictionary rootmap file
-apply_pattern generate_rootmap library=ROMonDict
 apply_pattern install_python_modules
