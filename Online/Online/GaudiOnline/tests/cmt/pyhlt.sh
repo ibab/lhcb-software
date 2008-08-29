@@ -10,7 +10,7 @@ fi;
 #
 start_task()
 {
-  $MINITERM ${1}@${HOST}   -e "export UTGID=${NODENAME}/${1};   exec -a \${UTGID} $gaudi_task -opt=command=\"${2}\""&
+  $MINITERM ${1}@${HOST}   -e "export UTGID=${NODENAME}/${1};   exec -a \${UTGID} $Class1_task -opt=command=\"${2}\""&
 }
 #
 start_task MepInit   "import GaudiOnlineTests;GaudiOnlineTests.runMepBuffer()"
@@ -20,19 +20,20 @@ $MINITERM TanServer@${HOST} -e "export UTGID=${NODENAME}/TANServer; exec -a \${U
 #$MINITERM ROCollect@${HOST} -e "export UTGID=${NODENAME}/ROCollect; exec -a \${UTGID} $gaudi_run libGaudiOnline.so romon_collect -gbl=ROMonitor -size=64 -delay=500 -verbose"&
 #$MINITERM ROPublish@${HOST} -e "export UTGID=${NODENAME}/ROPublish; exec -a \${UTGID} $gaudi_run libGaudiOnline.so romon_dimserver -gbl=ROMonitor -size=64 -delay=500 -verbose"&
 #
-sleep 4
+sleep 6
 #
 #  Monitors:
 #
 $BIGTERM MBMMon@${HOST}     -e "export UTGID=${NODENAME}/MBMMon;    exec -a \${UTGID} $gaudi_run libOnlineKernel.so mbm_mon"&
 #$BIGTERM TANMon@${HOST}     -e "export UTGID=${NODENAME}/TANMon;    exec -a \${UTGID} $gaudi_run libOnlineKernel.so tanmon -c"&
 #
+#$MINITERM EvtProd@${HOST}   -e "export UTGID=${NODENAME}/EvtProd;   exec -a \${UTGID} $Class1_task -opt=$OPTS/MEPConverter.opts"&
 start_task EvtProd   "import GaudiOnlineTests;GaudiOnlineTests.runEvtProd()"
 start_task EvtHolder "import GaudiOnlineTests;GaudiOnlineTests.runEvtHolder()"
 start_task Moore_0   "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead()"
 start_task Moore_1   "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead()"
-#start_task Moore_2   "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead()"
-#start_task Moore_3   "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead()"
+start_task Moore_2   "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead()"
+start_task Moore_3   "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead()"
 #start_task Moore_4   "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead()"
 #start_task Moore_5   "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead()"
 #start_task Moore_6   "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead()"
@@ -40,7 +41,7 @@ start_task Moore_1   "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead()"
 #
 sleep 3
 start_task Receiver "import GaudiOnlineTests;GaudiOnlineTests.runReceiver()"
-start_task DiskWR   "import GaudiOnlineTests;GaudiOnlineTests.runDiskWR('OUT',True,False,'./mdfOutput.dat')"
+#start_task DiskWR   "import GaudiOnlineTests;GaudiOnlineTests.runDiskWR('OUT',True,False,'./mdfOutput.dat')"
 start_task EvtServ   "import GaudiOnlineTests;GaudiOnlineTests.runEvtServer('OUT',True)"
 #
 sleep 4

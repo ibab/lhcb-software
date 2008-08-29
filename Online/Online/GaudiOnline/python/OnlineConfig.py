@@ -145,13 +145,20 @@ def end_config():
   return gaudi
 
 #------------------------------------------------------------------------------------------------
-def _application(histpersistency, evtsel=None, extsvc=None, runable=None, algs=None):
+def _application(histpersistency, evtsel=None, extsvc=None, runable=None, algs=None, evtloop=None):
   app                      = ApplicationMgr()
   app.HistogramPersistency = histpersistency
   if extsvc is not None:      app.ExtSvc   = extsvc
   if evtsel is not None:      app.EvtSel   = evtsel
   if runable is not None:     app.Runable  = runable
   if algs is not None:        app.TopAlg  += algs
+  if evtloop is None:
+    evtloop = Configs.EventLoopMgr('EventLoopMgr')
+    #evtloop.Warnings = False
+  app.EventLoop = evtloop
+  if app.HistogramPersistency=="NONE":
+    pers = Configs.HistogramPersistencySvc('HistogramPersistencySvc')
+    #pers.Warnings = False
   return app
 
 #------------------------------------------------------------------------------------------------
@@ -170,17 +177,23 @@ def mepHolderApp(partID, partName):
   extsvc               = [Configs.MonitorSvc(), mepManager(partID,partName,['MEP'])]
   runable              = Configs.LHCb__MEPHolderSvc('Runable')
   runable.Requirements = [mbm_requirements['MEP']]
-  return _application('NONE',evtsel='NONE',extsvc=extsvc,runable=runable)
+  evtloop              = Configs.LHCb__OnlineRunable('EmptyEventLoop')
+  evtloop.Wait         = 3
+  return _application('NONE',evtsel='NONE',extsvc=extsvc,runable=runable,evtloop=evtloop)
 
 #------------------------------------------------------------------------------------------------
 def mepConverterApp(partID, partName, bursts=True, freq=0.):
   "MEP to event converter application for usage of multi event packet buffers."
+  monSvc               = Configs.MonitorSvc()
   mepMgr               = mepManager(partID,partName,['MEP','EVENT'])
   runable              = Configs.LHCb__MEPConverterSvc('Runable')
   runable.BurstMode    = bursts
   runable.PrintFreq    = freq
   runable.Requirements = [mbm_requirements['MEP']]
-  return _application('NONE',evtsel='NONE',extsvc=[Configs.MonitorSvc(), mepMgr],runable=runable)
+  evtloop              = Configs.LHCb__OnlineRunable('EmptyEventLoop')
+  evtloop.Wait         = 1
+  msgSvc().OutputLevel = 1
+  return _application('NONE',evtsel='NONE',extsvc=[monSvc,mepMgr],runable=runable,evtloop=evtloop)
 
 #------------------------------------------------------------------------------------------------
 def dataSenderApp(partID, partName, target, buffer, partitionBuffers=True, decode=False,algs=[]):
@@ -228,7 +241,7 @@ def defaultFilterApp(partID, partName, percent, print_freq):
   evtdata              = evtDataSvc()
   evtPers              = rawPersistencySvc()
   seq                  = CFG.Sequencer('SendSequence')
-  seq.Members          = [prescaler(percent=percent), Configs.LHCb__DecisionSetterAlg('DecisionSetter')]
+  seq.Members          = [prescaler(percent=percent),Configs.LHCb__DecisionSetterAlg('DecisionSetter')]
   algs                 = [storeExplorer(load=1,freq=print_freq),seq]
   return _application('NONE',extsvc=[Configs.MonitorSvc(),mepMgr,evtSel],runable=runable,algs=algs)
 
