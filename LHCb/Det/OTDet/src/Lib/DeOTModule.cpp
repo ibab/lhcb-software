@@ -1,4 +1,4 @@
-// $Id: DeOTModule.cpp,v 1.31 2008-06-25 08:55:45 jpalac Exp $
+// $Id: DeOTModule.cpp,v 1.32 2008-08-29 17:01:38 janos Exp $
 // GaudiKernel
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
@@ -88,8 +88,11 @@ StatusCode DeOTModule::initialize() {
   m_uniqueModuleID = aChan.uniqueModule();
 
   // Get some general parameters for the OT
-  m_xPitch = ot->params()->param<double>("strawPitchX");
+  m_xPitch     = ot->params()->param<double>("strawPitchX");
+  m_halfXPitch = 0.5*m_xPitch;
   m_zPitch = ot->params()->param<double>("strawPitchZ");
+  m_monoAXZero = ot->params()->param<double>("firstMonoOffset");
+  m_monoBXZero = ot->params()->param<double>("secondMonoOffset");
   m_cellRadius = ot->params()->param<double>("cellRadius");
   m_inefficientRegion = ot->params()->param<double>("inefficientRegion");
   m_sensThickness = ot->params()->param<double>("sensThickness");
@@ -439,14 +442,14 @@ StatusCode DeOTModule::cacheInfo() {
 
 std::auto_ptr<LHCb::Trajectory> DeOTModule::trajectoryFirstWire(int monolayer) const {
   /// Default is 0 -> straw 1
-  double lUwire = (monolayer==1?localUOfStraw(m_nStraws+1):localUOfStraw(1));
+  double lUwire = (monolayer == 1 ? localUOfStraw(m_nStraws+1) : localUOfStraw(1) );
   Gaudi::XYZPoint firstWire = m_midTraj[monolayer]->position(lUwire);
   return std::auto_ptr<LHCb::Trajectory>(new LineTraj(firstWire, m_dir, m_range[monolayer], true));
 }
 
 std::auto_ptr<LHCb::Trajectory> DeOTModule::trajectoryLastWire(int monolayer) const {
   /// Default is 1 -> straw 64(s3)/128
-  double lUwire = (monolayer==0?localUOfStraw(m_nStraws):localUOfStraw(2*m_nStraws));
+  double lUwire = (monolayer == 0 ? localUOfStraw(m_nStraws) : localUOfStraw(2*m_nStraws) );
   Gaudi::XYZPoint lastWire = m_midTraj[monolayer]->position(lUwire);
   return std::auto_ptr<LHCb::Trajectory>(new LineTraj(lastWire, m_dir, m_range[monolayer], true));
 }
@@ -464,7 +467,7 @@ std::auto_ptr<LHCb::Trajectory> DeOTModule::trajectory(const OTChannelID& aChan,
   
   unsigned int mono = (monoLayerA(aStraw)?0u:1u);
 
-  Gaudi::XYZPoint posWire = m_midTraj[mono]->position(localUOfStraw(aStraw));
+  Gaudi::XYZPoint posWire = m_midTraj[mono]->position( localUOfStraw(aStraw) );
   
   return std::auto_ptr<Trajectory>(new LineTraj(posWire, m_dir, m_range[mono],true));
 }

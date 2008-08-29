@@ -1,4 +1,4 @@
-// $Id: DeOTModule.h,v 1.32 2008-08-13 08:30:12 janos Exp $
+// $Id: DeOTModule.h,v 1.33 2008-08-29 17:01:38 janos Exp $
 #ifndef OTDET_DEOTMODULE_H
 #define OTDET_DEOTMODULE_H 1
 
@@ -36,6 +36,8 @@ namespace LHCb
  *  between the hit and the read-out. These and some other functions 
  *  are used by the OT digitization as well as the track reconstruction.
  *  The numbering scheme for the OT modules in the digitization is:
+ *  
+ *  @verbatim
  *
  *         Quarter 3                      Quarter 2
  *    __________________________     _________________________
@@ -57,6 +59,8 @@ namespace LHCb
  *   |__|__|__|__|__|__|__|__|__|   |_|__|__|__|__|__|__|__|__|
  *
  *          Quarter 1                      Quarter 0
+ *
+ *  @endverbatim
  *
  *  @author Jeroen van Tilburg jtilburg@nikhef.nl 
  *  @date   05-03-2003
@@ -383,7 +387,7 @@ private:
   LHCb::OTChannelID m_elementID; ///< element ID
   unsigned int m_uniqueModuleID; ///< module ID number
   unsigned int m_nStraws;        ///< half the number of straws inside module
-  double m_angle;          ///< stereo angle of the layer
+  double m_angle;                ///< stereo angle of the layer
   double m_sinAngle;             ///< sine of stereo angle
   double m_cosAngle;             ///< cosine of stereo angle
   double m_xPitch;               ///< pitch in x between straws
@@ -406,16 +410,19 @@ private:
   Gaudi::Plane3D m_entryPlane;                  ///< entry plane
   Gaudi::Plane3D m_exitPlane;                   ///< exit plane
   Gaudi::XYZPoint m_centerModule;               ///< center of module 
-  double m_dxdy ;                                ///< dx/dy along straw
-  double m_dzdy ;                                ///< dx/dz along straw
-  double m_dy[2] ;                               ///< difference in y coordinates of straw end points 
+  double m_dxdy ;                               ///< dx/dy along straw
+  double m_dzdy ;                               ///< dx/dz along straw
+  double m_dy[2] ;                              ///< difference in y coordinates of straw end points 
   Gaudi::XYZVectorF m_dp0di ;                   ///< vector with change in straw position in units of pitch in y-line coordinates
   Gaudi::XYZPointF  m_p0[2] ;                   ///< position of first straw in y-line coordinates
-  std::vector<double> m_strawt0 ;                ///< vector with t0 for every straw
-  std::vector<double> m_strawdefaulttof ;        ///< vector with default tof correction for straw
+  std::vector<double> m_strawt0 ;               ///< vector with t0 for every straw
+  std::vector<double> m_strawdefaulttof ;       ///< vector with default tof correction for straw
   OTDet::RtRelation m_rtrelation ;              ///< rt-relation
-  double m_propagationVelocity ;                 ///< propagation velocity
-  double m_propagationVelocityY ;                ///< propagation velocity in y-direction (cached for speed)
+  double m_propagationVelocity ;                ///< propagation velocity
+  double m_propagationVelocityY ;               ///< propagation velocity in y-direction (cached for speed)
+  double m_halfXPitch;                          ///< Half of the pitch in x (needed for staggering)
+  double m_monoAXZero;                          ///< offset of staggering in first monolayer  
+  double m_monoBXZero;                          ///< offset of staggering in second monolayer
 };
 
 // -----------------------------------------------------------------------------
@@ -573,8 +580,10 @@ inline Gaudi::XYZPoint DeOTModule::globalPoint(const double x,
 /// This gives you the x position of the wire
 inline double DeOTModule::localUOfStraw(const unsigned int aStraw) const {
   unsigned int tmpStraw = (!monoLayerB(aStraw)?aStraw-1u:aStraw-m_nStraws-1u);
-  double uLeftStraw = (!monoLayerB(aStraw)?(-(0.5*m_nStraws-0.25)+0.5)
-                       :-(0.5*m_nStraws-0.25))*m_xPitch;
+  //double uLeftStraw = (!monoLayerB(aStraw)?(-(0.5*m_nStraws-0.25)+0.5)
+  //                     :-(0.5*m_nStraws-0.25))*m_xPitch;
+  double uLeftStraw = ( !monoLayerB( aStraw ) ? double( m_nStraws ) + m_monoAXZero : 
+                        double( m_nStraws ) + m_monoBXZero )*-m_halfXPitch;
   return uLeftStraw + tmpStraw * m_xPitch;
 }
 
