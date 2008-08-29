@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::RecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.cpp,v 1.42 2008-08-28 22:42:39 jonrob Exp $
+ *  $Id: RichRecoQC.cpp,v 1.43 2008-08-29 10:41:30 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -226,13 +226,13 @@ StatusCode RecoQC::execute()
     plot1D( segment->richRecPhotons().size(),
             hid(rad,"totalPhotons"),
             RAD+" Photon Yield : All Tracks",
-              -0.5, 30.5, 31 );
+              -0.5, 50.5, 51 );
     if ( isolated )
     {
       plot1D( segment->richRecPhotons().size(),
               hid(rad,"totalPhotonsIsolated"),
               RAD+" Photon Yield : Isolated Tracks",
-              -0.5, 30.5, 31 );
+              -0.5, 50.5, 51 );
     }
     
       // number of true photons
