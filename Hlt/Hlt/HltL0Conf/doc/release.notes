@@ -4,6 +4,13 @@
 ! Purpose     : L0-T-track Confirmation algorithms
 !-----------------------------------------------------------------------------
 
+! 2008-08-29 - Johannes Albrecht
+ - ElectronSeedTool, HadronSeedTool, L0ConfExtrapolator: Add functionality for B=0
+ - MuonSeedTool: Add functionality for B=0, improve muon segment preparation
+ - L0confirmWithT: Add functionality for B=0, make Pattern Reco tool private to allow 
+	special configuration for alleys, change default to PatConfirmTool
+ - PatConfirmTool: Add option if PR is done with a state as seed
+
 !========================== HltL0Conf v2r3 2008-08-06 ===================
 ! 2008-07-29 - Johannes Albrecht
  - TsaConfirmTool.h,cpp: changes for Panoramix drawing now also in TsaConfirmTool
