@@ -17,10 +17,10 @@ ToolSvc.SequencerTimerTool.OutputLevel = 4;
 // Detectors to monitor (uncomment to use)
 // CRJ : Now done via python Configurable
 //--------------------------------------------------------------
-Moni.DetectorList += {
-                     "CALO"
+//Moni.DetectorList += {
+//                     "CALO"
                      //                     ,"MUON"
-                     };
+//                    };
 
 //--------------------------------------------------------------
 // Monitoring algorithms
