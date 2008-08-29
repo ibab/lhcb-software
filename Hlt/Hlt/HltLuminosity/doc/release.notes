@@ -4,6 +4,10 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+! 2008-08-29 - Jaap Panman
+ - LumiHistMaker: set bins and thresholds by options
+ - also make a binary histogram
+
 ! 2008-08-27 - Patrick Koppenburg
  - Tag of 25/08 has been tagged as v2r0. Increment to v2r1.
 

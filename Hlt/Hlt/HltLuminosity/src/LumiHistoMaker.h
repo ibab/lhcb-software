@@ -1,4 +1,4 @@
-// $Id: LumiHistoMaker.h,v 1.3 2008-08-26 14:03:14 panmanj Exp $
+// $Id: LumiHistoMaker.h,v 1.4 2008-08-29 07:50:27 panmanj Exp $
 #ifndef LUMIHISTOMAKER_H 
 #define LUMIHISTOMAKER_H 1
 
@@ -64,20 +64,21 @@ private:
 
 protected:
 
-  // name of the input data to lumi histos->should become a vector of strings (option)
-  std::string m_DataName;
-  LHCb::HltLumiSummary* m_HltLumiSummary;
+  Hlt::Counter m_counterEntries;               // counter with all the entries of the algorithm
+  Hlt::Counter m_counterHistoInputs;           // counter with all the events with fine inputs
 
-  std::vector<std::string> m_Variables;
-  
-  // counter with all the entries of the algorithm
-  Hlt::Counter m_counterEntries;
-  // counter with all the events with fine inputs
-  Hlt::Counter m_counterHistoInputs;
+  std::string m_DataName;                      // input location of summary data
+  LHCb::HltLumiSummary* m_HltLumiSummary;      // summary data
+  std::vector<std::string> m_Variables;        // list of variables to look at
+  std::vector<int> m_MaxBins;                  // number of bins in the histos
+  std::vector<int> m_Thresholds;               // thresholds to apply
+  int m_MaxBin;                                // default maximum bin number
+  int m_Threshold;                             // default threshold
 
-  std::vector<Hlt::Histo*> m_Histos;
-  std::vector<std::string> m_names;
-  std::vector<int> m_keys;
+  std::vector<Hlt::Histo*> m_Histos;           // the straight histogram of counts
+  std::vector<Hlt::Histo*> m_ThresholdHistos;  // two-bin histogram after threshold
+  std::vector<std::string> m_names;            // list of named counters to look at
+  std::vector<int> m_keys;                     // key value in the summary bank
   
 };
 #endif // LUMIHISTOMAKER_H
