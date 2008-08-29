@@ -1,4 +1,4 @@
-// $Id: DummyAlley.cpp,v 1.4 2008-08-19 09:42:38 graven Exp $
+// $Id: DummyAlley.cpp,v 1.5 2008-08-29 14:31:55 bdepaula Exp $
 // Include files 
 
 // from Gaudi
@@ -6,10 +6,9 @@
 
 // local
 #include "DummyAlley.h"
+#include "Event/HltSummary.h"
 // from LHCb core
 #include "Event/ODIN.h"
-#include "Event/L0DUReport.h"
-
 
 using namespace LHCb;
 
@@ -30,6 +29,7 @@ DummyAlley::DummyAlley( const std::string& name,
   : HltAlgorithm ( name , pSvcLocator )
   , m_selection(*this)
 {
+  declareProperty("L0DULocation", m_l0Location = L0DUReportLocation::Default );
   declareProperty("RightType", m_RightType = -1 );
   declareProperty("WrongType", m_WrongType = -1 );
   m_selection.declareProperties();
@@ -48,11 +48,7 @@ StatusCode DummyAlley::initialize() {
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  m_selection.registerSelection();
-  if (m_RightType!= -1 && m_WrongType!=-1){ 
-    error() << "You are setting both the wanted and the unwanted trigger type. This is an error" << endreq;
-    return StatusCode::FAILURE;
-  }
+   m_selection.registerSelection();
 
   return StatusCode::SUCCESS;
 };
@@ -62,23 +58,32 @@ StatusCode DummyAlley::initialize() {
 //=============================================================================
 StatusCode DummyAlley::execute() {
 
+//  m_l0 = get<L0DUReport>(m_l0Location);
+  
   debug() << " Entering the execute " << endreq;
+//  LHCb::HltSummary *summary = get<LHCb::HltSummary>(LHCb::HltSummaryLocation::Default);
+//  summary->setDecision(true);
   if (!exist<LHCb::ODIN> ( LHCb::ODINLocation::Default )) {
     // m_incidentSvc->fireIncident(Incident(name(),IncidentType::AbortEvent));
+   setFilterPassed( false );
    return Error( "ODIN missing, skipping event", StatusCode::SUCCESS );
   }
   LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
   debug() << " Trigger type =  " << odin->triggerType() << endreq;
-  if (m_WrongType == -1 && odin->triggerType()== m_RightType){
-    debug() << "This accepts trigger type " << m_RightType << endreq; 
+  if (m_RightType!= -1 && m_WrongType!=-1){ 
+    warning() << "You are setting both the wanted and the unwanted trigger type. No events accepted" << endreq;
+  } else if (m_WrongType == -1 && odin->triggerType()== m_RightType){
+    debug() << "This choses trigger type " << m_RightType << endreq; 
     m_selection.output()->setDecision(true);
   } else if (m_RightType == -1 && odin->triggerType()!= m_WrongType){
-    debug() << "This rejects trigger type " << m_WrongType << endreq; 
+    debug() << "This ignores trigger type " << m_WrongType << endreq; 
     m_selection.output()->setDecision(true);
   } else if (m_RightType == -1 && m_WrongType==-1) {
     debug() << "No specific trigger type. All events accepted" << endreq;
     m_selection.output()->setDecision(true);
   }
+  
+
   return StatusCode::SUCCESS;
 };
 
@@ -91,3 +96,6 @@ StatusCode DummyAlley::finalize() {
 }
 
 //=============================================================================
+
+
+

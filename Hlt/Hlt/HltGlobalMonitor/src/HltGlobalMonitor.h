@@ -115,9 +115,8 @@ protected:
   int _counter1;        // "All events"
   int _counter2;       // "L0 accepted evts"
   float _efficiency;  // "Ratio counter2/counter1"
-  double muonallacc;
-  double muhadallacc;
-  double hadronallacc;
+  double physallacc;
+  double randallacc;
   double orallacc;
 
 

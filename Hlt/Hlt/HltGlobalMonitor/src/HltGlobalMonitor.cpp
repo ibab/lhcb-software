@@ -70,9 +70,8 @@ StatusCode HltGlobalMonitor::initialize() {
   _counter1=0;            // "All events"
   _counter2=0;           // "L0 accepted evts"
   _efficiency=0;        // "Ratio counter2/counter1"
-  muonallacc=0;
-  muhadallacc=0;
-  hadronallacc=0;
+  physallacc=0;
+  randallacc=0;
   orallacc=0;
 
   info() << " Declaring infos to be published " << endreq;
@@ -86,9 +85,8 @@ StatusCode HltGlobalMonitor::initialize() {
   declareInfo("counter2",_counter2,"L0 accepted evts");
   declareInfo("efficiency",_efficiency,"Ratio counter2/counter1");
 //  declareInfo("COUNTER_TO_RATE[Hlt1AlleyOr]", orallacc, "Hlt1 Alleys Or Call");
-//  declareInfo("COUNTER_TO_RATE[Hlt1MuonAlley]", muonallacc, "Hlt1 Muon Alley Call");
-//  declareInfo("COUNTER_TO_RATE[Hlt1MuHadAlley]", muhadallacc, "Hlt1 MuHad Alley Call");
-//  declareInfo("COUNTER_TO_RATE[Hlt1HadronAlley]", hadronallacc, "Hlt1 Hadron Alley Call");
+//  declareInfo("COUNTER_TO_RATE[Hlt1PhysAlley]", physallacc, "Hlt1 Physics Alley Accepts");
+//  declareInfo("COUNTER_TO_RATE[Hlt1RandAlley]", randallacc, "Hlt1 Random Alley Accepts");
    declareInfo("m_histoL0",m_histoL0,"Successful L0 bits");
    declareInfo("m_histoL0corr",m_histoL0corr,"Correlated L0 bits");
    declareInfo("m_histoalleycall", m_histoalleycall,"Physics and Random Trigger");
@@ -296,7 +294,7 @@ void HltGlobalMonitor::monitorAlleysinput() {
       }
       fill(m_histoalleycall, binMuonAlley, 1.);
       fill(m_histoodintype, odin->triggerType(), 1.);
-      muonallacc=muonallacc+1;
+      physallacc=physallacc+1;
    }
     if (dataSvc().selection(keyrand,this).decision()){ 
 //      Hlt::Histo* m_histoalleycall = plot1D(binMuonHadAlley,"AlleyCalls", "Alleys Called", 0, 6., 6, 1.);
@@ -304,7 +302,7 @@ void HltGlobalMonitor::monitorAlleysinput() {
       debug() << "ODIN trigger type" << odin->triggerType() << endreq;
       fill(m_histoalleycall, binMuonHadAlley, 1.);
       fill(m_histoodintype, odin->triggerType(), 1.);
-      muhadallacc=muhadallacc+1;
+      randallacc=randallacc+1;
    }
 
 };
