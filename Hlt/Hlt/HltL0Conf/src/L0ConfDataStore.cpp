@@ -1,4 +1,4 @@
-// $Id: L0ConfDataStore.cpp,v 1.4 2008-03-20 11:38:10 albrecht Exp $
+// $Id: L0ConfDataStore.cpp,v 1.5 2008-08-29 14:36:00 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -81,12 +81,15 @@ bool L0ConfDataStore::checkConsistency()
   if( n !=  trackHypo.size() ) consistent = false;
 
   if( !consistent ){
+    warning()<<"Collect, seed prep:           "<<endmsg;
     warning()<<"nL0Candidates          "<<nL0Candidates <<" (should be one less)"<<endmsg;
     warning()<<"seedingTime.size()     "<<seedingTime.size()<<endmsg;
-    warning()<<" decodingTime.size()   "<<decodingTime.size() <<endmsg;
-    warning()<<"trackingTime.size()    "<<trackingTime.size() <<endmsg;
-    warning()<<"nTHits.size()          "<<nTHits.size() <<endmsg;
     warning()<<"region.size()          "<<region.size() <<endmsg;
+     warning()<<"L0 confirmWithT:          "<<endmsg;
+     warning()<<" decodingTime.size()   "<<decodingTime.size() <<endmsg;
+     warning()<<"trackingTime.size()    "<<trackingTime.size() <<endmsg;
+     warning()<<"nTHits.size()          "<<nTHits.size() <<endmsg;
+     
     warning()<<"trackHypo.size()       "<<trackHypo.size() <<endmsg;
     
   }
