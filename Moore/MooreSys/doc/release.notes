@@ -3,6 +3,17 @@ Package     : MooreSys
 Package Coordinator : P. Koppenburg, M. Cattaneo
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v5r1>2008-08-29 Moore v5r1</A></H1><PRE>
+Based on Phys v7r0, Rec v5r10, HLT v4r1, Lbcom v6r21, LHCb v25r0, Gaudi v20r1, LCGCMT 55
+
+ This version uses LHCb v25r0 and Gaudi v20r2 . Only Hlt changed. 
+ . Many changes to get pythonized configuration.
+ . Prepare for working version in the pit.  
+ . New packages HltConf, HltHidValley
+
+The Moore project temporarily contains DaVinciTools to allow the use
+of the ParticleFilter in Hlt2 (was in DaVinciFilter).
+
 </PRE><H1><A NAME=v5r0>2008-08-11 Moore v5r0</A></H1><PRE>
 Based on Phys v7r0, Rec v5r10, HLT v4r0, Lbcom v6r21, LHCb v25r0, Gaudi v20r1, LCGCMT 55
 

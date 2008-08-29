@@ -31,8 +31,8 @@ HistogramPersistencySvc().OutputFile = 'Moore_minbias.root'
 #HltConfigSvc().OutputLevel = DEBUG
 #HltConfigSvc().checkOdin = False
 #
-Moore().hltType = 'PHYSICS_Hlt1'
-#Moore().hltType = 'PHYSICS_Hlt1+Hlt2'
+#Moore().hltType = 'PHYSICS_Hlt1'
+Moore().hltType = 'PHYSICS_Hlt1+Hlt2'
 #Moore().hltType = 'DEFAULT'  # current commissioning setup
 
 #Moore().DDDBtag = '2008-default'
@@ -61,7 +61,7 @@ EventSelector().Input = [ "DATAFILE='PFN:"+ f + extensions[ filetype ] for f in 
 
 EventSelector().PrintFreq = 100
 
-Moore().EvtMax = 1000
+Moore().EvtMax = 10000
 
 
 # optionally, we can enable some auditors...

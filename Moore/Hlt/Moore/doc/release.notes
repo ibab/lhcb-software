@@ -2,6 +2,7 @@ Package     : Hlt/Moore
 Package Coordinator : Patrick Koppenburg and Marco Cattaneo
 Purpose     : LHCb HLT application
 
+!========================== Moore v5r1 2008-08-29 ===================
 ! 2008-08-29 - Jaap Panman
  - lumiMoore.py and lumiChecker.py updates to use binary Histos
 
