@@ -1,14 +1,16 @@
-// $Id: L0ConfExtrapolator.h,v 1.4 2008-07-17 08:09:59 albrecht Exp $
+// $Id: L0ConfExtrapolator.h,v 1.5 2008-08-29 14:28:03 albrecht Exp $
 #ifndef L0CONFEXTRAPOLATOR_H 
 #define L0CONFEXTRAPOLATOR_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/Point3DTypes.h"
+#include "Kernel/ILHCbMagnetSvc.h"
+
 #include "HltBase/IL0ConfExtrapolator.h"            // Interface
 
 #include "Event/Track.h"
-#include "GaudiKernel/Point3DTypes.h"
 
 /** @class L0ConfExtrapolator L0ConfExtrapolator.h
  *  
@@ -24,6 +26,9 @@ public:
                       const IInterface* parent);
 
   virtual ~L0ConfExtrapolator( ); ///< Destructor
+
+ /// Initialize method
+  virtual StatusCode initialize();
 
   FwdHypothesis getFwdHypothesis( const LHCb::Track& veloTrack, 
                                   const LHCb::Track& caloTrack,
@@ -50,6 +55,9 @@ public:
 protected:
 
 private:
+  ILHCbMagnetSvc*  m_magFieldSvc;
+  bool m_fieldOff;
+  
   //for getParabolaHypothesis
   double m_curvFactor;
   

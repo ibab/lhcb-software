@@ -1,16 +1,19 @@
-// $Id: L0ConfirmWithT.h,v 1.5 2008-07-09 08:28:51 hernando Exp $
+// $Id: L0ConfirmWithT.h,v 1.6 2008-08-29 14:31:25 albrecht Exp $
 #ifndef L0CONFIRMWITHT_H 
 #define L0CONFIRMWITHT_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "TrackInterfaces/ITracksFromTrack.h"            // Interface
+#include "Kernel/ILHCbMagnetSvc.h"
 
-#include "L0ConfDataStore.h"
+#include "TrackInterfaces/ITracksFromTrack.h"            // Interface
+#include "HltBase/ITrackView.h"
 #include "HltBase/IL0ConfExtrapolator.h"
 
-#include "HltBase/ITrackView.h"
+#include "L0ConfDataStore.h"
+
+
 
 class ITrackConfirmTool;
 
@@ -53,10 +56,11 @@ private:
   StatusCode prepareStates( const LHCb::Track& seed, LHCb::State* seedStates, int& nStates );
   
 
-  bool m_debugMode;
+  bool m_debugMode, m_fieldOff;
   
   IL0ConfExtrapolator* m_l0ConfExtrapolator;
-  
+  ILHCbMagnetSvc*  m_magFieldSvc;
+
   ITrackConfirmTool* m_TrackConfirmTool;
   std::string m_trackingTool;
 

@@ -1,4 +1,4 @@
-// $Id: L0ConfExtrapolator.cpp,v 1.5 2008-07-21 17:07:35 albrecht Exp $
+// $Id: L0ConfExtrapolator.cpp,v 1.6 2008-08-29 14:28:06 albrecht Exp $
 // Include files 
 
 #include <cmath>
@@ -36,7 +36,7 @@ L0ConfExtrapolator::L0ConfExtrapolator( const std::string& type,
                                         const std::string& name,
                                         const IInterface* parent )
   : GaudiTool ( type, name , parent )
-    , zEndT3(9315.0)
+    , zEndT3(9315.0), m_fieldOff(false)
 {
   declareInterface<IL0ConfExtrapolator>(this);
 
@@ -67,6 +67,25 @@ L0ConfExtrapolator::L0ConfExtrapolator( const std::string& type,
 //=============================================================================
 L0ConfExtrapolator::~L0ConfExtrapolator() {} 
 
+
+StatusCode L0ConfExtrapolator::initialize() 
+{
+  StatusCode sc = GaudiTool::initialize();
+  if (sc.isFailure()){
+    return sc;
+  }
+
+ m_magFieldSvc = svc<ILHCbMagnetSvc>( "MagneticFieldSvc", true );
+
+ if( m_magFieldSvc->scaleFactor() < 0.1 ) {
+    info()<<"magnetic field is: "<<m_magFieldSvc->scaleFactor()
+          <<" %, below 10% of nominal field! \n Use options for no field!"<<endmsg;
+    m_fieldOff=true;
+  }
+  
+  return sc;
+}
+
 //=============================================================================
 void L0ConfExtrapolator::muon2T( const LHCb::Track& muonTrack,
                                  LHCb::State& stateAtT ) const
@@ -93,6 +112,9 @@ void L0ConfExtrapolator::calo2T( const LHCb::State& aState, double xkick,
   // assume neutral particle slopes, correct for x-kick in T below
   double tx = x / z, ty = y / z;
   double dz = zEndT3 - z;
+  //in case of no (low) field, particle gets no kick
+  if(m_fieldOff) xkick = 0 ;
+  
 
   statePosAtT.setState(xT3 - xkick, yT3, zEndT3, 
                        tx - xkick / dz, ty, aState.qOverP()); 
@@ -151,6 +173,8 @@ ParabolaHypothesis L0ConfExtrapolator::getParabolaHypothesis(const LHCb::State& 
   double z = aState.z();
   
   double ax = aState.qOverP() / m_curvFactor;
+  //no field --> parabola becomes line
+  if( m_fieldOff ) ax=0;
   double bx = aState.tx() - 2. * z * ax;
   double cx = aState.x() - z * (bx + ax * z);
   
@@ -185,6 +209,16 @@ FwdHypothesis L0ConfExtrapolator::getFwdHypothesis( const LHCb::Track& veloTrack
   by = by + m_byParam * dSlope * dSlope * veloState.ty();
   double ay = caloState.y() + ( m_zRef - caloState.z() ) * by;
 
+  if(m_fieldOff){
+    //without field, everything is a line. Take VELO parameters to set up the line
+    ax = veloState.x() + veloState.tx() * ( m_zRef - veloState.z() );
+    bx = veloState.tx();
+    ay = veloState.y() + veloState.ty() * ( m_zRef - veloState.z() );
+    by = veloState.ty();
+    cx = 0;
+    dx = 0;
+  }
+  
   int reg = getCaloRegion(caloState.x(),caloState.y(),caloState.z());
   
   if ( reg < 0 || reg > 4 ) {

@@ -1,10 +1,12 @@
-// $Id: MuonSeedTool.h,v 1.4 2008-07-21 17:01:19 albrecht Exp $
+// $Id: MuonSeedTool.h,v 1.5 2008-08-29 14:30:04 albrecht Exp $
 #ifndef MUONSEEDTOOL_H 
 #define MUONSEEDTOOL_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
+#include "Kernel/ILHCbMagnetSvc.h"
+
 #include "TrackInterfaces/ITrackMomentumEstimate.h"
 
 // Interface
@@ -41,8 +43,7 @@ public:
 
 private:
 
-  bool m_debugMode;
-  bool m_useM1;
+  bool m_debugMode, m_useM1, m_fieldOff;
   std::string m_momentumToolName;
 
   std::vector<double> m_sigmaX2;
@@ -56,7 +57,7 @@ private:
   std::vector<double> m_sigmaTy2NoM1;
   
   IMuonPosTool      *m_iPosTool;
-
+  ILHCbMagnetSvc*  m_magFieldSvc;
   
   ITrackMomentumEstimate* m_momentumTool;
   

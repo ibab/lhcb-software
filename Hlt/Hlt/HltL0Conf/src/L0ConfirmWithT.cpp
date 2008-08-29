@@ -1,4 +1,4 @@
-// $Id: L0ConfirmWithT.cpp,v 1.9 2008-07-09 14:09:16 albrecht Exp $
+// $Id: L0ConfirmWithT.cpp,v 1.10 2008-08-29 14:31:28 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -28,6 +28,7 @@ L0ConfirmWithT::L0ConfirmWithT( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
   : GaudiTool ( type, name , parent )
+    , m_fieldOff(false)
 {
   declareInterface<ITracksFromTrack>(this);
   declareInterface<ITrackView>(this);
@@ -59,7 +60,7 @@ StatusCode L0ConfirmWithT::initialize()
   m_particleType = static_cast<ParticleType>(m_particleTypeTMP);
 
   // Pattern recognition tool
-  m_TrackConfirmTool=tool<ITrackConfirmTool>( m_trackingTool  );
+  m_TrackConfirmTool=tool<ITrackConfirmTool>( m_trackingTool, this  );
 
   // to store debug information
   m_DataStore = tool<L0ConfDataStore>("L0ConfDataStore");
@@ -68,6 +69,14 @@ StatusCode L0ConfirmWithT::initialize()
   m_l0ConfExtrapolator = tool<IL0ConfExtrapolator>("L0ConfExtrapolator");
 
   info() << "Selected particle type " << m_particleType << endmsg;
+
+  m_magFieldSvc = svc<ILHCbMagnetSvc>( "MagneticFieldSvc", true );
+  
+  if( m_magFieldSvc->scaleFactor() < 0.1 ) {
+    info()<<"magnetic field is: "<<m_magFieldSvc->scaleFactor()
+          <<" %, below 10% of nominal field! \n Use options for no field!"<<endmsg;
+    m_fieldOff=true;
+  }
 
   return sc;
 }
@@ -151,11 +160,11 @@ StatusCode L0ConfirmWithT::prepareStates( const LHCb::Track& seed, LHCb::State* 
 		  break;
 	  case Hadron:
 		  m_l0ConfExtrapolator->hcal2T( seed , seedStates[0] , seedStates[1] );
-		  ++nStates;
+      if( m_fieldOff == false )	++nStates;
 		  break;
 	  case Electron:
 		  m_l0ConfExtrapolator->ecal2T( seed , seedStates[0] , seedStates[1] );
-		  ++nStates;
+		  if( m_fieldOff == false ) ++nStates;
 		  break;
 	  default:
 		  // Unknown particle type, complain

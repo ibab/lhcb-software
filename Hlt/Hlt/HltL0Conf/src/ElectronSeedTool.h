@@ -4,6 +4,7 @@
 
 // Include files for service retrieval
 #include "GaudiAlg/GaudiTool.h"
+#include "Kernel/ILHCbMagnetSvc.h"
 
 #include "HltBase/ICaloSeedTool.h"    // Interface
 
@@ -44,7 +45,7 @@ public:
   
 
 private:
-  bool m_debugMode;
+  bool m_debugMode, m_fieldOff;
   
   std::vector<double> m_sigmaX2;
   std::vector<double> m_sigmaY2;
@@ -65,6 +66,7 @@ private:
 
   // ECAL
   DeCalorimeter* m_ecal;
+  ILHCbMagnetSvc*  m_magFieldSvc;
 
   StatusCode SetCandPosAndE(const LHCb::L0CaloCandidate& cand,
                             double& x1, double& x2, double& x3, double& x4,

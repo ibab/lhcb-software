@@ -1,4 +1,4 @@
-// $Id: HadronSeedTool.cpp,v 1.5 2008-03-20 14:17:16 albrecht Exp $
+// $Id: HadronSeedTool.cpp,v 1.6 2008-08-29 14:27:50 albrecht Exp $
 // Include files 
 
 #include <cmath>
@@ -44,7 +44,8 @@ const double HadronSeedTool::zT3 = 9315.;
 HadronSeedTool::HadronSeedTool( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : GaudiTool ( type, name , parent ),
+    m_fieldOff(false)
 {
   //resolutions w/o calo decoding --> only region 3,4 (HCal) sensible
   declareProperty("l0SigmaX2", m_l0SigmaX2 = boost::assign::list_of(0.)(0.)(0.)(1849.)(8281.) );
@@ -102,6 +103,16 @@ StatusCode HadronSeedTool::initialize()
     error()<<"Size of search winow vectors is not valid, check you options!"<<endmsg;
     return StatusCode::FAILURE;
   }
+
+  m_magFieldSvc = svc<ILHCbMagnetSvc>( "MagneticFieldSvc", true );
+  
+  if( m_magFieldSvc->scaleFactor() < 0.1 ) {
+    info()<<"magnetic field is: "<<m_magFieldSvc->scaleFactor()
+          <<" %, below 10% of nominal field! \n Use options for no field!"<<endmsg;
+    m_fieldOff=true;
+    warning()<<"Tool configured for no B field!"<<endmsg;
+    warning()<<"Position and slope is set correctly, covariance and momemtum _not_!"<<endmsg;
+  }
   
   return StatusCode::SUCCESS;
 }
@@ -123,6 +134,11 @@ StatusCode HadronSeedTool::makeTrack(const LHCb::L0CaloCandidate& hadL0Cand,
   double x = hadL0Cand.position().X();
   double y = hadL0Cand.position().Y();
   double zL0 = hadL0Cand.position().Z();
+  double tx = 0;
+  
+  if(m_fieldOff) tx = x / double(zL0);
+  
+  double ty = y / double(zL0);
   double e = std::abs(hadL0Cand.et()) *
 	  std::sqrt(x * x + y * y + zL0 * zL0) / std::sqrt(x * x + y * y);
 
@@ -173,7 +189,7 @@ StatusCode HadronSeedTool::makeTrack(const LHCb::L0CaloCandidate& hadL0Cand,
   }//end if decode calos
   
   // add state to track
-  Gaudi::TrackVector stateVec(x, y, 0., 0., 1. / e);
+  Gaudi::TrackVector stateVec(x, y, tx, ty, 1. / double(e));
   LHCb::State state(stateVec, stateCov, z, State::MidHCal);
   seedTrack.addToStates(state);
   
@@ -251,8 +267,8 @@ StatusCode HadronSeedTool::getECalBarycenter(double& x, double& y, double& z, do
 {
   static const double cellSizeECal[3] = { 40.56, 60.85, 121.7 };
   // extrapolate HCal position to ECal 
-  double xPred = x * zECal / z;
-  double yPred = y * zECal / z;
+  double xPred = x * zECal / double(z);
+  double yPred = y * zECal / double(z);
   int reg = ECALpart(xPred, yPred);
   // check that the result is valid
   if( 0 > reg ) {

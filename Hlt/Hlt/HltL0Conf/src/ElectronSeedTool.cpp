@@ -29,8 +29,8 @@ DECLARE_TOOL_FACTORY( ElectronSeedTool );
 ElectronSeedTool::ElectronSeedTool(const std::string& type, 
                                    const std::string& name, 
                                    const IInterface* parent) 
-  : GaudiTool( type, name, parent )
-    
+  : GaudiTool( type, name, parent ),
+    m_fieldOff(false)
 {
   // Declare the algorithm's properties which can be set at run time
   declareInterface<ICaloSeedTool>(this);
@@ -91,6 +91,16 @@ StatusCode ElectronSeedTool::initialize()
     return StatusCode::FAILURE;
   }
 
+  m_magFieldSvc = svc<ILHCbMagnetSvc>( "MagneticFieldSvc", true );
+  
+  if( m_magFieldSvc->scaleFactor() < 0.1 ) {
+    info()<<"magnetic field is: "<<m_magFieldSvc->scaleFactor()
+          <<" %, below 10% of nominal field! \n Use options for no field!"<<endmsg;
+    m_fieldOff=true;
+    warning()<<"Tool configured for no B field!"<<endmsg;
+    warning()<<"Position and slope is set correctly, covariance and momemtum _not_!"<<endmsg;
+  }
+  
   return StatusCode::SUCCESS;
 }
 
@@ -213,9 +223,12 @@ StatusCode ElectronSeedTool::makeTrack( const LHCb::L0CaloCandidate& eL0Cand,
   
   // set the states
   LHCb::State seedState;
-    
+  double tx = 0.;
+  if(m_fieldOff) tx = barx_cor / double(zCluster);
+  double ty = bary_cor / double(zCluster);
+  
   seedState.setState( barx_cor , bary_cor , zCluster ,
-                      0 , 0 , 1./eCluster );
+                      tx , ty , 1./double(eCluster) );
     
   // set the covariance matrix
   Gaudi::TrackSymMatrix stateCov = Gaudi::TrackSymMatrix();
@@ -232,11 +245,8 @@ StatusCode ElectronSeedTool::makeTrack( const LHCb::L0CaloCandidate& eL0Cand,
     m_DataStore->region.push_back( ecalRegion );
   }
   
-
   seedTrack.addToStates(seedState);
     
-
-
   return StatusCode::SUCCESS;
   
 }

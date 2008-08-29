@@ -1,10 +1,12 @@
-// $Id: HadronSeedTool.h,v 1.3 2008-03-27 10:48:20 albrecht Exp $
+// $Id: HadronSeedTool.h,v 1.4 2008-08-29 14:27:47 albrecht Exp $
 #ifndef HADRONSEEDTOOL_H 
 #define HADRONSEEDTOOL_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
+#include "Kernel/ILHCbMagnetSvc.h"
+
 #include "HltBase/ICaloSeedTool.h"            // Interface
 #include "HltBase/IL0ConfExtrapolator.h"
 
@@ -69,7 +71,7 @@ private:
   ICaloDataProvider* m_ecalDaq;
   ICaloDataProvider* m_hcalDaq;
   IL0ConfExtrapolator* m_l0ConfExtrapolator;
-  
+  ILHCbMagnetSvc*  m_magFieldSvc;
 
   //tool to store debug information
   L0ConfDataStore* m_DataStore;  
@@ -92,7 +94,7 @@ private:
  
   
   //boolean if information in dataStore tool should be saved
-  bool m_debugMode, m_decodeCalos;
+  bool m_debugMode, m_decodeCalos, m_fieldOff;
   static const double zECal, zHCal, zT3;
 };
 #endif // HADRONSEEDTOOL_H
