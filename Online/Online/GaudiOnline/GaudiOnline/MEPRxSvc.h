@@ -100,6 +100,7 @@ namespace LHCb  {
     bool                        m_dynamicMEPRequest;
     bool                        m_dropIncompleteEvents;	
     bool                        m_checkPartitionID;
+    bool                        m_expectOdin;
     int                         m_MEPBuffers; 
     int                         m_maxMsForGetSpace;
     int                         m_pktSamplingCount; 

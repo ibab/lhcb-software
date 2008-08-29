@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.67 2008-08-29 11:37:51 frankb Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.68 2008-08-29 14:39:36 niko Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -383,6 +383,9 @@ int MEPRx::spaceAction() {
   e->evID     = ++id;
   dsc.len     = m_brx + sizeof(MEPEVENT);
   dsc.mask[0] = dsc.mask[1] = dsc.mask[2] = dsc.mask[3] = 0xffffffff;
+  if (!m_odinMEP && m_parent->m_expectOdin) {
+      m_eventType = EVENT_TYPE_ERROR;
+  }
   dsc.type    = m_eventType;    
   m->setSize(m_brx);
   declareEvent();
@@ -470,7 +473,7 @@ MEPRxSvc::MEPRxSvc(const std::string& nam, ISvcLocator* svc)
   declareProperty("errorCheckInterval", m_errorCheckInterval = -1); // ms
   declareProperty("RTTCCompat", m_RTTCCompat = false);
   m_trashCan  = new u_int8_t[MAX_R_PACKET];
-
+  m_expectOdin = false;
   m_mepRQCommand = new MEPRQCommand(this, msgSvc(), RTL::processName());
 }
 
@@ -832,8 +835,10 @@ StatusCode MEPRxSvc::checkProperties() {
     m_srcFlags.push_back(0);
     if (m_IPSrc[i + 2] == "DOUBLE_ZERO_BUG") 
       m_srcFlags[i/3] |= DOUBLE_ZERO_BUG;
-    if (m_IPSrc[i + 2] == "ODIN")
-      m_srcFlags[i/3] |= ODIN;		
+    if (m_IPSrc[i + 2] == "ODIN") {
+      m_srcFlags[i/3] |= ODIN;	
+      m_expectOdin = true;
+    }
     m_srcAddr[addr] = i / 3; 
     m_srcDottedAddr.push_back(MEPRxSys::dotted_addr(addr));
     m_srcName.push_back(nam);
