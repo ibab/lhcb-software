@@ -1,4 +1,4 @@
-// $Id: L0DUReportMonitor.cpp,v 1.15 2008-08-14 09:33:41 odescham Exp $
+// $Id: L0DUReportMonitor.cpp,v 1.16 2008-08-29 18:51:49 odescham Exp $
 // Include files 
 #include <cmath>
 // from Gaudi
@@ -116,7 +116,15 @@ StatusCode L0DUReportMonitor::execute() {
       m_evtCnt = 0.;
       m_decCnt = 0.;
       init = true;
-    }
+      m_chanCnt.clear();  
+      m_condCnt.clear();  
+      m_chanRate.clear();  
+      m_chanRelRate.clear();
+      m_condRate.clear();    
+      m_trigCnt.clear();     
+      m_trigRate.clear();    
+      m_trigRelRate.clear();
+     }
     else{  
       m_chanCnt     = m_chanCntMap[tck];
       m_condCnt     = m_condCntMap[tck];

@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.121 2008-08-28 15:34:38 odescham Exp $
+! $Id: release.notes,v 1.122 2008-08-29 18:51:49 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
+
+! 2008-08-29 - Olivier Deschamps
+ - L0DUReportMonitor : bug fix (incomplete initialization) - produce weird result in case of several TCK are monitored in the same job
 
 ! 2008-08-27 - Olivier Deschamps
  - L0DUConfig_0x000X.opts : produced by L0DU PVSS on 25th august 2008
