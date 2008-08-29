@@ -416,7 +416,7 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName, int &file
 
   for (m_dimInfoIt=m_dimInfo.begin(); m_dimInfoIt!=m_dimInfo.end(); ++m_dimInfoIt) 
   {
-    std::cout << "========================SAVER=================================" << std::endl;
+   // std::cout << "========================SAVER=================================" << std::endl;
     
     fileSize=0;
     std::string tmpfile = saveDir + "/" +  m_dimInfoIt->first + "-" + timestr + ".root";
@@ -465,7 +465,7 @@ void BaseServiceMap::add() {
 
   for (m_dimInfoIt=m_dimInfo.begin(); m_dimInfoIt!=m_dimInfo.end(); ++m_dimInfoIt) 
   {
-    std::cout << "========================ADDER=================================" << std::endl;
+    //std::cout << "========================ADDER=================================" << std::endl;
     msg << MSG::DEBUG << " Adder : " << m_dimInfoIt->first << endreq;
     // reset MonObject
     if (m_dimSrv.find(m_dimInfoIt->first) == m_dimSrv.end()) { 
@@ -497,7 +497,7 @@ void BaseServiceMap::add() {
     //m_dimSrv[m_dimInfoIt->first].second->print();
     m_dimSrv[m_dimInfoIt->first].first->updateService(m_dimSrv[m_dimInfoIt->first].second->endOfRun());
     
-    std::cout << "==============================================================" << std::endl;
+  //  std::cout << "==============================================================" << std::endl;
     
 /*  std::cout << "==============================================================" << std::endl;
   std::cout << "========================ADDER=================================" << std::endl;
@@ -507,7 +507,7 @@ void BaseServiceMap::add() {
   std::cout << "========================ADDERB=================================" << std::endl;
   std::cout << "==============================================================" << std::endl;
   m_dimSrv[m_dimInfoIt->first].first->monObject()->print();
-  std::cout << "==============================================================" << std::endl;*/
+//  std::cout << "==============================================================" << std::endl;*/
   }
 }
 
