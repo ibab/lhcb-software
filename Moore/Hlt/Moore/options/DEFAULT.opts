@@ -38,8 +38,14 @@ LHCBCOND.DefaultTAG = "head-20080702";
 
 EventClockSvc.EventTimeDecoder = "OdinTimeDecoder";
 MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
-#include "$HLTSYSROOT/options/HltInit.opts"
-#include "$HLTSYSROOT/options/RandomPrescaling.opts"
+HltConfigSvc.checkOdin = false;
+HltConfigSvc.maskL0TCK = true;
+//                           0x80010000  0x80020000
+HltConfigSvc.prefetchTCK = { 2147549184, 2147614720 }
+//                        0x80020000
+HltConfigSvc.initialTCK = 2147614720
+ApplicationMgr.ExtSvc += { "HltConfigSvc" };
+ApplicationMgr.TopAlg += { "GaudiSequencer/Hlt" };
 /////////////////////////////////////
 
 
@@ -64,7 +70,7 @@ EventSelector.REQ1 = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xff
 MEPManager.PartitionID               = @OnlineEnv.PartitionID;
 
 ApplicationMgr.TopAlg               += { "Sequencer/SendSequence" };
-SendSequence.Members                 = {"CheckHLTDecision", "LHCb::RawEvent2MBMMergerAlg/Output"};
+SendSequence.Members                 = {"Hlt1GlobalDecision", "LHCb::RawEvent2MBMMergerAlg/Output"};
 //SendSequence.Members                 = {"LHCb::RawEvent2MBMMergerAlg/Output"};
 SendSequence.OutputLevel             = @OnlineEnv.OutputLevel;
 
