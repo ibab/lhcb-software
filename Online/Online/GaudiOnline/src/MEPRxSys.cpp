@@ -190,9 +190,8 @@ int send_msg(int sockfd, u_int32_t addr, u_int8_t protocol, void *buf, int len, 
  */
 int
 send_msg_arb_source(int raw_socket, u_int8_t proto, u_int32_t srcAddr, u_int32_t destAddr, void *buf, int len) {
-
-  int n;
-
+  int n = 0;
+#ifndef _WIN32
   struct sockaddr_in in;
   struct iphdr *hdr = (struct iphdr *) buf;
   hdr->saddr = srcAddr; //inet_addr(srcAddr);
@@ -209,22 +208,21 @@ send_msg_arb_source(int raw_socket, u_int8_t proto, u_int32_t srcAddr, u_int32_t
     perror("send");
     exit(errno);
   }
-
+#endif
   return n;
-
 }
 
 //Also socket need some special treatment.
 int
 open_sock_arb_source(int ipproto, int rxbufsiz, std::string &errmsg) {
   int raw_socket;
-
+#ifndef _WIN32
   int fd;
   if ((fd = open("/proc/raw_cap_hack", O_RDONLY)) != -1) {
     ioctl(fd, 0, 0);
     close(fd);
   } // if we can't open the raw_cap_hack we have to be root
-
+#endif
   if ((raw_socket = socket(PF_INET, SOCK_RAW, IPPROTO_RAW)) == -1) {
     errmsg = "socket";
     return -1;
@@ -236,12 +234,12 @@ open_sock_arb_source(int ipproto, int rxbufsiz, std::string &errmsg) {
      return -1;
      //RCVBUF not needed
   }
-
-  if (setsockopt(raw_socket, SOL_IP, IP_HDRINCL, &ipproto, 4)) { // any non-zero value is fine.
+#ifdef _WIN32
+  if (setsockopt(raw_socket, SOL_IP, IP_HDRINCL, (char*)&ipproto, 4)) { // any non-zero value is fine.
     errmsg = "setsockopt";
     return -1;
   }
-
+#else
   char netdev_name[10];
   int netdev = 1;
   sprintf(netdev_name, netdev < 0 ? "lo" : "eth%d", netdev);
@@ -250,6 +248,7 @@ open_sock_arb_source(int ipproto, int rxbufsiz, std::string &errmsg) {
     errmsg = "setsockopt SO_BINDTODEVICE";
     return -1;
   }
+#endif
 
   int val;
   val = MEP_REQ_TTL;

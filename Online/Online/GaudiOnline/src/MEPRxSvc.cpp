@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.66 2008-08-28 17:34:19 niko Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.67 2008-08-29 11:37:51 frankb Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -741,8 +741,8 @@ StatusCode MEPRxSvc::run() {
           rx = m_freeDsc.back();
           m_freeDsc.pop_back();
           lib_rtl_unlock(m_freeDscLock);
-	  rx->m_age = m_MEPBuffers;
-	  rx->m_l0ID = mephdr->m_l0ID;
+          rx->m_age = MEPRxSys::ms2k();
+          rx->m_l0ID = mephdr->m_l0ID;
           RXIT j = lower_bound(m_workDsc.begin(),m_workDsc.end(),mephdr->m_l0ID,MEPRx::cmpL0ID);
           m_workDsc.insert(j, rx);
           rxit = lower_bound(m_workDsc.begin(),m_workDsc.end(),mephdr->m_l0ID,MEPRx::cmpL0ID);

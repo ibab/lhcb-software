@@ -20,21 +20,14 @@
 #include "MDF/MDFHeader.h"
 #include "MDF/MEPWriter.h"
 #include "MDF/MEPEvent.h"
+#include <MDF/MEPFragment.h>
 #include "Event/RawEvent.h"
 #include "GaudiKernel/AlgFactory.h"
-//#include "MDF/MEPMultiFragment.h"
-#include <MDF/MEPFragment.h>
 #include "GaudiOnline/MEPRxSvc.h"
-
-//#include "GaudiUtils/IIODataManager.h"
-//#include "MDF/RawDataConnection.h"
-#include <arpa/inet.h>
-
-
 #include <iostream>
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
+#include <cstdio>
+#include <cstdlib>
+#include <ctime>
 
 #include "GaudiOnline/MEPInjector.h"
 
@@ -162,8 +155,14 @@ StatusCode MEPInjector::sendMEP() {
     
   const char* addrfrom = m_IPAddrFrom[(rand() % (int)m_IPAddrFrom.size())].c_str();
         // rand() is not very random, but it is enough for us.
-  
-  int n = MEPRxSys::send_msg_arb_source(m_mepSock,m_IPProtoIn, inet_addr(addrfrom) ,inet_addr(m_IPAddrTo.c_str()),mh, mepsize );
+  u_int32_t addr1, addr2;
+  if ( MEPRxSys::parse_addr(addrfrom,addr1) != 0 )  {
+    ERRMSG(log,"Failed to convert address ");
+  }
+  if ( MEPRxSys::parse_addr(m_IPAddrTo,addr2) != 0 )  {
+    ERRMSG(log,"Failed to convert address ");
+  }
+  int n = MEPRxSys::send_msg_arb_source(m_mepSock,m_IPProtoIn, addr1, addr2, mh, mepsize );
   if (n == (int) mh->m_totLen)   {
     log << MSG::INFO << "MEP successfully sent!" << endmsg;
     return StatusCode::SUCCESS;
