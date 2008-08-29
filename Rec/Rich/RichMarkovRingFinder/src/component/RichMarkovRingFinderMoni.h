@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichMarkovRingFinderMoni
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderMoni.h,v 1.25 2008-08-28 23:48:10 jonrob Exp $
+ *  $Id: RichMarkovRingFinderMoni.h,v 1.26 2008-08-29 00:08:13 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -93,6 +93,9 @@ namespace Rich
 
           std::vector<double> m_ckThetaMax; ///< Max theta limit for histos for each rad
           std::vector<double> m_ckThetaMin; ///< Min theta limit for histos for each rad
+
+          // Max fit variance
+          double m_maxFitVariance;
 
           /// Number of histogram bins
           unsigned int m_nBins;

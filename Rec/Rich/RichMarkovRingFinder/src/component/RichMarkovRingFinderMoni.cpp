@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichMarkovRingFinderMoni
  *
- *  $Id: RichMarkovRingFinderMoni.cpp,v 1.37 2008-08-28 23:56:52 jonrob Exp $
+ *  $Id: RichMarkovRingFinderMoni.cpp,v 1.38 2008-08-29 00:08:13 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -34,6 +34,7 @@ Moni::Moni( const std::string& name,
   declareProperty( "ChThetaRecHistoLimitMax",
                    m_ckThetaMax = boost::assign::list_of(0.3)(0.08)(0.05) );
   declareProperty( "NumberBins", m_nBins = 100 );
+  declareProperty( "MaxFitVariance", m_maxFitVariance = 200 );
 }
 
 // Destructor
@@ -126,9 +127,16 @@ StatusCode Moni::execute()
     // run the fit
     fitter.fit();
     // plot the fitted radius
-    if ( fitter.result().Status == 0 )
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << "Fit "<< fitter.result().Status
+                << " " << fitter.result().Radius
+                << " " << fitter.result().Variance
+                << " " << fitter.numberOfPoints()
+                << endreq;
+    if ( fitter.result().Status == 0 &&
+         fitter.result().Variance < m_maxFitVariance )
     {
-      plot1D( fitter.result().Radius, hid(rad,"ringRadiiRefitted"), 
+      plot1D( fitter.result().Radius, hid(rad,"ringRadiiRefitted"),
               RAD+" Refitted Trackless Ring Radii (mm on HPD plane)",
               0, 200, m_nBins );
     }
