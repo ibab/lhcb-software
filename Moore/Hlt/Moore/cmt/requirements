@@ -1,5 +1,5 @@
 #============================================================================
-# $Id: requirements,v 1.28 2008-08-15 08:50:55 graven Exp $
+# $Id: requirements,v 1.29 2008-08-29 10:32:33 pkoppenb Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : P. Koppenburg & M. Cattaneo
 #============================================================================
@@ -14,6 +14,9 @@ branches doc cmt options python
 
 # Set the default path for Moore options.
 set MOOREOPTS ${MOOREROOT}/options
+
+# TMP ####
+use DaVinciTools v17r1 Phys
 
 # Packages needed to compile and link the application
 use GaudiConf          v*                   -no_auto_imports
