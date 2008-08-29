@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.12 2008-08-08 12:36:33 jpalac Exp $
+# $Id: requirements,v 1.13 2008-08-29 06:00:01 jpalac Exp $
 package MicroDST
 version v3r3
 
@@ -27,9 +27,9 @@ apply_pattern install_more_includes more=MicroDST
 # BUILD
 #############################################################
 # build a component library
-library MicroDST ../src/*.cpp
+library MicroDSTAlgorithm ../src/*.cpp
 
-apply_pattern component_library library=MicroDST
+apply_pattern component_library library=MicroDSTAlgorithm
 
 #===============================================================
 
