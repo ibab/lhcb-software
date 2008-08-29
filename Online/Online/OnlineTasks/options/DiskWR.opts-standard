@@ -1,0 +1,22 @@
+#include "$ONLINETASKSROOT/options/OnlineEnvironment.opts"
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.ExtSvc               += {"IncidentSvc", "LHCb::MEPManager/MEPManager", "LHCb::OnlineEvtSelector/EventSelector"};
+ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
+ApplicationMgr.TopAlg                = {"StoreExplorerAlg","LHCb::MDFWriter/Writer" };
+Runable.MEPManager                   = "LHCb::MEPManager/MEPManager";
+StoreExplorerAlg.Load                = 0;
+StoreExplorerAlg.PrintFreq           = 0.001;
+Writer.Compress                      = 0;
+Writer.DataType                      = 1; // 3: MDF_BANKS 1:MDF_NONE 2:MDF_RECORDS
+Writer.GenerateMD5                   = true;
+Writer.Connection                    = "file://test.dat";
+Writer.OutputLevel		     = 1;
+MEPManager.PartitionID               = @OnlineEnv.PartititonID;
+MEPManager.Buffers                   = {"RESULT"};
+MEPManager.OutputLevel               = 1;
+EventSelector.Decode                 = true;
+EventSelector.Input                  = "RESULT";
+EventDataSvc.RootCLID                = 1;
+EventDataSvc.EnableFaultHandler      = true ;
+EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc/RawDataCnvSvc" };
+EventSelector.REQ1 = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0";

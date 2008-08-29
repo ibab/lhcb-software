@@ -1,0 +1,26 @@
+#include "$HLTOPTS/OnlineEnvironment.opts"
+#include "$OPTIONS"
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.ExtSvc               += {"IncidentSvc",  "LHCb::OnlineEvtSelector/EventSelector"};
+ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
+ApplicationMgr.SvcOptMapping        += { "LHCb::EventRunable/Runable", "LHCb::MEPManager/MEPManager", "LHCb::OnlineEvtSelector/EventSelector"};
+ApplicationMgr.TopAlg                = {"StoreExplorerAlg","LHCb::MDFWriter/Writer" };
+Runable.MEPManager                   = "LHCb::MEPManager/MEPManager";
+MEPManager.Buffers                   = { "SEND" };
+MEPManager.PartitionID               = @OnlineEnv.PartitionID;
+MEPManager.PartitionName             = @OnlineEnv.PartitionName;
+MEPManager.PartitionBuffers          = false;
+StoreExplorerAlg.Load                = 0;
+StoreExplorerAlg.PrintFreq           = 0.001;
+Writer.Compress                      = 0;
+Writer.InputDataType                 = 3;
+Writer.DataType                      = 2;
+Writer.GenerateMD5                   = true;
+Writer.Connection                    = "file:///localdisk/OTTest.mdf";
+EventSelector.Decode                 = false;
+EventSelector.Input                  = "SEND";
+EventDataSvc.RootCLID                = 1;
+EventDataSvc.EnableFaultHandler      = true ;
+EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc/RawDataCnvSvc" };
+ApplicationMgr.SvcOptMapping        += {"LHCb::RawDataCnvSvc/RawDataCnvSvc" };
+EventSelector.REQ1 = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0";
