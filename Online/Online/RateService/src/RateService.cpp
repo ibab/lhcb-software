@@ -46,7 +46,8 @@ DECLARE_ALGORITHM_FACTORY(RateService)
     : Algorithm(name, ploc),
     m_dimName(name),
     m_found(false),
-    m_dimInfoMonRate(0)
+    m_dimInfoMonRate(0),
+    m_numberOfMonRatesPublisher(0)
 {
   m_monRateServiceName = "*";
   declareProperty("SleepTime",sleepTime=5); // Sleeping time between events, in seconds
@@ -70,6 +71,12 @@ StatusCode RateService::initialize() {
     {
       msg << MSG::INFO << "Unable to find dim services." << endreq;
     }
+    
+    m_numberOfMonRatesPublisher = new RatePublisher();
+    m_numberOfMonRatesPublisher->setValue(0);
+    m_numberOfMonRatesPublisher->setComment("Number of MonRates processed by this RateService");
+    m_numberOfMonRatesPublisher->publishService(m_UTGID + "/NumberOfMonRates");
+    
   }catch(const std::exception & e)
   {
     msg << MSG::WARNING << "EXCEPTION CAUGHT IN RateService::initialize() : "
@@ -207,6 +214,8 @@ StatusCode RateService::execute() {
     {
       msg << MSG::INFO << "Unable to find " << m_monRateServiceName << endreq;
     }
+    
+    m_numberOfMonRatesPublisher->updateService(m_dimInfoMonRate.size());
   }catch(std::exception e)
   {
    msg << MSG::WARNING << "EXCEPTION CAUGHT INT RateService::execute()" << endreq;
@@ -233,6 +242,9 @@ StatusCode RateService::finalize() {
   {
     if( *it ) delete (*it);
   }
+  
+  if(m_numberOfMonRatesPublisher)
+    delete m_numberOfMonRatesPublisher;
   
   return StatusCode::SUCCESS;
 }

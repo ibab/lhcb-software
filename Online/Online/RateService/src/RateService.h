@@ -18,6 +18,8 @@
 #include <vector>
 #include <stdlib.h>
 
+#include "RatePublisher.h"
+
 // boost
 #include "boost/lexical_cast.hpp"
 #include<time.h>
@@ -79,6 +81,8 @@ private:
   
   /// Time to sleep betwen 
   int sleepTime;
+  
+  RatePublisher * m_numberOfMonRatesPublisher;
 
   
   /** Checks if a MonRate service is already being processed by a DimInFoMonRate.
