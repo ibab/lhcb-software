@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/Gaucho/MonObject.h,v 1.10 2008-08-04 07:12:38 evh Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/Gaucho/MonObject.h,v 1.11 2008-08-29 08:41:44 frankb Exp $
 #ifndef GAUCHO_MONOBJECT_H
 #define GAUCHO_MONOBJECT_H 1
 
@@ -23,7 +23,6 @@
 // #include <boost/serialization/list.hpp>
 #include "GaudiKernel/IMessageSvc.h"
 #include "GaudiKernel/MsgStream.h"
-#include <pthread.h>
 
 /** @class ClassName MonObject.h OnlineKernel/MonObject.h
  *
@@ -100,9 +99,6 @@ public:
   virtual void save(boost::archive::binary_oarchive & ar, const unsigned int version);
   virtual void load(boost::archive::binary_iarchive & ar, const unsigned int version);
 
-  void lock();
-  void unlock();
-
   std::string comments(){return m_comments;}
   void setComments(std::string comm){m_comments = comm;}
 
@@ -139,7 +135,6 @@ protected:
   MsgStream createMsgStream();
 
 private:
-  pthread_mutex_t  m_mtx;
 
   friend class boost::serialization::access;
 };

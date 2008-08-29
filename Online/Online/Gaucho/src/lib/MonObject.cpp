@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/lib/MonObject.cpp,v 1.12 2008-08-06 15:40:59 evh Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/lib/MonObject.cpp,v 1.13 2008-08-29 08:41:44 frankb Exp $
 
 // Include files
 #include "Gaucho/MonObject.h"
@@ -13,7 +13,6 @@ MonObject::MonObject(IMessageSvc* msgSvc, const std::string& source, int version
   m_comments = "";
   m_endOfRun = false;
   m_serviceActive = true;
-  pthread_mutex_init(&m_mtx,NULL);
 }
 
 MonObject::~MonObject(){
@@ -35,10 +34,6 @@ void MonObject::load(boost::archive::binary_iarchive & ar, const unsigned int ve
   ar & m_version;
   ar & m_comments;
   ar & m_endOfRun;
-}
-
-void MonObject::lock(){
-  pthread_mutex_lock(&m_mtx);
 }
 
 void MonObject::combine(MonObject* monObject) {
@@ -68,10 +63,6 @@ void MonObject::copyFrom(MonObject* monObject){
 
 void MonObject::reset(){
   return;
-}
-
-void MonObject::unlock(){
-    pthread_mutex_unlock(&m_mtx);
 }
 
 MsgStream MonObject::createMsgStream(){
