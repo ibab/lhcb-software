@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.347 2008-08-27 14:15:26 pkoppenb Exp $
+! $Id: release.notes,v 1.348 2008-08-29 15:47:43 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
 
+!========================== DaVinciTools v17r1 2008-08-29 ===================
 ! 2008-08-27 - Patrick Koppenburg
  - Moved ParticleFilter from DaVinciFilter.
 
