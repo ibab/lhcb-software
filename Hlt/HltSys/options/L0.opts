@@ -4,4 +4,7 @@
 //---------------------------
 // LO
 //--------------------------
-#include "$L0DUROOT/options/ReplaceL0DUBankWithEmulated.opts"
+// #include "$L0DUROOT/options/ReplaceL0DUBankWithEmulated.opts"
+//
+#include "$L0DUROOT/options/L0DUBankSwap.opts"
+#include "$L0DUROOT/options/DefaultTCK.opts"
