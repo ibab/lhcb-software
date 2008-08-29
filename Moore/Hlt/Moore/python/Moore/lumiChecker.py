@@ -16,14 +16,26 @@ class LumiAlg(GaudiPython.PyAlgorithm):
     """ Constructor """
     GaudiPython.PyAlgorithm.__init__( self , name )
     self.name=name
+    
     ## does not work: GaudiPython.declareProperty( "String", m_string = "hundred")
+    # defaults of properties
     self.PreScale=40
-
+    self.Interval=0
+    
     print 'python algorithm',self.name,': __init__'
 
 #----------------------------------
   def initialize(self):
+    # The algorithm needs some knowledge about Gaudi
+    # this can only be done at initialization not at instantiation
+    appMgr = self.AppMgr
+    self.EventSvc=appMgr.evtsvc()
+    self.HistSvc=appMgr.histsvc()
+    self.LumiAnnSvc=appMgr.service('LumiANNSvc', 'IANNSvc')
+
+    # event counter
     self.nevents=0
+    self.gpsPrevious=0
     print 'python algorithm',self.name,'initialises'
 
     # set up the naming in the TES etc. - would be nice to get from configurables
@@ -46,6 +58,7 @@ class LumiAlg(GaudiPython.PyAlgorithm):
 
     self.analysisDefined=False
     self.allCounters=[]
+    self.lucoDict={}
     
     # the results
     self.rValue={}
@@ -78,9 +91,12 @@ class LumiAlg(GaudiPython.PyAlgorithm):
       
     if prflag and False:
       self.testingHistos(prflag)
+
+    ## ODIN time
+    timer = self.lookAtOdin()
     
     ## store and subtract each "N" events >>> configure "N"
-    if self.nevents%self.PreScale==0:
+    if (self.Interval == 0 and self.nevents%self.PreScale==0) or timer:
       for cn in self.allCounters:
         self.storeAndSubtract(cn)
     
@@ -111,13 +127,20 @@ class LumiAlg(GaudiPython.PyAlgorithm):
     '''
     analyses the list of all histos and picks out the counter names only
     '''
+    # use ANNSvc to set up lookup table for counter names/keys
+    for lc in self.LumiAnnSvc.items("LumiCounters"):
+      self.lucoDict[lc.first]=lc.second
+
+    print self.lucoDict
+
     cl=[]
     for hn in ls:
+      if hn.endswith('_threshold'): continue
       if hn.startswith(prefix):
         cn=hn.replace(prefix,'')
         if len(cn):
           cl.append(cn)
-          print 'python algorithm',self.name,': found counter:',cn
+          print 'python algorithm',self.name,': found counter:',cn,' key',self.lucoDict[cn]
 
     return cl
     
@@ -136,6 +159,26 @@ class LumiAlg(GaudiPython.PyAlgorithm):
     ls = dumpResult.split('\n')
     return ls
     
+
+#----------------------------------
+  def lookAtOdin(self):
+    '''
+    calculates "R" for one counter
+    '''
+    odin = self.EventSvc['DAQ/ODIN']
+    now = odin.gpsTime()
+    if self.gpsPrevious:
+      delta = now - self.gpsPrevious
+      timer = delta/10**6 > self.Interval
+      if timer:
+        self.gpsPrevious = now
+    else:
+      self.gpsPrevious = now
+      delta=0
+      timer = False
+    if timer: print 'ODIN GPS time', now, delta, timer
+
+    return timer
     
 #----------------------------------
   def storeAndSubtract(self, ct):
@@ -145,22 +188,28 @@ class LumiAlg(GaudiPython.PyAlgorithm):
     # check if first time around
     try:
       hs=self.hStore[ct]
+      hs=self.hStore[ct+'_threshold']
       makeNew=False
     except KeyError:
       makeNew=True
       self.hStore[ct]={}
+      self.hStore[ct+'_threshold']={}
 
     bx_mean={}
     bx_frac={}
+    bx_thres={}
     # calculate the basic values per crossing type
     for BT in self.btype.keys():
       BTV=self.btype[BT]
       # get previous
       h1=self.HistSvc[self.histbaselumi+BTV+'/'+ct]
+      hT=self.HistSvc[self.histbaselumi+BTV+'/'+ct+'_threshold']
       if makeNew:
         hP=self.cloneHisto1D(h1, self.histbaselumiprev+BT+'/', ct, reset=True)
+        hPT=self.cloneHisto1D(hT, self.histbaselumiprev+BT+'/', ct+'_threshold', reset=True)
       else:
         hP=self.hStore[ct][BT]
+        hPT=self.hStore[ct+'_threshold'][BT]
 
       # subtract previous from present
       hP.scale(-1.)
@@ -168,7 +217,7 @@ class LumiAlg(GaudiPython.PyAlgorithm):
       ## print 'delta   ',ct,BT,BTV,hP.entries(),hP.sumAllBinHeights(),hP.mean()
       mean=hP.mean()
       # count number of entries above the cut (by subtracting below)
-      cutBins=7
+      cutBins=8
       nBelow=0
       for b in range(cutBins):
         nBelow+=hP.binHeight(b)
@@ -184,6 +233,15 @@ class LumiAlg(GaudiPython.PyAlgorithm):
       
       # copy present status to place for previous status for the next time
       self.hStore[ct][BT]=self.cloneHisto1D(h1, self.histbaselumiprev+BT+'/', ct)
+
+      # threshold histo: subtract previous from present
+      hPT.scale(-1.)
+      hPT.add(hT)
+      meanT=hPT.mean()
+      bx_thres[BT]=meanT
+      
+      # copy present status to place for previous status for the next time
+      self.hStore[ct+'_threshold'][BT]=self.cloneHisto1D(hT, self.histbaselumiprev+BT+'/', ct+'_threshold')
       # close the loop
       pass
 
@@ -191,14 +249,39 @@ class LumiAlg(GaudiPython.PyAlgorithm):
     corr_mean=bx_mean['BB']-bx_mean['BL']-bx_mean['BR']+bx_mean['EE']
     corr_frac=bx_frac['BB']-bx_frac['BL']-bx_frac['BR']+bx_frac['EE']
     try:
-      corr_logs = math.log(1.-bx_frac['BB']) + \
-                  math.log(1.-bx_frac['EE']) - \
-                  math.log(1.-bx_frac['BL']) - \
-                  math.log(1.-bx_frac['BR'])
+      corr_logs = -1.*(math.log(1.-bx_frac['BB']) + \
+                       math.log(1.-bx_frac['EE']) - \
+                       math.log(1.-bx_frac['BL']) - \
+                       math.log(1.-bx_frac['BR']))
     except:
-      corr_logs=0
+      corr_logs=-1.0
+    try:
+      corr_thres = -1.*(math.log(1.-bx_thres['BB']) + \
+                        math.log(1.-bx_thres['EE']) - \
+                        math.log(1.-bx_thres['BL']) - \
+                        math.log(1.-bx_thres['BR']))
+    except:
+      corr_thres=-1.0
     print 'python algorithm',self.name,': R-Results background corrected',ct,\
-          'mean',corr_mean,'fraction',corr_frac,'log-fraction',corr_logs,'at',self.nevents
+          'mean',corr_mean,'fraction',corr_frac,'log-fraction',corr_logs,\
+          'threshold',corr_thres,'at',self.nevents
+
+    # store result on the TES
+    resultTES=self.EventSvc['Hlt/LumiResult']
+    infoKey=self.lucoDict[ct]
+    if resultTES==None:
+      print 'TES result container not found',ct,infoKey
+    else:
+      if resultTES.hasInfo(infoKey+100):
+        print 'resultLocation already filled',ct,infoKey
+      else:
+        resultTES.addInfo(infoKey+100,corr_mean)
+        ##print 'result written on the TES at',ct,infoKey
+      if resultTES.hasInfo(infoKey+200):
+        print 'resultLocation already filled',ct,infoKey
+      else:
+        resultTES.addInfo(infoKey+200,corr_thres)
+        ##print 'result written on the TES at',ct,infoKey
 
     # store trends for ['mean','logZero']
     hM=self.HistSvc[self.histbaselumitrend+'mean_'+ct]
@@ -213,7 +296,7 @@ class LumiAlg(GaudiPython.PyAlgorithm):
         valNextZ=hZ.binHeight(b+1)
       else:
         valNextM=corr_mean
-        valNextZ=-corr_logs
+        valNextZ=-corr_thres
       x=0.5*(axis.binUpperEdge(b)+axis.binLowerEdge(b))
       hM.fill(x,valNextM-valM)
       hZ.fill(x,valNextZ-valZ)

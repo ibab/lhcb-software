@@ -101,7 +101,8 @@ class AnyAlg(GaudiPython.PyAlgorithm):
 
 # instantiate the user algorithms
 lumiAlg=LumiAlg('LumiAlgorithm')
-Moore().userAlgorithms=['LumiAlgorithm']
+#Moore().userAlgorithms=['LumiAlgorithm']
+Moore().userAlgorithms=['LumiPrepareResult','LumiAlgorithm','LumiPutResult']
 
 # optionally, we can enable some auditors...
 # Moore().enableAuditor = [ NameAuditor() ]
@@ -110,12 +111,11 @@ Moore().applyConf()
 
 # The user algorithm may need some knowledge about Gaudi
 appMgr = GaudiPython.AppMgr()
-evt=appMgr.evtsvc()
-lumiAlg.EventSvc=evt
-histsvc=appMgr.histsvc()
-lumiAlg.HistSvc=histsvc
+lumiAlg.AppMgr = appMgr
+
 # test prescaler
-lumiAlg.PreScale=25
+lumiAlg.PreScale=25 # in events
+lumiAlg.Interval=100 # (in seconds)
 
 # and tell the world how we are configured
 print Moore()
