@@ -1,5 +1,7 @@
-// $Id: gslSVDsolver.cpp,v 1.6 2008-04-22 11:52:32 wouter Exp $
+// $Id: gslSVDsolver.cpp,v 1.7 2008-08-29 13:09:11 wouter Exp $
 // Include files 
+
+#include <cmath>
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
@@ -29,6 +31,7 @@ gslSVDsolver::gslSVDsolver( const std::string& type,
   declareProperty("SVDJacobi" ,           m_svdJacobi  = false);
   declareProperty("SVDEpsilon",           m_svdEpsilon = 0.0  );
   declareProperty("SVDSetSmallestToZero", m_nZero      = 0    );
+  declareProperty("EigenValueThreshold", m_eigenValueThreshold = -1 ) ;
   declareProperty( "NumberOfPrintedEigenvalues", m_numberOfPrintedEigenvalues = 20 ) ;
 }
 //=============================================================================
@@ -118,7 +121,19 @@ bool gslSVDsolver::compute(AlSymMat& symMatrix, AlVec& vector) const {
        (*gsl_vector_ptr(vectorS, size-1-i)) = 0;
     }
   }
-
+  size_t numremoved(0) ;
+  if(m_eigenValueThreshold>0) {
+    info() << "Removing eigenvalues smaller than " << m_eigenValueThreshold << endmsg ;
+    for (unsigned i = 0u; i < size; ++i) {
+      double* s = gsl_vector_ptr(vectorS, i);
+      if (std::abs(*s) < m_eigenValueThreshold) {
+	(*s) = 0; 
+	++numremoved ;
+      }
+    }
+  }
+  
+  info() << "Number of removed eigenvalues = " << numremoved << endreq ;
   debug() << "==> Regularised Vector S  = " << (*vectorS) << endmsg;
   
   // Replace symMatrix with its inverse (the covariance matrix)
