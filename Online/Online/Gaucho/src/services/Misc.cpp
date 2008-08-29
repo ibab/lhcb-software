@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <algorithm>
 #include "Gaucho/services/Misc.h"
 
 Misc::Misc()
