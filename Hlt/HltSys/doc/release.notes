@@ -12,6 +12,11 @@ Purpose: LHCb High Level Trigger packages.
  . Prepare for working version in the pit.
  . New packages HltConf, HltHidValley
 
+! 2008-08-29 - Jaap Panman
+ - add old-style opts files to check in the pit
+ - HltLumiReadHistos.py: add binary histos
+
+
 ! 2008-08-27 - Patrick Koppenburg
  - Add HidValley package
  - Comment bankKiller. Restore it when building on top of v25r1.

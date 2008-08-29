@@ -1,7 +1,6 @@
 //---------------------------
 // HLT Reconstruction
 //--------------------------
-#include "$HLTSYSROOT/options/HltRecoSequence.opts"
 // init is needed for ANNSvc
 #include "$HLTSYSROOT/options/HltLumiInit.opts"
 
@@ -45,7 +44,6 @@ Hlt1LumiAlleySequence.Members = {
 // *************************************************
 // Reconstruction envelope
 Hlt1LumiRecoSequence.Members = {
-  "GaudiSequencer/HltRecoSequence",
   "DummyLumiAlley/HltDummyReco"
 };
 
@@ -53,24 +51,10 @@ Hlt1LumiRecoSequence.Members = {
 // *************************************************
 // Counting (always pass)
 HltLumiCountSequence.Members = {
-  "LumiCountTracks/LumiCountVelo",
-  "LumiCountTracks/LumiCountRZVelo",
-  "GaudiSequencer/HltBWRZVeloSequence",
-  "LumiCountHltTracks/LumiCountHltBWRZVelo",
-//  "LumiCountTracks/LumiCountMuon",
-  "LumiCountVertices/LumiCountPV2D",
-//  "LumiCountVertices/LumiCountPV3D",
   "LumiFromL0DU/LumiCountSpd",
   "LumiFromL0DU/LumiCountPU",
   "LumiFromL0DU/LumiCountET",
   "DummyLumiAlley/HltDummyCount"
-};
-
-// *************************************************
-// filter to get backward tracks (always pass)
-HltBWRZVeloSequence.Members += { 
-  "HltTrackFilter/HltPrepareBWRZVelo",
-  "DummyLumiAlley/HltDummyBWRZVelo"
 };
 
 // *************************************************
@@ -88,82 +72,44 @@ Hlt1LumiBXTypesSequence.Members = {
 // place for histograms with NoBeam condition
 Hlt1LumiNoBeamSequence.Members = {
   "OdinTypesFilter/FilterNoBeam",
-  "HltLumiOdinReader/OdinReaderNoBeam"
+  "HltLumiOdinReader/OdinReaderNoBeam",
+  "LumiHistoMaker/HistoNoBeam"
 };
 
 // place for histograms with BeamCrossing condition
 Hlt1LumiBeamCrossingSequence.Members = {
   "OdinTypesFilter/FilterBeamCrossing",
-  "HltLumiOdinReader/OdinReaderBeamCrossing"
+  "HltLumiOdinReader/OdinReaderBeamCrossing",
+  "LumiHistoMaker/HistoBeamCrossing"
 };
 
 // place for histograms with SingleBeamRight condition
 Hlt1LumiSingleBeamRightSequence.Members = {
   "OdinTypesFilter/FilterSingleBeamRight",
-  "HltLumiOdinReader/OdinReaderSingleBeamRight"
+  "HltLumiOdinReader/OdinReaderSingleBeamRight",
+  "LumiHistoMaker/HistoSingleBeamRight"
 };
 
 // place for histograms with SingleBeamLeft condition
 Hlt1LumiSingleBeamLeftSequence.Members = {
   "OdinTypesFilter/FilterSingleBeamLeft",
-  "HltLumiOdinReader/OdinReaderSingleBeamLeft"
+  "HltLumiOdinReader/OdinReaderSingleBeamLeft",
+  "LumiHistoMaker/HistoSingleBeamLeft"
 };
 
 
 //-------------------------------------------------------------------------
 // HLT LumiAlley options
 //-------------------------------------------------------------------------
-Hlt1LumiRecoSequence.ModeOR = true;         // should always pass
+Hlt1LumiRecoSequence.ModeOr = true;         // should always pass
 Hlt1LumiRecoSequence.ShortCircuit = false;  // execute the last always
 Hlt1LumiRecoSequence.MeasureTime = true;
 // Hlt1LumiRecoSequence.OutputLevel=3;
 
-Hlt1LumiPreRecoSequence.MeasureTime = true;
-// Hlt1LumiPreRecoSequence.OutputLevel=3;
-
-HltLumiCountSequence.ModeOR = true;         // should always pass
+HltLumiCountSequence.ModeOr = true;         // should always pass
 HltLumiCountSequence.ShortCircuit = false;  // execute the last always
 HltLumiCountSequence.MeasureTime = true;
 // HltLumiCountSequence.OutputLevel=3;
-
-// LumiCountVelo.OutputLevel=2;
-LumiCountVelo.InputSelection="Hlt/Track/Velo";
-LumiCountVelo.CounterName="Velo";
-LumiCountVelo.OutputContainer="Hlt/LumiSummary";
-
-// LumiCountRZVelo.OutputLevel=2;
-LumiCountRZVelo.InputSelection="Hlt/Track/RZVelo";
-LumiCountRZVelo.CounterName="RZVelo";
-LumiCountRZVelo.OutputContainer="Hlt/LumiSummary";
-
-HltBWRZVeloSequence.MeasureTime = true;
-HltBWRZVeloSequence.ModeOR = true;         // should always pass
-
-HltPrepareBWRZVelo.InputSelection   = "TES:Hlt/Track/RZVelo";
-HltPrepareBWRZVelo.AddInfo = false;
-HltPrepareBWRZVelo.FilterDescriptor = {"IsBackward,>,0.5"};
-HltPrepareBWRZVelo.OutputSelection     = "BWRZVelo";
-HltPrepareBWRZVelo.RequirePositiveInputs = false;
-
-// LumiCountHltBWRZVelo.OutputLevel=2;
-LumiCountHltBWRZVelo.InputSelection="BWRZVelo";
-LumiCountHltBWRZVelo.CounterName="RZVeloBW";
-LumiCountHltBWRZVelo.OutputContainer="Hlt/LumiSummary";
-
-// LumiCountMuon.OutputLevel=2;
-LumiCountMuon.InputSelection="Rec/Track/Muons";
-LumiCountMuon.CounterName="Muon";
-LumiCountMuon.OutputContainer="Hlt/LumiSummary";
-
-// LumiCountPV2D.OutputLevel=2;
-LumiCountPV2D.InputSelection="Hlt/Vertex/PV2D";
-LumiCountPV2D.CounterName="PV2D";
-LumiCountPV2D.OutputContainer="Hlt/LumiSummary";
-
-// LumiCountPV3D.OutputLevel=2;
-LumiCountPV3D.InputSelection="Hlt/Vertex/PV3D";
-LumiCountPV3D.CounterName="PV3D";
-LumiCountPV3D.OutputContainer="Hlt/LumiSummary";
 
 // LumiCountSpd.OutputLevel=2;
 LumiCountSpd.InputSelection="Trig/L0/L0DUReport";
@@ -192,29 +138,28 @@ FilterNoBeam.BXTypes={"NoBeam"};
 // OdinReaderNoBeam.OutputLevel=3;
 Hlt1LumiNoBeamSequence.MeasureTime = true;
 // Hlt1LumiNoBeamSequence.OutputLevel=3;
+HistoNoBeam.InputVariables={"SPDMult","CaloEt"};
 
 FilterBeamCrossing.BXTypes={"BeamCrossing"};
 // OdinReaderBeamCrossing.OutputLevel=3;
 Hlt1LumiBeamCrossingSequence.MeasureTime = true;
 // Hlt1LumiBeamCrossingSequence.OutputLevel=3;
+HistoBeamCrossing.InputVariables={"SPDMult","CaloEt"};
 
 FilterSingleBeamRight.BXTypes={"SingleBeamRight"};
 // OdinReaderSingleBeamRight.OutputLevel=3;
 Hlt1LumiSingleBeamRightSequence.MeasureTime = true;
 // Hlt1LumiSingleBeamRightSequence.OutputLevel=3;
+HistoSingleBeamRight.InputVariables={"SPDMult","CaloEt"};
 
 FilterSingleBeamLeft.BXTypes={"SingleBeamLeft"};
 // OdinReaderSingleBeamLeft.OutputLevel=3;
 Hlt1LumiSingleBeamLeftSequence.MeasureTime = true;
 // Hlt1LumiSingleBeamLeftSequence.OutputLevel=3;
-
-//CollectLumiData.OutputLevel=3;
-// HltLumiOdinReader.OutputLevel=3;
+HistoSingleBeamLeft.InputVariables={"SPDMult","CaloEt"};
 
 // OdinTypesFilter.OutputLevel=3;
 OdinTypesFilter.TriggerTypes={"ALL"};
-//OdinTypesFilter.TriggerTypes={"Reserve","PhysicsTrigger","RandomTrigger","TimingTrigger","CalibrationTrigger"};
-//OdinTypesFilter.TriggerTypes={"Reserve"};  // should become "Random"
 OdinTypesFilter.BXTypes={"NoBeam","BeamCrossing","SingleBeamRight","SingleBeamLeft"};
 
 PrescaleLumiDecision.AcceptFraction=1.0;
