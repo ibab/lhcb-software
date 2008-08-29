@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.76 2008-08-27 15:08:56 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.77 2008-08-29 17:19:50 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -873,9 +873,10 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
               if ( !OK )
               {
                 std::ostringstream mess;
-                mess << "EventID Mismatch : HPD " << hpdID << " L1IngressHeader = "
-                     << ingressWord.eventID()
-                     << " HPDHeader = " << hpdBank->eventID();
+                mess << "EventID Mismatch : HPD L0ID=" 
+                     <<  hpdBank->level0ID() << " " << hpdID;
+                //<< " L1IngressHeader = " << ingressWord.eventID()
+                //<< " HPDHeader = "       << hpdBank->eventID();
                 Error( mess.str() );
               }
               else
