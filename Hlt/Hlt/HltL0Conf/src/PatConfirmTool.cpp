@@ -1,4 +1,4 @@
-// $Id: PatConfirmTool.cpp,v 1.10 2008-07-21 12:54:06 albrecht Exp $
+// $Id: PatConfirmTool.cpp,v 1.11 2008-08-29 14:33:18 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -43,6 +43,7 @@ PatConfirmTool::PatConfirmTool( const std::string& type,
   declareProperty("nSigmaTx",m_nSigmaTx=5.);
   declareProperty("nSigmaTy",m_nSigmaTy=5.);
   declareProperty("debugMode", m_debugMode = false);
+  declareProperty("restrictSearch",m_restrictSearch=true);
   declareProperty("minHitsInOT", m_minHitsInOT = 14 );
 }
 //=============================================================================
@@ -75,10 +76,10 @@ StatusCode PatConfirmTool::initialize(){
 
   m_l0ConfExtrapolator = tool<IL0ConfExtrapolator>("L0ConfExtrapolator");
 
-  always()<<"nSigma:  X = "<<m_nSigmaX<<"  , y = "<<m_nSigmaY
-          <<" ,  Tx = "<<m_nSigmaTx<<"  , Ty = "<<m_nSigmaTy<<endmsg;
+  debug()<<"PatConfirmTool configured with the following search windows: "<<endmsg;
+  debug()<<"nSigma:  X = "<<m_nSigmaX<<"  , y = "<<m_nSigmaY
+         <<" ,  Tx = "<<m_nSigmaTx<<"  , Ty = "<<m_nSigmaTy<<endmsg;
   
-
   return sc;
 
 }
@@ -130,22 +131,28 @@ StatusCode PatConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
 
   if ( m_tHitManager->hits().size() >= minHits ) {
     m_patSeedingTool->prepareHits();
-    // modify the covariance matrix, as PatSeedingTool will search in the one
-    // sigma range per default
-    LHCb::State state(seedState);
-    Gaudi::TrackSymMatrix stateCov = state.covariance();
-    stateCov(0,0) *= m_nSigmaX * m_nSigmaX;
-    stateCov(1,1) *= m_nSigmaY * m_nSigmaY;
-    stateCov(2,2) *= m_nSigmaTx * m_nSigmaTx;
-    stateCov(3,3) *= m_nSigmaTy * m_nSigmaTy;
-    state.setCovariance(stateCov);
-    //sc=m_patSeedingTool->performTracking(tmpTracks, &state);
-    sc=m_patSeedingTool->performTracking(tmpTracks );
+  
+    if( m_restrictSearch ){
+      
+      // modify the covariance matrix, as PatSeedingTool will search in the one
+      // sigma range per default
+      LHCb::State state(seedState);
+      Gaudi::TrackSymMatrix stateCov = state.covariance();
+      stateCov(0,0) *= m_nSigmaX * m_nSigmaX;
+      stateCov(1,1) *= m_nSigmaY * m_nSigmaY;
+      stateCov(2,2) *= m_nSigmaTx * m_nSigmaTx;
+      stateCov(3,3) *= m_nSigmaTy * m_nSigmaTy;
+      state.setCovariance(stateCov);
+      sc=m_patSeedingTool->performTracking(tmpTracks, &state);
+    }
+    else{
+      sc=m_patSeedingTool->performTracking(tmpTracks );
+    }
+    
     if(sc.isFailure())
       if (msgLevel(MSG::DEBUG) ) debug() << "seeding failed!!"<<endmsg;
-    
   }
-
+    
   if (m_debugMode) {
     tTracking.stop();
     m_DataStore->trackingTime.push_back( tTracking.eTotalTime() );    
@@ -155,27 +162,27 @@ StatusCode PatConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
       debug() << "tracks found sofar in PatSearch Tool: " << tmpTracks.size() << endreq;
     }
   }
-
+  
   for( std::vector<LHCb::Track*>::iterator it1 = tmpTracks.begin(); 
        it1 != tmpTracks.end() ; 
        ++it1 ) {
-
+    
     bool saveTrack = true;
     
     for( LHCb::Tracks::iterator it2=outputTracks.begin();
          it2!=outputTracks.end(); ++it2 ){
       
-         if( isClone(*(*it1) , *(*it2) ) ) saveTrack = false;
+      if( isClone(*(*it1) , *(*it2) ) ) saveTrack = false;
     }
     if( saveTrack ){
       outputTracks.push_back( (*it1)->clone() );
-      if(msgLevel(MSG::DEBUG)) 
+      if(msgLevel(MSG::DEBUG))
         debug()<<"keep track with pt(T): "<<(*it1)->pt() <<endmsg;
     }
     delete  *it1;
   }
   tmpTracks.clear();
-
+  
   m_tHitManager->clearHits();
   
   return sc;
@@ -199,7 +206,7 @@ ParabolaHypothesis PatConfirmTool::prepareT( const LHCb::State& seedState ,std::
   //get lhcbids from hits and fill output
   Tf::TStationHitManager<PatForwardHit>::HitRange::const_iterator it;
   for ( it = hits.begin();it != hits.end();++it){
-  PatForwardHit* myHit = (*it);
+    PatForwardHit* myHit = (*it);
     LHCb::LHCbID id = myHit->hit()->lhcbID();
     ids.push_back(id);
   }

@@ -1,4 +1,4 @@
-// $Id: PatConfirmTool.h,v 1.7 2008-07-21 12:54:01 albrecht Exp $
+// $Id: PatConfirmTool.h,v 1.8 2008-08-29 14:33:15 albrecht Exp $
 #ifndef PATCONFIRMTOOL_H 
 #define PATCONFIRMTOOL_H 1
 
@@ -59,7 +59,7 @@ private:
   
   //variables declared in job options
   double m_nSigmaX, m_nSigmaY, m_nSigmaTx, m_nSigmaTy ;
-
+  bool m_restrictSearch;
   bool m_debugMode;
   unsigned m_minHitsInOT;
 
