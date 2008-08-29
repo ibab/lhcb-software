@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichMarkovRingFinderMoni
  *
- *  $Id: RichMarkovRingFinderMoni.cpp,v 1.40 2008-08-29 10:50:42 jonrob Exp $
+ *  $Id: RichMarkovRingFinderMoni.cpp,v 1.41 2008-08-29 12:13:52 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -114,7 +114,7 @@ StatusCode Moni::execute()
     // photon yield
     plot1D( (*iR)->richRecPixels().size(),
             hid(rad,"totalPhotons"),
-            RAD+" Photon Yield",
+            RAD+" Photon Yield : Trackless Rings",
             -0.5, 50.5, 51 );
     
     // refit the ring ...
