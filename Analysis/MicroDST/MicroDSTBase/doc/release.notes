@@ -1,10 +1,16 @@
-!$Id: release.notes,v 1.14 2008-08-13 16:53:27 jpalac Exp $
+!$Id: release.notes,v 1.15 2008-08-29 05:51:12 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTBase
 ! Responsible : Juan Palacios
 ! Purpose     : Base classes for MicroDST algorithms and tools, plus helper
 !               functions and functors.
 !-----------------------------------------------------------------------------
+
+! 2008-08-29 - Juan PALACIOS
+ - Add MicroDST/ObjectClonerAlg.h
+  . Templated class for the simplest object cloning MicroDSTAlgorithms.
+ - cmt/requirements
+  . Increase version to v1r2
 
 ! 2008-08-13 - Juan PALACIOS
  - MicroDST/Functors.hpp, MicroDST/MicroDSTCommon.icpp
