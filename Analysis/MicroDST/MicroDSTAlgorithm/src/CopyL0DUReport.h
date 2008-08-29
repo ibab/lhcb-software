@@ -1,11 +1,12 @@
-// $Id: CopyL0DUReport.h,v 1.1 2008-04-16 13:19:53 jpalac Exp $
+// $Id: CopyL0DUReport.h,v 1.2 2008-08-29 07:08:56 jpalac Exp $
 #ifndef COPYL0DUREPORT_H 
 #define COPYL0DUREPORT_H 1
 
 // Include files
-// from Gaudi
-#include "MicroDST/MicroDSTAlgorithm.h"
-
+// from MicroDST
+#include "MicroDST/ObjectClonerAlg.h"
+// from LHCb
+#include "Event/L0DUReport.h"
 
 /** @class CopyL0DUReport CopyL0DUReport.h
  *  
@@ -15,34 +16,21 @@
  *  TES location defined by InputLocation, and is cloned and put in 
  *  TES location "/Event" + OutputPrefix + InputLocation. 
  *  If InputLocation already contains a leading "/Event" it is removed.
- *  If no InputLocation is specified the header is taken from LHCb::L0DUReportLocation::Default
  *
  *  <b>Example</b>: Clone the LHCb::L0DUReport from default location ("Trig/L0/L0DUReport") 
  *  to "/Event/MyLocation/Trig/L0/L0DUReport"
  *  @code
  *  // Add a sequencer
  *  ApplicationMgr.TopAlg += { "GaudiSequencer/MyStuffCopier" } ;
- *  MyStuffCopier.Members += {"CopyL0DUReport"};
+ *  MyStuffCopier.Members += {"MicroDST::ObjectClonerAlg<LHCb::L0DUReport>/CopyL0DUReport"};
+ *  CopyL0DUReport.InputLocation = "Trig/L0/L0DUReport";
  *  CopyL0DUReport.OutputPrefix = "MyLocation";
  *  @endcode
  *
  *  @author Juan PALACIOS juan.palacios@nikhef.nl
  *  @date   2008-04-16
  */
-class CopyL0DUReport : public MicroDSTAlgorithm {
-public: 
-  /// Standard constructor
-  CopyL0DUReport( const std::string& name, ISvcLocator* pSvcLocator );
-
-  virtual ~CopyL0DUReport( ); ///< Destructor
-
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
-
-protected:
-
-private:
-  typedef MicroDST::BasicCopy<LHCb::L0DUReport> L0DUReportCopy;
-};
+typedef MicroDST::ObjectClonerAlg<LHCb::L0DUReport> CopyL0DUReport;
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( CopyL0DUReport )
 #endif // COPYL0DUREPORT_H

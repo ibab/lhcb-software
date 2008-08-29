@@ -1,11 +1,12 @@
-// $Id: CopyMCHeader.h,v 1.5 2008-03-20 14:10:57 jpalac Exp $
+// $Id: CopyMCHeader.h,v 1.6 2008-08-29 07:08:56 jpalac Exp $
 #ifndef COPYMCHEADER_H 
 #define COPYMCHEADER_H 1
 
 // Include files
-// from Gaudi
-#include "MicroDST/MicroDSTAlgorithm.h"
-
+// from MicroDST
+#include "MicroDST/ObjectClonerAlg.h"
+// from LHCb
+#include "Event/MCHeader.h"
 
 /** @class CopyMCHeader CopyMCHeader.h
  *  
@@ -36,20 +37,6 @@
  *  @author Juan PALACIOS juan.palacios@nikhef.nl
  *  @date   2007-11-02
  */
-class CopyMCHeader : public MicroDSTAlgorithm {
-public: 
-  /// Standard constructor
-  CopyMCHeader( const std::string& name, ISvcLocator* pSvcLocator );
-
-  virtual ~CopyMCHeader( ); ///< Destructor
-
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
-
-protected:
-
-private:
 
   struct MCHeaderCopy 
   {
@@ -77,7 +64,9 @@ private:
     }
 
   };
-  
 
-};
+typedef MicroDST::ObjectClonerAlg<LHCb::MCHeader> CopyMCHeader;
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( CopyMCHeader )
+
 #endif // COPYMCHEADER_H

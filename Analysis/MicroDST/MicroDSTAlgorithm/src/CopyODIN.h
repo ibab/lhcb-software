@@ -1,10 +1,12 @@
-// $Id: CopyODIN.h,v 1.4 2008-03-19 18:59:53 jpalac Exp $
+// $Id: CopyODIN.h,v 1.5 2008-08-29 07:08:56 jpalac Exp $
 #ifndef COPYODIN_H 
 #define COPYODIN_H 1
 
 // Include files
-// from Gaudi
-#include "MicroDST/MicroDSTAlgorithm.h"
+// MicroDST
+#include "MicroDST/ObjectClonerAlg.h"
+// from LHCb
+#include "Event/ODIN.h"
 
 /** @class CopyODIN CopyODIN.h
  *  
@@ -21,7 +23,7 @@
  *  @code
  *  // Add a sequencer
  *  ApplicationMgr.TopAlg += { "GaudiSequencer/MyStuffCopier" } ;
- *  MyStuffCopier.Members += {"CopyODIN"};
+ *  MyStuffCopier.Members += {"MicroDST::ObjectClonerAlg<LHCb::ODIN>/CopyODIN"};
  *  CopyODIN.OutputPrefix = "MyLocation";
  *  @endcode
  *
@@ -29,20 +31,9 @@
  *  @author Juan PALACIOS
  *  @date   2007-10-15
  */
-class CopyODIN : public MicroDSTAlgorithm {
-public: 
-  /// Standard constructor
-  CopyODIN( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~CopyODIN( ); ///< Destructor
+typedef MicroDST::ObjectClonerAlg<LHCb::ODIN> CopyODIN;
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( CopyODIN )
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
-
-protected:
-
-private:
-  typedef MicroDST::BasicCopy<LHCb::ODIN> ODINCopy;
-};
 #endif // COPYODIN_H

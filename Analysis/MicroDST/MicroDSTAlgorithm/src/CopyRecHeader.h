@@ -1,10 +1,13 @@
-// $Id: CopyRecHeader.h,v 1.4 2008-03-19 18:59:53 jpalac Exp $
+// $Id: CopyRecHeader.h,v 1.5 2008-08-29 07:08:56 jpalac Exp $
 #ifndef COPYRECHEADER_H 
 #define COPYRECHEADER_H 1
 
+// MicroDST
+#include "MicroDST/ObjectClonerAlg.h"
+
 // Include files
-// from Gaudi
-#include "MicroDST/MicroDSTAlgorithm.h"
+// from LHCb
+#include "Event/RecHeader.h"
 
 
 /** @class CopyRecHeader CopyRecHeader.h
@@ -22,27 +25,15 @@
  *  @code
  *  // Add a sequencer
  *  ApplicationMgr.TopAlg += { "GaudiSequencer/MyStuffCopier" } ;
- *  MyStuffCopier.Members += {"CopyRecHeader"};
+ *  MyStuffCopier.Members += {""MicroDST::ObjectClonerAlg<LHCb::RecHeader>/CopyRecHeader"};
  *  CopyRecHeader.OutputPrefix = "MyLocation";
  *  @endcode
  *
  *  @author Juan PALACIOS juan.palacios@nikhef.nl
  *  @date   2007-10-15
  */
-class CopyRecHeader : public MicroDSTAlgorithm {
-public: 
-  /// Standard constructor
-  CopyRecHeader( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~CopyRecHeader( ); ///< Destructor
-
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
-
-protected:
-
-private:
-  typedef MicroDST::BasicCopy<LHCb::RecHeader> RecHeaderCopy;
-};
+typedef MicroDST::ObjectClonerAlg<LHCb::RecHeader> CopyRecHeader;
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( CopyRecHeader )
 #endif // COPYRECHEADER_H

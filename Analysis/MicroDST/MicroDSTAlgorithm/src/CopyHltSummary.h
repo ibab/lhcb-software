@@ -1,11 +1,12 @@
-// $Id: CopyHltSummary.h,v 1.1 2008-04-16 13:19:19 jpalac Exp $
+// $Id: CopyHltSummary.h,v 1.2 2008-08-29 07:08:56 jpalac Exp $
 #ifndef COPYHLTSUMMARY_H 
 #define COPYHLTSUMMARY_H 1
 
 // Include files
-// from Gaudi
-#include "MicroDST/MicroDSTAlgorithm.h"
-
+// from MicroDST
+#include "MicroDST/ObjectClonerAlg.h"
+// from LHCb
+#include "Event/HltSummary.h"
 
 /** @class CopyHltSummary CopyHltSummary.h
  *  
@@ -15,34 +16,21 @@
  *  TES location defined by InputLocation, and is cloned and put in 
  *  TES location "/Event" + OutputPrefix + InputLocation. 
  *  If InputLocation already contains a leading "/Event" it is removed.
- *  If no InputLocation is specified the header is taken from LHCb::HltSummaryLocation::Default
  *
  *  <b>Example</b>: Clone the LHCb::HltSummary from default location ("Hlt/Summary") 
  *  to "/Event/MyLocation/Hlt/Summary"
  *  @code
  *  // Add a sequencer
  *  ApplicationMgr.TopAlg += { "GaudiSequencer/MyStuffCopier" } ;
- *  MyStuffCopier.Members += {"CopyHltSummary"};
+ *  MyStuffCopier.Members += {"MicroDST::ObjectClonerAlg<HltSummary>/CopyHltSummary"};
  *  CopyHltSummary.OutputPrefix = "MyLocation";
+ *  CopyHltSummary.InputLocation = "Hlt/Summary";
  *  @endcode
  *
  *  @author Juan PALACIOS juan.palacios@nikhef.nl
  *  @date   2008-04-16
  */
-class CopyHltSummary : public MicroDSTAlgorithm {
-public: 
-  /// Standard constructor
-  CopyHltSummary( const std::string& name, ISvcLocator* pSvcLocator );
-
-  virtual ~CopyHltSummary( ); ///< Destructor
-
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
-
-protected:
-
-private:
-  typedef MicroDST::BasicCopy<LHCb::HltSummary> HltSummaryCopy;
-};
+typedef MicroDST::ObjectClonerAlg<LHCb::HltSummary> CopyHltSummary;
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( CopyHltSummary )
 #endif // COPYHLTSUMMARY_H
