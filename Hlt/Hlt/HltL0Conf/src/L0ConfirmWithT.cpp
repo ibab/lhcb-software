@@ -1,4 +1,4 @@
-// $Id: L0ConfirmWithT.cpp,v 1.10 2008-08-29 14:31:28 albrecht Exp $
+// $Id: L0ConfirmWithT.cpp,v 1.11 2008-08-29 14:33:12 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -33,7 +33,7 @@ L0ConfirmWithT::L0ConfirmWithT( const std::string& type,
   declareInterface<ITracksFromTrack>(this);
   declareInterface<ITrackView>(this);
   
-  declareProperty("trackingTool", m_trackingTool = "TsaConfirmTool");
+  declareProperty("trackingTool", m_trackingTool = "PatConfirmTool");
   declareProperty("debugMode",m_debugMode = false );
   declareProperty("particleType", m_particleTypeTMP = 0 );
 }
