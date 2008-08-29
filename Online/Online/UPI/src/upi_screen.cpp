@@ -318,15 +318,14 @@ int upic_move_cursor (Menu* m, Page* d, Item* i, int line)  {
       i = j;
       d = Page_address (i->father);    
     }
-    if ( i != 0 && d != 0 ) {
-      if (m->page.cur != d) m->page.cur = d;
-      Sys.item.cur = i;
-      Sys.param.cur = i->param.cur;
-      d->item.cur  = i;
-      d->cur_line  = line;
-    }
+    if (m->page.cur != d) m->page.cur = d;
+    Sys.item.cur = i;
+    Sys.param.cur = i->param.cur;
+    d->item.cur  = i;
+    d->cur_line  = line;
+    return UPI_NORMAL;
   }
-  return UPI_NORMAL;
+  return UPI_ERROR;
 }
 
 //---------------------------------------------------------------------------
@@ -353,14 +352,13 @@ int upic_draw_cursor (FLAG mode)    {
     }
     else    {
       d = Page_address (i->father);
-      if (d != m->page.cur)
-      {
+      if (d != m->page.cur)  {
         upic_move_cursor (m, d, i, d->cur_line);
         i = 0;
       }
     }
     row = d->cur_line;  
-    if (mode == ON)    {
+    if (mode == ON)  {
       attr = SCR::INVERSE | SCR::BOLD;
       if (i && !i->enabled)  {
         if (!upic_move_cursor (m, d, i, row)) upic_go_backward(m);
@@ -377,11 +375,11 @@ int upic_draw_cursor (FLAG mode)    {
     row++;
     if (i->type == PARAM)
       upic_draw_param (d, i->param.cur, row, attr, 0);
-    else    {
+    else if ( d )   {
       col = 1;
       scrc_put_chars (d->id, i->string, attr, row, col, 0);
     }
-    if (mode == ON) scrc_show_window (m->window, d->id);
+    if (d && mode == ON) scrc_show_window (m->window, d->id);
   }
   scrc_end_pasteboard_update (Sys.pb);
   return UPI_SS_NORMAL;

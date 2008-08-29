@@ -70,30 +70,24 @@ int upic_delete_command (int menu_id, int item_id)  {
   /*  First delete underlaying structure  */
   if (i->to) upic_delete_menu (i->to->id);
 
-  if (Sys.menu.cur == m)
-  {
-    Sys.item.cur = (Item*) 0;
+  Item* dropped = i;
+  upic_drop_item(i);
+  m->items--;
+  if (Sys.menu.cur == m)  {
+    Sys.item.cur = 0;
     upic_wakeup();
   }
 
-  if (i == d->item.cur) d->item.cur = i->next;
-  upic_drop_item (i);
-  m->items--;
-
 #ifdef SCREEN
-  /*  Rearrange the pages  */
-  while (d)
-  {
+  while (d)  {  //  Rearrange the pages
+    if ( d->item.cur = dropped ) d->item.cur=0;
     if (d->cur_line > row) d->cur_line--;
     else if (d->cur_line == row && d->item.cur)
-    {
       d->item.cur = d->item.cur->next;
-    }
 
     scrc_delete_line (d->id, row + 1);
     i = d->item.last;
-    if (d->next)
-    {
+    if (d->next)    {
       /* There is another Page */
       list_transfer_entry (d->next->item.first, &d->item, i, 0);
       if (!d->item.cur) d->item.cur = d->item.last;
@@ -102,25 +96,26 @@ int upic_delete_command (int menu_id, int item_id)  {
       d = d->next;
       row = 1;
     }
-    else
-    {
+    else    {
       /* This is the last Page */
       d->lines--;
       upic_change_page (m, d, m->width);
-      if (!d->lines)
-      {
-        if (d->prev)
-        {
-          /* This is the last line of the display. */
+      if (!d->lines)      {
+	Page* dprev = d->prev;
+        if ( dprev )  {
+          // This is the last line of the display.
           scrc_remove_display_from_window (d->id, m->window);
           upic_drop_page (d);
         }
-        else d->item.cur = 0;
-
-        if (m->page.cur == d) m->page.cur = d->prev;
+        else  {
+	  d->item.cur = 0;
+	}
+        if (m->page.cur == d) m->page.cur = dprev;
       }
-      else if (!d->item.cur) d->item.cur = d->item.last;
-      d = (Page*) 0;
+      else if (!d->item.cur)  {
+	d->item.cur = d->item.first;
+      }
+      d = 0;
     }
   }
   scrc_end_pasteboard_update (Sys.pb);
@@ -271,12 +266,12 @@ int upic_add_item (int id, const char* text_0, const char* text_1, int type)  {
   }
   m->items++;
   list_init (&i->param);
-  i->param.cur = (Param*) 0;
-  i->string = (char*) 0;
+  i->param.cur = 0;
+  i->string    = 0;
   upic_init_item_strings (i, text_0, text_1);
-  i->type    = type;
-  i->enabled = (type == COMMENT)?DISABLED:ENABLED;
-  i->to      = (Menu*) 0;
+  i->type      = type;
+  i->enabled   = (type == COMMENT)?DISABLED:ENABLED;
+  i->to        = 0;
 
   int len = strlen(i->string);
   if (len > m->width) m->width = len;
@@ -383,13 +378,13 @@ int upic_insert_item (int menu_id, int position, int id, const char* text_0, con
   m->items++;
 
   list_init (&i->param);
-  i->param.cur = (Param*) 0;
-  i->string = (char*) 0;
+  i->param.cur = 0;
+  i->string = 0;
   upic_init_item_strings (i, text_0, text_1);
 
   i->type    = type;
   i->enabled = (type == COMMENT)?DISABLED:ENABLED;
-  i->to      = (Menu*) 0;
+  i->to      = 0;
 
   if (Sys.param.first)  {
     list_transfer (&Sys.param, &i->param);
