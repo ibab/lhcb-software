@@ -6,6 +6,10 @@
 #include "RatePublisher.h"
 #include <string>
 
+
+
+#include "debugMacro.h"
+
 class MonRate;
 
 /* format of structured data sent by DIM

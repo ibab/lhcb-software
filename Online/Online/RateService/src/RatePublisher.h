@@ -5,6 +5,9 @@
 #include "dis.hxx"
 #include <string>
 
+
+#include "debugMacro.h"
+
 #define MAX_CAR 512
 
 /* format of structured data sent by DIM

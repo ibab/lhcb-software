@@ -6,6 +6,9 @@
 #include "RatePublisher.h"
 #include <string>
 
+
+#include "debugMacro.h"
+
 class MonRate;
 
 
@@ -43,7 +46,7 @@ public:
     *
     * @return True if no error.
    */
-  bool     extractData(longlong time);
+  bool extractData(longlong time);
   
   /** Method publishing the structured service.
     * 
@@ -61,7 +64,7 @@ private:
     */
   std::string makeServiceName(std::string nameHeader);
   
-  int getCounterFromMonRate();
+  double getCounterFromMonRate();
   std::string getCommentFromMonRate();
   
   /*====================================================*/
@@ -83,8 +86,8 @@ private:
   /*====================================================*/
   /** Counter values got from MonRate, used to make counter's value comparisons
     */
-  int  m_counterOldValue;
-  int m_counterNewValue;
+  double m_counterOldValue;
+  double m_counterNewValue;
   
   /** Time values got from MonRate, used to make time comparisons.
     */

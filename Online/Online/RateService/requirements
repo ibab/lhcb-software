@@ -1,0 +1,44 @@
+package RateService
+version v2r2
+
+
+# ================ structure =========================================
+
+branches src cmt doc options
+
+include_dirs      $(CONVERTERROOT)
+
+# ================ used packages =========================================
+#use MuonDAQ     v*    Muon
+#use MuonDet     v*    Det
+#use PatTools    v*    Pat
+#use MCEvent     v*    Event
+#use LinkerEvent v*    Event
+##use HltMuon     v*    Hlt -no_auto_imports
+#use   GaudiAlg      v*
+
+use GaudiKernel v*  
+use CLHEP v1 LCG_Interfaces
+use Boost v* LCG_Interfaces
+use OnlineKernel v* Online
+#use GaudiOnline v* Online
+use GaudiSvc v*
+use Gaucho v* Online
+use GaudiUtils v*
+
+
+# build a component library
+
+library RateService  ../src/*.cpp
+apply_pattern component_library library=RateService
+
+#macro Boost_config_version "1.35.0"
+#macro Boost_file_version "1_35"
+
+# private
+macro_append RateService_shlibflags "-lGaucho"
+private
+use AIDA        v* LCG_Interfaces
+#===============================================================
+
+

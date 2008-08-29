@@ -18,7 +18,7 @@
 using namespace std;
 
 
-
+#include "debugMacro.h"
 
 //forward declaration
 class RateExtractor;
@@ -26,6 +26,7 @@ class NOPExtractor;
 
 class MonRate;
 class TProfile;
+
 
 /* useful typedefs to make code easier to read.
  */

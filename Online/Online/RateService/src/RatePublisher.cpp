@@ -10,15 +10,15 @@ int min(int x, int y)
 
 void RatePublisher::printData()
 {
-  std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
-  std::cout << "comment = " << m_comment << std::endl;
-  std::cout << "value = " << m_value << std::endl;
-  std::cout << "in struct:" << std::endl;
-  std::cout << "m_rateData.comment = " << m_rateData.comment << std::endl;
-  std::cout << "m_rateData.value = " << m_rateData.value << std::endl;
-  std::cout << std::endl;
-  std::cout << "sent data size = " << sentDataSize() << std::endl;
-  std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
+  COUT_DEBUG("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+  COUT_DEBUG("comment = " << m_comment);
+  COUT_DEBUG("value = " << m_value)
+  COUT_DEBUG("in struct:")
+  COUT_DEBUG("m_rateData.comment = " << m_rateData.comment);
+  COUT_DEBUG("m_rateData.value = " << m_rateData.value);
+  COUT_DEBUG("");
+  COUT_DEBUG("sent data size = " << sentDataSize());
+  COUT_DEBUG("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 }
 
 RatePublisher::RatePublisher()
@@ -36,7 +36,7 @@ RatePublisher::~RatePublisher()
 
 void RatePublisher::updateService()
 {
-  std::cout << "RatePublisher::updateService()" << std::endl;
+  COUT_DEBUG("RatePublisher::updateService()");
   if(!m_structuredService)
     return;
   
@@ -64,13 +64,13 @@ void RatePublisher::updateService(double value)
 
 void RatePublisher::publishService(std::string serviceName)
 {
-  std::cout << "RatePublisher::publishService(std::string serviceName)" << std::endl;
+  COUT_DEBUG("RatePublisher::publishService(std::string serviceName)");
   m_serviceName = serviceName;
     
   char * tmpFormat = new char[s_rateServiceFormat.length()+1];
   strcpy(tmpFormat, s_rateServiceFormat.c_str());
 
-  std::cout << "CREATING SERVICE " << serviceName << " FORMAT = " << tmpFormat << std::endl;
+  COUT_DEBUG("CREATING SERVICE " << serviceName << " FORMAT = " << tmpFormat);
   
   fillRateData();
   

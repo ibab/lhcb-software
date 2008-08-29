@@ -21,20 +21,12 @@
 #include <iostream>
 #include <math.h>
 
-#define DISPLAY__DEBUG 1
-#define COUT_DEBUG(c) {}
-#if DISPLAY__DEBUG
-  #define COUT_DEBUG(c){ std::cout << "DimInfoMonRate.cpp l." << __LINE__ << " " << c << std::endl; }
-#endif
-
 /* Trivial finction to print a char * string.
  * Prints '.' for non printable characters.
  */
 void printChar(char * c, int size)
 {
   int i=0;
-  
-  bool flag = false;
   
   cout << "content (" << size << " bytes):" << endl;
   
@@ -70,27 +62,28 @@ DimInfoMonRate::DimInfoMonRate(std::string monRateSvcName,
     : DimInfo(monRateSvcName.c_str(),
               refreshTime,
 	      (float)-1),
-    m_sourceName(source),
-    
-    m_monRateServiceName(monRateSvcName),
-    m_monRate(0),
-    m_stringSize(-1),
-    m_currentCycleNumber(0),
-    m_monRateCreated(false),
-    m_pNOPExtractor(0)
+      m_monRateCreated(false),
+      m_monRateServiceName(monRateSvcName),
+      m_monRate(0),
+      m_profile(0),
+      m_currentCycleNumber(0),
+      m_msgSvc(0),
+      m_stringSize(-1),
+      m_sourceName(source),
+      m_pNOPExtractor(0)
 {
   //COUT_DEBUG("m_doubleServiceName = " << m_doubleServiceName)
 }
 
 int DimInfoMonRate::getCycleNumberFromMonRate()
 {
-  return m_profile->GetBinContent(6);
+  return (int)m_profile->GetBinContent(6);
 }
 
 longlong DimInfoMonRate::getTimeLastEventInCycleFromMonRate()
 {
   //COUT_DEBUG("getTimeLastEventInCycleFromMonRate");
-  longlong time = m_profile->GetBinContent(3);
+  longlong time = (longlong)m_profile->GetBinContent(3);
   //COUT_DEBUG("getTimeLastEventInCycleFromMonRate DONE");
   
   return time;
@@ -318,7 +311,9 @@ void DimInfoMonRate::extractData()
     
     //COUT_DEBUG("extractData    <=================");
     int newRates = lookForNewRates();
-    //COUT_DEBUG("extractData    new = " << newRates << "<=================");
+    
+    if(newRates != 0)
+      COUT_DEBUG("extractData    new = " << newRates << "<=================");
     
     //COUT_DEBUG("extractData   new counters search done");
     

@@ -7,12 +7,12 @@
 
 RateExtractor::RateExtractor(int counterId,
                              MonRate * pMonRate)
-     : m_pMonRate(pMonRate),
-       m_counterId(counterId),
-       m_oldTime(0),
-       m_newTime(0),
+     : m_counterId(counterId),
+       m_pMonRate(pMonRate),
        m_counterOldValue(0),
-       m_counterNewValue(0)
+       m_counterNewValue(0),
+       m_oldTime(0),
+       m_newTime(0)
 {
 }
 
@@ -31,12 +31,12 @@ std::string RateExtractor::makeServiceName(std::string nameHeader)
   
   std::string name = streamName.str();
   
-  std::cout << "###########################################" << std::endl;
-  std::cout << "###########################################" << std::endl;
-  std::cout << "m_counterId = " << m_counterId << std::endl;
-  std::cout << "name = " << name << std::endl;
-  std::cout << "###########################################" << std::endl;
-  std::cout << "###########################################" << std::endl;
+  COUT_DEBUG("###########################################")
+  COUT_DEBUG("###########################################");
+  COUT_DEBUG("m_counterId = " << m_counterId);
+  COUT_DEBUG("name = " << name);
+  COUT_DEBUG("###########################################");
+  COUT_DEBUG("###########################################");
   
   return name;
 }
@@ -47,18 +47,17 @@ void RateExtractor::publishService(std::string nameHeader)
   
   RatePublisher::publishService(serviceName);
   
-  std::cout << " FOR COUNTER " << m_counterId;// << " OF MonRate " << m_pMonRate->...();
-  std::cout << std::endl;  
+  COUT_DEBUG(" FOR COUNTER " << m_counterId);
 }
 
-int RateExtractor::getCounterFromMonRate()
+double RateExtractor::getCounterFromMonRate()
 {
   if(!m_pMonRate)
     return -1;
     
   TProfile * profile = m_pMonRate->profile();
   
-  return profile->GetBinContent(8 + m_counterId);
+  return (double)profile->GetBinContent(8 + m_counterId);
 }
 
 std::string RateExtractor::getCommentFromMonRate()
@@ -66,12 +65,11 @@ std::string RateExtractor::getCommentFromMonRate()
   if(!m_pMonRate)
     return "";
     
-  TProfile * profile = m_pMonRate->profile();
-    
+//  TProfile * profile = m_pMonRate->profile();  
 //  return profile->GetBinLabel(8 + m_counterId);  
 
   std::stringstream comment;
-  comment << "Comment for rate from counter #" << m_counterId;
+  COUT_DEBUG("Comment for rate from counter #");
   
   return comment.str();
 }

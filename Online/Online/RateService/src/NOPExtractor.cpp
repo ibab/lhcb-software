@@ -5,8 +5,8 @@
 
 
 NOPExtractor::NOPExtractor(MonRate * pMonRate)
-     : m_pMonRate(pMonRate)
 {
+  m_pMonRate = pMonRate;
   setComment("Number of processes publishing via this MonRate");
 }
 
@@ -20,7 +20,7 @@ int NOPExtractor::getNOPFromMonRate()
     return -1;
   TProfile * profile = m_pMonRate->profile();
   
-  return profile->GetBinEntries(4);
+  return (int)profile->GetBinEntries(4);
 }
 
 
