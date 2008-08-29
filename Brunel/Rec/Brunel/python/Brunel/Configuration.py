@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.13 2008-08-27 14:59:52 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.14 2008-08-29 15:45:46 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -44,7 +44,7 @@ class Brunel(LHCbConfigurableUser):
                           "ProcessPhase/Output" ]
        ,"mcCheckSequence": ["Pat","RICH","MUON"] # The default MC Check sequence
        ,"initSequence": ["Reproc", "Brunel", "Calo"] # The default init sequence
-       ,"moniSequence": []    # The default Moni sequence
+       ,"moniSequence": ["CALO","RICH"]    # The default Moni sequence
        ,"monitors": []        # list of monitors to execute, see KnownMonitors
         # Following are options forwarded to RecSys
        ,"recoSequence"   : [] # The Sub-detector reconstruction sequencing. See RecSys for default
@@ -119,8 +119,13 @@ class Brunel(LHCbConfigurableUser):
             from RichRecQC.Configuration import RichRecQCConf
             RichRecQCConf().context = "Offline"
             RichRecQCConf().applyConf(GaudiSequencer("CheckRICHSeq"))
+        else:
+            # Add the RICH monitors to the Moni sequence
+            from RichRecQC.Configuration import RichRecQCConf
+            RichRecQCConf().context = "Offline"
+            RichRecQCConf().applyConf(GaudiSequencer("MoniRICHSeq"))
 
-        elif inputType not in [ "DIGI", "DST" ]:
+        if inputType not in [ "DIGI", "DST" ]:
             # In case raw data resides in MDF file
             EventPersistencySvc().CnvServices.append("LHCb::RawDataCnvSvc")
 

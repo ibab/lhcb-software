@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2008-08-29 - Chris Jones
+ - Update RICH monitoring options to use the Check sequence if MC is enabled
+   and the Moni sequence when it is not.
+
 ! 2008-08-27 - Chris Jones
  - Update python Configurable to use pure python for the MC monitoring. 
    Update to use the new RichRecQCConf Configurable
