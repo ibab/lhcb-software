@@ -154,11 +154,11 @@ def _application(histpersistency, evtsel=None, extsvc=None, runable=None, algs=N
   if algs is not None:        app.TopAlg  += algs
   if evtloop is None:
     evtloop = Configs.EventLoopMgr('EventLoopMgr')
-    #evtloop.Warnings = False
+    evtloop.Warnings = False
   app.EventLoop = evtloop
   if app.HistogramPersistency=="NONE":
     pers = Configs.HistogramPersistencySvc('HistogramPersistencySvc')
-    #pers.Warnings = False
+    pers.Warnings = False
   return app
 
 #------------------------------------------------------------------------------------------------
@@ -187,13 +187,13 @@ def mepConverterApp(partID, partName, bursts=True, freq=0.):
   monSvc               = Configs.MonitorSvc()
   mepMgr               = mepManager(partID,partName,['MEP','EVENT'])
   runable              = Configs.LHCb__MEPConverterSvc('Runable')
-  runable.BurstMode    = bursts
+  runable.BurstMode    = False # bursts
   runable.PrintFreq    = freq
   runable.Requirements = [mbm_requirements['MEP']]
   evtloop              = Configs.LHCb__OnlineRunable('EmptyEventLoop')
   evtloop.Wait         = 1
   msgSvc().OutputLevel = 1
-  return _application('NONE',evtsel='NONE',extsvc=[monSvc,mepMgr],runable=runable,evtloop=evtloop)
+  return _application('NONE',evtsel='NONE',extsvc=[monSvc,mepMgr,evtloop,runable],runable=runable,evtloop=evtloop)
 
 #------------------------------------------------------------------------------------------------
 def dataSenderApp(partID, partName, target, buffer, partitionBuffers=True, decode=False,algs=[]):

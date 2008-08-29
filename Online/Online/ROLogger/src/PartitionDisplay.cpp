@@ -10,7 +10,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionDisplay.cpp,v 1.12 2008-08-28 12:23:30 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionDisplay.cpp,v 1.13 2008-08-29 20:37:18 frankb Exp $
 
 // Framework include files
 #include "ROLogger/PartitionDisplay.h"
@@ -64,7 +64,7 @@ PartitionDisplay::PartitionDisplay(Interactor* parent, Interactor* msg, Interact
   m_id = UpiSensor::instance().newID();
   ::strcpy(m_wildNode,"*");
   ::strcpy(m_wildMessage,"*");
-  ::strcpy(m_msgSeverity,s_SevList[2]);
+  ::strcpy(m_msgSeverity,s_SevList[3]);
   ::strcpy(m_histSeverity,s_SevList[2]);
   ::upic_open_window();
   ::upic_open_menu(m_id,0,0,"Error logger",RTL::processName().c_str(),RTL::nodeName().c_str());
@@ -87,6 +87,7 @@ PartitionDisplay::PartitionDisplay(Interactor* parent, Interactor* msg, Interact
   ::upic_add_command(CMD_CLOSE,        "Close","");
   ::upic_close_menu();
   UpiSensor::instance().add(this,m_id);
+  IocSensor::instance().send(m_msg,CMD_SEVERITY,new std::string(m_msgSeverity));
 }
 
 /// Standard destructor
@@ -135,7 +136,8 @@ void PartitionDisplay::updateFarms() {
     ::upic_insert_param_line(m_id, CMD_COM2, ++nf, setupParams(m_monitoring,true).c_str(), "");
     m_items[nf] = std::make_pair(true,m_monitoring);
   }
-  IocSensor::instance().send(this,CMD_COMLAST,this);
+  //  IocSensor::instance().send(this,CMD_COMLAST,this);
+  ::upic_set_cursor(m_id,m_menuCursor=CMD_WILD_NODE,0);
 }
 
 void PartitionDisplay::handle(const Event& ev) {
