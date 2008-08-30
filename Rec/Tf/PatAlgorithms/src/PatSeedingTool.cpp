@@ -1,4 +1,4 @@
-// $Id: PatSeedingTool.cpp,v 1.22 2008-08-26 09:57:02 mschille Exp $
+// $Id: PatSeedingTool.cpp,v 1.23 2008-08-30 21:13:52 mschille Exp $
 // Include files
 
 #include <cmath>
@@ -493,9 +493,10 @@ void PatSeedingTool::collectPerRegion(
 
 	if ( m_measureTime ) m_timer->start( m_timeX );
 
-	const unsigned reginc1 = (m_nReg - 1 - (reginc / m_nReg));
-	const unsigned reginc2 = (m_nReg - 1 - (reginc % m_nReg));
-	findXCandidates(lay, reg | (reginc1 << 3) | (reginc2 << 6), pool, state);
+	const unsigned reginc1 = (m_nReg - 1u - (reginc / m_nReg));
+	const unsigned reginc2 = (m_nReg - 1u - (reginc % m_nReg));
+	findXCandidates(lay, reg | (reginc1 << 3u) | (reginc2 << 6u),
+	    pool, state);
 
 	if ( msgLevel( MSG::DEBUG ) )
 	  debug() << "Found " << pool.size()
@@ -691,7 +692,7 @@ void PatSeedingTool::collectPerRegion(
 
 	//== Keep only best with >50% unused clusters (in the current pass...)
 	killClonesAndStore(finalSelection, outputTracks, m_maxUsedFractPerRegion);
-      } // regmask
+      } // reginc
     } // layer
   } // reg
   if (m_measureTime) m_timer->stop(m_timePerRegion);
@@ -1354,9 +1355,9 @@ void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
   // very few tracks migrate between regions
   // thus, we "decode" reg in a way similar to what is done for layers above
   // by applying a per station region increment (only in the cosmic case)
-  const unsigned reg0 = reg & 0x07;
-  const unsigned reg1 = (reg0 + (m_cosmics?((reg0 >> 3) & 0x07):0)) % m_nReg;
-  const unsigned reg2 = (reg0 + (m_cosmics?((reg0 >> 6) & 0x07):0)) % m_nReg;
+  const unsigned reg0 = reg & 7u;
+  const unsigned reg1 = (reg0 + (m_cosmics?((reg >> 3) & 7u):0)) % m_nReg;
+  const unsigned reg2 = (reg0 + (m_cosmics?((reg >> 6) & 7u):0)) % m_nReg;
 
   const double zScaling  = ( regionZ0(2,lay2,reg0) - regionZ0(0,lay0,reg0) ) /
     ( regionZ0(0,lay0,reg0) - m_zMagnet );
@@ -1558,7 +1559,7 @@ void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
 	}
 
 	//== Limited OT multiplicity -> check if compatible with in the central Y region
-	if ( isRegionOT(reg) && 8 > track.nCoords() ) {
+	if ( isRegionOT(reg0) && 8 > track.nCoords() ) {
 	  fitOK = m_seedTool->fitTrack( track, m_maxFinalChi2, m_minXPlanes, true, m_printing );
 	  if ( !fitOK ) {
 	    if ( m_printing ) info() << "    -- re-fit with final Chi2 failed" << endreq;
@@ -1576,7 +1577,7 @@ void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
 	  }
 	}
 
-	if ( isRegionIT(reg) && 3 > track.nbHighThreshold() ) {
+	if ( isRegionIT(reg0) && 3 > track.nbHighThreshold() ) {
 	  if ( m_printing ) info() << "    -- only " << track.nbHighThreshold()
 	    << " high threshold IT hits" << endreq;
 	  continue;
@@ -1674,7 +1675,7 @@ void PatSeedingTool::collectStereoHits ( PatSeedTrack& track,
 	  const double y = (track.xAtZ(z) - x) / hit->hit()->dxDy();
 	  // check if the hit is isolated
 	  if ( m_enforceIsolation && !isIsolated(it, rangeW) ) {
-	    int idx = int(fabs(y) * 20. / 3e3);
+	    int idx = int(std::abs(y) * 20. / 3e3);
 	    if (idx < 0) idx = 0;
 	    if (idx >= 20) idx = 19;
 	    if (nDense[idx]++ > 0)
@@ -1821,7 +1822,7 @@ bool PatSeedingTool::findBestRangeCosmics(
   // number of planes inside to find our pattern)
 
   // check that we have a chance to fulfill the requirements
-  if (minNbPlanes > int(stereo.size())) return false;
+  if (unsigned(minNbPlanes) > stereo.size()) return false;
   {
     PatFwdPlaneCounter count0(stereo.begin(), stereo.end());
     if (minNbPlanes > count0.nbDifferent()) return false;
