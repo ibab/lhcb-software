@@ -169,6 +169,7 @@ TProfile* MonProfile::profile(){
   loadObject();
   return m_profile;
 }
+
 void MonProfile::createObject(std::string name){
   if (!isLoaded) return;
   MsgStream msgStream = createMsgStream();
@@ -346,6 +347,11 @@ void MonProfile::combine(MonObject * H){
   }
 
   nEntries += HH->nEntries;
+}
+
+int MonProfile::diffNumBins(MonObject * H){
+  MonProfile *HH = (MonProfile*)H;
+  return (nbinsx - HH->nbinsx);
 }
 
 void MonProfile::copyFrom(MonObject * H){

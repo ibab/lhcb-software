@@ -89,12 +89,13 @@ StatusCode UpdateAndReset::initialize() {
   m_runNumber = currentRunNumber().first;
   m_cycleNumber = currentCycleNumber(m_timeStart).first;
   m_timeFirstEvInRun = m_timeStart;
+  m_offsetTimeFirstEvInRun = offsetToBoundary(m_cycleNumber, m_timeFirstEvInRun, true);
   m_timeLastEvInCycle = m_timeStart;
   m_gpsTimeLastEvInCycle = gpsTime();
   m_runStatus = s_statusNoUpdated;
   m_cycleStatus = s_statusNoUpdated;
 
-  if (0==m_disableMonRate) m_pGauchoMonitorSvc->declareMonRateComplement(m_runNumber, m_cycleNumber, m_deltaTCycle, m_timeFirstEvInRun, m_timeLastEvInCycle, m_gpsTimeLastEvInCycle);
+  if (0==m_disableMonRate) m_pGauchoMonitorSvc->declareMonRateComplement(m_runNumber, m_cycleNumber, m_deltaTCycle, m_offsetTimeFirstEvInRun, m_offsetTimeLastEvInCycle, m_gpsTimeLastEvInCycle);
 
   //DimTimer::start(20); // we wait a few seconds 
 
@@ -188,6 +189,7 @@ void UpdateAndReset::retrieveRunNumber(int runNumber) {
   m_runNumber = runNumber;
   m_runStatus = s_statusNoUpdated;
   m_timeFirstEvInRun = GauchoTimer::currentTime();
+  m_offsetTimeFirstEvInRun = offsetToBoundary(currentCycleNumber(m_timeFirstEvInRun).first, m_timeFirstEvInRun, true);
 }
 
 //------------------------------------------------------------------------------
@@ -268,6 +270,16 @@ void UpdateAndReset::retrieveCycleNumber(int cycleNumber) {
   m_cycleStatus = s_statusNoUpdated;
 }
 
+double UpdateAndReset::offsetToBoundary(int cycleNumber, ulonglong time, bool inferior){
+  if (inferior) {
+    ulonglong timeIniCycle = ((ulonglong) cycleNumber)*((ulonglong)(m_desiredDeltaTCycle*1000000));
+    return ((double)(time - timeIniCycle));
+  }
+  else {
+    ulonglong timeEndCycle = ((ulonglong) (cycleNumber+1))*((ulonglong)(m_desiredDeltaTCycle*1000000));
+    return ((double)(time - timeEndCycle));
+  }
+}
 
 void UpdateAndReset::updateData(bool isRunNumberChanged) {
   MsgStream msg( msgSvc(), name() );
@@ -280,6 +292,7 @@ void UpdateAndReset::updateData(bool isRunNumberChanged) {
   m_deltaTCycle = currentTime - m_timeLastEvInCycle;
   msg << MSG::DEBUG << "m_deltaTCycle = " << m_deltaTCycle << " microseconds" << endreq;
   m_timeLastEvInCycle = currentTime;
+  m_offsetTimeLastEvInCycle = offsetToBoundary(m_cycleNumber, m_timeLastEvInCycle, false);
   msg << MSG::DEBUG << "m_timeLastEvInCycle     = " << m_timeLastEvInCycle << endreq;
   msg << MSG::DEBUG << "deltaT error = " << m_deltaTCycle - m_desiredDeltaTCycle*1000000 << " microseconds" << endreq;
   m_gpsTimeLastEvInCycle = gpsTime();

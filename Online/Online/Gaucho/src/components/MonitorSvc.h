@@ -134,7 +134,7 @@ private:
   bool m_monRateDeclared;
   
 public:    
-   void declareMonRateComplement( int& runNumber, int& cycleNumber, double& deltaT, ulonglong& timeFirstEvInRun, ulonglong& timeLastEvInCycle, ulonglong& gpsTimeLastEvInCycle);  
+   void declareMonRateComplement( int& runNumber, int& cycleNumber, double& deltaT, double& offsetTimeFirstEvInRun, double& offsetTimeLastEvInCycle, ulonglong& gpsTimeLastEvInCycle);  
 
   int m_disableMonRate;
   int m_disableDimPropServer;

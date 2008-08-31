@@ -38,7 +38,7 @@ public:
   
   void verifyAndProcessRunChange(std::string method);
   void verifyAndProcessCycleChange(std::string method);
-  
+  double offsetToBoundary(int cycleNumber, ulonglong time, bool inferior);
   
 private:
   
@@ -51,7 +51,9 @@ private:
   int m_cycleNumber;
   ulonglong m_timeStart;
   ulonglong m_timeFirstEvInRun;
+  double m_offsetTimeFirstEvInRun;
   ulonglong m_timeLastEvInCycle;
+  double m_offsetTimeLastEvInCycle;
   ulonglong m_gpsTimeLastEvInCycle;
   double m_deltaTCycle;
   
