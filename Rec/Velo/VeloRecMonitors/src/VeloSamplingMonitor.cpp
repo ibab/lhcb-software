@@ -1,4 +1,4 @@
-// $Id: VeloSamplingMonitor.cpp,v 1.1 2008-08-21 11:39:38 erodrigu Exp $
+// $Id: VeloSamplingMonitor.cpp,v 1.2 2008-08-31 15:52:08 krinnert Exp $
 // Include files
 // -------------
 
@@ -72,7 +72,7 @@ StatusCode Velo::VeloSamplingMonitor::execute() {
   for ( itL = m_samplingLocations.begin();
         itL != m_samplingLocations.end(); ++itL ) {
     LHCb::VeloClusters* clusters = veloClusters( (*itL) );
-    if( clusters == NULL ) continue;
+    if( clusters == 0 ) continue;
     
     monitorClusters( (*itL), clusters );
   }
@@ -80,7 +80,7 @@ StatusCode Velo::VeloSamplingMonitor::execute() {
   for ( itL = m_samplingLocations.begin();
         itL != m_samplingLocations.end(); ++itL ) {
     LHCb::VeloTELL1Datas* tell1Datas = veloTell1Data( (*itL) );
-    if( tell1Datas == NULL ) continue;
+    if( tell1Datas == 0 ) continue;
     
     monitorTell1Data( (*itL), tell1Datas );
   }
@@ -113,9 +113,8 @@ Velo::VeloSamplingMonitor::veloClusters( std::string samplingLocation ) {
     debug() << "Retrieving VeloClusters from " << tesPath << endmsg;
 
   if ( !exist<LHCb::VeloClusters>( tesPath ) ) {
-    Warning( "No VeloClusters container found for this event !",
-             StatusCode::FAILURE, 100 );
-    return NULL;
+    debug() << "No VeloClusters container found for this event !" << endmsg;
+    return 0;
   }
   else {
     LHCb::VeloClusters* clusters = get<LHCb::VeloClusters>( tesPath );
@@ -140,9 +139,8 @@ Velo::VeloSamplingMonitor::veloTell1Data( std::string samplingLocation ) {
     debug() << "Retrieving VeloTell1Data from " << tesPath << endmsg;
   
   if ( !exist<LHCb::VeloTELL1Datas>( tesPath ) ) {
-    Warning( "No VeloTell1Data container found for this event !",
-             StatusCode::FAILURE, 100 );
-    return NULL;
+    debug() << "No VeloTell1Data container found for this event !" << endmsg; 
+    return 0;
   }
   else {
     LHCb::VeloTELL1Datas* tell1Data = get<LHCb::VeloTELL1Datas>( tesPath );
@@ -160,6 +158,8 @@ void Velo::VeloSamplingMonitor::monitorClusters( std::string samplingLocation,
 {
   
   unsigned int nxbins = m_samplingLocations.size();
+  std::string histIDBase("Cluster ADC values vs sampling ");
+  std::string histTitleBase("Cluster ADC values versus sampling index ");
   
   // Loop over the VeloClusters
   // ==========================
@@ -177,8 +177,21 @@ void Velo::VeloSamplingMonitor::monitorClusters( std::string samplingLocation,
       if ( m_samplingLocations[i] == samplingLocation )
         samplingIndex = i;
 
-    plot2D( samplingIndex, adc, "Cluster ADC values vs sampling",
-            "Cluster ADC values versus sampling index",
+    std::string histID;
+    std::string histTitle;
+    if ( cluster->isRType() ) {
+      histID    = histIDBase + "R";
+      histTitle = histTitleBase + "R";
+    } else if ( cluster->isPhiType() ) {
+      histID = histIDBase + "Phi";
+      histTitle = histTitleBase + "Phi";
+    } else {
+      histID = histIDBase + "PU";
+      histTitle = histTitleBase + "PU";
+    } 
+      
+    plot2D( samplingIndex, adc, histID,
+            histTitle,
             -0.5, nxbins - 0.5, -0.5, 50.5, nxbins, 51 );
     
   }
@@ -193,7 +206,7 @@ void Velo::VeloSamplingMonitor::monitorTell1Data( std::string samplingLocation,
 {
   
   unsigned int nxbins = m_samplingLocations.size();
-  
+
   // Loop over the VeloTell1Data
   // ==========================+
   LHCb::VeloTELL1Datas::const_iterator itD;
@@ -212,7 +225,7 @@ void Velo::VeloSamplingMonitor::monitorTell1Data( std::string samplingLocation,
       for( size_t i = 0; i < nxbins; ++i )
         if ( m_samplingLocations[i] == samplingLocation )
           samplingIndex = i;
-      
+
       plot2D( samplingIndex, adc, "Channel ADC values vs sampling",
               "Channel ADC values versus sampling index",
               -0.5, nxbins - 0.5, -0.5, 50.5, nxbins, 51 );

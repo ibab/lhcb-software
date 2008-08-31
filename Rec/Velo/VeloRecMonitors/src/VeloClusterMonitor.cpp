@@ -1,4 +1,4 @@
-// $Id: VeloClusterMonitor.cpp,v 1.5 2008-08-24 07:47:03 erodrigu Exp $
+// $Id: VeloClusterMonitor.cpp,v 1.6 2008-08-31 15:52:08 krinnert Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -35,13 +35,13 @@ namespace Velo {
 // Standard constructor, initializes variables
 //=============================================================================
 Velo::VeloClusterMonitor::VeloClusterMonitor( const std::string& name,
-                                              ISvcLocator* pSvcLocator)
-  : Velo::VeloMonitorBase ( name , pSvcLocator )
+    ISvcLocator* pSvcLocator)
+: Velo::VeloMonitorBase ( name , pSvcLocator )
 {
   m_sensorNumbers = boost::assign::list_of(1)(3)(5)(7)(9)(20)(24)(26)(28)(30);
 
   declareProperty( "VeloClusterLocation",
-                   m_clusterCont = LHCb::VeloClusterLocation::Default );
+      m_clusterCont = LHCb::VeloClusterLocation::Default );
   declareProperty( "SensorNumbersForRPlots", m_sensorNumbers );
 }
 
@@ -89,18 +89,17 @@ StatusCode Velo::VeloClusterMonitor::finalize() {
 // Retrieve the VeloClusters
 //=============================================================================
 StatusCode Velo::VeloClusterMonitor::veloClusters() {
-  
+
   if ( m_debugLevel )
     debug() << "Retrieving VeloClusters from " << m_clusterCont << endmsg;
 
   if ( !exist<LHCb::VeloClusters>( m_clusterCont ) ) {
-    return Warning( "No VeloClusters container found for this event !",
-                    StatusCode::FAILURE, 100 );
+    debug() << "No VeloClusters container found for this event !" << endmsg;
   }
   else {
     m_clusters = get<LHCb::VeloClusters>( m_clusterCont );
     if ( m_debugLevel ) debug() << "  -> number of clusters found in TES: "
-                                << m_clusters->size() <<endmsg;
+      << m_clusters->size() <<endmsg;
   }
 
   return StatusCode::SUCCESS;
@@ -121,34 +120,34 @@ void Velo::VeloClusterMonitor::monitorClusters() {
   unsigned int nclus = m_clusters -> size();
   counter( "# VeloClusters" ) += nclus;
   plot1D( nclus, "# VELO clusters", "Number of VeloClusters per event",
-          -0.5, 20000.5, 20001 );
+      -0.5, 20000.5, 20001 );
 
   // Loop over the VeloClusters
   LHCb::VeloClusters::const_iterator itVC;
   for ( itVC = m_clusters -> begin(); itVC != m_clusters -> end(); ++itVC ) {
-    
+
     LHCb::VeloCluster* cluster = (*itVC);
 
     // Number of strips and total charge
-  // -----------------------------------
+    // -----------------------------------
     unsigned int nstrips = cluster -> size();    
     double adc           = cluster -> totalCharge();
 
     plot1D( nstrips, "Cluster size", "Number of strips per cluster",
-            -0.5, 5.5, 6 );
+        -0.5, 5.5, 6 );
     plot1D( adc, "Cluster ADC value", "ADC value per cluster",
-            -0.5, 128*4+0.5, 128*4+1 );
+        -0.5, 128*4+0.5, 128*4+1 );
 
     // Number of strips and total charge versus the sensor number
     // ----------------------------------------------------------
     unsigned int sensorNumber = cluster -> channelID().sensor();
 
     plot2D( sensorNumber, nstrips, "Cluster size vs sensor",
-            "Number of strips per cluster versus sensor",
-            -0.5, 131.5, -0.5, 5.5, 132, 6 );
+        "Number of strips per cluster versus sensor",
+        -0.5, 131.5, -0.5, 5.5, 132, 6 );
     plot2D( sensorNumber, adc, "Cluster ADC values vs sensor",
-            "Cluster ADC values versus sensor",
-            -0.5, 131.5, -0.5, 128*4+0.5, 132, 128*4+1 );
+        "Cluster ADC values versus sensor",
+        -0.5, 131.5, -0.5, 128*4+0.5, 132, 128*4+1 );
 
     // Active chip links versus sensor number
     // --------------------------------------
@@ -162,14 +161,14 @@ void Velo::VeloClusterMonitor::monitorClusters() {
     // number 6 introduced to have 2 bins separating every 4 links per chip
     unsigned int activeLink = chip*6 + linkInChip;
     plot2D( sensorNumber, activeLink, "Active chip links vs sensor",
-            "Active chip links versus sensor",
-            -0.5, 131.5, -0.5, 95.5, 132, 96 );
+        "Active chip links versus sensor",
+        -0.5, 131.5, -0.5, 95.5, 132, 96 );
 
     // Produce the R correlation plots
     // -------------------------------
     if ( m_sensorNumbers.end()
-	 != std::find( m_sensorNumbers.begin(), m_sensorNumbers.end(), sensorNumber ) ) {
-      
+        != std::find( m_sensorNumbers.begin(), m_sensorNumbers.end(), sensorNumber ) ) {
+
       const DeVeloRType* rSensor1 = dynamic_cast<const DeVeloRType*>( veloSensor );
       double localR1 = rSensor1 -> rOfStrip( stripNumber );
       rDifferences( sensorNumber, localR1, sensorNumber+2 );
@@ -183,27 +182,27 @@ void Velo::VeloClusterMonitor::monitorClusters() {
 //  R_i -R_j difference distributions
 //=============================================================================
 void Velo::VeloClusterMonitor::rDifferences( unsigned int sensorNumber1,
-                                             double localR1,
-                                             unsigned int sensorNumber2 ) {
+    double localR1,
+    unsigned int sensorNumber2 ) {
 
   LHCb::VeloClusters::const_iterator itVC;
- 
+
   std::string sn  = boost::lexical_cast<std::string>( sensorNumber1 )
-                  + "-"
-                  + boost::lexical_cast<std::string>( sensorNumber2 );
+    + "-"
+    + boost::lexical_cast<std::string>( sensorNumber2 );
 
   for ( itVC = m_clusters -> begin(); itVC != m_clusters -> end(); ++itVC ) {
-    
+
     unsigned int sensorNumber = (*itVC) -> channelID().sensor();
     const DeVeloSensor* veloSensor = m_veloDet -> sensor( sensorNumber );
-    
+
     if ( sensorNumber==sensorNumber2 ) {
       const DeVeloRType* rSensor = dynamic_cast<const DeVeloRType*>( veloSensor );
       unsigned int stripNumber = (*itVC) -> channelID().strip(); 
       double localR2           = rSensor -> rOfStrip( stripNumber );      
 
       plot1D( localR1-localR2, "Sensors R diff. (" + sn + ")",
-              "Sensors R difference (sensors " + sn + ")", -10.5, 10.5, 41 );
+          "Sensors R difference (sensors " + sn + ")", -10.5, 10.5, 41 );
     }
   }
 }
@@ -212,20 +211,20 @@ void Velo::VeloClusterMonitor::rDifferences( unsigned int sensorNumber1,
 //  R_i -R_j difference distributions
 //=============================================================================
 void Velo::VeloClusterMonitor::rCorrelations( unsigned int sensorNumber1,
-					      double localR1 ) {
+    double localR1 ) {
 
   LHCb::VeloClusters::const_iterator itVC;
 
   std::vector<LHCb::VeloCluster*> clusters2;
   std::vector<LHCb::VeloCluster*> clusters4;
-  
+
   for ( itVC = m_clusters -> begin(); itVC != m_clusters -> end(); ++itVC ) {
-    
+
     unsigned int sensorNumber = (*itVC) -> channelID().sensor();
-  
+
     if      ( sensorNumber == sensorNumber1+2 ) clusters2.push_back( (*itVC) );
     else if ( sensorNumber == sensorNumber1+4 ) clusters4.push_back( (*itVC) );
-    
+
   }
 
   std::string sn = boost::lexical_cast<std::string>( sensorNumber1 );
@@ -233,9 +232,9 @@ void Velo::VeloClusterMonitor::rCorrelations( unsigned int sensorNumber1,
   std::vector<LHCb::VeloCluster*>::const_iterator it2, it4;
 
   for ( it2 = clusters2.begin(); it2 != clusters2.end(); ++it2 ) {
-    
+
     for ( it4 = clusters4.begin(); it4 != clusters4.end(); ++it4 ) {
-      
+
       const DeVeloSensor* veloSensor2 = m_veloDet -> sensor( sensorNumber1 + 2 );
       const DeVeloSensor* veloSensor4 = m_veloDet -> sensor( sensorNumber1 + 4 );
       const DeVeloRType* rSensor2 = dynamic_cast<const DeVeloRType*>( veloSensor2 );
@@ -246,12 +245,12 @@ void Velo::VeloClusterMonitor::rCorrelations( unsigned int sensorNumber1,
       double localR4 = rSensor4 -> rOfStrip( stripNumber4 );
 
       plot2D( localR1-localR2, localR2-localR4,
-              "R-Sensors R_s(i+2)-R_s(i+4) vs R_s(i)-R_s(i+2), i=" + sn,
-	      "R-Sensors R_s(i+2)-R_s(i+4) versus R_s(i)-R_s(i+2), i=" + sn,
-              -10.5, 10.5, -10.5, 10.5, 41, 41 );
+          "R-Sensors R_s(i+2)-R_s(i+4) vs R_s(i)-R_s(i+2), i=" + sn,
+          "R-Sensors R_s(i+2)-R_s(i+4) versus R_s(i)-R_s(i+2), i=" + sn,
+          -10.5, 10.5, -10.5, 10.5, 41, 41 );
 
     }
-    
+
   }
 
 }
