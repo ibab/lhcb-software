@@ -1,13 +1,13 @@
-#include "Gaucho/services/ProcessMgr.h"
-#include "Gaucho/services/DimInfoServers.h"
-#include "Gaucho/services/Misc.h"
+#include "Gaucho/ProcessMgr.h"
+#include "Gaucho/DimInfoServers.h"
+#include "Gaucho/Misc.h"
 
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IIncidentSvc.h"
-#include "Gaucho/services/BaseServiceMap.h"
-#include "Gaucho/services/DimTimerProcess.h"
+#include "Gaucho/BaseServiceMap.h"
+#include "Gaucho/DimTimerProcess.h"
 #include "SaverSvc.h"
 
 #include <ctime>
