@@ -15,7 +15,7 @@ private:
   void*         m_data;
   MonObject*    m_monObject;
   std::string   m_svcName;
-  std::stringstream m_ss;
+  //std::stringstream m_ss;
   //DimService    *m_dimService;
 
 public: 

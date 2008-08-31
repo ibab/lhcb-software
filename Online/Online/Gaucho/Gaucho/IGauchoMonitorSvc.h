@@ -1,4 +1,4 @@
-// $Id: IGauchoMonitorSvc.h,v 1.7 2008-08-04 07:12:38 evh Exp $
+// $Id: IGauchoMonitorSvc.h,v 1.8 2008-08-31 17:30:49 evh Exp $
 #ifndef KERNEL_IGAUCHOMONITORSVC_H 
 #define KERNEL_IGAUCHOMONITORSVC_H 1
 
@@ -47,7 +47,7 @@ public:
 //   virtual void setTimerElapsed(bool timerelapsed) = 0;
 //   virtual bool getTimerElapsed() const = 0;
 
-  virtual void declareMonRateComplement( int& runNumber, int& cycleNumber, double& deltaT, ulonglong& timeFirstEvInRun, ulonglong& timeLastEvInCycle, ulonglong& gpsTimeLastEvInCycle) = 0;
+  virtual void declareMonRateComplement( int& runNumber, int& cycleNumber, double& deltaT, double& offsetTimeFirstEvInRun, double& offsetTimeLastEvInCycle, ulonglong& gpsTimeLastEvInCycle) = 0;
   
 };
 #endif // KERNEL_IGAUCHOMONITORSVC_H

@@ -12,10 +12,11 @@ protected:
   
   int    *m_runNumber;       // Maybe we have to use double
   int    *m_cycleNumber;
-  double    *m_deltaT;
-  ulonglong *m_timeFirstEvInRun;
-  ulonglong *m_timeLastEvInCycle; 
+  double *m_deltaT;
+  double *m_offsetTimeFirstEvInRun;
+  double *m_offsetTimeLastEvInCycle; 
   ulonglong *m_gpsTimeLastEvInCycle; 
+  
   bool isServer;
   
     
@@ -34,27 +35,29 @@ public:
     m_counterMap[countName] = std::pair<double*, std::string*> (const_cast<double *>(&count), descr);
   }
   
-  void addComplement(int* runNumber, int* cycleNumber, double* deltaT, ulonglong* timeFirstEvInRun, ulonglong* timeLastEvInCycle, ulonglong* gpsTimeLastEvInCycle){
+  void addComplement(int* runNumber, int* cycleNumber, double* deltaT, double* offsetTimeFirstEvInRun, double* offsetTimeLastEvInCycle, ulonglong* gpsTimeLastEvInCycle){
     m_runNumber = runNumber;
     m_cycleNumber = cycleNumber;
     m_deltaT = deltaT;
-    m_timeFirstEvInRun = timeFirstEvInRun;
-    m_timeLastEvInCycle = timeLastEvInCycle;
+    m_offsetTimeFirstEvInRun = offsetTimeFirstEvInRun;
+    m_offsetTimeLastEvInCycle = offsetTimeLastEvInCycle;
     m_gpsTimeLastEvInCycle = gpsTimeLastEvInCycle;
   }
   
+  std::map<const std::string, std::pair<double*, std::string*>, std::less<std::string> > counterMap(){return m_counterMap;}
   virtual void combine(MonObject * monObject);
   virtual void copyFrom(MonObject* monObject);
   virtual void reset();
   virtual void print();
   virtual void write(){};
-
+  int diffNumCounters(MonObject * monObject);
+  
 private:
-  std::map<const std::string, std::pair<double*, std::string*>, std::less<std::string> > counterMap(){return m_counterMap;}
+  
   double counter(std::string countName) {return (*(m_counterMap[countName].first));}
   std::string counterDescription(std::string countName) {return (*(m_counterMap[countName].second));}
-  ulonglong timeFirstEvInRun() {return (*m_timeFirstEvInRun);}
-  ulonglong timeLastEvInCycle() {return (*m_timeLastEvInCycle);}
+  double offsetTimeFirstEvInRun() {return (*m_offsetTimeFirstEvInRun);}
+  double offsetTimeLastEvInCycle() {return (*m_offsetTimeLastEvInCycle);}
   ulonglong gpsTimeLastEvInCycle() {return (*m_gpsTimeLastEvInCycle);}
   int runNumber() {return (*m_runNumber);}
   int cycleNumber() {return (*m_cycleNumber);}

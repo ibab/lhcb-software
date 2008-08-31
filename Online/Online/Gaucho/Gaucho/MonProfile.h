@@ -49,6 +49,7 @@ public:
   virtual void print();
   virtual void write();
   virtual void reset();
+  int diffNumBins(MonObject * H);
 
   /**********/
   // data   
