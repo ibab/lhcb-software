@@ -1,4 +1,4 @@
-// $Id: DecodeVeloFullRawBuffer.cpp,v 1.3 2008-03-17 14:26:10 krinnert Exp $
+// $Id: DecodeVeloFullRawBuffer.cpp,v 1.4 2008-08-31 16:05:46 krinnert Exp $
 // Include files 
 
 // from Gaudi
@@ -130,7 +130,7 @@ StatusCode DecodeVeloFullRawBuffer::getData()
   if (m_isDebug) debug()<< " ==> getData() " <<endmsg;
   //
   if(!exist<VeloFullBanks>(adcContName())){
-    info()<< " ==> There is no data banks at: "
+    if (m_isDebug) debug() << " ==> There is no data banks at: "
       << adcContName() <<endmsg;
   }else{  
     // get data banks from default TES location
@@ -280,7 +280,7 @@ StatusCode DecodeVeloFullRawBuffer::decodeData()
   }
   //
   if((!adcDataFlag())&&(!pedDataFlag())){
-    info()<< " ==> No data decoded! " <<endmsg;
+    if ( m_isDebug ) debug()<< " ==> No data decoded! " <<endmsg;
     return ( StatusCode::SUCCESS );
   }else{
     return ( StatusCode::SUCCESS );

@@ -1,4 +1,4 @@
-// $Id: DecodeVeloRawBuffer.cpp,v 1.14 2007-09-17 13:55:46 krinnert Exp $
+// $Id: DecodeVeloRawBuffer.cpp,v 1.15 2008-08-31 16:05:46 krinnert Exp $
 
 #include "GaudiKernel/AlgFactory.h"
 
@@ -90,14 +90,13 @@ StatusCode DecodeVeloRawBuffer::initialize() {
 StatusCode DecodeVeloRawBuffer::execute() {
 
   // fetch raw bank in any case
-  LHCb::RawEvent* rawEvent = get<LHCb::RawEvent>(m_rawEventLocation);
-
-  if (!rawEvent) {
-    error() << "Raw Event not found in " << m_rawEventLocation
+  if (!exist<LHCb::RawEvent>(m_rawEventLocation) ) {
+    debug() << "Raw Event not found in " << m_rawEventLocation
 	    << endmsg;
     createEmptyBanks();
-    return StatusCode::FAILURE;
+    return StatusCode::SUCCESS;
   }
+  LHCb::RawEvent* rawEvent = get<LHCb::RawEvent>(m_rawEventLocation);
 
   const std::vector<LHCb::RawBank*>& banks = rawEvent->banks(LHCb::RawBank::Velo);
 
@@ -270,8 +269,12 @@ void DecodeVeloRawBuffer::dumpVeloClusters(const LHCb::VeloClusters* clusters) c
 }
 
 void DecodeVeloRawBuffer::createEmptyBanks() {
-  LHCb::VeloLiteCluster::FastContainer* fastCont = new LHCb::VeloLiteCluster::FastContainer();
-  put(fastCont,m_veloLiteClusterLocation);
-  LHCb::VeloClusters* clusters = new LHCb::VeloClusters();
-  put(clusters,m_veloClusterLocation);
+  if ( m_decodeToVeloLiteClusters ) {
+    LHCb::VeloLiteCluster::FastContainer* fastCont = new LHCb::VeloLiteCluster::FastContainer();
+    put(fastCont,m_veloLiteClusterLocation);
+  }
+  if ( m_decodeToVeloClusters ) {
+    LHCb::VeloClusters* clusters = new LHCb::VeloClusters();
+    put(clusters,m_veloClusterLocation);
+  }
 }

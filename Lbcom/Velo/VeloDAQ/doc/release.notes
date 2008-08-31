@@ -3,6 +3,11 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+! 2008-08-31 - Kurt Rinnert
+ - missing input containers are no longer an error condition in NZS decoder
+ - if input is missing, the cluster decoder now only creates empty containers 
+   for the requested cluster type. 
+
 ! 2008-08-26 Tomasz Szumlak
  - add a new algoritm to deal with complicated error bank 
    SmartVeloErrorBankDecoder, this piece of code is able
