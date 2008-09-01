@@ -1,4 +1,4 @@
-// $Id: TriggerTisTos.cpp,v 1.5 2008-07-01 01:44:49 tskwarni Exp $
+// $Id: TriggerTisTos.cpp,v 1.6 2008-09-01 13:37:49 pkoppenb Exp $
 // Include files 
 #include <algorithm>
 
@@ -308,7 +308,7 @@ void TriggerTisTos::triggerTisTos( bool & decision, bool & tis, bool & tos, bool
 {
   decision = false; tis=false; tos=false;
   if( m_triggerInput_Selections.size()==0 ){
-    error() << " triggerTisTos called with empty Trigger Input " << endmsg;
+    Warning(" triggerTisTos called with empty Trigger Input");
     return;
   }
   for( std::vector< std::string >::const_iterator iTriggerSelection=m_triggerInput_Selections.begin();
