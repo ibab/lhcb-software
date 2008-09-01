@@ -1,4 +1,4 @@
-// $Id: STDecodingBaseAlg.h,v 1.11 2008-08-15 08:21:44 mneedham Exp $
+// $Id: STDecodingBaseAlg.h,v 1.12 2008-09-01 08:52:29 mneedham Exp $
 #ifndef STDECODINGBASEALG_H 
 #define STDECODINGBASEALG_H 1
 
@@ -132,6 +132,8 @@ inline LHCb::STTELL1BoardErrorBank* STDecodingBaseAlg::findErrorBank(const unsig
 }
 
 #include "Kernel/STClusterWord.h"
+#include "Kernel/PPRepresentation.h"
+#include "Kernel/StripRepresentation.h"
 #include "Kernel/STDAQDefinitions.h"
 #include "Kernel/LHCbConstants.h"
 #include "Event/STTELL1Error.h"
@@ -140,18 +142,18 @@ inline bool STDecodingBaseAlg::canBeRecovered(const LHCb::STTELL1BoardErrorBank*
                                               const STClusterWord& word,
                                               const unsigned int pcn) const{
 
-  const unsigned int pp = word.channelID()/STDAQ::nStripPerPPx;
+  STDAQ::PPRepresentation ppRep = STDAQ::PPRepresentation(STDAQ::StripRepresentation(word.channelID()));
+  unsigned int pp, beetle, port, strip;
+  ppRep.decompose(pp, beetle, port, strip); // split up the word 
   const LHCb::STTELL1Error* errorInfo = bank->ppErrorInfo(pp);
   bool ok = false;
   if (errorInfo != 0 ){
-     const unsigned int stripOnPP = word.channelID() % STDAQ::nStripPerPPx;
-     const unsigned int beetle = stripOnPP/LHCbConstants::nStripsInBeetle;
-     const unsigned int port = (stripOnPP%LHCbConstants::nStripsInBeetle)/LHCbConstants::nStripsInPort;
-
      if (errorInfo->badLink(beetle, port,pcn) == true){
       std::cout << " pcn " << pcn << "bad link " << word.channelID() << " pp " << pp << " " << beetle << " port " << port  << " chip " << errorInfo->ChipAddr() <<std::endl;  
      }
-     else { ok = true;}
+     else { 
+       ok = true;
+     }
 
   }
   return ok ; 

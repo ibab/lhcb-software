@@ -1,4 +1,4 @@
-// $Id: STReadoutTool.cpp,v 1.11 2008-08-15 08:21:44 mneedham Exp $
+// $Id: STReadoutTool.cpp,v 1.12 2008-09-01 08:52:29 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -84,7 +84,7 @@ unsigned int STReadoutTool::nBoard() const {
 }
 
 unsigned int STReadoutTool::nServiceBox() const{
-  return m_nServiceBox;
+  return m_serviceBoxes.size();
 }
 
 std::string STReadoutTool::serviceBox(const LHCb::STChannelID& aChan) const{

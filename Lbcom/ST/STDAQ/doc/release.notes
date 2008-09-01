@@ -4,6 +4,11 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2008-08-31 M Needham 
+ - Bug fix in service box mapping: vector of all possible names was 
+   not filled 
+ - Move to using new representation classes
+
 ! 2008-08-14 - Start to implement recovery mode
              - error decoding moved to base class 
              - Add PCN printout 

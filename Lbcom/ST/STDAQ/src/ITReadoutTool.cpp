@@ -1,4 +1,4 @@
-// $Id: ITReadoutTool.cpp,v 1.11 2008-08-15 08:21:43 mneedham Exp $
+// $Id: ITReadoutTool.cpp,v 1.12 2008-09-01 08:52:29 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -13,6 +13,9 @@
 
 // Det Desc
 #include "DetDesc/Condition.h"
+
+#include <algorithm>
+
 
 using namespace LHCb;
 
@@ -103,6 +106,14 @@ StatusCode ITReadoutTool::createBoards() {
      for (unsigned iH = 0 ; iH < m_hybridsPerBoard; ++iH, ++vecLoc){
        STChannelID sectorID((unsigned int)tMap[vecLoc]);
        aBoard->addSector(sectorID, (unsigned int)orientation[vecLoc], serviceBoxes[vecLoc]);
+
+
+       // add to the list of service boxs if not already there
+       if (std::find(m_serviceBoxes.begin(), m_serviceBoxes.end(), 
+                     serviceBoxes[vecLoc]) ==  m_serviceBoxes.end()) {
+	 m_serviceBoxes.push_back(serviceBoxes[vecLoc]);
+       }
+
      } // iH
 
      m_boards.push_back(aBoard);
