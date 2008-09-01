@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.122 2008-08-29 18:51:49 odescham Exp $
+! $Id: release.notes,v 1.123 2008-09-01 14:07:28 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
+
+! 2008-09-01 - Olivier Deschamps
+ - rename L0DUBankSwap.opts to ReplaceL0BanksWithEmulated.opts : 
+	similar to ReplaceL0DUBankWithEmulated but for all L0 banks 
+	including L0Calo and L0Muon.
+
 
 ! 2008-08-29 - Olivier Deschamps
  - L0DUReportMonitor : bug fix (incomplete initialization) - produce weird result in case of several TCK are monitored in the same job
