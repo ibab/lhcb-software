@@ -42,7 +42,7 @@ GaudiSequencer("SeqHlt2TruthFilter").IgnoreFilterPassed = TRUE
 importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
 DecayTreeTuple("Hlt2DecayTreeTuple").addTool(PhysDesktop())
 DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Phys/Hlt2SelDstar"]
-DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[D*(2010)+ -> (^D0 -> ^K+ ^pi-) ^pi+]cc" # only Cabibbo-faoured ? 
+DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[D*(2010)+ -> (^D0 -> ^K- ^pi+) ^pi+]cc" # only Cabibbo-favoured ? 
 
 EventSelector().Input   = [
   "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol1/dijkstra/Selections/Dst-PiD-HH-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]

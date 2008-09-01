@@ -4,6 +4,13 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
+! 2008-09-01 - Patrick Koppenburg
+ - options/DVTestHlt2Dstar.py : look for favoured, not DCS D0 decays in nTuple
+ - options/DVTestHlt2HidValley.py : new test file for hidden valley. 
+   There are no candidates stored and no offline selection, so just running
+   Hlt on signal data.
+ - Increment to v7r2
+
 !========================== HltSelChecker v7r1 2008-08-28 ===================
 ! 2008-08-14 - Patrick Koppenburg
  - Remove all ; in .py files
