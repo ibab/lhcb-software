@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.119 2008-07-16 20:12:01 cattanem Exp $
+! $Id: release.notes,v 1.120 2008-09-01 20:19:08 asatta Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
-
+! 2008-09-01 - Alessia Satta
+  - Fix a FPE in MuonChamberGrid::listOfPhysChannels()
 !========================= MuonDet v8r2 2008-07-16 ==========================
 ! 2008-07-14 - Alessia Satta
   - Remove the explict FPE Guard , leave only the standard protection

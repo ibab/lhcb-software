@@ -1,4 +1,4 @@
-// $Id: MuonChamberGrid.cpp,v 1.13 2008-06-09 09:02:11 asatta Exp $
+// $Id: MuonChamberGrid.cpp,v 1.14 2008-09-01 20:19:09 asatta Exp $
 // Include files 
 
 // local
@@ -271,14 +271,26 @@ MuonChamberGrid::listOfPhysChannels(double x_enter,double y_enter,
           myX = (xinit+xend)/2;
           myY = (yinit+yend)/2;
         } else if(Yloop==nyBegin&&Yloop!=nyEnd){
-          myX = (xinit + (retLenght(Yloop+1,y_rdout)-intercept)/slopeY)/2;
+          if(parallelFlag){
+            myX=xinit;
+          }else{
+            myX = (xinit + (retLenght(Yloop+1,y_rdout)-intercept)/slopeY)/2;
+          }
           myY = (yinit + retLenght(Yloop+1,y_rdout))/2;
         } else if(Yloop!=nyBegin&&Yloop==nyEnd){
-          myX = (((retLenght(Yloop,y_rdout)-intercept)/slopeY)+xend)/2;
+          if(parallelFlag){
+            myX=xend;
+          }else{            
+            myX = (((retLenght(Yloop,y_rdout)-intercept)/slopeY)+xend)/2;
+          }
           myY = (retLenght(Yloop,y_rdout)+yend)/2;
         } else {
-          myX = ((retLenght(Yloop,y_rdout)-intercept)/slopeY 
-                 + (retLenght(Yloop+1,y_rdout)-intercept)/slopeY)/2;
+          if(parallelFlag){
+            myX=(xend+xinit)/2;
+          }else{
+            myX = ((retLenght(Yloop,y_rdout)-intercept)/slopeY 
+                   + (retLenght(Yloop+1,y_rdout)-intercept)/slopeY)/2;
+          }
           myY = (retLenght(Yloop,y_rdout) + retLenght(Yloop+1,y_rdout))/2;
         }
         
