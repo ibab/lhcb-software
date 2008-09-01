@@ -15,6 +15,7 @@
      previous releases. This also implies a number of changes in
      Gaucho, Adder, Saver, and other related packages.
      New package: RateService
+     For this release the Presenter package got removed.
 
 </PRE><H1><A NAME=v4r12>2008-08-09 OnlineSys v4r12</A></H1><PRE>
      New version v4r12 built against LHCb v25r0.
