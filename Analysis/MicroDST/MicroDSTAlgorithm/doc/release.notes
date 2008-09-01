@@ -1,7 +1,37 @@
-! $Id: release.notes,v 1.66 2008-08-29 07:09:16 jpalac Exp $
+! $Id: release.notes,v 1.67 2008-09-01 17:28:36 jpalac Exp $
 ! Package     : MicroDST/MicroDSTAlgorithm
 ! Responsible : Ulrich Kerzel, Juan Palacios
 !============================================================
+
+! 2008-09-01 - Juan PALACIOS
+ - src/CopyFlavourTag.h
+ - src/CopyHltSummary.h
+ - src/CopyL0DUReport.h
+ - src/CopyMCParticles.h
+ - src/CopyParticles.h
+ - src/CopyPrimaryVertices.h
+ - src/CopyProtoParticles.h
+  . Remove obsolete #include "Defaults.h"
+
+! 2008-09-01 - Juan PALACIOS
+ - src/CopyFlavourTag.cpp
+ - src/CopyFlavourTag.h
+ - src/CopyHltSummary.h
+ - src/CopyL0DUReport.h
+ - src/CopyMCHeader.h
+ - src/CopyMCParticles.cpp
+ - src/CopyMCParticles.h
+ - src/CopyODIN.h
+ - src/CopyParticles.cpp
+ - src/CopyParticles.h
+ - src/CopyPrimaryVertices.cpp
+ - src/CopyPrimaryVertices.h
+ - src/CopyProtoParticles.cpp
+ - src/CopyProtoParticles.h
+ - src/CopyRecHeader.h
+  . Re-implement all these simple algorithms as templates of ObjectClonerAlg<T> or 
+    KeyedContainerClonerAlg<T>. Write the necessary specialisaitons of BindType2Cloner<T>,
+    Location<T> and Defaults<T>
 
 ! 2008-08-29 - Juan PALACIOS
  - cmt/requirements, src/MicroDSTAlgorithm_dll.cpp
