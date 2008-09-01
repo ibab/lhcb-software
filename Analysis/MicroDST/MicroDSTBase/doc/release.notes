@@ -1,10 +1,21 @@
-!$Id: release.notes,v 1.17 2008-09-01 11:56:07 jpalac Exp $
+!$Id: release.notes,v 1.18 2008-09-01 17:03:36 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTBase
 ! Responsible : Juan Palacios
 ! Purpose     : Base classes for MicroDST algorithms and tools, plus helper
 !               functions and functors.
 !-----------------------------------------------------------------------------
+
+! 2008-09-01 - Juan PALACIOS
+ - MicroDST/Defaults.h
+  . Keep only forward declarations of Defaults and Location templated structs.
+ - MicroDST/BindType2ClonerDef.h
+  . Add templated default implementation.
+ - MicroDST/KeyedContainerClonerAlg.h
+  . Use new templated structs for location and default cloner type.
+ - MicroDSTBase/MicroDST/ObjectClonerAlg.h
+  . Steer cloner functor type and default TES location with new templated
+    structs Location and BindType2Cloner.
 
 ! 2008-09-01 - Juan PALACIOS
  - Add MicroDST/BindType2ClonerDef.h
