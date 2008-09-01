@@ -1,4 +1,4 @@
-// $Id: CopyFlavourTag.h,v 1.3 2008-09-01 17:12:56 jpalac Exp $
+// $Id: CopyFlavourTag.h,v 1.4 2008-09-01 17:28:14 jpalac Exp $
 #ifndef COPYFLAVOURTAG_H 
 #define COPYFLAVOURTAG_H 1
 
@@ -11,7 +11,6 @@
 #include "MicroDST/BindType2Cloner.h"
 
 // local
-#include "Defaults.h"
 /** @class CopyFlavourTag CopyFlavourTag.h
  *  
  *  MicroDSTAlgorithm to clone an LHCb::FlavourTag container from one TES 

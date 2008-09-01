@@ -1,4 +1,4 @@
-// $Id: CopyHltSummary.h,v 1.3 2008-09-01 17:12:56 jpalac Exp $
+// $Id: CopyHltSummary.h,v 1.4 2008-09-01 17:28:14 jpalac Exp $
 #ifndef COPYHLTSUMMARY_H 
 #define COPYHLTSUMMARY_H 1
 
@@ -7,7 +7,6 @@
 #include "MicroDST/ObjectClonerAlg.h"
 // from LHCb
 #include "Event/HltSummary.h"
-#include "Defaults.h"
 /** @class CopyHltSummary CopyHltSummary.h
  *  
  *  MicroDSTAlgorithm to clone an LHCb::HltSummary from one TES location to 

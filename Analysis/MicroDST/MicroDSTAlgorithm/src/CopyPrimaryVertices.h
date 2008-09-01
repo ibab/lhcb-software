@@ -1,4 +1,4 @@
-// $Id: CopyPrimaryVertices.h,v 1.8 2008-09-01 17:12:57 jpalac Exp $
+// $Id: CopyPrimaryVertices.h,v 1.9 2008-09-01 17:28:14 jpalac Exp $
 #ifndef COPYPRIMARYVERTICES_H 
 #define COPYPRIMARYVERTICES_H 1
 
@@ -9,8 +9,6 @@
 #include "MicroDST/BindType2ClonerDef.h"
 // from LHCb
 #include <Event/RecVertex.h>
-// local
-#include "Defaults.h"
 /** @class CopyPrimaryVertices CopyPrimaryVertices.h
  *  
  * MicroDSTAlgorithm to clone LHCb::RecVertex and related objects 

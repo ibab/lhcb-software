@@ -1,4 +1,4 @@
-// $Id: CopyProtoParticles.h,v 1.9 2008-09-01 17:12:57 jpalac Exp $
+// $Id: CopyProtoParticles.h,v 1.10 2008-09-01 17:28:14 jpalac Exp $
 #ifndef COPYPROTOPARTICLES_H 
 #define COPYPROTOPARTICLES_H 1
 
@@ -10,9 +10,6 @@
 #include "MicroDST/BindType2ClonerDef.h"
 // from LHCb
 #include <Event/ProtoParticle.h>
-// local
-#include "Defaults.h"
-
 /** @class CopyProtoParticles CopyProtoParticles.h
  *  
  * MicroDSTAlgorithm to clone LHCb::ProtoParticles from one TES location 

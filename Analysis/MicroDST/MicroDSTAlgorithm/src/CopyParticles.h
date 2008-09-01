@@ -1,4 +1,4 @@
-// $Id: CopyParticles.h,v 1.13 2008-09-01 17:12:57 jpalac Exp $
+// $Id: CopyParticles.h,v 1.14 2008-09-01 17:28:14 jpalac Exp $
 #ifndef COPYPARTICLES_H 
 #define COPYPARTICLES_H 1
 
@@ -9,9 +9,6 @@
 #include "MicroDST/BindType2ClonerDef.h"
 // from LHCb
 #include <Event/Particle.h>
-// local
-#include "Defaults.h"
-
 /** @class CopyParticles CopyParticles.h
  *  
  * MicroDSTAlgorithm to clone LHCb::Particles and related objects 

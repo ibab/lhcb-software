@@ -1,4 +1,4 @@
-// $Id: CopyL0DUReport.h,v 1.3 2008-09-01 17:12:56 jpalac Exp $
+// $Id: CopyL0DUReport.h,v 1.4 2008-09-01 17:28:14 jpalac Exp $
 #ifndef COPYL0DUREPORT_H 
 #define COPYL0DUREPORT_H 1
 
@@ -7,8 +7,6 @@
 #include "MicroDST/ObjectClonerAlg.h"
 // from LHCb
 #include "Event/L0DUReport.h"
-//local
-#include "Defaults.h"
 /** @class CopyL0DUReport CopyL0DUReport.h
  *  
  *  MicroDSTAlgorithm to clone an LHCb::L0DUReport from one TES location to 
