@@ -1,4 +1,4 @@
-// $Id: KeyedContainerClonerAlg.h,v 1.1 2008-08-29 17:00:44 jpalac Exp $
+// $Id: KeyedContainerClonerAlg.h,v 1.2 2008-09-01 09:04:27 jpalac Exp $
 #ifndef MICRODST_KEYEDCONTAINERCLONERALG_H 
 #define MICRODST_KEYEDCONTAINERCLONERALG_H 1
 
@@ -14,12 +14,20 @@
  *  @author Juan PALACIOS
  *  @date   2008-08-29
  */
+template <class T> struct Defaults;
+template <class T> struct BindType2Cloner;
+
 namespace MicroDST 
 {
-  
-template <typename T, typename CLONER, typename DEFAULTS>
+
+template <typename T>
 class KeyedContainerClonerAlg : public MicroDSTAlgorithm {
-public: 
+
+private:
+  typedef Defaults<T> DEFAULTS;
+  typedef typename BindType2Cloner<T>::cloner CLONER;
+public:
+
   /// Standard constructor
   KeyedContainerClonerAlg( const std::string& name, ISvcLocator* pSvcLocator )
     :
