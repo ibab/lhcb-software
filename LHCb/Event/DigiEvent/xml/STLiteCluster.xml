@@ -7,8 +7,10 @@
 <!ENTITY channelIDName "STChannelID">
 <!ENTITY className "STLiteCluster">
 <!ENTITY posBits "2">
+<!ENTITY channelIDFunction "channelID()" >
 <!ENTITY STLiteClusterClass SYSTEM "SiLiteCluster.ent">
-]>
+<!ENTITY STLiteClusterChannelIDFunctions SYSTEM "STChannelID.ent">]>
+
 <gdd>
 
 <package name="DigiEvent">
@@ -20,26 +22,7 @@
      <location name="ITClusters"   place="Raw/IT/LiteClusters"   />
 
   &STLiteClusterClass;
-
-<method
- name = "isTT"
- type = "bool"
- desc = "check if TT type"
- const = "TRUE" >
-  <code>
-  return channelID().isTT(); 
-  </code> 
-</method>
-
-<method
- name = "isIT"
- type = "bool"
- desc = "check if IT type"
- const = "TRUE" >
-  <code>
-  return channelID().isIT();
-  </code> 
-</method>
+  &STLiteClusterChannelIDFunctions;
 
   </class>
 </package>

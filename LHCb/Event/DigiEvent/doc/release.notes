@@ -4,6 +4,9 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+! 2008-09-01 M Needham
+ - Add shortcuts to station, layer etc to STCluster classes
+
 ! 2008-08-23 M Needham
  - Add accessor to liteCluster form Cluster class 
 

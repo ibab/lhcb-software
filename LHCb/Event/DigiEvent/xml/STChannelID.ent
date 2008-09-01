@@ -1,0 +1,72 @@
+<method
+ name = "isTT"
+ type = "bool"
+ desc = "check if TT type"
+ const = "TRUE" >
+  <code>
+  return &channelIDFunction;.isTT(); 
+  </code> 
+</method>
+
+<method
+ name = "isIT"
+ type = "bool"
+ desc = "check if IT type"
+ const = "TRUE" >
+  <code>
+  return &channelIDFunction;.isIT();
+  </code> 
+</method>
+
+<method
+ name = "station"
+ type = "unsigned int"
+ desc = "short cut for station"
+ const = "TRUE" >
+  <code>
+  return &channelIDFunction;.station();
+  </code> 
+</method>
+
+<method
+ name = "layer"
+ type = "unsigned int"
+ desc = "shortcut for layer"
+ const = "TRUE" >
+  <code>
+  return &channelIDFunction;.layer();
+  </code> 
+</method>
+
+<method
+ name = "detRegion"
+ type = "unsigned int"
+ desc = "short cut for detRegion"
+ const = "TRUE" >
+  <code>
+  return &channelIDFunction;.detRegion();
+  </code> 
+</method>
+
+<method
+ name = "sector"
+ type = "unsigned int"
+ desc = "short cut for sector"
+ const = "TRUE" >
+  <code>
+  return &channelIDFunction;.sector();
+  </code> 
+</method>
+
+<method
+ name = "strip"
+ type = "unsigned int"
+ desc = "short cut for strip"
+ const = "TRUE" >
+  <code>
+  return &channelIDFunction;.sector();
+  </code> 
+</method>
+
+
+

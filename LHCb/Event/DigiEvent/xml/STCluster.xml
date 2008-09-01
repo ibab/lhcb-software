@@ -6,7 +6,9 @@
 <!DOCTYPE gdd SYSTEM "gdd.dtd" [
 <!ENTITY liteClusterName "STLiteCluster">
 <!ENTITY channelID "STChannelID">
+<!ENTITY channelIDFunction "channelID()" >
 <!ENTITY STClusterClass SYSTEM "SiCluster.ent">
+<!ENTITY STClusterChannelIDFunctions SYSTEM "STChannelID.ent">
 ]>
 <gdd>
  <package name="DigiEvent">
@@ -100,25 +102,8 @@
       </code>
  </method>
 
-<method
- name = "isTT"
- type = "bool"
- desc = "check if TT type"
- const = "TRUE" >
-  <code>
-  return m_liteCluster.channelID().isTT();
-  </code> 
-</method>
+ &STClusterChannelIDFunctions;
 
-<method
- name = "isIT"
- type = "bool"
- desc = "check if IT type"
- const = "TRUE" >
-  <code>
-  return m_liteCluster.channelID().isIT();
-  </code> 
-</method>
 
     </class>
 </package>
