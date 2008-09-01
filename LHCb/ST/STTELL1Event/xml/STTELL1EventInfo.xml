@@ -135,7 +135,7 @@
          setMeth   = 'TRUE'
          getMeth   = 'TRUE'
          checkMeth = 'FALSE' />
-    
+
         <bitfield
          type      = 'unsigned char'
          name      = 'TLKLnkLoss'
@@ -371,6 +371,13 @@
 	const  = "TRUE"
 	access = "PUBLIC"
 	/>
+
+
+        <method name = "linkEnabled"
+         type = "bool"
+         desc = "test if bit enable"
+         argList = "const unsigned int"
+         const = "TRUE" />
   
 	 </class>
   </package>

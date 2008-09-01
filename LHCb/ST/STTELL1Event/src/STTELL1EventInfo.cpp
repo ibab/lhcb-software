@@ -24,6 +24,7 @@ unsigned int LHCb::STTELL1EventInfo::findPCN(const unsigned int beetle) const{
     return 200u;
 }
 
+
 unsigned int LHCb::STTELL1EventInfo::pcnVote() const{
   
   std::map<unsigned int, unsigned int> pcns;
@@ -59,3 +60,10 @@ bool LHCb::STTELL1EventInfo::pcnConsistency() const
 
   return isConsistent;
 }
+
+bool LHCb::STTELL1EventInfo::linkEnabled(const unsigned int iLink) const{
+  return  (OptLnkDisable() >> iLink & 1) ;
+} 
+
+
+
