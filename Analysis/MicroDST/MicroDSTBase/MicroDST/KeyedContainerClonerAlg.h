@@ -1,4 +1,4 @@
-// $Id: KeyedContainerClonerAlg.h,v 1.3 2008-09-01 11:57:07 jpalac Exp $
+// $Id: KeyedContainerClonerAlg.h,v 1.4 2008-09-01 17:02:57 jpalac Exp $
 #ifndef MICRODST_KEYEDCONTAINERCLONERALG_H 
 #define MICRODST_KEYEDCONTAINERCLONERALG_H 1
 
@@ -24,6 +24,7 @@ class KeyedContainerClonerAlg : public MicroDSTAlgorithm {
 
 private:
   typedef Defaults<T> DEFAULTS;
+  typedef Location<T> LOCATION;
   typedef typename BindType2Cloner<T>::cloner CLONER;
 public:
 
@@ -32,7 +33,7 @@ public:
     :
     MicroDSTAlgorithm ( name , pSvcLocator ),
     m_cloner(0),
-    m_clonerType(DEFAULTS::clonerType())
+    m_clonerType(DEFAULTS::clonerType)
   {
     declareProperty("ClonerType", m_clonerType);
   }
@@ -49,8 +50,8 @@ public:
 
     if (inputTESLocation()=="")  {
       verbose() << "changing input TES location to " 
-                << DEFAULTS::location() << endmsg;
-      setInputTESLocation(DEFAULTS::location());
+                << LOCATION::Default << endmsg;
+      setInputTESLocation(LOCATION::Default);
     }
     verbose() << "inputTESLocation() is " << inputTESLocation() << endmsg;
 
