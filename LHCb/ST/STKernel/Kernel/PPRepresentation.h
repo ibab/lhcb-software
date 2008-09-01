@@ -1,4 +1,4 @@
-// $Id: PPRepresentation.h,v 1.1 2008-08-23 08:22:45 mneedham Exp $
+// $Id: PPRepresentation.h,v 1.2 2008-09-01 08:51:11 mneedham Exp $
 #ifndef _STDAQ_PPRepresentation_H
 #define _STDAQ_PPRepresentation_H 1
 
@@ -15,7 +15,7 @@
 
 #include "Kernel/STDAQDefinitions.h"
 #include "Kernel/LHCbConstants.h"
-#include "PPRepresentation.h"
+#include "Kernel/StripRepresentation.h"
 #include <iostream>
 
 namespace STDAQ{
@@ -37,7 +37,7 @@ namespace STDAQ{
                      unsigned int strip = 0); 
 
     /** constructor  from int */
-    explicit PPRepresentation(const StripRepresentation& strip); 
+    explicit PPRepresentation(const STDAQ::StripRepresentation& strip); 
 
     /** destructor */
     ~PPRepresentation(){}
@@ -55,7 +55,7 @@ namespace STDAQ{
     unsigned int value() const;
 
     /** value as StripRepresentation */
-    StripRepresentation toStripRepresentation() const;
+    STDAQ::StripRepresentation toStripRepresentation() const;
 
     /** Operator overloading for stringoutput */
     friend std::ostream& operator<< (std::ostream& s, 

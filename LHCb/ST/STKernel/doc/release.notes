@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.29 2008-08-23 08:22:46 mneedham Exp $
+! $Id: release.notes,v 1.30 2008-09-01 08:51:11 mneedham Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
 
+! 2008-08-31 M Needham
+ - bug fixes in Representation classes
 
 ! 2008-08-23 M Needham
  - Remove some of the functionality from STTell1Board
