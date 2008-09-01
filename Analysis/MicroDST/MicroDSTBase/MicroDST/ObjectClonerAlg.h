@@ -1,4 +1,4 @@
-// $Id: ObjectClonerAlg.h,v 1.1 2008-08-29 05:50:42 jpalac Exp $
+// $Id: ObjectClonerAlg.h,v 1.2 2008-09-01 09:04:06 jpalac Exp $
 #ifndef MICRODST_MICRODSTOBJECTCLONERALG_H 
 #define MICRODST_MICRODSTOBJECTCLONERALG_H 1
 
@@ -18,7 +18,7 @@
 namespace MicroDST 
 {
   
-  template <typename T>
+  template <typename T, typename CLONER = MicroDST::BasicCopy<T> >
   class ObjectClonerAlg : public MicroDSTAlgorithm {
   public: 
     /// Standard constructor
@@ -55,8 +55,8 @@ namespace MicroDST
   
         verbose() << "Going to object from " << inputTESLocation()
                   << " into " << fullOutputTESLocation() << endmsg;
-        return (0!=copyAndStoreObject<T,MicroDST::BasicCopy<T> >(inputTESLocation(),
-                                                                fullOutputTESLocation() ) ) ?
+        return (0!=copyAndStoreObject<T, CLONER >(inputTESLocation(),
+                                                  fullOutputTESLocation() ) ) ?
           StatusCode::SUCCESS : StatusCode::FAILURE;
     }
     
