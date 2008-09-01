@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.15 2008-08-29 05:51:12 jpalac Exp $
+!$Id: release.notes,v 1.16 2008-09-01 09:06:40 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTBase
 ! Responsible : Juan Palacios
@@ -6,9 +6,20 @@
 !               functions and functors.
 !-----------------------------------------------------------------------------
 
+! 2008-09-01 - Juan PALACIOS
+ - MicroDST/ObjectClonerAlg.h
+  . Add second template parameter controlling the static cloner action. Default
+    is MicroDST::BasicCopy<T>.
+ - MicroDST/KeyedContainerClonerAlg.h
+  . Use new Defaults and BindType2Cloner structs to reduce number of template
+    parameters to one.
+
 ! 2008-08-29 - Juan PALACIOS
+ - Add MicroDST/KeyedContainerClonerAlg.h
+  . Templated MicroDSTAlgorithm class for cloning contents of a KeyedContainer
+    using a user-specified cloner tool.
  - Add MicroDST/ObjectClonerAlg.h
-  . Templated class for the simplest object cloning MicroDSTAlgorithms.
+  . Templated MicroDSTAlgorithm class for the simplest object cloning .
  - cmt/requirements
   . Increase version to v1r2
 
