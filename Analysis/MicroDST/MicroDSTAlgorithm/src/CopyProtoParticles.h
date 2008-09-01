@@ -1,15 +1,18 @@
-// $Id: CopyProtoParticles.h,v 1.8 2008-04-02 09:37:50 jpalac Exp $
+// $Id: CopyProtoParticles.h,v 1.9 2008-09-01 17:12:57 jpalac Exp $
 #ifndef COPYPROTOPARTICLES_H 
 #define COPYPROTOPARTICLES_H 1
 
 // Include files
 // from MicroDST
-#include "MicroDST/MicroDSTAlgorithm.h"
-class ICloneProtoParticle;
-
+// from MicroDST
+#include "MicroDST/KeyedContainerClonerAlg.h"
+#include <MicroDST/ICloneProtoParticle.h>
+#include "MicroDST/BindType2ClonerDef.h"
 // from LHCb
-#include "Event/ProtoParticle.h"
-#include "Event/Particle.h"
+#include <Event/ProtoParticle.h>
+// local
+#include "Defaults.h"
+
 /** @class CopyProtoParticles CopyProtoParticles.h
  *  
  * MicroDSTAlgorithm to clone LHCb::ProtoParticles from one TES location 
@@ -21,7 +24,7 @@ class ICloneProtoParticle;
  * a leading "/Event" it is removed.
  * The actual cloning of individual LHCb::ProtoParticles is performed by the 
  * ICloneProtoParticle, the implementation of which is set by the property 
- * ICloneProtoParticle (default ProtoParticleCloner). It is the 
+ * ClonerType (default ProtoParticleCloner). It is the 
  * ICloneProtoParticle that controls the depth of the cloning, ie 
  * what is done with related elements like LHCb::Tracks etc.
  *
@@ -33,7 +36,7 @@ class ICloneProtoParticle;
  *  @code
  *
  *  // Add a CopyProtoParticles instance to a selection sequence
- *  SeqDC06selBd2Jpsi2MuMu_Kst2KPi.Members += {"CopyProtoParticles"};
+ *  SeqDC06selBd2Jpsi2MuMu_Kst2KPi.Members += {"MicroDST::KeyedContainerClonerAlg<LHCb::ProtoParticle>/CopyProtoParticles"};
  *  CopyProtoParticles.OutputPrefix = "MyLocation";
  *  CopyProtoParticles.InputLocation = "Rec/ProtoP/Charged";
  *  CopyProtoParticles.ICloneProtoParticle = "ProtoParticleCloner"
@@ -45,29 +48,25 @@ class ICloneProtoParticle;
  *  @author Juan PALACIOS juan.palacios@nikhef.nl
  *  @date   2008-04-01
  */
-class CopyProtoParticles : public MicroDSTAlgorithm {
-public: 
-  /// Standard constructor
-  CopyProtoParticles( const std::string& name, ISvcLocator* pSvcLocator );
-
-  virtual ~CopyProtoParticles( ); ///< Destructor
-
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
-
-protected:
-
-private:
-
-  typedef LHCb::ProtoParticle::Container ProtoParticles;
-  typedef MicroDST::BasicItemCloner<LHCb::ProtoParticle> PPCloneFunctor;
-  typedef MicroDST::CloneKeyedContainerItem<LHCb::ProtoParticle, PPCloneFunctor> BasicPPCloner;
-
-private:
-
-  ICloneProtoParticle* m_cloner;
-  std::string m_clonerName;
-
+template <> struct BindType2Cloner<LHCb::ProtoParticle> 
+{
+  typedef LHCb::ProtoParticle type;
+  typedef ICloneProtoParticle cloner;
 };
+//=============================================================================
+template<> struct Defaults<LHCb::ProtoParticle>
+{
+  const static std::string clonerType;
+};
+const std::string Defaults<LHCb::ProtoParticle>::clonerType = "ProtoParticleCloner";
+//=============================================================================
+template<> struct Location<LHCb::ProtoParticle>
+{
+  const static std::string Default;
+};
+const std::string Location<LHCb::ProtoParticle>::Default = "";
+//=============================================================================
+typedef MicroDST::KeyedContainerClonerAlg<LHCb::ProtoParticle>
+CopyProtoParticles;
+DECLARE_ALGORITHM_FACTORY( CopyProtoParticles );
 #endif // COPYPROTOPARTICLES_H

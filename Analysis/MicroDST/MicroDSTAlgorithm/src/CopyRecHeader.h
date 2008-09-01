@@ -1,4 +1,4 @@
-// $Id: CopyRecHeader.h,v 1.5 2008-08-29 07:08:56 jpalac Exp $
+// $Id: CopyRecHeader.h,v 1.6 2008-09-01 17:12:57 jpalac Exp $
 #ifndef COPYRECHEADER_H 
 #define COPYRECHEADER_H 1
 
@@ -32,7 +32,19 @@
  *  @author Juan PALACIOS juan.palacios@nikhef.nl
  *  @date   2007-10-15
  */
-
+//=============================================================================
+template <> struct BindType2Cloner<LHCb::RecHeader> 
+{
+  typedef LHCb::RecHeader type;
+  typedef MicroDST::BasicCopy<LHCb::RecHeader> cloner;
+};
+//=============================================================================
+template <> struct Location<LHCb::RecHeader> 
+{
+  const static std::string Default;
+};
+const std::string Location<LHCb::RecHeader>::Default = LHCb::RecHeaderLocation::Default;
+//=============================================================================
 typedef MicroDST::ObjectClonerAlg<LHCb::RecHeader> CopyRecHeader;
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( CopyRecHeader )

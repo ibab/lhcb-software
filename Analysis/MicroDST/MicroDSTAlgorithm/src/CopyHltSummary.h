@@ -1,4 +1,4 @@
-// $Id: CopyHltSummary.h,v 1.2 2008-08-29 07:08:56 jpalac Exp $
+// $Id: CopyHltSummary.h,v 1.3 2008-09-01 17:12:56 jpalac Exp $
 #ifndef COPYHLTSUMMARY_H 
 #define COPYHLTSUMMARY_H 1
 
@@ -7,7 +7,7 @@
 #include "MicroDST/ObjectClonerAlg.h"
 // from LHCb
 #include "Event/HltSummary.h"
-
+#include "Defaults.h"
 /** @class CopyHltSummary CopyHltSummary.h
  *  
  *  MicroDSTAlgorithm to clone an LHCb::HltSummary from one TES location to 
@@ -30,6 +30,18 @@
  *  @author Juan PALACIOS juan.palacios@nikhef.nl
  *  @date   2008-04-16
  */
+template <> struct BindType2Cloner<LHCb::HltSummary> 
+{
+  typedef LHCb::HltSummary type;
+  typedef MicroDST::BasicCopy<LHCb::HltSummary> cloner;
+};
+//=============================================================================
+template <> struct Location<LHCb::HltSummary> 
+{
+  const static std::string Default;
+};
+const std::string Location<LHCb::HltSummary>::Default = LHCb::HltSummaryLocation::Default;
+//=============================================================================
 typedef MicroDST::ObjectClonerAlg<LHCb::HltSummary> CopyHltSummary;
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( CopyHltSummary )

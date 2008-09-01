@@ -1,17 +1,17 @@
-// $Id: CopyFlavourTag.h,v 1.2 2008-08-08 12:41:34 jpalac Exp $
+// $Id: CopyFlavourTag.h,v 1.3 2008-09-01 17:12:56 jpalac Exp $
 #ifndef COPYFLAVOURTAG_H 
 #define COPYFLAVOURTAG_H 1
 
 // Include files
+// from LHCb
+#include <Event/FlavourTag.h>
 // from MicroDST
-#include "MicroDST/MicroDSTAlgorithm.h"
+#include "MicroDST/KeyedContainerClonerAlg.h"
+#include <MicroDST/ICloneFlavourTag.h>
+#include "MicroDST/BindType2Cloner.h"
 
-namespace MicroDST
-{
-  class ICloneFlavourTag;
-}
-
-
+// local
+#include "Defaults.h"
 /** @class CopyFlavourTag CopyFlavourTag.h
  *  
  *  MicroDSTAlgorithm to clone an LHCb::FlavourTag container from one TES 
@@ -24,7 +24,7 @@ namespace MicroDST
  *  If no InputLocation is specified the FlavourTags are taken from 
  *  LHCb::FlavourTagLocation::Default
  *  The cloning action os performed by an implementation of the 
- *  ICloneFlavourTag interface. This is steerable via the ICloneFlavourTag
+ *  ICloneFlavourTag interface. This is steerable via the ClonerType
  *  property, with default value FlavourTagCloner.
  *
  *  <b>Example</b>: Clone the LHCb::FlavourTags from default location ("Phys/Tagging") 
@@ -32,31 +32,31 @@ namespace MicroDST
  *  @code
  *  // Add a sequencer
  *  ApplicationMgr.TopAlg += { "GaudiSequencer/MyStuffCopier" } ;
- *  MyStuffCopier.Members += {"CopyFlavourTag"};
+ *  MyStuffCopier.Members += {"MicroDST::KeyedContainerClonerAlg<LHCb::FlavourTag>/CopyFlavourTag"};
  *  CopyFlavourTag.OutputPrefix = "MyLocation";
  *  @endcode
  *
  *  @author Juan PALACIOS juan.palacios@nikhef.nl
  *  @date   2008-04-16
  */
-class CopyFlavourTag : public MicroDSTAlgorithm {
-public: 
-  /// Standard constructor
-  CopyFlavourTag( const std::string& name, ISvcLocator* pSvcLocator );
-
-  virtual ~CopyFlavourTag( ); ///< Destructor
-
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
-
-private:
-  typedef MicroDST::BasicCopy<LHCb::FlavourTag> FlavourTagCopy;
-  typedef MicroDST::CloneKeyedContainerItem<LHCb::FlavourTag, FlavourTagCopy> FlavourTagKeyedItemCopy;
-
-  ICloneFlavourTag* m_cloner;
-
-  std::string m_tagClonerName;
-
+template <> struct BindType2Cloner<LHCb::FlavourTag> 
+{
+  typedef LHCb::FlavourTag type;
+  typedef ICloneFlavourTag cloner;
 };
+//=============================================================================
+template<> struct Defaults<LHCb::FlavourTag>
+{
+  const static std::string clonerType;
+};
+const std::string Defaults<LHCb::FlavourTag>::clonerType = "FlavourTagCloner";
+//=============================================================================
+template<> struct Location<LHCb::FlavourTag>
+{
+  const static std::string Default;
+};
+const std::string Location<LHCb::FlavourTag>::Default = LHCb::FlavourTagLocation::Default;
+//=============================================================================
+typedef MicroDST::KeyedContainerClonerAlg<LHCb::FlavourTag> CopyFlavourTag;
+DECLARE_ALGORITHM_FACTORY( CopyFlavourTag );
 #endif // COPYFLAVOURTAG_H

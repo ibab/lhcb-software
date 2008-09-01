@@ -1,4 +1,4 @@
-// $Id: CopyL0DUReport.h,v 1.2 2008-08-29 07:08:56 jpalac Exp $
+// $Id: CopyL0DUReport.h,v 1.3 2008-09-01 17:12:56 jpalac Exp $
 #ifndef COPYL0DUREPORT_H 
 #define COPYL0DUREPORT_H 1
 
@@ -7,7 +7,8 @@
 #include "MicroDST/ObjectClonerAlg.h"
 // from LHCb
 #include "Event/L0DUReport.h"
-
+//local
+#include "Defaults.h"
 /** @class CopyL0DUReport CopyL0DUReport.h
  *  
  *  MicroDSTAlgorithm to clone an LHCb::L0DUReport from one TES location to 
@@ -30,6 +31,19 @@
  *  @author Juan PALACIOS juan.palacios@nikhef.nl
  *  @date   2008-04-16
  */
+//=============================================================================
+template <> struct BindType2Cloner<LHCb::L0DUReport> 
+{
+  typedef LHCb::L0DUReport type;
+  typedef MicroDST::BasicCopy<LHCb::L0DUReport> cloner;
+};
+//=============================================================================
+template <> struct Location<LHCb::L0DUReport> 
+{
+  const static std::string Default;
+};
+const std::string Location<LHCb::L0DUReport>::Default = LHCb::L0DUReportLocation::Default;
+//=============================================================================
 typedef MicroDST::ObjectClonerAlg<LHCb::L0DUReport> CopyL0DUReport;
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( CopyL0DUReport )

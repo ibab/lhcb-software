@@ -1,12 +1,16 @@
-// $Id: CopyMCParticles.h,v 1.2 2008-04-16 10:28:04 jpalac Exp $
+// $Id: CopyMCParticles.h,v 1.3 2008-09-01 17:12:56 jpalac Exp $
 #ifndef COPYMCPARTICLES_H 
 #define COPYMCPARTICLES_H 1
 
 // Include files
-// from Gaudi
-#include <MicroDST/MicroDSTAlgorithm.h>
-
-class ICloneMCParticle;
+// from MicroDST
+#include <MicroDST/KeyedContainerClonerAlg.h>
+#include <MicroDST/ICloneMCParticle.h>
+#include "MicroDST/BindType2ClonerDef.h"
+// from LHCb
+#include <Event/MCParticle.h>
+// local
+#include "Defaults.h"
 
 /** @class CopyMCParticles CopyMCParticles.h
  *  
@@ -28,7 +32,7 @@ class ICloneMCParticle;
  *  @code
  *
  *  // Add a CopyMCParticles instance to a selection sequence
- *  SeqDC06selBd2Jpsi2MuMu_Kst2KPi.Members += {"CopyMCParticles"};
+ *  SeqDC06selBd2Jpsi2MuMu_Kst2KPi.Members += {"MicroDST::KeyedContainerClonerAlg<LHCb::MCParticle>/CopyMCParticles"};
  *  CopyMCParticles.OutputPrefix = "MyLocation";
  *  CopyMCParticles.InputLocation = "MC/Particles";
  *  CopyMCParticles.ICloneMCParticle = "MCParticleCloner"
@@ -37,21 +41,24 @@ class ICloneMCParticle;
  *  @author Juan PALACIOS juan.palacios@nikhef.nl
  *  @date   2008-04-08
  */
-class CopyMCParticles : public MicroDSTAlgorithm {
-public: 
-  /// Standard constructor
-  CopyMCParticles( const std::string& name, ISvcLocator* pSvcLocator );
-
-  virtual ~CopyMCParticles( ); ///< Destructor
-
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
-
-private:
-
-  ICloneMCParticle* m_particleCloner;
-  std::string m_particleClonerName;
-
+template <> struct BindType2Cloner<LHCb::MCParticle> 
+{
+  typedef LHCb::MCParticle type;
+  typedef ICloneMCParticle cloner;
 };
+//=============================================================================
+template<> struct Defaults<LHCb::MCParticle>
+{
+  const static std::string clonerType;
+};
+const std::string Defaults<LHCb::MCParticle>::clonerType = "MCParticleCloner";
+//=============================================================================
+template<> struct Location<LHCb::MCParticle>
+{
+  const static std::string Default;
+};
+const std::string Location<LHCb::MCParticle>::Default = LHCb::MCParticleLocation::Default;
+//=============================================================================
+typedef MicroDST::KeyedContainerClonerAlg<LHCb::MCParticle> CopyMCParticle;
+DECLARE_ALGORITHM_FACTORY( CopyMCParticle );
 #endif // COPYMCPARTICLES_H

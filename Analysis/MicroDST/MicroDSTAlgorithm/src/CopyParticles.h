@@ -1,11 +1,16 @@
-// $Id: CopyParticles.h,v 1.12 2008-04-08 16:43:01 jpalac Exp $
+// $Id: CopyParticles.h,v 1.13 2008-09-01 17:12:57 jpalac Exp $
 #ifndef COPYPARTICLES_H 
 #define COPYPARTICLES_H 1
 
 // Include files
-// from Gaudi
-#include <MicroDST/MicroDSTAlgorithm.h>
+// from MicroDST
+#include "MicroDST/KeyedContainerClonerAlg.h"
 #include <MicroDST/ICloneParticle.h>
+#include "MicroDST/BindType2ClonerDef.h"
+// from LHCb
+#include <Event/Particle.h>
+// local
+#include "Defaults.h"
 
 /** @class CopyParticles CopyParticles.h
  *  
@@ -18,7 +23,7 @@
  * a leading "/Event" it is removed.
  * The actual cloning of individual LHCb::Particles is performed by the 
  * ICloneParticle, the implementation of which is set by the property 
- * ICloneParticle (default ParticleCloner)
+ * ClonerType (default ParticleCloner)
  * @see ICloneParticle
  * @see ParticleCloner
  *
@@ -27,31 +32,34 @@
  *  @code
  *
  *  // Add a CopyParticles instance to a selection sequence
- *  SeqDC06selBd2Jpsi2MuMu_Kst2KPi.Members += {"CopyParticles"};
+ *  SeqDC06selBd2Jpsi2MuMu_Kst2KPi.Members += {"MicroDST::KeyedContainerClonerAlg<LHCb::Particle>/CopyParticles"};
  *  CopyParticles.OutputPrefix = "MyLocation";
  *  CopyParticles.InputLocation = "Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/Particles";
- *  CopyParticles.ICloneParticle = "ParticleCloner"
+ *  CopyParticles.ClonerType = "ParticleCloner"
  *  @endcode
  * 
  *  @author Juan PALACIOS juan.palacios@nikhef.nl
  *  @date   2007-10-16
  */
-class CopyParticles : public MicroDSTAlgorithm {
-public: 
-  /// Standard constructor
-  CopyParticles( const std::string& name, ISvcLocator* pSvcLocator );
-
-  virtual ~CopyParticles( ); ///< Destructor
-
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
-
-private:
-
-  ICloneParticle* m_particleCloner;
-
-  std::string m_particleClonerName;
-
+//=============================================================================
+template <> struct BindType2Cloner<LHCb::Particle> 
+{
+  typedef LHCb::Particle type;
+  typedef ICloneParticle cloner;
 };
+//=============================================================================
+template<> struct Defaults<LHCb::Particle>
+{
+  const static std::string clonerType;
+};
+const std::string Defaults<LHCb::Particle>::clonerType = "ParticleCloner";
+//=============================================================================
+template<> struct Location<LHCb::Particle>
+{
+  const static std::string Default;
+};
+const std::string Location<LHCb::Particle>::Default = LHCb::ParticleLocation::Production;
+//=============================================================================
+typedef MicroDST::KeyedContainerClonerAlg<LHCb::Particle> CopyParticles;
+DECLARE_ALGORITHM_FACTORY( CopyParticles );
 #endif // COPYPRIMARYVERTICES_H

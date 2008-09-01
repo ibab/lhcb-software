@@ -1,4 +1,4 @@
-// $Id: CopyMCHeader.h,v 1.6 2008-08-29 07:08:56 jpalac Exp $
+// $Id: CopyMCHeader.h,v 1.7 2008-09-01 17:12:56 jpalac Exp $
 #ifndef COPYMCHEADER_H 
 #define COPYMCHEADER_H 1
 
@@ -38,33 +38,45 @@
  *  @date   2007-11-02
  */
 
-  struct MCHeaderCopy 
+struct MCHeaderCopy 
+{
+  LHCb::MCHeader* operator() (const LHCb::MCHeader* mcHeader) 
+  { 
+    return copy(mcHeader); 
+  }
+    
+  static LHCb::MCHeader* copy(const LHCb::MCHeader* mcHeader)
   {
-    LHCb::MCHeader* operator() (const LHCb::MCHeader* mcHeader) 
-    { 
-      return copy(mcHeader); 
-    }
+
+    LHCb::MCHeader* newHeader = new LHCb::MCHeader(*mcHeader);
     
-    static LHCb::MCHeader* copy(const LHCb::MCHeader* mcHeader)
-    {
+    newHeader->clearPrimaryVertices();
+      
+    const SmartRefVector<LHCb::MCVertex>& PVs = 
+      mcHeader->primaryVertices();
 
-      LHCb::MCHeader* newHeader = new LHCb::MCHeader(*mcHeader);
+    for (SmartRefVector<LHCb::MCVertex>::const_iterator iPV = PVs.begin();
+         iPV != PVs.end();
+         ++iPV) newHeader->addToPrimaryVertices(*iPV);
 
-      newHeader->clearPrimaryVertices();
-
-      const SmartRefVector<LHCb::MCVertex>& PVs = 
-        mcHeader->primaryVertices();
-
-      for (SmartRefVector<LHCb::MCVertex>::const_iterator iPV = PVs.begin();
-           iPV != PVs.end();
-           ++iPV) newHeader->addToPrimaryVertices(*iPV);
-
-      return newHeader;
+    return newHeader;
     
-    }
+  }
 
-  };
-
+};
+//=============================================================================
+template <> struct BindType2Cloner<LHCb::MCHeader> 
+{
+  typedef LHCb::MCHeader type;
+  typedef MCHeaderCopy cloner;
+};
+//=============================================================================
+template <> struct Location<LHCb::MCHeader> 
+{
+  const static std::string Default;
+};
+const std::string Location<LHCb::MCHeader>::Default = LHCb::MCHeaderLocation::Default;
+//=============================================================================
 typedef MicroDST::ObjectClonerAlg<LHCb::MCHeader> CopyMCHeader;
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( CopyMCHeader )
