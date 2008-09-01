@@ -24,9 +24,12 @@ from Configurables import DecayTreeTuple, PhysDesktop, NeuralNetTmva, EventTuple
 
 importOptions( "$B2DILEPTONROOT/options/DVDC06SelBu2eeK.opts" )
 
-# importOptions( "$L0DUOPTS/L0DUFromRaw.opts")
-importOptions( "$HLTSYSROOT/options/L0.opts")
-importOptions( "$HLTSYSROOT/options/Hlt.opts" )
+importOptions('$L0DUROOT/options/L0DUBankSwap.opts')
+importOptions('$L0DUROOT/options/DefaultTCK.opts')
+#
+#
+importOptions( "$HLTSYSROOT/options/Hlt1.opts" )
+importOptions( "$HLTSYSROOT/options/Hlt2.opts" )
 
 ApplicationMgr().TopAlg += [ NeuralNetTmva() ] 
 importOptions( "$NNTOOLSROOT/options/NeuralNetTmva.opts")
