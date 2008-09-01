@@ -16,7 +16,7 @@ use confDB            v1r6     Online
 use confDBpython      v1r7     Online
 use $(CCPCHist_use)
 macro CCPCHist_use "CCPCHist v2r6 Online" slc4-amd64 ""
-use DIM               v17r7    Online
+use DIM               v17r10   Online
 use ExampleGaucho     v3r0     Online
 # Does not work on WIN32
 # use FarmMonitor     v1r0     Online
