@@ -1,8 +1,8 @@
-// $Id: BindType2Cloner.h,v 1.1 2008-09-01 08:59:24 jpalac Exp $
+// $Id: BindType2Cloner.h,v 1.2 2008-09-01 11:51:43 jpalac Exp $
 #ifndef MICRODST_BINDTYPE2CLONER_H 
 #define MICRODST_BINDTYPE2CLONER_H 1
 
-// Forwrd declarations
+// Forward declarations
 class LHCb::FlavourTag;
 class LHCb::MCParticle;
 class LHCb::MCVertex;
@@ -20,16 +20,14 @@ class ICloneProtoParticle;
 class ICloneRecVertex;
 class ICloneTrack;
 class ICloneVertex;
+
+#include "MicroDST/BindType2ClonerDef.h"
 /** @class BindType2Cloner BindType2Cloner.h MicroDST/BindType2Cloner.h
  *  
  *
  *  @author Juan PALACIOS
  *  @date   2008-09-01
  */
-
-template <typename T> struct BindType2Cloner
-{
-};
 
 template <> struct BindType2Cloner<LHCb::FlavourTag> 
 {
