@@ -1,7 +1,7 @@
 // Job options file. Simple Online monitoring example
 //==============================================================
 
-
+ApplicationMgr.TopAlg = {"UpdateAndReset", "GaudiExample"};
 ApplicationMgr.ExtSvc = { "MonitorSvc" };
 
 ApplicationMgr.DLLs = {"GaudiAlg", "GaudiAud","Gaucho", "GaudiOnline"};

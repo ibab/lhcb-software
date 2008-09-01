@@ -11,7 +11,9 @@
 #include <TPad.h>
 //class TImage;
 class DimInfo;
+class DimInfoMonObject;
 //class TPad;
+class DimBrowser;
 
 enum ReferenceVisibility {
     Show = 0,
@@ -28,7 +30,8 @@ class DbRootHist : public HistogramIdentifier
                OnlineHistDB* histogramDB,
                OMAlib* analysisLib,
                OnlineHistogram* onlineHist,
-               pres::MsgLevel verbosity);
+               pres::MsgLevel verbosity,
+               DimBrowser* DimBr);
 
     DbRootHist (const DbRootHist & );
     DbRootHist & operator= (const DbRootHist &);
@@ -151,14 +154,18 @@ class DbRootHist : public HistogramIdentifier
     std::string m_dataType;
     std::string m_dimServiceName;
     DimInfo* m_dimInfo;
+    DimInfoMonObject* m_dimInfoMonObject;    
     pres::MsgLevel m_verbosity;
-
+    DimBrowser*       m_dimBrowser;
+    std::string m_partition;
     void cleanAnaSources();
     void loadAnaSources();
     void initRootFromDim();
     void fillRootFromDim();
 
     bool updateDBOption(std::string opt, void* value, bool isDefault);
+    std::string findDimServiceName(const std::string & dimServiceType);
+    std::string assembleCurrentDimServiceName();
 };
 
 #endif // DBROOTHIST_H

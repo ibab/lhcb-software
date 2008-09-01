@@ -4,6 +4,10 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+!============ Presenter v0r11 2008-09-01 =============
+! 2008-09-01
++ MonObject support
+
 !============ Presenter v0r10 2008-06-17 =============
 ! 2008-06-17
 + Quick partition selector with autodiscovery

@@ -4,6 +4,7 @@ version v0r11
 branches cmt doc src test
 
 use DIM           v*  Online
+use Gaucho        v*  Online
 
 use OnlineHistDB  v*  Online
 use OMAlib        v*  Online
@@ -38,6 +39,8 @@ macro_append Boost_linkopts " "
 macro_append Boost_linkopts $(Boost_linkopts_date_time)
 macro_append Boost_linkopts " "
 macro_append Boost_linkopts $(Boost_linkopts_program_options)
+macro_append Boost_linkopts " "
+macro_append Boost_linkopts $(Boost_linkopts_serialization)
 macro_append Boost_linkopts " "
 #macro_append Boost_linkopts " -lboost_filesystem-gcc34 -lboost_date_time-gcc34 -lboost_program_options-gcc34 " \
 macro_append Boost_linkopts "" WIN32 " boost_filesystem-vc71-mt-1_34_1.lib boost_date_time-vc71-mt-1_34_1.lib boost_program_options-vc71-mt-1_34_1.lib "
