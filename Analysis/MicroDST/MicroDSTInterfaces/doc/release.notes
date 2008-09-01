@@ -4,8 +4,13 @@
 ! Purpose     : Interfaces for MicroDST cloning and storing of LHCb event
 !               model classes
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.4 2008-08-08 12:21:43 jpalac Exp $
+! $Id: release.notes,v 1.5 2008-09-01 08:58:34 jpalac Exp $
 !-----------------------------------------------------------------------------
+
+! 2008-09-01 - Juan PALACIOS
+ - Add MicroDST/BindType2CLoner.h
+  . Simple specialized templated structs to bind event model types to their
+    corresponding cloner interfaces at compile time.
 
 ! 2008-08-08 - Juan PALACIOS
  - cmt/requirements
