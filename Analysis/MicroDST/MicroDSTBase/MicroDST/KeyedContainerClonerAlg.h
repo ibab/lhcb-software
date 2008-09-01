@@ -1,4 +1,4 @@
-// $Id: KeyedContainerClonerAlg.h,v 1.2 2008-09-01 09:04:27 jpalac Exp $
+// $Id: KeyedContainerClonerAlg.h,v 1.3 2008-09-01 11:57:07 jpalac Exp $
 #ifndef MICRODST_KEYEDCONTAINERCLONERALG_H 
 #define MICRODST_KEYEDCONTAINERCLONERALG_H 1
 
@@ -7,15 +7,14 @@
 #include "GaudiKernel/AlgFactory.h" 
 // From MicroDST
 #include "MicroDST/MicroDSTAlgorithm.h"
-
+#include "MicroDST/BindType2ClonerDef.h"
+#include "MicroDST/Defaults.h"
 /** @class KeyedContainerClonerAlg KeyedContainerClonerAlg.h MicroDST/KeyedContainerClonerAlg.h
  *  
  *
  *  @author Juan PALACIOS
  *  @date   2008-08-29
  */
-template <class T> struct Defaults;
-template <class T> struct BindType2Cloner;
 
 namespace MicroDST 
 {
