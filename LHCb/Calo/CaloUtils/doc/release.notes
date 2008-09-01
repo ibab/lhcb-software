@@ -1,9 +1,9 @@
-! $Id: release.notes,v 1.107 2008-08-28 09:10:57 odescham Exp $
+! $Id: release.notes,v 1.108 2008-09-01 13:12:01 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
-
+!========================== CaloUtils v8r1p1 2008-09-01 =======================
 ! 2008-08-28 - Olivier Deschamps
  - Calo2Dview.cpp : remove verbose line
 
