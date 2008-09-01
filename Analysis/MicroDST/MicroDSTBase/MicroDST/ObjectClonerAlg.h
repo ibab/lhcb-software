@@ -1,4 +1,4 @@
-// $Id: ObjectClonerAlg.h,v 1.2 2008-09-01 09:04:06 jpalac Exp $
+// $Id: ObjectClonerAlg.h,v 1.3 2008-09-01 17:03:11 jpalac Exp $
 #ifndef MICRODST_MICRODSTOBJECTCLONERALG_H 
 #define MICRODST_MICRODSTOBJECTCLONERALG_H 1
 
@@ -7,7 +7,8 @@
 #include "GaudiKernel/AlgFactory.h" 
 // From MicroDST
 #include "MicroDST/MicroDSTAlgorithm.h"
-
+#include "MicroDST/BindType2ClonerDef.h"
+#include "MicroDST/Defaults.h"
 
 /** @class ObjectClonerAlg ObjectClonerAlg.h MicroDST/ObjectClonerAlg.h
  *  
@@ -18,8 +19,11 @@
 namespace MicroDST 
 {
   
-  template <typename T, typename CLONER = MicroDST::BasicCopy<T> >
+  template <typename T>
   class ObjectClonerAlg : public MicroDSTAlgorithm {
+  private:
+    typedef Location<T> LOCATION;
+    typedef typename BindType2Cloner<T>::cloner CLONER;
   public: 
     /// Standard constructor
     ObjectClonerAlg( const std::string& name, ISvcLocator* pSvcLocator )
@@ -38,9 +42,9 @@ namespace MicroDST
       if ( sc.isFailure() ) return sc;
 
       if (inputTESLocation()=="")  {
-        error() << "No input TES location set" 
-                << endmsg;
-        return StatusCode::FAILURE;
+        verbose() << "changing input TES location to " 
+                  << LOCATION::Default << endmsg;
+        setInputTESLocation(LOCATION::Default);
       }
       verbose() << "inputTESLocation() is " << inputTESLocation() << endmsg;
 
