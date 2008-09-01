@@ -2,6 +2,7 @@
 
 static L0Muon::RegisterFactory* s_instance_0=0;
 static L0Muon::RegisterFactory* s_instance_1=0;
+static L0Muon::RegisterFactory* s_instance_2=0;
 static int s_sel=0;
 
 L0Muon::RegisterFactory::RegisterFactory() {
@@ -13,7 +14,7 @@ L0Muon::RegisterFactory::RegisterFactory() {
 L0Muon::RegisterFactory::~RegisterFactory() {}
 
 void L0Muon::RegisterFactory::selectInstance(int i){ 
-  s_sel= i<2 ? i : 1; 
+  s_sel= i<3 ? i : 1; 
 }
 
 L0Muon::RegisterFactory* L0Muon::RegisterFactory::instance() {
@@ -30,6 +31,13 @@ L0Muon::RegisterFactory* L0Muon::RegisterFactory::instance() {
       s_instance_1 = new L0Muon::RegisterFactory;
     } 
     return s_instance_1;
+  }
+
+  if (s_sel==2) {
+    if ( s_instance_2 == 0 ) {
+      s_instance_2 = new L0Muon::RegisterFactory;
+    } 
+    return s_instance_2;
   }
 
   return s_instance_1;
@@ -145,6 +153,7 @@ void  L0Muon::RegisterFactory::reset(){
   m_registers.clear();
   s_instance_0=0;
   s_instance_1=0;
+  s_instance_2=0;
 }
 
 
