@@ -126,8 +126,7 @@ DIC_DNS_PACKET *packet;
 		if(Debug)
 		{
 			dim_print_date_time();
-			printf(" Connection request received - conn: %d to %s@%s\n", conn_id,
-				Net_conns[conn_id].task,Net_conns[conn_id].node );
+			printf(" Connection request received - conn: %d\n", conn_id);
 		}
 		/* handle_conn( conn_id ); */
 		break;
@@ -817,8 +816,16 @@ DIC_DNS_PACKET *packet;
 		{
 			if(Debug)
 			{
-				printf("\tService exists in BAD state, queueing request\n");
-				fflush(stdout);
+				if(servp->state == -1)
+				{
+					printf("\tService exists in BAD state, queueing request\n");
+					fflush(stdout);
+				}
+				else
+				{
+					printf("\tService does not exist (other client(s) waiting), queueing request\n");
+					fflush(stdout);
+				}
 			}
 			if(!(NODE *)Dns_conns[conn_id].node_head ) 
 			{
@@ -1075,7 +1082,7 @@ int conn_id;
 		if(Debug)
 		{
 			dim_print_date_time();
-			printf(" Conn %3d : ERROR - Strange thing %s@%s died\n",
+			printf(" Conn %3d : Undefined Type %s@%s died\n",
 				conn_id, Net_conns[conn_id].task,
 				Net_conns[conn_id].node);
 			fflush(stdout);
@@ -1312,7 +1319,7 @@ char **argv;
 	Timer_q = dtq_create();
 	get_node_name(node);
 	dim_print_date_time();
-	printf(" DNS (pid %d) starting up on %s\n",getpid(),node); 
+	printf(" DNS version %d starting up on %s\n",DIM_VERSION_NUMBER, node); 
 	fflush(stdout);
 
 	Server_new_info_id = dis_add_service( "DIS_DNS/SERVER_LIST", "C", 0, 0, 
@@ -1376,10 +1383,10 @@ void print_stats()
 		switch(Dns_conns[i].src_type)
 		{
 		case SRC_DIS :
-			printf("%d - Server %s@%s, %d services\n",
+			printf("%d - Server %s@%s (PID %d) %d services\n",
 				i, Dns_conns[i].task_name,
 				Dns_conns[i].node_name,
-				Dns_conns[i].n_services );
+				Dns_conns[i].pid, Dns_conns[i].n_services);
 			fflush(stdout);
 			n_services +=  Dns_conns[i].n_services;
 			n_servers++;
@@ -1396,11 +1403,11 @@ void print_stats()
 			if(Dna_conns[i].busy)
 			{
 				if(Net_conns[i].task[0] && Net_conns[i].node[0])
-					printf("%d - Busy - %s@%s\n",
+					printf("%d - Undefined %s@%s\n",
 						i, Net_conns[i].task,
 						Net_conns[i].node);
 				else 
-					printf("%d - Busy\n", i);
+					printf("%d - Undefined\n", i);
 				fflush(stdout);
 				n_conns++;
 			}

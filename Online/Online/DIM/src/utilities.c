@@ -197,6 +197,7 @@ int severity;
 			break;
 	}
 	printf("%s\n",msg);
+	fflush(stdout);
 }
 
 void dim_panic( s )

@@ -517,19 +517,25 @@ int conn_id;
 	 */
 	int	len, totlen, size, count;
 	char	*p;
-/*
+
 	count = get_bytes_to_read(conn_id);
 	if(!count)
 	{
-		printf("Connection closed %d\n", conn_id);
-		Net_conns[conn_id].read_rout( conn_id, -1, 0 );
-		return;
-	}
+/*
+		dna_report_error(conn_id, -1,
+			"Connection closed by remote peer", DIM_ERROR, DIMTCPRDERR);
+		printf("conn_id %d\n", conn_id);
 */
+		Net_conns[conn_id].read_rout( conn_id, -1, 0 );
+		return 0;
+	}
+
 	size = Net_conns[conn_id].size;
 	p = Net_conns[conn_id].buffer;
 	totlen = 0;
+/*
 	count = 1;
+*/
 	while( size > 0 && count > 0 )
 	{
 		if( (len = readsock(Net_conns[conn_id].channel, p, size, 0)) <= 0 ) 
@@ -626,12 +632,17 @@ int num;
 			{
 				if( Net_conns[conn_id].reading )
 				{
+					count = 0;
 					do
 					{
-						do_read( conn_id );
-						count = 0;
 						if(Net_conns[conn_id].channel)
 						{
+							do_read( conn_id );
+							count = 0;
+/*
+						if(Net_conns[conn_id].channel)
+						{
+*/
 							count = get_bytes_to_read(conn_id);
 						}
 					}while(count > 0 );
@@ -689,13 +700,18 @@ void tcpip_task( void *dummy)
 			{
 				if( Net_conns[conn_id].reading )
 				{
+					count = 0;
 					do
 					{
 						DISABLE_AST
-						do_read( conn_id );
-						count = 0;
 						if(Net_conns[conn_id].channel)
 						{
+							do_read( conn_id );
+							count = 0;
+/*
+						if(Net_conns[conn_id].channel)
+						{
+*/
 							count = get_bytes_to_read(conn_id);
 						}
 						ENABLE_AST

@@ -268,6 +268,7 @@ static int my_alarm(int secs)
 #endif
 
 		ret = DIM_time_left;
+
 		if(secs == 0)
 			DIM_next_time = -1;
 		return(ret);
@@ -406,7 +407,7 @@ void (*user_routine)();
 			if(next_time != -10)
 			{
 				min_time = stop_it();
-				if(next_time > min_time)
+				if((next_time > min_time) && (min_time != 0))
 					next_time = min_time;
 			}
 			else
