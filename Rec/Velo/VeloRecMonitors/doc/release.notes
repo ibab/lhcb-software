@@ -4,6 +4,10 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2008-08-31 - Malcolm John
+ - Tinker with the dummy variables generated in the LumiRegion monitor
+ - Inport a LiteCluster monitor meant for running in the HLT
+
 ! 2008-08-31 - Kurt Rinnert
  - added beam position monitor (currently produces dummy random positions)
  - added separate options file for running online
