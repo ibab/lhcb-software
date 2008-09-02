@@ -23,6 +23,12 @@ class DeleteDevicesWindowController(object):
         i = 0
         for device in allDevices:
             self.newDevicesListModel.append(device)
+            if progressDialog.wasCanceled():
+                self.parentController.devicesActionMutex.unlock()
+                progressDialog.hide()
+                progressDialog.destroy()
+                print "canceled"
+                return
             i += 1
             progressDialog.setValue(i)
         progressDialog.hide()

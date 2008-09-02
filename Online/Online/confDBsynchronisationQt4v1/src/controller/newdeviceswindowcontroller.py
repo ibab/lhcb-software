@@ -22,6 +22,12 @@ class NewDevicesWindowController(object):
         for device in system.getAllDevices():
             if self.confDB.getDeviceBySerial(device.sn) is None:
                 self.newDevicesListModel.append(device.devicename+" ("+device.sn+")")
+            if progressDialog.wasCanceled():
+                self.parentController.devicesActionMutex.unlock()
+                progressDialog.hide()
+                progressDialog.destroy()
+                print "canceled"
+                return
             i += 1
             progressDialog.setValue(i)
         progressDialog.hide()
