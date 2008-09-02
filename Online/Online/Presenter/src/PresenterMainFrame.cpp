@@ -48,6 +48,8 @@
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OMAlib/OMAlib.h"
 
+#include "Gaucho/MonObject.h"
+
 #include "DbRootHist.h"
 #include "PresenterMainFrame.h"
 #include "HistogramIdentifier.h"
@@ -61,7 +63,7 @@
 #include "icons.h"
 
 using namespace pres;
-
+using namespace std;
 PresenterMainFrame* gPresenter = 0;
 
 ClassImp(PresenterMainFrame)
@@ -1326,7 +1328,8 @@ void PresenterMainFrame::setStartupHistograms(const std::vector<std::string> & h
         //  Identifier, dimServiceName, refreshrate, instance, histogramDB
         DbRootHist* dbRootHist = new DbRootHist(
           convDimToHistoID(*histogramListIt),*histogramListIt,
-          2, newHistoInstance, NULL, analysisLib(), NULL, m_verbosity);
+          2, newHistoInstance, NULL, analysisLib(), NULL, m_verbosity,
+          NULL);
   
         dbHistosOnPage.push_back(dbRootHist);
         paintHist(dbRootHist);
@@ -1767,11 +1770,16 @@ void PresenterMainFrame::setTreeNodeIcon(TGListTreeItem* node,
                                          const std::string & type)
 {
   const TGPicture*  m_icon;
-  if (s_H1D == type) {
+  if (s_H1D == type || 
+      s_pfixMonH1D == type ||
+      s_pfixMonH1F == type ) {
     m_icon = m_iconH1D;
-  } else if (s_H2D == type) {
+  } else if (s_H2D == type ||
+      s_pfixMonH2D == type ||
+      s_pfixMonH2F == type ) {
     m_icon = m_iconH2D;
   } else if (s_P1D == type ||
+             s_pfixMonProfile == type ||
              s_HPD == type ||
              s_P2D == type ) {
     m_icon = m_iconProfile;
@@ -2179,6 +2187,43 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
   char *dimFormat;
   int dimType;
 
+
+//TODO: put known Mon prefixes into a list and cycle through...
+  // s_pfixMonH1F
+  std::string serviceType(s_pfixMonH1F);
+  (serviceType.append(s_slash)).append("*");
+  m_dimBrowser->getServices(serviceType.c_str());
+  while(dimType = m_dimBrowser->getNextService(dimService, dimFormat)) {            
+    m_candidateDimServices.push_back(std::string(dimService));
+  }
+  // s_pfixMonH1D
+  serviceType = s_pfixMonH1D;
+  (serviceType.append(s_slash)).append("*");
+  m_dimBrowser->getServices(serviceType.c_str());
+  while(dimType = m_dimBrowser->getNextService(dimService, dimFormat)) {            
+    m_candidateDimServices.push_back(std::string(dimService));
+  }
+  // s_pfixMonH2F
+  serviceType = s_pfixMonH2F;
+  (serviceType.append(s_slash)).append("*");
+  m_dimBrowser->getServices(serviceType.c_str());
+  while(dimType = m_dimBrowser->getNextService(dimService, dimFormat)) {            
+    m_candidateDimServices.push_back(std::string(dimService));
+  }
+  // s_pfixMonH2D
+  serviceType = s_pfixMonH2D;
+  (serviceType.append(s_slash)).append("*");
+  m_dimBrowser->getServices(serviceType.c_str());
+  while(dimType = m_dimBrowser->getNextService(dimService, dimFormat)) {            
+    m_candidateDimServices.push_back(std::string(dimService));
+  }
+  // s_pfixMonProfile
+  serviceType = s_pfixMonProfile;
+  (serviceType.append(s_slash)).append("*");
+  m_dimBrowser->getServices(serviceType.c_str());
+  while(dimType = m_dimBrowser->getNextService(dimService, dimFormat)) {            
+    m_candidateDimServices.push_back(std::string(dimService));
+  }
   // "H1D", "H2D", "P1D", "P2D", "CNT", "SAM" -- is this uncle SAM?
   for (int it = 0; it < OnlineHistDBEnv_constants::NHTYPES; ++it) {
     std::string serviceType(OnlineHistDBEnv_constants::HistTypeName[it]);
@@ -2189,7 +2234,7 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
     }        
   }
   // HPD
-  std::string serviceType(s_HPD);
+  serviceType = s_HPD;
   (serviceType.append(s_slash)).append("*");
   m_dimBrowser->getServices(serviceType.c_str());
   while(dimType = m_dimBrowser->getNextService(dimService, dimFormat)) {            
@@ -2435,7 +2480,7 @@ void PresenterMainFrame::addDimSvcToPage()
       convDimToHistoID(
         std::string(*static_cast<TString*>(currentNode->GetUserData()))),
         std::string(*static_cast<TString*>(currentNode->GetUserData())),
-      2, newHistoInstance, NULL, analysisLib(), NULL, m_verbosity);
+      2, newHistoInstance, NULL, analysisLib(), NULL, m_verbosity, NULL);
 
     dbHistosOnPage.push_back(dbRootHist);
 
@@ -2448,14 +2493,15 @@ void PresenterMainFrame::addDimSvcToPage()
     int paintLineStyle = bulkHistoOptions.m_lineStyle;
     int paintLineColour = bulkHistoOptions.m_lineColour;
     int paintStats = bulkHistoOptions.m_statsOption;
-    dbRootHist->rootHistogram->SetXTitle(paintDrawXLabel.Data());
-    dbRootHist->rootHistogram->SetYTitle(paintDrawYLabel.Data());
-    dbRootHist->rootHistogram->SetLineWidth(paintLineWidth);
-    dbRootHist->rootHistogram->SetFillColor(paintFillColour);
-    dbRootHist->rootHistogram->SetFillStyle(paintFillStyle);
-    dbRootHist->rootHistogram->SetLineStyle(paintLineStyle);
-    dbRootHist->rootHistogram->SetLineColor(paintLineColour);
-    dbRootHist->rootHistogram->SetStats(paintStats);
+    if (dbRootHist && dbRootHist->rootHistogram) {
+      dbRootHist->rootHistogram->SetXTitle(paintDrawXLabel.Data());
+      dbRootHist->rootHistogram->SetYTitle(paintDrawYLabel.Data());
+      dbRootHist->rootHistogram->SetLineWidth(paintLineWidth);
+      dbRootHist->rootHistogram->SetFillColor(paintFillColour);
+      dbRootHist->rootHistogram->SetFillStyle(paintFillStyle);
+      dbRootHist->rootHistogram->SetLineStyle(paintLineStyle);
+      dbRootHist->rootHistogram->SetLineColor(paintLineColour);
+      dbRootHist->rootHistogram->SetStats(paintStats);
 
     TString paintDrawOption;
     if (s_H1D == dbRootHist->histogramType()) {
@@ -2474,8 +2520,9 @@ void PresenterMainFrame::addDimSvcToPage()
     }
 
     dbRootHist->rootHistogram->SetOption(paintDrawOption.Data());
-
     paintHist(dbRootHist);
+  }
+
 
     currentNode = currentNode->GetNextSibling();
   }
@@ -2523,8 +2570,8 @@ void PresenterMainFrame::addDbHistoToPage()
         //  Identifier, dimServiceName, refreshrate, instance, histogramDB
         DbRootHist* dbRootHist = new DbRootHist(
           std::string(*static_cast<TString*>(currentNode->GetUserData())),
-          assembleCurrentDimServiceName(dimQuery), 2, newHistoInstance,
-          m_histogramDB, analysisLib(), dimQuery, m_verbosity);
+          m_currentPartition, 2, newHistoInstance,
+          m_histogramDB, analysisLib(), dimQuery, m_verbosity, m_dimBrowser);
 
         dbHistosOnPage.push_back(dbRootHist);
         paintHist(dbRootHist);
@@ -2553,53 +2600,7 @@ void PresenterMainFrame::addDbHistoToPage()
   enableAutoCanvasLayoutBtn();
 }
 
-std::string PresenterMainFrame::assembleCurrentDimServiceName(OnlineHistogram* histogram) {
 
-  std::string dimServiceNameQueryBegining;
-  if (s_P1D != histogram->hstype()) {
-     dimServiceNameQueryBegining = histogram->hstype() + s_slash +
-                                   m_currentPartition +
-                                   s_underscrore + "*";
-// HPD
-  } else {
-    dimServiceNameQueryBegining =  s_HPD + s_slash +
-                                   m_currentPartition +
-                                   s_underscrore + "*";    
-  }
-  
-  char *dimService; 
-  char *dimFormat;
-  int dimType;
-  std::string dimServiceName("");
-
-  m_dimBrowser->getServices(dimServiceNameQueryBegining.c_str());
-  while(dimType = m_dimBrowser->getNextService(dimService, dimFormat)) {
-    std::string dimServiceCandidate(dimService);
-    if (m_verbosity >= Verbose) {
-      std::cout << "m_dimBrowser->getService: " << dimService
-                << std::endl;
-    }
-   
-    TString dimServiceTS(dimServiceCandidate);
-     
-    if (false == dimServiceTS.EndsWith(s_gauchocomment.c_str())) {
-      HistogramIdentifier histogramCandidate = HistogramIdentifier(dimServiceCandidate);
-      if (0 == (histogramCandidate.histogramIdentifier().compare(histogram->identifier()))) {          
-        dimServiceName = dimServiceCandidate;
-        break;
-      }
-    } else {
-      if (m_verbosity >= Verbose) {
-        std::cout << std::endl << "NOT found: " << dimService << std::endl;
-      }
-    }
-  }
-  if (m_verbosity >= Verbose) {
-    std::cout << std::endl << "assembled current Dim service name: " << dimServiceName
-              << std::endl << std::endl;
-  }  
-  return dimServiceName;
-}
 
 void PresenterMainFrame::setHistogramDimSource(bool tree)
 {
@@ -2754,9 +2755,14 @@ void PresenterMainFrame::setHistogramPropertiesInDB()
 
         if (s_H1D == onlineHistogramToSet->hstype() ||
             s_P1D == onlineHistogramToSet->hstype() ||
+            s_pfixMonH1F == onlineHistogramToSet->hstype() ||
+            s_pfixMonH1D == onlineHistogramToSet->hstype() ||
+            s_pfixMonProfile == onlineHistogramToSet->hstype() ||
             s_HPD == onlineHistogramToSet->hstype()) {
           m_drawOption = bulkHistoOptions.m_1DRootDrawOption;
-        } else if (s_H2D == onlineHistogramToSet->hstype()) {
+        } else if (s_H2D == onlineHistogramToSet->hstype() ||
+                   s_pfixMonH2F == onlineHistogramToSet->hstype() ||
+                   s_pfixMonH2D == onlineHistogramToSet->hstype() ) {
           m_drawOption = bulkHistoOptions.m_2DRootDrawOption;
         }
         std::string paintDrawOption = TString(
@@ -2924,13 +2930,26 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
           page->getHistogramList(&m_onlineHistosOnPage);
           m_onlineHistosOnPageIt = m_onlineHistosOnPage.begin();
           while (m_onlineHistosOnPageIt != m_onlineHistosOnPage.end()) {
-            DbRootHist* dbRootHist = new DbRootHist(
-                                  (*m_onlineHistosOnPageIt)->identifier(),
-                                  assembleCurrentDimServiceName(*m_onlineHistosOnPageIt),
-                                  2, (*m_onlineHistosOnPageIt)->instance(),
-                                  m_histogramDB, analysisLib(),
-                                  *m_onlineHistosOnPageIt,
-                                  m_verbosity);
+            DbRootHist* dbRootHist;
+            if(History == m_presenterMode) { // no need for DIM
+              dbRootHist = new DbRootHist((*m_onlineHistosOnPageIt)->identifier(),
+                                          std::string(""),
+                                          2, (*m_onlineHistosOnPageIt)->instance(),
+                                          m_histogramDB, analysisLib(),
+                                          *m_onlineHistosOnPageIt,
+                                          m_verbosity,
+                                          NULL);
+            }
+            else {
+              dbRootHist = new DbRootHist((*m_onlineHistosOnPageIt)->identifier(),
+                                          m_currentPartition,
+                                          2, (*m_onlineHistosOnPageIt)->instance(),
+                                          m_histogramDB, analysisLib(),
+                                          *m_onlineHistosOnPageIt,
+                                          m_verbosity,
+                                          m_dimBrowser);
+            }
+
             if (0 != m_archive &&
                 ((History == m_presenterMode) ||
                  (Editor == m_presenterMode && canWriteToHistogramDB()))) {
@@ -2943,14 +2962,19 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
             }
             if (dbRootHist && dbRootHist->isEmptyHisto() &&
                (History != m_presenterMode)) {             
+              if (m_verbosity >= Verbose) {
+                std::cout << "Histogram "<<(*m_onlineHistosOnPageIt)->identifier() <<
+                  " is empty!"<<endl;
+              }
               delete dbRootHist;
               dbRootHist = new DbRootHist(
                                   (*m_onlineHistosOnPageIt)->identifier(),
-                                  assembleCurrentDimServiceName(*m_onlineHistosOnPageIt),
+                                  m_currentPartition,
                                   2, (*m_onlineHistosOnPageIt)->instance(),
                                   m_histogramDB, analysisLib(),
                                   *m_onlineHistosOnPageIt,
-                                  m_verbosity);                                  
+                                  m_verbosity,
+                                  m_dimBrowser);                                  
             }
             
             dbHistosOnPage.push_back(dbRootHist);
