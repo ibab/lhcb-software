@@ -16,8 +16,4 @@ sS'../../../Online/RateService/v2r2/genConf/RateService/RateServiceConf.py'
 p8
 S'../../../../InstallArea/python/RateService/RateServiceConf.py'
 p9
-ssS'../../../Online/RateService/v2r2/slc4_amd64_gcc34/libRateService.so'
-p10
-S'../../../../InstallArea/slc4_amd64_gcc34/lib/libRateService.so'
-p11
-ssb.
+sssb.

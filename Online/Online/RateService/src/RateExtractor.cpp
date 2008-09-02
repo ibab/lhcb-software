@@ -72,16 +72,20 @@ std::string RateExtractor::getCommentFromMonRate()
   if(!m_pMonRate)
     return "";
     
-//  TProfile * profile = m_pMonRate->profile();  
-//  return profile->GetBinLabel(8 + m_counterId);  
+  TProfile * profile = m_pMonRate->profile();  
+  std::string comment(profile->GetXaxis()->GetBinLabel(8 + m_counterId));
+  
+   COUT_DEBUG("Comment for rate from counter # = " << comment);
+   
+   return comment;
 
-  std::stringstream comment;
+//  std::stringstream comment;
   
-  comment << "Comment for rate from counter #" << m_counterId;
+//  comment << "Comment for rate from counter #" << m_counterId;
   
-  COUT_DEBUG("Comment for rate from counter #");
+
   
-  return comment.str();
+//  return comment.str();
 }
 
 bool RateExtractor::extractData(longlong time)
