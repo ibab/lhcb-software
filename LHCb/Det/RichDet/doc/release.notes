@@ -4,6 +4,7 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+!======================== RichDet v11r1 2008-09-02 ===========================
 ! 2008-08-18 - Chris Jones
  - Add method to DeRichRadiator to provide interpolated function for the 
    effective absorption length, as a function of photon energy.
