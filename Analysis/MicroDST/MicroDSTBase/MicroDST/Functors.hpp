@@ -1,4 +1,4 @@
-// $Id: Functors.hpp,v 1.4 2008-08-13 16:51:23 jpalac Exp $
+// $Id: Functors.hpp,v 1.5 2008-09-02 09:19:32 jpalac Exp $
 #ifndef MICRODST_FUNCTORS_HPP 
 #define MICRODST_FUNCTORS_HPP 1
 
@@ -7,8 +7,12 @@
 /** @namespace MicroDST Functors.hpp MicroDST/Functors.hpp
  *  
  *
- *  Collection of useful functors to do with cloning and 
- *  storing clones into TES locations.
+ *  Collection of useful functors satisfying the Cloner policy and
+ *  dealing with the cloning and storing clones into TES locations.
+ *
+ *  Policy: Cloner must export a clone(const T*) method that returns
+ *          a T*. If the input T* is null, Cloner must return a null
+ *          pointer.
  *
  *  @author Juan PALACIOS
  *  @date   2007-10-24
@@ -18,7 +22,9 @@ namespace MicroDST {
   /**
    *
    * Clone an item into a container of type T. 
-   * The functor checks if an item with the same key already exists.
+   * The functor checks if an item with the same key already exists and only
+   * clones and inserts the clone into the container if this is not the case.
+   *
    * Requirements:
    *
    * Contained type T:
@@ -41,6 +47,11 @@ namespace MicroDST {
     
     T* operator() ( const T* item )
     {
+      return clone(item);
+    }
+
+    T* clone( const T* item ) 
+    {
       if (0==item) return 0;
       if ( !m_to->object( item->key() ) ) {
         T* clonedItem = itemCloner::clone(item);
@@ -49,13 +60,20 @@ namespace MicroDST {
       }
       return m_to->object( item->key() );
     }
-    
+
     typename T::Container* m_to;
     
   };
 
 
   /**
+   *
+   * BasicItemCloner satisfying the Cloner policy. 
+   * Requirements on template parameter T:
+   * T must export a method T* T::clone().
+   *
+   * @author Juan Palacios juancho@nikhef.nl
+   * @date 16-10-2007
    */
   template <class T>
   struct BasicItemCloner 
@@ -66,6 +84,13 @@ namespace MicroDST {
   };
 
   /**
+   *
+   * BasicCopy satisfying the Cloner policy. 
+   * Requirements on template parameter T:
+   * T must have a copy constructor.
+   *
+   * @author Juan Palacios juancho@nikhef.nl
+   * @date 16-10-2007
    */
   template <class T>
   struct BasicCopy 
