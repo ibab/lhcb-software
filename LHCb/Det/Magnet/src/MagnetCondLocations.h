@@ -1,4 +1,4 @@
-// $Id: MagnetCondLocations.h,v 1.1 2008-07-26 18:04:53 cattanem Exp $
+// $Id: MagnetCondLocations.h,v 1.2 2008-09-02 09:11:50 cattanem Exp $
 #ifndef MAGNETCONDLOCATIONS_H 
 #define MAGNETCONDLOCATIONS_H 1
 
@@ -7,7 +7,7 @@
  *  Namespace for the location of Magnet conditions in the TDS
  *
  *  @author Marco Cattaneo
- *  @date   2004-06-18
+ *  @date   2008-06-18
  *
  */
 
@@ -34,6 +34,10 @@ namespace MagnetCondLocations
   /// Location of online measured current and polarity
   static const std::string& Measured =
          "/dd/Conditions/Online/LHCb/Magnet/Measured";
+
+  /// Location of online set current and polarity
+  static const std::string& Set =
+         "/dd/Conditions/Online/LHCb/Magnet/Set";
 }
 
 #endif // MAGNETCONDLOCATIONS_H

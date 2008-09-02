@@ -4,6 +4,13 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
+!====================== Magnet v5r1 2008-09-02 ===============================
+! 2008-09-02 - Marco Cattaneo
+ - Add an option UseSetCurrent to get Set instead of Measured current from
+   CondDB (default false)
+ - Remove a duplicate registration to a condition
+ - Fix a bug in use case without condDB (was crashing if scale factor was set)
+
 ! 2008-08-01 - Marco Cattaneo
  - If MagneticFieldSvc.UseConstantField option is set, all other options are
    ignored

@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.h,v 1.24 2008-07-26 23:03:01 cattanem Exp $
+// $Id: MagneticFieldSvc.h,v 1.25 2008-09-02 09:11:50 cattanem Exp $
 #ifndef MAGNETICFIELDSVC_H
 #define MAGNETICFIELDSVC_H 1
 
@@ -83,6 +83,7 @@ private:
 
   // Properties to configure the service
   bool m_UseConditions;      ///< Get data from CondDB or options. Default CondDB
+  bool m_UseSetCurrent;      ///< Use Set or Measured current. Default false
   double m_nominalCurrent;   ///< Nominal magnet current to normalise rescaling
   std::string m_mapFilePath; ///< Directory where field map files are located
  
@@ -98,11 +99,12 @@ private:
   // Private data
   bool m_mapFromOptions;        ///< Set if not using condDB for field map.
   bool m_scaleFromOptions;      ///< Set if not using condDB for scale factor.
+  
   Condition* m_mapFilesUpPtr;   ///< Pointer to FieldMapFilesUp condition
   Condition* m_mapFilesDownPtr; ///< Pointer to FieldMapFilesDown condition
   Condition* m_scaleUpPtr;      ///< Pointer to ScaleUp condition
   Condition* m_scaleDownPtr;    ///< Pointer to ScaleDown condition
-  Condition* m_measuredPtr;     ///< Pointer to Measured condition
+  Condition* m_currentPtr;      ///< Pointer to Measured or Set condition
 
   IMagFieldTool* m_fieldTool;     ///< Pointer to current map handling tool
   IMagFieldTool* m_DC06FieldUp;   ///< Pointer to tool handling "Up" DC06 map

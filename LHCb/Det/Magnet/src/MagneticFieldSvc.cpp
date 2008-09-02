@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.cpp,v 1.38 2008-08-01 08:03:15 cattanem Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.39 2008-09-02 09:11:50 cattanem Exp $
 
 // Include files
 #include "GaudiKernel/SvcFactory.h"
@@ -40,7 +40,7 @@ MagneticFieldSvc::MagneticFieldSvc( const std::string& name,
                                                          m_mapFilesDownPtr(0),
                                                          m_scaleUpPtr(0),
                                                          m_scaleDownPtr(0),
-                                                         m_measuredPtr(0),
+                                                         m_currentPtr(0),
                                                          m_fieldTool(0),
                                                          m_DC06FieldUp(0),
                                                          m_DC06FieldDown(0),
@@ -66,6 +66,7 @@ MagneticFieldSvc::MagneticFieldSvc( const std::string& name,
   declareProperty( "FieldMapPath",  m_mapFilePath, 
                    "Directory where field map files are located, including trailing separator" );
   declareProperty( "UseConditions", m_UseConditions = true );
+  declareProperty( "UseSetCurrent", m_UseSetCurrent = false );
   declareProperty( "FieldMapFiles", m_mapFileNames, 
                    "Vector of file names for the field map. If set, over-rides CondDB value" );
   declareProperty( "ScaleFactor",   m_scaleFactor = 9999.,
@@ -178,11 +179,18 @@ StatusCode MagneticFieldSvc::initializeWithCondDB()
     return status;
   }
 
+  // Polarity and current
+  if( m_UseSetCurrent ) {
+    m_updMgrSvc->registerCondition( this, MagnetCondLocations::Set,
+                                    &MagneticFieldSvc::i_updateConditions, m_currentPtr );
+  }
+  else {
+    m_updMgrSvc->registerCondition( this, MagnetCondLocations::Measured,
+                                    &MagneticFieldSvc::i_updateConditions, m_currentPtr );
+  }
+
   // FieldMap file name(s). If not over-ridden by options, get from CondDB
   m_mapFromOptions = false;
-  m_updMgrSvc->registerCondition( this, MagnetCondLocations::Measured,
-                                  &MagneticFieldSvc::i_updateConditions, m_measuredPtr );
-
   if( m_mapFileNames.size() != 0 ) {
     log << MSG::WARNING 
         << "Requested condDB but using manually set field map file name(s) = "
@@ -207,9 +215,6 @@ StatusCode MagneticFieldSvc::initializeWithCondDB()
     m_scaleFromOptions = true;
   }
   else {
-    m_updMgrSvc->registerCondition( this, MagnetCondLocations::Measured,
-                                    &MagneticFieldSvc::i_updateConditions, m_measuredPtr );
-
     m_updMgrSvc->registerCondition( this, MagnetCondLocations::ScaleUp,
                                     &MagneticFieldSvc::i_updateConditions, m_scaleUpPtr );
 
@@ -239,8 +244,8 @@ StatusCode MagneticFieldSvc::initializeWithoutCondDB()
   if( m_scaleFactor > 9998. ) {
     m_scaleFactor = 1.;
     log << MSG::DEBUG << "Scale factor set to default = " << m_scaleFactor << endmsg;
-    m_scaleFromOptions = true;
   }
+  m_scaleFromOptions = true;
   
   // Value of polarity irrelevant when using options
   // Parse the file via the appropriate tool
@@ -298,11 +303,11 @@ StatusCode MagneticFieldSvc::i_updateConditions()
     polarity = m_polarity;
   }
   else
-    polarity = m_measuredPtr->param<int>("Polarity");
+    polarity = m_currentPtr->param<int>("Polarity");
   
   // Update the scale factor
   if( !m_scaleFromOptions ) {
-    double measuredCurrent = m_measuredPtr->param<double>("Current");
+    double current = m_currentPtr->param<double>("Current");
     
     // ******* Check I have the correct convention!!
     std::vector<double> coeffs;
@@ -311,7 +316,7 @@ StatusCode MagneticFieldSvc::i_updateConditions()
     else
       coeffs = m_scaleDownPtr->param<std::vector<double> >("Coeffs");
   
-    m_scaleFactor = coeffs[0] + ( coeffs[1]*(measuredCurrent/m_nominalCurrent) );
+    m_scaleFactor = coeffs[0] + ( coeffs[1]*(current/m_nominalCurrent) );
   }
    
   // Update the field map file
