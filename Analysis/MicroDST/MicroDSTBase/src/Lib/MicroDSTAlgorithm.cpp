@@ -1,4 +1,4 @@
-// $Id: MicroDSTAlgorithm.cpp,v 1.1.1.1 2007-12-10 09:12:42 jpalac Exp $
+// $Id: MicroDSTAlgorithm.cpp,v 1.2 2008-09-02 09:04:57 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -21,7 +21,6 @@ MicroDSTAlgorithm::MicroDSTAlgorithm( const std::string& name,
   : 
   MicroDSTCommon<GaudiAlgorithm> ( name , pSvcLocator )
 {
-  std::cout << "MicroDSTAlgorithm constructor for " << name << std::endl;
 }
 //=============================================================================
 // Destructor
