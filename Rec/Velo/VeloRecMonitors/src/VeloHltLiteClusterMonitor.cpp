@@ -60,21 +60,24 @@ StatusCode Velo::VeloHltLiteClusterMonitor::initialize() {
   for (; iterV != m_veloDet->rSensorsEnd(); ++iterV){
     if((*iterV)->isReadOut()) m_nRSensorsOn++;
   }
-  h_nClusters.resize(2);
+  h_nClustersLargeRange.resize(2);
+  h_nClustersSmallRange.resize(2);
   h_nClustersByZone.resize(2);
-  for (unsigned int lr=0;lr<h_nClusters.size();lr++){
+  for (unsigned int lr=0;lr<2;lr++){
     std::string side="ASide";
     if(lr) side="CSide";
-    std::string name = "nClusters_"+side;
+    std::string name = "nClusters_"+side+"_LargeRange";
     std::string title= "N(Clusters)/event ("+side+")";
-    h_nClusters[lr] = book1D(name,title,0.,512.*m_nRSensorsOn, 128 );
+    h_nClustersLargeRange[lr] = book1D(name,title,0.,512.*m_nRSensorsOn, 128 );
+    name = "nClusters_"+side+"_SmallRange";
+    h_nClustersSmallRange[lr] = book1D(name,title,0.,512, 128 );
     if(m_histogramByZone){
       std::vector<IHistogram1D*> list;
       list.resize(4);
       for (unsigned int i=0;i<list.size();i++){
         name = "nClusters_"+side+"_Zone"+boost::lexical_cast<std::string>(i);
         title= "N(Clusters)/event for R-zone "+boost::lexical_cast<std::string>(i)+" ("+side+")";
-        list[i]=book1D(name, title, 0., 128.*m_nRSensorsOn, 128 );
+        list[i]=book1D(name, title, 0., 512, 128 );
       }
       h_nClustersByZone[lr]=list;
     }
@@ -98,6 +101,11 @@ StatusCode Velo::VeloHltLiteClusterMonitor::initialize() {
       }
       h_nClustersVsZByZone[lr]=list;
     }
+  }
+
+  m_nClusters.resize(42);
+  for (int i=0;i<42;i++){
+    m_nClusters[i].resize(4);
   }
   return StatusCode::SUCCESS;
 }
@@ -160,11 +168,11 @@ void Velo::VeloHltLiteClusterMonitor::monitorLiteClusters()
   unsigned int nclus = m_liteClusters->size();
   counter( "# VeloLiteClusters" ) += nclus;
 
-  std::vector< std::vector<int> > nClusters;
-  nClusters.resize(42);
   for (int i=0;i<42;i++){
-    nClusters[i].resize(4);
-  }
+    for (int j=0;j<4;j++){
+      m_nClusters[i][j]=0;
+    }
+  }    
 
   LHCb::VeloLiteCluster::FastContainer::const_iterator ci =  m_liteClusters->begin();
   for(; ci != m_liteClusters->end(); ++ci ) {
@@ -173,7 +181,7 @@ void Velo::VeloHltLiteClusterMonitor::monitorLiteClusters()
       unsigned int sensorNumber = id.sensor();
       const DeVeloRType* sensor = (DeVeloRType*)m_veloDet->sensor( sensorNumber );
       int globalZone = sensor->globalZoneOfStrip(id.strip());
-      nClusters[sensorNumber][globalZone]++;
+      m_nClusters[sensorNumber][globalZone]++;
     }
   }
 
@@ -186,10 +194,10 @@ void Velo::VeloHltLiteClusterMonitor::monitorLiteClusters()
       unsigned int sensorNumber = sensor->sensorNumber();
       int sumAll=0;
       for( int globalZone=0 ; globalZone<4 ; ++globalZone ){
-        sumAll+=nClusters[sensorNumber][globalZone];
-        sum4Each[globalZone]+=nClusters[sensorNumber][globalZone];
+        sumAll+=m_nClusters[sensorNumber][globalZone];
+        sum4Each[globalZone]+=m_nClusters[sensorNumber][globalZone];
         if(m_histogramByZone){
-          h_nClustersVsZByZone[isRight][globalZone]->fill(sensor->z(),nClusters[sensorNumber][globalZone]);
+          h_nClustersVsZByZone[isRight][globalZone]->fill(sensor->z(),m_nClusters[sensorNumber][globalZone]);
         }
       }
       h_nClustersVsZ[isRight]->fill(sensor->z(),sumAll);
@@ -201,6 +209,7 @@ void Velo::VeloHltLiteClusterMonitor::monitorLiteClusters()
         h_nClustersByZone[isRight][i]->fill(sum4Each[i]);
       }
     }
-    h_nClusters[isRight]->fill(sum);
+    h_nClustersSmallRange[isRight]->fill(sum);
+    h_nClustersLargeRange[isRight]->fill(sum);
   }
 }

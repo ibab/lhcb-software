@@ -1,4 +1,4 @@
-// $Id: VeloHltLiteClusterMonitor.h,v 1.1 2008-09-01 00:17:21 mjohn Exp $
+// $Id: VeloHltLiteClusterMonitor.h,v 1.2 2008-09-02 09:39:27 mjohn Exp $
 #ifndef VELORECMONITORS_VELOHLTLITECLUSTERMONITOR_H 
 #define VELORECMONITORS_VELOHLTLITECLUSTERMONITOR_H 1
 
@@ -45,12 +45,14 @@ namespace Velo
 
     // Data members
     LHCb::VeloLiteCluster::FastContainer* m_liteClusters;
+    std::vector< std::vector<int> > m_nClusters;
     std::string m_liteClusterLocation;
     unsigned int m_nRSensorsOn;
     bool m_histogramByZone;
 
     // Histogram pointers
-    std::vector<IHistogram1D*> h_nClusters;
+    std::vector<IHistogram1D*> h_nClustersSmallRange;
+    std::vector<IHistogram1D*> h_nClustersLargeRange;
     std::vector< IProfile1D* > h_nClustersVsZ;
     std::vector< std::vector<IHistogram1D*> > h_nClustersByZone;
     std::vector< std::vector< IProfile1D* > > h_nClustersVsZByZone;
