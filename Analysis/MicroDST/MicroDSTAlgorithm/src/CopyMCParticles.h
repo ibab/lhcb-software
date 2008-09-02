@@ -1,4 +1,4 @@
-// $Id: CopyMCParticles.h,v 1.4 2008-09-01 17:28:14 jpalac Exp $
+// $Id: CopyMCParticles.h,v 1.5 2008-09-02 09:26:52 jpalac Exp $
 #ifndef COPYMCPARTICLES_H 
 #define COPYMCPARTICLES_H 1
 
@@ -56,6 +56,6 @@ template<> struct Location<LHCb::MCParticle>
 };
 const std::string Location<LHCb::MCParticle>::Default = LHCb::MCParticleLocation::Default;
 //=============================================================================
-typedef MicroDST::KeyedContainerClonerAlg<LHCb::MCParticle> CopyMCParticle;
-DECLARE_ALGORITHM_FACTORY( CopyMCParticle );
+typedef MicroDST::KeyedContainerClonerAlg<LHCb::MCParticle> CopyMCParticles;
+DECLARE_ALGORITHM_FACTORY( CopyMCParticles );
 #endif // COPYMCPARTICLES_H
