@@ -1,16 +1,17 @@
-! $Id: release.notes,v 1.107 2008-08-29 17:01:52 janos Exp $
+! $Id: release.notes,v 1.108 2008-09-02 11:56:20 cattanem Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 !--------------------------------------------------------------------------
 
+!========================== OTDet v8r0 2008-09-02 =========================
 ! 2008-08-29 - Jan Amoraal
  - The offsets for the staggering are know retrieved from the OT DDDB.
    This allows the code to be backwards compatible.
 
 ! 2008-08-13 - Jan Amoraal
- - Fix staggering of straws in a module. This affects the digitization and is thus not
-   backward compatible with digis produced with older version of Boole.  
-  
+ - Fix staggering of straws in a module. This affects the digitization and is
+   thus not backward compatible with digis produced with older version of Boole.
+
 !========================== OTDet v7r9 2008-06-30 =========================
 ! 2008-06-25 - Juan PALACIOS
  - src/Lib/DeOTModule.cpp
