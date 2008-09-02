@@ -18,6 +18,7 @@ HltPhysics.Members = {
 PrescalePhysics.AcceptFraction=1.0;
 PhysicsTrigger.WrongType=3;
 HltSummaryWriter.Save += { "PhysicsTrigger" };
+Hlt1GlobalDecision.InputSelections += { "PhysicsTrigger" };
 
 
 Hlt1.Members += {  "GaudiSequencer/HltRandom" };
@@ -30,9 +31,10 @@ PrescaleRandom.AcceptFraction=1;
 // PrescaleRandom.AcceptFraction=@OnlineEnv.AcceptRate;
 RandomTrigger.RightType=3;
 HltSummaryWriter.Save += { "RandomTrigger"};
+Hlt1GlobalDecision.InputSelections += { "RandomTrigger" };
 
 Hlt1.Members += {  "HltGlobalMonitor" };
-Hlt1.Members += {  "HltSelectionFilter/Hlt1Global" };
+Hlt1.Members += {  "HltSelectionFilter/Hlt1GlobalDecision" };
 
 
 /**
@@ -47,14 +49,14 @@ HltEndSequence.Members += {"HltSelectionToTES"};
 HltSelectionToTES.OutputLevel = 3;
 
 HltEndSequence.Members += { "HltSummaryWriter"};
-// If you want to save all the Hlt selections in the summary uncomment
-HltSummaryWriter.SaveAll = true;
-//HltSummaryWriter.Save += {"Hlt1Global"};
-
 HltSummaryWriter.OutputLevel=3;
+
+HltEndSequence.Members += { "HltDecReportsMaker"};
+HltDecReportsMaker.OutputLevel = 3;
+HltEndSequence.Members += { "HltDecReportsWriter"};
 
 /**
  *  If Hlt1Global are run, check that they passed in selections.
  *  If selections are not run this does not harm.
  */
-PassedAlleys.Members += { "HltSelectionFilter/Hlt1Global" } ;
+PassedAlleys.Members += { "HltSelectionFilter/Hlt1GlobalDecision" } ;
