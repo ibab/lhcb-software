@@ -5,6 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2008-09-02 - Eduardo Rodrigues
+ - *** version to analyse end-of-August data ***
  - histo for (# clusters) gets only entries when (# clusters)>0
  - introduced separate histos for R and Phi sensors
 
