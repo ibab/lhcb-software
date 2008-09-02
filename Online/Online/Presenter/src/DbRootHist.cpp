@@ -25,8 +25,16 @@
 #include "presenter.h"
 #include "DbRootHist.h"
 
+#include "Gaucho/DimInfoMonObject.h"
+#include "Gaucho/MonObject.h"
+#include "Gaucho/MonProfile.h"
+#include "Gaucho/MonH1D.h"
+#include "Gaucho/MonH2D.h"
+#include "Gaucho/MonH1F.h"
+#include "Gaucho/MonH2F.h"
+
+
 using namespace pres;
-using namespace std;
 
 DbRootHist::DbRootHist(const std::string & identifier,
                        const std::string & dimServiceName,
@@ -35,7 +43,8 @@ DbRootHist::DbRootHist(const std::string & identifier,
                        OnlineHistDB* histogramDB,
                        OMAlib* analysisLib,
                        OnlineHistogram* onlineHist,
-                       pres::MsgLevel verbosity)
+                       pres::MsgLevel verbosity,
+                       DimBrowser* DimBr)
 : HistogramIdentifier(dimServiceName),
   rootHistogram(NULL),
   hostingPad(NULL),
@@ -48,7 +57,7 @@ DbRootHist::DbRootHist(const std::string & identifier,
   m_refreshTime(refreshTime),
 //  m_toRefresh(false),
   m_cleared(false),
-//  m_hstype(),
+//  m_histogramType(),
 //  m_hname(m_histogramName),
   m_instance(instance),
   m_waitTime(20),
@@ -62,23 +71,50 @@ DbRootHist::DbRootHist(const std::string & identifier,
   m_startRun(1),
   m_dataType("default"),  
   m_dimServiceName(dimServiceName),
-  m_verbosity(verbosity)
+  m_dimInfo(NULL),
+  m_dimInfoMonObject(NULL),
+  m_verbosity(verbosity),
+  m_dimBrowser(DimBr),
+  m_partition("")
 {
   // Prevent ROOT booking
   TH1::AddDirectory(kFALSE);
-  m_dimInfo = new DimInfo(m_dimServiceName.c_str(), refreshTime, (float)-1.0);
-  if (m_verbosity >= Verbose) {
-    std::cout << "DimInfo dimServiceName: " << m_dimServiceName << std::endl;
-  }
 
+  // if dimBrowser is specified, retrieve dim service name from partition name
+  if(m_dimBrowser) {
+    m_partition = dimServiceName;
+  }
+  
   if (histogramDB) {
     if (onlineHist) { setOnlineHistogram(onlineHist); }
     else { connectToDB(histogramDB, "_NONE_", 1); }
   }
 
+  if( false == m_isAnaHist) {
+    if(m_dimBrowser) {
+      m_dimServiceName = assembleCurrentDimServiceName();
+    }
+    
+    if( m_dimServiceName.size() >0 ) {
+      m_dimInfo = new DimInfo(m_dimServiceName.c_str(), refreshTime, (float)-1.0);
+      if (m_verbosity >= Verbose) {
+        std::cout << "DimInfo dimServiceName: " << m_dimServiceName << std::endl;
+      }
+    }
+  }
+  
+  
   initHistogram();
+  if (m_verbosity >= Verbose && m_isEmptyHisto) {
+    std::cout << "Histogram " << m_identifier << " empty after Init"<<std::endl;
+  }
   if (false == m_isEmptyHisto) {
     fillHistogram();
+    if(m_verbosity >= Verbose && m_isEmptyHisto) {
+      std::cout << "Histogram " << m_identifier << " empty after Fill"<<std::endl;
+    }
+  } else {
+    beEmptyHisto(); 
   }
 
   setTH1FromDB();
@@ -92,6 +128,7 @@ DbRootHist::~DbRootHist()
 //  if (histogramImage) { delete histogramImage; histogramImage = NULL; }
   if (hostingPad) { delete hostingPad; hostingPad = NULL; }
   if (m_dimInfo) { delete m_dimInfo; m_dimInfo = NULL; }
+  if (m_dimInfoMonObject) { delete m_dimInfoMonObject; m_dimInfoMonObject = NULL; }
   cleanAnaSources();
 }
 void DbRootHist::cleanAnaSources()
@@ -116,19 +153,19 @@ void DbRootHist::loadAnaSources()
       for (unsigned int i=0; i< m_sourcenames.size(); ++i) {
         OnlineHistogram* histo = dbSession()->getHistogram(m_sourcenames[i]);
         m_anaSources.push_back(new DbRootHist(m_sourcenames[i],
-                                              m_dimServiceName,
+                                              m_partition,
                                               m_refreshTime,
                                               999,
                                               dbSession(),
                                               m_analysisLib,
                                               histo,
-                                              m_verbosity));
+                                              m_verbosity,
+                                              m_dimBrowser));
         if (NULL == m_anaSources[i]->rootHistogram) { sourcesOK = false; }
       }
       m_anaLoaded = true;
       if (!sourcesOK) { // cannot get sources from DIM
         beEmptyHisto();
-        cleanAnaSources();
       }
     }
   }
@@ -144,15 +181,24 @@ void DbRootHist::setDimServiceName(std::string newDimServiceName)
   if (0 == histogramIdentifier.histogramIdentifier().compare(m_identifier) &&
       0 == histogramIdentifier.histogramSetName().compare(m_setName) &&
       0 == histogramIdentifier.histogramType().compare(m_histogramType)) {
-    setIdentifiersFromDim(newDimServiceName);        
-    if (m_dimInfo) { delete m_dimInfo; m_dimInfo = NULL; }
-    m_dimInfo = new DimInfo(newDimServiceName.c_str(), m_refreshTime,
-                            (float)-1.0);                          
+    setIdentifiersFromDim(newDimServiceName);
+
+    if (s_pfixMonProfile != m_histogramType && s_pfixMonH1D != m_histogramType && s_pfixMonH1F != m_histogramType
+                   && s_pfixMonH2D != m_histogramType && s_pfixMonH2F != m_histogramType) {  
+
+      if (m_dimInfo) { delete m_dimInfo; m_dimInfo = NULL; }
+      m_dimInfo = new DimInfo(newDimServiceName.c_str(), m_refreshTime,
+                            (float)-1.0);
+    } else {
+      if (m_dimInfoMonObject) { delete m_dimInfoMonObject; m_dimInfoMonObject = NULL; }
+      m_dimInfoMonObject = new DimInfoMonObject(newDimServiceName.c_str(), m_refreshTime, "Presenter");
+    }
+
     m_dimServiceName = newDimServiceName;
     if (m_verbosity >= Verbose) {
       std::cout << "DimInfo dimServiceName: " << newDimServiceName << std::endl;
     }
-    if (m_dimInfo) {
+    if (m_dimInfo || m_dimInfoMonObject) {
       initHistogram();
       if (false == m_isEmptyHisto) {
         fillHistogram();
@@ -217,115 +263,190 @@ void DbRootHist::initHistogram()
   if (m_offsetHistogram) { delete m_offsetHistogram; m_offsetHistogram = NULL;}
   if (rootHistogram) { delete rootHistogram; rootHistogram = NULL; }
   if (m_reference) { delete  m_reference; m_reference = NULL; }
-  cleanAnaSources();
-  
+
   // If not AnaLib hist:
-  if (!m_isAnaHist) {    
-//    beRegularHisto();
-    std::string noGauchocomment = "No gauchocomment";
-    if (m_gauchocommentDimInfo) {
-      delete m_gauchocommentDimInfo; m_gauchocommentDimInfo = 0;
-    }
+  if (!m_isAnaHist) {
+    if (s_P1D == m_histogramType || s_HPD == m_histogramType || s_H2D == m_histogramType ||
+        s_H1D == m_histogramType || s_CNT == m_histogramType || s_P2D == m_histogramType) {
+      if (m_dimInfo) {
+        beRegularHisto();
+        std::string noGauchocomment = "No gauchocomment";
+        if (m_gauchocommentDimInfo) {
+          delete m_gauchocommentDimInfo; m_gauchocommentDimInfo = 0;
+        }
+        
+        m_gauchocommentDimInfo = new DimInfo(gauchocommentEric().c_str(),
+                                             m_refreshTime,
+                                             (char*)noGauchocomment.c_str());
     
-    m_gauchocommentDimInfo = new DimInfo(gauchocommentEric().c_str(),
-                                         m_refreshTime,
-                                         (char*)noGauchocomment.c_str());
-
-    m_serviceSize = m_gauchocommentDimInfo->getSize()/sizeof(char);
-    while (m_serviceSize <= 0) {
-      gSystem->Sleep(m_waitTime);
-      m_serviceSize = m_gauchocommentDimInfo->getSize()/sizeof(char);
-    }
-    // Does not look like a Gaucho job. Let's see if it is a CCPC...
-    if ( 0 == noGauchocomment.compare(m_gauchocommentDimInfo->getString())) {
-      if (m_gauchocommentDimInfo) {
-        delete m_gauchocommentDimInfo; m_gauchocommentDimInfo = 0;
-      }
-      m_gauchocommentDimInfo = new DimInfo(gauchocommentBeat().c_str(),
-                                           m_refreshTime,
-                                           (char*)noGauchocomment.c_str());
-      m_serviceSize = m_gauchocommentDimInfo->getSize()/sizeof(char);
-      while (m_serviceSize <= 0) {
-        gSystem->Sleep(m_waitTime);
         m_serviceSize = m_gauchocommentDimInfo->getSize()/sizeof(char);
+        while (m_serviceSize <= 0) {
+          gSystem->Sleep(m_waitTime);
+          m_serviceSize = m_gauchocommentDimInfo->getSize()/sizeof(char);
+        }
+        // Does not look like a Gaucho job. Let's see if it is a CCPC...
+        if ( 0 == noGauchocomment.compare(m_gauchocommentDimInfo->getString())) {
+          if (m_gauchocommentDimInfo) {
+            delete m_gauchocommentDimInfo; m_gauchocommentDimInfo = 0;
+          }
+          m_gauchocommentDimInfo = new DimInfo(gauchocommentBeat().c_str(),
+                                               m_refreshTime,
+                                               (char*)noGauchocomment.c_str());
+          m_serviceSize = m_gauchocommentDimInfo->getSize()/sizeof(char);
+          while (m_serviceSize <= 0) {
+            gSystem->Sleep(m_waitTime);
+            m_serviceSize = m_gauchocommentDimInfo->getSize()/sizeof(char);
+          }
+        }
+        // use ROOT cycle notion ";" for tracking instances
+        m_histoRootName = TString(Form("%s;%i",
+                                       histogramName().c_str(),
+                                       m_instance));
+        m_histoRootTitle = TString(Form("%s",
+                                        m_gauchocommentDimInfo->getString()));
+        if (m_gauchocommentDimInfo) {
+          delete m_gauchocommentDimInfo;
+          m_gauchocommentDimInfo = NULL;
+        }
+    
+        int m_serviceSize = m_dimInfo->getSize()/sizeof(float);    
+        while (m_serviceSize <= 0) {
+          gSystem->Sleep(m_waitTime);
+          m_serviceSize = m_dimInfo->getSize()/sizeof(float);
+        }    
+        float* histoDimData;
+        if (-1.0 != m_dimInfo->getFloat()) {
+          histoDimData = (float*) m_dimInfo->getData();
+          if (s_H1D == m_histogramType) {
+            const int   nBins   = (int) histoDimData[1];
+            const float xMin   = (float) histoDimData[2];
+            const float xMax   = (float) histoDimData[3];
+    //      const int   entries = (int) histoDimData[4];
+            if (!rootHistogram) {
+              rootHistogram = new TH1F(m_histoRootName.Data(),
+                                       m_histoRootTitle.Data(),
+                                       nBins, xMin, xMax);
+            }
+          } else if (s_H2D == m_histogramType) {
+            const int   nBinsX   = (int) histoDimData[1];
+            const float xMin    = (float) histoDimData[2];
+            const float xMax    = (float) histoDimData[3];
+            const int   nBinsY   = (int) histoDimData[4];
+            const float yMin    = (float) histoDimData[5];
+            const float yMax    = (float) histoDimData[6];
+    //      const float entries  = histoDimData[7];
+            if (!rootHistogram) {
+              rootHistogram = new TH2F(m_histoRootName.Data(),
+                                       m_histoRootTitle.Data(),
+                                       nBinsX, xMin, xMax,
+                                       nBinsY, yMin, yMax);
+    //        if (!histogramImage) {
+    //          histogramImage = TImage::Create();
+    //          histogramImage->SetImage((const Double_t *)((TH2F*)rootHistogram)->GetArray(),
+    //              ((TH2F*)rootHistogram)->GetNbinsX() + 2,
+    //              ((TH2F*)rootHistogram)->GetNbinsY() + 2); // , gHistImagePalette
+    //        }
+            }
+          } else if (s_P1D == m_histogramType || s_HPD == m_histogramType) {
+            const int   nBins   = (int) histoDimData[1];
+            const float xMin    = histoDimData[2];
+            const float xMax    = histoDimData[3];
+    //      const int   entries = (int) histoDimData[4];
+    //      float* entriesPerBin;
+    //      float* sumWTPerBin;
+    //      float* sumWT2PerBin;
+            if (!rootHistogram) {
+              rootHistogram = new TH1F(m_histoRootName.Data(),
+                                       m_histoRootTitle.Data(),
+                                       nBins, xMin, xMax);
+            }
+          } else {
+            // cannot get sources from DIM
+            beEmptyHisto();
+          }
+        }
       }
-    }
-    // use ROOT cycle notion ";" for tracking instances
-    m_histoRootName = TString(Form("%s;%i",
-                                   histogramName().c_str(),
-                                   m_instance));
-    m_histoRootTitle = TString(Form("%s",
-                                    m_gauchocommentDimInfo->getString()));
-    if (m_gauchocommentDimInfo) {
-      delete m_gauchocommentDimInfo;
-      m_gauchocommentDimInfo = NULL;
-    }
-
-    int m_serviceSize = m_dimInfo->getSize()/sizeof(float);    
-    while (m_serviceSize <= 0) {
-      gSystem->Sleep(m_waitTime);
-      m_serviceSize = m_dimInfo->getSize()/sizeof(float);
-    }    
-    float* histoDimData;
-    if (-1.0 != m_dimInfo->getFloat()) {
-      histoDimData = (float*) m_dimInfo->getData();
-      if (s_H1D == m_histogramType) {
-        const int   nBins   = (int) histoDimData[1];
-        const float xMin   = (float) histoDimData[2];
-        const float xMax   = (float) histoDimData[3];
-//      const int   entries = (int) histoDimData[4];
-        if (!rootHistogram) {
-          rootHistogram = new TH1F(m_histoRootName.Data(),
-                                   m_histoRootTitle.Data(),
-                                   nBins, xMin, xMax);
+    } else if (s_pfixMonProfile == m_histogramType || s_pfixMonH1D == m_histogramType || s_pfixMonH1F == m_histogramType
+                || s_pfixMonH2D == m_histogramType || s_pfixMonH2F == m_histogramType) {
+      if (m_dimInfoMonObject) { delete m_dimInfoMonObject; m_dimInfoMonObject = NULL; }
+      m_dimInfoMonObject = new DimInfoMonObject(m_dimServiceName.c_str(), m_refreshTime, "Presenter");
+        if (m_dimInfoMonObject && m_dimInfoMonObject->createMonObject()) {
+    
+        TString histoRootName;
+        TString histoRootTitle;
+  
+        if (s_pfixMonH1F == m_histogramType){
+          MonH1F* monTH1F = static_cast<MonH1F*>(m_dimInfoMonObject->monObject());
+          if (NULL != monTH1F) {
+            histoRootName = TString(Form("%s__instance__%i", monTH1F->histName().c_str(), m_instance));
+            histoRootTitle = TString(Form("%s", monTH1F->histTitle().c_str()));
+            monTH1F->createObject(histoRootName.Data());
+            monTH1F->hist()->SetTitle(histoRootTitle);
+            if (m_verbosity >= Verbose) { monTH1F->print(); }
+            rootHistogram = monTH1F->hist();
+          }
+        } else if (s_pfixMonH2F == m_histogramType){
+          MonH2F* monTH2F = static_cast<MonH2F*>(m_dimInfoMonObject->monObject());
+          if (NULL != monTH2F) {
+            histoRootName = TString(Form("%s__instance__%i", monTH2F->histName().c_str(), m_instance));
+            histoRootTitle = TString(Form("%s", monTH2F->histTitle().c_str()));
+            monTH2F->createObject(histoRootName.Data());
+            monTH2F->hist()->SetTitle(histoRootTitle);
+            if (m_verbosity >= Verbose) { monTH2F->print(); }
+            rootHistogram = monTH2F->hist();
+          }
+        } else if (s_pfixMonH1D == m_histogramType){
+          MonH1D* monTH1D = static_cast<MonH1D*>(m_dimInfoMonObject->monObject());
+          if (NULL != monTH1D) {
+            histoRootName = TString(Form("%s__instance__%i", monTH1D->histName().c_str(), m_instance));
+            histoRootTitle = TString(Form("%s", monTH1D->histTitle().c_str()));
+            monTH1D->createObject(histoRootName.Data());
+            monTH1D->hist()->SetTitle(histoRootTitle);
+            if (m_verbosity >= Verbose) { monTH1D->print(); }
+            rootHistogram = monTH1D->hist();
+          }
+        } else if (s_pfixMonH2D == m_histogramType){
+          MonH2D* monTH2D = static_cast<MonH2D*>(m_dimInfoMonObject->monObject());
+          if (NULL != monTH2D) {
+            histoRootName = TString(Form("%s__instance__%i", monTH2D->histName().c_str(), m_instance));
+            histoRootTitle = TString(Form("%s", monTH2D->histTitle().c_str()));
+            monTH2D->createObject(histoRootName.Data());
+            monTH2D->hist()->SetTitle(histoRootTitle);
+            if (m_verbosity >= Verbose) { monTH2D->print(); }
+            rootHistogram = monTH2D->hist();
+          }
+        } else if (s_pfixMonProfile == m_histogramType){
+          MonProfile* monProfile = static_cast<MonProfile*>(m_dimInfoMonObject->monObject());
+          if (NULL != monProfile) {
+            histoRootName = TString(Form("%s__instance__%i", monProfile->profileName().c_str(), m_instance));
+            histoRootTitle = TString(Form("%s", monProfile->profileTitle().c_str()));
+            monProfile->createObject(histoRootName.Data());
+            monProfile->profile()->SetTitle(histoRootTitle);
+            if (m_verbosity >= Verbose) { monProfile->print(); }
+            rootHistogram = monProfile->profile();
+          }
+        } else {
+          std::cout << "MonObject not included in the Presenter: " << m_histogramType << std::endl;
+          rootHistogram =  0;
         }
-      } else if (s_H2D == m_histogramType) {
-        const int   nBinsX   = (int) histoDimData[1];
-        const float xMin    = (float) histoDimData[2];
-        const float xMax    = (float) histoDimData[3];
-        const int   nBinsY   = (int) histoDimData[4];
-        const float yMin    = (float) histoDimData[5];
-        const float yMax    = (float) histoDimData[6];
-//      const float entries  = histoDimData[7];
-        if (!rootHistogram) {
-          rootHistogram = new TH2F(m_histoRootName.Data(),
-                                   m_histoRootTitle.Data(),
-                                   nBinsX, xMin, xMax,
-                                   nBinsY, yMin, yMax);
-//        if (!histogramImage) {
-//          histogramImage = TImage::Create();
-//          histogramImage->SetImage((const Double_t *)((TH2F*)rootHistogram)->GetArray(),
-//              ((TH2F*)rootHistogram)->GetNbinsX() + 2,
-//              ((TH2F*)rootHistogram)->GetNbinsY() + 2); // , gHistImagePalette
-//        }
-        }
-      } else if (s_P1D == m_histogramType || s_HPD == m_histogramType) {
-        const int   nBins   = (int) histoDimData[1];
-        const float xMin    = histoDimData[2];
-        const float xMax    = histoDimData[3];
-//      const int   entries = (int) histoDimData[4];
-//      float* entriesPerBin;
-//      float* sumWTPerBin;
-//      float* sumWT2PerBin;
-        if (!rootHistogram) {
-          rootHistogram = new TH1F(m_histoRootName.Data(),
-                                   m_histoRootTitle.Data(),
-                                   nBins, xMin, xMax);
-        }
+        if (rootHistogram) { rootHistogram->AddDirectory(kFALSE); }
       }
-      if (rootHistogram) { rootHistogram->AddDirectory(kFALSE); }
     } else {
       // cannot get sources from DIM
+      if (m_verbosity >= Verbose) { std::cout << "cannot get sources from DIM"
+                                              << std::endl; }
       beEmptyHisto();
     }
-  } else if (m_isAnaHist && m_anaSources.size() > 0) {
+  } else if (m_isAnaHist && m_anaSources.size() > 0) { // analib hist
     std::vector<TH1*> sources(m_anaSources.size());
     bool sourcesOk = true;
     for (unsigned int i=0; i< m_anaSources.size(); ++i) {
-      m_anaSources[i]->initHistogram();
       sources[i]= m_anaSources[i]->rootHistogram;
-      if (m_anaSources[i]->isEmptyHisto() ) 
+      if (m_anaSources[i]->isEmptyHisto() ) {
         sourcesOk = false;
+        if (m_verbosity >= Verbose) { std::cout << 
+            "source "<<i<<" is empty"<<std::endl; }
+      }
     }
     OMAHcreatorAlg* creator = dynamic_cast<OMAHcreatorAlg*>
       (m_analysisLib->getAlg(m_creationAlgorithm));
@@ -335,11 +456,15 @@ void DbRootHist::initHistogram()
                                     onlineHistogram()->htitle(),
                                     isEmptyHisto() ? NULL : rootHistogram);
       beRegularHisto();
+      if (m_verbosity >= Verbose && (!rootHistogram)) { 
+        std::cout<< "creator alg. failed!"<<std::endl;}
     }
     else {
+      if (m_verbosity >= Verbose) {
+        std::cout << "creator alg. or sources not found!"<<std::endl;}
       beEmptyHisto(); 
     }
-    if (!rootHistogram) { beEmptyHisto(); }
+    if (!rootHistogram) {beEmptyHisto(); }
   }
   if (!rootHistogram) {
     beEmptyHisto();
@@ -383,6 +508,9 @@ void DbRootHist::fillHistogram()
     rootHistogram->Reset();
   }
   if (!m_isAnaHist) {
+    if (s_P1D == m_histogramType || s_HPD == m_histogramType || s_H2D == m_histogramType ||
+        s_H1D == m_histogramType || s_CNT == m_histogramType || s_P2D == m_histogramType) {
+      if (m_dimInfo) {
     // wait until data has arrived
     int m_serviceSize = m_dimInfo->getSize()/sizeof(float);
     while (m_serviceSize <= 0) {
@@ -512,7 +640,37 @@ void DbRootHist::fillHistogram()
       if (hostingPad) { hostingPad->Modified(); }
     }
 //    m_toRefresh = false;
-  } else if (m_isAnaHist && m_anaSources.size()>0)  {
+    }
+   } else if (s_pfixMonProfile == m_histogramType || s_pfixMonH1D == m_histogramType  || s_pfixMonH1F == m_histogramType
+                || s_pfixMonH2D == m_histogramType  || s_pfixMonH2F == m_histogramType) {
+     if (m_dimInfoMonObject && m_dimInfoMonObject->loadMonObject()) {
+
+        if (s_pfixMonH1F == m_histogramType){
+          MonH1F* monTH1F = (MonH1F*) m_dimInfoMonObject->monObject();
+          if (monTH1F) { monTH1F->loadObject(); }
+        }
+        if (s_pfixMonH2F == m_histogramType){
+          MonH2F* monTH2F = (MonH2F*) m_dimInfoMonObject->monObject();
+          if (monTH2F) { monTH2F->loadObject(); }
+        }
+        if (s_pfixMonH1D == m_histogramType){
+          MonH1D* monTH1D = (MonH1D*) m_dimInfoMonObject->monObject();
+          if (monTH1D) { monTH1D->loadObject(); }
+        }
+        if (s_pfixMonH2D == m_histogramType){
+          MonH2D* monTH2D = (MonH2D*) m_dimInfoMonObject->monObject();
+          if (monTH2D) { monTH2D->loadObject(); }
+        }
+        if (s_pfixMonProfile == m_histogramType){
+          MonProfile* monProfile = (MonProfile*) m_dimInfoMonObject->monObject();
+          if (monProfile) { monProfile->loadObject(); }
+        }
+
+        if (hostingPad) hostingPad->Modified();
+      }
+    }
+  
+} else if (m_isAnaHist && m_anaSources.size()>0)  {
     std::vector<TH1*> sources(m_anaSources.size());
     bool sourcesOk = true;
     for (unsigned int i=0; i< m_anaSources.size(); ++i) {
@@ -529,7 +687,6 @@ void DbRootHist::fillHistogram()
                                     isEmptyHisto() ? NULL : rootHistogram);
       beRegularHisto();
     }
-    if (!rootHistogram) { beEmptyHisto(); }
     if (hostingPad) { hostingPad->Modified(); }
   }
 }
@@ -944,4 +1101,77 @@ void DbRootHist::referenceHistogram(ReferenceVisibility visibility)
   } else if (Hide == visibility) {
     if (0 != m_reference) { delete m_reference; m_reference = NULL; }
   }
+}
+
+std::string DbRootHist::findDimServiceName(const std::string & dimServiceType) {
+  char *dimService; 
+  char *dimFormat;
+  int dimType;
+  std::string dimServiceName("");
+
+  std::string dimServiceNameQueryBegining = dimServiceType + s_slash +
+                                            m_partition +
+                                            s_underscrore + "*";
+
+  m_dimBrowser->getServices(dimServiceNameQueryBegining.c_str());
+  while(dimType = m_dimBrowser->getNextService(dimService, dimFormat)) {
+    std::string dimServiceCandidate(dimService);
+       
+    TString dimServiceTS(dimServiceCandidate);
+     
+    if (false == dimServiceTS.EndsWith(s_gauchocomment.c_str())) {
+      HistogramIdentifier histogramCandidate = HistogramIdentifier(dimServiceCandidate);
+      if (0 == (histogramCandidate.histogramIdentifier().compare(m_onlineHistogram->identifier()))) {          
+        dimServiceName = dimServiceCandidate;
+        break;
+      }
+    } else {
+      if (m_verbosity >= Verbose) {
+        std::cout << std::endl << "NOT found: " << dimService << std::endl;
+      }
+    }
+  }
+  return dimServiceName;
+}
+
+std::string DbRootHist::assembleCurrentDimServiceName() {
+
+  std::string dimServiceNameQueryBegining;
+  std::string dimServiceName("");
+
+  if (0 == m_onlineHistogram->hstype().compare(s_P1D) ||
+      0 == m_onlineHistogram->hstype().compare(s_HPD)) {
+    dimServiceName = findDimServiceName(s_pfixMonProfile);
+    if (dimServiceName.empty()) {
+      dimServiceName = findDimServiceName(s_HPD);
+    }
+    if (dimServiceName.empty()) {
+      dimServiceName = findDimServiceName(s_P1D);                
+    }        
+  } else if (0 == m_onlineHistogram->hstype().compare(s_H2D)) {
+    dimServiceName = findDimServiceName(s_pfixMonH2F);
+    if (dimServiceName.empty()) {
+      dimServiceName = findDimServiceName(s_pfixMonH2D);          
+    }
+    if (dimServiceName.empty()) {
+      dimServiceName = findDimServiceName(s_H2D);          
+    }              
+  } else if (0 == m_onlineHistogram->hstype().compare(s_H1D)) {
+    dimServiceName = findDimServiceName(s_pfixMonH1F);
+    if (dimServiceName.empty()) {
+      dimServiceName = findDimServiceName(s_pfixMonH1D);          
+    }
+    if (dimServiceName.empty()) {
+      dimServiceName = findDimServiceName(s_H1D);          
+    }              
+  }
+
+  if (!dimServiceName.empty()){
+    if (m_verbosity >= Verbose) {
+      std::cout << std::endl << "assembled current Dim service name: " << dimServiceName
+                << std::endl << std::endl;
+    }  
+    setIdentifiersFromDim(dimServiceName);
+  }
+  return dimServiceName;
 }
