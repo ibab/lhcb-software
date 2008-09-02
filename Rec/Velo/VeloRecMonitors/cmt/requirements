@@ -15,6 +15,7 @@ branches          cmt doc src
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
 # use   Package      v1r*    Hat
+use  AIDA         v*   LCG_Interfaces 
 
 use  GaudiAlg     v*
 

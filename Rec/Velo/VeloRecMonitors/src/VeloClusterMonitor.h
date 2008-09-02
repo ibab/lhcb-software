@@ -1,4 +1,4 @@
-// $Id: VeloClusterMonitor.h,v 1.5 2008-08-24 07:47:03 erodrigu Exp $
+// $Id: VeloClusterMonitor.h,v 1.6 2008-09-02 08:58:58 erodrigu Exp $
 #ifndef VELORECMONITORS_VELOCLUSTERMONITOR_H 
 #define VELORECMONITORS_VELOCLUSTERMONITOR_H 1
 
@@ -63,7 +63,8 @@ namespace Velo
 
     // Job options
     std::string m_clusterCont;
-    std::vector<unsigned int> m_sensorNumbers;
+    std::vector<unsigned int> m_rSensorNumbers;
+    std::vector<unsigned int> m_phiSensorNumbers;
 	
   };
 }

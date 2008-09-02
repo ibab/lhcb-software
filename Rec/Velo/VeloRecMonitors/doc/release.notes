@@ -4,6 +4,10 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2008-09-02 - Eduardo Rodrigues
+ - histo for (# clusters) gets only entries when (# clusters)>0
+ - introduced separate histos for R and Phi sensors
+
 ! 2008-08-31 - Malcolm John
  - Tinker with the dummy variables generated in the LumiRegion monitor
  - Inport a LiteCluster monitor meant for running in the HLT
