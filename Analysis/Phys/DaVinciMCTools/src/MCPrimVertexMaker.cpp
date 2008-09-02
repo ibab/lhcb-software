@@ -1,4 +1,4 @@
-// $Id: MCPrimVertexMaker.cpp,v 1.6 2007-06-15 16:18:39 jpalac Exp $
+// $Id: MCPrimVertexMaker.cpp,v 1.7 2008-09-02 09:10:23 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -114,7 +114,8 @@ StatusCode MCPrimVertexMaker::makePV(const LHCb::MCVertex* mc, LHCb::RecVertex* 
   Gaudi::XYZVector smearPV(smearV(0)*gauss(0),smearV(1)*gauss(1),smearV(2)*gauss(2));
   Gaudi::XYZPoint posPV = mc->position() + smearPV ;
   Gaudi::SymMatrix3x3 errPV;
-  errPV.SetDiagonal(smearV);
+  Gaudi::Vector3 smearV2 = Gaudi::Vector3( m_xSmear*m_xSmear, m_ySmear*m_ySmear, m_zSmear*m_zSmear)/float(ntk);
+  errPV.SetDiagonal(smearV2);
   debug() << "Generated PV is smeared by " << smearPV << " to be at "<< posPV << endmsg ;
   pv->setPosition(posPV);
   pv->setCovMatrix(errPV);
