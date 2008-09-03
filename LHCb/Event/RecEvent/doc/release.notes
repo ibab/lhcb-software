@@ -1,10 +1,11 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.103 2008-08-18 18:50:01 jonrob Exp $
+! $Id: release.notes,v 1.104 2008-09-03 14:36:47 cattanem Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+!========================= RecEvent v2r15 2008-09-03 =========================
 ! 2008-08-18 - Chris Jones
  - Extend type flags in RichPID
 
