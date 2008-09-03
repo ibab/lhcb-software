@@ -34,6 +34,11 @@ Hlt1.Members += {  "GaudiSequencer/Hlt1EleAlleySequence" };
 Hlt1.Members += {  "GaudiSequencer/Hlt1PhoAlleySequence" };
 #include "$HLTSYSROOT/options/HltPhoAlleySequence.opts"
 
+//Hlt1.Members += {  "GaudiSequencer/HltVeloClosingSequence" };
+//Hlt1.Members += {  "GaudiSequencer/HltVeloAligningSequence" };
+//Hlt1.Members += {  "GaudiSequencer/HltVeloMonitoringSequence" };
+//#include "$HLTSYSROOT/options/HltVeloAlleySequence.opts"
+
 //Hlt1.Members += {  "GaudiSequencer/Hlt1LumiAlleySequence" };
 //#include "$HLTSYSROOT/options/HltLumiAlleyConfSequence.opts"
 Hlt1.Members += {  "GaudiSequencer/HltLumiSequence" };
