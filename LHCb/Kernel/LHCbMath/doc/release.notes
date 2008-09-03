@@ -6,6 +6,7 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+!========================= LHCbMath v3r2 2008-09-03 ==========================
 ! 2008-08-02 - Vanya BELYAEV
  - LHCbMath/Bit.h
    LHCbMath/Digit.h
@@ -35,12 +36,8 @@
      -  Gaudi::Math::bits
         The regular function, the least efficient evaluator 
 
- 
-
 ! 2008-08-01 - Vanya BELYAEV
-
  - LHCbMath/Bit.h
- 
     add few more evaluators of Nth nit for integral unsigned types 
 
     Finally one has three possibility:
@@ -116,28 +113,22 @@
   
 
 -  LHCbMath/TypeWrapper.h
-
       TypeWrapper utility (extraction from IPower.hpp)
       Null and Null_ strructures 
 
 -  LHCbMath/IPower.hpp
-
       extract the useful TypeWrapper consttuction
 
 - tests/pow.cpp
-    
       new test for testiing various "pow"-functions  
 
 - tests/bit.cpp
-
       new test for testiing various "bit"-functions  
 
 - tests/digit.cpp
-
       new test for testiing various "digit"-functions  
 
 - cmt/requirements 
-
        add "check" applications: 
 
            TestPow 
@@ -145,7 +136,6 @@
            TestDigit 
      
         version increment to v3r2 
-
 
 !========================= LHCbMath v3r1 2008-07-16 ==========================
 ! 2008-07-15 - Wouter Hulsbergen (code provided by Manuel Schiller)
