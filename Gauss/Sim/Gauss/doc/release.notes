@@ -4,6 +4,13 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2008-09-03 - Gloria CORTI
+ - Fix options for magnetic field to use with Magnet v5r0 (LHCb v25r0)
+   . SimGeometry.opts
+   . MeasuredFieldMap.opts
+ - Fix options for CondDBDispatcherSvc to use with Gaudi v20r1
+   . lhcb-2008.opts
+
 ! 2008-07-28 - Gloria CORTI
  - Add few steering options for alignment production:
    450 GeV with magnet off, 5 TeV with magnet off and on (leave in this case
