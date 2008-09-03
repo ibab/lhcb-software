@@ -1,6 +1,9 @@
-// $Id: CondDBNameTagPair.h,v 1.1 2007-05-11 10:02:50 marcocle Exp $
+// $Id: CondDBNameTagPair.h,v 1.2 2008-09-03 15:36:09 cattanem Exp $
 #ifndef KERNEL_CONDDBNAMETAGPAIR_H 
 #define KERNEL_CONDDBNAMETAGPAIR_H 1
+
+#include <string>
+#include <utility>
 
 namespace LHCb 
 {

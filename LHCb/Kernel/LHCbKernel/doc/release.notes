@@ -4,53 +4,42 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+!===================== LHCbKernel v9r1 2008-09-03 =========================
+! 2008-09-03 - Marco Cattaneo
+ - Add some missing dictionaries and missing includes
+
 ! 2008-08-19 - Chris Jones
  - Fix some doxygen warnings from the python Configurable
 
 ! 2008-08-17 M Needham
  - Extend functionality in TT and ITNames 
- - [add methods to return station, layer, ... names + all valid possibilities]
-
+   [add methods to return station, layer, ... names + all valid possibilities]
 
 ! 2008-08-15 - Chris Jones
  - Add python/LHCbKernel/Configurable.py containing base class Configurable
 
-
 ! 2008-08-03 - Vanya BELYAEV 
-
- - src/Inspectors.cpp
-  
-     fix for Win32 platform
+ - src/Inspectors.cpp:  fix for Win32 platform
 
 ! 2008-08-03 - Vanya BELYAEV
 
- - Kernel/Inspectors.h
-   src/Inspectors.cpp
+ - Kernel/Inspectors.h, src/Inspectors.cpp
+   New utility class LHCb::Inspector for (recursive) inspection of the 
+   major properties of various Gaudi components, including  the application
+   itself. It is especially suited for inspection of the "algorithmic" part.  
    
-      New utility class LHCb::Inspector 
-      for (recursive) inspection of the 
-      major properties of various Gaudi components, including 
-      the application itself. It is especially suited for
-      inspection of the "algorithmic" part.  
-   
-- python/LHCbKernel/Inspector.py
-
-      Helper python module with the proper decorations for LHCb::Inspector.
-      See the embedded documentation inside the module  
+ - python/LHCbKernel/Inspector.py
+   Helper python module with the proper decorations for LHCb::Inspector.
+   See the embedded documentation inside the module  
 
  - xml/lcgdict/lcg_seletiron.xml
    dict/LHCbKernelDict.h
-
       add LHCb::Inspector into the dictionary
 
- - cmt/requirements 
-  
-      add "python_install" pattern  
+ - cmt/requirements: add "python_install" pattern  
 
 ! 2008-08-01 - Vanya BELYAEV
-
  - src/ParticleID.h
-
    Small update for LHCb::ParticleID::digit function 
    to take into account updated Gaudi::Math::digit function 
    (The least significant digit i numbered now as #0)

@@ -1,10 +1,11 @@
-// $Id: LHCbKernelDict.h,v 1.14 2008-08-03 12:34:37 ibelyaev Exp $
+// $Id: LHCbKernelDict.h,v 1.15 2008-09-03 15:36:09 cattanem Exp $
 #ifndef DICT_LHCBKERNELDICT_H 
 #define DICT_LHCBKERNELDICT_H 1
 
 // Additional classes to be added to automatically generated lcgdict
 
 // begin include files
+#include <map>
 #include <vector>
 #include <utility>
 #include "GaudiKernel/VectorMap.h"
@@ -60,6 +61,7 @@ namespace {
     std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint>       m_std_pair_XYZPoint_XYZPoint;
     std::vector<LHCb::VeloChannelID>                 m_std_vector_VeloChannelID;
     std::vector<LHCb::LHCbID>::const_iterator        m_std_vector_LHCbID_const_iterator;
+    std::map<std::pair<int,unsigned int>,unsigned int> m_L0DUReport_Summaries;
     // end instantiations
   };
 }

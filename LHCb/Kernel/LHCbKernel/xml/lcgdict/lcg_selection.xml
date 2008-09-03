@@ -12,6 +12,7 @@
   <class name="std::pair<LHCb::MuonTileID,int>"/>
   <class name="std::vector<std::pair<LHCb::MuonTileID,int> >"/>
   <class name="LHCb::Trajectory"/>
+  <class name="LHCb::AlignTraj"/>
   <class name="LHCb::CircleTraj"/>
   <class name="LHCb::LineTraj"/>
   <class name="LHCb::ParabolaTraj"/>
@@ -20,6 +21,8 @@
   <class pattern ="LHCb::DifTraj<*"/>
   <class pattern ="LHCb::SiPositionInfo<*>"/>
   <class pattern ="GaudiUtils::VectorMap<*>"/>
+<!--- Next should really be in L0Event, is an L0DUReport return type -->
+  <class name ="std::map<std::pair<int,unsigned int>,unsigned int>"/>
 <!--- Add here all interfaces from Kernel directory --> 
   <class name = "IAlgorithmCorrelations" />
   <class name = "IBdlTool"             />
