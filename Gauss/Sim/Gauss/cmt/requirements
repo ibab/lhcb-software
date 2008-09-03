@@ -3,7 +3,7 @@
 # Maintainer : Gloria Corti, Florence Ranjard
 #============================================================================
 package Gauss
-version v34r0
+version v35r0
 
 #============================================================================
 #-- Structure
@@ -19,7 +19,7 @@ use ParamFiles         v7r1                  -no_auto_imports
 use FieldMap           v5r0                  -no_auto_imports
 use DecFiles           v15r*  Gen            -no_auto_imports
 use Geant4Files	       v91r0	             -no_auto_imports
-use XmlVis             v1r6   Vis            -no_auto_imports
+use XmlVis             v1r*   Vis            -no_auto_imports
 use MIBData            v2r0                  -no_auto_imports
 use MCatNLOData        v1r1                  -no_auto_imports
 
