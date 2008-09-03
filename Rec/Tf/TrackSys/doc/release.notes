@@ -3,6 +3,9 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
+! 2008-09-03 - Stephanie Hansmann-Menzemer
+- bug fix in Fitting.py  
+
 ! 2008-08-27 - Stephanie Hansmann-Menzemer
 - add option file for track checking sequence, fix yet another bug for BfieldOff in RecoTracking.py
 

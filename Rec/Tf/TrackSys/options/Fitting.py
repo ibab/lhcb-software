@@ -44,8 +44,8 @@ if TrackSys().getProp( "fieldOff" ):
     TrackEventFitter("FitForward").Fitter.NodeFitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
     TrackEventFitter("FitForward").Fitter.NodeFitter.Extrapolator.addTool(TrackSimpleExtraSelector, name="ExtraSelector")
     TrackEventFitter("FitForward").Fitter.NodeFitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";  
-    TrackEventFitter("FitForward").Fitter.Extrapolator.addTool(materialLocator)
-    TrackEventFitter("FitForward").Fitter.NodeFitter.Extrapolator.addTool(materialLocator)
+#    TrackEventFitter("FitForward").Fitter.Extrapolator.addTool(materialLocator)
+#    TrackEventFitter("FitForward").Fitter.NodeFitter.Extrapolator.addTool(materialLocator)
     
 if "simplifiedGeometry" in TrackSys().getProp("expertTracking"):
     TrackEventFitter("FitForward").Fitter.MaterialLocator = "SimplifiedMaterialLocator"
@@ -104,6 +104,7 @@ if TrackSys().getProp("fieldOff") :
    TrackEventFitter("FitSeed").Fitter.Extrapolator.addTool(TrackSimpleExtraSelector, name="ExtraSelector")
    TrackEventFitter("FitSeed").Fitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
    TrackEventFitter("FitSeed").Fitter.NodeFitter.Extrapolator.ApplyEnergyLossCorr = False;
+   TrackEventFitter("FitSeed").Fitter.NodeFitter.Extrapolator.addTool(TrackSimpleExtraSelector, name="ExtraSelector");
    TrackEventFitter("FitSeed").Fitter.NodeFitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
 
 if "simplifiedGeometry" in TrackSys().getProp("expertTracking"):
