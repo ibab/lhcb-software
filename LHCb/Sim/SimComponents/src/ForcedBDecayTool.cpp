@@ -1,4 +1,4 @@
-// $Id: ForcedBDecayTool.cpp,v 1.3 2008-08-19 17:16:53 musy Exp $
+// $Id: ForcedBDecayTool.cpp,v 1.4 2008-09-03 08:48:27 musy Exp $
 #include "ForcedBDecayTool.h"
 #include "GaudiKernel/ToolFactory.h"
 
@@ -55,8 +55,8 @@ MCParticle* ForcedBDecayTool::associatedofHEP(HepMC::GenParticle* hepmcp) {
   MCParticles* mcpart = get<MCParticles> ( MCParticleLocation::Default );
 
   int mid = hepmcp->pdg_id();
-  double mothmom = hepmcp->momentum().mag();
-  double moththeta = hepmcp->momentum().theta();
+//   double mothmom = hepmcp->momentum().mag();
+//   double moththeta = hepmcp->momentum().theta();
 //   debug()<<mid<<"  mothmom="<<mothmom<<"   moththeta="<<moththeta<<endreq;
 //   debug()<< hepmcp->production_vertex ()->position().z()<<endreq;
 

@@ -5,9 +5,11 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+! 2008-09-03 - Marco Musy
+ - fix of warning message
+
 ! 2008-08-19 - Marco Musy
  - Fix ForcedBDecayTool.cpp to work with CheatedSelection
-
 
 !====================== SimComponents v2r11 2008-07-27 =======================
 ! 2008-07-24 - Marco Cattaneo
