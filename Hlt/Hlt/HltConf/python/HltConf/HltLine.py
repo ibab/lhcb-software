@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.9 2008-08-28 07:10:32 graven Exp $ 
+# $Id: HltLine.py,v 1.10 2008-09-03 08:54:47 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'    ,  ## the Hlt line itself 
@@ -87,9 +87,10 @@ from Configurables import HltVertexFilter        as VertexFilter
 from Configurables import HltL0MuonPrepare       as L0MuonPrepare 
 from Configurables import HltL0CaloPrepare       as L0CaloPrepare 
 from Configurables import HltVertexToTracks      as VertexToTracks 
+from Configurables import HltDummySelection      as Dummy 
 
 ## @todo introduce the proper decision 
-from Configurables import HelloWorld             as LineDecision 
+from Configurables import HltDecision            as LineDecision 
 
 
 ## Convention: the name of 'PreScaler' algorithm inside HltLine
@@ -260,6 +261,7 @@ _types_ = { TrackUpgrade  : 'TU'
           , VertexToTracks: 'VT'
           , L0CaloPrepare : 'L0CaloPrepare'
           , L0MuonPrepare : 'L0MuonPrepare'
+          , Dummy         : 'Dummy'
           } 
 
 ## protected attributes 
@@ -587,8 +589,8 @@ class Hlt1Line(object):
             for key in self._ODIN.keys():
                 if key not in [ 'BXTypes','TriggerTypes' ] :
                     raise AttributeError, 'Unknown key %s for ODIN Filter configuration '%key
-            BXTypes_       = self._ODIN['BXTypes']      if 'BXTypes'      in self._ODIN else [ ]
-            TriggerTypes_  = self._ODIN['TriggerTypes'] if 'TriggerTypes' in self._ODIN else [ ]
+            BXTypes_       = self._ODIN['BXTypes']      if 'BXTypes'      in self._ODIN else [ 'ALL' ]
+            TriggerTypes_  = self._ODIN['TriggerTypes'] if 'TriggerTypes' in self._ODIN else [ 'ALL' ]
             if type(BXTypes_)      is not list : BXTypes_      = list( BXTypes_      )
             if type(TriggerTypes_) is not list : TriggerTypes_ = list( TriggerTypes_ )
             _members += [ ODINFilter ( odinentryName( line ) 
@@ -677,8 +679,10 @@ class Hlt1Line(object):
         
         ## finally add the decision algorithm!
         if  makesDecision  :
+            if not self._outputsel :
+                raise TypeError( "line '%s' has been requested to create a decision, but it has no output selection"%name)
             _members += [ PreScaler    ( postscalerName ( line ) , AcceptFraction = self._postscale ) 
-                        , LineDecision ( decisionName   ( line ) ) ]   
+                        , LineDecision ( decisionName   ( line ) , InputSelection = self._outputsel ) ]   
             self._terminus = decisionName ( line )
 
         # register selections:
@@ -966,17 +970,18 @@ def __enroll__ ( self       ,   ## the object
     if hasattr ( self , 'sequencer' ) :
         return __enroll__ ( self.sequencer() , level )
 
+    _tab = 50
     _indent_ = ('%-3d'%level) + level * '   ' 
     try:     line = _indent_ + self.name ()
     except:  line = _indent_ + '<UNKNOWN>'
         
-    if len1(line)>39: line = line + '\n'+ 40*' '
-    else :            line = line + (40-len1(line))*' '
+    if len1(line)>( _tab-1): line = line + '\n'+ _tab*' '
+    else :                   line = line + (_tab-len1(line))*' '
     try: line = line + '%-25.25s'%self.getType()
     except: line = line + '<UNKNOWN>'
 
 
-    line = prnt ( self , lst , line )
+    line = prnt ( self , lst , line, l1 = _tab+25 )
     
     line = line + '\n'
 

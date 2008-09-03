@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.7 2008-08-28 08:16:25 pkoppenb Exp $ 
+! $Id: release.notes,v 1.8 2008-09-03 08:54:47 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : 
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+! 2008-09-03 - Gerhard Raven
+ - python/HltConfig/Hlt1Line.py
+    o add dummy selection as recognized member
+    o make printout a little wider
+    o if BXTypes or TriggerTypes not specified in ODIN filter, set them to 'All'
+    o set HltDecision as the type of algorithm that makes the line decision
 
 !========================== HltConf v1r1 2008-08-28 ===================
 ! 2008-08-28 - Gerhard Raven
