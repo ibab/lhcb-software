@@ -8,8 +8,7 @@
  */
 
 MagneticFieldSvc.UseRealMap     = true;
-MagneticFieldSvc.FieldMapFileQ1 = "$FIELDMAPROOT/cdf/field048.c1.vp.cdf";
-MagneticFieldSvc.FieldMapFileQ2 = "$FIELDMAPROOT/cdf/field048.c2.vp.cdf";
-MagneticFieldSvc.FieldMapFileQ3 = "$FIELDMAPROOT/cdf/field048.c3.vp.cdf";
-MagneticFieldSvc.FieldMapFileQ4 = "$FIELDMAPROOT/cdf/field048.c4.vp.cdf";
-
+MagneticFieldSvc.FieldMapFiles  = [ "$FIELDMAPROOT/cdf/field048.c1.vp.cdf",
+                                    "$FIELDMAPROOT/cdf/field048.c2.vp.cdf",
+                                    "$FIELDMAPROOT/cdf/field048.c3.vp.cdf",
+                                    "$FIELDMAPROOT/cdf/field048.c4.vp.cdf" ];
