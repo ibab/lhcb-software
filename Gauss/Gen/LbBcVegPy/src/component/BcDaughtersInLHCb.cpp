@@ -1,4 +1,4 @@
-// $Id: BcDaughtersInLHCb.cpp,v 1.2 2008-07-24 22:37:48 robbep Exp $
+// $Id: BcDaughtersInLHCb.cpp,v 1.3 2008-09-03 09:04:49 gcorti Exp $
 // Include files 
 
 // local
@@ -47,15 +47,47 @@ BcDaughtersInLHCb::BcDaughtersInLHCb( const std::string& type,
   declareProperty( "NeutralThetaMax" , m_neutralThetaMax = 400 * Gaudi::Units::mrad ) ;
   declareProperty( "DecayTool" ,       m_decayToolName = "EvtGenDecay") ;
   m_sigBcPID = 541 ;
-  if ( "" != m_decayToolName ) 
-    m_decayTool = tool< IDecayTool >( m_decayToolName ) ;
-  m_decayTool -> setSignal( m_sigBcPID ) ;
+
 }
 
 //=============================================================================
 // Destructor 
 //=============================================================================
 BcDaughtersInLHCb::~BcDaughtersInLHCb( ) { ; }
+
+//=============================================================================
+// Initialize
+//=============================================================================
+StatusCode BcDaughtersInLHCb::initialize( ) {
+
+  StatusCode sc = GaudiTool::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiTool
+
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize and retrieve "
+                                      << m_decayToolName << " tool" << endmsg;
+
+  if ( "" != m_decayToolName )
+    m_decayTool = tool< IDecayTool >( m_decayToolName ) ;
+
+  m_decayTool -> setSignal( m_sigBcPID ) ;
+
+  return StatusCode::SUCCESS;
+
+}
+
+//=============================================================================
+// Finalize
+//=============================================================================
+StatusCode BcDaughtersInLHCb::finalize( ) {
+
+  StatusCode sc = GaudiTool::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiTool
+
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
+
+  return StatusCode::SUCCESS;
+
+}
 
 //=============================================================================
 // Acceptance function

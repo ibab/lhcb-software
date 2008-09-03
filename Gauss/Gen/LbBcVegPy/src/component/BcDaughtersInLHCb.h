@@ -1,4 +1,4 @@
-// $Id: BcDaughtersInLHCb.h,v 1.2 2008-07-24 22:37:48 robbep Exp $
+// $Id: BcDaughtersInLHCb.h,v 1.3 2008-09-03 09:04:49 gcorti Exp $
 #ifndef GENERATORS_BCDAUGHTERSINLHCB_H 
 #define GENERATORS_BCDAUGHTERSINLHCB_H 1
 
@@ -31,7 +31,9 @@ class BcDaughtersInLHCb : public GaudiTool, virtual public IGenCutTool {
                      const IInterface* parent);
   
   virtual ~BcDaughtersInLHCb( ); ///< Destructor
-  
+
+  virtual StatusCode initialize( );   ///< Initialize method
+
   /** Accept events with daughters in LHCb acceptance (defined by min and
    *  max angles, different values for charged and neutrals)
    *  Implements IGenCutTool::applyCut.
@@ -39,6 +41,8 @@ class BcDaughtersInLHCb : public GaudiTool, virtual public IGenCutTool {
   virtual bool applyCut( ParticleVector & theParticleVector , 
                          const HepMC::GenEvent * theEvent , 
                          const LHCb::GenCollision * theCollision ) const ;
+
+  virtual StatusCode finalize( );   ///< Finalize method
   
 protected:
   
@@ -46,7 +50,7 @@ protected:
   
 private:
   /// Decay tool
-  IDecayTool      * m_decayTool      ;
+  IDecayTool*  m_decayTool;
 
   /** Study a particle a returns true when all stable daughters
    *  are in LHCb acceptance

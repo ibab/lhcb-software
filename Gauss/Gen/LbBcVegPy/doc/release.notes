@@ -1,6 +1,15 @@
-! $Id: release.notes,v 1.10 2008-07-24 22:37:48 robbep Exp $
+! $Id: release.notes,v 1.11 2008-09-03 09:04:49 gcorti Exp $
 ! Package     : Gen/LbBcGen
 ! Responsible : Patrick ROBBE
+!=====================================================================
+
+
+!===================== LbBcVegPy v2r0 2008-09-01 =====================
+! 2008-08-31 - Gloria CORTI
+ - Retrieve DecayTool at initialization rather that at construction, 
+   otherwise ERROR instantiating BcDaughtersInLHCb from LbBcVegPy when
+   building LbBcVegPyConf. Introduced both initialize and finalize 
+   methods. 
 
 ! 2008-07-25 - Patrick Robbe
  - BcDaughtersInLHCb: use units from Gaudi 
