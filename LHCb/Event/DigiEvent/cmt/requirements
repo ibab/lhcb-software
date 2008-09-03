@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.15 2008-07-14 07:41:28 mneedham Exp $
+# $Id: requirements,v 1.16 2008-09-03 08:39:52 cattanem Exp $
 package DigiEvent
-version v2r7
+version v2r8
 
 branches Event xml cmt doc
 
@@ -15,6 +15,11 @@ end_private
 #============================================================================
 apply_pattern god_headers files=../xml/*.xml
 apply_pattern install_more_includes more=Event
+
+# Make custom dictionary. Must be before GOD generation
+#============================================================================
+document customdict DigiEventCustomDict ../dict/lcgDict.h
+macro_append DigiEventObj2Dict_dependencies DigiEventCustomDict
 
 # Generate dictionaries with lcgdict via GOD
 #============================================================================
