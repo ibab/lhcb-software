@@ -1,5 +1,5 @@
 #============================================================================
-# $Id: requirements,v 1.30 2008-09-02 12:36:07 graven Exp $
+# $Id: requirements,v 1.31 2008-09-03 20:00:45 snies Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : P. Koppenburg & M. Cattaneo
 #============================================================================
@@ -94,3 +94,6 @@ alias Moore gaudirun.py
 # application MooreOffline $(GAUDICONFROOT)/src/GaudiMain.cpp
 # apply_pattern application_path
 #===============================================================
+private
+  apply_pattern QMTest
+end_private
