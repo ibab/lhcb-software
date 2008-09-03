@@ -1,5 +1,6 @@
 <lcgdict>
 
+  <class name    = "ICameraTool"                         />
   <class name    = "Rich::HPDPixelCluster"               />
   <class name    = "Rich::HPDPixelClusters"               />
   <class name    = "Rich::HPDPixelClusters::ConstSharedPtn" />
@@ -53,7 +54,7 @@
   <class name    = "Rich::ISmartIDTool"                  />
   <class name    = "Rich::IToolRegistry"                 />
   <class name    = "Rich::ISnellsLawRefraction"          />
-
   <class name    = "Rich::IDetParameters::RadLimits"     />
+  <class name    = "Rich::Mon::IHpdUkL1DisableTool"      />
 
 </lcgdict>

@@ -1,11 +1,16 @@
-! $Id: release.notes,v 1.192 2008-08-28 08:56:52 ukerzel Exp $
+! $Id: release.notes,v 1.193 2008-09-03 16:35:32 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
+!====================== RichKernel v7r15 2008-09-03 ====================
+! 2008-09-03 - Marco Cattaneo
+ - Add dictionaries for moved interfaces
+
 ! 2008-08-28 - Ulrich Kerzel
-- update interface to HPDDisableTool and add method based on minimal information required
+- update interface to HPDDisableTool and add method based on minimal
+  information required
 
 ! 2008-08-27 - Chris Jones
  - Import tool interface header files from Rich/RichMonitoringTools
