@@ -1,6 +1,6 @@
 package ProcessorKernel
 
-version v5r1p1
+version v5r2
 
 branches cmt doc src ProcessorKernel
 

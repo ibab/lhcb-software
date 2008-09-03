@@ -4,6 +4,7 @@
 ! Purpose     : Base classes for a generic processor simulation
 !-----------------------------------------------------------------------------
 
+!======================== ProcessorKernel v5r2 2008-09-03 ====================
 ! 2008-09-01 - Julien Cogan
  - Allow a 3rd instance of Register Factory (to run L0MuonFromRawTrans)
 
