@@ -4,6 +4,12 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+!========================== GENSER v4r2 2008-09-01 ===========================
+! 2008-08-31 - Gloria CORTI
+ - Use latest available version of Pythia 6 (418.2) from LCG MCGenerators
+   build.
+ - Do not put in library the pyevwt.F to re-weight events (see below).
+
 !========================== GENSER v4r1 2008-06-09 ===========================
 ! 2008-06-09 - Gloria CORTI
  - Add routine pyevwt.F over-writing the dummy routine in pythia_dummy library
