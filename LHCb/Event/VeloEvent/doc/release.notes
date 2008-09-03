@@ -1,15 +1,16 @@
-! $Id: release.notes,v 1.60 2008-08-26 09:59:45 szumlat Exp $
+! $Id: release.notes,v 1.61 2008-09-03 14:39:06 cattanem Exp $
 ! package Event/VeloEvent
 ! package manager: C.Parkes, T.Szumlak
 !========================================================================
 
+!====================== VeloEvent v16r6 2008-09-03 ======================
 ! 2008-08-26 - Tomasz Szumlak
  - modified VeloErrorBank class that stores information from
    VeloError bank
 
 !====================== VeloEvent v16r5 2008-07-28 ======================
 ! 2008-07-28 - Marco Cattaneo
- - Fix include path for dictionay generation
+ - Fix include path for dictionary generation
 
 ! 2008-07-24 - Thomas Ruf
  - modifications to allow creation of dictionaries
