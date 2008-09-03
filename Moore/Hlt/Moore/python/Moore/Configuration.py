@@ -1,7 +1,7 @@
 """
 High level configuration tools for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.21 2008-08-25 11:11:07 panmanj Exp $"
+__version__ = "$Id: Configuration.py,v 1.22 2008-09-03 18:59:28 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -83,6 +83,31 @@ class Moore(ConfigurableUser):
         AuditorSvc().Auditors.append( x.name() )
         x.Enable = True
 
+    def printAlgo( self, algName, appMgr, prefix = ' ') :
+        #""" print algorithm name, and, if it is a sequencer, recursively those algorithms it calls"""
+        print prefix + algName
+        alg = appMgr.algorithm( algName.split( "/" )[ -1 ] )
+        prop = alg.properties()
+        if prop.has_key( "Members" ) :
+            subs = prop[ "Members" ].value()
+            for i in subs : self.printAlgo( i.strip( '"' ), appMgr, prefix + "     " )
+        elif prop.has_key( "DetectorList" ) :
+            subs = prop[ "DetectorList" ].value()
+            for i in subs : self.printAlgo( algName.split( "/" )[ -1 ] + i.strip( '"' ) + "Seq", appMgr, prefix + "     ")
+
+    def printFlow( self ) :
+        mp = ApplicationMgr()
+        print "\n ****************************** Application Flow ****************************** \n"
+        for i in mp.TopAlg: self.printAlgo( i, mp )
+        print "\n ****************************************************************************** \n"
+
+        # Print all configurables
+        if self.getProp( "OutputLevel" ) == DEBUG :
+            from pprint import PrettyPrinter
+            print "\n ************************** DEBUG: All Configurables ************************** \n"
+            PrettyPrinter().pprint(allConfigurables)
+            print "\n ****************************************************************************** \n"
+
     def applyConf(self):
         GaudiKernel.ProcessJobOptions.printing_level += 1
         importOptions('$STDOPTS/DstDicts.opts')
@@ -135,13 +160,22 @@ class Moore(ConfigurableUser):
                 hlttype = self.getProp('hltType')
                 if hlttype not in self.validHltTypes() :  raise TypeError("Unknown hlttype '%s'"%hlttype)
                 if inputType == 'DST' and hlttype in [ 'PHYSICS_Hlt1+Hlt2', 'PHYSICS_Hlt1' , 'PHYSICS_Lumi', 'Lumi'] : 
-                        importOptions('$L0DUROOT/options/ReplaceL0DUBankWithEmulated.opts')
-                if hlttype.find('Hlt1') != -1   :   importOptions('$HLTSYSROOT/options/Hlt1.opts')
-                if hlttype.find('Hlt2') != -1   :   importOptions('$HLTSYSROOT/options/Hlt2.opts')
-                if hlttype ==  'DEFAULT'        :   importOptions('$HLTSYSROOT/options/RandomPrescaling.opts')
-                if hlttype == 'readBackLumi'    :   importOptions('$HLTSYSROOT/options/HltJob_readLumiPy.opts')
-                elif hlttype == 'writeLumi'     :   importOptions('$HLTSYSROOT/options/HltJob_onlyLumi.opts')
-                elif hlttype.find('Lumi') != -1 :   importOptions('$HLTSYSROOT/options/Lumi.opts')
+                    importOptions('$L0DUROOT/options/L0DUBankSwap.opts')
+                    importOptions('$L0DUROOT/options/DefaultTCK.opts')
+                if True :
+                    if hlttype.find('Hlt1') != -1 :   importOptions('$HLTSYSROOT/options/Hlt1.opts')
+                    if hlttype.find('Hlt2') != -1 :   importOptions('$HLTSYSROOT/options/Hlt2.opts')
+                    if hlttype ==  'DEFAULT'        :   importOptions('$HLTSYSROOT/options/RandomPrescaling.opts')
+                    if hlttype == 'readBackLumi'    :   importOptions('$HLTSYSROOT/options/HltJob_readLumiPy.opts')
+                    if hlttype == 'writeLumi'     :   importOptions('$HLTSYSROOT/options/HltJob_onlyLumi.opts')
+                    if hlttype.find('Lumi') != -1 :   importOptions('$HLTSYSROOT/options/Lumi.opts')
+                else :
+                    if hlttype == 'DEFAULT'       : hlttype = 'Commissioning_Lumi'
+                    if hlttype.find('Lumi') != -1 : importOptions('$HLTSYSROOT/options/HltLumiAlleyConfSequence.py')
+                    if hlttype.find('Muon') != -1 : importOptions('$HLTSYSROOT/options/HltMuonAlleyConfSequence.py')
+                    if hlttype.find('Commissioning') != -1 : importOptions('$HLTSYSROOT/options/Commissioning.py')
+                    importOptions('$HLTSYSROOT/options/HltMain.py')
+                    importOptions('$HLTSYSROOT/options/Hlt1.py')
 
             if self.getProp('runTiming') :
                 importOptions('$HLTSYSROOT/options/HltAlleysTime.opts')
