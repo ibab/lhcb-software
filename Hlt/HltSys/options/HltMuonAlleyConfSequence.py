@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltMuonAlleyConfSequence.py,v 1.2 2008-08-27 09:31:56 graven Exp $
+# $Id: HltMuonAlleyConfSequence.py,v 1.3 2008-09-04 12:41:41 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -12,7 +12,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -25,7 +25,7 @@ from Configurables import PatMatchTool
 from HltConf.HltLine import Hlt1Line   as Line
 from HltConf.HltLine import Hlt1Member as Member
 from HltConf.HltLine import Hlt1Tool   as Tool
-from HltConf.HltLine import hlt1Lines, addHlt1Prop, rmHlt1Prop , hlt1Termini
+from HltConf.HltLine import hlt1Lines, addHlt1Prop, rmHlt1Prop 
 
 
 importOptions('$HLTSYSROOT/options/TsaTool.opts')
@@ -129,6 +129,8 @@ SingleMuonNoIP = Line( 'SingleMuonNoIP'
                            )
                    ] )
 
+### TODO: clone and mutate from line above...
+### FIXME: how to add RecoRZPV??
 SingleMuonIPandPT = Line ( 'SingleMuonIPandPT'
                    ,  HLT = [ singleMuonPrep ]
                    ,  algos = 
@@ -149,6 +151,8 @@ DiMuonFromL0DiMuonNoIP = Line( 'DiMuonFromL0DiMuoNoIP'
                             )
                    ] )
 
+### TODO: clone and mutate from line above...
+### FIXME: how to remove RecoRZPV??
 DiMuonFromL0DiMuonIP = Line ( 'DiMuonFromL0DiMuonIP'
                    , HLT = [ DiMuonFromL0DiMuonPrepare ]
                    , algos = 
@@ -176,6 +180,8 @@ DiMuonFrom2L0IP = Line ('DiMuonFrom2L0IP'
                            )
                    ] )
 
+### TODO: clone and mutate from line above... 
+### FIXME: how to remove RecoRZPV??
 DiMuonFrom2L0NoIP = Line( 'DiMuonFrom2L0NoIP'
                    , HLT = [ singleMuonPrep ] 
                    , algos = 
@@ -214,6 +220,8 @@ DiMuonFromMuonSegIP  = Line( 'DiMuonFromMuonSegIP'
                    ] )
 
 
+### TODO: clone and mutate from line above...
+### FIXME: how to remove RecoRZPV??
 DiMuonFromMuonSegNoIP = Line( 'DiMuonFromMuonSegNoIP'
                    ,  HLT = [ singleMuonPrep
                             , muonSegPrep ] # TODO: this is OR, should be AND
