@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.47 2008-08-04 15:38:53 ibelyaev Exp $ 
+! $Id: release.notes,v 1.48 2008-09-04 13:28:41 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,6 +15,7 @@
 !
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiMC v7r6 2008-09-04 ============================
 ! 2008-08-04 - Vanya BELYAEV
 
  - LoKi/MCDecays.h 

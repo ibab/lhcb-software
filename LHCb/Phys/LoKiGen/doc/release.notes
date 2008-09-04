@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.56 2008-08-04 14:06:16 ibelyaev Exp $ 
+! $Id: release.notes,v 1.57 2008-09-04 13:27:30 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGen
 ! Responsible : Vanya BELYAEV
@@ -14,6 +14,7 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!============================ LoKiGen v7r6 2008-09-04 =========================
 ! 2008-08-04 - Vanya BELYAEV
  - LoKi/GenDecays.h
    src/GenDecays.cpp
