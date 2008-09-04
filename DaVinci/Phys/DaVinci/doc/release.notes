@@ -1,4 +1,4 @@
- $Id: release.notes,v 1.233 2008-08-29 08:15:32 pkoppenb Exp $
+ $Id: release.notes,v 1.234 2008-09-04 16:14:48 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,10 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2008-09-04 - Juan PALACIOS
+ - options/DaVinciCommon.opts
+  . Comment out $ANALYSISSYSROOT/options/PhysMCSys.opts
 
 !========================== DaVinci v20r1 2008-08-29 ===================
 ! 2008-08-29 - Patrick Koppenburg
