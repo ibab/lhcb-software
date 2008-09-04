@@ -1,16 +1,17 @@
-! $Id: release.notes,v 1.123 2008-09-01 14:07:28 odescham Exp $
+! $Id: release.notes,v 1.124 2008-09-04 15:52:10 cattanem Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
 
+!========================== L0DU v8r9 2008-09-04 =========================
 ! 2008-09-01 - Olivier Deschamps
  - rename L0DUBankSwap.opts to ReplaceL0BanksWithEmulated.opts : 
 	similar to ReplaceL0DUBankWithEmulated but for all L0 banks 
 	including L0Calo and L0Muon.
 
-
 ! 2008-08-29 - Olivier Deschamps
- - L0DUReportMonitor : bug fix (incomplete initialization) - produce weird result in case of several TCK are monitored in the same job
+ - L0DUReportMonitor : bug fix (incomplete initialization) - produce weird result
+   in case of several TCK are monitored in the same job
 
 ! 2008-08-27 - Olivier Deschamps
  - L0DUConfig_0x000X.opts : produced by L0DU PVSS on 25th august 2008
@@ -27,13 +28,11 @@
     - check configuration against hardware constraints
     - independant separate package for TCK files (DBASE/)
 
-
 ! 2008-08-18 - Olivier Deschamps
  - L0DUConfig_0x000X.opts : add new TCKs 
 
 ! 2008-08-14 - Olivier Deschamps
  - improve printout
-
 
 !========================== L0DU v8r8 2008-07-29 =========================
 ! 2008-07-21 - Marco Cattaneo
