@@ -1,4 +1,4 @@
-// $Id: TrajOTProjector.h,v 1.12 2007-11-30 14:33:17 wouter Exp $
+// $Id: TrajOTProjector.h,v 1.13 2008-09-04 12:45:16 wouter Exp $
 #ifndef TRAJOTPROJECTOR_H 
 #define TRAJOTPROJECTOR_H 1
 
@@ -47,9 +47,9 @@ public:
   /// Deestructor
   virtual ~TrajOTProjector();
 
-private:
-  StatusCode project( const LHCb::StateVector& state, const LHCb::OTMeasurement& meas );
-
+protected:
+  StatusCode project( const LHCb::StateVector& state, const LHCb::OTMeasurement& meas, double& distToWire );
+  bool useDrift() const { return m_useDrift ; }
 private:
   DeOTDetector*      m_det;
   IMagneticFieldSvc* m_pIMF;          ///< Pointer to the magn. field service

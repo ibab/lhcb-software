@@ -52,8 +52,9 @@ namespace
 StatusCode TrajOTProjector::project( const StateVector& statevector,
                                      const Measurement& meas )
 {
+  double dist(0) ;
   return meas.checkType( Measurement::OT ) ?
-    project(statevector, dynamic_cast<const OTMeasurement&>(meas) ) :
+    project(statevector, dynamic_cast<const OTMeasurement&>(meas),dist ) :
     StatusCode::FAILURE;
 }
 
@@ -62,7 +63,8 @@ StatusCode TrajOTProjector::project( const StateVector& statevector,
 /// It returns the chi squared of the projection
 //-----------------------------------------------------------------------------
 StatusCode TrajOTProjector::project( const LHCb::StateVector& statevector, 
-                                     const OTMeasurement& meas )
+                                     const OTMeasurement& meas,
+				     double& distToWire )
 {
   // Project onto the reference. First create the StateTraj with or without BField information.
   XYZVector bfield(0,0,0) ;
@@ -96,7 +98,7 @@ StatusCode TrajOTProjector::project( const LHCb::StateVector& statevector,
   m_H = unit*refTraj.derivative(s1);
 
   // Calculate the reference distance and set the ambiguity "on the fly"
-  double distToWire = dot( unit, dist ) ;
+  distToWire = dot( unit, dist ) ;
   (const_cast<OTMeasurement&>(meas)).setAmbiguity( distToWire > 0 ? 1 : -1 ) ;
   
   if (m_useDrift) {
