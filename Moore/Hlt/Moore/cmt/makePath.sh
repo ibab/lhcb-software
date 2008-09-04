@@ -5,8 +5,6 @@
 export MYSITEROOT=/sw/lib
 export LHCBHOME=/sw/lib
 . $MYSITEROOT/scripts/ExtCMT.sh
-#export CMTPROJECTPATH=$LHCBPROJECTPATH
-#export CMTPROJECTPATH=/group/hlt/cmtuser:/home/online:/sw/lib/lhcb:/sw/lib/lcg/external
 export CMTOPT=slc4_amd64_gcc34
 
 echo "Create pathsetup using config '$CMTOPT'"
