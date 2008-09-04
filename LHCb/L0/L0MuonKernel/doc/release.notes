@@ -4,10 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!============================ L0MuonKernel v8r2 2009-08-04 =================== 
 ! 2008-09-04 - Julien Cogan
  - Decoding of the L0Muon compressed mode + transparent mode v2 
 
-!============================ L0MuonKernel v8r1p1 2009-08-03 ================= 
 ! 2008-08-01 - Julien Cogan
  - Fix compilation warning
 
