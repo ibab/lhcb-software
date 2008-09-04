@@ -1,8 +1,5 @@
-//DataOnDemandSvc.OutputLevel = 1 ;
-ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
-
 // #include "$CALORECOROOT/options/CaloRecoOnDemand.opts"
-ApplicationMgr.Dlls += { "TrackExtrapolators" }; 
+//ApplicationMgr.Dlls += { "TrackExtrapolators" }; 
 
 // Data-on-demand service
 ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
