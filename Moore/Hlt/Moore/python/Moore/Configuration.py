@@ -1,7 +1,7 @@
 """
 High level configuration tools for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.22 2008-09-03 18:59:28 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.23 2008-09-04 11:52:55 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -30,6 +30,7 @@ class Moore(ConfigurableUser):
         , "TCKpersistency" :   'file' # which method to use for TCK data? valid is 'file' and 'sqlite'
         , "enableAuditor" :    [ ]  # put here eg . [ NameAuditor(), ChronoAuditor(), MemoryAuditor() ]
         , "userAlgorithms":    [ ]  # put here user algorithms to add
+        , "oldStyle" :         True # old style options configuration
         }   
                 
     def getProp(self,name):
@@ -162,7 +163,7 @@ class Moore(ConfigurableUser):
                 if inputType == 'DST' and hlttype in [ 'PHYSICS_Hlt1+Hlt2', 'PHYSICS_Hlt1' , 'PHYSICS_Lumi', 'Lumi'] : 
                     importOptions('$L0DUROOT/options/L0DUBankSwap.opts')
                     importOptions('$L0DUROOT/options/DefaultTCK.opts')
-                if True :
+                if self.getProp('oldStyle') :
                     if hlttype.find('Hlt1') != -1 :   importOptions('$HLTSYSROOT/options/Hlt1.opts')
                     if hlttype.find('Hlt2') != -1 :   importOptions('$HLTSYSROOT/options/Hlt2.opts')
                     if hlttype ==  'DEFAULT'        :   importOptions('$HLTSYSROOT/options/RandomPrescaling.opts')
