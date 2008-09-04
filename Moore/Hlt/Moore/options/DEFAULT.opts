@@ -41,8 +41,8 @@ EventClockSvc.EventTimeDecoder = "OdinTimeDecoder";
 MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
 HltConfigSvc.checkOdin = false;
 HltConfigSvc.maskL0TCK = true;
-//                           0x80010000  0x80020000
-HltConfigSvc.prefetchTCK = { 2147549184, 2147614720 };
+//                           0x80010000  0x80020000  0x80030000  0x80040000
+HltConfigSvc.prefetchTCK = { 2147549184, 2147614720, 2147680256, 2147745792 };
 //                        0x80020000
 HltConfigSvc.initialTCK = 2147614720;
 ApplicationMgr.ExtSvc += { "HltConfigSvc" };
