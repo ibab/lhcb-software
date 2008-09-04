@@ -4,6 +4,7 @@
 ! Purpose     : Uses a Markov Chain sampler to do ring finding without tracks
 !-----------------------------------------------------------------------------
 
+!=================== Rich/RichMarkovRingFinder v2r1 2008-08-04 ===============
 ! 2008-08-28 - Chris Jones
  - Update the trackless ring monitor
 
