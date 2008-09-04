@@ -6,7 +6,7 @@ branches cmt doc dict
 use BcmDet              v1r1    Det
 use CaloDet             v9r0    Det
 use CaloDetXmlCnv       v3r2    Det
-use DDDB                v1r10   Det
+use DDDB                v1r11   Det
 use DetCond             v12r2   Det
 use DetDesc             v18r8   Det
 use DetDescCnv          v4r7    Det
