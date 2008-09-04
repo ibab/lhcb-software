@@ -23,6 +23,7 @@ EventPersistencySvc.CnvServices += {"LHCb::RawDataCnvSvc"};
 // #include "$HLTOPTS/OnlineEnvironment.opts"
 #include "$ONLINETASKSROOT/hltopts/OnlineEnvironment.opts"
 
+ApplicationMgr.TopAlg += { "UpdateAndReset" };
 /////////////////////////////////////
 #include "$STDOPTS/DstDicts.opts"
 #include "$STDOPTS/DecodeRawEvent.opts"
