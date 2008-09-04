@@ -4,6 +4,7 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!======================= RichRecPhotonTools v1r5 2008-09-04 ==================
 ! 2008-08-15 - Chris Jones
  - Update default properties to aid python Configuration
 
