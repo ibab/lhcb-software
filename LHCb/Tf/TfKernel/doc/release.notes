@@ -3,6 +3,8 @@
 ! Responsible : Tracking 'A-Team' for the moment ... Then someone else.
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
+
+!============================ TfKernel v2r7 2008-09-04 =======================
 ! 2008-08-20 - Stephanie Hansmann-Menzemer
  - add methods to HitCreator interfaces to reset hit used flag, add method to
     HitBase to reset used flag
