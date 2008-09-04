@@ -1,5 +1,5 @@
 package MuonDAQ
-version v4r3
+version v4r4
 
 # ================ structure ===========================================
 branches src MuonDAQ cmt doc
