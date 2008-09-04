@@ -4,6 +4,7 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+!=========================== RichTools v2r22 2008-09-04 ======================
 ! 2008-08-15 - Chris Jones
  - Updates for Configurables. Update default property values to those used
    in the Job Option based configuration.
