@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.49 2008-08-22 10:48:33 odescham Exp $
+! $Id: release.notes,v 1.50 2008-09-04 15:46:11 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
+!========================== CaloTools v5r4 2008-09-04 =========================
 ! 2008-08-21 - Olivier Deschamps
  - CaloCosmicsTrackAlg : add monitoring histo for cosmics track (theta,phi) parameters
  - CaloCosmicsTool : add cellId vector in the output ntuple

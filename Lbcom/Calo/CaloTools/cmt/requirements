@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.21 2008-07-21 14:40:37 cattanem Exp $
+# $Id: requirements,v 1.22 2008-09-04 15:46:11 cattanem Exp $
 # =============================================================================
 # Created    : 2008-05-08
 # Maintainer : Olivier Deschamps odescham@in2p3.fr
 # =============================================================================
 package             CaloTools
-version             v5r3
+version             v5r4
 
 # ================= structure =================================================
 branches            cmt doc src
