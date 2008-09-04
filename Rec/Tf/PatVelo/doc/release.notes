@@ -4,6 +4,10 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2008-09-04 - David Hutchcroft
+ - Small bug fix to track sort order between RZ and Space tracking; 
+   slight improvement in efficiency and ghost rate
+
 ! 2008-08-26 - David Hutchcroft
  - Added PatVeloResetClusterUsed to all the rerunning of VELO PR routines in 
    the same job for the HLT2 group. Modifications to PatVeloRHitManager and 

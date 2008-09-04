@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTracking.h,v 1.5 2008-02-27 14:37:38 krinnert Exp $
+// $Id: PatVeloSpaceTracking.h,v 1.6 2008-09-04 13:46:03 dhcroft Exp $
 #ifndef TF_PATVELOSPACETRACKING_H 
 #define TF_PATVELOSPACETRACKING_H 1
 
@@ -61,7 +61,7 @@ namespace Tf {
         bool operator()(LHCb::Track* const &first, 
             LHCb::Track* const &second) { 
           if ( first->nLHCbIDs() == second->nLHCbIDs() ) {
-	    first->chi2PerDoF() > second->chi2PerDoF();
+	    return (first->chi2PerDoF() < second->chi2PerDoF());
           }
           return ( first->nLHCbIDs() > second->nLHCbIDs() ) ;
         }
