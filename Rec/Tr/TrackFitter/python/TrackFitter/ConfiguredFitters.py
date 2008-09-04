@@ -3,101 +3,132 @@
 #  Track fitting options
 # ====================================================================
 
+from TrackSys.Configuration import TrackSys
+
 from Configurables import ( TrackEventFitter, TrackMasterFitter, TrackKalmanFilter,
                             TrackProjectorSelector, TrajOTProjector, TrackMasterExtrapolator,
                             TrackSimpleExtraSelector, SimplifiedMaterialLocator, DetailedMaterialLocator)
 
-_fitterdictionary = {}
+def ConfiguredFitter( Name = "DefaultEventFitter",
+                      TracksInContainer = "Rec/Tracks/Best",
+                      FieldOff = TrackSys().getProp( "fieldOff" ),
+                      SimplifiedGeometry = "simplifiedGeometry" in TrackSys().getProp("expertTracking"),
+                      NoDriftTimes =  "noDrifttimes" in TrackSys().getProp("expertTracking"),
+                      KalmanSmoother = "kalmanSmoother" in TrackSys().getProp("expertTracking") ):
 
-def createConfiguredFitters( FieldOff = False, SimplifiedGeometry = False, NoDriftTimes = False ):
-    
     # set up the material locator
     if SimplifiedGeometry:
-        defaultMaterialLocator = SimplifiedMaterialLocator()
+        materialLocator = SimplifiedMaterialLocator()
     else:
-        defaultMaterialLocator = DetailedMaterialLocator()
+        materialLocator = DetailedMaterialLocator()
         
-    # set up the master extrapolator
-    defaultMasterExtrapolator = TrackMasterExtrapolator()
+    # set up the private extrapolator. must make sure name is 'unique'
+    myExtrapolator = TrackMasterExtrapolator( Name + "_Extrapolator" )
+    
+    # this is a public tool, so you configure it with just a name
+    myExtrapolator.MaterialLocator = materialLocator.name()
+    
     if FieldOff:
-        defaultExtraSelector = TrackSimpleExtraSelector()
-        #    defaultMasterExtrapolator.ExtraSelector = "TrackSimpleExtraSelector"
-        defaultMasterExtrapolator.addTool(defaultExtraSelector, name="ExtraSelector")
-        defaultMasterExtrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator"
-        defaultMasterExtrapolator.ApplyEnergyLossCorr = False
-        defaultMasterExtrapolator.addTool(defaultMaterialLocator, name = MaterialLocator)
+        myExtrapolator.addTool(TrackSimpleExtraSelector(), name="ExtraSelector")
+        myExtrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator"
+        myExtrapolator.ApplyEnergyLossCorr = False
 
-    # set up the NoDriftTimeProjector
-    defaultOTNoDriftTimeProjector = TrajOTProjector("OTNoDrifttimesProjector")
-    defaultOTNoDriftTimeProjector.UseDrift = False
-
-    # set up the projector selectors. note: these take projectors from toolsvc!
-    defaultProjectorSelector = TrackProjectorSelector("DefaultProjectorSelector")
+    myProjectorSelector = TrackProjectorSelector(Name + "_ProjectorSelector")
     if NoDriftTimes:
-        defaultProjectorSelector.OT = "TrajOTProjector/" + defaultOTNoDriftTimeProjector.name()
-    prefitProjectorSelector = TrackProjectorSelector("PreFitProjectorSelector")
-    prefitProjectorSelector.OT = "TrajOTProjector/" + defaultOTNoDriftTimeProjector.name()
+        # set up the NoDriftTimeProjector in the toolsvc
+        defaultOTNoDriftTimeProjector = TrajOTProjector("OTNoDrifttimesProjector")
+        defaultOTNoDriftTimeProjector.UseDrift = False
+        myProjectorSelector.OT = "TrajOTProjector/" + defaultOTNoDriftTimeProjector.name()
 
     # set up the default NodeFitter and the prefit NodeFitter
-    defaultNodeFitter = TrackKalmanFilter("DefaultNodeFitter")
-    defaultNodeFitter.addTool(defaultProjectorSelector,name = "Projector")
-    prefitNodeFitter = TrackKalmanFilter("PreFitNodeFitter")
-    prefitNodeFitter.addTool(prefitProjectorSelector,name = "Projector")
+    myNodeFitter = TrackKalmanFilter(Name + "_NodeFitter")
+    myNodeFitter.addTool(myProjectorSelector,name = "Projector")
 
+    if KalmanSmoother:
+        myNodeFitter.BiDirectionalFit = False
+        
     # set up the default MasterFitter and the prefit MasterFitter
-    defaultMasterFitter = TrackMasterFitter("DefaultMasterFitter")
-    defaultMasterFitter.addTool(defaultMasterExtrapolator,name="Extrapolator")
-    defaultMasterFitter.addTool(defaultMaterialLocator,name="MaterialLocator")
-    defaultMasterFitter.addTool(defaultNodeFitter,name="NodeFitter")
-    defaultMasterFitter.NumberFitIterations = 2
+    myMasterFitter = TrackMasterFitter(Name + "_MasterFitter")
+    myMasterFitter.addTool(myNodeFitter,name="NodeFitter")
+    #myMasterFitter.addTool(myExtrapolator, name = "Extrapolator" )
+    myMasterFitter.Extrapolator = myExtrapolator.clone()
+    myMasterFitter.MaterialLocator = materialLocator.name()
 
-    prefitMasterFitter = defaultMasterFitter.clone("PreFitMasterFitter")
-    prefitMasterFitter.addTool(prefitNodeFitter,name="NodeFitter")
-    prefitMasterFitter.NumberFitIterations = 2
-    prefitMasterFitter.MaxNumberOutliers = 0
-    prefitMasterFitter.ErrorY2 = 10000
+    # finally create the eventfitter
+    eventfitter = TrackEventFitter(Name)
+    eventfitter.addTool(myMasterFitter,name = "Fitter")
+    eventfitter.TracksInContainer = TracksInContainer
+    return eventfitter
 
-    # now set of the default and prefit event fitter
-    defaultTrackEventFitter = TrackEventFitter("DefaultTrackEventFitter")
-    defaultTrackEventFitter.addTool(defaultMasterFitter,name = "Fitter")
-    prefitTrackEventFitter = TrackEventFitter("PreFitTrackEventFitter")
-    prefitTrackEventFitter.addTool(prefitMasterFitter,name = "Fitter")
-    
-    # now create all fitters
-    configuredPreFitForward = prefitTrackEventFitter.clone("PreFitForward",TracksInContainer = "Rec/Track/Forward")
-    configuredFitForward = defaultTrackEventFitter.clone("FitForward",TracksInContainer = "Rec/Track/Forward")
+def ConfiguredPrefitter( Name = "DefaultEventFitter",
+                         TracksInContainer = "Rec/Tracks/Best",
+                         FieldOff = TrackSys().getProp( "fieldOff" ),
+                         SimplifiedGeometry = "simplifiedGeometry" in TrackSys().getProp("expertTracking")):
+    eventfitter = ConfiguredFitter(Name,TracksInContainer,FieldOff,SimplifiedGeometry,NoDriftTimes=True)
+    eventfitter.Fitter.NumberFitIterations = 2
+    eventfitter.Fitter.MaxNumberOutliers = 0
+    eventfitter.Fitter.ErrorY2 = 10000
+    return eventfitter
 
-    configuredPreFitMatch = prefitTrackEventFitter.clone("PreFitMatch",TracksInContainer = "Rec/Track/Match")
-    configuredFitMatch = defaultTrackEventFitter.clone("FitMatch",TracksInContainer = "Rec/Track/Match")
+def ConfiguredFitVelo( Name = "FitVelo",
+                       TracksInContainer = "Rec/Track/PreparedVelo" ):
+    eventfitter = ConfiguredFitter(Name,TracksInContainer)
+    eventfitter.Fitter.NumberFitIterations = 2
+    eventfitter.Fitter.ZPositions = []
+    eventfitter.Fitter.ErrorP= [0.01, 5e-08]
+    eventfitter.Fitter.ErrorX2 = 100
+    eventfitter.Fitter.ErrorY2 = 100
+    eventfitter.Fitter.ErrorP= [0,0.01]
+    return eventfitter
 
-    configuredPreFitDownstream = prefitTrackEventFitter.clone("PreFitDownstream",TracksInContainer = "Rec/Track/Downstream")
-    configuredPreFitDownstream.Fitter.ZPositions = [ 990., 2165., 9450. ]
-    configuredFitDownstream = defaultTrackEventFitter.clone("FitDownstream",TracksInContainer = "Rec/Track/Downstream")
-    configuredFitDownstream.Fitter.ZPositions = [ 990., 2165., 9450. ]
+def ConfiguredFitVeloTT( Name = "FitVeloTT",
+                         TracksInContainer = "Rec/Track/VeloTT" ):
+    eventfitter = ConfiguredFitter(Name,TracksInContainer)
+    eventfitter.Fitter.NumberFitIterations = 2
+    eventfitter.Fitter.ZPositions = [ 990., 2165. ]
+    eventfitter.Fitter.ErrorP = [1.2, 5e-07]
+    eventfitter.Fitter.MaxNumberOutliers = 1
+    return eventfitter
 
-    configuredFitSeed = defaultTrackEventFitter.clone("FitSeed",TracksInContainer = "Rec/Track/Seed")
-    configuredFitSeed.Fitter.StateAtBeamLine = False
-    configuredFitSeed.Fitter.ZPositions = [ 7500., 9450., 11900. ]
-    configuredFitSeed.Fitter.ErrorP = [0.04, 5e-08]
+def ConfiguredFitSeed( Name = "FitSeed",
+                       TracksInContainer = "Rec/Track/Seed" ):
+    eventfitter = ConfiguredFitter(Name,TracksInContainer)
+    eventfitter.Fitter.NumberFitIterations = 2
+    eventfitter.Fitter.StateAtBeamLine = False
+    eventfitter.Fitter.ZPositions = [ 7500., 9450., 11900. ]
+    eventfitter.Fitter.ErrorP = [0.04, 5e-08]
+    eventfitter.Fitter.NumberFitIterations = 2
+    return eventfitter
 
-    configuredFitVeloTT = defaultTrackEventFitter.clone("FitVeloTT",TracksInContainer = "Rec/Track/VeloTT")
-    configuredFitVeloTT.Fitter.ZPositions = [ 990., 2165. ]
-    configuredFitVeloTT.Fitter.ErrorP = [1.2, 5e-07]
-    configuredFitVeloTT.Fitter.MaxNumberOutliers = 1
+def ConfiguredFitForward( Name = "FitForward",
+                         TracksInContainer = "Rec/Track/Forward" ):
+    eventfitter = ConfiguredFitter(Name,TracksInContainer)
+    eventfitter.Fitter.NumberFitIterations = 2
+    return eventfitter
 
-    configuredFitVelo = defaultTrackEventFitter.clone("FitVelo",TracksInContainer = "Rec/Track/PreparedVelo")
-    configuredFitVelo.Fitter.ZPositions = []
-    configuredFitVelo.Fitter.ErrorP= [0.01, 5e-08]
+def ConfiguredFitMatch( Name = "FitMatch",
+                        TracksInContainer = "Rec/Track/Match" ):
+    eventfitter = ConfiguredFitter(Name,TracksInContainer)
+    eventfitter.Fitter.NumberFitIterations = 2
+    return eventfitter
+ 
+def ConfiguredFitDownstream( Name = "FitDownstream",
+                             TracksInContainer = "Rec/Track/Downstream" ):
+    eventfitter = ConfiguredFitter(Name,TracksInContainer)
+    eventfitter.Fitter.ZPositions = [ 990., 2165., 9450. ]
+    eventfitter.Fitter.NumberFitIterations = 2
+    return eventfitter
 
-    # add them to the dictionary
-    _fitterdictionary[configuredPreFitForward.name()]    = configuredPreFitForward
-    _fitterdictionary[configuredFitForward.name()]       = configuredFitForward
-    _fitterdictionary[configuredPreFitMatch.name()]      = configuredPreFitMatch
-    _fitterdictionary[configuredFitMatch.name()]         = configuredFitMatch
-    _fitterdictionary[configuredPreFitDownstream.name()] = configuredPreFitDownstream
-    _fitterdictionary[configuredFitDownstream.name()]    = configuredFitDownstream
-    _fitterdictionary[configuredFitSeed.name()]          = configuredFitSeed
-    _fitterdictionary[configuredFitVeloTT.name()]        = configuredFitVeloTT
-    _fitterdictionary[configuredFitVelo.name()]          = configuredFitVelo
+def ConfiguredPreFitForward( Name = "PreFitForward",
+                             TracksInContainer = "Rec/Track/Forward" ):
+    return ConfiguredPrefitter(Name,TracksInContainer)
 
-    return _fitterdictionary
+def ConfiguredPreFitMatch( Name = "PreFitMatch",
+                           TracksInContainer = "Rec/Track/Match" ):
+    return ConfiguredPrefitter(Name,TracksInContainer)
+
+def ConfiguredPreFitDownstream( Name = "PreFitDownstream",
+                                TracksInContainer = "Rec/Track/Downstream" ):
+    eventfitter = ConfiguredPrefitter(Name,TracksInContainer)
+    eventfitter.Fitter.ZPositions = [ 990., 2165., 9450. ]
+    return eventfitter
