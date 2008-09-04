@@ -1,12 +1,14 @@
-! $Id: release.notes,v 1.116 2008-08-14 10:51:55 odescham Exp $
+! $Id: release.notes,v 1.117 2008-09-04 16:23:37 cattanem Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+!========================== CaloReco v4r15 2008-09-04 =========================
 ! 2008-08-14 - Olivier Deschamps
- - HltCaloSeq.opts : CaloDigits created via the on-Demand service to avoid conflict with offline processing.
+ - HltCaloSeq.opts : CaloDigits created via the on-Demand service to avoid
+                     conflict with offline processing.
 
 !========================== CaloReco v4r14 2008-07-18 ===================
 ! 2008-07-18 - Olivier Deschamps
