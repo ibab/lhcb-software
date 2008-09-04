@@ -3,6 +3,9 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+!2008-09-04 - Gerhard Raven
+  - add algorithm which takes a selection and creates a decision
+
 !2008-09-01 - Gerhard Raven
   - if upper bit of TCK is set, ignore L0 part (the lower 16 bits)
 
