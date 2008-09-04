@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.41 2008-08-27 09:26:40 graven Exp $
+// $Id: HltAlgorithm.cpp,v 1.42 2008-09-04 12:23:12 graven Exp $
 // Include files 
 
 #include "HltBase/HltAlgorithm.h"
@@ -143,6 +143,11 @@ StatusCode HltAlgorithm::sysExecute() {
 }
 
 StatusCode HltAlgorithm::beginExecute() {
+  if ( m_outputSelection == 0 ) {
+      error() << " no output selection !!" << endmsg;
+      return StatusCode::FAILURE;
+  }
+  Assert( m_outputSelection != 0," beginExecute() no output selection !");
 
   setDecision(false);
 
@@ -151,7 +156,6 @@ StatusCode HltAlgorithm::beginExecute() {
   
   increaseCounter( m_counterEntries );
   
-  Assert( m_outputSelection != 0," beginExecute() no output selection !");
   m_outputSelection->clean();
   bool ok = verifyInput();
   if (produceHistos()) monitorInputs();

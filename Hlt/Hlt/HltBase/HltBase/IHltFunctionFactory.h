@@ -1,4 +1,4 @@
-// $Id: IHltFunctionFactory.h,v 1.6 2008-02-07 16:55:15 hernando Exp $
+// $Id: IHltFunctionFactory.h,v 1.7 2008-09-04 12:23:12 graven Exp $
 #ifndef HLTBASE_IHLTFUNCTIONFACTORY_H 
 #define HLTBASE_IHLTFUNCTIONFACTORY_H 1
 
@@ -8,7 +8,6 @@
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
-#include "Event/HltEnums.h"
 #include "HltBase/HltTypes.h"
 
 static const InterfaceID IID_IHltFunctionFactory ( "IHltFunctionFactory", 1, 0 );
