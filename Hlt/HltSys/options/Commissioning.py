@@ -1,4 +1,5 @@
 from HltConf.HltLine import Hlt1Line   as Line
+from HltConf.HltLine import Hlt1Member as Member
 
 OdinTypes = set([  'Reserve'
                 ,  'PhysicsTrigger'
@@ -10,9 +11,11 @@ OdinTypes = set([  'Reserve'
 
 physics = Line( 'Physics'
               ,  ODIN = { 'TriggerTypes' : OdinTypes - set([ 'RandomTrigger' ]) }
+              ,  algos = [ Member('Dummy','Selection',OutputSelection = '%Decision') ]
               )
 
 random  = Line('Random'
               ,  prescale = 1 # @OnlineEnv.AcceptRate
               ,  ODIN = { 'TriggerTypes' : [ 'RandomTrigger' ] }
+              ,  algos = [ Member('Dummy','Selection',OutputSelection = '%Decision') ]
               )
