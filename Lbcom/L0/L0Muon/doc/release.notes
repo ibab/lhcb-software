@@ -1,7 +1,12 @@
-!  $Id: release.notes,v 1.64 2008-07-29 14:30:41 cattanem Exp $
+!  $Id: release.notes,v 1.65 2008-09-04 08:57:02 jucogan Exp $
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !-------------------------------------------------------------------------
+
+! 2008-09-04 - Julien Cogan
+ - Change in L0MuonFromRawTrans :
+     + use a third instance of RegisterFactory 
+     + use by default the config file in PARAMFILES
 
 !========================= L0Muon v8r1 2008-07-29 ========================
 ! 2008-07-23 - Julien Cogan

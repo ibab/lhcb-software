@@ -1,4 +1,4 @@
-// $Id: L0MuonFromRawTrans.h,v 1.5 2008-04-02 12:56:13 jucogan Exp $
+// $Id: L0MuonFromRawTrans.h,v 1.6 2008-09-04 08:57:02 jucogan Exp $
 #ifndef COMPONENT_L0MUONFROMRAWTRANS_H 
 #define COMPONENT_L0MUONFROMRAWTRANS_H 1
 
@@ -36,7 +36,7 @@ protected:
   StatusCode decodeRawBanks();
   /// From the registers of the converters, fill the L0MuonCandidates
   /// and L0MuonData containers on the TES
-  StatusCode writeOnTES(int procVersion, std::string extension="");
+  StatusCode writeOnTES();
   /// Reset the registers used by the converters
   StatusCode releaseRegisters();
   /// Print out errors
@@ -68,7 +68,8 @@ private:
     };
     
   };
-    
+
+  int m_version;
 
   int m_l0EventNumber;
   int m_l0_B_Id;
