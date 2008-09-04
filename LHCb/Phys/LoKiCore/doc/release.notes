@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.104 2008-08-04 15:08:49 ibelyaev Exp $ 
+! $Id: release.notes,v 1.105 2008-09-04 13:26:09 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,6 +15,7 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+! =========================== LoKiCore v7r7 2008-09-04 ========================
 ! 2008-08-04 - Vanya BELYAEV
 
  - LoKi/Trees.h, 
