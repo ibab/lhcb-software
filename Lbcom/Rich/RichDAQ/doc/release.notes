@@ -4,6 +4,7 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+!========================== RichDAQ v3r20 2008-09-04 =========================
 ! 2008-08-29 - Chris Jones
  - Do not include event IDs in event ID mis-match errors (as then each message
    is different and thus never suppressed...)
