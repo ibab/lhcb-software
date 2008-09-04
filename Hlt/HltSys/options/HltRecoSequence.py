@@ -8,6 +8,7 @@ from Configurables import PatPV2D, PatPV3D, PatForward, PatForwardTool
 from Configurables import Tf__PatVeloRTracking, Tf__PatVeloSpaceTracking
 from Configurables import RawBankToSTLiteClusterAlg
 from Configurables import HltTrackFilter, HltVertexFilter, HltTrackUpgrade
+from Configurables import DummyLumiAlley as Dummy
 
 #----------------------- HltTrack sequence
 # ---------------------
@@ -56,7 +57,7 @@ prepareForward = HltTrackFilter( 'HltPrepareForward'
 recoPV3D =  PatPV3D('Hlt1RecoPV3D' ) # FIXME: check InputTracksName = "Hlt/Track/Velo" )
 
 trackRecoSequence = GaudiSequencer( 'HltTrackRecoSequence'
-                                  ,  Members = 
+                                  ,  Members =
                                   [  recoRZVeloSequence
                                   ,  recoVelo
                                   ,  prepareVelo
@@ -118,14 +119,9 @@ hlt1RecoSequence = GaudiSequencer( 'Hlt1RecoSequence', MeasureTime = True
 
 # Forward
 #----------------
-PatForwardTool().MinMomentum = 1000.
-PatForwardTool().MinPt = 1000.
-PatForwardTool().AddTTClusterName = ""
-
-#ToolSvc.PatForwardTool.MinMomentum = 1000. ;  
-#ToolSvc.PatForwardTool.MinPt       = 80. ;   
-#ToolSvc.PatForwardTool.AddTTClusterName = "";
-
+PatForwardTool( MinMomentum = 1000.
+              , MinPt = 1000.
+              , AddTTClusterName = "" )
 
 recoSeq = GaudiSequencer('HltRecoSequence', MeasureTime = True
                         , Members =
@@ -136,7 +132,7 @@ recoSeq = GaudiSequencer('HltRecoSequence', MeasureTime = True
 #// --------------------- HltCalosequence // In HltChargedProtoPAlg for the time being
 #// Options for Calo reconstruction
 importOptions( "$CALORECOROOT/options/HltCaloSeq.opts" )
-GaudiSequencer('HltCaloRecoSequence', Members = ["GaudiSequencer/RecoCALOSeq" ] )
+GaudiSequencer('HltCaloRecoSequence', Members = [ GaudiSequencer('RecoCALOSeq') ] )
 
 #/// PATCH /// @todo remove
 #print 'Before patch: ' + str(HltRecoCALOSeq.Members)
