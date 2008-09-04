@@ -4,6 +4,9 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+! 2008-09-04 - Marco Clemencic
+ - New default tags for DC06 (DC06-20080904) and 2008 (head-20080904).
+
 ! 2008-09-03 - Marco Clemencic
  - Changed the default global tag for DC06 to DC06-20080903. (Fixed bug #40313)
 
