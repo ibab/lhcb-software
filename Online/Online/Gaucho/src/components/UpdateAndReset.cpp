@@ -216,7 +216,7 @@ std::pair<std::pair<int, ulonglong>, bool> UpdateAndReset::currentRunNumber() {
     {
       msg << MSG::DEBUG<< "ODIN Bank doesn't exist. " <<endreq;
       // When Odin doesn't work
-      runNumber = gpsTime/(m_deltaTRunTest*1000000);
+      //runNumber = gpsTime/(m_deltaTRunTest*1000000);
     }
   }
   else {

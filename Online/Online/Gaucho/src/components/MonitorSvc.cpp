@@ -727,12 +727,25 @@ void MonitorSvc::updateService(std::string infoName, bool endOfRun)
   //  mes << MSG::DEBUG << (*m_dimSrvIt).first << endreq;
   m_dimSrvIt = m_dimSrv.find(infoName);
   if(m_dimSrvIt != m_dimSrv.end()) {
-    DimServiceMonObject* dimSvcMO = dynamic_cast<DimServiceMonObject*>((*m_dimSrvIt).second);
-    if (0 != dimSvcMO) dimSvcMO->updateService(endOfRun);
-    else (*m_dimSrvIt).second->updateService(); //THIS IS WRONG
-    //msg << MSG::DEBUG << "updateSvc: Service " + infoName + " updated" << endreq;
-    return;
+    if (m_dimSrvIt->second != 0){
+      //msg << MSG::INFO << "svcName="<< m_dimSrvIt->second->getName() << endreq;
+      std::string svcName = m_dimSrvIt->second->getName();
+      if ((svcName.compare(0, 3, "Mon") == 0 )||(svcName.compare(0, 3, "MON") == 0 )){
+        DimServiceMonObject* dimSvcMO = static_cast<DimServiceMonObject*>(m_dimSrvIt->second);
+        dimSvcMO->updateService(endOfRun);
+      }
+      else {
+        //msg << MSG::INFO << "name="<< m_dimSrvIt->first << endreq;
+        //msg << MSG::INFO << "svcName="<< svcName << endreq;
+        m_dimSrvIt->second->updateService(); //THIS IS WRONG
+      }
+      //msg << MSG::DEBUG << "updateSvc: Service " + infoName + " updated" << endreq;
+    }
+    else {
+       msg << MSG::DEBUG << "updateSvc:service "<< infoName << "is been processed." << endreq;      
+    }
   }
-  msg << MSG::DEBUG << "updateSvc: No DimServiceMonObject found with the name:" + infoName << endreq;
+  else  msg << MSG::DEBUG << "updateSvc:service "<< infoName << " was not processed yet." << endreq;      
 }
+
 
