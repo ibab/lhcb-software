@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.120 2008-08-15 08:10:57 robbep Exp $
+! $Id: release.notes,v 1.121 2008-09-04 15:47:53 cattanem Exp $
 ! Package	        : L0/L0Calo
 ! Package Manager : Patrick Robbe & M-H. Schune
 !--------------------------------------------------------------------------
 
+!========================= L0Calo v9r17 2008-09-04 ========================
 ! 2008-08-15 - Patrick Robbe
  - src/L0CaloCandidatesFromRaw.cpp: initialize raw bank status
 
