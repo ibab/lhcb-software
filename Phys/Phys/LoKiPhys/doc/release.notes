@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.68 2008-08-07 15:02:59 ibelyaev Exp $ 
+! $Id: release.notes,v 1.69 2008-09-04 13:30:00 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiPhys v7r7 2008-09-04 ==========================
 ! 2008-08-07 - Vanya BELYAEV
 
  - python/LoKiPhys/functions.py
