@@ -5,6 +5,18 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v4r14>2008-09-04 OnlineSys v4r14</A></H1><PRE>
+     New version v4r12 built against LHCb v25r0.
+     Fix to important memory leak in gaucho and new version of presenter
+     including MonObjects. Bug fixes in RawBankSizes.
+
+     Please note the important note from Eric about additional job options.
+     The following change to your options files is required:
+
+     ApplicationMgr.TopAlg ={"UpdateAndReset"};
+
+    (UpdateAndReset needs to be the first algorithm in the TopAlg list).
+
 </PRE><H1><A NAME=v4r13>2008-08-28 OnlineSys v4r13</A></H1><PRE>
      New version v4r12 built against LHCb v25r0.
      Changes and bug fixes as found during the commissioning in

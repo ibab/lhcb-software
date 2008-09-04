@@ -11,6 +11,21 @@ N.Neufeld, E.v.Herwijnen).</p>
 <p>
 <h2>Releases</h2>
 <ul>
+<li> ONLINE v4r14 <br/>
+     <p>Version built against 
+     <a
+     href="http://cern.ch/LHCb-release-area/DOC/lhcb/releases/v25r0/">LHCb
+     v25r0</a>.
+     Fix to important memory leak in gaucho and new version of presenter
+     including MonObjects. Bug fixes in RawBankSizes.
+
+     Please note the important note from Eric about additional job options.
+     The following change to your options files is required:
+
+     ApplicationMgr.TopAlg ={"UpdateAndReset"};
+
+    (UpdateAndReset needs to be the first algorithm in the TopAlg list).
+</li>
 <li> ONLINE v4r13 <br/>
      <p>Version built against 
      <a
