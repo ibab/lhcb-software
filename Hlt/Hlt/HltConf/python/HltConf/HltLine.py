@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.10 2008-09-03 08:54:47 graven Exp $ 
+# $Id: HltLine.py,v 1.11 2008-09-04 12:18:32 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -21,8 +21,8 @@ The module defines three major public symbols :
       helper class to represent the member of Hl1 'line'
  - function htl1Lines   :
       bookeeping routine which keeps the track of all created Hlt1 'lines'
- - function hlt1Termini :
-      simle function which returns termini for all created Hlt lines
+ - function hlt1Decsions:
+      simle function which returns decisions for all created Hlt lines
       
 Also few helper symbols are defined:
 
@@ -54,22 +54,23 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.11 $ "
 # =============================================================================
 
-__all__ = ( 'Hlt1Line'    ,  ## the Hlt line itself 
-            'Hlt1Member'  ,  ## the representation of the line member 
-            'hlt1Lines'   ,  ## list of all created lines 
-            'hlt1Termini' ,  ## all termini for created alleys 
-            'hlt1Props'   ,  ## list of all major properties for inspection
-            'addHlt1Prop' ,  ## add attribute/property into the list 
-            'rmHlt1Prop'  ,  ## remove attribute/property form the list
+__all__ = ( 'Hlt1Line'     ,  ## the Hlt line itself 
+            'Hlt1Member'   ,  ## the representation of the line member 
+            'hlt1Lines'    ,  ## list of all created lines 
+            'hlt1Decisions',  ## all decisions for created alleys 
+            'hlt1Props'    ,  ## list of all major properties for inspection
+            'addHlt1Prop'  ,  ## add attribute/property into the list 
+            'rmHlt1Prop'   ,  ## remove attribute/property form the list
             'hlt1InputSelections'  , ## the list of all known input selections
             'hlt1OutputSelections' , ## the list of all known output selections
             'hlt1Selections' ) ## the list of all matched selections
             
             
 
+import re
 from Gaudi.Configuration import GaudiSequencer, Sequencer, Configurable 
 
 from Configurables import DeterministicPrescaler as PreScaler
@@ -90,7 +91,7 @@ from Configurables import HltVertexToTracks      as VertexToTracks
 from Configurables import HltDummySelection      as Dummy 
 
 ## @todo introduce the proper decision 
-from Configurables import HltDecision            as LineDecision 
+from Configurables import HltSelection2Decision            as LineDecision 
 
 
 ## Convention: the name of 'PreScaler' algorithm inside HltLine
@@ -138,25 +139,25 @@ def hlt1Lines () :
     >>> print lines
     >>> for line in lines : print line
 
-    it is also a good way to get all 'termini' from the registered Hlt lines:
+    it is also a good way to get all 'decisions' from the registered Hlt lines:
 
-    >>> termini = [ p.terminus() for p in hlt1Lines() ]
+    >>> decisions = [ p.decision() for p in hlt1Lines() ]
     
     """
     return tuple(_hlt_1_lines__)
 
 # =============================================================================
-## Simple function whcih returns the termini for all created Hlt1 lines
+## Simple function whcih returns the decisions for all created Hlt1 lines
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date   2008-08-06
-def hlt1Termini () :
+def hlt1Decisions () :
     """
-    Simple function which returns the termini for all created Hlt1 lines:
+    Simple function which returns the decisions for all created Hlt1 lines:
     
-    >>> termini = hlt1Termini ()
+    >>> decisions = hlt1Decisions ()
     
     """
-    t = [ l.terminus() for l in hlt1Lines() ]
+    t = [ l.decision() for l in hlt1Lines() if l.decision() ]
     return tuple(t)
 
 ## the list of all input selections
@@ -464,9 +465,6 @@ class Hlt1Member ( object ) :
         self.Name = Name 
         self.Args = Args
         self.Tools = tools
-        #TODO/FIXME: 
-        #    expand '%' in FilterDescriptor to allow bound selections
-        #    check if any Args are of type 'Tool', and convert them accordingly
         for key in Args :
             if  key not in self.Type.__slots__  :
                 raise AttributeError, "The key %s is not allowed"%key
@@ -570,8 +568,8 @@ class Hlt1Line(object):
         if HLT and ODIN :
             raise AttributeError, "The attribute HLT and ODIN are exclusive %s" % name 
         
-        # terminus:
-        self._terminus  = None 
+        # decision:
+        self._decision  = None 
         
         # check for forbidden attributes
         mdict = {} 
@@ -614,6 +612,12 @@ class Hlt1Line(object):
                 continue
                 
             margs = alg.Args.copy() 
+            #TODO/FIXME: 
+            #    expand '%' in FilterDescriptor, OutputSelection to allow bound selections
+            _subs_cand_ =  ['FilterDescriptor', 'OutputSelection', 'InputSelections'
+                           , 'InputSelection', 'InputSelection1','InputSelection2' ]
+            for key in set(margs).intersection(set(_subs_cand_)) :
+                margs[key] = re.sub('%','Hlt1%s'%line,margs[key])
             algName = alg.name ( line )
             print 'processing ' + algName
             
@@ -682,8 +686,8 @@ class Hlt1Line(object):
             if not self._outputsel :
                 raise TypeError( "line '%s' has been requested to create a decision, but it has no output selection"%name)
             _members += [ PreScaler    ( postscalerName ( line ) , AcceptFraction = self._postscale ) 
-                        , LineDecision ( decisionName   ( line ) , InputSelection = self._outputsel ) ]   
-            self._terminus = decisionName ( line )
+                        , LineDecision ( decisionName   ( line ) , InputSelection = self._outputsel, OutputLevel = 1 ) ]   
+            self._decision = decisionName ( line )
 
         # register selections:
         _input_selection_properties_ = [ 'InputSelection'
@@ -762,18 +766,18 @@ class Hlt1Line(object):
         for alg in self._algos :
             if Hlt1Member is type(alg) : _ids += [ alg.id() ] 
         return _ids
-    ## get the terminus of the line
-    def terminus ( self ) :
+    ## get the decision of the line
+    def decision ( self ) :
         """
-        Get the actual terminus of the line
+        Get the actual decision of the line
 
         >>> line = ...
-        >>> terminus = line.terminus()
+        >>> decision = line.decision()
         
         """
-        if not self._terminus :
-            raise AttributeError, "The line %s does not define valid terminus " % self.subname()
-        return self._terminus
+        if not self._decision :
+            raise AttributeError, "The line %s does not define valid decision " % self.subname()
+        return self._decision
     ## get the last output selection of the line
     def outputSelection ( self ) :
         """
