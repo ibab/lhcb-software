@@ -24,6 +24,8 @@ EventPersistencySvc.CnvServices += {"LHCb::RawDataCnvSvc"};
 #include "$ONLINETASKSROOT/hltopts/OnlineEnvironment.opts"
 
 ApplicationMgr.TopAlg += { "UpdateAndReset" };
+UpdateAndReset.disableReadOdin=1;
+
 /////////////////////////////////////
 #include "$STDOPTS/DstDicts.opts"
 #include "$STDOPTS/DecodeRawEvent.opts"
