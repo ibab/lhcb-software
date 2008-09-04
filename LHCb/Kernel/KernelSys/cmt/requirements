@@ -6,7 +6,7 @@ branches doc cmt
 use CaloKernel      v5r1    Calo
 use LHCbKernel      v9r1    Kernel
 use LHCbMath        v3r2    Kernel
-use L0MuonKernel    v8r1p1  L0
+use L0MuonKernel    v8r2    L0
 use MuonKernel      v4r0    Muon
 use ProcessorKernel v5r2    L0
 use Relations       v5r4    Kernel
