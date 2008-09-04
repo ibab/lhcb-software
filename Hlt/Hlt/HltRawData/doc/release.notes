@@ -3,6 +3,9 @@
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Writers and Readers, Makers of persisted TES info
 !-----------------------------------------------------------------------------
+! 2008-09-04 - Gerhard Raven
+ - RoutingBitsWriter now uses DecReports as input, not selections
+
 
 !========================== HltRawData v1r1 2008-08-28 ===================
 ! 2008-08-26 - Jaap Panman

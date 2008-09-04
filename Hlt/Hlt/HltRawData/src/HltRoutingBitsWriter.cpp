@@ -1,4 +1,4 @@
-// $Id: HltRoutingBitsWriter.cpp,v 1.1 2008-08-13 07:15:23 graven Exp $
+// $Id: HltRoutingBitsWriter.cpp,v 1.2 2008-09-04 12:21:49 graven Exp $
 // Include files 
 #include <algorithm>
 // from Boost
@@ -7,6 +7,7 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 #include "Event/RawEvent.h" 
+#include "Event/HltDecReports.h" 
 
 // local
 #include "HltRoutingBitsWriter.h"
@@ -27,13 +28,13 @@ void HltRoutingBitsWriter::updateEvaluators(Property&) {
     else { m_updateRequired = true; }
 }
 
-void HltRoutingBitsWriter::updateEvaluators(const IHltSelectionCombinerFactory& factory) {
+void HltRoutingBitsWriter::updateEvaluators(const IHltDecisionPredicateFactory& factory) {
     std::for_each(m_evaluators.begin(),m_evaluators.end(),boost::lambda::delete_ptr());
     zeroEvaluators();
     typedef std::map<unsigned int,std::string>::const_iterator iter_t;
     for (iter_t i=m_specifications.begin();i!=m_specifications.end();++i) {
         if ( i->first>3*sizeof(unsigned int) ) throw GaudiException("Out of Range","",StatusCode::FAILURE);
-        combiner_t* eval = factory.create(i->second,*this);
+        combiner_t* eval = factory.create(i->second);
         if (eval==0) throw GaudiException("Invalid Evaluator","",StatusCode::FAILURE);
         m_evaluators[i->first] = eval;
     }
@@ -46,13 +47,12 @@ void HltRoutingBitsWriter::updateEvaluators(const IHltSelectionCombinerFactory& 
 //=============================================================================
 HltRoutingBitsWriter::HltRoutingBitsWriter( const std::string& name,
                                         ISvcLocator* pSvcLocator)
-  : HltAlgorithm ( name , pSvcLocator, false )
-  , m_selection(*this)
+  : GaudiAlgorithm ( name , pSvcLocator )
   , m_factory(0)
   , m_updateRequired(true)
 {
   zeroEvaluators();
-  m_selection.declareProperties();
+  declareProperty("DecReportsLocation", m_location = LHCb::HltDecReportsLocation::Default);
   declareProperty("routingBitDefinitions", m_specifications)
         ->declareUpdateHandler( &HltRoutingBitsWriter::updateEvaluators, this );
 
@@ -67,14 +67,13 @@ HltRoutingBitsWriter::~HltRoutingBitsWriter() {
 // Initialization
 //=============================================================================
 StatusCode HltRoutingBitsWriter::initialize() {
-  StatusCode sc = HltAlgorithm::initialize(); // must be executed first
+  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
 
-  m_factory = tool<IHltSelectionCombinerFactory>("HltSelectionCombinerFactory");
+  m_factory = tool<IHltDecisionPredicateFactory>("HltSelectionCombinerFactory");
   updateEvaluators(*m_factory);
   
-  m_selection.registerSelection();
   return StatusCode::SUCCESS;
 }
 
@@ -86,24 +85,25 @@ StatusCode HltRoutingBitsWriter::execute() {
     error() << " stale evaluators???? " << endmsg;
     return StatusCode::FAILURE;
   }
+
+  LHCb::HltDecReports* decisions = get<LHCb::HltDecReports>( m_location );
   std::vector<unsigned int> bits(3,0); 
   for (unsigned j=0;j<3;++j) {
     unsigned int& w = bits[j];
     for (unsigned i=0;i<32;++i) {
-        if (evaluate(j*32+i)) w = w | (0x01UL << i); 
+        if (evaluate(j*32+i,*decisions)) w = w | (0x01UL << i); 
     }
   }
   LHCb::RawEvent* rawEvent = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default);
   rawEvent->addBank(0,LHCb::RawBank::HltRoutingBits,0,bits);
 
-  m_selection.output()->setDecision( bits[0]!=0 || bits[1]!=0 || bits[2]!=0 );
+  setFilterPassed( bits[0]!=0 || bits[1]!=0 || bits[2]!=0 );
 
   return StatusCode::SUCCESS;
 }
 
 
 StatusCode HltRoutingBitsWriter::finalize() {
-
   debug() << "==> Finalize" << endmsg;
-  return HltAlgorithm::finalize();  
+  return GaudiAlgorithm::finalize();  
 }
