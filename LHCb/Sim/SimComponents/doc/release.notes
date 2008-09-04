@@ -5,6 +5,7 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+!====================== SimComponents v2r12 2008-09-04 =======================
 ! 2008-09-03 - Marco Musy
  - fix of warning message
 
