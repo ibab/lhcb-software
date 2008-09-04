@@ -4,6 +4,7 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!===================== RichRecBase v3r16 2008-09-04 ==========================
 ! 2008-08-29 - Chris Jones
  - Resurrect the old FastRingFitter class, that provides a simple and fast 
    circle fit to a set of (x,y) data points.
