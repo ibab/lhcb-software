@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.8 2008-07-31 20:56:59 jucogan Exp $
+! $Id: release.notes,v 1.9 2008-09-04 15:55:54 cattanem Exp $
 ! Package     : L0MuonMonitor
 ! Responsible : Julien Cogan
 ! Purpose     : Monitoring of the L0Muon
-!-------------------------------------------------------------------------
+!--------------------------------------------------------------------------
 
+!========================== L0MuonMonitor v1r1p1 2008-09-04 ===============
 ! 2008-07-31 - Julien Cogan
  - Bug fix in the booking of number of cand histo
  - Bug fix in the booking pt histo
