@@ -57,8 +57,8 @@ public:
 
 private:
 
-    ConfigTreeNodeAlias(const digest_type& ref, const alias_type& alias)
-      : m_ref(ref), m_alias(alias) { }
+    ConfigTreeNodeAlias(const digest_type& ref, const alias_type& alias);
+    void invalidate(const std::string& reason);
 
     digest_type     m_ref;
     alias_type      m_alias;
