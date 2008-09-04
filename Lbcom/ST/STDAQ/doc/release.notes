@@ -4,6 +4,7 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+!=============================== STDAQ v3r11 2008-09-04 ======================
 ! 2008-08-31 M Needham 
  - Bug fix in service box mapping: vector of all possible names was 
    not filled 
