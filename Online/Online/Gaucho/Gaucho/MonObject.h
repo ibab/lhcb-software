@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/Gaucho/MonObject.h,v 1.11 2008-08-29 08:41:44 frankb Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/Gaucho/MonObject.h,v 1.12 2008-09-04 08:13:43 evh Exp $
 #ifndef GAUCHO_MONOBJECT_H
 #define GAUCHO_MONOBJECT_H 1
 
@@ -23,6 +23,7 @@
 // #include <boost/serialization/list.hpp>
 #include "GaudiKernel/IMessageSvc.h"
 #include "GaudiKernel/MsgStream.h"
+#include <vector>
 
 /** @class ClassName MonObject.h OnlineKernel/MonObject.h
  *

@@ -10,6 +10,10 @@ MonH1F::MonH1F(IMessageSvc* msgSvc, const std::string& source, int version):
   m_hist = 0;
   m_typeName = s_monH1F;
   m_dimPrefix = "MonH1F";
+  binCont = 0;
+  binErr = 0;
+  binLabel = 0;
+  m_fSumw2 = 0;  
 }
 
 MonH1F::~MonH1F(){
@@ -62,20 +66,20 @@ void MonH1F::load2(boost::archive::binary_iarchive  & ar){
 //  std::cout << "  nEntries = " <<  nEntries << std::endl;
 //  std::cout << "==============================================================" << std::endl;
   
-  binCont = new float[(nbinsx+2)];
+  if (binCont == 0) binCont = new float[(nbinsx+2)];
 
   for (int i = 0; i < (nbinsx+2) ; ++i){
     ar & binCont[i];
   }
 
-  binErr = new float[(nbinsx+2)];
+  if (binErr == 0) binErr = new float[(nbinsx+2)];
 
   for (int i = 0; i < (nbinsx+2) ; ++i){
     ar & binErr[i];
   }
 
   if (bBinLabel){
-    binLabel = new std::string[(nbinsx+2)];
+    if (binLabel == 0) binLabel = new std::string[(nbinsx+2)];
 
     for (int i = 0; i < (nbinsx+2) ; ++i){
       ar & binLabel[i];
@@ -93,7 +97,7 @@ void MonH1F::load2(boost::archive::binary_iarchive  & ar){
 
   ar & m_fSumSize;
 
-  m_fSumw2 = new float[m_fSumSize];
+  if (m_fSumw2 == 0) m_fSumw2 = new float[m_fSumSize];
   for (int i=0 ; i < m_fSumSize; ++i) {
     ar & m_fSumw2[i];
   }
@@ -162,7 +166,7 @@ void MonH1F::createObject(std::string name){
   if (!isLoaded) return;
   MsgStream msgStream = createMsgStream();
   msgStream <<MSG::INFO<<"Creating TH1F " << name << endreq;
-  m_hist = new TH1F(name.c_str(), sTitle.c_str(), nbinsx, Xmin, Xmax);
+  if (m_hist == 0) m_hist = new TH1F(name.c_str(), sTitle.c_str(), nbinsx, Xmin, Xmax);
   objectCreated = true;
 }
 void MonH1F::createObject(){
@@ -226,8 +230,8 @@ void MonH1F::splitObject(){
   const char *cTitle  = m_hist->GetTitle();
   sTitle  = std::string(cTitle);
 
-  binCont = new float[(nbinsx+2)];
-  binErr = new float[(nbinsx+2)];
+  if (binCont==0) binCont = new float[(nbinsx+2)];
+  if (binErr==0) binErr = new float[(nbinsx+2)];
 
   for (int i = 0; i < (nbinsx+2) ; ++i){
     binCont[i] = ((float) (m_hist->GetBinContent(i))); 
@@ -247,7 +251,7 @@ void MonH1F::splitObject(){
   }
 
   if (bBinLabel){
-    binLabel = new std::string[(nbinsx+2)];
+    if (binLabel==0)  binLabel = new std::string[(nbinsx+2)];
     for (int i = 0; i < (nbinsx+2) ; ++i){
       binLabel[i] = m_hist->GetXaxis()->GetBinLabel(i);
     }
@@ -262,7 +266,7 @@ void MonH1F::splitObject(){
   m_fTsumwx = fot->fTsumwx;
   m_fTsumwx2 = fot->fTsumwx2;
   m_fSumSize =  ((int)(fot->fSumw2.GetSize()));
-  m_fSumw2 = new float[m_fSumSize];
+  if (m_fSumw2==0) m_fSumw2 = new float[m_fSumSize];
   
   for (int i=0;i<fot->fSumw2.GetSize();++i) {
     m_fSumw2[i] = fot->fSumw2[i]; 
@@ -342,12 +346,14 @@ void MonH1F::copyFrom(MonObject * H){
   sName = HH->sName;
   sTitle = HH->sTitle;
 
+  if (binCont != 0) delete binCont;
   binCont = new float[(nbinsx+2)];
 
   for (int i = 0; i < (nbinsx+2) ; ++i){
     binCont[i] = HH->binCont[i];
   }
 
+  if (binErr != 0) delete binErr;
   binErr = new float[(nbinsx+2)];
 
   for (int i = 0; i < (nbinsx+2) ; ++i){
@@ -357,6 +363,7 @@ void MonH1F::copyFrom(MonObject * H){
   bBinLabel = HH->bBinLabel;
 
   if (bBinLabel){
+    if (binLabel != 0) delete binLabel;
     binLabel = new std::string[(nbinsx+2)];
     for (int i = 0; i < (nbinsx+2) ; ++i){
       binLabel[i] = HH->binLabel[i];
@@ -372,6 +379,7 @@ void MonH1F::copyFrom(MonObject * H){
   m_fTsumwx2 = HH->m_fTsumwx2;
   m_fSumSize = HH->m_fSumSize;
 
+  if (m_fSumw2 != 0) delete m_fSumw2;
   m_fSumw2 = new float[m_fSumSize];
   for (int i=0 ; i < m_fSumSize; ++i) {
     m_fSumw2[i] = HH->m_fSumw2[i];

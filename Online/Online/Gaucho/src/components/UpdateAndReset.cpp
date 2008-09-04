@@ -86,7 +86,7 @@ StatusCode UpdateAndReset::initialize() {
 
   m_timeStart = GauchoTimer::currentTime();
 
-  m_runNumber = currentRunNumber().first;
+  m_runNumber = currentRunNumber().first.first;
   m_cycleNumber = currentCycleNumber(m_timeStart).first;
   m_timeFirstEvInRun = m_timeStart;
   m_offsetTimeFirstEvInRun = offsetToBoundary(m_cycleNumber, m_timeFirstEvInRun, true);
@@ -95,7 +95,7 @@ StatusCode UpdateAndReset::initialize() {
   m_runStatus = s_statusNoUpdated;
   m_cycleStatus = s_statusNoUpdated;
 
-  if (0==m_disableMonRate) m_pGauchoMonitorSvc->declareMonRateComplement(m_runNumber, m_cycleNumber, m_deltaTCycle, m_offsetTimeFirstEvInRun, m_offsetTimeLastEvInCycle, m_gpsTimeLastEvInCycle);
+  if (0==m_disableMonRate) m_pGauchoMonitorSvc->declareMonRateComplement(m_runNumber, m_cycleNumber, m_deltaTCycle, m_offsetTimeFirstEvInRun, m_offsetTimeLastEvInCycle, m_offsetGpsTimeLastEvInCycle);
 
   //DimTimer::start(20); // we wait a few seconds 
 
@@ -162,7 +162,7 @@ void UpdateAndReset::verifyAndProcessCycleChange(std::string method) {
 }
 
 void UpdateAndReset::verifyAndProcessRunChange(std::string method) {
-  std::pair<int, bool> runNumber = currentRunNumber(); // if this process is too late, then we can not avoid two process calling this method.
+  std::pair<std::pair<int, ulonglong>, bool> runNumber = currentRunNumber(); // if this is too late, we can not avoid two process calling it.
   if (!runNumber.second) return;// false means that the runNumber wasn't change
   if (s_statusNoUpdated != m_runStatus) return; // We update if the runStatus is different of ProcessingUpdate and Updated
   MsgStream msg(msgSvc(), name());
@@ -171,7 +171,7 @@ void UpdateAndReset::verifyAndProcessRunChange(std::string method) {
   m_runStatus = s_statusProcessingUpdate;
   updateData(true); //true means that the update was called because the runNumber changed
   m_runStatus = s_statusUpdated;
-  retrieveRunNumber(runNumber.first);
+  retrieveRunNumber(runNumber.first.first, runNumber.first.second);
 }
 
 //------------------------------------------------------------------------------
@@ -184,19 +184,21 @@ StatusCode UpdateAndReset::finalize() {
 }
 
 //------------------------------------------------------------------------------
-void UpdateAndReset::retrieveRunNumber(int runNumber) {
+void UpdateAndReset::retrieveRunNumber(int runNumber, ulonglong gpsTime) {
 //------------------------------------------------------------------------------
   m_runNumber = runNumber;
   m_runStatus = s_statusNoUpdated;
-  m_timeFirstEvInRun = GauchoTimer::currentTime();
+  m_timeFirstEvInRun = gpsTime;
   m_offsetTimeFirstEvInRun = offsetToBoundary(currentCycleNumber(m_timeFirstEvInRun).first, m_timeFirstEvInRun, true);
 }
 
 //------------------------------------------------------------------------------
-std::pair<int, bool> UpdateAndReset::currentRunNumber() {
+// std::pair<int, bool> UpdateAndReset::currentRunNumber() {
+std::pair<std::pair<int, ulonglong>, bool> UpdateAndReset::currentRunNumber() {
 //------------------------------------------------------------------------------
   MsgStream msg( msgSvc(), name() );
   int runNumber=0;
+  ulonglong gpsTime = GauchoTimer::currentTime();
   bool changed = false;
 
   msg << MSG::DEBUG<< "Reading ODIN Bank. " <<endreq;
@@ -207,26 +209,26 @@ std::pair<int, bool> UpdateAndReset::currentRunNumber() {
       LHCb::ODIN* odin = get<LHCb::ODIN> (LHCb::ODINLocation::Default);
       msg << MSG::DEBUG<< "Getting RunNumber. " <<endreq;
       runNumber = odin->runNumber();
+      gpsTime = odin->gpsTime();
       msg << MSG::DEBUG<< "runNumber from ODIN is. " <<endreq;
     }
     else
     {
       msg << MSG::DEBUG<< "ODIN Bank doesn't exist. " <<endreq;
-      // this is only for test when Odin doesn't work
-      ulonglong currentTime = GauchoTimer::currentTime();
-      runNumber = currentTime/(m_deltaTRunTest*1000000);
+      // When Odin doesn't work
+      runNumber = gpsTime/(m_deltaTRunTest*1000000);
     }
   }
   else {
-    msg << MSG::DEBUG<< "===============> Reading Odin bank is disabled. " <<endreq;
-    //ulonglong currentTime = GauchoTimer::currentTime();
-    //runNumber = currentTime/(m_deltaTRunTest*1000);
+    msg << MSG::DEBUG<< "===============> Reading Odin bank is disabled. Then runNumber = 0 and gpsTime = currentTime" <<endreq;
   }
 
   if (m_runNumber != runNumber) changed = true;
 
-  return std::pair<int, bool>(runNumber,changed);
-
+  std::pair<int, ulonglong> runNumberGpsTime = std::pair<int, ulonglong>(runNumber, gpsTime);
+  
+  // return std::pair<int, bool>(runNumber,changed);
+  return std::pair<std::pair<int, ulonglong>, bool>(runNumberGpsTime, changed);
 }
 
 //------------------------------------------------------------------------------
@@ -289,14 +291,18 @@ void UpdateAndReset::updateData(bool isRunNumberChanged) {
   msg << MSG::DEBUG << "m_runNumber        = " << m_runNumber << endreq;
   msg << MSG::DEBUG << "m_cycleNumber      = " << m_cycleNumber << endreq;
   msg << MSG::DEBUG << "m_timeFirstEvInRun      = " << m_timeFirstEvInRun << endreq;
+  msg << MSG::DEBUG << "m_offsetTimeFirstEvInRun      = " << m_offsetTimeFirstEvInRun << endreq;
   m_deltaTCycle = currentTime - m_timeLastEvInCycle;
   msg << MSG::DEBUG << "m_deltaTCycle = " << m_deltaTCycle << " microseconds" << endreq;
   m_timeLastEvInCycle = currentTime;
   m_offsetTimeLastEvInCycle = offsetToBoundary(m_cycleNumber, m_timeLastEvInCycle, false);
   msg << MSG::DEBUG << "m_timeLastEvInCycle     = " << m_timeLastEvInCycle << endreq;
+  msg << MSG::DEBUG << "m_offsetTimeLastEvInCycle     = " << m_offsetTimeLastEvInCycle << endreq;
   msg << MSG::DEBUG << "deltaT error = " << m_deltaTCycle - m_desiredDeltaTCycle*1000000 << " microseconds" << endreq;
   m_gpsTimeLastEvInCycle = gpsTime();
+  m_offsetGpsTimeLastEvInCycle = offsetToBoundary(m_cycleNumber, m_gpsTimeLastEvInCycle, false);
   msg << MSG::DEBUG << "m_gpsTimeLastEvInCycle  = " << m_gpsTimeLastEvInCycle << endreq;
+  msg << MSG::DEBUG << "m_offsetGpsTimeLastEvInCycle  = " << m_offsetGpsTimeLastEvInCycle << endreq;
   msg << MSG::DEBUG << "TimeLastEvent error = " << (m_timeLastEvInCycle - m_gpsTimeLastEvInCycle) << " microseconds" << endreq;
 
   if (isRunNumberChanged) {

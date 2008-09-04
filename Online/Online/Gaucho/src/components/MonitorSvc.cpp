@@ -168,7 +168,7 @@ void MonitorSvc::declareInfo(const std::string& name, const bool&  var,
 
   if (!registerName(name, owner)) return;
   std::pair<std::string, std::string> dimSvcName = registerDimSvc(name, prefix, owner, false);
-  if ("" == dimSvcName.second) return;
+  if (dimSvcName.second.compare("") == 0) return;
 
   if (isMonObject) m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, monObject);
   else {
@@ -194,7 +194,7 @@ void MonitorSvc::declareInfo(const std::string& name, const int&  var,
         m_monRate->setComments("MonRate... !!");
         msg << MSG::DEBUG << "Registering MonRate " << endreq; 
         std::pair<std::string, std::string> dimSvcName = registerDimSvc("monRate", "MonR/", this, false);
-        if ("" == dimSvcName.second) return;
+        if (dimSvcName.second.compare("") == 0) return;
         msg << MSG::DEBUG << "Printing MonRate " << endreq;
         m_monRate->print();
         msg << MSG::DEBUG << "Creating DimServiceMonObject for MonRate " << endreq;
@@ -222,13 +222,13 @@ void MonitorSvc::declareInfo(const std::string& name, const int&  var,
 
   if (!registerName(name, owner)) return;
   std::pair<std::string, std::string> dimSvcName = registerDimSvc(name, prefix, owner, false);
-  if ("" == dimSvcName.second) return;
+  if (dimSvcName.second.compare("") == 0) return;
 
   if (isMonObject) m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, monObject);
   else {
     m_dimSrv[dimSvcName.first]= new DimService(dimSvcName.second.c_str(),(int&)var);
     std::pair<std::string, std::string> dimSvcNameComment = registerDimSvc(name, prefix, owner, true);
-    if ("" != dimSvcNameComment.second) m_dimSrv[dimSvcNameComment.first]= new DimService(dimSvcNameComment.second.c_str(),(char*)desc.c_str());
+      if (dimSvcName.second.compare("") == 0) m_dimSrv[dimSvcNameComment.first]= new DimService(dimSvcNameComment.second.c_str(),(char*)desc.c_str());
   }
   msg << MSG::DEBUG << "New DimService: " + dimSvcName.second << endreq;
 }
@@ -248,7 +248,7 @@ void MonitorSvc::declareInfo(const std::string& name, const long&  var,
         m_monRate->setComments("MonRate... !!");
         msg << MSG::DEBUG << "Registering MonRate " << endreq; 
         std::pair<std::string, std::string> dimSvcName = registerDimSvc("monRate", "MonR/", this, false);
-        if ("" == dimSvcName.second) return;
+        if (dimSvcName.second.compare("") == 0) return;
         msg << MSG::DEBUG << "Printing MonRate " << endreq;
         m_monRate->print();
         msg << MSG::DEBUG << "Creating DimServiceMonObject for MonRate " << endreq;
@@ -276,13 +276,13 @@ void MonitorSvc::declareInfo(const std::string& name, const long&  var,
 
   if (!registerName(name, owner)) return;
   std::pair<std::string, std::string> dimSvcName = registerDimSvc(name, prefix, owner, false);
-  if ("" == dimSvcName.second) return;
+  if (dimSvcName.second.compare("") == 0) return;
 
   if (isMonObject) m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, monObject);
   else {
     m_dimSrv[dimSvcName.first]= new DimService(dimSvcName.second.c_str(),(int&)var);
     std::pair<std::string, std::string> dimSvcNameComment = registerDimSvc(name, prefix, owner, true);
-    if ("" != dimSvcNameComment.second) m_dimSrv[dimSvcNameComment.first]= new DimService(dimSvcNameComment.second.c_str(),(char*)desc.c_str());
+      if (dimSvcName.second.compare("") != 0) m_dimSrv[dimSvcNameComment.first]= new DimService(dimSvcNameComment.second.c_str(),(char*)desc.c_str());
   }
   msg << MSG::DEBUG << "New DimService: " + dimSvcName.second << endreq;
 }
@@ -303,7 +303,7 @@ void MonitorSvc::declareInfo(const std::string& name, const double& var,
         m_monRate->setComments("My name is MonRate. Nice to meet you !!");
         msg << MSG::DEBUG << "Registering MonRate " << endreq; 
         std::pair<std::string, std::string> dimSvcName = registerDimSvc("monRate", "MonR/", this, false);
-        if ("" == dimSvcName.second) return;
+        if (dimSvcName.second.compare("") == 0) return;
         msg << MSG::DEBUG << "Printing MonRate " << endreq;
         m_monRate->print();
         msg << MSG::DEBUG << "Creating DimServiceMonObject for MonRate " << endreq;
@@ -330,13 +330,13 @@ void MonitorSvc::declareInfo(const std::string& name, const double& var,
 
   if (!registerName(name, owner)) return;
   std::pair<std::string, std::string> dimSvcName = registerDimSvc(name, prefix, owner, false);
-  if ("" == dimSvcName.second) return;
+  if (dimSvcName.second.compare("") == 0) return;
 
   if (isMonObject) m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, monObject);
   else {
     m_dimSrv[dimSvcName.first]= new DimService(dimSvcName.second.c_str(),(double&)var);
     std::pair<std::string, std::string> dimSvcNameComment = registerDimSvc(name, prefix, owner, true);
-    if ("" != dimSvcNameComment.second) m_dimSrv[dimSvcNameComment.first]= new DimService(dimSvcNameComment.second.c_str(),(char*)desc.c_str());
+      if (dimSvcName.second.compare("") != 0) m_dimSrv[dimSvcNameComment.first]= new DimService(dimSvcNameComment.second.c_str(),(char*)desc.c_str());
   }
   msg << MSG::DEBUG << "New DimService: " + dimSvcName.second << endreq;
 }
@@ -360,13 +360,13 @@ void MonitorSvc::declareInfo(const std::string& name, const std::string& var,
 
   if (!registerName(name, owner)) return;
   std::pair<std::string, std::string> dimSvcName = registerDimSvc(name, prefix, owner, false);
-  if ("" == dimSvcName.second) return;
+  if (dimSvcName.second.compare("") == 0) return;
 
   if (isMonObject) m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, monObject);
   else {
     m_dimSrv[dimSvcName.first]= new DimService(dimSvcName.second.c_str(),(char*)var.c_str());
     std::pair<std::string, std::string> dimSvcNameComment = registerDimSvc(name, prefix, owner, true);
-    if ("" != dimSvcNameComment.second) m_dimSrv[dimSvcNameComment.first]= new DimService(dimSvcNameComment.second.c_str(),(char*)desc.c_str());
+      if (dimSvcName.second.compare("") != 0) m_dimSrv[dimSvcNameComment.first]= new DimService(dimSvcNameComment.second.c_str(),(char*)desc.c_str());
   }
   msg << MSG::DEBUG << "New DimService: " + dimSvcName.second << endreq;
 }
@@ -393,8 +393,8 @@ void MonitorSvc::declareInfo(const std::string& name, const std::pair<double,dou
 
   if (!registerName(name, owner)) return;
   std::pair<std::string, std::string> dimSvcName = registerDimSvc(name, prefix, owner, false);
-  if ("" == dimSvcName.second) return;
-
+  if (dimSvcName.second.compare("") == 0) return;
+  
   m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, monObject);
 }
 
@@ -417,13 +417,13 @@ void MonitorSvc::declareInfo(const std::string& name, const std::string& format,
 
   if (!registerName(name, owner)) return;
   std::pair<std::string, std::string> dimSvcName = registerDimSvc(name, prefix, owner, false);
-  if ("" == dimSvcName.second) return;
+  if (dimSvcName.second.compare("") == 0) return;
 
   if (isMonObject) m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, monObject);
   else {
     m_dimSrv[dimSvcName.first]= new DimService(dimSvcName.second.c_str(), (char*)format.c_str(), (void *)var, size);
     std::pair<std::string, std::string> dimSvcNameComment = registerDimSvc(name, prefix, owner, true);
-    if ("" != dimSvcNameComment.second) m_dimSrv[dimSvcNameComment.first]= new DimService(dimSvcNameComment.second.c_str(),(char*)desc.c_str());
+      if (dimSvcName.second.compare("") != 0) m_dimSrv[dimSvcNameComment.first]= new DimService(dimSvcNameComment.second.c_str(),(char*)desc.c_str());
   }
   msg << MSG::DEBUG << "New DimService: " + dimSvcName.second << endreq;
 }
@@ -466,21 +466,21 @@ void MonitorSvc::declareInfo(const std::string& name, const AIDA::IBaseHistogram
 
   if (!registerName(name, owner)) return;
   std::pair<std::string, std::string> dimSvcName = registerDimSvc(name, prefix, owner, false);
-  if ("" == dimSvcName.second) return;
-
+  if (dimSvcName.second.compare("") == 0) return;
+  
   m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, monObject);
 
 }
 
-void MonitorSvc::declareMonRateComplement( int& runNumber, int& cycleNumber, double& deltaT, double& offsetTimeFirstEvInRun, double& offsetTimeLastEvInCycle, ulonglong& gpsTimeLastEvInCycle){
+void MonitorSvc::declareMonRateComplement( int& runNumber, int& cycleNumber, double& deltaT, double& offsetTimeFirstEvInRun, double& offsetTimeLastEvInCycle, double& offsetGpsTimeLastEvInCycle){
   MsgStream msg(msgSvc(),"MonitorSvc");
   msg << MSG::DEBUG << "Inside declareMonRateComplement" << endreq;
 
   if ( 0 == m_disableMonRate) {
-    m_monRate->addComplement(&runNumber, &cycleNumber, &deltaT, &offsetTimeFirstEvInRun, &offsetTimeLastEvInCycle, &gpsTimeLastEvInCycle);
+    m_monRate->addComplement(&runNumber, &cycleNumber, &deltaT, &offsetTimeFirstEvInRun, &offsetTimeLastEvInCycle, &offsetGpsTimeLastEvInCycle);
     m_monRate->print();
   }
-  else  msg << MSG::INFO << "Complemet of MonRate can not be declared because MonRate process is disable." << endreq; 
+  else  msg << MSG::INFO << "Complemet of MonRate was not declared because MonRate process is disable." << endreq; 
 
 }
 

@@ -10,6 +10,10 @@ MonObject(msgSvc, source, version)
   isLoaded = false;
   objectCreated = false;
   m_profile = 0;
+  binCont = 0;
+  binErr = 0;
+  binEntries = 0;
+  m_fSumw2 = 0;  
 }
 
 MonProfile::~MonProfile(){
@@ -19,9 +23,6 @@ MonProfile::~MonProfile(){
 //   msgStream <<MSG::DEBUG<<"deleting binErr" << endreq;
   if (binErr) {delete binErr;binErr=0;}
 //   msgStream <<MSG::DEBUG<<"deleting binLabelX" << endreq;
-  if (bBinLabelX) {
-    if (binLabelX) {delete binLabelX;binLabelX=0;}
-  }
 //   msgStream <<MSG::DEBUG<<"deleting m_fSumw2" << endreq;
   if (m_fSumw2) {delete m_fSumw2;m_fSumw2=0;}
 // BUGG...I dont know yet why I can't do it..  
@@ -59,28 +60,33 @@ void MonProfile::load2(boost::archive::binary_iarchive  & ar){
   ar & sTitle;
   ar & bBinLabelX;
 
-  binCont = new double[(nbinsx+2)];
+  if (binCont==0) binCont = new double[(nbinsx+2)];
 
   for (int i = 0; i < (nbinsx+2) ; ++i){
     ar & binCont[i];
   }
 
-  binErr = new double[(nbinsx+2)];
+  if (binErr==0) binErr = new double[(nbinsx+2)];
 
   for (int i = 0; i < (nbinsx+2) ; ++i){
     ar & binErr[i];
   }
 
-  binEntries = new double[(nbinsx+2)];
+  if (binEntries==0) binEntries = new double[(nbinsx+2)];
 
   for (int i = 0; i < (nbinsx+2) ; ++i){
     ar & binEntries[i];
   }
 
   if (bBinLabelX){
-    binLabelX = new std::string[(nbinsx+1)];
-    for (int i = 1; i < (nbinsx+1) ; ++i){
-      ar & binLabelX[i];
+    //if (binLabelX==0) binLabelX = new std::string[(nbinsx+1)];
+    binLabelX.clear();
+    for (int i = 0; i < (nbinsx+2) ; ++i){
+      //ar & binLabelX[i];
+      std::string labelX;
+      ar & labelX;
+//      std::cout << "load ===>label["<< i << "]=" << labelX << std::endl;
+      binLabelX.push_back(labelX);
     }
   }
 
@@ -97,7 +103,7 @@ void MonProfile::load2(boost::archive::binary_iarchive  & ar){
 
   ar & m_fSumSize;
 
-  m_fSumw2 = new double[m_fSumSize];
+  if (m_fSumw2==0) m_fSumw2 = new double[m_fSumSize];
   for (int i=0 ; i < m_fSumSize; ++i) {
     ar & m_fSumw2[i];
   }
@@ -135,8 +141,10 @@ void MonProfile::save3(boost::archive::binary_oarchive  & ar) {
     ar & binEntries[i];
   }
   if (bBinLabelX){
-    for (int i = 1; i < (nbinsx+1) ; ++i){
-      ar & binLabelX[i];
+    for (int i = 0; i < (int)binLabelX.size() ; ++i){
+//      std::cout << "save ===>label["<< i << "]=" << binLabelX[i] << std::endl;
+      std::string labelX = binLabelX[i];
+      ar & labelX;
     }
   }
 
@@ -174,7 +182,7 @@ void MonProfile::createObject(std::string name){
   if (!isLoaded) return;
   MsgStream msgStream = createMsgStream();
   msgStream <<MSG::INFO<<"Creating TProfile " << name << endreq;
-  m_profile = new TProfile(name.c_str(), sTitle.c_str(), nbinsx, Xmin, Xmax, Ymin, Ymax);
+  if (m_profile==0) m_profile = new TProfile(name.c_str(), sTitle.c_str(), nbinsx, Xmin, Xmax, Ymin, Ymax);
   objectCreated = true;
 }
 void MonProfile::createObject(){
@@ -213,7 +221,7 @@ void MonProfile::loadObject(){
   }
 
   if (bBinLabelX){
-    for (int i = 1; i < (nbinsx+1) ; ++i){
+    for (int i = 0; i < (nbinsx+2) ; ++i){
       m_profile->GetXaxis()->SetBinLabel(i, binLabelX[i].c_str());
     } 
   }
@@ -239,7 +247,9 @@ void MonProfile::loadObject(){
 void MonProfile::splitObject(){
 
   FriendOfTProfile * fot = (FriendOfTProfile *)m_profile; 
-
+  
+  int nbinsxOld = 0;
+  if (nbinsx != 0) nbinsxOld = nbinsx;
   nbinsx = m_profile->GetNbinsX();
   Xmin = m_profile->GetXaxis()->GetXmin();
   Xmax = m_profile->GetXaxis()->GetXmax();
@@ -252,8 +262,14 @@ void MonProfile::splitObject(){
   const char *cTitle  = m_profile->GetTitle();
   sTitle  = std::string(cTitle);
 
+  MsgStream msgStream = createMsgStream();
+  if (binCont != 0) {
+    delete binCont;
+  }
   binCont = new double[(nbinsx+2)];
+  if (binErr != 0) delete binErr;
   binErr = new double[(nbinsx+2)];
+  if (binEntries != 0) delete binEntries;
   binEntries = new double[(nbinsx+2)];
 
   for (int i = 0; i < (nbinsx+2) ; ++i){
@@ -269,17 +285,23 @@ void MonProfile::splitObject(){
   }
 
   bBinLabelX = false;
-  for (int i = 1; i < (nbinsx+1) ; ++i){
+  for (int i = 0; i < (nbinsx+2) ; ++i){
     std::string binLab = m_profile->GetXaxis()->GetBinLabel(i);
     if (binLab.length() > 0 ){
       bBinLabelX = true;
       break;
     }
   }
+  
   if (bBinLabelX){
-    binLabelX = new std::string[(nbinsx+1)];
-    for (int i = 1; i < (nbinsx+1) ; ++i){
-      binLabelX[i] = m_profile->GetXaxis()->GetBinLabel(i);
+    //if (binLabelX != 0) {
+      binLabelX.clear();
+    //}
+    //binLabelX = new std::string[(nbinsx+2)];
+    for (int i = 0; i < (nbinsx+2) ; ++i){
+//      std::cout << "split ===>label["<< i << "]=" << m_profile->GetXaxis()->GetBinLabel(i) << std::endl;
+      binLabelX.push_back(m_profile->GetXaxis()->GetBinLabel(i));
+      //binLabelX[i] = m_profile->GetXaxis()->GetBinLabel(i);
     }
   }
 
@@ -294,6 +316,7 @@ void MonProfile::splitObject(){
   m_fTsumwy = fot->fTsumwy;
   m_fTsumwy2 = fot->fTsumwy2;
   m_fSumSize =  ((int)(fot->fSumw2.GetSize()));
+  if (m_fSumw2 != 0) delete m_fSumw2;
   m_fSumw2 = new double[m_fSumSize];
 
   for (int i=0;i<fot->fSumw2.GetSize();++i) {
@@ -372,18 +395,21 @@ void MonProfile::copyFrom(MonObject * H){
   sName = HH->sName;
   sTitle = HH->sTitle;
 
+  if (binCont != 0) delete binCont;
   binCont = new double[(nbinsx+2)];
 
   for (int i = 0; i < (nbinsx+2) ; ++i){
     binCont[i] = HH->binCont[i];
   }
 
+  if (binErr != 0) delete binErr;
   binErr = new double[(nbinsx+2)];
 
   for (int i = 0; i < (nbinsx+2) ; ++i){
     binErr[i] = HH->binErr[i];
   }
 
+  if (binEntries != 0) delete binEntries;
   binEntries = new double[(nbinsx+2)];
 
   for (int i = 0; i < (nbinsx+2) ; ++i){
@@ -393,10 +419,13 @@ void MonProfile::copyFrom(MonObject * H){
   bBinLabelX = HH->bBinLabelX;
 
   if (bBinLabelX){
-    binLabelX = new std::string[(nbinsx+1)];
+    binLabelX = HH->binLabelX;
+/*    binLabelX.clear();
+    //binLabelX = new std::string[(nbinsx+1)];
     for (int i = 1; i < (nbinsx+1) ; ++i){
-      binLabelX[i] = HH->binLabelX[i];
-    }
+      binLabelX.push_back(HH->binLabelX[i]);
+      //binLabelX[i] = HH->binLabelX[i];
+    }*/
   }
 
   m_fDimension = HH->m_fDimension;
@@ -411,6 +440,7 @@ void MonProfile::copyFrom(MonObject * H){
   m_fTsumwy2 = HH->m_fTsumwy2;
   m_fSumSize = HH->m_fSumSize;
   
+  if (m_fSumw2 != 0) delete m_fSumw2;
   m_fSumw2 = new double[m_fSumSize];
   for (int i=0 ; i < m_fSumSize; ++i) {
     m_fSumw2[i] = HH->m_fSumw2[i];

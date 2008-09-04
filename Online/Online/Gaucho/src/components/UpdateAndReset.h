@@ -26,10 +26,10 @@ public:
   
   void timerHandler();
   
-  void retrieveRunNumber(int runNumber);
+  void retrieveRunNumber(int runNumber, ulonglong gpsTime);
   void retrieveCycleNumber(int cycleNumber);
   
-  std::pair<int, bool> currentRunNumber();
+  std::pair<std::pair<int, ulonglong>, bool> currentRunNumber();
   std::pair<int, bool> currentCycleNumber(ulonglong currentTime);
   
   ulonglong UpdateAndReset::gpsTime();
@@ -55,6 +55,7 @@ private:
   ulonglong m_timeLastEvInCycle;
   double m_offsetTimeLastEvInCycle;
   ulonglong m_gpsTimeLastEvInCycle;
+  double m_offsetGpsTimeLastEvInCycle;
   double m_deltaTCycle;
   
   // For Testing RunNumber generator

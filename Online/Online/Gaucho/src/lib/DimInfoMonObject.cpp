@@ -55,7 +55,7 @@ bool DimInfoMonObject::createMonObject() {
   
   int tmpStringSize = -1;
   int numTent = 0;
-  while ( (tmpStringSize = m_dimInfo->getSize()) <= 40 ) {
+  while ( (tmpStringSize = m_dimInfo->getSize()) <= 10 ) {
     msg << MSG::DEBUG << "svcName : " << m_svcName << ", stream size "<< m_dimInfo->getSize() << endreq;
     if (numTent > 40) {
       msg << MSG::WARNING << "==================> INEXISTENT SERVICE " << m_svcName << endreq;
@@ -121,7 +121,7 @@ bool DimInfoMonObject::loadMonObject(){
   m_monObject->reset(); // <================VERIFICAR ISSO AQUI (ACHO QUE E' DESNECESARIO)
 
   //msg << MSG::DEBUG << "getting stream" << endreq;
-  while ( (tmpStringSize = m_dimInfo->getSize()) < 40 ){
+  while ( (tmpStringSize = m_dimInfo->getSize()) < 10 ){
     //msg << MSG::DEBUG << "svcName : " << m_svcName << ", stream size "<< m_dimInfo->getSize() << endreq;
     if (numTent > 40) {
       msg << MSG::WARNING << "==================> INEXISTENT SERVICE " << m_svcName << endreq;

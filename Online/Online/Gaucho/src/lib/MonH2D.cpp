@@ -10,6 +10,11 @@ MonObject(msgSvc, source, version)
   isLoaded = false;
   objectCreated = false;
   m_hist = 0;
+  binCont = 0;
+  binErr = 0;
+  binLabelX = 0;
+  binLabelY = 0;
+  m_fSumw2 = 0;  
 }
   
 MonH2D::~MonH2D(){
@@ -62,27 +67,27 @@ void MonH2D::load2(boost::archive::binary_iarchive  & ar){
   ar & bBinLabelX;
   ar & bBinLabelY;
 
-  binCont = new double[(nbinsx+2)*(nbinsy+2)];
+  if (binCont == 0) binCont = new double[(nbinsx+2)*(nbinsy+2)];
 
   for (int i = 0; i < (nbinsx+2)*(nbinsy+2) ; ++i){
     ar & binCont[i];
   }
 
-  binErr = new double[(nbinsx+2)*(nbinsy+2)];
+  if (binErr == 0) binErr = new double[(nbinsx+2)*(nbinsy+2)];
 
   for (int i = 0; i < (nbinsx+2)*(nbinsy+2) ; ++i){
     ar & binErr[i];
   }
 
   if (bBinLabelX){
-    binLabelX = new std::string[(nbinsx+2)];
+    if (binLabelX == 0) binLabelX = new std::string[(nbinsx+2)];
     for (int i = 0; i < (nbinsx+2) ; ++i){
       ar & binLabelX[i];
     }
   }
 
   if (bBinLabelY){
-    binLabelY = new std::string[(nbinsy+2)];
+    if (binLabelY == 0) binLabelY = new std::string[(nbinsy+2)];
     for (int i = 0; i < (nbinsy+2) ; ++i){
       ar & binLabelY[i];
     }
@@ -102,7 +107,7 @@ void MonH2D::load2(boost::archive::binary_iarchive  & ar){
   
   ar & m_fSumSize;
   
-  m_fSumw2 = new double[m_fSumSize];
+  if (m_fSumw2 == 0) m_fSumw2 = new double[m_fSumSize];
   for (int i=0 ; i < m_fSumSize; ++i) {
     ar & m_fSumw2[i];
   }
@@ -178,7 +183,7 @@ void MonH2D::createObject(std::string name){
   if (!isLoaded) return;
   MsgStream msgStream = createMsgStream();
   msgStream <<MSG::INFO<<"Creating TH1D " << name << endreq;
-  m_hist = new TH2D(name.c_str(), sTitle.c_str(), nbinsx, Xmin, Xmax, nbinsy, Ymin, Ymax);
+  if (m_hist == 0) m_hist = new TH2D(name.c_str(), sTitle.c_str(), nbinsx, Xmin, Xmax, nbinsy, Ymin, Ymax);
   objectCreated = true;
 }
 void MonH2D::createObject(){
@@ -258,10 +263,10 @@ void MonH2D::splitObject(){
   const char *cTitle  = m_hist->GetTitle();
   sTitle  = std::string(cTitle);
 
-  binCont = new double[(nbinsx+2)*(nbinsy+2)];
-  binErr = new double[(nbinsx+2)*(nbinsy+2)];
-  binLabelX = new std::string[(nbinsx+2)];
-  binLabelY = new std::string[(nbinsy+2)];
+  if (binCont==0) binCont = new double[(nbinsx+2)*(nbinsy+2)];
+  if (binErr==0) binErr = new double[(nbinsx+2)*(nbinsy+2)];
+  if (binLabelX==0) binLabelX = new std::string[(nbinsx+2)];
+  if (binLabelY==0) binLabelY = new std::string[(nbinsy+2)];
 
   for (int i = 0; i < (nbinsx+2)*(nbinsy+2) ; ++i){
     binCont[i] = ((double) (m_hist->GetBinContent(i))); 
@@ -280,7 +285,7 @@ void MonH2D::splitObject(){
     }
   }
   if (bBinLabelX){
-    binLabelX = new std::string[(nbinsx+2)];
+    if (binLabelX==0) binLabelX = new std::string[(nbinsx+2)];
     for (int i = 0; i < (nbinsx+2) ; ++i){
       binLabelX[i] = m_hist->GetXaxis()->GetBinLabel(i);
     }
@@ -295,7 +300,7 @@ void MonH2D::splitObject(){
     }
   }
   if (bBinLabelY){
-    binLabelY = new std::string[(nbinsy+2)];
+    if (binLabelY==0) binLabelY = new std::string[(nbinsy+2)];
     for (int i = 0; i < (nbinsy+2) ; ++i){
       binLabelY[i] = m_hist->GetYaxis()->GetBinLabel(i);
     }
@@ -314,7 +319,7 @@ void MonH2D::splitObject(){
   m_fTsumwy2 = fot->fTsumwy2;
 
   m_fSumSize =  ((int)(fot->fSumw2.GetSize()));
-  m_fSumw2 = new double[m_fSumSize];
+  if (m_fSumw2==0) m_fSumw2 = new double[m_fSumSize];
 
   for (int i=0;i<fot->fSumw2.GetSize();++i) {
     m_fSumw2[i] = fot->fSumw2[i]; 
@@ -406,12 +411,14 @@ void MonH2D::copyFrom(MonObject * H){
   sName = HH->sName;
   sTitle = HH->sTitle;
   
+  if (binCont != 0) delete binCont;
   binCont = new double[(nbinsx+2)*(nbinsy+2)];
   
   for (int i = 0; i < (nbinsx+2)*(nbinsy+2) ; ++i){
     binCont[i] = HH->binCont[i];
   }
   
+  if (binErr != 0) delete binErr;
   binErr = new double[(nbinsx+2)*(nbinsy+2)];
   
   for (int i = 0; i < (nbinsx+2)*(nbinsy+2) ; ++i){
@@ -421,6 +428,7 @@ void MonH2D::copyFrom(MonObject * H){
   bBinLabelX = HH->bBinLabelX;
 
   if (bBinLabelX){
+   if (binLabelX != 0) delete binLabelX;
     binLabelX = new std::string[(nbinsx+2)];
     for (int i = 0; i < (nbinsx+2) ; ++i){
       binLabelX[i] = HH->binLabelX[i];
@@ -430,7 +438,8 @@ void MonH2D::copyFrom(MonObject * H){
   bBinLabelY = HH->bBinLabelY;
 
   if (bBinLabelY){
-    binLabelY = new std::string[(nbinsy+2)];
+   if (binLabelY != 0) delete binLabelY;
+   binLabelY = new std::string[(nbinsy+2)];
     for (int i = 0; i < (nbinsy+2) ; ++i){
       binLabelY[i] = HH->binLabelY[i];
     }
@@ -449,6 +458,7 @@ void MonH2D::copyFrom(MonObject * H){
 
   m_fSumSize = HH->m_fSumSize;
 
+  if (m_fSumw2 != 0) delete m_fSumw2;
   m_fSumw2 = new double[m_fSumSize];
   for (int i=0 ; i < m_fSumSize; ++i) {
     m_fSumw2[i] = HH->m_fSumw2[i];

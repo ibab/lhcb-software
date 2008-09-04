@@ -70,7 +70,8 @@ public:
   double *binCont;
   double *binErr;
   double *binEntries;
-  std::string *binLabelX;
+  
+  std::vector<std::string> binLabelX;
 
   int m_fDimension;
   //double m_fIntegral;

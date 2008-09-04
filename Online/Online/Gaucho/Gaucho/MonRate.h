@@ -15,7 +15,7 @@ protected:
   double *m_deltaT;
   double *m_offsetTimeFirstEvInRun;
   double *m_offsetTimeLastEvInCycle; 
-  ulonglong *m_gpsTimeLastEvInCycle; 
+  double *m_offsetGpsTimeLastEvInCycle; 
   
   bool isServer;
   
@@ -35,13 +35,13 @@ public:
     m_counterMap[countName] = std::pair<double*, std::string*> (const_cast<double *>(&count), descr);
   }
   
-  void addComplement(int* runNumber, int* cycleNumber, double* deltaT, double* offsetTimeFirstEvInRun, double* offsetTimeLastEvInCycle, ulonglong* gpsTimeLastEvInCycle){
+  void addComplement(int* runNumber, int* cycleNumber, double* deltaT, double* offsetTimeFirstEvInRun, double* offsetTimeLastEvInCycle, double* offsetGpsTimeLastEvInCycle){
     m_runNumber = runNumber;
     m_cycleNumber = cycleNumber;
     m_deltaT = deltaT;
     m_offsetTimeFirstEvInRun = offsetTimeFirstEvInRun;
     m_offsetTimeLastEvInCycle = offsetTimeLastEvInCycle;
-    m_gpsTimeLastEvInCycle = gpsTimeLastEvInCycle;
+    m_offsetGpsTimeLastEvInCycle = offsetGpsTimeLastEvInCycle;
   }
   
   std::map<const std::string, std::pair<double*, std::string*>, std::less<std::string> > counterMap(){return m_counterMap;}
@@ -58,7 +58,7 @@ private:
   std::string counterDescription(std::string countName) {return (*(m_counterMap[countName].second));}
   double offsetTimeFirstEvInRun() {return (*m_offsetTimeFirstEvInRun);}
   double offsetTimeLastEvInCycle() {return (*m_offsetTimeLastEvInCycle);}
-  ulonglong gpsTimeLastEvInCycle() {return (*m_gpsTimeLastEvInCycle);}
+  double offsetGpsTimeLastEvInCycle() {return (*m_offsetGpsTimeLastEvInCycle);}
   int runNumber() {return (*m_runNumber);}
   int cycleNumber() {return (*m_cycleNumber);}
   double deltaT() {return (*m_deltaT);}
