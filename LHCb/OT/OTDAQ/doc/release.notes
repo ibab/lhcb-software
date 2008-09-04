@@ -2,6 +2,7 @@ Package         : OTDAQ
 Package manager : J.Amoraal
 !---------------------------------------------------------------------
 
+!======================= OTDAQ v7r2 2008-09-04 =======================
 ! 2008-08-26 - Wouter Hulsbergen
  - Added method to get total number of hits (without 'decoding' the full bank)
 
