@@ -1,4 +1,4 @@
-// $Id: HltRoutingBitsWriter.h,v 1.2 2008-09-04 12:21:49 graven Exp $
+// $Id: HltRoutingBitsWriter.h,v 1.3 2008-09-04 13:31:50 graven Exp $
 #ifndef HLTCOMMON_HLTROUTINGBITSWRITER_H 
 #define HLTCOMMON_HLTROUTINGBITSWRITER_H 1
 
@@ -28,7 +28,7 @@ public:
 private:
 
   typedef IHltDecisionPredicateFactory::decisionPredicate combiner_t;
-  boost::array<combiner_t*,3*sizeof(unsigned int)> m_evaluators;
+  boost::array<combiner_t*,3*sizeof(unsigned int)*8> m_evaluators;
 
   bool evaluate(size_t i,const LHCb::HltDecReports& reports) { return m_evaluators[i]!=0 && (*m_evaluators[i])(reports); }
   std::ostream& print(std::ostream& os, size_t i) 
