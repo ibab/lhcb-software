@@ -5,7 +5,12 @@
 #include <TPRegexp.h>
 #include <TString.h>
 
-static const std::string s_presenterVersion("v0r10");
+#ifdef _WIN32
+ #define NOMSG
+ #define WIN32_LEAN_AND_MEAN
+#endif
+
+static const std::string s_presenterVersion("v0r11");
 // environment variable for archive mount point (i.e. prefix to paths)
 static const std::string s_groupdir("GROUPDIR");
 
@@ -119,7 +124,7 @@ namespace pres
 //  static TPRegexp s_histogramUrlRegexp("^(H1D|H2D|P1D|HPD|P2D)?/?([^/_]+)_([^/_]+)_([^/]+)_([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");
 // so let's process the UTGID separately:
 // TODO: make this lazier...
-  static TPRegexp s_histogramUrlRegexp("^(H1D|H2D|P1D|HPD|P2D)?/?([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");
+  static TPRegexp s_histogramUrlRegexp("^(MonP1|MonH1F|MonH1D|MonH2F|MonH2D|H1D|H2D|P1D|HPD|P2D)?/?([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");
   static TPRegexp s_histogramUTGIDRegexp("^([^/_]+)_([^/_]+)_([^/]+)_([^/]+)$");
   static TPRegexp s_fileDateRegexp("(.*)-(\\d{8}T\\d{6})\\.root$");
 
@@ -137,7 +142,7 @@ namespace pres
   static const TString s_lhcbMonGiacomo("LHCB_MON_GIACOMO");
 
   static const TString s_lbora01("lbora01:1528/HISTOGRAMDB");
-  static const TString s_oradev10("oradev10.cern.ch:10520/D10");
+  static const TString s_oradev10("devdb10");
   static const TString s_histdb("HISTDB");
   static const TString s_lhcbPartionName("LHCb");
 
