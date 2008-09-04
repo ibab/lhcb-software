@@ -8,7 +8,7 @@ branches doc cmt
 #===============================================================
 
 use GaudiConf             v10r12
-use GaudiObjDesc          v11r3
+use GaudiObjDesc          v11r4
 
 #                                         Maintainer
 # Kernel packages
@@ -74,7 +74,7 @@ use DaVinciKernel         v7r0   Phys    # Juan Palacios
 use DaVinciMCKernel       v2r10  Phys    # Juan Palacios
 use HepMCBack             v1r0   Gen     # Gloria Corti, Patrick Robbe
 use HltInterfaces         v1r0   Kernel  # Patrick Koppenburg
-use LHCbAlgs              v2r20  Kernel  # Marco Cattaneo
+use LHCbAlgs              v2r21  Kernel  # Marco Cattaneo
 use LinkerInstances       v3r4   Event   # Thomas Ruf
 use LoKi                  v7r1   Phys    # Ivan Belyaev
 use LoKiAlgo              v7r5   Phys    # Ivan Belyaev
