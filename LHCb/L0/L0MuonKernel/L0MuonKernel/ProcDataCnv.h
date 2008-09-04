@@ -73,7 +73,9 @@ namespace L0Muon {
     int notcompressedPBWords_to_bitset(const std::vector<unsigned int> & raw, const int size, 
                                        unsigned int & word_index,
                                        boost::dynamic_bitset<> & rawbitset);
-    
+
+    int next_bit(const std::vector<unsigned int> & raw, unsigned int &iwd, int &ibit);
+
     int m_compressionParameter;
 
     boost::dynamic_bitset<> applyCompression(boost::dynamic_bitset<> bitset_to_compress);

@@ -9,7 +9,8 @@
 
 #include "L0MuonKernel/ProcRawErrors.h"
 
-
+#define _DEBUG_RAWDATA_    0
+#define _DEBUG_RAWDATA_2_  0
 /**
    Constructor.
 */
@@ -264,10 +265,20 @@ void L0Muon::ProcRawCnv::decodeBank(const std::vector<unsigned int> &original, i
                                     int &Refl0EventNumber, int &Refl0_B_Id){
 
 
-  bool debug=false;
   
   if (bankVersion<1) return;
 
+  if (bankVersion==1) decodeBank_v1(original,Refl0EventNumber,Refl0_B_Id);
+
+  if (bankVersion==2) decodeBank_v2(original,Refl0EventNumber,Refl0_B_Id);
+
+}
+
+void L0Muon::ProcRawCnv::decodeBank_v1(const std::vector<unsigned int> &original, int &Refl0EventNumber, int &Refl0_B_Id){
+
+
+  bool debug=false;
+  
   unsigned int word;
   unsigned int empty;
 
@@ -318,8 +329,8 @@ void L0Muon::ProcRawCnv::decodeBank(const std::vector<unsigned int> &original, i
   for (int ib=11; ib>-1; --ib) {
     for (int ich=1; ich>-1; --ich){
       int pos = (ib*2+ich)*(L0Muon::ProcRawCnv::board_full_frame_size-1);
-      word = raw[pos];
-      empty                    = ((word>>28)&0xF);
+      word  = raw[pos];
+      empty = ((word>>28)&0xF);
       if (empty!=0) {
         ++decodingError[ib];
         if (debug) std::cout << "L0Muon::ProcRawCnv::decodeBank decodingError ib= "<<ib<<" A"<<std::endl;
@@ -626,6 +637,622 @@ void L0Muon::ProcRawCnv::decodeBank(const std::vector<unsigned int> &original, i
   ++m_n_decoded_banks;
   
 
+}
+
+void L0Muon::ProcRawCnv::decodeBank_v2(const std::vector<unsigned int> &raw, int &Refl0EventNumber, int &Refl0_B_Id){
+
+
+  bool debug=false;
+  
+  // Clear the registers first
+  release();
+  m_activ = true;
+  
+  int decodingError[12];
+  for (int ib=0; ib<12; ++ib){
+    decodingError[ib]=0;
+  }
+
+  unsigned int word;
+  unsigned int empty;
+  
+  int iwd=0;
+#if _DEBUG_RAWDATA_==1
+  std::cout<<" L0Muon::ProcRawCnv::decodeBank IN "<<std::endl;
+  std::cout<<" L0Muon::ProcRawCnv::decodeBank l0_B_Id Ref="<<Refl0_B_Id<<std::endl;
+  std::cout<<" L0Muon::ProcRawCnv::decodeBank l0EventNumber Ref="<<Refl0EventNumber<<std::endl;
+#endif
+
+  for (int pp=0; pp<4; ++pp){ // Loop over PPs
+    for (int bb=0; bb<3; ++bb){ // 1st loop over boards in PP : candidates
+      int ib=pp*3+bb;
+
+      // 1st 2 words: L0bid & event number 
+      for (int ich=0; ich<2; ++ich){
+        word  = raw[iwd];
+        
+        int l0_B_Id = ((word>> 0)&0xFFF);
+        Refl0_B_Id  = Refl0_B_Id==-1 ? l0_B_Id : Refl0_B_Id;
+        m_errors[ib].l0_B_Id[ich].set(l0_B_Id,Refl0_B_Id);
+        
+        int l0EventNumber = ((word>>16)&0xFFF);
+        Refl0EventNumber  = Refl0EventNumber==-1 ? l0EventNumber : Refl0EventNumber;
+        m_errors[ib].l0EventNumber[ich].set(l0EventNumber,Refl0EventNumber);
+        m_errors[ib].board_index[ich].set(((word>>12)&0xF),ib);
+#if _DEBUG_RAWDATA_==1
+      std::cout<<" L0Muon::ProcRawCnv::decodeBank ib= "<<ib<<std::endl;
+      std::cout<<" L0Muon::ProcRawCnv::decodeBank l0_B_Id= "<<l0_B_Id<<" Ref="<<Refl0_B_Id<<std::endl;
+      std::cout<<" L0Muon::ProcRawCnv::decodeBank l0EventNumber= "<<l0EventNumber<<" Ref="<<Refl0EventNumber<<std::endl;
+#endif
+        
+        ++iwd;
+      }
+      
+      // Next 2 words : BCSU candidates
+      for (int icand=0; icand<2; ++icand){ // Loop over BCSU candidates
+        word  = raw[iwd];
+
+        m_candRegHandlerBCSU[ib].setCandOffM1( ( (word>> 0)&0x0F ) ,icand);
+        m_candRegHandlerBCSU[ib].setCandOffM2( ( (word>> 4)&0x0F ) ,icand);
+        m_candRegHandlerBCSU[ib].setCandColM3( ( (word>> 8)&0x1F ) ,icand);
+        m_candRegHandlerBCSU[ib].setCandRowM3( ( (word>>13)&0x03 ) ,icand);
+        m_candRegHandlerBCSU[ib].setCandPT(    ( (word>>16)&0x7F ) ,icand);
+        m_candRegHandlerBCSU[ib].setCandCharge(( (word>>23)&0x01 ) ,icand);
+        if (icand==0) {
+          m_errors[ib].bcsu_bcid.set((word>> 24)&0x0F,Refl0_B_Id);
+        } else {
+          m_candRegHandlerBCSU[ib].setStatus(  ( (word>>24)&0x0F ) );
+          int status =m_candRegHandlerBCSU[ib].getStatus();
+          m_errors[ib].bcsu_status.set(status);
+        }
+        m_candRegHandlerBCSU[ib].setCandPU(    ( (word>>28)&0x03 ) ,icand);
+        empty = (word>>30)&0x3;
+        if (empty!=0) {
+          ++decodingError[ib];
+          if (debug) std::cout << "L0Muon::ProcRawCnv::decodeBank decodingError ib= "<<ib<<" B"<<std::endl;
+        }
+
+        int ncand = m_candRegHandlerBCSU[ib].numberOfCandidates();
+        for( int icand =0; icand<ncand;++icand){
+          m_candRegHandlerBCSU[ib].setCandBoard( ib ,icand);
+          m_candRegHandlerBCSU[ib].setCandQuarter( m_quarter ,icand);
+        }
+
+        ++iwd;
+      } // End of loop over BCSU candidates
+
+      // Next 8 words : PU candidates  
+      for (int ipu=0; ipu<4; ++ipu){ // Loop over PUs in board : candidates
+        for (int icand=0; icand<2; ++icand){ // Loop over PU candidates
+          word  = raw[iwd];
+
+          m_candRegHandlerPU[ib][ipu].setCandOffM1( ( (word>> 0)&0x0F ) ,icand);
+          m_candRegHandlerPU[ib][ipu].setCandOffM2( ( (word>> 4)&0x0F ) ,icand);
+          m_candRegHandlerPU[ib][ipu].setCandColM3( ( (word>> 8)&0x1F ) ,icand);
+          m_candRegHandlerPU[ib][ipu].setCandRowM3( ( (word>>13)&0x03 ) ,icand);
+          m_candRegHandlerPU[ib][ipu].setCandPT(    ( (word>>16)&0x7F ) ,icand);
+          m_candRegHandlerPU[ib][ipu].setCandCharge(( (word>>23)&0x01 ) ,icand);
+          if (icand==0) {
+            m_errors[ib].pus_bcid[ipu].set((word>> 24)&0x0F,Refl0_B_Id);
+          } else {
+            m_candRegHandlerPU[ib][ipu].setStatus(  ( (word>>24)&0x0F ) );
+            int status = m_candRegHandlerPU[ib][ipu].getStatus();
+            m_errors[ib].pus_status[ipu].set(status);
+          }
+          m_candRegHandlerPU[ib][ipu].setCandPU(    ( (word>>28)&0x03 ) ,icand);
+          empty = (word>>30)&0x3;
+          if (empty!=0) {
+            ++decodingError[ib];
+            if (debug) std::cout << "L0Muon::ProcRawCnv::decodeBank decodingError ib= "<<ib<<" C"<<std::endl;
+          }
+
+          int ncand = m_candRegHandlerPU[ib][ipu].numberOfCandidates();
+          for( int icand =0; icand<ncand;++icand){
+            m_candRegHandlerPU[ib][ipu].setCandPU( ipu ,icand);
+            m_candRegHandlerPU[ib][ipu].setCandBoard( ib ,icand);
+            m_candRegHandlerPU[ib][ipu].setCandQuarter( m_quarter ,icand);
+          }
+
+          ++iwd;
+        } // End of loop over PU candidates
+      } // End of loop over PUs in board : candidates
+    } // End of 1st loop over boards in PP : candidates
+
+    for (int bb=0; bb<3; ++bb){ // 2nd loop over boards in PP : ol data
+      int ib=pp*3+bb;
+#if _DEBUG_RAWDATA_2_==1
+      std::cout<<" L0Muon::ProcRawCnv::decodeBank ib= "<<ib<<std::endl;
+#endif
+      for (int ipu=0; ipu<4; ++ipu){  // Loop over PUs in board : error field
+        word  = raw[iwd];
+
+#if _DEBUG_RAWDATA_2_==1
+        std::cout<<" L0Muon::ProcRawCnv::decodeBank ib= "<<ib<<" ipu= "<<ipu
+                 <<" error word= 0x"<<std::hex<<word<<std::dec<<std::endl;
+#endif
+        m_errors[ib].par_link[ipu].set( (word>> 0)&0xFF);
+        m_errors[ib].ser_link[ipu].set( (word>> 8)&0xFF);
+        m_errors[ib].opt_link[ipu].set( (word>>16)&0xFF);
+
+        ++iwd;
+      } // End of loop over PUs in board : error field
+
+      for (int ipu=0; ipu<4; ++ipu){  // Loop over PUs in board : ol data
+
+#if _DEBUG_RAWDATA_2_==1
+        std::cout<<" L0Muon::ProcRawCnv::decodeBank ol ib= "<<ib<<" ipu= "<<ipu<<" iwd= "<<iwd<<std::endl;
+#endif
+        iwd+=4; 
+        boost::dynamic_bitset<> olbitset;
+        for (int i=0; i<5; ++i) { // 5 full words
+          boost::dynamic_bitset<> bitset(32,raw[iwd-i]);
+          int olsize = olbitset.size();
+          olbitset.resize(olsize+32);
+          bitset.resize(olsize+32);
+          bitset<<=olsize;
+          olbitset|=bitset;
+        }
+        ++iwd;
+        
+        if (m_ols[ib][ipu]!=0) m_ols[ib][ipu]->set(olbitset);
+#if _DEBUG_RAWDATA_2_==1
+        std::cout << "L0Muon::ProcRawCnv::decodeBank OLs   cross check"<<std::endl;
+       if (m_ols[ib][ipu]!=0) {
+         std::vector<LHCb::MuonTileID> mids = m_ols[ib][ipu]->getTileVector();
+         std::cout << "L0Muon::ProcRawCnv::decodeBank OLs   model"<<std::endl;
+         for (int ii=10-1;ii>-1;--ii){
+           for (int iii=16-1;iii>-1;--iii){
+             if (mids[ii*16+iii].isValid())
+               std::cout<<(mids[ii*16+iii].station()+1);
+             else if (mids[ii*16+iii].layout().xGrid()!=0 &&
+                          mids[ii*16+iii].layout().xGrid()!=0)
+               std::cout<<"?";
+             else
+               std::cout<<"x";
+           }
+           std::cout<<std::endl;
+         }
+         int nexpected=0;
+         for (int ii=10-1;ii>-1;--ii){
+           for (int iii=16-1;iii>-1;--iii){
+             if (mids[ii*16+iii].isValid()) ++nexpected;
+           }
+         }        
+         for (int ii=10-1;ii>-1;--ii){
+           for (int iii=16-1;iii>-1;--iii){
+             if (mids[ii*16+iii].isValid()) {
+               if (!m_ols[ib][ipu]->test(ii*16+iii)){
+                 std::cout << "L0Muon::ProcRawCnv::decodeBank OLs   missing : "<<mids[ii*16+iii].toString()
+                           <<" @ "<<ii*16+iii<<std::endl;
+               }
+             } 
+           }
+         }        
+         std::vector<LHCb::MuonTileID> pads = m_ols[ib][ipu]->firedTiles();
+         for (std::vector<LHCb::MuonTileID>::iterator it=pads.begin(); it<pads.end();++it){
+           if (!it->isValid())
+             std::cout << "L0Muon::ProcRawCnv::decodeBank OLs    OL data :"
+                       <<" tiles "<<it->toString()<<" valid ? "<<it->isValid()<<std::endl;
+         }
+         std::cout << "L0Muon::ProcRawCnv::decodeBank OLs   bits found in"
+                   <<" buffer= "<<olbitset.count()
+                   <<" register= "<<pads.size()
+                   <<" model= "<<nexpected;
+         if ( (olbitset.count()!=pads.size()) || (olbitset.count()!=nexpected) ) 
+           std::cout << "!!!!!!!!!!!!!!!!!!!!!!!!";
+         std::cout<<std::endl;
+       }
+#endif      
+
+      } // End of loop over PUs in board : ol data
+    } // End of 2nd loop over boards in PP : ol data: 
+    
+    for (int bb=0; bb<3; ++bb){ // 3rd loop over boards in PP : neigh data
+      int ib=pp*3+bb;
+      for (int ipu=0; ipu<4; ++ipu){  // Loop over PUs in board : neigh data
+#if _DEBUG_RAWDATA_2_==1
+        std::cout<<" L0Muon::ProcRawCnv::decodeBank neigh ib= "<<ib<<" ipu= "<<ipu<<" iwd= "<<iwd<<std::endl;
+#endif
+
+        boost::dynamic_bitset<> neighbitset;
+
+        if (ipu%2==0) {
+          iwd+=8;
+          {                          // 16 bits (msb) of last word
+            boost::dynamic_bitset<> bitset(16,( (raw[iwd]>>16)&0xFFFF ) );
+            int neighsize = neighbitset.size();
+            neighbitset.resize(neighsize+16);
+            bitset.resize(neighsize+16);
+            bitset<<=neighsize;
+            neighbitset|=bitset;
+          }
+          
+          for (int i=0; i<8; ++i) { // 8 full words
+            boost::dynamic_bitset<> bitset(32,raw[iwd-1-i]);
+            int neighsize = neighbitset.size();
+            neighbitset.resize(neighsize+32);
+            bitset.resize(neighsize+32);
+            bitset<<=neighsize;
+            neighbitset|=bitset;
+          }
+          if (m_neighs[ib][ipu]!=0) m_neighs[ib][ipu]->set(neighbitset);   
+
+        } else {
+          iwd+=8; // iwd = 38 (%68)
+          for (int i=0; i<8; ++i) { // 8 full words
+            boost::dynamic_bitset<> bitset(32,raw[iwd-i]);
+            int neighsize = neighbitset.size();
+            neighbitset.resize(neighsize+32);
+            bitset.resize(neighsize+32);
+            bitset<<=neighsize;
+            neighbitset|=bitset;
+          }
+          
+          { // 16 bits (lsb) of previous word
+            boost::dynamic_bitset<> bitset(16,raw[iwd-8]);
+            int neighsize = neighbitset.size();
+            neighbitset.resize(neighsize+16);
+            bitset.resize(neighsize+16);
+            bitset<<=neighsize;
+            neighbitset|=bitset;
+          }
+          ++iwd;
+          
+          if (m_neighs[ib][ipu]!=0) m_neighs[ib][ipu]->set(neighbitset);   
+        }
+
+#if _DEBUG_RAWDATA_2_==1
+      if (m_neighs[ib][ipu]!=0) {
+        std::cout<<"-- PB"<<ib<<" PU"<<ipu<<std::endl; 
+        // Cross check (only when all inputs forced to 1)
+        std::vector<LHCb::MuonTileID> mids = m_neighs[ib][ipu]->getTileVector();
+//         for (int ii=17-1;ii>-1;--ii){
+//           for (int iii=16-1;iii>-1;--iii){
+//             if (mids[ii*16+iii].isValid()) {
+//               if (!m_neighs[ib][ipu]->test(ii*16+iii)){
+//                 std::cout << "L0Muon::ProcRawCnv::decodeBank Neigh   !!! en moins : "<<mids[ii*16+iii].toString()
+//                           <<" @ pos"<<ii*16+iii
+//                           <<" word "<<ii<<" bit "<<iii<<std::endl;
+//               }
+//             } 
+//             if (m_neighs[ib][ipu]->test(ii*16+iii)){
+//               if (!mids[ii*16+iii].isValid()) {
+//                 std::cout << "L0Muon::ProcRawCnv::decodeBank Neigh   !!! en plus  : "<<mids[ii*16+iii].toString()
+//                           <<" @ pos"<<ii*16+iii
+//                           <<" word "<<ii<<" bit "<<iii<<std::endl;
+//               }
+//             }
+//           }
+//         }
+        
+        
+        boost::dynamic_bitset<> model(17*16);
+        for (int ii=17*16-1;ii>-1;--ii){
+          if (mids[ii].isValid()) model.set(ii);
+        }
+        std::cout << "L0Muon::ProcRawCnv::decodeBank Neigh   PER LINK"<<std::endl;
+        boost::dynamic_bitset<> link;
+        boost::dynamic_bitset<> link2;
+        
+        link.resize(17*16);
+        link=neighbitset>>244;
+        link.resize(28);
+        link2.resize(17*16);
+        link2=model>>244;
+        link2.resize(28);
+#if _DEBUG_RAWDATA_2_==1
+        std::cout <<"BP SER 1 : "<<link<<std::endl;
+        std::cout <<"BP SER 1 - "<<link2<<std::endl;
+#endif
+        if (link2.count()>0) {
+          std::cout<<"++Neigh :   PB"<<ib<<" PU"<<ipu<<" : BP SER 1";
+          std::cout<<" status "<<((m_errors[ib].ser_link[ipu].value()>>0)&1);
+          if (link!=link2) std::cout<<" missing";
+          std::cout<<std::endl;
+        } else {
+          if (link.count()>0) std::cout<<"++Neigh :   PB"<<ib<<" PU"<<ipu<<" : BP SER 1"<<" excess"<<std::endl;
+        }
+        
+        link.resize(17*16);
+        link=neighbitset>>216;
+        link.resize(28);
+        link2.resize(17*16);
+        link2=model>>216;
+        link2.resize(28);
+#if _DEBUG_RAWDATA_2_==1
+        std::cout <<"BP SER 2 : "<<link<<std::endl;
+        std::cout <<"BP SER 2 - "<<link2<<std::endl;
+#endif
+        if (link2.count()>0) {
+          std::cout<<"++Neigh :   PB"<<ib<<" PU"<<ipu<<" : BP SER 2";
+          std::cout<<" status "<<((m_errors[ib].ser_link[ipu].value()>>1)&1);
+          if (link!=link2) std::cout<<" missing";
+          std::cout<<std::endl;
+        } else {
+          if (link.count()>0) std::cout<<"++Neigh :   PB"<<ib<<" PU"<<ipu<<" : BP SER 2"<<" excess"<<std::endl;
+        }
+     
+        link.resize(17*16);
+        link=neighbitset>>188;
+        link.resize(28);
+        link2.resize(17*16);
+        link2=model>>188;
+        link2.resize(28);
+#if _DEBUG_RAWDATA_2_==1
+        std::cout <<"BP SER 3 : "<<link<<std::endl;
+        std::cout <<"BP SER 3 - "<<link2<<std::endl;
+#endif
+        if (link2.count()>0) {
+          std::cout<<"++Neigh :   PB"<<ib<<" PU"<<ipu<<" : BP SER 3";
+          std::cout<<" status "<<((m_errors[ib].ser_link[ipu].value()>>2)&1);
+          if (link!=link2) std::cout<<" missing";
+          std::cout<<std::endl;
+        } else {
+          if (link.count()>0) std::cout<<"++Neigh :   PB"<<ib<<" PU"<<ipu<<" : BP SER 3"<<" excess"<<std::endl;
+        }
+        
+
+        link.resize(17*16);
+        link=neighbitset>>176;
+        link.resize(12);
+        link2.resize(17*16);
+        link2=model>>176;
+        link2.resize(12);
+#if _DEBUG_RAWDATA_2_==1
+        std::cout <<"BP SER 4 : "<<link<<std::endl;
+        std::cout <<"BP SER 4 - "<<link2<<std::endl;
+#endif
+        if (link2.count()>0) {
+          std::cout<<"++Neigh :   PB"<<ib<<" PU"<<ipu<<" : BP SER 4";
+          std::cout<<" status "<<((m_errors[ib].ser_link[ipu].value()>>3)&1);
+          if (link!=link2) std::cout<<" missing";
+          std::cout<<std::endl;
+        } else {
+          if (link.count()>0) std::cout<<"++Neigh :   PB"<<ib<<" PU"<<ipu<<" : BP SER 4"<<" excess"<<std::endl;
+        }
+     
+        link.resize(17*16);
+        link=neighbitset>>164;
+        link.resize(12);
+        link2.resize(17*16);
+        link2=model>>164;
+        link2.resize(12);
+#if _DEBUG_RAWDATA_2_==1
+        std::cout <<"BP SER 5 : "<<link<<std::endl;
+        std::cout <<"BP SER 5 - "<<link2<<std::endl;
+#endif
+        if (link2.count()>0) {
+          std::cout<<"++Neigh :   PB"<<ib<<" PU"<<ipu<<" : BP SER 5";
+          std::cout<<" status "<<((m_errors[ib].ser_link[ipu].value()>>4)&1);
+          if (link!=link2) std::cout<<" missing";
+          std::cout<<std::endl;
+        } else {
+          if (link.count()>0) std::cout<<"++Neigh :   PB"<<ib<<" PU"<<ipu<<" : BP SER 5"<<" excess"<<std::endl;
+        }
+     
+        link.resize(17*16);
+        link=neighbitset>>152;
+        link.resize(12);
+        link2.resize(17*16);
+        link2=model>>152;
+        link2.resize(12);
+#if _DEBUG_RAWDATA_2_==1
+        std::cout <<"BP SER 6 : "<<link<<std::endl;
+        std::cout <<"BP SER 6 - "<<link2<<std::endl;
+#endif
+        if (link2.count()>0) {
+          std::cout<<"++Neigh :   PB"<<ib<<" PU"<<ipu<<" : BP SER 6";
+          std::cout<<" status "<<((m_errors[ib].ser_link[ipu].value()>>5)&1);
+          if (link!=link2) std::cout<<" missing";
+          std::cout<<std::endl;
+        } else {
+          if (link.count()>0) std::cout<<"++Neigh :   PB"<<ib<<" PU"<<ipu<<" : BP SER 6"<<" excess"<<std::endl;
+        }
+     
+        link.resize(17*16);
+        link=neighbitset>>150;
+        link.resize(2);
+        link2.resize(17*16);
+        link2=model>>150;
+        link2.resize(2);
+#if _DEBUG_RAWDATA_2_==1
+        std::cout <<"BP PAR 5 : "<<link<<std::endl;
+        std::cout <<"BP PAR 5 - "<<link2<<std::endl;
+#endif
+        if (link2.count()>0) {
+          std::cout<<"++Neigh :   PB"<<ib<<" PU"<<ipu<<" : BP PAR 5";
+          std::cout<<" status "<<((m_errors[ib].par_link[ipu].value()>>4)&1);
+          if (link!=link2) std::cout<<" missing";
+          std::cout<<std::endl;
+        } else {
+          if (link.count()>0) std::cout<<"++Neigh :   PB"<<ib<<" PU"<<ipu<<" : BP PAR 5"<<" excess"<<std::endl;
+        }
+     
+        link.resize(17*16);
+        link=neighbitset>>148;
+        link.resize(2);
+        link2.resize(17*16);
+        link2=model>>148;
+        link2.resize(2);
+#if _DEBUG_RAWDATA_2_==1
+        std::cout <<"BP PAR 4 : "<<link<<std::endl;
+        std::cout <<"BP PAR 4 - "<<link2<<std::endl;
+#endif
+        if (link2.count()>0) {
+          std::cout<<"++Neigh :   PB"<<ib<<" PU"<<ipu<<" : BP PAR 4";
+          std::cout<<" status "<<((m_errors[ib].par_link[ipu].value()>>3)&1);
+          if (link!=link2) std::cout<<" missing";
+          std::cout<<std::endl;
+        } else {
+          if (link.count()>0) std::cout<<"++Neigh :   PB"<<ib<<" PU"<<ipu<<" : BP PAR 4"<<" excess"<<std::endl;
+        }
+     
+        link.resize(17*16);
+        link=neighbitset>>146;
+        link.resize(2);
+        link2.resize(17*16);
+        link2=model>>146;
+        link2.resize(2);
+#if _DEBUG_RAWDATA_2_==1
+        std::cout <<"BP PAR 3 : "<<link<<std::endl;
+        std::cout <<"BP PAR 3 - "<<link2<<std::endl;
+#endif
+        if (link2.count()>0) {
+          std::cout<<"++Neigh :   PB"<<ib<<" PU"<<ipu<<" : BP PAR 3";
+          std::cout<<" status "<<((m_errors[ib].par_link[ipu].value()>>2)&1);
+          if (link!=link2) std::cout<<" missing";
+          std::cout<<std::endl;
+        } else {
+          if (link.count()>0) std::cout<<"++Neigh :   PB"<<ib<<" PU"<<ipu<<" : BP PAR 3"<<" excess"<<std::endl;
+        }
+     
+        link.resize(17*16);
+        link=neighbitset>>144;
+        link.resize(2);
+        link2.resize(17*16);
+        link2=model>>144;
+        link2.resize(2);
+#if _DEBUG_RAWDATA_2_==1
+        std::cout <<"BP PAR 2 : "<<link<<std::endl;
+        std::cout <<"BP PAR 2 - "<<link2<<std::endl;
+#endif
+        if (link2.count()>0) {
+          std::cout<<"++Neigh :   PB"<<ib<<" PU"<<ipu<<" : BP PAR 2";
+          std::cout<<" status "<<((m_errors[ib].par_link[ipu].value()>>1)&1);
+          if (link!=link2) std::cout<<" missing";
+          std::cout<<std::endl;
+        } else {
+          if (link.count()>0) std::cout<<"++Neigh :   PB"<<ib<<" PU"<<ipu<<" : BP PAR 2"<<" excess"<<std::endl;
+        }
+     
+        link.resize(17*16);
+        link=neighbitset>>142;
+        link.resize(2);
+        link2.resize(17*16);
+        link2=model>>142;
+        link2.resize(2);
+#if _DEBUG_RAWDATA_2_==1
+        std::cout <<"BP PAR 1 : "<<link<<std::endl;
+        std::cout <<"BP PAR 1 - "<<link2<<std::endl;
+#endif
+        if (link2.count()>0) {
+          std::cout<<"++Neigh :   PB"<<ib<<" PU"<<ipu<<" : BP PAR 1";
+          std::cout<<" status "<<((m_errors[ib].par_link[ipu].value()>>0)&1);
+          if (link!=link2) std::cout<<" missing";
+          std::cout<<std::endl;
+        } else {
+          if (link.count()>0) std::cout<<"++Neigh :   PB"<<ib<<" PU"<<ipu<<" : BP PAR 1"<<" excess"<<std::endl;
+        }
+     
+        link.resize(17*16);
+        link=neighbitset>>130;
+        link.resize(12);
+        link2.resize(17*16);
+        link2=model>>130;
+        link2.resize(12); 
+#if _DEBUG_RAWDATA_2_==1
+        std::cout <<"CROS     : "<<link<<std::endl;
+        std::cout <<"CROS     - "<<link2<<std::endl;
+#endif
+     
+        link.resize(17*16);
+        link=neighbitset>>48;
+        link.resize(81);
+        link2.resize(17*16);
+        link2=model>>48;
+        link2.resize(81);
+#if _DEBUG_RAWDATA_2_==1
+        std::cout <<"HORI     : "<<link<<std::endl;
+        std::cout <<"HORI     - "<<link2<<std::endl;
+#endif
+     
+        link.resize(17*16);
+        link=neighbitset>>6;
+        link.resize(42);
+        link2.resize(17*16);
+        link2=model>>6;
+        link2.resize(42);
+#if _DEBUG_RAWDATA_2_==1
+        std::cout <<"VERT     : "<<link<<std::endl;
+        std::cout <<"VERT     - "<<link2<<std::endl;
+#endif
+     
+        link.resize(17*16);
+        link=neighbitset>>0;
+        link.resize(6);
+        link2.resize(17*16);
+        link2=model>>0;
+        link2.resize(6);
+#if _DEBUG_RAWDATA_2_==1
+        std::cout <<"EMPTY    : "<<link<<std::endl;
+        std::cout <<"EMPTY    - "<<link2<<std::endl;
+#endif
+      }
+
+      if (m_neighs[ib][ipu]!=0) {
+        
+        std::cout << "L0Muon::ProcRawCnv::decodeBank Neigh   cross check"<<std::endl;
+        std::vector<LHCb::MuonTileID> mids = m_neighs[ib][ipu]->getTileVector();
+        //         std::cout << "L0Muon::ProcRawCnv::decodeBank Neigh   model"<<std::endl;
+        //         for (int ii=17-1;ii>-1;--ii){
+        //           int wd=0;
+        //           for (int iii=16-1;iii>-1;--iii){
+        //             if (mids[ii*16+iii].isValid()) wd|=1<<iii;
+        //             if (mids[ii*16+iii].isValid())
+        //               std::cout<<(mids[ii*16+iii].station()+1);
+        //             else if (mids[ii*16+iii].layout().xGrid()!=0 && mids[ii*16+iii].layout().xGrid()!=0)
+        //               std::cout<<"?";
+        //             else
+        //               std::cout<<"x";
+        //           }
+        //           std::cout<<" "<<std::hex<<wd<<std::dec<<" "<<(ii)<<" "<<(ii*16+15)<<" <- "<<(ii*16)<<std::endl;
+        //         }
+        int nexpected=0;
+        for (int ii=17-1;ii>-1;--ii){
+          for (int iii=16-1;iii>-1;--iii){
+            if (mids[ii*16+iii].isValid()) ++nexpected;
+          }
+        }
+        
+        std::vector<LHCb::MuonTileID> pads = m_neighs[ib][ipu]->firedTiles();
+        std::cout << "L0Muon::ProcRawCnv::decodeBank Neigh number of bits fired= "<<pads.size()<<std::endl;
+        for (std::vector<LHCb::MuonTileID>::iterator it=pads.begin(); it<pads.end();++it){
+          if (!it->isValid())
+            std::cout << "L0Muon::ProcRawCnv::decodeBank   NOT VALID  "<<it->toString()<<std::endl;
+        }
+        
+        std::cout << "L0Muon::ProcRawCnv::decodeBank Neigh   bits found in"
+                  <<" buffer= "<<neighbitset.count()
+                  <<" register= "<<pads.size()
+                  <<" model= "<<nexpected;
+        if ( (neighbitset.count()!=pads.size()) || (neighbitset.count()!=nexpected) ) 
+          std::cout << "!!!!!!!!!!!!!!!!!!!!!!!! ERROR -- PB"<<ib<<" PU"<<ipu;
+        std::cout<<std::endl; 
+        std::cout<<"--"<<std::endl; 
+      }
+#endif
+
+      } // End of loop over PUs in board : neigh data
+    } // End of 3rd loop over boards in PP : neigh data
+    
+  } // End of loop over PPs
+  for (int ib=0; ib<12; ++ib)  m_errors[ib].decoding.set(decodingError[ib]);
+  
+  // Reset registers of a board if a decoding error has been detected
+  for (int ib=0; ib<12; ++ib){
+    if (decodingError[ib]>0) {
+      m_candRegHandlerBCSU[ib].clear();
+      for (int ipu = 0; ipu<4; ++ipu) {
+        m_candRegHandlerPU[ib][ipu].clear();
+        m_ols[ib][ipu]->reset();
+        m_neighs[ib][ipu]->reset();
+      }
+      if (debug) std::cout<<"\tL0Muon::ProcRawCnv::decodeBank decodingError !!! DECODING ERROR !!! board "<<ib<<std::endl;
+    }
+  }
+
+  ++m_n_decoded_banks;
+  
 }
 
 

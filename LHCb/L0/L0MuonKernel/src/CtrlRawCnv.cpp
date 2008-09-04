@@ -7,6 +7,7 @@
 
 #include "L0MuonKernel/CtrlRawErrors.h"
 
+#define _DEBUG_RAWDATA_  0
 /**
    Constructor.
 */
@@ -142,6 +143,14 @@ void L0Muon::CtrlRawCnv::decodeBank(const std::vector<unsigned int> &raw, int ba
                                     int &Refl0EventNumber, int &Refl0_B_Id){
 
   if (bankVersion<1) return;
+
+  if (bankVersion==1) decodeBank_v1(raw,Refl0EventNumber,Refl0_B_Id);
+
+  if (bankVersion==2) decodeBank_v2(raw,Refl0EventNumber,Refl0_B_Id);
+  
+}
+
+void L0Muon::CtrlRawCnv::decodeBank_v1(const std::vector<unsigned int> &raw, int &Refl0EventNumber, int &Refl0_B_Id){
 
   unsigned int word;
   unsigned int empty;
@@ -568,6 +577,270 @@ void L0Muon::CtrlRawCnv::decodeBank(const std::vector<unsigned int> &raw, int ba
   }
   ++m_n_decoded_banks;
   return;
+}
+
+void L0Muon::CtrlRawCnv::decodeBank_v2(const std::vector<unsigned int> &raw, int &Refl0EventNumber, int &Refl0_B_Id){
+
+  unsigned int word;
+  unsigned int empty;
+  
+  // temporary !!!
+  std::vector<unsigned int> original = raw;
+
+  // Clear the registers first
+  release();
+  m_activ = true;
+  
+  int decodingError[2];
+  for (int iq=0; iq<2; ++iq){
+    decodingError[iq]=0;
+  }
+
+  // =========================
+  // TELL1 NON-COMPRESSED BANK
+  // =========================
+
+  //   //   unsigned int header = raw[0];
+  
+  int iwd=0;
+  
+  // 1st Loop over quarters
+  for (int iq=0; iq<2; ++iq) {
+    int l0_B_Id, l0EventNumber;
+
+    // first word contains evt num & crate index
+    word = raw[iwd];
+    l0EventNumber = ((word>> 0)&0xFFF);
+    Refl0EventNumber  = Refl0EventNumber==-1 ? l0EventNumber : Refl0EventNumber;      
+    m_errors[iq].l0EventNumber[0].set(l0EventNumber,Refl0EventNumber);
+    l0EventNumber = ((word>>16)&0xFFF);
+    m_errors[iq].l0EventNumber[1].set(l0EventNumber,Refl0EventNumber);
+
+    m_errors[iq].board_index[0].set((word>>12)&0x3,m_side*2+iq) ;
+    m_errors[iq].board_index[1].set((word>>28)&0x3,m_side*2+iq) ;
+
+    empty = ((word>>14)&0x3);
+    if (empty!=0) {
+      ++decodingError[iq];
+#if _DEBUG_RAWDATA_==1
+      std::cout<<"L0Muon::CtrlRawCnv::decodeBank decodingError Q"<<m_side*2+iq<<" A"<<std::endl;
+#endif
+    }
+    empty = ((word>>30)&0x3);
+    if (empty!=0) {
+      ++decodingError[iq];
+#if _DEBUG_RAWDATA_==1
+      std::cout<<"L0Muon::CtrlRawCnv::decodeBank decodingError Q"<<m_side*2+iq<<" B"<<std::endl;
+#endif
+    }
+
+    ++iwd;
+
+    // 2nd word contains L0BID 
+    word = raw[iwd];
+    l0_B_Id       = ((word>>0)&0xFFF);    
+    Refl0_B_Id  = Refl0_B_Id==-1 ? l0_B_Id : Refl0_B_Id;
+    m_errors[iq].l0_B_Id[0].set(l0_B_Id,Refl0_B_Id);
+    l0_B_Id       = ((word>>16)&0xFFF);    
+    m_errors[iq].l0_B_Id[1].set(l0_B_Id,Refl0_B_Id);
+
+    empty = ((word>>14)&0x3);
+    if (empty!=0) {
+      ++decodingError[iq];
+#if _DEBUG_RAWDATA_==1
+      std::cout<<"L0Muon::CtrlRawCnv::decodeBank decodingError Q"<<m_side*2+iq<<" C"<<std::endl;
+#endif
+    }
+    empty = ((word>>30)&0x3);
+    if (empty!=0) {
+      ++decodingError[iq];
+#if _DEBUG_RAWDATA_==1
+      std::cout<<"L0Muon::CtrlRawCnv::decodeBank decodingError Q"<<m_side*2+iq<<" D"<<std::endl;
+#endif
+    }
+
+    ++iwd;
+
+    // Next 2 words are candidates best pair
+    for (int icand=0; icand<2; ++icand){
+      word = raw[iwd];
+      m_candRegHandler[iq].setCandOffM1( ( (word    )&0x0F),icand);
+      m_candRegHandler[iq].setCandOffM2( ( (word>> 4)&0x0F),icand);
+      m_candRegHandler[iq].setCandPU(    ( (word>> 8)&0x03),icand);
+      m_candRegHandler[iq].setCandBoard( ( (word>>12)&0x0F),icand);
+      m_candRegHandler[iq].setCandPT(    ( (word>>16)&0x7F),icand);
+      m_candRegHandler[iq].setCandColM3( ( (word>>24)&0x1F),icand);
+      m_candRegHandler[iq].setCandRowM3( ( (word>>29)&0x03),icand);
+
+      empty =(word&0x80800C00);
+      if (empty!=0) {
+        ++decodingError[iq];
+#if _DEBUG_RAWDATA_==1
+        std::cout<<"L0Muon::CtrlRawCnv::decodeBank decodingError Q"<<m_side*2+iq<<" E"<<std::endl;
+#endif
+      }
+
+      ++iwd;
+    }
+    
+    // Next word : charge , status & bcid
+    word=raw[iwd];
+    m_errors[iq].su_bcid_best.set(word&0xF,Refl0_B_Id);
+    m_candRegHandler[iq].setStatus(    ( (word>> 4)&0x0F) );
+    m_candRegHandler[iq].setCandCharge(( (word>> 8)&0x01),1);
+    m_candRegHandler[iq].setCandCharge(( (word>>12)&0x01),0);
+    m_errors[iq].cu_bcid_best.set((word>>16)&0xF,Refl0_B_Id);
+
+    empty =(word&0xFFF0EE00);
+    if (empty!=0) {
+      ++decodingError[iq];
+#if _DEBUG_RAWDATA_==1
+      std::cout<<"L0Muon::CtrlRawCnv::decodeBank decodingError Q"<<m_side*2+iq<<" F"<<std::endl;
+#endif
+    }
+
+    int status =m_candRegHandler[iq].getStatus();
+    m_errors[iq].su_status.set(status);
+
+    int ncand = m_candRegHandler[iq].numberOfCandidates();
+    //std::cout<<"L0Muon::CtrlRawCnv::decodeBank ncand= "<<ncand<<" Q"<<m_side*2+iq<<std::endl;
+    for( int icand =0; icand<ncand;++icand) {
+      m_candRegHandler[iq].setCandQuarter(m_side*2+iq,icand);
+    }
+
+    ++iwd;
+
+    // Next word : bcids CU & SU
+    word=raw[iwd];
+    m_errors[iq].su_bcid.set((word>>0)&0xF,Refl0_B_Id);
+    m_errors[iq].cu_bcid.set((word>>4)&0xF,Refl0_B_Id);
+    m_errors[iq].err_bcid.set((word>>8)&0x1);
+
+    empty =(word&0xFFFFFE00);
+    if (empty!=0) {
+      ++decodingError[iq];
+#if _DEBUG_RAWDATA_==1
+      std::cout<<"L0Muon::CtrlRawCnv::decodeBank decodingError Q"<<m_side*2+iq<<" G"<<std::endl;
+#endif
+    }
+
+    ++iwd;
+
+    
+  } // End of 1st loop over quarters
+
+  // 2nd Loop over quarters
+  for (int iq=0; iq<2; ++iq) {
+
+    // Next 3 words : link errors
+    for (int i=0; i<3; ++i){
+      word=raw[iwd];
+      for (int ii=0; ii<4; ++ii){
+        int ib=i*4+ii;
+        m_errors[iq].pb_link_su[ib].set((word>>(32-(4*(ii+1))))&3);
+        m_errors[iq].pb_link_cu[ib].set((word>>(16-(4*(ii+1))))&3);
+      }
+      empty =(word&0xCCCCCCCC);
+      if (empty!=0) {
+        ++decodingError[iq];
+#if _DEBUG_RAWDATA_==1
+        std::cout<<"L0Muon::CtrlRawCnv::decodeBank decodingError Q"<<m_side*2+iq<<" H"<<std::endl;
+#endif
+      }
+      ++iwd;
+    }
+    
+    // Next words : PB candidates
+    for (int ib=0; ib<12; ++ib) {
+      // Adresses & PT
+      for (int icand=0; icand<2; ++icand){
+        word = raw[iwd];
+        m_candRegHandlerBCSU[iq][ib].setCandOffM1( ( (word    )&0x0F),icand);
+        m_candRegHandlerBCSU[iq][ib].setCandOffM2( ( (word>> 4)&0x0F),icand);
+        m_candRegHandlerBCSU[iq][ib].setCandPU(    ( (word>> 8)&0x03),icand);
+        m_candRegHandlerBCSU[iq][ib].setCandCharge(( (word>>12)&0x01),icand);
+        m_candRegHandlerBCSU[iq][ib].setCandPT(    ( (word>>16)&0x7F),icand);
+        m_candRegHandlerBCSU[iq][ib].setCandColM3( ( (word>>24)&0x1F),icand);
+        m_candRegHandlerBCSU[iq][ib].setCandRowM3( ( (word>>29)&0x03),icand);
+
+        empty =(word&0x8080EC00);
+        if (empty!=0) {
+          ++decodingError[iq];
+#if _DEBUG_RAWDATA_==1
+          std::cout<<"L0Muon::CtrlRawCnv::decodeBank decodingError Q"<<m_side*2+iq<<" I"<<std::endl;
+#endif
+        }
+        
+        ++iwd;
+      }
+
+      // BCID, charge & status
+      word = raw[iwd];
+      m_errors[iq].bcsus_bcid_su[ib].set(word&0xF,Refl0_B_Id);
+      m_candRegHandlerBCSU[iq][ib].setStatus(    ( (word>> 4)&0x0F) );
+      m_errors[iq].bcsus_bcid_cu[ib].set((word>>16)&0xF,Refl0_B_Id);
+      
+      empty =(word&0xCFF0CF00);
+      if (empty!=0) {
+        ++decodingError[iq];
+#if _DEBUG_RAWDATA_==1
+        std::cout<<"L0Muon::CtrlRawCnv::decodeBank decodingError Q"<<m_side*2+iq<<" J"<<std::endl;
+#endif
+      }
+      ++iwd;
+                                 
+      int status =m_candRegHandler[iq].getStatus();
+      m_errors[iq].su_status.set(status);
+
+      int ncand = m_candRegHandler[iq].numberOfCandidates();
+      //std::cout<<"L0Muon::CtrlRawCnv::decodeBank ncand= "<<ncand<<" Q"<<m_side*2+iq<<" ib= "<<ib<<std::endl;
+      for( int icand =0; icand<ncand;++icand) {
+        m_candRegHandlerBCSU[iq][ib].setCandBoard(ib,icand);
+        m_candRegHandlerBCSU[iq][ib].setCandQuarter(m_side*2+iq,icand);
+      }
+    }
+
+    // Next word : unused
+    ++iwd;
+    
+  }// End of 2nd loop over quarters
+
+//   // temporary check
+//   std::vector<unsigned int> tmp;
+//   rawBank(tmp,bankVersion);
+//   for (int iq=0; iq<2; ++iq){
+//     for (unsigned int i=0; i<L0Muon::CtrlRawCnv::board_full_data_size;++i){
+//       unsigned int iw = iq*L0Muon::CtrlRawCnv::board_full_data_size+i;
+//       if (tmp[iw]!=original[iw]) {
+//         if (decodingError[iq]==0){
+//           ++decodingError[iq];
+// //           std::cout<<"L0Muon::CtrlRawCnv::decodeBank decodingError Q"<<m_side*2+iq<<" AE"<<std::endl;
+// //           std::cout<<"\t !!! L0Muon::CtrlRawCnv::decodeBank !!! ERROR !!! line "<<iw<<" Q"<<m_side*2+iq
+// //                    <<std::hex<<" rebuild= 0x"<<tmp[iw]<<" VS original= 0x"<<original[iw]<<std::dec<<std::endl;
+//         }
+//       }
+//     }
+//   }
+
+  for (int iq=0; iq<2; ++iq) m_errors[iq].decoding.set(decodingError[iq]);
+
+  // Reset registers of a board if a decoding error has been detected
+  for (int iq=0; iq<2; ++iq){
+    if (decodingError[iq]>0) {
+      m_candRegHandler[iq].clear();
+      for (int ib = 0; ib<12; ++ib) {
+        m_candRegHandlerBCSU[iq][ib].clear();
+      } 
+#if _DEBUG_RAWDATA_==1
+      std::cout<<"\tL0Muon::CtrlRawCnv::decodeBank !!! DECODING ERROR !!! Q"<<m_side*2+iq<<std::endl;
+#endif
+    }
+  }
+
+  ++m_n_decoded_banks;
+
+  return;
+
 }
 
 // void L0Muon::CtrlRawCnv::setErrors(int L0EventNum, int L0_B_Id){

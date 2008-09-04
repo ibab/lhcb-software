@@ -68,6 +68,9 @@ namespace L0Muon {
 
   private:
     
+    void decodeBank_v1(const std::vector<unsigned int> &raw, int &RefL0EventNumber, int &RefL0_B_Id);
+    void decodeBank_v2(const std::vector<unsigned int> &raw, int &RefL0EventNumber, int &RefL0_B_Id);
+
     bool m_activ;
     int m_n_decoded_banks;    
     int m_side;

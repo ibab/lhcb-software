@@ -1,4 +1,4 @@
-// $Id: CtrlRawErrors.cpp,v 1.1 2008-04-02 12:45:50 jucogan Exp $
+// $Id: CtrlRawErrors.cpp,v 1.2 2008-09-04 08:25:41 jucogan Exp $
 // Include files 
 
 
@@ -9,7 +9,7 @@
 L0Muon::CtrlRawErrors::CtrlRawErrors()
 {
 
-  decoding = L0Muon::ErrorHandler(" %01X",0x00F);
+  decoding = L0Muon::ErrorHandler(" %08X",0xFFFFFFFF);
   for (int ich=0; ich<2; ++ich){
     board_index[ich]  =  L0Muon::ErrorHandler(" %01X",0x00F);
     l0EventNumber[ich]=  L0Muon::ErrorHandler(" %03X",0xFFF);

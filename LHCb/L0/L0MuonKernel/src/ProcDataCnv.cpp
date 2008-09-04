@@ -288,22 +288,25 @@ int L0Muon::ProcDataCnv::decodeBank_v2(const std::vector<unsigned int> & raw)
   bool compressed =  false;
 #if _DET_SPEC_HEADER_==1
   static unsigned int nheader =1;
-  unsigned int nOLwords= (raw[0] & 0xFFFF)/2; 
+  //  unsigned int nOLwords= (raw[0] & 0xFFFF)/2; 
+  unsigned int nOLbytes= (raw[0] & 0xFFFF);
+  unsigned int nOLwords= (nOLbytes+2)/4;
   compressed = (raw[0]>>31)&1;
 #else
   static unsigned int nheader = 0;
+  unsigned int nOLbytes = PB_OpticalLinks_size*12*4;
   unsigned int nOLwords = PB_OpticalLinks_size*12;
 #endif
 
 #if _DEBUG_PROCDATA_ >0
   std::cout<<"L0Muon::ProcDataCnv::decodeBank (v2) "
            <<" nheader= "<<nheader
+           <<" nOLbytes= "<<nOLbytes
            <<" nOLwords= "<<nOLwords
            <<" compressed= "<<compressed
            <<std::endl;
 #endif
 
-  unsigned int iwd=nheader;
 
   for (int ib=0; ib<12; ++ib)  m_errors[ib].present.set(1);
   
@@ -318,7 +321,8 @@ int L0Muon::ProcDataCnv::decodeBank_v2(const std::vector<unsigned int> & raw)
   //for (int ib=0; ib<12; ++ib)  m_errors[ib].decoding.set(1);
 
   
-  int ibit=31;
+  unsigned int iwd=nheader;
+  int ibit=-1;
   for (int ib =0; ib<12; ++ib) 
   { // Loop over processing boards
 
@@ -377,12 +381,7 @@ int L0Muon::ProcDataCnv::decodeBank_v2(const std::vector<unsigned int> & raw)
     
     if (((ib+1)%3)==0) 
     { // take care of padding bits at the end of each PP
-      if (ibit<16) {
-        ++iwd;
-        ibit=31;
-      } else if (ibit<31) {
-        ibit=15;
-      }
+      ibit=16*((ibit+16)/16)-1;
 #if _DEBUG_PROCDATA_ >0
     std::cout<<"L0Muon::ProcDataCnv::decodeBank OLs board# "<<ib
              <<" AFTER   PADDING"
@@ -395,11 +394,6 @@ int L0Muon::ProcDataCnv::decodeBank_v2(const std::vector<unsigned int> & raw)
     } // end padding
   } // End loop over processing boards
   
-  if (ibit<16) {
-    ++iwd;
-    ibit=31;
-  }
-
 #if _DEBUG_PROCDATA_ >0
   std::cout<<"L0Muon::ProcDataCnv::decodeBank "
            <<" OL decoding done ..."
@@ -408,18 +402,24 @@ int L0Muon::ProcDataCnv::decodeBank_v2(const std::vector<unsigned int> & raw)
            <<std::endl;
 #endif
   
+  // Skip the end of the word after first part of bank 
+  if (ibit!=-1) { // if no compression, we are already at next word
+    ++iwd;
+    ibit=-1;
+  }
+
   if (iwd!=(nOLwords+nheader)) {
     // ERROR 
 #if _DEBUG_PROCDATA_ >0
     std::cout<<"L0Muon::ProcDataCnv::decodeBank ERROR  end of 1st part current word ("<<iwd
-             <<") does'nt match 1st part size ("<<(nOLwords+nheader)<<")"
+             <<") doesn't match 1st part size ("<<(nOLwords+nheader)<<")"
              <<std::endl;
 #endif
     for (int ib=0; ib<12; ++ib)  m_errors[ib].decoding.set(decoding_error[ib]);
     return -1;
   }
 
-  if ((nOLwords+nheader)==raw.size()) {
+  if (iwd==raw.size()) {
     // the 2nd part was not activated : stop here
     for (int ib=0; ib<12; ++ib)  m_errors[ib].decoding.set(decoding_error[ib]);
     return 1;
@@ -429,7 +429,6 @@ int L0Muon::ProcDataCnv::decodeBank_v2(const std::vector<unsigned int> & raw)
   //--- 2nd part 
   //
   
-  ibit=31;
   for (int ib =0; ib<12; ++ib) 
   { // Loop over processing boards
     int ok;
@@ -488,12 +487,8 @@ int L0Muon::ProcDataCnv::decodeBank_v2(const std::vector<unsigned int> & raw)
     
     if (((ib+1)%3)==0) 
     { // take care of padding bits at the end of each PP
-      if (ibit<16) {
-        ++iwd;
-        ibit=31;
-      } else if (ibit<31) {
-        ibit=15;
-      }
+      //ibit=32*((ibit+32)/32)-1;
+      ibit=31;
 #if _DEBUG_PROCDATA_ >0
     std::cout<<"L0Muon::ProcDataCnv::decodeBank Neigh board# "<<ib
              <<" AFTER   PADDING"
@@ -505,10 +500,7 @@ int L0Muon::ProcDataCnv::decodeBank_v2(const std::vector<unsigned int> & raw)
     } // end padding
   } // Enf of loop over processing boards
 
-  if (ibit<16) {
-    ++iwd;
-    ibit=31;
-  }
+
 #if _DEBUG_PROCDATA_ >0
   std::cout<<"L0Muon::ProcDataCnv::decodeBank "
            <<" Neigh decoding done ..."
@@ -516,6 +508,12 @@ int L0Muon::ProcDataCnv::decodeBank_v2(const std::vector<unsigned int> & raw)
            <<" last_bit  ="<<ibit
            <<std::endl;
 #endif
+
+  // Skip the end of the word after first part of bank 
+  if (ibit!=-1) { // if no compression, we are already at next word
+    ++iwd;
+    ibit=-1;
+  }
 
   if (iwd!=raw.size()) {
     //ERROR
@@ -853,61 +851,312 @@ int L0Muon::ProcDataCnv::notcompressedPBWords_to_bitset(const std::vector<unsign
   return 1;
 }
 
+int L0Muon::ProcDataCnv::next_bit(const std::vector<unsigned int> & raw, unsigned int &iwd, int &ibit)
+{
+//   if (ibit==0) {
+//     ++iwd;
+//     ibit=32;
+//   }
+//   --ibit;
+//   if (iwd>=raw.size()) return -1;
+//   return (raw[iwd]>>ibit)&1;
+  if (ibit==31) {
+    ++iwd;
+    ibit=-1;
+  }
+  ++ibit;
+  if (iwd>=raw.size()) return -1;
+  return (raw[iwd]>>ibit)&1;
+}
+
 int L0Muon::ProcDataCnv::compressedPBWords_to_bitset(const std::vector<unsigned int> & raw,const int size_in_word,
                                                      unsigned int &iwd,int &ibit,
                                                      boost::dynamic_bitset<> & bitset)
 {
-  int remains=0;
-  int counter=0;
+  int bitset_size=size_in_word*32;
 
-  int size=size_in_word*32;
+  bitset.clear();
+  bitset.resize(bitset_size);
+  int bitset_index=bitset_size;
   
-  while (iwd<raw.size())
-  { // Loop over bank words
-    unsigned int reversed_word=raw[iwd];
-    unsigned int word=0;
-    for (int ibyte=0; ibyte<4; ++ibyte)
-    { // Loop over bytes in the correct order
-      int byte=(reversed_word>>(ibyte*8))&0xFF;
-      word|=(byte<<((3-ibyte)*8));
-    } // End of loop over bytes in the correct order
-    while (ibit>-1) 
-    { // Loop over bits in word
-      int bit=(word>>ibit)&1; // current bit
-      if (remains==0) 
-      {  // the current bit is a control bit 
-        if (bit==0) 
-        { // control bit is '0' means the uncompressed sequence is 32 zeros
-          bitset.resize(bitset.size()+32);
-        }  
-        else 
-        { // control bit is '1' means the next 5 bits is a counter encoding the number of zeros
-          remains=5;
-        }
-      } 
-      else 
-      { // the current bit is part of the counter encoding the number of zeros 
-        --remains;
-        counter|=(bit<<remains);
-        if (remains==0) 
-        { // counter is complete
-          bitset.resize(bitset.size()+counter);
-          counter=0;
-          if ((bitset.size() % (size))!=0) bitset.push_back(1);
-          if ((bitset.size() % (size))==0) 
-          { // the PB field is complete  
-            return 1;
-          }
-        } // end counter is complete
+  boost::dynamic_bitset<> bitset_of_32_ones(32); bitset_of_32_ones.flip();
+  boost::dynamic_bitset<> bitset_of_16_ones(16); bitset_of_16_ones.flip();
+
+  for (int iw=0; iw<size_in_word; ++iw) { // Loop over the number of original words
+#if _DEBUG_PROCDATA_ >0
+    std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset iwd= "<<iwd
+             <<" word: 0x"<<std::hex<<raw[iwd]<<std::dec
+             <<" ibit= "<<ibit<<std::endl;
+#endif
+    
+    // Get the key
+    int key=0; 
+    for(int i=1;i>-1;--i){
+      int bit = next_bit(raw,iwd,ibit);
+      key|=(bit<<i);
+    }
+    
+#if _DEBUG_PROCDATA_ >0
+    std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset key= "<<key<<std::endl;
+#endif
+#if _DEBUG_PROCDATA_ >0
+    std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset bitset size= "<<bitset.size()
+             <<" bitset_index= "<<bitset_index<<std::endl;
+#endif
+   
+    // According to the key, decode the following sequence of bits
+    if (key==0) // '00' -> add 32 '0'
+    {
+#if _DEBUG_PROCDATA_ >0
+      std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset case 00"<<std::endl;
+#endif
+      bitset_index-=32;
+#if _DEBUG_PROCDATA_ >0
+      std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset bitset size= "<<bitset.size()
+               <<" bitset_index= "<<bitset_index<<std::endl;
+#endif
+    }
+
+    else if (key==1) // '01' -> key is not yet complete, seek the next bit 
+    {
+      int bit = next_bit(raw,iwd,ibit);
+      if (bit==1) // '011' -> add 32 '1'
+      {
+#if _DEBUG_PROCDATA_ >0
+        std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset case 011"<<std::endl;
+#endif
+        bitset_index-=32;
+        boost::dynamic_bitset<> b32ones=bitset_of_32_ones;
+        b32ones.resize(bitset_size);
+        b32ones<<=(bitset_index);
+        bitset|=b32ones;
+#if _DEBUG_PROCDATA_ >0
+        std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset bitset size= "<<bitset.size()
+                 <<" bitset_index= "<<bitset_index<<std::endl;
+#endif
       }
-      --ibit;
-    } // End over bits in word
-    ibit=31;
-    ++iwd;
-  } // End of loop over bank words
+      else // '010' -> add 16 '1' and the 16 next bits
+      {
+#if _DEBUG_PROCDATA_ >0
+        std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset case 010"<<std::endl;
+#endif
+        bitset_index-=16;
+        boost::dynamic_bitset<> b16ones=bitset_of_16_ones;
+        b16ones.resize(bitset_size);
+        b16ones<<=(bitset_index);
+        bitset|=b16ones;
+#if _DEBUG_PROCDATA_ >0
+        unsigned int debug_word=0;
+#endif
+        for (int i=0; i<16; ++i){
+          int bit = next_bit(raw,iwd,ibit);
+          --bitset_index;
+          if (bit==1) bitset.set(bitset_index);
+#if _DEBUG_PROCDATA_ >0
+          debug_word|=(bit<<(15-i));
+#endif
+        }
+#if _DEBUG_PROCDATA_ >0
+        std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset     0x"<<std::hex<<debug_word<<std::dec<<std::endl;
+#endif
+#if _DEBUG_PROCDATA_ >0
+        std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset bitset size= "<<bitset.size()
+                 <<" bitset_index= "<<bitset_index<<std::endl;
+#endif
+
+      }
+    }
+
+    else if (key==2) // '10' -> decode the position of the ones in the word
+    {
+#if _DEBUG_PROCDATA_ >0
+      std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset case 10"<<std::endl;
+#endif
+      // The number of '1' in the 32 bits original word is encoded on 3 bits 
+      int n_ones=0; 
+      for (int i=2; i>-1; --i){
+        int bit = next_bit(raw,iwd,ibit);
+        n_ones|=(bit<<i);
+      }
+#if _DEBUG_PROCDATA_ >0
+      std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset nb ones : "<<n_ones<<std::endl;
+#endif
+      if (n_ones==0) return -2;
+      if (n_ones>5) return -3;
+
+      // The position of each '1' is encoded on 5 bits
+      for (int k=0; k<n_ones; ++k){
+        int pos=0;
+        for (int i=4; i>-1; --i){
+          int bit = next_bit(raw,iwd,ibit);
+          pos|=(bit<<i);
+        }
+        bitset.set(bitset_index-pos-1);
+      }
+      bitset_index-=32;
+#if _DEBUG_PROCDATA_ >0
+      std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset bitset size= "<<bitset.size()
+               <<" bitset_index= "<<bitset_index<<std::endl;
+#endif
+    }
+
+    else if (key==3) // '11' -> the next 32 bits are uncompressed
+    {
+#if _DEBUG_PROCDATA_ >0
+      std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset case 11"<<std::endl;
+#endif
+      for (int i=0; i<32; ++i){
+        int bit = next_bit(raw,iwd,ibit);
+        --bitset_index;
+        if (bit==1) bitset.set(bitset_index);
+      }
+#if _DEBUG_PROCDATA_ >0
+      std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset bitset size= "<<bitset.size()
+               <<" bitset_index= "<<bitset_index<<std::endl;
+#endif
+
+    } 
+#if _DEBUG_PROCDATA_ >0
+    boost::dynamic_bitset<> debug_bitset =bitset;
+    debug_bitset>>=(bitset_index);
+    debug_bitset.resize(32);
+    unsigned int debug_word=(debug_bitset.to_ulong()&0xFFFFFFFF);
+    std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset decompressed word= 0x"
+             <<std::hex<<debug_word<<std::dec<<std::endl;
+#endif
+
+  } // End of loop over the number of original words
   
-  return -1;
+  // If the end of the word was reach, point to the next 
+  if (ibit==31) {
+    ++iwd;
+    ibit=-1;
+  }
+
+  return 1;
 }
+// int L0Muon::ProcDataCnv::compressedPBWords_to_bitset(const std::vector<unsigned int> & raw,const int size_in_word,
+//                                                      unsigned int &iwd,int &ibit,
+//                                                      boost::dynamic_bitset<> & bitset)
+// {
+
+//   //int size_max=size_in_word*32;
+//   int size=0;
+  
+//   boost::dynamic_bitset<> bitset_of_32_ones(32); bitset_of_32_ones.flip();
+//   boost::dynamic_bitset<> bitset_of_16_ones(16); bitset_of_16_ones.flip();
+
+//   for (int iw=0; iw<size_in_word; ++iw) { // Loop over the number of original words
+// #if _DEBUG_PROCDATA_ >0
+//     std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset iwd= "<<iwd
+//              <<" word: 0x"<<std::hex<<raw[iwd]<<std::dec<<std::endl;
+// #endif
+    
+//     // Get the key
+//     int key=0; 
+//     for(int i=1;i>-1;--i){
+//       int bit = next_bit(raw,iwd,ibit);
+//       key|=(bit<<i);
+//     }
+    
+// #if _DEBUG_PROCDATA_ >0
+//     std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset key= "<<key<<std::endl;
+// #endif
+   
+//     // According to the key, decode the following sequence of bits
+//     if (key==0) // '00' -> add 32 '0'
+//     {
+// #if _DEBUG_PROCDATA_ >0
+//       std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset case 00"<<std::endl;
+// #endif
+//       size+=32;
+//       bitset.resize(size);
+//     }
+
+//     else if (key==1) // '01' -> key is not yet complete, seek the next bit 
+//     {
+//       int bit = next_bit(raw,iwd,ibit);
+//       if (bit==1) // '011' -> add 32 '1'
+//       {
+// #if _DEBUG_PROCDATA_ >0
+//         std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset case 011"<<std::endl;
+// #endif
+//         size+=32;
+//         bitset.resize(size);
+//         boost::dynamic_bitset<> b32ones=bitset_of_32_ones;
+//         b32ones.resize(size);
+//         b32ones<<=(size-32);
+//         bitset|=b32ones;
+//       }
+//       else // '010' -> add 16 '1' and the 16 next bits
+//       {
+// #if _DEBUG_PROCDATA_ >0
+//         std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset case 010"<<std::endl;
+// #endif
+//         size+=32;
+//         bitset.resize(size);
+//         boost::dynamic_bitset<> b16ones=bitset_of_16_ones;
+//         b16ones.resize(size);
+//         b16ones<<=(size-16);
+//         bitset|=b16ones;
+//         for (int i=0; i<16; ++i){
+//           int bit = next_bit(raw,iwd,ibit);
+//           if (bit==1) bitset.set(size-i);
+//         }
+//       }
+//     }
+
+//     else if (key==2) // '10' -> decode the position of the ones in the word
+//     {
+// #if _DEBUG_PROCDATA_ >0
+//       std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset case 10"<<std::endl;
+// #endif
+//       // The number of '1' in the 32 bits original word is encoded on 3 bits 
+//       int n_ones=0; 
+//       for (int i=2; i>-1; --i){
+//         int bit = next_bit(raw,iwd,ibit);
+//         n_ones|=(bit<<i);
+//       }
+//       if (n_ones==0) return -2;
+//       if (n_ones>5) return -3;
+
+//       size+=32;
+//       bitset.resize(size);
+
+//       // The position of each '1' is encoded on 5 bits
+//       for (int k=0; k<n_ones; ++k){
+//         int pos=0;
+//         for (int i=4; i>-1; --i){
+//           int bit = next_bit(raw,iwd,ibit);
+//           pos|=(bit<<i);
+//         }
+//         bitset.set(size-pos);
+//       }
+//     }
+
+//     else if (key==3) // '11' -> the next 32 bits are uncompressed
+//     {
+// #if _DEBUG_PROCDATA_ >0
+//       std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset case 11"<<std::endl;
+// #endif
+//       size+=32;
+//       bitset.resize(size);
+//       for (int i=0; i<32; ++i){
+//         int bit = next_bit(raw,iwd,ibit);
+//         if (bit==1) bitset.push_back(size-i);
+//       }
+//     } 
+
+//   } // End of loop over the number of original words
+  
+//   // If the end of the word was reach, point to the next 
+//   if (ibit==31) {
+//     ++iwd;
+//     ibit=-1;
+//   }
+
+//   return 1;
+// }
   
 
 int L0Muon::ProcDataCnv::rawBank_v2(std::vector<unsigned int> &raw, int mode, bool compression)
@@ -988,6 +1237,15 @@ int L0Muon::ProcDataCnv::setRegisters_for_PB_OpticalLinks(int iboard, boost::dyn
 {
     int current_size;
     
+#if _DEBUG_PROCDATA_ >0
+    unsigned int x=0xFFFF0000;
+    boost::dynamic_bitset<> bitset1(32,x);
+    unsigned int y=0x0000FFFF;
+    boost::dynamic_bitset<> bitset2(32,y);
+    std::cout << "L0Muon::ProcDataCnv::decodeBank bitset1 size= "<<bitset1.size()<<" "<<bitset1<<std::endl;
+    std::cout << "L0Muon::ProcDataCnv::decodeBank bitset2 size= "<<bitset2.size()<<" "<<bitset2<<std::endl;
+    std::cout << "L0Muon::ProcDataCnv::decodeBank bitset  size= "<<bitset.size() <<" "<<bitset <<std::endl;
+#endif
     // Errors
     current_size=bitset.size();
     boost::dynamic_bitset<> errorbitset(current_size);
@@ -999,6 +1257,10 @@ int L0Muon::ProcDataCnv::setRegisters_for_PB_OpticalLinks(int iboard, boost::dyn
       boost::dynamic_bitset<> bitset = (errorbitset>>(ipu*32));
       bitset.resize(32);
       unsigned int word = bitset.to_ulong();
+#if _DEBUG_PROCDATA_ >0
+      std::cout << "L0Muon::ProcDataCnv::decodeBank error word ipu= "<<ipu
+                <<" 0x"<<std::hex<<word<<std::dec<<std::endl;
+#endif
       m_errors[iboard].opt_link[ipu].set( (word>>16)&0xFF);
       m_errors[iboard].ser_link[ipu].set( (word>> 8)&0x3F);
       m_errors[iboard].par_link[ipu].set( (word>> 0)&0xFF);
@@ -1036,6 +1298,16 @@ int L0Muon::ProcDataCnv::setRegisters_for_PB_OpticalLinks(int iboard, boost::dyn
                std::cout<<"?";
              else
                std::cout<<"x";
+           }
+           std::cout<<std::endl;
+         }
+         std::cout << "L0Muon::ProcDataCnv::decodeBank OLs   observed"<<std::endl;
+         for (int ii=10-1;ii>-1;--ii){
+           for (int iii=16-1;iii>-1;--iii){
+             if (m_ols[iboard][ipu]->test(ii*16+iii))
+               std::cout<<"1";
+             else
+               std::cout<<"0";
            }
            std::cout<<std::endl;
          }
