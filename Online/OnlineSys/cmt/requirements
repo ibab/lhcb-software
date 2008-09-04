@@ -20,7 +20,7 @@ use DIM               v17r10   Online
 use ExampleGaucho     v3r0     Online
 # Does not work on WIN32
 # use FarmMonitor     v1r0     Online
-use Gaucho            v6r1     Online
+use Gaucho            v6r2     Online
 use GaudiOnline       v2r20    Online
 use GaudiUPI          v1r9     Online
 use GaudiSerialize    v0r1     Online
@@ -32,7 +32,7 @@ use OnlineDummyReader v1r4     Online
 use OnlineHistDB      v4r11    Online
 use OnlineKernel      v1r19    Online
 use OnlineTasks       v1r14    Online
-### use Presenter         v0r10    Online
+use Presenter         v0r11    Online
 use PyDIM             v2r5     Online
 use RateService       v2r2     Online
 use RawBankSizes      v1r4     Online
