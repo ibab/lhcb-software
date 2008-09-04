@@ -15,7 +15,7 @@
 // Physics packages and dependent packages
 #include "$PHYSSYSROOT/options/PhysCoreSys.opts"
 //    ... for physics check on MC data
-#include "$ANALYSISSYSROOT/options/PhysMCSys.opts"
+//#include "$ANALYSISSYSROOT/options/PhysMCSys.opts"
 //--------------------------------------------------------------
 // Get the event time (for CondDb) from ODIN 
 EventClockSvc.EventTimeDecoder = "OdinTimeDecoder";
