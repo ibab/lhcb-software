@@ -4,6 +4,7 @@
 ! Purpose     : Contains the merging algorithms for final RICH PID results
 !-----------------------------------------------------------------------------
 
+!======================= RichPIDMerge v2r6 2008-09-04 =======================
 ! 2008-08-15 - Chris Jones
  - Adapt to change in RichPID copy constructor (pointer to reference)
 
