@@ -1,4 +1,4 @@
-// $Id: LHCbKernelDict.h,v 1.15 2008-09-03 15:36:09 cattanem Exp $
+// $Id: LHCbKernelDict.h,v 1.16 2008-09-04 09:56:47 cattanem Exp $
 #ifndef DICT_LHCBKERNELDICT_H 
 #define DICT_LHCBKERNELDICT_H 1
 
@@ -16,6 +16,7 @@
 #include "Kernel/MuonTileID.h"
 #include "Kernel/MuonLayout.h"
 #include "Kernel/Trajectory.h"
+#include "Kernel/AlignTraj.h"
 #include "Kernel/CircleTraj.h"
 #include "Kernel/LineTraj.h"
 #include "Kernel/ParabolaTraj.h"
