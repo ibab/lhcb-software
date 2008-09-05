@@ -1,4 +1,4 @@
-// $Id: L0MuonMonitor.cpp,v 1.7 2008-07-24 09:36:53 jucogan Exp $
+// $Id: L0MuonMonitor.cpp,v 1.8 2008-09-05 09:07:09 jucogan Exp $
 // Include files 
 
 #include <math.h>
@@ -54,8 +54,8 @@ StatusCode L0MuonMonitor::initialize() {
   debug() << "==> Initialize" << endmsg;
 
   // Tools
-  m_channelHist_l0muon = tool<L0MuonChannelsHistos>( "L0MuonChannelsHistos", "Channels_l0muon", this);
-  m_channelHist_muon = tool<L0MuonChannelsHistos>( "L0MuonChannelsHistos", "Channels_muon", this);
+  m_channelHist_l0muon = tool<L0MuonChannelsHistos>( "L0MuonChannelsHistos", "l0muon", this);
+  m_channelHist_muon = tool<L0MuonChannelsHistos>( "L0MuonChannelsHistos", "muon", this);
   m_muonBuffer=tool<IMuonRawBuffer>("MuonRawBuffer","MuonRawTool", this);
 
   // Run info
@@ -80,8 +80,8 @@ StatusCode L0MuonMonitor::initialize() {
       for (std::vector<int>::iterator its=m_stations.begin(); its<m_stations.end(); ++its){
         int sta = (*its);
 //         info()<<"booking histo for Q"<<(iq+1)<<" R"<<(reg+1)<<" M"<<(sta+1)<<endmsg;
-        m_channelHist_l0muon->bookHistos(iq,reg,sta);
-        m_channelHist_muon->bookHistos(iq,reg,sta);
+        m_channelHist_l0muon->bookHistos(iq,reg,sta,m_shortnames);
+        m_channelHist_muon->bookHistos(iq,reg,sta,m_shortnames);
       }
     }
   }

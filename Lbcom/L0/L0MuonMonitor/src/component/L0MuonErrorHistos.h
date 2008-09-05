@@ -1,4 +1,4 @@
-// $Id: L0MuonErrorHistos.h,v 1.1 2008-07-24 09:36:53 jucogan Exp $
+// $Id: L0MuonErrorHistos.h,v 1.2 2008-09-05 09:07:09 jucogan Exp $
 #ifndef COMPONENT_L0MUONERRORHISTOS_H 
 #define COMPONENT_L0MUONERRORHISTOS_H 1
 
@@ -33,9 +33,10 @@ public:
   virtual ~L0MuonErrorHistos( ); ///< Destructor
 
   void bookHistos(bool shortname=true);
-  void bookHistos_ctrl(int qua, bool shortname=true);
-  void bookHistos_proc(int qua, bool shortname=true);
-  void bookHistos_proc(int qua, int reg, bool shortname=true);
+  void bookHistos_gen(bool shortname=true);
+  void bookHistos_quarter(int qua, bool shortname=true);
+  void bookHistos_board(int qua, bool shortname=true);
+  void bookHistos_board(int qua, int reg, bool shortname=true);
   void fillHistos();
   
 
@@ -46,12 +47,10 @@ private:
 
   
   void _fillHistos(std::string location,int board_type);
-  void _fillHistos_ctrl(const LHCb::L0MuonError *err);
-  void _fillHistos_proc(const LHCb::L0MuonError *err);
 
-  AIDA::IHistogram1D * m_hctrl1[L0Muon::MonUtilities::NErrors];
-  AIDA::IHistogram1D * m_hctrl2[L0Muon::MonUtilities::NErrors][4];
-  AIDA::IHistogram1D * m_hproc[L0Muon::MonUtilities::NErrors][4][12];
+  AIDA::IHistogram1D * m_hgen[L0Muon::MonUtilities::NErrors];
+  AIDA::IHistogram1D * m_hquarter[L0Muon::MonUtilities::NErrors][4];
+  AIDA::IHistogram1D * m_hboard[L0Muon::MonUtilities::NErrors][4][12];
 
 };
 

@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.9 2008-09-04 15:55:54 cattanem Exp $
+! $Id: release.notes,v 1.10 2008-09-05 09:07:09 jucogan Exp $
 ! Package     : L0MuonMonitor
 ! Responsible : Julien Cogan
 ! Purpose     : Monitoring of the L0Muon
 !--------------------------------------------------------------------------
+
+! 2008-09-05 - Julien Cogan
+ - Change histogram names in L0MuonMonitor
+ - Add checks in L0MuonErrorHistos + modify the histogram filling
 
 !========================== L0MuonMonitor v1r1p1 2008-09-04 ===============
 ! 2008-07-31 - Julien Cogan

@@ -1,4 +1,4 @@
-// $Id: L0MuonCandHistos.cpp,v 1.3 2008-07-31 18:35:40 jucogan Exp $
+// $Id: L0MuonCandHistos.cpp,v 1.4 2008-09-05 09:07:09 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -101,6 +101,14 @@ void L0MuonCandHistos::fillHistos(LHCb::L0MuonCandidates* cands, int ts)
         int Y  =itpad->nY();
         int reg=itpad->region();
         int f=1<<reg;
+        //         debug()<<"Q"<<(qua+1)
+        //                <<" M"<<(sta+1)
+        //                <<" ("<<itpad->layout().xGrid()<<","<<itpad->layout().yGrid()<<")"
+        //                <<" X: "<<X
+        //                <<" Y: "<<Y
+        //                <<" reg: "<<reg
+        //                <<" f: "<<f<<endmsg;
+        
         for (int ix=X*f; ix<X*f+f; ++ix){
           for (int iy=Y*f; iy<Y*f+f; ++iy){
             int x= ix;

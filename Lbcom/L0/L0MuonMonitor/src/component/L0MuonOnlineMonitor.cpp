@@ -1,4 +1,4 @@
-// $Id: L0MuonOnlineMonitor.cpp,v 1.10 2008-07-31 21:15:31 jucogan Exp $
+// $Id: L0MuonOnlineMonitor.cpp,v 1.11 2008-09-05 09:07:09 jucogan Exp $
 // Include files 
 
 #include "boost/format.hpp"
@@ -75,12 +75,13 @@ StatusCode L0MuonOnlineMonitor::initialize() {
   // Decoding
   //  if (m_shortnames) m_error->setHistoDir(""); else m_error->setHistoDir("L0Muon/Online");
   if (!m_shortnames) m_error->setHistoDir("L0Muon/Online");
+  m_error->bookHistos_gen(m_shortnames);
   for (std::vector<int>::iterator itq=m_quarters.begin(); itq<m_quarters.end(); ++itq){
     int iq = (*itq);
-    m_error->bookHistos_ctrl(iq,m_shortnames);
+    m_error->bookHistos_quarter(iq,m_shortnames);
     for (std::vector<int>::iterator itr=m_regions.begin(); itr<m_regions.end(); ++itr){
       int reg = (*itr);
-      m_error->bookHistos_proc(iq,reg,m_shortnames);
+      m_error->bookHistos_board(iq,reg,m_shortnames);
     }
   }
   debug() << "==>   -- Decoding done" << endmsg;
