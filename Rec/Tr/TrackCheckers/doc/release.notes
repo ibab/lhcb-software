@@ -3,10 +3,15 @@
 ! Responsible : Edwin Bos
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
+
+!======================= TrackCheckers v4r2 2009-09-05 =======================
+! 2008-09-05 - Marco Cattaneo
+ - Fix a compilation warning
+
 ! 2008-08-27 - Stephanie Hansmann-Menzemer
-- added output to finalize job
-- added some safety checks for division by zero
-- replace number of histograms by names
+ - added output to finalize job
+ - added some safety checks for division by zero
+ - replace number of histograms by names
 
 !======================= TrackCheckers v4r1 2008-07-02 =======================
 ! 2008-06-17 - Louis Nicolas

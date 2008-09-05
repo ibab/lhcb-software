@@ -1,4 +1,4 @@
-// $Id: TrackEffChecker.cpp,v 1.9 2008-08-28 16:59:45 smenzeme Exp $
+// $Id: TrackEffChecker.cpp,v 1.10 2008-09-05 06:32:53 cattanem Exp $
 // Include files 
 #include "TrackEffChecker.h"
 
@@ -180,7 +180,7 @@ void TrackEffChecker::plots(const std::string& type,
 void TrackEffChecker::plots(const std::string& type, 
                             const LHCb::Track* track ) const{
 
-  const double nMeas = weightedMeasurementSum(track);
+  //  const double nMeas = weightedMeasurementSum(track);
   
   if (!track->history() == LHCb::Track::PatVeloR && 
       !track->history() == LHCb::Track::PatVeloGeneric &&
