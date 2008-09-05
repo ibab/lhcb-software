@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.2 2008-08-15 14:48:53 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.3 2008-09-05 13:51:04 wouter Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -23,7 +23,7 @@ class TrackSys(LHCbConfigurableUser):
        ,"expertTracking": []  # list of expert Tracking options, see KnownExpertTracking
         }
 
-    KnownExpertTracking = ["usePatSeeding", "noDrifttimes", "simplifiedGeometry"]
+    KnownExpertTracking = ["usePatSeeding", "noDrifttimes", "simplifiedGeometry", "kalmanSmoother" ]
 
     def defineOptions(self):
         for prop in self.getProp("expertTracking"):
