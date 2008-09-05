@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.1 2008-08-15 14:53:54 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.2 2008-09-05 15:30:54 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -19,7 +19,7 @@ from Configurables import ( ProcessPhase, PatPVOffline )
 class RecSysConf(LHCbConfigurableUser):
 
     ## Default tracking Sub-detector processing sequence
-    DefaultTrackingSubdets = ["VELO","TT","IT","OT","Tr"]
+    DefaultTrackingSubdets = ["VELO","TT","IT","OT","Tr","Vertex"]
     ## Default reconstruction sequence for field-on data
     DefaultSubDetsFieldOn  = DefaultTrackingSubdets+["RICH","CALO","MUON","PROTO"]
     ## Default reconstruction sequence for field-off data
