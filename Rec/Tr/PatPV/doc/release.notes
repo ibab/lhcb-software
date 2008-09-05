@@ -4,6 +4,7 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+!============================= PatPV v3r6 2008-09-05 =========================
 ! 2008-08-28 - Mariusz Witek
   - improvements for reconstruction of low multiplicity PVs and bad quality
     tracks. Triggered by options. Deafult performance not changed.   
