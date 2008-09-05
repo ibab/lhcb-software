@@ -3,6 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v16r2>2008-09-05 Boole v16r2</A></H1><PRE>
+ - Update QMTest references for new release
+
 </PRE><H1><A NAME=v16r1>2008-07-30 Boole v16r1</A></H1><PRE>
  - Add qmtests
  - Changes to Configurable:
