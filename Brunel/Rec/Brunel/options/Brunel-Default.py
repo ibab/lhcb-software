@@ -14,7 +14,7 @@ from Brunel.Configuration import *
 ###############################################################################
 # Brunel().EvtMax       = -1    # Number of events to process
 # Brunel().skipEvents   = 0     # Number of events to skip before first event
-# Brunel().printFreq    = -1    # The frequency at which to print event numbers
+# Brunel().printFreq    = 1     # The frequency at which to print event numbers
 # Brunel().withMC       = True  # set to False if real data or to ignore MC truth
 # Brunel().recL0Only    = False # set to True to reconstruct only L0-yes events
 # Brunel().inputType    = "DIGI"# or "MDF" or "ETC" or "RDST" or "DST"

@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.14 2008-08-29 15:45:46 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.15 2008-09-05 16:26:54 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -24,7 +24,7 @@ class Brunel(LHCbConfigurableUser):
     __slots__ = {
         "EvtMax":          -1 # Maximum number of events to process
        ,"skipEvents":   0     # events to skip
-       ,"printFreq":   -1     # The frequency at which to print event numbers
+       ,"printFreq":    1     # The frequency at which to print event numbers
        ,"withMC":       True  # set to False for real data or to ignore MC truth
        ,"recL0Only":    False # set to True to reconstruct only L0-yes events
        ,"inputType":    "DIGI"# or "MDF" or "ETC" or "RDST" or "DST"

@@ -41,7 +41,7 @@ while ($i < $nar)
 end
 
 #   
-set Bversion = "v33r1"
+set Bversion = "v33r2"
 echo "Executing valgrind for Brunel $Bversion using options $options"
 #
 
