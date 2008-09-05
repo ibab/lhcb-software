@@ -6,6 +6,9 @@
 ! 2008-09-04 - Gerhard Raven
  - RoutingBitsWriter now uses DecReports as input, not selections
 
+!========================== HltRawData v1r2 2008-08-28 ===================
+! 2008-09-04 - Gerhard Raven
+ - HltRoutingBitsWriter: fix off by factor 8 bug
 
 !========================== HltRawData v1r1 2008-08-28 ===================
 ! 2008-08-26 - Jaap Panman
