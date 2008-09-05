@@ -1,6 +1,6 @@
-. $LHCb_release_area/ONLINE/ONLINE_v4r13/OnlineSys/v4r13/cmt/setup.sh
-. $User_release_area/Online/Gaucho/v6r0/cmt/setup.sh
-. $User_release_area/Online/ExampleGaucho/v3r0/cmt/setup/sh
+. $LHCb_release_area/ONLINE/ONLINE_v4r14/OnlineSys/v4r14/cmt/setup.sh
+#. $User_release_area/Online/Gaucho/v6r0/cmt/setup.sh
+#. $User_release_area/Online/ExampleGaucho/v3r0/cmt/setup/sh
 killall Gaudi.exe
 export UTGID=$1
 shift

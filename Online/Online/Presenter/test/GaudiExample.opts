@@ -6,9 +6,9 @@ ApplicationMgr.ExtSvc = { "MonitorSvc" };
 
 ApplicationMgr.DLLs = {"GaudiAlg", "GaudiAud","Gaucho", "GaudiOnline"};
 ApplicationMgr.DLLs += {"ExampleGaucho"};
-
+UpdateAndReset.disableReadOdin=1;
 GaudiExample.OutputLevel = 3;
-ApplicationMgr.TopAlg  = { "GaudiExample" };
+//ApplicationMgr.TopAlg  = { "GaudiExample" };
 
 ApplicationMgr.EvtMax    = -1;   // events to be processed (default is 10)
 ApplicationMgr.EvtSel   = "NONE"; // do not use any event input
