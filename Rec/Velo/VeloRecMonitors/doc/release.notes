@@ -4,6 +4,7 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+!======================= VeloRecMonitors v1r0 2008-09-05 =====================
 ! 2008-09-02 - Eduardo Rodrigues
  - *** version to analyse end-of-August data ***
  - histo for (# clusters) gets only entries when (# clusters)>0
