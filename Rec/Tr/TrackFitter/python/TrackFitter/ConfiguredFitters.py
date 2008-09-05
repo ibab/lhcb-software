@@ -7,7 +7,9 @@ from TrackSys.Configuration import TrackSys
 
 from Configurables import ( TrackEventFitter, TrackMasterFitter, TrackKalmanFilter,
                             TrackProjectorSelector, TrajOTProjector, TrackMasterExtrapolator,
-                            TrackSimpleExtraSelector, SimplifiedMaterialLocator, DetailedMaterialLocator)
+                            TrackSimpleExtraSelector, TrackDistanceExtraSelector,
+                            TrackHerabExtrapolator,
+                            SimplifiedMaterialLocator, DetailedMaterialLocator)
 
 def ConfiguredFitter( Name = "DefaultEventFitter",
                       TracksInContainer = "Rec/Tracks/Best",
@@ -125,4 +127,17 @@ def ConfiguredPreFitDownstream( Name = "PreFitDownstream",
                                 TracksInContainer = "Rec/Track/Downstream" ):
     eventfitter = ConfiguredPrefitter(Name,TracksInContainer)
     eventfitter.Fitter.ZPositions = [ 990., 2165., 9450. ]
+    return eventfitter
+
+def ConfiguredFastFit( Name, TracksInContainer ):
+    FieldOff = TrackSys().getProp( "fieldOff" )
+    eventfitter = ConfiguredFitter(Name,TracksInContainer,
+                                   FieldOff,
+                                   SimplifiedGeometry = True)
+    eventfitter.Fitter.NumberFitIterations = 1
+    eventfitter.Fitter.MaxNumberOutliers = 0
+    eventfitter.Fitter.NodeFitter.BiDirectionalFit = False
+    eventfitter.Fitter.NodeFitter.Smooth = False
+    # at some point, need to switch to analytic evaluation
+    # TrackHerabExtrapolator().extrapolatorID = 4
     return eventfitter
