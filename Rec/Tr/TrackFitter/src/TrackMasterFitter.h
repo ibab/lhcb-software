@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.h,v 1.17 2008-09-05 09:47:10 wouter Exp $
+// $Id: TrackMasterFitter.h,v 1.18 2008-09-05 09:58:14 wouter Exp $
 #ifndef TRACKFITTER_TRACKMASTERFITTER_H 
 #define TRACKFITTER_TRACKMASTERFITTER_H 1
 
@@ -84,7 +84,6 @@ private:
   ITrackExtrapolator* m_extrapolator; ///< extrapolator
   ITrackFitter* m_trackNodeFitter;    ///< elegate to actual track fitter (which fits from nodes)
   IMeasurementProvider* m_measProvider;
-  ITrackManipulator*    m_refStateTool; ///< Adds states for initial reference trajectory
   IMaterialLocator*     m_materialLocator ;
   std::string           m_materialLocatorName ;
 

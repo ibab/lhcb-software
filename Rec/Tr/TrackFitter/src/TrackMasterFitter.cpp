@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.53 2008-09-05 09:47:10 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.54 2008-09-05 09:58:14 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -59,7 +59,6 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   , m_extrapolator(0)
   , m_trackNodeFitter(0)
   , m_measProvider(0)
-  , m_refStateTool(0)
   , m_materialLocator(0)
 {
   declareInterface<ITrackFitter>( this );
@@ -116,7 +115,6 @@ StatusCode TrackMasterFitter::initialize()
   m_extrapolator      = tool<ITrackExtrapolator>( m_extrapolatorName, "Extrapolator",this );
   m_trackNodeFitter   = tool<ITrackFitter>( "TrackKalmanFilter", "NodeFitter", this ) ;
   m_measProvider      = tool<IMeasurementProvider>( "MeasurementProvider","MeasProvider", this );
-  m_refStateTool      = tool<ITrackManipulator>( "LongTrackReferenceCreator", "RefStateTool", this );
   m_materialLocator   = tool<IMaterialLocator>(m_materialLocatorName, "MaterialLocator", this) ;
   
   m_debugLevel   = msgLevel( MSG::DEBUG ) || msgLevel( MSG::VERBOSE ) ;  
