@@ -57,7 +57,11 @@ double RateExtractor::getCounterFromMonRate()
     
   TProfile * profile = m_pMonRate->profile();
   
-  return (double)profile->GetBinContent(8 + m_counterId);
+  double numberOfProcesses = profile->GetBinEntries(4);
+  
+  double counterMean = profile->GetBinContent(8 + m_counterId);
+  
+  return numberOfProcesses * counterMean;
 }
 
 longlong RateExtractor::getCycleLengthFromMonRate()

@@ -29,9 +29,9 @@ struct RateData
 
 int min(int, int);
 
-/** Class publishing a value/comment pair in a structure DIM service.
+/** Class publishing a value/comment pair in a structured DIM service for PVSS.
   * 
-  * @class RateExtractor 
+  * @class RatePublisher
   * @author Jean-Francois Menou    
   */
 class RatePublisher

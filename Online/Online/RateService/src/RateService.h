@@ -30,7 +30,7 @@
 
 /* deprecated
  */
-static const std::string s_converterName("RATE_SERVICE_V2R1");
+static const std::string s_converterName("RATE_SERVICE_V2R2");
 
 // Forward declarations
 class DimInfoMonRate;
@@ -75,13 +75,13 @@ private:
   /** Pointers to the DimInfoMonObject handling the MonRate services.
     */
   std::vector<DimInfoMonRate *> m_dimInfoMonRate;
-  
-  /// not used anymore. 
-  time_t time_old,time_new;
-  
+    
   /// Time to sleep betwen 
   int sleepTime;
   
+  /* RatePublisher to publish the number of MonRate services currently processed
+   * by the RateService.
+   */
   RatePublisher * m_numberOfMonRatesPublisher;
 
   

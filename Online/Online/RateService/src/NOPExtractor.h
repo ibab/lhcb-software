@@ -12,12 +12,12 @@
 
 class MonRate;
 
-/* format of structured data sent by DIM
+/* ...
  */
 static const std::string s_NOPServiceNameEnd("NUMBER_OF_PROCESSES");
 
-/** Class extracting rate from a given counter in a MonRate object.
-  * Publishes a pair of DIM services (rate value and rate comment).
+/** Class extracting the number of processes using a given MonRate
+  * and publishing it to PVSS.
   * 
   * @class NOPExtractor 
   * @author Jean-Francois Menou    
@@ -39,7 +39,7 @@ public:
     */
   ~NOPExtractor();
         
-  /** Extraction method, based on time of the new event.
+  /** Method extracting the num. of proc. and publishing it.
     * 
     * @param time Time of the last event in the processed cycle.
     *
@@ -57,12 +57,14 @@ private:
 
   /** Trivial method to create the name of the services.
     *
-    * @param nameHeader Header to add before the counter name.
+    * @param nameHeader Header to add before the service name.
     *
     * @return The service name.  
     */
   std::string makeServiceName(std::string nameHeader);
   
+  /** Extracts the number of processes from th e given MonRate.
+    */
   int getNOPFromMonRate();
   
   /*====================================================*/

@@ -12,8 +12,8 @@
 class MonRate;
 
 
-/** Class extracting rate from a given counter in a MonRate object.
-  * Publishes a pair of DIM services (rate value and rate comment).
+/** Class extracting rates from a given counter in a MonRate object
+  * an publishing them to PVSS.
   * 
   * @class RateExtractor 
   * @author Jean-Francois Menou    
