@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.h,v 1.16 2008-06-17 13:26:50 lnicolas Exp $
+// $Id: TrackMasterFitter.h,v 1.17 2008-09-05 09:47:10 wouter Exp $
 #ifndef TRACKFITTER_TRACKMASTERFITTER_H 
 #define TRACKFITTER_TRACKMASTERFITTER_H 1
 
@@ -41,12 +41,16 @@ public:
   virtual ~TrackMasterFitter( );
 
   StatusCode initialize();
+  StatusCode finalize();
 
   //! fit a track 
   StatusCode fit( LHCb::Track& track, LHCb::ParticleID pid = LHCb::ParticleID(211)  ) ;
 
 private:
-  
+
+  //! initialize reference states for initial trajectory
+  StatusCode initializeRefStates(LHCb::Track& track, LHCb::ParticleID pid ) const ;
+
   //! determine track state at various z positions
   StatusCode determineStates( LHCb::Track& track, LHCb::ParticleID pid ) const;
 
@@ -103,6 +107,7 @@ private:
   bool m_updateTransport ;          ///< Update the transport matrices between iterations
   double m_minMomentumForELossCorr ; ///< Minimum momentum used in correction for energy loss
   bool m_applyMaterialCorrections ; ///< Apply material corrections
+  bool m_applyEnergyLossCorrections ; ///< Apply material corrections
 
   double m_scatteringPt ;           ///< transverse momentum used for scattering if track has no good momentum estimate
   double m_maxMomentumForScattering ; ///< Maximum momentum used for scattering

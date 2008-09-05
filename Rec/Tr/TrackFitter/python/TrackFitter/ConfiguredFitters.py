@@ -16,48 +16,40 @@ def ConfiguredFitter( Name = "DefaultEventFitter",
                       NoDriftTimes =  "noDrifttimes" in TrackSys().getProp("expertTracking"),
                       KalmanSmoother = "kalmanSmoother" in TrackSys().getProp("expertTracking") ):
 
+    # start with the event fitter
+    eventfitter = TrackEventFitter(Name)
+    eventfitter.TracksInContainer = TracksInContainer
+
+    # add the tools that need to be modified
+    eventfitter.addTool(TrackMasterFitter(),name = "Fitter")
+
+    eventfitter.Fitter.addTool( TrackMasterExtrapolator(), name = "Extrapolator" )
+    eventfitter.Fitter.addTool( TrackKalmanFilter(), name = "NodeFitter" )
+
     # set up the material locator
     if SimplifiedGeometry:
-        materialLocator = SimplifiedMaterialLocator()
-    else:
-        materialLocator = DetailedMaterialLocator()
-        
-    # set up the private extrapolator. must make sure name is 'unique'
-    myExtrapolator = TrackMasterExtrapolator( Name + "_Extrapolator" )
-    
-    # this is a public tool, so you configure it with just a name
-    myExtrapolator.MaterialLocator = materialLocator.name()
-    
-    if FieldOff:
-        myExtrapolator.addTool(TrackSimpleExtraSelector(), name="ExtraSelector")
-        myExtrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator"
-        myExtrapolator.ApplyEnergyLossCorr = False
+        eventfitter.Fitter.MaterialLocator = "SimplifiedMaterialLocator"
+        eventfitter.Fitter.Extrapolator.MaterialLocator = "SimplifiedMaterialLocator"
 
-    myProjectorSelector = TrackProjectorSelector(Name + "_ProjectorSelector")
+    # special settings for field-off
+    if FieldOff:
+        eventfitter.Fitter.Extrapolator.addTool(TrackSimpleExtraSelector(), name="ExtraSelector")
+        eventfitter.Fitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator"
+        eventfitter.Fitter.Extrapolator.ApplyEnergyLossCorr = False
+        eventfitter.Fitter.ApplyEnergyLossCorr = False
+
+    # change the smoother
+    if KalmanSmoother:
+        eventfitter.Fitter.NodeFitter.BiDirectionalFit = False
+
+    # don't use drift times
     if NoDriftTimes:
         # set up the NoDriftTimeProjector in the toolsvc
         defaultOTNoDriftTimeProjector = TrajOTProjector("OTNoDrifttimesProjector")
         defaultOTNoDriftTimeProjector.UseDrift = False
-        myProjectorSelector.OT = "TrajOTProjector/" + defaultOTNoDriftTimeProjector.name()
+        eventfitter.Fitter.NodeFitter.addTool( TrackProjectorSelector(), "Projector" )
+        eventfitter.Fitter.NodeFitter.Projector.OT = "TrajOTProjector/" + defaultOTNoDriftTimeProjector.name()
 
-    # set up the default NodeFitter and the prefit NodeFitter
-    myNodeFitter = TrackKalmanFilter(Name + "_NodeFitter")
-    myNodeFitter.addTool(myProjectorSelector,name = "Projector")
-
-    if KalmanSmoother:
-        myNodeFitter.BiDirectionalFit = False
-        
-    # set up the default MasterFitter and the prefit MasterFitter
-    myMasterFitter = TrackMasterFitter(Name + "_MasterFitter")
-    myMasterFitter.addTool(myNodeFitter,name="NodeFitter")
-    #myMasterFitter.addTool(myExtrapolator, name = "Extrapolator" )
-    myMasterFitter.Extrapolator = myExtrapolator.clone()
-    myMasterFitter.MaterialLocator = materialLocator.name()
-
-    # finally create the eventfitter
-    eventfitter = TrackEventFitter(Name)
-    eventfitter.addTool(myMasterFitter,name = "Fitter")
-    eventfitter.TracksInContainer = TracksInContainer
     return eventfitter
 
 def ConfiguredPrefitter( Name = "DefaultEventFitter",
@@ -76,9 +68,10 @@ def ConfiguredFitVelo( Name = "FitVelo",
     eventfitter.Fitter.NumberFitIterations = 2
     eventfitter.Fitter.ZPositions = []
     eventfitter.Fitter.ErrorP= [0.01, 5e-08]
-    eventfitter.Fitter.ErrorX2 = 100
-    eventfitter.Fitter.ErrorY2 = 100
-    eventfitter.Fitter.ErrorP= [0,0.01]
+    #eventfitter.Fitter.ErrorX2 = 100
+    #eventfitter.Fitter.ErrorY2 = 100
+    #eventfitter.Fitter.ErrorP= [0,0.01]
+    eventfitter.Fitter.Extrapolator.ApplyEnergyLossCorr = False
     return eventfitter
 
 def ConfiguredFitVeloTT( Name = "FitVeloTT",
@@ -88,6 +81,7 @@ def ConfiguredFitVeloTT( Name = "FitVeloTT",
     eventfitter.Fitter.ZPositions = [ 990., 2165. ]
     eventfitter.Fitter.ErrorP = [1.2, 5e-07]
     eventfitter.Fitter.MaxNumberOutliers = 1
+    eventfitter.Fitter.Extrapolator.ApplyEnergyLossCorr = False
     return eventfitter
 
 def ConfiguredFitSeed( Name = "FitSeed",

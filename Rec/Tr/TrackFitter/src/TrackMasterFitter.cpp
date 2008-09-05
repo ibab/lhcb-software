@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.52 2008-09-02 13:32:29 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.53 2008-09-05 09:47:10 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -86,6 +86,7 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   declareProperty( "UpdateTransport", m_updateTransport = false             );
   declareProperty( "MinMomentumForTransport", m_minMomentumForELossCorr = 10.*Gaudi::Units::MeV );
   declareProperty( "ApplyMaterialCorrections", m_applyMaterialCorrections = true );
+  declareProperty( "ApplyEnergyLossCorr", m_applyEnergyLossCorrections = true ) ;
   declareProperty( "TransverseMomentumForScattering", m_scatteringPt = 400.*Gaudi::Units::MeV );
   declareProperty( "MaxMomentumForScattering", m_maxMomentumForScattering = 500.*Gaudi::Units::GeV );
 }
@@ -94,6 +95,14 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
 // Destructor
 //=========================================================================
 TrackMasterFitter::~TrackMasterFitter() {
+}
+
+//=========================================================================
+// Initialize
+//=========================================================================
+StatusCode TrackMasterFitter::finalize() 
+{
+  return GaudiTool::finalize() ;
 }
 
 //=========================================================================
@@ -453,7 +462,7 @@ StatusCode TrackMasterFitter::makeNodes( Track& track, LHCb::ParticleID pid ) co
 
   // make sure the track has sufficient reference states
   if( m_debugLevel ) debug() << "Track before making nodes: " << track << endmsg ;
-  StatusCode sc = m_refStateTool -> execute( track );
+  StatusCode sc = initializeRefStates( track, pid );
   if (sc.isFailure())
     return Warning("Problems setting reference info", StatusCode::FAILURE, 1);
   
@@ -634,7 +643,7 @@ StatusCode TrackMasterFitter::updateMaterialCorrections(LHCb::Track& track, LHCb
 
   if( nodes.size()>1 ) {
     // only apply energyloss correction for tracks that traverse magnet
-    bool   applyenergyloss    = track.hasT() && (track.hasVelo()||track.hasTT()) ;
+    bool   applyenergyloss    = m_applyEnergyLossCorrections && track.hasT() && (track.hasVelo()||track.hasTT()) ;
     
     // if only velo, or magnet off, use a fixed momentum based on pt.
     double scatteringMomentum = track.firstState().p() ;
@@ -663,8 +672,11 @@ StatusCode TrackMasterFitter::updateMaterialCorrections(LHCb::Track& track, LHCb
       m_materialLocator->computeMaterialCorrection(noise,delta,intersections,zorigin,ztarget,
                                                    scatteringMomentum, pid) ;
       node->setNoiseMatrix( noise ) ;
-      double deltaE = 1 / ( 1/scatteringMomentum + delta(4) ) - scatteringMomentum ;
-      node->setDeltaEnergy( applyenergyloss ? deltaE : 0 ) ;
+      node->setDeltaEnergy( 0 ) ;
+      if( applyenergyloss ) {
+	double deltaE = 1 / ( 1/scatteringMomentum + delta(4) ) - scatteringMomentum ;
+	node->setDeltaEnergy( deltaE ) ;
+      }
       zorigin = ztarget ;
     }
     
@@ -716,6 +728,110 @@ StatusCode TrackMasterFitter::updateTransport(LHCb::Track& track) const
       // update the reference
       refvector = &((*inode)->refVector()) ;
     }
+  }
+  return sc ;
+}
+
+template<class T>
+inline bool LessThanFirst(const T& lhs, const T& rhs)
+{
+  return lhs.first < rhs.first ;
+}
+
+StatusCode TrackMasterFitter::initializeRefStates(LHCb::Track& track,
+						  LHCb::ParticleID pid ) const
+{
+   // given existing states on the track, this tool adds states at fixed
+  // z-positions along the track. if a track state already exists
+  // sufficiently close to the desired state, it will not add the
+  // state.
+  StatusCode sc = StatusCode::SUCCESS ;
+
+  // first fix the momentum of states on the track. need to make sure this works for Velo-TT as well.
+  if( track.states().empty() ) {
+    error() << "Track has no states. Cannot create reference states" << endreq ;
+    sc = StatusCode::FAILURE ;
+  } else {
+    // first need to make sure all states already on track have
+    // reasonable momentum. still needs to check that this works for
+    // velo-TT
+    const LHCb::State& refstate = 
+      track.hasStateAt(LHCb::State::AtT) ? track.stateAt(LHCb::State::AtT) :
+      *( track.checkFlag(Track::Backward) ? track.states().front() : track.states().back()) ;
+    for( LHCb::Track::StateContainer::const_iterator it = track.states().begin() ;
+         it != track.states().end() ; ++it)
+      const_cast<LHCb::State*>(*it)->setQOverP( refstate.qOverP() ) ;
+    
+    
+    // collect the z-positions where we want the states
+    std::vector<double> zpositions ;
+    if( track.hasT() ) {
+      zpositions.push_back( StateParameters::ZBegT) ;
+      zpositions.push_back( StateParameters::ZEndT ) ;
+    }
+    if( track.hasTT() || (track.hasT() && track.hasVelo() ) ) 
+      zpositions.push_back(StateParameters::ZEndTT) ;
+    if( track.hasVelo() )
+      zpositions.push_back(StateParameters::ZEndVelo) ;
+    
+    // the following container is going to hold pairs of 'desired'
+    // z-positionds and actual states. the reason for the gymnastics
+    // is that we always want to propagate from the closest availlable
+    // state, but then recursively. this will make the parabolic
+    // approximation reasonably accurate.
+    typedef std::pair<double, const LHCb::State*> ZPosWithState ;
+    typedef std::vector< ZPosWithState > ZPosWithStateContainer ;
+    std::vector< ZPosWithState > states ;
+    // we first add the states we already have
+    for( std::vector<LHCb::State*>::const_iterator it = track.states().begin() ;
+         it != track.states().end() ; ++it) 
+      states.push_back( ZPosWithState((*it)->z(),(*it)) ) ;
+
+    // now add the other z-positions, provided nothing close exists
+    const double maxDistance = 50*Gaudi::Units::cm ;
+    for( std::vector<double>::iterator iz = zpositions.begin() ;
+         iz != zpositions.end(); ++iz) {
+      bool found = false ;
+      for( ZPosWithStateContainer::const_iterator it = states.begin() ;
+           it != states.end()&&!found ; ++it)
+        found = fabs( *iz - it->first ) < maxDistance ;
+      if(!found) states.push_back( ZPosWithState(*iz,0) ) ;
+    }
+    std::sort( states.begin(), states.end(), LessThanFirst<ZPosWithState> ) ;
+    
+    // create the states in between
+    LHCb::Track::StateContainer newstates ;
+    for( ZPosWithStateContainer::iterator it = states.begin();
+         it != states.end() ; ++it) 
+      if( it->second == 0 ) {
+        // find the nearest existing state to it
+        ZPosWithStateContainer::iterator best= states.end() ;
+        for( ZPosWithStateContainer::iterator jt = states.begin();
+             jt != states.end() ; ++jt) 
+          if( it != jt && jt->second
+              && ( best==states.end() || fabs( jt->first - it->first) < fabs( best->first - it->first) ) )
+            best = jt ;
+        
+        assert( best != states.end() ) ;
+        
+        // move from that state to this iterator, using the extrapolator and filling all states in between.
+        int direction = best > it ? -1 : +1 ;
+        LHCb::StateVector statevec( best->second->stateVector(), best->second->z() ) ;
+        for( ZPosWithStateContainer::iterator jt = best+direction ;
+             jt != it+direction ; jt += direction) {
+          StatusCode thissc = m_extrapolator->propagate( statevec, jt->first, 0, pid ) ;
+          LHCb::State* newstate = new LHCb::State( statevec ) ;
+          jt->second = newstate ;
+          newstates.push_back( newstate ) ;
+          if( !thissc.isSuccess() ) {
+            error() << "Problem propagating state in LongTrackReferenceCreator::createReferenceStates" << endmsg ;
+            sc = thissc ;
+          }
+        }
+      }
+    
+    // finally, copy the new states to the track. 
+    track.addToStates( newstates ) ;
   }
   return sc ;
 }
