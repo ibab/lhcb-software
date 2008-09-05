@@ -1,4 +1,4 @@
-// $Id: TrackEventFitter.cpp,v 1.19 2008-07-15 06:51:19 wouter Exp $
+// $Id: TrackEventFitter.cpp,v 1.20 2008-09-05 13:56:39 wouter Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -124,7 +124,6 @@ StatusCode TrackEventFitter::execute() {
     StatusCode sc = m_tracksFitter -> fit( track );
 
     if ( sc.isSuccess() ) {
-      track.setFitStatus( Track::Fitted );
       // Add the track to the new Tracks container
       // -----------------------------------------
       if ( m_makeNewContainer ) tracksNewCont -> add( &track );
@@ -141,7 +140,6 @@ StatusCode TrackEventFitter::execute() {
     }
     else {
       track.setFlag( Track::Invalid, true );
-      track.setFitStatus( Track::FitFailed );
       ++nFitFail;
       if ( msgLevel( MSG::DEBUG ) )
         debug() << "Unable to fit the track # " << track.key() << endmsg;

@@ -3,6 +3,11 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2008-09-05 - Wouter Hulsbergen
+ - added python configurables for track fitters, including a 'fast fit'
+ - add option to ignore e-loss corrections
+ - move setting of FitStatus flag from event fitter to master fitter
+
 !=========================== TrackFitter v2r27 2008-07-29 ===================
 ! 2008-07-24 - Wouter Hulsbergen
  - adapted to change in FitNode

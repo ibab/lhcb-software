@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.54 2008-09-05 09:58:14 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.55 2008-09-05 13:56:39 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -140,10 +140,10 @@ StatusCode TrackMasterFitter::initialize()
 //=========================================================================
 // Helper to print a failure comment
 //=========================================================================
-StatusCode TrackMasterFitter::failure( const std::string& comment ) const {
-  if ( m_debugLevel )
-    debug() << "TrackMasterFitter failure: " << comment << endreq;
-  return StatusCode::FAILURE;
+StatusCode TrackMasterFitter::failure( const std::string& comment ) const 
+{
+  if ( m_debugLevel ) debug() << "TrackMasterFitter failure: " + comment << endreq ;
+  return Warning(comment,StatusCode::FAILURE,1) ;
 }
 
 //=========================================================================
@@ -151,11 +151,11 @@ StatusCode TrackMasterFitter::failure( const std::string& comment ) const {
 //=========================================================================
 StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
 {
-  StatusCode sc;
-  if ( track.nStates() == 0 )
-    return Error( "Track has no state! Can not fit.", StatusCode::FAILURE );
-  
+  // any track that doesnt make it to the end is failed
+  track.setFitStatus( Track::FitFailed );
+
   // Make the nodes from the measurements
+  StatusCode sc;
   if( track.nodes().empty() || m_makeNodes ) {
     sc = makeNodes( track,pid );
     if ( sc.isFailure() )
@@ -168,8 +168,7 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
     debug() << "Track has " << track.nMeasurements() 
             << " measurements. Fitting a " << seed.nParameters() 
             << "D-state" << endmsg;
-    return Warning( "Insufficient measurements to fit the State",
-                    StatusCode::FAILURE, 1 );
+    return failure("Insufficient measurements to fit the State");
   }
 
   // create a covariance matrix to seed the Kalman fit
@@ -240,14 +239,18 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
 
   // determine the track states at user defined z positions
   sc = determineStates( track, pid );
-  if ( sc.isFailure() )  {
+  if ( sc.isFailure() ) {
     track.clearNodes() ;
-    if( m_debugLevel ) debug() << "fit failed" << endmsg ;
-  } else {
-    if ( m_debugLevel && !track.states().empty() )
-      debug() << "first state = " << track.firstState() << endmsg;
-    fillExtraInfo( track ) ;
+    return failure( "failed in determining states" ) ;
   }
+
+  if ( m_debugLevel && !track.states().empty() )
+    debug() << "first state = " << track.firstState() << endmsg;
+
+  // fill extra info
+  fillExtraInfo( track ) ;
+  // make sure to declare the track successful
+  track.setFitStatus( Track::Fitted );
   
   return sc;
 }
@@ -747,8 +750,7 @@ StatusCode TrackMasterFitter::initializeRefStates(LHCb::Track& track,
 
   // first fix the momentum of states on the track. need to make sure this works for Velo-TT as well.
   if( track.states().empty() ) {
-    error() << "Track has no states. Cannot create reference states" << endreq ;
-    sc = StatusCode::FAILURE ;
+    sc = Error( "Track has no state! Can not fit.", StatusCode::FAILURE );
   } else {
     // first need to make sure all states already on track have
     // reasonable momentum. still needs to check that this works for
