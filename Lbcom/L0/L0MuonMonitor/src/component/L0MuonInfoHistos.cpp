@@ -1,4 +1,4 @@
-// $Id: L0MuonInfoHistos.cpp,v 1.1 2008-07-24 09:36:53 jucogan Exp $
+// $Id: L0MuonInfoHistos.cpp,v 1.2 2008-09-05 09:31:16 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -62,6 +62,10 @@ void L0MuonInfoHistos::fillHistos()
   if (m_error)  error|=0x1;
   error|=((m_errStatus<<1)&0x6);
   if (m_ovfStatus) error|=0x8;
+  for (int i=0;i<4;++i) {
+    if ( (error>>0)&1 ) fill(m_herror,(i+1),1);
+  }
+  
 }
 
 StatusCode L0MuonInfoHistos::getInfo(){
