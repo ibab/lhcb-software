@@ -4,6 +4,7 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!===================== RichRecTools v4r5 2008-09-05 ===========================
 ! 2008-08-19 - Chris Jones
  - Improve handling of updates in RichSellmeirFunc and 
    RichTabulatedRayleighScatter.
