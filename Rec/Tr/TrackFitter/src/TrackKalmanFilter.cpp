@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.65 2008-09-05 09:47:10 wouter Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.66 2008-09-05 09:49:48 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -323,15 +323,6 @@ StatusCode TrackKalmanFilter::predict( FitNode& aNode, State& aState ) const
   
   if( msgLevel( MSG::VERBOSE ) )
     verbose() << " after predict state = " << aState << endmsg ;
-
-  if( aState.x() != aState.x() ) {
-    std::cout << "F: " << aNode.transportMatrix()
-	      << "state: " <<  aState.stateVector()
-	      << "transportvector: " << aNode.transportVector()
-	      << std::endl ;
-
-    throw GaudiException( "nan in prediction", "predictnan", StatusCode::FAILURE ) ; 
-  }
   
   return StatusCode::SUCCESS;
 }
@@ -366,10 +357,6 @@ StatusCode TrackKalmanFilter::predictReverseFit(const FitNode& prevNode,
 
   if( msgLevel( MSG::VERBOSE ) )
     verbose() << " after predictReverseFit state = " << aState << endmsg ;
-
-  if( aState.x() != aState.x() ) {
-    throw GaudiException( "nan in reverse prediction", "predictrevnan", StatusCode::FAILURE ) ; 
-  }
 
   return StatusCode::SUCCESS;
 }
@@ -422,13 +409,8 @@ StatusCode TrackKalmanFilter::filter(FitNode& node, State& state) const
   }
 
   // get reference to the state vector and cov
-  
-
   TrackVector&    X = state.stateVector();
   TrackSymMatrix& C = state.covariance();
-
-  TrackVector saveX = X ;
-  TrackSymMatrix saveC = C ;
 
   // calculate the linearized residual of the prediction and its error
   const TrackProjectionMatrix& H = node.projectionMatrix();
@@ -473,23 +455,7 @@ StatusCode TrackKalmanFilter::filter(FitNode& node, State& state) const
 	      << (node.hasMeasurement() ? node.measurement().errMeasure() : 0 )
 	      << " errMeas2 = " << node.errMeasure2()
 	      << " errRes2 = " << errorMeas2 + Similarity(H,C)(0,0) << endmsg ;
-
-  if( X[0] != X[0] ) {
-    std::cout << " chisquare of node = " << node.chi2() << std::endl
-	      << " filtered state = " << state << std::endl
-	      << " original state = " << saveX << std::endl
-	      << " original cov   = " << saveC << std::endl
-	      << " ref residual = " << node.refResidual() 
-	      << " type = " 
-	      << (node.hasMeasurement() ? node.measurement().type() : 0 )
-	      << " err meas = "
-	      << (node.hasMeasurement() ? node.measurement().errMeasure() : 0 )
-	      << " errMeas2 = " << node.errMeasure2()
-	      << " errRes2 = " << errorMeas2 + Similarity(H,C)(0,0) << std::endl ;
-    throw GaudiException( "nan in filter", "nan", StatusCode::FAILURE ) ; 
-  }
-
-
+  
   return StatusCode::SUCCESS;
 }
 
@@ -615,22 +581,10 @@ StatusCode TrackKalmanFilter::biSmooth( FitNode& thisNode ) const
       return Warning( "Smoothing error", StatusCode::FAILURE, 0 );
     }
   }
-
-  if( smoothedX[0] != smoothedX[0] ) {
-    std::cout << "invR: " << invR << std::endl ;
-    std::cout << filtStateC << std::endl
-	      << predRevC << std::endl
-	      << filtStateX << std::endl
-	      << predRevX << std::endl
-	      << smoothedX << std::endl ;
-
-    throw GaudiException( "nan in smoother", "nan", StatusCode::FAILURE ) ; 
-  }
-
+  
   (thisNode.state()).setState( smoothedX );
   (thisNode.state()).setCovariance( smoothedC );
 
- 
   return StatusCode::SUCCESS;
 }
 
