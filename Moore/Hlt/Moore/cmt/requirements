@@ -1,5 +1,5 @@
 #============================================================================
-# $Id: requirements,v 1.32 2008-09-04 12:54:11 graven Exp $
+# $Id: requirements,v 1.33 2008-09-05 07:20:57 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : P. Koppenburg & M. Cattaneo
 #============================================================================
@@ -17,6 +17,7 @@ set MOOREOPTS ${MOOREROOT}/options
 
 # TMP ####
 use DaVinciTools v17r1 Phys
+use HltRawData   v1r2 Hlt
 
 # Packages needed to compile and link the application
 use GaudiConf          v*                   -no_auto_imports

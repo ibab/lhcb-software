@@ -2,6 +2,16 @@ Package     : Hlt/Moore
 Package Coordinator : Patrick Koppenburg and Marco Cattaneo
 Purpose     : LHCb HLT application
 
+!========================== Moore v5r2 2008-09-05 ===================
+
+! 2008-09-04 - Gerhard Raven
+ - add install manifest which copies the TCK manifest for the current
+   release into the InstallArea
+ - update DEFAULT.opts to work with Online v4r14
+ - add switch for new-style (python) vs. old-style configuration (.opts)
+   to configurable
+ - add HltRawData temporarily to requirements to fix small bug
+
 !========================== Moore v5r1 2008-08-29 ===================
 ! 2008-08-29 - Jaap Panman
  - lumiMoore.py and lumiChecker.py updates to use binary Histos
