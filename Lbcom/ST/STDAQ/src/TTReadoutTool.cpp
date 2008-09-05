@@ -1,4 +1,4 @@
-// $Id: TTReadoutTool.cpp,v 1.14 2008-09-01 08:52:29 mneedham Exp $
+// $Id: TTReadoutTool.cpp,v 1.15 2008-09-05 14:12:13 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -99,7 +99,7 @@ StatusCode TTReadoutTool::createBoards() {
    
      // make new board
      STTell1ID anID = STTell1ID(iReg,iBoard);
-     STTell1Board* aBoard = new STTell1Board(anID, nStripsPerHybrid);
+     STTell1Board* aBoard = new STTell1Board(anID, nStripsPerHybrid, m_detType);
 
      for (unsigned iH = 0 ; iH < m_hybridsPerBoard; ++iH, ++vecLoc){
        STChannelID sectorID((unsigned int)tMap[vecLoc]);

@@ -1,4 +1,4 @@
-// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.26 2008-08-15 08:21:44 mneedham Exp $
+// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.27 2008-09-05 14:12:13 mneedham Exp $
 
 
 #include <algorithm>
@@ -169,7 +169,7 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt) const{
       STClusterWord aWord = *iterDecoder;
       unsigned int fracStrip = aWord.fracStripBits();
       
-      STTell1Board::chanPair chan = aBoard->DAQToOffline(version, fracStrip, aWord.channelID());
+      STTell1Board::chanPair chan = aBoard->DAQToOffline(fracStrip, version, aWord.channelID());
 
       STLiteCluster liteCluster(chan.second,
                                 aWord.pseudoSizeBits(),

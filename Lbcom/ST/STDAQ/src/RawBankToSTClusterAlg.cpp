@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.37 2008-08-15 08:21:43 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.38 2008-09-05 14:12:13 mneedham Exp $
 
 #include <algorithm>
 
@@ -157,6 +157,8 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
 
     bool recover = false;
     if (decoder.hasError() == true && !m_skipErrors){
+      STTELL1BoardErrorBank* errorBank2 = findErrorBank((*iterBank)->sourceID());
+
       if (!recoverMode()){
         bankList.push_back((*iterBank)->sourceID());
         std::string errorBank = "bank has errors, skip sourceID "+
@@ -205,7 +207,7 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
       }
       else {
 	// check that this cluster is ok to be recovered
-        if (errorBank && canBeRecovered(errorBank,iterDecoder->first, pcn) == true){
+        if (errorBank != 0 && canBeRecovered(errorBank,iterDecoder->first, pcn) == true){
          createCluster(iterDecoder->first,aBoard,
                         iterDecoder->second,version, clusCont); 
 	} 
