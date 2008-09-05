@@ -1,4 +1,4 @@
-// $Id: STTell1Board.h,v 1.10 2008-08-23 08:22:45 mneedham Exp $
+// $Id: STTell1Board.h,v 1.11 2008-09-05 14:11:49 mneedham Exp $
 #ifndef _STTell1Board_H
 #define _STTell1Board_H 1
 
@@ -26,7 +26,8 @@ public:
 
   /// constructer
   STTell1Board(const STTell1ID aBoard, 
-               const unsigned int stripsPerHybrid);
+               const unsigned int stripsPerHybrid, 
+               const std::string& type);
 
   /// destructer
   virtual ~STTell1Board();
@@ -92,7 +93,6 @@ public:
     return obj.fillStream(s);
   }
 
-
   // Fill the ASCII output stream
   virtual std::ostream& fillStream(std::ostream& s) const;
 
@@ -106,6 +106,8 @@ private:
   std::vector<LHCb::STChannelID> m_sectorsVector;
   std::vector<int> m_orientation;
   std::vector<std::string> m_serviceBoxVector;
+  std::string m_detType;
+
 };
 
 inline STTell1ID STTell1Board::boardID() const{

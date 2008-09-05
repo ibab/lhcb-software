@@ -1,16 +1,20 @@
-// $Id: STTell1Board.cpp,v 1.8 2008-08-23 08:22:46 mneedham Exp $
+// $Id: STTell1Board.cpp,v 1.9 2008-09-05 14:11:49 mneedham Exp $
 #include "Kernel/STTell1Board.h"
 #include "Kernel/STDAQDefinitions.h"
 #include "Kernel/LHCbConstants.h"
 
 #include "Event/STCluster.h"
+#include "Kernel/ITNames.h"
+#include "Kernel/TTNames.h"
 
 using namespace LHCb;
 
 STTell1Board::STTell1Board(const STTell1ID aBoard, 
-                           const unsigned int nStripsPerHybrid):
+                           const unsigned int nStripsPerHybrid,
+                           const std::string& detType):
   m_boardID(aBoard),
-  m_nStripsPerHybrid(nStripsPerHybrid)
+  m_nStripsPerHybrid(nStripsPerHybrid),
+  m_detType(detType)
 {
   // constructer
   m_sectorsVector.reserve(8);
@@ -150,9 +154,12 @@ std::ostream& STTell1Board::fillStream( std::ostream& os ) const{
   std::vector<STChannelID>::const_iterator iterW = m_sectorsVector.begin();
   unsigned int wafer = 0u;
   for (; iterW !=  m_sectorsVector.end() ;++iterW, ++wafer){
-    os << "Station: " << (*iterW).station() << "Layer: " << (*iterW).layer() 
-       << "Region: " << (*iterW).detRegion() <<"Sector: " << (*iterW).sector() << " ServiceBox "
-       << serviceBox(wafer) << std::endl;
+    if (m_detType == "IT"){    
+      os  << ITNames().UniqueSectorToString(*iterW)  << " "   << serviceBox(wafer) << std::endl;
+    }
+    else {
+      os << TTNames().UniqueSectorToString(*iterW) << " " << serviceBox(wafer) << std::endl;   
+    }
   }   // iW 
   os << " -----------" << std::endl; 
 
