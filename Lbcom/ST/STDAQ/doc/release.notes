@@ -4,15 +4,13 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
-! 2008-09-02 M Needham
+!=============================== STDAQ v3r11 2008-09-05 ======================
+! 2008-09-05 M Needham
  - bug fixes in readout tool and data lite cluster decoding
- - reocovery mode implemented 
+ - recovery mode implemented 
 
 ! 2008-09-02 M Needham
  - Use IT and TTNames classes.
-
-
-!=============================== STDAQ v3r11 2008-09-04 ======================
 
 ! 2008-08-31 M Needham 
  - Bug fix in service box mapping: vector of all possible names was 
