@@ -4,6 +4,7 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================== PatAlgorithms v3r10 2008-09-04 ===================
 ! 2008-08-30 - Manuel Tobias Schiller
  - PatSeedingTool: fix bug introduced in change to improve IT cosmics
    reconstruction (bug effectively turned off OT reconstruction in non-cosmic
