@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2008-09-03 - Wouter Hulsbergen
+ - replace Fitting.py with ConfiguredFitters
+
 !============================ TrackSys v4r17 2008-09-05 ======================
 ! 2008-09-03 - Stephanie Hansmann-Menzemer
  - bug fix in Fitting.py  

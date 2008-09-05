@@ -89,8 +89,8 @@ track.DetectorList += [ "VeloTTPat",    "VeloTTPreFit",    "VeloTTFit"
                         , "AddExtraInfo"
                         ]
                
-## Set of standard fitting options
-importOptions( "$TRACKSYSROOT/options/Fitting.py" )
+## get all the trackfitters
+from TrackFitter.ConfiguredFitters import *
 
 if "noDrifttimes" in TrackSys().getProp("expertTracking"):
    Tf__OTHitCreator("OTHitCreator").NoDriftTimes = True
@@ -100,10 +100,10 @@ GaudiSequencer("TrackForwardPatSeq").Members +=  [ PatForward("PatForward") ]
 importOptions("$PATALGORITHMSROOT/options/PatForward.py")
 
 ## Forward prefit
-GaudiSequencer("TrackForwardPreFitSeq").Members += [TrackEventFitter("PreFitForward")] 
+GaudiSequencer("TrackForwardPreFitSeq").Members += [ConfiguredPreFitForward()]
 
 ## Forward fit
-GaudiSequencer("TrackForwardFitSeq").Members += [TrackEventFitter("FitForward" )]
+GaudiSequencer("TrackForwardFitSeq").Members += [ConfiguredFitForward()]
 
 ## Seed pattern
   
@@ -119,7 +119,7 @@ else:
 importOptions ("$TRACKTOOLSROOT/options/FastMomentumEstimate.opts")
 
 ## Seed fit
-GaudiSequencer("TrackSeedFitSeq").Members += [ TrackEventFitter("FitSeed")]
+GaudiSequencer("TrackSeedFitSeq").Members += [ConfiguredFitSeed()]
 
 ## Match pattern
 GaudiSequencer("TrackMatchPatSeq").Members += [ TrackMatchVeloSeed("TrackMatch")]
@@ -127,26 +127,26 @@ GaudiSequencer("TrackMatchPatSeq").Members += [ TrackMatchVeloSeed("TrackMatch")
 importOptions("$TRACKMATCHINGROOT/options/TrackMatch.py")
 
 ## Match prefit
-GaudiSequencer("TrackMatchPreFitSeq").Members += [ TrackEventFitter("PreFitMatch")] 
+GaudiSequencer("TrackMatchPreFitSeq").Members += [ConfiguredPreFitMatch()]
 
 ## Match fit
-GaudiSequencer("TrackMatchFitSeq").Members += [ TrackEventFitter("FitMatch")]
+GaudiSequencer("TrackMatchFitSeq").Members += [ConfiguredFitMatch()]
 
 ## Downstream pattern
 GaudiSequencer("TrackDownstreamPatSeq").Members += [ PatDownstream() ];
 
 ## Downstream prefit
-GaudiSequencer("TrackDownstreamPreFitSeq").Members +=[ TrackEventFitter("PreFitDownstream")]
+GaudiSequencer("TrackDownstreamPreFitSeq").Members += [ConfiguredPreFitDownstream()]
 
 ## Downstream fit
-GaudiSequencer("TrackDownstreamFitSeq").Members += [ TrackEventFitter("FitDownstream" )]
+GaudiSequencer("TrackDownstreamFitSeq").Members += [ConfiguredFitDownstream()]
 
 ## Velo-TT pattern
 GaudiSequencer("TrackVeloTTPatSeq").Members += [ PatVeloTT("PatVeloTT")] 
 importOptions ("$PATVELOTTROOT/options/PatVeloTT.py")
 
 ## Velo-TT fit
-GaudiSequencer("TrackVeloTTFitSeq").Members += [ TrackEventFitter("FitVeloTT") ]
+GaudiSequencer("TrackVeloTTFitSeq").Members += [ ConfiguredFitVeloTT() ]
 
 ## Clone tracks killer: output is "best" container
 GaudiSequencer("TrackPostFitSeq").Members += [ TrackEventCloneKiller() ]
@@ -163,7 +163,7 @@ else:
 GaudiSequencer("TrackVeloPreFitSeq").Members += [ TrackPrepareVelo() ] 
 
 ## Fit the velo tracks and copy them to the "best" container
-GaudiSequencer("TrackVeloFitSeq").Members += [ TrackEventFitter("FitVelo") ]
+GaudiSequencer("TrackVeloFitSeq").Members += [ ConfiguredFitVelo() ]
 copyVelo = TrackContainerCopy( "CopyVelo" )
 copyVelo.inputLocation = "Rec/Track/PreparedVelo";
 GaudiSequencer("TrackVeloFitSeq").Members += [ copyVelo ]
