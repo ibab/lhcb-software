@@ -1,0 +1,131 @@
+//-----------------------------------------------------------------
+// Main Opts to run the Moore or HLTAPP application 
+//-----------------------------------------------------------------
+
+#pragma print off
+// Standard LHCb application setup
+#pragma print on
+#include "$STDOPTS/LHCbApplication.opts"
+
+// POOL Persistency
+#include "$STDOPTS/DstDicts.opts"
+
+//-----------------------------------------------------------------
+// Rerun L0 and HLT - Alleys
+//-----------------------------------------------------------------
+
+// Default options to rerun L0 and run Hlt 
+//ApplicationMgr.TopAlg = {"UpdateAndReset"};
+#include "$GAUDICONFROOT/options/DecodeRawEvent.opts" 
+//#include "$HLTSYSROOT/options/L0.opts"
+//#include "$HLTSYSROOT/options/L0FromRaw.opts"
+//#include "$L0DUOPTS/L0DUFromRaw.opts"
+//#include "$HLTSYSROOT/options/Hlt1.opts"
+//#include "$HLTSYSROOT/options/PrescaledAlleys.opts"
+#include "$MOOREOPTS/RandomPrescaling.opts"
+//#include "$HLTSYSROOT/options/Hlt1_onlyLumi.opts"
+//#include "$HLTSYSROOT/options/Hlt2.opts"
+
+// For DAQ studies replace the includes above for these ones:
+// #include "$HLTSYSROOT/options/L0DAQ.opts"
+// #include "$HLTSYSROOT/options/HltDAQ.opts"
+
+// include this options to get time or histogram information of alleys
+// #include "$HLTSYSROOT/options/HltAlleysTime.opts"
+// #include "$HLTSYSROOT/options/HltAlleysHistos.opts"
+
+//---------------------------------------------------------------------------
+// Geometry specific options
+//---------------------------------------------------------------------------
+#include "$STDOPTS/DC06Conditions.opts"
+DDDB.DefaultTAG = "head-20080729";
+LHCBCOND.DefaultTAG = "head-20080729";
+//#pragma print on
+//ApplicationMgr.TopAlg +=  [ "CaloDigitsFromRaw/EcalFromRaw" ] ;
+
+//EcalFromRaw.RootInTES = "Next1";
+//ApplicationMgr.TopAlg +=  [ "CaloDigitsFromRaw/HcalFromRaw" ] ;
+
+//HcalFromRaw.RootInTES = "Next2";
+//---------------------------------------------------------------------------
+// Number of events to process, optionally skipping some events
+//---------------------------------------------------------------------------
+ApplicationMgr.EvtMax =  400;
+EventSelector.PrintFreq = 100;
+ApplicationMgr.OutputLevel = 4;
+//L0DUFromRawAlg.OutputLevel=2;
+//EcalFromRaw.OutputLevel= 6;
+//UpdateAndReset.OutputLevel =4;
+//EventSelector.FirstEvent = 7;  // To skip some events 
+
+//---------------------------------------------------------------------------
+// Histogram output
+//---------------------------------------------------------------------------
+ApplicationMgr.HistogramPersistency = "ROOT";
+HistogramPersistencySvc.OutputFile = "Moore_minbias.root";  
+
+//---------------------------------------------------------------------------
+// POOL file catalogs. First one is read-write, others are read only
+//---------------------------------------------------------------------------
+// PoolDbCacheSvc.Catalog = {
+//  "xmlcatalog_file:$HLTAPPROOT/job/NewCatalog.xml"
+// };
+ApplicationMgr.ExtSvc +=  [ "ToolSvc" , "AuditorSvc" ] ; 
+ApplicationMgr.AuditAlgorithms = 1;  
+AuditorSvc.Auditors +=  [ "TimingAuditor/TIMER" ] ;   
+//AuditorSvc.Auditors +=  [ "ChronoAuditor" ] ;   
+MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
+ToolSvc.OutputLevel=4;
+ToolSvc.SequencerTimerTool.OutputLevel = 4;          
+
+ApplicationMgr.ExtSvc += {"MonitorSvc"};
+//ApplicationMgr.DLLs + = {"Gaucho","GaudiOnline"};
+
+ApplicationMgr.TopAlg +={"CheckHLTDecision"};
+//---------------------------------------------------------------------------
+// Event input
+//---------------------------------------------------------------------------
+//#include "$MOOREROOT/options/raw06_minbias_1.opts"
+
+EventPersistencySvc.CnvServices += {"LHCb::RawDataCnvSvc"};
+ApplicationMgr.ExtSvc += {"DataOnDemandSvc"};
+EventSelector.Input   = {
+//"DATA='castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/PHYSICS/22759/022759_0000012258.raw' SVC='LHCb::MDFSelector' "
+//"DATA='PFN:/afs/cern.ch/lhcb/scratch/week/bdepaula/022759_0000012258.raw' SVC='LHCb::MDFSelector' "
+//"DATA='PFN:/afs/cern.ch/lhcb/scratch/week/bdepaula/22759/022759_0000012258.raw' SVC='LHCb::MDFSelector'",
+//"DATA='PFN:/afs/cern.ch/lhcb/scratch/week/bdepaula/020712_0000001243.raw' SVC='LHCb::MDFSelector'",
+//"DATA='PFN:/afs/cern.ch/lhcb/scratch/week/bdepaula/022767_0000012264.raw' SVC='LHCb::MDFSelector'",
+"DATA='castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/PHYSICS_COSMICS/27804/027804_0000063303.raw' SVC='LHCb::MDFSelector' ",
+"DATA='castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/PHYSICS_COSMICS/27804/027804_0000063303.raw' SVC='LHCb::MDFSelector' ",
+"DATA='castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/PHYSICS_COSMICS/27804/027804_0000063303.raw' SVC='LHCb::MDFSelector' ",
+"DATA='castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/PHYSICS_COSMICS/27804/027804_0000063303.raw' SVC='LHCb::MDFSelector' ",
+"DATA='castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/PHYSICS_COSMICS/27804/027804_0000063303.raw' SVC='LHCb::MDFSelector' ",
+"DATA='castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/PHYSICS_COSMICS/27804/027804_0000063303.raw' SVC='LHCb::MDFSelector' ",
+"DATA='castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/PHYSICS_COSMICS/27804/027804_0000063303.raw' SVC='LHCb::MDFSelector' ",
+"DATA='castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/PHYSICS_COSMICS/27804/027804_0000063303.raw' SVC='LHCb::MDFSelector' ",
+"DATA='castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/PHYSICS_COSMICS/27804/027804_0000063303.raw' SVC='LHCb::MDFSelector' ",
+"DATA='castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/PHYSICS_COSMICS/27804/027804_0000063303.raw' SVC='LHCb::MDFSelector' ",
+"DATA='castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/PHYSICS_COSMICS/27804/027804_0000063303.raw' SVC='LHCb::MDFSelector' ",
+"DATA='castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/PHYSICS_COSMICS/27804/027804_0000063303.raw' SVC='LHCb::MDFSelector' ",
+"DATA='castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/PHYSICS_COSMICS/27804/027804_0000063303.raw' SVC='LHCb::MDFSelector' ",
+"DATA='castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/PHYSICS_COSMICS/27804/027804_0000063303.raw' SVC='LHCb::MDFSelector' ",
+"DATA='PFN:/afs/cern.ch/lhcb/scratch/week/bdepaula/027041_0000062711.raw' SVC='LHCb::MDFSelector'"
+//"DATA='castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/MUON/PHYSICS/27331/027331_0000062878.raw' SVC='LHCb::MDFSelector'"
+};
+
+//EventSelector.Input   = {
+//"DATAFILE='castor:/castor/cern.ch/user/d/dijkstra/Selections-DC06/Bd2KstarMuMu-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+//"DATAFILE='castor:/castor/cern.ch/user/d/dijkstra/Selections-DC06/Bd2Jpsi2MuMuKS-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+//"DATAFILE='castor:/castor/cern.ch/user/d/dijkstra/Selections-DC06/Bd2DstarMu-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+//"DATAFILE='castor:/castor/cern.ch/user/d/dijkstra/Selections-DC06/Bd2D0Kst_D02HH-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+//"DATAFILE='castor:/castor/cern.ch/user/d/dijkstra/Selections-DC06/Bs2Dspi-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+//"DATAFILE='castor:/castor/cern.ch/user/n/nstyles/phiphi_signal.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+//  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol1/dijkstra/Selections/MBL0-lumi2-1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+//  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol1/dijkstra/Selections/MBL0-lumi2-2.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+//  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol3/dijkstra/Selections/MBL0-lumi2-3.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+//  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol3/dijkstra/Selections/MBL0-lumi2-4.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+// };
+
+
+// remove this
+//#include "$HLTSELECTIONSROOT/options/HltCorrelations.opts"
