@@ -3,6 +3,8 @@
 ! Responsible : Tracking 'A-Team' for the moment ... Then someone else.
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
+
+!============================ TfTools v1r6 2008-09-05 ========================
 ! 2008-08-20 - Stephanie Hansmann-Menzemer
   - add function to remove all used flags from hits to STHitCreator and 
     OTHitCreator
