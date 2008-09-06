@@ -83,12 +83,14 @@ PhysDesktop::PhysDesktop( const std::string& type,
                           const std::string& name,
                           const IInterface* parent )
   : GaudiTool ( type, name , parent ),
+    m_primVtxLocn(""),
     m_outputLocn     (),
     m_pMaker         (0),
     m_locationWarned (false),
     m_OnOffline      (0),
     m_p2VtxTable(),
-    m_pvRelator()
+    m_pvRelator(),
+    m_pvRelatorName("RelatedPVFinder/OnlinePVFinder")
 {
 
   // Declaring implemented interfaces
@@ -102,7 +104,7 @@ PhysDesktop::PhysDesktop( const std::string& type,
   declareProperty( "ParticleMakerType",m_pMakerType="" );
 
   //                    input & output locations
-  declareProperty( "InputPrimaryVertices", m_primVtxLocn = "" );
+  declareProperty( "InputPrimaryVertices", m_primVtxLocn );
   m_inputLocn.clear();
   declareProperty( "InputLocations", m_inputLocn );
 
@@ -130,7 +132,7 @@ PhysDesktop::PhysDesktop( const std::string& type,
   if (m_outputLocn.empty()) Exception("OutputLocation is not set") ;
 
   // instance of PV relator
-  declareProperty( "RelatedPVFinderName", m_pvRelatorName = "Default" );
+  declareProperty( "RelatedPVFinderName", m_pvRelatorName );
 
 
 } ;
@@ -141,7 +143,7 @@ PhysDesktop::PhysDesktop( const std::string& type,
 StatusCode PhysDesktop::initialize()
 {
 
-  const StatusCode sc = GaudiTool::initialize() ;
+  StatusCode sc = GaudiTool::initialize() ;
   if (!sc) return Warning( "Failed to initialize base class GaudiTool", sc );
   if (msgLevel(MSG::DEBUG)) debug() << ">>>   PhysDesktop::initialize() " << endmsg;
 
@@ -188,14 +190,15 @@ StatusCode PhysDesktop::initialize()
   // OnOffline tool
   m_OnOffline = tool<IOnOffline>("OnOfflineTool",this);
 
+  if (m_primVtxLocn=="") m_primVtxLocn = m_OnOffline->getPVLocation();
+
   // PV relator
-  if ( m_pvRelatorName != "Default" ){
-    Warning("Will be using non standard IRelatedPVFinder "+m_pvRelatorName);
-    m_pvRelator = tool<IRelatedPVFinder>(m_pvRelatorName); // not owned by desktop
-  } else {
-    m_pvRelator = m_OnOffline->pvRelator() ;
-  }
-  
+  m_pvRelator = tool<IRelatedPVFinder>(m_pvRelatorName);
+
+  sc = m_pvRelator->setDefaults(getPVLocation(),
+                                m_OnOffline->distanceCalculator());
+
+
   
   return sc;
 }
@@ -706,20 +709,17 @@ StatusCode PhysDesktop::getRelations(){
 //=============================================================================
 StatusCode PhysDesktop::getPrimaryVertices(){
 
-  std::string primVtxLocn ;
-  if ( m_primVtxLocn == "" ) primVtxLocn = m_OnOffline->getPVLocation() ;
-  else primVtxLocn = m_primVtxLocn ;
 
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Getting PV from " << primVtxLocn << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Getting PV from " << getPVLocation() << endmsg;
 
-  if ( !exist<LHCb::RecVertices>( primVtxLocn )){
+  if ( !exist<LHCb::RecVertices>( getPVLocation())){
     return StatusCode::SUCCESS; // no PV
   }
-  LHCb::RecVertices* verts = get<LHCb::RecVertices>( primVtxLocn );
+  LHCb::RecVertices* verts = get<LHCb::RecVertices>( getPVLocation() );
   if( ! verts ) {
-    if (msgLevel(MSG::VERBOSE)) verbose() << " Unable to retrieve vertices from " << primVtxLocn << endmsg;
+    if (msgLevel(MSG::VERBOSE)) verbose() << " Unable to retrieve vertices from " << getPVLocation() << endmsg;
   } else if( verts->empty() ) {
-    if (msgLevel(MSG::VERBOSE)) verbose() << " No vertices retrieved from  " << primVtxLocn << endmsg;
+    if (msgLevel(MSG::VERBOSE)) verbose() << " No vertices retrieved from  " << getPVLocation() << endmsg;
   } else {
     if (msgLevel(MSG::VERBOSE)) verbose() << "    Number of primary vertices  = " << verts->size() << endmsg;
 
@@ -738,7 +738,9 @@ StatusCode PhysDesktop::getPrimaryVertices(){
       m_primVerts.push_back(*ivert);
     }
   }
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Number of Vertices from " << primVtxLocn << " are " << m_primVerts.size() << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Number of Vertices from " 
+                                        << getPVLocation() << " are " 
+                                        << m_primVerts.size() << endmsg;
   return StatusCode::SUCCESS;
 }
 //=============================================================================
