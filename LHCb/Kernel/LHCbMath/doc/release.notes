@@ -6,6 +6,23 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2008-09-06 - Manuel Tobias Schiller
+ - LHCbMath/{MatrixInversion.h,SymMatrixInverter.h,SymPosDefMatrixInverter.h}
+   Add matrix inversion routines for symmetric and symmetric positive definite
+   matrices based on Cholesky decomposition for the positive definite case (or
+   a variant thereof for the general symmetric case). These routines have
+   template specializations for different matrix sizes for better performance.
+   All the inversion code should be inlined by the compiler.
+   For the positive definite case, the code should be more accurate than the
+   inversion routine that comes with ROOT::SMatrix, in the general case, it
+   depends on the matrix which implementation is more accurate; see the
+   documentation for details.
+   The user interface is in MatrixInversion.h and will work for symmetric
+   ROOT::SMatrix instances. The inversion code is implemented in the two other
+   header files. The implementation is a little more generic, so users who
+   know what they're doing might want to call this code directly for other
+   types of matrices (which should behave like a ROOT::SMatrix, though).
+
 !========================= LHCbMath v3r2 2008-09-03 ==========================
 ! 2008-08-02 - Vanya BELYAEV
  - LHCbMath/Bit.h
@@ -249,7 +266,7 @@
 !========================= LHCbMath v2r6 2008-02-24 ==========================
 ! 2008-02-24 - Vanya BELYAEV
  - LHCbMath/MatrixUtils.h
-	  add a bit more optimizations 
+     add a bit more optimizations 
 
 ! 2008-02-20 - Vanya BELYAEV 
  - add few more optimizations into MatrixUtils.h & MatrixTransforms.h
@@ -328,7 +345,7 @@
 !========================= LHCbMath v2r2 2007-07-10 ===========================
 ! 2007-07-10 - Juan Palacios
  - LHCbMath/GeomFun.icpp
-	 . Bug fix to parallel(line, line) method.
+    . Bug fix to parallel(line, line) method.
    . Bug-fix in closestPointParams method.
 
 ! 2007-07-10 - Marco Cattaneo
