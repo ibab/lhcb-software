@@ -210,6 +210,9 @@ private:
     return;
   }
 
+  inline std::string& getPVLocation() { return m_primVtxLocn; }
+  
+
 private: // data
 
   /// TES pathname for Primary Vertices 
