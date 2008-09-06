@@ -96,6 +96,9 @@ LHCb::STTELL1Error::FailureMode LHCb::STTELL1Error::linkInfo(const unsigned int 
                                                              const unsigned int testpcn) const
 {
 
+  // if link is not in error we have nothhing to do
+  if (hasErrorInfo() == false) return STTELL1Error::kNone;
+ 
   const unsigned int key = linkID(beetle,port);
   LHCb::STTELL1Error::FailureInfo::iterator i = m_badLinks.find( key ) ;
   if (m_badLinks.end() !=i) { 
