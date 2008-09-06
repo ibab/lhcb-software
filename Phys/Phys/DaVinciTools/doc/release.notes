@@ -1,8 +1,17 @@
-! $Id: release.notes,v 1.348 2008-08-29 15:47:43 pkoppenb Exp $
+! $Id: release.notes,v 1.349 2008-09-06 05:50:48 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-09-06 - Juan PALACIOS
+ - src/PhysDesktop.h
+  . Add private method returning PV location.
+ - src/PhysDesktop.cpp
+  . Sort out setting and use of PV location.
+  . De-couple IRelatedPVFinder from IOnOffline. Now the desktop controls it, 
+    and the PV location is set to its own PV location. The distance calculator
+    is set from the desktop, but to that given by the IOnOffline tool.
 
 !========================== DaVinciTools v17r1 2008-08-29 ===================
 ! 2008-08-27 - Patrick Koppenburg
