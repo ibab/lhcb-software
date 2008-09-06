@@ -1,4 +1,4 @@
- $Id: release.notes,v 1.234 2008-09-04 16:14:48 jpalac Exp $
+ $Id: release.notes,v 1.235 2008-09-06 05:56:12 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,10 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2008-09-04 - Juan PALACIOS
+ - tests/qmtest/davinci.qms/preselections.qms/test_bbstripping.qmt
+  . Adapt correlation table to changes in DV v20r0
 
 ! 2008-09-04 - Juan PALACIOS
  - options/DaVinciCommon.opts
