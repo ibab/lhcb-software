@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.15 2008-09-05 16:26:54 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.16 2008-09-06 12:13:00 pkoppenb Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -44,7 +44,7 @@ class Brunel(LHCbConfigurableUser):
                           "ProcessPhase/Output" ]
        ,"mcCheckSequence": ["Pat","RICH","MUON"] # The default MC Check sequence
        ,"initSequence": ["Reproc", "Brunel", "Calo"] # The default init sequence
-       ,"moniSequence": ["CALO","RICH"]    # The default Moni sequence
+       ,"moniSequence": ["CALO","RICH","MUON","VELO"]    # The default Moni sequence
        ,"monitors": []        # list of monitors to execute, see KnownMonitors
         # Following are options forwarded to RecSys
        ,"recoSequence"   : [] # The Sub-detector reconstruction sequencing. See RecSys for default

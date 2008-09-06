@@ -12,18 +12,13 @@ ApplicationMgr.AuditAlgorithms = True;
 AuditorSvc.Auditors += { "TimingAuditor" }; 
 ToolSvc.SequencerTimerTool.OutputLevel = 4;
 
-
 //--------------------------------------------------------------
-// Detectors to monitor (uncomment to use)
-// CRJ : Now done via python Configurable
-//--------------------------------------------------------------
-//Moni.DetectorList += {
-//                     "CALO"
-                     //                     ,"MUON"
-//                    };
-
-//--------------------------------------------------------------
-// Monitoring algorithms
+// Calo Monitoring algorithms
 //--------------------------------------------------------------
 #include "$CALOMONIDSTOPTS/CaloMonitor.opts"
+
+//--------------------------------------------------------------
+// Velo Monitoring algorithms
+//--------------------------------------------------------------
+#include "$VELORECMONITORSROOT/options/BrunelMoni_Velo.py"
 

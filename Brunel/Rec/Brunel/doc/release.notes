@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2008-09-06 - Patrick Koppenburg
+  - BrunelMoni.opts : Remove commented out MONI list. Add velo monitoring options.
+  - Configuration.py : Add Velo and Muon to MONI default list
+
 ! 2008-08-29 - Chris Jones
  - Update RICH monitoring options to use the Check sequence if MC is enabled
    and the Moni sequence when it is not.
