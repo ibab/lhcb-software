@@ -23,8 +23,6 @@ use oracle      v* LCG_Interfaces -no_auto_imports
 
 use Boost       v* LCG_Interfaces
 
-use SEAL        v* LCG_Interfaces -no_auto_imports
-
 use COOL        v* LCG_Interfaces
 
 apply_tag NEEDS_COOL_FACTORY
