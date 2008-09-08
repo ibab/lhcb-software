@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.57 2008-08-08 13:06:18 jpalac Exp $
+# $Id: requirements,v 1.58 2008-09-08 15:28:44 jpalac Exp $
 package AnalysisSys
-version v2r0
+version v2r1
 
 branches doc cmt
 
