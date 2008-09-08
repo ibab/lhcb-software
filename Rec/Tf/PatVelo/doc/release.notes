@@ -4,6 +4,11 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2008-09-08 - Marco Gersabeck
+ - Added PatVeloAlignTrackFilter.cpp/h 
+   This algorithm is a fast filter for tracks parallel to the beam axis and
+   is foreseen to be used in HLT.
+
 !========================== PatVelo v3r8 2008-09-05 ==========================
 ! 2008-09-04 - David Hutchcroft
  - Small bug fix to track sort order between RZ and Space tracking; 
