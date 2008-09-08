@@ -1,10 +1,10 @@
-// $Id: PVReFitterAlg.h,v 1.3 2008-08-19 19:39:26 jpalac Exp $
+// $Id: PVReFitterAlg.h,v 1.4 2008-09-08 16:09:10 jpalac Exp $
 #ifndef PVREFITTERALG_H 
 #define PVREFITTERALG_H 1
 
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiTupleAlg.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 
 
 // From LHCb
@@ -58,7 +58,7 @@ class IOnOffline;
  *  @author Juan PALACIOS
  *  @date   2008-06-25
  */
-class PVReFitterAlg : public GaudiTupleAlg {
+class PVReFitterAlg : public GaudiAlgorithm {
 public: 
   /// Standard constructor
   PVReFitterAlg( const std::string& name, ISvcLocator* pSvcLocator );

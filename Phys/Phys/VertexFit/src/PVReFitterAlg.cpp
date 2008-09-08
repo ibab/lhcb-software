@@ -1,4 +1,4 @@
-// $Id: PVReFitterAlg.cpp,v 1.3 2008-08-19 19:39:26 jpalac Exp $
+// $Id: PVReFitterAlg.cpp,v 1.4 2008-09-08 16:09:10 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -33,7 +33,7 @@ DECLARE_ALGORITHM_FACTORY( PVReFitterAlg );
 PVReFitterAlg::PVReFitterAlg( const std::string& name,
                               ISvcLocator* pSvcLocator)
   : 
-  GaudiTupleAlg ( name , pSvcLocator ),
+  GaudiAlgorithm ( name , pSvcLocator ),
   m_onOfflineTool(0),
   m_pvOfflineTool(0),
   m_pvReFitter(0),
@@ -74,7 +74,7 @@ StatusCode PVReFitterAlg::initialize() {
 
   //  StatusCode sc = DVAlgorithm::initialize(); // must be executed first
 
-  StatusCode sc = GaudiTupleAlg::initialize(); // must be executed first
+  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
 
   if ( sc.isFailure() ) return sc;  // error printed already by DVAlgorithm
 
@@ -292,7 +292,7 @@ StatusCode PVReFitterAlg::finalize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 
-  return GaudiTupleAlg::finalize();  // must be called after all other actions
+  return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
 //=============================================================================
