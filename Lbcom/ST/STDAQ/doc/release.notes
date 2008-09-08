@@ -4,14 +4,9 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
-
-! 2008-09-05 M Needham
-  - remove unused variable  
-
-! 2008-09-02 M Needham
-
 !=============================== STDAQ v3r11 2008-09-05 ======================
 ! 2008-09-05 M Needham
+  - remove unused variable  
 
  - bug fixes in readout tool and data lite cluster decoding
  - recovery mode implemented 
