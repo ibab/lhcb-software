@@ -6,6 +6,81 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v6r22>2008-09-08 LbcomSys v6r22</A></H1><PRE>
+This version uses Gaudi v20r2 and LHCb v25r1
+
+- Packages modified: CaloTools v5r4, L0Calo v9r17, L0DU v8r9, L0Muon v8r2,
+    L0MuonMonitor v1r1p1, RichDAQ v3r20, RichTools v2r22, STCheckers v2r7,
+    STDAQ v3r11, VeloDAQ v4r3
+
+- In CaloTools v5r4
+  . CaloCosmicsTrackAlg : add monitoring histo for cosmics track parameters
+  . CaloCosmicsTool : add cellId vector in the output ntuple
+
+- In L0Calo v9r17
+  . src/L0CaloCandidatesFromRaw.cpp: initialize raw bank status, improve speed
+
+- In L0DU v8r9
+  . rename L0DUBankSwap.opts to ReplaceL0BanksWithEmulated.opts:
+    o similar to ReplaceL0DUBankWithEmulated but for all L0 banks including
+      L0Calo and L0Muon.
+    o add missing default TCK for simulation (including DefaultTCK.opts)
+  . L0DUReportMonitor : bug fix (incomplete initialization) - produced weird
+    result in case of several TCK are monitored in the same job
+  . L0DUConfig_0x000X.opts : produced by L0DU PVSS on 25th august 2008
+    after configurations cleaning (naming + algorithm rewritting)
+      -> Warning : not backward compatible
+  . L0DUConfig_0x000X-obsolete.opts: to be used instead of L0DUConfig_0x000X.opts
+    for commissioning data taken before 2008/08/20 (run <30406)  
+  . L0DUConfig_0xDEBX.opts : produced by L0DU PVSS on 25th august 2008
+  . L0DUTriggerSet.opts : new options containing trigger set definition.
+  . improve printout
+
+- In L0Muon v8r2
+  . Change in L0MuonFromRawTrans :
+    o use a third instance of RegisterFactory 
+    o use by default the config file in PARAMFILES
+
+- In L0MuonMonitor v1r1p1
+  . Bug fix in the booking of number of cand and pt histos
+  . Possiblity to remove the setting of histo directory
+
+- In RichDAQ v3r20
+  . Do not include event IDs in event ID mis-match errors (as then each message
+    is different and thus never suppressed...)
+  . Some minor changes to help migration to python Configurables
+
+- In RichTools v2r22
+  . Updates for Configurables. Update default property values to those used
+    in the Job Option based configuration.
+
+- In STCheckers v2r7
+  . Add STPerformanceMonitor 
+
+- In STDAQ v3r11
+  . Bug fixes in readout tool and data lite cluster decoding
+  . Recovery mode implemented 
+  . Use IT and TTNames classes.
+  . Bug fix in service box mapping: vector of all possible names was not filled 
+  . Move to using new representation classes
+  . Error decoding moved to base class 
+  . Add PCN printout 
+  . Add functionality related to service boxes to readout tool 
+  . Fix problem in cluster decoding in case of all banks lost
+
+- In VeloDAQ v4r3
+  . missing input containers are no longer an error condition in NZS decoder
+  . if input is missing, the cluster decoder now only creates empty containers 
+    for the requested cluster type. 
+  . add a new SmartVeloErrorBankDecoder to deal with complicated error bank, able
+    to check which fpga processors sent errors and deal with different size of
+    the bank that depends on a raw file content
+  . update PrepareVeloFullRawBuffer - error decoding is now decoupled
+    from NZS data
+  . add a cluster filter algorithm that filters the [lite]clusters into 
+    new TES locations according to a few pre-defined criteria like 
+    "is R", is phi", etc. Also maximum and and minimum limits can be required
+
 </PRE><H1><A NAME=v6r21>2008-07-30 LbcomSys v6r21</A></H1><PRE>
 This version uses Gaudi v20r2 and LHCb v25r0
 
