@@ -24,7 +24,10 @@ class BridgeService: public DimInfo, public SLLItem
     if(*(int *)srv_data == no_link)
 	{
 		if(srv)
+		{
 			delete(srv);
+			srv = 0;
+		}
 		declared = 0;
 //  		cout << "Disconnecting bridge for: " << srv_name << endl;
 	}
@@ -38,7 +41,8 @@ class BridgeService: public DimInfo, public SLLItem
 	}
     else
 	{
-		srv->updateService(srv_data, srv_size);
+		if(srv)
+			srv->updateService(srv_data, srv_size);
 	}
   }
 
@@ -64,7 +68,13 @@ class BridgeService: public DimInfo, public SLLItem
   	~BridgeService()
   	{
   		if(declared)
-  			delete(srv);
+		{
+			if(srv)
+			{
+  				delete(srv);
+				srv = 0;
+			}
+		}
   		declared = 0;
 //  		cout << "Stopped bridge for: " << srv_name << endl;
   	}
@@ -271,7 +281,7 @@ int rate = 0;
 				delete aux_ptrc;
 			}
 		}
-		sleep(2);
+		sleep(4);
 	}
 	return 1;
 }

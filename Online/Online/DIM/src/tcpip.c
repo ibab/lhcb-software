@@ -538,6 +538,11 @@ int conn_id;
 */
 	while( size > 0 && count > 0 )
 	{
+/*
+		would this be better? not sure afterwards...
+		nbytes = (size < count) ? size : count;
+		if( (len = readsock(Net_conns[conn_id].channel, p, nbytes, 0)) <= 0 ) 
+*/
 		if( (len = readsock(Net_conns[conn_id].channel, p, size, 0)) <= 0 ) 
 		{	/* Connection closed by other side. */
 			Net_conns[conn_id].read_rout( conn_id, -1, 0 );
@@ -638,12 +643,11 @@ int num;
 						if(Net_conns[conn_id].channel)
 						{
 							do_read( conn_id );
-							count = 0;
-/*
-						if(Net_conns[conn_id].channel)
-						{
-*/
 							count = get_bytes_to_read(conn_id);
+						}
+						else
+						{
+							count = 0;
 						}
 					}while(count > 0 );
 				}
@@ -707,12 +711,11 @@ void tcpip_task( void *dummy)
 						if(Net_conns[conn_id].channel)
 						{
 							do_read( conn_id );
-							count = 0;
-/*
-						if(Net_conns[conn_id].channel)
-						{
-*/
 							count = get_bytes_to_read(conn_id);
+						}
+						else
+						{
+							count = 0;
 						}
 						ENABLE_AST
 					}while(count > 0 );
