@@ -3,6 +3,7 @@
 ##############################################################################
 
 from Boole.Configuration import *
+from Configurables import CondDBAccessSvc
 
 Boole().EvtMax       = 10
 Boole().useSpillover = False
@@ -15,6 +16,10 @@ Boole().applyConf()
 
 # Do not compare times....
 TimingAuditor().OutputLevel = WARNING 
+
+# Ignore changes to database tags
+CondDBAccessSvc('DDDB').OutputLevel = WARNING
+CondDBAccessSvc('SIMCOND').OutputLevel = WARNING
 
 # Data files
 importOptions( "$BOOLEOPTS/2008-Files.py" ) 
