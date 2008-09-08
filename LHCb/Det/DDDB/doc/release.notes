@@ -4,7 +4,10 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
-!========================== DDDB v1r11 2008-09-05 ============================
+!========================== DDDB v1r11 2008-09-08 ============================
+! 2008-09-08 - Marco Cattaneo
+ - New default tags for 2008 (head-20080908).
+
 ! 2008-09-05 - Marco Clemencic
  - New default tags for 2008 (head-20080905).
 
