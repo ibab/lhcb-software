@@ -1,16 +1,16 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.14 2008-07-30 15:22:43 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.15 2008-09-08 16:36:00 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
-from Gaudi.Configuration import *
+from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
 from Configurables import ( CondDBCnvSvc, MagneticFieldSvc,
                             MCSTDepositCreator, MuonDigitToRawBuffer ) 
 import GaudiKernel.ProcessJobOptions
 
-class Boole(ConfigurableUser):
+class Boole(LHCbConfigurableUser):
     __slots__ = {
         "EvtMax":          -1 # Maximum number of events to process
        ,"skipEvents":   0     # events to skip
@@ -26,33 +26,18 @@ class Boole(ConfigurableUser):
        ,"mainOptions" : '$BOOLEOPTS/Boole.opts' # top level options to import
        ,"noWarnings":   False # suppress all messages with MSG::WARNING or below 
        ,"datasetName":  '00001820_00000001' # string used to build file names
-       ,"DDDBtag":      ""    # geometry database tag
-       ,"condDBtag":    ""    # conditions database tag
+       ,"DDDBtag":      "DC06-default"    # geometry database tag
+       ,"condDBtag":    "DC06-default"    # conditions database tag
        ,"useOracleCondDB": False  # if False, use SQLDDDB instead
        ,"monitors": []        # list of monitors to execute
         }
 
-    def getProp(self,name):
-        if hasattr(self,name):
-            return getattr(self,name)
-        else:
-            return self.getDefaultProperties()[name]
-
-    def setProp(self,name,value):
-        return setattr(self,name,value)
-
-    def setOtherProp(self,other,name):
-        # Function to propagate properties to other component, if not already set
-        if hasattr(self,name):
-            if hasattr(other,name):
-                print "# %s().%s already defined, ignoring Brunel().%s"%(other.name(),name,name)
-            else:
-                other.setProp(name,self.getProp(name))
-
-
     def defineDB(self):
-        self.setOtherProp(LHCbApp(),"condDBtag") 
-        self.setOtherProp(LHCbApp(),"DDDBtag") 
+        # Prefer Boole default over LHCbApp default if not set explicitly
+        self.setProp( "condDBtag", self.getProp("condDBtag") )
+        self.setProp( "DDDBtag", self.getProp("DDDBtag") )
+        # Delegate handling to LHCbApp configurable
+        self.setOtherProps(LHCbApp(),["condDBtag","DDDBtag"])
 
         # Special options for DC06 data processing
         if LHCbApp().getProp("DDDBtag").find("DC06") != -1 :

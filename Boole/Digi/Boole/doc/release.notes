@@ -3,11 +3,10 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-! 2008-09-08 - Marco Cattaneo
- - Separate the QMTest reference files for amd64 and ia32 platforms
-
 </PRE><H1><A NAME=v16r2>2008-09-08 Boole v16r2</A></H1><PRE>
- - Update QMTest references for new release
+ - Update Configurable to inherit from LHCbConfigurableUser
+ - Separate the QMTest reference files for amd64 and ia32 platforms and update
+   for new release
  - Ignore condDB tags in QMTest output
 
 </PRE><H1><A NAME=v16r1>2008-07-30 Boole v16r1</A></H1><PRE>
