@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.55 2008-09-05 13:56:39 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.56 2008-09-08 12:02:42 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -336,6 +336,8 @@ StatusCode TrackMasterFitter::determineStates( Track& track, ParticleID pid ) co
         state.setLocation( State::BegRich2 );
       else if ( fabs(z - StateParameters::ZEndRich2 ) < TrackParameters::lowTolerance )
         state.setLocation( State::EndRich2 );
+      else if ( fabs(z - StateParameters::ZEndVelo ) < TrackParameters::lowTolerance )
+	state.setLocation( State::EndVelo );
       // add to the track
       track.addToStates( state );
     }
@@ -506,6 +508,8 @@ StatusCode TrackMasterFitter::makeNodes( Track& track, LHCb::ParticleID pid ) co
       state.setLocation( State::BegRich2 );
     else if ( fabs(z - StateParameters::ZEndRich2 ) < TrackParameters::lowTolerance )
       state.setLocation( State::EndRich2 );
+    else if ( fabs(z - StateParameters::ZEndVelo ) < TrackParameters::lowTolerance )
+      state.setLocation( State::EndVelo );
     nodes.push_back( node ) ;
   }
 
