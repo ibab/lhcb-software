@@ -5,6 +5,190 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v25r1>2008-09-08 LHCbSys v25r1</A></H1><PRE>
+This version uses Gaudi v20r2 and LCG_55a
+
+- Packages modified: GaudiObjDesc v11r4, KernelSys v9r1, LHCbKernel v9r1, 
+    LHCbMath v3r2, L0MuonKernel v8r2, ProcessorKernel v5r2, RichKernel v7r15,
+    DetSys v15r1, DDDB v1r11, Magnet v5r1, MuonDet v8r3, OTDet v8r0,
+    RichDet v11r1, STDet v4r5, EventSys v24r8, DAQEvent v7r14, DigiEvent v2r8,
+    HltEvent v8r12, L0Event v17r1p1, MCEvent v2r9p1, RecEvent v2r15,
+    VeloEvent v16r6, STTELL1Event v1r5, DAQSys v5r2, MuonDAQ v4r4, OTDAQ v7r2,
+    CaloUtils v8r1p1, LHCbAlgs v2r21, LoKiCore v7r7, LoKiGen v7r6, LoKiMC v7r6,
+    LoKiPhys v7r7, RichRecBase v3r16, SimComponents v2r12, STKernel v1r8,
+    TfKernel v2r7
+
+- In GaudiObjDesc v11r4
+  . Fixed fragment to create target directory if not already existing
+
+- In LHCbKernel v9r1
+  . Add some missing dictionaries and missing includes
+  . Extend functionality in TT and ITNames 
+    [add methods to return station, layer, ... names + all valid possibilities]
+  . Add python/LHCbKernel/Configurable.py containing base class Configurable
+  . Kernel/Inspectors.h, src/Inspectors.cpp, python/LHCbKernel/Inspector.py 
+    New utility class LHCb::Inspector for (recursive) inspection of the 
+    major properties of various Gaudi components, including  the application
+    itself. It is especially suited for inspection of the "algorithmic" part.  
+  . Small update for LHCb::ParticleID::digit function to follow updated
+    Gaudi::Math::digit function (Least significant digit now numbered as #0)
+
+- In LHCbMath v3r2
+  . LHCbMath/Bit.h, LHCbMath/Digit.h
+    Add functionality to get the RANGE of bits (or decimal digits) from
+    unsigned integral type. See details in LHCbMath release notes
+
+- In L0MuonKernel v8r2
+  . Add decoding of the L0Muon compressed mode + transparent mode v2 
+  . Bug fix in the handling of status error 
+  . Minor bug fix in the handling of decoding error counter
+
+- In ProcessorKernel v5r2
+  . Allow a 3rd instance of Register Factory (to run L0MuonFromRawTrans)
+
+- In RichKernel v7r15
+  . Update interface to HPDDisableTool and add method based on minimal
+    information required
+  . Import tool interface header files from Rich/RichMonitoringTools
+  . Add python configuration files
+  . Change ToolRegistry names from Offline.XXX to Offline_XXX to avoid 
+    problems with python configurables
+
+- In DDDB v1r11
+  . New default tags for DC06 (DC06-20080904) and 2008 (head-20080908)
+
+- In Magnet v5r1
+  . Add an option UseSetCurrent to get Set instead of Measured current from
+    CondDB (default false)
+  . Remove a duplicate registration to a condition
+  . Fix a bug in use case without condDB (was crashing if scale factor was set)
+  . If MagneticFieldSvc.UseConstantField option is set, all other options are
+    ignored
+  . Fix uninitialised pointer to Real field map tools
+  . Remove unneccessary TestMagnet.exe. Test can be run with 
+    "Gaudi.exe ../options/job.opts" or  "gaudirun.py ../options/job.opts"
+  . Improve messages when scaling factor changes
+
+- In MuonDet v8r3
+  . Fix a FPE in MuonChamberGrid::listOfPhysChannels()
+
+- In OTDet v8r0
+  . Fix staggering of straws in a module. The offsets are retrieved from DDDB.
+    Affects digitization, for 2008 geometry this is not backward compatible with
+    digis produced with older version of Boole.
+
+- In RichDet v11r1
+  . Add method to DeRichRadiator to provide interpolated function for the 
+    effective absorption length, as a function of photon energy.
+  . Make sure interpolators in DeRichRadiator are re-initialised when the 
+    underlying tables are updated.
+  . Move the method initTabPropInterpolators() to the DeRichRadiator base class.
+  . Add the public method initInterpolator to Rich::TabulatedProperty1D to 
+    allow the forced re-initialisation of the interpolator.
+
+- In STDet v4r5
+  . Add many dictionaries
+
+- In DAQEvent v7r14
+  . bankKiller can now work in exclusion mode (kill all that is not specified)
+  . OdinTypeFilter : extend to ReadoutType and TAEWindow
+
+- In DigiEvent v2r8
+  . Add custom dictionary, and populate it with FastClusterContainers
+  . Add shortcuts to station, layer etc to STCluster classes
+  . Add accessor to liteCluster form Cluster class 
+
+- In HltEvent v8r12
+  . LumiResult container added to hold "R" results in extraInfo
+  . LumiSummary container is now a single object
+  . added HltVertexReports.xml
+
+- In L0Event v17r1p1
+  . Bug fix to L0MuonError.cpp : correct the pu index computation
+
+- In MCEvent v2r9p1
+  . Add a dictionary
+
+- In RecEvent v2r15
+  . Add list of recovered banks to STSummary class 
+  . RichPID:
+    o Extend type flags in RichPID
+    o Remove LHCb::RichPID(const LHCb::RichPID*) copy constructor.
+    o Add LHCb::RichPID(const LHCb::RichPID&) copy constructor.
+  . MuonPID: Add LHCb::MuonPID(const LHCb::MuonPID&) copy constructor.
+
+- In VeloEvent v16r6
+  . Modified VeloErrorBank class that stores information from VeloError bank
+
+- In STTELL1Event v1r5
+  . add method to test if link is enabled to STTell1Error
+  . Add ErrorInfo method to STTell1BoardErrorBank
+  . Change location of error bank
+  . Cleanup/bug fix in STTELL1Error bankLink method  
+
+- In MuonDAQ v4r4
+  . Fix for empty raw bank during check of tell1 headers (version and source id)
+
+- In OTDAQ v7r2
+  . Added method to get total number of hits (without 'decoding' the full bank)
+
+- In CaloUtils v8r1p1
+  . Calo2Dview.cpp : remove verbose line
+
+- In LHCbAlgs v2r21
+  . Make sure DeterministicPrescaler does not crash on events without ODIN
+
+- In LoKiCore v7r7
+  . LoKi/Trees.h, LoKi/Trees.icpp: fix wrong signature of constructor for Marked_
+  . src/Component/LoKiSvc.cpp: add more "protected" words/symbols for CC-utility
+  . fix LaTeX expresssions inside Doxygen comments 
+  . Many improvemens to LoKi::Tensors utilities
+  . LoKi::Kinematics::<...> : use explicit Lorentz-invariant expressions for
+    evaluation of (sin/cos/angle) chi.
+  . LoKi/Kinematics.h, src/Kinematics.cpp
+    o reimplement of 2-argument LoKi::Kinematics::decayAngle in terms 
+      of 3-argument form in terms of Lorentz invariants (no "boost" are used).
+      The old implementation is available as LoKi::Kinematics::decayAngle_ 
+    o Add new functions for evaluation of angle "chi" between the decay planes:
+      LoKi::Kinematics::cosDecayAngleChi, sinDecayAngleChi, decayAngleChi 
+    o Add new functions for evaluation of energy and 3-momentum magnitude of one
+      particle in the reference system of another particle:
+      LoKi::Kinematics::restMomentum, restEnergy 
+  . LoKi/Report.h, LoKi/ErrorReport.h: some ironing of status codes 
+
+- In LoKiGen v7r6
+  . LoKi/GenDecays.h, src/GenDecays.cpp:
+    o make more uniform interface for LoKi::Decays::Trees::Gen* 
+    o improve Doxygen comments 
+
+- In LoKiMC v7r6
+  . LoKi/MCDecays.h: improve Doxygen comments  
+
+- In LoKiPhys v7r7
+  . python/LoKiPhys/functions.py: add missing LV0, LV01, LV02, LV03, LV04 symbols
+
+- In RichRecBase v3r16
+  . Resurrect the old FastRingFitter class, that provides a simple and fast 
+    circle fit to a set of (x,y) data points.
+  . Remove redundant method from IRichSellmeirFunc interface
+  . Improve default property values in various base classes
+  . use of the god_headers pattern instead of the plain obj2doth document.
+
+- In SimComponents v2r12
+  . Fix ForcedBDecayTool.cpp to work with CheatedSelection
+
+- In STKernel v1r8
+  . Add Strip, Beetle and PPRepresentation classes
+  . Bug fix in STBoardMapping.h (first IT TELL1 number is 1, not 0)
+  . Add functionality to STTell1Board
+  . Add functionality to ITSTReadoutTool, STTell1Board related to service box
+    mapping
+  . Add dictionary stuff [lots done, but still incomplete !]
+
+- In TfKernel v2r7
+  . Add methods to HitCreator interfaces to reset hit used flag, add method to
+    HitBase to reset used flag
+
 </PRE><H1><A NAME=v25r0>2008-07-29 LHCbSys v25r0</A></H1><PRE>
 This version uses Gaudi v20r2 and LCG_55a
 
