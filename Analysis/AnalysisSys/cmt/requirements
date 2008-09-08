@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.58 2008-09-08 15:28:44 jpalac Exp $
+# $Id: requirements,v 1.59 2008-09-08 15:53:52 jpalac Exp $
 package AnalysisSys
 version v2r1
 
@@ -10,18 +10,18 @@ branches doc cmt
 #===================================================================
 use  CommonParticles            v4r0     Phys   # Juan Palacios, WGs
 use  FlavourTagging             v8r0     Phys   # Marco Musy
-use  DaVinciFilter              v6r9     Phys   # Patrick Koppenburg - deprecated
+use  DaVinciFilter              v6r10    Phys   # Patrick Koppenburg - deprecated
 
 ####################################################################
-use  DaVinciMCTools     	v9r15    Phys   # Juan Palacios
+use  DaVinciMCTools     	v9r16    Phys   # Juan Palacios
 use  DaVinciAssociators         v9r2p4   Phys   # Philippe Charpentier
-# use  VertexFitCheck             v1r2p1   Phys   # Yuehong Xie
+use  VertexFitCheck             v1r3   Phys   # Yuehong Xie
 use  MCStandardParticles        v1r2     Phys   # Juan Palacios
 use  FlavourTaggingChecker      v3r1     Phys   # Marco Musy
 use  DaVinciUser      	        v8r5     Phys   # Juan Palacios
 use  ParticleMakerChecker       v1r2     Phys   # Chris Jones
 use  LoKiUser                   v6r1     Phys   # Vanya Belyaev
-use  DecayTreeTuple             v1r5     Phys   # Jeremie Borel
+use  DecayTreeTuple             v1r6     Phys   # Jeremie Borel
 ####################################################################
 use  PhysSelSys          	v10r11  PhysSel
 #===================================================================
@@ -46,7 +46,7 @@ use Bd2PiPiPi0       	   	v4r3p3   PhysSel # Olivier Deschamps
 use  Stripping          	v6r6     Tools   # Patrick Koppenburg
 
 ####################################################################
-use  MicroDSTBase        	v1r1p1  MicroDST          # Juan Palacios
+use  MicroDSTBase        	v1r2  MicroDST          # Juan Palacios
 use  MicroDSTInterfaces  	v1r1    MicroDST          # Juan Palacios
 use  MicroDSTTools      	v1r3    MicroDST          # Juan Palacios
 use  MicroDSTAlgorithm   	v3r3  MicroDST          # Ulrich Kerzel
