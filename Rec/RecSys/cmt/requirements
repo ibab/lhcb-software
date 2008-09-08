@@ -59,7 +59,7 @@ use RichGlobalPID       v3r10   Rich  # Chris Jones
 use RichHLTLocalPID     v1r3    Rich  # Chris Jones
 use RichLocalPID        v3r6    Rich  # Chris Jones
 use RichMarkovRingFinder v2r1   Rich  # Chris Jones
-use RichPIDMerge	v2r6    Rich  # Chris Jones
+use RichPIDMerge        v2r6    Rich  # Chris Jones
 use RichRecAlgorithms   v2r13   Rich  # Chris Jones
 use RichRecMCAlgorithms v1r1    Rich  # Chris Jones
 use RichRecMCTools      v2r19   Rich  # Chris Jones

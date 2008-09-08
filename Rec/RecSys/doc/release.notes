@@ -5,17 +5,127 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-! 2008-08-18 - Chris Jones
- - Remove dependency on Rich/RichHLTSys. Obsoleted by new python Configuration
-   in Rich/RichRecSys.
+</PRE><H1><A NAME=v5r11>2008-09-08 RecSys v5r11</A></H1><PRE>
+This version uses Gaudi v20r2 and LHCb v25r1.
 
-! 2008-08-15 - Chris Jones
- - Add new python Configurable RecSys(). This configurable replaces the old 
-   options and python files previously in the options sub-directory, and thus 
-   have been removed.
+- Packages added:    VeloRecMonitors v1r0: Velo monitoring for ZS Reco data
+- Packages removed:  RichHLTSys, obsoleted by new Configuration.py in RichRecSys 
+- Packages modified: CaloReco v4r15, TrackCheckers v4r2,
+    TrackExtrapolators v2r20, TrackTools v3r11, TrackSys v4r17, NNTools v1r3,
+    PatAlgorithms v3r10, PatVelo v3r8, TfTools v1r6, PatPV v3r6,
+    MuonPIDChecker v2r3, RichGlobalPID v3r10, RichHLTLocalPID v1r3,
+    RichLocalPID v3r6, RichMarkovRingFinder v2r1, RichPIDMerge v2r6,
+    RichRecAlgorithms v2r13, RichRecPhotonTools v1r5, RichRecQC v2r22,
+    RichRecSys v3r13, RichRecTools v4r5, RichRecTrackTools v1r6
+
+- In RecSys v5r11
+  . Add new python Configurable RecSys(). This configurable replaces the old 
+    options and python files previously in the options sub-directory, which has
+    been removed
+
+- In CaloReco v4r15
+  . HltCaloSeq.opts : CaloDigits created via the on-Demand service to avoid
+                      conflict with offline processing.
+
+- In TrackCheckers v4r2
+  . Added output to job finalization
+  . Added some safety checks for division by zero
+  . Replace number of histograms by names
+
+- In TrackExtrapolators v2r20
+  . Fixed bug in HeraBExtrapolator::rk5numde which would make it fail for q/p=0
+
+- In TrackTools v3r11
+  . make FastMomentumTool and PtTransporter safe for 0 b field
+  . StateSimpleBetheBlochEnergyCorrectionTool.cpp, correction never applied,
+    added missing tX[4] = 1.0/newP;
+
+- In TrackSys v4r17
+  . Fix bug to extrapolator options in Fitting.py  
+  . Fix bugs for nonDrifttimes and BfieldOff in Fitting.py and RecoTracking.py
+  . Add option file for track checking sequence, 
+  . Minor improvements to python configurable, to fit in with changes in RecSys
+
+- In NNTools v1r3
+  . Fix FPE in ghost probability tool
+
+- In PatAlgorithms v3r10
+  . PatSeedingTool: 
+    o fix for L0 confirmation: account properly for tilt in search windows
+      derived from state given by caller
+    o use newly introduced PatRange object to represent search windows
+    o fix for cosmics: in X search, try all combinations of regions to find
+      initial three x hits (allowing hits in IT to be found)
+    o fix for fallback momentum estimate: if FastMomentumTool returns failure for
+      some reason and we run without magnetic field, return  momentum 1 GeV with
+      uncertainty on q/p = 1 / 1MeV
+    o when specifying track model parameters as options, make sure that
+      initialize() does not overwrite them
+  . PatSeedTool, PatSeedTrack, PatSeedingTool: use unsigned instead of int
+    if we know that a number is positive
+  . Move public tools private, to allow for separate configuration in HLT and
+    offline in same job
+
+- In PatVelo v3r8
+  . Small bug fix to track sort order between RZ and Space tracking; 
+    slight improvement in efficiency and ghost rate
+  . Added PatVeloResetClusterUsed to all the rerunning of VELO PR routines in 
+    the same job for the HLT2 group. Modifications to PatVeloRHitManager and 
+    PatVeloPhiHitManager make this possible.
+
+- In TfTools v1r6
+  . Add function to remove all used flags from hits to STHitCreator and 
+    OTHitCreator
+  . Add new algorithm to remove all used flags from hits, e.g. to run HLT2
+    on initial scenario after HLT1 
+
+- In PatPV v3r6
+  . Improvements for reconstruction of low multiplicity PVs and bad quality
+    tracks. Triggered by options. Deafult performance not changed.   
+
+- In MuonPIDChecker v2r3
+  . Edit reference numbers 
+  . Add the possibility to save monitoring or checking histos
+  . Modify some histos
+
+- In RichGlobalPID v3r10,  RichHLTLocalPID v1r3, RichLocalPID v3r6,
+     RichPIDMerge v2r6
+  . Adapt to changes in RichPID from RecEvent v2r15
+
+- In RichGlobalPID v3r10, RichRecPhotonTools v1r5, RichRecTools v4r5,
+     RichRecTrackTools v1r6
+  . Update default property values
+
+- In RichHLTLocalPID v1r3
+  . Add context specific default RichPID TES locations
+
+- In RichMarkovRingFinder v2r1
+  . Update the trackless ring monitor
+  . Some minor improvements
+
+- In RichRecAlgorithms v2r13
+  . Add new selection criteria to EventSelectionAlg
+
+- In RichRecQC v2r22
+  . Add a couple new plots to RichRecoQC to fill photon yield plots
+  . Make sure some plots are filled in MC-free mode.
+  . Add python configurable
+
+- In RichRecSys v3r13
+  . Add python Configuration. Job Option files remain for the moment to allow, 
+    testing whilst moving over, but will be removed in a future release.
+
+- In RichRecTools v4r5
+  . Improve handling of updates in RichSellmeirFunc and 
+    RichTabulatedRayleighScatter.
+  . Improve use of aerogel properties in RichSellmeirFunc and 
+    RichTabulatedRayleighScatter.
+
+- In RichRecTrackTools v1r6
+  . Don't abort processing when input Tracks are missing.
 
 </PRE><H1><A NAME=v5r10>2008-07-30 RecSys v5r10</A></H1><PRE>
-This version uses Gaudi v20r2 and LHCb v2r50.
+This version uses Gaudi v20r2 and LHCb v25r0.
 
 - Packages modified: MuonID v5r2p1, MuonTrackAlign v1r6, PatAlgorithms v3r9,
     PatVeloTT v3r3, RecAlgs v1r7, RichRecAlgorithms v2r12, RichRecQC v2r20,
