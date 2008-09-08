@@ -1,10 +1,9 @@
-// $Id: HltTrackUpgradeTool.cpp,v 1.26 2008-07-30 13:39:39 graven Exp $
+// $Id: HltTrackUpgradeTool.cpp,v 1.27 2008-09-08 10:14:22 graven Exp $
 // Include files
 #include "GaudiKernel/ToolFactory.h" 
 
 // local
 #include "HltTrackUpgradeTool.h"
-#include "Event/HltEnums.h"
 #include "HltBase/ESequences.h"
 #include "GaudiKernel/IJobOptionsSvc.h"
 #include "GaudiKernel/Property.h"
@@ -163,8 +162,10 @@ StatusCode HltTrackUpgradeTool::setReco(const std::string& key)
   m_transferIDs = m_recoConf.retrieve<bool>(m_recoName+"/TransferIDs");
   m_transferAncestor = 
     m_recoConf.retrieve<bool>(m_recoName+"/TransferAncestor");
-  
-  if (m_recoID <= HltEnums::VeloKey) m_orderByPt = false;
+ 
+  // by default, m_orderByPt is already false... so this only overrules
+  // the case where someone overruled it to be true...
+  // if (m_recoID <= hltInfoID( HltEnums::VeloKey) m_orderByPt = false;
 
   info() << " Reco: " << m_recoName 
          << " Tool: " << toolName

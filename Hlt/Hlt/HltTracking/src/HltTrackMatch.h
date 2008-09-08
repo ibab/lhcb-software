@@ -1,4 +1,4 @@
-// $Id: HltTrackMatch.h,v 1.4 2008-07-30 13:39:39 graven Exp $
+// $Id: HltTrackMatch.h,v 1.5 2008-09-08 10:14:22 graven Exp $
 #ifndef HLTTRACKING_HLTTRACKMATCH_H 
 #define HLTTRACKING_HLTTRACKMATCH_H 1
 
@@ -7,7 +7,6 @@
 #include "HltBase/HltAlgorithm.h"
 #include "HltBase/HltSelectionContainer.h"
 #include "TrackInterfaces/ITrackMatch.h"
-#include "Event/HltEnums.h"
 #include "Event/Track.h"
 
 
