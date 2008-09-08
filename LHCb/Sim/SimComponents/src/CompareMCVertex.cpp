@@ -1,4 +1,4 @@
-// $Id: CompareMCVertex.cpp,v 1.4 2008-06-05 12:18:29 cattanem Exp $
+// $Id: CompareMCVertex.cpp,v 1.5 2008-09-08 15:46:18 cattanem Exp $
 // Include files 
 
 // from STD
@@ -67,7 +67,7 @@ StatusCode CompareMCVertex::execute() {
     // Protect crazy vertex times in DC06 data. Test times should be OK after unpacking
     double oldTime;
     if( oVert->time() > 0. && oVert->time() < std::numeric_limits<float>::min() ) {
-      debug() << "time " << oVert->time() << " set to zero for vertex "
+      debug() << "time set to zero for vertex "
                 << oVert->key() << " of type " << oVert->type() << endmsg;
       oldTime = 0;
     }

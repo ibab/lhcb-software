@@ -5,6 +5,9 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+! 2008-09-08 - Marco Cattaneo
+ - Improve FPE protection of CompareMCVertex (was failing on ia32)
+
 !====================== SimComponents v2r12 2008-09-04 =======================
 ! 2008-09-03 - Marco Musy
  - fix of warning message
