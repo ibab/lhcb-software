@@ -24,10 +24,10 @@ SaverSvc::SaverSvc(const std::string& name, ISvcLocator* ploc) : Service(name, p
   declareProperty("taskname",m_taskName);
   declareProperty("algorithmname",m_algorithmName);
   declareProperty("objectname",m_objectName);
-  declareProperty("refreshTime",  m_refreshTime=5);
+  declareProperty("refreshTime",  m_refreshTime=10);
   declareProperty("dimclientdns",m_dimClientDns);
   declareProperty("savedir", m_saveDir);
-  
+  m_enablePostEvents = true;
 }
 
 SaverSvc::~SaverSvc() {}
@@ -42,16 +42,23 @@ StatusCode SaverSvc::initialize() {
   }
   
   m_utgid = RTL::processName();
+  
   std::size_t first_us = m_utgid.find("_");
   std::size_t second_us = m_utgid.find("_", first_us + 1);
   m_nodeName = m_utgid.substr(0, first_us);
+  
+  if (m_nodeName.compare(m_partName[0])) {
+    std::size_t third_us = m_utgid.find("_", second_us+1);
+    m_nodeName = m_utgid.substr(second_us+1,third_us);
+  }
+
   std::string verifName = m_utgid.substr(first_us + 1, second_us - first_us - 1);
   
-  if ((verifName != "Saver")&&(verifName != "SAVER")) {
-    msg << MSG::ERROR << "This is not a Saver !" << endreq;
-    msg << MSG::ERROR << "Pplease try nodeName_Saver_1" << endreq;
-    return StatusCode::FAILURE;
-  }
+//   if ((verifName != "Saver")&&(verifName != "SAVER")) {
+//     msg << MSG::ERROR << "This is not a Saver !" << endreq;
+//     msg << MSG::ERROR << "Pplease try nodeName_Saver_1" << endreq;
+//     return StatusCode::FAILURE;
+//   }
 
   sc = service("IncidentSvc",m_incidentSvc,true);
   if ( !sc.isSuccess() )  {
@@ -64,7 +71,7 @@ StatusCode SaverSvc::initialize() {
   msg << MSG::DEBUG << "***************************************************** " << endreq;
   msg << MSG::DEBUG << "This Saver will save data published in : " << m_dimClientDns << endreq;
   
-  msg << MSG::DEBUG << "Consider node " << m_nodeName << endreq;
+  msg << MSG::DEBUG << "Consider node " << m_nodeName << " partition " << m_partName << endreq;
 
   if ((0 == m_partName.size())&&(0 == m_taskName.size())){
     msg << MSG::ERROR << "In your options file you should to specify the tasks names OR the partition names." << endreq;
@@ -107,17 +114,17 @@ StatusCode SaverSvc::initialize() {
   msg << MSG::DEBUG << "***************************************************** " << endreq;
     
   msg << MSG::DEBUG << "creating ProcessMgr" << endreq;
-  m_processMgr = new ProcessMgr (msgSvc(), this);
+  m_processMgr = new ProcessMgr (msgSvc(), this, m_refreshTime);
   if (m_withPartitionName) m_processMgr->setPartVector(m_partName);
   m_processMgr->setTaskVector(m_taskName);
   m_processMgr->setAlgorithmVector(m_algorithmName);
   m_processMgr->setObjectVector(m_objectName);
-  m_processMgr->setUtgid(m_utgid);
+  m_processMgr->setNodeName(m_nodeName);
   m_processMgr->setSaveDir(m_saveDir);
 
   m_processMgr->createInfoServers();
 
-  m_processMgr->createTimerProcess(m_refreshTime);
+  m_processMgr->createTimerProcess();
 
   m_file="Waiting for command to save histograms............."; 
   m_fileSize=0;
@@ -145,7 +152,9 @@ StatusCode SaverSvc::initialize() {
 
 void SaverSvc::handle(const Event&  ev) {
   MsgStream msg(msgSvc(), name());
-
+  
+  if (!m_enablePostEvents) return;
+  
   if (s_saveHistos == ev.type) {
     save().ignore();
   }
@@ -204,6 +213,7 @@ void SaverSvc::handle(const Incident& inc) {
 StatusCode SaverSvc::finalize() {
 //------------------------------------------------------------------------------
   MsgStream msg(msgSvc(), name());
+  m_enablePostEvents = false;
   msg << MSG::INFO<< "Save historgams on finalized..... " << endmsg;
   // No linger accept incidents!
   if ( m_incidentSvc ) {

@@ -64,6 +64,7 @@ private:
   std::string m_command;
   std::string m_file;
   int m_fileSize;
+  bool m_enablePostEvents;
     
   };
 }  //end namespace LHCb  
