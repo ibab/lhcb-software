@@ -1,4 +1,4 @@
-// $Id: HltSelection2Decision.cpp,v 1.1 2008-09-04 12:20:01 graven Exp $
+// $Id: HltSelection2Decision.cpp,v 1.2 2008-09-09 11:00:44 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -27,7 +27,7 @@ HltSelection2Decision::HltSelection2Decision( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator ) 
 {
   declareProperty("InputSelection", m_inputName.property());
-  declareProperty("DecisionName", m_decisionName = name );
+  declareProperty("Decision", m_decisionName = name );
   declareProperty("DecReportsLocation", m_location = LHCb::HltDecReportsLocation::Default);
 }
 //=============================================================================

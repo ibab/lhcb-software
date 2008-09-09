@@ -3,6 +3,10 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+!2008-09-09 - Gerhard Raven
+  - add algorithm which takes a list of algorithms, and uses their
+    filterPassed result to create a decision
+
 !2008-09-04 - Gerhard Raven
   - add algorithm which takes a selection and creates a decision
 
