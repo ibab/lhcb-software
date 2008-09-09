@@ -15,21 +15,21 @@ DataOnDemandSvc.Algorithms += {
   // No PID long pions
   "DATA='/Event/Phys/StdNoPIDsPions/Particles'     TYPE='GaudiSequencer/StdNoPIDsPionsSeq'",
   "DATA='/Event/Phys/StdNoPIDsPions/Vertices'      TYPE='GaudiSequencer/StdNoPIDsPionsSeq'",
-  // No PID pions
-  "DATA='/Event/Phys/StdNoPIDsPions/Particles'     TYPE='GaudiSequencer/StdNoPIDsPionsSeq'",
-  "DATA='/Event/Phys/StdNoPIDsPions/Vertices'      TYPE='GaudiSequencer/StdNoPIDsPionsSeq'",
-  // Loose pions       
+  // Loose long pions       
   "DATA='/Event/Phys/StdLoosePions/Particles'     TYPE='GaudiSequencer/StdLoosePionsSeq'",
   "DATA='/Event/Phys/StdLoosePions/Vertices'      TYPE='GaudiSequencer/StdLoosePionsSeq'",
   // Loose VTT pions  
   "DATA='/Event/Phys/StdLooseVTTPions/Particles'     TYPE='GaudiSequencer/StdLooseVTTPionsSeq'",
   "DATA='/Event/Phys/StdLooseVTTPions/Vertices'      TYPE='GaudiSequencer/StdLooseVTTPionsSeq'",  
-  // Loose VTT No PIDs pions  
+  // VTT No PIDs pions  
   "DATA='/Event/Phys/StdNoPIDsVTTPions/Particles'     TYPE='GaudiSequencer/StdNoPIDsVTTPionsSeq'",
   "DATA='/Event/Phys/StdNoPIDsVTTPions/Vertices'      TYPE='GaudiSequencer/StdNoPIDsVTTPionsSeq'",  
   // Loose Downstream pions  
   "DATA='/Event/Phys/StdLooseDownstreamPions/Particles' TYPE='GaudiSequencer/StdLooseDownstreamPionsSeq'",
   "DATA='/Event/Phys/StdLooseDownstreamPions/Vertices'  TYPE='GaudiSequencer/StdLooseDownstreamPionsSeq'",
+  // NoPID Downstream pions  
+  "DATA='/Event/Phys/StdNoPIDsDownstreamPions/Particles' TYPE='GaudiSequencer/StdNoPIDsDownstreamPionsSeq'",
+  "DATA='/Event/Phys/StdNoPIDsDownstreamPions/Vertices'  TYPE='GaudiSequencer/StdNoPIDsDownstreamPionsSeq'",
   // Tight pions
   "DATA='/Event/Phys/StdTightPions/Particles'     TYPE='GaudiSequencer/StdTightPionsSeq'",
   "DATA='/Event/Phys/StdTightPions/Vertices'      TYPE='GaudiSequencer/StdTightPionsSeq'"
@@ -49,13 +49,13 @@ StdTightPionsSeq.Members += { "PreLoadParticles/StdTightPions" };
 StdTightPionsSeq.MeasureTime = true;
 
 // ============================================================================
-// NO PID, all tracks
+// NO PID long
 // ============================================================================
 StdNoPIDsPions.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker" ;
 StdNoPIDsPions.PhysDesktop.NoPIDsParticleMaker.Particle =  "pion" ;
 StdNoPIDsPions.DecayDescriptor = "Pion" ;
 // ============================================================================
-// LOOSE long (except VTT pions)
+// LOOSE Long
 // ============================================================================
 StdLoosePions.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
 StdLoosePions.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
@@ -63,27 +63,40 @@ StdLoosePions.PhysDesktop.CombinedParticleMaker.Particles = {"pion"} ;
 StdLoosePions.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
 StdLoosePions.PhysDesktop.CombinedParticleMaker.Pion.Selection = {""} ;
 StdLoosePions.DecayDescriptor = "Pion" ;
-
+// ============================================================================
+// LOOSE upstream
+// ============================================================================
 StdLooseVTTPions.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
 StdLooseVTTPions.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
 StdLooseVTTPions.PhysDesktop.CombinedParticleMaker.Particles = {"pion"} ;
 StdLooseVTTPions.PhysDesktop.CombinedParticleMaker.Pion.Selection = {""} ;
 StdLooseVTTPions.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes={"Upstream"} ;
 StdLooseVTTPions.DecayDescriptor = "Pion" ;
-
+// ============================================================================
+// No PID upstream
+// ============================================================================
 StdNoPIDsVTTPions.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker" ;
 StdNoPIDsVTTPions.PhysDesktop.NoPIDsParticleMaker.Particle =  "pion" ;
 StdNoPIDsVTTPions.PhysDesktop.NoPIDsParticleMaker.UseLongTracks = false ;
 StdNoPIDsVTTPions.PhysDesktop.NoPIDsParticleMaker.UseUpstreamTracks = true ;
 StdNoPIDsVTTPions.DecayDescriptor = "Pion" ;
-
+// ============================================================================
+// LOOSE Downstream
+// ============================================================================
 StdLooseDownstreamPions.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
 StdLooseDownstreamPions.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
 StdLooseDownstreamPions.PhysDesktop.CombinedParticleMaker.Particles = {"pion"} ;
 StdLooseDownstreamPions.PhysDesktop.CombinedParticleMaker.Pion.Selection = {""} ;
 StdLooseDownstreamPions.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Downstream"};
 StdLooseDownstreamPions.DecayDescriptor = "Pion" ;
-
+// ============================================================================
+// No PID downstream
+// ============================================================================
+StdNoPIDsDownstreamPions.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker" ;
+StdNoPIDsDownstreamPions.PhysDesktop.NoPIDsParticleMaker.Particle =  "pion" ;
+StdNoPIDsDownstreamPions.PhysDesktop.NoPIDsParticleMaker.UseLongTracks = false ;
+StdNoPIDsDownstreamPions.PhysDesktop.NoPIDsParticleMaker.UseDownstreamTracks = true ;
+StdNoPIDsDownstreamPions.DecayDescriptor = "Pion" ;
 // ============================================================================
 // TIGHT
 // ============================================================================
