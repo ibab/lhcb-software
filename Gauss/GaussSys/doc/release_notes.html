@@ -3,6 +3,172 @@ Package : GaussSys
 Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
+</PRE><H1><A NAME="v35r0">2008-09-09 - GaussSys v35r0</A></H1><PRE>
+<H2><A NAME="Note">DEVELOPEMENT version. Support SIMCOND tag head-20080727 
+   </A></H2>
+<H3><A NAME="Use">This version uses:
+   <b>LHCb v25r0 (and Gaudi v20r2)</b>
+   <b>pythia6 418.2</b>, photos 215.2, lhapdf 5.3.1 
+   (via LCG_GeneratorsInterfaces)
+   <b>HepMC 2.03.09 (via LCG_Interfaces)</b>
+   Geant4 v91r2p2 (based on geant4.9.1.p02) and Geant4Files v91r0
+   <b>DecFiles v15r* (latest to date v15r1, DC06 incompatible)</b>, 
+   ParamFiles v7r1 
+   DDDB v1r* (latest to date v1r10), FieldMap v5r0, XmlVis v1r* (latest v1r7)
+   herwig 6.510.2, jimmy 4.31.2 (via LCG_GeneratorsInterfaces)
+   hijing 1.383bs.2 (via LCG_GeneratorsInterfaces)
+   pythia8 107.1
+   <b>Put back BcVegPy (LHCb build)</b>
+</A></H3>
+
+!======================== Gauss v35r0 2008-09-09 =============================
+! 2008-09-09 - Gloria CORTI
+ - New python options for stearing a default Gauss job with 2008 geometry
+   setup, for 450GeV, 5TeV, Velo open/close and magnetic field on/off
+   steered by SIMCOND (for velo and magnet). Various combinations are provided
+   (as requested by Wouter for alignment studies).
+   Initial Gauss python configuration.
+   . python/Gauss/Configuration.py
+   . Beam450GeV-VeloOpen-BfieldZero.py
+   . Beam5TeV-VeloClosed-BfieldNeg.py
+   . Beam5TeV-VeloClosed-BfieldZero.py
+   . Beam5TeV-VeloOpen-BfieldNeg.py
+   . Beam5TeV-VeloOpen-BfieldZero.py
+   . Gauss-2008.py
+ - New generic options for what need to be set for a job: random seed and
+   output histogram and data files names.
+   . Gauss-Job.py
+ - Take away VELO and Magnet configuration from PilotRun.opts and set zero
+   crossing angle as for magnet off as likely all 450 GeV runs will be in 2008
+   . PilotRun.opts
+ - Pick up dawn in path from LCG_external
+   . requirements
+ - Simplify options and remove options for windows since they do not work
+   . GaussVis.opts
+
+! 2008-09-03 - Gloria CORTI
+ - Fix options for magnetic field to use with Magnet v5r0 (LHCb v25r0)
+   . SimGeometry.opts
+   . MeasuredFieldMap.opts
+ - Fix options for CondDBDispatcherSvc to use with Gaudi v20r1
+   . lhcb-2008.opts
+
+! 2008-07-28 - Gloria CORTI
+ - Add few steering options for alignment production:
+   450 GeV with magnet off, 5 TeV with magnet off and on (leave in this case
+   the spread of the beam as for 450 GeV, same beta*, but z lenght of
+   bunche and crossing angle as in 7 TeV)
+   . lhcb-2008-{450GeV,5TeV}-{BOff}.opts
+
+!========================= GenTests v1r3 2008-08-25 ==========================
+! 2008-07-14 - Patrick Robbe
+ - Add B0 decay test (Bd -> D0 K*)
+
+!======================= ParticleGuns v6r0 2008-08-25 ========================
+! 2008-07-25 - Patrick Robbe
+ - Move to HEPMc2
+
+!======================== LbPythia8 v2r0 2008-08-25 ==========================
+! 2008-07-25 - Patrick Robbe
+ - move to HEPMc 2
+
+!========================= LbPythia v8r0 2008-08-25 ==========================
+! 2008-07-26 - Patrick Robbe
+ - PythiaProduction.cpp: set new tune for Pythia6.4 as default
+   options
+ - Pythia64.opts: leave old charmonium production temporarily
+
+! 2008-07-25 - Patrick Robbe
+ - Move to HEPMC2
+
+!=========================== LbMIB v3r0 2008-08-25 ===========================
+! 2008-07-27 - Patrick Robbe
+ - Move to HEPMC2
+
+!========================= LbHijing v4r0 2008-09-09 ==========================
+! 2008-09-09 - Gloria CORTI
+ - Fix bug introduced with latest changes, i.e. reset momentum in particle
+   with Gaudi units
+
+! 2008-08-06 - Patrick Robbe
+ - Move to HEPMC2
+
+!======================== LbHerwig v6r0 2008-08-25 ==========================
+! 2008-07-27 - Patrick Robbe
+ - Move to HepMC2
+
+!===================== LbBcVegPy v2r0 2008-09-01 =====================
+! 2008-08-31 - Gloria CORTI
+ - Retrieve DecayTool at initialization rather that at construction,
+   otherwise ERROR instantiating BcDaughtersInLHCb from LbBcVegPy when
+   building LbBcVegPyConf. Introduced both initialize and finalize
+   methods.
+
+! 2008-07-25 - Patrick Robbe
+ - BcDaughtersInLHCb: use units from Gaudi
+
+!====================== Generators v9r0 2008-08-25 ===========================
+! 2008-07-24 - Patrick Robbe
+ - Move to HEPMC2
+
+! 2008-07-23 - Marco Cattaneo
+ - Removed DumpHepMCTree, DumpMC, DumpMCDecay algorithms, moved to
+   Sim/SimComponents, last two renamed DumpHepMC and DumpHepMCDecay
+ - Generator/HepMCUtils.h has been moved to GenEvent package. A dummy file is
+   kept for backwards compatibility, forwarding to the new include
+
+! 2008-07-21 - Patrick Robbe
+ - EvtGenDecay.cpp: add possibility to generate polarized charmonium
+
+! 2008-07-20 - Patrick Robbe
+ - Special.cpp: suppress LHAPDF output
+
+!========================== GENSER v4r2 2008-09-01 ===========================
+! 2008-08-31 - Gloria CORTI
+ - Use latest available version of Pythia 6 (418.2) from LCG MCGenerators
+   build.
+ - Do not put in library the pyevwt.F to re-weight events (see below).
+
+!======================== GaussAlgs v3r3 2008-08-04 ===========================
+! 2008-08-04 - Gloria CORTI
+ - Fix compilation errors due to move of include IGenericTool from LHCbKernel
+   (LHCB v25r0) to GaudiAlg (Gaudi v20r2)
+   . GenInit.cpp
+   . SimInit.cpp
+
+!========================= GaussKine v3r0 2008-08-25 =========================
+! 2008-07-25 - Patrick Robbe
+ - Move to HEPMC2
+
+!====================== GaussMonitor v6r0 2008-08-25 =========================
+! 2008-07-26 - Patrick Robbe
+ - Move to HEPMC2
+
+!========================= GaussRICH v9r1 2008-08-26 =========================
+! 2008-08-08 - Sajan Easo
+  Modified the RichG4Cerenkov to be a poststep process , similar to
+  what is suggested in the recent G4.9. This needed a modification in
+  GiGaPhysConstructorOp.cpp as well.
+! 2008-07-30 - Sajan Easo
+  Updated the RichHpdProperties.cpp to be compatible with the latest RichDet
+  when accesing the HPD QE info from the DataBase.
+
+!======================== GaussTools v15r0 2008-08-25 ========================
+! 2008-07-25 - Patrick Robbe
+ - MCTruthManager.h/.cpp: Adapt to HEPMC2
+
+!======================== VisSvc v5r3 2008-08-08 =============================
+! 2008-08-01 - Guy Barrand
+ - In VisualizationSvc::visAttribute, handle <Item regex="" .../>.
+
+!=========================== XmlVis v1r7 =====================================
+! 2008-08-08 - Thomas Ruf
+ - changes for infrastructure, beampipe
+
+! 2008-07-28 - Antonis Papanestis
+ - Added visual attributes for the Rich2 superstructure
+
+!=============================================================================
 </PRE><H1><A NAME="v34r0">2008-07-22 - GaussSys v34r0</A></H1><PRE>
 <H2><A NAME="Note">DEVELOPEMENT version. Support only tag head-20080702 
    via first version of SIMCOND.
