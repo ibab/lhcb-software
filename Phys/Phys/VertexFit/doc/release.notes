@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.145 2008-09-08 16:09:20 jpalac Exp $
+! $Id: release.notes,v 1.146 2008-09-09 08:33:01 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+! 2008-09-09 - Juan PALACIOS
+ - src/PVReFitterAlg{.cpp, .h}
+  . Now re-fit all PVs for all candidates instead of only related ones.
+    Keep the key of the original PV in each case. Store in ObjectVector to
+    allow more than one re-fitted vertex with the same key.
 
 ! 2008-09-08 - Juan PALACIOS
  - src/PVReFitterAlg{.cpp, .h}
