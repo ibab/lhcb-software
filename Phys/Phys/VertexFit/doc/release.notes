@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.148 2008-09-09 15:43:53 jpalac Exp $
+! $Id: release.notes,v 1.149 2008-09-09 16:40:22 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
@@ -9,6 +9,7 @@
 ! 2008-09-09 - Juan PALACIOS
  - src/PVReFitterAlg.cpp
   . Clean up error messages.
+  . Fix default PV location bug.
 
 ! 2008-09-09 - Juan PALACIOS
  - src/PVReFitterAlg{.cpp, .h}
