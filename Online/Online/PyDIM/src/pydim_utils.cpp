@@ -372,8 +372,8 @@ dim_buf_to_list(const char *schema, const char *buf, unsigned int len)
           mult = (len - n) / _DIM_CHAR_LEN;
         if ((unsigned int)(n + mult) <= len) { // ugly
           int p = (mult-1) >= 0 ? (mult -1) : 0;
-          while (p && buf[n+p] == '\0')
-            --p;
+          //while (p && buf[n+p] == '\0')
+          //  --p;
           tmp = PyString_FromStringAndSize(&buf[n], p+1);
           n += mult;
         } else {
@@ -666,9 +666,12 @@ iterator_to_buffer(PyObject     *iter,   /* list or tuple PyObject */
                */
               memcpy(&buffer[buf_ptr], str, size-buf_ptr);
             } else {
-              /* shorter string */
-              memcpy(&buffer[buf_ptr], str, str_size);
-              memset(&buffer[buf_ptr+str_size], '\0', size-buf_ptr-str_size);
+              /* shorter string OR we have an end of line in the middle
+               * I prefer here to copy past what size indicates. This allows
+               * to pass also Null characters..*/
+              //memcpy(&buffer[buf_ptr], str, str_size);
+              //memset(&buffer[buf_ptr+str_size], '\0', size-buf_ptr-str_size);
+              memcpy(&buffer[buf_ptr], str, size-buf_ptr);
             }
             buf_ptr = size;
           } else {

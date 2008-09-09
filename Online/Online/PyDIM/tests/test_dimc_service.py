@@ -33,7 +33,7 @@ class DimTask:
     SRV1FORMAT='F:1;I:1;D:2;C:10;C' # buffer size is 35 on 32 bits 
     SRV2FORMAT='D' 
     SRV3FORMAT='C'
-    DELAY=3
+    DELAY=0.03
     
     def __init__(self, name, clients, updates=10):
         self.name = name
@@ -84,7 +84,7 @@ class DimTask:
                 %(self.name, dis_update_service(self.svc2, values)))
 
             SAY("DIMTASK %s : Updating service nr. 3" %self.name)
-            values = ('ALABALAPORTOCALA', )
+            values = ('ALABALAP\x00ORTOCALA', )
             SAY('DIMTASK %s : Updated %d clients' \
                 %(self.name, dis_update_service(self.svc3, values)))
             sleep(DimTask.DELAY)
@@ -126,5 +126,5 @@ if __name__=='__main__':
     client_names = sys.argv[2:]
     if not client_names:
         client_names = ("task1",)
-    task = DimTask(task_name, client_names)
+    task = DimTask(task_name, client_names, updates=10/DimTask.DELAY)
     task.run()
