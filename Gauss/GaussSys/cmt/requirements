@@ -35,7 +35,7 @@ macro LbPythia8_use     "LbPythia8    v2r0    Gen"  WIN32 ""
 use ${BcVegPy_use}
 use ${LbBcVegPy_use}
 use ${LbHerwig_use}
-use ${LbHidValley_use}
+#use ${LbHidValley_use}
 use ${LbHijing_use}
 use ${LbPythia8_use}
 #
