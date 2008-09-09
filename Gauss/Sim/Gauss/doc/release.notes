@@ -4,6 +4,31 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!======================== Gauss v35r0 2008-09-09 =============================
+! 2008-09-09 - Gloria CORTI
+ - New python options for stearing a default Gauss job with 2008 geometry 
+   setup, for 450GeV, 5TeV, Velo open/close and magnetic field on/off
+   steered by SIMCOND (for velo and magnet). Various combinations are provided
+   (as requested by Wouter for alignment studies).
+   Initial Gauss python configuration.
+   . python/Gauss/Configuration.py
+   . Beam450GeV-VeloOpen-BfieldZero.py 
+   . Beam5TeV-VeloClosed-BfieldNeg.py 
+   . Beam5TeV-VeloClosed-BfieldZero.py 
+   . Beam5TeV-VeloOpen-BfieldNeg.py 
+   . Beam5TeV-VeloOpen-BfieldZero.py 
+   . Gauss-2008.py
+ - New generic options for what need to be set for a job: random seed and
+   output histogram and data files names.
+   . Gauss-Job.py
+ - Take away VELO and Magnet configuration from PilotRun.opts and set zero
+   crossing angle as for magnet off as likely all 450 GeV runs will be in 2008
+   . PilotRun.opts
+ - Pick up dawn in path from LCG_external
+   . requirements
+ - Simplify options and remove options for windows since they do not work
+   . GaussVis.opts
+
 ! 2008-09-03 - Gloria CORTI
  - Fix options for magnetic field to use with Magnet v5r0 (LHCb v25r0)
    . SimGeometry.opts
