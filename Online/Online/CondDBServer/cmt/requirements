@@ -68,5 +68,7 @@ set CORAL_AUTH_PATH     $(HOME)/private
 #path_remove  PATH "/DIM/" WIN32 "\DIM\"
 #path_prepend PATH "$(DIM_home)\bin"
 
+set DIM_DNS_NODE ecs01.lbdaq.cern.ch
+
 action startServer 'condDBServer.exe $(CONDDBSERVERROOT)/cmt/partitions.txt'
 macro_remove cmt_actions_constituents 'startServer'
