@@ -3,6 +3,85 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v33r2>2008-09-09 Brunel v33r2</A></H1><PRE>
+This version uses projects Gaudi v20r2, LHCb v25r1, Lbcom v6r22, Rec v5r11
+ and DDDB v1r* (SQLDDDB v4r8 or greater), ParamFiles v7r2, FieldMap v5r*
+
+This version is a development version to prepare for reconstruction of real 
+data. It contains many fixes to data decoding and an overhaul of monitoring
+- Should be used to reconstruct 2008 geometries
+- For 2008 simulation, needs data digitised with Boole v16r2 or later
+- Can reconstruct DC06 data, except if digitised with Boole v15r1 or v15r2,
+  but material seen is different from DC06
+
+- Configuration changes
+  **************** IMPORTANT **************
+  . Default setting in Configurable (picked up when using Brunel-Default.py and
+    Brunel-2008.py) is now for real data, MDF input, default 2008 geometry
+  *****************************************
+  . New and update configuration files: 
+    o Brunel-2008-MC.py   (MC with default 2008 geometry)
+    o Brunel-2008-Rdst.py (RDST production from 2008 MDF real data)
+    o Brunel-2008-Stripping.py (DST production from 2008 real data ETC)
+    o Brunel-DC06.py      (Standard DC06 reconstruction)
+    o Brunel-2008.py      (Real data, MDF, 2008 geometry)
+    o Brunel-DC06L0Rdst.py, Brunel-DC06Rdst.py,  Brunel-DC06Stripping.py
+  . Added an example MDF file (TED data taken 20080906) to 2008-Files.py
+  . Major migration away from .opts, now using configurables in many packages
+    (Brunel v33r2, RecSys v5r11, TrackSys v4r17, LHCbKernel v9r1, 
+     RichRecQC v2r22, RichRecSys v3r13)
+  . In  Brunel Configurable:
+    . Added option printFreq to allow control over the event printing frequency
+    . Added options to allow the various sequences to be modified. Allows, for 
+      instance, sub-detectors to be disabled for specialist studies.
+  + Check sequence is now completely defined in Configuration.py. The files
+    BrunelMC.opts, BrunelCheck.opts are obsolete and have been removed
+
+- Geometry changes
+  . Fix staggering of straws in a OT module. The offsets are retrieved from DDDB.
+    For 2008 geometry this is not backward compatible with digis produced with
+    versions of Boole prior to v16r2
+    (OTDet v8r0, SQLDDDB v4r9 with tags DC06-20080903, head-20080904 or later)
+  . Add Velo Tell1-Sector mapping for 2008 data decoding
+    (SQLDDDB v4r9 with tag head-20080904 or later)
+  . Fixes to material and overlaps in Rich, Prs, Spd, Hcal (SQLDDDB v4r9)
+
+- New features
+  . Add an option to MagneticFieldSvc to use Set instead of Measured current from
+    CondDB (default false, needed when running online) (Magnet v5r1)
+  . Add functionalities to ST readout maps
+    (SQLDDDB v4r9, STDAQ v3r11, STKernel v1r8, LHCbKernel v9r1)
+
+- Monitoring changes
+  . Rich monitoring uses new RichRecQCConf configurable. Uses the Check sequence
+    when MC is enabled and the Moni sequence when it is not. Make sure some plots
+    are filled in MC-free mode (Brunel v33r2, RichRecQC v2r22)
+  . Add Velo and Calo monitoring (BrunelMoni.opts)
+  . Updates to MuonPIDChecker, add possibility to run as a monitor
+    (MuonPIDChecker v2r3) 
+
+- Bug fixes
+  . Many fixes and enhancements for real data decoding
+    (L0MuonKernel v8r2, ProcessorKernel v5r2, L0Event v17r1p1, RecEvent v2r15,
+     VeloEvent v16r6, STTell1Event v1r5, MuonDAQ v4r4, OTDAQ v7r2, STKernel v1r8,
+     L0Calo v9r17, L0Muon v8r2, RichDAQ v3r20, STDAQ v3r11, VeloDAQ v4r3)
+  . Fix uninitialised pointers in MagneticFieldSvc (Magnet v5r1)
+  . Fix a FPE in MuonChamberGrid::listOfPhysChannels() (Magnet v5r1)
+  . Fix in TT dead strip list (SQLDDDB v4r9)
+  . Fixed bug in HeraBExtrapolator::rk5numde which would make it fail for q/p=0
+    (TrackExtrapolators v2r20)
+  . make FastMomentumTool and PtTransporter safe for 0 b field
+    (TrackTools v3r11)
+  . StateSimpleBetheBlochEnergyCorrectionTool.cpp, dEdx correction never applied,
+    added missing tX[4] = 1.0/newP; (TrackTools v3r11)
+  . Fix bug to extrapolator options in Fitting.py (TrackSys v4r17)
+  . Fix bugs for nonDrifttimes and BfieldOff in Fitting.py and RecoTracking.py
+    (TrackSys v4r17)
+  . Small bug fix to track sort order between RZ and Space tracking;
+    slight improvement in efficiency and ghost rate (PatVelo v3r8)
+  . Don't abort processing when input Tracks are missing.
+    (RichRecTrackTools v1r6)
+
 </PRE><H1><A NAME=v33r1>2008-07-31 Brunel v33r1</A></H1><PRE>
 This version uses projects Gaudi v20r2, LHCb v25r0, Lbcom v6r21, Rec v5r10
  and DDDB v1r* (SQLDDDB v4r7 or greater), ParamFiles v7r2, FieldMap v5r*
