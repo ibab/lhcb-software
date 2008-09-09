@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.42 2008-09-04 12:23:12 graven Exp $
+// $Id: HltAlgorithm.cpp,v 1.43 2008-09-09 09:17:08 graven Exp $
 // Include files 
 
 #include "HltBase/HltAlgorithm.h"
@@ -13,7 +13,20 @@ namespace bl = boost::lambda;
 //
 // 2006-06-15 : Jose Angel Hernando Morata
 //-----------------------------------------------------------------------------
-
+namespace {
+    class histoGuard {
+    public:
+        histoGuard(bool switchOff,HltAlgorithm& parent) : m_parent(parent), m_flag( parent.produceHistos() && switchOff) {
+            if (m_flag) m_parent.setProduceHistos(false);
+        }
+        ~histoGuard() {
+            if (m_flag) m_parent.setProduceHistos(true);
+        }
+    private:
+        HltAlgorithm& m_parent;
+        bool m_flag;
+    };
+};
 
 HltAlgorithm::HltAlgorithm( const std::string& name,
                             ISvcLocator* pSvcLocator,
@@ -115,29 +128,31 @@ StatusCode HltAlgorithm::sysExecute() {
 
   StatusCode sc = StatusCode::SUCCESS;
 
-  bool restore=false;
-  if (produceHistos()&&m_histogramUpdatePeriod>0 && (m_counterEntries % m_histogramUpdatePeriod !=0))  {
-      // switch of histogramming for this event only
-      setProduceHistos(false) ;
-      restore=true;
-  }
-  
-  sc = beginExecute();
-  if (sc.isFailure()) return sc;
+  // switch of histogramming for this event only if so requested
+  histoGuard guard( m_histogramUpdatePeriod>0 && (m_counterEntries % m_histogramUpdatePeriod !=0), *this );
+
   
   //TODO: add try/catch around this, and set error flags...
   //      need to know the 'terminus' of the current sequence (probably
   //      need an explicit property for that, cannot discover ourselves),
   //      and execute that one explicitly so it can record the problem...
-  sc = HltBaseAlg::sysExecute();
-  if (sc.isFailure()) return sc;
+  //NOTE: GaudiKernel/Algorithm.cpp does a 'try/catch' in sysExecute
+  //      so the above wouldn't catch anything unless we make 
+  //      sure that the IExceptionSvc which one gets as 'ExceptionSvc' 
+  //      does something reasonable -- by default it 'rethrows'... 
+  try {
+    sc = beginExecute();
+    if (sc.isFailure()) return sc;
+    sc = HltBaseAlg::sysExecute();
+    if (sc.isFailure()) return sc;
+    sc = endExecute();
+  } catch(...) {
+    sc = StatusCode::FAILURE; // for now -- maybe at some point we try to continue...
+    setDecision(true); // try to keep event for debugging...
+    m_outputSelection->setError(true);
+  }
   
-  //TODO: add flushbacks here...
-  sc = endExecute();
 
-  // restore original setting of produceHistos...
-  if (restore) setProduceHistos(true) ;
-  
   return sc;
 
 }
@@ -165,6 +180,7 @@ StatusCode HltAlgorithm::beginExecute() {
 }
 
 StatusCode HltAlgorithm::endExecute() {
+  //TODO: add flushbacks here...
   setDecision();
   if (produceHistos()) monitorOutput();
   
@@ -181,11 +197,14 @@ bool HltAlgorithm::verifyInput()
   if (!m_requireInputsToBeValid) return true;
   bool ok = true;
   BOOST_FOREACH( Hlt::Selection* i, m_inputSelections ) {
+    // propagate error status!
+    if (i->error()) m_outputSelection->setError(true);
     ok = ok &&  i->decision() ;
     if (m_debug) 
-      debug() << " input selection " << i->id()
+      debug() << " input " << i->id()
               << " decision " << i->decision() 
               << " process status " << i->processed() 
+              << " error status " << i->error() 
               << " candidates " << i->ncandidates() << endreq;
   }
 
@@ -200,6 +219,7 @@ bool HltAlgorithm::verifyInput()
       warning() << " input selection " << i->id()
                 << " decision " << i->decision()
                 << " processed " << i->processed()
+                << " error " << i->error()
                 << " candidates " << i->ncandidates() << endreq;      
     }
     warning() << endreq;

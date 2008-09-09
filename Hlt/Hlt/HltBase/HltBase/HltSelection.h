@@ -1,4 +1,4 @@
-// $Id: HltSelection.h,v 1.5 2008-08-13 07:11:15 graven Exp $
+// $Id: HltSelection.h,v 1.6 2008-09-09 09:17:08 graven Exp $
 #ifndef HLTBASE_HLTSELECTION_H 
 #define HLTBASE_HLTSELECTION_H 1
 
@@ -21,7 +21,7 @@ namespace Hlt
 
   class Selection : public ContainedObject, public DataObject, private boost::noncopyable {
   public:
-    Selection(const stringKey& id) : m_id(id), m_processed(false) {}
+    Selection(const stringKey& id) : m_id(id), m_decision(false), m_processed(false), m_error(false) {}
     virtual ~Selection() {}
 
     const stringKey& id() const {return m_id;}
@@ -33,12 +33,15 @@ namespace Hlt
     }
 
     void setDecision(bool value) {m_decision = value; m_processed = true;}
+    void setError(bool value) { m_error = true;}
+
     bool decision() const {return m_decision;}
     bool processed() const {return m_processed;}
+    bool error() const {return m_error;} //TODO: is bool really what we want??? do we want more???
 
     virtual CLID classID() const {return DataObject::clID();}
     virtual size_t ncandidates() const {return 0;}
-    virtual void clean() {m_decision = false; m_processed = false;}    
+    virtual void clean() {m_decision = false; m_processed = false; m_error = false;}    
 
     template <typename T>
     TSelection<T>* down_cast() { return T::classID()==classID() 
@@ -48,8 +51,9 @@ namespace Hlt
   private:
     std::vector<stringKey> m_inputSelectionsIDs;
     stringKey m_id;
-    bool m_decision; // accept / reject
-    bool m_processed;    // did we actually set the decision?
+    bool m_decision;  // accept / reject
+    bool m_processed; // did we actually set the decision?
+    bool m_error;     // did an error occur during processing?
   };
   
   template <typename T>
