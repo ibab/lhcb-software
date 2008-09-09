@@ -1,4 +1,4 @@
-// $Id: CaloPIDsChecker.cpp,v 1.3 2007-12-03 07:52:13 cattanem Exp $
+// $Id: CaloPIDsChecker.cpp,v 1.4 2008-09-09 15:37:24 odescham Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -103,8 +103,7 @@ public:
   /// standard algorithm execution
   virtual StatusCode execute();
   /// standard algorithm finalization
-  virtual StatusCode finalize()
-  { 
+  virtual StatusCode finalize(){ 
     StatusCode sc = divide( h1["21"], h1["11"], h1["31"] );
     if(sc.isSuccess())sc=divide( h1["22"], h1["12"], h1["32"] );
     if(sc.isSuccess())sc= divide( h1["23"], h1["13"], h1["33"] );
@@ -114,7 +113,7 @@ public:
     m_track2MCLink = NULL;
 
 // finalize the chain of base classes
-    return GaudiHistoAlg::finalize();
+    return CaloMoniAlg::finalize();
   }
 protected:
   /** Standard constructor
@@ -327,4 +326,6 @@ StatusCode CaloPIDsChecker::divide( AIDA::IHistogram1D *hh1
   
   return StatusCode::SUCCESS;
 }
+
+
 

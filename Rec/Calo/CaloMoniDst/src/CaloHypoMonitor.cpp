@@ -1,6 +1,6 @@
-// $Id: CaloHypoMonitor.cpp,v 1.6 2007-08-24 11:14:20 odescham Exp $
+// $Id: CaloHypoMonitor.cpp,v 1.7 2008-09-09 15:37:24 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -54,42 +54,42 @@ class CaloHypoMonitor : public CaloMoniAlg
   friend class AlgFactory<CaloHypoMonitor>;
 public:
   /// standard algorithm initialization
-  virtual StatusCode initialize()
-  { StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
+  virtual StatusCode initialize(){ 
+    StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
     if ( sc.isFailure() ) return sc; // error already printedby GaudiAlgorithm
-    hBook1( "1", "# of Hypos    " + inputData(),  0,    m_multMax, m_multMax );
-    hBook1( "2", "Hypo Energy   " + inputData(),  0,    m_energyMax );
-    hBook1( "3", "Hypo Pt       " + inputData(),  0,    m_ptMax );
-    hBook1( "4", "Hypo Mass     " + inputData(),  m_massMin, m_massMax );
-    hBook1(  "5", "Hypo X        " + inputData(), -m_xMax, m_xMax );
-    hBook1(  "6", "Hypo Y        " + inputData(), -m_yMax, m_yMax );
-    hBook1(  "7", "Clusters/Hypo " + inputData(),  0,    10, 10 );
-    hBook1(  "8", "Spd/Hypo      " + inputData(),  0,    20, 20 );
-    hBook1(  "9", "Prs/Hypo      " + inputData(),  0,    20, 20 );
-    hBook2( "10", "Hypo x vs y   " + inputData(),  -m_xMax, m_xMax, 100, -m_yMax, m_yMax, 100);
+    hBook1(  "1", "# of Hypos    " + inputData(),  m_multMin   ,    m_multMax   , m_multBin  );
+    hBook1(  "2", "Hypo Energy   " + inputData(),  m_energyMin ,    m_energyMax , m_energyBin );
+    hBook1(  "3", "Hypo Pt       " + inputData(),  m_etMin     ,    m_etMax     , m_etBin);
+    hBook1(  "4", "Hypo Mass     " + inputData(),  m_massMin   ,    m_massMax   , m_massBin );
+    hBook1(  "5", "Hypo X        " + inputData(),  m_xMin      ,    m_xMax      , m_xBin    );
+    hBook1(  "6", "Hypo Y        " + inputData(),  m_yMin      ,    m_yMax      , m_yBin );
+    hBook1(  "7", "Clusters/Hypo " + inputData(),  m_clusMin, m_clusMax, m_clusBin );
+    hBook1(  "8", "Spd/Hypo      " + inputData(),  m_spdMin,  m_spdMax , m_spdBin  );
+    hBook1(  "9", "Prs/Hypo      " + inputData(),  m_prsMin,  m_prsMax , m_prsBin  );
+    hBook2( "10", "Hypo x vs y   " + inputData(),  m_xMin, m_xMax, m_xBin, m_yMin, m_yMax, m_yBin);
     return StatusCode::SUCCESS;
   }
-  /// standard algorithm execution
   virtual StatusCode execute();
+  virtual StatusCode finalize();
 protected:
   /** Standard constructor
    *  @param   name        algorithm name
    *  @param   pSvcLocator pointer to service locator
    */
   CaloHypoMonitor( const std::string &name, ISvcLocator *pSvcLocator )
-    : CaloMoniAlg( name, pSvcLocator )
-    , m_multMax( 100 )
-    , m_energyMax( 200. * Gaudi::Units::GeV )
-    , m_ptMax( 15. * Gaudi::Units::GeV )
-    , m_massMin( 0. * Gaudi::Units::GeV )
-    , m_massMax( 1. * Gaudi::Units::GeV )
-  { declareProperty( "MultiplicityMax", m_multMax );
-    declareProperty( "EnergyMax",       m_energyMax );
-    declareProperty( "PtMax",           m_ptMax );
-    declareProperty( "MassMin",         m_massMin );
-    declareProperty( "MassMax",         m_massMax );
-    declareProperty( "xMax",          m_xMax = 4 * Gaudi::Units::meter);
-    declareProperty( "yMax",          m_yMax = 4 * Gaudi::Units::meter);
+    : CaloMoniAlg( name, pSvcLocator ){
+    declareProperty("NClusterMin" ,m_clusMin = 0.);
+    declareProperty("NClusterMin" ,m_clusMax = 10.);
+    declareProperty("NClusterMin" ,m_clusBin = 10);
+    declareProperty("NSpdMax" ,m_spdMin = 0.);
+    declareProperty("NSpdMax" ,m_spdMax = 20.);
+    declareProperty("NSpdMax" ,m_spdBin = 20);
+    declareProperty("NPrsBin" ,m_prsMin = 0.);
+    declareProperty("NPrsBin" ,m_prsMax = 20.);
+    declareProperty("NPrsBin" ,m_prsBin = 20);
+
+    m_multMax = 150;
+    
   }
   /// destructor (virtual and protected)
   virtual ~CaloHypoMonitor() {}
@@ -101,17 +101,18 @@ private:
   /// assignement operator  is  private
   CaloHypoMonitor &operator=( const CaloHypoMonitor& );
 private:
-  // hypo multiplicity
-  int m_multMax;
-  // hypo energy  distribution
-  double m_energyMax;
-  // hypo transverse momentum distribution
-  double m_ptMax;
-  // hypo mass distribution
-  double m_massMin;
-  double m_massMax;
-  double m_xMax;
-  double m_yMax;
+
+  int m_clusBin;
+  double m_clusMax;
+  double m_clusMin;
+  int m_spdBin;
+  double m_spdMax;
+  double m_spdMin;
+  int m_prsBin;
+  double m_prsMax;
+  double m_prsMin;
+  
+
 };
 DECLARE_ALGORITHM_FACTORY( CaloHypoMonitor );
 
@@ -126,29 +127,36 @@ StatusCode CaloHypoMonitor::execute()
 
   // get input data
   Hypos *hypos = get<Hypos> ( inputData() );
-  if ( 0 == hypos ) return StatusCode::FAILURE;
+  if ( 0 == hypos ) return StatusCode::SUCCESS;
 
-  // fill multiplicity histogram
-  hFill1( "1", hypos->size() );
 
   if ( hypos -> empty() ) return StatusCode::SUCCESS;
 
   LHCb::CaloDataFunctor::DigitFromCalo spd( DeCalorimeterLocation::Spd );
   LHCb::CaloDataFunctor::DigitFromCalo prs( DeCalorimeterLocation::Prs );
 
+  long count = 0;
   for( Hypos::const_iterator hypo = hypos->begin();
-       hypos->end () != hypo ; ++hypo )
-  { if ( 0 == *hypo ) continue;
+       hypos->end () != hypo ; ++hypo ){ 
+    if ( 0 == *hypo ) continue;
 
-    { LHCb::CaloMomentum momentum( *hypo );
-      hFill1( "2", momentum.momentum().e() );
-      hFill1( "3", momentum.momentum().pt() );
-      hFill1( "4", momentum.momentum().mass() );
-    }
+    LHCb::CaloMomentum momentum( *hypo );
+    const double e = momentum.e();
+    const double et= momentum.pt();
+    const double mass=momentum.momentum().mass();
+    if(e    < m_eFilter)continue;
+    if(et   < m_etFilter)continue;
+    if(mass < m_massFilterMin || mass > m_massFilterMax)continue;
+
+    count++;
+    hFill1( "2", e );
+    hFill1( "3", et );
+    hFill1( "4", mass );
+    
 
     const LHCb::CaloHypo::Position *position = (*hypo)->position();
-    if ( 0 != position )
-    { hFill1( "5", position->x() );
+    if ( 0 != position ){
+      hFill1( "5", position->x() );
       hFill1( "6", position->y() );
     }
 
@@ -159,5 +167,14 @@ StatusCode CaloHypoMonitor::execute()
     hFill1( "9", std::count_if( digits.begin(), digits.end(), prs ) );
     if( NULL != position)hFill2( "10", position->x(),position->y());
   }
+  // fill multiplicity histogram
+  hFill1( "1", count );
+
   return StatusCode::SUCCESS;
+}
+
+
+StatusCode CaloHypoMonitor::finalize() {
+  debug() << "==> Finalize" << endmsg;
+  return CaloMoniAlg::finalize();
 }

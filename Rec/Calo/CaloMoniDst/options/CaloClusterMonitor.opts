@@ -1,2 +1,4 @@
-EcalClusterMonitor.Input  = "Rec/Calo/EcalClusters";
-SplitClusterMonitor.Input = "Rec/Calo/EcalSplitClusters";
+CaloClusterMon.Members += { "CaloClusterMonitor/EcalClusterMon"};
+//CaloClusterMon.Members += { "CaloClusterMonitor/SplitClusterMon"};
+EcalClusterMon.Input  = "Rec/Calo/EcalClusters";
+SplitClusterMon.Input = "Rec/Calo/EcalSplitClusters";

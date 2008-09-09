@@ -7,6 +7,7 @@
 // ============================================================================
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiAlg/GaudiHistoAlg.h"
+#include "CaloUtils/Calo2Dview.h"
 // ============================================================================
 // AIDA 
 // ============================================================================
@@ -19,29 +20,17 @@
 //   @see      Algorithm
 //   @see     IAlgorithm
 
-class CaloMoniAlg : public GaudiHistoAlg
+class CaloMoniAlg : public Calo2Dview
 {
 public:
 // Standard constructor
 //   @param   name        algorithm name
 //   @param   pSvcLocator pointer to service locator
-  CaloMoniAlg( const std::string &name, ISvcLocator *pSvcLocator )
-    : GaudiHistoAlg( name, pSvcLocator )
-    , m_inputData( "" ) // no default value
-    , m_inputs()        // no default value
-    , m_detData( "" )   // no default value
-  { declareProperty( "Input",    m_inputData );
-    declareProperty( "Inputs",   m_inputs );
-    declareProperty( "Detector", m_detData );
-    StatusCode sc=setProperty( "HistoTopDir", "CaloMoniDst/" );
-    sc.isSuccess() ? 
-      info() << "HistoTopDir set to 'CaloMoniDst/' " << endreq :
-      info() << "HistoTopDir setProperty failed " << endreq ;
-    
-      
-  }
-// destructor
-  virtual ~CaloMoniAlg() {}
+  CaloMoniAlg( const std::string &name, ISvcLocator *pSvcLocator );  
+  virtual ~CaloMoniAlg();
+  virtual StatusCode initialize();    ///< Algorithm initialization
+  virtual StatusCode finalize();    ///< Algorithm initialization
+  
 // address/location/name in Transient Store of input data container
   const std::string              &inputData() const { return m_inputData; }
 // vector of input data containers
@@ -57,32 +46,36 @@ public:
 // booking histogram
   inline AIDA::IHistogram1D *hBook1( const std::string hid,
                                     const std::string titl,
-                                    const double low=0,
-                                    const double high=100,
-                                    const unsigned long bins=100 ){ 
+                                   const double low=0,
+                                 const double high=100,
+                                const unsigned long bins=100 ){ 
+    if(!doHisto(hid))return NULL;
     h1[hid] = book1D( hid, titl, low, high, bins );
-    if ( 0 != h1[hid] ) declareInfo( hid, h1[hid], titl );
     return h1[hid];
   }
   inline AIDA::IHistogram2D *hBook2( const std::string hid,
-                                     const std::string titl,
-                                     const double lowx=0,
-                                     const double highx=100,
-                                     const unsigned long binsx=100,
-                                     const double lowy=0,
-                                     const double highy=100,
-                                     const unsigned long binsy=100 ){ 
+                                    const std::string titl,
+                                    const double lowx=0,
+                                    const double highx=100,
+                                    const unsigned long binsx=100,
+                                    const double lowy=0,
+                                    const double highy=100,
+                                    const unsigned long binsy=100 ){ 
+    if(!doHisto(hid))return NULL;
     h2[hid] = book2D( hid, titl, lowx, highx, binsx, lowy, highy, binsy );
-      if ( 0 != h2[hid] ) declareInfo( hid, h2[hid], titl );
     return h2[hid];
   }
-
+  
 // fill histogram
-  inline AIDA::IHistogram1D* hFill1( std::string hid, double value, double w=1. )
-  { return  fill(h1[hid],value,w);}
-  //
-  inline AIDA::IHistogram2D* hFill2( std::string hid, double x, double y, double w=1. )
-  { return fill(h2[hid],x,y,w); }
+  inline AIDA::IHistogram1D* hFill1( std::string hid, double value, double w=1. ){ 
+    if(!doHisto(hid))return NULL;
+    return  fill(h1[hid],value,w);
+  }
+  
+  inline AIDA::IHistogram2D* hFill2( std::string hid, double x, double y, double w=1. ){ 
+    if(!doHisto(hid))return NULL;
+    return fill(h2[hid],x,y,w); 
+  }
 protected:
 //
 // Histogram Map
@@ -96,6 +89,44 @@ private:
   std::vector<std::string> m_inputs;
 // address/location/name in Transient Store of detector data
   std::string              m_detData;
+
+protected:
+  //
+  double m_energyMin;
+  double m_etMin;
+  double m_massMin;
+  double m_yMin;
+  double m_xMin;
+  double m_multMin;
+  double m_sizeMin;
+  double m_energyMax;
+  double m_etMax;
+  double m_massMax;
+  double m_yMax;
+  double m_xMax;
+  double m_multMax;
+  double m_sizeMax;
+  int m_energyBin;
+  int m_etBin;
+  int m_massBin;
+  int m_yBin;
+  int m_xBin;
+  int m_multBin;
+  int m_sizeBin;
+
+  double m_eFilter;
+  double m_etFilter;
+  double m_massFilterMin; 
+  double m_massFilterMax;
+  std::vector<std::string> m_histoList;
+  bool doHisto(std::string histo){
+    for( std::vector<std::string>::iterator ih = m_histoList.begin() ; m_histoList.end() != ih ; ih++){
+      if( histo == *ih || "All" == *ih )return true;
+    }
+    return false;
+  }
+  
+
 };
 // ============================================================================
 // The END 

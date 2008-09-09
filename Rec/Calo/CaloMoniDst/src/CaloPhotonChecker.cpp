@@ -782,3 +782,5 @@ std::vector<AIDA::IHistogram1D*> CaloPhotonChecker::defHisto1d(
    }
 	return histoList;
 }
+
+

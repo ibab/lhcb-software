@@ -1,4 +1,12 @@
-// Monitoring of different Hypotheses
-ElectronMonitor.Input    = "Rec/Calo/Electrons";
-PhotonMonitor.Input      = "Rec/Calo/Photons";
-MergedPi0Monitor.Input   = "Rec/Calo/MergedPi0s";
+CaloHypoMon.Members    += { "CaloHypoMonitor/ElectronMon"               
+                            ,"CaloHypoMonitor/PhotonMon"               
+                            ,"CaloHypoMonitor/MergedPi0Mon"
+                            ,"CaloPi0Monitor/ResolvedPi0Mon" 
+};             
+
+ResolvedPi0Mon.PhotonPtFilter = 500.*MeV;
+
+// Moning of different Hypotheses
+ElectronMon.Input    = "Rec/Calo/Electrons";
+PhotonMon.Input      = "Rec/Calo/Photons";
+MergedPi0Mon.Input   = "Rec/Calo/MergedPi0s";

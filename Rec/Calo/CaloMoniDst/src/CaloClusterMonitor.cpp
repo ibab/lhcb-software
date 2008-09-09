@@ -1,6 +1,6 @@
-// $Id: CaloClusterMonitor.cpp,v 1.5 2007-07-25 19:49:12 odescham Exp $
+// $Id: CaloClusterMonitor.cpp,v 1.6 2008-09-09 15:37:24 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -50,17 +50,17 @@ public:
   virtual StatusCode initialize()
   { StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
     if ( sc.isFailure() ) return sc; // error already printedby GaudiAlgorithm
-    hBook1( "1", "# of Clusters    " + inputData(),  0, 200, 200 );
-    hBook1( "2", "Cluster Size     " + inputData(),  0,  50,  50 );
-    hBook1( "3", "Cluster Energy   " + inputData(),  0, m_energyMax );
-    hBook1( "4", "Cluster Et       " + inputData(),  0, m_etMax );
-    hBook1( "5", "Cluster x " + inputData(), -m_xband, m_xband );
-    hBook1( "6", "Cluster y " + inputData(), -m_yband, m_yband );
-    hBook2( "7", "Cluster x vs y   " + inputData(), -m_xband, m_xband, 100 , -m_yband, m_yband,100 );
+    hBook1( "1", "# of Clusters    " + inputData(),  m_multMin, m_multMax , m_multBin );
+    hBook1( "2", "Cluster Size     " + inputData(),  m_sizeMin, m_sizeMax , m_sizeBin );
+    hBook1( "3", "Cluster Energy   " + inputData(),  m_energyMin, m_energyMax ,m_energyBin);
+    hBook1( "4", "Cluster Et       " + inputData(),  m_etMin, m_etMax , m_etBin);
+    hBook1( "5", "Cluster x "        + inputData(), m_xMin, m_xMax , m_xBin);
+    hBook1( "6", "Cluster y "        + inputData(), m_yMin, m_yMax , m_yBin );
+    hBook2( "7", "Cluster x vs y   " + inputData(), m_xMin, m_xMax, m_xBin , m_yMin, m_yMax, m_yBin );
     
     return StatusCode::SUCCESS;
   }
-  /// standard algorithm execution
+  virtual StatusCode finalize();
   virtual StatusCode execute();
 protected:
   /** Standard constructor
@@ -68,15 +68,7 @@ protected:
    *  @param   pSvcLocator pointer to service locator
    */
   CaloClusterMonitor( const std::string &name, ISvcLocator *pSvcLocator )
-    : CaloMoniAlg( name, pSvcLocator )
-    , m_energyMax    ( 250. * Gaudi::Units::GeV )
-    , m_etMax        (  15. * Gaudi::Units::GeV )
-    , m_yband        (  4 * Gaudi::Units::meter )
-    , m_xband        (  4 * Gaudi::Units::meter )
-  { declareProperty( "EnergyMax", m_energyMax );
-    declareProperty( "EtMax",     m_etMax );
-    declareProperty( "xMax",     m_xband );
-    declareProperty( "yMax",     m_yband );
+    : CaloMoniAlg( name, pSvcLocator ){
   }
   /// destructor (virtual and protected)
   virtual ~CaloClusterMonitor() {}
@@ -88,10 +80,6 @@ private:
   /// assignement operator  is  private
   CaloClusterMonitor &operator=( const CaloClusterMonitor& );
 private:
-  double m_energyMax;
-  double m_etMax;
-  double m_yband;
-  double m_xband;
 };
 
 DECLARE_ALGORITHM_FACTORY( CaloClusterMonitor );
@@ -102,32 +90,54 @@ DECLARE_ALGORITHM_FACTORY( CaloClusterMonitor );
 StatusCode CaloClusterMonitor::execute()
 { typedef const LHCb::CaloCluster::Container Clusters;
 
-// produce histos ?
-  if ( !produceHistos() ) return StatusCode::SUCCESS;
+
+ debug() << " Producing histo " << produceHistos() << endreq;
+ // produce histos ?
+ if ( !produceHistos() ) return StatusCode::SUCCESS;
 
 // get input data
-  Clusters* clusters = get<Clusters> ( inputData() );
-  if ( 0 == clusters ) return StatusCode::FAILURE;
-
+ if( !exist<Clusters>(inputData() )){
+   debug() << "No cluster container found " << endreq;
+   return StatusCode::SUCCESS;
+ }
+ 
+ Clusters* clusters = get<Clusters> ( inputData() );
+ if ( 0 == clusters || clusters->empty() ){
+   debug() << "No cluster found in " << inputData() << endreq;
+   return StatusCode::SUCCESS;
+ }
+  
 // fill multiplicity histogram
-  hFill1( "1", clusters->size() );
-
+  long count = 0;
   for( Clusters::const_iterator cluster = clusters->begin();
-       clusters->end() != cluster ; ++cluster )
-  { if ( 0 == *cluster ) continue;
-
-    hFill1( "2", (*cluster)->entries().size() );
-    
+       clusters->end() != cluster ; ++cluster ){
+    if ( 0 == *cluster ) continue;
     const double e = (*cluster)->position().e();
     const double x = (*cluster)->position().x();
     const double y = (*cluster)->position().y();
     const double z = (*cluster)->position().z();
-
+    const double et = e * sqrt( x*x + y*y ) / sqrt( x*x+y*y+z*z);
+    if( e  < m_eFilter)continue;
+    if( et < m_etFilter)continue;
+    count++;
+    hFill1( "2", (*cluster)->entries().size() );    
     hFill1( "3", e );
-    hFill1( "4", e * sqrt( x*x + y*y ) / sqrt( x*x+y*y+z*z) );
-    if ( fabs( y ) <= m_yband ) hFill1( "5", x );
-    if ( fabs( x ) <= m_xband ) hFill1( "6", y );
-    if ( fabs( y ) <= m_yband &&  fabs( x ) <= m_xband)hFill2( "7", x,y );
+    hFill1( "4", et );
+    hFill1( "5", x );
+    hFill1( "6", y );
+    hFill2( "7", x,y );
   }
+  hFill1( "1", count );
+
+
+
+
   return StatusCode::SUCCESS;
+}
+
+
+
+StatusCode CaloClusterMonitor::finalize() {
+  debug() << "==> Finalize" << endmsg;
+  return CaloMoniAlg::finalize();
 }

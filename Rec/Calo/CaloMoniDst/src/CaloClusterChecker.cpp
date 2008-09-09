@@ -1,8 +1,11 @@
-// $Id: CaloClusterChecker.cpp,v 1.1 2007-07-25 19:49:12 odescham Exp $
+// $Id: CaloClusterChecker.cpp,v 1.2 2008-09-09 15:37:23 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2007/07/25 19:49:12  odescham
+// major release : see doc
+//
 // Revision 1.5  2005/11/07 12:16:38  odescham
 // v2r0 - adapt to the new Track Event Model
 //
@@ -73,6 +76,7 @@ public:
   }
   /// standard algorithm execution
   virtual StatusCode execute();
+  virtual StatusCode finalize();
 protected:
   /** Standard constructor
    *  @param   name        algorithm name
@@ -145,4 +149,10 @@ StatusCode CaloClusterChecker::execute()
     } // end of loop over clusters
   } // end of loop over containers
   return StatusCode::SUCCESS;
+}
+
+
+StatusCode CaloClusterChecker::finalize() {
+  debug() << "==> Finalize" << endmsg;
+  return CaloMoniAlg::finalize();
 }

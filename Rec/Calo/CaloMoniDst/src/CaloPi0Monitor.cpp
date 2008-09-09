@@ -1,8 +1,11 @@
-// $Id: CaloPi0Monitor.cpp,v 1.4 2007-07-25 19:49:13 odescham Exp $
+// $Id: CaloPi0Monitor.cpp,v 1.5 2008-09-09 15:37:24 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2007/07/25 19:49:13  odescham
+// major release : see doc
+//
 // Revision 1.3  2005/11/07 12:16:38  odescham
 // v2r0 - adapt to the new Track Event Model
 //
@@ -57,31 +60,23 @@ public:
   virtual StatusCode initialize()
   { StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
     if ( sc.isFailure() ) return sc; // error already printedby GaudiAlgorithm
-    hBook1( "1", "Gamma-Gamma Mass",                   0, 600 );
-    hBook1( "2", "Gamma-Gamma Mass (    PtGamma cut)", 0, 600 );
-    hBook1( "3", "Gamma-Gamma Mass (0.5xPtGamma cut)", 0, 600 );
-    hBook1( "4", "Gamma-Gamma Mass (2.5xPtGamma cut)", 0, 600 );
-    hBook1( "5", "Gamma-Gamma Mass (    PtPi0   cut)", 0, 600 );
-    hBook1( "6", "Gamma-Gamma Mass (0.5xPtPi0   cut)", 0, 600 );
-    hBook1( "7", "Gamma-Gamma Mass (2.5xPtPi0   cut)", 0, 600 );
+    hBook1( "1", "pi0 multiplicity " + inputData() , m_multMin  , m_multMax , m_multBin );
+    hBook1( "2", "pi0 energy " + inputData()       , m_energyMin  , m_energyMax , m_energyBin );
+    hBook1( "3", "pi0 et     " + inputData()       , m_etMin  , m_etMax , m_etBin );
+    hBook1( "4", "pi0 Mass   " + inputData()       , m_massMin  , m_massMax , m_massBin );
     return StatusCode::SUCCESS;
   }
-  /// standard algorithm execution
   virtual StatusCode execute();
+  virtual StatusCode finalize();
 protected:
   /** Standard constructor
    *  @param   name        algorithm name
    *  @param   pSvcLocator pointer to service locator
    */
   CaloPi0Monitor( const std::string &name, ISvcLocator *pSvcLocator )
-    : CaloMoniAlg( name, pSvcLocator )
-    , m_ptPhoton( 250 * Gaudi::Units::MeV )
-    , m_ptPi0( 500 * Gaudi::Units::MeV )
-  { declareProperty( "PhotonPt", m_ptPhoton );
-    declareProperty( "Pi0Pt",    m_ptPi0 );
-    // set the appropriate default for input data
+    : CaloMoniAlg( name, pSvcLocator ){ 
+    declareProperty( "PhotonPtFilter", m_ptPhoton = 250 * Gaudi::Units::MeV );
     addToInputs( LHCb::CaloHypoLocation::Photons );
-    addToInputs( LHCb::CaloHypoLocation::SplitPhotons );
   }
   /// destructor (virtual and protected)
   virtual ~CaloPi0Monitor() {}
@@ -93,10 +88,7 @@ private:
   /// assignement operator is private
   CaloPi0Monitor &operator=( const CaloPi0Monitor& );
 private:
-  // cut on Photon Pt
   double m_ptPhoton;
-  // cut on Pi0    Pt
-  double m_ptPi0;
 };
 
 DECLARE_ALGORITHM_FACTORY( CaloPi0Monitor );
@@ -116,49 +108,49 @@ StatusCode CaloPi0Monitor::execute()
 
   Photons photons;
   for( std::vector<std::string>::const_iterator input = inputs().begin();
-        inputs().end() != input; ++input )
-  { Hypos* hypos = get<Hypos>( *input );
-    if ( 0 == hypos ) return StatusCode::FAILURE;
+       inputs().end() != input; ++input ){
+    Hypos* hypos = get<Hypos>( *input );
+    if ( 0 == hypos ) return StatusCode::SUCCESS;
     photons.insert( photons.end(), hypos->begin(), hypos->end() );
   }
-
-  if ( photons.empty() )
-  { return Warning( "No Photons arte found!", StatusCode::SUCCESS );
-  }
+  if ( photons.empty() )return StatusCode::SUCCESS;  
 
 // loop over the first photon
-  for( photon g1 = photons.begin(); photons.end() != g1; ++g1 )
-  { if ( 0 == *g1 ) continue;
+  long count = 0;
+  for( photon g1 = photons.begin(); photons.end() != g1; ++g1 ){
+    if ( 0 == *g1 ) continue;
     LHCb::CaloMomentum momentum1( *g1 );
+    if(momentum1.pt() < m_ptPhoton)continue;
     Gaudi::LorentzVector v1( momentum1.momentum() );
 // loop over the second photon
-    for( photon g2 = g1 + 1; photons.end() != g2; ++g2 )
-    { if ( 0 == *g2 ) continue;
+    for( photon g2 = g1 + 1; photons.end() != g2; ++g2 ){
+      if ( 0 == *g2 ) continue;
       LHCb::CaloMomentum momentum2( *g2 );
+      if(momentum2.pt() < m_ptPhoton)continue;
+
       Gaudi::LorentzVector v2( momentum2.momentum() );
-
-// 4-vector for pi0
       Gaudi::LorentzVector pi0( v1 + v2 );
-
-// pi0 mass
-      const double mass = pi0.mass() / Gaudi::Units::MeV;
-
-      hFill1( "1", mass );
-
-      const double pt1 = v1.pt();
-      const double pt2 = v2.pt();
-      if ( pt1 >     m_ptPhoton &&
-           pt2 >     m_ptPhoton  ) hFill1( "2", mass );
-      if ( pt1 > 0.5*m_ptPhoton &&
-           pt2 > 0.5*m_ptPhoton  ) hFill1( "3", mass );
-      if ( pt1 > 2.0*m_ptPhoton &&
-           pt2 > 2.0*m_ptPhoton  ) hFill1( "4", mass );
-
-      const double pt  = pi0.pt();
-      if ( pt >     m_ptPi0 ) hFill1( "5", mass );
-      if ( pt > 0.5*m_ptPi0 ) hFill1( "6", mass );
-      if ( pt > 2.0*m_ptPi0 ) hFill1( "7", mass ); 
+      const double mass = pi0.mass() ;
+      const double e = pi0.e();
+      const double et = pi0.pt();
+      if( e < m_eFilter)continue;
+      if( et< m_etFilter)continue;
+      if( mass<m_massFilterMin || mass>m_massFilterMax)continue;
+      count++;
+      hFill1( "2", e );
+      hFill1( "3", et );
+      hFill1( "4", mass );
     }
   }
+  hFill1( "1", count );
+
   return StatusCode::SUCCESS;
+}
+
+
+
+
+StatusCode CaloPi0Monitor::finalize() {
+  debug() << "==> Finalize" << endmsg;
+  return CaloMoniAlg::finalize();
 }

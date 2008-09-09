@@ -1,8 +1,11 @@
-// $Id: CaloClusterMatchMonitor.cpp,v 1.6 2007-07-25 19:49:12 odescham Exp $
+// $Id: CaloClusterMatchMonitor.cpp,v 1.7 2008-09-09 15:37:23 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2007/07/25 19:49:12  odescham
+// major release : see doc
+//
 // Revision 1.5  2005/11/07 12:16:38  odescham
 // v2r0 - adapt to the new Track Event Model
 //
@@ -76,8 +79,8 @@ public:
     hBook1( "5", "Weights",                           0, 1000, 500 );
     return StatusCode::SUCCESS;
   }
-  /// standard algorithm execution
   virtual StatusCode execute();
+  virtual StatusCode finalize();
 protected:
   /** Standard constructor
    *  @param   name        algorithm name
@@ -116,7 +119,7 @@ StatusCode CaloClusterMatchMonitor::execute()
 
 // check relations
   Table *table = get<Table>( inputData() );
-  if ( 0 == table ) return StatusCode::FAILURE;
+  if ( 0 == table ) return StatusCode::SUCCESS;
 
 // total number of links
   hFill1( "1", log10( table->relations().size() + 1. ) );
@@ -126,7 +129,7 @@ StatusCode CaloClusterMatchMonitor::execute()
   for( std::vector<std::string>::const_iterator input = inputs().begin();
         inputs().end() != input; ++input )
   { Clusters* clusters = get<Clusters>( *input );
-    if ( 0 == clusters ) return StatusCode::FAILURE;
+    if ( 0 == clusters ) return StatusCode::SUCCESS;
     // loop over all clusters
     for ( Clusters::const_iterator cluster = clusters->begin();
           clusters->end() != cluster ; ++cluster ){ 
@@ -145,4 +148,10 @@ StatusCode CaloClusterMatchMonitor::execute()
     } // end of loop over clusters
   } // end of loop over conainers
   return StatusCode::SUCCESS;
+}
+
+
+StatusCode CaloClusterMatchMonitor::finalize() {
+  debug() << "==> Finalize" << endmsg;
+  return CaloMoniAlg::finalize();
 }

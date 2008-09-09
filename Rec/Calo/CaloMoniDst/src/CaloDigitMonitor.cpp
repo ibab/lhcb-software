@@ -42,17 +42,19 @@ class CaloDigitMonitor : public CaloMoniAlg
 public:
   /// standard algorithm initialization 
   virtual StatusCode initialize();
-  /// standard algorithm execution
   virtual StatusCode execute();
+  virtual StatusCode finalize();
 protected:
   /** Standard constructor
    *  @param   name        algorithm name
    *  @param   pSvcLocator pointer to service locator
    */
   CaloDigitMonitor( const std::string &name, ISvcLocator *pSvcLocator )
-    : CaloMoniAlg( name, pSvcLocator )
-  {    declareProperty( "ECuts",  m_eCuts );
-    declareProperty( "EtCuts", m_etCuts );
+    : CaloMoniAlg( name, pSvcLocator ){
+    if(detData()     == "Ecal" ){setInputData( LHCb::CaloDigitLocation::Ecal );}
+    else if(detData()== "Hcal" ){setInputData( LHCb::CaloDigitLocation::Hcal );}    
+    else if(detData()== "Prs"  ){setInputData( LHCb::CaloDigitLocation::Prs  );}
+    else if(detData()== "Spd"  ){setInputData( LHCb::CaloDigitLocation::Spd  );}
   }
   /// destructor (virtual and protected)
   virtual ~CaloDigitMonitor() {}
@@ -66,8 +68,6 @@ private:
 private:
   DeCalorimeter *m_calo;
 //
-  std::vector<double> m_eCuts;
-  std::vector<double> m_etCuts;
 };
 
 DECLARE_ALGORITHM_FACTORY( CaloDigitMonitor );
@@ -75,167 +75,77 @@ DECLARE_ALGORITHM_FACTORY( CaloDigitMonitor );
 // ============================================================================
 // standard initialize method
 // ============================================================================
-StatusCode CaloDigitMonitor::initialize()
-{ StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
+StatusCode CaloDigitMonitor::initialize(){ 
+  StatusCode sc = CaloMoniAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc; // error already printedby GaudiAlgorithm
-  if      ( "Ecal" == detData() ) m_calo = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal );
-  else if ( "Hcal" == detData() ) m_calo = getDet<DeCalorimeter>( DeCalorimeterLocation::Hcal );
-  else if ( "Prs"  == detData() ) m_calo = getDet<DeCalorimeter>( DeCalorimeterLocation::Prs );
-  else if ( "Spd"  == detData() ) m_calo = getDet<DeCalorimeter>( DeCalorimeterLocation::Spd );
-  else 
-  { return Error( "Unknown detector name "+detData() );
+
+  if      ( "Ecal" == detData() ) {
+    m_calo = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal );  }  
+  else if ( "Hcal" == detData() ) {
+    m_calo = getDet<DeCalorimeter>( DeCalorimeterLocation::Hcal );  }
+  else if ( "Prs"  == detData() ){
+    m_calo = getDet<DeCalorimeter>( DeCalorimeterLocation::Prs  );  }  
+  else if ( "Spd"  == detData() ) {
+    m_calo = getDet<DeCalorimeter>( DeCalorimeterLocation::Spd  );
+  }  
+  else{
+    return Error( "Unknown detector name "+detData() );
   }
-  hBook1( "1", "# of Digits",          0,   6000,  600 );
-  hBook2( "2", "Digits (col,row) Area = 0  " , 0., 63. , 64, 0. ,63., 64);
-  hBook2( "3", "Digits (col,row) Area = 1  " , 0., 63. , 64, 0. ,63., 64);
-  if("Hcal" != detData() )hBook2( "4", "Digits (col,row) Area = 2  " , 0., 63. , 64, 0. ,63., 64);
-  hBook2( "5", "Energy(col,row) Area = 0  " , 0., 63. , 64, 0. ,63., 64);
-  hBook2( "6", "Energy(col,row) Area = 1  " , 0., 63. , 64, 0. ,63., 64);
-  if("Hcal" != detData() )hBook2( "7", "Digit(col,row) Area = 2  " , 0., 63. , 64, 0. ,63., 64);
+  hBook1( "1", detData() + " : # of Digits"   , m_multMin   ,   m_multMax,  m_multBin   );
+  hBook1( "2", detData() + " : digits energy" , m_energyMin ,   m_energyMax,  m_energyBin );
+  if( detData() != "Spd" && detData() != "Prs")
+    hBook1( "3", detData() + " : digits Et"     , m_etMin     ,   m_etMax    ,  m_etBin     );
 
-
-
-  unsigned int i;
-  char         hname[128];
-  for( i=0; i<m_eCuts.size(); i++ )  {
-    std::stringstream ecut("");
-    ecut << "eCut_" << m_eCuts[i]/Gaudi::Units::MeV ;
-    
-    if ( m_eCuts[i] > 0 ){
-      sprintf( hname, "# of Digits (e>%.0f MeV)", m_eCuts[i]/Gaudi::Units::MeV );
-      hBook1( ecut.str() + "/1", hname, 0,     200,  200 );
-
-      sprintf( hname, "Digits (col,row) Area = 0  (e>%.0f MeV)", m_eCuts[i]/Gaudi::Units::MeV );
-      hBook2( ecut.str() + "/2" , hname , 0., 63. , 64, 0. ,63., 64);
-
-      sprintf( hname, "Digits (col,row) Area = 1  (e>%.0f MeV)", m_eCuts[i]/Gaudi::Units::MeV );
-      hBook2( ecut.str() + "/3" , hname , 0., 63. , 64, 0. ,63., 64);
-
-      if("Hcal" != detData() ){
-        sprintf( hname, "Digits (col,row) Area = 2  (e>%.0f MeV)", m_eCuts[i]/Gaudi::Units::MeV );
-        hBook2( ecut.str() + "/4" , hname , 0., 63. , 64, 0. ,63., 64);
-      }  
-
-      sprintf( hname, "Energy (col,row) Area = 0  (e>%.0f MeV)", m_eCuts[i]/Gaudi::Units::MeV );
-      hBook2( ecut.str() + "/5" , hname , 0., 63. , 64, 0. ,63., 64);
-
-      sprintf( hname, "Energy (col,row) Area = 1  (e>%.0f MeV)", m_eCuts[i]/Gaudi::Units::MeV );
-      hBook2( ecut.str() + "/6" , hname , 0., 63. , 64, 0. ,63., 64);
-
-      if("Hcal" != detData() ){
-        sprintf( hname, "Energy (col,row) Area = 2  (e>%.0f MeV)", m_eCuts[i]/Gaudi::Units::MeV );
-        hBook2( ecut.str() + "/7" , hname , 0., 63. , 64, 0. ,63., 64);
-      }
-    } 
-  }
-  for( i=0; i<m_etCuts.size(); i++ ){ 
-    std::stringstream etcut("");
-    etcut << "etCut_" << m_etCuts[i]/Gaudi::Units::MeV ;
-
-    if ( m_etCuts[i] > 0 ){ 
-      sprintf( hname, "# of Digits (et>%.0f MeV)", m_etCuts[i]/Gaudi::Units::MeV );
-      hBook1( etcut.str() + "/1", hname, 0,     200,  200 );
-
-      sprintf( hname, "Digits (col,row) Area = 0  (et>%.0f MeV)", m_etCuts[i]/Gaudi::Units::MeV );
-      hBook2( etcut.str() + "/2" , hname , 0., 63. , 64, 0. ,63., 64);
-
-      sprintf( hname, "Digits (col,row) Area = 1  (et>%.0f MeV)", m_etCuts[i]/Gaudi::Units::MeV );
-      hBook2( etcut.str() + "/3" , hname , 0., 63. , 64, 0. ,63., 64);
-
-      if("Hcal" != detData() ){
-        sprintf( hname, "Digits (col,row) Area = 2  (et>%.0f MeV)", m_etCuts[i]/Gaudi::Units::MeV );
-        hBook2( etcut.str() + "/4" , hname , 0., 63. , 64, 0. ,63., 64);
-      }  
-
-      sprintf( hname, "Energy (col,row) Area = 0  (et>%.0f MeV)", m_etCuts[i]/Gaudi::Units::MeV );
-      hBook2( etcut.str() + "/5" , hname , 0., 63. , 64, 0. ,63., 64);
-
-      sprintf( hname, "Energy (col,row) Area = 1  (et>%.0f MeV)", m_etCuts[i]/Gaudi::Units::MeV );
-      hBook2( etcut.str() + "/6" , hname , 0., 63. , 64, 0. ,63., 64);
-
-      if("Hcal" != detData() ){
-        sprintf( hname, "Energy (col,row) Area = 2  (et>%.0f MeV)", m_etCuts[i]/Gaudi::Units::MeV );
-        hBook2( etcut.str() + "/7" , hname , 0., 63. , 64, 0. ,63., 64);
-      }
-    }
-  }
+  info() << detData() << " digits from " << inputData() << endreq;
+  
   return StatusCode::SUCCESS;
 }
 // ============================================================================
 // standard execution method
 // ============================================================================
-StatusCode CaloDigitMonitor::execute()
-{ typedef const LHCb::CaloDigit::Container Digits;
-  unsigned int hid, i;
-
+StatusCode CaloDigitMonitor::execute(){
+  typedef const LHCb::CaloDigit::Container Digits;
+  debug() << name() << " execute " << endreq;
+ 
 // produce histos ?
+  debug() << " Producing histo " << produceHistos() << endreq;
   if ( !produceHistos() ) return StatusCode::SUCCESS;
+  
+  // get input data
+  if( !exist<Digits>(inputData())){
+    debug() << "no digit container found at " << inputData() << endreq;
+    return StatusCode::SUCCESS;
+  }
+  
 
-// get input data
   Digits* digits = get<Digits> ( inputData() );
-  if ( 0 == digits ) return StatusCode::FAILURE;
-
-// fill multiplicity histogram
-  hFill1( "1", digits->size() );
-  std::vector<int> nDigits( m_eCuts.size()+m_etCuts.size() );
-
+  if ( 0 == digits ){
+    debug() << "no digit found in " << inputData() <<endreq;
+    return StatusCode::SUCCESS;
+  }
+  
+  long count = 0;
   for( Digits::const_iterator digit = digits->begin();
-       digits->end() != digit ; ++digit )
-  { if ( 0 == *digit ) continue;
-
-    const LHCb::CaloCellID &cellID = (*digit)->cellID();
-    const unsigned int  col = cellID.col();
-    const unsigned int  row = cellID.row();    
-    const unsigned int  area = cellID.area();    
+       digits->end() != digit ; ++digit ){
+    if ( 0 == *digit ) continue;
+    const LHCb::CaloCellID  id     = (*digit)->cellID();
     const double            e      = (*digit)->e();
-    const double            et     = e * m_calo->cellSine( cellID );
-
-    if( 0 == area ) hFill2( "2", row, col );
-    if( 1 == area ) hFill2( "3", row, col );
-    if( 2 == area ) hFill2( "4", row, col );
-    if( 0 == area ) hFill2( "5", row, col ,e );
-    if( 1 == area ) hFill2( "6", row, col ,e );
-    if( 2 == area ) hFill2( "7", row, col ,e );
-
-//
-    for( i=0; i<m_eCuts.size(); i++ ){ 
-      std::stringstream ecut("");
-      ecut << "eCut_" << m_eCuts[i]/Gaudi::Units::MeV ;
-      if (( m_eCuts[i] > 0 ) && ( e > m_eCuts[i] )){ 
-        nDigits[i]++;
-        if( 0 == area ) hFill2( ecut.str() +"/2", row, col );
-        if( 1 == area ) hFill2( ecut.str() +"/3", row, col );
-        if( 2 == area ) hFill2( ecut.str() +"/4", row, col );
-        if( 0 == area ) hFill2( ecut.str() +"/5", row, col ,e );
-        if( 1 == area ) hFill2( ecut.str() +"/6", row, col ,e );
-        if( 2 == area ) hFill2( ecut.str() +"/7", row, col ,e );
-      }
-    }
-    for( i=0; i<m_etCuts.size(); i++ ){ 
-      std::stringstream etcut("");
-      etcut << "etCut_" << m_etCuts[i]/Gaudi::Units::MeV ;
-      if (( m_etCuts[i] > 0 ) && ( et > m_etCuts[i] )){
-        nDigits[m_eCuts.size()+i]++;
-        if( 0 == area ) hFill2( etcut.str() +"/2", row, col );
-        if( 1 == area ) hFill2( etcut.str() +"/3", row, col );
-        if( 2 == area ) hFill2( etcut.str() +"/4", row, col );
-        if( 0 == area ) hFill2( etcut.str() +"/5", row, col ,e );
-        if( 1 == area ) hFill2( etcut.str() +"/6", row, col ,e );
-        if( 2 == area ) hFill2( etcut.str() +"/7", row, col ,e );
-      }
-    }
+    const double            et     = e * m_calo->cellSine( id );
+    if( e  < m_eFilter)continue;
+    if( et < m_etFilter)continue;    
+    count++;
+    hFill1( "2", e );
+    if( detData() != "Spd" && detData() != "Prs")hFill1( "3", et ); 
+    fillCalo2D("4", *(*digit) , "Digit x vs y ");
   }
-  hid = 5;
-  for( i=0; i<m_eCuts.size(); i++ ){
-    std::stringstream ecut("");
-    ecut << "eCut_" << m_eCuts[i]/Gaudi::Units::MeV ;
-    if ( m_eCuts[i] > 0 )hFill1( ecut.str() +"/1", nDigits[i] );
-  }
-  for( i=0; i<m_etCuts.size(); i++ ){
-    std::stringstream etcut("");
-    etcut << "etCut_" << m_etCuts[i]/Gaudi::Units::MeV ;
-    if ( m_etCuts[i] > 0 )hFill1( etcut.str() +"/1", nDigits[m_eCuts.size()+i] );
-  }
-
+  hFill1( "1", count );
+  
   return StatusCode::SUCCESS;
+}
+
+
+
+StatusCode CaloDigitMonitor::finalize() {
+  debug() << "==> Finalize" << endmsg;
+  return CaloMoniAlg::finalize();
 }

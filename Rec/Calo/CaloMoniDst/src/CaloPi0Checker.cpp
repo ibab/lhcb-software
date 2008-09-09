@@ -1,4 +1,4 @@
-// $Id: CaloPi0Checker.cpp,v 1.1 2007-07-25 19:49:13 odescham Exp $
+// $Id: CaloPi0Checker.cpp,v 1.2 2008-09-09 15:37:24 odescham Exp $
 
 // ============================================================================
 // Include files
@@ -47,8 +47,7 @@
  *  @date   02/11/2001
  */
 
-class CaloPi0Checker : public CaloMoniAlg
-{
+class CaloPi0Checker : public CaloMoniAlg{
   /// friend factory for instantiation
   friend class AlgFactory<CaloPi0Checker>;
 
@@ -75,8 +74,11 @@ public:
 
     return StatusCode::SUCCESS;
   }
+  
   /// standard algorithm execution
   virtual StatusCode execute();
+  virtual StatusCode finalize();
+
 protected:
   /** Standard constructor
    *  @param   name        algorithm name
@@ -87,15 +89,15 @@ protected:
     , m_cut( 50 * Gaudi::Units::perCent )
     , m_calo( DeCalorimeterLocation::Ecal )
     , m_pi0Name( "pi0" )
-    , m_pi0ID( 0 )
-  { declareProperty( "Ancestor", m_pi0Name );
+    , m_pi0ID( 0 ){ 
+    declareProperty( "Ancestor", m_pi0Name );
     declareProperty( "Cut",      m_cut );
-// set the appropriate default value for input data
+    // set the appropriate default value for input data
     setInputData(  "Relations/"+LHCb::CaloClusterLocation::Default );
-// set the appropriate defalts value for input data
+    // set the appropriate defalts value for input data
     addToInputs( LHCb::CaloHypoLocation::Photons );
     //    addToInputs( LHCb::CaloHypoLocation::SplitPhotons );
-// set the appropriate defualt value for detector data
+    // set the appropriate defualt value for detector data
     setDetData( DeCalorimeterLocation::Ecal );
   }
   /// destructor (virtual and protected)
@@ -111,7 +113,7 @@ private:
   // photon "purity" cut
   float                                  m_cut;
   LHCb::ClusterFunctors::ClusterFromCalo m_calo;
-  std::string                            m_pi0Name;
+std::string                            m_pi0Name;
   LHCb::ParticleID                       m_pi0ID;
 };
 
@@ -201,4 +203,10 @@ StatusCode CaloPi0Checker::execute()
     } // end of loop over second photon
   } // end of loop over first photon
   return StatusCode::SUCCESS;
+}
+
+
+StatusCode CaloPi0Checker::finalize() {
+  debug() << "==> Finalize" << endmsg;
+  return CaloMoniAlg::finalize();
 }

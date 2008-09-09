@@ -1,8 +1,11 @@
-// $Id: CaloHypoMatchMonitor.cpp,v 1.5 2007-07-25 19:49:12 odescham Exp $
+// $Id: CaloHypoMatchMonitor.cpp,v 1.6 2008-09-09 15:37:24 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2007/07/25 19:49:12  odescham
+// major release : see doc
+//
 // Revision 1.4  2005/11/07 12:16:38  odescham
 // v2r0 - adapt to the new Track Event Model
 //
@@ -79,6 +82,7 @@ public:
   }
   /// standard algorithm execution
   virtual StatusCode execute();
+  virtual StatusCode finalize();
 protected:
   /** Standard constructor
    *  @param   name        algorithm name
@@ -110,7 +114,7 @@ StatusCode CaloHypoMatchMonitor::execute()
 
 // check relations
   Table *table = get<Table>( inputData() );
-  if ( 0 == table ) return StatusCode::FAILURE;
+  if ( 0 == table ) return StatusCode::SUCCESS;
 
 // logarithm of ( total number of links + 1 )
   hFill1( "1", log10( table-> inverse()->relations().size() + 1. ) );
@@ -121,7 +125,7 @@ StatusCode CaloHypoMatchMonitor::execute()
   for( std::vector<std::string>::const_iterator input = inputs().begin();
        inputs().end() != input; ++input )
   { Hypos* hypos = get<Hypos>( *input );
-    if ( 0 == hypos ) return StatusCode::FAILURE;
+    if ( 0 == hypos ) return StatusCode::SUCCESS;
 // loop over all hypos
     for( Hypos::const_iterator hypo = hypos->begin();
          hypos->end() != hypo; ++hypo )
@@ -140,4 +144,10 @@ StatusCode CaloHypoMatchMonitor::execute()
     } // end of loop over hypos 
   } // end of loop over containers 
   return StatusCode::SUCCESS;
+}
+
+
+StatusCode CaloHypoMatchMonitor::finalize() {
+  debug() << "==> Finalize" << endmsg;
+  return CaloMoniAlg::finalize();
 }
