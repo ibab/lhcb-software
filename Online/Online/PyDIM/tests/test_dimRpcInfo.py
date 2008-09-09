@@ -11,9 +11,10 @@ from dimcpp import *
 # importing for the dim_start_serving()
 import dimc
 
-#############################################################################
-# Implements test classes functionality
-#############################################################################
+##
+# @addtogroup examples
+# @{
+#
 class PyRpcInt (DimRpc):
     def __init__(self):
          DimRpc.__init__(self, 'testRpc1', 'I', 'I')
@@ -172,6 +173,9 @@ class TestDimRpc(unittest.TestCase):
         self.assertEqual('Error', res1)
         self.assertEqual(res1, res2)
 
+##
+# @}
+#
 
 #def suite():
 #    tests = ['testRpcInt', 'testRpcString', 'testRpcComposite']
