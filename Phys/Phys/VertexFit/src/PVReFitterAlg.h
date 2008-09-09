@@ -1,4 +1,4 @@
-// $Id: PVReFitterAlg.h,v 1.6 2008-09-09 08:44:56 jpalac Exp $
+// $Id: PVReFitterAlg.h,v 1.7 2008-09-09 08:47:59 jpalac Exp $
 #ifndef PVREFITTERALG_H 
 #define PVREFITTERALG_H 1
 
@@ -12,8 +12,6 @@
 class IPVReffitter;
 class IPVOfflineTool;
 class ILifetimeFitter;
-class IRelatedPVFinder;
-class IOnOffline;
 
 /** @class PVReFitterAlg PVReFitterAlg.h
  *  
