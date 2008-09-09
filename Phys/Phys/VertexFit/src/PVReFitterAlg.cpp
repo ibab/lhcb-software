@@ -1,4 +1,4 @@
-// $Id: PVReFitterAlg.cpp,v 1.7 2008-09-09 13:24:51 jpalac Exp $
+// $Id: PVReFitterAlg.cpp,v 1.8 2008-09-09 15:43:40 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -93,32 +93,32 @@ StatusCode PVReFitterAlg::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   if (!exist<LHCb::Particle::Container>(m_particleInputLocation)) {
-    error() << "No LHCb::Particle::Container found at "
-            <<  m_particleInputLocation << endmsg;
-    return StatusCode::SUCCESS;
+    return Error("No LHCb::Particle::Container found at " + 
+                 m_particleInputLocation,
+                 StatusCode::SUCCESS);
   }
   if (!exist<LHCb::RecVertex::Container>(m_PVInputLocation)) {
-    error() << "No LHCb::RecVertex::Container found at "
-            <<  m_PVInputLocation << endmsg;
-    return StatusCode::SUCCESS;
+    return Error("No LHCb::RecVertex::Container found at " +
+                 m_PVInputLocation,
+                 StatusCode::SUCCESS);
   }
 
   LHCb::Particle::Container* particles = 
     get<LHCb::Particle::Container>(m_particleInputLocation);
 
   if (0==particles) {
-    error() << "No LHCb::Particles in LHCb::Particle::Container "
-            <<  m_particleInputLocation << endmsg;
-    return StatusCode::SUCCESS;
+    return Error("No LHCb::Particles in LHCb::Particle::Container " +
+                 m_particleInputLocation,
+                 StatusCode::SUCCESS);
   }
 
   LHCb::RecVertex::Container* vertices = 
     get<LHCb::RecVertex::Container>(m_PVInputLocation);
 
   if (0==vertices) {
-    error() << "No LHCb::RecVertices in LHCb::Particle::Container "
-            <<  m_particleInputLocation << endmsg;
-    return StatusCode::SUCCESS;
+    return Error("No LHCb::RecVertices in LHCb::Particle::Container "+
+                 m_PVInputLocation,
+                 StatusCode::SUCCESS);
   }
   
   LHCb::RecVertex::Container* vertexContainer = 
@@ -158,6 +158,7 @@ StatusCode PVReFitterAlg::execute() {
     }
   }
   
+  setFilterPassed(true);
 
   if (exist<LHCb::RecVertex::Container>(m_vertexOutputLocation) )
   {  
@@ -168,8 +169,9 @@ StatusCode PVReFitterAlg::execute() {
               << " re-fitted vertices in " 
               << m_vertexOutputLocation << endmsg;
   } else {
-    error() << "No re-fitted vertices at "
-            << m_vertexOutputLocation << endmsg;    
+    return Error("No re-fitted vertices at "+
+                 m_vertexOutputLocation,
+                 StatusCode::SUCCESS);
   }
 
 
@@ -178,11 +180,10 @@ StatusCode PVReFitterAlg::execute() {
     verbose() << "CHECK: table is at " 
               << m_particle2VertexRelationsOutputLocation << endmsg;
   } else {
-    error() << "No LHCb::Particle->LHCb::RecVertex table found at "
-            << m_particle2VertexRelationsOutputLocation << endmsg;    
+    return Error("No LHCb::Particle->LHCb::RecVertex table found at "+
+                 m_particle2VertexRelationsOutputLocation,
+                 StatusCode::SUCCESS);
   }
-  
-  setFilterPassed(true);
 
   return StatusCode::SUCCESS;
 }
