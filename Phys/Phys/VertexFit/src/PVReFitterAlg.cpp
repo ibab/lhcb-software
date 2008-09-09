@@ -1,9 +1,9 @@
-// $Id: PVReFitterAlg.cpp,v 1.4 2008-09-08 16:09:10 jpalac Exp $
+// $Id: PVReFitterAlg.cpp,v 1.5 2008-09-09 08:32:37 jpalac Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
-
+#include "GaudiKernel/ObjectVector.h"
 // LHCb
 #include <Event/RecVertex.h>
 #include <Event/Particle.h>
@@ -44,7 +44,7 @@ PVReFitterAlg::PVReFitterAlg( const std::string& name,
   m_lifetimeFitterType("PropertimeFitter"),
   m_relatedPVFinderType("Default"),
   m_particleInputLocation(""),
-  m_particle2VertexRelationsInputLocation(""),
+  m_PVInputLocation("LHCb::RecVertexLocation::Primary"),
   m_particle2VertexRelationsOutputLocation(""),
   m_vertexOutputLocation("")
 
@@ -55,8 +55,7 @@ PVReFitterAlg::PVReFitterAlg( const std::string& name,
   declareProperty("ILifetimeFitter",    m_lifetimeFitterType);
   declareProperty("IRelatedPVFinder", m_relatedPVFinderType);
   declareProperty("ParticleInputLocation",  m_particleInputLocation);
-  declareProperty("P2VRelationsInputLocation",  
-                  m_particle2VertexRelationsInputLocation);
+  declareProperty("PrimaryVertexInputLocation",  m_PVInputLocation);
   declareProperty("P2VRelationsOutputLocation",  
                   m_particle2VertexRelationsOutputLocation);
   declareProperty("VertexOutputLocation", m_vertexOutputLocation);
@@ -72,17 +71,11 @@ PVReFitterAlg::~PVReFitterAlg() {}
 //=============================================================================
 StatusCode PVReFitterAlg::initialize() {
 
-  //  StatusCode sc = DVAlgorithm::initialize(); // must be executed first
-
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
 
   if ( sc.isFailure() ) return sc;  // error printed already by DVAlgorithm
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
-
-  //  if (msgLevel(MSG::DEBUG)) debug() << ">>> Preloading PhysDesktop" << endmsg;
-
-  //  this->desktop();
 
   m_onOfflineTool = tool<IOnOffline>("OnOfflineTool", this);
 
@@ -122,38 +115,32 @@ StatusCode PVReFitterAlg::execute() {
             <<  m_particleInputLocation << endmsg;
     return StatusCode::SUCCESS;
   }
-
-//   if (!exist<Particle2Vertex::Table>(m_particle2VertexRelationsInputLocation) )
-//   {  
-//     error() << "No LHCb::Particle->LHCb::RecVertex table found at "
-//             << m_particle2VertexRelationsInputLocation << endmsg;
-//     return StatusCode::SUCCESS;    
-//   } else {
-//     m_p2VtxTable = 
-//       get<Particle2Vertex::Table>(m_particle2VertexRelationsInputLocation);
-//   }
-  
+  if (!exist<LHCb::RecVertex::Container>(m_PVInputLocation)) {
+    error() << "No LHCb::RecVertex::Container found at "
+            <<  m_PVInputLocation << endmsg;
+    return StatusCode::SUCCESS;
+  }
 
   LHCb::Particle::Container* particles = 
     get<LHCb::Particle::Container>(m_particleInputLocation);
-
-//   Particle2Vertex::Table* table = 
-//     get<Particle2Vertex::Table>(m_particle2VertexRelationsInputLocation);
 
   if (0==particles) {
     error() << "No LHCb::Particles in LHCb::Particle::Container "
             <<  m_particleInputLocation << endmsg;
     return StatusCode::SUCCESS;
   }
-  
-//   if (0==table) {
-//     error() << "No LHCb::Particle->LHCb::RecVertex "
-//             << m_particle2VertexRelationsInputLocation << endmsg;
-//     return StatusCode::SUCCESS;    
-//   }
 
-  LHCb::RecVertex::Container* vertexContainer = 
-    new LHCb::RecVertex::Container();
+  LHCb::RecVertex::Container* vertices = 
+    get<LHCb::RecVertex::Container>(m_PVInputLocation);
+
+  if (0==vertices) {
+    error() << "No LHCb::RecVertices in LHCb::Particle::Container "
+            <<  m_particleInputLocation << endmsg;
+    return StatusCode::SUCCESS;
+  }
+  
+  ObjectVector<LHCb::RecVertex>* vertexContainer = 
+    new ObjectVector<LHCb::RecVertex>();
 
   verbose() << "Storing re-fitted vertices in " 
             << m_vertexOutputLocation << endmsg;
@@ -172,27 +159,23 @@ StatusCode PVReFitterAlg::execute() {
   for ( LHCb::Particle::Container::const_iterator itP = particles->begin();
         itP != particles->end(); 
         ++itP) {
-    const LHCb::RecVertex* bestVertex = getRelatedVertex(*itP);
-
-    if (0!=bestVertex) {
-      if( !vertexContainer->object(bestVertex->key()) ) {
-        verbose() << "Found related vertex for particle\n" 
-                  << *(*itP) << endmsg;
-        LHCb::RecVertex* refittedVertex = refitVertex(bestVertex, *itP);
-        if (0!=refittedVertex) {
-          verbose() << "Storing vertex with key " << refittedVertex->key()
-                   << " into container slot with key " << bestVertex->key() << endmsg;
-          vertexContainer->insert(refittedVertex);
-          newTable->relate(*itP, refittedVertex, 1.);
-        }
-      } else {
-        verbose() << "Related vertex had already been refitted" << endmsg;
-      }
-    } else {
-      warning() << "Found no related vertex for particle\n" 
+    for (LHCb::RecVertex::Container::const_iterator itPV = vertices->begin();
+         itPV != vertices->end();
+         ++itPV) {
+      
+      verbose() << "Found related vertex for particle\n" 
                 << *(*itP) << endmsg;
+      LHCb::RecVertex* refittedVertex = refitVertex(*itPV, *itP);
+      if (0!=refittedVertex) {
+        verbose() << "Storing vertex with key " << refittedVertex->key()
+                  << " into container slot with key " << (*itPV)->key() 
+                  << endmsg;
+        vertexContainer->push_back(refittedVertex);
+        newTable->relate(*itP, refittedVertex, 1.);
+      }
     }
   }
+  
 
   if (exist<LHCb::RecVertex::Container>(m_vertexOutputLocation) )
   {  
@@ -217,8 +200,6 @@ StatusCode PVReFitterAlg::execute() {
             << m_particle2VertexRelationsOutputLocation << endmsg;    
   }
   
-  m_p2VtxTable.clear();
-
   setFilterPassed(true);
 
   return StatusCode::SUCCESS;
@@ -252,13 +233,6 @@ LHCb::RecVertex* PVReFitterAlg::refitVertex(const LHCb::RecVertex* v,
   }
 
   return (sc==StatusCode::SUCCESS) ? reFittedVertex : 0;
-}
-//=============================================================================
-const LHCb::RecVertex* PVReFitterAlg::getRelatedVertex(const LHCb::Particle* p)
-{
-  StatusCode sc = m_relatedPVFinder->relatedPVs(p, &m_p2VtxTable);
-  if (sc.isFailure()) return 0;
-  return dynamic_cast<const LHCb::RecVertex*>(m_p2VtxTable.relations(p).back().to());
 }
 //=============================================================================
 void PVReFitterAlg::getTracks(const LHCb::Particle* p,

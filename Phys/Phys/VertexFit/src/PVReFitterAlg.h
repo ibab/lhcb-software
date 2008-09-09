@@ -1,11 +1,10 @@
-// $Id: PVReFitterAlg.h,v 1.4 2008-09-08 16:09:10 jpalac Exp $
+// $Id: PVReFitterAlg.h,v 1.5 2008-09-09 08:32:37 jpalac Exp $
 #ifndef PVREFITTERALG_H 
 #define PVREFITTERALG_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
-
 
 // From LHCb
 #include "Kernel/Particle2Vertex.h"
@@ -18,38 +17,40 @@ class IOnOffline;
 
 /** @class PVReFitterAlg PVReFitterAlg.h
  *  
- * Simple DVAlgorithm that takes some particles, their related primary 
+ * Simple GaudiAlgorithm that takes some particles, some primary 
  * vertices, and refits the vertices excluding the tracks coming from the 
  * particle's decay. It also creates a relations table associating each 
  * particle to its corresponding new vertex.
  *
  * <b>Properties</b>:
  *
- * IPVOfflineTool  : Implemenmtation of IPVOfflineTool. Default: PVOfflineTool
+ * <b>IPVOfflineTool</b>  : Implemenmtation of IPVOfflineTool. Default: PVOfflineTool
  *
- * IPVReFitter     : Implemenmtation of IPVRefitter. Default: AdaptivePVReFitter
+ * <b>IPVReFitter</b>     : Implemenmtation of IPVRefitter. Default: AdaptivePVReFitter
  *
- * ILifetimeFitter : Implemenmtation of ILifetimeFitter. Default: PropertimeFitter
+ * <b>ILifetimeFitter</b> : Implemenmtation of ILifetimeFitter. Default: PropertimeFitter
  *
  * <b>ParticleInputLocation</b>: TES location of the particles who's related primary vertices will be re-fitted.
  *
- * <b>P2VRelationsInputLocation</b> : TES location of the relations table 
- * relating the particles in  ParticleInputLocation to the "best" primary 
- * vertices.
+ * <b>PrimaryVertexInputLocation</b>: TES location of the LHCb::RecVertices to be
+ * re-fitted.
  *
- * <b>P2VRelationsOutputLocation</b> : TES location of the relations table 
+ * <b>P2VRelationsOutputLocation</b>: TES location of the relations table 
  * relating the particles in ParticleInputLocation to the re-fitted 
  * primary vertices.
  *
- * <b>VertexOutputLocation</b> : TES location of the 
- * LHCb::RecVertex::Container containing the re-fitted vertices.
+ * <b>VertexOutputLocation</b>: TES location of the 
+ * ObjectVector<LHCb::RecVertex> containing the re-fitted vertices.
  *
  * The algorithm iterates over the LHCb::Particles in ParticleInputLocation,
- * obtains the related LHCb::RecVertices from the table in 
- * P2VRelationsInputLocation, then re-fits clones of these excluding any 
+ * and the LHCb::RecVertices in PrimaryVertexLocation, re-fits clones of the
+ * vertices excluding any 
  * tracks that originate from the particle, and creates a relations table
- * connecting the particle to the re-fitted vertices. It places the re-fitted 
- * vertices in VertexOutputLocation and the relations table in 
+ * connecting the particle to the re-fitted vertices. The re-fitted vertices 
+ * have the same key as the original vertex to allow to identify re-fitted
+ * vertices that come from the same original. Hence they are not stored in a
+ * KeyedContainer<LHCb::RecVertex> but in a ObjectVector<LHCb::RecVertex>,
+ * which is placed in VertexOutputLocation. The relations table is placed in 
  * P2VRelationsOutputLocation. The re-fitting itself is a sequence of
  * IPVOfflineTool::reDoSinglePV, IPVReFitter::remove.
  *
@@ -74,9 +75,6 @@ private:
   LHCb::RecVertex* refitVertex(const LHCb::RecVertex* v,
                                const LHCb::Particle* p  ) const;
   
-  const LHCb::RecVertex* getRelatedVertex(const LHCb::Particle* p);
-  
-
   void getTracks(const LHCb::Particle* p,
                  LHCb::Track::ConstVector& tracks) const;
 
@@ -93,11 +91,10 @@ private:
   std::string m_lifetimeFitterType;
   std::string m_relatedPVFinderType;
   std::string m_particleInputLocation;
-  std::string m_particle2VertexRelationsInputLocation;
+  std::string m_PVInputLocation;
   std::string m_particle2VertexRelationsOutputLocation;
   std::string m_vertexOutputLocation;
-  
-  LHCb::RecVertex::Container* m_vertexContainer;
+
   Particle2Vertex::Table m_p2VtxTable;
   
 };
