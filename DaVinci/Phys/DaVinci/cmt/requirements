@@ -1,11 +1,11 @@
-# $Id: requirements,v 1.388 2008-08-21 12:54:34 pkoppenb Exp $
+# $Id: requirements,v 1.389 2008-09-09 14:25:18 jpalac Exp $
 # Created    : 07/02/2002
 # Maintainer : J. Palacios
 #
 
 #============================================================================
 package           DaVinci
-version           v20r1
+version           v20r2
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -37,7 +37,7 @@ use LinkerInstances    v*    Event
 use SimComponents      v*    Sim            -no_auto_imports
 
 #-- Hlt
-use HltSys      v*
+#use HltSys      v*
 
 #-- Lbcom
 use LbcomSys    v*
