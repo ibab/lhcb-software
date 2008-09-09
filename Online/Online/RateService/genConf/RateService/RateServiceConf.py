@@ -1,4 +1,4 @@
-#Tue Sep  2 10:55:08 2008
+#Tue Sep  9 11:18:09 2008
 """Automatically generated. DO NOT EDIT please"""
 from GaudiKernel.Proxy.Configurable import *
 

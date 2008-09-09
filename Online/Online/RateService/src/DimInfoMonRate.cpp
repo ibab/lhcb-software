@@ -319,7 +319,7 @@ void DimInfoMonRate::extractData()
     
     int gotCycleNumber = getCycleNumberFromMonRate();
     
-    COUT_DEBUG("extractData   got cycle number ===> " << gotCycleNumber);
+    //COUT_DEBUG("extractData   got cycle number ===> " << gotCycleNumber);
     
     /* if the current cycle has finished
      */

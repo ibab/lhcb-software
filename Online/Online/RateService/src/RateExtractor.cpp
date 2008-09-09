@@ -21,21 +21,40 @@ RateExtractor::~RateExtractor()
 }
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// improve thi naming comvention by getting counter signification
+// improve this naming comvention by getting counter signification
 // from MonRate when it will provide it.
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 std::string RateExtractor::makeServiceName(std::string nameHeader)
 {
-  std::stringstream streamName;
-  streamName << nameHeader << "/rateFromCounter#" << m_counterId;
+  std::string comment = getCommentFromMonRate();
   
-  std::string name = streamName.str();
+  
+  char * c = new char[comment.length()+1];
+  strcpy(c, comment.c_str());
+  
+  std::string name = "";
+  char * part = NULL;
+  
+  part = strtok(c, " ");
+  while(part != NULL)
+  {
+    name += part;
+    part = strtok(NULL, " ");
+  }
+  
+  if(name == "")
+  {
+
+    std::stringstream streamName;
+    streamName << nameHeader << "/rateFromCounter#" << m_counterId;
+  
+    name = streamName.str();
+  }else{
+    name = nameHeader + "/" + name;
+  }
   
   COUT_DEBUG("###########################################")
-  COUT_DEBUG("###########################################");
-  COUT_DEBUG("m_counterId = " << m_counterId);
-  COUT_DEBUG("name = " << name);
-  COUT_DEBUG("###########################################");
+  COUT_DEBUG("counter #" << m_counterId << " >>> " << name);
   COUT_DEBUG("###########################################");
   
   return name;
@@ -43,6 +62,9 @@ std::string RateExtractor::makeServiceName(std::string nameHeader)
 
 void RateExtractor::publishService(std::string nameHeader)
 {
+  setValue(0);
+  setComment(getCommentFromMonRate());
+  
   std::string serviceName = makeServiceName(nameHeader);
   
   RatePublisher::publishService(serviceName);
@@ -79,7 +101,7 @@ std::string RateExtractor::getCommentFromMonRate()
   TProfile * profile = m_pMonRate->profile();  
   std::string comment(profile->GetXaxis()->GetBinLabel(8 + m_counterId));
   
-   COUT_DEBUG("Comment for rate from counter # = " << comment);
+   COUT_DEBUG("Comment for rate from counter #" << m_counterId << " = " << comment);
    
    return comment;
 
