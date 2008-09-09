@@ -1,10 +1,12 @@
-// $Id: HltTrackUpgradeTool.cpp,v 1.27 2008-09-08 10:14:22 graven Exp $
+// $Id: HltTrackUpgradeTool.cpp,v 1.28 2008-09-09 11:28:08 graven Exp $
 // Include files
 #include "GaudiKernel/ToolFactory.h" 
 
 // local
 #include "HltTrackUpgradeTool.h"
 #include "HltBase/ESequences.h"
+#include "boost/algorithm/string/split.hpp"
+#include "boost/algorithm/string/classification.hpp"
 #include "GaudiKernel/IJobOptionsSvc.h"
 #include "GaudiKernel/Property.h"
 
@@ -138,7 +140,8 @@ std::vector<std::string> HltTrackUpgradeTool::recos() {
   for (std::vector<std::string>::iterator it = keys.begin();
        it != keys.end(); it++) {
     std::string key = *it;
-    std::vector<std::string> cromos = EParser::parse(key,"/");
+    std::vector<std::string> cromos;
+    boost::algorithm::split(cromos,key,boost::algorithm::is_any_of("/"));
     if (cromos.size()==2 && cromos[1] == "Tool")
       mrecos.push_back(cromos[0]);
   }
@@ -207,7 +210,8 @@ void HltTrackUpgradeTool::toolConfigure()
   IJobOptionsSvc* optSvc = svc<IJobOptionsSvc>( "JobOptionsSvc" );
   std::string toolname = 
     m_recoConf.retrieve<std::string>(m_recoName+"/Tool");
-  std::vector<std::string> cromos = EParser::parse(toolname,"/");
+  std::vector<std::string> cromos;
+  boost::algorithm::split(cromos,toolname,boost::algorithm::is_any_of("/"));
   if (cromos.size() != 2) return;
   std::string root = name()+"."+cromos[1];
   if (m_recoName == "TMuonConf") {
