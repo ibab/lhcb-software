@@ -12,7 +12,8 @@ from Configurables import DummyLumiAlley as Dummy
 
 #----------------------- HltTrack sequence
 # ---------------------
-recoRZPVSequence = GaudiSequencer( 'HltRecoRZPVSequence' , MeasureTime = True
+## make sure we continue, even if no PV is found
+recoRZPVSequence = GaudiSequencer( 'HltRecoRZPVSequence' , MeasureTime = True, IgnoreFilterPassed = True
                                  , Members = 
                                  [ PatPV2D( 'HltRecoPV2D'
                                           , InputTracksName = "Hlt/Track/RZVelo"
