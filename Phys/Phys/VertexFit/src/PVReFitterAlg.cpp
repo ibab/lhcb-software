@@ -1,4 +1,4 @@
-// $Id: PVReFitterAlg.cpp,v 1.5 2008-09-09 08:32:37 jpalac Exp $
+// $Id: PVReFitterAlg.cpp,v 1.6 2008-09-09 08:44:56 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -8,10 +8,8 @@
 #include <Event/RecVertex.h>
 #include <Event/Particle.h>
 #include <Event/Track.h>
-#include "Kernel/IOnOffline.h"
 #include "Kernel/IPVReFitter.h"
 #include "Kernel/ILifetimeFitter.h"
-#include "Kernel/IRelatedPVFinder.h"
 #include "TrackInterfaces/IPVOfflineTool.h"
 // local
 #include "PVReFitterAlg.h"
@@ -34,15 +32,12 @@ PVReFitterAlg::PVReFitterAlg( const std::string& name,
                               ISvcLocator* pSvcLocator)
   : 
   GaudiAlgorithm ( name , pSvcLocator ),
-  m_onOfflineTool(0),
   m_pvOfflineTool(0),
   m_pvReFitter(0),
   m_lifetimeFitter(0),
-  m_relatedPVFinder(0),
   m_pvOfflinetoolType("PVOfflineTool"),
   m_pvReFitterType("AdaptivePVReFitter"),
   m_lifetimeFitterType("PropertimeFitter"),
-  m_relatedPVFinderType("Default"),
   m_particleInputLocation(""),
   m_PVInputLocation("LHCb::RecVertexLocation::Primary"),
   m_particle2VertexRelationsOutputLocation(""),
@@ -53,7 +48,6 @@ PVReFitterAlg::PVReFitterAlg( const std::string& name,
   declareProperty("IPVOfflineTool", m_pvOfflinetoolType);
   declareProperty("IPVReFitter",    m_pvReFitterType);
   declareProperty("ILifetimeFitter",    m_lifetimeFitterType);
-  declareProperty("IRelatedPVFinder", m_relatedPVFinderType);
   declareProperty("ParticleInputLocation",  m_particleInputLocation);
   declareProperty("PrimaryVertexInputLocation",  m_PVInputLocation);
   declareProperty("P2VRelationsOutputLocation",  
@@ -77,28 +71,16 @@ StatusCode PVReFitterAlg::initialize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
-  m_onOfflineTool = tool<IOnOffline>("OnOfflineTool", this);
-
   m_pvOfflineTool = tool<IPVOfflineTool> (m_pvOfflinetoolType, this);
 
   m_pvReFitter = tool<IPVReFitter>(m_pvReFitterType, this);
 
   m_lifetimeFitter = tool<ILifetimeFitter>(m_lifetimeFitterType, this);
 
-  if (m_relatedPVFinderType != "Default") {
-    verbose() << "Use non-standard IRelatedPVFinder " 
-              << m_relatedPVFinderType << endmsg;
-    m_relatedPVFinder = tool<IRelatedPVFinder>(m_relatedPVFinderType, this);
-  } else {
-    m_relatedPVFinder = m_onOfflineTool->pvRelator();
-  }
 
   return ( m_pvOfflineTool   && 
            m_pvReFitter      && 
-           m_lifetimeFitter  && 
-           m_relatedPVFinder && 
-           m_onOfflineTool   &&
-           m_relatedPVFinder    ) 
+           m_lifetimeFitter    )
     ? StatusCode::SUCCESS
     : StatusCode::FAILURE;
 }

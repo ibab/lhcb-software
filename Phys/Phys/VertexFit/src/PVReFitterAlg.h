@@ -1,4 +1,4 @@
-// $Id: PVReFitterAlg.h,v 1.5 2008-09-09 08:32:37 jpalac Exp $
+// $Id: PVReFitterAlg.h,v 1.6 2008-09-09 08:44:56 jpalac Exp $
 #ifndef PVREFITTERALG_H 
 #define PVREFITTERALG_H 1
 
@@ -80,11 +80,9 @@ private:
 
 private:
 
-  IOnOffline* m_onOfflineTool;
   IPVOfflineTool* m_pvOfflineTool;
   IPVReFitter* m_pvReFitter;
   ILifetimeFitter* m_lifetimeFitter;
-  IRelatedPVFinder* m_relatedPVFinder;
 
   std::string m_pvOfflinetoolType;
   std::string m_pvReFitterType;
