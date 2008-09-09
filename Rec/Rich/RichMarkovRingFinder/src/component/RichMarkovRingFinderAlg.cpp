@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.72 2008-08-26 19:36:46 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.73 2008-09-09 09:25:37 ukerzel Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -220,25 +220,25 @@ StatusCode AlgBase<SAMPLER>::runRingFinder()
         const int maxIts  = 2000;
         plot1D( output.numIterations, "Number of iterations",
                 -0.5, maxIts+0.5, maxIts+1 );
-        plot1D( output.timeTaken,     "Processin time(ms)", 0, maxTime );
-        plot2D( output.numIterations, output.timeTaken, "time(ms) V #iterations | 2D",
+        plot1D( output.timeTaken,     "Processing time in ms", 0, maxTime );
+        plot2D( output.numIterations, output.timeTaken, "time in ms V #iterations  2D",
                 -0.5, maxIts+0.5,
                 0, maxTime,
                 maxIts+1, 100 );
-        profile1D( output.numIterations, output.timeTaken, "time(ms) V #iterations | Profile",
+        profile1D( output.numIterations, output.timeTaken, "time in ms V #iterations  Profile",
                    -0.5, maxIts+0.5, maxIts+1 );
-        plot2D( input.hits.size(), output.numIterations, "#iterations V #hits | 2D",
+        plot2D( input.hits.size(), output.numIterations, "#iterations V #hits  2D",
                 -0.5, m_maxHitsEvent+0.5,
                 -0.5, maxIts+0.5,
                 m_maxHitsEvent+1, maxIts+1 );
-        profile1D( input.hits.size(), output.numIterations, "#iterations V #hits | Profile",
+        profile1D( input.hits.size(), output.numIterations, "#iterations V #hits  Profile",
                    -0.5, m_maxHitsEvent+0.5,
                    m_maxHitsEvent+1 );
-        plot2D( input.hits.size(), output.timeTaken, "time(ms) V #hits | 2D",
+        plot2D( input.hits.size(), output.timeTaken, "time in ms  V #hits  2D",
                 -0.5, m_maxHitsEvent+0.5,
                 0, maxTime,
                 m_maxHitsEvent+1, 100 );
-        profile1D( input.hits.size(), output.timeTaken, "time(ms) V #hits | 2D",
+        profile1D( input.hits.size(), output.timeTaken, "time ms V #hits  2D",
                    -0.5, m_maxHitsEvent+0.5,
                    m_maxHitsEvent+1 );
       }
@@ -255,8 +255,7 @@ StatusCode AlgBase<SAMPLER>::runRingFinder()
   }
   catch ( const std::exception & excpt )
   {
-    Warning( "Ring finding FAILED : " + std::string(excpt.what()),
-             StatusCode::SUCCESS );
+    debug() <<  "Ring finding FAILED : " + std::string(excpt.what()) << endmsg;
   }
 
   return sc;
@@ -399,11 +398,11 @@ bool AlgBase<SAMPLER>::addDataPoints( GenRingF::GenericInput & input ) const
     std::ostringstream mess;
     mess << "# selected hits in " << Rich::text(rich()) << " " << Rich::text(rich(),panel())
          << " exceeded maximum of " << m_maxHitsEvent << " -> Processing aborted";
-    Warning( mess.str(), StatusCode::SUCCESS, 3 );
+    debug() <<  mess.str() << endmsg;
   }
   else if ( range.size() < 3 )
   {
-    Warning( "Too few hits (<3) to find any rings", StatusCode::SUCCESS, 3 );
+    debug() <<  "Too few hits (<3) to find any rings" << endmsg;
   }
   else
   {

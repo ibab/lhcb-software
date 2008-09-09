@@ -4,6 +4,12 @@
 ! Purpose     : Uses a Markov Chain sampler to do ring finding without tracks
 !-----------------------------------------------------------------------------
 
+! 2008-09-09 - Ulrich Kerzel
+- Rich/RichMarkovRingFinder: RichMarkovRingFinderAlg.cpp ThreePointCircleProposerB.cc
+  - reduce severity of messages to info and debug
+  - remove special characters ( | ) from histogram name / titles
+    as they are used inside DIM for special purposes (delimiters, etc)
+
 !=================== Rich/RichMarkovRingFinder v2r1 2008-08-04 ===============
 ! 2008-08-28 - Chris Jones
  - Update the trackless ring monitor

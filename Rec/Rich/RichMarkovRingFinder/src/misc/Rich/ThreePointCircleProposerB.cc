@@ -54,19 +54,19 @@ namespace Lester
         ++failures;
         if (failures==1)
         {
-          Lester::messHandle().warning() << "The situation with respect to very unlikely start points has caused an ineficiency in "
-                                         << __FUNCTION__ << " at line " << __LINE__ << " in " << __FILE__ << Lester::endmsg;
+          Lester::messHandle().debug() << "The situation with respect to very unlikely start points has caused an ineficiency in "
+                                       << __FUNCTION__ << " at line " << __LINE__ << " in " << __FILE__ << Lester::endmsg;
         }
         else if (failures==5)
         {
-          Lester::messHandle().warning() << "The situation with respect to very unlikely start points has causing a much larger problem in "
-                                         << __FUNCTION__ << " at line " << __LINE__ << " in " << __FILE__ << " than previously thought possible.  Fix Immediately!"
-                                         << Lester::endmsg;
+          Lester::messHandle().debug() << "The situation with respect to very unlikely start points has causing a much larger problem in "
+                                       << __FUNCTION__ << " at line " << __LINE__ << " in " << __FILE__ << " than previously thought possible.  Fix Immediately!"
+                                       << Lester::endmsg;
         }
         else if (failures==100)
         {
-          Lester::messHandle().warning() << "Program probably stuck in an infinite loop in " << __FUNCTION__ << " at line " << __LINE__
-                                         << " in " << __FILE__ << " -> aborting" << Lester::endmsg;
+          Lester::messHandle().debug() << "Program probably stuck in an infinite loop in " << __FUNCTION__ << " at line " << __LINE__
+                                       << " in " << __FILE__ << " -> aborting" << Lester::endmsg;
           throw GenRingF::GenericRingFinder::CouldNotFit("Stuck in potential infinite loop -> abort");
         }
       }
@@ -155,10 +155,10 @@ namespace Lester
         return CircleParams(Small2Vector(smearedX,smearedY), smearedR);
 
       } catch (CircleTheorems::PointAtInfinity&) {
-        Lester::messHandle().error() << "CircleTheorems::PointAtInfinity problem at line " << __LINE__ << " of " << __FILE__ << Lester::endmsg;
+        Lester::messHandle().info() << "CircleTheorems::PointAtInfinity problem at line " << __LINE__ << " of " << __FILE__ << Lester::endmsg;
         throw;
       } catch (CircleTheorems::RadiusIsInfinite&) {
-        Lester::messHandle().error() << "CircleTheorems::RadiusIsInfinite problem at line " << __LINE__ << " of " << __FILE__ << Lester::endmsg;
+        Lester::messHandle().info() << "CircleTheorems::RadiusIsInfinite problem at line " << __LINE__ << " of " << __FILE__ << Lester::endmsg;
         throw;
       };
 
@@ -166,8 +166,8 @@ namespace Lester
       static bool first = true;
       if (first) {
         first = false;
-        Lester::messHandle().warning() << "The throw/catch situation w.r.t very unlikely start points is handled very badly at present ... please fix!"
-                                       << Lester::endmsg;
+        Lester::messHandle().debug() << "The throw/catch situation w.r.t very unlikely start points is handled very badly at present ... please fix!"
+                                     << Lester::endmsg;
       };
       throw;
     };
