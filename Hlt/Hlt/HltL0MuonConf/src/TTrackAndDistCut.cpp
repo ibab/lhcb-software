@@ -1,10 +1,9 @@
-// $Id: TTrackAndDistCut.cpp,v 1.3 2008-07-30 13:42:04 graven Exp $
+// $Id: TTrackAndDistCut.cpp,v 1.4 2008-09-09 06:37:05 graven Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "Event/MuonCoord.h"
-#include "Event/HltEnums.h"
 
 
 // local
@@ -70,7 +69,7 @@ StatusCode TTrackAndDistCut::execute() {
        (*itT)->addToAncestors (*itT);
        (*itT)->addToLhcbIDs(tileM4);
        (*itT)->addToLhcbIDs(tileM5);
-       (*itT)->addInfo(HltEnums::HltParticleInfoToType("MuonTdist"),dist); //FIXME
+       (*itT)->addInfo(HltInfoID("MuonTdist"),dist);
        m_selections.output()->push_back(*itT);
     }
   }

@@ -1,9 +1,8 @@
-// $Id: RZMuonMatch.cpp,v 1.8 2008-07-30 13:42:04 graven Exp $
+// $Id: RZMuonMatch.cpp,v 1.9 2008-09-09 06:37:05 graven Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
-#include "Event/HltEnums.h"
 // local
 #include "RZMuonMatch.h"
 
@@ -84,7 +83,7 @@ StatusCode RZMuonMatch::execute() {
         m_selections.output()->push_back(pTr2d);
               
         pTr2d->setFlag(Track::PIDSelected,true);
-        pTr2d->addInfo(HltEnums::Muon2DxDist,x_dist); 
+        pTr2d->addInfo(hltInfoID("Muon2DxDist"),x_dist); 
 
         
         if(m_debug) debug() << " Selected track" << endreq;

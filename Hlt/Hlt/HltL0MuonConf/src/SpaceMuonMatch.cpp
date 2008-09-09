@@ -1,9 +1,8 @@
-// $Id: SpaceMuonMatch.cpp,v 1.10 2008-07-30 13:42:04 graven Exp $
+// $Id: SpaceMuonMatch.cpp,v 1.11 2008-09-09 06:37:05 graven Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
-#include "Event/HltEnums.h"
 // local
 #include "SpaceMuonMatch.h"
 
@@ -91,11 +90,11 @@ StatusCode SpaceMuonMatch::execute() {
 
         //float x_dist2d = (*(anceRZ.begin()))->info(LHCb::HltEnums::Muon2DxDist,-1);
         //debug() << "xdist 2d from ancestor " << x_dist2d << endmsg;
-        outputTrack->addInfo(HltEnums::Muon2DxDist,x_dist2dRecalc);
-        outputTrack->addInfo(HltEnums::Muon3DxDist,x_dist);
-        outputTrack->addInfo(HltEnums::Muon3DyDist,y_dist);
-        double tDist = (*itMuon)->info(LHCb::HltEnums::MuonTdist,-1);
-        outputTrack->addInfo(HltEnums::MuonTdist,tDist );
+        outputTrack->addInfo(hltInfoID("Muon2DxDist"),x_dist2dRecalc);
+        outputTrack->addInfo(hltInfoID("Muon3DxDist"),x_dist);
+        outputTrack->addInfo(hltInfoID("Muon3DyDist"),y_dist);
+        double tDist = (*itMuon)->info(hltInfoID("MuonTdist"),-1);
+        outputTrack->addInfo(hltInfoID("MuonTdist"),tDist );
 
 
         debug() << "x_dist2d Recalc " << x_dist2dRecalc << endmsg;
