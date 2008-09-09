@@ -1,0 +1,24 @@
+/** @file 
+ * 
+ *  Example file to run a HLT job.
+ *  This file defines, sequences and configures the algorithms 
+ *  to be executed
+ *
+ */
+
+
+//
+// L0 and HLT sequences
+//
+
+#include "$HLTSYSROOT/options/Hlt1_onlyLumi.opts"
+
+//
+//  Message level
+//
+MessageSvc.OutputLevel                  = 3;
+ToolSvc.OutputLevel                     = 3;
+XmlParserSvc.OutputLevel                = 4;
+
+MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
+

@@ -1,0 +1,35 @@
+/**
+ * Steering file for Hlt1 (alleys) 
+ */
+#include "$HLTSYSROOT/options/HltMainSequence.opts"
+/**
+ * the Alleys sequencer
+ */
+Hlt.Members += { "GaudiSequencer/Hlt1" };
+Hlt.Members += {  "HltSelectionFilter/Hlt1Global" };
+
+Hlt1.Members += {  "GaudiSequencer/HltLumiSequence" };
+Hlt1.ModeOr=true; 
+Hlt1.ShortCircuit=false; 
+//#include "$HLTSYSROOT/options/HltLumiAlleyonly.opts"
+#include "$HLTSYSROOT/options/HltLumiAlleyConfSequence.py"
+
+Hlt1.Members += {  "HltSelectionFilter/Hlt1Global" };
+
+/**
+ * end the Hlt sequencer: write in summary and copy to TES
+ */
+
+Hlt.Members += { "GaudiSequencer/HltEndSequence" };
+HltEndSequence.ModeOr = true;
+HltEndSequence.ShortCircuit = false;
+// If you want to save all the Hlt selections in the summary uncomment
+// HltSummaryWriter.SaveAll = true;
+HltSummaryWriter.Save += {"Hlt1Global"};
+HltSummaryWriter.OutputLevel=3;
+
+/**
+ *  If HltGlobal are run, check that they passed in selections.
+ *  If selections are not run this does not harm.
+ */
+PassedAlleys.Members += { "HltSelectionFilter/Hlt1Global" } ;

@@ -1,0 +1,11 @@
+
+//---------------------------
+// LO
+//--------------------------
+
+ApplicationMgr.TopAlg += {"GaudiSequencer/L0"};
+
+// Read L0 from RawBuffer
+L0.Members = { "L0DUFromRaw"};
+
+

@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.8 2008-09-03 08:54:47 graven Exp $ 
+! $Id: release.notes,v 1.9 2008-09-09 06:54:51 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : 
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+! 2008-09-09 - Gerhard Raven
+ - move all files out of HltSys/options into Hlt/HltConf/options
+
 ! 2008-09-03 - Gerhard Raven
  - python/HltConfig/Hlt1Line.py
     o add dummy selection as recognized member

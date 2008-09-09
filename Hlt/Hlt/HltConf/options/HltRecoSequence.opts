@@ -1,0 +1,155 @@
+//------------------------------
+// Definition of the Hlt Reconstruction
+//-----------------------------
+#units "$STDOPTS/units.opts"
+
+
+HltRecoSequence.MeasureTime = true;
+
+//-----------------------
+HltRecoSequence.Members = { 
+  "GaudiSequencer/HltTrackRecoSequence"
+  //,"GaudiSequencer/HltCaloRecoSequence"  // In HltChargedProtoPAlg for the time being
+};
+
+/// @todo This cannot work, as tracking must have been done to process the rest.
+//HltRecoSequence.IgnoreFilterPassed = true; // process both track and calo independently
+
+
+//----------------------- HltTrack sequence
+HltTrackRecoSequence.Members = {
+  "GaudiSequencer/HltRecoRZVeloSequence",
+  "Tf::PatVeloSpaceTracking/HltRecoVelo",
+  "HltTrackFilter/HltPrepareVelo",
+  // "PatPV3D/HltRecoPV3D",
+  "GaudiSequencer/HltDecodeTT",
+  "GaudiSequencer/HltDecodeT",
+  "PatForward/HltRecoForward",
+  "HltTrackFilter/HltPrepareForward"
+};
+// --------------------- HltCalosequence // In HltChargedProtoPAlg for the time being
+HltCaloRecoSequence.Members = {"GaudiSequencer/RecoCALOSeq" };
+// Options for Calo reconstruction
+#include "$CALORECOROOT/options/HltCaloSeq.opts"
+
+/// PATCH /// @todo remove
+HltRecoCALOSeq.Members -= { "GaudiSequencer/HltCaloDigits" };
+
+//---------------------
+HltRecoRZVeloSequence.MeasureTime = true;
+HltRecoRZVeloSequence.Members = { 
+  "GaudiSequencer/HltRecoRZVeloTracksSequence",
+  "GaudiSequencer/HltRecoRZPVSequence"
+};
+
+HltRecoRZVeloTracksSequence.MeasureTime = true;
+HltRecoRZVeloTracksSequence.Members = { 
+  "DecodeVeloRawBuffer", 
+  "Tf::PatVeloRTracking/HltRecoRZVelo"
+};
+
+HltRecoRZPVSequence.MeasureTime = true;
+HltRecoRZPVSequence.Members = { 
+  "PatPV2D/HltRecoPV2D"
+};
+
+HltRecoRZVelo.OutputTracksName = "Hlt/Track/RZVelo";
+
+HltRecoPV2D.InputTracksName = "Hlt/Track/RZVelo";
+HltRecoPV2D.OutputVerticesName = "Hlt/Vertex/PV2D";
+
+HltRecoVelo.InputTracksName = "Hlt/Track/RZVelo";
+HltRecoVelo.OutputTracksName = "Hlt/Track/Velo";
+HltRecoVelo.PatVeloSpaceTool.OutputLevel = 4;
+
+HltRecoPV3D.InputTracksName = "Hlt/Track/Velo";
+
+HltRecoForward.InputTracksName = "Hlt/Track/Velo";
+HltRecoForward.OutputTracksName = "Hlt/Track/Forward";
+
+HltDecodeTT.MeasureTime = true;
+HltDecodeTT.Members += { 
+  "RawBankToSTLiteClusterAlg/createTTLiteClusters"
+};
+
+HltDecodeT.MeasureTime = true;
+HltDecodeT.Members += { 
+  "RawBankToSTLiteClusterAlg/createITLiteClusters"
+};
+createITLiteClusters.detType = "IT";
+
+HltPrepareVelo.InputSelection = "TES:Hlt/Track/Velo";
+HltPrepareVelo.OutputSelection = "Velo1";
+HltPrepareVelo.RequirePositiveInputs = false;
+
+HltPrepareForward.InputSelection = "TES:Hlt/Track/Forward";
+HltPrepareForward.OutputSelection = "Forward1";
+HltPrepareForward.RequirePositiveInputs = false;
+
+
+
+//------------------------------
+// Definition of the Hlt1 Reconstruction
+//-----------------------------
+
+Hlt1RecoSequence.MeasureTime = true;
+Hlt1RecoSequence.Members = {
+  "GaudiSequencer/Hlt1RecoRZVeloTracksSequence",
+  "GaudiSequencer/Hlt1RecoRZPVSequence",
+  "HltTrackUpgrade/Hlt1RecoVelo",
+  "PatPV3D/Hlt1RecoPV3D",
+  "GaudiSequencer/HltDecodeTT",
+  "GaudiSequencer/HltDecodeT",
+  "HltTrackUpgrade/Hlt1RecoForward"
+};
+
+Hlt1RecoRZVeloTracksSequence.MeasureTime = true;
+Hlt1RecoRZVeloTracksSequence.Members += { 
+  "GaudiSequencer/HltRecoRZVeloTracksSequence",
+  "HltTrackFilter/Hlt1PrepareRZVelo"
+};
+
+Hlt1RecoRZPVSequence.MeasureTime = true;
+Hlt1RecoRZPVSequence.Members += { 
+  "GaudiSequencer/HltRecoRZPVSequence",
+  "HltVertexFilter/Hlt1PreparePV2D"
+};
+
+
+Hlt1RecoRZVeloSequence.MeasureTime = true;
+Hlt1RecoRZVeloSequence.Members += { 
+  "GaudiSequencer/HltRecoRZVeloSequence",
+  "HltTrackFilter/Hlt1PrepareRZVelo",
+  "HltVertexFilter/Hlt1PreparePV2D"
+};
+
+Hlt1PrepareRZVelo.InputSelection   = "TES:Hlt/Track/RZVelo";
+Hlt1PrepareRZVelo.RequirePositiveInputs = false;
+Hlt1PrepareRZVelo.AddInfo = false;
+Hlt1PrepareRZVelo.FilterDescriptor = {"IsBackward,<,0.5"};
+Hlt1PrepareRZVelo.OutputSelection     = "RZVelo";
+
+Hlt1PreparePV2D.InputSelection = "TES:Hlt/Vertex/PV2D";
+Hlt1PreparePV2D.RequirePositiveInputs = false;
+Hlt1PreparePV2D.OutputSelection   = "PV2D";
+
+Hlt1RecoVelo.InputSelection = "RZVelo";
+Hlt1RecoVelo.OutputSelection = "Velo";
+Hlt1RecoVelo.RecoName = "Velo";
+Hlt1RecoVelo.HistogramUpdatePeriod = 0;
+
+Hlt1RecoForward.InputSelection = "Velo";
+Hlt1RecoForward.OutputSelection = "Forward";
+Hlt1RecoForward.RecoName = "Forward";
+Hlt1RecoForward.HistogramUpdatePeriod = 0;
+
+
+// Forward
+//----------------
+#include "$PATALGORITHMSROOT/options/PatFwdTool.opts"
+ToolSvc.PatForwardTool.OutputLevel = 3;
+ToolSvc.PatForwardTool.MinMomentum = 1000. ;  
+ToolSvc.PatForwardTool.MinPt       = 80. ;   
+ToolSvc.PatAddTTCoord.OutputLevel = 3;
+ToolSvc.PatForwardTool.AddTTClusterName = "";
+

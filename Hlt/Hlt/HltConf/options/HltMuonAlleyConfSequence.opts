@@ -1,0 +1,348 @@
+#include "$HLTSYSROOT/options/TsaTool.opts"
+
+// to write in the summary
+HltSummaryWriter.Save += {
+  "Hlt1MuonSingleDecision",
+  "Hlt1MuonSingleNoIPDecision",
+  "Hlt1MuonDiMuonNoIPDecision",
+  "Hlt1MuonDiMuonWithIPDecision",
+  "Hlt1MuonDiMuon2L0NoIPDecision",
+  "Hlt1MuonDiMuonMuonSegNoIPDecision",
+  "Hlt1MuonDiMuon2L0WithIPDecision",
+  "Hlt1MuonDiMuonMuonSegWithIPDecision",  
+  "Hlt1MuonAlleysSF",
+  "Hlt1MuonSingleAlleysSF",
+  "Hlt1MuonDiMuonAlleysSF", 
+  "Hlt1MuonDiMuonAlleysSFNoIP",
+  "Hlt1MuonDiMuonAlleysSFWithIP",
+  "Hlt1MuonSingleTMVeloT",
+  "Hlt1MuonDiMuonTMVeloT",
+  "Hlt1MuonDiMuonMuonSegTMVeloT"
+};
+
+
+
+// to declare as input for the OR of the muon alley
+Hlt1Global.InputSelections += {
+  "Hlt1MuonSingleDecision",
+  "Hlt1MuonSingleNoIPDecision",
+  "Hlt1MuonDiMuonNoIPDecision",
+  "Hlt1MuonDiMuonWithIPDecision",
+  "Hlt1MuonDiMuon2L0WithIPDecision",
+  "Hlt1MuonDiMuon2L0NoIPDecision",
+  "Hlt1MuonDiMuonMuonSegWithIPDecision",
+  "Hlt1MuonDiMuonMuonSegNoIPDecision"
+};
+
+
+HltMuonAlleySequence.Members = {  
+  "GaudiSequencer/Hlt1SingleMuonIPandPTSequence",
+  "GaudiSequencer/Hlt1SingleMuonNoIPSequence",
+  "GaudiSequencer/Hlt1DiMuonFrom2L0NoIPSequence",
+  "GaudiSequencer/Hlt1DiMuonFrom2L0IPSequence",
+  "GaudiSequencer/Hlt1DiMuonFromMuonSegNoIPSequence",
+  "GaudiSequencer/Hlt1DiMuonFromMuonSegIPSequence",
+  "GaudiSequencer/Hlt1DiMuonFromL0DiMuonNoIPSequence",
+  "GaudiSequencer/Hlt1DiMuonFromL0DiMuonIPSequence",
+  "HltSelectionFilter/Hlt1MuonSingleAlleysSF",
+  "HltSelectionFilter/Hlt1MuonAlleysSF",
+  "HltSelectionFilter/Hlt1MuonDiMuonAlleysSF",  
+  "HltSelectionFilter/Hlt1MuonDiMuonAlleysSFNoIP",
+  "HltSelectionFilter/Hlt1MuonDiMuonAlleysSFWithIP"
+};
+HltMuonAlleySequence.ModeOR=true;
+HltMuonAlleySequence.ShortCircuit=false;
+HltMuonAlleySequence.MeasureTime=true;
+
+Hlt1MuonSingleAlleysSF.InputSelections = {
+  "Hlt1MuonSingleDecision",
+  "Hlt1MuonSingleNoIPDecision"
+};
+
+Hlt1MuonAlleysSF.InputSelections = {
+  "Hlt1MuonSingleDecision",
+  "Hlt1MuonSingleNoIPDecision",
+  "Hlt1MuonDiMuonNoIPDecision",
+  "Hlt1MuonDiMuonWithIPDecision",
+  "Hlt1MuonDiMuon2L0WithIPDecision",
+  "Hlt1MuonDiMuon2L0NoIPDecision",
+  "Hlt1MuonDiMuonMuonSegWithIPDecision",
+  "Hlt1MuonDiMuonMuonSegNoIPDecision"
+};
+
+
+Hlt1MuonDiMuonAlleysSF.InputSelections = {
+  "Hlt1MuonDiMuonNoIPDecision",
+  "Hlt1MuonDiMuonWithIPDecision",
+  "Hlt1MuonDiMuon2L0WithIPDecision",
+  "Hlt1MuonDiMuon2L0NoIPDecision",
+  "Hlt1MuonDiMuonMuonSegWithIPDecision",
+  "Hlt1MuonDiMuonMuonSegNoIPDecision"
+};
+
+Hlt1MuonDiMuonAlleysSFNoIP.InputSelections = {
+  "Hlt1MuonDiMuonNoIPDecision",
+  "Hlt1MuonDiMuon2L0NoIPDecision",
+  "Hlt1MuonDiMuonMuonSegNoIPDecision"
+};
+
+Hlt1MuonDiMuonAlleysSFWithIP.InputSelections = {
+  "Hlt1MuonDiMuonWithIPDecision",
+  "Hlt1MuonDiMuon2L0WithIPDecision",
+  "Hlt1MuonDiMuonMuonSegWithIPDecision"
+};
+//-------------------------------
+//   SINGLE MUON ALLEY
+//-------------------------------
+
+Hlt1SingleMuonIPandPTSequence.Members = {
+  "GaudiSequencer/Hlt1L0SingleMuonPreparation",
+  "GaudiSequencer/Hlt1RecoRZPVSequence",
+  "HltTrackFilter/Hlt1MuonSingleDecision"
+ };
+
+Hlt1SingleMuonNoIPSequence.Members = {
+  "GaudiSequencer/Hlt1L0SingleMuonPreparation",
+  "HltTrackFilter/Hlt1MuonSingleNoIPDecision"
+};
+
+
+Hlt1MuonSingleDecision.InputSelection ="Hlt1MuonSingleTMVeloT";
+Hlt1MuonSingleDecision.FilterDescriptor = {
+  "IP_PV2D,||[],0.08,30.",
+  "PT,>,1300"
+};
+
+
+Hlt1MuonSingleNoIPDecision.InputSelection ="Hlt1MuonSingleTMVeloT";
+Hlt1MuonSingleNoIPDecision.FilterDescriptor = {"PT,>,6000"};
+
+
+//---- L0 muon single preparation
+
+
+Hlt1L0SingleMuonPreparation.Members = { 
+  "GaudiSequencer/PrepareL0MuonORMuonNoGlobSeq",
+  // "HltL0Filter/Hlt1L0MuonORMuonNoGlob",
+  "HltTrackFilter/Hlt1MuonSingleTFL0",
+  "GaudiSequencer/HltDecodeT",
+  "HltTrackUpgrade/Hlt1MuonSingleTUTConf" , 
+  "HltTrackFilter/Hlt1MuonSingleTFTConf",
+  "GaudiSequencer/Hlt1RecoRZVeloTracksSequence",
+  "HltTrackFilter/Hlt1MuonSingleTFRZVelo",
+  "HltTrackUpgrade/Hlt1MuonSingleTUVelo",
+  "HltTrackMatch/Hlt1MuonSingleTMVeloT"
+};
+
+
+
+//--------------------------
+// options of the muon alley
+//--------------------------
+
+// Hlt1L0MuonORMuonNoGlob.L0Channels = {"Muon" ,"MuonNoGlob"};
+
+Hlt1MuonSingleTFL0.InputSelection ="L0AllMuons";
+Hlt1MuonSingleTFL0.FilterDescriptor = {"PT0,||>,1300"};
+
+Hlt1MuonSingleTUTConf.InputSelection = "Hlt1MuonSingleTFL0";
+Hlt1MuonSingleTUTConf.RecoName = "TConf";
+ 
+Hlt1MuonSingleTFTConf.InputSelection = "Hlt1MuonSingleTUTConf";
+Hlt1MuonSingleTFTConf.FilterDescriptor = {"IsMuon,>,0."};
+
+Hlt1MuonSingleTFRZVelo.InputSelection = "RZVelo";
+Hlt1MuonSingleTFRZVelo.FilterDescriptor = {"RZVeloTMatch_Hlt1MuonSingleTFTConf,||<,80."};
+
+Hlt1MuonSingleTUVelo.InputSelection = "Hlt1MuonSingleTFRZVelo";
+Hlt1MuonSingleTUVelo.RecoName = "Velo";
+
+Hlt1MuonSingleTMVeloT.InputSelection1 =  "Hlt1MuonSingleTUVelo";
+Hlt1MuonSingleTMVeloT.InputSelection2 =  "Hlt1MuonSingleTFTConf";
+Hlt1MuonSingleTMVeloT.MatchName = "VeloT";
+Hlt1MuonSingleTMVeloT.PatMatchTool.maxMatchChi2 = 6;
+
+
+//----------------------------
+// DIMUON ALLEY from L0Dimuon
+//----------------------------
+
+Hlt1DiMuonFromL0DiMuonNoIPSequence.MeasureTime=true;
+Hlt1DiMuonFromL0DiMuonNoIPSequence.Members = {
+  "GaudiSequencer/HltDiMuonFromL0DiMuonPreparation",
+  "HltVertexFilter/Hlt1MuonDiMuonNoIPDecision"
+};
+
+Hlt1DiMuonFromL0DiMuonIPSequence.MeasureTime=true;
+Hlt1DiMuonFromL0DiMuonIPSequence.Members = {
+  "GaudiSequencer/HltDiMuonFromL0DiMuonPreparation",
+  "GaudiSequencer/Hlt1RecoRZPVSequence",
+  "HltVertexFilter/Hlt1MuonDiMuonWithIPDecision"
+};
+
+HltDiMuonFromL0DiMuonPreparation.MeasureTime=true;
+HltDiMuonFromL0DiMuonPreparation.Members = { 
+  "GaudiSequencer/PrepareL0DiMuonDecisionSeq",
+  "HltVertexToTracks/Hlt1MuonDiMuonV2TL0",
+  "GaudiSequencer/HltDecodeT",
+  "HltTrackUpgrade/Hlt1MuonDiMuonTUTConf",
+  "HltTrackFilter/Hlt1MuonDiMuonTFTConf",
+  "GaudiSequencer/Hlt1RecoRZVeloTracksSequence",
+  "HltTrackFilter/Hlt1MuonDiMuonTFRZVelo",
+  "HltTrackUpgrade/Hlt1MuonDiMuonTUVelo",
+  "HltTrackMatch/Hlt1MuonDiMuonTMVeloT",
+  "HltVertexMaker1/Hlt1MuonDiMuonVMVeloT",
+  "HltVertexFilter/Hlt1MuonDiMuonVFVeloT"
+};
+
+
+Hlt1L0DiMuon.L0Channels = {"DiMuon"};
+
+
+Hlt1MuonDiMuonV2TL0.InputSelection ="L0DiMuonDecision";
+
+Hlt1MuonDiMuonTUTConf.InputSelection = "Hlt1MuonDiMuonV2TL0";
+Hlt1MuonDiMuonTUTConf.RecoName = "TConf";
+
+Hlt1MuonDiMuonTFTConf.InputSelection = "Hlt1MuonDiMuonTUTConf";
+Hlt1MuonDiMuonTFTConf.FilterDescriptor = {"IsMuon,>,0."};
+
+Hlt1MuonDiMuonTFRZVelo.InputSelection = "RZVelo";
+Hlt1MuonDiMuonTFRZVelo.FilterDescriptor = {"RZVeloTMatch_Hlt1MuonDiMuonTFTConf,||<,80."};
+
+Hlt1MuonDiMuonTUVelo.InputSelection = "Hlt1MuonDiMuonTFRZVelo";
+Hlt1MuonDiMuonTUVelo.RecoName = "Velo";
+
+Hlt1MuonDiMuonTMVeloT.InputSelection1 =  "Hlt1MuonDiMuonTUVelo";
+Hlt1MuonDiMuonTMVeloT.InputSelection2 =  "Hlt1MuonDiMuonTFTConf";
+Hlt1MuonDiMuonTMVeloT.MatchName = "VeloT";
+Hlt1MuonDiMuonTMVeloT.PatMatchTool.maxMatchChi2 = 6;
+
+Hlt1MuonDiMuonVMVeloT.InputSelection = "Hlt1MuonDiMuonTMVeloT";
+Hlt1MuonDiMuonVMVeloT.FilterDescriptor   = {"DOCA,<,0.5"};
+
+Hlt1MuonDiMuonVFVeloT.InputSelection    = "Hlt1MuonDiMuonVMVeloT";
+Hlt1MuonDiMuonVFVeloT.FilterDescriptor   = { "VertexMatchIDsFraction_L0DiMuonDecision,>,1.9"};
+
+Hlt1MuonDiMuonNoIPDecision.InputSelection = "Hlt1MuonDiMuonVFVeloT";
+Hlt1MuonDiMuonNoIPDecision.FilterDescriptor = {"VertexDimuonMass,>,2500."};
+
+Hlt1MuonDiMuonWithIPDecision.InputSelection = "Hlt1MuonDiMuonVFVeloT";
+Hlt1MuonDiMuonWithIPDecision.FilterDescriptor = { 
+  "VertexDimuonMass,>,500.",
+  "VertexMinIP_PV2D,||>,0.15"
+};
+
+
+//-----------------------------------------------------
+// DIMUON ALLEY : from L0Muon + L0Muon
+//-----------------------------------------------------
+
+
+
+Hlt1DiMuonFrom2L0IPSequence.MeasureTime=true;
+Hlt1DiMuonFrom2L0IPSequence.Members = {
+  "GaudiSequencer/Hlt1L0SingleMuonPreparation",
+  "HltVertexMaker1/Hlt1MuonDiMuon2L0VMVeloT",
+  "GaudiSequencer/Hlt1RecoRZPVSequence",
+  "HltVertexFilter/Hlt1MuonDiMuon2L0WithIPDecision"
+};
+
+Hlt1DiMuonFrom2L0NoIPSequence.MeasureTime=true;
+Hlt1DiMuonFrom2L0NoIPSequence.Members = {
+  "GaudiSequencer/Hlt1L0SingleMuonPreparation",
+  "HltVertexMaker1/Hlt1MuonDiMuon2L0VMVeloT",
+  "HltVertexFilter/Hlt1MuonDiMuon2L0NoIPDecision"
+};
+
+Hlt1MuonDiMuon2L0VMVeloT.InputSelection = "Hlt1MuonSingleTMVeloT";
+Hlt1MuonDiMuon2L0VMVeloT.FilterDescriptor = {"DOCA,<,0.5"};
+
+Hlt1MuonDiMuon2L0WithIPDecision.InputSelection = "Hlt1MuonDiMuon2L0VMVeloT";
+Hlt1MuonDiMuon2L0WithIPDecision.FilterDescriptor = {"VertexDimuonMass,>,500.",
+                                                    "VertexMinIP_PV2D,||>,0.15"};
+
+Hlt1MuonDiMuon2L0NoIPDecision.InputSelection   = "Hlt1MuonDiMuon2L0VMVeloT";
+Hlt1MuonDiMuon2L0NoIPDecision.FilterDescriptor = {"VertexDimuonMass,>,2500."};
+
+//-----------------------------------------------------
+// DIMUON ALLEY : from L0Muon + Muon Segment
+//-----------------------------------------------------
+
+Hlt1DiMuonFromMuonSegIPSequence.MeasureTime=true;
+Hlt1DiMuonFromMuonSegIPSequence.Members = {
+  "GaudiSequencer/Hlt1L0SingleMuonPreparation",
+  "GaudiSequencer/HltMuonSegPreparation",
+  "HltVertexMaker2/Hlt1MuonDiMuonMuonSegVMVeloT",
+  "GaudiSequencer/Hlt1RecoRZPVSequence",
+  "HltVertexFilter/Hlt1MuonDiMuonMuonSegWithIPDecision"
+};
+
+Hlt1DiMuonFromMuonSegNoIPSequence.MeasureTime=true;
+Hlt1DiMuonFromMuonSegNoIPSequence.Members = {
+  "GaudiSequencer/Hlt1L0SingleMuonPreparation",
+  "GaudiSequencer/HltMuonSegPreparation",
+  "HltVertexMaker2/Hlt1MuonDiMuonMuonSegVMVeloT",
+  "HltVertexFilter/Hlt1MuonDiMuonMuonSegNoIPDecision"
+};
+
+
+HltMuonSegPreparation.MeasureTime = true;
+HltMuonSegPreparation.Members = {
+  "HltSelectionFilter/Hlt1MuonSFSingleTMVeloT",
+  "HltMuonRec/Hlt1RecoMuonSeg",
+  "HltTrackFilter/Hlt1PrepareMuonSeg",
+  "GaudiSequencer/HltDecodeT",
+  "HltTrackUpgrade/Hlt1MuonDiMuonMuonSegTUTConf",
+  "HltTrackFilter/Hlt1MuonDiMuonMuonSegTFTConf", 
+  "HltTrackFilter/Hlt1MuonDiMuonMuonSegTFRZVelo",
+  "HltTrackUpgrade/Hlt1MuonDiMuonMuonSegTUVelo",
+  "HltTrackMatch/Hlt1MuonDiMuonMuonSegTMVeloT"
+};
+
+
+Hlt1MuonSFSingleTMVeloT.InputSelections = {"Hlt1MuonSingleTMVeloT"};
+
+// It already Prepare the muon segments with proper error calling the tool MuonSeedTool
+Hlt1RecoMuonSeg.OutputMuonTracksName="Hlt/Track/MuonSegmentForL0Single";
+Hlt1RecoMuonSeg.DecodingFromCoord=true;
+
+Hlt1PrepareMuonSeg.RequirePositiveInputs = false;
+Hlt1PrepareMuonSeg.InputSelection = "TES:Hlt/Track/MuonSegmentForL0Single";
+Hlt1PrepareMuonSeg.FilterDescriptor = {
+  "DoShareM3_Hlt1MuonSingleTUTConf,<,0.5"
+};
+
+Hlt1MuonDiMuonMuonSegTUTConf.InputSelection = "Hlt1PrepareMuonSeg";
+Hlt1MuonDiMuonMuonSegTUTConf.RecoName = "TConf";
+
+Hlt1MuonDiMuonMuonSegTFTConf.InputSelection = "Hlt1MuonDiMuonMuonSegTUTConf";
+Hlt1MuonDiMuonMuonSegTFTConf.FilterDescriptor = {"IsMuon,>,0."};
+
+Hlt1MuonDiMuonMuonSegTFRZVelo.InputSelection = "RZVelo";
+Hlt1MuonDiMuonMuonSegTFRZVelo.FilterDescriptor = {"RZVeloTMatch_Hlt1MuonDiMuonMuonSegTFTConf,||<,80."};
+
+Hlt1MuonDiMuonMuonSegTUVelo.InputSelection = "Hlt1MuonDiMuonMuonSegTFRZVelo";
+Hlt1MuonDiMuonMuonSegTUVelo.RecoName = "Velo";
+
+Hlt1MuonDiMuonMuonSegTMVeloT.InputSelection1 = "Hlt1MuonDiMuonMuonSegTUVelo";
+Hlt1MuonDiMuonMuonSegTMVeloT.InputSelection2 = "Hlt1MuonDiMuonMuonSegTFTConf";
+Hlt1MuonDiMuonMuonSegTMVeloT.MatchName = "VeloT";
+Hlt1MuonDiMuonMuonSegTMVeloT.PatMatchTool.maxMatchChi2 = 6;
+
+
+Hlt1MuonDiMuonMuonSegVMVeloT.InputSelection1 = "Hlt1MuonSingleTMVeloT";
+Hlt1MuonDiMuonMuonSegVMVeloT.InputSelection2   = "Hlt1MuonDiMuonMuonSegTMVeloT";
+Hlt1MuonDiMuonMuonSegVMVeloT.FilterDescriptor = {"DOCA,<,0.5"};
+//If you do not set DoMergeInputs = False it will make vertices
+//with 2 tracks from  InputSelection and
+//one track from InputSelection and another track from InputSelection2 
+Hlt1MuonDiMuonMuonSegVMVeloT.DoMergeInputs = False;
+
+
+Hlt1MuonDiMuonMuonSegWithIPDecision.InputSelection = "Hlt1MuonDiMuonMuonSegVMVeloT";
+Hlt1MuonDiMuonMuonSegWithIPDecision.FilterDescriptor = {"VertexDimuonMass,>,500.",
+                                        "VertexMinIP_PV2D,||>,0.15"};
+
+Hlt1MuonDiMuonMuonSegNoIPDecision.InputSelection = "Hlt1MuonDiMuonMuonSegVMVeloT";
+Hlt1MuonDiMuonMuonSegNoIPDecision.FilterDescriptor = {"VertexDimuonMass,>,2500."};
