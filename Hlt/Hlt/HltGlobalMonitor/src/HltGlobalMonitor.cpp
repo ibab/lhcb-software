@@ -67,12 +67,16 @@ StatusCode HltGlobalMonitor::initialize() {
   
   starthistos();
 
-  _counter1=0;            // "All events"
+  counter1=0;            // "All events"
   _counter2=0;           // "L0 accepted evts"
   _efficiency=0;        // "Ratio counter2/counter1"
   physallacc=0;
   randallacc=0;
+  physallcall=0;
+  randallcall=0;
   orallacc=0;
+  gpstime=0;
+  gpstimesec=0;
 
   info() << " Declaring infos to be published " << endreq;
 
@@ -81,12 +85,16 @@ StatusCode HltGlobalMonitor::initialize() {
   m_histoodinentry = m_histosvc->book("m_histoodinentry","Trigger Type Entry",8, 0., 8.);
   m_histoL0 = m_histosvc->book("m_histoL0","L0 bits",14,0.,14.);
   
-  declareInfo("counter1",_counter1,"All events");
+//  declareInfo("counter1",_counter1,"All events");
   declareInfo("counter2",_counter2,"L0 accepted evts");
   declareInfo("efficiency",_efficiency,"Ratio counter2/counter1");
-//  declareInfo("COUNTER_TO_RATE[Hlt1AlleyOr]", orallacc, "Hlt1 Alleys Or Call");
-//  declareInfo("COUNTER_TO_RATE[Hlt1PhysAlley]", physallacc, "Hlt1 Physics Alley Accepts");
-//  declareInfo("COUNTER_TO_RATE[Hlt1RandAlley]", randallacc, "Hlt1 Random Alley Accepts");
+  declareInfo("COUNTER_TO_RATE[Hlt1AlleyOr]", orallacc, "Hlt1 Alleys Or Accepts");
+  declareInfo("COUNTER_TO_RATE[Hlt1PhysAlley]", physallacc, "Hlt1 Physics Alley Accepts");
+  declareInfo("COUNTER_TO_RATE[Hlt1RandAlley]", randallacc, "Hlt1 Random Alley Accepts");
+  declareInfo("COUNTER_TO_RATE[Hlt1PhysCall]", physallcall, "Hlt1 Physics Alley Calls");
+  declareInfo("COUNTER_TO_RATE[Hlt1RandCall]", randallcall, "Hlt1 Random Alley Calls");
+  declareInfo("COUNTER_TO_RATE[Hlt1Calls]",counter1,"Hlt1 Calls");
+  declareInfo("COUNTER_TO_RATE[GpsTimeoflast]",gpstimesec,"Gps time of last event");
    declareInfo("m_histoL0",m_histoL0,"Successful L0 bits");
    declareInfo("m_histoL0corr",m_histoL0corr,"Correlated L0 bits");
    declareInfo("m_histoalleycall", m_histoalleycall,"Physics and Random Trigger");
@@ -108,7 +116,7 @@ StatusCode HltGlobalMonitor::execute() {
 //  m_l0 = get<L0DUReport>(m_L0DUReportLocation);
 //  if (!m_l0) error() << " No L0 in TES!" << endreq;
   
-  _counter1++;  // count all evts
+  counter1++;  // count all evts
 //  monitorL0();
 
  //  LHCb::HltSummary* sum = get<LHCb::HltSummary>(LHCb::
@@ -145,7 +153,7 @@ void HltGlobalMonitor::monitorL0() {
   
   _counter2++;  // count L0 accepts
 
-  _efficiency= float(_counter2)/_counter1;
+  _efficiency= float(_counter2)/counter1;
   bool first=true;
 
   for (int i = 0; i<14; i+=1){ 
@@ -274,6 +282,8 @@ void HltGlobalMonitor::monitorAlleysinput() {
  if (exist<LHCb::ODIN> ( LHCb::ODINLocation::Default)){
 // try {
    odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
+   gpstime=odin->gpsTime();
+   gpstimesec=int(gpstime/1000000-904262401);
  }
  else {
 // catch( const GaudiException& Exception ) {
@@ -287,6 +297,13 @@ void HltGlobalMonitor::monitorAlleysinput() {
    stringKey keyphys("PhysicsTrigger");
    stringKey keyrand("RandomTrigger");
    debug() << "ODIN trigger type" << odin->triggerType() << endreq;
+   debug() << "gps time" << odin->gpsTime() << endreq;
+   if (odin->triggerType()==3){
+     randallcall=randallcall+1;
+   }
+   else {
+     physallcall=physallcall+1;
+   }
    if (dataSvc().selection(keyphys,this).decision()) {
 //      m_histoalleycall = plot1D(binMuonAlley,"AlleyCalls", "Alleys Called", 0, 6., 6, 1.);
       if (odin->triggerType()!=0){ 
@@ -295,6 +312,7 @@ void HltGlobalMonitor::monitorAlleysinput() {
       fill(m_histoalleycall, binMuonAlley, 1.);
       fill(m_histoodintype, odin->triggerType(), 1.);
       physallacc=physallacc+1;
+      orallacc=orallacc+1;
    }
     if (dataSvc().selection(keyrand,this).decision()){ 
 //      Hlt::Histo* m_histoalleycall = plot1D(binMuonHadAlley,"AlleyCalls", "Alleys Called", 0, 6., 6, 1.);
@@ -303,6 +321,7 @@ void HltGlobalMonitor::monitorAlleysinput() {
       fill(m_histoalleycall, binMuonHadAlley, 1.);
       fill(m_histoodintype, odin->triggerType(), 1.);
       randallacc=randallacc+1;
+      orallacc=orallacc+1;
    }
 
 };

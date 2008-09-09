@@ -112,12 +112,16 @@ protected:
 
  private:
 
-  int _counter1;        // "All events"
+  int counter1;        // "All events"
   int _counter2;       // "L0 accepted evts"
   float _efficiency;  // "Ratio counter2/counter1"
   double physallacc;
   double randallacc;
+  double physallcall;
+  double randallcall;
   double orallacc;
+  unsigned long long gpstime;
+  int gpstimesec;
 
 
 };
