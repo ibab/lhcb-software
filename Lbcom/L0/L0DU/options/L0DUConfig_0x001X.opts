@@ -1,0 +1,23 @@
+//-------------------------------------------------------
+// Created by PVSS / L0DU  : 2008-09-09 11:48:44
+//-------------------------------------------------------
+
+//------------------------- TCK = 0x0010 / Recipe name : MINBIAS_CaloORMuon_v1_0x0010
+ToolSvc.L0DUConfig.registerTCK += {"0x0010"};
+ToolSvc.L0DUConfig.TCK_0x0010.Name = "MINBIAS_CaloORMuon_v1_0x0010";
+ToolSvc.L0DUConfig.TCK_0x0010.Description ="(hadEt>6 and spdMult>0) or mu1Pt>0";
+
+
+ToolSvc.L0DUConfig.TCK_0x0010.Conditions = {
+  { "name=[Hadron,Et]" , "data=[Hadron(Et)]" , "comparator=[>]" , "threshold=[6]" },
+  { "name=[SpdMult]"   , "data=[Spd(Mult)]"  , "comparator=[>]" , "threshold=[0]" },
+  { "name=[Muon1,Pt]"  , "data=[Muon1(Pt)]"  , "comparator=[>]" , "threshold=[0]" }
+};
+
+ToolSvc.L0DUConfig.TCK_0x0010.Channels ={
+  { "name=[HCAL]" , "rate==[100.0]" , "conditions= [Hadron,Et]" , "DISABLE=[TRUE]" },
+  { "name=[SPD]"  , "rate==[100.0]" , "conditions= [SpdMult]"   , "DISABLE=[TRUE]" },
+  { "name=[CALO]" , "rate==[100.0]" , "conditions= [HCAL] && [SPD]" },
+  { "name=[MUON]" , "rate==[100.0]" , "conditions= [Muon1,Pt]" }
+};
+

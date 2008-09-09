@@ -10,6 +10,7 @@
 #include "$L0DUROOT/options/L0DUConfig_0xFFFA_alg0_set1_lumi5.opts"  // RTTC'06 tuning  -  no DC06-compatible production so far
 #include "$L0DUROOT/options/L0DUConfig_0xFFF9_alg0_set1_lumi6.opts"  // RTTC'06 tuning  -  no DC06-compatible production so far
 #include "$L0DUROOT/options/L0DUConfig_0x000X.opts"                  // Configurations for cosmics trigger (summer 2008)
+#include "$L0DUROOT/options/L0DUConfig_0x001X.opts"                  // Configurations for MB trigger (autumn 2008)
 #include "$L0DUROOT/options/L0DUConfig_0xDEBX.opts"                  // Debug configurations for expert usage
 
 //--- hand-written definition for 'trigger set' (will be automatically defined in the future)

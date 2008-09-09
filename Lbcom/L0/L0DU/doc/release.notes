@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.124 2008-09-04 15:52:10 cattanem Exp $
+! $Id: release.notes,v 1.125 2008-09-09 15:08:53 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
+
+! 2008-09-09 - Olivier Deschamps
+- L0DUConfig_0x001X.opts : produced by L0DU PVSS on 9th september 2008 
+                         : configuration for MB trigger
+
+
 
 !========================== L0DU v8r9 2008-09-04 =========================
 ! 2008-09-01 - Olivier Deschamps
