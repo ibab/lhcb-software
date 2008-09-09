@@ -25,10 +25,10 @@ AdderSvc::AdderSvc(const std::string& name, ISvcLocator* ploc) : Service(name, p
   declareProperty("subfarmname",m_subfarmName);
   declareProperty("algorithmname",m_algorithmName);
   declareProperty("objectname",m_objectName);
-  declareProperty("refreshTime",  m_refreshTime=5);
+  declareProperty("refreshTime",  m_refreshTime=10);
   declareProperty("dimclientdns",m_dimClientDns);
   //declareProperty("savedir", m_saveDir);
-
+  m_enablePostEvents = true;
 }
 
 AdderSvc::~AdderSvc() {}
@@ -88,7 +88,7 @@ StatusCode AdderSvc::initialize() {
   msg << MSG::DEBUG << "***************************************************** " << endreq;
 
   msg << MSG::DEBUG << "creating ProcessMgr" << endreq;
-  m_processMgr = new ProcessMgr (msgSvc(), this);
+  m_processMgr = new ProcessMgr (msgSvc(), this, m_refreshTime);
   m_processMgr->setSubFarmVector(m_subfarmName);
   m_processMgr->setTaskVector(m_taskName);
   m_processMgr->setAlgorithmVector(m_algorithmName);
@@ -97,7 +97,7 @@ StatusCode AdderSvc::initialize() {
 
   m_processMgr->createInfoServers();
 
-  m_processMgr->createTimerProcess(m_refreshTime);
+  m_processMgr->createTimerProcess();
 
   msg << MSG::DEBUG << "Activing PostEvent to StartTimer............." << endreq;
   IocSensor::instance().send(this, s_startTimer, this); //start Timer*/
@@ -108,11 +108,18 @@ StatusCode AdderSvc::initialize() {
 
 void AdderSvc::handle(const Event&  ev) {
   MsgStream msg(msgSvc(), name());
-
+  
+  if (!m_enablePostEvents) return;
+    
   if(s_startTimer == ev.type) {
     msg << MSG::DEBUG << " We are inside a PostEvent to Start the Timer " << endreq;
     m_processMgr->dimTimerProcess()->start(m_refreshTime);
     msg << MSG::DEBUG << " End PostEvent to Start the Timer " << endreq;
+  }
+  else if(s_stopTimer == ev.type) {
+    msg << MSG::DEBUG << " We are inside a PostEvent to Sop the Timer " << endreq;
+    m_processMgr->dimTimerProcess()->stop();
+    msg << MSG::DEBUG << " End PostEvent to Stop Timer " << endreq;
   }
   else if(s_createInfoServices == ev.type ){
     msg << MSG::DEBUG << " We are inside a PostEvent to Create the DimInfoServices " << endreq;
@@ -158,6 +165,7 @@ void AdderSvc::handle(const Incident& inc) {
 
 StatusCode AdderSvc::finalize() {
   MsgStream msg(msgSvc(), name());
+  m_enablePostEvents = false;
   msg << MSG::DEBUG << "Finalize Adder..... " << endmsg;
   if (m_processMgr) {delete m_processMgr; m_processMgr=0;}
   return Service::finalize();

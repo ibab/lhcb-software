@@ -44,6 +44,7 @@ private:
   
   std::string m_dimClientDns;
   int m_refreshTime;
+  bool m_enablePostEvents;
     
   };
 }  //end namespace LHCb  
