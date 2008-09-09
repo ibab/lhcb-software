@@ -4,7 +4,11 @@
 ! Purpose     : "Interface" to Hijing 
 !-----------------------------------------------------------------------------
 
-!========================= LbHijing v4r0 2008-08-25 ==========================
+!========================= LbHijing v4r0 2008-09-09 ==========================
+! 2008-09-09 - Gloria CORTI
+ - Fix bug introduced with latest changes, i.e. reset momentum in particle
+   with Gaudi units
+
 ! 2008-08-06 - Patrick Robbe 
  - Move to HEPMC2
 

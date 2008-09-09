@@ -123,6 +123,7 @@ StatusCode HijingProduction::generateEvent( HepMC::GenEvent * theEvent ,
     newMom.setY( (*p) -> momentum() . y() * Gaudi::Units::GeV ) ;
     newMom.setZ( (*p) -> momentum() . z() * Gaudi::Units::GeV ) ;
     newMom.setT( (*p) -> momentum() . t() * Gaudi::Units::GeV ) ;
+    (*p) -> set_momentum( newMom );
   }
   
   // Not really needed since all particles come from (0,0,0,0)
