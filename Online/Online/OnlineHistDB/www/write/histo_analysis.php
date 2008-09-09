@@ -35,7 +35,7 @@ function update_histo_analysis() {
     $command= "update ANASETTINGS set WARNINGS=$warnings,ALARMS=$alarms,INPUTPARS=$inputs where ANA=$aid and ".
       ( $_POST["htype"] == "HID" ? "HISTO='$id'" : "REGEXP_REPLACE(HISTO,'^(.*)/.*\$','\\1')=$id");
   
-  //echo "command is $command<br>\n";
+//  echo "command is $command<br>\n";
   $stid = OCIParse($conn,$command);
   if (! $aid)
     ocibindbyname($stid,":out",$out,10);

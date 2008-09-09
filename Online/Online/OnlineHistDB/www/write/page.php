@@ -9,7 +9,12 @@ $conn=HistDBconnect(1);
 $folder= ($_POST["NEWFOLDER"]) ? $_POST["NEWFOLDER"] : $_POST["FOLDER"];
 $page=RemoveSpaces($_POST["PAGENAME"]);
 $newpagename="$folder/$page";
-$fullpage=$_POST["ORIGINALNAME"];
+if (array_key_exists("ORIGINALNAME",$_POST)) {
+  $fullpage=$_POST["ORIGINALNAME"];
+ }
+ else {
+   $fullpage=$newpagename;
+ }
 
 
 $nh=0;
@@ -36,7 +41,7 @@ else {
     "Sx => OnlineHistDB.floattlist(".implode(",",$data["SIZE_X"])."),".
     "Sy => OnlineHistDB.floattlist(".implode(",",$data["SIZE_Y"])."),theName => :pn,theFolder => :pf); end;";
 }
-//echo "command is $command <br>";
+echo "command is $command <br>";
 $stid = OCIParse($conn,$command);
 ocibindbyname($stid,":fn",$outpage,500);
 ocibindbyname($stid,":pn",$out_pn,500);

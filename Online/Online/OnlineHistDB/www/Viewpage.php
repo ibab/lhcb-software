@@ -68,8 +68,9 @@ function page_form($page) {
      printf("Folder <input class='normal' type='text' size=40 name='FOLDER' value='%s'>\n",$_POST["FOLDER"]);
   }
   printf("</td><td> &nbsp&nbsp Name <input class='normal' type='text' size=20 name='PAGENAME' value='%s' ><br>\n",PageSimpleName($_POST["PAGENAME"]));
-  echo "<input type='hidden' name='ORIGINALNAME'  value='".$_POST["PAGENAME"]."'>\n";
-
+  if ($page!="new__") {
+    echo "<input type='hidden' name='ORIGINALNAME'  value='".$_POST["PAGENAME"]."'>\n";
+  }
   echo "</td></tr></table>\n";
   echo "<table align=\"center\"><tr><td>Description <td><textarea valign='center' cols='50' rows='2' name='PAGEDOC'".
     " $readonly >".$_POST["PAGEDOC"]."</textarea></tr></table><br>\n";
