@@ -5,6 +5,11 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+! 2008-09-09 - Gerhard Raven
+ - move _all_ options files from HltSys to Hlt/HltConf
+   (driven by the fact that it is almost impossible to check out
+    HltSys on top of a nightly release, and thus almost impossible
+    to run the nightly with changes to the option files)
 
 ! 2008-08-29 - Patrick Koppenburg
  - L0.opts : put in correct options
