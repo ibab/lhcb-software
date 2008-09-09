@@ -64,7 +64,7 @@ if __name__ == '__main__':
   
     # second command
     print ""
-    tuple_args = (counter, counter+1, counter*9, counter*1.9, counter, counter-1, 'ABRACADABRA')
+    tuple_args = (counter, counter+1, counter*9, counter*1.9, counter, counter-1, 'ABRACA\x00DABRA')
     res = pydim.dic_cmnd_service('test2', tuple_args, CMND2FORMAT)
     if res:   
       SAY('Client: Successfully executed command test2 (return code %d)' %res)
