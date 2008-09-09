@@ -650,7 +650,7 @@ dim_dis_add_cmnd(PyObject* /* self */, PyObject* args) {
 
 
 void
-serviceProxy(void *tagp, void **buf, int *size, int *first_time) {
+serviceProxy(void *tagp, void **buf, int *size, int * /*first_time*/) {
   /** Internal function for returning the data buffer for a service.
    * A DIM service functions in two ways:
    *   - by specifying a pointer to a fixed size structure at creation time
