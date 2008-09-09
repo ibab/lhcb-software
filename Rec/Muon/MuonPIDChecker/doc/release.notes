@@ -2,6 +2,11 @@
 ! Responsible : E. Polycarpo, M. Gandelman
 !----------------------------------------------------------------------------
 
+!====================== MuonPIDChecker v2r4 2008-09-09 ====================
+! 2008-09-09 -  M. Gandelman
+ - added the options file MuonPIDMonitor.opts to be able to switch off the use 
+   of MC true information
+
 !====================== MuonPIDChecker v2r3 2008-08-20 ====================
 ! 2008-08-20 -  E. Polycarpo, M. Gandelman
  - Edit reference numbers 
