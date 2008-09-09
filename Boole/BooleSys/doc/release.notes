@@ -3,13 +3,42 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v16r2>2008-09-09 Boole v16r2</A></H1><PRE>
+This version uses projects Gaudi v20r2, LHCb v25r1, Lbcom v6r22
+ and DDDB v1r* (SQLDDDB v4r9 or greater), ParamFiles v7r2, FieldMap v5r1
+
+This is a development version. It can process DC06 data, but output format and
+tuning is different from DC06. Processing of 2008 data is possible but not yet
+commissioned. Output requires Brunel v33r2 or later
+
+- Geometry changes
+  . Fix staggering of straws in a OT module. The offsets are retrieved from DDDB.
+    For 2008 geometry this is not backward compatible with digis produced with
+    older version of Boole, requires Brunel v33r2 or later
+    (OTDet v8r0, SQLDDDB v4r9 with tags DC06-20080903, head-20080904 or later)
+
+- Packaging changes
+  . Adapt Boole Configurable to inherit from ConfigurableUserLHCb
+    (Boole v16r2, LHCbKernel v9r1)
+  . Separate the QMTest reference files for amd64 and ia32 platforms and update
+    for new release (Boole v16r2)
+
+- New tuning
+  . Add functionalities to ST readout maps
+    (SQLDDDB v4r9, STDAQ v3r11, STKernel v1r8)
+  . Ignore condDB tags in QMTest output (Boole v16r2)
+
+- Bug fixes
+  . Fix a FPE in MuonChamberGrid::listOfPhysChannels() (MuonDet v8r3)
+  . Fix in TT dead strip list (SQLDDDB v4r9)
+
 </PRE><H1><A NAME=v16r1>2008-07-29 Boole v16r1</A></H1><PRE>
 This version uses projects Gaudi v20r2, LHCb v25r0, Lbcom v6r21
  and DDDB v1r* (SQLDDDB v4r7 or greater), ParamFiles v7r2, FieldMap v5r1
 
 This is a development version. It can process DC06 data, but output format and
 tuning is different from DC06. Processing of 2008 data is possible but not yet
-commissioned. Output requires Brunel v33r1 or later
+commissioned. Output requires Brunel v33r1
 
 - Persistency changes
   . Fixes to 2008 TT channel numbering for consistency with real TELL1. 
