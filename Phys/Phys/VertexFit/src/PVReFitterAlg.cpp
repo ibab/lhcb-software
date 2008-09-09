@@ -1,9 +1,9 @@
-// $Id: PVReFitterAlg.cpp,v 1.6 2008-09-09 08:44:56 jpalac Exp $
+// $Id: PVReFitterAlg.cpp,v 1.7 2008-09-09 13:24:51 jpalac Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
-#include "GaudiKernel/ObjectVector.h"
+//#include "GaudiKernel/ObjectVector.h"
 // LHCb
 #include <Event/RecVertex.h>
 #include <Event/Particle.h>
@@ -121,8 +121,8 @@ StatusCode PVReFitterAlg::execute() {
     return StatusCode::SUCCESS;
   }
   
-  ObjectVector<LHCb::RecVertex>* vertexContainer = 
-    new ObjectVector<LHCb::RecVertex>();
+  LHCb::RecVertex::Container* vertexContainer = 
+    new  LHCb::RecVertex::Container();
 
   verbose() << "Storing re-fitted vertices in " 
             << m_vertexOutputLocation << endmsg;
@@ -152,7 +152,7 @@ StatusCode PVReFitterAlg::execute() {
         verbose() << "Storing vertex with key " << refittedVertex->key()
                   << " into container slot with key " << (*itPV)->key() 
                   << endmsg;
-        vertexContainer->push_back(refittedVertex);
+        vertexContainer->insert(refittedVertex);
         newTable->relate(*itP, refittedVertex, 1.);
       }
     }
@@ -191,7 +191,7 @@ LHCb::RecVertex* PVReFitterAlg::refitVertex(const LHCb::RecVertex* v,
                                             const LHCb::Particle* p  ) const
 {
 
-  LHCb::RecVertex* reFittedVertex = new LHCb::RecVertex(v->key());  
+  LHCb::RecVertex* reFittedVertex = new LHCb::RecVertex();  
 
   LHCb::Track::ConstVector tracks;
   

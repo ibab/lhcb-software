@@ -1,4 +1,4 @@
-// $Id: PVReFitterAlg.h,v 1.7 2008-09-09 08:47:59 jpalac Exp $
+// $Id: PVReFitterAlg.h,v 1.8 2008-09-09 13:24:52 jpalac Exp $
 #ifndef PVREFITTERALG_H 
 #define PVREFITTERALG_H 1
 
@@ -38,19 +38,21 @@ class ILifetimeFitter;
  * primary vertices.
  *
  * <b>VertexOutputLocation</b>: TES location of the 
- * ObjectVector<LHCb::RecVertex> containing the re-fitted vertices.
+ * KeyedContainer<LHCb::RecVertex> containing the re-fitted vertices.
  *
  * The algorithm iterates over the LHCb::Particles in ParticleInputLocation,
  * and the LHCb::RecVertices in PrimaryVertexLocation, re-fits clones of the
  * vertices excluding any 
  * tracks that originate from the particle, and creates a relations table
  * connecting the particle to the re-fitted vertices. The re-fitted vertices 
- * have the same key as the original vertex to allow to identify re-fitted
- * vertices that come from the same original. Hence they are not stored in a
- * KeyedContainer<LHCb::RecVertex> but in a ObjectVector<LHCb::RecVertex>,
+ * are stored  in a KeyedContainer<LHCb::RecVertex>,
  * which is placed in VertexOutputLocation. The relations table is placed in 
  * P2VRelationsOutputLocation. The re-fitting itself is a sequence of
  * IPVOfflineTool::reDoSinglePV, IPVReFitter::remove.
+ * <b>Beware</b>: If there is more than one candidate per event, there can me 
+ * more than one refitted PV for each original one. Hence users are encouraged
+ * to access the re-fitted vertices on a particle by particle basis, using
+ * the relations table, and not the full container of re-fitted vertices.
  *
  * @todo Test!
  *
