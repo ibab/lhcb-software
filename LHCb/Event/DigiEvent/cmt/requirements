@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.16 2008-09-03 08:39:52 cattanem Exp $
+# $Id: requirements,v 1.17 2008-09-09 07:19:57 mneedham Exp $
 package DigiEvent
-version v2r8
+version v2r9
 
 branches Event xml cmt doc
 

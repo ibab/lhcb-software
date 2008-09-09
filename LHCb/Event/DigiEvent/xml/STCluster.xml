@@ -102,6 +102,23 @@
       </code>
  </method>
 
+ <method
+   name = "maxADCValue"
+   type = "unsigned int"
+   desc = "maximum adc value of strips in a cluster"
+   const = "TRUE" >
+    <code>
+   unsigned int maxCharge = 0u;
+   LHCb::STCluster::ADCVector::const_iterator iter = stripValues().begin();
+   while (iter != stripValues().end()){
+     if (iter->second &gt; maxCharge) maxCharge = iter->second;
+     ++iter; 
+   }
+    return maxCharge;
+    </code>
+ </method>
+
+
  &STClusterChannelIDFunctions;
 
 

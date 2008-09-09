@@ -4,6 +4,8 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+! 2008-09-09 Add method to return max adc value of a cluster
+
 !========================== DigiEvent v2r8 2008-09-03 ========================
 ! 2008-09-03 - Marco Cattaneo
  - Add custom dictionary, and populate it with FastClusterContainers
