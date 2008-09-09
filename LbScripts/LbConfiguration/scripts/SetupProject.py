@@ -4,7 +4,7 @@ import os, sys, tempfile, re, sys
 from stat import S_ISDIR
 import getopt
 
-_cvs_id = "$Id: SetupProject.py,v 1.23 2008-08-28 14:34:42 hmdegaud Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.24 2008-09-09 11:37:06 hmdegaud Exp $"
 
 ########################################################################
 # Useful constants
@@ -49,17 +49,17 @@ class Logger:
             self.out.write("\n")
             self.out.flush()
     def debug(self, message):
-        writeln(self.DEBUG, message)
+        self.writeln(self.DEBUG, message)
     def verbose(self, message):
-        writeln(self.VERBOSE, message)
+        self.writeln(self.VERBOSE, message)
     def info(self, message):
-        writeln(self.INFO, message)
+        self.writeln(self.INFO, message)
     def warning(self, message):
-        writeln(self.WARNING, message)
+        self.writeln(self.WARNING, message)
     def error(self, message):
-        writeln(self.ERROR, message)
+        self.writeln(self.ERROR, message)
     def always(self, message):
-        writeln(self.ALWAYS, message)
+        self.writeln(self.ALWAYS, message)
 
 log = Logger()
 
@@ -929,6 +929,10 @@ class SetupProject:
         parser.add_option("--use-grid", action="store_true",
                           help = "Enable auto selection of LHCbGrid project")
         
+        parser.add_option("--silent", action="store_true",
+                          help = "Removes message printout during setup")
+        
+        
         parser.set_defaults(output=None,
                             mktemp=False,
                             loglevel = 3,
@@ -942,7 +946,8 @@ class SetupProject:
                             runtime_projects = [],
                             overriding_projects = [],
                             auto_override = True,
-                            use_grid = False
+                            use_grid = False,
+                            silent=False
                             )
         
         if 'CMTSITE' in os.environ and \
@@ -959,8 +964,9 @@ class SetupProject:
         for p,v,n,d in versions:
             if v not in vers_locs:
                 vers_locs[v] = d
-        for v in SortVersions(vers_locs.keys()):
-            output += 'echo %s in %s\n' % (v,vers_locs[v])
+        if not self.opts.silent :
+            for v in SortVersions(vers_locs.keys()):
+                output += 'echo %s in %s\n' % (v,vers_locs[v])
         self._write_script(output)
 
     def _ask_version(self, versions):
@@ -1141,7 +1147,8 @@ class SetupProject:
             del new_env["CMTPATH"]
         
         if self.context_path:
-            output_lines.append("echo Using CMTUSERCONTEXT = '%s'"%self.context_path)
+            if not self.opts.silent :
+                output_lines.append("echo Using CMTUSERCONTEXT = '%s'"%self.context_path)
             # unset CMTUSERCONTEXT in case of future calls
             del new_env['CMTUSERCONTEXT']
         
@@ -1172,7 +1179,10 @@ class SetupProject:
         self.parse_args(args=args)
         
         # set level of log messages
-        self._logger.level = self.loglevel
+        if not self.opts.silent :
+            self._logger.level = self.loglevel
+        else :
+            self._logger.level = self._logger.ERROR
         log.level = self.loglevel
         
         self._debug("----- main() -----")
@@ -1403,8 +1413,9 @@ class SetupProject:
                 
         output_script = env.gen_script(self.shell)
         output_script += script
-        for m in messages:
-            output_script += 'echo "%s"\n' % m
+        if not self.opts.silent :
+            for m in messages:
+                output_script += 'echo "%s"\n' % m
         #I have to touch a file to tell the release manager which version of the project I'm using
         output_script += self._touch_project_logfiles()
         
