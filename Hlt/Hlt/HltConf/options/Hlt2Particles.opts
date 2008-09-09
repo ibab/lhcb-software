@@ -80,13 +80,13 @@ HltMuonID.MuonTrackLocation = "Hlt/Track/Muon";
 //----------------------------------------------------------------------------------------------------
 
 // Global algorithm, using all three radiators
-//#include "$RICHHLTCONFOPTS/GlobalPID_AllRads.opts"
+//#include "$RICHHLTSYSOPTS/GlobalPID_AllRads.opts"
 
 // Global algorithm, using only the gas radiators (faster, but no low P PID)
-//#include "$RICHHLTCONFOPTS/GlobalPID_GasRads.opts"
+//#include "$RICHHLTSYSOPTS/GlobalPID_GasRads.opts"
 
 // Local algorithm (fastest)
-#include "$RICHHLTCONFOPTS/LocalPID.opts"
+#include "$RICHHLTSYSOPTS/LocalPID.opts"
 
 // temporary, to use the cleaned forward tracks
 ToolSvc.HLT.RichTrackCreator.TracksLocation = "Hlt/Track/Forward";
