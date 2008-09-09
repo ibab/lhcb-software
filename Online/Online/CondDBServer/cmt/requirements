@@ -46,7 +46,10 @@ application          condDBServer    ../src/*.cpp
 #============================================================================
 apply_pattern    application_path
 
+# PIT-specific
 #set TNS_ADMIN $(CONDDBSERVERROOT)/cmt
+set TNS_ADMIN /sw/oracle/10.2.0.4/linux32/network/admin
+
 set CORAL_DBLOOKUP_PATH $(CONDDBSERVERROOT)/cmt
 set CORAL_AUTH_PATH     $(HOME)/private
 
@@ -68,6 +71,7 @@ set CORAL_AUTH_PATH     $(HOME)/private
 #path_remove  PATH "/DIM/" WIN32 "\DIM\"
 #path_prepend PATH "$(DIM_home)\bin"
 
+# PIT-specific
 set DIM_DNS_NODE ecs01.lbdaq.cern.ch
 
 action startServer 'condDBServer.exe $(CONDDBSERVERROOT)/cmt/partitions.txt'
