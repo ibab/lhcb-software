@@ -17,22 +17,22 @@
 // Default options to rerun L0 and run Hlt 
 //ApplicationMgr.TopAlg = {"UpdateAndReset"};
 #include "$GAUDICONFROOT/options/DecodeRawEvent.opts" 
-//#include "$HLTSYSROOT/options/L0.opts"
-//#include "$HLTSYSROOT/options/L0FromRaw.opts"
+//#include "$HLTCONFROOT/options/L0.opts"
+//#include "$HLTCONFROOT/options/L0FromRaw.opts"
 //#include "$L0DUOPTS/L0DUFromRaw.opts"
-//#include "$HLTSYSROOT/options/Hlt1.opts"
-//#include "$HLTSYSROOT/options/PrescaledAlleys.opts"
+//#include "$HLTCONFROOT/options/Hlt1.opts"
+//#include "$HLTCONFROOT/options/PrescaledAlleys.opts"
 #include "$MOOREOPTS/RandomPrescaling.opts"
-//#include "$HLTSYSROOT/options/Hlt1_onlyLumi.opts"
-//#include "$HLTSYSROOT/options/Hlt2.opts"
+//#include "$HLTCONFROOT/options/Hlt1_onlyLumi.opts"
+//#include "$HLTCONFROOT/options/Hlt2.opts"
 
 // For DAQ studies replace the includes above for these ones:
-// #include "$HLTSYSROOT/options/L0DAQ.opts"
-// #include "$HLTSYSROOT/options/HltDAQ.opts"
+// #include "$HLTCONFROOT/options/L0DAQ.opts"
+// #include "$HLTCONFROOT/options/HltDAQ.opts"
 
 // include this options to get time or histogram information of alleys
-// #include "$HLTSYSROOT/options/HltAlleysTime.opts"
-// #include "$HLTSYSROOT/options/HltAlleysHistos.opts"
+// #include "$HLTCONFROOT/options/HltAlleysTime.opts"
+// #include "$HLTCONFROOT/options/HltAlleysHistos.opts"
 
 //---------------------------------------------------------------------------
 // Geometry specific options

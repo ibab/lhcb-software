@@ -16,12 +16,12 @@
 // Default options to rerun L0 and run Hlt 
 //#include "$GAUDICONFROOT/options/DecodeRawEvent.opts" 
 #include "$MOOREROOT/options/DecodeRawEvent.opts" 
-//#include "$HLTSYSROOT/options/L0.opts"
-//#include "$HLTSYSROOT/options/L0FromRaw.opts"
-//#include "$HLTSYSROOT/options/Hlt1.opts"
-//#include "$HLTSYSROOT/options/PrescaledAlleys.opts"
-#include "$HLTSYSROOT/options/RandomPrescaling.opts"
-//#include "$HLTSYSROOT/options/Hlt2.opts"
+//#include "$HLTCONFROOT/options/L0.opts"
+//#include "$HLTCONFROOT/options/L0FromRaw.opts"
+//#include "$HLTCONFROOT/options/Hlt1.opts"
+//#include "$HLTCONFROOT/options/PrescaledAlleys.opts"
+#include "$HLTCONFROOT/options/RandomPrescaling.opts"
+//#include "$HLTCONFROOT/options/Hlt2.opts"
 
 //---------------------------------------------------------------------------
 // Geometry specific options

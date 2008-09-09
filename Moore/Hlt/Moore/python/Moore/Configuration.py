@@ -1,7 +1,7 @@
 """
 High level configuration tools for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.23 2008-09-04 11:52:55 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.24 2008-09-09 07:01:12 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -154,33 +154,33 @@ class Moore(ConfigurableUser):
             ApplicationMgr().ExtSvc.append(cfg.getFullName())
         else:
             if self.getProp("DAQStudies") :
-                importOptions('$HLTSYSROOT/options/L0DAQ.opts')
-                importOptions('$HLTSYSROOT/options/HltDAQ.opts')
+                importOptions('$HLTCONFROOT/options/L0DAQ.opts')
+                importOptions('$HLTCONFROOT/options/HltDAQ.opts')
             else :
-                importOptions('$HLTSYSROOT/options/HltInit.opts')
+                importOptions('$HLTCONFROOT/options/HltInit.opts')
                 hlttype = self.getProp('hltType')
                 if hlttype not in self.validHltTypes() :  raise TypeError("Unknown hlttype '%s'"%hlttype)
                 if inputType == 'DST' and hlttype in [ 'PHYSICS_Hlt1+Hlt2', 'PHYSICS_Hlt1' , 'PHYSICS_Lumi', 'Lumi'] : 
                     importOptions('$L0DUROOT/options/L0DUBankSwap.opts')
                     importOptions('$L0DUROOT/options/DefaultTCK.opts')
                 if self.getProp('oldStyle') :
-                    if hlttype.find('Hlt1') != -1 :   importOptions('$HLTSYSROOT/options/Hlt1.opts')
-                    if hlttype.find('Hlt2') != -1 :   importOptions('$HLTSYSROOT/options/Hlt2.opts')
-                    if hlttype ==  'DEFAULT'        :   importOptions('$HLTSYSROOT/options/RandomPrescaling.opts')
-                    if hlttype == 'readBackLumi'    :   importOptions('$HLTSYSROOT/options/HltJob_readLumiPy.opts')
-                    if hlttype == 'writeLumi'     :   importOptions('$HLTSYSROOT/options/HltJob_onlyLumi.opts')
-                    if hlttype.find('Lumi') != -1 :   importOptions('$HLTSYSROOT/options/Lumi.opts')
+                    if hlttype.find('Hlt1') != -1 :   importOptions('$HLTCONFROOT/options/Hlt1.opts')
+                    if hlttype.find('Hlt2') != -1 :   importOptions('$HLTCONFROOT/options/Hlt2.opts')
+                    if hlttype ==  'DEFAULT'        :   importOptions('$HLTCONFROOT/options/RandomPrescaling.opts')
+                    if hlttype == 'readBackLumi'    :   importOptions('$HLTCONFROOT/options/HltJob_readLumiPy.opts')
+                    if hlttype == 'writeLumi'     :   importOptions('$HLTCONFROOT/options/HltJob_onlyLumi.opts')
+                    if hlttype.find('Lumi') != -1 :   importOptions('$HLTCONFROOT/options/Lumi.opts')
                 else :
                     if hlttype == 'DEFAULT'       : hlttype = 'Commissioning_Lumi'
-                    if hlttype.find('Lumi') != -1 : importOptions('$HLTSYSROOT/options/HltLumiAlleyConfSequence.py')
-                    if hlttype.find('Muon') != -1 : importOptions('$HLTSYSROOT/options/HltMuonAlleyConfSequence.py')
-                    if hlttype.find('Commissioning') != -1 : importOptions('$HLTSYSROOT/options/Commissioning.py')
-                    importOptions('$HLTSYSROOT/options/HltMain.py')
-                    importOptions('$HLTSYSROOT/options/Hlt1.py')
+                    if hlttype.find('Lumi') != -1 : importOptions('$HLTCONFROOT/options/HltLumiAlleyConfSequence.py')
+                    if hlttype.find('Muon') != -1 : importOptions('$HLTCONFROOT/options/HltMuonAlleyConfSequence.py')
+                    if hlttype.find('Commissioning') != -1 : importOptions('$HLTCONFROOT/options/Commissioning.py')
+                    importOptions('$HLTCONFROOT/options/HltMain.py')
+                    importOptions('$HLTCONFROOT/options/Hlt1.py')
 
             if self.getProp('runTiming') :
-                importOptions('$HLTSYSROOT/options/HltAlleysTime.opts')
-                importOptions('$HLTSYSROOT/options/HltAlleysHistos.opts')
+                importOptions('$HLTCONFROOT/options/HltAlleysTime.opts')
+                importOptions('$HLTCONFROOT/options/HltAlleysHistos.opts')
 
         if self.getProp("userAlgorithms"):
             for userAlg in self.getProp("userAlgorithms"):
