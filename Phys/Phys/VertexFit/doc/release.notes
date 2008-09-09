@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.147 2008-09-09 13:25:10 jpalac Exp $
+! $Id: release.notes,v 1.148 2008-09-09 15:43:53 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+!========================== VertexFit v5r4 2008-09-09 ===================
+
+! 2008-09-09 - Juan PALACIOS
+ - src/PVReFitterAlg.cpp
+  . Clean up error messages.
 
 ! 2008-09-09 - Juan PALACIOS
  - src/PVReFitterAlg{.cpp, .h}
