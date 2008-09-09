@@ -1,4 +1,4 @@
-// $Id: TTrackAndDistCut.cpp,v 1.4 2008-09-09 06:37:05 graven Exp $
+// $Id: TTrackAndDistCut.cpp,v 1.5 2008-09-09 06:47:15 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -69,7 +69,7 @@ StatusCode TTrackAndDistCut::execute() {
        (*itT)->addToAncestors (*itT);
        (*itT)->addToLhcbIDs(tileM4);
        (*itT)->addToLhcbIDs(tileM5);
-       (*itT)->addInfo(HltInfoID("MuonTdist"),dist);
+       (*itT)->addInfo(hltInfoID("MuonTdist"),dist);
        m_selections.output()->push_back(*itT);
     }
   }
