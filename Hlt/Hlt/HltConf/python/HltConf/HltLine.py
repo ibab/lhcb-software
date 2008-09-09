@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.11 2008-09-04 12:18:32 graven Exp $ 
+# $Id: HltLine.py,v 1.12 2008-09-09 13:18:45 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.11 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.12 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt line itself 
@@ -686,7 +686,7 @@ class Hlt1Line(object):
             if not self._outputsel :
                 raise TypeError( "line '%s' has been requested to create a decision, but it has no output selection"%name)
             _members += [ PreScaler    ( postscalerName ( line ) , AcceptFraction = self._postscale ) 
-                        , LineDecision ( decisionName   ( line ) , InputSelection = self._outputsel, OutputLevel = 1 ) ]   
+                        , LineDecision ( decisionName   ( line ) , InputSelection = self._outputsel ) ]   
             self._decision = decisionName ( line )
 
         # register selections:
