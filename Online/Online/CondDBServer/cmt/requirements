@@ -48,7 +48,7 @@ apply_pattern    application_path
 
 # PIT-specific
 #set TNS_ADMIN $(CONDDBSERVERROOT)/cmt
-set TNS_ADMIN /sw/oracle/10.2.0.4/linux32/network/admin
+set TNS_ADMIN /sw/oracle/linux/network/admin/tnsnames.ora
 
 set CORAL_DBLOOKUP_PATH $(CONDDBSERVERROOT)/cmt
 set CORAL_AUTH_PATH     $(HOME)/private
