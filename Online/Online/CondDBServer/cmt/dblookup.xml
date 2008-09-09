@@ -2,11 +2,11 @@
 <servicelist>
 
   <logicalservice name="CondDB">
-    <service name="oracle://CONDDB_RAC/lhcb_conddb" accessMode="readonly" authentication="password" />
+    <service name="oracle://LHCBONR/lhcb_conddb" accessMode="readonly" authentication="password" />
   </logicalservice>
 
   <logicalservice name="CondDBOnline">
-    <service name="oracle://CONDDB_RAC/lhcb_online_conddb" accessMode="update" authentication="password" />
+    <service name="oracle://LHCBONR/lhcb_online_conddb" accessMode="update" authentication="password" />
   </logicalservice>
 
   <logicalservice name="CondDBPrivate">

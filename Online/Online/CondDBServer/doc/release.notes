@@ -4,7 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-!================ Online/CondDBServer v1r1 2008-09-08 ========================
+!================ Online/CondDBServer v1r1 2008-09-09 ========================
+
+! 2008-09-09 - Maria Del Carmen Barandela Pazos
+ - Updated dblookup.xml to use the new oracle server in the PIT.
 
 ! 2008-09-08 - Maria Del Carmen Barandela Pazos
  - Removed dependency on SEAL (LCG >= 55)
