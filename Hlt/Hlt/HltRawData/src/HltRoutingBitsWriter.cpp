@@ -1,4 +1,4 @@
-// $Id: HltRoutingBitsWriter.cpp,v 1.2 2008-09-04 12:21:49 graven Exp $
+// $Id: HltRoutingBitsWriter.cpp,v 1.3 2008-09-09 13:15:49 graven Exp $
 // Include files 
 #include <algorithm>
 // from Boost
@@ -71,7 +71,7 @@ StatusCode HltRoutingBitsWriter::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
 
-  m_factory = tool<IHltDecisionPredicateFactory>("HltSelectionCombinerFactory");
+  m_factory = tool<IHltDecisionPredicateFactory>("HltDecisionPredicateFactory");
   updateEvaluators(*m_factory);
   
   return StatusCode::SUCCESS;
