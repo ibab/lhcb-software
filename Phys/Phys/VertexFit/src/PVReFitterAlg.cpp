@@ -1,4 +1,4 @@
-// $Id: PVReFitterAlg.cpp,v 1.8 2008-09-09 15:43:40 jpalac Exp $
+// $Id: PVReFitterAlg.cpp,v 1.9 2008-09-09 16:41:33 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -39,7 +39,7 @@ PVReFitterAlg::PVReFitterAlg( const std::string& name,
   m_pvReFitterType("AdaptivePVReFitter"),
   m_lifetimeFitterType("PropertimeFitter"),
   m_particleInputLocation(""),
-  m_PVInputLocation("LHCb::RecVertexLocation::Primary"),
+  m_PVInputLocation(LHCb::RecVertexLocation::Primary),
   m_particle2VertexRelationsOutputLocation(""),
   m_vertexOutputLocation("")
 
