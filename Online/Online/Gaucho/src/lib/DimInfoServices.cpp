@@ -29,7 +29,9 @@ void DimInfoServices::infoHandler()
   //IocSensor::instance().send(m_processMgr->service(), s_createServiceMap , m_processMgr->service());
   //IocSensor::instance().send(m_processMgr->service(), s_updateServiceMap, m_processMgr->dimInfoServers()); //start Timer*/
   if (m_serviceSet.size() <= 0) return;
+  IocSensor::instance().send(m_processMgr->service(), s_stopTimer, this); //stop Timer*/
   IocSensor::instance().send(m_processMgr->service(), s_updateSvcMapFromInfoService, (void *) &m_serviceSet);
+  IocSensor::instance().send(m_processMgr->service(), s_startTimer, this); //start Timer*/
   alreadyDone = true;
 }
 

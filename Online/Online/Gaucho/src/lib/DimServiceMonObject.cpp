@@ -1,5 +1,4 @@
 #include "Gaucho/DimServiceMonObject.h"
-#include "Gaucho/MonObject.h"
 #include "GaudiKernel/StatusCode.h"
 #include <iostream>
 #include <string>
@@ -9,10 +8,9 @@ DimServiceMonObject::DimServiceMonObject(std::string svcName, MonObject *monObje
 {
   m_monObject = monObject;
   m_svcName = svcName;
-  std::stringstream m_ss;
   m_ss.str("");
-  boost::archive::binary_oarchive m_oa(m_ss);
-  m_monObject->save(m_oa, m_monObject->version());
+  boost::archive::binary_oarchive oa(m_ss);
+  m_monObject->save(oa, m_monObject->version());
   m_data = const_cast<void *>((const void*)m_ss.str().data());
   //m_dimService = new DimService(svcName.c_str(), "", m_data, m_ss.str().length());
   
@@ -31,10 +29,11 @@ void DimServiceMonObject::updateService(bool endOfRun) {
 }
 
 void DimServiceMonObject::setDataFromMonObject() {
-  std::stringstream m_ss;
   m_ss.str("");
-  boost::archive::binary_oarchive m_oa(m_ss);
-  m_monObject->save(m_oa, m_monObject->version());
+//  delete m_oa;
+//  m_oa = new boost::archive::binary_oarchive(m_ss);
+  boost::archive::binary_oarchive oa(m_ss);
+  m_monObject->save(oa, m_monObject->version());
   
 //   std::cout << "==============================================================" << std::endl;
 //   std::cout << "========================MONOBJECT=============================" << std::endl;

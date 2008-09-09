@@ -62,6 +62,7 @@ MonitorSvc::MonitorSvc(const std::string& name, ISvcLocator* sl):
    declareProperty("disableDeclareInfoPair", m_disableDeclareInfoPair = 0);
    declareProperty("disableDeclareInfoFormat", m_disableDeclareInfoFormat = 0);
    declareProperty("disableDeclareInfoHistos", m_disableDeclareInfoHistos = 0);
+   declareProperty("maxNumCountersMonRate", m_maxNumCountersMonRate = 10);
       
    declareProperty("teste", m_teste);
  
@@ -115,6 +116,7 @@ StatusCode MonitorSvc::initialize() {
   if ( 0 == m_disableMonRate) {
     msg << MSG::DEBUG << "new MonRate " << endreq;
     m_monRate = new MonRate(msgSvc(), "MonitorSvc", 0);
+    m_monRate->setMaxNumCounters(m_maxNumCountersMonRate);
     m_monRateDeclared = false;
     msg << MSG::DEBUG << "End of new MonRate Information" << endreq;
   }
@@ -507,6 +509,8 @@ std::pair<std::string, std::string> MonitorSvc::registerDimSvc(const std::string
 
   std::string dimSvcName = dimPrefix + m_utgid + "/"+dimName;
 
+  //msg << MSG::INFO << " register========>dimSvcName="<< dimSvcName << endreq;
+
   return std::pair<std::string, std::string> (dimName, dimSvcName);
 }
 
@@ -747,5 +751,4 @@ void MonitorSvc::updateService(std::string infoName, bool endOfRun)
   }
   else  msg << MSG::DEBUG << "updateSvc:service "<< infoName << " was not processed yet." << endreq;      
 }
-
 

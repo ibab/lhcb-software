@@ -1,3 +1,4 @@
+
 #ifndef DIMSERVICEMONOBJECT_H
 #define DIMSERVICEMONOBJECT_H 1
 
@@ -6,18 +7,19 @@
 #include "dis.hxx"
 #include <TStopwatch.h>
 #include <sstream>
+#include "Gaucho/MonObject.h"
 
 //  Author: jotalo, 22/10/2007
-class MonObject;
+// class MonObject;
 class DimServiceMonObject:public DimService {
 
 private:
   void*         m_data;
   MonObject*    m_monObject;
   std::string   m_svcName;
-  //std::stringstream m_ss;
+  std::stringstream m_ss;
   //DimService    *m_dimService;
-
+  //boost::archive::binary_oarchive* m_oa;
 public: 
   DimServiceMonObject(std::string svcName, MonObject *monObject);
   virtual ~DimServiceMonObject();

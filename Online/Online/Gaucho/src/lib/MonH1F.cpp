@@ -1,6 +1,7 @@
 #include "Gaucho/MonH1F.h"
 #include "AIDA/IAxis.h"
 #include <GaudiUtils/Aida2ROOT.h>
+#include <GaudiUtils/HistoTableFormat.h>
 
 MonH1F::MonH1F(IMessageSvc* msgSvc, const std::string& source, int version):
   MonObject(msgSvc, source, version)
@@ -19,13 +20,13 @@ MonH1F::MonH1F(IMessageSvc* msgSvc, const std::string& source, int version):
 MonH1F::~MonH1F(){
 //   MsgStream msgStream = createMsgStream();
 //   msgStream <<MSG::DEBUG<<"deleting binCont" << endreq;
-  delete binCont;
+  if (binCont!=0) delete []binCont;
 //   msgStream <<MSG::DEBUG<<"deleting binErr" << endreq;
-  delete binErr;
+  if (binErr!=0) delete []binErr;
 //   msgStream <<MSG::DEBUG<<"deleting binLabel" << endreq;
-  if (bBinLabel) delete binLabel;
+  if (bBinLabel) {if (binLabel!=0) delete []binLabel;}
 //   msgStream <<MSG::DEBUG<<"deleting m_fSumw2" << endreq;
-  delete m_fSumw2;
+  if (m_fSumw2!=0) delete []m_fSumw2;
 // BUGG...I dont know yet why I can't do it..
 /*  if (m_hist!=0) {
     msgStream <<MSG::DEBUG<<"deleting m_hist" << endreq;
@@ -38,7 +39,10 @@ MonH1F::~MonH1F(){
 
 void MonH1F::setAidaHisto(AIDA::IHistogram1D* iHistogram1D){
   m_aidaHist = iHistogram1D;
-  setHist((TH1F*)Gaudi::Utils::Aida2ROOT::aida2root(m_aidaHist));
+  TH1F* hRoot = (TH1F*)Gaudi::Utils::Aida2ROOT::aida2root(m_aidaHist);
+  sName = Gaudi::Utils::Histos::path ( m_aidaHist ) ;
+  hRoot->SetName(sName.c_str());
+  setHist(hRoot);
 }
 
 void MonH1F::save(boost::archive::binary_oarchive & ar, const unsigned int version){
@@ -165,7 +169,7 @@ TH1F* MonH1F::hist(){
 void MonH1F::createObject(std::string name){
   if (!isLoaded) return;
   MsgStream msgStream = createMsgStream();
-  msgStream <<MSG::INFO<<"Creating TH1F " << name << endreq;
+  msgStream <<MSG::DEBUG<<"Creating TH1F " << name << endreq;
   if (m_hist == 0) m_hist = new TH1F(name.c_str(), sTitle.c_str(), nbinsx, Xmin, Xmax);
   objectCreated = true;
 }
@@ -346,14 +350,14 @@ void MonH1F::copyFrom(MonObject * H){
   sName = HH->sName;
   sTitle = HH->sTitle;
 
-  if (binCont != 0) delete binCont;
+  if (binCont != 0) delete []binCont;
   binCont = new float[(nbinsx+2)];
 
   for (int i = 0; i < (nbinsx+2) ; ++i){
     binCont[i] = HH->binCont[i];
   }
 
-  if (binErr != 0) delete binErr;
+  if (binErr != 0) delete []binErr;
   binErr = new float[(nbinsx+2)];
 
   for (int i = 0; i < (nbinsx+2) ; ++i){
@@ -363,7 +367,7 @@ void MonH1F::copyFrom(MonObject * H){
   bBinLabel = HH->bBinLabel;
 
   if (bBinLabel){
-    if (binLabel != 0) delete binLabel;
+    if (binLabel != 0) delete []binLabel;
     binLabel = new std::string[(nbinsx+2)];
     for (int i = 0; i < (nbinsx+2) ; ++i){
       binLabel[i] = HH->binLabel[i];
@@ -379,7 +383,7 @@ void MonH1F::copyFrom(MonObject * H){
   m_fTsumwx2 = HH->m_fTsumwx2;
   m_fSumSize = HH->m_fSumSize;
 
-  if (m_fSumw2 != 0) delete m_fSumw2;
+  if (m_fSumw2 != 0) delete []m_fSumw2;
   m_fSumw2 = new float[m_fSumSize];
   for (int i=0 ; i < m_fSumSize; ++i) {
     m_fSumw2[i] = HH->m_fSumw2[i];
@@ -405,6 +409,11 @@ void MonH1F::reset(){
   }
   
   nEntries = 0;
+  m_fTsumw   = 0;
+  m_fTsumw2  = 0;
+  m_fTsumwx  = 0;
+  m_fTsumwx2 = 0;
+  m_fSumSize = 0;
 }
 
 void MonH1F::print(){

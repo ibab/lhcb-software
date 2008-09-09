@@ -34,10 +34,10 @@ public:
   
   ulonglong UpdateAndReset::gpsTime();
   
-  void updateData(bool isRunNumberChanged);
+  void updateData(bool isRunNumberChanged, bool isFromTimerHandler);
   
-  void verifyAndProcessRunChange(std::string method);
-  void verifyAndProcessCycleChange(std::string method);
+  void verifyAndProcessRunChange();
+  void verifyAndProcessCycleChange(bool isFromTimerHandler);
   double offsetToBoundary(int cycleNumber, ulonglong time, bool inferior);
   
 private:

@@ -20,6 +20,7 @@ private:
   std::string  m_name;
   std::string  m_svcName;
   std::string  m_source;
+  std::string  m_noValidMonObject;
   MonObject*   m_monObject;
   IMessageSvc* m_msgSvc;
   int          m_StringSize;

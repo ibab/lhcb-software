@@ -7,7 +7,7 @@
 #include "CPP/Interactor.h"
 #include "TFile.h"
 
-ProcessMgr::ProcessMgr(IMessageSvc* msgSvc, Interactor *service):m_name("ProcessMgr"), m_msgSvc(msgSvc), m_service(service)
+ProcessMgr::ProcessMgr(IMessageSvc* msgSvc, Interactor *service, const int &refreshTime):m_name("ProcessMgr"), m_msgSvc(msgSvc), m_service(service), m_refreshTime(refreshTime)
 {
   m_isAdder = false;
   m_withPartitionName = false;
@@ -38,11 +38,11 @@ void ProcessMgr::createInfoServices(std::string serverName){
   m_dimInfoServices = new DimInfoServices(this, serverName);
 }
 
-void ProcessMgr::createTimerProcess(int refreshTime) {
+void ProcessMgr::createTimerProcess() {
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG << "Creating DimTimerAdder"<< endreq;
   
-  m_dimTimerProcess = new DimTimerProcess (this, refreshTime, msgSvc());
+  m_dimTimerProcess = new DimTimerProcess (this, m_refreshTime, msgSvc());
   
 }
 

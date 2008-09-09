@@ -97,8 +97,6 @@ StatusCode UpdateAndReset::initialize() {
 
   if (0==m_disableMonRate) m_pGauchoMonitorSvc->declareMonRateComplement(m_runNumber, m_cycleNumber, m_deltaTCycle, m_offsetTimeFirstEvInRun, m_offsetTimeLastEvInCycle, m_offsetGpsTimeLastEvInCycle);
 
-  //DimTimer::start(20); // we wait a few seconds 
-
   return StatusCode::SUCCESS;
 }
 
@@ -112,8 +110,8 @@ void UpdateAndReset::timerHandler()
 //  msg << MSG::DEBUG << "**********************************************************************" << endreq;
   msg << MSG::DEBUG << "********************Inside timerHandler*******************************" << endreq;
 
-  verifyAndProcessRunChange("timer");
-  verifyAndProcessCycleChange("timer");
+  //verifyAndProcessRunChange("timer");
+  verifyAndProcessCycleChange(true);
 
   DimTimer::start(9); // we verify the cycle status every 9 seconds
 //  msg << MSG::DEBUG << "***********************End timerHandler*******************************" << endreq;
@@ -132,44 +130,45 @@ StatusCode UpdateAndReset::execute() {
 //  msg << MSG::DEBUG << "********************************************************************" << endreq;
 
   if (0 == m_disableChekInExecute){
-    verifyAndProcessRunChange("execute");
-    verifyAndProcessCycleChange("execute");
+    verifyAndProcessRunChange();
+    verifyAndProcessCycleChange(false);
   }
   else msg << MSG::DEBUG << "===============> Checking changes inside execute method is disable." << endreq;
 
   // Because the plot method we start the timer after the first execute...
   // This is because of plot method declareinfo in the execute method...
-  if (m_firstExecute){ 
-   m_firstExecute = false;
-   DimTimer::start(9); 
+  if (m_firstExecute){
+    m_firstExecute = false;
+    DimTimer::start(9); 
   }
   msg << MSG::DEBUG << "End of Execute method # " << m_countExecutes << endreq;
 //  msg << MSG::DEBUG << "*****************************************************************************" << endreq;
   return StatusCode::SUCCESS;
 }
 
-void UpdateAndReset::verifyAndProcessCycleChange(std::string method) {
+void UpdateAndReset::verifyAndProcessCycleChange(bool isFromTimerHandler) {
   ulonglong currentTime = GauchoTimer::currentTime();
   std::pair<int, bool> cycleNumber = currentCycleNumber(currentTime);
   if (!cycleNumber.second) return; // false means that the cycleNumber wasn't change
   if (s_statusNoUpdated != m_cycleStatus) return; // We update if the cycleStatus is different of ProcessingUpdate and Updated
   MsgStream msg(msgSvc(), name());
+  std::string method = "execute";
+  if (isFromTimerHandler) method = "timerHandler";
   msg << MSG::DEBUG << " Process Triggered by the "<< method <<"() method." << endreq;
   m_cycleStatus = s_statusProcessingUpdate;
-  updateData(false); //false means that the update wasn't called when runNumber changed
+  updateData(false, isFromTimerHandler); //1er param false means that the update wasn't called when runNumber changed
   m_cycleStatus = s_statusUpdated;
   retrieveCycleNumber(cycleNumber.first);
 }
 
-void UpdateAndReset::verifyAndProcessRunChange(std::string method) {
+void UpdateAndReset::verifyAndProcessRunChange() { // this method can not be called from TimerHandler
   std::pair<std::pair<int, ulonglong>, bool> runNumber = currentRunNumber(); // if this is too late, we can not avoid two process calling it.
   if (!runNumber.second) return;// false means that the runNumber wasn't change
   if (s_statusNoUpdated != m_runStatus) return; // We update if the runStatus is different of ProcessingUpdate and Updated
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG << " The Run Number has changed then we UpdateAll and reset Histograms" << endreq;
-  msg << MSG::DEBUG << " Process Triggered by the "<< method <<"() method." << endreq;
   m_runStatus = s_statusProcessingUpdate;
-  updateData(true); //true means that the update was called because the runNumber changed
+  updateData(true, false); //1er param true means that the update was called because the runNumber changed and 2d false means no TimerHandler
   m_runStatus = s_statusUpdated;
   retrieveRunNumber(runNumber.first.first, runNumber.first.second);
 }
@@ -214,9 +213,7 @@ std::pair<std::pair<int, ulonglong>, bool> UpdateAndReset::currentRunNumber() {
     }
     else
     {
-      msg << MSG::DEBUG<< "ODIN Bank doesn't exist. " <<endreq;
-      // When Odin doesn't work
-      //runNumber = gpsTime/(m_deltaTRunTest*1000000);
+      msg << MSG::DEBUG<< "ODIN Bank doesn't exist. " <<endreq;	
     }
   }
   else {
@@ -283,7 +280,7 @@ double UpdateAndReset::offsetToBoundary(int cycleNumber, ulonglong time, bool in
   }
 }
 
-void UpdateAndReset::updateData(bool isRunNumberChanged) {
+void UpdateAndReset::updateData(bool isRunNumberChanged, bool isFromTimerHandler) {
   MsgStream msg( msgSvc(), name() );
   ulonglong currentTime = GauchoTimer::currentTime();
   msg << MSG::DEBUG << "**********************************************************************" << endreq;
@@ -299,8 +296,12 @@ void UpdateAndReset::updateData(bool isRunNumberChanged) {
   msg << MSG::DEBUG << "m_timeLastEvInCycle     = " << m_timeLastEvInCycle << endreq;
   msg << MSG::DEBUG << "m_offsetTimeLastEvInCycle     = " << m_offsetTimeLastEvInCycle << endreq;
   msg << MSG::DEBUG << "deltaT error = " << m_deltaTCycle - m_desiredDeltaTCycle*1000000 << " microseconds" << endreq;
-  m_gpsTimeLastEvInCycle = gpsTime();
+  
+  if (!isFromTimerHandler) m_gpsTimeLastEvInCycle = currentTime; // we can not read ODIN from timerHandler
+  else  m_gpsTimeLastEvInCycle = gpsTime();
+    
   m_offsetGpsTimeLastEvInCycle = offsetToBoundary(m_cycleNumber, m_gpsTimeLastEvInCycle, false);
+  
   msg << MSG::DEBUG << "m_gpsTimeLastEvInCycle  = " << m_gpsTimeLastEvInCycle << endreq;
   msg << MSG::DEBUG << "m_offsetGpsTimeLastEvInCycle  = " << m_offsetGpsTimeLastEvInCycle << endreq;
   msg << MSG::DEBUG << "TimeLastEvent error = " << (m_timeLastEvInCycle - m_gpsTimeLastEvInCycle) << " microseconds" << endreq;
@@ -309,8 +310,8 @@ void UpdateAndReset::updateData(bool isRunNumberChanged) {
     if (0 == m_disableUpdateData) m_pGauchoMonitorSvc->updateAll(true); //the first parameter is the endOfRun flag
     else msg << MSG::DEBUG << "===============> Data was not updated because the UpdateData process is disable." << endreq;
     // if (0 == m_disableResetHistos) m_pGauchoMonitorSvc->resetHistos();
-    //else  
-    msg << MSG::DEBUG << "===============> Histos were not reset because IT'S NOT IMPLEMENTED." << endreq;
+    // else 
+    msg << MSG::DEBUG << "===============> resetHistos disabled." << endreq;
   }
   else{
     if (0 == m_disableUpdateData) m_pGauchoMonitorSvc->updateAll(false);

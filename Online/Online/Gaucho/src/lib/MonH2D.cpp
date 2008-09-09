@@ -1,6 +1,7 @@
 #include "Gaucho/MonH2D.h"
 #include "AIDA/IAxis.h"
 #include <GaudiUtils/Aida2ROOT.h>
+#include <GaudiUtils/HistoTableFormat.h>
 
 MonH2D::MonH2D(IMessageSvc* msgSvc, const std::string& source, int version):
 MonObject(msgSvc, source, version)
@@ -20,15 +21,15 @@ MonObject(msgSvc, source, version)
 MonH2D::~MonH2D(){
 //   MsgStream msgStream = createMsgStream();
 //   msgStream <<MSG::DEBUG<<"deleting binCont" << endreq;
-  delete binCont;
+  if  (binCont!=0) delete []binCont;
 //   msgStream <<MSG::DEBUG<<"deleting binErr" << endreq;
-  delete binErr;
+  if (binErr !=0) delete []binErr;
 //   msgStream <<MSG::DEBUG<<"deleting binLabelX" << endreq;
-  if (bBinLabelX) delete binLabelX;
+  if (bBinLabelX) {if (binLabelX!=0) delete []binLabelX;}
 //   msgStream <<MSG::DEBUG<<"deleting binLabelY" << endreq;
-  if (bBinLabelY) delete binLabelY;
+  if (bBinLabelY) { if (binLabelY!=0) delete []binLabelY;}
 //   msgStream <<MSG::DEBUG<<"deleting m_fSumw2" << endreq;
-  delete m_fSumw2;
+  if (m_fSumw2!=0) delete []m_fSumw2;
 // BUGG...I dont know yet why I can't do it..
 //   if (m_hist!=0) {
 //     msgStream <<MSG::DEBUG<<"deleting m_hist" << endreq;
@@ -39,7 +40,10 @@ MonH2D::~MonH2D(){
 
 void MonH2D::setAidaHisto(AIDA::IHistogram2D* iHistogram2D){
   m_aidaHist = iHistogram2D;
-  setHist(Gaudi::Utils::Aida2ROOT::aida2root(m_aidaHist));
+  TH2D* hRoot = (TH2D*)Gaudi::Utils::Aida2ROOT::aida2root(m_aidaHist);
+  sName = Gaudi::Utils::Histos::path ( m_aidaHist ) ;
+  hRoot->SetName(sName.c_str());
+  setHist(hRoot);
 }
 
 void MonH2D::save(boost::archive::binary_oarchive & ar, const unsigned int version){
@@ -182,7 +186,7 @@ TH2D* MonH2D::hist(){
 void MonH2D::createObject(std::string name){
   if (!isLoaded) return;
   MsgStream msgStream = createMsgStream();
-  msgStream <<MSG::INFO<<"Creating TH1D " << name << endreq;
+  msgStream <<MSG::DEBUG<<"Creating TH1D " << name << endreq;
   if (m_hist == 0) m_hist = new TH2D(name.c_str(), sTitle.c_str(), nbinsx, Xmin, Xmax, nbinsy, Ymin, Ymax);
   objectCreated = true;
 }
@@ -411,14 +415,14 @@ void MonH2D::copyFrom(MonObject * H){
   sName = HH->sName;
   sTitle = HH->sTitle;
   
-  if (binCont != 0) delete binCont;
+  if (binCont != 0) delete []binCont;
   binCont = new double[(nbinsx+2)*(nbinsy+2)];
   
   for (int i = 0; i < (nbinsx+2)*(nbinsy+2) ; ++i){
     binCont[i] = HH->binCont[i];
   }
   
-  if (binErr != 0) delete binErr;
+  if (binErr != 0) delete []binErr;
   binErr = new double[(nbinsx+2)*(nbinsy+2)];
   
   for (int i = 0; i < (nbinsx+2)*(nbinsy+2) ; ++i){
@@ -428,7 +432,7 @@ void MonH2D::copyFrom(MonObject * H){
   bBinLabelX = HH->bBinLabelX;
 
   if (bBinLabelX){
-   if (binLabelX != 0) delete binLabelX;
+   if (binLabelX != 0) delete []binLabelX;
     binLabelX = new std::string[(nbinsx+2)];
     for (int i = 0; i < (nbinsx+2) ; ++i){
       binLabelX[i] = HH->binLabelX[i];
@@ -438,7 +442,7 @@ void MonH2D::copyFrom(MonObject * H){
   bBinLabelY = HH->bBinLabelY;
 
   if (bBinLabelY){
-   if (binLabelY != 0) delete binLabelY;
+   if (binLabelY != 0) delete []binLabelY;
    binLabelY = new std::string[(nbinsy+2)];
     for (int i = 0; i < (nbinsy+2) ; ++i){
       binLabelY[i] = HH->binLabelY[i];
@@ -458,7 +462,7 @@ void MonH2D::copyFrom(MonObject * H){
 
   m_fSumSize = HH->m_fSumSize;
 
-  if (m_fSumw2 != 0) delete m_fSumw2;
+  if (m_fSumw2 != 0) delete []m_fSumw2;
   m_fSumw2 = new double[m_fSumSize];
   for (int i=0 ; i < m_fSumSize; ++i) {
     m_fSumw2[i] = HH->m_fSumw2[i];
@@ -484,6 +488,16 @@ void MonH2D::reset(){
   }
   
   nEntries = 0;
+  m_fTsumw   = 0;
+  m_fTsumw2  = 0;
+  m_fTsumwx  = 0;
+  m_fTsumwx2 = 0;
+  m_fTsumwy  = 0;
+  m_fTsumwy2 = 0;
+  m_fTsumwxy = 0;
+
+  m_fSumSize = 0;
+
 }
 
 void MonH2D::print(){

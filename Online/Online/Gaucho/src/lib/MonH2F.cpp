@@ -1,6 +1,7 @@
 #include "Gaucho/MonH2F.h"
 #include "AIDA/IAxis.h"
 #include <GaudiUtils/Aida2ROOT.h>
+#include <GaudiUtils/HistoTableFormat.h>
 
 MonH2F::MonH2F(IMessageSvc* msgSvc, const std::string& source, int version):
 MonObject(msgSvc, source, version)
@@ -21,15 +22,19 @@ MonObject(msgSvc, source, version)
 MonH2F::~MonH2F(){
 //   MsgStream msgStream = createMsgStream();
   //msgStream <<MSG::DEBUG<<"deleting binCont" << endreq;
-  delete binCont;
+  if (binCont != 0) delete []binCont;
   //msgStream <<MSG::DEBUG<<"deleting binErr" << endreq;
-  delete binErr;
+  if (binErr != 0) delete []binErr;
   //msgStream <<MSG::DEBUG<<"deleting binLabelX" << endreq;
-  if (bBinLabelX) delete binLabelX;
+  if (bBinLabelX) {
+    if (binLabelX != 0) delete []binLabelX;
+  }
   //msgStream <<MSG::DEBUG<<"deleting binLabelY" << endreq;
-  if (bBinLabelY) delete binLabelY;
+  if (bBinLabelY) {
+    if (binLabelY != 0) delete []binLabelY;
+  }
   //msgStream <<MSG::DEBUG<<"deleting m_fSumw2" << endreq;
-  delete m_fSumw2;
+  if (m_fSumw2 != 0) delete []m_fSumw2;
   // BUGG...I dont know yet why I can't do it..
 /*  if (m_hist!=0) {
     msgStream <<MSG::DEBUG<<"deleting m_hist" << endreq;
@@ -40,7 +45,10 @@ MonH2F::~MonH2F(){
 
 void MonH2F::setAidaHisto(AIDA::IHistogram2D* iHistogram2D){
   m_aidaHist = iHistogram2D;
-  setHist((TH2F*)Gaudi::Utils::Aida2ROOT::aida2root(m_aidaHist));
+  TH2F* hRoot = (TH2F*)Gaudi::Utils::Aida2ROOT::aida2root(m_aidaHist);
+  sName = Gaudi::Utils::Histos::path ( m_aidaHist ) ;
+  hRoot->SetName(sName.c_str());
+  setHist(hRoot);
 }
 
 void MonH2F::save(boost::archive::binary_oarchive & ar, const unsigned int version){
@@ -183,7 +191,7 @@ TH2F* MonH2F::hist(){
 void MonH2F::createObject(std::string name){
   if (!isLoaded) return;
   MsgStream msgStream = createMsgStream();
-  msgStream <<MSG::INFO<<"Creating TH2F " << name << endreq;
+  msgStream <<MSG::DEBUG<<"Creating TH2F " << name << endreq;
   if (m_hist ==0) m_hist = new TH2F(name.c_str(), sTitle.c_str(), nbinsx, Xmin, Xmax, nbinsy, Ymin, Ymax);
   objectCreated = true;
 }
@@ -357,15 +365,14 @@ void MonH2F::combine(MonObject * H){
   if (sTitle !=  HH->sTitle) matchParam = false;
 
   if (!matchParam){
-    MsgStream msgStream = createMsgStream();
-    msgStream <<MSG::ERROR<<"Trying to combine uncompatible MonObjects" << endreq;
-    msgStream <<MSG::ERROR<<"  nbinsx ="<<nbinsx << "; HH->nbinsx="<<HH->nbinsx << endreq;
-    msgStream <<MSG::ERROR<<"  nbinsy ="<<nbinsy << "; HH->nbinsy="<<HH->nbinsy << endreq;
-    msgStream <<MSG::ERROR<<"  Xmin ="<<Xmin << "; HH->Xmin="<<HH->Xmin<<endreq;;
-    msgStream <<MSG::ERROR<<"  Xmax ="<<Xmax << "; HH->Xmax="<<HH->Xmax<<endreq;;
-    msgStream <<MSG::ERROR<<"  Ymin ="<<Xmin << "; HH->Xmin="<<HH->Xmin<<endreq;;
-    msgStream <<MSG::ERROR<<"  Ymax ="<<Ymax << "; HH->Ymax="<<HH->Ymax<<endreq;;
-    msgStream <<MSG::ERROR<<"  sTitle ="<<sTitle << "; HH->sTitle="<<HH->sTitle<<std::endl;
+    msg <<MSG::ERROR<<"Trying to combine uncompatible MonObjects" << endreq;
+    msg <<MSG::ERROR<<"  nbinsx ="<<nbinsx << "; HH->nbinsx="<<HH->nbinsx << endreq;
+    msg <<MSG::ERROR<<"  nbinsy ="<<nbinsy << "; HH->nbinsy="<<HH->nbinsy << endreq;
+    msg <<MSG::ERROR<<"  Xmin ="<<Xmin << "; HH->Xmin="<<HH->Xmin<<endreq;;
+    msg <<MSG::ERROR<<"  Xmax ="<<Xmax << "; HH->Xmax="<<HH->Xmax<<endreq;;
+    msg <<MSG::ERROR<<"  Ymin ="<<Xmin << "; HH->Xmin="<<HH->Xmin<<endreq;;
+    msg <<MSG::ERROR<<"  Ymax ="<<Ymax << "; HH->Ymax="<<HH->Ymax<<endreq;;
+    msg <<MSG::ERROR<<"  sTitle ="<<sTitle << "; HH->sTitle="<<HH->sTitle<<std::endl;
     
     return;
   }
@@ -413,14 +420,14 @@ void MonH2F::copyFrom(MonObject * H){
   sName = HH->sName;
   sTitle = HH->sTitle;
 
-  if (binCont != 0) delete binCont;
+  if (binCont != 0) delete []binCont;
   binCont = new float[(nbinsx+2)*(nbinsy+2)];
 
   for (int i = 0; i < (nbinsx+2)*(nbinsy+2) ; ++i){
     binCont[i] = HH->binCont[i];
   }
 
-  if (binErr != 0) delete binErr;
+  if (binErr != 0) delete []binErr;
   binErr = new float[(nbinsx+2)*(nbinsy+2)];
 
   for (int i = 0; i < (nbinsx+2)*(nbinsy+2) ; ++i){
@@ -430,7 +437,7 @@ void MonH2F::copyFrom(MonObject * H){
   bBinLabelX = HH->bBinLabelX;
 
   if (bBinLabelX){
-   if (binLabelX != 0) delete binLabelX;
+   if (binLabelX != 0) delete []binLabelX;
     binLabelX = new std::string[(nbinsx+2)];
     for (int i = 0; i < (nbinsx+2) ; ++i){
       binLabelX[i] = HH->binLabelX[i];
@@ -440,7 +447,7 @@ void MonH2F::copyFrom(MonObject * H){
   bBinLabelY = HH->bBinLabelY;
 
   if (bBinLabelY){
-   if (binLabelY != 0) delete binLabelY;
+   if (binLabelY != 0) delete []binLabelY;
     binLabelY = new std::string[(nbinsy+2)];
     for (int i = 0; i < (nbinsy+2) ; ++i){
       binLabelY[i] = HH->binLabelY[i];
@@ -460,7 +467,7 @@ void MonH2F::copyFrom(MonObject * H){
 
   m_fSumSize = HH->m_fSumSize;
 
-  if (m_fSumw2 != 0) delete m_fSumw2;
+  if (m_fSumw2 != 0) delete [] m_fSumw2;
   m_fSumw2 = new float[m_fSumSize];
   for (int i=0 ; i < m_fSumSize; ++i) {
     m_fSumw2[i] = HH->m_fSumw2[i];
@@ -486,6 +493,15 @@ void MonH2F::reset(){
   }
   
   nEntries = 0;
+  m_fTsumw   = 0;
+  m_fTsumw2  = 0;
+  m_fTsumwx  = 0;
+  m_fTsumwx2 = 0;
+  m_fTsumwy  = 0;
+  m_fTsumwy2 = 0;
+  m_fTsumwxy = 0;
+
+  m_fSumSize = 0;
 }
 
 void MonH2F::print(){

@@ -13,7 +13,8 @@ static const int s_saveHistos(123);
 static const int s_updateSvcMapFromInfoService(124);
 static const int s_updateSvcMapFromInfoServer(125);
 static const int s_startTimer(126);
-static const int s_createInfoServices(127);
+static const int s_stopTimer(127);
+static const int s_createInfoServices(128);
 
 //  Author: jotalo, 19/06/2008
 
@@ -24,17 +25,17 @@ class Interactor;
 class DimTimerProcess;
 class ProcessMgr {
 public:
-  ProcessMgr(IMessageSvc* msgSvc, Interactor *service); 
+  ProcessMgr(IMessageSvc* msgSvc, Interactor *service, const int &m_refreshTime);
   virtual ~ProcessMgr();
   DimInfoServers*  dimInfoServers() {return m_dimInfoServers;}
   DimInfoServices* dimInfoServices(){return m_dimInfoServices;}
   BaseServiceMap*      serviceMap()     {return m_serviceMap;}
   Interactor* service() {return m_service;} 
   DimTimerProcess* dimTimerProcess(){return m_dimTimerProcess;}
-
   std::string utgid() {return m_utgid;}
-  
+
   bool isAdder() {return m_isAdder;}
+  int refreshTime(){return m_refreshTime;}
   
   bool withPartitionName() {return m_withPartitionName;}
   
@@ -46,7 +47,7 @@ public:
   
   void createInfoServers();
   void createInfoServices(std::string serverName);
-  void createTimerProcess(int refreshTime);
+  void createTimerProcess();
   void updateMap(); //this method update data when we dont have the ServerMap 
 
   void setPartVector(const std::vector<std::string> &partName) {m_partName = partName; m_withPartitionName = true;}
@@ -55,6 +56,7 @@ public:
   void setAlgorithmVector(const std::vector<std::string> &algorithmName) {m_algorithmName = algorithmName;}
   void setObjectVector(const std::vector<std::string> &objectName) {m_objectName = objectName;}
   void setUtgid(const std::string &utgid);
+  void setNodeName(const std::string &nodeName){m_nodeName=nodeName;};
 
   void setSaveDir(const std::string &saveDir){m_saveDir = saveDir;}
   void timerHandler();
@@ -72,8 +74,9 @@ protected:
   std::string m_name;
   IMessageSvc* m_msgSvc;
   Interactor* m_service;
+  int m_refreshTime;
   bool m_isAdder;
-  
+    
   std::string m_utgid;
   std::string m_nodeName;
   

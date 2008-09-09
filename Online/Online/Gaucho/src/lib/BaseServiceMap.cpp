@@ -95,7 +95,7 @@ void BaseServiceMap::includeServerInMaps(const std::string &serverName) {
   MsgStream msg(msgSvc(), name());
   
   std::set<std::string>::iterator svcSetIt;  
-  
+  msg << MSG::DEBUG << "m_dimInfo.size() = " << m_dimInfo.size()<< endreq;    
   if (m_dimInfo.size() <= 0) {
     for (svcSetIt = m_serviceSet.begin(); svcSetIt != m_serviceSet.end(); ++svcSetIt) {
       msg << MSG::DEBUG << "Service " << *svcSetIt << endreq;    
@@ -161,7 +161,9 @@ void BaseServiceMap::insertDimInfo(const std::string &serviceName, const std::st
   //msg << MSG::DEBUG << "groupName =  " << groupName << endreq;
   //msg << MSG::DEBUG << "elementName =  " << elementName << endreq;
   
-  m_dimInfo[groupName][elementName] = new DimInfoMonObject(termSvcName, 5); 
+  
+  
+  m_dimInfo[groupName][elementName] = new DimInfoMonObject(termSvcName, m_processMgr->refreshTime()); 
   //msg << MSG::DEBUG << "setSourceName : " << name() << endreq;
   m_dimInfo[groupName][elementName]->setSourceName(name());
   //msg << MSG::DEBUG << "setMsgSvc" << endreq;
@@ -243,8 +245,8 @@ void BaseServiceMap::insertDimService(const std::string &serviceName, const std:
   
   MonObject *monObjectAdder = MonObjectCreator::createMonObject(monObjectTmp->typeName(), msgSvc(), name());
   monObjectAdder->copyFrom(monObjectTmp);
+  
   //monObjectAdder->print();
-      
   msg << MSG::DEBUG << "creating DimServiceMonObject for Adder : " << groupName << endreq;
   DimServiceMonObject *dimServiceMonObjectAdder = new DimServiceMonObject(groupName, monObjectAdder);
       
@@ -421,7 +423,6 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName, int &file
   for (m_dimInfoIt=m_dimInfo.begin(); m_dimInfoIt!=m_dimInfo.end(); ++m_dimInfoIt) 
   {
    // std::cout << "========================SAVER=================================" << std::endl;
-    
     fileSize=0;
     std::string tmpfile = saveDir + "/" +  m_dimInfoIt->first + "-" + timestr + ".root";
     fileName.replace(0, fileName.length(), tmpfile);
@@ -469,74 +470,40 @@ void BaseServiceMap::add() {
 
   for (m_dimInfoIt=m_dimInfo.begin(); m_dimInfoIt!=m_dimInfo.end(); ++m_dimInfoIt) 
   {
-    //std::cout << "========================ADDER=================================" << std::endl;
     msg << MSG::DEBUG << " Adder : " << m_dimInfoIt->first << endreq;
-    // reset MonObject
+    
     if (m_dimSrv.find(m_dimInfoIt->first) == m_dimSrv.end()) { 
       msg << MSG::DEBUG << "No Adder Found " << m_dimInfoIt->first << endreq;
       continue;
     }
     
     m_dimSrv[m_dimInfoIt->first].second->reset();
-    
-    // checking endOfRun Flag
-    msg << MSG::DEBUG << "Adder EndOfRun Flag=  " << m_dimSrv[m_dimInfoIt->first].second->endOfRun() << endreq;
-    
+    //msg << MSG::DEBUG << "Adder EndOfRun Flag=  " << m_dimSrv[m_dimInfoIt->first].second->endOfRun() << endreq;
     for (it=m_dimInfoIt->second.begin(); it!=m_dimInfoIt->second.end(); ++it) {
       if (!m_processMgr->dimInfoServers()->isActive(it->first)) continue;
             
       if(0 == it->second->monObject()) continue;
-      //msg << MSG::DEBUG << "Term : " << it->first << endreq;
-      msg << MSG::DEBUG << "Term : " << it->second->dimInfo()->getName() << endreq;
-
-      it->second->loadMonObject();
-      // it->second->createMonObject();
-      msg << MSG::DEBUG << "Term EndOfRun Flag=  " << it->second->monObject()->endOfRun() << endreq;
-      // if (m_dimSrv[m_dimInfoIt->first].second->endOfRun() != it->second->monObject()->endOfRun()) continue; 
-      // std::cout << "==============================================================" << std::endl;
-      // std::cout << "==============================================================" << std::endl;
-      // it->second->monObject()->print();
-      // std::cout << "==============================================================" << std::endl;
+      msg << MSG::DEBUG << "Loading term : " << it->first << endreq;
+      bool isLoaded = it->second->loadMonObject();
+      if (!isLoaded){
+        msg << MSG::DEBUG << "Term : " << it->second->dimInfo()->getName() << " unloaded" << endreq;
+        continue;
+      }
+      msg << MSG::DEBUG << "Term : " << it->second->dimInfo()->getName() << " ok" << endreq;
       
       if (s_monRate == m_dimSrv[m_dimInfoIt->first].second->typeName()){
-        if (((MonRate*) m_dimSrv[m_dimInfoIt->first].second)->diffNumCounters(((MonRate*) it->second->monObject())) != 0) 
-	  m_dimSrv[m_dimInfoIt->first].second->copyFrom(it->second->monObject());
-	else m_dimSrv[m_dimInfoIt->first].second->combine(it->second->monObject());
+        int countersAdder = ((MonRate*) (m_dimSrv[m_dimInfoIt->first].second))->numCounters();
+	int countersTerm = ((MonRate*) it->second->monObject())->numCounters();
+	if ( countersAdder < countersTerm) {
+	  ((MonProfile*) (m_dimSrv[m_dimInfoIt->first].second))->synchronizeLabelNames(it->second->monObject());
+	  ((MonRate*) (m_dimSrv[m_dimInfoIt->first].second))->setNumCounters(((MonRate*)it->second->monObject())->numCounters());
+	}
       }
-      else m_dimSrv[m_dimInfoIt->first].second->combine(it->second->monObject());
+      //msg << MSG::DEBUG << "Combining Service : " << endreq;
+      m_dimSrv[m_dimInfoIt->first].second->combine(it->second->monObject());
     }
-    //m_dimSrv[m_dimInfoIt->first].second->print();
+    //msg << MSG::DEBUG << "Updating Service : " << endreq;
     m_dimSrv[m_dimInfoIt->first].first->updateService(m_dimSrv[m_dimInfoIt->first].second->endOfRun());
-    
-  //  std::cout << "==============================================================" << std::endl;
-    
-/*  std::cout << "==============================================================" << std::endl;
-  std::cout << "========================ADDER=================================" << std::endl;
-  std::cout << "==============================================================" << std::endl;
-  m_dimSrv[m_dimInfoIt->first].second->print();
-  std::cout << "==============================================================" << std::endl;
-  std::cout << "========================ADDERB=================================" << std::endl;
-  std::cout << "==============================================================" << std::endl;
-  m_dimSrv[m_dimInfoIt->first].first->monObject()->print();
-//  std::cout << "==============================================================" << std::endl;*/
   }
 }
 
-/*
-void BaseServiceMap::createMap(std::map<std::string, bool, std::less<std::string> > serverMap, std::set<std::string> serviceSet) 
-{
-  MsgStream msg(msgSvc(), name());
-  
-  m_serverMap = serverMap;
-  m_serviceSet = serviceSet;
-  
-  printLocalSet();
-  
-  std::map<std::string, bool, std::less<std::string> >::iterator svrMapIt;
-  
-  for (svrMapIt = m_serverMap.begin(); svrMapIt != m_serverMap.end(); ++svrMapIt) {  
-    if (!svrMapIt->second) continue; // inactive Server
-    includeServerInMaps(svrMapIt->first);
-  }
-}
-*/

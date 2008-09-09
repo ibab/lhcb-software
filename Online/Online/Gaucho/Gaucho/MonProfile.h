@@ -49,8 +49,9 @@ public:
   virtual void print();
   virtual void write();
   virtual void reset();
-  int diffNumBins(MonObject * H);
-
+  void synchronizeLabelNames(MonObject * H);
+  
+  void printLabels();
   /**********/
   // data   
   /**********/
@@ -71,8 +72,6 @@ public:
   double *binErr;
   double *binEntries;
   
-  std::vector<std::string> binLabelX;
-
   int m_fDimension;
   //double m_fIntegral;
   double m_fMaximum;
@@ -90,6 +89,11 @@ public:
   bool isLoaded;
   bool objectCreated;
   /**********/
+  
+private:
+  std::vector<std::string> binLabelX;
+
+  
 };
 
 #endif //GAUCHO_MONPROFILE_H

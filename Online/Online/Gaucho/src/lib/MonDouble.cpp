@@ -9,7 +9,7 @@ MonDouble::MonDouble(IMessageSvc* msgSvc, const std::string& source, int version
 }
 
 MonDouble::~MonDouble(){
-  if (m_double) {delete m_double; m_double = NULL;}
+  //if (m_double) {delete m_double; m_double = NULL;}
 }
 
 void MonDouble::save(boost::archive::binary_oarchive & ar, const unsigned int version){

@@ -30,7 +30,9 @@ void DimInfoServers::infoHandler() {
       IocSensor::instance().send(m_processMgr->service(), s_createInfoServices, (void *) &m_serverMap); // this command also updateServiceMap
   }
   else {
+    IocSensor::instance().send(m_processMgr->service(), s_stopTimer, this); //stop Timer*/
     IocSensor::instance().send(m_processMgr->service(), s_updateSvcMapFromInfoServer, (void *) &m_serverMap);
+    IocSensor::instance().send(m_processMgr->service(), s_startTimer, this); //start Timer*/
   }
 
   //m_processMgr->serviceMap()->updateMap(m_serverMap);

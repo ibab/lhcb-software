@@ -17,6 +17,8 @@ protected:
   double *m_offsetTimeLastEvInCycle; 
   double *m_offsetGpsTimeLastEvInCycle; 
   
+  int m_maxNumCounters;
+  int m_numCounters;
   bool isServer;
   
     
@@ -50,10 +52,10 @@ public:
   virtual void reset();
   virtual void print();
   virtual void write(){};
-  int diffNumCounters(MonObject * monObject);
-  
+  void setMaxNumCounters(int maxNumCounters) {m_maxNumCounters = maxNumCounters;}
+  int numCounters(){return m_numCounters;}
+  void setNumCounters(int numCounters){m_numCounters = numCounters;}
 private:
-  
   double counter(std::string countName) {return (*(m_counterMap[countName].first));}
   std::string counterDescription(std::string countName) {return (*(m_counterMap[countName].second));}
   double offsetTimeFirstEvInRun() {return (*m_offsetTimeFirstEvInRun);}

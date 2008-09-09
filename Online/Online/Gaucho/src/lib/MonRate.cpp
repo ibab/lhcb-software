@@ -13,13 +13,11 @@ MonRate::MonRate(IMessageSvc* msgSvc, const std::string& source, int version):
   m_offsetTimeLastEvInCycle = new double(0);
   m_offsetGpsTimeLastEvInCycle = new double(0);
   isServer = true;
+  m_maxNumCounters = 0;
+  m_numCounters = 0;
 }
   
 MonRate::~MonRate(){
-}
-
-int MonRate::diffNumCounters(MonObject * monObject){
-  return diffNumBins(monObject);
 }
 
 void MonRate::save(boost::archive::binary_oarchive & ar, const unsigned int version){
@@ -29,9 +27,9 @@ void MonRate::save(boost::archive::binary_oarchive & ar, const unsigned int vers
   
   if (isServer) {
     //msg <<MSG::INFO<<"THIS IS A SERVER " << endreq;
-    int size = m_counterMap.size();
-//     msg <<MSG::INFO<<"size: " << size << endreq;
-    m_profile = new TProfile("profile","MonRate Profile", size+7, 0, size+7);
+    m_numCounters = m_counterMap.size();
+//     msg <<MSG::INFO<<"m_numCounters: " << m_numCounters << endreq;
+    m_profile = new TProfile("profile","MonRate Profile", m_maxNumCounters+7, 0, m_maxNumCounters+7);
     m_profile->Fill(0.50, *m_offsetTimeFirstEvInRun, 1.00);
     m_profile->Fill(1.50, *m_offsetTimeLastEvInCycle, 1.00);
     m_profile->Fill(2.50, *m_offsetGpsTimeLastEvInCycle, 1.00);
@@ -53,6 +51,10 @@ void MonRate::save(boost::archive::binary_oarchive & ar, const unsigned int vers
 //       msg <<MSG::INFO<<"bin [" << i << "]="<< (double)(*(m_counterMapIt->second.first)) << endreq;
       i++;
     }
+    for (int j = 7+m_numCounters; j < 7+m_maxNumCounters; j++) {
+       m_profile->Fill((double)j - 0.5, 0, 1.00);
+    }
+    
     m_profile->GetXaxis()->SetBinLabel(1, "OffsetTimeFirstEvInRun");
     m_profile->GetXaxis()->SetBinLabel(2, "OffsetTimeLastEvInCycle");
     m_profile->GetXaxis()->SetBinLabel(3, "OffsetGpsTimeLastEvInCycle");
@@ -67,13 +69,17 @@ void MonRate::save(boost::archive::binary_oarchive & ar, const unsigned int vers
       m_profile->GetXaxis()->SetBinLabel(i, (*(m_counterMapIt->second.second)).c_str());
       i++;
     }
+    for (int j = 7+m_numCounters; j < 7+m_maxNumCounters; j++) {
+      m_profile->GetXaxis()->SetBinLabel(i, " ");
+    }
+    
   }  
   else{
     //msg <<MSG::INFO<<"THIS IS A CLIENT " << endreq;
     //m_profile =  profile(); //NEVER CALL THIS FUNCTION IN ADDERS
   }
 
-/*  msg <<MSG::INFO<<"size = " << m_profile->GetNbinsX() << endreq;
+/*  msg <<MSG::INFO<<"m_numCounters = " << m_profile->GetNbinsX() << endreq;
   for (int j = 0; j< m_profile->GetNbinsX()+2; j++) {
     msg <<MSG::INFO<<"bin["<<j<<"] = " << (ulonglong) m_profile->GetBinContent(j) << ", description: "<< m_profile->GetXaxis()->GetBinLabel(j) << ", entries: " << m_profile->GetBinEntries(j) << endreq;
   }*/
@@ -81,7 +87,7 @@ void MonRate::save(boost::archive::binary_oarchive & ar, const unsigned int vers
   
   MonProfile::save(ar, version);
   
-  
+  ar & m_numCounters;
   if (isServer) {
     delete m_profile; m_profile = 0;
   }
@@ -93,6 +99,7 @@ void MonRate::load(boost::archive::binary_iarchive  & ar, const unsigned int ver
   isServer = false;
   MonObject::load(ar, version);
   MonProfile::load(ar, version);
+  ar & m_numCounters;
   
 /*  m_profile = profile();
   for (int j = 0; j< m_profile->GetNbinsX()+2; j++) {
@@ -115,6 +122,7 @@ void MonRate::combine(MonObject * monObject) {
 }
 
 void MonRate::copyFrom(MonObject * monObject){
+  MsgStream msg = createMsgStream();
   isServer = false;
   if (monObject->typeName() != this->typeName()) {
     MsgStream msgStream = createMsgStream();
@@ -122,7 +130,10 @@ void MonRate::copyFrom(MonObject * monObject){
     return;
   }
   MonProfile::copyFrom(monObject);
+  
+  m_numCounters = ((MonRate*)monObject)->numCounters();
 }
+
 
 void MonRate::reset(){
   MonProfile::reset();

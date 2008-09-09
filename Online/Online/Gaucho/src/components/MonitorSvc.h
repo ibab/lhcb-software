@@ -131,7 +131,9 @@ private:
 
   // MonObjetc to convert conters in rates  
   MonRate  *m_monRate;
+  int m_maxNumCountersMonRate;
   bool m_monRateDeclared;
+  
   
 public:    
    void declareMonRateComplement( int& runNumber, int& cycleNumber, double& deltaT, double& offsetTimeFirstEvInRun, double& offsetTimeLastEvInCycle, double& offsetGpsTimeLastEvInCycle);  
