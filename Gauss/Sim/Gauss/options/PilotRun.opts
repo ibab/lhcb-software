@@ -1,4 +1,4 @@
-// $Id: PilotRun.opts,v 1.8 2007-03-02 10:07:40 gcorti Exp $ 
+// $Id: PilotRun.opts,v 1.9 2008-09-09 16:15:12 gcorti Exp $ 
 
 /** @file 
  * 
@@ -41,22 +41,5 @@ Generation.FlatZSmearVertex.SigmaY = 0.280*mm;
 // MAGNETIC FIELD
 // ===========================================================================
 // == Magnetic Field OFF -> zero beam crossing angle
-// MagneticFieldSvc.UseConstantField = true;
-// Generation.MinimumBias.PythiaProduction.CollidingBeams.HorizontalCrossingAngle = 0.0;
-// Generation.MinimumBias.PythiaProduction.FixedTarget.HorizontalCrossingAngle = 0.0;
-
-// == Magnetic Field ON ->  +/-2.1 mrad beam crossing angle
-// To use uncomment the lines below while commenting the part relative to 
-// magnet off above
-Generation.MinimumBias.PythiaProduction.CollidingBeams.HorizontalCrossingAngle = 2.1*mrad;
-Generation.MinimumBias.PythiaProduction.FixedTarget.HorizontalCrossingAngle = 2.1*mrad;
-
-// VELO POSITION
-// ===========================================================================
-// == VELO Open (for Velo close or partially open set conditions appropriately:
-//            - MainCatalog.xml              = Velo Close
-//            - MainCatalog_OpenVelo.xml     = Velo Open
-//            - MainCatalog_SemiOpenVelo.xml = Velo at intermediate position)
-// #include "$GAUSSOPTS/SimVeloGeometry.opts"
-// ApplicationMgr.Environment = { "CONDITIONS_PATH" : "$XMLCONDITIONSROOT/DDDB/Conditions/MainCatalog_OpenVelo.xml" };
-
+Generation.MinimumBias.PythiaProduction.CollidingBeams.HorizontalCrossingAngle = 0.0;
+Generation.MinimumBias.PythiaProduction.FixedTarget.HorizontalCrossingAngle = 0.0;
