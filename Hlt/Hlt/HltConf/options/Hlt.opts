@@ -5,9 +5,9 @@
 /**
  * Hlt alleys - HLT 1 (this requires L0 to have been run)
  */
-#include "$HLTSYSROOT/options/Hlt1.opts"
+#include "$HLTCONFROOT/options/Hlt1.opts"
 
 /**
  * Hlt selections - HLT 2
  */
-#include "$HLTSYSROOT/options/Hlt2.opts"
+#include "$HLTCONFROOT/options/Hlt2.opts"

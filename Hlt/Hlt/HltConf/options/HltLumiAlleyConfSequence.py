@@ -40,7 +40,7 @@ def combine( op, arg ) :
 
 # HLT Reconstruction
 # init is needed for ANNSvc
-importOptions('$HLTSYSROOT/options/HltLumiInit.opts')
+importOptions('$HLTCONFROOT/options/HltLumiInit.opts')
 
 # debugging options
 debugOPL=4
@@ -116,7 +116,7 @@ BXTypes = Sequence( 'Hlt1LumiBXTypesSequence'
                   , ShortCircuit = False
                   , MeasureTime = True)
 
-importOptions('$HLTSYSROOT/options/HltRecoSequence.py')
+importOptions('$HLTCONFROOT/options/HltRecoSequence.py')
 
 lumiRecoSequence  = Sequence( 'Hlt1LumiRecoSequence'
                   , Members = [ GaudiSequencer('HltRecoSequence')

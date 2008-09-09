@@ -2,7 +2,7 @@
 // HLT Reconstruction
 //--------------------------
 
-#include "$HLTSYSROOT/options/HltRecoSequence.opts"
+#include "$HLTCONFROOT/options/HltRecoSequence.opts"
 
 
 //---------------------------

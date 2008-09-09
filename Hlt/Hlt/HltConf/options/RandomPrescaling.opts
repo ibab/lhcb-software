@@ -1,7 +1,7 @@
 /**
  * Steering file for Hlt1 (alleys) 
  */
-#include "$HLTSYSROOT/options/HltMainSequence.opts"
+#include "$HLTCONFROOT/options/HltMainSequence.opts"
 /**
  * the Alleys sequencer
  */

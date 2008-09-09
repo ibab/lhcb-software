@@ -6,7 +6,7 @@
 /**
  * defines online reconstruction
  */
-#include "$HLTSYSROOT/options/HltRecoSequence.opts"
+#include "$HLTCONFROOT/options/HltRecoSequence.opts"
 /**
  * Add Ks 
  * @todo Make ProtoParticlea and articles with these Ks

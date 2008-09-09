@@ -1,7 +1,7 @@
 /**
  * Steering file for Hlt1
  */
-#include "$HLTSYSROOT/options/HltMainSequence.opts"
+#include "$HLTCONFROOT/options/HltMainSequence.opts"
 /**
  * the Hlt1 sequencer
  */
@@ -16,25 +16,25 @@ Hlt1.ShortCircuit=false;
 //
 
 Hlt1.Members += {  "GaudiSequencer/HltL0TriggerSequence" };
-#include "$HLTSYSROOT/options/HltL0TriggerSequence.opts"
+#include "$HLTCONFROOT/options/HltL0TriggerSequence.opts"
 
 //Hlt1.Members += {  "GaudiSequencer/HltMuonAlleySequence" };
-//#include "$HLTSYSROOT/options/HltMuonAlleyConfSequence.opts"
+//#include "$HLTCONFROOT/options/HltMuonAlleyConfSequence.opts"
 
 //Hlt1.Members += {  "GaudiSequencer/HltMuHadAlleySequence" };
-//#include "$HLTSYSROOT/options/Hlt1MuTrackSequence.opts"
+//#include "$HLTCONFROOT/options/Hlt1MuTrackSequence.opts"
 
 //Hlt1.Members += {  "GaudiSequencer/Hlt1HadronSequence" };
-//#include "$HLTSYSROOT/options/Hlt1HadronSequence.opts"
+//#include "$HLTCONFROOT/options/Hlt1HadronSequence.opts"
 
 //Hlt1.Members += {  "GaudiSequencer/Hlt1EleAlleySequence" };
-//#include "$HLTSYSROOT/options/HltEleAlleyConfSequence.opts"
+//#include "$HLTCONFROOT/options/HltEleAlleyConfSequence.opts"
 
 //Hlt1.Members += {  "GaudiSequencer/Hlt1PhoAlleySequence" };
-//#include "$HLTSYSROOT/options/HltPhoAlleySequence.opts"
+//#include "$HLTCONFROOT/options/HltPhoAlleySequence.opts"
 
 Hlt1.Members += {  "GaudiSequencer/Hlt1LumiAlleySequence" };
-#include "$HLTSYSROOT/options/HltLumiAlleyConfSequence.opts"
+#include "$HLTCONFROOT/options/HltLumiAlleyConfSequence.opts"
 
 Hlt1.Members += {  "HltSelectionFilter/Hlt1Global" };
 

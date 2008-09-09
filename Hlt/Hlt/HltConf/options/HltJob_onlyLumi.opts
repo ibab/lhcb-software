@@ -11,7 +11,7 @@
 // L0 and HLT sequences
 //
 
-#include "$HLTSYSROOT/options/Hlt1_onlyLumi.opts"
+#include "$HLTCONFROOT/options/Hlt1_onlyLumi.opts"
 
 //
 //  Message level

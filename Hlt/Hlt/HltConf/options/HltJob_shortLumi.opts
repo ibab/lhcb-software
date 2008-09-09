@@ -18,11 +18,11 @@
 // L0 and HLT sequences
 //
 
-//#include "$HLTSYSROOT/options/L0.opts"
-#include "$HLTSYSROOT/options/Hlt1_shortLumi.opts"
+//#include "$HLTCONFROOT/options/L0.opts"
+#include "$HLTCONFROOT/options/Hlt1_shortLumi.opts"
 //#ApplicationMgr.TopAlg += {"GaudiSequencer/HltRecoSequence"};
 // still to be done: Hlt2 pass-through selection
-// #include "$HLTSYSROOT/options/Hlt2.opts"
+// #include "$HLTCONFROOT/options/Hlt2.opts"
 
 
 //

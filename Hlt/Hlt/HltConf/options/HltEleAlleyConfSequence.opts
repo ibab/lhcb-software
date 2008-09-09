@@ -2,7 +2,7 @@
 // HLT Reconstruction
 //--------------------------
 
-// in Had Alley #include "$HLTSYSROOT/options/HltRecoSequence.opts"
+// in Had Alley #include "$HLTCONFROOT/options/HltRecoSequence.opts"
 
 //---------------------------
 // HLT Ele Alley

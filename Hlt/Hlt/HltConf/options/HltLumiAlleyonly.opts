@@ -2,7 +2,7 @@
 // HLT Reconstruction
 //--------------------------
 // init is needed for ANNSvc
-#include "$HLTSYSROOT/options/HltLumiInit.opts"
+#include "$HLTCONFROOT/options/HltLumiInit.opts"
 
 //---------------------------
 // HLT Lumi Alley

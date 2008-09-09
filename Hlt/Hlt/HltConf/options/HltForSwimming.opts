@@ -7,7 +7,7 @@ HltSvc.ForceLeaves = true;
 /**
  * defines online reconstruction
  */
-#include "$HLTSYSROOT/options/HltRecoSequence.opts"
+#include "$HLTCONFROOT/options/HltRecoSequence.opts"
 /**
  * Add Ks 
  * @todo Make ProtoParticlea and articles with these Ks
@@ -37,22 +37,22 @@ HltAllAlleysSequence.ModeOr=true;
 HltAllAlleysSequence.ShortCircuit=false; 
 
 HltAllAlleysSequence.Members += {  "GaudiSequencer/HltL0TriggerSequence" };
-#include "$HLTSYSROOT/options/HltL0TriggerSequence.opts"
+#include "$HLTCONFROOT/options/HltL0TriggerSequence.opts"
 
 //HltAllAlleysSequence.Members += {  "GaudiSequencer/HltMuonAlleySequence" };
-//#include "$HLTSYSROOT/options/HltMuonAlleyConfSequence.opts"
+//#include "$HLTCONFROOT/options/HltMuonAlleyConfSequence.opts"
 
 //HltAllAlleysSequence.Members += {  "GaudiSequencer/HltMuHadAlleySequence" };
-//#include "$HLTSYSROOT/options/HltMuHadAlleyConfSequence.opts"
+//#include "$HLTCONFROOT/options/HltMuHadAlleyConfSequence.opts"
 
 HltAllAlleysSequence.Members += {  "GaudiSequencer/HltHadAlleySequence" };
-#include "$HLTSYSROOT/options/HltHadAlleyConfSequenceForSwimming.opts"
+#include "$HLTCONFROOT/options/HltHadAlleyConfSequenceForSwimming.opts"
 
 //HltAllAlleysSequence.Members += {  "GaudiSequencer/HltEleAlleySequence" };
-//#include "$HLTSYSROOT/options/HltEleAlleyConfSequence.opts"
+//#include "$HLTCONFROOT/options/HltEleAlleyConfSequence.opts"
 
 //HltAllAlleysSequence.Members += {  "GaudiSequencer/HltPhoAlleySequence" };
-//#include "$HLTSYSROOT/options/HltPhoAlleySequence.opts"
+//#include "$HLTCONFROOT/options/HltPhoAlleySequence.opts"
 
 HltAllAlleysSequence.Members += {  "HltSelectionFilter/Hlt1Global" };
 
@@ -77,5 +77,5 @@ HltSummaryWriter.OutputLevel=3;
 /**
  * Hlt selections
  */
-//#include "$HLTSYSROOT/options/HltSelections.opts"
+//#include "$HLTCONFROOT/options/HltSelections.opts"
 

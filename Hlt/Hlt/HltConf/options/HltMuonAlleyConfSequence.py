@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltMuonAlleyConfSequence.py,v 1.1 2008-09-09 06:54:53 graven Exp $
+# $Id: HltMuonAlleyConfSequence.py,v 1.2 2008-09-09 06:56:49 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -12,7 +12,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.1 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -28,7 +28,7 @@ from HltConf.HltLine import Hlt1Tool   as Tool
 from HltConf.HltLine import hlt1Lines, addHlt1Prop, rmHlt1Prop 
 
 
-importOptions('$HLTSYSROOT/options/TsaTool.opts')
+importOptions('$HLTCONFROOT/options/TsaTool.opts')
 
 decodeT = GaudiSequencer('HltDecodeT')
 RZVelo  = GaudiSequencer('Hlt1RecoRZVeloTracksSequence')

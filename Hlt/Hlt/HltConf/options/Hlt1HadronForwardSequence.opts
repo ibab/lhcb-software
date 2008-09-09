@@ -1,4 +1,4 @@
-#include "$HLTSYSROOT/options/HltRecoSequence.opts"
+#include "$HLTCONFROOT/options/HltRecoSequence.opts"
 
 //---------------------------
 // HLT Had Alley

@@ -8,11 +8,11 @@
 //---------------------------------------------------------------------
 //Common stuff. Probably already included in Hlt1.
 //---------------------------------------------------------------------
-#include "$HLTSYSROOT/options/HltMainSequence.opts"
+#include "$HLTCONFROOT/options/HltMainSequence.opts"
 //---------------------------------------------------------------------
 // Phys initialisation
 //---------------------------------------------------------------------
-#include "$HLTSYSROOT/options/Hlt2Init.opts"
+#include "$HLTCONFROOT/options/Hlt2Init.opts"
 //---------------------------------------------------------------------
 // HLT exclusive Selections
 //---------------------------------------------------------------------
@@ -33,7 +33,7 @@ Hlt2.Members += {"GaudiSequencer/PassedAlleys", // empty sequencer
 //---------------------------------------------------------------------
 // ProtoParticles and Particles
 //---------------------------------------------------------------------
-#include "$HLTSYSROOT/options/Hlt2Particles.opts"
+#include "$HLTCONFROOT/options/Hlt2Particles.opts"
 //---------------------------------------------------------------------
 // Empty Sequencer for MC truth filtering --- fill in HltSelChecker
 //---------------------------------------------------------------------
@@ -57,5 +57,5 @@ Hlt2.Members += { "HltSelectionsDecision/Hlt2Decision" } ;
 //-------------------------------------------------------------------
 // True MC matching (DoD Svc)
 //-------------------------------------------------------------------
-#include "$HLTSYSROOT/options/HltTrackAssociator.opts"
+#include "$HLTCONFROOT/options/HltTrackAssociator.opts"
 

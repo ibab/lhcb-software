@@ -1,7 +1,7 @@
 /**
  * Steering file for Hlt1 (alleys) 
  */
-#include "$HLTSYSROOT/options/HltMainSequence.opts"
+#include "$HLTCONFROOT/options/HltMainSequence.opts"
 /**
  * the Alleys sequencer
  */
@@ -11,8 +11,8 @@ Hlt.Members += {  "HltSelectionFilter/Hlt1Global" };
 Hlt1.Members += {  "GaudiSequencer/HltLumiSequence" };
 Hlt1.ModeOr=true; 
 Hlt1.ShortCircuit=false; 
-//#include "$HLTSYSROOT/options/HltLumiAlleyonly.opts"
-#include "$HLTSYSROOT/options/HltLumiAlleyConfSequence.py"
+//#include "$HLTCONFROOT/options/HltLumiAlleyonly.opts"
+#include "$HLTCONFROOT/options/HltLumiAlleyConfSequence.py"
 
 Hlt1.Members += {  "HltSelectionFilter/Hlt1Global" };
 

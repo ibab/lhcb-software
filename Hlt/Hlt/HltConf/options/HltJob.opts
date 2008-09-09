@@ -19,9 +19,9 @@
 //
 
 #include "$L0DUROOT/options/ReplaceL0DUBankWithEmulated.opts"
-#include "$HLTSYSROOT/options/Hlt1.opts"
+#include "$HLTCONFROOT/options/Hlt1.opts"
 ApplicationMgr.TopAlg += {"GaudiSequencer/HltRecoSequence"};
-// #include "$HLTSYSROOT/options/Hlt2.opts"
+// #include "$HLTCONFROOT/options/Hlt2.opts"
 
 
 //

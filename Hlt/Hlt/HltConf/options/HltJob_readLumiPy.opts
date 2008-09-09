@@ -8,7 +8,7 @@
 //
 // read Lumi sequences
 //
-#include "$HLTSYSROOT/options/HltLumiReadHistos.py"
+#include "$HLTCONFROOT/options/HltLumiReadHistos.py"
 
 
 //

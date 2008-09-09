@@ -11,7 +11,7 @@
 //
 
 // init is needed for ANNSvc
-#include "$HLTSYSROOT/options/HltLumiInit.opts"
+#include "$HLTCONFROOT/options/HltLumiInit.opts"
 
 ApplicationMgr.TopAlg += {"GaudiSequencer/readLumiSequence"};
 

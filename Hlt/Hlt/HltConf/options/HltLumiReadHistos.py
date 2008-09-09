@@ -32,7 +32,7 @@ def combine( op, arg ) :
     for key,value in arg.iteritems() : op(key,value)
 
 # init is needed for ANNSvc
-importOptions('$HLTSYSROOT/options/HltLumiInit.opts')
+importOptions('$HLTCONFROOT/options/HltLumiInit.opts')
 
 # debugging options
 debugOPL=4

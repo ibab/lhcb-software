@@ -1,9 +1,9 @@
 //---------------------------
 // HLT Reconstruction
 //--------------------------
-#include "$HLTSYSROOT/options/HltRecoSequence.opts"
+#include "$HLTCONFROOT/options/HltRecoSequence.opts"
 // init is needed for ANNSvc
-#include "$HLTSYSROOT/options/HltLumiInit.opts"
+#include "$HLTCONFROOT/options/HltLumiInit.opts"
 
 //---------------------------
 // HLT Lumi Alley
