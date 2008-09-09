@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.146 2008-09-09 08:33:01 jpalac Exp $
+! $Id: release.notes,v 1.147 2008-09-09 13:25:10 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+! 2008-09-09 - Juan PALACIOS
+ - src/PVReFitterAlg{.cpp, .h}
+  . Go back to KeyedContainer to store refitted vertices. ObjectVector 
+    would've posed problems in client code and MicroDST cloning.
+    It is now up to the user to know how to deal with these vertices.
 
 ! 2008-09-09 - Juan PALACIOS
  - src/PVReFitterAlg{.cpp, .h}
