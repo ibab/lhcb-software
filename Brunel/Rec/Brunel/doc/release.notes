@@ -3,26 +3,34 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-! 2008-09-06 - Patrick Koppenburg
-  - BrunelMoni.opts : Remove commented out MONI list. Add velo monitoring options.
-  - Configuration.py : Add Velo and Muon to MONI default list
+</PRE><H1><A NAME=v33r2>2008-09-09 Brunel v33r2</A></H1><PRE>
+ - Reorganisation of options and defaults
+  + Default setting in Configurable is now for real data, MDF file, default
+    2008 geometry (Brunel-Default.py)
+  + New files 
+    . Brunel-2008-MC.py   (MC with default 2008 geometry)
+    . Brunel-2008-Rdst.py (RDST production from 2008 MDF real data)
+    . Brunel-2008-Stripping.py (DST production from 2008 real data ETC)
+    . Brunel-DC06.py      (Standard DC06 reconstruction)
+  + Updated files to take into account new defaults:
+    . Brunel-2008.py      (Real data, MDF, 2008 geometry)
+    . Brunel-DC06L0Rdst.py, Brunel-DC06Rdst.py,  Brunel-DC06Stripping.py
+ - Added an example MDF file (TED data taken 20080906) to 2008-Files.py
 
-! 2008-08-29 - Chris Jones
- - Update RICH monitoring options to use the Check sequence if MC is enabled
-   and the Moni sequence when it is not.
-
-! 2008-08-27 - Chris Jones
- - Update python Configurable to use pure python for the MC monitoring. 
-   Update to use the new RichRecQCConf Configurable
-
-! 2008-08-15 - Chris Jones
- - Changes to python Configurable:
+ - Changes to python Configurable
   + Use new RecSys Configurable
   + Add option printFreq to allow control over the event printing frequency
   + Add options to allow the various sequences to be modified. Allows, for 
     instance, sub-detectors to be disabled for specialist studies.
   + Use new Configurable base class in LHCbKernel (shares some methods)
+  + Check sequence is now completely defined in Configuration.py. The files
+    BrunelMC.opts, BrunelCheck.opts are obsolete and have been removed
+  + Rich monitoring uses new RichRecQCConf configurable. Uses the Check sequence
+    when MC is enabled and the Moni sequence when it is not. 
   + Add some doxygen comments
+
+ - BrunelMoni.opts : add velo monitoring options.
+ - SuppressWarning.opts : updated for latest changes
 
 </PRE><H1><A NAME=v33r1>2008-07-30 Brunel v33r1</A></H1><PRE>
  - Changes to Configurable:

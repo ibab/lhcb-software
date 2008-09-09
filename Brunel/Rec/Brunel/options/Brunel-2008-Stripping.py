@@ -1,15 +1,13 @@
 ##############################################################################
-# File for producing .rdst in DC06 production workflows.
+# File for running Brunel on real data in 2008 stripping workflow,
+# starting from strip ETC
 # Syntax is:
-#   gaudirun.py Brunel-DC06Rdst.py <someDataFiles>.py
+#   gaudirun.py Brunel-2008-Stripping.py <someDataFiles>.py
 ##############################################################################
 
 from Brunel.Configuration import *
 
-Brunel().DDDBtag    = "DC06-default"
-Brunel().condDBtag  = "DC06-default"
-Brunel().inputType  = "DIGI"
-Brunel().outputType = "RDST"
+Brunel().inputType  = "ETC"
 Brunel().noWarnings = True
 
 Brunel().applyConf()

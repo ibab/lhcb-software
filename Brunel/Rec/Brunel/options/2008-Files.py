@@ -20,8 +20,18 @@ if inputType == "MDF":
     # generated externally, as it is not contained in the MDF file. If the FID is
     # not provided in the Catalog, the output dataset will not contain the
     # information to allow navigation back to the MDF data when reading
-    datasetName =  "00001820_00000001"
-    # No 2008 MDF file yet, format is as follows:
+    datasetName =  "032484_0000081651"
+    EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/32484/032484_0000081651.raw' SVC='LHCb::MDFSelector'"] #TED data 20080906
+    # Above file requires following special options for Velo
+    from Configurables import (RawBankToSTClusterAlg, RawBankToSTLiteClusterAlg,
+                               DecodeVeloRawBuffer, UpdateManagerSvc )
+    DecodeVeloRawBuffer().ForceBankVersion=3
+    DecodeVeloRawBuffer('DecodeVeloClusters').RawEventLocation='Prev2/DAQ/RawEvent'
+    DecodeVeloRawBuffer('DecodeVeloClusters').ForceBankVersion=3
+    UpdateManagerSvc().ConditionsOverride +=  ["Conditions/Online/Velo/MotionSystem := double ResolPosRC =-29. ; double ResolPosLA = 29. ;"]
+    RawBankToSTClusterAlg('CreateTTClusters').rawEventLocation = "/Event/Prev2/DAQ/RawEvent"
+    RawBankToSTLiteClusterAlg('CreateTTLiteClusters').rawEventLocation = "/Event/Prev2/DAQ/RawEvent"
+    
     # EventSelector().Input = [ "DATA='FID:94ACC0F5-09A3-DC11-8140-003048836626' SVC='LHCb::MDFSelector'" ] # Can use FID or LFN or PFN.
 
 elif inputType == "DST":

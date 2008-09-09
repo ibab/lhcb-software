@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.16 2008-09-06 12:13:00 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.17 2008-09-09 09:45:02 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -25,16 +25,16 @@ class Brunel(LHCbConfigurableUser):
         "EvtMax":          -1 # Maximum number of events to process
        ,"skipEvents":   0     # events to skip
        ,"printFreq":    1     # The frequency at which to print event numbers
-       ,"withMC":       True  # set to False for real data or to ignore MC truth
+       ,"withMC":       False # set to True to use MC truth
        ,"recL0Only":    False # set to True to reconstruct only L0-yes events
-       ,"inputType":    "DIGI"# or "MDF" or "ETC" or "RDST" or "DST"
+       ,"inputType":    "MDF" # or "DIGI" or "ETC" or "RDST" or "DST"
        ,"outputType":   "DST" # or "RDST" or "NONE"
        ,"expertHistos": False # set to True to write out expert histos
        ,"noWarnings":   False # suppress all messages with MSG::WARNING or below 
        ,"datasetName":  ""    # string used to build file names
        ,"mainOptions" : '$BRUNELOPTS/Brunel.opts' # top level options to import
-       ,"DDDBtag":      ""    # geometry database tag
-       ,"condDBtag":    ""    # conditions database tag
+       ,"DDDBtag":      "2008-default" # geometry database tag
+       ,"condDBtag":    "2008-default" # conditions database tag
        ,"useOracleCondDB": False  # if False, use SQLDDDB instead
        ,"mainSequence": [ "ProcessPhase/Init",
                           "ProcessPhase/Reco",
@@ -55,8 +55,11 @@ class Brunel(LHCbConfigurableUser):
         }
 
     def defineGeometry(self):
-        self.setOtherProp(LHCbApp(),"condDBtag") 
-        self.setOtherProp(LHCbApp(),"DDDBtag") 
+        # Prefer Brunel default over LHCbApp default if not set explicitly
+        self.setProp( "condDBtag", self.getProp("condDBtag") )
+        self.setProp( "DDDBtag", self.getProp("DDDBtag") )
+        # Delegate handling to LHCbApp configurable
+        self.setOtherProps(LHCbApp(),["condDBtag","DDDBtag"]) 
         if LHCbApp().getProp("DDDBtag").find("DC06") != -1 :
             ApplicationMgr().Dlls += [ "HepMCBack" ]
 

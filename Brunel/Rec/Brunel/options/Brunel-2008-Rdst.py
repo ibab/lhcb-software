@@ -1,14 +1,11 @@
 ##############################################################################
-# File for producing .rdst in DC06 production workflows.
+# File for producing .rdst from 2008 real data.
 # Syntax is:
-#   gaudirun.py Brunel-DC06Rdst.py <someDataFiles>.py
+#   gaudirun.py Brunel-2008-Rdst.py <someDataFiles>.py
 ##############################################################################
 
 from Brunel.Configuration import *
 
-Brunel().DDDBtag    = "DC06-default"
-Brunel().condDBtag  = "DC06-default"
-Brunel().inputType  = "DIGI"
 Brunel().outputType = "RDST"
 Brunel().noWarnings = True
 

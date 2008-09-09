@@ -1,19 +1,18 @@
 ##############################################################################
-# File for producing .rdst in DC06 production workflows.
+# File for running Brunel on MC data with default 2008 geometry, as defined in
+#                                              $DDDBROOT/options/lhcb-2008.py
 # Syntax is:
-#   gaudirun.py Brunel-DC06Rdst.py <someDataFiles>.py
+#   gaudirun.py Brunel-2008-MC.py <someDataFiles>.py
 ##############################################################################
 
 from Brunel.Configuration import *
 
-Brunel().DDDBtag    = "DC06-default"
-Brunel().condDBtag  = "DC06-default"
-Brunel().inputType  = "DIGI"
-Brunel().outputType = "RDST"
-Brunel().noWarnings = True
+Brunel().inputType    = "DIGI"
+Brunel().withMC       = True
 
 Brunel().applyConf()
 
+
 ##############################################################################
-# I/O datasets are defined in a separate file, see examples in DC06-Files.py
+# I/O datasets are defined in a separate file, see examples in 2008-Files.py
 ##############################################################################
