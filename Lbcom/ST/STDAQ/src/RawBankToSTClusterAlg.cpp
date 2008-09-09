@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.39 2008-09-05 18:43:15 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.40 2008-09-09 11:35:55 mneedham Exp $
 
 #include <algorithm>
 
@@ -293,9 +293,12 @@ double RawBankToSTClusterAlg::mean(const std::vector<SiADCWord>& adcValues) cons
 StatusCode RawBankToSTClusterAlg::finalize() {
 
   const double failed = counter("skipped Banks").flag();
-  const double processed = counter("# valid banks").flag();  
-  const double eff = 1.0 - (failed/processed); 
+  unsigned int processed = counter("# valid banks").flag();
 
+  double eff = 0.0; 
+  if (processed > 0u){ 
+    eff = 1.0 - (failed/double(processed)); 
+  }
   info() << "Successfully processed " << 100* eff << " %"  << endmsg;
     
   return STDecodingBaseAlg::finalize();

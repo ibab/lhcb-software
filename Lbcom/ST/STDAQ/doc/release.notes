@@ -4,6 +4,10 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2008-09-09 M Needham
+ - Make recovery mode default for cluster decoding
+ - Protect against zero banks processed 
+
 !=============================== STDAQ v3r11 2008-09-05 ======================
 ! 2008-09-05 M Needham
   - remove unused variable  

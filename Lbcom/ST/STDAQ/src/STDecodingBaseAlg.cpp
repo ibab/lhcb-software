@@ -1,4 +1,4 @@
-// $Id: STDecodingBaseAlg.cpp,v 1.17 2008-08-15 08:21:44 mneedham Exp $
+// $Id: STDecodingBaseAlg.cpp,v 1.18 2008-09-09 11:35:55 mneedham Exp $
 
 #include <algorithm>
 
@@ -51,7 +51,7 @@ m_bankTypeString(""){
  declareProperty("ErrorBank", m_errorBankString = "TTError"); 
  
  declareProperty("skipBanksWithErrors", m_skipErrors = false );
- declareProperty("recoverMode", m_recoverMode = false);
+ declareProperty("recoverMode", m_recoverMode = true);
  
  declareProperty("rawEventLocation",m_rawEventLocation = RawEventLocation::Default);
  declareProperty("forcedVersion", m_forcedVersion = -1);
