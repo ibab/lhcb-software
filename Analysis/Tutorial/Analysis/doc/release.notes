@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2008-09-10 - Patrick Koppenburg
+ - Change trigger includes
+
 !========================== Analysis v7r5 2008-08-12 ===================
 ! 2008-08-12 - Patrick Koppenburg
  - Fix a few typos. Tag as v7r5 to match instructions from wiki page.

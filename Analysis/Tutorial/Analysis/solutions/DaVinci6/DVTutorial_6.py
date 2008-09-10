@@ -13,8 +13,10 @@ from Configurables import CombineParticles, PhysDesktop
 from Configurables import LoKi__Hybrid__PlotTool as PlotTool 
 from Configurables import TutorialChecker
 
-importOptions( "$HLTSYSROOT/options/L0.opts" )
-importOptions( "$HLTSYSROOT/options/Hlt.opts" )
+importOptions( "$L0DUROOT/options/ReplaceL0DUBankWithEmulated.opts" )
+#
+importOptions( "$HLTCONFROOT/options/Hlt1.opts" )
+importOptions( "$HLTCONFROOT/options/Hlt2.opts" )
 importOptions( "$ANALYSISROOT/solutions/DaVinci4/DVTutorial_4b.py" )
 # B tagging options
 importOptions( "$FLAVOURTAGGINGROOT/options/BTaggingTool.opts" )
