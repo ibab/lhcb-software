@@ -3,6 +3,14 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+
+!========================== HltCommon v4r2 2008-09-10 ===================
+
+! 2008-09-10 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v4r2
+
+
 !2008-09-09 - Gerhard Raven
   - add algorithm which takes a list of algorithms, and uses their
     filterPassed result to create a decision
