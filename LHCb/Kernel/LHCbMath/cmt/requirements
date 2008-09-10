@@ -31,11 +31,11 @@ macro_append ROOT_linkopts " -lMathCore " \
 # ================= constituents: linker library ============================
 library             LHCbMathLib    ../src/*.cpp
                 
-application  TestPow   ../tests/pow.cpp     -check 
+application  TestPow -group=tests   ../tests/pow.cpp     -check 
 macro_append TestPow_dependencies " LHCbMathLib "
-application  TestBit   ../tests/bit.cpp     -check 
+application  TestBit -group=tests  ../tests/bit.cpp     -check 
 macro_append TestBit_dependencies " LHCbMathLib "
-application  TestDigit ../tests/digit.cpp   -check 
+application  TestDigit -group=tests ../tests/digit.cpp   -check 
 macro_append TestDigit_dependencies " LHCbMathLib "
 
 # ================= patterns ================================================
