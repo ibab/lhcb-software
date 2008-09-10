@@ -1,0 +1,382 @@
+# --> Including file '/build/cattanem/Boole_v16r2/BooleSys/tests/options/testBoole.py'
+ApplicationMgr    SUCCESS 
+====================================================================================================================================
+                                                   Welcome to Boole version v16r2
+                                          running on lxbuild120.cern.ch on Wed Sep 10 15:42:08 2008
+====================================================================================================================================
+ApplicationMgr       INFO Application Manager Configured successfully
+DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
+ToolSvc.CondDBE...   INFO Initializing...
+ToolSvc.CondDBE...   INFO Successfully initialized.
+DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
+DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
+EventPersistenc...   INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' ]
+RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
+RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
+RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
+Init                 INFO Member list: GaudiSequencer/InitBooleSeq, GaudiSequencer/InitDataSeq, GaudiSequencer/InitMUONSeq
+InitBooleSeq         INFO Member list: BooleInit
+BooleInit         SUCCESS ==================================================================
+BooleInit         SUCCESS Requested to process 0 events
+BooleInit         SUCCESS ==================================================================
+HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
+RootHistSvc          INFO Writing ROOT histograms to: UndefinedROOTOutputFileName
+HistogramPersis...   INFO Added successfully Conversion service:RootHistSvc
+HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v7r2/data/muonlow-G4.root as LowEnergy
+HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v7r2/data/muonflat-G4.root as MuonFlatSpillover
+InitDataSeq          INFO Member list: MergeEventAlg/SpilloverAlg
+SpilloverAlg         INFO Spillover events will be added to the main event in paths Prev PrevPrev Next
+ToolSvc.LumiTool     INFO BunchCrossRate  29.49
+ToolSvc.LumiTool     INFO Total X-section 102.4
+InitMUONSeq          INFO Member list: MuonBackground/MuonLowEnergy, MuonBackground/MuonFlatSpillover
+COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
+COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
+EventClockSvc.F...   INFO Event times generated from 0 with steps of 0
+RFileCnv             INFO opening Root file "/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v7r2/data/muonlow-G4.root" for reading
+RFileCnv             INFO opening Root file "/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v7r2/data/muonflat-G4.root" for reading
+DigiPrev2            INFO Member list: , with rootInTES 'Prev2/', with globalTimeOffset 50
+DigiPrev1            INFO Member list: , with rootInTES 'Prev1/', with globalTimeOffset 25
+Digi                 INFO Member list: GaudiSequencer/DigiVELOSeq, GaudiSequencer/DigiTTSeq, GaudiSequencer/DigiITSeq, GaudiSequencer/DigiOTSeq, GaudiSequencer/DigiRICHSeq, GaudiSequencer/DigiCALOSeq, GaudiSequencer/DigiMUONSeq, GaudiSequencer/DigiL0Seq
+DigiVELOSeq          INFO Member list: VeloSim, VeloSim/VeloPUSim, VeloDataProcessor, VeloClusterMaker, PrepareVeloRawBuffer
+VeloSim              INFO Probability to add noise to empty strips 0.00583881
+VeloPUSim            INFO Probability to add noise to empty strips 0.00583881
+DigiTTSeq            INFO Member list: MCSTDepositCreator/MCTTDepositCreator, MCSTDigitCreator/MCTTDigitCreator, STDigitCreator/TTDigitCreator, STClusterCreator/TTClusterCreator, STClusterKiller/TTClusterKiller, STClustersToRawBankAlg/createTTRawBuffer
+DigiITSeq            INFO Member list: MCSTDepositCreator/MCITDepositCreator, MCSTDigitCreator/MCITDigitCreator, STDigitCreator/ITDigitCreator, STClusterCreator/ITClusterCreator, STClusterKiller/ITClusterKiller, STClustersToRawBankAlg/createITRawBuffer
+DigiOTSeq            INFO Member list: MCOTDepositCreator, MCOTTimeCreator, OTFillRawBuffer
+ToolSvc.OTChann...   INFO Updating OT channel map for bank version 3
+DigiRICHSeq          INFO Member list: Rich::MC::Digi::Signal/RichPDSignal, Rich::MC::Digi::SimpleChargeSharing/RichChargeShare, Rich::MC::Digi::SummedDeposits/RichSummedDeposits, Rich::MC::Digi::DetailedFrontEndResponse/RichPDResponse, Rich::MC::Digi::MCRichDigitsToRawBufferAlg/RichFillRawBuffer
+DeRichSystem         INFO Update triggered for HPD numbering maps
+DeRichSystem         INFO Built mappings for  7 L1 and 196 HPDs in Rich1
+DeRichSystem         INFO Built mappings for  8 L1 and 288 HPDs in Rich2
+ParticlePropert...   INFO Opened particle properties file : /afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v7r2/data/ParticleTable.txt
+RichChargeShare      INFO Will add charge sharing at 2.5 % level
+ToolSvc.RichSma...   INFO Created active HPD channel list : # channels RICH(1/2) = 167776 / 246528
+RichPDResponse       INFO Time Calibration (Rich1/RICH2) = 10 6 
+RichFillRawBuffer    INFO Using RICH Level1 buffer format : 129
+DigiCALOSeq          INFO Member list: CaloSignalAlg/SpdSignal, CaloSignalAlg/PrsSignal, CaloSignalAlg/EcalSignal, CaloSignalAlg/HcalSignal, CaloDigitAlg/SpdDigit, CaloDigitAlg/PrsDigit, CaloDigitAlg/EcalDigit, CaloDigitAlg/HcalDigit, CaloFillPrsSpdRawBuffer, CaloFillRawBuffer/EcalFillRawBuffer, CaloFillRawBuffer/HcalFillRawBuffer
+SpdSignal            INFO Initialised. Store also previous BX. 
+PrsSignal            INFO Initialised. Store also previous BX. 
+EcalSignal           INFO Initialised. 
+HcalSignal           INFO Initialised. 
+SpdDigit             INFO Subtract 0.2000 of previous BX 
+SpdDigit             INFO ZSupThreshold 10
+PrsDigit             INFO Noise:  1.0 +  0.0 (coherent) counts.
+PrsDigit             INFO Gain error  1.0%
+PrsDigit             INFO Subtract 0.2000 of previous BX 
+PrsDigit             INFO ZSupThreshold 15
+EcalDigit            INFO Noise:  1.2 +  0.3 (coherent) counts.
+EcalDigit            INFO Gain error  1.0%
+EcalDigit            INFO Pedestal shift  0.60
+EcalDigit            INFO Trigger correction factor per area : 1 1.04 1.08 
+HcalDigit            INFO Noise:  1.2 +  0.3 (coherent) counts.
+HcalDigit            INFO Gain error  1.0%
+HcalDigit            INFO Pedestal shift  0.60
+HcalDigit            INFO Trigger correction factor per area : 1 1.05 
+CaloFillPrsSpdR...   INFO Data coding type 3
+EcalFillRawBuffer    INFO Processing 192 FE-Cards and 26 TELL1
+EcalFillRawBuffer    INFO Data coding type 2
+HcalFillRawBuffer    INFO Processing 54 FE-Cards and 8 TELL1
+HcalFillRawBuffer    INFO Data coding type 2
+DigiMUONSeq          INFO Member list: MuonDigitization, MuonDigitToRawBuffer
+MuonDigitization     INFO number of spillover events read from aux stream 3
+DigiL0Seq            INFO Member list: GaudiSequencer/L0SimulationSeq
+L0SimulationSeq      INFO Member list: PuVetoFillRawBuffer, GaudiSequencer/L0EmulatorSeq, L0CaloCandidatesFromRaw
+L0EmulatorSeq        INFO Member list: GaudiSequencer/L0ProcessorsSeq, L0DUAlg/L0DU
+L0ProcessorsSeq      INFO Member list: L0CaloAlg/L0Calo, L0MuonAlg/L0Muon, PuVetoAlg/L0PuVeto
+L0Calo               INFO 192 Ecal and 54 Hcal front end cards.
+ChronoStatSvc        INFO  Number of skipped events for MemStat-1
+L0Muon               INFO XML file = /afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v7r2/data/L0MuonKernel.xml
+L0Muon               INFO MuonTriggerUnit properties are:
+L0Muon               INFO  foiXSize = 4,5,0,2,4
+L0Muon               INFO  foiYSize = 0,0,0,1,1
+L0Muon               INFO  ignoreM1 = 0
+L0Muon               INFO  ignoreM2 = 0
+L0Muon               INFO  procVersion = 2
+L0Muon               INFO  ptParameters = 40.000000,7.000000
+L0MuonTrigger I...   INFO Time User   : Tot=  1.6  [s]                                             #=  1
+ToolSvc.L0DUCon...   INFO **** L0DU Configs loading : TCK = 0xFFFF
+ToolSvc.L0DUCon...   INFO Short description ::  TCK = 0xFFFF : Algorithm[1] Setting[0] lumi[2] - 2007 tuning - gain:Calo[20] : Muon[40]
+L0DU                 INFO The L0DUConfig (TCK=0xFFFF) have been succesfully loaded
+DigiNext1            INFO Member list: , with rootInTES 'Next1/', with globalTimeOffset -25
+DigiNext2            INFO Member list: , with rootInTES 'Next2/', with globalTimeOffset -50
+Trigger              INFO Member list: GaudiSequencer/TriggerL0Seq
+TriggerL0Seq         INFO Member list: L0Filter
+L0Filter             INFO Will require that any L0 channel(s) is passed
+Relations            INFO Member list: GaudiSequencer/RelationsVELOSeq, GaudiSequencer/RelationsTTSeq, GaudiSequencer/RelationsITSeq, GaudiSequencer/RelationsOTSeq, GaudiSequencer/RelationsTrSeq, GaudiSequencer/RelationsRICHSeq, GaudiSequencer/RelationsCALOSeq, GaudiSequencer/RelationsMUONSeq, GaudiSequencer/RelationsL0Seq
+RelationsVELOSeq     INFO Member list: DecodeVeloRawBuffer, VeloCluster2MCHitLinker, VeloCluster2MCParticleLinker
+RelationsTTSeq       INFO Member list: STDigit2MCHitLinker/TTDigitLinker, STCluster2MCHitLinker/TTClusterLinker, STCluster2MCParticleLinker/TTTruthLinker
+RelationsITSeq       INFO Member list: STDigit2MCHitLinker/ITDigitLinker, STCluster2MCHitLinker/ITClusterLinker, STCluster2MCParticleLinker/ITTruthLinker
+RelationsOTSeq       INFO Member list: OTMCDepositLinker, OTMCHitLinker, OTMCParticleLinker
+RelationsTrSeq       INFO Member list: BuildMCTrackInfo
+BuildMCTrackInfo     INFO Number TT layer 4
+BuildMCTrackInfo     INFO Number IT layer 48
+BuildMCTrackInfo     INFO Number OT layer 12
+RelationsRICHSeq     INFO Member list: Rich::MC::MCRichDigitSummaryAlg, Rich::MC::MCPartToMCRichTrackAlg, Rich::MC::MCRichHitToMCRichOpPhotAlg
+Rich::MC::MCRic...   INFO Will only store MCParticle references for main event
+RelationsCALOSeq     INFO Member list: CaloDigitsFromRaw/EcalFromRaw, CaloDigitsFromRaw/HcalFromRaw, CaloReCreateMCLinks, CaloDigitMCTruth/EcalDigitMCTruth, CaloDigitMCTruth/HcalDigitMCTruth
+RelationsMUONSeq     INFO Member list: MuonDigit2MCParticleAlg, MuonTileDigitInfo
+RelationsL0Seq       INFO Member list: L0CaloToMCParticleAsct, L0CaloToMCParticleAsct/L0CaloFullTruth
+Moni                 INFO Member list: GaudiSequencer/MoniVELOSeq, GaudiSequencer/MoniITSeq, GaudiSequencer/MoniTTSeq, GaudiSequencer/MoniOTSeq, GaudiSequencer/MoniRICHSeq, GaudiSequencer/MoniCALOSeq, GaudiSequencer/MoniMUONSeq, GaudiSequencer/MoniL0Seq, GaudiSequencer/MoniMCSeq
+MoniVELOSeq          INFO Member list: VeloSimMoni, VeloDigit2MCHitLinker, VeloDigiMoni, VeloRawClustersMoni
+MoniITSeq            INFO Member list: MCSTDepositMonitor/MCITDepositMonitor, MCSTDigitMonitor/MCITDigitMonitor, STDigitMonitor/ITDigitMonitor, STClusterMonitor/ITClusterMonitor, MCParticle2MCHitAlg/MCP2ITMCHitAlg, STEffChecker/ITEffChecker
+ITEffChecker.MC...   INFO MCParticle Momentum cut     : 1 GeV/c < P < 9.99999e+08 GeV/c
+ITEffChecker.MC...   INFO            Beta * gamma cut : 1 < beta*gamma
+ITEffChecker.MC...   INFO            Eta cut          : -9999 < P < 9999
+MoniTTSeq            INFO Member list: MCSTDepositMonitor/MCTTDepositMonitor, MCSTDigitMonitor/MCTTDigitMonitor, STDigitMonitor/TTDigitMonitor, STClusterMonitor/TTClusterMonitor, MCParticle2MCHitAlg/MCP2TTMCHitAlg, STEffChecker/TTEffChecker
+TTEffChecker.MC...   INFO MCParticle Momentum cut     : 1 GeV/c < P < 9.99999e+08 GeV/c
+TTEffChecker.MC...   INFO            Beta * gamma cut : 1 < beta*gamma
+TTEffChecker.MC...   INFO            Eta cut          : -9999 < P < 9999
+MoniOTSeq            INFO Member list: MCOTDepositMonitor
+MoniRICHSeq          INFO Member list: Rich::MC::Digi::DigitQC/RiDigitQC
+MoniCALOSeq          INFO Member list: CaloDigitChecker/SpdCheck, CaloDigitChecker/PrsCheck, CaloDigitChecker/EcalCheck, CaloDigitChecker/HcalCheck
+SpdCheck             INFO Monitoring Hits MC/Spd/Hits   MC Digit   MC/Spd/Digits   Digit   Raw/Spd/Digits, Histograms booked
+PrsCheck             INFO Monitoring Hits MC/Prs/Hits   MC Digit   MC/Prs/Digits   Digit   Raw/Prs/Digits, Histograms booked
+EcalCheck            INFO Monitoring Hits MC/Ecal/Hits   MC Digit   MC/Ecal/Digits   Digit   Raw/Ecal/Digits, Histograms booked
+HcalCheck            INFO Monitoring Hits MC/Hcal/Hits   MC Digit   MC/Hcal/Digits   Digit   Raw/Hcal/Digits, Histograms booked
+MoniMUONSeq          INFO Member list: MuonDigitChecker
+MoniL0Seq            INFO Member list: GaudiSequencer/L0MoniSeq
+L0MoniSeq            INFO Member list: L0CaloMonit, L0DUReportMonitor
+MoniMCSeq            INFO Member list: UnpackMCVertex/TestMCVertex, UnpackMCParticle/TestMCParticle, CompareMCParticle, CompareMCVertex
+Output               INFO Member list: 
+ApplicationMgr       INFO Application Manager Initialized successfully
+ApplicationMgr       INFO Application Manager Started successfully
+ApplicationMgr       INFO Application Manager Stopped successfully
+BooleInit         SUCCESS ==================================================================
+BooleInit         SUCCESS 0 events processed
+BooleInit         SUCCESS ==================================================================
+VeloSim              INFO Removed   nan% MCVeloFEs due to bad strips and   nan% as random removals
+VeloPUSim            INFO Removed   nan% MCVeloFEs due to bad strips and   nan% as random removals
+EcalDigit            INFO noise fit (outer area):
+EcalDigit            INFO   chisquare = 0/-6
+EcalDigit            INFO   amplitude for gaus #1 = 0 +- 1.41421 ( 0 )
+EcalDigit            INFO   amplitude for gaus #2 = 0 +- 1.41421 ( 0 )
+EcalDigit            INFO   amplitude for gaus #3 = 0 +- 1.41421 ( 0 )
+EcalDigit            INFO   amplitude for gaus #4 = 0 +- 1.41421 ( 0 )
+EcalDigit            INFO   amplitude for gaus #5 = 0 +- 1.41421 ( 0 )
+EcalDigit            INFO   amplitude for gaus #6 = 0 +- 1.41421 ( 0 )
+EcalDigit            INFO noise fit (middle area):
+EcalDigit            INFO   chisquare = 0/-6
+EcalDigit            INFO   amplitude for gaus #1 = 0 +- 1.41421 ( 0 )
+EcalDigit            INFO   amplitude for gaus #2 = 0 +- 1.41421 ( 0 )
+EcalDigit            INFO   amplitude for gaus #3 = 0 +- 1.41421 ( 0 )
+EcalDigit            INFO   amplitude for gaus #4 = 0 +- 1.41421 ( 0 )
+EcalDigit            INFO   amplitude for gaus #5 = 0 +- 1.41421 ( 0 )
+EcalDigit            INFO   amplitude for gaus #6 = 0 +- 1.41421 ( 0 )
+EcalDigit            INFO noise fit (inner area):
+EcalDigit            INFO   chisquare = 0/-5
+EcalDigit            INFO   amplitude for gaus #1 = 0 +- 1.41421 ( 0 )
+EcalDigit            INFO   amplitude for gaus #2 = 0 +- 1.41421 ( 0 )
+EcalDigit            INFO   amplitude for gaus #3 = 0 +- 1.41421 ( 0 )
+EcalDigit            INFO   amplitude for gaus #4 = 0 +- 1.41421 ( 0 )
+EcalDigit            INFO   amplitude for gaus #5 = 0 +- 1.41421 ( 0 )
+EcalDigit         SUCCESS Booked 3 Histogram(s) : 1D=3 
+EcalDigit         SUCCESS List of booked 1D histograms in directory         "EcalDigit" :-
+ | ID                        |   Title                                       |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |
+ | middle                    | "middle"                                      |    0    |          0 | 0          |          0 |          0 |
+ | inner                     | "inner"                                       |    0    |          0 | 0          |          0 |          0 |
+ | outer                     | "outer"                                       |    0    |          0 | 0          |          0 |          0 |
+L0Muon               INFO - ------------------------------------------------------------------
+L0Muon               INFO - ========> Final summary of the L0Muon trigger (emulator) <========
+L0Muon               INFO - Total number of events processed           :        0
+L0Muon               INFO - ------------------------------------------------------------------
+VeloSimMoni          INFO ------------------------------------------------------
+VeloSimMoni          INFO                 - VeloSimMoni table -                 
+VeloSimMoni          INFO ------------------------------------------------------
+VeloSimMoni          INFO | Number of MCVeloFEs/Event: 0 +/- 0
+VeloSimMoni          INFO | ==> No MCVeloFEs found! 
+VeloSimMoni          INFO ------------------------------------------------------
+VeloDigiMoni        ERROR  ==> Zero events processed! 
+VeloRawClusters...   INFO ======================================================
+VeloRawClusters...   INFO               - VeloClusterMoni table -               
+VeloRawClusters...   INFO ------------------------------------------------------
+VeloRawClusters...   INFO | Number of Clusters/Event: 0 +/- 0
+VeloRawClusters...   INFO | ==> No VeloClusters found! 
+VeloRawClusters...   INFO ======================================================
+ITEffChecker         INFO  -------Efficiency %--------- 
+ITEffChecker         INFO Station 1 Box 4 Layer1 eff 9999 +/- 9999
+ITEffChecker         INFO Station 1 Box 4 Layer2 eff 9999 +/- 9999
+ITEffChecker         INFO Station 1 Box 4 Layer3 eff 9999 +/- 9999
+ITEffChecker         INFO Station 1 Box 4 Layer4 eff 9999 +/- 9999
+ITEffChecker         INFO Station 1 Box 3 Layer1 eff 9999 +/- 9999
+ITEffChecker         INFO Station 1 Box 3 Layer2 eff 9999 +/- 9999
+ITEffChecker         INFO Station 1 Box 3 Layer3 eff 9999 +/- 9999
+ITEffChecker         INFO Station 1 Box 3 Layer4 eff 9999 +/- 9999
+ITEffChecker         INFO Station 1 Box 2 Layer1 eff 9999 +/- 9999
+ITEffChecker         INFO Station 1 Box 2 Layer2 eff 9999 +/- 9999
+ITEffChecker         INFO Station 1 Box 2 Layer3 eff 9999 +/- 9999
+ITEffChecker         INFO Station 1 Box 2 Layer4 eff 9999 +/- 9999
+ITEffChecker         INFO Station 1 Box 1 Layer1 eff 9999 +/- 9999
+ITEffChecker         INFO Station 1 Box 1 Layer2 eff 9999 +/- 9999
+ITEffChecker         INFO Station 1 Box 1 Layer3 eff 9999 +/- 9999
+ITEffChecker         INFO Station 1 Box 1 Layer4 eff 9999 +/- 9999
+ITEffChecker         INFO Station 2 Box 4 Layer1 eff 9999 +/- 9999
+ITEffChecker         INFO Station 2 Box 4 Layer2 eff 9999 +/- 9999
+ITEffChecker         INFO Station 2 Box 4 Layer3 eff 9999 +/- 9999
+ITEffChecker         INFO Station 2 Box 4 Layer4 eff 9999 +/- 9999
+ITEffChecker         INFO Station 2 Box 3 Layer1 eff 9999 +/- 9999
+ITEffChecker         INFO Station 2 Box 3 Layer2 eff 9999 +/- 9999
+ITEffChecker         INFO Station 2 Box 3 Layer3 eff 9999 +/- 9999
+ITEffChecker         INFO Station 2 Box 3 Layer4 eff 9999 +/- 9999
+ITEffChecker         INFO Station 2 Box 2 Layer1 eff 9999 +/- 9999
+ITEffChecker         INFO Station 2 Box 2 Layer2 eff 9999 +/- 9999
+ITEffChecker         INFO Station 2 Box 2 Layer3 eff 9999 +/- 9999
+ITEffChecker         INFO Station 2 Box 2 Layer4 eff 9999 +/- 9999
+ITEffChecker         INFO Station 2 Box 1 Layer1 eff 9999 +/- 9999
+ITEffChecker         INFO Station 2 Box 1 Layer2 eff 9999 +/- 9999
+ITEffChecker         INFO Station 2 Box 1 Layer3 eff 9999 +/- 9999
+ITEffChecker         INFO Station 2 Box 1 Layer4 eff 9999 +/- 9999
+ITEffChecker         INFO Station 3 Box 4 Layer1 eff 9999 +/- 9999
+ITEffChecker         INFO Station 3 Box 4 Layer2 eff 9999 +/- 9999
+ITEffChecker         INFO Station 3 Box 4 Layer3 eff 9999 +/- 9999
+ITEffChecker         INFO Station 3 Box 4 Layer4 eff 9999 +/- 9999
+ITEffChecker         INFO Station 3 Box 3 Layer1 eff 9999 +/- 9999
+ITEffChecker         INFO Station 3 Box 3 Layer2 eff 9999 +/- 9999
+ITEffChecker         INFO Station 3 Box 3 Layer3 eff 9999 +/- 9999
+ITEffChecker         INFO Station 3 Box 3 Layer4 eff 9999 +/- 9999
+ITEffChecker         INFO Station 3 Box 2 Layer1 eff 9999 +/- 9999
+ITEffChecker         INFO Station 3 Box 2 Layer2 eff 9999 +/- 9999
+ITEffChecker         INFO Station 3 Box 2 Layer3 eff 9999 +/- 9999
+ITEffChecker         INFO Station 3 Box 2 Layer4 eff 9999 +/- 9999
+ITEffChecker         INFO Station 3 Box 1 Layer1 eff 9999 +/- 9999
+ITEffChecker         INFO Station 3 Box 1 Layer2 eff 9999 +/- 9999
+ITEffChecker         INFO Station 3 Box 1 Layer3 eff 9999 +/- 9999
+ITEffChecker         INFO Station 3 Box 1 Layer4 eff 9999 +/- 9999
+ITEffChecker         INFO  -----------------------
+ITEffChecker      SUCCESS Booked 288 Histogram(s) : 1D=192 2D=96 
+TTEffChecker         INFO  -------Efficiency %--------- 
+TTEffChecker         INFO Station 1 Layer1 eff 9999 +/- 9999
+TTEffChecker         INFO Station 1 Layer2 eff 9999 +/- 9999
+TTEffChecker         INFO Station 2 Layer2 eff 9999 +/- 9999
+TTEffChecker         INFO Station 2 Layer1 eff 9999 +/- 9999
+TTEffChecker         INFO  -----------------------
+TTEffChecker      SUCCESS Booked 24 Histogram(s) : 1D=16 2D=8 
+MCOTDepositMonitorSUCCESS Booked 3 Histogram(s) : 1D=3 
+MCOTDepositMonitorSUCCESS List of booked 1D histograms in directory         "OT/MCOTDepositMonitor" :-
+ | ID                        |   Title                                       |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |
+ | 1                         | "Number of deposits"                          |    0    |          0 | 0          |          0 |          0 |
+ | 3                         | "Number of deposits per layer"                |    0    |          0 | 0          |          0 |          0 |
+ | 6                         | "Drift distance"                              |    0    |          0 | 0          |          0 |          0 |
+RiDigitQC            INFO ===============================================================================================
+RiDigitQC            INFO                             RICH Digitisation Simulation Summary
+RiDigitQC            INFO -----------------------------------------------------------------------------------------------
+RiDigitQC            INFO  Rich1 : Av. total  hit occupancy         0.00 +- 0.00 hits/event
+RiDigitQC            INFO        : Av. signal hit occupancy         0.00 +- 0.00 hits/event
+RiDigitQC            INFO        : Av. HPD hit occupancy            0.00 +- 0.00 hits/event
+RiDigitQC            INFO        :   Min Av. HPD occ. hID=     0    0.00 +- 0.00 hits/event
+RiDigitQC            INFO        :   Max Av. HPD occ. hID=     0    0.00 +- 0.00 hits/event
+RiDigitQC            INFO        : % overall background hits        0.00 +- 0.00 % 
+RiDigitQC            INFO        :   % rayleigh scattered hits      0.00 +- 0.00 % 
+RiDigitQC            INFO        :   % charged track on HPD hits    0.00 +- 0.00 % 
+RiDigitQC            INFO        :   % gas quartz window CK hits    0.00 +- 0.00 % 
+RiDigitQC            INFO        :   % hpd quartz window CK hits    0.00 +- 0.00 % 
+RiDigitQC            INFO        :   % nitrogen CK hits             0.00 +- 0.00 % 
+RiDigitQC            INFO        :   % aerogel filter CK hits       0.00 +- 0.00 % 
+RiDigitQC            INFO        :   % silicon back-scatter hits    0.00 +- 0.00 % 
+RiDigitQC            INFO        :   % internal reflection hits     0.00 +- 0.00 % 
+RiDigitQC            INFO        :   % silicon charge share hits    0.00 +- 0.00 % 
+RiDigitQC            INFO -----------------------------------------------------------------------------------------------
+RiDigitQC            INFO  Rich2 : Av. total  hit occupancy         0.00 +- 0.00 hits/event
+RiDigitQC            INFO        : Av. signal hit occupancy         0.00 +- 0.00 hits/event
+RiDigitQC            INFO        : Av. HPD hit occupancy            0.00 +- 0.00 hits/event
+RiDigitQC            INFO        :   Min Av. HPD occ. hID=     0    0.00 +- 0.00 hits/event
+RiDigitQC            INFO        :   Max Av. HPD occ. hID=     0    0.00 +- 0.00 hits/event
+RiDigitQC            INFO        : % overall background hits        0.00 +- 0.00 % 
+RiDigitQC            INFO        :   % rayleigh scattered hits      0.00 +- 0.00 % 
+RiDigitQC            INFO        :   % charged track on HPD hits    0.00 +- 0.00 % 
+RiDigitQC            INFO        :   % gas quartz window CK hits    0.00 +- 0.00 % 
+RiDigitQC            INFO        :   % hpd quartz window CK hits    0.00 +- 0.00 % 
+RiDigitQC            INFO        :   % nitrogen CK hits             0.00 +- 0.00 % 
+RiDigitQC            INFO        :   % aerogel filter CK hits       0.00 +- 0.00 % 
+RiDigitQC            INFO        :   % silicon back-scatter hits    0.00 +- 0.00 % 
+RiDigitQC            INFO        :   % internal reflection hits     0.00 +- 0.00 % 
+RiDigitQC            INFO        :   % silicon charge share hits    0.00 +- 0.00 % 
+RiDigitQC            INFO ===============================================================================================
+MuonDigitChecker     INFO -----------------------------------------------------------------
+MuonDigitChecker     INFO        Muon Monitoring Table 
+MuonDigitChecker     INFO -----------------------------------------------------------------
+MuonDigitChecker     INFO -----------------------------------------------------------------
+MuonDigitChecker     INFO     Digi Information     
+MuonDigitChecker     INFO -----------------------------------------------------------------
+MuonDigitChecker     INFO -----------------------------------------------------------------
+MuonDigitChecker     INFO -----   Container: Geant------------------------
+MuonDigitChecker     INFO -----------------------------------------------------------------
+MuonDigitChecker     INFO    M1     M2     M3     M4     M5 
+MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.000   R1
+MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.000   R2
+MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.000   R3
+MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.000   R4
+MuonDigitChecker     INFO -----------------------------------------------------------------
+MuonDigitChecker     INFO -----   Container: FlastSpillOver------------------------
+MuonDigitChecker     INFO -----------------------------------------------------------------
+MuonDigitChecker     INFO    M1     M2     M3     M4     M5 
+MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.000   R1
+MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.000   R2
+MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.000   R3
+MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.000   R4
+MuonDigitChecker     INFO -----------------------------------------------------------------
+MuonDigitChecker     INFO -----   Container: Low Energy Background------------------------
+MuonDigitChecker     INFO -----------------------------------------------------------------
+MuonDigitChecker     INFO    M1     M2     M3     M4     M5 
+MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.000   R1
+MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.000   R2
+MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.000   R3
+MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.000   R4
+MuonDigitChecker     INFO -----------------------------------------------------------------
+MuonDigitChecker     INFO -----   Container: Chamber Noise------------------------
+MuonDigitChecker     INFO -----------------------------------------------------------------
+MuonDigitChecker     INFO    M1     M2     M3     M4     M5 
+MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.000   R1
+MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.000   R2
+MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.000   R3
+MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.000   R4
+MuonDigitChecker     INFO -----------------------------------------------------------------
+MuonDigitChecker     INFO -----   Container: Crosstalk------------------------
+MuonDigitChecker     INFO -----------------------------------------------------------------
+MuonDigitChecker     INFO    M1     M2     M3     M4     M5 
+MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.000   R1
+MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.000   R2
+MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.000   R3
+MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.000   R4
+MuonDigitChecker     INFO -----------------------------------------------------------------
+MuonDigitChecker     INFO -----   Container: Electronic Noise------------------------
+MuonDigitChecker     INFO -----------------------------------------------------------------
+MuonDigitChecker     INFO    M1     M2     M3     M4     M5 
+MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.000   R1
+MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.000   R2
+MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.000   R3
+MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.000   R4
+L0CaloMonit          INFO Number of events 0
+L0CaloMonit          INFO Number of useful events (Odin bank decoded) 0
+L0CaloMonit       SUCCESS Booked 12 Histogram(s) : 1D=7 2D=5 
+L0CaloMonit       SUCCESS List of booked 1D histograms in directory         "L0CaloMonit" :-
+ | ID                        |   Title                                       |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |
+ | EtPil                     | "Et Pi0 Local "                               |    0    |          0 | 0          |          0 |          0 |
+ | EtPho                     | "Et photon "                                  |    0    |          0 | 0          |          0 |          0 |
+ | SumEt                     | "Sum Et "                                     |    0    |          0 | 0          |          0 |          0 |
+ | EtEle                     | "Et electron "                                |    0    |          0 | 0          |          0 |          0 |
+ | EtHad                     | "Et hadron "                                  |    0    |          0 | 0          |          0 |          0 |
+ | SpdMult                   | "Spd Mult "                                   |    0    |          0 | 0          |          0 |          0 |
+ | EtPig                     | "Et Pi0 Global "                              |    0    |          0 | 0          |          0 |          0 |
+L0CaloMonit       SUCCESS List of booked 2D histograms in directory         "L0CaloMonit" :-
+ ID=EcalMapEle                 "Electron Ecal map"                              Ents/All=    0/0    <X>/sX=0/0,<Y>/sY=0/0
+ ID=HcalMapHad                 "Hadron Hcal map"                                Ents/All=    0/0    <X>/sX=0/0,<Y>/sY=0/0
+ ID=EcalMapPig                 "Pi0Global Ecal map"                             Ents/All=    0/0    <X>/sX=0/0,<Y>/sY=0/0
+ ID=EcalMapPil                 "Pi0Local Ecal map"                              Ents/All=    0/0    <X>/sX=0/0,<Y>/sY=0/0
+ ID=EcalMapPho                 "Photon Ecal map"                                Ents/All=    0/0    <X>/sX=0/0,<Y>/sY=0/0
+L0DUReportMonitor    INFO ======================================================================== 
+L0DUReportMonitor    INFO  L0DUReport Monitoring ran on 0 Configuration(s) 
+L0DUReportMonitor    INFO ======================================================================== 
+L0DUReportMonitor    INFO  
+RootHistSvc       WARNING no ROOT output file name, Histograms cannot be persistified
+EventLoopMgr         INFO Histograms converted successfully according to request.
+ToolSvc              INFO Removing all tools created by ToolSvc
+DataOnDemandSvc      INFO  #Incidents: Alg/Node/All: 0/0/0 Algorithms: Time User   : Tot=    0 [us]                                             #=  0
+*****Chrono*****     INFO ****************************************************************************************************
+*****Chrono*****     INFO  The Final CPU consumption ( Chrono ) Table (ordered)
+*****Chrono*****     INFO ****************************************************************************************************
+L0MuonTrigger I...   INFO Time User   : Tot=  1.6  [s]                                             #=  1
+ChronoStatSvc        INFO Time User   : Tot= 2.63  [s]                                             #=  1
+*****Chrono*****     INFO ****************************************************************************************************
+ChronoStatSvc.f...   INFO  Service finalized succesfully 
+ApplicationMgr       INFO Application Manager Finalized successfully
+ApplicationMgr       INFO Application Manager Terminated successfully
