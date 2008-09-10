@@ -1,4 +1,4 @@
-// $Id: L0DUReportMonitor.cpp,v 1.16 2008-08-29 18:51:49 odescham Exp $
+// $Id: L0DUReportMonitor.cpp,v 1.17 2008-09-10 16:28:53 odescham Exp $
 // Include files 
 #include <cmath>
 // from Gaudi
@@ -290,6 +290,10 @@ StatusCode L0DUReportMonitor::execute() {
     for(LHCb::L0DUElementaryCondition::Map::iterator it = conditions.begin();it!=conditions.end();it++){
       int id = ((*it).second)->id() ;
       std::string name = (*it).first;
+
+
+
+      // detail per BX slot
       if( report->conditionValue( id ) ){
         plot1D( (double) id , base.str() + "/L0Conditions/Counters/1" ,ecName.str() + " - BX=T0", -1. ,(double) ecBin  , ecBin+1);
         m_condSeq[name] |=  (1 << 2);
@@ -321,6 +325,17 @@ StatusCode L0DUReportMonitor::execute() {
               , "Decision sequence over 5 BX for -" + name + "- Elementary Condition (TCK " + ttck.str() +")  - LSB = Prev2"    
               , 0. , 32. , 32); 
       
+
+      // timing summary
+
+      for(int slot = -2 ; slot <=2 ; slot++){
+        int dec =   report->conditionValue( id, slot ) ;
+        plot2D( (double) slot , (double) id 
+                ,  base.str() + "/L0Conditions/Timing/1" 
+                , "value(BX, L0Condition)" 
+                , -2.5  ,2.5 , 0. , (double) ecBin, 5, ecBin, dec);
+      }
+
       if( ecBin <= 1)continue;
     
       
@@ -376,6 +391,7 @@ StatusCode L0DUReportMonitor::execute() {
       int id = ((*it).second)->id() ;
       std::string name = (*it).first;
 
+      // detail per slot
       if( report->channelDecision( id ) ){
         plot1D( (double) id , base.str() + "/L0Channels/Counters/1" , tcName.str()+ " - BX=T0"    , -1. ,(double) cBin  , cBin+1);
         m_chanSeq[name] |=  (1 << 2);
@@ -411,6 +427,17 @@ StatusCode L0DUReportMonitor::execute() {
       xid << id+1;
       plot1D( m_chanSeq[name] , base.str() + "/L0Channels/Sequence/" + xid.str() 
               , "Decision sequence over 5 BX for -" + name + "- channel (TCK " + ttck.str() +") - LSB = Prev2", 0. , 32., 32);
+
+      // Timing summary
+      for(int slot = -2 ; slot <=2 ; slot++){
+        int dec =  report->channelDecision( id , slot);
+        plot2D( (double) slot , (double) id 
+                       ,  base.str() + "/L0Channels/Timing/1" 
+                       , "Decision(BX, L0Channel)" 
+                       , -2.5  ,2.5 , 0. , (double) cBin, 5, cBin, dec);
+      }
+
+
       
       if(cBin <= 1)continue;
 
@@ -463,6 +490,10 @@ StatusCode L0DUReportMonitor::execute() {
     for(LHCb::L0DUTrigger::Map::iterator it = triggers.begin();it!=triggers.end();it++){
       std::string name = (*it).first;
       int id = (*it).second->id();
+
+
+      
+      // detail per BX slot
       if( report->triggerDecisionByName( name ) ){
         plot1D( (double) id , base.str() + "/L0Triggers/Counters/1" , tName.str()+ " - BX=T0"    , -1. ,(double) tBin  , tBin+1);
         m_trigSeq[name] |=  (1 << 2);
@@ -496,6 +527,16 @@ StatusCode L0DUReportMonitor::execute() {
       xid << id+1;
       plot1D( m_trigSeq[name] , base.str() + "/L0Triggers/Sequence/" + xid.str() 
               , "Decision sequence over 5 BX for -" + name + "- trigger (TCK " + ttck.str() +") - LSB = Prev2", 0. , 32., 32);
+
+      // timing summary
+      for(int slot = -2 ; slot <=2 ; slot++){
+        int dec =   report->triggerDecisionByName( name , slot);
+        plot2D( (double) slot , (double) id 
+                       ,  base.str() + "/L0Triggers/Timing/1" 
+                , "decision(BX, L0Trigger)" 
+                , -2.5  , 2.5 , 0. , (double) tBin, 5, tBin, dec);
+      }
+
       
       if(tBin <= 1)continue;
 
@@ -545,6 +586,16 @@ StatusCode L0DUReportMonitor::execute() {
     std::stringstream seqName("");
     seqName << "L0 Decision sequence over 5 BX (TCK = " << ttck.str() << ") - LSB = Prev2";
     plot1D( (double) m_chanSeq["Global"] , base.str() + "/L0Decision/Sequence/1" , seqName.str(), 0 ,32  , 32);
+
+
+    // Timing summary
+    for(int slot = -2 ; slot <=2 ; slot++){
+      int dec =  report->decisionFromSummary( slot );
+      plot1D( (double) slot ,  base.str() + "/L0Decision/Timing/1" 
+              , "decision(BX)", -2.5  ,2.5 , 5 , dec);
+    }
+
+
   }  
   return StatusCode::SUCCESS;
 }
