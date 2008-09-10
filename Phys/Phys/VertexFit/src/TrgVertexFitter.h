@@ -1,4 +1,4 @@
-// $Id: TrgVertexFitter.h,v 1.7 2007-10-11 17:11:40 pkoppenb Exp $
+// $Id: TrgVertexFitter.h,v 1.8 2008-09-10 15:10:38 pkoppenb Exp $
 #ifndef TRGVERTEXFITTER_H 
 #define TRGVERTEXFITTER_H 1
 
@@ -84,7 +84,7 @@ private:
   bool m_useDaughters;
   
   int m_photonID; ///< Photon particle ID
-
+  int m_pi0ID; /// neutral pion ID
   IParticleStuffer* m_stuffer ; ///< Particle stuffer
 
   double m_epsilon ; ///< smallest acceptable value for doubles
