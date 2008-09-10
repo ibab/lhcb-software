@@ -4,6 +4,8 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+!========================== HltLuminosity v2r1 2008-09-10 ===================
+
 ! 2008-08-29 - Jaap Panman
  - LumiHistMaker: set bins and thresholds by options
  - also make a binary histogram
