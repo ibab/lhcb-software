@@ -23,7 +23,7 @@ use HltRecChecker	v1r7	Hlt   # Jose Angel Hernando-Morata
 use HltGlobalMonitor	v1r2	Hlt   # Bruno de Paula
 use HltLuminosity       v2r1    Hlt   # Jaap Panman
 
-use HltRawData          v1r2    Hlt   # Tomasz Skwarnicki
+use HltRawData          v1r3    Hlt   # Tomasz Skwarnicki
 
 # And now for something completely different
 use HltPython	        v1r9    Hlt   # Jose Angel Hernando-Morata
