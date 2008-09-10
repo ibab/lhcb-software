@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.h,v 1.14 2008-07-17 09:30:21 wouter Exp $
+// $Id: AlignmentElement.h,v 1.15 2008-09-10 12:31:31 wouter Exp $
 #ifndef TALIGNMENT_ALIGNMENTELEMENT_H
 #define TALIGNMENT_ALIGNMENTELEMENT_H 1
 
@@ -163,6 +163,8 @@ public:
     return m_activeParOffset >=0 ? ( (tmp = m_dofMask.activeParIndex(ipar))>=0 ? (tmp + m_activeParOffset) : -1) : -1 ; 
   }
  
+  const ElementContainer& detelements() const { return m_elements ; }
+
 private:
   
   typedef std::vector<const DetectorElement*>::const_iterator ElemIter;
