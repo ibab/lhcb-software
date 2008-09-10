@@ -92,7 +92,8 @@ namespace Al
     if (!m_constrainttool) return Error("==> Failed to retrieve constraint tool!", StatusCode::FAILURE);
     
     //Get matrix solver tool
-    m_matrixSolverTool = tool<IAlignSolvTool>(m_matrixSolverToolName, "MatrixSolver", this);
+    //m_matrixSolverTool = tool<IAlignSolvTool>(m_matrixSolverToolName, "MatrixSolver", this);
+    m_matrixSolverTool = tool<IAlignSolvTool>(m_matrixSolverToolName, this);
     if (!m_matrixSolverTool) return Error("==> Failed to retrieve matrix solver tool", StatusCode::FAILURE);
 
     return sc ;
