@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.389 2008-09-09 14:25:18 jpalac Exp $
+# $Id: requirements,v 1.390 2008-09-10 14:18:52 jpalac Exp $
 # Created    : 07/02/2002
 # Maintainer : J. Palacios
 #
@@ -37,7 +37,7 @@ use LinkerInstances    v*    Event
 use SimComponents      v*    Sim            -no_auto_imports
 
 #-- Hlt
-#use HltSys      v*
+use HltSys      v*
 
 #-- Lbcom
 use LbcomSys    v*
