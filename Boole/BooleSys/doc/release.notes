@@ -6,7 +6,7 @@ Purpose: LHCb Digitization program
 ! 2008-09-10 - Marco Cattaneo
  - Add a qmtest that tests the initialisation of Boole, used by Dirac to test
    the installation. Invoked with:
-   cmt TestPackage SAM
+   cmt TestPackage sam
 
 </PRE><H1><A NAME=v16r2>2008-09-09 Boole v16r2</A></H1><PRE>
 This version uses projects Gaudi v20r2, LHCb v25r1, Lbcom v6r22
