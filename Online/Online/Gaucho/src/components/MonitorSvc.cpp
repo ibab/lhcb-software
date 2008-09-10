@@ -205,7 +205,8 @@ void MonitorSvc::declareInfo(const std::string& name, const int&  var,
       }
       msg << MSG::DEBUG << "Adding Counter to MonRate"<< newName << ", with description: " << desc << endreq; 
       
-      m_monRate->addCounter(newName, desc, (double&) var);
+      //m_monRate->addCounter(newName, desc, (double&) var);
+      m_monRate->addCounter(newName, desc, var);
     }
     else msg << MSG::INFO << "Counter "<< newName << " can not be declared because MonRate process is disable." << endreq; 
     return;
@@ -302,7 +303,7 @@ void MonitorSvc::declareInfo(const std::string& name, const double& var,
         msg << MSG::DEBUG << "Declaring MonRate " << endreq; 
         if (!registerName("monRate", this)) return;
         msg << MSG::DEBUG << "Setting comments in MonRate " << endreq; 
-        m_monRate->setComments("My name is MonRate. Nice to meet you !!");
+        m_monRate->setComments("MonRate !!");
         msg << MSG::DEBUG << "Registering MonRate " << endreq; 
         std::pair<std::string, std::string> dimSvcName = registerDimSvc("monRate", "MonR/", this, false);
         if (dimSvcName.second.compare("") == 0) return;

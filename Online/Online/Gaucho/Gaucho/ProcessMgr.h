@@ -37,7 +37,7 @@ public:
   bool isAdder() {return m_isAdder;}
   int refreshTime(){return m_refreshTime;}
   
-  bool withPartitionName() {return m_withPartitionName;}
+  bool isMonitoringFarm() {return m_monitoringFarm;}
   
   std::string name() {return m_name;};
   IMessageSvc* msgSvc() {return m_msgSvc;};  
@@ -50,7 +50,7 @@ public:
   void createTimerProcess();
   void updateMap(); //this method update data when we dont have the ServerMap 
 
-  void setPartVector(const std::vector<std::string> &partName) {m_partName = partName; m_withPartitionName = true;}
+  void setPartVector(const std::vector<std::string> &partName) {m_partName = partName; m_monitoringFarm = true;}
   void setTaskVector(const std::vector<std::string> &taskName) {m_taskName = taskName;}
   void setSubFarmVector(const std::vector<std::string> &subfarmName) {m_subfarmName = subfarmName;}
   void setAlgorithmVector(const std::vector<std::string> &algorithmName) {m_algorithmName = algorithmName;}
@@ -84,7 +84,7 @@ protected:
   int *m_pFileSize;
   IGauchoMonitorSvc* m_pGauchoMonitorSvc; ///< Online Gaucho Monitoring Service
   
-  bool m_withPartitionName;
+  bool m_monitoringFarm;
   std::vector<std::string> m_partName;
   std::vector<std::string> m_taskName;
   std::vector<std::string> m_subfarmName;

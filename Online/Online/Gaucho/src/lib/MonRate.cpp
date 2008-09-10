@@ -47,7 +47,22 @@ void MonRate::save(boost::archive::binary_oarchive & ar, const unsigned int vers
     msg <<MSG::INFO<<"bin[7]=" << (*m_deltaT) << ", deltaT" << endreq;*/
     int i = 8;
     for (m_counterMapIt = m_counterMap.begin(); m_counterMapIt != m_counterMap.end(); m_counterMapIt++) {
-      m_profile->Fill((double)i - 0.5, (double)(*(m_counterMapIt->second.first)), 1.00);
+        
+      if (m_counterMapIt->second.second.first.compare("int") ==0 ){
+        msg <<MSG::DEBUG<<"Counter :" << m_counterMapIt->first << " is int !! "<< endreq;
+        m_profile->Fill((double)i - 0.5, (*(int*)(m_counterMapIt->second.second.second)), 1.00);
+      } 
+      else if (m_counterMapIt->second.second.first.compare("double") ==0 ){
+        msg <<MSG::DEBUG<<"Counter :" << m_counterMapIt->first << " is double !! "<< endreq;
+        m_profile->Fill((double)i - 0.5, (*(double*)(m_counterMapIt->second.second.second)), 1.00);
+      } 
+      else if (m_counterMapIt->second.second.first.compare("long") ==0 ){
+        msg <<MSG::DEBUG<<"Counter :" << m_counterMapIt->first << " is long !! "<< endreq;
+        m_profile->Fill((double)i - 0.5, (*(long*)(m_counterMapIt->second.second.second)), 1.00);
+      } 
+      else {
+        msg <<MSG::ERROR<<"Incompatible counter type for MonRate.." << endreq;
+      }
 //       msg <<MSG::INFO<<"bin [" << i << "]="<< (double)(*(m_counterMapIt->second.first)) << endreq;
       i++;
     }
@@ -66,7 +81,7 @@ void MonRate::save(boost::archive::binary_oarchive & ar, const unsigned int vers
     i = 8;
     for (m_counterMapIt = m_counterMap.begin(); m_counterMapIt != m_counterMap.end(); m_counterMapIt++) {
       //msg <<MSG::INFO<<"description: " << (*(m_counterMapIt->second.second)).c_str() << endreq;
-      m_profile->GetXaxis()->SetBinLabel(i, (*(m_counterMapIt->second.second)).c_str());
+      m_profile->GetXaxis()->SetBinLabel(i, (*(m_counterMapIt->second.first)).c_str());
       i++;
     }
     for (int j = 7+m_numCounters; j < 7+m_maxNumCounters; j++) {

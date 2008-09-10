@@ -28,8 +28,8 @@ BaseServiceMap::~BaseServiceMap() {
 
 void BaseServiceMap::removeMap() {
   MsgStream msg(m_processMgr->msgSvc(), name());
-  msg << MSG::DEBUG<< "***************************************************************" << endreq;
-  msg << MSG::INFO << " Removing Servers from Maps because the Process was Stoped" << endreq;
+  msg << MSG::DEBUG << "***************************************************************" << endreq;
+  msg << MSG::INFO  << " Removing Servers from Maps because the Process was Stoped"      << endreq;
   msg << MSG::DEBUG << "***************************************************************" << endreq;
   std::map<std::string, bool, std::less<std::string> >::iterator svrMapIt;
   for (svrMapIt=m_serverMap.begin() ; svrMapIt != m_serverMap.end(); ++svrMapIt){

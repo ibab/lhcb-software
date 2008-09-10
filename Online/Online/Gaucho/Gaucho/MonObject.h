@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/Gaucho/MonObject.h,v 1.13 2008-09-09 12:05:52 evh Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/Gaucho/MonObject.h,v 1.14 2008-09-10 11:48:56 evh Exp $
 #ifndef GAUCHO_MONOBJECT_H
 #define GAUCHO_MONOBJECT_H 1
 

@@ -85,17 +85,17 @@ void MonProfile::load2(boost::archive::binary_iarchive  & ar){
     ar & binEntries[i];
   }
 
-  msg <<MSG::DEBUG<<"before binLabelX" << endreq;
+  //msg <<MSG::DEBUG<<"before binLabelX" << endreq;
   if (bBinLabelX){
     //if (binLabelX==0) binLabelX = new std::string[(nbinsx+1)];
-    msg <<MSG::DEBUG<<"binLabelX clear" << endreq;
+    //msg <<MSG::DEBUG<<"binLabelX clear" << endreq;
     binLabelX.clear();
 
     for (int i = 1; i < (nbinsx+1) ; ++i){
       //ar & binLabelX[i];
       std::string labelX;
       ar & labelX;
-      msg <<MSG::DEBUG<<"binLabelX[" << i << "]" << labelX << endreq;
+      //msg <<MSG::DEBUG<<"binLabelX[" << i << "]" << labelX << endreq;
       binLabelX.push_back(labelX);
     }
   }
@@ -113,14 +113,14 @@ void MonProfile::load2(boost::archive::binary_iarchive  & ar){
 
   ar & m_fSumSize;
 
-  msg <<MSG::DEBUG<<"m_fSumSize" << m_fSumSize << endreq;
+  //msg <<MSG::DEBUG<<"m_fSumSize" << m_fSumSize << endreq;
 
   if (m_fSumw2==0) m_fSumw2 = new double[m_fSumSize];
   for (int i=0 ; i < m_fSumSize; ++i) {
     ar & m_fSumw2[i];
   }
 
-  msg <<MSG::DEBUG<<"is Loaded" << endreq;
+  //msg <<MSG::DEBUG<<"is Loaded" << endreq;
 
   isLoaded = true;
 
@@ -548,7 +548,7 @@ void MonProfile::print(){
   msg <<MSG::INFO<<"*************************************"<<endreq;
   msg <<MSG::INFO<<"BinContents:"<<endreq;
   for (int i = 0; i < (nbinsx+2) ; ++i){
-    msg <<binCont[i]<<" ";
+    msg << (int) binCont[i]<<" ";
   }
   msg << endreq;
   msg <<MSG::INFO<<"*************************************"<<endreq;

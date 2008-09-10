@@ -10,7 +10,7 @@
 ProcessMgr::ProcessMgr(IMessageSvc* msgSvc, Interactor *service, const int &refreshTime):m_name("ProcessMgr"), m_msgSvc(msgSvc), m_service(service), m_refreshTime(refreshTime)
 {
   m_isAdder = false;
-  m_withPartitionName = false;
+  m_monitoringFarm = false;
 }
 
 ProcessMgr::~ProcessMgr() {
@@ -113,7 +113,7 @@ void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> 
       else msg << MSG::DEBUG << "subfarmName OK" << endreq;
     }
     else {
-      if (m_withPartitionName) {
+      if (m_monitoringFarm) {
         if (serviceName.find(m_nodeName) == std::string::npos) continue;
       }
       else {
@@ -145,11 +145,11 @@ void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> 
     std::string task;
     std::string part;
     int index=2;
-    if (m_withPartitionName) {
+    if (m_monitoringFarm) {
       part = Misc::splitString(utgid, "_")[0];
       task = Misc::splitString(utgid, "_")[2];
     }
-    else{
+    else {
       task = Misc::splitString(utgid, "_")[1];
       // we don't do nothing with Savers
       if ((task.compare("Saver")==0)||(task.compare("SAVER")==0)) continue; 
@@ -287,7 +287,7 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
     std::string nodeName;
     std::string taskName;
     
-    if (m_withPartitionName){
+    if (m_monitoringFarm) { // the this is a Saver because in the case of Adders it is false
       std::size_t third_us = (*serverListTotIt).find("_", second_us + 1);
       if (third_us == std::string::npos) continue;
       
@@ -295,7 +295,7 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
       nodeName = (*serverListTotIt).substr(first_us + 1, second_us - first_us - 1);
       taskName = (*serverListTotIt).substr(second_us + 1, third_us - second_us - 1);
       if ((taskName.compare("Saver")==0)||(taskName.compare("SAVER")==0)||(taskName.compare("Adder")==0)||(taskName.compare("ADDER")==0)) {
-        msg << MSG::DEBUG << "refused because we don't save ADDERS nor save SAVERS. "<< endreq;    
+        msg << MSG::DEBUG << "refused because we don't save ADDERS nor save SAVERS in Monitoring Farm. "<< endreq;    
         continue; // we don't do nothing with Savers
       }
       if (nodeName.size() !=  m_nodeName.size()) { // If nodeName have smaller size 

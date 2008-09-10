@@ -7,8 +7,10 @@
 class MonRate: public MonProfile {
 
 protected:
-  std::map<const std::string, std::pair<double*, std::string*>, std::less<std::string> > m_counterMap;
-  std::map<const std::string, std::pair<double*, std::string*>, std::less<std::string> >::iterator m_counterMapIt;
+//  std::map<const std::string, std::pair<void*, std::string*>, std::less<std::string> > m_counterMap;
+//  std::map<const std::string, std::pair<void*, std::string*>, std::less<std::string> >::iterator m_counterMapIt;
+  std::map<const std::string, std::pair<std::string*, std::pair<std::string, void*> >, std::less<std::string> > m_counterMap;
+  std::map<const std::string, std::pair<std::string*, std::pair<std::string, void*> >, std::less<std::string> >::iterator m_counterMapIt;
   
   int    *m_runNumber;       // Maybe we have to use double
   int    *m_cycleNumber;
@@ -34,7 +36,23 @@ public:
   void addCounter(const std::string& countName, const std::string& countDescription, const double& count) {
     
     std::string* descr = new std::string(countDescription);
-    m_counterMap[countName] = std::pair<double*, std::string*> (const_cast<double *>(&count), descr);
+    //m_counterMap[countName] = std::pair<void*, std::string*> ((void*) const_cast<double *>(&count), descr);
+    m_counterMap[countName] = std::pair<std::string*, std::pair<std::string, void*> > (descr, std::pair<std::string, void*> ("double", (void*) const_cast<double *>(&count)));
+  }
+  
+  void addCounter(const std::string& countName, const std::string& countDescription, const int& count) {
+    
+    std::string* descr = new std::string(countDescription);
+    //m_counterMap[countName] = std::pair<void*, std::string*> ((void*) (const_cast<int *>(&count)), descr);
+//    m_counterMap[countName] = std::pair<std::string*, std::pair<std::string, void*> > (descr, ("int", (void*) const_cast<double *>(&count)));
+    m_counterMap[countName] = std::pair<std::string*, std::pair<std::string, void*> > (descr, std::pair<std::string, void*> ("int", (void*) const_cast<int *>(&count)));
+  }
+  void addCounter(const std::string& countName, const std::string& countDescription, const long& count) {
+    
+    std::string* descr = new std::string(countDescription);
+    //m_counterMap[countName] = std::pair<void*, std::string*> ((void*) (const_cast<int *>(&count)), descr);
+//    m_counterMap[countName] = std::pair<std::string*, std::pair<std::string, void*> > (descr, ("int", (void*) const_cast<double *>(&count)));
+    m_counterMap[countName] = std::pair<std::string*, std::pair<std::string, void*> > (descr, std::pair<std::string, void*> ("long", (void*) const_cast<long *>(&count)));
   }
   
   void addComplement(int* runNumber, int* cycleNumber, double* deltaT, double* offsetTimeFirstEvInRun, double* offsetTimeLastEvInCycle, double* offsetGpsTimeLastEvInCycle){
@@ -46,7 +64,8 @@ public:
     m_offsetGpsTimeLastEvInCycle = offsetGpsTimeLastEvInCycle;
   }
   
-  std::map<const std::string, std::pair<double*, std::string*>, std::less<std::string> > counterMap(){return m_counterMap;}
+//  std::map<const std::string, std::pair<void*, std::string*>, std::less<std::string> > counterMap(){return m_counterMap;}
+  std::map<const std::string, std::pair<std::string*, std::pair<std::string, void*> >, std::less<std::string> > counterMap(){return m_counterMap;}
   virtual void combine(MonObject * monObject);
   virtual void copyFrom(MonObject* monObject);
   virtual void reset();
@@ -56,8 +75,8 @@ public:
   int numCounters(){return m_numCounters;}
   void setNumCounters(int numCounters){m_numCounters = numCounters;}
 private:
-  double counter(std::string countName) {return (*(m_counterMap[countName].first));}
-  std::string counterDescription(std::string countName) {return (*(m_counterMap[countName].second));}
+  //double counter(std::string countName) {return (*(double*) (m_counterMap[countName].first));}
+  //std::string counterDescription(std::string countName) {return (*(m_counterMap[countName].second));}
   double offsetTimeFirstEvInRun() {return (*m_offsetTimeFirstEvInRun);}
   double offsetTimeLastEvInCycle() {return (*m_offsetTimeLastEvInCycle);}
   double offsetGpsTimeLastEvInCycle() {return (*m_offsetGpsTimeLastEvInCycle);}
