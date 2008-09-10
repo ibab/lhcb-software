@@ -4,6 +4,8 @@
 ! Purpose     : L0-T-track Confirmation algorithms
 !-----------------------------------------------------------------------------
 
+!========================== HltL0Conf v2r4 2008-09-10 ===================
+
 ! 2008-08-29 - Johannes Albrecht
  - ElectronSeedTool, HadronSeedTool, L0ConfExtrapolator: Add functionality for B=0
  - MuonSeedTool: Add functionality for B=0, improve muon segment preparation
