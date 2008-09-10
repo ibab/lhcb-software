@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.31 2008-07-24 17:36:43 cattanem Exp $
+// $Id: VeloSim.cpp,v 1.32 2008-09-10 16:59:49 dhcroft Exp $
 // Include files
 // STL
 #include <string>
@@ -1159,10 +1159,12 @@ bool VeloSim::checkConditions(LHCb::MCHit* aHit)
 //
 
 StatusCode VeloSim::finalize(){
-  double fracBad = static_cast<double>(m_killedFEsBadStrips)/static_cast<double>(m_totalFEs);
-  double fracRandom = static_cast<double>(m_killedFEsRandom)/static_cast<double>(m_totalFEs);
-  info() << format("Removed %5.2f%% MCVeloFEs due to bad strips and %5.2f%% as random removals",
-		   100.*fracBad,100.*fracRandom)
-	 << endmsg;    
+  if(m_totalFEs > 0){
+    double fracBad = static_cast<double>(m_killedFEsBadStrips)/static_cast<double>(m_totalFEs);
+    double fracRandom = static_cast<double>(m_killedFEsRandom)/static_cast<double>(m_totalFEs);
+    info() << format("Removed %5.2f%% MCVeloFEs due to bad strips and %5.2f%% as random removals",
+		     100.*fracBad,100.*fracRandom)
+	   << endmsg;    
+  }
   return GaudiAlgorithm::finalize(); // must be executed last
 }
