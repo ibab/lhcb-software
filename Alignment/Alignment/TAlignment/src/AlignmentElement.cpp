@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.cpp,v 1.18 2008-07-17 09:30:21 wouter Exp $
+// $Id: AlignmentElement.cpp,v 1.19 2008-09-10 12:31:18 wouter Exp $
 // Include files
 
 // from STD
@@ -106,7 +106,7 @@ void AlignmentElement::initAlignmentFrame() {
   
   // This is a simple check for velo R, just to make sure Jan separated them correctly:
   if( m_elements.size()==1 && dynamic_cast<const DeVeloRType*>(m_elements.front()) &&
-      m_dofMask[AlParameters::Rz] ) {
+      m_dofMask.isActive(AlParameters::Rz) ) {
     std::cout << "PROBLEM: You are aligning Rz for velo R module with name "
 	      << m_elements.front()->name() << std::endl ;
   }
