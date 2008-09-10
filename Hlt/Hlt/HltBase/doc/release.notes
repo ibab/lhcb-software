@@ -3,6 +3,12 @@
 ! Responsible : Jose Angel Hernando Morata
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+
+!========================== HltBase v5r2 2008-09-10 ===================
+! 2008-09-10 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v5r2
+
 ! 2008-09-09 - Gerhard Raven
  - add error flag to HltSelection, propagate to 'dependents'
 
