@@ -24,7 +24,7 @@ importOptions( "$DAVINCIROOT/options/DaVinciCommon.opts" )
 #
 # Temporary hack to re-run L0
 #
-importOptions('$L0DUROOT/options/L0DUBankSwap.opts')
+#importOptions('$L0DUROOT/options/L0DUBankSwap.opts')
 importOptions('$L0DUROOT/options/DefaultTCK.opts')
 #
 #
