@@ -68,6 +68,10 @@ private:
     */
   std::string m_monRateServiceName;
   
+  /** option-defined number of counter per MonRate
+    */
+  int m_nbCounterInMonRate;
+  
   /** if the service has been found then don't ; if the service has been found then don't
     */
   bool m_found;

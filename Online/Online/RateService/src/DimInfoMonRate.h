@@ -56,10 +56,12 @@ public :
 	  * @param monRateSvcName Name of the DIM service to subscribe and handle.
 	  * @param refreshTime DimInfo refreshTime parameter.
 	  * @param source Name of the algorithm creating this instance.
+	  * @param nbCounterInMonRate The number of counter in the MonRate
 	  */
 	DimInfoMonRate(std::string monRateSvcName,
 	                 int refreshTime,
-			 std::string source);
+			 std::string source,
+			 int nbCounterInMonRate);
 	
 	
 	virtual ~DimInfoMonRate();
@@ -165,6 +167,8 @@ private :
 	ExtractorMap m_extractorMap;
 	
 	NOPExtractor * m_pNOPExtractor;
+	
+	int m_nbCounterInMonRate;
 	
 	/** Looks for new counters (not beeing converted into rate by a RateExtractor object yet).
 	  *

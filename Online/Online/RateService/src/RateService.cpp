@@ -8,6 +8,7 @@
 #include "DimInfoMonRate.h"
 #include "Gaucho/DimInfoMonObject.h"
 
+#include "debugMacro.h"
 
 
 #include "AIDA/IHistogram1D.h"
@@ -50,8 +51,13 @@ DECLARE_ALGORITHM_FACTORY(RateService)
     m_numberOfMonRatesPublisher(0)
 {
   m_monRateServiceName = "*";
-  declareProperty("SleepTime",sleepTime=5); // Sleeping time between events, in seconds
+  m_nbCounterInMonRate = 0;
+  sleepTime=5;
+  
+  declareProperty("MonRateCounterNumber", m_nbCounterInMonRate);
+  declareProperty("SleepTime",sleepTime); // Sleeping time between events, in seconds
   declareProperty("MonRateServiceName", m_monRateServiceName);
+  
 }
 
 //------------------------------------------------------------------------------
@@ -59,6 +65,11 @@ StatusCode RateService::initialize() {
   //------------------------------------------------------------------------------
   StatusCode sc = Algorithm::initialize(); // must be executed first
   MsgStream msg(msgSvc(), name());
+  
+  
+  COUT_DEBUG("MonRateServiceName   : " << m_monRateServiceName);
+  COUT_DEBUG("MonRateCounterNumber : " << m_nbCounterInMonRate);
+  COUT_DEBUG("SleepTime            : " << sleepTime);
   
   msg << MSG::INFO << "Initialize" << endreq;
 
@@ -138,7 +149,7 @@ StatusCode RateService::findServices() {
     
     try
     {
-      pNew = new DimInfoMonRate(serviceNameC, 5, m_UTGID);
+      pNew = new DimInfoMonRate(serviceNameC, 5, m_UTGID, m_nbCounterInMonRate);
       
       if(pNew)
         pNew->setMsgService(msgSvc());

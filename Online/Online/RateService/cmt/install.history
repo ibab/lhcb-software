@@ -16,4 +16,12 @@ sS'../../../Online/RateService/v2r2/genConf/RateService/RateServiceConf.py'
 p8
 S'../../../../InstallArea/python/RateService/RateServiceConf.py'
 p9
-sssb.
+ssS'../../../Online/RateService/v2r2/slc4_ia32_gcc34/libRateService.so'
+p10
+S'../../../../InstallArea/slc4_ia32_gcc34/lib/libRateService.so'
+p11
+sS'../../../../../../../../sw/Gaudi/releases/GAUDI/GAUDI_v20r2/GaudiPolicy/v8r5/cmt/fragments/__init__.py'
+p12
+S'../../../../InstallArea/python/RateService/__init__.py'
+p13
+ssb.

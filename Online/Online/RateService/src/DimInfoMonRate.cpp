@@ -53,7 +53,8 @@ void printChar(char * c, int size)
 
 DimInfoMonRate::DimInfoMonRate(std::string monRateSvcName,
                                    int refreshTime,
-				   std::string source)
+				   std::string source,
+				   int nbCounterInMonRate)
     /* it actually subscribe to a char array service
      * (MonObject are serialized and published as
      * char array)
@@ -70,7 +71,8 @@ DimInfoMonRate::DimInfoMonRate(std::string monRateSvcName,
       m_msgSvc(0),
       m_stringSize(-1),
       m_sourceName(source),
-      m_pNOPExtractor(0)
+      m_pNOPExtractor(0),
+      m_nbCounterInMonRate(nbCounterInMonRate)
 {
   //COUT_DEBUG("m_doubleServiceName = " << m_doubleServiceName)
 }
@@ -372,50 +374,30 @@ void DimInfoMonRate::extractData()
 }
 
 
-// THIS IS A COMPLETELY DUMMY IMPLEMENTATION OF lookForNewRates()
-// ASSUMING THAT THE NUMBER OF COUNTERS IS FIXED TO 4 AND WILL NEVER CHANGE.
 int DimInfoMonRate::lookForNewRates()
 {
   //COUT_DEBUG("lookForNewRates <=================");
+    
+  int currentNumberOfCounters;
   
-  /* just to take in account the 5 firstcounter published by HltGlobalMonitor
-   */
-  #define NB_COUNTERS 5
-  
-  int currentNumberOfCounters = 0;
-  
-  for(ExtractorMap::iterator it = m_extractorMap.begin();
-          it != m_extractorMap.end();
-          it++)
-  {
-    currentNumberOfCounters++;
-  }
+  currentNumberOfCounters = m_extractorMap.size();
     
   //COUT_DEBUG("lookForNewRates   currentNumberOfCounters = " << currentNumberOfCounters);
     
-  if(currentNumberOfCounters == NB_COUNTERS)
+  if(currentNumberOfCounters == m_nbCounterInMonRate)
     return 0;
     
-  for(int i = 0; i < NB_COUNTERS; i++)
+  for(int i = 0; i < m_nbCounterInMonRate; i++)
   {
     m_extractorMap[i] = new RateExtractor(i, m_monRate);
     m_extractorMap[i]->publishService(serviceNameHeader);
   }
-  
-  currentNumberOfCounters = 0;
-  
-  for(ExtractorMap::iterator it = m_extractorMap.begin();
-          it != m_extractorMap.end();
-          it++)
-  {
-    currentNumberOfCounters++;
-  }
-  
+      
   //COUT_DEBUG("lookForNewRates   after adding currentNumberOfCounters = " << currentNumberOfCounters);
   
   //COUT_DEBUG("lookForNewRates DONE <=================");
   
-  return NB_COUNTERS;
+  return m_nbCounterInMonRate;
 }
 
 // int DimInfoMonRate::lookForNewRates()

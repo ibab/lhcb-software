@@ -16,6 +16,7 @@ ApplicationMgr.TopAlg  = { "RateService" };
 RateService.SleepTime = 15;  // in seconds
 
 RateService.MonRateServiceName = "MonR*";
+RateService.MonRateCounterNumber = 5;
 RateService.OutputLevel = 3;
 //RateService.svcname = "MonR/Moore/MonitorSvc/monRate"; // the MonRate to be subscribed
 

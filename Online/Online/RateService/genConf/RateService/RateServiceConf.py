@@ -1,4 +1,4 @@
-#Wed Sep 10 10:53:08 2008
+#Wed Sep 10 13:00:12 2008
 """Automatically generated. DO NOT EDIT please"""
 from GaudiKernel.Proxy.Configurable import *
 
@@ -19,6 +19,7 @@ class RateService( ConfigurableAlgorithm ) :
     'AuditStart' : False, # bool
     'AuditStop' : False, # bool
     'MonitorService' : 'MonitorSvc', # str
+    'MonRateCounterNumber' : 0, # int
     'SleepTime' : 5, # int
     'MonRateServiceName' : '*', # str
   }
