@@ -1,8 +1,16 @@
+!$Id: release.notes,v 1.63 2008-09-10 13:07:39 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+
+!========================== HltTracking v3r6 2008-09-10 ===================
+
+! 2008-09-10 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v3r6
+
 ! 2008-09-08 - Gerhard Raven
   - remove (usage of) HltEnums, direct usage of boost::algorithm::split
 
