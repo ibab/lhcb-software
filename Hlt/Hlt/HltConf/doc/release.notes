@@ -1,15 +1,18 @@
-! $Id: release.notes,v 1.10 2008-09-10 12:44:22 jpalac Exp $ 
+! $Id: release.notes,v 1.11 2008-09-10 12:47:57 jpalac Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : 
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
-! 2008-09-09 - Gerhard Raven
- - move all files out of HltSys/options into Hlt/HltConf/options
+
+!========================== HltConf v1r2 2008-09-10 ===================
 
 ! 2008-09-10 - Juan PALACIOS
  - cmt/requirements
   . Increase version to v1r2
+
+! 2008-09-09 - Gerhard Raven
+ - move all files out of HltSys/options into Hlt/HltConf/options
 
 ! 2008-09-03 - Gerhard Raven
  - python/HltConfig/Hlt1Line.py
