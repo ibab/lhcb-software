@@ -1,4 +1,4 @@
- $Id: release.notes,v 1.237 2008-09-10 14:17:25 jpalac Exp $
+ $Id: release.notes,v 1.238 2008-09-10 14:19:03 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -12,6 +12,8 @@
 ! 2008-09-10 - Juan PALACIOS
  - job/DaVinci_Ganga.py
   . Increase version
+ - cmt/requirements
+  . Put HltSys back in.
 
 ! 2008-09-10 - Juan PALACIOS
  - options/DaVinciCommon.opts
