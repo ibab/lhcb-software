@@ -21,7 +21,7 @@
 #include <iostream>
 #include <math.h>
 
-/* Trivial finction to print a char * string.
+/* Trivial function to print a char * string.
  * Prints '.' for non printable characters.
  */
 void printChar(char * c, int size)
@@ -318,6 +318,7 @@ void DimInfoMonRate::extractData()
     //COUT_DEBUG("extractData   new counters search done");
     
     int gotCycleNumber = getCycleNumberFromMonRate();
+    int nbElapsedCycles = gotCycleNumber - m_currentCycleNumber;
     
     //COUT_DEBUG("extractData   got cycle number ===> " << gotCycleNumber);
     
@@ -345,7 +346,7 @@ void DimInfoMonRate::extractData()
       {
         try{
 	  RateExtractor * extractor = it->second;
-	  extractor->extractData(time);
+	  extractor->extractData(time, nbElapsedCycles);
 	  double value = extractor->getValue();
 	  COUT_DEBUG("counter #" << extractor->getCounterId() << " ===> " << value << "Hz");
 	}catch(const std::exception & e){

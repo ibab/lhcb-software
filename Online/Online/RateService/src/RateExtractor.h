@@ -43,10 +43,11 @@ public:
   /** Extraction method, based on time of the new event.
     * 
     * @param time Time of the last event in the processed cycle.
+    * @param nbElapsedCycles The number of cycles elapsed since the last rate calculation
     *
     * @return True if no error.
    */
-  bool extractData(longlong time);
+  bool extractData(longlong time, int nbElapsedCycles);
   
   /** Method publishing the structured service.
     * 

@@ -114,10 +114,13 @@ std::string RateExtractor::getCommentFromMonRate()
 //  return comment.str();
 }
 
-bool RateExtractor::extractData(longlong time)
+bool RateExtractor::extractData(longlong time, int nbElapsedCycles)
 {
   bool success = true;
   bool anyUpdate = false;
+  
+  if(nbElapsedCycles <= 0)
+    return false;
   
   /*====================================================*/
   /*======= RATE CALCULATION ===========================*/
@@ -135,7 +138,8 @@ bool RateExtractor::extractData(longlong time)
   
   double oldValue = getValue();
   
-  double deltaT = (double)(m_newTime - m_oldTime + getCycleLengthFromMonRate());
+  double deltaT = (double)(m_newTime - m_oldTime);
+  deltaT += (double)(nbElapsedCycles * getCycleLengthFromMonRate());
   
   double newValueForRate = m_counterNewValue - m_counterOldValue;
   newValueForRate *= 1000000.0;
