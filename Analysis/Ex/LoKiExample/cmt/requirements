@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.40 2008-06-12 10:44:01 ibelyaev Exp $ 
+# $Id: requirements,v 1.41 2008-09-10 07:48:34 jpalac Exp $ 
 # =============================================================================
 package         LoKiExample
-version         v7r4
+version         v7r6
 
 # ============= structure =====================================================
 branches        cmt doc src options 
