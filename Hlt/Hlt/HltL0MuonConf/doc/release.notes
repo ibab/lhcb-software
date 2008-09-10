@@ -1,8 +1,16 @@
+!$Id: release.notes,v 1.33 2008-09-10 13:13:51 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltL0MuonConf
 ! Responsible : Alessia Satta
 ! Purpose     : Matching of Muon object (L0 or Muon segment) to T station
 !-----------------------------------------------------------------------------
+
+!========================== HltL0MuonConf v3r4 2008-09-10 ===================
+
+! 2008-09-10 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v3r4
+
 ! 2008-09-09 - Gerhard Raven
  - remove references to HltEnums
 
