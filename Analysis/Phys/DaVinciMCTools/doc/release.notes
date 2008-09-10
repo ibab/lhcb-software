@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.230 2008-09-02 09:10:23 pkoppenb Exp $
+! $Id: release.notes,v 1.231 2008-09-10 06:58:02 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+!========================== DaVinciMCTools v9r16 2008-09-10 ===================
 
 ! 2008-09-02 - Patrick Koppenburg
  - MCPrimVertexMaker: put square errors in matrix. Spotted by Aurelio Bay.
