@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.50 2008-08-01 20:33:28 wouter Exp $
+// $Id: AlignAlgorithm.cpp,v 1.51 2008-09-10 12:30:09 wouter Exp $
 // Include files
 // from std
 // #include <utility>
@@ -72,45 +72,6 @@ namespace {
    bool              m_isOutlier ;
  };
  
- //FIXME: the next two stand-alone functions should move into AlVec & AlSymMat...
- template <typename T>
- void ass(AlVec& lhs, unsigned row, const T& rhs) {
-   for (unsigned i = 0; i < T::kSize; ++i) lhs[row+i] = rhs(i);
- }
- 
- template <typename T>
- void ass(AlSymMat& lhs, unsigned col, unsigned row, const T& rhs) {
-   for (unsigned i = 0; i < T::kCols; ++i)
-     for (unsigned j = 0; j < T::kRows; ++j)
-       lhs[col+i][row+j] = rhs(i,j);
- }
- 
- void fillHisto1D(IHistogram1D* histo1D, const size_t& bin, const double& value, const double& error) {
-   /// Get pointer to root histo
-   TH1D* rHisto1D = Gaudi::Utils::Aida2ROOT::aida2root(histo1D);
-   rHisto1D->SetBinContent(bin, value); rHisto1D->SetBinError(bin, error);
- }
-
-  class Constraints
-  {
-  public:
-    enum EConstraints { Tx, Ty, Tz, Rx, Ry, Rz, Szx, Szy, Szz, Cur, NumConstraints } ;
-    static std::vector<std::string> all()  { return names ; }
-    static std::vector<std::string> global()  { 
-      return std::vector<std::string>( names.begin(), names.begin()+6) ;
-    }
-    static std::string name(size_t i)  { return names[i] ; }
-    static size_t index(const std::string& aname) {
-      std::vector<std::string>::const_iterator it = std::find( names.begin(), names.end(), aname) ;
-      return size_t( it - names.begin() ) ;
-      //return std::distance( names.begin(),it) ; // doesn't exist for random access iterator ?!
-    }
-  private:
-    static const std::vector<std::string> names ;
-  } ;
-  
-  const std::vector<std::string> Constraints::names = 
-    boost::assign::list_of("Tx")("Ty")("Tz")("Rx")("Ry")("Rz")("Szx")("Szy")("Szz")("Cur");
 };
 
 using namespace LHCb;
