@@ -20,15 +20,15 @@ public:
   typedef ROOT::Math::SMatrix<double, 6, 6> Matrix6x6 ;
   typedef ROOT::Math::SVector<double, 6>    Vector6 ;
   typedef boost::array<double,NumPars>      TransformParameters ;
-  typedef AlDofMask<6>                      DofMask ; 
+  typedef AlDofMask                         DofMask ; 
 
   /** Constructors */
-  AlParameters(DofMask mask=DofMask()) ;
-  AlParameters(const Vector& parameters, const Covariance& covariance, DofMask mask=DofMask(), size_t offset = 0u) ;
+  AlParameters(DofMask mask=DofMask(NumPars)) ;
+  AlParameters(const Vector& parameters, const Covariance& covariance, DofMask mask=DofMask(NumPars), size_t offset = 0u) ;
   AlParameters(const Vector& parameters, const Covariance& covariance, const Covariance& weightmatrix,
-	       DofMask mask=DofMask(), size_t offset = 0u) ;
-  AlParameters(double parameters[6], DofMask mask=DofMask()) ;
-  AlParameters(const TransformParameters& parameters, DofMask mask=DofMask()) ;
+	       DofMask mask=DofMask(NumPars), size_t offset = 0u) ;
+  AlParameters(double parameters[6], DofMask mask=DofMask(NumPars)) ;
+  AlParameters(const TransformParameters& parameters, DofMask mask=DofMask(NumPars)) ;
   
   size_t dim() const { return m_mask.nActive() ; }
   static std::string parName( int ) ;
