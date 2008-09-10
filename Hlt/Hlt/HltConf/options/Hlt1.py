@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1.py,v 1.1 2008-09-09 14:48:20 graven Exp $
+# $Id: Hlt1.py,v 1.2 2008-09-10 16:33:01 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of HLT1
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.1 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -24,10 +24,16 @@ from Configurables       import HltSelectionFilter, HltSelectionToTES
 from Configurables       import HltDecisionFilter
 from Configurables       import HltDecReportsMaker, HltDecReportsWriter
 from Configurables       import HltRoutingBitsWriter
+from Configurables       import HltLumiFillRawBuffer
+from Configurables       import bankKiller
 from HltConf.HltLine     import hlt1Lines
 from HltConf.HltLine     import hlt1Decisions
 from HltConf.HltLine     import hlt1Selections
+from HltConf.HltLine     import addHlt1Prop
 
+# add a few thing to our printout
+addHlt1Prop('routingBitDefinitions')
+addHlt1Prop('Accept')
 
 importOptions('$HLTCONFROOT/options/HltInit.opts')
 # importOptions('$HLTCONFROOT/options/HltMain.py')
@@ -37,7 +43,6 @@ summaryWriter = HltSummaryWriter( Save = list(hlt1Selections()['All']) )
 Hlt1Decision =  HltDecisionFilter('Hlt1Decision'
                                 , Accept = ' | '.join( hlt1Decisions() )
                                 )
-print Hlt1Decision
 
 ### TODO: check dependencies, and re-order if needed! 
 Hlt1 = Sequence('Hlt1',  ModeOR = True, ShortCircuit = False
@@ -51,13 +56,28 @@ triggerBits = HltRoutingBitsWriter( routingBitDefinitions =
                                   , 4 : 'Hlt1PhysicsDecision'
                                   , 5 : 'Hlt1LumiDecision'
                                   })
-print triggerBits
+
+
+lumiDecision = 'Hlt1LumiDecision'
+allExceptLumi = ' | '.join([ i for i in hlt1Decisions() if i != lumiDecision ])
+lumiOnly = lumiDecision + ' & !( ' + allExceptLumi + ')'
+
+
+rawbankLumiStripper = Sequence( 'LumiStripper'
+                              , IgnoreFilterPassed = True
+                              , Members = 
+                              [ HltDecisionFilter('LumiOnlyFilter' , Accept = lumiOnly )
+                              , bankKiller( BankTypes=[ "ODIN","HltLumiSummary"],  DefaultIsKill=True )
+                              ]
+                              )
 
 Hlt  = Sequence('Hlt')
 Hlt.Members = [ Hlt1
               , Sequence( 'HltEndSequence', ModeOR = True, ShortCircuit = False
                         , Members = [ HltDecReportsWriter()
                                     , triggerBits
+                                    , HltLumiFillRawBuffer()
+                                    #, rawbankLumiStripper
                                     ] )
               ]
 
