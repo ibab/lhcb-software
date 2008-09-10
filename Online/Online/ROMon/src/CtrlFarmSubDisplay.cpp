@@ -110,6 +110,8 @@ void CtrlFarmSubDisplay::init(bool) {
 /// DIM command service callback
 void CtrlFarmSubDisplay::update(const void* address) {
   const char* data = (const char*)address;
+  //scrc_resetANSI();
+  //std::cout << data << std::endl;
   m_lastUpdate = time(0);
   XML::TaskSupervisorParser ts;
   if ( ts.parseBuffer(m_name, data,::strlen(data)+1) ) {
@@ -118,7 +120,8 @@ void CtrlFarmSubDisplay::update(const void* address) {
     Cluster& c = m_cluster;
     Cluster::Nodes::const_iterator i;
     int col = NORMAL, pos = 0, line=3;
-    size_t taskCount=0, missCount=0;
+    size_t taskCount=0, missTaskCount=0;
+    size_t connCount=0, missConnCount=0;
     c.nodes.clear();
     ts.getClusterNodes(c);
     ::scrc_put_chars(m_display,"Nodes  ", NORMAL,3,1,1);
@@ -126,9 +129,11 @@ void CtrlFarmSubDisplay::update(const void* address) {
     for(i=c.nodes.begin(), pos=7; i!=c.nodes.end();++i) {
       const Cluster::Node& n = (*i).second;
       bool good = n.status == "ALIVE";
-      col = good && n.missCount==0 ? GREEN|BOLD|INVERSE : COL_ALARM;
-      taskCount += n.taskCount;
-      missCount += n.missCount;
+      col = good && n.missTaskCount==0 && n.missConnCount==0 ? GREEN|INVERSE : COL_ALARM;
+      taskCount     += n.taskCount;
+      missTaskCount += n.missTaskCount;
+      connCount     += n.connCount;
+      missConnCount += n.missConnCount;
       val = " "+(n.name == m_name ? n.name : n.name.substr(n.name.length()-2))+" ";
       ::scrc_put_chars(m_display,val.c_str(),col,line,pos,0);
       pos += val.length();
@@ -139,7 +144,8 @@ void CtrlFarmSubDisplay::update(const void* address) {
     ::scrc_put_chars(m_display,txt,NORMAL,1,1,0);
     ::sprintf(txt,"%s",c.status.c_str());
     ::scrc_put_chars(m_display,c.status.c_str(),col,1,22,1);
-    ::sprintf(txt,"%2zd Nodes %3zd Tasks running, %2zd missing",c.nodes.size(),taskCount,missCount);
+    ::sprintf(txt,"%2zd Nodes %3zd Tasks/%2zd bad %2zd Connections/%2zd bad",
+	      c.nodes.size(),taskCount,missTaskCount,connCount,missConnCount);
     ::scrc_put_chars(m_display,txt,col&~BOLD,2,1,1);
     if ( c.status == "DEAD" ) {
       ::scrc_put_chars(m_display,"Nodes down - Please check.",RED|BOLD,4,1,1);    
@@ -149,8 +155,12 @@ void CtrlFarmSubDisplay::update(const void* address) {
       ::scrc_put_chars(m_display,"Some nodes down - Please check.",BOLD,4,1,1);    
       //::scrc_set_border(m_display,m_title.c_str(),col);
     }
-    else if ( missCount>0 ) {
+    else if ( missTaskCount>0 ) {
       ::scrc_put_chars(m_display,"Tasks missing - Please check.",NORMAL,4,1,1);    
+      //::scrc_set_border(m_display,m_title.c_str(),col);
+    }
+    else if ( missConnCount>0 ) {
+      ::scrc_put_chars(m_display,"Connectivity bad - Please check.",NORMAL,4,1,1);    
       //::scrc_set_border(m_display,m_title.c_str(),col);
     }
     ::scrc_set_border(m_display,m_title.c_str(),NORMAL|BOLD);

@@ -1,4 +1,4 @@
-// $Id: CtrlSubfarmDisplay.cpp,v 1.1 2008-08-27 19:15:55 frankb Exp $
+// $Id: CtrlSubfarmDisplay.cpp,v 1.2 2008-09-10 09:45:20 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CtrlSubfarmDisplay.cpp,v 1.1 2008-08-27 19:15:55 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CtrlSubfarmDisplay.cpp,v 1.2 2008-09-10 09:45:20 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -76,20 +76,34 @@ CtrlSubfarmDisplay::~CtrlSubfarmDisplay()  {
 void CtrlSubfarmDisplay::showNodes()  {
   Cluster& c = m_cluster;
   MonitorDisplay* disp = m_nodes;
-  size_t taskCount=0, missCount=0;
-  const char* fmt = " %-24s %12s %17zd %17zd    %s";
+  size_t taskCount=0, missTaskCount=0;
+  size_t connCount=0, missConnCount=0;
+  const char* fmt = " %-12s %8s %5zd/%-7zd %5zd/%-7zd %6d %6d %6d %6d %3.0f %3.0f %-12s %s";
 
   //disp->draw_line_reverse(" ----------------------------------   Cluster information   ----------------------------------");
-  disp->draw_line_normal("");
-  disp->draw_line_bold(   " %-24s %12s %17s %17s    %s","Node","Status","Found Tasks","Missing tasks","Timestamp");
+  disp->draw_line_bold(   " %-12s %8s    Tasks       Connections  %6s %6s %6s %6s %3s %3s %-12s %s",
+			  "","","RSS","Stack","Data","VSize","CPU","MEM","","");
+  disp->draw_line_bold(   " %-12s %8s found/missing found/missing %6s %6s %6s %6s %3s %3s %-12s %s",
+			  "Node","Status","[MB]","[MB]","[MB]","[MB]","[%]","[%]","Boot time","Timestamp");
   for(Cluster::Nodes::const_iterator i=c.nodes.begin(); i!=c.nodes.end();++i) {
     const Cluster::Node& n = (*i).second;
-    taskCount += n.taskCount;
-    missCount += n.missCount;
-    disp->draw_line_normal(fmt,n.name.c_str(),n.status.c_str(),n.taskCount,n.missCount,n.time.c_str());
+    if ( n.status == "DEAD" ) {
+      disp->draw_line_normal(" %-12s %8s %64s",n.name.c_str(),n.status.c_str(),n.time.c_str());
+    }
+    else {
+      taskCount += n.taskCount;
+      missTaskCount += n.missTaskCount;
+      connCount += n.connCount;
+      missConnCount += n.missConnCount;
+      disp->draw_line_normal(fmt,n.name.c_str(),n.status.c_str(),
+			     n.taskCount,n.missTaskCount,n.connCount,n.missConnCount,
+			     int(n.rss/1024),int(n.stack/1024),int(n.data/1024),int(n.vsize/1024),
+			     n.perc_cpu, n.perc_mem, n.boot.substr(4,12).c_str(),n.time.c_str());
+    }
   }
   disp->draw_line_normal("");
-  disp->draw_line_bold(fmt, "Total:", c.status.c_str(), taskCount, missCount, c.time.c_str());
+  disp->draw_line_bold(" %-12s %8s %5zd/%-7zd %5zd/%-7zd", "Total:", 
+		       c.status.c_str(), taskCount, missTaskCount, connCount, missConnCount);
 }
 
 /// Update header information

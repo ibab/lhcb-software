@@ -38,8 +38,13 @@
 
 """
 
-import os, sys, time, dimc, XMLTaskList
+import os, sys, time, dimc, copy, XMLTaskList
 from Helpers import *
+
+s_fullInfo = True
+PUBLISH_TIME = 15
+PUBLISH_TIME = 15
+NUM_TASK_ITEMS = 34
 
 class TaskList(list):
     """
@@ -50,11 +55,11 @@ class TaskList(list):
         "Standard constructor"
         list.__init__(self)
 
-class TmTask:               # initialization of the structure with 34 attributes per task
+class TmTask:               # initialization of the structure with NUM_TASK_ITEMS attributes per task
     """
 
         The TmTask class  initializes the structure of the 'Task'
-        object with the 34 attributes of each task and when its
+        object with the NUM_TASK_ITEMS attributes of each task and when its
         fill function is invoked it assigns a number to each one of the
         attributes to be filled.
 
@@ -64,10 +69,10 @@ class TmTask:               # initialization of the structure with 34 attributes
     """
     def __init__(self):
         self.utgid = None
-        self.tid = None
-        self.tgid = None
-        self.ppid = None
-        self.pgid = None
+        self.tid = 0
+        self.tgid = 0
+        self.ppid = 0
+        self.pgid = 0
         self.nlwp = None
         self.user = None
         self.group = None
@@ -79,11 +84,11 @@ class TmTask:               # initialization of the structure with 34 attributes
         self.nice = None
         self.psr = None
         self.stat = None
-        self.perc_cpu = None
-        self.perc_mem = None
-        self.vsize = None
+        self.perc_cpu = 0
+        self.perc_mem = 0
+        self.vsize = 0
         self.lock = None
-        self.rss = None
+        self.rss = 0
         self.data = None
         self.stack = None
         self.exe = None
@@ -99,12 +104,14 @@ class TmTask:               # initialization of the structure with 34 attributes
         self.cmdline = None
 
     def header(self):  # header for printing some of the values (use with show()) currently unused
-        print '%-32s %6s %6s %6s'%('UTGID','TID','TGID','VSIZE')
+      print '%-32s %6s %6s %6s'%('UTGID','TID','TGID','VSIZE')
 
     def show(self):    # gathering some values to print (currently unused)
-        print '%-32s %6d %6d %6d'%(self.utgid,self.tid,self.tgid,self.vsize)
+      print '%-32s %6d %6d %6d'%(self.utgid,self.tid,self.tgid,self.vsize)
 
     def fill(self,items):    # filling the attribute structure
+      #print items
+      try:
         self.utgid = items[0]
         self.tid = int(items[1])
         self.tgid = int(items[2])
@@ -121,13 +128,13 @@ class TmTask:               # initialization of the structure with 34 attributes
         self.nice = items[13]
         self.psr = items[14]
         self.stat = items[15]
-        self.perc_cpu = items[16]
-        self.perc_mem = items[17]
+        self.perc_cpu = float(items[16])
+        self.perc_mem = float(items[17])
         self.vsize = int(items[18])
         self.lock = items[19]
-        self.rss = items[20]
-        self.data = items[21]
-        self.stack = items[22]
+        self.rss = int(items[20])
+        self.data = int(items[21])
+        self.stack = int(items[22])
         self.exe = items[23]
         self.lib = items[24]
         self.share = items[25]
@@ -139,6 +146,9 @@ class TmTask:               # initialization of the structure with 34 attributes
         self.elapsed = items[31]
         self.cputime = items[32]
         self.cmdline = items[33]
+      except Exception,X:
+        #print items
+        raise X
 
 
 class NodeMonitor(DimClient):
@@ -148,9 +158,9 @@ class NodeMonitor(DimClient):
         executed in that moment.
 
         The callback function defined in the class splits the
-        arguments read from /ps/data into 34 pieces which is
+        arguments read from /ps/data into NUM_TASK_ITEMS pieces which is
         the number of attributes each task has. A TmTask
-        structure is then filled with all the 34 attributes for
+        structure is then filled with all the NUM_TASK_ITEMS attributes for
         each existing task.
 
         The utgid names are then put together in a list that is
@@ -166,71 +176,132 @@ class NodeMonitor(DimClient):
 
         The NodeMonitor class inherits from the DimClient. 
     """
-    def __init__(self,node,tasks):
+    def __init__(self,node,node_info):
         "Standard constructor"
         DimClient.__init__(self,node)
-        self.tasks = tasks
-        self.errors = None
+        self.tasks = {}
+        for l in node_info.taskLists.keys():
+          for t in node_info.taskLists[l].tasks.keys():
+            self.tasks[t] = node_info.taskLists[l].tasks[t]
+        self.connections = {}
+        for l in node_info.connectionLists.keys():
+          for t in node_info.connectionLists[l].connections.keys():
+            self.connections[t] = node_info.connectionLists[l].connections[t]
+        self.errors = ''
+        self.connerrors = ''
         self.time = 0
+        self.connTime = 0
         print 'Created node monitor:',self.name
+
+    def testConnection(self,name,size,count):
+      import xmlrpclib
+      try:
+        s = xmlrpclib.Server('http://'+self.name+':8088')
+        #print self.name,name,count,size
+        lines = s.ping(name,count,size)
+        tag = '%d packets transmitted, %d received'%(count,count,)
+        for l in lines:
+          if l.find(tag)==0:
+            #print self.name,name,l[:-1]
+            return 1
+      except Exception,X:
+        print 'Failed to ping ',name,X
+      return None
+        
+    def checkConnections(self):
+        good = []
+        bad = []
+        self.connTime = time.time()
+        for t in self.connections.keys(): 
+          target = t.replace('<DIM_DNS_NODE>',os.environ['DIM_DNS_NODE'])
+          siz = 0
+          if target[:-3] == '-d1': siz=9000
+          if self.testConnection(target,siz,1) is None:
+            bad.append(target)
+          else:
+            good.append(target)
+        errs = '\t\t<Connections count="%d" ok="%d" missing="%d">\n'%(len(good)+len(bad),len(good),len(bad))
+        if s_fullInfo:
+          for t in good: errs = errs + '\t\t\t<Connection name="%s" status="OK"/>\n'%(t,)
+        for t in bad: errs = errs + '\t\t\t<Connection name="%s" status="Not OK"/>\n'%(t,)
+        errs = errs + '\t\t</Connections>\n'
+        self.connerrors = errs
+        return self.connerrors
         
     def callback(self,*args): # separates each item from the chain
         try:
-            if len(args)==0:\
+            if len(args)==0:
                 return
             self.time = time.time()
             items = args[0].split('\0')[:-1] # the long chain of arguments is splitted here
             tasks = TaskList()
-            for i in xrange(len(items)/34):  
-                t = TmTask()
-                # calling of the fill routine that will put the arguments into the object
-                if len(items[i*34])>0:
-                  t.fill(items[i*34:(i+1)*34]) 
+            for i in xrange(len(items)/NUM_TASK_ITEMS):  
+              t = TmTask()
+              # calling of the fill routine that will put the arguments into the object
+              if len(items[i*NUM_TASK_ITEMS])>0:
+                try:
+                  #print items[i*NUM_TASK_ITEMS:(i+1)*NUM_TASK_ITEMS]
+                  t.fill(items[i*NUM_TASK_ITEMS:(i+1)*NUM_TASK_ITEMS]) 
                   tasks.append(t)
-            node_tasks = self.tasks
-            all_tasks = {}
-
-            for l in node_tasks.taskLists.keys():
-                for t in node_tasks.taskLists[l].tasks.keys():
-                    all_tasks[t] = node_tasks.taskLists[l].tasks[t]
+                except:
+                  print 'Failed to decode task information......'
+            all_tasks = copy.deepcopy(self.tasks)
+            good_tasks = {}
             num_req_tasks = len(all_tasks.keys())
-
+            err = ''
+            mem = 0.0
+            cpu = 0.0
+            rss = 0
+            vsize = 0
+            data = 0
+            stack = 0
             for t in tasks:
-                utgid = t.utgid.replace(self.name,'<Node>')
-                if all_tasks.has_key(utgid):
-                    del all_tasks[utgid]
-            err = '    <Node name="'+self.name+'" status="ALIVE" time="'+time.strftime('%Y-%m-%d %H:%M:%S')+'">\n'
-            if len(all_tasks)>0:
-                keys = all_tasks.keys()
-                err = err + '      <Missing_Tasks  count="%d">\n'%(len(keys),)
-                for i in keys:
-                    utgid = i.replace('<Node>',self.name)
-                    err = err + '         <Task name="'+utgid+'"/>\n'
-                err = err + '      </Missing_Tasks>\n'
-                err = err + '      <Found_Tasks count="%d"/>\n'%(num_req_tasks,)
-                err = err + '    </Node>\n'
-                self.errors = err
-            else:
-                self.errors = None
-                self.errors = err + '      <Found_Tasks count="%d"/></Node>\n'%(num_req_tasks,)
+              utgid = t.utgid.replace(self.name,'<Node>')
+              if all_tasks.has_key(utgid):
+                good_tasks[utgid] = all_tasks[utgid]
+                del all_tasks[utgid]
+              if t.cmd == 'init':
+                err = '\t\t<Boot time="%s"/>\n'%(t.started,)
+              mem = mem + t.perc_mem
+              cpu = cpu + t.perc_cpu
+              rss = rss + t.rss
+              data = data + t.data
+              vsize = vsize + t.vsize
+              stack = stack + t.stack
+
+            err = err + '\t\t<System perc_cpu="%f" perc_memory="%f" vsize="%d" rss="%d" data="%d" stack="%d"/>\n'%(cpu,mem,vsize,rss,data,stack,)
+            keys = all_tasks.keys()
+            err = err + '\t\t<Tasks count="%d" ok="%d" missing="%d">\n'%(len(self.tasks.keys()),len(good_tasks.keys()),len(keys),)
+            for i in keys:
+              err = err + '\t\t\t<Task name="'+i.replace('<Node>',self.name)+'" status="Not OK"/>\n'
+            if s_fullInfo:
+              for i in good_tasks:
+                err = err + '\t\t\t<Task name="'+i.replace('<Node>',self.name)+'" status="OK"/>\n'
+            err = err + '\t\t</Tasks>\n'
+            self.errors = err
 
         except Exception,X:
-            import traceback
-            traceback.print_exc()
-            print 'Something went wrong:',str(X)
-            print 'Exception handling finished.'
+          import traceback
+          traceback.print_exc()
+          print 'Something went wrong:',str(X)
+          #print 'Exception handling finished.'
 
     def start(self):
-        #info('Node monitor for ',self.name,' started.....')
         return self.startClient('/'+self.name.upper()+'/ps/data','C:200000',self.callback)
+        #return self.startClient('/'+self.name.upper()+'/ps/data','C',self.callback)
 
     def statusInfo(self):
         if (time.time() - self.time) > 35:
-            #print 'No answer since ', self.time, time.time() - self.time
-            self.errors = '    <Node name="'+self.name+'" status="DEAD"/>"\n'
-        return self.errors
-
-
+          self.errors = '    <Node name="'+self.name+'" status="DEAD" last="+self.time+"/>"\n'
+          print self.errors
+          return self.errors
+        else:
+          if (time.time() - self.connTime) > 30: self.checkConnections()
+          err = '\t<Node name="'+self.name+'" status="ALIVE" time="'+time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(self.time))+'">\n'
+          err = err + self.errors
+          err = err + self.connerrors
+          err = err + '\t</Node>\n'
+          return err
 
 
 class TaskSupervisor:
@@ -272,7 +343,7 @@ class TaskSupervisor:
     @version 1.0
     """
     def __init__(self,name,inventory):
-        "Iniitalize the object"
+        "Initialize the object"
         self.node = name
         self.name = '/'+name.upper()+'/TaskSupervisor'
         self.inventory = inventory
@@ -282,7 +353,8 @@ class TaskSupervisor:
         dimc.dis_set_dns_node('ecs03')  # a call can be individually made with this command
         #dimc.dis_set_dns_node(os.environ['DIM_DNS_NODE'])
         
-        self.serviceId = dimc.dis_add_service(svc,'C:20000',self.serviceCall,1)
+        self.serviceId = dimc.dis_add_service(svc,'C:50000',self.serviceCall,1)
+        #self.serviceId = dimc.dis_add_service(svc,'C',self.serviceCall,1)
         dimc.dis_start_serving(self.name)
         dimc.dic_set_dns_node(name)
         self.list = {}
@@ -290,28 +362,25 @@ class TaskSupervisor:
     def initialize(self):
         "Load the database and check for consistency"
         nodes = self.inventory.getNodes()
-        print 'Nodes:',nodes
+        print 'Nodes:',nodes.keys()
         if nodes is None:
-            return error('Failed to retrieve the nodelist from the inventory.')
+          return error('Failed to retrieve the nodelist from the inventory.')
         elif len(nodes) == 0:
-            return error('Node list for ',self.node,' is of ZERO length. This cannot be.')
+          return error('Node list for ',self.node,' is of ZERO length. This cannot be.')
         else:
-            debug('Yes: I got a node list with ',len(nodes),' entries. All fine so far.')
+          debug('Yes: I got a node list with ',len(nodes),' entries. All fine so far.')
         self.nodes = nodes
         for node in self.nodes.keys():
-            self.monitors[node] = NodeMonitor(node,self.nodes[node])
+          self.monitors[node] = NodeMonitor(node,self.nodes[node])
         return S_SUCCESS
 
     def start(self):
         "Start controlling the associated nodes."
-        nodelist = []
         for node in self.monitors.keys():
-            nodelist.append(node)
-            status = self.monitors[node].start()
-            if status != S_SUCCESS:
-                return error('Failed to start monitor for node:',node)
+          status = self.monitors[node].start()
+          if status != S_SUCCESS:
+            return error('Failed to start monitor for node:',node)
         info('All task monitors for ',self.node,' are now running.')
-        #print nodelist
         return S_SUCCESS
     
     def serviceCall(self,*args):
@@ -323,33 +392,34 @@ class TaskSupervisor:
         er = ''
         sc1 = "DEAD"
         sc2 = "ALIVE"
-        #clearscreen()
         for node,mon in self.monitors.items():
-            e = mon.statusInfo()
-            if e is not None:
-                dead  = e.find('status="DEAD"')>0
-                alive = e.find('status="ALIVE"')>0
-                if alive and sc1=="DEAD":
-                    sc1 = "MIXED"
-                if dead and sc2=="ALIVE":
-                    sc2 = "MIXED"
-                er = er + e
+          e = mon.statusInfo()
+          if e is not None:
+            dead  = e.find('status="DEAD"')>0
+            alive = e.find('status="ALIVE"')>0
+            if alive and sc1=="DEAD":
+              sc1 = "MIXED"
+            if dead and sc2=="ALIVE":
+              sc2 = "MIXED"
+            er = er + e
         err = '  <Cluster name="'+self.node.upper()+'" status="'
         if sc1=="DEAD":     err=err+sc1
         elif sc2=="ALIVE":  err=err+sc2
         else:               err=err+sc1
         err = err + '" time="'+time.strftime('%Y-%m-%d %H:%M:%S')+'">\n' + er + "  </Cluster>"
-        res = dimc.dis_update_service(self.serviceId,(err,))
-        #info('dis_update_service:'+str(res)+'\n'+err)
+        #print err
+        e = str(err)
+        print '================================\n',type(e),e
+        res = dimc.dis_update_service(self.serviceId,(e,))
     
     def run(self):
         "Here I can sleep while my monitoring slaves actually have to struggle."
-        collect=0
         while(1):
-            collect = collect + 1
-            time.sleep(2)
-            if (collect%1)==0:
-                self.publish()
+            try:
+              time.sleep(PUBLISH_TIME)
+              self.publish()
+            except:
+              pass
 
 
 
@@ -367,7 +437,7 @@ def callTaskSupervisor():
     sup.initialize()
     sup.start()
     sup.run()
-
+    print '.....Task supervisor stopped executing.....'
 
 if __name__=="__main__":
     callTaskSupervisor()

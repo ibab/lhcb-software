@@ -29,17 +29,21 @@ namespace XML {
 
   struct XMLElement {
     xercesc::DOMElement* m_node;
+    XMLElement() : m_node(0)                            {                                             }
     XMLElement(xercesc::DOMNode* n);
-    operator bool()  const                              { return 0 != m_node;                         }
-    operator xercesc::DOMNode* () const                 { return m_node;                              }
-    operator xercesc::DOMElement* () const              { return m_node;                              }
-    xercesc::DOMElement* operator->() const             { return m_node;                              }
-    std::string attr(const XMLTag& tag) const           { return _toString(m_node->getAttribute(tag));}
-    std::string attr(CSTR tag)  const                   { return attr(XMLTag(tag));                   }
-    std::string tag() const                             { return _toString(m_node->getTagName());     }
+    operator bool()  const                              { return 0 != m_node;                                        }
+    XMLElement& operator ()(xercesc::DOMNode* n);
+    operator xercesc::DOMNode* () const                 { return m_node;                                             }
+    operator xercesc::DOMElement* () const              { return m_node;                                             }
+    xercesc::DOMElement* operator->() const             { return m_node;                                             }
+    std::string attr(const XMLTag& tag) const           { return m_node ? _toString(m_node->getAttribute(tag)) : ""; }
+    std::string attr(CSTR tag)  const                   { return attr(XMLTag(tag));                                  }
+    std::string tag() const                             { return m_node ? _toString(m_node->getTagName()) : "";      }
+    std::string value() const                           { return m_node ? _toString(m_node->getNodeValue()) : "";    }
   };
   struct XMLCollection : public XMLElement  {
-    XMLCollection(xercesc::DOMNode* n, bool use_children=true);
+    std::string m_tag;
+    XMLCollection(xercesc::DOMNode* n, bool use_children=true, const std::string& tag="");
     XMLCollection& operator++();
   };
 }

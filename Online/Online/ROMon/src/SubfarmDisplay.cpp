@@ -1,4 +1,4 @@
-// $Id: SubfarmDisplay.cpp,v 1.7 2008-08-27 19:15:20 frankb Exp $
+// $Id: SubfarmDisplay.cpp,v 1.8 2008-09-10 09:45:20 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/SubfarmDisplay.cpp,v 1.7 2008-08-27 19:15:20 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/SubfarmDisplay.cpp,v 1.8 2008-09-10 09:45:20 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -132,7 +132,7 @@ void SubfarmDisplay::showNodes(const Nodeset& ns)  {
       case SND_BUFFER: getBuffInfo((*ib).ctrl, res_info, res_tot); break;
       case MEP_BUFFER: getBuffInfo((*ib).ctrl, mep_info, mep_tot); break;
       case EVT_BUFFER: getBuffInfo((*ib).ctrl, evt_info, evt_tot); break;
-      default:                                                                  break;
+      default:                                                     break;
       }
       for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
 	++ntsk;

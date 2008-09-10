@@ -1,5 +1,13 @@
 <TaskInventory>
 
+<!--
+
+- Boot information [Not availible]
+- CPU usage (saturation)
+- Memory usage (saturation)
+
+-->
+
 <!--  Standard FMC tasks:                  -->
 <Task name="fmcLog"/>
 <Task name="tmSrv_u"/>
@@ -14,7 +22,7 @@
 <Task name="coalSrv_u"/>
 
 <!--  Standard infrastructure tasks:       -->
-<Task name="TANSrv"/>
+<Task name="TANServ"/>
 
 <!--  Standard Readout worker tasks:       -->
 <Task name="ROcollect"/>
@@ -56,113 +64,226 @@
 <Task name="Monitoring_Slice0FSrv" type="logViewer"/>
 
 
-<TaskList>
- <Name>FMC</Name>
- <Task>fmcLog</Task>
- <Task>tmSrv_u</Task>
- <Task>fsSrv_u</Task>
- <Task>smartSrv_u</Task>
- <Task>tcpipSrv_u</Task>
- <Task>psSrv_u</Task>
- <Task>nifSrv_u</Task>
- <Task>memSrv_u</Task>
- <Task>irqSrv_u</Task>
- <Task>cpustatSrv_u</Task>
- <Task>coalSrv_u</Task>
+<!--
+ <Task name="fmcLog"/>
+ <Task name="fsSrv_u"/>
+-->
+
+<TaskList name="FMC">
+ <Task name="tmSrv_u"/>
+ <Task name="smartSrv_u"/>
+ <Task name="tcpipSrv_u"/>
+ <Task name="psSrv_u"/>
+ <Task name="nifSrv_u"/>
+ <Task name="memSrv_u"/>
+ <Task name="irqSrv_u"/>
+ <Task name="cpustatSrv_u"/>
+ <Task name="coalSrv_u"/>
+
+ <Task name="pingSrv_u"/>
 </TaskList>
 
-<TaskList>
- <Name>StandardHLT</Name>
- <Task>TANSrv</Task>
- <Task>ROcollect</Task>
- <Task>ROpublish</Task>
- <Task>LogGaudiSrv</Task>
+<TaskList name="StandardHLT">
+ <Task name="TANServ"/>
+ <Task name="ROcollect"/>
+ <Task name="ROpublish"/>
+ <Task name="LogGaudiSrv"/>
 </TaskList>
 
-<TaskList>
- <Name>StandardMonitoring</Name>
- <Task>Monitoring_Slice00Srv</Task>
- <Task>Monitoring_Slice01Srv</Task>
- <Task>Monitoring_Slice02Srv</Task>
- <Task>Monitoring_Slice03Srv</Task>
- <Task>Monitoring_Slice04Srv</Task>
- <Task>Monitoring_Slice05Srv</Task>
- <Task>Monitoring_Slice06Srv</Task>
- <Task>Monitoring_Slice07Srv</Task>
- <Task>Monitoring_Slice08Srv</Task>
- <Task>Monitoring_Slice09Srv</Task>
- <Task>Monitoring_Slice0ASrv</Task>
- <Task>Monitoring_Slice0BSrv</Task>
- <Task>Monitoring_Slice0CSrv</Task>
- <Task>Monitoring_Slice0DSrv</Task>
- <Task>Monitoring_Slice0ESrv</Task>
- <Task>Monitoring_Slice0FSrv</Task>
+<TaskList name="StandardMonitoring">
+ <Task name="Monitoring_Slice00Srv"/>
+ <Task name="Monitoring_Slice01Srv"/>
+ <Task name="Monitoring_Slice02Srv"/>
+ <Task name="Monitoring_Slice03Srv"/>
+ <Task name="Monitoring_Slice04Srv"/>
+ <Task name="Monitoring_Slice05Srv"/>
+ <Task name="Monitoring_Slice06Srv"/>
+ <Task name="Monitoring_Slice07Srv"/>
+ <Task name="Monitoring_Slice08Srv"/>
+ <Task name="Monitoring_Slice09Srv"/>
+ <Task name="Monitoring_Slice0ASrv"/>
+ <Task name="Monitoring_Slice0BSrv"/>
+ <Task name="Monitoring_Slice0CSrv"/>
+ <Task name="Monitoring_Slice0DSrv"/>
+ <Task name="Monitoring_Slice0ESrv"/>
+ <Task name="Monitoring_Slice0FSrv"/>
 </TaskList>
 
-<TaskList>
- <Name>StandardStorage</Name>
- <Task>Storage_Slice00Srv</Task>
- <Task>Storage_Slice01Srv</Task>
- <Task>Storage_Slice02Srv</Task>
- <Task>Storage_Slice03Srv</Task>
- <Task>Storage_Slice04Srv</Task>
- <Task>Storage_Slice05Srv</Task>
- <Task>Storage_Slice06Srv</Task>
- <Task>Storage_Slice07Srv</Task>
- <Task>Storage_Slice08Srv</Task>
- <Task>Storage_Slice09Srv</Task>
- <Task>Storage_Slice0ASrv</Task>
- <Task>Storage_Slice0BSrv</Task>
- <Task>Storage_Slice0CSrv</Task>
- <Task>Storage_Slice0DSrv</Task>
- <Task>Storage_Slice0ESrv</Task>
- <Task>Storage_Slice0FSrv</Task>
+<TaskList name="StandardStorage">
+ <Task name="Storage_Slice00Srv"/>
+ <Task name="Storage_Slice01Srv"/>
+ <Task name="Storage_Slice02Srv"/>
+ <Task name="Storage_Slice03Srv"/>
+ <Task name="Storage_Slice04Srv"/>
+ <Task name="Storage_Slice05Srv"/>
+ <Task name="Storage_Slice06Srv"/>
+ <Task name="Storage_Slice07Srv"/>
+ <Task name="Storage_Slice08Srv"/>
+ <Task name="Storage_Slice09Srv"/>
+ <Task name="Storage_Slice0ASrv"/>
+ <Task name="Storage_Slice0BSrv"/>
+ <Task name="Storage_Slice0CSrv"/>
+ <Task name="Storage_Slice0DSrv"/>
+ <Task name="Storage_Slice0ESrv"/>
+ <Task name="Storage_Slice0FSrv"/>
 </TaskList>
 
-<TaskList>
- <Name>MonitoringWorker</Name>
+<TaskList name="StorageControl">
+ <Task name="Storage_Slice00SumSrv"/>
+ <Task name="Storage_Slice01SumSrv"/>
+ <Task name="Storage_Slice02SumSrv"/>
+ <Task name="Storage_Slice03SumSrv"/>
+ <Task name="Storage_Slice04SumSrv"/>
+ <Task name="Storage_Slice05SumSrv"/>
+ <Task name="Storage_Slice06SumSrv"/>
+ <Task name="Storage_Slice07SumSrv"/>
+ <Task name="Storage_Slice08SumSrv"/>
+ <Task name="Storage_Slice09SumSrv"/>
+ <Task name="Storage_Slice0ASumSrv"/>
+ <Task name="Storage_Slice0BSumSrv"/>
+ <Task name="Storage_Slice0CSumSrv"/>
+ <Task name="Storage_Slice0DSumSrv"/>
+ <Task name="Storage_Slice0ESumSrv"/>
+ <Task name="Storage_Slice0FSumSrv"/>
+ <Task name="Storage_Slice00Collect"/>
+ <Task name="Storage_Slice01Collect"/>
+ <Task name="Storage_Slice02Collect"/>
+ <Task name="Storage_Slice03Collect"/>
+ <Task name="Storage_Slice04Collect"/>
+ <Task name="Storage_Slice05Collect"/>
+ <Task name="Storage_Slice06Collect"/>
+ <Task name="Storage_Slice07Collect"/>
+ <Task name="Storage_Slice08Collect"/>
+ <Task name="Storage_Slice09Collect"/>
+ <Task name="Storage_Slice0ACollect"/>
+ <Task name="Storage_Slice0BCollect"/>
+ <Task name="Storage_Slice0CCollect"/>
+ <Task name="Storage_Slice0DCollect"/>
+ <Task name="Storage_Slice0ECollect"/>
+ <Task name="Storage_Slice0FCollect"/>
 </TaskList>
 
-<TaskList>
- <Name>MonitoringControl</Name>
+<TaskList name="MonitoringWorker">
 </TaskList>
 
-<TaskList>
-  <Name>ControlsPC</Name>
+<TaskList name="MonitoringControl">
+ <Task name="Monitoring_Slice00SumSrv"/>
+ <Task name="Monitoring_Slice01SumSrv"/>
+ <Task name="Monitoring_Slice02SumSrv"/>
+ <Task name="Monitoring_Slice03SumSrv"/>
+ <Task name="Monitoring_Slice04SumSrv"/>
+ <Task name="Monitoring_Slice05SumSrv"/>
+ <Task name="Monitoring_Slice06SumSrv"/>
+ <Task name="Monitoring_Slice07SumSrv"/>
+ <Task name="Monitoring_Slice08SumSrv"/>
+ <Task name="Monitoring_Slice09SumSrv"/>
+ <Task name="Monitoring_Slice0ASumSrv"/>
+ <Task name="Monitoring_Slice0BSumSrv"/>
+ <Task name="Monitoring_Slice0CSumSrv"/>
+ <Task name="Monitoring_Slice0DSumSrv"/>
+ <Task name="Monitoring_Slice0ESumSrv"/>
+ <Task name="Monitoring_Slice0FSumSrv"/>
+ <Task name="Monitoring_Slice00Collect"/>
+ <Task name="Monitoring_Slice01Collect"/>
+ <Task name="Monitoring_Slice02Collect"/>
+ <Task name="Monitoring_Slice03Collect"/>
+ <Task name="Monitoring_Slice04Collect"/>
+ <Task name="Monitoring_Slice05Collect"/>
+ <Task name="Monitoring_Slice06Collect"/>
+ <Task name="Monitoring_Slice07Collect"/>
+ <Task name="Monitoring_Slice08Collect"/>
+ <Task name="Monitoring_Slice09Collect"/>
+ <Task name="Monitoring_Slice0ACollect"/>
+ <Task name="Monitoring_Slice0BCollect"/>
+ <Task name="Monitoring_Slice0CCollect"/>
+ <Task name="Monitoring_Slice0DCollect"/>
+ <Task name="Monitoring_Slice0ECollect"/>
+ <Task name="Monitoring_Slice0FCollect"/>
 </TaskList>
 
+<TaskList name="ControlsPC">
+</TaskList>
 
-<NodeType>
-  <Name>HLTControl</Name>
-  <TaskList>FMC</TaskList>
-  <TaskList>StandardHLT</TaskList>
-  <Task>CPUmon</Task>
-  <Task>CPUcollect</Task>
-  <Task>PROCmon</Task>
-  <Task>PROCcollect</Task>
-  <Task>LogGaudi</Task>
-  <Task>LogGaudiSumSrv</Task>
-  <Task>LogGaudiSumSrvaaaa</Task>
+<ConnectionList name="Standard">
+  <Connection name="&lt;DIM_DNS_NODE&gt;"/>
+</ConnectionList>
+
+<ConnectionList name="ControlsPC">
+  <Connection name="hlt01"/>
+  <Connection name="ecs01"/>
+  <Connection name="ecs03"/>
+  <Connection name="storectl01"/>
+</ConnectionList>
+
+<ConnectionList name="StorageReceiver">
+  <Connection name="storerecv01-d1"/>
+  <Connection name="storerecv02-d1"/>
+</ConnectionList>
+
+<ConnectionList name="StorageControl">
+  <Connection name="storerecv01"/>
+  <Connection name="storerecv02"/>
+  <Connection name="storestrm01"/>
+  <Connection name="storestrm02"/>
+</ConnectionList>
+
+<ConnectionList name="StorageWorker">
+  <Connection name="storerecv01-d1"/>
+  <Connection name="storerecv02-d1"/>
+  <Connection name="storestrm01-d1"/>
+  <Connection name="storestrm02-d1"/>
+</ConnectionList>
+
+<NodeType name="HLTControl">
+  <!-- TaskList name="FMC"/-->
+  <TaskList name="StandardHLT"/>
+  <Task name="CPUmon"/>
+  <Task name="CPUcollect"/>
+  <Task name="PROCmon"/>
+  <Task name="PROCcollect"/>
+  <Task name="LogGaudi"/>
+  <Task name="LogGaudiSumSrv"/>
+  <ConnectionList name="ControlsPC"/>
 </NodeType>
 
-<NodeType>
-  <Name>HLTWorker</Name>
-  <TaskList>FMC</TaskList>
-  <TaskList>StandardHLT</TaskList>
-  <Task>MBMMON_0</Task>
+<NodeType name="HLTWorker">
+  <TaskList name="FMC"/>
+  <TaskList name="StandardHLT"/>
+  <Task name="MBMMON_0"/>
+  <ConnectionList name="Standard"/>
+  <ConnectionList name="StorageReceiver"/>
 </NodeType>
 
-<NodeType>
-  <Name>MonitoringControl</Name>
-  <TaskList>FMC</TaskList>
-  <TaskList>StandardMonitoring</TaskList>
-  <TaskList>MonitoringControl</TaskList>
+<NodeType name="MonitoringControl">
+  <TaskList name="FMC"/>
+  <TaskList name="StandardMonitoring"/>
+  <TaskList name="MonitoringControl"/>
+  <ConnectionList name="ControlsPC"/>
 </NodeType>
-<NodeType>
-  <Name>MonitoringWorker</Name>
-  <TaskList>FMC</TaskList>
-  <TaskList>StandardMonitoring</TaskList>
-  <TaskList>MonitoringWorker</TaskList>
+
+<NodeType name="MonitoringWorker">
+  <TaskList name="FMC"/>
+  <TaskList name="StandardMonitoring"/>
+  <TaskList name="MonitoringWorker"/>
+  <ConnectionList name="Standard"/>
+  <ConnectionList name="StorageReceiver"/>
+</NodeType>
+
+
+<NodeType name="StorageControl">
+  <TaskList name="FMC"/>
+  <TaskList name="StandardStorage"/>
+  <TaskList name="StorageControl"/>
+  <ConnectionList name="ControlsPC"/>
+  <ConnectionList name="StorageControl"/>
+</NodeType>
+
+<NodeType name="StorageWorker">
+  <TaskList name="FMC"/>
+  <TaskList name="StandardStorage"/>
+  <TaskList name="StorageWorker"/>
+  <ConnectionList name="Standard"/>
+  <ConnectionList name="StorageWorker"/>
 </NodeType>
 
 </TaskInventory>

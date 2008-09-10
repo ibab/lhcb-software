@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.h,v 1.11 2008-08-28 16:39:14 frankb Exp $
+// $Id: FarmDisplay.h,v 1.12 2008-09-10 09:45:20 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmDisplay.h,v 1.11 2008-08-28 16:39:14 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmDisplay.h,v 1.12 2008-09-10 09:45:20 frankb Exp $
 #ifndef ROMON_FARMDISPLAY_H
 #define ROMON_FARMDISPLAY_H 1
 
@@ -135,89 +135,6 @@ namespace ROMon {
     virtual ~HelpDisplay() {}
     /// Update display content
     virtual void update(const void*) {}
-  };
-
-  /**@class FarmSubDisplay ROMon.h GaudiOnline/FarmDisplay.h
-   *
-   *   Display summarizing one single subfarm. Showed as an array on the
-   *   main display.
-   *
-   *   @author M.Frank
-   */
-  class FarmSubDisplay : public InternalDisplay  {
-    int               m_evtBuilt;
-    int               m_evtMoore;
-    int               m_evtSent;
-    int               m_totBuilt;
-    int               m_totMoore;
-    int               m_totSent;
-    int               m_numUpdate;
-    bool              m_hasProblems;
-    bool              m_inUse;
-
-  public:
-    /// Access to problem flag
-    bool hasProblems() const { return m_hasProblems; }
-    /// Set timeout error
-    void setTimeoutError();
-    /// Initializing constructor
-    FarmSubDisplay(FarmDisplay* parent, const std::string& title, bool bad=false);
-    /// Standard destructor
-    virtual ~FarmSubDisplay();
-    /// Initialize default display text
-    void init(bool bad);
-    /// Update display content
-    virtual void update(const void* data);
-    /// Check display for errors
-    virtual void check(time_t stamp);
-    /// Set the focus to this display
-    virtual void setFocus();
-    /// Release the focus of this display
-    virtual void releaseFocus();
-    /// Interactor overload: Display callback handler
-    virtual void handle(const Event& ev);
-    /// Update display content
-    virtual void updateContent(const Nodeset& ns);
-  };
-
-  /**@class RecFarmSubDisplay ROMon.h GaudiOnline/FarmDisplay.h
-   *
-   *   Display summarizing one single subfarm. Showed as an array on the
-   *   main display.
-   *
-   *   @author M.Frank
-   */
-  class RecFarmSubDisplay : public InternalDisplay  {
-    int               m_evtRecv;
-    int               m_evtReco;
-    int               m_evtSent;
-    int               m_totRecv;
-    int               m_totReco;
-    int               m_totSent;
-    bool              m_hasProblems;
-  public:
-    /// Access to problem flag
-    bool hasProblems() const { return m_hasProblems; }
-    /// Set timeout error
-    void setTimeoutError();
-    /// Initializing constructor
-    RecFarmSubDisplay(FarmDisplay* parent, const std::string& title, bool bad=false);
-    /// Standard destructor
-    virtual ~RecFarmSubDisplay();
-    /// Initialize default display text
-    void init(bool bad);
-    /// Update display content
-    virtual void update(const void* data);
-    /// Check display for errors
-    virtual void check(time_t stamp);
-    /// Set the focus to this display
-    virtual void setFocus();
-    /// Release the focus of this display
-    virtual void releaseFocus();
-    /// Interactor overload: Display callback handler
-    virtual void handle(const Event& ev);
-    /// Update display content
-    virtual void updateContent(const Nodeset& ns);
   };
 
   /**@class ProcessDisplay ROMon.h GaudiOnline/FarmDisplay.h
@@ -387,6 +304,40 @@ public:
     int showMbmWindow();
     /// Show window with node control information
     int showCtrlWindow();
+    /// DIM command service callback
+    static void dnsDataHandler(void* tag, void* address, int* size);
+
   };
 }      // End namespace ROMon
+
+
+
+#define BUILDER_TASK                 'M'
+#define SENDER_TASK                  'D'
+#define MOORE_TASK                   'G'
+
+#define REC_RECEIVER_TASK            'R'
+#define REC_SENDER_TASK              'S'
+#define REC_TASK                     'B'
+
+#define MEP_BUFFER                   'M'
+#define RES_BUFFER                   'R'
+#define EVT_BUFFER                   'E'
+#define SND_BUFFER                   'S'
+#define INPUT_BUFFER                 'I'
+#define OUTPUT_BUFFER                'O'
+
+#define SUBFARM_HEIGHT               65
+#define SUBFARM_WIDTH               132
+#define SUBFARM_NODE_OFFSET           8
+#define SUBFARM_DISP_WIDTH           48
+#define SUBFARM_DISP_HEIGHT_NORMAL    5
+#define SUBFARM_DISP_HEIGHT_DENSE     4
+#define SUBFARM_DISP_TOP              4
+#define SUBFARM_DISP_LEFT             3
+#define NUM_UPDATE_DIFF               5
+
+#define SLOTS_MIN                     .1
+#define SPACE_MIN                     .1
+
 #endif /* ROMON_FARMDISPLAY_H */

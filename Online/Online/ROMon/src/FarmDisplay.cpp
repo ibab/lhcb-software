@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.cpp,v 1.22 2008-08-28 16:39:14 frankb Exp $
+// $Id: FarmDisplay.cpp,v 1.23 2008-09-10 09:45:20 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.22 2008-08-28 16:39:14 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.23 2008-09-10 09:45:20 frankb Exp $
 
 #include "ROMon/CtrlSubfarmDisplay.h"
 #include "ROMon/RecSubfarmDisplay.h"
@@ -106,17 +106,11 @@ static std::string strUpper(const std::string& src) {
 }
 
 namespace ROMon {
+  InternalDisplay* createFarmSubDisplay(FarmDisplay* parent, const std::string& title);
+  InternalDisplay* createRecFarmSubDisplay(FarmDisplay* parent, const std::string& title);
   InternalDisplay* createCtrlFarmSubDisplay(FarmDisplay* parent, const std::string& title);
 }
 namespace {
-  const char* _procNam(const char* nam) {
-    char* p;
-    if (0 != ::strstr(nam,"MEPRx") ) return nam;
-    p = ::strchr(nam,'_');
-    if ( 0 != p ) return ++p;
-    return "Unknown";
-  }
-
   struct DisplayUpdate {
     Pasteboard* m_pb;
     bool m_flush;
@@ -292,7 +286,7 @@ void BufferDisplay::update(const void* data) {
 	    p = strchr(bnam,'_');
 	    if ( p ) *p = 0;
 	  }
-	  sprintf(name," Buffer \"%s\"",(*ib).name);
+	  ::sprintf(name," Buffer \"%s\"",(*ib).name);
 	  ::sprintf(txt,"%-26s  Events: Produced:%d Actual:%d Seen:%d Pending:%d Max:%d",
 		    name, c.tot_produced, c.tot_actual, c.tot_seen, c.i_events, c.p_emax);
 	  ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
@@ -390,7 +384,7 @@ void CtrlDisplay::update(const void* data) {
   Cluster* c = (Cluster*)data;
   if ( c ) {
     const Cluster::Nodes& n = c->nodes;
-    const char* fmt = "  %-24s %12s %17zd %17zd    %s";
+    //const char* fmt = "  %-24s %12s %17zd / %-5zd     %17zd / %-5zd      %s";
 
     ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
     ::sprintf(txt, "  Cluster:%s  status:%12s  last update:%s",c->name.c_str(),c->status.c_str(),c->time.c_str());
@@ -403,29 +397,82 @@ void CtrlDisplay::update(const void* data) {
 	::strftime(name,sizeof(name),"%H:%M:%S",::localtime(&tim));
 	::sprintf(txt,"Task Control display for node:%s  [%s]",n.name.c_str(),name);
 	::scrc_set_border(m_display,txt,BLUE|INVERSE);
-	::sprintf(txt,"  %-24s %12s %17s %17s    %s","Node","Status","Found Tasks","Missing tasks","Timestamp");
-	::scrc_put_chars(m_display,txt,INVERSE,++line,1,1);
-	::sprintf(txt,fmt,n.name.c_str(),n.status.c_str(),n.taskCount,n.missCount,n.time.c_str());
+
+	::sprintf(txt, "  Node:%s  last update:%s",n.name.c_str(),n.time.c_str());
 	::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
+
+	::sprintf(txt," %-12s %8s    Tasks       Connections  %6s %6s %6s %6s %3s %3s",
+		  "","","RSS","Stack","Data","VSize","CPU","MEM");
+	::scrc_put_chars(m_display,txt,INVERSE,++line,1,1);
+	::sprintf(txt," %-12s %8s found/missing found/missing %6s %6s %6s %6s %3s %3s %s",
+		  "Node","Status","[MB]","[MB]","[MB]","[MB]","[%]","[%]","Boot time");
+	::scrc_put_chars(m_display,txt,INVERSE,++line,1,1);
+	::sprintf(txt," %-12s %8s %5zd/%-7zd %5zd/%-7zd %6d %6d %6d %6d %3.0f %3.0f %s",
+		  n.name.c_str(),n.status.c_str(),
+		  n.taskCount,n.missTaskCount,n.connCount,n.missConnCount,
+		  int(n.rss/1024),int(n.stack/1024),int(n.data/1024),int(n.vsize/1024),
+		  n.perc_cpu, n.perc_mem, n.boot.substr(4,12).c_str());
+	::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
+
+	//::sprintf(txt,"  %-24s %12s %17s / Missing   %17s / Missing    %s","Node","Status","Tasks found","Connections found","Timestamp");
+	//::scrc_put_chars(m_display,txt,INVERSE,++line,1,1);
+	//::sprintf(txt,fmt,n.name.c_str(),n.status.c_str(),n.taskCount,n.missTaskCount,n.connCount,n.missConnCount,n.time.c_str());
+	//::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
 	if ( n.status == "DEAD" ) {
 	  ::scrc_put_chars(m_display,"",INVERSE|RED|BOLD,++line,1,1);
-	  ::scrc_put_chars(m_display,"  -------------------------------------",INVERSE|RED|BOLD,++line,1,1);
-	  ::scrc_put_chars(m_display,"  Node is DEAD. Severe problem present.",INVERSE|RED|BOLD,++line,1,1);
-	  ::scrc_put_chars(m_display,"  -------------------------------------",INVERSE|RED|BOLD,++line,1,1);
+	  ::scrc_put_chars(m_display,"                        -------------------------------------",INVERSE|RED|BOLD,++line,1,1);
+	  ::scrc_put_chars(m_display,"                        Node is DEAD. Severe problem present.",INVERSE|RED|BOLD,++line,1,1);
+	  ::scrc_put_chars(m_display,"                        -------------------------------------",INVERSE|RED|BOLD,++line,1,1);
 	  ::scrc_put_chars(m_display,"",INVERSE|RED|BOLD,++line,1,1);
 	}
-	else if ( n.missing.size() > 0 ) {
-	  ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
-	  ::scrc_put_chars(m_display,"  Missing tasks:",INVERSE|BOLD|RED,++line,1,1);
-	  for(j=n.missing.begin(); j != n.missing.end(); ++j,++cnt) {
-	    ::sprintf(txt,"   [%d]  %s",cnt,(*j).c_str());
-	    ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
-	  }
-	}
 	else {
+	  typedef std::map<std::string,bool> _O;
+	  int l, x;
+	  _O ord;
+	  _O::iterator k;
 	  ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
+	  if ( n.taskCount > 0 ) {
+	    ::scrc_put_chars(m_display,"  Task Summary:",n.missTaskCount > 0 ? INVERSE|BOLD|RED : INVERSE|GREEN,++line,1,1);
+	    ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
+	    for(j=n.tasks.begin(); j != n.tasks.end(); ++j) ord[(*j).first]=(*j).second;
+	    for(k=ord.begin(),cnt=0,l=line,x=1; k !=ord.end(); ++k,++cnt) {
+	      bool ok = (*k).second;
+	      if ( cnt==int((ord.size()+1)/2) ) l = line, x=61;
+	      ::sprintf(txt,"   [%03d]  %-32s %-10s",cnt,(*k).first.c_str(),ok ? "OK" : "MISSING");
+	      ::scrc_put_chars(m_display,txt,ok ? NORMAL : INVERSE|RED,++l,x,1);
+	    }
+	    line += (ord.size()+3)/2;
+	    ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
+	    ord.clear();
+	  }
+	  else {
+	    ::scrc_put_chars(m_display,"  No tasks found",INVERSE|BOLD|RED,++line,1,1);
+	  }
+	  if ( n.connCount > 0 ) {
+	    ::scrc_put_chars(m_display,"  Connection Summary:",n.missConnCount > 0 ? INVERSE|BOLD|RED : INVERSE|GREEN,++line,1,1);
+	    ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
+	    for(j=n.conns.begin(); j != n.conns.end(); ++j) ord[(*j).first]=(*j).second;
+	    for(k=ord.begin(),cnt=0,l=line,x=1; k !=ord.end(); ++k,++cnt) {
+	      bool ok = (*k).second;
+	      if ( cnt==int((ord.size()+1)/2) ) l = line, x=61;
+	      ::sprintf(txt,"   [%03d]  %-32s %-10s",cnt,(*k).first.c_str(),ok ? "OK" : "MISSING");
+	      ::scrc_put_chars(m_display,txt,ok ? NORMAL : INVERSE|RED,++l,x,1);
+	    }
+	    line += (ord.size()+3)/2;
+	    ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
+	    ord.clear();
+	  }
+	  else {
+	    ::scrc_put_chars(m_display,"  No connections found",INVERSE|BOLD|RED,++line,1,1);
+	  }
 	  ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
-	  ::scrc_put_chars(m_display,"  Node looks fine. No missing tasks found.",INVERSE|GREEN,++line,1,1);
+	  if ( n.missTaskCount == 0 && n.missConnCount == 0 )
+	    ::scrc_put_chars(m_display,"  Node looks fine. No missing tasks/network connections found.",INVERSE|GREEN,++line,1,1);
+	  else if ( n.missTaskCount == 0 )
+	    ::scrc_put_chars(m_display,"  No missing tasks found, but missing network connections .....",INVERSE|RED,++line,1,1);
+	  else if ( n.missConnCount == 0 )
+	    ::scrc_put_chars(m_display,"  No missing network connections found, but missing tasks .....",INVERSE|RED,++line,1,1);
+	  ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
 	}
       }
     }
@@ -575,526 +622,6 @@ void CPUDisplay::updateContent(const CPUfarm& f) {
   }
 }
 
-/// Initializing constructor
-FarmSubDisplay::FarmSubDisplay(FarmDisplay* parent, const std::string& title, bool bad) 
-: InternalDisplay(parent, title)
-{
-  m_numUpdate = 0;
-  m_evtSent  = m_totSent = 0;
-  m_evtMoore = m_totMoore = 0;
-  m_evtBuilt = m_totBuilt = 0;
-  m_lastUpdate = time(0);
-  ::scrc_create_display(&m_display,4,48,NORMAL,ON,m_title.c_str());
-  init(bad);
-  std::string svc = "/";
-  for(size_t i=0; i<title.length();++i) svc += ::tolower(title[i]);
-  svc += "/ROpublish";
-  m_svc = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,dataHandler,(long)this,0,0);
-  m_hasProblems = false;
-  MouseSensor::instance().add(this,m_display);
-}
-
-/// Standard destructor
-FarmSubDisplay::~FarmSubDisplay() {
-  MouseSensor::instance().remove(m_display);
-}
-
-/// Initialize default display text
-void FarmSubDisplay::init(bool bad) {
-  int col = bad ? INVERSE|RED : NORMAL;
-  char txt[128];
-  ::sprintf(txt,"%-4s%9s %3s%9s %2s%4s%9s%4s",
-	    "","MEP","Sl","EVENT","Cl","Sl","SEND","Sl");
-  ::scrc_put_chars(m_display,txt,col|INVERSE,1,1,1);
-  //::scrc_put_chars(m_display,txt,col|BOLD,1,1,1);
-  ::scrc_put_chars(m_display," ",col,2,1,1);
-  ::scrc_put_chars(m_display," ",col,3,1,1);
-  ::scrc_put_chars(m_display," ",col,4,1,1);
-  ::scrc_put_chars(m_display,"Tot:",BOLD,2,1,1);
-  ::scrc_put_chars(m_display,"Min:",BOLD,3,1,1);
-  ::scrc_put_chars(m_display,"Max:",BOLD,4,1,1);
-  ::scrc_put_chars(m_display,"  ",col,2,46,0);
-  ::scrc_put_chars(m_display,"  ",col,3,45,0);
-  ::scrc_put_chars(m_display,"  ",col,4,44,0);
-  ::scrc_set_border(m_display,m_title.c_str(),col|BOLD);
-}
-
-/// DIM command service callback
-void FarmSubDisplay::update(const void* address) {
-  const Nodeset* ns = (const Nodeset*)address;
-  if ( ns->type == Nodeset::TYPE ) {
-    updateContent(*ns);
-  }
-}
-
-/// Set timeout error
-void FarmSubDisplay::setTimeoutError() {
-  ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
-  ::scrc_put_chars(m_display," No update information available",BOLD|RED|INVERSE,4,1,1);
-}
-
-/// Check display for errors
-void FarmSubDisplay::check(time_t now) {
-  if ( hasProblems() ) {
-    if ( now - lastUpdate() > UPDATE_TIME_MAX ) {
-      setTimeoutError();
-    }
-  }
-}
-
-/// Set the focus to this display
-void FarmSubDisplay::setFocus() {
-  ::scrc_set_border(m_display,m_title.c_str(),INVERSE|BLUE);
-}
-
-/// Release the focus of this display
-void FarmSubDisplay::releaseFocus() {
-}
-
-/// Interactor overload: Display callback handler
-void FarmSubDisplay::handle(const Event& ev) {
-  switch(ev.eventtype) {
-  case ScrMouseEvent: {
-    const MouseEvent* m = ev.get<MouseEvent>();
-    if ( m->button == 2 ) {
-      IocSensor::instance().send(parent(),CMD_SHOWHELP,this);
-      return;
-    }
-    setFocus();
-    IocSensor::instance().send(parent(),m->msec == (unsigned int)-1 ? CMD_POSCURSOR : CMD_SHOW,this);
-    return;
-  }
-  default:
-    break;
-  }
-  InternalDisplay::handle(ev);
-}
-
-/// Update display content
-void FarmSubDisplay::updateContent(const Nodeset& ns) {
-  char txt[128], text[128];
-  int evt_prod[3]    = {0,0,0}, min_prod[3]  = {INT_max,INT_max,INT_max};
-  int free_space[3]  = {0,0,0}, min_space[3] = {INT_max,INT_max,INT_max};
-  int used_slots[3]  = {0,0,0}, min_slots[3] = {INT_max,INT_max,INT_max};
-  int buf_clients[3] = {0,0,0};
-  float fspace[3]    = {FLT_max,FLT_max,FLT_max};
-  float fslots[3]    = {FLT_max,FLT_max,FLT_max};
-  int evt_sent       = INT_max;
-  int evt_moore      = INT_max;
-  int evt_built      = INT_max;
-  bool inuse         = false;
-  int numNodes       = 0;
-  int numBuffs       = 0;
-  int numClients     = 0;
-  std::set<std::string> bad_nodes;
-
-  for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
-    const Buffers& buffs = *(*n).buffers();
-    numNodes++;
-    int node_evt_mep = 0;
-    int node_evt_sent = INT_max;
-    int node_evt_moore = INT_max;
-    for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
-      int idx = 0;
-      char b = (*ib).name[0];
-      const MBMBuffer::Control& ctrl = (*ib).ctrl;
-      inuse = true;
-      numBuffs++;
-      switch(b) {
-      case MEP_BUFFER:	idx = 0; break;
-      case EVT_BUFFER:	idx = 1; break;
-      case RES_BUFFER:
-      case SND_BUFFER:	idx = 2; break;
-      default:
-	continue;
-      }
-      fspace[idx]       = std::min(fspace[idx],float(ctrl.i_space)/float(ctrl.bm_size)); 
-      fslots[idx]       = std::min(fslots[idx],float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax));
-      min_space[idx]    = std::min(min_space[idx],(ctrl.i_space*ctrl.bytes_p_Bit)/1024/1024);
-      min_slots[idx]    = std::min(min_slots[idx],ctrl.p_emax-ctrl.i_events);
-      min_prod[idx]     = std::min(min_prod[idx],ctrl.tot_produced);
-      evt_prod[idx]    += ctrl.tot_produced;
-      free_space[idx]  += (ctrl.i_space*ctrl.bytes_p_Bit)/1024/1024;
-      used_slots[idx]  += (ctrl.p_emax-ctrl.i_events);
-      buf_clients[idx] += ctrl.i_users;
-      if ( fslots[idx] < SLOTS_MIN || fspace[idx] < SPACE_MIN ) {
-	bad_nodes.insert((*n).name);
-      }
-      const Clients& clients = (*ib).clients;
-      for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
-	++numClients;
-	const char* p = _procNam((*ic).name);
-	switch(*p) {
-	case BUILDER_TASK:
-	  if( b == MEP_BUFFER ) {
-	    node_evt_mep += (*ic).events;
-	  }
-	  break;
-	case SENDER_TASK:
-	  if( b == RES_BUFFER || b == SND_BUFFER )  {
-	    node_evt_sent = std::min(node_evt_sent,(*ic).events);
-	  }
-	  break;
-	case MOORE_TASK:
-	  //  Normal  and        TAE event processing
-	  if( b == EVT_BUFFER || b == MEP_BUFFER )  {
-	    node_evt_moore = std::min(node_evt_moore,(*ic).events);
-	  }
-	  break;
-	default:
-	  break;
-	}
-      }
-    }
-    evt_moore = std::min(evt_moore,node_evt_moore);
-    evt_built = std::min(evt_built,node_evt_mep);
-    evt_sent  = std::min(evt_sent,node_evt_sent);
-  }
-  char b1[64];
-  Nodeset::TimeStamp frst=ns.firstUpdate();
-  time_t t1 = numNodes == 0 ? time(0) : frst.first, now = time(0);
-  ::strftime(b1,sizeof(b1),"%H:%M:%S",::localtime(&t1));
-  ::sprintf(text," %s %s [%d nodes %d buffers %d clients] ",
-	    m_name.c_str(),b1,numNodes,numBuffs,numClients);
-  m_title = text;
-  m_inUse = inuse;
-
-  if ( numNodes != 0 ) {
-    m_lastUpdate = t1;
-  }
-  m_hasProblems = true;
-  if ( now-m_lastUpdate > UPDATE_TIME_MAX ) {
-    setTimeoutError();
-  }
-  else if ( numNodes == 0 ) {
-    ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
-    ::scrc_put_chars(m_display," No nodes found in this subfarm!",BOLD|RED|INVERSE,4,1,1);
-  }
-  else if ( !inuse ) {
-    ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
-    ::scrc_put_chars(m_display," Subfarm not used by any partition....",NORMAL|INVERSE|GREEN,4,1,1);
-  }
-  else if ( fslots[0] < SLOTS_MIN || fslots[1] < SLOTS_MIN || fslots[2] < SLOTS_MIN ) {
-    ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
-    ::sprintf(txt," SLOTS at limit:");
-    if ( fslots[0] < SLOTS_MIN ) ::strcat(txt,"MEP ");
-    if ( fslots[1] < SLOTS_MIN ) ::strcat(txt,"EVENT ");
-    if ( fslots[2] < SLOTS_MIN ) ::strcat(txt,"RES/SEND ");
-    ::sprintf(text,"[%d nodes]",int(bad_nodes.size()));
-    ::strcat(txt,text);
-    ::scrc_put_chars(m_display,txt,BOLD|RED|INVERSE,4,1,1);
-  }
-  else if ( fspace[0] < SPACE_MIN || fspace[1] < SPACE_MIN || fspace[2] < SPACE_MIN  ) {
-    ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
-    ::sprintf(txt," SPACE at limit:");
-    if ( fspace[0] < SPACE_MIN ) ::strcat(txt,"MEP ");
-    if ( fspace[1] < SPACE_MIN ) ::strcat(txt,"EVENT ");
-    if ( fspace[2] < SPACE_MIN ) ::strcat(txt,"RES/SEND ");
-    ::sprintf(text,"[%d nodes]",int(bad_nodes.size()));
-    ::strcat(txt,text);
-    ::scrc_put_chars(m_display,txt,BOLD|RED|INVERSE,4,1,1);
-  }
-  else if ( evt_built <= m_evtBuilt && evt_prod[0]<m_totBuilt ) {
-    ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
-    ::sprintf(txt," Some MEPRx(s) stuck.");
-    ::scrc_put_chars(m_display,txt,BOLD|RED|INVERSE,4,1,1);
-  }
-  else if ( evt_built <= m_evtBuilt && evt_prod[0] == m_totBuilt ) {
-    ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
-    ::scrc_put_chars(m_display," No DAQ activity visible.",BOLD|RED,4,1,1);
-  }
-  else if ( evt_moore+2 <= m_evtMoore && evt_prod[1] > m_totMoore ) {
-    ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
-    ::scrc_put_chars(m_display," Some MOORE(s) stuck.",BOLD|RED|INVERSE,4,1,1);
-  }
-  else if ( evt_moore <= m_evtMoore && evt_prod[1] == m_totMoore ) {
-    ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
-    ::scrc_put_chars(m_display," No HLT activity visible.",BOLD|RED,4,1,1);
-  }
-  else if ( evt_sent+2 <= m_evtSent && evt_prod[2] > m_totSent ) {
-    ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
-    ::scrc_put_chars(m_display," Some Sender(s) stuck.",BOLD|RED|INVERSE,4,1,1);
-  }
-  else if ( evt_sent <= m_evtSent && evt_prod[0] == m_totSent ) {
-    ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
-    ::scrc_put_chars(m_display," No STORAGE activity visible.",BOLD|RED,4,1,1);
-  }
-  else {
-    ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
-    ::scrc_put_chars(m_display," No obvious Errors detected....",NORMAL|INVERSE|GREEN,4,1,1);
-    m_hasProblems = false;
-  }
-  m_evtBuilt  = evt_built;
-  m_evtMoore  = evt_moore;
-  m_evtSent   = evt_sent;
-  m_totBuilt  = evt_prod[0];
-  m_totMoore  = evt_prod[1];
-  m_totSent   = evt_prod[2];
-
-  if ( evt_prod[0] != 0 )
-    ::sprintf(txt,"%9d%4d%9d %2d%4d%9d%4d",
-	      evt_prod[0],used_slots[0],
-	      evt_prod[1],buf_clients[1],used_slots[1],
-	      evt_prod[2],used_slots[2]);
-  else
-    ::sprintf(txt,"%9s%4s%9s  %5s%9s%4s","--","--","--","--","--","--");
-  ::scrc_put_chars(m_display,txt,NORMAL,2,5,1);
-  if ( min_prod[0] != INT_max )
-    ::sprintf(txt,"%9d%4d%9d   %4d%9d%4d",
-	      min_prod[0],min_slots[0],
-	      min_prod[1],min_slots[1],
-	      min_prod[2],min_slots[2]);
-  else
-    ::sprintf(txt,"%9s%4s%9s  %5s%9s%4s","--","--","--","--","--","--");
-  ::scrc_put_chars(m_display,txt,NORMAL,3,5,1);
-  IocSensor::instance().send(m_parent,CMD_CHECK,this);
-}
-
-/// Initializing constructor
-RecFarmSubDisplay::RecFarmSubDisplay(FarmDisplay* parent, const std::string& title, bool bad) 
-: InternalDisplay(parent, title)
-{
-  m_evtSent = m_totSent = 0;
-  m_evtReco = m_totReco = 0;
-  m_evtRecv = m_totRecv = 0;
-  m_lastUpdate = time(0);
-  ::scrc_create_display(&m_display,4,48,NORMAL,ON,m_title.c_str());
-  init(bad);
-  std::string svc = "/";
-  for(size_t i=0; i<title.length();++i) svc += ::tolower(title[i]);
-  svc += "/ROpublish";
-  m_svc = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,dataHandler,(long)this,0,0);
-  m_hasProblems = false;
-  MouseSensor::instance().add(this,m_display);
-}
-
-/// Standard destructor
-RecFarmSubDisplay::~RecFarmSubDisplay() {
-  MouseSensor::instance().remove(m_display);
-}
-
-/// Initialize default display text
-void RecFarmSubDisplay::init(bool bad) {
-  int col = bad ? INVERSE|RED : NORMAL;
-  char txt[128];
-  ::sprintf(txt,"%-4s%9s%4s%6s   %9s%4s%6s","","INPUT","Cl","Slots","OUTPUT","Cl","Slots");
-  ::scrc_put_chars(m_display,txt,col|INVERSE,1,1,1);
-  ::scrc_put_chars(m_display," ",col,2,1,1);
-  ::scrc_put_chars(m_display," ",col,3,1,1);
-  ::scrc_put_chars(m_display," ",col,4,1,1);
-  ::scrc_put_chars(m_display,"Tot:",BOLD,2,1,1);
-  ::scrc_put_chars(m_display,"Min:",BOLD,3,1,1);
-  ::scrc_put_chars(m_display,"Max:",BOLD,4,1,1);
-  ::scrc_put_chars(m_display,"  ",col,2,46,0);
-  ::scrc_put_chars(m_display,"  ",col,3,45,0);
-  ::scrc_put_chars(m_display,"  ",col,4,44,0);
-  ::scrc_set_border(m_display,m_title.c_str(),col|BOLD);
-}
-
-/// DIM command service callback
-void RecFarmSubDisplay::update(const void* address) {
-  const Nodeset* ns = (const Nodeset*)address;
-  if ( ns->type == Nodeset::TYPE ) {
-    updateContent(*ns);
-  }
-}
-
-/// Set timeout error
-void RecFarmSubDisplay::setTimeoutError() {
-  ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
-  ::scrc_put_chars(m_display," No update information available",BOLD|RED|INVERSE,4,1,1);
-}
-
-/// Check display for errors
-void RecFarmSubDisplay::check(time_t now) {
-  if ( hasProblems() ) {
-    if ( now - lastUpdate() > UPDATE_TIME_MAX ) {
-      setTimeoutError();
-    }
-  }
-}
-
-/// Set the focus to this display
-void RecFarmSubDisplay::setFocus() {
-  ::scrc_set_border(m_display,m_title.c_str(),INVERSE|BLUE);
-}
-
-/// Release the focus of this display
-void RecFarmSubDisplay::releaseFocus() {
-}
-
-/// Interactor overload: Display callback handler
-void RecFarmSubDisplay::handle(const Event& ev) {
-  switch(ev.eventtype) {
-  case ScrMouseEvent: {
-    const MouseEvent* m = ev.get<MouseEvent>();
-    setFocus();
-    IocSensor::instance().send(parent(),m->msec == (unsigned int)-1 ? CMD_POSCURSOR : CMD_SHOW,this);
-    return;
-  }
-  default:
-    break;
-  }
-  InternalDisplay::handle(ev);
-}
-
-/// Update display content
-void RecFarmSubDisplay::updateContent(const Nodeset& ns) {
-  char txt[128], text[128];
-  int evt_prod[2]    = {0,0}, min_prod[2]  = {INT_max,INT_max};
-  int free_space[2]  = {0,0}, min_space[2] = {INT_max,INT_max};
-  int used_slots[2]  = {0,0}, min_slots[2] = {INT_max,INT_max};
-  int buf_clients[2] = {0,0};
-  float fspace[2]    = {FLT_max,FLT_max};
-  float fslots[2]    = {FLT_max,FLT_max};
-  int evt_sent       = INT_max;
-  int evt_reco       = INT_max;
-  int evt_recv       = INT_max;
-  bool inuse         = false;
-  int numNodes       = 0;
-  int numBuffs       = 0;
-  int numClients     = 0;
-  std::set<std::string> bad_nodes;
-
-  for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
-    const Buffers& buffs = *(*n).buffers();
-    numNodes++;
-    int node_evt_recv = 0;
-    int node_evt_sent = INT_max;
-    int node_evt_reco = INT_max;
-    for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
-      int idx = 0;
-      char b = (*ib).name[0];
-      const MBMBuffer::Control& ctrl = (*ib).ctrl;
-      inuse = true;
-      numBuffs++;
-      switch(b) {
-      case INPUT_BUFFER:	idx = 0; break;
-      case OUTPUT_BUFFER:	idx = 1; break;
-      default:
-	continue;
-      }
-      fspace[idx]       = std::min(fspace[idx],float(ctrl.i_space)/float(ctrl.bm_size)); 
-      fslots[idx]       = std::min(fslots[idx],float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax));
-      min_space[idx]    = std::min(min_space[idx],(ctrl.i_space*ctrl.bytes_p_Bit)/1024/1024);
-      min_slots[idx]    = std::min(min_slots[idx],ctrl.p_emax-ctrl.i_events);
-      min_prod[idx]     = std::min(min_prod[idx],ctrl.tot_produced);
-      evt_prod[idx]    += ctrl.tot_produced;
-      free_space[idx]  += (ctrl.i_space*ctrl.bytes_p_Bit)/1024/1024;
-      used_slots[idx]  += (ctrl.p_emax-ctrl.i_events);
-      buf_clients[idx] += ctrl.i_users;
-      if ( fslots[idx] < SLOTS_MIN || fspace[idx] < SPACE_MIN ) {
-	bad_nodes.insert((*n).name);
-      }
-      const Clients& clients = (*ib).clients;
-      for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
-	++numClients;
-	char* p = ::strchr((*ic).name,'_');
-	if ( p ) p = ::strchr(++p,'_');
-	if ( p ) {
-	  if ( b==INPUT_BUFFER && p[4] == REC_TASK )  {
-	    node_evt_reco = std::min(node_evt_reco,(*ic).events);
-	  }
-	  else if ( b==INPUT_BUFFER && p[8] == REC_RECEIVER_TASK )  {
-	    node_evt_recv += (*ic).events;
-	  }
-	  else if ( b==OUTPUT_BUFFER && p[8] == REC_SENDER_TASK )  {
-	    node_evt_sent = std::min(node_evt_sent,(*ic).events);
-	  }
-	}
-      }
-    }
-    evt_reco = std::min(evt_reco,node_evt_reco);
-    evt_recv = std::min(evt_recv,node_evt_recv);
-    evt_sent = std::min(evt_sent,node_evt_sent);
-  }
-  char b1[64];
-  Nodeset::TimeStamp frst=ns.firstUpdate();
-  time_t t1 = numNodes == 0 ? time(0) : frst.first, now = time(0);
-  ::strftime(b1,sizeof(b1),"%H:%M:%S",::localtime(&t1));
-  ::sprintf(text," %s %s [%d nodes %d buffers %d clients] ",
-	    m_name.c_str(),b1,numNodes,numBuffs,numClients);
-  m_title = text;
-  if ( numNodes != 0 ) {
-    m_lastUpdate = t1;
-  }
-  m_hasProblems = true;
-  if ( numNodes == 0 ) {
-    ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
-    ::scrc_put_chars(m_display," No nodes found in this subfarm!",BOLD|RED|INVERSE,4,1,1);
-  }
-  else if ( now-m_lastUpdate > UPDATE_TIME_MAX ) {
-    setTimeoutError();
-  }
-  else if ( !inuse ) {
-    ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
-    ::scrc_put_chars(m_display," Subfarm not in used by any partition....",NORMAL|INVERSE|GREEN,4,1,1);
-  }
-  else if ( fslots[0] < SLOTS_MIN || fslots[1] < SLOTS_MIN ) {
-    ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
-    ::sprintf(txt," SLOTS at limit:");
-    if ( fslots[0] < SLOTS_MIN ) ::strcat(txt,"INPUT ");
-    if ( fslots[1] < SLOTS_MIN ) ::strcat(txt,"OUTPUT ");
-    ::sprintf(text,"[%d nodes]",int(bad_nodes.size()));
-    ::strcat(txt,text);
-    ::scrc_put_chars(m_display,txt,BOLD|RED|INVERSE,4,1,1);
-  }
-  else if ( fspace[0] < SPACE_MIN || fspace[1] < SPACE_MIN ) {
-    ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
-    ::sprintf(txt," SPACE at limit:");
-    if ( fspace[0] < SPACE_MIN ) ::strcat(txt,"INPUT ");
-    if ( fspace[1] < SPACE_MIN ) ::strcat(txt,"OUTPUT ");
-    ::sprintf(text,"[%d nodes]",int(bad_nodes.size()));
-    ::strcat(txt,text);
-    ::scrc_put_chars(m_display,txt,BOLD|RED|INVERSE,4,1,1);
-  }
-  else if ( inuse && evt_recv <= m_evtRecv && evt_prod[0] == m_totRecv ) {
-    ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
-    ::scrc_put_chars(m_display," No reconstruction activity visible.",BOLD|RED,4,1,1);
-  }
-  else if ( evt_reco <= m_evtReco && evt_prod[1] > m_totReco ) {
-    ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
-    ::scrc_put_chars(m_display," Some RECO(s) stuck.",BOLD|RED|INVERSE,4,1,1);
-  }
-  else if ( inuse && evt_reco <= m_evtReco && evt_prod[1] == m_totReco ) {
-    ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
-    ::scrc_put_chars(m_display," No activity visible.",BOLD|RED,4,1,1);
-  }
-  else if ( evt_sent <= m_evtSent && evt_prod[1] > m_totSent ) {
-    ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
-    ::scrc_put_chars(m_display," Some Sender(s) stuck.",BOLD|RED|INVERSE,4,1,1);
-  }
-  else if ( inuse && evt_sent <= m_evtSent && evt_prod[1] == m_totSent ) {
-    ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
-    ::scrc_put_chars(m_display," No STORAGE activity visible.",BOLD|RED,4,1,1);
-  }
-  else {
-    ::scrc_set_border(m_display,m_title.c_str(),NORMAL);
-    ::scrc_put_chars(m_display,"",NORMAL,4,1,1);
-    ::scrc_put_chars(m_display," No obvious Errors detected....",NORMAL|INVERSE|GREEN,4,1,1);
-    m_hasProblems = false;
-  }
-  m_evtRecv = evt_recv;
-  m_evtReco = evt_reco;
-  m_evtSent = evt_sent;
-  m_totRecv = evt_prod[0];
-  m_totReco = evt_prod[1];
-  m_totSent = evt_prod[1];
-  if ( buf_clients[0] != 0 )
-    ::sprintf(txt,"%9d%4d%6d   %9d%4d%6d",
-	      evt_prod[0],buf_clients[0],used_slots[0],
-	      evt_prod[1],buf_clients[1],used_slots[1]);
-  else
-    ::sprintf(txt,"%9s%4s%6s   %9s%4s%6s","--","","--","--","","--");
-  ::scrc_put_chars(m_display,txt,NORMAL,2,5,1);
-  if ( buf_clients[0] != 0 )
-    ::sprintf(txt,"%9d%4s%6d   %9d%4s%6d",min_prod[0],"",min_slots[0],min_prod[1],"",min_slots[1]);
-  else
-    ::sprintf(txt,"%9s%4s%6s   %9s%4s%6s","--","","--","--","","--");
-  ::scrc_put_chars(m_display,txt,NORMAL,3,5,1);
-  IocSensor::instance().send(m_parent,CMD_CHECK,this);
-}
-
 /// Standard constructor with object setup through parameters
 PartitionListener::PartitionListener(Interactor* parent,const std::string& nam) : m_parent(parent), m_name(nam)
 {
@@ -1190,7 +717,7 @@ FarmDisplay::FarmDisplay(int argc, char** argv)
   ::wtc_subscribe(WT_FACILITY_SCR, key_rearm, key_action, m_pasteboard);
   MouseSensor::instance().start(pasteboard());
   if ( all ) {
-    m_svc = ::dic_info_service("DIS_DNS/SERVER_LIST",MONITORED,0,0,0,dataHandler,(long)this,0,0);
+    m_svc = ::dic_info_service("DIS_DNS/SERVER_LIST",MONITORED,0,0,0,dnsDataHandler,(long)this,0,0);
   }
   else {
     m_listener = std::auto_ptr<PartitionListener>(new PartitionListener(this,m_name));
@@ -1222,6 +749,14 @@ FarmDisplay::~FarmDisplay()  {
   m_pasteboard = 0;
   ::scrc_resetANSI();
   ::printf("Farm display deleted and resources freed......\n");
+}
+
+/// DIM command service callback
+void FarmDisplay::dnsDataHandler(void* tag, void* address, int* size) {
+  if ( address && tag && *size > 0 ) {
+    FarmDisplay* disp = *(FarmDisplay**)tag;
+    disp->update(address);
+  }
 }
 
 /// Keyboard rearm action
@@ -1429,6 +964,8 @@ void FarmDisplay::update(const void* address) {
     getServiceNode(++msg,svc,node);
     idx = svc.find("/ROpublish");
     idq = svc.find("/hlt");
+    if ( idq == std::string::npos ) idq = svc.find("/mona");
+    if ( idq == std::string::npos ) idq = svc.find("/store");
     if ( idx != std::string::npos && idq == 0 ) {
       std::string f = svc.substr(1,idx-1);
       if ( ::strcase_match_wild(f.c_str(),m_match.c_str()) ) {
@@ -1452,6 +989,8 @@ void FarmDisplay::update(const void* address) {
 	getServiceNode(p,svc,node);
 	idx = svc.find("/ROpublish");
 	idq = svc.find("/hlt");
+	if ( idq == std::string::npos ) idq = svc.find("/mona");
+	if ( idq == std::string::npos ) idq = svc.find("/store");
 	if ( idx != std::string::npos && idq == 0 ) {
 	  std::string f = svc.substr(1,idx-1);
 	  if ( ::strcase_match_wild(f.c_str(),m_match.c_str()) ) {
@@ -1727,9 +1266,7 @@ void FarmDisplay::handle(const Event& ev) {
       DisplayUpdate update(this,true);
       for(k=m_farmDisplays.begin(); k != m_farmDisplays.end(); ++k) {
 	InternalDisplay* d = (*k).second;
-	if ( d != ev.data )  {
-	  d->check(now);
-	}
+	if ( d != ev.data ) d->check(now);
       }
       break;
     }
@@ -1761,11 +1298,11 @@ void FarmDisplay::connect(const std::vector<std::string>& farms) {
     k = m_farmDisplays.find(*i);
     if ( k == m_farmDisplays.end() ) {
       if ( m_mode == RECO_MODE )
-	copy.insert(std::make_pair(*i,new RecFarmSubDisplay(this,*i)));
+	copy.insert(std::make_pair(*i,createRecFarmSubDisplay(this,*i)));
       else if ( m_mode == CTRL_MODE )
 	copy.insert(std::make_pair(*i,createCtrlFarmSubDisplay(this,*i)));
       else
-	copy.insert(std::make_pair(*i,new FarmSubDisplay(this,*i)));
+	copy.insert(std::make_pair(*i,createFarmSubDisplay(this,*i)));
     }
     else {
       copy.insert(*k);
