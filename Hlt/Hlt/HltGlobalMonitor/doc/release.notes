@@ -1,12 +1,17 @@
+!$Id: release.notes,v 1.6 2008-09-10 13:17:22 jpalac Exp $
 Package     : Hlt/HltGlobalMonitor
 Package Coordinator : Bruno Souza de Paula 
 Purpose     : LHCb HLT Global Monitoring
 
-!========================== HltGlobalMonitor v1r2 2008-08-28 ===================
+!========================= HltGlobalMonitor v1r3 2008-09-10 ===================
+! 2008-09-10 - Juan PALACIOS
+ - No idea what has changed. See CVS log.
+
+!========================= HltGlobalMonitor v1r2 2008-08-28 ===================
 ! 2008-08-06 - Gerhard Raven
  - update to Hlt v4r0
 
-!========================== HltGlobalMonitor v1r1 2008-08-06 ===================
+!========================= HltGlobalMonitor v1r1 2008-08-06 ===================
 - remove explicit Gaucho dependency, update to work with Hlt v3r4
 
 !----v1r0>2007-02-11 HltGlobaMonitor v1r0-------
