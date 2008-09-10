@@ -5,8 +5,14 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v4r15>2008-09-12 OnlineSys v4r15</A></H1><PRE>
+     New version v4r15 built against LHCb v25r1.
+     - Updates to Gaucho, Adder, Saver and RateService.
+     - New version of DIM (v17r11).
+     - Updates to ROLogger, ROMon
+
 </PRE><H1><A NAME=v4r14>2008-09-04 OnlineSys v4r14</A></H1><PRE>
-     New version v4r12 built against LHCb v25r0.
+     New version v4r14 built against LHCb v25r0.
      Fix to important memory leak in gaucho and new version of presenter
      including MonObjects. Bug fixes in RawBankSizes.
 
@@ -18,7 +24,7 @@
     (UpdateAndReset needs to be the first algorithm in the TopAlg list).
 
 </PRE><H1><A NAME=v4r13>2008-08-28 OnlineSys v4r13</A></H1><PRE>
-     New version v4r12 built against LHCb v25r0.
+     New version v4r13 built against LHCb v25r0.
      Changes and bug fixes as found during the commissioning in
      GaudiOnline, OMAlib, OnlineHistDB, RawBankSizes, ROMon, ROLogger
      and UPI.
