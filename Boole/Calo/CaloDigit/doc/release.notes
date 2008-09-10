@@ -4,6 +4,9 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
+! 2008-09-10 - Marco Cattaneo
+ - One more protection against FPE
+
 !======================== CaloDigit v2r8 2008-07-29 ==========================
 ! 2008-07-24 - Marco Cattaneo
  - Add a wrapper to Rndm::Poisson to avoid floating point exception

@@ -1,4 +1,4 @@
-// $Id: CaloDigitAlg.cpp,v 1.23 2008-07-24 18:03:41 cattanem Exp $
+// $Id: CaloDigitAlg.cpp,v 1.24 2008-09-10 13:20:19 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -473,8 +473,7 @@ StatusCode CaloDigitAlg::execute() {
 
         //== generate the photo-electron fluctuation on the previous BX signal
         if ( 0. < prevEnergy && 0. < m_pePerMeV ) {
-          Rndm::Numbers pe ( rndmSvc(), Rndm::Poisson( prevEnergy * m_pePerMeV));
-          prevEnergy = pe() / m_pePerMeV;
+          prevEnergy = safe_poisson( prevEnergy * m_pePerMeV ) / m_pePerMeV;
         }
 
         double cor = m_fracPrev * prevEnergy / gain;
