@@ -20,16 +20,10 @@ importOptions( "$DAVINCIROOT/options/DaVinciCommon.opts" )
 #
 # Trigger. Uncomment what you need. Hlt1 needs L0, Hlt2 doesn't.
 #
-# importOptions( "$L0DUROOT/options/ReplaceL0DUBankWithEmulated.opts" )
+importOptions( "$L0DUROOT/options/ReplaceL0DUBankWithEmulated.opts" )
 #
-# Temporary hack to re-run L0
-#
-#importOptions('$L0DUROOT/options/L0DUBankSwap.opts')
-importOptions('$L0DUROOT/options/DefaultTCK.opts')
-#
-#
-importOptions( "$HLTSYSROOT/options/Hlt1.opts" )
-importOptions( "$HLTSYSROOT/options/Hlt2.opts" )
+importOptions( "$HLTCONFROOT/options/Hlt1.opts" )
+importOptions( "$HLTCONFROOT/options/Hlt2.opts" )
 ########################################################################
 #
 # enable standard particles monitors
