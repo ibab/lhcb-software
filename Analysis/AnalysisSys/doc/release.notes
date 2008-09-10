@@ -3,6 +3,12 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v2r1>2008-09-10 Analysis v2r1 </A></H1><PRE>
+
+ - Based on LHCb v25r1 and Gaudi v20r2
+ - Many developments to MicroDST code.
+ - Various minor bug fixes.
+
 </PRE><H1><A NAME=v2r0>2008-08-05 Analysis v2r0 - First LHCb v25 version</A></H1><PRE>
 
  - Based on LHCb v25r0 and Gaudi v20r2
