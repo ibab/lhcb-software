@@ -1,4 +1,4 @@
-// $Id: IGetElementsToBeAligned.h,v 1.6 2008-04-22 16:45:29 janos Exp $
+// $Id: IGetElementsToBeAligned.h,v 1.7 2008-09-10 13:10:01 wouter Exp $
 #ifndef IGETELEMENTSTOBEALIGNED_H 
 #define IGETELEMENTSTOBEALIGNED_H 1
 
@@ -52,5 +52,11 @@ class IGetElementsToBeAligned : virtual public IAlgTool {
   // Return method that finds an alignment element for a given Measuerment
   virtual const AlignmentElement* findElement(const LHCb::Measurement& meas) const = 0;
 
+  // Return method that finds an alignment element for a given detector element
+  virtual const AlignmentElement* findElement(const DetectorElement& element) const = 0 ;  
+
+  // Find the list of elements corresponding to a path (which can ba rehulare expression)
+  virtual StatusCode findElements(const std::string& path, 
+				  std::vector<const AlignmentElement*>& alignelements) const = 0 ;
 };
 #endif // IGETELEMENTSTOBEALIGNED_H
