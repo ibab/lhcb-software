@@ -1,4 +1,4 @@
-// $Id: PartitionListener.cpp,v 1.10 2008-08-05 21:24:52 frankb Exp $
+// $Id: PartitionListener.cpp,v 1.11 2008-09-10 10:08:11 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionListener.cpp,v 1.10 2008-08-05 21:24:52 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionListener.cpp,v 1.11 2008-09-10 10:08:11 frankb Exp $
 
 // Framework include files
 #include "ROLogger/PartitionListener.h"
@@ -154,6 +154,11 @@ void PartitionListener::nodeHandler(void* tag, void* address, int* size) {
   n->push_back("MONA0803");
   n->push_back("MONA0804");
   n->push_back("MONA0805");
+  n->push_back("MONA0806");
+  n->push_back("MONA0807");
+  n->push_back("MONA0808");
+  n->push_back("MONA0809");
+  n->push_back("MONA0810");
   if ( h->name() == "LHCb" ) n->push_back("CALD0701");
   IocSensor::instance().send(h->m_parent,CMD_UPDATE_NODES,n.release());
 }
