@@ -1,4 +1,4 @@
-// $Id: GetElementsToBeAligned.h,v 1.10 2008-07-17 09:27:09 wouter Exp $
+// $Id: GetElementsToBeAligned.h,v 1.11 2008-09-10 13:09:33 wouter Exp $
 #ifndef GETELEMENTSTOBEALIGNED_H
 #define GETELEMENTSTOBEALIGNED_H 1
 
@@ -55,21 +55,25 @@ public:
   // Return method that finds an alignment element for a given Measuerment
   virtual const AlignmentElement* findElement(const LHCb::Measurement& meas) const;
 
+  // Return method that finds an alignment element for a given detector element
+  virtual const AlignmentElement* findElement(const DetectorElement& element) const ;
+
+  // Find the list of elements corresponding to a path (which can ba rehulare expression)
+  StatusCode findElements(const std::string& path, 
+			  std::vector<const AlignmentElement*>& alignelements) const ;
 private:
   enum e_DoFs {Tx, Ty, Tz, Rx, Ry, Rz};
   
-  void getElements(const IDetectorElement* parent);
+  void getElements(const IDetectorElement* parent, const RegExs& expressions,
+		   size_t depth, std::vector<const DetectorElement*>& detelements) const ;
   
+private:
   bool                                                              m_useLocalFrame;    ///< Use local frame as alignmentframe
   std::vector<std::string>                                          m_elemsToBeAligned; ///< Elemenst : Path to elements
-  RegExs                                                            m_regexs;           ///< List of regular expresions
-  size_t                                                            m_depth;            ///< How deep?
-  mutable std::vector<const DetectorElement*>                       m_elements;         ///< Flat vector of detector elements
   mutable IGetElementsToBeAligned::Elements                         m_alignElements;    ///< Flat vector of alignment elements
   IGetElementsToBeAligned::ElementRange                             m_rangeElements;    ///< Range of elements to be aligned
   typedef std::map<const DetectorElement*, const AlignmentElement*> ElementMap;
   ElementMap                                                        m_elementMap;       ///< Map of detector elements to alignment element
-   
 };
 
 #endif // GETELEMENTSTOBEALIGNED_H

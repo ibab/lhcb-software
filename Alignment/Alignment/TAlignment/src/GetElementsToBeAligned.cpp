@@ -1,4 +1,4 @@
-// $Id: GetElementsToBeAligned.cpp,v 1.21 2008-07-24 13:44:22 janos Exp $
+// $Id: GetElementsToBeAligned.cpp,v 1.22 2008-09-10 13:09:33 wouter Exp $
 // Include files
 
 //from STL
@@ -44,8 +44,6 @@ GetElementsToBeAligned::GetElementsToBeAligned( const std::string& type,
   : GaudiTool ( type, name , parent ),
     m_useLocalFrame(true),
     m_elemsToBeAligned(),
-    m_depth(0),
-    m_elements(),
     m_rangeElements(),
     m_elementMap()
 {
@@ -81,7 +79,7 @@ StatusCode GetElementsToBeAligned::initialize() {
     return sc;
   }
 
-  IDetectorElement* lhcb = dynamic_cast<IDetectorElement*>(lhcbObj);
+  const IDetectorElement* lhcb = dynamic_cast<const IDetectorElement*>(lhcbObj);
   /// This shouldn't go wrong, but you never know
   if (!lhcb) {
     error() << "==> Object is not a detector element!" << endmsg;
@@ -134,40 +132,37 @@ StatusCode GetElementsToBeAligned::initialize() {
       debug() << "DoFs to align    : " << dofs       << endmsg;
     }
     
-    /// Break path into a set of regexs
-    /// Forward slash is the path separator
-    // Separator pathSep("/");
-    /// Tokens of regular expressions
-    Tokenizer regexs(path, Separator("/"));//pathSep);
-
-    /// Print the list of regular expressions that are going to be used.
+    // Traverse LHCb detector in transient store and get alignable elements
+    std::vector<const DetectorElement*> detelements ;
+    // Break path into a set of regexs. Forward slash is the path separator
+    Tokenizer elemtokenizer(path, Separator("/"));
+    RegExs regexs ;
+    
+    // Print the list of regular expressions that are going to be used.
     info() << "       ";
-    for (Tokenizer::iterator j = regexs.begin(), jEnd = regexs.end(); j != jEnd; ++j) info() << "\"" << (*j) << "\"" << " ";
+    for (Tokenizer::iterator j = elemtokenizer.begin(), jEnd = elemtokenizer.end(); j != jEnd; ++j) info() << "\"" << (*j) << "\"" << " ";
     info() << endmsg;
-
-    /// Create list of regular expressions
-    for (Tokenizer::iterator j = regexs.begin(), jEnd = regexs.end(); j != jEnd; ++j) {
+    
+    // Create list of regular expressions
+    for (Tokenizer::iterator j = elemtokenizer.begin(), jEnd = elemtokenizer.end(); j != jEnd; ++j) {
       boost::regex ex;
-      /// Check if token is a valid regular expression, else catch exception and return statuscode failure.
-      /// Better to stop the program and let the user fix the expression than trying to predict what he/she wants.
+      // Check if token is a valid regular expression, else catch exception and return statuscode failure.
+      // Better to stop the program and let the user fix the expression than trying to predict what he/she wants.
       try {
-        ex.assign((*j), boost::regex_constants::icase);
+	ex.assign((*j), boost::regex_constants::icase);
       } catch (boost::bad_expression& exprs) {
-        error() << "==> Error: " << (*j) << " is not a valid regular expression: " << exprs.what() << endmsg;
-        return StatusCode::FAILURE;
+	error() << "==> Error: " << (*j) << " is not a valid regular expression: " << exprs.what() << endmsg;
+	return StatusCode::FAILURE;
       }
-      /// If valid add expression to list of expressions.
-      m_regexs.push_back(ex);
+      // If valid add expression to list of expressions.
+      regexs.push_back(ex);
     }
     
-    /// Depth is equal to the number regular expressions in the regex list.
-    m_depth = m_regexs.size();
-    
-    /// Traverse LHCb detector in transient store and get alignable elements
-    getElements(lhcb);
-    
-     /// Check that we have found elements to align, else exit gracefully
-    if ( m_elements.empty() ) {
+    // Depth is equal to the number regular expressions in the regex list.
+    getElements(lhcb, regexs, regexs.size(), detelements) ;
+
+    // Check that we have found elements to align, else exit gracefully
+    if ( detelements.empty() ) {
       error() << "\n ==> Couldn't find any elements that matched the given regular expression! \n"
               << " ==> The syntax of the property Elements is a list of : \"Group : Regex representing path of det elems : dofs\" \n" 
               << " ==> where group and dofs are optional.\n" 
@@ -194,18 +189,13 @@ StatusCode GetElementsToBeAligned::initialize() {
     }
     
     /// Loop over elements and create AlignmentElements
-    if (groupElems) m_alignElements.push_back(AlignmentElement(m_elements, index++, dofMask,m_useLocalFrame));
-    else std::transform(m_elements.begin(), m_elements.end(), std::back_inserter(m_alignElements),
+    if (groupElems) m_alignElements.push_back(AlignmentElement(detelements, index++, dofMask,m_useLocalFrame));
+    else std::transform(detelements.begin(), detelements.end(), std::back_inserter(m_alignElements),
                         boost::lambda::bind(boost::lambda::constructor<AlignmentElement>(), 
                                             boost::lambda::_1, 
                                             boost::lambda::var(index)++, 
                                             dofMask,
                                             m_useLocalFrame));
-
-    m_regexs.clear();
-    m_depth = 0u;
-    m_elements.clear();
-
   }
       
   m_rangeElements = ElementRange(m_alignElements.begin(), m_alignElements.end());
@@ -229,7 +219,9 @@ StatusCode GetElementsToBeAligned::initialize() {
   return sc;
 }
 
-void GetElementsToBeAligned::getElements(const IDetectorElement* parent) {
+
+void GetElementsToBeAligned::getElements(const IDetectorElement* parent, const RegExs& regexs,
+					 size_t depth, std::vector<const DetectorElement*>& detelements) const {
   /// loop over children
   for (IDetIter iC = parent->childBegin(), iCend = parent->childEnd(); iC != iCend; ++iC) {
     /// Get path of child
@@ -250,9 +242,9 @@ void GetElementsToBeAligned::getElements(const IDetectorElement* parent) {
     bool match = true;         ///< Can we match a sub path to a regular expression?
 
     /// Begin iterator of regular expressions list
-    std::list<boost::regex>::const_iterator iR = m_regexs.begin();
+    std::list<boost::regex>::const_iterator iR = regexs.begin();
     /// End iterator of regular expressions list
-    std::list<boost::regex>::const_iterator iRend = m_regexs.end();
+    std::list<boost::regex>::const_iterator iRend = regexs.end();
     /// Loop over list of sub paths and try to match them
     for (std::list<std::string>::const_iterator i = paths.begin(), iEnd = paths.end();
 	 i != iEnd && iR != iRend; ++i) {
@@ -262,14 +254,31 @@ void GetElementsToBeAligned::getElements(const IDetectorElement* parent) {
 
     /// OK we found a detector element
     if (match) {
-      if (currentDepth == m_depth) {
-        m_elements.push_back(dynamic_cast<DetectorElement*>(*iC));
+      if (currentDepth == depth) {
+        detelements.push_back(dynamic_cast<DetectorElement*>(*iC));
       }
       /// Call thyself. Get children recursively.
       /// No need to go any deeper.
-      if (paths.size() < m_depth) getElements((*iC));
+      if (paths.size() < depth) getElements((*iC),regexs,depth,detelements);
     }
   }
+}
+
+StatusCode GetElementsToBeAligned::findElements(const std::string& path,
+						std::vector<const AlignmentElement*>& alignelements) const 
+{
+  alignelements.clear() ;
+  boost::regex ex ;
+  ex.assign( path, boost::regex_constants::icase) ;
+  for( Elements::const_iterator ialelem = m_alignElements.begin() ; 
+       ialelem != m_alignElements.end() ; ++ialelem) {
+    bool match=false ;
+    for( AlignmentElement::ElementContainer::const_iterator idetelem = ialelem->detelements().begin() ;
+	 idetelem != ialelem->detelements().end() && !match ; ++idetelem) 
+      match = boost::regex_match((*idetelem)->name(),ex) ;
+    if(match) alignelements.push_back( &(*ialelem) ) ;
+  }
+  return StatusCode::SUCCESS ;
 }
 
 const IGetElementsToBeAligned::ElementRange& GetElementsToBeAligned::rangeElements() const {
@@ -279,6 +288,12 @@ const IGetElementsToBeAligned::ElementRange& GetElementsToBeAligned::rangeElemen
 const AlignmentElement* GetElementsToBeAligned::findElement(const LHCb::Measurement& meas) const {
   // We'll do this differently with new brunel version
   return findElement(meas.lhcbID()) ;
+}
+
+const AlignmentElement* GetElementsToBeAligned::findElement(const DetectorElement& element) const 
+{  
+  ElementMap::const_iterator it = m_elementMap.find( &element ) ;
+  return it == m_elementMap.end() ? 0 : it->second ;
 }
 
 const AlignmentElement* GetElementsToBeAligned::findElement(const LHCb::LHCbID& id) const {
