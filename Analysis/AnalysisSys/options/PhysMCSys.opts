@@ -1,9 +1,4 @@
 //--------------------------------------------------------------
-ApplicationMgr.DLLs += { "SimComponents" };
-ApplicationMgr.DLLs += { "DaVinciMCTools" };
-// ApplicationMgr.DLLs += { "DaVinciEff" };
-ApplicationMgr.DLLs += { "ParticleMakerChecker" };
-
 DataOnDemandSvc.Nodes += { "DATA='/Event/MC' TYPE='DataObject'" };
 DataOnDemandSvc.Algorithms += {
   "DATA='/Event/MC/Particles'       TYPE='UnpackMCParticle'",
