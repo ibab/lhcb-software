@@ -4,6 +4,8 @@
 ! Purpose     : Holds algorithms for selections of Hidden Valley particles
 !-----------------------------------------------------------------------------
 
+! ====================== HltHiddenValley v1r1 2008-09-10 =====================
+
 ! 2008-08-28 - Marcin Kucharczyk
   - Some improvements in the algorithm
   - Putting highest pt pion to desktop 
