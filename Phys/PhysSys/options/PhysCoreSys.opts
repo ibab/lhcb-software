@@ -1,6 +1,4 @@
 // #include "$CALORECOROOT/options/CaloRecoOnDemand.opts"
-//ApplicationMgr.Dlls += { "TrackExtrapolators" }; 
-
 // Data-on-demand service
 ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
 DataOnDemandSvc.Nodes +=  {  "DATA='/Event/Rec'             TYPE='DataObject'",
