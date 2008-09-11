@@ -192,8 +192,13 @@ StatusCode PhysDesktop::initialize()
 
   if (m_primVtxLocn=="") m_primVtxLocn = m_OnOffline->getPVLocation();
 
+  if (msgLevel(MSG::DEBUG)) {
+    debug() << "Primary vertex location set to " << getPVLocation() << endmsg;
+  }
+  
+
   // PV relator
-  m_pvRelator = tool<IRelatedPVFinder>(m_pvRelatorName);
+  m_pvRelator = tool<IRelatedPVFinder>(m_pvRelatorName, this);
 
   sc = m_pvRelator->setDefaults(getPVLocation(),
                                 m_OnOffline->distanceCalculator());
