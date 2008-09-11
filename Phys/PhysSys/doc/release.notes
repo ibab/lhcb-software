@@ -1,7 +1,44 @@
 <PRE>
-Package     : PhysSys
+Package             : PhysSys
 Package Coordinator : Juan Palacios
-Purpose     : LHCb physics packages
+Purpose             : LHCb physics packages
+
+</PRE><H1><A NAME=v7r1>2008-09-10 Phys v7r1 </A></H1><PRE>
+
+###############################################################################
+#                                  PHYS v7r1                                  #
+###############################################################################
+
+ - Based on LHCb v25r1 and Gaudi v20r2
+
+ - Minor changes. Necessary release to pick up new feautres on LHCb v25r1.
+  . PhysDesktop: modified to pass on user-set primary vertices to related PV
+    finding machinery.
+  . VertexFit: GaudiAlgorithm PVReFitterAlg now re-fits all PVs for all 
+    candidates. USE WITH CAUTION. Resulting PVs can be extremely correlated.
+
+!========================== DaVinciTools v17r2 2008-09-09 ===================
+
+! 2008-09-06 - Juan PALACIOS
+ - src/PhysDesktop.h
+  . Add private method returning PV location.
+ - src/PhysDesktop.cpp
+  . Sort out setting and use of PV location.
+  . De-couple IRelatedPVFinder from IOnOffline. Now the desktop controls it, 
+    and the PV location is set to its own PV location. The distance calculator
+    is set from the desktop, but to that given by the IOnOffline tool.
+
+!========================== DaVinciTools v17r1 2008-08-29 ===================
+! 2008-08-27 - Patrick Koppenburg
+ - Moved ParticleFilter from DaVinciFilter.
+
+! 2008-08-07 - Patrick Koppenburg
+ - CombineParticles : Set default value of MotherCut to "Configure me!". This 
+   forces a python error if the cut is not configured. Was "NONE", cutting all 
+   candidates away silently.
+ - Increment to v7r1
+
+
 
 </PRE><H1><A NAME=v7r0>2008-08-05 Phys v7r0 - First version with LHCb v25 series</A></H1><PRE>
  - Based on LHCb v25r0 and Gaudi v20r2
