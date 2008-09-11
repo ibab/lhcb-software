@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltMuonAlleyConfSequence.py,v 1.2 2008-09-09 06:56:49 graven Exp $
+# $Id: HltMuonLines.py,v 1.1 2008-09-11 16:41:59 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -12,7 +12,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.1 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 

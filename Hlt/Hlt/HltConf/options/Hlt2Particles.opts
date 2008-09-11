@@ -1,10 +1,10 @@
 /** @file 
- *
- *  Hlt exclusive selections particle making
- *
- *  @author P. Koppenburg
- *  @date 2006-02-01
- */
+*
+*  Hlt exclusive selections particle making
+*
+*  @author P. Koppenburg
+*  @date 2006-02-01
+*/
 //---------------------------------------------------------------------
 // Charged ProtoParticles
 //---------------------------------------------------------------------
@@ -15,27 +15,27 @@ SeqHlt2Particles.Members += { "GaudiSequencer/SeqHlt2Charged" } ;
 SeqHlt2Charged.MeasureTime = true ;
 SeqHlt2Charged.IgnoreFilterPassed = false ;
 /**
- * @todo TEMPORARY clone killer - waiting to understand duplicated tracks
- */
+* @todo TEMPORARY clone killer - waiting to understand duplicated tracks
+*/
 SeqHlt2Charged.Members += {
-  "TrackEventCloneKiller/HltFullRecoTEMPORARYCloneKiller"} ;
+ "TrackEventCloneKiller/HltFullRecoTEMPORARYCloneKiller"} ;
 HltFullRecoTEMPORARYCloneKiller.TracksInContainers = { "Hlt/Track/Forward" };
 HltFullRecoTEMPORARYCloneKiller.TracksOutContainer = "Hlt/Track/ForwardCLEANED" ;
 HltFullRecoTEMPORARYCloneKiller.SkipSameContainerTracks = false ;
 HltFullRecoTEMPORARYCloneKiller.CloneFinderTool.CompareAtLHCbIDsLevel = true ;
 /**
- * @todo TEMPORARY kill huge events
- */
+* @todo TEMPORARY kill huge events
+*/
 SeqHlt2Charged.Members += { "NumberOfTracksFilter" };
 NumberOfTracksFilter.TrackLocations = { "Hlt/Track/Forward" };
 NumberOfTracksFilter.MaxTracks = 1000 ;
 /*
- * MC truth associated tracks
- */
+* MC truth associated tracks
+*/
 SeqHlt2Charged.Members += { "GaudiSequencer/SeqTrueSignalTracks" }; // debug
 /*
- * Hacking of errors
- */
+* Hacking of errors
+*/
 SeqHlt2Charged.Members += { "HltInsertTrackErrParam"} ;
 HltInsertTrackErrParam.InputLocation = "Hlt/Track/Forward" ;
 
@@ -75,7 +75,7 @@ HltMuonID.MuonIDLocation = "Hlt/Muon/MuonPID" ;
 HltMuonID.MuonTrackLocation = "Hlt/Track/Muon";
 
 //----------------------------------------------------------------------------------------------------
-// C.Jones : RICH options
+// C.Jones : OLD RICH options
 // Disabled by default. To enable uncomment the lines below
 //----------------------------------------------------------------------------------------------------
 
@@ -86,10 +86,10 @@ HltMuonID.MuonTrackLocation = "Hlt/Track/Muon";
 //#include "$RICHHLTSYSOPTS/GlobalPID_GasRads.opts"
 
 // Local algorithm (fastest)
-#include "$RICHHLTSYSOPTS/LocalPID.opts"
+//#include "$RICHHLTSYSOPTS/LocalPID.opts"
 
 // temporary, to use the cleaned forward tracks
-ToolSvc.HLT.RichTrackCreator.TracksLocation = "Hlt/Track/Forward";
+//ToolSvc.HLT.RichTrackCreator.TracksLocation = "Hlt/Track/Forward";
 
 // Explicitly run the RICH reco sequence
 //SeqHlt2Charged.Members += { "GaudiSequencer/HltRICHReco" };
@@ -97,6 +97,15 @@ ToolSvc.HLT.RichTrackCreator.TracksLocation = "Hlt/Track/Forward";
 //DataOnDemandSvc.Algorithms += {"DATA='/Event/Rec/Rich/HltPIDs' 
 //                              TYPE='GaudiSequencer/HltRICHReco'"};
 //-----------------------------------------------------------------
+
+//---------------------------------------------------------------------
+// C.Jones : RICH options
+// Disabled by default. To enable uncomment the lines below
+//---------------------------------------------------------------------
+#include "$HLTCONFROOT/options/Hlt2Rich.py"
+//CreateHLTTracks.OutputLevel = 1;
+//ToolSvc.HLT_RichTrackCreator.OutputLevel  = 1;
+//---------------------------------------------------------------------
 
 //---------------------------------------------------------------------
 // ChargedProtoPAlg
@@ -135,7 +144,7 @@ Hlt2ChargedProtoPAlg.UseVeloPID = false ;
 // Charged Particles - Here make all to Pi and K
 //---------------------------------------------------------------------
 SeqHlt2Particles.Members += { "PreLoadParticles/Hlt2Pions",
-                              "PreLoadParticles/Hlt2Kaons" }; 
+                             "PreLoadParticles/Hlt2Kaons" }; 
 
 Hlt2Pions.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker" ;
 Hlt2Pions.PhysDesktop.NoPIDsParticleMaker.Inputs =  {"Hlt/ProtoP/Charged"} ;
@@ -188,17 +197,17 @@ Hlt2Muons.PhysDesktop.CombinedParticleMaker.InputProtoParticles =  "/Event/Hlt/P
 Hlt2Muons.DecayDescriptor = "Muon" ;
 
 /** not run anymore
- *
- * //---------------------------------------------------------------------
- * // Special case for muons from L0
- * //---------------------------------------------------------------------
- * #include "$HLTCONFROOT/options/Hlt2ObsoleteMuonsFromL0.opts"
- * //---------------------------------------------------------------------
- * /// Now merge muons    @todo : kill clones
- * //---------------------------------------------------------------------
- * SeqHlt2Muons.Members += { "FilterDesktop/HltMuons"};
- * HltMuons.PhysDesktop.InputLocations = { "Phys/HltAlleyMuons", "Phys/HltForwardMuons" };
- */
+*
+* //---------------------------------------------------------------------
+* // Special case for muons from L0
+* //---------------------------------------------------------------------
+* #include "$HLTSYSROOT/options/Hlt2ObsoleteMuonsFromL0.opts"
+* //---------------------------------------------------------------------
+* /// Now merge muons    @todo : kill clones
+* //---------------------------------------------------------------------
+* SeqHlt2Muons.Members += { "FilterDesktop/HltMuons"};
+* HltMuons.PhysDesktop.InputLocations = { "Phys/HltAlleyMuons", "Phys/HltForwardMuons" };
+*/
 
 //---------------------------------------------------------------------
 // Special case for electrons 
@@ -218,9 +227,9 @@ Hlt2Electrons.DecayDescriptor = "Electron" ;
 SeqHlt2Neutrals.IgnoreFilterPassed = true;
 SeqHlt2Particles.Members += {"GaudiSequencer/SeqHlt2Neutrals"};
 SeqHlt2Neutrals.Members += { 
-  "PreLoadParticles/Hlt2Photons",
-  "PreLoadParticles/Hlt2MergedPi0s",
-  "PreLoadParticles/Hlt2ResolvedPi0s"
+ "PreLoadParticles/Hlt2Photons",
+ "PreLoadParticles/Hlt2MergedPi0s",
+ "PreLoadParticles/Hlt2ResolvedPi0s"
 };
 //Make the photons
 Hlt2Photons.PhysDesktop.ParticleMakerType = "CaloParticleMaker" ;
@@ -253,9 +262,9 @@ SeqHlt2VzeroLL.MeasureTime = true ;
 SeqHlt2VzeroLL.IgnoreFilterPassed = false ;
 // Kzero from two long tracks
 SeqHlt2VzeroLL.Members += {
-  "CreateHltVzero/Hlt2V0LL",
-  "GaudiSequencer/SeqMakeHlt2KsLL",
-  "GaudiSequencer/SeqMakeHlt2LambdaLL"
+ "CreateHltVzero/Hlt2V0LL",
+ "GaudiSequencer/SeqMakeHlt2KsLL",
+ "GaudiSequencer/SeqMakeHlt2LambdaLL"
 };
 #include "$HLTKSHORTROOT/options/HltV0LL.opts"
 Hlt2V0LL.InputTrackContainer = "Hlt/Track/Forward";
@@ -272,7 +281,7 @@ Hlt2LambdaLLParticles.V0Location = "Hlt/Vertex/KsLL" ;
 Hlt2LambdaLLParticles.MakeKs = false ;
 Hlt2LambdaLLParticles.MakeLambda = true ;
 Hlt2LambdaLLParticles.PhysDesktop.InputLocations = { "Phys/Hlt2Pions",
-                                                     "Phys/Hlt2Protons"};
+                                                    "Phys/Hlt2Protons"};
 
 
 Hlt2KsLLParticles.RefitVertex = true ; /// @todo Remove when covariance is fixed

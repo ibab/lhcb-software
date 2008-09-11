@@ -77,15 +77,14 @@ ASideGeneralTracking.PhiHitManagerName= "ASidePhiHitManager";
 ASideGeneralTracking.TrackToolName="ASideTrackTool"; 
 ASideGeneralTracking.OutputTracksLocation = "Hlt/Track/ASideVelo";
 
+
 ToolSvc.ASideTrackTool.RHitManagerName="ASideRHitManager"; 
-ToolSvc.ASideTrackTool.PhiHitManagerName="ASidePhiHitManager"; 
-
 ToolSvc.ASideRHitManager.DefaultHitManagerName="ASideDefaultVeloRHitManager"; 
-ToolSvc.ASidePhiHitManager.DefaultHitManagerName="ASideDefaultVeloPhiHitManager";
-
 ToolSvc.ASideDefaultVeloRHitManager.ClusterLocation = "/Event/Raw/Velo/ASideClusters";
 ToolSvc.ASideDefaultVeloRHitManager.LiteClusterLocation = "/Event/Raw/Velo/ASideLiteClusters";
 
+ToolSvc.ASideTrackTool.PhiHitManagerName="ASidePhiHitManager"; 
+ToolSvc.ASidePhiHitManager.DefaultHitManagerName="ASideDefaultVeloPhiHitManager";
 ToolSvc.ASideDefaultVeloPhiHitManager.ClusterLocation = "/Event/Raw/Velo/ASideClusters";
 ToolSvc.ASideDefaultVeloPhiHitManager.LiteClusterLocation = "/Event/Raw/Velo/ASideLiteClusters";
 
