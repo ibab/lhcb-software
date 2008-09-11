@@ -1,8 +1,15 @@
-! $Id: release.notes,v 1.350 2008-09-09 13:51:28 jpalac Exp $
+! $Id: release.notes,v 1.351 2008-09-11 09:32:14 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+!========================== DaVinciTools v17r2p1 2008-09-11 =================
+
+! 2008-09-06 - Juan PALACIOS
+ - src/PhysDesktop.cpp
+  . Make PV relator tool private.
+  . Print PV location in initialize() method (DEBUG)
 
 !========================== DaVinciTools v17r2 2008-09-09 ===================
 
