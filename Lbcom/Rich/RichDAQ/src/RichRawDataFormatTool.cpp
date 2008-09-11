@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.78 2008-09-11 14:44:30 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.79 2008-09-11 15:04:19 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -1355,11 +1355,9 @@ RawDataFormatTool::decodeToSmartIDs( L1Map & decodedData ) const
     }
 
     // do not print if faking HPDID, since smartIDs.size() then has no meaning
-    if ( !m_useFakeHPDID
-         // && msgLevel(MSG::DEBUG)
-         )
+    if ( !m_useFakeHPDID && msgLevel(MSG::DEBUG) )
     {
-      info() << "Decoded in total " << richBanks.size() << " RICH Level1 bank(s) for RawEvent '"
+      debug() << "Decoded in total " << richBanks.size() << " RICH Level1 bank(s) for RawEvent '"
               << *iLoc << "'"
               << endreq;
     }
