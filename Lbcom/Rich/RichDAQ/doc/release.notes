@@ -6,6 +6,8 @@
 
 ! 2008-09-11 - Chris Jones
  - Update RawEvent decoding tool to allow multiple TAE RawEvents to be decoded
+ - Revert change in previous release which caused the summaries to be always
+   printed and not suppressable.
 
 !========================== RichDAQ v3r20 2008-09-04 =========================
 ! 2008-08-29 - Chris Jones
