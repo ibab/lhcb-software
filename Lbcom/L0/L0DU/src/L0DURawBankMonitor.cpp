@@ -1,4 +1,4 @@
-// $Id: L0DURawBankMonitor.cpp,v 1.7 2008-07-17 16:16:07 odescham Exp $
+// $Id: L0DURawBankMonitor.cpp,v 1.8 2008-09-11 11:20:49 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -171,6 +171,7 @@ StatusCode L0DURawBankMonitor::execute() {
 
   // Status
   if(m_status){     
+    if(report.decision() )fill( histo1D(HistoID("Status/BCID/1")), m_fromRaw->bcid().first, 1 );
     // from L0Processor
     fill( histo1D(HistoID("Status/Muon/1")), (m_fromRaw->data("MuonCU0(Status)") & 0xC)>>2 , 1 );
     fill( histo1D(HistoID("Status/Muon/2")), (m_fromRaw->data("MuonCU1(Status)") & 0xC)>>2 , 1 );
@@ -380,6 +381,8 @@ void L0DURawBankMonitor::bookHistos() {
      book1D( "Status/L0DU/BCID/2" ,  "BCID(PGA3)-BCID(PGA2)" , -15. , 15., 31);
      // Global summary
      book1D( "Status/Summary/1"     ,  "L0DU error status summary"       , -1. , 10., 11);
+     // BXID decision
+     book1D( "Status/BCID/1"        ,  "BCID for positive decisions"     , 0 , 3565, 3565);
    }
 
    if( m_addr ){
