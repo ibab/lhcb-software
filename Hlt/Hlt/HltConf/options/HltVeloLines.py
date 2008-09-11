@@ -1,11 +1,16 @@
 #
 # VELO specific HLT trigger lines
 #
-from Configurables import VeloClusterFilter
+from Configurables import VeloClusterFilter, DecodeVeloRawBuffer
+from Configurables import Velo__VeloHltLiteClusterMonitor
 from Configurables import Tf__PatVeloRTracking, Tf__PatVeloSpaceTracking, Tf__PatVeloGeneralTracking
 from Configurables import Tf__PatVeloSpaceTool, Tf__PatVeloTrackTool
 from Configurables import Tf__DefaultVeloRHitManager, Tf__DefaultVeloPhiHitManager
 from Configurables import Tf__PatVeloRHitManager, Tf__PatVeloPhiHitManager
+from Configurables import PatPV3D, PVOfflineTool
+from Configurables import GaudiSequencer
+from HltConf.HltLine import Hlt1Line   as Line
+from HltConf.HltLine import Hlt1Member as Member
 
 ### find primary vertices seperately in each side
 for side in [ 'ASide', 'CSide' ] :
@@ -23,6 +28,9 @@ for side in [ 'ASide', 'CSide' ] :
     Tf__DefaultVeloRHitManager( side + 'DefaultVeloRHitManager'
                               , ClusterLocation = '/Event/Raw/Velo/' + side + 'Clusters'
                               , LiteClusterLocation = '/Event/Raw/Velo/' + side + 'LiteClusters' )
+    Tf__DefaultVeloPhiHitManager( side + 'DefaultVeloPhiHitManager'
+                            , ClusterLocation = '/Event/Raw/Velo/' + side + 'Clusters'
+                            , LiteClusterLocation = '/Event/Raw/Velo/' + side + 'LiteClusters' )
     st = Tf__PatVeloSpaceTracking( side + 'SpaceTracking'
                         , InputTracksName = 'Hlt/Track/'+side+'RZVelo'
                         , OutputTracksName = 'Hlt/Track/'+side+'Velo'
@@ -41,9 +49,6 @@ for side in [ 'ASide', 'CSide' ] :
                         , PhiHitManagerName= side + "PhiHitManager")
     Tf__PatVeloRHitManager(   side + 'RHitManager',   DefaultHitManagerName= side + "DefaultVeloRHitManager")
     Tf__PatVeloPhiHitManager( side + 'PhiHitManager', DefaultHitManagerName= side + "DefaultVeloPhiHitManager")
-    Tf__PatVeloPhiHitManager( side + 'DefaultVeloPhiHitManager'
-                            , ClusterLocation = '/Event/Raw/Velo/' + side + 'Clusters'
-                            , LiteClusterLocation = '/Event/Raw/Velo/' + side + 'LiteClusters' )
 
     pv3D = PatPV3D( side + 'PatPV3D'
                   , OutputVerticesName = 'Hlt/Vertex/' + side + 'PV3D')
@@ -52,16 +57,17 @@ for side in [ 'ASide', 'CSide' ] :
     pv3D.PVOfflineTool.PVFitterName = "LSAdaptPV3DFitter"
     pv3D.PVOfflineTool.PVSeedingName = "PVSeed3DTool"
 
-    line = HltLine( 'Velo' + side
-                  , algos =
-                  [ DecodeVeloRawBuffer()
-                  , cf, rt, st, gt, pv3D
-                  , Member( 'VF' , 'Decision'
-                          , InputSelection  = 'TES:Hlt/Vertex/' + side + 'PV3D'
-                          , FilterDescriptor = ['VertexNumberOf' + side + 'Tracks,>,4']
-                          , HistogramUpdatePeriod = 1
-                          , HistoDescriptor = {'VertexNumberOf' + side + 'Tracks' : ( 'VertexNumberOf'+side+'Tracks',-0.5,39.5,40)})
-                  ] )
+    line =Line( 'Velo' + side
+              , algos =
+              [ DecodeVeloRawBuffer()
+              , cf, rt, st, gt, pv3D
+              , Member( 'VF' , 'Decision'
+                      , InputSelection  = 'TES:Hlt/Vertex/' + side + 'PV3D'
+                      , FilterDescriptor = ['VertexNumberOf' + side + 'Tracks,>,4']
+                      , HistogramUpdatePeriod = 1
+                      #, HistoDescriptor = {'VertexNumberOf' + side + 'Tracks' : ( 'VertexNumberOf'+side+'Tracks',-0.5,39.5,40)})
+                      )
+              ] )
 
 
 
@@ -120,7 +126,7 @@ GaudiSequencer( 'HltVeloAligningSequence', IgnoreFilterPassed = True
               )
 
 GaudiSequencer( 'HltVeloMonitoringSequence' , IgnoreFilterPassed=True
-              , Members = [ GaudiSequencer('LiteClusterMonitorSequence', MeasureTime=True,  ModeOR=false ) ]
+              , Members = [ GaudiSequencer('LiteClusterMonitorSequence', MeasureTime=True,  ModeOR=False ) ]
               )
 
 GaudiSequencer( 'LiteClusterMonitorSequence'
