@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.80 2008-09-11 15:17:28 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.81 2008-09-11 16:51:20 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -831,12 +831,13 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
                                                                HPDInfo(LHCb::RichSmartID(),
                                                                        HPDInfo::Header(hpdBank->headerWords()),
                                                                        HPDInfo::Footer(hpdBank->footerWords()) ) ) );
-          if ( !p.second )
-          {
-            std::ostringstream mess;
-            mess << "Found multiple data blocks L1=" << L1ID << " input=" << l1Input;
-            Warning( mess.str() );
-          }
+          // disable test (gies worng warnings in TAE events)
+          //if ( !p.second )
+          //{
+          //  std::ostringstream mess;
+          //  mess << "Found multiple data blocks L1=" << L1ID << " input=" << l1Input;
+          //  Warning( mess.str() );
+          //}
           HPDInfo & hpdInfo = p.first->second;
 
           // Only try and decode this HPD if ODIN test was OK
@@ -1313,7 +1314,14 @@ void RawDataFormatTool::decodeToSmartIDs_DC0406( const LHCb::RawBank & bank,
 void
 RawDataFormatTool::decodeToSmartIDs( L1Map & decodedData ) const
 {
+  // set the been used flag
   m_hasBeenCalled = true;
+
+  // Purge data container
+  decodedData.clear();
+
+  // clear the L1 ID map
+  m_l1IdsDecoded.clear();
 
   // Loop over all RawEvent locations
   for ( RawEventLocations::const_iterator iLoc = m_rawEventLocs.begin();
@@ -1322,12 +1330,6 @@ RawDataFormatTool::decodeToSmartIDs( L1Map & decodedData ) const
 
     // Get the banks for the Rich
     const LHCb::RawBank::Vector & richBanks = rawEvent(*iLoc)->banks( LHCb::RawBank::Rich );
-
-    // Purge data container
-    decodedData.clear();
-
-    // clear the L1 ID map
-    m_l1IdsDecoded.clear();
 
     // Loop over data banks
     for ( LHCb::RawBank::Vector::const_iterator iBank = richBanks.begin();
