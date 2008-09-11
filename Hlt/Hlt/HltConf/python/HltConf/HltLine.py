@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.12 2008-09-09 13:18:45 graven Exp $ 
+# $Id: HltLine.py,v 1.13 2008-09-11 17:46:03 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.12 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.13 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt line itself 
@@ -613,11 +613,13 @@ class Hlt1Line(object):
                 
             margs = alg.Args.copy() 
             #TODO/FIXME: 
-            #    expand '%' in FilterDescriptor, OutputSelection to allow bound selections
+            #    expand '%' in FilterDescriptor, InputSelection{,1,2} to allow bound selections
             _subs_cand_ =  ['FilterDescriptor', 'OutputSelection', 'InputSelections'
                            , 'InputSelection', 'InputSelection1','InputSelection2' ]
             for key in set(margs).intersection(set(_subs_cand_)) :
-                margs[key] = re.sub('%','Hlt1%s'%line,margs[key])
+                print 'considering ' + key + ' for substitution type = ' + str(type(margs[key]))
+                if (type(margs[key]) is str)  : margs[key] = re.sub('%','Hlt1%s'%line,margs[key])
+                if (type(margs[key]) is list) : margs[key] = [ re.sub('%','Hlt1%s'%line,i) for i in margs[key] ]
             algName = alg.name ( line )
             print 'processing ' + algName
             
