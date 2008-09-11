@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::DAQ::RawBufferToSmartIDsTool
  *
  * CVS Log :-
- * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.21 2008-06-03 12:46:57 jonrob Exp $
+ * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.22 2008-09-11 14:44:30 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -30,10 +30,8 @@ RawBufferToSmartIDsTool::RawBufferToSmartIDsTool( const std::string& type,
     m_rawFormatT   ( NULL  ),
     m_newEvent     ( true  )
 {
-
   // Defined interface
   declareInterface<IRawBufferToSmartIDsTool>(this);
-
 }
 
 StatusCode RawBufferToSmartIDsTool::initialize()
@@ -43,7 +41,7 @@ StatusCode RawBufferToSmartIDsTool::initialize()
   if ( sc.isFailure() ) return sc;
 
   // acquire tools
-  acquireTool( "RichRawDataFormatTool", m_rawFormatT, 0, true );
+  acquireTool( "RichRawDataFormatTool", "RawDecoder", m_rawFormatT, this );
 
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
@@ -101,6 +99,7 @@ RawBufferToSmartIDsTool::richSmartIDs( const LHCb::RichSmartID hpdID ) const
           break;
         }
       } // loop over HPDs
+      if ( found_data ) break;
     } // loop over ingresses
     if ( found_data ) break;
   }

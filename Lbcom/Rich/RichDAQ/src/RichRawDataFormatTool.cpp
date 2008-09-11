@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.77 2008-08-29 17:19:50 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.78 2008-09-11 14:44:30 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -39,7 +39,6 @@ RawDataFormatTool::RawDataFormatTool( const std::string& type,
                                       const IInterface* parent )
   : RichToolBase    ( type, name , parent  ),
     m_richSys       ( NULL                 ),
-    m_rawEvent      ( NULL                 ),
     m_odin          ( NULL                 ),
     m_timeTool      ( NULL                 ),
     m_evtCount      ( 0                    ),
@@ -51,8 +50,8 @@ RawDataFormatTool::RawDataFormatTool( const std::string& type,
 
   // job opts
   declareProperty( "ZeroSuppressHitCut", m_zeroSuppresCut = 96 );
-  declareProperty( "RawEventLocation",
-                   m_rawEventLoc = LHCb::RawEventLocation::Default );
+  declareProperty( "RawEventLocations",
+                   m_rawEventLocs = RawEventLocations(1,LHCb::RawEventLocation::Default) );
   declareProperty( "PrintSummary",       m_summary   = true  );
   declareProperty( "MaxHPDOccupancy",    m_maxHPDOc = 999999 );
   declareProperty( "DumpRawBanks",       m_dumpBanks          = false );
@@ -158,26 +157,26 @@ RawDataFormatTool::printL1Stats( const L1TypeCount & count,
 
     // Printout
     always() << LINES << endreq
-           << "                             " << title << " : " << m_evtCount << " events" << endreq;
+             << "                             " << title << " : " << m_evtCount << " events" << endreq;
 
     std::map<Rich::DetectorType,unsigned long> totWordSize, totBanks, totHits;
     Rich::DetectorType lastrich = Rich::InvalidDetector;
     for ( L1TypeCount::const_iterator iL1C = count.begin(); iL1C != count.end(); ++iL1C )
     {
-      const Level1HardwareID  L1HardID = (*iL1C).first.second;
+      const Level1HardwareID L1HardID = (*iL1C).first.second;
       Level1LogicalID L1LogID(0);
       try { L1LogID = m_richSys->level1LogicalID(L1HardID); }
-      catch ( const GaudiException & expt ) 
+      catch ( const GaudiException & expt )
       {
         Warning( "Unknown L1 Hardware ID " + (std::string)L1HardID );
       }
       const BankVersion version    = (*iL1C).first.first;
       Rich::DetectorType rich;
       try { rich = m_richSys->richDetector( L1HardID ); }
-      catch ( const GaudiException & expt ) 
-      { 
+      catch ( const GaudiException & expt )
+      {
         Warning( "Unknown L1 Hardware ID " + (std::string)L1HardID );
-        rich = Rich::InvalidDetector; 
+        rich = Rich::InvalidDetector;
       }
       const unsigned long nBanks          = (*iL1C).second.first;
       totBanks[rich]                     += nBanks;
@@ -192,28 +191,29 @@ RawDataFormatTool::printL1Stats( const L1TypeCount & count,
         always() << lines << endreq;
       }
 
-      always() << " " << rich << " L1ID(log/hard) " << boost::format("%2i/%2i") % L1HardID.data() % L1LogID.data();
+      always() << " " << rich << " L1ID(hard/log) "
+               << boost::format("%2i/%2i") % L1HardID.data() % L1LogID.data();
       always() << " V" << boost::format("%3i") % version;
       always() << " | L1 size ="
-             << occ1(nBanks,m_evtCount) << " hpds :"
-             << occ2(words,m_evtCount) << " words :"
-             << occ2(hits,m_evtCount) << " hits / event" << endreq;
+               << occ1(nBanks,m_evtCount) << " hpds :"
+               << occ2(words,m_evtCount) << " words :"
+               << occ2(hits,m_evtCount) << " hits / event" << endreq;
     }
 
     always() << lines << endreq;
     if ( totBanks[Rich::Rich1]>0 )
     {
-      always() << " Rich1 Average                   | L1 size =" 
-             << occ1(totBanks[Rich::Rich1],m_evtCount) << " hpds :"
-             << occ2(totWordSize[Rich::Rich1],m_evtCount) << " words :"
-             << occ2(totHits[Rich::Rich1],m_evtCount) << " hits / event" << endreq;
+      always() << " Rich1 Average                   | L1 size ="
+               << occ1(totBanks[Rich::Rich1],m_evtCount) << " hpds :"
+               << occ2(totWordSize[Rich::Rich1],m_evtCount) << " words :"
+               << occ2(totHits[Rich::Rich1],m_evtCount) << " hits / event" << endreq;
     }
     if ( totBanks[Rich::Rich2]>0 )
     {
-      always() << " Rich2 Average                   | L1 size =" 
-             << occ1(totBanks[Rich::Rich2],m_evtCount) << " hpds :"
-             << occ2(totWordSize[Rich::Rich2],m_evtCount) << " words :"
-             << occ2(totHits[Rich::Rich2],m_evtCount) << " hits / event" << endreq;
+      always() << " Rich2 Average                   | L1 size ="
+               << occ1(totBanks[Rich::Rich2],m_evtCount) << " hpds :"
+               << occ2(totWordSize[Rich::Rich2],m_evtCount) << " words :"
+               << occ2(totHits[Rich::Rich2],m_evtCount) << " hits / event" << endreq;
     }
 
     always() << LINES << endreq;
@@ -618,7 +618,11 @@ void RawDataFormatTool::fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs
     } // ingress loop
 
     // Add this bank to the Raw buffer
-    rawEvent()->addBank( (*iL1).first.data(), LHCb::RawBank::Rich, version, dataBank );
+    // CRJ : Hardcode adding banks to default RawEvent location ...
+    rawEvent(LHCb::RawEventLocation::Default)->addBank( (*iL1).first.data(),
+                                                        LHCb::RawBank::Rich,
+                                                        version,
+                                                        dataBank );
 
     if ( m_summary )
     {
@@ -873,7 +877,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
               if ( !OK )
               {
                 std::ostringstream mess;
-                mess << "EventID Mismatch : HPD L0ID=" 
+                mess << "EventID Mismatch : HPD L0ID="
                      <<  hpdBank->level0ID() << " " << hpdID;
                 //<< " L1IngressHeader = " << ingressWord.eventID()
                 //<< " HPDHeader = "       << hpdBank->eventID();
@@ -1311,56 +1315,72 @@ RawDataFormatTool::decodeToSmartIDs( L1Map & decodedData ) const
 {
   m_hasBeenCalled = true;
 
-  // Get the banks for the Rich
-  const LHCb::RawBank::Vector & richBanks = rawEvent()->banks( LHCb::RawBank::Rich );
-
-  // Purge data container
-  decodedData.clear();
-
-  // clear the L1 ID map
-  m_l1IdsDecoded.clear();
-
-  // Loop over data banks
-  for ( LHCb::RawBank::Vector::const_iterator iBank = richBanks.begin();
-        iBank != richBanks.end(); ++iBank )
+  // Loop over all RawEvent locations
+  for ( RawEventLocations::const_iterator iLoc = m_rawEventLocs.begin();
+        iLoc != m_rawEventLocs.end(); ++iLoc )
   {
-    // get bank
-    LHCb::RawBank * bank = *iBank;
-    // test bank is OK
-    if ( !bank ) Exception( "Retrieved null pointer to RawBank" );
-    // Decode this bank
-    try
-    {
-      decodeToSmartIDs( *bank, decodedData );
-    }
-    catch ( const GaudiException & expt )
-    {
-      // Print error message
-      std::ostringstream mess;
-      mess << "Error decoding bank ID=" << bank->sourceID() << " version=" << bankVersion(*bank)
-           << " '" << expt.message() << "'";
-      Error( mess.str() );
-      // dump the full bank
-      if ( m_verboseErrors ) dumpRawBank( *bank, error() );
-    }
-  }
 
-  // loop over the L1 map to check we only got each L1 ID once
-  for ( Rich::Map<Rich::DAQ::Level1HardwareID,unsigned int>::const_iterator iL1 = m_l1IdsDecoded.begin();
-        iL1 != m_l1IdsDecoded.end(); ++iL1 )
-  {
-    if ( iL1->second > 1 )
-    {
-      std::ostringstream mess;
-      mess << "Found multiple RawBanks (" << iL1->second << ") for L1 ID " << iL1->first;
-      Warning( mess.str() );
-    }
-  }
+    // Get the banks for the Rich
+    const LHCb::RawBank::Vector & richBanks = rawEvent(*iLoc)->banks( LHCb::RawBank::Rich );
 
-  // do not print if faking HPDID, since smartIDs.size() then has no meaning
-  if ( !m_useFakeHPDID && msgLevel(MSG::DEBUG) )
+    // Purge data container
+    decodedData.clear();
+
+    // clear the L1 ID map
+    m_l1IdsDecoded.clear();
+
+    // Loop over data banks
+    for ( LHCb::RawBank::Vector::const_iterator iBank = richBanks.begin();
+          iBank != richBanks.end(); ++iBank )
+    {
+      // get bank
+      LHCb::RawBank * bank = *iBank;
+      // test bank is OK
+      if ( !bank ) Exception( "Retrieved null pointer to RawBank" );
+      // Decode this bank
+      try
+      {
+        decodeToSmartIDs( *bank, decodedData );
+      }
+      catch ( const GaudiException & expt )
+      {
+        // Print error message
+        std::ostringstream mess;
+        mess << "Error decoding bank ID=" << bank->sourceID() << " version=" << bankVersion(*bank)
+             << " '" << expt.message() << "'";
+        Error( mess.str() );
+        // dump the full bank
+        if ( m_verboseErrors ) dumpRawBank( *bank, error() );
+      }
+    }
+
+    // do not print if faking HPDID, since smartIDs.size() then has no meaning
+    if ( !m_useFakeHPDID
+         // && msgLevel(MSG::DEBUG)
+         )
+    {
+      info() << "Decoded in total " << richBanks.size() << " RICH Level1 bank(s) for RawEvent '"
+              << *iLoc << "'"
+              << endreq;
+    }
+    
+  } // loop over RawEvent locations in the TES
+
+  // loop over the L1 map to check we only got each L1 ID once 
+  // (only if not using more than one RawEvent)
+  // CRJ : Is this check really needed ?
+  if ( m_rawEventLocs.size() == 1 )
   {
-    debug() << "Decoded in total " << richBanks.size() << " RICH Level1 bank(s)" << endreq;
+    for ( Rich::Map<Rich::DAQ::Level1HardwareID,unsigned int>::const_iterator iL1 = m_l1IdsDecoded.begin();
+          iL1 != m_l1IdsDecoded.end(); ++iL1 )
+    {
+      if ( iL1->second > 1 )
+      {
+        std::ostringstream mess;
+        mess << "Found multiple RawBanks (" << iL1->second << ") for L1 ID " << iL1->first;
+        Warning( mess.str() );
+      }
+    }
   }
 
 }
