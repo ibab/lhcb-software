@@ -55,6 +55,8 @@
       <enum
         name   = 'History'
         desc   = 'Track history enumerations: each entry corresponds to the name of the pattern recognition algorithm that produced the Track'
+        strTypConv = 'TRUE'
+        unknownValue = 'HistoryUnknown'
         access = 'PUBLIC' >
         <enumval name = "HistoryUnknown" value="0" desc="unknown history (i.e. history not set)"/>
         <enumval name = "TrackIdealPR"   value="1" desc="track produced with the ideal pattern recognition"/>
@@ -79,6 +81,8 @@
       <enum
         name   = 'FitHistory'
         desc   = 'Track fit history enumerations'
+        strTypConv = 'TRUE'
+        unknownValue = 'FitUnknown'
         access = 'PUBLIC' >
         <enumval name = "FitUnknown" value="0" desc="track not fitted yet (fit history not set)"/>
         <enumval name = "StdKalman"            desc="track fitted with the standard Kalman fitter"/>
@@ -88,6 +92,8 @@
       <enum
         name   = 'Types'
         desc   = 'Track type enumerations'
+        strTypConv = 'TRUE'
+        unknownValue = 'TypeUnknown'
         access = 'PUBLIC' >
         <enumval name = "TypeUnknown" value="0" desc="track of undefined type"/>
         <enumval name = "Velo"        desc="VELO track"/>
@@ -103,6 +109,8 @@
       <enum
         name   = 'PatRecStatus'
         desc   = 'Track pattern recognition status flag enumerations: The flag specifies in which state of the pattern recognition phase the track is. The status flag is set by the relevant algorithms'
+        strTypConv = 'TRUE'
+        unknownValue = 'PatRecStatusUnknown'
         access = 'PUBLIC' >
         <enumval name = "PatRecStatusUnknown" value="0" desc="track in an undefined PR status"/>
         <enumval name = "PatRecIDs"                     desc="pattern recognition track with LHCbIDs"/>
@@ -112,6 +120,8 @@
       <enum
         name   = 'FitStatus'
         desc   = 'Track fitting status flag enumerations: The flag specifies in which state of the fitting phase the track is. The status flag is set by the relevant algorithms'
+        strTypConv = 'TRUE'
+        unknownValue = 'FitStatusUnknown'
         access = 'PUBLIC' >
         <enumval name = "FitStatusUnknown" value="0" desc="track in an undefined fitting status"/>
         <enumval name = "Fitted"                     desc="fitted track"/>
@@ -121,7 +131,10 @@
       <enum
         name   = 'Flags'
         desc   = 'Track general flags enumerations'
+        strTypConv = 'TRUE'
+        unknownValue = 'FlagsUnknown'
         access = 'PUBLIC' >
+        <enumval name = "FlagsUnknown"    value=  "0" desc=""/>
         <enumval name = "Backward"    value=  "1" desc="VELO track in the backward direction"/>
         <enumval name = "Invalid"     value=  "2" desc="invalid track for physics"/>
         <enumval name = "Clone"       value=  "4" desc="clone track (of a corresponding unique track)"/>
@@ -135,7 +148,10 @@
       <enum
         desc   = "Additional information assigned to this Track by pattern recognition"
         name   = "AdditionalInfo"
+        strTypConv = 'TRUE'
+        unknownValue = 'AdditionalInfoUnknown'
         access = "PUBLIC" >
+        <enumval name = "AdditionalInfoUnknown" value = "0" desc=""/>
         <enumval name = "Likelihood" value = "1" desc="The Likelihood the track is real"/>
         <enumval name = "PatQuality" value = "2" desc="Quality variable from PatForward Tracking"/>
 	<enumval name = "Cand1stQPat"      value = "3"  desc=" Quality of the first candidate"/>
