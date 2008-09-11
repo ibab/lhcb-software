@@ -4,7 +4,12 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
-!======================== Gauss v35r0 2008-09-09 =============================
+!======================== Gauss v35r0 2008-09-11 =============================
+! 2008-09-11 - Gloria CORTI
+ - Fix bug (mistying) for Beam energy at 5 TeV, where for collision it was
+   given 10 TeV (as in CM) rather that 5 TeV.
+   . BeamCond-5TeV.opts
+
 ! 2008-09-09 - Gloria CORTI
  - New python options for stearing a default Gauss job with 2008 geometry 
    setup, for 450GeV, 5TeV, Velo open/close and magnetic field on/off

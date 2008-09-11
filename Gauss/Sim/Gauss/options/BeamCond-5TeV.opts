@@ -1,4 +1,4 @@
-// $Id: BeamCond-5TeV.opts,v 1.1 2008-07-28 09:23:31 gcorti Exp $ 
+// $Id: BeamCond-5TeV.opts,v 1.2 2008-09-11 12:40:09 gcorti Exp $ 
 
 /** @file 
  * 
@@ -14,7 +14,7 @@ Generation.PileUpTool = "FixedNInteractions";
 Generation.FixedNInteractions.Luminosity = 1.0e-03*LumiUnit;
  
 // == Beam momentum and vertex smearing for pp collisions 
-Generation.MinimumBias.PythiaProduction.CollidingBeams.BeamMomentum = 10.0*TeV;
+Generation.MinimumBias.PythiaProduction.CollidingBeams.BeamMomentum = 5.0*TeV;
 Generation.BeamSpotSmearVertex.SigmaX = 0.200*mm; 
 Generation.BeamSpotSmearVertex.SigmaY = 0.200*mm; 
 
