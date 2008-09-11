@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.193 2008-09-03 16:35:32 cattanem Exp $
+! $Id: release.notes,v 1.194 2008-09-11 14:43:25 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
+
+! 2008-09-11 - Chris Jones
+ - Update python Configuration to reflect changes in RichDAQ decoding tool
 
 !====================== RichKernel v7r15 2008-09-03 ====================
 ! 2008-09-03 - Marco Cattaneo

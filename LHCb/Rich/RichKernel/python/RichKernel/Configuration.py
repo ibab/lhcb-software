@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.3 2008-08-26 19:27:35 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.4 2008-09-11 14:43:25 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -290,7 +290,10 @@ class RichTools(RichConfigurableUser):
 
     ## @brief Raw Event encode/decode tool
     def rawEventTool(self):
-        from Configurables import Rich__DAQ__RawDataFormatTool
-        return Rich__DAQ__RawDataFormatTool("RichRawDataFormatTool")
-    
+        from Configurables import ( Rich__DAQ__RawDataFormatTool,
+                                    Rich__DAQ__RawBufferToSmartIDsTool )
+        smarts  = Rich__DAQ__RawBufferToSmartIDsTool("ToolSvc.RichSmartIDDecoder")
+        decoder = Rich__DAQ__RawDataFormatTool("RawDecoder")
+        smarts.addTool(decoder)
+        return smarts.RawDecoder
         
