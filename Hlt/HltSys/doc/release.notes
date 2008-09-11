@@ -5,6 +5,10 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+</PRE><H1><A NAME=v4r2>2008-09-11 HltSys v4r2</A></H1><PRE>
+
+ This version uses LHCb v25r1 and Gaudi v20r2
+
 ! 2008-09-09 - Gerhard Raven
  - move _all_ options files from HltSys to Hlt/HltConf
    (driven by the fact that it is almost impossible to check out
