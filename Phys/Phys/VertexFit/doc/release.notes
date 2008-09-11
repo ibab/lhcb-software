@@ -1,14 +1,14 @@
-! $Id: release.notes,v 1.151 2008-09-10 15:11:38 pkoppenb Exp $
+! $Id: release.notes,v 1.152 2008-09-11 08:08:33 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
 
+!========================== VertexFit v5r4 2008-09-11 ===================
+
 ! 2008-09-10 - Patrick Koppenburg for Yasmine Amhis
  - TrgVertexFitter: Treat pi0 the same way as gammas.
  - The LHC started today.
-
-!========================== VertexFit v5r4 2008-09-09 ===================
 
 ! 2008-09-09 - Juan PALACIOS
  - src/PVReFitterAlg.cpp
