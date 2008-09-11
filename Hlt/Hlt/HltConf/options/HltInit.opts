@@ -88,6 +88,8 @@ HltANNSvc.Hlt1SelectionID = {
     "Hlt1PhotonDiTrackDecision"             :  608,
     "Hlt1PrepareMuonSeg"                    :  701,
     "Hlt1RandomDecision"                    :  750,
+    "Hlt1VeloASideDecision"                 :  760,
+    "Hlt1VeloCSideDecision"                 :  761,
     "L0AllMuons"                            :  901,
     "L0MuonORMuonNoGlob"                    :  902,
     "L0DiMuonDecision"                      : 1001,
