@@ -38,7 +38,16 @@
 
 """
 
-import os, sys, time, dimc, copy, XMLTaskList
+import os, sys, time, copy, XMLTaskList
+try:
+  import dimc
+except Exception,X:
+  print X
+  print sys.path
+  print os.environ['PATH']
+  print os.environ['LD_LIBRARY_PATH']
+  raise
+  
 from Helpers import *
 
 s_fullInfo = True
@@ -287,8 +296,8 @@ class NodeMonitor(DimClient):
           #print 'Exception handling finished.'
 
     def start(self):
-        return self.startClient('/'+self.name.upper()+'/ps/data','C:200000',self.callback)
-        #return self.startClient('/'+self.name.upper()+'/ps/data','C',self.callback)
+        #return self.startClient('/'+self.name.upper()+'/ps/data','C:200000',self.callback)
+        return self.startClient('/'+self.name.upper()+'/ps/data','C',self.callback)
 
     def statusInfo(self):
         if (time.time() - self.time) > 35:
@@ -353,8 +362,8 @@ class TaskSupervisor:
         dimc.dis_set_dns_node('ecs03')  # a call can be individually made with this command
         #dimc.dis_set_dns_node(os.environ['DIM_DNS_NODE'])
         
-        self.serviceId = dimc.dis_add_service(svc,'C:50000',self.serviceCall,1)
-        #self.serviceId = dimc.dis_add_service(svc,'C',self.serviceCall,1)
+        #self.serviceId = dimc.dis_add_service(svc,'C:50000',self.serviceCall,1)
+        self.serviceId = dimc.dis_add_service(svc,'C',self.serviceCall,1)
         dimc.dis_start_serving(self.name)
         dimc.dic_set_dns_node(name)
         self.list = {}
@@ -402,14 +411,14 @@ class TaskSupervisor:
             if dead and sc2=="ALIVE":
               sc2 = "MIXED"
             er = er + e
-        err = '  <Cluster name="'+self.node.upper()+'" status="'
+        err = '<Cluster name="'+self.node.upper()+'" status="'
         if sc1=="DEAD":     err=err+sc1
         elif sc2=="ALIVE":  err=err+sc2
         else:               err=err+sc1
         err = err + '" time="'+time.strftime('%Y-%m-%d %H:%M:%S')+'">\n' + er + "  </Cluster>"
         #print err
         e = str(err)
-        print '================================\n',type(e),e
+        #print '================================\n',type(e),e
         res = dimc.dis_update_service(self.serviceId,(e,))
     
     def run(self):

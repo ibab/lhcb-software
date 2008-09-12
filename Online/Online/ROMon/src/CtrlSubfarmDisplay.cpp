@@ -1,4 +1,4 @@
-// $Id: CtrlSubfarmDisplay.cpp,v 1.2 2008-09-10 09:45:20 frankb Exp $
+// $Id: CtrlSubfarmDisplay.cpp,v 1.3 2008-09-12 18:56:50 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CtrlSubfarmDisplay.cpp,v 1.2 2008-09-10 09:45:20 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CtrlSubfarmDisplay.cpp,v 1.3 2008-09-12 18:56:50 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -116,33 +116,43 @@ void CtrlSubfarmDisplay::showHeader()   {
 
 /// Update all displays
 void CtrlSubfarmDisplay::update()   {
-  dim_lock();
   RTL::Lock lock(m_lock);
   begin_update();
   m_nodes->begin_update();
-  if ( m_data.actual>0 ) {
-    const char* ptr = m_data.data<const char>();
+  try {
+    int result = 0;
     XML::TaskSupervisorParser ts;
-    if ( ts.parseBuffer(m_svcName, ptr,::strlen(ptr)+1) ) {
+    dim_lock();
+    if ( m_data.actual>0 ) {
+      const char* ptr = m_data.data<const char>();
+      result = ts.parseBuffer(m_svcName, ptr,::strlen(ptr)+1) ? 1 : 2;
+    }
+    dim_unlock();
+    showHeader();
+    switch(result) {
+    case 0:
+      m_nodes->draw_line_normal ("");
+      m_nodes->draw_line_bold("   ..... No XML information present .....");
+      m_nodes->draw_line_normal ("");
+      break;
+    case 1:
       m_cluster.nodes.clear();
       ts.getClusterNodes(m_cluster);
       showNodes();
-    }
-    else {
+      break;
+    case 2:
       m_nodes->draw_line_normal ("");
       m_nodes->draw_line_bold("   ..... Failed to parse XML information .....");
       m_nodes->draw_line_normal ("");
+      break;
+    default:
+      break;
     }
   }
-  else {
-    m_nodes->draw_line_normal ("");
-    m_nodes->draw_line_bold("   ..... No XML information present .....");
-    m_nodes->draw_line_normal ("");
+  catch(...) {
   }
   m_nodes->end_update();
-  showHeader();
   end_update();
-  dim_unlock();
 }
 
 /// Retrieve node name from cluster display by offset

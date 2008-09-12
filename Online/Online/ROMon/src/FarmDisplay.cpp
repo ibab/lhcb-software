@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.cpp,v 1.23 2008-09-10 09:45:20 frankb Exp $
+// $Id: FarmDisplay.cpp,v 1.24 2008-09-12 18:56:50 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.23 2008-09-10 09:45:20 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.24 2008-09-12 18:56:50 frankb Exp $
 
 #include "ROMon/CtrlSubfarmDisplay.h"
 #include "ROMon/RecSubfarmDisplay.h"
@@ -822,25 +822,23 @@ int FarmDisplay::showSubfarm()    {
       std::string svc = "-servicename=/"+strUpper(d->name())+"/TaskSupervisor/Status";
       const char* argv[] = {"",svc.c_str(), "-delay=300"};
       m_subfarmDisplay = new CtrlSubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
-      m_nodeSelector = dynamic_cast<ScrDisplay*>(m_subfarmDisplay->nodeDisplay());
     }
     else if ( m_mode == RECO_MODE ) {
       std::string svc = "-servicename=/"+d->name()+"/ROpublish";
       const char* argv[] = {"",svc.c_str(), "-delay=300"};
       m_subfarmDisplay = new RecSubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
-      m_nodeSelector = dynamic_cast<ScrDisplay*>(m_subfarmDisplay->nodeDisplay());
     }
     else if ( m_mode == HLT_MODE ) {
       std::string svc = "-servicename=/"+d->name()+"/ROpublish";
       const char* argv[] = {"",svc.c_str(), "-delay=300"};
       m_subfarmDisplay = new SubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
-      m_nodeSelector = dynamic_cast<ScrDisplay*>(m_subfarmDisplay->nodeDisplay());
     }
     else {
       m_nodeSelector = 0;
       m_subfarmDisplay = 0;
       return WT_SUCCESS;
     }
+    m_nodeSelector = dynamic_cast<ScrDisplay*>(m_subfarmDisplay->nodeDisplay());
     m_subfarmDisplay->initialize();
     ::lib_rtl_sleep(200);
     MouseSensor::instance().add(this,m_subfarmDisplay->display());

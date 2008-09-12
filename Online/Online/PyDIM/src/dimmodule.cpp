@@ -679,7 +679,7 @@ serviceProxy(void *tagp, void **buf, int *size, int * /*first_time*/) {
   // the implicit assumption is that tagp is a pointer to a ServiceCallback
   ServiceCallback* svc =(ServiceCallback*)(*(long *)tagp);
 
-  if (!svc->isUpdated || !svc->buffer) {
+  if (!svc->buffer) {
     /* what happens here? we have no data and we can't signal this to
      * DIM.Two options:
      *    - returning NULL + size 0
@@ -689,16 +689,11 @@ serviceProxy(void *tagp, void **buf, int *size, int * /*first_time*/) {
     debug("Could not get data to update service %s, pointer %x. Output buffer is %x with size %d, updated %d",
            svc->name, svc, (long)svc->buffer, svc->bufferSize, svc->isUpdated);
     svc->bufferSize = 0;
-    if (svc->buffer) {
-      free(svc->buffer);
-      svc->buffer = NULL;
-    }
   } else if (svc->isUpdated && svc->buffer) {
     /* nothing much to do there, we have everything already */
   }
   *buf = svc->buffer;
   *size = svc->bufferSize;
-  svc->isUpdated = 0;
 }
 
 

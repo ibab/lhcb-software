@@ -1,4 +1,4 @@
-// $Id: ROMonDisplay.cpp,v 1.8 2008-08-27 19:15:20 frankb Exp $
+// $Id: ROMonDisplay.cpp,v 1.9 2008-09-12 18:56:50 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonDisplay.cpp,v 1.8 2008-08-27 19:15:20 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonDisplay.cpp,v 1.9 2008-09-12 18:56:50 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -132,7 +132,7 @@ void ROMonDisplay::handle(const Event& ev) {
 
 /// DimInfoHandler overload
 void ROMonDisplay::infoHandler(void* tag, void* address, int* size) {
-  if ( address && tag && size && *size>0 ) {
+  if ( address && tag && size && *size>0) {
     size_t len = *size;
     ROMonData data(address);
     ROMonDisplay* display = *(ROMonDisplay**)tag;
@@ -145,11 +145,12 @@ void ROMonDisplay::infoHandler(void* tag, void* address, int* size) {
       if ( !display->m_readAlways ) return;
     }
     RTL::Lock lock(display->lock());
-    if ( d.length < len ) {
-      d.length = len;
+    if ( d.length < len+1 ) {
+      d.length = len+1;
       d.reserve(size_t(1.2*len));
     }
     d.actual = len;
     ::memcpy(d.data<char>(),address,d.actual);
+    d.data<char>()[len]=0;
   }
 }
