@@ -3,6 +3,10 @@ Package : AlignmentInterfaces
 Package Coordinator : Johan Blouw
 Purpose :  Collection of interfaces needed for the T-station alignment
 
+</PRE><H1><A NAME=v2r8>2008-09-12 AlignmentInterfaces v2r8 </A></H1><PRE>
+- J. Blouw: version v2r8 for Alignment release v3r2
+
+
 ! 2008-07-17 - Louis Nicolas
  - Commented unused variables in methods of ITAConfigTool, IDerivatives and ICentipede.
 
