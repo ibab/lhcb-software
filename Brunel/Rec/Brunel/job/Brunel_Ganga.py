@@ -43,7 +43,7 @@
 #-------------------------------------------------------------------------------
 # Make a new job object for Brunel
 #-------------------------------------------------------------------------------
-j = Job( application = Brunel( version = 'v33r2' ) )
+j = Job( application = Brunel( version = 'v33r3' ) )
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
@@ -60,7 +60,7 @@ myOptsPath = ( j.application.user_release_area + '/Brunel_' +
                j.application.version + '/Rec/Brunel/' +
                j.application.version + '/options/' )
 j.application.optsfile = [ File ( myOptsPath + 'Brunel-Default.py' ),
-                           File ( myOptsPath + 'DC06-Files.py'     ) ]
+                           File ( myOptsPath + '2008-Files.py'     ) ]
 # Extra options
 # Appended to the end of the main options to override default settings
 #j.application.extraopts = ''

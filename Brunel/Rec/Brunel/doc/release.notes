@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2008-09-12 - Marco Cattaneo
+ - Fix default options in Brunel_Ganga.py for consistency with new defaults
+
 </PRE><H1><A NAME=v33r2>2008-09-09 Brunel v33r2</A></H1><PRE>
  - Reorganisation of options and defaults
   + Default setting in Configurable is now for real data, MDF file, default
