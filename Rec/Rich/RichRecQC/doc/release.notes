@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2008-09-12 - Chris Jones
+ - Only fill occupancy plots when #hits > 0
+
 !======================= RichRecQC v2r22 2008-09-04 ==========================
 ! 2008-08-28 - Chris Jones
  - Add a couple new plots to RichRecoQC to fill photon yield plots

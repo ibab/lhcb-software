@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : Rich::Rec::MC::PixelQC
  *
- *  $Id: RichRecPixelQC.cpp,v 1.22 2008-08-29 15:21:18 jonrob Exp $
+ *  $Id: RichRecPixelQC.cpp,v 1.23 2008-09-12 15:49:47 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -180,14 +180,18 @@ StatusCode PixelQC::execute()
     } // ingresses
   } // L1 boards
 
-  plot1D( pixels[Rich::Rich1], hid(Rich::Rich1,"nTotalPixs"), 
-          Rich::text(Rich::Rich1)+" Overall occupancy (nHits>0)", 0, 5000, 100 );
-  plot1D( pixels[Rich::Rich2], hid(Rich::Rich2,"nTotalPixs"), 
-          Rich::text(Rich::Rich2)+" Overall occupancy (nHits>0)", 0, 2000, 100 );
-  plot1D( signal[Rich::Rich1], hid(Rich::Rich1,"nSignalPixs"),
-          Rich::text(Rich::Rich1)+" Signal occupancy (nHits>0)", 0, 5000, 100 );
-  plot1D( signal[Rich::Rich2], hid(Rich::Rich2,"nSignalPixs"), 
-          Rich::text(Rich::Rich2)+" Signal occupancy (nHits>0)", 0, 2000, 100 );
+  if ( pixels[Rich::Rich1] > 0 )
+    plot1D( pixels[Rich::Rich1], hid(Rich::Rich1,"nTotalPixs"), 
+            Rich::text(Rich::Rich1)+" Overall occupancy (nHits>0)", 0, 5000, 100 );
+  if ( pixels[Rich::Rich2] > 0 )
+    plot1D( pixels[Rich::Rich2], hid(Rich::Rich2,"nTotalPixs"), 
+            Rich::text(Rich::Rich2)+" Overall occupancy (nHits>0)", 0, 2000, 100 );
+  if ( signal[Rich::Rich1] > 0 )
+    plot1D( signal[Rich::Rich1], hid(Rich::Rich1,"nSignalPixs"),
+            Rich::text(Rich::Rich1)+" Signal occupancy (nHits>0)", 0, 5000, 100 );
+  if ( signal[Rich::Rich2] > 0 )
+    plot1D( signal[Rich::Rich2], hid(Rich::Rich2,"nSignalPixs"), 
+            Rich::text(Rich::Rich2)+" Signal occupancy (nHits>0)", 0, 2000, 100 );
 
   return StatusCode::SUCCESS;
 }
