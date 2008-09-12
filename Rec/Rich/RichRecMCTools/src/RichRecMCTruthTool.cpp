@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichRecMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichRecMCTruthTool.cpp,v 1.32 2008-05-28 11:55:20 jonrob Exp $
+ *  $Id: RichRecMCTruthTool.cpp,v 1.33 2008-09-12 15:47:24 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -28,11 +28,11 @@ DECLARE_TOOL_FACTORY( MCTruthTool );
 MCTruthTool::MCTruthTool( const std::string& type,
                           const std::string& name,
                           const IInterface* parent )
-  : RichRecToolBase ( type, name, parent ),
-    m_truth         ( NULL ),
+  : RichRecToolBase    ( type, name, parent ),
+    m_truth            ( NULL ),
     m_mcSegToRingLinks ( NULL ),
-    m_trLoc         ( "/Event/"+LHCb::TrackLocation::Default ),
-    m_otherTrLoc    ( "/Event/"+LHCb::TrackLocation::HltForward )
+    m_trLoc            ( "/Event/"+LHCb::TrackLocation::Default ),
+    m_otherTrLoc       ( "/Event/"+LHCb::TrackLocation::HltForward )
 {
   // interface
   declareInterface<Rich::Rec::MC::IMCTruthTool>(this);
