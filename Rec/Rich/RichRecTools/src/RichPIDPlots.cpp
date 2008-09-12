@@ -1,4 +1,4 @@
-// $Id: RichPIDPlots.cpp,v 1.5 2008-05-12 14:04:17 jonrob Exp $
+// $Id: RichPIDPlots.cpp,v 1.6 2008-09-12 15:54:07 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -28,6 +28,8 @@ PIDPlots::PIDPlots( const std::string& type,
   // JOs
   declareProperty( "HistoBins",   m_bins = 50 );
   declareProperty( "ExtraHistos", m_extraHistos = false );
+  // redefine some default settings
+  //setPrintHistos(false); // Disable until available in Gaudi
 }
 
 PIDPlots::~PIDPlots() {}

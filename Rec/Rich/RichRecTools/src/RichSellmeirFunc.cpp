@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::SellmeirFunc
  *
  *  CVS Log :-
- *  $Id: RichSellmeirFunc.cpp,v 1.23 2008-08-26 19:52:28 jonrob Exp $
+ *  $Id: RichSellmeirFunc.cpp,v 1.24 2008-09-12 15:54:07 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -50,7 +50,7 @@ StatusCode SellmeirFunc::initialize()
   //updMgrSvc()->registerCondition( this, m_Rich1DE, &SellmeirFunc::umsUpdate );
   // force first updates
   //sc = updMgrSvc()->update(this);
-  umsUpdate();
+  sc = umsUpdate();
  
   // return
   return ( sc.isSuccess() ? sc : Error ("Failed first UMS update",sc) );
