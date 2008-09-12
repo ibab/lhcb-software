@@ -1,4 +1,4 @@
-// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.27 2008-09-05 14:12:13 mneedham Exp $
+// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.28 2008-09-12 13:56:33 mneedham Exp $
 
 
 #include <algorithm>
@@ -11,6 +11,8 @@
 #include "RawBankToSTLiteClusterAlg.h"
 #include "Kernel/ISTReadoutTool.h"
 
+#include "LHCbMath/LHCbMath.h"
+
 // Event
 #include "Event/RawEvent.h"
 #include "Event/STLiteCluster.h"
@@ -18,11 +20,8 @@
 
 #include "Kernel/STTell1Board.h"
 #include "Kernel/STTell1ID.h"
-
 #include "Kernel/STDAQDefinitions.h"
-
 #include "Kernel/STDecoder.h"
-
 #include "Kernel/STDetSwitch.h"
 #include "Kernel/STDataFunctor.h"
 
@@ -198,9 +197,11 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt) const{
 StatusCode RawBankToSTLiteClusterAlg::finalize() {
 
   const double failed = counter("skipped Banks").flag();
-  const double processed = counter("# valid banks").flag();  
-  const double eff = 1.0 - (failed/processed); 
-
+  const double processed = counter("# valid banks").flag();
+  double eff = 0.0;
+  if (LHCb::Math::Equal_To<double>()(processed, 0u) == true){   
+    eff = 1.0 - (failed/processed); 
+  }
   info() << "Successfully processed " << 100* eff << " %"  << endmsg;
     
   return STDecodingBaseAlg::finalize();

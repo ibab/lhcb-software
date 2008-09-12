@@ -4,9 +4,15 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+
+! 2008-09-12 M. Needham
+ - Fix warnings for doubles
+
+
 ! 2008-09-12 - Marco Cattaneo
  - Change return type of RawBankToSTClusterAlg::createCluster to void,
    fixes untested StatusCode warnings in Brunel
+
 
 ! 2008-09-09 M Needham
  - Make recovery mode default for cluster decoding

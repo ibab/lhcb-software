@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.41 2008-09-12 07:30:06 cattanem Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.42 2008-09-12 13:56:33 mneedham Exp $
 
 #include <algorithm>
 
@@ -14,15 +14,14 @@
 #include "Event/STCluster.h"
 #include "Event/STSummary.h"
 
+#include "LHCbMath/LHCbMath.h"
 #include "Event/STLiteCluster.h"
 #include "Kernel/STDataFunctor.h"
 #include "Kernel/ISTReadoutTool.h"
 #include "Kernel/STTell1Board.h"
 #include "Kernel/STTell1ID.h"
 #include "Kernel/STFun.h"
-
 #include "SiDAQ/SiADCWord.h"
-
 #include "Kernel/STDecoder.h"
 #include "Kernel/STDetSwitch.h"
 
@@ -293,11 +292,11 @@ double RawBankToSTClusterAlg::mean(const std::vector<SiADCWord>& adcValues) cons
 StatusCode RawBankToSTClusterAlg::finalize() {
 
   const double failed = counter("skipped Banks").flag();
-  unsigned int processed = counter("# valid banks").flag();
+  const double processed = counter("# valid banks").flag();
 
   double eff = 0.0; 
-  if (processed > 0u){ 
-    eff = 1.0 - (failed/double(processed)); 
+  if (LHCb::Math::Equal_To<double>()(processed, 0u)){ 
+    eff = 1.0 - (failed/processed); 
   }
   info() << "Successfully processed " << 100* eff << " %"  << endmsg;
     
