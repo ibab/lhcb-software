@@ -3,6 +3,10 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+! 2008-09-12 - Marco Cattaneo
+ - Disable boole-2008.qmt on slc4_ia32_gcc34_dbg
+  (fails with FPR in std::numeric_limits)
+
 </PRE><H1><A NAME=v16r2>2008-09-08 Boole v16r2</A></H1><PRE>
  - Update Configurable to inherit from LHCbConfigurableUser
  - Separate the QMTest reference files for amd64 and ia32 platforms and update
