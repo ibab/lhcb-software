@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.h,v 1.25 2008-09-02 09:11:50 cattanem Exp $
+// $Id: MagneticFieldSvc.h,v 1.26 2008-09-12 13:32:35 jonrob Exp $
 #ifndef MAGNETICFIELDSVC_H
 #define MAGNETICFIELDSVC_H 1
 
@@ -46,8 +46,9 @@ public:
 
   /// Initialise the service (Inherited Service overrides) 
   virtual StatusCode initialize();
-  
- 
+
+  /// Finalise the service (Inherited Service overrides) 
+  virtual StatusCode finalize();
   
   /** Query the available interfaces.
    * @param riid Requested interface ID
