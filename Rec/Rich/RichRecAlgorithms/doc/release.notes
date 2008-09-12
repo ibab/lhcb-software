@@ -4,6 +4,9 @@
 ! Purpose     : Common reconstruction algorithms for the RICH
 !-----------------------------------------------------------------------------
 
+! 2008-09-12 - Chris Jones
+ - Update the isolated Ring finding algorithm
+
 !===================== RichRecAlgorithms v2r13 2008-09-04 ====================
 ! 2008-08-26 - Chris Jones
  - Add new selection criteria to EventSelectionAlg
