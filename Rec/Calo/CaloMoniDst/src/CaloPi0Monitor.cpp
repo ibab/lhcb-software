@@ -1,8 +1,11 @@
-// $Id: CaloPi0Monitor.cpp,v 1.5 2008-09-09 15:37:24 odescham Exp $
+// $Id: CaloPi0Monitor.cpp,v 1.6 2008-09-12 09:50:34 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2008/09/09 15:37:24  odescham
+// review
+//
 // Revision 1.4  2007/07/25 19:49:13  odescham
 // major release : see doc
 //
@@ -76,7 +79,9 @@ protected:
   CaloPi0Monitor( const std::string &name, ISvcLocator *pSvcLocator )
     : CaloMoniAlg( name, pSvcLocator ){ 
     declareProperty( "PhotonPtFilter", m_ptPhoton = 250 * Gaudi::Units::MeV );
+    m_multMax = 150;
     addToInputs( LHCb::CaloHypoLocation::Photons );
+
   }
   /// destructor (virtual and protected)
   virtual ~CaloPi0Monitor() {}
