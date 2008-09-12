@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.h,v 1.10 2008-07-04 15:52:21 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.h,v 1.11 2008-09-12 07:30:06 cattanem Exp $
 #ifndef RAWBANKTOSTCLUSTERALG_H 
 #define RAWBANKTOSTCLUSTERALG_H 1
 
@@ -49,10 +49,11 @@ private:
   StatusCode decodeBanks(LHCb::RawEvent* rawEvt, LHCb::STClusters* digitCont ) const;
 
 
-  StatusCode createCluster(const STClusterWord& aWord,
-                           const STTell1Board* aBoard,
-                           const std::vector<SiADCWord>& adcValues,
-			   const unsigned int version, LHCb::STClusters* clusCont) const;
+  void createCluster(const STClusterWord& aWord,
+                     const STTell1Board* aBoard,
+                     const std::vector<SiADCWord>& adcValues,
+                     const unsigned int version,
+                     LHCb::STClusters* clusCont) const;
  
   double mean(const std::vector<SiADCWord>& adcValues) const;
    

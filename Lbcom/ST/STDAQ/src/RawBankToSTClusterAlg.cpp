@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.40 2008-09-09 11:35:55 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.41 2008-09-12 07:30:06 cattanem Exp $
 
 #include <algorithm>
 
@@ -133,7 +133,7 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
       // not a valid IT
      std::string invalidSource = "Invalid source ID --> skip bank"+
 	 boost::lexical_cast<std::string>((*iterBank)->sourceID());  
-      Warning(invalidSource,StatusCode::SUCCESS); 
+      Warning(invalidSource,StatusCode::SUCCESS).ignore(); 
       ++counter("skipped Banks");
       continue;
     }
@@ -143,7 +143,7 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
     if ((*iterBank)->magic() != RawBank::MagicPattern) {
       std::string pattern = "wrong magic pattern "+
 	 boost::lexical_cast<std::string>((*iterBank)->sourceID());  
-      Warning(pattern, StatusCode::SUCCESS); 
+      Warning(pattern, StatusCode::SUCCESS).ignore(); 
       ++counter("skipped banks");
       continue;
     }
@@ -160,9 +160,9 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
    
       if (!recoverMode()){
         bankList.push_back((*iterBank)->sourceID());
-        std::string errorBank = "bank has errors, skip sourceID "+
-	  boost::lexical_cast<std::string>((*iterBank)->sourceID());
-        Warning(errorBank, StatusCode::SUCCESS);
+        std::string errorBank = "bank has errors, skip sourceID " +
+          boost::lexical_cast<std::string>((*iterBank)->sourceID());
+        Warning(errorBank, StatusCode::SUCCESS).ignore();
         ++counter("skipped Banks");
         continue;
       }
@@ -177,10 +177,10 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
     const unsigned bankpcn = decoder.header().pcn();
     if (pcn != bankpcn && !m_skipErrors){
       bankList.push_back((*iterBank)->sourceID());
-      std::string errorBank = "PCNs out of sync, sourceID "+
-	boost::lexical_cast<std::string>((*iterBank)->sourceID());
+      std::string errorBank = "PCNs out of sync, sourceID " +
+        boost::lexical_cast<std::string>((*iterBank)->sourceID());
       debug() << "Expected " << pcn << " found " << bankpcn << endmsg;
-      Warning(errorBank, StatusCode::SUCCESS);
+      Warning(errorBank, StatusCode::SUCCESS).ignore();
       ++counter("skipped Banks");
       continue; 
     }
@@ -222,12 +222,12 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
 
 }
 
-StatusCode RawBankToSTClusterAlg::createCluster(const STClusterWord& aWord,
-                                                const STTell1Board* aBoard,
-                                                const std::vector<SiADCWord>& 
-                                                adcValues,
-                                                const unsigned int version,
-                                                STClusters* clusCont) const{
+void RawBankToSTClusterAlg::createCluster( const STClusterWord& aWord,
+                                           const STTell1Board* aBoard,
+                                           const std::vector<SiADCWord>& 
+                                           adcValues,
+                                           const unsigned int version,
+                                           STClusters* clusCont) const{
   // stream the neighbour sum
   std::vector<SiADCWord>::const_iterator iterADC = adcValues.begin();
   char neighbour = *iterADC;  
@@ -271,7 +271,7 @@ StatusCode RawBankToSTClusterAlg::createCluster(const STClusterWord& aWord,
     delete newCluster; 
   }
   
-  return StatusCode::SUCCESS;
+  return;
 }
 
 
