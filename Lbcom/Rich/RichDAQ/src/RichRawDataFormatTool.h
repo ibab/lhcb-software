@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::DAQ::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.h,v 1.34 2008-09-11 14:44:30 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.h,v 1.35 2008-09-12 15:38:02 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -153,10 +153,11 @@ namespace Rich
       /// Finalise for each event
       void FinishEvent();
 
-      /// Retrieves the raw event for the given TES location
-      LHCb::RawEvent * rawEvent( const std::string& loc ) const;
+      /// Retrieves the raw event for the current TAE event
+      LHCb::RawEvent * rawEvent() const;
 
-      /// Retrieves the ODIN data object
+      /** Retrieves the ODIN data object
+       */
       const LHCb::ODIN * odin() const;
 
       /// Get the ODIN time tool
@@ -214,7 +215,10 @@ namespace Rich
       mutable Rich::Map< const std::string, LHCb::RawEvent * > m_rawEvent;
 
       /// Pointer to ODIN
-      mutable LHCb::ODIN * m_odin;
+      mutable Rich::Map< const std::string, LHCb::ODIN * > m_odin;
+
+      /// Current TAE type
+      mutable std::string m_currentTAE;
 
       /// Pointer to ODIN (Event time) tool
       mutable const IEventTimeDecoder * m_timeTool;
@@ -294,7 +298,7 @@ namespace Rich
     inline void RawDataFormatTool::InitEvent()
     {
       m_rawEvent.clear();
-      m_odin          = NULL;
+      m_odin.clear();
       m_hasBeenCalled = false;
     }
 
@@ -315,27 +319,21 @@ namespace Rich
       return ( 0 != (data & (1<<pos)) );
     }
 
-    inline LHCb::RawEvent * RawDataFormatTool::rawEvent( const std::string& loc ) const
-    {
-      LHCb::RawEvent *& raw = m_rawEvent[loc]; 
-      if ( !raw ) { raw = get<LHCb::RawEvent>(loc); }
-      return raw;
-    }
-
     inline const IEventTimeDecoder * RawDataFormatTool::timeTool() const
     {
-      if (!m_timeTool) acquireTool( "OdinTimeDecoder", m_timeTool );
+      if (!m_timeTool) { acquireTool( "OdinTimeDecoder", m_timeTool ); }
       return m_timeTool;
     }
 
     inline const LHCb::ODIN * RawDataFormatTool::odin() const
     {
-      if ( !m_odin )
+      LHCb::ODIN *& odin = m_odin[m_currentTAE];
+      if ( !odin )
       {
         timeTool()->getTime(); // Needed to make sure ODIN object is in TES (Strange but true)
-        m_odin = get<LHCb::ODIN>( LHCb::ODINLocation::Default );
+        odin = get<LHCb::ODIN>( m_currentTAE+LHCb::ODINLocation::Default );
       }
-      return m_odin;
+      return odin;
     }
 
   }

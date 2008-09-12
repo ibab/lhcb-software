@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.81 2008-09-11 16:51:20 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.82 2008-09-12 15:38:02 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -39,7 +39,6 @@ RawDataFormatTool::RawDataFormatTool( const std::string& type,
                                       const IInterface* parent )
   : RichToolBase    ( type, name , parent  ),
     m_richSys       ( NULL                 ),
-    m_odin          ( NULL                 ),
     m_timeTool      ( NULL                 ),
     m_evtCount      ( 0                    ),
     m_hasBeenCalled ( false                ),
@@ -51,7 +50,8 @@ RawDataFormatTool::RawDataFormatTool( const std::string& type,
   // job opts
   declareProperty( "ZeroSuppressHitCut", m_zeroSuppresCut = 96 );
   declareProperty( "RawEventLocations",
-                   m_rawEventLocs = RawEventLocations(1,LHCb::RawEventLocation::Default) );
+                   m_rawEventLocs = RawEventLocations(1,"") );
+  //m_rawEventLocs = RawEventLocations(1,LHCb::RawEventLocation::Default) );
   declareProperty( "PrintSummary",       m_summary   = true  );
   declareProperty( "MaxHPDOccupancy",    m_maxHPDOc = 999999 );
   declareProperty( "DumpRawBanks",       m_dumpBanks          = false );
@@ -618,11 +618,11 @@ void RawDataFormatTool::fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs
     } // ingress loop
 
     // Add this bank to the Raw buffer
-    // CRJ : Hardcode adding banks to default RawEvent location ...
-    rawEvent(LHCb::RawEventLocation::Default)->addBank( (*iL1).first.data(),
-                                                        LHCb::RawBank::Rich,
-                                                        version,
-                                                        dataBank );
+    m_currentTAE = "";
+    rawEvent()->addBank( (*iL1).first.data(),
+                         LHCb::RawBank::Rich,
+                         version,
+                         dataBank );
 
     if ( m_summary )
     {
@@ -1327,9 +1327,15 @@ RawDataFormatTool::decodeToSmartIDs( L1Map & decodedData ) const
   for ( RawEventLocations::const_iterator iLoc = m_rawEventLocs.begin();
         iLoc != m_rawEventLocs.end(); ++iLoc )
   {
+    // Set the current TAE type (for use by odin and raw event methods)
+    m_currentTAE = *iLoc;
+
+    // Get the raw event
+    LHCb::RawEvent * rawEv = rawEvent();
+    if ( !rawEv ) continue;
 
     // Get the banks for the Rich
-    const LHCb::RawBank::Vector & richBanks = rawEvent(*iLoc)->banks( LHCb::RawBank::Rich );
+    const LHCb::RawBank::Vector & richBanks = rawEv->banks( LHCb::RawBank::Rich );
 
     // Loop over data banks
     for ( LHCb::RawBank::Vector::const_iterator iBank = richBanks.begin();
@@ -1383,6 +1389,24 @@ RawDataFormatTool::decodeToSmartIDs( L1Map & decodedData ) const
     }
   }
 
+}
+
+LHCb::RawEvent * RawDataFormatTool::rawEvent() const
+{
+  LHCb::RawEvent *& raw = m_rawEvent[m_currentTAE]; 
+  if (!raw) 
+  { 
+    const std::string loc = m_currentTAE+LHCb::RawEventLocation::Default;
+    if ( exist<LHCb::RawEvent>(loc) )
+    {
+      raw = get<LHCb::RawEvent>(loc);
+    }
+    else
+    {
+      Warning( "No RawEvent at '"+loc+"'" ).ignore();
+    } 
+  }
+  return raw;
 }
 
 const Rich::DAQ::L1Map & RawDataFormatTool::dummyMap() const
