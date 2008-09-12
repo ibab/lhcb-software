@@ -154,11 +154,11 @@ def _application(histpersistency, evtsel=None, extsvc=None, runable=None, algs=N
   if algs is not None:        app.TopAlg  += algs
   if evtloop is None:
     evtloop = Configs.EventLoopMgr('EventLoopMgr')
-    evtloop.Warnings = False
+    #evtloop.Warnings = False
   app.EventLoop = evtloop
   if app.HistogramPersistency=="NONE":
     pers = Configs.HistogramPersistencySvc('HistogramPersistencySvc')
-    pers.Warnings = False
+    #pers.Warnings = False
   return app
 
 #------------------------------------------------------------------------------------------------

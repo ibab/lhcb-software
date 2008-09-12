@@ -27,8 +27,8 @@ sleep 6
 $BIGTERM MBMMon@${HOST}     -e "export UTGID=${NODENAME}/MBMMon;    exec -a \${UTGID} $gaudi_run libOnlineKernel.so mbm_mon"&
 #$BIGTERM TANMon@${HOST}     -e "export UTGID=${NODENAME}/TANMon;    exec -a \${UTGID} $gaudi_run libOnlineKernel.so tanmon -c"&
 #
-#$MINITERM EvtProd@${HOST}   -e "export UTGID=${NODENAME}/EvtProd;   exec -a \${UTGID} $Class1_task -opt=$OPTS/MEPConverter.opts"&
-start_task EvtProd   "import GaudiOnlineTests;GaudiOnlineTests.runEvtProd()"
+$MINITERM EvtProd@${HOST}   -e "export UTGID=${NODENAME}/EvtProd;   exec -a \${UTGID} $Class1_task -opt=$OPTS/MEPConverter.opts"&
+# start_task EvtProd   "import GaudiOnlineTests;GaudiOnlineTests.runEvtProd()"
 start_task EvtHolder "import GaudiOnlineTests;GaudiOnlineTests.runEvtHolder()"
 start_task Moore_0   "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead()"
 start_task Moore_1   "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead()"
