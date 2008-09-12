@@ -4,6 +4,9 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2008-09-12 M Needham
+ - fix untested StatusCode
+
 !======================= TsaAlgorithms v3r5 2008-07-29 ======================
 ! 2008-07-29 - Marco Cattaneo
  - in options, use TrackSys configurable instead of Brunel

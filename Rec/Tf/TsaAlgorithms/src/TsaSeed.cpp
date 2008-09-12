@@ -255,6 +255,10 @@ StatusCode Seed::execute(){
     } // iterT
 
     sc = m_finalSelection->execute(tempSel);
+    if (sc.isFailure()) {
+      return Error("failed to make final selection", StatusCode::FAILURE,1);
+    }
+
   }
 
   debug() << "Created " << seedSel->size() << " SeedTracks at " << m_seedTrackLocation << endreq;
