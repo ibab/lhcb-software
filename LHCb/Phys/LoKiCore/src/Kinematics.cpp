@@ -1,4 +1,4 @@
-// $Id: Kinematics.cpp,v 1.11 2008-08-02 13:34:27 ibelyaev Exp $
+// $Id: Kinematics.cpp,v 1.12 2008-09-12 13:13:32 hmdegaud Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -240,7 +240,7 @@ double LoKi::Kinematics::decayAngle
  *  of particle "v" in the rest system of particle "M" 
  *
  *  \f$ \left|\vec{p}\right| 
- *     \sqrt{  \frac{\left(v\cdotM\right)^2}{M^2} -v^2} \f$
+ *     \sqrt{  \frac{\left(v\cdot M\right)^2}{M^2} -v^2} \f$
  * 
  *  @attention particle M must be time-like particle!
  *  @param v the vector to be checked 
@@ -275,7 +275,7 @@ double LoKi::Kinematics::restMomentum
 /*  simple function which evaluates the energy
  *  of particle "v" in the rest system of particle "M" 
  * 
- *  \f$ e = \frac{v\cdotM}{\sqrt{M^2}} \f$
+ *  \f$ e = \frac{v\cdot M}{\sqrt{M^2}} \f$
  *  
  *  @attention particle M must be time-like particle: M^2 > 0 !
  *  @param v the vector to be checked 
