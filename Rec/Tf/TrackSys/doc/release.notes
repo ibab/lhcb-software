@@ -4,6 +4,11 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2008-09-12 - Chris Jones
+ - Port TrackClones.opts to python (directly included in RecoTracking.py)
+ - Remove obsolete TrackClones.opts
+ - Add missing CMT use statements to requirements file
+
 ! 2008-09-03 - Wouter Hulsbergen
  - replace Fitting.py with ConfiguredFitters
 

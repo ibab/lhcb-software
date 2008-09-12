@@ -18,7 +18,8 @@ from Configurables import ( ProcessPhase, MagneticFieldSvc,
                             PatSeeding,
                             TrackMatchVeloSeed, PatDownstream, PatVeloTT,
                             TrackEventCloneKiller, TrackPrepareVelo, TrackContainerCopy,
-                            TrackAddLikelihood, TrackLikelihood, NeuralNetTmva, Tf__OTHitCreator
+                            TrackAddLikelihood, TrackLikelihood, NeuralNetTmva, Tf__OTHitCreator,
+                            TrackBuildCloneTable, TrackCloneCleaner
                            )
 
 ## Start TransportSvc, needed by track fit
@@ -172,7 +173,13 @@ GaudiSequencer("TrackVeloFitSeq").Members += [ copyVelo ]
 trackClones = GaudiSequencer("TrackClonesSeq")
 GaudiSequencer("TrackAddExtraInfoSeq").Members += [ trackClones ];
 trackClones.MeasureTime = True;
-importOptions( "$TRACKSYSROOT/options/TrackClones.opts" )
+cloneTable = TrackBuildCloneTable("FindTrackClones")
+cloneTable.maxDz   = 500*mm
+cloneTable.zStates = [ 0*mm, 990*mm, 9450*mm ]
+cloneTable.klCut   = 5e3
+cloneCleaner = TrackCloneCleaner("FlagTrackClones")
+cloneCleaner.CloneCut = 5e3
+trackClones.Members += [ cloneTable, cloneCleaner ]
 
 ## Add the likelihood information & ghost probability using TMVA package
 trackAddLikelihood = TrackAddLikelihood()

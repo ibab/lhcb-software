@@ -38,6 +38,13 @@ use   TrackMonitors        v1r*    Tr
 
 use   TrackPython          v3r*    Tr
 
+use   STTools              v3r*    ST
+use   PatAlgorithms        v3r*    Tf
+use   TrackMatching        v2r*    Tf
+use   PatVelo              v3r*    Tf
+use   PatVeloTT            v3r*    Tf
+use   NNTools              v1r*    Tr
+
 #============================================================================
 # Install the configurable
 apply_pattern install_python_modules
