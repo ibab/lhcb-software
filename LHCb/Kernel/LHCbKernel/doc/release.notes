@@ -4,6 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2008-09-12 - Chris Jones
+ - Remove space in string "below threshold" in RichParticleIDType.cpp as
+   it was causing problems elsewhere with component names.
+
 !===================== LHCbKernel v9r1 2008-09-03 =========================
 ! 2008-09-03 - Marco Cattaneo
  - Add some missing dictionaries and missing includes
