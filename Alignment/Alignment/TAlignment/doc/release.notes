@@ -3,6 +3,10 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+</PRE><H1><A NAME=v3r7>2008-09-12 TAlignment v3r7</A></H1><PRE>
+
+- Johan Blouw: 2008-09-12: tagged package v3r7 for alignment project release v3r2
+
 ! 2008-07-07 - Jan Amoraal
  - Throw StatusCode::FAILURE when no elments are given in GetElementsToBeAligned
  - Added some more ot alignables

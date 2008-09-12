@@ -3,7 +3,7 @@
 # Maintainer : Johan Blouw
 #============================================================================
 package           TAlignment
-version           v3r6
+version           v3r7
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -29,7 +29,7 @@ use     MuonDet                 v*      Det
 use     LHCbKernel              v*      Kernel
 use     LHCbMath                v*      Kernel
 use     LoKiCore        	v*      Phys
-use   LinkerEvent	v*	Event
+use     LinkerEvent		v*	Event
 
 #============================================================================
 # include directories
