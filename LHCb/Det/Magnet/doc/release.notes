@@ -4,6 +4,9 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
+! 2008-09-12 - Marco Cattaneo
+ - Fix an untested StautsCode
+
 !====================== Magnet v5r1 2008-09-02 ===============================
 ! 2008-09-02 - Marco Cattaneo
  - Add an option UseSetCurrent to get Set instead of Measured current from

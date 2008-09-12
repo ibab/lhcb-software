@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.cpp,v 1.39 2008-09-02 09:11:50 cattanem Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.40 2008-09-12 07:05:53 cattanem Exp $
 
 // Include files
 #include "GaudiKernel/SvcFactory.h"
@@ -348,7 +348,6 @@ StatusCode MagneticFieldSvc::updateTool( int polarity )
 {
   // Depending on the polarity and the type of field map, update the tool
   MsgStream log(msgSvc(), name());
-  StatusCode sc = StatusCode::FAILURE;
 
   if( polarity == 0 ) {
     polarity = 1;
@@ -359,8 +358,9 @@ StatusCode MagneticFieldSvc::updateTool( int polarity )
     // DC06 case
     if( polarity > 0 ) {
       if( 0 == m_DC06FieldUp ) {
-        sc = m_toolSvc->retrieveTool( "MagFieldToolDC06", "MagToolDC06Up",
-                                      m_DC06FieldUp, this );
+        StatusCode sc = m_toolSvc->retrieveTool( "MagFieldToolDC06",
+                                                 "MagToolDC06Up",
+                                                 m_DC06FieldUp, this );
         if( sc.isFailure() ) {
           log << MSG::ERROR << "Could not retrieve MagToolDC06Up" << endmsg;
           return sc;
@@ -370,8 +370,9 @@ StatusCode MagneticFieldSvc::updateTool( int polarity )
     }
     else {
       if( 0 == m_DC06FieldDown ) {
-        sc = m_toolSvc->retrieveTool( "MagFieldToolDC06", "MagToolDC06Down",
-                                      m_DC06FieldDown, this );
+        StatusCode sc = m_toolSvc->retrieveTool( "MagFieldToolDC06",
+                                                 "MagToolDC06Down",
+                                                 m_DC06FieldDown, this );
         if( sc.isFailure() ) {
           log << MSG::ERROR << "Could not retrieve MagToolDC06Down" << endmsg;
           return sc;
@@ -384,8 +385,9 @@ StatusCode MagneticFieldSvc::updateTool( int polarity )
     // Real map case
     if( polarity > 0 ) {
       if( 0 == m_RealFieldUp ) {
-        sc = m_toolSvc->retrieveTool( "MagFieldTool", "MagToolRealUp",
-                                      m_RealFieldUp, this );
+        StatusCode sc = m_toolSvc->retrieveTool( "MagFieldTool",
+                                                 "MagToolRealUp",
+                                                 m_RealFieldUp, this );
         if( sc.isFailure() ) {
           log << MSG::ERROR << "Could not retrieve MagToolRealUp" << endmsg;
           return sc;
@@ -395,8 +397,9 @@ StatusCode MagneticFieldSvc::updateTool( int polarity )
     }
     else {
       if( 0 == m_RealFieldDown ) {
-        sc = m_toolSvc->retrieveTool( "MagFieldTool", "MagToolRealDown",
-                                      m_RealFieldDown, this );
+        StatusCode sc = m_toolSvc->retrieveTool( "MagFieldTool",
+                                                 "MagToolRealDown",
+                                                 m_RealFieldDown, this );
         if( sc.isFailure() ) {
           log << MSG::ERROR << "Could not retrieve MagToolRealDown" << endmsg;
           return sc;
