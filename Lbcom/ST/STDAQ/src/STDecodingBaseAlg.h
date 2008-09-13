@@ -1,4 +1,4 @@
-// $Id: STDecodingBaseAlg.h,v 1.13 2008-09-05 14:12:13 mneedham Exp $
+// $Id: STDecodingBaseAlg.h,v 1.14 2008-09-13 12:33:21 mneedham Exp $
 #ifndef STDECODINGBASEALG_H 
 #define STDECODINGBASEALG_H 1
 
@@ -81,6 +81,9 @@ protected:
                      const STClusterWord& word, 
                      const unsigned int pcn) const;
 
+ /** check the spill is read out **/
+ bool validSpill() const;
+
  bool m_skipErrors;
  std::string m_bankTypeString;
  std::string m_rawEventLocation;
@@ -89,6 +92,11 @@ protected:
 private:
 
   StatusCode decodeErrors() const;
+
+
+  std::string toSpill(const std::string& location) const;
+  unsigned int spillOffset(const std::string& spill) const;
+  unsigned int m_spillOffset;
 
   std::string m_detType;
 

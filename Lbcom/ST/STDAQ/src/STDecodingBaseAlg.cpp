@@ -1,4 +1,4 @@
-// $Id: STDecodingBaseAlg.cpp,v 1.18 2008-09-09 11:35:55 mneedham Exp $
+// $Id: STDecodingBaseAlg.cpp,v 1.19 2008-09-13 12:33:21 mneedham Exp $
 
 #include <algorithm>
 
@@ -11,6 +11,7 @@
 #include "Event/ByteStream.h"
 #include "Event/STCluster.h"
 #include "Event/STSummary.h"
+#include "Event/ODIN.h"
 
 #include "Kernel/STDataFunctor.h"
 #include "Kernel/ISTReadoutTool.h"
@@ -73,7 +74,10 @@ StatusCode STDecodingBaseAlg::initialize() {
   STDetSwitch::flip(m_detType,m_summaryLocation);
   STDetSwitch::flip(m_detType,m_errorLocation);
   STDetSwitch::flip(m_detType,m_errorBankString);
-  
+
+  std::string spill = toSpill(m_rawEventLocation);
+  m_spillOffset = spillOffset(spill); 
+
   // readout tool
   m_readoutTool = tool<ISTReadoutTool>(m_readoutToolName,m_readoutToolName);
    
@@ -151,7 +155,7 @@ bool STDecodingBaseAlg::checkDataIntegrity(STDecoder& decoder, const STTell1Boar
               << aBoard->DAQToOffline(fracStrip,version,aWord.channelID()) 
               << " source ID  " << aBoard->boardID()  <<  " chan "  << aWord.channelID()   
               << endmsg ;
-      Warning("ADC values do not match", StatusCode::FAILURE);
+      Warning("ADC values do not match", StatusCode::SUCCESS,2);
       ok = false;
       break;
     }
@@ -159,7 +163,7 @@ bool STDecodingBaseAlg::checkDataIntegrity(STDecoder& decoder, const STTell1Boar
     // decode the channel
     if (aBoard->validChannel(aWord.channelID()) == false){
       debug() << "invalid TELL1 channel number board: " << aBoard->boardID() << " chan " << aWord.channelID() << endmsg;
-      Warning("Invalid tell1 channel", StatusCode::SUCCESS); 
+      Warning("Invalid tell1 channel", StatusCode::SUCCESS,2); 
       ok = false;
       break;
     }
@@ -204,7 +208,7 @@ LHCb::STTELL1BoardErrorBanks* STDecodingBaseAlg::getErrorBanks() const{
     // we have to do the decoding
     StatusCode sc = decodeErrors();
     if (sc.isFailure()){
-      Warning("Error Bank Decoding failed",StatusCode::FAILURE,100);
+      Warning("Error Bank Decoding failed",StatusCode::FAILURE,2);
       return 0;
     }
   }
@@ -243,7 +247,7 @@ StatusCode STDecodingBaseAlg::decodeErrors() const{
    if ((*itB)->magic() != RawBank::MagicPattern) {
      std::string pattern = "wrong magic pattern "+
 	boost::lexical_cast<std::string>((*itB)->sourceID());  
-     Warning(pattern, StatusCode::SUCCESS); 
+     Warning(pattern, StatusCode::SUCCESS,2); 
      continue;
    }
 
@@ -253,13 +257,13 @@ StatusCode STDecodingBaseAlg::decodeErrors() const{
 
    // bank has to be at least 28 words 
    if (bankEnd < STDAQ::minErrorBankWords){
-     Warning("Error bank too short --> not decoded", StatusCode::SUCCESS);
+     Warning("Error bank too short --> not decoded", StatusCode::SUCCESS,2);
      continue;
    }
 
    // and less than 52 words
    if (bankEnd > STDAQ::maxErrorBankWords){
-     Warning("Error bank too long --> not decoded", StatusCode::SUCCESS);
+     Warning("Error bank too long --> not decoded", StatusCode::SUCCESS,2);
      continue;
    }
 
@@ -277,7 +281,7 @@ StatusCode STDecodingBaseAlg::decodeErrors() const{
 
      // we must find 5 words
      if (bankEnd - w < 5 ){
-       Warning("Ran out of words to read", StatusCode::SUCCESS);
+       Warning("Ran out of words to read", StatusCode::SUCCESS,2);
        break;
      }
  
@@ -289,7 +293,7 @@ StatusCode STDecodingBaseAlg::decodeErrors() const{
 
      // we must find the optional words + 2 more control words
      if (bankEnd - w < nOptional + 2 ){
-        Warning("Ran out of words to read", StatusCode::SUCCESS);
+        Warning("Ran out of words to read", StatusCode::SUCCESS,2);
         break;
       }
 
@@ -339,3 +343,38 @@ StatusCode STDecodingBaseAlg::finalize() {
   return GaudiAlgorithm::finalize();
 }
 
+
+std::string STDecodingBaseAlg::toSpill(const std::string& location) const{
+
+  std::string theSpill = "";
+  std::string names[2] = {"Prev", "Next"};
+  for (unsigned int is = 0; is < 2; ++is){ 
+    std::string::size_type iPos = location.find(names[is]);
+    if (iPos != std::string::npos){
+      std::string startSpill = location.substr(iPos,location.size() - iPos);
+      std::string::size_type iPos2 = startSpill.find("/");
+      theSpill = startSpill.substr(0,iPos2); 
+      break;
+    }
+  }  // is
+  return theSpill;
+}
+
+unsigned int STDecodingBaseAlg::spillOffset(const std::string& spill) const{
+
+  // convert spill to offset in time
+  unsigned int offset = 0;
+  if (spill.size() > 4u){
+    std::string spillNumber = spill.substr(4u,spill.size() - 4u);
+    offset = boost::lexical_cast<unsigned int>(spillNumber);
+  }
+  return offset;
+}
+
+bool STDecodingBaseAlg::validSpill() const{
+
+  // check spill is actually read out using the ODIN
+  ODIN* odin = get<ODIN>(ODINLocation::Default); 
+  const unsigned int numberOfSpills = odin->timeAlignmentEventWindow();
+  return m_spillOffset < numberOfSpills ;
+}
