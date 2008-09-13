@@ -83,6 +83,14 @@
 	  </code>
       </method>
 
+     <method
+     name = "fractionOK"
+     desc = "fraction of links that are OK"
+     type = "double"
+     const = "TRUE"
+     argList = "const unsigned int pcn">
+   </method>
+
     <method 
         name    = "fillStream" 
         desc    = "Print out of error information"

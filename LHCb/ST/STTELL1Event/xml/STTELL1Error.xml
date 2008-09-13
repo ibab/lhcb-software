@@ -39,7 +39,7 @@
    <enum access = 'PRIVATE'
      name = 'Tell1Const'
      desc = 'few useful constants'
-     value = 'nPort = 4, nBeetle = 6, nMagic = 0x8E'
+     value = 'nPort = 4, nBeetle = 6, totalNumberOfPorts = nPort*nBeetle,  nMagic = 0x8E'
     >
      </enum>
 
@@ -747,6 +747,14 @@
      const = "TRUE">
     </method>
 
+   <method
+     name = "fractionOK"
+     desc = "fraction of links that are OK"
+     type = "double"
+     const = "TRUE"
+     argList = "const unsigned int pcn">
+   </method>
+
      <method 
         name    = "fillStream" 
         desc    = "Print out of error information"
@@ -757,7 +765,8 @@
          type = "std::ostream" 
          name = "s"/>
       </method>	
-	
+
+
 	 </class>
   </package>
 </gdd>
