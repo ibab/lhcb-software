@@ -4,6 +4,13 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2008-09-13 M Needham
+ - Improve error recoverary bookkeeping
+
+! 2008-09-13 M Needham
+ - Check spill is read out before retrieving it
+ - Reduce number of warnings printed out
+ - [Online request...]
 
 ! 2008-09-12 M. Needham
  - Fix warnings for doubles

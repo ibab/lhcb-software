@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.43 2008-09-13 12:33:21 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.44 2008-09-13 13:14:10 mneedham Exp $
 
 #include <algorithm>
 
@@ -172,7 +172,6 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
       else {
 	// flag that need to recover....
         recover = true;
-        recoveredBanks[(*iterBank)->sourceID()] = 1.0;
         ++counter("recovered banks");
       }
     }
@@ -198,6 +197,8 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
     STTELL1BoardErrorBank* errorBank = 0;
     if (recover == true){
       errorBank = findErrorBank((*iterBank)->sourceID());
+      // check what fraction we can recover
+      recoveredBanks[(*iterBank)->sourceID()] += errorBank->fractionOK(pcn);
     } 
 
     // iterator over the data....
