@@ -1,10 +1,12 @@
-// $Id: L0MuonAlgComparison.cpp,v 1.4 2008-07-24 09:36:53 jucogan Exp $
+// $Id: L0MuonAlgComparison.cpp,v 1.5 2008-09-15 07:46:40 jucogan Exp $
 // Include files 
 
 #include "boost/format.hpp"
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
+
+#include "Kernel/MuonLayout.h"
 
 #include "Event/RawEvent.h"
 #include "Event/ODIN.h"
@@ -46,6 +48,14 @@ StatusCode L0MuonAlgComparison::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiHistoAlg
 
   debug() << "==> Initialize" << endmsg;
+
+  m_candHistosPU0    = tool<L0MuonCandHistos>( "L0MuonCandHistos", "PUCand_only0", this);
+  m_candHistosPU1    = tool<L0MuonCandHistos>( "L0MuonCandHistos", "PUCand_only1", this);
+
+  if (!m_shortnames) m_candHistosPU0->setHistoDir("L0MuonComparison");
+  m_candHistosPU0->bookHistos(384,m_shortnames);
+  if (!m_shortnames) m_candHistosPU1->setHistoDir("L0MuonComparison");
+  m_candHistosPU1->bookHistos(384,m_shortnames);
  
   for (int i=0; i<NCounters; ++i) m_counters[i]=0;
   
@@ -67,24 +77,25 @@ StatusCode L0MuonAlgComparison::execute() {
 
   info()<<" Event # : "<<m_counters[TOTAL] << " Processed event #: "<<m_counters[PROCESSED] << endmsg;
   
+  info()<<"Verifying -- Ctrl :"<<endmsg;
   sc = compare(LHCb::L0MuonCandidateLocation::Default);
+  if(sc==StatusCode::FAILURE) {
+    return Error("Failed to compare candidates at "+LHCb::L0MuonCandidateLocation::Default+" ... abort"
+                 ,StatusCode::SUCCESS,100);
+  }
   
-  if( (msgLevel(MSG::INFO) && sc==StatusCode::FAILURE) || msgLevel(MSG::DEBUG) ) {
-    info()<<"*** Dump Candidates **** TIME SLOT=0"<<endmsg;
-    info()<<"-- Ctrl :"<<endmsg;
-    printCand(LHCb::L0MuonCandidateLocation::Default+ m_extension_0);
-    printCand(LHCb::L0MuonCandidateLocation::Default+ m_extension_1);
-    info()<<"-- BCSU (from CB):"<<endmsg;
-    printCand(LHCb::L0MuonCandidateLocation::BCSU+ m_extension_0);
-    printCand(LHCb::L0MuonCandidateLocation::BCSU+ m_extension_1);
-    info()<<"-- BCSU (from PB):"<<endmsg;
-    printCand(LHCb::L0MuonCandidateLocation::BCSU+"fromPB"+ m_extension_0);
-    printCand(LHCb::L0MuonCandidateLocation::BCSU+"fromPB"+ m_extension_1);
-    info()<<"-- PU :"<<endmsg;
-    printCand(LHCb::L0MuonCandidateLocation::PU+ m_extension_0);
-    printCand(LHCb::L0MuonCandidateLocation::PU+ m_extension_1);
+  info()<<"Verifying -- BCSU :"<<endmsg;
+  sc = compare(LHCb::L0MuonCandidateLocation::BCSU+"fromPB");
+  if(sc==StatusCode::FAILURE) {
+    return Error("Failed to compare candidates at "+LHCb::L0MuonCandidateLocation::BCSU+"fromPB"+" ... abort"
+                 ,StatusCode::SUCCESS,100);
+  }
 
-
+  info()<<"Verifying -- PU :"<<endmsg;
+  sc = compare(LHCb::L0MuonCandidateLocation::PU,true);
+  if(sc==StatusCode::FAILURE) {
+    return Error("Failed to compare candidates at "+LHCb::L0MuonCandidateLocation::PU+" ... abort"
+                 ,StatusCode::SUCCESS,100);
   }
 
   return StatusCode::SUCCESS;
@@ -107,22 +118,29 @@ StatusCode L0MuonAlgComparison::finalize() {
 
 //=============================================================================
 
-StatusCode L0MuonAlgComparison::compare(std::string location)
+StatusCode L0MuonAlgComparison::compare(std::string location, bool histo)
 {
   StatusCode sc = StatusCode::SUCCESS;
   std::string location0 = location + m_extension_0;
-  if (!exist<LHCb::L0MuonCandidates>( location0 )) return StatusCode::FAILURE;  
+  if (!exist<LHCb::L0MuonCandidates>( location0 )) 
+    return Error("L0MuonCandidates not found at "+location0,StatusCode::FAILURE,100);  
   LHCb::L0MuonCandidates* original0 = get<LHCb::L0MuonCandidates>( location0 );
-  LHCb::L0MuonCandidates* cands0 = filterCand(original0);
+  LHCb::L0MuonCandidates* cands0 = new LHCb::L0MuonCandidates();
+  filterCand(original0,cands0);
 
   std::string location1 = location + m_extension_1;
-  if (!exist<LHCb::L0MuonCandidates>( location1 )) return StatusCode::FAILURE;
+  if (!exist<LHCb::L0MuonCandidates>( location1 ))  
+    return Error("L0MuonCandidates not found at "+location1,StatusCode::FAILURE,100);  
   LHCb::L0MuonCandidates* original1 = get<LHCb::L0MuonCandidates>( location1 );
-  LHCb::L0MuonCandidates* cands1 = filterCand(original1);
+  LHCb::L0MuonCandidates* cands1 = new LHCb::L0MuonCandidates();
+  filterCand(original1,cands1);
 
   LHCb::L0MuonCandidates::const_iterator it0;
   LHCb::L0MuonCandidates::const_iterator it1;
+
+  debug()<<"Nb of candidates : 0= "<<cands0->size()<<"  - 1= "<<cands1->size()<<endmsg;
   
+  LHCb::L0MuonCandidates* cands_only0 = new LHCb::L0MuonCandidates();
   for ( it0= cands0->begin(); it0<cands0->end();++it0) {
     bool found=false;
     for ( it1= cands1->begin(); it1<cands1->end();++it1) {
@@ -132,15 +150,32 @@ StatusCode L0MuonAlgComparison::compare(std::string location)
       } 
     }
     if (!found) {
+      cands_only0->add((*it0));
       ++m_counters[NOT_FOUND];
       sc = StatusCode::FAILURE;
-      info()<<"Candidate not found in 2nd processing ... evt # "<<m_counters[TOTAL]<<endmsg;
+      LHCb::MuonTileID mid= ((*it0)->muonTileIDs(2))[0];
+      if (mid.isValid()) {
+        LHCb::MuonTileID pu = MuonLayout(2,2).contains(mid);
+        int qua = pu.quarter();
+        int reg = pu.region();
+        int iboard =  ( ((pu.nY()/2)*2) + (pu.nX()/2) ) -1 + (reg*3);
+        int ipu = ((pu.nY()%2)*2) +  (pu.nX()%2);
+        info()<<"Candidate not found in 2nd processing ... evt # "<<m_counters[TOTAL]
+              <<" Q"<<(qua+1)<< " R"<<(reg+1)<<" PB"<<iboard<<" PU"<<ipu<<endmsg;
+      } else {
+        info()<<"Candidate not found in 2nd processing ... evt # "<<m_counters[TOTAL]
+              <<" mid M3 not valid => "<<(*it0)<<endmsg;
+      }
     } else {
       ++m_counters[FOUND];
       debug()<<"Candidate found !!! "<<endmsg;
     }
   }
-
+  if (histo) m_candHistosPU0->fillHistos(cands_only0);
+  if (histo) m_candHistosPU0->fillHistos(cands_only0->size());
+  delete cands_only0;
+  
+  LHCb::L0MuonCandidates* cands_only1 = new LHCb::L0MuonCandidates();
   for ( it1= cands1->begin(); it1<cands1->end();++it1) {
     bool found=false;
     for ( it0= cands0->begin(); it0<cands0->end();++it0) {
@@ -150,41 +185,100 @@ StatusCode L0MuonAlgComparison::compare(std::string location)
       } 
     }
     if (!found) {
+      cands_only1->add((*it1));
       ++m_counters[ADDITIONAL];
       sc = StatusCode::FAILURE;
-      info()<<"Candidate not found in 1st processing ... evt # "<<m_counters[TOTAL]<<endmsg;
+      LHCb::MuonTileID mid= ((*it1)->muonTileIDs(2))[0];
+      if (mid.isValid()) {
+        LHCb::MuonTileID pu = MuonLayout(2,2).contains(mid);
+        int qua = pu.quarter();
+        int reg = pu.region();
+        int iboard =  ( ((pu.nY()/2)*2) + (pu.nX()/2) ) -1 + (reg*3);
+        int ipu = ((pu.nY()%2)*2) +  (pu.nX()%2);
+        info()<<"Candidate not found in 1st processing ... evt # "<<m_counters[TOTAL]
+              <<" Q"<<(qua+1)<< " R"<<(reg+1)<<" PB"<<iboard<<" PU"<<ipu<<endmsg;
+      }
+      else {
+        info()<<"Candidate not found in 2nd processing ... evt # "<<m_counters[TOTAL]
+              <<" mid M3 not valid => "<<(*it1)<<endmsg;
+        
+      }
     } else {
       debug()<<"Candidate found !!! "<<endmsg;
     }
   }
+  if (histo) m_candHistosPU1->fillHistos(cands_only1);
+  if (histo) m_candHistosPU1->fillHistos(cands_only1->size());
+  delete cands_only1;
   
-  return sc;
+  delete cands0;
+  delete cands1;
+
+  if( (msgLevel(MSG::INFO) && sc==StatusCode::FAILURE) || msgLevel(MSG::DEBUG) ) {
+    printCand(location0);
+    printCand(location1);
+  }
+  return StatusCode::SUCCESS;
 }
 
-LHCb::L0MuonCandidates* L0MuonAlgComparison::filterCand(LHCb::L0MuonCandidates* originals)
+void L0MuonAlgComparison::filterCand(LHCb::L0MuonCandidates* originals, LHCb::L0MuonCandidates* filtered)
 {
-  LHCb::L0MuonCandidates* filtered = new LHCb::L0MuonCandidates();
+  
+  filtered->clear();
   for (LHCb::L0MuonCandidates::const_iterator it=originals->begin(); it<originals->end();++it) {  
     std::vector<LHCb::MuonTileID> mids=(*it)->muonTileIDs(2);
     int qua=mids[0].quarter();
     if (quarterInUse(qua)) filtered->insert(*it);
   }
     
-  return filtered;
 }
 
 void L0MuonAlgComparison::printCand(std::string location){
+
   if (!exist<LHCb::L0MuonCandidates>( location )) return;
   LHCb::L0MuonCandidates* cands = get<LHCb::L0MuonCandidates>( location );
-  printCand(cands,location);
+
+  LHCb::L0MuonCandidates* filtered = new LHCb::L0MuonCandidates();
+  filterCand(cands,filtered);
+
+  std::cout<<boost::format("%-30s %3d candidates found  ") % location % filtered->size();
+  std::cout<<std::endl;
+  if (filtered->size()>8) {
+    for (std::vector<int>::iterator iq=m_quarters.begin(); iq<m_quarters.end(); ++iq) {
+      LHCb::L0MuonCandidates* candsQ = new LHCb::L0MuonCandidates();
+      for (LHCb::L0MuonCandidates::const_iterator it=filtered->begin(); it<filtered->end();++it) {
+        int qua=(((*it)->muonTileIDs(2))[0].quarter());
+        if ( (*iq)==qua) candsQ->add(*it);
+      }
+      if (candsQ->size()>0) printCand(candsQ,location);
+      delete candsQ;
+    }
+  }
+
+  delete filtered;
 }
 
-void L0MuonAlgComparison::printCand(LHCb::L0MuonCandidates* cands, std::string tab)
+void L0MuonAlgComparison::printCand(LHCb::L0MuonCandidates* filtered, std::string tab)
 {
-  LHCb::L0MuonCandidates* filtered = filterCand(cands);
-
-  std::cout<<boost::format("%-30s %3d candidates found  ") % tab % filtered->size();
-  std::cout<<std::endl;
+  
+  if (filtered->size()>8) {
+    LHCb::L0MuonCandidates* cands8 = new LHCb::L0MuonCandidates();
+    int ncands=0;
+    for (LHCb::L0MuonCandidates::const_iterator it=filtered->begin(); it<filtered->end();++it) {
+      ++ncands;
+      cands8->add(*it);
+      if (0==((ncands)%8)) 
+      {
+        printCand(cands8,tab);
+        cands8->clear();
+        ncands=0;
+      }
+    }
+    if (0!=((ncands)%8)) printCand(cands8,tab);
+    cands8->clear();
+    delete cands8;
+    return;
+  }
 
   std::cout<<boost::format("%-30s PT  ") % tab;
   for (LHCb::L0MuonCandidates::const_iterator it=filtered->begin(); it<filtered->end();++it) {      
@@ -219,7 +313,6 @@ void L0MuonAlgComparison::printCand(LHCb::L0MuonCandidates* cands, std::string t
       std::cout<<std::endl;
     }
   }
-  delete filtered;
 }
 
 

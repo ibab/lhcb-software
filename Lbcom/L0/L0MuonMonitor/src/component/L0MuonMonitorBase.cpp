@@ -1,14 +1,18 @@
-// $Id: L0MuonMonitorBase.cpp,v 1.4 2008-07-24 09:36:53 jucogan Exp $
+// $Id: L0MuonMonitorBase.cpp,v 1.5 2008-09-15 07:46:40 jucogan Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
 
+#include "Kernel/MuonLayout.h"
+#include "Kernel/MuonTileID.h"
+
 #include "Event/L0DUReport.h"
 #include "Event/RawEvent.h"
 #include "Event/ODIN.h"
 #include "Event/L0MuonData.h"
+#include "Event/L0MuonError.h"
 
 // local
 #include "L0MuonMonitorBase.h"
@@ -72,7 +76,8 @@ StatusCode L0MuonMonitorBase::initialize() {
 
   debug() << "==> Initialize" << endmsg;
 
-
+  setLayouts();
+  
   return StatusCode::SUCCESS;
 }
 
@@ -98,6 +103,80 @@ StatusCode L0MuonMonitorBase::finalize() {
 
 //=============================================================================
 
+StatusCode L0MuonMonitorBase::getOlsInError(std::vector<LHCb::MuonTileID> & ols)
+{
+  StatusCode sc=StatusCode::SUCCESS;
+  
+  ols.clear();
+  std::string location;
+  location=LHCb::L0MuonErrorLocation::ProcPU+context();
+  
+
+  if (exist<LHCb::L0MuonErrors> (location)) {
+    LHCb::L0MuonErrors *perrors = get<LHCb::L0MuonErrors> (location);
+    LHCb::L0MuonErrors::const_iterator iterr;
+    for (iterr=perrors->begin(); iterr!=perrors->end(); ++iterr){ // Loop over L0MuonError in container
+      const LHCb::L0MuonError *err = (*iterr);
+      LHCb::MuonTileID pu=err->key();
+      int reg = pu.region();
+      unsigned int optlinkError = ( (err->hardware()>>16) &0xFF);
+      for (int ib =0; ib<8; ++ib) { // Loop over opt link error bits
+        if ( (optlinkError>>ib)&0x1 ) { // If error bit is ON
+          LHCb::MuonTileID olid;
+          int sta=ib/2;
+          if (ib==7) sta=4;
+          MuonLayout layOL = m_opt_link_layout.stationLayout(sta).regionLayout(reg);
+          pu.setStation(sta);
+          std::vector<LHCb::MuonTileID> ols_in_pu=layOL.tiles(pu);
+          if (ols_in_pu.size()==1) 
+          { 
+            olid=ols_in_pu[0];
+          } 
+          else if (ols_in_pu.size()==2)
+          {
+            if (sta==0) { // M1 : 2 optical links per PU
+              olid=ols_in_pu[ib%2];
+            } else if (sta==1 || sta==2) {
+              if (reg==0) { // M2-M3 R1 : the layout gives 2 OLs per PU only one was received by this PU                
+                if ( (pu.nY()%2)==1 ) {
+                  olid=ols_in_pu[0];
+                } else {
+                  olid=ols_in_pu[1];
+                }
+              } else if (reg==1) { // M2-M3 R2 : 2 optical links per PU
+                olid=ols_in_pu[ib%2];
+              } else {
+                return Error("Wrong number of optical links M2 M3",StatusCode::FAILURE,50);
+              }
+            } else {
+              return Error("Wrong number of optical links M4 M5",StatusCode::FAILURE,50);
+            }
+          }
+          else
+          {
+            return Error("Wrong number of optical links >2",StatusCode::FAILURE,50);
+          }
+          olid.setStation(sta);
+          ols.push_back(olid);
+          if( msgLevel(MSG::VERBOSE) ) {
+            int quarter,iboard,ipu;
+            err->index(quarter,iboard,ipu);
+            verbose()<<"Error on "<<pu.toString()
+                     <<" Q"<<(quarter+1)<<" R"<<(reg+1)<<" M"<<(sta+1)<<" PB"<<iboard<<" PU"<<ipu
+                     <<" OL "<<olid.toString()
+                     <<endmsg;
+          }
+        } // End if error bit is ON
+      } // End of loop over opt link error bits
+    } // End of loop over L0MuonError in container
+  } else {
+    return Error("L0MuonErrors not found at "+location,StatusCode::FAILURE,50);
+  }
+  
+  return sc;
+  
+
+}
 StatusCode L0MuonMonitorBase::getL0MuonTiles(std::vector<LHCb::MuonTileID> & l0muontiles)
 {
   l0muontiles.clear();
@@ -210,3 +289,23 @@ bool L0MuonMonitorBase::selectedTrigger()
   return trig;
 }
 
+void L0MuonMonitorBase::setLayouts()
+{
+
+
+
+  m_opt_link_layout = MuonSystemLayout(MuonStationLayout(MuonLayout(2,4)),
+                                       MuonStationLayout(MuonLayout(4,1),
+                                                         MuonLayout(4,2),
+                                                         MuonLayout(2,2),
+                                                         MuonLayout(2,2)),
+                                       MuonStationLayout(MuonLayout(4,1),
+                                                         MuonLayout(4,2),
+                                                         MuonLayout(2,2),
+                                                         MuonLayout(2,2)),
+                                       MuonStationLayout(MuonLayout(2,2)),
+                                       MuonStationLayout(MuonLayout(2,2)));
+  
+  
+
+}

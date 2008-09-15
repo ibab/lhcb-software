@@ -1,4 +1,4 @@
-// $Id: L0MuonErrorHistos.h,v 1.2 2008-09-05 09:07:09 jucogan Exp $
+// $Id: L0MuonErrorHistos.h,v 1.3 2008-09-15 07:46:40 jucogan Exp $
 #ifndef COMPONENT_L0MUONERRORHISTOS_H 
 #define COMPONENT_L0MUONERRORHISTOS_H 1
 
@@ -51,6 +51,7 @@ private:
   AIDA::IHistogram1D * m_hgen[L0Muon::MonUtilities::NErrors];
   AIDA::IHistogram1D * m_hquarter[L0Muon::MonUtilities::NErrors][4];
   AIDA::IHistogram1D * m_hboard[L0Muon::MonUtilities::NErrors][4][12];
+  AIDA::IHistogram1D * m_hpu[4][12][4];
 
 };
 

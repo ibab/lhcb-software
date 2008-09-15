@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.10 2008-09-05 09:07:09 jucogan Exp $
+! $Id: release.notes,v 1.11 2008-09-15 07:46:40 jucogan Exp $
 ! Package     : L0MuonMonitor
 ! Responsible : Julien Cogan
 ! Purpose     : Monitoring of the L0Muon
 !--------------------------------------------------------------------------
+
+! 2008-09-15 - Julien Cogan
+ - Upgrade comparison with emulator
+ - New histo
 
 ! 2008-09-05 - Julien Cogan
  - Change histogram names in L0MuonMonitor

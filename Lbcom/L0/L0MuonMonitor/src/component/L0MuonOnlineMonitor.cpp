@@ -1,4 +1,4 @@
-// $Id: L0MuonOnlineMonitor.cpp,v 1.11 2008-09-05 09:07:09 jucogan Exp $
+// $Id: L0MuonOnlineMonitor.cpp,v 1.12 2008-09-15 07:46:40 jucogan Exp $
 // Include files 
 
 #include "boost/format.hpp"
@@ -12,8 +12,6 @@
 #include "Event/L0MuonData.h"
 #include "Event/L0MuonCandidate.h"
 #include "Event/L0MuonInfo.h"
-#include "Event/L0MuonProcError.h"
-#include "Event/L0MuonCtrlError.h"
 
 #include "L0MuonKernel/MonUtilities.h"
 
@@ -140,6 +138,8 @@ StatusCode L0MuonOnlineMonitor::execute() {
   int ncand=0;
   int ncandPU=0;
   int npad[L0Muon::MonUtilities::NStations]; for (int i=0; i<L0Muon::MonUtilities::NStations; ++i) npad[i]=0;
+  
+  int bid_ts0=-1;
 
   // Loop over time slots
   for (std::vector<int>::iterator it_ts=m_time_slots.begin(); it_ts<m_time_slots.end(); ++it_ts){
@@ -150,10 +150,15 @@ StatusCode L0MuonOnlineMonitor::execute() {
     std::string location;
 
     //Run info
+    sc = m_info->setProperty( "RootInTES", rootInTES() );
+    if ( sc.isFailure() ) continue;// error printed already by GaudiAlgorithm
     m_info->getInfo();
     m_info->fillHistos();
-
+    if (0==(*it_ts)) bid_ts0=m_info->bunchId();
+    
     // Error
+    sc = m_error->setProperty( "RootInTES", rootInTES() );
+    if ( sc.isFailure() ) continue;// error printed already by GaudiAlgorithm
     m_error->fillHistos();
 
     // Get L0Muon Hits
@@ -180,14 +185,14 @@ StatusCode L0MuonOnlineMonitor::execute() {
     location = LHCb::L0MuonCandidateLocation::Default + context();
     if (  exist<LHCb::L0MuonCandidates>(location ) ) {
       LHCb::L0MuonCandidates* cands = get<LHCb::L0MuonCandidates>( location );
-      m_candHistosFinal->fillHistos(cands,(*it_ts));
+      m_candHistosFinal->fillHistos(cands,(*it_ts),m_info->bunchId());
       ncand+=cands->size();
     }
 
     location = LHCb::L0MuonCandidateLocation::PU + context();
     if (  exist<LHCb::L0MuonCandidates>(location ) ) {
       LHCb::L0MuonCandidates* cands = get<LHCb::L0MuonCandidates>( location );
-      m_candHistosPU->fillHistos(cands,(*it_ts));
+      m_candHistosPU->fillHistos(cands,(*it_ts),m_info->bunchId());
       ncandPU+=cands->size();
     }
 
@@ -198,8 +203,8 @@ StatusCode L0MuonOnlineMonitor::execute() {
   m_padsHistos->fillHistos(npad);
   
   // Candidates
-  m_candHistosFinal->fillHistos(ncand);
-  m_candHistosPU->fillHistos(ncandPU);
+  m_candHistosFinal->fillHistos(ncand,bid_ts0);
+  m_candHistosPU->fillHistos(ncandPU,bid_ts0);
   
   return StatusCode::SUCCESS;
 }

@@ -1,4 +1,4 @@
-// $Id: L0MuonCandHistos.cpp,v 1.4 2008-09-05 09:07:09 jucogan Exp $
+// $Id: L0MuonCandHistos.cpp,v 1.5 2008-09-15 07:46:40 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -68,16 +68,22 @@ void L0MuonCandHistos::bookHistos(int nmax, bool shortname)
     hname = L0Muon::MonUtilities::hname_cand_pos(sta,toolname);
     m_hpos[sta]=book2D(hname,hname,-nx,nx,2*nx,-ny,ny,2*ny);
   }
-  
+
   hname = L0Muon::MonUtilities::hname_cand_number(toolname);
   m_hnumber=book2D(hname,hname,-7.5,7.5,15,-0.5,0.5+nmax,nmax+1);
+
+  hname = L0Muon::MonUtilities::hname_cand_bid(toolname);
+  m_hbid=book1D(hname,hname,-0.5,-0.5+3564,3564);
+
+  hname = L0Muon::MonUtilities::hname_cand_evtbid(toolname);
+  m_hevtbid=book1D(hname,hname,-0.5,-0.5+3564,3564);
 
   hname = L0Muon::MonUtilities::hname_cand_sum(toolname);
   m_hsum=book1D(hname,hname,-0.5,0.5+nmax,nmax+1);
 
 }
 
-void L0MuonCandHistos::fillHistos(LHCb::L0MuonCandidates* cands, int ts)
+void L0MuonCandHistos::fillHistos(LHCb::L0MuonCandidates* cands, int ts, int bid)
 {
   LHCb::L0MuonCandidates::const_iterator itcand;
 
@@ -122,9 +128,12 @@ void L0MuonCandHistos::fillHistos(LHCb::L0MuonCandidates* cands, int ts)
   }
 
   fill(m_hnumber,ts,cands->size(),1);
+  if ( (cands->size()>0) & (bid>-1) ) fill(m_hbid,bid,1);
 }
 
-void L0MuonCandHistos::fillHistos(int sum)
+void L0MuonCandHistos::fillHistos(int sum, int bid)
 {
   fill(m_hsum,sum,1);
+  if ( (sum>0) & (bid>-1) ) fill(m_hevtbid,bid,1);
+  
 }

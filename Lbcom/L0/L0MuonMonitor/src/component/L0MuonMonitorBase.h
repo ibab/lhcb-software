@@ -1,4 +1,4 @@
-// $Id: L0MuonMonitorBase.h,v 1.3 2008-07-24 09:36:53 jucogan Exp $
+// $Id: L0MuonMonitorBase.h,v 1.4 2008-09-15 07:46:40 jucogan Exp $
 #ifndef COMPONENT_L0MUONMONITORBASE_H 
 #define COMPONENT_L0MUONMONITORBASE_H 1
 
@@ -6,6 +6,8 @@
 // from Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "Kernel/MuonTileID.h"
+
+#include "MuonKernel/MuonSystemLayout.h"
 
 /** @class L0MuonMonitorBase L0MuonMonitorBase.h component/L0MuonMonitorBase.h
  *  
@@ -27,6 +29,11 @@ public:
 protected:
 
   StatusCode getL0MuonTiles(std::vector<LHCb::MuonTileID> & l0muontiles);
+  StatusCode getOlsInError(std::vector<LHCb::MuonTileID> & ols);
+
+  void setLayouts(); // Set the layouts in use
+  MuonSystemLayout  m_opt_link_layout;
+
   bool excludedBx(); //Return true if the current Bx is in the list of exclusion  
   bool exclusiveBx(); //Return true if the current Bx is in the list of exclusive  
   bool selectedTrigger();

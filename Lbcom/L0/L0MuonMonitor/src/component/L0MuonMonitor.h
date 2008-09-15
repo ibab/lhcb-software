@@ -1,4 +1,4 @@
-// $Id: L0MuonMonitor.h,v 1.5 2008-07-24 09:36:53 jucogan Exp $
+// $Id: L0MuonMonitor.h,v 1.6 2008-09-15 07:46:40 jucogan Exp $
 #ifndef COMPONENT_L0MUONMONITOR_H 
 #define COMPONENT_L0MUONMONITOR_H 1
 
@@ -6,6 +6,8 @@
 
 //#include "Kernel/IEventTimeDecoder.h"
 #include "MuonDAQ/IMuonRawBuffer.h"
+#include "MuonMonKernel/MuonMonHit.h"
+#include "MuonMonKernel/MuonMonPad.h"
 
 #include "L0MuonMonitorBase.h"
 //#include "L0MuonPadsHistos.h"
@@ -17,6 +19,10 @@
  *  @author Julien Cogan
  *  @date   2008-04-08
  */
+  
+// Forward declarations
+class IMuonMonRec;
+  
 class L0MuonMonitor : public L0MuonMonitorBase {
 public: 
   /// Standard constructor
@@ -41,6 +47,8 @@ private:
   L0MuonChannelsHistos* m_channelHist_l0muon;
   L0MuonChannelsHistos* m_channelHist_muon;
   
+  IMuonMonRec* m_recTool;
+
   IMuonRawBuffer* m_muonBuffer;
 
   

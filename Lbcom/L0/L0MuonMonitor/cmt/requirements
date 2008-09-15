@@ -12,6 +12,7 @@ use L0Muon        v*    L0
 use L0MuonKernel  v*    L0
 use MuonDAQ       v*    Muon
 use MuonDet       v*    Det
+use MuonMonKernel v*    Muon
 use GaudiAlg      v*
 
 

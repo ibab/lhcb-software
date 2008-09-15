@@ -1,4 +1,4 @@
-// $Id: L0MuonInfoHistos.cpp,v 1.2 2008-09-05 09:31:16 jucogan Exp $
+// $Id: L0MuonInfoHistos.cpp,v 1.3 2008-09-15 07:46:40 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -63,7 +63,7 @@ void L0MuonInfoHistos::fillHistos()
   error|=((m_errStatus<<1)&0x6);
   if (m_ovfStatus) error|=0x8;
   for (int i=0;i<4;++i) {
-    if ( (error>>0)&1 ) fill(m_herror,(i+1),1);
+    if ( (error>>i)&1 ) fill(m_herror,(i+1),1);
   }
   
 }
@@ -99,6 +99,20 @@ StatusCode L0MuonInfoHistos::getInfo(){
   
   m_error=false;
   if ( (event!=m_evtNum) || (bunch!=m_bunchId) ) m_error=true;
+
+  if (msgLevel(MSG::DEBUG) && m_error) {
+    debug() <<"Evt id inconsistency "
+            <<" event : "<<event<<" -VS- "<<m_evtNum
+            <<" bunch : "<<bunch<<" -VS- "<<m_bunchId
+            <<endmsg;
+  }
+  if (msgLevel(MSG::VERBOSE) ) {
+    verbose() <<"Odin -VS- L0Muon "
+            <<" event : "<<event<<" -VS- "<<m_evtNum
+            <<" - bunch : "<<bunch<<" -VS- "<<m_bunchId
+            <<endmsg;
+  }
+  
 
   return StatusCode::SUCCESS;
   

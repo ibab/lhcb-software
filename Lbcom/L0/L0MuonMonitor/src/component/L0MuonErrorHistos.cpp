@@ -1,4 +1,4 @@
-// $Id: L0MuonErrorHistos.cpp,v 1.3 2008-09-05 09:07:09 jucogan Exp $
+// $Id: L0MuonErrorHistos.cpp,v 1.4 2008-09-15 07:46:40 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -31,22 +31,30 @@ L0MuonErrorHistos::L0MuonErrorHistos( const std::string& type,
   declareInterface<L0MuonErrorHistos>(this);
   
   for (int ih=L0Muon::MonUtilities::Overflow; ih<L0Muon::MonUtilities::Decoding_data; ++ih){
-    m_hgen[ih]=NULL;
+    m_hgen[ih]=NULL; 
   }
   
   for (int quarter=0; quarter<4; ++quarter){
- 
-   for (int ih=L0Muon::MonUtilities::Overflow; ih<L0Muon::MonUtilities::Decoding_data; ++ih){
+
+    for (int ih=L0Muon::MonUtilities::Overflow; ih<L0Muon::MonUtilities::Decoding_data; ++ih){
       m_hquarter[ih][quarter]=NULL;
     }
     
-   for (int ih=L0Muon::MonUtilities::Overflow; ih<L0Muon::MonUtilities::NErrors; ++ih){
-     for (int board=0; board<12; ++board){
-       m_hboard[ih][quarter][board]=NULL;
-     }
-   }
-
+    for (int ih=L0Muon::MonUtilities::Overflow; ih<L0Muon::MonUtilities::NErrors; ++ih){
+      for (int board=0; board<12; ++board){
+        m_hboard[ih][quarter][board]=NULL;
+      }
+    }
   }
+  
+  for (int quarter=0; quarter<4; ++quarter){
+    for (int board=0; board<12; ++board){
+      for (int ipu=0; ipu<4; ++ipu) {
+        m_hpu[quarter][board][ipu]=NULL;
+      }
+    }
+  }
+
 }
 //=============================================================================
 // Destructor
@@ -83,7 +91,7 @@ void L0MuonErrorHistos::bookHistos_gen(bool shortname)
   if (!shortname) toolname=name();
   
   for (int ih=L0Muon::MonUtilities::Overflow; ih<L0Muon::MonUtilities::Decoding_data; ++ih){
-    hname=L0Muon::MonUtilities::hname_error_ctrl1(ih,toolname);
+    hname=L0Muon::MonUtilities::hname_error_gen(ih,toolname);
     m_hgen[ih]=book1D(hname,-0.5,3.5,4);
   }
   
@@ -97,7 +105,7 @@ void L0MuonErrorHistos::bookHistos_quarter(int quarter, bool shortname)
   if (!shortname) toolname=name();
   
   for (int ih=L0Muon::MonUtilities::Overflow; ih<L0Muon::MonUtilities::Decoding_data; ++ih){
-    hname=L0Muon::MonUtilities::hname_error_ctrl2(ih,quarter,toolname);
+    hname=L0Muon::MonUtilities::hname_error_quarter(ih,quarter,toolname);
     m_hquarter[ih][quarter]=book1D(hname,-0.5,15.5,16);
   }
   
@@ -124,8 +132,14 @@ void L0MuonErrorHistos::bookHistos_board(int quarter, int region, bool shortname
   
   for (int ih=L0Muon::MonUtilities::Overflow; ih<L0Muon::MonUtilities::NErrors; ++ih){
     for (int board=3*region; board<(3*region+3); ++board){
-      hname=L0Muon::MonUtilities::hname_error_proc(ih,quarter,board,toolname);
+      hname=L0Muon::MonUtilities::hname_error_board(ih,quarter,board,toolname);
       m_hboard[ih][quarter][board]=book1D(hname,-0.5,5.5,6);
+    }
+  }
+  for (int board=3*region; board<(3*region+3); ++board){
+    for (int ipu=0; ipu<4; ++ipu) {
+      hname=L0Muon::MonUtilities::hname_error_pu(quarter,board,ipu,toolname);
+      m_hpu[quarter][board][ipu]=book1D(hname,-0.5,31.5,32);
     }
   }
 
@@ -231,6 +245,12 @@ void L0MuonErrorHistos::_fillHistos(std::string location, int type)
               if (msgLevel(MSG::ERROR) ) error()<<"bad parameters Q"<<quarter<<" PB"<<board<<" PU"<<pu<<endmsg;
             } else {
               fill(m_hboard[L0Muon::MonUtilities::Internal][quarter][board],pu,1);
+              if (pu<4) {
+                unsigned int linkError = err->hardware();
+                for (int ibit=0; ibit<32; ++ibit){
+                  if ( ((linkError>>ibit)&1)==1) fill(m_hpu[quarter][board][pu],ibit,1);
+                }
+              }
             }
           }
           
