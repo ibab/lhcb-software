@@ -66,6 +66,12 @@ ToolSvc.L0DUConfig.TCK_0x0010.Triggers +={
   {"name=[L0Hcal]"     , "channels=[CALO]"},
   {"name=[L0Muon]"     , "channels=[MUON]"}
 }; 
+ToolSvc.L0DUConfig.TCK_0x0011.Triggers +={ 
+  {"name=[L0Hcal]"     , "channels=[CALO]"},
+  {"name=[L0Spd]"      , "channels=[SPDgt10]"},
+  {"name=[L0Muon]"     , "channels=[MUON]"}
+}; 
+
 //----------------------------------------------------------------
 // Define Trigger sets for TCK=0xFFFX and 0xDC06
 //----------------------------------------------------------------
