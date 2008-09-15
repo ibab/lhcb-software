@@ -1254,7 +1254,7 @@ int L0Muon::ProcDataCnv::setRegisters_for_PB_OpticalLinks(int iboard, boost::dyn
     bitset.resize(current_size-4*32);
     
     for (int ipu = 0; ipu <4 ; ipu++) {// Loop over PUs errors
-      boost::dynamic_bitset<> bitset = (errorbitset>>(ipu*32));
+      boost::dynamic_bitset<> bitset = (errorbitset>>((3-ipu)*32));
       bitset.resize(32);
       unsigned int word = bitset.to_ulong();
 #if _DEBUG_PROCDATA_ >0

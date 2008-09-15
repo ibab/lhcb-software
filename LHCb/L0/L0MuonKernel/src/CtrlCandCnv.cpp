@@ -150,17 +150,17 @@ int L0Muon::CtrlCandCnv::decodeBank(const std::vector<unsigned int> &raw, int ba
   // Clear the registers first
   release();
 
-//   std::cout.setf(std::ios::uppercase) ;
-//   std::cout<<"\t=> L0Muon::CtrlCandCnv::decodeBank -- dump raw bank of size: "<<raw.size()<<std::hex<<std::endl;
-//   for (std::vector<unsigned int>::const_iterator itraw = raw.begin(); itraw<raw.end(); ++itraw){
-//     std::cout <<"\t0x"<<std::setw(8)<<(*itraw)<<std::endl;
-//   }
-//   std::cout<<std::dec;
-//   std::cout.unsetf(std::ios::uppercase);
+  //   std::cout.setf(std::ios::uppercase) ;
+  //   std::cout<<"\t=> L0Muon::CtrlCandCnv::decodeBank -- dump raw bank of size: "<<raw.size()<<std::hex<<std::endl;
+  //   for (std::vector<unsigned int>::const_iterator itraw = raw.begin(); itraw<raw.end(); ++itraw){
+  //     std::cout <<"\t0x"<<std::setw(8)<<(*itraw)<<std::endl;
+  //   }
+  //   std::cout<<std::dec;
+  //   std::cout.unsetf(std::ios::uppercase);
 
 #if _DET_SPEC_HEADER_==1
   int header = raw[0];
-  unsigned int nPart1words = (header & 0xFFFF)/2; // in words of 32 bytes
+  unsigned int nPart1words = (header & 0xFFFF)/4; // in words of 32 bytes
   unsigned int nPart2words = raw.size()-nPart1words-1; // in words of 32 bytes
   unsigned int iwd = 1;
 #else
@@ -168,6 +168,9 @@ int L0Muon::CtrlCandCnv::decodeBank(const std::vector<unsigned int> &raw, int ba
   //   unsigned int nPart1words =  9;
   unsigned int nPart2words = 62;
 #endif
+
+  //   std::cout<<"L0Muon::CtrlCandCnv::decodeBank => nPart1words= "<<nPart1words<<std::endl;
+  //   std::cout<<"L0Muon::CtrlCandCnv::decodeBank => nPart2words= "<<nPart2words<<std::endl;
 
   // First part of the bank
   for (int iq = 0; iq <2 ; iq++) { // Loop over quarters (1st part)
@@ -219,7 +222,7 @@ int L0Muon::CtrlCandCnv::decodeBank(const std::vector<unsigned int> &raw, int ba
   } // End of loop over quarters (1st part)
 
   // Do not try to decode the 2nd part of the bank
-  if ( (mode<=0) || (nPart2words==0) ) {
+  if ( (mode<=1) || (nPart2words==0) ) {
     if (decodingError) return -1;
     return 1;
   }
