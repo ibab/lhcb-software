@@ -25,7 +25,7 @@ namespace OTDet
   {
     // we want a fixed error in the radius. that just means that
     // sigma_t(r) is the derivative of t(r)
-    for(size_t i=0; i<m_terrcoeff.size(); ++i) m_terrcoeff[i] = sigmaR * m_tcoeff[i+1] * (i+1) ;
+    for(size_t i=0; i<m_terrcoeff.size(); ++i) m_terrcoeff[i] = sigmaR * m_tcoeff[i+1] * (i+1) / m_rmax ;
     // now initialize the table
     initRTable(ntbins) ;
   }
@@ -35,13 +35,13 @@ namespace OTDet
     // create a table for the r(t) relation. this table has a fixed bin
     // size, otherwise things are not fast enough.
     m_tmin = polyeval(m_tcoeff,0) ;
-    m_tmax = polyeval(m_tcoeff,m_rmax) ;
+    m_tmax = polyeval(m_tcoeff,1) ;
     m_dt   = (m_tmax-m_tmin)/(ntbins-1) ;
     m_rtable.resize( ntbins ) ;
     std::vector<double> derivcoeff(m_tcoeff.size()-1) ;
-    for(size_t i=0; i<derivcoeff.size(); ++i) derivcoeff[i] = m_tcoeff[i+1] * (i+1) ;
+    for(size_t i=0; i<derivcoeff.size(); ++i) derivcoeff[i] = m_tcoeff[i+1] * (i+1) / m_rmax ;
     m_rtable.front() = RadiusWithError(0,drifttimeError(0)/polyeval(derivcoeff,0)) ;
-    m_rtable.back()  = RadiusWithError(m_rmax,drifttimeError(m_rmax)/polyeval(derivcoeff,m_rmax)) ;
+    m_rtable.back()  = RadiusWithError(m_rmax,drifttimeError(m_rmax)/polyeval(derivcoeff,1)) ;
     // the rest goes numeric (newton-raphson) 
     for(size_t i = 1; i<ntbins-1; ++i) {
       double t = m_tmin + i*m_dt ;
@@ -51,14 +51,14 @@ namespace OTDet
       const unsigned char maxtries = 10 ;
       unsigned char ntries = 0 ;
       while ( fabs(residual) > precision) {
-	r += residual / polyeval(derivcoeff,r) ;
+	r += residual / polyeval(derivcoeff,r/m_rmax) ;
 	residual = t - drifttime(r) ;
 	if(++ntries>maxtries) {
 	  r=-1 ;
 	  break ;
 	}
       }
-      double dtdr = polyeval(derivcoeff,r) ;
+      double dtdr = polyeval(derivcoeff,r/m_rmax) ;
       m_rtable[i] = RadiusWithError(r, drifttimeError(r)/dtdr ) ;
     }
   }

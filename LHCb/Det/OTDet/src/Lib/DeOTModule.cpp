@@ -1,4 +1,4 @@
-// $Id: DeOTModule.cpp,v 1.32 2008-08-29 17:01:38 janos Exp $
+// $Id: DeOTModule.cpp,v 1.33 2008-09-15 20:33:17 wouter Exp $
 // GaudiKernel
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
@@ -102,9 +102,9 @@ StatusCode DeOTModule::initialize() {
   // simulation. In the end, we need to read this from a database.
   m_propagationVelocity = 1/(4.0*Gaudi::Units::ns/Gaudi::Units::m) ;
   double resolution     = 0.200*Gaudi::Units::mm ;
-  // Coefficients of polynomial t(r): for MC this is just t = 0 + 42/2.5 * r
-  std::vector<double> tcoeff    = boost::assign::list_of(0.0)(42*Gaudi::Units::ns / m_cellRadius) ;
-  // Coefficients of polynomial sigma_t(r): for MC this is just sigma_t = 0.200 * 42/2.5 
+  // Coefficients of polynomial t(r/rmax): for MC this is just t = 0 + 42/2.5 * r
+  std::vector<double> tcoeff    = boost::assign::list_of(0.0)(42*Gaudi::Units::ns ) ;
+  // Coefficients of polynomial sigma_t(r/rmax): for MC this is just sigma_t = 0.200 * 42/2.5 
   std::vector<double> terrcoeff = boost::assign::list_of(resolution * 42*Gaudi::Units::ns / m_cellRadius) ;
   // Since everything is so simple, we need just two bins in the table
   m_rtrelation = OTDet::RtRelation(m_cellRadius,tcoeff,terrcoeff,2) ;

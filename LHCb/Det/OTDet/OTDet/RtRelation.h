@@ -30,7 +30,9 @@ namespace OTDet
   public:
     /// default constructor. does nothing sensible.
     RtRelation() {}
-    /// constructor from a polynomial t(r). this is what you should use.
+    /// constructor from a polynomial t(r) and sigmat(r).  the
+    /// coefficients are actually those of a polynominal in r/rmax,
+    /// such that they all have unit [ns].
     RtRelation(double rmax, const std::vector<double>& tcoeff, const std::vector<double>& terrcoeff, size_t nbins=25) ;
     ///  constructor from a polynomial t(r) and a fixed error in r. this is only for convenience with MC.
     RtRelation(double rmax, const std::vector<double>& tcoeff, double sigmaR, size_t nbins=25) ;
@@ -72,9 +74,8 @@ namespace OTDet
     void initRTable(size_t ntbins) ;
   private:
     double m_rmax ;
-    std::vector<double> m_tcoeff ;    /// coefficients of polynomial t(r)
-    std::vector<double> m_terrcoeff ; /// coefficients of polynomial sigma_t(r)
-    //double m_rmin ;
+    std::vector<double> m_tcoeff ;    /// coefficients of polynomial t(r/rmax) all in [ns]
+    std::vector<double> m_terrcoeff ; /// coefficients of polynomial sigma_t(r/rmax) all in [ns]
     double m_tmin ;
     double m_tmax ;
     double m_dt ;
@@ -121,12 +122,12 @@ namespace OTDet
   
   inline double RtRelation::drifttime( double r ) const 
   {
-    return polyeval(m_tcoeff,r ) ;
+    return polyeval(m_tcoeff,r/m_rmax ) ;
   }
 
   inline double RtRelation::drifttimeError( double r ) const 
   {
-    return polyeval(m_terrcoeff,r) ;
+    return polyeval(m_terrcoeff,r/m_rmax) ;
   }
 
   inline DriftTimeWithError RtRelation::drifttimeWithError( double r ) const 
@@ -138,8 +139,8 @@ namespace OTDet
   {
     // we probably want to cache these ...
     std::vector<double> derivcoeff(m_tcoeff.size()-1) ;
-    for( size_t i=0; i<derivcoeff.size(); ++i) derivcoeff[i] = m_tcoeff[i+1] * (i+1) ;
-    return polyeval(derivcoeff,r) ;
+    for( size_t i=0; i<derivcoeff.size(); ++i) derivcoeff[i] = m_tcoeff[i+1] * (i+1) / m_rmax ;
+    return polyeval(derivcoeff,r/m_rmax) ;
   }
   
 }

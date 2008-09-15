@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.108 2008-09-02 11:56:20 cattanem Exp $
+! $Id: release.notes,v 1.109 2008-09-15 20:33:17 wouter Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 !--------------------------------------------------------------------------
+
+! 2008-09-15 - Wouter Hulsbergen
+  - Changed definition of coefficients t(r) and sigma_t(r) in
+  RtRelation.h: Those coefficiencts now define a polynomial in r/rmax,
+  such that they all have unit [ns].
 
 !========================== OTDet v8r0 2008-09-02 =========================
 ! 2008-08-29 - Jan Amoraal
