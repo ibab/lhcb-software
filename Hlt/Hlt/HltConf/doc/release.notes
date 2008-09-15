@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.13 2008-09-11 19:50:24 graven Exp $ 
+! $Id: release.notes,v 1.14 2008-09-15 08:26:55 witekma Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : 
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+! 2008-09-15 - Mariusz Witek
+ - improve photon line. IsPhoton function is continuous (adjustable) variable now.
+
 ! 2008-09-09 - Gerhard Raven
  - rename python files to have uniform, shorter names
  - integrate Velo closing lines

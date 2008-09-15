@@ -2,7 +2,7 @@
 // HLT Reconstruction
 //--------------------------
 
-// in Had Alley #include "$HLTCONFROOT/options/HltRecoSequence.opts"
+// in Had Alley #include "$HLTSYSROOT/options/HltRecoSequence.opts"
 
 //---------------------------
 // HLT Pho Alley
@@ -24,8 +24,12 @@ Hlt1PhoAlleySequence.Members = {
   "GaudiSequencer/HltDecodeTT",
   "HltTrackUpgrade/Hlt1PhoTUForward",
   "HltTrackFilter/Hlt1PhoTFForward",
-  "HltVertexMaker1/Hlt1PhoVMDiTrack",
+  "HltTrackUpgrade/Hlt1RecoVelo",
+  "HltTrackFilter/Hlt1PhoTFSecondVelo",
+  "HltVertexMaker2/Hlt1PhoVMDiTrack",
   "HltVertexFilter/Hlt1PhoVFDiTrack",
+  "HltVertexUpgrade/Hlt1PhoVUDiTrack",
+  "HltVertexFilter/Hlt1PhoVFSecondDiTrack",
   "HltAddPhotonToVertex/Hlt1PhotonDiTrackDecision"
 };
 Hlt1PhoAlleySequence.MeasureTime = true;
@@ -36,7 +40,7 @@ Hlt1PhoAlleySequence.MeasureTime = true;
 
 
 Hlt1PhoTFPhoton.InputSelection = "L0PhotonDecision";
-Hlt1PhoTFPhoton.FilterDescriptor = {"IsPhoton,>,0.5"};
+Hlt1PhoTFPhoton.FilterDescriptor = {"IsPhoton,>,-0.1"};
 
 Hlt1PhoTFRZVelo.InputSelection     = "RZVelo";
 Hlt1PhoTFRZVelo.FilterDescriptor = {"rIP_PV2D,||[],0.10,3.0"};
@@ -61,13 +65,22 @@ Hlt1PhoTUForward.RecoName = "Forward";
 
 //  Pt cut (call it pretrigger sice couldn't implement veloTT)
 Hlt1PhoTFForward.InputSelection     = "Hlt1PhoTUForward";
-Hlt1PhoTFForward.FilterDescriptor = {"PT,>,650."};
+Hlt1PhoTFForward.FilterDescriptor = {"PT,>,600."};
 Hlt1PhoTFForward.HistogramUpdatePeriod = 0;
 Hlt1PhoTFForward.HistoDescriptor =  { "PT"     : ("PT",0.,8000.,100), "PTBest" : ("PTBest",0.,8000.,100) };
 Hlt1PhoTFForward.OutputLevel = 3;
 
+//    3D IP selection second track
+Hlt1PhoTFSecondVelo.InputSelection     = "Velo";
+Hlt1PhoTFSecondVelo.FilterDescriptor = {"IP_PV2D,||[],0.15,3.0"};
+Hlt1PhoTFSecondVelo.HistogramUpdatePeriod = 0;
+Hlt1PhoTFSecondVelo.HistoDescriptor = { "IP" : ("IP",-1.,3.,400), "IPBest" : ("IPBest",-1.,3.,400) };
+Hlt1PhoTFSecondVelo.OutputLevel = 3;
+
+
 // two track vertex: DOCA
-Hlt1PhoVMDiTrack.InputSelection    = "Hlt1PhoTFForward";
+Hlt1PhoVMDiTrack.InputSelection1    = "Hlt1PhoTFForward";
+Hlt1PhoVMDiTrack.InputSelection2    = "Hlt1PhoTFSecondVelo";
 Hlt1PhoVMDiTrack.FilterDescriptor = { "DOCA,<,0.2"};
 Hlt1PhoVMDiTrack.HistoDescriptor = { "DOCA":("DOCA",0.,3.,100), "DOCABest":("DOCABest",0.,3.,100) };
 
@@ -76,6 +89,15 @@ Hlt1PhoVFDiTrack.InputSelection = "Hlt1PhoVMDiTrack";
 Hlt1PhoVFDiTrack.FilterDescriptor = { "VertexDz_PV2D,>,0."};
 Hlt1PhoVFDiTrack.HistoDescriptor = { "VertexDz_PV2D":("VertexDz_PV2D",-3.,3.,100), "VertexDz_PV2DBest":("VertexDz_PV2D",-3.,3.,100) };
 
+Hlt1PhoVUDiTrack.InputSelection = "Hlt1PhoVFDiTrack";
+Hlt1PhoVUDiTrack.RecoName = "Forward";
+
+// cut on pt both tracks here
+Hlt1PhoVFSecondDiTrack.InputSelection = "Hlt1PhoVUDiTrack";
+Hlt1PhoVFSecondDiTrack.FilterDescriptor = { "VertexMinPT,>,600."};
+
 // add photon track to ditrack vertex to save all objects into summary
-Hlt1PhotonDiTrackDecision.InputSelection1 = "Hlt1PhoVFDiTrack";
+Hlt1PhotonDiTrackDecision.InputSelection1 = "Hlt1PhoVFSecondDiTrack";
 Hlt1PhotonDiTrackDecision.InputSelection2 = "Hlt1PhoTFPhoton";
+
+

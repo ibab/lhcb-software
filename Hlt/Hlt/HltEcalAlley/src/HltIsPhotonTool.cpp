@@ -1,4 +1,4 @@
-// $Id: HltIsPhotonTool.cpp,v 1.1.1.1 2008-07-16 16:54:04 witekma Exp $
+// $Id: HltIsPhotonTool.cpp,v 1.2 2008-09-15 08:29:13 witekma Exp $
 // Include files 
 
 // from Gaudi
@@ -78,7 +78,7 @@ double HltIsPhotonTool::function(const Track& ctrack)
     xc = ctrack.stateAt(State::MidHCal).x();
     yc = ctrack.stateAt(State::MidHCal).y();
   } else {
-    return 0.;
+    return -9999999.;
   }
 
   // get LHCbID of coresponding L0CaloCandidate
@@ -99,7 +99,7 @@ double HltIsPhotonTool::function(const Track& ctrack)
   }  
 
   if ( idL0 == 0 ) {
-    return 0.;
+    return -9999999.;
   }
 
   // get input data (sequential and simultaneously direct access!)  
@@ -110,7 +110,7 @@ double HltIsPhotonTool::function(const Track& ctrack)
   // remember to delete cluster
   m_tool->clusterize(clusters, digits, m_detector, *idL0, level);
   if (clusters.size() < 1 ) {
-    return 0.;
+    return -9999999.;
   }
 
   // get cluster closest to Track ( = L0Photon )
@@ -184,14 +184,10 @@ double HltIsPhotonTool::function(const Track& ctrack)
   }
 
   if ( etnew > m_minEtCluster ) {
-    if ( ( iarea == 0 && phovar > 0.0 ) ||
-         ( iarea == 1 && phovar > 0.0 ) ||
-         ( iarea == 2 && phovar > 0.0 ) ) {
-       return 1.;
-    }
+    return phovar;
   }
 
-  return 0.;
+  return -9999999.;
 
 } 
 
