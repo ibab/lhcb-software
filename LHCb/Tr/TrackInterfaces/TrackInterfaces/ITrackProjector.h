@@ -18,6 +18,7 @@ namespace LHCb {
   class State;
   class StateVector;
   class Measurement;
+  class FitNode;
 };
 
 static const InterfaceID IID_ITrackProjector ( "ITrackProjector", 2, 0 );
@@ -42,7 +43,10 @@ public:
   /// Project a state onto a measurement.
   virtual StatusCode project( const LHCb::State& state,
                               const LHCb::Measurement& meas ) = 0;
-
+  
+  /// Project the state vector in this fitnode and update projection matrix and reference residual
+  virtual StatusCode projectReference( LHCb::FitNode& node ) const = 0;
+  
   /// Retrieve the projection matrix H of the (last) projection
   virtual const Gaudi::TrackProjectionMatrix& projectionMatrix() const = 0;
 

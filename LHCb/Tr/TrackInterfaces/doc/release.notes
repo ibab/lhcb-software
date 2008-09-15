@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2008-09-15 - Wouter Hulsbergen
+ - Extended interface of ITrackProjector
+
 !====================== TrackInterfaces v3r16 2008-07-27 =====================
 ! 2008-07-17 - Stephanie Hansmann-Menzemer
  - Unification of interfaces for FastMomentumEstimate and TrackPtKick
