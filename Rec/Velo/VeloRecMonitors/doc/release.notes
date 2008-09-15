@@ -4,6 +4,9 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2008-09-15 - Kurt Rinnert
+ - added sampling monitor plots separated for A and C side.
+
 !======================= VeloRecMonitors v1r0 2008-09-08 =====================
 ! 2008-09-06 - Patrick Koppenburg
  - Remove addition of velo to Moni list. This is done in Brunel Configuration.py.

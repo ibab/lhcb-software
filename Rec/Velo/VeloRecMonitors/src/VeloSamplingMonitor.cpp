@@ -1,4 +1,4 @@
-// $Id: VeloSamplingMonitor.cpp,v 1.2 2008-08-31 15:52:08 krinnert Exp $
+// $Id: VeloSamplingMonitor.cpp,v 1.3 2008-09-15 10:52:28 krinnert Exp $
 // Include files
 // -------------
 
@@ -52,6 +52,8 @@ StatusCode Velo::VeloSamplingMonitor::initialize() {
   
   StatusCode sc = VeloMonitorBase::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;
+  
+  m_velo = getDet<DeVelo>( DeVeloLocation::Default );  
   
   return StatusCode::SUCCESS;
 }
@@ -193,7 +195,21 @@ void Velo::VeloSamplingMonitor::monitorClusters( std::string samplingLocation,
     plot2D( samplingIndex, adc, histID,
             histTitle,
             -0.5, nxbins - 0.5, -0.5, 50.5, nxbins, 51 );
+   
+    // C is right, A is left
+    bool isCSide = m_velo->sensor(cluster->channelID().sensor())->isRight(); 
+    if ( isCSide ) {
+      histID = histID + ", C-Side";
+      histTitle = histTitle + ", C-Side";
+    } else { // A side
+      histID = histID + ", A-Side";
+      histTitle = histTitle + ", A-Side";
+    }
     
+    plot2D( samplingIndex, adc, histID,
+            histTitle,
+            -0.5, nxbins - 0.5, -0.5, 50.5, nxbins, 51 );
+   
   }
   
 }

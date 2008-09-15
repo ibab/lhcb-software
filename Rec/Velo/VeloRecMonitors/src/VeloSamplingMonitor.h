@@ -1,9 +1,10 @@
-// $Id: VeloSamplingMonitor.h,v 1.1 2008-08-21 11:39:38 erodrigu Exp $
+// $Id: VeloSamplingMonitor.h,v 1.2 2008-09-15 10:52:28 krinnert Exp $
 #ifndef VELORECMONITORS_VELOSAMPLINGMONITOR_H 
 #define VELORECMONITORS_VELOSAMPLINGMONITOR_H 1
 
 // Include files
 // -------------
+#include "VeloDet/DeVelo.h"
 
 // from VeloEvent
 #include "VeloEvent/VeloTELL1Data.h"
@@ -55,6 +56,7 @@ namespace Velo
                            LHCb::VeloTELL1Datas* tell1Datas );
 
     // Data members
+    const DeVelo* m_velo;
 
     // Job options
     std::vector<std::string> m_samplingLocations;
