@@ -1,4 +1,4 @@
-// $Id: FitNode.h,v 1.24 2008-07-24 20:38:33 wouter Exp $
+// $Id: FitNode.h,v 1.25 2008-09-15 13:11:21 wouter Exp $
 #ifndef TRACKFITEVENT_FITNODE_H
 #define TRACKFITEVENT_FITNODE_H 1
 
@@ -154,6 +154,12 @@ namespace LHCb
     // get the smoother gain matrix
     const Gaudi::TrackMatrix& smootherGainMatrix() const { return m_smootherGainMatrix ; }
 
+    /// set the poca vector
+    void setPocaVector( const Gaudi::XYZVector& v ) { m_pocaVector = v ; }
+
+    /// get the poca vector
+    const Gaudi::XYZVector& pocaVector() const { return m_pocaVector ; }
+
   private:
 
     Gaudi::TrackMatrix    m_transportMatrix;    ///< transport matrix for propagation from previous node to this one
@@ -167,6 +173,7 @@ namespace LHCb
     double                m_deltaChi2Forward;       ///< chisq contribution in forward filter
     double                m_deltaChi2Backward;      ///< chisq contribution in backward filter (bi-directional fit only)
     Gaudi::TrackMatrix    m_smootherGainMatrix ;    ///< smoother gain matrix (smoothedfit only)
+    Gaudi::XYZVector      m_pocaVector ;            ///< unit vector perpendicular to state and measurement
   };
 
 } // namespace LHCb

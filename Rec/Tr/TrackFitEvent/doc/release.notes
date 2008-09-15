@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2008-09-15 - Wouter Hulsbergen
+ - added 'pocaVector' to fitnode
+
 !========================== TrackFitEvent v3r17 2008-07-29 ===================
 ! 2008-07-24 - Wouter Hulsbergen
  - two changes to FitNode:
