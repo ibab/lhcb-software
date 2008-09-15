@@ -1,4 +1,4 @@
-// $Id: TrajOTProjector.h,v 1.13 2008-09-04 12:45:16 wouter Exp $
+// $Id: TrajOTProjector.h,v 1.14 2008-09-15 13:19:27 wouter Exp $
 #ifndef TRAJOTPROJECTOR_H 
 #define TRAJOTPROJECTOR_H 1
 
@@ -28,14 +28,7 @@ public:
 
   /// Project a state-vector onto a measurement
   StatusCode project( const LHCb::StateVector& state, const LHCb::Measurement& meas );
-
-  /// Project a state onto a measurement.
-  StatusCode project( const LHCb::State& state, const LHCb::Measurement& meas );
   
-  typedef Gaudi::Matrix1x6 Derivatives;
-  Derivatives alignmentDerivatives(const LHCb::StateVector& state, const LHCb::Measurement& meas, 
-                                   const Gaudi::XYZPoint& pivot) const;
-
   /// initialize
   virtual StatusCode initialize();
 
@@ -48,17 +41,10 @@ public:
   virtual ~TrajOTProjector();
 
 protected:
-  StatusCode project( const LHCb::StateVector& state, const LHCb::OTMeasurement& meas, double& distToWire );
+  StatusCode project( const LHCb::StateVector& state, const LHCb::OTMeasurement& meas );
   bool useDrift() const { return m_useDrift ; }
 private:
-  DeOTDetector*      m_det;
-  IMagneticFieldSvc* m_pIMF;          ///< Pointer to the magn. field service
-  ITrajPoca*         m_poca;          ///< Pointer to the ITrajPoca interface
-
-  // job options
-  std::string        m_otTrackerPath; ///< Name of the OT XML geom path
-  double             m_tolerance;     ///< Required accuracy of the projection
-  bool               m_useDrift;      ///< Use measured drift distance
+  bool m_useDrift;      ///< Use measured drift distance
 
 };
 #endif // TRACKPROJECTORS_TRAJOTPROJECTOR_H

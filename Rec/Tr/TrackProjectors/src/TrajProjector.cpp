@@ -1,157 +1,12 @@
-// $Id: TrajProjector.cpp,v 1.11 2007-11-30 14:32:44 wouter Exp $
+// $Id: TrajProjector.cpp,v 1.12 2008-09-15 13:19:27 wouter Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
-
-// from GaudiKernel
-#include "GaudiKernel/IMagneticFieldSvc.h"
-
-// from TrackFitEvent
-#include "Event/StateZTraj.h"
-#include "Event/StateVector.h"
-
-// from TrackInterfaces
-#include "Kernel/ITrajPoca.h"
-
-// from LHCbKernel
-#include "Kernel/AlignTraj.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // local
 #include "TrajProjector.h"
-
-// Namespaces
-using namespace Gaudi;
-using namespace LHCb;
-
-// trivial helpers to make code clearer...
-namespace
-{
-  typedef Matrix1x3 DualVector;
-
-  DualVector dual( const XYZVector& v )
-  {
-    DualVector d;
-    v.GetCoordinates( d.Array() );
-    return d;
-  }
-
-  double dot( const DualVector& a, const XYZVector& b )
-  {
-    return a(0,0)*b.X() + a(0,1)*b.Y() + a(0,2)*b.Z();
-  }
-}
-
-//-----------------------------------------------------------------------------
-/// Project a statevector onto a measurement
-/// It returns the chi squared of the projection
-//-----------------------------------------------------------------------------
-template <typename T>
-StatusCode TrajProjector<T>::project( const StateVector& statevector,
-                                      const Measurement& meas )
-{
-  // Project onto the reference. First create the StateTraj with or without BField information.
-  XYZVector bfield(0,0,0) ;
-  if( m_useBField) m_pIMF -> fieldVector( statevector.position(), bfield ).ignore();
-  const StateZTraj refTraj( statevector, bfield );
-
-  // Get the measurement trajectory representing the centre of gravity
-  const Trajectory& measTraj = meas.trajectory();
-
-  // Determine initial estimates of s1 and s2
-  double s1 = statevector.z() ; // Assume state is already close to the minimum
-  double s2 = measTraj.muEstimate( refTraj.position(s1) );
-
-  // Determine the actual minimum with the Poca tool
-  static XYZVector dist; // avoid constructing this every call to project...
-  StatusCode sc = m_poca -> minimize( refTraj, s1,
-				      measTraj, s2, dist, m_tolerance );
-  if( sc.isFailure() ) { return sc; }
-
-  // Set up the vector onto which we project everything
-  DualVector unit = dual( (measTraj.direction(s2).Cross( refTraj.direction(s1) ) ).Unit() ) ;
-
-  // compute the projection matrix from parameter space onto the (signed!) unit
-  m_H = unit*refTraj.derivative(s1);
-  
-  // Calculate the residual by projecting the distance onto unit
-  m_residual = - dot( unit, dist ) ;
-  
-  // Set the error on the measurement so that it can be used in the fit
-  double errMeasure2 = meas.resolution2( refTraj.position(s1), 
-                                         refTraj.direction(s1) );
-  m_errResidual = m_errMeasure = sqrt(errMeasure2);
-
-  return StatusCode::SUCCESS;
-}
-//-----------------------------------------------------------------------------
-/// Project a state onto a measurement
-//-----------------------------------------------------------------------------
-template <typename T>
-StatusCode TrajProjector<T>::project( const State& state,
-                                      const Measurement& meas )
-{
-  // Project onto the reference (prevent the virtual function call)
-  StatusCode sc = TrajProjector<T>::project(LHCb::StateVector(state.stateVector(), state.z()), meas ) ;
-  
-  if(sc.isSuccess())
-    // Calculate the error on the residual
-    m_errResidual = sqrt( m_errMeasure*m_errMeasure + Similarity( m_H, state.covariance() )(0,0) );
-  
-  return sc ;
-}
-
-//-----------------------------------------------------------------------------
-/// Derivatives wrt.the measurement's alignment...
-//-----------------------------------------------------------------------------
-template <typename T>
-typename TrajProjector<T>::Derivatives
-TrajProjector<T>::alignmentDerivatives( const StateVector& statevector,
-                                        const Measurement& meas,
-                                        const Gaudi::XYZPoint& pivot ) const
-{
-  // create the track trajectory...
-  static XYZVector bfield;
-  // Create StateTraj with or without BField information.
-  if( m_useBField )
-    {
-      m_pIMF -> fieldVector( statevector.position(),bfield ).ignore();
-    }
-  else { bfield.SetXYZ( 0., 0., 0. ); }
-  const StateZTraj refTraj(statevector , bfield );
-
-  // Get the measurement trajectory
-  const Trajectory& measTraj = meas.trajectory();  
-
-  // Determine initial estimates of s1 and s2
-  double s1 = meas.z() ; // Assume state is already close to the minimum
-  double s2 = measTraj.muEstimate( refTraj.position(s1) );
-
-  // Determine the actual minimum with the Poca tool
-  static XYZVector dist;
-  m_poca -> minimize( refTraj, s1, measTraj, s2, dist, m_tolerance );
-
-  // Set up the vector onto which we project everything
-  DualVector unit = dual( (measTraj.direction(s2).Cross( refTraj.direction(s1) ) ).Unit() ) ;
-
-  // compute the projection matrix from parameter space onto the (signed!) unit
-  return unit*AlignTraj( measTraj, pivot ).derivative( s2 );
-}
-
-//-----------------------------------------------------------------------------
-/// Initialize
-//-----------------------------------------------------------------------------
-template <typename T>
-StatusCode TrajProjector<T>::initialize()
-{
-  StatusCode sc = GaudiTool::initialize();
-  if( sc.isFailure() ) { return Error( "Failed to initialize!", sc ); }
-
-  m_pIMF = svc<IMagneticFieldSvc>( "MagneticFieldSvc", true );
-  m_poca = tool<ITrajPoca>( "TrajPoca" );
-
-  return StatusCode::SUCCESS;
-}
 
 //-----------------------------------------------------------------------------
 /// Standard constructor, initializes variables
@@ -163,8 +18,7 @@ TrajProjector<T>::TrajProjector( const std::string& type,
   : TrackProjector( type, name, parent )
 {
   declareInterface<ITrackProjector>(this);
-  declareProperty( "Tolerance", m_tolerance = T::defaultTolerance() );
-  declareProperty( "UseBField", m_useBField = false );
+  m_tolerance = T::defaultTolerance() ;
 }
 
 //-----------------------------------------------------------------------------

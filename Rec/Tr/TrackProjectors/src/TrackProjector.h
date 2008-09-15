@@ -1,4 +1,4 @@
-// $Id: TrackProjector.h,v 1.7 2007-06-22 13:54:13 ebos Exp $
+// $Id: TrackProjector.h,v 1.8 2008-09-15 13:19:27 wouter Exp $
 #ifndef TRACKPROJECTORS_TRACKPROJECTOR_H 
 #define TRACKPROJECTORS_TRACKPROJECTOR_H 1
 
@@ -6,13 +6,14 @@
 
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/Vector3DTypes.h"
+#include "GaudiKernel/GenericMatrixTypes.h"
 
 // from TrackInterfaces
 #include "TrackInterfaces/ITrackProjector.h"
 
-// from TrackEvent
-#include "Event/State.h"
-#include "Event/Measurement.h"
+class IMagneticFieldSvc;
+class ITrajPoca;
 
 /** @class TrackProjector TrackProjector.h TrackProjectors/TrackProjector.h
  *
@@ -36,28 +37,53 @@ public:
   /// Destructor
   virtual ~TrackProjector();
 
+  /// ::initialize
+  StatusCode initialize() ;
+
+  /// Project the reference vector
+  virtual StatusCode project( const LHCb::StateVector& state, const LHCb::Measurement& meas ) ;
+
+  /// Project a state onto a measurement.
+  virtual StatusCode project( const LHCb::State& state, const LHCb::Measurement& meas ) ;
+
+  /// Project the state vector in this fitnode and update projection matrix and reference residual
+  virtual StatusCode projectReference( LHCb::FitNode& node ) const ;
+
+  /// Retrieve the derivative of the residual wrt. the alignment parameters
+  /// of the measurement. The details of the alignment transformation are 
+  /// defined in AlignTraj.
+  virtual Derivatives alignmentDerivatives(const LHCb::StateVector& state, 
+					   const LHCb::Measurement& meas,
+                                           const Gaudi::XYZPoint& pivot) const ;
+
   /// Retrieve the projection matrix H of the (last) projection
-  virtual const Gaudi::TrackProjectionMatrix& projectionMatrix() const;
+  const Gaudi::TrackProjectionMatrix& projectionMatrix() const { return m_H ; }
 
   /// Retrieve the chi squared of the (last) projection
   double chi2() const;
 
   /// Retrieve the residual of the (last) projection
-  double residual() const;
+  double residual() const { return m_residual ; }
 
   /// Retrieve the error on the residual of the (last) projection
-  double errResidual() const;
+  double errResidual() const { return m_errResidual; }
 
   /// Retrieve the error on the measurement of the (last) projection
-  double errMeasure() const;
+  double errMeasure() const { return m_errMeasure ; }
 
 protected:
-
-  double  m_residual;
-  double  m_errResidual;
-  double  m_errMeasure;
-  Gaudi::TrackProjectionMatrix m_H;
-  /// Create StateTraj with or without BField information.
-  bool m_useBField;
+  mutable double m_residual;
+  mutable double m_errResidual;
+  mutable double m_errMeasure;
+  mutable Gaudi::TrackProjectionMatrix m_H;
+  mutable double m_sMeas  ;
+  mutable double m_sState ;
+  mutable Gaudi::XYZVector m_dist ;
+  mutable Gaudi::XYZVector m_unitPocaVector ;
+  bool m_useBField;                   /// Create StateTraj with or without BField information.
+  double             m_tolerance;     ///< Required accuracy of the projection
+  IMagneticFieldSvc* m_pIMF; ///< Pointer to the magn. field service
+  ITrajPoca*         m_poca; ///< Pointer to the ITrajPoca interface
+  
 };
 #endif // TRACKPROJECTORS_TRACKPROJECTOR_H

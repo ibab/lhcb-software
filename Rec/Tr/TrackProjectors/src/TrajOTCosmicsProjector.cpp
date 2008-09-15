@@ -47,19 +47,20 @@ StatusCode TrackOTCosmicsProjector::project( const LHCb::StateVector& statevecto
     // typecast
     const LHCb::OTMeasurement& meas =  dynamic_cast<const LHCb::OTMeasurement&>(ameas) ;
     
-    // compute the tof correction (could also be done inside measurement provider)
+    // compute the tof correction relative to a reference z.
     double L0 = ( m_tofReferenceZ - meas.z())*std::sqrt( 1 + statevector.tx()*statevector.tx() + statevector.ty()*statevector.ty()) ;
-    double dtof = (statevector.ty() > 0 ? -1 : 1) * L0/Gaudi::Units::c_light ;
+    double tof = (statevector.ty() > 0 ? -1 : 1) * L0/Gaudi::Units::c_light ;
+    // should we subtract a reference time-of-flight? 
+    //   tof -= fabs( m_tofReferenceZ - meas.z() ) / Gaudi::Units::c_light ;
     // add this to the measurement, including the phase. we'll use the
     // qop-entry of the statevector to store the phase.
     double eventt0 = statevector.parameters()[4] ;
     // ugly const-cast to update the measurement's time-of-flight
-    (const_cast< LHCb::OTMeasurement&>(meas)).setDeltaTimeOfFlight( dtof + eventt0 ) ;
+    (const_cast< LHCb::OTMeasurement&>(meas)).setDeltaTimeOfFlight( tof + eventt0 ) ;
     
     // call the standard projector (which uses the time-of-flight)
-    double distToWire(0) ;
-    sc = TrajOTProjector::project( statevector, meas, distToWire ) ;
-  
+    sc = TrajOTProjector::project( statevector, meas ) ;
+    double distToWire = m_dist.Dot( m_unitPocaVector ) ;
     // update the projection matrix with the derivative to event-t0.
     if( useDrift() && m_fitEventT0 ) {
       // get the drift velocity. for the linearization it is best to

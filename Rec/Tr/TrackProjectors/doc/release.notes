@@ -4,6 +4,11 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2008-09-15 Wouter Hulsbergen
+ - added project method for FitNode
+ - major cleanup 
+ - added TrajOTCosmicsProjector
+
 !====================== TrackProjectors v2r18 2007-11-30 =====================
 ! 2007-11-30 Wouter Hulsbergen
  - add StateVector as argument to alignmentDerivatives, because ref no longer
