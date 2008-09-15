@@ -1,4 +1,4 @@
-// $Id: L0MuonOutputs.cpp,v 1.21 2008-07-24 09:28:50 jucogan Exp $
+// $Id: L0MuonOutputs.cpp,v 1.22 2008-09-15 07:36:20 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -895,7 +895,7 @@ LHCb::L0MuonCandidate* L0MuonOutputs::l0muoncandidate(L0Muon::PMuonCandidate can
                                                         cand->colM3(),cand->rowM3(), cand->offM2(),cand->offM1(),
                                                         m_version,debug);
   if (pads.size()==0) {
-    error()<<"wrong address for candidate "<<endmsg;
+    if (msgLevel( MSG::ERROR)) error()<<"Wrong address for candidate"<<endmsg;
     return NULL;
   }
   std::vector<double> kine = L0Muon::kine(pads[0],pads[1],m_version,debug);

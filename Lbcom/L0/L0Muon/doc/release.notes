@@ -1,8 +1,11 @@
-!  $Id: release.notes,v 1.66 2008-09-04 15:53:41 cattanem Exp $
+!  $Id: release.notes,v 1.67 2008-09-15 07:36:20 jucogan Exp $
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !-------------------------------------------------------------------------
 
+! 2008-09-15 - Julien Cogan
+ - Add printout protection.
+  
 !========================= L0Muon v8r2 2008-09-04 ========================
 ! 2008-09-04 - Julien Cogan
  - Change in L0MuonFromRawTrans :
