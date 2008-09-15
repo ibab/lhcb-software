@@ -32,7 +32,8 @@
         Tell1Link  = 64, 
         Tell1Error = 128,  
         ErrorBank  = 256,  
-        Unknown    = 512 ' 
+        MissingStatus = 512,  
+        Unknown    = 1024 ' 
         access = 'PUBLIC' />
       <!-- 'Unknown' MUST BE THE LAST ITEM -->
 

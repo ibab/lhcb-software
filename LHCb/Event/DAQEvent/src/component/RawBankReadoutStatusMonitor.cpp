@@ -1,4 +1,4 @@
-// $Id: RawBankReadoutStatusMonitor.cpp,v 1.6 2008-04-02 18:53:09 odescham Exp $
+// $Id: RawBankReadoutStatusMonitor.cpp,v 1.7 2008-09-15 17:46:55 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -81,11 +81,27 @@ StatusCode RawBankReadoutStatusMonitor::execute() {
     statuss = get<LHCb::RawBankReadoutStatuss>( LHCb::RawBankReadoutStatusLocation::Default );
   }else{
     Warning("No  RawBankReadoutStatus container found at " + LHCb::RawBankReadoutStatusLocation::Default );
+    for(std::vector<std::string>::iterator inam = m_bankTypes.begin() ; inam != m_bankTypes.end() ; ++inam){
+      std::string typeName = *inam;
+      std::stringstream base("");
+      base << typeName << "/" ;    
+      std::stringstream tit1D("");
+      tit1D << "Status summary for " << typeName << " bank " ;
+      plot1D( LHCb::RawBankReadoutStatus::MissingStatus , base.str() + "/1",  tit1D.str() ,  -1, (double) m_degree , m_degree+1);
+    }
     return StatusCode::SUCCESS;
   }
   
   if( 0 == statuss->size() ){
     Warning("The RawBankReadoutStatus container is empty *" + LHCb::RawBankReadoutStatusLocation::Default + ")");
+    for(std::vector<std::string>::iterator inam = m_bankTypes.begin() ; inam != m_bankTypes.end() ; ++inam){
+      std::string typeName = *inam;
+      std::stringstream base("");
+      base << typeName << "/" ;    
+      std::stringstream tit1D("");
+      tit1D << "Status summary for " << typeName << " bank " ;
+      plot1D( LHCb::RawBankReadoutStatus::MissingStatus , base.str() + "/1",  tit1D.str() ,  -1, (double) m_degree , m_degree+1);
+    }
     return StatusCode::SUCCESS;
   }
   
@@ -107,8 +123,16 @@ StatusCode RawBankReadoutStatusMonitor::execute() {
         break;
       }  
     }
-    if( !ok )continue;
+    if( !ok ){
+      std::stringstream base("");
+      base << typeName << "/" ;    
+      std::stringstream tit1D("");
+      tit1D << "Status summary for " << typeName << " bank " ;
+      plot1D( LHCb::RawBankReadoutStatus::MissingStatus , base.str() + "/1",  tit1D.str() ,  -1, (double) m_degree , m_degree+1);
+      continue;
+    }
     
+        
     
     
     std::stringstream base("");
