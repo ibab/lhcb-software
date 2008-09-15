@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.66 2008-09-05 09:49:48 wouter Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.67 2008-09-15 13:37:04 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -381,14 +381,10 @@ StatusCode TrackKalmanFilter::projectReference(FitNode& node) const
       Warning( "Could not get projector for measurement", sc, 0 ).ignore();
       debug() << "could not get projector for measurement" << endmsg ;
     } else {
-      sc = proj -> project(node.refVector(), meas );
+      sc = proj -> projectReference(node) ;
       if ( sc.isFailure() ) {
         Warning( "unable to project statevector", sc, 0 ).ignore();
         debug() << "unable to project this statevector: " << node.refVector() << endmsg ;
-      } else {
-        node.setProjectionMatrix( proj->projectionMatrix() );
-        node.setRefResidual( proj -> residual() ) ;
-        node.setErrMeasure( proj -> errMeasure() ) ;
       }
     }
   }

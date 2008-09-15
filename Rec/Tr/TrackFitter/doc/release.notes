@@ -3,6 +3,9 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2008-09-15 - Wouter Hulsbergen
+ - use new function in TrackProjector interface
+
 ! 2008-09-05 - Wouter Hulsbergen
  - added python configurables for track fitters, including a 'fast fit'
  - add option to ignore e-loss corrections
