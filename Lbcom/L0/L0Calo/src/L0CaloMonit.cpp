@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloMonit.cpp,v 1.23 2008-07-30 06:47:34 cattanem Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloMonit.cpp,v 1.24 2008-09-16 16:29:06 odescham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -120,22 +120,22 @@ StatusCode L0CaloMonit::initialize() {
   float xMinEt = 0   ; 
   float xMaxEt = 255. ; 
   delta = (xMaxEt - xMinEt)/nBinEt ; 
-  xMinEt = xMinEt - delta*.5F ; 
-  xMaxEt = xMaxEt - delta*.5F ; 
+  xMinEt = xMinEt - delta*.5 ; 
+  xMaxEt = xMaxEt - delta*.5 ; 
 
   int   nBinSumEt = 16383 ; 
   float xMinSumEt = 0 ; 
   float xMaxSumEt = 16383. ; 
   delta = (xMaxSumEt - xMinSumEt)/nBinSumEt ; 
-  xMinSumEt = xMinSumEt - delta*.5F ; 
-  xMaxSumEt = xMaxSumEt - delta*.5F ; 
+  xMinSumEt = xMinSumEt - delta*.5 ; 
+  xMaxSumEt = xMaxSumEt - delta*.5 ; 
 
-  int   nBinSpdMult = 1023 ; 
+  int   nBinSpdMult = 6016 ; 
   float xMinSpdMult = 0 ; 
-  float xMaxSpdMult = 1023. ; 
+  float xMaxSpdMult = 6016. ; 
   delta = (xMaxSpdMult - xMinSpdMult)/nBinSpdMult ; 
-  xMinSpdMult = xMinSpdMult - delta*.5F ; 
-  xMaxSpdMult = xMaxSpdMult - delta*.5F ; 
+  xMinSpdMult = xMinSpdMult - delta*.5 ; 
+  xMaxSpdMult = xMaxSpdMult - delta*.5 ; 
 
   
   m_histElectron  = GaudiHistoAlg::book( "EtEle", "Et electron "   , xMinEt, xMaxEt, nBinEt );
@@ -647,17 +647,20 @@ StatusCode L0CaloMonit::execute() {
 
 //============================================================================
 void L0CaloMonit::SearchForHotCellsAndReset(IHistogram1D* hist , int caloType ) { 
-  float nIn = (float)hist->entries() ;
+  float nIn = hist->entries() ;
   const IAxis& xAxis = hist->axis() ; 
   int nBin = xAxis.bins() ; 
+  float data[nBin] ; 
   float nUsedCells = 0 ; 
   for ( int i = 0 ; i<nBin ; i++) {
-    if (hist->binEntries(i) !=0) nUsedCells++ ; 
+    data[i] = hist->binEntries(i) ; 
+    if (data[i] !=0) nUsedCells++ ; 
   } 
   bool hotChannels = false ; 
   float meanOcc = nIn/nUsedCells ; 
   for ( int i = 0 ; i<nBin ; i++) { 
-    if (hist->binEntries(i) > meanOcc*m_alarmThresholdRatio ) { 
+    data[i] = hist->binEntries(i) ; 
+    if (data[i] > meanOcc*m_alarmThresholdRatio ) { 
       hotChannels = true ; 
       break ; 
     }
@@ -669,41 +672,41 @@ void L0CaloMonit::SearchForHotCellsAndReset(IHistogram1D* hist , int caloType ) 
     info()<<"|   Data     |    Hot(?) Cell    |    Crate    | Slot     |   Channel   |"<<endreq ; 
     info()<<"-------------------------------------------------------------------------"<<endreq ; 
     for ( int i = 0 ; i<nBin ; i++) { 
-      if ( hist->binEntries(i) > meanOcc*m_alarmThresholdRatio ) { 
-        double idAll = xAxis.binLowerEdge(i) ; 
-        LHCb::CaloCellID caloCell ((int)idAll)  ; 
-        int card = -999 ; 
-        int crate = -999 ; 
-        int cardSlot = -999 ; 
-        int channelNum = 0 ; 
-        int cellChannel = 0 ; 
-
-        if (caloType == 1 ) { 
-          card  = m_ecal->cardNumber( caloCell) ; 
-          crate = m_ecal->cardCrate(card); 
-          cardSlot = m_ecal->cardSlot(card) ; 
-          std::vector<LHCb::CaloCellID>&  myCardChannels = m_ecal->cardChannels( card ) ;
-          std::vector<LHCb::CaloCellID>::iterator it ;
-          for ( it = myCardChannels.begin() ; it != myCardChannels.end() ;  it++ ) {
-          if (*it == caloCell) cellChannel = channelNum ; 
-            channelNum++ ; 
-          } 
-        }
-        if (caloType == 2 ) { 
-          card  = m_hcal->cardNumber( caloCell) ; 
-          crate = m_hcal->cardCrate(card); 
-          cardSlot = m_hcal->cardSlot(card) ; 
-          std::vector<LHCb::CaloCellID>&  myCardChannels = m_hcal->cardChannels( card ) ;
-          std::vector<LHCb::CaloCellID>::iterator it ;
-          for ( it = myCardChannels.begin() ; it != myCardChannels.end() ;  it++ ) {
-            if (*it == caloCell) cellChannel = channelNum ; 
-            channelNum++ ; 
-          }
-        }
-
-        info()<<"|     "<<hist->binEntries(i)<<"     |   "<<caloCell<<"    |     "<<crate
-              <<"     |     " <<cardSlot<<"      |  "<<"   |   "<<cellChannel << "  |  "<<endmsg ; 
-        info()<<"-------------------------------------------------------------------------"<<endreq ; 
+      data[i] = hist->binEntries(i) ; 
+      if (data[i] > meanOcc*m_alarmThresholdRatio ) { 
+	double idAll = xAxis.binLowerEdge(i) ; 
+	LHCb::CaloCellID caloCell ((int)idAll)  ; 
+	int card = -999 ; 
+	int crate = -999 ; 
+	int cardSlot = -999 ; 
+	int channelNum = 0 ; 
+	int cellChannel = 0 ; 
+	
+	if (caloType == 1 ) { 
+	  card  = m_ecal->cardNumber( caloCell) ; 
+	  crate = m_ecal->cardCrate(card); 
+	  cardSlot = m_ecal->cardSlot(card) ; 
+	  std::vector<LHCb::CaloCellID>&  myCardChannels = m_ecal->cardChannels( card ) ;
+	  std::vector<LHCb::CaloCellID>::iterator it ;
+	  for ( it = myCardChannels.begin() ; it != myCardChannels.end() ;  it++ ) {
+	    if (*it == caloCell) cellChannel = channelNum ; 
+	    channelNum++ ; 
+	  } 
+	}
+	if (caloType == 2 ) { 
+	  card  = m_hcal->cardNumber( caloCell) ; 
+	  crate = m_hcal->cardCrate(card); 
+	  cardSlot = m_hcal->cardSlot(card) ; 
+	  std::vector<LHCb::CaloCellID>&  myCardChannels = m_hcal->cardChannels( card ) ;
+	  std::vector<LHCb::CaloCellID>::iterator it ;
+	  for ( it = myCardChannels.begin() ; it != myCardChannels.end() ;  it++ ) {
+	    if (*it == caloCell) cellChannel = channelNum ; 
+	    channelNum++ ; 
+	  }
+	}
+	
+	info()<<"|     "<<data[i]<<"     |   "<<caloCell<<"    |     "<<crate<<"     |     " <<cardSlot<<"      |  "<<"   |   "<<cellChannel << "  |  "<<endreq ; 
+	info()<<"-------------------------------------------------------------------------"<<endreq ; 
       } 
     } 
   } else {
@@ -711,3 +714,4 @@ void L0CaloMonit::SearchForHotCellsAndReset(IHistogram1D* hist , int caloType ) 
   }
   hist->reset() ; 
 } 
+

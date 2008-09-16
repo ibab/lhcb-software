@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.121 2008-09-04 15:47:53 cattanem Exp $
+! $Id: release.notes,v 1.122 2008-09-16 16:29:06 odescham Exp $
 ! Package	        : L0/L0Calo
 ! Package Manager : Patrick Robbe & M-H. Schune
 !--------------------------------------------------------------------------
+
+! 2008-09-16 Marie-Helene Schune
+ - src/L0CaloMonit.cpp : change the range of SpdMult monitoring histo
 
 !========================= L0Calo v9r17 2008-09-04 ========================
 ! 2008-08-15 - Patrick Robbe
