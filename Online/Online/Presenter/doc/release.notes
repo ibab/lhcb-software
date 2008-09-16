@@ -1,8 +1,12 @@
 !-----------------------------------------------------------------------------
 ! Package     : Online/Presenter
-! Responsible :
+! Responsible : Peter Somogyi
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
+
+!============ Presenter v0r12 2008-09-16 =============
+! 2008-09-16
++ fix MonObject Clear&Restore
 
 !============ Presenter v0r11 2008-09-01 =============
 ! 2008-09-01
