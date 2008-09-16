@@ -1,25 +1,23 @@
-# $Id: requirements,v 1.96 2008-07-15 10:29:40 ibelyaev Exp $ 
+# $Id: requirements,v 1.97 2008-09-16 14:27:40 ibelyaev Exp $ 
 # =============================================================================
 # The management of the content of BENDER project:
 #                 LHCb Physics Analysis with Python  
 # =============================================================================
 package       BenderSys
-version       v8r3p1
+version       v9r0
 author        Vanya BELYAEV
 
-
 # =========== Bender Application itself =======================================
-use           Bender         v8r3p1 Phys 
+use           Bender         v9r0 Phys 
   
 # =========== examples of usage of Bender "in practice" =======================
-use           BenderExample  v8r3   Ex
+use           BenderExample  v9r0   Ex
 
 # =========== Bender tutorial =================================================
-use           BenderTutor    v8r3   Tutorial
+use           BenderTutor    v9r0   Tutorial
 
 # =========== template of user module/scriot ==================================
-use           BenderUser     v8r3   Phys 
-
+use           BenderUser     v9r0   Phys 
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
