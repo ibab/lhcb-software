@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: decorators.py,v 1.11 2008-06-12 08:28:54 ibelyaev Exp $ 
+# $Id: decorators.py,v 1.12 2008-09-16 15:02:20 ibelyaev Exp $ 
 # =============================================================================
 ## @file decorators.py LoKiAlgo/decorators.py
 #  The set of basic decorator for objects from LoKiAlgo library
@@ -408,6 +408,8 @@ def _decorateAlg ( alg ) :
     GaudiPython.GaudiAlgs._decorate_algs_    ( [ Algo ] )
     GaudiPython.GaudiAlgs._decorate_plots_   ( [ Algo ] )
     GaudiPython.GaudiAlgs._decorate_tuples_  ( [ Algo ] )
+    Algo . start      = GaudiPython.GaudiAlgs._start_
+    Algo . stop       = GaudiPython.GaudiAlgs._stop_    
     ##
     return Algo
 ## ============================================================================

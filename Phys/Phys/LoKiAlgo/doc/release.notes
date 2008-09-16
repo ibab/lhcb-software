@@ -1,9 +1,22 @@
-! $Id: release.notes,v 1.42 2008-06-30 19:36:35 cattanem Exp $ 
+! $Id: release.notes,v 1.43 2008-09-16 15:02:20 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgo
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : LoKi-algorithm related stuff 
 ! -----------------------------------------------------------------------------
+
+
+! 2008-09-16 - Vanya BELYAEV
+
+ - python/LoKiAlgo/decorators.py
+
+       add the trivial start/stop functions 
+       for the python algorithm 
+       (required by new 'state-machine' in Gaudi) 
+        
+ - cmt/requirements 
+
+       version increment to v7r6 
 
 !========================== LoKiAlgo v7r5 2008-06-30 ==========================
 ! 2008-06-26 - Vanya BELYAEV
