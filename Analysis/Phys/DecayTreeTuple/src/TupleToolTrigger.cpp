@@ -1,4 +1,4 @@
-// $Id: TupleToolTrigger.cpp,v 1.7 2008-06-27 14:34:55 pkoppenb Exp $
+// $Id: TupleToolTrigger.cpp,v 1.8 2008-09-16 09:50:50 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -8,12 +8,10 @@
 #include "TupleToolTrigger.h"
 
 #include "Event/L0DUReport.h"
-#include "Kernel/IHltSummaryTool.h"
-#include "Kernel/IANNSvc.h"
+#include "Event/HltDecReports.h"
 
 #include "GaudiAlg/Tuple.h"
 #include "GaudiAlg/TupleObj.h"
-
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TriggerTupleTool
@@ -32,7 +30,6 @@ TupleToolTrigger::TupleToolTrigger( const std::string& type,
 					    const std::string& name,
 					    const IInterface* parent )
   : GaudiTool ( type, name , parent )
-  , m_summaryTool(0)
 {
   declareInterface<IEventTupleTool>(this);
   declareProperty( "VerboseL0",   m_verboseL0=false );
@@ -40,8 +37,8 @@ TupleToolTrigger::TupleToolTrigger( const std::string& type,
   declareProperty( "VerboseHlt2", m_verboseHlt2=false );
   declareProperty( "FillL0", m_fillL0=true );
   declareProperty( "FillHlt", m_fillHlt=true );
-  declareProperty( "Hlt1MajorKey", m_hlt1MajorKey = "Hlt1SelectionID"); 
-  declareProperty( "Hlt2MajorKey", m_hlt2MajorKey = "Hlt2SelectionID");
+  //  declareProperty( "Hlt1MajorKey", m_hlt1MajorKey = "Hlt1SelectionID"); 
+  //  declareProperty( "Hlt2MajorKey", m_hlt2MajorKey = "Hlt2SelectionID");
 
 }
 
@@ -50,11 +47,7 @@ TupleToolTrigger::TupleToolTrigger( const std::string& type,
 //=========================================================================
 StatusCode TupleToolTrigger::initialize ( ) {
   StatusCode sc = GaudiTool::initialize();
-  if (!sc) return sc;
-  m_summaryTool = tool<IHltSummaryTool>("HltSummaryTool",this);
-
-
-  return StatusCode::SUCCESS ;
+  return sc ;
 }
 //=============================================================================
 StatusCode TupleToolTrigger::fill( Tuples::Tuple& tuple ) {
@@ -62,8 +55,11 @@ StatusCode TupleToolTrigger::fill( Tuples::Tuple& tuple ) {
   
   if (m_fillL0)
   	if (!fillL0(tuple)) return StatusCode::FAILURE ;
-  if (m_fillHlt)
-  	if (!fillHlt(tuple)) return StatusCode::FAILURE ;
+  if (m_fillHlt){
+    if (!(fillHlt(tuple,"Hlt1", m_verboseHlt1))) return StatusCode::FAILURE;
+    if (!(fillHlt(tuple,"Hlt2", m_verboseHlt2))) return StatusCode::FAILURE; 
+  }
+  
   return StatusCode::SUCCESS;
 }
 //=============================================================================
@@ -90,28 +86,25 @@ StatusCode TupleToolTrigger::fillL0( Tuples::Tuple& tuple ) {
   }
   return StatusCode::SUCCESS;
 }
-//=============================================================================
-StatusCode TupleToolTrigger::fillHlt( Tuples::Tuple& tuple ) {
-  // Hlt
-
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Looking for decision" << endmsg ;
-  if( !tuple->column( "HltDecision", m_summaryTool->decision() )) return StatusCode::FAILURE;
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Decision " << m_summaryTool->decision() << endmsg ;
-
-  StatusCode sc = StatusCode::SUCCESS ;
-
-  if ( m_verboseHlt1)        sc = fillHlt(tuple,m_hlt1MajorKey);
-  if ( sc && m_verboseHlt2 ) sc = fillHlt(tuple,m_hlt2MajorKey);
-  return sc ;
-}
 //============================================================================
-StatusCode TupleToolTrigger::fillHlt( Tuples::Tuple& tuple, const std::string & major ) {
-  std::vector<std::string> names = svc<IANNSvc>("HltANNSvc")->keys(major);
-  for (std::vector<std::string>::const_iterator s = names.begin() ; s!=names.end() ; ++s){
-    if ( ! tuple->column(*s, m_summaryTool->selectionDecision(*s) ) ) 
-      return StatusCode::FAILURE;
-    if (msgLevel(MSG::VERBOSE)) verbose() << major << " :: " << *s << " says " 
-                                          << m_summaryTool->selectionDecision(*s) << endmsg ; 
+StatusCode TupleToolTrigger::fillHlt( Tuples::Tuple& tuple, const std::string & level, bool individual ) {
+  if( exist<LHCb::HltDecReports>( LHCb::HltDecReportsLocation::Default ) ){ 
+    const LHCb::HltDecReports* decReports = 
+      get<LHCb::HltDecReports>( LHCb::HltDecReportsLocation::Default );
+    if( !tuple->column( level+"Global", (decReports->decReport(level+"Global"))? 
+                        (decReports->decReport(level+"Global")->decision()):0 )) return StatusCode::FAILURE;
+    if ( individual) {
+      // individual Hlt trigger lines
+      for(LHCb::HltDecReports::Container::const_iterator it=decReports->begin();
+          it!=decReports->end();++it){
+        if( ( it->first.find(level) == 0 ) && 
+            ( it->first.find("Decision") != std::string::npos ) ) 
+          if (msgLevel(MSG::DEBUG))  debug() << " Hlt2 trigger name= " << it->first  
+                                             << " decision= " << it->second.decision() << endmsg;
+        if ( ! tuple->column(it->first  , it->second.decision() ) ) 
+          return StatusCode::FAILURE;
+      } 
+    }
   }
-  return StatusCode::SUCCESS;
+  return StatusCode::SUCCESS ;
 }

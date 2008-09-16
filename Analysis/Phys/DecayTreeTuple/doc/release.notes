@@ -1,8 +1,13 @@
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DecayTreeTuple
 ! Responsible : Jeremie Borel
-! Purpose     : Successor of DecayChainNTuple
+! Purpose     : Option-steered tuples. Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
+
+! 2008-09-16 - Patrick Koppenburg
+ - TupleToolTrigger : use HltDecReport
+ - Test options : Run HltDecReport maker.
+ - Increment to v1r7
 
 !========================== DecayTreeTuple v1r6 2008-09-10 ===================
 ! 2008-09-10 - Patrick Koppenburg

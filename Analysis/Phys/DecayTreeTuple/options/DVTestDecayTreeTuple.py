@@ -20,7 +20,7 @@
  #
 
 from Gaudi.Configuration import *
-from Configurables import DecayTreeTuple, PhysDesktop, NeuralNetTmva, EventTuple
+from Configurables import DecayTreeTuple, PhysDesktop, NeuralNetTmva, EventTuple, HltDecReportsMaker, TupleToolTrigger
 
 importOptions( "$B2DILEPTONROOT/options/DVDC06SelBu2eeK.opts" )
 #
@@ -31,6 +31,9 @@ importOptions( "$HLTCONFROOT/options/Hlt2.opts" )
 
 ApplicationMgr().TopAlg += [ NeuralNetTmva() ] 
 importOptions( "$NNTOOLSROOT/options/NeuralNetTmva.opts")
+
+# get reports
+ApplicationMgr().TopAlg += [ HltDecReportsMaker() ]
 
 tuple = DecayTreeTuple("Tuple")
 tuple.ToolList +=  [
@@ -43,7 +46,8 @@ tuple.ToolList +=  [
     , "TupleToolPrimaries"
     , "TupleToolEventInfo"
     , "TupleToolTrackInfo"
-    , "TupleToolTISTOS" ]
+    , "TupleToolTISTOS"
+     ]
 
 tuple.addTool( PhysDesktop())
 tuple.PhysDesktop.InputLocations = ["Phys/DC06SelBu2eeK"]
@@ -56,9 +60,12 @@ evtTuple = EventTuple()
 evtTuple.ToolList = [ "TupleToolTrigger", "TupleToolEventInfo" , "TupleToolGeneration" ]
 ApplicationMgr().TopAlg += [ evtTuple ]
 
+evtTuple.addTool(TupleToolTrigger())
+evtTuple.TupleToolTrigger.VerboseHlt1 = True 
+evtTuple.TupleToolTrigger.VerboseHlt2 = True 
 
 
-ApplicationMgr().EvtMax = 1000 
+ApplicationMgr().EvtMax = 100
 
 NTupleSvc().Output = ["FILE1 DATAFILE='Tuple.root' TYP='ROOT' OPT='NEW'"]
 

@@ -1,4 +1,4 @@
-// $Id: TupleToolTrigger.h,v 1.4 2008-06-25 12:18:26 pkoppenb Exp $
+// $Id: TupleToolTrigger.h,v 1.5 2008-09-16 09:50:50 pkoppenb Exp $
 #ifndef JBOREL_TUPLETOOLTRIGGER_H
 #define JBOREL_TUPLETOOLTRIGGER_H 1
 
@@ -36,17 +36,15 @@ public:
 private:
 
   StatusCode fillL0( Tuples::Tuple& );
-  StatusCode fillHlt( Tuples::Tuple& );
-  StatusCode fillHlt( Tuples::Tuple&, const std::string & );
+  StatusCode fillHlt( Tuples::Tuple&, const std::string &, bool );
   
   bool m_fillHlt;
   bool m_fillL0;
   bool m_verboseL0;     ///< get details on L0
-  bool m_verboseHlt1; ///< get details on alleys
-  bool m_verboseHlt2; ///< get details on selections
-  IHltSummaryTool* m_summaryTool ; ///< HLT summary tool
-  std::string m_hlt1MajorKey ; ///< Major key of Hlt1 in HltANNSvc
-  std::string m_hlt2MajorKey ; ///< Major key of Hlt2 in HltANNSvc
+  bool m_verboseHlt1; ///< get details on Hlt1
+  bool m_verboseHlt2; ///< get details on Hlt2
+  //  std::string m_hlt1MajorKey ; ///< Major key of Hlt1 in HltANNSvc
+  //  std::string m_hlt2MajorKey ; ///< Major key of Hlt2 in HltANNSvc
   
   
 };
