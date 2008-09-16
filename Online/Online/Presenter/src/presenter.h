@@ -10,7 +10,7 @@
  #define WIN32_LEAN_AND_MEAN
 #endif
 
-static const std::string s_presenterVersion("v0r11");
+static const std::string s_presenterVersion("v0r12");
 // environment variable for archive mount point (i.e. prefix to paths)
 static const std::string s_groupdir("GROUPDIR");
 
@@ -125,7 +125,8 @@ namespace pres
 // so let's process the UTGID separately:
 // TODO: make this lazier...
   static TPRegexp s_histogramUrlRegexp("^(MonP1|MonH1F|MonH1D|MonH2F|MonH2D|H1D|H2D|P1D|HPD|P2D)?/?([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");
-  static TPRegexp s_histogramUTGIDRegexp("^([^/_]+)_([^/_]+)_([^/]+)_([^/]+)$");
+//  static TPRegexp s_histogramUTGIDRegexp("^([^/_]+)?_?([^/_]+)_([^/]+)_([^/]+)$");
+  static TPRegexp s_histogramUTGIDRegexp("^(([^/_]+)_)?([^/_]+)_([^/]+)_([^/]+)$");
   static TPRegexp s_fileDateRegexp("(.*)-(\\d{8}T\\d{6})\\.root$");
 
   // Tunables:

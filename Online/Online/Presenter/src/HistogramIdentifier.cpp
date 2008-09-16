@@ -92,13 +92,13 @@ void HistogramIdentifier::setIdentifiersFromDim(std::string newDimServiceName)
   MatchS(m_histogramUTGID);
 
   if (!histogramUTGIDMatchGroup->IsEmpty()) {
-    m_partitionName = (((TObjString *)histogramUTGIDMatchGroup->At(1))->
+    m_partitionName = (((TObjString *)histogramUTGIDMatchGroup->At(2))->
       GetString()).Data();
-    m_nodeName = (((TObjString *)histogramUTGIDMatchGroup->At(2))->
+    m_nodeName = (((TObjString *)histogramUTGIDMatchGroup->At(3))->
       GetString()).Data();      
-    m_taskName = (((TObjString *)histogramUTGIDMatchGroup->At(3))->
+    m_taskName = (((TObjString *)histogramUTGIDMatchGroup->At(4))->
       GetString()).Data();
-    m_instanceOnNode = (((TObjString *)histogramUTGIDMatchGroup->At(4))->
+    m_instanceOnNode = (((TObjString *)histogramUTGIDMatchGroup->At(5))->
       GetString()).Data();        
   } else {
     m_taskName = m_histogramUTGID;

@@ -7,6 +7,7 @@
 !============ Presenter v0r12 2008-09-16 =============
 ! 2008-09-16
 + fix MonObject Clear&Restore
++ support missing partition names from UTGID
 
 !============ Presenter v0r11 2008-09-01 =============
 ! 2008-09-01
