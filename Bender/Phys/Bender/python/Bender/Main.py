@@ -26,6 +26,8 @@ This is a major Python Module for Bender application
 # =============================================================================
 __author__ = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 # =============================================================================
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $' 
+# =============================================================================
 
 import os 
 
@@ -58,28 +60,6 @@ from LoKiAlgo.decorators          import *
 
 from LoKiCore.functions           import *
 
-## @var LoKi   : define namespace LoKi 
-LoKi   = cpp.LoKi
-## @var Bender : define namespace Bender 
-Bender = cpp.Bender
-## @var LHCb   : define namespace LHCb
-LHCb   = cpp.LHCb
-## @var Gaudi  : define namespace Gaudi
-Gaudi  = cpp.Gaudi
-
-_SC=cpp.StatusCode
-SUCCESS = _SC(_SC.SUCCESS,True)
-FAILURE = _SC(_SC.FAILURE,True)
-
-_SE = cpp.StatEntity
-_iadd_old_ = _SE.__iadd__
-def _iadd_new_ (s,v) :
-    return _iadd_old_(s,float(v))
-_SE.__iadd__ = _iadd_new_
-_SE.__str__  = _SE.toString 
-
-from Gaudi.Configuration import importOptions
-
 ## Get the application manager 
 def appMgr( *varg , **kwarg ) :
     """
@@ -105,8 +85,40 @@ def run ( n = -1 ) :
     return _g.run ( n )
 
 # =============================================================================
+from Gaudi.Configuration import importOptions
+
+# =============================================================================
+## apply some last-minutes fixes
+import Bender.Fixes
+
+
+## @var LoKi   : define namespace LoKi 
+LoKi   = cpp.LoKi
+## @var Bender : define namespace Bender 
+Bender = cpp.Bender
+## @var LHCb   : define namespace LHCb
+LHCb   = cpp.LHCb
+## @var Gaudi  : define namespace Gaudi
+Gaudi  = cpp.Gaudi
+
+_SC=cpp.StatusCode
+SUCCESS = _SC(_SC.SUCCESS,True)
+FAILURE = _SC(_SC.FAILURE,True)
+
+_SE = cpp.StatEntity
+_iadd_old_ = _SE.__iadd__
+def _iadd_new_ (s,v) :
+    return _iadd_old_(s,float(v))
+_SE.__iadd__ = _iadd_new_
+_SE.__str__  = _SE.toString 
+
+
+
+# =============================================================================
 ## Welcome message:
 Bender.Welcome.instance()
+
+
 
 
 if __name__ == '__main__' :
