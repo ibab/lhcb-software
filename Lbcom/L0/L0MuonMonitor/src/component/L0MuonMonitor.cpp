@@ -1,14 +1,10 @@
-// $Id: L0MuonMonitor.cpp,v 1.9 2008-09-15 07:46:40 jucogan Exp $
+// $Id: L0MuonMonitor.cpp,v 1.10 2008-09-16 09:36:54 jucogan Exp $
 // Include files 
 
 #include <math.h>
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
-
-#include "MuonMonKernel/IMuonMonRec.h"
-#include "MuonMonKernel/MuonMonHit.h"
-#include "MuonMonKernel/MuonMonPad.h"
 
 #include "Kernel/MuonLayout.h"
 
@@ -63,11 +59,6 @@ StatusCode L0MuonMonitor::initialize() {
   m_channelHist_l0muon = tool<L0MuonChannelsHistos>( "L0MuonChannelsHistos", "l0muon", this);
   m_channelHist_muon = tool<L0MuonChannelsHistos>( "L0MuonChannelsHistos", "muon", this);
   m_muonBuffer=tool<IMuonRawBuffer>("MuonRawBuffer","MuonRawTool", this);
-  m_recTool = tool<IMuonMonRec>("MuonMonRec");
-  if(!m_recTool){
-    error()<<"error retrieving the muon mon. rec. tool "<<endreq;
-    return StatusCode::FAILURE;
-  }
 
   // Run info
   setHistoDir("L0Muon/Analysis");
@@ -142,9 +133,6 @@ StatusCode L0MuonMonitor::execute() {
 
   int npad[L0Muon::MonUtilities::NStations]; for (int i=0; i<L0Muon::MonUtilities::NStations; ++i) npad[i]=0;
   int npad_muon[L0Muon::MonUtilities::NStations]; for (int i=0; i<L0Muon::MonUtilities::NStations; ++i) npad_muon[i]=0;
-
-  const std::vector<MuonMonHit*> * hits = m_recTool->hits();
-  debug()<<"# of muon hits in event  "<<hits->size()<<endmsg;
 
   // Loop over time slots
   for (std::vector<int>::iterator it_ts=m_time_slots.begin(); it_ts<m_time_slots.end(); ++it_ts){
@@ -221,16 +209,6 @@ StatusCode L0MuonMonitor::execute() {
     // Get Muon Hits
 
     std::vector<LHCb::MuonTileID> muontiles;
-    std::vector<MuonMonHit*>::const_iterator ithits;
-    for (ithits=hits->begin(); ithits<hits->end(); ++ithits){
-      int bx = (int)( ((*ithits)->time()+160)/16 ) -10 ; 
-      if ( (*it_ts)==bx ) {
-        LHCb::MuonTileID* itile = (*ithits)->tile();
-        muontiles.push_back(*itile);
-      }
-    }
-
-    std::vector<LHCb::MuonTileID> muontilesR;
     if (m_muonBuffer) { // If muon raw buffer tool
       IProperty* prop = dynamic_cast<IProperty*>( m_muonBuffer );
       if( prop ) {
@@ -239,21 +217,19 @@ StatusCode L0MuonMonitor::execute() {
           return Error( "Unable to set RootInTES property of MuonRawBuffer", sc );
       } else return Error( "Unable to locate IProperty interface of MuonRawBuffer" );
       if (m_muonZS) { // Look at ZS supressed bank
-        m_muonBuffer->getTile(muontilesR);
+        m_muonBuffer->getTile(muontiles);
       } else { // Look at NonZS supressed bank
         std::vector<std::pair<LHCb::MuonTileID,unsigned int> >  tileAndTDC;
         m_muonBuffer->getNZSupp(tileAndTDC);
         //         info()<<"Nb of muon hits : "<<tileAndTDC.size()<<endmsg;
         std::vector<std::pair<LHCb::MuonTileID,unsigned int> >::iterator itileAndTDC;
         for (itileAndTDC=tileAndTDC.begin(); itileAndTDC<tileAndTDC.end(); ++itileAndTDC) {
-          muontilesR.push_back(itileAndTDC->first);
+          muontiles.push_back(itileAndTDC->first);
         }
       } // End NonZS supressed bank
       m_muonBuffer->forceReset();
     }// End if muon raw buffer tool
 
-    debug()<<"# of muon hits in "<<rootInTES()<<": muonBuffer = "<<muontilesR.size()<<" muonRec= "<<muontiles.size()<<endmsg;
-    
     
     // Physical channels
     m_channelHist_l0muon->fillHistos(l0muontiles,*it_ts);
