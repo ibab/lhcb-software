@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.24 2008-09-16 11:47:27 ibelyaev Exp $
+! $Id: release.notes,v 1.25 2008-09-16 14:24:11 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Ex/BenderExample
 ! Responsible : Vanya  BELYAEV ibelyaev@physics.syr.edu
@@ -21,7 +21,10 @@
       python/Bender/Example/Bex_BQQ.py
       python/Bender/Example/Bex_BSMUMU_SCRIPT.py 
       python/Bender/Example/Bex_BuJPsiK.py
-
+ 
+  - options
+    
+     add data cards form bs->mumu an db+ -> jpsi k+ samples (CERN-only) 
 
   - cmt/requirements 
 

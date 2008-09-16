@@ -4,7 +4,8 @@ from Bender.MainMC import *
 from Gaudi.Configuration import NTupleSvc
 
 ### Some variables
-AFS = os.environ["HOME"] + "/cmtuser/"
+## AFS = os.environ["HOME"] + "/cmtuser/"
+
 bsmumuCounterKeys = ['CandidatesAnalyzed', 'k_Dz', 'k_muIps', 'k_Ptmu', 'MuMuPhotBsel', 'k_BIps', 'MuMuPhot', 'k_MassWindow', 'k_Chi2', 'k_Bpt', 'EVT', 'k_DOFS']
 
 ################################### Some General Options. Remember to check it
@@ -20,15 +21,12 @@ TUP = 1
         # for running on splited datacards ( ex: bsmumu_n.opts)
 
 
-string = ""
-args = sys.argv
-for arg in args[1:]:
-    if arg in ["-b","-b-"]: continue
-    string += "_" + arg
+datacards = os.environ['BENDEREXAMPLEROOT'] + "/options/bsmumuCERN.opts"
+# datacards = os.environ['BENDEREXAMPLEROOT'] + "/options/BuJPsiKCERN.opts"
+if not os.path.exists ( datacards ) :
+    raise RuntimeError, "DATACARDS-file '%s' does not exist" % datacards
 
 
-datacards = AFS + "data/bsmumuCERN"+ string + ".opts"
-#datacards = AFS + "data/BuJPsiKCERN"+string+".opts"
 
 ########################
 ### ALGORITHMS TO ADD ##
@@ -56,8 +54,7 @@ PhiMASSWINDOW = 28.
 PTmu_Cut = 500.   # Max (m+ mu-), required by Heavy DiMuon
 
 if TUP:
-    NTupleSvc( Output =["T DATAFILE='" +AFS + "/nothing" + string +".root' TYP='ROOT' OPT='NEW'"] )
-   # NTupleSvc( Output = [ 'T DATAFILE=\'castor:'+os.environ["CASTOR_HOME"]+'/nothing"+string+ ".root\' TYP=\'ROOT\' OPT=\'NEW\'' ])
+    NTupleSvc( Output =["T DATAFILE='BSMUMU_tuples.root' TYP='ROOT' OPT='NEW'"] )
 
 from Bex_BQQ import *  
 from Bex_BuJPsiK import *
