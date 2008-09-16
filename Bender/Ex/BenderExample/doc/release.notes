@@ -1,10 +1,32 @@
-! $Id: release.notes,v 1.23 2008-06-12 12:44:14 ibelyaev Exp $
+! $Id: release.notes,v 1.24 2008-09-16 11:47:27 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Ex/BenderExample
 ! Responsible : Vanya  BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : collection of examples to run Bender - 
 !             :                    -Python based physic sanalysis 
 ! -----------------------------------------------------------------------------
+
+! ====================== Ex/BenderExample v9r0 2008-09-16 =====================
+
+! 2008-09-16 - Vanya BELYAEV
+
+ - prepare for new version of Bender 
+   
+   Diego has updated his examples, therefore the old files are removed:  
+
+      python/Bender/Example/BsMuMu.py & Bu2JpsiK.py 
+
+   and new files have been added: 
+
+      python/Bender/Example/Bex_BQQ.py
+      python/Bender/Example/Bex_BSMUMU_SCRIPT.py 
+      python/Bender/Example/Bex_BuJPsiK.py
+
+
+  - cmt/requirements 
+
+      version incremented to v9r0 
+
 
 ! ====================== Ex/BenderExample v8r3 2008-06-12 =====================
 
