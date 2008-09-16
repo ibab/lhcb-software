@@ -4,6 +4,14 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2008-09-16 - Gloria CORTI
+ - Remove lhcb-2008*.{py,opts} that are obsolete and no longer working.
+   Use Gauss-2008.py instead.
+   . REMOVED: lhcb-2008.opts      lhcb-2008.py      lhcb-2008-BOff.opts 
+              lhcb-2008-5TeV.opts lhcb-2008-5TeV.py lhcb-2008-5TeV-BOff.py 
+              lhcb-2008-5TeV-BOff.opts lhcb-2008-450GeV-OpenVelo-BOff.opts 
+              lhcb-2008-450GeV-BOff.py lhcb-2008-450GeV-BOff.opts
+
 !======================== Gauss v35r0 2008-09-11 =============================
 ! 2008-09-11 - Gloria CORTI
  - Fix bug (mistying) for Beam energy at 5 TeV, where for collision it was
