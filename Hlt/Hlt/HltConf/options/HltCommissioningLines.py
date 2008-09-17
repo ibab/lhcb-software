@@ -3,6 +3,7 @@ from HltConf.HltLine import Hlt1Member as Member
 
 OdinTypes = set([  'Reserve'
                 ,  'PhysicsTrigger'
+                ,  'RandomTrigger'
                 ,  'AuxilliaryTrigger'
                 ,  'PeriodicTrigger'
                 ,  'NonZSupTrigger'

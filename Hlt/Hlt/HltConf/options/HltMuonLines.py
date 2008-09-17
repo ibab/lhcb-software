@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltMuonLines.py,v 1.1 2008-09-11 16:41:59 graven Exp $
+# $Id: HltMuonLines.py,v 1.2 2008-09-17 19:44:40 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -12,7 +12,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.1 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -20,6 +20,7 @@ from Gaudi.Configuration import *
 from Configurables import GaudiSequencer
 from Configurables import HltMuonRec
 from Configurables import HltL0MuonPrepare
+from Configurables import HltTrackUpgrade
 from Configurables import PatMatchTool
 
 from HltConf.HltLine import Hlt1Line   as Line
@@ -29,6 +30,7 @@ from HltConf.HltLine import hlt1Lines, addHlt1Prop, rmHlt1Prop
 
 
 importOptions('$HLTCONFROOT/options/TsaTool.opts')
+importOptions('$HLTCONFROOT/options/HltRecoSequence.py')
 
 decodeT = GaudiSequencer('HltDecodeT')
 RZVelo  = GaudiSequencer('Hlt1RecoRZVeloTracksSequence')
@@ -38,8 +40,6 @@ RecoMuonSeg = HltMuonRec('HltRecoMuonSeg'
                         , OutputMuonTracksName='Hlt/Track/MuonSegmentForL0Single'
                         , DecodingFromCoord=True )
 
-### save current known lines, so we know at the end what got added by 'us'
-currentLines = hlt1Lines()
 
 TConfMatchVelo = [ decodeT
                  , Member ('TU', 'TConf' , RecoName = 'TConf' )
@@ -47,7 +47,6 @@ TConfMatchVelo = [ decodeT
                  , RZVelo
                  , Member ('TF', 'RZVelo'
                           , InputSelection = 'RZVelo'
-                          ### TODO/FIXME: make sure that we expand the % in FilterDescriptors for bound selections...
                           , FilterDescriptor = ['RZVeloTMatch_%TFTConf,||<,80.'] )
                  , Member ('TU', 'Velo' , RecoName = 'Velo' )
                  , Member ('TM', 'VeloT'
@@ -152,7 +151,7 @@ DiMuonFromL0DiMuonNoIP = Line( 'DiMuonFromL0DiMuoNoIP'
                    ] )
 
 ### TODO: clone and mutate from line above...
-### FIXME: how to remove RecoRZPV??
+### FIXME: how to remove RecoRZPV in that case??
 DiMuonFromL0DiMuonIP = Line ( 'DiMuonFromL0DiMuonIP'
                    , HLT = [ DiMuonFromL0DiMuonPrepare ]
                    , algos = 
@@ -181,7 +180,8 @@ DiMuonFrom2L0IP = Line ('DiMuonFrom2L0IP'
                    ] )
 
 ### TODO: clone and mutate from line above... 
-### FIXME: how to remove RecoRZPV??
+### FIXME: how to remove RecoRZPV in that case??
+
 DiMuonFrom2L0NoIP = Line( 'DiMuonFrom2L0NoIP'
                    , HLT = [ singleMuonPrep ] 
                    , algos = 
@@ -193,7 +193,6 @@ DiMuonFrom2L0NoIP = Line( 'DiMuonFrom2L0NoIP'
                            , FilterDescriptor = ['VertexDimuonMass,>,2500.']
                            )
                    ] )
-
 
 #-----------------------------------------------------
 # DIMUON ALLEY : from L0Muon + Muon Segment
@@ -240,34 +239,45 @@ DiMuonFromMuonSegNoIP = Line( 'DiMuonFromMuonSegNoIP'
                    ])
 
 
-############ and now the general bookkeeping ... 
-addHlt1Prop ( 'FilterDescriptor'     ) 
+#### and now the mu+had line(s)
 
-for i in  hlt1Lines() : print i
-#muonLines = ( hlt1Lines() - currentLines )
-
-MuonAlleySequence = GaudiSequencer('HltMuonAlleySequence', ModeOR = True, ShortCircuit = False, MeasureTime = True )
-for i in [ 'GaudiSequencer/Hlt1SingleMuonIPandPTSequence'
-         , 'GaudiSequencer/Hlt1SingleMuonNoIPSequence'
-         , 'GaudiSequencer/Hlt1DiMuonFrom2L0NoIPSequence'
-         , 'GaudiSequencer/Hlt1DiMuonFrom2L0IPSequence'
-         , 'GaudiSequencer/Hlt1DiMuonFromMuonSegNoIPSequence'
-         , 'GaudiSequencer/Hlt1DiMuonFromMuonSegIPSequence'
-         , 'GaudiSequencer/Hlt1DiMuonFromL0DiMuonNoIPSequence'
-         , 'GaudiSequencer/Hlt1DiMuonFromL0DiMuonIPSequence'
-         , 'HltSelectionFilter/Hlt1MuonSingleAlleysSF'
-         , 'HltSelectionFilter/Hlt1MuonAlleysSF'
-         , 'HltSelectionFilter/Hlt1MuonDiMuonAlleysSF'
-         , 'HltSelectionFilter/Hlt1MuonDiMuonAlleysSFNoIP'
-         , 'HltSelectionFilter/Hlt1MuonDiMuonAlleysSFWithIP' ] :
-    MuonAlleySequence.Members.append( i )
-
-
-#for i in [ p.terminus() for p in  muonLines ] :
-#    HltSummaryWriter.Save.append(i)
-#    if i Hlt1Muon*Decision: HltSelectionFilter('Hlt1Global').InputSelections.append( i )
-#    if i Hlt1Muon*Decision: Hlt1MuonAlleysSF.InputSelections.append( i ) 
-#    if i Hlt1MuonsSingle*Decision: Hlt1MuonSingleAlleysSF.InputSelections.append( i )
-#    if i Hlt1MuonDiMuon*Decision: Hlt1MuonDiMuonAlleysSF.InputSelections.append(i)
-#    if i Hlt1MuonDiMuon*NoIPDecision: Hlt1MuonDiMuonAlleysSFNoIP.InputSelections.append(i)
-#    if i Hlt1MuonDiMuon*WithIPDecision: Hlt1MuonDiMuonAlleysSFWithIP.InputSelections.append(i)
+Line( 'MuonHadron'
+       , HLT = [ singleMuonPrep ]
+       , algos =
+       [ RecoRZPV
+       , Member( 'TF','Muon' # // Select Muons with IP and pT
+               , InputSelection  = singleMuonPrep
+               , HistogramUpdatePeriod = 0
+               , FilterDescriptor = ["PT,>,1000.", "IP_PV2D,||[],0.1,3." ]
+               , HistoDescriptor = { "PT"     : ( "PT",0.,6000.,400), "PTBest" : ( "PTBest",0.,6000.,400), "IP"     : ( "IP",-1.,3.,400), "IPBest" : ( "IPBest",-1.,3.,400) }
+               ) # // NEED TO CHANGE TO MAKEVERTICES TO HAVE A GOOD CONFIRMATION LOGIC
+       ,  HltTrackUpgrade('Hlt1RecoVelo')
+       ,  Member( 'TF', 'CompanionVelo' # // Select Velo tracks with an IP and good DOCA to Muon
+                , InputSelection  = HltTrackUpgrade('Hlt1RecoVelo').OutputSelection
+                , HistogramUpdatePeriod = 0
+                , FilterDescriptor = ["IP_PV2D,||[],0.1,3.", "DOCA_%TFMuon,<,0.2" ]
+                , HistoDescriptor = { "IP"         : ( "IP",-1.,3.,400), "IPBest"     : ( "IPBest",-1.,3.,400), "DOCA"       : ( "DOCA",0.,1.,400), "DOCABest"   : ( "DOCABest",0.,1.,400) }
+                )
+       ,  GaudiSequencer('HltDecodeT')
+       ,  GaudiSequencer('HltDecodeTT')
+       ,  Member ( 'TU', 'CompanionForward' # // Make forward the selected velo tracks
+                 , RecoName = "Forward"
+                 )
+       ,  Member ( 'TF', 'CompanionForward' # // Select forward track with a given Pt
+                 , FilterDescriptor = ["PT,>,500."]
+                 , HistogramUpdatePeriod = 0
+                 , HistoDescriptor = {  "PT" : ("PT",0.,6000.,100), "PTBest" : ("PTBest",0.,6000.,100) }
+                 )
+       ,  Member( 'VM2', 'Vertex' # // Make vertices with the forward companion tracks 
+                ,InputSelection1  = "%TFMuon"
+                ,InputSelection2  = "%TFCompanionForward"
+                ,FilterDescriptor = ["DOCA,<,0.2" ]
+                ,HistogramUpdatePeriod = 0
+                ,HistoDescriptor = {  "DOCA" : ("DOCA",100,0.,1.), "DOCABest" : ( "DOCABest",100,0.,0.5) }
+                )
+       ,  Member( 'VF','Decision' # // select vertices if Pt, pointing, and distance
+                , FilterDescriptor = ["VertexPointing_PV2D,<,0.4", "VertexDz_PV2D,>,2." ]
+                , HistogramUpdatePeriod = 0
+                , HistoDescriptor = { "VertexPointing"     : ( "VertexPointing",0.,1.,100), "VertexPointingBest" : ( "VertexPointingBest",0.,1.,100), "VertexDz"           : ( "VertexDz",-10.,50.,100), "VertexDzBest"       : ( "VertexDzBest",-10.,50.,100) }
+                )
+       ])

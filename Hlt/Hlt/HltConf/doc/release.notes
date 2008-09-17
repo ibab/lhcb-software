@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.14 2008-09-15 08:26:55 witekma Exp $ 
+! $Id: release.notes,v 1.15 2008-09-17 19:44:40 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : 
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+! 2008-09-17 - Gerhard Raven
+ - update python configuration. WARNING: not all lines operational yet!!!
+ - allow 'bound members' in HltLine to support re-use of identical 'blocks'
+   by explicit binding their names to a specified prefix
+
 ! 2008-09-15 - Mariusz Witek
  - improve photon line. IsPhoton function is continuous (adjustable) variable now.
 

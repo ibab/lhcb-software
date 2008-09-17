@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.13 2008-09-11 17:46:03 graven Exp $ 
+# $Id: HltLine.py,v 1.14 2008-09-17 19:44:40 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.13 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.14 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt line itself 
@@ -383,7 +383,112 @@ def _checkSelections ( args      ,   # the dictionary with arguments
             raise ArgumentError, 'The selection "%s" is not allowed for %s' % ( _f , name )
     if list is not type(check)     and tuple is not type(check)     : check     =  (check,) 
     for _c in check : _checkSelection ( _c , args , name , line )
+
+# =============================================================================
+## Bind members to an HLT line
+#  @author Gerhard Raven Gerhard.Raven@nikhef.nl
+#  @date   2008-09-16
+class bindMembers (object) :
+    """
+    Simple class to represent a set of Hlt1Members which are bound to a line
+    """
+    __slots__ = ('_members','_outputsel')
+
+    def members( self ) : return self._members
+    def outputSelection( self ) : return self._outputsel
+
+    def __init__( self, line, algos ) :
+        if line == None: raise AttributeError, 'Must have a line name to bind to'
+
+        self._members = []
+        self._outputsel = None
+
+        for alg in algos :
+
+            # allow chaining of previously bound members...
+            if type(alg) is bindMembers:
+                self._members += alg.members()
+                self._outputsel = alg.outputSelection()
+                continue
+
+            # if not Hlt1Member, blindly copy -- not much else we can do
+            if type(alg) is not Hlt1Member:
+                self._members += [ alg ]
+                continue
+                
+            # if Hlt1Member, verify, expand, and chain
+
+            margs = alg.Args.copy() 
+            #    expand '%' in FilterDescriptor, InputSelection{,1,2} to allow bound selections
+            _subs_cand_ =  ['FilterDescriptor', 'OutputSelection', 'InputSelections'
+                           , 'InputSelection', 'InputSelection1','InputSelection2','InputSelecion3' ]
+            for key in set(margs).intersection(set(_subs_cand_)) :
+                if (type(margs[key]) is str)  : margs[key] =   re.sub('%','Hlt1%s'%line,margs[key])
+                if (type(margs[key]) is list) : margs[key] = [ re.sub('%','Hlt1%s'%line,i) for i in margs[key] ]
+            algName = alg.name ( line )
+            
+            ## need input selection?
+            if   'InputSelection3' in alg.Type.__slots__ :
+                # check input selections
+                _checkSelections ( margs ,  # arguments
+                                   # must be: 
+                                   [ 'InputSelection3' , 'InputSelection2' , 'InputSelection1' ] ,
+                                   # not allowed:
+                                   [ 'InputSelection'  , 'InputSelections' ] ,
+                                   algName , line ) ;
+                #
+            elif 'InputSelection2' in alg.Type.__slots__ :
+                # check input selections
+                _checkSelections ( margs ,  # arguments
+                                   # must be: 
+                                   [ 'InputSelection2' , 'InputSelection1' ] ,
+                                   # not allowed:
+                                   [ 'InputSelection'  , 'InputSelections' , 'InputSelection3' ] ,
+                                   algName , line ) ;
+                # 
+            elif 'InputSelections' in alg.Type.__slots__ :
+                # check input selections
+                _checkSelections ( margs ,  # arguments
+                                   # must be: 
+                                   [ 'InputSelections' ] ,
+                                   # not allowed:
+                                   [ 'InputSelection'  , 'InputSelection1' , 'InputSelection2' , 'InputSelection3' ] ,
+                                   algName , line ) ;
+                #
+            elif 'InputSelection' in alg.Type.__slots__ :
+                # come manual work 
+                _inputsel = self._outputsel
+                if margs.has_key ( 'InputSelection' ) :
+                    _checkSelection ( 'InputSelection' , margs , algName , line )
+                    _inputsel = margs['InputSelection']
+                if not _inputsel :
+                    raise AttributeError, 'Cannot deduce InputSelection neither from argument nor from previous alg'
+                margs['InputSelection'] = _inputsel
+                # here start the machinery check input selections
+                _checkSelections ( margs ,  # arguments
+                                   # must be: 
+                                   [ 'InputSelection' ] ,
+                                   # not allowed:
+                                   [ 'InputSelections'  , 'InputSelection1' , 'InputSelection2' , 'InputSelection3' ] ,
+                                   algName , line ) ;
+                #
+            else :
+                print "%s WARNING: HtlMember('Hlt1%s') with strange configuration " % ( line , algName )
+
+            
+            ## output selection (default: the algorithm instance name)
+            if 'OutputSelection' in alg.Type.__slots__ : 
+                self._outputsel = algName
+                if margs.has_key ( 'OutputSelection' ) :
+                    _checkSelection ( 'OutputSelection' , margs , algName , line ) 
+                    self._outputsel = margs['OutputSelection']
+            
+            # create (the configurable for) the algorithm and add it to the sequencer:
+            self._members += [ alg.createConfigurable( line , **margs ) ]
+
         
+
+
 # =============================================================================
 ## @class Hlt1Tool
 #  Simple class to represent the settings for a tool used by an Hlt1Member
@@ -552,7 +657,7 @@ class Hlt1Line(object):
         self._L0        = L0
         
         if list is not type(HLT) : HLT = [HLT] 
-        self._HLT       = [ i if Hlt1Line is not type(i) else i.outputSelection() for i in HLT ]
+        self._HLT       = [ i if type(i) is not Hlt1Line else i.outputSelection() for i in HLT ]
 
         #if str is type(ODIN) : ODIN = [ODIN] 
         self._ODIN      = ODIN
@@ -603,85 +708,10 @@ class Hlt1Line(object):
         # most recent output selection
         self._outputsel = None
 
-        # algos_ = algos.copy()
-        algos_ = algos 
-        for alg in algos_ :
-
-            if type(alg) is not Hlt1Member:
-                _members += [ alg ]
-                continue
-                
-            margs = alg.Args.copy() 
-            #TODO/FIXME: 
-            #    expand '%' in FilterDescriptor, InputSelection{,1,2} to allow bound selections
-            _subs_cand_ =  ['FilterDescriptor', 'OutputSelection', 'InputSelections'
-                           , 'InputSelection', 'InputSelection1','InputSelection2' ]
-            for key in set(margs).intersection(set(_subs_cand_)) :
-                print 'considering ' + key + ' for substitution type = ' + str(type(margs[key]))
-                if (type(margs[key]) is str)  : margs[key] = re.sub('%','Hlt1%s'%line,margs[key])
-                if (type(margs[key]) is list) : margs[key] = [ re.sub('%','Hlt1%s'%line,i) for i in margs[key] ]
-            algName = alg.name ( line )
-            print 'processing ' + algName
-            
-            ## need input selection?
-            if   'InputSelection3' in alg.Type.__slots__ :
-                # check input selections
-                _checkSelections ( margs ,  # arguments
-                                   # must be: 
-                                   [ 'InputSelection3' , 'InputSelection2' , 'InputSelection1' ] ,
-                                   # not allowed:
-                                   [ 'InputSelection'  , 'InputSelections' ] ,
-                                   algName , line ) ;
-                #
-            elif 'InputSelection2' in alg.Type.__slots__ :
-                # check input selections
-                _checkSelections ( margs ,  # arguments
-                                   # must be: 
-                                   [ 'InputSelection2' , 'InputSelection1' ] ,
-                                   # not allowed:
-                                   [ 'InputSelection'  , 'InputSelections' , 'InputSelection3' ] ,
-                                   algName , line ) ;
-                # 
-            elif 'InputSelections' in alg.Type.__slots__ :
-                # check input selections
-                _checkSelections ( margs ,  # arguments
-                                   # must be: 
-                                   [ 'InputSelections' ] ,
-                                   # not allowed:
-                                   [ 'InputSelection'  , 'InputSelection1' , 'InputSelection2' , 'InputSelection3' ] ,
-                                   algName , line ) ;
-                #
-            elif 'InputSelection' in alg.Type.__slots__ :
-                # come manual work 
-                _inputsel = self._outputsel
-                if margs.has_key ( 'InputSelection' ) :
-                    _checkSelection ( 'InputSelection' , margs , algName , line )
-                    _inputsel = margs['InputSelection']
-                if not _inputsel :
-                    raise AttributeError, 'Cannot deduce InputSelection neither from argument nor from previous alg'
-                margs['InputSelection'] = _inputsel
-                # here start the machinery check input selections
-                _checkSelections ( margs ,  # arguments
-                                   # must be: 
-                                   [ 'InputSelection' ] ,
-                                   # not allowed:
-                                   [ 'InputSelections'  , 'InputSelection1' , 'InputSelection2' , 'InputSelection3' ] ,
-                                   algName , line ) ;
-                #
-            else :
-                print "%s WARNING: HtlMember('%s') with strange configuration " % ( self.name() , algName )
-
-            
-            ## output selection ( the algorithm name)
-            if 'OutputSelection' in alg.Type.__slots__ : 
-                self._outputsel = algName
-                if margs.has_key ( 'OutputSelection' ) :
-                    _checkSelection ( 'OutputSelection' , margs , algName , line ) 
-                    self._outputsel = margs['OutputSelection']
-            
-            # create (the configurable for) the algorithm and add it to the sequencer:
-            _members += [ alg.createConfigurable( line , **margs ) ]
-
+        # bind members to line
+        _boundMembers = bindMembers( line, algos )
+        _members += _boundMembers.members()
+        self._outputsel = _boundMembers.outputSelection()
         
         ## finally add the decision algorithm!
         if  makesDecision  :
@@ -692,10 +722,8 @@ class Hlt1Line(object):
             self._decision = decisionName ( line )
 
         # register selections:
-        _input_selection_properties_ = [ 'InputSelection'
-                                       , 'InputSelection1'
-                                       , 'InputSelection2'
-                                       , 'InputSelection3' 
+        _input_selection_properties_ = [ 'InputSelection' , 'InputSelection1'
+                                       , 'InputSelection2', 'InputSelection3' 
                                        , 'InputSelections'
                                        ] 
         for _m in _members :
@@ -815,10 +843,10 @@ class Hlt1Line(object):
         # Explictly copy all major structural parameters 
         __name       = name
         __prescale   = args.get ( 'prescale'  , self._prescale  ) 
-        __postscale  = args.get ( 'postscale' , self._postscale )  
         __ODIN       = args.get ( 'ODIN'      , self._ODIN      )         
         __L0         = args.get ( 'L0'        , self._L0        )         
         __HLT        = args.get ( 'HLT'       , self._HLT       )         
+        __postscale  = args.get ( 'postscale' , self._postscale )  
         __algos      = args.get ( 'algos'     , self._algos     )      
         __args       = self._args
 

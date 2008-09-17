@@ -96,7 +96,7 @@ recoRZVelo = GaudiSequencer( 'Hlt1RecoRZVeloSequence' , MeasureTime = True
                            , Members = 
                            [ recoRZVeloSequence , prepareRZVelo, preparePV2D ] ) 
 
-recoVelo = HltTrackUpgrade( 'Hlt1RecoVelo'
+reco1Velo = HltTrackUpgrade( 'Hlt1RecoVelo'
                           , InputSelection = "RZVelo"
                           , OutputSelection = "Velo"
                           , RecoName = "Velo"
@@ -112,7 +112,7 @@ hlt1RecoSequence = GaudiSequencer( 'Hlt1RecoSequence', MeasureTime = True
                                  , Members = 
                                  [ hlt1RecoRZVeloTracksSequence
                                  , hlt1RecoRZPVSequence
-                                 , recoVelo
+                                 , reco1Velo
                                  , recoPV3D
                                  , decodeTT
                                  , decodeT

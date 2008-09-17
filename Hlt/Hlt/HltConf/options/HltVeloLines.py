@@ -8,6 +8,7 @@ from Configurables import Tf__PatVeloSpaceTool, Tf__PatVeloTrackTool
 from Configurables import Tf__DefaultVeloRHitManager, Tf__DefaultVeloPhiHitManager
 from Configurables import Tf__PatVeloRHitManager, Tf__PatVeloPhiHitManager
 from Configurables import PatPV3D, PVOfflineTool
+#from Configurables import PatVeloAlignTrackFilter
 from Configurables import GaudiSequencer
 from HltConf.HltLine import Hlt1Line   as Line
 from HltConf.HltLine import Hlt1Member as Member
@@ -15,35 +16,35 @@ from HltConf.HltLine import Hlt1Member as Member
 ### find primary vertices seperately in each side
 for side in [ 'ASide', 'CSide' ] :
     cf = VeloClusterFilter( side + 'ClusterFilter'
-                 , MinimumNumberOfRClusters = 12 # 4tracks with 3 hits
-                 , MinimumNumberOfPhiClusters = 12 # 4tracks with 3 hits
-                 , MaximumNumberOfClusters = 450 # 0.5% occupancy
-                 , OutputLiteClusterLocation = "/Event/Raw/Velo/" + side + "LiteClusters"
-                 , OutputClusterLocation = "/Event/Raw/Velo/" + side + "Clusters"
-                 , FilterOption = { 'ASide' : 'Left', 'CSide' : 'Right' }[ side ]
-                 )
+                          , MinimumNumberOfRClusters = 12 # 4tracks with 3 hits
+                          , MinimumNumberOfPhiClusters = 12 # 4tracks with 3 hits
+                          , MaximumNumberOfClusters = 450 # 0.5% occupancy
+                          , OutputLiteClusterLocation = "/Event/Raw/Velo/" + side + "LiteClusters"
+                          , OutputClusterLocation = "/Event/Raw/Velo/" + side + "Clusters"
+                          , FilterOption = { 'ASide' : 'Left', 'CSide' : 'Right' }[ side ]
+                          )
     rt = Tf__PatVeloRTracking( side + 'RTracking'
-                       , OutputTracksName = 'Hlt/Track/' + side + 'RZVelo'
-                       , HitManagerName = side + 'DefaultVeloRHitManager')
+                             , OutputTracksName = 'Hlt/Track/' + side + 'RZVelo'
+                             , HitManagerName = side + 'DefaultVeloRHitManager')
     Tf__DefaultVeloRHitManager( side + 'DefaultVeloRHitManager'
                               , ClusterLocation = '/Event/Raw/Velo/' + side + 'Clusters'
                               , LiteClusterLocation = '/Event/Raw/Velo/' + side + 'LiteClusters' )
     Tf__DefaultVeloPhiHitManager( side + 'DefaultVeloPhiHitManager'
-                            , ClusterLocation = '/Event/Raw/Velo/' + side + 'Clusters'
-                            , LiteClusterLocation = '/Event/Raw/Velo/' + side + 'LiteClusters' )
+                                , ClusterLocation = '/Event/Raw/Velo/' + side + 'Clusters'
+                                , LiteClusterLocation = '/Event/Raw/Velo/' + side + 'LiteClusters' )
     st = Tf__PatVeloSpaceTracking( side + 'SpaceTracking'
-                        , InputTracksName = 'Hlt/Track/'+side+'RZVelo'
-                        , OutputTracksName = 'Hlt/Track/'+side+'Velo'
-                        , SpaceToolName = side + "SpaceTool")
+                                 , InputTracksName = 'Hlt/Track/'+side+'RZVelo'
+                                 , OutputTracksName = 'Hlt/Track/'+side+'Velo'
+                                 , SpaceToolName = side + "SpaceTool")
     Tf__PatVeloSpaceTool( side + 'SpaceTool'
                         , RHitManagerName= side+"RHitManager"
                         , PhiHitManagerName= side + "PhiHitManager"
                         , TrackToolName= side + "TrackTool" )
     gt = Tf__PatVeloGeneralTracking( side + 'GeneralTracking'
-                          , RHitManagerName = side + 'RHitManager'
-                          , PhiHitManagerName= side + 'PhiHitManager'
-                          , TrackToolName= side + 'TrackTool'
-                          , OutputTracksLocation = 'Hlt/Track/' + side + 'Velo')
+                                   , RHitManagerName = side + 'RHitManager'
+                                   , PhiHitManagerName= side + 'PhiHitManager'
+                                   , TrackToolName= side + 'TrackTool'
+                                   , OutputTracksLocation = 'Hlt/Track/' + side + 'Velo')
     Tf__PatVeloTrackTool( side + 'TrackTool'
                         , RHitManagerName= side + "RHitManager"
                         , PhiHitManagerName= side + "PhiHitManager")
@@ -70,7 +71,18 @@ for side in [ 'ASide', 'CSide' ] :
               ] )
 
 
-
+#Line( 'VeloAlignTracks' 
+#    , algos = 
+#    [ PatVeloAlignTrackFilter( 'AlignTrackFilter' )
+#    , Member('Dummy','Selection',OutputSelection = '%Decision') # add a dummy selection which is used as input to the decision
+#    ] )
+#
+#
+#Line( 'VeloOverlapTracks' 
+#    ,  algos = 
+#    [ PatVeloAlignTrackFilter( 'OverlapAlignTrackFilter', Overlap = True )
+#    ,  Member('Dummy','Selection',OutputSelection = '%Decision') # add a dummy selection which is used as input to the decision
+#    ] )
 
 #
 # Overlap-track-finding sequence
@@ -131,7 +143,10 @@ GaudiSequencer( 'HltVeloMonitoringSequence' , IgnoreFilterPassed=True
 
 GaudiSequencer( 'LiteClusterMonitorSequence'
               , Members = [ DecodeVeloRawBuffer()
-                          , Velo__VeloHltLiteClusterMonitor( 'VeloLiteClusterMonitor', HistogramByZone=True, VeloLiteClusterLocation="Raw/Velo/LiteClusters" )
+                          , Velo__VeloHltLiteClusterMonitor( 'VeloLiteClusterMonitor'
+                                                           , HistogramByZone=True
+                                                           , VeloLiteClusterLocation="Raw/Velo/LiteClusters" 
+                                                           )
                           ]
               )
 
