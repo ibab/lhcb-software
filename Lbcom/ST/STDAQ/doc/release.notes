@@ -4,6 +4,9 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2008-09-16 M Needham
+ - Make check on valid spill after container is put in store
+
 ! 2008-09-13 M Needham
  - Improve error recoverary bookkeeping
 

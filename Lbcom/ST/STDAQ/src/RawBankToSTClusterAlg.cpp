@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.44 2008-09-13 13:14:10 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.45 2008-09-17 08:00:24 mneedham Exp $
 
 #include <algorithm>
 
@@ -66,10 +66,6 @@ StatusCode RawBankToSTClusterAlg::initialize() {
     
 StatusCode RawBankToSTClusterAlg::execute() {
 
-  if (!validSpill()) {
-    return Warning("Not a valid spill",StatusCode::SUCCESS, 1);
-  }
-
   // Retrieve the RawEvent:
   RawEvent* rawEvt = get<RawEvent>(m_rawEventLocation );
 
@@ -77,6 +73,10 @@ StatusCode RawBankToSTClusterAlg::execute() {
   STClusters* clusCont = new STClusters();
   clusCont->reserve(2000);
   put(clusCont, m_clusterLocation);
+
+  if (!validSpill()) {
+    return Warning("Not a valid spill",StatusCode::SUCCESS, 1);
+  }
 
   // decode banks
   StatusCode sc = decodeBanks(rawEvt,clusCont);   
