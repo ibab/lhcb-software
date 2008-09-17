@@ -1,8 +1,5 @@
 #include "ROMon/TaskSupervisor.h"
 #include "XMLDocument.h"
-namespace ROMon {
-  class Inventory;
-}
 
 namespace XML {
   class TaskSupervisorParser : public XMLDocument {

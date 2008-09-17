@@ -103,9 +103,9 @@ CtrlFarmSubDisplay::~CtrlFarmSubDisplay() {
 /// Initialize default display text
 void CtrlFarmSubDisplay::init(bool) {
   ::scrc_put_chars(m_display,"                     UNKNOWN ",COL_WARNING,1,1,1);
-  ::scrc_put_chars(m_display,"                             ",COL_ALARM,2,1,1);
+  ::scrc_put_chars(m_display,"                             ",NORMAL,2,1,1);
   ::scrc_put_chars(m_display,"     No information availible",COL_ALARM,3,1,1);
-  ::scrc_put_chars(m_display,"                             ",COL_ALARM,4,1,1);
+  ::scrc_put_chars(m_display,"                             ",NORMAL,4,1,1);
   ::scrc_set_border(m_display,m_title.c_str(),COL_WARNING);
 }
 
@@ -139,13 +139,20 @@ void CtrlFarmSubDisplay::updateContent(XML::TaskSupervisorParser& ts) {
   int col = NORMAL, pos = 0, line=3;
   size_t taskCount=0, missTaskCount=0;
   size_t connCount=0, missConnCount=0;
+  int pvss_status=0;
   c.nodes.clear();
   ts.getClusterNodes(c);
-  ::scrc_put_chars(m_display,"Nodes  ", NORMAL,3,1,1);
-  ::scrc_put_chars(m_display,"       ", NORMAL,4,1,1);
-  for(i=c.nodes.begin(), pos=7; i!=c.nodes.end();++i) {
+  ::scrc_put_chars(m_display,"", NORMAL,3,1,1);
+  ::scrc_put_chars(m_display,"", NORMAL,4,1,1);
+  for(i=c.nodes.begin(), pos=1; i!=c.nodes.end();++i) {
     const Cluster::Node& n = (*i).second;
     bool good = n.status == "ALIVE";
+    for(Cluster::Projects::const_iterator q=n.projects.begin(); q != n.projects.end(); ++q) {
+      bool pvss_ok = (*q).eventMgr && (*q).dataMgr && (*q).distMgr;
+      if ( pvss_ok && pvss_status<2 ) pvss_status=1;
+      else if ( !pvss_ok ) pvss_status = 2;
+      good = good && pvss_ok;
+    }
     col = good && n.missTaskCount==0 && n.missConnCount==0 ? GREEN|INVERSE : COL_ALARM;
     taskCount     += n.taskCount;
     missTaskCount += n.missTaskCount;
@@ -154,50 +161,61 @@ void CtrlFarmSubDisplay::updateContent(XML::TaskSupervisorParser& ts) {
     val = " "+(n.name == m_name ? n.name : n.name.substr(n.name.length()-2))+" ";
     ::scrc_put_chars(m_display,val.c_str(),col,line,pos,0);
     pos += val.length();
-    if ( pos>DISP_WIDTH-5 ) ++line, pos=7;
+    if ( pos>DISP_WIDTH-3 ) ++line, pos=1;
   }
   col = (c.status=="ALIVE") ? NORMAL|BOLD : (c.status=="MIXED") ? COL_WARNING : COL_ALARM;
   ::sprintf(txt,"%-40s",c.time.c_str());
   ::scrc_put_chars(m_display,txt,NORMAL,1,1,0);
-  ::sprintf(txt,"%s",c.status.c_str());
-  ::scrc_put_chars(m_display,c.status.c_str(),col,1,22,1);
+  ::sprintf(txt,"%-19s  %-18s %s",pvss_status>0 ? pvss_status==1 ? "PVSS Ok" : "PVSS Errors" : "",
+	    c.status.c_str(),c.time.c_str()+11);
+  ::scrc_put_chars(m_display,txt,col,1,1,1);
   ::sprintf(txt,"%2zd Nodes %3zd Tasks/%2zd bad %2zd Connections/%2zd bad",
 	    c.nodes.size(),taskCount,missTaskCount,connCount,missConnCount);
   ::scrc_put_chars(m_display,txt,col&~BOLD,2,1,1);
-  if ( c.status == "DEAD" ) {
-    ::scrc_put_chars(m_display,"Nodes down - Please check.",RED|BOLD,4,1,1);    
-    //::scrc_set_border(m_display,m_title.c_str(),col);
+  col = NORMAL|BOLD;
+  if ( pvss_status>1 ) {
+    ::scrc_put_chars(m_display,"PVSS environment looks funny - Please Check.",COL_ALARM,4,1,1);    
+    ::scrc_set_border(m_display,m_title.c_str(),COL_WARNING);
+  }
+  else if ( c.status == "DEAD" ) {
+    ::scrc_put_chars(m_display,"",NORMAL,1,1,0);
+    ::scrc_put_chars(m_display,"",NORMAL,3,1,0);
+    ::scrc_put_chars(m_display,"",NORMAL,4,1,0);
+    ::scrc_put_chars(m_display,"Nodes down - Please check.",COL_WARNING,4,1,1);    
+    ::scrc_set_border(m_display,m_title.c_str(),COL_ALARM);
   }
   else if ( c.status == "MIXED" ) {
     ::scrc_put_chars(m_display,"Some nodes down - Please check.",BOLD,4,1,1);    
-    //::scrc_set_border(m_display,m_title.c_str(),col);
+    ::scrc_set_border(m_display,m_title.c_str(),col);
   }
   else if ( missTaskCount>0 ) {
     ::scrc_put_chars(m_display,"Tasks missing - Please check.",NORMAL,4,1,1);    
-    //::scrc_set_border(m_display,m_title.c_str(),col);
+    ::scrc_set_border(m_display,m_title.c_str(),col);
   }
   else if ( missConnCount>0 ) {
     ::scrc_put_chars(m_display,"Connectivity bad - Please check.",NORMAL,4,1,1);    
-    //::scrc_set_border(m_display,m_title.c_str(),col);
+    ::scrc_set_border(m_display,m_title.c_str(),col);
   }
-  ::scrc_set_border(m_display,m_title.c_str(),NORMAL|BOLD);
+  else {
+    ::scrc_set_border(m_display,m_title.c_str(),NORMAL|BOLD);
+  }
 }
 
 /// Set timeout error
 void CtrlFarmSubDisplay::setTimeoutError() {
   char txt[128];
+  ::scrc_put_chars(m_display,"                     UNKNOWN ",COL_WARNING,1,1,1);
+  ::scrc_put_chars(m_display,"                             ",NORMAL,2,1,1);
   ::sprintf(txt," No update information for > %d seconds",UPDATE_TIME_MAX);
-  ::scrc_set_border(m_display,m_title.c_str(),COL_ALARM);
-  ::scrc_put_chars(m_display,txt,COL_ALARM,1,1,1);
+  ::scrc_put_chars(m_display,txt,COL_ALARM,3,1,1);
+  ::scrc_put_chars(m_display,"                             ",NORMAL,4,1,1);
+  ::scrc_set_border(m_display,m_title.c_str(),COL_WARNING);
 }
 
 /// Check display for errors
 void CtrlFarmSubDisplay::check(time_t now) {
-  if ( hasProblems() ) {
-    if ( now - lastUpdate() > UPDATE_TIME_MAX ) {
-      setTimeoutError();
-    }
-  }
+  if ( hasProblems() || (now - lastUpdate()) > UPDATE_TIME_MAX )
+    setTimeoutError();
 }
 
 /// Set the focus to this display

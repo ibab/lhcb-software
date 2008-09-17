@@ -4,12 +4,15 @@ cd `dirname $0`
 if test "`uname -i`" = "i386";
     then
     . setup.slc4_ia32_gcc34_dbg.vars
-    export PYTHONHOME=/sw/lib/lcg/external/Python/2.5/slc4_ia32_gcc34
 else
     . setup.slc4_amd64_gcc34_dbg.vars
-    export PYTHONHOME=/sw/lib/lcg/external/Python/2.5/slc4_amd64_gcc34
 fi;
+echo `pwd`
 export UTGID
-export PYTHONPATH=$PYTHONPATH:$LD_LIBRARY_PATH
-`which python` ../python/TaskSupervisor.py
-#exec -a ${UTGID} `which python` ../python/TaskSupervisor.py
+h=`hostname -s`
+H=`echo $h|tr a-z A-Z`
+exec -a ${UTGID} `which gentest.exe` libROMon.so run_tasksupervisor \
+    -input=file://${ROMONROOT}/xml/${H}.xml \
+    -invent=file://${ROMONROOT}/xml/TaskInventory.xml \
+    -node=${h} $*
+

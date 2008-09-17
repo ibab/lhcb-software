@@ -1,4 +1,4 @@
-// $Id: CPUMon.h,v 1.6 2008-07-02 14:55:09 frankb Exp $
+// $Id: CPUMon.h,v 1.7 2008-09-17 15:08:59 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,12 +12,14 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/CPUMon.h,v 1.6 2008-07-02 14:55:09 frankb Exp $
-#ifndef ROMON_RUNDB_H
-#define ROMON_RUNDB_H 1
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/CPUMon.h,v 1.7 2008-09-17 15:08:59 frankb Exp $
+#ifndef ROMON_CPUMON_H
+#define ROMON_CPUMON_H 1
 
 // ++ include files
 #include <ctime>
+#include <vector>
+#include <string>
 #include "ROMon/Collections.h"
 #include "RTL/Pack.h"
 
@@ -222,6 +224,44 @@ namespace ROMon {
     TimeStamp lastUpdate() const;
   };
 
+  std::vector<std::string> psItems(const char*& ptr);
+  std::vector<std::string> psLabels();
+  enum PsDataItems {
+    UTGID=0, 
+    TID, 
+    TGID, 
+    PPID, 
+    PGID, 
+    NLWP, 
+    USER_NAME,
+    GROUP_NAME,
+    TTY,
+    CMD,
+    SCHED,
+    PRIO,
+    RTPRIO,
+    NICE,
+    PSR,
+    STAT,
+    PERCENT_CPU,
+    PERCENT_MEMORY,
+    VIRTUAL_SIZE,
+    LOCK,
+    RESIDENT_MEMORY,
+    DATA_MEMORY,
+    STACK_MEMORY,
+    EXECUTABLE,
+    LIB,
+    SHARE,
+    IGNORED_SIGNALS,
+    PENDING_SIGNALS,
+    CATCHED_SIGNALS,
+    BLOCKED_SIGNALS,
+    START_TIME,
+    ELAPSED_TIME,
+    CPU_TIME,
+    CMDLINE
+  };
   union CPUMonData {
     char*      str;
     void*      ptr;
@@ -237,5 +277,5 @@ namespace ROMon {
 }
 #include "RTL/Unpack.h"
 
-#endif /* ROMON_RUNDB_H */
+#endif /* ROMON_CPUMON_H */
 

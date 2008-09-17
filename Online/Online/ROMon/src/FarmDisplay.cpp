@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.cpp,v 1.24 2008-09-12 18:56:50 frankb Exp $
+// $Id: FarmDisplay.cpp,v 1.25 2008-09-17 15:08:59 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.24 2008-09-12 18:56:50 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.25 2008-09-17 15:08:59 frankb Exp $
 
 #include "ROMon/CtrlSubfarmDisplay.h"
 #include "ROMon/RecSubfarmDisplay.h"
@@ -389,7 +389,6 @@ void CtrlDisplay::update(const void* data) {
     ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
     ::sprintf(txt, "  Cluster:%s  status:%12s  last update:%s",c->name.c_str(),c->status.c_str(),c->time.c_str());
     ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
-    ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
     for(Cluster::Nodes::const_iterator i=n.begin(); i!=n.end();++i, ++node) {
       if ( node == m_node ) {
 	const Cluster::Node& n = (*i).second;
@@ -433,7 +432,6 @@ void CtrlDisplay::update(const void* data) {
 	  ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
 	  if ( n.taskCount > 0 ) {
 	    ::scrc_put_chars(m_display,"  Task Summary:",n.missTaskCount > 0 ? INVERSE|BOLD|RED : INVERSE|GREEN,++line,1,1);
-	    ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
 	    for(j=n.tasks.begin(); j != n.tasks.end(); ++j) ord[(*j).first]=(*j).second;
 	    for(k=ord.begin(),cnt=0,l=line,x=1; k !=ord.end(); ++k,++cnt) {
 	      bool ok = (*k).second;
@@ -442,15 +440,31 @@ void CtrlDisplay::update(const void* data) {
 	      ::scrc_put_chars(m_display,txt,ok ? NORMAL : INVERSE|RED,++l,x,1);
 	    }
 	    line += (ord.size()+3)/2;
-	    ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
 	    ord.clear();
 	  }
 	  else {
 	    ::scrc_put_chars(m_display,"  No tasks found",INVERSE|BOLD|RED,++line,1,1);
 	  }
+	  if ( n.projects.size() > 0 ) {
+	    cnt=0;
+	    ::sprintf(txt,"%-15s %-16s %-10s %-10s %-10s %-10s %-10s",
+		      "PVSS Summary:","Project name","Event Mgr","Data Mgr","Dist Mgr","FSM Server","Dev Handler");
+	    ::scrc_put_chars(m_display,txt,INVERSE|GREEN,++line,1,1);
+	    for(Cluster::Projects::const_iterator q=n.projects.begin(); q != n.projects.end(); ++q,++cnt)  {
+	      const Cluster::PVSSProject& p = *q;
+	      bool ok = p.eventMgr && p.dataMgr && p.distMgr;
+	      ::sprintf(txt,"   [%03d]        %-16s %-10s %-10s %-10s %-10s %-10s",cnt,p.name.c_str(), 
+			p.eventMgr ? "RUNNING" : "DEAD",
+			p.dataMgr  ? "RUNNING" : "DEAD",
+			p.distMgr  ? "RUNNING" : "DEAD",
+			p.fsmSrv   ? "RUNNING" : "DEAD",
+			p.devHdlr  ? "RUNNING" : "DEAD");
+	      ::scrc_put_chars(m_display,txt,ok ? NORMAL : INVERSE|RED,++line,1,1);
+	    }
+	    ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
+	  }
 	  if ( n.connCount > 0 ) {
 	    ::scrc_put_chars(m_display,"  Connection Summary:",n.missConnCount > 0 ? INVERSE|BOLD|RED : INVERSE|GREEN,++line,1,1);
-	    ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
 	    for(j=n.conns.begin(); j != n.conns.end(); ++j) ord[(*j).first]=(*j).second;
 	    for(k=ord.begin(),cnt=0,l=line,x=1; k !=ord.end(); ++k,++cnt) {
 	      bool ok = (*k).second;
@@ -459,7 +473,6 @@ void CtrlDisplay::update(const void* data) {
 	      ::scrc_put_chars(m_display,txt,ok ? NORMAL : INVERSE|RED,++l,x,1);
 	    }
 	    line += (ord.size()+3)/2;
-	    ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
 	    ord.clear();
 	  }
 	  else {

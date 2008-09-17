@@ -244,6 +244,7 @@
   <Task name="LogGaudi"/>
   <Task name="LogGaudiSumSrv"/>
   <ConnectionList name="ControlsPC"/>
+  <Project name="&lt;NODE&gt;"/>
 </NodeType>
 
 <NodeType name="HLTWorker">
@@ -259,9 +260,26 @@
   <TaskList name="StandardMonitoring"/>
   <TaskList name="MonitoringControl"/>
   <ConnectionList name="ControlsPC"/>
+  <Project name="MONITORING"/>
 </NodeType>
 
 <NodeType name="MonitoringWorker">
+  <TaskList name="FMC"/>
+  <TaskList name="StandardMonitoring"/>
+  <TaskList name="MonitoringWorker"/>
+  <ConnectionList name="Standard"/>
+  <ConnectionList name="StorageReceiver"/>
+</NodeType>
+
+<NodeType name="ReconstructionControl">
+  <TaskList name="FMC"/>
+  <TaskList name="StandardMonitoring"/>
+  <TaskList name="MonitoringControl"/>
+  <ConnectionList name="ControlsPC"/>
+  <Project name="RECONSTRUCTION"/>
+</NodeType>
+
+<NodeType name="ReconstructionWorker">
   <TaskList name="FMC"/>
   <TaskList name="StandardMonitoring"/>
   <TaskList name="MonitoringWorker"/>
@@ -276,6 +294,8 @@
   <TaskList name="StorageControl"/>
   <ConnectionList name="ControlsPC"/>
   <ConnectionList name="StorageControl"/>
+  <Project name="LBECS"/>
+  <Project name="STORAGE"/>
 </NodeType>
 
 <NodeType name="StorageWorker">

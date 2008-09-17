@@ -2,6 +2,8 @@ import os, sys, socket
 HLT = 1
 STORAGE = 2
 MONITORING = 3
+RECONSTRUCTION = 5
+RECCTRL = 3
 TOP_LOGGER = 4
 
 db_dir = '..'+os.sep+'xml'+os.sep
@@ -17,13 +19,15 @@ def nodeType(typ):
     return ('StorageControl','StorageWorker')
   elif typ == MONITORING:
     return ('MonitoringControl','MonitoringWorker')
+  elif typ == RECONSTRUCTION:
+    return ('ReconstructionControl','ReconstructionWorker')
   return ('','')
 
 def create(typ,controlsPC):
   ctr = controlsPC.upper()
   nodes = getNodes(ctr)
   ctr_type,wrk_type = nodeType(typ)
-  txt = '<TaskInventory>\n  <NodeList>\n   <Name>%s</Name>\n'%(ctr,)
+  txt = '<TaskInventory>\n  <NodeList name="%s">\n   <Name>%s</Name>\n'%(ctr,ctr,)
   for i in nodes:
     if i.upper()==ctr:
       txt = txt + '   <Node name="%s"   type="%s"/>\n'%(i,ctr_type)
@@ -35,12 +39,16 @@ def create(typ,controlsPC):
   file.close()
   print '.........> Wrote XML configuration file for sub-cluster:',ctr
 
-if __name__ == "__main__":
+def createHLT():
   rows = "a'b'c'd'e"
   columns = "1'2'3'4'6'7'8'9'10'11"
   for row in rows.split("'"):
     for column in columns.split("'"):
       create(HLT,'hlt%s%02d'%(row,int(column)))
+if __name__ == "__main__":
   create(STORAGE,'storectl01')
   create(MONITORING,'mona08')
+  create(RECONSTRUCTION,'mona09')
+  create(RECCTRL,'mona07')
+  createHLT()
   print '.........> All Done.'
