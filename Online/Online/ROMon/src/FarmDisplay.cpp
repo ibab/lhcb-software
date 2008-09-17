@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.cpp,v 1.25 2008-09-17 15:08:59 frankb Exp $
+// $Id: FarmDisplay.cpp,v 1.26 2008-09-17 15:40:11 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.25 2008-09-17 15:08:59 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.26 2008-09-17 15:40:11 frankb Exp $
 
 #include "ROMon/CtrlSubfarmDisplay.h"
 #include "ROMon/RecSubfarmDisplay.h"
@@ -879,6 +879,10 @@ int FarmDisplay::showHelpWindow() {
     m_helpDisplay = std::auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","procs"));
   else if ( m_cpuDisplay.get() ) 
     m_helpDisplay = std::auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","cpu"));
+  else if ( m_subfarmDisplay && m_mode == CTRL_MODE )
+    m_helpDisplay = std::auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","subfarm_ctrl"));
+  else if ( m_subfarmDisplay && m_mode == RECO_MODE )
+    m_helpDisplay = std::auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","subfarm_reco"));
   else if ( m_subfarmDisplay )
     m_helpDisplay = std::auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","subfarm"));
   else

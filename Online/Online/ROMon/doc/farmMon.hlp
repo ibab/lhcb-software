@@ -9,6 +9,7 @@ You receive different help content depending on the current window:
 -- Help on MBM buffer monitor of a single node.
 -- Help on DAQ processes executing on a given node
 -- Help on the CPU content of a given subfarm.
+-- Help on the task control status of a given subfarm (-taskmon option only)
 
 </common>
 
@@ -24,12 +25,16 @@ The extended subfarm display may alternatively be invoked by double-click with t
 subfarm. To close the window double-click with the mouse on the header section of the extended
 subfarm display.
 
+Readout Monitor mode:
 The display of each subfarm shows in the upper line the basic summary of the event processing 
 buffers MEP,EVENT and SEND. The lower line displays the minimum numbers found.
 If, for one reason or another a node is stuck, these numbers will not change anymore and the 
 box should become red.
 
-
+Task Control mode:
+The display of each subfarm shows in the upper line the basic summary of PVSS and the node status.
+The lines below show a summary of the nodes present, the task summary and the connection checks.
+If any of the node names is in red, either tasks are missing or the connection status is bad.
 
 </farm>
 
@@ -50,9 +55,48 @@ also close all associated lower level windows mentioned above.
 
 </subfarm>
 
-<ctrl>
+<subfarm_ctrl>
+Extended subfarm display for task/node control monitoring
 
-nothing doumented yet!
+The subfarm display shows for all nodes the tasks executing and the status of basic
+connection checks. Also displayed is the resource usage and boot information.
+
+You can move with the arrow keys of the keyboard to select a given node and invoke the
+buffer manager monitor if you type KPD-PERIOD (".")
+
+To close the window double-click with the mouse on the header section of the extended
+subfarm dislay. Alternatively type ENTER or KPD-ENTER. Closing this window will
+also close all associated lower level windows mentioned above.
+
+</subfarm_ctrl>
+
+<subfarm_reco>
+Extended subfarm display for task/node monitoring during online reconstruction
+
+The subfarm display shows all nodes and tasks executing in one subfarm.
+The top display shows the buffer status on all nodes.
+
+You can move with the arrow keys of the keyboard to select a given node and invoke the
+buffer manager monitor if you type KPD-PERIOD (".")
+
+To close the window double-click with the mouse on the header section of the extended
+subfarm dislay. Alternatively type ENTER or KPD-ENTER. Closing this window will
+also close all associated lower level windows mentioned above.
+
+</subfarm_reco>
+
+<ctrl>
+Control Monitor display for a single node
+
+This displayed is partitioned into three sections:
+1) On the top basic node and resource information is displayed.
+2) The second section shows if all tasks are present (or not) as they were defined in
+   the configuration.
+3) The third section summarizes the status of PVSS (if the node should contain a project)
+4) The lower section shows the status of the node connectivity. The connectivity is
+   determined by sending regular icmp (ping) packets from the node to the target.
+
+Nothing more to say. If you don't understand this display you are hopeless anyway. 
 
 </ctrl>
 
