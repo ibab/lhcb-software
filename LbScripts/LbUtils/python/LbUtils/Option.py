@@ -54,19 +54,20 @@ class Parser(OptionParser):
                         help=gettext("show the complete help message and exit"))
     def add_option(self, *args, **kwargs):
         if kwargs.has_key("fallback_env") :
-            kwargs["help"] += "\nThe fallback environment variable is set to %s" % kwargs["fallback_env"]
+            kwargs["help"] += "\nThe fallback environment variable is set to %s." % kwargs["fallback_env"]
         if kwargs.has_key("fallback_conf") :
-            kwargs["help"] += "\nThe fallback configuration is set to %s" % kwargs["fallback_conf"]
+            kwargs["help"] += "\nThe fallback configuration is set to %s." % kwargs["fallback_conf"]
         OptionParser.add_option(self, *args, **kwargs) #IGNORE:W0142
     def check_values(self, values, args):
         log = logging.getLogger()
         for opt in self._get_all_options():
             fb_env = getattr(opt,"fallback_env")
-            fb_conf = getattr(opt,"fallback_conf") 
+            fb_conf = getattr(opt,"fallback_conf")
+            fb_mand = getattr(opt, "mandatory")
             if fb_env or fb_conf :
                 dest = getattr(opt, "dest")
                 if not getattr(values, dest) :
-                    if fb_env :
+                    if fb_env and os.environ.has_key(fb_env):
                         setattr(opt, "dest", os.environ[fb_env])
                         setattr(values, dest, os.environ[fb_env])
                         log.warning("using environment variable %s for %s" % (fb_env, dest))
@@ -77,7 +78,8 @@ class Parser(OptionParser):
                         log.warning("using configuration fallback for %s: %s" % (dest, fb_conf))
                         log.info("%s is set to %s" % (dest, fb_conf) )
                     else :
-                        log.error("no value for %s" % dest)
+                        if fb_mand :
+                            log.error("no value for %s" % dest)
         return (values, args)
     def format_option_help(self, formatter=None):
         if formatter is None:
