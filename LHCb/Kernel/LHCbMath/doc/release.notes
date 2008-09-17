@@ -6,6 +6,14 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2008-09-17 - Vanya BELYAEV
+
+ - LHCbMath/LHCbMath.h
+    add the functions for comparison of double and int, and double 
+    and unsigned int:
+      LHCb::Math::equal_to_int 
+      LHCb::Math::equal_to_uint   
+
 ! 2008-09-06 - Manuel Tobias Schiller
  - LHCbMath/{MatrixInversion.h,SymMatrixInverter.h,SymPosDefMatrixInverter.h}
    Add matrix inversion routines for symmetric and symmetric positive definite
