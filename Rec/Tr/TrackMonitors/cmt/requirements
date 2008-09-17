@@ -28,4 +28,5 @@ library          TrackMonitors    ../src/*.cpp -import=AIDA
 #============================================================================
 # define component library link options
 #============================================================================
-apply_pattern    component_library library=TrackMonitors
+apply_pattern component_library library=TrackMonitors
+apply_pattern install_python_modules
