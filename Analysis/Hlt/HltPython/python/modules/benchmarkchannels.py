@@ -11,6 +11,21 @@
 """
 # =============================================================================
 
+import datacard_dst06L0_mblumi2_2 as mblumi2
+
+def configuration(channel):
+    """ for a given channel returns the list of files needs for the selection,
+    the extraopts to include the data cards with the DSTs, and a dictionary with some extra data information, i.e path in the TES of the selection, number of evetns etc
+    """
+    datacard = createOptLines(channel)
+    eopts = []
+    files = selectionOptsFiles[channel]
+    eopts.append(datacard)
+    data = {}
+    data["TESPATH"] = TESPath[channel]
+    return files,eopts,data
+
+
 #---------------------------------------------------
 # Dst Files for each selected sample DC06:
 
@@ -18,21 +33,23 @@ dstDataCards = {
     'Bd2MuMuKstar'     : ['/d/dijkstra/Selections-DC06/Bd2KstarMuMu-lum2.dst'],
     'Bd2Jpsi2MuMuKs'   : ['/d/dijkstra/Selections-DC06/Bd2Jpsi2MuMuKS-lum2.dst'],
     'Bd2DstarMuNu'     : ['/d/dijkstra/Selections-DC06/Bd2DstarMu-lum2.dst'],
-    'Bs2MuMu'          : ['/d/diegoms/A_ver_se_vai.dst'],
+    'Bs2MuMuSR'        : ['/d/diegoms/13112001_DC06_phys_v2_lumi2_SR.dst'], #Selected events in sensitivity region for Bs->mumu analysis
+    'Bs2MuMu'          : ['/d/dijkstra/Selections-DC06/Bs2MuMu.dst'],
     'Bs2Jpsi2MuMuPhi'  : ['/d/dijkstra/Selections-DC06/Bs2JpsiPhi-lum2.dst'],
-    'Bs2DsMuNu'        : ['/a/aperezca/Bs2Dsmunu/Bs2DsMuNu1.dst',   # SELECTED ACCORDING TO DC04 OPTIMIZATION!
-                          '/a/aperezca/Bs2Dsmunu/Bs2DsMuNu2.dst',
-                          '/a/aperezca/Bs2Dsmunu/Bs2DsMuNu3.dst',
-                          '/a/aperezca/Bs2Dsmunu/Bs2DsMuNu4.dst',
-                          '/a/aperezca/Bs2Dsmunu/Bs2DsMuNu5.dst',
-                          '/a/aperezca/Bs2Dsmunu/Bs2DsMuNu6.dst',
-                          '/a/aperezca/Bs2Dsmunu/Bs2DsMuNu7.dst',
-                          '/a/aperezca/Bs2Dsmunu/Bs2DsMuNu8.dst',
-                          '/a/aperezca/Bs2Dsmunu/Bs2DsMuNu9.dst',
-                          '/a/aperezca/Bs2Dsmunu/Bs2DsMuNu10.dst',
-                          '/a/aperezca/Bs2Dsmunu/Bs2DsMuNu11.dst',
-                          '/a/aperezca/Bs2Dsmunu/Bs2DsMuNu12.dst',
-                          '/a/aperezca/Bs2Dsmunu/Bs2DsMuNu13.dst'],
+    'Bs2DsMuNu'        : ['/d/dijkstra/Selections-DC06/B02DMuX_D2KKpi.dst'],  #Common selection by R. Lambert
+##     'Bs2DsMuNu'        : ['/a/aperezca/Bs2Dsmunu/Bs2DsMuNu1.dst',   # SELECTED ACCORDING TO DC04 OPTIMIZATION! Old files now.
+##                           '/a/aperezca/Bs2Dsmunu/Bs2DsMuNu2.dst',
+##                           '/a/aperezca/Bs2Dsmunu/Bs2DsMuNu3.dst',
+##                           '/a/aperezca/Bs2Dsmunu/Bs2DsMuNu4.dst',
+##                           '/a/aperezca/Bs2Dsmunu/Bs2DsMuNu5.dst',
+##                           '/a/aperezca/Bs2Dsmunu/Bs2DsMuNu6.dst',
+##                           '/a/aperezca/Bs2Dsmunu/Bs2DsMuNu7.dst',
+##                           '/a/aperezca/Bs2Dsmunu/Bs2DsMuNu8.dst',
+##                           '/a/aperezca/Bs2Dsmunu/Bs2DsMuNu9.dst',
+##                           '/a/aperezca/Bs2Dsmunu/Bs2DsMuNu10.dst',
+##                           '/a/aperezca/Bs2Dsmunu/Bs2DsMuNu11.dst',
+##                           '/a/aperezca/Bs2Dsmunu/Bs2DsMuNu12.dst',
+##                           '/a/aperezca/Bs2Dsmunu/Bs2DsMuNu13.dst'],
     'Z2MuMu'           : [''],  #not yet!!
     'Bd2D0Kstar'       : ['/d/dijkstra/Selections-DC06/Bd2D0Kst_D02HH-lum2.dst'],
     'Bd2RhoPi'         : [''],  #not yet!!
@@ -43,20 +60,23 @@ dstDataCards = {
     'Bs2PiK'           : ['/d/dijkstra/Selections-DC06/B2HH-lum2.dst'], #B->hh common selection
     'Bs2KK'            : ['/d/dijkstra/Selections-DC06/B2HH-lum2.dst'], #B->hh common selection
     'Bu2KD2KSPiPi'     : ['/d/dijkstra/Selections-DC06/Bu2KD-KSPiPi-lum2.dst'], 
-    'Bs2PhiPhi'        : ['/n/nstyles/phiphi_signal.dst'], 
+    'Bs2PhiPhi'        : ['/d/dijkstra/Selections-DC06/BsPhiPhi.dst'],
+    #'Bs2PhiPhi'        : ['/n/nstyles/phiphi_signal.dst'],  #Old file 
     'Bs2DsPi'          : ['/d/dijkstra/Selections-DC06/Bs2Dspi-lum2.dst'],
     'Bs2DsK'           : ['/d/dijkstra/Selections-DC06/Bs2DsK-lum2.dst'],
     'Bs2DsDs'          : [''],  #not yet!!
     'Dstar2D2hhPi'     : ['/d/dijkstra/Selections-DC06/Dstar2D0Pi_D02HH-lum2.dst'],
     'Bu2eeK'           : ['/d/dijkstra/Selections-DC06/Bu2eeK-lum2.dst'],
-    'Bs2PhiGamma'      : ['/l/lshchuts/phigamma1a.dst',
-                          '/l/lshchuts/phigamma1b.dst',
-                          '/l/lshchuts/phigamma1c.dst',
-                          '/l/lshchuts/phigamma2a.dst',
-                          '/l/lshchuts/phigamma2b.dst',
-                          '/l/lshchuts/phigamma2c.dst',
-                          '/l/lshchuts/phigamma2d.dst',
-                          '/l/lshchuts/phigamma2e.dst']
+    'Bu2JpsiK'         : ['/d/diegoms/buJPsiK.dst'],
+    'Bs2PhiGamma'      : ['/d/dijkstra/Selections-DC06/Bs2PhiGamma.dst']
+##     'Bs2PhiGamma'      : ['/l/lshchuts/phigamma1a.dst',
+##                           '/l/lshchuts/phigamma1b.dst',
+##                           '/l/lshchuts/phigamma1c.dst',
+##                           '/l/lshchuts/phigamma2a.dst',
+##                           '/l/lshchuts/phigamma2b.dst',
+##                           '/l/lshchuts/phigamma2c.dst',
+##                           '/l/lshchuts/phigamma2d.dst',
+##                           '/l/lshchuts/phigamma2e.dst']
     }
 
 #---------------------------------------------------
@@ -122,6 +142,7 @@ selectionOptsFiles = {
                           '/afs/cern.ch/user/d/dijkstra/python/offline-sel/DoPreselBu2LLK.opts',
                           '/afs/cern.ch/user/d/dijkstra/python/offline-sel/PreselBu2LLK.opts',
                           StandardParticles, StandardJPsi],
+    'Bu2JpsiK'         : [], #??
     'Bs2PhiGamma'      : [], #??
     }
 
@@ -150,8 +171,9 @@ TESPath = {
     'Bs2DsK'           : '/Event/Phys/DC06SelBs2DsH/Particles',
     'Bs2DsDs'          : '', #??
     'Dstar2D2hhPi'     : '/Event/Phys/SelDstar2D0Pi_D02HH/Particles',
+    'Bu2JpsiK'         : '', #??
     'Bu2eeK'           : '/Event/Phys/DC06SelBu2eeK/Particles',
-    'Bs2PhiGamma'      : '' #??
+    'Bs2PhiGamma'      : ''  #??
                          
     }
 

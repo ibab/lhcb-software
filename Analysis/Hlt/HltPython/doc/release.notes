@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 !========================== HltPython v1r9 2008-08-28 ===================
+
+! 2008-9-17 Antonio Perez-Calero
+   - python/modules deleted hltbchannels.py. Changes by Jose A. moved to benchmarkchannels.py. Also, updated datacards to be used. Use this module instead.  
+
 ! 2008-8-15 Jose A. Hernando
    - python/examples hltalleymonitor.py updating main alley monitor script
    - python/modules ostools.py tools to deal with the os
