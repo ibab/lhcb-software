@@ -1,4 +1,4 @@
-// $Id: TrackMonitor.h,v 1.2 2008-07-25 08:01:48 wouter Exp $
+// $Id: TrackMonitor.h,v 1.3 2008-09-17 21:29:42 wouter Exp $
 #ifndef TRACKMONITOR_H
 #define TRACKMONITOR_H 1
  
@@ -11,6 +11,7 @@ namespace LHCb {
   class Track ;
   class State ;
 }
+class DeVelo ;
 
 /** @class TrackMonitor TrackMonitor.h "TrackCheckers/TrackMonitor"
  * 
@@ -44,10 +45,9 @@ class TrackMonitor : public TrackMonitorBase {
 		     const LHCb::State*& firstMeasurementState,
 		     const LHCb::State*& lastMeasurementState) const ;
 
-  double m_refZ;
   double m_xMax;
   double m_yMax;
-
+  const DeVelo* m_veloDet ;
 };
 
 

@@ -1,4 +1,4 @@
-// $Id: TrackMonitorBase.cpp,v 1.2 2008-07-10 10:34:13 wouter Exp $
+// $Id: TrackMonitorBase.cpp,v 1.3 2008-09-17 21:29:42 wouter Exp $
 // Include files 
 #include "TrackMonitorBase.h"
 #include "Event/Track.h"
@@ -17,7 +17,7 @@ TrackMonitorBase::TrackMonitorBase( const std::string& name,
   declareProperty( "Extrapolator",
                    m_extrapolatorName = "TrackMasterExtrapolator" );
   declareProperty("SplitByAlgorithm", m_splitByAlgorithm = false);
-  declareProperty("SplitByType", m_splitByType = false);
+  declareProperty("SplitByType", m_splitByType = true);
 }
 
 //=============================================================================

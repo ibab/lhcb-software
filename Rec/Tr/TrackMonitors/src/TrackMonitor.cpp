@@ -1,4 +1,4 @@
-// $Id: TrackMonitor.cpp,v 1.3 2008-07-25 08:01:48 wouter Exp $
+// $Id: TrackMonitor.cpp,v 1.4 2008-09-17 21:29:42 wouter Exp $
 // Include files 
 #include "TrackMonitor.h"
 
@@ -6,11 +6,15 @@
 #include "Event/Track.h"
 #include "Event/State.h"
 #include "Kernel/LHCbID.h"
+#include "Event/VeloCluster.h"
+#include "Event/VeloPhiMeasurement.h"
+#include "Event/VeloRMeasurement.h"
 
 // Det
 #include "OTDet/DeOTDetector.h"
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeITDetector.h"
+#include "VeloDet/DeVelo.h"
 #include "Event/FitNode.h"
 
 // gsl
@@ -40,10 +44,8 @@ DECLARE_ALGORITHM_FACTORY( TrackMonitor );
 //=============================================================================
 TrackMonitor::TrackMonitor(const std::string& name,
                            ISvcLocator* pSvcLocator ) :
-TrackMonitorBase( name , pSvcLocator ){
-
-  declareProperty("ReferenceZ", m_refZ = 0.0);
- 
+TrackMonitorBase( name , pSvcLocator )
+{
 }
 
 //=============================================================================
@@ -56,12 +58,7 @@ StatusCode TrackMonitor::initialize()
   // Mandatory initialization of GaudiAlgorithm
   StatusCode sc = TrackMonitorBase::initialize();
   if ( sc.isFailure() ) { return sc; }
-
-  // guess that the size of the histograms at ref is ~ 0.35 by 0.3
-  m_xMax = GSL_MAX(5.0, 0.35*m_refZ/Gaudi::Units::cm);
-  m_yMax = GSL_MAX(5.0, 0.3*m_refZ/Gaudi::Units::cm);
-
-  
+  m_veloDet = getDet<DeVelo>(  DeVeloLocation::Default ) ;
   return StatusCode::SUCCESS;
 }
 
@@ -84,7 +81,7 @@ StatusCode TrackMonitor::execute()
   LHCb::Tracks::const_iterator iterT = tracks->begin();
   
   for (; iterT != tracks->end(); ++iterT){
-    if (selector((*iterT)->type())->accept(**iterT) == true){
+    if (/*selector((*iterT)->type())->accept(**iterT) ==*/ true){
       type = all() ;
       if( splitByType() ) {
 	type = Gaudi::Utils::toString((*iterT)->type()) ;
@@ -141,26 +138,13 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
   plot(track.fitStatus(),type+"/fitstatus","fit status",-0.5,5.5,6) ;
   plot(track.nMeasurements(),type+"/100","#nMeas",  -0.5, 60., 61);
   plot(track.nMeasurementsRemoved(),type+"/101","#outliers", -0.5, 10.5, 11);
-
-  static const double halfOverLog10 = 0.5/std::log(10.0) ;
-  // find first and last node with measurement
-   // First locate the first and last node that actually have information
-  const LHCb::State *firstMState(0), *lastMState(0) ;
-  findRefStates(track,firstMState,lastMState) ;
-  if( firstMState ) {
-    plot(log(firstMState->covariance()(0,0))*halfOverLog10,type+"/xerrorAtFirst", "10log(x error) at first measurement",-3,2);
-    plot(log(firstMState->covariance()(1,1))*halfOverLog10,type+"/yerrorAtFirst", "10log(y error) at first measurement",-3,2);
-    plot(log(firstMState->covariance()(2,2))*halfOverLog10,type+"/txerrorAtFirst", "10log(tx error) at first measurement",-7,0);
-    plot(log(firstMState->covariance()(3,3))*halfOverLog10,type+"/tyerrorAtFirst", "10log(ty error) at first measurement",-7,0);
-    plot(log(firstMState->covariance()(4,4))*halfOverLog10,type+"/qoperrorAtFirst", "10log(qop error) at first measurement",-8,0);
-  }
-  if( lastMState ) {
-    plot(log(lastMState->covariance()(0,0))*halfOverLog10,type+"/xerrorAtLast", "10log(x error) at last measurement",-3,2);
-    plot(log(lastMState->covariance()(1,1))*halfOverLog10,type+"/yerrorAtLast", "10log(y error) at last measurement",-3,2);
-    plot(log(lastMState->covariance()(2,2))*halfOverLog10,type+"/txerrorAtLast", "10log(tx error) at last measurement",-7,0);
-    plot(log(lastMState->covariance()(3,3))*halfOverLog10,type+"/tyerrorAtLast", "10log(ty error) at last measurement",-7,0);
-    plot(log(lastMState->covariance()(4,4))*halfOverLog10,type+"/qoperrorAtLast", "10log(qop error) at last measurement",-8,0);
-  }
+  const LHCb::State& firststate = track.firstState() ;
+  plot(firststate.x(),type + "/110","x of first state",-100,100) ;
+  plot(firststate.y(),type + "/111","y of first state",-100,100) ;
+  plot(firststate.z(),type + "/112","z of first state",-500,500) ;
+  plot(firststate.tx(),type + "/113","tx of first state",-0.3,0.3) ;
+  plot(firststate.ty(),type + "/114","ty of first state",-0.3,0.3) ;
+  plot(firststate.qOverP(),type + "/115","q/p of first state",-0.001,0.001) ; 
 
   // found hits of each type
   const std::vector<LHCb::LHCbID>& ids = track.lhcbIDs();
@@ -178,9 +162,83 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
   plot(nVeloRHits, type+"/114","# Velo R hits" ,-0.5, 20.5 ,21);
   plot(nVeloPhiHits, type+"/115","# Velo phi hits" ,-0.5, 20.5 ,21);
   
+  if( track.nodes().size()>0 ) {
+    std::string names[] = { "VeloR","VeloPhi","TT","IT","OT","Muon" } ;
+    double resmax[] = { 0.1,0.1,0.5,0.5,2.0,10 } ;
+    for( LHCb::Track::NodeContainer::const_iterator inode = track.nodes().begin() ;
+	 inode != track.nodes().end(); ++inode) 
+      if( (*inode)->type() == LHCb::Node::HitOnTrack ) {
+	size_t mtype = (*inode)->measurement().type() - 1  ;
+	plot((*inode)->residual(),
+	     type+"/"+names[mtype]+"Residual",names[mtype]+" residual",
+	     -resmax[mtype],resmax[mtype],50);
+	plot((*inode)->residual()/(*inode)->errResidual(),
+	     type+"/"+names[mtype]+"residualPull",names[mtype]+" residual pull",-5,5,50);
+	// these should be expert plots because 2D
+	if(mtype<=1 && fullDetail()) {
+	  // calculate R in the local frame
+	  Gaudi::XYZPoint globalPoint = (*inode)->state().position() ;
+	  Gaudi::XYZPoint localPoint = 
+	    (*inode)->measurement().detectorElement()->geometry()->toLocal( globalPoint ) ;
+	  double r = localPoint.Rho() ;
+	  // factor for unbiasing the rms (not the mean!)
+	  double f = std::sqrt( (*inode)->errMeasure2()/(*inode)->errResidual2()) ;
+	  // factor to calculate residual in detector plane
+	  const LHCb::FitNode* fitnode = dynamic_cast<const LHCb::FitNode*>(*inode) ;
+	  double cosalpha(1) ;
+	  if(fitnode) {
+	    // this vector is along residual, perp to strips
+	    Gaudi::XYZVector localUnitPocaVector = 
+	      (*inode)->measurement().detectorElement()->geometry()->toLocal( fitnode->pocaVector() ) ;
+	    cosalpha = localUnitPocaVector.Rho()/localUnitPocaVector.R() ;
+	  }
+	  plot2D(r,(*inode)->residual()*f/cosalpha,
+		 type+"/"+names[mtype]+"residualVsR",names[mtype]+" residual vs R",
+		 10,42,-resmax[mtype],resmax[mtype], 16, 50);
+
+	  // now get the pitch ...
+	  double pitch(1) ;
+	  if( (*inode)->measurement().type() == LHCb::Measurement::VeloPhi ) {
+	    const LHCb::VeloCluster* clus = 
+	      static_cast<LHCb::VeloPhiMeasurement&>((*inode)->measurement()).cluster() ;
+	    const DeVeloPhiType* phiDet = m_veloDet->phiSensor( clus->channelID().sensor() );
+	    pitch = r * phiDet->phiPitch( unsigned(clus->strip(0)) ) ;
+	  } else {
+	    const LHCb::VeloCluster* clus = 
+	      static_cast<LHCb::VeloRMeasurement&>((*inode)->measurement()).cluster() ;
+	    const DeVeloRType* rDet = m_veloDet->rSensor( clus->channelID().sensor() );
+	    pitch = rDet->rPitch( unsigned(clus->strip(0)) ) ;
+	  }
+	  plot2D(pitch,(*inode)->residual()*f/cosalpha,
+		 type+"/"+names[mtype]+"residualVsPitch",names[mtype]+" residual vs pitch",
+		 0.04,0.100,-resmax[mtype],resmax[mtype], 12, 50);
+ 	}
+      }
+  }
+  
   // expert checks  
   if (fullDetail() == true){
 
+    static const double halfOverLog10 = 0.5/std::log(10.0) ;
+    // find first and last node with measurement
+    // First locate the first and last node that actually have information
+    const LHCb::State *firstMState(0), *lastMState(0) ;
+    findRefStates(track,firstMState,lastMState) ;
+    if( firstMState ) {
+      plot(log(firstMState->covariance()(0,0))*halfOverLog10,type+"/xerrorAtFirst", "10log(x error) at first measurement",-3,2);
+      plot(log(firstMState->covariance()(1,1))*halfOverLog10,type+"/yerrorAtFirst", "10log(y error) at first measurement",-3,2);
+      plot(log(firstMState->covariance()(2,2))*halfOverLog10,type+"/txerrorAtFirst", "10log(tx error) at first measurement",-7,0);
+      plot(log(firstMState->covariance()(3,3))*halfOverLog10,type+"/tyerrorAtFirst", "10log(ty error) at first measurement",-7,0);
+      plot(log(firstMState->covariance()(4,4))*halfOverLog10,type+"/qoperrorAtFirst", "10log(qop error) at first measurement",-8,0);
+    }
+    if( lastMState ) {
+      plot(log(lastMState->covariance()(0,0))*halfOverLog10,type+"/xerrorAtLast", "10log(x error) at last measurement",-3,2);
+      plot(log(lastMState->covariance()(1,1))*halfOverLog10,type+"/yerrorAtLast", "10log(y error) at last measurement",-3,2);
+      plot(log(lastMState->covariance()(2,2))*halfOverLog10,type+"/txerrorAtLast", "10log(tx error) at last measurement",-7,0);
+      plot(log(lastMState->covariance()(3,3))*halfOverLog10,type+"/tyerrorAtLast", "10log(ty error) at last measurement",-7,0);
+      plot(log(lastMState->covariance()(4,4))*halfOverLog10,type+"/qoperrorAtLast", "10log(qop error) at last measurement",-8,0);
+    }
+    
     // compare to what we expected
     if (track.hasInfo(LHCb::Track::nExpectedOT) == true){
       plot(nOTHits  - track.info(LHCb::Track::nExpectedOT,9999.), type+"/120", "# OT missed",  -10.5, 10.5 ,21);
@@ -201,16 +259,6 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
       plot(nVeloHits - track.info(LHCb::Track::nExpectedVelo, 9999.), type+"/123","# Velo missed" ,-10.5, 10.5 ,21);
     }
 
-
-    // track parameters at some reference z
-    LHCb::State aState;
-    StatusCode sc = extrapolator()->propagate(track, m_refZ,aState );
-    plot2D(aState.x()/Gaudi::Units::cm,
-           aState.y()/Gaudi::Units::cm, type+"/200", "x vs y", 
-           -m_xMax,m_xMax, -m_yMax, m_yMax, 50, 50);
-    plot(aState.tx(),type+"/103","tx", -1.,1., 50);
-    plot(aState.ty(),type+"/104", "ty", -1.,1., 50);
-
     const LHCb::Track::ExtraInfo& info = track.extraInfo();
     LHCb::Track::ExtraInfo::const_iterator iterInfo = info.begin();
     for (;iterInfo != info.end(); ++iterInfo ){
@@ -227,4 +275,3 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
 
   }
 }
-
