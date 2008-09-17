@@ -151,7 +151,7 @@ by the CLID before using this insertor.
 	   >
 	<code>
 	  if( !m_location )return ((unsigned int)HltSelRepRBEnums::kNoBank); 
-	  if( !numberOfObjTyp() )return ((unsigned int)HltSelRepRBEnums::kEmptyBank); 
+	  //empty bank is OK: if( !numberOfObjTyp() )return ((unsigned int)HltSelRepRBEnums::kEmptyBank); 
 	  if( !allocatedSize() )return ((unsigned int)HltSelRepRBEnums::kZeroAllocatedSize); 
           if( numberOfObjTyp() > ( allocatedSize() - 1 ) )return ((unsigned int)HltSelRepRBEnums::kPtrOutOfRange);
           return ((unsigned int)HltSelRepRBEnums::kBankIsOK);

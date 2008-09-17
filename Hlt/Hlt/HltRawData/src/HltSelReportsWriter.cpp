@@ -1,4 +1,4 @@
-// $Id: HltSelReportsWriter.cpp,v 1.1.1.1 2008-08-02 16:40:07 tskwarni Exp $
+// $Id: HltSelReportsWriter.cpp,v 1.2 2008-09-17 16:14:56 tskwarni Exp $
 // Include files 
 
 // from Gaudi
@@ -90,15 +90,13 @@ StatusCode HltSelReportsWriter::execute() {
   const std::string objectsLocation = m_inputHltSelReportsLocation.value() + "/Candidates" ;  
   if( !exist<HltObjectSummary::Container>( objectsLocation ) )
   {
-    error() << " No HltSelReports objects at " << objectsLocation << endmsg;
-    return StatusCode::SUCCESS;  
+    return Warning( " No HltSelReports objects at " + objectsLocation, StatusCode::SUCCESS, 20 );
   }
   const HltObjectSummary::Container* objectSummaries = get<HltObjectSummary::Container>( objectsLocation );
 
- // get output
+  // get output
   if( !exist<RawEvent>(m_outputRawEventLocation) ){    
-    error() << " No RawEvent at " << m_outputRawEventLocation << endmsg;
-    return StatusCode::SUCCESS;  
+    return Error(" No RawEvent at " + m_outputRawEventLocation.value(), StatusCode::SUCCESS, 20 );
   }  
   RawEvent* rawEvent = get<RawEvent>(m_outputRawEventLocation);
 
@@ -127,6 +125,7 @@ StatusCode HltSelReportsWriter::execute() {
        iSeq != lhcbidSequences.end(); ++iSeq ){
     nHits += (*iSeq)->size();
   }
+
   HltSelRepRBHits hitsSubBank;
   hitsSubBank.initialize( lhcbidSequences.size(),nHits );
   for( LhcbidSequences::const_iterator iSeq=lhcbidSequences.begin();
@@ -136,7 +135,6 @@ StatusCode HltSelReportsWriter::execute() {
     hitsSubBank.push_back( hitvec );
   }
 
-  
   // --------------------------------------------------------------------------------------
   //  ---------------- in storage banks are ordered by summarizedClassCLID ----------------
   // -------------------------------- sort them -------------------------------------------
@@ -166,6 +164,8 @@ StatusCode HltSelReportsWriter::execute() {
 
   std::vector<IANNSvc::minor_value_type> hltinfos = m_hltANNSvc->items("InfoID"); 
 
+  objTypSubBank.initialize();
+  substrSubBank.initialize();  
   // some banks require initialization with size info 
   unsigned int nExtraInfo=0;  
   unsigned int nStdInfo=0;  
@@ -221,7 +221,12 @@ StatusCode HltSelReportsWriter::execute() {
           }
         }
         // this is very unexpected but shouldn't be fatal
-        if( !found ) error() << "Int key for string info key=" << i->first << " not found " << endmsg;
+        if( !found ) {
+          std::ostringstream mess;
+          mess << "Int key for string info key=" << i->first << " not found ";
+          Error( mess.str(), StatusCode::SUCCESS, 50 );
+        }
+
       
       }
     }

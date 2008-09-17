@@ -1,4 +1,4 @@
-// $Id: HltSelReportsMaker.cpp,v 1.1.1.1 2008-08-02 16:40:07 tskwarni Exp $
+// $Id: HltSelReportsMaker.cpp,v 1.2 2008-09-17 16:14:56 tskwarni Exp $
 // Include files 
 
 // from Gaudi
@@ -135,7 +135,7 @@ StatusCode HltSelReportsMaker::execute() {
 
   // get input selection summary
   if( !exist<HltSummary>(m_inputHltSummaryLocation) ){    
-    warning() << " No HltSummary at " << m_inputHltSummaryLocation << endmsg;
+    Warning( " No HltSummary at "+ m_inputHltSummaryLocation,StatusCode::SUCCESS, 50 );
     return StatusCode::SUCCESS;  
   }  
   HltSummary* inputSummary = get<HltSummary>(m_inputHltSummaryLocation);
@@ -182,7 +182,7 @@ StatusCode HltSelReportsMaker::execute() {
 
     // don't bother if duplicate selection 
      if( outputSummary->hasSelectionName(selName) ){
-         warning() << " duplicate selection ignored selectionName=" << selName << endmsg;
+         Warning( " duplicate selection ignored selectionName=" + selName,StatusCode::SUCCESS, 20 );
          continue;        
      }
 
@@ -198,7 +198,7 @@ StatusCode HltSelReportsMaker::execute() {
        }
      }
      if( !intSelID ){
-       warning() << " selectionName=" << selName << " from HltSummary not found in HltANNSvc. Skipped. " << endmsg;
+       Warning( " selectionName="+selName+" from HltSummary not found in HltANNSvc. Skipped. " , StatusCode::SUCCESS, 20 );
        continue;
      }
  
@@ -227,9 +227,9 @@ StatusCode HltSelReportsMaker::execute() {
              if( candi ){
                rank = rankCaloCluster( candi );
              } else { 
-               warning() << " Unsupported data type in Hlt Trigger Summary - skip selection ID=" 
-                         << selName << endmsg;
-               continue;   
+               Warning( " Unsupported data type in Hlt Trigger Summary - skip selection ID=" 
+                       +selName,StatusCode::SUCCESS, 20 );
+               continue;    
              }
            }
          }
@@ -281,7 +281,7 @@ StatusCode HltSelReportsMaker::execute() {
 
      // don't bother if duplicate selection 
      if( outputSummary->hasSelectionName(selName) ){
-         warning() << " duplicate selection ignored selectionName=" << selName << endmsg;
+         Warning( " duplicate selection ignored selectionName=" + selName,StatusCode::SUCCESS, 20 );
          continue;        
      }
 
@@ -297,7 +297,7 @@ StatusCode HltSelReportsMaker::execute() {
        }
      }
      if( !intSelID ){
-       warning() << " selectionName=" << selName << " from HltSummary not found in HltANNSvc. Skipped. " << endmsg;
+       Warning(" selectionName="+selName+" from HltSummary not found in HltANNSvc. Skipped. ",StatusCode::SUCCESS, 20 );
        continue;
      }
    
@@ -333,15 +333,15 @@ StatusCode HltSelReportsMaker::execute() {
                 if( candi ){
                   hos = storeCaloCluster( candi );
                 } else { 
-                  warning() << " Unsupported data type in Hlt Trigger Summary - skip remaining candidates too, selection ID=" 
-                            << selName << endmsg;
+                  Warning(" Unsupported data type in Hlt Trigger Summary - skip remaining candidates too, selection ID=" 
+                          +selName,StatusCode::SUCCESS, 20 );
                   break;       
                 }
               }
             }
           }
           if( !hos ){
-            warning() << " Could not store supported candidate - skip remaining candidates too " << endmsg;
+            Warning(" Could not store supported candidate - skip remaining candidates too ",StatusCode::SUCCESS, 20 );
             break;
           } 
           selSumOut->addToSubstructure(hos);
@@ -356,7 +356,7 @@ StatusCode HltSelReportsMaker::execute() {
             if( candi ){
               const HltObjectSummary* hos = storeParticle( candi );
               if( !hos ){
-                warning() << " Could not store Particle - skip remaining candidates too " << endmsg;
+                Warning( " Could not store Particle - skip remaining candidates too ", StatusCode::SUCCESS, 20 );
                 break;                
               }
               selSumOut->addToSubstructure(hos);              
@@ -368,9 +368,9 @@ StatusCode HltSelReportsMaker::execute() {
 
     // insert selection into the container
     if( outputSummary->insert(selName,*selSumOut) == StatusCode::FAILURE ){
-      warning() << " Failed to add Hlt selection name " << selName
-                << " to its container "
-                << endmsg;
+      Warning(" Failed to add Hlt selection name "+selName
+              +" to its container ",StatusCode::SUCCESS, 20 );
+
     }    
 
   }
@@ -687,7 +687,7 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::storeParticle(const LHCb::Part
     // we don't save Protoparticles, only things they lead to
     const ProtoParticle* pp = object->proto();
     if( !pp ){
-      warning() << " Particle with no daughters and no protoparticle skipped " << endmsg;
+      Warning(" Particle with no daughters and no protoparticle, skipped ",StatusCode::SUCCESS, 20 );
     } else {
       const Track* track=pp->track();
       if( track ){
@@ -701,7 +701,7 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::storeParticle(const LHCb::Part
               if( exist<LHCb::Tracks>(m_HltMuonTracksLocation) ){
                 m_HLTmuonTracks = get<LHCb::Tracks>(m_HltMuonTracksLocation);
               } else {
-                warning() << " Found track which is a muon but no muon tracks at " << m_HltMuonTracksLocation << endmsg;
+                Warning(" Found track which is a muon but no muon tracks at " + m_HltMuonTracksLocation,StatusCode::SUCCESS,20 );
               }
             }
             if( m_HLTmuonTracks ){          

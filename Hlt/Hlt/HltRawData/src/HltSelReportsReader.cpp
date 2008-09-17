@@ -1,4 +1,4 @@
-// $Id: HltSelReportsReader.cpp,v 1.1.1.1 2008-08-02 16:40:07 tskwarni Exp $
+// $Id: HltSelReportsReader.cpp,v 1.2 2008-09-17 16:14:56 tskwarni Exp $
 // Include files 
 
 // from Gaudi
@@ -85,8 +85,7 @@ StatusCode HltSelReportsReader::execute() {
 
   // get inputs
   if( !exist<RawEvent>(m_inputRawEventLocation) ){    
-    error() << " No RawEvent at " << m_inputRawEventLocation << endmsg;
-    return StatusCode::SUCCESS;  
+    return Error(" No RawEvent at "+ m_inputRawEventLocation.value());
   }  
   RawEvent* rawEvent = get<RawEvent>(m_inputRawEventLocation);
 
@@ -105,16 +104,15 @@ StatusCode HltSelReportsReader::execute() {
 
   const std::vector<RawBank*> hltselreportsRawBanks = rawEvent->banks( RawBank::HltSelReports );
   if( !hltselreportsRawBanks.size() ){
-    warning() << " No HltSelReports RawBank in RawEvent. Quiting. " << endmsg;
-    return StatusCode::SUCCESS;  
+    return Warning( " No HltSelReports RawBank in RawEvent. Quiting. ",StatusCode::SUCCESS, 10 );
   } else if( hltselreportsRawBanks.size() != 1 ){
-    warning() << " More then one HltSelReports RawBanks in RawEvent. Will process only the first one. " << endmsg;
+    Warning( " More then one HltSelReports RawBanks in RawEvent. Will process only the first one. ",StatusCode::SUCCESS, 20 );
   }
   const RawBank* hltselreportsRawBank = *(hltselreportsRawBanks.begin());
   if( hltselreportsRawBank->version() > kVersionNumber ){
   }
   if( hltselreportsRawBank->sourceID() != kSourceID ){
-    warning() << " HltSelReports RawBank has unexpected source ID. Will try to decode it anyway." << endmsg;
+    Warning( " HltSelReports RawBank has unexpected source ID. Will try to decode it anyway." ,StatusCode::SUCCESS, 20 );
   }
 
   unsigned int bankSize = (hltselreportsRawBank->size()+3)/4; // from bytes to words
@@ -140,70 +138,89 @@ StatusCode HltSelReportsReader::execute() {
   unsigned int nObj = objTypSubBank.numberOfObj();
 
   if( bankSize < hltSelReportsBank.size() ){
-    error() << " HltSelReportsRawBank internally reported size " << hltSelReportsBank.size()
-	    << " less than bank size delivered by RawEvent " << bankSize
-            << " Quitting! " << endmsg;
+    std::ostringstream mess;
+    mess   << " HltSelReportsRawBank internally reported size " << hltSelReportsBank.size()
+           << " less than bank size delivered by RawEvent " << bankSize;
+    Error( mess.str(), StatusCode::SUCCESS, 100 );
     errors=true;
 
   } else {
 
   ic = hltSelReportsBank.integrityCode();
   if( ic ){
-    error() << " HltSelReportsRawBank fails integrity check with code " 
-	    << ic << " " << HltSelRepRBEnums::IntegrityCodesToString(ic) << endmsg;
+    std::ostringstream mess;
+    mess << " HltSelReportsRawBank fails integrity check with code " 
+         << ic << " " << HltSelRepRBEnums::IntegrityCodesToString(ic) ;
+    Error( mess.str(), StatusCode::SUCCESS, 100 );
     errors=true;
   }
 
   ic = hitsSubBank.integrityCode();
   if( ic ){
-    error() << " HltSelRepRBHits fails integrity check with code " 
-	    << ic << " " << HltSelRepRBEnums::IntegrityCodesToString(ic) << endmsg;
+    std::ostringstream mess;
+    mess << " HltSelRepRBHits fails integrity check with code " 
+         << ic << " " << HltSelRepRBEnums::IntegrityCodesToString(ic) ;
+    Error( mess.str(), StatusCode::SUCCESS, 100 );
     errors=true;
   }
 
   ic = objTypSubBank.integrityCode();
   if( ic ){
-    error() << " HltSelRepRBObjTyp fails integrity check with code " 
-	    << ic << " " << HltSelRepRBEnums::IntegrityCodesToString(ic) << endmsg;
+    std::ostringstream mess;
+    mess << " HltSelRepRBObjTyp fails integrity check with code " 
+         << ic << " " << HltSelRepRBEnums::IntegrityCodesToString(ic) ;
+    Error( mess.str(), StatusCode::SUCCESS, 100 );
     errors=true;
   }
 
   ic = substrSubBank.integrityCode();
   if( ic ){
-    error() << " HltSelRepRBSubstr fails integrity check with code " 
-	    << ic << " " << HltSelRepRBEnums::IntegrityCodesToString(ic) << endmsg;
+    std::ostringstream mess;
+    mess << " HltSelRepRBSubstr fails integrity check with code " 
+         << ic << " " << HltSelRepRBEnums::IntegrityCodesToString(ic) ;
+    Error( mess.str(), StatusCode::SUCCESS, 100 );
     errors=true;
   }
   if( nObj != substrSubBank.numberOfObj() ){
-    error() << " HltSelRepRBSubstr has number of objects " 
-	    << substrSubBank.numberOfObj()
-            << " which is different than HltSelRepRBObjTyp " << nObj << endmsg;
+    std::ostringstream mess;
+    mess << " HltSelRepRBSubstr has number of objects " 
+         << substrSubBank.numberOfObj()
+         << " which is different than HltSelRepRBObjTyp " << nObj ;
+    Error( mess.str(), StatusCode::SUCCESS, 100 );
     errors=true;
   }
 
   ic = stdInfoSubBank.integrityCode();
   if( ic ){
-    error() << " HltSelRepRBStdInfo fails integrity check with code " 
-	    << ic << " " << HltSelRepRBEnums::IntegrityCodesToString(ic) << endmsg;
+    std::ostringstream mess;
+    mess << " HltSelRepRBStdInfo fails integrity check with code " 
+         << ic << " " << HltSelRepRBEnums::IntegrityCodesToString(ic) ;
+    Error( mess.str(), StatusCode::SUCCESS, 100 );
     errors=true;
   }
   if( nObj != stdInfoSubBank.numberOfObj() ){
-    error() << " HltSelRepRBStdInfo has number of objects " 
-	    << stdInfoSubBank.numberOfObj()
-            << " which is different than HltSelRepRBObjTyp " << nObj << endmsg;
+    std::ostringstream mess;
+    mess << " HltSelRepRBStdInfo has number of objects " 
+         << stdInfoSubBank.numberOfObj()
+         << " which is different than HltSelRepRBObjTyp " << nObj ;
+    Error( mess.str(), StatusCode::SUCCESS, 100 );
     errors=true;
   }
 
   ic = extraInfoSubBank.integrityCode();
   if( ic ){
-    error() << " HltSelRepRBExtraInfo fails integrity check with code " 
-	    << ic << " " << HltSelRepRBEnums::IntegrityCodesToString(ic) << endmsg;
+    std::ostringstream mess;
+    mess << " HltSelRepRBExtraInfo fails integrity check with code " 
+         << ic << " " << HltSelRepRBEnums::IntegrityCodesToString(ic) ;
+    Error( mess.str(), StatusCode::SUCCESS, 100 );
     exInfOn=false; // the only non-fatal info corruption
   }
   if( nObj != extraInfoSubBank.numberOfObj() ){
-    error() << " HltSelRepRBExtraInfo has number of objects " 
-	    << extraInfoSubBank.numberOfObj()
-            << " which is different than HltSelRepRBObjTyp " << nObj << endmsg;
+    std::ostringstream mess;
+    mess << " HltSelRepRBExtraInfo has number of objects " 
+         << extraInfoSubBank.numberOfObj()
+         << " which is different than HltSelRepRBObjTyp " << nObj ;
+    Error( mess.str(), StatusCode::SUCCESS, 100 );
     exInfOn=false;
   }
 
@@ -225,7 +242,7 @@ StatusCode HltSelReportsReader::execute() {
 
   if( errors ){
     hltSelReportsBank.deleteBank();
-    return StatusCode::SUCCESS;
+    return Error("Quiting becasue of the possible data corruption", StatusCode::SUCCESS, 100 );
   }
 
 
@@ -277,7 +294,9 @@ StatusCode HltSelReportsReader::execute() {
 	    
           } else {
 
-            warning() << " wrong number of StdInfo on Track " << stdInfo.size() << endmsg;
+            std::ostringstream mess;
+            mess  << " wrong number of StdInfo on Track " << stdInfo.size();
+            Warning(mess.str(),StatusCode::SUCCESS, 20 );
             for(HltSelRepRBStdInfo::StdInfo::const_iterator i=stdInfo.begin();
                 i!=stdInfo.end(); ++i){
               std::stringstream ss;
@@ -297,7 +316,9 @@ StatusCode HltSelReportsReader::execute() {
 
           } else {
             
-            warning() << " wrong number of StdInfo on RecVertex " << stdInfo.size() << endmsg;
+            std::ostringstream mess;
+            mess  << " wrong number of StdInfo on RecVertex " << stdInfo.size();
+            Warning(mess.str(),StatusCode::SUCCESS, 20 );
             for(HltSelRepRBStdInfo::StdInfo::const_iterator i=stdInfo.begin();
                 i!=stdInfo.end(); ++i){
               std::stringstream ss;
@@ -323,7 +344,9 @@ StatusCode HltSelReportsReader::execute() {
             
           } else {
 
-            warning() << " wrong number of StdInfo on Particle " << stdInfo.size() << endmsg;
+            std::ostringstream mess;
+            mess  << " wrong number of StdInfo on Particle " << stdInfo.size();
+            Warning(mess.str(),StatusCode::SUCCESS, 20 );
             for(HltSelRepRBStdInfo::StdInfo::const_iterator i=stdInfo.begin();
                 i!=stdInfo.end(); ++i){
               std::stringstream ss;
@@ -345,7 +368,9 @@ StatusCode HltSelReportsReader::execute() {
             infoPersistent.insert( "3#CaloCluster.position.z", floatFromInt(stdInfo[3]) );
           } else {
 
-            warning() << " wrong number of StdInfo on CaloCluster " << stdInfo.size() << endmsg;
+            std::ostringstream mess;
+            mess  << " wrong number of StdInfo on CaloCluster " << stdInfo.size();
+            Warning(mess.str(),StatusCode::SUCCESS, 20 );
             for(HltSelRepRBStdInfo::StdInfo::const_iterator i=stdInfo.begin();
                 i!=stdInfo.end(); ++i){
               std::stringstream ss;
@@ -357,10 +382,12 @@ StatusCode HltSelReportsReader::execute() {
         }
         break;
       case 1:
-        {      
+        {
 
           if( stdInfo.size()!=1 ){    
-            error() << " wrong number of StdInfo on Trigger Selection " << stdInfo.size() << endmsg;
+            std::ostringstream mess;
+            mess << " wrong number of StdInfo on Trigger Selection " << stdInfo.size();
+            Error( mess.str(),  StatusCode::SUCCESS, 20 );
             for(HltSelRepRBStdInfo::StdInfo::const_iterator i=(stdInfo.begin()+1);
                 i!=stdInfo.end(); ++i){
               std::stringstream ss;
@@ -373,7 +400,10 @@ StatusCode HltSelReportsReader::execute() {
         break;
       default:
         { 
-          warning() << " StdInfo on unsupported class type " << hos->summarizedObjectCLID() << endmsg; 
+
+          std::ostringstream mess;
+          mess << " StdInfo on unsupported class type " << hos->summarizedObjectCLID();
+          Warning( mess.str(),  StatusCode::SUCCESS, 20 );
           for(HltSelRepRBStdInfo::StdInfo::const_iterator i=stdInfo.begin();
               i!=stdInfo.end(); ++i){
             std::stringstream ss;
@@ -398,7 +428,12 @@ StatusCode HltSelReportsReader::execute() {
             break;
           }
         }
-        if( !found )warning() << " String key for Extra Info item in storage not found" << endmsg;
+        if( !found ){
+          std::ostringstream mess;
+          mess << " String key for Extra Info item in storage not found id=" << i->first;
+          Warning( mess.str(), StatusCode::SUCCESS, 20 );
+        }
+
       }
     }
     hos->setNumericalInfo( infoPersistent );
@@ -425,7 +460,7 @@ StatusCode HltSelReportsReader::execute() {
           std::vector< LHCb::LHCbID > hitseq = hitsSubBank.sequence( iSeq );
           hits.insert( hits.end(), hitseq.begin(), hitseq.end() );
         } else {
-          error() << " Hit sequence index out of range " << endmsg;
+          Error(  "Hit sequence index out of range", StatusCode::SUCCESS, 10 );
         }
       }
       hos->setLhcbIDs( hits );
@@ -438,7 +473,7 @@ StatusCode HltSelReportsReader::execute() {
         if( jObj<nObj ){
           thisSubstructure.push_back( &(*(objects[jObj])) );
         } else {
-          error() << " Substructure object index out of range " << endmsg;
+          Error(  " Substructure object index out of range ", StatusCode::SUCCESS, 10 );
         }
       }
       hos->setSubstructure( thisSubstructure );
@@ -486,14 +521,15 @@ StatusCode HltSelReportsReader::execute() {
 
       // insert selection into the container
       if( outputSummary->insert(selName,*selSumOut) == StatusCode::FAILURE ){
-        error() << " Failed to add Hlt selection name " << selName
-                << " to its container "
-                << endmsg;
+          Error( "  Failed to add Hlt selection name " + selName
+                + " to its container ", StatusCode::SUCCESS, 10 );
       }
 
     } else {    
 
-      error() << " Did not find string key for trigger selection in storage " << endmsg;
+      std::ostringstream mess;
+      mess << " Did not find string key for trigger selection in storage";
+      Error( mess.str(),  StatusCode::SUCCESS, 50 ); 
 
     }
 

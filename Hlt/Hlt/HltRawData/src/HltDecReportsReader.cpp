@@ -1,4 +1,4 @@
-// $Id: HltDecReportsReader.cpp,v 1.1.1.1 2008-08-02 16:40:07 tskwarni Exp $
+// $Id: HltDecReportsReader.cpp,v 1.2 2008-09-17 16:14:56 tskwarni Exp $
 // Include files 
 
 // from Gaudi
@@ -74,8 +74,7 @@ StatusCode HltDecReportsReader::execute() {
 
   // get input
   if( !exist<RawEvent>(m_inputRawEventLocation) ){    
-    error() << " No RawEvent at " << m_inputRawEventLocation << endmsg;
-    return StatusCode::SUCCESS;  
+    return Error(" No RawEvent at "+ m_inputRawEventLocation.value());
   }  
   RawEvent* rawEvent = get<RawEvent>(m_inputRawEventLocation);
 
@@ -90,16 +89,15 @@ StatusCode HltDecReportsReader::execute() {
 
   const std::vector<RawBank*> hltdecreportsRawBanks = rawEvent->banks( RawBank::HltDecReports );
   if( !hltdecreportsRawBanks.size() ){
-    warning() << " No HltDecReports RawBank in RawEvent. Quiting. " << endmsg;
-    return StatusCode::SUCCESS;  
+    return Warning( " No HltDecReports RawBank in RawEvent. Quiting. ",StatusCode::SUCCESS, 20 );
   } else if( hltdecreportsRawBanks.size() != 1 ){
-    warning() << " More then one HltDecReports RawBanks in RawEvent. Will process only the first one. " << endmsg;
+    Warning(" More then one HltDecReports RawBanks in RawEvent. Will process only the first one. " ,StatusCode::SUCCESS, 20 );
   }
   const RawBank* hltdecreportsRawBank = *(hltdecreportsRawBanks.begin());
   if( hltdecreportsRawBank->version() > kVersionNumber ){
   }
   if( hltdecreportsRawBank->sourceID() != kSourceID ){
-    warning() << " HltDecReports RawBank has unexpected source ID. Will try to decode it anyway." << endmsg;
+    Warning( " HltDecReports RawBank has unexpected source ID. Will try to decode it anyway.",StatusCode::SUCCESS, 20 );
   }
 
   // ----------------------------------------------------------
@@ -148,13 +146,15 @@ StatusCode HltDecReportsReader::execute() {
     }    
     if( selName != "Dummy" ){
       if( outputSummary->hasSelectionName( selName ) ){
-        error() << " Duplicate decision report in storage " << endmsg;
+        Warning(" Duplicate decision report in storage ", StatusCode::SUCCESS, 20 );
       } else {
         outputSummary->insert( selName, *dec );
       }
     } else {
-      error() << " No string key found for trigger decision in storage "
-              << " id=" << id << endmsg;      
+      std::ostringstream mess;
+      mess << " No string key found for trigger decision in storage "
+           << " id=" << id;
+      Error(mess.str(), StatusCode::SUCCESS, 50 );
     }
   }
 
@@ -173,15 +173,16 @@ StatusCode HltDecReportsReader::execute() {
       HltDecReport* selSumOut = new HltDecReport( 0, 0, 0, si->second );
       if( selSumOut->invalidIntSelectionID() ){
         delete selSumOut;
-        warning() << " selectionName=" << selName << " has invalid intSelectionID=" << endmsg;
+        std::ostringstream mess;
+        mess << " selectionName=" << selName << " has invalid intSelectionID=" << si->second;
+        Warning( mess.str(), StatusCode::SUCCESS, 20 );
         continue;
       }
 
       // insert selection into the container
       if( outputSummary->insert( selName, *selSumOut ) == StatusCode::FAILURE ){
-        error() << " Failed to add HltDecReport selectionName=" << selName 
-                << " to its container "
-                << endmsg;
+        Error(" Failed to add HltDecReport selectionName=" + selName 
+              + " to its container ");
       }    
     }
     

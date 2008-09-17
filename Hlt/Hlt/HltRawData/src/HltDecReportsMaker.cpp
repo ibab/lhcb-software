@@ -1,4 +1,4 @@
-// $Id: HltDecReportsMaker.cpp,v 1.2 2008-08-13 07:15:23 graven Exp $
+// $Id: HltDecReportsMaker.cpp,v 1.3 2008-09-17 16:14:56 tskwarni Exp $
 // Include files 
 
 // from Gaudi
@@ -132,7 +132,7 @@ StatusCode HltDecReportsMaker::execute() {
        } else if( selName.find("L0") != std::string::npos ){ 
          l0globalC += 1;
        } else {
-         warning() << " Unrecognized type of decision in configuration selection name=" << selName << endmsg;
+         Warning(" Unrecognized type of decision in configuration selection name="+selName, StatusCode::SUCCESS, 10 );
        }
      }
   }
@@ -153,7 +153,7 @@ StatusCode HltDecReportsMaker::execute() {
        } else if( selName.find("L0") != std::string::npos ){ 
          //        l0globalC += 1;
        } else {
-         warning() << " Unrecognized type of decision in configuration selection name=" << selName << endmsg;
+         Warning(" Unrecognized type of decision in configuration selection name="+selName, StatusCode::SUCCESS, 10 );
        }
      }
   }
@@ -167,7 +167,7 @@ StatusCode HltDecReportsMaker::execute() {
 
   // get input selection summary
   if( !exist<HltSummary>(m_inputHltSummaryLocation) ){    
-    warning() << " No HltSummary at " << m_inputHltSummaryLocation << endmsg;
+    Warning(" No HltSummary at "+ m_inputHltSummaryLocation.value(),StatusCode::SUCCESS, 50 );
 
     //       hlt1 configured but no hlt summary
     int dec(0);
@@ -235,7 +235,7 @@ StatusCode HltDecReportsMaker::execute() {
        } else if( selName.find("L0") != std::string::npos ){ 
          l0global += 1;
        } else {
-         warning() << " Unrecognized type of decision selection name=" << selName << endmsg;
+         Warning(" Unrecognized type of decision selection in HltSummary name="+selName,StatusCode::SUCCESS, 10 );
        }
      }
 
@@ -248,7 +248,7 @@ StatusCode HltDecReportsMaker::execute() {
        }
      }
      if( !intSelID ){
-       warning() << " selectionName=" << selName << " from HltSummary not found in HltANNSvc. Skipped. " << endmsg;
+       Warning( " selectionName=" + selName + " from HltSummary not found in HltANNSvc. Skipped. ",StatusCode::SUCCESS, 20 );
        continue;
      }
      
@@ -277,10 +277,14 @@ StatusCode HltDecReportsMaker::execute() {
        si!=selectionNameToIntMap.end();++si){
     const std::string & selName = si->first;
 
+    // skip over global decisions (done already)
+    if( selName == "Hlt1Global" )continue;    
+    if( selName == "Hlt2Global" )continue;    
+    if( selName == "L0Global" )continue;    
 
      // don't bother if duplicate selection 
      if( outputSummary->hasSelectionName(selName) ){
-         warning() << " duplicate selection ignored selectionName=" << selName << endmsg;
+         Warning(" duplicate selection ignored selectionName=" + selName, StatusCode::SUCCESS, 10 );
          continue;        
      }
 
@@ -330,15 +334,16 @@ StatusCode HltDecReportsMaker::execute() {
 
      if( selSumOut->invalidIntSelectionID() ){
        delete selSumOut;
-       warning() << " selectionName=" << selName << " has invalid intSelectionID=" << intSelID << " Skipped. " << endmsg;
+       std::ostringstream mess;
+       mess << " selectionName=" << selName << " has invalid intSelectionID=" << intSelID << " Skipped. ";
+       Warning( mess.str(), StatusCode::SUCCESS, 20 );
        continue;
      }
      
      // insert selection into the container
      if( outputSummary->insert( selName, *selSumOut ) == StatusCode::FAILURE ){
-       warning() << " Failed to add HltDecReport selectionName=" << selName 
-                 << " to its container "
-                 << endmsg;
+       Warning( " Failed to add HltDecReport selectionName=" + selName 
+                + " to its container ", StatusCode::SUCCESS, 20 );
      }    
 
   }

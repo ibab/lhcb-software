@@ -1,4 +1,4 @@
-// $Id: HltVertexReportsMaker.cpp,v 1.1 2008-08-06 14:51:54 tskwarni Exp $
+// $Id: HltVertexReportsMaker.cpp,v 1.2 2008-09-17 16:14:56 tskwarni Exp $
 // Include files 
 
 // from Gaudi
@@ -76,7 +76,7 @@ StatusCode HltVertexReportsMaker::execute() {
 
   // get input selection summary
   if( !exist<HltSummary>(m_inputHltSummaryLocation) ){    
-    warning() << " No HltSummary at " << m_inputHltSummaryLocation << endmsg;
+    Warning( " No HltSummary at "+ m_inputHltSummaryLocation.value(),StatusCode::SUCCESS, 20 );
     return StatusCode::SUCCESS;  
   }  
   HltSummary* inputSummary = get<HltSummary>(m_inputHltSummaryLocation);
@@ -122,7 +122,7 @@ StatusCode HltVertexReportsMaker::execute() {
      std::vector<ContainedObject*>::const_iterator ic0 = candidates.begin();
      RecVertex* candi = dynamic_cast<RecVertex*>(*ic0);
      if( !candi ){
-       error() << " Selection name " << selName << " did not select vertices. " << endmsg;
+       Error(" Selection name "+selName+" did not select vertices. ");
        continue;
      }
 
@@ -138,7 +138,7 @@ StatusCode HltVertexReportsMaker::execute() {
        }
      }
      if( !intSelID ){
-       warning() << " selectionName=" << selName << " from HltSummary not found in HltANNSvc. Skipped. " << endmsg;
+       Warning( " selectionName="+selName+ " from HltSummary not found in HltANNSvc. Skipped. ",StatusCode::SUCCESS, 20 );
        continue;
      }
 
@@ -169,9 +169,8 @@ StatusCode HltVertexReportsMaker::execute() {
 
      // insert selection into the container
      if( outputSummary->insert(selName,pVtxs) == StatusCode::FAILURE ){
-       warning() << " Failed to add Hlt vertex selection name " << selName
-		 << " to its container "
-		 << endmsg;
+       Warning(" Failed to add Hlt vertex selection name " + selName
+               + " to its container ",StatusCode::SUCCESS, 20 );
     }    
 
   }

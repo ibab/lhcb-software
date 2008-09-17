@@ -1,4 +1,4 @@
-// $Id: HltRoutingBitsWriter.cpp,v 1.3 2008-09-09 13:15:49 graven Exp $
+// $Id: HltRoutingBitsWriter.cpp,v 1.4 2008-09-17 16:14:56 tskwarni Exp $
 // Include files 
 #include <algorithm>
 // from Boost
@@ -82,8 +82,7 @@ StatusCode HltRoutingBitsWriter::initialize() {
 //=============================================================================
 StatusCode HltRoutingBitsWriter::execute() {
   if (m_updateRequired) {
-    error() << " stale evaluators???? " << endmsg;
-    return StatusCode::FAILURE;
+    return Error(" stale evaluators???? ", StatusCode::FAILURE, 20);    
   }
 
   LHCb::HltDecReports* decisions = get<LHCb::HltDecReports>( m_location );

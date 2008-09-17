@@ -1,10 +1,10 @@
-// $Id: HltVertexReportsReader.cpp,v 1.1 2008-08-06 14:51:54 tskwarni Exp $
+// $Id: HltVertexReportsReader.cpp,v 1.2 2008-09-17 16:14:56 tskwarni Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
-#include "HltVertexReports.h"
+#include "Event/HltVertexReports.h"
 #include "Event/RawEvent.h"
 
 
@@ -71,8 +71,7 @@ StatusCode HltVertexReportsReader::execute() {
 
   // get inputs
   if( !exist<RawEvent>(m_inputRawEventLocation) ){    
-    error() << " No RawEvent at " << m_inputRawEventLocation << endmsg;
-    return StatusCode::SUCCESS;  
+    return Error(" No RawEvent at "+m_inputRawEventLocation.value());
   }  
   RawEvent* rawEvent = get<RawEvent>(m_inputRawEventLocation);
 
@@ -95,18 +94,19 @@ StatusCode HltVertexReportsReader::execute() {
 
   const std::vector<RawBank*> hltVertexReportsRawBanks = rawEvent->banks( RawBank::HltVertexReports );
   if( !hltVertexReportsRawBanks.size() ){
-    warning() << " No HltVertexReports RawBank in RawEvent. Quiting. " << endmsg;
-    return StatusCode::SUCCESS;  
+    return Warning(" No HltVertexReports RawBank in RawEvent. Quiting. ",StatusCode::SUCCESS, 20 );
   } else if( hltVertexReportsRawBanks.size() != 1 ){
-    warning() << " More then one HltSelReports RawBanks in RawEvent. Will process only the first one. " << endmsg;
+    Warning(" More then one HltSelReports RawBanks in RawEvent. Will process only the first one. ",StatusCode::SUCCESS, 20 );
   }
   const RawBank* hltvertexReportsRawBank = *(hltVertexReportsRawBanks.begin());
   if( hltvertexReportsRawBank->version() > kVersionNumber ){
-    warning() << " HltVertexReports Raw Bank version number " << hltvertexReportsRawBank->version()
-	      << " higher than the one of the reader " << int(kVersionNumber) << endmsg;
+    std::ostringstream mess;
+    mess <<  " HltVertexReports Raw Bank version number " << hltvertexReportsRawBank->version()
+         << " higher than the one of the reader " << int(kVersionNumber);
+    Warning( mess.str(),  StatusCode::SUCCESS, 20 );
   }
   if( hltvertexReportsRawBank->sourceID() != kSourceID ){
-    warning() << " HltVertexReports RawBank has unexpected source ID. Will try to decode it anyway." << endmsg;
+    Warning(" HltVertexReports RawBank has unexpected source ID. Will try to decode it anyway." ,  StatusCode::SUCCESS, 20 );
   }
 
  
@@ -140,29 +140,30 @@ StatusCode HltVertexReportsReader::execute() {
       SmartRefVector<VertexBase> pVtxs;
 
       for( unsigned int j=0; j!=n; ++j ){
-	VertexBase* pVtx = new VertexBase();
-	Gaudi::XYZPoint position( doubleFromInt( hltVertexReportsRawBank[iWord] ),
-				  doubleFromInt( hltVertexReportsRawBank[iWord+1] ),
-				  doubleFromInt( hltVertexReportsRawBank[iWord+2] ) );
-	pVtx->setPosition( position );
-	pVtx->setChi2( doubleFromInt( hltVertexReportsRawBank[iWord+3] ) );
-	pVtx->setNDoF( hltVertexReportsRawBank[iWord+4] );
-	iWord += 5;
+        VertexBase* pVtx = new VertexBase();
+        Gaudi::XYZPoint position( doubleFromInt( hltVertexReportsRawBank[iWord] ),
+                                  doubleFromInt( hltVertexReportsRawBank[iWord+1] ),
+                                  doubleFromInt( hltVertexReportsRawBank[iWord+2] ) );
+        pVtx->setPosition( position );
+        pVtx->setChi2( doubleFromInt( hltVertexReportsRawBank[iWord+3] ) );
+        pVtx->setNDoF( hltVertexReportsRawBank[iWord+4] );
+        iWord += 5;
 
-	verticesOutput->insert(pVtx);
-	pVtxs.push_back( SmartRef<VertexBase>( pVtx ) );
+        verticesOutput->insert(pVtx);
+        pVtxs.push_back( SmartRef<VertexBase>( pVtx ) );
 
       }
 
       // insert selection into the container
       if( outputSummary->insert(selName,pVtxs) == StatusCode::FAILURE ){
-	warning() << " Failed to add Hlt vertex selection name " << selName
-		  << " to its container "
-		  << endmsg;
+        Error(" Failed to add Hlt vertex selection name " + selName
+              + " to its container ",StatusCode::SUCCESS, 20 );
       }    
  
     } else {
-      error() << " did nit find selection name for int selection id in HltVertexReports " << endmsg; 
+      std::ostringstream mess;
+      mess <<  " did not find selection name for int selection id in HltVertexReports id=" << intSelID;
+      Error(mess.str(), StatusCode::SUCCESS, 50 );
       for( unsigned int j=0; j!=n; ++j ) iWord +=5;
 
     }

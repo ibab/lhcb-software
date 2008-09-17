@@ -190,7 +190,7 @@ Info can only be read and stored sequencially.'
 	   >
 	<code>
 	  if( !m_location )return ((unsigned int)HltSelRepRBEnums::kNoBank); 
-	  if( !numberOfObj() )return ((unsigned int)HltSelRepRBEnums::kEmptyBank); 
+	  //empty bank is OK: if( !numberOfObj() )return ((unsigned int)HltSelRepRBEnums::kEmptyBank); 
 	  if( !size() )return ((unsigned int)HltSelRepRBEnums::kZeroAllocatedSize); 
           unsigned int s=size();
 

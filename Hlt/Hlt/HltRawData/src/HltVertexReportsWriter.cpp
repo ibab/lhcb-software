@@ -1,11 +1,11 @@
-// $Id: HltVertexReportsWriter.cpp,v 1.1 2008-08-06 14:51:54 tskwarni Exp $
+// $Id: HltVertexReportsWriter.cpp,v 1.2 2008-09-17 16:14:56 tskwarni Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
 #include "Event/RawEvent.h"
-#include "HltVertexReports.h"
+#include "Event/HltVertexReports.h"
 
 // local
 #include "HltVertexReportsWriter.h"
@@ -69,15 +69,14 @@ StatusCode HltVertexReportsWriter::execute() {
 
   // get input hlt vertex reports
   if( !exist<HltVertexReports>(m_inputHltVertexReportsLocation) ){    
-    warning() << " No HltVertexReports at " << m_inputHltVertexReportsLocation << endmsg;
-    return StatusCode::SUCCESS;  
+    return Warning( " No HltVertexReports at " + m_inputHltVertexReportsLocation.value(),
+                    StatusCode::SUCCESS, 20 );
   }  
   HltVertexReports* inputSummary = get<HltVertexReports>(m_inputHltVertexReportsLocation);
 
  // get output
   if( !exist<RawEvent>(m_outputRawEventLocation) ){    
-    error() << " No RawEvent at " << m_outputRawEventLocation << endmsg;
-    return StatusCode::SUCCESS;  
+    return Error(" No RawEvent at " + m_outputRawEventLocation.value(),StatusCode::SUCCESS, 20 );
   }  
   RawEvent* rawEvent = get<RawEvent>(m_outputRawEventLocation);
 
@@ -111,7 +110,7 @@ StatusCode HltVertexReportsWriter::execute() {
        }
      }
      if( !intSelID ){
-       error() << " selectionName=" << selName << " from HltVertexReports not found in HltANNSvc. Skipped. " << endmsg;
+       Error(" selectionName=" +selName+ " from HltVertexReports not found in HltANNSvc. Skipped. ", StatusCode::SUCCESS, 20 ); 
        continue;
      }
 

@@ -1,4 +1,4 @@
-// $Id: HltLumiWriter.cpp,v 1.4 2008-08-26 13:59:44 panmanj Exp $
+// $Id: HltLumiWriter.cpp,v 1.5 2008-09-17 16:14:56 tskwarni Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
@@ -125,7 +125,7 @@ StatusCode HltLumiWriter::finalize() {
 void HltLumiWriter::fillDataBankShort ( ) {
 
   if (!exist<LHCb::HltLumiSummary>(m_inputBank) ){
-    error() << m_inputBank << " not found" << endmsg ;
+    Error( m_inputBank +" not found" );
     return;
   }
 

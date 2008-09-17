@@ -1,4 +1,4 @@
-// $Id: HltVertexReportsMaker.h,v 1.1 2008-08-06 14:51:54 tskwarni Exp $
+// $Id: HltVertexReportsMaker.h,v 1.2 2008-09-17 16:14:56 tskwarni Exp $
 #ifndef HLTVERTEXREPORTSMAKER_H 
 #define HLTVERTEXREPORTSMAKER_H 1
 
@@ -6,7 +6,7 @@
 // from Gaudi
 #include "HltBase/HltBaseAlg.h"
 
-#include "HltVertexReports.h"
+#include "Event/HltVertexReports.h"
 
 #include "Kernel/IANNSvc.h"
 

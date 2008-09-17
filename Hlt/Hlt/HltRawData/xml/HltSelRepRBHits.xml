@@ -108,6 +108,7 @@ Then sequences must be pushed back in the sequencial order.'
           const='TRUE'
           >
         <code>
+          if( ( numberOfSeq()==0 ) &amp;&amp; (iSeq==0 ) )return hitsLocation();
           validateIndex(iSeq);
           unsigned int iWord = (iSeq+1)/2;
           unsigned int iPart = (iSeq+1)%2;
@@ -121,10 +122,11 @@ Then sequences must be pushed back in the sequencial order.'
           name ='seqBegin'
           type ='unsigned int'
           argList='unsigned int iSeq'
-          desc ='location of the hit suquence begin() relative to hitLocation() in the sub-bank body (0=means at hitLocation)'
+          desc ='location of the hit suquence begin() in the sub-bank body (0=means 1st word)'
           const='TRUE'
           >
         <code>
+          if( ( numberOfSeq()==0 ) &amp;&amp; (iSeq==0 ) )return hitsLocation();
           validateIndex(iSeq);
           if( iSeq )return seqEnd(iSeq-1);
           return hitsLocation();
@@ -150,7 +152,8 @@ Then sequences must be pushed back in the sequencial order.'
           const='TRUE'
           >
         <code>
-          return seqEnd(numberOfSeq()-1);
+          if( numberOfSeq() )return seqEnd(numberOfSeq()-1);
+          return seqEnd(0);
         </code>
       </method>
 
@@ -226,7 +229,7 @@ Then sequences must be pushed back in the sequencial order.'
 	   >
 	<code>
 	  if( !m_location )return ((unsigned int)HltSelRepRBEnums::kNoBank); 
-	  if( !numberOfSeq() )return ((unsigned int)HltSelRepRBEnums::kEmptyBank); 
+	  //empty bank if OK: if( !numberOfSeq() )return ((unsigned int)HltSelRepRBEnums::kEmptyBank); 
 	  for( unsigned int iSeq=0; iSeq!=numberOfSeq(); ++iSeq ){
 	       unsigned int ie1 = seqEnd( iSeq );
                if( ie1 &lt; hitsLocation() ) return ((unsigned int)HltSelRepRBEnums::kPtrOutOfRange);

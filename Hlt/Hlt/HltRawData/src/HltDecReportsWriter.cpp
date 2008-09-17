@@ -1,4 +1,4 @@
-// $Id: HltDecReportsWriter.cpp,v 1.2 2008-08-13 07:15:23 graven Exp $
+// $Id: HltDecReportsWriter.cpp,v 1.3 2008-09-17 16:14:56 tskwarni Exp $
 // Include files 
 
 // from Gaudi
@@ -65,15 +65,13 @@ StatusCode HltDecReportsWriter::execute() {
 
   // get input
   if( !exist<HltDecReports>(m_inputHltDecReportsLocation) ){    
-    warning() << " No HltDecReports at " << m_inputHltDecReportsLocation << endmsg;
-    return StatusCode::SUCCESS;  
+    return Warning( " No HltDecReports at " + m_inputHltDecReportsLocation.value(), StatusCode::SUCCESS, 20 );
   }  
   const HltDecReports* inputSummary = get<HltDecReports>(m_inputHltDecReportsLocation);
 
   // get output
   if( !exist<RawEvent>(m_outputRawEventLocation) ){    
-    error() << " No RawEvent at " << m_outputRawEventLocation << endmsg;
-    return StatusCode::SUCCESS;  
+    return Error(" No RawEvent at " + m_outputRawEventLocation.value(), StatusCode::SUCCESS, 20 );
   }  
   RawEvent* rawEvent = get<RawEvent>(m_outputRawEventLocation);
 

@@ -163,7 +163,7 @@ Never write into into the bank with iterator not at its end-of-the bank position
 	   >
 	<code>
 	  if( !m_location )return ((unsigned int)HltSelRepRBEnums::kNoBank); 
-	  if( !numberOfObj() )return ((unsigned int)HltSelRepRBEnums::kEmptyBank); 
+	  //empty bank is OK: if( !numberOfObj() )return ((unsigned int)HltSelRepRBEnums::kEmptyBank); 
 	  if( !allocatedSize() )return ((unsigned int)HltSelRepRBEnums::kZeroAllocatedSize); 
           unsigned int s=allocatedSize();
           unsigned int itera = kInitialPosition;
