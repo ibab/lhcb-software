@@ -1,4 +1,4 @@
-// $Id: VeloClusterMonitor.cpp,v 1.8 2008-09-17 17:14:05 krinnert Exp $
+// $Id: VeloClusterMonitor.cpp,v 1.9 2008-09-17 22:49:03 krinnert Exp $
 // Include files 
 // -------------
 
@@ -210,7 +210,7 @@ void Velo::VeloClusterMonitor::monitorClusters() {
       boost::format fmtEvt ( "# clusters sensor %d" ) ;
       fmtEvt % s ;
       const std::string hName = fmtEvt.str() ;
-      plot1D( m_nClustersPerSensor[s], hName, hName, -0.5, 20000.5, 20001 );
+      plot1D( m_nClustersPerSensor[s], hName, hName, -0.5, 200.5, 201 );
 
     }
   }
