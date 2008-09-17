@@ -1,15 +1,18 @@
-// $Id: HltConfigSvc.cpp,v 1.18 2008-09-01 14:15:47 graven Exp $
+// $Id: HltConfigSvc.cpp,v 1.19 2008-09-17 19:31:57 graven Exp $
 // Include files 
 
 #include <algorithm>
 
 #include "boost/lexical_cast.hpp"
 #include "boost/format.hpp"
+#include "boost/regex.hpp"
+#include "boost/foreach.hpp"
 
 // from Gaudi
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/GaudiException.h"
 
 #include "Event/ODIN.h"
 
@@ -18,6 +21,40 @@
 
 using namespace std;
 using boost::lexical_cast;
+
+namespace {
+    unsigned char unhex(unsigned char C) {
+        unsigned char c=tolower(C);
+        boost::uint8_t x = ( c >= '0' && c <= '9' ? c-'0' :
+                           ( c >= 'a' && c <='f'  ? 10+(c-'a') : 255 ) );
+        if ( x&0xF0 ) {  /* whoah: C is not in [0-9a-fA-F] */ }
+        return x;
+    };
+    unsigned int unhex(const std::string& val) {
+        assert( val.substr(0,2)=="0x" );
+        assert( val.size()==10 );
+        unsigned int i = 0;
+        const char *x = val.c_str()+2;
+        while (*x) i = ( i<<4 | unhex(*x++) );
+        return i;
+    };
+}
+
+HltConfigSvc::TCKrep& HltConfigSvc::TCKrep::set(const std::string& s) {
+        boost::regex e("^(0x[0-9a-fA-F]{8})$");
+        boost::smatch what;
+        if(!boost::regex_match(s, what, e)) {
+            throw GaudiException("Invalid TCK format",s,StatusCode::FAILURE);
+            return *this;
+        }
+        //  and if most significant bit is set, lower 16 must be zero and vice versa
+        m_unsigned = unhex(what[1]);
+        m_stringRep = s;
+        return *this;
+}
+
+std::ostream& operator<<(std::ostream& os, const HltConfigSvc::TCKrep& tck) { return os << tck.str(); }
+
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltConfigSvc
@@ -37,11 +74,31 @@ HltConfigSvc::HltConfigSvc( const string& name, ISvcLocator* pSvcLocator)
   , m_evtSvc(0)
   , m_incidentSvc(0)
 {
-  declareProperty("TCK2ConfigMap", m_tck2config);
-  declareProperty("initialTCK", m_initialTCK = TCK_t(0)); // TODO: replace by hex string
-  declareProperty("prefetchTCK", m_prefetchTCK); // TODO: load all TCK of same type as initialTCK
+  //TODO: template this pattern of property + 'transformer' -> thing_I_really_want with callback support
+  declareProperty("TCK2ConfigMap", m_tck2config_)->declareUpdateHandler( &HltConfigSvc::updateMap, this);
+  declareProperty("initialTCK", m_initialTCK_ )->declareUpdateHandler( &HltConfigSvc::updateInitial, this); 
+  declareProperty("prefetchTCK", m_prefetchTCK_)->declareUpdateHandler( &HltConfigSvc::updatePrefetch, this); // TODO: load all TCK of same type as initialTCK
   declareProperty("checkOdin", m_checkOdin = true);
   declareProperty("maskL0TCK", m_maskL0TCK = false);
+}
+
+void HltConfigSvc::updateMap(Property&) {
+  m_tck2config.clear();
+  typedef std::pair<std::string,std::string> val_t;
+  BOOST_FOREACH( const val_t& i, m_tck2config_ ) {
+    m_tck2config.insert( make_pair( TCKrep( i.first ), i.second)  );
+  }
+}
+
+void HltConfigSvc::updateInitial(Property&) {
+    m_initialTCK = TCKrep(m_initialTCK_);
+}
+
+void HltConfigSvc::updatePrefetch(Property&) {
+  m_prefetchTCK.clear();
+  BOOST_FOREACH( const std::string& i, m_prefetchTCK_ ) {
+    m_prefetchTCK.push_back( TCKrep( i )  );
+  }
 }
 //=============================================================================
 // Destructor
@@ -80,16 +137,17 @@ StatusCode HltConfigSvc::initialize() {
                                  std::numeric_limits<long>::min(),rethrow,oneShot);
   }
 
-  for (vector<TCK_t>::const_iterator i = m_prefetchTCK.begin(); i!=m_prefetchTCK.end(); ++i ) {
+  for (vector<TCKrep>::const_iterator i = m_prefetchTCK.begin(); i!=m_prefetchTCK.end(); ++i ) {
      info() << " loading TCK " << *i << endmsg; 
-     if ( !loadConfig( tck2id(*i) ) ) {
+     if ( !loadConfig( tck2id( *i) ) ) {
         error() << " failed to load TCK " << *i << endmsg; 
         return StatusCode::FAILURE;
      }
   }
   // configure everyone from an a-priori specified TCK
-  status = configure( tck2id(m_initialTCK), false );
-  if (status.isSuccess()) m_configuredTCK = m_initialTCK;
+  TCKrep initialTCK(m_initialTCK);
+  status = configure( tck2id( initialTCK ), false );
+  if (status.isSuccess()) m_configuredTCK = initialTCK;
   return status;
 }
 
@@ -98,7 +156,7 @@ StatusCode HltConfigSvc::initialize() {
 // Perform mapping from TCK to onfiguration ID
 //=============================================================================
 ConfigTreeNode::digest_type
-HltConfigSvc::tck2id(const TCK_t& tck) const {
+HltConfigSvc::tck2id(const TCKrep& tck) const {
     ConfigTreeNode::digest_type id = ConfigTreeNode::digest_type::createInvalid();
     std::string tckRep = boost::str( boost::format("0x%08x")%tck ) ;
     TCKMap_t::const_iterator i = m_tck2config.find( tck );
@@ -138,7 +196,7 @@ HltConfigSvc::tck2id(const TCK_t& tck) const {
 //=============================================================================
 void HltConfigSvc::dummyCheckOdin() {
   // check if TCK still the same -- if not, reconfigure... 
-  TCK_t currentTCK = m_configuredTCK;
+  TCKrep currentTCK = m_configuredTCK;
   static unsigned nEvent(0);
   debug() << "nEvent: " << nEvent << endmsg;
   if (++nEvent%100==0) { 
@@ -173,12 +231,13 @@ void HltConfigSvc::checkOdin() {
     debug() << "checkOdin: requested TCK: " << TCK << endmsg;
 
     if ( m_configuredTCK == TCK ) return;
+    TCKrep TCKr(TCK);
 
     info() << "requesting configuration update from TCK " 
            << m_configuredTCK 
-           << " to TCK " << TCK << endmsg;
-    if (reconfigure( tck2id(TCK) ).isSuccess()) { 
-        m_configuredTCK = TCK;
+           << " to TCK " << TCKr << endmsg;
+    if (reconfigure( tck2id(TCKr) ).isSuccess()) { 
+        m_configuredTCK = TCKr;
     } else {
         error()   << "\n\n\n\n\n"
                   << "            ****************************************\n"

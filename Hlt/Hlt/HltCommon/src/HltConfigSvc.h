@@ -1,4 +1,4 @@
-// $Id: HltConfigSvc.h,v 1.8 2008-08-22 12:04:18 graven Exp $
+// $Id: HltConfigSvc.h,v 1.9 2008-09-17 19:31:57 graven Exp $
 #ifndef HLTCONFIGSVC_H 
 #define HLTCONFIGSVC_H 1
 
@@ -8,6 +8,10 @@
 #include <vector>
 #include "boost/lambda/lambda.hpp"
 #include "boost/lambda/bind.hpp"
+#include "boost/format.hpp"
+#include "boost/operators.hpp"
+
+
 // from Gaudi
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/IIncidentListener.h"
@@ -33,25 +37,58 @@ public:
   virtual StatusCode finalize();      ///< Service finalization
   virtual void handle(const Incident&);
 
+   //TODO: move in dedicated class in HltBase...
+  class TCKrep : public boost::equality_comparable<ConfigTreeNode> {
+      public:
+        TCKrep() : m_unsigned(0) {}
+        explicit TCKrep(unsigned int i) : m_unsigned(i) { set(i); }
+        explicit TCKrep(const std::string& s) : m_unsigned(0) { set(s); }
+        bool operator<(const TCKrep& rhs) const { return m_unsigned  < rhs.m_unsigned; } 
+        bool operator==(const TCKrep& rhs) const { return m_unsigned == rhs.m_unsigned; } 
+        bool operator==(unsigned int rhs) const { return m_unsigned == rhs; } 
+        bool operator!=(const TCKrep& rhs) const { return !operator==(rhs); }
+        TCKrep& operator++() { return set( ++m_unsigned ); }
+        const std::string&  str() const { return m_stringRep; }
+        unsigned int uint() const { return m_unsigned;  }
+        TCKrep& set(const std::string& s);
+        TCKrep& set(unsigned i)           { 
+                m_unsigned = i;
+                m_stringRep = boost::str( boost::format("0x%08x")%m_unsigned ) ;
+                return *this;
+        }
+        bool valid() const { return m_unsigned != 0 ; }
+      private:
+        std::string m_stringRep;
+        unsigned int m_unsigned;
+  };
 private:
   void dummyCheckOdin();
   void checkOdin();
 
-  typedef unsigned int TCK_t ;
-  typedef std::map<TCK_t,std::string> TCKMap_t;
+   void updateMap(Property&);
+   void updateInitial(Property&);
+   void updatePrefetch(Property&);
 
-  std::vector<TCK_t>           m_prefetchTCK;     ///< which TCK to prefetch
+  typedef std::map<TCKrep,std::string> TCKMap_t;
+
+  std::vector<TCKrep>          m_prefetchTCK;     ///< which TCK to prefetch
+  std::vector<std::string>     m_prefetchTCK_;     ///< which TCK to prefetch
+
   TCKMap_t                     m_tck2config;      ///< from TCK to configuration ID
+  std::map<std::string,std::string> m_tck2config_;      ///< from TCK to configuration ID
+
+  TCKrep                       m_initialTCK;      ///< which TCK to start with...
+  std::string                  m_initialTCK_;      ///< which TCK to start with...
+
   mutable TCKMap_t             m_tck2configCache; ///< from TCK to configuration ID
-  TCK_t                        m_initialTCK;      ///< which TCK to start with...
-  TCK_t                        m_configuredTCK;   ///< which TCK is currently in use?
+  TCKrep                       m_configuredTCK;   ///< which TCK is currently in use?
   IDataProviderSvc            *m_evtSvc;          ///< get Evt Svc to get ODIN (which contains TCK)
   IIncidentSvc                *m_incidentSvc;     ///< 
   bool                         m_checkOdin;
   bool                         m_maskL0TCK;
 
   // resolve TCK -> toplevel config ID, then call method with ID
-  ConfigTreeNode::digest_type tck2id(const TCK_t& tck) const;
+  ConfigTreeNode::digest_type tck2id(const TCKrep& tck) const;
 
 };
 #endif // HLTCONFIGSVC_H

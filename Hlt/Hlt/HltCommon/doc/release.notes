@@ -3,6 +3,9 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2008-09-17 - Gerhard Raven
+ - in HltConfigSvc, add dedicate type for TCK representation
+ - job option for TCK is now a hex _string_, eg. 0xdeadbeef
 
 !========================== HltCommon v4r2 2008-09-10 ===================
 

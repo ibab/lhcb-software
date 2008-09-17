@@ -1,4 +1,4 @@
-// $Id: HltIncidentFilter.cpp,v 1.2 2008-07-30 13:37:32 graven Exp $
+// $Id: HltIncidentFilter.cpp,v 1.3 2008-09-17 19:31:57 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -79,6 +79,9 @@ StatusCode HltIncidentFilter::execute() {
     return StatusCode::SUCCESS;
 };
 
+//=============================================================================
+// Incident handler
+//=============================================================================
 void HltIncidentFilter::handle(const Incident& incident) {
     if ( m_keep && incident.type() == "EndEvent") { // only do string comparison if really needed...
         m_keep = false; 
