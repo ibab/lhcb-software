@@ -202,10 +202,12 @@ void TrackFitMatchMonitor::plotDelta(const std::string& thisname,
     myProfile1D(node.state().ty(),deltacpull(1),thisname,"dy pull vs ty", -0.25,0.25,20) ;
     //profile1D(node.state().qOverP(),deltacpull(1), std::string("dy pull vs qop"), -4e-4,4e-4,20) ;
   }
-  if( fabs(deltacpull(2))<5 ) {
-    myProfile1D(node.state().tx(),deltacpull(2),thisname,"dtx pull vs tx", -0.25,0.25,20) ;
-    myProfile1D(node.state().ty(),deltacpull(2),thisname,"dty pull vs ty", -0.25,0.25,20) ;
-    //profile1D(node.state().qOverP(),deltacpull(2), std::string("dtx pull vs qop"), -4e-4,4e-4,20) ;
+  if( fullDetail() ) {
+    if( fabs(deltacpull(2))<5 ) {
+      myProfile1D(node.state().tx(),deltacpull(2),thisname,"dtx pull vs tx", -0.25,0.25,20) ;
+      myProfile1D(node.state().ty(),deltacpull(2),thisname,"dty pull vs ty", -0.25,0.25,20) ;
+      //profile1D(node.state().qOverP(),deltacpull(2), std::string("dtx pull vs qop"), -4e-4,4e-4,20) ;
+    }
   }
 }
 
@@ -244,22 +246,23 @@ StatusCode TrackFitMatchMonitor::execute()
 	}
       }
     
-    // take only long tracks
-    if( firstT && lastVelo) {
+    // take only tracks with VELO
+    if( lastVelo) {
 
       // now split this between tracks with and tracks without TT
       if( lastTT ) {
 
 	// you can take either of these two: they give identical results.
+	//plotDelta("Velo-TT at TT",*firstTT,true) ;
 	plotDelta("Velo-TT",*lastVelo,false) ;
-	//plot("Velo-TT at TT",*firstTT,true) ;
 
-	plotDelta("T-TT",*lastTT,false) ;
-	//plot("T-TT at T",*firstT,true) ;
+	if( firstT )
+	  //plotDelta("T-TT at T",*firstT,true) ;
+	  plotDelta("T-TT",*lastTT,false) ;
 	
-      } else {
+      } else if (firstT) {
+	//plotDelta("Velo-T at T",*firstT,true) ;
 	plotDelta("Velo-T",*lastVelo,false) ;
-	//plot("Velo-T at T",*firstT,true) ;
       }
     }
   }
