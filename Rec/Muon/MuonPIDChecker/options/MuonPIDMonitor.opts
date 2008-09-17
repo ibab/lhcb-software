@@ -1,8 +1,6 @@
-//Check.DetectorList += { "MUON" }; // included in BrunelCheck.opts
-CheckMUONSeq.Members += { "MuonPIDChecker" };
-MuonPIDChecker.HistoTopDir = "Muon/";
-MuonPIDChecker.DLLCut = -1.0;
-MuonPIDChecker.NSHCut = 1.;
 MoniMUONSeq.Members += { "MuonPIDChecker/MuonPIDMonitor" };
-MuonPIDChecker.RunningMC = false;
-MuonPIDChecker.HistoDir = "MuonPID/Monitor";
+MuonPIDMonitor.HistoTopDir = "Muon/";
+MuonPIDMonitor.DLLCut = -1.0;
+MuonPIDMonitor.NSHCut = 1.;
+MuonPIDMonitor.RunningMC = false;
+MuonPIDMonitor.HistoDir = "MuonPID/Monitor";
