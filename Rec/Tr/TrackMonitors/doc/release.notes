@@ -4,6 +4,10 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2008-09-17 Wouter Hulsbergen
+ - added configurable for creating monitoring sequence
+ - added residuals
+
 !============================ TrackMonitors v1r3 2008-07-29 ==================
 ! 2008-07-25 - Wouter Hulsbergen
  - adapted to change in TrackFitEvent
