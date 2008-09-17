@@ -17,6 +17,7 @@ sys.path.append(os.path.join(_base_dir, "python"))
 
 from LbUtils.Script import Script
 from LbUtils.Env import Environment, Aliases
+from AllProjectsSetup import AllProjectsSetupScript
 from tempfile import mkstemp
 import sys, os, logging
 import re
@@ -66,14 +67,14 @@ class LbLoginScript(Script):
         close_output = False
         if self.options.output:
             self.output_file = open(self.options.output,"w")
-            self.options.output = None # reset the option value to avoid to reuse it
-            close_output = True
+#            self.options.output = None # reset the option value to avoid to reuse it
+#            close_output = True
         elif self.options.mktemp:
             fd, outname = mkstemp()
             self.output_file = os.fdopen(fd,"w")
             print outname
-            self.options.mktemp = None # reset the option value to avoid to reuse it
-            close_output = True
+#            self.options.mktemp = None # reset the option value to avoid to reuse it
+#            close_output = True
         else :
             self.output_file = sys.stdout
             close_output = False
@@ -153,6 +154,8 @@ class LbLoginScript(Script):
         server = "isscvs.cern.ch"
         self._env["GAUDIKSERVER"] = ":%s:%s:/local/reps/Gaudi" % (method, server)
         self._env["LHCBKSERVER"] = ":%s:%s:/local/reps/lhcb" % (method, server)
+
+
 
     def setSite(self):
         """ Site massaging """
@@ -295,7 +298,37 @@ class LbLoginScript(Script):
         
         self.setCMTInternals()
 #-----------------------------------------------------------------------------------
-              
+    def setSoftLocations(self):
+        ev = self._env
+        opts = self.options
+        if opts.cmtsite == "LOCAL" :
+            ev["LHCBHOME"] = ev["MYSITEROOT"]
+            ev["DIM_release_area"] = ev["CONTRIBDIR"]
+            ev["XMLRPC_release_area"] = ev["CONTRIBDIR"]
+            ev["LCG_release_area"] = os.path.join(ev["MYSITEROOT"], "lcg" ,"external")
+            ev["LHCBRELEASES"] = os.path.join(ev["LHCBHOME"], "lhcb")
+            ev["GAUDISOFT"] = ev["LHCBRELEASES"]
+            ev["LHCBPROJECTPATH"] = os.pathsep.join([ev["LHCb_release_area"],ev["LCG_release_area"]])
+        else :
+            ev["LHCBHOME"] = os.path.join(ev["SITEROOT"], "lhcb")
+            ev["DIM_release_area"] = os.path.join(ev["LHCBHOME"], "online", "control")
+            ev["XMLRPC_release_area"] = os.path.join(ev["LHCBHOME"], "project", "web", "online" )
+            ev["LCG_release_area"] = os.path.join(ev["SITEROOT"], "sw", "lcg", "app", "releases" )
+            ev["SOFTWARE"] = os.path.join(ev["LHCBHOME"], "software" )
+            ev["LHCBRELEASES"] = os.path.join(ev["SOFTWARE"], "releases")
+            ev["GAUDISOFT"] = os.path.join(ev["SITEROOT"], "sw", "Gaudi", "releases")
+            ev["LHCBPROJECTPATH"] = os.pathsep.join([ev["LHCBRELEASES"], ev["GAUDISOFT"], ev["LCG_release_area"]])
+            ev["LHCBDEV"] = os.path.join(ev["SITEROOT"], "lhcb", "software", "DEV" )
+            ev["LHCBDOC"] = os.path.join(ev["LHCBRELEASES"], "DOC")
+            ev["EMACSDIR"] = os.path.join(ev["LHCBRELEASES"], "TOOLS", "Tools", "Emacs", "pro")
+            ev["LHCBSTYLE"] = os.path.join(ev["LHCBRELEASES"], "TOOLS", "Tools", "Styles", "pro")
+
+        ev["OSC_release_area"] = ev["CONTRIBDIR"]
+        ev["Gaudi_release_area"] = ev["GAUDISOFT"]
+        ev["LHCb_release_area"] = ev["LHCBRELEASES"]
+
+#-----------------------------------------------------------------------------------
+                      
     def setHomeDir(self):
         ev = self._env
         opts = self.options
@@ -485,16 +518,64 @@ class LbLoginScript(Script):
         if debug :
             ev["CMTCONFIG"] = ev["CMTDEB"]
             
+    def setCMTPath(self):
+        ev = self._env
+        opts = self.options
+        
+        self.setHomeDir()
+        if ev.has_key("CMTPROJECTPATH") :
+            if ev.has_key("CMTPATH") :
+                del ev["CMTPATH"]
+        else :    
+            if opts.cmtvers.find("v1r20") == -1 :
+                ev["CMTPATH"] = ev["User_release_area"]
+                if ev.has_key("CMTPROJECTPATH") :
+                    del ev["CMTPROJECTPATH"]
+            else :
+                if ev.has_key("CMTPATH") :
+                    del ev["CMTPATH"]
+                ev["CMTPROJECTPATH"] = os.pathsep.join([ev["User_release_area"], ev["LHCBPROJECTPATH"]])
+
+    
+    def setupLbScripts(self):
+        ev = self._env
+        al = self._aliases
+        opts = self.options
+        if ev.has_key("PYTHONPATH"):
+            pylist = ev["PYTHONPATH"].split(os.pathsep)
+        else : 
+            pylist = []
+        pylist.append(os.path.join(_base_dir, "python"))
+        ev["PYTHONPATH"] = os.pathsep.join(pylist)
+
+        if ev.has_key("PATH"):
+            plist = ev["PATH"].split(os.pathsep)
+        else : 
+            plist = []
+        plist.append(os.path.join(_base_dir, "scripts"))
+        ev["PATH"] = os.pathsep.join(plist)
+        
+        AProj = AllProjectsSetupScript()
+        sev, sal = AProj.getEnv()
+        
+        for e in sev.keys():
+            if sev[e] :
+                ev[e] = sev[e]
+        for a in sal.keys():
+            if sal[a] :
+                ev[a] = sal[a]
+    
     def setEnv(self, debug=False):
         self.setPath()
         self.setCVSEnv()
         self.setSite()
         self.setCMT()
+        self.setSoftLocations()
         self.setSharedArea()
 
         self.setCMTConfig(debug)
-        
-        self.setHomeDir()
+        self.setCMTPath()
+        self.setupLbScripts()
 
         return self._env
 

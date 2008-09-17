@@ -58,8 +58,7 @@ class AllProjectsSetupScript(Script):
                           type = "string", callback = _check_output_options_cb,
                           help="(internal) output the command to set up the environment ot the given file instead of stdout")
 
-    def main(self):
-        opts = self.options
+    def getEnv(self):
         ev = Environment(orig=dict())
         al = Aliases()
         for p in project_list :
@@ -70,6 +69,11 @@ class AllProjectsSetupScript(Script):
             alist = p.Aliases()
             for a in alist.keys():
                 al[a] = alist[a]
+        return ev, al
+
+    def main(self):
+        opts = self.options
+        ev, al = self.getEnv()
         self._write_script(ev.gen_script(opts.targetshell)+al.gen_script(opts.targetshell))
         return 0
 
