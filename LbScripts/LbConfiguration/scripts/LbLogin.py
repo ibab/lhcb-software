@@ -1,0 +1,542 @@
+#!/usr/bin/env python
+
+
+from imp import find_module
+from SetupProject import SetupProject
+
+import sys
+import os
+
+# bootstraping the location of the file
+_this_file = find_module("LbLogin")[1]
+_scripts_dir = os.path.dirname(_this_file)
+_base_dir = os.path.dirname(_scripts_dir)
+# updating the sys.path for the bare minimum of the available scripts
+sys.path.append(_scripts_dir)
+sys.path.append(os.path.join(_base_dir, "python"))
+
+from LbUtils.Script import Script
+from LbUtils.Env import Environment, Aliases
+from tempfile import mkstemp
+import sys, os, logging
+import re
+
+
+def getLbLoginEnv(debug=False, 
+                  targetshell="csh", mysiteroot=None,
+                  cmtconfig=None, userarea=None,
+                  cmtvers="v1r20p20070208", sharedarea=None,
+                  cmtsite=None):
+    s = LbLoginScript()
+    s.parseOpts("")
+    s.options.targetshell = targetshell
+    s.options.mysiteroot = mysiteroot
+    s.options.cmtconfig = cmtconfig
+    s.options.userarea = userarea
+    s.options.cmtvers = cmtvers
+    s.options.sharedarea = sharedarea
+    s.options.cmtsite = cmtsite
+
+    return s.setEnv(debug)
+
+def _check_output_options_cb(option, opt_str, value, parser):
+    if opt_str == "--mktemp":
+        if parser.values.output:
+            raise OptionValueError("--mktemp cannot be used at the same time as --output")
+        parser.values.mktemp = True
+    elif opt_str == "--output":
+        if parser.values.mktemp:
+            raise OptionValueError("--mktemp cannot be used at the same time as --output")
+        parser.values.output = value
+
+
+
+class LbLoginScript(Script):
+    _version = "fake version"
+    
+    def __init__(self, usage=None, version=None):
+        Script.__init__(self, usage, version)
+        self._env = Environment()
+        self._aliases = Aliases()
+        self.platform = ""
+        self.binary   = ""
+        self.compdef  = ""
+    def _write_script(self, env):
+        """ select the ouput stream according to the cmd line options """
+        close_output = False
+        if self.options.output:
+            self.output_file = open(self.options.output,"w")
+            self.options.output = None # reset the option value to avoid to reuse it
+            close_output = True
+        elif self.options.mktemp:
+            fd, outname = mkstemp()
+            self.output_file = os.fdopen(fd,"w")
+            print outname
+            self.options.mktemp = None # reset the option value to avoid to reuse it
+            close_output = True
+        else :
+            self.output_file = sys.stdout
+            close_output = False
+        # write the data
+        self.output_file.write(env)
+        self.output_file.write("\n") # @todo: this may be avoided
+        if close_output: 
+            self.output_file.close()
+            
+    def defineOpts(self):
+        """ define commandline options """
+        parser = self.parser
+        parser.set_defaults(targetshell="csh")
+        parser.add_option("--shell", action="store", type="choice", metavar="SHELL",
+                          dest = "targetshell",
+                          choices = ['csh','sh','bat'],
+                          help="(internal) select the type of shell to use")
+        parser.set_defaults(mktemp=False)
+        parser.add_option("--mktemp", action="callback",
+                          callback = _check_output_options_cb,
+                          help="(internal) send the output to a temporary file and print on stdout the file name (like mktemp)")
+        parser.set_defaults(output=None)
+        parser.add_option("--output", action="callback", metavar="FILE",
+                          type = "string", callback = _check_output_options_cb,
+                          help="(internal) output the command to set up the environment ot the given file instead of stdout")
+        parser.set_defaults(mysiteroot=None)
+        parser.add_option("-m", "--mysiteroot",
+                          dest="mysiteroot",
+                          help="set MYSITEROOT", 
+                          fallback_env="MYSITEROOT")
+#        parser.add_option("-m", "--mysiteroot",
+#                          dest="mysiteroot",
+#                          help="set MYSITEROOT", 
+#                          fallback_env="MYSITEROOT" ,
+#                          fallback_conf=os.getcwd())
+        parser.set_defaults(cmtconfig=None)
+        parser.add_option("-c", "--cmtconfig",
+                          dest="cmtconfig",
+                          help="set CMTCONFIG", 
+                          fallback_env="CMTCONFIG")
+        parser.set_defaults(userarea=None)
+        parser.add_option("-u", "--userarea",
+                          dest="userarea",
+                          help="set User_release_area", 
+                          fallback_env="User_release_area")
+        parser.set_defaults(cmtvers="v1r20p20070208")
+        parser.add_option("--cmtvers",
+                          dest="cmtvers",
+                          help="set CMT version")
+        parser.set_defaults(sharedarea=None)
+        parser.add_option("-s", "--shared",
+                          dest="sharedarea",
+                          help="set the shared area", 
+                          fallback_env="VO_LHCB_SW_DIR")
+        parser.set_defaults(cmtsite=None)
+        parser.add_option("--cmtsite",
+                          dest="cmtsite",
+                          help="set the CMTSITE", 
+                          fallback_env="CMTSITE")
+
+#-----------------------------------------------------------------------------------
+
+    def setPath(self):
+        opts = self.options
+        ev = self._env
+        if ev["OSTYPE"] == "linux" :
+            if ev.has_key("SAVEPATH") :
+                if ev["PATH"] != ev["SAVEPATH"] :
+                    ev["PATH"] = ev["SAVEPATH"]
+
+    def setCVSEnv(self):
+        """ CVS base setup """
+        if sys.platform == "win32" :
+            method = "ext"
+        else :
+            method = "kserver"
+        server = "isscvs.cern.ch"
+        self._env["GAUDIKSERVER"] = ":%s:%s:/local/reps/Gaudi" % (method, server)
+        self._env["LHCBKSERVER"] = ":%s:%s:/local/reps/lhcb" % (method, server)
+
+    def setSite(self):
+        """ Site massaging """
+        opts = self.options
+        ev = self._env
+        if opts.mysiteroot :
+            ev["MYSITEROOT"] = opts.mysiteroot
+            ev["SITEROOT"] = opts.mysiteroot
+            ev["CMTSITE"] = "LOCAL"
+            opts.cmtsite = "LOCAL"
+        else :
+            if sys.platform != "win32" :
+                afsroot = "/afs"
+            else :
+                if ev.has_key("AFSROOT") :
+                    afsroot = ev["AFSROOT"]
+                else : 
+                    afsroot = "Z:"
+            cernbase = "cern.ch"
+            cernroot = os.path.join(afsroot, cernbase)
+            if opts.cmtsite == "LOCAL" :
+                opts.mysiteroot = os.getcwd()
+                self.setSite()
+            elif opts.cmtsite == "CERN" :
+                ev["CMTSITE"] = "CERN"
+                ev["AFSROOT"] = afsroot 
+                ev["SITEROOT"] = cernroot
+                if ev.has_key("MYSITEROOT") :
+                    del ev["MYSITEROOT"]
+            elif os.path.exists(cernroot) and os.path.isdir(cernroot) :
+                opts.cmtsite = "CERN"
+                self.setSite()
+            else : 
+                print ' the MYSITEROOT variable is not defined'
+                print ' we suggest you install all software under $MYSITEROOT'
+                print ' then LHCb software will be installed under $MYSITEROOT/lhcb'
+                print '      LCG software will be installed under $MYSITEROOT/lcg/external'
+                print '      CMT and OpenScientist will be installed under $MYSITEROOT/contrib'
+                print ' as an example '
+                print ' setenv $MYSITEROOT /home/ranjard/Install'
+
+#-----------------------------------------------------------------------------------
+# Core CMT business
+
+    def setCMTBin(self):
+        ev = self._env
+        if sys.platform != "win32" :
+            m1 = os.popen("uname").read()[:-1]
+            m2 = os.popen("uname -m").read()[:-1].strip()
+            ev["CMTBIN"] = "%s-%s" % (m1, m2)
+        else : 
+            ev["CMTBIN"] = "VisualC"
+
+    def setCMTSystem(self):
+        ev = self._env
+        if sys.platform != "win32" :
+            if ev.has_key("UNAME") :
+                uname = ev["UNAME"]
+            else :
+                uname = os.popen("uname").read()[:-1]
+            may_use_afs = True
+            if uname == "Darwin" :
+                may_use_afs = False
+            if may_use_afs :
+                f = os.popen("fs sysname")
+                a = f.read()
+                if f.close() is None :
+                   a = a.replace(" ","")
+                   a = a.replace(":","")
+                   a = a.replace("'","")
+                   a = a.replace("Currentsysnameis","")
+                   a = a.replace("Currentsysnamelistis","")
+                   system = a.split()[0]
+            else :
+                if uname == "Linux" or uname == "LynxOS" :
+                    uname2 = os.popen("uname -m").read()[:-1].strip()
+                    system = "%s-%s" % (uname, uname2)
+                elif uname == "Darwin" or uname.startswith("CYGWIN") :
+                    system = uname
+        else :
+            if ev.has_key("CMTCONFIG") :
+                system = ev["CMTCONFIG"]
+            else :
+                system = ev["CMTBIN"]
+
+        return system
+
+    def setCMTInternals(self):
+        ev = self._env
+        opts = self.options
+        
+        self.setCMTBin()
+
+        if opts.targetshell == "csh" and ev.has_key("SHELL") :
+            if os.path.basename(ev["SHELL"]) == "tcsh" :
+                for l in open(os.path.join(ev["CMTROOT"], "src", "setup.tcsh"),"r") :
+                    self._write_script(l[:-1])
+                    
+        if opts.targetshell == "sh" and ev.has_key["ZSH_NAME"] :
+            if ev["ZSH_NAME"] == "zsh" :
+                for l in open(os.path.join(ev["CMTROOT"], "src", "setup.zsh"),"r") :
+                    self._write_script(l[:-1])
+                
+        newpath = []    
+        for p in ev["PATH"].split(os.pathsep) :
+            if p.find(os.sep + "CMT" + os.sep) == -1 :
+               newpath.append(p)
+        newpath.append(os.path.join(ev["CMTROOT"], ev["CMTBIN"]))
+        ev["PATH"] = os.pathsep.join(newpath)
+
+        self._aliases["cmt"] = os.path.join(ev["CMTROOT"], ev["CMTBIN"], "cmt.exe")
+
+        if ev.has_key("CLASSPATH") :
+            newpath = []
+            for p in ev["CLASSPATH"].split(os.pathsep) :
+                if p.find(os.sep + "CMT" + os.sep) == -1 :
+                   newpath.append(p)
+            newpath.append(os.path.join(ev["CMTROOT"], "java"))
+            ev["CLASSPATH"] = os.pathsep.join(newpath)
+        else :
+            ev["CLASSPATH"] = os.path.join(ev["CMTROOT"], "java")
+
+        self._aliases["jcmt"] = "(java cmt_parser)"
+
+        ev["CMTCONFIG"] = self.setCMTSystem()
+
+    def setCMT(self):
+        opts = self.options
+        ev = self._env
+        if opts.cmtsite == "CERN" :
+            ev["CONTRIBDIR"] = os.path.join(ev["SITEROOT"], "sw", "contrib")
+        else :
+            ev["CONTRIBDIR"] = os.path.join(ev["SITEROOT"], "contrib")
+
+        if sys.platform == "darwin" :
+            opts.cmtvers = "v1r20p20070524"
+            
+        ev["CMT_DIR"] = ev["CONTRIBDIR"]
+        ev["CMTROOT"] = os.path.join(ev["CMT_DIR"], "CMT", opts.cmtvers)
+        
+        self.setCMTInternals()
+#-----------------------------------------------------------------------------------
+              
+    def setHomeDir(self):
+        ev = self._env
+        opts = self.options
+        if sys.platform == "win32" :
+            homedir = os.path.join(ev["HOMEDRIVE"], ev["HOMEPATH"])
+        else :
+            homedir = ev["HOME"]
+        rhostfile = os.path.join(homedir,".rhosts")
+        if not os.path.exists(rhostfile) and sys.platform == "win32" :
+            print "Creating a %s file to use CMT" % rhostfile 
+            print " "
+            print "Joel.Closier@cern.ch"
+            f = open(rhostfile, "w")
+            f.write("+ %s\n") % ev["USER"]
+            f.close()
+        # remove any .cmtrc file stored in the $HOME directory
+        cmtrcfile = os.path.join(homedir, ".cmtrc")
+        if os.path.exists(cmtrcfile) :
+            os.remove(cmtrcfile)
+        # to work with rootd the .rootauthrc file is required
+        rootrcfile = os.path.join(homedir, ".rootauthrc")
+        if not os.path.exists(rootrcfile) :
+            if opts.cmtsite == "CERN" :
+                srcrootrcfile = os.path.join(ev["AFSROOT"], "cern.ch", "lhcb", "scripts", ".rootauthrc")
+            elif opts.cmtsite == "LOCAL" :
+                srcrootrcfile = os.path.join(ev["MYSITEROOT"].split(os.pathsep)[0], "cern.ch", "lhcb", "scripts", ".rootauthrc")                
+            shutil.copy(srcrootrcfile, rootauthrc)
+
+        if not ev.has_key("LD_LIBRARY_PATH") :
+            ev["LD_LIBRARY_PATH"] = ""
+
+        if not ev.has_key("ROOTSYS") :
+            ev["ROOTSYS"] = ""
+
+        self.setUserArea()  
+
+    def setUserArea(self):
+        log = logging.getLogger()
+        opts = self.options
+        ev = self._env
+        al = self._aliases
+        newdir = False
+        if not opts.userarea :
+            # @todo: the windows part has to be reviewed
+            if sys.platform == "win32" :
+                opts.userarea = os.path.join(ev["HOMEDRIVE"], ev["HOMEPATH"], "cmtuser")
+            else :
+                opts.userarea = os.path.join(ev["HOME"], "cmtuser") # @todo: use something different for window
+        ev["User_release_area"] = opts.userarea
+
+        if os.path.exists(opts.userarea) :
+            if not os.path.isdir(opts.userarea) :
+                os.rename(opts.userarea, opts.userarea + "_bak")
+                log.warning("Renamed file %s into %s" % (opts.userarea, opts.userarea + "_bak"))
+                os.mkdir(opts.userarea)
+                newdir = True
+                print " --- a new cmtuser directory has been created in your HOME directory"
+        else :
+            os.mkdir(opts.userarea)
+            newdir = True
+
+        if opts.cmtsite == "CERN" :
+            if newdir :
+                os.system("fs setacl %s system:anyuser rl" % opts.userarea )
+                print " --- with public access (readonly)"
+                print " --- use mkprivate to remove public access to the current directory"
+                print " --- use mkpublic to give public access to the current directory"
+            al["mkprivate"] = "find . -type d -print -exec fs setacl {} system:anyuser l \\;"
+            al["mkpublic"] = "find . -type d -print -exec fs setacl {} system:anyuser rl \\;"
+
+        dirm = os.path.join(opts.userarea, "cmt")
+        if os.path.exists(dirm) :
+            if os.path.isdir(dirm):
+                os.rmdir(dirm)
+            else:
+                os.remove(dirm)
+            
+    def setSharedArea(self):
+        log = logging.getLogger()
+        opts = self.options
+        ev = self._env
+        if opts.sharedarea :
+            if opts.cmtsite == "LOCAL" :
+                opts.mysiteroot = os.pathsep.join(opts.sharedarea.split(os.pathsep))
+            else :
+                log.error("Cannot have a shared area if your CMTSITE is not local")
+            
+    def setCMTConfig(self, debug=False):
+        ev = self._env
+        opts = self.options
+        gcclist = []
+        if sys.platform.find("linux") != -1 or ev["OSTYPE"] == "linux" or ev["OSTYPE"] == "linux-gnu" :
+            for l in os.popen("gcc --version") :
+                if l.find("gcc") != -1 :
+                    gcclist = l[:-1].split()[2]
+                    gcclist = gcclist.split(".")
+                    gccvers = int("".join(gcclist[:2]))
+                    if gccvers >= 34 :
+                        self.compdef = "gcc%s" % "".join(gcclist[:2])
+                    else :
+                        self.compdef = "gcc%s" % "".join(gcclist[:3])
+                    break
+            
+            hwdict = {"ia32" : ["i386"], "amd64" : ["x86_64"] }
+            nathw = os.popen("uname -i").read()[:-1]
+            for h in hwdict :
+                for l in hwdict[h] :
+                    if l == nathw :
+                        self.binary = h
+                        break
+            relfiles = [ "/etc/redhat-release" , "/etc/system-release" ]
+            nbre = re.compile("[0-9]")
+            for r in relfiles :
+                if os.path.exists(r) :
+                    firstl = open(r, "r").read()[:-1]
+                    distrib = firstl.split()[0]
+                    rhw = nbre.search(firstl).group()
+                    if distrib == "Scientific" :
+                        self.platform = "slc%s" % rhw
+                    elif distrib == "Fedora" :
+                        self.platform = "fc%s" % rhw
+                    else:
+                        self.platform = "rh%s" % rhw
+                    break
+        elif sys.platform.find("darwin") != -1 :
+            for l in os.popen("gcc --version") :
+                if l.find("gcc") != -1 :
+                    gcclist = l[:-1].split()[2]
+                    gcclist = gcclist.split(".")
+                    gccvers = int("".join(gcclist))
+                    self.compdef = "gcc%s" % "".join(gcclist)
+                    break
+                
+            nathw = os.popen("uname -p").read()[:-1]
+            if nathw == "powerpc" :
+                self.binary = "ppc"
+            else :
+                self.binary = "ia32"
+            
+            for l in os.popen("sw_vers") :
+                if l.find("ProductVersion") != -1 :
+                    platlist = l[:-1].split()[1]
+                    platlist = platlist.split(".")
+                    self.platform = "osx%s" % "".join(platlist[:2])
+
+        if opts.cmtconfig :
+            conflist = opts.cmtconfig.split("_")
+            if len(conflist) > 2 :
+                self.platform = conflist[0]
+                self.binary   = conflist[1]
+                self.compdef  = conflist[2]
+            
+            for c in conflist :
+                if c.startswith("gcc32") or c == "slc3" or c == "sl3":
+                    self.platform = "slc3"
+                    self.binary   = "ia32"
+                    self.compdef  = "gcc323"
+                    break
+                if c == "sl4" :
+                    self.platform = "slc4"
+
+        if self.compdef == "gcc323" :
+            if "".join(gcclist[:3]) != "323" :
+                if opts.cmtsite == "CERN":
+                    compiler_path = "/afs/cern.ch/lhcb/externallib/SLC3COMPAT/slc3_ia32_gcc323"
+                    if not os.path.isdir(compiler_path) or not os.path.isfile("/usr/bin/gcc32") :
+                        print "%s compiler is not available on this node" % self.compdef
+                    else :
+                        if ev.has_key("PATH") :
+                            pthlist = ev["PATH"].split(os.pathsep)
+                        else :
+                            pthlist = []
+                        pthlist.append(compiler_path)
+                        ev["PATH"] = os.pathsep.join(pthlist)
+                        if ev.has_key("LD_LIBRARY_PATH") :
+                            lpthlist = ev["LD_LIBRARY_PATH"].split(os.path.sep)
+                        else :
+                            lpthlist = []
+                        lpthlist.append(compiler_path)
+                        ev["LD_LIBRARY_PATH"] = os.pathsep.join(lpthlist)
+
+
+        ev["CMTOPT"] = "_".join([self.platform, self.binary, self.compdef])
+        ev["CMTDEB"] = ev["CMTOPT"] + "_dbg"
+        
+        ev["CMTCONFIG"] = ev["CMTOPT"]
+        if debug :
+            ev["CMTCONFIG"] = ev["CMTDEB"]
+            
+    def setEnv(self, debug=False):
+        self.setPath()
+        self.setCVSEnv()
+        self.setSite()
+        self.setCMT()
+        self.setSharedArea()
+
+        self.setCMTConfig(debug)
+        
+        self.setHomeDir()
+
+        return self._env
+
+    def Manifest(self, debug=False):
+        ev = self._env
+        opts = self.options
+        print "*" * 80
+        toprint = "*" + " " * 27 + "---- LHCb Login ----"
+        print toprint + " " * (80-len(toprint)-1) + "*"
+        toprint = "*" + " " * 11 + "Building with %s on %s_%s system" % (self.compdef, self.platform, self.binary)
+        print toprint + " " * (80-len(toprint)-1) + "*"
+        toprint = "*" + " " * 11 + "DEVELOPMENT SCRIPT"
+        print toprint + " " * (80-len(toprint)-1) + "*"
+        print "*" * 80
+        print " --- CMTROOT is set to %s " % ev["CMTROOT"]
+        print " --- CMTCONFIG is set to %s " % ev["CMTCONFIG"]
+        if debug :
+            print " --- to compile and link in debug mode : setenv CMTCONFIG $CMTDEB ; gmake"
+        if ev.has_key("CMTPATH") :
+            print " --- CMTPATH is set to %s" % ev["CMTPATH"] 
+        else :
+            print " --- User_release_area is set to %s" % ev["User_release_area"]
+            print " --- CMTPROJECTPATH is set to $User_release_area:$LHCb_release_area:$Gaudi_release_area:$LCG_release_area"
+            print " --- projects will be searched in $CMTPROJECTPATH "
+        print "-" * 80
+
+    def main(self):
+        opts = self.options
+        debug = False
+        for a in self.args :
+            if a == "debug" :
+                debug = True
+
+        self.setEnv(debug)
+        self._write_script(self._env.gen_script(opts.targetshell)
+                           +self._aliases.gen_script(opts.targetshell))
+        
+        self.Manifest(debug)
+        return 0
+
+
+if __name__ == '__main__':
+    sys.exit(LbLoginScript(usage="%prog [options]").run())
+
+
