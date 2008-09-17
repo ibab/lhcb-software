@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichMarkovRingFinderMoni
  *
- *  $Id: RichMarkovRingFinderMoni.cpp,v 1.41 2008-08-29 12:13:52 jonrob Exp $
+ *  $Id: RichMarkovRingFinderMoni.cpp,v 1.42 2008-09-17 12:34:20 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -116,8 +116,9 @@ StatusCode Moni::execute()
             hid(rad,"totalPhotons"),
             RAD+" Photon Yield : Trackless Rings",
             -0.5, 50.5, 51 );
-    
+
     // refit the ring ...
+    //FastRingFitter fitter(**iR);
     FastRingFitter fitter;
     // loop over hits on the ring
     for ( LHCb::RichRecPixelOnRing::Vector::iterator iP = (*iR)->richRecPixels().begin();
