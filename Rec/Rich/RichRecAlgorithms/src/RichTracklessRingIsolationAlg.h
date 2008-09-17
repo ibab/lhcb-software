@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::TracklessRingIsolationAlg
  *
  *  CVS Log :-
- *  $Id: RichTracklessRingIsolationAlg.h,v 1.3 2008-07-15 14:15:42 shaines Exp $
+ *  $Id: RichTracklessRingIsolationAlg.h,v 1.4 2008-09-17 12:28:51 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
@@ -26,6 +26,7 @@
 
 // Kernel
 #include "RichKernel/RichMap.h"
+#include "RichRecBase/FastRingFitter.h"
 
 // boost
 #include "boost/assign/list_of.hpp"
@@ -81,6 +82,9 @@ namespace Rich
       ///Phi cuts
       std::vector<unsigned int> m_nPhiRegions;
       std::vector<double> m_sizephicut;
+
+      // Max ring refiting variance
+      std::vector<double> m_maxFitVariance;
     
     };
 

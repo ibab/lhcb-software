@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichTracklessRingIsolationAlg
  *
  *  CVS Log :-
- *  $Id: RichTracklessRingIsolationAlg.cpp,v 1.5 2008-09-12 15:45:12 jonrob Exp $
+ *  $Id: RichTracklessRingIsolationAlg.cpp,v 1.6 2008-09-17 12:28:51 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -44,6 +44,7 @@ TracklessRingIsolationAlg( const std::string& name,
   declareProperty( "SepGMax", m_sepGMax = list_of  (342)(75)(130) );
   declareProperty( "NPhiRegions", m_nPhiRegions = list_of  (8)(8)(8)   );
   declareProperty( "SizePhiCut", m_sizephicut = list_of  (0.2125)(0.2125)(0.2125)   );
+  declareProperty( "MaxFitVariance", m_maxFitVariance = list_of (200)(200)(200) );
 }
 
 // Destructor
@@ -64,7 +65,6 @@ StatusCode TracklessRingIsolationAlg::initialize()
     //numbers for hit pixel calculations
     m_scale[radi] = (m_ckThetaMax[radi]/m_sepGMax[radi]);
   }
-
 
   return sc;
 }
@@ -87,6 +87,8 @@ StatusCode TracklessRingIsolationAlg::execute()
   for ( LHCb::RichRecRings::const_iterator iRing = inrings->begin();
         iRing != inrings->end(); ++iRing )
   {
+    debug() << "Trying ring " << (*iRing)->key() << endreq;
+
     bool ringIsIsolated(true);
 
     // Ring radiator
@@ -111,7 +113,7 @@ StatusCode TracklessRingIsolationAlg::execute()
 
       if ( centreXYdif < m_sizesepcut[RingRadiator]   )
       {
-        //debug() << "Too close to another ring !" << endmsg;
+        debug() << " -> Too close to another ring !" << endmsg;
         ringIsIsolated = false;
         break;
       }
@@ -149,10 +151,9 @@ StatusCode TracklessRingIsolationAlg::execute()
       const double Ydifsq      = std::pow( fabs(RingCentreLocal.y()-PixelLocal.y()), 2 );
       const double sep = std::sqrt(Xdifsq+Ydifsq);
 
-
       ++hittotal; // Counting total hits assoc with this ring
 
-      //Estimated Ch theta for this pixel
+      // Estimated Ch theta for this pixel
       const double ckThetaEsti = sep*m_scale[RingRadiator];
 
       // Does hit lie outside ring region?
@@ -185,8 +186,9 @@ StatusCode TracklessRingIsolationAlg::execute()
 
     if ( frachitsout > m_sizepixelcut[RingRadiator] )
     {
-      //debug() << "Too many pixel hits outside ring!" << endmsg;
+      debug() << "Too many pixel hits outside ring!" << endmsg;
       ringIsIsolated = false;
+      break;
     }
 
     ++noofrings;
@@ -196,14 +198,39 @@ StatusCode TracklessRingIsolationAlg::execute()
     {
       if ( (double)(*iRegion)/(double)hittotal > m_sizephicut[RingRadiator] )
       {
-        //debug() << "Too many blobs!" << endmsg;
+        debug() << "Too many blobs!" << endmsg;
         ringIsIsolated = false;
+        break;
       }
     }
 
+    // refit the ring
+    //FastRingFitter fitter(**iRing);
+    FastRingFitter fitter;
+    // data points
+    for ( LHCb::RichRecPixelOnRing::Vector::iterator iP = (*iRing)->richRecPixels().begin();
+          iP != (*iRing)->richRecPixels().end(); ++iP )
+    {
+      // get pixel from pixelOnRing
+      LHCb::RichRecPixel * pixel = (*iP).pixel();
+      // pixel hit
+      //const Gaudi::XYZPoint & PixelLocal = pixel->localPosition();
+      const Gaudi::XYZPoint & PixelLocal = pixel->radCorrLocalPositions().position(RingRadiator);
+      // add (x,y) point to the fitter
+      fitter.addPoint( PixelLocal.x(), PixelLocal.y() );
+    }
+    // run the fit
+    fitter.fit();
+    // Fit OK ?
+    if ( fitter.result().Status != 0 ||
+         fitter.result().Variance > m_maxFitVariance[RingRadiator] )
+    {
+      // debug() << " -> Failed refitting : " << fitter.result() << endmsg;
+      ringIsIsolated = false;
+      break;
+    }
 
-
-    //---------------------------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------
     // is ring isolated
     if ( ringIsIsolated )
     {
