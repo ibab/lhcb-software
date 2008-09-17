@@ -1,7 +1,10 @@
-// $Id: VeloClusterMonitor.cpp,v 1.7 2008-09-02 08:58:58 erodrigu Exp $
+// $Id: VeloClusterMonitor.cpp,v 1.8 2008-09-17 17:14:05 krinnert Exp $
 // Include files 
 // -------------
-// from Gaudi
+
+#include <string.h>
+
+/// from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
 // from VeloDet
@@ -13,6 +16,7 @@
 // from Boost
 #include <boost/assign/list_of.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/format.hpp>
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : VeloClusterMonitor
@@ -37,6 +41,7 @@ namespace Velo {
 Velo::VeloClusterMonitor::VeloClusterMonitor( const std::string& name,
 					      ISvcLocator* pSvcLocator)
   : Velo::VeloMonitorBase ( name , pSvcLocator )
+  , m_nClustersPerSensor(256,0)
 {
   m_rSensorNumbers = boost::assign::list_of(1)(3)(5)(7)(9)(20)(24)(26)(28)(30);
   m_phiSensorNumbers = boost::assign::list_of(65)(67)(69)(71)(73)(84)(88)(90)(92)(94);
@@ -45,6 +50,7 @@ Velo::VeloClusterMonitor::VeloClusterMonitor( const std::string& name,
 		   m_clusterCont = LHCb::VeloClusterLocation::Default );
   declareProperty( "RSensorNumbersForPlots",   m_rSensorNumbers );
   declareProperty( "PhiSensorNumbersForPlots", m_phiSensorNumbers );
+  declareProperty( "PerSensorPlots", m_perSensorPlots=false );
 }
 
 //=============================================================================
@@ -112,6 +118,10 @@ StatusCode Velo::VeloClusterMonitor::veloClusters() {
 //=============================================================================
 void Velo::VeloClusterMonitor::monitorClusters() {
 
+  if ( m_perSensorPlots ) {
+    memset(&m_nClustersPerSensor[0],0,m_nClustersPerSensor.size()*sizeof(unsigned int));
+  }
+
   // Retrieve the VeloClusters
   // -------------------------
   StatusCode sc = veloClusters();
@@ -153,6 +163,8 @@ void Velo::VeloClusterMonitor::monitorClusters() {
     // ----------------------------------------------------------
     unsigned int sensorNumber = cluster -> channelID().sensor();
     
+    ++m_nClustersPerSensor[sensorNumber];
+
     plot2D( sensorNumber, nstrips, "Cluster size vs sensor",
 	    "Number of strips per cluster versus sensor",
 	    -0.5, 131.5, -0.5, 5.5, 132, 6 );
@@ -189,6 +201,20 @@ void Velo::VeloClusterMonitor::monitorClusters() {
       if ( sensorNumber == 24 ) rCorrelations( sensorNumber, localR1 );
     }
   }
+
+  // plot number of clusters seperately for each sensor
+  if ( m_perSensorPlots ) {
+    for (unsigned int s=0; s<m_nClustersPerSensor.size(); ++s) {
+      if ( 0 == m_nClustersPerSensor[s] ) continue;
+
+      boost::format fmtEvt ( "# clusters sensor %d" ) ;
+      fmtEvt % s ;
+      const std::string hName = fmtEvt.str() ;
+      plot1D( m_nClustersPerSensor[s], hName, hName, -0.5, 20000.5, 20001 );
+
+    }
+  }
+  
 }
 
 //=============================================================================

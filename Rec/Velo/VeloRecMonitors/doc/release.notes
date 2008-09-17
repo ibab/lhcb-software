@@ -4,6 +4,9 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2008-09-17 - Kurt Rinnert
+ - added number of clusters per sensor to cluster monitor, off by default.
+
 ! 2008-09-15 - Kurt Rinnert
  - added sampling monitor plots separated for A and C side.
 
