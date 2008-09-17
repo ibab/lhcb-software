@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-09-17 - Maria Del Carmen Barandela Pazos
+ - Updated dblookup.xml to use the LHCBONR_COOL Oracle service.
+
 !================ Online/CondDBServer v1r1 2008-09-09 ========================
 
 ! 2008-09-09 - Maria Del Carmen Barandela Pazos
