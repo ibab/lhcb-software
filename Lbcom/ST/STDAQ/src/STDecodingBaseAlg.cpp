@@ -1,4 +1,4 @@
-// $Id: STDecodingBaseAlg.cpp,v 1.19 2008-09-13 12:33:21 mneedham Exp $
+// $Id: STDecodingBaseAlg.cpp,v 1.20 2008-09-17 12:57:05 mneedham Exp $
 
 #include <algorithm>
 
@@ -376,5 +376,5 @@ bool STDecodingBaseAlg::validSpill() const{
   // check spill is actually read out using the ODIN
   ODIN* odin = get<ODIN>(ODINLocation::Default); 
   const unsigned int numberOfSpills = odin->timeAlignmentEventWindow();
-  return m_spillOffset < numberOfSpills ;
+  return m_spillOffset <= numberOfSpills ;
 }

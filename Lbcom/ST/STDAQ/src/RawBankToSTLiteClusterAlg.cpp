@@ -1,4 +1,4 @@
-// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.29 2008-09-13 12:33:21 mneedham Exp $
+// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.30 2008-09-17 12:57:05 mneedham Exp $
 
 
 #include <algorithm>
@@ -70,11 +70,6 @@ StatusCode RawBankToSTLiteClusterAlg::execute() {
 
 
   // Retrieve the RawEvent:
-
-  if (!validSpill()) {
-    return Warning("Not a valid spill",StatusCode::SUCCESS, 1);
-  }
-
   RawEvent* rawEvt = get<RawEvent>(m_rawEventLocation);
 
  
@@ -95,6 +90,9 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt) const{
   fCont->reserve(5000);  
   put(fCont, m_clusterLocation);
 
+  if (!validSpill()) {
+    return Warning("Not a valid spill",StatusCode::SUCCESS, 1);
+  }
 
   std::vector<unsigned int> missing = missingInAction(tBanks);
   if ( missing.empty() == false ){
@@ -204,7 +202,7 @@ StatusCode RawBankToSTLiteClusterAlg::finalize() {
   const double failed = counter("skipped Banks").flag();
   const double processed = counter("# valid banks").flag();
   double eff = 0.0;
-  if (LHCb::Math::Equal_To<double>()(processed, 0u) == true){   
+  if (!LHCb::Math::Equal_To<double>()(processed, 0.0) == true){   
     eff = 1.0 - (failed/processed); 
   }
   info() << "Successfully processed " << 100* eff << " %"  << endmsg;

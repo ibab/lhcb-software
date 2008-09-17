@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.45 2008-09-17 08:00:24 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.46 2008-09-17 12:57:05 mneedham Exp $
 
 #include <algorithm>
 
@@ -300,7 +300,7 @@ StatusCode RawBankToSTClusterAlg::finalize() {
   const double processed = counter("# valid banks").flag();
 
   double eff = 0.0; 
-  if (LHCb::Math::Equal_To<double>()(processed, 0u)){ 
+  if (!LHCb::Math::Equal_To<double>()(processed, 0.0)){ 
     eff = 1.0 - (failed/processed); 
   }
   info() << "Successfully processed " << 100* eff << " %"  << endmsg;
