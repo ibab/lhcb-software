@@ -45,3 +45,31 @@ ToolSvc.L0DUConfig.TCK_0x0011.Channels ={
 { "name=[MUON]"    , "rate==[100.0]" , "conditions= [Muon1,Pt]" },
 { "name=[SPDgt10]" , "rate==[100.0]" , "conditions= [SpdMult,GT,10]" }
 };
+
+
+
+//-------------------------------------------------------
+// Created by PVSS / L0DU  : 2008-09-17 15:15:07
+//-------------------------------------------------------
+
+//------------------------- TCK = 0x0012 / Recipe name : MINBIAS_CaloOrMuonOrSpd_v2_0x0012
+ToolSvc.L0DUConfig.registerTCK += {"0x0012"};
+ToolSvc.L0DUConfig.TCK_0x0012.Name = "MINBIAS_CaloOrMuonOrSpd_v2_0x0012";
+ToolSvc.L0DUConfig.TCK_0x0012.Description ="(hadEt>10 and spdMult>1) or (mu1Pt>0) or (spdMult>10)";
+
+
+ToolSvc.L0DUConfig.TCK_0x0012.Conditions = {
+{ "name=[Hadron,Et]"     , "data=[Hadron(Et)]" , "comparator=[>]" , "threshold=[10]" },
+{ "name=[SpdMult]"       , "data=[Spd(Mult)]"  , "comparator=[>]" , "threshold=[1]"  },
+{ "name=[SpdMult,GT,10]" , "data=[Spd(Mult)]"  , "comparator=[>]" , "threshold=[10]" },
+{ "name=[Muon1,Pt]"      , "data=[Muon1(Pt)]"  , "comparator=[>]" , "threshold=[0]"  }
+};
+
+ToolSvc.L0DUConfig.TCK_0x0012.Channels ={
+{ "name=[HCAL]"    , "rate==[100.0]" , "conditions= [Hadron,Et]" , "DISABLE=[TRUE]" },
+{ "name=[SPD]"     , "rate==[100.0]" , "conditions= [SpdMult]" , "DISABLE=[TRUE]" },
+{ "name=[CALO]"    , "rate==[100.0]" , "conditions= [HCAL]          && [SPD]" },
+{ "name=[MUON]"    , "rate==[100.0]" , "conditions= [Muon1,Pt]" },
+{ "name=[SPDgt10]" , "rate==[100.0]" , "conditions= [SpdMult,GT,10]" }
+};
+

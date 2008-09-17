@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.128 2008-09-15 09:19:21 odescham Exp $
+! $Id: release.notes,v 1.129 2008-09-17 15:32:23 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
+
+! 2008-09-17 - Olivier Deschamps
+- L0DUConfig_0x001X.opts : add new algorithm TCK = 0x0012
+                          (http://lblogbook.cern.ch/L0+Trigger/408)
 
 ! 2008-09-15 - Olivier Deschamps
 - L0DUConfig_0x001X.opts : add new algorithm TCK = 0x0011 
