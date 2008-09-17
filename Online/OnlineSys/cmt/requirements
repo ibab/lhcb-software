@@ -32,7 +32,7 @@ use OnlineDummyReader v1r4     Online
 use OnlineHistDB      v4r11    Online
 use OnlineKernel      v1r19    Online
 use OnlineTasks       v1r14    Online
-use Presenter         v0r11    Online
+use Presenter         v0r12    Online
 use PyDIM             v2r5     Online
 use RateService       v2r3     Online
 use RawBankSizes      v1r4     Online
