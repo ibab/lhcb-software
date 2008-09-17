@@ -35,6 +35,7 @@ public:
 protected:
   //  sao enderecos na transient store
   std::string m_L0DUReportLocation;
+  std::vector<std::string> m_Hlt1Lines;
   //  std::string m_PileUpDataLocation;
   //  std::string m_L0DUChannelLocation;
 
@@ -112,9 +113,12 @@ protected:
 
  private:
 
-  int counter1;        // "All events"
+  std::string m_location;
+  int hlt1allcall;        // "All events"
   int _counter2;       // "L0 accepted evts"
-  float _efficiency;  // "Ratio counter2/counter1"
+  float _efficiency;  // "Ratio counter2/hlt1allcall"
+  std::vector<double> m_allAcc;
+  std::vector<double> m_allCall;
   double physallacc;
   double randallacc;
   double physallcall;

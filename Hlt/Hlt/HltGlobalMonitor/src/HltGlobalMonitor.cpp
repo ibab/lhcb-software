@@ -17,6 +17,7 @@
 #include "AIDA/IHistogram3D.h"
 #include "AIDA/IProfile1D.h"
 #include "AIDA/IProfile2D.h"
+#include "Event/HltDecReports.h"
 
 using namespace LHCb;
 
@@ -40,6 +41,8 @@ HltGlobalMonitor::HltGlobalMonitor( const std::string& name,
   
   // se nao tiver declarado no options, ele usa este
   declareProperty("L0DUReportLocation", m_L0DUReportLocation );
+  declareProperty("Hlt1Lines", m_Hlt1Lines );
+  declareProperty("DecReportsLocation", m_location = LHCb::HltDecReportsLocation::Default);
 
   // declareProperty("HadronAlleySelections", m_hadronalleySelections);
 
@@ -67,13 +70,15 @@ StatusCode HltGlobalMonitor::initialize() {
   
   starthistos();
 
-  counter1=0;            // "All events"
+  hlt1allcall=0;            // "All events"
   _counter2=0;           // "L0 accepted evts"
-  _efficiency=0;        // "Ratio counter2/counter1"
-  physallacc=0;
-  randallacc=0;
-  physallcall=0;
-  randallcall=0;
+  _efficiency=0;        // "Ratio counter2/hlt1allcall"
+  for (std::vector<std::string>::const_iterator i = m_Hlt1Lines.begin(); i!=m_Hlt1Lines.end();++i) {
+     m_allAcc.push_back(0);
+     declareInfo("COUNTER_TO_RATE["+*i+"Acc]",  m_allAcc.back(), "Hlt1 "+*i+" Alley Accepts");
+     m_allCall.push_back(0);
+     declareInfo("COUNTER_TO_RATE["+*i+"Call]", m_allCall.back(), "Hlt1 "+*i+" Alley Calls");
+  }
   orallacc=0;
   gpstime=0;
   gpstimesec=0;
@@ -85,15 +90,11 @@ StatusCode HltGlobalMonitor::initialize() {
   m_histoodinentry = m_histosvc->book("m_histoodinentry","Trigger Type Entry",8, 0., 8.);
   m_histoL0 = m_histosvc->book("m_histoL0","L0 bits",14,0.,14.);
   
-//  declareInfo("counter1",_counter1,"All events");
+//  declareInfo("hlt1allcall",_hlt1allcall,"All events");
   declareInfo("counter2",_counter2,"L0 accepted evts");
-  declareInfo("efficiency",_efficiency,"Ratio counter2/counter1");
+  declareInfo("efficiency",_efficiency,"Ratio counter2/hlt1allcall");
   declareInfo("COUNTER_TO_RATE[Hlt1AlleyOr]", orallacc, "Hlt1 Alleys Or Accepts");
-  declareInfo("COUNTER_TO_RATE[Hlt1PhysAlley]", physallacc, "Hlt1 Physics Alley Accepts");
-  declareInfo("COUNTER_TO_RATE[Hlt1RandAlley]", randallacc, "Hlt1 Random Alley Accepts");
-  declareInfo("COUNTER_TO_RATE[Hlt1PhysCall]", physallcall, "Hlt1 Physics Alley Calls");
-  declareInfo("COUNTER_TO_RATE[Hlt1RandCall]", randallcall, "Hlt1 Random Alley Calls");
-  declareInfo("COUNTER_TO_RATE[Hlt1Calls]",counter1,"Hlt1 Calls");
+  declareInfo("COUNTER_TO_RATE[Hlt1Calls]",hlt1allcall,"Hlt1 Calls");
   declareInfo("COUNTER_TO_RATE[GpsTimeoflast]",gpstimesec,"Gps time of last event");
    declareInfo("m_histoL0",m_histoL0,"Successful L0 bits");
    declareInfo("m_histoL0corr",m_histoL0corr,"Correlated L0 bits");
@@ -116,7 +117,7 @@ StatusCode HltGlobalMonitor::execute() {
 //  m_l0 = get<L0DUReport>(m_L0DUReportLocation);
 //  if (!m_l0) error() << " No L0 in TES!" << endreq;
   
-  counter1++;  // count all evts
+  hlt1allcall++;  // count all evts
 //  monitorL0();
 
  //  LHCb::HltSummary* sum = get<LHCb::HltSummary>(LHCb::
@@ -153,8 +154,8 @@ void HltGlobalMonitor::monitorL0() {
   
   _counter2++;  // count L0 accepts
 
-  _efficiency= float(_counter2)/counter1;
-  bool first=true;
+  _efficiency= float(_counter2)/hlt1allcall;
+//  bool first=true;
 
   for (int i = 0; i<14; i+=1){ 
     if (m_l0->channelDecision(i)) {
@@ -294,35 +295,36 @@ void HltGlobalMonitor::monitorAlleysinput() {
    return;
  }
    fill(m_histoodinentry, odin->triggerType(), 1.);
-   stringKey keyphys("PhysicsTrigger");
-   stringKey keyrand("RandomTrigger");
-   debug() << "ODIN trigger type" << odin->triggerType() << endreq;
-   debug() << "gps time" << odin->gpsTime() << endreq;
    if (odin->triggerType()==3){
      randallcall=randallcall+1;
    }
    else {
      physallcall=physallcall+1;
    }
-   if (dataSvc().selection(keyphys,this).decision()) {
-//      m_histoalleycall = plot1D(binMuonAlley,"AlleyCalls", "Alleys Called", 0, 6., 6, 1.);
-      if (odin->triggerType()!=0){ 
-        debug() << "ODIN trigger type" << odin->triggerType() << endreq;
-      }
-      fill(m_histoalleycall, binMuonAlley, 1.);
+  if (!exist<LHCb::HltDecReports>( m_location )){
+//  if (!exist<LHCb::HltDecReports>( LHCb::HltDecReportsLocation::Default )){
+    warning() << "No HltDecReport" << endreq;
+    return;
+  }
+  LHCb::HltDecReports* decisions = get<LHCb::HltDecReports>( m_location );
+//  LHCb::HltDecReports* decisions = get<LHCb::HltDecReports>( LHCb::HltDecReportsLocation::Default );
+  int j=0;
+  for (std::vector<std::string>::const_iterator i = m_Hlt1Lines.begin(); i!=m_Hlt1Lines.end();++i) {
+     const LHCb::HltDecReport*  decision = decisions->decReport( *i );
+     if (decision == 0 ) {
+       error() << "Name of teh decision is incorrect" << endreq;
+       return;
+     }
+     if (decision->decision()) {
+      fill(m_histoalleycall, j+1, 1.);
       fill(m_histoodintype, odin->triggerType(), 1.);
-      physallacc=physallacc+1;
+      m_allAcc[j]=m_allAcc[j]+1;
       orallacc=orallacc+1;
-   }
-    if (dataSvc().selection(keyrand,this).decision()){ 
-//      Hlt::Histo* m_histoalleycall = plot1D(binMuonHadAlley,"AlleyCalls", "Alleys Called", 0, 6., 6, 1.);
-//      m_histoalleycall = plot1D(binMuonHadAlley,"AlleyCalls", "Alleys Called", 0, 6., 6, 1.);
-      debug() << "ODIN trigger type" << odin->triggerType() << endreq;
-      fill(m_histoalleycall, binMuonHadAlley, 1.);
-      fill(m_histoodintype, odin->triggerType(), 1.);
-      randallacc=randallacc+1;
-      orallacc=orallacc+1;
-   }
+      j=j+1;
+     }
+  }
+   debug() << "ODIN trigger type" << odin->triggerType() << endreq;
+   debug() << "gps time" << odin->gpsTime() << endreq;
 
 };
 /*
