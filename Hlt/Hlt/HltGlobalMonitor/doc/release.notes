@@ -1,8 +1,15 @@
-!$Id: release.notes,v 1.6 2008-09-10 13:17:22 jpalac Exp $
+!$Id: release.notes,v 1.7 2008-09-17 19:29:44 graven Exp $
 Package     : Hlt/HltGlobalMonitor
 Package Coordinator : Bruno Souza de Paula 
 Purpose     : LHCb HLT Global Monitoring
 
+! 2008-09-17 - Gerhard Raven
+ - for now, absence of an DecReport is not an error (note: will change in future!)
+ - make sure odin histogram is filled once per event
+
+! 2008-09-17 - Bruno Souza de Paula 
+ - make HltGlobalMonitor more generic
+ 
 !========================= HltGlobalMonitor v1r3 2008-09-10 ===================
 ! 2008-09-10 - Juan PALACIOS
  - No idea what has changed. See CVS log.

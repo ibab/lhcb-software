@@ -41,7 +41,7 @@ HltGlobalMonitor::HltGlobalMonitor( const std::string& name,
   
   // se nao tiver declarado no options, ele usa este
   declareProperty("L0DUReportLocation", m_L0DUReportLocation );
-  declareProperty("Hlt1Lines", m_Hlt1Lines );
+  declareProperty("Hlt1Decisions", m_Hlt1Lines );
   declareProperty("DecReportsLocation", m_location = LHCb::HltDecReportsLocation::Default);
 
   // declareProperty("HadronAlleySelections", m_hadronalleySelections);
@@ -302,22 +302,19 @@ void HltGlobalMonitor::monitorAlleysinput() {
      physallcall=physallcall+1;
    }
   if (!exist<LHCb::HltDecReports>( m_location )){
-//  if (!exist<LHCb::HltDecReports>( LHCb::HltDecReportsLocation::Default )){
-    warning() << "No HltDecReport" << endreq;
+    error() << "No HltDecReport" << endreq;
     return;
   }
   LHCb::HltDecReports* decisions = get<LHCb::HltDecReports>( m_location );
-//  LHCb::HltDecReports* decisions = get<LHCb::HltDecReports>( LHCb::HltDecReportsLocation::Default );
   int j=0;
   for (std::vector<std::string>::const_iterator i = m_Hlt1Lines.begin(); i!=m_Hlt1Lines.end();++i) {
      const LHCb::HltDecReport*  decision = decisions->decReport( *i );
      if (decision == 0 ) {
-       error() << "Name of teh decision is incorrect" << endreq;
-       return;
+       debug() << "decision " << *i << " not found" << endreq;
+       continue;
      }
      if (decision->decision()) {
       fill(m_histoalleycall, j+1, 1.);
-      fill(m_histoodintype, odin->triggerType(), 1.);
       m_allAcc[j]=m_allAcc[j]+1;
       orallacc=orallacc+1;
       j=j+1;
