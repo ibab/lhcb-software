@@ -1,4 +1,4 @@
-// $Id: HltRoutingBitsWriter.cpp,v 1.4 2008-09-17 16:14:56 tskwarni Exp $
+// $Id: HltRoutingBitsWriter.cpp,v 1.5 2008-09-18 07:45:01 graven Exp $
 // Include files 
 #include <algorithm>
 // from Boost
@@ -33,7 +33,7 @@ void HltRoutingBitsWriter::updateEvaluators(const IHltDecisionPredicateFactory& 
     zeroEvaluators();
     typedef std::map<unsigned int,std::string>::const_iterator iter_t;
     for (iter_t i=m_specifications.begin();i!=m_specifications.end();++i) {
-        if ( i->first>3*sizeof(unsigned int) ) throw GaudiException("Out of Range","",StatusCode::FAILURE);
+        if ( i->first>nBits ) throw GaudiException("Out of Range","",StatusCode::FAILURE);
         combiner_t* eval = factory.create(i->second);
         if (eval==0) throw GaudiException("Invalid Evaluator","",StatusCode::FAILURE);
         m_evaluators[i->first] = eval;
