@@ -4,15 +4,14 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.19 2008-09-18 09:21:41 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.20 2008-09-18 14:16:52 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
 from GaudiConf.Configuration  import *
 from RecSys.Configuration     import *
 import GaudiKernel.ProcessJobOptions
-from Configurables import ( ProcessPhase, CondDBCnvSvc, MagneticFieldSvc,
-                            ReadStripETC, RecInit, GaudiSequencer )
+from Configurables import ( ProcessPhase, GaudiSequencer )
 
 ## @class Brunel
 #  Configurable for Brunel application
@@ -32,7 +31,6 @@ class Brunel(LHCbConfigurableUser):
        ,"expertHistos": False # set to True to write out expert histos
        ,"noWarnings":   False # suppress all messages with MSG::WARNING or below 
        ,"datasetName":  ""    # string used to build file names
-       ,"mainOptions" : '$BRUNELOPTS/Brunel.opts' # top level options to import
        ,"DDDBtag":      "2008-default" # geometry database tag
        ,"condDBtag":    "2008-default" # conditions database tag
        ,"useOracleCondDB": False  # if False, use SQLDDDB instead
@@ -155,6 +153,13 @@ class Brunel(LHCbConfigurableUser):
         """
         Tune initialisation according to input type
         """
+
+        # POOL Persistency
+        importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
+
+        # By default, Brunel only needs to open one input file at a time
+        IODataManager().AgeLimit = 0
+        
         if inputType in [ "DST", "RDST", "ETC" ]:
             # Kill knowledge of any previous Brunel processing
             from Configurables import ( TESCheck, EventNodeKiller )
@@ -169,6 +174,7 @@ class Brunel(LHCbConfigurableUser):
 
         # Read ETC selection results into TES for writing to DST
         if inputType == "ETC":
+            from Configurables import ReadStripETC
             GaudiSequencer("InitBrunelSeq").Members.append("ReadStripETC/TagReader")
             ReadStripETC("TagReader").CollectionName = "TagCreator"
             IODataManager().AgeLimit += 1
@@ -176,6 +182,15 @@ class Brunel(LHCbConfigurableUser):
         if inputType not in [ "DIGI", "DST" ]:
             # In case raw data resides in MDF file
             EventPersistencySvc().CnvServices.append("LHCb::RawDataCnvSvc")
+
+        # Get the event time (for CondDb) from ODIN
+        from Configurables import EventClockSvc
+        EventClockSvc().EventTimeDecoder = "OdinTimeDecoder";
+
+        # Convert Calo 'packed' banks to 'short' banks if needed
+        GaudiSequencer("InitCaloSeq").Members += ["GaudiSequencer/CaloBanksHandler"]
+        importOptions("$CALODAQROOT/options/CaloBankHandler.opts")
+
 
     def configureOutput(self, dstType, withMC):
         """
@@ -186,21 +201,25 @@ class Brunel(LHCbConfigurableUser):
                 importOptions( "$BRUNELOPTS/DstContent.opts" )
             else:
                 importOptions( "$BRUNELOPTS/rDstContent.opts" )
-            OutputStream( "DstWriter" )
-            ApplicationMgr().OutStream.append( "DstWriter" )
+            dstWriter = OutputStream( "DstWriter" )
+            ApplicationMgr().OutStream.append( dstWriter )
+            dstWriter.Preload = False
+            dstWriter.RequireAlgs += ["Reco"] # Write only if Rec phase completed
 
         # Add MC truth to DST
         if withMC and dstType == "DST":
             importOptions("$STDOPTS/MCDstContent.opts")
             
-        if self.getProp( "noWarnings" ):
-            importOptions( "$BRUNELOPTS/SuppressWarnings.opts" )
-
         # Always write an ETC if ETC input
         if self.getProp( "inputType" ).upper() == "ETC":
             ApplicationMgr().ExtSvc.append("TagCollectionSvc/EvtTupleSvc")
             ApplicationMgr().OutStream.append("GaudiSequencer/SeqTagWriter")
             importOptions( "$BRUNELOPTS/DefineETC.opts" )
+
+        # Modify printout defaults
+        importOptions("$BRUNELOPTS/BrunelMessage.opts")
+        if self.getProp( "noWarnings" ):
+            importOptions( "$BRUNELOPTS/SuppressWarnings.opts" )
 
     def outputName(self):
         """
@@ -240,8 +259,8 @@ class Brunel(LHCbConfigurableUser):
         brunelSeq = GaudiSequencer("BrunelSequencer")
         ApplicationMgr().TopAlg = [ brunelSeq ]
         brunelSeq.Members += self.getProp("mainSequence")
-        importOptions( self.getProp( "mainOptions" ) )
         ProcessPhase("Init").DetectorList += self.getProp("initSequence")
+        GaudiSequencer("InitBrunelSeq").Members += [ "RecInit/BrunelInit" ]
         self.defineGeometry()
         self.defineEvents()
         self.defineOptions()
@@ -249,8 +268,10 @@ class Brunel(LHCbConfigurableUser):
         self.defineMonitors()
         RecSysConf().applyConf()
         LHCbApp().applyConf()
+        from Configurables import RecInit
         RecInit("BrunelInit").PrintFreq = self.getProp("printFreq")
         # Use SIMCOND for Simulation, if not DC06
         if self.getProp("withMC") and LHCbApp().getProp("condDBtag").find("DC06") == -1:
+            from Configurables import CondDBCnvSvc
             CondDBCnvSvc( CondDBReader = allConfigurables["SimulationCondDBReader"] )
         print self
