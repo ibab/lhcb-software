@@ -1,11 +1,4 @@
-// Main job options for running Brunel.
-//
-// This file is included by the geometry dependent options files, and is valid
-// for both real and simulated data
-//
-// This file defines, sequences and configures the algorithms to be executed
-// You only need to modify it if you want to add or remove algorithms
-// !! Do not modify position or order of included files !!
+// Default Brunel().mainOptions included by Configuration.py
 //==============================================================
 
 #units "$STDOPTS/units.opts"
@@ -19,47 +12,12 @@ IODataManager.AgeLimit = 0;
 // Get the event time (for CondDb) from ODIN
 EventClockSvc.EventTimeDecoder = "OdinTimeDecoder";
 
-// Run the full job inside a single sequencer TopAlg
-// CRJ : Now in Configurable
-//ApplicationMgr.TopAlg = { "GaudiSequencer/BrunelSequencer" };
-
-//----------------------------------------------------------------------------
-// Instantiate all Brunel phases. MC specific phases not populated in this file
-//----------------------------------------------------------------------------
-// CRJ : Now in Configurable
-//BrunelSequencer.Members = { "ProcessPhase/Init",
-//                            "ProcessPhase/Reco",
-//                            "ProcessPhase/Moni",
-//                            "ProcessPhase/MCLinks", // Links to MC truth
-//                            "ProcessPhase/Check",   // Checking with MC truth
-//                            "ProcessPhase/Output" };
-
-// Initialisation phase
-//Init.DetectorList += { "Reproc", "Brunel", "Calo" }; // CRJ : Now done in python
+// Initialise 
 InitBrunelSeq.Members += { "RecInit/BrunelInit" };
 
 // Convert Calo 'packed' banks to 'short' banks if needed
 InitCaloSeq.Members += { "GaudiSequencer/CaloBanksHandler" };
 #include "$CALODAQROOT/options/CaloBankHandler.opts"
-
-// Setup L0 filtering. Has no effect unless "L0" is added to Init.DetectorList
-#include "$L0DUROOT/options/L0Sequence.opts"
-InitL0Seq.Members += { "GaudiSequencer/L0FilterFromRawSeq"}; // run L0 before Reco
-
-// Setup reprocessing from DST.
-// Enable by adding TESCheck and EventNodeKiller to InitReprocSeq
-TESCheck.Inputs       = { "Link/Rec/Track/Best" } ;
-TESCheck.Stop         = false; // rDST case, above container missing.... 
-TESCheck.OutputLevel  = 5;
-EventNodeKiller.Nodes = { "Rec", "Raw", "Link/Rec" };
-
-// Reconstruction phase
-// CRJ : No longer needed. Applied via RecSys().applyConf()
-//#include "$RECSYSROOT/options/Reco.py"
-//#include "$RECSYSROOT/options/Reco.opts"
-
-// Monitoring phase (monitoring independent of MC truth)
-#include "$BRUNELOPTS/BrunelMoni.py"
 
 // Set up DstWriter. Has no effect is (r)Dst writing is disabled
 DstWriter.Preload = false;

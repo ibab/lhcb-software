@@ -1,5 +1,5 @@
-# This file sets up the default Brunel monitoring, independent of MC Truth
-#-------------------------------------------------------------------------
+# This file sets up the Brunel monitoring, independent of MC Truth
+#-----------------------------------------------------------------
 
 from GaudiKernel.ProcessJobOptions import importOptions
 from Configurables import (ProcessPhase,RootHistCnv__PersSvc,
@@ -32,3 +32,8 @@ importOptions('$VELORECMONITORSROOT/options/BrunelMoni_Velo.py')
 #--------------------------------------------------------------
 from TrackMonitors.ConfiguredTrackMonitors import ConfiguredTrackMonitorSequence
 ConfiguredTrackMonitorSequence(Name='MoniTrackSeq')
+
+#--------------------------------------------------------------
+# Muon Monitoring algorithms
+#--------------------------------------------------------------
+importOptions("$MUONPIDCHECKERROOT/options/MuonPIDMonitor.opts")

@@ -3,7 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-! 2008-09-12 - Marco Cattaneo
+ - Reorganise Configuration.py, clean up Brunel.opts
+ - Replace BrunelMoni.opts wih BrunelMoni.py, add Track Moni sequence
+ - Add Muon histograms to Moni sequence
+ - Print state of Brunel configurable at the end of applyConf()
  - Fix default options in Brunel_Ganga.py for consistency with new defaults
 
 </PRE><H1><A NAME=v33r2>2008-09-09 Brunel v33r2</A></H1><PRE>

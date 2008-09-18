@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.18 2008-09-17 21:58:39 wouter Exp $"
+__version__ = "$Id: Configuration.py,v 1.19 2008-09-18 09:21:41 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -81,36 +81,42 @@ class Brunel(LHCbConfigurableUser):
 
         inputType = self.getProp( "inputType" ).upper()
         if inputType not in [ "MDF", "DST", "DIGI", "ETC", "RDST" ]:
-            raise TypeError( "Invalid outputType '%s'"%inputType )
+            raise TypeError( "Invalid inputType '%s'"%inputType )
+
+        outputType = self.getProp( "outputType" ).upper()
+        if outputType not in [ "NONE", "DST", "RDST" ]:
+            raise TypeError( "Invalid outputType '%s'"%outputType )
 
         withMC = self.getProp("withMC")
-        if inputType in [ "DST", "RDST", "ETC" ]:
-            # Kill knowledge of any previous Brunel processing
-            InitReprocSeq = GaudiSequencer( "InitReprocSeq" )
-            InitReprocSeq.Members.append( "TESCheck" )
-            InitReprocSeq.Members.append( "EventNodeKiller" )
-            if inputType == "ETC":
-                # Read ETC selection results into TES for writing to DST
-                GaudiSequencer("InitBrunelSeq").Members.append("ReadStripETC/TagReader")
-                ReadStripETC("TagReader").CollectionName = "TagCreator"
-                IODataManager().AgeLimit += 1
-                
-        elif ( inputType == "MDF" ):
-            withMC = False # Force it, MDF never contains MC truth
-
-        if self.getProp("outputType").upper() == "RDST":
+        if inputType in [ "MDF", "RDST" ]:
+            withMC = False # Force it, MDF and RDST never contain MC truth
+        if outputType == "RDST":
             withMC = False # Force it, RDST never contains MC truth
 
+        self.configureInput( inputType )
+
+        self.configureOutput( outputType, withMC )
+
+
+        # Set up monitoring (i.e. not using MC truth)
+        ProcessPhase("Moni").DetectorList += self.getProp("moniSequence")
+        importOptions("$BRUNELOPTS/BrunelMoni.py") # Filled in all cases
+        if not withMC:
+            # Add here histograms to be filled only with real data 
+            from RichRecQC.Configuration import RichRecQCConf
+            RichRecQCConf().context = "Offline"
+            RichRecQCConf().applyConf(GaudiSequencer("MoniRICHSeq"))
+
+
+        # Setup up MC truth processing and checking
         if withMC:
-            #importOptions( "$BRUNELOPTS/BrunelMC.opts" )
-            # CRJ : explicitly include the options from above here
-            importOptions("$STDOPTS/MCDstContent.opts")
             ProcessPhase("MCLinks").DetectorList += [ "L0", "Unpack", "Tr" ]
             # Unpack Sim data
             GaudiSequencer("MCLinksUnpackSeq").Members += [ "UnpackMCParticle",
                                                             "UnpackMCVertex" ]
             GaudiSequencer("MCLinksTrSeq").Members += [ "TrackAssociator" ]
-            # MC checks
+
+            # "Check" histograms filled only with simulated data 
             ProcessPhase("Check").DetectorList += self.getProp("mcCheckSequence")
             # Tracking
             GaudiSequencer("CheckPatSeq").Members += [ "PatLHCbID2MCParticle"
@@ -122,18 +128,12 @@ class Brunel(LHCbConfigurableUser):
             from RichRecQC.Configuration import RichRecQCConf
             RichRecQCConf().context = "Offline"
             RichRecQCConf().applyConf(GaudiSequencer("CheckRICHSeq"))
-        else:
-            # Add the RICH monitors to the Moni sequence
-            from RichRecQC.Configuration import RichRecQCConf
-            RichRecQCConf().context = "Offline"
-            RichRecQCConf().applyConf(GaudiSequencer("MoniRICHSeq"))
 
-        if inputType not in [ "DIGI", "DST" ]:
-            # In case raw data resides in MDF file
-            EventPersistencySvc().CnvServices.append("LHCb::RawDataCnvSvc")
-
+        # Setup L0 filtering if requested, runs L0 before Reco
         if self.getProp("recL0Only"):
             ProcessPhase("Init").DetectorList.append("L0")
+            importOptions( "$L0DUROOT/options/L0Sequence.opts" )
+            GaudiSequencer("InitL0Seq").Members += [ "GaudiSequencer/L0FilterFromRawSeq" ]
 
     def defineHistos(self):
         """
@@ -151,22 +151,36 @@ class Brunel(LHCbConfigurableUser):
         # pass to LHCbApp any monitors not dealt with here
         LHCbApp().setProp("monitors", monitors)
 
-    def histosName(self):
-        histosName   = self.getProp("datasetName")
-        if self.getProp( "recL0Only" ): histosName += '-L0Yes'
-        if ( self.evtMax() > 0 ): histosName += '-' + str(self.evtMax()) + 'ev'
-        expertHistos = self.getProp("expertHistos")
-        if expertHistos     : histosName += '-expert'
-        histosName += '-histos.root'
-        return histosName
-    
-    def defineOutput(self):
+    def configureInput(self, inputType):
+        """
+        Tune initialisation according to input type
+        """
+        if inputType in [ "DST", "RDST", "ETC" ]:
+            # Kill knowledge of any previous Brunel processing
+            from Configurables import ( TESCheck, EventNodeKiller )
+            InitReprocSeq = GaudiSequencer( "InitReprocSeq" )
+            InitReprocSeq.Members.append( "TESCheck" )
+            TESCheck().Inputs = ["Link/Rec/Track/Best"]
+            # in case above container is not on input (e.g. RDST)
+            TESCheck().Stop = False
+            TESCheck().OutputLevel = ERROR
+            InitReprocSeq.Members.append( "EventNodeKiller" )
+            EventNodeKiller().Nodes = [ "Rec", "Raw", "Link/Rec" ]
+
+        # Read ETC selection results into TES for writing to DST
+        if inputType == "ETC":
+            GaudiSequencer("InitBrunelSeq").Members.append("ReadStripETC/TagReader")
+            ReadStripETC("TagReader").CollectionName = "TagCreator"
+            IODataManager().AgeLimit += 1
+
+        if inputType not in [ "DIGI", "DST" ]:
+            # In case raw data resides in MDF file
+            EventPersistencySvc().CnvServices.append("LHCb::RawDataCnvSvc")
+
+    def configureOutput(self, dstType, withMC):
         """
         Set up output stream
         """
-        dstType = self.getProp( "outputType" ).upper()
-        if dstType not in [ "RDST", "DST", "NONE" ]:
-            raise TypeError( "Invalid outputType '%s'"%dstType )
         if dstType in [ "DST", "RDST" ]:
             if( dstType == "DST" ):
                 importOptions( "$BRUNELOPTS/DstContent.opts" )
@@ -174,9 +188,13 @@ class Brunel(LHCbConfigurableUser):
                 importOptions( "$BRUNELOPTS/rDstContent.opts" )
             OutputStream( "DstWriter" )
             ApplicationMgr().OutStream.append( "DstWriter" )
+
+        # Add MC truth to DST
+        if withMC and dstType == "DST":
+            importOptions("$STDOPTS/MCDstContent.opts")
             
-        nowarn = self.getProp( "noWarnings" )
-        if nowarn: importOptions( "$BRUNELOPTS/SuppressWarnings.opts" )
+        if self.getProp( "noWarnings" ):
+            importOptions( "$BRUNELOPTS/SuppressWarnings.opts" )
 
         # Always write an ETC if ETC input
         if self.getProp( "inputType" ).upper() == "ETC":
@@ -194,6 +212,15 @@ class Brunel(LHCbConfigurableUser):
         outputType = self.getProp("outputType").lower()
         return outputName + '.' + outputType
 
+    def histosName(self):
+        histosName   = self.getProp("datasetName")
+        if self.getProp( "recL0Only" ): histosName += '-L0Yes'
+        if ( self.evtMax() > 0 ): histosName += '-' + str(self.evtMax()) + 'ev'
+        expertHistos = self.getProp("expertHistos")
+        if expertHistos     : histosName += '-expert'
+        histosName += '-histos.root'
+        return histosName
+    
     def evtMax(self):
         if hasattr(ApplicationMgr(),"EvtMax"):
             return getattr(ApplicationMgr(),"EvtMax")
@@ -215,12 +242,10 @@ class Brunel(LHCbConfigurableUser):
         brunelSeq.Members += self.getProp("mainSequence")
         importOptions( self.getProp( "mainOptions" ) )
         ProcessPhase("Init").DetectorList += self.getProp("initSequence")
-        ProcessPhase("Moni").DetectorList += self.getProp("moniSequence")
         self.defineGeometry()
         self.defineEvents()
         self.defineOptions()
         self.defineHistos()
-        self.defineOutput()
         self.defineMonitors()
         RecSysConf().applyConf()
         LHCbApp().applyConf()
@@ -228,3 +253,4 @@ class Brunel(LHCbConfigurableUser):
         # Use SIMCOND for Simulation, if not DC06
         if self.getProp("withMC") and LHCbApp().getProp("condDBtag").find("DC06") == -1:
             CondDBCnvSvc( CondDBReader = allConfigurables["SimulationCondDBReader"] )
+        print self
