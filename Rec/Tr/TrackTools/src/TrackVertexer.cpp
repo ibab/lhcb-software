@@ -1,4 +1,4 @@
- // $Id: TrackVertexer.cpp,v 1.3 2008-07-10 11:43:07 wouter Exp $
+ // $Id: TrackVertexer.cpp,v 1.4 2008-09-18 08:19:20 wouter Exp $
 // Include files 
 
 // from Gaudi
@@ -76,8 +76,8 @@ TrackVertexer::fit(const StateContainer& tracks) const
 LHCb::RecVertex*
 TrackVertexer::fit(const TrackContainer& tracks) const
 {
-  // NOTE: THIS IS NOT EXTRAPOLATING YET!!
-  Warning("TrackVertexer::fit(const TrackContainer& tracks) is not yet extrapolating!",1) ;
+  // TODO: THIS IS NOT EXTRAPOLATING YET!!
+  // Warning("TrackVertexer::fit(const TrackContainer& tracks) is not yet extrapolating!",1) ;
 
   // get the states. this needs to becomes smarter.
   StateContainer states ;
