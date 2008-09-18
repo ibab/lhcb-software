@@ -1,7 +1,7 @@
 """
 High level configuration tools for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.26 2008-09-18 10:42:45 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.27 2008-09-18 22:03:29 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -17,9 +17,10 @@ class Moore(ConfigurableUser):
     __slots__ = {
           "EvtMax":            -1    # Maximum number of events to process
         , "DAQStudies":        False # use DAQ study version of options
-        , "DDDBtag" :          'DEFAULT'
-        , "condDBtag" :        'DEFAULT'
+        , "DDDBtag" :          '2008-default'
+        , "condDBtag" :        '2008-default'
         , "inputType":         'dst' # must either 'mdf' or 'dst'
+        , "DC06" :             False # use DC06 setup
         , "hltType" :          'PA+LU+VE'
         , "runTiming"  :       False # include additional timing information
         , "useTCK"     :       False # use TCK instead of options...
@@ -117,18 +118,23 @@ class Moore(ConfigurableUser):
             EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
         importOptions('$STDOPTS/DecodeRawEvent.opts')
         ApplicationMgr().ExtSvc.append(  "DataOnDemandSvc"   ); # needed for DecodeRawEvent...
-        importOptions('$STDOPTS/DC06Conditions.opts')
+
         # forward some other settings... TODO: make a dictionary..
         self.setOtherProp( LHCbApp(), 'useOracleCondDB' )
         importOptions( "$DDDBROOT/options/DDDB.py" )
-        # the next is for 2008 data & MC, i.e. NOT for DC'06
-        # importOptions( "$DDDBROOT/options/LHCb-2008.py" )
+        if self.getProp('DC06') :
+            importOptions( '$DDDBROOT/options/LHCb-2008.py' )
+        else : 
+            # the next is for 2008 data & MC, i.e. NOT for DC'06
+            importOptions( '$DDDBROOT/options/DC06.opts' )
         self.setOtherProp( LHCbApp(), 'DDDBtag' )
         self.setOtherProp( LHCbApp(), 'condDBtag' )
         self.setOtherProp( LHCbApp(), 'skipEvents' )
         self.setOtherProp( ApplicationMgr(), 'EvtMax' )
         # Get the event time (for CondDb) from ODIN 
         EventClockSvc().EventTimeDecoder = 'OdinTimeDecoder'
+        # make sure we don't pick up small variations of the read current
+        MagneticFieldSvc().UseSetCurrent = True
         # output levels...
         ToolSvc().OutputLevel                     = INFO
         from Configurables import XmlParserSvc 

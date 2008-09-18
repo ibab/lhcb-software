@@ -4,6 +4,8 @@ Purpose     : LHCb HLT application
 
 ! 2008-09-19 - Gerhard Raven
  - failure to copy manifest is not an error
+ - explicitly use 'set' magnet current instead of measured
+ - add option for DC06 (default=false)
 
 ! 2008-09-09 - Gerhard Raven
  - implement generic treatment of HltTypes
