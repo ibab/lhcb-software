@@ -1,4 +1,4 @@
-// $Id: MessageLogger.h,v 1.8 2008-07-04 07:40:21 frankb Exp $
+// $Id: MessageLogger.h,v 1.9 2008-09-18 13:04:14 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/MessageLogger.h,v 1.8 2008-07-04 07:40:21 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/MessageLogger.h,v 1.9 2008-09-18 13:04:14 frankb Exp $
 #ifndef ROLOGGER_MESSAGELOGGER_H
 #define ROLOGGER_MESSAGELOGGER_H
 
@@ -111,6 +111,9 @@ namespace ROLogger {
 
     /// Print single message retrieved from error logger
     virtual void printMessage(const char* msg, bool crlf=true);
+
+    /// Execute command from message
+    void execute(const std::string& cmd);
 
     /// Set message severity level for display
     void setMessageSeverity(const std::string& severity);

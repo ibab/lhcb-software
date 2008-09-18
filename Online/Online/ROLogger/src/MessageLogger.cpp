@@ -1,4 +1,4 @@
-// $Id: MessageLogger.cpp,v 1.11 2008-07-04 07:40:21 frankb Exp $
+// $Id: MessageLogger.cpp,v 1.12 2008-09-18 13:04:14 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/MessageLogger.cpp,v 1.11 2008-07-04 07:40:21 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/MessageLogger.cpp,v 1.12 2008-09-18 13:04:14 frankb Exp $
 // Framework include files
 #include <cerrno>
 #include <cstdarg>
@@ -230,8 +230,8 @@ void MessageLogger::printHistory(const std::string& pattern) {
   for(size_t n=messages.size(), j=n>numMsg ? n-numMsg : 0; j<n; ++j, ++displayed)  
     printMessage(messages[j], false);
   ::sprintf(text,"History>    [ALWAYS]  %d %s%s [%s]. %d %s %d messages replayed.",
-    match,"messages matched the request:",node_pattern.c_str(),
-    msg_pattern.c_str(),(int)numMsg,"messages requested.",displayed);
+	    match,"messages matched the request:",node_pattern.c_str(),
+	    msg_pattern.c_str(),(int)numMsg,"messages requested.",displayed);
   printMessage(text,true);
 }
 
@@ -358,6 +358,22 @@ void MessageLogger::setMessageSeverity(const std::string& severity) {
   printMessage(text,true);
 }
 
+/// Execute command from message
+void MessageLogger::execute(const std::string& cmd) {
+  FILE * f = ::popen(cmd.c_str(),"r");
+  if ( f ) {
+    size_t siz;
+    std::string result = "Execute>    [ALWAYS] ";
+    char buff[1024];
+    while((siz=::fread(buff,1,sizeof(buff)-1,f))>0) {
+      buff[siz]=0;
+      result += buff;
+    }
+    printMessage(result.c_str(),false);
+  }
+  ::fclose(f);
+}
+
 /// Load filters from string represntation
 void MessageLogger::loadFilters(const std::string& s) {
   std::stringstream str(s);
@@ -379,6 +395,9 @@ void MessageLogger::requestHandler(void* tag, void* address, int* size) {
   if ( idx != std::string::npos ) {
     std::string nam = n.substr(++idx);
     switch(::toupper(n[0])) {
+    case 'E': // Execute command
+      h->execute(p+idx);
+      return;
     case 'D': // Display line
       h->printMessage(p+idx,true);
       return;

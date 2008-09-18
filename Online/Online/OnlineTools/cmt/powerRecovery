@@ -1,0 +1,20 @@
+#!/bin/bash
+export UTGID=Recovery_$$
+cd `dirname $0`
+. setup.slc4_amd64_gcc34_dbg.vars
+#. /group/online/dataflow/scripts/preamble.sh
+export DIM_DNS_NODE=ecs03
+directory=`dirname $0`
+#eval `${directory}/internal/getMonOpts.sh $*`
+export TAN_PORT=YES
+export TAN_NODE=${HOST}
+export UTGID=${HOST}_Recovery_$$;
+xterm -ls -132 -sl 20000 \
+    -geometry 132x70+0+0 -bg black -fg white -rightbar \
+    -title "${UTGID}:Powercut Recovery Message display" \
+    -e "export UTGID=${UTGID}_display; exec -a \${UTGID} `which gentest.exe` libROLogger.so romon_logger -service=\$UTGID -col -buff=0 -disp"&
+sleep 1;
+xterm -ls -132 +sb \
+    -geometry 100x70+650+0 \
+    -title "${UTGID}:Powercut Recovery" \
+    -e "export UTGID=${UTGID}; exec -a \${UTGID} `which gentest.exe` libOnlineTools.so powercutrecovery_display" &

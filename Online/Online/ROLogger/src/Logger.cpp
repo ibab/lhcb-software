@@ -1,4 +1,4 @@
-// $Id: Logger.cpp,v 1.9 2008-07-02 16:18:33 frankb Exp $
+// $Id: Logger.cpp,v 1.10 2008-09-18 13:04:14 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/Logger.cpp,v 1.9 2008-07-02 16:18:33 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/Logger.cpp,v 1.10 2008-09-18 13:04:14 frankb Exp $
 
 #include "ROLogger/Logger.h"
 #include "CPP/IocSensor.h"
@@ -77,6 +77,10 @@ void Logger::handle(const Event& ev) {
   switch(ev.eventtype) {
   case IocEvent:
     switch(ev.type) {
+  case CMD_EXECUTE:
+    sendData("E:"+*data.str);
+    delete data.str;
+    return;
   case CMD_SHOW:
     sendData("D:"+*data.str);
     delete data.str;
