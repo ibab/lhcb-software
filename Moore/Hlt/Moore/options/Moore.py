@@ -22,24 +22,16 @@ HistogramPersistencySvc().OutputFile = 'Moore_minbias.root'
 
 # if you want to generate a configuration, uncomment the following lines:
 #Moore().generateConfig = True
-#Moore().configLabel = 'out of the box'
+#Moore().configLabel = 'pass-thru, no prescale, add routingbits'
 
-# if you want to run, using a (set of) TCK(s), uncomment the following two
-# lines, and input the (list of ) TCK(s)
-#Moore().useTCK = True
-#Moore().prefetchTCK = [ 0x00100000 ]
-#HltConfigSvc().OutputLevel = DEBUG
-#HltConfigSvc().checkOdin = False
-#
-#Moore().hltType = 'PHYSICS_Hlt1'
-Moore().hltType = 'PHYSICS_Hlt1+Hlt2'
-#Moore().hltType = 'DEFAULT'  # current commissioning setup
+Moore().hltType = 'PA+LU+VE'
+Moore().oldStyle = False
 
-#Moore().DDDBtag = '2008-default'
-#Moore().condDBtag = '2008-default'
-# importOptions( "$DDDBROOT/options/LHCb-2008.py" )
 
 #files= [ '/data/bfys/lhcb/MinBias-L0strip/DC06_L0_v1_lumi2_MuonHadron_40000ev_' + str(f) +'.mdf'  for f in range(1,3) ]
+#files= [ '/data/bfys/lhcb/data/2008/RAW/LHCb/PHYSICS_COSMICS/27804/027804_0000063303.raw' ]
+
+
 
 #files = [ '/data/bfys/lhcb/MinBias-L0strip/MBL0-lumi2-' + str(f) +'.dst'  for f in range(1,5) ]
 
