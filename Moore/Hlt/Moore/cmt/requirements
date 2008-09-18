@@ -1,5 +1,5 @@
 #============================================================================
-# $Id: requirements,v 1.35 2008-09-09 07:01:12 graven Exp $
+# $Id: requirements,v 1.36 2008-09-18 22:04:15 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : P. Koppenburg & M. Cattaneo
 #============================================================================
@@ -16,8 +16,11 @@ branches doc cmt options python
 set MOOREOPTS ${MOOREROOT}/options
 
 # TMP ####
-#use DaVinciTools v17r1 Phys
-#use HltRawData   v1r2 Hlt
+use DaVinciTools v17r2p1 Phys
+use HltRawData   v1r4 Hlt
+use HltConf   v1r3 Hlt
+use HltCommon   v4r3 Hlt
+use HltGlobalMonitor   v1r4 Hlt
 
 # Packages needed to compile and link the application
 use GaudiConf          v*                   -no_auto_imports
