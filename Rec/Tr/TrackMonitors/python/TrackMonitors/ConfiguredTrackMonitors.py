@@ -4,7 +4,7 @@ from Configurables import (GaudiSequencer, TrackMonitor, TrackVertexMonitor,
 def ConfiguredTrackMonitorSequence(Name = "TrackMonitorSequence",
                                    HistoPrint = False ):
     seq = GaudiSequencer(Name)
-    seq.Members.append( TrackMonitor(HistoPrint) )
-    seq.Members.append( TrackVertexMonitor(HistoPrint) )
-    seq.Members.append( TrackFitMatchMonitor(HistoPrint) )
+    seq.Members.append( TrackMonitor(HistoPrint=HistoPrint) )
+    seq.Members.append( TrackVertexMonitor(HistoPrint=HistoPrint) )
+    seq.Members.append( TrackFitMatchMonitor(HistoPrint=HistoPrint) )
     return seq
