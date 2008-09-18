@@ -1,3 +1,4 @@
+#units "$STDOPTS/units.opts"
 MoniCALOSeq.Members += { "GaudiSequencer/CaloDigitMon"
                          ,"GaudiSequencer/CaloClusterMon"
                          ,"GaudiSequencer/CaloHypoMon"
