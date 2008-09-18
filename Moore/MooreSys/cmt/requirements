@@ -9,6 +9,12 @@ branches doc cmt
 use  Moore    v5r3    Hlt
 use  TCKData  v1r3    Hlt
 
+### TMP
+use DaVinciTools v17r2p1 Phys
+use HltRawData   v1r4 Hlt
+use HltConf      v1r3 Hlt
+use HltCommon    v4r3 Hlt
+use HltGlobalMonitor v1r4 Hlt
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
