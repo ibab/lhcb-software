@@ -3,6 +3,9 @@ Package Coordinator : Patrick Koppenburg and Marco Cattaneo
 Purpose     : LHCb HLT application
 
 ! 2008-09-09 - Gerhard Raven
+ - implement generic treatment of HltTypes
+
+! 2008-09-09 - Gerhard Raven
  - follow movement of options files from HltSys into HltConf
 
 !========================== Moore v5r2 2008-09-05 ===================

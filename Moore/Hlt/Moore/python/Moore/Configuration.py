@@ -1,7 +1,7 @@
 """
 High level configuration tools for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.24 2008-09-09 07:01:12 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.25 2008-09-18 08:39:40 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -51,14 +51,12 @@ class Moore(ConfigurableUser):
                 setattr(other,name,self.getProp(name))
 
     def validHltTypes(self):
-        return [ 'PHYSICS_Lumi', 
-                 'PHYSICS_Hlt1', 
-                 'PHYSICS_Hlt2', 
-                 'PHYSICS_Hlt1+Hlt2', 
-                 'PHYSICS_Lumi+Hlt1', 
-                 'PHYSICS_Lumi+Hlt1+Hlt2',
-                 'writeLumi' ,
-                 'readBackLumi',
+        return [ 'PA'
+                 'PA+LU', 
+                 'PA+LU+VE', 
+                 'PA+LU+VE+MU', 
+                 'ALL_HLT1', 
+                 'ALL_HLT1+HLT2', 
                  'DEFAULT' ] 
 
     def getRelease(self):
@@ -158,26 +156,35 @@ class Moore(ConfigurableUser):
                 importOptions('$HLTCONFROOT/options/HltDAQ.opts')
             else :
                 importOptions('$HLTCONFROOT/options/HltInit.opts')
+                if inputType == 'DST' : # and hlttype in [ 'PHYSICS_Hlt1+Hlt2', 'PHYSICS_Hlt1' , 'PHYSICS_Lumi', 'Lumi'] : 
+                    importOptions('$L0DUROOT/options/ReplaceL0BanksWithEmulated.opts')
                 hlttype = self.getProp('hltType')
-                if hlttype not in self.validHltTypes() :  raise TypeError("Unknown hlttype '%s'"%hlttype)
-                if inputType == 'DST' and hlttype in [ 'PHYSICS_Hlt1+Hlt2', 'PHYSICS_Hlt1' , 'PHYSICS_Lumi', 'Lumi'] : 
-                    importOptions('$L0DUROOT/options/L0DUBankSwap.opts')
-                    importOptions('$L0DUROOT/options/DefaultTCK.opts')
                 if self.getProp('oldStyle') :
+                    if hlttype not in self.validHltTypes() :  raise TypeError("Unknown hlttype '%s'"%hlttype)
                     if hlttype.find('Hlt1') != -1 :   importOptions('$HLTCONFROOT/options/Hlt1.opts')
                     if hlttype.find('Hlt2') != -1 :   importOptions('$HLTCONFROOT/options/Hlt2.opts')
-                    if hlttype ==  'DEFAULT'        :   importOptions('$HLTCONFROOT/options/RandomPrescaling.opts')
-                    if hlttype == 'readBackLumi'    :   importOptions('$HLTCONFROOT/options/HltJob_readLumiPy.opts')
+                    if hlttype ==  'DEFAULT'      :   importOptions('$HLTCONFROOT/options/RandomPrescaling.opts')
+                    if hlttype == 'readBackLumi'  :   importOptions('$HLTCONFROOT/options/HltJob_readLumiPy.opts')
                     if hlttype == 'writeLumi'     :   importOptions('$HLTCONFROOT/options/HltJob_onlyLumi.opts')
                     if hlttype.find('Lumi') != -1 :   importOptions('$HLTCONFROOT/options/Lumi.opts')
+                    if hlttype.find('Velo') != -1 :   importOptions('$HLTCONFROOT/options/HltVeloAlleySequence.opts')
                 else :
-                    if hlttype == 'DEFAULT'       : hlttype = 'Commissioning_Lumi'
-                    if hlttype.find('Lumi') != -1 : importOptions('$HLTCONFROOT/options/HltLumiAlleyConfSequence.py')
-                    if hlttype.find('Muon') != -1 : importOptions('$HLTCONFROOT/options/HltMuonAlleyConfSequence.py')
-                    if hlttype.find('Commissioning') != -1 : importOptions('$HLTCONFROOT/options/Commissioning.py')
+                    if hlttype == 'DEFAULT'       : hlttype = 'PA+LU+VE'
+                    if hlttype == 'HLT1'          : hlttype = 'PA+LU+VE+MU+HA+PH+EL'
+                    type2conf = { 'PA' : '$HLTCONFROOT/options/HltCommissioningLines.py' # PA for 'Pass-Thru' (PT was considered bad)
+                                , 'LU' : '$HLTCONFROOT/options/HltLumiLines.py'
+                                , 'VE' : '$HLTCONFROOT/options/HltVeloLines.py'
+                                , 'MU' : '$HLTCONFROOT/options/HltMuonLines.py' 
+                                , 'HA' : '$HLTCONFROOT/options/HltHadronLines.py' 
+                                , 'PH' : '$HLTCONFROOT/options/HltPhotonLines.py' 
+                                , 'EL' : '$HLTCONFROOT/options/HltElectronLines.py' 
+                                }
+                    for i in hlttype.split('+') :
+                        if i not in type2conf : raise AttributError, "unknown hlttype fragment '%s'"%i
+                        print i + '->' + type2conf[i]
+                        importOptions( type2conf[i] )
                     importOptions('$HLTCONFROOT/options/HltMain.py')
                     importOptions('$HLTCONFROOT/options/Hlt1.py')
-
             if self.getProp('runTiming') :
                 importOptions('$HLTCONFROOT/options/HltAlleysTime.opts')
                 importOptions('$HLTCONFROOT/options/HltAlleysHistos.opts')
