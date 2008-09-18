@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2008-09-18 - Wouter Hulsbergen
+ - made TrackVertexer and MeasurementProvider less verbose
+
 !======================== TrackTools v3r11 2008-09-05 ========================
 ! 2008-08-20 - Stephanie Hansmann-Menzemer
  - make FastMomentumTool and PtTransporter safe for 0 b field
