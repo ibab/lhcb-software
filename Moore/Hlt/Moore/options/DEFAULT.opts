@@ -73,7 +73,7 @@ EventSelector.REQ1 = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xff
 MEPManager.PartitionID               = @OnlineEnv.PartitionID;
 
 ApplicationMgr.TopAlg               += { "Sequencer/SendSequence" };
-SendSequence.Members                 = {"Hlt1GlobalDecision", "LHCb::RawEvent2MBMMergerAlg/Output"};
+SendSequence.Members                 = {"Hlt1Global", "LHCb::RawEvent2MBMMergerAlg/Output"};
 //SendSequence.Members                 = {"LHCb::RawEvent2MBMMergerAlg/Output"};
 SendSequence.OutputLevel             = @OnlineEnv.OutputLevel;
 

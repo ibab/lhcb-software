@@ -4,6 +4,7 @@ Purpose     : LHCb HLT application
 
 ! 2008-09-09 - Gerhard Raven
  - implement generic treatment of HltTypes
+ - filter before sendsequence now called Hlt1Global, according to naming convention
 
 ! 2008-09-09 - Gerhard Raven
  - follow movement of options files from HltSys into HltConf
