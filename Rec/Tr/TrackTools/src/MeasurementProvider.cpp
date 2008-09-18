@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.cpp,v 1.34 2007-11-30 15:10:41 wouter Exp $
+// $Id: MeasurementProvider.cpp,v 1.35 2008-09-18 08:22:58 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -110,14 +110,14 @@ StatusCode MeasurementProvider::load( Track& track ) const
 	 // First look if the Measurement corresponding to this LHCbID
 	 // is already in the Track, i.e. whether it has already been loaded!
     if ( track.isMeasurementOnTrack( id ) ) {
-      warning() << "Measurement had already been loaded for the LHCbID"
+      Warning("Found measurements already loaded on track!",StatusCode::SUCCESS,0) ;
+      if( msgLevel( MSG::DEBUG ) || msgLevel( MSG::VERBOSE ) )
+	debug() << "Measurement had already been loaded for the LHCbID"
 		<< " channelID, detectorType = "
 		<< id.channelID() << " , " << id.detectorType()
 		<< "  -> Measurement loading skipped for this LHCbID!"
 		<< endreq;
-		continue;
-    }
-    newids.push_back( id ) ;
+    } else newids.push_back( id ) ;
   }
   
   // create a reference trajectory
