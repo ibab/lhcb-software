@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.15 2008-09-17 19:44:40 graven Exp $ 
+! $Id: release.notes,v 1.16 2008-09-18 21:43:00 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : 
@@ -8,6 +8,7 @@
  - update python configuration. WARNING: not all lines operational yet!!!
  - allow 'bound members' in HltLine to support re-use of identical 'blocks'
    by explicit binding their names to a specified prefix
+ - for now, simplify lumi to the bare minimum
 
 ! 2008-09-15 - Mariusz Witek
  - improve photon line. IsPhoton function is continuous (adjustable) variable now.

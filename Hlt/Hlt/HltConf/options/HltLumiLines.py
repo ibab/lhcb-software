@@ -55,40 +55,40 @@ lumiCountSequence = Sequence('Hlt'+seqName +'Sequence'
                             , ShortCircuit = False
                             , MeasureTime = True)
 
-createdCounters.extend( 
-        combine( createCounter( LumiCountTracks,   seqName , lumiCountSequence),
-               {   'Velo'   : 'Hlt/Track/Velo'
-               , 'RZVelo'   : 'Hlt/Track/RZVelo'
-               #, 'Muon'    : 'Rec/Tracks/Muons' 
-               } ) 
-        )
-
-createdCounters.extend(
-        combine( createCounter( LumiCountVertices, seqName, lumiCountSequence ),
-               {  'PV2D'  : 'Hlt/Vertex/PV2D'
-               #,  'PV3D'  : 'Hlt/Vertex/PV3D' 
-               } )
-        )
+#createdCounters.extend( 
+#        combine( createCounter( LumiCountTracks,   seqName , lumiCountSequence),
+#               {   'Velo'   : 'Hlt/Track/Velo'
+#               , 'RZVelo'   : 'Hlt/Track/RZVelo'
+#               #, 'Muon'    : 'Rec/Tracks/Muons' 
+#               } ) 
+#        )
+#
+#createdCounters.extend(
+#        combine( createCounter( LumiCountVertices, seqName, lumiCountSequence ),
+#               {  'PV2D'  : 'Hlt/Vertex/PV2D'
+#               #,  'PV3D'  : 'Hlt/Vertex/PV3D' 
+#               } )
+#        )
 
 # filter to get backward tracks (make sure it always passes by wrapping inside a sequence)
-lumiCountSequence.Members.append( Sequence('HltRZVeloBWSequence'
-                                          , Members  = [ HltTrackFilter('HltPrepareRZVeloBW'
-                                                                       , InputSelection   = 'TES:Hlt/Track/RZVelo'
-                                                                       , AddInfo = False
-                                                                       , FilterDescriptor = ['IsBackward,>,0.5']
-                                                                       , OutputSelection     = 'RZVeloBW'
-                                                                       , RequirePositiveInputs = False
-                                                                       ) ]
-                                          , MeasureTime = True
-                                          , ModeOR = True
-                                          , ShortCircuit = False
-                                           ) )
+#lumiCountSequence.Members.append( Sequence('HltRZVeloBWSequence'
+#                                          , Members  = [ HltTrackFilter('HltPrepareRZVeloBW'
+#                                                                       , InputSelection   = 'TES:Hlt/Track/RZVelo'
+#                                                                       , AddInfo = False
+#                                                                       , FilterDescriptor = ['IsBackward,>,0.5']
+#                                                                       , OutputSelection     = 'RZVeloBW'
+#                                                                       , RequirePositiveInputs = False
+#                                                                       ) ]
+#                                          , MeasureTime = True
+#                                          , ModeOR = True
+#                                          , ShortCircuit = False
+#                                           ) )
 
-createdCounters.extend(
-    combine( createCounter( LumiCountHltTracks,   seqName , lumiCountSequence),
-             { 'RZVeloBW' : 'RZVeloBW'
-             } )
-    )
+#createdCounters.extend(
+#    combine( createCounter( LumiCountHltTracks,   seqName , lumiCountSequence),
+#             { 'RZVeloBW' : 'RZVeloBW'
+#             } )
+#    )
 
 createdCounters.extend(
     combine( createL0Counter( seqName, lumiCountSequence ),
@@ -130,11 +130,11 @@ lumiRecoSequence  = Sequence( 'Hlt1LumiRecoSequence'
 
 lumiSequence = Line ( 'Lumi'
                     , ODIN = 
-                    { 'TriggerTypes' : [ 'TimingTrigger']  # should become 'Random', now 'TimingTrigger' or 'Reserve'
+                    { 'TriggerTypes' : [ 'RandomTrigger' ]  # should become 'Random', now 'TimingTrigger' or 'Reserve'
                     }
                     , algos =
-                    [ lumiRecoSequence
-                    , lumiCountSequence
+                    [ # lumiRecoSequence
+                    lumiCountSequence
                     , BXTypes
                     , Member('Dummy','Selection',OutputSelection = '%Decision') # add a dummy selection which is used as input to the decision
                     ] )
