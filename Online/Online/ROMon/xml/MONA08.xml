@@ -1,0 +1,17 @@
+<TaskInventory>
+  <NodeList name="MONA08">
+   <Name>MONA08</Name>
+   <Node name="mona0801"   type="MonitoringWorker"/>
+   <Node name="mona0802"   type="MonitoringWorker"/>
+   <Node name="mona0803"   type="MonitoringWorker"/>
+   <Node name="mona0804"   type="MonitoringWorker"/>
+   <Node name="mona0805"   type="MonitoringWorker"/>
+   <Node name="mona0806"   type="MonitoringWorker"/>
+   <Node name="mona0807"   type="MonitoringWorker"/>
+   <Node name="mona0808"   type="MonitoringWorker"/>
+   <Node name="mona0809"   type="MonitoringWorker"/>
+   <Node name="mona0810"   type="MonitoringWorker"/>
+   <Node name="mona08"   type="MonitoringControl"/>
+  </NodeList>
+</TaskInventory>
+

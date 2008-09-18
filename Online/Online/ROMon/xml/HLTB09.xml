@@ -1,0 +1,11 @@
+<TaskInventory>
+  <NodeList name="HLTB09">
+   <Name>HLTB09</Name>
+   <Node name="hltb0901"   type="HLTWorker"/>
+   <Node name="hltb0902"   type="HLTWorker"/>
+   <Node name="hltb0903"   type="HLTWorker"/>
+   <Node name="hltb0904"   type="HLTWorker"/>
+   <Node name="hltb09"   type="HLTControl"/>
+  </NodeList>
+</TaskInventory>
+

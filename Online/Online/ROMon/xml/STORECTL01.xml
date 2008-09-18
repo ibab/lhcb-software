@@ -1,0 +1,11 @@
+<TaskInventory>
+  <NodeList name="STORECTL01">
+   <Name>STORECTL01</Name>
+   <Node name="storectl01"   type="StorageControl"/>
+   <Node name="storerecv01"   type="StorageWorker"/>
+   <Node name="storerecv02"   type="StorageWorker"/>
+   <Node name="storestrm01"   type="StorageWorker"/>
+   <Node name="storestrm02"   type="StorageWorker"/>
+  </NodeList>
+</TaskInventory>
+
