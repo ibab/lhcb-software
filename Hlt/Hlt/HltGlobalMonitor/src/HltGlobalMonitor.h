@@ -119,8 +119,6 @@ protected:
   float _efficiency;  // "Ratio counter2/hlt1allcall"
   std::vector<double> m_allAcc;
   std::vector<double> m_allCall;
-  double physallacc;
-  double randallacc;
   double physallcall;
   double randallcall;
   double orallacc;

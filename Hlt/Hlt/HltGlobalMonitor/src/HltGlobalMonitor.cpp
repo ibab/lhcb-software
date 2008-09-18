@@ -71,6 +71,8 @@ StatusCode HltGlobalMonitor::initialize() {
   starthistos();
 
   hlt1allcall=0;            // "All events"
+  randallcall=0;
+  physallcall=0;
   _counter2=0;           // "L0 accepted evts"
   _efficiency=0;        // "Ratio counter2/hlt1allcall"
   for (std::vector<std::string>::const_iterator i = m_Hlt1Lines.begin(); i!=m_Hlt1Lines.end();++i) {
@@ -307,6 +309,7 @@ void HltGlobalMonitor::monitorAlleysinput() {
   }
   LHCb::HltDecReports* decisions = get<LHCb::HltDecReports>( m_location );
   int j=0;
+  bool onceodin=false;
   for (std::vector<std::string>::const_iterator i = m_Hlt1Lines.begin(); i!=m_Hlt1Lines.end();++i) {
      const LHCb::HltDecReport*  decision = decisions->decReport( *i );
      if (decision == 0 ) {
@@ -317,6 +320,8 @@ void HltGlobalMonitor::monitorAlleysinput() {
       fill(m_histoalleycall, j+1, 1.);
       m_allAcc[j]=m_allAcc[j]+1;
       orallacc=orallacc+1;
+      if (!onceodin) fill(m_histoodintype, odin->triggerType(), 1.);
+      onceodin=true;
       j=j+1;
      }
   }
