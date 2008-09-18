@@ -1,7 +1,7 @@
 """
 High level configuration tools for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.25 2008-09-18 08:39:40 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.26 2008-09-18 10:42:45 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -20,7 +20,7 @@ class Moore(ConfigurableUser):
         , "DDDBtag" :          'DEFAULT'
         , "condDBtag" :        'DEFAULT'
         , "inputType":         'dst' # must either 'mdf' or 'dst'
-        , "hltType" :          'PHYSICS_Hlt1+Hlt2'
+        , "hltType" :          'PA+LU+VE'
         , "runTiming"  :       False # include additional timing information
         , "useTCK"     :       False # use TCK instead of options...
         , "prefetchTCK" :      [ ] # which TCKs to prefetch. Initial TCK used is first one...
