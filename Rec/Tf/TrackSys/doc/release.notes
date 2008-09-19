@@ -4,6 +4,10 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2008-09-19 - David Hutchcroft
+ - Added VeloTEDOne.py to optimise the reconstruction of the VELO for TED data
+   taken in August and up to Sept 10th 2008.
+
 ! 2008-09-12 - Chris Jones
  - Port TrackClones.opts to python (directly included in RecoTracking.py)
  - Remove obsolete TrackClones.opts
