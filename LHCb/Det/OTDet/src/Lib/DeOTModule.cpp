@@ -1,9 +1,11 @@
-// $Id: DeOTModule.cpp,v 1.33 2008-09-15 20:33:17 wouter Exp $
+// $Id: DeOTModule.cpp,v 1.34 2008-09-19 15:18:50 janos Exp $
 // GaudiKernel
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/PhysicalConstants.h"
+
+#include "DetDesc/Condition.h"
 
 // LHCbKernel
 #include "Kernel/LineTraj.h"
@@ -57,9 +59,9 @@ DeOTModule::DeOTModule(const std::string& name) :
   m_yMaxLocal(0.0),
   m_xInverted(false),
   m_yInverted(false) {
-  
-  /// Constructor 
+  /// Constructor
 }
+
 
 DeOTModule::~DeOTModule() { /// Destructor 
 }
@@ -101,35 +103,46 @@ StatusCode DeOTModule::initialize() {
   // Added for the A-team. This is the calibration for the
   // simulation. In the end, we need to read this from a database.
   m_propagationVelocity = 1/(4.0*Gaudi::Units::ns/Gaudi::Units::m) ;
-  double resolution     = 0.200*Gaudi::Units::mm ;
+ 
+  // double resolution     = 0.200*Gaudi::Units::mm ;  
   // Coefficients of polynomial t(r/rmax): for MC this is just t = 0 + 42/2.5 * r
-  std::vector<double> tcoeff    = boost::assign::list_of(0.0)(42*Gaudi::Units::ns ) ;
+  //std::vector<double> tcoeff    = boost::assign::list_of(0.0)(42*Gaudi::Units::ns ) ;
   // Coefficients of polynomial sigma_t(r/rmax): for MC this is just sigma_t = 0.200 * 42/2.5 
-  std::vector<double> terrcoeff = boost::assign::list_of(resolution * 42*Gaudi::Units::ns / m_cellRadius) ;
+  //std::vector<double> terrcoeff = boost::assign::list_of(resolution * 42*Gaudi::Units::ns / m_cellRadius) ;
   // Since everything is so simple, we need just two bins in the table
-  m_rtrelation = OTDet::RtRelation(m_cellRadius,tcoeff,terrcoeff,2) ;
+  //m_rtrelation = OTDet::RtRelation(m_cellRadius,tcoeff,terrcoeff,2) ;
   
   // Get the lenght of the module
-  //const ILVolume* lv = (this->geometry())->lvolume();
-  const ISolid* solid = this->geometry()->lvolume()->solid();
-  const SolidBox* mainBox = dynamic_cast<const SolidBox*>(solid);
+  //const ISolid* solid = this->geometry()->lvolume()->solid();
+  //const SolidBox* mainBox = dynamic_cast<const SolidBox*>(solid);
+  const SolidBox* mainBox = dynamic_cast<const SolidBox*>( this->geometry()->lvolume()->solid() );
   m_ySizeModule = mainBox->ysize();
   m_xMaxLocal = (0.5*m_nStraws+0.25)*m_xPitch;
   m_xMinLocal = -m_xMaxLocal;
   m_yMaxLocal = mainBox->yHalfLength();
   m_yMinLocal = -m_yMaxLocal;
 
-  /// Update and chache trajectories/planes
+  /// Register conditions with update manager svc
   MsgStream msg(msgSvc(), name() );
   try {
     msg << MSG::DEBUG << "Registering conditions" << endmsg;
-    updMgrSvc()->registerCondition(this,this->geometry(),&DeOTModule::cacheInfo);
-    msg << MSG::DEBUG << "Start first update" << endmsg;
-    StatusCode sc = updMgrSvc()->update(this);
+    m_status      = condition( "Status"      );
+    m_calibration = condition( "Calibration" );
+    updMgrSvc()->registerCondition( this, this->geometry()    , &DeOTModule::cacheInfo           );
+    updMgrSvc()->registerCondition( this, m_status.path()     , &DeOTModule::statusCallback      );
+    updMgrSvc()->registerCondition( this, m_calibration.path(), &DeOTModule::calibrationCallback );
+    
+    msg << MSG::DEBUG << "Start first update of conditions" << endmsg;
+    StatusCode sc = updMgrSvc()->update( this );
     if ( !sc.isSuccess() ) {
+      msg << MSG::WARNING << "Failed to update detector element " << this->name() 
+          << "!" << endmsg;
       return sc;
+      
     }
   } catch (DetectorElementException &e) {
+    msg << MSG::ERROR    << "Failed to update detector element " << this->name() 
+        << "! " << "See exeption (next)." << endmsg;
     msg << MSG::ERROR << e << endmsg;
     return StatusCode::FAILURE;
   }
@@ -366,7 +379,7 @@ StatusCode DeOTModule::cacheInfo() {
   m_midTraj[1].reset(new LineTraj(g3[1], g4[1]));
  
   /// range -> wire length
-  /// wire lenght = module length
+  /// wire length = module length
   /// first mono layer
   m_range[0] = std::make_pair(m_yMinLocal, m_yMaxLocal);
   /// second mono layer
@@ -414,8 +427,8 @@ StatusCode DeOTModule::cacheInfo() {
   // for MC. Cannot use ReadOutGate tool becaus eof circular
   // dependency. FIXME.
   
-  const double startReadOutGate[]   = { 28.0*Gaudi::Units::ns, 30.0*Gaudi::Units::ns, 32.0*Gaudi::Units::ns } ;
-  double thisModuleStartReadOutGate = startReadOutGate[m_stationID-1] ;
+  //const double startReadOutGate[]   = { 28.0*Gaudi::Units::ns, 30.0*Gaudi::Units::ns, 32.0*Gaudi::Units::ns } ;
+  //double thisModuleStartReadOutGate = startReadOutGate[m_stationID-1] ;
   
   // the t0 will be defined such that 
   // 
@@ -425,7 +438,7 @@ StatusCode DeOTModule::cacheInfo() {
   // midpoint of the straw. does that make sense, actually?
 
   // The following just makes sense for MC, of course.
-  m_strawt0.resize( 2*m_nStraws, 0 ) ;
+  //m_strawt0.resize( 2*m_nStraws, 0 ) ;
   m_strawdefaulttof.resize( 2*m_nStraws, 0 ) ;
   for(unsigned int istraw=1; istraw<=2*m_nStraws; ++istraw) {
     OTChannelID id(stationID(),layerID(),quarterID(),moduleID(),istraw,0) ;
@@ -435,8 +448,42 @@ StatusCode DeOTModule::cacheInfo() {
     //double defaulttof = p0.r() / Gaudi::Units::c_light;
     double defaulttof = sqrt(p0.x()*p0.x() + p0.z()*p0.z()) / Gaudi::Units::c_light;
     m_strawdefaulttof[istraw - 1] = defaulttof ;
-    m_strawt0[istraw - 1]         = defaulttof - thisModuleStartReadOutGate ;
+    //m_strawt0[istraw - 1]         = defaulttof - thisModuleStartReadOutGate ;
   }
+  
+  return StatusCode::SUCCESS;
+}
+
+StatusCode DeOTModule::calibrationCallback() {
+  MsgStream msg( msgSvc(), name() );
+  msg << MSG::DEBUG << "Updating Calibration parameters" << endmsg;
+  try {
+    std::vector< double > trParameters     = m_calibration->param< std::vector<double> >( "TRParameters" ); ///< in ns
+    std::vector< double > sigmaTParameters = m_calibration->param< std::vector<double> >( "STParameters" ); ///< in ns
+    // Here we assume the cell radius is the same for all straws. Should be  ;)
+    // Maybe add the number of bins to the conditions
+    m_rtrelation = OTDet::RtRelation( m_cellRadius, trParameters, sigmaTParameters ) ;
+    m_strawt0    = m_calibration->param< std::vector<double> >( "TZero" );
+  }
+  catch (...) {
+    msg << MSG::WARNING << "Failed to update calibration conditions for " << this->name() << "!" << endmsg;
+    return StatusCode::FAILURE;
+  }
+
+  return StatusCode::SUCCESS;
+}
+
+StatusCode DeOTModule::statusCallback() {
+  MsgStream msg( msgSvc(), name() );
+  msg << MSG::DEBUG << "Updating Status parameters" << endmsg;
+  try {
+    m_channelStatus = m_status->param< std::vector<int> >( "ChannelStatus" );
+  }
+  catch (...) {
+    msg << MSG::WARNING << "Failed to update status conditions for " << this->name() << "!" << endmsg;
+    return StatusCode::FAILURE;
+  }
+  
   return StatusCode::SUCCESS;
 }
 
@@ -470,4 +517,42 @@ std::auto_ptr<LHCb::Trajectory> DeOTModule::trajectory(const OTChannelID& aChan,
   Gaudi::XYZPoint posWire = m_midTraj[mono]->position( localUOfStraw(aStraw) );
   
   return std::auto_ptr<Trajectory>(new LineTraj(posWire, m_dir, m_range[mono],true));
+}
+
+StatusCode DeOTModule::setStrawT0s( const std::vector< double >& tzeros ) {
+  // @TODO: Make me smarter so i can handle a vector of otis t0s
+  /// Modify condition in TES
+  m_calibration->param< std::vector<double> >( "TZero" ) = tzeros;
+  /// m_calibration->neverUpdateMode() /// Always valid for any and all IOV
+  /// Now we need to inform the ums that the condition has changed
+  updMgrSvc()->invalidate( m_calibration.target() ); 
+  /// Trigger an update
+  StatusCode sc = updMgrSvc()->update( this );
+  if ( !sc.isSuccess() ) {
+    MsgStream msg( msgSvc(), name() );
+    msg << MSG::WARNING << "Failed to update straw T0 conditions for " << this->name() << "!" << endmsg;
+    return StatusCode::FAILURE;
+  }
+  
+  return StatusCode::SUCCESS;
+}
+
+StatusCode DeOTModule::setRtRelation(const OTDet::RtRelation& rtr) {
+  /// First we need to get the tr and st parameters
+  std::vector< double > trParameters     = rtr.tcoeff();
+  std::vector< double > sigmaTParameters = rtr.terrcoeff();
+  /// Ok now we modify the conditions in the tes
+  m_calibration->param< std::vector< double > >( "TRParameters" ) = trParameters;
+  m_calibration->param< std::vector< double > >( "STParameters" ) = sigmaTParameters;
+  /// Now we need to inform the ums that the condition has changed
+  updMgrSvc()->invalidate( m_calibration.target() );
+  /// Trigger an update
+  StatusCode sc = updMgrSvc()->update( this );
+  if ( !sc.isSuccess() ) {
+    MsgStream msg( msgSvc(), name() );
+    msg << MSG::WARNING << "Failed to update RT conditions for " << this->name() << "!" << endmsg;
+    return StatusCode::FAILURE;
+  }
+  
+  return StatusCode::SUCCESS;
 }

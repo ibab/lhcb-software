@@ -1,4 +1,4 @@
-// $Id: DeOTModule.h,v 1.33 2008-08-29 17:01:38 janos Exp $
+// $Id: DeOTModule.h,v 1.34 2008-09-19 15:18:50 janos Exp $
 #ifndef OTDET_DEOTMODULE_H
 #define OTDET_DEOTMODULE_H 1
 
@@ -38,28 +38,31 @@ namespace LHCb
  *  The numbering scheme for the OT modules in the digitization is:
  *  
  *  @verbatim
- *
- *         Quarter 3                      Quarter 2
- *    __________________________     _________________________
- *   |  |  |  |  |  |  |  |  |  |   | |  |  |  |  |  |  |  |  |
- *   |  |  |  |  |  |  |  |  |  |   | |  |  |  |  |  |  |  |  |
- *   |  |  |  |  |  |  |  |  |  |   | |  |  |  |  |  |  |  |  |
- *   | 1| 2| 3| 4| 5| 6| 7| 8|9 |   |9| 8| 7| 6| 5| 4| 3| 2| 1|
- *   |  |  |  |  |  |  |  |  |  |   | |  |  |  |  |  |  |  |  | 
- *   |  |  |  |  |  |  |  |  |  |   | |  |  |  |  |  |  |  |  |
- *   |  |  |  |  |  |  |  |  |__|   |_|  |  |  |  |  |  |  |  |
- *   |  |  |  |  |  |  |  |__|        |__|  |  |  |  |  |  |  |
- *   |--|--|--|--|--|--|--|__   IT     __|--|--|--|--|--|--|--|
- *   |  |  |  |  |  |  |  |  |__     _|  |  |  |  |  |  |  |  |
- *   |  |  |  |  |  |  |  |  |  |   | |  |  |  |  |  |  |  |  | 
- *   |  |  |  |  |  |  |  |  |  |   | |  |  |  |  |  |  |  |  | 
- *   |  |  |  |  |  |  |  |  |  |   | |  |  |  |  |  |  |  |  |
- *   | 1| 2| 3| 4| 5| 6| 7| 8| 9|   |9| 8| 7| 6| 5| 4| 3| 2| 1|
- *   |  |  |  |  |  |  |  |  |  |   | |  |  |  |  |  |  |  |  |
- *   |__|__|__|__|__|__|__|__|__|   |_|__|__|__|__|__|__|__|__|
- *
- *          Quarter 1                      Quarter 0
- *
+                                                                ^ Z 
+          Quarter 3                      Quarter 2              |
+     __________________________     _________________________   |
+    |  |  |  |  |  |  |  |  |  |   | |  |  |  |  |  |  |  |  |  |
+    |  |  |  |  |  |  |  |  |  |   | |  |  |  |  |  |  |  |  |  |
+    |  |  |  |  |  |  |  |  |  |   | |  |  |  |  |  |  |  |  |  |
+    | 1| 2| 3| 4| 5| 6| 7| 8|9 |   |9| 8| 7| 6| 5| 4| 3| 2| 1|  |
+    |  |  |  |  |  |  |  |  |  |   | |  |  |  |  |  |  |  |  |  |
+    |  |  |  |  |  |  |  |  |  |   | |  |  |  |  |  |  |  |  |  |
+    |  |  |  |  |  |  |  |  |__|   |_|  |  |  |  |  |  |  |  |  |
+    |  |  |  |  |  |  |  |__|        |__|  |  |  |  |  |  |  |  |
+    |--|--|--|--|--|--|--|__   IT     __|--|--|--|--|--|--|--|  |
+    |  |  |  |  |  |  |  |  |__     _|  |  |  |  |  |  |  |  |  |
+    |  |  |  |  |  |  |  |  |  |   | |  |  |  |  |  |  |  |  |  |
+    |  |  |  |  |  |  |  |  |  |   | |  |  |  |  |  |  |  |  |  |
+    |  |  |  |  |  |  |  |  |  |   | |  |  |  |  |  |  |  |  |  |
+    | 1| 2| 3| 4| 5| 6| 7| 8| 9|   |9| 8| 7| 6| 5| 4| 3| 2| 1|  |
+    |  |  |  |  |  |  |  |  |  |   | |  |  |  |  |  |  |  |  |  |
+    |__|__|__|__|__|__|__|__|__|   |_|__|__|__|__|__|__|__|__|  |
+                                                                |
+           Quarter 1                      Quarter 0             |
+                                                                |
+   <------------------------------------------------------------
+   X
+
  *  @endverbatim
  *
  *  @author Jeroen van Tilburg jtilburg@nikhef.nl 
@@ -283,16 +286,20 @@ public:
 		  double& xAtYEq0, double& zAtYEq0, double& ybegin, double& yend) const ;
 
   /** Set the t0 for a straw in this module */
-  void setStrawT0(unsigned int iStraw, double t0)  ;
-
+  // void setStrawT0(unsigned int iStraw, double t0)  ;
+  
+  StatusCode setStrawT0s( const std::vector< double >& tzeros );
+  
   /** Time offset correction for a straw */
   double strawT0(unsigned int iStraw) const ;
 
   /** Reference time-of-flight correction for straw (c=1 particle from origin)*/
   double strawReferenceTimeOfFlight(unsigned int iStraw) const ;
 
-  /** Set the rt-relation for all straws in this module */
-  void setRtRelation(const OTDet::RtRelation& rtr) ;
+  /** Set the rt-relation for all straws in this module. !! Only for experts
+      or people who know what their doing. !! */
+  //void setRtRelation(const OTDet::RtRelation& rtr) ;
+  StatusCode setRtRelation(const OTDet::RtRelation& rtr) ;
 
   /** Rt-realtion for  all straws in this module */
   const OTDet::RtRelation& rtRelation() const ;
@@ -325,6 +332,15 @@ public:
       side.) */
   double propagationVelocityY() const ;
 
+  /** @return pointer to Calibration condition. !! Only for experts or people who think
+       they know what their doing. !! */
+  const Condition* calibrationCondition() const;
+
+  /** @return pointer to Status condition. !! Only for experts or people who think
+       they know what their doing. !! */
+  const Condition* statusCondition() const;
+  
+  /// Private member methods
 private:
   
   /// Not allowed to copy
@@ -332,9 +348,13 @@ private:
   DeOTModule& operator=(const DeOTModule&);
   
   void clear();
-
+  
   StatusCode cacheInfo();
-
+  
+  StatusCode calibrationCallback();
+  
+  StatusCode statusCallback();
+  
   /** Return range of hit straws for a given local entry and exit point.
    * @param entryPoint local entry point
    * @param exitPoint  local exit point
@@ -380,6 +400,8 @@ private:
                const double u2, const double dz,
                double& zc, double& uc, double& rc) const;
 
+  /// Private members
+private :
   unsigned int m_stationID;      ///< station ID number
   unsigned int m_layerID;        ///< layer ID number
   unsigned int m_quarterID;      ///< quarter ID number
@@ -423,6 +445,10 @@ private:
   double m_halfXPitch;                          ///< Half of the pitch in x (needed for staggering)
   double m_monoAXZero;                          ///< offset of staggering in first monolayer  
   double m_monoBXZero;                          ///< offset of staggering in second monolayer
+  // Calibration and status CONDDB stuff
+  SmartRef< Condition > m_calibration;          ///< Calibration condition
+  SmartRef< Condition > m_status;               ///< Status condition
+  std::vector<int>    m_channelStatus;          ///< vector of channel statuses
 };
 
 // -----------------------------------------------------------------------------
@@ -708,17 +734,24 @@ inline double DeOTModule::strawReferenceTimeOfFlight(unsigned int istraw) const 
   return m_strawdefaulttof[istraw-1] ;
 }
 
-inline void DeOTModule::setStrawT0( unsigned int istraw, double t0 ) {
-  m_strawt0[istraw-1] = t0 ;
-}
+//inline void DeOTModule::setStrawT0( unsigned int istraw, double t0 ) {
+//  m_strawt0[istraw-1] = t0 ;
+//}
 
 inline const OTDet::RtRelation& DeOTModule::rtRelation() const {
   return m_rtrelation ;
 }
 
-inline void DeOTModule::setRtRelation( const OTDet::RtRelation& rtr) {
-  m_rtrelation = rtr ;
+//inline void DeOTModule::setRtRelation( const OTDet::RtRelation& rtr) {
+//  m_rtrelation = rtr ;
+//}
+
+inline const Condition* DeOTModule::calibrationCondition() const {
+  return m_calibration.target();
 }
 
+inline const Condition* DeOTModule::statusCondition() const {
+  return m_status.target();
+}
 
 #endif  // OTDET_DEOTMODULE_H
