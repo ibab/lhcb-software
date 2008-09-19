@@ -103,7 +103,6 @@ StatusCode Hlt2HidValley::execute() {
       sumPtTracks += trk->pt();
       sumXYTrackfirstStates += xyfState;
     }
-    int nrDisplacedOffVrtcs = 0;
     double sumSVxyDist = 0.;
     for(LHCb::RecVertices::const_iterator itRV = displacedVrtcs->begin();
         displacedVrtcs->end() != itRV; itRV++) {
@@ -118,13 +117,11 @@ StatusCode Hlt2HidValley::execute() {
                            dVtx->position().y() * dVtx->position().y());
       if(distVtcs > .001) {
       	sumSVxyDist += xyDist;
-        nrDisplacedOffVrtcs++;
       }
     }    
     // Cuts
     if((sumPtTracks > 250. * Gaudi::Units::GeV) && 
        (sumXYTrackfirstStates > 30. * Gaudi::Units::mm) && 
-       (nrDisplacedOffVrtcs > 1) && 
        (sumSVxyDist > 0.7 * Gaudi::Units::mm)) {
       setFilterPassed(true);
       desktop()->keep(highestPtPion);

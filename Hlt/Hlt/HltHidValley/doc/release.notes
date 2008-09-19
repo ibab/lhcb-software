@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.5 2008-09-10 12:22:05 jpalac Exp $
+!$Id: release.notes,v 1.6 2008-09-19 10:23:50 marcin Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltHidValley
 ! Responsible : Marcin Kucharczyk
@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 ! ====================== HltHidValley v1r1 2008-09-10 =====================
+
+! 2008-09-19 - Marcin Kucharczyk
+  - Removing irrelevant cut
 
 ! 2008-08-28 - Marcin Kucharczyk
   - Some improvements in the algorithm
