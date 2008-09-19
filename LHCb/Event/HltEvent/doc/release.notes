@@ -4,6 +4,9 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+! 2008-09-19 - Tomasz Skwarnicki
+ - added executionStage field in HltDecReports
+
 !======================== HltEvent v8r12 2008-09-03 ==========================
 ! 2008-08-29 - Jaap Panman
  - LumiResult container added to hold "R" results in extraInfo

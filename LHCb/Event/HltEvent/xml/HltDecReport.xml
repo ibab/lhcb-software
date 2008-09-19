@@ -16,7 +16,7 @@
       <attribute
         type = 'bitfield'
         name = 'decReport'
-        desc = 'encoded decision, errors, number of candidates and selection ID'
+        desc = 'encoded decision, execution stage, errors, number of candidates and selection ID'
 	init = '0'
 	access = 'PROTECTED' >
 
@@ -24,21 +24,30 @@
             type='unsigned int'
             name='decision'
             length='1'
-            desc='decision 1(true)=passed selection 0(false)=did not pass selection'
+            desc='decision 1(true)=this trigger line asked to keep the event; 0(false)=this trigger did not ask to keep the event'
             setMeth ='FALSE'
 	    />
+
+	<bitfield 
+            type='unsigned int'
+	    name='executionStage'
+	    length='3'
+	    desc='code specifying highest step reached during the trigger line execution (0-7)'
+            setMeth ='FALSE'
+	    />
+  
 
 	<bitfield
             type='unsigned int'
 	    name='errorBits'
-	    length='5'
+	    length='3'
 	    desc='error code 0=none'
 	    />
 
 	<bitfield
 	    type='unsigned int'
 	    name='numberOfCandidates'
-	    length='10'
+	    length='9'
 	    desc='number of selected candidates passing trigger selection criteria' 
             setMeth ='FALSE'
 	    />
@@ -61,13 +70,27 @@
         name='setDecision'
         type='void'
         argList='int dec' 
-        desc='set decision bit; passed selection=(dec!=0)'
+        desc='set decision bit; keep event= (dec!=0)'
         >
         <code>
    m_decReport &amp;= ~decisionMask;
    if( dec ){ 
      m_decReport |= ((((unsigned int)1) &lt;&lt; decisionBits) &amp; decisionMask); 
    }
+       </code>
+      </method>        
+
+      <method
+        name='setExecutionStage'
+        type='void'
+        argList='int stage' 
+        desc='Update code specifying highest step reached during the trigger line execution (0-7)'
+        >
+        <code>
+  unsigned int val=(stage&lt;0)?0:((unsigned int)stage);
+  val=(val&lt;7)?val:7; 
+  m_decReport &amp;= ~executionStageMask;
+  m_decReport |= ((((unsigned int)val) &lt;&lt; executionStageBits)  &amp; executionStageMask);
        </code>
       </method>        
 
@@ -141,12 +164,27 @@
 	/>
 
       <constructor
-        argList='int dec, unsigned int eb, int noc, int selID'
+        argList='int dec, int stage, unsigned int eb, int noc, int selID'
         desc='create from subfield inputs with allowed range checking'
 	>
         <code>
    m_decReport=0;
    setDecision(dec);
+   setExecutionStage(stage);
+   setErrorBits(eb);          
+   setNumberOfCandidates(noc);
+   setIntSelectionID(selID);
+        </code>   
+      </constructor>
+
+      <constructor
+        argList='int dec, unsigned int eb, int noc, int selID'
+        desc='create from subset of subfield inputs with allowed range checking'
+	>
+        <code>
+   m_decReport=0;
+   setDecision(dec);
+   setExecutionStage(0); // not specified
    setErrorBits(eb);          
    setNumberOfCandidates(noc);
    setIntSelectionID(selID);
@@ -164,10 +202,11 @@
         <code>
           std::ostream&amp; ss = const_cast&lt; std::ostream&amp; &gt;(s);
           ss &lt;&lt; "{ " 
-             &lt;&lt; " decision :	" &lt;&lt; decision() 
-             &lt;&lt; " errorBits :	" &lt;&lt; errorBits() 
-             &lt;&lt; " numberOfCandidates :	" &lt;&lt; numberOfCandidates() 
-             &lt;&lt; " intSelectionID :	" &lt;&lt; intSelectionID() 
+             &lt;&lt; " decision : " &lt;&lt; decision() 
+	     &lt;&lt; " executionStage : " &lt;&lt; executionStage() 
+             &lt;&lt; " errorBits : " &lt;&lt; errorBits() 
+             &lt;&lt; " numberOfCandidates : " &lt;&lt; numberOfCandidates() 
+             &lt;&lt; " intSelectionID : " &lt;&lt; intSelectionID() 
              &lt;&lt; " }" ;
           return ss;
         </code>
