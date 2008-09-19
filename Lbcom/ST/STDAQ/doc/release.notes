@@ -4,6 +4,9 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2008-09-19 M Needham
+ - bug fix in recovery mode
+
 ! 2008-09-16 M Needham
  - fix bug in printout of decoded fraction in finalize
  - fix case of only having central spill
