@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.109 2008-09-15 20:33:17 wouter Exp $
+! $Id: release.notes,v 1.110 2008-09-19 15:19:26 janos Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 !--------------------------------------------------------------------------
 
+! 2008-09-19 - Jan Amoraal
+  - Added callbacks for calibration conditions. T0s and RTs are now in CONDDB.
+    Modified set functions to reflect this.
+ 
 ! 2008-09-15 - Wouter Hulsbergen
   - Changed definition of coefficients t(r) and sigma_t(r) in
   RtRelation.h: Those coefficiencts now define a polynomial in r/rmax,
