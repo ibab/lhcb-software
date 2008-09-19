@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichMarkovRingFinderMoni
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderMoni.h,v 1.26 2008-08-29 00:08:13 jonrob Exp $
+ *  $Id: RichMarkovRingFinderMoni.h,v 1.27 2008-09-19 07:43:44 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -80,7 +80,10 @@ namespace Rich
           /// access RichRecMCTruthTool tool on demand
           const Rich::Rec::MC::IMCTruthTool * richRecMCTool() const
           {
-            if ( !m_richRecMCTruth ) { acquireTool( "RichRecMCTruthTool", m_richRecMCTruth ); }
+            if ( !m_richRecMCTruth ) 
+            {
+              acquireTool( "RichRecMCTruthTool", m_richRecMCTruth );
+            }
             return m_richRecMCTruth;
           }
 
@@ -95,7 +98,7 @@ namespace Rich
           std::vector<double> m_ckThetaMin; ///< Min theta limit for histos for each rad
 
           // Max fit variance
-          double m_maxFitVariance;
+          std::vector<double> m_maxFitVariance;
 
           /// Number of histogram bins
           unsigned int m_nBins;

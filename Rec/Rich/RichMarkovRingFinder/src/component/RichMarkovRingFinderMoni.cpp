@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichMarkovRingFinderMoni
  *
- *  $Id: RichMarkovRingFinderMoni.cpp,v 1.42 2008-09-17 12:34:20 jonrob Exp $
+ *  $Id: RichMarkovRingFinderMoni.cpp,v 1.43 2008-09-19 07:43:44 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -26,7 +26,8 @@ DECLARE_ALGORITHM_FACTORY( Moni );
 // Standard constructor, initializes variables
 Moni::Moni( const std::string& name,
             ISvcLocator* pSvcLocator )
-  : RichRecHistoAlgBase ( name, pSvcLocator )
+  : RichRecHistoAlgBase ( name, pSvcLocator ),
+    m_richRecMCTruth    ( NULL )
 {
   declareProperty( "RingLocation", m_ringLoc = LHCb::RichRecRingLocation::MarkovRings+"All" );
   declareProperty( "ChThetaRecHistoLimitMin",
@@ -34,7 +35,8 @@ Moni::Moni( const std::string& name,
   declareProperty( "ChThetaRecHistoLimitMax",
                    m_ckThetaMax = boost::assign::list_of(0.3)(0.08)(0.05) );
   declareProperty( "NumberBins", m_nBins = 100 );
-  declareProperty( "MaxFitVariance", m_maxFitVariance = 200 );
+  declareProperty( "MaxFitVariance", 
+                   m_maxFitVariance = boost::assign::list_of(200)(200)(200) );
 }
 
 // Destructor
@@ -47,7 +49,7 @@ StatusCode Moni::initialize()
   const StatusCode sc = RichRecHistoAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  debug() << "Monitoring Trackless rings " << m_ringLoc << endreq;
+  debug() << "Monitoring Trackless rings at '" << m_ringLoc << "'" << endreq;
 
   return sc;
 }
@@ -142,7 +144,7 @@ StatusCode Moni::execute()
                 << " " << fitter.numberOfPoints()
                 << endreq;
     if ( fitter.result().Status == 0 &&
-         fitter.result().Variance < m_maxFitVariance )
+         fitter.result().Variance < m_maxFitVariance[rad] )
     {
       plot1D( fitter.result().Radius, hid(rad,"ringRadiiRefitted"),
               RAD+" Refitted Trackless Ring Radii (mm on HPD plane)",
