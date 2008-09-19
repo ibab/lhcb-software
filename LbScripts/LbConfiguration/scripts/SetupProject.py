@@ -4,7 +4,7 @@ import os, sys, tempfile, re, sys
 from stat import S_ISDIR
 import getopt
 
-_cvs_id = "$Id: SetupProject.py,v 1.24 2008-09-09 11:37:06 hmdegaud Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.25 2008-09-19 10:09:38 marcocle Exp $"
 
 ########################################################################
 # Useful constants
@@ -1373,9 +1373,9 @@ class SetupProject:
             # create the user project if User_release_area is defined, it is a
             # project with InstallArea and the directory doesn't exist yet.
             if self.user_area:
-                user_proj_name = "%s_%s" % (self.project_info.name, self.project_info.version)
-                user_proj_dir = os.path.join(self.user_area, user_proj_name)
                 if self.project_info.policy != 'old':
+                    user_proj_name = "%s_%s" % (self.project_info.name, self.project_info.version)
+                    user_proj_dir = os.path.join(self.user_area, user_proj_name)
                     if not os.path.exists(user_proj_dir):
                         cur_dir = os.getcwd()
                         os.chdir(self.user_area)
@@ -1386,10 +1386,10 @@ class SetupProject:
                         else:
                             messages.append('Cannot create user project in %s' % user_proj_dir)
                         
-                if os.path.isdir(user_proj_dir):
-                    # Let's enter the user project directory
-                    script += "cd %s\n" % user_proj_dir
-                    messages.append("Current directory is '%s'." % user_proj_dir)
+                    if os.path.isdir(user_proj_dir):
+                        # Let's enter the user project directory
+                        script += "cd %s\n" % user_proj_dir
+                        messages.append("Current directory is '%s'." % user_proj_dir)
                 
             if 'CMTPROJECTPATH' in env:
                 messages.append("Using CMTPROJECTPATH = '%(CMTPROJECTPATH)s'" % env)
