@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
-import os, sys, tempfile, re, sys
+import os, sys, tempfile, re, sys, time
 from stat import S_ISDIR
 import getopt
 
-_cvs_id = "$Id: SetupProject.py,v 1.26 2008-09-19 10:43:46 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.27 2008-09-19 11:55:13 marcocle Exp $"
 
 ########################################################################
 # Useful constants
@@ -932,6 +932,29 @@ class SetupProject:
         parser.add_option("--keep-CMTPROJECTPATH", action="store_true",
                           help = "Do not override the value of the environment variable CMTPROJECTPATH")
         
+        def nightly_option(option, opt_str, value, parser):
+            parser.values.dev = True
+            if len(parser.rargs) < 1:
+                raise OptionValueError("%s must be followed by the slot of the nightlies and optionally by the day"%opt_str)
+            slot = parser.rargs.pop(0)
+            days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+            if len(parser.rargs) and parser.rargs[0].capitalize() in days:
+                day = parser.rargs.pop(0).capitalize()
+            else:
+                day = days[time.localtime()[6]]
+                # In Python 2.3
+                # day = days[datetime.date.today().weekday()]
+            path = os.path.join(os.environ.get("LHCBNIGHTLIES", "/afs/cern.ch/lhcb/software/nightlies"),
+                                slot, day)
+            if not os.path.isdir(path):
+                raise OptionValueError("The directory %s does not exists. Check the values of the option %s" % (path, opt_str))
+            parser.values.dev_dirs.append(path)
+        
+        parser.add_option("--nightly", action="callback",
+                          metavar = "SLOT [DAY]", callback = nightly_option,
+                          help = "Add the required slot of the LHCb nightly " +
+                                 "builds to the list of DEV dirs. The DAY is " +
+                                 "by default the current day.")
         
         parser.set_defaults(output=None,
                             mktemp=False,

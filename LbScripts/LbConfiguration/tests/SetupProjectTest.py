@@ -3,7 +3,7 @@ import unittest
 import SetupProject
 #from SetupProject import *
 
-import os, sys, re
+import os, sys, re, datetime
 from StringIO import StringIO
 
 # utility check functions
@@ -218,6 +218,19 @@ class SetupProjectTestCase(unittest.TestCase):
         sp = SetupProject.SetupProject()
         sp.parse_args(['--dev-dir=MyDevDir'])
         self.assert_(sp.dev)
+        
+        days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+        # --nightly implies --dev and append to dev_dirs
+        sp = SetupProject.SetupProject()
+        sp.parse_args(['--nightly', 'lhcb1'])
+        self.assert_(sp.dev)
+        self.assert_(len(sp.dev_dirs) == 1 and ("lhcb1/" + days[datetime.date.today().weekday()]) in  sp.dev_dirs[0])
+        
+        # --nightly implies --dev and append to dev_dirs
+        sp = SetupProject.SetupProject()
+        sp.parse_args(['--nightly', 'lhcb1', 'tUe'])
+        self.assert_(sp.dev)
+        self.assert_(len(sp.dev_dirs) == 1 and "lhcb1/Tue" in  sp.dev_dirs[0])
         
         # runtime dependencies on projects
         sp = SetupProject.SetupProject()
