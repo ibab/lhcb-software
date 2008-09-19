@@ -1,3 +1,13 @@
+2008-09-19  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* scripts/SetupProject.py:
+	   - ignore CMTPROJECTPATH by default, unless the option
+	     --keep-CMTPROJECTPATH is used
+	   - changed the order of entries in CMTPROJECTPATH:
+	     1) user area
+	     2) DEV
+	     3) LHCBPROJECTPATH
+
 2008-08-27  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/Project.py: Factor out some methods of the ProjectConf

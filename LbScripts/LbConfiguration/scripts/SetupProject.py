@@ -4,7 +4,7 @@ import os, sys, tempfile, re, sys
 from stat import S_ISDIR
 import getopt
 
-_cvs_id = "$Id: SetupProject.py,v 1.25 2008-09-19 10:09:38 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.26 2008-09-19 10:43:46 marcocle Exp $"
 
 ########################################################################
 # Useful constants
@@ -672,29 +672,26 @@ class SetupProject:
                                                         env['CMTPATH'] ])
             self._debug("----- CMTPATH set to '%s' -----"%env['CMTPATH'])
         else:
-            # split the CMTPROJECTPATH in a convenient way
-            cmtProjPath = env.get("CMTPROJECTPATH","")
-            if cmtProjPath:
-                cmtProjPath = cmtProjPath.split(os.pathsep)
-            else: # to prevent a dir of size 0 in the path
+            if not self.keep_CMTPROJECTPATH:
+                # Generate the CMTPROJECTPATH in a convenient way
                 cmtProjPath = []
-            # Prepend the user release area, if not there
-            if self.user_area and self.user_area not in cmtProjPath:
-                cmtProjPath.insert(0, self.user_area)
-            # explicit dev dirs must always be taken into account
-            for d in self.dev_dirs:
-                if d not in cmtProjPath:
-                    cmtProjPath.insert(0,d)
-            # the project directory should be appended, if not there
-            if self.project_info.path not in cmtProjPath:
-                cmtProjPath.append(self.project_info.path)
-            # append search_path directories too, to be sure that everything is there
-            for d in self.search_path:
-                if d not in cmtProjPath:
-                    cmtProjPath.append(d)
-                    
-            env['CMTPROJECTPATH'] = os.pathsep.join(cmtProjPath)
-            self._debug("----- CMTPROJECTPATH set to '%s' -----"%env['CMTPROJECTPATH'])
+                # explicit dev dirs must always be taken into account
+                for d in self.dev_dirs:
+                    if d not in cmtProjPath:
+                        cmtProjPath.insert(0,d)
+                # Prepend the user release area, if not there
+                if self.user_area and self.user_area not in cmtProjPath:
+                    cmtProjPath.insert(0, self.user_area)
+                # the project directory should be appended, if not there
+                if self.project_info.path not in cmtProjPath:
+                    cmtProjPath.append(self.project_info.path)
+                # append search_path directories too, to be sure that everything is there
+                for d in self.search_path:
+                    if d not in cmtProjPath:
+                        cmtProjPath.append(d)
+                        
+                env['CMTPROJECTPATH'] = os.pathsep.join(cmtProjPath)
+                self._debug("----- CMTPROJECTPATH set to '%s' -----"%env['CMTPROJECTPATH'])
             
             # unset CMTPATH if present
             if 'CMTPATH' in env:
@@ -929,8 +926,11 @@ class SetupProject:
         parser.add_option("--use-grid", action="store_true",
                           help = "Enable auto selection of LHCbGrid project")
         
-        parser.add_option("--silent", action="store_true",
+        parser.add_option("-q", "--silent", action="store_true",
                           help = "Removes message printout during setup")
+        
+        parser.add_option("--keep-CMTPROJECTPATH", action="store_true",
+                          help = "Do not override the value of the environment variable CMTPROJECTPATH")
         
         
         parser.set_defaults(output=None,
@@ -947,7 +947,8 @@ class SetupProject:
                             overriding_projects = [],
                             auto_override = True,
                             use_grid = False,
-                            silent=False
+                            silent=False,
+                            keep_CMTPROJECTPATH=False
                             )
         
         if 'CMTSITE' in os.environ and \
@@ -1206,7 +1207,7 @@ class SetupProject:
         if self.dev:
             self.search_path += self.dev_dirs
         # default locations
-        for v in ["CMTPROJECTPATH", "LHCBPROJECTPATH"]:
+        for v in ["LHCBPROJECTPATH"]:
             if v in os.environ:
                 self.search_path += os.environ[v].split(os.pathsep)
         # remove duplicates
@@ -1336,6 +1337,8 @@ class SetupProject:
             # Feedback
             if 'CMTPROJECTPATH' in env:
                 messages.append("Using CMTPROJECTPATH = '%(CMTPROJECTPATH)s'" % env)
+                if self.keep_CMTPROJECTPATH:
+                    messages.append("(as defined by the user)" % env)
             else:
                 messages.append("Using CMTPATH = '%s'" % CMTPATH)
             tmps = self.project_info.name

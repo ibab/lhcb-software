@@ -162,6 +162,7 @@ class SetupProjectTestCase(unittest.TestCase):
                        '--external-only',
                        '--dev',
                        '--ask',
+                       '--keep-CMTPROJECTPATH',
                        ])
         self.assert_(sp.disable_CASTOR)
         self.assert_(sp.ignore_missing)
@@ -175,6 +176,7 @@ class SetupProjectTestCase(unittest.TestCase):
         self.assertEquals(sp.site_externals,[])
         self.assertEquals(sp.use,["abc v1","abc v2"])
         self.assertEquals(sp.tag_add,["A1","A2"])
+        self.assert_(sp.keep_CMTPROJECTPATH)
         
         sp = SetupProject.SetupProject()
         sp.parse_args([])
@@ -190,6 +192,7 @@ class SetupProjectTestCase(unittest.TestCase):
         #self.assertEquals(sp.site_externals,[])
         self.assertEquals(sp.use,[])
         self.assertEquals(sp.tag_add,[])
+        self.assert_(not sp.keep_CMTPROJECTPATH)
         
         sp = SetupProject.SetupProject()
         sp.parse_args(['--debug',"--mktemp","--site=CERN"])
