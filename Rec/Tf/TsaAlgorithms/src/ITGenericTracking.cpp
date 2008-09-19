@@ -1,4 +1,4 @@
-// $Id: ITGenericTracking.cpp,v 1.1 2008-09-17 08:07:07 mneedham Exp $
+// $Id: ITGenericTracking.cpp,v 1.2 2008-09-19 09:09:37 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -60,7 +60,7 @@ ITGenericTracking::ITGenericTracking( const std::string& name,
   declareProperty("xWindow2", m_xWindow2 = 1.0);
   declareProperty("yWindow", m_yWindow =  5.0);
   declareProperty("yTol", m_yTol = 5.0);
-  declareProperty("maxTy", m_maxTx = 0.1);
+  declareProperty("maxTx", m_maxTx = 0.1);
   declareProperty("maxTy", m_maxTy = 0.1);
   declareProperty("zRef", m_zRef = 300000.);
   declareProperty("maxXRef", m_maxRefX = 5000.);
@@ -71,6 +71,7 @@ ITGenericTracking::ITGenericTracking( const std::string& name,
   declareProperty("minHits", m_minHits = 11);
   declareProperty("minXHitsToConfirm", m_minXHitsToConfirm = 0u);
   declareProperty("requireFirstAndLast", m_requireFirstAndLast = true);
+  declareProperty("requireSameBox", m_requireSameBox = true );
 }
 
 ITGenericTracking::~ITGenericTracking() { }

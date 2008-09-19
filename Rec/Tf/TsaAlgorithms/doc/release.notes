@@ -4,6 +4,12 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2008-09-19 M Needham
+ - bug fixes in generic tracking code 
+
+! 2008-09-17 M Needham
+ - add ITGenericTrackingCode
+
 ! 2008-09-12 M Needham
  - fix untested StatusCode
 

@@ -1,4 +1,4 @@
-// $Id: ITGenericTracking.h,v 1.1 2008-09-17 08:07:07 mneedham Exp $
+// $Id: ITGenericTracking.h,v 1.2 2008-09-19 09:09:37 mneedham Exp $
 #ifndef ITGenericTracking_H
 #define ITGenericTracking_H 1
 
@@ -95,7 +95,8 @@ private:
   unsigned int m_minXHits;
   unsigned int m_minHits;
   unsigned int m_minXHitsToConfirm;
- 
+  bool m_requireSameBox; 
+
 };
 
 
@@ -105,7 +106,7 @@ inline bool ITGenericTracking::allowedBox(const Tf::STHit* hit) const {
 }
 
 inline bool ITGenericTracking::sameBox(const Tf::STHit* hit1, const Tf::STHit* hit2) const{
-  return(hit1->cluster().detRegion() == hit2->cluster().detRegion());
+  return(m_requireSameBox == true ? hit1->cluster().detRegion() == hit2->cluster().detRegion() : true);
 }
 
 #endif // MCITGenericTracking_H
