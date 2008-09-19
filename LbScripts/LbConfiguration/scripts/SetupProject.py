@@ -4,7 +4,7 @@ import os, sys, tempfile, re, sys, time
 from stat import S_ISDIR
 import getopt
 
-_cvs_id = "$Id: SetupProject.py,v 1.28 2008-09-19 12:05:02 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.29 2008-09-19 12:09:48 marcocle Exp $"
 
 ########################################################################
 # Useful constants
@@ -955,7 +955,8 @@ class SetupProject:
                           callback = nightly_option,
                           nargs = 0,
                           help = "Add the required slot of the LHCb nightly " +
-                                 "builds to the list of DEV dirs. The DAY is " +
+                                 "builds to the list of DEV dirs. DAY must be "+
+                                 "a 3 digit abbreviation of the weekday, " +
                                  "by default the current day.")
         
         parser.set_defaults(output=None,
