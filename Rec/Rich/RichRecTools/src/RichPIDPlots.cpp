@@ -1,4 +1,4 @@
-// $Id: RichPIDPlots.cpp,v 1.6 2008-09-12 15:54:07 jonrob Exp $
+// $Id: RichPIDPlots.cpp,v 1.7 2008-09-19 07:53:49 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -28,8 +28,8 @@ PIDPlots::PIDPlots( const std::string& type,
   // JOs
   declareProperty( "HistoBins",   m_bins = 50 );
   declareProperty( "ExtraHistos", m_extraHistos = false );
-  // redefine some default settings
-  //setPrintHistos(false); // Disable until available in Gaudi
+  // turn off histo printing by default
+  setProperty("HistoPrint",false);
 }
 
 PIDPlots::~PIDPlots() {}
@@ -41,7 +41,8 @@ StatusCode PIDPlots::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Warn if extra histos are enabled
-  if ( m_extraHistos ) Warning( "Extra histograms are enabled", StatusCode::SUCCESS );
+  if ( m_extraHistos ) 
+    Warning( "Extra histograms are enabled", StatusCode::SUCCESS );
 
   return sc;
 }

@@ -4,6 +4,9 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2008-09-19 - Chris Jones
+ - Turn off histogram printing by default in RichPIDPlots.cpp
+
 ! 2008-09-12 - Chris Jones
  - Fix unchecked StatusCode in Sellmeir tool
 
