@@ -4,6 +4,9 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2008-09-19 - Chris Jones
+ - Update FastRingFitter with a constructor from a RichRecRing
+
 !===================== RichRecBase v3r16 2008-09-04 ==========================
 ! 2008-08-29 - Chris Jones
  - Resurrect the old FastRingFitter class, that provides a simple and fast 

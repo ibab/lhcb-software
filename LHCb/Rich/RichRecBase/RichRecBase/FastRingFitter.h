@@ -5,7 +5,7 @@
  *  Header file for class : Rich::Rec::FastRingFitter
  *
  *  CVS Log :-
- *  $Id: FastRingFitter.h,v 1.2 2008-08-28 23:30:47 jonrob Exp $
+ *  $Id: FastRingFitter.h,v 1.3 2008-09-19 06:40:03 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-05-01
@@ -17,6 +17,12 @@
 
 // std
 #include <vector>
+#include <ostream>
+
+namespace LHCb
+{
+  class RichRecRing;
+}
 
 namespace Rich
 {
@@ -50,6 +56,16 @@ namespace Rich
         /// Default Constructor
         Result() : Radius(0), XCenter(0), YCenter(0), Variance(0), Status(0) { }
       public:
+        /// overload printout to ostream operator <<
+        friend inline std::ostream& operator << ( std::ostream& s,
+                                                  const Result & result )
+        {
+          return s << "[ Status="  << result.Status
+                   << " Radius="   << result.Radius
+                   << " Variance=" << result.Variance
+                   << " ]";
+        }
+      public:
         double  Radius;        ///< Fitted radius
         double  XCenter;       ///< Fitted x point of centre
         double  YCenter;       ///< Fitted y point of centre
@@ -62,17 +78,24 @@ namespace Rich
       ///< Default Constructor
       FastRingFitter() { }
 
+      ///< Constructor from a RichRecRing
+      explicit FastRingFitter( const LHCb::RichRecRing & ring ) 
+      { addPoints(ring); }
+
       ///< Default Destructor
-      ~FastRingFitter() {};
+      ~FastRingFitter() { }
 
       /// Perform the ring fit with the current set of points
-      bool   fit();
+      const Result& fit();
 
       /// full reset
-      void   clear();
+      void clear();
 
-      /// Add a data (x,y) point to the fitter set
-      void   addPoint( const double x, const double y );
+      /// Add a data (x,y) point to the fitter data set
+      void addPoint( const double x, const double y );
+
+      /// Add the points from a RichRecRing to the fitter data set
+      void addPoints( const LHCb::RichRecRing & ring );
 
       /// Number of data points
       unsigned int numberOfPoints() const;

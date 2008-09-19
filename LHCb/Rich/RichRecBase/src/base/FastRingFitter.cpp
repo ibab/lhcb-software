@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::Rec::FastRingFitter
  *
  *  CVS Log :-
- *  $Id: FastRingFitter.cpp,v 1.3 2008-08-28 23:31:16 jonrob Exp $
+ *  $Id: FastRingFitter.cpp,v 1.4 2008-09-19 06:40:03 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-05-01
@@ -17,6 +17,9 @@
 
 // local
 #include "RichRecBase/FastRingFitter.h"
+
+// event
+#include "Event/RichRecRing.h"
 
 using namespace Rich::Rec;
 
@@ -30,7 +33,7 @@ void FastRingFitter::clear()
   m_result = Result();
 }
 
-bool FastRingFitter::fit() 
+const FastRingFitter::Result& FastRingFitter::fit()
 {
 
   double xx, yy, xx2, yy2;
@@ -52,11 +55,11 @@ bool FastRingFitter::fit()
   m_result.Status = 0; // default status set to OK
 
   // check number of fit points > 4
-  const unsigned int npoints = numberOfPoints();  
-  if ( npoints <= 3 ) { m_result.Status = 1; return false; }
+  const unsigned int npoints = numberOfPoints();
+  if ( npoints <= 3 ) { m_result.Status = 1; return result(); }
 
   // average point
-  for ( unsigned int i = 0; i<npoints; ++i ) 
+  for ( unsigned int i = 0; i<npoints; ++i )
   {
     xgravity += m_X[i];
     ygravity += m_Y[i];
@@ -64,7 +67,7 @@ bool FastRingFitter::fit()
   xgravity /= npoints;
   ygravity /= npoints;
 
-  {for ( unsigned int i = 0; i < npoints; ++i ) 
+  {for ( unsigned int i = 0; i < npoints; ++i )
   {
     xx  = m_X[i]-xgravity;
     yy  = m_Y[i]-ygravity;
@@ -77,7 +80,7 @@ bool FastRingFitter::fit()
     yx2y2 += yy*(xx2+yy2);
     x2y22 += (xx2+yy2)*(xx2+yy2);
   }}
-  if ( 0 == xy ) { m_result.Status = 2; return false; }
+  if ( 0 == xy ) { m_result.Status = 2; return result(); }
 
   f = (3.*x2+y2)/npoints;
   g = (x2+3.*y2)/npoints;
@@ -92,7 +95,7 @@ bool FastRingFitter::fit()
   c = (t*(f+g)-2.*(p*p+q*q))/(g02*g0);
   d = (t*(h*h-f*g)+2.*(p*p*g+q*q*f)-4.*p*q*h)/(g02*g02);
   xroot = 1.0;
-  {for ( int i = 0; i<5; ++i ) 
+  {for ( int i = 0; i<5; ++i )
   {
     ff = (((xroot+a)*xroot+b)*xroot+c)*xroot+d;
     fp = ((4.*xroot+3.*a)*xroot+2.*b)*xroot+c;
@@ -100,18 +103,18 @@ bool FastRingFitter::fit()
   }}
   g1 = xroot*g0;
   xnom = (g-g1)*(f-g1)-h*h;
-  if ( 0 == xnom ) { m_result.Status = 3; return false; }
+  if ( 0 == xnom ) { m_result.Status = 3; return result(); }
 
   yd = (q*(f-g1)-h*p)/xnom;
   xnom = f-g1;
-  if ( 0 == xnom ) { m_result.Status = 4; return false; }
+  if ( 0 == xnom ) { m_result.Status = 4; return result(); }
   xd = (p-h*yd )/xnom;
 
   radius2 = xd*xd+yd*yd+g1;
   m_result.XCenter = xd+xgravity;
   m_result.YCenter = yd+ygravity;
 
-  {for ( unsigned int i = 0; i < npoints; ++i ) 
+  {for ( unsigned int i = 0; i < npoints; ++i )
   {
     dx = m_X[i]-(m_result.XCenter);
     dy = m_Y[i]-(m_result.YCenter);
@@ -123,5 +126,29 @@ bool FastRingFitter::fit()
   m_result.Radius = std::sqrt(radius2);
   m_result.Status = 0;
 
-  return true;
+  return result();
+}
+
+void FastRingFitter::addPoints( const LHCb::RichRecRing & ring )
+{
+  // clean current data list
+  clear();
+
+  // Radiator info
+  const Rich::RadiatorType rad = ring.radiator();
+
+  // loop over hits on the ring
+  for ( LHCb::RichRecPixelOnRing::Vector::const_iterator iP = ring.richRecPixels().begin();
+        iP != ring.richRecPixels().end(); ++iP )
+  {
+    // get pixel from pixelOnRing
+    const LHCb::RichRecPixel * pixel = (*iP).pixel();
+    // pixel hit position
+    const Gaudi::XYZPoint & pos = ( rad != Rich::InvalidRadiator ?
+                                    pixel->radCorrLocalPositions().position(rad) :
+                                    pixel->localPosition() );
+    // add (x,y) point to the fitter
+    addPoint( pos.x(), pos.y() );
+  }
+
 }
