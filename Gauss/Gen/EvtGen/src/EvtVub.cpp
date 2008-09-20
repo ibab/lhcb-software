@@ -249,8 +249,8 @@ void EvtVub::decay( EvtParticle *p ){
   // W flight direction.
 
   double ctH = EvtRandom::Flat(-1,1);
-  double phH = EvtRandom::Flat(0,2*M_PI);
-  double phL = EvtRandom::Flat(0,2*M_PI);
+  double phH = EvtRandom::Flat(0,2*EvtConst::pi);
+  double phL = EvtRandom::Flat(0,2*EvtConst::pi);
 
   // now compute the four vectors in the B Meson restframe
     
