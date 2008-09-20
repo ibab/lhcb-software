@@ -4,6 +4,10 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2008-09-20 - Patrick Robbe
+ - Add temporary fixes in pyevnw.F and pyptfs.F which will be 
+   incorporated in pythia 6.4.19
+
 !========================== GENSER v4r2 2008-09-01 ===========================
 ! 2008-08-31 - Gloria CORTI
  - Use latest available version of Pythia 6 (418.2) from LCG MCGenerators
