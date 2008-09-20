@@ -34,7 +34,8 @@
 //-----------------------
 // This Class's Header --
 //-----------------------
-#include "CLHEP/config/CLHEP.h"
+//#include "CLHEP/config/CLHEP.h"
+#include "EvtGenBase/EvtConst.hh"
 #include "EvtGenModels/EvtVubdGamma.hh"
 #include "EvtGenBase/EvtDiLog.hh"
 
@@ -65,7 +66,7 @@ EvtVubdGamma::EvtVubdGamma(const double &alphas)
   _epsilon1 = 1e-10;
   _epsilon2 = 1e-5;
   if ( alphas > 0 ) {
-    double lne3 = 9./16.-2*M_PI*M_PI/3.+6*M_PI/4/alphas;
+    double lne3 = 9./16.-2*EvtConst::pi*EvtConst::pi/3.+6*EvtConst::pi/4/alphas;
     if ( lne3 > 0 ) 
       lne3 = -7./4. - sqrt(lne3);
     else
@@ -152,12 +153,12 @@ double EvtVubdGamma::getW1delta(const double &/*x*/, const double &z)
   // I take ddilog_(&mz) where mz=1-z in order to satisfy Neubert's definition
   // and to compare with Maple the argument in maple should be (1-mz) ...
 
-  double dl = 4.*EvtDiLog::DiLog(mz) + 4.*pow(M_PI,2)/3.;
+  double dl = 4.*EvtDiLog::DiLog(mz) + 4.*pow(EvtConst::pi,2)/3.;
 
   double w = -(8.*pow(log(z),2) - 10.*log(z) + 2.*lz + dl + 5.)
     + (8.*log(z)-7.)*log(_epsilon3) - 2.*pow(log(_epsilon3),2); 
 
-  return (1. + w*_alphas/3./M_PI);
+  return (1. + w*_alphas/3./EvtConst::pi);
 }
 
 double EvtVubdGamma::getW1nodelta(const double &/*x*/, const double &z, const double &p2)
@@ -175,7 +176,7 @@ double EvtVubdGamma::getW1nodelta(const double &/*x*/, const double &z, const do
   if ( p2 > _epsilon3 )
     w += (8.*log(z)-7.)/p2 - 4.*log(p2)/p2;
  
-  return w*_alphas/3./M_PI;
+  return w*_alphas/3./EvtConst::pi;
 }
 
 double EvtVubdGamma::getW2nodelta(const double &/*x*/, const double &z, const double &p2)
@@ -192,7 +193,7 @@ double EvtVubdGamma::getW2nodelta(const double &/*x*/, const double &z, const do
   if ( p2 > _epsilon2 ) 
     w += (8.-z)/4. + w11;
  
-  return (w*_alphas/3./M_PI);
+  return (w*_alphas/3./EvtConst::pi);
 }
 
 double EvtVubdGamma::getW3nodelta(const double &/*x*/, const double &z, const double &p2)
@@ -210,7 +211,7 @@ double EvtVubdGamma::getW3nodelta(const double &/*x*/, const double &z, const do
   if ( p2 > _epsilon2 ) 
     w += -(8.-3.*z)/8. + (32.+22.*z-3.*z2)/4./z/t2 - 3.*(12.-z)/8./t4;
  
-  return (w*_alphas/3./M_PI);
+  return (w*_alphas/3./EvtConst::pi);
 }
 
 double EvtVubdGamma::getW4nodelta(const double &/*x*/, const double &z, const double &p2)
@@ -228,7 +229,7 @@ double EvtVubdGamma::getW4nodelta(const double &/*x*/, const double &z, const do
   if ( p2 > _epsilon2 ) 
     w += -1. - (32.-5.*z)/2./z/t2 + 3.*(12.-z)/2./z/t4 ;
  
-  return w*_alphas/3./M_PI;
+  return w*_alphas/3./EvtConst::pi;
 }
 
 double EvtVubdGamma::getW4plus5delta(const double &/*x*/, const double &z)
@@ -241,7 +242,7 @@ double EvtVubdGamma::getW4plus5delta(const double &/*x*/, const double &z)
   else
     w = 2.*log(z)/(1.-z);
 
-  return (w*_alphas/3./M_PI);
+  return (w*_alphas/3./EvtConst::pi);
 }
 
 double EvtVubdGamma::getW5nodelta(const double &/*x*/, const double &z, const double &p2)
@@ -259,7 +260,7 @@ double EvtVubdGamma::getW5nodelta(const double &/*x*/, const double &z, const do
     w += -(8.+z)/2./z2/t2 - 3.*(12.-z)/2./z2/t4;
 
  
-  return (w*_alphas/3./M_PI);
+  return (w*_alphas/3./EvtConst::pi);
 }
 
 
