@@ -20,7 +20,7 @@
 //
 #include "EvtGenBase/EvtConst.hh"
 
-const double EvtConst::pi           =  3.141592653589793238;
+const double EvtConst::pi           =  3.14159265358979323846;
 const double EvtConst::twoPi        =  2*pi;
 const double EvtConst::radToDegrees =  180./pi;
  
