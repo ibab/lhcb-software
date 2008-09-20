@@ -4,7 +4,13 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+
+! 2008-09-20 M Needham
+ -Changes to STCluster class: add clone/copy constructor+ contains method
+
+
 ! 2008-09-09 Add method to return max adc value of a cluster
+
 
 !========================== DigiEvent v2r8 2008-09-03 ========================
 ! 2008-09-03 - Marco Cattaneo

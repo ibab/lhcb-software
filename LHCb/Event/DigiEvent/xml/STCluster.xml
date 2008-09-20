@@ -28,18 +28,32 @@
        argList='&liteClusterName; lCluster, 
                 ADCVector strips,
                 double neighbourSum'
-        initList='m_liteCluster(lCluster), m_stripValues(strips),
-                  m_neighbourSum(neighbourSum) , m_sourceID(999), m_tell1Channel(9999)' >
+        initList='m_liteCluster(lCluster), m_stripValues(strips),m_neighbourSum(neighbourSum) , m_sourceID(999), m_tell1Channel(9999)' >
      </constructor>
 
     <constructor desc="Constructor with source id" 
        argList='&liteClusterName; lCluster, 
                 ADCVector strips,
                 double neighbourSum, unsigned sourceID, unsigned int tell1Chan'
-        initList='m_liteCluster(lCluster), m_stripValues(strips),
-                  m_neighbourSum(neighbourSum) , m_sourceID(sourceID), 
-                  m_tell1Channel(tell1Chan)' >
+        initList='m_liteCluster(lCluster), m_stripValues(strips),m_neighbourSum(neighbourSum) , m_sourceID(sourceID), m_tell1Channel(tell1Chan)' >
      </constructor>
+
+   <constructor desc = 'copy constructor'
+      initList = "KeyedObject&lt;LHCb::&channelID;&gt;(),m_liteCluster(cluster.m_liteCluster), m_stripValues(cluster.m_stripValues),m_neighbourSum(cluster.m_neighbourSum) , m_sourceID(cluster.m_sourceID), m_tell1Channel(cluster.m_tell1Channel) " > 
+      <arg const = 'TRUE' name = "cluster" type = "LHCb::STCluster" />
+	</constructor>
+
+  <method desc= 'clone method'
+   name = 'clone' 
+   const = 'TRUE'
+   type = "LHCb::STCluster*"
+   access = "PUBLIC">
+   <code>
+     return new LHCb::STCluster( *this );
+   </code>
+  </method>
+
+
 
 
   &STClusterClass;
@@ -102,6 +116,24 @@
       </code>
  </method>
 
+
+ <method name = "contains"
+  type = "bool"
+  desc = "check if channel is inside cluster"
+  argList = "const LHCb::STChannelID&amp; chan"
+  const = "TRUE">
+ <code>
+  bool inside = false;
+  if (chan.uniqueSector() == channelID().uniqueSector()){
+    const unsigned int firstStrip = channelID().strip() + stripValues().front().first;    
+    const unsigned int lastStrip = channelID().strip() + stripValues().back().first;
+    if (chan.strip() &gt; firstStrip &amp;&amp; chan.strip() &lt; lastStrip ) inside = true;
+  }
+  return inside;
+  </code> 
+  </method>
+
+
  <method
    name = "maxADCValue"
    type = "unsigned int"
@@ -117,6 +149,7 @@
     return maxCharge;
     </code>
  </method>
+
 
 
  &STClusterChannelIDFunctions;
