@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.136 2008-08-25 12:13:20 gcorti Exp $
+! $Id: release.notes,v 1.137 2008-09-20 20:07:06 robbep Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+! 2008-09-20 - Patrick Robbe
+ - ExternalGenerator.cpp: create ParticlePropertySvc if not existing (needed
+   if DecayTool is not used)
+ - Signal.cpp: protect in case of empty decay tool
 
 !====================== Generators v9r0 2008-08-25 ===========================
 ! 2008-07-24 - Patrick Robbe

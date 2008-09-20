@@ -1,4 +1,4 @@
-// $Id: Signal.cpp,v 1.22 2007-12-06 16:45:25 ibelyaev Exp $
+// $Id: Signal.cpp,v 1.23 2008-09-20 20:06:11 robbep Exp $
 // Include files 
 
 // local
@@ -103,18 +103,18 @@ StatusCode Signal::initialize( ) {
   // Transform vector into set
   for ( std::vector<int>::iterator it = m_pidVector.begin() ; 
         it != m_pidVector.end() ; ++it ) m_pids.insert( *it ) ;
-  
+        
   IParticlePropertySvc * ppSvc =
     svc< IParticlePropertySvc >( "ParticlePropertySvc" ) ;
-  
+    
   info() << "Generating Signal events of " ;
   PIDs::const_iterator it2 ;
   for ( it2 = m_pids.begin() ; it2 != m_pids.end() ; ++it2 ) {
     ParticleProperty * prop = ppSvc -> findByStdHepID( *it2 ) ;
     info() << prop -> particle() << " " ;
-
+ 
     LHCb::ParticleID pid( prop -> pdgID() ) ;
-    
+     
     m_signalPID  = abs( prop -> pdgID() ) ;
     if ( pid.hasCharm() ) m_signalQuark = LHCb::ParticleID::charm ;
     else if ( pid.hasBottom()    ) m_signalQuark = LHCb::ParticleID::bottom ;
@@ -124,11 +124,11 @@ StatusCode Signal::initialize( ) {
         always() << " UNKNOWN pid=" << pid.pid() << endreq ;
         return Error( "This case is not implemented yet" ) ;
       }
-    
-    
+     
+     
     if ( prop -> pdgID() > 0 ) { m_sigName = prop -> particle() ; }
     else { m_sigBarName = prop -> particle() ; }
-    
+     
   }
 
   m_cpMixture = false ;
@@ -138,9 +138,10 @@ StatusCode Signal::initialize( ) {
     else return Error( "Bad configuration in PID list" ) ;
   } else if ( m_pids.size() > 2 ) return Error( "Too many PIDs in list" ) ;
 
-  m_decayTool -> setSignal( *m_pids.begin() ) ;
+  if ( m_decayTool ) m_decayTool -> setSignal( *m_pids.begin() ) ;
 
-  m_signalBr = m_decayTool -> getSignalBr( ) ;
+  if ( m_decayTool ) m_signalBr = m_decayTool -> getSignalBr( ) ;
+  else m_signalBr = 0. ;
 
   info() << endmsg ;  
   release( ppSvc ) ;
@@ -331,8 +332,9 @@ HepMC::GenParticle * Signal::chooseAndRevert( const ParticleVector &
   }
 
   // now force the particle to decay
-  if ( m_cpMixture ) m_decayTool -> enableFlip() ;
-  m_decayTool -> generateSignalDecay( theSignal , hasFlipped ) ;
+  if ( m_cpMixture ) 
+	if ( m_decayTool ) m_decayTool -> enableFlip() ;
+  if ( m_decayTool ) m_decayTool -> generateSignalDecay( theSignal , hasFlipped ) ;
   
   return theSignal ;
 }
