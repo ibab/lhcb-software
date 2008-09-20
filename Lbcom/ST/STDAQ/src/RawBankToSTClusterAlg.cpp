@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.47 2008-09-19 09:09:02 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.48 2008-09-20 09:53:31 mneedham Exp $
 
 #include <algorithm>
 
@@ -66,9 +66,6 @@ StatusCode RawBankToSTClusterAlg::initialize() {
     
 StatusCode RawBankToSTClusterAlg::execute() {
 
-  // Retrieve the RawEvent:
-  RawEvent* rawEvt = get<RawEvent>(m_rawEventLocation );
-
   // make a new digits container
   STClusters* clusCont = new STClusters();
   clusCont->reserve(2000);
@@ -77,6 +74,10 @@ StatusCode RawBankToSTClusterAlg::execute() {
   if (!validSpill()) {
     return Warning("Not a valid spill",StatusCode::SUCCESS, 1);
   }
+
+   // Retrieve the RawEvent:
+  RawEvent* rawEvt = get<RawEvent>(m_rawEventLocation );
+
 
   // decode banks
   StatusCode sc = decodeBanks(rawEvt,clusCont);   
@@ -172,7 +173,7 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
       else {
 	// flag that need to recover....
         recover = true;
-        ++counter("recovered banks");
+        ++counter("recovered banks" +  boost::lexical_cast<std::string>((*iterBank)->sourceID()));
       }
     }
 

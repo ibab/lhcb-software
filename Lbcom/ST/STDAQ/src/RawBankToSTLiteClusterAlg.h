@@ -1,4 +1,4 @@
-// $Id: RawBankToSTLiteClusterAlg.h,v 1.9 2008-07-04 15:52:21 mneedham Exp $
+// $Id: RawBankToSTLiteClusterAlg.h,v 1.10 2008-09-20 09:53:31 mneedham Exp $
 #ifndef RAWBANKTOSTLITECLUSTERALG_H 
 #define RAWBANKTOSTLITECLUSTERALG_H 1
 
@@ -6,7 +6,7 @@
 #include "Event/RawBank.h"
 #include "Kernel/STDAQDefinitions.h"
 
-#include "Event/STCluster.h"
+#include "Event/STLiteCluster.h"
 
 #include <vector>
 #include <string>
@@ -46,7 +46,7 @@ public:
 private:
 
   // create Clusters from this type
-  StatusCode decodeBanks(LHCb::RawEvent* rawEvt) const;
+  StatusCode decodeBanks(LHCb::RawEvent* rawEvt, LHCb::STLiteCluster::STLiteClusters* fCont) const;
 
 
   std::string m_clusterLocation;  

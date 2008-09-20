@@ -4,6 +4,10 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2008-09-20 M Needham
+ - better bookkeeping of recovered banks
+ - make put really the first thing I do !
+
 ! 2008-09-19 M Needham
  - bug fix in recovery mode
 

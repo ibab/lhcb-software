@@ -1,4 +1,4 @@
-// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.30 2008-09-17 12:57:05 mneedham Exp $
+// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.31 2008-09-20 09:53:31 mneedham Exp $
 
 
 #include <algorithm>
@@ -68,24 +68,6 @@ StatusCode RawBankToSTLiteClusterAlg::initialize() {
     
 StatusCode RawBankToSTLiteClusterAlg::execute() {
 
-
-  // Retrieve the RawEvent:
-  RawEvent* rawEvt = get<RawEvent>(m_rawEventLocation);
-
- 
-  // decode banks
-  StatusCode sc = decodeBanks(rawEvt);   
-  if (sc.isFailure()){
-    return Error("Problems in decoding event skipped", sc);
-  }
-
-  return sc;
-};
-
-
-StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt) const{
- 
-  const std::vector<RawBank* >&  tBanks = rawEvt->banks(bankType());
   STLiteCluster::STLiteClusters* fCont = new STLiteCluster::STLiteClusters();
   fCont->reserve(5000);  
   put(fCont, m_clusterLocation);
@@ -94,6 +76,23 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt) const{
     return Warning("Not a valid spill",StatusCode::SUCCESS, 1);
   }
 
+  // Retrieve the RawEvent:
+  RawEvent* rawEvt = get<RawEvent>(m_rawEventLocation);
+
+ 
+  // decode banks
+  StatusCode sc = decodeBanks(rawEvt, fCont);   
+  if (sc.isFailure()){
+    return Error("Problems in decoding event skipped", sc);
+  }
+
+  return sc;
+};
+
+
+StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt,STLiteCluster::STLiteClusters* fCont) const{
+
+  const std::vector<RawBank* >&  tBanks = rawEvt->banks(bankType()); 
   std::vector<unsigned int> missing = missingInAction(tBanks);
   if ( missing.empty() == false ){
     counter("lost Banks") += missing.size() ;
