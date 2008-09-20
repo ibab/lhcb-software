@@ -1,4 +1,4 @@
-// $Id: EvtGenDecay.cpp,v 1.17 2008-07-21 13:37:34 robbep Exp $
+// $Id: EvtGenDecay.cpp,v 1.18 2008-09-20 20:27:11 robbep Exp $
 // Header file
 #include "EvtGenDecay.h"
 
@@ -378,7 +378,7 @@ StatusCode EvtGenDecay::makeHepMC( EvtParticle * theEvtGenPart ,
     // Create a new vertex corresponding to the decay vertex of
     // theMother and add it to theEvent
     HepMC::GenVertex * end_vtx = 
-      new HepMC::GenVertex( HepLorentzVector( x , y , z , t ) ) ;
+      new HepMC::GenVertex( HepMC::FourVector( x , y , z , t ) ) ;
     theMother -> parent_event() -> add_vertex( end_vtx ) ;
     end_vtx->add_particle_in( theMother ) ;
     
@@ -395,7 +395,7 @@ StatusCode EvtGenDecay::makeHepMC( EvtParticle * theEvtGenPart ,
       int status = LHCb::HepMCEvent::DecayedByDecayGen ;
       
       HepMC::GenParticle * prod_part = new
-        HepMC::GenParticle( HepLorentzVector(px,py,pz,e) , id , status ) ;
+        HepMC::GenParticle( HepMC::FourVector(px,py,pz,e) , id , status ) ;
       
       end_vtx->add_particle_out( prod_part ) ;
       
