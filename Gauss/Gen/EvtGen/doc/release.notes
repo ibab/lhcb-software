@@ -4,6 +4,14 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-09-20 - Patrick Robbe
+ - EvtGen/EvtGen.hh, src/EvtGen.cpp: remove CLHEP dependancy (remove 2 obsolete functions)
+ - src/EvtConst.cpp: update pi value to be equal to the GAUDI one
+ - src/EvtPythiaPart.F: remove "external pydata" since it is done in GENSER package
+ - src/EvtVub.cpp, EvtVubdGamma.cpp: start to remove CLHEP dependancy (usage of CLHEP
+   physical constants replaced by EvtConst::pi)
+ - src/Pythia.F: update for Pythia6.4
+
 !========================== EvtGen v9r2 2008-07-18 ===========================
 ! 2008-07-10 - Patrick Robbe
  - Remove compilation warnings
