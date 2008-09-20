@@ -29,7 +29,6 @@
 #define EVTGEN_HH
 
 #include "EvtGenBase/EvtPDL.hh"
-#include "CLHEP/Vector/LorentzVector.h"
 
 class EvtParticle;
 class EvtRandomEngine;
@@ -52,12 +51,6 @@ public:
 		     EvtStdHep *evtStdHep,EvtSpinDensity *spinDensity=0);
 
   void generateDecay(EvtParticle *p);
-
-  //These two methods are obsolete
-  void generateEvent(int stdhepid, HepLorentzVector P, 
-                     HepLorentzVector D);
-  void generateEvent(EvtParticle *p,HepLorentzVector D);
-
   
 private:
 
