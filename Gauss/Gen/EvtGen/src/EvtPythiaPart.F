@@ -22,7 +22,7 @@ C------------------------------------------------------------------------
       implicit double precision(A-H,O-Z)
       implicit integer(I-N)
       
-      external pydata
+CCC      external pydata
 
       Common /pydat2/ kchg(500,4),pmas(500,4),parf(2000),vckm(4,4)
 
