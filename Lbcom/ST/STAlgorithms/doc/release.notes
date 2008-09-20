@@ -2,6 +2,9 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+! 2008-09-20 M Needham
+- Add algorithm to merge spills
+
 !======================= STAlgorithms v3r0 2008-02-15 ========================
 ! 2008-02-15 - Marco Cattaneo
  - Remove digitisation algorithms, moved to new BOOLE STDigiAlgorithms package
