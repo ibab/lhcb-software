@@ -1,4 +1,4 @@
-// $Id: Generation.cpp,v 1.29 2008-07-18 11:22:46 robbep Exp $
+// $Id: Generation.cpp,v 1.30 2008-09-20 20:06:31 robbep Exp $
 // Include files 
 
 // from Gaudi
@@ -139,8 +139,8 @@ StatusCode Generation::initialize() {
     return Error( "No Sample Generation Tool is defined. This is mandatory" ) ;
   m_sampleGenerationTool = 
     tool< ISampleGenerationTool >( m_sampleGenerationToolName , this ) ;
-   
-  // Retrieve generation method tool
+  
+  // Retrieve vertex smearing tool
   if ( "" != m_vertexSmearingToolName ) 
     m_vertexSmearingTool = 
       tool< IVertexSmearingTool >( m_vertexSmearingToolName , this ) ;
