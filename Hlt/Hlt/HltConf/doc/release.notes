@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.17 2008-09-21 16:48:24 graven Exp $ 
+! $Id: release.notes,v 1.18 2008-09-21 18:07:19 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : 
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+!========================== HltConf v1r3 2008-09-21 ===================
+
 ! 2008-09-19 - Gerhard Raven
  - always include HltLumiInit
  - tell vertexwriter which VELO vertices to write
