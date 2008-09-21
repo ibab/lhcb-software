@@ -217,22 +217,23 @@ void HltGlobalMonitor::monitorAlleysinput() {
   }
   LHCb::HltDecReports* decisions = get<LHCb::HltDecReports>( m_location );
   int j=0;
-  bool onceodin=false;
+  bool anyAccept=false;
   for (std::vector<std::string>::const_iterator i = m_Hlt1Lines.begin(); i!=m_Hlt1Lines.end();++i) {
      const LHCb::HltDecReport*  decision = decisions->decReport( *i );
      if (decision == 0 ) {
        debug() << "decision " << *i << " not found" << endreq;
-       continue;
-     }
-     if (decision->decision()) {
+     } else if (decision->decision()) {
+      anyAccept = true;
       fill(m_histoalleycall, j+1, 1.);
       m_allAcc[j]=m_allAcc[j]+1;
-      orallacc=orallacc+1;
-      if (!onceodin) fill(m_histoodintype, odin->triggerType(), 1.);
-      onceodin=true;
-      j=j+1;
      }
+     j=j+1;
   }
+   if (anyAccept) { 
+      orallacc=orallacc+1;
+      fill(m_histoalleycall, 0, 1.);
+      fill(m_histoodintype, odin->triggerType(), 1.);
+   }
    debug() << "ODIN trigger type" << odin->triggerType() << endreq;
    debug() << "gps time" << odin->gpsTime() << endreq;
 

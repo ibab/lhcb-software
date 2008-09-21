@@ -1,7 +1,10 @@
-!$Id: release.notes,v 1.7 2008-09-17 19:29:44 graven Exp $
+!$Id: release.notes,v 1.8 2008-09-21 16:43:02 graven Exp $
 Package     : Hlt/HltGlobalMonitor
 Package Coordinator : Bruno Souza de Paula 
 Purpose     : LHCb HLT Global Monitoring
+
+! 2008-09-19 - Bruno Souza de Pault + Gerhard Raven
+ - some bug fixes
 
 ! 2008-09-17 - Gerhard Raven
  - for now, absence of an DecReport is not an error (note: will change in future!)
