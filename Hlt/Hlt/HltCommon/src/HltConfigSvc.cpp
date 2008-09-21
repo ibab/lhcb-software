@@ -1,4 +1,4 @@
-// $Id: HltConfigSvc.cpp,v 1.19 2008-09-17 19:31:57 graven Exp $
+// $Id: HltConfigSvc.cpp,v 1.20 2008-09-21 16:44:57 graven Exp $
 // Include files 
 
 #include <algorithm>
@@ -75,6 +75,7 @@ HltConfigSvc::HltConfigSvc( const string& name, ISvcLocator* pSvcLocator)
   , m_incidentSvc(0)
 {
   //TODO: template this pattern of property + 'transformer' -> thing_I_really_want with callback support
+  //TODO: Already done -- called propertyhandler...[:w
   declareProperty("TCK2ConfigMap", m_tck2config_)->declareUpdateHandler( &HltConfigSvc::updateMap, this);
   declareProperty("initialTCK", m_initialTCK_ )->declareUpdateHandler( &HltConfigSvc::updateInitial, this); 
   declareProperty("prefetchTCK", m_prefetchTCK_)->declareUpdateHandler( &HltConfigSvc::updatePrefetch, this); // TODO: load all TCK of same type as initialTCK
@@ -158,11 +159,10 @@ StatusCode HltConfigSvc::initialize() {
 ConfigTreeNode::digest_type
 HltConfigSvc::tck2id(const TCKrep& tck) const {
     ConfigTreeNode::digest_type id = ConfigTreeNode::digest_type::createInvalid();
-    std::string tckRep = boost::str( boost::format("0x%08x")%tck ) ;
     TCKMap_t::const_iterator i = m_tck2config.find( tck );
     if (i != m_tck2config.end()) {
         ConfigTreeNode::digest_type id = ConfigTreeNode::digest_type::createFromStringRep(i->second);
-        debug() << " TCK " << tckRep << " mapped (by explicit option) to " << id << endmsg;
+        debug() << " TCK " << tck << " mapped (by explicit option) to " << id << endmsg;
         return id;
     }
 
@@ -177,17 +177,17 @@ HltConfigSvc::tck2id(const TCKrep& tck) const {
     if ( i!=m_tck2configCache.end() )  {
         id = ConfigTreeNode::digest_type::createFromStringRep(i->second);
     } else {
-        ConfigTreeNodeAlias::alias_type alias( std::string("TCK/") +  tckRep  );
+        ConfigTreeNodeAlias::alias_type alias( std::string("TCK/") +  tck.str()  );
         boost::optional<ConfigTreeNode> n = cas()->readConfigTreeNodeAlias( alias );
         if (!n) {
-            error() << "Could not resolve TCK " <<  tckRep  << " : no alias found " << endmsg;
+            error() << "Could not resolve TCK " <<  tck  << " : no alias '" << alias << "' found " << endmsg;
             return id;
         }
         id = n->digest(); // need a digest, not an object itself...
         // add to cache...
         m_tck2configCache.insert( make_pair(  tck , id.str() ) );
     }
-    debug() << "mapping TCK" <<  tckRep  << " to configuration ID" << id << endmsg;
+    debug() << "mapping TCK" <<  tck  << " to configuration ID" << id << endmsg;
     return id;
 }
 

@@ -1,4 +1,4 @@
-// $Id: HltDecisionFilter.cpp,v 1.1 2008-09-04 12:25:20 graven Exp $ // Include files 
+// $Id: HltDecisionFilter.cpp,v 1.2 2008-09-21 16:44:57 graven Exp $ // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -59,6 +59,11 @@ StatusCode HltDecisionFilter::restart() {
 // Main execution
 //=============================================================================
 StatusCode HltDecisionFilter::execute() {
+  //TODO/FIXME: remove check -- absence should become an error
+  if (!exist<LHCb::HltDecReports>( m_location )) {
+  	setFilterPassed(false);
+	return StatusCode::SUCCESS;
+  }
   LHCb::HltDecReports* decisions = get<LHCb::HltDecReports>( m_location );
   bool pass = (*m_filter)(*decisions);
   setFilterPassed(pass);
