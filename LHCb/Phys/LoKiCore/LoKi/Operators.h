@@ -1,4 +1,4 @@
-// $Id: Operators.h,v 1.9 2007-12-03 12:03:22 ibelyaev Exp $
+// $Id: Operators.h,v 1.10 2008-09-21 13:19:11 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_OPERATORS_H 
 #define LOKI_OPERATORS_H 1
@@ -368,6 +368,54 @@ inline   LoKi::EqualToValue<TYPE,TYPE2>
 operator== ( typename LoKi::Constant<TYPE,TYPE2>::T2 val  ,
              const LoKi::Functor<TYPE,TYPE2>&        fun  ) 
 { return LoKi::EqualToValue<TYPE,TYPE2> ( val , fun  ) ; }
+// ============================================================================
+template <class TYPE, class TYPE2>
+inline LoKi::EqualToInt<TYPE,TYPE2> 
+operator== ( const int                        val , 
+             const LoKi::Functor<TYPE,TYPE2>& fun  ) 
+{ return LoKi::EqualToInt<TYPE,TYPE2> ( val , fun  ) ; }
+// ============================================================================
+template <class TYPE, class TYPE2>
+inline LoKi::EqualToUInt<TYPE,TYPE2> 
+operator== ( const unsigned int               val , 
+             const LoKi::Functor<TYPE,TYPE2>& fun  ) 
+{ return LoKi::EqualToUInt<TYPE,TYPE2> ( val , fun  ) ; }
+// ============================================================================
+template <class TYPE, class TYPE2>
+inline LoKi::EqualToInt<TYPE,TYPE2> 
+operator== ( const LoKi::Functor<TYPE,TYPE2>& fun , 
+             const int                        val )
+{ return LoKi::EqualToInt<TYPE,TYPE2> ( val , fun  ) ; }
+// ============================================================================
+template <class TYPE, class TYPE2>
+inline LoKi::EqualToUInt<TYPE,TYPE2> 
+operator== ( const LoKi::Functor<TYPE,TYPE2>& fun , 
+             const unsigned int               val )
+{ return LoKi::EqualToUInt<TYPE,TYPE2> ( val , fun  ) ; }
+// ============================================================================
+template <class TYPE, class TYPE2>
+inline LoKi::NotEqualToInt<TYPE,TYPE2> 
+operator!= ( const int                        val , 
+             const LoKi::Functor<TYPE,TYPE2>& fun  ) 
+{ return LoKi::NotEqualToInt<TYPE,TYPE2> ( val , fun  ) ; }
+// ============================================================================
+template <class TYPE, class TYPE2>
+inline LoKi::NotEqualToUInt<TYPE,TYPE2> 
+operator!= ( const unsigned int               val , 
+             const LoKi::Functor<TYPE,TYPE2>& fun  ) 
+{ return LoKi::NotEqualToUInt<TYPE,TYPE2> ( val , fun  ) ; }
+// ============================================================================
+template <class TYPE, class TYPE2>
+inline LoKi::NotEqualToInt<TYPE,TYPE2> 
+operator!= ( const LoKi::Functor<TYPE,TYPE2>& fun , 
+             const int                        val )
+{ return LoKi::NotEqualToInt<TYPE,TYPE2> ( val , fun  ) ; }
+// ============================================================================
+template <class TYPE, class TYPE2>
+inline LoKi::NotEqualToUInt<TYPE,TYPE2> 
+operator!= ( const LoKi::Functor<TYPE,TYPE2>& fun , 
+             const unsigned int               val )
+{ return LoKi::NotEqualToUInt<TYPE,TYPE2> ( val , fun  ) ; }
 // ============================================================================
 /** inline construction of operator "<=" 
  *

@@ -1,4 +1,4 @@
-// $Id: CoreTypes.h,v 1.6 2007-07-23 17:07:37 ibelyaev Exp $
+// $Id: CoreTypes.h,v 1.7 2008-09-21 13:19:11 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_CORETYPES_H 
 #define LOKI_CORETYPES_H 1
@@ -25,6 +25,7 @@
 // ============================================================================
 namespace LoKi 
 {  
+  // ==========================================================================
   /** @namespace LoKi::CoreTypes CoreTypes.h LoKi/CoreTypes.h
    *  The core namespace for some "core"  types 
    *
@@ -34,6 +35,7 @@ namespace LoKi
   namespace CoreTypes 
   {
   }  // end of namespace LoKi::CoreTypes
+  // ==========================================================================
   /** @namespace LoKi::Types 
    *  The namespace to collect all basic LoKi types for 
    *  funtors and predicates 
@@ -43,6 +45,7 @@ namespace LoKi
   namespace Types 
   {
   }  // end of namespace LoKi::Types
+  // ==========================================================================
 }  // end of namespace LoKi
 // ========================================================================
 // The END 

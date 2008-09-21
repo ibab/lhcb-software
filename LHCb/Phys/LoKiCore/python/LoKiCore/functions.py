@@ -491,7 +491,56 @@ def info ( index , fun , update = False ) :
     
     """
     return fun.__info__ ( index , update ) 
+
+
+# =============================================================================
+## construct std::vector<std::string> from the arguments 
+def strings ( arg1 , *args ) :
+    """
+    Construct the std::vector<std::string> from the arguments
     
+    >>> v1 = strings ( 'sadfsdf' )
+    >>> v2 = strings ( 'sadfsdf' , 'sadf' , 'afadf' )
+    >>> v3 = strings ( [ 'sadfsdf' , 'sadf' , 'afadf' ] )
+    
+    """
+    from LoKiCore.decorators import std
+    _vt = std.vector('std::string')
+    vct = _vt () 
+    if 0 != len( args ) :
+        vct.push_back ( arg1 )
+        for a in args : vct.push_back ( a )
+        return vct
+    if list == type( arg1 )  :
+        for a in arg1 : vct.push_back ( a )
+        return vct
+    vct.push_back ( arg1 )
+    return vct 
+
+# =============================================================================
+## construct std::vector<double> from the arguments 
+def doubles ( arg1 , *args ) :
+    """
+    Construct the std::vector<double> from the arguments
+    
+    >>> v1 = doubles ( 1.01 )
+    >>> v2 = doubles ( 1.01 , 1.02 , 1.03  )
+    >>> v3 = doubles ( [ 1.01 , 1.02 , 1.03 ] )
+    
+    """
+    from LoKiCore.decorators import std
+    _vt = std.vector('double')
+    vct = _vt () 
+    if 0 != len( args ) :
+        vct.push_back ( arg1 )
+        for a in args : vct.push_back ( a )
+        return vct
+    if list == type( arg1 )  :
+        for a in arg1 : vct.push_back ( a )
+        return vct
+    vct.push_back ( arg1 )
+    return vct 
+
 # =============================================================================
 # The END
 # =============================================================================

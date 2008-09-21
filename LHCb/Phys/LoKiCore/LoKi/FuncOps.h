@@ -1,4 +1,4 @@
-// $Id: FuncOps.h,v 1.13 2008-02-29 16:09:11 ibelyaev Exp $
+// $Id: FuncOps.h,v 1.14 2008-09-21 13:19:11 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FUNCOPS_H 
 #define LOKI_FUNCOPS_H 1
@@ -57,10 +57,18 @@ namespace LoKi
                               const Func&  fun2 ) { return fun1 == fun2 ; }
       static Cut __eq__     ( const Func&  fun1 , 
                               const double fun2 ) { return fun1 == fun2 ; }
+      static Cut __eq__     ( const Func&  fun1 , 
+                              const int    fun2 ) { return fun1 == fun2 ; }
+      static Cut __eq__     ( const Func&  fun1 , 
+                              const unsigned int fun2 ) { return fun1 == fun2 ; }
       static Cut __ne__     ( const Func&  fun1 , 
                               const Func&  fun2 ) { return fun1 != fun2 ; }
       static Cut __ne__     ( const Func&  fun1 , 
                               const double fun2 ) { return fun1 != fun2 ; }
+      static Cut __ne__     ( const Func&  fun1 , 
+                              const int    fun2 ) { return fun1 != fun2 ; }
+      static Cut __ne__     ( const Func&  fun1 , 
+                              const unsigned int fun2 ) { return fun1 != fun2 ; }
       static Fun __add__    ( const Func&  fun1 , 
                               const Func&  fun2 ) { return fun1 + fun2  ; }
       static Fun __sub__    ( const Func&  fun1 , 

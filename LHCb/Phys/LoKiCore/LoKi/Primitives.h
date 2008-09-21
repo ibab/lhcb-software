@@ -1,4 +1,4 @@
-// $Id: Primitives.h,v 1.9 2008-06-12 08:14:31 ibelyaev Exp $
+// $Id: Primitives.h,v 1.10 2008-09-21 13:19:11 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PRIMITIVES_H 
 #define LOKI_PRIMITIVES_H 1
@@ -22,6 +22,10 @@
 #include "LoKi/valid.h"
 #include "LoKi/same.h"
 #include "LoKi/apply.h"
+// ============================================================================
+// Boost 
+// ============================================================================
+#include "boost/integer_traits.hpp"
 // ============================================================================
 /** @file
  *
@@ -1832,6 +1836,339 @@ namespace LoKi
     NotEqualToValue();
   private:
     LoKi::EqualToValue<TYPE,TYPE2> m_equal ;
+  };
+  // ==========================================================================
+  /** @class EqualToInt
+   *  Simple comparison with ints 
+   *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+   *  @date 2008-09-17
+   */
+  template <class TYPE, class TYPE2=double>
+  class EqualToInt : public LoKi::Functor<TYPE,bool>
+  {
+  private:
+    // ========================================================================
+    /// argument type
+    typedef typename LoKi::Functor<TYPE,bool>::argument argument  ; 
+    /// result type 
+    typedef typename LoKi::Functor<TYPE,bool>::result_type result_type ; 
+    // ========================================================================
+  public:
+    // ========================================================================
+    /** constructor from the function and the value 
+     *  @param fun the function
+     *  @param val the reference value 
+     *  @param eps the relative precision
+     */
+    EqualToInt
+    ( const LoKi::Functor<TYPE,TYPE2>&  fun , 
+      const int                         val ) 
+      : LoKi::Functor<TYPE,bool>() 
+      , m_fun ( fun ) 
+      , m_val ( val ) 
+    {}
+    // ========================================================================
+    /** constructor from the function and the value 
+     *  @param fun the function
+     *  @param val the reference value 
+     *  @param eps the relative precision
+     */
+    EqualToInt
+    ( const int val , const LoKi::Functor<TYPE,TYPE2>&  fun ) 
+      : LoKi::Functor<TYPE,bool>() 
+      , m_fun ( fun ) 
+      , m_val ( val ) 
+    {}
+    // ========================================================================
+    /// copy constructor 
+    EqualToInt
+    ( const EqualToInt& right )
+      : LoKi::AuxFunBase          ( right ) 
+      , LoKi::Functor<TYPE,bool>  ( right )
+      , m_fun ( right.m_fun ) 
+      , m_val ( right.m_val )
+    {}
+    // ========================================================================
+    /// MANDATORY: virtual destructor 
+    virtual ~EqualToInt(){} ;
+    // ========================================================================
+    /// MANDATORY: clone method ("virtual construcor")
+    virtual  EqualToInt* clone() const { return new EqualToInt(*this); }
+    /// MANDATORY: the only one essential method :
+    virtual  result_type operator() ( argument a ) const
+    { return equal_to ( a ) ; }
+    /// OPTIONAL: the specific printout 
+    virtual std::ostream& fillStream ( std::ostream& s ) const 
+    { return s << "(" << m_val << "==" << m_fun << ")" ; }
+    // ========================================================================
+  public:
+    // ========================================================================
+    inline result_type equal_to ( argument a ) const
+    {
+      // evaluate the function 
+      const typename LoKi::Functor<TYPE,TYPE2>::result_type r = m_fun.fun ( a ) ;
+      return LHCb::Math::equal_to_int ( r , m_val ) ;
+    }    
+    // ========================================================================
+  public:
+    // ========================================================================
+    const LoKi::Functor<TYPE,TYPE2>& fun () const { return m_fun.fun() ; }
+    const int                        val () const { return m_val       ; }
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// The default constructor is disabled 
+    EqualToInt();
+    // ========================================================================
+  private:
+    // ========================================================================
+    // the functor 
+    LoKi::FunctorFromFunctor<TYPE,TYPE2> m_fun ; ///< the functor 
+    // the value 
+    int  m_val ; ///< the value 
+    // ========================================================================
+  };
+  // ==========================================================================
+  /** @class NotEqualToInt
+   *  Simple comparison with ints 
+   *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+   *  @date 2008-09-17
+   */
+  template <class TYPE, class TYPE2=double>
+  class NotEqualToInt : public LoKi::Functor<TYPE,bool>
+  {
+  private:
+    // ========================================================================
+    /// argument type
+    typedef typename LoKi::Functor<TYPE,bool>::argument argument  ; 
+    /// result type 
+    typedef typename LoKi::Functor<TYPE,bool>::result_type result_type ; 
+    // ========================================================================
+  public:
+    // ========================================================================
+    /** constructor from the function and the value 
+     *  @param fun the function
+     *  @param val the reference value 
+     *  @param eps the relative precision
+     */
+    NotEqualToInt
+    ( const LoKi::Functor<TYPE,TYPE2>&  fun , 
+      const int                         val ) 
+      : LoKi::Functor<TYPE,bool>() 
+      , m_fun ( fun , val )  
+    {}
+    // ========================================================================
+    /** constructor from the function and the value 
+     *  @param fun the function
+     *  @param val the reference value 
+     *  @param eps the relative precision
+     */
+    NotEqualToInt
+    ( const int val , const LoKi::Functor<TYPE,TYPE2>&  fun ) 
+      : LoKi::Functor<TYPE,bool>() 
+      , m_fun ( fun , val ) 
+    {}
+    // ========================================================================
+    /// copy constructor 
+    NotEqualToInt
+    ( const NotEqualToInt& right )
+      : LoKi::AuxFunBase          ( right ) 
+      , LoKi::Functor<TYPE,bool>  ( right )
+      , m_fun ( right.m_fun ) 
+    {}
+    // ========================================================================
+    /// MANDATORY: virtual destructor 
+    virtual ~NotEqualToInt(){} ;
+    // ========================================================================
+    /// MANDATORY: clone method ("virtual construcor")
+    virtual  NotEqualToInt* clone() const { return new NotEqualToInt(*this); }
+    /// MANDATORY: the only one essential method :
+    virtual  result_type operator() ( argument a ) const
+    { return !m_fun.equal_to ( a ) ; }
+    /// OPTIONAL: the specific printout 
+    virtual std::ostream& fillStream ( std::ostream& s ) const 
+    { return s << "(" << m_fun.val() << "!=" << m_fun.fun() << ")" ; }
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// The default constructor is disabled 
+    NotEqualToInt();
+    // ========================================================================
+  private:
+    // ========================================================================
+    // the functor 
+    LoKi::EqualToInt<TYPE,TYPE2> m_fun ; ///< the functor 
+    // ========================================================================
+  };
+  // ==========================================================================
+  /** @class EqualToUInt
+   *  Simple comparison with unsigned ints 
+   *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+   *  @date 2008-09-17
+   */
+  template <class TYPE, class TYPE2=double>
+  class EqualToUInt : public LoKi::Functor<TYPE,bool>
+  {
+  private:
+    // ========================================================================
+    /// argument type
+    typedef typename LoKi::Functor<TYPE,bool>::argument argument  ; 
+    /// result type 
+    typedef typename LoKi::Functor<TYPE,bool>::result_type result_type ; 
+    // ========================================================================
+  public:
+    // ========================================================================
+    /** constructor from the function and the value 
+     *  @param fun the function
+     *  @param val the reference value 
+     *  @param eps the relative precision
+     */
+    EqualToUInt
+    ( const LoKi::Functor<TYPE,TYPE2>&  fun , 
+      const unsigned int                val ) 
+      : LoKi::Functor<TYPE,bool>() 
+      , m_fun ( fun ) 
+      , m_val ( val ) 
+    {}
+    // ========================================================================
+    /** constructor from the function and the value 
+     *  @param fun the function
+     *  @param val the reference value 
+     *  @param eps the relative precision
+     */
+    EqualToUInt
+    ( const unsigned int val , const LoKi::Functor<TYPE,TYPE2>&  fun ) 
+      : LoKi::Functor<TYPE,bool>() 
+      , m_fun ( fun ) 
+      , m_val ( val ) 
+    {}
+    // ========================================================================
+    /// copy constructor 
+    EqualToUInt
+    ( const EqualToUInt& right )
+      : LoKi::AuxFunBase          ( right ) 
+      , LoKi::Functor<TYPE,bool>  ( right )
+      , m_fun ( right.m_fun ) 
+      , m_val ( right.m_val )
+    {}
+    // ========================================================================
+    /// MANDATORY: virtual destructor 
+    virtual ~EqualToUInt(){} ;
+    // ========================================================================
+    /// MANDATORY: clone method ("virtual construcor")
+    virtual  EqualToUInt* clone() const { return new EqualToUInt(*this); }
+    /// MANDATORY: the only one essential method :
+    virtual  result_type operator() ( argument a ) const
+    { return equal_to ( a ) ; }
+    /// OPTIONAL: the specific printout 
+    virtual std::ostream& fillStream ( std::ostream& s ) const 
+    { return s << "(" << m_val << "==" << m_fun << ")" ; }
+    // ========================================================================
+  public:
+    // ========================================================================
+    inline result_type equal_to ( argument a ) const
+    {
+      // evaluate the function 
+      const typename LoKi::Functor<TYPE,TYPE2>::result_type r = m_fun.fun ( a ) ;
+      return LHCb::Math::equal_to_uint ( r , m_val ) ;
+    }    
+    // ========================================================================
+  public:
+    // ========================================================================
+    const LoKi::Functor<TYPE,TYPE2>& fun () const { return m_fun.fun() ; }
+    const unsigned int               val () const { return m_val       ; }
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// The default constructor is disabled 
+    EqualToUInt();
+    // ========================================================================
+  private:
+    // ========================================================================
+    // the functor 
+    LoKi::FunctorFromFunctor<TYPE,TYPE2> m_fun ; ///< the functor 
+    // the value 
+    unsigned int  m_val ; ///< the value 
+    // ========================================================================
+  };
+  // ==========================================================================
+  /** @class NotEqualToUInt
+   *  Simple comparison with unsigned ints 
+   *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+   *  @date 2008-09-17
+   */
+  template <class TYPE, class TYPE2=double>
+  class NotEqualToUInt : public LoKi::Functor<TYPE,bool>
+  {
+  private:
+    // ========================================================================
+    /// argument type
+    typedef typename LoKi::Functor<TYPE,bool>::argument argument  ; 
+    /// result type 
+    typedef typename LoKi::Functor<TYPE,bool>::result_type result_type ; 
+    // ========================================================================
+  public:
+    // ========================================================================
+    /** constructor from the function and the value 
+     *  @param fun the function
+     *  @param val the reference value 
+     *  @param eps the relative precision
+     */
+    NotEqualToUInt
+    ( const LoKi::Functor<TYPE,TYPE2>&  fun , 
+      const unsigned int                val ) 
+      : LoKi::Functor<TYPE,bool>() 
+      , m_fun ( fun , val ) 
+    {}
+    // ========================================================================
+    /** constructor from the function and the value 
+     *  @param fun the function
+     *  @param val the reference value 
+     *  @param eps the relative precision
+     */
+    NotEqualToUInt
+    ( const unsigned int val , const LoKi::Functor<TYPE,TYPE2>&  fun ) 
+      : LoKi::Functor<TYPE,bool>() 
+      , m_fun ( fun , val ) 
+    {}
+    // ========================================================================
+    /// copy constructor 
+    NotEqualToUInt
+    ( const NotEqualToUInt& right )
+      : LoKi::AuxFunBase          ( right ) 
+      , LoKi::Functor<TYPE,bool>  ( right )
+      , m_fun ( right.m_fun )  
+    {}
+    // ========================================================================
+    /// MANDATORY: virtual destructor 
+    virtual ~NotEqualToUInt(){} ;
+    // ========================================================================
+    /// MANDATORY: clone method ("virtual construcor")
+    virtual  NotEqualToUInt* clone() const { return new NotEqualToUInt(*this); }
+    /// MANDATORY: the only one essential method :
+    virtual  result_type operator() ( argument a ) const
+    { return !m_fun.equal_to ( a ) ; }
+    /// OPTIONAL: the specific printout 
+    virtual std::ostream& fillStream ( std::ostream& s ) const 
+    { return s << "(" << m_fun.val() << "!=" << m_fun.fun() << ")" ; }
+    // ========================================================================
+  public:
+    // ========================================================================
+    const LoKi::Functor<TYPE,TYPE2>& fun () const { return m_fun.fun() ; }
+    const unsigned int               val () const { return m_val       ; }
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// The default constructor is disabled 
+    NotEqualToUInt();
+    // ========================================================================
+  private:
+    // ========================================================================
+    // the functor 
+    LoKi::EqualToUInt<TYPE,TYPE2> m_fun ; ///< the functor 
+    // the value 
+    unsigned int  m_val ; ///< the value 
+    // ========================================================================
   };
   // ==========================================================================
   /** compare 2 objects using the comparison criteria CMP , 

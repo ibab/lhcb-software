@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.105 2008-09-04 13:26:09 cattanem Exp $ 
+! $Id: release.notes,v 1.106 2008-09-21 13:19:11 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,12 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2008-09-21 - Vanya BELYAEV
+
+ - comparisons with the integers 
+ - cmt/requirements 
+     version increment to v7r8 
 
 ! =========================== LoKiCore v7r7 2008-09-04 ========================
 ! 2008-08-04 - Vanya BELYAEV
