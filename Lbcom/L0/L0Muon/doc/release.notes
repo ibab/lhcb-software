@@ -1,7 +1,10 @@
-!  $Id: release.notes,v 1.67 2008-09-15 07:36:20 jucogan Exp $
+!  $Id: release.notes,v 1.68 2008-09-21 21:42:22 jucogan Exp $
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !-------------------------------------------------------------------------
+
+! 2008-09-21 - Julien Cogan
+ - minor clean up
 
 ! 2008-09-15 - Julien Cogan
  - Add printout protection.

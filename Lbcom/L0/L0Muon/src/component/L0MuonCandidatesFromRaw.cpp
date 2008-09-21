@@ -1,4 +1,4 @@
-// $Id: L0MuonCandidatesFromRaw.cpp,v 1.14 2008-07-23 07:56:58 jucogan Exp $
+// $Id: L0MuonCandidatesFromRaw.cpp,v 1.15 2008-09-21 21:42:22 jucogan Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
@@ -117,7 +117,16 @@ StatusCode L0MuonCandidatesFromRaw::execute()
     // Decode Raw banks
     m_outputTool->setMode(m_mode);
     sc = m_outputTool->decodeRawBanks();
-    if ( sc.isFailure() ) continue;
+    if ( sc.isFailure() ) { 
+      Warning("Error from decodeRawBanks - skip this time slice"
+                     ,StatusCode::SUCCESS,50);
+      sc = m_outputTool->releaseRegisters();
+      if ( sc.isFailure() ) {
+        return Warning("Fail to release registers - skip the rest of event"
+                       ,StatusCode::SUCCESS,50);
+      }
+      continue;
+    }
     
     // Print Errors
     if (msgLevel(MSG::DEBUG)) {
@@ -128,19 +137,40 @@ StatusCode L0MuonCandidatesFromRaw::execute()
     if ( m_writeOnTES) {
       if( msgLevel(MSG::VERBOSE) ) verbose() << "Write on TES ..." << endreq;
       sc = m_outputTool->writeOnTES();
-      if ( sc.isFailure() ) continue;  
+      if ( sc.isFailure() ) { 
+        Warning("Error from writeOnTES - skip this time slice"
+                       ,StatusCode::SUCCESS,50);
+        sc = m_outputTool->releaseRegisters();
+        if ( sc.isFailure() ) {
+          return Warning("Fail to release registers - skip the rest of event"
+                         ,StatusCode::SUCCESS,50);
+        }
+        continue;
+      }
     }
   
     // Fill the container for the L0DU (L0ProcessorData)
     if ( m_writeL0ProcData) {
       if( msgLevel(MSG::VERBOSE) ) verbose() << "Fill L0ProcessorData ..." << endreq;
       sc = m_outputTool->writeL0ProcessorData();
-      if ( sc.isFailure() ) continue;  
+      if ( sc.isFailure() ) { 
+        Warning("Error from writeL0ProcessorData - skip this time slice"
+                       ,StatusCode::SUCCESS,50);
+        sc = m_outputTool->releaseRegisters();
+        if ( sc.isFailure() ) {
+          return Warning("Fail to release registers - skip the rest of event"
+                         ,StatusCode::SUCCESS,50);
+        }
+        continue;
+      }
     }
 
     // Release registers used by the converters
     sc = m_outputTool->releaseRegisters();
-    if ( sc.isFailure() ) continue; 
+    if ( sc.isFailure() ) {
+      return Warning("Fail to release registers - skip the rest of event"
+                     ,StatusCode::SUCCESS,50);
+    }
 
     if( msgLevel(MSG::VERBOSE) ) verbose() << "... decoding done"<< endmsg;
 

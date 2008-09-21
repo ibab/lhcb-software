@@ -1,4 +1,4 @@
-// $Id: L0MuonOutputs.cpp,v 1.22 2008-09-15 07:36:20 jucogan Exp $
+// $Id: L0MuonOutputs.cpp,v 1.23 2008-09-21 21:42:22 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -579,7 +579,7 @@ StatusCode L0MuonOutputs::writeOnTES(){
         for ( itcand = cands.begin();itcand!=cands.end();++itcand ) {
           LHCb::L0MuonCandidate* l0mcand = l0muoncandidate(*itcand);
           if (l0mcand==NULL) {
-            if (msgLevel( MSG::ERROR)) error()<<"writeOnTES: proc Q"<<(i+1)<<"BCSU from PB"
+            if (msgLevel( MSG::ERROR)) error()<<"writeOnTES: proc Q"<<(i+1)<<" BCSU from PB"
                                               <<"\n"<<(*itcand)->dump("\t=> ")<< endreq;
             continue;
           }
@@ -606,9 +606,9 @@ StatusCode L0MuonOutputs::writeOnTES(){
         for ( itcand = cands.begin();itcand!=cands.end();++itcand ) {
           LHCb::L0MuonCandidate* l0mcand = l0muoncandidate(*itcand);
           if (l0mcand==NULL) {
-          if (msgLevel( MSG::ERROR)) error()<<"writeOnTES: proc Q"<<(i+1)<<"PU"
-                                            <<"\n"<<(*itcand)->dump("\t=> ")<< endreq;
-          continue;
+            if (msgLevel( MSG::ERROR)) error()<<"writeOnTES: proc Q"<<(i+1)<<" PU"
+                                              <<"\n"<<(*itcand)->dump("\t=> ")<< endreq;
+            continue;
           }
           ppucands->insert(l0mcand);
         }
