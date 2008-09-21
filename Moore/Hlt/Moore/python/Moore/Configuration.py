@@ -1,7 +1,7 @@
 """
 High level configuration tools for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.27 2008-09-18 22:03:29 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.28 2008-09-21 16:38:42 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -123,10 +123,10 @@ class Moore(ConfigurableUser):
         self.setOtherProp( LHCbApp(), 'useOracleCondDB' )
         importOptions( "$DDDBROOT/options/DDDB.py" )
         if self.getProp('DC06') :
-            importOptions( '$DDDBROOT/options/LHCb-2008.py' )
+            importOptions( '$DDDBROOT/options/DC06.opts' )
         else : 
             # the next is for 2008 data & MC, i.e. NOT for DC'06
-            importOptions( '$DDDBROOT/options/DC06.opts' )
+            importOptions( '$DDDBROOT/options/LHCb-2008.py' )
         self.setOtherProp( LHCbApp(), 'DDDBtag' )
         self.setOtherProp( LHCbApp(), 'condDBtag' )
         self.setOtherProp( LHCbApp(), 'skipEvents' )
@@ -201,7 +201,8 @@ class Moore(ConfigurableUser):
             
         if self.getProp("generateConfig") :
             # TODO: add properties for ConfigTop and ConfigSvc...
-            gen = HltGenConfig( ConfigTop = [ i.rsplit('/')[-1] for i in ApplicationMgr().TopAlg ]
+            
+            gen = HltGenConfig( ConfigTop = [ i.rsplit('/')[-1] if type(i) is str else i.getName() for i in ApplicationMgr().TopAlg ]
                               , ConfigSvc = [ 'ToolSvc','HltDataSvc','HltANNSvc' ]
                               , ConfigAccessSvc = self.getConfigAccessSvc().getName()
                               , hltType = self.getProp('hltType')
