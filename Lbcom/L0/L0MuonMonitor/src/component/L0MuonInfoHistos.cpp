@@ -1,4 +1,4 @@
-// $Id: L0MuonInfoHistos.cpp,v 1.3 2008-09-15 07:46:40 jucogan Exp $
+// $Id: L0MuonInfoHistos.cpp,v 1.4 2008-09-21 21:47:04 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -48,7 +48,7 @@ void L0MuonInfoHistos::bookHistos(bool shortname)
   hname  = L0Muon::MonUtilities::hname_info_bid2(toolname);
   m_hbid2= book1D(hname,hname,-0.5,-0.5+3564,89);
   hname  = L0Muon::MonUtilities::hname_info_evt(toolname);
-  m_hevt = book1D(hname,hname,0.5,0.5+4095,4095);
+  m_hevt = book1D(hname,hname,-0.5,0.5+4095,4096);
   hname  = L0Muon::MonUtilities::hname_info_error(toolname);
   m_herror = book1D(hname,hname,0.5,0.5+4,4);
 } 
