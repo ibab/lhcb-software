@@ -1,4 +1,4 @@
-// $Id: Kinematics.cpp,v 1.12 2008-09-12 13:13:32 hmdegaud Exp $
+// $Id: Kinematics.cpp,v 1.13 2008-09-21 16:35:47 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -91,13 +91,12 @@ double LoKi::Kinematics::delta2euclidian
  */
 // ============================================================================
 double LoKi::Kinematics::transverseMomentumDir 
-( const LoKi::LorentzVector& mom , 
-  const LoKi::ThreeVector&   dir ) 
+( const LoKi::ThreeVector& mom , 
+  const LoKi::ThreeVector& dir ) 
 {
   const double dmag2 = dir.Mag2() ;
-  if ( 0 == dmag2 ) { return mom.P() ; }
-  const LoKi::ThreeVector v( mom ) ;
-  const LoKi::ThreeVector perp = v - dir * ( v.Dot( dir ) / dmag2 ) ;
+  if ( 0 == dmag2 ) { return mom.R() ; }
+  const LoKi::ThreeVector perp = mom - dir * ( mom.Dot( dir ) / dmag2 ) ;
   return perp.R() ;
 }
 // ============================================================================
@@ -474,6 +473,19 @@ double LoKi::Kinematics::sinDecayAngleChi
   return sinChi ;  
 }
 // ============================================================================
+/*  evaluate the Armenteros-Podolanski variable \f$\mathbf{\alpha}\f$,     
+ *  @param d1  three momentum of the first  daughter particle 
+ *  @param d2  three momentum of the second daughter particle 
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2008-09-21 
+ */
+// ============================================================================
+double LoKi::Kinematics::armenterosPodolanskiX 
+( const LoKi::ThreeVector& d1 , 
+  const LoKi::ThreeVector& d2 )
+{
+  return  ( d1.Mag2() - d2.Mag2() ) / ( d1 + d2 ).Mag2() ;
+}
 
 
 

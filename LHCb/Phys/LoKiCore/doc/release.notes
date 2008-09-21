@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.106 2008-09-21 13:19:11 ibelyaev Exp $ 
+! $Id: release.notes,v 1.107 2008-09-21 16:35:47 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2008-09-21 - Vanya BELYAEV
+ - add the function for evalaution of Armenteros-Podolaski variable 
 
 ! 2008-09-21 - Vanya BELYAEV
 

@@ -1,4 +1,4 @@
-// $Id: Kinematics.h,v 1.17 2008-08-02 13:34:27 ibelyaev Exp $
+// $Id: Kinematics.h,v 1.18 2008-09-21 16:35:47 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_KINEMATICS_H 
 #define LOKI_KINEMATICS_H 1
@@ -108,8 +108,28 @@ namespace LoKi
      *  @date 2006-01-17
      */
     double transverseMomentumDir 
+    ( const LoKi::ThreeVector& mom , 
+      const LoKi::ThreeVector& dir ) ;
+    /** simple function which evaluates the transverse 
+     *  momentum with respect a certain 3D-direction:
+     * 
+     * \f$
+     *  r_T = \left| \vec{r} \right| = 
+     *  = \left| \vec{v} - 
+     * \vec{d}\frac{\left(\vec{v}\vec{d}\right)}
+     *  { \left| \vec{d} \right|^2 } \right|
+     *  \f$
+     *  
+     *  @param mom the momentum
+     *  @param dir the direction
+     *  @return the transverse moementum with respect to the direction
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-01-17
+     */
+    inline double transverseMomentumDir 
     ( const LoKi::LorentzVector& mom , 
-      const LoKi::ThreeVector&   dir ) ;
+      const LoKi::ThreeVector&   dir ) 
+    { return transverseMomentumDir ( mom.Vect() , dir ) ; }
     // ========================================================================    
     /** trivial function to evaluate the mass of 4-vector 
      *  @param mom lorenz vector
@@ -722,6 +742,87 @@ namespace LoKi
       const LoKi::LorentzVector& d2 , 
       const LoKi::LorentzVector& h1 , 
       const LoKi::LorentzVector& h2 ) ;
+    // ========================================================================
+    /** evaluate the Armenteros-Podolanski variable \f$\mathbf{\alpha}\f$, 
+     *  defined as:
+     *  \f[
+     *  \mathbf{\alpha} = \dfrac
+     *  { \mathrm{p}^{\mathrm{L},1} - \mathrm{p}^{\mathrm{L},1} }
+     *  { \mathrm{p}^{\mathrm{L},1} + \mathrm{p}^{\mathrm{L},1} },
+     *  \f]
+     *  where 
+     *   \f$ \mathrm{p}^{\mathrm{L},1}\f$ and 
+     *   \f$ \mathrm{p}^{\mathrm{L},2}\f$ are longitudinal momentum
+     *   components for the first and the seco ddaughter particles 
+     *   with respect to the total momentum direction. 
+     *
+     *  Clearly this expression could be rewritten in an equivalent 
+     *  form which however much more easier for calculation:
+     *  \f[
+     *  \mathbf{\alpha} = \dfrac
+     *  { \vec{\mathbf{p}}_1^2 - \vec{\mathbf{p}}_2^2 }  
+     *  { \left( \vec{\mathbf{p}}_1 + \vec{\mathbf{p}}_2 \right)^2 }  
+     *  \f]
+     * 
+     *  @attention instead of 
+     *     2D \f$\left(\mathrm{p_T},\mathbf{\alpha}\right)\f$ diagram, 
+     *     in the case of twobody decays at LHCb it is much better to 
+     *     use 2D diagram \f$\left(\cos \theta, \mathrm{m} \right)\f$
+     *     diagram, where \f$\cos\theta\f$-is the decay 
+     *     angle,see the variable LV01, and \f$\mathrm{m}\f$ is an 
+     *     invariant evalauted for some (fixed) mass prescription, 
+     *     e.g. \f$\pi^+\pi^-\f$.  
+     *
+     *  @param d1  three momentum of the first  daughter particle 
+     *  @param d2  three momentum of the second daughter particle 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-09-21 
+     */
+    double armenterosPodolanskiX 
+    ( const LoKi::ThreeVector& d1 , 
+      const LoKi::ThreeVector& d2 ) ;
+    // ========================================================================
+    /** evaluate the Armenteros-Podolanski variable \f$\mathbf{\alpha}\f$, 
+     *  defined as:
+     *  \f[
+     *  \mathbf{\alpha} = \dfrac
+     *  { \mathrm{p}^{\mathrm{L},1} - \mathrm{p}^{\mathrm{L},1} }
+     *  { \mathrm{p}^{\mathrm{L},1} + \mathrm{p}^{\mathrm{L},1} },
+     *  \f]
+     *  where 
+     *   \f$ \mathrm{p}^{\mathrm{L},1}\f$ and 
+     *   \f$ \mathrm{p}^{\mathrm{L},2}\f$ are longitudinal momentum
+     *   components for the first and the seco ddaughter particles 
+     *   with respect to the total momentum direction. 
+     *
+     *  Clearly this expression could be rewritten in an equivalent 
+     *  form which however much more easier for calculation:
+     *  \f[
+     *  \mathbf{\alpha} = \dfrac
+     *  { \vec{\mathbf{p}}_1^2 - \vec{\mathbf{p}}_2^2 }  
+     *  { \left( \vec{\mathbf{p}}_1 + \vec{\mathbf{p}}_2 \right)^2 }  
+     *  \f]
+     * 
+     *  @attention instead of 
+     *     2D \f$\left(\mathrm{p_T},\mathbf{\alpha}\right)\f$ diagram, 
+     *     in the case of twobody decays at LHCb it is much better to 
+     *     use 2D diagram \f$\left(\cos \theta, \mathrm{m} \right)\f$
+     *     diagram, where \f$\cos\theta\f$-is the decay 
+     *     angle,see the variable LV01, and \f$\mathrm{m}\f$ is an 
+     *     invariant evalauted for some (fixed) mass prescription, 
+     *     e.g. \f$\pi^+\pi^-\f$.  
+     *
+     *  @param d1  four momentum of the first  daughter particle 
+     *  @param d2  four momentum of the second daughter particle 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-09-21 
+     */
+    inline double armenterosPodolanskiX 
+    ( const LoKi::LorentzVector& d1 , 
+      const LoKi::LorentzVector& d2 ) 
+    { 
+      return armenterosPodolanskiX ( d1.Vect () , d2. Vect() ) ; 
+    }
     // ========================================================================
   }  // end of namespace Kinematics  
   // ==========================================================================
