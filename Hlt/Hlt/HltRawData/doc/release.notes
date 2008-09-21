@@ -1,16 +1,16 @@
-!$Id: release.notes,v 1.13 2008-09-17 16:14:56 tskwarni Exp $
+!$Id: release.notes,v 1.14 2008-09-21 18:04:59 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltRawData
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Writers and Readers, Makers of persisted TES info
 !-----------------------------------------------------------------------------
 
+!========================== HltRawData v1r4 2008-09-21 ===================
 ! 2008-09-17 - Tomasz Skwarnicki
  - fix bugs is HltSelReports maker,writer related to empty events
  - change warning and error reporting to use Warning() and Error() methods
 
 !========================== HltRawData v1r3 2008-08-28 ===================
-
 ! 2008-09-10 - Juan PALACIOS
  - cmt/requirements
   . Increase version to v1r3
