@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.194 2008-09-11 14:43:25 jonrob Exp $
+! $Id: release.notes,v 1.195 2008-09-21 12:50:40 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
+
+! 2008-09-21 - Christopher Rob JONES
+ - Add missing include in RichDAQDefinitions.h for ulonglong typedef 
+   (GaudiKernel/Kernel.h)
 
 ! 2008-09-11 - Chris Jones
  - Update python Configuration to reflect changes in RichDAQ decoding tool

@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ general definitions
  *
  *  CVS Log :-
- *  $Id: RichDAQDefinitions.h,v 1.24 2008-07-25 15:26:19 jonrob Exp $
+ *  $Id: RichDAQDefinitions.h,v 1.25 2008-09-21 12:50:40 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -20,6 +20,7 @@
 #include <vector>
 
 // GaudiKernel
+#include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/HashMap.h"
 
 // Kernel
