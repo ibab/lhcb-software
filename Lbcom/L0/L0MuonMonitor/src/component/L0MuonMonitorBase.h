@@ -1,4 +1,4 @@
-// $Id: L0MuonMonitorBase.h,v 1.4 2008-09-15 07:46:40 jucogan Exp $
+// $Id: L0MuonMonitorBase.h,v 1.5 2008-09-21 21:53:42 jucogan Exp $
 #ifndef COMPONENT_L0MUONMONITORBASE_H 
 #define COMPONENT_L0MUONMONITORBASE_H 1
 
@@ -8,6 +8,7 @@
 #include "Kernel/MuonTileID.h"
 
 #include "MuonKernel/MuonSystemLayout.h"
+#include "L0MuonKernel/MonUtilities.h"
 
 /** @class L0MuonMonitorBase L0MuonMonitorBase.h component/L0MuonMonitorBase.h
  *  
@@ -28,9 +29,18 @@ public:
 
 protected:
 
+  void olsErrorSummary(MsgStream & msg) const;
+  
   StatusCode getL0MuonTiles(std::vector<LHCb::MuonTileID> & l0muontiles);
+  StatusCode getL0MuonTilesTAE(std::vector<std::pair<LHCb::MuonTileID,int > > & l0muontiles);
+
   StatusCode getOlsInError(std::vector<LHCb::MuonTileID> & ols);
 
+  StatusCode storeOlsInError();
+  
+  std::map<std::pair<LHCb::MuonTileID,int> ,bool> m_err_ols;
+  std::map<LHCb::MuonTileID,int> m_err_ols_stored;
+  
   void setLayouts(); // Set the layouts in use
   MuonSystemLayout  m_opt_link_layout;
 
@@ -46,7 +56,7 @@ protected:
   std::vector<int> m_regions;
   std::vector<unsigned int> m_excludedBxs;
   std::vector<unsigned int> m_exclusiveBxs;
-//   std::string m_triggerType;
+  //   std::string m_triggerType;
   int m_triggerType;
   
 

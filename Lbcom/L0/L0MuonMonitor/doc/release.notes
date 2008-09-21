@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.12 2008-09-16 09:36:54 jucogan Exp $
+! $Id: release.notes,v 1.13 2008-09-21 21:53:42 jucogan Exp $
 ! Package     : L0MuonMonitor
 ! Responsible : Julien Cogan
 ! Purpose     : Monitoring of the L0Muon
 !--------------------------------------------------------------------------
+
+! 2008-09-21 - Julien Cogan
+ - Update monitoring :
+   - add new histo for online
+   - add new tool to make histo for OL
+   - update Muon and L0Muon comparison
 
 ! 2008-09-16 - Julien Cogan
  - Remove unwanted dependency to MuonMonKernel (introduced at previous step)

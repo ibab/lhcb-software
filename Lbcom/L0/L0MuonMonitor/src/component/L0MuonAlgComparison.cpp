@@ -1,4 +1,4 @@
-// $Id: L0MuonAlgComparison.cpp,v 1.5 2008-09-15 07:46:40 jucogan Exp $
+// $Id: L0MuonAlgComparison.cpp,v 1.6 2008-09-21 21:53:42 jucogan Exp $
 // Include files 
 
 #include "boost/format.hpp"
@@ -75,23 +75,23 @@ StatusCode L0MuonAlgComparison::execute() {
   if (!selectedTrigger()) return StatusCode::SUCCESS;
   ++m_counters[PROCESSED];
 
-  info()<<" Event # : "<<m_counters[TOTAL] << " Processed event #: "<<m_counters[PROCESSED] << endmsg;
+  debug()<<" Event # : "<<m_counters[TOTAL] << " Processed event #: "<<m_counters[PROCESSED] << endmsg;
   
-  info()<<"Verifying -- Ctrl :"<<endmsg;
+  debug()<<"Verifying -- Ctrl :"<<endmsg;
   sc = compare(LHCb::L0MuonCandidateLocation::Default);
   if(sc==StatusCode::FAILURE) {
     return Error("Failed to compare candidates at "+LHCb::L0MuonCandidateLocation::Default+" ... abort"
                  ,StatusCode::SUCCESS,100);
   }
   
-  info()<<"Verifying -- BCSU :"<<endmsg;
+  debug()<<"Verifying -- BCSU :"<<endmsg;
   sc = compare(LHCb::L0MuonCandidateLocation::BCSU+"fromPB");
   if(sc==StatusCode::FAILURE) {
     return Error("Failed to compare candidates at "+LHCb::L0MuonCandidateLocation::BCSU+"fromPB"+" ... abort"
                  ,StatusCode::SUCCESS,100);
   }
 
-  info()<<"Verifying -- PU :"<<endmsg;
+  debug()<<"Verifying -- PU :"<<endmsg;
   sc = compare(LHCb::L0MuonCandidateLocation::PU,true);
   if(sc==StatusCode::FAILURE) {
     return Error("Failed to compare candidates at "+LHCb::L0MuonCandidateLocation::PU+" ... abort"
@@ -207,8 +207,11 @@ StatusCode L0MuonAlgComparison::compare(std::string location, bool histo)
       debug()<<"Candidate found !!! "<<endmsg;
     }
   }
-  if (histo) m_candHistosPU1->fillHistos(cands_only1);
-  if (histo) m_candHistosPU1->fillHistos(cands_only1->size());
+  if (histo) {
+    m_candHistosPU1->fillHistos(cands_only1);
+    m_candHistosPU1->fillHistos(cands_only1->size());
+  }
+  
   delete cands_only1;
   
   delete cands0;

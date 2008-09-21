@@ -1,4 +1,4 @@
-// $Id: L0MuonChannelsHistos.h,v 1.1 2008-07-24 09:36:53 jucogan Exp $
+// $Id: L0MuonChannelsHistos.h,v 1.2 2008-09-21 21:53:42 jucogan Exp $
 #ifndef COMPONENT_L0MUONCHANNELSHISTOS_H 
 #define COMPONENT_L0MUONCHANNELSHISTOS_H 1
 
@@ -33,7 +33,9 @@ public:
   void bookHistos(bool shortname=true);
   void bookHistos(int quarter, int region, int station,bool shortname=true);
   void fillHistos(const std::vector<LHCb::MuonTileID> &tiles, int ts=0);
-  void fillHistos(const std::vector<std::pair<LHCb::MuonTileID, double > > &tiles);
+  void fillHistos(const std::vector<std::pair<LHCb::MuonTileID,int > > &tiles);
+  void fillHistos(const std::vector<std::pair<LHCb::MuonTileID,std::pair<int,int> > > &tiles);
+  void fillHistosDT(const std::vector<std::pair<LHCb::MuonTileID, int > > &tiles);
   
 protected:
 

@@ -1,4 +1,4 @@
-// $Id: L0MuonChannelsHistos.cpp,v 1.1 2008-07-24 09:36:53 jucogan Exp $
+// $Id: L0MuonChannelsHistos.cpp,v 1.2 2008-09-21 21:53:42 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -100,6 +100,33 @@ void L0MuonChannelsHistos::bookHistos(int quarter, int region, int station, bool
   }
 }
 
+void L0MuonChannelsHistos::fillHistos(const std::vector<std::pair<LHCb::MuonTileID,int > > &tiles)
+{
+  std::map<int, std::vector<LHCb::MuonTileID> > vtiles;
+  for (std::vector<std::pair<LHCb::MuonTileID,int > >::const_iterator it=tiles.begin(); it!=tiles.end();++it){
+    vtiles[(*it).second].push_back((*it).first);
+  }
+  std::map<int, std::vector<LHCb::MuonTileID> >::iterator it_vtiles;
+  for (it_vtiles=vtiles.begin(); it_vtiles!=vtiles.end(); ++it_vtiles) {
+    fillHistos(it_vtiles->second,it_vtiles->first);
+  }
+  
+}
+
+void L0MuonChannelsHistos::fillHistos(const std::vector<std::pair<LHCb::MuonTileID, std::pair<int,int> > > &tiles)
+{
+  std::map<int, std::vector<LHCb::MuonTileID> > vtiles;
+  for (std::vector<std::pair<LHCb::MuonTileID,std::pair<int,int> > >::const_iterator it=tiles.begin(); it!=tiles.end();++it){
+    vtiles[((*it).second).first].push_back((*it).first);
+  }
+  std::map<int, std::vector<LHCb::MuonTileID> >::iterator it_vtiles;
+  for (it_vtiles=vtiles.begin(); it_vtiles!=vtiles.end(); ++it_vtiles) {
+    fillHistos(it_vtiles->second,it_vtiles->first);
+  }
+  
+}
+
+
 void L0MuonChannelsHistos::fillHistos(const std::vector<LHCb::MuonTileID> &tiles, int ts)
 {
     std::vector<LHCb::MuonTileID>::const_iterator it_tiles;
@@ -135,41 +162,45 @@ void L0MuonChannelsHistos::fillHistos(const std::vector<LHCb::MuonTileID> &tiles
     }
 }
 
-void L0MuonChannelsHistos::fillHistos(const std::vector<std::pair<LHCb::MuonTileID, double > > &tiles)
+void L0MuonChannelsHistos::fillHistosDT(const std::vector<std::pair<LHCb::MuonTileID, int > > &tiles)
 {
   
   if (!m_DT) return;
   
-  std::vector<std::pair<LHCb::MuonTileID, double > >::const_iterator it_tiles;
-    for (it_tiles=tiles.begin();it_tiles<tiles.end();++it_tiles){
-      LHCb::MuonTileID tile=it_tiles->first;
-      int sta = tile.station();
-      int reg = tile.region();
-      MuonLayout lay = tile.layout();
-      for (L0Muon::MonUtilities::Channel_type type =L0Muon::MonUtilities::Pad;
-           type<L0Muon::MonUtilities::nb_channel_types;
-           type++){
-        if (lay==m_channel_layout[type].stationLayout(sta).regionLayout(reg)) {
-          int qua = tile.quarter();
-          if (m_hist[qua][type][sta][reg]==NULL) continue;
-          MuonLayout layOL = m_opt_link_layout.stationLayout(sta).regionLayout(reg);
-          LHCb::MuonTileID ol=tile.containerID(layOL);
-
-          int xgrid=lay.xGrid();
-          int ygrid=lay.yGrid();
-          int xOLgrid=layOL.xGrid();
-          int yOLgrid=layOL.yGrid();
-
-          int ipb=ol.nX()/xOLgrid+2*(ol.nY()/yOLgrid)-1;
-          int ind_ol=ipb*xOLgrid*yOLgrid+ol.localX(layOL)+ol.localY(layOL)*xOLgrid;
-          int ind_local=tile.localX(lay)%(xgrid/xOLgrid)+tile.localY(lay)%(ygrid/yOLgrid)*xgrid/xOLgrid;
-
-          int ind = ind_local+ind_ol*xgrid*ygrid/(xOLgrid*yOLgrid);
-
-          fill(m_histDT[qua][type][sta][reg],ind,it_tiles->second,1);
-        }
+  std::vector<std::pair<LHCb::MuonTileID, int > >::const_iterator it_tiles;
+  for (it_tiles=tiles.begin();it_tiles<tiles.end();++it_tiles){
+    LHCb::MuonTileID tile=it_tiles->first;
+    int sta = tile.station();
+    int reg = tile.region();
+    MuonLayout lay = tile.layout();
+    for (L0Muon::MonUtilities::Channel_type type =L0Muon::MonUtilities::Pad;
+         type<L0Muon::MonUtilities::nb_channel_types;
+         type++){
+      if (lay==m_channel_layout[type].stationLayout(sta).regionLayout(reg)) {
+        int qua = tile.quarter();
+        if (m_hist[qua][type][sta][reg]==NULL) continue;
+        MuonLayout layOL = m_opt_link_layout.stationLayout(sta).regionLayout(reg);
+        LHCb::MuonTileID ol=tile.containerID(layOL);
+        
+        int xgrid=lay.xGrid();
+        int ygrid=lay.yGrid();
+        int xOLgrid=layOL.xGrid();
+        int yOLgrid=layOL.yGrid();
+        
+        int ipb=ol.nX()/xOLgrid+2*(ol.nY()/yOLgrid)-1;
+        int ind_ol=ipb*xOLgrid*yOLgrid+ol.localX(layOL)+ol.localY(layOL)*xOLgrid;
+        int ind_local=tile.localX(lay)%(xgrid/xOLgrid)+tile.localY(lay)%(ygrid/yOLgrid)*xgrid/xOLgrid;
+        
+        int ind = ind_local+ind_ol*xgrid*ygrid/(xOLgrid*yOLgrid);
+          
+        //if ( (it_tiles->second>14.) || (it_tiles->second<-14.) ) {
+        //  info()<< "deltaT= "<<it_tiles->second<<" Q"<<(qua+1)<<" type "<<type<<" M"<<(sta+1)<<" R"<<reg+1<<endmsg;
+        //}
+        
+        fill(m_histDT[qua][type][sta][reg],ind,it_tiles->second,1);
       }
     }
+  }
 }
 
 
