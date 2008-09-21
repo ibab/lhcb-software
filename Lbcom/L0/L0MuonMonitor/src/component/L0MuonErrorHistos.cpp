@@ -1,4 +1,4 @@
-// $Id: L0MuonErrorHistos.cpp,v 1.4 2008-09-15 07:46:40 jucogan Exp $
+// $Id: L0MuonErrorHistos.cpp,v 1.5 2008-09-21 21:46:23 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -36,6 +36,10 @@ L0MuonErrorHistos::L0MuonErrorHistos( const std::string& type,
   
   for (int quarter=0; quarter<4; ++quarter){
 
+    m_hmulti_opt[quarter]=NULL;
+    m_hmulti_ser[quarter]=NULL;
+    m_hmulti_par[quarter]=NULL;
+
     for (int ih=L0Muon::MonUtilities::Overflow; ih<L0Muon::MonUtilities::Decoding_data; ++ih){
       m_hquarter[ih][quarter]=NULL;
     }
@@ -68,6 +72,7 @@ void L0MuonErrorHistos::bookHistos(bool shortname)
 {
   
   bookHistos_gen(shortname);
+  bookHistos_multi(shortname);
 
   for (int quarter=0; quarter<4; ++quarter){
     bookHistos_quarter(quarter, shortname);
@@ -81,6 +86,24 @@ void L0MuonErrorHistos::bookHistos(bool shortname)
     }
   }
 
+}
+
+void L0MuonErrorHistos::bookHistos_multi(bool shortname)
+{
+  
+  std::string hname;
+  std::string toolname="";
+  if (!shortname) toolname=name();
+  
+  for (int quarter=0; quarter<4; ++quarter){
+    hname=L0Muon::MonUtilities::hname_error_multi_opt(quarter,toolname);
+    m_hmulti_opt[quarter]=book1D(hname,-0.5,49.5,50);
+    hname=L0Muon::MonUtilities::hname_error_multi_ser(quarter,toolname);
+    m_hmulti_ser[quarter]=book1D(hname,-0.5,49.5,50);;
+    hname=L0Muon::MonUtilities::hname_error_multi_par(quarter,toolname);
+    m_hmulti_par[quarter]=book1D(hname,-0.5,49.5,50);;
+  }
+  
 }
 
 void L0MuonErrorHistos::bookHistos_gen(bool shortname)
@@ -147,6 +170,12 @@ void L0MuonErrorHistos::bookHistos_board(int quarter, int region, bool shortname
 
 void L0MuonErrorHistos::fillHistos()
 {
+
+  for (int quarter=0; quarter<4; ++quarter){
+    m_nmulti_opt[quarter]=0;
+    m_nmulti_ser[quarter]=0;
+    m_nmulti_par[quarter]=0;
+  }
   
   std::string location;
   location=LHCb::L0MuonErrorLocation::Default+context();
@@ -160,6 +189,12 @@ void L0MuonErrorHistos::fillHistos()
 
   location=LHCb::L0MuonErrorLocation::ProcPU+context();
   _fillHistos(location,L0Muon::MonUtilities::Proc);
+
+  for (int quarter=0; quarter<4; ++quarter){
+    fill(m_hmulti_opt[quarter],m_nmulti_opt[quarter],1);
+    fill(m_hmulti_ser[quarter],m_nmulti_ser[quarter],1);
+    fill(m_hmulti_par[quarter],m_nmulti_par[quarter],1);
+  }
   
 }
 
@@ -250,6 +285,9 @@ void L0MuonErrorHistos::_fillHistos(std::string location, int type)
                 for (int ibit=0; ibit<32; ++ibit){
                   if ( ((linkError>>ibit)&1)==1) fill(m_hpu[quarter][board][pu],ibit,1);
                 }
+                if (linkError&0xFF0000) ++m_nmulti_opt[quarter];
+                if (linkError&0x00FF00) ++m_nmulti_ser[quarter];
+                if (linkError&0x0000FF) ++m_nmulti_par[quarter];
               }
             }
           }
