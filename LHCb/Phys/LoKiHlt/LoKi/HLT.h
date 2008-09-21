@@ -1,4 +1,4 @@
-// $Id: HLT.h,v 1.1.1.1 2008-09-21 14:41:20 ibelyaev Exp $
+// $Id: HLT.h,v 1.2 2008-09-21 14:50:34 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_HLT_H 
 #define LOKI_HLT_H 1
@@ -187,6 +187,7 @@ namespace LoKi
     class NPass
       : public LoKi::BasicFunctors<const LHCb::HltDecReports*>::Function
     {
+    public:
       // ======================================================================
       /// MANDATORY: virtual destructor 
       virtual ~NPass () {}
@@ -214,6 +215,7 @@ namespace LoKi
     class Decision
       : public LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate
     {
+    public:
       // ======================================================================
       /// MANDATORY: virtual destructor 
       virtual ~Decision () {}

@@ -1,4 +1,4 @@
-// $Id: LoKiHlt.cpp,v 1.1.1.1 2008-09-21 14:41:20 ibelyaev Exp $
+// $Id: LoKiHlt.cpp,v 1.2 2008-09-21 14:50:34 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -7,10 +7,12 @@
 #include "LoKi/LoKiHlt.h"
 #include "LoKi/DAQTypes.h"
 #include "LoKi/L0Types.h"
+#include "LoKi/HLTTypes.h"
 #include "LoKi/IHltFactory.h"
 // ============================================================================
 #include "LoKi/O1Cuts.h"
 #include "LoKi/L0Cuts.h"
+#include "LoKi/HLTCuts.h"
 // ============================================================================
 
 
