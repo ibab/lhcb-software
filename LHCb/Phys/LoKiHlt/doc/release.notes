@@ -1,0 +1,18 @@
+! $Id: release.notes,v 1.1.1.1 2008-09-21 14:41:20 ibelyaev Exp $ 
+! -----------------------------------------------------------------------------
+! Package     : Phys/LoKiHlt
+! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+! Purpose     : collection of functors&factory for HLT 
+! -----------------------------------------------------------------------------
+
+! 2008-09-21 - Vanya BELYAEV
+ - new package, it contains three series of functors:
+
+    "L0"  : functors, dealing with LHCb::L0DUReport 
+    "O1"  : functors, dealing woth LHCb::ODIN 
+    "HLT" : functors, dealing woth LHCb::HtlDecReports 
+
+
+! -----------------------------------------------------------------------------
+! The END 
+! -----------------------------------------------------------------------------

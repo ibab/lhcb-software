@@ -1,0 +1,80 @@
+<!-- 
+     * $Id: LoKiHlt.xml,v 1.1.1.1 2008-09-21 14:41:20 ibelyaev Exp $ 
+     * ========================================================================
+     * @file
+     * The XML seleciton file to build Reflex 
+     * dictionaries for Phys/LoKiNumbers package
+     * @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     * @date 2007-12-01
+     * ========================================================================
+-->
+
+<lcgdict>
+
+  <class name = "LoKi::Hybrid::IHltFactory"               />
+  <class name = "LoKi::Hybrid::IHltAntiFactory"           />
+  <class name = "LoKi::Hybrid::HltEngine"                 />
+
+  
+  <class name = "LoKi::Functor<const LHCb::ODIN*,double>" />
+  <class name = "LoKi::Functor<const LHCb::ODIN*,bool>"   />
+  
+  <class name = "LoKi::FunctorFromFunctor<const LHCb::ODIN*,double>" />
+  <class name = "LoKi::FunctorFromFunctor<const LHCb::ODIN*,bool>"   />
+  
+  <class name = "LoKi::Constant<const LHCb::ODIN*,double>" />
+  <class name = "LoKi::Constant<const LHCb::ODIN*,bool>"   />
+  
+  <class pattern   = "LoKi::Dicts::*Ops<*LHCb::ODIN*>"     />
+  <class pattern   = "LoKi::Dicts::*Calls<*LHCb::ODIN*>"   />
+  
+  <class pattern   = "LoKi::O1::*"   />
+
+  <class name = "std::unary_function<const LHCb::ODIN*,double>" />
+  <class name = "std::unary_function<const LHCb::ODIN*,bool>"   />
+
+  
+
+  <class name = "LoKi::Functor<const LHCb::L0DUReport*,double>" />
+  <class name = "LoKi::Functor<const LHCb::L0DUReport*,bool>"   />
+  
+  <class name = "LoKi::FunctorFromFunctor<const LHCb::L0DUReport*,double>" />
+  <class name = "LoKi::FunctorFromFunctor<const LHCb::L0DUReport*,bool>"   />
+
+  <class name = "LoKi::Constant<const LHCb::L0DUReport*,double>" />
+  <class name = "LoKi::Constant<const LHCb::L0DUReport*,bool>"   />
+  
+  <class pattern   = "LoKi::Dicts::*Ops<*LHCb::L0DUReport*>"     />
+  <class pattern   = "LoKi::Dicts::*Calls<*LHCb::L0DUReport*>"   />
+
+  <class pattern   = "LoKi::L0::*"   />
+  <class name = "std::unary_function<const LHCb::L0DUReport*,double>" />
+  <class name = "std::unary_function<const LHCb::L0DUReport*,bool>"   />
+
+
+  <class name = "LoKi::Functor<const LHCb::HltDecReports*,double>" />
+  <class name = "LoKi::Functor<const LHCb::HltDecReports*,bool>"   />
+  
+  <class name = "LoKi::FunctorFromFunctor<const LHCb::HltDecReports*,double>" />
+  <class name = "LoKi::FunctorFromFunctor<const LHCb::HltDecReports*,bool>"   />
+
+  <class name = "LoKi::Constant<const LHCb::HltDecReports*,double>" />
+  <class name = "LoKi::Constant<const LHCb::HltDecReports*,bool>"   />
+  
+  <class pattern   = "LoKi::Dicts::*Ops<*LHCb::HltDecReports*>"     />
+  <class pattern   = "LoKi::Dicts::*Calls<*LHCb::HltDecReports*>"   />
+
+  <class pattern   = "LoKi::HLT::*"   />
+
+  <class name = "std::unary_function<const LHCb::HltDecReports*,double>" />
+  <class name = "std::unary_function<const LHCb::HltDecReports*,bool>"   />
+
+  
+  <exclusion>
+    <class name="LoKi::Hlt::HasSelection::Names"        />
+    <class name="LoKi::L0::ChannelDecision::Names"      />
+    <class name="std::vector<std::basic_string<char> >" /> 
+  </exclusion>
+
+
+</lcgdict>
