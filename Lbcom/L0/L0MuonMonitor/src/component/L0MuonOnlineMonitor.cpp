@@ -1,4 +1,4 @@
-// $Id: L0MuonOnlineMonitor.cpp,v 1.12 2008-09-15 07:46:40 jucogan Exp $
+// $Id: L0MuonOnlineMonitor.cpp,v 1.13 2008-09-21 21:45:51 jucogan Exp $
 // Include files 
 
 #include "boost/format.hpp"
@@ -13,7 +13,6 @@
 #include "Event/L0MuonCandidate.h"
 #include "Event/L0MuonInfo.h"
 
-#include "L0MuonKernel/MonUtilities.h"
 
 // local
 #include "L0MuonOnlineMonitor.h"
@@ -73,6 +72,7 @@ StatusCode L0MuonOnlineMonitor::initialize() {
   // Decoding
   //  if (m_shortnames) m_error->setHistoDir(""); else m_error->setHistoDir("L0Muon/Online");
   if (!m_shortnames) m_error->setHistoDir("L0Muon/Online");
+  m_error->bookHistos_multi(m_shortnames);
   m_error->bookHistos_gen(m_shortnames);
   for (std::vector<int>::iterator itq=m_quarters.begin(); itq<m_quarters.end(); ++itq){
     int iq = (*itq);
