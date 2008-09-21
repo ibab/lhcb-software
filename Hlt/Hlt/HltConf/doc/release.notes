@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.16 2008-09-18 21:43:00 graven Exp $ 
+! $Id: release.notes,v 1.17 2008-09-21 16:48:24 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : 
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+! 2008-09-19 - Gerhard Raven
+ - always include HltLumiInit
+ - tell vertexwriter which VELO vertices to write
+
 ! 2008-09-17 - Gerhard Raven
  - update python configuration. WARNING: not all lines operational yet!!!
  - allow 'bound members' in HltLine to support re-use of identical 'blocks'

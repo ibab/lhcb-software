@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1.py,v 1.4 2008-09-17 19:44:40 graven Exp $
+# $Id: Hlt1.py,v 1.5 2008-09-21 16:48:24 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of HLT1
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -38,6 +38,7 @@ addHlt1Prop('routingBitDefinitions')
 addHlt1Prop('Accept')
 
 importOptions('$HLTCONFROOT/options/HltInit.opts')
+importOptions('$HLTCONFROOT/options/HltLumiInit.opts')
 # importOptions('$HLTCONFROOT/options/HltMain.py')
 
 
@@ -53,7 +54,7 @@ Hlt1 = Sequence('Hlt1',  ModeOR = True, ShortCircuit = False
 ## needed to feed HltVertexReportsMaker... needed for Velo!
 # run for all selections which have 'velo' in them
 summaryWriter = HltSummaryWriter( Save = list(hlt1Selections()['All']) )
-vertexMaker = HltVertexReportsMaker(  )
+vertexMaker = HltVertexReportsMaker( VertexSelections = [ 'Hlt1VeloASideVFDecision','Hlt1VeloCSideVFDecision']  )
 vertexWriter =  HltVertexReportsWriter( )
 
 veloVertex = Sequencer( 'VeloVertex',  Members = [ summaryWriter, vertexMaker, vertexWriter ])
@@ -63,13 +64,17 @@ veloVertex = Sequencer( 'VeloVertex',  Members = [ summaryWriter, vertexMaker, v
 #  0-31: reserved for L0  // need to add L0DU support to routing bit writer
 # 32-63: reserved for Hlt1
 # 64-91: reserved for Hlt2
-triggerBits = HltRoutingBitsWriter( routingBitDefinitions = 
-                                  { 32 : 'Hlt1Global'
-                                  , 34 : 'Hlt1RandomDecision|Hlt1PhysicsDecision|Hlt1LumiDecision'
-                                  , 35 : 'Hlt1RandomDecision'
-                                  , 36 : 'Hlt1PhysicsDecision'
-                                  , 37 : 'Hlt1LumiDecision'
-                                  })
+
+### non-existant strings always evaluate to false, and or not an error (yet)
+routingBits = { 32 : 'Hlt1Global'
+              , 33 : 'Hlt1RandomDecision'
+              , 34 : 'Hlt1PhysicsDecision'
+              , 35 : 'Hlt1LumiDecision'
+              , 36 : 'Hlt1VeloASideDecision|Hlt1VeloCSideDecision'
+              }
+
+
+triggerBits = HltRoutingBitsWriter( routingBitDefinitions = routingBits )
 
 
 def XOnly( dec ) :

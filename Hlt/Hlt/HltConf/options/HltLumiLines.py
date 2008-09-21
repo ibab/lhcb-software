@@ -38,10 +38,6 @@ def combine( op, arg ) :
 
 ############# start building the lumi line(s)...
 
-# HLT Reconstruction
-# init is needed for ANNSvc
-importOptions('$HLTCONFROOT/options/HltLumiInit.opts')
-
 # debugging options
 debugOPL=4
 debugging=False
