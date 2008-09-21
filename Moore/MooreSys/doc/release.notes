@@ -3,8 +3,13 @@ Package     : MooreSys
 Package Coordinator : P. Koppenburg, M. Cattaneo
 Purpose     : LHCb HLT application
 
-</PRE><H1><A NAME=v5r2>2008-08-29 Moore v5r2</A></H1><PRE>
-Based on Phys v7r0, Rec v5r10, HLT v4r1, Lbcom v6r21, LHCb v25r0, Gaudi v20r1, LCGCMT 55, Online v4r14
+</PRE><H1><A NAME=v5r2>2008-09-21 Moore v5r2</A></H1><PRE>
+Based on Phys v7r1, Rec v5r11, HLT v4r2, Lbcom v6r22, LHCb v25r1, Gaudi v20r2, LCGCMT 55a, Online v4r15
+ Updates for Online v4r15, further integration into online system
+ (eg. includes Velo lines)
+
+</PRE><H1><A NAME=v5r2>2008-09-05 Moore v5r2</A></H1><PRE>
+Based on Phys v7r0, Rec v5r10, HLT v4r1, Lbcom v6r21, LHCb v25r0, Gaudi v20r2, LCGCMT 55, Online v4r14
  Updates for Online v4r14, further integration into online system
 
 </PRE><H1><A NAME=v5r1>2008-08-29 Moore v5r1</A></H1><PRE>
