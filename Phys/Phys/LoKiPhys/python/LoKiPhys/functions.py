@@ -78,6 +78,9 @@ VCut  = LoKi.FunctorFromFunctor     ( _RCV ,  bool    )
 ## All concrete types 
 # =============================================================================
 
+## @see LoKi::Cuts::ARMENTEROS 
+ARMENTEROS = LoKi.Particles.ArmenterosPodolanski ()
+
 ## @see LoKi::Cuts::TRUE
 TRUE     = LoKi.Constant( _RCP , bool )(True)
 ## @see LoKi::Cuts::FALSE
@@ -358,8 +361,15 @@ DPHI     = LoKi.Particles.DeltaPhi
 DELTAR2  = LoKi.Particles.DeltaR2
 ## @see LoKi::Cuts::DR2
 DR2      = LoKi.Particles.DeltaR2
-## @see LoKi::Cust::TRPCHI2 
+## @see LoKi::Cuts::TRPCHI2 
 TRPCHI2  = LoKi.Particles.TrackChi2Prob ()
+
+## @see LoKi::Cuts::QPT 
+QPT      = LoKi.Particles.TransverseMomentumQ 
+## @see LoKi::Cuts::QPT1 
+QPT1     = LoKi.Particles.TransverseMomentumQ ( 1 ) 
+## @see LoKi::Cuts::QPT2
+QPT2     = LoKi.Particles.TransverseMomentumQ ( 2 ) 
 
 
 # cosine of the decay  angle

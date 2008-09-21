@@ -1,4 +1,4 @@
-// $Id: Particles0.h,v 1.13 2008-06-03 15:47:08 cattanem Exp $
+// $Id: Particles0.h,v 1.14 2008-09-21 17:15:37 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES0_H 
 #define LOKI_PARTICLES0_H 1
@@ -1081,6 +1081,42 @@ namespace LoKi
     private:
       // the direction 
       LoKi::ThreeVector m_momentum ; ///< the direction 
+    } ;
+    // ========================================================================
+    /** @class TransverseMomentumQ 
+     *  Simple evalautor of the value of the transvers emomentum of daughter 
+     *  particle with respect to the direction of the mother particle. 
+     *  It is useful e.g. as Y-variable for Armenteros-Podolanski plot or 
+     *  for jet-studies 
+     *  @attention indices start from 1
+     *  @see LoKi::Cuts::QPT 
+     *  @see LoKi::Cuts::QPT1 
+     *  @see LoKi::Cuts::QPT2 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-09-21
+     */
+    class TransverseMomentumQ 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
+    {
+    public:
+      // ======================================================================
+      /// constructor from the daughter's index 
+      TransverseMomentumQ ( const unsigned int index = 1 ) ;
+      /// MANDATORY: virtual destrcutor 
+      virtual ~TransverseMomentumQ () {}
+      /// MANDATORY: clone methiod ("virtual constructor")
+      virtual  TransverseMomentumQ* clone() const 
+      { return new TransverseMomentumQ ( *this ) ; }
+      /// MANDATORY: the only one essential method 
+      result_type operator() ( argument p ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the index of daughter particle
+      const unsigned int m_index ; // the index pof daughter particle
+      // ======================================================================
     } ;
     // ========================================================================
   } // end of namespace LoKi::Particles

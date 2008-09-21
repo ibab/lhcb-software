@@ -1,4 +1,4 @@
-// $Id: Particles0.cpp,v 1.14 2007-11-28 14:39:30 ibelyaev Exp $
+// $Id: Particles0.cpp,v 1.15 2008-09-21 17:15:38 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -1266,6 +1266,53 @@ LoKi::Particles::TransverseMomentumRel::fillStream( std::ostream& s ) const
 { return s << "PTDIR(" 
            << m_momentum.Theta () << ","
            << m_momentum.Phi   () <<  ")" ; }
+// ============================================================================
+
+
+
+// ============================================================================
+// constructor from the daughter's index 
+// ============================================================================
+LoKi::Particles::TransverseMomentumQ::TransverseMomentumQ
+( const unsigned int index ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()  
+  , m_index ( index ) 
+{}
+// ============================================================================
+//  MANDATORY: the only one essential mehtod 
+// ============================================================================
+LoKi::Particles::TransverseMomentumQ::result_type 
+LoKi::Particles::TransverseMomentumQ::operator() 
+  ( LoKi::Particles::TransverseMomentumQ::argument p ) const 
+{
+  if ( 0 == p ) 
+  {
+    Error("Invalid argument, return 'Invalid Momentum'") ;
+    return LoKi::Constants::InvalidMomentum ;
+  }
+  // get the proper daughter 
+  const LHCb::Particle* d = LoKi::Child::child ( p , m_index ) ; 
+  //
+  if ( 0 == d ) 
+  {
+    Error( "Invalid daughter, return 'Invalid Momentum'") ;
+    return LoKi::Constants::InvalidMomentum ;
+  }
+  // use the function 
+  return LoKi::Kinematics::transverseMomentumDir 
+    ( d -> momentum() , p -> momentum () . Vect()  ) ;
+}
+// ============================================================================
+//  OPTIONAL: the specific printout 
+// ============================================================================
+std::ostream& 
+LoKi::Particles::TransverseMomentumQ::fillStream( std::ostream& s ) const 
+{ 
+  if      ( 1 == m_index ) { return s  << "QPT1" ; }                 // RETURN
+  else if ( 2 == m_index ) { return s  << "QPT2" ; }                 // RETURN
+  //
+  return s << "QPT(" << m_index << ")" ;
+}
 // ============================================================================
 
 

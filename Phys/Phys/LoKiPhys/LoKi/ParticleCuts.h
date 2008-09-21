@@ -1,4 +1,4 @@
-// $Id: ParticleCuts.h,v 1.26 2008-06-03 15:47:08 cattanem Exp $
+// $Id: ParticleCuts.h,v 1.27 2008-09-21 17:15:37 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSPARTICLECUTS_H 
 #define LOKI_PHYSPARTICLECUTS_H 1
@@ -228,6 +228,53 @@ namespace LoKi
      *  @date 2006-02-15
      */
     const LoKi::Constant<const LHCb::Particle*,bool>           ALL ( true ) ;    
+    // ========================================================================
+    /** @var ARMENTEROS 
+     *  Simple evaluator of Armenteros-Podolanski 
+     *  variable \f$\mathbf{\alpha}\f$, defined as:
+     *  \f[
+     *  \mathbf{\alpha} = \dfrac
+     *  { \mathrm{p}^{\mathrm{L},1} - \mathrm{p}^{\mathrm{L},1} }
+     *  { \mathrm{p}^{\mathrm{L},1} + \mathrm{p}^{\mathrm{L},1} },
+     *  \f]
+     *  where 
+     *   \f$ \mathrm{p}^{\mathrm{L},1}\f$ and 
+     *   \f$ \mathrm{p}^{\mathrm{L},2}\f$ are longitudinal momentum
+     *   components for the first and the seco ddaughter particles 
+     *   with respect to the total momentum direction. 
+     *
+     *  Clearly this expression could be rewritten in an equivalent 
+     *  form which however much more easier for calculation:
+     *  \f[
+     *  \mathbf{\alpha} = \dfrac
+     *  { \vec{\mathbf{p}}_1^2 - \vec{\mathbf{p}}_2^2 }  
+     *  { \left( \vec{\mathbf{p}}_1 + \vec{\mathbf{p}}_2 \right)^2 }  
+     *  \f]
+     *
+     *  @code
+     * 
+     *   const LHCb::Particle* p = ... ;
+     *   const double alpha  = ARMENTEROS ( p ) ;
+     *  
+     *  @endcode 
+     *
+     *  @attention instead of 
+     *     2D \f$\left(\mathrm{p_T},\mathbf{\alpha}\right)\f$ diagram, 
+     *     in the case of twobody decays at LHCb it is much better to 
+     *     use 2D diagram \f$\left(\cos \theta, \mathrm{m} \right)\f$
+     *     diagram, where \f$\cos\theta\f$-is the decay 
+     *     angle,see the variable LV01, and \f$\mathrm{m}\f$ is an 
+     *     invariant evalauted for some (fixed) mass prescription, 
+     *     e.g. \f$\pi^+\pi^-\f$.  
+     * 
+     *  
+     *  @see LoKi::Particles::ArmenterosPodolaski
+     *  @see LoKi::Kinematics::armenterosPodolanskiX 
+     *
+     *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
+     *  @date 2008-09-21 
+     */
+    const LoKi::Particles::ArmenterosPodolanski                    ARMENTEROS ;
     // ========================================================================
     /** @var BASIC 
      *  The trivial predicate which evaluates to "true" for 
@@ -4351,6 +4398,81 @@ namespace LoKi
      *  @date   2006-05-22
      */
     const LoKi::Particles::Charge                                           Q ;
+    // ========================================================================
+    /** @typedef QPT    
+     *  Simple evalautor of the value of the transverse momentum of 
+     *  the daughter particle with respect to the direction of the 
+     *  mother particle. 
+     *  It is useful e.g. as Y-variable for Armenteros-Podolanski plot or 
+     *  for jet-studies 
+     *  @code
+     *  
+     *   const LHCb::Particle* p = ... ;
+     *
+     *   const QPT qpt = QPT ( 3 ) ;
+     *
+     *   const double pt3 = qpt( p ) 
+     *
+     *  @endcode 
+     *  
+     *  @see  LoKi::Particles::TransverseMomentumQ 
+     *  @see  LoKi::Cuts::QPT1
+     *  @see  LoKi::Cuts::QPT2
+     * 
+     *  @author Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
+     *  @date 2008-09-21
+     */
+    typedef LoKi::Particles::TransverseMomentumQ                          QPT ;
+    // ========================================================================
+    /** @var QPT1    
+     *  Simple evalautor of the value of the transverse momentum of 
+     *  the first daughter particle with respect to the direction of 
+     *  the mother particle. 
+     *  It is useful e.g. as Y-variable for Armenteros-Podolanski plot or 
+     *  for jet-studies 
+     *
+     *  @code
+     *  
+     *   const LHCb::Particle* p = ... ;
+     *
+     *   const double pt1 = QPT1( p ) 
+     *
+     *  @endcode 
+     *  
+     *  @see  LoKi::Particles::TransverseMomentumQ 
+     *  @see  LoKi::Cuts::QPT
+     *  @see  LoKi::Cuts::QPT2
+     * 
+     *  @author Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
+     *  @date 2008-09-21
+     */
+    const LoKi::Particles::TransverseMomentumQ                     QPT1 ( 1 ) ;
+    // ========================================================================
+    /** @var QPT2    
+     *  Simple evalautor of the value of the transverse momentum of 
+     *  the second daughter particle with respect to the direction of 
+     *  the mother particle. 
+     *  It is useful e.g. as Y-variable for Armenteros-Podolanski plot or 
+     *  for jet-studies 
+     *
+     *  @code
+     *  
+     *   const LHCb::Particle* p = ... ;
+     *
+     *   const double pt2 = QPT2( p ) 
+     *
+     *  @endcode 
+     *
+     *  Clearly for two-body decays: QPT2 = QPT1 
+     *
+     *  @see  LoKi::Particles::TransverseMomentumQ 
+     *  @see  LoKi::Cuts::QPT
+     *  @see  LoKi::Cuts::QPT1
+     * 
+     *  @author Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
+     *  @date 2008-09-21
+     */
+    const LoKi::Particles::TransverseMomentumQ                     QPT2 ( 2 ) ;
     // ========================================================================
     /** @typedef SAME 
      *  The trivial predicate which check the identity of 2 particles

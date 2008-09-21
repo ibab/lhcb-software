@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.69 2008-09-04 13:30:00 cattanem Exp $ 
+! $Id: release.notes,v 1.70 2008-09-21 17:15:37 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2008-09-21 - Vanya BELYAEV
+
+ - add the functor ARMENTEROS for evaluation of armenteros-podolanski 
+   variable
 
 !========================== LoKiPhys v7r7 2008-09-04 ==========================
 ! 2008-08-07 - Vanya BELYAEV

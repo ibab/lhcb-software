@@ -1,4 +1,4 @@
-// $Id: Particles14.cpp,v 1.6 2007-11-28 14:39:30 ibelyaev Exp $
+// $Id: Particles14.cpp,v 1.7 2008-09-21 17:15:38 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -59,7 +59,7 @@ LoKi::Particles::DecayAngle::operator()
 {
   if ( 0 == p ) 
   { 
-    Error ( " Argumentis invalid, return 'InvalidAngle' " ) ;
+    Error ( " Argument is invalid, return 'InvalidAngle' " ) ;
     return LoKi::Constants::InvalidAngle ;                        // RETURN 
   }               
   // get the gaughter particle
@@ -96,6 +96,46 @@ LoKi::Particles::DecayAngle::fillStream ( std::ostream& s ) const
   }
   return s ;
 } ;
+
+
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Particles::ArmenterosPodolanski::result_type 
+LoKi::Particles::ArmenterosPodolanski::operator() 
+  ( LoKi::Particles::ArmenterosPodolanski::argument p ) const
+{
+  if ( 0 == p ) 
+  { 
+    Error ( " Argument is invalid, return 'InvalidAngle' " ) ;
+    return LoKi::Constants::InvalidAngle ;                        // RETURN 
+  } 
+  //
+  if ( 2 != LoKi::Child::nChildren ( p ) ) 
+  {
+    Error ( " Invalid number of daughter particles, return 'InvalidAngle' " ) ;
+    return LoKi::Constants::InvalidAngle ;                        // RETURN 
+  }
+  // get the first  child 
+  const LHCb::Particle* p1 = LoKi::Child::child ( p , 1 ) ;
+  if ( 0 == p1 ) 
+  {
+    Error ( " Invalid first daughter particle, return 'InvalidAngle' " ) ;
+    return LoKi::Constants::InvalidAngle ;                        // RETURN 
+  }
+  // get the second child 
+  const LHCb::Particle* p2 = LoKi::Child::child ( p , 2 ) ;
+  if ( 0 == p2 ) 
+  {
+    Error ( " Invalid second daughter particle, return 'InvalidAngle' " ) ;
+    return LoKi::Constants::InvalidAngle ;                        // RETURN 
+  }
+  return LoKi::Kinematics::armenterosPodolanskiX 
+    ( p1 -> momentum () , 
+      p2 -> momentum () ) ; 
+}
+
+
 
 // ============================================================================
 // The END 

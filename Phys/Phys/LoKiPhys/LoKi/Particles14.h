@@ -1,4 +1,4 @@
-// $Id: Particles14.h,v 1.6 2008-06-03 15:47:08 cattanem Exp $
+// $Id: Particles14.h,v 1.7 2008-09-21 17:15:37 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES14_H 
 #define LOKI_PARTICLES14_H 1
@@ -74,6 +74,63 @@ namespace LoKi
       // index of the daughter particle
       size_t m_child ;
     };
+    // ========================================================================
+    /** @class ArmenterosPodolanski 
+     *  Simple evaluator of Armenteros-Podolandky variable 
+     *
+     *  The variable is defined as:
+     *  \f[
+     *  \mathbf{\alpha} = \dfrac
+     *  { \mathrm{p}^{\mathrm{L},1} - \mathrm{p}^{\mathrm{L},1} }
+     *  { \mathrm{p}^{\mathrm{L},1} + \mathrm{p}^{\mathrm{L},1} },
+     *  \f]
+     *  where 
+     *   \f$ \mathrm{p}^{\mathrm{L},1}\f$ and 
+     *   \f$ \mathrm{p}^{\mathrm{L},2}\f$ are longitudinal momentum
+     *   components for the first and the seco ddaughter particles 
+     *   with respect to the total momentum direction. 
+     *
+     *  Clearly this expression could be rewritten in an equivalent 
+     *  form which however much more easier for calculation:
+     *  \f[
+     *  \mathbf{\alpha} = \dfrac
+     *  { \vec{\mathbf{p}}_1^2 - \vec{\mathbf{p}}_2^2 }  
+     *  { \left( \vec{\mathbf{p}}_1 + \vec{\mathbf{p}}_2 \right)^2 }  
+     *  \f]
+     *
+     *  @see @LoKi::Kinematics::armenterosPodolanskiX 
+     *  @see LoKi::Cuts::ARMENTEROSX
+     *
+     *  @attention instead of 
+     *     2D \f$\left(\mathrm{p_T},\mathbf{\alpha}\right)\f$ diagram, 
+     *     in the case of twobody decays at LHCb it is much better to 
+     *     use 2D diagram \f$\left(\cos \theta, \mathrm{m} \right)\f$
+     *     diagram, where \f$\cos\theta\f$-is the decay 
+     *     angle,see the variable LV01, and \f$\mathrm{m}\f$ is an 
+     *     invariant evalauted for some (fixed) mass prescription, 
+     *     e.g. \f$\pi^+\pi^-\f$.  
+     * 
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@inkhef.nl
+     *  @date 2008-09-21
+     */
+    class ArmenterosPodolanski
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
+    {
+    public:
+      // ======================================================================
+      /// MANDATORY: virtual destructor 
+      virtual ~ArmenterosPodolanski () {}
+      /// MANDATORY: virtual destructor 
+      virtual  ArmenterosPodolanski* clone () const 
+      { return new ArmenterosPodolanski ( *this ) ; }
+      /// MANDATORY: the only one essential method 
+      result_type operator() ( argument p ) const ;
+      /// OPTIONAL: specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const 
+      { return s << "ARMENTEROS" ; }
+      // ======================================================================
+    } ;
     // ========================================================================
   }  // end of namespace Particles
 } // end of namespace LoKi
