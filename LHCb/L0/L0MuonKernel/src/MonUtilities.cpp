@@ -1,4 +1,4 @@
-// $Id: MonUtilities.cpp,v 1.3 2008-09-15 07:28:49 jucogan Exp $
+// $Id: MonUtilities.cpp,v 1.4 2008-09-21 21:36:58 jucogan Exp $
 // Include files 
 
 #include <sstream>
@@ -201,6 +201,16 @@ std::string L0Muon::MonUtilities::hname_error_pu(int qua, int board, int pu, std
   return toolname+"LinkError_"+quarterName(qua)+"_"+boardName(board)+"_"+puName(pu) ;
 }
 
+std::string L0Muon::MonUtilities::hname_error_multi_opt(int qua,  std::string toolname)  {
+  return toolname+"Nb_of_opt_link_error"+quarterName(qua) ;
+}
+std::string L0Muon::MonUtilities::hname_error_multi_ser(int qua,  std::string toolname)  {
+  return toolname+"Nb_of_ser_link_error"+quarterName(qua) ;
+}
+std::string L0Muon::MonUtilities::hname_error_multi_par(int qua,  std::string toolname)  {
+  return toolname+"Nb_of_par_link_error"+quarterName(qua) ;
+}
+
 std::string L0Muon::MonUtilities::hname_channels_hist(int qua,Channel_type type, int sta, int reg,std::string toolname)    {
   return toolname+"Hits_"+quarterName(qua)+"_"+stationName(sta)
     +"_"+regionName(reg)+"_"+channelTypeName(type);
@@ -216,6 +226,34 @@ std::string L0Muon::MonUtilities::hname_channels_histBX(int qua,Channel_type typ
 
 std::string L0Muon::MonUtilities::hname_channels_histDT(int qua,Channel_type type, int sta, int reg,std::string toolname)  {
   return hname_channels_hist(qua,type,sta,reg,toolname)+"-wrt-Muon";
+}
+
+std::string L0Muon::MonUtilities::hname_optlinks_evt(std::string toolname)    {
+  return toolname+"evt_in_error";
+}
+
+std::string L0Muon::MonUtilities::hname_optlinks_multitot(std::string toolname)    {
+  return toolname+"OLs_multiplicity";
+}
+
+std::string L0Muon::MonUtilities::hname_optlinks_multi(int qua,std::string toolname)    {
+  return toolname+"OLs_multiplicity_"+quarterName(qua);
+}
+
+std::string L0Muon::MonUtilities::hname_optlinks_hist(int qua, int sta, int reg,std::string toolname)    {
+  return toolname+"OLs_"+quarterName(qua)+"_"+stationName(sta)+"_"+regionName(reg);
+}
+
+std::string L0Muon::MonUtilities::hname_optlinks_hist2D(int qua, int sta, int reg,std::string toolname)  {
+  return hname_optlinks_hist(qua,sta,reg,toolname)+"2D";
+}
+
+std::string L0Muon::MonUtilities::hname_optlinks_histBX(int qua, int sta, int reg,std::string toolname)  {
+  return hname_optlinks_hist(qua,sta,reg,toolname)+"-VS-BX";
+}
+
+std::string L0Muon::MonUtilities::hname_optlinks_histDT(int qua, int sta, int reg,std::string toolname)  {
+  return hname_optlinks_hist(qua,sta,reg,toolname)+"-wrt-Muon";
 }
 
 std::string L0Muon::MonUtilities::hname_cand_pt(std::string toolname)  {

@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-09-21 - Julien Cogan
+ - MonUtilities : add new names for histograms
+
 ! 2008-09-15 - Julien Cogan
  - MonUtilities : add new names for histograms
  - ProcDataCnv : bug fix in the decoding of PU errors

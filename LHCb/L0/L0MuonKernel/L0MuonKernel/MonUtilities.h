@@ -1,4 +1,4 @@
-// $Id: MonUtilities.h,v 1.3 2008-09-15 07:28:49 jucogan Exp $
+// $Id: MonUtilities.h,v 1.4 2008-09-21 21:36:58 jucogan Exp $
 #ifndef COMPONENT_MONUTILITIES_H 
 #define COMPONENT_MONUTILITIES_H 1
 
@@ -46,11 +46,22 @@ namespace L0Muon
     std::string hname_error_quarter(int type, int qua, std::string toolname="") ;
     std::string hname_error_board(int type, int qua, int board, std::string toolname="") ;
     std::string hname_error_pu(int qua, int board, int pu, std::string toolname="") ;
+    std::string hname_error_multi_opt(int qua, std::string toolname="") ;
+    std::string hname_error_multi_ser(int qua, std::string toolname="") ;
+    std::string hname_error_multi_par(int qua, std::string toolname="") ;
 
     std::string hname_channels_hist(int qua,Channel_type type, int sta, int reg,std::string toolname="") ;
     std::string hname_channels_hist2D(int qua,Channel_type type, int sta, int reg,std::string toolname="") ;
     std::string hname_channels_histBX(int qua,Channel_type type, int sta, int reg,std::string toolname="") ;
     std::string hname_channels_histDT(int qua,Channel_type type, int sta, int reg,std::string toolname="") ;
+
+    std::string hname_optlinks_evt(std::string toolname="");
+    std::string hname_optlinks_multitot(std::string toolname="");
+    std::string hname_optlinks_multi(int qua,std::string toolname="");
+    std::string hname_optlinks_hist(int qua, int sta, int reg,std::string toolname="") ;
+    std::string hname_optlinks_hist2D(int qua, int sta, int reg,std::string toolname="") ;
+    std::string hname_optlinks_histBX(int qua, int sta, int reg,std::string toolname="") ;
+    std::string hname_optlinks_histDT(int qua, int sta, int reg,std::string toolname="") ;
 
     std::string hname_cand_pt(std::string toolname="") ;
     std::string hname_cand_encodedpt(std::string toolname="") ;
