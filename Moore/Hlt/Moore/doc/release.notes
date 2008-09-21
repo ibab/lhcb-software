@@ -2,9 +2,12 @@ Package     : Hlt/Moore
 Package Coordinator : Patrick Koppenburg and Marco Cattaneo
 Purpose     : LHCb HLT application
 
+!========================== Moore v5r3 2008-09-21 ===================
+
 ! 2008-09-21 - Gerhard Raven
  - DC06 and real data geometry were swapped...
  - make HltGenConfig part of configurable deal with configurables.
+ - make DEFAULT.opts consistent with TCKs
 
 ! 2008-09-19 - Gerhard Raven
  - failure to copy manifest is not an error

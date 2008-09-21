@@ -22,9 +22,11 @@ HistogramPersistencySvc().OutputFile = 'Moore_minbias.root'
 
 # if you want to generate a configuration, uncomment the following lines:
 #Moore().generateConfig = True
-#Moore().configLabel = 'pass-thru, no prescale, add routingbits'
+#Moore().configLabel = 'NO prescale'
 
-Moore().hltType = 'PA+LU+VE'
+#Moore().hltType = 'PA+LU+VE'
+Moore().hltType = 'PA+VE'
+#Moore().hltType = 'PA'
 Moore().oldStyle = False
 
 
