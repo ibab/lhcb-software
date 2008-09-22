@@ -1,4 +1,4 @@
-// $Id: ICaloClusterization.h,v 1.2 2008-04-22 09:46:51 cattanem Exp $
+// $Id: ICaloClusterization.h,v 1.3 2008-09-22 00:50:30 odescham Exp $
 #ifndef CALOINTERFACES_ICALOCLUSTERIZATION_H 
 #define CALOINTERFACES_ICALOCLUSTERIZATION_H 1
 
@@ -17,7 +17,7 @@
 // forward declarations
 class DeCalorimeter;
 
-static const InterfaceID IID_ICaloClusterization ( "ICaloClusterization", 1, 0 );
+static const InterfaceID IID_ICaloClusterization ( "ICaloClusterization", 1, 1 );
 
 /** @class ICaloClusterization ICaloClusterization.h CaloInterfaces/ICaloClusterization.h
  *  
@@ -66,6 +66,8 @@ public:
   ( std::vector<LHCb::CaloCluster*>&      clusters   , 
     const LHCb::CaloDigits*               digits     , 
     const DeCalorimeter*                  detector   ) = 0 ;
+
+  virtual unsigned int iterations()=0;
   
 public: 
 

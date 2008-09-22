@@ -1,8 +1,11 @@
-// $Id: ICaloTrackIdEval.h,v 1.8 2007-03-29 16:55:34 odescham Exp $
+// $Id: ICaloTrackIdEval.h,v 1.9 2008-09-22 00:50:30 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2007/03/29 16:55:34  odescham
+// change in ICaloMomentum + standardization of the package
+//
 // Revision 1.7  2006/03/22 18:21:51  odescham
 // Migration to new Event Model
 //

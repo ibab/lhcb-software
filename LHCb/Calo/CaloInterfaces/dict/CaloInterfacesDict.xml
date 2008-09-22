@@ -17,6 +17,9 @@
   <class name    = "ITrack2Calo"              />
   <class name    = "ICaloCosmicsTool"         />
   <class name    = "ICaloCosmicsTrackTool"    />
+  <class name    = "ICaloHypo2Calo"           />
 </lcgdict>
+
+
 
 
