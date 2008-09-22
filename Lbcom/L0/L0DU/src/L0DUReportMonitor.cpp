@@ -1,4 +1,4 @@
-// $Id: L0DUReportMonitor.cpp,v 1.17 2008-09-10 16:28:53 odescham Exp $
+// $Id: L0DUReportMonitor.cpp,v 1.18 2008-09-22 01:48:49 odescham Exp $
 // Include files 
 #include <cmath>
 // from Gaudi
@@ -332,7 +332,7 @@ StatusCode L0DUReportMonitor::execute() {
         int dec =   report->conditionValue( id, slot ) ;
         plot2D( (double) slot , (double) id 
                 ,  base.str() + "/L0Conditions/Timing/1" 
-                , "value(BX, L0Condition)" 
+                , "L0Conditions value over +-2 BX around trigger : value(BXslot , L0Conditions) - (TCK "+ttck.str() +")"  
                 , -2.5  ,2.5 , 0. , (double) ecBin, 5, ecBin, dec);
       }
 
@@ -432,9 +432,9 @@ StatusCode L0DUReportMonitor::execute() {
       for(int slot = -2 ; slot <=2 ; slot++){
         int dec =  report->channelDecision( id , slot);
         plot2D( (double) slot , (double) id 
-                       ,  base.str() + "/L0Channels/Timing/1" 
-                       , "Decision(BX, L0Channel)" 
-                       , -2.5  ,2.5 , 0. , (double) cBin, 5, cBin, dec);
+                ,  base.str() + "/L0Channels/Timing/1" 
+                , "Channel decision  over +-2 BX around trigger : decision(BX slot,L0Channel) - (TCK "+ttck.str() +")"  
+                , -2.5  ,2.5 , 0. , (double) cBin, 5, cBin, dec);
       }
 
 
@@ -533,7 +533,7 @@ StatusCode L0DUReportMonitor::execute() {
         int dec =   report->triggerDecisionByName( name , slot);
         plot2D( (double) slot , (double) id 
                        ,  base.str() + "/L0Triggers/Timing/1" 
-                , "decision(BX, L0Trigger)" 
+                , "Trigger decision over +-2 BX around trigger : decision(BX slot, L0Trigger) - (TCK " + ttck.str() +")" 
                 , -2.5  , 2.5 , 0. , (double) tBin, 5, tBin, dec);
       }
 
@@ -592,7 +592,7 @@ StatusCode L0DUReportMonitor::execute() {
     for(int slot = -2 ; slot <=2 ; slot++){
       int dec =  report->decisionFromSummary( slot );
       plot1D( (double) slot ,  base.str() + "/L0Decision/Timing/1" 
-              , "decision(BX)", -2.5  ,2.5 , 5 , dec);
+              ,  "L0 decision over +-2 BX around trigger : decision(BX) - (TCK " + ttck.str() +")" , -2.5  ,2.5 , 5 , dec);
     }
 
 

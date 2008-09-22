@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.129 2008-09-17 15:32:23 odescham Exp $
+! $Id: release.notes,v 1.130 2008-09-22 01:48:49 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
+
+! 2008-09-17 - Olivier Deschamps
+- new monitoring histos (timing) in L0DUReportMonitor
 
 ! 2008-09-17 - Olivier Deschamps
 - L0DUConfig_0x001X.opts : add new algorithm TCK = 0x0012
