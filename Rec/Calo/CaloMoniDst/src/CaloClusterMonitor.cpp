@@ -1,6 +1,6 @@
-// $Id: CaloClusterMonitor.cpp,v 1.7 2008-09-22 00:59:56 odescham Exp $
+// $Id: CaloClusterMonitor.cpp,v 1.8 2008-09-22 13:53:35 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -137,7 +137,7 @@ StatusCode CaloClusterMonitor::execute()
     int iuse=0;
     for(std::vector<LHCb::CaloClusterEntry>::iterator ie = (*cluster)->entries().begin();
         ie != (*cluster)->entries().end();ie++){
-      if(LHCb::CaloDigitStatus::UseForEnergy == (*ie).status())iuse++;
+      if( 0 != (LHCb::CaloDigitStatus::UseForEnergy & (*ie).status()) )iuse++;
     }
     hFill1( "10", iuse );
     
