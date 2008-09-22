@@ -1,8 +1,11 @@
-// $Id: CaloSelectNeutralCluster.h,v 1.6 2008-06-30 15:36:33 odescham Exp $
+// $Id: CaloSelectNeutralClusterWithTracks.h,v 1.1 2008-09-22 01:41:23 odescham Exp $
 // ===================================================q=========================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2008/06/30 15:36:33  odescham
+// prepare for HLT processing
+//
 // Revision 1.5  2006/06/14 16:49:22  odescham
 // 2nd step of the migration towards DC06
 //
@@ -16,8 +19,8 @@
 //  steps towards 'Fast' Calo recontruction
 //
 // ============================================================================
-#ifndef CALORECO_CALOSELECTNeutralCLUSTER_H 
-#define CALORECO_CALOSELECTNeutralCLUSTER_H 1
+#ifndef CALORECO_CALOSELECTNEUTRALCLUSTERWITHTRACKS_H 
+#define CALORECO_CALOSELECTNEUTRALCLUSTERWITHTRACKS_H 1
 // ============================================================================
 // Include files
 #include "Relations/IRelationWeighted.h"
@@ -34,7 +37,7 @@
 #include "Event/Track.h"
 // ============================================================================
 
-/** @class CaloSelectNeutralCluster CaloSelectNeutralCluster.h
+/** @class CaloSelectNeutralClusterWithTracks CaloSelectNeutralClusterWithTracks.h
  *  
  *  Concrete tool, which select the Neutral clusters 
  *  (photon candidates) looking through the relation table 
@@ -47,13 +50,13 @@
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date   26/04/2002
  */
-class CaloSelectNeutralCluster : 
+class CaloSelectNeutralClusterWithTracks : 
   public virtual ICaloClusterSelector ,
   public virtual IIncidentListener    ,
   public          GaudiTool
 {
   /// friend factory for instantiation
-  friend class ToolFactory<CaloSelectNeutralCluster>;
+  friend class ToolFactory<CaloSelectNeutralClusterWithTracks>;
 public:
   
   
@@ -111,24 +114,24 @@ protected:
    *  @param name name of the concrete instance 
    *  @param parent pointer to the parent 
    */
-  CaloSelectNeutralCluster
+  CaloSelectNeutralClusterWithTracks
   ( const std::string& type   , 
     const std::string& name   ,
     const IInterface*  parent );
   
   /// destructor (virtual and protected)
-  virtual ~CaloSelectNeutralCluster(); 
+  virtual ~CaloSelectNeutralClusterWithTracks(); 
 
 private:
   
   ///  default  constructor   is  private 
-  CaloSelectNeutralCluster(); 
+  CaloSelectNeutralClusterWithTracks(); 
   ///  copy     constructor   is  private 
-  CaloSelectNeutralCluster
-  (const CaloSelectNeutralCluster& ); 
+  CaloSelectNeutralClusterWithTracks
+  (const CaloSelectNeutralClusterWithTracks& ); 
   ///  assignement operator   is  private 
-  CaloSelectNeutralCluster& operator=
-  (const CaloSelectNeutralCluster& );
+  CaloSelectNeutralClusterWithTracks& operator=
+  (const CaloSelectNeutralClusterWithTracks& );
 
 private:
   
@@ -138,5 +141,4 @@ private:
   double           m_chi2cut       ;
 
 };
-// ============================================================================
-#endif // CALORECO_CALOSELECTNeutralCLUSTER_H
+#endif // CALORECO_CALOSELECTNEUTRALCLUSTERWITHTRACKS_H

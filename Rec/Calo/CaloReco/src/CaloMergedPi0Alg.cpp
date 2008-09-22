@@ -1,4 +1,4 @@
-// $Id: CaloMergedPi0Alg.cpp,v 1.21 2008-06-30 15:36:33 odescham Exp $
+// $Id: CaloMergedPi0Alg.cpp,v 1.22 2008-09-22 01:41:23 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -23,7 +23,7 @@
 #include "Event/CaloCluster.h"
 #include "Event/CaloHypo.h"
 #include "Event/CaloPosition.h"
-#include "Event/CaloDataFunctor.h"
+#include "CaloUtils/CaloDataFunctor.h"
 #include "Event/CellID.h"
 // ============================================================================
 #include "Kernel/CaloCellID.h"
@@ -848,7 +848,8 @@ StatusCode CaloMergedPi0Alg::execute()
         //Defined new Calo SubCluster pointed by PhotonFromMergedPi0 CaloHypos
         LHCb::CaloCluster* cl1 = new LHCb::CaloCluster();
         LHCb::CaloCluster* cl2 = new LHCb::CaloCluster();
-        
+        LHCb::CaloCellID seed1;
+        LHCb::CaloCellID seed2;
         // Init the 2 new CaloClusters 
         // with the original cluster digits, owned-status'ed and  0-weighted
         for( LHCb::CaloCluster::Digits::const_iterator it3 =
@@ -875,6 +876,7 @@ StatusCode CaloMergedPi0Alg::execute()
                     LHCb::CaloDigitStatus::UseForEnergy   | 
                     LHCb::CaloDigitStatus::UseForPosition | 
                     LHCb::CaloDigitStatus::UseForCovariance  ;
+                  seed1 = d1->cellID();
                 }
               }
             }
@@ -885,15 +887,16 @@ StatusCode CaloMergedPi0Alg::execute()
               if (d == d2 ) {
                 w2 = Weight[1][ir][ic] ;      
                 s2   =  LHCb::CaloDigitStatus::OwnedCell      | 
-                  LHCb::CaloDigitStatus::LocalMaximum   | 
                   LHCb::CaloDigitStatus::UseForEnergy   | 
                   LHCb::CaloDigitStatus::UseForPosition | 
                   LHCb::CaloDigitStatus::UseForCovariance  ;
                 if(1 == ir && 1==ic){
                   s2   = LHCb::CaloDigitStatus::SeedCell       | 
                     LHCb::CaloDigitStatus::UseForEnergy   | 
+                    LHCb::CaloDigitStatus::LocalMaximum   | 
                     LHCb::CaloDigitStatus::UseForPosition | 
                     LHCb::CaloDigitStatus::UseForCovariance  ;
+                  seed2 = d2->cellID();
                 }
               }
             }
@@ -904,7 +907,9 @@ StatusCode CaloMergedPi0Alg::execute()
           cl2->entries().push_back( entry2 );
           log << MSG::DEBUG << " s1 after loop =  " <<s1<< endreq;
         }  
-
+        cl1->setSeed( seed1 );
+        cl2->setSeed( seed2 );
+        
         // OD calculate position for cluster
         LHCb::CaloPosition pp1 ;
         pp1.parameters()( LHCb::CaloPosition::X ) = PosX[0];

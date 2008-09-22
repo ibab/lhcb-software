@@ -1,4 +1,4 @@
-// $Id: CaloSelectNeutralCluster.cpp,v 1.9 2008-06-30 15:36:33 odescham Exp $
+// $Id: CaloSelectNeutralClusterWithTracks.cpp,v 1.1 2008-09-22 01:41:23 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -9,19 +9,19 @@
 //CaloUtils
 #include "CaloUtils/Calo2Track.h"
 // local 
-#include "CaloSelectNeutralCluster.h"
+#include "CaloSelectNeutralClusterWithTracks.h"
 
 // ============================================================================
 /** @file 
  *
- *  implementation file for class CaloSelectNeutralCluster
+ *  implementation file for class CaloSelectNeutralClusterWithTracks
  *
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date 26 Apr 2002 
  */
 // ============================================================================
 
-DECLARE_TOOL_FACTORY( CaloSelectNeutralCluster );
+DECLARE_TOOL_FACTORY( CaloSelectNeutralClusterWithTracks );
 
 // ============================================================================
 /** Standard constructor
@@ -33,7 +33,7 @@ DECLARE_TOOL_FACTORY( CaloSelectNeutralCluster );
  *  @param parent pointer to the parent 
  */
 // ============================================================================
-CaloSelectNeutralCluster::CaloSelectNeutralCluster
+CaloSelectNeutralClusterWithTracks::CaloSelectNeutralClusterWithTracks
 ( const std::string& type   , 
   const std::string& name   ,
   const IInterface*  parent )
@@ -47,7 +47,7 @@ CaloSelectNeutralCluster::CaloSelectNeutralCluster
   declareInterface<IIncidentListener>    ( this ) ;
   //
   declareProperty ("Table"      , m_tableLocation ) ;
-  declareProperty ("Cut"        , m_chi2cut       ) ;
+  declareProperty ("MinChi2"    , m_chi2cut       ) ;
 
   if("HLT"==context())m_tableLocation=LHCb::CaloIdLocation::ClusterMatchHlt;
   
@@ -57,7 +57,7 @@ CaloSelectNeutralCluster::CaloSelectNeutralCluster
 // ============================================================================
 /// destructor (virtual and protected)
 // ============================================================================
-CaloSelectNeutralCluster::~CaloSelectNeutralCluster() {};
+CaloSelectNeutralClusterWithTracks::~CaloSelectNeutralClusterWithTracks() {};
 // ============================================================================
 
 // ============================================================================
@@ -69,7 +69,7 @@ CaloSelectNeutralCluster::~CaloSelectNeutralCluster() {};
  */
 // ============================================================================
 StatusCode 
-CaloSelectNeutralCluster::initialize ()
+CaloSelectNeutralClusterWithTracks::initialize ()
 {  
   // initialize the base class 
   StatusCode sc = GaudiTool::initialize () ;
@@ -91,7 +91,7 @@ CaloSelectNeutralCluster::initialize ()
  *  @param inc incident 
  */
 // ============================================================================
-void CaloSelectNeutralCluster::handle ( const Incident& /* inc */ ) 
+void CaloSelectNeutralClusterWithTracks::handle ( const Incident& /* inc */ ) 
 { m_table = 0 ; };
 // ============================================================================
 
@@ -107,7 +107,7 @@ void CaloSelectNeutralCluster::handle ( const Incident& /* inc */ )
  *  @return true if cluster is selected
  */
 // ============================================================================
-bool CaloSelectNeutralCluster::select     
+bool CaloSelectNeutralClusterWithTracks::select     
 ( const LHCb::CaloCluster* cluster ) const 
 { return (*this) ( cluster ); };
 // ============================================================================
@@ -124,12 +124,13 @@ bool CaloSelectNeutralCluster::select
  *  @return true if cluster is selected
  */
 // ============================================================================
-bool CaloSelectNeutralCluster::operator() 
+bool CaloSelectNeutralClusterWithTracks::operator() 
   ( const LHCb::CaloCluster* cluster   ) const 
 {
   // check the cluster 
   if ( 0 == cluster ) { Warning ( "CaloCluster* points to NULL!" ) ; return false ; }
   
+  if( !exist<LHCb::Calo2Track::IClusTrTable>( m_tableLocation ))return true;
   // locate the table (if needed) 
   if ( 0 == m_table ) { m_table = get<LHCb::Calo2Track::IClusTrTable>( m_tableLocation ) ; }
   
@@ -138,8 +139,4 @@ bool CaloSelectNeutralCluster::operator()
 
   return range.empty() ? true : false ;
 };
-// ============================================================================
 
-// ============================================================================
-// The END 
-// ============================================================================

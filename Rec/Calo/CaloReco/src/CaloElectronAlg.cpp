@@ -1,4 +1,4 @@
-// $Id: CaloElectronAlg.cpp,v 1.12 2008-06-30 15:36:33 odescham Exp $
+// $Id: CaloElectronAlg.cpp,v 1.13 2008-09-22 01:41:23 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -231,9 +231,6 @@ CaloElectronAlg::execute()
   Hypos*    hypos = new Hypos() ;
   put( hypos , m_outputData );
   
-  DigitFromCalo prs( "Prs" );
-  DigitFromCalo spd( "Spd" );
-
   // loop over clusters 
   for( iterator cluster = clusters->begin() ; 
        clusters->end() != cluster ; ++cluster )
@@ -283,23 +280,6 @@ CaloElectronAlg::execute()
           continue    ;                                // CONTINUE  !
         }
       
-      // need to have at least 2 "extra" digits (1 Spd & 1 Prs)
-      // count Spd digits 
-      if( 1 > std::count_if( hypo->digits().begin () , 
-                             hypo->digits().end   () , spd ) )
-        {
-          delete hypo ;
-          hypo = 0    ;
-          continue    ;
-        }
-      // count Prs digits 
-      if( 1 > std::count_if( hypo->digits().begin () , 
-                             hypo->digits().end   () , prs ) ) 
-        {
-          delete hypo ;
-          hypo = 0    ;
-          continue    ;
-        }
       
       // loop over all corrections and apply corrections  
       for( Corrections::const_iterator cor2 = m_corrections2.begin() ;

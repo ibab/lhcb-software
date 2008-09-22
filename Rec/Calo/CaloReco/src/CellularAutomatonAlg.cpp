@@ -1,4 +1,4 @@
-// $Id: CellularAutomatonAlg.cpp,v 1.1 2008-04-21 13:53:18 vegorych Exp $
+// $Id: CellularAutomatonAlg.cpp,v 1.2 2008-09-22 01:41:23 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -39,13 +39,30 @@ CellularAutomatonAlg::CellularAutomatonAlg( const std::string& name,
 {
   declareProperty("InputData" , m_inputData = LHCb::CaloDigitLocation::Ecal);
   declareProperty("Detector"  , m_detData   = DeCalorimeterLocation::Ecal ) ;
-  declareProperty("Neig_level", m_neig_level = 0) ;
+  declareProperty("Level"     , m_neig_level = 0) ;
   declareProperty("OutputData", m_outputData=  LHCb::CaloClusterLocation::Ecal);  
   // sort the clusters ? 
   declareProperty ( "Sort"     , m_sort     ) ;
   declareProperty ( "SortByET" , m_sortByET ) ;
   // Tool name
-  declareProperty("Tool"      , m_toolName = "CaloClusterizationTool");
+  declareProperty("Tool"      , m_toolName = "CaloClusterizationTool");    
+  // set default data as a function of detector
+  int index = name.find_last_of(".") +1 ; // return 0 if '.' not found --> OK !!
+  std::string det = name.substr( index, 4 );
+  if(det == "Ecal"){
+    m_inputData=   LHCb::CaloDigitLocation::Ecal;
+    m_outputData = ("HLT"==context() || "Hlt" == context()) ? 
+      LHCb::CaloClusterLocation::EcalHlt : LHCb::CaloClusterLocation::Ecal;
+    m_detData= DeCalorimeterLocation::Ecal;
+  }
+  else if( det == "Hcal"){
+    m_inputData=   LHCb::CaloDigitLocation::Hcal;
+    m_outputData = ("HLT"==context() || "Hlt" == context()) ? 
+      LHCb::CaloClusterLocation::HcalHlt : LHCb::CaloClusterLocation::Hcal;
+    m_detData= DeCalorimeterLocation::Hcal;
+  }
+
+
 }
 //=============================================================================
 // Destructor
@@ -73,6 +90,13 @@ StatusCode CellularAutomatonAlg::initialize() {
   // Tool Interface
   m_tool = tool<ICaloClusterization>(m_toolName, this);
 
+  // init counters
+  m_pass = 0.;
+  m_clus = 0.;
+  m_event= 0.;
+  m_passMin= 999999;
+  m_passMax = 0;
+
   return StatusCode::SUCCESS;
 }
 
@@ -96,10 +120,20 @@ StatusCode CellularAutomatonAlg::execute() {
   std::vector<LHCb::CaloCluster*> clusters;
 
   // clusterization tool which return the vector of pointers for CaloClusters
-  StatusCode sc = m_tool->clusterize(clusters, digits, m_detector);
 
-  if ( sc.isFailure() ) 
-  {
+  StatusCode sc;
+  if( m_neig_level> 0){
+    std::vector<LHCb::CaloCellID> seeds;
+    seeds.clear();
+    sc= m_tool->clusterize(clusters, digits, m_detector, seeds, m_neig_level) ;
+  }
+  else{
+    sc = m_tool->clusterize(clusters, digits, m_detector) ;
+  }
+  
+  // TODO : use level with list of seeds
+
+  if ( sc.isFailure() ){
     return Error(" Failure from the tool, no clusterization!");
   }
   
@@ -115,10 +149,9 @@ StatusCode CellularAutomatonAlg::execute() {
       // sorting criteria: Energy
       LHCb::CaloDataFunctor::Less_by_Energy<const LHCb::CaloCluster*> Cmp;
       // perform the sorting 
-      std::stable_sort
-        ( clusters.begin()            ,
-          clusters.end  ()            ,
-          LHCb::CaloDataFunctor::inverse( Cmp ) ) ;
+      std::stable_sort    ( clusters.begin()            ,
+                            clusters.end  ()            ,
+                            LHCb::CaloDataFunctor::inverse( Cmp ) ) ;
     }
     else 
     {
@@ -126,10 +159,9 @@ StatusCode CellularAutomatonAlg::execute() {
       LHCb::CaloDataFunctor::Less_by_TransverseEnergy<const LHCb::CaloCluster*,
         const DeCalorimeter*> Cmp ( m_detector ) ;
       // perform the sorting 
-      std::stable_sort
-        ( clusters.begin()            ,
-          clusters.end  ()            ,
-          LHCb::CaloDataFunctor::inverse( Cmp ) ) ;    
+      std::stable_sort   ( clusters.begin()            ,
+                           clusters.end  ()            ,
+                           LHCb::CaloDataFunctor::inverse( Cmp ) ) ;    
     }
     
   }
@@ -137,9 +169,28 @@ StatusCode CellularAutomatonAlg::execute() {
   // put to the container of clusters  
 
   for ( std::vector<LHCb::CaloCluster*>::const_iterator icluster = clusters.begin();
-        clusters.end() != icluster; ++icluster)
-  {
+        clusters.end() != icluster; ++icluster){
     output -> insert ( *icluster ) ;
+  }
+
+  // statistics
+  m_pass += (double) m_tool->iterations();
+  m_clus += (double) output->size();
+  m_event += 1;
+  if(m_tool->iterations() < m_passMin)m_passMin = m_tool->iterations();
+  if(m_tool->iterations() > m_passMax)m_passMax = m_tool->iterations();
+  
+
+  if ( msgLevel( MSG::DEBUG) ){
+    debug() << "Built " << clusters.size() <<" cellular automaton clusters  with " 
+            << m_tool->iterations() << " iterations" <<endreq;
+    debug() << " ----------------------- Cluster List : " << endreq;
+    for(std::vector<LHCb::CaloCluster*>::iterator ic = clusters.begin();ic!=clusters.end();ic++){
+      debug() << " Cluster seed " << (*ic)->seed() 
+              << " energy " << (*ic)->e() 
+              << " #entries " << (*ic)->entries().size() 
+              << endreq;
+    }    
   }
 
   return StatusCode::SUCCESS;
@@ -149,6 +200,16 @@ StatusCode CellularAutomatonAlg::execute() {
 //  Finalize
 //=============================================================================
 StatusCode CellularAutomatonAlg::finalize() {
+
+
+  double avePass = 0.;
+  double aveClus = 0.;
+  if(m_event>0){
+    avePass = m_pass/m_event;
+    aveClus = m_clus/m_event;
+  }
+  info() << "Built " << aveClus <<" cellular automaton clusters/event  with " 
+         << avePass << " iterations (min,max)=(" << m_passMin << "," << m_passMax << ") on average " << endreq;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }

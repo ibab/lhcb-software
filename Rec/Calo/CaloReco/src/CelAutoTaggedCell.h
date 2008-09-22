@@ -3,6 +3,9 @@
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2008/06/06 07:52:41  vegorych
+// fixed id warning into CelAutoTaggedCell.h
+//
 // Revision 1.5  2006/05/30 09:42:06  odescham
 // first release of the CaloReco migration
 //
@@ -29,23 +32,20 @@
  *  @date    27/02/2001
  */
 
-class CelAutoTaggedCell 
-{
+class CelAutoTaggedCell{
   
 public:
   
-  enum Tag 
-    {
+  enum Tag{
       DefaultFlag ,
       Clustered   ,
       Edge        
-    };
+  };
   
-  enum FlagState 
-    {
-      NotTagged ,
-      Tagged    
-    } ;
+  enum FlagState{
+    NotTagged ,
+    Tagged    
+  } ;
   
 public:
   
@@ -59,49 +59,34 @@ public:
   // Destructor
   //  ~CelAutoTaggedCell() {}
   
-  // Retrieve data 
+  // Getters 
   const LHCb::CaloDigit*  digit () const { return m_digit              ; }
   const LHCb::CaloCellID& cellID() const { return digit() -> cellID () ; }
-  double            e     () const { return digit() -> e      () ; }
+  double            e     () const { return digit() -> e      () ; }  
+  bool isEdge() const{ return ( ( Tagged == m_status ) && ( Edge == m_tag ) ); }  
+  bool isClustered() const{ return ( ( Tagged == m_status ) && ( Clustered == m_tag ) ); }  
+  const LHCb::CaloCellID&   seedForClustered() const { return m_seeds[0]; }  
+  const std::vector<LHCb::CaloCellID>& seeds() const { return m_seeds; }  
+  size_t numberSeeds() const { return m_seeds.size(); }  
+  bool isSeed() const{ return ( ( m_seeds.size() != 1 ) ? false : cellID() ==  m_seeds [0] ); }  
+  bool isWithSeed ( const LHCb::CaloCellID& seed ){ return m_seeds.end() != std::find( m_seeds.begin() , m_seeds.end() , seed );}
+  Tag tag( ) const{return m_tag;}
+  FlagState status( ) const{return m_status;}
   
   
-  bool isEdge() const 
-  { return ( ( Tagged == m_status ) && ( Edge == m_tag ) ); }
-  
-  bool isClustered() const 
-  { return ( ( Tagged == m_status ) && ( Clustered == m_tag ) ); }
-  
-  const LHCb::CaloCellID&   seedForClustered() const { return m_seeds[0]; }
-  
-  const std::vector<LHCb::CaloCellID>& seeds() const { return m_seeds; } 
-  
-  size_t numberSeeds() const { return m_seeds.size(); }
-  
-  bool isSeed() const 
-  { return ( ( m_seeds.size() != 1 ) ? false : cellID() ==  m_seeds [0] ); }
-  
-  bool isWithSeed ( const LHCb::CaloCellID& seed ) 
-  { return m_seeds.end() != std::find( m_seeds.begin() , m_seeds.end() , seed ) ; }
-  
-  // Updata data
-  
-  void setIsSeed() 
-  {
+  // Setters
+  void setIsSeed(){
     m_tag = Clustered;
     m_status = Tagged;
     m_seeds.push_back ( cellID() );
   };
-  
-  void setEdge      () { m_tag = Edge      ; } 
+  void setEdge      () { m_tag = Edge  ; } 
   void setClustered () { m_tag = Clustered ; }
-  
-  void setStatus    () 
-  { if ( ( Edge == m_tag ) || ( Clustered == m_tag ) ) { m_status = Tagged; } }
-  
+  void setStatus    () { if ( ( Edge == m_tag ) || ( Clustered == m_tag ) ) { m_status = Tagged; } }  
   void addSeed ( const LHCb::CaloCellID& seed ) { m_seeds.push_back ( seed ); }  
   
-  CelAutoTaggedCell& operator=( const LHCb::CaloDigit* digit ) 
-  {
+  // operator
+  CelAutoTaggedCell& operator=( const LHCb::CaloDigit* digit ){
     reset() ;
     m_digit    = digit ;    
     return *this ;
@@ -109,8 +94,7 @@ public:
   
 protected:
   
-  void reset() 
-  {
+  void reset(){
     m_seeds.clear()        ; 
     m_seeds.reserve( 3 )   ;
     m_tag    = DefaultFlag ;

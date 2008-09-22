@@ -1,0 +1,54 @@
+#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/SystemOfUnits.h"
+#include "Event/CaloCluster.h"
+#include "CaloSelectCluster.h"
+
+DECLARE_TOOL_FACTORY( CaloSelectCluster );
+
+// ============================================================================
+CaloSelectCluster::CaloSelectCluster
+( const std::string& type   , 
+  const std::string& name   ,
+  const IInterface*  parent )
+  : GaudiTool ( type , name , parent ) 
+{
+  //
+  declareInterface<ICaloClusterSelector> ( this ) ;
+  //
+  declareProperty ("MinEnergy"        , m_cut  = 0. ) ;
+  declareProperty ("MaxDigits"        , m_mult = 9999 ) ;
+};
+// ============================================================================
+
+// ============================================================================
+/// destructor (virtual and protected)
+// ============================================================================
+CaloSelectCluster::~CaloSelectCluster() {};
+
+StatusCode CaloSelectCluster::initialize (){  
+  // initialize the base class 
+  StatusCode sc = GaudiTool::initialize () ;
+
+  return sc;
+}; 
+
+// ============================================================================
+/** @brief "select"  method 
+ *
+ *  Cluster is considered to be "selected" if there are Spd/Prs hit in front 
+ *
+ */
+// ============================================================================
+bool CaloSelectCluster::select( const LHCb::CaloCluster* cluster ) const{ 
+return (*this) ( cluster ); 
+};
+// ============================================================================
+bool CaloSelectCluster::operator()( const LHCb::CaloCluster* cluster   ) const{
+  // check the cluster 
+  if ( 0 == cluster ) { Warning ( "CaloCluster* points to NULL!" ) ; return false ; }
+  double e = cluster->e();
+  int m = cluster->entries().size();
+  if ( msgLevel( MSG::DEBUG) )debug() << "Cluster has " << m << " entries " 
+                                      << " for a total energy of " << e <<  endreq;
+  return (e>m_cut) && (m<m_mult);
+};

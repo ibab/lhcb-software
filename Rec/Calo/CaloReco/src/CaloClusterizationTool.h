@@ -1,42 +1,18 @@
-// $Id: CaloClusterizationTool.h,v 1.2 2008-06-04 08:07:28 cattanem Exp $
+// $Id: CaloClusterizationTool.h,v 1.3 2008-09-22 01:41:23 odescham Exp $
 #ifndef CALOCLUSTERIZATIONTOOL_H 
 #define CALOCLUSRERIZATIONTOOL_H 1
 // ============================================================================
-// STD and STL 
-// ============================================================================
 #include <string>
 #include <iostream>
-// ============================================================================
-/// GaudiKernel
-// ============================================================================
-#include  "GaudiKernel/ToolFactory.h"
-// ============================================================================
-// STD and STL 
-// ============================================================================
 #include <string>
 #include <iostream>
-// ============================================================================
-// GaudiKernel
-// ============================================================================
+#include "GaudiKernel/ToolFactory.h"
 #include "GaudiAlg/GaudiTool.h"
-// ============================================================================
-// CaloKernel 
-// ============================================================================
 #include "CaloKernel/CaloVector.h"
-// ============================================================================
-// CaloInterfaces 
-// ============================================================================
 #include "CaloInterfaces/ICaloClusterization.h"
-// ============================================================================
-// CaloDet 
-// ============================================================================
 #include "CaloDet/DeCalorimeter.h"
-// ============================================================================
-// local
-// ============================================================================
 #include "CelAutoTaggedCell.h"
-// ============================================================================
-
+#include "CaloUtils/CellSelector.h"
 
 /** @class CaloClusterizationTool CaloClusterizationTool.h
  *  
@@ -94,7 +70,7 @@ public:
     seeds.clear();
     return clusterize ( clusters , hits , detector, seeds, level) ; 
   } ;
-
+  unsigned int iterations(){return m_pass;};
   virtual StatusCode initialize() ; 
 
   virtual ~CaloClusterizationTool( ); ///< Destructor
@@ -123,5 +99,9 @@ private:
 
   bool m_withET ;
   double m_ETcut;
+  bool m_release;
+  std::string m_used;
+  CellSelector m_cellSelector;
+  unsigned int m_pass;
 };
 #endif // CALOCLUSTERIZATIONTOOL_H

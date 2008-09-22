@@ -1,4 +1,4 @@
-// $Id: CellularAutomatonAlg.h,v 1.1 2008-04-21 13:53:18 vegorych Exp $
+// $Id: CellularAutomatonAlg.h,v 1.2 2008-09-22 01:41:23 odescham Exp $
 #ifndef CELLULARAUTOMATONALG_H 
 #define CELLULARAUTOMATONALG_H 1
 
@@ -42,5 +42,7 @@ private:
   ICaloClusterization* m_tool;
   
   unsigned int m_neig_level;
+  unsigned long m_passMin , m_passMax;
+  double m_pass , m_clus ,m_event;
 };
 #endif // CELLULARAUTOMATONALG_H

@@ -6,11 +6,6 @@
  *  @date 2002-10-31
  */
 
-// Selector
-HltElectronRec.SelectionTools           =  { "CaloSelectorNOT/HltElectronSelect"     }; 
-ToolSvc.HltElectronSelect.SelectorTools =  { "CaloSelectNeutralCluster/HltChargedCluster"} ;
-ToolSvc.HltChargedCluster.Cut        = 25 ;
-ToolSvc.HltChargedCluster.Table = "Hlt/Calo/ClusterMatch";
 
 // Tools and correctors
 HltElectronRec.HypoTools        = { "CaloExtraDigits/SpdExtraE"           } ;

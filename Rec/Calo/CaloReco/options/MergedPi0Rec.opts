@@ -23,3 +23,5 @@ MergedPi0Rec.Lpar_Be0= {   0.,0.,0. } ;//unused
 
 MergedPi0Rec.Lpar_z0 = { 12566. } ;
 
+//
+MergedPi0Rec.EtCut = 2.*GeV;

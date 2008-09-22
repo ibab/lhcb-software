@@ -1,0 +1,38 @@
+
+PartialRecoCALOSeq.Members +=     { 	"GaudiSequencer/CaloDigits" 
+                                      ,"GaudiSequencer/CaloClusters"
+                                      ,"GaudiSequencer/CaloRec"
+};
+
+//------ Unpack the rawBanks & create CaloDigit on TES 
+CaloDigits.Members = {  "CaloZSupAlg/EcalZSup",                 
+                        "CaloZSupAlg/HcalZSup",                  
+                        "CaloDigitsFromRaw/PrsFromRaw",        
+                        "CaloDigitsFromRaw/SpdFromRaw"};
+
+
+//------ Clusterize, clean & compute cluster parameters 
+CaloClusters.Members += { "CellularAutomaton/EcalClust",
+                          "CaloSharedCellAlg/EcalShare",
+                          "CaloClusterCovarianceAlg/EcalCovar",
+                          "CaloClusterCorrect3x3Position/EcalPosition"};
+
+
+//------ Merged Pi0, Single Photon & Electron reconstruction
+CaloRec.Members += {"CaloMergedPi0Alg/MergedPi0Rec", 
+                    "CaloHypoAlg/PhotonFromMergedRec",
+                    "CaloSinglePhotonAlg/SinglePhotonRec",
+                    "CaloElectronAlg/ElectronRec"};
+
+//EcalClust.CellSelectorForEnergy = "";
+
+#include "$CALORECOOPTS/SinglePhotonRec.opts" 
+#include "$CALORECOOPTS/ElectronRec.opts" 
+#include "$CALORECOOPTS/MergedPi0Rec.opts"
+#include "$CALORECOOPTS/PhotonFromMergedRec.opts"
+#include "$CALORECOOPTS/CaloStandaloneClusterSelection.opts"
+#include "$CALORECOOPTS/CaloECorrectionParam.opts"  
+#include "$CALORECOOPTS/CaloSCorrectionParam.opts"  
+#include "$CALORECOOPTS/CaloLCorrectionParam.opts"
+
+

@@ -47,13 +47,13 @@ HltCaloRec.Members += {"CaloMergedPi0Alg/HltMergedPi0Rec",
                        "CaloElectronAlg/HltElectronRec"};
 
 
-
+#include "$CALORECOOPTS/HltClusterSelection.opts" 
 #include "$CALORECOOPTS/HltMergedPi0Rec.opts"
 #include "$CALORECOOPTS/HltPhotonFromMergedRec.opts"
 #include "$CALORECOOPTS/HltSinglePhotonRec.opts" 
 #include "$CALORECOOPTS/HltElectronRec.opts" 
+#include "$CALORECOOPTS/HltClusterSelection.opts" 
 // Configure Tools
-#include "$CALORECOOPTS/ExtraDigits.opts"
 #include "$CALORECOOPTS/CaloECorrectionParam.opts"  
 #include "$CALORECOOPTS/CaloSCorrectionParam.opts"  
 #include "$CALORECOOPTS/CaloLCorrectionParam.opts"

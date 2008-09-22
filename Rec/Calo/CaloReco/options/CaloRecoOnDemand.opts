@@ -14,7 +14,7 @@ DataOnDemandSvc.AlgMap += {
  ,"Rec/Calo/EcalSplitClusters" : "CaloMergedPi0Alg/MergedPi0Rec"
 };
 
-CaloClusterOnDemand.Members += { "CellularAutomaton/EcalClust",
+CaloClusterOnDemand.Members += { "CellularAutomatonAlg/EcalClust",
                                  "CaloSharedCellAlg/EcalShare",
                                  "CaloClusterCovarianceAlg/EcalCovar",
                                  "CaloClusterCorrect3x3Position/EcalPosition"};
@@ -22,6 +22,6 @@ MergedPi0Rec.CreateSplitClustersOnly = true;
 
 
 #include "$CALORECOOPTS/MergedPi0Rec.opts"
-#include "$CALORECOOPTS/ExtraDigits.opts"
 
 // Other Calo objects (CaloHypo, CaloPIDs) are available on DST
+// TODO : matching tables ...

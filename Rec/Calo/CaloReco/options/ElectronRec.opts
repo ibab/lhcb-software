@@ -1,8 +1,11 @@
-// $Id: ElectronRec.opts,v 1.6 2008-06-30 15:36:33 odescham Exp $
+// $Id: ElectronRec.opts,v 1.7 2008-09-22 01:41:23 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2008/06/30 15:36:33  odescham
+// prepare for HLT processing
+//
 // Revision 1.5  2006/05/30 09:41:59  odescham
 // first release of the CaloReco migration
 //
@@ -23,15 +26,9 @@
  *  @date 2002-10-31
  */
 
-// Selector
-ElectronRec.SelectionTools           =  { "CaloSelectorNOT/ElectronSelect"     }; 
-ToolSvc.ElectronSelect.SelectorTools =  { "CaloSelectNeutralCluster/ChargedCluster"} ;
-ToolSvc.ChargedCluster.Cut        = 25 ;
 
 // Tools and correctors
-ElectronRec.HypoTools        = { "CaloExtraDigits/SpdExtraE"           } ;
-ElectronRec.HypoTools       += { "CaloExtraDigits/PrsExtraE"           } ;
-
+ElectronRec.HypoTools        = { "CaloExtraDigits/SpdPrsExtraE"       } ;
 ElectronRec.CorrectionTools2   = { "CaloECorrection/ECorrection"      } ;
 ElectronRec.CorrectionTools2  += { "CaloSCorrection/SCorrection"      } ;
 ElectronRec.CorrectionTools2  += { "CaloLCorrection/LCorrection"      } ;

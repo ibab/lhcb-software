@@ -1,4 +1,4 @@
-// $Id: CaloSinglePhotonAlg.cpp,v 1.11 2008-06-30 15:36:33 odescham Exp $
+// $Id: CaloSinglePhotonAlg.cpp,v 1.12 2008-09-22 01:41:23 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -22,7 +22,7 @@
 // ============================================================================
 #include "Event/CaloCluster.h"
 #include "Event/CaloHypo.h"
-#include "Event/CaloDataFunctor.h"
+#include "CaloUtils/CaloDataFunctor.h"
 #include "Event/CellID.h"
 // ============================================================================
 // CaloInterfaces
@@ -230,8 +230,7 @@ CaloSinglePhotonAlg::execute()
     bool select = true ;
     // loop over all selectors 
     for( Selectors::const_iterator selector = m_selectors.begin() ;
-         select && m_selectors.end() != selector ; ++selector )
-    { 
+         select && m_selectors.end() != selector ; ++selector ){ 
       select = (**selector)( *cluster ); 
     }
     // cluster to be selected? 

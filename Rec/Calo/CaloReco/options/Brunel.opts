@@ -1,6 +1,6 @@
-// $Id: Brunel.opts,v 1.22 2008-07-18 00:33:10 odescham Exp $ 
+// $Id: Brunel.opts,v 1.23 2008-09-22 01:41:23 odescham Exp $ 
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.22 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.23 $ 
 // ============================================================================
 
 /** @file
@@ -25,7 +25,7 @@ CaloDigits.Members = {  "CaloZSupAlg/EcalZSup",
 
 
 //------ Clusterize, clean & compute cluster parameters 
-CaloClusters.Members += { "CellularAutomaton/EcalClust",
+CaloClusters.Members += { "CellularAutomatonAlg/EcalClust",
                           "CaloSharedCellAlg/EcalShare",
                           "CaloClusterCovarianceAlg/EcalCovar",
                           "CaloClusterCorrect3x3Position/EcalPosition"};
@@ -51,12 +51,12 @@ CaloRec.Members += {"CaloMergedPi0Alg/MergedPi0Rec",
                     "CaloElectronAlg/ElectronRec"};
 
 
+#include "$CALORECOOPTS/ClusterSelection.opts" 
 #include "$CALORECOOPTS/MergedPi0Rec.opts"
 #include "$CALORECOOPTS/PhotonFromMergedRec.opts"
 #include "$CALORECOOPTS/SinglePhotonRec.opts" 
 #include "$CALORECOOPTS/ElectronRec.opts" 
 // Configure Tools
-#include "$CALORECOOPTS/ExtraDigits.opts"
 #include "$CALORECOOPTS/CaloECorrectionParam.opts"  
 #include "$CALORECOOPTS/CaloSCorrectionParam.opts"  
 #include "$CALORECOOPTS/CaloLCorrectionParam.opts"

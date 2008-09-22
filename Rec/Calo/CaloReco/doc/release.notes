@@ -1,9 +1,45 @@
-! $Id: release.notes,v 1.117 2008-09-04 16:23:37 cattanem Exp $
+! $Id: release.notes,v 1.118 2008-09-22 01:41:23 odescham Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
+! 2008-08-14 - Olivier Deschamps
+  - new cluster selection tools : 
+    - CaloSelectCluster  : cluster selection with energy and #entries
+    - CaloSelectClusterWithPrs : cluster selection with Prs energy and multiplicity
+    - CaloSelectNeutralClusterWithSpd : cluster selection with Spd hits multiplicity
+    - CaloSelectNeutralClusterWithTracks (replace CaloSelectNeutralCluster)
+  - CaloExtraDigits : use of the new CaloHypo2Calo tool (located inCaloTools)  
+    as CaloSelectClusterWithPrs & CaloSelectNeutralClusterWithSpd 
+    Bonus : the matching now takes the actual calo alignment into account 
+
+  - CaloElectronAlg : remove hardcoded Prs/Spd criteria (use selection tool instead)
+
+  - CellularAutomaton & CellularAutomatonAlg & CaloClusterizationTool : 
+    - fix problem of incomplete  clusteriwation due to rare digits configuration
+    - add statistics printout in finalize()
+    - complete CellularAutomatonAlg (Level property + missing HLT/Calo context)
+    - include the possibility to select digit for energy computation using 
+     CaloUtils/CellSelector (mask by options)  : default '3x3' mask
+     --> CaloClusterCorrect3x3Energy in principle obsolete. 
+     Could be remove from options (To be checked)
+   
+  - CellularAutomatonAlg is now the default in Brunel options (and on-Demand)
+    and replace 'CellularAutomaton' everywhere 
+    (obsolete now and to be remove in the next release)
+
+
+  - new options :   
+    - (Hlt)ClusterSelection.opts : based on tracks (default)
+    - CaloStandaloneClusterSelection.opts : based on Prs/Spd
+    - CaloStandalonePartialReco.opts : partial reco (no pid) to be used for commissioning
+    - remove ExtraDigits.opts (default setting now in CaloTools/CaloHypo2Calo) 
+    - Et(cluster)>2GeV is now the default for offline MergedPi0 reconstruction (as for Hlt)
+
+  - adapt here and there to change in CaloUtils & CaloTools
+
+
 
 !========================== CaloReco v4r15 2008-09-04 =========================
 ! 2008-08-14 - Olivier Deschamps

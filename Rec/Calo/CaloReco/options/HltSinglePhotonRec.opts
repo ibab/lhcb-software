@@ -6,10 +6,6 @@
  *  @date 2002-10-31
  */
 
-// Select neutral clusters
-HltSinglePhotonRec.SelectionTools   = { "CaloSelectNeutralCluster/HltNeutralCluster" } ;
-ToolSvc.HltNeutralCluster.Cut = 4 ;
-ToolSvc.HltNeutralCluster.Table = "Hlt/Calo/ClusterMatch";
 
 /// hypo tools 
 HltSinglePhotonRec.HypoTools         = { "CaloExtraDigits/SpdExtraG"              } ;
