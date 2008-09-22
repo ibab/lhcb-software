@@ -7,8 +7,10 @@ branches cmt doc options
 # HLT1 and common packages
 #=======================================================
 
-use HltConf             v1r2    Hlt   # Vanya Belyaev
+use HltConf             v1r2    Hlt   # Vanya Belyaev, Gerhard Raven
+use HltBase             v5r2    Hlt   # Jose Angel Hernando-Morata
 use HltCommon           v4r2    Hlt   # Jose Angel Hernando-Morata
+
 use HltTracking         v3r6    Hlt   # Jose Angel Hernando-Morata
 use HltHadAlley         v3r3    Hlt   # Jose Angel Hernando-Morata
 
@@ -27,6 +29,7 @@ use HltRawData          v1r3    Hlt   # Tomasz Skwarnicki
 
 # And now for something completely different
 use HltPython	        v1r9    Hlt   # Jose Angel Hernando-Morata
+use LoKiHlt             v1r0    Phys  # Vanya Belyaev
 
 #=======================================================
 # HLT2 packages
@@ -42,8 +45,6 @@ use HltSelChecker       v7r2    Hlt   # Patrick Koppenburg
 #=============================================================
 # Stuff added temporarily to allow a fast development cycle
 #=============================================================
-
-use HltBase             v5r2   Hlt    # Jose Angel Hernando-Morata
 
 use LoKiTrigger         v7r3   Phys   # Vanya Belyaev
 use TisTosTobbing       v2r7   Phys   # Tomasz Skwarnicki  
