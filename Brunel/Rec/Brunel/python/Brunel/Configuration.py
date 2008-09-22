@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.20 2008-09-18 14:16:52 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.21 2008-09-22 15:44:18 dhcroft Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -41,6 +41,7 @@ class Brunel(LHCbConfigurableUser):
                           "ProcessPhase/Check",
                           "ProcessPhase/Output" ]
        ,"mcCheckSequence": ["Pat","RICH","MUON"] # The default MC Check sequence
+       ,"mcLinksSequence": [ "L0", "Unpack", "Tr" ] # The default MC Link sequence
        ,"initSequence": ["Reproc", "Brunel", "Calo"] # The default init sequence
        ,"moniSequence": ["CALO","RICH","MUON","VELO","Track"]    # The default Moni sequence
        ,"monitors": []        # list of monitors to execute, see KnownMonitors
@@ -108,7 +109,7 @@ class Brunel(LHCbConfigurableUser):
 
         # Setup up MC truth processing and checking
         if withMC:
-            ProcessPhase("MCLinks").DetectorList += [ "L0", "Unpack", "Tr" ]
+            ProcessPhase("MCLinks").DetectorList += self.getProp("mcLinksSequence")
             # Unpack Sim data
             GaudiSequencer("MCLinksUnpackSeq").Members += [ "UnpackMCParticle",
                                                             "UnpackMCVertex" ]
