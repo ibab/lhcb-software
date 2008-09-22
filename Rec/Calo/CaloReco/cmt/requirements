@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.57 2008-09-22 01:41:23 odescham Exp $
+# $Id: requirements,v 1.58 2008-09-22 10:19:04 odescham Exp $
 # =============================================================================
 package            CaloReco
 version            v4r15
@@ -9,7 +9,6 @@ branches           cmt doc src options
 # ================ dependencies ===============================================
 use CaloInterfaces  v*	   Calo 
 use CaloUtils       v*     Calo 
-use CaloTools       v*     Calo
 use Relations       v*     Kernel 
 
 # ================ environment ================================================
