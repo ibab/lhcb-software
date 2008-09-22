@@ -1,9 +1,12 @@
-from optparse import OptionParser, Option, OptionContainer
+from optparse import OptionParser, Option, OptionContainer, OptParseError
 from LbUtils import Log, Env
 import os, sys
 import logging
+import types
 from gettext import gettext
 
+
+NO_DEFAULT = ("NO", "DEFAULT")
 
 class FallBackOption(Option):
     ATTRS = ['action',
@@ -41,10 +44,64 @@ class FallBackOption(Option):
             Option.take_action(self, action, dest, opt, value, values, parser)
 
 
+class CommandError(OptParseError):
+    """
+    Raised if an Command instance is created with invalid or
+    inconsistent arguments.
+    """
+
+    def __init__(self, msg, command):
+        self.msg = msg
+        self.command_id = str(command)
+
+    def __str__(self):
+        if self.command_id:
+            return "command %s: %s" % (self.command_id, self.msg)
+        else:
+            return self.msg
+
+
+
+class Command:
+    CHECK_METHODS = None
+    ATTRS = []
+    def __init__(self, *cmds, **attrs):
+        self.parser = Parser()
+        self._cmds = []
+        self._set_cmd_strings(cmds)
+        self._set_attrs(attrs)
+        for checker in self.CHECK_METHODS:
+            checker(self)
+    def _set_cmd_strings(self, cmds):
+        for cmd in cmds:
+            if cmd[0] == "-" :
+                raise CommandError(
+                    "invalid command string %r: "
+                    "has to start with a non-dash char" % cmd, self)
+            else:
+                self._cmds.append(cmd)
+    def _set_attrs(self, attrs):
+        for attr in self.ATTRS:
+            if attrs.has_key(attr):
+                setattr(self, attr, attrs[attr])
+                del attrs[attr]
+            else:
+                if attr == 'default':
+                    setattr(self, attr, NO_DEFAULT)
+                else:
+                    setattr(self, attr, None)
+        if attrs:
+            attrs = attrs.keys()
+            attrs.sort()
+            raise CommandError(
+                "invalid keyword arguments: %s" % ", ".join(attrs),
+                self)
+
 class Parser(OptionParser):
     def __init__(self, *args, **kwargs):
         kwargs["option_class"] = FallBackOption
-        OptionParser.__init__(self, *args, **kwargs) #IGNORE:W0142
+        OptionParser.__init__(self, *args, **kwargs)
+        self._create_command_list() #IGNORE:W0142
         Log.addDefaultLogger(self)
         Env.addEnvironment(self)
     def _add_help_option(self):
@@ -81,6 +138,42 @@ class Parser(OptionParser):
                         if fb_mand :
                             log.error("no value for %s" % dest)
         return (values, args)
+
+    def _create_command_list(self):
+        self.command_list = []
+        self._create_command_mappings()
+    def _create_command_mappings(self):
+        self._cmd = {}             # long option -> Option instance
+    def add_command(self, *args, **kwargs):
+        if type(args[0]) is types.StringType:
+            command = Command(*args, **kwargs)
+        elif len(args) == 1 and not kwargs:
+            command = args[0]
+            if not isinstance(command, Command):
+                raise TypeError, "not an Command instance: %r" % command
+        else:
+            raise TypeError, "invalid arguments"
+        self.command_list.append(command)
+        command.container = self
+        for cmd in command._cmds:
+            self._cmd[cmd] = command
+        return command
+    def add_commands(self, command_list):
+        for command in command_list:
+            self.add_command(command)
+    def get_command(self, cmd_str):
+        return self._cmd.get(cmd_str)
+    def has_command(self, cmd_str):
+        return self._cmd.has_key(cmd_str)
+    def remove_command(self, cmd_str):
+        command = self._cmd.get(cmd_str)
+        if command is None:
+            raise ValueError("no such command %r" % cmd_str)
+        for cmd in command._cmds:
+            del self._cmd[cmd]
+        command.container.command_list.remove(command)
+
+
     def format_option_help(self, formatter=None):
         if formatter is None:
             formatter = self.formatter
@@ -131,4 +224,6 @@ class Parser(OptionParser):
             filename = sys.stdout
         encoding = self._get_encoding(filename)
         filename.write(self.format_longhelp().encode(encoding, "replace"))
-        
+    def destroy(self):
+        del self.command_list
+        OptionParser.destroy(self)
