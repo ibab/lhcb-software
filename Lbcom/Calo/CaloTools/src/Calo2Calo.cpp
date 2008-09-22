@@ -1,4 +1,4 @@
-// $Id: Calo2Calo.cpp,v 1.1.1.1 2008-05-08 09:09:02 cattanem Exp $
+// $Id: Calo2Calo.cpp,v 1.2 2008-09-22 00:47:12 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -28,6 +28,7 @@ Calo2Calo::Calo2Calo( const std::string& type,
     ,m_cells()
     ,m_digits()
     ,m_energy()
+    ,m_count(0)
 {
   declareInterface<ICalo2Calo>(this);
 
@@ -38,6 +39,7 @@ Calo2Calo::Calo2Calo( const std::string& type,
 Calo2Calo::~Calo2Calo() {}
 //=============================================================================
 StatusCode Calo2Calo::initialize(){
+  StatusCode sc = GaudiTool::initialize();
   debug() << "Initialize Calo2Calo tool " << endreq;
 
   // CaloDigit locations
@@ -56,13 +58,14 @@ StatusCode Calo2Calo::initialize(){
   m_refSize["Prs"]  = (*(m_det["Prs"]->cellParams().begin())).size(); 
   m_refSize["Spd"]  = (*(m_det["Spd"]->cellParams().begin())).size(); 
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 void Calo2Calo::reset(){
   m_digits.clear();
   m_cells.clear();
   m_energy = 0;
+  m_count  = 0;
 }
 
 std::vector<LHCb::CaloCellID> Calo2Calo::cellIDs(LHCb::CaloCluster fromCluster, std::string toCalo){
@@ -139,8 +142,9 @@ std::vector<LHCb::CaloCellID> Calo2Calo::cellIDs(LHCb::CaloCellID fromId, std::s
         LHCb::CaloDigits* digits = get<LHCb::CaloDigits>( m_loc[ m_toCalo ] );
         LHCb::CaloDigit* digit = digits->object( toId );
         if( NULL != digit ) {
-          m_digits.push_back( *digit );
+          m_digits.push_back( digit );
           m_energy += digit->e();
+          m_count++;
         } 
       }
     }        
@@ -150,11 +154,11 @@ std::vector<LHCb::CaloCellID> Calo2Calo::cellIDs(LHCb::CaloCellID fromId, std::s
 
 
 // Digits
-std::vector<LHCb::CaloDigit> Calo2Calo::digits(LHCb::CaloCellID fromId, std::string toCalo){  
+std::vector<LHCb::CaloDigit*> Calo2Calo::digits(LHCb::CaloCellID fromId, std::string toCalo){  
   cellIDs( fromId, toCalo);
   return m_digits;
 }
-std::vector<LHCb::CaloDigit> Calo2Calo::digits(LHCb::CaloCluster fromCluster, std::string toCalo){  
+std::vector<LHCb::CaloDigit*> Calo2Calo::digits(LHCb::CaloCluster fromCluster, std::string toCalo){  
   cellIDs( fromCluster, toCalo);
   return m_digits;
 }  
@@ -163,9 +167,17 @@ double Calo2Calo::energy(LHCb::CaloCellID fromId, std::string toCalo){
   cellIDs(fromId, toCalo);
   return m_energy;
 }
+int Calo2Calo::multiplicity(LHCb::CaloCellID fromId, std::string toCalo){
+  cellIDs(fromId, toCalo);
+  return m_count;
+}
 double Calo2Calo::energy(LHCb::CaloCluster fromCluster, std::string toCalo){
   cellIDs(fromCluster, toCalo);
   return m_energy;
+}
+int Calo2Calo::multiplicity(LHCb::CaloCluster fromCluster, std::string toCalo){
+  cellIDs(fromCluster, toCalo);
+  return m_count;
 }
 
 
