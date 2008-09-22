@@ -1,4 +1,7 @@
-// $Id: DeOTModule.cpp,v 1.35 2008-09-22 12:44:40 janos Exp $
+// $Id: DeOTModule.cpp,v 1.36 2008-09-22 13:42:15 janos Exp $
+// STD
+#include <algorithm>
+
 // GaudiKernel
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
@@ -541,7 +544,7 @@ StatusCode DeOTModule::setRtRelation(const OTDet::RtRelation& rtr) {
 
 bool DeOTModule::hasCondition( const std::string& condition ) const {
   std::vector< std::string > conditions = conditionNames();
-  std::vector< std::string >::const_iterator match = find( conditions.begin(), conditions.end(), condition );
+  std::vector< std::string >::const_iterator match = std::find( conditions.begin(), conditions.end(), condition );
   return match != conditions.end() ? true : false;
 }
 
