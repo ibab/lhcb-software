@@ -1,6 +1,6 @@
-// $Id: CaloClusterMonitor.cpp,v 1.6 2008-09-09 15:37:24 odescham Exp $
+// $Id: CaloClusterMonitor.cpp,v 1.7 2008-09-22 00:59:56 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -48,16 +48,18 @@ class CaloClusterMonitor : public CaloMoniAlg
 public:
   /// standard algorithm initialization 
   virtual StatusCode initialize()
-  { StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
+  { StatusCode sc = CaloMoniAlg::initialize(); // must be executed first
     if ( sc.isFailure() ) return sc; // error already printedby GaudiAlgorithm
+
     hBook1( "1", "# of Clusters    " + inputData(),  m_multMin, m_multMax , m_multBin );
-    hBook1( "2", "Cluster Size     " + inputData(),  m_sizeMin, m_sizeMax , m_sizeBin );
+    hBook1( "2", "Cluster digit multiplicity     " + inputData(),  m_sizeMin, m_sizeMax , m_sizeBin );
     hBook1( "3", "Cluster Energy   " + inputData(),  m_energyMin, m_energyMax ,m_energyBin);
     hBook1( "4", "Cluster Et       " + inputData(),  m_etMin, m_etMax , m_etBin);
     hBook1( "5", "Cluster x "        + inputData(), m_xMin, m_xMax , m_xBin);
     hBook1( "6", "Cluster y "        + inputData(), m_yMin, m_yMax , m_yBin );
-    hBook2( "7", "Cluster x vs y   " + inputData(), m_xMin, m_xMax, m_xBin , m_yMin, m_yMax, m_yBin );
-    
+    hBook2( "7", "Cluster barycenter position x vs y   " + inputData(), m_xMin, m_xMax, m_xBin , m_yMin, m_yMax, m_yBin );
+    hBook1( "10", "Cluster digit used for Energy multiplicity     " + inputData(),  m_sizeMin, m_sizeMax , m_sizeBin );
+
     return StatusCode::SUCCESS;
   }
   virtual StatusCode finalize();
@@ -69,6 +71,10 @@ protected:
    */
   CaloClusterMonitor( const std::string &name, ISvcLocator *pSvcLocator )
     : CaloMoniAlg( name, pSvcLocator ){
+
+    m_multMax = 200;
+    m_multBin = 100;
+
   }
   /// destructor (virtual and protected)
   virtual ~CaloClusterMonitor() {}
@@ -126,6 +132,15 @@ StatusCode CaloClusterMonitor::execute()
     hFill1( "5", x );
     hFill1( "6", y );
     hFill2( "7", x,y );
+    fillCalo2D("8",  (*cluster)->seed() , 1.,  "Cluster position 2Dview " + inputData() );
+    fillCalo2D("9",  (*cluster)->seed() , e ,  "Cluster Energy 2Dview " + inputData() );
+    int iuse=0;
+    for(std::vector<LHCb::CaloClusterEntry>::iterator ie = (*cluster)->entries().begin();
+        ie != (*cluster)->entries().end();ie++){
+      if(LHCb::CaloDigitStatus::UseForEnergy == (*ie).status())iuse++;
+    }
+    hFill1( "10", iuse );
+    
   }
   hFill1( "1", count );
 

@@ -1,6 +1,6 @@
-// $Id: CaloHypoMonitor.cpp,v 1.7 2008-09-09 15:37:24 odescham Exp $
+// $Id: CaloHypoMonitor.cpp,v 1.8 2008-09-22 00:59:56 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -55,18 +55,19 @@ class CaloHypoMonitor : public CaloMoniAlg
 public:
   /// standard algorithm initialization
   virtual StatusCode initialize(){ 
-    StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
+    StatusCode sc = CaloMoniAlg::initialize(); // must be executed first
     if ( sc.isFailure() ) return sc; // error already printedby GaudiAlgorithm
     hBook1(  "1", "# of Hypos    " + inputData(),  m_multMin   ,    m_multMax   , m_multBin  );
     hBook1(  "2", "Hypo Energy   " + inputData(),  m_energyMin ,    m_energyMax , m_energyBin );
     hBook1(  "3", "Hypo Pt       " + inputData(),  m_etMin     ,    m_etMax     , m_etBin);
-    hBook1(  "4", "Hypo Mass     " + inputData(),  m_massMin   ,    m_massMax   , m_massBin );
+    if( inputData() == "Rec/Calo/MergedPi0s" || inputData() == "Hlt/Calo/MergedPi0s" )
+      hBook1(  "4", "Hypo Mass     " + inputData(),  m_massMin   ,    m_massMax   , m_massBin );
     hBook1(  "5", "Hypo X        " + inputData(),  m_xMin      ,    m_xMax      , m_xBin    );
     hBook1(  "6", "Hypo Y        " + inputData(),  m_yMin      ,    m_yMax      , m_yBin );
     hBook1(  "7", "Clusters/Hypo " + inputData(),  m_clusMin, m_clusMax, m_clusBin );
     hBook1(  "8", "Spd/Hypo      " + inputData(),  m_spdMin,  m_spdMax , m_spdBin  );
     hBook1(  "9", "Prs/Hypo      " + inputData(),  m_prsMin,  m_prsMax , m_prsBin  );
-    hBook2( "10", "Hypo x vs y   " + inputData(),  m_xMin, m_xMax, m_xBin, m_yMin, m_yMax, m_yBin);
+    hBook2( "10", "Hypo barycenter position x vs y   " + inputData(),  m_xMin, m_xMax, m_xBin, m_yMin, m_yMax, m_yBin);
     return StatusCode::SUCCESS;
   }
   virtual StatusCode execute();
@@ -79,16 +80,17 @@ protected:
   CaloHypoMonitor( const std::string &name, ISvcLocator *pSvcLocator )
     : CaloMoniAlg( name, pSvcLocator ){
     declareProperty("NClusterMin" ,m_clusMin = 0.);
-    declareProperty("NClusterMin" ,m_clusMax = 10.);
-    declareProperty("NClusterMin" ,m_clusBin = 10);
+    declareProperty("NClusterMin" ,m_clusMax = 5.);
+    declareProperty("NClusterMin" ,m_clusBin = 5);
     declareProperty("NSpdMax" ,m_spdMin = 0.);
-    declareProperty("NSpdMax" ,m_spdMax = 20.);
-    declareProperty("NSpdMax" ,m_spdBin = 20);
+    declareProperty("NSpdMax" ,m_spdMax = 10.);
+    declareProperty("NSpdMax" ,m_spdBin = 10);
     declareProperty("NPrsBin" ,m_prsMin = 0.);
-    declareProperty("NPrsBin" ,m_prsMax = 20.);
-    declareProperty("NPrsBin" ,m_prsBin = 20);
+    declareProperty("NPrsBin" ,m_prsMax = 10.);
+    declareProperty("NPrsBin" ,m_prsBin = 10);
 
     m_multMax = 150;
+    m_multBin =  50;
     
   }
   /// destructor (virtual and protected)
@@ -151,7 +153,7 @@ StatusCode CaloHypoMonitor::execute()
     count++;
     hFill1( "2", e );
     hFill1( "3", et );
-    hFill1( "4", mass );
+    if( inputData() == "Rec/Calo/MergedPi0s" || inputData() == "Hlt/Calo/MergedPi0s" )hFill1( "4", mass );
     
 
     const LHCb::CaloHypo::Position *position = (*hypo)->position();
@@ -166,6 +168,13 @@ StatusCode CaloHypoMonitor::execute()
     hFill1( "8",  std::count_if( digits.begin(), digits.end(), spd ) );
     hFill1( "9", std::count_if( digits.begin(), digits.end(), prs ) );
     if( NULL != position)hFill2( "10", position->x(),position->y());
+    if( (*hypo)->clusters().size() == 1){
+      SmartRef<LHCb::CaloCluster> cluster= *((*hypo)->clusters().begin());
+      LHCb::CaloCellID seed = (*cluster).seed();      
+      fillCalo2D("11", seed , 1. ,  "Hypo position 2Dview " + inputData() );
+      fillCalo2D("12", seed , e  ,  "Hypo Energy 2Dview " + inputData() );
+    }
+    
   }
   // fill multiplicity histogram
   hFill1( "1", count );

@@ -92,7 +92,7 @@ StatusCode CaloDigitMonitor::initialize(){
     return Error( "Unknown detector name "+detData() );
   }
   hBook1( "1", detData() + " : # of Digits"   , m_multMin   ,   m_multMax,  m_multBin   );
-  hBook1( "2", detData() + " : digits energy" , m_energyMin ,   m_energyMax,  m_energyBin );
+  if( detData() != "Spd" ) hBook1( "2", detData() + " : digits energy" , m_energyMin ,   m_energyMax,  m_energyBin );
   if( detData() != "Spd" && detData() != "Prs")
     hBook1( "3", detData() + " : digits Et"     , m_etMin     ,   m_etMax    ,  m_etBin     );
 
@@ -136,7 +136,10 @@ StatusCode CaloDigitMonitor::execute(){
     count++;
     hFill1( "2", e );
     if( detData() != "Spd" && detData() != "Prs")hFill1( "3", et ); 
-    fillCalo2D("4", *(*digit) , "Digit x vs y ");
+    double x = m_calo->cellCenter(id).X();
+    double y = m_calo->cellCenter(id).Y();
+    fillCalo2D("4", id , 1. , detData() + " digits position 2D view");
+    if( detData() != "Spd" )fillCalo2D("5", id , e  , detData() + " digits energy 2D view");
   }
   hFill1( "1", count );
   

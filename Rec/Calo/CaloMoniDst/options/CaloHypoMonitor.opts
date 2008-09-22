@@ -1,5 +1,6 @@
 CaloHypoMon.Members    += { "CaloHypoMonitor/ElectronMon"               
                             ,"CaloHypoMonitor/PhotonMon"               
+                            ,"CaloHypoMonitor/SplitPhotonMon" 
                             ,"CaloHypoMonitor/MergedPi0Mon"
                             ,"CaloPi0Monitor/ResolvedPi0Mon" 
 };             
@@ -10,3 +11,4 @@ ResolvedPi0Mon.PhotonPtFilter = 500.*MeV;
 ElectronMon.Input    = "Rec/Calo/Electrons";
 PhotonMon.Input      = "Rec/Calo/Photons";
 MergedPi0Mon.Input   = "Rec/Calo/MergedPi0s";
+SplitPhotonMon.Input = "Rec/Calo/SplitPhotons";

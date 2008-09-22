@@ -1,4 +1,4 @@
-// $Id: CaloMoniAlg.cpp,v 1.2 2008-09-12 09:50:34 odescham Exp $
+// $Id: CaloMoniAlg.cpp,v 1.3 2008-09-22 00:59:56 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -38,23 +38,23 @@ CaloMoniAlg::CaloMoniAlg( const std::string& name,
   declareProperty( "HistoYMin"           , m_yMin      = -4 * Gaudi::Units::meter );
   declareProperty( "HistoMultiplicityMin", m_multMin   = 0.);
   declareProperty( "HistoSizeMin"        , m_sizeMin   =  0. );
-  declareProperty( "HistoMassMin"      , m_massMin = 0.   );
+  declareProperty( "HistoMassMin"        , m_massMin = 0.   );
 
   declareProperty( "HistoEnergyMax"      , m_energyMax = 250. * Gaudi::Units::GeV);
   declareProperty( "HistoEtMax"          , m_etMax     = 15. * Gaudi::Units::GeV );
-  declareProperty( "HistoXMax"           , m_xMax      = 4 * Gaudi::Units::meter);
-  declareProperty( "HistoYMax"           , m_yMax      = 4 * Gaudi::Units::meter);
+  declareProperty( "HistoXMax"           , m_xMax      = +4 * Gaudi::Units::meter);
+  declareProperty( "HistoYMax"           , m_yMax      = +4 * Gaudi::Units::meter);
   declareProperty( "HistoMultiplicityMax", m_multMax   = 2000.);
   declareProperty( "HistoSizeMax"        , m_sizeMax   = 25. );
-  declareProperty( "HistoMassMax"      , m_massMax = 500. );
+  declareProperty( "HistoMassMax"        , m_massMax = 500.*Gaudi::Units::MeV );
 
   declareProperty( "HistoEnergyBin"      , m_energyBin = 100);
   declareProperty( "HistoEtBin"          , m_etBin     = 100);
-  declareProperty( "HistoXBin"           , m_xBin      = 100 );
-  declareProperty( "HistoYBin"           , m_yBin      = 100);
-  declareProperty( "HistoMultiplicityBin", m_multBin   =150);
-  declareProperty( "HistoSizeBin"        , m_sizeBin   =25);
-  declareProperty( "HistoMassBin"      , m_massBin = 100  );
+  declareProperty( "HistoXBin"           , m_xBin      = 50 );
+  declareProperty( "HistoYBin"           , m_yBin      = 50);
+  declareProperty( "HistoMultiplicityBin", m_multBin   = 100);
+  declareProperty( "HistoSizeBin"        , m_sizeBin   = 25);
+  declareProperty( "HistoMassBin"        , m_massBin   = 100  );
   
   declareProperty( "EnergyFilter" , m_eFilter   =-100.);
   declareProperty( "EtFilter"     , m_etFilter  =-100.);
