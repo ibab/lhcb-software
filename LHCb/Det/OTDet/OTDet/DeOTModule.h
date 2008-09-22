@@ -1,4 +1,4 @@
-// $Id: DeOTModule.h,v 1.34 2008-09-19 15:18:50 janos Exp $
+// $Id: DeOTModule.h,v 1.35 2008-09-22 12:44:40 janos Exp $
 #ifndef OTDET_DEOTMODULE_H
 #define OTDET_DEOTMODULE_H 1
 
@@ -339,6 +339,12 @@ public:
   /** @return pointer to Status condition. !! Only for experts or people who think
        they know what their doing. !! */
   const Condition* statusCondition() const;
+
+  /** Method to check existence of condition
+      @param name of condition
+      @return boolean
+  */
+  bool hasCondition( const std::string& condition ) const;
   
   /// Private member methods
 private:
@@ -354,6 +360,9 @@ private:
   StatusCode calibrationCallback();
   
   StatusCode statusCallback();
+
+  /** Only for backwards compatibility with DC06 */
+  void fallbackDefaults();
   
   /** Return range of hit straws for a given local entry and exit point.
    * @param entryPoint local entry point

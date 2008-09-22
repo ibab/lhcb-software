@@ -1,4 +1,4 @@
-// $Id: DeOTModule.cpp,v 1.34 2008-09-19 15:18:50 janos Exp $
+// $Id: DeOTModule.cpp,v 1.35 2008-09-22 12:44:40 janos Exp $
 // GaudiKernel
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
@@ -123,15 +123,21 @@ StatusCode DeOTModule::initialize() {
   m_yMinLocal = -m_yMaxLocal;
 
   /// Register conditions with update manager svc
-  MsgStream msg(msgSvc(), name() );
+  MsgStream msg( msgSvc(), name() );
   try {
     msg << MSG::DEBUG << "Registering conditions" << endmsg;
-    m_status      = condition( "Status"      );
     m_calibration = condition( "Calibration" );
     updMgrSvc()->registerCondition( this, this->geometry()    , &DeOTModule::cacheInfo           );
-    updMgrSvc()->registerCondition( this, m_status.path()     , &DeOTModule::statusCallback      );
-    updMgrSvc()->registerCondition( this, m_calibration.path(), &DeOTModule::calibrationCallback );
-    
+    if ( hasCondition( "Status" ) ) { ///< Only do this if condtion is in LHCBCOND
+      m_status = condition( "Status" );
+      updMgrSvc()->registerCondition( this, m_status.path()     , &DeOTModule::statusCallback      );
+    }
+    if ( hasCondition( "Calibration" ) ) { ///< Only do this if condtion is in LHCBCOND
+      m_calibration = condition( "Calibration" );
+      updMgrSvc()->registerCondition( this, m_calibration.path(), &DeOTModule::calibrationCallback );
+    } else {
+      msg << MSG::DEBUG << "Going to use DC06 defaults for RT-relation and T0s" << endmsg;
+    }
     msg << MSG::DEBUG << "Start first update of conditions" << endmsg;
     StatusCode sc = updMgrSvc()->update( this );
     if ( !sc.isSuccess() ) {
@@ -422,34 +428,10 @@ StatusCode DeOTModule::cacheInfo() {
 
   // propagation velocity along y-direction (includes correction for readout side)
   m_propagationVelocityY = m_propagationVelocity * m_dir.y() ;
-  
-  // now the calibration. This is a real mess and it will only work
-  // for MC. Cannot use ReadOutGate tool becaus eof circular
-  // dependency. FIXME.
-  
-  //const double startReadOutGate[]   = { 28.0*Gaudi::Units::ns, 30.0*Gaudi::Units::ns, 32.0*Gaudi::Units::ns } ;
-  //double thisModuleStartReadOutGate = startReadOutGate[m_stationID-1] ;
-  
-  // the t0 will be defined such that 
-  // 
-  //  tdc = drifttime + propagationtime + delta-tof + t0 
-  //
-  // the delta-tof is the tof compared to a straight line to the
-  // midpoint of the straw. does that make sense, actually?
 
-  // The following just makes sense for MC, of course.
-  //m_strawt0.resize( 2*m_nStraws, 0 ) ;
-  m_strawdefaulttof.resize( 2*m_nStraws, 0 ) ;
-  for(unsigned int istraw=1; istraw<=2*m_nStraws; ++istraw) {
-    OTChannelID id(stationID(),layerID(),quarterID(),moduleID(),istraw,0) ;
-    std::auto_ptr<Trajectory> traj = trajectory(id) ;
-    Gaudi::XYZPoint p0 = traj->position(0.5*(traj->beginRange()+traj->endRange())) ;
-    // to get same results as with old OTTimeCreator, use x-z plane only
-    //double defaulttof = p0.r() / Gaudi::Units::c_light;
-    double defaulttof = sqrt(p0.x()*p0.x() + p0.z()*p0.z()) / Gaudi::Units::c_light;
-    m_strawdefaulttof[istraw - 1] = defaulttof ;
-    //m_strawt0[istraw - 1]         = defaulttof - thisModuleStartReadOutGate ;
-  }
+  /// Only call this one if the calibration condition doesn't exist
+  /// Call it after all the trajectory stuff
+  if ( !hasCondition( "Calibration" ) ) fallbackDefaults();
   
   return StatusCode::SUCCESS;
 }
@@ -556,3 +538,47 @@ StatusCode DeOTModule::setRtRelation(const OTDet::RtRelation& rtr) {
   
   return StatusCode::SUCCESS;
 }
+
+bool DeOTModule::hasCondition( const std::string& condition ) const {
+  std::vector< std::string > conditions = conditionNames();
+  std::vector< std::string >::const_iterator match = find( conditions.begin(), conditions.end(), condition );
+  return match != conditions.end() ? true : false;
+}
+
+void DeOTModule::fallbackDefaults() {
+  /// Need some default t0s and rt-relation
+  /// Only to ensure backwards compatibility with DC06
+  /// Frist the rt-relation
+  double resolution     = 0.200*Gaudi::Units::mm ;  
+  // Coefficients of polynomial t(r/rmax): for MC this is just t = 0 + 42/2.5 * r
+  std::vector<double> tcoeff    = boost::assign::list_of(0.0)(42*Gaudi::Units::ns ) ;
+  // Coefficients of polynomial sigma_t(r/rmax): for MC this is just sigma_t = 0.200 * 42/2.5 
+  std::vector<double> terrcoeff = boost::assign::list_of(resolution * 42*Gaudi::Units::ns / m_cellRadius) ;
+  // Since everything is so simple, we need just two bins in the table
+  m_rtrelation = OTDet::RtRelation(m_cellRadius,tcoeff,terrcoeff,2) ;
+  // Now the T0s
+  const double startReadOutGate[]   = { 28.0*Gaudi::Units::ns, 30.0*Gaudi::Units::ns, 32.0*Gaudi::Units::ns } ;
+  double thisModuleStartReadOutGate = startReadOutGate[m_stationID-1] ;
+
+  // the t0 will be defined such that 
+  // 
+  //  tdc = drifttime + propagationtime + delta-tof + t0 
+  //
+  // the delta-tof is the tof compared to a straight line to the
+  // midpoint of the straw. does that make sense, actually?
+      
+  // The following just makes sense for MC, of course.
+  m_strawt0.resize( 2*m_nStraws, 0 ) ;
+  m_strawdefaulttof.resize( 2*m_nStraws, 0 ) ;
+  for(unsigned int istraw=1; istraw<=2*m_nStraws; ++istraw) {
+    OTChannelID id(stationID(),layerID(),quarterID(),moduleID(),istraw,0) ;
+    std::auto_ptr<Trajectory> traj = trajectory(id) ;
+    Gaudi::XYZPoint p0 = traj->position(0.5*(traj->beginRange()+traj->endRange())) ;
+    // to get same results as with old OTTimeCreator, use x-z plane only
+    //double defaulttof = p0.r() / Gaudi::Units::c_light;
+    double defaulttof = sqrt(p0.x()*p0.x() + p0.z()*p0.z()) / Gaudi::Units::c_light;
+    m_strawdefaulttof[istraw - 1] = defaulttof ;
+    m_strawt0[istraw - 1]         = defaulttof - thisModuleStartReadOutGate ;
+  }
+}
+
