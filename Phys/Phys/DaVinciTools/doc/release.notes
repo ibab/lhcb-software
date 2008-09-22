@@ -1,8 +1,18 @@
-! $Id: release.notes,v 1.351 2008-09-11 09:32:14 jpalac Exp $
+! $Id: release.notes,v 1.352 2008-09-22 18:00:42 ibelyaev Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-09-22 - Vanya BELYAEV
+
+ - src/LoKi_FilterDesktop.cpp
+   new algorithm LoKi::FilterDesktop (temporary, to be renamed after 
+   some validation&tests) - LoKi/Bender "Hybrid" implementation of 
+   FilterDesktop concept.
+
+ - cmt/requirements
+   version incremen to v17r3 
 
 !========================== DaVinciTools v17r2p1 2008-09-11 =================
 
