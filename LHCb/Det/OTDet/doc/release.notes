@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.110 2008-09-19 15:19:26 janos Exp $
+! $Id: release.notes,v 1.111 2008-09-22 12:44:56 janos Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 !--------------------------------------------------------------------------
+
+! 2008-09-22 - Jan Amoraal
+  - Added method to set default RT-relation and T0s if claibration condition
+    doesn't exist. For backwards compatibility with DC06.
 
 ! 2008-09-19 - Jan Amoraal
   - Added callbacks for calibration conditions. T0s and RTs are now in CONDDB.
