@@ -2,6 +2,8 @@
 #include <fstream>
 #include <iterator>
 
+#include <TSystem.h>
+#include <TSysEvtHandler.h>
 #include <TROOT.h>
 #include <TApplication.h>
 #include <TStyle.h>
@@ -31,6 +33,10 @@ int main(int argc, char* argv[])
 {
   TApplication presenterApp("Presenter", NULL, NULL);
   gROOT->Reset("a");
+  gSystem->ResetSignal(kSigBus, true);
+  gSystem->ResetSignal(kSigSegmentationViolation, true);
+  gSystem->ResetSignal(kSigIllegalInstruction, true);
+  gSystem->ResetSignal(kSigFloatingException, true);
   if (gROOT->IsBatch()) {
     std::cout << "error: LHCb Presenter cannot run in batch mode." << std::endl;
     exit(EXIT_FAILURE);
