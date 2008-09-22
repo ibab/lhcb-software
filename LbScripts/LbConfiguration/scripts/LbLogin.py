@@ -62,27 +62,29 @@ class LbLoginScript(Script):
         self.platform = ""
         self.binary   = ""
         self.compdef  = ""
+        self.output_file = None
     def _write_script(self, env):
         """ select the ouput stream according to the cmd line options """
         close_output = False
-        if self.options.output:
-            self.output_file = open(self.options.output,"w")
-#            self.options.output = None # reset the option value to avoid to reuse it
-#            close_output = True
-        elif self.options.mktemp:
-            fd, outname = mkstemp()
-            self.output_file = os.fdopen(fd,"w")
-            print outname
-#            self.options.mktemp = None # reset the option value to avoid to reuse it
-#            close_output = True
-        else :
-            self.output_file = sys.stdout
-            close_output = False
+        if not self.output_file :
+            if self.options.output:
+                self.output_file = open(self.options.output,"w")
+                self.options.output = None # reset the option value to avoid to reuse it
+#                close_output = True
+            elif self.options.mktemp:
+                fd, outname = mkstemp()
+                self.output_file = os.fdopen(fd,"w")
+                print outname
+                self.options.mktemp = None # reset the option value to avoid to reuse it
+#                close_output = True
+            else :
+                self.output_file = sys.stdout
+#                close_output = False
         # write the data
         self.output_file.write(env)
         self.output_file.write("\n") # @todo: this may be avoided
-        if close_output: 
-            self.output_file.close()
+ #       if close_output: 
+ #           self.output_file.close()
             
     def defineOpts(self):
         """ define commandline options """
@@ -473,6 +475,7 @@ class LbLoginScript(Script):
                     platlist = l[:-1].split()[1]
                     platlist = platlist.split(".")
                     self.platform = "osx%s" % "".join(platlist[:2])
+
 
         if opts.cmtconfig :
             conflist = opts.cmtconfig.split("_")
