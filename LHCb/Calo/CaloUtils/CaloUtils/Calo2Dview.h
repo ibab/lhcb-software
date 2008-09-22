@@ -1,4 +1,4 @@
-// $Id: Calo2Dview.h,v 1.3 2008-06-07 01:31:27 odescham Exp $
+// $Id: Calo2Dview.h,v 1.4 2008-09-22 00:44:44 odescham Exp $
 #ifndef CALODAQ_CALO2DVIEW_H 
 #define CALODAQ_CALO2DVIEW_H 1
 
@@ -16,7 +16,7 @@
 #include "Event/L0CaloAdc.h"
 #include "Event/L0PrsSpdHit.h"
 #include "Event/L0CaloCandidate.h"
-// forward
+#include "Event/CaloCluster.h"
 
 /** @class Calo2Dview Calo2Dview.h
  *  
@@ -41,7 +41,8 @@ protected:
   AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::CaloAdc adc, const std::string title="");
   AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::L0CaloAdc l0adc, const std::string title="");
   AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::L0PrsSpdHit hit, const std::string title="");
-  AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::L0CaloCandidate l0calo, const std::string title="");  
+  AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::L0CaloCandidate l0calo, const std::string title="");
+  AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::CaloCluster cluster, const std::string title="");  
   AIDA::IHistogram2D* fillCalo2D(const HistoID unit, LHCb::CaloCellID id , double value, const std::string title="");
   AIDA::IHistogram2D* fillCaloPin2D(const HistoID unit,  LHCb::CaloCellID id , double value, const std::string title="");
   void reset(const HistoID unit,std::string title="");
@@ -52,7 +53,9 @@ protected:
   void setActualSize(bool dim){m_dim=dim ;};
   void setL0ClusterView(bool l0){m_l0=l0 ;};
   void setOffset(double offset){m_offset = offset;};
-
+  void setFlux(bool flux){m_flux = flux ;}
+  void setEnergyWeighted(bool energyWeighted){m_energyWeighted = energyWeighted ;}
+  
 
   // attributes
   DeCalorimeter* m_calo;
@@ -66,7 +69,8 @@ protected:
   bool m_dim;
   bool m_l0;
   bool m_pin;
- 
+  bool m_energyWeighted;
+  bool m_flux;
 private:
   std::map<int,DeCalorimeter*> m_caloMap;
   std::map<int,int> m_centreMap;

@@ -1,4 +1,4 @@
-// $Id: Calo2Dview.cpp,v 1.11 2008-08-28 09:10:57 odescham Exp $
+// $Id: Calo2Dview.cpp,v 1.12 2008-09-22 00:44:44 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -34,14 +34,18 @@ Calo2Dview::Calo2Dview( const std::string& name,
     m_offset(0.0),
     m_dim(true),
     m_l0(false),
-    m_pin(false)
+    m_pin(false),
+    m_energyWeighted(true),
+    m_flux(false)
 {
   declareProperty( "Threshold"     ,  m_threshold  );
   declareProperty( "PinView"       ,  m_pin   );
   declareProperty( "Offset"        ,  m_offset );
   declareProperty( "ActualSize"    ,  m_dim );
   declareProperty( "L0ClusterView" ,  m_l0  );
-
+  declareProperty( "EnergyWeighted",  m_energyWeighted  );
+  declareProperty( "Flux"          ,  m_flux  );
+  
 
   setHistoDir( name );
 }
@@ -186,27 +190,39 @@ void Calo2Dview::reset(const HistoID unit , std::string title){
 
 //=============================================================================
 AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::MCCaloHit mchit, const std::string title){
-  return fillCalo2D(unit, mchit.cellID(), mchit.activeE() , title);
+  double weight = m_energyWeighted ? mchit.activeE() : 1.;
+  return fillCalo2D(unit, mchit.cellID(), weight , title);
 }
 AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::MCCaloDigit mcdigit, const std::string title){
-  return fillCalo2D(unit, mcdigit.cellID(), mcdigit.activeE() , title);
+  double weight = m_energyWeighted ? mcdigit.activeE() : 1.;
+  return fillCalo2D(unit, mcdigit.cellID(), weight , title);
 }
 AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::CaloDigit digit, const std::string title){
-  return fillCalo2D(unit, digit.cellID(), digit.e() , title);
+  double weight = m_energyWeighted ? digit.e() : 1.;
+  return fillCalo2D(unit, digit.cellID(), weight  , title);
 }
 AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::CaloAdc adc, const std::string title){
-  return fillCalo2D(unit, adc.cellID(), (double) adc.adc() , title);
+  double weight = m_energyWeighted ? (double) adc.adc() : 1.;
+  return fillCalo2D(unit, adc.cellID(), weight , title);
 }
 AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::L0CaloAdc l0adc, const std::string title){
-  return fillCalo2D(unit, l0adc.cellID(), (double) l0adc.adc() , title);
+  double weight = m_energyWeighted ? (double) l0adc.adc() : 1.;
+  return fillCalo2D(unit, l0adc.cellID(), weight , title);
 }
 AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::L0PrsSpdHit hit, const std::string title){
   return fillCalo2D(unit, hit.cellID(), 1. , title);
 }
 AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::L0CaloCandidate l0calo, const std::string title){
   setL0ClusterView(true);
-  return fillCalo2D(unit, l0calo.id(), l0calo.et() , title);
+  double weight = m_energyWeighted ? l0calo.et() : 1.;
+  return fillCalo2D(unit, l0calo.id(), weight , title);
 }
+AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::CaloCluster cluster, const std::string title){
+  setL0ClusterView(true);
+  double weight = m_energyWeighted ? cluster.e() : 1.;
+  return fillCalo2D(unit, cluster.seed(), weight , title);
+}
+
 // The main implementation of fillCalo2D
 AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::CaloCellID id , double value, const std::string title){
 
@@ -280,9 +296,9 @@ AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::CaloCellID
           }
           double x = m_xsize *  ((double) iic+0.5 ) /(double) m_reg ;
           double y = m_ysize *  ((double) iir+0.5 ) /(double) m_reg ;
-          if ( msgLevel(MSG::VERBOSE) ){
-          }
-          GaudiHistoAlg::fill( histo2D(unit) ,  x, y , value + m_offset);
+          double weight = (value + m_offset);
+          if( m_flux )weight /=   (m_xsizeMap[calo]*m_ysizeMap[calo]);
+          GaudiHistoAlg::fill( histo2D(unit) ,  x, y , weight);
         }
       }
     }
@@ -351,7 +367,9 @@ AIDA::IHistogram2D*  Calo2Dview::fillCaloPin2D(const HistoID unit, LHCb::CaloCel
         }
         double x = (m_xsize * ((double) iic +0.5) )/(double) m_reg ;
         double y = (m_ysize * ((double) iir +0.5) )/(double) m_reg ;
-        GaudiHistoAlg::fill( histo2D( (HistoID) lun.str()) , x , y , value + m_offset);
+        double weight = (value + m_offset);
+        if( m_flux )weight /=   (m_xsizeMap[m_caloType]*m_ysizeMap[m_caloType]);    
+        GaudiHistoAlg::fill( histo2D( (HistoID) lun.str()) , x , y , weight );
       }
     }
   }

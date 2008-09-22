@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.108 2008-09-01 13:12:01 cattanem Exp $
+! $Id: release.notes,v 1.109 2008-09-22 00:44:44 odescham Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+
+! 2008-09-29 - Olivier Deschamps
+ - Calo2Dview.cpp : add new features (Flux and energyWeighted properties)
+ - add new class : CellSelector to handle the various CellMatrix methods
+ - add CaloDataFunctor.h (moved from RecEvent)
 
 !========================== CaloUtils v8r1p1 2008-09-01 =======================
 ! 2008-08-28 - Olivier Deschamps

@@ -1,4 +1,4 @@
-// $Id: ClusterFunctors.h,v 1.9 2006-03-22 18:25:05 odescham Exp $ 
+// $Id: ClusterFunctors.h,v 1.10 2008-09-22 00:44:44 odescham Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -9,7 +9,7 @@
 // CaloDet 
 #include "CaloDet/DeCalorimeter.h"
 #include "Event/CaloCluster.h"
-#include "Event/CaloDataFunctor.h"
+#include "CaloUtils/CaloDataFunctor.h"
 
 class DeCalorimeter;
 
@@ -103,8 +103,7 @@ namespace ClusterFunctors
                                    DE de     ,
                                    double& e , 
                                    double& x , 
-                                   double& y )
-  {
+                                   double& y ){
     return CaloDataFunctor::calculateClusterEXY( begin , 
                                                  end   , 
                                                  de    , 
