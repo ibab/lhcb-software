@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltMuonLines.py,v 1.3 2008-09-23 08:49:43 graven Exp $
+# $Id: HltMuonLines.py,v 1.4 2008-09-23 09:27:57 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -12,7 +12,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -73,8 +73,8 @@ singleMuonPrep = bindMembers( 'singleMuonPrep',
                    )
 
 muonSegPrep = bindMembers ('muonSegPrepare' ,
-                   [ singleMuonPrep ] + 
-                   [ RecoMuonSeg
+                   [ singleMuonPrep 
+                   , RecoMuonSeg
                    , Member ('TF', 'PrepareMuonSeg'
                             , RequirePositiveInputs = False
                             , InputSelection = 'TES:' + RecoMuonSeg.OutputMuonTracksName # if has else RecoMuonSeg.getDefaults('OutputMuonTracksName')

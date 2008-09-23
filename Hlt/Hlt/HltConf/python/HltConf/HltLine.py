@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.15 2008-09-23 08:49:43 graven Exp $ 
+# $Id: HltLine.py,v 1.16 2008-09-23 09:27:57 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.15 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.16 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt line itself 
@@ -85,6 +85,7 @@ from Configurables import HltTrackFilter         as TrackFilter
 from Configurables import HltVertexMaker1        as VertexMaker1 
 from Configurables import HltVertexMaker2        as VertexMaker2 
 from Configurables import HltVertexFilter        as VertexFilter 
+from Configurables import HltVertexUpgrade       as VertexUpgrade 
 from Configurables import HltL0MuonPrepare       as L0MuonPrepare 
 from Configurables import HltL0CaloPrepare       as L0CaloPrepare 
 from Configurables import HltVertexToTracks      as VertexToTracks 
@@ -260,6 +261,7 @@ _types_ = { TrackUpgrade  : 'TU'
           , VertexMaker2  : 'VM2'
           , VertexFilter  : 'VF'
           , VertexToTracks: 'VT'
+          , VertexUpgrade : 'VU'
           , L0CaloPrepare : 'L0CaloPrepare'
           , L0MuonPrepare : 'L0MuonPrepare'
           , Dummy         : 'Dummy'
