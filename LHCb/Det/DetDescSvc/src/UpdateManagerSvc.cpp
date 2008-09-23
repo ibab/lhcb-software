@@ -1,5 +1,5 @@
-// $Id: UpdateManagerSvc.cpp,v 1.19 2008-06-10 06:53:52 cattanem Exp $
-// Include files 
+// $Id: UpdateManagerSvc.cpp,v 1.20 2008-09-23 12:29:18 marcocle Exp $
+// Include files
 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/IDetDataSvc.h"
@@ -104,7 +104,7 @@ StatusCode UpdateManagerSvc::initialize(){
       log << MSG::WARNING << "Cannot access IDataManagerSvc interface of \"" << m_dataProviderName
           << "\": using empty RootName" << endmsg;
       m_dataProviderRootName = "";
-    } 
+    }
   }
 
   // find the detector data service
@@ -117,7 +117,7 @@ StatusCode UpdateManagerSvc::initialize(){
   } else {
     log << MSG::DEBUG << "Got pointer to IDetDataSvc \"" << m_detDataSvcName << '"' << endmsg;
   }
-  
+
   // before registering to the incident service I have to be sure that the EventClockSvc is ready
   IService *evtClockSvc;
   sc = service("EventClockSvc", evtClockSvc, true);
@@ -126,7 +126,7 @@ StatusCode UpdateManagerSvc::initialize(){
     evtClockSvc->release();
   } else {
     log << MSG::WARNING << "Unable find EventClockSvc, probably I'll not work." << endmsg;
-  }  
+  }
 
   // register to the incident service for BeginEvent incidents
   sc = service("IncidentSvc", m_incidentSvc, false);
@@ -151,13 +151,13 @@ StatusCode UpdateManagerSvc::initialize(){
     std::string name;
     Condition *cond = new Condition();
     if (ConditionParser(*co,name,*cond)) {
-      
+
       // Remove TS root name from the path
       if ( name[0] == '/'
            && name.compare(0,m_dataProviderRootName.size(),m_dataProviderRootName) == 0 ){
         name.erase(0,m_dataProviderRootName.size());
       }
-      
+
       // If a condition override with that name already exists, delete it
       Condition * dest = m_conditionsOverides[name];
       if ( dest ) {
@@ -165,11 +165,11 @@ StatusCode UpdateManagerSvc::initialize(){
             << "' is defined more than once (I use the last one)." << endmsg;
         delete dest;
       }
-      
+
       // Add the condition to internal list
       m_conditionsOverides[name] = cond;
       log << MSG::DEBUG << "Added condition: " << name << "\n" << cond->printParams() << endmsg;
-      
+
     } else {
       // something went wrong while parsing: delete the temporary
       delete cond;
@@ -184,7 +184,7 @@ StatusCode UpdateManagerSvc::initialize(){
 
 StatusCode UpdateManagerSvc::finalize(){
   // local finalization
-  
+
   MsgStream log(msgSvc(),name());
   log << MSG::DEBUG << "--- finalize ---" << endmsg;
 
@@ -245,7 +245,7 @@ void UpdateManagerSvc::i_registerCondition(const std::string &condition, BaseObj
     log << MSG::DEBUG << "registering object of type " << System::typeinfoName(mf->type())
         << " (without condition)" << endmsg;
   }
-  
+
   // find the object
   Item *mf_item = findItem(mf);
   if (!mf_item){ // a new OMF
@@ -258,7 +258,7 @@ void UpdateManagerSvc::i_registerCondition(const std::string &condition, BaseObj
       mf_item->ptr = mf->castToVoid();
     }
   }
-  
+
   if (!cond_copy.empty()) {
     // find the condition
     Item *cond_item = findItem(cond_copy);
@@ -278,7 +278,7 @@ void UpdateManagerSvc::i_registerCondition(const std::string &condition, BaseObj
       }
 
       m_all_items.push_back(cond_item);
-      
+
     } else {
       if (ptr_dest){
         // I already have this condition registered, but a new user wants to set the pointer to it.
@@ -287,7 +287,7 @@ void UpdateManagerSvc::i_registerCondition(const std::string &condition, BaseObj
         if (cond_item->vdo) {
           ptr_dest->set(cond_item->vdo);
           if ( ptr_dest->isNull() ) { // the dynamic cast failed
-            throw GaudiException("A condition in memory cannot be casted to the requested type", 
+            throw GaudiException("A condition in memory cannot be casted to the requested type",
                 "UpdateManagerSvc::i_registerCondition", StatusCode::FAILURE );
           }
         }
@@ -363,7 +363,7 @@ StatusCode UpdateManagerSvc::newEvent(const Gaudi::Time &evtTime){
 
 #ifndef WIN32
   MsgStream log(msgSvc(),name());
-  
+
   log << MSG::VERBOSE << "newEvent(evtTime): acquiring mutex lock" << endmsg;
   acquireLock();
 #endif
@@ -373,7 +373,7 @@ StatusCode UpdateManagerSvc::newEvent(const Gaudi::Time &evtTime){
 #ifndef WIN32
     log << MSG::VERBOSE << "newEvent(evtTime): releasing mutex lock" << endmsg;
     releaseLock();
-#endif    
+#endif
     return sc; // no need to update
   }
 
@@ -399,7 +399,7 @@ StatusCode UpdateManagerSvc::newEvent(const Gaudi::Time &evtTime){
         MsgStream item_log(msgSvc(),name()+"::Item");
         sc = (*it)->update(dataProvider(),evtTime,&item_log);
       } else {
-        sc = (*it)->update(dataProvider(),evtTime);       
+        sc = (*it)->update(dataProvider(),evtTime);
       }
       if (sc.isSuccess()) {
         if ( head_copy_since < (*it)->since )  head_copy_since = (*it)->since;
@@ -424,7 +424,7 @@ StatusCode UpdateManagerSvc::newEvent(const Gaudi::Time &evtTime){
   log << MSG::VERBOSE << "newEvent(evtTime): releasing mutex lock" << endmsg;
   releaseLock();
 #endif
-  
+
   return sc;
 }
 StatusCode UpdateManagerSvc::i_update(void *instance){
@@ -483,14 +483,14 @@ void UpdateManagerSvc::i_invalidate(void *instance){
 }
 
 void UpdateManagerSvc::unlink(Item *parent, Item *child){
-  
+
   // check if the parent knows about the child
   Item::ItemList::iterator childIt = std::find(parent->children.begin(),
                                                parent->children.end(),child);
   if ( parent->children.end() == childIt )
     return; // parent does not know about child
-  
-  // remove from child all the user pointers belonging to the parent 
+
+  // remove from child all the user pointers belonging to the parent
   Item::UserPtrList::iterator pi = child->user_dest_ptrs.begin();
   while ( pi != child->user_dest_ptrs.end() ) {
     if (pi->second != parent) {
@@ -499,11 +499,11 @@ void UpdateManagerSvc::unlink(Item *parent, Item *child){
       ++pi;
     }
   }
-  
+
   // If the child is used by a MF that uses other Items, we need to disconnect
   // them too.
   std::set<Item*> siblings; // list of Items used together with "child"
-  
+
   // loop over child parent's pairs (mf,parent) to disconnect from them
   Item::MembFuncList::iterator p_mf;
   Item::ParentList::iterator p = child->parents.begin();
@@ -512,10 +512,10 @@ void UpdateManagerSvc::unlink(Item *parent, Item *child){
       ++p;
       continue; // skip to next one
     }
-    
+
     // find the MF inside the parent
     p_mf = parent->find(p->second);
-    
+
     // find iterator to child in MF list ...
     Item::ItemList *mfInternalList = p_mf->items;
     Item::ItemList::iterator entry = std::find(mfInternalList->begin(),
@@ -523,20 +523,20 @@ void UpdateManagerSvc::unlink(Item *parent, Item *child){
     // ... and remove it (if found)
     if ( mfInternalList->end() != entry )
       mfInternalList->erase(entry);
-    
-    // append then other Items in the MF (to unlink them too) 
+
+    // append then other Items in the MF (to unlink them too)
     siblings.insert(mfInternalList->begin(),mfInternalList->end());
-    
+
     // remove the parent pair from child
     p = child->parents.erase(p);
   }
-  
+
   // unlink the siblings
   std::set<Item*>::iterator s;
   for ( s = siblings.begin(); s != siblings.end(); ++s ) {
     unlink(parent,*s);
   }
-  
+
   // Check in the parent if there are MF without children: they have to be
   // removed.
   p_mf = parent->memFuncs.begin();
@@ -544,17 +544,17 @@ void UpdateManagerSvc::unlink(Item *parent, Item *child){
     if ( p_mf->items->empty() ) p_mf = parent->memFuncs.erase(p_mf);
     else ++p_mf;
   }
-  
+
   // remove child from parent's list of all childs
   parent->children.erase(childIt);
-  
+
   // check if the child should be part of the head now
   if ( child->isHead() ) {
     m_head_items.push_back(child);
   }
 
   // Note: I do not need to touch the validity because the it can only increase
-  
+
 }
 
 void UpdateManagerSvc::i_unregister(void *instance){
@@ -572,10 +572,10 @@ void UpdateManagerSvc::i_unregister(void *instance){
     MsgStream log(msgSvc(),name());
     log << MSG::DEBUG << "Unregister object at " << instance << endmsg;
   }
-  
-  Item *item = findItem(instance);  
+
+  Item *item = findItem(instance);
   if (item){
-    
+
     // unlink from parents
     Item::ParentList::iterator p = item->parents.begin();
     while ( p != item->parents.end() ) {
@@ -589,11 +589,11 @@ void UpdateManagerSvc::i_unregister(void *instance){
       unlink(item,(*c));
       c = item->children.begin();
     }
-    
-    // update the lists of Items 
+
+    // update the lists of Items
     if ( item->isHead() ) removeFromHead(item);
     m_all_items.erase(std::find(m_all_items.begin(),m_all_items.end(),item));
-    
+
     // finally we can delete the Item
     delete item;
   }
@@ -603,7 +603,7 @@ void UpdateManagerSvc::dump(){
   if ( FSMState() < Gaudi::StateMachine::INITIALIZED ){
     throw GaudiException("Service offline","UpdateManagerSvc::dump",StatusCode::FAILURE);
   }
-  
+
   MsgStream log(msgSvc(),name());
 
   std::auto_ptr<std::ofstream> dia_file;
@@ -611,7 +611,7 @@ void UpdateManagerSvc::dump(){
   if ( ! m_diaDumpFile.empty() ){
     dia_file.reset(new std::ofstream(m_diaDumpFile.c_str()));
   }
-  
+
   if (dia_file.get() != NULL) {
     // DIA header
     (*dia_file)
@@ -619,12 +619,12 @@ void UpdateManagerSvc::dump(){
       << "<dia:diagram xmlns:dia=\"http://www.lysator.liu.se/~alla/dia/\">"
       << "<dia:layer name=\"Background\" visible=\"true\">";
   }
-  
+
   log << MSG::DEBUG << "--- Dump" << endmsg;
   log << MSG::DEBUG << "    " << m_all_items.size() << " items registered" << endmsg;
   log << MSG::DEBUG << "     of which " << m_head_items.size() << " in the head" << endmsg;
   log << MSG::DEBUG << "         head IOV = " << m_head_since << " - " << m_head_until << endmsg;
-  
+
   size_t cnt = 0, head_cnt = 0;
   for (Item::ItemList::iterator i = m_all_items.begin(); i != m_all_items.end(); ++i){
     log << MSG::DEBUG << "--item " << cnt++ << " " << std::hex << *i << std::dec;
@@ -644,7 +644,7 @@ void UpdateManagerSvc::dump(){
         << "(" << std::dec << cnt-1 << ") " << std::hex << *i << "\n"
         << "(" << (*i)->ptr << ")";
     }
-    
+
     log << MSG::DEBUG << "       ptr  = " << std::hex << (*i)->ptr << std::dec << endmsg;
     if ( !(*i)->path.empty() ) {
       log << MSG::DEBUG << "       path = " << (*i)->path << endmsg;
@@ -707,16 +707,16 @@ void UpdateManagerSvc::purge() {
   }
 
   MsgStream log(msgSvc(),name());
-  
+
   log << MSG::INFO << "Purging dependencies network" << endmsg;
-  
+
   // first I make a copy of the list of objects
   //Item::ItemList items_copy(m_all_items);
   //Item::ItemList items_copy(m_head_items);
   // Start from a clean IOV (I cannot use m_head_X because the head is not stable and they may change)
   //Gaudi::Time head_copy_since(Gaudi::Time::epoch());
   //Gaudi::Time head_copy_until(Gaudi::Time::max());
-  
+
   Item::ItemList::iterator it = m_all_items.begin();
   for (it = m_all_items.begin(); it != m_all_items.end() ; ++it){
     (*it)->purge(&log);
@@ -731,10 +731,10 @@ void UpdateManagerSvc::purge() {
       }
     }
   }
-  
+
   m_head_since = 1;
   m_head_until = 0;
-  
+
 }
 
 //=========================================================================

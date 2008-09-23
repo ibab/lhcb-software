@@ -1,17 +1,17 @@
-// $Id: UpdateManagerSvc_Item.icpp,v 1.8 2007-08-02 17:04:37 marcocle Exp $
+// $Id: UpdateManagerSvc_Item.icpp,v 1.9 2008-09-23 12:28:32 marcocle Exp $
 #ifndef UPDATEMANAGERSVC_ITEM_ICPP
 #define UPDATEMANAGERSVC_ITEM_ICPP 1
 
-/// \class Item 
+/// \class Item
 /// Used internally by UpdateManagerSvc to handle the dependency network.
 /// @author Marco Clemencic
 /// @date   2005-04-26
 struct Item {
   /// Type for the list of user's pointers for the condition.
   typedef std::pair<BasePtrSetter*,void*> UserPtrType;
-  
+
   // ------ Item Cons & Dest
-  
+
   /// Constructor for an item representing an object in the data store.
   Item(const std::string &objPath, ValidDataObject *overrideObj = NULL):
     since(1),until(0),path(objPath),db_path(),
@@ -43,7 +43,7 @@ struct Item {
     }
     memFuncs.push_back(MembFunc(mf));
   }
-    
+
   /// Destructor
   ~Item();
 
@@ -123,16 +123,16 @@ struct Item {
   }
 
   void purge(MsgStream *log = NULL);
-  
+
   // ------ Item data members
 
   /// Time points delimiting the interval of validity of the item
   /// (intersection of the intervals of validity of the member functions).
   Gaudi::Time since,until;
-    
+
   /// Item parents: the (item,member_function) pairs that depend on this item
   ParentList parents;
-    
+
   /// List of all the children: the items on which this item depend (used for fast accessing).
   ItemList children;
 
@@ -151,7 +151,7 @@ struct Item {
 
   /// Flag used to prevent infinite loops when updating.
   bool updateLock;
-  
+
   /// List op setters for user's pointers.
   UserPtrList user_dest_ptrs;
 
@@ -169,7 +169,7 @@ struct Item {
     }
     return StatusCode::SUCCESS;
   }
-  
+
   inline StatusCode setPointers(DataObject  *pObj, bool force = false)
   {
     vdo = dynamic_cast<ValidDataObject*>(pObj);
@@ -180,10 +180,10 @@ struct Item {
 
   /// Main method. Used to update the object and all the used ones.
   StatusCode update(IDataProviderSvc *dp,const Gaudi::Time &when, MsgStream *log = NULL);
-  
+
   /// Tells if this item represents the given pointer.
   inline bool match(void *p) const {return p == ptr;}
-    
+
   /// Tells if this item represents object identified by the given pointer.
   inline bool match(const std::string &p, bool is_path_to_db=false) const {
     return is_path_to_db ? (p == db_path) : (p == path);
@@ -200,15 +200,15 @@ struct Item {
     }
     return memFuncs.end();
   }
-    
+
   /// Adds a (item,member_function) pair to the list of parents.
   inline void addParent(Item* parent, BaseObjectMemberFunction *parentMF) {
     parents.push_back(std::make_pair(parent,parentMF));
   }
-    
+
   /// Adds a child item to the given member function.
   /// Return a pointer to the actual member function if an equivalent one was already registered.
   BaseObjectMemberFunction * addChild(BaseObjectMemberFunction *thisMF, Item *child);
-  
+
 };
 #endif // UPDATEMANAGERSVC_ITEM_ICPP
