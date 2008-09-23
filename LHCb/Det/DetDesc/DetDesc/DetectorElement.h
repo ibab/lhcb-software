@@ -1,9 +1,9 @@
-// $Id: DetectorElement.h,v 1.36 2007-05-03 12:06:29 cattanem Exp $
+// $Id: DetectorElement.h,v 1.37 2008-09-23 12:32:15 marcocle Exp $
 #ifndef  DETDESC_DETECTORELEMENT_H
 #define  DETDESC_DETECTORELEMENT_H 1
 
 // Some pragmas to avoid warnings in VisualC
-#ifdef WIN32 
+#ifdef WIN32
   // Disable warning C4786: identifier was truncated to '255' characters
   // in the debug information
   #pragma warning ( disable : 4786 )
@@ -46,16 +46,16 @@ class IRegistry;
 class DetectorElement: public ParamValidDataObject,
                        virtual public IDetectorElement {
 
-  friend class DataObjectFactory<DetectorElement> ;  
+  friend class DataObjectFactory<DetectorElement> ;
 
 public:
   /// Type of the internal list of used conditions
   typedef std::map<std::string,SmartRef<Condition> > ConditionMap;
 
-  /// Constructors 
+  /// Constructors
   DetectorElement (const std::string& name = "NotYetDefined");
-  
-  ///  Destructor 
+
+  ///  Destructor
   virtual ~DetectorElement();
 
 public:
@@ -72,162 +72,165 @@ public:
   /// Obtain class ID
   virtual const  CLID& clID()   const  { return classID(); }
   static const   CLID& classID()       { return CLID_DetectorElement; }
-  
+
   virtual const std::string& name () const;
+
+  /// Check if the condition called 'name' is in the list of conditionrefs.
+  virtual bool hasCondition(const std::string &name) const;
 
   /// Return the SmartRef for the condition called 'name'.
   virtual SmartRef<Condition> condition(const std::string &name) const;
 
   /// Iterator to the first element of the list of conditions.
-  inline  ConditionMap::const_iterator conditionBegin() const 
+  inline  ConditionMap::const_iterator conditionBegin() const
   { return m_de_conditions.begin(); }
-  
+
   /// Iterator to the last+1 element of the list of conditions.
-  inline  ConditionMap::const_iterator conditionEnd() const 
+  inline  ConditionMap::const_iterator conditionEnd() const
   { return m_de_conditions.end(); }
 
-  /// delegation for geometry 
-  inline        IGeometryInfo* geometry(); 
+  /// delegation for geometry
+  inline        IGeometryInfo* geometry();
 
-  /// delegation for geometry  (const version) 
-  inline  const IGeometryInfo* geometry() const; 
+  /// delegation for geometry  (const version)
+  inline  const IGeometryInfo* geometry() const;
 
   /// helper member using IGeometryInfo::isInside
   bool isInside(const Gaudi::XYZPoint& globalPoint) const;
 
   const IDetectorElement* childDEWithPoint(const Gaudi::XYZPoint& globalPoint) const;
 
-  /// delegation for alignnment                
-  inline        IAlignment*    alignment(); 
+  /// delegation for alignnment
+  inline        IAlignment*    alignment();
 
-  /// delegation for alignment (const version) 
-  inline  const IAlignment*    alignment() const; 
+  /// delegation for alignment (const version)
+  inline  const IAlignment*    alignment() const;
 
-  // delegation for calibration 
-  inline        ICalibration*  calibration(); 
+  // delegation for calibration
+  inline        ICalibration*  calibration();
 
-  // delegation for calibration (const version) 
-  inline  const ICalibration*  calibration() const; 
+  // delegation for calibration (const version)
+  inline  const ICalibration*  calibration() const;
 
-  // delegation for readout 
-  inline        IReadOut*      readOut(); 
+  // delegation for readout
+  inline        IReadOut*      readOut();
 
-  // delegation for readout (const version) 
-  inline  const IReadOut*      readOut() const ; 
+  // delegation for readout (const version)
+  inline  const IReadOut*      readOut() const ;
 
-  // delegation for slow control 
-  inline        ISlowControl*  slowControl(); 
+  // delegation for slow control
+  inline        ISlowControl*  slowControl();
 
-  // delegation for slow control (const version) 
-  inline  const ISlowControl*  slowControl() const; 
+  // delegation for slow control (const version)
+  inline  const ISlowControl*  slowControl() const;
 
-  // delegation for fast control 
-  inline        IFastControl*  fastControl(); 
+  // delegation for fast control
+  inline        IFastControl*  fastControl();
 
-  // delegation for fast control (const version) 
-  inline  const IFastControl*  fastControl() const; 
+  // delegation for fast control (const version)
+  inline  const IFastControl*  fastControl() const;
 
   // another way to access: "pseudo-conversion"
   // cast to         IGeometryInfo*
-  inline operator       IGeometryInfo*(); 
+  inline operator       IGeometryInfo*();
 
-  // cast to   const IGeometryInfo* 
-  inline operator const IGeometryInfo*() const; 
+  // cast to   const IGeometryInfo*
+  inline operator const IGeometryInfo*() const;
 
-  // cast to         IAligment*     
-  inline operator       IAlignment*   (); 
+  // cast to         IAligment*
+  inline operator       IAlignment*   ();
 
-  // cast to   const IAlignment*    
-  inline operator const IAlignment*   () const; 
+  // cast to   const IAlignment*
+  inline operator const IAlignment*   () const;
 
-  // cast to         ICalibration*  
-  inline operator       ICalibration* (); 
+  // cast to         ICalibration*
+  inline operator       ICalibration* ();
 
-  // cast to   const ICalibration*  
-  inline operator const ICalibration* () const; 
+  // cast to   const ICalibration*
+  inline operator const ICalibration* () const;
 
-  // cast to         IReadOut*      
-  inline operator       IReadOut*     (); 
+  // cast to         IReadOut*
+  inline operator       IReadOut*     ();
 
-  // cast to   const IReadOut*      
-  inline operator const IReadOut*     () const; 
+  // cast to   const IReadOut*
+  inline operator const IReadOut*     () const;
 
-  // cast to         ISlowControl*  
-  inline operator       ISlowControl* (); 
+  // cast to         ISlowControl*
+  inline operator       ISlowControl* ();
 
-  // cast to   const ISlowControl*  
-  inline operator const ISlowControl* () const; 
+  // cast to   const ISlowControl*
+  inline operator const ISlowControl* () const;
 
-  // cast to         IFastControl*  
-  inline operator       IFastControl* (); 
+  // cast to         IFastControl*
+  inline operator       IFastControl* ();
 
-  // cast to   const IFastControl*  
-  inline operator const IFastControl* () const; 
+  // cast to   const IFastControl*
+  inline operator const IFastControl* () const;
 
-  // cast to         IGeometryInfo&     
+  // cast to         IGeometryInfo&
   // (potentially could throw DetectorElementException)
-  inline operator       IGeometryInfo&(); 
+  inline operator       IGeometryInfo&();
 
-  // cast to   const IGeometryInfo& 
+  // cast to   const IGeometryInfo&
   // (potentially could throw DetectorElementException)
-  inline operator const IGeometryInfo&() const; 
+  inline operator const IGeometryInfo&() const;
 
-  // cast to         IAlignment&    
+  // cast to         IAlignment&
   // (potentially could throw DetectorElementException)
-  inline operator       IAlignment&   (); 
+  inline operator       IAlignment&   ();
 
-  // cast to   const IAlignment&    
+  // cast to   const IAlignment&
   // (potentially could throw DetectorElementException)
-  inline operator const IAlignment&   () const; 
+  inline operator const IAlignment&   () const;
 
-  // cast to         ICalibration&  
+  // cast to         ICalibration&
   // (potentially could throw DetectorElementException)
-  inline operator       ICalibration& ()                ; 
+  inline operator       ICalibration& ()                ;
 
-  // cast to   const ICalibration&  
+  // cast to   const ICalibration&
   // (potentially could throw DetectorElementException)
-  inline operator const ICalibration& ()          const ; 
+  inline operator const ICalibration& ()          const ;
 
-  // cast to         IReadOut&      
+  // cast to         IReadOut&
   // (potentially could throw DetectorElementException)
-  inline operator       IReadOut&     ()                ; 
+  inline operator       IReadOut&     ()                ;
 
-  // cast to   const IReadOut&      
+  // cast to   const IReadOut&
   // (potentially could throw DetectorElementException)
-  inline operator const IReadOut&     ()          const ; 
+  inline operator const IReadOut&     ()          const ;
 
-  // cast to         ISlowControl&  
+  // cast to         ISlowControl&
   // (potentially could throw DetectorElementException)
-  inline operator       ISlowControl& ()                ; 
+  inline operator       ISlowControl& ()                ;
 
-  // cast to   const ISlowControl&  
+  // cast to   const ISlowControl&
   // (potentially could throw DetectorElementException)
-  inline operator const ISlowControl& ()          const ; 
+  inline operator const ISlowControl& ()          const ;
 
-  // cast to         IFastControl&  
+  // cast to         IFastControl&
   // (potentially could throw DetectorElementException)
-  inline operator       IFastControl& ()                ; 
+  inline operator       IFastControl& ()                ;
 
-  // cast to   const IFastControl&  
+  // cast to   const IFastControl&
   // (potentially could throw DetectorElementException)
-  inline operator const IFastControl& ()          const ; 
+  inline operator const IFastControl& ()          const ;
 
   //  printout (overloaded)
   // (potentially could throw DetectorElementException)
-  virtual std::ostream& printOut( std::ostream& ) const;  
+  virtual std::ostream& printOut( std::ostream& ) const;
 
   /// reset to the initial state
-  IDetectorElement* reset() ;    
+  IDetectorElement* reset() ;
 
-  virtual MsgStream&    printOut( MsgStream&    ) const;  
+  virtual MsgStream&    printOut( MsgStream&    ) const;
 
   // pointer to parent IDetectorElement (const version)
   virtual IDetectorElement*  parentIDetectorElement() const;
 
-  // (reference to) container of pointers to child detector elements 
+  // (reference to) container of pointers to child detector elements
   virtual IDetectorElement::IDEContainer& childIDetectorElements() const;
 
-  // iterators for manipulation of daughter elements 
+  // iterators for manipulation of daughter elements
   inline virtual IDetectorElement::IDEContainer::iterator childBegin() {
     return childIDetectorElements().begin();
   }
@@ -245,7 +248,7 @@ public:
   virtual const ParamValidDataObject *params() const;
 
   /**
-   * Return a sensitive volume identifier for a given point in the 
+   * Return a sensitive volume identifier for a given point in the
    * global reference frame.
    */
 
@@ -260,8 +263,8 @@ public:
   //-----------------------------------------------------------------------
 
   ///
-  /// specific   
-  // create "ghost" 
+  /// specific
+  // create "ghost"
   const IGeometryInfo* createGeometryInfo();
 
   // create "orphan"
@@ -269,23 +272,23 @@ public:
 
   // create "regular"
   const IGeometryInfo* createGeometryInfo
-         (const std::string& logVol, 
+         (const std::string& logVol,
           const std::string& support,
           const ILVolume::ReplicaPath & replicaPath );
 
   const IGeometryInfo* createGeometryInfo
-         (const std::string& logVol, 
+         (const std::string& logVol,
           const std::string& support,
           const ILVolume::ReplicaPath & replicaPath,
           const std::string& alignmentPath);
 
   const IGeometryInfo* createGeometryInfo
-         (const std::string& logVol, 
+         (const std::string& logVol,
           const std::string& support,
           const std::string& namePath);
 
   const IGeometryInfo* createGeometryInfo
-         (const std::string& logVol, 
+         (const std::string& logVol,
           const std::string& support,
           const std::string& namePath,
           const std::string& alignmentPath);
@@ -309,29 +312,29 @@ public:
                                      void** ppvInterface );
 
 protected:
-  
-  /// specific 
+
+  /// specific
   void setGeometry( IGeometryInfo* geoInfo ) { m_de_iGeometry = geoInfo; }
-  
+
   IDataProviderSvc*  dataSvc () const;
   IMessageSvc*       msgSvc  () const;
   IUpdateManagerSvc* updMgrSvc() const;
-  
-  // technicalities 
-  
-  inline void Assert 
-  ( bool assertion, const std::string& message = 
+
+  // technicalities
+
+  inline void Assert
+  ( bool assertion, const std::string& message =
     "DetectorElement Unknown Exception" ) const ;
-  
-  inline void Assert 
+
+  inline void Assert
   ( bool assertion, const char* message ) const ;
-  
+
 private:
 
-  // for IDetectorElement implementation 
+  // for IDetectorElement implementation
   IGeometryInfo*         m_de_iGeometry     ;
   IAlignment*            m_de_iAlignment    ;
-  ICalibration*          m_de_iCalibration  ;   
+  ICalibration*          m_de_iCalibration  ;
   IReadOut*              m_de_iReadOut      ;
   ISlowControl*          m_de_iSlowControl  ;
   IFastControl*          m_de_iFastControl  ;
@@ -340,7 +343,7 @@ private:
   ConditionMap m_de_conditions;
 
   mutable bool                              m_de_childrensLoaded;
-  mutable IDetectorElement::IDEContainer    m_de_childrens; 
+  mutable IDetectorElement::IDEContainer    m_de_childrens;
 
   /// This defines the type of a userParameter
   enum userParamKind { DOUBLE, INT, OTHER };
@@ -353,5 +356,5 @@ private:
 // implementation of the inlines functions
 #include "DetDesc/DetectorElement.icpp"
 
-#endif    //    DETDESC_DETECTORELEMENT_H 
+#endif    //    DETDESC_DETECTORELEMENT_H
 

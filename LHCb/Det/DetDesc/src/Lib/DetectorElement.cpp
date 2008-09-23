@@ -1,4 +1,4 @@
-// $Id: DetectorElement.cpp,v 1.37 2006-10-19 08:24:40 cattanem Exp $
+// $Id: DetectorElement.cpp,v 1.38 2008-09-23 12:32:15 marcocle Exp $
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/IDataManagerSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -22,7 +22,7 @@
 #include "DetDesc/FastControlInfo.h"
 
 /** @file DetectorElement.cpp
- *  
+ *
  * Implementation of class DetectorElement
  *
  * @author Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -31,12 +31,12 @@
  */
 DetectorElement::DetectorElement( const std::string&   /* name */ )
   : ParamValidDataObject           (         )
-  , m_de_iGeometry       (    0    ) 
-  , m_de_iAlignment      (    0    ) 
-  , m_de_iCalibration    (    0    )   
-  , m_de_iReadOut        (    0    ) 
-  , m_de_iSlowControl    (    0    ) 
-  , m_de_iFastControl    (    0    ) 
+  , m_de_iGeometry       (    0    )
+  , m_de_iAlignment      (    0    )
+  , m_de_iCalibration    (    0    )
+  , m_de_iReadOut        (    0    )
+  , m_de_iSlowControl    (    0    )
+  , m_de_iFastControl    (    0    )
   , m_de_childrensLoaded (  false  )
   , m_de_childrens       (         )
   , m_services           (    0    )
@@ -47,22 +47,22 @@ DetectorElement::DetectorElement( const std::string&   /* name */ )
 DetectorElement::~DetectorElement()
 {
   // release geometry
-  if ( 0 != m_de_iGeometry ) 
-    { delete m_de_iGeometry     ;  m_de_iGeometry     = 0 ; } 
+  if ( 0 != m_de_iGeometry )
+    { delete m_de_iGeometry     ;  m_de_iGeometry     = 0 ; }
   // release alignment
-  if ( 0 != m_de_iAlignment ) 
-    { delete m_de_iAlignment; m_de_iAlignment = 0; } 
+  if ( 0 != m_de_iAlignment )
+    { delete m_de_iAlignment; m_de_iAlignment = 0; }
   // release calibration
-  if ( 0 != m_de_iCalibration ) 
-    { delete m_de_iCalibration; m_de_iCalibration = 0; }   
+  if ( 0 != m_de_iCalibration )
+    { delete m_de_iCalibration; m_de_iCalibration = 0; }
   // release readout
-  if ( 0 != m_de_iReadOut ) 
-    { delete m_de_iReadOut; m_de_iReadOut = 0; } 
+  if ( 0 != m_de_iReadOut )
+    { delete m_de_iReadOut; m_de_iReadOut = 0; }
   // release slowcontrol
-  if ( 0 != m_de_iSlowControl ) 
-    { delete m_de_iSlowControl; m_de_iSlowControl = 0; } 
+  if ( 0 != m_de_iSlowControl )
+    { delete m_de_iSlowControl; m_de_iSlowControl = 0; }
   // release fastcontrol
-  if ( 0 != m_de_iFastControl ) 
+  if ( 0 != m_de_iFastControl )
     { delete m_de_iFastControl; m_de_iFastControl = 0; }
 
   // release services
@@ -71,11 +71,11 @@ DetectorElement::~DetectorElement()
 
 IDataProviderSvc* DetectorElement::dataSvc() const {
   return m_services->detSvc();
-} 
+}
 
 IMessageSvc* DetectorElement::msgSvc() const {
   return m_services->msgSvc();
-} 
+}
 
 IUpdateManagerSvc* DetectorElement::updMgrSvc() const {
   return m_services->updMgrSvc();
@@ -85,12 +85,12 @@ IDetectorElement*  DetectorElement::parentIDetectorElement() const {
   IDataManagerSvc* mgr = 0;
   StatusCode sc = dataSvc()->queryInterface(IID_IDataManagerSvc,(void**)&mgr);
   if ( sc.isSuccess() ) {
-    IRegistry* pRegParent = 0;      
+    IRegistry* pRegParent = 0;
     sc = mgr->objectParent(this, pRegParent);
     mgr->release();
     if ( sc.isSuccess() && 0 != pRegParent ) {
       return dynamic_cast<IDetectorElement*>(pRegParent->object());
-    } 
+    }
   }
   return 0;
 };
@@ -103,7 +103,7 @@ unsigned long DetectorElement::release () {
   return ParamValidDataObject::release();
 }
 
-StatusCode 
+StatusCode
 DetectorElement::queryInterface( const InterfaceID& ID , void** ppI )
 {
   if (0 == ppI) {
@@ -117,42 +117,53 @@ DetectorElement::queryInterface( const InterfaceID& ID , void** ppI )
   } else {
     return StatusCode::FAILURE;
   }
-  /// add the reference 
+  /// add the reference
   addRef();
   ///
   return StatusCode::SUCCESS;
 };
 
 std::ostream& DetectorElement::printOut( std::ostream& os ) const
-{ 
-  os << "DetectorElement::"  << name(); 
-  return ( 0 == geometry() ? os : (os << "GeometryInfo::" << geometry()) ); 
+{
+  os << "DetectorElement::"  << name();
+  return ( 0 == geometry() ? os : (os << "GeometryInfo::" << geometry()) );
 };
 
 MsgStream& DetectorElement::printOut( MsgStream& os ) const
-{ 
-  os << "DetectorElement::"  << name(); 
+{
+  os << "DetectorElement::"  << name();
   return ( 0 == geometry() ? os : (os << "GeometryInfo::" << geometry() ) );
 };
 /// reset to the initial state/////
-IDetectorElement* DetectorElement::reset() 
+IDetectorElement* DetectorElement::reset()
 {
   /// reset geometry
-  if( 0 != geometry() ) { geometry()->reset() ;} 
-  if( m_de_childrensLoaded ) 
-    { std::for_each( childBegin() , childEnd() , 
-                     std::mem_fun(&IDetectorElement::reset) );} 
-  m_de_childrensLoaded = false ; 
-  m_de_childrens.clear()       ; 
-  return this;  
+  if( 0 != geometry() ) { geometry()->reset() ;}
+  if( m_de_childrensLoaded )
+    { std::for_each( childBegin() , childEnd() ,
+                     std::mem_fun(&IDetectorElement::reset) );}
+  m_de_childrensLoaded = false ;
+  m_de_childrens.clear()       ;
+  return this;
 };
 
 // ----------------------------------------------------------------------
+bool DetectorElement::hasCondition(const std::string &name) const {
+  return m_de_conditions.find(name) != m_de_conditions.end();
+}
+
 SmartRef<Condition> DetectorElement::condition(const std::string &name) const {
   ConditionMap::const_iterator cond = m_de_conditions.find(name);
   if ( cond != m_de_conditions.end() ) {
     return cond->second;
   }
+  else {
+    std::ostringstream oss;
+    oss << "Requested unknown condition '" << name << "' to '" << this->name() << "'";
+    throw DetectorElementException(oss.str(), this,
+        StatusCode(StatusCode::FAILURE,true));
+  }
+  // this line is never reached, but it (usually) avoids warnings.
   return SmartRef<Condition>();
 }
 
@@ -178,7 +189,7 @@ std::vector<std::string> DetectorElement::conditionNames() const {
 // ----------------------------------------------------------------------
 
 /////
-const IGeometryInfo* 
+const IGeometryInfo*
 DetectorElement::createGeometryInfo()
 {
   Assert( 0 == geometry() ,
@@ -187,7 +198,7 @@ DetectorElement::createGeometryInfo()
   return geometry();
 };
 /////
-const IGeometryInfo* 
+const IGeometryInfo*
 DetectorElement::createGeometryInfo( const std::string& LogVol )
 {
   Assert( 0 == geometry() ,
@@ -196,61 +207,61 @@ DetectorElement::createGeometryInfo( const std::string& LogVol )
   return geometry();
 };
 /////
-const IGeometryInfo* 
-DetectorElement::createGeometryInfo( const std::string& LogVol   , 
+const IGeometryInfo*
+DetectorElement::createGeometryInfo( const std::string& LogVol   ,
                                      const std::string& Support  ,
                                      const std::string& NamePath )
 {
-  Assert( 0 == geometry() , 
+  Assert( 0 == geometry() ,
           "Could not create REGULAR(1): Geometry already exist!" );
-  m_de_iGeometry = GeoInfo::createGeometryInfo( this     , 
-                                                LogVol   , 
-                                                Support  , 
+  m_de_iGeometry = GeoInfo::createGeometryInfo( this     ,
+                                                LogVol   ,
+                                                Support  ,
                                                 NamePath );
   return geometry();
 };
 /////
 const IGeometryInfo*
-DetectorElement::createGeometryInfo( const std::string& LogVol   , 
+DetectorElement::createGeometryInfo( const std::string& LogVol   ,
                                      const std::string& Support  ,
                                      const std::string& NamePath,
                                      const std::string& alignmentPath)
 {
-  Assert( 0 == geometry() , 
+  Assert( 0 == geometry() ,
           "Could not create REGULAR(1): Geometry already exist!" );
-  m_de_iGeometry = GeoInfo::createGeometryInfo( this     , 
-                                                LogVol   , 
-                                                Support  , 
+  m_de_iGeometry = GeoInfo::createGeometryInfo( this     ,
+                                                LogVol   ,
+                                                Support  ,
                                                 NamePath ,
                                                 alignmentPath);
   return geometry();
 };
 //
-const IGeometryInfo* 
-DetectorElement::createGeometryInfo( const std::string           & LogVol   , 
+const IGeometryInfo*
+DetectorElement::createGeometryInfo( const std::string           & LogVol   ,
                                      const std::string           & Support  ,
-                                     const ILVolume::ReplicaPath & rPath    ) 
+                                     const ILVolume::ReplicaPath & rPath    )
 {
-  Assert( 0 == geometry() , 
+  Assert( 0 == geometry() ,
           "Could not create REGULAR(2): Geometry already exist!" );
-  m_de_iGeometry = GeoInfo::createGeometryInfo( this    , 
-                                                LogVol  , 
-                                                Support , 
+  m_de_iGeometry = GeoInfo::createGeometryInfo( this    ,
+                                                LogVol  ,
+                                                Support ,
                                                 rPath   );
   return geometry();
 };
 //=============================================================================
-const IGeometryInfo* 
-DetectorElement::createGeometryInfo( const std::string           & LogVol   , 
+const IGeometryInfo*
+DetectorElement::createGeometryInfo( const std::string           & LogVol   ,
                                      const std::string           & Support  ,
                                      const ILVolume::ReplicaPath & rPath,
-                                     const std::string& alignmentPath) 
+                                     const std::string& alignmentPath)
 {
-  Assert( 0 == geometry() , 
+  Assert( 0 == geometry() ,
           "Could not create REGULAR(2): Geometry already exist!" );
-  m_de_iGeometry = GeoInfo::createGeometryInfo( this    , 
-                                                LogVol  , 
-                                                Support , 
+  m_de_iGeometry = GeoInfo::createGeometryInfo( this    ,
+                                                LogVol  ,
+                                                Support ,
                                                 rPath   ,
                                                 alignmentPath);
   return geometry();
@@ -313,9 +324,9 @@ StatusCode DetectorElement::initialize() {
 /// (reference to) container of pointers to child detector elements ///////////
 IDetectorElement::IDEContainer&
 DetectorElement::childIDetectorElements() const {
-  /// already loaded? 
-  if( m_de_childrensLoaded ) { return m_de_childrens; } 
-  /// load them! 
+  /// already loaded?
+  if( m_de_childrensLoaded ) { return m_de_childrens; }
+  /// load them!
   IDataManagerSvc* mgr = 0;
   StatusCode sc = dataSvc()->queryInterface(IID_IDataManagerSvc,(void**)&mgr);
   if ( sc.isSuccess() ) {
@@ -331,7 +342,7 @@ DetectorElement::childIDetectorElements() const {
         Assert (0 != ide , "Could not load child object="+nam );
         m_de_childrens.push_back( ide  );
       }
-      m_de_childrensLoaded = true; 
+      m_de_childrensLoaded = true;
     }
     mgr->release();
   }
@@ -342,7 +353,7 @@ const ParamValidDataObject *DetectorElement::params() const {
   return this;
 }
 /// sensitive volume identifier ///////////////////////////////////////////////
-const int DetectorElement::sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const 
+const int DetectorElement::sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const
 {
   if (!isInside(globalPoint)) return -1;
   const IDetectorElement* child = childDEWithPoint(globalPoint);
@@ -351,11 +362,11 @@ const int DetectorElement::sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint)
 
 bool DetectorElement::isInside(const Gaudi::XYZPoint& globalPoint) const {
   const IGeometryInfo* gi = geometry();
-  return (0!=gi) ? gi->isInside(globalPoint) : false; 
+  return (0!=gi) ? gi->isInside(globalPoint) : false;
   //  return (geometry()) ? geometry()->isInside(globalPoint) : false;
 };
 
-const IDetectorElement* DetectorElement::childDEWithPoint(const Gaudi::XYZPoint& globalPoint) const 
+const IDetectorElement* DetectorElement::childDEWithPoint(const Gaudi::XYZPoint& globalPoint) const
 {
   IDetectorElement::IDEContainer::const_iterator iDE = childBegin();
   for (; iDE!=childEnd(); ++iDE) {
@@ -371,5 +382,5 @@ const std::string& DetectorElement::name () const {
   return (0!=pReg) ? pReg->identifier() : s_empty;
 };
 // ============================================================================
-// End 
+// End
 // ============================================================================

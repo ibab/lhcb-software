@@ -1,9 +1,15 @@
 ! =============================================================================
-! $Id: release.notes,v 1.376 2008-07-27 12:43:31 cattanem Exp $ 
+! $Id: release.notes,v 1.377 2008-09-23 12:32:15 marcocle Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2008-09-23 - Marco Clemencic
+ - Extended IDetectorElement with the function hasCondition(name) to check if
+   the conditionref with the specified name is defined in the XML.
+ - Modified the behavior of IDetectorElement::condition() to throw an exception
+   if the requested condition is not known.
 
 !====================== DetDesc v18r7 2008-07-27 ==============================
 ! 2008-07-21 - Marco Cattaneo
