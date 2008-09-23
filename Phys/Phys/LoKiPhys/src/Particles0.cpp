@@ -1,4 +1,4 @@
-// $Id: Particles0.cpp,v 1.15 2008-09-21 17:15:38 ibelyaev Exp $
+// $Id: Particles0.cpp,v 1.16 2008-09-23 16:10:44 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -1073,6 +1073,25 @@ LoKi::Particles::DeltaMeasuredMassChi2::clone() const
 // ============================================================================
 std::ostream& 
 LoKi::Particles::DeltaMeasuredMassChi2::fillStream( std::ostream& s ) const 
+{ return s << "CHI2MM("  << m0() <<  ")" ; }
+// ============================================================================
+LoKi::Particles::DeltaMassChi2::result_type 
+LoKi::Particles::DeltaMassChi2::operator() 
+  ( LoKi::Particles::DeltaMassChi2::argument p ) const 
+{
+  if ( 0 == p              )
+  {
+    Error(" Invalid Particle, return 'InvalidChi2'");
+    return LoKi::Constants::InvalidChi2 ;                       // RETURN
+  }
+  return LoKi::Kinematics::chi2mass 
+    ( m0() , p->momentum() , p->momCovMatrix() ) ;                                   
+}
+// ============================================================================
+// specific printout 
+// ============================================================================
+std::ostream& 
+LoKi::Particles::DeltaMassChi2::fillStream( std::ostream& s ) const 
 { return s << "CHI2M("  << m0() <<  ")" ; }
 // ============================================================================
 LoKi::Particles::ConfidenceLevel* 
@@ -1314,6 +1333,28 @@ LoKi::Particles::TransverseMomentumQ::fillStream( std::ostream& s ) const
   return s << "QPT(" << m_index << ")" ;
 }
 // ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================ 
+LoKi::Particles::NominalMass::result_type 
+LoKi::Particles::NominalMass::operator() 
+  ( LoKi::Particles::NominalMass::argument p ) const 
+{
+  if ( 0 == p ) 
+  {
+    Error("Invalid argument, return 'Invalid Mass'") ;
+    return LoKi::Constants::InvalidMass ;
+  }
+  //
+  const ParticleProperty* pp =
+    LoKi::Particles::_ppFromPID ( p -> particleID() ) ;
+  //
+  if ( 0 == pp ) 
+  {
+    Error("Invalid particleID , return 'Invalid Mass'") ;
+    return LoKi::Constants::InvalidMass ;
+  }
+  return pp->mass() ;  
+}
 
 
 // ============================================================================

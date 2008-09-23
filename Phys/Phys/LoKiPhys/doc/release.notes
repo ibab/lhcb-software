@@ -1,9 +1,23 @@
-! $Id: release.notes,v 1.70 2008-09-21 17:15:37 ibelyaev Exp $ 
+! $Id: release.notes,v 1.71 2008-09-23 16:10:44 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2008-09-23 - Vanay BELYAEV
+
+ - new functors:
+
+     NMASS       LoKi::Particles::NominalMass          : get Nominal/PDG mass 
+     DPDGM       LoKi::Particles::DeltaNominalMass     : get (mass-nominal_mass) 
+     DPDGMASS    LoKi::Particles::DeltaNominalMass     : get (mass-nominal_mass)
+     ADPDGM      LoKi::Particles::AbsDeltaNominalMass  : get |mass-nominal_mass| 
+     ADPDGMASS   LoKi::Particles::AbsDeltaNominalMass  : get |mass-nominal_mass|
+     CHI2PDGM    LoKi::Particles::DeltaNominalMassChi2 : get chi2(mass-nominal_mass)
+     CHI2PDGMASS LoKi::Particles::DeltaNominalMassChi2 : get chi2(mass-nominal_mass)
+
+  
 
 ! 2008-09-21 - Vanya BELYAEV
 

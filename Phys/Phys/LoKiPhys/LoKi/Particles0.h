@@ -1,4 +1,4 @@
-// $Id: Particles0.h,v 1.14 2008-09-21 17:15:37 ibelyaev Exp $
+// $Id: Particles0.h,v 1.15 2008-09-23 16:10:44 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES0_H 
 #define LOKI_PARTICLES0_H 1
@@ -29,6 +29,7 @@ class  ParticleProperty    ;
 // ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   /** @namespace LoKi::Particles 
    *  collection of Particle-related functions and classes 
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -800,8 +801,8 @@ namespace LoKi
     /** @class DeltaMeasuredMassChi2 
      *  evaluator of delta meadured mass in chi2 units 
      *
-     *  @see LoKi::Cuts::CHI2M
-     *  @see LoKi::Cuts::CHI2MASS
+     *  @see LoKi::Cuts::CHI2MM
+     *  @see LoKi::Cuts::CHI2MMASS
      *
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2003-01-17
@@ -864,6 +865,72 @@ namespace LoKi
       DeltaMeasuredMassChi2();
     private:
       LoKi::Particles::DeltaMeasuredMass  m_eval;
+    };
+    // ========================================================================    
+    /** @class DeltaMassChi2 
+     *  evaluator of delta mass in chi2 units 
+     *
+     *  @see LoKi::Cuts::CHI2M
+     *  @see LoKi::Cuts::CHI2MASS
+     *
+     *  @author Vanya Belyaev Ivan.Belyav@nikhef.nl
+     *  @date   2008-09-23
+     */
+    class DeltaMassChi2 : public DeltaMass 
+    {      
+    public:
+      /// constructor  
+      DeltaMassChi2 
+      ( const double           mass   ) : DeltaMass ( mass ) {}
+      /** constructor 
+       *  @param pp particle property 
+       */
+      DeltaMassChi2 
+      ( const ParticleProperty& pp    ) : DeltaMass ( pp ) {}
+      /** constructor 
+       *  @param name particle name 
+       *  @param ppsvc ParticleProperty service 
+       */
+      DeltaMassChi2 
+      ( const std::string&      name   , 
+        IParticlePropertySvc*   ppsvc  ) 
+        : DeltaMass ( name , ppsvc ) {}
+      /** constructor 
+       *  @param pid  particle ID 
+       *  @param ppsvc ParticleProperty service 
+       */
+      DeltaMassChi2 
+      ( const LHCb::ParticleID& pid    , 
+        IParticlePropertySvc*   ppsvc  ) 
+        : DeltaMass ( pid , ppsvc ) {}
+      /** constructor 
+       *  @param name particle name 
+       */
+      DeltaMassChi2 
+      ( const std::string&      name   ) 
+        : DeltaMass ( name ) {}
+      /** constructor 
+       *  @param pid  particle ID 
+       */
+      DeltaMassChi2 
+      ( const LHCb::ParticleID& pid    ) 
+        : DeltaMass ( pid ) {}
+      /// constructor 
+      DeltaMassChi2 ( const DeltaMass& pid    ) 
+        : DeltaMass ( pid ) {}
+      /// virtual destructor 
+      ~DeltaMassChi2(){};
+      /// clone method (mandatory!)
+      virtual DeltaMassChi2* clone() const 
+      { return new DeltaMassChi2(*this) ; }
+      /// the only one essential method 
+      result_type operator() ( argument p ) const ;
+      /// specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      /// default constructor 
+      DeltaMassChi2();
     };
     // ========================================================================    
     /** @class ConfidenceLevel
@@ -1118,6 +1185,30 @@ namespace LoKi
       const unsigned int m_index ; // the index pof daughter particle
       // ======================================================================
     } ;
+    // ========================================================================
+    /** @class NominalMass 
+     *  trivial evaluato to return the nominal mass of the particle
+     *  @see LoKi::Cuts::NMASS 
+     *  @see LoKi::Cuts::PDGMASS 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-09-23
+     */
+    class NominalMass 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
+    {
+    public:
+      // ======================================================================
+      /// MANDATORY: virtual destructor 
+      virtual ~NominalMass() {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  NominalMass* clone() const { return new NominalMass ( *this ) ; }
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const 
+      { return s << "NMASS" ; }
+      // ======================================================================
+    };    
     // ========================================================================
   } // end of namespace LoKi::Particles
 } // end of namespace LoKi

@@ -159,6 +159,8 @@ M3       = MASS(3)
 M34      = MASS(3,4)
 ## @see LoKi::Cuts::M4  
 M4       = MASS(4)
+## @see LoKi::Cuts::NMASS
+NMASS    = LoKi.Particles.NominalMass ()
 ## @see LoKi::Cuts::DMASS 
 DMASS    = LoKi.Particles.DeltaMass         
 ## @see LoKi::Cuts::ADMASS 
@@ -168,9 +170,13 @@ DMMASS   = LoKi.Particles.DeltaMeasuredMass
 ## @see LoKi::Cuts::ADMMASS 
 ADMMASS  = LoKi.Particles.AbsDeltaMeasuredMass         
 ## @see LoKi::Cuts::CHI2M
-CHI2M    = LoKi.Particles.DeltaMeasuredMassChi2
+CHI2M    = LoKi.Particles.DeltaMassChi2
 ## @see LoKi::Cuts::CHI2MASS
 CHI2MASS = CHI2M
+## @see LoKi::Cuts::CHI2MM
+CHI2MM    = LoKi.Particles.DeltaMeasuredMassChi2
+## @see LoKi::Cuts::CHI2MMASS
+CHI2MMASS = CHI2MM
 ## @see LoKi::Cuts::CL  
 CL       = LoKi.Particles.ConfidenceLevel  () 
 ## @see LoKi::Cuts::WEIGHT
@@ -297,6 +303,8 @@ ISINTREE = LoKi.Particles.IsAParticleInTree
 FROMTREE = LoKi.Particles.IsAParticleInTree 
 ## @see LoKi::Cuts::FROM
 FROM     = FROMTREE
+## @see LoKi::Cuts::PDGMASS
+PDGMASS  = LoKi.Particles.NominalMass ()
 ## @see LoKi::Cuts::PPHASINFO
 PPHASINFO= LoKi.Particles.ProtoHasInfo
 ## @see LoKi::Cuts::PPINFO
@@ -577,6 +585,15 @@ BPVVDZ                = LoKi.Particles.VertexZDistanceWithTheBestPV   ()
 BPVVDRHO              = LoKi.Particles.VertexRhoDistanceWithTheBestPV ()
 ## @see LoKi::Cuts::BPVVDR
 BPVVDR                = LoKi.Particles.VertexRhoDistanceWithTheBestPV ()
+
+
+ADPDGM       = LoKi.Particles.AbsDeltaNominalMass  ()
+ADPDGMASS    = LoKi.Particles.AbsDeltaNominalMass  ()
+DPDGM        = LoKi.Particles.DeltaNominalMass     ()
+DPDGMASS     = LoKi.Particles.DeltaNominalMass     ()
+CHI2PDGM     = LoKi.Particles.DeltaNominalMassChi2 ()
+CHI2PDGMASS  = LoKi.Particles.DeltaNominalMassChi2 ()
+
 
 
 # =============================================================================

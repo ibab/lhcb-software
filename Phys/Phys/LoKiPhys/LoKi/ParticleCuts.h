@@ -1,4 +1,4 @@
-// $Id: ParticleCuts.h,v 1.27 2008-09-21 17:15:37 ibelyaev Exp $
+// $Id: ParticleCuts.h,v 1.28 2008-09-23 16:10:44 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSPARTICLECUTS_H 
 #define LOKI_PHYSPARTICLECUTS_H 1
@@ -218,6 +218,45 @@ namespace LoKi
      */        
     typedef LoKi::Particles::AbsDeltaMeasuredMass                     ADMMASS ;    
     // ========================================================================
+    /** @var ADPDGM 
+     *  Simple (but not very efficient)  function to evaluate the absolute 
+     *  value for the difference between the particle mass and the 
+     *  nominal(PDG) mass
+     * 
+     *  @code 
+     *
+     *   const LHCb::Particle* B = ... ;
+     *   
+     *   const adelta = ADPDGM ( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::AbsDeltaNominalMass 
+     *  @see LoKi::Cuts::ADPDGMASS 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-09-23
+     */
+    const LoKi::Particles::AbsDeltaNominalMass                         ADPDGM ;
+    // ========================================================================
+    /** @var ADPDGMASS
+     *  Simple (but not very efficient)  function to evaluate the absolute 
+     *  value for the difference between particle mass and the nominal(PDG) mass
+     * 
+     *  @code 
+     *
+     *   const LHCb::Particle* B = ... ;
+     *   
+     *   const adelta = ADPDGMASS ( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::AbsDeltaNominalMass 
+     *  @see LoKi::Cuts::ADPDGM 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-09-23
+     */
+    const LoKi::Particles::AbsDeltaNominalMass                      ADPDGMASS ;
+    // ========================================================================
     /** @var ALL
      *  the trivial functor which always evaluates to "true"
      *  
@@ -389,12 +428,13 @@ namespace LoKi
     typedef LoKi::Particles::ImpParChi2                                CHI2IP ;
     // ========================================================================
     /** @typedef CHI2M 
-     *  Delta Measured Mass in chi2 units 
+     *  Delta Mass in chi2 units, defined as chi2 value for 1-step 
+     *  mass-fit procedure
      *
      *  @code 
      *
      *     const Particle* particle = ... ; //  get the particle
-     *     Fun dmm = CHI2M ( 3.010 * GeV );
+     *     Fun dmm = CHI2M  ( 3.010 * GeV );
      *     const double  chi2  = dmm( particle ) ;
      *
      *  @endcode
@@ -410,11 +450,11 @@ namespace LoKi
      *     IParticlePropertySvc* ppsvc    = ... ; // get the service 
      *     const ParticleProperty& D0     = ... ; // get from the service 
      *
-     *     Fun dmm1 = CHI2M( "D0" , ppsvc ) ;
+     *     Fun dmm1 = CHI2M ( "D0" , ppsvc ) ;
      *     const double    chi2_1       = dmm1 ( particle ) ;
-     *     Fun dmm2 = CHI2M( 241  , ppsvc ) ;
+     *     Fun dmm2 = CHI2M ( 241  , ppsvc ) ;
      *     const double    chi2_2       = dmm2 ( particle ) ;
-     *     Fun dmm3 = CHI2M( D0 ) ;
+     *     Fun dmm3 = CHI2M ( D0 ) ;
      *     const double    chi2_3       = dmm3 ( particle ) ;
      *
      *  @endcode
@@ -425,30 +465,33 @@ namespace LoKi
      *
      *     const Particle*       particle = ... ; // get the particle
      *
-     *     Fun dmm1 = CHI2M( LHCb::ParticleID( 241 ) ) ;
+     *     Fun dmm1 = CHI2M ( LHCb::ParticleID( 241 ) ) ;
      *     const double    chi2_1       = dmm1 ( particle ) ;
-     *     Fun dmm2 = CHI2M( "D0" ) ;
+     *     Fun dmm2 = CHI2M ( "D0" ) ;
      *     const double    chi2_2       = dmm2 ( particle ) ;
      *
      *  @endcode
      *
+     *  @attention mind the difference with CHI2MM and CHI2MMASS functions!
+     * 
      *  @see Particle
-     *  @see LoKi::Particle::DeltaMeasuredMassChi2
-     *  @see LoKi::Particle::DeltaMeasuredMass
-     *  @see LoKi::Particle::MeasuredMass
-     *  @see LoKi::Function
-     *  @see LoKi::Cuts::Fun
-     *  @attention LoKi::Particles::ErrorValue returned on error 
+     *  @see LoKi::Kinematics::chi2mass 
+     *  @see LoKi::Particle::DeltaMassChi2
+     *  @see LoKi::Particle::DeltaMass
+     *  @see LoKi::Cuts::CHI2MASS
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-09-23
      */        
-    typedef LoKi::Particles::DeltaMeasuredMassChi2                      CHI2M ;
+    typedef LoKi::Particles::DeltaMassChi2                              CHI2M ;
     // ========================================================================
-    /** @typedef CHI2MASS 
-     *  Delta Measured Mass in chi2 units 
+    /** @typedef CHI2MASS
+     *  Delta Mass in chi2 units, defined as chi2 value for 1-step 
+     *  mass-fit procedure
      *
      *  @code 
      *
      *     const Particle* particle = ... ; //  get the particle
-     *     Fun dmm = CHI2MASS ( 3.010 * GeV );
+     *     Fun dmm = CHI2MASS  ( 3.010 * GeV );
      *     const double  chi2  = dmm( particle ) ;
      *
      *  @endcode
@@ -464,11 +507,11 @@ namespace LoKi
      *     IParticlePropertySvc* ppsvc    = ... ; // get the service 
      *     const ParticleProperty& D0     = ... ; // get from the service 
      *
-     *     Fun dmm1 = CHI2MASS( "D0" , ppsvc ) ;
+     *     Fun dmm1 = CHI2MASS ( "D0" , ppsvc ) ;
      *     const double    chi2_1       = dmm1 ( particle ) ;
-     *     Fun dmm2 = CHI2MASS( 241  , ppsvc ) ;
+     *     Fun dmm2 = CHI2MASS ( 241  , ppsvc ) ;
      *     const double    chi2_2       = dmm2 ( particle ) ;
-     *     Fun dmm3 = CHI2MASS( D0 ) ;
+     *     Fun dmm3 = CHI2MASS ( D0 ) ;
      *     const double    chi2_3       = dmm3 ( particle ) ;
      *
      *  @endcode
@@ -479,13 +522,71 @@ namespace LoKi
      *
      *     const Particle*       particle = ... ; // get the particle
      *
-     *     Fun dmm1 = CHI2MASS( LHCb::ParticleID( 241 ) ) ;
+     *     Fun dmm1 = CHI2MASS ( LHCb::ParticleID( 241 ) ) ;
      *     const double    chi2_1       = dmm1 ( particle ) ;
-     *     Fun dmm2 = CHI2MASS( "D0" ) ;
+     *     Fun dmm2 = CHI2MASS ( "D0" ) ;
      *     const double    chi2_2       = dmm2 ( particle ) ;
      *
      *  @endcode
      *
+     *  @attention mind the difference with CHI2MM and CHI2MMASS functions!
+     * 
+     *  @see Particle
+     *  @see LoKi::Kinematics::chi2mass 
+     *  @see LoKi::Particle::DeltaMassChi2
+     *  @see LoKi::Particle::DeltaMass
+     *  @see LoKi::Cuts::CHI2M
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-09-23
+     */        
+    typedef LoKi::Particles::DeltaMassChi2                           CHI2MASS ;
+    // ========================================================================
+    /** @typedef CHI2MM 
+     *  Delta Measured Mass in chi2 units 
+     *
+     *  @code 
+     *
+     *     const Particle* particle = ... ; //  get the particle
+     *     Fun dmm = CHI2MM ( 3.010 * GeV );
+     *     const double  chi2  = dmm( particle ) ;
+     *
+     *  @endcode
+     *
+     *  Alternatively the function object could be created
+     *  from Particle ID or particle name, in this case it requires
+     *  to be supplied with pointer to <tt>IParticlePpopertySvc</tt>
+     *  service: 
+     *
+     *  @code 
+     *
+     *     const Particle*       particle = ... ; // get the particle
+     *     IParticlePropertySvc* ppsvc    = ... ; // get the service 
+     *     const ParticleProperty& D0     = ... ; // get from the service 
+     *
+     *     Fun dmm1 = CHI2MM( "D0" , ppsvc ) ;
+     *     const double    chi2_1       = dmm1 ( particle ) ;
+     *     Fun dmm2 = CHI2MM( 241  , ppsvc ) ;
+     *     const double    chi2_2       = dmm2 ( particle ) ;
+     *     Fun dmm3 = CHI2MM( D0 ) ;
+     *     const double    chi2_3       = dmm3 ( particle ) ;
+     *
+     *  @endcode
+     *
+     *  More simple ways are also valid:
+     *
+     *  @code 
+     *
+     *     const Particle*       particle = ... ; // get the particle
+     *
+     *     Fun dmm1 = CHI2MM( LHCb::ParticleID( 241 ) ) ;
+     *     const double    chi2_1       = dmm1 ( particle ) ;
+     *     Fun dmm2 = CHI2MM( "D0" ) ;
+     *     const double    chi2_2       = dmm2 ( particle ) ;
+     *
+     *  @endcode
+     *
+     *  @attention mind the difference with CHI2M and CHI2MASS functions!
+     * 
      *  @see Particle
      *  @see LoKi::Particle::DeltaMeasuredMassChi2
      *  @see LoKi::Particle::DeltaMeasuredMass
@@ -494,7 +595,63 @@ namespace LoKi
      *  @see LoKi::Cuts::Fun
      *  @attention LoKi::Particles::ErrorValue returned on error 
      */        
-    typedef LoKi::Particles::DeltaMeasuredMassChi2                   CHI2MASS ;
+    typedef LoKi::Particles::DeltaMeasuredMassChi2                     CHI2MM ;
+    // ========================================================================
+    /** @typedef CHI2MMASS 
+     *  Delta Measured Mass in chi2 units 
+     *
+     *  @code 
+     *
+     *     const Particle* particle = ... ; //  get the particle
+     *     Fun dmm = CHI2MMASS ( 3.010 * GeV );
+     *     const double  chi2  = dmm( particle ) ;
+     *
+     *  @endcode
+     *
+     *  Alternatively the function object could be created
+     *  from Particle ID or particle name, in this case it requires
+     *  to be supplied with pointer to <tt>IParticlePpopertySvc</tt>
+     *  service: 
+     *
+     *  @code 
+     *
+     *     const Particle*       particle = ... ; // get the particle
+     *     IParticlePropertySvc* ppsvc    = ... ; // get the service 
+     *     const ParticleProperty& D0     = ... ; // get from the service 
+     *
+     *     Fun dmm1 = CHI2MMASS( "D0" , ppsvc ) ;
+     *     const double    chi2_1       = dmm1 ( particle ) ;
+     *     Fun dmm2 = CHI2MMASS( 241  , ppsvc ) ;
+     *     const double    chi2_2       = dmm2 ( particle ) ;
+     *     Fun dmm3 = CHI2MMASS( D0 ) ;
+     *     const double    chi2_3       = dmm3 ( particle ) ;
+     *
+     *  @endcode
+     *
+     *  More simple ways are also valid:
+     *
+     *  @code 
+     *
+     *     const Particle*       particle = ... ; // get the particle
+     *
+     *     Fun dmm1 = CHI2MMASS( LHCb::ParticleID( 241 ) ) ;
+     *     const double    chi2_1       = dmm1 ( particle ) ;
+     *     Fun dmm2 = CHI2MMASS( "D0" ) ;
+     *     const double    chi2_2       = dmm2 ( particle ) ;
+     *
+     *  @endcode
+     *
+     *  @attention mind the difference with CHI2M and CHI2MASS functions!
+     * 
+     *  @see Particle
+     *  @see LoKi::Particle::DeltaMeasuredMassChi2
+     *  @see LoKi::Particle::DeltaMeasuredMass
+     *  @see LoKi::Particle::MeasuredMass
+     *  @see LoKi::Function
+     *  @see LoKi::Cuts::Fun
+     *  @attention LoKi::Particles::ErrorValue returned on error 
+     */        
+    typedef LoKi::Particles::DeltaMeasuredMassChi2                  CHI2MMASS ;
     // ========================================================================
     /** @typedef CHI2MIP 
      *  Evaluation of minimal value of chi2 for the impact parameter of 
@@ -526,6 +683,47 @@ namespace LoKi
      *  @date   2002-07-15
      */
     typedef LoKi::Particles::MinImpParChi2                            CHI2MIP ;
+    // ========================================================================
+    /** @var CIH2PDGM 
+     *  Simple (but not very efficient)  function to evaluate the chi2
+     *  between the particle mass and the nominal(PDG) mass
+     *  Chi2 is evaluate ans chi2 of 1-step mass-fit procedure.
+     * 
+     *  @code 
+     *
+     *   const LHCb::Particle* B = ... ;
+     *   
+     *   const double chi2 = CHI2PDGM ( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::DeltaNominalMassChi2
+     *  @see LoKi::Cuts::CHI2PDGMASS 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-09-23
+     */
+    const LoKi::Particles::DeltaNominalMassChi2                      CHI2PDGM ;
+    // ========================================================================
+    /** @var CHI2PDGMASS
+     *  Simple (but not very efficient)  function to evaluate the 
+     *  che2 of the difference between particle mass and the nominal(PDG) 
+     *  mass.
+     *  Chi2 is evaluate ans chi2 of 1-step mass-fit procedure.
+     * 
+     *  @code 
+     *
+     *   const LHCb::Particle* B = ... ;
+     *   
+     *   const double chi2 = CHI2PDGMASS ( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::DeltaNominalMassChi2
+     *  @see LoKi::Cuts::CHI2PDGM 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-09-23
+     */
+    const LoKi::Particles::DeltaNominalMassChi2                   CHI2PDGMASS ;
     // ========================================================================
     /** @var CHI2TR 
      *  The trivial funtion which evaluates LHCb::Track::chi2
@@ -1305,6 +1503,44 @@ namespace LoKi
      *  @date   2002-07-15
      */
     typedef LoKi::Particles::MinClosestApproach                       DOCAMIN ;
+    // ========================================================================
+    /** @var DPDGM 
+     *  Simple (but not very efficient)  function to evaluate the difference 
+     *  between the particle mass and the nominal(PDG) mass
+     * 
+     *  @code 
+     *
+     *   const LHCb::Particle* B = ... ;
+     *   
+     *   const adelta = DPDGM ( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::DeltaNominalMass 
+     *  @see LoKi::Cuts::DPDGMASS 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-09-23
+     */
+    const LoKi::Particles::DeltaNominalMass                             DPDGM ;
+    // ========================================================================
+    /** @var DPDGMASS
+     *  Simple (but not very efficient)  function to evaluate the 
+     *  difference between particle mass and the nominal(PDG) mass
+     * 
+     *  @code 
+     *
+     *   const LHCb::Particle* B = ... ;
+     *   
+     *   const delta = DPDGMASS ( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::DeltaNominalMass 
+     *  @see LoKi::Cuts::DPDGM 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-09-23
+     */
+    const LoKi::Particles::DeltaNominalMass                          DPDGMASS ;
     // ========================================================================
     /** @typedef DPHI
      *  simple evaluator of "delta phi" of the particle momenta
@@ -3453,6 +3689,25 @@ namespace LoKi
      */
     typedef LoKi::Particles::NinTree                                  NINTREE ;
     // ========================================================================
+    /** @var NMASS 
+     *  The simple evaluato of the nominal(PDG) particle mass 
+     *
+     *  @code 
+     *
+     *   const LHCb::Particle* B = ... ;
+     *
+     *   const double nominal = NMASS ( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::NominalMass 
+     *  @see LoKi::Cuts::PDGMASS 
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-09-23
+     */
+    const LoKi::Particles::NominalMass                                  NMASS ;
+    // ========================================================================
     /** @var NONE
      *  the trivial functor which always evaluates to "false"
      *  
@@ -3525,6 +3780,26 @@ namespace LoKi
      */
     const LoKi::Constant<const LHCb::Particle*,bool>           PALL ( true ) ;
     // ========================================================================
+    /** @var PDGMASS 
+     *  The simple evaluator of the nominal(PDG) particle mass 
+     *
+     *  @code 
+     *
+     *   const LHCb::Particle* B = ... ;
+     *
+     *   const double nominal = PDGMASS ( B ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::NominalMass 
+     *  @see LoKi::Cuts::NMASS
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-09-23
+     */
+    const LoKi::Particles::NominalMass                                PDGMASS ;
+    // ========================================================================
+
     /** @var PFALSE
      *  the trivial functor which always evaluates to "false"
      *  
