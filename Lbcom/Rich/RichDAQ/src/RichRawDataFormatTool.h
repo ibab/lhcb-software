@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::DAQ::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.h,v 1.35 2008-09-12 15:38:02 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.h,v 1.36 2008-09-23 14:54:01 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -106,7 +106,8 @@ namespace Rich
                          const Rich::DAQ::BankVersion version = Rich::DAQ::LHCb2 ) const;
 
       /// Decode all RICH RawBanks into RichSmartID identifiers
-      void decodeToSmartIDs( Rich::DAQ::L1Map & decodedData ) const;
+      void decodeToSmartIDs( const RawEventLocations & taeLocations,
+                             Rich::DAQ::L1Map & decodedData ) const;
 
     private: // definitions
 
@@ -222,10 +223,6 @@ namespace Rich
 
       /// Pointer to ODIN (Event time) tool
       mutable const IEventTimeDecoder * m_timeTool;
-
-      /// Input location(s) for RawEvent in TES
-      typedef std::vector<std::string> RawEventLocations;
-      RawEventLocations m_rawEventLocs;
 
       /// The number of hits marking the transistion between zero and non-zero suppressed data
       /// Used by version 0 of the data banks

@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.82 2008-09-12 15:38:02 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.83 2008-09-23 14:54:01 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -49,9 +49,6 @@ RawDataFormatTool::RawDataFormatTool( const std::string& type,
 
   // job opts
   declareProperty( "ZeroSuppressHitCut", m_zeroSuppresCut = 96 );
-  declareProperty( "RawEventLocations",
-                   m_rawEventLocs = RawEventLocations(1,"") );
-  //m_rawEventLocs = RawEventLocations(1,LHCb::RawEventLocation::Default) );
   declareProperty( "PrintSummary",       m_summary   = true  );
   declareProperty( "MaxHPDOccupancy",    m_maxHPDOc = 999999 );
   declareProperty( "DumpRawBanks",       m_dumpBanks          = false );
@@ -1312,23 +1309,22 @@ void RawDataFormatTool::decodeToSmartIDs_DC0406( const LHCb::RawBank & bank,
 }
 
 void
-RawDataFormatTool::decodeToSmartIDs( L1Map & decodedData ) const
+RawDataFormatTool::decodeToSmartIDs( const RawEventLocations & taeLocations,
+                                     L1Map & decodedData ) const
 {
   // set the been used flag
   m_hasBeenCalled = true;
-
-  // Purge data container
-  decodedData.clear();
 
   // clear the L1 ID map
   m_l1IdsDecoded.clear();
 
   // Loop over all RawEvent locations
-  for ( RawEventLocations::const_iterator iLoc = m_rawEventLocs.begin();
-        iLoc != m_rawEventLocs.end(); ++iLoc )
+  for ( RawEventLocations::const_iterator iLoc = taeLocations.begin();
+        iLoc != taeLocations.end(); ++iLoc )
   {
     // Set the current TAE type (for use by odin and raw event methods)
     m_currentTAE = *iLoc;
+    if ( !m_currentTAE.empty() ) m_currentTAE += "/";
 
     // Get the raw event
     LHCb::RawEvent * rawEv = rawEvent();
@@ -1375,7 +1371,7 @@ RawDataFormatTool::decodeToSmartIDs( L1Map & decodedData ) const
   // loop over the L1 map to check we only got each L1 ID once
   // (only if not using more than one RawEvent)
   // CRJ : Is this check really needed ?
-  if ( m_rawEventLocs.size() == 1 )
+  if ( taeLocations.size() == 1 )
   {
     for ( Rich::Map<Rich::DAQ::Level1HardwareID,unsigned int>::const_iterator iL1 = m_l1IdsDecoded.begin();
           iL1 != m_l1IdsDecoded.end(); ++iL1 )

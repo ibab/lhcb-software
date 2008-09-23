@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::DAQ::RawBufferToSmartIDsTool
  *
  * CVS Log :-
- * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.22 2008-09-11 14:44:30 jonrob Exp $
+ * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.23 2008-09-23 14:54:01 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -32,6 +32,9 @@ RawBufferToSmartIDsTool::RawBufferToSmartIDsTool( const std::string& type,
 {
   // Defined interface
   declareInterface<IRawBufferToSmartIDsTool>(this);
+  // JOs
+  declareProperty( "RawEventLocations",
+                   m_rawEventLocs = IRawDataFormatTool::RawEventLocations(1,"") );
 }
 
 StatusCode RawBufferToSmartIDsTool::initialize()
@@ -46,6 +49,8 @@ StatusCode RawBufferToSmartIDsTool::initialize()
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
 
+  debug() << "RawEvent TAEs : " << m_rawEventLocs << endreq;
+
   return sc;
 }
 
@@ -55,25 +60,34 @@ void RawBufferToSmartIDsTool::handle ( const Incident& incident )
   if ( IncidentType::BeginEvent == incident.type() ) { InitNewEvent(); }
 }
 
-const Rich::DAQ::L1Map & RawBufferToSmartIDsTool::allRichSmartIDs() const
+// ---------------------------------------------------------------------------------------------
+
+const LHCb::RichSmartID::Vector&
+RawBufferToSmartIDsTool::richSmartIDs( const IRawBufferToSmartIDsTool::RawEventLocations& taeLocs,
+                                       const LHCb::RichSmartID hpdID ) const
 {
-  if ( m_newEvent )
-  {
-    fillRichSmartIDs(); // Fill for this event
-    m_newEvent = false; // Set this event processed
-  }
-  return m_richData;
+  // get the full data structure
+  const Rich::DAQ::L1Map & data = allRichSmartIDs(taeLocs);
+  // find the data vector
+  return richSmartIDs( hpdID, data );
 }
 
-const LHCb::RichSmartID::Vector& 
+const LHCb::RichSmartID::Vector&
 RawBufferToSmartIDsTool::richSmartIDs( const LHCb::RichSmartID hpdID ) const
 {
   // get the full data structure
   const Rich::DAQ::L1Map & data = allRichSmartIDs();
+  // find the data vector
+  return richSmartIDs( hpdID, data );
+}
 
+const LHCb::RichSmartID::Vector&
+RawBufferToSmartIDsTool::richSmartIDs( const LHCb::RichSmartID hpdID,
+                                       const Rich::DAQ::L1Map & data ) const
+{
   // find the data for the requested HPD ...
- 
-  /** @attention This implementation is not particulary efficient. 
+
+  /** @attention This implementation is not particulary efficient.
    *             Could maybe be improved if needed for speed reasons.
    *  @todo      Look into speeding this up if needed.
    */
@@ -94,7 +108,7 @@ RawBufferToSmartIDsTool::richSmartIDs( const LHCb::RichSmartID hpdID ) const
             iHPD != (*iIn).second.hpdData().end(); ++iHPD )
       {
         if ( hpdID == (*iHPD).second.hpdID() )
-        { 
+        {
           found_data = &((*iHPD).second.smartIDs());
           break;
         }
@@ -111,11 +125,29 @@ RawBufferToSmartIDsTool::richSmartIDs( const LHCb::RichSmartID hpdID ) const
   return ( found_data ? *found_data : dummy_vector );
 }
 
-void RawBufferToSmartIDsTool::fillRichSmartIDs() const
+const Rich::DAQ::L1Map &
+RawBufferToSmartIDsTool::allRichSmartIDs( const IRawBufferToSmartIDsTool::RawEventLocations& taeLocs ) const
 {
-  // clear current data
-  m_richData.clear();
-
-  // Use raw format tool to decode event
-  m_rawFormatT->decodeToSmartIDs( m_richData );
+  Rich::DAQ::L1Map & data = m_richDataTAE[ taeKey(taeLocs) ];
+  if ( data.empty() )
+  {
+    // Use raw format tool to decode event
+    m_rawFormatT->decodeToSmartIDs( taeLocs, data );
+  }
+  return data;
 }
+
+const Rich::DAQ::L1Map & RawBufferToSmartIDsTool::allRichSmartIDs() const
+{
+  if ( m_newEvent )
+  {
+    // clear current data
+    m_richData.clear();
+    // Use raw format tool to decode event
+    m_rawFormatT->decodeToSmartIDs( m_rawEventLocs, m_richData );
+    // Set this event processed
+    m_newEvent = false;
+  }
+  return m_richData;
+}
+
