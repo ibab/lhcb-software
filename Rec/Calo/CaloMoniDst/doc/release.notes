@@ -1,18 +1,19 @@
-! $Id: release.notes,v 1.22 2008-09-22 00:59:55 odescham Exp $ 
+! $Id: release.notes,v 1.23 2008-09-23 05:47:55 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
 
+! 2008-09-23 - Marco Cattaneo
+ - Fix compilation warning
+
 ! 2008-09-21 - Olivier Deschamps
  - review histogram production & prepare XXXMonitor for real data.
  - cleanup algorithm and options
 
-
 ! 2008-09-18 - Marco Cattaneo
  - Add #units directive to CaloMonitor.opts, needed by Brunel pythonisation
-
 
 !========================== CaloMoniDst v3r1 2008-07-02 =======================
 ! 2008-06-26 - Juan PALACIOS

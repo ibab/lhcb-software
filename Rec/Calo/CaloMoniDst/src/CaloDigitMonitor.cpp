@@ -23,7 +23,7 @@
  *  The same set of histograms, but with cut on Et (or E), is produced if specified
  *
  *  Histograms reside in the directory @p /stat/"Name" , where
- *  @ "Name" is the name of the algorithm
+ *  @p "Name" is the name of the algorithm
  *
  *  @see   CaloMoniAlg
  *  @see GaudiHistoAlg
@@ -136,8 +136,8 @@ StatusCode CaloDigitMonitor::execute(){
     count++;
     hFill1( "2", e );
     if( detData() != "Spd" && detData() != "Prs")hFill1( "3", et ); 
-    double x = m_calo->cellCenter(id).X();
-    double y = m_calo->cellCenter(id).Y();
+    //    double x = m_calo->cellCenter(id).X();
+    //    double y = m_calo->cellCenter(id).Y();
     fillCalo2D("4", id , 1. , detData() + " digits position 2D view");
     if( detData() != "Spd" )fillCalo2D("5", id , e  , detData() + " digits energy 2D view");
   }
