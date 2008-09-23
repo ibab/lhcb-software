@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.390 2008-09-10 14:18:52 jpalac Exp $
+# $Id: requirements,v 1.391 2008-09-23 14:51:44 jpalac Exp $
 # Created    : 07/02/2002
 # Maintainer : J. Palacios
 #
@@ -52,7 +52,7 @@ use PhysSys     v*
 
 #-- Analysis
 use AnalysisSys v*
-
+use Bs2JpsiPhi  v* PhysSel
 # DO NOT Build DaVinci Application with standard executable
 #============================================================================
 # application DaVinci $(GAUDICONFROOT)/src/GaudiMain.cpp
@@ -69,3 +69,5 @@ alias DaVinciTests "cmt qmtest_run"
 apply_pattern QMTest
 #
 apply_pattern GaudiApp
+#
+apply_pattern install_python_modules
