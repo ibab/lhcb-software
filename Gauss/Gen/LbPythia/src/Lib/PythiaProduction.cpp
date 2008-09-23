@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.cpp,v 1.11 2008-09-23 09:41:31 robbep Exp $
+// $Id: PythiaProduction.cpp,v 1.12 2008-09-23 16:18:58 robbep Exp $
 
 // Include files
 // STD * STL 
@@ -170,6 +170,7 @@ PythiaProduction::PythiaProduction( const std::string& type,
   m_defaultSettings.push_back( "pypars mstp 82 3" ) ;
   m_defaultSettings.push_back( "pypars mstp 52 2" ) ;
   m_defaultSettings.push_back( "pypars mstp 51 10042" ) ;
+  m_defaultSettings.push_back( "pypars mstp 142 2" ) ;
   m_defaultSettings.push_back( "pypars parp 67 1.0" ) ;
   m_defaultSettings.push_back( "pypars parp 82 4.50" ) ;
   m_defaultSettings.push_back( "pypars parp 89 14000" ) ;
@@ -177,6 +178,8 @@ PythiaProduction::PythiaProduction( const std::string& type,
   m_defaultSettings.push_back( "pypars parp 85 0.33" ) ;
   m_defaultSettings.push_back( "pypars parp 86 0.66" ) ;
   m_defaultSettings.push_back( "pypars parp 91 1.0" ) ;
+  m_defaultSettings.push_back( "pypars parp 149 0.02" ) ;
+  m_defaultSettings.push_back( "pypars parp 150 0.085" ) ;
   m_defaultSettings.push_back( "pydat1 parj 11 0.5" ) ;
   m_defaultSettings.push_back( "pydat1 parj 12 0.4" ) ;
   m_defaultSettings.push_back( "pydat1 parj 13 0.79" ) ;
@@ -675,6 +678,32 @@ void PythiaProduction::printPythiaParameter( ) {
           << Pythia::pydat1().mstj( 26 )  << endmsg ;
   debug() << "** PARJ(33) ( cut off for fragmentation )         : "
           << Pythia::pydat1().parj( 33 )  << endmsg;
+  debug() << "** PARP(141)                                      : " 
+	  << Pythia::pypars().parp( 141 ) << endmsg ;
+  debug() << "** PARP(142)                                      : " 
+	  << Pythia::pypars().parp( 142 ) << endmsg ;
+  debug() << "** PARP(143)                                      : " 
+	  << Pythia::pypars().parp( 143 ) << endmsg ;
+  debug() << "** PARP(144)                                      : " 
+	  << Pythia::pypars().parp( 144 ) << endmsg ;
+  debug() << "** PARP(145)                                      : " 
+	  << Pythia::pypars().parp( 145 ) << endmsg ;
+  debug() << "** PARP(146)                                      : " 
+	  << Pythia::pypars().parp( 146 ) << endmsg ;
+  debug() << "** PARP(147)                                      : " 
+	  << Pythia::pypars().parp( 147 ) << endmsg ;
+  debug() << "** PARP(148)                                      : " 
+	  << Pythia::pypars().parp( 148 ) << endmsg ;
+  debug() << "** PARP(149)                                      : " 
+	  << Pythia::pypars().parp( 149 ) << endmsg ;
+  debug() << "** PARP(150)                                      : " 
+	  << Pythia::pypars().parp( 150 ) << endmsg ;
+  debug() << "** MSTP(148)                                      : " 
+	  << Pythia::pypars().mstp( 148 ) << endmsg ;
+  debug() << "** MSTP(149)                                      : " 
+	  << Pythia::pypars().mstp( 149 ) << endmsg ;
+  debug() << "** MSTP(142)                                      : " 
+	  << Pythia::pypars().mstp( 142 ) << endmsg ;
   debug() << "** MSEL ( processes )                             : "
           << Pythia::pysubs().msel()      << endmsg ;
   debug() << "** Activated processes                            : " << endmsg ;
