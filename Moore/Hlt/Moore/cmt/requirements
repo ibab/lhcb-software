@@ -1,5 +1,5 @@
 #============================================================================
-# $Id: requirements,v 1.36 2008-09-18 22:04:15 graven Exp $
+# $Id: requirements,v 1.37 2008-09-23 13:15:08 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : P. Koppenburg & M. Cattaneo
 #============================================================================
@@ -16,11 +16,7 @@ branches doc cmt options python
 set MOOREOPTS ${MOOREROOT}/options
 
 # TMP ####
-use DaVinciTools v17r2p1 Phys
-use HltRawData   v1r4 Hlt
-use HltConf   v1r3 Hlt
-use HltCommon   v4r3 Hlt
-use HltGlobalMonitor   v1r4 Hlt
+#use DaVinciTools v17r2p1 Phys
 
 # Packages needed to compile and link the application
 use GaudiConf          v*                   -no_auto_imports
@@ -84,6 +80,7 @@ alias Moore gaudirun.py
 make_fragment install_TCK_manifest -header=install_TCK_manifest_header
 document install_TCK_manifest manifest MANIFEST_VERSION=${MOOREVERSION}
 
+#document template ../job/runMooreOnline_EFF.sh.tmpl
 #===============================================================
 #-- Online packages 
 # macro useOnline "OnlineSys v1r4" WIN32 ""

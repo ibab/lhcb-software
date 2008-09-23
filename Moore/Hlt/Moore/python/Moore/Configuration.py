@@ -1,7 +1,7 @@
 """
 High level configuration tools for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.28 2008-09-21 16:38:42 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.29 2008-09-23 13:15:08 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -9,6 +9,7 @@ from Gaudi.Configuration import *
 from GaudiConf.Configuration import *
 from Configurables import ConfigFileAccessSvc, ConfigDBAccessSvc, HltConfigSvc, HltGenConfig
 from Configurables import EventClockSvc
+from HltConf.Configuration import *
 
 import GaudiKernel.ProcessJobOptions
 from  ctypes import c_uint
@@ -45,20 +46,21 @@ class Moore(ConfigurableUser):
 
     def setOtherProp(self,other,name):
         # Function to propagate properties to other component, if not already set
-        if hasattr(self,name):
-            if hasattr(other,name) and len(other.getProp(name)) > 0 :
-                print "# %s().%s already defined, ignoring Moore().%s"%(other.name(),name,name)
-            else:
-                setattr(other,name,self.getProp(name))
+        if hasattr(other,name) and len(other.getProp(name)) > 0 :
+            print "# %s().%s already defined, ignoring Moore().%s"%(other.name(),name,name)
+        else:
+            print 'Propagating ' + name + ' = ' + str(self.getProp(name)) + ' to ' + other.name()
+            setattr(other,name,self.getProp(name))
 
     def validHltTypes(self):
-        return [ 'PA'
-                 'PA+LU', 
-                 'PA+LU+VE', 
-                 'PA+LU+VE+MU', 
-                 'ALL_HLT1', 
-                 'ALL_HLT1+HLT2', 
-                 'DEFAULT' ] 
+        return [ 'PA',
+                 'PA+LU',
+                 'PA+LU+VE',
+                 'PA+LU+VE+MU',
+                 'PA+LU+VE+MU+HA+EL+PH',
+                 'Physics_HLT1',
+                 'Physics_HLT1+HLT2',
+                 'DEFAULT' ]
 
     def getRelease(self):
         import re,fileinput
@@ -83,30 +85,6 @@ class Moore(ConfigurableUser):
         AuditorSvc().Auditors.append( x.name() )
         x.Enable = True
 
-    def printAlgo( self, algName, appMgr, prefix = ' ') :
-        #""" print algorithm name, and, if it is a sequencer, recursively those algorithms it calls"""
-        print prefix + algName
-        alg = appMgr.algorithm( algName.split( "/" )[ -1 ] )
-        prop = alg.properties()
-        if prop.has_key( "Members" ) :
-            subs = prop[ "Members" ].value()
-            for i in subs : self.printAlgo( i.strip( '"' ), appMgr, prefix + "     " )
-        elif prop.has_key( "DetectorList" ) :
-            subs = prop[ "DetectorList" ].value()
-            for i in subs : self.printAlgo( algName.split( "/" )[ -1 ] + i.strip( '"' ) + "Seq", appMgr, prefix + "     ")
-
-    def printFlow( self ) :
-        mp = ApplicationMgr()
-        print "\n ****************************** Application Flow ****************************** \n"
-        for i in mp.TopAlg: self.printAlgo( i, mp )
-        print "\n ****************************************************************************** \n"
-
-        # Print all configurables
-        if self.getProp( "OutputLevel" ) == DEBUG :
-            from pprint import PrettyPrinter
-            print "\n ************************** DEBUG: All Configurables ************************** \n"
-            PrettyPrinter().pprint(allConfigurables)
-            print "\n ****************************************************************************** \n"
 
     def applyConf(self):
         GaudiKernel.ProcessJobOptions.printing_level += 1
@@ -120,7 +98,7 @@ class Moore(ConfigurableUser):
         ApplicationMgr().ExtSvc.append(  "DataOnDemandSvc"   ); # needed for DecodeRawEvent...
 
         # forward some other settings... TODO: make a dictionary..
-        self.setOtherProp( LHCbApp(), 'useOracleCondDB' )
+        # self.setOtherProp( LHCbApp(), 'useOracleCondDB' )
         importOptions( "$DDDBROOT/options/DDDB.py" )
         if self.getProp('DC06') :
             importOptions( '$DDDBROOT/options/DC06.opts' )
@@ -129,7 +107,7 @@ class Moore(ConfigurableUser):
             importOptions( '$DDDBROOT/options/LHCb-2008.py' )
         self.setOtherProp( LHCbApp(), 'DDDBtag' )
         self.setOtherProp( LHCbApp(), 'condDBtag' )
-        self.setOtherProp( LHCbApp(), 'skipEvents' )
+        # self.setOtherProp( LHCbApp(), 'skipEvents' )
         self.setOtherProp( ApplicationMgr(), 'EvtMax' )
         # Get the event time (for CondDb) from ODIN 
         EventClockSvc().EventTimeDecoder = 'OdinTimeDecoder'
@@ -157,47 +135,10 @@ class Moore(ConfigurableUser):
                               , ConfigAccessSvc = self.getConfigAccessSvc().getFullName() ) 
             ApplicationMgr().ExtSvc.append(cfg.getFullName())
         else:
-            if self.getProp("DAQStudies") :
-                importOptions('$HLTCONFROOT/options/L0DAQ.opts')
-                importOptions('$HLTCONFROOT/options/HltDAQ.opts')
-            else :
-                importOptions('$HLTCONFROOT/options/HltInit.opts')
-                if inputType == 'DST' : # and hlttype in [ 'PHYSICS_Hlt1+Hlt2', 'PHYSICS_Hlt1' , 'PHYSICS_Lumi', 'Lumi'] : 
-                    importOptions('$L0DUROOT/options/ReplaceL0BanksWithEmulated.opts')
-                hlttype = self.getProp('hltType')
-                if self.getProp('oldStyle') :
-                    if hlttype not in self.validHltTypes() :  raise TypeError("Unknown hlttype '%s'"%hlttype)
-                    if hlttype.find('Hlt1') != -1 :   importOptions('$HLTCONFROOT/options/Hlt1.opts')
-                    if hlttype.find('Hlt2') != -1 :   importOptions('$HLTCONFROOT/options/Hlt2.opts')
-                    if hlttype ==  'DEFAULT'      :   importOptions('$HLTCONFROOT/options/RandomPrescaling.opts')
-                    if hlttype == 'readBackLumi'  :   importOptions('$HLTCONFROOT/options/HltJob_readLumiPy.opts')
-                    if hlttype == 'writeLumi'     :   importOptions('$HLTCONFROOT/options/HltJob_onlyLumi.opts')
-                    if hlttype.find('Lumi') != -1 :   importOptions('$HLTCONFROOT/options/Lumi.opts')
-                    if hlttype.find('Velo') != -1 :   importOptions('$HLTCONFROOT/options/HltVeloAlleySequence.opts')
-                else :
-                    if hlttype == 'DEFAULT'       : hlttype = 'PA+LU+VE'
-                    if hlttype == 'HLT1'          : hlttype = 'PA+LU+VE+MU+HA+PH+EL'
-                    type2conf = { 'PA' : '$HLTCONFROOT/options/HltCommissioningLines.py' # PA for 'Pass-Thru' (PT was considered bad)
-                                , 'LU' : '$HLTCONFROOT/options/HltLumiLines.py'
-                                , 'VE' : '$HLTCONFROOT/options/HltVeloLines.py'
-                                , 'MU' : '$HLTCONFROOT/options/HltMuonLines.py' 
-                                , 'HA' : '$HLTCONFROOT/options/HltHadronLines.py' 
-                                , 'PH' : '$HLTCONFROOT/options/HltPhotonLines.py' 
-                                , 'EL' : '$HLTCONFROOT/options/HltElectronLines.py' 
-                                }
-                    for i in hlttype.split('+') :
-                        if i not in type2conf : raise AttributError, "unknown hlttype fragment '%s'"%i
-                        print i + '->' + type2conf[i]
-                        importOptions( type2conf[i] )
-                    importOptions('$HLTCONFROOT/options/HltMain.py')
-                    importOptions('$HLTCONFROOT/options/Hlt1.py')
-            if self.getProp('runTiming') :
-                importOptions('$HLTCONFROOT/options/HltAlleysTime.opts')
-                importOptions('$HLTCONFROOT/options/HltAlleysHistos.opts')
+            for i in [ 'hltType','oldStyle','userAlgorithms' ] : 
+                self.setOtherProp( HltConf(), i )
+            HltConf().applyConf()
 
-        if self.getProp("userAlgorithms"):
-            for userAlg in self.getProp("userAlgorithms"):
-                ApplicationMgr().TopAlg += [ userAlg ]
             
         if self.getProp("generateConfig") :
             # TODO: add properties for ConfigTop and ConfigSvc...

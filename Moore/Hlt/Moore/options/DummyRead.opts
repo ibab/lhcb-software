@@ -5,8 +5,6 @@
 #pragma print off
 // Standard LHCb application setup
 #include "$STDOPTS/LHCbApplication.opts"
-
-// POOL Persistency
 #include "$STDOPTS/DstDicts.opts"
 
 //-----------------------------------------------------------------
@@ -16,13 +14,7 @@
 // Default options to rerun L0 and run Hlt 
 //#include "$GAUDICONFROOT/options/DecodeRawEvent.opts" 
 #include "$MOOREROOT/options/DecodeRawEvent.opts" 
-//#include "$HLTCONFROOT/options/L0.opts"
-//#include "$HLTCONFROOT/options/L0FromRaw.opts"
-//#include "$HLTCONFROOT/options/Hlt1.opts"
-//#include "$HLTCONFROOT/options/PrescaledAlleys.opts"
-#include "$HLTCONFROOT/options/RandomPrescaling.opts"
-//#include "$HLTCONFROOT/options/Hlt2.opts"
-
+#include "$HLCONFROOT/options/RandomPrescaling.opts"
 //---------------------------------------------------------------------------
 // Geometry specific options
 //---------------------------------------------------------------------------
@@ -40,44 +32,32 @@ ToolSvc.SequencerTimerTool.OutputLevel = 4;
 
 ApplicationMgr.ExtSvc +=  [ "ToolSvc" , "AuditorSvc" ] ; 
 ApplicationMgr.ExtSvc += {"MonitorSvc"};
-//ApplicationMgr.DLLs + = {"Gaucho","GaudiOnline"};
 
 
 EventPersistencySvc.CnvServices += {"LHCb::RawDataCnvSvc"};
 ApplicationMgr.ExtSvc += {"DataOnDemandSvc"};
 
+// #include "$HLTOPTS/OnlineEnvironment.opts"
+#include "$ONLINETASKSROOT/hltopts/OnlineEnvironment.opts"
 
-#include "$HLTOPTS/OnlineEnvironment.opts"
 MessageSvc.OutputLevel               = @OnlineEnv.OutputLevel;
 MessageSvc.LoggerOnly                = true;
 ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.ExtSvc                += { "LHCb::MEPManager/MEPManager", "LHCb::OnlineEvtSelector/EventSelector" };
-
 ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
-
 
 EventDataSvc.RootCLID                = 1;
 EventDataSvc.EnableFaultHandler      = true ;
 EventPersistencySvc.CnvServices      = { "LHCb::RawDataCnvSvc/RawDataCnvSvc" };
 EventSelector.Input                  = "EVENT";
-//EventSelector.Input                  = "MEP";
-//EventSelector.REQ1 = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0";
 MEPManager.Buffers                   = { "EVENT", "SEND" };
-//MEPManager.Buffers                   = { "MEP", "SEND" };
 EventSelector.REQ1 = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0";
 MEPManager.PartitionID               = @OnlineEnv.PartitionID;
 
 ApplicationMgr.TopAlg               += { "Sequencer/SendSequence" };
 SendSequence.Members                 = {"CheckHLTDecision", "LHCb::RawEvent2MBMMergerAlg/Output"};
-//SendSequence.Members                 = {"LHCb::RawEvent2MBMMergerAlg/Output"};
-//SendSequence.OutputLevel             = @OnlineEnv.OutputLevel;
 SendSequence.OutputLevel             = 3;
 
-//MonitorSvc.OutputLevel               = @OnlineEnv.OutputLevel;
-//HltAllAlleysSequence.OutputLevel     =1;
-//EventSelector.OutputLevel            = @OnlineEnv.OutputLevel;
-//EventLoopMgr.OutputLevel             = @OnlineEnv.OutputLevel;
-//Runable.OutputLevel                  = @OnlineEnv.OutputLevel;
 Output.Buffer                        = "SEND";
 Output.DataType                      = 3;
 Output.InputDataType                 = 1;
