@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.19 2008-09-23 08:49:43 graven Exp $ 
+! $Id: release.notes,v 1.20 2008-09-23 09:58:00 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : 
@@ -8,6 +8,7 @@
 ! 2008-09-19 - Gerhard Raven
  - further support for 'bindMembers'
  - use 'bindMembers' in various lines
+ - add configurable 
 
 !========================== HltConf v1r3 2008-09-21 ===================
 
