@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataSender.cpp,v 1.10 2008-09-23 15:08:50 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataSender.cpp,v 1.11 2008-09-23 15:09:38 frankb Exp $
 //  ====================================================================
 //  NetworkDataSender.cpp
 //  --------------------------------------------------------------------
@@ -188,7 +188,7 @@ StatusCode NetworkDataSender::writeBuffer(void* const /* ioDesc */, const void* 
     return StatusCode::FAILURE;
   }
   else {
-    RawBank*   b = (RawBank*)e.data;
+    RawBank*   b = (RawBank*)data;
     MDFHeader* h = (MDFHeader*)b->data();
     MsgStream output(msgSvc(),name());
     output << MSG::DEBUG << "Handle request for recipient:" << recipient.name  << " Mask:" 
