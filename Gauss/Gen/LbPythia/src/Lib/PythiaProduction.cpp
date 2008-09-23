@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.cpp,v 1.10 2008-07-26 18:04:54 robbep Exp $
+// $Id: PythiaProduction.cpp,v 1.11 2008-09-23 09:41:31 robbep Exp $
 
 // Include files
 // STD * STL 
@@ -125,11 +125,44 @@ PythiaProduction::PythiaProduction( const std::string& type,
   m_defaultSettings.push_back( "pysubs msub 93 1" ) ;
   m_defaultSettings.push_back( "pysubs msub 94 1" ) ;
   m_defaultSettings.push_back( "pysubs msub 95 1" ) ;
-  m_defaultSettings.push_back( "pysubs msub 86 1" ) ;
-  m_defaultSettings.push_back( "pysubs msub 87 1" ) ;
-  m_defaultSettings.push_back( "pysubs msub 88 1" ) ;
-  m_defaultSettings.push_back( "pysubs msub 89 1" ) ;
-  m_defaultSettings.push_back( "pysubs msub 106 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 421 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 422 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 423 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 424 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 425 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 426 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 427 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 428 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 429 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 430 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 431 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 432 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 433 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 434 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 435 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 436 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 437 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 438 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 439 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 461 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 462 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 463 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 464 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 465 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 466 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 467 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 468 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 469 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 470 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 471 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 472 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 473 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 474 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 475 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 476 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 477 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 478 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 479 1" ) ;
   m_defaultSettings.push_back( "pypars mstp 2 2" ) ;
   m_defaultSettings.push_back( "pypars mstp 33 3" ) ;
   m_defaultSettings.push_back( "pypars mstp 128 2" ) ;
