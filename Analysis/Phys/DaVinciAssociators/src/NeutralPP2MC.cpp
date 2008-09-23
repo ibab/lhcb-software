@@ -1,8 +1,11 @@
-// $Id: NeutralPP2MC.cpp,v 1.16 2007-03-05 11:28:11 pkoppenb Exp $
+// $Id: NeutralPP2MC.cpp,v 1.17 2008-09-23 10:30:25 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.16 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.17 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.16  2007/03/05 11:28:11  pkoppenb
+// Correct Particle2MCLinker location
+//
 // Revision 1.15  2007/01/12 13:58:53  ranjard
 // v8r0 - use Gaudi v19r0
 //
@@ -96,14 +99,27 @@ protected:
     ISvcLocator*       svc  )
     : AsctAlgorithm ( name , svc )
     //
-    , m_mcTable ( "Relations/" + LHCb::CaloClusterLocation::Default ) 
-  { 
+    , m_mcTable ( "Relations/" + LHCb::CaloClusterLocation::Default )  { 
     // define proper default for input data (location of Protoparticles )
     m_inputData.push_back( LHCb::ProtoParticleLocation::Neutrals );
     // define proper default for output data (location of relation table )
     m_outputTable = LHCb::ProtoParticle2MCLocation::Neutrals ;
     // define proper default for CaloCLuster->MCPArticle data 
-    declareProperty ( "MCCaloTable" , m_mcTable ) ;
+    declareProperty ( "MCCaloTable" , m_mcTable ) ;    
+
+    std::string out( context() );
+    std::transform( context().begin() , context().end() , out.begin () , ::toupper ) ;
+    if( out == "HLT" ){
+      m_mcTable =  "Relations/" + LHCb::CaloClusterLocation::DefaultHlt;
+      m_inputData.push_back( LHCb::ProtoParticleLocation::HltNeutrals );
+      m_outputTable =  "Relations/" + LHCb::ProtoParticleLocation::HltNeutrals ;      
+    } else {      
+      m_mcTable =  "Relations/" + LHCb::CaloClusterLocation::Default;
+      m_inputData.push_back( LHCb::ProtoParticleLocation::Neutrals );
+      m_outputTable = LHCb::ProtoParticle2MCLocation::Neutrals ;
+    }  
+
+
   };
   /// destructor (virtual and protected)
   virtual ~NeutralPP2MC(){};
@@ -188,7 +204,8 @@ StatusCode NeutralPP2MC::execute()
         m_inputData.end()!= inp; inp++) 
   {
     // get the protoparticles from TES 
-    const ProtoParticles* protos = get<ProtoParticles> ( *inp ) ;
+    if( !exist<ProtoParticles>( *inp )) continue; 
+   const ProtoParticles* protos = get<ProtoParticles> ( *inp ) ;
     if ( 0 == protos ) { return StatusCode::FAILURE ; }       // RETURN 
     
     // Create a linker table
