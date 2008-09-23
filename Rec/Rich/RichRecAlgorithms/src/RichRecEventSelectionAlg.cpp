@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : Rich::Rec::EventSelectionAlg
  *
  *  CVS Log :-
- *  $Id: RichRecEventSelectionAlg.cpp,v 1.4 2008-08-27 15:08:16 jonrob Exp $
+ *  $Id: RichRecEventSelectionAlg.cpp,v 1.5 2008-09-23 15:38:21 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -28,7 +28,7 @@ EventSelectionAlg::EventSelectionAlg( const std::string& name,
                                       ISvcLocator* pSvcLocator )
   : Rich::Rec::AlgBase ( name, pSvcLocator )
 {
-  declareProperty( "MinPixels", m_minPixels = 10, 
+  declareProperty( "MinPixels", m_minPixels = 10,
                    "The minimum number of total RICH hits" );
   declareProperty( "MinRings",  m_minRings  = 0,
                    "The minimum number of rings at the given TES location" );
@@ -36,7 +36,7 @@ EventSelectionAlg::EventSelectionAlg( const std::string& name,
                    "The minimum number of tracks"  );
   declareProperty( "MinHPDsWithHits",  m_minHPDsWithHits = 0,
                    "The minimum number of HPDs to have more that 'MinHPDHits' in them" );
-  declareProperty( "MinHPDHits", m_minHPDHits = 0, 
+  declareProperty( "MinHPDHits", m_minHPDHits = 0,
                    "The minimum number of hits to have in at least 'MinHPDsWithHits' HPDs");
   declareProperty( "RingLocation", m_ringLoc = "Rec/Rich/Markov/RingsIsolated",
                    "The TES location in which to count the number of ring objects" );
@@ -74,10 +74,18 @@ StatusCode EventSelectionAlg::execute()
   // rings
   if ( OK && m_minRings > 0 )
   {
-    // get the rings
-    const LHCb::RichRecRings * rings = get<LHCb::RichRecRings>(m_ringLoc);
-    // enough rings ?
-    OK = ( rings->size() >= m_minRings );
+    if ( !exist<LHCb::RichRecRings>(m_ringLoc) )
+    {
+      Warning( "No Rings at '"+m_ringLoc+"'");
+      OK = false;
+    }
+    else
+    {
+      // get the rings
+      const LHCb::RichRecRings * rings = get<LHCb::RichRecRings>(m_ringLoc);
+      // enough rings ?
+      OK = ( rings->size() >= m_minRings );
+    }
   }
 
   // tracks

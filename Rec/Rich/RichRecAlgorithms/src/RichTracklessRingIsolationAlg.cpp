@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichTracklessRingIsolationAlg
  *
  *  CVS Log :-
- *  $Id: RichTracklessRingIsolationAlg.cpp,v 1.6 2008-09-17 12:28:51 jonrob Exp $
+ *  $Id: RichTracklessRingIsolationAlg.cpp,v 1.7 2008-09-23 15:38:21 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -28,22 +28,22 @@ TracklessRingIsolationAlg::
 TracklessRingIsolationAlg( const std::string& name,
                            ISvcLocator* pSvcLocator )
   : Rich::Rec::AlgBase ( name, pSvcLocator ),
-    m_ckThetaMax     ( Rich::NRadiatorTypes, 0 ),
-    m_sepGMax        ( Rich::NRadiatorTypes, 0 ),
-    m_scale          ( Rich::NRadiatorTypes, 0 )
+    m_ckThetaMax       ( Rich::NRadiatorTypes, 0 ),
+    m_sepGMax          ( Rich::NRadiatorTypes, 0 ),
+    m_scale            ( Rich::NRadiatorTypes, 0 )
 {
   using namespace boost::assign;
   declareProperty( "InputRings",
                    m_inputRings = LHCb::RichRecRingLocation::MarkovRings+"All" );
   declareProperty( "OutputRings",
                    m_outputRings = LHCb::RichRecRingLocation::MarkovRings+"Isolated" );
-  declareProperty( "SizeSepCut", m_sizesepcut = list_of(260)(260)(260) );
-  declareProperty( "SizeRingWidth", m_sizeringwidth = list_of(0.0)(0.0)(0.00944) );
-  declareProperty( "SizePixelCut", m_sizepixelcut = list_of(0.2)(0.2)(0.2) );
-  declareProperty( "CKthetaMax", m_ckThetaMax = list_of  (0.24)(0.052) (0.03) );
-  declareProperty( "SepGMax", m_sepGMax = list_of  (342)(75)(130) );
-  declareProperty( "NPhiRegions", m_nPhiRegions = list_of  (8)(8)(8)   );
-  declareProperty( "SizePhiCut", m_sizephicut = list_of  (0.2125)(0.2125)(0.2125)   );
+  declareProperty( "SizeSepCut",         m_sizesepcut = list_of (260)(260)(260) );
+  declareProperty( "SizeRingWidth",   m_sizeringwidth = list_of (0.0)(0.0)(0.00944) );
+  declareProperty( "SizePixelCut",     m_sizepixelcut = list_of (0.2)(0.2)(0.2) );
+  declareProperty( "CKthetaMax",         m_ckThetaMax = list_of (0.24)(0.052) (0.03) );
+  declareProperty( "SepGMax",               m_sepGMax = list_of (342)(75)(130) );
+  declareProperty( "NPhiRegions",       m_nPhiRegions = list_of (8)(8)(8)   );
+  declareProperty( "SizePhiCut",         m_sizephicut = list_of (0.2125)(0.2125)(0.2125)   );
   declareProperty( "MaxFitVariance", m_maxFitVariance = list_of (200)(200)(200) );
 }
 
@@ -121,7 +121,7 @@ StatusCode TracklessRingIsolationAlg::execute()
 
     } // inner ring loop
 
-    //-----------------------------------------------------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------------------------------
 
     // Ring radius
     const LHCb::RichRecRing::FloatType rRadius = (*iRing)->radius();//RADIUS IN RADIANS!
@@ -160,29 +160,26 @@ StatusCode TracklessRingIsolationAlg::execute()
       if (ckThetaEsti>ringmax) { ++hitsoutside; }
       if (ckThetaEsti<ringmin) { ++hitsinside;  }
 
-      //---------------------------------------------------------------------------------------------------------
+      //--------------------------------------------------------------------------------------------------
 
-      //Estimate Ch Phi for pixel
       // x,y differences
-      const float diff_x = RingCentreLocal.x()-PixelLocal.x();
-      const float diff_y = RingCentreLocal.y()-PixelLocal.y();
-
+      const float diff_x       = RingCentreLocal.x()-PixelLocal.x();
+      const float diff_y       = RingCentreLocal.y()-PixelLocal.y();
+      // Estimate Ch Phi for pixel
       const float CherenkovPhi = Gaudi::Units::pi + std::atan2( diff_y, diff_x );
 
       // Which Ch phi region
       const int region = (int)( m_nPhiRegions[RingRadiator] * CherenkovPhi / (M_PI*2.0) );
 
-      //debug() << "Phi region: " << region  << endmsg;
-
       // count number in each region
       ++regTally[region];
 
-
     }//loop over pixels
 
-    if (hittotal==0) { hittotal = 1; } // To prevent dividing by zero, although if a Markov ring exists it should have hits
-    const double frachitsout = (double)(hitsinside+hitsoutside) / (double)hittotal;
+    // To prevent dividing by zero, although if a Markov ring exists it should have hits
+    if (hittotal==0) { hittotal = 1; }
 
+    const double frachitsout = (double)(hitsinside+hitsoutside) / (double)hittotal;
 
     if ( frachitsout > m_sizepixelcut[RingRadiator] )
     {
@@ -207,7 +204,7 @@ StatusCode TracklessRingIsolationAlg::execute()
     // refit the ring
     //FastRingFitter fitter(**iRing);
     FastRingFitter fitter;
-    // data points
+    // data points (ultimately will be done by fitter)
     for ( LHCb::RichRecPixelOnRing::Vector::iterator iP = (*iRing)->richRecPixels().begin();
           iP != (*iRing)->richRecPixels().end(); ++iP )
     {
@@ -225,7 +222,9 @@ StatusCode TracklessRingIsolationAlg::execute()
     if ( fitter.result().Status != 0 ||
          fitter.result().Variance > m_maxFitVariance[RingRadiator] )
     {
-      // debug() << " -> Failed refitting : " << fitter.result() << endmsg;
+      debug() << " -> Failed refitting : " 
+        //<< fitter.result()
+              << endmsg;
       ringIsIsolated = false;
       break;
     }
@@ -239,7 +238,6 @@ StatusCode TracklessRingIsolationAlg::execute()
     }
 
   } // outer ring loop
-  //debug() << "No. of Markov rings past sep cut " << noofrings << endmsg;
 
   return StatusCode::SUCCESS;
 }
