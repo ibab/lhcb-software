@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.352 2008-09-22 18:00:42 ibelyaev Exp $
+! $Id: release.notes,v 1.353 2008-09-23 13:52:23 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-09-23 - Patrick Koppenburg
+ - Renamed LoKi_FilterDesktop to FilterDesktop and FilterDesktop to OldFilterDesktop.
 
 ! 2008-09-22 - Vanya BELYAEV
 
