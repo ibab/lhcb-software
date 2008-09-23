@@ -1,5 +1,5 @@
 ! =============================================================================
-! $Id: release.notes,v 1.377 2008-09-23 12:32:15 marcocle Exp $ 
+! $Id: release.notes,v 1.378 2008-09-23 13:04:46 marcocle Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
@@ -11,12 +11,12 @@
  - Modified the behavior of IDetectorElement::condition() to throw an exception
    if the requested condition is not known.
 
-!====================== DetDesc v18r7 2008-07-27 ==============================
+!====================== DetDesc v18r8 2008-07-27 ==============================
 ! 2008-07-21 - Marco Cattaneo
  - Add DetDesc/IDetElemFinder.h, previously in LHCbKernel
  - Remove from DetDescDict.h the hack for an obsolete gccxml problem on Win32
 
-!====================== DetDesc v18r6 2008-07-16 ==============================
+!====================== DetDesc v18r7 2008-07-16 ==============================
 ! 2008-07-14 - Stephanie Hansmann-Menzemer
  - Minor fix to the computation of the molar weight for computation of dE/dx
    constants for mixtures - almost no effect on fitted tracks
