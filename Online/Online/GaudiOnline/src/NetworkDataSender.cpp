@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataSender.cpp,v 1.12 2008-09-23 15:10:09 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataSender.cpp,v 1.13 2008-09-23 15:11:17 frankb Exp $
 //  ====================================================================
 //  NetworkDataSender.cpp
 //  --------------------------------------------------------------------
@@ -9,6 +9,8 @@
 #include "GaudiOnline/NetworkDataSender.h"
 #include "GaudiOnline/ISuspendable.h"
 #include "GaudiKernel/strcasecmp.h"
+#include "Event/RawBank.h"
+#include "MDF/MDFHeader.h"
 #include "RTL/Lock.h"
 
 using namespace LHCb;
