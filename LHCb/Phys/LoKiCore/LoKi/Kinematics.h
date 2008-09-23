@@ -1,9 +1,13 @@
-// $Id: Kinematics.h,v 1.18 2008-09-21 16:35:47 ibelyaev Exp $
+// $Id: Kinematics.h,v 1.19 2008-09-23 15:55:36 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_KINEMATICS_H 
 #define LOKI_KINEMATICS_H 1
 // ============================================================================
 // Include files
+// ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/SymmetricMatrixTypes.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -824,6 +828,28 @@ namespace LoKi
       return armenterosPodolanskiX ( d1.Vect () , d2. Vect() ) ; 
     }
     // ========================================================================
+    /** evaluate the chi2 of the mass  \f$\chi^2_{M}\f$.
+     * 
+     *  \f$\chi^2_{M}\f$ is evaluated as 
+     *  \f$\chi^2_{M}=\chi^2_{M^2}\f$, where 
+     *  \f$\chi^2_{M^2} = \mathrm{V} \left( \Delta M^2 \right)^2 \f$ and 
+     *  \f$ \mathrm{V} = \left( \mathrm{P^T}\mathrm{C}\mathrm{P}\right)^{-1}\f$,
+     *  and \f$C\f$ is covariance matrix, and 
+     *  \f$\mathrm{P} = 2\cdot\left(  - p_x , -p_y , -p_z , e \right)^T\f$.
+     * 
+     *  Essentially it is just 1-step of the mass-fit
+     *
+     *  @param mass the nominal mass 
+     *  @param mom  four momentum 
+     *  @param cov  four momentum covariance matrix 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-09-23 
+     */
+    double chi2mass 
+    ( const double               mass , 
+      const LoKi::LorentzVector& mom  , 
+      const Gaudi::SymMatrix4x4& cov  ) ;
+      // ========================================================================
   }  // end of namespace Kinematics  
   // ==========================================================================
 } // end of namespace LoKi
