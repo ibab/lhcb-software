@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.52 2008-09-23 10:00:59 odescham Exp $
+! $Id: release.notes,v 1.53 2008-09-23 10:32:32 odescham Exp $
 ! =============================================================================
 ! Package     : CaloAssociators
 ! =============================================================================
@@ -9,8 +9,9 @@
 
 ! 2008-09-23 - Yasmine Amhis & Olivier Deschamps
  - add HLT CaloCluster MC association in CaloAssociators.opts
- - CaloClusterMCTruth.cpp : make use of context() for HLT - protect against missing clusters
-
+ - CaloClusterMCTruth.cpp : - make use of context() for HLT - protect against missing clusters
+                            - correct typo in property "Clustes"->"Clusters"
+ - remove obsolete stuff (CaloTrgClusterMCTruch & CaloClustersMCTruthAlg)
 
 !===================== CaloAssociators v6r5 2008-01-25 ========================
 ! 2008-01-25 - Marco Cattaneo

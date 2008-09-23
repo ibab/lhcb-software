@@ -1,8 +1,11 @@
-// $Id: CaloClusterMCTruth.cpp,v 1.7 2008-09-23 10:00:59 odescham Exp $
+// $Id: CaloClusterMCTruth.cpp,v 1.8 2008-09-23 10:32:32 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2008/09/23 10:00:59  odescham
+// add HLT context for cluster-MC association
+//
 // Revision 1.6  2006/04/06 13:26:11  odescham
 // generic tools moved to CaloUtils
 //
@@ -83,10 +86,10 @@ protected:
     ISvcLocator*       pSvc ) 
     : GaudiAlgorithm ( name , pSvc ) 
     , m_inputRelations    ( "Relations/" + LHCb::CaloDigitLocation::Default )
-    , m_outputRelations   ( "Relations/" + LHCb::CaloClusterLocation::Default )
+    , m_outputRelations   ( )
     , m_clusterContainers ()
   {    // set the appropriate default values for input data (linker)
-    declareProperty ( "Clustes", m_clusterContainers);
+    declareProperty ( "Clusters", m_clusterContainers);
     declareProperty ( "Input"  , m_inputRelations  ) ;
     declareProperty ( "Output" , m_outputRelations ) ;
 
@@ -96,9 +99,11 @@ protected:
     if( out == "HLT" ){
       m_clusterContainers.push_back( LHCb::CaloClusterLocation :: EcalHlt      ) ; 
       m_clusterContainers.push_back( LHCb::CaloClusterLocation :: EcalSplitHlt ) ;      
+      m_outputRelations = "Relations/" + LHCb::CaloClusterLocation::DefaultHlt;
     } else {      
       m_clusterContainers.push_back( LHCb::CaloClusterLocation :: Ecal      ) ; 
       m_clusterContainers.push_back( LHCb::CaloClusterLocation :: EcalSplit ) ;    
+      m_outputRelations = "Relations/" + LHCb::CaloClusterLocation::Default;
     }  
   };
   /// virtual destructor (protected)
