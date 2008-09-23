@@ -1,4 +1,4 @@
-// $Id: SerializeCnvSvc.cpp,v 1.3 2008-06-17 14:41:13 frankb Exp $
+// $Id: SerializeCnvSvc.cpp,v 1.4 2008-09-23 13:03:23 frankb Exp $
 //====================================================================
 //	SerializeCnvSvc implementation
 //--------------------------------------------------------------------
@@ -17,6 +17,7 @@
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/IDataManagerSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/System.h"
@@ -25,6 +26,8 @@
 #include "GaudiSerialize/SerializeAddress.h"
 #include "Event/RawEvent.h"
 #include "Event/RawBank.h"
+#include "MDF/MDFHeader.h"
+#include "MDF/OnlineRunInfo.h"
 #include "MDF/RawDataAddress.h"
 #include "MDF/RawEventHelpers.h"
 
@@ -63,6 +66,7 @@ namespace {
 SerializeCnvSvc::SerializeCnvSvc(CSTR nam, ISvcLocator* svc)
   : ConversionSvc( nam, svc, SERIALIZE_StorageType), m_dataMgr(0)
 {
+  declareProperty("Banks",m_location="/Event/GaudiSerialize");
 }
 
 /// Standard destructor
@@ -127,7 +131,6 @@ SerializeCnvSvc::createConverter(long typ,const CLID& wanted,const ICnvFactory*)
   ConverterID cnvid(SERIALIZE_StorageType, wanted);  
   pConverter = PluginService::CreateWithId<IConverter*>(cnvid, typ, wanted, serviceLocator());
   MsgStream log(msgSvc(), name());
-  log << MSG::INFO << (void*)this << " Get conf " << typ << " " << wanted << endmsg;
 
   if ( 0 == pConverter )  {
     const CLID gen_clids[] = {  
@@ -163,7 +166,7 @@ SerializeCnvSvc::createConverter(long typ,const CLID& wanted,const ICnvFactory*)
     if ( 0 != pConverter ) {
       MsgStream log(msgSvc(), name());
       log << MSG::INFO << "Using \"Any\" converter for objects of type " 
-	  << std::showbase << std::hex << wanted << endmsg;
+	  << showbase << hex << wanted << endmsg;
     }
   }
   return pConverter;
@@ -172,7 +175,7 @@ SerializeCnvSvc::createConverter(long typ,const CLID& wanted,const ICnvFactory*)
 void SerializeCnvSvc::loadConverter(DataObject* pObject) {
   if (pObject) {
     MsgStream log(msgSvc(), name());
-    std::string cname = System::typeinfoName(typeid(*pObject));
+    string cname = System::typeinfoName(typeid(*pObject));
     log << MSG::DEBUG << "Trying to 'Autoload' dictionary for class " << cname << endmsg;
     gInterpreter->EnableAutoLoading();
     gInterpreter->AutoLoad( cname.c_str());
@@ -211,7 +214,7 @@ StatusCode  SerializeCnvSvc::commitOutput(CSTR dsn, bool doCommit) {
       MsgStream log(msgSvc(), name());
       log << MSG::DEBUG << "Serializing " << dsn << " with " << m_objects.size() << " objects." << endmsg;
       map<string, TClass*> classes;
-      int ObjObjCounter=1;
+      int object_counter=1;
       RawEvent* raw = new RawEvent();
       for(Objects::iterator i=m_objects.begin(); i != m_objects.end(); ++i)      {    
         TBufferFile rawBuffer(TBuffer::kWrite,256*1024);
@@ -219,26 +222,17 @@ StatusCode  SerializeCnvSvc::commitOutput(CSTR dsn, bool doCommit) {
 	DataObjectPush p(pObj);
 
 	// We build a map so gROOT has to access the whole class database as little as possible
-	TClass* cl;
-	const type_info& objClass = typeid(*pObj);
-	string objClassName = System::typeinfoName(objClass);
-	if (classes[objClassName])   {
-	  log << MSG::VERBOSE << "Class "<<objClassName<<" already mapped"<<endmsg;
-	  cl=classes[objClassName];
-	}
-	else	  {
-	  log << MSG::VERBOSE << "Looking for class "<<objClassName<<" in gROOT"<<endmsg;
-	  const char* clName = objClassName.c_str();
-	  cl = gROOT->GetClass(clName);
-	  classes[objClassName]=cl;
+	string objClassName = System::typeinfoName(typeid(*pObj));
+	TClass* cl = classes[objClassName];
+	if ( 0 == cl )   {
+	  classes[objClassName] = cl = gROOT->GetClass(objClassName.c_str());
 	}
 	if (cl==0){
-	  log<<MSG::ERROR<<"No valid class found!"<<endmsg;
-	  log<<MSG::ERROR<<"     Class Name: "<<objClassName<<endmsg;    
+	  log<<MSG::ERROR<<"No valid class found for " << objClassName << endmsg;    
 	  return StatusCode::FAILURE;      
 	}
         
-	std::string loc=pObj->registry()->identifier();
+	string loc=pObj->registry()->identifier();
 	rawBuffer.WriteString(loc.c_str());
         rawBuffer << (long)pObj->clID();
 	rawBuffer.WriteString(cl->GetName());
@@ -248,8 +242,7 @@ StatusCode  SerializeCnvSvc::commitOutput(CSTR dsn, bool doCommit) {
 	int numLinks = linkMgr->size();
         rawBuffer << numLinks;
 	for (int it = 0; it != numLinks; it++)        {
-	  const string& link = linkMgr->link(it)->path();
-          rawBuffer.WriteString(link.c_str());
+          rawBuffer.WriteString(linkMgr->link(it)->path().c_str());
 	}
         
 	// Write the bank taking into account size limitations
@@ -258,31 +251,52 @@ StatusCode  SerializeCnvSvc::commitOutput(CSTR dsn, bool doCommit) {
         int bnk_count = 0;
         while(start<end) {
           int bnk_len = end-start > 32*1024 ? 32*1024 : end-start;
-          RawBank* bank = raw->createBank(ObjObjCounter, RawBank::GaudiSerialize, bnk_count, bnk_len, start);
+          RawBank* bank = raw->createBank(object_counter, RawBank::GaudiSerialize, ++bnk_count, bnk_len, start);
           raw->adoptBank(bank,true);
-          bnk_count++;
           start += bnk_len;
         }
-	ObjObjCounter++;
-	rawBuffer.Delete();
+	++object_counter;
+	// rawBuffer.Delete();
       }
-      
-      StatusCode sc = dataProvider()->registerObject("/Event/GaudiSerialize",new DataObject());
-      if (!sc.isSuccess())   {
-	log<<MSG::ERROR<<"\"/Event/GaudiSerialize\" not successfully registered"<<endmsg;
+      //
+      //  Add MDF Header bank using the original ODIN information if present
+      //
+      SmartDataPtr<RawEvent> raw_org(dataProvider(),RawEventLocation::Default);
+      if ( raw_org ) {
+	const vector<RawBank*>& odin=raw_org->banks(RawBank::ODIN);
+	if ( !odin.empty() ) {
+	  unsigned int trMask[] = {~0,~0,~0,0x10};
+	  const OnlineRunInfo* odin_bank=odin[0]->begin<OnlineRunInfo>();
+	  size_t len = rawEventLength(raw);
+	  RawBank* hdrBank = raw->createBank(0, RawBank::DAQ, DAQ_STATUS_BANK, sizeof(MDFHeader)+sizeof(MDFHeader::Header1), 0);
+	  MDFHeader* hdr = (MDFHeader*)hdrBank->data();
+	  hdr->setChecksum(0);
+	  hdr->setCompression(0);
+	  hdr->setHeaderVersion(3);
+	  hdr->setSpare(0);
+	  hdr->setDataType(MDFHeader::BODY_TYPE_BANKS);
+	  hdr->setSubheaderLength(sizeof(MDFHeader::Header1));
+	  hdr->setSize(len);
+	  MDFHeader::SubHeader h = hdr->subHeader();
+	  h.H1->setTriggerMask(trMask);
+	  h.H1->setRunNumber(odin_bank->Run);
+	  h.H1->setOrbitNumber(odin_bank->Orbit);
+	  h.H1->setBunchID(odin_bank->bunchID);
+	  raw->adoptBank(hdrBank, true);
+	}
       }
-      sc = dataProvider()->registerObject("/Event/GaudiSerialize/Banks",raw);
+
+      StatusCode sc = dataProvider()->registerObject(m_location,raw);
       if (!sc.isSuccess())   {
-	log<<MSG::ERROR<<"\"/Event/GaudiSerialize/Banks\" not successfully registered"<<endmsg;
-      }      
-      
+	log << MSG::ERROR << "\"" << m_location << "\" not successfully registered"<<endmsg;
+      }
     }
     // Rollback: just clear the object buffer!
     m_objects.clear();
     return S_OK;
   }
-  catch (std::exception& e)  {
-    error(std::string("commitOutput> Caught exception:")+e.what());
+  catch (exception& e)  {
+    error(string("commitOutput> Caught exception:")+e.what());
   }
   catch (...)   {
     error("commitOutput> Unknown Fatal Exception on commit to "+dsn);
@@ -299,7 +313,7 @@ StatusCode SerializeCnvSvc::disconnect(CSTR /* dsn */)  {
 /// IAddressCreator implementation: Address creation
 StatusCode SerializeCnvSvc::createAddress(long  typ,
 					  const CLID& clid,
-					  const std::string* par, 
+					  const string* par, 
 					  const unsigned long* ip,
 					  IOpaqueAddress*& refpAddress) 
 {
@@ -312,7 +326,7 @@ StatusCode
 SerializeCnvSvc::writeObject(DataObject* pObj, IOpaqueAddress*& refpAddr)  {
   if ( pObj ) {
     CLID clid = pObj->clID();
-    std::string loc = pObj->registry()->identifier();
+    string loc = pObj->registry()->identifier();
     m_objects.push_back(pObj);
     refpAddr = new SerializeAddress(SERIALIZE_StorageType,clid,loc,"",0,0);
     return S_OK;
@@ -327,22 +341,22 @@ StatusCode SerializeCnvSvc::readObject(IOpaqueAddress* pA, DataObject*& refpObj)
   if ( pA ) {
     MsgStream log(msgSvc(), name());
     IRegistry* pReg = pA->registry();
-    std::string id = pReg->identifier();
+    string id = pReg->identifier();
     RawDataAddress* pAddRaw = dynamic_cast<RawDataAddress*>(pA);
-    std::vector<RawBank*> banks;
-    std::pair<char*,int> d = pAddRaw->data();
+    vector<RawBank*> banks;
+    pair<char*,int> d = pAddRaw->data();
     
     decodeRawBanks(d.first,d.first+d.second,banks);
-    for(std::vector<RawBank*>::const_iterator i=banks.begin(); i!=banks.end();++i)  {
+    for(vector<RawBank*>::const_iterator i=banks.begin(); i!=banks.end();++i)  {
       // log << RawEventPrintout::bankHeader(*i) << endmsg;      
     }
     
-    for(std::vector<RawBank*>::const_iterator i=banks.begin(); i!=banks.end();++i)  {
+    for(vector<RawBank*>::const_iterator i=banks.begin(); i!=banks.end();++i)  {
       RawBank* readBank = *i;
       if ( readBank->version() == 0 && id == readBank->begin<char>() ) { //We only want banks with version()=0
         int srcID = readBank->sourceID();
         size_t len = 0;
-        for(std::vector<RawBank*>::const_iterator k=banks.begin(); k!=banks.end();++k)  {
+        for(vector<RawBank*>::const_iterator k=banks.begin(); k!=banks.end();++k)  {
           RawBank* checkBank = *k;
           if ( checkBank->sourceID() == srcID ) { //Banks with the same sourceID() correspond to the same DataObject
             len += checkBank->size();
@@ -355,7 +369,7 @@ StatusCode SerializeCnvSvc::readObject(IOpaqueAddress* pA, DataObject*& refpObj)
 	//  The TBuffer is filled with as many banks as necessary        
         memory = new char[len];
         char* mem = memory;
-        for(std::vector<RawBank*>::const_iterator k=banks.begin(); k!=banks.end();++k)  {
+        for(vector<RawBank*>::const_iterator k=banks.begin(); k!=banks.end();++k)  {
           RawBank* copyBank = *k;
           if ( copyBank->sourceID() == srcID ) {
             memcpy(mem,copyBank->begin<char>(),copyBank->size());
@@ -388,7 +402,7 @@ StatusCode SerializeCnvSvc::readObject(IOpaqueAddress* pA, DataObject*& refpObj)
             lnkMgr->addLink(text,0);
           }
           // Now register addresses! We need to register the leaves of the object (some string magic)
-          for(std::vector<RawBank*>::const_iterator j=banks.begin(); j!=banks.end();++j)  {
+          for(vector<RawBank*>::const_iterator j=banks.begin(); j!=banks.end();++j)  {
             RawBank* loopBank = *j;
             if ( loopBank->version() == 0 && loopBank != readBank ) {
               const char* name = loopBank->begin<char>();
@@ -399,7 +413,7 @@ StatusCode SerializeCnvSvc::readObject(IOpaqueAddress* pA, DataObject*& refpObj)
                   StatusCode sc = m_dataMgr->registerAddress(pReg, name, leafAddr);
                   if ( !sc.isSuccess() )  {
                     leafAddr->release();
-                    error("Failed to register address for object "+std::string(name));
+                    error("Failed to register address for object "+string(name));
                   }
                 }
               }

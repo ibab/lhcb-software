@@ -1,4 +1,4 @@
-// $Id: SerializeCnvSvc.h,v 1.1 2008-06-17 13:23:14 frankb Exp $
+// $Id: SerializeCnvSvc.h,v 1.2 2008-09-23 13:03:23 frankb Exp $
 //====================================================================
 //	SerializeCnvSvc definition
 //--------------------------------------------------------------------
@@ -7,7 +7,7 @@
 //====================================================================
 #ifndef SERIALIZE_SERIALIZECNVSVC_H
 #define SERIALIZE_SERIALIZECNVSVC_H
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiSerialize/GaudiSerialize/SerializeCnvSvc.h,v 1.1 2008-06-17 13:23:14 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiSerialize/GaudiSerialize/SerializeCnvSvc.h,v 1.2 2008-09-23 13:03:23 frankb Exp $
 
 // Framework include files
 #include "GaudiKernel/ConversionSvc.h"
@@ -39,6 +39,9 @@ class SerializeCnvSvc : public ConversionSvc  {
   typedef std::vector<DataObject*> Objects;
   IDataManagerSvc* m_dataMgr;
   Objects          m_objects;
+  /// Property: Location of bank object in TES
+  std::string      m_location;
+
  public:
   /// Retrieve interface ID
   static const InterfaceID& interfaceID() { return IID_ISerializeMgr; }

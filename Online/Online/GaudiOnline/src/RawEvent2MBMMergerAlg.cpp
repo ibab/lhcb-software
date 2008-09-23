@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/RawEvent2MBMMergerAlg.cpp,v 1.1 2008-01-17 17:30:10 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/RawEvent2MBMMergerAlg.cpp,v 1.2 2008-09-23 13:03:23 frankb Exp $
 //  ====================================================================
 //  DecisionSetterAlg.cpp
 //  --------------------------------------------------------------------
@@ -15,6 +15,7 @@
 #include "RTL/rtl.h"
 
 using namespace MBM;
+static const unsigned int NO_ROUTING = (unsigned int)~0x0;
 
 /*
  *  LHCb namespace declaration
@@ -34,15 +35,17 @@ namespace LHCb  {
     Producer*     m_prod;
     /// Property: output buffer name
     std::string   m_bufferName;
+    /// Property: Word 4 of trigger mask (Routing bits)
+    unsigned int  m_routingBits;
     /// Monitoring quantity: Counter of number of bytes sent
     int           m_bytesDeclared;
-
   public:
     /// Standard algorithm constructor
     RawEvent2MBMMergerAlg(const std::string& nam, ISvcLocator* pSvc)
     :  MDFWriter(MDFIO::MDF_NONE, nam, pSvc), m_mepMgr(0), m_prod(0)
     {
-      declareProperty("Buffer",m_bufferName="RESULT");
+      declareProperty("Buffer",      m_bufferName="RESULT");
+      declareProperty("RoutingBits", m_routingBits=NO_ROUTING);
     }
     /// Standard Destructor
     virtual ~RawEvent2MBMMergerAlg()      {                                 }
@@ -114,6 +117,11 @@ namespace LHCb  {
 	MDFHeader* h = (MDFHeader*)b->data();
 	e.type       = EVENT_TYPE_EVENT;
 	e.len        = len;
+	const unsigned int* mask = h->subHeader().H1->triggerMask();
+	if ( m_routingBits != NO_ROUTING ) {
+	  unsigned int m[] = { mask[0], mask[1], mask[2], m_routingBits };
+	  h->subHeader().H1->setTriggerMask(m);
+	}
 	::memcpy(e.mask,h->subHeader().H1->triggerMask(),sizeof(e.mask));
 	int ret = m_prod->sendEvent();
 	if ( MBM_NORMAL == ret )   {

@@ -60,6 +60,26 @@ def evtSender(target,name='Sender'):
   return sender
   
 #------------------------------------------------------------------------------------------------
+def evtMerger(buffer='Events',name='Writer',location='/Event/DAQ/RawEvent',routing=0x1):
+  merger                   = Configs.LHCb__RawEvent2MBMMergerAlg(name)
+  merger.Buffer            = buffer
+  merger.Compress          = 0
+  merger.DataType          = 1
+  merger.BankLocation      = location
+  merger.RoutingBits       = routing
+  return merger
+  
+#------------------------------------------------------------------------------------------------
+def serialWriter(name='DstWriter',location='/Event/GaudiSerialize'):
+  svc    = CFG.EventPersistencySvc()
+  ser    = Configs.SerializeCnvSvc('SerializeCnvSvc')
+  serial = CFG.OutputStream(name)
+  ser.Banks = location
+  svc.CnvServices.append('SerializeCnvSvc/SerializeCnvSvc')
+  serial.Output = "DATAFILE='root.buffers' SVC='SerializeCnvSvc/SerializeCnvSvc' OPT='RECREATE'"
+  return serial
+
+#------------------------------------------------------------------------------------------------
 def msgSvc():
   svc                  = CFG.MessageSvc()
   return svc
@@ -107,7 +127,13 @@ def evtReceiver(buffer,name='Receiver'):
 #------------------------------------------------------------------------------------------------
 def rawPersistencySvc():
   svc                  = CFG.EventPersistencySvc()
-  svc.CnvServices      = ['LHCb::RawDataCnvSvc/RawDataCnvSvc' ]
+  svc.CnvServices.append('LHCb::RawDataCnvSvc/RawDataCnvSvc')
+  return svc
+
+#------------------------------------------------------------------------------------------------
+def serialPersistencySvc():
+  svc                  = rawPersistencySvc()
+  svc.CnvServices.append('SerializeCnvSvc/SerializeCnvSvc')
   return svc
 
 #------------------------------------------------------------------------------------------------
@@ -137,11 +163,11 @@ def netSelector(input=None,type=None):
   return svc
 
 #------------------------------------------------------------------------------------------------
-def end_config():
+def end_config(print_config=True):
   import GaudiPython
   gaudi = GaudiPython.AppMgr()
   patchExitHandler()
-  printConfiguration()
+  if print_config: printConfiguration()
   return gaudi
 
 #------------------------------------------------------------------------------------------------
@@ -253,3 +279,15 @@ def diskWRApp(partID, partName, buffer, partitionBuffers, decode, output):
   evtPers              = rawPersistencySvc()
   algs                 = [storeExplorer(load=1,freq=0.001),diskWriter(output=output,input=3,compress=0)]
   return _application('NONE',extsvc=[Configs.MonitorSvc(),mepMgr,evtSel],runable=evtRunable(mepMgr),algs=algs)
+
+#------------------------------------------------------------------------------------------------
+def mdf2mbmApp(partID, partName, buffers, input, partitionBuffers=True,routing=0x1):
+  mepMgr               = mepManager(partID,partName,buffers,partitionBuffers=partitionBuffers)
+  runable              = evtRunable(mepMgr)
+  evtSel               = CFG.EventSelector()
+  evtSel.PrintFreq     = 1
+  evtSel.Input         = input
+  evtdata              = evtDataSvc()  
+  evtPers              = rawPersistencySvc()
+  algs                 = [evtMerger(buffer=buffers[0],name='MDF2MBM',location='DAQ/RawEvent',routing=routing)]
+  return _application('NONE',extsvc=[Configs.MonitorSvc(),mepMgr,evtSel],runable=runable,algs=algs)

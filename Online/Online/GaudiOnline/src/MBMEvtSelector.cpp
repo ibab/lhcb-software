@@ -1,4 +1,4 @@
-// $Id: MBMEvtSelector.cpp,v 1.3 2008-04-15 18:32:02 frankb Exp $
+// $Id: MBMEvtSelector.cpp,v 1.4 2008-09-23 13:03:23 frankb Exp $
 //====================================================================
 //  MBMEvtSelector
 //--------------------------------------------------------------------
@@ -13,7 +13,7 @@
 //  Created    : 4/01/99
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMEvtSelector.cpp,v 1.3 2008-04-15 18:32:02 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMEvtSelector.cpp,v 1.4 2008-09-23 13:03:23 frankb Exp $
 #ifndef GAUDIONLINE_MBMEVTSELECTOR_H
 #define GAUDIONLINE_MBMEVTSELECTOR_H 1
 
@@ -96,7 +96,7 @@ namespace LHCb  {
 }
 #endif // GAUDIONLINE_MBMEVTSELECTOR_H
 
-// $Id: MBMEvtSelector.cpp,v 1.3 2008-04-15 18:32:02 frankb Exp $
+// $Id: MBMEvtSelector.cpp,v 1.4 2008-09-23 13:03:23 frankb Exp $
 //====================================================================
 //  MBMEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -259,6 +259,7 @@ StatusCode MBMContext::connect(const std::string& input)  {
     }
     return sc;
   }
+  m_sel->error("Failed to connect to buffer manager \""+input+"\".");
   return sc;
 }
 
@@ -298,6 +299,8 @@ StatusCode MBMContext::connectMBM(const std::string& input)  {
       }
       return StatusCode::SUCCESS;
     }
+    m_sel->error("Data buffer \""+input+"\" is not mapped. "
+		 "How do you think you can connect to it?");
   }
   return StatusCode::FAILURE;
 }
