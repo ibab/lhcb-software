@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltMuonLines.py,v 1.4 2008-09-23 09:27:57 graven Exp $
+# $Id: HltMuonLines.py,v 1.5 2008-09-23 13:13:41 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -12,7 +12,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -60,7 +60,7 @@ TConfMatchVelo = [ decodeT
 
 #### shared 'blocks' of members
 
-singleMuonPrep = bindMembers( 'singleMuonPrep',
+singleMuonPrep = bindMembers( 'SingleMuonPrep',
                    [ Member ( 'L0MuonPrepare' , 'MuonORMuonNoGlob'
                             , InputSelection = HltL0MuonPrepare().getDefaultProperties()['InputSelection']
                             # , InputSelection = 'TES:' + 'Trig/L0/MuonCtrl' # how to get LHCb::L0MuonCandidateLocation::Default instead?
@@ -72,7 +72,7 @@ singleMuonPrep = bindMembers( 'singleMuonPrep',
                    ] + TConfMatchVelo 
                    )
 
-muonSegPrep = bindMembers ('muonSegPrepare' ,
+muonSegPrep = bindMembers ('MuonSegPrepare' ,
                    [ singleMuonPrep 
                    , RecoMuonSeg
                    , Member ('TF', 'PrepareMuonSeg'
