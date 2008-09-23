@@ -5,7 +5,7 @@
  *  Header file for tool interface : Rich::DAQ::IRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: IRichRawDataFormatTool.h,v 1.11 2007-04-23 12:44:03 jonrob Exp $
+ *  $Id: IRichRawDataFormatTool.h,v 1.12 2008-09-23 14:31:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -51,6 +51,11 @@ namespace Rich
 
     public:
 
+      /// Type for Input location(s) for RawEvent in TES
+      typedef std::vector<std::string> RawEventLocations;
+
+    public:
+
       /** static interface identification
        *  @return unique interface identifier
        */
@@ -64,11 +69,23 @@ namespace Rich
       virtual void fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs,
                                  const Rich::DAQ::BankVersion version = Rich::DAQ::LHCb2 ) const = 0;
 
-      /** Decode all RICH RawBanks into the RICH decoded data structure
+      /** Decode all RICH RawBanks in the given events into the RICH decoded data structure
+       *
+       *  @param[in] taeLocations Vector of TAE locations to decode
+       *  @param decodedData The RICH data structure to fill
+       */
+      virtual void decodeToSmartIDs( const RawEventLocations & taeLocations,
+                                     Rich::DAQ::L1Map & decodedData ) const = 0;
+
+      /** Decode all RICH RawBanks in the main event into the RICH decoded data structure
        *
        *  @param decodedData The RICH data structure to fill
        */
-      virtual void decodeToSmartIDs( Rich::DAQ::L1Map & decodedData ) const = 0;
+      inline void decodeToSmartIDs( Rich::DAQ::L1Map & decodedData ) const
+      {
+        static const RawEventLocations loc(1,"");
+        return decodeToSmartIDs( loc, decodedData );
+      }
 
     };
 
