@@ -117,14 +117,14 @@ StatusCode LoKi::Hybrid::HltEngineActor::process
 // ============================================================================
 StatusCode LoKi::Hybrid::HltEngineActor::process
 ( const std::string&          name , 
-  const LoKi::Types::O1_Cuts& func ) const 
+  const LoKi::Types::ODIN_Cuts& func ) const 
 { return _add ( name , func ) ; }
 // ============================================================================
 // propagate the function to the tool 
 // ============================================================================
 StatusCode LoKi::Hybrid::HltEngineActor::process
 ( const std::string&          name , 
-  const LoKi::Types::O1_Func& func ) const 
+  const LoKi::Types::ODIN_Func& func ) const 
 { return _add ( name , func ) ; }
 // ============================================================================
 // propagate the function to the tool 

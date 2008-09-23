@@ -1,4 +1,4 @@
-// $Id: LoKiHltDict.h,v 1.1.1.1 2008-09-21 14:41:20 ibelyaev Exp $
+// $Id: LoKiHltDict.h,v 1.2 2008-09-23 13:13:35 ibelyaev Exp $
 // ============================================================================
 #ifndef DICT_LOKIDAQDICT_H 
 #define DICT_LOKIDAQDICT_H 1
@@ -15,7 +15,7 @@
 #include "LoKi/FuncOps.h"
 #include "LoKi/BasicFunctors.h"
 // ============================================================================
-#include "LoKi/O1.h"
+#include "LoKi/Odin.h"
 #include "LoKi/L0.h"
 #include "LoKi/HLT.h"
 // ============================================================================

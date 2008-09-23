@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: functions.py,v 1.1.1.1 2008-09-21 14:41:20 ibelyaev Exp $ 
+# $Id: functions.py,v 1.2 2008-09-23 13:13:35 ibelyaev Exp $ 
 # =============================================================================
 ## @file LoKiHlt/functions.py
 #  The full set of useful objects from LoKiHlt library 
@@ -12,7 +12,7 @@
 The full set of useful objects from LoKiHlt library
 """
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl   "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.1.1.1 $  "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $  "
 # =============================================================================
 
 import LoKiCore.decorators as _LoKiCore 
@@ -40,14 +40,14 @@ L0_Fun   = LoKi.FunctorFromFunctor     ( _l0 + ',double' )
 ## @see LoKi::Types::L0_Cut
 L0_Cut   = LoKi.FunctorFromFunctor     ( _l0 + ',bool'   ) 
 
-## @see LoKi::Types::O1_Func
-O1_Func  = LoKi.Functor                ( _o1 + ',double' ) 
-## @see LoKi::Types::O1_Cuts
-O1_Cuts  = LoKi.Functor                ( _o1 + ',bool'   ) 
-## @see LoKi::Types::O1_Fun
-O1_Fun   = LoKi.FunctorFromFunctor     ( _o1 + ',double' ) 
-## @see LoKi::Types::O1_Cut
-O1_Cut   = LoKi.FunctorFromFunctor     ( _o1 + ',bool'   ) 
+## @see LoKi::Types::ODIN_Func
+ODIN_Func  = LoKi.Functor                ( _o1 + ',double' ) 
+## @see LoKi::Types::ODIN_Cuts
+ODIN_Cuts  = LoKi.Functor                ( _o1 + ',bool'   ) 
+## @see LoKi::Types::ODIN_Fun
+ODIN_Fun   = LoKi.FunctorFromFunctor     ( _o1 + ',double' ) 
+## @see LoKi::Types::ODIN_Cut
+ODIN_Cut   = LoKi.FunctorFromFunctor     ( _o1 + ',bool'   ) 
 
 ## @see LoKi::Types::HLT_Func
 HLT_Func = LoKi.Functor                ( _hlt + ',double' ) 
@@ -134,76 +134,76 @@ L0_ZERO          = LoKi.Constant ( _l0 + ',double' ) ( 0 )
 ## The concrete O1-functions 
 # =============================================================================
 
-## @see LoKi::Cuts::O1_ALL
-O1_ALL       = LoKi.Constant( _o1 + ',bool'  ) ( True  )
+## @see LoKi::Cuts::ODIN_ALL
+ODIN_ALL       = LoKi.Constant( _o1 + ',bool'  ) ( True  )
 
-## @see LoKi::Cuts::O1_BUNCH
-O1_BUNCH     = LoKi.O1.BunchId      ()
+## @see LoKi::Cuts::ODIN_BUNCH
+ODIN_BUNCH     = LoKi.Odin.BunchId      ()
 
-## @see LoKi::Cuts::O1_BXCURRENT
-O1_BXCURRENT = LoKi.O1.BunchCurrent ()
+## @see LoKi::Cuts::ODIN_BXCURRENT
+ODIN_BXCURRENT = LoKi.Odin.BunchCurrent ()
 
-## @see LoKi::Cuts::O1_BXID 
-O1_BXID      = LoKi.O1.BXId 
+## @see LoKi::Cuts::ODIN_BXID 
+ODIN_BXID      = LoKi.Odin.BXId 
 
-## @see LoKi::Cuts::O1_BXTYP
-O1_BXTYP     = LoKi.O1.BXType () 
+## @see LoKi::Cuts::ODIN_BXTYP
+ODIN_BXTYP     = LoKi.Odin.BXType () 
 
-## @see LoKi::Cuts::O1_CALSTEP
-O1_CALSTEP   = LoKi.O1.CalibrationStep () 
+## @see LoKi::Cuts::ODIN_CALSTEP
+ODIN_CALSTEP   = LoKi.Odin.CalibrationStep () 
 
-## @see LoKi::Cuts::O1_ForceBit 
-O1_FORCEBIT  = LoKi.O1.ForceBit () 
+## @see LoKi::Cuts::ODIN_ForceBit 
+ODIN_FORCEBIT  = LoKi.Odin.ForceBit () 
 
-## @see LoKi::Cuts::O1_EVTTYP
-O1_EVTTYP    = LoKi.O1.EventType () 
+## @see LoKi::Cuts::ODIN_EVTTYP
+ODIN_EVTTYP    = LoKi.Odin.EventType () 
 
-## @see LoKi::Cuts::O1_ERRBITS
-O1_ERRBITS   = LoKi.O1.ErrorBits () 
+## @see LoKi::Cuts::ODIN_ERRBITS
+ODIN_ERRBITS   = LoKi.Odin.ErrorBits () 
 
 
 
-## @see LoKi::Cuts::O1_FALSE
-O1_FALSE     = LoKi.Constant( _o1 + ',bool'  ) ( False )
+## @see LoKi::Cuts::ODIN_FALSE
+ODIN_FALSE     = LoKi.Constant( _o1 + ',bool'  ) ( False )
 
-## @see LoKi::Cuts::O1_NONE
-O1_NONE      = LoKi.Constant( _o1 + ',bool'   ) ( False )
+## @see LoKi::Cuts::ODIN_NONE
+ODIN_NONE      = LoKi.Constant( _o1 + ',bool'   ) ( False )
 
-## @see LoKi::Cuts::O1_NULL
-O1_NULL      = LoKi.Constant( _o1 + ',double') ( 0 )
+## @see LoKi::Cuts::ODIN_NULL
+ODIN_NULL      = LoKi.Constant( _o1 + ',double') ( 0 )
 
-## @see LoKi::Cuts::O1_ONE 
-O1_ONE       = LoKi.Constant( _o1 + ',double') ( 1 )
+## @see LoKi::Cuts::ODIN_ONE 
+ODIN_ONE       = LoKi.Constant( _o1 + ',double') ( 1 )
 
-## @see LoKi::Cuts::O1_ORBIT 
-O1_ORBIT     = LoKi.O1.Orbit  () 
+## @see LoKi::Cuts::ODIN_ORBIT 
+ODIN_ORBIT     = LoKi.Odin.Orbit  () 
 
-## @see LoKi::Cuts::O1_ROTYP
-O1_ROTYP     = LoKi.O1.ReadOutType () 
+## @see LoKi::Cuts::ODIN_ROTYP
+ODIN_ROTYP     = LoKi.Odin.ReadOutType () 
 
-## @see LoKi::Cuts::O1_RUN 
-O1_RUN       = LoKi.O1.Run ()
+## @see LoKi::Cuts::ODIN_RUN 
+ODIN_RUN       = LoKi.Odin.Run ()
 
-## @see LoKi::Cuts::O1_RUNNUMBER 
-O1_RUNNUMBER = LoKi.O1.RunNumber 
+## @see LoKi::Cuts::ODIN_RUNNUMBER 
+ODIN_RUNNUMBER = LoKi.Odin.RunNumber 
 
-## @see LoKi::Cuts::O1_TCK
-O1_TCK       = LoKi.O1.TrgConfKey () 
+## @see LoKi::Cuts::ODIN_TCK
+ODIN_TCK       = LoKi.Odin.TrgConfKey () 
 
-## @see LoKi::Cuts::O1_TCKEYS 
-O1_TCKEYS    = LoKi.O1.Tck 
+## @see LoKi::Cuts::ODIN_TCKEYS 
+ODIN_TCKEYS    = LoKi.Odin.Tck 
 
-## @see LoKi::Cuts::O1_TIME
-O1_TIME      = LoKi.O1.InTime
+## @see LoKi::Cuts::ODIN_TIME
+ODIN_TIME      = LoKi.Odin.InTime
 
-## @see LoKi::Cuts::O1_TGRTYP
-O1_TRGTYP    = LoKi.O1.TriggerType () 
+## @see LoKi::Cuts::ODIN_TGRTYP
+ODIN_TRGTYP    = LoKi.Odin.TriggerType () 
 
-## @see LoKi::Cuts::O1_TRUE
-O1_TRUE      = LoKi.Constant( _o1 + ',bool'  ) ( True )
+## @see LoKi::Cuts::ODIN_TRUE
+ODIN_TRUE      = LoKi.Constant( _o1 + ',bool'  ) ( True )
 
-## @see LoKi::Cuts::O1_ZERO
-O1_ZERO      = LoKi.Constant( _o1 + ',double') ( 0 )
+## @see LoKi::Cuts::ODIN_ZERO
+ODIN_ZERO      = LoKi.Constant( _o1 + ',double') ( 0 )
 
 
 # =============================================================================

@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiHlt.xml,v 1.1.1.1 2008-09-21 14:41:20 ibelyaev Exp $ 
+     * $Id: LoKiHlt.xml,v 1.2 2008-09-23 13:13:35 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The XML seleciton file to build Reflex 
@@ -28,7 +28,7 @@
   <class pattern   = "LoKi::Dicts::*Ops<*LHCb::ODIN*>"     />
   <class pattern   = "LoKi::Dicts::*Calls<*LHCb::ODIN*>"   />
   
-  <class pattern   = "LoKi::O1::*"   />
+  <class pattern   = "LoKi::Odin::*"   />
 
   <class name = "std::unary_function<const LHCb::ODIN*,double>" />
   <class name = "std::unary_function<const LHCb::ODIN*,bool>"   />
@@ -71,9 +71,8 @@
 
   
   <exclusion>
-    <class name="LoKi::Hlt::HasSelection::Names"        />
+    <class name="LoKi::HLT::HasSelection::Names"        />
     <class name="LoKi::L0::ChannelDecision::Names"      />
-    <class name="std::vector<std::basic_string<char> >" /> 
   </exclusion>
 
 

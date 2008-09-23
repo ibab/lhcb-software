@@ -1,4 +1,4 @@
-// $Id: DAQTypes.h,v 1.1.1.1 2008-09-21 14:41:20 ibelyaev Exp $
+// $Id: DAQTypes.h,v 1.2 2008-09-23 13:13:35 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_DAQTYPES_H 
 #define LOKI_DAQTYPES_H 1
@@ -7,17 +7,12 @@
 // ============================================================================
 // LoKi
 // ============================================================================
-#include "LoKi/CoreTypes.h"
-#include "LoKi/Functions.h"
-// ============================================================================
-// forward declarations 
-// ============================================================================
-namespace LHCb { class ODIN       ; }
+#include "LoKi/OdinTypes.h"
 // ============================================================================
 namespace LoKi 
 {
   // ==========================================================================
-  /** @class DAQTypes DAQTypes.h LoKi/DAQTypes.h
+  /** @namespace LoKi::DAQTypes LoKi/DAQTypes.h
    *
    *  The basic types defined for LoKiHlt package 
    *
@@ -27,52 +22,9 @@ namespace LoKi
   namespace DAQTypes 
   {
     // ========================================================================
-    // O1 
-    // ========================================================================
-    /// type of 'cuts' for LHCb::ODIN        (interface)
-    typedef LoKi::BasicFunctors<const LHCb::ODIN*>::Predicate O1_Cuts ;
-    // ========================================================================
-    /// type of 'functions' for LHCb::ODIN   (interface)
-    typedef LoKi::BasicFunctors<const LHCb::ODIN*>::Function  O1_Func ;
-    // ========================================================================
-    /// type of 'cuts' for LHCb::ODIN        (assignable)
-    typedef LoKi::BasicFunctors<const LHCb::ODIN*>::PredicateFromPredicate O1_Cut ;
-    // ========================================================================
-    /// type of 'functions' for HEpMC::GenParticle   (assignable)
-    typedef LoKi::BasicFunctors<const LHCb::ODIN*>::FunctionFromFunction   O1_Fun ;
+    using namespace LoKi::OdinTypes ;
     // ========================================================================
   } // end of namespace LoKi::DAQTypes 
-  // ==========================================================================
-  namespace Types 
-  {
-    // ========================================================================
-    // O1 
-    // ========================================================================
-    /// type of 'cuts' for LHCb::ODIN        (interface)
-    typedef LoKi::DAQTypes::O1_Cuts                                  O1_Cuts ;
-    // ========================================================================
-    /// type of 'functions' LHCb::ODIN       (interface)
-    typedef LoKi::DAQTypes::O1_Func                                  O1_Func ;
-    // ========================================================================
-    /// type of 'cuts' for LHCb::ODIN        (assignable)
-    typedef LoKi::DAQTypes::O1_Cut                                   O1_Cut  ;
-    // ========================================================================
-    /// type of 'functions' for LHCb::ODIN   (assignable)
-    typedef LoKi::DAQTypes::O1_Fun                                   O1_Fun  ;
-    // ========================================================================
-  }
-  // ==========================================================================
-} // end of namespace LoKi
-// ============================================================================
-namespace LoKi 
-{
-  // ==========================================================================
-  // the specialized printout 
-  // ==========================================================================
-  template <>
-  inline std::ostream& 
-  Constant<const LHCb::ODIN*,bool>::fillStream( std::ostream& s ) const 
-  { return s << ( this->m_value ? "O1_ALL" : "O1_NONE" ) ; }
   // ==========================================================================
 } // end of namespace LoKi
 // ============================================================================

@@ -1,4 +1,4 @@
-// $Id: IHltFactory.h,v 1.1.1.1 2008-09-21 14:41:20 ibelyaev Exp $
+// $Id: IHltFactory.h,v 1.2 2008-09-23 13:13:35 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_IHltFACTORY_H 
 #define LOKI_IHltFACTORY_H 1
@@ -11,7 +11,7 @@
 // ============================================================================
 // LoKi
 // ============================================================================
-#include "LoKi/DAQTypes.h"
+#include "LoKi/OdinTypes.h"
 #include "LoKi/L0Types.h"
 #include "LoKi/HLTTypes.h"
 // ============================================================================
@@ -77,9 +77,9 @@ namespace LoKi
        *  @return StatusCode 
        */
       virtual StatusCode get
-      ( const std::string&   pycode       , 
-        LoKi::Types::O1_Cut& cuts         , 
-        const std::string&   context = "" )  = 0 ;
+      ( const std::string&     pycode       , 
+        LoKi::Types::ODIN_Cut& cuts         , 
+        const std::string&     context = "" )  = 0 ;
       // ========================================================================
       /** "Factory": get the the object form python code 
        *  @param pycode the python pseudo-code of the function
@@ -88,9 +88,9 @@ namespace LoKi
        *  @return StatusCode 
        */
       virtual StatusCode get
-      ( const std::string&   pycode       , 
-        LoKi::Types::O1_Fun& cuts         , 
-        const std::string&   context = "" )  = 0 ;
+      ( const std::string&     pycode       , 
+        LoKi::Types::ODIN_Fun& cuts         , 
+        const std::string&     context = "" )  = 0 ;
       // ======================================================================      
     public: // HLT
       // ======================================================================

@@ -1,4 +1,4 @@
-// $Id: HltEngine.cpp,v 1.1.1.1 2008-09-21 14:41:20 ibelyaev Exp $
+// $Id: HltEngine.cpp,v 1.2 2008-09-23 13:13:35 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -57,13 +57,13 @@ StatusCode LoKi::Hybrid::HltEngine::process
 // ============================================================================
 StatusCode LoKi::Hybrid::HltEngine::process
 ( const std::string&          name , 
-  const LoKi::Types::O1_Cuts& cut  ) const { return _process ( name , cut ) ; }
+  const LoKi::Types::ODIN_Cuts& cut  ) const { return _process ( name , cut ) ; }
 // ============================================================================
 // add the cut 
 // ============================================================================
 StatusCode LoKi::Hybrid::HltEngine::process
 ( const std::string&          name , 
-  const LoKi::Types::O1_Func& cut  ) const { return _process ( name , cut ) ; }
+  const LoKi::Types::ODIN_Func& cut  ) const { return _process ( name , cut ) ; }
 // ============================================================================
 // add the cut 
 // ============================================================================

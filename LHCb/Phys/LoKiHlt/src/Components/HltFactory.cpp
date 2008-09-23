@@ -1,4 +1,4 @@
-// $Id: HltFactory.cpp,v 1.1.1.1 2008-09-21 14:41:20 ibelyaev Exp $
+// $Id: HltFactory.cpp,v 1.2 2008-09-23 13:13:36 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -92,7 +92,7 @@ namespace LoKi
         const std::string&   context ) 
       { return _get ( pycode , m_l0_func , cuts , context ) ; }
       // ======================================================================
-    public: // O1-functors 
+    public: // ODIN-functors 
       // ======================================================================
       /** "Factory": get the the object form python code 
        *  @param pycode the python pseudo-code of the function
@@ -101,7 +101,7 @@ namespace LoKi
        */
       virtual StatusCode get
       ( const std::string&   pycode  , 
-        LoKi::Types::O1_Cut& cuts    , 
+        LoKi::Types::ODIN_Cut& cuts    , 
         const std::string&   context ) 
       { return _get ( pycode , m_o1_cuts  , cuts , context ) ; }
       // ======================================================================
@@ -112,7 +112,7 @@ namespace LoKi
        */
       virtual StatusCode get
       ( const std::string&   pycode  , 
-        LoKi::Types::O1_Fun& cuts    ,
+        LoKi::Types::ODIN_Fun& cuts    ,
         const std::string&   context ) 
       { return _get ( pycode , m_o1_func , cuts , context ) ; }
       // ======================================================================
@@ -152,10 +152,10 @@ namespace LoKi
     public: // O1-functors 
       // ======================================================================
       /// set the C++ predicate 
-      virtual void set ( const LoKi::Types::O1_Cuts& cut ) 
+      virtual void set ( const LoKi::Types::ODIN_Cuts& cut ) 
       { LoKi::Hybrid::Base::_set ( m_o1_cuts , cut ) ; }
       /// set the C++ function 
-      virtual void set ( const LoKi::Types::O1_Func& cut ) 
+      virtual void set ( const LoKi::Types::ODIN_Func& cut ) 
       { LoKi::Hybrid::Base::_set ( m_o1_func , cut ) ; }
       // ======================================================================
     public: // HLT-functors 
@@ -199,14 +199,14 @@ namespace LoKi
     private:
       // ======================================================================
       /// L0-functors :
-      LoKi::Types::L0_Cuts*  m_l0_cuts  ;                          // predicate 
-      LoKi::Types::L0_Func*  m_l0_func  ;                          //  function
-      /// O1-functors :
-      LoKi::Types::O1_Cuts*  m_o1_cuts  ;                          // predicate 
-      LoKi::Types::O1_Func*  m_o1_func  ;                          //  function
+      LoKi::Types::L0_Cuts*    m_l0_cuts  ;                        // predicate 
+      LoKi::Types::L0_Func*    m_l0_func  ;                        //  function
+      /// ODIN-functors :
+      LoKi::Types::ODIN_Cuts*  m_o1_cuts  ;                        // predicate 
+      LoKi::Types::ODIN_Func*  m_o1_func  ;                        //  function
       /// HLT-functors :
-      LoKi::Types::HLT_Cuts* m_hlt_cuts ;                          // predicate 
-      LoKi::Types::HLT_Func* m_hlt_func ;                          //  function
+      LoKi::Types::HLT_Cuts*   m_hlt_cuts ;                        // predicate 
+      LoKi::Types::HLT_Func*   m_hlt_func ;                        //  function
       // ======================================================================
       typedef std::vector<std::string> Modules ;
       Modules     m_modules ;

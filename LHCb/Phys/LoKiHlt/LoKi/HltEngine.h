@@ -1,4 +1,4 @@
-// $Id: HltEngine.h,v 1.1.1.1 2008-09-21 14:41:20 ibelyaev Exp $
+// $Id: HltEngine.h,v 1.2 2008-09-23 13:13:35 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_HltENGINE_H 
 #define LOKI_HltENGINE_H 1
@@ -56,11 +56,11 @@ namespace LoKi
       /// add the cut 
       StatusCode process 
       ( const std::string&          name , 
-        const LoKi::Types::O1_Cuts& cut  ) const ;
+        const LoKi::Types::ODIN_Cuts& cut  ) const ;
       /// add the cut 
       StatusCode process 
       ( const std::string&          name , 
-        const LoKi::Types::O1_Func& cut  ) const ;
+        const LoKi::Types::ODIN_Func& cut  ) const ;
       // ======================================================================
     public: // HLT
       // ======================================================================

@@ -1,4 +1,4 @@
-// $Id: IHltAntiFactory.h,v 1.1.1.1 2008-09-21 14:41:20 ibelyaev Exp $
+// $Id: IHltAntiFactory.h,v 1.2 2008-09-23 13:13:35 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_IHltANTIFACTORY_H 
 #define LOKI_IHltANTIFACTORY_H 1
@@ -11,7 +11,7 @@
 // ============================================================================
 // LoKi
 // ============================================================================
-#include "LoKi/DAQTypes.h"
+#include "LoKi/OdinTypes.h"
 #include "LoKi/L0Types.h"
 #include "LoKi/HLTTypes.h"
 // ============================================================================
@@ -54,9 +54,9 @@ namespace LoKi
     public: // O1 
       // ======================================================================
       /// set the C++ function for LHCb::ODIN
-      virtual void set ( const LoKi::Types::O1_Cuts& cut ) = 0 ;
+      virtual void set ( const LoKi::Types::ODIN_Cuts& cut ) = 0 ;
       /// set the C++ function for LHCb::ODIN
-      virtual void set ( const LoKi::Types::O1_Func& cut ) = 0 ;
+      virtual void set ( const LoKi::Types::ODIN_Func& cut ) = 0 ;
       // ======================================================================
     public: // HLT
       // ======================================================================
