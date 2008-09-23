@@ -1,7 +1,9 @@
 ! package GaudiConf
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
-
+! 2008-09-23 - Thomas Ruf
+ - Added Tae_ondemand.py : decoding (except for Rich and L0) for time align
+   events of all slots
 !======================== GaudiConf v10r12 2008-07-29 =======================
 ! 2008-07-29 - Marco Clemencic
  - Added the script gaudirun.py including work-arounds for
