@@ -4,6 +4,9 @@
 ! Purpose     : Fidel
 !-----------------------------------------------------------------------------
 
+! 2008-09-23 - Patrick Koppenburg
+ - Remove options file that is duplcate with Hlt selection.
+
 !========================== Fidel v1r3 2008-08-28 ===================
 ! 2008-08-19 - Patrick Koppenburg
  - Changes in Fidel.cpp. Use LoKi cuts to apply all cuts available in LoKi.
