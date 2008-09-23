@@ -1,8 +1,11 @@
-// $Id: CaloClusterMCTruth.cpp,v 1.6 2006-04-06 13:26:11 odescham Exp $
+// $Id: CaloClusterMCTruth.cpp,v 1.7 2008-09-23 10:00:59 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/04/06 13:26:11  odescham
+// generic tools moved to CaloUtils
+//
 // Revision 1.5  2006/03/28 14:44:36  cattanem
 // remove checks on return code from methods that only fail with exception
 //
@@ -86,8 +89,17 @@ protected:
     declareProperty ( "Clustes", m_clusterContainers);
     declareProperty ( "Input"  , m_inputRelations  ) ;
     declareProperty ( "Output" , m_outputRelations ) ;
-    m_clusterContainers.push_back( LHCb::CaloClusterLocation :: Ecal      ) ; 
-    m_clusterContainers.push_back( LHCb::CaloClusterLocation :: EcalSplit ) ;    
+
+    
+    std::string out( context() );
+    std::transform( context().begin() , context().end() , out.begin () , ::toupper ) ;
+    if( out == "HLT" ){
+      m_clusterContainers.push_back( LHCb::CaloClusterLocation :: EcalHlt      ) ; 
+      m_clusterContainers.push_back( LHCb::CaloClusterLocation :: EcalSplitHlt ) ;      
+    } else {      
+      m_clusterContainers.push_back( LHCb::CaloClusterLocation :: Ecal      ) ; 
+      m_clusterContainers.push_back( LHCb::CaloClusterLocation :: EcalSplit ) ;    
+    }  
   };
   /// virtual destructor (protected)
   virtual ~CaloClusterMCTruth() {}
@@ -138,18 +150,20 @@ StatusCode CaloClusterMCTruth::execute    ()
   
   if ( m_inputRelations.empty() ) 
   { return Error ( "No inputs are specified!" ) ; }
-  
-  // get CaloDigit->MCParticle relation from TES 
+
+
+  StatusCode sc = StatusCode::SUCCESS ;
+  if( !exist<DigTable>( m_inputRelations ))  return StatusCode::FAILURE ;
   DigTable* digTable = get<DigTable> ( m_inputRelations ) ;
   
   // loop over all containers of clusters 
   for ( Inputs::const_iterator container = m_clusterContainers.begin() ; 
-        m_clusterContainers.end() != container ; ++container ) 
-  {
+        m_clusterContainers.end() != container ; ++container ){
     
     // get the container of clusters 
+    if( !exist<Clusters>( *container))  continue;
     Clusters* clusters = get<Clusters> ( *container ) ;
-    
+   
     // loop over all clusters in the container  
     for ( Clusters::const_iterator icluster = clusters->begin() ; 
           clusters->end() != icluster ; ++icluster ) 

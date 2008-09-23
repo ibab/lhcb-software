@@ -1,10 +1,16 @@
-! $Id: release.notes,v 1.51 2008-01-25 13:28:57 cattanem Exp $
+! $Id: release.notes,v 1.52 2008-09-23 10:00:59 odescham Exp $
 ! =============================================================================
 ! Package     : CaloAssociators
 ! =============================================================================
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 !               Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
+
+! 2008-09-23 - Yasmine Amhis & Olivier Deschamps
+ - add HLT CaloCluster MC association in CaloAssociators.opts
+ - CaloClusterMCTruth.cpp : make use of context() for HLT - protect against missing clusters
+
 
 !===================== CaloAssociators v6r5 2008-01-25 ========================
 ! 2008-01-25 - Marco Cattaneo
