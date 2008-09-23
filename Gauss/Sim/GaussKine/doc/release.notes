@@ -4,6 +4,9 @@
 ! Purpose     : Code to exchange kinematic information with Geant4
 !-----------------------------------------------------------------------------
 
+! 2008-09-23 - Patrick Robbe
+ - GeneratorToG4.cpp: fix optical photon polarization part
+
 !========================= GaussKine v3r0 2008-08-25 ========================= 
 ! 2008-07-25 - Patrick Robbe
  - Move to HEPMC2

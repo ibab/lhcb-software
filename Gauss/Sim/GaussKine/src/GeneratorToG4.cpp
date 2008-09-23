@@ -1,4 +1,4 @@
-// $Id: GeneratorToG4.cpp,v 1.9 2008-07-26 17:29:33 robbep Exp $
+// $Id: GeneratorToG4.cpp,v 1.10 2008-09-23 16:15:49 robbep Exp $
 // Include files 
 
 // from Gaudi
@@ -41,7 +41,6 @@ public:
 
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( GeneratorToG4 );
-
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -92,7 +91,6 @@ StatusCode GeneratorToG4::execute() {
   // Temporary container of particles to store
   std::vector<HepMC::GenParticle*> outParts;
   outParts.clear();
-  
   
   if( hepEvts->size() == 0 ) {
     *gigaSvc() << NULL;
@@ -184,7 +182,6 @@ StatusCode GeneratorToG4::execute() {
     
     *gigaSvc() << origVertex;
     outParts.clear();
-
   } // end loop on events
 
   return StatusCode::SUCCESS;
@@ -201,14 +198,10 @@ StatusCode GeneratorToG4::finalize() {
 }
 
 //=============================================================================
+// Transform a HepMC particle into a Geant4 Primary particle
+//=============================================================================
 G4PrimaryParticle* GeneratorToG4::makeG4Particle(HepMC::GenParticle* genPart,
                                                  LHCb::HepMCEvent* theEvent ) {
-
-  //  static const std::string 
-  //  ErrMsg1("GiGaCnv::GenPartG4Part: GenParticle* points to NULL!");
-
-  //if( 0 == particle ) { throw GiGaException( ErrMsg1 ) ; }
-  
   std::vector<HepMC::GenParticle*> outParticles;
   
   G4PrimaryParticle*  g4Particle = 
@@ -216,53 +209,35 @@ G4PrimaryParticle* GeneratorToG4::makeG4Particle(HepMC::GenParticle* genPart,
                            genPart->momentum().px() ,
                            genPart->momentum().py() ,
                            genPart->momentum().pz() );
-//                            genPart->momentum().pz() ,
-//                            genPart->momentum().e()  );  
-  //If PDGID > Nucleus, Get Name, find G4 particle definition and reset that of the particle
+  
   LHCb::ParticleID pid( genPart->pdg_id() );
-  if( pid.isNucleus() ){
+  
+  // Set polarization (random) in case it is an optical photon: used 
+  // by RICH particle guns
+  if ( 20022 == pid.abspid() ){
+    //create Hep3Vector orthogonal to momentum direction, 
+    // use as polarisation of light
+    double x1 = genPart->momentum().px();
+    double y1 = genPart->momentum().py();
+    double z1 = genPart->momentum().pz();
 
-    ParticleProperty* prop = m_pSvc->findByStdHepID(genPart->pdg_id());
-    std::string particlename;
-    if( prop ) { particlename = prop->particle(); }
-    G4ParticleTable* g4Table = G4ParticleTable::GetParticleTable();
-    //find G4 particle definition
-    G4ParticleDefinition* g4PartCode = g4Table->FindParticle(particlename);
-    g4Particle->SetPDGcode(genPart->pdg_id());
-    g4Particle->SetG4code(g4PartCode);
-    //create Hep3Vector orthogonal to momentum direction, use as polarisation of light
+    double Phi = m_rand();
+    double sinPhi = sin(Phi);
+    double cosPhi = cos(Phi);
+    double Theta = acos( z1 / sqrt( (x1 * x1) + (y1 * y1) + (z1 * z1) ) );
+    double sinTheta = sin(Theta);
+    double cosTheta = cos(Theta);
+
+    double sx = cosTheta*cosPhi;
+    double sy = cosTheta*sinPhi;
+    double sz = -sinTheta;
     
-    G4double x1 = genPart->momentum().px();
-    G4double y1 = genPart->momentum().py();
-    G4double z1 = genPart->momentum().pz();
-
-    G4double Phi = m_rand();
-    G4double sinPhi = sin(Phi);
-    G4double cosPhi = cos(Phi);
-    G4double Theta = acos( z1 / sqrt( (x1 * x1) + (y1 * y1) + (z1 * z1) ) );
-    G4double sinTheta = sin(Theta);
-    G4double cosTheta = cos(Theta);
-
-    G4double sx = cosTheta*cosPhi;
-    G4double sy = cosTheta*sinPhi;
-    G4double sz = -sinTheta;
-
-
-    Hep3Vector momDir(genPart->momentum().px(),
-                      genPart->momentum().py(),
-                      genPart->momentum().pz());
-    
-    //Hep3Vector polDir(momDir.orthogonal());
     g4Particle->SetPolarization(sx,
 				sy,
 				sz);
-    //g4Particle->Print();
-    //std::cout<<"***Polarisation magnitude*** "
-    //     <<sqrt( (sx * sx) + (sy * sy) + (sz * sz) )
-    //     <<std::endl;
   }
+  
   g4Particle -> SetMass( genPart -> momentum().m() ) ;
-
   
   // create a new User information to contain the link to the HepMC
   // particle and signal information for particles with 889 status
@@ -286,16 +261,11 @@ G4PrimaryParticle* GeneratorToG4::makeG4Particle(HepMC::GenParticle* genPart,
     theLorentzV.SetE( theLorentzV.t() * Gaudi::Units::c_light ) ;
 
     Gaudi::LorentzVector mom( genPart->momentum() ) ;
-    ROOT::Math::Boost theBoost( -mom.BoostToCM() ) ;
+    ROOT::Math::Boost theBoost( mom.BoostToCM() ) ;
 
     // switch again to time from distance (ns)
     Gaudi::LorentzVector newPosition = theBoost( theLorentzV ) ;
     g4Particle->SetProperTime(newPosition.T()/Gaudi::Units::c_light);
-    
-    // Better to use print here instead of verbose because
-//     verbose() << "assigning time " 
-//               << (theLorentzV.boost(-theBoost)).t()/c_light
-//               << " to " <<  genPart->pdg_id() << endmsg;
     
     if( ( genPart->end_vertex() )->particles_out_size() == 1 ) {
       HepMC::GenVertex::particles_out_const_iterator dPart =
