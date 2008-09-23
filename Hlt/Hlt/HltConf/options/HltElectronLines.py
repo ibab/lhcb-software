@@ -1,9 +1,9 @@
 
-prepElectron =  Line( 'PrepElectron'
   GaudiSequencer('PrepareL0ElectronDecisionSeq')
-  GaudiSequencer('Hlt1RecoRZVeloSequence')
-  , algos =
-  [ Member ('TF', 'Hlt1EleSingleTFRZVelo', # // select RZVelo tracks with an IP and matched to L0Calo
+
+prepElectron =  bindMembers( 'PrepElectron', 
+  [ GaudiSequencer('Hlt1RecoRZVeloSequence')
+  , Member ('TF', 'Hlt1EleSingleTFRZVelo', # // select RZVelo tracks with an IP and matched to L0Calo
            , InputSelection     = 'RZVelo'
            , FilterDescriptor = [ 'Calo2DChi2_L0ElectronDecision,<,4.' ]
            , HistogramUpdatePeriod = 0
@@ -31,9 +31,10 @@ prepElectron =  Line( 'PrepElectron'
 
 
 Line ('SingleElectron'
-     , HLT = prepElectron
+     , L0 = 
      , algos = 
-     [ Member( 'TF','Hlt1ElectronSingleDecision'
+     [ prepElectron
+     , Member( 'TF','Hlt1ElectronSingleDecision'
              , InputSelection  = prepElectron.OuputSelection
              , FilterDescriptor = ['PT,>,3000.']
              , HistogramUpdatePeriod = 0
@@ -43,9 +44,10 @@ Line ('SingleElectron'
 
 
 Line( 'ElectronTrack' 
-    , HLT = prepElectron
+    , L0 = 
     , algos = 
-    [ reco1Velo
+    [ prepElectron
+    , reco1Velo
     , Member ( 'TF', 'CompanionVelo', # select velo tracks as companions 
              , InputSelection    = 'Velo'
              , HistogramUpdatePeriod = 0
