@@ -1,21 +1,17 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.1 2008-09-23 09:58:00 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.2 2008-09-23 13:07:27 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
 from Gaudi.Configuration import *
 from GaudiConf.Configuration import *
-from Configurables import ConfigFileAccessSvc, ConfigDBAccessSvc, HltConfigSvc, HltGenConfig
-from Configurables import EventClockSvc
-
 import GaudiKernel.ProcessJobOptions
-from  ctypes import c_uint
 
 class HltConf(ConfigurableUser):
     __slots__ = {
-        , "hltType" :          'PA+LU+VE+MU'
+          "hltType" :          'PA+LU+VE+MU'
         , "userAlgorithms":    [ ]  # put here user algorithms to add
         , "oldStyle" :         True # old style options configuration
         }   
@@ -67,7 +63,5 @@ class HltConf(ConfigurableUser):
                 importOptions( type2conf[i] )
             importOptions('$HLTCONFROOT/options/HltMain.py')
             importOptions('$HLTCONFROOT/options/Hlt1.py')
-
-        if self.getProp("userAlgorithms"):
-            for userAlg in self.getProp("userAlgorithms"):
-                ApplicationMgr().TopAlg += [ userAlg ]
+        for userAlg in self.getProp("userAlgorithms"):
+            ApplicationMgr().TopAlg += [ userAlg ]
