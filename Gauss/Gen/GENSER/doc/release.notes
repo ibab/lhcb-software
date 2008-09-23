@@ -4,6 +4,10 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2008-09-23 - Patrick Robbe
+ - pyevwt.F: reweight events only if quarkonium
+ - pyrand.F: call pyevwt even if minimum bias processes activated
+
 ! 2008-09-20 - Patrick Robbe
  - Add temporary fixes in pyevnw.F and pyptfs.F which will be 
    incorporated in pythia 6.4.19

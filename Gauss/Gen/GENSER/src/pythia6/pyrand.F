@@ -1,4 +1,4 @@
-C $Id: pyrand.F,v 1.1 2008-03-16 20:20:15 robbep Exp $ 
+C $Id: pyrand.F,v 1.2 2008-09-23 16:07:27 robbep Exp $ 
 C*********************************************************************
  
 C...PYRAND
@@ -883,8 +883,10 @@ C...Multiply cross-section by user-defined weights.
       VINT(99)=1D0
       VINT(100)=1D0
       IF(MINT(82).EQ.1.AND.MSTP(142).GE.1) THEN
-        IF(ISUB.NE.96.AND.MSUB(91)+MSUB(92)+MSUB(93)+MSUB(94)+
-     &  MSUB(95).EQ.0) CALL PYEVWT(WTXS)
+CC PR LHCb: modify to call PYEVWT for quarkonium
+C        IF(ISUB.NE.96.AND.MSUB(91)+MSUB(92)+MSUB(93)+MSUB(94)+
+C     &  MSUB(95).EQ.0) CALL PYEVWT(WTXS)
+        IF (ISUB.NE.96) CALL PYEVWT(WTXS)
         SIGSWT=WTXS*SIGS
         VINT(99)=WTXS
         IF(MSTP(142).EQ.1) VINT(100)=1D0/WTXS
