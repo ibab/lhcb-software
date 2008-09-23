@@ -1,3 +1,13 @@
+2008-09-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/LbLogin.bat: Removed.
+	* scripts/LbLogin.csh: Removed.
+	* scripts/LbLogin.sh: Removed.
+	* scripts/LbLogin.zsh: Removed.
+	* scripts/generateLogin.py: New file.
+	* cmt/requirements: 
+	* scripts/LbLogin.py: use a script to generate the shell wrappers
+
 2008-09-19  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* scripts/SetupProject.py:

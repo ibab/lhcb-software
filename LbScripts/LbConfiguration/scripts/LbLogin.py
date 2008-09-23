@@ -59,6 +59,7 @@ class LbLoginScript(Script):
         Script.__init__(self, usage, version)
         self._env = Environment()
         self._aliases = Aliases()
+        self._extra = ""
         self.platform = ""
         self.binary   = ""
         self.compdef  = ""
@@ -66,25 +67,24 @@ class LbLoginScript(Script):
     def _write_script(self, env):
         """ select the ouput stream according to the cmd line options """
         close_output = False
-        if not self.output_file :
-            if self.options.output:
-                self.output_file = open(self.options.output,"w")
-                self.options.output = None # reset the option value to avoid to reuse it
-#                close_output = True
-            elif self.options.mktemp:
-                fd, outname = mkstemp()
-                self.output_file = os.fdopen(fd,"w")
-                print outname
-                self.options.mktemp = None # reset the option value to avoid to reuse it
-#                close_output = True
-            else :
-                self.output_file = sys.stdout
-#                close_output = False
+        if self.options.output:
+            self.output_file = open(self.options.output,"w")
+            self.options.output = None # reset the option value to avoid to reuse it
+            close_output = True
+        elif self.options.mktemp:
+            fd, outname = mkstemp()
+            self.output_file = os.fdopen(fd,"w")
+            print outname
+            self.options.mktemp = None # reset the option value to avoid to reuse it
+            close_output = True
+        else :
+            self.output_file = sys.stdout
+            close_output = False
         # write the data
         self.output_file.write(env)
         self.output_file.write("\n") # @todo: this may be avoided
- #       if close_output: 
- #           self.output_file.close()
+        if close_output: 
+            self.output_file.close()
             
     def defineOpts(self):
         """ define commandline options """
@@ -254,12 +254,12 @@ class LbLoginScript(Script):
         if opts.targetshell == "csh" and ev.has_key("SHELL") :
             if os.path.basename(ev["SHELL"]) == "tcsh" :
                 for l in open(os.path.join(ev["CMTROOT"], "src", "setup.tcsh"),"r") :
-                    self._write_script(l[:-1])
+                    self._extra += l
                     
-        if opts.targetshell == "sh" and ev.has_key["ZSH_NAME"] :
+        if opts.targetshell == "sh" and ev.has_key("ZSH_NAME") :
             if ev["ZSH_NAME"] == "zsh" :
                 for l in open(os.path.join(ev["CMTROOT"], "src", "setup.zsh"),"r") :
-                    self._write_script(l[:-1])
+                    self._extra += l
                 
         newpath = []    
         for p in ev["PATH"].split(os.pathsep) :
@@ -580,7 +580,7 @@ class LbLoginScript(Script):
         self.setCMTPath()
         self.setupLbScripts()
 
-        return self._env
+        return self._env, self._aliases, self._extra
 
     def Manifest(self, debug=False):
         ev = self._env
@@ -614,7 +614,7 @@ class LbLoginScript(Script):
 
         self.setEnv(debug)
         self._write_script(self._env.gen_script(opts.targetshell)
-                           +self._aliases.gen_script(opts.targetshell))
+                           +self._aliases.gen_script(opts.targetshell)+self._extra)
         
         self.Manifest(debug)
         return 0
