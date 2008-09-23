@@ -1,3 +1,9 @@
+2008-09-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/fragments/call_command_header: New file.
+	* cmt/fragments/template_header: New file.
+	* cmt/requirements: added the template and call_command fragment from Gaudi
+
 2008-06-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/fragments/install_scripts_header:

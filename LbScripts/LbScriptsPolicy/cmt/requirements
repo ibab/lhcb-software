@@ -135,8 +135,33 @@ pattern install_script_doc \
     
 make_fragment install_doc -header=install_doc_header
 
+#-------------------------------------------------------------------
+# Generic cmt template processing
+# take "fichier.tmpl" as input and outputs "fichier" with all 
+# cmt macros expanded. E.g:
+#
+#  document template DoxyTemplate -s=../doc *.tmpl
+#
+#-------------------------------------------------------------------
 
+make_fragment template -header=template_header -dependencies
 
+#-------------------------------------------------------------------
+# Generic pattern to call a command.
+# It is driven by macros.
+# E.g:
+# 
+#   macro MyCommandTarget_output  "output.file"
+#   macro MyCommandTarget_deps    "input.file"
+#   macro MyCommandTarget_command "python do_something.py -o $(MyCommandTarget_output) $(MyCommandTarget_deps)"
+#
+#   apply_pattern CallCommand target=MyCommandTarget
+#
+# (Marco Clemencic)
+#-------------------------------------------------------------------
+make_fragment call_command -header=call_command_header
+pattern CallCommand \
+   document call_command <target> -group=<group> name="<target>"
 
 #---------------------------------------------------
 # Automatic Installation

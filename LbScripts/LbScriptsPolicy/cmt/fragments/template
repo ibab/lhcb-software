@@ -1,0 +1,11 @@
+#-- start of template ------
+
+${CONSTITUENT} :: ${FILEPATH}${NAME}
+
+${FILEPATH}${NAME}:: ${FULLNAME}
+	$(cmtexe) filter ${FULLNAME} $@
+
+${CONSTITUENT}clean ::
+	/bin/rm -f ${FILEPATH}${NAME}
+
+#-- end of template ------
