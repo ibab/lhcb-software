@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichTracklessRingIsolationAlg
  *
  *  CVS Log :-
- *  $Id: RichTracklessRingIsolationAlg.cpp,v 1.7 2008-09-23 15:38:21 jonrob Exp $
+ *  $Id: RichTracklessRingIsolationAlg.cpp,v 1.8 2008-09-23 15:40:14 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -202,28 +202,14 @@ StatusCode TracklessRingIsolationAlg::execute()
     }
 
     // refit the ring
-    //FastRingFitter fitter(**iRing);
-    FastRingFitter fitter;
-    // data points (ultimately will be done by fitter)
-    for ( LHCb::RichRecPixelOnRing::Vector::iterator iP = (*iRing)->richRecPixels().begin();
-          iP != (*iRing)->richRecPixels().end(); ++iP )
-    {
-      // get pixel from pixelOnRing
-      LHCb::RichRecPixel * pixel = (*iP).pixel();
-      // pixel hit
-      //const Gaudi::XYZPoint & PixelLocal = pixel->localPosition();
-      const Gaudi::XYZPoint & PixelLocal = pixel->radCorrLocalPositions().position(RingRadiator);
-      // add (x,y) point to the fitter
-      fitter.addPoint( PixelLocal.x(), PixelLocal.y() );
-    }
-    // run the fit
+    FastRingFitter fitter(**iRing);
     fitter.fit();
     // Fit OK ?
     if ( fitter.result().Status != 0 ||
          fitter.result().Variance > m_maxFitVariance[RingRadiator] )
     {
       debug() << " -> Failed refitting : " 
-        //<< fitter.result()
+              << fitter.result()
               << endmsg;
       ringIsIsolated = false;
       break;
