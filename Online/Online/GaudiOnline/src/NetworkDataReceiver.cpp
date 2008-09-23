@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataReceiver.cpp,v 1.17 2008-09-23 14:19:27 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataReceiver.cpp,v 1.18 2008-09-23 14:25:39 frankb Exp $
 //  ====================================================================
 //  NetworkDataReceiver.cpp
 //  --------------------------------------------------------------------
@@ -251,7 +251,7 @@ StatusCode NetworkDataReceiver::declareEventData(RecvEntry& entry)  {
         if ( MBM_NORMAL == ret )   {
           m_backlog--;
 	  MsgStream log(msgSvc(), name());
-	  log << MSG::WARNING << "Declared event of size:" << entry.size 
+	  log << MSG::ALWAYS << "Declared event of size:" << entry.size 
 	      << " to MBM from:" << entry.name << " Routing:" << std::hex 
 	      << h->subHeader().H1->triggerMask()[3] << endmsg;
           return rearmRequest(entry);
