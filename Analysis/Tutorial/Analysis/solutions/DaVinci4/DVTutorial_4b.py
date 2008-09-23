@@ -38,8 +38,7 @@ PsiFilter.addTool( PhysDesktop() )
 PsiFilter.PhysDesktop.InputLocations = [ "Phys/Jpsi2MuMu" ]
 PsiFilter.FilterCriterion = "LoKi::Hybrid::FilterCriterion"
 PsiFilter.addTool( LoKiFilterCriterion("Filter") )
-PsiFilter.Filter.Code = '''(PT>1*GeV) &
-                           (P>3*GeV)'''
+PsiFilter.Code = "(PT>1*GeV) & (P>3*GeV)"
 
 GaudiSequencer("TutorialSeq").Members.append(PsiFilter)
 #
