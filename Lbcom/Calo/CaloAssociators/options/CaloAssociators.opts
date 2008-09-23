@@ -1,4 +1,4 @@
-// $Id: CaloAssociators.opts,v 1.12 2008-09-23 10:00:59 odescham Exp $ 
+// $Id: CaloAssociators.opts,v 1.13 2008-09-23 14:47:16 odescham Exp $ 
 // ============================================================================
 /** @file CaloAssociators.cpp
  *  Job-options file to run CaloAssociators 
@@ -10,10 +10,10 @@
 /// load options 
 DataOnDemandSvc.AlgMap +={ 
   "Relations/Raw/Calo/Digits"   : "CaloDigit2MCLinks2Table",
-  "Relations/Rec/Calo/Clusters" : "CaloClusterMCTruth"         
+  "Relations/Rec/Calo/Clusters" : "CaloClusterMCTruth",
   "Relations/Hlt/Calo/Clusters" : "CaloClusterMCTruth/CaloClusterMCTruthForHlt"         
 }; 
 
-CaloClusterMCTruthForHlt.context = "HLT";
+CaloClusterMCTruthForHlt.Context = "HLT";
 
 // ============================================================================
