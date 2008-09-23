@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-09-23 - Patrick Robbe
+ - PythiaProduction.cpp: set new charmonium models as default
+
 ! 2008-09-20 - Patrick Robbe
  - Pythia64.opts: set new charmonium models as default
 
