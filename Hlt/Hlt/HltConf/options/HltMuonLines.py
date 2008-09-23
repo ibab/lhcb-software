@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltMuonLines.py,v 1.2 2008-09-17 19:44:40 graven Exp $
+# $Id: HltMuonLines.py,v 1.3 2008-09-23 08:49:43 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -12,7 +12,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -25,6 +25,7 @@ from Configurables import PatMatchTool
 
 from HltConf.HltLine import Hlt1Line   as Line
 from HltConf.HltLine import Hlt1Member as Member
+from HltConf.HltLine import bindMembers
 from HltConf.HltLine import Hlt1Tool   as Tool
 from HltConf.HltLine import hlt1Lines, addHlt1Prop, rmHlt1Prop 
 
@@ -57,12 +58,9 @@ TConfMatchVelo = [ decodeT
                           ) 
                  ]
 
-#### lines which are shared inputs, and which do NOT make decisions
+#### shared 'blocks' of members
 
-singleMuonPrep = Line( 'singleMuonPrepare' 
-                   , makesDecision = False
-                   , L0 = [ 'Muon','MuonNoGlob' ]
-                   , algos = 
+singleMuonPrep = bindMembers( 'singleMuonPrep',
                    [ Member ( 'L0MuonPrepare' , 'MuonORMuonNoGlob'
                             , InputSelection = HltL0MuonPrepare().getDefaultProperties()['InputSelection']
                             # , InputSelection = 'TES:' + 'Trig/L0/MuonCtrl' # how to get LHCb::L0MuonCandidateLocation::Default instead?
@@ -74,10 +72,8 @@ singleMuonPrep = Line( 'singleMuonPrepare'
                    ] + TConfMatchVelo 
                    )
 
-muonSegPrep = Line ('muonSegPrepare'
-                   , makesDecision = False
-                   , HLT = [ singleMuonPrep ]
-                   , algos = 
+muonSegPrep = bindMembers ('muonSegPrepare' ,
+                   [ singleMuonPrep ] + 
                    [ RecoMuonSeg
                    , Member ('TF', 'PrepareMuonSeg'
                             , RequirePositiveInputs = False
@@ -86,10 +82,7 @@ muonSegPrep = Line ('muonSegPrepare'
                    ] + TConfMatchVelo 
                    )
 
-DiMuonFromL0DiMuonPrepare = Line( 'DiMuonFromL0DiMuonPrepare'
-                   , makesDecision = False
-                   , L0 = [ 'DiMuon' ]
-                   , algos = 
+DiMuonFromL0DiMuonPrepare = bindMembers( 'DiMuonFromL0DiMuonPrepare',
                    [ HltL0MuonPrepare('L0AllMuons') # WARNING: we require dimuon, but use L0AllMuons
                    , Member( 'VM1', 'L0DiMuon'
                            , InputSelection = 'L0AllMuons'
@@ -112,54 +105,44 @@ DiMuonFromL0DiMuonPrepare = Line( 'DiMuonFromL0DiMuonPrepare'
                            , tools = [ Tool( PatMatchTool, maxMatchChi2 = 6 ) ]
                            )
                    , Member( 'VM1', 'VeloT' , FilterDescriptor   = ['DOCA,<,0.5' ])
-                   , Member( 'VF', 'VeloT'
-                           , FilterDescriptor = [ 'VertexMatchIDsFraction_L0DiMuonDecision,>,1.9']
-                           )
+                   , Member( 'VF', 'VeloT' , FilterDescriptor = [ 'VertexMatchIDsFraction_L0DiMuonDecision,>,1.9'])
                    ] )
 
 #### these are the lines which actually make decisions...
 
 SingleMuonNoIP = Line( 'SingleMuonNoIP'
-                   ,  HLT = [ singleMuonPrep ]
+                   ,  L0 = [ 'Muon','MuonNoGlob' ]
                    ,  algos = 
-                   [ Member( 'TF', 'Decision'
-                           , InputSelection = singleMuonPrep
-                           , FilterDescriptor = ['PT,>,6000']
-                           )
+                   [ singleMuonPrep 
+                   , Member( 'TF', 'Decision' , FilterDescriptor = ['PT,>,6000'])
                    ] )
 
 ### TODO: clone and mutate from line above...
 ### FIXME: how to add RecoRZPV??
 SingleMuonIPandPT = Line ( 'SingleMuonIPandPT'
-                   ,  HLT = [ singleMuonPrep ]
+                   ,  L0 = [ 'Muon','MuonNoGlob' ]
                    ,  algos = 
-                   [  RecoRZPV
-                   ,  Member ( 'TF', 'Decision'
-                             ,  InputSelection = singleMuonPrep
-                             ,  FilterDescriptor = [ 'IP_PV2D,||[],0.08,30.', 'PT,>,1300' ] 
-                             )
+                   [  singleMuonPrep
+                   ,  RecoRZPV
+                   ,  Member ( 'TF', 'Decision' ,  FilterDescriptor = [ 'IP_PV2D,||[],0.08,30.', 'PT,>,1300' ] )
                    ] )
 
 
 DiMuonFromL0DiMuonNoIP = Line( 'DiMuonFromL0DiMuoNoIP'
-                   ,  HLT = [ DiMuonFromL0DiMuonPrepare ]
+                   , L0 = [ 'DiMuon' ]
                    ,  algos = 
-                   [  Member( 'VF', 'Decision'
-                            , InputSelection = DiMuonFromL0DiMuonPrepare
-                            , FilterDescriptor = ['VertexDimuonMass,>,2500.']
-                            )
+                   [ DiMuonFromL0DiMuonPrepare 
+                   , Member( 'VF', 'Decision' , FilterDescriptor = ['VertexDimuonMass,>,2500.'])
                    ] )
 
 ### TODO: clone and mutate from line above...
 ### FIXME: how to remove RecoRZPV in that case??
 DiMuonFromL0DiMuonIP = Line ( 'DiMuonFromL0DiMuonIP'
-                   , HLT = [ DiMuonFromL0DiMuonPrepare ]
+                   , L0 = [ 'DiMuon' ]
                    , algos = 
-                   [ RecoRZPV
-                   , Member( 'VF','Decision'
-                           , InputSelection = DiMuonFromL0DiMuonPrepare
-                           , FilterDescriptor = [ 'VertexDimuonMass,>,500.', 'VertexMinIP_PV2D,||>,0.15' ]
-                           )
+                   [ DiMuonFromL0DiMuonPrepare
+                   , RecoRZPV
+                   , Member( 'VF','Decision' , FilterDescriptor = [ 'VertexDimuonMass,>,500.', 'VertexMinIP_PV2D,||>,0.15' ])
                    ] )
 
 #-----------------------------------------------------
@@ -167,31 +150,23 @@ DiMuonFromL0DiMuonIP = Line ( 'DiMuonFromL0DiMuonIP'
 #-----------------------------------------------------
 
 DiMuonFrom2L0IP = Line ('DiMuonFrom2L0IP'
-                   , HLT = [ singleMuonPrep ] 
+                   , L0 = [ 'Muon','MuonNoGlob' ] 
                    , algos = 
-                   [ Member( 'VM1' , 'VeloT'
-                           , InputSelection = singleMuonPrep
-                           , FilterDescriptor = ['DOCA,<,0.5']
-                           )
+                   [ singleMuonPrep
+                   , Member( 'VM1' , 'VeloT' , FilterDescriptor = ['DOCA,<,0.5'])
                    , RecoRZPV
-                   , Member( 'VF','Decision'
-                           , FilterDescriptor = ['VertexDimuonMass,>,500.', 'VertexMinIP_PV2D,||>,0.15']
-                           )
+                   , Member( 'VF','Decision' , FilterDescriptor = ['VertexDimuonMass,>,500.', 'VertexMinIP_PV2D,||>,0.15'])
                    ] )
 
 ### TODO: clone and mutate from line above... 
 ### FIXME: how to remove RecoRZPV in that case??
 
 DiMuonFrom2L0NoIP = Line( 'DiMuonFrom2L0NoIP'
-                   , HLT = [ singleMuonPrep ] 
+                   , L0 = [ 'Muon','MuonNoGlob' ]
                    , algos = 
-                   [ Member( 'VM1' , 'VeloT'
-                          , InputSelection = singleMuonPrep
-                          , FilterDescriptor = ['DOCA,<,0.5']
-                          )
-                   , Member( 'VF', 'Decision'
-                           , FilterDescriptor = ['VertexDimuonMass,>,2500.']
-                           )
+                   [ singleMuonPrep
+                   , Member( 'VM1', 'VeloT' ,   FilterDescriptor = ['DOCA,<,0.5'])
+                   , Member( 'VF', 'Decision' , FilterDescriptor = ['VertexDimuonMass,>,2500.'])
                    ] )
 
 #-----------------------------------------------------
@@ -199,13 +174,12 @@ DiMuonFrom2L0NoIP = Line( 'DiMuonFrom2L0NoIP'
 #-----------------------------------------------------
 
 DiMuonFromMuonSegIP  = Line( 'DiMuonFromMuonSegIP' 
-                   ,  HLT = [ singleMuonPrep
-                            , muonSegPrep ] # TODO: this is OR, should be AND
-                                            # but OK for now: muonSegPrep requires singleMuonPrep
-                   , algos =
-                   [  Member ( 'VM2', 'VeloT'
+                   , L0 = [ 'Muon','MuonNoGlob' ]
+                   , algos = 
+                   [ muonSegPrep
+                   , Member ( 'VM2', 'VeloT'
                            , InputSelection1 = singleMuonPrep
-                           , InputSelection2   = muonSegPrep
+                           , InputSelection2 = muonSegPrep
                            , FilterDescriptor = ['DOCA,<,0.5']
                            #If you do not set DoMergeInputs = False it will make vertices
                            #with 2 tracks from  InputSelection and
@@ -222,10 +196,10 @@ DiMuonFromMuonSegIP  = Line( 'DiMuonFromMuonSegIP'
 ### TODO: clone and mutate from line above...
 ### FIXME: how to remove RecoRZPV??
 DiMuonFromMuonSegNoIP = Line( 'DiMuonFromMuonSegNoIP'
-                   ,  HLT = [ singleMuonPrep
-                            , muonSegPrep ] # TODO: this is OR, should be AND
+                   , L0 = [ 'Muon','MuonNoGlob' ]
                    , algos = 
-                   [  Member( 'VM2', 'VeloT'
+                   [ muonSegPrep
+                   , Member( 'VM2', 'VeloT'
                             , InputSelection1 = singleMuonPrep
                             , InputSelection2   = muonSegPrep
                             , FilterDescriptor = ['DOCA,<,0.5']
@@ -242,42 +216,42 @@ DiMuonFromMuonSegNoIP = Line( 'DiMuonFromMuonSegNoIP'
 #### and now the mu+had line(s)
 
 Line( 'MuonHadron'
-       , HLT = [ singleMuonPrep ]
+       , L0 = [ 'Muon','MuonNoGlab' ]
        , algos =
-       [ RecoRZPV
+       [ singleMuonPrep
+       , RecoRZPV
        , Member( 'TF','Muon' # // Select Muons with IP and pT
-               , InputSelection  = singleMuonPrep
                , HistogramUpdatePeriod = 0
                , FilterDescriptor = ["PT,>,1000.", "IP_PV2D,||[],0.1,3." ]
                , HistoDescriptor = { "PT"     : ( "PT",0.,6000.,400), "PTBest" : ( "PTBest",0.,6000.,400), "IP"     : ( "IP",-1.,3.,400), "IPBest" : ( "IPBest",-1.,3.,400) }
                ) # // NEED TO CHANGE TO MAKEVERTICES TO HAVE A GOOD CONFIRMATION LOGIC
-       ,  HltTrackUpgrade('Hlt1RecoVelo')
-       ,  Member( 'TF', 'CompanionVelo' # // Select Velo tracks with an IP and good DOCA to Muon
-                , InputSelection  = HltTrackUpgrade('Hlt1RecoVelo').OutputSelection
-                , HistogramUpdatePeriod = 0
-                , FilterDescriptor = ["IP_PV2D,||[],0.1,3.", "DOCA_%TFMuon,<,0.2" ]
-                , HistoDescriptor = { "IP"         : ( "IP",-1.,3.,400), "IPBest"     : ( "IPBest",-1.,3.,400), "DOCA"       : ( "DOCA",0.,1.,400), "DOCABest"   : ( "DOCABest",0.,1.,400) }
-                )
-       ,  GaudiSequencer('HltDecodeT')
-       ,  GaudiSequencer('HltDecodeTT')
-       ,  Member ( 'TU', 'CompanionForward' # // Make forward the selected velo tracks
-                 , RecoName = "Forward"
-                 )
-       ,  Member ( 'TF', 'CompanionForward' # // Select forward track with a given Pt
-                 , FilterDescriptor = ["PT,>,500."]
-                 , HistogramUpdatePeriod = 0
-                 , HistoDescriptor = {  "PT" : ("PT",0.,6000.,100), "PTBest" : ("PTBest",0.,6000.,100) }
-                 )
-       ,  Member( 'VM2', 'Vertex' # // Make vertices with the forward companion tracks 
-                ,InputSelection1  = "%TFMuon"
-                ,InputSelection2  = "%TFCompanionForward"
-                ,FilterDescriptor = ["DOCA,<,0.2" ]
-                ,HistogramUpdatePeriod = 0
-                ,HistoDescriptor = {  "DOCA" : ("DOCA",100,0.,1.), "DOCABest" : ( "DOCABest",100,0.,0.5) }
-                )
-       ,  Member( 'VF','Decision' # // select vertices if Pt, pointing, and distance
-                , FilterDescriptor = ["VertexPointing_PV2D,<,0.4", "VertexDz_PV2D,>,2." ]
-                , HistogramUpdatePeriod = 0
-                , HistoDescriptor = { "VertexPointing"     : ( "VertexPointing",0.,1.,100), "VertexPointingBest" : ( "VertexPointingBest",0.,1.,100), "VertexDz"           : ( "VertexDz",-10.,50.,100), "VertexDzBest"       : ( "VertexDzBest",-10.,50.,100) }
-                )
+       , HltTrackUpgrade('Hlt1RecoVelo')
+       , Member( 'TF', 'CompanionVelo' # // Select Velo tracks with an IP and good DOCA to Muon
+               , InputSelection  = HltTrackUpgrade('Hlt1RecoVelo').OutputSelection
+               , HistogramUpdatePeriod = 0
+               , FilterDescriptor = ["IP_PV2D,||[],0.1,3.", "DOCA_%TFMuon,<,0.2" ]
+               , HistoDescriptor = { "IP"         : ( "IP",-1.,3.,400), "IPBest"     : ( "IPBest",-1.,3.,400), "DOCA"       : ( "DOCA",0.,1.,400), "DOCABest"   : ( "DOCABest",0.,1.,400) }
+               )
+       , GaudiSequencer('HltDecodeT')
+       , GaudiSequencer('HltDecodeTT')
+       , Member( 'TU', 'CompanionForward' # // upgrade the selected velo tracks to forward...
+               , RecoName = "Forward"
+               )
+       , Member( 'TF', 'CompanionForward' # // Select forward track with a given Pt
+               , FilterDescriptor = ["PT,>,500."]
+               , HistogramUpdatePeriod = 0
+               , HistoDescriptor = {  "PT" : ("PT",0.,6000.,100), "PTBest" : ("PTBest",0.,6000.,100) }
+               )
+       , Member( 'VM2', 'Vertex' # // Make vertices with the forward companion tracks 
+               ,InputSelection1  = "%TFMuon"
+               ,InputSelection2  = "%TFCompanionForward"
+               ,FilterDescriptor = ["DOCA,<,0.2" ]
+               ,HistogramUpdatePeriod = 0
+               ,HistoDescriptor = {  "DOCA" : ("DOCA",100,0.,1.), "DOCABest" : ( "DOCABest",100,0.,0.5) }
+               )
+       , Member( 'VF','Decision' # // select vertices if Pt, pointing, and distance
+               , FilterDescriptor = ["VertexPointing_PV2D,<,0.4", "VertexDz_PV2D,>,2." ]
+               , HistogramUpdatePeriod = 0
+               , HistoDescriptor = { "VertexPointing"     : ( "VertexPointing",0.,1.,100), "VertexPointingBest" : ( "VertexPointingBest",0.,1.,100), "VertexDz"           : ( "VertexDz",-10.,50.,100), "VertexDzBest"       : ( "VertexDzBest",-10.,50.,100) }
+               )
        ])

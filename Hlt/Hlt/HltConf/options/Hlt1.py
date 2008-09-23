@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1.py,v 1.5 2008-09-21 16:48:24 graven Exp $
+# $Id: Hlt1.py,v 1.6 2008-09-23 08:49:43 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of HLT1
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -34,8 +34,8 @@ from HltConf.HltLine     import hlt1Selections
 from HltConf.HltLine     import addHlt1Prop
 
 # add a few thing to our printout
-addHlt1Prop('routingBitDefinitions')
-addHlt1Prop('Accept')
+for i in [ 'routingBitDefinitions', 'Accept', 'FilterDescriptor' ] :
+    addHlt1Prop(i)
 
 importOptions('$HLTCONFROOT/options/HltInit.opts')
 importOptions('$HLTCONFROOT/options/HltLumiInit.opts')
@@ -65,6 +65,7 @@ veloVertex = Sequencer( 'VeloVertex',  Members = [ summaryWriter, vertexMaker, v
 # 32-63: reserved for Hlt1
 # 64-91: reserved for Hlt2
 
+#### TODO: check that the used lines are actually in use!!!
 ### non-existant strings always evaluate to false, and or not an error (yet)
 routingBits = { 32 : 'Hlt1Global'
               , 33 : 'Hlt1RandomDecision'
@@ -72,7 +73,6 @@ routingBits = { 32 : 'Hlt1Global'
               , 35 : 'Hlt1LumiDecision'
               , 36 : 'Hlt1VeloASideDecision|Hlt1VeloCSideDecision'
               }
-
 
 triggerBits = HltRoutingBitsWriter( routingBitDefinitions = routingBits )
 

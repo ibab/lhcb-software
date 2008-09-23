@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.14 2008-09-17 19:44:40 graven Exp $ 
+# $Id: HltLine.py,v 1.15 2008-09-23 08:49:43 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.14 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.15 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt line itself 
@@ -316,7 +316,7 @@ def _selectionName ( name ,      ## the selection name or pattern
     
     """
     if not name : return None
-    if type(name) is Hlt1Line : name = name.outputSelection()
+    if type(name) in [ Hlt1Line, bindMembers ] : name = name.outputSelection()
     if '%' != name[0] : return name 
     return 'Hlt1' + line + name[1:]
 
@@ -335,12 +335,15 @@ def _checkSelection ( sel   ,     ## the selection
     """
     Check specified selection:
 
-    - If selection is an Hlt1Line, substitute its output selection
+    - If selection is an Hlt1Line or bindMembers, substitute its output selection
 
     - If selection has a 'pattern' form (starts from %) ,
-          it is expanded properly and replaced in the dictionary
+          it is expanded properly and the dictionary is updated accordingly
 
-    - The selection is required to be in the dictionary
+    - TODO: The selection is required to be in the dictionary, 
+            and a warning should be given if an input is used which 
+            is not contained in the current line (i.e. when the line
+            has 'external' dependencies)
     
     @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
     @date   2008-08-06
@@ -419,6 +422,7 @@ class bindMembers (object) :
             # if Hlt1Member, verify, expand, and chain
 
             margs = alg.Args.copy() 
+            #### TODO: use _checkSelection to make sure the result is valid!!!
             #    expand '%' in FilterDescriptor, InputSelection{,1,2} to allow bound selections
             _subs_cand_ =  ['FilterDescriptor', 'OutputSelection', 'InputSelections'
                            , 'InputSelection', 'InputSelection1','InputSelection2','InputSelecion3' ]
