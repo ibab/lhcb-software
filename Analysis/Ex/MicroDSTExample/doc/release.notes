@@ -1,0 +1,9 @@
+!$Id: release.notes,v 1.1.1.1 2008-09-23 16:25:45 jpalac Exp $
+!-----------------------------------------------------------------------------
+! Package     : Ex/MicroDSTExample
+! Responsible : Juan PALACIOS
+! Purpose     : MicroDST making and reading examples.
+!-----------------------------------------------------------------------------
+
+! 2008-09-23 - Juan PALACIOS
+ - First import of this package to CVS.

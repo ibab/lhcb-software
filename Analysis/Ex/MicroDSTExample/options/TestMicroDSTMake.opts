@@ -1,0 +1,122 @@
+#pragma print on
+/// Required DaVinci and options
+#include "$DAVINCIROOT/options/DaVinciCommon.opts"
+#include "$DAVINCIROOT/options/DaVinciReco.opts"
+
+// Include your favourite data sample
+#include "$DAVINCIROOT/options/JpsiPhiData.opts"
+
+/// This is where we do the selection
+#include "$CCBARROOT/options/DoDC06SelBs2Jpsi2MuMuPhi2KK_lifetime_unbiased.opts"
+#pragma print on
+
+#include "$DAVINCIROOT/options/MicroDSTCommon.opts"
+// over-write some MicroDSTCommon.opts options
+MicroDSTStream.Output = "DATAFILE='testBs2JpsiPhi_5Kevt.dst' TYP='POOL_ROOTTREE' OPT='REC'";
+
+// Get rid of some spam
+PrintDC06selBs2JpsiPhi.OutputLevel=4;
+
+// add sequence for things we want to keep fos ALL events in DST
+ApplicationMgr.TopAlg += { "GaudiSequencer/AllEvents" } ;
+
+//=============================================================================
+// save the ODIN bank
+SeqDC06selBs2JpsiPhi.Members += {"MicroDST::ObjectClonerAlg<LHCb::ODIN>/CopyODIN"};
+CopyODIN.OutputLevel = 4;
+//=============================================================================
+
+//=============================================================================
+// Save the RecHeader for all events
+AllEvents.Members += {"MicroDST::ObjectClonerAlg<LHCb::RecHeader>/CopyRecHeader"};
+CopyRecHeader.OutputLevel = 4;
+//=============================================================================
+
+//=============================================================================
+// Save MCPatricles matching a certain decay descriptor for all events where 
+// the decay tree is found.
+AllEvents.Members += {"MCParticleArrayFilterAlg/FilterMCDecays"};
+FilterMCDecays.OutputLocation = "MC/Decays";
+FilterMCDecays.IMCParticleArrayFilter = "FilterMCParticleArrayByDecay";
+FilterMCDecays.FilterMCParticleArrayByDecay.MCDecayFinder.Decay = "[B_s0 -> (J/psi(1S) -> mu+ mu- {,gamma} {,gamma}) (phi(1020) -> K+ K-)]cc";
+FilterMCDecays.OutputLevel = 4;
+//=============================================================================
+
+//=============================================================================
+// copy the MCParticles above onto MicroDST
+AllEvents.Members += {"MicroDST::KeyedContainerClonerAlg<LHCb::MCParticle>/CopyMCParticles"};
+CopyMCParticles.InputLocation = "MC/Decays";
+CopyMCParticles.MCParticleCloner.ICloneMCVertex = "MCVertexCloner";
+CopyMCParticles.OutputLevel = 4;
+//=============================================================================
+
+//=============================================================================
+// Save selected particles and their decay tree
+SeqDC06selBs2JpsiPhi.Members += {"MicroDST::KeyedContainerClonerAlg<LHCb::Particle>/CopyParticles"};
+CopyParticles.InputLocation = "Phys/DC06selBs2JpsiPhi_unbiased/Particles";
+// keep the Particle's ProtoParticle
+CopyParticles.ParticleCloner.ICloneProtoParticle = "ProtoParticleCloner";
+CopyParticles.ParticleCloner.ICloneVertex = "VertexCloner";
+CopyParticles.OutputLevel = 4;
+//=============================================================================
+
+//=============================================================================
+// Copy primary vertices
+SeqDC06selBs2JpsiPhi.Members += {"MicroDST::KeyedContainerClonerAlg<LHCb::RecVertex>/CopyPV"};
+CopyPV.OutputLevel = 4;
+//=============================================================================
+
+//=============================================================================
+// Re-fit the primary vertices excluding tracks from B candidate
+// Seqdc06selbd2jpsi2mumu_Kst2KPi.Members += {"PVReFitterAlg"};
+// PVReFitterAlg.ParticleInputLocation = "Phys/DC06selBs2JpsiPhi_unbiased/Particles";
+// PVReFitterAlg.P2VRelationsOutputLocation = "Phys/DC06selBs2JpsiPhi_unbiased/Particle2ReFittedVertexRelations";
+// PVReFitterAlg.VertexOutputLocation = "Phys/DC06selBs2JpsiPhi_unbiased/RefittedVertices";
+// PVReFitterAlg.OutputLevel=4;
+
+// Copy the re-fitted vertices to the MicroDST
+// SeqDC06selBs2JpsiPhi.Members += {"MicroDST::KeyedContainerClonerAlg<LHCb::RecVertex>/CopyRefittedPV"};
+// CopyRefittedPV.InputLocation = "Phys/DC06selBs2JpsiPhi_unbiased/RefittedVertices";
+// CopyReFittedPV.OutputLevel = 4;
+
+// Copy the Particle -> Re-fitted relations table to the MicroDST
+// SeqDC06selBs2JpsiPhi.Members += {"CopyParticle2PVLink/P2RefitPVLink"};
+// P2RefitPVLink.InputLocation = "Phys/DC06selBs2JpsiPhi_unbiased/Particle2ReFittedVertexRelations";
+// P2RefitPVLink.OutputLevel=4;
+//=============================================================================
+
+//=============================================================================
+// Copy all ProtoParticles in location "Rec/ProtoP/Charged"
+// SeqDC06selBs2JpsiPhi.Members += {"CopyProtoParticles"};
+// CopyProtoParticles.InputLocation = "Rec/ProtoP/Charged";
+// CopyProtoParticles.OutputLevel=1;
+//=============================================================================
+
+//=============================================================================
+// Copy Particle -> PV link
+// This only works if a relations table already exists in InputLocation
+SeqDC06selBs2JpsiPhi.Members += {"CopyParticle2PVLink"};
+CopyParticle2PVLink.InputLocation = "Phys/DC06selBs2JpsiPhi_unbiased/Particle2VertexRelations";
+CopyParticle2PVLink.OutputLevel=4;
+//=============================================================================
+
+//=============================================================================
+// Copy related MCParticles and also associations between
+// Particles and MCParticles. For the time being, these are copied in a 
+// relations table of type LHCb::Relation2D<LHCb::Particle, LHCb::MCParticle>
+// in location InputLocation + "/RelatedMCParticles"
+SeqDC06selBs2JpsiPhi.Members += {"CopyRelatedMCParticles/CopyMC"};
+CopyMC.InputLocation = "microDST/Phys/DC06selBs2JpsiPhi_unbiased/Particles";
+CopyMC.ICloneMCParticle = "MCParticleCloner";
+CopyMC.MCParticleCloner.ICloneMCVertex = "MCVertexCloner";
+CopyMC.OutputLevel=4;
+//=============================================================================
+
+//=============================================================================
+ApplicationMgr.HistogramPersistency = "ROOT";
+HistogramPersistencySvc.OutputFile = "DVHistos.root";
+
+ApplicationMgr.EvtMax    = 5000 ;
+EventSelector.FirstEvent = 1 ;
+EventSelector.PrintFreq  = 100 ;
+//=============================================================================
