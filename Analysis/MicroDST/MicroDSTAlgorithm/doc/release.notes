@@ -1,7 +1,22 @@
-! $Id: release.notes,v 1.69 2008-09-10 07:16:00 jpalac Exp $
+! $Id: release.notes,v 1.70 2008-09-24 20:50:31 jpalac Exp $
 ! Package     : MicroDST/MicroDSTAlgorithm
 ! Responsible : Ulrich Kerzel, Juan Palacios
 !============================================================
+
+! 2008-09-24 - Juan PALACIOS
+ - src/CopyRelatedMCParticles.cpp
+  . Associators don't seem able to associate LHCb::Particles coming from 
+    locations like /Event/microDST/Phys/... for some reason I have no time
+    to look into. Solve by passing the original LHCb::Particles, cloning
+    their associated LHCb::MCParticles, and making Relations between them
+    and the previously cloned LHCb::Particle if it exists. Does nothing if it 
+    doesn't exist.
+    The requirement is that the LHCb::Particles from the input TES location 
+    have already been cloned. Nasty, but necessary.
+ - src/CopyRelatedMCParticles.h
+  . Update doxygen in light of the above changes.
+ - cmt/requirements
+  . Increase version to v3r3p1
 
 !========================== MicroDSTAlgorithm v3r3 2008-09-10 =====================
 
