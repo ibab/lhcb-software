@@ -1,10 +1,10 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltMuonLines.py,v 1.5 2008-09-23 13:13:41 graven Exp $
+# $Id: HltMuonLines.py,v 1.6 2008-09-24 11:28:33 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
-#  @author Gerhard Raven Gerhard.Raven@nikhef.nl
+#  @Translator from the original options: Gerhard Raven Gerhard.Raven@nikhef.nl
 #  @date 2008-08-25
 # =============================================================================
 """
@@ -12,7 +12,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -67,10 +67,9 @@ singleMuonPrep = bindMembers( 'SingleMuonPrep',
                             , MinPt = 1300.0  
                             )
                    , Member ( 'TF', 'L0'
-                            , InputSelection = 'L0AllMuons' # did we mean L0AllMuons and not the above???
+                            # , InputSelection = 'L0AllMuons' # did we really mean L0AllMuons and not the above???
                             , FilterDescriptor = [ 'PT0,||>,1300' ] )
-                   ] + TConfMatchVelo 
-                   )
+                   ] + TConfMatchVelo )
 
 muonSegPrep = bindMembers ('MuonSegPrepare' ,
                    [ singleMuonPrep 
@@ -79,12 +78,11 @@ muonSegPrep = bindMembers ('MuonSegPrepare' ,
                             , RequirePositiveInputs = False
                             , InputSelection = 'TES:' + RecoMuonSeg.OutputMuonTracksName # if has else RecoMuonSeg.getDefaults('OutputMuonTracksName')
                             , FilterDescriptor = [ 'DoShareM3_'+singleMuonPrep.outputSelection()+',<,0.5' ] )
-                   ] + TConfMatchVelo 
-                   )
+                   ] + TConfMatchVelo )
 
 DiMuonFromL0DiMuonPrepare = bindMembers( 'DiMuonFromL0DiMuonPrepare',
                    [ HltL0MuonPrepare('L0AllMuons') # WARNING: we require dimuon, but use L0AllMuons
-                   , Member( 'VM1', 'L0DiMuon'
+                   , Member( 'VM1', 'L0DiMuon' # this is the selection formery known as L0DiMuonDecision
                            , InputSelection = 'L0AllMuons'
                            , FilterDescriptor = [ 'SumPT,>,1500.' ]
                            )
@@ -104,8 +102,8 @@ DiMuonFromL0DiMuonPrepare = bindMembers( 'DiMuonFromL0DiMuonPrepare',
                            , MatchName = 'VeloT'
                            , tools = [ Tool( PatMatchTool, maxMatchChi2 = 6 ) ]
                            )
-                   , Member( 'VM1', 'VeloT' , FilterDescriptor   = ['DOCA,<,0.5' ])
-                   , Member( 'VF', 'VeloT' , FilterDescriptor = [ 'VertexMatchIDsFraction_L0DiMuonDecision,>,1.9'])
+                   , Member( 'VM1', 'VeloT', FilterDescriptor = [ 'DOCA,<,0.5' ])
+                   , Member( 'VF', 'VeloT',  FilterDescriptor = [ 'VertexMatchIDsFraction_%VM1L0DiMuon,>,1.9' ]) # TODO: a fraction which is larger than 1.9???
                    ] )
 
 #### these are the lines which actually make decisions...
@@ -247,7 +245,7 @@ Line( 'MuonHadron'
                ,InputSelection2  = "%TFCompanionForward"
                ,FilterDescriptor = ["DOCA,<,0.2" ]
                ,HistogramUpdatePeriod = 0
-               ,HistoDescriptor = {  "DOCA" : ("DOCA",100,0.,1.), "DOCABest" : ( "DOCABest",100,0.,0.5) }
+               ,HistoDescriptor = {  "DOCA" : ("DOCA",0.,1.,100), "DOCABest" : ( "DOCABest",0.,0.5,100) }
                )
        , Member( 'VF','Decision' # // select vertices if Pt, pointing, and distance
                , FilterDescriptor = ["VertexPointing_PV2D,<,0.4", "VertexDz_PV2D,>,2." ]
