@@ -1,8 +1,11 @@
-// $Id: NeutralPP2MC.cpp,v 1.18 2008-09-24 17:51:36 odescham Exp $
+// $Id: NeutralPP2MC.cpp,v 1.19 2008-09-24 23:28:58 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.18 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.19 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.18  2008/09/24 17:51:36  odescham
+// fix
+//
 // Revision 1.17  2008/09/23 10:30:25  odescham
 // add HLT context for NeutralProtoP
 //
@@ -102,22 +105,22 @@ protected:
     ISvcLocator*       svc  )
     : AsctAlgorithm ( name , svc )
     //
-    , m_mcTable ( )  { 
-    declareProperty ( "MCCaloTable" , m_mcTable ) ;    
+    , m_mcTable ( )  {
+    declareProperty ( "MCCaloTable" , m_mcTable ) ;
 
     std::string out( context() );
     std::transform( context().begin() , context().end() , out.begin () , ::toupper ) ;
     if( out == "HLT" ){
-      m_mcTable =  "Relations/" + LHCb::CaloClusterLocation::DefaultHlt;
       m_inputData.push_back( LHCb::ProtoParticleLocation::HltNeutrals );
-      m_outputTable =  "Relations/" + LHCb::ProtoParticleLocation::HltNeutrals ;      
-    } else {      
-      m_mcTable =  "Relations/" + LHCb::CaloClusterLocation::Default;
+      m_outputTable = "Relations/"+ LHCb::ProtoParticleLocation::HltNeutrals;
+      m_mcTable =  "Relations/" + LHCb::CaloClusterLocation::DefaultHlt;
+    }else{
       m_inputData.push_back( LHCb::ProtoParticleLocation::Neutrals );
       m_outputTable = LHCb::ProtoParticle2MCLocation::Neutrals ;
-    }  
-
-
+      m_mcTable =  "Relations/" + LHCb::CaloClusterLocation::Default;
+    }
+    
+    // define proper default for CaloCLuster->MCPArticle data
   };
   /// destructor (virtual and protected)
   virtual ~NeutralPP2MC(){};
@@ -169,6 +172,8 @@ DECLARE_ALGORITHM_FACTORY( NeutralPP2MC );
 // ============================================================================
 StatusCode NeutralPP2MC::execute() 
 {
+
+  debug() << "Input data " << m_inputData << endreq;
   // avoid the long name and always use "const" qualifier
   typedef const SmartRefVector<CaloHypo>                        Hypos    ;
   typedef const SmartRefVector<CaloCluster>                     Clusters ;
