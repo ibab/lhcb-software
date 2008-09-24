@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltPhotonLines.py,v 1.4 2008-09-24 12:56:21 graven Exp $
+# $Id: HltPhotonLines.py,v 1.5 2008-09-24 13:16:37 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Photon Lines
@@ -12,7 +12,7 @@
 '''
 # =============================================================================
 __author__  = 'Gerhard Raven Gerhard.Raven@nikhef.nl'
-__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $'
+__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $'
 # =============================================================================
 
 from Gaudi.Configuration import * 
