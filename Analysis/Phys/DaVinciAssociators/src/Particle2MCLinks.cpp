@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinks.cpp,v 1.24 2007-06-15 16:05:37 pkoppenb Exp $
+// $Id: Particle2MCLinks.cpp,v 1.25 2008-09-24 17:51:36 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -40,6 +40,8 @@ Particle2MCLinks::Particle2MCLinks( const std::string& name,
   , m_chargedLink(NULL)
   , m_neutralLink(NULL)
 {
+
+  
   m_chargedPPLocation.push_back( ProtoParticleLocation::Charged );
   m_chargedPPLocation.push_back( ProtoParticleLocation::Upstream );
   m_neutralPPLocation.push_back( ProtoParticleLocation::Neutrals );

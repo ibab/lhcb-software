@@ -1,8 +1,11 @@
-// $Id: NeutralPP2MC.cpp,v 1.17 2008-09-23 10:30:25 odescham Exp $
+// $Id: NeutralPP2MC.cpp,v 1.18 2008-09-24 17:51:36 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.17 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.18 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.17  2008/09/23 10:30:25  odescham
+// add HLT context for NeutralProtoP
+//
 // Revision 1.16  2007/03/05 11:28:11  pkoppenb
 // Correct Particle2MCLinker location
 //
@@ -99,12 +102,7 @@ protected:
     ISvcLocator*       svc  )
     : AsctAlgorithm ( name , svc )
     //
-    , m_mcTable ( "Relations/" + LHCb::CaloClusterLocation::Default )  { 
-    // define proper default for input data (location of Protoparticles )
-    m_inputData.push_back( LHCb::ProtoParticleLocation::Neutrals );
-    // define proper default for output data (location of relation table )
-    m_outputTable = LHCb::ProtoParticle2MCLocation::Neutrals ;
-    // define proper default for CaloCLuster->MCPArticle data 
+    , m_mcTable ( )  { 
     declareProperty ( "MCCaloTable" , m_mcTable ) ;    
 
     std::string out( context() );
