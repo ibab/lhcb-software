@@ -6,12 +6,12 @@ import sys
 
 class Script():
     _version = "$Name: not supported by cvs2svn $"
-    def __init__(self, usage=None, version = None):
+    def __init__(self, usage=None, version = None, parser=Parser, help_output=sys.stdout):
         """ constructor of the Script. provides default options parser 
         and logger """
         if version is None:
             version = self._version 
-        self.parser = Parser(usage=usage, version=version)
+        self.parser = parser(usage=usage, version=version, help_output=help_output)
         self.env = Env.getDefaultEnv()
         self.log = logging.getLogger()
         self.options = None

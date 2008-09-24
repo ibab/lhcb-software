@@ -1,3 +1,11 @@
+2008-09-24  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/Option.py: added the possibility to print the help messages 
+	to a custom file. By default it is stdout. But for shell wrappers, it is needed 
+	to have stderror instead.
+	* python/LbUtils/Script.py: added the possiblity to print the help messages
+	to a custom file and to have a custom parser.
+
 2008-08-27  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/Storage.py: added Unit class

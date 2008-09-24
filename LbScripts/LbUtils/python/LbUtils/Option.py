@@ -99,9 +99,13 @@ class Command:
 
 class Parser(OptionParser):
     def __init__(self, *args, **kwargs):
+        self.help_output = sys.stdout
+        if kwargs.has_key("help_output") :
+            self.help_output = kwargs["help_output"]
+            del kwargs["help_output"]
         kwargs["option_class"] = FallBackOption
-        OptionParser.__init__(self, *args, **kwargs)
-        self._create_command_list() #IGNORE:W0142
+        OptionParser.__init__(self, *args, **kwargs) #IGNORE:W0142
+        self._create_command_list() 
         Log.addDefaultLogger(self)
         Env.addEnvironment(self)
     def _add_help_option(self):
@@ -218,10 +222,13 @@ class Parser(OptionParser):
         result.append(self.format_option_longhelp(formatter))
         result.append(self.format_epilog(formatter))
         return "".join(result)
-
+    def print_help(self, file=None):
+        if file is None:
+            file = self.help_output
+        OptionParser.print_help(self, file)
     def print_longhelp(self, filename=None):
         if filename is None:
-            filename = sys.stdout
+            filename = self.help_output
         encoding = self._get_encoding(filename)
         filename.write(self.format_longhelp().encode(encoding, "replace"))
     def destroy(self):
