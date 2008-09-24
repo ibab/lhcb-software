@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.21 2008-09-22 15:44:18 dhcroft Exp $"
+__version__ = "$Id: Configuration.py,v 1.22 2008-09-24 06:27:19 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -275,4 +275,3 @@ class Brunel(LHCbConfigurableUser):
         if self.getProp("withMC") and LHCbApp().getProp("condDBtag").find("DC06") == -1:
             from Configurables import CondDBCnvSvc
             CondDBCnvSvc( CondDBReader = allConfigurables["SimulationCondDBReader"] )
-        print self
