@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.3 2008-09-24 07:43:00 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.4 2008-09-24 07:51:47 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -59,7 +59,7 @@ class HltConf(ConfigurableUser):
                         , 'EL' : '$HLTCONFROOT/options/HltElectronLines.py' }
             for i in hlttype.split('+') :
                 if i not in type2conf : raise AttributError, "unknown hlttype fragment '%s'"%i
-                print '# requested ' + i + ', including ' + type2conf[i] )
+                print '# requested ' + i + ', including ' + type2conf[i] 
                 importOptions( type2conf[i] )
             importOptions('$HLTCONFROOT/options/HltMain.py')
             importOptions('$HLTCONFROOT/options/Hlt1.py')
