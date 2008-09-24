@@ -1,4 +1,4 @@
-// $Id: CopyRelatedMCParticles.cpp,v 1.15 2008-09-24 20:50:10 jpalac Exp $
+// $Id: CopyRelatedMCParticles.cpp,v 1.16 2008-09-24 20:51:10 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -47,7 +47,7 @@ StatusCode CopyRelatedMCParticles::initialize() {
 
   StatusCode sc = MicroDSTAlgorithm::initialize(); // must be executed first
 
-  debug() << "==> Initialize XX" << endmsg;
+  debug() << "==> Initialize" << endmsg;
 
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
