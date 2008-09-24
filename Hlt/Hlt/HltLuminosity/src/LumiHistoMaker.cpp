@@ -1,4 +1,4 @@
-// $Id: LumiHistoMaker.cpp,v 1.5 2008-09-24 14:15:35 panmanj Exp $
+// $Id: LumiHistoMaker.cpp,v 1.6 2008-09-24 19:13:50 graven Exp $
 // Include files 
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -7,7 +7,6 @@
 
 #include "LumiHistoMaker.h"
 
-#include "HltBase/ESequences.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : LumiHistoMaker
