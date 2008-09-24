@@ -1,3 +1,9 @@
+2008-09-24  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/LbLogin.py: 
+	   - write echos in generated file instead of printing directly
+	   - use stderr for the help messages 
+
 2008-09-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/LbLogin.bat: Removed.

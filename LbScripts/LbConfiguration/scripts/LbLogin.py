@@ -56,7 +56,7 @@ class LbLoginScript(Script):
     _version = "fake version"
     
     def __init__(self, usage=None, version=None):
-        Script.__init__(self, usage, version)
+        Script.__init__(self, usage, version, help_output=sys.stderr)
         self._env = Environment()
         self._aliases = Aliases()
         self._extra = ""
@@ -85,6 +85,12 @@ class LbLoginScript(Script):
         self.output_file.write("\n") # @todo: this may be avoided
         if close_output: 
             self.output_file.close()
+    def _add_echo(self, line):
+        if line[-1] == "\n" :
+            line = line[:-1]            
+        outline = "echo '%s'\n" % line
+        
+        self._extra += outline
             
     def defineOpts(self):
         """ define commandline options """
@@ -191,13 +197,13 @@ class LbLoginScript(Script):
                 opts.cmtsite = "CERN"
                 self.setSite()
             else : 
-                print ' the MYSITEROOT variable is not defined'
-                print ' we suggest you install all software under $MYSITEROOT'
-                print ' then LHCb software will be installed under $MYSITEROOT/lhcb'
-                print '      LCG software will be installed under $MYSITEROOT/lcg/external'
-                print '      CMT and OpenScientist will be installed under $MYSITEROOT/contrib'
-                print ' as an example '
-                print ' setenv $MYSITEROOT /home/ranjard/Install'
+                self._add_echo(' the MYSITEROOT variable is not defined')
+                self._add_echo(' we suggest you install all software under $MYSITEROOT')
+                self._add_echo(' then LHCb software will be installed under $MYSITEROOT/lhcb')
+                self._add_echo('      LCG software will be installed under $MYSITEROOT/lcg/external')
+                self._add_echo('      CMT and OpenScientist will be installed under $MYSITEROOT/contrib')
+                self._add_echo( ' as an example ')
+                self._add_echo(' setenv $MYSITEROOT /home/ranjard/Install')
 
 #-----------------------------------------------------------------------------------
 # Core CMT business
@@ -340,9 +346,8 @@ class LbLoginScript(Script):
             homedir = ev["HOME"]
         rhostfile = os.path.join(homedir,".rhosts")
         if not os.path.exists(rhostfile) and sys.platform == "win32" :
-            print "Creating a %s file to use CMT" % rhostfile 
-            print " "
-            print "Joel.Closier@cern.ch"
+            self._add_echo( "Creating a %s file to use CMT" % rhostfile ) 
+            self._add_echo("Joel.Closier@cern.ch")
             f = open(rhostfile, "w")
             f.write("+ %s\n") % ev["USER"]
             f.close()
@@ -387,7 +392,7 @@ class LbLoginScript(Script):
                 log.warning("Renamed file %s into %s" % (opts.userarea, opts.userarea + "_bak"))
                 os.mkdir(opts.userarea)
                 newdir = True
-                print " --- a new cmtuser directory has been created in your HOME directory"
+                self._add_echo(" --- a new cmtuser directory has been created in your HOME directory")
         else :
             os.mkdir(opts.userarea)
             newdir = True
@@ -395,9 +400,9 @@ class LbLoginScript(Script):
         if opts.cmtsite == "CERN" :
             if newdir :
                 os.system("fs setacl %s system:anyuser rl" % opts.userarea )
-                print " --- with public access (readonly)"
-                print " --- use mkprivate to remove public access to the current directory"
-                print " --- use mkpublic to give public access to the current directory"
+                self._add_echo( " --- with public access (readonly)" )
+                self._add_echo( " --- use mkprivate to remove public access to the current directory" )
+                self._add_echo( " --- use mkpublic to give public access to the current directory" )
             al["mkprivate"] = "find . -type d -print -exec fs setacl {} system:anyuser l \\;"
             al["mkpublic"] = "find . -type d -print -exec fs setacl {} system:anyuser rl \\;"
 
@@ -498,7 +503,7 @@ class LbLoginScript(Script):
                 if opts.cmtsite == "CERN":
                     compiler_path = "/afs/cern.ch/lhcb/externallib/SLC3COMPAT/slc3_ia32_gcc323"
                     if not os.path.isdir(compiler_path) or not os.path.isfile("/usr/bin/gcc32") :
-                        print "%s compiler is not available on this node" % self.compdef
+                        self._add_echo( "%s compiler is not available on this node" % self.compdef )
                     else :
                         if ev.has_key("PATH") :
                             pthlist = ev["PATH"].split(os.pathsep)
@@ -585,25 +590,25 @@ class LbLoginScript(Script):
     def Manifest(self, debug=False):
         ev = self._env
         opts = self.options
-        print "*" * 80
+        self._add_echo( "*" * 80 )
         toprint = "*" + " " * 27 + "---- LHCb Login ----"
-        print toprint + " " * (80-len(toprint)-1) + "*"
+        self._add_echo(toprint + " " * (80-len(toprint)-1) + "*")
         toprint = "*" + " " * 11 + "Building with %s on %s_%s system" % (self.compdef, self.platform, self.binary)
-        print toprint + " " * (80-len(toprint)-1) + "*"
+        self._add_echo(toprint + " " * (80-len(toprint)-1) + "*")
         toprint = "*" + " " * 11 + "DEVELOPMENT SCRIPT"
-        print toprint + " " * (80-len(toprint)-1) + "*"
-        print "*" * 80
-        print " --- CMTROOT is set to %s " % ev["CMTROOT"]
-        print " --- CMTCONFIG is set to %s " % ev["CMTCONFIG"]
+        self._add_echo( toprint + " " * (80-len(toprint)-1) + "*" )
+        self._add_echo( "*" * 80 )
+        self._add_echo( " --- CMTROOT is set to %s " % ev["CMTROOT"] )
+        self._add_echo( " --- CMTCONFIG is set to %s " % ev["CMTCONFIG"] )
         if debug :
-            print " --- to compile and link in debug mode : setenv CMTCONFIG $CMTDEB ; gmake"
+            self._add_echo( " --- to compile and link in debug mode : setenv CMTCONFIG $CMTDEB ; gmake" )
         if ev.has_key("CMTPATH") :
-            print " --- CMTPATH is set to %s" % ev["CMTPATH"] 
+            self._add_echo( " --- CMTPATH is set to %s" % ev["CMTPATH"]) 
         else :
-            print " --- User_release_area is set to %s" % ev["User_release_area"]
-            print " --- CMTPROJECTPATH is set to $User_release_area:$LHCb_release_area:$Gaudi_release_area:$LCG_release_area"
-            print " --- projects will be searched in $CMTPROJECTPATH "
-        print "-" * 80
+            self._add_echo( " --- User_release_area is set to %s" % ev["User_release_area"])
+            self._add_echo( " --- CMTPROJECTPATH is set to $User_release_area:$LHCb_release_area:$Gaudi_release_area:$LCG_release_area")
+            self._add_echo( " --- projects will be searched in $CMTPROJECTPATH ")
+        self._add_echo( "-" * 80)
 
     def main(self):
         opts = self.options
@@ -613,6 +618,8 @@ class LbLoginScript(Script):
                 debug = True
 
         self.setEnv(debug)
+        self.Manifest(debug)
+
         self._write_script(self._env.gen_script(opts.targetshell)
                            +self._aliases.gen_script(opts.targetshell)+self._extra)
         
