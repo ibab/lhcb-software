@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltMuonLines.py,v 1.6 2008-09-24 11:28:33 graven Exp $
+# $Id: HltMuonLines.py,v 1.7 2008-09-24 12:31:02 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -12,7 +12,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -214,7 +214,7 @@ DiMuonFromMuonSegNoIP = Line( 'DiMuonFromMuonSegNoIP'
 #### and now the mu+had line(s)
 
 Line( 'MuonHadron'
-       , L0 = [ 'Muon','MuonNoGlab' ]
+       , L0 = [ 'Muon','MuonNoGlob' ]
        , algos =
        [ singleMuonPrep
        , RecoRZPV
