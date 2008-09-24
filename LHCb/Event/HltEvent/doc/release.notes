@@ -4,6 +4,9 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+! 2008-09-19 - Gerhard Raven
+ - remove HltEnums
+
 ! 2008-09-19 - Tomasz Skwarnicki
  - added executionStage field in HltDecReports
 
