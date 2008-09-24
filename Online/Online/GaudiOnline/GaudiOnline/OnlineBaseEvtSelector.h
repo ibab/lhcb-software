@@ -1,4 +1,4 @@
-// $Id: OnlineBaseEvtSelector.h,v 1.2 2008-02-11 20:02:08 frankm Exp $
+// $Id: OnlineBaseEvtSelector.h,v 1.3 2008-09-24 12:49:30 frankb Exp $
 //====================================================================
 //  OnlineBaseEvtSelector.h
 //--------------------------------------------------------------------
@@ -13,7 +13,7 @@
 //  Created    : 4/01/99
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineBaseEvtSelector.h,v 1.2 2008-02-11 20:02:08 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineBaseEvtSelector.h,v 1.3 2008-09-24 12:49:30 frankb Exp $
 #ifndef GAUDIONLINE_ONLINEBASEEVTSELECTOR_H
 #define GAUDIONLINE_ONLINEBASEEVTSELECTOR_H 1
 
@@ -54,7 +54,6 @@ namespace LHCb  {
     const OnlineBaseEvtSelector* m_sel;
     /// Flag to indicate that current event needs to be freed.
     bool                         m_needFree;
-
   public:
     /// Standard constructor
     OnlineContext(const OnlineBaseEvtSelector* s) : m_sel(s), m_needFree(false) {}
@@ -210,6 +209,8 @@ namespace LHCb  {
     std::string                   m_input;
     /// Decode data buffer
     bool                          m_decode;
+    /// Dummy property for backwards compatibility
+    int                           m_printFreq;
     /// Requirement properties
     std::string                   m_Rqs[8];
     /// Decoded requirements

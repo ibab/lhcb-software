@@ -1,4 +1,4 @@
-// $Id: OnlineBaseEvtSelector.cpp,v 1.3 2008-01-29 14:03:25 frankb Exp $
+// $Id: OnlineBaseEvtSelector.cpp,v 1.4 2008-09-24 12:49:30 frankb Exp $
 //====================================================================
 //  OnlineBaseEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -42,6 +42,9 @@ OnlineBaseEvtSelector::OnlineBaseEvtSelector(const std::string& nam, ISvcLocator
   declareProperty("REQ6", m_Rqs[5] = "");
   declareProperty("REQ7", m_Rqs[6] = "");
   declareProperty("REQ8", m_Rqs[7] = "");
+  // Note: This is purely dummy! 
+  // Only present for backwards compatibility with offline
+  declareProperty("PrintFreq",m_printFreq);
 }
 
 // IInterface::queryInterface

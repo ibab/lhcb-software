@@ -16,6 +16,7 @@ use GaudiKernel   v*
 use GaudiAlg      v*
 
 apply_pattern install_more_includes more=GaudiOnline
+apply_pattern install_python_modules
 
 # ==================== component libraries ==================================
 library  GaudiOnline  *.cpp -import=DIM -import=DAQEvent -import=MDF -import=AIDA -import=Python
