@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltPhotonLines.py,v 1.5 2008-09-24 13:16:37 graven Exp $
+# $Id: HltPhotonLines.py,v 1.6 2008-09-24 13:47:54 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Photon Lines
@@ -12,7 +12,7 @@
 '''
 # =============================================================================
 __author__  = 'Gerhard Raven Gerhard.Raven@nikhef.nl'
-__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $'
+__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $'
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -39,11 +39,11 @@ from HltConf.HltLine import hlt1Lines, addHlt1Prop, rmHlt1Prop
 Line ('Photon' 
       , L0 = [ 'Photon' ]
       , algos = 
-      [ Member ('L0CaloPrepare' 
-               , InputSelection = HltL0CaloPrepare().getDefaultProperties()['InputSelection']
-               , CaloType = 'Photon' , MinEt = 2300.0 
+      [ HltL0CaloPrepare('L0PhotonDecision', CaloType = 'Photon', MinEt = 2300.0 )
+      , Member ('TF', 'Photon'
+               , InputSelection = 'L0PhotonDecision'
+               , FilterDescriptor = ['IsPhoton,>,0.5']
                )
-      , Member ('TF', 'Photon', FilterDescriptor = ['IsPhoton,>,0.5'])
       , GaudiSequencer('Hlt1RecoRZVeloSequence')
       , Member ('TF', 'RZVelo'
                , InputSelection     = 'RZVelo'
