@@ -1,11 +1,10 @@
-// $Id: HltLumiOdinReader.cpp,v 1.3 2008-08-12 20:33:36 graven Exp $
+// $Id: HltLumiOdinReader.cpp,v 1.4 2008-09-24 18:52:18 graven Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 // from LHCb
 #include "Event/ODIN.h"
-#include "Event/HltSummary.h"
 #include "Event/L0DUReport.h"
 // local
 #include "HltLumiOdinReader.h"

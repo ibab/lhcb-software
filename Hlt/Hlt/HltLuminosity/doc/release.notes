@@ -4,6 +4,9 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+! 2008-09-24 - Gerhard Raven
+ - remove unneeded include files
+
 ! 2008-09-24 - Jaap Panman
  - LumiFromL0DU: use L0DUFromRawTool to avoid dependence from L0 TCK
 

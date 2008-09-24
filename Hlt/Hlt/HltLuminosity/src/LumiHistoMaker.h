@@ -1,9 +1,8 @@
-// $Id: LumiHistoMaker.h,v 1.4 2008-08-29 07:50:27 panmanj Exp $
+// $Id: LumiHistoMaker.h,v 1.5 2008-09-24 18:52:18 graven Exp $
 #ifndef LUMIHISTOMAKER_H 
 #define LUMIHISTOMAKER_H 1
 
 // Include files
-#include "Event/HltSummary.h"
 #include "Event/RecVertex.h"
 #include "HltBase/HltTypes.h"
 #include "HltBase/HltBaseAlg.h"

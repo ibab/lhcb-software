@@ -1,11 +1,10 @@
-// $Id: DummyLumiAlley.cpp,v 1.3 2008-08-13 16:03:52 panmanj Exp $
+// $Id: DummyLumiAlley.cpp,v 1.4 2008-09-24 18:52:18 graven Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
 #include "Event/L0DUReport.h"
-#include "Event/HltSummary.h"
 
 // local
 #include "DummyLumiAlley.h"
