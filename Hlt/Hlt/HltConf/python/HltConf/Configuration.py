@@ -1,38 +1,31 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.4 2008-09-24 07:51:47 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.5 2008-09-24 13:59:21 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
+from LHCbKernel.Configuration import *
 from Gaudi.Configuration import *
 from GaudiConf.Configuration import *
 import GaudiKernel.ProcessJobOptions
 
-class HltConf(ConfigurableUser):
+class HltConf(LHCbConfigurableUser):
     __slots__ = {
           "hltType" :          'PA+LU+VE+MU'
         , "userAlgorithms":    [ ]  # put here user algorithms to add
         , "oldStyle" :         True # old style options configuration
         }   
+    def validHltTypes(self):
+        return [ 'PA',
+                 'PA+LU',
+                 'PA+LU+VE',
+                 'PA+LU+VE+MU',
+                 'PA+LU+VE+MU+HA+EL+PH',
+                 'Physics_Hlt1',
+                 'Physics_Hlt1+Hlt2',
+                 'DEFAULT' ]
                 
-    def getProp(self,name):
-        if hasattr(self,name):
-            return getattr(self,name)
-        else:
-            return self.getDefaultProperties()[name]
-
-    def setProp(self,name,value):
-        return setattr(self,name,value)
-
-    def setOtherProp(self,other,name):
-        # Function to propagate properties to other component, if not already set
-        if hasattr(self,name):
-            if hasattr(other,name) and len(other.getProp(name)) > 0 :
-                print "# %s().%s already defined, ignoring HltConf().%s"%(other.name(),name,name)
-            else:
-                setattr(other,name,self.getProp(name))
-
     def applyConf(self):
         GaudiKernel.ProcessJobOptions.printing_level += 1
 

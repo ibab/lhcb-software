@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.19 2008-09-24 08:55:08 graven Exp $ 
+# $Id: HltLine.py,v 1.20 2008-09-24 13:59:22 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.19 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.20 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt line itself 
@@ -481,7 +481,7 @@ class bindMembers (object) :
                                    algName , line ) ;
                 #
             else :
-                print "# %s WARNING: HtlMember('Hlt1%s') with strange configuration " % ( line , algName )
+                print "# WARNING: Line '%s', Member '%s'  with strange configuration " % ( line , algName )
 
             
             ## output selection (default: the algorithm instance name)
