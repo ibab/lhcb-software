@@ -1,4 +1,4 @@
-// $Id: CopyRelatedMCParticles.h,v 1.14 2008-03-26 13:57:46 jpalac Exp $
+// $Id: CopyRelatedMCParticles.h,v 1.15 2008-09-24 20:50:09 jpalac Exp $
 #ifndef COPYRELATEDMCPARTICLES_H 
 #define COPYRELATEDMCPARTICLES_H 1
 
@@ -31,10 +31,15 @@ class MCVertex;
  * ICloneMCParticle, the implementation of which is set by the property 
  * IMCCloneMCParticle (default MCParticleCloner). The depth and content of the 
  * cloning action depends on the implementation of the ICloneMCParticle.
- * The algorithm also stores the associations between the input set of 
- * LHCb::Particle and the cloned LHCb::MCParticles. This is stored in the form 
+ * The algorithm also stores the associations between the clones of the 
+ * input set of LHCb::Particles,
+ * and the cloned LHCb::MCParticles. This is stored in the form 
  * of an LHCb::RelationWeighted2D<LHCb::Particle, LHCb::MCParticle, double> in
  * a TES location defined by InputLocation + "/RelatedMCParticles".
+ * The requirement is that the LHCb::Particles from the InputLocation have 
+ * previously been cloned to the MicroDST TES area. If a clone is not found,
+ * no association is stored
+ *
  * @see ICloneMCParticle
  * @see MCParticleCloner
  *
@@ -47,7 +52,8 @@ class MCVertex;
  *  // Add a CopyRelatedMCParticles instance to a selection sequence
  *  SeqDC06selBd2Jpsi2MuMu_Kst2KPi.Members += {"CopyRelatedMCParticles/CopyMC"};
  *  CopyMC.OutputPrefix = "MyLocation";
- *  CopyMC.InputLocation = "MyLocation/Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/Particles";
+ *  // Note: the InputLocation is the TES location of the original particles
+ *  CopyMC.InputLocation = "Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/Particles";
  *  CopyMC.ICloneMCParticle = "MCParticleCloner" // this is the default anyway.
  *  @endcode
  * 

@@ -1,4 +1,4 @@
-// $Id: CopyRelatedMCParticles.cpp,v 1.14 2008-03-20 13:37:57 jpalac Exp $
+// $Id: CopyRelatedMCParticles.cpp,v 1.15 2008-09-24 20:50:10 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -47,7 +47,7 @@ StatusCode CopyRelatedMCParticles::initialize() {
 
   StatusCode sc = MicroDSTAlgorithm::initialize(); // must be executed first
 
-  debug() << "==> Initialize" << endmsg;
+  debug() << "==> Initialize XX" << endmsg;
 
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
@@ -89,7 +89,7 @@ StatusCode CopyRelatedMCParticles::execute() {
 
   verbose() << "Make Linker for " << inputTESLocation()  << endmsg;
 
-  const std::string relationsLoc = inputTESLocation() + "/RelatedMCParticles";
+  const std::string relationsLoc = fullOutputTESLocation() + "/RelatedMCParticles";
 
   verbose() << "Storing relations table at " << relationsLoc << endmsg;
 
@@ -159,7 +159,12 @@ CopyRelatedMCParticles::storeAssociatedMCParticles(const LHCb::Particle* particl
               << endmsg;
 //     linker.link(particle, clonedMCParticle);
     verbose() << "Linked cloned MCParticle" << endmsg;
-    m_relations->relate(particle, clonedMCParticle, 1.);
+    LHCb::Particle* clonedParticle = getStoredClone<LHCb::Particle>(particle);
+    if (particle) {
+      m_relations->relate(clonedParticle, clonedMCParticle, 1.);
+    } else {
+      error() << "Particle has not been cloned, make sure you clone them first!" << endmsg;   
+    } 
   }
 
   return sc;
