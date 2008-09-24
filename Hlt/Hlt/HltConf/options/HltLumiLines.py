@@ -94,6 +94,7 @@ createdCounters.extend(
              } )
     )
 
+
 BXMembers = []
 for i in [ 'NoBeam', 'BeamCrossing','SingleBeamRight','SingleBeamLeft'] :
     HistoMembers=[]
@@ -140,12 +141,12 @@ lumiSequence = Line ( 'Lumi'
 
 
 # @todo: move writer into dedicated rawbank sequence
-if debugging: LumiSequence( RawEventDump('FullRawDataDump' ) )
+#if debugging: lumiSequence( RawEventDump('FullRawDataDump' ) )
 # @todo Retsore that with LHCb v25r1
-#LumiSequence( bankKiller( 'SerialKiller', DefaultIsKill=True, BankTypes=["ODIN","HltLumiSummary"],
+####lumiSequence( bankKiller( 'SerialKiller', DefaultIsKill=True, BankTypes=["ODIN","HltLumiSummary"],
 #                          OutputLevel=debugOPL ) )
-if debugging: LumiSequence( RawEventDump('NanoEventDump' ) )
-#LumiSequence( HltLumiWriter( OutputLevel=debugOPL )  )
+#if debugging: lumiSequence( RawEventDump('NanoEventDump' ) )
+####lumiSequence( HltLumiWriter( OutputLevel=debugOPL )  )
 
 # register with global decision (which is the OR of its input)
 #HltSelectionFilter('Hlt1Global').InputSelections.append( 'HltLumiDecision' ) 

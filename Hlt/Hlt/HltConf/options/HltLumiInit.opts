@@ -12,7 +12,7 @@ LumiANNSvc.LumiCounters = {
     "CaloEt"     : 7   , 
     "PV2D"       : 10  , 
     "PV3D"       : 11  , 
-    "PU"         : 13  , 
+    "PU"         : 13  
 };
 
 LumiANNSvc.OutputLevel=2;

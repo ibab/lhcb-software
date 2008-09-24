@@ -1,4 +1,4 @@
-// $Id: LumiFromL0DU.h,v 1.2 2008-08-25 10:59:04 panmanj Exp $
+// $Id: LumiFromL0DU.h,v 1.3 2008-09-24 14:15:35 panmanj Exp $
 #ifndef LUMIFROML0DU_H 
 #define LUMIFROML0DU_H 1
 
@@ -7,6 +7,8 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 // from LHCB
 #include "Event/L0DUReport.h"
+// Interfaces
+#include "L0Interfaces/IL0DUFromRawTool.h"
 
 /** @class LumiFromL0DU LumiFromL0DU.h
  *  
@@ -27,12 +29,16 @@ public:
 
 protected:
   std::string m_InputSelectionName;
+  std::string m_OutputContainerName;
+
   const LHCb::L0DUReport* m_L0DUReport;
+  std::string m_fromRawTool;
+  IL0DUFromRawTool* m_fromRaw;
+
   std::string m_ValueName;
   std::string m_CounterName;
   int m_Counter;
 
-  std::string m_OutputContainerName;
 
 private:
 

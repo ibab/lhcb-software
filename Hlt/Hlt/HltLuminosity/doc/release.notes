@@ -4,6 +4,13 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+! 2008-09-24 - Jaap Panman
+ - LumiFromL0DU: use L0DUFromRawTool to avoid dependence from L0 TCK
+
+! 2008-09-24 - Jaap Panman
+ - LumiHistoMaker: remove duplicate declareInfo statements (giving warnings)
+
+
 !========================== HltLuminosity v2r1 2008-09-10 ===================
 
 ! 2008-08-29 - Jaap Panman

@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.20 2008-09-23 09:58:00 graven Exp $ 
+! $Id: release.notes,v 1.21 2008-09-24 14:19:41 panmanj Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : 
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2008-09-24 - Jaap Panman
+ - small corrections in HltLumiInit.opts, HltLumiLines.py
 
 ! 2008-09-19 - Gerhard Raven
  - further support for 'bindMembers'

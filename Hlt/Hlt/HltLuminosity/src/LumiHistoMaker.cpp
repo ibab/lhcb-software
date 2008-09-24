@@ -1,4 +1,4 @@
-// $Id: LumiHistoMaker.cpp,v 1.4 2008-08-29 07:50:27 panmanj Exp $
+// $Id: LumiHistoMaker.cpp,v 1.5 2008-09-24 14:15:35 panmanj Exp $
 // Include files 
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -91,12 +91,10 @@ StatusCode LumiHistoMaker::initialize() {
       m_Histos.push_back(countHisto);  
       m_names.push_back(*ivar);
       m_keys.push_back(counter);
-      declareInfo(*ivar, countHisto, *ivar);
 
       // create histograms to hold the counts above threshold
       Hlt::Histo* digitHisto = initializeHisto(*ivar+"_threshold", -0.5, 1.5, 2);
       m_ThresholdHistos.push_back(digitHisto);  
-      declareInfo(*ivar+"_threshold", digitHisto, *ivar+"_threshold");
 
       info() << "Variable: " << *ivar << " Key: " << counter << 
 	" Bins: " << bins << " Threshold: " << m_Thresholds[i] << endreq;

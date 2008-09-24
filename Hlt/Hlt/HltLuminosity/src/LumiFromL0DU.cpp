@@ -1,4 +1,4 @@
-// $Id: LumiFromL0DU.cpp,v 1.5 2008-08-26 14:03:14 panmanj Exp $
+// $Id: LumiFromL0DU.cpp,v 1.6 2008-09-24 14:15:35 panmanj Exp $
 // Include files 
 
 // from Gaudi
@@ -31,10 +31,11 @@ LumiFromL0DU::LumiFromL0DU( const std::string& name,
                                   ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
-  declareProperty( "InputSelection" ,      m_InputSelectionName  = "Trig/L0/L0DUReport");
-  declareProperty( "CounterName"    ,      m_CounterName);
-  declareProperty( "ValueName"      ,      m_ValueName);
-  declareProperty( "OutputContainer",      m_OutputContainerName =  LHCb::HltLumiSummaryLocation::Default );
+  declareProperty( "InputSelection"      , m_InputSelectionName  = "Trig/L0/L0DUReport");
+  declareProperty( "CounterName"         , m_CounterName);
+  declareProperty( "ValueName"           , m_ValueName);
+  declareProperty( "OutputContainer"     , m_OutputContainerName =  LHCb::HltLumiSummaryLocation::Default );
+  declareProperty( "L0DUFromRawToolType" , m_fromRawTool         = "L0DUFromRawTool" );
 
 }
 //=============================================================================
@@ -57,6 +58,9 @@ StatusCode LumiFromL0DU::initialize() {
   info() << "OutputContainer        " << m_OutputContainerName << endmsg;
 
 
+  // get the L0 decoding tool
+  m_fromRaw = tool<IL0DUFromRawTool>( m_fromRawTool , m_fromRawTool  );
+
   // ------------------------------------------
   IANNSvc* annSvc = svc<IANNSvc>("LumiANNSvc");
 
@@ -70,6 +74,7 @@ StatusCode LumiFromL0DU::initialize() {
     info() << "ExtraInfo key value: " << m_Counter << endmsg;
   }
   // ------------------------------------------
+  //m_channelmaptool = tool<IOTChannelMapTool>("OTChannelMapTool");
  
   return StatusCode::SUCCESS;
 }
@@ -81,43 +86,13 @@ StatusCode LumiFromL0DU::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
-  // load the L0DU configuration
-  int nCounter =  0;
-  if ( !exist<LHCb::L0DUReport>(m_InputSelectionName) ){
-    warning() << m_InputSelectionName << " not found" << endmsg ;
-  } else {
-    // get the container
-    m_L0DUReport = get<LHCb::L0DUReport>(m_InputSelectionName);
-    
-    if ( !m_L0DUReport ) { 
-      err() << "Could not find location " 
-	    <<  m_InputSelectionName << endreq;
-      return StatusCode::FAILURE ;
-    }
-    // get the value using its name from the L0Report
-    double value = m_L0DUReport->dataValue(m_ValueName);
-    debug() << "found value for " << m_ValueName << " " << value << endreq ;
-
-    if ( msgLevel(MSG::DEBUG) ) {
-      // for debugging, get also value in alternative way
-      const LHCb::L0DUConfig* m_configuration = m_L0DUReport->configuration();
-      if ( NULL == m_configuration ) { 
-        debug() << "cannot find L0DUConfig" << endreq ;
-      }
-      else {
-        LHCb::L0DUElementaryData::Map data = m_configuration->data();
-        LHCb::L0DUElementaryData::Map::const_iterator it = data.find( m_ValueName );
-        if( it == data.end() ) {
-          debug() << "cannot find map element for " << m_ValueName << endreq ;
-        }
-        else {
-          double other_value = ((*it).second)->value();
-          debug() << "found other value for " << m_ValueName << " " << other_value << endreq ;
-        }
-      }
-    }
-    nCounter = (int) value;
-  }
+  // decode the bank using the fromRaw Tool
+  if ( !m_fromRaw->decodeBank() ) Warning("Unable to decode L0DU rawBank", StatusCode::SUCCESS).ignore();
+  LHCb::L0DUReport fromRawReport = m_fromRaw->report();
+  // get the value using its name from the fromRawReport
+  double fromRawValue = fromRawReport.dataValue(m_ValueName);
+  debug() << "found value from the raw L0DU report for " << m_ValueName << " " << fromRawValue << endreq ;
+  int nCounter = (int) fromRawValue;
 
   // get container
   LHCb::HltLumiSummary* sums = getOrCreate<HltLumiSummary,HltLumiSummary>(m_OutputContainerName);
