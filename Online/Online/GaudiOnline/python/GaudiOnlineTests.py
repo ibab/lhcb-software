@@ -2,7 +2,6 @@ from OnlineEnv import *
 
 def _run(app):     end_config()
 
-PartitionID=0x7de1
 pid = PartitionID
 pnam = PartitionName
 
