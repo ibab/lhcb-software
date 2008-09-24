@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.18 2008-09-24 07:43:00 graven Exp $ 
+# $Id: HltLine.py,v 1.19 2008-09-24 08:55:08 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.18 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.19 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt line itself 
@@ -985,7 +985,7 @@ def prnt ( obj        ,   # the object
     #
     for item in lst :
         if hasattr ( obj , item ) :
-            if l1 < len1( line ) : line += '\n' + l1*' '
+            if l1 < len1( line ) : line += '\n#' + (l1-1)*' '
             line = line + " %-15s : %s" % ( item , getattr ( obj , item ) )
     return line 
 
@@ -1013,13 +1013,13 @@ def __enroll__ ( self       ,   ## the object
         return __enroll__ ( self.sequencer() , level )
 
     _tab = 50
-    _indent_ = ('%-3d'%level) + level * '   ' 
+    _indent_ = ('#%-3d'%level) + level * '   ' 
     try:     line = _indent_ + self.name ()
     except:  line = _indent_ + '<UNKNOWN>'
         
-    if len1(line)>( _tab-1): line = line + '\n'+ _tab*' '
+    if len1(line)>( _tab-1): line = line + '\n#'+ (_tab-1)*' '
     else :                   line = line + (_tab-len1(line))*' '
-    try: line = line + '%-25.25s'%self.getType()
+    try:    line = line + '%-25.25s'%self.getType()
     except: line = line + '<UNKNOWN>'
 
 
