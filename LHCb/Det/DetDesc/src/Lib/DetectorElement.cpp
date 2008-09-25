@@ -1,4 +1,4 @@
-// $Id: DetectorElement.cpp,v 1.38 2008-09-23 12:32:15 marcocle Exp $
+// $Id: DetectorElement.cpp,v 1.39 2008-09-25 13:53:04 marcocle Exp $
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/IDataManagerSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -154,17 +154,13 @@ bool DetectorElement::hasCondition(const std::string &name) const {
 
 SmartRef<Condition> DetectorElement::condition(const std::string &name) const {
   ConditionMap::const_iterator cond = m_de_conditions.find(name);
-  if ( cond != m_de_conditions.end() ) {
-    return cond->second;
-  }
-  else {
+  if ( cond == m_de_conditions.end() ) {
     std::ostringstream oss;
     oss << "Requested unknown condition '" << name << "' to '" << this->name() << "'";
     throw DetectorElementException(oss.str(), this,
         StatusCode(StatusCode::FAILURE,true));
   }
-  // this line is never reached, but it (usually) avoids warnings.
-  return SmartRef<Condition>();
+  return cond->second;
 }
 
 void DetectorElement::createCondition(std::string &name, std::string &path) {

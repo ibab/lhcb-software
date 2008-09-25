@@ -1,9 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.378 2008-09-23 13:04:46 marcocle Exp $ 
+! $Id: release.notes,v 1.379 2008-09-25 13:53:03 marcocle Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2008-09-24 - Marco Cattaneo
+ - Cleaned the logic in IDetectorElement::condition.
 
 ! 2008-09-23 - Marco Clemencic
  - Extended IDetectorElement with the function hasCondition(name) to check if
