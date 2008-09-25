@@ -1,4 +1,4 @@
-// $Id: OMAcommon.h,v 1.2 2008-08-19 22:45:32 ggiacomo Exp $
+// $Id: OMAcommon.h,v 1.3 2008-09-25 15:38:30 ggiacomo Exp $
 #ifndef OMALIB_OMACOMMON_H 
 
 #define OMALIB_OMACOMMON_H 1
@@ -29,7 +29,7 @@ namespace OMAconstants {
 class OMAcommon : public OMAMsgInterface {
 public: 
   /// Standard constructor
-  OMAcommon( ) : m_histDB(NULL), m_debug(2) {
+  OMAcommon(OnlineHistDB* HistDB = NULL) : m_histDB(HistDB), m_debug(2) {
     setDefRefRoot();
   }
   virtual ~OMAcommon( ) {} ///< Destructor

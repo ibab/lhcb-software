@@ -1,4 +1,4 @@
-// $Id: OMAcommon.cpp,v 1.2 2008-09-25 13:58:15 ggiacomo Exp $
+// $Id: OMAcommon.cpp,v 1.3 2008-09-25 15:38:30 ggiacomo Exp $
 
 #include "OMAlib/OMAcommon.h"
 
@@ -15,7 +15,10 @@ void OMAcommon::setDefRefRoot() {
 #else
   m_RefRoot = "/group/";
 #endif
-  m_RefRoot += OnlineHistDBEnv_constants::StdRefRoot;
+  if(m_histDB)
+    m_RefRoot += m_histDB->refRoot();
+  else
+    m_RefRoot += OnlineHistDBEnv_constants::StdRefRoot;
 }
 
 TH1* OMAcommon::getReference(OnlineHistogram* h,

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAlib.cpp,v 1.7 2008-08-11 16:51:49 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAlib.cpp,v 1.8 2008-09-25 15:38:30 ggiacomo Exp $
 /*
   Online Monitoring Analysis library
   G. Graziani (INFN Firenze)
@@ -10,8 +10,7 @@
 using namespace std;
 
 // constructor to be used if already connected to HistDB (use NULL for not using HistDB)
-OMAlib::OMAlib(OnlineHistDB* HistDB) : OMAcommon() { 
-  m_histDB = HistDB;
+OMAlib::OMAlib(OnlineHistDB* HistDB) : OMAcommon(HistDB) { 
   m_localDBsession=false;
   doAlgList(); 
 }
