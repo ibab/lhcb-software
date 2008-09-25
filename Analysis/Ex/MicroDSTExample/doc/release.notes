@@ -1,9 +1,16 @@
-!$Id: release.notes,v 1.3 2008-09-25 09:02:27 jpalac Exp $
+!$Id: release.notes,v 1.4 2008-09-25 15:26:10 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Ex/MicroDSTExample
 ! Responsible : Juan PALACIOS
 ! Purpose     : MicroDST making and reading examples.
 !-----------------------------------------------------------------------------
+
+! 2008-09-25 - Juan PALACIOS
+ - options/TestMicroDSTMake.py
+  . Set OutputLevel of PrintDC06selBs2JpsiPhi to 4
+  . Run over 1000 events
+ - python/MicroDSTReadingExample.py
+  . Steer input file, TES root and selection sequence from command line.
 
 ! 2008-09-23 - Juan PALACIOS
  - python/MicroDSTReadingExample.py
