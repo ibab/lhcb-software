@@ -1,6 +1,6 @@
-// $Id: ChargedPP2MC.opts,v 1.4 2006-10-16 17:16:56 ibelyaev Exp $ 
+// $Id: ChargedPP2MC.opts,v 1.5 2008-09-25 12:00:54 odescham Exp $ 
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
 // ============================================================================
 /** @file
  *  "Data-On-Demand" configuration for 
@@ -11,6 +11,3 @@ DataOnDemandSvc.Algorithms +=
   { "DATA='/Event/Relations/Rec/ProtoP/Charged'   TYPE='ChargedPP2MC'" , 
     "DATA='/Event/Relations/Rec/ProtoP/Upstream'  TYPE='ChargedPP2MC'" } ;
 
-// ============================================================================
-// The END 
-// ============================================================================

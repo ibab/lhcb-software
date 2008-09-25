@@ -1,65 +1,22 @@
-// $Id: NeutralPP2MC.cpp,v 1.19 2008-09-24 23:28:58 odescham Exp $
+// $Id: NeutralPP2MC.cpp,v 1.20 2008-09-25 12:00:54 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.19 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.18  2008/09/24 17:51:36  odescham
-// fix
-//
-// Revision 1.17  2008/09/23 10:30:25  odescham
-// add HLT context for NeutralProtoP
-//
-// Revision 1.16  2007/03/05 11:28:11  pkoppenb
-// Correct Particle2MCLinker location
-//
-// Revision 1.15  2007/01/12 13:58:53  ranjard
-// v8r0 - use Gaudi v19r0
-//
-// Revision 1.14  2006/10/18 14:57:50  jpalac
-// New version v7r0
-//
-// Revision 1.13  2006/10/16 17:16:58  ibelyaev
-//  update for Data-On-Demand usage
-//
-// ============================================================================
-// Include files
-// ============================================================================
-// Relations
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.20 $
 // ============================================================================
 #include "Relations/IRelationWeighted.h"
-// ============================================================================
-// GaudiKernel
-// ============================================================================
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartRef.h"
 #include "GaudiKernel/SmartRefVector.h"
 #include "GaudiKernel/StreamBuffer.h"
-// Event
 #include "Event/MCParticle.h"
 #include "Event/ProtoParticle.h"
-// Associators
 #include "Relations/RelationWeighted1D.h"
-
-// ============================================================================
-// CaloEvent/Event
-// ============================================================================
 #include "Event/CaloCluster.h"
 #include "Event/CaloHypo.h"
 #include "CaloUtils/Calo2MC.h"
-// ============================================================================
-// DaVinciKernel
-// ============================================================================
 #include "Kernel/PP2MCLocation.h"
-// ============================================================================
-// DaVinci associators 
-// ============================================================================
 #include "Kernel/Particle2MCLinker.h"
-// ============================================================================
-// local 
-// ============================================================================
-#include "AsctAlgorithm.h"
-// ============================================================================
+#include "NeutralPP2MC.h"
 
 /** @class NeutralPP2MC NeutralPP2MC.cpp
  *  
@@ -85,83 +42,50 @@
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date   08/04/2002
  */
-class NeutralPP2MC
-  : public AsctAlgorithm
-{
-  // friend factory for instantiation 
-  friend class AlgFactory<NeutralPP2MC>;
-public:
-  /** standard execution of the algorithm
-   *  @return StatusCode
-   */
-  virtual StatusCode execute    () ;
-protected:  
-  /** Standard constructor
-   *  @param name name of the algorithm
-   *  @param svc  service locator
-   */
-  NeutralPP2MC
-  ( const std::string& name , 
-    ISvcLocator*       svc  )
-    : AsctAlgorithm ( name , svc )
-    //
-    , m_mcTable ( )  {
-    declareProperty ( "MCCaloTable" , m_mcTable ) ;
-
-    std::string out( context() );
-    std::transform( context().begin() , context().end() , out.begin () , ::toupper ) ;
-    if( out == "HLT" ){
-      m_inputData.push_back( LHCb::ProtoParticleLocation::HltNeutrals );
-      m_outputTable = "Relations/"+ LHCb::ProtoParticleLocation::HltNeutrals;
-      m_mcTable =  "Relations/" + LHCb::CaloClusterLocation::DefaultHlt;
-    }else{
-      m_inputData.push_back( LHCb::ProtoParticleLocation::Neutrals );
-      m_outputTable = LHCb::ProtoParticle2MCLocation::Neutrals ;
-      m_mcTable =  "Relations/" + LHCb::CaloClusterLocation::Default;
-    }
-    
-    // define proper default for CaloCLuster->MCPArticle data
-  };
-  /// destructor (virtual and protected)
-  virtual ~NeutralPP2MC(){};
-private:
-  /// default  constructor is private
-  NeutralPP2MC();
-  /// copy     constructor is private
-  NeutralPP2MC
-  ( const NeutralPP2MC& );
-  /// assignement operator is private
-  NeutralPP2MC& operator=
-  ( const NeutralPP2MC& );
-private:
-  /// the location of Calo Cluster -> MCParticle table 
-  std::string m_mcTable ;
-};
 using namespace LHCb;
-// ============================================================================
-// Algorithm Factory
-// ============================================================================
-namespace 
-{
-  // ==========================================================================
-  /** @var s_Factory
-   *  local concrete factory for algorithm instantiation
-   *  @see NeutralPP2MC
-   */
-  // ==========================================================================
-  //  const  AlgFactory<NeutralPP2MC>         s_Factory ;
-  // ==========================================================================
-};
-// ============================================================================
-/** @var NeutralPP2MCFactory
- *  abstract (importable) factory for algorithm instantiation
- *  @see NeutralPP2MC
- */
-// ============================================================================
-//const   IAlgFactory&NeutralPP2MCFactory = s_Factory ;
+
 DECLARE_ALGORITHM_FACTORY( NeutralPP2MC );
 
+NeutralPP2MC::NeutralPP2MC( const std::string& name , ISvcLocator*       svc  )
+  : AsctAlgorithm ( name , svc ),
+    m_mcTable ( )  {
+  declareProperty ( "MCCaloTable" , m_mcTable ) ;
+  std::string out( context() );
+  std::transform( context().begin() , context().end() , out.begin () , ::toupper ) ;
+  if( out == "HLT" ){
+  }else{
+    m_outputTable = LHCb::ProtoParticle2MCLocation::Neutrals ;
+  }
+  m_test = context();
+};
+
+
 // ============================================================================
+
+StatusCode NeutralPP2MC::initialize(){
+  StatusCode sc = GaudiAlgorithm::initialize();
+  if( !sc.isSuccess() ) return sc;
+
+  // property setting for Neutral is based on context() 
+  // default setup in initialize() to please the linker design
+  std::string out( context() );
+  std::transform( context().begin() , context().end() , out.begin () , ::toupper ) ;
+  if( out == "HLT" ){
+    if(m_inputData.empty()   ) m_inputData.push_back( LHCb::ProtoParticleLocation::HltNeutrals );
+    if(m_outputTable.empty() ) m_outputTable =  "Relations/" +  LHCb::ProtoParticleLocation::HltNeutrals ;;
+    if(m_mcTable.empty()     ) m_mcTable     =  "Relations/" + LHCb::CaloClusterLocation::DefaultHlt;
+  }else{
+    if(m_inputData.empty()   ) m_inputData.push_back( LHCb::ProtoParticleLocation::Neutrals );
+    if(m_outputTable.empty() ) m_outputTable =  "Relations/" +  LHCb::ProtoParticleLocation::Neutrals ;;
+    if(m_mcTable.empty()     ) m_mcTable     =  "Relations/" + LHCb::CaloClusterLocation::Default;
+  }
+  
+  
+  
+  return StatusCode::SUCCESS;
+}
+
+
 
 // ============================================================================
 /** standard execution of the algorithm
@@ -170,10 +94,14 @@ DECLARE_ALGORITHM_FACTORY( NeutralPP2MC );
  *  @return StatusCode
  */
 // ============================================================================
-StatusCode NeutralPP2MC::execute() 
-{
+StatusCode NeutralPP2MC::execute(){
 
-  debug() << "Input data " << m_inputData << endreq;
+  info() << "Execute for context = "     << context() 
+         << "::  inputData   = ("           << m_inputData << ")"
+         << "::  output Relation table =  " << m_outputTable 
+         << "::  input  Relation table =  " << m_mcTable
+         << endreq;
+  debug() << "Context test " << m_test << "/" << context() << endreq;
   // avoid the long name and always use "const" qualifier
   typedef const SmartRefVector<CaloHypo>                        Hypos    ;
   typedef const SmartRefVector<CaloCluster>                     Clusters ;
@@ -188,80 +116,54 @@ StatusCode NeutralPP2MC::execute()
   // input locations 
   typedef std::vector<std::string>                              Inputs   ;
   
-  // get the CaloCluster->MCParticle table from TES 
-  const MCTable* mcTable = get<MCTable> ( m_mcTable ) ;
-  if ( 0 == mcTable ) { return StatusCode::FAILURE ; }       // RETURN 
   
-  // create relation table  
+  // create protoP<->MC output relation table  
   Table* table = 0 ;
-  if ( !outputTable().empty() ) 
-  {
-    // create new table 
+  if ( !outputTable().empty() ){
     table = new Table() ;
-    // register it in TES 
     put( table, outputTable() );
   };
+  // get cluster<->MC input relation table
+  const MCTable* mcTable = get<MCTable> ( m_mcTable ) ;
+  if ( 0 == mcTable ) { return StatusCode::FAILURE ; }       // RETURN 
+
   
   // Loop on all input containers of ProtoParticles
-  for ( Inputs::const_iterator inp = m_inputData.begin(); 
-        m_inputData.end()!= inp; inp++) 
-  {
+  for ( Inputs::const_iterator inp = m_inputData.begin(); m_inputData.end()!= inp; inp++)  {
     // get the protoparticles from TES 
     if( !exist<ProtoParticles>( *inp )) continue; 
-   const ProtoParticles* protos = get<ProtoParticles> ( *inp ) ;
-    if ( 0 == protos ) { return StatusCode::FAILURE ; }       // RETURN 
+    const ProtoParticles* protos = get<ProtoParticles> ( *inp ) ;
+    if ( 0 == protos ) { return StatusCode::FAILURE ; }       // RETURN        
+
     
     // Create a linker table
-    const std::string linkContainer = 
-      (*inp) + Particle2MCMethod::extension[Particle2MCMethod::NeutralPP];
+    const std::string linkContainer = (*inp) + Particle2MCMethod::extension[Particle2MCMethod::NeutralPP];
     
     // Just a fake helper class
     Object2MCLinker<LHCb::ProtoParticle> p2MCLink(this);
-    Object2MCLinker<LHCb::ProtoParticle>::Linker*
-      linkerTable = p2MCLink.linkerTable( linkContainer );
-    //
+    Object2MCLinker<LHCb::ProtoParticle>::Linker* linkerTable = p2MCLink.linkerTable( linkContainer );
+    
     if ( NULL == table && NULL == linkerTable ) { continue; } // CONTINUE
     
-    for ( ProtoParticles::const_iterator ipp = protos->begin() ; 
-          protos->end() != ipp ; ++ipp ) 
-    {
+    for ( ProtoParticles::const_iterator ipp = protos->begin() ; protos->end() != ipp ; ++ipp ){
       const ProtoParticle* pp = *ipp ;
-      // skip nulls
       if ( 0 == pp ) { continue ; }
-      
-      //      bool matched = false;
-      // get all calo hypos 
       const Hypos& hypos = pp->calo() ;
       // loop over all hypotheses for givel protoparticle
-      for ( Hypos::const_iterator ihypo = hypos.begin() ; 
-            hypos.end() != ihypo ; ++ihypo) 
-      {
+      for ( Hypos::const_iterator ihypo = hypos.begin() ; hypos.end() != ihypo ; ++ihypo){
         const CaloHypo* hypo = *ihypo ;
-        // skip nulls
         if ( 0 == hypo  ) { continue ; }                         // CONTINUE 
-        // get all clusters from the hypo 
         const Clusters& clusters = hypo->clusters();
-        // loop over all clusters for given hypo 
-        for ( Clusters::const_iterator icluster = clusters.begin() ; 
-              clusters.end() != icluster ; ++icluster ) 
-        {
+        for ( Clusters::const_iterator icluster = clusters.begin() ; clusters.end() != icluster ; ++icluster ){
           const CaloCluster* cluster = *icluster ;
-          // skip nulls 
           if ( 0 == cluster ) { continue ; }                  // CONTINUE 
-          // get all relations form the cluster 
-          Range range = mcTable -> relations ( cluster ) ;
-          
-          for ( relation rel = range.begin() ; range.end() != rel ; ++rel ) 
-          {
+          Range range = mcTable -> relations ( cluster ) ;          
+          for ( relation rel = range.begin() ; range.end() != rel ; ++rel ){
             const MCParticle* mcPart = rel->to();
-            // skip nulls 
             if ( 0 == mcPart ) { continue ; }              // CONTINUE 
-            // propagate the relation to protoparticle 
             const double weight = rel->weight() / cluster->e() ;
-            if ( NULL != table )
-            { table       -> relate (  pp , mcPart , weight ) ; }
-            if ( NULL != linkerTable ) 
-            { linkerTable -> link   (  pp , mcPart , weight ) ; }
+            if ( NULL != table )      { table       -> relate (  pp , mcPart , weight ) ; }
+            if ( NULL != linkerTable ){ linkerTable -> link   (  pp , mcPart , weight ) ; }
             
           } // end of loop over MC relations
         } // end of loop over clusters 
@@ -269,16 +171,9 @@ StatusCode NeutralPP2MC::execute()
     } // end of loop over protoparticles  
   } // end of loop over input containters 
   
-  if ( msgLevel( MSG::DEBUG ) && 0 != table )  
-  {
+  if ( msgLevel( MSG::DEBUG ) && 0 != table ){
     debug() << "Number of MC links are " 
             << table->relations().size() << endreq ;
   }
-  
   return StatusCode::SUCCESS;
 };
-// ============================================================================
-
-// ============================================================================
-// The End 
-// ============================================================================

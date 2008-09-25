@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinks.cpp,v 1.25 2008-09-24 17:51:36 odescham Exp $
+// $Id: Particle2MCLinks.cpp,v 1.26 2008-09-25 12:00:54 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -42,11 +42,13 @@ Particle2MCLinks::Particle2MCLinks( const std::string& name,
 {
 
   
-  m_chargedPPLocation.push_back( ProtoParticleLocation::Charged );
-  m_chargedPPLocation.push_back( ProtoParticleLocation::Upstream );
-  m_neutralPPLocation.push_back( ProtoParticleLocation::Neutrals );
   declareProperty( "ChargedPPLocation", m_chargedPPLocation);
   declareProperty( "NeutralPPLocation", m_neutralPPLocation);
+
+  m_chargedPPLocation.push_back( ProtoParticleLocation::Charged );
+  m_chargedPPLocation.push_back( ProtoParticleLocation::Upstream );
+  
+
 }
 
 //=============================================================================
@@ -64,13 +66,28 @@ StatusCode Particle2MCLinks::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize();
   if( !sc.isSuccess() ) return sc;
 
+
+  // property setting for Neutral is based on context() 
+  // default setup in initialize() to please the linker design
+  if(m_neutralPPLocation.empty()){
+      std::string out( context() );
+      std::transform( context().begin() , context().end() , out.begin () , ::toupper ) ;
+    if( out == "HLT" ){
+      m_neutralPPLocation.push_back( ProtoParticleLocation::HltNeutrals );
+    }else{
+      m_neutralPPLocation.push_back( ProtoParticleLocation::Neutrals );
+    }
+  }
+  
+
   // Create a helper class for each type of Protoparticles
   m_chargedLink = new Object2MCLinker< LHCb::ProtoParticle >( this, 
                                                             Particle2MCMethod::ChargedPP,
                                                             m_chargedPPLocation);
   m_neutralLink = new Object2MCLinker< LHCb::ProtoParticle >( this, 
-                                                            Particle2MCMethod::NeutralPP,
-                                                            m_neutralPPLocation);
+                                                              Particle2MCMethod::NeutralPP,
+                                                              m_neutralPPLocation
+                                                              );
   return sc;
 };
 
