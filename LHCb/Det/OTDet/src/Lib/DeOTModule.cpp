@@ -1,7 +1,4 @@
-// $Id: DeOTModule.cpp,v 1.36 2008-09-22 13:42:15 janos Exp $
-// STD
-#include <algorithm>
-
+// $Id: DeOTModule.cpp,v 1.37 2008-09-25 10:04:46 janos Exp $
 // GaudiKernel
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
@@ -61,7 +58,12 @@ DeOTModule::DeOTModule(const std::string& name) :
   m_yMinLocal(0.0),
   m_yMaxLocal(0.0),
   m_xInverted(false),
-  m_yInverted(false) {
+  m_yInverted(false),
+  m_calibrationName( "Calibration" ),
+  m_calibration(),
+  m_statusName( "Status" ),
+  m_status()
+{
   /// Constructor
 }
 
@@ -129,14 +131,13 @@ StatusCode DeOTModule::initialize() {
   MsgStream msg( msgSvc(), name() );
   try {
     msg << MSG::DEBUG << "Registering conditions" << endmsg;
-    m_calibration = condition( "Calibration" );
     updMgrSvc()->registerCondition( this, this->geometry()    , &DeOTModule::cacheInfo           );
-    if ( hasCondition( "Status" ) ) { ///< Only do this if condtion is in LHCBCOND
-      m_status = condition( "Status" );
+    if ( hasCondition( m_statusName ) ) { ///< Only do this if condtion is in LHCBCOND
+      m_status = condition( m_statusName );
       updMgrSvc()->registerCondition( this, m_status.path()     , &DeOTModule::statusCallback      );
     }
-    if ( hasCondition( "Calibration" ) ) { ///< Only do this if condtion is in LHCBCOND
-      m_calibration = condition( "Calibration" );
+    if ( hasCondition( m_calibrationName ) ) { ///< Only do this if condtion is in LHCBCOND
+      m_calibration = condition( m_calibrationName );
       updMgrSvc()->registerCondition( this, m_calibration.path(), &DeOTModule::calibrationCallback );
     } else {
       msg << MSG::DEBUG << "Going to use DC06 defaults for RT-relation and T0s" << endmsg;
@@ -434,12 +435,15 @@ StatusCode DeOTModule::cacheInfo() {
 
   /// Only call this one if the calibration condition doesn't exist
   /// Call it after all the trajectory stuff
-  if ( !hasCondition( "Calibration" ) ) fallbackDefaults();
+  if ( !hasCondition( m_calibrationName ) ) fallbackDefaults();
   
   return StatusCode::SUCCESS;
 }
 
+
 StatusCode DeOTModule::calibrationCallback() {
+  /// Don't need to check if condition exists
+  /// Callback will only be registered with ums if condition exists
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Updating Calibration parameters" << endmsg;
   try {
@@ -451,7 +455,7 @@ StatusCode DeOTModule::calibrationCallback() {
     m_strawt0    = m_calibration->param< std::vector<double> >( "TZero" );
   }
   catch (...) {
-    msg << MSG::WARNING << "Failed to update calibration conditions for " << this->name() << "!" << endmsg;
+    msg << MSG::ERROR << "Failed to update calibration conditions for " << this->name() << "!" << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -459,13 +463,15 @@ StatusCode DeOTModule::calibrationCallback() {
 }
 
 StatusCode DeOTModule::statusCallback() {
+  /// Don't need to check if condition exists
+  /// Callback will only be registered with ums if condition exists
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Updating Status parameters" << endmsg;
   try {
     m_channelStatus = m_status->param< std::vector<int> >( "ChannelStatus" );
   }
   catch (...) {
-    msg << MSG::WARNING << "Failed to update status conditions for " << this->name() << "!" << endmsg;
+    msg << MSG::ERROR << "Failed to update status conditions for " << this->name() << "!" << endmsg;
     return StatusCode::FAILURE;
   }
   
@@ -505,17 +511,23 @@ std::auto_ptr<LHCb::Trajectory> DeOTModule::trajectory(const OTChannelID& aChan,
 }
 
 StatusCode DeOTModule::setStrawT0s( const std::vector< double >& tzeros ) {
-  // @TODO: Make me smarter so i can handle a vector of otis t0s
-  /// Modify condition in TES
-  m_calibration->param< std::vector<double> >( "TZero" ) = tzeros;
-  /// m_calibration->neverUpdateMode() /// Always valid for any and all IOV
-  /// Now we need to inform the ums that the condition has changed
-  updMgrSvc()->invalidate( m_calibration.target() ); 
-  /// Trigger an update
-  StatusCode sc = updMgrSvc()->update( this );
-  if ( !sc.isSuccess() ) {
+  if ( hasCondition( m_calibrationName ) ) {
+    // @TODO: Make me smarter so i can handle a vector of otis t0s
+    /// Modify condition in TES
+    m_calibration->param< std::vector<double> >( "TZero" ) = tzeros;
+    /// m_calibration->neverUpdateMode() /// Always valid for any and all IOV
+    /// Now we need to inform the ums that the condition has changed
+    updMgrSvc()->invalidate( m_calibration.target() ); 
+    /// Trigger an update
+    StatusCode sc = updMgrSvc()->update( this );
+    if ( !sc.isSuccess() ) {
+      MsgStream msg( msgSvc(), name() );
+      msg << MSG::ERROR << "Failed to update straw T0 conditions for " << this->name() << "!" << endmsg;
+      return StatusCode::FAILURE;
+    } 
+  } else {
     MsgStream msg( msgSvc(), name() );
-    msg << MSG::WARNING << "Failed to update straw T0 conditions for " << this->name() << "!" << endmsg;
+    msg << MSG::ERROR << "Condition " << m_calibrationName << " doesn't exist for " << this->name() << "!" << endmsg;
     return StatusCode::FAILURE;
   }
   
@@ -523,29 +535,29 @@ StatusCode DeOTModule::setStrawT0s( const std::vector< double >& tzeros ) {
 }
 
 StatusCode DeOTModule::setRtRelation(const OTDet::RtRelation& rtr) {
-  /// First we need to get the tr and st parameters
-  std::vector< double > trParameters     = rtr.tcoeff();
-  std::vector< double > sigmaTParameters = rtr.terrcoeff();
-  /// Ok now we modify the conditions in the tes
-  m_calibration->param< std::vector< double > >( "TRParameters" ) = trParameters;
-  m_calibration->param< std::vector< double > >( "STParameters" ) = sigmaTParameters;
-  /// Now we need to inform the ums that the condition has changed
-  updMgrSvc()->invalidate( m_calibration.target() );
-  /// Trigger an update
-  StatusCode sc = updMgrSvc()->update( this );
-  if ( !sc.isSuccess() ) {
+  if ( hasCondition( m_calibrationName ) ) {
+    /// First we need to get the tr and st parameters
+    std::vector< double > trParameters     = rtr.tcoeff();
+    std::vector< double > sigmaTParameters = rtr.terrcoeff();
+    /// Ok now we modify the conditions in the tes
+    m_calibration->param< std::vector< double > >( "TRParameters" ) = trParameters;
+    m_calibration->param< std::vector< double > >( "STParameters" ) = sigmaTParameters;
+    /// Now we need to inform the ums that the condition has changed
+    updMgrSvc()->invalidate( m_calibration.target() );
+    /// Trigger an update
+    StatusCode sc = updMgrSvc()->update( this );
+    if ( !sc.isSuccess() ) {
+      MsgStream msg( msgSvc(), name() );
+      msg << MSG::ERROR << "Failed to update RT conditions for " << this->name() << "!" << endmsg;
+      return StatusCode::FAILURE;
+    }
+  } else {
     MsgStream msg( msgSvc(), name() );
-    msg << MSG::WARNING << "Failed to update RT conditions for " << this->name() << "!" << endmsg;
+    msg << MSG::ERROR << "Condition " << m_calibrationName << " doesn't exist for " << this->name() << "!" << endmsg;
     return StatusCode::FAILURE;
   }
-  
+    
   return StatusCode::SUCCESS;
-}
-
-bool DeOTModule::hasCondition( const std::string& condition ) const {
-  std::vector< std::string > conditions = conditionNames();
-  std::vector< std::string >::const_iterator match = std::find( conditions.begin(), conditions.end(), condition );
-  return match != conditions.end() ? true : false;
 }
 
 void DeOTModule::fallbackDefaults() {

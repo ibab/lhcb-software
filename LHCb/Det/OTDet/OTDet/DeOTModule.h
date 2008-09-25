@@ -1,4 +1,4 @@
-// $Id: DeOTModule.h,v 1.35 2008-09-22 12:44:40 janos Exp $
+// $Id: DeOTModule.h,v 1.36 2008-09-25 10:04:46 janos Exp $
 #ifndef OTDET_DEOTMODULE_H
 #define OTDET_DEOTMODULE_H 1
 
@@ -339,12 +339,6 @@ public:
   /** @return pointer to Status condition. !! Only for experts or people who think
        they know what their doing. !! */
   const Condition* statusCondition() const;
-
-  /** Method to check existence of condition
-      @param name of condition
-      @return boolean
-  */
-  bool hasCondition( const std::string& condition ) const;
   
   /// Private member methods
 private:
@@ -455,9 +449,11 @@ private :
   double m_monoAXZero;                          ///< offset of staggering in first monolayer  
   double m_monoBXZero;                          ///< offset of staggering in second monolayer
   // Calibration and status CONDDB stuff
+  std::string           m_calibrationName;      ///< Name of calibration condition
   SmartRef< Condition > m_calibration;          ///< Calibration condition
+  std::string           m_statusName;           ///< Name of calibration condition
   SmartRef< Condition > m_status;               ///< Status condition
-  std::vector<int>    m_channelStatus;          ///< vector of channel statuses
+  std::vector<int>      m_channelStatus;        ///< vector of channel statuses
 };
 
 // -----------------------------------------------------------------------------
@@ -756,11 +752,11 @@ inline const OTDet::RtRelation& DeOTModule::rtRelation() const {
 //}
 
 inline const Condition* DeOTModule::calibrationCondition() const {
-  return m_calibration.target();
+  return hasCondition( m_calibrationName ) ? m_calibration.target() : static_cast< const Condition* >( 0 );
 }
 
 inline const Condition* DeOTModule::statusCondition() const {
-  return m_status.target();
+  return hasCondition( m_statusName ) ? m_status.target() : static_cast< const Condition* >( 0 );
 }
 
 #endif  // OTDET_DEOTMODULE_H
