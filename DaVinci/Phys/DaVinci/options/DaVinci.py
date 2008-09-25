@@ -8,7 +8,7 @@
 ########################################################################
 from os import environ
 from Gaudi.Configuration import *
-from Configurables import GaudiSequencer, PrintTree, PhysDesktop, BTagging
+from Configurables import GaudiSequencer, PrintTree, PhysDesktop, BTagging, MagneticFieldSvc, MakeResonances
 ########################################################################
 #
 # Standard configuration
@@ -20,10 +20,10 @@ importOptions( "$DAVINCIROOT/options/DaVinciCommon.opts" )
 #
 # Trigger. Uncomment what you need. Hlt1 needs L0, Hlt2 doesn't.
 #
-importOptions( "$L0DUROOT/options/ReplaceL0DUBankWithEmulated.opts" )
+#importOptions( "$L0DUROOT/options/ReplaceL0DUBankWithEmulated.opts" )
 #
-importOptions( "$HLTCONFROOT/options/Hlt1.opts" )
-importOptions( "$HLTCONFROOT/options/Hlt2.opts" )
+#importOptions( "$HLTCONFROOT/options/Hlt1.opts" )
+#importOptions( "$HLTCONFROOT/options/Hlt2.opts" )
 ########################################################################
 #
 # enable standard particles monitors
@@ -78,3 +78,5 @@ EventSelector().PrintFreq  = 100
 importOptions( "$DAVINCIROOT/options/DaVinciTestData.opts" )
 ########################################################################
 
+MagneticFieldSvc().OutputLevel = 1 
+MakeResonances("DiLeptonForPreselBu2LLK").OutputLevel = 1 

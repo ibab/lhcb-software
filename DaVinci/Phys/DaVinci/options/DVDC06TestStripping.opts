@@ -30,7 +30,7 @@ DSTOR.Output = "DATAFILE='Presel_test.dst' TYP='POOL_ROOTTREE' OPT='RECREATE'";
  * Job steering
  */
 EventClocksvc.EventTimeDecoder = "FakeEventTime";
-ApplicationMgr.EvtMax = 1000 ;
+ApplicationMgr.EvtMax = 5000 ;
 EventSelector.PrintFreq  = 1;
 
 MessageSvc.OutputLevel = 3 ;
@@ -40,12 +40,8 @@ ApplicationMgr.HistogramPersistency = "ROOT";
 
 // no output 
 //EvtTupleSvc.Output = {} ;
-//ApplicationMgr.OutStream = {};
+ApplicationMgr.OutStream = {};
 
 #include "$DAVINCIROOT/options/Phys_v4_BB_lumi2.opts"
 
 
-/// TMP
-SeqPreselXb2GammaX.Members = {
-  "LoKi::PreselXb2GammaX/PreselXb2GammaX"    // the preselection algorithm
-} ;

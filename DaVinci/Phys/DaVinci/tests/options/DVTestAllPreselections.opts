@@ -1,6 +1,6 @@
-// $Id: DVTestAllPreselections.opts,v 1.1 2007-11-21 18:22:42 jpalac Exp $
+// $Id: DVTestAllPreselections.opts,v 1.2 2008-09-25 12:26:48 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
 /*
  * Options to test stripping
