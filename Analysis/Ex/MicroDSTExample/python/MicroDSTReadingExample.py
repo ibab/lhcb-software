@@ -1,25 +1,17 @@
 # Imports and typedefs
+import sys, getopt
 from ROOT import TCanvas, TH1D, Double
 from GaudiPython import gbl, AppMgr
 from math import sqrt, fabs
-#from units import GeV
-from LinkerInstances.eventassoc import *
-
-
-std = gbl.std
-LHCb = gbl.LHCb
-
-sc = gbl.StatusCode
-locationRoot = '/Event/microDST/Phys/'
-
+#==============================================================================
 def nextEvent(am):
     am.run(1)
-    return  am.evtSvc()['/Event/microDST/Rec/Header'] != None
-
+    return  am.evtSvc()['/Event'] != None
+#==============================================================================
 def deSmartRef(T) :
     if hasattr(T, 'target'): T = T.target()
     return T
-
+#==============================================================================
 def initMassPlots(pid, window):
     partProp=partSvc.findByStdHepID( pid )
     return TH1D(partProp.particle()+" mass",
@@ -27,7 +19,7 @@ def initMassPlots(pid, window):
                 100,
                 partProp.mass()-window,
                 partProp.mass()+window)
-
+#==============================================================================
 def initMassResPlots(pid, window):
     partProp=partSvc.findByStdHepID( pid )    
     return TH1D(partProp.particle()+" Rec mass - MC mass",
@@ -35,7 +27,7 @@ def initMassResPlots(pid, window):
                 100,
                 -window,
                 +window)
-
+#==============================================================================
 def initProperTimePlots(pid, min, max):
     partProp=partSvc.findByStdHepID( pid )
     return TH1D(partProp.particle()+" proper time",
@@ -43,13 +35,13 @@ def initProperTimePlots(pid, min, max):
                 100,
                 min,
                 max)
-
+#==============================================================================
 def makeMassPlots(particle,plots):
     pid = particle.particleID().pid()
     if plots.has_key(pid) == False :
         plots[pid] = initMassPlots(pid, 500.)
     result = plots[pid].Fill(particle.momentum().mass())    
-
+#==============================================================================
 def makeMassResPlots(particle,mcParticle,plots):
     pid = particle.particleID().pid()
     offset = 10000
@@ -57,7 +49,7 @@ def makeMassResPlots(particle,mcParticle,plots):
     if plots.has_key(offset+pid) == False :
         plots[offset+pid] = initMassResPlots(pid, 500.)
     result = plots[offset+pid].Fill(particle.momentum().mass()-mcParticle.momentum().mass())    
-
+#==============================================================================
 def makeProperTimePlots(particle, vertex, fitter, plots):
     pid = particle.particleID().pid()
     if ( particle.particleID().hasBottom() ):
@@ -68,7 +60,7 @@ def makeProperTimePlots(particle, vertex, fitter, plots):
         chi2=Double(0.)
         fitter.fit(vertex, particle, time, error, chi2)
         result = plots[pid].Fill(time)    
-
+#==============================================================================
 def particleLoop(particles, plots):
     for p in particles:
         p = deSmartRef(p)
@@ -79,12 +71,35 @@ def particleLoop(particles, plots):
             if (assocRange.size() > 0) :
                 assocMCParticle = assocRange[0].to()
                 makeMassResPlots(p, assocMCParticle, plots)
-        else :
-            print "Did NOT FIND Particle->MCParticle Relations table!!!!"
-
         daughters = p.daughters()
         particleLoop(daughters, plots)
 
+#==============================================================================
+def printHelp():
+    print "Usage: python -i MicroDSTReadingExample [options]"
+    print "Options:\n"
+    print "\t--input         Input MicroDST file"
+    print "                  Default /afs/cern.ch/lhcb/group/davinci/vol1/DEV/data/DV_v20r2/testBs2JpsiPhi_5Kevt_pythonConfig.dst"
+    print "\t--selection     DV Selection run to make the MicroDST."
+    print "                  Default 'DC06selBs2JpsiPhi_unbiased'"
+    print "\t--root          TES root of everything."
+    print "                  Default 'Event/microDST'"
+    
+locationRoot = '/Event/microDST'
+selection = 'DC06selBs2JpsiPhi_unbiased'
+microDSTFile = '/afs/cern.ch/lhcb/group/davinci/vol1/DEV/data/DV_v20r2/testBs2JpsiPhi_5Kevt_pythonConfig.dst'
+
+opts, args = getopt.getopt(sys.argv[1:], "s:i:r:h", ["selection=","input=", "root=", "help"])
+
+for o, a in opts:
+    if o in ("-h", "--help"):
+        printHelp()
+    elif o in ("-i", "--input"):
+        microDSTFile=a
+    elif o in ("-s", "--selection"):
+        selection = a
+    elif o in ("-r", "--root"):
+        locationRoot = a
 
 
 appMgr = AppMgr(outputlevel=4)
@@ -104,9 +119,8 @@ partSvc = appMgr.partSvc()
 properTimeFitter = tools.create('PropertimeFitter',
                                 interface='ILifetimeFitter')
 
-#sel.open('$HOME/cmtDaVinci/DaVinci_v20r2/Phys/DaVinci/v20r2/cmt/testBs2JpsiPhi_5Kevt.dst')
-sel.open('../options/MicroDST.dst')
-#sel.open('../options/testBs2JpsiPhi_5Kevt.dst')
+sel.open(microDSTFile)
+
 mcMassPlots = {}
 massPlots = {}
 propTimePlots = {}
@@ -115,11 +129,11 @@ nMCEvents=0
 nRecEvents=0
 nParticles = 0
 nPrimaryVertices = 0
-basePath = '/Event/microDST/Phys/DC06selBs2JpsiPhi_unbiased'
-#basePath = '/Event/microDST/Phys/SelB2HH'
-particlePath = basePath + '/Particles'
-particle2mcPath = basePath + '/Particles/RelatedMCParticles'
-vertexAssociationPath = basePath + '/Particle2VertexRelations'
+
+selectionPath = locationRoot +  '/Phys/' + selection
+particlePath = selectionPath + '/Particles'
+particle2mcPath = selectionPath + '/Particles/RelatedMCParticles'
+vertexAssociationPath = selectionPath + '/Particle2VertexRelations'
 mcParticlePath = '/Event/microDST/MC/Particles'
 while (nextEvent(appMgr)) :
 #    print "HELLO!!!!!"
@@ -154,6 +168,8 @@ print "Found MC info in ", nMCEvents, "/", nEvents, " events"
 print "Found Reco info in ", nRecEvents, "/", nEvents, "events"
 print "Found ", nPrimaryVertices, " PVs in ", nEvents, "events"
 print "Found ", nParticles, " B candidates in ", nEvents, "events"
+
+print "massPlots.keys() = ", massPlots.keys()
 
 #massPlots[511].Draw()
 #mcMassPlots[511].SetLineColor(2)
