@@ -70,11 +70,12 @@ def configure():
     return (opts,c)
 
 def run_online(args):
+    import GaudiPython
     argv = ['gaudirun']
     for i in args: argv.append(i)
     sys.argv = argv
     opts,app=configure()
-    return app
+    return (GaudiPython.AppMgr(),app)
 
 def run_offline():
     opts,app=configure();

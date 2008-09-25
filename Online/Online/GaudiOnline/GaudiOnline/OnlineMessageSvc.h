@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineMessageSvc.h,v 1.6 2008-06-05 18:40:48 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineMessageSvc.h,v 1.7 2008-09-25 12:13:09 frankb Exp $
 #ifndef GAUDI_ONLINEMESSAGESVC_H
 #define GAUDI_ONLINEMESSAGESVC_H
 
@@ -126,8 +126,10 @@ namespace LHCb {
   protected:
     virtual bool i_reportMessage( const Message& message );
     static void setErrorLogger(IErrorLogger* logger);
+    void setupLimits(Property& prop);
+    void setupThreshold(Property& prop);
 
-  private:
+  protected:
 
     bool          m_loggerOnly;                 ///< Property to suppress local logging
     int           m_msgCount[MSG::NUM_LEVELS];  ///< Counter of messages of a given type
@@ -137,7 +139,13 @@ namespace LHCb {
     MessageMap    m_messageMap;                 ///< Message map
     ThresholdMap  m_thresholdMap;               ///< Output level threshold map
     std::string   m_defaultFormat;              ///< Default format for the messages
-    std::vector<std::string> m_thresholdProp[MSG::NUM_LEVELS]; ///< Properties controling
-  };
+    std::string   m_defaultTimeFormat;          ///< Default format for timestamps in the messages
+    StringArrayProperty     m_thresholdProp[MSG::NUM_LEVELS]; ///< Properties controling
+    BooleanProperty         m_printAlways;
+    BooleanProperty         m_stats;
+    UnsignedIntegerProperty m_statLevel;
+    IntegerProperty         m_msgLimit[MSG::NUM_LEVELS];
+    BooleanProperty         m_suppress;
+ };
 } // End namespace LHCb
 #endif

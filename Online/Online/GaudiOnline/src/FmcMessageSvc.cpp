@@ -32,6 +32,7 @@ LHCb::FmcMessageSvc::FmcMessageSvc(const std::string& name,ISvcLocator* svcloc)
   declareProperty("fifoPath",m_fifoPath="/tmp/logSrv.fifo");
   declareProperty("noDrop",m_noDrop=false);
   declareProperty("tryN",m_tryN=2);
+  m_fifoPath.declareUpdateHandler(&FmcMessageSvc::changeFifo, this);
 }
 /*****************************************************************************/
 /// Destructor.
@@ -56,13 +57,28 @@ StatusCode LHCb::FmcMessageSvc::queryInterface(const InterfaceID& riid,
 /// Initialize Service 
 StatusCode LHCb::FmcMessageSvc::initialize()
 {
+  StatusCode sc=OnlineMessageSvc::initialize();
+  if(sc.isFailure())return sc;
+  return openFifo();
+}
+
+void LHCb::FmcMessageSvc::changeFifo(Property& ) {
+  /*-------------------------------------------------------------------------*/
+  if(fifoFD!=-1)
+  {
+    close(fifoFD);
+    fifoFD=-1;
+  }
+  openFifo();
+}
+
+StatusCode LHCb::FmcMessageSvc::openFifo() {
   char *dfltFifoPath="/tmp/logSrv.fifo";
   int errU=0;
   struct stat statBuf;
   enum outType{L_DIM=0x1,L_STD=0x2,L_SYS=0x4};
+  std::string fifo_name = m_fifoPath;
   /*-------------------------------------------------------------------------*/
-  StatusCode sc=OnlineMessageSvc::initialize();
-  if(sc.isFailure())return sc;
   /*-------------------------------------------------------------------------*/
   droppedN=0;
   /*-------------------------------------------------------------------------*/
@@ -83,7 +99,7 @@ StatusCode LHCb::FmcMessageSvc::initialize()
   errU=L_STD|L_SYS;
   /* If the logger is a secondary logger, try to open also the default       */
   /* logger to send it possible errors in opening the secondary logger.      */
-  if(strcmp(m_fifoPath.c_str(),dfltFifoPath))
+  if(strcmp(fifo_name.c_str(),dfltFifoPath))
   {
     /* check if dfltFifoPath is writable */
     if(access(dfltFifoPath,W_OK)!=-1)     /* write access to dfltFifoPath OK */
@@ -106,13 +122,13 @@ StatusCode LHCb::FmcMessageSvc::initialize()
   }
   /*-------------------------------------------------------------------------*/
   /* check if m_fifoPath is writable */
-  if(access(m_fifoPath.c_str(),W_OK)==-1)                   /* access denied */
+  if(access(fifo_name.c_str(),W_OK)==-1)                   /* access denied */
   {
-    printM(errU,MSG::FATAL,__func__,"access(\"%s\"): %s!",m_fifoPath.c_str(),
+    printM(errU,MSG::FATAL,__func__,"access(\"%s\"): %s!",fifo_name.c_str(),
            strerror(errno));
     if(errno==ENOENT)
     {
-      if(!strcmp(m_fifoPath.c_str(),dfltFifoPath))
+      if(!strcmp(fifo_name.c_str(),dfltFifoPath))
       {
         printM(errU,MSG::FATAL,__func__,"Please, run \"logSrv\" (without -p or -s "
                "options) on the node \"%s\"!",hostName);
@@ -120,48 +136,48 @@ StatusCode LHCb::FmcMessageSvc::initialize()
       else
       {
         printM(errU,MSG::FATAL,__func__,"Please, run \"logSrv -p %s -s <srv_name>\""
-               " on the node \"%s\"!",m_fifoPath.c_str(),hostName);
+               " on the node \"%s\"!",fifo_name.c_str(),hostName);
       }
     }
     return StatusCode::FAILURE;
   }
-  /* get m_fifoPath information */
-  if(stat(m_fifoPath.c_str(),&statBuf)==-1)
+  /* get fifo_name information */
+  if(stat(fifo_name.c_str(),&statBuf)==-1)
   {
-    printM(errU,MSG::ERROR,__func__,"stat(\"%s\"): %s!",m_fifoPath.c_str(),
+    printM(errU,MSG::ERROR,__func__,"stat(\"%s\"): %s!",fifo_name.c_str(),
            strerror(errno));
     return StatusCode::FAILURE;
   }
-  /* check if m_fifoPath is a FIFO */
+  /* check if fifo_name is a FIFO */
   if(!S_ISFIFO(statBuf.st_mode))
   {
     printM(errU,MSG::ERROR,__func__,"I-node: \"%s\" is not a FIFO!",
-           m_fifoPath.c_str());
+           fifo_name.c_str());
     return StatusCode::FAILURE;
   }
   /* open error log */
-  if(m_noDrop)fifoFD=open(m_fifoPath.c_str(),O_WRONLY|O_NONBLOCK|O_APPEND);
-  else fifoFD=open(m_fifoPath.c_str(),O_RDWR|O_NONBLOCK|O_APPEND);
+  if(m_noDrop)fifoFD=open(fifo_name.c_str(),O_WRONLY|O_NONBLOCK|O_APPEND);
+  else fifoFD=open(fifo_name.c_str(),O_RDWR|O_NONBLOCK|O_APPEND);
   if(fifoFD==-1)
   {
     if(errno==ENXIO)
     {
       printM(errU,MSG::FATAL,__func__,"open(\"%s\"): No process has the FIFO "
-             "\"%s\" open for reading!",m_fifoPath.c_str(),m_fifoPath.c_str());
-      if(!strcmp(m_fifoPath.c_str(),dfltFifoPath))
+             "\"%s\" open for reading!",fifo_name.c_str(),fifo_name.c_str());
+      if(!strcmp(fifo_name.c_str(),dfltFifoPath))
       {
         printM(errU,MSG::FATAL,__func__,"Please, run \"logSrv\" (without -p or -s "
-               "options) on the node \"%s\"!",m_fifoPath.c_str(),hostName);
+               "options) on the node \"%s\"!",fifo_name.c_str(),hostName);
       }
       else
       {
         printM(errU,MSG::FATAL,__func__,"Please, run \"logSrv -p %s -s <srv_name>"
-               "\" on the node \"%s\"!",m_fifoPath.c_str(),hostName);
+               "\" on the node \"%s\"!",fifo_name.c_str(),hostName);
       }
     }
     else
     {
-      printM(errU,MSG::FATAL,__func__,"open(\"%s\"): %s!",m_fifoPath.c_str(),
+      printM(errU,MSG::FATAL,__func__,"open(\"%s\"): %s!",fifo_name.c_str(),
              strerror(errno));
     }
     return StatusCode::FAILURE;
@@ -177,14 +193,14 @@ StatusCode LHCb::FmcMessageSvc::initialize()
     if(statusFlag<0)
     {
       printM(errU,MSG::FATAL,__func__,"fcntl(\"%s\",F_GETFL): %s!",
-             m_fifoPath.c_str(),strerror(errno));
+             fifo_name.c_str(),strerror(errno));
       return StatusCode::FAILURE;
     }
     statusFlag&=~O_NONBLOCK;                         /* unset O_NONBLOCK bit */
     if(fcntl(fifoFD,F_SETFL,statusFlag)==-1)
     {
       printM(errU,MSG::FATAL,__func__,"fcntl(\"%s\",F_SETFL): %s!",
-             m_fifoPath.c_str(),strerror(errno));
+             fifo_name.c_str(),strerror(errno));
       return StatusCode::FAILURE;
     }
   }
@@ -192,7 +208,7 @@ StatusCode LHCb::FmcMessageSvc::initialize()
   /* If the logger is a secondary logger, close the default logger, since we */
   /* succeeded in opening the secondary logger and we have no more need of   */
   /* the default logger.                                                     */
-  if(strcmp(m_fifoPath.c_str(),dfltFifoPath))
+  if(strcmp(fifo_name.c_str(),dfltFifoPath))
   {
     if(dfltFifoFD!=-1)
     {
@@ -274,9 +290,10 @@ void LHCb::FmcMessageSvc::report(int typ,const std::string& src,const std::strin
 }
 /*****************************************************************************/
 /// Dispatch a message to the relevant streams.
-void LHCb::FmcMessageSvc::reportMessage(const Message& msg)
-{
-  //i_reportMessage(msg);
+void LHCb::FmcMessageSvc::reportMessage(const Message& msg)  {
+  int typ = msg.getType();
+  bool report_always = m_printAlways;
+  if ( typ==MSG::ALWAYS && !report_always) return;
   report(msg.getType(),msg.getSource(),msg.getMessage());
 }
 /*****************************************************************************/

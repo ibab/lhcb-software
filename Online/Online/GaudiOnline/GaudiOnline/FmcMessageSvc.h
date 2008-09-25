@@ -32,7 +32,7 @@ namespace LHCb
     virtual bool isDropped();
   private:
     bool m_noDrop;
-    std::string m_fifoPath;
+    StringProperty m_fifoPath;
     int m_tryN;
     char hostName[80];
     char *pName;
@@ -41,6 +41,8 @@ namespace LHCb
     int dfltFifoFD;
     int droppedN;
     bool dropped;
+    StatusCode openFifo();
+    void changeFifo(Property& prop);
     virtual void getPName();
     virtual int printM(int out,int severity,const char* fName,
                        char *format,...);

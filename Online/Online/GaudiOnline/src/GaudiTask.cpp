@@ -251,9 +251,14 @@ int GaudiTask::configApplication()  {
     sc = configSubManager();
   else
     sc = configPythonSubManager();
-  if ( sc.isSuccess() ) {
-    log << MSG::INFO << "2nd Level successfully configured." << endmsg;	
-    return 1;
+  if ( sc.isSuccess() )  {
+    sc = m_subMgr->configure();
+    if ( sc.isSuccess() )  {
+      log << MSG::INFO << "2nd Level successfully configured." << endmsg;
+      return sc;
+    }
+    // This means job options were not found - this is an error
+    log << MSG::FATAL << "Failed to configure 2nd. level. Bad options ?" << endmsg;
   }
   if ( m_subMgr ) {
     m_subMgr->terminate();
@@ -489,17 +494,7 @@ StatusCode GaudiTask::configSubManager() {
   else {
     log << MSG::WARNING << "2nd. layer is already present - reusing instance" << endmsg;
   }
-  StatusCode sc = setInstanceProperties(m_subMgr);
-  if ( sc.isSuccess() )  {
-    sc = m_subMgr->configure();
-    if ( sc.isSuccess() )  {
-      log << MSG::INFO << "2nd Level successfully configured." << endmsg;
-      return sc;
-    }
-    // This means job options were not found - this is an error
-    log << MSG::FATAL << "Failed to configure 2nd. level. Bad options ?" << endmsg;
-  }
-  return sc;
+  return setInstanceProperties(m_subMgr);
 }
 
 /// Configure Python based second level application manager
@@ -515,17 +510,28 @@ StatusCode GaudiTask::configPythonSubManager() {
   if( !cmd.empty() ) {
     std::string vsn = Py_GetVersion();
     log << MSG::INFO << "Starting python initialization. Python version: [" << vsn << "]" << endmsg;
+    m_subMgr = Gaudi::createApplicationMgr("GaudiSvc", "ApplicationMgr");
+    Gaudi::setInstance(m_subMgr);
+    SmartIF<IProperty> ip(m_subMgr);
+    if ( ip )  {
+      ip->setProperty(StringProperty("AppName",""));
+      ip->setProperty(StringProperty("MessageSvcType", m_msgsvcType));
+    }
     ::PyRun_SimpleString((char*)cmd.c_str());
     if ( ::PyErr_Occurred() )   {
       ::PyErr_Print(); 
       ::PyErr_Clear();
       log << MSG::FATAL << "Failed to invoke python startup script." << endmsg;
       m_python = std::auto_ptr<PythonInterpreter>(0);
+      if ( m_subMgr ) {
+	m_subMgr->release();
+	m_subMgr = 0;
+	Gaudi::setInstance((IAppMgrUI*)0);
+	Gaudi::setInstance((ISvcLocator*)0);
+      }
       return StatusCode::FAILURE;
     }
-    m_subMgr = Gaudi::createApplicationMgr("GaudiSvc", "ApplicationMgr");
-    Gaudi::setInstance(m_subMgr);
-    log << MSG::ALWAYS << "Python initialization done." << endmsg;
+    log << MSG::INFO << "Python initialization done. ";
     return StatusCode::SUCCESS;
   }
   log << MSG::FATAL << "Failed to invoke python startup script." << endmsg;
