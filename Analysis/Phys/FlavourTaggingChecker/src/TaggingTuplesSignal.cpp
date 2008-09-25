@@ -1,10 +1,9 @@
-// $Id: TaggingTuplesSignal.cpp,v 1.3 2008-07-24 08:21:09 cattanem Exp $
+// $Id: TaggingTuplesSignal.cpp,v 1.4 2008-09-25 06:52:22 pkoppenb Exp $
 // Include files 
 // local
 #include "TaggingTuplesSignal.h"
 #include "Event/L0DUReport.h"
 #include "Event/HltSummary.h"
-#include "Event/HltEnums.h"
 
 // Declaration of Factory
 DECLARE_ALGORITHM_FACTORY( TaggingTuplesSignal );
