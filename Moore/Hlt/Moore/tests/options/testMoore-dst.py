@@ -20,6 +20,7 @@ HistogramPersistencySvc().OutputFile = 'Moore_minbias.root'
 #---------------------------------------------------------------------------
 
 Moore().hltType = 'PA+VE+LU+MU+HA+EL+PH'
+Moore().oldStyle = False
 
 files = [ 'castor:/castor/cern.ch/user/s/snies/mdf/DC06_L0_v1_lumi2_MuonHadron_40000ev_1.mdf',
           'castor:/castor/cern.ch/user/s/snies/mdf/DC06_L0_v1_lumi2_MuonHadron_40000ev_2.mdf' ]
