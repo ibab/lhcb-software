@@ -1,4 +1,4 @@
-// $Id: RawEventHelpers.h,v 1.22 2008-07-09 07:45:36 frankb Exp $
+// $Id: RawEventHelpers.h,v 1.23 2008-09-25 13:07:46 frankb Exp $
 //  ====================================================================
 //  MDFIO.h
 //  --------------------------------------------------------------------
@@ -49,6 +49,8 @@ namespace LHCb  {
   /// Check consistency of MEP multi event fragment
   bool checkMDFRecord(const MDFHeader* h, int opt_len=~0x0, bool throw_exc=true,bool print_cout=false);
 
+  /// Deep copy raw event structure (including baw bank memory - hence heavy)
+  StatusCode deepCopyRawEvent(RawEvent* source, RawEvent*& result);
   /// Clone rawevent structure
   StatusCode cloneRawEvent(RawEvent* source, RawEvent*& result);
   /// Determine length of the sequential buffer from RawEvent object

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.40 2008-07-09 07:45:36 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.41 2008-09-25 13:07:46 frankb Exp $
 //  ====================================================================
 //  RawEventHelpers.cpp
 //  --------------------------------------------------------------------
@@ -378,6 +378,22 @@ StatusCode LHCb::cloneRawEvent(RawEvent* source, RawEvent*& result)  {
       }
     }
     result = raw.release();
+    return StatusCode::SUCCESS;
+  }
+  return StatusCode::FAILURE;
+}
+
+/// Deep copy raw event structure (including baw bank memory - hence heavy)
+StatusCode LHCb::deepCopyRawEvent(RawEvent* source, RawEvent*& result)  {
+  typedef std::vector<RawBank*> _B;
+  if ( source )  {
+    RawEvent* raw = result==0 ? new RawEvent() : result;
+    for(int i=RawBank::L0Calo; i<RawBank::LastType; ++i) {
+      const _B& banks = source->banks(RawBank::BankType(i));
+      for( _B::const_iterator j=banks.begin(); j != banks.end(); ++j)
+        raw->addBank(*j);
+    }
+    result = raw;
     return StatusCode::SUCCESS;
   }
   return StatusCode::FAILURE;
