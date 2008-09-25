@@ -3,6 +3,10 @@
 ! Responsible : P. Koppenburg
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
+!
+! foreach a (`ls -1 options/DVTestHlt2* | awk -FTestHlt2 '{print $2}' | awk -F. '{print $1}'`)
+!   gaudirun.py options/DVTestHlt2${a}.py | tee test-$a
+! end
 
 !========================== HltSelChecker v7r2 2008-09-10 ===================
 
