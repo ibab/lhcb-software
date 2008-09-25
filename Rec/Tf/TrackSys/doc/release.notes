@@ -3,6 +3,8 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
+! 2008-09-25 - Stephanie Hansmann-Menzemer
+ - Add TrackRecoHLT.py to run HLT2 sequence
 
 ! 2008-09-19 - David Hutchcroft
  - Added VeloTEDOne.py to optimise the reconstruction of the VELO for TED data

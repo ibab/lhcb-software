@@ -19,7 +19,7 @@ GaudiSequencer("RecoHLTTrSeq").Members += [  Tf__PatVeloResetClusterUsed("HLT"),
                                              Tf__PatVeloSpaceTracking("HltRecoSpaceVelo"),
                                              HltTrackFilter("HltPrepareVelo"),
                                              PatPV3D("HltRecoPV3D"),
-                                             PatForward("HltRecoForward")
+                                             PatForward("HltRecoForward"),
                                              HltTrackFilter("HltPrepareForward")]
 
 
@@ -38,8 +38,8 @@ Tf__PatVeloSpaceTracking("HltRecoSpaceVelo").HLTVeloSpaceTool.MarkClustersUsed =
 
 PatForward("HltRecoForward").InputTracksName = "Hlt/Track/Velo";
 PatForward("HltRecoForward").OutputTracksName = "Hlt/Track/Forward";
-PatForward("HltRecoForward").addTool( PatForwardTool(), name="HLTForwardTool") 
-PatForwardTool("HLTForwardTool").AddTTClusterName = "PatAddTTCoord"
+PatForward("HltRecoForward").addTool( PatForwardTool("PatForwardTool")) 
+PatForward("HltRecoForward").PatForwardTool.AddTTClusterName = "PatAddTTCoord"
 
 HltTrackFilter("HltPrepareVelo").InputSelection = "TES:Hlt/Track/Velo";
 HltTrackFilter("HltPrepareVelo").OutputSelection = "Velo1";
