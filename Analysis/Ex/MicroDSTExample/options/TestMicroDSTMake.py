@@ -1,4 +1,4 @@
-#$Id: TestMicroDSTMake.py,v 1.3 2008-09-25 08:05:52 jpalac Exp $
+#$Id: TestMicroDSTMake.py,v 1.4 2008-09-25 15:23:45 jpalac Exp $
 from Gaudi.Configuration import *
 from DaVinci.MicroDSTAlgorithm import *
 from Configurables import CopyRelatedMCParticles
@@ -10,11 +10,16 @@ from Configurables import MCParticleCloner
 from Configurables import MCVertexCloner
 from Configurables import VertexCloner
 from Configurables import ProtoParticleCloner
+from Configurables import PrintHeader
 #
 importOptions( "$DAVINCIROOT/options/DaVinciCommon.opts" )
 importOptions("$DAVINCIROOT/options/DaVinciReco.opts" )
 importOptions( "JpsiPhiData.opts")
 importOptions( "$CCBARROOT/options/DoDC06SelBs2Jpsi2MuMuPhi2KK_lifetime_unbiased.opts"  )
+# get rid of some spam
+printSel=PrintHeader('PrintDC06selBs2JpsiPhi')
+printSel.OutputLevel=4
+#
 importOptions("$DAVINCIROOT/options/MicroDSTCommon.opts")
 #
 AllEvents = GaudiSequencer('AllEvents')
@@ -63,7 +68,7 @@ MySelection.Members += [copyP2PVLink]
 MySelection.Members += [copyMC]
 
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
-ApplicationMgr().EvtMax =50
+ApplicationMgr().EvtMax =1000
 ApplicationMgr().HistogramPersistency = "ROOT";
 HistogramPersistencySvc().OutputFile = "DVHistos.root";
 EventSelector().FirstEvent = 1 
