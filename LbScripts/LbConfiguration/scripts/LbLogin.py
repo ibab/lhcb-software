@@ -17,7 +17,6 @@ sys.path.append(os.path.join(_base_dir, "python"))
 
 from LbUtils.Script import Script
 from LbUtils.Env import Environment, Aliases
-from AllProjectsSetup import AllProjectsSetupScript
 from tempfile import mkstemp
 import sys, os, logging
 import re
@@ -562,7 +561,8 @@ class LbLoginScript(Script):
             plist = []
         plist.append(os.path.join(_base_dir, "scripts"))
         ev["PATH"] = os.pathsep.join(plist)
-        
+
+        from AllProjectsSetup import AllProjectsSetupScript    
         AProj = AllProjectsSetupScript()
         sev, sal = AProj.getEnv()
         

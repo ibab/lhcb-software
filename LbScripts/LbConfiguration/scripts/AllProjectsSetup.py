@@ -2,7 +2,7 @@
 
 from LbUtils.Script import Script
 from LbUtils.Env import Environment, Aliases
-from LbConfiguration.Project import project_list, getProject
+import LbConfiguration.Project as Project
 from tempfile import mkstemp
 import sys, os
 
@@ -61,11 +61,11 @@ class AllProjectsSetupScript(Script):
     def getEnv(self):
         ev = Environment(orig=dict())
         al = Aliases()
-        for p in project_list :
+        for p in Project.project_list :
             key = "%s_release_area" % p.Name()
             value = p.ReleaseArea()
             ev[key] = value
-        for p in project_list :
+        for p in Project.project_list :
             alist = p.Aliases()
             for a in alist.keys():
                 al[a] = alist[a]

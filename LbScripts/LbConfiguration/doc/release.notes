@@ -1,3 +1,10 @@
+2008-09-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/AllProjectsSetup.py: 
+	* scripts/LbLogin.py: Fixed the import of AllProjectsSetup. It has 
+	to be done after the definition of the base environment variables like 
+	LHCBRELEASES. Otherwise the releases areas are not defined.
+
 2008-09-24  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/LbLogin.py: 
