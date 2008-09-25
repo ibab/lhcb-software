@@ -106,7 +106,7 @@ CopyParticle2PVLink.OutputLevel=4;
 // relations table of type LHCb::Relation2D<LHCb::Particle, LHCb::MCParticle>
 // in location InputLocation + "/RelatedMCParticles"
 SeqDC06selBs2JpsiPhi.Members += {"CopyRelatedMCParticles/CopyMC"};
-CopyMC.InputLocation = "microDST/Phys/DC06selBs2JpsiPhi_unbiased/Particles";
+CopyMC.InputLocation = "Phys/DC06selBs2JpsiPhi_unbiased/Particles";
 CopyMC.ICloneMCParticle = "MCParticleCloner";
 CopyMC.MCParticleCloner.ICloneMCVertex = "MCVertexCloner";
 CopyMC.OutputLevel=4;
