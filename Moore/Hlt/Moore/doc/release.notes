@@ -2,6 +2,9 @@ Package     : Hlt/Moore
 Package Coordinator : Patrick Koppenburg and Marco Cattaneo
 Purpose     : LHCb HLT application
 
+! 2008-09-25 - Gerhard Raven
+ - use LHCbConfigurableUser to inherit from 
+
 ! 2008-09-23 - Gerhard Raven
  - move part of configurable into HltConf so that part can also be
    used by DaVinci

@@ -1,11 +1,11 @@
 """
 High level configuration tools for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.29 2008-09-23 13:15:08 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.30 2008-09-25 07:10:08 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
-from Gaudi.Configuration import *
+from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
 from Configurables import ConfigFileAccessSvc, ConfigDBAccessSvc, HltConfigSvc, HltGenConfig
 from Configurables import EventClockSvc
@@ -14,9 +14,10 @@ from HltConf.Configuration import *
 import GaudiKernel.ProcessJobOptions
 from  ctypes import c_uint
 
-class Moore(ConfigurableUser):
+class Moore(LHCbConfigurableUser):
     __slots__ = {
           "EvtMax":            -1    # Maximum number of events to process
+        , "skipEvents":        0
         , "DAQStudies":        False # use DAQ study version of options
         , "DDDBtag" :          '2008-default'
         , "condDBtag" :        '2008-default'
@@ -32,35 +33,9 @@ class Moore(ConfigurableUser):
         , "TCKpersistency" :   'file' # which method to use for TCK data? valid is 'file' and 'sqlite'
         , "enableAuditor" :    [ ]  # put here eg . [ NameAuditor(), ChronoAuditor(), MemoryAuditor() ]
         , "userAlgorithms":    [ ]  # put here user algorithms to add
-        , "oldStyle" :         True # old style options configuration
+        , "oldStyle" :         False# old style options configuration
         }   
                 
-    def getProp(self,name):
-        if hasattr(self,name):
-            return getattr(self,name)
-        else:
-            return self.getDefaultProperties()[name]
-
-    def setProp(self,name,value):
-        return setattr(self,name,value)
-
-    def setOtherProp(self,other,name):
-        # Function to propagate properties to other component, if not already set
-        if hasattr(other,name) and len(other.getProp(name)) > 0 :
-            print "# %s().%s already defined, ignoring Moore().%s"%(other.name(),name,name)
-        else:
-            print 'Propagating ' + name + ' = ' + str(self.getProp(name)) + ' to ' + other.name()
-            setattr(other,name,self.getProp(name))
-
-    def validHltTypes(self):
-        return [ 'PA',
-                 'PA+LU',
-                 'PA+LU+VE',
-                 'PA+LU+VE+MU',
-                 'PA+LU+VE+MU+HA+EL+PH',
-                 'Physics_HLT1',
-                 'Physics_HLT1+HLT2',
-                 'DEFAULT' ]
 
     def getRelease(self):
         import re,fileinput
@@ -105,14 +80,11 @@ class Moore(ConfigurableUser):
         else : 
             # the next is for 2008 data & MC, i.e. NOT for DC'06
             importOptions( '$DDDBROOT/options/LHCb-2008.py' )
-        self.setOtherProp( LHCbApp(), 'DDDBtag' )
-        self.setOtherProp( LHCbApp(), 'condDBtag' )
-        # self.setOtherProp( LHCbApp(), 'skipEvents' )
-        self.setOtherProp( ApplicationMgr(), 'EvtMax' )
+        self.setOtherProps( LHCbApp(), [ 'DDDBtag' , 'condDBtag', 'EvtMax','skipEvents' ] )
         # Get the event time (for CondDb) from ODIN 
         EventClockSvc().EventTimeDecoder = 'OdinTimeDecoder'
         # make sure we don't pick up small variations of the read current
-        MagneticFieldSvc().UseSetCurrent = True
+        # MagneticFieldSvc().UseSetCurrent = True
         # output levels...
         ToolSvc().OutputLevel                     = INFO
         from Configurables import XmlParserSvc 
@@ -135,8 +107,7 @@ class Moore(ConfigurableUser):
                               , ConfigAccessSvc = self.getConfigAccessSvc().getFullName() ) 
             ApplicationMgr().ExtSvc.append(cfg.getFullName())
         else:
-            for i in [ 'hltType','oldStyle','userAlgorithms' ] : 
-                self.setOtherProp( HltConf(), i )
+            for i in [ 'hltType','oldStyle','userAlgorithms' ] : self.setOtherProp( HltConf(), i )
             HltConf().applyConf()
 
             
