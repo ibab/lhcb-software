@@ -7,6 +7,7 @@ Purpose: LHCb reconstruction program
  - Replace BrunelMoni.opts wih BrunelMoni.py, add Track Moni sequence
  - Add Muon histograms to Moni sequence
  - Fix default options in Brunel_Ganga.py for consistency with new defaults
+ - Use ParamFiles v7r3, do not set DDDB major version (taken from LHCbSys)
 
 </PRE><H1><A NAME=v33r2>2008-09-09 Brunel v33r2</A></H1><PRE>
  - Reorganisation of options and defaults
