@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
-__version__ = "$Id: CondDBAdmin_MakeSnapshot.py,v 1.5 2008-07-30 12:07:29 marcocle Exp $"
+__version__ = "$Id: CondDBAdmin_MakeSnapshot.py,v 1.6 2008-09-25 22:56:16 marcocle Exp $"
 
 import os, sys
 
@@ -48,51 +48,6 @@ def guessConnectionString(partition, options):
                     return "sqlite_file:%s/%s" % (partition, p)
     # No further guessing, let's assume that we are dealing with a connection string
     return partition
-
-def timegm(t):
-    """Inverse of time.gmtime. Implementation from Gaudi::Time."""
-    import time
-    if t[8] != 0: # ensure that dst is not set
-        t = tuple(list(t[0:8]) + [0])
-    t1 = time.mktime(t)
-    gt = time.gmtime(t1)
-    t2 = time.mktime(gt)
-    return t1 + (t1 - t2)
-
-def timeToValKey(tstring, default):
-    if not tstring: return default
-    import re
-    # Format YYYY-MM-DD[_HH:MM[:SS.SSS]][UTC]
-    exp = re.compile(r"^(?P<year>[0-9]{4})-(?P<month>[0-9]{2})-(?P<day>[0-9]{2})"+
-                     r"(?:_(?P<hour>[0-9]{2}):(?P<minute>[0-9]{2})(?::(?P<second>[0-9]{2})(?:\.(?P<decimal>[0-9]*))?)?)?"+
-                     r"(?P<utc>UTC)?$")
-    m = exp.match(tstring)
-    if m:
-        # FIXME: check for validity ranges
-        def toInt(s):
-            if s: return int(s)
-            return 0
-        tm = tuple([ toInt(n) for n in m.groups()[0:6] ] + [ 0, 0, -1 ])
-        import time
-        if m.group('utc'):
-            # the user specified UTC
-            t = timegm(tm)
-        else:
-            # seconds since epoch UTC, from local time tuple
-            t = time.mktime(tm)
-        t = int(t) * 1000000000 # to ns
-        d = m.group('decimal')
-        if d:
-            if len(d) < 9:
-                # Add the missing 0s to the decimals
-                d += '0'*(9-len(d))
-            else:
-                # truncate decimals
-                d = d[:9]
-            # add decimals to t
-            t += int(d)
-        return t
-    return default
 
 def main(argv):
     # Configure the parser
@@ -150,6 +105,7 @@ connection string. 'destination' must be a connection string.""")
     dest = os.path.expandvars(args[1])
     
     from PyCool import cool
+    from CondDBUI.Admin import timeToValKey
     since = timeToValKey(options.since, cool.ValidityKeyMin)
     until = timeToValKey(options.until, cool.ValidityKeyMax)
     

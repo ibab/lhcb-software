@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
-__version__ = "$Id: CondDBAdmin_Commit.py,v 1.6 2008-07-28 19:30:45 marcocle Exp $"
+__version__ = "$Id: CondDBAdmin_Commit.py,v 1.7 2008-09-25 22:56:16 marcocle Exp $"
 
 import os, sys, stat
 
@@ -114,11 +114,21 @@ and for a short message for the release notes.""")
     parser.add_option("-n","--dry-run", action = "store_true",
                       help = "Skip the actual commit to database and the update of release notes."
                       )
+    parser.add_option("-s", "--since", type = "string",
+                      help = "Start of the Interval Of Validity (local time)." + 
+                      " Format: YYYY-MM-DD[_HH:MM[:SS.SSS]][UTC]"
+                      )
+    parser.add_option("-u", "--until", type = "string",
+                      help = "End of the Interval Of Validity (local time)"+ 
+                      " Format: YYYY-MM-DD[_HH:MM[:SS.SSS]][UTC]"
+                      )
     parser.set_default("user_tag", "HEAD")
     parser.set_default("dir", None)
     parser.set_default("rel_notes", os.path.join(os.environ["SQLDDDBROOT"], "doc", "release_notes.xml"))
     parser.set_default("message", None)
     parser.set_default("contributor", None)
+    parser.set_default("since", None)
+    parser.set_default("until", None)
     
     # parse command line
     options, args = parser.parse_args()
@@ -150,6 +160,14 @@ and for a short message for the release notes.""")
         parser.error("'%s' is not a valid partition name. Allowed: %s" % \
                      (partition, partitions))
     
+    from CondDBUI.Admin import timeToValKey
+    from PyCool import cool
+    since = timeToValKey(options.since, cool.ValidityKeyMin)
+    until = timeToValKey(options.until, cool.ValidityKeyMax)
+    if since >= until:
+        parser.error("Invalid IOV: %s to %s" % (options.since, options.until))
+        
+    
     log.info("Preparing database with changes from data in %s for partition %s" % (changes_source, partition))
     log.info("reference tag = %s" % reference_tag)
     if options.user_tag != "HEAD":
@@ -158,12 +176,18 @@ and for a short message for the release notes.""")
         log.info("working dir = %s" % options.dir)
         if not os.path.isdir(options.dir):
             os.makedirs(options.dir)
+    if options.since:
+        log.info("validity from %s" % options.since)
+    if options.until:
+        log.info("validity until %s" % options.until)
+    
         
     from CondDBUI.Admin import prepareChangesDB, analyzeChanges
     changesURL, pass1URL = prepareChangesDB(changes_source, partition,
                                             reference_tag,
                                             usertag = options.user_tag,
-                                            destdir = options.dir)
+                                            destdir = options.dir,
+                                            since = since, until = until)
     log.info("Created changes database: %s" % changesURL)
     
     log.info("Analyzing changes with respect to head version of master DB")

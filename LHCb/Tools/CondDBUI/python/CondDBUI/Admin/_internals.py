@@ -3,7 +3,7 @@
 Internal common functions/utilities. 
 """
 __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
-__version__ = "$Id: _internals.py,v 1.2 2008-07-10 15:11:39 marcocle Exp $"
+__version__ = "$Id: _internals.py,v 1.3 2008-09-25 22:56:16 marcocle Exp $"
 
 # Set up the logger 
 import logging
@@ -130,7 +130,9 @@ def MergeAndTag(source, target, tag, check_addition_db = True):
         log.error("The source DB contains something already in the target DB!!!")
 
 def MakeDBFromFiles(source, db, includes, excludes, basepath = "",
-                    remove_extension = False, verbose = False):
+                    remove_extension = False, verbose = False,
+                    since = None,
+                    until = None):
     """
     Copy the content of a directory into a CondDB instance.
     """
@@ -150,6 +152,8 @@ def MakeDBFromFiles(source, db, includes, excludes, basepath = "",
     # }
     import re
     from PyCool import cool
+    if since is None: since = cool.ValidityKeyMin
+    if until is None: until = cool.ValidityKeyMax
     nodes = CondDBUI._collect_tree_info(source, includes = includes, excludes = [])
 
     # Just count the number of folders we are going to write
@@ -195,8 +199,8 @@ def MakeDBFromFiles(source, db, includes, excludes, basepath = "",
             xmllist = []
             for channel in collection:
                 xmllist.append({ 'payload': collection[channel],
-                                 'since': cool.ValidityKeyMin,
-                                 'until': cool.ValidityKeyMax,
+                                 'since': since,
+                                 'until': until,
                                  'channel': channel })
                 
             folder_count += 1
@@ -210,3 +214,47 @@ def MakeDBFromFiles(source, db, includes, excludes, basepath = "",
         print "Total folders inserted = %d"%folder_count
         print "Total files inserted = %d"%file_count
 
+def timegm(t):
+    """Inverse of time.gmtime. Implementation from Gaudi::Time."""
+    import time
+    if t[8] != 0: # ensure that dst is not set
+        t = tuple(list(t[0:8]) + [0])
+    t1 = time.mktime(t)
+    gt = time.gmtime(t1)
+    t2 = time.mktime(gt)
+    return t1 + (t1 - t2)
+
+def timeToValKey(tstring, default):
+    if not tstring: return default
+    import re
+    # Format YYYY-MM-DD[_HH:MM[:SS.SSS]][UTC]
+    exp = re.compile(r"^(?P<year>[0-9]{4})-(?P<month>[0-9]{2})-(?P<day>[0-9]{2})"+
+                     r"(?:_(?P<hour>[0-9]{2}):(?P<minute>[0-9]{2})(?::(?P<second>[0-9]{2})(?:\.(?P<decimal>[0-9]*))?)?)?"+
+                     r"(?P<utc>UTC)?$")
+    m = exp.match(tstring)
+    if m:
+        # FIXME: check for validity ranges
+        def toInt(s):
+            if s: return int(s)
+            return 0
+        tm = tuple([ toInt(n) for n in m.groups()[0:6] ] + [ 0, 0, -1 ])
+        import time
+        if m.group('utc'):
+            # the user specified UTC
+            t = timegm(tm)
+        else:
+            # seconds since epoch UTC, from local time tuple
+            t = time.mktime(tm)
+        t = int(t) * 1000000000 # to ns
+        d = m.group('decimal')
+        if d:
+            if len(d) < 9:
+                # Add the missing 0s to the decimals
+                d += '0'*(9-len(d))
+            else:
+                # truncate decimals
+                d = d[:9]
+            # add decimals to t
+            t += int(d)
+        return t
+    return default

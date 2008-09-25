@@ -109,7 +109,7 @@ def diff( originalDB, modifiedDB, diffDB,
                                 orig_local_tag = ''
                             else:
                                 orig_local_tag = orig_folder.resolveTag(originalTAG)
-                            orig_obj = orig_folder.findObject( obj.since(),
+                            orig_obj = orig_folder.findObject( max(obj.since(), since),
                                                                obj.channelId(),
                                                                orig_local_tag )
                             # if the objects are different, prepare to add the new
@@ -161,7 +161,8 @@ def diff( originalDB, modifiedDB, diffDB,
                                           True)
                     diff_folder.setupStorageBuffer()
                     for obj in new_data:
-                        diff_folder.storeObject(obj.since(),obj.until(),
+                        diff_folder.storeObject(max(obj.since(), since),
+                                                min(obj.until(), until),
                                                 obj.payload(),obj.channelId())
                     diff_folder.flushStorageBuffer()
                 else:

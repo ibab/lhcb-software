@@ -2,7 +2,7 @@
 Management utilities: Commit, TAG, etc. 
 """
 __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
-__version__ = "$Id: Management.py,v 1.3 2008-07-28 19:30:45 marcocle Exp $"
+__version__ = "$Id: Management.py,v 1.4 2008-09-25 22:56:16 marcocle Exp $"
 
 
 # Exported symbols
@@ -12,6 +12,7 @@ import os, shutil, errno, tempfile
 
 import CondDBUI
 import CondDBUI.PyCoolDiff
+from PyCool import cool
 
 from _internals import _assertNoFile, MakeDBFromFiles, log
 
@@ -45,7 +46,9 @@ def _isSQLite(path):
 # Prepare changes DB with minimal changes
 __all__.append("prepareChangesDB")
 def prepareChangesDB(srcpath, partition, reftag, usertag = "HEAD", destdir = None,
-                     two_pass_diff = True):
+                     two_pass_diff = True,
+                     since = cool.ValidityKeyMin,
+                     until = cool.ValidityKeyMax):
     """Given an input path, produces a database with only the differences that
     have to be added to the DB.
     If two_pass_diff is True (default), the difference is computed against the
@@ -86,6 +89,7 @@ def prepareChangesDB(srcpath, partition, reftag, usertag = "HEAD", destdir = Non
             CondDBUI.PyCoolDiff.diff(_masterCoolURL(partition),
                                      _coolSQLiteURL(filename, partition),
                                      _coolSQLiteURL(first_pass_file, partition),
+                                     since = since, until = until,
                                      originalTAG = reftag, modifiedTAG = usertag)
             if not os.path.exists(first_pass_file):
                 # this is needed because PyCoolDiff refuses to create empty diffs
@@ -97,6 +101,7 @@ def prepareChangesDB(srcpath, partition, reftag, usertag = "HEAD", destdir = Non
         CondDBUI.PyCoolDiff.diff(_masterCoolURL(partition),
                                  _coolSQLiteURL(filename, partition),
                                  _coolSQLiteURL(changesfn, partition),
+                                 since = since, until = until,
                                  originalTAG = reftag, modifiedTAG = usertag)
         if not os.path.exists(changesfn):
             # this is needed because PyCoolDiff refuses to create empty diffs
