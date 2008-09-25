@@ -140,13 +140,9 @@ lumiSequence = Line ( 'Lumi'
 
 
 
-# @todo: move writer into dedicated rawbank sequence
 #if debugging: lumiSequence( RawEventDump('FullRawDataDump' ) )
 # @todo Retsore that with LHCb v25r1
 ####lumiSequence( bankKiller( 'SerialKiller', DefaultIsKill=True, BankTypes=["ODIN","HltLumiSummary"],
 #                          OutputLevel=debugOPL ) )
 #if debugging: lumiSequence( RawEventDump('NanoEventDump' ) )
 ####lumiSequence( HltLumiWriter( OutputLevel=debugOPL )  )
-
-# register with global decision (which is the OR of its input)
-#HltSelectionFilter('Hlt1Global').InputSelections.append( 'HltLumiDecision' ) 
