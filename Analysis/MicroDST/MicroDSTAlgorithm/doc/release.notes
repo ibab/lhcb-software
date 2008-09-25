@@ -1,7 +1,9 @@
-! $Id: release.notes,v 1.70 2008-09-24 20:50:31 jpalac Exp $
+! $Id: release.notes,v 1.71 2008-09-25 15:36:36 jpalac Exp $
 ! Package     : MicroDST/MicroDSTAlgorithm
 ! Responsible : Ulrich Kerzel, Juan Palacios
 !============================================================
+
+!========================== MicroDSTAlgorithm v3r3p1 2008-09-25 ===============
 
 ! 2008-09-24 - Juan PALACIOS
  - src/CopyRelatedMCParticles.cpp
@@ -18,7 +20,7 @@
  - cmt/requirements
   . Increase version to v3r3p1
 
-!========================== MicroDSTAlgorithm v3r3 2008-09-10 =====================
+!========================== MicroDSTAlgorithm v3r3 2008-09-10 =================
 
 ! 2008-09-02 - Juan PALACIOS
  - Remove src/CoprRelatedProtoParticles{.cpp, .h}
