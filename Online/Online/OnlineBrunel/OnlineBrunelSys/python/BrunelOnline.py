@@ -1,18 +1,28 @@
-# Example 2008 data files for Brunel.
-# This file must be given as last argument to gaudirun.py, after Brunel<conf>.py
+"""
+     Run Brunel in the online environment
+
+     @author M.Frank
+"""
+import os
+import Configurables as Configs
+import Gaudi.Configuration as Gaudi
 
 def dummy(): pass
 
-def patchBrunel():
-  import Configurables as Configs
+def patchBrunel(true_online_version):
+  """
+        Instantiate the options to run Brunel with raw data
+
+        @author M.Frank
+  """
   import Brunel.Configuration
 
   brunel=Brunel.Configuration.Brunel()
-  print '\n\n           [ERROR] Running special version 1.1\n\n\n'
   brunel.defineMonitors = dummy
-  brunel.__repr__       = dummy
-  brunel.noWarnings     = True
-  brunel.printFreq      = -1
+  if true_online_version:
+    brunel.__repr__       = dummy
+    brunel.noWarnings     = True
+    brunel.printFreq      = -1
   brunel.applyConf()
   # Above file requires following special options for Velo
   Configs.DecodeVeloRawBuffer().ForceBankVersion=3
@@ -24,13 +34,13 @@ def patchBrunel():
   # Set the property, used to build other file names
   brunel.setProp( "datasetName", 'GaudiSerialize' )
 
-#
-#  Online Environment:
-#
-def brunelApp():
+def setupOnline():
+  """
+        Setup the online environment: Buffer managers, event serialisation, etc.
+
+        @author M.Frank
+  """
   import OnlineEnv as Online
-  import Gaudi.Configuration as Gaudi
-  import Configurables as Configs
   app=Gaudi.ApplicationMgr()
   app.AppName = ''
   app.HistogramPersistency = 'ROOT'
@@ -43,13 +53,39 @@ def brunelApp():
   app.OutStream = []
   app.OutStream.append(Online.serialWriter(name='DstWriter',location='/Event/GaudiSerialize'))
   app.OutStream.append(Online.evtMerger(buffer='Output',name='Writer',location='/Event/GaudiSerialize',routing=0x10))
+  app.AuditAlgorithms = False
+  app.OutputLevel = 4
+
+def patchMessages():
+  """
+        Messages in the online get redirected.
+        Setup here the FMC message service
+
+        @author M.Frank
+  """
+  app=Gaudi.ApplicationMgr()
+  Configs.AuditorSvc().Auditors = []
   app.MessageSvcType = 'LHCb::FmcMessageSvc'
   del Gaudi.allConfigurables['MessageSvc']
   msg=Configs.LHCb__FmcMessageSvc('MessageSvc')
-  msg.fifoPath = '/tmp/Reconstruction_Slice00.fifo'
+  msg.fifoPath = os.environ['LOGFIFO']
   msg.OutputLevel = 4
   msg.doPrintAlways = False
-  app.OutputLevel = 4
-  
-patchBrunel()
-brunelApp()
+
+def start():
+  """
+        Finish configuration and configure Gaudi application manager
+
+        @author M.Frank
+  """
+  import OnlineEnv as Online
+  Online.end_config(False)
+
+true_online = os.environ.has_key('LOGFIFO') and os.environ.has_key('PARTITION')
+
+if not true_online:
+  print '\n            Running terminal version 1.1 of Brunel ONLINE\n\n'  
+patchBrunel(true_online)
+setupOnline()
+if true_online: patchMessages()
+start()

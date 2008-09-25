@@ -7,3 +7,4 @@ branches cmt
 use Brunel         v* Rec
 use GaudiOnline    v* Online
 use GaudiSerialize v* Online
+apply_pattern install_python_modules

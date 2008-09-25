@@ -1,11 +1,7 @@
 #!/bin/bash
 . ${GAUDIONLINEROOT}/tests/cmt/preamble.sh
 export NODENAME=`python -c "print '$HOST'.split('.')[0]"`
-if test -z "${PYOPTS}";
-  then
-    export PYOPTS=${GAUDIONLINEROOT}/python:${MYBRUNELROOT}/python
-    export PYTHONPATH=${PYOPTS}:${PYTHONPATH}
-fi;
+export PYTHONPATH=`cd ..;dirname $PWD`/InstallArea/python:${PYTHONPATH};
 #
 start_task()
 {
@@ -13,9 +9,12 @@ start_task()
 }
 start_Brunel()
 {
-    start_task Brunel_0 "import gaudirun;gaudirun.run_online(['../python/BrunelOnline.py'])"
-    start_task Brunel_1 "import gaudirun;gaudirun.run_online(['../python/BrunelOnline.py'])"
-    start_task Brunel_2 "import gaudirun;gaudirun.run_online(['../python/BrunelOnline.py'])"
+    start_task Brunel_0 \
+    "import Gaudi;Gaudi.gaudimain().configure(['../python/BrunelOnline.py']);"
+    start_task Brunel_1 \
+    "import Gaudi;Gaudi.gaudimain().configure(['../python/BrunelOnline.py']);"
+    start_task Brunel_2 \
+    "import Gaudi;Gaudi.gaudimain().configure(['../python/BrunelOnline.py']);"
 }
 #
 start_task MbmEvents "import GaudiOnlineTests;GaudiOnlineTests.runRecBuffer()"
