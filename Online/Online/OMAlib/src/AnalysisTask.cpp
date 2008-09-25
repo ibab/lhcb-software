@@ -1,4 +1,4 @@
-// $Id: AnalysisTask.cpp,v 1.4 2008-08-19 22:45:32 ggiacomo Exp $
+// $Id: AnalysisTask.cpp,v 1.5 2008-09-25 13:58:15 ggiacomo Exp $
 
 
 // from Gaudi
@@ -19,7 +19,7 @@
 AnalysisTask::AnalysisTask( const std::string& name,
                             ISvcLocator* pSvcLocator)
   : OMAlib(NULL),
-    GaudiAlgorithm ( name , pSvcLocator ),
+    GaudiHistoAlg ( name , pSvcLocator ),
     m_inputFiles(0),
     m_inputTasks(0)
 {
@@ -42,7 +42,7 @@ AnalysisTask::~AnalysisTask() {
 
 
 StatusCode AnalysisTask::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize(); 
+  StatusCode sc = GaudiHistoAlg::initialize(); 
   if ( sc.isFailure() ) return sc;  
 
   // where to send messages 
@@ -80,7 +80,7 @@ StatusCode AnalysisTask::execute() {
 
 
 StatusCode AnalysisTask::finalize() {
-  return GaudiAlgorithm::finalize();  
+  return GaudiHistoAlg::finalize();  
 }
 
 

@@ -1,4 +1,4 @@
-// $Id: OMAcommon.cpp,v 1.1 2008-08-11 08:05:16 ggiacomo Exp $
+// $Id: OMAcommon.cpp,v 1.2 2008-09-25 13:58:15 ggiacomo Exp $
 
 #include "OMAlib/OMAcommon.h"
 
@@ -26,7 +26,7 @@ TH1* OMAcommon::getReference(OnlineHistogram* h,
     std::stringstream refFile;
     refFile << refRoot() << "/"
             << h->task() << "/" << DataType << "_"
-            << startrun;
+            << startrun << ".root";
     TFile* f = new TFile(refFile.str().c_str(),"READ");
     if(f) {
       if (false == f->IsZombie() ) {

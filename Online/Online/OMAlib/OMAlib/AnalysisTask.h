@@ -1,4 +1,4 @@
-// $Id: AnalysisTask.h,v 1.5 2008-08-19 22:45:31 ggiacomo Exp $
+// $Id: AnalysisTask.h,v 1.6 2008-09-25 13:58:15 ggiacomo Exp $
 #ifndef OMALIB_ANALYSISTASK_H 
 #define OMALIB_ANALYSISTASK_H 1
 
@@ -9,11 +9,11 @@
  *  @date   2008-02-18
  */
 #include "OMAlib/OMAlib.h"
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "GaudiAlg/GaudiHistoAlg.h"
 
 class SavesetFinder;
 
-class AnalysisTask : public OMAlib, public GaudiAlgorithm {
+class AnalysisTask : public OMAlib, public GaudiHistoAlg {
 public:
   AnalysisTask( const std::string& name, 
                 ISvcLocator* pSvcLocator );
