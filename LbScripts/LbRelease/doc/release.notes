@@ -1,3 +1,7 @@
+2008-09-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v1r2
+
 2008-08-27  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbRelease/CMT/__init__.py: New file.
