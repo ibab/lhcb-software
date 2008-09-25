@@ -240,8 +240,8 @@ int lib_rtl_trylock(lib_rtl_lock_t h) {
 int lib_rtl_unlock(lib_rtl_lock_t h) {
   if ( h )  {
 #if defined(USE_PTHREADS)
-    int val;
-    lib_rtl_lock_value(h, &val);
+    int val = 0;
+    //lib_rtl_lock_value(h, &val);
     if ( val == 0 ) {
       if ( ::sem_post(h->handle) == 0 )   {
         h->held = 0;
