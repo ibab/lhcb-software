@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinker.icpp,v 1.4 2008-02-11 10:59:24 jpalac Exp $
+// $Id: Particle2MCLinker.icpp,v 1.5 2008-09-25 12:04:52 odescham Exp $
 // Include files 
 
 
@@ -86,11 +86,24 @@ Object2MCLinker<SOURCE>::locateAlgorithm( const std::string& algType,
   }
   // algorithm is noT found: try to create it! 
   sc = algMgr->createAlgorithm( algType , algName , alg );
+  //
+
   if( sc.isFailure()   ) { return
     NULL != m_myGaudiAlg? m_myGaudiAlg->Error("Could not create algorithm", sc ) :
     NULL != m_myGaudiTool? m_myGaudiTool->Error("Could not create algorithm", sc ) :
     sc;
+  }else{
+    IProperty* prop = dynamic_cast<IProperty*>( alg );
+    sc = prop->setProperty( "Context", context() );
+    if( !sc.isSuccess() ) {
+      std::string err = "Unable to set Property Context in algo " + alg->name();
+      return 
+        NULL != m_myGaudiAlg ? m_myGaudiAlg->Error( err, sc) :
+        NULL != m_myGaudiTool ? m_myGaudiTool->Error( err, sc) :
+        sc;
+    }
   }
+  
   // add the reference to the new algorithm 
   alg -> addRef() ;
   
@@ -132,7 +145,18 @@ Object2MCLinker<SOURCE>::setAlgInputData( IAlgorithm*& alg,
     IProperty* prop = dynamic_cast<IProperty*>( alg );
     
     if( prop ) {
-      // Set OutputTable property to "" avoiding Relations table
+      // Context property is contagious (from myMother)
+      sc = prop->setProperty( "Context", context() );
+      if( !sc.isSuccess() ) {
+        std::string err = "Unable to set Property Context in algo " + alg->name();
+        return 
+          NULL != m_myGaudiAlg ? m_myGaudiAlg->Error( err, sc) :
+          NULL != m_myGaudiTool ? m_myGaudiTool->Error( err, sc) :
+          sc;
+      }
+
+
+     // Set OutputTable property to "" avoiding Relations table
       sc = prop->setProperty( "OutputTable", "");
       if( !sc.isSuccess() ) {
         std::string err = "Unable to set Property OutputTable in algo " + alg->name();

@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinker.h,v 1.4 2008-01-22 17:37:33 jpalac Exp $
+// $Id: Particle2MCLinker.h,v 1.5 2008-09-25 12:04:52 odescham Exp $
 #ifndef DAVINCIASSOCIATORS_PARTICLE2MCLINKER_H
 #define DAVINCIASSOCIATORS_PARTICLE2MCLINKER_H 1
 
@@ -93,18 +93,19 @@ public:
                    const int method,
                    const std::vector<std::string>& containerList)
     : m_myGaudiAlg(dynamic_cast<const GaudiAlgorithm*>(myMother))
-    , m_myGaudiTool(NULL)
-    , m_evtSvc( myMother->evtSvc())
-    , m_msgSvc( myMother->msgSvc())
-    , m_svcLoc( myMother->svcLoc())
-    , m_name( myMother->name())
-    , m_extension(Particle2MCMethod::extension[method])
-    , m_linkerAlgType(Particle2MCMethod::algType[method])
-    , m_linkerAlg(NULL)
-    , m_containerList(containerList)
-    , m_linkTo( m_evtSvc,NULL,"")
+      , m_myGaudiTool(NULL)
+      , m_evtSvc( myMother->evtSvc())
+      , m_msgSvc( myMother->msgSvc())
+      , m_svcLoc( myMother->svcLoc())
+      , m_name( myMother->name())
+      , m_context (m_myGaudiAlg->context() )
+      , m_extension(Particle2MCMethod::extension[method])
+      , m_linkerAlgType(Particle2MCMethod::algType[method])
+      , m_linkerAlg(NULL)
+      , m_containerList(containerList)
+      , m_linkTo( m_evtSvc,NULL,"")
     , m_linkerTable( m_evtSvc,NULL,"") { }
-
+  
   Object2MCLinker( const Algorithm* myMother,
                    const int method,
                    const std::string& container)
@@ -114,6 +115,7 @@ public:
     , m_msgSvc( myMother->msgSvc())
     , m_svcLoc( myMother->svcLoc())
     , m_name( myMother->name())
+    , m_context (m_myGaudiAlg->context() )
     , m_extension(Particle2MCMethod::extension[method])
     , m_linkerAlgType(Particle2MCMethod::algType[method])
     , m_linkerAlg(NULL)
@@ -131,6 +133,7 @@ public:
     , m_msgSvc( myMother->msgSvc())
     , m_svcLoc( myMother->svcLoc())
     , m_name( myMother->name())
+    , m_context (m_myGaudiAlg->context() )
     , m_extension(extension)
     , m_linkerAlgType(algType)
     , m_linkerAlg(NULL)
@@ -147,7 +150,8 @@ public:
     , m_evtSvc( myMother->evtSvc())
     , m_msgSvc( myMother->msgSvc())
     , m_svcLoc( myMother->svcLoc())
-    , m_name( myMother->name())
+    , m_name( myMother->name())      
+    , m_context (m_myGaudiAlg->context() )
     , m_extension(extension)
     , m_linkerAlgType(algType)
     , m_linkerAlg(NULL)
@@ -162,6 +166,7 @@ public:
     , m_msgSvc( myMother->msgSvc())
     , m_svcLoc( myMother->svcLoc())
     , m_name( myMother->name())
+    , m_context (m_myGaudiAlg->context() )
     , m_extension("")
     , m_linkerAlgType("")
     , m_linkerAlg(NULL)
@@ -179,6 +184,7 @@ public:
     , m_msgSvc( myMother->msgSvc())
     , m_svcLoc( myMother->svcLoc())
     , m_name( myMother->name())
+    , m_context (m_myGaudiTool->context() )
     , m_extension(Particle2MCMethod::extension[method])
     , m_linkerAlgType(Particle2MCMethod::algType[method])
     , m_linkerAlg(NULL)
@@ -195,6 +201,7 @@ public:
     , m_msgSvc( myMother->msgSvc())
     , m_svcLoc( myMother->svcLoc())
     , m_name( myMother->name())
+    , m_context (m_myGaudiTool->context() )
     , m_extension(Particle2MCMethod::extension[method])
     , m_linkerAlgType(Particle2MCMethod::algType[method])
     , m_linkerAlg(NULL)
@@ -213,6 +220,7 @@ public:
     , m_msgSvc( myMother->msgSvc())
     , m_svcLoc( myMother->svcLoc())
     , m_name( myMother->name())
+    , m_context (m_myGaudiTool->context() )
     , m_extension(extension)
     , m_linkerAlgType(algType)
     , m_linkerAlg(NULL)
@@ -230,6 +238,7 @@ public:
     , m_msgSvc( myMother->msgSvc())
     , m_svcLoc( myMother->svcLoc())
     , m_name( myMother->name())
+    , m_context (m_myGaudiTool->context() )
     , m_extension(extension)
     , m_linkerAlgType(algType)
     , m_linkerAlg(NULL)
@@ -244,6 +253,7 @@ public:
     , m_msgSvc( myMother->msgSvc())
     , m_svcLoc( myMother->svcLoc())
     , m_name( myMother->name())
+    , m_context (m_myGaudiTool->context() )
     , m_extension("")
     , m_linkerAlgType("")
     , m_linkerAlg(NULL)
@@ -320,7 +330,8 @@ public:
   bool notFound( const std::string& contname);
   bool checkAssociation( const SOURCE* obj,
                          const LHCb::MCParticle* mcPart);
-
+  std::string context()const {return m_context;}
+  
 protected:
 
   const GaudiAlgorithm*        m_myGaudiAlg;
@@ -329,6 +340,7 @@ protected:
   IMessageSvc*                 m_msgSvc;
   ISvcLocator*                 m_svcLoc;
   std::string                  m_name;
+  std::string                  m_context;
   std::string                  m_extension;
   std::string                  m_linkerAlgType;
   IAlgorithm*                  m_linkerAlg;
