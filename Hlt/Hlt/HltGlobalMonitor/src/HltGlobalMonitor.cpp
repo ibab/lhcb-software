@@ -8,9 +8,6 @@
 
 // local
 #include "HltGlobalMonitor.h"
-//#include "InitHistos.h"
-#include "Event/HltEnums.h"
-//#include "Event/HltSummary.h"
 #include "Event/ODIN.h"
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
