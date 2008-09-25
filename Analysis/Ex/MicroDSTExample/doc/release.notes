@@ -1,9 +1,16 @@
-!$Id: release.notes,v 1.1.1.1 2008-09-23 16:25:45 jpalac Exp $
+!$Id: release.notes,v 1.2 2008-09-25 08:06:31 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Ex/MicroDSTExample
 ! Responsible : Juan PALACIOS
 ! Purpose     : MicroDST making and reading examples.
 !-----------------------------------------------------------------------------
+
+! 2008-09-23 - Juan PALACIOS
+ - options/TestMicroDSTMake.py
+  . MicroDST-making example in Python configurables
+ - options/TestMicroDSTMake.opts
+  . Change InputLocation of CopyRelatedMCParticles to the location of the
+    original particles. Requires MicroDSTAlgorithm v3r3p1 or higher.
 
 ! 2008-09-23 - Juan PALACIOS
  - First import of this package to CVS.
