@@ -3,7 +3,7 @@
 import sys
 import os
 
-def generateLogin(targetlocation, script):
+def generateLogin(targetlocation, script, version=""):
     knownshells = ["sh", "csh", "tcsh", "zsh", "bat"]
     shell = os.path.splitext(script)[1][1:]
     if not shell in knownshells :
@@ -17,7 +17,9 @@ if [ "$LbLoginStatus" = 0 ]; then
 fi
 rm -f $LbLogin_tmpfile
 unset LbLogin_tmpfile
-""" % targetlocation
+. %s/scripts/SetupProject.sh --disable-CASTOR LbScripts %s --runtime LCGCMT Python -v 2.5
+
+""" % (targetlocation, targetlocation, version)
     elif shell == "csh" or shell == "tcsh" :
         content = """set LbLogin_tmpfile = `%s/scripts/LbLogin.py --shell=csh --mktemp ${*:q}`
 set LbLoginStatus = $?
@@ -26,7 +28,9 @@ if ( ! $LbLoginStatus ) then
 endif
 rm -f $LbLogin_tmpfile
 unset LbLogin_tmpfile
-""" % targetlocation
+source %s/scripts/SetupProject.csh --disable-CASTOR LbScripts %s --runtime LCGCMT Python -v 2.5
+
+""" % (targetlocation, targetlocation, version)
     elif shell == "bat" :
         content = """ @echo off
         
@@ -42,16 +46,19 @@ if %LbLoginStatus% EQU 0 (
 
 if exist %LbLogin_tmpfile% del %LbLogin_tmpfile%
 set LbLogin_tmpfile=
-"""
+call %~d0\%~p0\SetupProject.bat --disable-CASTOR LbScripts """ + version + " --runtime LCGCMT Python -v 2.5"
     
     f.write(content)
     f.close()
 
 if __name__ == '__main__':
-    if len(sys.argv) < 3 :
-        sys.exit("Error must have at least 2 arguments")
+    if len(sys.argv) < 4 :
+        sys.exit("Error must have at least 3 arguments")
     else :
         targetlocation = sys.argv[1]
-        scripts = sys.argv[2:]
+        version = sys.argv[2]
+        scripts = sys.argv[3:]
+        
+
     for s in scripts :
-        generateLogin(targetlocation, s)
+        generateLogin(targetlocation, s, version)
