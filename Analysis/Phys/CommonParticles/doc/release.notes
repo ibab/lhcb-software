@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.103 2008-09-10 06:15:24 jpalac Exp $
+!$Id: release.notes,v 1.104 2008-09-25 09:07:55 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
+
+! 2008-09-25 - Patrick Koppenburg
+ - Use OldFilterDesktop where needed
+ - Increment to v4r1p1
 
 !========================== CommonParticles v4r1 2008-09-10 ===================
 

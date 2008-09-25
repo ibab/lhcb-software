@@ -1,5 +1,5 @@
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 // ============================================================================
 
 /** @file
@@ -35,13 +35,13 @@ StdDC06UnbiasedHeavyDimuonSeq.Members += { "MakeResonances/StdDC06UnbiasedHeavyD
 StdDC06UnbiasedHeavyDimuonSeq.MeasureTime = true;
 StdDC06LoosePenguinDimuonSeq.Members += { "MakeResonances/StdDC06LoosePenguinDimuon" };
 StdDC06LoosePenguinDimuonSeq.MeasureTime = true;
-StdDC06UnbiasedJpsi2MuMuSeq.Members += { "FilterDesktop/StdDC06UnbiasedJpsi2MuMu" };
+StdDC06UnbiasedJpsi2MuMuSeq.Members += { "OldFilterDesktop/StdDC06UnbiasedJpsi2MuMu" };
 StdDC06UnbiasedJpsi2MuMuSeq.MeasureTime = true;
-StdDC06LooseBiasedJpsi2MuMuSeq.Members += { "FilterDesktop/StdDC06LooseBiasedJpsi2MuMu" };
+StdDC06LooseBiasedJpsi2MuMuSeq.Members += { "OldFilterDesktop/StdDC06LooseBiasedJpsi2MuMu" };
 StdDC06LooseBiasedJpsi2MuMuSeq.MeasureTime = true;
 StdDC06LooseJpsi2eeSeq.Members += { "MakeResonances/StdDC06LooseJpsi2ee" };
 StdDC06LooseJpsi2eeSeq.MeasureTime = true;
-StdDC06LooseBiasedJpsi2eeSeq.Members += { "FilterDesktop/StdDC06LooseBiasedJpsi2ee" };
+StdDC06LooseBiasedJpsi2eeSeq.Members += { "OldFilterDesktop/StdDC06LooseBiasedJpsi2ee" };
 StdDC06LooseBiasedJpsi2eeSeq.MeasureTime = true;
 
 /*************************************************************************

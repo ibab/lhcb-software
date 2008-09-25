@@ -1,5 +1,5 @@
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.17 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.18 $
 // ============================================================================
 
 /** @file
@@ -36,13 +36,13 @@ StdUnbiasedHeavyDimuonSeq.Members += { "MakeResonances/StdUnbiasedHeavyDimuon" }
 StdUnbiasedHeavyDimuonSeq.MeasureTime = true;
 StdLoosePenguinDimuonSeq.Members += { "MakeResonances/StdLoosePenguinDimuon" };
 StdLoosePenguinDimuonSeq.MeasureTime = true;
-StdUnbiasedJpsi2MuMuSeq.Members += { "FilterDesktop/StdUnbiasedJpsi2MuMu" };
+StdUnbiasedJpsi2MuMuSeq.Members += { "OldFilterDesktop/StdUnbiasedJpsi2MuMu" };
 StdUnbiasedJpsi2MuMuSeq.MeasureTime = true;
-StdLooseBiasedJpsi2MuMuSeq.Members += { "FilterDesktop/StdLooseBiasedJpsi2MuMu" };
+StdLooseBiasedJpsi2MuMuSeq.Members += { "OldFilterDesktop/StdLooseBiasedJpsi2MuMu" };
 StdLooseBiasedJpsi2MuMuSeq.MeasureTime = true;
 StdLooseJpsi2eeSeq.Members += { "MakeResonances/StdLooseJpsi2ee" };
 StdLooseJpsi2eeSeq.MeasureTime = true;
-StdLooseBiasedJpsi2eeSeq.Members += { "FilterDesktop/StdLooseBiasedJpsi2ee" };
+StdLooseBiasedJpsi2eeSeq.Members += { "OldFilterDesktop/StdLooseBiasedJpsi2ee" };
 StdLooseBiasedJpsi2eeSeq.MeasureTime = true;
 
 /*************************************************************************
