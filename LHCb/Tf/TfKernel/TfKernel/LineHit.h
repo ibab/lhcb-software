@@ -5,7 +5,7 @@
  *  Header file for track find class Tf::LineHit
  *
  *  CVS Log :-
- *  $Id: LineHit.h,v 1.7 2008-05-29 10:55:11 smenzeme Exp $
+ *  $Id: LineHit.h,v 1.8 2008-09-25 15:11:11 smenzeme Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -88,7 +88,11 @@ namespace Tf
     inline double sinT() const { return tanT()*cosT() ; }
 
     /** cos of stereo angle */
-    inline double cosT() const { return coord()/m_xAtYEq0 ; }
+    inline double cosT() const { 
+	if (fabs(m_xAtYEq0) < 1.0E-9)
+	    return cos(atan(-m_dxdy));
+	return coord()/m_xAtYEq0 ; 
+    }
 
     /** is this hit in an X layer */
     inline bool  isX () const { return (layer() == 0 || layer() == 3) ; }
