@@ -1,4 +1,4 @@
-// $Id: MicroDSTCommon.opts,v 1.3 2008-08-26 09:48:48 jpalac Exp $
+// $Id: MicroDSTCommon.opts,v 1.4 2008-09-25 17:19:57 jpalac Exp $
 /** @file MicroDSTCommon.opts
  * 
  *  Minimal options required to run a MicroDST DaVinci job.
@@ -10,10 +10,7 @@
 //                  OUTPUT STREAM
 // ====================================================
 ApplicationMgr.OutStream += { "MicroDSTStream"};
-
-MicroDSTStream.OptItemList = {"/Event/microDST#99",
-                              "/Event/Link/microDST#99"};
-
+MicroDSTStream.OptItemList = {"/Event/microDST#99"};
 MicroDSTStream.Output      = "DATAFILE='MicroDST.dst' TYP='POOL_ROOTTREE' OPT='REC'";
 // DSTStream.OutputLevel      = 1;
 
