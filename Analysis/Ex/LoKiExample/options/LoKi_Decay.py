@@ -24,7 +24,7 @@ from  Configurables import PhysDesktop
 from  Configurables import LoKi__DecayDescriptor as Decay
 
 
-import LoKi_Bs2PsiPhi
+importOptions('$LOKIEXAMPLEOPTS/LoKi_Bs2PsiPhi.py')
 
 
 ## configure our own algorithm: 
