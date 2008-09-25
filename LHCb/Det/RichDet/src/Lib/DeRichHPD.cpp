@@ -4,7 +4,7 @@
  *
  * Implementation file for class : DeRichHPD
  *
- * $Id: DeRichHPD.cpp,v 1.15 2008-07-24 18:28:57 papanest Exp $
+ * $Id: DeRichHPD.cpp,v 1.16 2008-09-25 16:52:46 papanest Exp $
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-09-19
@@ -227,14 +227,16 @@ StatusCode DeRichHPD::initialize ( )
   }
   else           // use copy number to locate QE
   {
-    SmartRef<Condition> hpdQuantumEffCond = condition("QuantumEffTable");
-    if ( hpdQuantumEffCond.path() == "" )
+    if ( !hasCondition("QuantumEffTable") )
     {
+      // use common QE for all HPDs
       SmartDataPtr<DeRich> deRich1( dataSvc(), DeRichLocations::Rich1 );
       m_hpdQuantumEffFunc = deRich1->nominalHPDQuantumEff();
     }
     else
     {
+      // get QE from the CondDB at the location stored in condition QuantumEffTable
+      SmartRef<Condition> hpdQuantumEffCond = condition("QuantumEffTable");
       SmartDataPtr<TabulatedProperty> hpdQuantumEffTabProp( dataSvc(), hpdQuantumEffCond.path() );
       if ( !hpdQuantumEffTabProp )
       {
@@ -246,6 +248,7 @@ StatusCode DeRichHPD::initialize ( )
     }
   }
   msg << MSG::DEBUG << "QE from location:" << m_hpdQuantumEffFunc->tabProperty()->name() << endmsg;
+  moreInfo << MSG::DEBUG << "QE from location:" << m_hpdQuantumEffFunc->tabProperty()->name() << endmsg;
   moreInfo << MSG::DEBUG << m_hpdQuantumEffFunc->tabProperty() << endmsg;
 
   // Magnetic Distortions

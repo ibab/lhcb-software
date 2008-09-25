@@ -4,6 +4,10 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2008-09-25 - Antonis Papanestis
+ - Bug fix to stop DeRichHPD from throwing an exception when testing
+   if a condition (QE location) exists.
+
 !======================== RichDet v11r1 2008-09-02 ===========================
 ! 2008-08-18 - Chris Jones
  - Add method to DeRichRadiator to provide interpolated function for the 
