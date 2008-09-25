@@ -1,4 +1,4 @@
-// $Id: TrackResChecker.cpp,v 1.5 2008-08-28 16:59:45 smenzeme Exp $
+// $Id: TrackResChecker.cpp,v 1.6 2008-09-25 15:18:18 smenzeme Exp $
 // Include files 
 #include "TrackResChecker.h"
 
@@ -133,8 +133,9 @@ void TrackResChecker::resolutionHistos(const LHCb::Track* track,
   
   const double errP =  sqrt(track->firstState().errP2());  
 
-  if (track->history() != LHCb::Track::PatVelo){
-    plot2D(track->p()/Gaudi::Units::GeV , (track->p() - mcPart->p()) / track->p(), 
+  if (track->history() != LHCb::Track::PatVelo && track->history() != LHCb::Track::PatVeloGeneral){
+    
+    plot2D(track->p()/Gaudi::Units::GeV , (track->p() - mcPart->p()) / mcPart->p(), 
 	   type+"/vertex/dpoverp_vs_p", "dp/p vs p", 0., 50., -0.1,0.1, 25, 50);
     
     
@@ -142,7 +143,7 @@ void TrackResChecker::resolutionHistos(const LHCb::Track* track,
 	    type+"/vertex/p_pull_vs_p","p pull vs p", 0., 50., -10.,10., 25, 50);
     
     const double eta = track->pseudoRapidity();
-    plot2D( eta, (track->p() - mcPart->p()) / track->p(), 
+    plot2D( eta, (track->p() - mcPart->p()) / mcPart->p(), 
 	    type+"/vertex/dpoverp_vs_eta", "dp/p vs eta", 2., 5., -0.05,0.05, 20, 50);
     plot2D( eta, (track->p() - mcPart->p()) /errP, 
 	    type+"/vertex/p_pull_vs_eta","p pull vs eta", 2., 5., -10.,10., 20, 50);

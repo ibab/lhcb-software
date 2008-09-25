@@ -3,6 +3,8 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2008-09-25 - Stephanie Hansmann-Menzemer
+- PatForward.py configure PatForwardTool as private tool
 
 !========================== PatAlgorithms v3r10 2008-09-04 ===================
 ! 2008-08-30 - Manuel Tobias Schiller

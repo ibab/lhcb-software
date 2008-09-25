@@ -3,6 +3,9 @@
 ! Responsible : Edwin Bos
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
+! 2008-09-25 - Stephanie Hansmann-Menzemer
+- fix warning when filling histograms with nan
+- fix output for event weighted ghost rate
 
 !======================= TrackCheckers v4r2 2009-09-05 =======================
 ! 2008-09-05 - Marco Cattaneo

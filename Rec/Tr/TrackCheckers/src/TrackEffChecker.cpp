@@ -1,4 +1,4 @@
-// $Id: TrackEffChecker.cpp,v 1.10 2008-09-05 06:32:53 cattanem Exp $
+// $Id: TrackEffChecker.cpp,v 1.11 2008-09-25 15:18:18 smenzeme Exp $
 // Include files 
 #include "TrackEffChecker.h"
 
@@ -272,7 +272,7 @@ StatusCode TrackEffChecker::finalize(){
   
   info() << "             **************         " 
          << format( "       %8.0f tracks including %8.0f ghosts [%5.1f %%] Event average %5.1f  ****",
-                    double(counter("nTrack").flag()), double(counter("nGhost").flag()), tGhost*100) << endreq;
+                    double(counter("nTrack").flag()), double(counter("nGhost").flag()), tGhost*100, eGhost*100) << endreq;
 
    info() << "     all  long     "
 	  << format( " :     %8.0f from %8.0f [%5.1f %%]; %5.1f %% clones; %5.1f %% hit purity",
