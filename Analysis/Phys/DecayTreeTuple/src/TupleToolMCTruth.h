@@ -1,4 +1,4 @@
-// $Id: TupleToolMCTruth.h,v 1.2 2008-07-04 21:41:10 gligorov Exp $
+// $Id: TupleToolMCTruth.h,v 1.3 2008-09-25 06:38:08 ahicheur Exp $
 #ifndef JBOREL_TUPLETOOLMCTRUTH_H
 #define JBOREL_TUPLETOOLMCTRUTH_H 1
 
@@ -34,11 +34,19 @@
 
  * - head_TRUETAU : true propertime
 
+ * - head_TRUE{ThetaL,ThetaK,Phi} : true helicity angles
+
+ * - head_TRUE{ThetaTr,PhiTr,ThetaVtr} : true transversity angles
+
  * \sa DecayTreeTuple
  *
  *  @author Jeremie Borel
  *  @date   2007-11-07
+ *  2008-09-23 Adlene Hicheur - Added true angles information for P2VV
  */
+
+class IP2VVMCPartAngleCalculator;
+
 class TupleToolMCTruth : public GaudiTool, virtual public IParticleTupleTool {
 public:
   /// Standard constructor
@@ -68,12 +76,17 @@ private:
   IDaVinciAssociatorsWrapper* m_linkerTool_Chi2;
   IDaVinciAssociatorsWrapper* m_linkerTool_Composite;
 
+  IP2VVMCPartAngleCalculator*   m_angleTool;
+
   std::vector<std::string> m_assocInputs;
   bool m_useChi2Method; //!< Use the chi2 associator instead of the link and composite associator
   bool m_storeNumberOfAssoc; //!< Store in the tuple the number of MC Association found;
   bool m_storeKinetic; //!< Store kinetic information from the associated candidate
   bool m_storePT; //!< Store the propertime information for associated composite particle
   bool m_storeVertexes; //!< Store the end and origin true vertex information
+  bool m_fillangles; //!< Store the true angular information (from P2VV)
+  std::string m_calculator; //!< Name of the tool for the angles calculation
+
 };
 
 #endif // JBOREL_TUPLETOOLMCTRUTH_H

@@ -1,4 +1,4 @@
-// $Id: TupleToolMCTruth.cpp,v 1.7 2008-07-04 21:41:10 gligorov Exp $
+// $Id: TupleToolMCTruth.cpp,v 1.8 2008-09-25 06:38:08 ahicheur Exp $
 // Include files
 #include "gsl/gsl_sys.h"
 // from Gaudi
@@ -12,6 +12,9 @@
 
 #include "Event/Particle.h"
 #include "Event/MCParticle.h"
+
+// kernel
+#include "Kernel/IP2VVMCPartAngleCalculator.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : EventInfoTupleTool
@@ -57,6 +60,10 @@ TupleToolMCTruth::TupleToolMCTruth( const std::string& type,
   
   // Store the propertime information for associated composite particle
   declareProperty( "StorePropertimeInfo", m_storePT = true );
+
+  // Store the true angular information 
+  declareProperty( "FillAngles", m_fillangles = false );
+  declareProperty( "Calculator", m_calculator = "MCBd2KstarMuMuAngleCalculator" );
 }
 
 //=============================================================================
@@ -67,7 +74,9 @@ StatusCode TupleToolMCTruth::initialize(){
   m_linkerTool_Links = tool<IDaVinciAssociatorsWrapper>("DaVinciAssociatorsWrapper","Wrapper_Links",this);
   m_linkerTool_Chi2 = tool<IDaVinciAssociatorsWrapper>("DaVinciAssociatorsWrapper","Wrapper_Chi2",this);
   m_linkerTool_Composite = tool<IDaVinciAssociatorsWrapper>("DaVinciAssociatorsWrapper","Wrapper_Composite",this);
-  
+
+   if (m_fillangles) m_angleTool  = tool<IP2VVMCPartAngleCalculator>(m_calculator,this);
+
   return StatusCode::SUCCESS;
 }
 
@@ -85,6 +94,8 @@ StatusCode TupleToolMCTruth::fill( const LHCb::Particle*
 	  ( m_useChi2Method || m_pChi2 )
 	  , "One of your associator hasn't been initialized!");
   
+  int assignedPid = 0;
+  
   int mcPid = 0;
   int nbAss = 0;
   double mcTau = -1;
@@ -96,6 +107,7 @@ StatusCode TupleToolMCTruth::fill( const LHCb::Particle*
   bool test = true;
 
   if( P ){
+    assignedPid = P->particleID().pid();
     if ( m_useChi2Method ){
       double w=0;
       nbAss = m_pChi2->associatedMCP( P );
@@ -110,7 +122,7 @@ StatusCode TupleToolMCTruth::fill( const LHCb::Particle*
   }
   
   // pointer is ready, prepare the values:
-  if( mcp ){
+  if( mcp ) {
 
     mcPid = mcp->particleID().pid();
 
@@ -145,6 +157,53 @@ StatusCode TupleToolMCTruth::fill( const LHCb::Particle*
 
   if( m_storePT )
     test &= tuple->column( head + "_TRUETAU", mcTau );
+
+  // true angles information:
+  if(m_fillangles && mcp) {
+    // only for Bs or Bd (patch, not meant to be elegant)
+    if (abs(assignedPid) == 511 || abs(assignedPid) == 531) {
+      
+    //Helicity
+    double thetaL(9999), thetaK(9999), phi(9999);
+    StatusCode sc_hel = m_angleTool->calculateAngles( mcp, thetaL, thetaK, phi);
+      
+    if (msgLevel(MSG::DEBUG)) debug() << "Three true helicity angles are theta_L : " 
+                                      << thetaL 
+                                      << " K: "<< thetaK
+                                      << " phi: " << phi << endmsg ;
+      
+      
+    if ( !sc_hel ) return sc_hel;
+      test &= tuple->column( head+"_TRUEThetaL", thetaL );
+      test &= tuple->column( head+"_TRUEThetaK", thetaK );
+      test &= tuple->column( head+"_TRUEPhi",    phi  );
+
+    //Transversity
+    double Theta_tr(9999), Phi_tr(9999), Theta_V(9999);
+      
+    StatusCode sc_tr = m_angleTool->calculateTransversityAngles( mcp, 
+                                                                  Theta_tr, 
+                                                                 Phi_tr, 
+                                                                 Theta_V );
+      
+      if (msgLevel(MSG::DEBUG)) debug() << "Three true transversity angles are Theta_tr : " 
+					<< Theta_tr 
+					<< " Phi_tr: " << Phi_tr
+					<< " Theta_phi_tr: " << Theta_V 
+					<< endmsg ;
+      
+      
+      
+      if ( !sc_tr ) return sc_tr;
+          test &= tuple->column( head+"_TRUEThetaTr", Theta_tr );
+          test &= tuple->column( head+"_TRUEPhiTr", Phi_tr );
+          test &= tuple->column( head+"_TRUEThetaVtr", Theta_V  );
+       
+    }
+    
+    
+  }
+  
 
   return StatusCode(test);
 }

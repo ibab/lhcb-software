@@ -4,6 +4,8 @@
 ! Purpose     : Option-steered tuples. Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+~ 2008-09-25 - Adlene Hicheur
+ - Add true angular information in TupleToolMCTruth
 ! 2008-09-16 - Patrick Koppenburg
  - TupleToolTrigger : use HltDecReport
  - Test options : Run HltDecReport maker.
