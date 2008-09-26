@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: Configuration.py,v 1.10 2008-07-25 12:53:19 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.11 2008-09-26 14:24:20 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from os import environ
@@ -33,6 +33,7 @@ class LHCbApp(ConfigurableUser):
     def defineDB(self):
         condDBtag = self.getProp("condDBtag")
         DDDBtag   = self.getProp("DDDBtag")
+        importOptions( "$DDDBROOT/options/DDDB.py" )
             
         # If a default is requested, use it
         if DDDBtag.find("-default") != -1 or condDBtag.find("-default") != -1:
