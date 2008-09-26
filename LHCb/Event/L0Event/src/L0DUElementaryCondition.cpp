@@ -1,4 +1,4 @@
-// $Id: L0DUElementaryCondition.cpp,v 1.4 2008-03-27 16:33:59 odescham Exp $
+// $Id: L0DUElementaryCondition.cpp,v 1.5 2008-09-26 13:30:22 odescham Exp $
 // Include files 
 #include <utility>
 #include <string>
@@ -14,7 +14,7 @@
 //-----------------------------------------------------------------------------
 
 
-bool LHCb::L0DUElementaryCondition::comparison(unsigned long a, const std::string& comparator, unsigned long b){
+bool LHCb::L0DUElementaryCondition::comparison( unsigned int a, const std::string& comparator,  unsigned int b){
     if( "<" == comparator ){return (a < b);}
     if( ">" == comparator ){return (a > b);}
     if( "==" == comparator){return (a == b);}

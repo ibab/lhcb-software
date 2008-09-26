@@ -43,7 +43,7 @@
       <attribute  desc=" global decision"          name="decision"           type="bool"/>
       <attribute  desc=" Timing Trigger Decision"  name="timingTriggerBit"   type="bool" />
       <attribute  desc=" Force Bit"                name="forceBit"           type="bool" />
-      <attribute  desc=" L0DU algorithm configuration Key"         name="tck"        type="long" />
+      <attribute  desc=" L0DU algorithm configuration Key"         name="tck"        type="unsigned int" />
       <attribute  desc=" L0DU algorithm configuration"             name="configuration"            type="LHCb::L0DUConfig*" setMeth = 'FALSE' nonconstaccessor='TRUE'/>
       <attribute  desc="'channels pre-decision' Summaries   (FCS)" name="channelsPreDecisionSummaries" type="std::map&lt;std::pair&lt;int,unsigned int&gt;,unsigned int&gt;"/>
       <attribute  desc="'Channel decisions' Summaries  (TCS)"      name="channelsDecisionSummaries"type="std::map&lt;std::pair&lt;int,unsigned int&gt;,unsigned int&gt;" />
@@ -113,11 +113,11 @@
         name="dataDigit"
         argList="const std::string name"
         desc="return L0DU elementary data value (digit) from m_configuration->data()"
-        type="unsigned long"
+        type="unsigned int"
         const="TRUE">
         <code> 
           if(NULL == m_configuration)return 0;
-          LHCb::L0DUElementaryData::Map data = m_configuration->data();
+          const LHCb::L0DUElementaryData::Map&amp; data = m_configuration->data();
           LHCb::L0DUElementaryData::Map::const_iterator it = data.find( name );
           if( it == data.end() )return 0;
           return ((*it).second)->digit();

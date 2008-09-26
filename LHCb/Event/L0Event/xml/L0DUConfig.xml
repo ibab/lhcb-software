@@ -9,7 +9,7 @@
       desc="This class represents the keyed L0DU Configuration"
       name="L0DUConfig"
       serializers="FALSE">
-      <base   name = "KeyedObject&lt;long&gt;" />
+      <base   name = "KeyedObject&lt;unsigned int&gt;" />
       &KeyedObject;
 
       <location name = "Default"   place = "Trig/L0/L0DUConfig"  />
@@ -24,7 +24,7 @@
 
       <typedef
         def    = "Base"
-        type   = "KeyedObject&lt;long&gt;"
+        type   = "KeyedObject&lt;unsigned int&gt;"
         desc   = "L0DU Trigger Configuration Key"
         access = "PROTECTED"
         />
@@ -37,7 +37,7 @@
 
       <constructor
         desc     = "non-default constructor"
-        argList  = "long tck "
+        argList  = "unsigned int tck "
         initList = "Base ( tck ), m_recipe(), m_definition(),m_data(),m_conditions(),m_channels(),m_triggers()"
         > <code/> </constructor>
 
@@ -57,7 +57,7 @@
       <attribute name = "channels" desc = " L0DU channels" type = "LHCb::L0DUChannel::Map"  nonconstaccessor='TRUE'/>      
       <attribute name = "triggers" desc = "Set of L0DU channels" type = "LHCb::L0DUTrigger::Map"  nonconstaccessor='TRUE'/>      
 
-      <method desc   = "return Trigger Configuration Key @alias of key() " name   = "tck" type   = "long" const = 'TRUE'><code>return key();</code></method>
+      <method desc   = "return Trigger Configuration Key @alias of key() " name   = "tck" type   = "unsigned int" const = 'TRUE'><code>return key();</code></method>
       <method desc   = "delete MAPs content" name="release" type="void">
         <code>
           for(LHCb::L0DUTrigger::Map::iterator ic = m_triggers.begin();ic!=m_triggers.end();++ic){

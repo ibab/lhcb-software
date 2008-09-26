@@ -28,7 +28,8 @@
       <copyconstructor/>
       <constructor
         desc = "non default constructor"
-        argList   = "unsigned int id, const std::string name, LHCb::L0DUElementaryData* data ,const std::string comp, unsigned long threshold" 
+        argList   = "unsigned int id, const std::string name, LHCb::L0DUElementaryData* data ,const std::string 
+comp, unsigned int threshold" 
         initList  = "m_id(id),m_name(name),m_data(data),m_comparator(comp),m_threshold(threshold)">
       </constructor>
 
@@ -36,7 +37,7 @@
       <attribute name = "name" desc = " L0DU condition name "  type = "std::string"/>
       <attribute name = "data" desc = " L0DU Elementary data"  type = "LHCb::L0DUElementaryData*" />
       <attribute name = "comparator" desc = " comparator symbol"  type = "std::string" />
-      <attribute name = "threshold" desc = "threshold value (digit)"type = "unsigned long" />
+      <attribute name = "threshold" desc = "threshold value (digit)"type = "unsigned int" />
 
 
       <method name      = "emulatedValue" 
@@ -50,7 +51,7 @@
 
 
       <method name      = "comparison" desc = "Comparison method" type  = "bool" 
-        argList   = "unsigned long a, const std::string comparator, unsigned long b">
+        argList   = "unsigned int a, const std::string comparator, unsigned int b">
       </method>
 
 

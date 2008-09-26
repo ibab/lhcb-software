@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.110 2008-09-25 13:00:11 cattanem Exp $
+! $Id: release.notes,v 1.111 2008-09-26 13:30:22 odescham Exp $
 ! Package : L0Event
 ! Package manager : Olivier Deschamps, Julien Cogan
 !-----------------------------------------------------------------------------
+
+! 2008-09-26 - Olivier Deschamps
+ - L0DUXXX.xml : convert all '(unsigned) long' into 'unsigned int'
+ - L0DUReport.xml : reference access to configuration->data() map
+
 
 ! 2008-09-25 - Marco Cattaneo
  - Add a missing dictionary

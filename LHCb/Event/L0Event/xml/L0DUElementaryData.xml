@@ -58,8 +58,9 @@
       <attribute name = "operator" desc = " Operator symbol"  type = "std::string" getMeth="FALSE"/>
       <attribute name = "operandsName" desc = " Operands name"  type = " std::vector&lt;std::string&gt;"  />
       <attribute name = "scale"      desc = " Operands scale"  type = "double "  init="1."/>
-      <attribute name = "saturation" desc = " Operands saturation value"  type = "long "  init="0"/>
-      <attribute name = "operands"  desc = " Operands value"  type = "std::vector&lt;long&gt;" nonconstaccessor='TRUE' />
+      <attribute name = "saturation" desc = " Operands saturation value"  type = "unsigned int "  init="0"/>
+      <attribute name = "operands"  desc = " Operands value"  type = "std::vector&lt;unsigned int&gt;" 
+nonconstaccessor='TRUE' />
 
 
 
@@ -68,7 +69,7 @@
       </method>
 
       <method name      = "setOperand" desc = "push_back a single operand value" type  = "void" 
-        argList   = "const long operand, const double scale=1.,const long satur=0">
+        argList   = "const unsigned int operand, const double scale=1.,const unsigned int satur=0">
         <code> 
           m_operands.clear(); 
           m_operands.push_back(operand);
@@ -78,7 +79,7 @@
       </method>
 
       <method name      = "addOperand" desc = "add a single operand value" type  = "void" 
-        argList   = "long operand, const double scale=1.,const long satur=0">
+        argList   = "unsigned int operand, const double scale=1.,const unsigned int satur=0">
         <code> 
           m_operands.push_back(operand);
           m_scale = scale ;
@@ -88,7 +89,7 @@
 
 
 
-      <method name      = "digit" desc = "L0DU data value (digit) = operation(operands,operator)" type  = "long" >
+      <method name      = "digit" desc = "L0DU data value (digit) = operation(operands,operator)" type  = "unsigned int" >
         <code> return operation(m_operator,m_operands); </code>
       </method>
 
@@ -107,8 +108,8 @@
       <method name  = "description" desc = "L0DUElementaryData short description" type  = "std::string" > </method>
       <method name  = "summary" desc = "L0DUElementaryData summary" type  = "std::string" > </method>
 
-      <method name      = "operation" desc = "Operation method" type  = "long" 
-        argList   = "std::string v_operator , std::vector&lt;long&gt; v_operands">
+      <method name      = "operation" desc = "Operation method" type  = "unsigned int" 
+        argList   = "std::string v_operator , std::vector&lt;unsigned int&gt; v_operands">
       </method>
 
 
