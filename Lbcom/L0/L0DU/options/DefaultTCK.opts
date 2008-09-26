@@ -1,5 +1,8 @@
-
 // ----- default TCK for the L0DU Emulation/SIMulation
-
+// ---------------------------------------------------
 L0DU.TCK = "0xFFFF";  
+
+// --- include all known configurations :
+// --------------------------------------
+#include "$L0TCK/L0DUConfig.opts"
 

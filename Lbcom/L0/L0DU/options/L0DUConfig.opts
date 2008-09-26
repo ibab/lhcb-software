@@ -1,18 +1,8 @@
-// PREDEFINED L0DU CONFIGURATION (L0DUMultiConfigProvider tool)
-//ToolSvc.L0DUConfig.Preload = true; // preload all config during initialisation (if not  load on-Demand (default))
-#pragma print off
-#include "$L0DUROOT/options/L0DUConfig_0xFFFF_alg1_set0_lumi2.opts"  // 2007 tuning - L0-stripping production  (L0DUbank vsn =1) 
-#include "$L0DUROOT/options/L0DUConfig_0xDC06_alg0_set0_lumi2.opts"  // DC04/DC06 tuning - DC06 production (L0DU bank vsn = 0)
-#include "$L0DUROOT/options/L0DUConfig_0xFFFE_alg0_set1_lumi1.opts"  // RTTC'06 tuning  -  no DC06-compatible production so far
-#include "$L0DUROOT/options/L0DUConfig_0xFFFD_alg0_set1_lumi2.opts"  // RTTC'06 tuning  -  no DC06-compatible production so far
-#include "$L0DUROOT/options/L0DUConfig_0xFFFC_alg0_set1_lumi3.opts"  // RTTC'06 tuning  -  no DC06-compatible production so far
-#include "$L0DUROOT/options/L0DUConfig_0xFFFB_alg0_set1_lumi4.opts"  // RTTC'06 tuning  -  no DC06-compatible production so far
-#include "$L0DUROOT/options/L0DUConfig_0xFFFA_alg0_set1_lumi5.opts"  // RTTC'06 tuning  -  no DC06-compatible production so far
-#include "$L0DUROOT/options/L0DUConfig_0xFFF9_alg0_set1_lumi6.opts"  // RTTC'06 tuning  -  no DC06-compatible production so far
-#include "$L0DUROOT/options/L0DUConfig_0x000X.opts"                  // Configurations for cosmics trigger (summer 2008)
-#include "$L0DUROOT/options/L0DUConfig_0x001X.opts"                  // Configurations for MB trigger (autumn 2008)
-#include "$L0DUROOT/options/L0DUConfig_0xDEBX.opts"                  // Debug configurations for expert usage
+// -----------------------------------
+// WARNING : OBSOLETE OPTIONS
+// kept for backward compatibility
+// redirect to $L0TCK/L0DUCONFIG.opts
+// PLEASE UPDATE YOUR INCLUDE !
+// -----------------------------------
 
-//--- hand-written definition for 'trigger set' (will be automatically defined in the future)
-#include "$L0DUROOT/options/L0DUTriggerSet.opts"
-#pragma print on
+#include "$L0TCK/L0DUConfig.opts"

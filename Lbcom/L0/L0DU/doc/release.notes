@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.130 2008-09-22 01:48:49 odescham Exp $
+! $Id: release.notes,v 1.131 2008-09-26 13:41:57 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
+
+
+
+! 2008-09-25 - O. Deschamps
+- remove configuration options (migrated to DBASE/TCK/L0TCK)
+
 
 ! 2008-09-17 - Olivier Deschamps
 - new monitoring histos (timing) in L0DUReportMonitor

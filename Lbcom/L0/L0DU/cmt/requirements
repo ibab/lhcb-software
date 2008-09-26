@@ -14,6 +14,9 @@ use DAQEvent     v*    Event
 use CaloDet      v*    Det
 use CaloUtils    v*    Calo
 use L0Interfaces v*    L0
+# the configuration database :
+use L0TCK        v*    TCK
+
 # L0Muon needed at run time by L0.opts
 use L0Muon       v*    L0    -no_auto_imports
 # ================ component library =====================================
