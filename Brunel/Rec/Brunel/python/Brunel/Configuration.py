@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.22 2008-09-24 06:27:19 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.23 2008-09-26 14:50:33 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -58,7 +58,7 @@ class Brunel(LHCbConfigurableUser):
         self.setProp( "condDBtag", self.getProp("condDBtag") )
         self.setProp( "DDDBtag", self.getProp("DDDBtag") )
         # Delegate handling to LHCbApp configurable
-        self.setOtherProps(LHCbApp(),["condDBtag","DDDBtag"]) 
+        self.setOtherProps(LHCbApp(),["condDBtag","DDDBtag","useOracleCondDB"]) 
         if LHCbApp().getProp("DDDBtag").find("DC06") != -1 :
             ApplicationMgr().Dlls += [ "HepMCBack" ]
 
@@ -250,13 +250,8 @@ class Brunel(LHCbConfigurableUser):
     ## Apply the configuration
     def applyConf(self):
         GaudiKernel.ProcessJobOptions.printing_level += 1
-        # Propagate the useOracleCondDB property to LHCbApp before it is used by DDDB.py
-        self.setOtherProp(LHCbApp(),"useOracleCondDB")
-        # Next line has to be before mainOptions - TODO: why?
-        importOptions( "$DDDBROOT/options/DDDB.py" )
         self.setOtherProp(TrackSys(),"expertTracking") 
         self.setOtherProps(RecSysConf(),["fieldOff","veloOpen","recoSequence"])
-        # Set main sequence
         brunelSeq = GaudiSequencer("BrunelSequencer")
         ApplicationMgr().TopAlg = [ brunelSeq ]
         brunelSeq.Members += self.getProp("mainSequence")

@@ -4,6 +4,7 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
  - Reorganise Configuration.py, remove Brunel.opts and Brunel().mainOptions
+ - Clean up DDDB intialisation in Configurable, needs GaudiConf v10r13
  - Replace BrunelMoni.opts wih BrunelMoni.py, add Track Moni sequence
  - Add Muon histograms to Moni sequence
  - Fix default options in Brunel_Ganga.py for consistency with new defaults
