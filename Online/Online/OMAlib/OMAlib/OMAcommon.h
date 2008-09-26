@@ -1,4 +1,4 @@
-// $Id: OMAcommon.h,v 1.3 2008-09-25 15:38:30 ggiacomo Exp $
+// $Id: OMAcommon.h,v 1.4 2008-09-26 14:36:31 ggiacomo Exp $
 #ifndef OMALIB_OMACOMMON_H 
 
 #define OMALIB_OMACOMMON_H 1
@@ -20,8 +20,8 @@
  */
 
 namespace OMAconstants {
-  static const int AlgListID = 5;
-  static const std::string version = "v1r3";
+  static const int AlgListID = 6;
+  static const std::string version = "v1r4";
   static const double epsilon = 1.e-10;
 }
 
