@@ -5,9 +5,8 @@
 !--------------------------------------------------------------------------
 
 ! 2008-09-26 - Marco Cattaneo
- - In requirements, define GOD_NOALLOC to switch off GaudiObjDesc custom
-   allocators in debug builds and on Windows.
- - Make corresponding change in classes where boost_allocators are added by hand
+ - Use GOD_NOALLOC flag to switch off custom allocators in classes where
+   where boost_allocators are added by hand
 
 ! 2008-09-12 - Chris Jones
  - Remove space in string "below threshold" in RichParticleIDType.cpp as

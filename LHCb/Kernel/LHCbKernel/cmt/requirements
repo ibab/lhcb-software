@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.143 2008-09-26 16:44:35 cattanem Exp $
+# $Id: requirements,v 1.144 2008-09-26 17:00:41 cattanem Exp $
 # =============================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
@@ -49,12 +49,3 @@ apply_pattern linker_library    library=LHCbKernel
 # Debug flag for RichSmartID
 macro_append LHCbKernel_cppflags "" \
                    Linux&debug " -DRICHDEBUG "
-
-# Switch off GaudiObjDesc custom allocators with debug or WIN32
-macro_append cppflags "" \
-                           debug " -DGOD_NOALLOC " \
-                           WIN32 " -DGOD_NOALLOC "
-
-macro_append gccxmlopts "" \
-                           debug " -DGOD_NOALLOC " \
-                           WIN32 " -DGOD_NOALLOC "
