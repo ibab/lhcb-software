@@ -1,0 +1,39 @@
+// -------------------------------------------------------------------------
+// option file model for the simulation of time misalignment in Calo
+//
+// option file to be included just after SimInit in Gauss.opts
+//
+// -------------------------------------------------------------------------
+
+
+Simulation.Members += {  "DeCaloCalib/EcalCalib" };
+
+
+//-------------------------------//
+// Select the method you prefer  //
+//-------------------------------//
+
+//------------------------------ 1) User defined value
+//EcalCalib.Method = "User";
+//EcalCalib.DeltaKey = "Index";   // Key for DeltaTime mapping 'Index' or 'CellID'
+//EcalCalib.DeltaTime = { "Default" : 0.,
+//                         "0" : 1.1     ,
+//                         "1" : 0.9     ,
+//                         "2" : 1.05    ,
+//                         "6015" : 0.95.  };  // example : mapping with key = 'Index' (0,1,2,3,...,6015)
+
+
+//------------------------------ 2) Random gaussian 
+//EcalCalib.Method = "Gauss";
+//EcalCalib.Params = {1., 0.05.};// mean/rms
+
+
+
+//------------------------------ 3) Random flat
+//EcalCalib.Method = "Flat";
+//EcalCalib.Params = {0.9., 1.1};// min/max
+
+
+// Uncomment when needed 
+//ApplicationMgr.HistogramPersistency = "ROOT";
+//NTupleSvc.Output={"FILE1 DATAFILE='caloCalib.root' TYP='ROOT' OPT='NEW'"};

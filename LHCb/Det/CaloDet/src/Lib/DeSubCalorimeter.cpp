@@ -48,7 +48,6 @@ StatusCode DeSubCalorimeter::initialize()
   std::string myName = CaloCellCode::CaloNameFromNum( index ) + "SubDet";
   MsgStream msg( msgSvc(), myName );
 
-  msg << " DeSubCalorimeter : " << endreq;
 
   typedef std::vector<std::string> Parameters;
   typedef Parameters::iterator     Iterator;
@@ -66,7 +65,7 @@ StatusCode DeSubCalorimeter::initialize()
   {
     // collect the sub-sub-calorimeters (calo areas)
     IDetectorElement::IDEContainer& subdets = childIDetectorElements();
-    msg << " Number of subSubCalorimeter " << subdets.size() << endreq;
+    msg << MSG::DEBUG << name() << " :  number of subSubCalorimeter " << subdets.size() << endreq;
     for(IDetectorElement::IDEContainer::iterator ichild = subdets.begin() ; ichild != subdets.end() ; ++ichild){
       IDetectorElement* child = *ichild ;
       if ( 0 == child ) { continue ; }

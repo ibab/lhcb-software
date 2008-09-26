@@ -1,0 +1,10 @@
+MessageSvc.setDebug   +={"EcalDet"};
+MessageSvc.setDebug   +={"EcalSubDet"};
+MessageSvc.setDebug   +={"EcalDet.BuildCells"};
+MessageSvc.setDebug   +={"EcalDet.BuildCards"};
+MessageSvc.setDebug   +={"EcalDet.BuildMonitoring"};
+MessageSvc.setDebug   +={"EcalDet.Quality"};
+MessageSvc.setDebug   +={"EcalDet.Calibration"};
+MessageSvc.setDebug   +={"EcalDet.Geometry"};
+MessageSvc.setDebug   +={"EcalDet.Gain"};
+MessageSvc.setDebug   +={"EcalDet.L0Gain"};

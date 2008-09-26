@@ -2,6 +2,9 @@
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2008/05/29 21:42:41  odescham
+// Readout channel re-mapping from condDB
+//
 // Revision 1.6  2007/08/22 19:05:13  odescham
 // implement time misalignment
 //
@@ -64,6 +67,7 @@ CardParam::CardParam( int iArea ,
     ,m_selectionType(-1)
     ,m_mapping( CardParam::None )
 {
+  m_ids.clear();
   m_ids.reserve( 64 );
 } ;
 

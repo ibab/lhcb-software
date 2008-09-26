@@ -22,6 +22,7 @@
 Tell1Param::Tell1Param( int num )
   : m_number ( num )
 {
+  m_feCards.clear();
   m_feCards.reserve( 24 );
   m_isPin = false;
 } ;

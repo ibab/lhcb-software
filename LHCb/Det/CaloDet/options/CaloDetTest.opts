@@ -1,29 +1,18 @@
 ApplicationMgr.TopAlg += {  "GaudiSequencer/CaloDetTest"};
 
+// Testing Hcal DetElem
+CaloDetTest.Members += {  "CaloDetTestAlgorithm/HcalDet"};
+#include "$CALODETROOT/options/HcalDetTest.opts"
 
+// Testing Ecal DetElem
+CaloDetTest.Members += {  "CaloDetTestAlgorithm/EcalDet"};
+#include "$CALODETROOT/options/EcalDetTest.opts"
 
-CaloDetTest.Members += {  "CaloDetTestAlgorithm/EcalDet"                   ,
-                          "CaloDetTestAlgorithm/HcalDet"                   ,
-                          "CaloDetTestAlgorithm/PrsDet"                    ,
-                          "CaloDetTestAlgorithm/SpdDet"                    
-};
+// Testing Prs DetElem
+CaloDetTest.Members += {  "CaloDetTestAlgorithm/PrsDet"};
+#include "$CALODETROOT/options/PrsDetTest.opts"
 
-MessageSvc.setDebug +={"EcalDet.BuildCells"};  
-MessageSvc.setDebug +={"HcalDet.BuildCells"};  
-MessageSvc.setDebug +={"PrsDet.BuildCells"};  
-MessageSvc.setDebug +={"SpdDet.BuildCells"};  
-MessageSvc.setDebug +={"EcalDet.BuildCards"};  
-MessageSvc.setDebug +={"HcalDet.BuildCards"};  
-MessageSvc.setDebug +={"PrsDet.BuildCards"};  
-MessageSvc.setDebug +={"SpdDet.BuildCards"};  
-MessageSvc.setDebug +={"EcalDet.BuildTell1s"};  
-MessageSvc.setDebug +={"HcalDet.BuildTell1s"};  
-MessageSvc.setDebug +={"PrsDet.BuildTell1s"};  
-MessageSvc.setDebug +={"SpdDet.BuildTell1s"};  
-MessageSvc.setDebug +={"EcalDet.BuildMonitoringSystem"};  
-MessageSvc.setDebug +={"HcalDet.BuildMonitoringSystem"};  
+// Testing Spd DetElem
+CaloDetTest.Members += {  "CaloDetTestAlgorithm/SpdDet"};
+#include "$CALODETROOT/options/SpdDetTest.opts"
 
-
- 
- 
- 

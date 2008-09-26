@@ -1,0 +1,8 @@
+MessageSvc.setDebug   +={"PrsDet"};
+MessageSvc.setDebug   +={"PrsSubDet"};
+MessageSvc.setDebug   +={"PrsDet.BuildCells"};
+MessageSvc.setDebug   +={"PrsDet.BuildCards"};
+MessageSvc.setDebug   +={"PrsDet.Quality"};
+MessageSvc.setDebug   +={"PrsDet.Calibration"};
+MessageSvc.setDebug   +={"PrsDet.Geometry"};
+MessageSvc.setDebug   +={"PrsDet.Gain"};

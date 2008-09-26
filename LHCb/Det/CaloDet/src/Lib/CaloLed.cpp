@@ -26,6 +26,7 @@ CaloLed::CaloLed(int id )
     m_index(-1),
     m_cells()
 {
+  m_cells.clear();
   std::stringstream reg("Region ") ;
   m_region = reg.str();
 };

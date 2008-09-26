@@ -1,0 +1,10 @@
+MessageSvc.setDebug +={"HcalDet"};
+MessageSvc.setDebug +={"HcalSubDet"};
+MessageSvc.setDebug +={"HcalDet.BuildCells"};
+MessageSvc.setDebug +={"HcalDet.BuildCards"};
+MessageSvc.setDebug +={"HcalDet.BuildMonitoring"};
+MessageSvc.setDebug +={"HcalDet.Quality"};
+MessageSvc.setDebug +={"HcalDet.Calibration"};
+MessageSvc.setDebug +={"HcalDet.Geometry"};
+MessageSvc.setDebug +={"HcalDet.Gain"};
+MessageSvc.setDebug +={"HcalDet.L0Gain"};

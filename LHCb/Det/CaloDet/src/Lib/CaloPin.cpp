@@ -27,6 +27,8 @@ CaloPin::CaloPin(LHCb::CaloCellID id )
     m_leds(),
     m_cells()
 {
+  m_cells.clear();
+  m_leds.clear();
   std::stringstream reg("Region ") ;
   m_region = reg.str();
   std::stringstream cod("Code ");

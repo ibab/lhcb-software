@@ -1,29 +1,32 @@
-// $Id: DeCaloTiming.cpp,v 1.2 2008-09-26 15:45:39 odescham Exp $
+// $Id: DeCaloCalib.cpp,v 1.1 2008-09-26 15:45:39 odescham Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/RndmGenerators.h"
 // local
-#include "DeCaloTiming.h"
+#include "DeCaloCalib.h"
 //-----------------------------------------------------------------------------
-// Implementation file for class : DeCaloTiming
+// Implementation file for class : DeCaloCalib
 //
-// Simple algorithm to add time shift  (user-defined or Gaussian or flat randomly
-// distributed) at the DeCalorimeter initialisation level
-// Useful to produce time misalignment (in Gauss) and check/develop alignment procedure
+// Simple algorithm to overwrite the condDB calibration constant 
+// with arbitrary value (user-defined or gaussian or flat randomly distributed)
+// at the DeCalorimeter initialisation level.
+//
+// Useful to produce mis-calibrated energy and check/develop calibration procedure
+// or to check calibration constant without feeding the condDB
 //
 // 2007-08-22 : Olivier DESCHAMPS
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( DeCaloTiming );
+DECLARE_ALGORITHM_FACTORY( DeCaloCalib );
 
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-DeCaloTiming::DeCaloTiming( const std::string& name,
+DeCaloCalib::DeCaloCalib( const std::string& name,
                             ISvcLocator* pSvcLocator)
   : GaudiTupleAlg ( name , pSvcLocator )
   , m_rndmSvc           (  0    )
@@ -33,11 +36,11 @@ DeCaloTiming::DeCaloTiming( const std::string& name,
   declareProperty( "Method"         , m_method = "Flat"); // Flat/Gauss/User
   declareProperty( "Params"         , m_params);
   declareProperty( "Key"            , m_key = "CellID" );
-  declareProperty( "deltaTime"      , m_deltas);
+  declareProperty( "deltaGain"      , m_deltas);
 
-  m_params.push_back( 0.0  * Gaudi::Units::ns );
-  m_params.push_back( 0.0  * Gaudi::Units::ns );
-  m_deltas["Default"] = 0.0 * Gaudi::Units::ns ;
+  m_params.push_back( 1.0 );
+  m_params.push_back( 1.0  );
+  m_deltas["Default"] = 1.0 ;
 
 // set default detectorName
   int idx = name.find_last_of(".") +1 ; // return 0 if '.' not found --> OK !!
@@ -50,12 +53,12 @@ DeCaloTiming::DeCaloTiming( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-DeCaloTiming::~DeCaloTiming() {} 
+DeCaloCalib::~DeCaloCalib() {} 
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode DeCaloTiming::initialize() {
+StatusCode DeCaloCalib::initialize() {
   StatusCode sc = GaudiTupleAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
@@ -75,7 +78,7 @@ StatusCode DeCaloTiming::initialize() {
     return StatusCode::FAILURE;
   }
 
-  info() << " ======= SIMULATING THE MISALIGNMENT of "<< m_detectorName << " TIMING  ======= " << endreq;
+  info() << " ======= SIMULATING THE (MIS)Calibration of "<< m_detectorName << " gains  ======= " << endreq;
   
   
   // Params
@@ -129,7 +132,7 @@ StatusCode DeCaloTiming::initialize() {
 
   CaloVector<CellParam>& cells = m_calo->cellParams();
   std::vector<int> cellids,cellind;
-  std::vector<double> times,dtimes;
+  std::vector<double> gains,dgains;
   for(CaloVector<CellParam>::iterator icell = cells.begin() ; icell != cells.end() ; icell++){
     LHCb::CaloCellID id = (*icell).cellID() ;
     if( !m_calo->valid  ( id )  )continue;
@@ -144,22 +147,22 @@ StatusCode DeCaloTiming::initialize() {
     else{
       dt = shoot();
     }
-    debug() << num << " Delta time for cellID " << id << " : " << dt << endreq;
-    (*icell).setDeltaTime ( dt ) ; // add delta time (ns)
+    debug() << num << " Calibration constant for cellID " << id << " : " << dt << endreq;
+    (*icell).setCalibration ( dt ) ; // 
 
     cellids.push_back( id.index()      );
     cellind.push_back( num             );
-    times.push_back  ( (*icell).time() );
-    dtimes.push_back ( (*icell).deltaTime());
+    gains.push_back  ( (*icell).gain() );
+    dgains.push_back ( (*icell).calibration());
   }
   
   // Ntupling
-  Tuple ntp = nTuple(500,m_detectorName + "DeTiming" ,CLID_ColumnWiseTuple);
+  Tuple ntp = nTuple(500,m_detectorName + "DeCalib" ,CLID_ColumnWiseTuple);
   int max = m_calo->numberOfCells();
   sc=ntp->farray("cellID"   , cellids  ,"Nchannels",max);
   sc=ntp->farray("index"    , cellind  ,"Nchannels",max);
-  sc=ntp->farray("time"     , times    ,"Nchannels",max);
-  sc=ntp->farray("dtime"    , dtimes   ,"Nchannels",max);
+  sc=ntp->farray("gain"     , gains    ,"Nchannels",max);
+  sc=ntp->farray("calib"    , dgains   ,"Nchannels",max);
   sc=ntp->write();
   return sc;
 }
@@ -167,7 +170,7 @@ StatusCode DeCaloTiming::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode DeCaloTiming::execute() {
+StatusCode DeCaloCalib::execute() {
 
   debug() << "==> Execute" << endmsg;
 
@@ -179,7 +182,7 @@ StatusCode DeCaloTiming::execute() {
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode DeCaloTiming::finalize() {
+StatusCode DeCaloCalib::finalize() {
 
   debug() << "==> Finalize" << endmsg;
 
