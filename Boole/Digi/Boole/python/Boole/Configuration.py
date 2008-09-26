@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.15 2008-09-08 16:36:00 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.16 2008-09-26 15:11:00 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -37,7 +37,7 @@ class Boole(LHCbConfigurableUser):
         self.setProp( "condDBtag", self.getProp("condDBtag") )
         self.setProp( "DDDBtag", self.getProp("DDDBtag") )
         # Delegate handling to LHCbApp configurable
-        self.setOtherProps(LHCbApp(),["condDBtag","DDDBtag"])
+        self.setOtherProps(LHCbApp(),["condDBtag","DDDBtag","useOracleCondDB"]) 
 
         # Special options for DC06 data processing
         if LHCbApp().getProp("DDDBtag").find("DC06") != -1 :
@@ -69,6 +69,9 @@ class Boole(LHCbConfigurableUser):
                 print "# EventSelector('SpilloverSelector').FirstEvent already defined, ignoring Boole().skipSpill"
             else:
                 EventSelector("SpilloverSelector").FirstEvent = skipSpill + 1
+        # POOL Persistency
+        importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
+
 
     def defineOptions(self):
         tae   = self.getProp("generateTAE")
@@ -124,6 +127,8 @@ class Boole(LHCbConfigurableUser):
 
         digi = self.getProp( "writeDigi" )
         if digi:
+            # Objects to be written to output file
+            importOptions("$BOOLEOPTS/DigiContent.opts")
             extended = self.getProp("extendedDigi")
             if ( extended ): importOptions( "$STDOPTS/ExtendedDigi.opts" )
             MyWriter = OutputStream( "DigiWriter" )
@@ -165,10 +170,6 @@ class Boole(LHCbConfigurableUser):
 
     def applyConf(self):
         GaudiKernel.ProcessJobOptions.printing_level += 1
-        # Propagate the useOracleCondDB property to LHCbApp before it is used by DDDB.py
-        self.setOtherProp(LHCbApp(),"useOracleCondDB") 
-        # Next line has to be before mainOptions - TODO: why?
-        importOptions( "$DDDBROOT/options/DDDB.py" )
         importOptions( self.getProp( "mainOptions" ) )
         self.defineDB()
         self.defineEvents()

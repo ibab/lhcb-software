@@ -7,17 +7,11 @@
 
 #units "$STDOPTS/units.opts"
 
-// POOL Persistency
-#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
-
 // Unpack MCParticles and MCVertices if not existing on input file
 ApplicationMgr.ExtSvc  += { "DataOnDemandSvc" };
 DataOnDemandSvc.AlgMap += { "MC/Particles" : "UnpackMCParticle"
                           , "MC/Vertices"  : "UnpackMCVertex"
                           };
-
-// Objects to be written to output file
-#include "$BOOLEOPTS/DigiContent.opts"
 
 // Phases to be executed
 ApplicationMgr.TopAlg += { "ProcessPhase/Init"

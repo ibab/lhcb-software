@@ -3,7 +3,8 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-! 2008-09-12 - Marco Cattaneo
+ - Clean up DDDB intialisation in Configurable, needs GaudiConf v10r13
+ - Use ParamFiles v7r3, do not set DDDB major version (taken from LHCbSys)
  - Disable boole-2008.qmt on slc4_ia32_gcc34_dbg
   (fails with FPR in std::numeric_limits)
 
