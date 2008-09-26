@@ -31,7 +31,8 @@ namespace PyRPC  {
   bool setDebug(bool new_value);
   bool debug();
 
-  struct Item {
+  class Item {
+  public:
     const std::string& m_s;
     std::string m_tag, m_item;
     size_t      m_start, m_end;
@@ -43,7 +44,8 @@ namespace PyRPC  {
     std::string value() const;
   };
 
-  struct Items : public Item {
+  class Items : public Item {
+  public:
     Items(const std::string& src, const std::string& tag) : Item(src,tag) {}
     Items& operator++()          { get(); return *this;  }
     Items& operator++(int)       { get(); return *this;  }
@@ -55,7 +57,8 @@ namespace PyRPC  {
     *  @version 1.0
     *  @date    02.05.2006
     */
-  struct _ContBase {
+  class _ContBase {
+  public:
     void* data;
     /// Default constructor
     _ContBase();

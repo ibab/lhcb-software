@@ -1,9 +1,11 @@
 #include "PyRPC.h"
 #include <list>
+#include <cerrno>
 #include <sstream>
 #include <iomanip>
 #include <stdexcept>
-
+#include "RTL/time.h"
+#include "NET/defs.h"
 #define DATA_LEN   6
 #define PARAM_LEN  7
 #define VALUE_LEN  7
@@ -44,17 +46,17 @@ const string& Item::get() {
       c = m_s[id-1];
       switch(c) {
       case '<':
-	if ( ++lvl == 1 ) m_start = id-1;
-	break;
+        if ( ++lvl == 1 ) m_start = id-1;
+        break;
       case '/':
-	if ( --lvl > 0 ) break;
-	m_end   = id-2;
-	m_item  = m_s.substr(m_start,m_end-m_start+m_tag.length()+2);
-	m_start = m_end+m_tag.length()+1;
-	return m_item;
-	break;
+        if ( --lvl > 0 ) break;
+        m_end   = id-2;
+        m_item  = m_s.substr(m_start,m_end-m_start+m_tag.length()+2);
+        m_start = m_end+m_tag.length()+1;
+        return m_item;
+        break;
       default:
-	break;
+        break;
       }
       id += m_tag.length();
     }
@@ -292,24 +294,24 @@ Arg& Arg::load(const string& v, const string& tag) {
       return *this;
     case 'd':                                        // <double>, <dateTime.iso8601>
       switch(item[2]) {
-      case 'o':                                      // double
-	type = DOUBLE;
-	data.dval = ::atof(Item(item,"double").c_str());
-	return *this;
-      case 'a':
-	return assign(TIME,&Time().load(Item(item,"dateTime.iso8601").value()));
-      default:
-	break;
+    case 'o':                                      // double
+      type = DOUBLE;
+      data.dval = ::atof(Item(item,"double").c_str());
+      return *this;
+    case 'a':
+      return assign(TIME,&Time().load(Item(item,"dateTime.iso8601").value()));
+    default:
+      break;
       }
       break;
     case 'b':
       switch(item[2]) {
-      case 'a':
-	return assign(BINARY,&Blob().load(Item(item,"base64")));
-      case 'o':
-	type = BOOL;
-	data.boolean = Item(item,"boolean").value()=="1";
-	return *this;
+    case 'a':
+      return assign(BINARY,&Blob().load(Item(item,"base64")));
+    case 'o':
+      type = BOOL;
+      data.boolean = Item(item,"boolean").value()=="1";
+      return *this;
       }
       break;
     case 'n':                                        // <member> Load dict member
@@ -320,9 +322,9 @@ Arg& Arg::load(const string& v, const string& tag) {
       return assign(TUPLE,&Tuple().load(Item(item,"data")));
     case 's':                                        // <string>
       if ( strncmp(&item[1],"string",6)==0)
-	return assign(STRING,Item(item,"string").c_str());
+        return assign(STRING,Item(item,"string").c_str());
       else if ( strncmp(&item[1],"struct",6)==0)     // Load dictionary
-	return assign(DICT,&Dict().load(Item(item,"struct")));
+        return assign(DICT,&Dict().load(Item(item,"struct")));
     default:
       break;
     }
@@ -392,21 +394,21 @@ string Arg::rawstr() const  {
 string Arg::datatype() const {
   switch(type)  {
 #define __T(x)  case x: return #x
-  __T(BOOL);
-  __T(CHAR);
-  __T(INT);
-  __T(INT64);
-  __T(FLOAT);
-  __T(DOUBLE);
-  __T(PAIR);
-  __T(PARAM);
-  __T(TUPLE);
-  __T(LIST);
-  __T(DICT);
-  __T(ARGS);
-  __T(TIME);
-  __T(STRING);
-  __T(BINARY);
+    __T(BOOL);
+    __T(CHAR);
+    __T(INT);
+    __T(INT64);
+    __T(FLOAT);
+    __T(DOUBLE);
+    __T(PAIR);
+    __T(PARAM);
+    __T(TUPLE);
+    __T(LIST);
+    __T(DICT);
+    __T(ARGS);
+    __T(TIME);
+    __T(STRING);
+    __T(BINARY);
   default: return "UNKNOWN";
   }
 #undef __T
@@ -435,8 +437,8 @@ void Arg::print(const std::string& prefix) const {
   case ARGS:       os << endl; data.args->print(prefix+"  ");    break;
   }
   os << setw(prefix.length()) << "" 
-     // << setw(12) << left << "" 
-     << "] End_" << typ << endl;
+    // << setw(12) << left << "" 
+    << "] End_" << typ << endl;
 }
 
 Time::Time()  {
@@ -553,8 +555,8 @@ Pair& Pair::operator=(const Pair& c)  {
 string Pair::str() const  {
   stringstream os;
   os << "<member>\n"
-     << "<name>" << key.rawstr() << "</name>\n" << val.str() 
-     << "</member>\n";
+    << "<name>" << key.rawstr() << "</name>\n" << val.str() 
+    << "</member>\n";
   return os.str();
 }
 
@@ -599,8 +601,8 @@ string MethodCall::body() const {
   string tag = "methodCall"; // "methodResponse";
   tag = "methodResponse";
   os << "<?xml version='1.0'?>\n"
-     << "<" << tag << ">" << "<methodName>" << call << "</methodName>\n" 
-     << values.str() << "</" << tag << ">\n";
+    << "<" << tag << ">" << "<methodName>" << call << "</methodName>\n" 
+    << values.str() << "</" << tag << ">\n";
   return os.str();
 }
 
@@ -608,10 +610,10 @@ string MethodCall::body() const {
 string MethodCall::header(const string& host, int port, size_t len) const {
   stringstream hdr;
   hdr << "POST /RPC2 HTTP/1.0\r\n"
-      << "Host: " << host << ":" << port << "\r\n"
-      << "User-Agent: LHCb-XMLRPC 1.0\r\n"
-      << "Content-Type: text/xml\r\n"
-      << "Content-Length: " << (int)len << "\r\n\r\n";
+    << "Host: " << host << ":" << port << "\r\n"
+    << "User-Agent: LHCb-XMLRPC 1.0\r\n"
+    << "Content-Type: text/xml\r\n"
+    << "Content-Length: " << (int)len << "\r\n\r\n";
   return hdr.str();
 }
 
@@ -635,7 +637,7 @@ MethodResponse::MethodResponse(const string& vals) {
     string pars = params.value();
     if ( !pars.empty() ) {
       for(Items it(pars,"param"); !it.empty(); ++it)
-	add(it);
+        add(it);
       return;
     }
     // ... we have an error
@@ -659,9 +661,9 @@ bool MethodResponse::hasError() const {
     l = (list<Arg>*)(*l->begin()).data.dict->data;
     for(list<Arg>::const_iterator i=l->begin(); i != l->end(); ++i) {
       if ( (*i).type == Arg::PAIR )  {
-	Pair* p = (*i).data.pair;
-	if ( p->key.type==Arg::STRING && ::strncmp(p->key.data.str,"faultCode",9)==0) 
-	  return true;
+        Pair* p = (*i).data.pair;
+        if ( p->key.type==Arg::STRING && ::strncmp(p->key.data.str,"faultCode",9)==0) 
+          return true;
       }
     }
   }
@@ -676,11 +678,11 @@ Error MethodResponse::error() const {
     l = (list<Arg>*)(*l->begin()).data.dict->data;
     for(list<Arg>::const_iterator i=l->begin(); i != l->end(); ++i) {
       if ( (*i).type == Arg::PAIR )  {
-	Pair* p = (*i).data.pair;
-	if ( p->key.type==Arg::STRING && ::strncmp(p->key.data.str,"faultCode",9)==0) 
-	  result.first = p->val.data.i64val;
-	if ( p->val.type==Arg::STRING && ::strncmp(p->key.data.str,"faultString",11)==0) 
-	  result.second = p->val.data.str;
+        Pair* p = (*i).data.pair;
+        if ( p->key.type==Arg::STRING && ::strncmp(p->key.data.str,"faultCode",9)==0) 
+          result.first = (int)p->val.data.i64val;
+        if ( p->val.type==Arg::STRING && ::strncmp(p->key.data.str,"faultString",11)==0) 
+          result.second = p->val.data.str;
       }
     }
   }
@@ -760,41 +762,47 @@ Server::Response Server::operator() (const Server::Call& call) {
     if ( nbyte == (int)h.length() ) {
       nbyte = m_channel->send(b.c_str(),b.length());
       if ( nbyte == (int)b.length() ) {
-	char buf[4096];
-	nb = 0;
-	while (nbyte>0)  {
-	  nbyte = m_channel->recv(buf,sizeof(buf),0,0);
-	  if ( nbyte==0 ) break;
-	  if ( nbyte==-1 ) {
-	    switch(m_channel->error()) {
-	    case EAGAIN:
-	    case EINTR:
-	      continue;
-	    case ETIMEDOUT:
-	    case ECONNRESET:
-	    case ENOTSOCK:
-	    case EOPNOTSUPP:
-	    case EINVAL:
-	    case EIO:
-	    case ENOBUFS:
-	    case ENOMEM:
-	    default:
-	      // Real error: stop processing.....
-	      return error(m_channel->error());
-	    }
-	  }
-	  nb += nbyte;
-	  buf[nbyte] = 0;
-	  s += buf;
-	}
-	if ( debug() ) cout << s << endl;
-	disconnect();
-	return Response(s);
+        char buf[4096];
+        nb = 0;
+        while (nbyte>0)  {
+          nbyte = m_channel->recv(buf,sizeof(buf),0,0);
+          if ( nbyte==0 ) break;
+          if ( nbyte==-1 ) {
+            switch(m_channel->error()) 
+            {
+            case ESOCK_AGAIN:
+            case ESOCK_INTR:
+              continue;
+            case ESOCK_TIMEDOUT:
+            case ESOCK_NETRESET:
+            case ESOCK_NETDOWN:
+            case ESOCK_CONNREFUSED:
+            case ESOCK_CONNRESET:
+            case ESOCK_NOTSOCK:
+            case ESOCK_FAULT:
+            case ESOCK_INVAL:
+            case ESOCK_BADF:
+            case ESOCK_OPNOTSUPP:
+            case ESOCK_NOBUFS:
+            case EIO:
+            case ENOMEM:
+            default:
+              // Real error: stop processing.....
+              return error(m_channel->error());
+            }
+          }
+          nb += nbyte;
+          buf[nbyte] = 0;
+          s += buf;
+        }
+        if ( debug() ) cout << s << endl;
+        disconnect();
+        return Response(s);
       }
     }
     // error sending to server
     disconnect();
     return error(m_channel->error());
   }
-  return error(ENOTCONN);
+  return error(ESOCK_NOTCONN);
 }
