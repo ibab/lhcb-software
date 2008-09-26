@@ -141,3 +141,14 @@ def ConfiguredFastFit( Name, TracksInContainer ):
     # at some point, need to switch to analytic evaluation
     # TrackHerabExtrapolator().extrapolatorID = 4
     return eventfitter
+
+def ConfiguredStraightLineFit( Name, TracksInContainer ):
+    eventfitter = ConfiguredFitter(Name,TracksInContainer,FieldOff=True)
+    eventfitter.Fitter.ApplyMaterialCorrections = False
+    eventfitter.Fitter.Extrapolator.ApplyMultScattCorr = False
+    eventfitter.Fitter.Extrapolator.ApplyEnergyLossCorr = False
+    eventfitter.Fitter.Extrapolator.ApplyElectronEnergyLossCorr = False
+    eventfitter.Fitter.StateAtBeamLine = False
+    eventfitter.Fitter.ZPositions = [ ]
+    return eventfitter
+
