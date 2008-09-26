@@ -4,10 +4,14 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
-!============ Presenter v0r12 2008-09-16 =============
+!============ Presenter v0r12 2008-09-26 =============
 ! 2008-09-16
 + fix MonObject Clear&Restore
 + support missing partition names from UTGID
++ attempt to remove dead-body feature of ROOT
+! 2008-09-26
++ from Giacomo: algorithm name for savesets, 
+    ref. management moved to OMAlib
 
 !============ Presenter v0r11 2008-09-01 =============
 ! 2008-09-01
@@ -26,7 +30,7 @@
 
 !============ Presenter v0r9 2008-05-23 =============
 ! 2008-05-23
-o use ROOT "thermic" coulour palette instead of custom
+o use ROOT "thermic" colour palette instead of custom
 o default error bars when rendering profile histograms
 + history mode: can specify a root file at startup;
   there is also a rudmientary file picker for savesets.
