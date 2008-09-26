@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2008-09-26 - Wouter Hulsbergen
+ - added option to set cluster location
+
 ! 2008-09-18 - Wouter Hulsbergen
  - made TrackVertexer and MeasurementProvider less verbose
 
