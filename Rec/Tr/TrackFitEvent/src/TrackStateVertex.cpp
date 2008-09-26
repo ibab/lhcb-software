@@ -59,7 +59,7 @@ namespace LHCb
       const ROOT::Math::SMatrix<double,5,3>& B() const { return m_B ; }
       const MomentumParameters& mom() const { return m_q ; }
 
-#ifndef _WIN32
+#ifndef GOD_NOALLOC
       static void* operator new ( size_t size ) {
 	return ( sizeof(VertexTrack) == size ?
 		 boost::singleton_pool<VertexTrack, sizeof(VertexTrack)>::malloc() :

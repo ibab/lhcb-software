@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2008-09-26 - Marco Cattaneo
+ - Use GOD_NOALLOC flag to switch off custom allocators
+
 ! 2008-09-15 - Wouter Hulsbergen
  - added 'pocaVector' to fitnode
 
