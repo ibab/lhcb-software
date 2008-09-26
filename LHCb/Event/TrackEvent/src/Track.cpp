@@ -11,6 +11,7 @@
 #include "Event/Track.h"
 #include "Event/TrackFunctor.h"
 #include "Event/Node.h"
+#include "iostream.h"
 
 using namespace Gaudi;
 using namespace LHCb;
@@ -26,7 +27,10 @@ using namespace LHCb;
 //=============================================================================
 double Track::probChi2() const
 {
-  return gsl_cdf_chisq_Q(chi2(),nDoF());
+    const double limit = 1e-15;
+    double chi2max = gsl_cdf_chisq_Qinv (limit, nDoF());
+    return chi2() < chi2max ? gsl_cdf_chisq_Q(chi2(),nDoF()) : 0;
+   
 };
 
 //=============================================================================

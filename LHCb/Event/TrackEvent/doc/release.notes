@@ -3,6 +3,9 @@
 ! Responsible : M.Needham, W.Hulsbergen
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
+! 2008-09-25 - Stephanie Hansmann-Menzemer
+ - make computation of probChi2 of track save for FPE
+
 ! 2008-09-11 - Gerhard Raven
  - enable string <-> enum conversion in Track.xml
 
