@@ -9,17 +9,18 @@
 #include "GaudiKernel/PhysicalConstants.h"
 #include "TrajOTProjector.h"
 
-class TrackOTCosmicsProjector : public TrajOTProjector 
+class TrajOTCosmicsProjector : public TrajOTProjector 
 {
 public:
 
   /// Standard constructor
-  TrackOTCosmicsProjector( const std::string& type, 
+  TrajOTCosmicsProjector( const std::string& type, 
 		      const std::string& name,
 		      const IInterface* parent );
   
   /// Destructor
-  virtual ~TrackOTCosmicsProjector();
+  virtual ~TrajOTCosmicsProjector();
+  StatusCode initialize() ;
 
   /// The only overloaded call
   StatusCode project( const LHCb::StateVector& state, const LHCb::Measurement& meas);
@@ -27,17 +28,26 @@ public:
 private:
   double m_tofReferenceZ ;
   bool m_fitEventT0 ;
+  bool m_useConstantDriftVelocity ;
 };
 
 //----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( TrackOTCosmicsProjector );
+DECLARE_TOOL_FACTORY( TrajOTCosmicsProjector );
+
+StatusCode TrajOTCosmicsProjector::initialize()
+{
+  StatusCode sc = TrajOTProjector::initialize() ;
+  info() << "Fit event t0 = " << m_fitEventT0 << endreq ;
+  info() << "Use const v_drift = " << m_useConstantDriftVelocity << endreq ;
+  return sc ;
+}
 
 //-----------------------------------------------------------------------------
 /// Project a state onto a measurement
 //-----------------------------------------------------------------------------
-StatusCode TrackOTCosmicsProjector::project( const LHCb::StateVector& statevector, 
-					const LHCb::Measurement& ameas )
+StatusCode TrajOTCosmicsProjector::project( const LHCb::StateVector& statevector, 
+					    const LHCb::Measurement& ameas )
 {
   // (Decided to catch this particlar project call such that I do no
   // need to introduce new virtual function hooks in default
@@ -48,8 +58,9 @@ StatusCode TrackOTCosmicsProjector::project( const LHCb::StateVector& statevecto
     const LHCb::OTMeasurement& meas =  dynamic_cast<const LHCb::OTMeasurement&>(ameas) ;
     
     // compute the tof correction relative to a reference z.
-    double L0 = ( m_tofReferenceZ - meas.z())*std::sqrt( 1 + statevector.tx()*statevector.tx() + statevector.ty()*statevector.ty()) ;
-    double tof = (statevector.ty() > 0 ? -1 : 1) * L0/Gaudi::Units::c_light ;
+    double L0 = (meas.z() - m_tofReferenceZ)*std::sqrt( 1 + statevector.tx()*statevector.tx() + statevector.ty()*statevector.ty()) ;
+    bool forward = statevector.ty() < 0 ;
+    double tof = (forward ? 1 : -1) * L0/Gaudi::Units::c_light ;
     // should we subtract a reference time-of-flight? 
     //   tof -= fabs( m_tofReferenceZ - meas.z() ) / Gaudi::Units::c_light ;
     // add this to the measurement, including the phase. we'll use the
@@ -63,13 +74,17 @@ StatusCode TrackOTCosmicsProjector::project( const LHCb::StateVector& statevecto
     double distToWire = m_dist.Dot( m_unitPocaVector ) ;
     // update the projection matrix with the derivative to event-t0.
     if( useDrift() && m_fitEventT0 ) {
-      // get the drift velocity. for the linearization it is best to
-      // have something as closest to the truth as possible. that's not
-      // the drift time. so, instead, we compute the inverse:
-      double dtdr = meas.module().rtRelation().dtdr( fabs(distToWire) ) ;
+      double vdrift = meas.module().rtRelation().drdt() ;
+      if( !m_useConstantDriftVelocity ) {
+	// get the drift velocity. for the linearization it is best to
+	// have something as closest to the truth as possible. that's not
+	// the drift time. so, instead, we compute the inverse:
+	double dtdr = meas.module().rtRelation().dtdr( fabs(distToWire) ) ;
+	vdrift = 1/dtdr ;
+      }
       // now we just need to get the sign right. I think that H is MINUS
       // the derivative of the residual in Fruhwirth's languague
-      m_H(0,4) = meas.ambiguity() / dtdr ;
+      m_H(0,4) = meas.ambiguity() * vdrift ;
     }
   }
   return StatusCode::SUCCESS;
@@ -78,16 +93,17 @@ StatusCode TrackOTCosmicsProjector::project( const LHCb::StateVector& statevecto
 //-----------------------------------------------------------------------------
 /// Standard constructor, initializes variables
 //-----------------------------------------------------------------------------
-TrackOTCosmicsProjector::TrackOTCosmicsProjector( const std::string& type,
+TrajOTCosmicsProjector::TrajOTCosmicsProjector( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
   : TrajOTProjector( type, name, parent )
 {
-  declareProperty( "TofReferenceZ", m_tofReferenceZ = 11*Gaudi::Units::m) ;
+  declareProperty( "TofReferenceZ", m_tofReferenceZ = 12.8*Gaudi::Units::m) ;
   declareProperty( "FitEventT0", m_fitEventT0 = false ) ;
+  declareProperty( "UseConstantDriftVelocity", m_useConstantDriftVelocity = true ) ;
 }
 
 //-----------------------------------------------------------------------------
 /// Destructor
 //-----------------------------------------------------------------------------
-TrackOTCosmicsProjector::~TrackOTCosmicsProjector() {}
+TrajOTCosmicsProjector::~TrajOTCosmicsProjector() {}
