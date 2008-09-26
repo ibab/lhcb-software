@@ -1,4 +1,4 @@
-// $Id: OMAMessage.h,v 1.1 2008-08-19 22:45:32 ggiacomo Exp $
+// $Id: OMAMessage.h,v 1.2 2008-09-26 17:24:55 ggiacomo Exp $
 #ifndef OMALIB_OMAMESSAGE_H 
 #define OMALIB_OMAMESSAGE_H 1
 
@@ -41,6 +41,7 @@ public:
       return "INFO";
       break;
     }
+    return "INFO";
   }
   inline bool confirmed() { return m_confirmed; }
   inline void confirm() { m_confirmed = true;}
