@@ -5,7 +5,7 @@
  *  Header file for class LHCb::MemPoolAlloc
  *
  *  CVS Log :-
- *  $Id: MemPoolAlloc.h,v 1.2 2007-08-28 12:49:17 jonrob Exp $
+ *  $Id: MemPoolAlloc.h,v 1.3 2008-09-26 16:44:35 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -49,8 +49,8 @@ namespace LHCb
 
   public:
 
-    // on windows, do nothing
-#ifndef _WIN32
+    /// If GOD_NOALLOC flag set, do nothing
+#ifndef GOD_NOALLOC
 
     /// operator new
     inline static void* operator new ( size_t size )

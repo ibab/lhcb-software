@@ -1,4 +1,4 @@
-// $Id: ParabolaTraj.h,v 1.14 2007-10-16 11:50:59 wouter Exp $
+// $Id: ParabolaTraj.h,v 1.15 2008-09-26 16:44:35 cattanem Exp $
 #ifndef LHCbKernel_ParabolaTraj_H
 #define LHCbKernel_ParabolaTraj_H 1
 
@@ -72,7 +72,7 @@ namespace LHCb
     virtual double arclength(double mu1, double mu2) const { return mu2 - mu1 ; }
 
 
-#ifndef _WIN32
+#ifndef GOD_NOALLOC
     /// operator new
     static void* operator new ( size_t size )
     {
