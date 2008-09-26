@@ -12,6 +12,9 @@
 #include <winsock.h>
 #endif
 
+#ifdef _POSIX_C_SOURCE  // This is already defined on linux and will cause a warning!
+#undef _POSIX_C_SOURCE
+#endif
 extern "C" {
 #include <Python.h>
 #include "structmember.h"
