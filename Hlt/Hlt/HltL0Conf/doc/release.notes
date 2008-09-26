@@ -4,6 +4,9 @@
 ! Purpose     : L0-T-track Confirmation algorithms
 !-----------------------------------------------------------------------------
 
+! 2008-09-26 - Johannes Albrecht
+ - MuonSeedTool: Fix momentum for mu segments, which was not set due to a typo
+
 !========================== HltL0Conf v2r4 2008-09-10 ===================
 
 ! 2008-08-29 - Johannes Albrecht

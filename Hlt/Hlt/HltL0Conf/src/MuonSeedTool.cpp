@@ -1,4 +1,4 @@
-// $Id: MuonSeedTool.cpp,v 1.9 2008-08-29 14:30:18 albrecht Exp $
+// $Id: MuonSeedTool.cpp,v 1.10 2008-09-26 05:42:48 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -159,7 +159,7 @@ StatusCode MuonSeedTool::makeTrack( const LHCb::Track& inputTrack,
   if( sc.isFailure() ) {
     Warning( "MomentumEstimate tool  failed, but still adding State" );
   }
-  seedState.setQOverP( seedState.qOverP() );
+  seedState.setQOverP( qOverP );
   seedState.setErrQOverP2( sigmaQOverP*sigmaQOverP );
 
   Gaudi::TrackSymMatrix stateCov = Gaudi::TrackSymMatrix();
@@ -311,7 +311,6 @@ StatusCode MuonSeedTool::makeTrack( const LHCb::L0MuonCandidate& muonL0Cand,
   outputTrack.addToStates(seedState);
   outputTrack.setType(LHCb::Track::Muon);
   outputTrack.setFlag(Track::L0Candidate,true);
-  
+
   return StatusCode::SUCCESS;
-    
 }
