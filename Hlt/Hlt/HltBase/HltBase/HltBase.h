@@ -1,4 +1,4 @@
-// $Id: HltBase.h,v 1.14 2008-07-30 13:33:16 graven Exp $
+// $Id: HltBase.h,v 1.15 2008-09-26 08:42:17 graven Exp $
 #ifndef HLTBASE_HLTBASE_H 
 #define HLTBASE_HLTBASE_H 1
 
@@ -37,6 +37,7 @@ namespace Hlt {
     virtual ~Counter(){}
 
     operator int () const { return m_counter;}
+    void increase(int i) { m_counter += i; }
     const std::string& name() const { return m_name;}
   public:
     Hlt::Histo* m_histo;

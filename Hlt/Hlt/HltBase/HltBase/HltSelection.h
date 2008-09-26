@@ -1,4 +1,4 @@
-// $Id: HltSelection.h,v 1.6 2008-09-09 09:17:08 graven Exp $
+// $Id: HltSelection.h,v 1.7 2008-09-26 08:42:17 graven Exp $
 #ifndef HLTBASE_HLTSELECTION_H 
 #define HLTBASE_HLTSELECTION_H 1
 
@@ -8,11 +8,9 @@
 #include "GaudiKernel/ContainedObject.h"
 #include "HltBase/stringKey.h"
 
-namespace LHCb 
-{
-  class Track;
-  class RecVertex;
-}
+#include "Event/Track.h"
+#include "Event/RecVertex.h"
+
 
 namespace Hlt 
 {

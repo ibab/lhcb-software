@@ -1,11 +1,12 @@
-// $Id: HltBase.icpp,v 1.14 2008-07-04 08:07:12 graven Exp $
+// $Id: HltBase.icpp,v 1.15 2008-09-26 08:42:17 graven Exp $
 // Include files
 
 
 // local
 #include "HltBase/HltBase.h"
-#include "Event/HltSummary.h"
 #include "Event/RecVertex.h"
+#include "Event/Track.h"
+#include "Event/Particle.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltBase
@@ -92,7 +93,7 @@ void HltBase<EBASE>::initializeHistosFromDescriptor() {
   for (std::map<std::string, Gaudi::Histo1DDef>::const_iterator 
          it = hdes.begin(); it != hdes.end(); it++){
       EBASE::book(it->second);
-      EBASE::debug() << " booking histo from descriptor " 
+      EBASE::debug() << " booking histogram from descriptor " 
                      << it->second << endreq;
   }
   
@@ -104,13 +105,13 @@ Hlt::Histo* HltBase<EBASE>::initializeHisto(const std::string& title,
   Hlt::Histo* histo = 0;
   if (!EBASE::produceHistos()) return histo;
 
-  const std::map<std::string,Gaudi::Histo1DDef>& values = 
-        m_histoDescriptor.value();
+  const std::map<std::string,Gaudi::Histo1DDef>& values = m_histoDescriptor.value();
   std::map<std::string,Gaudi::Histo1DDef>::const_iterator i = 
         values.find(title);
   Gaudi::Histo1DDef hd = (i!=values.end()) ? i->second 
                                            : Gaudi::Histo1DDef(title,x0,xf,nbins);
   EBASE::debug() << " booking histogram  " << hd << endreq;
+  //FIXME: add declareInfo ???
   return EBASE::book(hd);
 };
 
@@ -144,8 +145,8 @@ void HltBase<EBASE>::initializeCounter (Hlt::Counter& counter,
 
 template <class EBASE>
 void HltBase<EBASE>::increaseCounter( Hlt::Counter& count, 
-                                      int increase) {
-  count.m_counter =  count.m_counter + increase;
+                                      int increment) {
+  count.increase(increment);
   EBASE::verbose() << " counter " << count.m_name 
                    << " = " << count.m_counter << endreq;;
   // if (count.m_histo)
