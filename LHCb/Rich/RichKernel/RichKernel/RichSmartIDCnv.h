@@ -5,7 +5,7 @@
  *  Header file for RichSmartID conversion utilities
  *
  *  CVS Log :-
- *  $Id: RichSmartIDCnv.h,v 1.5 2008-06-30 12:28:23 jonrob Exp $
+ *  $Id: RichSmartIDCnv.h,v 1.6 2008-09-26 12:56:55 rogers Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   05/02/2008
@@ -146,7 +146,25 @@ namespace Rich
 
   public:
 
-    /// Returns the minimum 'global' pixel y-coordinate
+    /// Returns the minimum 'local' pixel x-coordinate
+    inline int minLocalPixelX() const
+    {
+      return ( 0 );
+    }
+
+    /// Returns the maximum 'local' pixel x-coordinate
+    int maxLocalPixelX() const;
+
+    /// Returns the minimum 'local' pixel y-coordinate
+    inline int minLocalPixelY() const
+    {
+      return ( 0 );
+    }
+
+    /// Returns the maximum 'local' pixel y-coordinate
+    int maxLocalPixelY() const;
+
+    /// Returns the minimum 'global' pixel x-coordinate
     inline int minGlobalPixelX() const
     {
       return ( 0 );

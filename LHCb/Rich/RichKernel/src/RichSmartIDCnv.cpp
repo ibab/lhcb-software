@@ -5,7 +5,7 @@
  *  Implementation file for RichSmartID conversion utilities
  *
  *  CVS Log :-
- *  $Id: RichSmartIDCnv.cpp,v 1.4 2008-06-30 12:28:23 jonrob Exp $
+ *  $Id: RichSmartIDCnv.cpp,v 1.5 2008-09-26 12:56:55 rogers Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   05/02/2008
@@ -39,6 +39,22 @@ int Rich::SmartIDGlobalOrdering::_hpdCol() const
   return ( ( Rich::Rich1 == smartID().rich() && Rich::top == smartID().panel() ) ?
            ( _panelHPDColOffset() + _nHPDCols() - 1 - smartID().hpdCol() ) :
            ( _panelHPDColOffset() + smartID().hpdCol() ) );
+}
+
+/// Returns the maximum 'local' pixel x-coordinate
+int Rich::SmartIDGlobalOrdering::maxLocalPixelX() const
+{
+  return ( Rich::Rich2 == smartID().rich() ?
+           _nPixelColsPerHPD() :
+           _nPixelRowsPerHPD() );
+}
+
+/// Returns the maximum 'local' pixel y-coordinate
+int Rich::SmartIDGlobalOrdering::maxLocalPixelY() const
+{
+  return ( Rich::Rich1 == smartID().rich() ?
+           _nPixelColsPerHPD() :
+           _nPixelRowsPerHPD() );
 }
 
 // Returns the maximum 'global' pixel x-coordinate
