@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/MBMMainMenu.cpp,v 1.5 2008-02-12 17:15:24 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/MBMMainMenu.cpp,v 1.6 2008-09-26 09:51:36 frankb Exp $
 //  ====================================================================
 //  BankListWindow.cpp
 //  --------------------------------------------------------------------
@@ -8,7 +8,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: MBMMainMenu.cpp,v 1.5 2008-02-12 17:15:24 frankb Exp $
+// $Id: MBMMainMenu.cpp,v 1.6 2008-09-26 09:51:36 frankb Exp $
 //
 // C++ include files
 #include "MBMDump/MBMDump.h"
@@ -114,7 +114,7 @@ int MBMMainMenu::includeMEP() {
 
 int MBMMainMenu::excludeMBM() {
   if( m_bmID != MBM_INV_DESC )   {
-    int status = mbm_exclude(m_bmID);     // Try to exclude from the buffer
+    int status = ::mbm_exclude(m_bmID);     // Try to exclude from the buffer
     switch(status){
     case MBM_NORMAL:
       m_bmID = MBM_INV_DESC;
@@ -133,7 +133,7 @@ int MBMMainMenu::excludeMBM() {
 
 int MBMMainMenu::excludeMEP() {
   if( m_mepID != MEP_INV_DESC )   {
-    int status = mep_exclude(m_mepID);
+    int status = ::mep_exclude(m_mepID);
     switch(status){
     case MBM_NORMAL:
       m_bmID = MBM_INV_DESC;
@@ -177,9 +177,9 @@ void MBMMainMenu::handleMenu(int cmd_id)    {
     m_name[sizeof(m_name)-1] = 0;
     m_buffName[sizeof(m_buffName)-1] = 0;
     m_buffType[sizeof(m_buffType)-1] = 0;
-    if ( (ptr=strchr(m_name,' ')) ) *ptr = 0;
-    if ( (ptr=strchr(m_buffName,' ')) ) *ptr = 0;
-    if ( (ptr=strchr(m_buffType,' ')) ) *ptr = 0;
+    if ( (ptr=::strchr(m_name,' ')) ) *ptr = 0;
+    if ( (ptr=::strchr(m_buffName,' ')) ) *ptr = 0;
+    if ( (ptr=::strchr(m_buffType,' ')) ) *ptr = 0;
     if ( m_mepFlags == 0 )  {
       (m_bmID == MBM_INV_DESC) ? includeMBM() : excludeMBM();
     }
@@ -189,11 +189,11 @@ void MBMMainMenu::handleMenu(int cmd_id)    {
     setCursor(m_bmID == MBM_INV_DESC ? C_PART : C_RQS,1);
     for(int i=0; i<8; ++i) m_req[i].setBufferID(m_bmID);
     output("Show display menu...");
-    if ( (ptr=strchr(m_buffType,' ')) ) *ptr = 0;
-    if      ( !strcmp(m_buffType,mep_type) ) b_type = DisplayMenu::B_MEP;
-    else if ( !strcmp(m_buffType,raw_type) ) b_type = DisplayMenu::B_RAW;
-    else if ( !strcmp(m_buffType,dsc_type) ) b_type = DisplayMenu::B_DESC;
-    else if ( !strcmp(m_buffType,mdf_type) ) b_type = DisplayMenu::B_MDF;
+    if ( (ptr=::strchr(m_buffType,' ')) ) *ptr = 0;
+    if      ( !::strcmp(m_buffType,mep_type) ) b_type = DisplayMenu::B_MEP;
+    else if ( !::strcmp(m_buffType,raw_type) ) b_type = DisplayMenu::B_RAW;
+    else if ( !::strcmp(m_buffType,dsc_type) ) b_type = DisplayMenu::B_DESC;
+    else if ( !::strcmp(m_buffType,mdf_type) ) b_type = DisplayMenu::B_MDF;
     else                                     b_type = DisplayMenu::B_UNKNOWN;
     m_dispMenu->update(b_type);
     break;
@@ -208,8 +208,8 @@ void MBMMainMenu::handleMenu(int cmd_id)    {
     ::lib_rtl_start_debugger();
     break;
   case C_EXIT:
-    if ( m_mepID != MEP_INV_DESC ) mep_exclude(m_mepID);
-    else if ( m_bmID != MBM_INV_DESC ) mbm_exclude(m_bmID);
+    if ( m_mepID != MEP_INV_DESC ) ::mep_exclude(m_mepID);
+    else if ( m_bmID != MBM_INV_DESC ) ::mbm_exclude(m_bmID);
     ::exit(quit());
     break; 
   }
@@ -227,9 +227,9 @@ int MBMMainMenu::getEvent(struct DataBlock *event)    {
         delete [] m_memory;
         m_memory = 0;
       }
-      m_memory = new int[len/4+10]; // reserve memory
+      m_memory = new int[len/sizeof(int)+10]; // reserve memory
       if(m_memory != 0)    {
-        memcpy(m_memory,p,len);
+        ::memcpy(m_memory,p,len);
         event->start = m_memory;
         mbm_pause(m_bmID);          // maybe should be a call to bm_pause
       }
@@ -238,7 +238,7 @@ int MBMMainMenu::getEvent(struct DataBlock *event)    {
       }
       ::memcpy(event->mask,tr,sizeof(tr));    // trigger type is in. name
       event->number = evtyp; // event type is in .number
-      event->length = len/4;
+      event->length = len/sizeof(int);
       break;
     case MBM_INACTIVE:
       output("Failed to get event : Buffer manager inactive");

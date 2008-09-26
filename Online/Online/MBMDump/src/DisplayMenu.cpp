@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/DisplayMenu.cpp,v 1.10 2008-02-18 16:01:20 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/DisplayMenu.cpp,v 1.11 2008-09-26 09:51:36 frankb Exp $
 //  ====================================================================
 //  BankListWindow.cpp
 //  --------------------------------------------------------------------
@@ -8,7 +8,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: DisplayMenu.cpp,v 1.10 2008-02-18 16:01:20 frankb Exp $
+// $Id: DisplayMenu.cpp,v 1.11 2008-09-26 09:51:36 frankb Exp $
 //
 // C++ include files
 #include <map>
@@ -143,7 +143,6 @@ void DisplayMenu::handleMenu(int cmd_id)    {
   unsigned int partID;
   static int evt = 0;
   MEPEVENT* e;
-  MDFHeader* h;
 
   switch(cmd_id){
     case C_MEP:
@@ -197,12 +196,11 @@ void DisplayMenu::handleMenu(int cmd_id)    {
     case C_MDF:
     case C_BLMDF: 
     case C_BTMDF: 
-      h = ((MDFHeader*)m_evtData.start);
-      ptr = ((char*)h) + sizeof(MDFHeader) + h->subheaderLength();
+      ptr = (const char*)m_evtData.start;
       if ( ptr )  {
         std::vector<RawBank*> b;
         BankListWindow::Banks banks;
-	size_t len = m_evtData.length*sizeof(int)-sizeof(MDFHeader)-h->subheaderLength();
+	size_t len = m_evtData.length*sizeof(int);
         if ( decodeRawBanks(ptr,ptr+len,b).isSuccess() )  {
           for(std::vector<RawBank*>::iterator j=b.begin(); j!=b.end(); ++j)
             banks.push_back(std::make_pair(0,*j));
@@ -215,7 +213,8 @@ void DisplayMenu::handleMenu(int cmd_id)    {
       }
       break;
     case C_CHECKMDF:
-      checkMDFRecord((MDFHeader*)m_evtData.start,m_evtData.length-sizeof(RawBank),true,false);
+      ptr = (const char*)m_evtData.start;
+      checkMDFRecord((MDFHeader*)(ptr+2*sizeof(int)),(m_evtData.length-2)*sizeof(int),true,false);
       output("Sanity check completed successfully.");
       break;
     case C_DSC:

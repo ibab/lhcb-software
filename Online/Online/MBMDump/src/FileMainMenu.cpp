@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/FileMainMenu.cpp,v 1.5 2008-02-12 17:15:24 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/FileMainMenu.cpp,v 1.6 2008-09-26 09:51:36 frankb Exp $
 //  ====================================================================
 //  BankListWindow.cpp
 //  --------------------------------------------------------------------
@@ -8,7 +8,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: FileMainMenu.cpp,v 1.5 2008-02-12 17:15:24 frankb Exp $
+// $Id: FileMainMenu.cpp,v 1.6 2008-09-26 09:51:36 frankb Exp $
 //
 // C++ include files
 #include "MBMDump/MBMDump.h"
@@ -83,7 +83,7 @@ namespace MBMDump  {
 FileMainMenu::FileMainMenu() :  m_io(0), m_dispMenu(0)
 {
   int num_types = sizeof(buff_types)/sizeof(buff_types[0]);
-  strcpy(m_name,"file://Brunel.dat");
+  strcpy(m_name,"file://mdf.dat");
   strcpy(m_buffType,buff_types[2]);
   openMenu(0,0,"Event Dump","General purpose MBM Dump",procName()); 
   addCommand(C_PROC,     "Set file name           ");
@@ -137,13 +137,13 @@ void FileMainMenu::handleMenu(int cmd_id)    {
   case C_INC_EXC: // open new file
     m_name[sizeof(m_name)-1] = 0;
     m_buffType[sizeof(m_buffType)-1] = 0;
-    if ( (ptr=strchr(m_name,' ')) ) *ptr = 0;
-    if ( (ptr=strchr(m_buffType,' ')) ) *ptr = 0;
+    if ( (ptr=::strchr(m_name,' ')) ) *ptr = 0;
+    if ( (ptr=::strchr(m_buffType,' ')) ) *ptr = 0;
     if ( m_io->connect(m_name) )  {
-      if      ( !strcmp(m_buffType,mep_type) ) b_type = DisplayMenu::B_MEP;
-      else if ( !strcmp(m_buffType,raw_type) ) b_type = DisplayMenu::B_RAW;
-      else if ( !strcmp(m_buffType,dsc_type) ) b_type = DisplayMenu::B_DESC;
-      else if ( !strcmp(m_buffType,mdf_type) ) b_type = DisplayMenu::B_MDF;
+      if      ( !::strcmp(m_buffType,mep_type) ) b_type = DisplayMenu::B_MEP;
+      else if ( !::strcmp(m_buffType,raw_type) ) b_type = DisplayMenu::B_RAW;
+      else if ( !::strcmp(m_buffType,dsc_type) ) b_type = DisplayMenu::B_DESC;
+      else if ( !::strcmp(m_buffType,mdf_type) ) b_type = DisplayMenu::B_MDF;
       else                                     b_type = DisplayMenu::B_UNKNOWN;
       m_dispMenu->update(b_type);
       output("Opened file: %s",m_name);
@@ -170,8 +170,8 @@ int FileMainMenu::getEvent(struct DataBlock *event)    {
     if ( m_io->receiveData() )  {
       event->number = EVENT_TYPE_EVENT;
       event->start = (int*)m_io->data().first;
-      event->length = m_io->data().second;
-      memset(event->mask,0,sizeof(event->mask));
+      event->length = m_io->data().second/sizeof(int);
+      ::memset(event->mask,0,sizeof(event->mask));
       return MBM_NORMAL;
     }
   }

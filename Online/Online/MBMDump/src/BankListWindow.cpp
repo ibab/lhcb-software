@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/BankListWindow.cpp,v 1.4 2008-02-12 17:13:47 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/BankListWindow.cpp,v 1.5 2008-09-26 09:51:36 frankb Exp $
 //  ====================================================================
 //  BankListWindow.cpp
 //  --------------------------------------------------------------------
@@ -8,7 +8,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: BankListWindow.cpp,v 1.4 2008-02-12 17:13:47 frankb Exp $
+// $Id: BankListWindow.cpp,v 1.5 2008-09-26 09:51:36 frankb Exp $
 //
 // C++ include files
 #include <string>
@@ -35,14 +35,14 @@ BankListWindow::~BankListWindow()  {
 
 void BankListWindow::build()  {
   char txt[256];
-  openDetached(0,0,"Display window"," MEP Fragment structure ",procName());
+  openDetached(0,0,"Display window"," Bank list ",procName());
   addCommand(C_DISMISS,"Dismiss");
   addComment(C_COM2,"");
   addComment(C_COM3," Hit return on bank to see data");
   addComment(C_COM4,"");
-  addComment(C_COM5,"+-------------------------------------------------------+");
-  addComment(C_COM6,"|EventID Type     Type #  SourceID  Vsn    Size    Start|");
-  addComment(C_COM7,"+-------------------------------------------------------+");
+  addComment(C_COM5,"+------------------------------------------------------------+");
+  addComment(C_COM6,"| EventID Type         Type # SourceID   Vsn    Size    Start|");
+  addComment(C_COM7,"+------------------------------------------------------------+");
   for(size_t cnt=0; cnt<m_banks.size();++cnt)  {
     unsigned int eid = m_banks[cnt].first;
     const RawBank* b = m_banks[cnt].second;
@@ -51,7 +51,7 @@ void BankListWindow::build()  {
       addComment(C_BANKS+cnt,txt);
       break;
     }
-    ::sprintf(txt," %8d %-12s %2d %8d %5d %7d %8p",
+    ::sprintf(txt," %8d %-16s %2d %8d %5d %7d %8p",
       eid,RawEventPrintout::bankType(b->type()).c_str(),
       b->type(),b->sourceID(),b->version(),b->size(),(void*)b);
     //if ( (cnt%10) != 0 )  {

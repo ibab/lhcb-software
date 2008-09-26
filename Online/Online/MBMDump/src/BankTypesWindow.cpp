@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/BankTypesWindow.cpp,v 1.4 2008-02-12 17:13:47 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/BankTypesWindow.cpp,v 1.5 2008-09-26 09:51:36 frankb Exp $
 //  ====================================================================
 //  BankListWindow.cpp
 //  --------------------------------------------------------------------
@@ -8,7 +8,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: BankTypesWindow.cpp,v 1.4 2008-02-12 17:13:47 frankb Exp $
+// $Id: BankTypesWindow.cpp,v 1.5 2008-09-26 09:51:36 frankb Exp $
 //
 // C++ include files
 #include <string>
@@ -27,14 +27,14 @@ BankTypesWindow::BankTypesWindow(BaseMenu* par,int cmd_id, const Format& f, Bank
   char txt[256];
   setParent(par);
   m_parentCmd = cmd_id;
-  openDetached(0,0,"Display window"," MEP Fragment structure ",procName());
+  openDetached(0,0,"Display window"," List of bank types ",procName());
   addCommand(C_DISMISS,"Dismiss");
   addComment(C_COM2,"");
   addComment(C_COM3," Hit return on family to see banks list");
   addComment(C_COM4,"");
-  addComment(C_COM5,"+------------------------------------+");
-  addComment(C_COM6,"| Type     Type #  Vsn    No.Banks   |");
-  addComment(C_COM7,"+------------------------------------+");
+  addComment(C_COM5,"+------------------------------------------+");
+  addComment(C_COM6,"| Type         Type #      Vsn    No.Banks |");
+  addComment(C_COM7,"+------------------------------------------+");
   for(Banks::iterator k=m_banks.begin(); k!=m_banks.end();++k)  {
     const RawBank* b = (*k).second;
     std::pair<int,int> typ(b->type(),b->version());
@@ -45,7 +45,7 @@ BankTypesWindow::BankTypesWindow(BaseMenu* par,int cmd_id, const Format& f, Bank
   int cnt = 0;
   for(BankMap::iterator i=m_map.begin(); i != m_map.end(); ++i, ++cnt)  {
     const RawBank* b = (*i).second.first;
-    ::sprintf(txt," %-12s %2d %8d %5d",
+    ::sprintf(txt,"  %-16s %2d %8d %11d",
       RawEventPrintout::bankType(b->type()).c_str(),b->type(),
       (*i).first.second,(*i).second.second);
     addCommand(C_TYPES+cnt,txt);

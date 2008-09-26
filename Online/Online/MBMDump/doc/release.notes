@@ -4,6 +4,9 @@
 !Purpose: Dump MEP events in MEP buffer
 !----------------------------------------------------------------------
 
+! 2008-09-20 - Markus Frank
+   Fix bug when analysing MDF file records.
+
 ! 2007-08-10 - Markus Frank
    Fix print format statements causing warnings
 
