@@ -1,11 +1,15 @@
 ! ------------------------------------------------------------------------------
-! $Id: release.notes,v 1.38 2008-07-27 12:50:19 cattanem Exp $ 
+! $Id: release.notes,v 1.39 2008-09-26 14:47:46 cattanem Exp $ 
 ! ------------------------------------------------------------------------------
 ! Package     : Det/DetDescChecks
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! Purpose     : Collection of useful components for checking of 
 !               Detector Description, Material Budget etc 
 ! ------------------------------------------------------------------------------
+
+! 2008-09-26 - Marco Cattaneo
+ - Clean up LoadDDDB.py options
+ - Add a test for 2008 geometry
 
 !======================= DetDescChecks v4r8 2008-07-27 ========================
 ! 2008-07-22 - Marco Cattaneo
