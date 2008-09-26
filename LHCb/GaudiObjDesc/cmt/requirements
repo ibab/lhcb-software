@@ -1,6 +1,6 @@
 package GaudiObjDesc
 
-version v11r4
+version v11r5
 
 include_path none
 macro xmlsrc "xml"
@@ -11,7 +11,7 @@ make_fragment obj2dict -header=obj2dict_header -trailer=obj2dict_trailer
 
 pattern god_dictionary \
    document obj2dict <package>Obj2Dict <files> ;\
-   macro_append use_obj2dict_gccxmlflags "" WIN32 "-U__MINGW32__" ; \
+   macro_append use_obj2dict_gccxmlflags "" debug " -DGOD_NOALLOC " WIN32 "-U__MINGW32__ -DGOD_NOALLOC" ; \
    apply_pattern reflex_dictionary dictionary=<package> \
                                    headerfiles=$(<PACKAGE>ROOT)/$(tag)/dict/$(package)/<package>_dictionary.h \
                                    selectionfile=$(<PACKAGE>ROOT)/$(tag)/dict/$(package)/<package>_selection.xml \
@@ -25,3 +25,8 @@ pattern god_headers \
 
 use Python v* LCG_Interfaces
 use GaudiPolicy v*
+
+# Always switch off GaudiObjDesc custom allocators with debug or WIN32
+macro_append cppflags "" \
+                debug " -DGOD_NOALLOC " \
+                WIN32 " -DGOD_NOALLOC "

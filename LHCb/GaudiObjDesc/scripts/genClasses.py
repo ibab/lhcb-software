@@ -591,7 +591,7 @@ class genClasses(genSrcUtils.genSrcUtils):
 
     if allocatorType == 'BOOST': # Boost allocator with check on delete
       s ="""
-#ifndef _WIN32
+#ifndef GOD_NOALLOC
   /// operator new
   static void* operator new ( size_t size )
   {
@@ -627,7 +627,7 @@ class genClasses(genSrcUtils.genSrcUtils):
       
     elif allocatorType == 'BOOST2': # Boost allocator without check on delete
       s ="""
-#ifndef _WIN32
+#ifndef GOD_NOALLOC
   /// operator new
   static void* operator new ( size_t size )
   {
@@ -661,7 +661,7 @@ class genClasses(genSrcUtils.genSrcUtils):
       
     elif allocatorType == 'DEBUG': # Boost allocator with check on delete and debug print-out
       s = """
-#ifndef _WIN32
+#ifndef GOD_NOALLOC
   /// operator new
   static void* operator new ( size_t size )
   {
