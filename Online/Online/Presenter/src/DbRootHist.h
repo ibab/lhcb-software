@@ -13,6 +13,7 @@
 class DimInfo;
 class DimInfoMonObject;
 //class TPad;
+class TPave;
 class DimBrowser;
 
 enum ReferenceVisibility {
@@ -158,6 +159,10 @@ class DbRootHist : public HistogramIdentifier
     pres::MsgLevel m_verbosity;
     DimBrowser*       m_dimBrowser;
     std::string m_partition;
+
+    TPave* m_titpave;
+    TPave* m_statpave;
+
     void cleanAnaSources();
     void loadAnaSources();
     void initRootFromDim();
