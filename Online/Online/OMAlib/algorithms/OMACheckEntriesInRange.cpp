@@ -1,4 +1,4 @@
-//  $
+// $Id: OMACheckEntriesInRange.cpp,v 1.3 2008-09-26 14:39:20 ggiacomo Exp $
 #include <TH1F.h>
 #include <TF1.h>
 #include "OMAlib/OMAAlgorithms.h"
