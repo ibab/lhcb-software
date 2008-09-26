@@ -14,6 +14,8 @@ TASKTYPE=${3}
 export DIM_DNS_NODE=${4}
 export ONLINETASKS=/group/online/dataflow/templates
 
+###export SQLITEDBPATH=/dev/shm/SQL
+
 echo "[WARN] +++ Starting BRUNEL ${UTGID} of class ${TASKCLASS} ${TASKTYPE} with DNS:${DIM_DNS_NODE}"
 exec -a ${UTGID} \
     $GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe libGaudiOnline.so OnlineTask \

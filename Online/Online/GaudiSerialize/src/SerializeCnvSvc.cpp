@@ -1,4 +1,4 @@
-// $Id: SerializeCnvSvc.cpp,v 1.4 2008-09-23 13:03:23 frankb Exp $
+// $Id: SerializeCnvSvc.cpp,v 1.5 2008-09-26 08:26:05 frankb Exp $
 //====================================================================
 //	SerializeCnvSvc implementation
 //--------------------------------------------------------------------
@@ -34,15 +34,15 @@
 // ROOT include files
 #include "TROOT.h"
 #include "TClass.h"
-#include "TInterpreter.h"
 #include "TBufferFile.h"
+#include "TInterpreter.h"
 
 using ROOT::Reflex::PluginService;
 using namespace std;
 using namespace LHCb;
+typedef const std::string& CSTR;
 
 DECLARE_SERVICE_FACTORY(SerializeCnvSvc);
-typedef const std::string& CSTR;
 
 #define S_OK   StatusCode::SUCCESS
 #define S_FAIL StatusCode::FAILURE
@@ -53,8 +53,9 @@ namespace GaudiPoolDb  {  bool patchStreamers(MsgStream& s); }
 
 namespace {
   struct DataObjectPush {
-    DataObjectPush(DataObject*& p) {
-      pushCurrentDataObject(&p);
+    DataObject* m_ptr;
+    DataObjectPush(DataObject* p) : m_ptr(p) {
+      pushCurrentDataObject(&m_ptr);
     }
     ~DataObjectPush() {
       popCurrentDataObject();
@@ -215,11 +216,11 @@ StatusCode  SerializeCnvSvc::commitOutput(CSTR dsn, bool doCommit) {
       log << MSG::DEBUG << "Serializing " << dsn << " with " << m_objects.size() << " objects." << endmsg;
       map<string, TClass*> classes;
       int object_counter=1;
-      RawEvent* raw = new RawEvent();
+      std::auto_ptr<RawEvent> raw(new RawEvent());
       for(Objects::iterator i=m_objects.begin(); i != m_objects.end(); ++i)      {    
         TBufferFile rawBuffer(TBuffer::kWrite,256*1024);
 	DataObject* pObj = (*i);
-	DataObjectPush p(pObj);
+	DataObjectPush push_buffer(pObj);
 
 	// We build a map so gROOT has to access the whole class database as little as possible
 	string objClassName = System::typeinfoName(typeid(*pObj));
@@ -228,11 +229,11 @@ StatusCode  SerializeCnvSvc::commitOutput(CSTR dsn, bool doCommit) {
 	  classes[objClassName] = cl = gROOT->GetClass(objClassName.c_str());
 	}
 	if (cl==0){
-	  log<<MSG::ERROR<<"No valid class found for " << objClassName << endmsg;    
-	  return StatusCode::FAILURE;      
+	  log << MSG::ERROR << "No valid class found for " << objClassName << endmsg;    
+	  return S_FAIL;      
 	}
         
-	string loc=pObj->registry()->identifier();
+	string loc = pObj->registry()->identifier();
 	rawBuffer.WriteString(loc.c_str());
         rawBuffer << (long)pObj->clID();
 	rawBuffer.WriteString(cl->GetName());
@@ -267,7 +268,7 @@ StatusCode  SerializeCnvSvc::commitOutput(CSTR dsn, bool doCommit) {
 	if ( !odin.empty() ) {
 	  unsigned int trMask[] = {~0,~0,~0,0x10};
 	  const OnlineRunInfo* odin_bank=odin[0]->begin<OnlineRunInfo>();
-	  size_t len = rawEventLength(raw);
+	  size_t len = rawEventLength(raw.get());
 	  RawBank* hdrBank = raw->createBank(0, RawBank::DAQ, DAQ_STATUS_BANK, sizeof(MDFHeader)+sizeof(MDFHeader::Header1), 0);
 	  MDFHeader* hdr = (MDFHeader*)hdrBank->data();
 	  hdr->setChecksum(0);
@@ -286,10 +287,11 @@ StatusCode  SerializeCnvSvc::commitOutput(CSTR dsn, bool doCommit) {
 	}
       }
 
-      StatusCode sc = dataProvider()->registerObject(m_location,raw);
+      StatusCode sc = dataProvider()->registerObject(m_location,raw.get());
       if (!sc.isSuccess())   {
 	log << MSG::ERROR << "\"" << m_location << "\" not successfully registered"<<endmsg;
       }
+      raw.release();
     }
     // Rollback: just clear the object buffer!
     m_objects.clear();
@@ -318,7 +320,7 @@ StatusCode SerializeCnvSvc::createAddress(long  typ,
 					  IOpaqueAddress*& refpAddress) 
 {
   refpAddress = new SerializeAddress(typ,clid,par[0],par[1],ip[0],ip[1]);
-  return StatusCode::SUCCESS;
+  return S_OK;
 }
 
 /// Mark an object for write given an object reference
@@ -336,99 +338,77 @@ SerializeCnvSvc::writeObject(DataObject* pObj, IOpaqueAddress*& refpAddr)  {
 
 /// Read existing object. Open transaction in read mode if not active
 StatusCode SerializeCnvSvc::readObject(IOpaqueAddress* pA, DataObject*& refpObj)  {
-  char* memory = 0;
   refpObj = 0;
   if ( pA ) {
     MsgStream log(msgSvc(), name());
-    IRegistry* pReg = pA->registry();
-    string id = pReg->identifier();
-    RawDataAddress* pAddRaw = dynamic_cast<RawDataAddress*>(pA);
+    size_t len;
+    char text[4096], *p;
+    long class_id = 0;
     vector<RawBank*> banks;
-    pair<char*,int> d = pAddRaw->data();
-    
-    decodeRawBanks(d.first,d.first+d.second,banks);
-    for(vector<RawBank*>::const_iterator i=banks.begin(); i!=banks.end();++i)  {
-      // log << RawEventPrintout::bankHeader(*i) << endmsg;      
-    }
-    
-    for(vector<RawBank*>::const_iterator i=banks.begin(); i!=banks.end();++i)  {
-      RawBank* readBank = *i;
-      if ( readBank->version() == 0 && id == readBank->begin<char>() ) { //We only want banks with version()=0
-        int srcID = readBank->sourceID();
-        size_t len = 0;
-        for(vector<RawBank*>::const_iterator k=banks.begin(); k!=banks.end();++k)  {
-          RawBank* checkBank = *k;
-          if ( checkBank->sourceID() == srcID ) { //Banks with the same sourceID() correspond to the same DataObject
-            len += checkBank->size();
-          } 
-        }
-        if ( len > 32*1024 ) { // We need to concatenate banks if the total size of the data is greater than 32*1024
-          log << MSG::INFO << "Need to concatenate banks (length is "<<len<<")!" << endmsg;
-        }
+    IRegistry* pReg = pA->registry();
+    string id       = pReg->identifier();
+    RawDataAddress* pAraw = dynamic_cast<RawDataAddress*>(pA);
+    pair<char*,int> d = pAraw->data();
 
-	//  The TBuffer is filled with as many banks as necessary        
-        memory = new char[len];
-        char* mem = memory;
-        for(vector<RawBank*>::const_iterator k=banks.begin(); k!=banks.end();++k)  {
-          RawBank* copyBank = *k;
-          if ( copyBank->sourceID() == srcID ) {
-            memcpy(mem,copyBank->begin<char>(),copyBank->size());
-            mem += copyBank->size();
+    decodeRawBanks(d.first,d.first+d.second,banks);
+    for(vector<RawBank*>::const_iterator k, i=banks.begin(); i!=banks.end();++i)  {
+      if ( (*i)->version() == 0 && id == (*i)->begin<char>() ) { //We only want banks with version()=0
+	RawBank *readBank = *i;
+        for (len=0, k=banks.begin(); k!=banks.end(); ++k)  {
+	  // Banks with the same sourceID() correspond to the same DataObject and need to be concatenated
+          if ( (*k)->sourceID() == readBank->sourceID() )
+            len += (*k)->size();
+        }
+	//  The TBuffer is filled with as many banks as necessary. The memory is adopted by the TBuffer!
+        TBufferFile buffer(TBuffer::kRead,len,p=new char[len],kTRUE); 
+        for( k=banks.begin(); k!=banks.end(); ++k)  {
+          if ( (*k)->sourceID() == readBank->sourceID() ) {
+            ::memcpy(p,(*k)->begin<char>(),(*k)->size());
+            p += (*k)->size();
           }
         }
-      
-	//  The TBuffer is read
-        char text[4096];
-        long class_id = 0;
-        TBufferFile buffer(TBuffer::kRead,len,memory,kFALSE);
-        buffer.ReadString(text,sizeof(text));
-        buffer >> class_id;        
-        buffer.ReadString(text,sizeof(text));
-	TClass* cl = gROOT->GetClass(text);        
-	char* obj = (char *)cl->New();
-        DataObject* pObj = (DataObject*)obj;
-	DataObjectPush push(pObj); // This is magic!
-        cl->Streamer(obj, buffer);
 
-        if ( pObj ) { // Restore links
+        buffer.ReadString(text,sizeof(text));
+        buffer >> class_id;
+        buffer.ReadString(text,sizeof(text));
+	TClass* cl = gROOT->GetClass(text);
+        std::auto_ptr<DataObject> pObj(cl ? (DataObject*)cl->New() : 0);
+        if ( pObj.get() ) { // Restore links
           int nlink = 0;
           LinkManager* lnkMgr = pObj->linkMgr();
+	  DataObjectPush push(pObj.get());
+	  cl->Streamer(pObj.get(), buffer);
           buffer >> nlink;
-          log << MSG::DEBUG << "Adding links: " << nlink << endmsg;
-          
-          for (int i=0; i<nlink; ++i) {
+          for (int cnt=0; cnt<nlink; ++cnt) {
             buffer.ReadString(text,sizeof(text));
-            log << MSG::INFO << "    ->Adding links: " << text << endmsg;
             lnkMgr->addLink(text,0);
           }
-          // Now register addresses! We need to register the leaves of the object (some string magic)
-          for(vector<RawBank*>::const_iterator j=banks.begin(); j!=banks.end();++j)  {
-            RawBank* loopBank = *j;
-            if ( loopBank->version() == 0 && loopBank != readBank ) {
-              const char* name = loopBank->begin<char>();
-              if ( 0 == ::strncmp(name,id.c_str(),id.length()) ) {
-                name += id.length();
-                if ( strchr(name+1,'/') == 0 ) {
-                  RawDataAddress* leafAddr = new RawDataAddress(*pAddRaw);
-                  StatusCode sc = m_dataMgr->registerAddress(pReg, name, leafAddr);
-                  if ( !sc.isSuccess() )  {
-                    leafAddr->release();
-                    error("Failed to register address for object "+string(name));
-                  }
+          // Now register addresses and the leaves of the object
+	  // We have stored the full registry identifier in the beginning of the TBuffer
+	  // We also rely on the fact that ROOT does not add magic in front of the TBuffer
+          for( k=banks.begin(); k!=banks.end(); ++k)  {
+            if ( (*k)->version() == 0 && (*k) != readBank ) {
+              p = (*k)->begin<char>();
+              if ( 0 == ::strncmp(p,id.c_str(),id.length()) ) {
+                p += id.length();
+                if ( ::strchr(p+1,'/') == 0 ) { // May not be sub-leaf further down the tree!
+                  std::auto_ptr<RawDataAddress> leaf(new RawDataAddress(*pAraw));
+                  StatusCode sc = m_dataMgr->registerAddress(pReg,p,leaf.get());
+                  if ( sc.isSuccess() )
+		    leaf.release();
+		  else
+                    error("Failed to register address for object "+string(p));
                 }
               }
             }
           }
-          refpObj = pObj;  // Return the desired object
-          delete [] memory;          
-          return StatusCode::SUCCESS;
-        }        
-        delete [] memory;          
+          refpObj = pObj.release();
+          return S_OK;
+        }
         return error("read> Cannot read object "+id);
       }
     }
   }
-  delete [] memory;          
   return error("read> Cannot read object "+pA->registry()->identifier()+" ");
 }
 
