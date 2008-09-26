@@ -39,8 +39,8 @@ extern "C" {
  #define debug print
  #define debugPyObject printPyObject
 #else
- #define debug(...) /* __VA_ARGS__ */
- #define debugPyObject(...) /* __VA_ARGS__ */
+inline void debug(const char*,...) {}
+inline void debugPyObject(PyObject*) {}
 #endif
 
 #ifndef HOST_NAME_MAX
