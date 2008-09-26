@@ -121,8 +121,14 @@ void Archive::fillHistogram(DbRootHist* histogram,
           histogram->rootHistogram = NULL;
         }
         TH1* archiveHisto;
-        rootFile.GetObject((histogram->onlineHistogram()->hname()).c_str(),
+        std::string rootHistoName = histogram->onlineHistogram()->algorithm()+
+          "/"+histogram->onlineHistogram()->hname();
+        rootFile.GetObject(rootHistoName.c_str(),
                            archiveHisto);
+        if (!archiveHisto) { // try w/o algorithm name (to be bkwd compat.)
+          rootFile.GetObject((histogram->onlineHistogram()->hname()).c_str(),
+                             archiveHisto);
+        }
         if (archiveHisto) {
           histogram->rootHistogram = archiveHisto;
         }

@@ -1221,6 +1221,7 @@ void PresenterMainFrame::setArchiveRoot(const std::string & archiveRoot) {
 }
 void PresenterMainFrame::setReferencePath(const std::string & referencePath) {
   m_referencePath = m_archiveRoot + referencePath;
+  if (m_analysisLib) m_analysisLib->setRefRoot(m_referencePath);
   if (!m_referencePath.empty()) {
     if (0 != m_archive) {
       m_archive->setReferencePath(m_archiveRoot + m_referencePath);
@@ -1361,6 +1362,7 @@ bool PresenterMainFrame::connectToHistogramDB(const std::string & dbPassword,
       m_localDatabasePages.reserve(m_histogramDB->nPages());
       m_localDatabaseFolders.reserve(m_histogramDB->nPageFolders());
 
+      m_histogramDB->setRefRoot(m_referencePath);
       m_analysisLib = new OMAlib(m_histogramDB);
       if (0 != m_archive) { m_archive->setAnalysisLib(m_analysisLib); }
 
@@ -1771,11 +1773,11 @@ void PresenterMainFrame::setTreeNodeIcon(TGListTreeItem* node,
 {
   const TGPicture*  m_icon;
   if (s_H1D == type || 
-      s_pfixMonH1D == type ||
+//      s_pfixMonH1D == type ||
       s_pfixMonH1F == type ) {
     m_icon = m_iconH1D;
   } else if (s_H2D == type ||
-      s_pfixMonH2D == type ||
+//      s_pfixMonH2D == type ||
       s_pfixMonH2F == type ) {
     m_icon = m_iconH2D;
   } else if (s_P1D == type ||
@@ -3216,7 +3218,7 @@ void PresenterMainFrame::deleteSelectedHistoFromCanvas()
         foundSelectedHisto = true;
         break;
       }
-      ++dbHistosOnPageIt;
+      if (false == foundSelectedHisto) { ++dbHistosOnPageIt; }
     }
     if (foundSelectedHisto) {
       new TGMsgBox(fClient->GetRoot(), this, "Remove Histogram",
@@ -3248,7 +3250,7 @@ DbRootHist* PresenterMainFrame::selectedDbRootHistogram()
         foundSelectedHisto = true;
         break;
       }
-      ++dbHistosOnPageIt;
+      if (false == foundSelectedHisto) { ++dbHistosOnPageIt; }
     }
     if (foundSelectedHisto) {
       return *dbHistosOnPageIt;
