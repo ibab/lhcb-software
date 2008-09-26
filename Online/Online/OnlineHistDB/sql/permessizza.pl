@@ -55,7 +55,7 @@ for (`cat tables.sql`) {
   }
   if ($seq) {
     print SYNO "CREATE OR REPLACE SYNONYM ${seq} FOR HIST_ADMIN.${seq};\n";
-    print PERM "GRANT EXECUTE ON ${seq} TO HIST_WRITER;\n";
+    print PERM "GRANT ALTER ON ${seq} TO HIST_WRITER;\n";
     print PERM "GRANT SELECT ON ${seq} TO HIST_WRITER;\n";
   }
   
