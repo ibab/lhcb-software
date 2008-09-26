@@ -53,9 +53,9 @@ int upic_delete_comment (int menu_id, int item_id)    {
 
 //---------------------------------------------------------------------------
 int upic_delete_command (int menu_id, int item_id)  {
-  Menu* m;
-  Item* i;
   int row;
+  Menu *m;
+  Item *i;
   if (!(m = upic_find_menu(menu_id))) return UPI_SS_INVMENU;
   Page* d = m->page.first;
   if (!d || !(i = (Item*) upic_find_item_row(d->item.first, item_id, &row)))
@@ -63,6 +63,7 @@ int upic_delete_command (int menu_id, int item_id)  {
 
 #ifdef SCREEN
   scrc_begin_pasteboard_update (Sys.pb);
+  Item* dropped = i;
 #endif
 
   d = Page_address(i->father);
@@ -70,7 +71,6 @@ int upic_delete_command (int menu_id, int item_id)  {
   /*  First delete underlaying structure  */
   if (i->to) upic_delete_menu (i->to->id);
 
-  Item* dropped = i;
   upic_drop_item(i);
   m->items--;
   if (Sys.menu.cur == m)  {
