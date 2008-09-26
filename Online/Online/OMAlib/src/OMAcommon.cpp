@@ -1,4 +1,4 @@
-// $Id: OMAcommon.cpp,v 1.3 2008-09-25 15:38:30 ggiacomo Exp $
+// $Id: OMAcommon.cpp,v 1.4 2008-09-26 14:35:41 ggiacomo Exp $
 
 #include "OMAlib/OMAcommon.h"
 
@@ -32,8 +32,11 @@ TH1* OMAcommon::getReference(OnlineHistogram* h,
             << startrun << ".root";
     TFile* f = new TFile(refFile.str().c_str(),"READ");
     if(f) {
-      if (false == f->IsZombie() ) {
-        TH1* ref = (TH1*) f->Get(h->hname().c_str());
+      if (false == f->IsZombie() ) {        
+        TH1* ref = (TH1*) f->Get((h->algorithm()+"/"+h->hname()).c_str());
+        if(!ref) { // try w/o algorithm name
+           ref = (TH1*) f->Get(h->hname().c_str());
+        }
         if (ref) {
           ref->SetDirectory(0);
           out = ref;

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAAlgorithms.h,v 1.7 2008-08-19 22:45:31 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAAlgorithms.h,v 1.8 2008-09-26 14:35:41 ggiacomo Exp $
 #ifndef OMALIB_OMAALGORITHMS_H
 #define OMALIB_OMAALGORITHMS_H 1
 
@@ -114,6 +114,20 @@ class OMACompareToReference : public OMACheckAlg
                     std::string& taskName,
                     TH1* Ref);
 };
+
+class OMACheckEntriesInRange : public OMACheckAlg
+{
+ public:
+  OMACheckEntriesInRange(OMAcommon* Env);
+  virtual void exec(TH1 &Histo,
+                    std::vector<float> & warn_thresholds,
+                    std::vector<float> & alarm_thresholds,
+                    std::vector<float> & input_pars,
+                    unsigned int anaID,
+                    std::string& taskName,
+                    TH1* Ref);
+};
+
 
 //------ Histogram Creator Algorithms ------------------//
 

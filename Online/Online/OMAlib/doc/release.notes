@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.9 2008-08-19 22:45:32 ggiacomo Exp $
+! $Id: release.notes,v 1.10 2008-09-26 14:35:41 ggiacomo Exp $
 ! Package     : OMAlib
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
 
+! 20080926 - OMAlib v1r4
+  - improvements on finding reference histograms
+  - new algorithm OMACheckEntriesInRange
 
 ! 20080819 - OMAlib v1r3
   - alarm logger mechanism

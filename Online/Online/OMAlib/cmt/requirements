@@ -3,7 +3,7 @@
 # Maintainer : Giacomo Graziani 
 # =============================================================================
 package          OMAlib
-version          v1r3
+version          v1r4
 
 branches src cmt doc OMAlib
 
@@ -29,7 +29,6 @@ private
 use   GaudiOnline      v*       Online -no_auto_imports
 use   Gaudi            v*              -no_auto_imports
 
-#application AutoAnalysis $(OMALIBROOT)/main/AutoAnalysis.cpp
 
 #===============================================================
 
