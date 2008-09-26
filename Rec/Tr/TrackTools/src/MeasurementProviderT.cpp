@@ -1,4 +1,4 @@
-// $Id: MeasurementProviderT.cpp,v 1.11 2008-05-29 14:05:18 smenzeme Exp $
+// $Id: MeasurementProviderT.cpp,v 1.12 2008-09-26 13:12:39 wouter Exp $
 // Include files
 
 //=============================================================================
@@ -54,6 +54,7 @@ private:
 
 private:
   bool m_useReference ;
+  std::string m_clusterLocation ;
   ToolHandle<typename T::PositionToolType> m_positiontool ;
   const typename T::DetectorType* m_det;
   mutable typename T::ClusterContainerType* m_clusters;
@@ -79,6 +80,7 @@ MeasurementProviderT<T>::MeasurementProviderT( const std::string& type,
 {
   declareInterface<IMeasurementProvider>(this);
   declareProperty( "UseReference", m_useReference = true );
+  declareProperty( "ClusterLocation", m_clusterLocation = T::defaultClusterLocation() ) ;
 }
 
 //-----------------------------------------------------------------------------
@@ -121,7 +123,7 @@ template <typename T>
 const typename T::ClusterContainerType* MeasurementProviderT<T>::clusters() const
 {
   if( !m_clusters )
-    m_clusters = get<typename T::ClusterContainerType>( T::defaultClusterLocation() );
+    m_clusters = get<typename T::ClusterContainerType>( m_clusterLocation );
   return m_clusters ;
 }
 
