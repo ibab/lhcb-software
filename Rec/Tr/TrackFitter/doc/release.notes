@@ -1,7 +1,10 @@
 !----------------------------------------------------------------------------
 ! Package     : Tr/TrackFitter
-! Responsible : Eduardo Rodrigues, Jose A. Hernando
+! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
+
+! 2008-09-26 - Wouter Hulsbergen
+ - added ConfiguredStraightLineFit
 
 ! 2008-09-15 - Wouter Hulsbergen
  - use new function in TrackProjector interface
