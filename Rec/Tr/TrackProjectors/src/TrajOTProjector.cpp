@@ -70,8 +70,7 @@ StatusCode TrajOTProjector::project( const LHCb::StateVector& statevector,
 StatusCode TrajOTProjector::initialize()
 {
   StatusCode sc = TrackProjector::initialize();
-  if( sc.isFailure() ) { return Error( "Failed to initialize!", sc ); }
-
+  info() << "Use drifttime = " << m_useDrift << endreq ;
   return sc;
 }
 
