@@ -1,4 +1,4 @@
-// $Id: PowercutRecovery.cpp,v 1.1 2008-09-18 13:08:22 frankb Exp $
+// $Id: PowercutRecovery.cpp,v 1.2 2008-09-26 16:05:41 frankb Exp $
 //====================================================================
 //  OnlineTools
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineTools/src/PowercutRecovery.cpp,v 1.1 2008-09-18 13:08:22 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineTools/src/PowercutRecovery.cpp,v 1.2 2008-09-26 16:05:41 frankb Exp $
 
 // Framework include files
 #include <sstream>
@@ -56,18 +56,43 @@ static void load(const string& name,
   }
 }
 
-static void load(ProcessorGroup& items,Interactor* msg) {
-  load("/admin/scripts/ipmi/d1allpc.txt","D1",4,items,msg);
-  load("/admin/scripts/ipmi/d2allpc.txt","D2",2,items,msg);
-  load("/admin/scripts/ipmi/d3allpc.txt","D3",0,items,msg);
+static void load_geo(ProcessorGroup& items,Interactor* msg) {
+  load("/group/online/piquet/nodelists/d1allpc.txt","D1",4,items,msg);
+  load("/group/online/piquet/nodelists/d2allpc.txt","D2",2,items,msg);
+  load("/group/online/piquet/nodelists/d3allpc.txt","D3",0,items,msg);
 }
 
+static void load_hlt(ProcessorGroup& items,Interactor* msg) {
+  load("/group/online/piquet/nodelists/farmcontrolC.txt","FarmControlC",4,items,msg);
+  load("/group/online/piquet/nodelists/farmcontrolD.txt","FarmControlD",4,items,msg);
+  load("/group/online/piquet/nodelists/farmnodesA.txt","A",6,items,msg);
+  load("/group/online/piquet/nodelists/farmnodesB.txt","B",6,items,msg);
+  load("/group/online/piquet/nodelists/farmnodesC.txt","C",6,items,msg);
+  load("/group/online/piquet/nodelists/farmnodesD.txt","D",6,items,msg);
+  load("/group/online/piquet/nodelists/farmnodesE.txt","E",6,items,msg);
+}
+static void load_moni(ProcessorGroup& items,Interactor* msg) {
+  load("/group/online/piquet/nodelists/mona06.txt","06",6,items,msg);
+  load("/group/online/piquet/nodelists/mona07.txt","07",6,items,msg);
+  load("/group/online/piquet/nodelists/mona09.txt","09",6,items,msg);
+}
+
+static void help() {}
+
 /// Standard constructor
-PowercutRecovery::PowercutRecovery(int, char**) 
+PowercutRecovery::PowercutRecovery(int argc, char** argv) 
 {
+  RTL::CLI cli(argc,argv,help);
   m_messageLog = new ROLogger::Logger(RTL::processName()+"_display");
   m_processors = new ProcessorGroup("All",m_messageLog);
-  load(*m_processors,m_messageLog);
+  if ( cli.getopt("hlt",1) != 0 )
+    load_hlt(*m_processors,m_messageLog);
+  else if ( cli.getopt("geographic",1) != 0 ) 
+    load_hlt(*m_processors,m_messageLog);
+  else if ( cli.getopt("monitoring",1) != 0 ) 
+    load_moni(*m_processors,m_messageLog);
+  else
+    load_geo(*m_processors,m_messageLog);
   m_display = new ProcessorDisplay(this,m_messageLog,m_processors);
 }
 

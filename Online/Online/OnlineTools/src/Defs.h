@@ -16,6 +16,7 @@ namespace OnlineTools {
     CMD_APPLY   = 12008,
     CMD_SHOW    = 12010,
     CMD_DELETE  = 12014,
+    CMD_CANCEL  = 12016,
     CMD_EXECUTE = 25000,
     CMD_LAST
   };

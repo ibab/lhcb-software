@@ -1,63 +1,4 @@
-#include <map>
-#include <string>
-
-namespace ROLogger {
-
-  // Forward declarations
-  class LogFileEntry;
-  /**
-  */
-  class LogDirectory {
-    /// Definition of file map
-    typedef std::map<std::string,LogFileEntry*> Files;
-    /// Directory path
-    std::string m_name;
-    /// Node name
-    std::string m_node;
-    /// Process name
-    std::string m_process;
-    /// Maximum time difference to changes to log files in order to be taken into account
-    time_t      m_maxFileChange;
-    /// Map of known log files
-    Files       m_files;
-    /// FIFO file descriptor
-    int m_fifo;
-    /// Max. number of seconds before checking for new files
-    int m_checkLimit;
-    /// Time stamp of last file existence check.
-    time_t m_lastChecked;
-
-    std::string _prefix(const std::string& tag="INFO") const;
-  public:
-
-    /// Initializing constructor
-    LogDirectory(const std::string& nam);
-    /// Default destructor
-    virtual ~LogDirectory(); 
-
-    /// Connect output fifo
-    int connect(const std::string& fifo);
-    /// Open all log files
-    int open(bool begin,bool prt);
-    /// Close all log files
-    int close();
-    /// Read directory content
-    int read(bool prt);
-    /// Print content of log files as they come....
-    int publish();
-    /// Check directory for new log files
-    void checkFiles();
-    /// Print message to output device
-    virtual int print(const std::string& msg);
-    /// Dump directory content
-    void dump();
-    /// Access directory name
-    const std::string& name() const { return m_name;  }
-    /// Access file map
-    const Files& files() const      { return m_files; }
-  };
-}
-
+#include "ROLogger/PVSSLogger.h"
 #include <sstream>
 #include <iostream>
 #include <iomanip>
@@ -76,17 +17,20 @@ namespace ROLogger {
 inline bool S_ISFIFO(int) { return false; }
 #endif
 
+using namespace ROLogger;
+using namespace std;
+
 namespace ROLogger {
   class LogFileEntry {
   public:
     struct stat   data;
     size_t        pointer;
     int           fd;
-    std::string   remainder;
+    string        remainder;
     LogFileEntry() : pointer(0), fd(0)     {    
       ::memset(&data,0,sizeof(data));
     }
-    LogFileEntry(const std::string& name) : fd(0)    {
+    LogFileEntry(const string& name) : fd(0)    {
       ::memset(&data,0,sizeof(data));
       ::stat(name.c_str(),&data);
       pointer = data.st_size;
@@ -99,7 +43,7 @@ namespace ROLogger {
     ~LogFileEntry()     {    
       if ( fd != 0 ) ::close(fd);
     }
-    int open(const std::string& fn, bool begin) {
+    int open(const string& fn, bool begin) {
       fd = ::open(fn.c_str(),O_RDONLY);
       pointer = begin ? 0 : data.st_size;
       if ( fd != -1 ) {
@@ -112,9 +56,7 @@ namespace ROLogger {
   };
 }
 
-using namespace ROLogger;
-
-std::string LogDirectory::_prefix(const std::string& tag) const {
+string PVSSLogger::_prefix(const string& tag) const {
   char prefix[132];
   time_t tim = ::time(0);
   tm* now = ::localtime(&tim);
@@ -127,7 +69,7 @@ std::string LogDirectory::_prefix(const std::string& tag) const {
 }
 
 /// Initializing constructor
-LogDirectory::LogDirectory(const std::string& nam)
+PVSSLogger::PVSSLogger(const string& nam)
 : m_name(nam), m_node("Unknown"), m_fifo(-1)
 {
   m_checkLimit = 3;
@@ -138,7 +80,7 @@ LogDirectory::LogDirectory(const std::string& nam)
 }
 
 /// Default destructor
-LogDirectory::~LogDirectory()
+PVSSLogger::~PVSSLogger()
 {
   if ( m_fifo != -1 ) {
     ::close(m_fifo);
@@ -147,7 +89,7 @@ LogDirectory::~LogDirectory()
 }
 
 /// Connect output fifo
-int LogDirectory::connect(const std::string& fifo) {
+int PVSSLogger::connect(const string& fifo) {
   struct stat statBuf;
   if( ::access(fifo.c_str(),W_OK) == -1 )    { // access denied
     ::printf("access(\"%s\"): %s!\n",fifo.c_str(),::strerror(errno));
@@ -181,34 +123,34 @@ int LogDirectory::connect(const std::string& fifo) {
 }
 
 /// Read directory content
-int LogDirectory::read(bool prt) {
-  std::string prefix = _prefix();
+int PVSSLogger::read(bool prt) {
+  string prefix = _prefix();
   DIR* dir=::opendir(m_name.c_str());
   if ( dir ) {
     time_t now = time(0);
     struct dirent* dp;
     while( (dp=::readdir(dir)) != 0 ) {
-      std::string fn = dp->d_name;
+      string fn = dp->d_name;
       size_t idx = fn.rfind(".");
       if ( fn.substr(idx) == ".log" ) {
         Files::iterator i=m_files.find(fn);
         if ( i == m_files.end() ) {
-          std::auto_ptr<LogFileEntry> e(new LogFileEntry(m_name+"/"+fn));
+          auto_ptr<LogFileEntry> e(new LogFileEntry(m_name+"/"+fn));
           if ( now-e->data.st_mtime < m_maxFileChange ) {
             // file needs to be modified at least during the last week.....
             m_files[fn] = e.release();
           }
           else if ( prt ) {
             const struct stat& s = e->data;
-            std::string mod = ::ctime(&e->data.st_mtime);
-            std::stringstream os;
-            os << prefix << std::left << std::setw(28) 
+            string mod = ::ctime(&e->data.st_mtime);
+            stringstream os;
+            os << prefix << left << setw(28) 
               << fn.substr(0,fn.length()-4)+": " 
               << "Last Modified: " << mod.substr(0,mod.length()-1)
-              << " Size:" << std::setw(9) << std::right << s.st_size
-              << " INode:" << std::setw(6) << std::right << s.st_ino
+              << " Size:" << setw(9) << right << s.st_size
+              << " INode:" << setw(6) << right << s.st_ino
               << "   ---> File too old and ignored"
-              << std::endl;
+              << endl;
             print(os.str());
           }
         }
@@ -222,25 +164,25 @@ int LogDirectory::read(bool prt) {
 }
 
 /// Dump directory content
-void LogDirectory::dump() {
-  std::string prefix = _prefix();
+void PVSSLogger::dump() {
+  string prefix = _prefix();
   for(Files::const_iterator i=m_files.begin(); i!=m_files.end();++i)  {
     const struct stat& s = (*i).second->data;
-    const std::string& fn = (*i).first;
-    std::string mod = ::ctime(&s.st_mtime);
-    std::stringstream os;
-    os << prefix << std::left << std::setw(28) 
+    const string& fn = (*i).first;
+    string mod = ::ctime(&s.st_mtime);
+    stringstream os;
+    os << prefix << left << setw(28) 
       << fn.substr(0,fn.length()-4)+": " 
       << "Last Modified: " << mod.substr(0,mod.length()-1)
-      << " Size:" << std::setw(9) << std::right << s.st_size
-      << " INode:" << std::setw(6) << std::right << s.st_ino
-      << std::endl;
+      << " Size:" << setw(9) << right << s.st_size
+      << " INode:" << setw(6) << right << s.st_ino
+      << endl;
     print(os.str());
   }
 }
 
 /// Open all log files
-int LogDirectory::open(bool begin, bool prt) {
+int PVSSLogger::open(bool begin, bool prt) {
   int ret = 1;
   for(Files::iterator i=m_files.begin(); i!=m_files.end();++i)  {
     if ( (*i).second->fd == 0 ) {
@@ -254,7 +196,7 @@ int LogDirectory::open(bool begin, bool prt) {
 }
 
 /// Close all log files
-int LogDirectory::close() {
+int PVSSLogger::close() {
   for(Files::iterator i=m_files.begin(); i!=m_files.end();++i)
     delete (*i).second;
   m_files.clear();
@@ -262,8 +204,8 @@ int LogDirectory::close() {
 }
 
 /// Print message to output device
-int LogDirectory::print(const std::string& msg) {
-  //std::cout << msg << std::endl;
+int PVSSLogger::print(const string& msg) {
+  //cout << msg << endl;
   const char* p = msg.c_str();
   for(size_t wr=msg.length(), written=0; written<wr; ) {
     int w = ::write(m_fifo,p+written,wr-written);
@@ -276,21 +218,21 @@ int LogDirectory::print(const std::string& msg) {
 }
 
 /// Print content of log files as they come....
-int LogDirectory::publish() {
+int PVSSLogger::publish() {
   size_t bytes, rd, buff_len = 0;
   char *buff = 0;
-  std::string prefix = _prefix();
-  std::string pref_err = _prefix("ERROR");
-  std::string pref_warn = _prefix("WARN");
+  string prefix = _prefix();
+  string pref_err = _prefix("ERROR");
+  string pref_warn = _prefix("WARN");
 
   ::lib_rtl_sleep(50);
   for(Files::iterator i=m_files.begin(); i!=m_files.end();++i)  {
-    const std::string& fn = (*i).first;
+    const string& fn = (*i).first;
     LogFileEntry* e = (*i).second;
     int fd = e->fd;
     int res = ::fstat(fd,&e->data);
     if ( res < 0 ) {
-      std::cout << "Failed to stat " << fn << std::endl;
+      cout << "Failed to stat " << fn << endl;
       continue;
     }
     bytes = e->data.st_size-e->pointer;
@@ -332,14 +274,14 @@ int LogDirectory::publish() {
           use = use && ::strstr(p0,"parenttype ") == 0;
           use = use && ::strstr(p0,"<GAUDIJOB:") == 0;
           if ( use ) {
-            std::stringstream os;
-            std::string pref = prefix;
+            stringstream os;
+            string pref = prefix;
             if ( strstr(p0,"ERROR") )
               pref = pref_err;
             else if ( strstr(p0,"> can not execute action <") )
               pref = pref_warn;
-            os << std::left << std::setw(60) << pref+fn.substr(0,fn.length()-4)+": " 
-              << e->remainder << p0 << std::endl;
+            os << left << setw(60) << pref+fn.substr(0,fn.length()-4)+": " 
+              << e->remainder << p0 << endl;
             print(os.str());
           }
           e->remainder = "";
@@ -355,11 +297,11 @@ int LogDirectory::publish() {
 }
 
 /// Check directory for new log files
-void LogDirectory::checkFiles() {
+void PVSSLogger::checkFiles() {
   if ( ::time(0)-m_lastChecked > m_checkLimit ) {
     for(Files::iterator i=m_files.begin(); i!=m_files.end();++i)  {
       struct stat buf;
-      const std::string& fn = (*i).first;
+      const string& fn = (*i).first;
       LogFileEntry* e = (*i).second;
       int res = ::stat(fn.c_str(),&buf);
       if ( 0 == res  ) {
@@ -382,8 +324,8 @@ void LogDirectory::checkFiles() {
 }
 
 extern "C" int romon_pvss_logger(int, char** argv) {
-  //LogDirectory dir("/localdisk/pvss/STORAGE/log");
-  LogDirectory dir(argv[1]);
+  //PVSSLogger dir("/localdisk/pvss/STORAGE/log");
+  PVSSLogger dir(argv[1]);
   if ( dir.connect("/tmp/logPVSS.fifo") ) {
     if ( dir.read(true) ) {
       dir.dump();

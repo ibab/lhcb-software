@@ -1,4 +1,4 @@
-// $Id: MessageLogger.cpp,v 1.12 2008-09-18 13:04:14 frankb Exp $
+// $Id: MessageLogger.cpp,v 1.13 2008-09-26 16:05:41 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/MessageLogger.cpp,v 1.12 2008-09-18 13:04:14 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/MessageLogger.cpp,v 1.13 2008-09-26 16:05:41 frankb Exp $
 // Framework include files
 #include <cerrno>
 #include <cstdarg>
@@ -20,6 +20,7 @@
 #include "RTL/rtl.h"
 #include "RTL/strdef.h"
 #include "RTL/graphics.h"
+#include "CPP/IocSensor.h"
 #include "CPP/Event.h"
 
 #include "ROLogger/MessageLogger.h"
@@ -36,11 +37,12 @@ extern "C" {
 
 using namespace ROLogger;
 using namespace graphics;
+using namespace std;
 
 /// Extract the source of a message from the message line
-static std::string msg_src(const std::string& m) {
+static string msg_src(const string& m) {
   size_t idx = m.find("]"), idq = m.find(":");
-  if ( idx != std::string::npos && idq != std::string::npos ) {
+  if ( idx != string::npos && idq != string::npos ) {
     while(m[++idx]==' ');
     return m.substr(idx,idq-idx);
   }
@@ -51,7 +53,7 @@ static std::string msg_src(const std::string& m) {
 MessageLogger::MessageLogger(int argc, char** argv) 
 : m_severity(3), m_colors(true), m_historySize(0), m_wrapped(false)
 {
-  std::string name;
+  string name;
   RTL::CLI cli(argc, argv, help_fun);
   cli.getopt("service",1,name);
   cli.getopt("buffer",1,m_historySize);
@@ -170,25 +172,25 @@ void MessageLogger::updateHistory(const char* msg) {
 }
 
 /// Print history records from stored memory
-void MessageLogger::printHistory(const std::string& pattern) {
+void MessageLogger::printHistory(const string& pattern) {
   char text[132];
   int  num=200, match = 0, displayed=0;
   size_t numMsg = num;
 
   size_t idq, id1 = pattern.find("#Node:{"), id2 = pattern.find("#Msg:{"), id3 = pattern.find("#Num:{");
-  std::string node_pattern = "*", msg_pattern = "*", tmp;
-  std::vector<const char*> messages;
-  if ( id1 != std::string::npos ) {
+  string node_pattern = "*", msg_pattern = "*", tmp;
+  vector<const char*> messages;
+  if ( id1 != string::npos ) {
     idq = pattern.find("}",id1);
     node_pattern = pattern.substr(id1+7,idq-id1-7);
   }
-  if ( id2 != std::string::npos ) {
+  if ( id2 != string::npos ) {
     idq = pattern.find("}",id2);
     msg_pattern = pattern.substr(id2+6,idq-id2-6);
   }
-  if ( id3 != std::string::npos ) {
+  if ( id3 != string::npos ) {
     idq = pattern.find("}",id3);
-    std::string tmp = pattern.substr(id3+6,idq-id3-6);
+    string tmp = pattern.substr(id3+6,idq-id3-6);
     if ( 1 == ::sscanf(tmp.c_str(),"%d",&num) ) {
       numMsg = num;
     }
@@ -197,8 +199,8 @@ void MessageLogger::printHistory(const std::string& pattern) {
   History::iterator i = m_histIter, n = m_histIter;
   if ( m_wrapped ) {
     for(; i != m_history.end(); ++i) {
-      const std::string& m = *i;
-      const std::string  src = msg_src(m);
+      const string& m = *i;
+      const string  src = msg_src(m);
       if ( !src.empty() ) {
         if ( ::strcase_match_wild(src.c_str(),node_pattern.c_str()) ) {
           if ( ::strcase_match_wild(m.c_str()+idq+1,msg_pattern.c_str()) ) {
@@ -213,8 +215,8 @@ void MessageLogger::printHistory(const std::string& pattern) {
     }
   }
   for(i=m_history.begin(); i != n; ++i) {
-    const std::string& m = *i;
-    const std::string  src = msg_src(m);
+    const string& m = *i;
+    const string  src = msg_src(m);
     if ( !src.empty() ) {
       if ( ::strcase_match_wild(src.c_str(),node_pattern.c_str()) ) {
         if ( ::strcase_match_wild(m.c_str()+idq+1,msg_pattern.c_str()) ) {
@@ -237,15 +239,15 @@ void MessageLogger::printHistory(const std::string& pattern) {
 
 /// Print summary of history records from stored memory
 void MessageLogger::summarizeHistory() {
-  typedef std::map<std::string,std::vector<int> > DataMap;
+  typedef map<string,vector<int> > DataMap;
   int sev, num_msg=0;
   char text[512];
   DataMap data;
   printHeader("Logger history summary");
   for(History::const_iterator i=m_history.begin(); i != m_history.end(); ++i) {
-    const std::string& m = *i;
+    const string& m = *i;
     if ( !m.empty() ) {
-      std::string src = msg_src(m);
+      string src = msg_src(m);
       if ( !src.empty() ) {
         DataMap::iterator i = data.find(src);
         if ( i==data.end() ) data[src].resize(MessageLine::Msg_Always+1);
@@ -256,7 +258,7 @@ void MessageLogger::summarizeHistory() {
     }
   }
   for(DataMap::const_iterator j=data.begin(); j!=data.end();++j)  {
-    const std::vector<int>& v = (*j).second;
+    const vector<int>& v = (*j).second;
     ::sprintf(text,"%s %-12s sent %5d %s %6d %s %6d %s %5d %s %5d %s %4d %s and %4d %s msgs.",
       "Summary>    [ALWAYS]",(*j).first.c_str(),
       v[1], "VERBOSE",
@@ -272,7 +274,7 @@ void MessageLogger::summarizeHistory() {
   printMessage(text,true);
 }
 
-std::string MessageLogger::getSummary() {
+string MessageLogger::getSummary() {
   char text[255];
   ::sprintf(text,"Total: %5d %s %6d %s %6d %s %5d %s %5d %s %4d %s and %4d %s Messages.",
     m_numMsg[1], "VERBOSE",
@@ -286,13 +288,13 @@ std::string MessageLogger::getSummary() {
 }
 
 /// Print header information before starting output
-void MessageLogger::printHeader(const std::string& title) {
-  std::vector<std::string> v(1,title);
+void MessageLogger::printHeader(const string& title) {
+  vector<string> v(1,title);
   printHeader(v);
 }
 
 /// Print multi-line header information before starting output
-void MessageLogger::printHeader(const std::vector<std::string>& titles) {
+void MessageLogger::printHeader(const vector<string>& titles) {
   if ( m_colors ) {
     size_t rows=0, cols=0;
     consolesize(&rows,&cols);
@@ -307,8 +309,8 @@ void MessageLogger::printHeader(const std::vector<std::string>& titles) {
       buffer[cols-1] = 0; 
       ::printf(buffer);
       ::printf("\n");
-      for(std::vector<std::string>::const_iterator i=titles.begin();i!=titles.end();++i) {
-        const std::string& title = *i;
+      for(vector<string>::const_iterator i=titles.begin();i!=titles.end();++i) {
+        const string& title = *i;
         ::memcpy(&buffer[20],title.c_str(),title.length());
         ::printf(buffer);
         ::printf("\n");
@@ -323,12 +325,12 @@ void MessageLogger::printHeader(const std::vector<std::string>& titles) {
       return;
     }
   } 
-  for(std::vector<std::string>::const_iterator i=titles.begin();i!=titles.end();++i)
+  for(vector<string>::const_iterator i=titles.begin();i!=titles.end();++i)
     ::fprintf(m_output,"                      %s\n",(*i).c_str());
 }
 
 /// Set message severity level for display
-void MessageLogger::setMessageSeverity(const std::string& severity) {
+void MessageLogger::setMessageSeverity(const string& severity) {
   char text[132];
   switch(::toupper(severity[0])) {
   case 'V':
@@ -359,30 +361,31 @@ void MessageLogger::setMessageSeverity(const std::string& severity) {
 }
 
 /// Execute command from message
-void MessageLogger::execute(const std::string& cmd) {
+void MessageLogger::execute(const string& cmd) {
   FILE * f = ::popen(cmd.c_str(),"r");
   if ( f ) {
     size_t siz;
-    std::string result = "Execute>    [ALWAYS] ";
+    string result = "Execute>    [ALWAYS] ";
     char buff[1024];
     while((siz=::fread(buff,1,sizeof(buff)-1,f))>0) {
       buff[siz]=0;
       result += buff;
     }
+    while((siz=result.find('%'))!=string::npos) result.replace(siz,1,"");
     printMessage(result.c_str(),false);
   }
   ::fclose(f);
 }
 
 /// Load filters from string represntation
-void MessageLogger::loadFilters(const std::string& s) {
-  std::stringstream str(s);
+void MessageLogger::loadFilters(const string& s) {
+  stringstream str(s);
   Filter filter;
   m_filters.clear();
   while(filter.read(str)>0) m_filters.push_back(filter);
   printHeader("Message filters:");
   for(Filters::const_iterator i=m_filters.begin();i!=m_filters.end();++i) {
-    (*i).dump(std::cout);
+    (*i).dump(cout);
   }
 }
 
@@ -390,13 +393,16 @@ void MessageLogger::loadFilters(const std::string& s) {
 void MessageLogger::requestHandler(void* tag, void* address, int* size) {
   MessageLogger* h = *(MessageLogger**)tag;
   const char* p = (const char*)address;
-  std::string n = p;
+  string n = p;
   size_t idx = n.find(":");
-  if ( idx != std::string::npos ) {
-    std::string nam = n.substr(++idx);
+  if ( idx != string::npos ) {
+    string nam = n.substr(++idx);
     switch(::toupper(n[0])) {
+    case 'C': // Cancel command queue
+      IocSensor::instance().sendHead(h,CMD_CANCEL,(void*)0);
+      return;
     case 'E': // Execute command
-      h->execute(p+idx);
+      IocSensor::instance().send(h,CMD_START,new string(p+idx));
       return;
     case 'D': // Display line
       h->printMessage(p+idx,true);
@@ -441,12 +447,12 @@ void MessageLogger::requestHandler(void* tag, void* address, int* size) {
   switch(::toupper(n[0])) {
   case 'M': // Messages mode
     idx = n.find("+");
-    if ( idx != std::string::npos ) {
+    if ( idx != string::npos ) {
       h->handleMessages(p+idx+1,p + (*size));
       return;
     }
     idx = n.find("-");
-    if ( idx != std::string::npos ) {
+    if ( idx != string::npos ) {
       h->handleRemoveMessages(p+idx+1,p + (*size));
       return;
     }
@@ -460,7 +466,7 @@ void MessageLogger::requestHandler(void* tag, void* address, int* size) {
 /// DIM command service callback
 void MessageLogger::handleMessages(const char* items, const char* end) {
   if ( items ) {
-    std::vector<std::string> titles;
+    vector<string> titles;
     time_t now = ::time(0);
     for(const char* p=items; p < end; p += ::strlen(p)+1 ) {
       if ( strlen(p)>0 ) {
@@ -484,7 +490,7 @@ void MessageLogger::handleMessages(const char* items, const char* end) {
 /// DIM command service callback
 void MessageLogger::handleRemoveMessages(const char* items, const char* end) {
   if ( items ) {
-    std::vector<std::string> titles;
+    vector<string> titles;
     for(const char* p=items; p < end; p += ::strlen(p)+1 ) {
       if ( strlen(p)>0 ) {
         Services::iterator i=m_infos.find(p);
@@ -501,7 +507,7 @@ void MessageLogger::handleRemoveMessages(const char* items, const char* end) {
 }
 
 /// Cleanup service stack
-void MessageLogger::cleanupServices(const std::string& match) {
+void MessageLogger::cleanupServices(const string& match) {
   time_t now = ::time(0);
   for ( Services::iterator i=m_infos.begin(); i != m_infos.end(); ) {
     Entry* e = (*i).second;
@@ -524,7 +530,7 @@ void MessageLogger::cleanupService(Entry* e) {
 }
 
 /// DIM command service callback
-void MessageLogger::handleHistory(const std::string& nam) {
+void MessageLogger::handleHistory(const string& nam) {
   time_t now = ::time(0);
   Entry* e = m_infos[nam] = new Entry;
   //::lib_rtl_output(LIB_RTL_INFO,"Adding client:%s", nam.c_str());
@@ -577,7 +583,7 @@ void MessageLogger::historyInfoHandler(void* tag, void* address, int* size)  {
     MessageLogger *logger = e->self;
     Services& s = logger->m_infos;
     char *msg = (char*)address, *end = msg + *size, *ptr = msg;
-    std::string title = "Logger history of:";
+    string title = "Logger history of:";
     title += e->name;
     logger->printHeader(title);
     while (ptr<=end) {
@@ -601,7 +607,26 @@ void MessageLogger::historyInfoHandler(void* tag, void* address, int* size)  {
 }
 
 /// Display callback handler
-void MessageLogger::handle(const Event& ) {
+void MessageLogger::handle(const Event& ev) {
+  ioc_data data(ev.data);
+  switch(ev.eventtype) {
+  case IocEvent:
+    switch(ev.type) {      
+    case CMD_CANCEL:
+      printMessage("Cancelled command queue",true);
+      IocSensor::instance().clear();
+      return;
+    case CMD_START:
+      execute(*data.str);
+      delete data.str;
+      return;
+    default:
+      break;
+    }
+    break;
+  default:
+    break;
+  }
   ::lib_rtl_output(LIB_RTL_INFO,"Received unknown input.....");
 }
 
@@ -615,6 +640,6 @@ extern "C" int romon_logger(int argc, char** argv) {
   ::lib_rtl_install_printer(do_output,0);
   MessageLogger mon(argc, argv);
   ::dis_start_serving((char*)RTL::processName().c_str());
-  while(1) ::lib_rtl_sleep(1000);
+  IocSensor::instance().run();
   return 1;
 }

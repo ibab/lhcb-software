@@ -1,4 +1,4 @@
-// $Id: PVSSLogListener.cpp,v 1.1 2008-08-05 21:25:11 frankb Exp $
+// $Id: PVSSLogListener.cpp,v 1.2 2008-09-26 16:05:41 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PVSSLogListener.cpp,v 1.1 2008-08-05 21:25:11 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PVSSLogListener.cpp,v 1.2 2008-09-26 16:05:41 frankb Exp $
 
 // Framework include files
 #include "ROLogger/PVSSLogListener.h"
@@ -32,14 +32,15 @@ extern "C" {
 #include <arpa/inet.h>
 #endif
 
-typedef std::vector<std::string> _SV;
 using namespace ROLogger;
+using namespace std;
+typedef vector<string> _SV;
 
 /// Standard constructor with object setup through parameters
-PVSSLogListener::PVSSLogListener(Interactor* parent,const std::string& n) : m_parent(parent), m_name(n)
+PVSSLogListener::PVSSLogListener(Interactor* parent,const string& n) : m_parent(parent), m_name(n)
 {
-  std::auto_ptr<_SV> f(new _SV());
-  std::string nam = "RunInfo/" + m_name + "/HLTsubFarms";
+  auto_ptr<_SV> f(new _SV());
+  string nam = "RunInfo/" + m_name + "/HLTsubFarms";
   m_subFarmDP = ::dic_info_service((char*)nam.c_str(),MONITORED,0,0,0,subFarmHandler,(long)this,0,0);
   ::upic_write_message2("Subfarm content for %s_RunInfo from:%s",m_name.c_str(),nam.c_str());
   f->push_back("/HLT01/pvss/log");
@@ -56,8 +57,8 @@ PVSSLogListener::~PVSSLogListener() {
 
 /// DIM command service callback
 void PVSSLogListener::subFarmHandler(void* tag, void* address, int* size) {
-  std::string svc;
-  std::auto_ptr<_SV> f(new _SV());
+  string svc;
+  auto_ptr<_SV> f(new _SV());
   PVSSLogListener* h = *(PVSSLogListener**)tag;
   for(const char* data = (char*)address, *end=data+*size;data<end;data += strlen(data)+1) {
     svc = "/";

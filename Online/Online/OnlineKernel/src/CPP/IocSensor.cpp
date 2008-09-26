@@ -38,6 +38,11 @@ void IocSensor::sendHead( Interactor* it, int type, unsigned long data )  {
   ::wtc_insert_head(WT_FACILITY_SENSOR2, new Message(it, type, (void*)data));    
 }
 
+/// Clear the command queue
+void IocSensor::clear() {
+  ::wtc_flush(WT_FACILITY_SENSOR2);
+}
+
 //----------------------------------------------------------------------------
 IocSensor& IocSensor::instance()  {
   static IocSensor* sensor = new IocSensor;

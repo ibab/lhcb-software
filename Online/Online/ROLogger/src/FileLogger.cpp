@@ -1,4 +1,4 @@
-// $Id: FileLogger.cpp,v 1.7 2008-07-08 07:46:28 frankb Exp $
+// $Id: FileLogger.cpp,v 1.8 2008-09-26 16:05:41 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/FileLogger.cpp,v 1.7 2008-07-08 07:46:28 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/FileLogger.cpp,v 1.8 2008-09-26 16:05:41 frankb Exp $
 
 #include "ROLogger/FileLogger.h"
 
@@ -39,6 +39,7 @@ extern "C" {
 static const char*  s_SevList[] = {"VERBOSE","DEBUG","INFO","WARNING","ERROR","FATAL"};
 
 using namespace ROLogger;
+using namespace std;
 
 static void closeUPI() {
   ::upic_write_message("Close window.","");
@@ -50,7 +51,7 @@ static void closeUPI() {
 /// Standard constructor
 FileLogger::FileLogger(int argc, char** argv) : MessageLogger(3,true,false), m_connected(false)
 {
-  std::string partition, title;
+  string partition, title;
   RTL::CLI cli(argc, argv, help_fun);
   cli.getopt("partition",1,partition);
   cli.getopt("logdir",1,m_outdir);
@@ -138,7 +139,7 @@ void FileLogger::printMessage(const char* msg, bool crlf) {
 
 /// Display callback handler
 void FileLogger::handle(const Event& ev) {
-  typedef std::vector<std::string> _SV;
+  typedef vector<string> _SV;
   IocSensor& ioc = IocSensor::instance();
   ioc_data data(ev.data);
   switch(ev.eventtype) {
@@ -152,7 +153,7 @@ void FileLogger::handle(const Event& ev) {
     closeUPI();
     return;
   case CMD_SEVERITY:
-    ioc.send(this,ev.command_id,new std::string(m_msgSeverity));
+    ioc.send(this,ev.command_id,new string(m_msgSeverity));
     return;
   case CMD_CLOSE:
     //UpiSensor::instance().remove(this,m_id);
@@ -179,18 +180,18 @@ void FileLogger::handle(const Event& ev) {
     switch(ev.type) {
   case CMD_UPDATE: {
     _SV v = m_farms;      
-    std::string tmp;
-    std::stringstream s;
+    string tmp;
+    stringstream s;
     if ( !m_storage.empty() ) v.push_back(m_storage);
     if ( !m_monitoring.empty() ) v.push_back(m_monitoring);
     tmp = "Farm content:";
     for(_SV::const_iterator i=v.begin();i!=v.end();++i) {
-      const std::string& n = *i;
-      s << n << std::ends;
+      const string& n = *i;
+      s << n << ends;
       tmp += n;
       tmp += " ";
     }
-    s << std::ends;
+    s << ends;
     ::upic_write_message(tmp.c_str(),"");
     tmp = s.str();
     removeAllServices();

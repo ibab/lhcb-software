@@ -10,7 +10,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionDisplay.cpp,v 1.13 2008-08-29 20:37:18 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionDisplay.cpp,v 1.14 2008-09-26 16:05:41 frankb Exp $
 
 // Framework include files
 #include "ROLogger/PartitionDisplay.h"
@@ -28,6 +28,7 @@ extern "C" {
 #include "dic.h"
 }
 using namespace ROLogger;
+using namespace std;
 
 static const char* s_show[]    = {"Show"};
 static const char* s_config[]  = {"Configure"};
@@ -38,14 +39,14 @@ static const char* s_SevList[] = {"VERBOSE","DEBUG","INFO","WARNING","ERROR","FA
 static char  s_enableDisableResult[80];
 static char  s_param_buff[80];
 
-static std::string item_name(const std::string& svc_name) {
+static string item_name(const string& svc_name) {
   size_t idx = svc_name.find("/",1);
-  std::string name = svc_name.substr(1,idx-1);
+  string name = svc_name.substr(1,idx-1);
   if ( name=="STORECTL01" ) name = "STORE";
   return name;
 }
 
-static std::string setupParams(const std::string& name, bool val) {
+static string setupParams(const string& name, bool val) {
   char text[132];
   ::sprintf(text,"%-12s %-10s  ^^^^     ^^^^^^^     ^^^^^^^^^",
     item_name(name).c_str(), val ? "[ENABLED]" : "[DISABLED]");
@@ -58,7 +59,7 @@ static std::string setupParams(const std::string& name, bool val) {
 
 
 /// Standard constructor
-PartitionDisplay::PartitionDisplay(Interactor* parent, Interactor* msg, Interactor* history, const std::string& name) 
+PartitionDisplay::PartitionDisplay(Interactor* parent, Interactor* msg, Interactor* history, const string& name) 
 : m_name(name), m_parent(parent), m_msg(msg), m_history(history), m_numMsg(200)
 {
   m_id = UpiSensor::instance().newID();
@@ -87,7 +88,7 @@ PartitionDisplay::PartitionDisplay(Interactor* parent, Interactor* msg, Interact
   ::upic_add_command(CMD_CLOSE,        "Close","");
   ::upic_close_menu();
   UpiSensor::instance().add(this,m_id);
-  IocSensor::instance().send(m_msg,CMD_SEVERITY,new std::string(m_msgSeverity));
+  IocSensor::instance().send(m_msg,CMD_SEVERITY,new string(m_msgSeverity));
 }
 
 /// Standard destructor
@@ -101,7 +102,7 @@ PartitionDisplay::~PartitionDisplay()  {
 void PartitionDisplay::showCluster(int cmd) {
   Nodes nodes;
   dim_lock();
-  std::string name = item_name(m_items[cmd].second);
+  string name = item_name(m_items[cmd].second);
   for(Nodes::const_iterator i=m_nodes.begin();i!=m_nodes.end();++i) {
     if ( strncmp((*i).c_str(),name.c_str(),name.length())==0 ) 
       nodes.push_back(*i);
@@ -113,9 +114,9 @@ void PartitionDisplay::showCluster(int cmd) {
 
 /// Show history according to node and message pattern match
 void PartitionDisplay::showHistory(const char* node_match, const char* msg_match) {
-  std::stringstream s;
-  s << "#Node:{" << node_match << "}#Msg:{" << msg_match << "}#Num:{" << m_numMsg << "}" << std::ends;
-  IocSensor::instance().send(m_history,CMD_NODE_HISTORY,new std::string(s.str()));
+  stringstream s;
+  s << "#Node:{" << node_match << "}#Msg:{" << msg_match << "}#Num:{" << m_numMsg << "}" << ends;
+  IocSensor::instance().send(m_history,CMD_NODE_HISTORY,new string(s.str()));
 }
 
 /// Update farm content
@@ -126,22 +127,22 @@ void PartitionDisplay::updateFarms() {
   m_items.clear();
   for(Farms::const_iterator f=m_farms.begin(); f!=m_farms.end(); ++f) {
     ::upic_insert_param_line(m_id, CMD_COM2, ++nf, setupParams(*f,true).c_str(), "");
-    m_items[nf] = std::make_pair(true,(*f));
+    m_items[nf] = make_pair(true,(*f));
   }
   if ( !m_storage.empty() ) {
     ::upic_insert_param_line(m_id, CMD_COM2, ++nf, setupParams(m_storage,true).c_str(), "");
-    m_items[nf] = std::make_pair(true,m_storage);
+    m_items[nf] = make_pair(true,m_storage);
   }
   if ( !m_monitoring.empty() ) {
     ::upic_insert_param_line(m_id, CMD_COM2, ++nf, setupParams(m_monitoring,true).c_str(), "");
-    m_items[nf] = std::make_pair(true,m_monitoring);
+    m_items[nf] = make_pair(true,m_monitoring);
   }
   //  IocSensor::instance().send(this,CMD_COMLAST,this);
   ::upic_set_cursor(m_id,m_menuCursor=CMD_WILD_NODE,0);
 }
 
 void PartitionDisplay::handle(const Event& ev) {
-  typedef std::vector<std::string> _SV;
+  typedef vector<string> _SV;
   IocSensor& ioc = IocSensor::instance();
   ioc_data data(ev.data);
   switch(ev.eventtype) {
@@ -237,10 +238,10 @@ void PartitionDisplay::handle(const Event& ev) {
     case CMD_SEVERITY:
       switch(ev.param_id) {
       case 1:
-	ioc.send(m_msg,ev.command_id,new std::string(m_msgSeverity));
+	ioc.send(m_msg,ev.command_id,new string(m_msgSeverity));
 	return;
       case 2:
-	ioc.send(m_history,ev.command_id,new std::string(m_histSeverity));
+	ioc.send(m_history,ev.command_id,new string(m_histSeverity));
 	return;
       default:
 	break;
@@ -258,7 +259,7 @@ void PartitionDisplay::handle(const Event& ev) {
 	  val = m_items[cmd].first = ::strcmp(s_enableDisableResult,s_enable[0])==0;
 	  ::upic_replace_param_line(m_id,cmd,setupParams(m_items[cmd].second,val).c_str(),"");
 	  ::upic_set_cursor(ev.menu_id,cmd,ev.param_id);
-	  ioc.send(m_msg,val ? CMD_DISCONNECT_CLUSTER : CMD_CONNECT_CLUSTER,new std::string(m_items[cmd].second));
+	  ioc.send(m_msg,val ? CMD_DISCONNECT_CLUSTER : CMD_CONNECT_CLUSTER,new string(m_items[cmd].second));
 	  break;
 	case 3:
 	  ::upic_write_message("Configuration by menu not implemented...","");

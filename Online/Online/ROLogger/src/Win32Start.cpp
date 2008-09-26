@@ -1,4 +1,4 @@
-// $Id: Win32Start.cpp,v 1.4 2008-06-05 09:42:15 frankb Exp $
+// $Id: Win32Start.cpp,v 1.5 2008-09-26 16:05:41 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/Win32Start.cpp,v 1.4 2008-06-05 09:42:15 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/Win32Start.cpp,v 1.5 2008-09-26 16:05:41 frankb Exp $
 
 #ifdef _WIN32
 #include <windows.h>
@@ -20,6 +20,7 @@
 #include <iostream>
 #include <string>
 #include "RTL/rtl.h"
+using namespace std;
 
 #define FOREGROUND_BLACK 0
 #define FOREGROUND_WHITE 15
@@ -45,7 +46,7 @@ struct STARTUPINFO {
   size_t      cb;
 };
 
-std::string getColor(int code) {
+string getColor(int code) {
   switch(code) {
   case 0:  return "black";
   case 1:  return "blue";
@@ -69,12 +70,12 @@ std::string getColor(int code) {
 
 #endif
 
-static void startTerminal(const std::string& utgid, const std::string& cmd, STARTUPINFO& si)  {
+static void startTerminal(const string& utgid, const string& cmd, STARTUPINFO& si)  {
 #ifdef _WIN32
   PROCESS_INFORMATION pi;
   ::memset( &pi, 0, sizeof(pi) );
   if ( 0 == ::SetEnvironmentVariable("UTGID",utgid.c_str()) ) {
-    std::cout << "Failed to set environment: UTGID=" << utgid << std::endl;
+    cout << "Failed to set environment: UTGID=" << utgid << endl;
   }
   if( !::CreateProcess(NULL,    // No module name (use command line). 
     (char*)cmd.c_str(),         // Command line. 
@@ -88,7 +89,7 @@ static void startTerminal(const std::string& utgid, const std::string& cmd, STAR
     &pi )                       // Pointer to PROCESS_INFORMATION structure.
     ) 
   {
-    std::cout << "CreateProcess [" << utgid << "] " << cmd << " failed."  << std::endl;
+    cout << "CreateProcess [" << utgid << "] " << cmd << " failed."  << endl;
     ::exit(0);
   }
   // Close process and thread handles. 
@@ -98,7 +99,7 @@ static void startTerminal(const std::string& utgid, const std::string& cmd, STAR
   char txt[128];
   int font_height=13;
   int font_width=6;
-  std::string env, command = "xterm -ls -132 ";
+  string env, command = "xterm -ls -132 ";
   sprintf(txt,"-fn %dx%d -fb %dx%db ",font_width,font_height,font_width,font_height);
   command += txt;
   if ( si.dwFlags&STARTF_USESIZE && si.dwFlags&STARTF_USEPOSITION )
@@ -136,38 +137,38 @@ static void startTerminal(const std::string& utgid, const std::string& cmd, STAR
     command += "\"";
   }
   command += "&";
-  // std::cout << command << std::endl;
+  // cout << command << endl;
   env = "UTGID="+utgid;
   if ( 0 != ::putenv((char*)env.c_str()) ) {
-    std::cout << "Failed to set environment: UTGID=" << utgid << std::endl;
+    cout << "Failed to set environment: UTGID=" << utgid << endl;
   }
   ::system(command.c_str());
 #endif
 }
 
-static std::pair<int,int> getDesktopGeometry(const std::string& geometry) {
+static pair<int,int> getDesktopGeometry(const string& geometry) {
   if ( geometry.empty() ) {
 #ifdef _WIN32
     HWND h = ::GetDesktopWindow();
     if ( 0 != h )  {
       RECT rc;
       if ( 0 != ::GetWindowRect(h, &rc) )   {
-        return std::make_pair(rc.right,rc.bottom);
+        return make_pair(rc.right,rc.bottom);
       }
     }
 #endif
   }
   else {
-    std::pair<int,int> rc;
+    pair<int,int> rc;
     if ( 2 == ::sscanf(geometry.c_str(),"%dx%d",&rc.first,&rc.second) ) {
       return rc;
     }
   }
-  return std::make_pair(0,0);
+  return make_pair(0,0);
 }
 
 static void help()  {
-  std::cout <<    
+  cout <<    
     "   start_rologger_win32 <partition> -option [-option]                    \n"
     "                                                                         \n"
     "   bu[ffer]=<number>         History buffer size in lines.               \n"
@@ -198,13 +199,13 @@ static void help()  {
     "   |         +--------------------------+--------------------+          |\n"
     "   |         bottom margin  [-bo]                                       |\n"
     "   +--------------------------------------------------------------------+\n"
-    << std::endl;
+    << endl;
 }
 
 extern "C" int start_rologger_win32(int argc, char** argv)  {
   RTL::CLI cli(argc, argv, help);
-  std::string part_name = "LHCb";  
-  std::string geometry;
+  string part_name = "LHCb";  
+  string geometry;
   int hist_buff     = 500000;
   int history_height= 400;
   int ctrl_width    = 450;
@@ -232,7 +233,7 @@ extern "C" int start_rologger_win32(int argc, char** argv)  {
 #else
   const char* logger = "gentest.exe ROLogger";
 #endif
-  std::pair<int,int> dt = getDesktopGeometry(geometry);
+  pair<int,int> dt = getDesktopGeometry(geometry);
   if ( dt.first && dt.second ) {
     const char* partition = part_name.c_str();
     int pid = ::lib_rtl_pid();
@@ -287,6 +288,6 @@ extern "C" int start_rologger_win32(int argc, char** argv)  {
     startTerminal(utgid,comm,si);
     return 1;
   }
-  std::cout << "Failed to determine desktop geometry." << std::endl;
+  cout << "Failed to determine desktop geometry." << endl;
   return 1;
 }

@@ -10,7 +10,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineTools/src/Processor.cpp,v 1.1 2008-09-18 13:08:22 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineTools/src/Processor.cpp,v 1.2 2008-09-26 16:05:41 frankb Exp $
 
 // Framework include files
 #include "OnlineTools/Processor.h"
@@ -58,7 +58,7 @@ Processor::~Processor()  {
 
 int Processor::_send(const string& m, const string& d) {
   stringstream s, q;
-  s << "echo \"" << left << setw(12) << (name()+":  `") << d << "`\"" << endl;
+  s << "echo " << left << setw(12) << (name()+":  `") << d << "`" << endl;
   q << left << setw(12) << (name()+":  ") << left << setw(12) << m << "   -->  " << d << endl;
   IocSensor::instance().send(m_exec,CMD_EXECUTE,new string(s.str()));
   ::upic_write_message(q.str().c_str(),"");

@@ -10,7 +10,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrShowDisplay.cpp,v 1.11 2008-06-05 09:42:15 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrShowDisplay.cpp,v 1.12 2008-09-26 16:05:41 frankb Exp $
 
 // Framework include files
 #include "ROLogger/ErrShowDisplay.h"
@@ -34,6 +34,7 @@ static const char* LOG_DIR="/group/online/dataflow/logs/";
 #endif
 
 using namespace ROLogger;
+using namespace std;
 
 static const int   s_NumList[]  = {1,10,50,100,200,300,500,1000,5000,10000};
 static const char* s_SevList[]  = {"VERBOSE","DEBUG","INFO","WARNING","ERROR","FATAL"};
@@ -55,7 +56,7 @@ static void clean_str(char* n,size_t len)  {
 }
 
 /// Standard constructor
-ErrShowDisplay::ErrShowDisplay(Interactor* parent, Interactor* msg, const std::string& part) 
+ErrShowDisplay::ErrShowDisplay(Interactor* parent, Interactor* msg, const string& part) 
 : m_parent(parent), m_msg(msg), m_numMsg(200)
 {
   ::tzset();
@@ -125,7 +126,7 @@ void ErrShowDisplay::getFiles(Files& files)  {
   time_t end   = ::str2time(m_endTime,  s_timeFmt);
   files.clear();
   if ( (end - begin) >= 0 ) {
-    std::string first, dirname = m_logDir;
+    string first, dirname = m_logDir;
     dirname += m_name;
     DIR* dir = opendir(dirname.c_str());
     if ( dir ) {
@@ -157,8 +158,8 @@ void ErrShowDisplay::getFiles(Files& files)  {
 }
 
 /// Process messages from single file
-void ErrShowDisplay::processFile(const std::string& fname, FILE* output) {
-  std::ifstream in(fname.c_str(),std::ios::in);
+void ErrShowDisplay::processFile(const string& fname, FILE* output) {
+  ifstream in(fname.c_str(),ios::in);
   char text[1024], tim[32], *p;
   if ( in.good() ) {
     int flag = Filter::MATCH_WILD+Filter::MATCH_NOCASE+Filter::MATCH_SELECT;
@@ -171,7 +172,7 @@ void ErrShowDisplay::processFile(const std::string& fname, FILE* output) {
     f.setComponentMatch (m_component,flag);
     f.setMessageMatch   (m_message,  flag);
     ::sprintf(text,"Logger output:%s from %s to %s",fname.c_str(),m_startTime,m_endTime);
-    ioc.send(m_msg,CMD_START,new std::string(text));
+    ioc.send(m_msg,CMD_START,new string(text));
     ::memcpy(tim,m_startTime+7,4);
     tim[4] = ' ';
     tim[17] = 0;
@@ -186,7 +187,7 @@ void ErrShowDisplay::processFile(const std::string& fname, FILE* output) {
         if ( f.acceptMessage(line) ) {
           if ( line.msgSeverity() >= sev ) {
             if ( output == 0 ) {
-              ioc.send(m_msg,CMD_SHOW,new std::string(text));
+              ioc.send(m_msg,CMD_SHOW,new string(text));
             }
             else {
               ::fprintf(output,"%s\n",text);
@@ -196,7 +197,7 @@ void ErrShowDisplay::processFile(const std::string& fname, FILE* output) {
         }
       }
       // ::sprintf(text,"Rejected: %d %s %d %d",(int)now,tim,(int)begin,(int)end);
-      // ioc.send(m_msg,CMD_SHOW,new std::string(text));
+      // ioc.send(m_msg,CMD_SHOW,new string(text));
     }
     return;
   }
@@ -223,7 +224,7 @@ void ErrShowDisplay::showMessages(FILE* output) {
       processFile(files[i],output);
     }
   }
-  catch(const std::exception& e) {
+  catch(const exception& e) {
     ::upic_write_message2("Error during message processing:%s",e.what());
   }
   catch(...) {
@@ -242,16 +243,16 @@ void ErrShowDisplay::saveMessages() {
     ::fclose(outFile);
     ::strftime(txt,sizeof(txt),"%b%d-%H%M%S [ALWAYS] Output file written:",now);
     ::strcat(txt,m_outFileName);
-    IocSensor::instance().send(m_msg,CMD_SHOW,new std::string(txt));
+    IocSensor::instance().send(m_msg,CMD_SHOW,new string(txt));
     return;
   }
   ::sprintf(txt,"Cannot open file %s: %s",m_outFileName,::strerror(errno));
-  IocSensor::instance().send(m_msg,CMD_SHOW,new std::string(txt));
+  IocSensor::instance().send(m_msg,CMD_SHOW,new string(txt));
   ::upic_write_message2(txt);
 }
 
 void ErrShowDisplay::handle(const Event& ev) {
-  typedef std::vector<std::string> _SV;
+  typedef vector<string> _SV;
   IocSensor& ioc = IocSensor::instance();
   ioc_data data(ev.data);
   switch(ev.eventtype) {
@@ -315,7 +316,7 @@ void ErrShowDisplay::handle(const Event& ev) {
   case CMD_SEVERITY:
     clean_str(m_severity,sizeof(m_severity));
     return;
-    //ioc.send(m_msg,ev.command_id,new std::string(m_severity));
+    //ioc.send(m_msg,ev.command_id,new string(m_severity));
   default:
     break;
     }

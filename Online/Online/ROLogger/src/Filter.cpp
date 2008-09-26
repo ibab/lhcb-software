@@ -10,7 +10,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/Filter.cpp,v 1.3 2008-05-27 06:52:49 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/Filter.cpp,v 1.4 2008-09-26 16:05:41 frankb Exp $
 
 // Framework include files
 #include "ROLogger/Filter.h"
@@ -21,6 +21,7 @@
 #define strcasecmp _stricmp
 #endif
 using namespace ROLogger;
+using namespace std;
 
 union _Match {
   const int* p;
@@ -39,31 +40,31 @@ Filter& Filter::operator=(const Filter& f) {
   return *this;
 }
 
-void Filter::setNodeMatch(const std::string& value, unsigned char typ) {
+void Filter::setNodeMatch(const string& value, unsigned char typ) {
   _Match m(&type);
   m.match[0] = typ;
   node = value;
 }
 
-void Filter::setUtgidMatch(const std::string& value, unsigned char typ) {
+void Filter::setUtgidMatch(const string& value, unsigned char typ) {
   _Match m(&type);
   m.match[1] = typ;
   utgid = value;
 }
 
-void Filter::setComponentMatch(const std::string& value, unsigned char typ) {
+void Filter::setComponentMatch(const string& value, unsigned char typ) {
   _Match m(&type);
   m.match[2] = typ;
   component = value;
 }
 
-void Filter::setMessageMatch(const std::string& value, unsigned char typ) {
+void Filter::setMessageMatch(const string& value, unsigned char typ) {
   _Match m(&type);
   m.match[3] = typ;
   message = value;
 }
 
-int Filter::acceptMatch(const std::string& cand, const std::string& pattern, unsigned char match) const  {
+int Filter::acceptMatch(const string& cand, const string& pattern, unsigned char match) const  {
   int result = 0;
   if ( match&MATCH_WILD && match&MATCH_NOCASE )
     result = ::strcase_match_wild(cand.c_str(),pattern.c_str());
@@ -84,7 +85,7 @@ int Filter::acceptMatch(const std::string& cand, const std::string& pattern, uns
   return 0;
 }
 
-bool Filter::acceptMessage(const std::string& message) const {
+bool Filter::acceptMessage(const string& message) const {
   MessageLine msg(message);
   return acceptMessage(msg);
 }
@@ -143,14 +144,14 @@ bool Filter::acceptMessage(const MessageLine& msg) const {
 }
 
 /// Write filter object to file
-std::ostream& Filter::write(std::ostream& os) const {
-  os << "<FILTER>"  <<std::endl
-    << std::hex    << std::setw(8) << std::setfill('0') << type << std::endl
-    << node        << std::endl
-    << utgid       << std::endl
-    << component   << std::endl
-    << message     << std::endl
-    << "</FILTER>" << std::endl;
+ostream& Filter::write(ostream& os) const {
+  os << "<FILTER>"  <<endl
+    << hex    << setw(8) << setfill('0') << type << endl
+    << node        << endl
+    << utgid       << endl
+    << component   << endl
+    << message     << endl
+    << "</FILTER>" << endl;
   return os;
 }
 
@@ -165,16 +166,16 @@ void Filter::dump() const {
 }
 
 /// Dump filter info
-void Filter::dump(std::ostream& os) const {
+void Filter::dump(ostream& os) const {
   const unsigned char* m = match();
-  os << "Filter match: Node: [" << std::hex << (int)m[NODE]      << "]  " << node << std::endl
-    << "             UTGID: [" << std::hex << (int)m[UTGID]     << "]  " << utgid << std::endl
-    << "         Component: [" << std::hex << (int)m[COMPONENT] << "]  " << component << std::endl
-    << "           Message: [" << std::hex << (int)m[MESSAGE]   << "]  " << message << std::endl;
+  os << "Filter match: Node: [" << hex << (int)m[NODE]      << "]  " << node << endl
+    << "             UTGID: [" << hex << (int)m[UTGID]     << "]  " << utgid << endl
+    << "         Component: [" << hex << (int)m[COMPONENT] << "]  " << component << endl
+    << "           Message: [" << hex << (int)m[MESSAGE]   << "]  " << message << endl;
 }
 
 /// read filter object from file
-size_t Filter::read(std::istream& in) {
+size_t Filter::read(istream& in) {
   int   start = 0;
   char txt[1024];
   while( in.getline(txt,sizeof(txt)).good() ) {

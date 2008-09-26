@@ -10,7 +10,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineTools/src/ProcessorDisplay.cpp,v 1.1 2008-09-18 13:08:22 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineTools/src/ProcessorDisplay.cpp,v 1.2 2008-09-26 16:05:41 frankb Exp $
 
 // Framework include files
 #include "OnlineTools/ProcessorDisplay.h"
@@ -26,7 +26,7 @@
 using namespace std;
 using namespace OnlineTools;
 
-static const char* s_action[]  = {"Ping","Status","Switch_On","Switch_Off","Reset"};
+static const char* s_action[]  = {"Ping","Status","On","Off","Reset"};
 static char  s_action_buff[80];
 
 static string setupParams(const string& name, bool flag=false) {
@@ -34,13 +34,13 @@ static string setupParams(const string& name, bool flag=false) {
   int ipar = 0;
   if ( flag ) {
     const char* list[] = {name.c_str()};
-    ::sprintf(text,"^^^^^^^^^^  ^^^^^^^^^^");
-    ::upic_set_param(s_action_buff,++ipar,"A10",list[0],0,0,list,1,1);
+    ::sprintf(text,"^^^^^^^^^^^^^^  ^^^^^^");
+    ::upic_set_param(s_action_buff,++ipar,"A14",list[0],0,0,list,1,1);
   }
   else {
-    ::sprintf(text,"%-10s ^^^^^^^^^^",name.c_str());
+    ::sprintf(text,"%-10s ^^^^^^",name.c_str());
   }
-  ::upic_set_param(s_action_buff,++ipar,"A10",s_action[0],0,0,s_action,5,1);
+  ::upic_set_param(s_action_buff,++ipar,"A6",s_action[0],0,0,s_action,5,1);
   return text;
 }
 
@@ -56,6 +56,7 @@ ProcessorDisplay::ProcessorDisplay(Interactor* par, Interactor* msg, NodeManipul
   ::upic_open_menu(m_id,0,0,"Processor Control",m_nodes->name().c_str(),RTL::nodeName().c_str());
 
   ::upic_add_command(CMD_CLOSE,        "Close","");
+  ::upic_add_command(CMD_CANCEL,       "Cancel","");
   ::upic_add_comment(CMD_COM1,         "-----------","");
   ::upic_add_param_line(CMD_APPLY,setupParams("All devices",false).c_str(),"");
   ::upic_add_comment(CMD_COM2,         "-----------","");
@@ -116,10 +117,13 @@ void ProcessorDisplay::handle(const Event& ev) {
     case CMD_CLOSE:
       ioc.send(m_parent,CMD_DELETE,this);
       return;
+    case CMD_CANCEL:
+      ioc.send(m_msg,CMD_CANCEL,this);
+      return;
     case CMD_APPLY:
       c=m_nodes->children();
       for( i=c.begin(); pmf!=0 && i!=c.end(); ++i) ((*i)->*pmf)();
-      IocSensor::instance().send(m_msg,CMD_SHOW,new string("Execute>    [WARN]   Command executed"));
+      ioc.send(m_msg,CMD_SHOW,new string("Execute>    [WARN]   Command queued for execution"));
       return;
     default:
       if ( ev.command_id >0 && ev.command_id<=(int)m_nodes->numChildren() )  {
@@ -133,7 +137,7 @@ void ProcessorDisplay::handle(const Event& ev) {
 	  return;
 	case 1:
 	  if ( pmf ) (manip->*pmf)();
-	  IocSensor::instance().send(m_msg,CMD_SHOW,new string("Execute>    [WARN]   Command executed"));
+	  ioc.send(m_msg,CMD_SHOW,new string("Execute>    [WARN]   Command queued for execution"));
 	  return;
 	default:
 	  return;

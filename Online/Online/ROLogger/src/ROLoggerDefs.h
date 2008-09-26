@@ -49,6 +49,7 @@ namespace ROLogger {
     CMD_RESET   = 12013,
     CMD_DELETE  = 12014,
     CMD_UPDATE  = 12015,
+    CMD_CANCEL  = 12016,
 
     CMD_SEVERITY,
     CMD_ADD_NODES,

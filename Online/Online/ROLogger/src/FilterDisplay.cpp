@@ -10,7 +10,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/FilterDisplay.cpp,v 1.5 2008-06-05 09:42:15 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/FilterDisplay.cpp,v 1.6 2008-09-26 16:05:41 frankb Exp $
 
 // Framework include files
 #include "ROLogger/FilterDisplay.h"
@@ -28,6 +28,7 @@ extern "C" {
 }
 
 using namespace ROLogger;
+using namespace std;
 
 const char* s_filterType[] = {
   "Exact match",
@@ -183,7 +184,7 @@ void FilterDisplay::addFilter(const Filter& f)   {
   for (Filters::const_iterator i=m_filters.begin(); i!=m_filters.end(); ++i )
     if ( (*i).first > cmd ) cmd = (*i).first;
   cmd += 5;
-  m_filters.push_back(std::make_pair(cmd,f));
+  m_filters.push_back(make_pair(cmd,f));
   cmd0 = cmd;
   ::sprintf(text,"Filter match: Node: [%d]  %s",f.match()[Filter::NODE],f.node.c_str());
   ::upic_insert_comment(m_id,CMD_COM1,++cmd,text,"");
@@ -218,9 +219,9 @@ void FilterDisplay::removeFilters() {
 }
 
 /// Save filers to file
-void FilterDisplay::saveFilters(const std::string& fname) {
+void FilterDisplay::saveFilters(const string& fname) {
   if ( !fname.empty() ) {
-    std::ofstream out(fname.c_str());
+    ofstream out(fname.c_str());
     if ( out.good() ) {
       for (Filters::iterator j=m_filters.begin(); j!=m_filters.end(); ++j )
         (*j).second.write(out);
@@ -233,9 +234,9 @@ void FilterDisplay::saveFilters(const std::string& fname) {
 }
 
 /// Load filers to file
-void FilterDisplay::loadFilters(const std::string& fname) {
+void FilterDisplay::loadFilters(const string& fname) {
   if ( !fname.empty() ) {
-    std::ifstream in(fname.c_str());
+    ifstream in(fname.c_str());
     if ( in.good() ) {
       Filter filter;
       while(filter.read(in)>0) addFilter(filter);
@@ -248,7 +249,7 @@ void FilterDisplay::loadFilters(const std::string& fname) {
 }
 
 void FilterDisplay::handle(const Event& ev) { 
-  typedef std::vector<std::string> _SV;
+  typedef vector<string> _SV;
   IocSensor& ioc = IocSensor::instance();
   switch(ev.eventtype) {
   case IocEvent:
@@ -296,10 +297,10 @@ void FilterDisplay::handle(const Event& ev) {
     ioc.send(this,ev.command_id,this);
     return;
   case CMD_APPLY: {
-    std::stringstream out;
+    stringstream out;
     for (Filters::iterator j=m_filters.begin(); j!=m_filters.end(); ++j )
       (*j).second.write(out);
-    ioc.send(ev.param_id==1 ? m_history : m_msg, ev.command_id, new std::string(out.str()));
+    ioc.send(ev.param_id==1 ? m_history : m_msg, ev.command_id, new string(out.str()));
     return;
                   }
   default:

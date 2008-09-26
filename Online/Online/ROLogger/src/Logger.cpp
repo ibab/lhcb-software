@@ -1,4 +1,4 @@
-// $Id: Logger.cpp,v 1.10 2008-09-18 13:04:14 frankb Exp $
+// $Id: Logger.cpp,v 1.11 2008-09-26 16:05:41 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/Logger.cpp,v 1.10 2008-09-18 13:04:14 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/Logger.cpp,v 1.11 2008-09-26 16:05:41 frankb Exp $
 
 #include "ROLogger/Logger.h"
 #include "CPP/IocSensor.h"
@@ -24,9 +24,10 @@ extern "C" {
 }
 
 using namespace ROLogger;
+using namespace std;
 
 /// Standard constructor
-Logger::Logger(const std::string& name) : m_name(name)
+Logger::Logger(const string& name) : m_name(name)
 {
   ::upic_write_message2("Logging server:%s started ...",m_name.c_str());
 }
@@ -45,7 +46,7 @@ void Logger::shutdown() {
 }
 
 /// Send data string to logger service
-int Logger::sendData(const std::string& msg) {
+int Logger::sendData(const string& msg) {
   if ( 1 != ::dic_cmnd_service((char*)m_name.c_str(),(char*)msg.c_str(),msg.length()+1) ) {
     ::upic_write_message2("Failed to update history server:%s with data:%s",m_name.c_str(), msg.c_str());
     return 0;
@@ -55,19 +56,19 @@ int Logger::sendData(const std::string& msg) {
 }
 
 /// Connect to messages of a given source
-int Logger::connectMessages(bool con, const std::string& name) {
-  std::stringstream s;
-  s << "Messages" << (const char*)(con ? "-" : "+") << name << std::ends;
+int Logger::connectMessages(bool con, const string& name) {
+  stringstream s;
+  s << "Messages" << (const char*)(con ? "-" : "+") << name << ends;
   return sendData(s.str());
 }
 
 /// Connect to messages of a given source
-int Logger::connectMessages(const std::vector<std::string>& names) {
-  std::stringstream s;
+int Logger::connectMessages(const vector<string>& names) {
+  stringstream s;
   s << "Messages:";
-  for(std::vector<std::string>::const_iterator i=names.begin();i!=names.end();++i)
-    s << *i << std::ends;
-  s << std::ends;
+  for(vector<string>::const_iterator i=names.begin();i!=names.end();++i)
+    s << *i << ends;
+  s << ends;
   return sendData(s.str());
 }
 
@@ -77,6 +78,9 @@ void Logger::handle(const Event& ev) {
   switch(ev.eventtype) {
   case IocEvent:
     switch(ev.type) {
+  case CMD_CANCEL:
+    sendData("C:CANCEL_QUEUE");
+    return;
   case CMD_EXECUTE:
     sendData("E:"+*data.str);
     delete data.str;

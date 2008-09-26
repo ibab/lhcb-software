@@ -1,4 +1,4 @@
-// $Id: PartitionListener.cpp,v 1.11 2008-09-10 10:08:11 frankb Exp $
+// $Id: PartitionListener.cpp,v 1.12 2008-09-26 16:05:41 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionListener.cpp,v 1.11 2008-09-10 10:08:11 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionListener.cpp,v 1.12 2008-09-26 16:05:41 frankb Exp $
 
 // Framework include files
 #include "ROLogger/PartitionListener.h"
@@ -32,13 +32,14 @@ extern "C" {
 #include <arpa/inet.h>
 #endif
 
-typedef std::vector<std::string> _SV;
 using namespace ROLogger;
+using namespace std;
+typedef vector<string> _SV;
 
 /// Standard constructor with object setup through parameters
-PartitionListener::PartitionListener(Interactor* parent,const std::string& nam) : m_parent(parent), m_name(nam)
+PartitionListener::PartitionListener(Interactor* parent,const string& nam) : m_parent(parent), m_name(nam)
 {
-  std::string name;
+  string name;
   name = "RunInfo/" + m_name + "/HLTsubFarms";
   m_subFarmDP = ::dic_info_service((char*)name.c_str(),MONITORED,0,0,0,subFarmHandler,(long)this,0,0);
   ::upic_write_message2("Subfarm content for %s_RunInfo from:%s",m_name.c_str(),name.c_str());
@@ -69,15 +70,15 @@ PartitionListener::~PartitionListener() {
 void PartitionListener::storSliceHandler(void* tag, void* address, int* size) {
   PartitionListener* h = *(PartitionListener**)tag;
   if(*size > 0)  {
-    std::string slice = (char*)address;
+    string slice = (char*)address;
     if ( slice.empty() ) {
       IocSensor::instance().send(h->m_parent,CMD_DISCONNECT_STORAGE,(void*)0);
     }
     else {
-      std::string svc = "/STORECTL01/";
+      string svc = "/STORECTL01/";
       svc += (char*)address;
       svc += "/log";
-      IocSensor::instance().send(h->m_parent,CMD_CONNECT_STORAGE,new std::string(svc));
+      IocSensor::instance().send(h->m_parent,CMD_CONNECT_STORAGE,new string(svc));
     }
   }
 }
@@ -86,23 +87,23 @@ void PartitionListener::storSliceHandler(void* tag, void* address, int* size) {
 void PartitionListener::monSliceHandler(void* tag, void* address, int* size) {
   PartitionListener* h = *(PartitionListener**)tag;
   if(*size > 0)  {
-    std::string slice = (char*)address;
+    string slice = (char*)address;
     if ( slice.empty() ) {
       IocSensor::instance().send(h->m_parent,CMD_DISCONNECT_MONITORING,(void*)0);
     }
     else {
-      std::string svc = "/MONA08/";
+      string svc = "/MONA08/";
       svc += (char*)address;
       svc += "/log";
-      IocSensor::instance().send(h->m_parent,CMD_CONNECT_MONITORING,new std::string(svc));
+      IocSensor::instance().send(h->m_parent,CMD_CONNECT_MONITORING,new string(svc));
     }
   }
 }
 
 /// DIM command service callback
 void PartitionListener::subFarmHandler(void* tag, void* address, int* size) {
-  std::string svc;
-  std::auto_ptr<_SV> f(new _SV());
+  string svc;
+  auto_ptr<_SV> f(new _SV());
   PartitionListener* h = *(PartitionListener**)tag;
   for(const char* data = (char*)address, *end=data+*size;data<end;data += strlen(data)+1) {
     svc = "/";
@@ -124,11 +125,11 @@ static void get_nodes(void* address, int* size, _SV* n) {
     hostent* he = gethostbyaddr(&addr,sizeof(addr),AF_INET);
 #endif
     if ( he ) {
-      std::string node = he->h_name;
+      string node = he->h_name;
       size_t idx = node.find("-d1"); 
-      if ( idx != std::string::npos ) node = node.substr(0,idx); 
+      if ( idx != string::npos ) node = node.substr(0,idx); 
       idx = node.find(".");
-      if ( idx != std::string::npos ) node = node.substr(0,idx); 
+      if ( idx != string::npos ) node = node.substr(0,idx); 
       for(size_t i=0; i<node.length();++i) node[i] = ::toupper(node[i]);
       n->push_back(node);
     }
@@ -140,7 +141,7 @@ static void get_nodes(void* address, int* size, _SV* n) {
 
 /// DIM command service callback
 void PartitionListener::nodeHandler(void* tag, void* address, int* size) {
-  std::auto_ptr<_SV> n(new _SV());
+  auto_ptr<_SV> n(new _SV());
   PartitionListener* h = *(PartitionListener**)tag;
   get_nodes(address,size,n.get());
   n->push_back("STORECTL01");
@@ -165,7 +166,7 @@ void PartitionListener::nodeHandler(void* tag, void* address, int* size) {
 
 /// DIM command service callback
 void PartitionListener::calibNodeHandler(void* tag, void* address, int* size) {
-  std::auto_ptr<_SV> n(new _SV());
+  auto_ptr<_SV> n(new _SV());
   PartitionListener* h = *(PartitionListener**)tag;
   get_nodes(address,size,n.get());
   if ( h ) {

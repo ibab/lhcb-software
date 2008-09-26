@@ -1,4 +1,4 @@
-// $Id: ClusterDisplay.cpp,v 1.5 2008-06-05 09:42:15 frankb Exp $
+// $Id: ClusterDisplay.cpp,v 1.6 2008-09-26 16:05:41 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ClusterDisplay.cpp,v 1.5 2008-06-05 09:42:15 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ClusterDisplay.cpp,v 1.6 2008-09-26 16:05:41 frankb Exp $
 
 #include "ROLogger/ClusterDisplay.h"
 #include "UPI/UpiSensor.h"
@@ -23,11 +23,12 @@
 #include <sstream>
 
 using namespace ROLogger;
+using namespace std;
 
 static int s_NumList[] = {1,10,50,100,200,300,500,1000,5000,10000};
 
 /// Standard constructor with object setup through parameters
-ClusterDisplay::ClusterDisplay(Interactor* parent, Interactor* logger, const std::string& name, const Nodes& nodes) 
+ClusterDisplay::ClusterDisplay(Interactor* parent, Interactor* logger, const string& name, const Nodes& nodes) 
   : m_name(name), m_nodes(nodes), m_parent(parent), m_logger(logger), m_numMsg(200)
 {
   int cnt = 0;
@@ -40,7 +41,7 @@ ClusterDisplay::ClusterDisplay(Interactor* parent, Interactor* logger, const std
   if ( !m_nodes.empty() ) {
     ::upic_add_comment(CMD_COM1,("Known nodes for cluster "+m_name).c_str(),"");
     for(Nodes::const_iterator n=m_nodes.begin(); n!=m_nodes.end(); ++n, ++cnt) {
-      if ( (*n).find(name) != std::string::npos ) {
+      if ( (*n).find(name) != string::npos ) {
 	::upic_add_command(cnt+1, (*n).c_str(),"");
       }
     }
@@ -70,9 +71,9 @@ ClusterDisplay::~ClusterDisplay() {
 
 /// Show history according to node and message pattern match
 void ClusterDisplay::showHistory(const char* node_match, const char* msg_match) {
-  std::stringstream s;
-  s << "#Node:{" << node_match << "}#Msg:{" << msg_match << "}#Num:{" << m_numMsg << "}" << std::ends;
-  IocSensor::instance().send(m_logger,CMD_NODE_HISTORY,new std::string(s.str()));
+  stringstream s;
+  s << "#Node:{" << node_match << "}#Msg:{" << msg_match << "}#Num:{" << m_numMsg << "}" << ends;
+  IocSensor::instance().send(m_logger,CMD_NODE_HISTORY,new string(s.str()));
 }
 
 /// Display callback handler

@@ -1,9 +1,8 @@
-
 #include "ROLogger/MessageLine.h"
 #include <iostream>
 
-
 using namespace ROLogger;
+using namespace std;
 
 MessageLine::MessageLine(const MessageLine& c) 
 : m_buff(c.m_buff), m_type(c.m_type), m_comp(c.m_comp), m_mess(c.m_mess)
@@ -12,12 +11,12 @@ MessageLine::MessageLine(const MessageLine& c)
 
 int MessageLine::analyze() const {
   size_t idp, idq, idx = m_buff.find("(",NOD_START);
-  if ( idx != std::string::npos && idx<32+NOD_START ) {
+  if ( idx != string::npos && idx<32+NOD_START ) {
     m_utgid = idx+1;
     idq = m_buff.find("):",++idx);
-    if ( idq != std::string::npos && idq>idx ) {
+    if ( idq != string::npos && idq>idx ) {
       idp = m_buff.find(":",idq+3);
-      if ( idp != std::string::npos ) {
+      if ( idp != string::npos ) {
         m_mess = idp+2;
         m_comp = idq+3;
         m_type = idx-1;
@@ -26,30 +25,30 @@ int MessageLine::analyze() const {
     }
   }
   m_mess = m_buff.find(":",NOD_START);
-  if ( m_mess != (int)std::string::npos ) m_mess += 2;
+  if ( m_mess != (int)string::npos ) m_mess += 2;
   return m_type=OTHER;
 }
 
 void MessageLine::dump()  const {
-  std::cout << "Line:" << m_buff << std::endl
+  cout << "Line:" << m_buff << endl
     << "  Type:" << type();
   switch(type()) {
   case NONE:    
-    std::cout << "[NONE]";
+    cout << "[NONE]";
     break;
   case OTHER:
-    std::cout << "[OTHER]";
+    cout << "[OTHER]";
     break;
   default:
-    std::cout << "[TASK]";
+    cout << "[TASK]";
     break;
   }
-  std::cout << " Severity:" << severity()
+  cout << " Severity:" << severity()
     << " Node:" << node();
   if ( type() > 0 ) {
-    std::cout << " Utgid:" << utgid() << " Component:" << component();
+    cout << " Utgid:" << utgid() << " Component:" << component();
   }
-  std::cout << std::endl << "  Message:" << message() << std::endl;
+  cout << endl << "  Message:" << message() << endl;
 }
 
 /// Retrieve message severity from DIM logger message
@@ -73,7 +72,7 @@ int MessageLine::msgSeverity(const char* msg) {
 }
 
 /// Convert severity string to enum
-int MessageLine::severityLevel(const std::string& severity) {
+int MessageLine::severityLevel(const string& severity) {
   switch(::toupper(severity[0])) {
   case 'V':
     return Msg_Verbose;
@@ -108,7 +107,7 @@ extern "C" int test_MessageLine(int,char**) {
   for(size_t i=0; i<sizeof(lines)/sizeof(lines[0]);++i) {
     MessageLine line(lines[i]);
     line.dump();
-    std::cout << std::endl;
+    cout << endl;
   }
   return 1;
 }

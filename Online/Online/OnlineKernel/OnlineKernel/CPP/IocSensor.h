@@ -23,12 +23,21 @@ public:
   IocSensor();
   /// Standard destructor
   virtual ~IocSensor() {}
+  /// Dispatch command requests to clients
   virtual void  dispatch(void* arg);
+  /// Rearm sensor action
   virtual void  rearm() {}
+  /// Queue command for execution
   void send( Interactor*, int, void* = 0);
+  /// Queue command for execution
   void send( Interactor*, int, unsigned long );
+  /// Send priority command
   void sendHead( Interactor*, int, void* = 0);
+  /// Send priority command
   void sendHead( Interactor*, int, unsigned long );
+  /// Clear the command queue
+  void clear();
+  /// Singleton: Instantiate object
   static IocSensor& instance();
 };
 
