@@ -1,4 +1,4 @@
-// $Id: SimpleAlgorithm.cpp,v 1.21 2008-02-22 16:17:06 marcocle Exp $
+// $Id: SimpleAlgorithm.cpp,v 1.22 2008-09-27 22:37:40 odescham Exp $
 
 /// Include files
 #include <vector>
@@ -88,8 +88,8 @@ StatusCode SimpleAlgorithm::initialize() {
 
   DeCalorimeter* ecal2 = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal );
 
-  info() << "Ecal->maxEtInCenter() = " << ecal2->maxEtInCenter() << endmsg;
-  info() << "Ecal->maxEtSlope() = "    << ecal2->maxEtSlope()    << endmsg;
+  info() << "Ecal->maxEtInCenter(Outer) = " << ecal2->maxEtInCenter(0) << endmsg;
+  info() << "Ecal->maxEtSlope(Outer) = "    << ecal2->maxEtSlope(0)    << endmsg;
   info() << "Ecal->adcMax() = "        << ecal2->adcMax()        << endmsg;
   info() << "Ecal->activeToTotal() = " << ecal2->activeToTotal() << endmsg;
   info() << "Ecal->zShowerMax() = "    << ecal2->zShowerMax()    << endmsg;
