@@ -4,7 +4,7 @@
  *
  * Implementation file for class : DeRichSystem
  *
- * $Id: DeRichSystem.cpp,v 1.18 2008-07-25 15:24:28 jonrob Exp $
+ * $Id: DeRichSystem.cpp,v 1.19 2008-09-27 15:21:10 jonrob Exp $
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-01-27
@@ -117,6 +117,7 @@ StatusCode DeRichSystem::buildHPDMappings()
   m_copyNumber2smartid.clear();
   m_inactiveSmartIDs.clear();
   m_inactiveHardIDs.clear();
+  m_L1HardIDAndInputToHPDHardID.clear();
 
   // NB : Currently updating both RICH1 and RICH2 if either changes ...
   //      Could considering doing this separately, probably not a big issue though
@@ -203,9 +204,8 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
           iL0    != l0IDs.end()   &&
           iL1    != l1IDs.end()   &&
           iL1In  != l1Ins.end()   &&
-          icopyN != copyNs.end()
-          ;
-        ++iSoft, ++iHard, ++iL0, ++iL1, ++iL1In, ++icopyN)
+          icopyN != copyNs.end()  ;
+        ++iSoft, ++iHard, ++iL0, ++iL1, ++iL1In, ++icopyN )
   {
 
     // get data
@@ -260,6 +260,7 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
     m_copyNumber2smartid[copyN] = hpdID;
     m_l12smartids[L1ID].push_back( hpdID );
     m_l12hardids[L1ID].push_back( hardID );
+    m_L1HardIDAndInputToHPDHardID[L1HardIDAndInput(L1ID,L1IN)] = hardID;
     if ( std::find( m_l1IDs.rbegin(), m_l1IDs.rend(), L1ID ) == m_l1IDs.rend() )
     {
       m_l1ToRich[L1ID] = rich;
@@ -647,6 +648,24 @@ DeRichSystem::level1LogicalID( const Rich::DAQ::Level1HardwareID hardID ) const
                           "DeRichSystem::level1LogicalID",
                           StatusCode::FAILURE );
   }
+  return (*iID).second;
+}
+
+//=========================================================================
+// Access the HPD hardware ID for the given L1 hardwareID and input number
+//=========================================================================
+const Rich::DAQ::HPDHardwareID 
+DeRichSystem::hpdHardwareID( const Rich::DAQ::Level1HardwareID L1HardID, 
+                             const Rich::DAQ::Level1Input L1Input ) const
+{
+  const L1HardIDAndInput key(L1HardID,L1Input);
+  L1HardIDAndInputToHPDHardID::const_iterator iID = m_L1HardIDAndInputToHPDHardID.find(key);
+  if ( m_L1HardIDAndInputToHPDHardID.end() == iID )
+  {
+    throw GaudiException( "Unknown L1 hardware ID " + (std::string)L1HardID,
+                          " and L1 input " + (std::string)L1Input + " pair",
+                          StatusCode::FAILURE );
+  } 
   return (*iID).second;
 }
 

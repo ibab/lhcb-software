@@ -4,6 +4,10 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2008-09-27 - Christopher Rob JONES
+ - Add method (request from monitoring) to access the HPD hardware ID
+   associated to a given L1 Hardware ID + L1 input number
+
 ! 2008-09-25 - Antonis Papanestis
  - Bug fix to stop DeRichHPD from throwing an exception when testing
    if a condition (QE location) exists.

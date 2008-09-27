@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRichSystem
  *
  *  CVS Log :-
- *  $Id: DeRichSystem.h,v 1.12 2008-07-25 15:24:28 jonrob Exp $
+ *  $Id: DeRichSystem.h,v 1.13 2008-09-27 15:21:10 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-01-26
@@ -26,6 +26,7 @@
 
 // RichKernel
 #include "RichKernel/RichDAQDefinitions.h"
+#include "RichKernel/RichMap.h"
 
 //local
 #include "RichDet/DeRichLocations.h"
@@ -177,6 +178,15 @@ public:
    */
   const Rich::DAQ::Level1Input level1InputNum( const Rich::DAQ::HPDHardwareID hardID ) const;
 
+  /** Access the HPD hardware ID for the given L1 hardwareID and input number
+   *  @param L1HardID L1 board hardware ID
+   *  @param L1Input  L1 input number
+   *  @return HPD hardware ID
+   */
+  const Rich::DAQ::HPDHardwareID 
+  hpdHardwareID( const Rich::DAQ::Level1HardwareID L1HardID, 
+                 const Rich::DAQ::Level1Input L1Input ) const;
+
   /** Obtain a list of RichSmartID HPD identifiers for a given level1 hardwareID
    *  @param l1ID The level1 ID number
    *  @return Vector of all HPD RichSmartIDs for that Level1 board
@@ -189,7 +199,7 @@ public:
    */
   const Rich::DAQ::HPDHardwareIDs & l1HPDHardIDs( const Rich::DAQ::Level1HardwareID l1ID ) const;
 
-  /** Return which RICH detector a given Level1 hardware ID is for
+  /** Reconst Rich::DAQ::HPDHardwareIDturn which RICH detector a given Level1 hardware ID is for
    *  @param l1ID The Level 1 hardware ID
    *  @return The RICH detector
    */
@@ -203,6 +213,8 @@ public:
 
   /// Returns a list of all valid Level1 board hardware IDs
   const Rich::DAQ::Level1HardwareIDs & level1HardwareIDs() const;
+
+public:
 
   /**
    * Retrieves the location of the HPD in the detector store, so it can be
@@ -276,6 +288,12 @@ private: // data
 
   Rich::DAQ::L1ToSmartIDs m_l12smartids; ///< L1 ID to RichSmartIDs map
   Rich::DAQ::L1ToHardIDs  m_l12hardids;  ///< L1 ID to HPD hardware IDs map
+
+  /// L1 hardware ID + Input number pair
+  typedef std::pair< const Rich::DAQ::Level1HardwareID, const Rich::DAQ::Level1Input > L1HardIDAndInput;
+  /// Typedef for mapping L1 HardwareID + L1 input number to HPD Hardware ID
+  typedef Rich::Map< L1HardIDAndInput, Rich::DAQ::HPDHardwareID > L1HardIDAndInputToHPDHardID;
+  L1HardIDAndInputToHPDHardID m_L1HardIDAndInputToHPDHardID;
 
   /// List of all valid Level1 IDs
   Rich::DAQ::Level1HardwareIDs m_l1IDs;
