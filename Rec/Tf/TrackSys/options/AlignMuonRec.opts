@@ -1,0 +1,25 @@
+# AlignMuonRec.BField = true;
+AlignMuonRec.CloneKiller=true;
+AlignMuonRec.OutputLevel = 5;
+AlignMuonRec.MatchChisq   = 40.;
+# AlignMuonRec.M1Station   = true;
+AlignMuonRec.Extrapolator.ApplyMultScattCorr = true;
+AlignMuonRec.Extrapolator.OutputLevel = 5;
+
+MuonTrackFitter.TracksInContainer = "/Event/Rec/Muon/MuonsTrackForAlignment";
+MuonTrackFitter.OutputLevel = 5;
+MuonTrackFitter.Fitter.OutputLevel = 5;
+
+MuonTrackFitter.Fitter.ErrorP   = {0., 1e-6};
+MuonTrackFitter.Fitter.ErrorX2  =   100000 ;
+MuonTrackFitter.Fitter.ErrorY2  = 10000000 ;
+MuonTrackFitter.Fitter.ErrorTx2 = 0.01 ;
+MuonTrackFitter.Fitter.ErrorTy2 = 0.01 ;
+
+MuonTrackFitter.Fitter.ApplyMaterialCorrections = true ;
+MuonTrackFitter.Extrapolator.ApplyMultScattCorr = true;
+MuonTrackFitter.Extrapolator.ApplyEnergyLossCorr = true;
+MuonTrackFitter.Extrapolator.ApplyElectronEnergyLossCorr = true;
+
+MuonTrackFitter.Fitter.MaxNumberOutliers = 0 ;
+MuonTrackFitter.Fitter.StateAtBeamLine   = false;
