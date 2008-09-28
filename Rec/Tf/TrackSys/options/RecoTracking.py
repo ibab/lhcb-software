@@ -19,7 +19,7 @@ from Configurables import ( ProcessPhase, MagneticFieldSvc,
                             TrackMatchVeloSeed, PatDownstream, PatVeloTT,
                             TrackEventCloneKiller, TrackPrepareVelo, TrackContainerCopy,
                             TrackAddLikelihood, TrackLikelihood, NeuralNetTmva, Tf__OTHitCreator,
-                            TrackBuildCloneTable, TrackCloneCleaner
+                            TrackBuildCloneTable, TrackCloneCleaner, AlignMuonRec
                            )
 
 ## Start TransportSvc, needed by track fit
@@ -87,7 +87,7 @@ else:
 track.DetectorList += [ "VeloTTPat",    "VeloTTPreFit",    "VeloTTFit"
                         , "PostFit"
                         , "VeloPreFit", "VeloFit"
-                        , "AddExtraInfo"
+                        , "AddExtraInfo", "MuonRec"
                         ]
                
 ## get all the trackfitters
@@ -187,3 +187,7 @@ trackAddLikelihood.addTool( TrackLikelihood, name = "TrackMatching_likTool" )
 trackAddLikelihood.TrackMatching_likTool.otEff = 0.9
 GaudiSequencer("TrackAddExtraInfoSeq").Members += [ trackAddLikelihood, NeuralNetTmva() ]
 importOptions ("$NNTOOLSROOT/options/NeuralNetTmva.opts")
+
+if "MuonAlignTracks" in TrackSys().getProp("expertTracking"):
+  GaudiSequencer("TrackMuonRecSeq").Members += [ AlignMuonRec(), TrackEventFitter("MuonTrackFitter") ];
+  importOptions("$TRACKSYSROOT/options/AlignMuonRec.opts")

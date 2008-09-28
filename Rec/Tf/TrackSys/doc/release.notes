@@ -3,6 +3,9 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
+! 2008-09-28 - Stephanie Hansmann-Menzemer
+ - Add MuonTrackAlignRec to RecoTracking.py
+
 ! 2008-09-25 - Stephanie Hansmann-Menzemer
  - Add TrackRecoHLT.py to run HLT2 sequence
 
