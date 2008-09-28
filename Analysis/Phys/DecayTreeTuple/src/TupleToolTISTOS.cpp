@@ -79,7 +79,7 @@ StatusCode TupleToolTISTOS::fill( const LHCb::Particle*
     const L0DUReport* pL0DUReport = get<L0DUReport>( L0DUReportLocation::Default );
     verbose() << " L0 decision= " << pL0DUReport->decision() << endmsg;
 
-    std::vector<std::string> l0NamesInHlt = m_TriggerTisTosTool->triggerSelectionNames("L0Trigger*", 
+    std::vector<std::string> l0NamesInHlt = m_TriggerTisTosTool->triggerSelectionNames("L0*", 
                                                                                      ITriggerTisTos::kAllTriggerSelections);
     verbose() << " Names of L0 triggers in Hlt="; dumpvs( l0NamesInHlt );  verbose() << endmsg;
 
@@ -130,7 +130,7 @@ StatusCode TupleToolTISTOS::fill( const LHCb::Particle*
 
     // L0 Info ---------------------------------------------------------------------------
     bool decisionL0,tisL0,tosL0;
-    m_TriggerTisTosTool->triggerTisTos(*P,"L0Trigger*",decisionL0,tisL0,tosL0, ITriggerTisTos::kAllTriggerSelections);
+    m_TriggerTisTosTool->triggerTisTos(*P,"L0*",decisionL0,tisL0,tosL0, ITriggerTisTos::kAllTriggerSelections);
     if( !decisionL0 ) {
       test &= tuple->column( head+"_L0TIS", -1 );
       test &= tuple->column( head+"_L0TOS", -1 );
