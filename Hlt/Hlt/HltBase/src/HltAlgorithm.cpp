@@ -1,6 +1,9 @@
-// $Id: HltAlgorithm.cpp,v 1.43 2008-09-09 09:17:08 graven Exp $
+// $Id: HltAlgorithm.cpp,v 1.44 2008-09-28 09:09:19 graven Exp $
 // Include files 
 
+#include "Event/Particle.h"
+#include "Event/Track.h"
+#include "Event/RecVertex.h"
 #include "HltBase/HltAlgorithm.h"
 #include "HltBase/ESequences.h"
 #include "boost/lambda/lambda.hpp"
