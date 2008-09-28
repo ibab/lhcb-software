@@ -1,6 +1,8 @@
 ! package GaudiConf
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
+! 2008-09-28 - Stephanie Hansmann-Menzemer
+ - added option file to write out muon-long tracks for alignment
 
 ! 2008-09-26 - Marco Cattaneo
  - LHCbApp() now automatically includes $DDDBROOT/options/DDDB.py 

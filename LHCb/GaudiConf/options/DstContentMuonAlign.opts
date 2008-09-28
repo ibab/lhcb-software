@@ -1,0 +1,8 @@
+
+OutputDSTSeq.Members += { "TrackToDST/MuonTrackToDST" };    
+MuonTrackToDST.TracksInContainer = "/Event/Rec/Muon/MuonsTrackForAlignment";
+MuonTrackToDST.StoreAllStates = True;
+MuonTrackToDST.OutputLevel = 5;
+
+DstWriter.ItemList += { "/Event/Rec/Muon/MuonsTrackForAlignment#1" }
+
