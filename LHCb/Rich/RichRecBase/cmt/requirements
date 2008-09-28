@@ -2,7 +2,7 @@
 # Created    : 2002-11-19
 # Maintainer : Chris Jones   Christopher.Rob.Jones@cern.ch 
 #============================================================================
-# $Id: requirements,v 1.74 2008-09-19 06:40:03 jonrob Exp $
+# $Id: requirements,v 1.75 2008-09-28 13:15:26 cattanem Exp $
 #============================================================================
 
 package   RichRecBase
@@ -45,5 +45,5 @@ apply_pattern reflex_dictionary                                         \
               headerfiles=$(RICHRECBASEROOT)/dict/RichRecBaseDict.h     \
               selectionfile=$(RICHRECBASEROOT)/dict/RichRecBaseDict.xml \
               options="-U__MINGW32__ -DBOOST_DISABLE_ASSERTS"
-
+macro RichRecBaseGen_dependencies RichRecBaseObj2Doth
 #============================================================================
