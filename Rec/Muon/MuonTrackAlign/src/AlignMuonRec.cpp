@@ -1,6 +1,6 @@
 ////////// Brunel v32r7 ///////////////
 
-// $Id: AlignMuonRec.cpp,v 1.9 2008-07-17 12:50:32 smenzeme Exp $
+// $Id: AlignMuonRec.cpp,v 1.10 2008-09-28 10:01:50 smenzeme Exp $
 // Include files 
 
 // from Gaudi
@@ -126,7 +126,7 @@ StatusCode AlignMuonRec::initialize() {
 
   //calculate the transverse momentum  
   m_fCalcMomentum = tool<ITrackMomentumEstimate>("TrackPtKick");
-  info() << "In init, PTKick from geometry " << endreq;
+  debug() << "In init, PTKick from geometry " << endreq;
   
 
   
@@ -441,7 +441,7 @@ StatusCode AlignMuonRec::execute() {
 
   
   m_muonTracks.clear();
-  info()<<" stored candidates "<<m_countMuonCandidates<<endreq; 
+  debug()<<" stored candidates "<<m_countMuonCandidates<<endreq; 
   
   return StatusCode::SUCCESS;
 };
@@ -453,8 +453,8 @@ StatusCode AlignMuonRec::finalize() {
   
   debug() << "==> Finalize" << endmsg;
   
-  info () << "Number of events processed: " << double(m_countEvents) << endreq;
-  info () << "Average number of muon tracks: " 
+  debug () << "Number of events processed: " << double(m_countEvents) << endreq;
+  debug () << "Average number of muon tracks: " 
           << double(m_countMuCandidates)/double(m_countEvents) << endreq;
   
   return GaudiAlgorithm::finalize();  // must be called after all other actions
@@ -486,7 +486,7 @@ StatusCode AlignMuonRec::muonSearch() {
     bool CT_flag = true;
     
     for( CT_itM5 = CT_Points[4].begin(); CT_itM5<CT_Points[4].end(); CT_itM5++){
-      info() <<" Hit already used for another seed"<<endreq;
+      debug() <<" Hit already used for another seed"<<endreq;
       if ((*CT_itM5).tile()==(*itM5m).tile()) CT_flag = false;
     }
           
@@ -513,8 +513,8 @@ StatusCode AlignMuonRec::muonSearch() {
     double x = M5x/n * m_station[3].z()/m_station[4].z();
     double y = M5y/n * m_station[3].z()/m_station[4].z();
     
-    info() <<(*itM5).x()<<" "<<M5x/n<<endreq; 
-    info() <<(*itM5).y()<<" "<<M5y/n<<endreq;
+    debug() <<(*itM5).x()<<" "<<M5x/n<<endreq; 
+    debug() <<(*itM5).y()<<" "<<M5y/n<<endreq;
     
     double distance = 0;
     double mindistance = sqrt(pow((PADsizeX[0]+PADsizeX[1]+PADsizeX[2]+PADsizeX[3]),2)+
@@ -599,7 +599,7 @@ StatusCode AlignMuonRec::muonSearch() {
       m_muonTracks.push_back(muon);      
   }
  
-  info()<<"number of muon Tracks "<<m_muonTracks.size()<<endreq;
+  debug()<<"number of muon Tracks "<<m_muonTracks.size()<<endreq;
   return StatusCode::SUCCESS;
   
 };

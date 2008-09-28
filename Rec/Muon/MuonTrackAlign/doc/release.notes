@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.14 2008-07-29 13:25:46 cattanem Exp $
+! $Id: release.notes,v 1.15 2008-09-28 10:01:50 smenzeme Exp $
 ! Package     : MuonTrackAlign
 ! Responsible : Alessia Satta
 ! Purpose     : Track reconstruction for Muon Alignment purposes
 !---------------------------------------------------------------------
+! 2008-09-28 - Stephanie Hansmann-Menzemer
+ - remove some of the verbosity of AlignMuonRec.cpp
 
 !=================== MuonTrackAlign v1r6 2008-07-29 ==================
 ! 2008-07-17 - Marco Cattaneo for Stephanie Menzemer
