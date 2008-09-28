@@ -189,5 +189,9 @@ GaudiSequencer("TrackAddExtraInfoSeq").Members += [ trackAddLikelihood, NeuralNe
 importOptions ("$NNTOOLSROOT/options/NeuralNetTmva.opts")
 
 if "MuonAlignTracks" in TrackSys().getProp("expertTracking"):
-  GaudiSequencer("TrackMuonRecSeq").Members += [ AlignMuonRec(), TrackEventFitter("MuonTrackFitter") ];
+  GaudiSequencer("TrackMuonRecSeq").Members += [ AlignMuonRec("AlignMuonRec"),
+                                                 TrackEventFitter("MuonTrackFitter") ];
   importOptions("$TRACKSYSROOT/options/AlignMuonRec.opts")
+  if TrackSys().getProp("fieldOff"):
+     AlignMuonRec("AlignMuonRec").BField = False;
+          

@@ -1,8 +1,8 @@
-# AlignMuonRec.BField = true;
+AlignMuonRec.BField = true;
 AlignMuonRec.CloneKiller=true;
 AlignMuonRec.OutputLevel = 5;
 AlignMuonRec.MatchChisq   = 40.;
-# AlignMuonRec.M1Station   = true;
+AlignMuonRec.M1Station   = false;
 AlignMuonRec.Extrapolator.ApplyMultScattCorr = true;
 AlignMuonRec.Extrapolator.OutputLevel = 5;
 
