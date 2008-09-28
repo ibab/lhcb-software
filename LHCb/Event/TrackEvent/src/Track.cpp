@@ -11,7 +11,6 @@
 #include "Event/Track.h"
 #include "Event/TrackFunctor.h"
 #include "Event/Node.h"
-#include "iostream.h"
 
 using namespace Gaudi;
 using namespace LHCb;
