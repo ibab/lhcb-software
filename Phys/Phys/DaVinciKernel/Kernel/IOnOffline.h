@@ -1,4 +1,4 @@
-// $Id: IOnOffline.h,v 1.9 2008-09-29 16:26:01 jpalac Exp $
+// $Id: IOnOffline.h,v 1.10 2008-09-29 16:50:06 jpalac Exp $
 #ifndef DAVINCIKERNEL_IONOFFLINE_H 
 #define DAVINCIKERNEL_IONOFFLINE_H 1
 
@@ -41,7 +41,7 @@ public:
   virtual const std::string& relatedPVFinderType() const = 0;
 
   /// Return location of default primary vertices
-  virtual std::string& primaryVertexLocation() const = 0 ;
+  virtual const std::string& primaryVertexLocation() const = 0 ;
 
 };
 #endif // DAVINCIKERNEL_IONOFFLINE_H
