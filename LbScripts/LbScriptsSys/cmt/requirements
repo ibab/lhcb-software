@@ -4,7 +4,7 @@ version v1r3
 use LbScriptsPolicy     v1r2
 use LbUtils             v1r3
 use LbRelease           v1r2
-use LbConfiguration     v1r2
+use LbConfiguration     v1r3
 # use LbLegacy            v1r1
 # use LbScriptsDoc        v1r1
 

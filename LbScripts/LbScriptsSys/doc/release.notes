@@ -1,6 +1,7 @@
 2008-09-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v1r3
+	fixed version of LbConfiguration
 
 2008-09-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
