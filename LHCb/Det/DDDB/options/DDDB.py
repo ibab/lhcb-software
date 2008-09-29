@@ -82,7 +82,7 @@ DetectorPersistencySvc( CnvServices = [ xmlCnvSvc ] )
 
 ##########################################################################
 # DetetectorDataSvc must be external, to finalize after ToolSvc
-ApplicationMgr().ExtSvc += [ detDataSvc ]
+ApplicationMgr().ExtSvc.insert(0, detDataSvc)
 
 ##########################################################################
 # Technology dependent options
