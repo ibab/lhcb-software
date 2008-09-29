@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.22 2008-09-25 19:07:13 graven Exp $ 
+! $Id: release.notes,v 1.23 2008-09-29 13:07:04 agomesdo Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : 
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2008-09-29 - Alvaro dos Santos, JA. Hernando
+ - update HltJob to work with the current L0
 
 ! 2008-09-25 - Gerhard Raven
  - update some out-of-date comments
