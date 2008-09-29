@@ -222,10 +222,10 @@ class Parser(OptionParser):
         result.append(self.format_option_longhelp(formatter))
         result.append(self.format_epilog(formatter))
         return "".join(result)
-    def print_help(self, file=None):
-        if file is None:
-            file = self.help_output
-        OptionParser.print_help(self, file)
+    def print_help(self, filename=None):
+        if filename is None:
+            filename = self.help_output
+        OptionParser.print_help(self, filename)
     def print_longhelp(self, filename=None):
         if filename is None:
             filename = self.help_output

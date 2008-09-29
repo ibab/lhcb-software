@@ -4,7 +4,7 @@ import logging
 
 import sys
 
-class Script():
+class Script:
     _version = "$Name: not supported by cvs2svn $"
     def __init__(self, usage=None, version = None, parser=Parser, help_output=sys.stdout):
         """ constructor of the Script. provides default options parser 

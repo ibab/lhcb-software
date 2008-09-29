@@ -46,7 +46,7 @@ class Environment:
         del self.env[key]
         log = logging.getLogger()
         log.info("removed %s from environment" % key)
-	
+
     def keys(self):
         """
         Return the list of defined environment variables.

@@ -1,3 +1,12 @@
+2008-09-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/_helpers/__init__.py: New file.
+	* python/LbUtils/_helpers/optparse.py: New file.
+	* python/LbUtils/_helpers/subprocess.py: New file.
+	* python/LbUtils/__init__.py: added helpers modules if python 2.5 is not 
+	present.
+	* python/LbUtils/Script.py: fixed class declaration
+
 2008-09-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v1r2
