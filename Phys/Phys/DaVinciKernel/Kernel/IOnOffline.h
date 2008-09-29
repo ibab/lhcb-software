@@ -1,4 +1,4 @@
-// $Id: IOnOffline.h,v 1.8 2008-09-29 16:20:14 jpalac Exp $
+// $Id: IOnOffline.h,v 1.9 2008-09-29 16:26:01 jpalac Exp $
 #ifndef DAVINCIKERNEL_IONOFFLINE_H 
 #define DAVINCIKERNEL_IONOFFLINE_H 1
 
@@ -32,13 +32,13 @@ public:
   virtual const bool online() const = 0 ;
 
   /// Return name of IDistanceCalculator implementation 
-  virtual const std::string& distanceCalculatorName() const = 0 ;
+  virtual const std::string& distanceCalculatorType() const = 0 ;
 
   /// Return name of unconstrained vertex fitter
-  virtual const std::string& vertexFitterName() const = 0 ;
+  virtual const std::string& vertexFitterType() const = 0 ;
 
   /// Return name of IRelatedPVFinder implementation
-  virtual const std::string& relatedPVFinderName() const = 0;
+  virtual const std::string& relatedPVFinderType() const = 0;
 
   /// Return location of default primary vertices
   virtual std::string& primaryVertexLocation() const = 0 ;
