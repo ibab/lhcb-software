@@ -1,9 +1,20 @@
-!$Id: release.notes,v 1.4 2008-09-25 15:26:10 jpalac Exp $
+!$Id: release.notes,v 1.5 2008-09-29 10:11:44 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Ex/MicroDSTExample
 ! Responsible : Juan PALACIOS
 ! Purpose     : MicroDST making and reading examples.
 !-----------------------------------------------------------------------------
+
+! 2008-09-29 - Juan PALACIOS
+ - options/TestMicroDSTMake.opts
+  . Add options to write only events that pass the selection if that is 
+	  desired. See lines containing "RequireAlgs"
+  . Copy RecHeader only for events passing the selection.
+ - options/TestMicroDSTMake.opts
+  . Use $DAVINCIROOT/options/MicroDSTStream.py instead of 
+    $DAVINCIROOT/options/MicroDSTCommon.opts
+  . Add lines to write only events that pass the selection if that is 
+	  desired. See lines containing "RequireAlgs". This is default behaviour
 
 ! 2008-09-25 - Juan PALACIOS
  - options/TestMicroDSTMake.py
