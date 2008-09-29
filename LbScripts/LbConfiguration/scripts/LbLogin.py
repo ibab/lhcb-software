@@ -147,7 +147,7 @@ class LbLoginScript(Script):
     def setPath(self):
         opts = self.options
         ev = self._env
-        if ev["OSTYPE"] == "linux" :
+        if sys.platform != "win32" :
             if ev.has_key("SAVEPATH") :
                 if ev["PATH"] != ev["SAVEPATH"] :
                     ev["PATH"] = ev["SAVEPATH"]

@@ -1,5 +1,12 @@
 2008-09-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* cmt/requirements: fixed building problems on windows for 
+	the generateLogin script
+	* scripts/LbLogin: fixed platform test
+
+
+2008-09-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* cmt/requirements: release of version v1r3
 
 2008-09-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>

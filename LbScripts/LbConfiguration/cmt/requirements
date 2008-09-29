@@ -26,6 +26,10 @@ document create_bat_aliases projectaliases
 macro_append projectaliases_dependencies " install_scripts "
 macro_append projectaliases_dependencies " LbConfiguration_python "
 
+cmtpath_pattern \
+	setup_script $(LBCONFIGURATIONROOT)/scripts/AllProjectsSetup
+	
+private 
 
 macro generateLogin_output " ../scripts/LbLogin.csh ../scripts/LbLogin.sh ../scripts/LbLogin.zsh ../scripts/LbLogin.bat"
 macro Lblogin_script_location "$(LbConfiguration_cmtpath)/$(cmt_installarea_prefix)"
@@ -36,6 +40,4 @@ apply_pattern CallCommand target=generateLogin
 macro_append install_scripts_dependencies " generateLogin " 
 
 
-cmtpath_pattern \
-	setup_script $(LBCONFIGURATIONROOT)/scripts/AllProjectsSetup
-	
+end_private
