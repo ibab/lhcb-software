@@ -206,7 +206,8 @@ void BaseServiceMap::loadDimInfo(const std::string &serviceName, const std::stri
       std::vector<std::string> serviceParts = Misc::splitString(termSvcName, "/");
       std::string newName="";
       int n = serviceParts.size();
-      for (int i=2; i < n; i++) {
+      newName=serviceParts[2];
+      for (int i=3; i < n; i++) {
         newName = newName + "/" + serviceParts[i];
       }
    
