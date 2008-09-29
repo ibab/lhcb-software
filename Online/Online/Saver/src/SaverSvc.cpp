@@ -8,6 +8,7 @@
 #include "GaudiKernel/IIncidentSvc.h"
 #include "Gaucho/BaseServiceMap.h"
 #include "Gaucho/DimTimerProcess.h"
+#include "Gaucho/DimInfoServices.h"
 #include "SaverSvc.h"
 
 #include <ctime>
@@ -27,6 +28,7 @@ SaverSvc::SaverSvc(const std::string& name, ISvcLocator* ploc) : Service(name, p
   declareProperty("refreshTime",  m_refreshTime=10);
   declareProperty("dimclientdns",m_dimClientDns);
   declareProperty("savedir", m_saveDir);
+  m_monitoringFarm = true;
   m_enablePostEvents = true;
 }
 
@@ -43,23 +45,36 @@ StatusCode SaverSvc::initialize() {
   
   m_utgid = RTL::processName();
   
-  std::size_t first_us = m_utgid.find("_");
-  std::size_t second_us = m_utgid.find("_", first_us + 1);
-  m_nodeName = m_utgid.substr(0, first_us);
-  
-  if (m_nodeName.compare(m_partName[0])) {
-    std::size_t third_us = m_utgid.find("_", second_us+1);
-    m_nodeName = m_utgid.substr(second_us+1,third_us);
+  std::vector<std::string> utgidParts = Misc::splitString(m_utgid, "_");
+
+  if (utgidParts.size() != 3 ) {
+     msg << MSG::ERROR << "Wrong utgid format for Saver !!" << endreq;
+     msg << MSG::ERROR << "If you are in a EFF farm try this format: nodename_Saver_1" << endreq;
+     msg << MSG::ERROR << "If you are in a Monitoring farm try: partition_nodename_MonSaver" << endreq;
+     return StatusCode::FAILURE;
   }
-
-  std::string verifName = m_utgid.substr(first_us + 1, second_us - first_us - 1);
   
-//   if ((verifName != "Saver")&&(verifName != "SAVER")) {
-//     msg << MSG::ERROR << "This is not a Saver !" << endreq;
-//     msg << MSG::ERROR << "Pplease try nodeName_Saver_1" << endreq;
-//     return StatusCode::FAILURE;
-//   }
-
+  std::string verifName;
+  if (utgidParts[2].compare("1")==0){ // EFF farm 
+    m_nodeName = utgidParts[0];
+    verifName = utgidParts[1];
+    m_monitoringFarm = false;
+  }
+  else { //Monitoring Farm
+    m_nodeName = utgidParts[1];
+    verifName = utgidParts[2];
+    m_monitoringFarm = true;
+  }
+  msg << MSG::DEBUG << "nodeName = " << m_nodeName << endreq;
+  msg << MSG::DEBUG << "verifName = " << verifName << endreq;
+  
+  if ((verifName != "Saver")&&(verifName != "SAVER")&&(verifName != "MonSaver")&&(verifName != "MONSAVER")) {
+     msg << MSG::ERROR << "Wrong utgid format for Saver !!" << endreq;
+     msg << MSG::ERROR << "If you are in a EFF farm try this format: nodename_Saver_1" << endreq;
+     msg << MSG::ERROR << "If you are in a Monitoring farm try: partition_nodename_MonSaver" << endreq;
+     return StatusCode::FAILURE;
+  }
+  
   sc = service("IncidentSvc",m_incidentSvc,true);
   if ( !sc.isSuccess() )  {
     msg << MSG::ERROR << "Cannot access incident service." << endmsg;
@@ -73,16 +88,8 @@ StatusCode SaverSvc::initialize() {
   
   msg << MSG::DEBUG << "Consider node " << m_nodeName << " partition " << m_partName << endreq;
 
-  if ((0 == m_partName.size())&&(0 == m_taskName.size())){
-    msg << MSG::ERROR << "In your options file you should to specify the tasks names OR the partition names." << endreq;
-    return StatusCode::FAILURE;
-  }
-  
-  m_withPartitionName = false;
-  std::string utgidformat = "nodename_taskname_X";
-  
-  if (m_partName.size() > 0){
-    m_withPartitionName = true;
+  std::string utgidformat = "nodename_taskname_#";
+  if (m_monitoringFarm){
     utgidformat = "partname_" + utgidformat;
   } 
     
@@ -113,22 +120,6 @@ StatusCode SaverSvc::initialize() {
   msg << MSG::DEBUG << "***************************************************** " << endreq;
   msg << MSG::DEBUG << "***************************************************** " << endreq;
     
-  msg << MSG::DEBUG << "creating ProcessMgr" << endreq;
-  m_processMgr = new ProcessMgr (msgSvc(), this, m_refreshTime);
-  if (m_withPartitionName) m_processMgr->setPartVector(m_partName);
-  m_processMgr->setTaskVector(m_taskName);
-  m_processMgr->setAlgorithmVector(m_algorithmName);
-  m_processMgr->setObjectVector(m_objectName);
-  m_processMgr->setNodeName(m_nodeName);
-  m_processMgr->setSaveDir(m_saveDir);
-
-  m_processMgr->createInfoServers();
-
-  m_processMgr->createTimerProcess();
-
-  m_file="Waiting for command to save histograms............."; 
-  m_fileSize=0;
-
   //sc = service("MonitorSvc",m_monitorSvc,true);
   sc = service("MonitorSvc",m_pGauchoMonitorSvc,true);
   if ( !sc.isSuccess() )  {
@@ -136,16 +127,55 @@ StatusCode SaverSvc::initialize() {
     return StatusCode::FAILURE;
   }
   
-  m_processMgr->setMonitorSvc(m_pGauchoMonitorSvc);
-  declareInfo("file",m_file,"Filename of latest saveset");
-  //declareInfo("filesize",m_fileSize,"Filesize of latest saveset");
+  m_pGauchoMonitorSvc->enableMonObjectsForString();
+  
+  std::vector<std::string>::iterator  it;
+  int i =0;
+  
+  m_file = new std::string[m_taskName.size()];
+  
+  for (it = m_taskName.begin(); it < m_taskName.end(); it++){
+    msg << MSG::DEBUG << "creating ProcessMgr for taskName " << *it << endreq;
+    ProcessMgr* processMgr = new ProcessMgr (msgSvc(), this, m_refreshTime);
+    if (m_monitoringFarm) processMgr->setPartVector(m_partName);
+    processMgr->setTaskName(*it);
+    processMgr->setAlgorithmVector(m_algorithmName);
+    processMgr->setObjectVector(m_objectName);
+    processMgr->setNodeName(m_nodeName);
+    processMgr->setSaveDir(m_saveDir);
+    processMgr->createInfoServers();
+    processMgr->createTimerProcess();
+  
+    processMgr->setMonitorSvc(m_pGauchoMonitorSvc);
 
-  m_processMgr->setFileStaus(m_file);
-  m_processMgr->setFileSizeStaus(m_fileSize);
+    m_file[i] = "Waiting for command to save histograms............."; 
+    // std::vector<std::string>::iterator it2 = m_file.end();
+    // m_file.insert(it2,fileName);
+    //m_file.push_back("Waiting for command to save histograms.............");
+    
+    //declareInfo("SAVESETLOCATION/"+*it, *it2,"Filename of latest saveset");
+    //declareInfo("SAVESETLOCATION/"+*it, m_file[i],"Filename of latest saveset");
+    
+    std::string *fileName = processMgr->fileNamePointer();
+    
+    //declareInfo("SAVESETLOCATION/"+*it, *fileName,"Filename of latest saveset");
+    std::string infoName = "SAVESETLOCATION/"+*it;
+    
+    declareInfo(infoName, *fileName, "Filename of latest saveset");
+    
+    //declareInfo("filesize",m_fileSize,"Filesize of latest saveset");
   
-  msg << MSG::DEBUG << "Activing PostEvent to StartTimer............." << endreq;
-  IocSensor::instance().send(this, s_startTimer, this); //start Timer*/
+    //processMgr->setFileStaus(m_file[i]);
+    //processMgr->setFileStaus(m_file[i]);
+    //m_processMgr->setFileSizeStaus(m_fileSize);
   
+    msg << MSG::DEBUG << "Activing PostEvent to StartTimer............." << endreq;
+    IocSensor::instance().send(this, s_startTimer, processMgr); //start Timer*/
+  
+    m_processMgr.push_back(processMgr);
+    msg << MSG::DEBUG << "Finishing the initialize ProcessMgr for taskName " << *it << endreq;
+    i++;
+  }
   msg << MSG::DEBUG << "Finishing the initialize method." << endreq;
   return StatusCode::SUCCESS;
 }
@@ -156,45 +186,64 @@ void SaverSvc::handle(const Event&  ev) {
   if (!m_enablePostEvents) return;
   
   if (s_saveHistos == ev.type) {
-    save().ignore();
+    msg << MSG::DEBUG << " We are inside a PostEvent to SaveHistos " << endreq;
+    ProcessMgr* processMgr = (ProcessMgr*) ev.data;
+    save(processMgr).ignore();
+    
   }
-  else if(s_startTimer == ev.type) {
+  if(s_startTimer == ev.type) {
     msg << MSG::DEBUG << " We are inside a PostEvent to Start the Timer " << endreq;
-    m_processMgr->dimTimerProcess()->start(m_refreshTime);
+    ProcessMgr* processMgr = (ProcessMgr*) ev.data;
+    processMgr->dimTimerProcess()->start(m_refreshTime);
     msg << MSG::DEBUG << " End PostEvent to Start the Timer " << endreq;
+  }
+  else if(s_stopTimer == ev.type) {
+    msg << MSG::DEBUG << " We are inside a PostEvent to Sop the Timer " << endreq;
+    ProcessMgr* processMgr = (ProcessMgr*) ev.data;
+    processMgr->dimTimerProcess()->stop();
+    msg << MSG::DEBUG << " End PostEvent to Stop Timer " << endreq;
   }
   else if(s_createInfoServices == ev.type ){
     msg << MSG::DEBUG << " We are inside a PostEvent to Create the DimInfoServices " << endreq;
     msg << MSG::DEBUG << "Choosing Server to get ServicesSet.........." << endreq;
-
+    ProcessMgr* processMgr = (ProcessMgr*) ev.data;
     std::string serverChoosed;
     while (true) {
-      m_processMgr->dimInfoServers()->chooseServer();
-      serverChoosed = m_processMgr->dimInfoServers()->serverChoosed();
+      processMgr->dimInfoServers()->chooseServer();
+      serverChoosed = processMgr->dimInfoServers()->serverChoosed();
       if ("" != serverChoosed) {
-        msg << MSG::DEBUG << "Server Choosed = " << m_processMgr->dimInfoServers()->serverChoosed() << endreq;
+        msg << MSG::DEBUG << "Server Choosed = " << processMgr->dimInfoServers()->serverChoosed() << endreq;
         break;
       }
     }
     msg << MSG::DEBUG << "Before createInfoServices............." << endreq;
-    m_processMgr->createInfoServices(serverChoosed);
-
+    processMgr->createInfoServices(serverChoosed);
    // IocSensor::instance().send(this, s_updateServiceMap, ev.data); //start Timer*/
     msg << MSG::DEBUG << " End PostEvent to Create the DimInfoServices " << endreq;
   }
   else if(s_updateSvcMapFromInfoServer == ev.type) {
     msg << MSG::DEBUG << " We are inside a PostEvent to UpdateServiceMapFromInfoServer " << endreq;
-    std::map<std::string, bool, std::less<std::string> >* serverMap = (std::map<std::string, bool, std::less<std::string> >*) ev.data;
-    m_processMgr->serviceMap()->updateMap(*serverMap);
-    m_processMgr->serviceMap()->printMap();
+    ProcessMgr* processMgr = (ProcessMgr*) ev.data;
+    std::map<std::string, bool, std::less<std::string> > serverMap = processMgr->dimInfoServers()->serverMap();
+
+/*    std::pair<ProcessMgr*, std::map<std::string, bool, std::less<std::string> > >* data = (std::pair<ProcessMgr*, std::map<std::string, bool, std::less<std::string> > >*) ev.data;
+    ProcessMgr* processMgr = data->first;
+    std::map<std::string, bool, std::less<std::string> > serverMap = data->second;*/
+    
+    processMgr->serviceMap()->updateMap(serverMap);
+    processMgr->serviceMap()->printMap();
     msg << MSG::DEBUG << " End PostEvent to UpdateServiceMap " << endreq;
+    
   }
   else if(s_updateSvcMapFromInfoService == ev.type) {
     msg << MSG::DEBUG << " We are inside a PostEvent to UpdateServiceMapFromInfoService " << endreq;
-    std::set<std::string>* serviceSet = (std::set<std::string>*) ev.data;
-    m_processMgr->serviceMap()->setServiceSet(*serviceSet);
-    m_processMgr->updateMap();
-    m_processMgr->serviceMap()->printMap();
+    ProcessMgr* processMgr = (ProcessMgr*) ev.data;
+    std::set<std::string> serviceSet = processMgr->dimInfoServices()->serviceSet();
+    processMgr->serviceMap()->setServiceSet(serviceSet);
+    processMgr->updateMap();
+
+    processMgr->serviceMap()->printMap();
+
     msg << MSG::DEBUG << " End PostEvent to UpdateServiceMapFromInfoService " << endreq;
   }
 }
@@ -204,8 +253,11 @@ void SaverSvc::handle(const Incident& inc) {
 //------------------------------------------------------------------------------
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG << "Got incident " << inc.type() << " from " << inc.source() <<endreq;
-  IocSensor::instance().send(this, s_saveHistos, this);
-  
+  //IocSensor::instance().send(this, s_saveHistos, this);
+  std::vector<ProcessMgr *>::iterator it;
+  for (it = m_processMgr.begin(); it < m_processMgr.end(); it++){
+    IocSensor::instance().send(this, s_saveHistos, *it);
+  }
 }
 
 
@@ -221,34 +273,53 @@ StatusCode SaverSvc::finalize() {
     m_incidentSvc->release();
     m_incidentSvc = 0;
   }
-  // Save histos
-  save().ignore();
-  // Disconnect NOW from monitoring service
+  
+  std::vector<ProcessMgr *>::iterator it;
+  for (it = m_processMgr.begin(); it < m_processMgr.end(); it++){
+    // Save histos
+    save(*it).ignore();
+    // Disconnect NOW from monitoring service
+  }
+  m_processMgr.clear();
+ 
   if ( m_pGauchoMonitorSvc ) {
     m_pGauchoMonitorSvc->undeclareAll(this);
     m_pGauchoMonitorSvc->release();
     m_pGauchoMonitorSvc = 0;
   }
+   
   
-  if (m_processMgr) {delete m_processMgr; m_processMgr=0;}
+//  if (*it) {delete *it; *it=0;}
+  
   return Service::finalize();
 }
 
 //------------------------------------------------------------------------------
-StatusCode SaverSvc::save() {
+StatusCode SaverSvc::save(ProcessMgr* processMgr) {
 //------------------------------------------------------------------------------
   MsgStream  msg( msgSvc(), name() );
-  //msg << MSG::INFO << "executing Saver....command " << m_command << endreq;
-
-  //if (m_command=="SAVE_HISTOS") {
+    
     msg << MSG::DEBUG << "save_histos command received." << endreq;
-    if (m_processMgr->isAdder()) {
+    if (processMgr->isAdder()) {
       msg << MSG::INFO << "Sorry Adders can't save." << endreq;
       return StatusCode::SUCCESS;
     }
-    m_processMgr->serviceMap()->write(m_saveDir, m_file, m_fileSize);
-    msg << MSG::INFO << "Finished saving histograms. "<< endreq;
-  //}
+    std::string *fileName = processMgr->fileNamePointer();
+    
+    msg << MSG::INFO << "Before saving histograms in file "<< *fileName << endreq;
+    
+    processMgr->write();
+    
+//    processMgr->serviceMap()->write(m_saveDir, m_file);
+/*    for (unsigned int i = 0; i < m_taskName.size(); i++){
+      if (processMgr->taskName().compare(m_taskName[i]) == 0){
+        //processMgr->serviceMap()->write(m_saveDir, m_file[i]);
+      }
+    }*/
+    
+    
+    
+    msg << MSG::INFO << "Finished saving histograms in file "<< *fileName << endreq;
   
   return StatusCode::SUCCESS;
 }

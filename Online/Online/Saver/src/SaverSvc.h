@@ -23,7 +23,7 @@ namespace LHCb {
     /// Iservice overload: Finalize service
     StatusCode finalize();
     /// Call to save the histograms
-    StatusCode save();
+    StatusCode save(ProcessMgr* processMgr);
     /// Incident handler callback
     virtual void handle(const Incident& inc);
     /// Interactor handler
@@ -38,6 +38,8 @@ namespace LHCb {
      void declareInfo(const std::string& nam,const T& var,const std::string& dsc) const {
        m_pGauchoMonitorSvc->declareInfo(nam, var, dsc, this);
      }
+     //std::vector<std::string> m_file;
+     std::string* m_file;
 
 private:
   /// Reference to monitoring service
@@ -46,12 +48,14 @@ private:
   /// Reference to incident service
   IIncidentSvc* m_incidentSvc;
   
-  ProcessMgr *m_processMgr;
+  //ProcessMgr *m_processMgr;
+  //std::string m_file;
+  //int m_fileSize;
+  std::vector<ProcessMgr *> m_processMgr;
   
   std::string m_utgid;
   std::string m_nodeName;
-  bool m_withPartitionName;
-  
+  bool m_monitoringFarm;
   
   std::vector<std::string> m_partName;
   std::vector<std::string> m_taskName;
@@ -61,9 +65,6 @@ private:
   int m_refreshTime;
   std::string m_saveDir;
     
-  std::string m_command;
-  std::string m_file;
-  int m_fileSize;
   bool m_enablePostEvents;
     
   };
