@@ -10,15 +10,19 @@
 #include "$CCBARROOT/options/DoDC06SelBs2Jpsi2MuMuPhi2KK_lifetime_unbiased.opts"
 #pragma print on
 
+// add sequence for things we want to keep fos ALL events in DST
+ApplicationMgr.TopAlg += { "GaudiSequencer/AllEvents" } ;
+
 #include "$DAVINCIROOT/options/MicroDSTCommon.opts"
 // over-write some MicroDSTCommon.opts options
-MicroDSTStream.Output = "DATAFILE='testBs2JpsiPhi_5Kevt.dst' TYP='POOL_ROOTTREE' OPT='REC'";
+MicroDSTStream.Output = "DATAFILE='testBs2JpsiPhi_1000evt.dst' TYP='POOL_ROOTTREE' OPT='REC'";
 
+MicroDSTStream.RequireAlgs = {'AllEvents'};
+// This will write out only events that have passed the selection
+MicroDSTStream.RequireAlgs += {'SeqDC06selBs2JpsiPhi'};
 // Get rid of some spam
 PrintDC06selBs2JpsiPhi.OutputLevel=4;
 
-// add sequence for things we want to keep fos ALL events in DST
-ApplicationMgr.TopAlg += { "GaudiSequencer/AllEvents" } ;
 
 //=============================================================================
 // save the ODIN bank
@@ -28,7 +32,8 @@ CopyODIN.OutputLevel = 4;
 
 //=============================================================================
 // Save the RecHeader for all events
-AllEvents.Members += {"MicroDST::ObjectClonerAlg<LHCb::RecHeader>/CopyRecHeader"};
+//AllEvents.Members += {"MicroDST::ObjectClonerAlg<LHCb::RecHeader>/CopyRecHeader"};
+SeqDC06selBs2JpsiPhi.Members += {"MicroDST::ObjectClonerAlg<LHCb::RecHeader>/CopyRecHeader"};
 CopyRecHeader.OutputLevel = 4;
 //=============================================================================
 
@@ -116,7 +121,7 @@ CopyMC.OutputLevel=4;
 ApplicationMgr.HistogramPersistency = "ROOT";
 HistogramPersistencySvc.OutputFile = "DVHistos.root";
 
-ApplicationMgr.EvtMax    = 5000 ;
+ApplicationMgr.EvtMax    = 1000 ;
 EventSelector.FirstEvent = 1 ;
 EventSelector.PrintFreq  = 100 ;
 //=============================================================================
