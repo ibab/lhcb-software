@@ -8,10 +8,10 @@ from   Online.RunInfoClasses.General import General as General
 from   Online.Streaming.PartitionInfo import PartitionInfo as PartitionInfo
 from   Online.Streaming.StreamingDescriptor import StreamingDescriptor as StreamDescriptor
 
-log       = Utils.log
-error     = Utils.error
-std       = PVSS.gbl.std
-printSlots  = Utils.printSlots
+log        = Utils.log
+error      = Utils.error
+std        = PVSS.gbl.std
+printSlots = Utils.printSlots
 
 # =============================================================================
 def getNodesFromSlots(slots):
@@ -40,86 +40,47 @@ class Reconstruction(General):
     General.__init__(self,manager,name)
     self.storage = storage
     self.streamManager = stream
+    self.addReconstruction()
 
+  # ===========================================================================
+  def detectorName(self):
+    return 'LHCb'
   # ===========================================================================
   def doStreaming(self):
     "Access to the use-flag"
-    return self.monFlag.data != 0
+    return self.recFlag.data != 0
   # ===========================================================================
   def numLayer2Slots(self):
-    return sum(self.monMult.data)
+    num = int(self.recWorker.data.split('/')[1])
+    print 'NumLayer2 slots:',num
+    return num
   # ===========================================================================
   def numLayer1Slots(self):
-    return 2*len(self.monStreams.data)
+    num = len(self.recStreams.data)
+    print 'NumLayer1 slots:',num
+    return 20
   # ===========================================================================
   def monitoringTypes(self):
-    return self.monTypes.data
-  # ===========================================================================
-  def monitoringMultiplicity(self):
-    return self.monMult.data
+    return [self.recWorker.data.split('/')[0]]
   # ===========================================================================
   def monitoringStreams(self):
-    return self.monStreams.data
+    return self.recStreams.data
   # ===========================================================================
   def defineTasks(self,partition):
     """
          Define all tasks in the storage layer for a given partition.
          The result is storen in runInfo datapoints for further processing.
     """
-
+    import traceback
     relay_slots = partition.recvSlices()
     mon_slots   = partition.streamSlices()
     monNodes    = partition.streamNodesFromSlots()
     relayNodes  = partition.recvNodesFromSlots()
     dimDns      = self.manager.hostName()
-    opt = '/'+dimDns+'/'+partition.manager.name()+'/'+partition.name+'/'
-    cl0 = '/Class0'+opt
-    cl1 = '/Class1'+opt
+    opt = '/'+dimDns+'/'+partition.manager.name()+'/'+partition.name
+    cl0 = '/Class0'+opt+'/("",)'
+    cl1 = '/Class1'+opt+'/("",)'
     cl2 = '/Class2'+opt
-
-    streams = []
-    jo_mgr = Systems.controlsMgr(Params.jobopts_system_name)
-    #log('Detectors in readout:'+str(self.detectorsInReadout()))
-    monStreams = set()
-    mon_types  = self.monitoringTypes()
-    mon_mult   = self.monitoringMultiplicity()
-    mon_stream = self.monitoringStreams()
-    for j in xrange(len(mon_types)):
-      for i in xrange(mon_mult[j]):
-        typ = mon_types[j]
-        task = JobOptions.TaskType(jo_mgr,typ)
-        if task.exists():
-          # Check if the detector is in the readout
-          partID = self.partID.data
-          detector = task.getDetector()
-          det_used = self.isDetectorInReadout(detector)
-          if detector.upper()=='ANY' or det_used is not None:
-            monStreams.add(mon_stream[j])
-            streams.append([typ,mon_stream[j],i])
-            if detector.upper()=='ANY':
-              log('USE  monitoring task:%-16s [Task started for all detectors]'%(typ,))
-            else:
-              log('USE  monitoring task:%-16s [Detector %-8s is in the readout]:%s'%(typ,detector,str(det_used)))
-          else:
-            log('SKIP monitoring task:%-16s [Detector %-8s is NOT in the readout]'%(typ,detector,))
-        else:
-          error('The task '+typ+' is not defined in the job options database. Failed to define monitoring streams.')
-          return None
-
-    monTasks = []
-    monStreamsByNode = {}
-    monStreamsByType = {}
-    #print 'Slots:',mon_slots, mon_slots.size()
-    for typ, strm, i in streams:
-      slot_name = mon_slots[len(monTasks)]
-      node = slot_name[:slot_name.find(':')]
-      item = typ+('_%02d'%i)
-      if not monStreamsByNode.has_key(node): monStreamsByNode[node] = set([])
-      monStreamsByNode[node].add(strm)
-      if not monStreamsByType.has_key(strm): monStreamsByType[strm] = set([])
-      monStreamsByType[strm].add(node)
-      task  = node+'/'+self.name+'_'+node+'_'+item+'/'+item+'/'+typ+cl1+str((strm,))
-      monTasks.append(task)
 
     res = StreamDescriptor(self.streamManager,self.storage).getPartition(self.name)
     if not res:
@@ -132,111 +93,81 @@ class Reconstruction(General):
     part.load()
     recv_nodes = part.recvNodes()
 
-    relayReceivers = []
-    relayReceiverTypes = {}
-    for i in monStreams:
-      relayReceiverTypes[i] = []
-      # Define the receiver tasks on the relay
-      for j in relayNodes:
-        task = [j,self.name+'_'+j+'_RCV'+i,i]
-        relayReceivers.append(task)
-        relayReceiverTypes[i].append(task)
+    storageTasks = []              # Define the sender tasks on the storage layer
+    stor_opt1 = '/Class1/'+dimDns+'/'+self.streamManager.name()+'/'+part.name
+    stor_opt2 = '/Class2/'+dimDns+'/'+self.streamManager.name()+'/'+part.name
+    for j in recv_nodes:
+      cnt = 0
+      for i in self.recStreams.data:
+        cnt = cnt + 1
+        for k in relayNodes:
+          rel_task = self.name+'_'+k+'_RCV_'+j
+          storageTasks.append(j+'/'+self.name+'_'+j+'_SND_'+k+'_'+str(cnt)+'/Send_'+i+'/SND_'+i+stor_opt2+'/(("'+k+'-d1","'+rel_task+'"),)')
+      storageTasks.append(j+'/'+self.name+'_'+j+'_RCV_Rec/Recv_'+j+'/RCV'+stor_opt1+'/("",)')
+    
+    # Define the infrastructure, receiver and sender tasks on the relay
+    relayInfra=[]
+    relaySenders=[]
+    relayReceivers=[]
+    for j in relayNodes:
+      for r in recv_nodes:
+        relayReceivers.append(j+'/'+self.name+'_'+j+'_RCV_'+r+'/Receiver_'+r+'/RCV'+cl1)
+      for k in monNodes:
+        relaySenders.append(j+'/'+self.name+'_'+j+'_SND_'+k+'/Send_'+k+'/SND'+cl2+'/(("'+k+'-d1","'+self.name+'_'+k+'_RCV'+'"),)')
+      for d in self.recRelayInfra.data:
+        i,mul = d.split('/')
+        for k in xrange(int(mul)):
+          relayInfra.append(j+'/'+self.name+'_'+j+'_'+i+'_'+str(k)+'/'+i+'_'+str(k)+'/'+i+cl0)
 
-    # Define the receiver tasks on the relay for each stream type
-    relayTargets = {}
-    for i,nodes in relayReceiverTypes.items():
-      relayTargets[i] = []
-      for j in nodes: relayTargets[i].append((j[0]+'-d1',j[1]))
+    # Define monitoring infrastructure
+    monInfra = []
+    monSenders = []
+    cnt=0
+    for j in monNodes:
+      for d in self.recNodeInfra.data:
+        i,mul = d.split('/')
+        for k in xrange(int(mul)):
+          monInfra.append(j+'/'+self.name+'_'+j+'_'+i+'_'+str(k)+'/'+i+'_'+str(k)+'/'+i+cl0)
+      for d in self.recStrmInfra.data:
+        i,mul = d.split('/')
+        for k in xrange(int(mul)):
+          monInfra.append(j+'/'+self.name+'_'+j+'_'+i+'_'+str(k)+'/'+i+'_'+str(k)+'/'+i+cl0)
+      cnt = cnt+1
+      rcv_node = recv_nodes[cnt%len(recv_nodes)]
+      rcv_task = self.name+'_'+rcv_node+'_RCV_Rec'
+      monSenders.append(j+'/'+self.name+'_'+j+'_SND_'+rcv_node+'/Sender/SND_Rec2Storage'+cl2+'/(("'+rcv_node+'","'+rcv_task+'"),)')
+      # Not really senders, but it works....
+      monSenders.append(j+'/'+self.name+'_'+j+'_RCV/Receiver/RCV'+cl1)
 
-    storageSenders = []
-    storageSenderTypes = {}
-    stor_opt = '/Class2/'+dimDns+'/'+self.streamManager.name()+'/'+part.name+'/'
-    for i in monStreams:
-      storageSenderTypes[i] = []
-      # Define the sender tasks on the storage layer
-      for j in recv_nodes:
-        nam = self.name+'_'+j+'_SND'+i
-        task = j+'/'+nam+'/SND'+i+'/SND'+i+stor_opt+str(relayTargets[i])
-        storageSenders.append(task)
-        storageSenderTypes[i].append([j,nam,i])
-        
-    # Define the sources of the receiver tasks for the senders on the storage layer
-    storageSources = {}
-    for i in storageSenderTypes.keys():
-      storageSources[i] = []
-      for j in storageSenderTypes[i]: storageSources[i].append((j[0]+'-d1',j[1]))
-
-    # Define the receiver tasks on monitoring nodes
-    # Only send events to node with known stream consumers!
+    # Define reconstruction tasks: treat them like receivers (they are all class 1 tasks)
     monReceivers = []
-    monTargets = {}
-    for i in monNodes:
-      if monStreamsByNode.has_key(i):
-        nam = self.name+'_'+i+'_RCVMon'
-        monReceivers.append([i,nam])
-        monTargets[i] = [(i+'-d1',nam)]
-
-    # Define the sender tasks on the relay to feed monitoring nodes
-    relaySenders = []
-    monSources = {}
-    # print 'Relay Nodes',relayNodes 
-    for i,nodes in monStreamsByType.items():
-      rcv = 0
-      # print 'MonNodes:',nodes 
-      for k in nodes:
-        if monStreamsByNode.has_key(k) and monStreamsByNode[k].issuperset([i]):
-          if not monSources.has_key(k): monSources[k]=[]
-          for j in relayNodes:
-            nick = 'SND'+i+'_'+k
-            nam  = self.name+'_'+j+'_'+nick
-            task = j+'/'+nam+'/'+nick+'/SND'+i+cl2+str(monTargets[k])
-            monSources[k].append((j+'-d1',nam))
-            relaySenders.append(task)
+    worker = self.monitoringTypes()[0]
+    for s in mon_slots:
+      j,k=s.split(':')
+      monReceivers.append(j+'/'+self.name+'_'+j+'_'+worker+'_'+str(k)+'/'+worker+'_'+str(k)+'/'+worker+cl1)
 
     # Fill all datapoints:
-
     # First the senders on the storage system
-    partition.setDataSources(storageSenders)
-
+    partition.setDataSources(storageTasks)
     # Update Relay infrastructure
-    infra = []
-    for j in relayNodes:
-      for i in self.relayInfra.data:
-        infra.append(j+'/'+self.name+'_'+j+'_'+i+'/'+i+'/'+i+cl0+'("'+i+'",)')
-    partition.setRecvInfrastructure(infra)
-
+    partition.setRecvInfrastructure(relayInfra)
     # Update task information for the receivers on the relays
-    rcv = []
-    for i in relayReceivers:
-      node, name, type = i
-      rcv.append(node+'/'+name+'/RCV'+type+'/RCV'+type+cl1+str(storageSources[i[2]]))
-    partition.setRecvReceivers(rcv)
-
+    partition.setRecvReceivers(relayReceivers)
     # Update relay receivers
     partition.setRecvSenders(relaySenders)
-
     # Update Monfarm infrastructure
-    infra = []
-    for j in monNodes:
-      for i in self.monInfra.data:
-        infra.append(j+'/'+self.name+'_'+j+'_'+i+'/'+i+'/'+i+cl0+'("'+i+'",)')
-    partition.setStreamInfrastructure(infra)
-
+    partition.setStreamInfrastructure(monInfra)
     # Update task information for the receivers on the monitoring farm
-    rcv = []
-    for i in monReceivers:
-      node, nam = i
-      rcv.append(node+'/'+nam+'/RCVMon/RCVMon'+cl1+str(monSources[node]))
-    partition.setStreamReceivers(rcv)
+    partition.setStreamReceivers(monReceivers)
+    partition.setStreamSenders(monSenders)
 
-    partition.setStreamSenders(monTasks)
     if partition.saveTasks():
       tasks = partition.collectTasks(tasks={},with_data_sources=1)
       return tasks
     return None
 
 # =============================================================================
-class ReconstructionInfoCreator:
+class InfoCreator:
   """ @class ReconstructionInfoCreator
   
       @author  M.Frank

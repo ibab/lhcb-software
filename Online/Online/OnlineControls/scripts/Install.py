@@ -112,8 +112,9 @@ def installFiles():
   if projectBaseDir() != componentsDir():
     print 'Copy files from '+sourceDir()+'/pvss to '+componentsDir()+' ...'
     try:
-      installDirectory(sourceDir()+os.sep+'pvss',componentsDir())
+      #installDirectory(sourceDir()+os.sep+'pvss',componentsDir())
       #execCmd('cp --recursive --remove-destination '+sourceDir()+'/pvss/* '+componentsDir())
+      pass
     except Exception,X:
       print X
     os.chdir(curr)

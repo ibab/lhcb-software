@@ -29,6 +29,7 @@ PANEL,-1 -1 636 357 N "_3DFace" 0
   jo_edit1=jo_editType=JobOptionsEditor_init();  
   JobOptionsEditor_setSystem(default_sys);
   m_detector.appendItem(\"ANY\");
+  m_detector.appendItem(\"L0DU\");
   m_detector.appendItem(\"VELO\");
   m_detector.appendItem(\"PUS\");
   m_detector.appendItem(\"VELOA\");

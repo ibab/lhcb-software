@@ -106,6 +106,9 @@ class General:
     self.tae         = None
     self.storeSlice  = None
     self.monSlice    = None
+    self.tck         = None
+    self.L0Type      = None
+
     dpn = self.manager.name()+':'+self.name+postfix+'.general.outputLevel'
     if self.devMgr.exists(dpn):
       self.outputLvl = self.dp('general.outputLevel')
@@ -124,6 +127,7 @@ class General:
 
     if complete:
       self.addBasic()
+      self.addTrigger()
       self.addStorage()
       self.addMonitoring()
       self.addSubdetectors()
@@ -156,10 +160,24 @@ class General:
     self.reader.add(self.nSubFarm)
 
   # ===========================================================================
+  def addTrigger(self):
+    "Add Trigger information to availible information."
+    dpn = self.manager.name()+':'+self.name+self.postfix+'.Trigger.TCK'
+    if self.devMgr.exists(dpn):
+      self.tck = self.dp('Trigger.TCK')
+      self.reader.add(self.tck)
+    dpn = self.manager.name()+':'+self.name+self.postfix+'.Trigger.L0Type'
+    if self.devMgr.exists(dpn):
+      self.L0Type = self.dp('Trigger.L0Type')
+      self.reader.add(self.L0Type)
+    return self
+
+  # ===========================================================================
   def addSubdetectors(self):
     "Add subdetector information to availible information."
     self.tell1Boards = self.dp('SubDetectors.tell1List')
     self.reader.add(self.tell1Boards)
+    return self
 
   # ===========================================================================
   def addMonitoring(self):
@@ -181,6 +199,33 @@ class General:
     self.reader.add(self.relayInfra)
     if self.monSlice is not None:
       self.reader.add(self.monSlice)
+    return self
+
+  # ===========================================================================
+  def addReconstruction(self):
+    "Add Reconstruction farm information to availible information."
+
+    self.recFlag       = self.dp('Reco.flag')
+    self.recSlice      = self.dp('Reco.slice')
+    self.recWorker     = self.dp('Reco.worker')
+    self.recStreams    = self.dp('Reco.streams')
+    self.recCtrlInfra  = self.dp('Reco.ctrlInfrastructure')
+    self.recRecvInfra  = self.dp('Reco.recvInfrastructure')
+    self.recStrmInfra  = self.dp('Reco.strmInfrastructure')
+    self.recNodeInfra  = self.dp('Reco.nodeInfrastructure')
+    self.recRelayInfra = self.dp('Reco.relayInfrastructure')
+
+    # Monitoring information
+    self.reader.add(self.recFlag)
+    self.reader.add(self.recSlice)
+    self.reader.add(self.recWorker)
+    self.reader.add(self.recStreams)
+    self.reader.add(self.recCtrlInfra)
+    self.reader.add(self.recRecvInfra)
+    self.reader.add(self.recStrmInfra)
+    self.reader.add(self.recNodeInfra)
+    self.reader.add(self.recRelayInfra)
+    return self
 
   # ===========================================================================
   def addStorage(self):
@@ -204,6 +249,7 @@ class General:
     self.reader.add(self.strInfra)
     if self.storeSlice is not None:
       self.reader.add(self.storeSlice)
+    return self
     
   # ===========================================================================
   def dp(self,name):
@@ -379,6 +425,14 @@ class General:
       if self.tae.data is None: self.load()
       return int(self.tae.data)
     return 0
+
+  # ===========================================================================
+  def TCK(self):
+    "Access TCK from run info."
+    if self.tck:
+      if self.tck.data is None: self.load()
+      return int(self.tck.data)
+    return None
 
   # ===========================================================================
   def storageSlice(self):

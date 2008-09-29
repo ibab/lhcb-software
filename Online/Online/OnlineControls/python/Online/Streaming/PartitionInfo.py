@@ -62,6 +62,8 @@ def showPartition(partition,extended=None):
     return
   log('-> Partition:'+name+' is FREE.')
   
+showReconstruction=showPartition
+
 # ===========================================================================
 def showStorage(partition,extended=None):
   q = partition.tasks

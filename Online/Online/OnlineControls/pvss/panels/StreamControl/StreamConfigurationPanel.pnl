@@ -41,10 +41,10 @@ main()  {
 " 0
  E E E E 1 -1 -1 0  0 0
 ""0  1
-E "createAllocPanelBySlice(string slice)  {
+E "void createAllocPanelBySlice(string slice)  {
   string slice_name = dpSubStr(slice,DPSUB_DP);
   DebugN(\"createAllocPanelBySlice> Building panel using:\"+slice+\" \"+slice_name);
-  addSymbol(myModuleName(),myPanelName(),\"StreamControl/Allocate.pnl\",\"m_configPanel\",
+  addSymbol(myModuleName(),myPanelName(),\"StreamControl/StreamEditor.pnl\",\"m_configPanel\",
             makeDynString(\"$1:\"+slice_name),5,105,0,0,0);
   setValue(\"m_configPanel.m_Ok\",\"visible\",0);
   setValue(\"m_configPanel.m_Cancel\",\"visible\",0);
@@ -52,20 +52,28 @@ E "createAllocPanelBySlice(string slice)  {
   LayerOn(6);
 }
 
-createAllocPanelByRunInfo(string runInfoDP, string stream)  {
-  string dpname = stream+\"_StreamPartitionEditor\";
-  string dp = strtoupper(stream)+\":\"+dpname;
+void createAllocPanelByRunInfo(string runInfoDP, string stream)  {
+  string dpname, dp, strm = stream, sys = getSystemName();
+  if ( sys == \"MONITORING2:\" ) strm = \"Monitoring2\"; // Temp. hack for new monitoring
+  dpname = strm+\"_StreamPartitionEditor\";
+  dp = strtoupper(strm)+\":\"+dpname;
   if ( !dpExists(dp,\"StreamPartition\") )  {
-    int res = dpCreate(dpname,\"StreamPartition\",getSystemId(strtoupper(stream)+\":\"));
+    int res = dpCreate(dpname,\"StreamPartition\",getSystemId(strtoupper(strm)+\":\"));
     if ( res != 0 )  {
       DebugN(\"Failed to create editor datapoint:\"+dp);
       return;
     }
   }
   dpSetWait(dp+\".RunInfo\",runInfoDP);
-  DebugN(\"createAllocPanelByRunInfo> Building Panel using:\"+runInfoDP+\" Stream:\"+stream);
-  addSymbol(myModuleName(),myPanelName(),\"StreamControl/Allocate.pnl\",\"m_configPanel\",
-            makeDynString(\"$1:\"+dpname),5,105,0,0,0);
+  DebugN(\"createAllocPanelByRunInfo> Building Panel using:\"+runInfoDP+\" Stream:\"+strm);
+  if ( stream == \"Reconstruction\" )  {
+    addSymbol(myModuleName(),myPanelName(),\"StreamControl/RecoEditor.pnl\",\"m_configPanel\",
+              makeDynString(\"$1:\"+dpname),5,105,0,0,0);
+  }
+  else  {
+    addSymbol(myModuleName(),myPanelName(),\"StreamControl/StreamEditor.pnl\",\"m_configPanel\",
+              makeDynString(\"$1:\"+dpname),5,105,0,0,0);
+  }
   setValue(\"m_configPanel.m_Ok\",\"visible\",0);
   setValue(\"m_configPanel.m_Cancel\",\"visible\",0);
   LayerOff(6);
@@ -252,8 +260,8 @@ LANG:1 0
 1
 LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
- 128 50 252 88
-2
+ 128 50 252 111
+3
 T 
 1
 LANG:1 7 Storage
@@ -266,6 +274,15 @@ E E
 T 
 1
 LANG:1 10 Monitoring
+
+0 
+1
+LANG:1 0 
+E E
+0 0 0 0 0
+T 
+1
+LANG:1 14 Reconstruction
 
 0 
 1

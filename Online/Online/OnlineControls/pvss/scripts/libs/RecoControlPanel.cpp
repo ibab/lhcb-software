@@ -200,7 +200,7 @@ int RecoControlPanel_AllocSave(string stream, string partition)  {
       while ( strpos(data[i],"/ ")>0 ) strreplace(data[i],"/ ","/");
       items = strsplit(data[i]," ");
       for(int j=1, m=dynlen(items); j<m; ++j) {
-        if ( dynlen(strsplit(items[j],"/")) != 2 )  {
+        if ( i>1 && dynlen(strsplit(items[j],"/")) != 2 )  {
 	  ChildPanelOn("vision/MessageInfo1","Bad input",
 		       makeDynString("Parameter '"+data[i]+"' is incorrect "+dynlen(items)),50,50);
 	  return 1;

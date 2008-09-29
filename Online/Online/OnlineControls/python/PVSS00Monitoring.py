@@ -11,7 +11,8 @@ def run():
   @author M.Frank
   """
   try:
-    cmd = '-name '+Params.monitor_type+' -type Monitoring -wait'
+    cmd = '-name '+Params.monitor_type+' -type '+Params.monitor_type+' -wait'
+    print cmd
     Online.Streaming.execute(cmd.split(' '))
   except Exception,X:
     print 'Failed to start Monitoring streaming device for system:',Params.monitor_system_name,Params.monitor_type

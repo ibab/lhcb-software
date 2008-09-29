@@ -621,7 +621,7 @@ class Allocator(StreamingDescriptor):
     return None
   
   # ===========================================================================
-  def allocate(self,rundp_name,partition,recv_slots_per_node=5,strm_slots_per_node=2):
+  def allocate(self,rundp_name,partition,recv_slots_per_node=4,strm_slots_per_node=2):
     """
     Allocate slots in the receiving and streaming layer of the storage system.
     Note: All input data must already be read.

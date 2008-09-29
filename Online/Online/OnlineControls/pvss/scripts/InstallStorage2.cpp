@@ -2,12 +2,18 @@
 #uses "StreamTaskMgr.cpp"
 #uses "StreamStatusDisplay.cpp"
 
+aamain()   {
+  string stream = "Storage";
+  string ctrl_node = "storectl01";
+  StreamTaskMgr_connectTaskManager(stream);
+}
+
 main()   {
   string stream = "Storage";
   string ctrl_node = "storectl01";
   ctrlUtils_stopAllTree();
   StreamTaskMgr_installStream(stream);
-  StreamTaskMgr_createAllTree(stream, 45, 20, "", 0);  
+  StreamTaskMgr_createAllTree(stream, 50, 20, "", 0);  
   StreamTaskMgr_connectTaskManager(stream);
   // Finally generate all FSMs
   ctrlUtils_genAllFSM();

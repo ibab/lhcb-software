@@ -48,7 +48,7 @@ def runHLTopts(name='HLT',sim=None):
   ctrl   = Control.Control(mgr,name+'JobOptions','Writer',[writer]).run()
   return (ctrl,run(name,mgr,sim))
   
-def runStorage(name='Storage',sim=None):
+def runStorage(name='Storage',sim=None,joboptions=True):
   """
   Execute Storage system streaming component to
    - allocate execution slots and
@@ -68,13 +68,15 @@ def runStorage(name='Storage',sim=None):
   mgr      = _mgr(Params.storage_system_name)
   info     = RI.StorageInfoCreator()
   streamer = StreamAllocator.Allocator(mgr,name,info)
-  writer   = JobOptions.StorageOptionsWriter(mgr,name,info)
-  ctrl = Control.Control(mgr,name,'Alloc',[streamer,writer]).run()
+  controllers = [streamer]
+  if joboptions:
+    controllers.append(JobOptions.StorageOptionsWriter(mgr,name,info))
+  ctrl = Control.Control(mgr,name,'Alloc',controllers).run()
   return (ctrl,run(name,mgr,sim))
 
 runRecStorage = runStorage
 
-def runMonitoring(name='Monitoring',sim=None):
+def _runMonitoring(info,name,sim,joboptions=None):
   """
   Execute Monitoring system streaming component to
    - allocate execution slots and
@@ -86,17 +88,29 @@ def runMonitoring(name='Monitoring',sim=None):
 
    @author M.Frank
   """
-  import Online.RunInfoClasses.Monitoring as RI
   import Online.AllocatorControl    as Control
   import Online.Streaming.Allocator as StreamAllocator
-  import Online.JobOptions.OptionsWriter as JobOptions
 
-  info     = RI.MonitoringInfoCreator('Storage')
   mgr      = _mgr(Params.monitor_system_name)
   streamer = StreamAllocator.Allocator(mgr,name,info)
-  writer   = JobOptions.MonitoringOptionsWriter(mgr,name,info)
-  ctrl = Control.Control(mgr,name,'Alloc',[streamer,writer]).run()
+  controllers = [streamer]
+  if joboptions:
+    controllers.append(joboptions(mgr,name,info))
+  ctrl = Control.Control(mgr,name,'Alloc',controllers).run()
   return (ctrl,run(name,mgr,sim))
+
+def runMonitoring(name='Monitoring',sim=None):
+  import Online.RunInfoClasses.Monitoring as RI
+  import Online.JobOptions.OptionsWriter as JobOptions
+  info     = RI.MonitoringInfoCreator('Storage')
+  return _runMonitoring(info,name,sim,joboptions=JobOptions.MonitoringOptionsWriter)
+
+def runReconstruction(name='Reconstruction',sim=None):
+  import Online.RunInfoClasses.Reconstruction as RI
+  import Online.JobOptions.OptionsWriter as JobOptions
+  info     = RI.InfoCreator('Storage')
+  print 'Running reconstrucvtion configurator....'
+  return _runMonitoring(info,name,sim,joboptions=JobOptions.RecoOptionsWriter)
 
 def run(name,mgr,sim=None):
   """
@@ -160,6 +174,8 @@ def execute(args):
   elif typ == 'Monitoring':
     function = runMonitoring
     #res = runMonitoring(sim=sim)
+  elif typ == 'Reconstruction':
+    function = runReconstruction
   elif typ == 'HLTOptions':
     function = runHLTopts
   elif function is None:

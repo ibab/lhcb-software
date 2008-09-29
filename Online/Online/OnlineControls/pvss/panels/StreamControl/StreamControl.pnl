@@ -212,7 +212,7 @@ LANG:1 82 -*-Sans-*-r-normal-*-15-*-100-100-*-*-iso8859-1|-15,0,0,0,505,0,0,0,0,
 2 15
 "m_sysText"
 ""
-1 23 12 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 21 10 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 20 0 0 0 0 0
 E E E
@@ -222,8 +222,8 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  1 E 2 302 192 329
-0 2 2 "0s" 0 0 0 64 0 0  2 302 1
+E E 0 1 1 2 1 E U  1 E 0 300 190 327
+0 2 2 "0s" 0 0 0 64 0 0  0 300 1
 1
 LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-17-*-100-100-*-*-iso8859-1|-17,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
@@ -232,7 +232,7 @@ LANG:1 0
 13 17
 "m_close"
 ""
-1 388 313 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 390 310 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 21 0 0 0 0 0
 E E E
@@ -244,7 +244,7 @@ LANG:1 0
 1
 LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
- 386 311 470 335
+ 388 308 472 332
 
 T 
 1
@@ -254,7 +254,7 @@ LANG:1 5 Close
 13 18
 "PUSH_BUTTON1"
 ""
-1 388 289 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 390 280 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  "main()    {
   if ( isPanelOpen(\"StreamOverview\")  )  {
     PanelOffPanel(\"StreamOverview\");
@@ -271,7 +271,7 @@ LANG:1 0
 1
 LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
- 386 287 470.2658911508102 312
+ 388 278 472.2658911508102 303
 
 T 
 1
@@ -282,7 +282,7 @@ LANG:1 11 Job options
 13 19
 "m_streamEditor"
 ""
-1 388.2658911508101 313 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 390 310 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  "main()    {
   if ( isPanelOpen(\"StreamOverview\")  )  {
     PanelOffPanel(\"StreamOverview\");
@@ -299,7 +299,7 @@ LANG:1 0
 1
 LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
- 386.2658911508101 311 470.2658911508101 336
+ 388 308 472 333
 
 T 
 1
@@ -310,7 +310,7 @@ LANG:1 13 Stream editor
 2 16
 "m_sysName"
 ""
-1 161 12 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 114 9 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  "main()    {
   if ( isPanelOpen(\"StreamOverview\")  )  {
     PanelOffPanel(\"StreamOverview\");
@@ -325,13 +325,41 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  1 E 117 303 380 329
-0 2 2 "0s" 0 0 0 64 0 0  117 303 1
+E E 0 1 1 2 1 E U  1 E 70 300 333 326
+0 2 2 "0s" 0 0 0 64 0 0  70 300 1
 1
 LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-17-*-100-100-*-*-iso8859-1|-17,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
 1
 LANG:1 0 
+13 20
+"m_sliceEditor"
+""
+1 300 310 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ "main()    {
+  if ( isPanelOpen(\"SliceOverview\")  )  {
+    PanelOffPanel(\"SliceOverview\");
+  }  
+}" 0
+ E
+25 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
+0 ""
+ 298 308 382 333
+
+T 
+1
+LANG:1 12 Slice editor
+"main()   {   ChildPanelOn(\"StreamControl/SliceEditor\",\"SliceEditor\",makeDynString($1,$2),100,100);  }
+" 0
+ E E E
 0
 LAYER, 1 
 1

@@ -71,8 +71,7 @@ hlt_numSubFarms     = 50
 # Joboptions control parameters
 if platform.system() == 'Linux': jobopts_optsdir = "/group/online/dataflow/options"
 else:                            jobopts_optsdir = "J:/options"
-gauditask_startscript='/home/frankm/runGaudi.sh'
-
+gauditask_startscript='/group/online/dataflow/scripts/runGaudi.sh'
 
 # Storage parameters
 # Stream definitions are in Online.RunInfoClasses.Installer
@@ -83,51 +82,51 @@ storage_strm_nodes  = ['STORESTRM01','STORESTRM02']
 
 # Monitoring parameters
 #
-# monitor_type          defines the monitoring base name
-# monitor_system_name   defines the PVSS system name
-# monitor_control_node  defines the name of the controls PC
-# monitor_relay_nodes   defines the relay nodes for the monitoring farm
-# monitor_nodes         defines the worker nodes for the monitoring farm
-# monitor_num_slices    defines the number of tasks in the worker nodes
-# monitor_streams_per_node
+# monitor_system_name       Generic setup: Defines the PVSS system name
+# monitor_type              Generic setup: Defines the monitoring base name
+# monitor_control_node      Generic setup: Defines the name of the controls PC
+# monitor_relay_nodes       Generic setup: Defines the relay nodes for the monitoring farm
+# monitor_nodes             Generic setup: Defines the worker nodes for the monitoring farm
+# monitor_num_slices        Generic setup: Defines the number of tasks in the worker nodes
+# monitor_num_nodes         Generic setup: Defines total number of nodes in the farm
+# monitor_streams_per_node  Generic setup: Defines the number of workers per node
+# daq_numPartition          Generic setup: Defines maximum of partitions
 #
 # Stream definitions are in Online.RunInfoClasses.Installer
+#
 if node_name == "MONA06":
-  # Generic setup: Maximum of 3 reconstruction partitions
   daq_numPartition         = 16
   # Monitoring system parameters
   monitor_system_name      = 'MONITORING2'
   monitor_type             = 'Monitoring2'
-  monitor_control_node     =  node_name
   monitor_num_nodes        = 10
-  monitor_streams_per_node = 8
-  monitor_num_slices       = monitor_num_nodes*15
-  monitor_relay_nodes      = [node_name+"01"]
-  monitor_nodes            = []
-  for i in xrange(9): monitor_nodes.append("%s%02d"%(node_name,i+1,))
+  monitor_streams_per_node =  8
+  monitor_workers_per_node = 15
 
-if node_name == "MONA08":
-  monitor_system_name      = 'MONITORING'
-  monitor_type             = 'Monitoring'
-  monitor_control_node     =  "MONA08"
-  monitor_num_nodes        = 5
-  monitor_num_slices       = 64
-  monitor_streams_per_node = 8
-  monitor_relay_nodes      = ["MONA0801"]
-  monitor_nodes            = ["MONA0802","MONA0803","MONA0804","MONA0805"]
-
-if node_name == "MONA09":
-  # Generic setup: Maximum of 3 reconstruction partitions
-  daq_numPartition         = 3
+elif node_name == "MONA09":
+  print ' -----> Setup for RECONSTRUCTION System:'
+  gauditask_startscript='/group/online/dataflow/scripts/Reco/runGaudi.sh'
+  daq_numPartition         = 4
   # Monitoring system parameters
   monitor_system_name      = 'RECONSTRUCTION'
   monitor_type             = 'Reconstruction'
-  monitor_control_node     =  node_name
   monitor_num_nodes        = 20
-  monitor_streams_per_node = 8
-  monitor_num_slices       = monitor_num_nodes*8
-  monitor_relay_nodes      = [node_name+"01"]
-  monitor_nodes            = []
-  for i in xrange(19):
-    monitor_nodes.append("%s%02d"%(node_name,i+1,))
+  monitor_streams_per_node =  4
+  monitor_workers_per_node = 12
 
+else:
+  ##### if node_name == "MONA08":
+  daq_numPartition         = 16
+  # Monitoring system parameters
+  monitor_system_name      = 'MONITORING'
+  monitor_type             = 'Monitoring'
+  monitor_num_nodes        = 10
+  monitor_streams_per_node =  8
+  monitor_workers_per_node = 12
+
+
+# Same for all monitoring systems
+monitor_control_node     =  node_name
+monitor_relay_nodes      = [node_name+"01"]
+monitor_nodes            = []
+for i in xrange(monitor_num_nodes-1): monitor_nodes.append("%s%02d"%(node_name,i+2,))

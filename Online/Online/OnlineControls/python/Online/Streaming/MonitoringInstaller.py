@@ -28,9 +28,9 @@ class Installer(InstallerBase):
     "Default constructor"
     InstallerBase.__init__(self,mgr,dev+'Alloc')
     self.system           = dev
-    self.numSlices        = Params.monitor_num_slices
     self.numPartition     = Params.daq_numPartition
-    self.numStreamPerNode = Params.monitor_streams_per_node
+    self.numWorkersPerNode = Params.monitor_workers_per_node
+    self.numStreams       = Params.monitor_streams_per_node
     self.relayNodes       = Params.monitor_relay_nodes
     self.monNodes         = Params.monitor_nodes
 
@@ -51,7 +51,7 @@ class Installer(InstallerBase):
     infos = []
     for i in xrange(self.numPartition):
       slice = '_Slice%02X'%(i,)
-      p = PartitionInfo.create(self.manager,self.system+slice,self.system+'Config'+slice)
+      p = PartitionInfo.create(self.manager,self.system+slice,self.system+slice+'_Config')
       if p:
         partitions.push_back(p[0].id())
         infos.append(p)
@@ -63,25 +63,27 @@ class Installer(InstallerBase):
     self.set('PartitionDesc',partitions)
     self.set('InUse',std.vector('int')(16,0))
     self.set('ActivePartitions',std.vector('std::string')())
-    slices = std.vector('std::string')(self.numSlices,'')
+    length = len(self.monNodes)*self.numStreams
+    relay_slices = std.vector('std::string')(length,'')
     nodes = {}
-    for i in xrange(self.numSlices):
+    for i in xrange(length):
       node = self.relayNodes[i%len(self.relayNodes)]
       if not nodes.has_key(node): nodes[node] = 0
       nodes[node] = nodes[node] + 1
-      slices[i] = node+":%02d"%nodes[node]
+      relay_slices[i] = node+":%02d"%nodes[node]
     self.set('RecvNodes',relayNodes)
-    self.set('RecvSlices',slices)
-    length = len(self.monNodes)*self.numStreamPerNode
-    slices.resize(length,'')
+    self.set('RecvSlices',relay_slices)
+
+    length = len(self.monNodes)*self.numWorkersPerNode
+    worker_slices = std.vector('std::string')(length,'')
     nodes = {}
     for i in xrange(length):
       node = self.monNodes[i%len(self.monNodes)]
       if not nodes.has_key(node): nodes[node] = 0
       nodes[node] = nodes[node] + 1
-      slices[i] = node+":%02d"%nodes[node]
+      worker_slices[i] = node+":%02d"%nodes[node]
     self.set('StreamNodes',monNodes)
-    self.set('StreamSlices',slices)
+    self.set('StreamSlices',worker_slices)
     return self.write(prefix='StreamControl('+self.name+'): ')
 
 # =============================================================================
