@@ -3,6 +3,7 @@
 #include "Gaucho/DimInfoServices.h"
 #include "Gaucho/BaseServiceMap.h"
 #include "Gaucho/DimTimerProcess.h"
+#include "Gaucho/MonObject.h"
 #include "Gaucho/Misc.h"
 #include "CPP/Interactor.h"
 #include "TFile.h"
@@ -11,6 +12,8 @@ ProcessMgr::ProcessMgr(IMessageSvc* msgSvc, Interactor *service, const int &refr
 {
   m_isAdder = false;
   m_monitoringFarm = false;
+  m_serverNameChoosen = "";
+  m_fileName = "Waiting for command to save histograms............."; 
 }
 
 ProcessMgr::~ProcessMgr() {
@@ -58,10 +61,18 @@ void ProcessMgr::timerHandler(){
     msg << MSG::DEBUG << "isSaver"<< endreq;
     //std::string fileName = "from timerHandler";
     //int fileSize = 0;
-    m_serviceMap->write(m_saveDir, *m_pFile, *m_pFileSize);
+    //m_serviceMap->write(m_saveDir, *m_pFile);
+    msg << MSG::DEBUG << "Before Save hiostograms in file: "<< m_fileName << endreq;
+    write();
+    msg << MSG::DEBUG << "After Save histograms in file: "<< m_fileName << endreq;
     //m_pGauchoMonitorSvc->updateService(infoName, false);
     m_pGauchoMonitorSvc->updateAll(false);
+    msg << MSG::DEBUG << "After UpdateAll in Monitoring Service: "<< m_fileName << endreq;
   }
+}
+
+void ProcessMgr::write(){
+  m_serviceMap->write(m_saveDir, m_fileName);
 }
 
 void ProcessMgr::setUtgid(const std::string &utgid)
@@ -78,13 +89,13 @@ void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> 
   
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG << "*************************************************************************"<< endreq;
-  msg << MSG::DEBUG << "*******Posible changes in ServiceSet. We will update the ServiceSet******"<< endreq;
+  msg << MSG::DEBUG << "******Possible changes in ServiceSet. We will update the ServiceSet******"<< endreq;
  
   msg << MSG::DEBUG << "DimString = " << dimString << endreq;
   
   std::vector<std::string> serviceList = Misc::splitString(dimString, "\n");
   std::vector<std::string>::const_iterator serviceListIt;
-
+  
   for(serviceListIt=serviceList.begin(); serviceListIt!=serviceList.end(); ++serviceListIt){
     
     std::string serviceName = (*serviceListIt).substr(0, (*serviceListIt).find("|"));
@@ -114,7 +125,7 @@ void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> 
     }
     else {
       if (m_monitoringFarm) {
-        if (serviceName.find(m_nodeName) == std::string::npos) continue;
+        //if (serviceName.find(m_nodeName) == std::string::npos) continue;
       }
       else {
         if (serviceName.find("/" + m_nodeName) == std::string::npos) continue;
@@ -126,19 +137,34 @@ void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> 
     //it should be possible to have an unlimited number of slashes im the histogram names
     if (serviceParts.size() < 4 ) continue; 
     std::string svctype = serviceParts[0];
-    msg << MSG::INFO << "svctype = " << svctype << endreq;
+    msg << MSG::DEBUG << "svctype = " << svctype << endreq;
 
+    if ((svctype.compare(s_pfixMonH1F) != 0)&&(svctype.compare(s_pfixMonH1D) != 0)&&(svctype.compare(s_pfixMonH2F) != 0)&&
+    (svctype.compare(s_pfixMonH2D) != 0)&&(svctype.compare(s_pfixMonProfile) != 0)&&(svctype.compare(s_pfixMonRate) != 0)) {
+      msg << MSG::DEBUG << "REFUSED because Service is not MonHisto, MonProfile, MonRate: " << svctype << endreq;
+      continue;
+    }
+    
+    if (!isAdder()) { // savers do not save MonRate
+      if (svctype.compare(s_pfixMonRate) == 0 ) {
+        msg << MSG::DEBUG << "REFUSED because Savers do not Save MonRate !!" << endreq;
+        continue; 
+      }
+    }
+    
+/*
     std::string pfxSvcType = svctype.substr(0, 3);
     if ((pfxSvcType.compare("MON")!=0)&&(pfxSvcType.compare("mon")!=0)&&(pfxSvcType.compare("Mon")!=0)) {
-      msg << MSG::INFO << "REFUSED because this service is not a MonObject: "<< pfxSvcType << endreq;
+      msg << MSG::DEBUG << "REFUSED because this service is not a MonObject: "<< pfxSvcType << endreq;
       continue;  
     }
     pfxSvcType = svctype.substr(3, 1);
-    if ((pfxSvcType.compare("H")!=0)&&(pfxSvcType.compare("h")!=0)&&(pfxSvcType.compare("R")!=0)&&(pfxSvcType.compare("r")!=0)  ) {
-      msg << MSG::INFO << "REFUSED because this MonObject Service is not a MonH nor a MonR: " << pfxSvcType << endreq;
+    if ((pfxSvcType.compare("H")!=0)&&(pfxSvcType.compare("h")!=0)&&(pfxSvcType.compare("R")!=0)&&(pfxSvcType.compare("r")!=0)&&(pfxSvcType.compare("P")!=0)&&(pfxSvcType.compare("p")!=0)) {
+      msg << MSG::DEBUG << "REFUSED because this MonObject Service is not a MonH, MonR, MonP: " << pfxSvcType << endreq;
       continue;  
     }
-    
+*/
+        
     std::string utgid = serviceParts[1];
     msg << MSG::DEBUG << "utgid = " << utgid << endreq;
     
@@ -172,19 +198,22 @@ void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> 
     msg << MSG::DEBUG << "object = " << object << endreq;
     
     // it is not necesary to verify the node name. It is done by the updateServerMap
+//     bool matched = true;
+//     if (m_taskName.size() > 0)  matched = false;
+//     for(unsigned int i = 0; i < m_taskName.size(); i++) {
+//       msg << MSG::DEBUG << "task match : " << m_taskName[i] << " vs " << task << endreq;
+//       if (Misc::findCaseIns(m_taskName[i], task) != std::string::npos) {
+//         matched = true;
+//         break;
+//       }
+//     }
+//     if (!matched) continue;
+
+    
+    msg << MSG::DEBUG << "task match : " << m_taskName << " vs " << task << endreq;
+    if (Misc::findCaseIns(m_taskName, task) == std::string::npos) continue;
     
     bool matched = true;
-    if (m_taskName.size() > 0)  matched = false;
-    for(unsigned int i = 0; i < m_taskName.size(); i++) {
-      msg << MSG::DEBUG << "task match : " << m_taskName[i] << " vs " << task << endreq;
-      if (Misc::findCaseIns(m_taskName[i], task) != std::string::npos) {
-        matched = true;
-        break;
-      }
-    }
-    if (!matched) continue;
-    
-    matched = true;
     if (m_algorithmName.size() > 0)  matched = false;
     for(unsigned int i = 0; i < m_algorithmName.size(); i++) {
       msg << MSG::DEBUG << "algo match : " << m_algorithmName[i] << " vs " << algo << endreq;
@@ -214,7 +243,7 @@ void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> 
       }
     }
     if (!matched) continue;
-        
+
     if (includeService) {
       msg << MSG::DEBUG << "service INCLUDED =======> " << serviceName << endreq;
       serviceSet.insert(serviceName);
@@ -224,10 +253,9 @@ void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> 
       serviceSet.erase(serviceName);
     }
   }
-  
   msg << MSG::DEBUG << "***************The process to update the ServiceSet is finished**********"<< endreq;
   msg << MSG::DEBUG << "*************************************************************************"<< endreq;
-  
+
 }
 
 void ProcessMgr::updateServerMap(std::string &dimString, std::map<std::string, bool, std::less<std::string> > &serverMap) {
@@ -275,7 +303,7 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
   std::vector<std::string>::const_iterator it;
   
   for(serverListTotIt = serverListTot.begin(); serverListTotIt!=serverListTot.end(); ++serverListTotIt) {
-    msg << MSG::DEBUG << "checking server="<<(*serverListTotIt)<< endreq;
+    //msg << MSG::DEBUG << "checking server="<<(*serverListTotIt)<< endreq;
     
     std::size_t first_us = (*serverListTotIt).find("_");
     if (first_us == std::string::npos) continue;
@@ -294,6 +322,7 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
       partName = (*serverListTotIt).substr(0, first_us);
       nodeName = (*serverListTotIt).substr(first_us + 1, second_us - first_us - 1);
       taskName = (*serverListTotIt).substr(second_us + 1, third_us - second_us - 1);
+      //msg << MSG::DEBUG << "partname "<< partName << " nodename " << nodeName << "   taskname " << taskName << endreq;
       if ((taskName.compare("Saver")==0)||(taskName.compare("SAVER")==0)||(taskName.compare("Adder")==0)||(taskName.compare("ADDER")==0)) {
         msg << MSG::DEBUG << "refused because we don't save ADDERS nor save SAVERS in Monitoring Farm. "<< endreq;    
         continue; // we don't do nothing with Savers
@@ -314,10 +343,10 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
         }
       }
       if (!chooseIt) {
-        msg << MSG::DEBUG << "REFUSED because partName NOT OK" << endreq;
+        msg << MSG::DEBUG << "REFUSED because partName NOT OK " <<(*serverListTotIt) << endreq;
         continue; 
       }
-      else msg << MSG::DEBUG << "partName OK" << endreq;
+      else msg << MSG::DEBUG << "partName OK server accepted: " << (*serverListTotIt) <<endreq;
     }
     else {
       nodeName = (*serverListTotIt).substr(0, first_us);
@@ -372,19 +401,20 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
       else msg << MSG::DEBUG << "subfarmName OK" << endreq;
     }
     else {
-      // checking the nodeName
-      msg << MSG::DEBUG << "comparing nodeName="<< nodeName << " with "<< m_nodeName << endreq;    
-      if (Misc::findCaseIns(m_nodeName, nodeName) == std::string::npos){
-        msg << MSG::DEBUG << "REFUSED because nodeName NOT OK" << endreq;
-        continue;
+      if (isAdder()) { // We check the nodeName in the case of Adders only
+        // checking the nodeName
+        msg << MSG::DEBUG << "comparing nodeName="<< nodeName << " with "<< m_nodeName << endreq;    
+        if (Misc::findCaseIns(m_nodeName, nodeName) == std::string::npos){
+          msg << MSG::DEBUG << "REFUSED because nodeName NOT OK" << endreq;
+          continue;
+        }
+        else msg << MSG::DEBUG << "nodeName OK" << endreq;
       }
-      else msg << MSG::DEBUG << "nodeName OK" << endreq;
-
 
       if ((taskName.compare("Adder")!=0)&&(taskName.compare("ADDER")!=0)) {
         // when the server is not an adder we can check the task name here.
 
-        bool chooseIt=true;
+/*        bool chooseIt=true;
         if (m_taskName.size()) chooseIt=false;
         for(it=m_taskName.begin(); it!=m_taskName.end(); ++it){
           msg << MSG::DEBUG << "comparing taskName="<< taskName << " with "<< (*it) << endreq;
@@ -397,13 +427,39 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
           msg << MSG::DEBUG << "REFUSED because taskName NOT OK" << endreq;
           continue; 
         }
-        else msg << MSG::DEBUG << "taskName OK" << endreq;
+        else msg << MSG::DEBUG << "taskName OK" << endreq;*/
+        
+        if (isAdder()) {
+          if (Misc::findCaseIns(m_taskName, taskName) == std::string::npos) {
+            msg << MSG::DEBUG << "REFUSED because taskName NOT OK" << endreq;
+            continue; 
+          }
+          else msg << MSG::DEBUG << "taskName OK" << endreq;
+	}
+	else {
+          if (m_taskName.compare(taskName)!= 0) {
+            msg << MSG::DEBUG << "REFUSED because taskName NOT OK" << endreq;
+            continue; 
+          }
+          else {
+            std::string serverName = (*serverListTotIt).substr(0, (*serverListTotIt).find("@"));
+	    if ((m_serverNameChoosen.compare("") == 0)||(m_serverNameChoosen.compare(serverName) == 0)){
+              msg << MSG::DEBUG << "taskName OK" << endreq;
+	      m_serverNameChoosen = serverName;
+              msg << MSG::DEBUG << "We will consider -----------> Server = "<<serverName << endreq;
+              serverList.insert(serverName);
+	    }
+            continue;
+	  }
+	}
       }
     }
     std::string serverName = (*serverListTotIt).substr(0, (*serverListTotIt).find("@"));
     msg << MSG::DEBUG << "We will consider -----------> Server = "<<serverName << endreq;
+
     serverList.insert(serverName);
   }
+  
   
   return serverList;
 }

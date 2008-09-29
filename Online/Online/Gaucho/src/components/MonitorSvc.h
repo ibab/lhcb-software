@@ -159,6 +159,15 @@ public:
   int m_disableDeclareInfoFormat;
   int m_disableDeclareInfoHistos;
   
+  void enableMonObjectsForBool() {m_disableMonObjectsForBool = 0;}
+  void enableMonObjectsForInt() {m_disableMonObjectsForInt = 0;}
+  void enableMonObjectsForLong() {m_disableMonObjectsForLong = 0;}
+  void enableMonObjectsForDouble() {m_disableMonObjectsForDouble = 0;}
+  void enableMonObjectsForString() {m_disableMonObjectsForString = 0;}
+  void enableMonObjectsForPairs() {m_disableMonObjectsForPairs = 0;}
+  void enableMonObjectsForHistos() {m_disableMonObjectsForHistos = 0;}
+  
+  
   std::string m_teste;
 };
 

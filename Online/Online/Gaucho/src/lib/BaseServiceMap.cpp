@@ -29,12 +29,12 @@ BaseServiceMap::~BaseServiceMap() {
 void BaseServiceMap::removeMap() {
   MsgStream msg(m_processMgr->msgSvc(), name());
   msg << MSG::DEBUG << "***************************************************************" << endreq;
-  msg << MSG::INFO  << " Removing Servers from Maps because the Process was Stoped"      << endreq;
+  msg << MSG::DEBUG  << " Removing Servers from maps because destructor called"      << endreq;
   msg << MSG::DEBUG << "***************************************************************" << endreq;
   std::map<std::string, bool, std::less<std::string> >::iterator svrMapIt;
   for (svrMapIt=m_serverMap.begin() ; svrMapIt != m_serverMap.end(); ++svrMapIt){
     if (!svrMapIt->second) continue; // is already inactive in local dimInfo
-    msg << MSG::INFO << "   Removing Server : " << svrMapIt->first << " from Adder" << endreq;
+    msg << MSG::INFO << "   Removing Server : " << svrMapIt->first << "." << endreq;
     excludeServerInMaps(svrMapIt->first);
   }
 }
@@ -100,16 +100,26 @@ void BaseServiceMap::includeServerInMaps(const std::string &serverName) {
     for (svcSetIt = m_serviceSet.begin(); svcSetIt != m_serviceSet.end(); ++svcSetIt) {
       msg << MSG::DEBUG << "Service " << *svcSetIt << endreq;    
       insertDimInfo(*svcSetIt, serverName);
+    }
+    
+    for (svcSetIt = m_serviceSet.begin(); svcSetIt != m_serviceSet.end(); ++svcSetIt) {
+      msg << MSG::DEBUG << "Service " << *svcSetIt << endreq;    
+      loadDimInfo(*svcSetIt, serverName);
       if (m_processMgr->isAdder()) {
         msg << MSG::DEBUG << "creating the Adder Service " << endreq;    
         insertDimService(*svcSetIt, serverName);
       }
     }
+    
   }
   else {
     for (svcSetIt = m_serviceSet.begin(); svcSetIt != m_serviceSet.end(); ++svcSetIt) {
       msg << MSG::DEBUG << "Service " << *svcSetIt << endreq;    
       insertDimInfo(*svcSetIt, serverName);
+    }
+    for (svcSetIt = m_serviceSet.begin(); svcSetIt != m_serviceSet.end(); ++svcSetIt) {
+      msg << MSG::DEBUG << "Service " << *svcSetIt << endreq;    
+      loadDimInfo(*svcSetIt, serverName);
     }
   }
 } 
@@ -161,20 +171,71 @@ void BaseServiceMap::insertDimInfo(const std::string &serviceName, const std::st
   //msg << MSG::DEBUG << "groupName =  " << groupName << endreq;
   //msg << MSG::DEBUG << "elementName =  " << elementName << endreq;
   
-  
-  
   m_dimInfo[groupName][elementName] = new DimInfoMonObject(termSvcName, m_processMgr->refreshTime()); 
   //msg << MSG::DEBUG << "setSourceName : " << name() << endreq;
   m_dimInfo[groupName][elementName]->setSourceName(name());
   //msg << MSG::DEBUG << "setMsgSvc" << endreq;
   m_dimInfo[groupName][elementName]->setMsgSvc(msgSvc());
            
-  msg << MSG::DEBUG << "creating MonObject in DimInfoMonObject " << endreq;
+}
+
+void BaseServiceMap::loadDimInfo(const std::string &serviceName, const std::string &serverName)
+{
+  MsgStream msg(msgSvc(), name());
+  
+  std::string termSvcName = createTermServiceName (serviceName, serverName);
+
+  std::string groupName = "";
+  std::string elementName = "";
+  
+  if (m_processMgr->isAdder()) {
+    groupName = createAdderName (serviceName);
+    elementName = serverName;
+  }
+  else {
+    groupName = createSaverName (termSvcName);// in the case of Saving Adders it should return "serverName"
+    elementName = termSvcName;
+  }
+  
+  msg << MSG::DEBUG << "creating MonObject in DimInfoMonObject " << termSvcName << endreq;
   m_dimInfo[groupName][elementName]->createMonObject();  
   msg << MSG::DEBUG << "after creating MonObject in DimInfoMonObject " << endreq;
   if (!m_processMgr->isAdder()) {// If it's a Saver we also create the object
-    if (0 != m_dimInfo[groupName][elementName]->monObject())
-      m_dimInfo[groupName][elementName]->monObject()->createObject();
+    if (0 != m_dimInfo[groupName][elementName]->monObject()){ 
+      
+      std::vector<std::string> serviceParts = Misc::splitString(termSvcName, "/");
+      std::string newName="";
+      int n = serviceParts.size();
+      for (int i=2; i < n; i++) {
+        newName = newName + "/" + serviceParts[i];
+      }
+   
+      std::string svctype = serviceParts[0];
+      if (svctype.compare(s_pfixMonH1F) == 0){
+       // newName = ((MonH1F*) (m_dimInfo[groupName][elementName]->monObject()))->histName();
+       // newName = m_processMgr->taskName() + "/"+ newName;
+        ((MonH1F*) (m_dimInfo[groupName][elementName]->monObject()))->createObject(newName);
+      } else if (svctype.compare(s_pfixMonH1D) == 0){
+       // newName = ((MonH1D*) (m_dimInfo[groupName][elementName]->monObject()))->histName();
+       // newName = m_processMgr->taskName() + "/"+ newName;
+        ((MonH1D*) (m_dimInfo[groupName][elementName]->monObject()))->createObject(newName);
+      } else if (svctype.compare(s_pfixMonH2F) == 0){
+       // newName = ((MonH2F*) (m_dimInfo[groupName][elementName]->monObject()))->histName();
+       // newName = m_processMgr->taskName() + "/"+ newName;
+        ((MonH2F*) (m_dimInfo[groupName][elementName]->monObject()))->createObject(newName);
+      } else if (svctype.compare(s_pfixMonH2D) == 0){
+       // newName = ((MonH2D*) (m_dimInfo[groupName][elementName]->monObject()))->histName();
+       // newName = m_processMgr->taskName() + "/"+ newName;
+        ((MonH2D*) (m_dimInfo[groupName][elementName]->monObject()))->createObject(newName);
+      } else if (svctype.compare(s_pfixMonProfile) == 0){
+       // newName = ((MonProfile*) (m_dimInfo[groupName][elementName]->monObject()))->profileName();
+       // newName = m_processMgr->taskName() + "/"+ newName;
+       ((MonProfile*) (m_dimInfo[groupName][elementName]->monObject()))->createObject(newName);
+      } else {
+        msg << MSG::WARNING << "MonObject not included in the Saver: " << svctype << endreq;
+      }
+    }
+ 
   }
 }
 
@@ -218,7 +279,7 @@ int BaseServiceMap::deleteDimInfo(const std::string &serviceName, const std::str
 
   return 0;
 }
-
+	
 void BaseServiceMap::insertDimService(const std::string &serviceName, const std::string &serverName)
 {
 
@@ -343,7 +404,7 @@ std::string BaseServiceMap::createSaverName (const std::string &serviceName){
 }
 
 
-void BaseServiceMap::writeOld(std::string saveDir, std::string &fileName, int &fileSize)
+void BaseServiceMap::writeOld(std::string saveDir, std::string &fileName)
 {
   MsgStream msg(msgSvc(), name());
   msg << MSG::INFO << " We will try to Write " << endreq;
@@ -369,7 +430,6 @@ void BaseServiceMap::writeOld(std::string saveDir, std::string &fileName, int &f
 
     if (!it->second) continue;
 
-    fileSize=0;
     std::string tmpfile = saveDir + "/" +  it->first + "-" + timestr + ".root"; 
     fileName.replace(0, fileName.length(), tmpfile);
     msg << MSG::INFO << "SaverSvc will save histograms in file " << fileName << endreq;
@@ -395,13 +455,13 @@ void BaseServiceMap::writeOld(std::string saveDir, std::string &fileName, int &f
         msg << MSG::ERROR << "MonObject of type " << type << " can not be writed."<< endreq; 
       }
     }
-    fileSize=(int)f->GetSize();
+    
     f->Close();
     delete f;f=0;
   }
 }
 
-void BaseServiceMap::write(std::string saveDir, std::string &fileName, int &fileSize)
+void BaseServiceMap::write(std::string saveDir, std::string &fileName)
 {
   MsgStream msg(msgSvc(), name());
   msg << MSG::INFO << " We will try to Write " << endreq;
@@ -423,15 +483,12 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName, int &file
   for (m_dimInfoIt=m_dimInfo.begin(); m_dimInfoIt!=m_dimInfo.end(); ++m_dimInfoIt) 
   {
    // std::cout << "========================SAVER=================================" << std::endl;
-    fileSize=0;
-    std::string tmpfile = saveDir + "/" +  m_dimInfoIt->first + "-" + timestr + ".root";
+    std::string tmpfile = saveDir + m_dimInfoIt->first + "-" + timestr + ".root";
     fileName.replace(0, fileName.length(), tmpfile);
     msg << MSG::INFO << "SaverSvc will save histograms in file " << fileName << endreq;
 
     f = new TFile(fileName.c_str(),"create");
 
-    msg << MSG::INFO << "Writing MonObjects"<< endreq;
-    
     for (it=m_dimInfoIt->second.begin(); it!=m_dimInfoIt->second.end(); ++it) {
       std::string serverName = Misc::splitString(it->first, "/")[1];
       if (!m_processMgr->dimInfoServers()->isActive(serverName)) continue;
@@ -451,10 +508,12 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName, int &file
       }
     }
   
-    fileSize=(int)f->GetSize();
     f->Close();
     delete f;f=0;
   }
+  
+  msg << MSG::INFO << "SaverSvc saved histograms in file " << fileName << endreq;
+  
 }
 
 

@@ -29,9 +29,11 @@ void DimInfoServices::infoHandler()
   //IocSensor::instance().send(m_processMgr->service(), s_createServiceMap , m_processMgr->service());
   //IocSensor::instance().send(m_processMgr->service(), s_updateServiceMap, m_processMgr->dimInfoServers()); //start Timer*/
   if (m_serviceSet.size() <= 0) return;
-  IocSensor::instance().send(m_processMgr->service(), s_stopTimer, this); //stop Timer*/
-  IocSensor::instance().send(m_processMgr->service(), s_updateSvcMapFromInfoService, (void *) &m_serviceSet);
-  IocSensor::instance().send(m_processMgr->service(), s_startTimer, this); //start Timer*/
+  IocSensor::instance().send(m_processMgr->service(), s_stopTimer, (void *) m_processMgr); //stop Timer*/
+//  std::pair<ProcessMgr*, std::set<std::string> > data = std::pair<ProcessMgr*, std::set<std::string> > (m_processMgr, m_serviceSet);
+  //IocSensor::instance().send(m_processMgr->service(), s_updateSvcMapFromInfoService, (void *) &m_serviceSet);
+  IocSensor::instance().send(m_processMgr->service(), s_updateSvcMapFromInfoService, (void *) m_processMgr);
+  IocSensor::instance().send(m_processMgr->service(), s_startTimer,  (void *) m_processMgr); //start Timer*/
   alreadyDone = true;
 }
 

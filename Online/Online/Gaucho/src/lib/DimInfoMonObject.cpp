@@ -56,9 +56,9 @@ bool DimInfoMonObject::createMonObject() {
   int tmpStringSize = m_dimInfo->getSize()/sizeof(char);
   while ( tmpStringSize <= 0 ) {
     //gSystem->Sleep(m_waitTime);
-    usleep(10000);
+    usleep(10);
     tmpStringSize = m_dimInfo->getSize()/sizeof(char);
-    //msg << MSG::DEBUG << "size for service "<< m_svcName << " " << tmpStringSize << endreq;
+    msg << MSG::DEBUG << "size for service "<< m_svcName << " " << tmpStringSize << endreq;
   }
   msg << MSG::DEBUG << "size for service "<< m_svcName << " " << tmpStringSize << endreq;
   m_StringSize = tmpStringSize;
@@ -72,25 +72,25 @@ bool DimInfoMonObject::createMonObject() {
       msg << MSG::WARNING << m_noValidMonObject << ", for service "<< m_svcName << endreq;
       return false;
     }
-    msg << MSG::DEBUG << "creating MonObject base" << endreq;
+    //msg << MSG::DEBUG << "creating MonObject base" << endreq;
     monObjectBase = new MonObject(m_msgSvc, m_source);
-    msg << MSG::DEBUG << "creating MonObject base" << endreq;
+    //msg << MSG::DEBUG << "creating MonObject base" << endreq;
     std::stringstream is;
     is.rdbuf()->pubsetbuf(c, m_StringSize);
-    msg << MSG::DEBUG << "creating iarchive 2" << endreq;  
+    //msg << MSG::DEBUG << "creating iarchive 2" << endreq;  
     boost::archive::binary_iarchive ia(is);
-    msg << MSG::DEBUG << "before load" << endreq;  
+    //msg << MSG::DEBUG << "before load" << endreq;  
     monObjectBase->load(ia, 0);
-    msg << MSG::DEBUG << "after MonObject base Load" << endreq;  
+    //msg << MSG::DEBUG << "after MonObject base Load" << endreq;  
     std::string monObjectTypeName  = monObjectBase->typeName();
-    msg << MSG::DEBUG << "creating MonObject" << endreq;
+    //msg << MSG::DEBUG << "creating MonObject" << endreq;
     m_monObject = MonObjectCreator::createMonObject(monObjectTypeName, m_msgSvc, m_source);
     std::stringstream is2;
     is2.rdbuf()->pubsetbuf(c, m_StringSize);
     boost::archive::binary_iarchive ia2(is2);
-    msg << MSG::DEBUG << "loading MonObject" << endreq;
+    //msg << MSG::DEBUG << "loading MonObject" << endreq;
     m_monObject->load(ia2, 0);
-    msg << MSG::DEBUG << "deleting " << endreq;
+    //msg << MSG::DEBUG << "deleting " << endreq;
     if (monObjectBase) {delete monObjectBase; monObjectBase = 0;}
   }
   catch (const std::exception &ex){
@@ -118,7 +118,7 @@ bool DimInfoMonObject::loadMonObject(){
   int tmpStringSize = m_dimInfo->getSize()/sizeof(char);
   while ( tmpStringSize <= 0 ) {
     //gSystem->Sleep(m_waitTime);
-    usleep(10000);
+    usleep(10);
     tmpStringSize = m_dimInfo->getSize()/sizeof(char);
   }
   msg << MSG::DEBUG << "size for service "<< m_svcName << " " << tmpStringSize << endreq;

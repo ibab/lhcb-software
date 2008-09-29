@@ -32,6 +32,7 @@ public:
   void excludeServerInMaps(const std::string &serverName);
   
   void insertDimInfo(const std::string &serviceName, const std::string &serverName);
+  void loadDimInfo(const std::string &serviceName, const std::string &serverName);
   int deleteDimInfo(const std::string &serviceName, const std::string &serverName);
   
   void insertDimService(const std::string &serviceName, const std::string &serverName);
@@ -44,8 +45,8 @@ public:
   void printMap();
   void printServiceSet();
   
-  void write(std::string saveDir, std::string &fileName, int &fileSize);
-  void writeOld(std::string saveDir, std::string &fileName, int &fileSize);
+  void write(std::string saveDir, std::string &fileName);
+  void writeOld(std::string saveDir, std::string &fileName);
   void add();
   
   void setServiceSet(const std::set<std::string>& serviceSet){m_serviceSet = serviceSet;}

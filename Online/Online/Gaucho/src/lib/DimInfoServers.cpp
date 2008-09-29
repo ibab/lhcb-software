@@ -26,13 +26,16 @@ void DimInfoServers::infoHandler() {
   m_processMgr->updateServerMap(value, m_serverMap);
 
   if ("" == m_serverChoosed) {
-    if (0 != m_serverMap.size())
-      IocSensor::instance().send(m_processMgr->service(), s_createInfoServices, (void *) &m_serverMap); // this command also updateServiceMap
+    if (0 != m_serverMap.size()){
+      //IocSensor::instance().send(m_processMgr->service(), s_createInfoServices, (void *) &m_serverMap); // this command also updateServiceMap
+      IocSensor::instance().send(m_processMgr->service(), s_createInfoServices, (void *) m_processMgr); // this command also updateServiceMap
+    }
   }
   else {
-    IocSensor::instance().send(m_processMgr->service(), s_stopTimer, this); //stop Timer*/
-    IocSensor::instance().send(m_processMgr->service(), s_updateSvcMapFromInfoServer, (void *) &m_serverMap);
-    IocSensor::instance().send(m_processMgr->service(), s_startTimer, this); //start Timer*/
+    IocSensor::instance().send(m_processMgr->service(), s_stopTimer, (void *) m_processMgr); //stop Timer*/
+    //IocSensor::instance().send(m_processMgr->service(), s_updateSvcMapFromInfoServer, (void *) &m_serverMap);
+    IocSensor::instance().send(m_processMgr->service(), s_updateSvcMapFromInfoServer, (void *) m_processMgr);
+    IocSensor::instance().send(m_processMgr->service(), s_startTimer, (void *) m_processMgr); //start Timer*/
   }
 
   //m_processMgr->serviceMap()->updateMap(m_serverMap);
@@ -44,14 +47,14 @@ void DimInfoServers::chooseServer() {
   
   for (m_it = m_serverMap.begin(); m_it != m_serverMap.end(); ++m_it){
     
-   // std::cout << "server " << m_it->second << " is ";
+    //std::cout << "server " << m_it->second << " is ";
   
     if (m_it->second) {
-    //  std::cout <<  " active" << std::endl;
+     // std::cout <<  " active" << std::endl;
       m_serverChoosed = m_it->first;
       return ;
     }
-    // std::cout <<  " inactive" << std::endl;
+    //std::cout <<  " inactive" << std::endl;
   }
 }
 
