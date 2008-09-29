@@ -1,4 +1,4 @@
-#$Id: TestMicroDSTMake.py,v 1.4 2008-09-25 15:23:45 jpalac Exp $
+#$Id: TestMicroDSTMake.py,v 1.5 2008-09-29 10:09:58 jpalac Exp $
 from Gaudi.Configuration import *
 from DaVinci.MicroDSTAlgorithm import *
 from Configurables import CopyRelatedMCParticles
@@ -11,6 +11,7 @@ from Configurables import MCVertexCloner
 from Configurables import VertexCloner
 from Configurables import ProtoParticleCloner
 from Configurables import PrintHeader
+from Configurables import OutputStream
 #
 importOptions( "$DAVINCIROOT/options/DaVinciCommon.opts" )
 importOptions("$DAVINCIROOT/options/DaVinciReco.opts" )
@@ -20,12 +21,25 @@ importOptions( "$CCBARROOT/options/DoDC06SelBs2Jpsi2MuMuPhi2KK_lifetime_unbiased
 printSel=PrintHeader('PrintDC06selBs2JpsiPhi')
 printSel.OutputLevel=4
 #
-importOptions("$DAVINCIROOT/options/MicroDSTCommon.opts")
-#
+importOptions('$DAVINCIROOT/options/MicroDSTStream.py')
+MicroDSTStream=OutputStream('MicroDSTStream')
+MicroDSTStream.Output = "DATAFILE='testBs2JpsiPhi_1Kevt.dst' TYP='POOL_ROOTTREE' OPT='REC'";
+MicroDSTStream.OutputLevel=4;
+# Sequence for stuff to be copied for all events.
 AllEvents = GaudiSequencer('AllEvents')
 ApplicationMgr().TopAlg += [ AllEvents ]
+
+# Seleciton sequence
 MySelection = GaudiSequencer('SeqDC06selBs2JpsiPhi')
+print "MySelection.name() = ", MySelection.name()
+# uncomment if you only want to write to the MicroDST for events that pass
+# the seleciton
+MicroDSTStream.RequireAlgs.append( MySelection.name() )
+#print MicroDSTStream.allConfigurables
 #
+
+MySelection.Members += [CopyRecHeader()]
+
 filterMCDecays = MCParticleArrayFilterAlg('FilterMCDecays')
 filterMCDecays.OutputLocation = "MC/Decays"
 filterMCDecays.addTool( FilterMCParticleArrayByDecay(), name = 'IMCParticleArrayFilter' )
@@ -33,8 +47,6 @@ filterMCDecays.IMCParticleArrayFilter.addTool( MCDecayFinder(), name = 'MCDecayF
 filterMCDecays.IMCParticleArrayFilter.MCDecayFinder.Decay = "[B_s0 -> (J/psi(1S) -> mu+ mu- {,gamma} {,gamma}) (phi(1020) -> K+ K-)]cc"
 filterMCDecays.OutputLevel = 4;
 
-AllEvents.Members  = [CopyRecHeader()]
-AllEvents.OutputLevel=4
 AllEvents.Members += [filterMCDecays]
 
 CopyMCParticles().InputLocation = "MC/Decays"
