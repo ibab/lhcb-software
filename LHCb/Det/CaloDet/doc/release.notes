@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.93 2008-09-26 15:45:38 odescham Exp $ 
+! $Id: release.notes,v 1.94 2008-09-29 09:10:25 odescham Exp $ 
 ! =============================================================================
 ! Package         : CaloDet   
 ! Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
+
+! 2008-09-28 Olivier Deschamps
+  - add temporary patches to restore the backward compatibility with DC06-tag condDB
 
 ! 2008-09-25 Olivier Deschamps
  - DeCalorimeter : check the condition existence with hasCondition(name) to please change in DetDesc

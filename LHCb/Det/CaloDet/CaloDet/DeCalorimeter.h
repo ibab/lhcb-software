@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.h,v 1.34 2008-09-26 15:45:38 odescham Exp $ 
+// $Id: DeCalorimeter.h,v 1.35 2008-09-29 09:10:24 odescham Exp $ 
 // ============================================================================
 #ifndef       CALODET_DECALORIMETER_H
 #define       CALODET_DECALORIMETER_H 1
@@ -279,7 +279,7 @@ private:
   SmartRef<Condition> m_hardware;
   SmartRef<Condition> m_readout;
   SmartRef<Condition> m_monitor;
-  bool loadCondition(SmartRef<Condition>& cond, std::string name, bool mandatory = false);
+  bool loadCondition(SmartRef<Condition>& cond, std::string name, bool mandatory = false,std::string alternate="");
 
   // cache
   StatusCode updHardware();
