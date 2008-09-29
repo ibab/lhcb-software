@@ -24,19 +24,19 @@ void generateXMLCatalog(const std::string &name,
                         const std::vector<std::string> &fldrsets,
                         std::string &data) {
   std::ostringstream xml; // buffer for the XML
-  
+
   // XML header, root element and catalog initial tag
   xml << "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>"
       << "<!DOCTYPE DDDB SYSTEM \"conddb:/DTD/structure.dtd\">"
       << "<DDDB><catalog name=\"" << name << "\">";
-  
+
   // sub-folders are considered as container of conditions
   std::vector<std::string>::const_iterator f;
   for ( f = fldrs.begin(); f != fldrs.end(); ++f ) {
     xml << "<conditionref href=\"" << name << '/' << *f;
     // If the folder has a ".xml" extension, we remove it for the actual object
     // name
-    if (f->substr(f->size()-4) == ".xml"){
+    if ((f->size() > 4) && (f->substr(f->size()-4) == ".xml")){
       xml << "#" << f->substr(0,f->size()-4);
     }
     xml << "\"/>";
@@ -47,7 +47,7 @@ void generateXMLCatalog(const std::string &name,
   }
   // catalog and root element final tag
   xml << "</catalog></DDDB>";
-  
+
   data = xml.str();
 }
 
@@ -66,16 +66,16 @@ StatusCode generateXMLCatalog(ICondDBReader *reader, const std::string &path,
   } else {
     name = path;
   }
-  
+
   // generate the XML catalog
   std::string xml;
   generateXMLCatalog(name,folders,foldersets,xml);
-  
+
   // prepare new payload
   cool::Record *rec = new cool::Record(getXMLStorageSpec());
   (*rec)["data"].setValue<cool::String16M>(xml);
   payload.reset(rec);
-  
+
   return sc;
 }
 
