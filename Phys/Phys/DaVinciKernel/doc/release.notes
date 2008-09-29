@@ -4,6 +4,12 @@
 !============================================================================
 
 ! 2008-09-29 - Juan PALACIOS
+ - Kernel/IOnOfflineTool.h
+  . Clean up interface. Now it only gives the names of some
+    tool implementations and PV location to be used by the parent algorithm
+    or tool.
+
+! 2008-09-29 - Juan PALACIOS
  - Backwards-incompatible changes to IRelatedPVFinder. interface now contains 
    three simple methods taking a particle, some primary vertices, and an 
    empty range of weighted Particle->VertexBase relations, so be filled
