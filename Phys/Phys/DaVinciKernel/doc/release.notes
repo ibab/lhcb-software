@@ -3,6 +3,12 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2008-09-29 - Juan PALACIOS
+ - Backwards-incompatible changes to IRelatedPVFinder. interface now contains 
+   three simple methods taking a particle, some primary vertices, and an 
+   empty range of weighted Particle->VertexBase relations, so be filled
+   according to some "bestness" logic.
+
 !======================== DaVinciKernel v7r0 2008-07-16 =====================
 ! 2008-07-11 - Vanya BELYAEV
  - Kernel/ISetInputParticles.h, src/Lib/ISetInputParticles.cpp
