@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.34 2008-07-10 15:18:20 pkoppenb Exp $
+// $Id: DVAlgorithm.cpp,v 1.35 2008-09-29 16:40:41 jpalac Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -210,7 +210,7 @@ StatusCode DVAlgorithm::loadTools()
   if ( m_vertexFitNames.end() == m_vertexFitNames.find("") )
   {
     if ( 0==onof) onof = tool<IOnOffline>("OnOfflineTool",this);
-    m_vertexFitNames[""] = onof->vertexFitter() ;
+    m_vertexFitNames[""] = onof->vertexFitterType() ;
   }
   
   if (msgLevel(MSG::DEBUG)) debug() << ">>> Preloading "
@@ -221,7 +221,7 @@ StatusCode DVAlgorithm::loadTools()
   if ( m_distanceCalculatorNames.end() == m_distanceCalculatorNames.find("") )
   {
     if ( 0==onof ) onof = tool<IOnOffline>("OnOfflineTool",this);
-    m_distanceCalculatorNames[""] = onof->distanceCalculator() ;
+    m_distanceCalculatorNames[""] = onof->distanceCalculatorType() ;
   }
   
   // distance geometry
