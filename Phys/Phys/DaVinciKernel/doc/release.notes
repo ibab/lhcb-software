@@ -4,6 +4,10 @@
 !============================================================================
 
 ! 2008-09-29 - Juan PALACIOS
+ - src/Lib/DVAlgorithm.cpp
+  . Adapt to changes in IOnOffline interface.
+
+! 2008-09-29 - Juan PALACIOS
  - Kernel/IOnOfflineTool.h
   . Clean up interface. Now it only gives the names of some
     tool implementations and PV location to be used by the parent algorithm
