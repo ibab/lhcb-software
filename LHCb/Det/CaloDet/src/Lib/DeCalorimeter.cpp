@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.cpp,v 1.52 2008-09-29 16:01:43 odescham Exp $ 
+// $Id: DeCalorimeter.cpp,v 1.53 2008-09-29 16:33:57 odescham Exp $ 
 // ============================================================================
 #define  CALODET_DECALORIMETER_CPP 1
 // STL
@@ -257,7 +257,7 @@ Gaudi::Plane3D DeCalorimeter::plane( const double dz) const{
   Gaudi::XYZPoint local(0. , 0. , dz);
   if ( fabs(dz-m_zOffset) > m_zSize/2. ) {  
     MsgStream msg( msgSvc(), name() + "Plane " );
-    msg << MSG::DEBUG 
+    msg << MSG::WARNING
         << " THE REQUESTED PLANE IS OUTSIDE THE ACTIVE VOLUME of : " << name()
         << " dz = " << dz
         << " z-enveloppe of the active area = ["<< m_zOffset-m_zSize/2. << " ; " 

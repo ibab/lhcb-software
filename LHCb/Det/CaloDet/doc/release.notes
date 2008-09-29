@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.95 2008-09-29 16:01:43 odescham Exp $ 
+! $Id: release.notes,v 1.96 2008-09-29 16:33:57 odescham Exp $ 
 ! =============================================================================
 ! Package         : CaloDet   
 ! Package manager : Olivier Deschamps odescham@in2p3.fr
@@ -6,7 +6,7 @@
 
 
 ! 2008-09-28 Olivier Deschamps
-  - reduce verbosity  (CaloPlane warning is set to DEBUG due to wrong default value in DC06-tag condDB)
+  - reduce verbosity  
 
 ! 2008-09-28 Olivier Deschamps
   - add temporary patches to restore the backward compatibility with DC06-tag condDB
