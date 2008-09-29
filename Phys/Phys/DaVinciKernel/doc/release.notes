@@ -4,6 +4,10 @@
 !============================================================================
 
 ! 2008-09-29 - Juan PALACIOS
+ - Kernel/IRelatedPVFinder.h
+  . Make all methods const.
+
+! 2008-09-29 - Juan PALACIOS
  - src/Lib/DVAlgorithm.cpp
   . Adapt to changes in IOnOffline interface.
 
