@@ -352,7 +352,7 @@ class LbLoginScript(Script):
             self._add_echo( "Creating a %s file to use CMT" % rhostfile ) 
             self._add_echo("Joel.Closier@cern.ch")
             f = open(rhostfile, "w")
-            f.write("+ %s\n") % username
+            f.write("+ %s\n" % username )
             f.close()
         # remove any .cmtrc file stored in the $HOME directory
         cmtrcfile = os.path.join(homedir, ".cmtrc")

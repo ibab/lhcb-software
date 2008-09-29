@@ -3,6 +3,24 @@
 import sys
 import os
 
+from imp import find_module
+# bootstraping the location of the file
+_this_file = find_module("generateLogin")[1]
+_scripts_dir = os.path.dirname(_this_file)
+_base_dir = os.path.dirname(_scripts_dir)
+
+
+def generateLogins(version, targetlocation=None, scripts=None):
+    if not targetlocation : 
+        targetlocation = os.path.realpath(_base_dir)
+    if not scripts :
+        scripts = []
+        scripts.append(os.path.join(_scripts_dir, "LbLogin.csh"))
+        scripts.append(os.path.join(_scripts_dir, "LbLogin.sh"))
+        scripts.append(os.path.join(_scripts_dir, "LbLogin.bat"))
+    for s in scripts :
+        generateLogin(targetlocation, s, version)
+
 def generateLogin(targetlocation, script, version=""):
     knownshells = ["sh", "csh", "tcsh", "zsh", "bat"]
     shell = os.path.splitext(script)[1][1:]
@@ -52,13 +70,17 @@ call %~d0\%~p0\SetupProject.bat --disable-CASTOR LbScripts """ + version + " --r
     f.close()
 
 if __name__ == '__main__':
-    if len(sys.argv) < 4 :
-        sys.exit("Error must have at least 3 arguments")
-    else :
-        targetlocation = sys.argv[1]
-        version = sys.argv[2]
+    targetlocation = None
+    scripts = None
+    
+    if len(sys.argv) < 2 :
+        sys.exit("Error must have at least 1 argument (the version)")
+    if len(sys.argv) > 1 :
+        version = sys.argv[1]
+    if len(sys.argv) > 2 :
+        targetlocation = os.path.realpath(sys.argv[2])
+    if len(sys.argv) > 3 :
         scripts = sys.argv[3:]
         
 
-    for s in scripts :
-        generateLogin(targetlocation, s, version)
+    generateLogins(version, targetlocation, scripts)
