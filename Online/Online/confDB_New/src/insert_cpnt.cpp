@@ -9,6 +9,7 @@
 
 #include "list_structures.h"
 #include "system_info.h"
+#include "CDB.h"
 #if defined(__cplusplus) || defined(c_plusplus)
 extern "C" {
 #endif
@@ -24,130 +25,6 @@ extern "C" {
 	extern   OCISvcCtx* ociHdbc ;
 	extern   OCIServer *mysrvhp;
 	extern   OCISession *myusrhp; 
-
-	/************************global variables for the cpnt***********************/
-	int FIRST_TIME_CPNT=0;
-	char* _CpntList;
-	int _max_cpntLength;
-	int _cpntListLength;
-
-
-
-	char* _cpnthwtype1List;
-	int _max_cpnthwtype1Length;
-	int _cpnthwtype1ListLength;
-
-	char* _cpntresponsible1List;
-	int _max_cpntresponsible1Length;
-	int _cpntresponsible1ListLength;
-
-
-	char*  _cpntcomments1List;
-	int _max_cpntcomments1Length;
-	int _cpntcomments1ListLength;
-
-
-
-	char* _cpntserialnb1List;
-	int _max_cpntserialnb1_length;
-	int _cpntserialnb1ListLength;
-
-
-	char* _cpnttypeList;
-	int _max_cpnttype_length;
-	int _cpnttypeListLength;
-
-
-
-
-	int * _cpntreplacable;
-
-	int _cpntNbElement;
-	int _cpnttypeNbElement;
-	int _cpnthwtype1NbElement;
-
-	int _cpntresponsible1NbElement;
-	int _cpntcomments1NbElement;
-	int _cpntreplacableNbElement;
-	int _cpntserialnb1NbElement;
-	int _cpntlocationNbElement;
-	int _cpntmotherboardNbElement;
-
-	char* _cpntlocationList;
-	int _max_cpntlocation_length;
-	int _cpntlocationListLength;
-
-	char* _cpntmotherboardList;
-	int _max_cpntmotherboard_length;
-	int _cpntmotherboardListLength;
-
-	int* _cpntList_nullvalue;
-	int _cpntListNbEl;
-
-	int* _cpntserialnb1_nullvalue;
-	int _cpntserialnb1NbEl;
-
-
-	int* _cpnttype_nullvalue;
-	int _cpnttypeNbEl;
-
-	int* _cpntresponsible1_nullvalue;
-	int _cpntresponsible1NbEl;
-
-
-	int* _cpnthwtype1_nullvalue;
-	int _cpnthwtype1NbEl;
-
-	int* _cpntcomments1_nullvalue;
-	int _cpntcomments1NbEl;
-
-
-	int* _cpntlocationList_nullvalue;
-	int _cpntlocationListNbEl;
-
-	int* _cpntmotherboardList_nullvalue;
-	int _cpntmotherboardListNbEl;
-	int freeCpnt()
-	{
-		int status=0;
-		_CpntList=(char*)realloc(_CpntList,0*sizeof(char));
-		_cpntserialnb1List=(char*)realloc(_cpntserialnb1List,0*sizeof(char));
-		_cpnttypeList=(char*)realloc(_cpnttypeList,0*sizeof(char));
-		_cpntlocationList=(char*)realloc(_cpntlocationList,0*sizeof(char));
-		_cpnthwtype1List=(char*)realloc(_cpnthwtype1List,0*sizeof(char));
-		_cpntresponsible1List=(char*)realloc(_cpntresponsible1List,0*sizeof(char));
-		_cpntcomments1List=(char*)realloc(_cpntcomments1List,0*sizeof(char));
-
-		_cpntreplacable=(int*)realloc(_cpntreplacable,0*sizeof(int));
-		_cpntList_nullvalue=(int*)realloc(_cpntList_nullvalue,0*sizeof(int));
-		_cpntserialnb1_nullvalue=(int*)realloc(_cpntserialnb1_nullvalue,0*sizeof(int));
-		_cpntlocationList_nullvalue=(int*)realloc(_cpntlocationList_nullvalue,0*sizeof(int));
-		_cpnthwtype1_nullvalue=(int*)realloc(_cpnthwtype1_nullvalue,0*sizeof(int));
-		_cpntcomments1_nullvalue=(int*)realloc(_cpntcomments1_nullvalue,0*sizeof(int));
-		_cpntresponsible1_nullvalue=(int*)realloc(_cpntresponsible1_nullvalue,0*sizeof(int));
-
-		_cpnttype_nullvalue=(int*)realloc(_cpnttype_nullvalue,0*sizeof(int));
-		_cpnttype_nullvalue=NULL;
-		_cpntList_nullvalue=NULL;
-		_cpntserialnb1_nullvalue=NULL;
-		_cpntmotherboardList=(char*)realloc(_cpntmotherboardList,0*sizeof(char));
-		_cpntmotherboardList_nullvalue=(int*)realloc(_cpntmotherboardList_nullvalue,0*sizeof(int));
-		_cpntmotherboardList=NULL;
-
-		_CpntList=NULL;
-		_cpntserialnb1List=NULL;
-		_cpntreplacable=NULL;
-		_cpntlocationList=NULL;
-		_cpnttypeList=NULL;
-		_cpnthwtype1_nullvalue=NULL;
-		_cpntcomments1_nullvalue=NULL;
-		_cpntresponsible1_nullvalue=NULL;
-		_cpntcomments1List=NULL;
-		_cpntresponsible1List=NULL;
-		_cpnthwtype1List=NULL;
-		FIRST_TIME_CPNT=0;
-		return status;
-	}
 
 	/**
 	* Insert a cpnt into the functional_cpnt table and the hw table :it means that the hw cpnt is currently IN_USE and it's having the given functional fct returning an integer value.
@@ -167,124 +44,116 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 
-	//extern "C" __declspec(dllexport)
 	EXTERN_CONFDB
-		int InsertMultipleBoardCpnts(char* cpntname,char* cpnttype,int replacable,char* motherboardname,char* serial_nb,char* hwtype,char* responsible,char* comments,char* location,int first_time1,int last_rows1,char* ErrMess)
+		int InsertMultipleBoardCpnts(char* cpntname,char* cpnttype,int replacable,char* motherboardname,char* serial_nb,char* hwtype,char* responsible,char* comments,char* location,int first_time,int last_rows,char* ErrMess)
 	{
 		char appliName[100]="InsertMultipleBoardCpnts";
 		char sqlstmt[2000];
 		OCIStmt *hstmt;
-		OCIBind  *bndp[10]; 
-		int rescode=0;
-		int free_mem=0;
+		OCIBind  *bndp[11]; 
+		int rescode=0;		
 		int res_query=0;
 		sword status=0;
-		char* dname=NULL;
 		int i=0;
+
+		char* dname=NULL;		
 		char* dlocation=NULL;
-		char* dlocationbis=NULL;
+		char* dmotherboard=NULL;
 		char* dserialnb=NULL;
 		char* dtype=NULL;
 		char* dresponsible=NULL;
 		char* dcomments=NULL;
 		char* dhwtype=NULL;
+		int* dreplacable=NULL;
+
+		int* name_nullList=NULL;
+		int* location_nullList=NULL;
+		int* motherboard_nullList=NULL;
+		int* serialnb_nullList=NULL;
+		int* type_nullList=NULL;
+		int* responsible_nullList=NULL;
+		int* comments_nullList=NULL;
+		int* hwtype_nullList=NULL;
+
+		static int FIRST_TIME=0;
+
 		int force_insert=0;
-		int first_time=first_time1;
 		char hist_seq[100]="LHCB_CPNT_HISTORY_COMPTID_SEQ.nextval";
 		char hw_seq[100]="LHCB_HW_CPNTS_SNBID_SEQ.nextval";
 		char lg_seq[100]="LHCB_LG_CPNTS_DEVICEID_SEQ.nextval";
-
-		//std::cout<<"value of first_time "<<first_time <<std::endl;
-		int last_rows=last_rows1;
-		char seq_name[100]="lhcb_lg_cpntseq.nextval";
 		int* numrows_inserted=NULL;
-		int* snbidList=NULL;
 		int numrows=0;
-		OCIBind  *bndp3 = (OCIBind *) 0;
-		char* errmessg1=(char*)malloc(ERROR_BUFFER*sizeof(char));
+		int* snbidList=NULL;
 
-
+		static int NbElement=0;
+		Cpnt** CpntList;
+		int max_namelen=0;
+		int max_locationlen=0;
+		int max_motherboardlen=0;
+		int max_serialnblen=0;
+		int max_typelen=0;
+		int max_responsiblelen=0;
+		int max_commentslen=0;
+		int max_hwtypelen=0;
+	
 		int dname1=null_charptr(cpntname);
 		int dserialnb1=null_charptr(serial_nb);
 		int dtype1=null_charptr(cpnttype);
 		int dlocation1=null_charptr(location);
 		int dlocation2=null_charptr(motherboardname);
-
 		int dresponsible1=null_charptr(responsible);
 		int dhwtype1=null_charptr(hwtype);
 		int dcomments1=null_charptr(comments);
+
 		if(replacable==1)
 		{
 			if(serial_nb!=NULL)
 			{
 				if(strncmp(serial_nb,"none",4)==0||strlen(serial_nb)<2)
 				{
-					status=freeCpnt();
 					GetErrorMess(appliName, "If the cpnt is replacable,a serialnb is mandatory the",ErrMess,1);
 					return -1;
 				}
 			}
 			else
 			{
-				status=freeCpnt();
 				GetErrorMess(appliName, "If the cpnt is replacable,a serialnb is mandatory the",ErrMess,1);
 				return -1;
 			}
 
 		}
 
-		if(FIRST_TIME_CPNT==1 && _CpntList==NULL)
+		if (first_time==1)
 		{
-			first_time=1;
-			//std::cout<<"case of FIRST_TIME_DEVICE==1 && _CpntList==NULL"<<std::endl;
-
+			FIRST_TIME=1;
+			NbElement=1;
+			CpntList=(Cpnt**)malloc( NbElement*sizeof(Cpnt));			
 		}
-		if(first_time==1)
+		else 
 		{
-			status=freeCpnt(); //delete the cache in case it was exiting with error
-			FIRST_TIME_CPNT=1;
-
+			if (FIRST_TIME==0&&force_insert==0)
+			{
+				GetErrorMess(appliName, "CACHE HAS NOT BEEN INITIALIZED",ErrMess,1);
+				return -1;
+			}
+			NbElement++;
+			CpntList=(Cpnt**)realloc(CpntList, NbElement*sizeof(Cpnt));
 		}
-		//std::cout<<"before appending string "<<std::endl;
 
-		res_query=AppendString(cpntname,_CpntList,_cpntListLength,_cpntNbElement,_max_cpntLength,first_time);
-		res_query+=AppendString(serial_nb,_cpntserialnb1List,_cpntserialnb1ListLength,_cpntserialnb1NbElement,_max_cpntserialnb1_length,first_time);
-		res_query+=AppendString(cpnttype,_cpnttypeList,_cpnttypeListLength,_cpnttypeNbElement,_max_cpnttype_length,first_time);
-		res_query+=AppendString(location,_cpntlocationList,_cpntlocationListLength,_cpntlocationNbElement,_max_cpntlocation_length,first_time);
-		res_query+=AppendString(responsible,_cpntresponsible1List,_cpntresponsible1ListLength,_cpntresponsible1NbElement,_max_cpntresponsible1Length,first_time);
-		res_query+=AppendString(comments,_cpntcomments1List,_cpntcomments1ListLength,_cpntcomments1NbElement,_max_cpntcomments1Length,first_time);
-		res_query+=AppendString(hwtype,_cpnthwtype1List,_cpnthwtype1ListLength,_cpnthwtype1NbElement,_max_cpnthwtype1Length,first_time);
-		res_query+=AppendString(motherboardname,_cpntmotherboardList,_cpntmotherboardListLength,_cpntmotherboardNbElement,_max_cpntmotherboard_length,first_time);
+		CpntList[NbElement-1]=new Cpnt(cpntname,cpnttype,replacable,motherboardname,serial_nb,hwtype,responsible,comments,location);
 
-		//std::cout<<"before appending int "<<std::endl;
-
-		res_query+=AppendInt(replacable,_cpntreplacable,_cpntreplacableNbElement,first_time);
-
-
-		res_query+=AppendInt(dname1,_cpntList_nullvalue,_cpntListNbEl,first_time);
-		res_query+=AppendInt(dlocation1,_cpntlocationList_nullvalue,_cpntlocationListNbEl,first_time);
-		res_query+=AppendInt(dserialnb1,_cpntserialnb1_nullvalue,_cpntserialnb1NbEl,first_time);
-		res_query+=AppendInt(dtype1,_cpnttype_nullvalue,_cpnttypeNbEl,first_time);
-		res_query+=AppendInt(dhwtype1,_cpnthwtype1_nullvalue,_cpnthwtype1NbEl,first_time);
-		res_query+=AppendInt(dcomments1,_cpntcomments1_nullvalue,_cpntcomments1NbEl,first_time);
-		res_query+=AppendInt(dresponsible1,_cpntresponsible1_nullvalue,_cpntresponsible1NbEl,first_time);
-		res_query+=AppendInt(dlocation2,_cpntmotherboardList_nullvalue,_cpntmotherboardListNbEl,first_time);
-
-		//std::cout<<"value of cpntlist "<<_CpntList<<std::endl;
-
-		//std::cout<<"value of FIRST_TIME_CPNT "<<FIRST_TIME_CPNT <<std::endl;
-
-		if(_cpntNbElement==MAXROWS && last_rows!=1)
+		if(NbElement==MAXROWS && last_rows!=1)
 		{
 			force_insert=1;
 			last_rows=1;
 		}
-		status=res_query;
-		if(last_rows==1 && res_query==0 && ociEnv!=0 && FIRST_TIME_CPNT==1)
+		
+		if(last_rows==1 && res_query==0 && ociEnv!=0 && FIRST_TIME==1)
 		{
 			int len_host=LOGIN_LEN;
 			char login[LOGIN_LEN];
 			char host[LOGIN_LEN];
+			char* errmessg1=(char*)malloc(ERROR_BUFFER*sizeof(char));
 			if(errmessg1==NULL)
 			{
 				GetErrorMess(appliName, "Malloc unsuccessful",ErrMess,1);
@@ -300,7 +169,7 @@ extern "C" {
 			res_query=getTerminalName(host,len_host,errmessg1);
 			len_host=LOGIN_LEN;
 			res_query=getLoginUser(login,len_host,errmessg2);
-
+			
 			if(strncmp("NO_ERROR",errmessg1,8)==0 && strncmp("NO_ERROR",errmessg2,8)==0 )
 			{
 				free(errmessg1);
@@ -323,8 +192,247 @@ extern "C" {
 					else
 						strcpy(ErrMess,errmessg2);
 				}
-				rescode=-1;
-				status+=freeCpnt();
+			
+				FIRST_TIME=0;
+
+				if(dname!=NULL)	
+					free(dname);
+				if(dtype!=NULL)
+					free(dtype);
+				if(dlocation!=NULL)
+					free(dlocation);
+				if(dserialnb!=NULL)
+					free(dserialnb);
+				if(dresponsible!=NULL)
+					free(dresponsible);
+				if(dcomments!=NULL)
+					free(dcomments);
+				if(dhwtype!=NULL)
+					free(dhwtype);
+				if(dmotherboard!=NULL)
+					free(dmotherboard);				
+				if(numrows_inserted!=NULL)
+					free(numrows_inserted);
+				if(name_nullList!=NULL)
+					free(name_nullList);
+				if(serialnb_nullList!=NULL)
+					free(serialnb_nullList);
+				if(location_nullList!=NULL)
+					free(location_nullList);
+				if(type_nullList!=NULL)
+					free(type_nullList);
+				if(hwtype_nullList!=NULL)
+					free(hwtype_nullList);
+				if(comments_nullList!=NULL)
+					free(comments_nullList);
+				if(responsible_nullList!=NULL)
+					free(responsible_nullList);
+				if(motherboard_nullList!=NULL)
+					free(motherboard_nullList);
+				if(dreplacable!=NULL)
+					free(dreplacable);
+				if(snbidList!=NULL)
+					free(snbidList);
+				
+				for(i=0;i<NbElement;i++)
+					delete CpntList[i];
+				if(CpntList!=NULL)
+					free(CpntList);
+				
+				free(errmessg1);
+				free(errmessg2);
+				return -1;
+			}
+
+			for(i=0;i<NbElement;i++){
+				if (CpntList[i]->namelen > max_namelen)
+					max_namelen=CpntList[i]->namelen;
+				if (CpntList[i]->serialnblen > max_serialnblen)
+					max_serialnblen=CpntList[i]->serialnblen;
+				if (CpntList[i]->locationlen > max_locationlen)
+					max_locationlen=CpntList[i]->locationlen;
+				if (CpntList[i]->typelen > max_typelen)
+					max_typelen=CpntList[i]->typelen;				
+				if (CpntList[i]->hwtypelen > max_hwtypelen)
+					max_hwtypelen=CpntList[i]->hwtypelen;
+				if (CpntList[i]->commentslen > max_commentslen)
+					max_commentslen=CpntList[i]->commentslen;
+				if (CpntList[i]->responsiblelen > max_responsiblelen)
+					max_responsiblelen=CpntList[i]->responsiblelen;
+				if (CpntList[i]->motherboardlen > max_motherboardlen)
+					max_motherboardlen=CpntList[i]->motherboardlen;
+			}
+
+			dname=(char*)malloc( NbElement*max_namelen*sizeof(char));
+			dserialnb=(char*)malloc(NbElement*max_serialnblen*sizeof(char));
+			dlocation=(char*)malloc(NbElement*max_locationlen*sizeof(char));
+			dtype=(char*)malloc(NbElement*max_typelen*sizeof(char));
+			dhwtype=(char*)malloc(NbElement*max_hwtypelen*sizeof(char));
+			dcomments=(char*)malloc(NbElement*max_commentslen*sizeof(char));
+			dresponsible=(char*)malloc(NbElement*max_responsiblelen*sizeof(char));
+			dmotherboard=(char*)malloc(NbElement*max_motherboardlen*sizeof(char));
+			dreplacable=(int*)malloc(sizeof(int)*NbElement);
+			snbidList=(int*)malloc(sizeof(int)*NbElement);
+			
+			name_nullList=(int*)malloc(NbElement*sizeof(int));
+			serialnb_nullList=(int*)malloc(NbElement*sizeof(int));
+			location_nullList=(int*)malloc(NbElement*sizeof(int));
+			type_nullList=(int*)malloc(NbElement*sizeof(int));
+			hwtype_nullList=(int*)malloc(NbElement*sizeof(int));
+			comments_nullList=(int*)malloc(NbElement*sizeof(int));
+			responsible_nullList=(int*)malloc(NbElement*sizeof(int));
+			motherboard_nullList=(int*)malloc(NbElement*sizeof(int));
+
+			if(name_nullList!=NULL && serialnb_nullList!=NULL && location_nullList!=NULL && type_nullList!=NULL && hwtype_nullList!=NULL && comments_nullList!=NULL && responsible_nullList!=NULL && motherboard_nullList!=NULL 
+				&& dname!=NULL && dserialnb!=NULL && dlocation!=NULL && dtype!=NULL && dhwtype!=NULL && dcomments!=NULL && dresponsible!=NULL && dmotherboard!=NULL&&dreplacable!=NULL&&snbidList!=NULL)
+			for(i=0;i<NbElement;i++)
+			{
+				memcpy(dname+i*max_namelen,CpntList[i]->name,CpntList[i]->namelen);
+				name_nullList[i]=CpntList[i]->name_null;
+				memcpy(dserialnb+i*max_serialnblen,CpntList[i]->serialnb,CpntList[i]->serialnblen);
+				serialnb_nullList[i]=CpntList[i]->serialnb_null;
+				memcpy(dlocation+i*max_locationlen,CpntList[i]->location,CpntList[i]->locationlen);
+				location_nullList[i]=CpntList[i]->location_null;
+				memcpy(dtype+i*max_typelen,CpntList[i]->type,CpntList[i]->typelen);
+				type_nullList[i]=CpntList[i]->type_null;
+				memcpy(dhwtype+i*max_hwtypelen,CpntList[i]->hwtype,CpntList[i]->hwtypelen);					
+				hwtype_nullList[i]=CpntList[i]->hwtype_null;
+				memcpy(dcomments+i*max_commentslen,CpntList[i]->comments,CpntList[i]->commentslen);					
+				comments_nullList[i]=CpntList[i]->comments_null;
+				memcpy(dresponsible+i*max_responsiblelen,CpntList[i]->responsible,CpntList[i]->responsiblelen);					
+				responsible_nullList[i]=CpntList[i]->responsible_null;
+				memcpy(dmotherboard+i*max_motherboardlen,CpntList[i]->motherboard,CpntList[i]->motherboardlen);
+				motherboard_nullList[i]=CpntList[i]->motherboard_null;
+				dreplacable[i]=CpntList[i]->replacable;
+			}
+
+			numrows_inserted=(int*)malloc(sizeof(int)*NbElement);
+
+			if( (dtype==NULL) || (dname==NULL) || dmotherboard==NULL || dlocation==NULL || (dserialnb==NULL) || (dresponsible==NULL)||dcomments==NULL||dhwtype==NULL||numrows_inserted==NULL ||dreplacable==NULL || snbidList==NULL
+				||name_nullList==NULL || serialnb_nullList==NULL || location_nullList==NULL || type_nullList==NULL || hwtype_nullList==NULL || comments_nullList==NULL || responsible_nullList==NULL || motherboard_nullList==NULL)
+
+			{
+				rescode=ShowErrors (status, ociError, "Invalid pointer allocation unsuccessful");
+				GetErrorMess(appliName, "Malloc unsuccessful",ErrMess,1);
+				
+				FIRST_TIME=0;
+				
+				if(dname!=NULL)
+					free(dname);
+				if(dtype!=NULL)
+					free(dtype);
+				if(dlocation!=NULL)
+					free(dlocation);
+				if(dserialnb!=NULL)
+					free(dserialnb);
+				if(dmotherboard!=NULL)
+					free(dmotherboard);
+				if(dresponsible!=NULL)
+					free(dresponsible);
+				if(dcomments!=NULL)
+					free(dcomments);
+				if(dhwtype!=NULL)
+					free(dhwtype);
+				if(numrows_inserted!=NULL)
+					free(numrows_inserted);
+				if(dreplacable!=NULL)
+					free(dreplacable);
+				if(snbidList!=NULL)
+					free(snbidList);
+				if(name_nullList!=NULL)
+					free(name_nullList);
+				if(serialnb_nullList!=NULL)
+					free(serialnb_nullList);
+				if(location_nullList!=NULL)
+					free(location_nullList);
+				if(type_nullList!=NULL)
+					free(type_nullList);
+				if(hwtype_nullList!=NULL)
+					free(hwtype_nullList);
+				if(comments_nullList!=NULL)
+					free(comments_nullList);
+				if(responsible_nullList!=NULL)
+					free(responsible_nullList);
+				if(motherboard_nullList!=NULL)
+					free(motherboard_nullList);
+				
+				for(i=0;i<NbElement;i++)
+					delete CpntList[i];
+				if(CpntList!=NULL)
+                    free(CpntList);
+				
+				NbElement=0;
+				
+				return -1;
+			}
+			else
+			{
+				for(i=0;i<NbElement;i++)
+				{
+                    numrows_inserted[i]=0;
+                    snbidList[i]=0;
+				}
+			}
+
+			try{
+                HandleAlloc(ociEnv,(dvoid**)&hstmt,OCI_HTYPE_STMT,&status);
+				sprintf(sqlstmt,"BEGIN if nvl(:motherboard,'none') not like 'none' then insert ALL into %s(snbid,serialnb,hwtype,responsible,user_comment,cpnt_status,hwname,replacable,location) values(%s,:serialnb,:hwtype,:responsible,:comments,%d,:dname,:replacable,location) select serialnb as location from %s where devicename=:motherboard and serialnb is not null; insert all into %s(cpntname,cpnttype,snbid,cpntid,motherboardid,location,author,created,terminal_name) values (:dname,:cpnttype,snbid,%s,motherboardid,:location,'%s',sysdate,'%s') select t.snbid as snbid, e.deviceid as motherboardid from %s t,%s  e where t.serialnb=:serialnb and e.devicename=:motherboard;if %s=1 then insert all into %s(historycpntID,snbid,cpntid,cpnt_status,user_comment,location,status_change,created,author,terminal_name) values(%s,snbid,cpntid,'IN_USE',:comments,:motherboard,statuschange,sysdate,'%s','%s') select snbid,cpntid,created as statuschange from %s where  cpntname=:dname; end if; else insert into %s(snbid,serialnb,hwtype,responsible,user_comment,cpnt_status,hwname,replacable,location) values(%s,:serialnb,:hwtype,:responsible,:comments,%d,:dname,:replacable,:location) returning snbid into :snbid; if %s=1 then insert into %s(historycpntID,snbid,cpnt_status,user_comment,location,status_change,created,author,terminal_name) values(%s,:snbid,'SPARE',:comments,:location,sysdate,sysdate,'%s','%s'); end if; end if;:numrows:=%s; END;",HW_CPNTS_TABLE,hw_seq,IN_USE,LOGICAL_DEVICE_TABLE,LG_CPNTS_TABLE,lg_seq,login,host,HW_CPNTS_TABLE,LOGICAL_DEVICE_TABLE,SQLROWCOUNT,HISTORY_CPNT_TABLE,hist_seq,login,host,LG_CPNTS_TABLE,HW_CPNTS_TABLE,hw_seq,SPARE,SQLROWCOUNT,HISTORY_CPNT_TABLE,hist_seq,login,host,SQLROWCOUNT);
+				StmtPrepare(hstmt,ociError, sqlstmt, &status);
+				BindByName(hstmt,&bndp[0],ociError,":dname",dname, max_namelen,SQLT_STR,&name_nullList[0],&status);
+				BindByName(hstmt,&bndp[1],ociError,":cpnttype",dtype,max_typelen,SQLT_STR,&type_nullList[0],&status);
+				BindByName(hstmt,&bndp[2],ociError,":replacable",&dreplacable[0],sizeof(int),SQLT_INT,0,&status);				
+				BindByName(hstmt,&bndp[3],ociError,":snbid",&snbidList[0],sizeof(int),SQLT_INT,0,&status);				
+				BindByName(hstmt,&bndp[4],ociError,":motherboard",dmotherboard,max_motherboardlen,SQLT_STR,&motherboard_nullList[0],&status);
+				BindByName(hstmt,&bndp[5],ociError,":serialnb",dserialnb,max_serialnblen,SQLT_STR,&serialnb_nullList[0],&status);
+				BindByName(hstmt,&bndp[6],ociError,":location",dlocation,max_locationlen,SQLT_STR,&location_nullList[0],&status);
+				BindByName(hstmt,&bndp[7],ociError,":hwtype",dhwtype,max_hwtypelen,SQLT_STR,&hwtype_nullList[0],&status);
+				BindByName(hstmt,&bndp[8],ociError,":responsible",dresponsible,max_responsiblelen,SQLT_STR,&responsible_nullList[0],&status);
+				BindByName(hstmt,&bndp[9],ociError,":comments",dcomments,max_commentslen,SQLT_STR,&comments_nullList[0],&status);
+				BindByName(hstmt,&bndp[10],ociError,":numrows",&numrows_inserted[0],sizeof(int),SQLT_INT,0,&status);
+
+				BindArrayOfStruct(bndp[0],ociError,max_namelen,sizeof(int),&status);
+				BindArrayOfStruct(bndp[1],ociError,max_typelen,sizeof(int),&status);
+				BindArrayOfStruct(bndp[2],ociError,sizeof(int),0,&status);
+				BindArrayOfStruct(bndp[3],ociError,sizeof(int),0,&status);
+				BindArrayOfStruct(bndp[4],ociError,max_motherboardlen,sizeof(int),&status);
+				BindArrayOfStruct(bndp[5],ociError,max_serialnblen,sizeof(int),&status);
+				BindArrayOfStruct(bndp[6],ociError,max_locationlen,sizeof(int),&status);
+				BindArrayOfStruct(bndp[7],ociError,max_hwtypelen,sizeof(int),&status);
+				BindArrayOfStruct(bndp[8],ociError,max_responsiblelen,sizeof(int),&status);
+				BindArrayOfStruct(bndp[9],ociError,max_commentslen,sizeof(int),&status);
+				BindArrayOfStruct(bndp[10],ociError,sizeof(int),0,&status);
+
+				StmtExecute(ociHdbc, hstmt, ociError,NbElement, &status);
+
+			}catch(Error err){
+				sprintf(appliName,"InsertMultipleBoardCpnts");	///////
+				rescode=ShowErrors (status, err.ociError, err.log);
+				
+				if(ociError!=0)
+					OCIReportError(ociError,appliName,ErrMess,1); 
+				else
+					GetErrorMess(appliName,err.msg,ErrMess,1);
+			}
+
+            numrows=-1;
+			for(i=0;i< NbElement;i++)
+			{
+				if(numrows_inserted[i]==0)
+				{
+					numrows=0;
+					i= NbElement+5;
+				}
+				else
+					numrows=numrows_inserted[i];
+			}
+
+			if(numrows==0)
+			{
+				status = OCITransCommit(ociHdbc, ociError, 0);
+				status =OCIHandleFree (hstmt,OCI_HTYPE_STMT);
+		
+				FIRST_TIME=0;
+
 				if(dname!=NULL)
 					free(dname);
 				if(dtype!=NULL)
@@ -339,381 +447,59 @@ extern "C" {
 					free(dcomments);
 				if(dhwtype!=NULL)
 					free(dhwtype);
-				if(dlocationbis!=NULL)
-					free(dlocationbis);
-				free(errmessg1);
-				free(errmessg2);
-				return rescode;
-			}
-			//need to proceed with messages
+				if(dmotherboard!=NULL)
+					free(dmotherboard);
+				if(numrows_inserted!=NULL)
+					free(numrows_inserted);
+				if(dreplacable!=NULL)
+					free(dreplacable);
+				if(snbidList!=NULL)
+					free(snbidList);
+				if(name_nullList!=NULL)
+					free(name_nullList);
+				if(serialnb_nullList!=NULL)
+					free(serialnb_nullList);
+				if(location_nullList!=NULL)
+					free(location_nullList);
+				if(type_nullList!=NULL)
+					free(type_nullList);
+				if(hwtype_nullList!=NULL)
+					free(hwtype_nullList);
+				if(comments_nullList!=NULL)
+					free(comments_nullList);
+				if(responsible_nullList!=NULL)
+					free(responsible_nullList);
+				if(motherboard_nullList!=NULL)
+					free(motherboard_nullList);
 
-			status =OCIHandleAlloc (ociEnv, (void**)&hstmt, OCI_HTYPE_STMT , 0, 0);
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIHandleAlloc unsuccessful");
-			}
-			else
-			{
-				//sprintf(sqlstmt,"BEGIN if nvl(:motherboard,'none') not like 'none' then insert ALL into %s(snbid,serialnb,hwtype,responsible,user_comment,cpnt_status,hwname,replacable,location) values(%s,:serialnb,:hwtype,:responsible,:comments,%d,:dname,:replacable,location) into %s(cpntname,cpnttype,snbid,cpntid,motherboardid,author,created,terminal_name) values (:dname,:cpnttype,snbid,%s,motherboardid,'%s',sysdate,'%s') into %s(historycpntID,snbid,cpntid,cpnt_status,user_comment,location,status_change,created,author,terminal_name) values(%s,snbid,cpntid,'IN_USE',:comments,:motherboard,statuschange,sysdate,'%s','%s') select t.deviceid as motherboardid,t.serialnb as location,e.snbid,e.cpntid,e.created as statuschange from %s e,%s t where  e.cpntname=:dname and t.devicename=:motherboard and t.serialnb is not null; else insert into %s(snbid,serialnb,hwtype,responsible,user_comment,cpnt_status,hwname,replacable,location) values(%s,:serialnb,:hwtype,:responsible,:comments,%d,:dname,:replacable,:location) returning snbid into :snbid; if %s=1 then insert into %s(historycpntID,snbid,cpnt_status,user_comment,location,status_change,created,author,terminal_name) values(%s,:snbid,'SPARE',:comments,:location,sysdate,sysdate,'%s','%s'); end if; end if;:numrows:=%s; END;",HW_CPNTS_TABLE,hw_seq,IN_USE,LG_CPNTS_TABLE,lg_seq,login,host,HISTORY_CPNT_TABLE,hist_seq,login,host,LG_CPNTS_TABLE,LOGICAL_DEVICE_TABLE, HW_CPNTS_TABLE,hw_seq,SPARE,SQLROWCOUNT,HISTORY_CPNT_TABLE,hist_seq,login,host,SQLROWCOUNT);
-				sprintf(sqlstmt,"BEGIN if nvl(:motherboard,'none') not like 'none' then insert ALL into %s(snbid,serialnb,hwtype,responsible,user_comment,cpnt_status,hwname,replacable,location) values(%s,:serialnb,:hwtype,:responsible,:comments,%d,:dname,:replacable,location) select serialnb as location from %s where devicename=:motherboard and serialnb is not null; insert all into %s(cpntname,cpnttype,snbid,cpntid,motherboardid,location,author,created,terminal_name) values (:dname,:cpnttype,snbid,%s,motherboardid,:location,'%s',sysdate,'%s') select t.snbid as snbid, e.deviceid as motherboardid from %s t,%s  e where t.serialnb=:serialnb and e.devicename=:motherboard;if %s=1 then insert all into %s(historycpntID,snbid,cpntid,cpnt_status,user_comment,location,status_change,created,author,terminal_name) values(%s,snbid,cpntid,'IN_USE',:comments,:motherboard,statuschange,sysdate,'%s','%s') select snbid,cpntid,created as statuschange from %s where  cpntname=:dname; end if; else insert into %s(snbid,serialnb,hwtype,responsible,user_comment,cpnt_status,hwname,replacable,location) values(%s,:serialnb,:hwtype,:responsible,:comments,%d,:dname,:replacable,:location) returning snbid into :snbid; if %s=1 then insert into %s(historycpntID,snbid,cpnt_status,user_comment,location,status_change,created,author,terminal_name) values(%s,:snbid,'SPARE',:comments,:location,sysdate,sysdate,'%s','%s'); end if; end if;:numrows:=%s; END;",HW_CPNTS_TABLE,hw_seq,IN_USE,LOGICAL_DEVICE_TABLE,LG_CPNTS_TABLE,lg_seq,login,host,HW_CPNTS_TABLE,LOGICAL_DEVICE_TABLE,SQLROWCOUNT,HISTORY_CPNT_TABLE,hist_seq,login,host,LG_CPNTS_TABLE,HW_CPNTS_TABLE,hw_seq,SPARE,SQLROWCOUNT,HISTORY_CPNT_TABLE,hist_seq,login,host,SQLROWCOUNT);
-				status=OCIStmtPrepare(hstmt, ociError, (text*)sqlstmt, (ub4)strlen((char *)sqlstmt), (ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-				//std::cout<<"query"<<sqlstmt<<std::endl;
-			}
-
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIStmtPrepare unsuccessful");
-			}
-			else
-			{
-				dname=(char*)malloc( _cpntNbElement*_max_cpntLength*sizeof(char));
-				if(dname!=NULL)
+				for(i=0;i<NbElement;i++)
+					delete CpntList[i];
+				if(force_insert==1)
 				{
-					status=NormalizeVector(_CpntList, _cpntNbElement,_max_cpntLength,dname);
-					//std::cout<<"dname not null "<<_max_cpntLength<<std::endl;
+					FIRST_TIME=1;
+					force_insert=0;
+					CpntList=(Cpnt**)realloc(CpntList, 0*sizeof(Cpnt));
 				}
-				dserialnb=(char*)malloc( _cpntserialnb1NbElement*_max_cpntserialnb1_length*sizeof(char));
-				if(dserialnb!=NULL)
-				{
-					status+=NormalizeVector(_cpntserialnb1List, _cpntserialnb1NbElement,_max_cpntserialnb1_length,dserialnb);
-					//std::cout<<"dserialnb not null "<<_max_cpntserialnb1_length<<std::endl;
-				}
-				dlocation=(char*)malloc( _cpntlocationNbElement*_max_cpntlocation_length*sizeof(char));
-				if(dlocation!=NULL)
-				{
-					status+=NormalizeVector(_cpntlocationList, _cpntlocationNbElement,_max_cpntlocation_length,dlocation);
-					//std::cout<<"dlocation not null "<<_max_cpntlocation_length<<std::endl;
-				}
-				dlocationbis=(char*)malloc( _cpntmotherboardNbElement*_max_cpntmotherboard_length*sizeof(char));
-				if(dlocationbis!=NULL)
-				{
-					status+=NormalizeVector(_cpntmotherboardList, _cpntmotherboardNbElement,_max_cpntmotherboard_length,dlocationbis);
-					//std::cout<<"dlocation not null "<<_max_cpntlocation_length<<std::endl;
-				}
-				dtype=(char*)malloc(_cpnttypeNbElement*_max_cpnttype_length*sizeof(char));
-				if(dtype!=NULL)
-				{
-					status+=NormalizeVector(_cpnttypeList, _cpnttypeNbElement,_max_cpnttype_length,dtype);
-					//std::cout<<"dtype not null "<<_max_cpnttype_length<<std::endl;
-				}
-				dhwtype=(char*)malloc(_cpnthwtype1NbElement*_max_cpnthwtype1Length*sizeof(char));
-				if(dhwtype!=NULL)
-					status+=NormalizeVector(_cpnthwtype1List, _cpnthwtype1NbElement,_max_cpnthwtype1Length,dhwtype);
-				dcomments=(char*)malloc(_cpntcomments1NbElement*_max_cpntcomments1Length*sizeof(char));
-				if(dcomments!=NULL)
-					status+=NormalizeVector(_cpntcomments1List, _cpntcomments1NbElement,_max_cpntcomments1Length,dcomments);
-				dresponsible=(char*)malloc(_cpntresponsible1NbElement*_max_cpntresponsible1Length*sizeof(char));
-				if(dresponsible!=NULL)
-				{
-					status+=NormalizeVector(_cpntresponsible1List, _cpntresponsible1NbElement,_max_cpntresponsible1Length,dresponsible);
-					//std::cout<<"dresponsible not null "<<_max_cpntresponsible1Length<<std::endl;
-				}
-				numrows_inserted=(int*)malloc(sizeof(int)*_cpntNbElement);
-				snbidList=(int*)malloc(sizeof(int)*_cpntNbElement);;
-				//std::cout<<"after memory allocation "<<_cpntNbElement<<std::endl;
-				if( (dtype==NULL) ||(dlocationbis==NULL)||(snbidList==NULL)|| (dname==NULL) || (dresponsible==NULL) || (dserialnb==NULL) || (dresponsible==NULL)||dcomments==NULL||dhwtype==NULL||numrows_inserted==NULL)
-				{
-					//std::cout<<"memory pb "<<std::endl;
+				else if(CpntList!=NULL)
+					free(CpntList);
 
-					rescode=ShowErrors (status, ociError, "Invalid pointer allocation unsuccessful");
-					GetErrorMess(appliName, "Malloc unsuccessful",ErrMess,1);
-					status =OCIHandleFree (hstmt,OCI_HTYPE_STMT);
-					//std::cout<<"memory pb 1"<<std::endl;
-					status+=freeCpnt();
-					//std::cout<<"memory pb 2"<<std::endl;
-					if(dname!=NULL)
-						free(dname);
-					if(dtype!=NULL)
-						free(dtype);
-					if(dlocation!=NULL)
-						free(dlocation);
-					if(dlocationbis!=NULL)
-						free(dlocationbis);
-					//std::cout<<"memory pb 3"<<std::endl;
-					if(dserialnb!=NULL)
-						free(dserialnb);
-					if(dresponsible!=NULL)
-						free(dresponsible);
-					if(dcomments!=NULL)
-						free(dcomments);
-					//std::cout<<"memory pb 4"<<std::endl;
-					if(dhwtype!=NULL)
-						free(dhwtype);
-					if(numrows_inserted!=NULL)
-						free(numrows_inserted);
-					if(snbidList!=NULL)
-						free(snbidList);
-					//if(errmessg1!=NULL)
-					//free(errmessg1);
-					//if(errmessg2!=NULL)
-					//free(errmessg2);
-					return -1;
-				}
-				else
-				{
-					for(i=0;i<_cpntNbElement;i++)
-					{
-						numrows_inserted[i]=0;
-						snbidList[i]=0;
-					}
-					//std::cout<<"before binding 0"<<std::endl;
-					status =OCIBindByName(hstmt, &bndp[0], ociError,(text*) ":dname", -1,(dvoid*)dname, _max_cpntLength,  SQLT_STR, (dvoid *) & _cpntList_nullvalue[0],(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
-				}
-			}
-			//std::cout<<"before binding "<<std::endl;
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindByName unsuccessful");
+				NbElement=0;
+
+				GetErrorMess(appliName, "COULDNOT_INSERT_ALL_ROWS",ErrMess,1);
+				return -1;
 			}
 			else
-				status =OCIBindByName(hstmt, &bndp[1], ociError,(text*) ":cpnttype", -1,(dvoid*)dtype, _max_cpnttype_length,  SQLT_STR, (dvoid *) & _cpnttype_nullvalue[0],(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
-			if(status!=OCI_SUCCESS)
+				status = OCITransCommit(ociHdbc, ociError, 0);
+
+            if(status!=OCI_SUCCESS)
 			{
 				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindByName unsuccessful");
-			}
-			else
-				status =OCIBindByName(hstmt, &bndp[2], ociError,(text*) ":replacable", -1,(dvoid*)&_cpntreplacable[0], sizeof(int),  SQLT_INT, (dvoid *) 0,(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
-
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindByName unsuccessful");
-			}
-			else
-				status =OCIBindByName(hstmt, &bndp[3], ociError,(text*) ":snbid", -1,(dvoid*)&snbidList[0], sizeof(int),  SQLT_INT, (dvoid *) 0,(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindByName unsuccessful");
-			}
-			else
-				status =OCIBindByName(hstmt, &bndp[4], ociError,(text*) ":motherboard", -1,(dvoid*)dlocationbis, _max_cpntmotherboard_length,  SQLT_STR, (dvoid *)& _cpntmotherboardList_nullvalue[0],(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
-
-
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindByName unsuccessful");
-			}
-			else
-				status =OCIBindByName(hstmt, &bndp[5], ociError,(text*) ":serialnb", -1,(dvoid*)dserialnb, _max_cpntserialnb1_length,  SQLT_STR, (dvoid *) & _cpntserialnb1_nullvalue[0],(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindByName unsuccessful");
-			}
-			else
-				status =OCIBindByName(hstmt, &bndp[6], ociError,(text*) ":location", -1,(dvoid*)dlocation, _max_cpntlocation_length,  SQLT_STR, (dvoid *)& _cpntlocationList_nullvalue[0],(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
-
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindByName unsuccessful");
-			}
-			else
-				status =OCIBindByName(hstmt, &bndp[7], ociError,(text*) ":hwtype", -1,(dvoid*)dhwtype, _max_cpnthwtype1Length,SQLT_STR, (dvoid *)&_cpnthwtype1_nullvalue[0],(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
-
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindByName unsuccessful");
-			}
-			else
-				status =OCIBindByName(hstmt, &bndp[8], ociError,(text*) ":responsible", -1,(dvoid*)dresponsible, _max_cpntresponsible1Length,SQLT_STR, (dvoid *) &_cpntresponsible1_nullvalue[0],(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
-
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindByName unsuccessful");
-			}
-			else
-				status =OCIBindByName(hstmt, &bndp[9], ociError,(text*) ":comments", -1,(dvoid*)dcomments, _max_cpntcomments1Length,SQLT_STR, (dvoid *) &_cpntcomments1_nullvalue[0],(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
-
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindByName unsuccessful");
-			}
-			else
-				status =OCIBindByName(hstmt, &bndp3, ociError,(text*) ":numrows", -1,(dvoid*)&numrows_inserted[0], sizeof(int),SQLT_INT, (dvoid *) 0,(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
-
-
-
-
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindByName unsuccessful");
-			}
-			else
-				status=OCIBindArrayOfStruct(bndp[0], ociError,_max_cpntLength, sizeof(int),0, 0);
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindArrayOfStruct unsuccessful");
-			}
-			else
-				status=OCIBindArrayOfStruct(bndp[1], ociError,  _max_cpnttype_length, sizeof(int), 0, 0);
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindArrayOfStruct unsuccessful");
-			}
-			else
-				status=OCIBindArrayOfStruct(bndp[2], ociError, sizeof(int), 0, 0, 0);
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindArrayOfStruct unsuccessful");
-			}
-			else
-				status=OCIBindArrayOfStruct(bndp[3], ociError,  sizeof(int), 0, 0, 0);
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindArrayOfStruct unsuccessful");
-			}
-			else
-				status=OCIBindArrayOfStruct(bndp[4], ociError,_max_cpntmotherboard_length, sizeof(int),  0, 0);
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindArrayOfStruct unsuccessful");
-			}
-			else
-				status=OCIBindArrayOfStruct(bndp[5], ociError, _max_cpntserialnb1_length, sizeof(int), 0, 0);
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindArrayOfStruct unsuccessful");
-			}
-			else
-				status=OCIBindArrayOfStruct(bndp[6], ociError, _max_cpntlocation_length, sizeof(int), 0, 0);
-
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindArrayOfStruct unsuccessful");
-			}
-			else
-				status=OCIBindArrayOfStruct(bndp[7], ociError, _max_cpnthwtype1Length, sizeof(int), 0, 0);
-
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindArrayOfStruct unsuccessful");
-			}
-			else
-				status=OCIBindArrayOfStruct(bndp[8], ociError, _max_cpntresponsible1Length, sizeof(int), 0, 0);
-
-
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindArrayOfStruct unsuccessful");
-			}
-			else
-				status=OCIBindArrayOfStruct(bndp[9], ociError, _max_cpntcomments1Length, sizeof(int), 0, 0);
-
-
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindArrayOfStruct unsuccessful");
-			}
-			else
-				status=OCIBindArrayOfStruct(bndp3, ociError, sizeof(int),0, 0, 0);
-
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindArrayOfStruct unsuccessful");
-			}
-			else
-				status= OCIStmtExecute(ociHdbc, hstmt, ociError, _cpntNbElement, 0, 0, 0, OCI_DEFAULT );
-			//std::cout<<"after execute "<<std::endl;
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIStmtExecute unsuccessful");
-			}
-			else
-			{
-				numrows=-1;
-				for(i=0;i< _cpntNbElement;i++)
-				{
-					if(numrows_inserted[i]==0)
-					{
-						numrows=0;
-						i= _cpntNbElement+5;
-					}
-					else
-						numrows=numrows_inserted[i];
-				}
-				if(numrows==0)
-				{
-					status = OCITransCommit(ociHdbc, ociError, 0);
-					status =OCIHandleFree (hstmt,OCI_HTYPE_STMT);
-					status+=freeCpnt();
-					if(dname!=NULL)
-						free(dname);
-					if(dtype!=NULL)
-						free(dtype);
-					if(dlocation!=NULL)
-						free(dlocation);
-					if(dserialnb!=NULL)
-						free(dserialnb);
-					if(dresponsible!=NULL)
-						free(dresponsible);
-					if(dcomments!=NULL)
-						free(dcomments);
-					if(dhwtype!=NULL)
-						free(dhwtype);
-					if(dlocationbis!=NULL)
-						free(dlocationbis);
-					if(numrows_inserted!=NULL)
-						free(numrows_inserted);
-
-					GetErrorMess(appliName, "COULDNOT_INSERT_ALL_ROWS",ErrMess,1);
-					return -1;
-				}
-				else
-					status = OCITransCommit(ociHdbc, ociError, 0);
-
-				if(status!=OCI_SUCCESS)
-				{
-					if(rescode==0)	
-						rescode=ShowErrors (status, ociError, "OCITransCommit unsuccessful");
-				}		
-			}
-
-			status+=freeCpnt();
-			//std::cout<<"after free cpnt final"<<std::endl;
-			if(dname!=NULL)
-				free(dname);
-			if(dtype!=NULL)
-				free(dtype);
-			if(dlocation!=NULL)
-				free(dlocation);
-			if(dlocationbis!=NULL)
-				free(dlocationbis);
-			if(dserialnb!=NULL)
-				free(dserialnb);
-			if(dresponsible!=NULL)
-				free(dresponsible);
-			if(dcomments!=NULL)
-				free(dcomments);
-			if(dhwtype!=NULL)
-				free(dhwtype);
-			if(numrows_inserted!=NULL)
-				free(numrows_inserted);
-
+					rescode=ShowErrors (status, ociError, "OCITransCommit unsuccessful");
+			}		
+			
+			FIRST_TIME=0;
 			status =OCIHandleFree (hstmt,OCI_HTYPE_STMT);
-
+							
 			if(rescode!=0)
 				if(ociError!=0)
 					OCIReportError(ociError,appliName, ErrMess,1); 
@@ -721,43 +507,87 @@ extern "C" {
 					GetErrorMess(appliName,  "NOT CONNECTED TO ANY DB",ErrMess,1); 
 			else
 				OCIReportError(ociError,appliName, ErrMess,0); 
-			if(force_insert==1 && rescode==0)
-			{
-				status=freeCpnt();
-				FIRST_TIME_CPNT=1;
-				force_insert=0;
 
+			for(i=0;i<NbElement;i++)
+				delete CpntList[i];
+			if(force_insert==1)
+			{
+				FIRST_TIME=1;
+				force_insert=0;
+				CpntList=(Cpnt**)realloc(CpntList, 0*sizeof(Cpnt));
 			}
-		}
+			else if(CpntList!=NULL)
+				free(CpntList);
+			NbElement=0;
+		}	
 		else
-		{
+		{		
 			if(res_query!=0)
 			{
-				status=freeCpnt();
+				FIRST_TIME=0;
 				GetErrorMess(appliName, "Cache Problem",ErrMess,1);
-			}
-			if(FIRST_TIME_CPNT!=1)
-			{
-				status=freeCpnt();
-
-				res_query=-1;
-				GetErrorMess(appliName, "CACHE HAS NOT BEEN INITIALIZED",ErrMess,1);
+				for(i=0;i<NbElement;i++)
+					delete CpntList[i];
+				if(CpntList!=NULL)
+                    free(CpntList);
 			}
 			if(ociEnv==0)
 			{
-				status=freeCpnt();
+				FIRST_TIME=0;
 				res_query=-1;
 				GetErrorMess(appliName, "NOT CONNECTED TO ANY DB",ErrMess,1);
+				for(i=0;i<NbElement;i++)
+					delete CpntList[i];
+				if(CpntList!=NULL)
+                    free(CpntList);
 			}
-			if(ociEnv!=0 && FIRST_TIME_CPNT==1 && res_query==0)
+		
+			status+=res_query;
+			if(ociEnv!=0 && FIRST_TIME==1 && res_query==0)
 			{
 				status=0;
 				GetErrorMess(appliName, "NO_ERROR",ErrMess,0);
 			}
-			status+=res_query;
-
 		}
-		//std::cout<<"end of fct "<<std::endl;
+		if(dname!=NULL)
+			free(dname);
+		if(dtype!=NULL)
+			free(dtype);
+		if(dlocation!=NULL)
+			free(dlocation);
+		if(dserialnb!=NULL)
+			free(dserialnb);
+		if(dresponsible!=NULL)
+			free(dresponsible);
+		if(dcomments!=NULL)
+			free(dcomments);
+		if(dhwtype!=NULL)
+			free(dhwtype);
+		if(dmotherboard!=NULL)
+			free(dmotherboard);
+		if(numrows_inserted!=NULL)
+			free(numrows_inserted);
+		if(dreplacable!=NULL)
+			free(dreplacable);
+		if(snbidList!=NULL)
+			free(snbidList);
+		if(name_nullList!=NULL)
+			free(name_nullList);
+		if(serialnb_nullList!=NULL)
+			free(serialnb_nullList);
+		if(location_nullList!=NULL)
+			free(location_nullList);
+		if(type_nullList!=NULL)
+			free(type_nullList);
+		if(hwtype_nullList!=NULL)
+			free(hwtype_nullList);
+		if(comments_nullList!=NULL)
+			free(comments_nullList);
+		if(responsible_nullList!=NULL)
+			free(responsible_nullList);
+		if(motherboard_nullList!=NULL)
+			free(motherboard_nullList);
+
 		return (status+rescode);
 	}
 

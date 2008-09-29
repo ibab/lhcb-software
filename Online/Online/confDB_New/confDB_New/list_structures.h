@@ -30,19 +30,24 @@ int DecomposeSysID(int sysID,char* sysIDlist);
 int GetDeviceStatus(int devstatus,char* device_status);
 int GetDeviceStatusID(char* device_status);
 int DecomposeSysID_bis(int sysID,char* sysIDlist);
-//////////////////////////
-int DefineByPos(OCIStmt* stmthp,OCIDefine** def, OCIError* ociError, int pos, int* valuep, sword* status);
-int DefineByPos(OCIStmt* stmthp,OCIDefine** def, OCIError* ociError, int pos, char* valuep, sb4 value_sz, sword* status);//
-int BindByName(OCIStmt* stmthp,OCIBind** bnd1p, OCIError* ociError, char* placeholder, char* valuep, sword* status);
-int BindByName(OCIStmt* stmthp,OCIBind** bnd1p, OCIError* ociError, char* placeholder, int* valuep, sword* status);
-int HandleAlloc(OCIEnv* ociEnv,OCIStmt** stmthp,OCIError* ociError, sword* status);
 int StmtPrepare(OCIStmt* stmthp,OCIError* ociError, char* stmt, sword* status);
-int StmtExecute(OCISvcCtx* ociHdbc, OCIStmt* stmthp, OCIError* ociError, sword* status);
 int ParamGet(OCIStmt* stmthp, OCIError* ociError, OCIParam** parmdp, int pos, sword* status);
 int AttrGet(OCIParam* parmdp, sb4* attrval, OCIError* ociError, sword* status);
-int AttrSet (OCIStmt* stmthp,int* attributep,OCIError* ociError, sword* status);
-///
+int BindByName(OCIStmt* stmthp,OCIBind** bnd1p, OCIError* ociError, char* placeholder, dvoid* valuep,sb4 value_sz,ub2 dty,int* indp, sword* status);
+int StmtExecute(OCISvcCtx* ociHdbc, OCIStmt* stmthp, OCIError* ociError,ub4 iters, sword* status);
+//
 void RemoveSeparator(char* attribute_value, char* separator);
+///
+int EnvCreate(OCIEnv*& myenvhp, sword* status);
+int HandleAlloc(OCIEnv* ociEnv,dvoid** stmthp,ub4 type, sword* status);
+int ServerAttach(OCIServer* srvhp,OCIError* errhp,char* dblink, sword* status);
+int AttrSet (dvoid* hndlp,ub4 hndltype,dvoid* attributep,ub4 sizep, ub4 attrtype,OCIError* ociError, sword* status);
+int SessionBegin(OCISvcCtx *svchp,OCIError *errhp,OCISession *usrhp,ub4 credt,sword* status);
+int DefineByPos(OCIStmt* stmthp,OCIDefine** def, OCIError* ociError, int pos,  dvoid* valuep, sb4 value_sz, ub2 dtype, sword* status);
+int BindArrayOfStruct(OCIBind *bindp,OCIError *errhp,ub4 pvskip,ub4 indskip,sword* status );
+int TransCommit(OCISvcCtx *svchp,OCIError *errhp, ub4 flags, sword* status );
+/////////
+int null_charptr(char* ptr_name, int* len);
 
 class Error
 {

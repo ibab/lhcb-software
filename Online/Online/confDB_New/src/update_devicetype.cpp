@@ -5,10 +5,8 @@
 // file which performs bulk collect update for the device type table
 // N.B : Memory management (allocation+release) should be handled by the user application thus, for all the fct provided by this lib
 /********************************************************************************/
-
-
-
 #include "list_structures.h"
+#include "CDB.h"
 #include "system_info.h"
 #if defined(__cplusplus) || defined(c_plusplus)
 extern "C" {
@@ -26,188 +24,77 @@ extern "C" {
 	extern   OCIServer *mysrvhp;
 	extern   OCISession *myusrhp; 
 
-	/************global variables for the devicetype*******************************/ 
-	char* _DeviceTypeListUpdate;  //the list of the devicetype which will be stored
-	int _devicetypeListLengthUpdate; //the total length of the char*
-	int _max_devicetypeLengthUpdate; //the maximum length of the devicetype as a string
-
-	char* _newDeviceTypeListUpdate;  //the list of the devicetype which will be stored
-	int _newdevicetypeListLengthUpdate; //the total length of the char*
-	int _max_newdevicetypeLengthUpdate; //the maximum length of the devicetype as a string
-
-	char* _oldDeviceTypeListUpdate;  //the list of the devicetype which will be stored
-	int _olddevicetypeListLengthUpdate; //the total length of the char*
-	int _max_olddevicetypeLengthUpdate; //the maximum length of the devicetype as a string
-
-	char* _DescriptionListUpdate;
-	int _descriptionListLengthUpdate;
-	int _max_descriptionLengthUpdate;
-	int* _NbrofinputListUpdate;
-	int* _NbrofoutputListUpdate;
-	int _devicetypeNbElementUpdate;// total nb of devicetype to update
-	int _newdevicetypeNbElementUpdate;// total nb of devicetype to insert
-	int _olddevicetypeNbElementUpdate;// total nb of devicetype to insert
-
-	int _descNbElementUpdate;
-	int _rgbcolorNbElementUpdate;
-	int _nbinElementUpdate;
-	int _nboutElementUpdate;
-	char* _rgbcolorListUpdate;
-	int _rgbcolorListLengthUpdate;
-	int _max_rgbcolorLengthUpdate;
-
-	int* _devicetype_nullvalueUpdate;
-	int _devicetypeNbElUpdate;
-
-	int* _newdevicetype_nullvalueUpdate;
-	int _newdevicetypeNbElUpdate;
-
-	int* _olddevicetype_nullvalueUpdate;
-	int _olddevicetypeNbElUpdate;
-
-
-	int* _description_nullvalueUpdate;
-	int _descriptionNbElUpdate;
-
-	int* _rgbcolor_nullvalueUpdate;
-	int _rgbcolorNbElUpdate;
-	int FIRST_TIME_DEVICETYPEUPDATE=0;
-	int FIRST_TIME_DEVICETYPEUPDATE1=0;
-	int FIRST_TIME_SYSDEVTYPEUPDATE=0;
-
-
-
-
-
-
-
-	char* _SysDeviceTypeListUpdate;
-	int* _SysTypeUpdate;
-	int* _SysdeviceTypeList_nullvalueUpdate;
-	int _SysTypeNbElementUpdate;
-	int _SysdeviceTypeListNbElUpdate;
-	int _SysdeviceTypeListLengthUpdate;
-	int _SysdeviceTypeNbElementUpdate;
-	int _max_SysdeviceTypeLengthUpdate;
-
-	int freeSysDeviceTypeUpdate()
-	{
-		int status=0;
-		_SysDeviceTypeListUpdate=(char*)realloc(_SysDeviceTypeListUpdate,0*sizeof(char));
-		_SysTypeUpdate=(int*)realloc(_SysTypeUpdate,0*sizeof(int));
-		_SysdeviceTypeList_nullvalueUpdate=(int*)realloc(_SysdeviceTypeList_nullvalueUpdate,0*sizeof(int));
-		FIRST_TIME_SYSDEVTYPEUPDATE=0;
-
-		return status;
-	}
-	int freeDeviceTypeUpdate()
-	{
-		int status=0;
-		_DeviceTypeListUpdate=(char*)realloc(_DeviceTypeListUpdate,0*sizeof(char));
-		_DeviceTypeListUpdate=NULL;
-		_rgbcolorListUpdate=(char*)realloc(_rgbcolorListUpdate,0*sizeof(char));
-		_rgbcolorListUpdate=NULL;
-		_DescriptionListUpdate=(char*)realloc(_DescriptionListUpdate,0*sizeof(char));
-		_DescriptionListUpdate=NULL;
-		_NbrofinputListUpdate=(int*)realloc(_NbrofinputListUpdate,0*sizeof(int));
-		_NbrofinputListUpdate=NULL;
-		_NbrofoutputListUpdate=(int*)realloc(_NbrofoutputListUpdate,0*sizeof(int));
-		_NbrofoutputListUpdate=NULL;
-		_description_nullvalueUpdate=(int*)realloc(_description_nullvalueUpdate,0*sizeof(int));
-		_description_nullvalueUpdate=NULL;
-		_devicetype_nullvalueUpdate=(int*)realloc(_devicetype_nullvalueUpdate,0*sizeof(int));
-		_devicetype_nullvalueUpdate=NULL;
-		_rgbcolor_nullvalueUpdate=(int*)realloc(_rgbcolor_nullvalueUpdate,0*sizeof(int));
-		_rgbcolor_nullvalueUpdate=NULL;
-		FIRST_TIME_DEVICETYPEUPDATE=0;
-		return status;
-	}
-
-	int freeDeviceTypeUpdate1()
-	{
-		int status=0;
-		_newDeviceTypeListUpdate=(char*)realloc(_newDeviceTypeListUpdate,0*sizeof(char));
-		_newDeviceTypeListUpdate=NULL;
-		_newdevicetype_nullvalueUpdate=(int*)realloc(_newdevicetype_nullvalueUpdate,0*sizeof(int));
-		_newdevicetype_nullvalueUpdate=NULL;
-
-		_oldDeviceTypeListUpdate=(char*)realloc(_oldDeviceTypeListUpdate,0*sizeof(char));
-		_oldDeviceTypeListUpdate=NULL;
-		_olddevicetype_nullvalueUpdate=(int*)realloc(_olddevicetype_nullvalueUpdate,0*sizeof(int));
-		_olddevicetype_nullvalueUpdate=NULL;
-
-		FIRST_TIME_DEVICETYPEUPDATE1=0;
-		return status;
-	}
-
-
-	/**
-	* Update the devicetype  returning an integer value.
-	* The user should manage the memory : there is no memory allocation.
-	* @param devicetype : name of the devicetype you want to update
-	* @param description : new value of the description, if no change you put  "none" (lower case)
-	* @param nbrofinput : new value of nbrofinput: put -1 if you don't want to change it
-	* @param nbrofoutput : new value of nbrofoutput: put -1 if you don't want to change it
-	* @param rgbcolor : new value of the rgbcolor of the devicetypefor display if no change you put  none (lower case)
-	* @param first_time1 : 1 if it's your first MultipleDevice update (save it into the database), 0 otherwise
-	* @param last_rows1 : 1 if it's your MultipleDevice last update (save it into the database), 0 otherwise
-	* @param ErrMess : error message in case of failure
-	* @return 0 if it is successful
-	*/
-
-	/******************************************************************/
-	EXTERN_CONFDB
-		int UpdateMultipleDeviceTypeAttributes(char* devicetype,char* description,int nbrofinput,int nbrofoutput,char* rgbcolor,int first_time1,int last_rows1,char* ErrMess)
+/**
+* Update the devicetype  returning an integer value.
+* The user should manage the memory : there is no memory allocation.
+* @param devicetype : name of the devicetype you want to update
+* @param description : new value of the description, if no change you put  "none" (lower case)
+* @param nbrofinput : new value of nbrofinput: put -1 if you don't want to change it
+* @param nbrofoutput : new value of nbrofoutput: put -1 if you don't want to change it
+* @param rgbcolor : new value of the rgbcolor of the devicetypefor display if no change you put  none (lower case)
+* @param first_time1 : 1 if it's your first MultipleDevice update (save it into the database), 0 otherwise
+* @param last_rows1 : 1 if it's your MultipleDevice last update (save it into the database), 0 otherwise
+* @param ErrMess : error message in case of failure
+* @return 0 if it is successful
+******************************************************************/
+EXTERN_CONFDB
+	int UpdateMultipleDeviceTypeAttributes(char* devicetype,char* description,int nbrofinput,int nbrofoutput,char* rgbcolor,int first_time,int last_rows,char* ErrMess)
 	{
 		char appliName[100]="UpdateMultipleDeviceTypeAttributes";
 		char sqlstmt[1000];
 		OCIStmt *hstmt;
-		OCIBind  *bndp[5]; 
+		OCIBind  *bndp[6]; 
 		int rescode=0;
-		int free_mem=0;
 		int res_query=0;
 		sword status=0;
-		int force_insert=0;
-		int first_time=first_time1;
-		int last_rows=last_rows1;
-		char* dtype=NULL;
 		int i=0;
-		char* descrip=NULL;
+
+		char* dtype=NULL;
 		char* rgbcol=NULL;
+		char* descrip=NULL;
+		int* NbrofinputList=NULL;
+		int* NbrofoutputList=NULL;
+	
+		int* type_nullList=NULL;
+		int* rgbcol_nullList=NULL;
+		int* descrip_nullList=NULL;
+
+		static int FIRST_TIME=0;
+		int force_insert=0;
 		int* numrows_inserted=NULL;
 		int numrows=0;
-		//int devtype_len=0;
-		//int descrip_len=0;
-		//int rgbcol_len=0;
-		//int in_len=0;
-		//int out_len=0;
-		OCIBind  *bndp3 = (OCIBind *) 0;
+		
+		static int NbElement;
+		DevType** typeList;
+		int max_typelen=0;
+		int max_rgbcollen=0;
+		int max_descriplen=0;
 
-		int dtype1=null_charptr(devicetype);
-		int descrip1=null_charptr(description);
-		int rgbcol1=null_charptr(rgbcolor);
-		if(FIRST_TIME_DEVICETYPEUPDATE==1 && _DeviceTypeListUpdate==NULL)
-			first_time=1;
-		res_query=AppendString(devicetype,_DeviceTypeListUpdate,_devicetypeListLengthUpdate,_devicetypeNbElementUpdate,_max_devicetypeLengthUpdate,first_time);
-		res_query+=AppendString(description,_DescriptionListUpdate,_descriptionListLengthUpdate,_descNbElementUpdate,_max_descriptionLengthUpdate,first_time);
-		res_query+=AppendString(rgbcolor,_rgbcolorListUpdate,_rgbcolorListLengthUpdate,_rgbcolorNbElementUpdate,_max_rgbcolorLengthUpdate,first_time);
-
-		res_query+=AppendInt(nbrofinput,_NbrofinputListUpdate,_nbinElementUpdate,first_time);
-		res_query+=AppendInt(nbrofoutput,_NbrofoutputListUpdate,_nboutElementUpdate,first_time);
-
-		res_query+=AppendInt(descrip1,_description_nullvalueUpdate,_descriptionNbElUpdate,first_time);
-		res_query+=AppendInt(dtype1,_devicetype_nullvalueUpdate,_devicetypeNbElUpdate,first_time);
-		res_query+=AppendInt(rgbcol1,_rgbcolor_nullvalueUpdate,_rgbcolorNbElUpdate,first_time);
-
-		if(first_time==1)
-			FIRST_TIME_DEVICETYPEUPDATE=1;
-		status=res_query;
-		if(last_rows!=1 && _devicetypeNbElementUpdate==MAXROWS)
+		if (first_time==1)
+		{
+			FIRST_TIME=1;
+			NbElement=1;
+			typeList=(DevType**)malloc( NbElement*sizeof(DevType));			
+		}
+		else 
+		{
+			if (FIRST_TIME==0&&force_insert==0)
+			{
+				GetErrorMess(appliName, "CACHE HAS NOT BEEN INITIALIZED",ErrMess,1);
+				return -1;
+			}
+			NbElement++;
+			typeList=(DevType**)realloc(typeList, NbElement*sizeof(DevType));
+		}
+		typeList[NbElement-1]=new DevType(NULL, devicetype, nbrofinput, nbrofoutput, description, rgbcolor);
+		
+		if(NbElement==MAXROWS && last_rows!=1)
 		{
 			force_insert=1;
 			last_rows=1;
 		}
-		if(last_rows==1 && res_query==0 && ociEnv!=0 && FIRST_TIME_DEVICETYPEUPDATE==1)
+	
+		if(last_rows==1 && res_query==0 && ociEnv!=0 && FIRST_TIME==1)
 		{
 			int len_host=LOGIN_LEN;
 			char login[LOGIN_LEN];
@@ -250,329 +137,340 @@ extern "C" {
 					else
 						strcpy(ErrMess,errmessg2);
 				}
-				rescode=-1;
-				status+=freeDeviceTypeUpdate();
 
+				FIRST_TIME=0;
 				if(dtype!=NULL)
 					free(dtype);
 				if(descrip!=NULL)
 					free(descrip);
 				if(rgbcol!=NULL)
 					free(rgbcol);
+				if(numrows_inserted!=NULL)
+					free(numrows_inserted);
+				if(type_nullList!=NULL)
+					free(type_nullList);
+				if(rgbcol_nullList!=NULL)
+					free(rgbcol_nullList);
+				if(descrip_nullList!=NULL)
+					free(descrip_nullList);
+				if(NbrofinputList!=NULL)
+					free(NbrofinputList);
+				if(NbrofoutputList!=NULL)
+					free(NbrofoutputList);
+				
+				for(i=0;i<NbElement;i++)
+					delete typeList[i];
+				if(typeList!=NULL)
+					free(typeList);
+				
 				free(errmessg1);
 				free(errmessg2);
 				return -1;
+			}
+			for(i=0;i<NbElement;i++){
+				if (typeList[i]->typelen > max_typelen)
+					max_typelen=typeList[i]->typelen;
+				if (typeList[i]->rgbcollen > max_rgbcollen)
+					max_rgbcollen=typeList[i]->rgbcollen;
+				if (typeList[i]->descriplen > max_descriplen)
+					max_descriplen=typeList[i]->descriplen;
+			}
 
+			dtype=(char*)malloc(NbElement*max_typelen*sizeof(char));
+			descrip=(char*)malloc(NbElement*max_descriplen*sizeof(char));
+			rgbcol=(char*)malloc(NbElement*max_rgbcollen*sizeof(char));
 
-			}
-			//need to proceed with messages
+			NbrofinputList=(int*)malloc(sizeof(int)*NbElement);
+			NbrofoutputList=(int*)malloc(sizeof(int)*NbElement);
+			
+			type_nullList=(int*)malloc(NbElement*sizeof(int));
+			rgbcol_nullList=(int*)malloc(NbElement*sizeof(int));
+			descrip_nullList=(int*)malloc(NbElement*sizeof(int));
+			
+			if(type_nullList!=NULL && rgbcol_nullList!=NULL && descrip_nullList!=NULL && dtype!=NULL
+				&& rgbcol!=NULL && descrip!=NULL && NbrofinputList!=NULL && NbrofoutputList!=NULL)
+			for(i=0;i<NbElement;i++)
+			{
+				memcpy(dtype+i*max_typelen,typeList[i]->type,typeList[i]->typelen);
+				type_nullList[i]=typeList[i]->type_null;
+				memcpy(rgbcol+i*max_rgbcollen,typeList[i]->rgbcol,typeList[i]->rgbcollen);
+				rgbcol_nullList[i]=typeList[i]->rgbcol_null;
+				memcpy(descrip+i*max_descriplen,typeList[i]->descrip,typeList[i]->descriplen);
+				descrip_nullList[i]=typeList[i]->descrip_null;
 
-			status =OCIHandleAlloc (ociEnv, (void**)&hstmt, OCI_HTYPE_STMT , 0, 0);
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIHandleAlloc unsuccessful");
+				NbrofinputList[i]=typeList[i]->nbin;
+				NbrofoutputList[i]=typeList[i]->nbout;				
 			}
-			else
+	
+			numrows_inserted=(int*)malloc(sizeof(int)*NbElement);
+			if( (dtype==NULL) || (rgbcol==NULL) || descrip==NULL || numrows_inserted==NULL 
+				||type_nullList==NULL || descrip_nullList==NULL || rgbcol_nullList==NULL ||NbrofinputList==NULL || NbrofoutputList==NULL)
 			{
-				sprintf(sqlstmt,
-					"BEGIN update %s set description=decode(nvl(:descrip,'none'),'none',description,:descrip),nbrofinput=decode(:nbin,-1,nbrofinput,:nbin),nbrofoutput=decode(:nbout,-1,nbrofoutput,:nbout),rgbcolor=decode(nvl(:rgbcol,'none'),'none',rgbcolor,:rgbcol),last_update=sysdate,user_update='%s' where devicetype=:dtype_old; :numrows:=%s; END;",DEVICETYPE_TABLE,login,SQLROWCOUNT);
-				status=OCIStmtPrepare(hstmt, ociError, (text*)sqlstmt, (ub4)strlen((char *)sqlstmt), (ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-			}
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIStmtPrepare unsuccessful");
-			}
-			else
-			{
-				//devtype_len=strlen(devicetype);
-				//descrip_len=strlen(description);
-				//rgbcol_len=strlen(rgbcolor);
-				//in_len=sizeof(nbrofinput);
-				//out_len=sizeof(nbrofoutput);
-				dtype=(char*)malloc(_devicetypeNbElementUpdate*_max_devicetypeLengthUpdate*sizeof(char));
+				rescode=ShowErrors (status, ociError, "Invalid pointer allocation unsuccessful");
+				GetErrorMess(appliName, "Malloc unsuccessful",ErrMess,1);
+				
+				FIRST_TIME=0;
 				if(dtype!=NULL)
-					status+=NormalizeVector(_DeviceTypeListUpdate, _devicetypeNbElementUpdate,_max_devicetypeLengthUpdate,dtype);
-				descrip=(char*)malloc(_descNbElementUpdate*_max_descriptionLengthUpdate*sizeof(char));
+					free(dtype);
 				if(descrip!=NULL)
-					status+=NormalizeVector(_DescriptionListUpdate, _descNbElementUpdate,_max_descriptionLengthUpdate,descrip);
-				rgbcol=(char*)malloc(_rgbcolorNbElementUpdate*_max_rgbcolorLengthUpdate*sizeof(char));
+					free(descrip);
 				if(rgbcol!=NULL)
-					status+=NormalizeVector(_rgbcolorListUpdate, _rgbcolorNbElementUpdate,_max_rgbcolorLengthUpdate,rgbcol);
-
-				free_mem=1;
-				numrows_inserted=(int*)malloc(sizeof(int)*_devicetypeNbElementUpdate);
-
-				if(dtype==NULL || descrip==NULL||numrows_inserted==NULL||rgbcol==NULL)
-				{
-
-					status =OCIHandleFree (hstmt,OCI_HTYPE_STMT);
-					rescode=ShowErrors (status, ociError, "Invalid pointer allocation unsuccessful");
-					GetErrorMess(appliName, "Malloc unsuccessful",ErrMess,1);
-					status+=freeDeviceTypeUpdate();
-					if(dtype!=NULL)
-						free(dtype);
-					if(descrip!=NULL)
-						free(descrip);
-					if(rgbcol!=NULL)
-						free(rgbcol);
-					if(numrows_inserted!=NULL)
-						free(numrows_inserted);
-					return -1;
-				}
-				else
-				{
-					for(i=0;i<_devicetypeNbElementUpdate;i++)
-						numrows_inserted[i]=0;
-					status =OCIBindByName(hstmt, &bndp[0], ociError,(text*) ":dtype_old", -1,(dvoid*)dtype, _max_devicetypeLengthUpdate,  SQLT_STR, (dvoid *) &_devicetype_nullvalueUpdate[0],(ub2 *)0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
-				}
-			}
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindByName unsuccessful");
-			}
-			else
-				status = OCIBindByName (hstmt, &bndp[1], ociError,(text*) ":nbin", -1,(dvoid*)&_NbrofinputListUpdate[0],sizeof(nbrofinput), SQLT_INT, 0, 0, 0, 0, 0, OCI_DEFAULT);
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindByName unsuccessful");
-			}
-			else
-				status = OCIBindByName (hstmt, &bndp[2], ociError, (text*) ":nbout", -1,(dvoid*)&_NbrofoutputListUpdate[0],sizeof(nbrofoutput),SQLT_INT, 0, 0, 0, 0, 0, OCI_DEFAULT);
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindByName unsuccessful");
-			}
-			else
-				status = OCIBindByName(hstmt, &bndp[3], ociError, (text*) ":descrip", -1,(dvoid*)descrip,_max_descriptionLengthUpdate, SQLT_STR,(dvoid *)  &_description_nullvalueUpdate[0], (ub2*)0, 0, 0, 0, OCI_DEFAULT);
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindByName unsuccessful");
-			}
-			else
-				status = OCIBindByName(hstmt, &bndp[4], ociError, (text*) ":rgbcol", -1,(dvoid*)rgbcol,_max_rgbcolorLengthUpdate, SQLT_STR,(dvoid *)  &_rgbcolor_nullvalueUpdate[0], (ub2*)0, 0, 0, 0, OCI_DEFAULT);
-
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindByName unsuccessful");
-			}
-			else
-				status =OCIBindByName(hstmt, &bndp3, ociError,(text*) ":numrows", -1,(dvoid*)&numrows_inserted[0], sizeof(nbrofoutput),SQLT_INT, (dvoid *) 0,(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
-
-
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindByName unsuccessful");
-			}
-			else	
-				status=OCIBindArrayOfStruct(bndp[0], ociError, _max_devicetypeLengthUpdate, sizeof(int),0, 0);
-
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindArrayOfStruct unsuccessful");
-			}
-			else
-				status=OCIBindArrayOfStruct(bndp[1], ociError, sizeof(int), 0, 0, 0);
-
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindArrayOfStruct unsuccessful");
-			}
-			else
-				status=OCIBindArrayOfStruct(bndp[2], ociError, sizeof(int), 0, 0, 0);
-
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindArrayOfStruct unsuccessful");
-			}
-			else
-				status=OCIBindArrayOfStruct(bndp[3], ociError, _max_descriptionLengthUpdate, sizeof(int), 0, 0);
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindArrayOfStruct unsuccessful");
-			}
-			else
-				status=OCIBindArrayOfStruct(bndp[4], ociError, _max_rgbcolorLengthUpdate, sizeof(int), 0, 0);
-
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindArrayOfStruct unsuccessful");
-			}
-			else
-				status=OCIBindArrayOfStruct(bndp3, ociError, sizeof(int),0, 0, 0);
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindArrayOfStruct unsuccessful");
-			}
-			else
-				status= OCIStmtExecute(ociHdbc, hstmt, ociError, _devicetypeNbElementUpdate, 0, 0, 0, OCI_DEFAULT );
-
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIStmtExecute unsuccessful");
-			}
-			else
-			{
-				numrows=-1;
-				for(i=0;i< _devicetypeNbElementUpdate;i++)
-				{
-					if(numrows_inserted[i]==0)
-					{
-						numrows=0;
-						i=  _devicetypeNbElementUpdate+5;
-					}
-					else
-						numrows=numrows_inserted[i];
-				}
-				if(numrows==0)
-				{
-					status = OCITransCommit(ociHdbc, ociError, 0);
-					status =OCIHandleFree (hstmt,OCI_HTYPE_STMT);
-					status+=freeDeviceTypeUpdate();
-					if(dtype!=NULL)
-						free(dtype);
-					if(rgbcol!=NULL)
-						free(rgbcol);
-					if(descrip!=NULL)
-						free(descrip);
+					free(rgbcol);
+				if(numrows_inserted!=NULL)
 					free(numrows_inserted);
-					GetErrorMess(appliName, "COULDNOT_UPDATE_ALL_ROWS",ErrMess,1);
-					return -1;
+				if(type_nullList!=NULL)
+					free(type_nullList);
+				if(rgbcol_nullList!=NULL)
+					free(rgbcol_nullList);
+				if(descrip_nullList!=NULL)
+					free(descrip_nullList);
+				if(NbrofinputList!=NULL)
+					free(NbrofinputList);
+				if(NbrofoutputList!=NULL)
+					free(NbrofoutputList);
+				
+				for(i=0;i<NbElement;i++)
+					delete typeList[i];
+				if(typeList!=NULL)
+                    free(typeList);
+				
+				NbElement=0;				
+				return -1;
+			}
+			else
+			{
+				for(i=0;i<NbElement;i++)
+					numrows_inserted[i]=0;
+			}
+
+			try{
+                HandleAlloc(ociEnv,(dvoid**)&hstmt,OCI_HTYPE_STMT,&status);
+				sprintf(sqlstmt,"BEGIN update %s set description=decode(nvl(:descrip,'none'),'none',description,:descrip),nbrofinput=decode(:nbin,-1,nbrofinput,:nbin),nbrofoutput=decode(:nbout,-1,nbrofoutput,:nbout),rgbcolor=decode(nvl(:rgbcol,'none'),'none',rgbcolor,:rgbcol),last_update=sysdate,user_update='%s' where devicetype=:dtype_old; :numrows:=%s; END;",DEVICETYPE_TABLE,login,SQLROWCOUNT);
+				StmtPrepare(hstmt,ociError, sqlstmt, &status);
+
+				BindByName(hstmt,&bndp[0],ociError,":dtype_old",dtype,max_typelen,SQLT_STR,&type_nullList[0],&status);
+				BindByName(hstmt,&bndp[1],ociError,":nbin",&NbrofinputList[0],sizeof(&typeList[0]->nbin),SQLT_INT,0,&status);
+				BindByName(hstmt,&bndp[2],ociError,":nbout",&NbrofoutputList[0],sizeof(&typeList[0]->nbout),SQLT_INT,0,&status);
+				BindByName(hstmt,&bndp[3],ociError,":descrip",descrip,max_descriplen,SQLT_STR,&descrip_nullList[0],&status);
+				BindByName(hstmt,&bndp[4],ociError,":rgbcol",rgbcol,max_rgbcollen,SQLT_STR,&rgbcol_nullList[0],&status);
+				BindByName(hstmt,&bndp[5],ociError,":numrows",&numrows_inserted[0],sizeof(int),SQLT_INT,0,&status);
+
+				BindArrayOfStruct(bndp[0],ociError,max_typelen,sizeof(int),&status);
+				BindArrayOfStruct(bndp[1],ociError,sizeof(int),0,&status);
+				BindArrayOfStruct(bndp[2],ociError,sizeof(int),0,&status);
+				BindArrayOfStruct(bndp[3],ociError,max_descriplen,sizeof(int),&status);
+				BindArrayOfStruct(bndp[4],ociError,max_rgbcollen,sizeof(int),&status);
+				BindArrayOfStruct(bndp[5],ociError,sizeof(int),0,&status);
+
+				StmtExecute(ociHdbc, hstmt, ociError,NbElement, &status);
+
+			}catch(Error err){
+				sprintf(appliName,"UpdateMultipleDeviceTypeAttributes");	///////
+				rescode=ShowErrors (status, err.ociError, err.log);
+				
+				if(ociError!=0)
+					OCIReportError(ociError,appliName,ErrMess,1); 
+				else
+					GetErrorMess(appliName,err.msg,ErrMess,1);
+			}
+
+			numrows=-1;
+			for(i=0;i< NbElement;i++)
+			{
+				if(numrows_inserted[i]==0)
+				{
+					numrows=0;
+					i= NbElement+5;
 				}
 				else
-					status = OCITransCommit(ociHdbc, ociError, 0);
-
-				if(status!=OCI_SUCCESS)
-				{
-					if(rescode==0)	
-						rescode=ShowErrors (status, ociError, "OCITransCommit unsuccessful");
-				}	
+					numrows=numrows_inserted[i];
 			}
+
+			if(numrows==0)
+			{
+				status = OCITransCommit(ociHdbc, ociError, 0);
+				status =OCIHandleFree (hstmt,OCI_HTYPE_STMT);
+				FIRST_TIME=0;
+				
+				if(dtype!=NULL)
+					free(dtype);
+				if(descrip!=NULL)
+					free(descrip);
+				if(rgbcol!=NULL)
+					free(rgbcol);
+				if(numrows_inserted!=NULL)
+					free(numrows_inserted);
+				if(type_nullList!=NULL)
+					free(type_nullList);
+				if(rgbcol_nullList!=NULL)
+					free(rgbcol_nullList);
+				if(descrip_nullList!=NULL)
+					free(descrip_nullList);
+				if(NbrofinputList!=NULL)
+					free(NbrofinputList);
+				if(NbrofoutputList!=NULL)
+					free(NbrofoutputList);
+				
+				for(i=0;i<NbElement;i++)
+					delete typeList[i];
+				if(force_insert==1)
+				{
+                    FIRST_TIME=1;
+					force_insert=0;
+					typeList=(DevType**)realloc(typeList, 0*sizeof(DevType));
+				}
+				else if(typeList!=NULL)
+                    free(typeList);
+
+				NbElement=0;
+
+				GetErrorMess(appliName, "COULDNOT_UPDATE_ALL_ROWS",ErrMess,1);
+				return -1;
+			}
+			else
+				status = OCITransCommit(ociHdbc, ociError, 0);
+			if(status!=OCI_SUCCESS)
+			{
+				if(rescode==0)	
+					rescode=ShowErrors (status, ociError, "OCITransCommit unsuccessful");
+			}	
+
+			FIRST_TIME=0;
 			status =OCIHandleFree (hstmt,OCI_HTYPE_STMT);
-			status+=freeDeviceTypeUpdate();
+
 			if(rescode!=0)
 				if(ociError!=0)
 					OCIReportError(ociError,appliName, ErrMess,1); 
 				else
 					GetErrorMess(appliName,  "NOT CONNECTED TO ANY DB",ErrMess,1); 
 			else
-				OCIReportError(ociError,appliName, ErrMess,0);  
+				OCIReportError(ociError,appliName, ErrMess,0); 
+			
+			for(i=0;i<NbElement;i++)
+				delete typeList[i];
 
-			if(dtype!=NULL)
-				free(dtype);
-
-			if(descrip!=NULL)
-				free(descrip);
-			if(rgbcol!=NULL)
-				free(rgbcol);
-			if(numrows_inserted!=NULL)
-				free(numrows_inserted);
-
-			if(force_insert==1 && rescode==0)
-				FIRST_TIME_DEVICETYPEUPDATE=1;
-
+			if(force_insert==1)
+			{
+				FIRST_TIME=1;
+				force_insert=0;
+				typeList=(DevType**)realloc(typeList, 0*sizeof(DevType));
+			}
+			else if(typeList!=NULL)
+                free(typeList);
+			NbElement=0;
 		}
 		else
 		{
-			//std::cout<<"before if res_query null "<<res_query<<" rescode "<<rescode<<std::endl;
-
 			if(res_query!=0)
 			{
-				status=freeDeviceTypeUpdate();
-				rescode=res_query;
+				FIRST_TIME=0;
 				GetErrorMess(appliName, "Cache Problem",ErrMess,1);
-			}
-			if(FIRST_TIME_DEVICETYPEUPDATE!=1)
-			{
-				status=freeDeviceTypeUpdate();
-				rescode=-1;
-				GetErrorMess(appliName, "CACHE HAS NOT BEEN INITIALIZED",ErrMess,1);
+				for(i=0;i<NbElement;i++)
+					delete typeList[i];
+				if(typeList!=NULL)
+					free(typeList);
 			}
 			if(ociEnv==0)
 			{
-				status=freeDeviceTypeUpdate();
-				rescode=-1;
+				FIRST_TIME=0;
+				res_query=-1;
 				GetErrorMess(appliName, "NOT CONNECTED TO ANY DB",ErrMess,1);
+				for(i=0;i<NbElement;i++)
+					delete typeList[i];
+				if(typeList!=NULL)
+                    free(typeList);
 			}
-			if(ociEnv!=0 && FIRST_TIME_DEVICETYPEUPDATE==1 && res_query==0)
+			status+=res_query;
+			if(ociEnv!=0 && FIRST_TIME==1 && res_query==0)
 			{
 				status=0;
 				GetErrorMess(appliName, "NO_ERROR",ErrMess,0);
 			}
-			//status+=res_query;
-			//std::cout<<"res_query null "<<res_query<<" rescode "<<rescode<<std::endl;
-
-
 		}
+		if(dtype!=NULL)
+			free(dtype);
+		if(descrip!=NULL)
+			free(descrip);
+		if(rgbcol!=NULL)
+			free(rgbcol);
+		if(numrows_inserted!=NULL)
+			free(numrows_inserted);
+		if(type_nullList!=NULL)
+			free(type_nullList);
+		if(rgbcol_nullList!=NULL)
+			free(rgbcol_nullList);
+		if(descrip_nullList!=NULL)
+			free(descrip_nullList);
+		if(NbrofinputList!=NULL)
+			free(NbrofinputList);
+		if(NbrofoutputList!=NULL)
+			free(NbrofoutputList);
+		
 		return (rescode+status);
 	}
 
-	/**
-	* Update the devicetype  returning an integer value.
-	* The user should manage the memory : there is no memory allocation.
-	* @param devicetype_old : name of the devicetype you want to update
-	* @param devicetype : new value of the devicetype, 
-	* @param first_time1 : 1 if it's your first MultipleDevice update (save it into the database), 0 otherwise
-	* @param last_rows1 : 1 if it's your MultipleDevice last update (save it into the database), 0 otherwise
-	* @param ErrMess : error message in case of failure
-	* @return 0 if it is successful
-	*/
-
-	/******************************************************************/
-	EXTERN_CONFDB
-		int UpdateMultipleDeviceTypes(char* devicetype_old,char* devicetype,int first_time1,int last_rows1,char* ErrMess)
+/**
+* Update the devicetype  returning an integer value.
+* The user should manage the memory : there is no memory allocation.
+* @param devicetype_old : name of the devicetype you want to update
+* @param devicetype : new value of the devicetype, 
+* @param first_time1 : 1 if it's your first MultipleDevice update (save it into the database), 0 otherwise
+* @param last_rows1 : 1 if it's your MultipleDevice last update (save it into the database), 0 otherwise
+* @param ErrMess : error message in case of failure
+* @return 0 if it is successful
+******************************************************************/
+EXTERN_CONFDB
+	int UpdateMultipleDeviceTypes(char* devicetype_old,char* devicetype,int first_time,int last_rows,char* ErrMess)
 	{
 		char appliName[100]="UpdateMultipleDeviceTypes";
 		char sqlstmt[1000];
 		OCIStmt *hstmt;
-		OCIBind  *bndp[2]; 
+		OCIBind  *bndp[3]; 
 		int rescode=0;
 		int res_query=0;
 		sword status=0;
-		char* dtype=NULL;
-		int force_insert=0;
-		int first_time=first_time1;
-		int last_rows=last_rows1;
 		int i=0;
-		char* dtype_old=NULL;
+
+		char* dtype=NULL;
+		char* dtypeold=NULL;		
+		int* type_nullList=NULL;
+		int* typeold_nullList=NULL;
+		
+		static int FIRST_TIME=0;
+		int force_insert=0;
 		int* numrows_inserted=NULL;
 		int numrows=0;
-		OCIBind  *bndp3 = (OCIBind *) 0;
 
-		int dtype1=null_charptr(devicetype);
-		int dtype1_old=null_charptr(devicetype_old);
-		if(FIRST_TIME_DEVICETYPEUPDATE1==1 && _newDeviceTypeListUpdate==NULL)
-			first_time=1;
-		res_query=AppendString(devicetype,_newDeviceTypeListUpdate,_newdevicetypeListLengthUpdate,_newdevicetypeNbElementUpdate,_max_newdevicetypeLengthUpdate,first_time);
-		res_query+=AppendString(devicetype_old,_oldDeviceTypeListUpdate,_olddevicetypeListLengthUpdate,_olddevicetypeNbElementUpdate,_max_olddevicetypeLengthUpdate,first_time);
+		static int NbElement;
+		UpdtDevType** typeList;
+		int max_typelen=0;
+		int max_typeoldlen=0;
 
-		res_query+=AppendInt(dtype1,_newdevicetype_nullvalueUpdate,_newdevicetypeNbElUpdate,first_time);
-		res_query+=AppendInt(dtype1_old,_olddevicetype_nullvalueUpdate,_olddevicetypeNbElUpdate,first_time);
-
-		if(first_time==1)
-			FIRST_TIME_DEVICETYPEUPDATE1=1;
-		status=res_query;
-
-		if(last_rows!=1 && _newdevicetypeNbElementUpdate==MAXROWS)
+		if (first_time==1)
 		{
-			last_rows=1;
-			force_insert=1;
+			FIRST_TIME=1;
+			NbElement=1;
+			typeList=(UpdtDevType**)malloc(NbElement*sizeof(UpdtDevType));			
 		}
-		if(last_rows==1 && res_query==0 && ociEnv!=0 && FIRST_TIME_DEVICETYPEUPDATE1==1)
+		else 
+		{
+			if (FIRST_TIME==0&&force_insert==0)
+			{
+				GetErrorMess(appliName, "CACHE HAS NOT BEEN INITIALIZED",ErrMess,1);
+				return -1;
+			}
+			NbElement++;
+			typeList=(UpdtDevType**)realloc(typeList, NbElement*sizeof(UpdtDevType));
+		}
+		typeList[NbElement-1]=new UpdtDevType(devicetype_old, devicetype);
+		
+		if(NbElement==MAXROWS && last_rows!=1)
+		{
+			force_insert=1;
+			last_rows=1;
+		}
+		
+		if(last_rows==1 && res_query==0 && ociEnv!=0 && FIRST_TIME==1)
 		{
 			int len_host=LOGIN_LEN;
 			char login[LOGIN_LEN];
@@ -615,299 +513,293 @@ extern "C" {
 					else
 						strcpy(ErrMess,errmessg2);
 				}
-				rescode=-1;
-				status+=freeDeviceTypeUpdate1();
 
+				FIRST_TIME=0;
 				if(dtype!=NULL)
 					free(dtype);
-				if(dtype_old!=NULL)
-					free(dtype);
+				if(dtypeold!=NULL)
+					free(dtypeold);
+				if(numrows_inserted!=NULL)
+					free(numrows_inserted);
+				if(type_nullList!=NULL)
+					free(type_nullList);
+				if(typeold_nullList!=NULL)
+					free(typeold_nullList);
+				
+				for(i=0;i<NbElement;i++)
+					delete typeList[i];
+				if(typeList!=NULL)
+					free(typeList);
+				
 				free(errmessg1);
 				free(errmessg2);
 				return -1;
+			}
+			for(i=0;i<NbElement;i++){
+				if (typeList[i]->typelen > max_typelen)
+					max_typelen=typeList[i]->typelen;
+				if (typeList[i]->typeoldlen > max_typeoldlen)
+					max_typeoldlen=typeList[i]->typeoldlen;
+			}
 
+			dtype=(char*)malloc(NbElement*max_typelen*sizeof(char));
+			dtypeold=(char*)malloc(NbElement*max_typeoldlen*sizeof(char));
+			type_nullList=(int*)malloc(NbElement*sizeof(int));
+			typeold_nullList=(int*)malloc(NbElement*sizeof(int));
 
+			if(type_nullList!=NULL && typeold_nullList!=NULL && dtype!=NULL && dtypeold!=NULL)
+			for(i=0;i<NbElement;i++)
+			{
+				memcpy(dtype+i*max_typelen,typeList[i]->type,typeList[i]->typelen);
+				type_nullList[i]=typeList[i]->type_null;
+				memcpy(dtypeold+i*max_typeoldlen,typeList[i]->typeold,typeList[i]->typeoldlen);
+				typeold_nullList[i]=typeList[i]->typeold_null;
 			}
-			//need to proceed with messages
+			numrows_inserted=(int*)malloc(sizeof(int)*NbElement);
 
-			status =OCIHandleAlloc (ociEnv, (void**)&hstmt, OCI_HTYPE_STMT , 0, 0);
-			if(status!=OCI_SUCCESS)
+			if(dtype==NULL || dtypeold==NULL || numrows_inserted==NULL ||type_nullList==NULL || typeold_nullList==NULL)
 			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIHandleAlloc unsuccessful");
-			}
-			else
-			{
-				sprintf(sqlstmt,
-					"BEGIN update %s set devicetype=:dtype,last_update=sysdate,user_update='%s' where devicetype=:dtype_old; :numrows:=%s; END;",DEVICETYPE_TABLE,login,SQLROWCOUNT);
-				status=OCIStmtPrepare(hstmt, ociError, (text*)sqlstmt, (ub4)strlen((char *)sqlstmt), (ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-			}
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIStmtPrepare unsuccessful");
-			}
-			else
-			{
-				//devtype_len=strlen(devicetype);
-				//descrip_len=strlen(description);
-				//rgbcol_len=strlen(rgbcolor);
-				//in_len=sizeof(nbrofinput);
-				//out_len=sizeof(nbrofoutput);
-				dtype=(char*)malloc(_newdevicetypeNbElementUpdate*_max_newdevicetypeLengthUpdate*sizeof(char));
+				rescode=ShowErrors (status, ociError, "Invalid pointer allocation unsuccessful");
+				GetErrorMess(appliName, "Malloc unsuccessful",ErrMess,1);
+				
+				FIRST_TIME=0;
 				if(dtype!=NULL)
-					status+=NormalizeVector(_newDeviceTypeListUpdate, _newdevicetypeNbElementUpdate,_max_newdevicetypeLengthUpdate,dtype);
-
-				dtype_old=(char*)malloc(_olddevicetypeNbElementUpdate*_max_olddevicetypeLengthUpdate*sizeof(char));
-				if(dtype_old!=NULL)
-					status+=NormalizeVector(_oldDeviceTypeListUpdate, _olddevicetypeNbElementUpdate,_max_olddevicetypeLengthUpdate,dtype_old);
-
-				numrows_inserted=(int*)malloc(sizeof(int)*_olddevicetypeNbElementUpdate);
-
-				if(dtype==NULL || numrows_inserted==NULL||dtype_old==NULL)
-				{
-
-					status =OCIHandleFree (hstmt,OCI_HTYPE_STMT);
-					rescode=ShowErrors (status, ociError, "Invalid pointer allocation unsuccessful");
-					GetErrorMess(appliName, "Malloc unsuccessful",ErrMess,1);
-					status+=freeDeviceTypeUpdate1();
-					if(dtype!=NULL)
-						free(dtype);
-					if(dtype_old!=NULL)
-						free(dtype_old);
-					if(numrows_inserted!=NULL)
-						free(numrows_inserted);
-					return -1;
-				}
-				else
-				{
-					for(i=0;i<_olddevicetypeNbElementUpdate;i++)
-						numrows_inserted[i]=0;
-					status =OCIBindByName(hstmt, &bndp[0], ociError,(text*) ":dtype", -1,(dvoid*)dtype, _max_newdevicetypeLengthUpdate,  SQLT_STR, (dvoid *) &_newdevicetype_nullvalueUpdate[0],(ub2 *)0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
-				}
-			}
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindByName unsuccessful");
-			}
-			else
-				status =OCIBindByName(hstmt, &bndp[1], ociError,(text*) ":dtype_old", -1,(dvoid*)dtype_old, _max_olddevicetypeLengthUpdate,  SQLT_STR, (dvoid *) &_olddevicetype_nullvalueUpdate[0],(ub2 *)0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
-
-
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindByName unsuccessful");
-			}
-			else
-				status =OCIBindByName(hstmt, &bndp3, ociError,(text*) ":numrows", -1,(dvoid*)&numrows_inserted[0], sizeof(int),SQLT_INT, (dvoid *) 0,(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
-
-
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindByName unsuccessful");
-			}
-			else	
-				status=OCIBindArrayOfStruct(bndp[0], ociError, _max_newdevicetypeLengthUpdate, sizeof(int),0, 0);
-
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindByName unsuccessful");
-			}
-			else	
-				status=OCIBindArrayOfStruct(bndp[1], ociError, _max_olddevicetypeLengthUpdate, sizeof(int),0, 0);
-
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindArrayOfStruct unsuccessful");
-			}
-			else
-				status=OCIBindArrayOfStruct(bndp3, ociError, sizeof(int),0, 0, 0);
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindArrayOfStruct unsuccessful");
-			}
-			else
-				status= OCIStmtExecute(ociHdbc, hstmt, ociError, _olddevicetypeNbElementUpdate, 0, 0, 0, OCI_DEFAULT );
-
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIStmtExecute unsuccessful");
-			}
-			else
-			{
-				numrows=-1;
-				for(i=0;i< _olddevicetypeNbElementUpdate;i++)
-				{
-					if(numrows_inserted[i]==0)
-					{
-						numrows=0;
-						i=  _olddevicetypeNbElementUpdate+5;
-					}
-					else
-						numrows=numrows_inserted[i];
-				}
-				if(numrows==0)
-				{
-					status = OCITransCommit(ociHdbc, ociError, 0);
-					status =OCIHandleFree (hstmt,OCI_HTYPE_STMT);
-					status+=freeDeviceTypeUpdate1();
-					if(dtype!=NULL)
-						free(dtype);
-					if(dtype_old!=NULL)
-						free(dtype_old);
-
-
+					free(dtype);
+				if(dtypeold!=NULL)
+					free(dtypeold);
+				if(numrows_inserted!=NULL)
 					free(numrows_inserted);
-					GetErrorMess(appliName, "COULDNOT_UPDATE_ALL_ROWS",ErrMess,1);
-					return -1;
+				if(type_nullList!=NULL)
+					free(type_nullList);
+				if(typeold_nullList!=NULL)
+					free(typeold_nullList);
+				
+				for(i=0;i<NbElement;i++)
+					delete typeList[i];
+				if(typeList!=NULL)
+                    free(typeList);
+				
+				NbElement=0;				
+				return -1;
+			}
+			else
+			{
+				for(i=0;i<NbElement;i++)
+					numrows_inserted[i]=0;
+			}			
+			
+			try{
+                HandleAlloc(ociEnv,(dvoid**)&hstmt,OCI_HTYPE_STMT,&status);
+				sprintf(sqlstmt,"BEGIN update %s set devicetype=:dtype,last_update=sysdate,user_update='%s' where devicetype=:dtype_old; :numrows:=%s; END;",DEVICETYPE_TABLE,login,SQLROWCOUNT);
+				StmtPrepare(hstmt,ociError, sqlstmt, &status);
+
+				BindByName(hstmt,&bndp[0],ociError,":dtype",dtype,max_typelen,SQLT_STR,&type_nullList[0],&status);
+				BindByName(hstmt,&bndp[1],ociError,":dtype_old",dtypeold,max_typeoldlen,SQLT_STR,&typeold_nullList[0],&status);
+				BindByName(hstmt,&bndp[2],ociError,":numrows",&numrows_inserted[0],sizeof(int),SQLT_INT,0,&status);
+
+				BindArrayOfStruct(bndp[0],ociError,max_typelen,sizeof(int),&status);
+				BindArrayOfStruct(bndp[1],ociError,max_typeoldlen,sizeof(int),&status);
+				BindArrayOfStruct(bndp[2],ociError,sizeof(int),0,&status);
+				
+				StmtExecute(ociHdbc, hstmt, ociError,NbElement, &status);
+			}catch(Error err){
+				sprintf(appliName,"UpdateMultipleDeviceTypes");	///////
+				rescode=ShowErrors (status, err.ociError, err.log);
+				
+				if(ociError!=0)
+					OCIReportError(ociError,appliName,ErrMess,1); 
+				else
+					GetErrorMess(appliName,err.msg,ErrMess,1);
+			}
+
+			numrows=-1;
+			for(i=0;i< NbElement;i++)
+			{
+				if(numrows_inserted[i]==0)
+				{
+					numrows=0;
+					i= NbElement+5;
 				}
 				else
-					status = OCITransCommit(ociHdbc, ociError, 0);
-
-				if(status!=OCI_SUCCESS)
-				{
-					if(rescode==0)	
-						rescode=ShowErrors (status, ociError, "OCITransCommit unsuccessful");
-				}	
+					numrows=numrows_inserted[i];
 			}
+			if(numrows==0)
+			{
+				status = OCITransCommit(ociHdbc, ociError, 0);
+				status =OCIHandleFree (hstmt,OCI_HTYPE_STMT);
+				FIRST_TIME=0;
+				
+				if(dtype!=NULL)
+					free(dtype);
+				if(dtypeold!=NULL)
+					free(dtypeold);
+				if(numrows_inserted!=NULL)
+					free(numrows_inserted);
+				if(type_nullList!=NULL)
+					free(type_nullList);
+				if(typeold_nullList!=NULL)
+					free(typeold_nullList);
+				
+				for(i=0;i<NbElement;i++)
+					delete typeList[i];
+				if(force_insert==1)
+				{
+                    FIRST_TIME=1;
+					force_insert=0;
+					typeList=(UpdtDevType**)realloc(typeList, 0*sizeof(UpdtDevType));
+				}
+				else if(typeList!=NULL)
+                    free(typeList);
+
+				NbElement=0;
+
+				GetErrorMess(appliName, "COULDNOT_UPDATE_ALL_ROWS",ErrMess,1);
+				return -1;
+			}
+			else
+				status = OCITransCommit(ociHdbc, ociError, 0);
+			if(status!=OCI_SUCCESS)
+			{
+				if(rescode==0)	
+					rescode=ShowErrors (status, ociError, "OCITransCommit unsuccessful");
+			}	
+
+			FIRST_TIME=0;
 			status =OCIHandleFree (hstmt,OCI_HTYPE_STMT);
-			status+=freeDeviceTypeUpdate1();
+
 			if(rescode!=0)
 				if(ociError!=0)
 					OCIReportError(ociError,appliName, ErrMess,1); 
 				else
 					GetErrorMess(appliName,  "NOT CONNECTED TO ANY DB",ErrMess,1); 
 			else
-				OCIReportError(ociError,appliName, ErrMess,0);  
+				OCIReportError(ociError,appliName, ErrMess,0); 
+			
+			for(i=0;i<NbElement;i++)
+				delete typeList[i];
 
-			if(dtype!=NULL)
-				free(dtype);
-			if(dtype_old!=NULL)
-				free(dtype_old);
-
-			if(numrows_inserted!=NULL)
-				free(numrows_inserted);
-
-			if(force_insert==1 && rescode==0)
-				FIRST_TIME_DEVICETYPEUPDATE1=1;
-
-
+			if(force_insert==1)
+			{
+				FIRST_TIME=1;
+				force_insert=0;
+				typeList=(UpdtDevType**)realloc(typeList, 0*sizeof(UpdtDevType));
+			}
+			else if(typeList!=NULL)
+                free(typeList);
+			NbElement=0;
 		}
 		else
 		{
-			//std::cout<<"before if res_query null "<<res_query<<" rescode "<<rescode<<std::endl;
-
 			if(res_query!=0)
 			{
-				status=freeDeviceTypeUpdate1();
-				rescode=res_query;
+				FIRST_TIME=0;
 				GetErrorMess(appliName, "Cache Problem",ErrMess,1);
-			}
-			if(FIRST_TIME_DEVICETYPEUPDATE1!=1)
-			{
-				status=freeDeviceTypeUpdate1();
-				rescode=-1;
-				GetErrorMess(appliName, "CACHE HAS NOT BEEN INITIALIZED",ErrMess,1);
+				for(i=0;i<NbElement;i++)
+					delete typeList[i];
+				if(typeList!=NULL)
+					free(typeList);
 			}
 			if(ociEnv==0)
 			{
-				status=freeDeviceTypeUpdate1();
-				rescode=-1;
+				FIRST_TIME=0;
+				res_query=-1;
 				GetErrorMess(appliName, "NOT CONNECTED TO ANY DB",ErrMess,1);
+				for(i=0;i<NbElement;i++)
+					delete typeList[i];
+				if(typeList!=NULL)
+                    free(typeList);
 			}
-			if(ociEnv!=0 && FIRST_TIME_DEVICETYPEUPDATE1==1 && res_query==0)
+			status+=res_query;
+			if(ociEnv!=0 && FIRST_TIME==1 && res_query==0)
 			{
 				status=0;
 				GetErrorMess(appliName, "NO_ERROR",ErrMess,0);
-			}
-			//status+=res_query;
-			//std::cout<<"res_query null "<<res_query<<" rescode "<<rescode<<std::endl;
-
-
+			}	
 		}
+		if(dtype!=NULL)
+			free(dtype);
+		if(dtypeold!=NULL)
+			free(dtypeold);
+		if(numrows_inserted!=NULL)
+			free(numrows_inserted);
+		if(type_nullList!=NULL)
+			free(type_nullList);
+		if(typeold_nullList!=NULL)
+			free(typeold_nullList);
+		
 		return (rescode+status);
 	}
 
-	/******************************************************/
-	/**
-	* Update the system_name parameter of a device type  returning an integer value.
-	* The user should manage the memory : there is no memory allocation.
-	* @param devicetype : name of the device
-	* @param new_systemList : new list of system, UPPER CASE, separated with a coma
-	* @param first_time1 : 1 if it's your first MultipleDeviceNodeUsed update (save it into the database), 0 otherwise
-	* @param last_rows1 : 1 if it's your MultipleDeviceNodeUsed last update (save it into the database), 0 otherwise
-	* @param ErrMess : error message in case of failure
-	* @return 0 if it is successful
-	*/
-	/*********************************************************************/
-	EXTERN_CONFDB int UpdateMultipleDeviceTypeSystemList(char* devicetype,char* new_systemList,int first_time1,int last_rows1,char* ErrMess)
+/******************************************************/
+/* Update the system_name parameter of a device type  returning an integer value.
+* The user should manage the memory : there is no memory allocation.
+* @param devicetype : name of the device
+* @param new_systemList : new list of system, UPPER CASE, separated with a coma
+* @param first_time1 : 1 if it's your first MultipleDeviceNodeUsed update (save it into the database), 0 otherwise
+* @param last_rows1 : 1 if it's your MultipleDeviceNodeUsed last update (save it into the database), 0 otherwise
+* @param ErrMess : error message in case of failure
+* @return 0 if it is successful
+*********************************************************************/
+EXTERN_CONFDB 
+	int UpdateMultipleDeviceTypeSystemList(char* devicetype,char* new_systemList,int first_time,int last_rows,char* ErrMess)
 	{
-
-		//extern "C" __declspec(dllexport)
 		char appliName[100]="UpdateMultipleDeviceTypeSystemList";
-		char sqlstmt[2000];
+		char sqlstmt[1000];
 		OCIStmt *hstmt;
-		OCIBind  *bndp[2]; 
+		OCIBind  *bndp[3]; 
 		int rescode=0;
-		int free_mem=0;
-		char res_query1[100]="blabla";
 		int res_query=0;
-
 		sword status=0;
-		char* dname=NULL;
 		int i=0;
-		int first_time=first_time1;
-		int last_rows=last_rows1;
+
+		char* dtype=NULL;
+		int* sysIDList=NULL;	
+		int* type_nullList=NULL;
+		
+		static int FIRST_TIME=0;
 		int force_insert=0;
 		int* numrows_inserted=NULL;
-		int* numrows_inserted1=NULL;
 		int numrows=0;
-		OCIBind  *bndp3 = (OCIBind *) 0;
-		OCIBind  *bndp4 = (OCIBind *) 0;
-		OCIBind  *bndp5 = (OCIBind *) 0;
 
+		static int NbElement;
+		DevType** typeList;
+		int max_typelen=0;
+		int max_rgbcollen=0;
+		int max_descriplen=0;
 
+		if (first_time==1)
+		{
+			FIRST_TIME=1;
+			NbElement=1;
+			typeList=(DevType**)malloc( NbElement*sizeof(DevType));			
+		}
+		else 
+		{
+			if (FIRST_TIME==0&&force_insert==0)
+			{
+				GetErrorMess(appliName, "CACHE HAS NOT BEEN INITIALIZED",ErrMess,1);
+				return -1;
+			}
+			NbElement++;
+			typeList=(DevType**)realloc(typeList, NbElement*sizeof(DevType));
+		}
 		int sysID=GetSubsystemID(new_systemList);
 		if(sysID==-1)
 		{
-
-			GetErrorMess(appliName, "new_systemList is invalid: not inserted in the cache",ErrMess,1);
+			GetErrorMess(appliName, "systemnameList is null or check the spelling",ErrMess,1);
 			return -1;
-
 		}
-		int dname1=null_charptr(devicetype);
-		if(FIRST_TIME_SYSDEVTYPEUPDATE==1 && _SysDeviceTypeListUpdate==NULL)
-			first_time;
-		if(first_time==1)
-		{
-			freeSysDeviceTypeUpdate();
-			FIRST_TIME_SYSDEVTYPEUPDATE=1;
 
-		}
-		res_query=AppendString(devicetype,_SysDeviceTypeListUpdate,_SysdeviceTypeListLengthUpdate,_SysdeviceTypeNbElementUpdate,_max_SysdeviceTypeLengthUpdate,first_time);
+		typeList[NbElement-1]=new DevType(NULL, devicetype, NULL, NULL, NULL, NULL);
+		typeList[NbElement-1]->sysID=sysID; 
 
-		res_query+=AppendInt(sysID,_SysTypeUpdate,_SysTypeNbElementUpdate,first_time);
-
-		res_query+=AppendInt(dname1,_SysdeviceTypeList_nullvalueUpdate,_SysdeviceTypeListNbElUpdate,first_time);
-
-
-		status=res_query;
-
-		if(last_rows!=1 && _SysdeviceTypeNbElementUpdate==MAXROWS)
+		if(NbElement==MAXROWS && last_rows!=1)
 		{
 			force_insert=1;
 			last_rows=1;
-
 		}
-
-		if(last_rows==1 && res_query==0 && ociEnv!=0 && FIRST_TIME_SYSDEVTYPEUPDATE==1 )
+		
+		if(last_rows==1 && res_query==0 && ociEnv!=0 && FIRST_TIME==1)
 		{
 			int len_host=LOGIN_LEN;
 			char login[LOGIN_LEN];
@@ -950,221 +842,214 @@ extern "C" {
 					else
 						strcpy(ErrMess,errmessg2);
 				}
-				rescode=-1;
-				status+=freeSysDeviceTypeUpdate();
-				if(dname!=NULL)
-					free(dname);
+
+				FIRST_TIME=0;
+				if(dtype!=NULL)
+					free(dtype);
+				if(numrows_inserted!=NULL)
+					free(numrows_inserted);
+				if(type_nullList!=NULL)
+					free(type_nullList);
+				if(sysIDList!=NULL)
+					free(sysIDList);	
 
 
+				for(i=0;i<NbElement;i++)
+					delete typeList[i];
+				if(typeList!=NULL)
+					free(typeList);
+				
 				free(errmessg1);
 				free(errmessg2);
-				return rescode;
+				return -1;
 			}
-			//need to proceed with messages
+			for(i=0;i<NbElement;i++){
+				if (typeList[i]->typelen > max_typelen)
+					max_typelen=typeList[i]->typelen;
+			}
 
-			status =OCIHandleAlloc (ociEnv, (void**)&hstmt, OCI_HTYPE_STMT , 0, 0);
-			if(status!=OCI_SUCCESS)
+			dtype=(char*)malloc(NbElement*max_typelen*sizeof(char));
+			sysIDList=(int*)malloc(sizeof(int)*NbElement);
+			type_nullList=(int*)malloc(NbElement*sizeof(int));
+
+			if(type_nullList!=NULL && dtype!=NULL && sysIDList!=NULL)
+			for(i=0;i<NbElement;i++)
 			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIHandleAlloc unsuccessful");
+				memcpy(dtype+i*max_typelen,typeList[i]->type,typeList[i]->typelen);
+				type_nullList[i]=typeList[i]->type_null;
+				sysIDList[i]=typeList[i]->sysID;
+			}
+	
+			numrows_inserted=(int*)malloc(sizeof(int)*NbElement);
+
+			if(dtype==NULL || numrows_inserted==NULL ||type_nullList==NULL || sysIDList==NULL)
+			{
+				rescode=ShowErrors (status, ociError, "Invalid pointer allocation unsuccessful");
+				GetErrorMess(appliName, "Malloc unsuccessful",ErrMess,1);
+				
+				FIRST_TIME=0;
+				if(dtype!=NULL)
+					free(dtype);
+				if(numrows_inserted!=NULL)
+					free(numrows_inserted);
+				if(type_nullList!=NULL)
+					free(type_nullList);
+				if(sysIDList!=NULL)
+					free(sysIDList);
+				
+				for(i=0;i<NbElement;i++)
+					delete typeList[i];
+				if(typeList!=NULL)
+                    free(typeList);
+				
+				NbElement=0;				
+				return -1;
 			}
 			else
 			{
-				int sysID=GetSubsystemID("DAQ,TFC");
-				//sprintf(sqlstmt,"BEGIN update %s set nodeused=decode(:nused,1,1,0,0,nodeused),last_update=sysdate,user_update='%s' where devicename=:dname; if :numrows1=1 then update %s e set e.last_update=sysdate,e.user_update='%s',e.lkused=(select t.nodeused*f.nodeused from %s t,%s f, %s l,%s m where t.deviceid=l.deviceid and l.portid=e.portidfrom and f.deviceid=m.deviceid and m.portid=e.portidto); end if; :numrows:=%s; END;",LOGICAL_DEVICE_TABLE,login,MACRO_CONNECTIVITY_TABLE,login,LOGICAL_DEVICE_TABLE,LOGICAL_DEVICE_TABLE,PORT_TABLE,PORT_TABLE,SQLROWCOUNT);
+				for(i=0;i<NbElement;i++)
+					numrows_inserted[i]=0;
+			}			
+			
+			try{
+                HandleAlloc(ociEnv,(dvoid**)&hstmt,OCI_HTYPE_STMT,&status);
 				sprintf(sqlstmt,"BEGIN update %s set system_name=:sysid,last_update=sysdate,user_update='%s' where devicetype=:dname; :numrows:=%s; END;",DEVICETYPE_TABLE,login,SQLROWCOUNT);
-				status=OCIStmtPrepare(hstmt, ociError, (text*)sqlstmt, (ub4)strlen((char *)sqlstmt), (ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-				//std::cout<<"sql stmt "<<sqlstmt<<std::endl;
+				StmtPrepare(hstmt,ociError, sqlstmt, &status);
 
-			}
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIStmtPrepare unsuccessful");
-			}
-			else
-			{
-				dname=(char*)malloc(_SysdeviceTypeNbElementUpdate*_max_SysdeviceTypeLengthUpdate*sizeof(char));
-				if(dname!=NULL)
-					status+=NormalizeVector(_SysDeviceTypeListUpdate, _SysdeviceTypeNbElementUpdate,_max_SysdeviceTypeLengthUpdate,dname);
+				BindByName(hstmt,&bndp[0],ociError,":dname",dtype,max_typelen,SQLT_STR,&type_nullList[0],&status);
+				BindByName(hstmt,&bndp[1],ociError,":sysid",&sysIDList[0],sizeof(int),SQLT_INT,0,&status);
+				BindByName(hstmt,&bndp[2],ociError,":numrows",&numrows_inserted[0],sizeof(int),SQLT_INT,0,&status);
+				
+				BindArrayOfStruct(bndp[0],ociError,max_typelen,sizeof(int),&status);
+				BindArrayOfStruct(bndp[1],ociError,sizeof(int),0,&status);
+				BindArrayOfStruct(bndp[2],ociError,sizeof(int),0,&status);
+				
+				StmtExecute(ociHdbc, hstmt, ociError,NbElement, &status);
 
-				numrows_inserted=(int*)malloc(sizeof(int)*_SysdeviceTypeNbElementUpdate);
-				numrows_inserted1=(int*)malloc(sizeof(int)*_SysdeviceTypeNbElementUpdate);
-				if(dname==NULL ||numrows_inserted==NULL ||numrows_inserted1==NULL)
+			}catch(Error err){
+				sprintf(appliName,"UpdateMultipleDeviceTypeSystemList");	///////
+				rescode=ShowErrors (status, err.ociError, err.log);
+				
+				if(ociError!=0)
+					OCIReportError(ociError,appliName,ErrMess,1); 
+				else
+					GetErrorMess(appliName,err.msg,ErrMess,1);
+			}
+
+			numrows=-1;
+			for(i=0;i< NbElement;i++)
+			{
+				if(numrows_inserted[i]==0)
 				{
-
-					rescode=ShowErrors (status, ociError, "Invalid pointer allocation unsuccessful");
-					GetErrorMess(appliName, "Malloc unsuccessful",ErrMess,1);
-					status =OCIHandleFree (hstmt,OCI_HTYPE_STMT);
-					status+=freeSysDeviceTypeUpdate();
-					if(dname!=NULL)
-						free(dname);
-
-					if(numrows_inserted!=NULL)
-						free(numrows_inserted);
-					if(numrows_inserted1!=NULL)
-						free(numrows_inserted1);
-					return -1;
+					numrows=0;
+					i= NbElement+5;
 				}
 				else
+					numrows=numrows_inserted[i];
+			}
+			if(res_query!=0)
+			{
+				status = OCITransCommit(ociHdbc, ociError, 0);
+				status =OCIHandleFree (hstmt,OCI_HTYPE_STMT);
+				FIRST_TIME=0;
+				
+				if(dtype!=NULL)
+					free(dtype);
+				if(numrows_inserted!=NULL)
+					free(numrows_inserted);
+				if(type_nullList!=NULL)
+					free(type_nullList);
+				if(sysIDList!=NULL)
+					free(sysIDList);
+				
+				for(i=0;i<NbElement;i++)
+					delete typeList[i];
+				if(force_insert==1)
 				{
-					for(i=0;i<_SysdeviceTypeNbElementUpdate;i++)
-					{
-						numrows_inserted[i]=0;
-						numrows_inserted1[i]=0;
-					}
-					numrows_inserted1[_SysdeviceTypeNbElementUpdate-1]=1;
+                    FIRST_TIME=1;
+					force_insert=0;
+					typeList=(DevType**)realloc(typeList, 0*sizeof(DevType));
 				}
-				status =OCIBindByName(hstmt, &bndp[0], ociError,(text*) ":dname", -1,(dvoid*)dname, _max_SysdeviceTypeLengthUpdate,  SQLT_STR, (dvoid *) & _SysdeviceTypeList_nullvalueUpdate[0],(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
+				else if(typeList!=NULL)
+                    free(typeList);
 
-			}
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindByName unsuccessful");
-			}
-			else
-				status =OCIBindByName(hstmt, &bndp[1], ociError,(text*) ":sysid", -1,(dvoid*)&_SysTypeUpdate[0], sizeof(int),  SQLT_INT, (dvoid *) 0,(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
+				NbElement=0;
 
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindByName unsuccessful");
+				GetErrorMess(appliName, "COULDNOT_UPDATE_ALL_ROWS",ErrMess,1);
+				return -1;
 			}
 			else
-				status =OCIBindByName(hstmt, &bndp3, ociError,(text*) ":numrows", -1,(dvoid*)&numrows_inserted[0], sizeof(int),SQLT_INT, (dvoid *) 0,(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
-
-
-
+				status = OCITransCommit(ociHdbc, ociError, 0);
 
 			if(status!=OCI_SUCCESS)
 			{
 				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindByName unsuccessful");
-			}
-			else
-				status=OCIBindArrayOfStruct(bndp[0], ociError,_max_SysdeviceTypeLengthUpdate, sizeof(int),0, 0);
+					rescode=ShowErrors (status, ociError, "OCITransCommit unsuccessful");
+			}		
 
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindArrayOfStruct unsuccessful");
-			}
-			else
-				status=OCIBindArrayOfStruct(bndp[1], ociError, sizeof(int), 0, 0, 0);
-
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindArrayOfStruct unsuccessful");
-			}
-			else
-				status=OCIBindArrayOfStruct(bndp3, ociError, sizeof(int),0, 0, 0);
-
-
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindArrayOfStruct unsuccessful");
-			}
-			else
-				status= OCIStmtExecute(ociHdbc, hstmt, ociError, _SysdeviceTypeNbElementUpdate, 0, 0, 0, OCI_DEFAULT );
-			//std::cout<<"res_query "<<res_query<<std::endl;
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIStmtExecute unsuccessful");
-			}
-			else
-			{
-				numrows=-1;
-				for(i=0;i< _SysdeviceTypeNbElementUpdate;i++)
-				{
-					if(numrows_inserted[i]==0)
-					{
-						numrows=0;
-						i= _SysdeviceTypeNbElementUpdate+5;
-					}
-					else
-						numrows=numrows_inserted[i];
-				}
-				if(res_query!=0)
-				{
-					status = OCITransRollback(ociHdbc, ociError, 0);
-					status =OCIHandleFree (hstmt,OCI_HTYPE_STMT);
-					status+=freeSysDeviceTypeUpdate();
-					if(dname!=NULL)
-						free(dname);
-
-					if(numrows_inserted!=NULL)
-						free(numrows_inserted);
-					if(numrows_inserted1!=NULL)
-						free(numrows_inserted1);
-					GetErrorMess(appliName, "COULDNOT_UPDATE_ALL_ROWS",ErrMess,1);
-					return -1;
-				}
-				else
-					status = OCITransCommit(ociHdbc, ociError, 0);
-
-				if(status!=OCI_SUCCESS)
-				{
-					if(rescode==0)	
-						rescode=ShowErrors (status, ociError, "OCITransCommit unsuccessful");
-				}		
-			}
+			FIRST_TIME=0;
 			status =OCIHandleFree (hstmt,OCI_HTYPE_STMT);
-			status+=freeSysDeviceTypeUpdate();
-			//std::cout<<"after free device"<<std::endl;
-			if(dname!=NULL)
-				free(dname);
 
-			if(numrows_inserted!=NULL)
-				free(numrows_inserted);
-			if(numrows_inserted1!=NULL)
-				free(numrows_inserted1);
 			if(rescode!=0)
-			{
 				if(ociError!=0)
 					OCIReportError(ociError,appliName, ErrMess,1); 
 				else
 					GetErrorMess(appliName,  "NOT CONNECTED TO ANY DB",ErrMess,1); 
-			}
 			else
 				OCIReportError(ociError,appliName, ErrMess,0); 
+			
+			for(i=0;i<NbElement;i++)
+				delete typeList[i];
 
-			if(force_insert==1 &&rescode==0)
-				FIRST_TIME_SYSDEVTYPEUPDATE=1;
+			if(force_insert==1)
+			{
+				FIRST_TIME=1;
+				force_insert=0;
+				typeList=(DevType**)realloc(typeList, 0*sizeof(DevType));
+			}
+			else if(typeList!=NULL)
+                free(typeList);
+			NbElement=0;
 		}
 		else
 		{
 			if(res_query!=0)
 			{
-				status=freeSysDeviceTypeUpdate();
+				FIRST_TIME=0;
 				GetErrorMess(appliName, "Cache Problem",ErrMess,1);
-			}
-			if(FIRST_TIME_SYSDEVTYPEUPDATE!=1)
-			{
-				status=freeSysDeviceTypeUpdate();
-				res_query=-1;
-				GetErrorMess(appliName, "CACHE HAS NOT BEEN INITIALIZED",ErrMess,1);
+				for(i=0;i<NbElement;i++)
+					delete typeList[i];
+				if(typeList!=NULL)
+					free(typeList);
 			}
 			if(ociEnv==0)
 			{
-				status=freeSysDeviceTypeUpdate();
+				FIRST_TIME=0;
 				res_query=-1;
 				GetErrorMess(appliName, "NOT CONNECTED TO ANY DB",ErrMess,1);
+				for(i=0;i<NbElement;i++)
+					delete typeList[i];
+				if(typeList!=NULL)
+                    free(typeList);
 			}
-			if(ociEnv!=0 && FIRST_TIME_SYSDEVTYPEUPDATE==1 && res_query==0)
+			status+=res_query;
+			if(ociEnv!=0 && FIRST_TIME==1 && res_query==0)
 			{
 				status=0;
 				GetErrorMess(appliName, "NO_ERROR",ErrMess,0);
-			}
-			status+=res_query;
+			}	
 		}
-		//std::cout<<"end of fct "<<std::endl;
+		if(dtype!=NULL)
+			free(dtype);
+		if(numrows_inserted!=NULL)
+			free(numrows_inserted);
+		if(type_nullList!=NULL)
+			free(type_nullList);
+		if(sysIDList!=NULL)
+			free(sysIDList);
+			
 		return (status+rescode);
 	}
-
 
 #if defined(__cplusplus) || defined(c_plusplus)
 }

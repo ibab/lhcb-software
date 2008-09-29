@@ -137,7 +137,8 @@ int ShowErrors (sword status, OCIError *errhp, const char* log)
 	case OCI_SUCCESS_WITH_INFO:
 		OCIErrorGet (errhp, 1, 0, &errcode, errbuf, sizeof(errbuf), OCI_HTYPE_ERROR);
 		printf("Error - OCI_SUCCESS_WITH_INFO %s and errbuf: %s\n", log,errbuf);
-		return errcode;
+		//return errcode;
+		return 0;
 	case OCI_NEED_DATA:
 		printf("Error - OCI_NEED_DATA %s\n", log);
 		return status;
@@ -251,7 +252,7 @@ int GetSubsystemID(char * sysnameList)
 			strcpy(sysname,sysnameList);
 		else
 		{
-			std::cout<<"value of sysname ="<<sysnameList[pos1]<<std::endl;
+			//std::cout<<"value of sysname ="<<sysnameList[pos1]<<std::endl;
 			check_needed=1;
 			if(sysnameList[pos1]!=' ')
 				strncpy(sysname,sysnameList+pos1,pos);
@@ -265,6 +266,7 @@ int GetSubsystemID(char * sysnameList)
 		}
 		sysname[pos]='\0';
 		//std::cout<<"value of sysname ="<<sysname<<"and pos= "<<pos<<std::endl;
+		std::cout<<"value of sysname ="<<sysname<<std::endl;
 		while(stop==0 && i<_nb_of_subsystem)
 		{
 			if(strcmp(sysname,_list_of_subsystemname[i])==0)
@@ -492,9 +494,13 @@ int GetDeviceStatus(int devstatus,char* device_status)
 
 }
 //////////////
-int DefineByPos(OCIStmt* stmthp,OCIDefine** def, OCIError* ociError, int pos, char* valuep, sb4 value_sz, sword* status){
+int DefineByPos(OCIStmt* stmthp,OCIDefine** def, OCIError* ociError, int pos,  dvoid* valuep, sb4 value_sz, ub2 dtype, sword* status){
 	Error err;
-	*status =OCIDefineByPos(stmthp, &def[pos-1], ociError,pos, (ub1 *) (valuep), value_sz,SQLT_STR, (dvoid *)0,(ub2 *) 0,0, OCI_DEFAULT);
+	*status=OCIDefineByPos (stmthp, &def[pos-1],ociError, pos,valuep,value_sz, dtype, 0, 0, 0, OCI_DEFAULT);
+	if(*status==OCI_SUCCESS_WITH_INFO){
+		ShowErrors (*status, ociError, "") ;
+	}
+
 	if(*status != OCI_SUCCESS && *status != OCI_SUCCESS_WITH_INFO){	
 		err.ociError=ociError;
 		sprintf(err.log,"OCIDefineByPos (pos %i) unsuccessful",pos);
@@ -503,20 +509,13 @@ int DefineByPos(OCIStmt* stmthp,OCIDefine** def, OCIError* ociError, int pos, ch
 	}
 	return *status;
 }
-int DefineByPos(OCIStmt* stmthp,OCIDefine** def, OCIError* ociError, int pos, int* valuep, sword* status){
+int BindByName(OCIStmt* stmthp,OCIBind** bnd1p, OCIError* ociError, char* placeholder, dvoid* valuep,sb4 value_sz,ub2 dty,int* indp, sword* status){
 	Error err;
-	*status=OCIDefineByPos (stmthp, &def[pos-1],ociError, pos,valuep,sizeof(valuep), SQLT_INT, 0, 0, 0, OCI_DEFAULT);
-	if(*status != OCI_SUCCESS && *status != OCI_SUCCESS_WITH_INFO){	
-		err.ociError=ociError;
-		sprintf(err.log,"OCIDefineByPos (pos %i) unsuccessful",pos);
-		err.msg=" ";
-		throw err;
+	*status=OCIBindByName(stmthp, bnd1p, ociError,(text*)placeholder,-1, valuep,value_sz, dty, (dvoid*)indp,(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0, OCI_DEFAULT);
+	if(*status==OCI_SUCCESS_WITH_INFO){
+		ShowErrors (*status, ociError, "") ;
 	}
-	return *status;
-}
-int BindByName(OCIStmt* stmthp,OCIBind** bnd1p, OCIError* ociError, char* placeholder, char* valuep, sword* status){
-	Error err;
-	*status=OCIBindByName(stmthp, bnd1p, ociError,(text*)placeholder,-1,(dvoid*) valuep,strlen(valuep)+1, SQLT_STR, (dvoid *) 0,(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0, OCI_DEFAULT);
+
 	if(*status != OCI_SUCCESS && *status != OCI_SUCCESS_WITH_INFO){	
 		err.ociError=ociError;
 		sprintf(err.log,"OCIBindByName unsuccessful");
@@ -525,22 +524,12 @@ int BindByName(OCIStmt* stmthp,OCIBind** bnd1p, OCIError* ociError, char* placeh
 	}
 	return *status;
 }
-int BindByName(OCIStmt* stmthp,OCIBind** bnd1p, OCIError* ociError, char* placeholder, int* valuep, sword* status){
+int HandleAlloc(OCIEnv* ociEnv,dvoid** stmthp,ub4 type, sword* status){
 	Error err;
-   	*status=OCIBindByName(stmthp, bnd1p, ociError,(text*)placeholder,-1,(dvoid*) valuep,sizeof(*valuep), SQLT_INT, (dvoid *) 0,(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0, OCI_DEFAULT);
+	*status=OCIHandleAlloc (ociEnv, stmthp ,type, 0, 0);
+
 	if(*status != OCI_SUCCESS && *status != OCI_SUCCESS_WITH_INFO){	
-		err.ociError=ociError;
-		sprintf(err.log,"OCIBindByName unsuccessful");
-		err.msg=" ";
-		throw err;
-	}
-	return *status;
-}
-int HandleAlloc(OCIEnv* ociEnv,OCIStmt** stmthp,OCIError* ociError, sword* status){
-	Error err;
-	*status=OCIHandleAlloc (ociEnv, (void**)stmthp, OCI_HTYPE_STMT , 0, 0);
-	if(*status != OCI_SUCCESS && *status != OCI_SUCCESS_WITH_INFO){	
-		err.ociError=ociError;
+		err.ociError=0;
 		sprintf(err.log,"OCIHandleAlloc unsuccessful");
 		err.msg="NOT CONNECTED TO ANY DB";
 		throw err;
@@ -550,6 +539,10 @@ int HandleAlloc(OCIEnv* ociEnv,OCIStmt** stmthp,OCIError* ociError, sword* statu
 int StmtPrepare(OCIStmt* stmthp,OCIError* ociError, char* stmt, sword* status){
 	Error err;
 	*status=OCIStmtPrepare(stmthp, ociError, (text*) (stmt),(ub4) strlen(stmt),(ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
+	if(*status==OCI_SUCCESS_WITH_INFO){
+		ShowErrors (*status, ociError, "") ;
+	}
+
 	if(*status != OCI_SUCCESS && *status != OCI_SUCCESS_WITH_INFO){	
 		err.ociError=ociError;
 		sprintf(err.log,"OCIStmtPrepare unsuccessful");
@@ -558,9 +551,13 @@ int StmtPrepare(OCIStmt* stmthp,OCIError* ociError, char* stmt, sword* status){
 	}	
 	return *status;
 }
-int StmtExecute(OCISvcCtx* ociHdbc, OCIStmt* stmthp, OCIError* ociError, sword* status){
+int StmtExecute(OCISvcCtx* ociHdbc, OCIStmt* stmthp, OCIError* ociError,ub4 iters, sword* status){
 	Error err;
-	*status=OCIStmtExecute(ociHdbc, stmthp, ociError, 0, 0,(OCISnapshot *) 0, (OCISnapshot *) 0, OCI_DEFAULT);
+	*status=OCIStmtExecute(ociHdbc, stmthp, ociError, iters, 0,(OCISnapshot *) 0, (OCISnapshot *) 0, OCI_DEFAULT);
+	if(*status==OCI_SUCCESS_WITH_INFO){
+		ShowErrors (*status, ociError, "") ;
+	}
+
 	if(*status != OCI_SUCCESS && *status != OCI_SUCCESS_WITH_INFO){	
 		err.ociError=ociError;
 		sprintf(err.log,"OCIStmtExecute unsuccessful");
@@ -569,9 +566,28 @@ int StmtExecute(OCISvcCtx* ociHdbc, OCIStmt* stmthp, OCIError* ociError, sword* 
 	}	
 	return *status;
 }
+int TransCommit(OCISvcCtx *svchp,OCIError *errhp, ub4 flags, sword* status ){
+	Error err;
+	*status=OCITransCommit(svchp, errhp, flags);
+	if(*status==OCI_SUCCESS_WITH_INFO){
+		ShowErrors (*status, errhp, "") ;
+	}
+
+	if(*status != OCI_SUCCESS && *status != OCI_SUCCESS_WITH_INFO){	
+		err.ociError=errhp;
+		sprintf(err.log,"OCISTransCommit unsuccessful");
+		err.msg=" ";
+		throw err;
+	}	
+	return *status;
+}
 int ParamGet(OCIStmt* stmthp, OCIError* ociError, OCIParam** parmdp, int pos, sword* status){
 	Error err;
 	*status=OCIParamGet(stmthp, OCI_HTYPE_STMT, ociError,(dvoid **)parmdp, (ub4) pos);
+	if(*status==OCI_SUCCESS_WITH_INFO){
+		ShowErrors (*status, ociError, "") ;
+	}
+
 	if(*status != OCI_SUCCESS && *status != OCI_SUCCESS_WITH_INFO){	
 		err.ociError=ociError;
 		sprintf(err.log,"OCIParamGet unsuccessful");	
@@ -583,20 +599,13 @@ int ParamGet(OCIStmt* stmthp, OCIError* ociError, OCIParam** parmdp, int pos, sw
 int AttrGet(OCIParam* parmdp, sb4* attrval, OCIError* ociError, sword* status){
 	Error err;
 	*status=OCIAttrGet((dvoid*) parmdp, (ub4) OCI_DTYPE_PARAM,(dvoid*) attrval, (ub4 *) 0, (ub4) OCI_ATTR_DATA_SIZE,(OCIError *) ociError);
+	if(*status==OCI_SUCCESS_WITH_INFO){
+		ShowErrors (*status, ociError, "") ;
+	}
+
 	if(*status != OCI_SUCCESS && *status != OCI_SUCCESS_WITH_INFO){	
 		err.ociError=ociError;
 		sprintf(err.log,"OCIAttrGet unsuccessful");
-		err.msg=" ";
-		throw err;
-	}	
-	return *status;
-}
-int AttrSet (OCIStmt* stmthp,int* attributep,OCIError* ociError, sword* status){
-	Error err;
-	*status=OCIAttrSet (stmthp,OCI_HTYPE_STMT,attributep,0,OCI_ATTR_PREFETCH_ROWS,ociError);
-	if(*status != OCI_SUCCESS && *status != OCI_SUCCESS_WITH_INFO){	
-		err.ociError=ociError;
-		sprintf(err.log,"OCIAttrSet unsuccessful");
 		err.msg=" ";
 		throw err;
 	}	
@@ -608,4 +617,86 @@ void RemoveSeparator(char* attribute_value, char* separator)
 	int pos;
 	pos=strcspn(attribute_value,separator);
 	attribute_value[pos]='\0';
+}
+//////////////////////////////
+//from connection:
+//////////////////////////////
+int EnvCreate(OCIEnv*& myenvhp, sword* status){
+	Error err;
+	*status=OCIEnvCreate(&myenvhp, OCI_DEFAULT, (dvoid *)0,0, 0, 0, (size_t) 0, (dvoid **)0);
+	if(*status != OCI_SUCCESS && *status != OCI_SUCCESS_WITH_INFO){	
+		sprintf(err.log,"OCIEnvCreate unsuccessful");
+		err.msg="";
+		throw err;
+	}
+	return *status;
+}
+int ServerAttach(OCIServer* srvhp,OCIError* errhp,char* dblink, sword* status){
+	Error err;
+	*status=OCIServerAttach (srvhp, errhp,(text*) dblink,strlen(dblink), OCI_DEFAULT);
+	if(*status==OCI_SUCCESS_WITH_INFO){
+		ShowErrors (*status, errhp, "") ;
+	}
+
+	if(*status != OCI_SUCCESS && *status != OCI_SUCCESS_WITH_INFO){	
+		sprintf(err.log,"OCIServerAttach unsuccessful");
+		err.msg="";
+		throw err;
+	}
+	return *status;
+}
+int AttrSet (dvoid* hndlp,ub4 hndltype,dvoid* attributep, ub4 sizep, ub4 attrtype,OCIError* ociError, sword* status){
+	Error err;
+	*status=OCIAttrSet (hndlp,hndltype,attributep, sizep, attrtype, ociError);
+	if(*status==OCI_SUCCESS_WITH_INFO){
+		ShowErrors (*status, ociError, "") ;
+	}
+
+	if(*status != OCI_SUCCESS && *status != OCI_SUCCESS_WITH_INFO){	
+		err.ociError=ociError;
+		sprintf(err.log,"OCIAttrSet unsuccessful");
+		err.msg=" ";
+		throw err;
+	}	
+	return *status;
+}
+int SessionBegin(OCISvcCtx *svchp,OCIError *errhp,OCISession *usrhp,ub4 credt,sword* status){
+	Error err;
+	*status=OCISessionBegin(svchp, errhp, usrhp,credt, OCI_DEFAULT);
+	if(*status==OCI_SUCCESS_WITH_INFO){
+			ShowErrors (*status, errhp, "") ;
+		}
+	if(*status != OCI_SUCCESS && *status != OCI_SUCCESS_WITH_INFO){	
+		err.ociError=errhp;
+		sprintf(err.log,"OCISessionBegin unsuccessful");
+		err.msg=" ";
+		throw err;
+	}	
+	return *status;
+}
+int BindArrayOfStruct(OCIBind *bindp,OCIError *errhp,ub4 pvskip,ub4 indskip,sword* status ){
+	Error err;
+	*status=OCIBindArrayOfStruct(bindp,errhp,pvskip,indskip,0,0);
+	if(*status==OCI_SUCCESS_WITH_INFO){
+			ShowErrors (*status, errhp, "") ;
+		}
+	if(*status != OCI_SUCCESS && *status != OCI_SUCCESS_WITH_INFO){	
+		err.ociError=errhp;
+		sprintf(err.log,"OCIBindArrayOfStruct unsuccessful");
+		err.msg=" ";
+		throw err;
+	}	
+	return *status;
+}
+/////////////////////////////
+int null_charptr(char* ptr_name, int* len)
+{
+	*len=0;
+	int value_ptr=0;
+	if(ptr_name==NULL)
+		value_ptr=-1;
+	else *len=strlen(ptr_name)+1;
+
+	return value_ptr;
+
 }

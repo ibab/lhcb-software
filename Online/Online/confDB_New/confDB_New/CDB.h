@@ -251,4 +251,378 @@ public:
   void deleteConnectivity();
 };
 
+////////////////////////////////////
+class Device
+{
+public:
+	char* name;
+	char* serialnb;
+	char* location;
+	char* type;
+	char* responsible;
+	char* comments;
+	char* hwtype;
+	char* system;
+	char* function;
+
+	int name_null;
+	int location_null;
+	int serialnb_null;
+	int type_null;
+	int hwtype_null;
+	int comments_null;
+	int responsible_null;
+	int function_null;
+
+	int namelen;
+	int serialnblen;
+	int locationlen;
+	int typelen;
+	int responsiblelen;
+	int commentslen;
+	int hwtypelen;
+	int systemlen;
+	int functionlen;
+	
+	int sysID;
+	int node;
+	int prom_mode;
+
+	Device(void);
+	~Device(void);
+	Device(char* systemnameList,char* devicename,char* devicetype,int dnode,int promiscuous_mode,char* serial_nb,char* dhwtype,char* dresponsible,char* dcomments,char* dlocation,char* function_list);
+};
+class Cpnt: public Device
+{
+public: 
+	char* motherboard;
+	int motherboard_null;
+	int motherboardlen;
+
+	int replacable;
+
+	Cpnt(void);
+	~Cpnt(void);
+	Cpnt(char* cpntname,char* cpnttype,int dreplacable,char* motherboardname,char* serial_nb,char* dhwtype,char* dresponsible,char* dcomments,char* dlocation);
+};
+class DevType
+{
+public:
+	char* type;
+	char* rgbcol;
+	char* descrip;
+
+	int type_null;
+	int rgbcol_null;
+	int descrip_null;
+
+	int typelen;
+	int rgbcollen;
+	int descriplen;
+
+	int sysID;
+	int nbin;
+	int nbout;
+
+	DevType(void);
+	~DevType(void);
+	DevType(char* systemnameList,char* devicetype,int nbrofinput,int nbrofoutput, char* description,char* rgbcolor);
+};
+class LinkType
+{
+public:
+	char* ltype;
+	char* lklist;
+	int ltype_null;
+	int ltypelen;
+	int lklist_null;
+	int lklistlen;
+
+	LinkType(void);
+	~LinkType(void);
+	LinkType(char* name);
+	LinkType(char* name, char* list);
+};
+class Link
+{
+public:
+    char* nodefrom;
+	char* nodeto;
+	char* linktype;
+
+	int bidirectional_lkused;
+		
+	int nodefrom_null;
+	int nodeto_null;
+	int linktype_null;
+
+	int nodefromlen;
+	int nodetolen;
+	int linktypelen;
+
+	Link(void);
+	~Link(void);
+};
+class MacroLink: public Link
+{
+public:
+	
+	char* lkinfo;	
+	char* portnbfrom;	
+	char* portnbto;
+	char* portypefrom;
+	char* portypeto;
+	
+	int portnbfrom_null;	
+	int portnbto_null;
+	int portypefrom_null;
+	int portypeto_null;	
+	int lkinfo_null;
+	
+	int lkinfolen;
+	int portnbfromlen;	
+	int portnbtolen;
+	int portypefromlen;
+	int portypetolen;
+	
+	MacroLink();
+	~MacroLink();
+	MacroLink(char* node_from,char* node_to,char* port_nbfrom,char* port_nbto,char* port_typefrom,char* port_typeto,char* link_type,char* link_information,int bidirectional_link_used);
+};
+class MicroLink: public Link
+{
+public:
+	int portnbfrom;	
+	int portnbto;
+	
+	MicroLink();
+	~MicroLink();
+	MicroLink(char* node_from,char* node_to,int port_nbfrom,int port_nbto,char* link_type,int bidirectional_link_used);
+};
+class SparePort
+{
+public:
+	char* serial;
+	char* portype;
+	char* dbia;
+	char* mac;	
+	char* portnb;
+
+	int portway;
+	
+	int serial_null;
+	int portype_null;
+	int dbia_null;
+	int mac_null;
+	int portnb_null;
+
+	int seriallen;
+	int portypelen;
+	int dbialen;
+	int maclen;
+	int portnblen;
+
+	SparePort();
+	~SparePort();
+	SparePort(char* serialnb,char* port_nb,int port_way,char* port_type,char* bia,char* macadd);
+};
+class Port
+{
+public:
+	char* devname;
+	char* dphy;
+	char* portype;
+	char* dbia;
+	char* mac;
+	char* ip;
+	char* dipname;
+	char* dsubnet;
+	char* portnb;
+
+	int adminstatus;
+	int portway;
+	int pspeed;
+	int pxibooting;
+
+	int devname_null;
+	int dphy_null;
+	int portype_null;
+	int dbia_null;
+	int mac_null;
+	int ip_null;
+	int dipname_null;
+	int dsubnet_null;
+	int portnb_null;
+
+	int devnamelen;
+	int dphylen;
+	int portypelen;
+	int dbialen;
+	int maclen;
+	int iplen;
+	int dipnamelen;
+	int dsubnetlen;
+	int portnblen;
+
+	Port();
+	~Port();
+	Port(char* devicename,char* port_nb,int admin_status,int port_way,int speed,int pxi_booting,char* port_type,char* bia,char* ipadd,char* ipname,char* subnet,char* macadd,char* phy);
+};
+class IPAlias
+{
+public:
+	char* ip;
+	char* dipname;
+	char* dipalias;
+	
+	int ip_null;
+	int dipname_null;
+	int dipalias_null;
+	
+	int iplen;
+	int dipnamelen;
+	int dipaliaslen;
+	
+	IPAlias();
+	~IPAlias();
+	IPAlias(char* ipaddress,char* ipname,char* ipalias);
+};
+class UpdtPort
+{
+public:
+	char* devname;
+	char* dphy;
+	char* portype;
+	char* portnb;
+
+	int portway;
+	int pspeed;
+	int pxibooting;
+	int adminstatus;
+
+	int devname_null;
+	int dphy_null;
+	int portype_null;
+	int portnb_null;
+
+	int devnamelen;
+	int dphylen;
+	int portypelen;
+	int portnblen;
+
+	UpdtPort();
+	~UpdtPort();
+	UpdtPort(char* devicename,char* port_nb,int port_way,char* port_type,int speed,char* phy,int pxi_booting);
+	UpdtPort(char* devicename,char* port_nb,int port_way,char* port_type,int admin_status);
+};
+class UpdtLink: public Link
+{
+public:
+	char* portnbfrom;	
+	char* portnbto;
+	char* portypefrom;
+	char* portypeto;
+	char* lkinfo;
+
+	int linkused;
+	
+	int portnbfrom_null;	
+	int portnbto_null;
+	int portypefrom_null;
+	int portypeto_null;	
+	int lkinfo_null;
+		
+	int portnbfromlen;	
+	int portnbtolen;
+	int portypefromlen;
+	int portypetolen;
+	int lkinfolen;
+	
+	UpdtLink();
+	~UpdtLink();
+	
+	UpdtLink(char* node_from,char* node_to,char* port_nbrfrom,char* port_nbrto,char* port_typefrom,char* port_typeto,int lkused,char* link_information, char* link_type, int bidirectional_link_used);
+};
+class UpdtDevice
+{
+	public:
+	char* name;
+	char* nameold;			
+	char* dlocation;
+	char* function;
+
+	int name_null;
+	int nameold_null;
+	int location_null;
+	int function_null;
+
+	int namelen;
+	int nameoldlen;
+	int locationlen;
+	int functionlen;
+	
+	int sysID;
+	int dnode;
+	int prom_mode;
+	int nused;
+	int act;
+
+	UpdtDevice(void);
+	~UpdtDevice(void);
+	UpdtDevice(char* devicename,int node,int promiscuous_mode,char* location,char* function_list);
+	UpdtDevice(char* devicename_old,char* devicename);
+	UpdtDevice(char* devicename,int nodeused,int active=NULL);
+};
+class UpdtDevType: public DevType
+{
+public:
+	char* typeold;
+	int typeold_null;
+	int typeoldlen;
+	
+	UpdtDevType(void);
+	~UpdtDevType(void);
+	UpdtDevType(char* devicetypeold,char* devicetype);
+};
+class UpdtLinkType: public LinkType
+{
+public:
+	char* typeold;
+	int typeold_null;
+	int typeoldlen;
+
+	UpdtLinkType(void);
+	~UpdtLinkType(void);
+	UpdtLinkType(char *old_link_name, char *link_name);
+};
+class macIP
+{
+public:
+	char* ipadd;
+	char* iname;
+	char* submask;
+			
+	int ipadd_null;
+	int iname_null;
+	int submask_null;
+	
+	int ipaddlen;
+	int inamelen;
+	int submasklen;
+	
+	macIP(void);
+	~macIP(void);
+	macIP(char* ip_add,char* subnet_mask,char* ipname);
+};
+class UpdtmacIP: public macIP
+{
+public:
+	char* ipaddold;
+	int ipaddold_null;
+	int ipaddoldlen;
+
+	UpdtmacIP(void);
+	~UpdtmacIP(void);
+	UpdtmacIP(char* ip_add,char* oldip_add);
+};
 #endif

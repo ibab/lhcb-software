@@ -69,13 +69,19 @@ extern "C" {
 	//////////////////
 
 
-	extern char* _ipnameList;
+	/*extern char* _ipnameList;
 	extern int _max_ipname_len;
 	extern int _ipnameNbElement;
 	extern int _ipnameList_len;
 
 	extern int* _ipname_nullvalue;
-	extern int _ipnameNbEl;
+	extern int _ipnameNbEl;*/
+	char* _ipnameList;
+	int _max_ipname_len;
+	int _ipnameNbElement;
+	int _ipnameList_len;
+	int* _ipname_nullvalue;
+	int _ipnameNbEl;
 
 
 	char* _devicenameList3;

@@ -1381,7 +1381,7 @@ int DBContainer::GetDetailedConnBetweenDeviceDevType(char* dev_from, char* dev_t
 
 	HopTyp hop[1000];
 	int i = 0,k, enres;
-	char* type;
+	char* type=	(char*)malloc(100*sizeof(char));
 	int system_name=1;
 
 	if (reload_connectivity==1)	{
@@ -2444,3 +2444,422 @@ end:;
 end:;
     return nrows;
   }
+///////////////
+Device::Device(void)
+{
+}
+Device::~Device()
+{
+}
+Device::Device(char* systemnameList,char* devicename,char* devicetype,int dnode,int promiscuous_mode,char* serial_nb,char* dhwtype,char* dresponsible,char* dcomments,char* dlocation,char* function_list)
+{
+	name=devicename;
+	serialnb=serial_nb;
+	location=dlocation;
+	type=devicetype;
+	responsible=dresponsible;
+	comments=dcomments;
+	hwtype=dhwtype;
+	system=systemnameList;/////////////////////////////
+	function=function_list;
+
+	
+	name_null=null_charptr(devicename,&namelen);
+	location_null=null_charptr(dlocation,&locationlen);
+	serialnb_null=null_charptr(serial_nb,&serialnblen);
+	type_null=null_charptr(devicetype,&typelen);
+	hwtype_null=null_charptr(dhwtype,&hwtypelen);
+	comments_null=null_charptr(dcomments,&commentslen);
+	responsible_null=null_charptr(dresponsible,&responsiblelen);
+	function_null=null_charptr(function_list,&functionlen);
+
+	node=dnode;
+	prom_mode=promiscuous_mode;
+}
+Cpnt::Cpnt()
+{
+}
+Cpnt::~Cpnt()
+{
+}
+Cpnt::Cpnt(char* cpntname,char* cpnttype,int dreplacable,char* motherboardname,char* serial_nb,char* dhwtype,char* dresponsible,char* dcomments,char* dlocation)
+{
+	
+	name=cpntname;
+	type=cpnttype;
+	motherboard=motherboardname;
+	serialnb=serial_nb;
+	hwtype=dhwtype;
+	responsible=dresponsible;
+	comments=dcomments;
+	location=dlocation;	
+
+	replacable=dreplacable;
+	
+	name_null=null_charptr(cpntname,&namelen);
+	type_null=null_charptr(cpnttype,&typelen);
+	motherboard_null=null_charptr(motherboard,&motherboardlen);
+	serialnb_null=null_charptr(serial_nb,&serialnblen);
+	hwtype_null=null_charptr(dhwtype,&hwtypelen);
+	responsible_null=null_charptr(dresponsible,&responsiblelen);
+	comments_null=null_charptr(dcomments,&commentslen);
+	location_null=null_charptr(dlocation,&locationlen);
+}
+DevType::DevType()
+{
+}
+DevType::~DevType()
+{
+}
+DevType::DevType(char* systemnameList,char* devicetype,int nbrofinput,int nbrofoutput, char* description,char* rgbcolor)
+{
+	type=devicetype;
+	rgbcol=rgbcolor;
+	descrip=description;
+
+	nbin=nbrofinput;
+	nbout=nbrofoutput;
+
+	type_null=null_charptr(devicetype,&typelen);
+	rgbcol_null=null_charptr(rgbcolor,&rgbcollen);
+	descrip_null=null_charptr(description,&descriplen);
+
+}
+LinkType::LinkType()
+{
+}
+LinkType::~LinkType()
+{
+}
+LinkType::LinkType(char* name)
+{
+	ltype=name;
+	ltype_null=null_charptr(name,&ltypelen);
+}
+LinkType::LinkType(char* name, char* list)
+{
+	ltype=name;
+	ltype_null=null_charptr(name,&ltypelen);
+
+	lklist=list;
+	lklist_null=null_charptr(list,&lklistlen);
+}
+Link::Link()
+{
+}
+Link::~Link()
+{
+}
+MacroLink::MacroLink()
+{
+}
+MacroLink::~MacroLink()
+{
+}
+MacroLink::MacroLink(char* node_from,char* node_to,char* port_nbfrom,char* port_nbto,char* port_typefrom,char* port_typeto,char* link_type,char* link_information,int bidirectional_link_used)
+{
+	nodefrom=node_from;
+	nodeto=node_to;
+	portnbfrom=port_nbfrom;
+	portypefrom=port_typefrom;
+	portnbto=port_nbto;
+	portypeto=port_typeto;
+	lkinfo=link_information;
+	linktype=link_type;
+	bidirectional_lkused=bidirectional_link_used;
+
+	nodefrom_null=null_charptr(node_from,&nodefromlen);
+	nodeto_null=null_charptr(node_to,&nodetolen);
+	portnbfrom_null=null_charptr(port_nbfrom,&portnbfromlen);
+	portypefrom_null=null_charptr(port_typefrom,&portypefromlen);
+	portnbto_null=null_charptr(port_nbto,&portnbtolen);
+	portypeto_null=null_charptr(port_typeto,&portypetolen);
+	lkinfo_null=null_charptr(link_information, &lkinfolen);
+	linktype_null=null_charptr(link_type,&linktypelen);
+}
+MicroLink::MicroLink()
+{
+}
+MicroLink::~MicroLink()
+{
+}
+MicroLink::MicroLink(char* node_from,char* node_to,int port_nbfrom,int port_nbto,char* link_type,int bidirectional_link_used)
+{
+	nodefrom=node_from;
+	nodeto=node_to;
+	portnbfrom=port_nbfrom;
+	portnbto=port_nbto;
+	linktype=link_type;
+	bidirectional_lkused=bidirectional_link_used;
+
+	nodefrom_null=null_charptr(node_from,&nodefromlen);
+	nodeto_null=null_charptr(node_to,&nodetolen);
+	linktype_null=null_charptr(link_type,&linktypelen);
+}
+Port::Port()
+{
+}
+Port::~Port()
+{
+}
+Port::Port(char* devicename,char* port_nb,int admin_status,int port_way,int speed,int pxi_booting,char* port_type,char* bia,char* ipadd,char* ipname,char* subnet,char* macadd,char* phy)
+{
+	devname=devicename;
+	dphy=phy;
+	portype=port_type;
+	dbia=bia;
+	mac=macadd;
+	ip=ipadd;
+	dipname=ipname;
+	dsubnet=subnet;
+	portnb=port_nb;
+
+	adminstatus=admin_status;
+	portway=port_way;
+	pspeed=speed;
+	pxibooting=pxi_booting;
+
+	devname_null=null_charptr(devname,&devnamelen);
+	dphy_null=null_charptr(dphy,&dphylen);
+	portype_null=null_charptr(portype,&portypelen);
+	dbia_null=null_charptr(dbia,&dbialen);
+	mac_null=null_charptr(mac,&maclen);
+	ip_null=null_charptr(ip,&iplen);
+	dipname_null=null_charptr(dipname,&dipnamelen);
+	dsubnet_null=null_charptr(dsubnet,&dsubnetlen);
+	portnb_null=null_charptr(portnb,&portnblen);
+}
+SparePort::SparePort()
+{
+}
+SparePort::~SparePort()
+{
+}
+SparePort::SparePort(char* serialnb,char* port_nb,int port_way,char* port_type,char* bia,char* macadd)
+{
+	serial=serialnb;
+	portnb=port_nb;
+	portype=port_type;
+	dbia=bia;
+	mac=macadd;
+	
+	portway=port_way;
+	
+	serial_null=null_charptr(serial,&seriallen);
+	portnb_null=null_charptr(portnb,&portnblen);
+	portype_null=null_charptr(portype,&portypelen);
+	dbia_null=null_charptr(dbia,&dbialen);
+	mac_null=null_charptr(mac,&maclen);
+}
+IPAlias::IPAlias()
+{
+}
+IPAlias::~IPAlias()
+{
+}
+IPAlias::IPAlias(char* ipaddress,char* ipname,char* ipalias)
+{
+	ip=ipaddress;
+	dipname=ipname;
+	dipalias=ipalias;
+	
+	ip_null=null_charptr(ip,&iplen);
+	dipname_null=null_charptr(dipname,&dipnamelen);
+	dipalias_null=null_charptr(dipalias,&dipaliaslen);
+}
+UpdtPort::UpdtPort()
+{
+}
+UpdtPort::~UpdtPort()
+{
+}
+UpdtPort::UpdtPort(char* devicename,char* port_nb,int port_way,char* port_type,int speed,char* phy,int pxi_booting)
+{
+	devname=devicename;
+	dphy=phy;
+	portype=port_type;
+	portnb=port_nb;
+
+	portway=port_way;
+	pspeed=speed;
+	pxibooting=pxi_booting;
+	adminstatus=NULL;
+
+	devname_null=null_charptr(devname,&devnamelen);
+	dphy_null=null_charptr(dphy,&dphylen);
+	portype_null=null_charptr(portype,&portypelen);
+	portnb_null=null_charptr(portnb,&portnblen);
+}
+UpdtPort::UpdtPort(char* devicename,char* port_nb,int port_way,char* port_type,int admin_status)
+{
+	devname=devicename;
+	dphy=NULL;
+	portype=port_type;
+	portnb=port_nb;
+
+	portway=port_way;
+	pspeed=NULL;
+	pxibooting=NULL;
+	adminstatus=admin_status;
+
+	dphy_null=NULL;
+	dphylen=NULL;
+
+	devname_null=null_charptr(devname,&devnamelen);
+	portype_null=null_charptr(portype,&portypelen);
+	portnb_null=null_charptr(portnb,&portnblen);
+
+}
+UpdtLink::UpdtLink()
+{
+}
+UpdtLink::~UpdtLink()
+{
+}
+UpdtLink::UpdtLink(char* node_from,char* node_to,char* port_nbrfrom,char* port_nbrto,char* port_typefrom,char* port_typeto,int lkused,char* link_information, char* link_type, int bidirectional_link_used)
+{
+	nodefrom=node_from;
+	nodeto=node_to;
+	portnbfrom=port_nbrfrom;
+	portnbto=port_nbrto;
+	portypefrom=port_typefrom;	
+	portypeto=port_typeto;
+	lkinfo=link_information;
+	linktype=link_type;
+
+	bidirectional_lkused=bidirectional_link_used;
+	linkused=lkused;	
+	
+	nodefrom_null=null_charptr(node_from,&nodefromlen);
+	nodeto_null=null_charptr(node_to,&nodetolen);
+	portnbfrom_null=null_charptr(portnbfrom,&portnbfromlen);
+	portypefrom_null=null_charptr(port_typefrom,&portypefromlen);
+	portnbto_null=null_charptr(portnbto,&portnbtolen);
+	portypeto_null=null_charptr(port_typeto,&portypetolen);
+	lkinfo_null=null_charptr(lkinfo,&lkinfolen);
+	linktype_null=null_charptr(linktype,&linktypelen);
+}
+UpdtDevice::UpdtDevice(void)
+{
+}
+UpdtDevice::~UpdtDevice()
+{
+}
+UpdtDevice::UpdtDevice(char* devicename,int node,int promiscuous_mode,char* location,char* function_list)
+{
+	name=devicename;
+	dlocation=location;
+	function=function_list;
+	nameold=NULL;
+	
+	name_null=null_charptr(devicename,&namelen);
+	location_null=null_charptr(dlocation,&locationlen);
+	function_null=null_charptr(function_list,&functionlen);
+
+	nameold_null=NULL;
+	nameoldlen=NULL;
+	dnode=node;
+	prom_mode=promiscuous_mode;
+	nused=NULL;
+	act=NULL;
+	sysID=NULL;
+}
+UpdtDevice::UpdtDevice(char* devicename,int nodeused,int active)
+{
+	name=devicename;
+	dlocation=NULL;
+	function=NULL;
+	nameold=NULL;
+
+	name_null=null_charptr(devicename,&namelen);
+	location_null=NULL;
+	nameold_null=NULL;
+	locationlen=NULL;
+	function_null=NULL;
+	functionlen=NULL;
+	nameoldlen=NULL;
+
+	nused=nodeused;
+	dnode=NULL;
+	prom_mode=NULL;
+	act=active;
+	sysID=NULL;
+}
+UpdtDevice::UpdtDevice(char* devicename_old,char* devicename)
+{
+	name=devicename;
+	dlocation=NULL;
+	function=NULL;
+	nameold=devicename_old;
+
+	name_null=null_charptr(devicename,&namelen);
+	nameold_null=null_charptr(nameold,&nameoldlen);
+	location_null=NULL;
+	locationlen=NULL;
+	function_null=NULL;
+	functionlen=NULL;
+
+	act=NULL;
+	nused=NULL;
+	dnode=NULL;
+	prom_mode=NULL;
+	sysID=NULL;
+}
+UpdtDevType::UpdtDevType()
+{
+}
+UpdtDevType::~UpdtDevType()
+{
+}
+UpdtDevType::UpdtDevType(char* devicetypeold,char* devicetype)
+{
+	type=devicetype;
+	typeold=devicetypeold;
+
+	type_null=null_charptr(devicetype,&typelen);
+	typeold_null=null_charptr(devicetypeold,&typeoldlen);
+}
+UpdtLinkType::UpdtLinkType()
+{
+}
+UpdtLinkType::~UpdtLinkType()
+{
+}
+UpdtLinkType::UpdtLinkType(char *old_link_name, char *link_name)
+{
+	ltype=link_name;
+	ltype_null=null_charptr(ltype,&ltypelen);
+
+	typeold=old_link_name;
+	typeold_null=null_charptr(typeold,&typeoldlen);
+}
+macIP::macIP()
+{
+}
+macIP::~macIP()
+{
+}
+macIP::macIP(char* ip_add,char* subnet_mask,char* ipname)
+{
+	ipadd=ip_add;
+	iname=ipname;
+	submask=subnet_mask;	
+
+	ipadd_null=null_charptr(ipadd,&ipaddlen);
+	iname_null=null_charptr(iname,&inamelen);
+	submask_null=null_charptr(submask,&submasklen);
+}
+UpdtmacIP::UpdtmacIP()
+{
+}
+UpdtmacIP::~UpdtmacIP()
+{
+}
+UpdtmacIP::UpdtmacIP(char* ip_add,char* oldip_add)
+{
+	ipadd=ip_add;
+	ipaddold=oldip_add;
+
+	ipadd_null=null_charptr(ipadd,&ipaddlen);
+	ipaddold_null=null_charptr(ipaddold,&ipaddoldlen);
+}

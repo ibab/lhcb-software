@@ -315,11 +315,13 @@ extern "C" {
 		else
 			status=OCISessionBegin(mysvchp, myerrhp, myusrhp1,OCI_CRED_RDBMS, OCI_DEFAULT);
 
-		if(status!= OCI_SUCCESS)
+		//if(status!= OCI_SUCCESS)
+		if(status!= OCI_SUCCESS && status!= OCI_SUCCESS_WITH_INFO)
 		{
 			char log[1000];
 			ShowErrors ( status, myerrhp, log) ;
 			if(rescode==0)
+			//if((status!= OCI_SUCCESS_WITH_INFO)&&(rescode==0))///////////
 			{
 				status=Disconnect(myenvhp,myerrhp,mysrvhp1,myusrhp1, mysvchp,count_free,errmessg);
 				if(status==OCI_SUCCESS)
@@ -327,13 +329,19 @@ extern "C" {
 				rescode= -1;
 			}
 		}
+		
 		else
 		{
+			if(status==OCI_SUCCESS_WITH_INFO){
+				//char log[100];
+				ShowErrors ( status, myerrhp, "") ;
+			}
+
 			/* set the user session attribute in the service context handle*/
 			status=OCIAttrSet ( (dvoid *)mysvchp, OCI_HTYPE_SVCCTX,(dvoid *)myusrhp1, (ub4) 0, OCI_ATTR_SESSION, myerrhp);
 		}
 
-		if(status!= OCI_SUCCESS)
+		if(status!= OCI_SUCCESS)// && status!= OCI_SUCCESS_WITH_INFO)/////////////
 		{ 
 			if(rescode==0)
 			{

@@ -61,15 +61,13 @@ EXTERN_CONFDB
 		}
 		
 		try{
-			HandleAlloc(ociEnv,&stmthp,ociError,&status);
-			
+			HandleAlloc(ociEnv,(dvoid**)&stmthp,OCI_HTYPE_STMT,&status);
+						
 			char selectdevtype[1000];
 			sprintf(selectdevtype,"select devicetype||'?',devicetypeID,nbrofinput,nbrofoutput, nvl(description,'none')||'?',nvl(rgbcolor,'none')||'?',nvl(system_name,-1) from %s where devicetype=:dtype ",DEVICETYPE_TABLE);
-	
 			StmtPrepare(stmthp,ociError, selectdevtype,&status);
-			BindByName(stmthp,&bnd1p,ociError,":dtype",devitype,&status);
-			StmtExecute(ociHdbc, stmthp, ociError, &status);
-
+			BindByName(stmthp,&bnd1p,ociError,":dtype",devitype,strlen(devitype)+1, SQLT_STR, 0,&status);
+			StmtExecute(ociHdbc, stmthp, ociError, 0,&status);
 			ParamGet(stmthp, ociError, &parmdp, 1, &status);
 			AttrGet(parmdp, &devtypelen, ociError, &status);
 			ParamGet(stmthp, ociError, &parmdp, 5, &status);
@@ -97,14 +95,14 @@ EXTERN_CONFDB
 				return rescode;
 			}
 			
-			DefineByPos(stmthp,def,ociError,1, devicetype_temp,devtypelen+1,&status);							
-			DefineByPos(stmthp,def,ociError,2,&dtypeID,&status);				
-			DefineByPos(stmthp,def,ociError,3,&nbrofinput,&status);
-			DefineByPos(stmthp,def,ociError,4,&nbrofoutput,&status);
-			DefineByPos(stmthp,def,ociError,5, description_temp, descriptionlen + 1,&status);				
-			DefineByPos(stmthp,def,ociError,6, rgbcolor_temp, descriptionlen + 1,&status);	
-			DefineByPos(stmthp,def,ociError,7,&sysID,&status);		
-		
+			DefineByPos(stmthp,def,ociError,1, devicetype_temp,devtypelen+1,SQLT_STR,&status);							
+			DefineByPos(stmthp,def,ociError,2,&dtypeID,sizeof(dtypeID),SQLT_INT,&status);				
+			DefineByPos(stmthp,def,ociError,3,&nbrofinput,sizeof(nbrofinput),SQLT_INT,&status);
+			DefineByPos(stmthp,def,ociError,4,&nbrofoutput,sizeof(nbrofoutput),SQLT_INT,&status);
+			DefineByPos(stmthp,def,ociError,5, description_temp, descriptionlen + 1,SQLT_STR,&status);				
+			DefineByPos(stmthp,def,ociError,6, rgbcolor_temp, descriptionlen + 1,SQLT_STR,&status);	
+			DefineByPos(stmthp,def,ociError,7,&sysID,sizeof(sysID),SQLT_INT,&status);		
+					
 		}catch(Error err){
 			sprintf(appliName,"GetDeviceTypeRow");	///////
 			rescode=ShowErrors (status, err.ociError, err.log);
@@ -225,11 +223,11 @@ EXTERN_CONFDB
 			return -1;
 		}	
 		try{
-			HandleAlloc(ociEnv,&stmthp,ociError,&status);
+			HandleAlloc(ociEnv,(dvoid**)&stmthp,OCI_HTYPE_STMT,&status);
 			sprintf(selectdev,"select t.devicename||'?',e.devicetype||'?',t.active,t.node,t.deviceid,t.promiscuous_mode,nvl(t.location,'none')||'?',t.nodeused,t.serialnb||'?',nvl(t.system_name,-1),%s(t.functionID)||'?' from %s e,%s t where t.devicename=:dname and e.devicetypeID=t.devicetypeID",_DecomposeFctID,DEVICETYPE_TABLE,LOGICAL_DEVICE_TABLE);
 			StmtPrepare(stmthp,ociError, selectdev, &status);
-			BindByName(stmthp,&bnd1p,ociError,":dname",functionaldeviname,&status);
-			StmtExecute(ociHdbc, stmthp, ociError, &status);
+			BindByName(stmthp,&bnd1p,ociError,":dname",functionaldeviname,strlen(functionaldeviname)+1, SQLT_STR, 0,&status);
+			StmtExecute(ociHdbc, stmthp, ociError, 0, &status);
 			ParamGet(stmthp, ociError, &parmdp, 1, &status);
 			AttrGet(parmdp, &devlen, ociError, &status);
 			ParamGet(stmthp, ociError, &parmdp, 2, &status);
@@ -266,17 +264,17 @@ EXTERN_CONFDB
 				return rescode;
 			}
 			
-			DefineByPos(stmthp,def,ociError,1, devicename_temp,devlen + 1,&status);							
-			DefineByPos(stmthp,def,ociError,2, devicetype_temp,devtypelen+1,&status);		
-			DefineByPos(stmthp,def,ociError,3,&active,&status);			
-			DefineByPos(stmthp,def,ociError,4,&node,&status);
-			DefineByPos(stmthp,def,ociError,5,&deviceid,&status);
-			DefineByPos(stmthp,def,ociError,6,&promiscuous_mode,&status);
-			DefineByPos(stmthp,def,ociError,7, location_temp, locationlen+1,&status);				
-			DefineByPos(stmthp,def,ociError,8,&nodeused,&status);
-			DefineByPos(stmthp,def,ociError,9, serialnb_temp, serialnblen + 1,&status);	
-			DefineByPos(stmthp,def,ociError,10,&sysID,&status);
-			DefineByPos(stmthp,def,ociError,11, devicefunction_temp, devfunctionlen+1,&status);				
+			DefineByPos(stmthp,def,ociError,1, devicename_temp,devlen + 1,SQLT_STR,&status);							
+			DefineByPos(stmthp,def,ociError,2, devicetype_temp,devtypelen+1,SQLT_STR,&status);		
+			DefineByPos(stmthp,def,ociError,3,&active,sizeof(active),SQLT_INT,&status);			
+			DefineByPos(stmthp,def,ociError,4,&node,sizeof(node),SQLT_INT,&status);
+			DefineByPos(stmthp,def,ociError,5,&deviceid,sizeof(deviceid),SQLT_INT,&status);
+			DefineByPos(stmthp,def,ociError,6,&promiscuous_mode,sizeof(promiscuous_mode),SQLT_INT,&status);
+			DefineByPos(stmthp,def,ociError,7, location_temp, locationlen+1,SQLT_STR,&status);				
+			DefineByPos(stmthp,def,ociError,8,&nodeused,sizeof(nodeused),SQLT_INT,&status);
+			DefineByPos(stmthp,def,ociError,9, serialnb_temp, serialnblen + 1,SQLT_STR,&status);	
+			DefineByPos(stmthp,def,ociError,10,&sysID,sizeof(sysID),SQLT_INT,&status);
+			DefineByPos(stmthp,def,ociError,11, devicefunction_temp, devfunctionlen+1,SQLT_STR,&status);				
 		
 		}catch(Error err){
 			sprintf(appliName,"GetDeviceRow_devicename");	///////
@@ -403,11 +401,11 @@ EXTERN_CONFDB
 		char* sysIDlist=NULL;
 		
 		try{
-			HandleAlloc(ociEnv,&stmthp,ociError,&status);
+			HandleAlloc(ociEnv,(dvoid**)&stmthp,OCI_HTYPE_STMT,&status);
 			sprintf(selectdev,"select t.devicename||'?',e.devicetype||'?',t.active,t.node,t.deviceid,t.promiscuous_mode,nvl(t.location,'none')||'?',t.nodeused,t.serialnb,nvl(t.system_name,-1), %s(t.functionid)||'?' from %s t,%s e where t.deviceid=:dID and e.devicetypeID=t.devicetypeID",_DecomposeFctID,LOGICAL_DEVICE_TABLE,DEVICETYPE_TABLE);
 			StmtPrepare(stmthp,ociError, selectdev, &status);
-			BindByName(stmthp,&bnd1p,ociError,":dID",&deviceID,&status);
-			StmtExecute(ociHdbc, stmthp, ociError, &status);
+			BindByName(stmthp,&bnd1p,ociError,":dID",&deviceID,sizeof(deviceID),SQLT_INT,0,&status);
+			StmtExecute(ociHdbc, stmthp, ociError, 0, &status);
 			ParamGet(stmthp, ociError, &parmdp, 1, &status);
 			AttrGet(parmdp, &devlen, ociError, &status);
 			ParamGet(stmthp, ociError, &parmdp, 2, &status);
@@ -445,17 +443,17 @@ EXTERN_CONFDB
 				return rescode;
 			}
 		
-			DefineByPos(stmthp,def,ociError,1, devicename_temp,devlen + 1,&status);							
-			DefineByPos(stmthp,def,ociError,2, devicetype_temp,devtypelen+1,&status);		
-			DefineByPos(stmthp,def,ociError,3,&active,&status);			
-			DefineByPos(stmthp,def,ociError,4,&node,&status);
-			DefineByPos(stmthp,def,ociError,5,&deviceid,&status);
-			DefineByPos(stmthp,def,ociError,6,&promiscuous_mode,&status);
-			DefineByPos(stmthp,def,ociError,7, location_temp, locationlen+1,&status);				
-			DefineByPos(stmthp,def,ociError,8,&nodeused,&status);
-			DefineByPos(stmthp,def,ociError,9, serialnb_temp, serialnblen + 1,&status);	
-			DefineByPos(stmthp,def,ociError,10,&sysID,&status);
-			DefineByPos(stmthp,def,ociError,11, functiondev_temp, functiondevlen,&status);					
+			DefineByPos(stmthp,def,ociError,1, devicename_temp,devlen + 1,SQLT_STR,&status);							
+			DefineByPos(stmthp,def,ociError,2, devicetype_temp,devtypelen+1,SQLT_STR,&status);		
+			DefineByPos(stmthp,def,ociError,3,&active,sizeof(active),SQLT_INT,&status);			
+			DefineByPos(stmthp,def,ociError,4,&node,sizeof(node),SQLT_INT,&status);
+			DefineByPos(stmthp,def,ociError,5,&deviceid,sizeof(deviceid),SQLT_INT,&status);
+			DefineByPos(stmthp,def,ociError,6,&promiscuous_mode,sizeof(promiscuous_mode),SQLT_INT,&status);
+			DefineByPos(stmthp,def,ociError,7, location_temp, locationlen+1,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,8,&nodeused,sizeof(nodeused),SQLT_INT,&status);
+			DefineByPos(stmthp,def,ociError,9, serialnb_temp, serialnblen + 1,SQLT_STR,&status);	
+			DefineByPos(stmthp,def,ociError,10,&sysID,sizeof(sysID),SQLT_INT,&status);
+			DefineByPos(stmthp,def,ociError,11, functiondev_temp, functiondevlen,SQLT_STR,&status);					
 		
 		}catch(Error err){
 			sprintf(appliName,"GetDeviceRow_devid");	///////
@@ -587,11 +585,11 @@ EXTERN_CONFDB
 		char selectport[1000];
 		
 		try{
-			HandleAlloc(ociEnv,&stmthp,ociError,&status);
+			HandleAlloc(ociEnv,(dvoid**)&stmthp,OCI_HTYPE_STMT,&status);
 			sprintf(selectport,"select e.portid,t.devicename||'?',e.port_nbr||'?',e.port_way,e.administrative_status,nvl(e.speed,0),nvl(e.port_type,'None')||'?',nvl(e.phy,'None')||'?',nvl(e.pxi_booting,-1),nvl(f.bia,'None')||'?',nvl(f.macaddress,'None')||'?',nvl(e.ipaddress,'None')||'?' from %s e,%s t,%s f where e.portid=:portID and t.deviceid=e.deviceid and f.serialnb=t.serialnb and f.port_nbr=e.port_nbr and nvl(f.port_type,'none')=nvl(e.port_type,'none') and f.port_way=e.port_way",PORT_TABLE,LOGICAL_DEVICE_TABLE,HWPORT_TABLE);
 			StmtPrepare(stmthp,ociError, selectport, &status);
-			BindByName(stmthp,&bnd1p,ociError,":portID",&portID,&status);
-			StmtExecute(ociHdbc, stmthp, ociError, &status);
+			BindByName(stmthp,&bnd1p,ociError,":portID",&portID,sizeof(portID),SQLT_INT,0,&status);
+			StmtExecute(ociHdbc, stmthp, ociError, 0, &status);
 			ParamGet(stmthp, ociError, &parmdp, 2, &status);
 			AttrGet(parmdp, &dnamelen, ociError, &status);
 			ParamGet(stmthp, ociError, &parmdp, 3, &status);
@@ -639,18 +637,18 @@ EXTERN_CONFDB
 				GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
 				return rescode;
 			}
-			DefineByPos(stmthp,def,ociError,1,&portid,&status);			
-			DefineByPos(stmthp,def,ociError,2, dname_temp,dnamelen+1,&status);							
-			DefineByPos(stmthp,def,ociError,3, portnb_temp,portnblen+1,&status);		
-			DefineByPos(stmthp,def,ociError,4,&portway,&status);
-			DefineByPos(stmthp,def,ociError,5,&admin_status,&status);
-			DefineByPos(stmthp,def,ociError,6,&speed,&status);
-			DefineByPos(stmthp,def,ociError,7, portype_temp, portypelen+1,&status);	
-			DefineByPos(stmthp,def,ociError,8, phy_temp,phylen+1,&status);		
-			DefineByPos(stmthp,def,ociError,9,&pxi_booting,&status);
-			DefineByPos(stmthp,def,ociError,10, bia_temp, bialen + 1,&status);	
-			DefineByPos(stmthp,def,ociError,11, mac_temp, maclen+1,&status);				
-			DefineByPos(stmthp,def,ociError,12, ip_temp, iplen+1,&status);						
+			DefineByPos(stmthp,def,ociError,1,&portid,sizeof(portid),SQLT_INT,&status);			
+			DefineByPos(stmthp,def,ociError,2, dname_temp,dnamelen+1,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,3, portnb_temp,portnblen+1,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,4,&portway,sizeof(portway),SQLT_INT,&status);
+			DefineByPos(stmthp,def,ociError,5,&admin_status,sizeof(admin_status),SQLT_INT,&status);
+			DefineByPos(stmthp,def,ociError,6,&speed,sizeof(speed),SQLT_INT,&status);
+			DefineByPos(stmthp,def,ociError,7, portype_temp, portypelen+1,SQLT_STR,&status);	
+			DefineByPos(stmthp,def,ociError,8, phy_temp,phylen+1,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,9,&pxi_booting,sizeof(pxi_booting),SQLT_INT,&status);
+			DefineByPos(stmthp,def,ociError,10, bia_temp, bialen + 1,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,11, mac_temp, maclen+1,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,12, ip_temp, iplen+1,SQLT_STR,&status);
 
 		}catch(Error err){
 			sprintf(appliName,"GetPortRow_pid");	///////
@@ -688,8 +686,8 @@ EXTERN_CONFDB
 				
 				try{
                     StmtPrepare(stmthp,ociError, selectport, &status);
-                    BindByName(stmthp,&bnd1p,ociError,":portID",&portID,&status);
-                    StmtExecute(ociHdbc, stmthp, ociError, &status);
+                    BindByName(stmthp,&bnd1p,ociError,":portID",&portID,sizeof(portID),SQLT_INT,0,&status);
+                    StmtExecute(ociHdbc, stmthp, ociError, 0, &status);
 					ParamGet(stmthp, ociError, &parmdp, 2, &status);
 					AttrGet(parmdp, &dnamelen, ociError, &status);
 					ParamGet(stmthp, ociError, &parmdp, 3, &status);
@@ -727,16 +725,16 @@ EXTERN_CONFDB
 						GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
 						return rescode;
 					}
-					DefineByPos(stmthp,def,ociError,1,&portid,&status);			
-					DefineByPos(stmthp,def,ociError,2, dname_temp,dnamelen+1,&status);							
-					DefineByPos(stmthp,def,ociError,3, portnb_temp,portnblen+1,&status);	
-					DefineByPos(stmthp,def,ociError,4,&portway,&status);			  
-					DefineByPos(stmthp,def,ociError,5,&admin_status,&status);
-					DefineByPos(stmthp,def,ociError,6,&speed,&status);
-					DefineByPos(stmthp,def,ociError,7, portype_temp, portypelen+1,&status);				
-					DefineByPos(stmthp,def,ociError,8, phy_temp,phylen+1,&status);					
-					DefineByPos(stmthp,def,ociError,9,&pxi_booting,&status);
-					DefineByPos(stmthp,def,ociError,10, ip_temp, iplen+1,&status);						
+					DefineByPos(stmthp,def,ociError,1,&portid,sizeof(portid),SQLT_INT,&status);			
+					DefineByPos(stmthp,def,ociError,2, dname_temp,dnamelen+1,SQLT_STR,&status);
+					DefineByPos(stmthp,def,ociError,3, portnb_temp,portnblen+1,SQLT_STR,&status);
+					DefineByPos(stmthp,def,ociError,4,&portway,sizeof(portway),SQLT_INT,&status);			  
+					DefineByPos(stmthp,def,ociError,5,&admin_status,sizeof(admin_status),SQLT_INT,&status);
+					DefineByPos(stmthp,def,ociError,6,&speed,sizeof(status),SQLT_INT,&status);
+					DefineByPos(stmthp,def,ociError,7, portype_temp, portypelen+1,SQLT_STR,&status);	
+					DefineByPos(stmthp,def,ociError,8, phy_temp,phylen+1,SQLT_STR,&status);
+					DefineByPos(stmthp,def,ociError,9,&pxi_booting,sizeof(pxi_booting),SQLT_INT,&status);
+					DefineByPos(stmthp,def,ociError,10, ip_temp, iplen+1,SQLT_STR,&status);
 
 				}catch(Error err){
 					sprintf(appliName,"GetPortRow_pid");	///////
@@ -864,14 +862,14 @@ EXTERN_CONFDB
 		}
 
 		try{
-			HandleAlloc(ociEnv,&stmthp,ociError,&status);
+			HandleAlloc(ociEnv,(dvoid**)&stmthp,OCI_HTYPE_STMT,&status);
 			sprintf(selectport,"select e.portid,t.devicename||'?',e.port_nbr||'?',e.port_way,e.administrative_status,nvl(e.speed,0),nvl(e.port_type,'none')||'?',nvl(e.phy,'none')||'?',nvl(e.pxi_booting,-1),nvl(f.bia,'none')||'?',nvl(f.macaddress,'none')||'?',nvl(e.ipaddress,'none')||'?' from %s e,%s t , %s f where t.devicename=:dname and e.port_nbr=:portnb and e.port_way=:portway and nvl(e.port_type,'none')=:portype and t.deviceid=e.deviceid and f.serialnb=t.serialnb and nvl(f.port_type,'none')=:portype and f.port_way=:portway and f.port_nbr=:portnb",PORT_TABLE,LOGICAL_DEVICE_TABLE,HWPORT_TABLE);
 			StmtPrepare(stmthp,ociError, selectport, &status);
-			BindByName(stmthp,&bnd1p[0],ociError,":dname",devicename,&status);
-			BindByName(stmthp,&bnd1p[1],ociError,":portnb",port_nb,&status);
-			BindByName(stmthp,&bnd1p[2],ociError,":portway",&port_way,&status);
-			BindByName(stmthp,&bnd1p[3],ociError,":portype",port_type1,&status);
-			StmtExecute(ociHdbc, stmthp, ociError, &status);
+			BindByName(stmthp,&bnd1p[0],ociError,":dname",devicename,strlen(devicename)+1, SQLT_STR, 0,&status);
+			BindByName(stmthp,&bnd1p[1],ociError,":portnb",port_nb,strlen(port_nb)+1, SQLT_STR, 0,&status);
+			BindByName(stmthp,&bnd1p[2],ociError,":portway",&port_way,sizeof(port_way),SQLT_INT,0,&status);
+			BindByName(stmthp,&bnd1p[3],ociError,":portype",port_type1,strlen(port_type1)+1, SQLT_STR, 0,&status);
+			StmtExecute(ociHdbc, stmthp, ociError, 0, &status);
 			ParamGet(stmthp, ociError, &parmdp, 2, &status);
 			AttrGet(parmdp, &dnamelen, ociError, &status);
 			ParamGet(stmthp, ociError, &parmdp, 3, &status);
@@ -919,18 +917,18 @@ EXTERN_CONFDB
 				GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
 				return rescode;
 			}						
-			DefineByPos(stmthp,def,ociError,1,&portid,&status);						
-			DefineByPos(stmthp,def,ociError,2, dname_temp,dnamelen+1,&status);										 
-			DefineByPos(stmthp,def,ociError,3, portnb_temp,portnblen+1,&status);					
-			DefineByPos(stmthp,def,ociError,4,&portway,&status);
-			DefineByPos(stmthp,def,ociError,5,&admin_status,&status);
-			DefineByPos(stmthp,def,ociError,6,&speed,&status);
-			DefineByPos(stmthp,def,ociError,7, portype_temp, portypelen+1,&status);				
-			DefineByPos(stmthp,def,ociError,8, phy_temp,phylen+1,&status);		
-			DefineByPos(stmthp,def,ociError,9,&pxi_booting,&status);			
-			DefineByPos(stmthp,def,ociError,10, bia_temp, bialen + 1,&status);				
-			DefineByPos(stmthp,def,ociError,11, mac_temp, maclen+1,&status);				
-			DefineByPos(stmthp,def,ociError,12, ip_temp, iplen+1,&status);						
+			DefineByPos(stmthp,def,ociError,1,&portid,sizeof(portid),SQLT_INT,&status);						
+			DefineByPos(stmthp,def,ociError,2, dname_temp,dnamelen+1,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,3, portnb_temp,portnblen+1,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,4,&portway,sizeof(portway),SQLT_INT,&status);
+			DefineByPos(stmthp,def,ociError,5,&admin_status,sizeof(admin_status),SQLT_INT,&status);
+			DefineByPos(stmthp,def,ociError,6,&speed,sizeof(speed),SQLT_INT,&status);
+			DefineByPos(stmthp,def,ociError,7, portype_temp, portypelen+1,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,8, phy_temp,phylen+1,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,9,&pxi_booting,sizeof(pxi_booting),SQLT_INT,&status);			
+			DefineByPos(stmthp,def,ociError,10, bia_temp, bialen + 1,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,11, mac_temp, maclen+1,SQLT_STR,&status);				
+			DefineByPos(stmthp,def,ociError,12, ip_temp, iplen+1,SQLT_STR,&status);
 
 		}catch(Error err){
 			sprintf(appliName,"GetPortRow_devname");	///////
@@ -968,11 +966,11 @@ EXTERN_CONFDB
 				
 				try{
                     StmtPrepare(stmthp,ociError, selectport, &status);
-                    BindByName(stmthp,&bnd1p[0],ociError,":dname",devicename,&status);
-					BindByName(stmthp,&bnd1p[1],ociError,":portnb",port_nb,&status);
-					BindByName(stmthp,&bnd1p[2],ociError,":portway",&port_way,&status);
-					BindByName(stmthp,&bnd1p[3],ociError,":portype",port_type1,&status);
-                    StmtExecute(ociHdbc, stmthp, ociError, &status);
+                    BindByName(stmthp,&bnd1p[0],ociError,":dname",devicename,strlen(devicename)+1, SQLT_STR, 0,&status);
+					BindByName(stmthp,&bnd1p[1],ociError,":portnb",port_nb,strlen(port_nb)+1, SQLT_STR, 0,&status);
+					BindByName(stmthp,&bnd1p[2],ociError,":portway",&port_way,sizeof(port_way),SQLT_INT,0,&status);
+					BindByName(stmthp,&bnd1p[3],ociError,":portype",port_type1,strlen(port_type1)+1, SQLT_STR, 0,&status);
+                    StmtExecute(ociHdbc, stmthp, ociError, 0, &status);
 					ParamGet(stmthp, ociError, &parmdp, 2, &status);
 					AttrGet(parmdp, &dnamelen, ociError, &status);
 					ParamGet(stmthp, ociError, &parmdp, 3, &status);
@@ -1010,16 +1008,16 @@ EXTERN_CONFDB
 						GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
 						return rescode;
 					}				
-					DefineByPos(stmthp,def,ociError,1,&portid,&status);			
-					DefineByPos(stmthp,def,ociError,2, dname_temp,dnamelen+1,&status);							
-					DefineByPos(stmthp,def,ociError,3, portnb_temp,portnblen+1,&status);	
-					DefineByPos(stmthp,def,ociError,4,&portway,&status);			  
-					DefineByPos(stmthp,def,ociError,5,&admin_status,&status);
-					DefineByPos(stmthp,def,ociError,6,&speed,&status);
-					DefineByPos(stmthp,def,ociError,7, portype_temp, portypelen+1,&status);				
-					DefineByPos(stmthp,def,ociError,8, phy_temp,phylen+1,&status);					
-					DefineByPos(stmthp,def,ociError,9,&pxi_booting,&status);
-					DefineByPos(stmthp,def,ociError,10, ip_temp, iplen+1,&status);		
+					DefineByPos(stmthp,def,ociError,1,&portid,sizeof(portid),SQLT_INT,&status);			
+					DefineByPos(stmthp,def,ociError,2, dname_temp,dnamelen+1,SQLT_STR,&status);
+					DefineByPos(stmthp,def,ociError,3, portnb_temp,portnblen+1,SQLT_STR,&status);
+					DefineByPos(stmthp,def,ociError,4,&portway,sizeof(portway),SQLT_INT,&status);			  
+					DefineByPos(stmthp,def,ociError,5,&admin_status,sizeof(admin_status),SQLT_INT,&status);
+					DefineByPos(stmthp,def,ociError,6,&speed,sizeof(speed),SQLT_INT,&status);
+					DefineByPos(stmthp,def,ociError,7, portype_temp, portypelen+1,SQLT_STR,&status);	
+					DefineByPos(stmthp,def,ociError,8, phy_temp,phylen+1,SQLT_STR,&status);
+					DefineByPos(stmthp,def,ociError,9,&pxi_booting,sizeof(pxi_booting),SQLT_INT,&status);
+					DefineByPos(stmthp,def,ociError,10, ip_temp, iplen+1,SQLT_STR,&status);
 
 				}catch(Error err){
 					sprintf(appliName,"GetPortRow_devname");	///////
@@ -1145,14 +1143,14 @@ EXTERN_CONFDB
 		}
 		
 		try{
-			HandleAlloc(ociEnv,&stmthp,ociError,&status);
+			HandleAlloc(ociEnv,(dvoid**)&stmthp,OCI_HTYPE_STMT,&status);
 			sprintf(selectport,"select e.portid,t.devicename||'?',e.port_nbr||'?',e.port_way,e.administrative_status,nvl(e.speed,0),nvl(e.port_type,'none')||'?',nvl(e.phy,'none')||'?',nvl(e.pxi_booting,-1),nvl(f.bia,'none')||'?',nvl(f.macaddress,'none')||'?',nvl(e.ipaddress,'none')||'?' from %s e,%s t,%s f where t.deviceid=:dID and e.port_nbr=:portnb and e.port_way=:portway and nvl(e.port_type,'none')=:portype and t.deviceid=e.deviceid and f.serialnb=t.serialnb and f.port_way=:portway and nvl(f.port_type,'none')=:portype and f.port_nbr=:portnb",PORT_TABLE,LOGICAL_DEVICE_TABLE,HWPORT_TABLE);
 			StmtPrepare(stmthp,ociError, selectport, &status);
-			BindByName(stmthp,&bnd1p[0],ociError,":dID",&deviceid,&status);
-			BindByName(stmthp,&bnd1p[1],ociError,":portnb",port_nb,&status);
-			BindByName(stmthp,&bnd1p[2],ociError,":portway",&port_way,&status);
-			BindByName(stmthp,&bnd1p[3],ociError,":portype",port_type1,&status);
-			StmtExecute(ociHdbc, stmthp, ociError, &status);
+			BindByName(stmthp,&bnd1p[0],ociError,":dID",&deviceid,sizeof(deviceid),SQLT_INT,0,&status);
+			BindByName(stmthp,&bnd1p[1],ociError,":portnb",port_nb,strlen(port_nb)+1, SQLT_STR, 0,&status);
+			BindByName(stmthp,&bnd1p[2],ociError,":portway",&port_way,sizeof(port_way),SQLT_INT,0,&status);
+			BindByName(stmthp,&bnd1p[3],ociError,":portype",port_type1,strlen(port_type1)+1, SQLT_STR, 0,&status);
+			StmtExecute(ociHdbc, stmthp, ociError, 0, &status);
 			ParamGet(stmthp, ociError, &parmdp, 2, &status);
 			AttrGet(parmdp, &dnamelen, ociError, &status);
 			ParamGet(stmthp, ociError, &parmdp, 3, &status);
@@ -1200,18 +1198,18 @@ EXTERN_CONFDB
 				GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
 				return rescode;
 			}							
-			DefineByPos(stmthp,def,ociError,1,&portid,&status);						
-			DefineByPos(stmthp,def,ociError,2, dname_temp,dnamelen+1,&status);										 
-			DefineByPos(stmthp,def,ociError,3, portnb_temp,portnblen+1,&status);					
-			DefineByPos(stmthp,def,ociError,4,&portway,&status);
-			DefineByPos(stmthp,def,ociError,5,&admin_status,&status);
-			DefineByPos(stmthp,def,ociError,6,&speed,&status);
-			DefineByPos(stmthp,def,ociError,7, portype_temp, portypelen+1,&status);				
-			DefineByPos(stmthp,def,ociError,8, phy_temp,phylen+1,&status);		
-			DefineByPos(stmthp,def,ociError,9,&pxi_booting,&status);			
-			DefineByPos(stmthp,def,ociError,10, bia_temp, bialen + 1,&status);				
-			DefineByPos(stmthp,def,ociError,11, mac_temp, maclen+1,&status);				
-			DefineByPos(stmthp,def,ociError,12, ip_temp, iplen+1,&status);
+			DefineByPos(stmthp,def,ociError,1,&portid,sizeof(portid),SQLT_INT,&status);						
+			DefineByPos(stmthp,def,ociError,2, dname_temp,dnamelen+1,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,3, portnb_temp,portnblen+1,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,4,&portway,sizeof(portway),SQLT_INT,&status);
+			DefineByPos(stmthp,def,ociError,5,&admin_status,sizeof(admin_status),SQLT_INT,&status);
+			DefineByPos(stmthp,def,ociError,6,&speed,sizeof(speed),SQLT_INT,&status);
+			DefineByPos(stmthp,def,ociError,7, portype_temp, portypelen+1,SQLT_STR,&status);	
+			DefineByPos(stmthp,def,ociError,8, phy_temp,phylen+1,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,9,&pxi_booting,sizeof(pxi_booting),SQLT_INT,&status);			
+			DefineByPos(stmthp,def,ociError,10, bia_temp, bialen + 1,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,11, mac_temp, maclen+1,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,12, ip_temp, iplen+1,SQLT_STR,&status);
 
 		}catch(Error err){
 			sprintf(appliName,"GetPortRow_devid");	///////
@@ -1250,11 +1248,11 @@ EXTERN_CONFDB
 			
 				try{
                     StmtPrepare(stmthp,ociError, selectport, &status);
-                    BindByName(stmthp,&bnd1p[0],ociError,":dID",&deviceid,&status);
-					BindByName(stmthp,&bnd1p[1],ociError,":portnb",port_nb,&status);
-					BindByName(stmthp,&bnd1p[2],ociError,":portway",&port_way,&status);
-					BindByName(stmthp,&bnd1p[3],ociError,":portype",port_type1,&status);                  
-                    StmtExecute(ociHdbc, stmthp, ociError, &status);
+                    BindByName(stmthp,&bnd1p[0],ociError,":dID",&deviceid,sizeof(deviceid),SQLT_INT,0,&status);
+					BindByName(stmthp,&bnd1p[1],ociError,":portnb",port_nb,strlen(port_nb)+1, SQLT_STR, 0,&status);
+					BindByName(stmthp,&bnd1p[2],ociError,":portway",&port_way,sizeof(port_way),SQLT_INT,0,&status);
+					BindByName(stmthp,&bnd1p[3],ociError,":portype",port_type1,strlen(port_type1)+1, SQLT_STR, 0,&status);
+                    StmtExecute(ociHdbc, stmthp, ociError, 0, &status);
 					ParamGet(stmthp, ociError, &parmdp, 2, &status);
 					AttrGet(parmdp, &dnamelen, ociError, &status);
 					ParamGet(stmthp, ociError, &parmdp, 3, &status);
@@ -1292,16 +1290,16 @@ EXTERN_CONFDB
 						GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
 						return rescode;
 					}									
-					DefineByPos(stmthp,def,ociError,1,&portid,&status);			
-					DefineByPos(stmthp,def,ociError,2, dname_temp,dnamelen+1,&status);							
-					DefineByPos(stmthp,def,ociError,3, portnb_temp,portnblen+1,&status);	
-					DefineByPos(stmthp,def,ociError,4,&portway,&status);			  
-					DefineByPos(stmthp,def,ociError,5,&admin_status,&status);
-					DefineByPos(stmthp,def,ociError,6,&speed,&status);
-					DefineByPos(stmthp,def,ociError,7, portype_temp, portypelen+1,&status);				
-					DefineByPos(stmthp,def,ociError,8, phy_temp,phylen+1,&status);					
-					DefineByPos(stmthp,def,ociError,9,&pxi_booting,&status);
-					DefineByPos(stmthp,def,ociError,10, ip_temp, iplen+1,&status);
+					DefineByPos(stmthp,def,ociError,1,&portid,sizeof(portid),SQLT_INT,&status);			
+					DefineByPos(stmthp,def,ociError,2, dname_temp,dnamelen+1,SQLT_STR,&status);
+					DefineByPos(stmthp,def,ociError,3, portnb_temp,portnblen+1,SQLT_STR,&status);
+					DefineByPos(stmthp,def,ociError,4,&portway,sizeof(portway),SQLT_INT,&status);			  
+					DefineByPos(stmthp,def,ociError,5,&admin_status,sizeof(admin_status),SQLT_INT,&status);
+					DefineByPos(stmthp,def,ociError,6,&speed,sizeof(speed),SQLT_INT,&status);
+					DefineByPos(stmthp,def,ociError,7, portype_temp, portypelen+1,SQLT_STR,&status);	
+					DefineByPos(stmthp,def,ociError,8, phy_temp,phylen+1,SQLT_STR,&status);
+					DefineByPos(stmthp,def,ociError,9,&pxi_booting,sizeof(pxi_booting),SQLT_INT,&status);
+					DefineByPos(stmthp,def,ociError,10, ip_temp, iplen+1,SQLT_STR,&status);
 					
 				}catch(Error err){
 					sprintf(appliName,"GetPortRow_devid");	///////
@@ -1412,11 +1410,11 @@ EXTERN_CONFDB
 		char * lkinfo_temp=NULL;
 
 		try{
-			HandleAlloc(ociEnv,&stmthp,ociError,&status);
+			HandleAlloc(ociEnv,(dvoid**)&stmthp,OCI_HTYPE_STMT,&status);
 			sprintf(selectconn,"select t.linkid,e.devicename||'?',f.devicename||'?',p.port_nbr||'?',nvl(p.port_type,'none')||'?',g.port_nbr||'?',nvl(g.port_type,'none')||'?',nvl(l.link_name,'none')||'?',t.bidirectional_link_used, t.lkused,nvl(t.link_info,'none')||'?' from %s t,%s p,%s g,%s l,%s e,%s f where t.linkid=:lkid and t.link_type=l.linktypeID and p.portid=t.portidfrom and g.portid=t.portidto and p.deviceid=e.deviceid and g.deviceid=f.deviceid",MACRO_CONNECTIVITY_TABLE,PORT_TABLE,PORT_TABLE,LINKTYPE_TABLE,LOGICAL_DEVICE_TABLE,LOGICAL_DEVICE_TABLE);
 			StmtPrepare(stmthp,ociError, selectconn, &status);
-			BindByName(stmthp,&bnd1p,ociError,":lkid",&lkID,&status);
-			StmtExecute(ociHdbc, stmthp, ociError, &status);
+			BindByName(stmthp,&bnd1p,ociError,":lkid",&lkID,sizeof(lkID),SQLT_INT,0,&status);
+			StmtExecute(ociHdbc, stmthp, ociError, 0, &status);
 			ParamGet(stmthp, ociError, &parmdp, 2, &status);
 			AttrGet(parmdp, &dnamefromlen, ociError, &status);
 			ParamGet(stmthp, ociError, &parmdp, 3, &status);
@@ -1469,17 +1467,17 @@ EXTERN_CONFDB
 				GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
 				return rescode;
 			}			
-			DefineByPos(stmthp,def,ociError,1,&linkid,&status);						
-			DefineByPos(stmthp,def,ociError,2, dnamefrom_temp,dnamefromlen+1,&status);										 
-			DefineByPos(stmthp,def,ociError,3, dnameto_temp,dnametolen+1,&status);					
-			DefineByPos(stmthp,def,ociError,4, portnbfrom_temp,portnbfromlen+1,&status);					
-			DefineByPos(stmthp,def,ociError,5, porttypefrom_temp,porttypefromlen+1,&status);					
-			DefineByPos(stmthp,def,ociError,6, portnbto_temp,portnbtolen+1,&status);					
-			DefineByPos(stmthp,def,ociError,7, porttypeto_temp,porttypetolen+1,&status);					
-			DefineByPos(stmthp,def,ociError,8, lkname_temp,lknamelen,&status);					
-			DefineByPos(stmthp,def,ociError,9,&bidirectional_link_used,&status);
-			DefineByPos(stmthp,def,ociError,10,&lkused,&status);
-			DefineByPos(stmthp,def,ociError,11, lkinfo_temp,lkinfolen+1,&status);					
+			DefineByPos(stmthp,def,ociError,1,&linkid,sizeof(linkid),SQLT_INT,&status);						
+			DefineByPos(stmthp,def,ociError,2, dnamefrom_temp,dnamefromlen+1,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,3, dnameto_temp,dnametolen+1,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,4, portnbfrom_temp,portnbfromlen+1,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,5, porttypefrom_temp,porttypefromlen+1,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,6, portnbto_temp,portnbtolen+1,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,7, porttypeto_temp,porttypetolen+1,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,8, lkname_temp,lknamelen,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,9,&bidirectional_link_used,sizeof(bidirectional_link_used),SQLT_INT,&status);
+			DefineByPos(stmthp,def,ociError,10,&lkused,sizeof(lkused),SQLT_INT,&status);
+			DefineByPos(stmthp,def,ociError,11, lkinfo_temp,lkinfolen+1,SQLT_STR,&status);
 						
 		}catch(Error err){
 			sprintf(appliName,"GetMacroConnectivityRow_lkid");	///////
@@ -1613,7 +1611,7 @@ EXTERN_CONFDB
 		char selectconn[1000];
 				
 		try{
-			HandleAlloc(ociEnv,&stmthp,ociError,&status);
+			HandleAlloc(ociEnv,(dvoid**)&stmthp,OCI_HTYPE_STMT,&status);
 			if(port_way==1) //port nb is an output so we have info about the node_to part of a link
 				sprintf(selectconn,"select t.linkid,e.devicename||'?',f.devicename||'?',p.port_nbr||'?',nvl(p.port_type,'none')||'?',g.port_nbr||'?',nvl(g.port_type,'none')||'?',l.link_name||'?',t.bidirectional_link_used, t.lkused,nvl(t.link_info,'none')||'?' from %s t,%s p,%s g,%s l,%s e,%s f where nvl(g.port_type,'none')=:portype and g.port_nbr=:portnb and g.port_way=1  and t.link_type=l.linktypeID and p.portid=t.portidfrom and g.portid=t.portidto and g.deviceid=f.deviceid and p.deviceid=e.deviceid and f.deviceid=:dID",MACRO_CONNECTIVITY_TABLE,PORT_TABLE,PORT_TABLE,LINKTYPE_TABLE,LOGICAL_DEVICE_TABLE,LOGICAL_DEVICE_TABLE);
 			else if(port_way==2)// info about the node_from part of a link
@@ -1625,10 +1623,10 @@ EXTERN_CONFDB
 			}
 				
 			StmtPrepare(stmthp,ociError, selectconn, &status);
-			BindByName(stmthp,&bnd1p[0],ociError,":dID",&nodeID,&status);
-			BindByName(stmthp,&bnd1p[1],ociError,":portnb",port_nb,&status);
-			BindByName(stmthp,&bnd1p[2],ociError,":portype",port_type1,&status);			
-			StmtExecute(ociHdbc, stmthp, ociError, &status);
+			BindByName(stmthp,&bnd1p[0],ociError,":dID",&nodeID,sizeof(nodeID),SQLT_INT,0,&status);
+			BindByName(stmthp,&bnd1p[1],ociError,":portnb",port_nb,strlen(port_nb)+1, SQLT_STR, 0,&status);
+			BindByName(stmthp,&bnd1p[2],ociError,":portype",port_type1,strlen(port_type1)+1, SQLT_STR, 0,&status);
+			StmtExecute(ociHdbc, stmthp, ociError, 0, &status);
 			ParamGet(stmthp, ociError, &parmdp, 2, &status);
 			AttrGet(parmdp, &dnamefromlen, ociError, &status);
 			ParamGet(stmthp, ociError, &parmdp, 3, &status);
@@ -1681,17 +1679,17 @@ EXTERN_CONFDB
 				GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
 				return rescode;
 			}
-			DefineByPos(stmthp,def,ociError,1,&linkid,&status);						
-			DefineByPos(stmthp,def,ociError,2, dnamefrom_temp,dnamefromlen+1,&status);	
-			DefineByPos(stmthp,def,ociError,3, dnameto_temp,dnametolen+1,&status);			
-			DefineByPos(stmthp,def,ociError,4, portnbfrom_temp,portnbfromlen+1,&status);	
-			DefineByPos(stmthp,def,ociError,5, porttypefrom_temp,porttypefromlen+1,&status);			
-			DefineByPos(stmthp,def,ociError,6, portnbto_temp,portnbtolen+1,&status);		
-			DefineByPos(stmthp,def,ociError,7, porttypeto_temp,porttypetolen+1,&status);		
-			DefineByPos(stmthp,def,ociError,8, lkname_temp,lknamelen,&status);
-			DefineByPos(stmthp,def,ociError,9,&bidirectional_link_used,&status);
-			DefineByPos(stmthp,def,ociError,10,&lkused,&status);
-			DefineByPos(stmthp,def,ociError,11, lkinfo_temp,lkinfolen+1,&status);
+			DefineByPos(stmthp,def,ociError,1,&linkid,sizeof(linkid),SQLT_INT,&status);						
+			DefineByPos(stmthp,def,ociError,2, dnamefrom_temp,dnamefromlen+1,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,3, dnameto_temp,dnametolen+1,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,4, portnbfrom_temp,portnbfromlen+1,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,5, porttypefrom_temp,porttypefromlen+1,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,6, portnbto_temp,portnbtolen+1,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,7, porttypeto_temp,porttypetolen+1,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,8, lkname_temp,lknamelen,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,9,&bidirectional_link_used,sizeof(bidirectional_link_used),SQLT_INT,&status);
+			DefineByPos(stmthp,def,ociError,10,&lkused,sizeof(lkused),SQLT_INT,&status);
+			DefineByPos(stmthp,def,ociError,11, lkinfo_temp,lkinfolen+1,SQLT_STR,&status);
 			
 		}catch(Error err){
 			sprintf(appliName,"GetMacroConnectivityRow_node");	///////
@@ -1823,7 +1821,7 @@ EXTERN_CONFDB
 		char selectconn[1000];
 		
 		try{
-			HandleAlloc(ociEnv,&stmthp,ociError,&status);
+			HandleAlloc(ociEnv,(dvoid**)&stmthp,OCI_HTYPE_STMT,&status);
 
 			if(port_way==1) //port nb is an input so we have info about the node_to part of a link
 				sprintf(selectconn,"select t.linkid,e.devicename||'?',f.devicename||'?',p.port_nbr||'?',nvl(p.port_type,'none')||'?',g.port_nbr||'?',nvl(g.port_type,'none')||'?',l.link_name||'?',t.bidirectional_link_used, t.lkused,nvl(t.link_info,'none')||'?' from %s t,%s p,%s g,%s l,%s e,%s f where nvl(g.port_type,'none')=:portype and g.port_nbr=:portnb and g.port_way=1  and t.link_type=l.linktypeID and p.portid=t.portidfrom and g.portid=t.portidto and g.deviceid=f.deviceid and p.deviceid=e.deviceid and f.devicename=:dname",MACRO_CONNECTIVITY_TABLE,PORT_TABLE,PORT_TABLE,LINKTYPE_TABLE,LOGICAL_DEVICE_TABLE,LOGICAL_DEVICE_TABLE);
@@ -1835,10 +1833,10 @@ EXTERN_CONFDB
 				return -1;
 			}				
 			StmtPrepare(stmthp,ociError, selectconn, &status);
-			BindByName(stmthp,&bnd1p[0],ociError,":dname",node_name,&status);
-			BindByName(stmthp,&bnd1p[1],ociError,":portnb",port_nb,&status);
-			BindByName(stmthp,&bnd1p[2],ociError,":portype",port_type1,&status);			
-			StmtExecute(ociHdbc, stmthp, ociError, &status);						
+			BindByName(stmthp,&bnd1p[0],ociError,":dname",node_name,strlen(node_name)+1, SQLT_STR, 0,&status);
+			BindByName(stmthp,&bnd1p[1],ociError,":portnb",port_nb,strlen(port_nb)+1, SQLT_STR, 0,&status);
+			BindByName(stmthp,&bnd1p[2],ociError,":portype",port_type1,strlen(port_type1)+1, SQLT_STR, 0,&status);
+			StmtExecute(ociHdbc, stmthp, ociError, 0, &status);
 			ParamGet(stmthp, ociError, &parmdp, 2, &status);
 			AttrGet(parmdp, &dnamefromlen, ociError, &status);
 			ParamGet(stmthp, ociError, &parmdp, 3, &status);
@@ -1891,17 +1889,17 @@ EXTERN_CONFDB
 				GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
 				return rescode;
 			}						
-			DefineByPos(stmthp,def,ociError,1,&linkid,&status);						
-			DefineByPos(stmthp,def,ociError,2, dnamefrom_temp,dnamefromlen+1,&status);	
-			DefineByPos(stmthp,def,ociError,3, dnameto_temp,dnametolen+1,&status);			
-			DefineByPos(stmthp,def,ociError,4, portnbfrom_temp,portnbfromlen+1,&status);	
-			DefineByPos(stmthp,def,ociError,5, porttypefrom_temp,porttypefromlen+1,&status);			
-			DefineByPos(stmthp,def,ociError,6, portnbto_temp,portnbtolen+1,&status);		
-			DefineByPos(stmthp,def,ociError,7, porttypeto_temp,porttypetolen+1,&status);		
-			DefineByPos(stmthp,def,ociError,8, lkname_temp,lknamelen,&status);
-			DefineByPos(stmthp,def,ociError,9,&bidirectional_link_used,&status);
-			DefineByPos(stmthp,def,ociError,10,&lkused,&status);
-			DefineByPos(stmthp,def,ociError,11, lkinfo_temp,lkinfolen+1,&status);
+			DefineByPos(stmthp,def,ociError,1,&linkid,sizeof(linkid),SQLT_INT,&status);						
+			DefineByPos(stmthp,def,ociError,2, dnamefrom_temp,dnamefromlen+1,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,3, dnameto_temp,dnametolen+1,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,4, portnbfrom_temp,portnbfromlen+1,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,5, porttypefrom_temp,porttypefromlen+1,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,6, portnbto_temp,portnbtolen+1,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,7, porttypeto_temp,porttypetolen+1,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,8, lkname_temp,lknamelen,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,9,&bidirectional_link_used,sizeof(bidirectional_link_used),SQLT_INT,&status);
+			DefineByPos(stmthp,def,ociError,10,&lkused,sizeof(lkused),SQLT_INT,&status);
+			DefineByPos(stmthp,def,ociError,11, lkinfo_temp,lkinfolen+1,SQLT_STR,&status);
 						
 		}catch(Error err){
 			sprintf(appliName,"GetMacroConnectivityRow_nodename");	///////
@@ -2009,11 +2007,11 @@ EXTERN_CONFDB
 			return -1;
 		}
 		try{
-			HandleAlloc(ociEnv,&stmthp,ociError,&status);
+			HandleAlloc(ociEnv,(dvoid**)&stmthp,OCI_HTYPE_STMT,&status);
 			sprintf(selectIP,"select ipaddress||'?',subnet_info||'?', ipname||'?' from %s where ipaddress=:IPadd",IPINFO_TABLE);				
 			StmtPrepare(stmthp,ociError, selectIP, &status);
-			BindByName(stmthp,&bnd1p,ociError,":IPadd",ip_address,&status);
-			StmtExecute(ociHdbc, stmthp, ociError, &status);
+			BindByName(stmthp,&bnd1p,ociError,":IPadd",ip_address,strlen(ip_address)+1, SQLT_STR, 0,&status);
+			StmtExecute(ociHdbc, stmthp, ociError, 0, &status);
 			ParamGet(stmthp, ociError, &parmdp, 1, &status);
 			AttrGet(parmdp, &ipaddlen, ociError, &status);
 			ParamGet(stmthp, ociError, &parmdp, 2, &status);
@@ -2042,9 +2040,9 @@ EXTERN_CONFDB
 				return rescode;
 			}
 		
-			DefineByPos(stmthp,def,ociError,1, ipadd_temp,ipaddlen + 1,&status);	
-			DefineByPos(stmthp,def,ociError,2, subnet_temp, subnetlen + 1,&status);			
-			DefineByPos(stmthp,def,ociError,3, ipname_temp,ipnamelen + 1,&status);	
+			DefineByPos(stmthp,def,ociError,1, ipadd_temp,ipaddlen + 1,SQLT_STR,&status);	
+			DefineByPos(stmthp,def,ociError,2, subnet_temp, subnetlen + 1,SQLT_STR,&status);	
+			DefineByPos(stmthp,def,ociError,3, ipname_temp,ipnamelen + 1,SQLT_STR,&status);
 						
 		}catch(Error err){
 			sprintf(appliName,"GetIPInfoRow");	///////
@@ -2136,11 +2134,11 @@ EXTERN_CONFDB
 		}
 		
 		try{
-			HandleAlloc(ociEnv,&stmthp,ociError,&status);
+			HandleAlloc(ociEnv,(dvoid**)&stmthp,OCI_HTYPE_STMT,&status);
 			sprintf(selectlktype,"select  link_name||'?',link_nbr,linktypeID from %s where link_name=:ltype",LINKTYPE_TABLE);
 			StmtPrepare(stmthp,ociError, selectlktype, &status);
-			BindByName(stmthp,&bnd1p,ociError,":ltype",lktype_name,&status);
-			StmtExecute(ociHdbc, stmthp, ociError, &status);
+			BindByName(stmthp,&bnd1p,ociError,":ltype",lktype_name,strlen(lktype_name)+1, SQLT_STR, 0,&status);
+			StmtExecute(ociHdbc, stmthp, ociError, 0, &status);
 						
 			/* The next two statements describe the select-list item, dept, and return its length to allocate the memory*/
 			ParamGet(stmthp, ociError, &parmdp, 1, &status);
@@ -2156,9 +2154,9 @@ EXTERN_CONFDB
 				GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
 				return rescode;
 			}
-			DefineByPos(stmthp,def,ociError,1, lktype_temp, lktypelen + 1,&status);	
-			DefineByPos(stmthp,def,ociError,2,&link_nbr,&status);	
-			DefineByPos(stmthp,def,ociError,3,&linktypeID,&status);	
+			DefineByPos(stmthp,def,ociError,1, lktype_temp, lktypelen + 1,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,2,&link_nbr,sizeof(link_nbr),SQLT_INT,&status);	
+			DefineByPos(stmthp,def,ociError,3,&linktypeID,sizeof(linktypeID),SQLT_INT,&status);	
 						
 		}catch(Error err){
 			sprintf(appliName,"GetLkTypeRow_lkname");	///////
@@ -2237,11 +2235,11 @@ EXTERN_CONFDB
 		char selectlktype[1000];
 
 		try{
-			HandleAlloc(ociEnv,&stmthp,ociError,&status);			
+			HandleAlloc(ociEnv,(dvoid**)&stmthp,OCI_HTYPE_STMT,&status);			
 			sprintf(selectlktype,"select link_name||'?',link_nbr,linktypeID from %s where linktypeID=:ltype",LINKTYPE_TABLE);
 			StmtPrepare(stmthp,ociError, selectlktype, &status);
-			BindByName(stmthp,&bnd1p,ociError,":ltype",&lktype_nbr,&status);
-			StmtExecute(ociHdbc, stmthp, ociError, &status);						
+			BindByName(stmthp,&bnd1p,ociError,":ltype",&lktype_nbr,sizeof(lktype_nbr),SQLT_INT,0,&status);
+			StmtExecute(ociHdbc, stmthp, ociError, 0, &status);
 			ParamGet(stmthp, ociError, &parmdp, 1, &status);
 			AttrGet(parmdp, (sb4*) &lktypelen, ociError, &status);
 			
@@ -2255,9 +2253,9 @@ EXTERN_CONFDB
 				GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
 				return rescode;
 			}						
-			DefineByPos(stmthp,def,ociError,1, lktype_temp, lktypelen + 1,&status);	
-			DefineByPos(stmthp,def,ociError,2,&link_nbr,&status);	
-			DefineByPos(stmthp,def,ociError,3,&linktypeID,&status);	
+			DefineByPos(stmthp,def,ociError,1, lktype_temp, lktypelen + 1,SQLT_STR,&status);	
+			DefineByPos(stmthp,def,ociError,2,&link_nbr,sizeof(link_nbr),SQLT_INT,&status);	
+			DefineByPos(stmthp,def,ociError,3,&linktypeID,sizeof(linktypeID),SQLT_INT,&status);	
 									
 		}catch(Error err){
 			sprintf(appliName,"GetLkTypeRow_lknb");	///////
@@ -2343,12 +2341,12 @@ EXTERN_CONFDB
 		char selectlktype[1000];
 
 		try{
-			HandleAlloc(ociEnv,&stmthp,ociError,&status);
+			HandleAlloc(ociEnv,(dvoid**)&stmthp,OCI_HTYPE_STMT,&status);
 			sprintf(selectlktype,"select e.link_name||'|'||e.linktypeid||'?' from %s t, %s e,%s f where mod(t.link_nbr,e.link_nbr)=0 and e.link_nbr!=t.link_nbr and e.link_nbr=f.prime_nb and t.linktypeID=:ltype",LINKTYPE_TABLE,LINKTYPE_TABLE,PRIME_NUMBER_TABLE);
 			StmtPrepare(stmthp,ociError, selectlktype, &status);
-			BindByName(stmthp,&bnd1p,ociError,":ltype",&lktype_nbr,&status);
-			AttrSet(stmthp,&prefetch_rows,ociError, &status);
-			StmtExecute(ociHdbc, stmthp, ociError, &status);
+			BindByName(stmthp,&bnd1p,ociError,":ltype",&lktype_nbr,sizeof(lktype_nbr),SQLT_INT,0,&status);
+			AttrSet(stmthp,OCI_HTYPE_STMT,&prefetch_rows,0,OCI_ATTR_PREFETCH_ROWS,ociError, &status);
+			StmtExecute(ociHdbc, stmthp, ociError, 0, &status);
 			ParamGet(stmthp, ociError, &parmdp, 1, &status);
 			AttrGet(parmdp, (sb4*) &lktypelen, ociError, &status);
 
@@ -2363,7 +2361,7 @@ EXTERN_CONFDB
 				GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
 				return rescode;
 			}
-			DefineByPos(stmthp,def,ociError,1, lktype_temp, lktypelen + 1,&status);	
+			DefineByPos(stmthp,def,ociError,1, lktype_temp, lktypelen + 1,SQLT_STR,&status);
 									
 		}catch(Error err){
 			sprintf(appliName,"GetLkTypeDecomposition_lknb");	///////
@@ -2491,18 +2489,18 @@ EXTERN_CONFDB
 		}
 
 		try{
-			HandleAlloc(ociEnv,&stmthp,ociError,&status);
+			HandleAlloc(ociEnv,(dvoid**)&stmthp,OCI_HTYPE_STMT,&status);
 			sprintf(selectdevID,"select t.devicename||'|'||t.deviceid||'?' from %s t,%s f where t.devicetypeID=f.devicetypeID and f.devicetype=:dtype",LOGICAL_DEVICE_TABLE,DEVICETYPE_TABLE);
 			StmtPrepare(stmthp,ociError,selectdevID, &status);
-			BindByName(stmthp,&bnd1p,ociError,":dtype",devitype,&status);
-			AttrSet(stmthp,&prefetch_rows,ociError, &status);
-			StmtExecute(ociHdbc, stmthp, ociError, &status);						
+			BindByName(stmthp,&bnd1p,ociError,":dtype",devitype,strlen(devitype)+1, SQLT_STR, 0,&status);
+			AttrSet(stmthp,OCI_HTYPE_STMT,&prefetch_rows,0,OCI_ATTR_PREFETCH_ROWS,ociError,&status);
+			StmtExecute(ociHdbc, stmthp, ociError, 0, &status);
 			ParamGet(stmthp, ociError, &parmdp, 1, &status);
 			AttrGet(parmdp, (sb4*) &len_devname, ociError, &status);
 			
 			devName=(char*)malloc((len_devname+1)*sizeof(char));
 			if(devName!=NULL)
-			DefineByPos(stmthp,&def,ociError,1, devName, len_devname+1, &status);
+			DefineByPos(stmthp,&def,ociError,1, devName, len_devname+1,SQLT_STR, &status);
 			else
 			{
 				status=-10;
@@ -2636,13 +2634,13 @@ EXTERN_CONFDB
 		}
 		
 		try{
-			HandleAlloc(ociEnv,&stmthp,ociError,&status);
+			HandleAlloc(ociEnv,(dvoid**)&stmthp,OCI_HTYPE_STMT,&status);
 			sprintf(selectdevID,"select t.deviceid from %s t, %s f where t.devicetypeID=f.devicetypeID and f.devicetype=:dtype",LOGICAL_DEVICE_TABLE,DEVICETYPE_TABLE);
 			StmtPrepare(stmthp,ociError,selectdevID, &status);
-			BindByName(stmthp,&bnd1p,ociError,":dtype",devitype,&status);
-			AttrSet(stmthp,&prefetch_rows,ociError, &status);
-			StmtExecute(ociHdbc, stmthp, ociError, &status);
-			DefineByPos(stmthp,&def,ociError,1, &devID,&status);
+			BindByName(stmthp,&bnd1p,ociError,":dtype",devitype,strlen(devitype)+1, SQLT_STR, 0,&status);
+			AttrSet(stmthp,OCI_HTYPE_STMT,&prefetch_rows,0,OCI_ATTR_PREFETCH_ROWS,ociError, &status);
+			StmtExecute(ociHdbc, stmthp, ociError, 0, &status);
+			DefineByPos(stmthp,&def,ociError,1, &devID,sizeof(devID),SQLT_INT,&status);
 												
 		}catch(Error err){
 			sprintf(appliName,"GetDeviceIDsPerType");	///////
@@ -2770,13 +2768,13 @@ EXTERN_CONFDB
 		char select_query[1000];
 
 		try{
-			HandleAlloc(ociEnv,&stmthp,ociError,&status);
+			HandleAlloc(ociEnv,(dvoid**)&stmthp,OCI_HTYPE_STMT,&status);
 			sprintf(select_query,"select t.linkid from %s t,%s e where t.portIDfrom=e.portid and e.deviceid=:nfrom and e.port_way=2",MACRO_CONNECTIVITY_TABLE,PORT_TABLE);
 			StmtPrepare(stmthp,ociError,select_query, &status);
-			BindByName(stmthp,&bnd1p,ociError,":nfrom",&node_from,&status);
-			AttrSet(stmthp,&prefetch_rows,ociError, &status);
-			StmtExecute(ociHdbc, stmthp, ociError, &status);
-			DefineByPos(stmthp,&def,ociError,1, &lkID,&status);
+			BindByName(stmthp,&bnd1p,ociError,":nfrom",&node_from,sizeof(node_from),SQLT_INT,0,&status);
+			AttrSet(stmthp,OCI_HTYPE_STMT,&prefetch_rows,0,OCI_ATTR_PREFETCH_ROWS,ociError, &status);
+			StmtExecute(ociHdbc, stmthp, ociError, 0, &status);
+			DefineByPos(stmthp,&def,ociError,1, &lkID,sizeof(lkID),SQLT_INT,&status);
 												
 		}catch(Error err){
 			sprintf(appliName,"GetLkFromDevID");	///////
@@ -2902,13 +2900,13 @@ EXTERN_CONFDB
 		char select_query[1000];
 		
 		try{
-			HandleAlloc(ociEnv,&stmthp,ociError,&status);
+			HandleAlloc(ociEnv,(dvoid**)&stmthp,OCI_HTYPE_STMT,&status);
 			sprintf(select_query,"select t.linkid from %s t,%s e where t.portIDTO=e.portid and e.deviceid=:nTO and e.port_way=1",MACRO_CONNECTIVITY_TABLE,PORT_TABLE);
 			StmtPrepare(stmthp,ociError,select_query, &status);
-			BindByName(stmthp,&bnd1p,ociError,":nto",&node_to,&status);
-			AttrSet(stmthp,&prefetch_rows,ociError, &status);
-			StmtExecute(ociHdbc, stmthp, ociError, &status);
-			DefineByPos(stmthp,&def,ociError,1, &lkID,&status);
+			BindByName(stmthp,&bnd1p,ociError,":nto",&node_to,sizeof(node_to),SQLT_INT,0,&status);
+			AttrSet(stmthp,OCI_HTYPE_STMT,&prefetch_rows,0,OCI_ATTR_PREFETCH_ROWS,ociError,&status);
+			StmtExecute(ociHdbc, stmthp, ociError, 0, &status);
+			DefineByPos(stmthp,&def,ociError,1, &lkID,sizeof(lkID),SQLT_INT,&status);
 												
 		}catch(Error err){
 			sprintf(appliName,"GetLkToDevID");	///////
@@ -3033,13 +3031,13 @@ EXTERN_CONFDB
 		char select_query[1000];
 		
 		try{
-			HandleAlloc(ociEnv,&stmthp,ociError,&status);
+			HandleAlloc(ociEnv,(dvoid**)&stmthp,OCI_HTYPE_STMT,&status);
 			sprintf(select_query,"select portid from %s where deviceid=:dID",PORT_TABLE);
 			StmtPrepare(stmthp,ociError,select_query, &status);
-			BindByName(stmthp,&bnd1p,ociError,":dID",&devID,&status);
-			AttrSet(stmthp,&prefetch_rows,ociError, &status);
-			StmtExecute(ociHdbc, stmthp, ociError, &status);
-			DefineByPos(stmthp,&def,ociError,1, &portID,&status);												
+			BindByName(stmthp,&bnd1p,ociError,":dID",&devID,sizeof(devID),SQLT_INT,0,&status);
+			AttrSet(stmthp,OCI_HTYPE_STMT,&prefetch_rows,0,OCI_ATTR_PREFETCH_ROWS,ociError,&status);
+			StmtExecute(ociHdbc, stmthp, ociError, 0, &status);
+			DefineByPos(stmthp,&def,ociError,1, &portID,sizeof(portID),SQLT_INT,&status);												
 		}catch(Error err){
 			sprintf(appliName,"GetPortIDPerDevID");	///////
 			rescode=ShowErrors (status, err.ociError, err.log);
@@ -3166,19 +3164,19 @@ EXTERN_CONFDB
 		char select_query[1000];
 		
 		try{
-			HandleAlloc(ociEnv,&stmthp,ociError,&status);
+			HandleAlloc(ociEnv,(dvoid**)&stmthp,OCI_HTYPE_STMT,&status);
 			sprintf(select_query,"select port_nbr||'|'||nvl(port_type,'none')||'|'||port_way||'|'||nvl(macaddress,'none')||'|'||nvl(bia, 'none')||'?' from %s where serialnb=:snb",HWPORT_TABLE);
 			StmtPrepare(stmthp,ociError,select_query, &status);
-			BindByName(stmthp,&bnd1p,ociError,":snb",serialnb,&status);
-			AttrSet(stmthp,&prefetch_rows,ociError, &status);
-			StmtExecute(ociHdbc, stmthp, ociError, &status);
+			BindByName(stmthp,&bnd1p,ociError,":snb",serialnb,strlen(serialnb)+1, SQLT_STR, 0,&status);
+			AttrSet(stmthp,OCI_HTYPE_STMT,&prefetch_rows,0,OCI_ATTR_PREFETCH_ROWS,ociError,&status);
+			StmtExecute(ociHdbc, stmthp, ociError, 0, &status);
 			/* The next two statements describe the select-list item, dept, and return its length to allocate the memory*/
 			ParamGet(stmthp, ociError, &parmdp, 1, &status);
 			AttrGet(parmdp, (sb4*) &len_port, ociError, &status);
 			
 			port_info=(char*) malloc((len_port+1)*sizeof(char));
 			if(port_info!=NULL)
-				DefineByPos(stmthp,&def,ociError,1, port_info,len_port+1,&status);												
+				DefineByPos(stmthp,&def,ociError,1, port_info,len_port+1,SQLT_STR,&status);
 			else
 			{
 				status=-10;
@@ -3305,12 +3303,12 @@ EXTERN_CONFDB
 		char select_query[1000];
 		
 		try{
-			HandleAlloc(ociEnv,&stmthp,ociError,&status);
+			HandleAlloc(ociEnv,(dvoid**)&stmthp,OCI_HTYPE_STMT,&status);
 			sprintf(select_query,"select t.port_nbr||'|'||t.port_way||'|'||nvl(t.port_type,'none')||'|'||f.macaddress||'|'||t.ipaddress||'?' from %s t,%s f,%s d where d.deviceid=:dID and d.serialnb=f.serialnb and d.deviceid=t.deviceid and f.port_nbr=t.port_nbr and nvl(f.port_type,'none')=nvl(t.port_type,'none') and f.port_way=t.port_way and t.ipaddress is not null ",PORT_TABLE,HWPORT_TABLE,LOGICAL_DEVICE_TABLE);
 			StmtPrepare(stmthp,ociError,select_query, &status);
-			BindByName(stmthp,&bnd1p,ociError,":dID",&devID,&status);
-			AttrSet(stmthp,&prefetch_rows,ociError, &status);
-			StmtExecute(ociHdbc, stmthp, ociError, &status);
+			BindByName(stmthp,&bnd1p,ociError,":dID",&devID,sizeof(devID),SQLT_INT,0,&status);
+			AttrSet(stmthp,OCI_HTYPE_STMT,&prefetch_rows,0,OCI_ATTR_PREFETCH_ROWS,ociError, &status);
+			StmtExecute(ociHdbc, stmthp, ociError, 0, &status);
 			ParamGet(stmthp, ociError, &parmdp, 1, &status);
 			AttrGet(parmdp, (sb4*) &etherlen, ociError, &status);
 						
@@ -3325,7 +3323,7 @@ EXTERN_CONFDB
 			}
 			else
 				//add 2 because 1 for \0 and 1 for ?
-				DefineByPos(stmthp,&def,ociError,1, etheradd,etherlen+1,&status);																			
+				DefineByPos(stmthp,&def,ociError,1, etheradd,etherlen+1,SQLT_STR,&status);
 		}catch(Error err){
 			sprintf(appliName,"GetMacIPAddPerDevID");	///////
 			rescode=ShowErrors (status, err.ociError, err.log);
@@ -3464,14 +3462,14 @@ EXTERN_CONFDB
 		}
 		
 		try{
-			HandleAlloc(ociEnv,&stmthp,ociError,&status);
+			HandleAlloc(ociEnv,(dvoid**)&stmthp,OCI_HTYPE_STMT,&status);
 			sprintf(select_query,"select distinct s.devicename||'|' from %s t, %s s, %s l, %s g ,%s d,%s f where t.devicename=:dname and l.node1=t.deviceid and l.node11=s.deviceid and  g.deviceid=t.deviceid  and g.port_nbr=:ptnb and g.port_way=2 and g.portid=d.portidfrom and nvl(g.port_type,'none')=:ptype and d.portidto=f.portid and f.deviceid=l.node2", LOGICAL_DEVICE_TABLE,LOGICAL_DEVICE_TABLE,PATHDETAILS_TABLE,PORT_TABLE,MACRO_CONNECTIVITY_TABLE,PORT_TABLE);
 			StmtPrepare(stmthp,ociError, select_query, &status);
-			BindByName(stmthp,&bnd1p,ociError,":ptnb",port_nb,&status);
-            BindByName(stmthp,&bnd1p,ociError,":ptype",port_type,&status);
-			BindByName(stmthp,&bnd1p,ociError,":dname",devname,&status);
-			AttrSet(stmthp,&prefetch_rows,ociError, &status);
-			StmtExecute(ociHdbc, stmthp, ociError, &status);
+			BindByName(stmthp,&bnd1p,ociError,":ptnb",port_nb,strlen(port_nb)+1, SQLT_STR, 0,&status);
+            BindByName(stmthp,&bnd1p,ociError,":ptype",port_type,strlen(port_type)+1, SQLT_STR, 0,&status);
+			BindByName(stmthp,&bnd1p,ociError,":dname",devname,strlen(devname)+1, SQLT_STR, 0,&status);
+			AttrSet(stmthp,OCI_HTYPE_STMT,&prefetch_rows,0,OCI_ATTR_PREFETCH_ROWS,ociError, &status);
+			StmtExecute(ociHdbc, stmthp, ociError, 0, &status);
 
 			ParamGet(stmthp, ociError, &parmdp, 1, &status);
 			AttrGet(parmdp, &devlen, ociError, &status);
@@ -3488,7 +3486,7 @@ EXTERN_CONFDB
 			}
 			else
 				//add 2 because 1 for \0 and 1 for ?
-				DefineByPos(stmthp,&def,ociError,1, destin,devlen+1,&status);										
+				DefineByPos(stmthp,&def,ociError,1, destin,devlen+1,SQLT_STR,&status);
 		}catch(Error err){
 			sprintf(appliName,"GetDestinationNamePerDevPort");	///////
 			rescode=ShowErrors (status, err.ociError, err.log);
@@ -3613,19 +3611,19 @@ EXTERN_CONFDB
 		}
 
 		try{
-			HandleAlloc(ociEnv,&stmthp,ociError,&status);
+			HandleAlloc(ociEnv,(dvoid**)&stmthp,OCI_HTYPE_STMT,&status);
 			sprintf(selectdevID,"select t.devicename||'|' from %s t, %s f where t.devicetypeID=f.devicetypeID and f.devicetype=:dtype and t.active=0 and t.nodeused=1",LOGICAL_DEVICE_TABLE,DEVICETYPE_TABLE);
 			StmtPrepare(stmthp,ociError,selectdevID, &status);
-			BindByName(stmthp,&bnd1p,ociError,":dtype",devitype,&status);
-			AttrSet(stmthp,&prefetch_rows,ociError, &status);
-			StmtExecute(ociHdbc, stmthp, ociError, &status);
+			BindByName(stmthp,&bnd1p,ociError,":dtype",devitype,strlen(devitype)+1, SQLT_STR, 0,&status);
+			AttrSet(stmthp,OCI_HTYPE_STMT,&prefetch_rows,0,OCI_ATTR_PREFETCH_ROWS,ociError, &status);
+			StmtExecute(ociHdbc, stmthp, ociError, 0, &status);
 						
 			ParamGet(stmthp, ociError, &parmdp, 1, &status);
 			AttrGet(parmdp, &len_devname, ociError, &status);
 			
 			devName=(char*)malloc((len_devname+1)*sizeof(char));
 			if(devName!=NULL)
-				DefineByPos(stmthp,&def,ociError,1, devName,len_devname+1,&status);
+				DefineByPos(stmthp,&def,ociError,1, devName,len_devname+1,SQLT_STR,&status);
 			else
 			{
 				status=-10;
@@ -3749,12 +3747,12 @@ EXTERN_CONFDB
 		}
 
 		try{
-			HandleAlloc(ociEnv,&stmthp,ociError,&status);
+			HandleAlloc(ociEnv,(dvoid**)&stmthp,OCI_HTYPE_STMT,&status);
 			sprintf(selectdev,"select deviceid from %s where devicename=:dname",LOGICAL_DEVICE_TABLE);
 			StmtPrepare(stmthp,ociError, selectdev, &status);
-			BindByName(stmthp,&bnd1p,ociError,":dname",deviname,&status);
-            StmtExecute(ociHdbc, stmthp, ociError, &status);
-			DefineByPos(stmthp,def,ociError,1, &deviceID,&status);										
+			BindByName(stmthp,&bnd1p,ociError,":dname",deviname,strlen(deviname)+1, SQLT_STR, 0,&status);
+            StmtExecute(ociHdbc, stmthp, ociError, 0, &status);
+			DefineByPos(stmthp,def,ociError,1, &deviceID,sizeof(deviceID),SQLT_INT,&status);										
 		}catch(Error err){
 			sprintf(appliName,"GetDeviceID_devicename");	///////
 			rescode=ShowErrors (status, err.ociError, err.log);
@@ -3820,15 +3818,15 @@ EXTERN_CONFDB
 		char selectdev[1000];
 
 		try{
-			HandleAlloc(ociEnv,&stmthp,ociError,&status);
+			HandleAlloc(ociEnv,(dvoid**)&stmthp,OCI_HTYPE_STMT,&status);
 			sprintf(selectdev,"select portid from %s where deviceid=:devid and port_nbr=:pnb and nvl(port_type,'none')=:ptype and port_way=:pway",PORT_TABLE);
 			StmtPrepare(stmthp,ociError, selectdev, &status);
-			BindByName(stmthp,&bnd1p[0],ociError,":devid",&deviceID,&status);
-			BindByName(stmthp,&bnd1p[1],ociError,":pnb",port_nb,&status);
-			BindByName(stmthp,&bnd1p[2],ociError,":ptype",port_type,&status);
-			BindByName(stmthp,&bnd1p[3],ociError,":pway",&port_way,&status);
-			StmtExecute(ociHdbc, stmthp, ociError, &status);
-			DefineByPos(stmthp,def,ociError,1, &portID,&status);																		
+			BindByName(stmthp,&bnd1p[0],ociError,":devid",&deviceID,sizeof(deviceID),SQLT_INT,0,&status);
+			BindByName(stmthp,&bnd1p[1],ociError,":pnb",port_nb,strlen(port_nb)+1, SQLT_STR, 0,&status);
+			BindByName(stmthp,&bnd1p[2],ociError,":ptype",port_type,strlen(port_type)+1, SQLT_STR, 0,&status);
+			BindByName(stmthp,&bnd1p[3],ociError,":pway",&port_way,sizeof(port_way),SQLT_INT,0,&status);
+			StmtExecute(ociHdbc, stmthp, ociError, 0, &status);
+			DefineByPos(stmthp,def,ociError,1, &portID,sizeof(portID),SQLT_INT,&status);
 		}catch(Error err){
 			sprintf(appliName,"GetPortID_portinfo");	///////
 			rescode=ShowErrors (status, err.ociError, err.log);
@@ -3894,15 +3892,15 @@ EXTERN_CONFDB
 		char selectdev[1000];
 
 		try{
-			HandleAlloc(ociEnv,&stmthp,ociError,&status);
+			HandleAlloc(ociEnv,(dvoid**)&stmthp,OCI_HTYPE_STMT,&status);
 			sprintf(selectdev,"select devicename||'?' from %s where deviceid=:devid",LOGICAL_DEVICE_TABLE);
 			StmtPrepare(stmthp,ociError, selectdev, &status);			
-			BindByName(stmthp,&bnd1p,ociError,":devid",&deviceID,&status);			
-			StmtExecute(ociHdbc, stmthp, ociError, &status);
+			BindByName(stmthp,&bnd1p,ociError,":devid",&deviceID,sizeof(deviceID),SQLT_INT,0,&status);			
+			StmtExecute(ociHdbc, stmthp, ociError, 0, &status);
 			/* The next two statements describe the select-list item, dept, and return its length to allocate the memory*/
 			ParamGet(stmthp, ociError, &parmdp, 1, &status);
 			AttrGet(parmdp, (sb4*) &devlen, ociError, &status);	
-			DefineByPos(stmthp,def,ociError,1, devicename,devlen+1,&status);	
+			DefineByPos(stmthp,def,ociError,1, devicename,devlen+1,SQLT_STR,&status);
 
 		}catch(Error err){
 			sprintf(appliName,"GetDeviceName_deviceid");	///////
@@ -3980,19 +3978,19 @@ EXTERN_CONFDB
 		}
 		
 		try{
-			HandleAlloc(ociEnv,&stmthp,ociError,&status);
+			HandleAlloc(ociEnv,(dvoid**)&stmthp,OCI_HTYPE_STMT,&status);
 			sprintf(selectdevID,"select devicename||'|' from %s where instr(nvl(location,'none'),:location)>0",LOGICAL_DEVICE_TABLE);
 			StmtPrepare(stmthp,ociError, selectdevID, &status);
-			BindByName(stmthp,&bnd1p,ociError,":location", location,&status);
-			AttrSet(stmthp,&prefetch_rows,ociError, &status);
-			StmtExecute(ociHdbc, stmthp, ociError, &status);
+			BindByName(stmthp,&bnd1p,ociError,":location", location,strlen(location)+1, SQLT_STR, 0,&status);
+			AttrSet(stmthp,OCI_HTYPE_STMT,&prefetch_rows,0,OCI_ATTR_PREFETCH_ROWS,ociError, &status);
+			StmtExecute(ociHdbc, stmthp, ociError, 0, &status);
 			/* The next two statements describe the select-list item, dept, and return its length to allocate the memory*/
 			ParamGet(stmthp, ociError, &parmdp, 1, &status);
 			AttrGet(parmdp, &len_devname, ociError, &status);
 			
 			devName=(char*)malloc((len_devname+1)*sizeof(char));
 			if(devName!=NULL)
-				DefineByPos(stmthp,&def,ociError,1, devName,len_devname+1,&status);	
+				DefineByPos(stmthp,&def,ociError,1, devName,len_devname+1,SQLT_STR,&status);
 			else
 			{
 				status=-10;
@@ -4122,22 +4120,22 @@ EXTERN_CONFDB
 		}
 		
 		try{
-			HandleAlloc(ociEnv,&stmthp,ociError,&status);
+			HandleAlloc(ociEnv,(dvoid**)&stmthp,OCI_HTYPE_STMT,&status);
 			if(strstr(function,"none")==NULL)
 				sprintf(selectdevID,"select t.devicename||'|' from %s t , %s e where mod(t.functionid,e.functionid)=0 and e.function_name=:fct and t.functionID!=0 ",LOGICAL_DEVICE_TABLE,DEVICE_FUNCTION_TABLE);
 			else
 				sprintf(selectdevID," select t.devicename||'|' from %s t where functionid=0",LOGICAL_DEVICE_TABLE);
 			StmtPrepare(stmthp,ociError, selectdevID, &status);
 			if(strstr(function,"none")==NULL)
-				BindByName(stmthp,&bnd1p,ociError,":fct",function,&status);
-			AttrSet(stmthp,&prefetch_rows,ociError, &status);
-			StmtExecute(ociHdbc, stmthp, ociError, &status);
+				BindByName(stmthp,&bnd1p,ociError,":fct",function,strlen(function)+1, SQLT_STR, 0,&status);
+			AttrSet(stmthp,OCI_HTYPE_STMT,&prefetch_rows,0,OCI_ATTR_PREFETCH_ROWS,ociError, &status);
+			StmtExecute(ociHdbc, stmthp, ociError, 0, &status);
 			/* The next two statements describe the select-list item, dept, and return its length to allocate the memory*/
 			ParamGet(stmthp, ociError, &parmdp, 1, &status);
 			AttrGet(parmdp, &len_devname, ociError, &status);
 			devName=(char*)malloc((len_devname+1)*sizeof(char));
 			if(devName!=NULL)
-				DefineByPos(stmthp,&def,ociError,1, devName,len_devname+1,&status);	
+				DefineByPos(stmthp,&def,ociError,1, devName,len_devname+1,SQLT_STR,&status);	
 			else
 			{
 				status=-10;
@@ -4265,19 +4263,19 @@ EXTERN_CONFDB
 		}
 		
 		try{
-			HandleAlloc(ociEnv,&stmthp,ociError,&status);
+			HandleAlloc(ociEnv,(dvoid**)&stmthp,OCI_HTYPE_STMT,&status);
 			sprintf(selectdevID,"select serialnb||'|'||nvl(hwname,'none')||'?' from %s where nvl(location,'none')=:location and device_status=%d",HW_DEVICE_TABLE,SPARE);
 			StmtPrepare(stmthp,ociError, selectdevID, &status);
-			BindByName(stmthp,&bnd1p,ociError,":location",location,&status);
-			AttrSet(stmthp,&prefetch_rows,ociError, &status);
-			StmtExecute(ociHdbc, stmthp, ociError, &status);
+			BindByName(stmthp,&bnd1p,ociError,":location",location,strlen(location)+1, SQLT_STR, 0,&status);
+			AttrSet(stmthp,OCI_HTYPE_STMT,&prefetch_rows,0,OCI_ATTR_PREFETCH_ROWS,ociError,&status);
+			StmtExecute(ociHdbc, stmthp, ociError, 0, &status);
 			/*The next two statements describe the select-list item, dept, and return its length to allocate the memory*/
 			ParamGet(stmthp, ociError, &parmdp, 1, &status);
 			AttrGet(parmdp, &len_devname, ociError, &status);
 			
 			devName=(char*)malloc((len_devname+1)*sizeof(char));
 			if(devName!=NULL)
-				DefineByPos(stmthp,&def,ociError,1, devName,len_devname+1,&status);		
+				DefineByPos(stmthp,&def,ociError,1, devName,len_devname+1,SQLT_STR,&status);
 			else
 			{
 				status=-10;
@@ -4407,19 +4405,19 @@ EXTERN_CONFDB
 		}
 		
 		try{
-			HandleAlloc(ociEnv,&stmthp,ociError,&status);
+			HandleAlloc(ociEnv,(dvoid**)&stmthp,OCI_HTYPE_STMT,&status);
 			sprintf(selectdevID,"select serialnb||'|'||nvl(hwname,'none')||'?' from %s where nvl(hwtype,'none')=:hwtype and device_status=%d",HW_DEVICE_TABLE, SPARE);
 			StmtPrepare(stmthp,ociError, selectdevID, &status);
-			BindByName(stmthp,&bnd1p,ociError,":hwtype",hwtype,&status);
-			AttrSet(stmthp,&prefetch_rows,ociError, &status);
-			StmtExecute(ociHdbc, stmthp, ociError, &status);
+			BindByName(stmthp,&bnd1p,ociError,":hwtype",hwtype,strlen(hwtype)+1, SQLT_STR, 0,&status);
+			AttrSet(stmthp,OCI_HTYPE_STMT,&prefetch_rows,0,OCI_ATTR_PREFETCH_ROWS,ociError,&status);
+			StmtExecute(ociHdbc, stmthp, ociError, 0, &status);
 			/* The next two statements describe the select-list item, dept, and return its length to allocate the memory*/
 			ParamGet(stmthp, ociError, &parmdp, 1, &status);
 			AttrGet(parmdp, &len_devname, ociError, &status);
 
 			devName=(char*)malloc((len_devname+1)*sizeof(char));
 			if(devName!=NULL)				
-				DefineByPos(stmthp,&def,ociError,1, devName,len_devname+1,&status);		
+				DefineByPos(stmthp,&def,ociError,1, devName,len_devname+1,SQLT_STR,&status);	
 			else
 			{
 				status=-10;
@@ -4561,11 +4559,11 @@ EXTERN_CONFDB
 		char selectdev[1000];
 
 		try{
-			HandleAlloc(ociEnv,&stmthp,ociError,&status);
+			HandleAlloc(ociEnv,(dvoid**)&stmthp,OCI_HTYPE_STMT,&status);
 			sprintf(selectdev," select nvl(t.hwname,'none')||'?',nvl(t.hwtype,'none')||'?',t.device_status,nvl(t.responsible,'none')||'?',nvl(t.user_comments,'none')||'?',nvl(t.location,'none')||'?',t.serialnb||'?',d.devicename||'?' from %s t,%s d where t.serialnb=:dname and t.serialnb=d.serialnb",HW_DEVICE_TABLE,LOGICAL_DEVICE_TABLE);
 			StmtPrepare(stmthp,ociError, selectdev, &status);
-			BindByName(stmthp,&bnd1p,ociError,":dname",serialnb,&status);
-			StmtExecute(ociHdbc, stmthp, ociError, &status);
+			BindByName(stmthp,&bnd1p,ociError,":dname",serialnb,strlen(serialnb)+1, SQLT_STR, 0,&status);
+			StmtExecute(ociHdbc, stmthp, ociError, 0, &status);
 			/* The next two statements describe the select-list item, dept, and return its length to allocate the memory*/
 			ParamGet(stmthp, ociError, &parmdp, 1, &status);
 			AttrGet(parmdp, &devlen, ociError, &status);
@@ -4611,14 +4609,14 @@ EXTERN_CONFDB
 				GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
 				return -1;
 			}
-			DefineByPos(stmthp,def,ociError,1, hwname_temp,devlen + 1,&status);		
-			DefineByPos(stmthp,def,ociError,2, hwtype_temp,devtypelen+1,&status);		
-			DefineByPos(stmthp,def,ociError,3, &status1,&status);		
-			DefineByPos(stmthp,def,ociError,4, responsible_temp,responlen+1,&status);		
-			DefineByPos(stmthp,def,ociError,5, comments_temp,commentslen+1, &status);		
-			DefineByPos(stmthp,def,ociError,6, location_temp,locationlen+1, &status);		
-			DefineByPos(stmthp,def,ociError,7, serialnb_temp,serialnblen+1, &status);		
-			DefineByPos(stmthp,def,ociError,8, dname_temp,dnamelen+1, &status);		
+			DefineByPos(stmthp,def,ociError,1, hwname_temp,devlen + 1,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,2, hwtype_temp,devtypelen+1,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,3, &status1,sizeof(status1),SQLT_INT,&status);		
+			DefineByPos(stmthp,def,ociError,4, responsible_temp,responlen+1,SQLT_STR,&status);		
+			DefineByPos(stmthp,def,ociError,5, comments_temp,commentslen+1,SQLT_STR,&status);		
+			DefineByPos(stmthp,def,ociError,6, location_temp,locationlen+1,SQLT_STR,&status);		
+			DefineByPos(stmthp,def,ociError,7, serialnb_temp,serialnblen+1,SQLT_STR,&status);		
+			DefineByPos(stmthp,def,ociError,8, dname_temp,dnamelen+1,SQLT_STR,&status);	
 			
 		}catch(Error err){
 			sprintf(appliName,"GetHWDeviceRow_serialnb");	///////
@@ -4655,15 +4653,15 @@ EXTERN_CONFDB
 				sprintf(selectdev," select nvl(hwname,'none')||'?',nvl(hwtype,'none')||'?',device_status,nvl(responsible,'none')||'?',nvl(user_comments,'none')||'?',nvl(location,'none')||'?',serialnb||'?' from %s where serialnb=:dname",HW_DEVICE_TABLE);
 				try{
                     StmtPrepare(stmthp,ociError, selectdev, &status);              
-					BindByName(stmthp,&bnd1p,ociError,":dname",serialnb,&status);
-    				StmtExecute(ociHdbc, stmthp, ociError, &status);
-					DefineByPos(stmthp,def,ociError,1, hwname_temp,devlen + 1,&status);		
-					DefineByPos(stmthp,def,ociError,2, hwtype_temp,devtypelen+1,&status);		
-					DefineByPos(stmthp,def,ociError,3, &status1,&status);		
-					DefineByPos(stmthp,def,ociError,4, responsible_temp,responlen+1,&status);		
-					DefineByPos(stmthp,def,ociError,5, comments_temp,commentslen+1,&status);		
-					DefineByPos(stmthp,def,ociError,6, location_temp,locationlen+1,&status);		
-					DefineByPos(stmthp,def,ociError,7, serialnb_temp,serialnblen+1,&status);						
+					BindByName(stmthp,&bnd1p,ociError,":dname",serialnb,strlen(serialnb)+1, SQLT_STR, 0,&status);
+    				StmtExecute(ociHdbc, stmthp, ociError, 0, &status);
+					DefineByPos(stmthp,def,ociError,1, hwname_temp,devlen + 1,SQLT_STR,&status);	
+					DefineByPos(stmthp,def,ociError,2, hwtype_temp,devtypelen+1,SQLT_STR,&status);
+					DefineByPos(stmthp,def,ociError,3, &status1,sizeof(status1),SQLT_INT,&status);		
+					DefineByPos(stmthp,def,ociError,4, responsible_temp,responlen+1,SQLT_STR,&status);
+					DefineByPos(stmthp,def,ociError,5, comments_temp,commentslen+1,SQLT_STR,&status);
+					DefineByPos(stmthp,def,ociError,6, location_temp,locationlen+1,SQLT_STR,&status);		
+					DefineByPos(stmthp,def,ociError,7, serialnb_temp,serialnblen+1,SQLT_STR,&status);						
 				}catch(Error err){
 					sprintf(appliName,"GetHWDeviceRow_serialnb");	///////
 					rescode=ShowErrors (status, err.ociError, err.log);
@@ -4764,19 +4762,19 @@ EXTERN_CONFDB
 		}
 		
 		try{
-			HandleAlloc(ociEnv,&stmthp,ociError,&status);
+			HandleAlloc(ociEnv,(dvoid**)&stmthp,OCI_HTYPE_STMT,&status);
 			sprintf(selectdevID,"select t.ipalias||'|' from %s t , %s d where t.ipaddress=d.ipaddress and d.ipname=:ipname",IPALIAS_TABLE,IPINFO_TABLE);
 			StmtPrepare(stmthp,ociError, selectdevID, &status);
-			BindByName(stmthp,&bnd1p,ociError,":ipname",ipname,&status);
-			AttrSet(stmthp,&prefetch_rows,ociError, &status);
-			StmtExecute(ociHdbc, stmthp, ociError, &status);
+			BindByName(stmthp,&bnd1p,ociError,":ipname",ipname,strlen(ipname)+1, SQLT_STR, 0,&status);
+			AttrSet(stmthp,OCI_HTYPE_STMT,&prefetch_rows,0,OCI_ATTR_PREFETCH_ROWS,ociError,&status);
+			StmtExecute(ociHdbc, stmthp, ociError, 0, &status);
 			/* The next two statements describe the select-list item, dept, and return its length to allocate the memory*/
 			ParamGet(stmthp, ociError, &parmdp, 1, &status);
 			AttrGet(parmdp, &len_devname, ociError, &status);
 
 			devName=(char*)malloc((len_devname+1)*sizeof(char));
 			if(devName!=NULL)
-				DefineByPos(stmthp,&def,ociError,1, devName,len_devname+1,&status);		
+				DefineByPos(stmthp,&def,ociError,1, devName,len_devname+1,SQLT_STR,&status);
 			else
 			{
 				status=-10;
@@ -4898,18 +4896,18 @@ EXTERN_CONFDB
 		char selectdevID[1000];
 
 		try{
-			HandleAlloc(ociEnv,&stmthp,ociError,&status);
+			HandleAlloc(ociEnv,(dvoid**)&stmthp,OCI_HTYPE_STMT,&status);
 			sprintf(selectdevID,"select function_name||'|' from %s",DEVICE_FUNCTION_TABLE);
 			StmtPrepare(stmthp,ociError, selectdevID, &status);
-			AttrSet(stmthp,&prefetch_rows,ociError, &status);
-			StmtExecute(ociHdbc, stmthp, ociError, &status);
+			AttrSet(stmthp,OCI_HTYPE_STMT,&prefetch_rows,0,OCI_ATTR_PREFETCH_ROWS,ociError,&status);
+			StmtExecute(ociHdbc, stmthp, ociError, 0, &status);
 			/* The next two statements describe the select-list item, dept, and return its length to allocate the memory*/
 			ParamGet(stmthp, ociError, &parmdp, 1, &status);
 			AttrGet(parmdp, &len_devname, ociError, &status);
 			
 			devName=(char*)malloc((len_devname+1)*sizeof(char));
 			if(devName!=NULL)
-				DefineByPos(stmthp,&def,ociError,1, devName,len_devname+1,&status);		
+				DefineByPos(stmthp,&def,ociError,1, devName,len_devname+1,SQLT_STR,&status);
 			else
 			{
 				status=-10;
@@ -5042,11 +5040,11 @@ EXTERN_CONFDB
 		}
 		
 		try{
-			HandleAlloc(ociEnv,&stmthp,ociError,&status);
+			HandleAlloc(ociEnv,(dvoid**)&stmthp,OCI_HTYPE_STMT,&status);
 			sprintf(selectdevtype,"select t.ipaddress||'?',t.ipalias||'?',e.ipname||'?',e.subnet_info||'?' from %s t,%s e where t.ipalias=:ipalias and t.ipaddress=e.ipaddress ",IPALIAS_TABLE,IPINFO_TABLE);
 			StmtPrepare(stmthp,ociError, selectdevtype, &status);
-			BindByName(stmthp,&bnd1p,ociError,":ipalias",ipalias,&status);
-			StmtExecute(ociHdbc, stmthp, ociError, &status);
+			BindByName(stmthp,&bnd1p,ociError,":ipalias",ipalias,strlen(ipalias)+1, SQLT_STR, 0,&status);
+			StmtExecute(ociHdbc, stmthp, ociError, 0, &status);
 			/* The next two statements describe the select-list item, dept, and return its length to allocate the memory*/
 			ParamGet(stmthp, ociError, &parmdp, 2, &status);
 			AttrGet(parmdp,  &ipalias_len, ociError, &status);
@@ -5073,10 +5071,10 @@ EXTERN_CONFDB
 				GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
 				return -1;
 			}
-			DefineByPos(stmthp,def,ociError,1,ipaddress_temp, ipadd_len + 1,&status);		
-			DefineByPos(stmthp,def,ociError,2,ipalias_temp,ipalias_len,&status);		
-			DefineByPos(stmthp,def,ociError,3,ipname_temp,ipname_len,&status);		
-			DefineByPos(stmthp,def,ociError,4,subnet_temp,ipadd_len,&status);		
+			DefineByPos(stmthp,def,ociError,1,ipaddress_temp, ipadd_len + 1,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,2,ipalias_temp,ipalias_len,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,3,ipname_temp,ipname_len,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,4,subnet_temp,ipadd_len,SQLT_STR,&status);
 						
 		}catch(Error err){
 			sprintf(appliName,"GetIPAliasRow");	///////
@@ -5168,13 +5166,13 @@ EXTERN_CONFDB
 		}
 		
 		try{
-			HandleAlloc(ociEnv,&stmthp,ociError,&status);
+			HandleAlloc(ociEnv,(dvoid**)&stmthp,OCI_HTYPE_STMT,&status);
 			sprintf(selectdevID,"select t.linkid from %s t where instr(nvl(t.link_info,'none'),:lkinfo)>0",MACRO_CONNECTIVITY_TABLE);
 			StmtPrepare(stmthp,ociError, selectdevID, &status);
-			BindByName(stmthp,&bnd1p,ociError,":lkinfo",lkinfo,&status);
-			AttrSet(stmthp,&prefetch_rows,ociError, &status);
-			StmtExecute(ociHdbc, stmthp, ociError, &status);
-			DefineByPos(stmthp,&def,ociError,1,&lkID,&status);
+			BindByName(stmthp,&bnd1p,ociError,":lkinfo",lkinfo,strlen(lkinfo)+1, SQLT_STR, 0,&status);
+			AttrSet(stmthp,OCI_HTYPE_STMT,&prefetch_rows,0,OCI_ATTR_PREFETCH_ROWS,ociError,&status);
+			StmtExecute(ociHdbc, stmthp, ociError, 0, &status);
+			DefineByPos(stmthp,&def,ociError,1,&lkID,sizeof(lkID),SQLT_INT,&status);
 
 		}catch(Error err){
 			sprintf(appliName,"GetLkIDsPerLkInfo");	///////
@@ -5297,18 +5295,18 @@ EXTERN_CONFDB
 		char selectdevID[1000];
 
 		try{
-			HandleAlloc(ociEnv,&stmthp,ociError,&status);
+			HandleAlloc(ociEnv,(dvoid**)&stmthp,OCI_HTYPE_STMT,&status);
 			sprintf(selectdevID,"select system_name||'|' from %s",SUBSYSTEM_TABLE);
 			StmtPrepare(stmthp,ociError, selectdevID, &status);
-			AttrSet(stmthp,&prefetch_rows,ociError, &status);
-			StmtExecute(ociHdbc, stmthp, ociError, &status);
+			AttrSet(stmthp,OCI_HTYPE_STMT,&prefetch_rows,0,OCI_ATTR_PREFETCH_ROWS,ociError,&status);
+			StmtExecute(ociHdbc, stmthp, ociError, 0, &status);
 			/* The next two statements describe the select-list item, dept, and return its length to allocate the memory*/
 			ParamGet(stmthp, ociError, &parmdp, 1, &status);
 			AttrGet(parmdp, &len_devname, ociError, &status);
 			
 			devName=(char*)malloc((len_devname+1)*sizeof(char));
 			if(devName!=NULL)
-				DefineByPos(stmthp,&def,ociError,1,devName,len_devname+1,&status);
+				DefineByPos(stmthp,&def,ociError,1,devName,len_devname+1,SQLT_STR,&status);
 			else
 			{
 				status=-10;
@@ -5432,18 +5430,18 @@ EXTERN_CONFDB
 		char selectdevID[1000];
 
 		try{
-			HandleAlloc(ociEnv,&stmthp,ociError,&status);
+			HandleAlloc(ociEnv,(dvoid**)&stmthp,OCI_HTYPE_STMT,&status);
 			sprintf(selectdevID,"select distinct nvl(hwtype,'none')||'?' from %s where device_status=%d",HW_DEVICE_TABLE,SPARE);
 			StmtPrepare(stmthp,ociError, selectdevID, &status);
-			AttrSet(stmthp,&prefetch_rows,ociError, &status);
-			StmtExecute(ociHdbc, stmthp, ociError, &status);
+			AttrSet(stmthp,OCI_HTYPE_STMT,&prefetch_rows,0,OCI_ATTR_PREFETCH_ROWS,ociError,&status);
+			StmtExecute(ociHdbc, stmthp, ociError, 0, &status);
 			/* The next two statements describe the select-list item, dept, and return its length to allocate the memory*/
 			ParamGet(stmthp, ociError, &parmdp, 1, &status);
 			AttrGet(parmdp, &len_devname, ociError, &status);
 			
 			devName=(char*)malloc((len_devname+1)*sizeof(char));
 			if(devName!=NULL)
-				DefineByPos(stmthp,&def,ociError,1, devName,len_devname+1,&status);		
+				DefineByPos(stmthp,&def,ociError,1, devName,len_devname+1,SQLT_STR,&status);	
 			else
 			{
 				status=-10;
@@ -5591,14 +5589,14 @@ EXTERN_CONFDB
 		}
 
 		try{
-			HandleAlloc(ociEnv,&stmthp,ociError,&status);
+			HandleAlloc(ociEnv,(dvoid**)&stmthp,OCI_HTYPE_STMT,&status);
 			sprintf(selectport,"select e.serialnb||'?',e.port_nbr||'?',e.port_way,nvl(e.port_type,'none')||'?',nvl(e.bia,'none')||'?',nvl(e.macaddress,'none')||'?' from %s e where e.serialnb=:snb and e.port_nbr=:portnb and e.port_way=:portway and nvl(e.port_type,'none')=:portype",HWPORT_TABLE);
 			StmtPrepare(stmthp,ociError, selectport, &status);
-			BindByName(stmthp,&bnd1p[0],ociError,":snb",serialnb,&status);
-			BindByName(stmthp,&bnd1p[1],ociError,":portnb",port_nb,&status);
-			BindByName(stmthp,&bnd1p[2],ociError,":portway",&port_way,&status);
-			BindByName(stmthp,&bnd1p[3],ociError,":portype",port_type1,&status);
-			StmtExecute(ociHdbc, stmthp, ociError, &status);
+			BindByName(stmthp,&bnd1p[0],ociError,":snb",serialnb,strlen(serialnb)+1, SQLT_STR, 0,&status);
+			BindByName(stmthp,&bnd1p[1],ociError,":portnb",port_nb,strlen(port_nb)+1, SQLT_STR, 0,&status);
+			BindByName(stmthp,&bnd1p[2],ociError,":portway",&port_way,sizeof(port_way),SQLT_INT,0,&status);
+			BindByName(stmthp,&bnd1p[3],ociError,":portype",port_type1,strlen(port_type1)+1, SQLT_STR, 0,&status);
+			StmtExecute(ociHdbc, stmthp, ociError, 0, &status);
 			ParamGet(stmthp, ociError, &parmdp, 1, &status);
 			AttrGet(parmdp, &dnamelen, ociError, &status);
 			ParamGet(stmthp, ociError, &parmdp, 2, &status);
@@ -5635,12 +5633,12 @@ EXTERN_CONFDB
 				GetErrorMess(appliName,"REALLOC UNSUCCESSFUL",ErrorMessage,1);
 				return -1;
 			}
-			DefineByPos(stmthp,def,ociError,1, snb_temp,dnamelen+1,&status);		
-			DefineByPos(stmthp,def,ociError,2, portnb_temp,portnblen+1,&status);		
-			DefineByPos(stmthp,def,ociError,3, &portway,&status);		
-			DefineByPos(stmthp,def,ociError,4, portype_temp,portypelen+1,&status);		
-			DefineByPos(stmthp,def,ociError,5, bia_temp, bialen + 1,&status);		
-			DefineByPos(stmthp,def,ociError,6, mac_temp,maclen+1,&status);		
+			DefineByPos(stmthp,def,ociError,1, snb_temp,dnamelen+1,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,2, portnb_temp,portnblen+1,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,3, &portway,sizeof(portway),SQLT_INT,&status);		
+			DefineByPos(stmthp,def,ociError,4, portype_temp,portypelen+1,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,5, bia_temp, bialen + 1,SQLT_STR,&status);
+			DefineByPos(stmthp,def,ociError,6, mac_temp,maclen+1,SQLT_STR,&status);
 						
 		}catch(Error err){
 			sprintf(appliName,"GetSparePortRow_snb");	///////

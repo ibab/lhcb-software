@@ -9,6 +9,7 @@
 
 #include "list_structures.h"
 #include "system_info.h"
+#include "CDB.h"
 
 #if defined(__cplusplus) || defined(c_plusplus)
 extern "C" {
@@ -28,173 +29,75 @@ extern "C" {
 	extern   OCIServer *mysrvhp;
 	extern   OCISession *myusrhp; 
 
-	/**************************GV for macIP************************************************/
+/**
+* Update MAC entries,  returning an integer value.
+* The user should manage the memory : there is no memory allocation.
+* @param ip_add : key entry : you want to update the info about this IPaddress
+* @param subnet_mask : new value : put  "none" if no changes
+* @param ipname : new value : put  "none" if no changes
+* @param first_time1 : 1 if it's your first MacIP insert (save it into the database), 0 otherwise
+* @param last_rows1 : 1 if it's your last MacIP insert (save it into the database), 0 otherwise
+* @param ErrMess : error message in case of failure
+* @return 0 if it is successful
+*/ 
 
-
-
-
-
-
-	char* _ip_addListUpdate;
-	int _max_ip_add_lenUpdate;
-	int _ip_addNbElementUpdate;
-	int _ip_addList_lenUpdate;
-
-	int* _ipadd_nullvalueUpdate;
-	int _ipaddNbElUpdate;
-
-	char* _ip1_addListUpdate;
-	int _max_ip1_add_lenUpdate;
-	int _ip1_addNbElementUpdate;
-	int _ip1_addList_lenUpdate;
-
-	int* _ip1_nullvalueUpdate;
-	int _ip1NbElUpdate;
-	char* _subnet_maskListUpdate;
-	int _max_subnet_mask_lenUpdate;
-	int _subnet_maskNbElementUpdate;
-	int _subnet_maskList_lenUpdate;
-
-	int* _subnetmask_nullvalueUpdate;
-	int _subnetmaskNbElUpdate;
-
-	int _oldip_addNbElementUpdate;
-	int _max_oldip_add_lenUpdate;
-	char* _oldip_addListUpdate;
-	int* _oldip_nullvalueUpdate;
-	int _oldip_addList_lenUpdate;
-	int _oldipNbElUpdate;
-
-	char* _ipnameListUpdate;
-	int _max_ipname_lenUpdate;
-	int _ipnameNbElementUpdate;
-	int _ipnameList_lenUpdate;
-
-	int* _ipname_nullvalueUpdate;
-	int _ipnameNbElUpdate;
-
-
-
-	int FIRST_TIME_MACUPDATE=0;
-	int FIRST_TIME_MACUPDATE3=0;
-	int FIRST_TIME_MACUPDATE2=0;
-
-	int freeIPEthernetUpdate()
-	{
-		int status=0;
-
-		_subnet_maskListUpdate=(char*)realloc(_subnet_maskListUpdate,0*sizeof(char));
-		_subnet_maskListUpdate=NULL;
-
-
-		_ipnameListUpdate=(char*)realloc(_ipnameListUpdate,0*sizeof(char));
-		_ipnameListUpdate=NULL;
-
-		_ip_addListUpdate=(char*)realloc(_ip_addListUpdate,0*sizeof(char));
-		_ip_addListUpdate=NULL;
-		_ipname_nullvalueUpdate=(int*)realloc(_ipname_nullvalueUpdate,0*sizeof(int));
-		_ipname_nullvalueUpdate=NULL;
-
-		_subnetmask_nullvalueUpdate=(int*)realloc(_subnetmask_nullvalueUpdate,0*sizeof(int));
-		_subnetmask_nullvalueUpdate=NULL;
-
-
-		_ipadd_nullvalueUpdate=(int*)realloc(_ipadd_nullvalueUpdate,0*sizeof(int));
-		_ipadd_nullvalueUpdate=NULL;
-
-		FIRST_TIME_MACUPDATE=0;
-		return status;
-	}
-
-	int freeIPEthernetUpdate3()
-	{
-		int status=0;
-
-
-		_ip1_nullvalueUpdate=(int*)realloc(_ip1_nullvalueUpdate,0*sizeof(int));
-		_ip1_nullvalueUpdate=NULL;
-
-
-		_ip1_addListUpdate=(char*)realloc(_ip1_addListUpdate,0*sizeof(char));
-		_ip1_addListUpdate=NULL;
-
-		_oldip_nullvalueUpdate=(int*)realloc(_oldip_nullvalueUpdate,0*sizeof(int));
-		_oldip_nullvalueUpdate=NULL;
-
-
-		_oldip_addListUpdate=(char*)realloc(_oldip_addListUpdate,0*sizeof(char));
-		_oldip_addListUpdate=NULL;
-
-		FIRST_TIME_MACUPDATE3=0;
-		return status;
-	}
-
-	/**
-	* Update MAC entries,  returning an integer value.
-	* The user should manage the memory : there is no memory allocation.
-	* @param ip_add : key entry : you want to update the info about this IPaddress
-	* @param subnet_mask : new value : put  "none" if no changes
-	* @param ipname : new value : put  "none" if no changes
-	* @param first_time1 : 1 if it's your first MacIP insert (save it into the database), 0 otherwise
-	* @param last_rows1 : 1 if it's your last MacIP insert (save it into the database), 0 otherwise
-	* @param ErrMess : error message in case of failure
-	* @return 0 if it is successful
-	*/ 
-
-
-
-	EXTERN_CONFDB
-		int UpdateMultipleAttributeMacIPs(char* ip_add,char* subnet_mask,char* ipname,int first_time1,int last_rows1,char* ErrMess)
+EXTERN_CONFDB
+	int UpdateMultipleAttributeMacIPs(char* ip_add,char* subnet_mask,char* ipname,int first_time,int last_rows,char* ErrMess)
 	{
 		char appliName[100]="UpdateMultipleAttributeMacIPs";
-		int* numrows_inserted=NULL;
-		int numrows=0;
-		OCIBind  *bndp3 = (OCIBind *) 0;
 		char sqlstmt[2000];
 		OCIStmt *hstmt;
-		OCIBind  *bndp[3]; 
-		int res_query=0;
-		int free_mem=0;
+		OCIBind  *bndp[4]; 
 		int rescode=0;
+		int res_query=0;
 		sword status=0;
+		int i=0;
+
 		char* ipadd=NULL;
-		char* ethadd=NULL;
 		char* iname=NULL;
 		char* submask=NULL;
-		char* vlanprefix=NULL;
-		int i=0;
+				
+		int* ipadd_nullList=NULL;
+		int* iname_nullList=NULL;
+		int* submask_nullList=NULL;
+				
+		static int FIRST_TIME=0;
 		int force_insert=0;
-		int first_time=first_time1;
-		int last_rows=last_rows1;
+		int* numrows_inserted=NULL;
+		int numrows=0;
 
-		int ipadd1=null_charptr(ip_add);
-		int submask1=null_charptr(subnet_mask);
-		int iname1=null_charptr(ipname);
+		static int NbElement;
+		macIP** macIPList;
+		int max_ipaddlen=0;
+		int max_inamelen=0;
+		int max_submasklen=0;
+				
+		if (first_time==1)
+		{
+			FIRST_TIME=1;
+			NbElement=1;
+			macIPList=(macIP**)malloc( NbElement*sizeof(macIP));			
+		}
+		else 
+		{
+			if (FIRST_TIME==0&&force_insert==0)
+			{
+				GetErrorMess(appliName, "CACHE HAS NOT BEEN INITIALIZED",ErrMess,1);
+				return -1;
+			}
+			NbElement++;
+			macIPList=(macIP**)realloc(macIPList, NbElement*sizeof(macIP));
+		}
 
-		if(FIRST_TIME_MACUPDATE==1 && _ip_addListUpdate==NULL)
-			first_time=1;
-
-		res_query+=AppendString(ip_add,_ip_addListUpdate,_ip_addList_lenUpdate,_ip_addNbElementUpdate,_max_ip_add_lenUpdate,first_time);
-		res_query+=AppendString(subnet_mask,_subnet_maskListUpdate,_subnet_maskList_lenUpdate,_subnet_maskNbElementUpdate,_max_subnet_mask_lenUpdate,first_time);
-		res_query+=AppendString(ipname,_ipnameListUpdate,_ipnameList_lenUpdate,_ipnameNbElementUpdate,_max_ipname_lenUpdate,first_time);
-
-
-		res_query+=AppendInt(iname1,_ipname_nullvalueUpdate,_ipnameNbElUpdate,first_time);
-		res_query+=AppendInt(submask1,_subnetmask_nullvalueUpdate,_subnetmaskNbElUpdate,first_time);
-		res_query+=AppendInt(ipadd1,_ipadd_nullvalueUpdate,_ipaddNbElUpdate,first_time);
-
-
-		status=res_query;
-		if(first_time==1)
-			FIRST_TIME_MACUPDATE=1;
-
-		if(last_rows!=1 && _ip_addNbElementUpdate==MAXROWS)
+		macIPList[NbElement-1]=new macIP(ip_add,subnet_mask,ipname);
+		
+		if(NbElement==MAXROWS && last_rows!=1)
 		{
 			force_insert=1;
 			last_rows=1;
 		}
 
-		if(last_rows==1 && res_query==0 && ociEnv!=0 && FIRST_TIME_MACUPDATE==1)
+		if(last_rows==1 && res_query==0 && ociEnv!=0 && FIRST_TIME==1)
 		{
 			int len_host=LOGIN_LEN;
 			char login[LOGIN_LEN];
@@ -238,192 +141,180 @@ extern "C" {
 					else
 						strcpy(ErrMess,errmessg2);
 				}
-				rescode=-1;
-
-
+				FIRST_TIME=0;
+		
 				if(ipadd!=NULL)
 					free(ipadd);
 				if(iname!=NULL)
 					free(iname);
 				if(submask!=NULL)
 					free(submask);
-				status=freeIPEthernetUpdate();
+				if(ipadd_nullList!=NULL)
+					free(ipadd_nullList);
+				if(iname_nullList!=NULL)
+					free(iname_nullList);
+				if(submask_nullList!=NULL)
+					free(submask_nullList);
+				
+				for(i=0;i<NbElement;i++)
+					delete macIPList[i];
+				if(macIPList!=NULL)
+					free(macIPList);
+				
 				free(errmessg1);
 				free(errmessg2);
 				return -1;
 			}
-			//need to proceed with messages
-
-
-			status =OCIHandleAlloc (ociEnv, (void**)&hstmt, OCI_HTYPE_STMT , 0, 0);
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIHandleAlloc unsuccessful");
+			for(i=0;i<NbElement;i++){
+				if (macIPList[i]->ipaddlen > max_ipaddlen)
+					max_ipaddlen=macIPList[i]->ipaddlen;
+				if (macIPList[i]->inamelen > max_inamelen)
+					max_inamelen=macIPList[i]->inamelen;
+				if (macIPList[i]->submasklen > max_submasklen)
+					max_submasklen=macIPList[i]->submasklen;				
 			}
-			else
-				sprintf(sqlstmt,"BEGIN  update %s set subnet_info=decode(nvl(:submask,'none'),'none',subnet_info,:submask),ipname=decode(nvl(:ipname,'none'),'none',ipname,:ipname),LAST_UPDATE=sysdate,author='%s' where ipaddress=:ipadd; :numrows:=%s; end; ",IPINFO_TABLE,login,SQLROWCOUNT);
-			if (OCIStmtPrepare(hstmt, ociError, (text*)sqlstmt, (ub4)strlen((char *)sqlstmt), (ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT))
+
+			ipadd=(char*)malloc(NbElement*max_ipaddlen*sizeof(char));
+			iname=(char*)malloc(NbElement*max_inamelen*sizeof(char));
+			submask=(char*)malloc(NbElement*max_submasklen*sizeof(char));
+
+			ipadd_nullList=(int*)malloc(NbElement*sizeof(int));
+			iname_nullList=(int*)malloc(NbElement*sizeof(int));
+			submask_nullList=(int*)malloc(NbElement*sizeof(int));
+			
+			if(ipadd!=NULL && ipadd_nullList!=NULL && iname!=NULL && iname_nullList!=NULL && submask!=NULL && submask_nullList!=NULL)
+			for(i=0;i<NbElement;i++)
 			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIStmtPrepare unsuccessful");
+				memcpy(ipadd+i*max_ipaddlen,macIPList[i]->ipadd,macIPList[i]->ipaddlen);
+				ipadd_nullList[i]=macIPList[i]->ipadd_null;
+				memcpy(iname+i*max_inamelen,macIPList[i]->iname,macIPList[i]->inamelen);
+				iname_nullList[i]=macIPList[i]->iname_null;
+				memcpy(submask+i*max_submasklen,macIPList[i]->submask,macIPList[i]->submasklen);
+				submask_nullList[i]=macIPList[i]->submask_null;				
 			}
-			else
+			numrows_inserted=(int*)malloc(sizeof(int)*NbElement);
+
+			if(ipadd==NULL || ipadd_nullList==NULL || iname==NULL || iname_nullList==NULL || submask==NULL || submask_nullList==NULL || numrows_inserted==NULL)
 			{
-				submask=(char*)malloc(_subnet_maskNbElementUpdate*_max_subnet_mask_lenUpdate*sizeof(char));
-				iname=(char*)malloc(_ipnameNbElementUpdate*_max_ipname_lenUpdate*sizeof(char));
-				ipadd=(char*)malloc(_ip_addNbElementUpdate*_max_ip_add_lenUpdate*sizeof(char));
-				if(submask!=NULL)
-					status+=NormalizeVector(_subnet_maskListUpdate,_subnet_maskNbElementUpdate,_max_subnet_mask_lenUpdate,submask);
-				if(iname!=NULL)
-					status+=NormalizeVector(_ipnameListUpdate,_ipnameNbElementUpdate,_max_ipname_lenUpdate,iname);
+				rescode=ShowErrors (status, ociError, "Invalid pointer allocation unsuccessful");
+				GetErrorMess(appliName, "Malloc unsuccessful",ErrMess,1);
+				
+				FIRST_TIME=0;
 				if(ipadd!=NULL)
-					status+=NormalizeVector(_ip_addListUpdate,_ip_addNbElementUpdate,_max_ip_add_lenUpdate,ipadd);
-				numrows_inserted=(int*)malloc(sizeof(int)*_ip_addNbElementUpdate);
+					free(ipadd);
+				if(iname!=NULL)
+					free(iname);
+				if(submask!=NULL)
+					free(submask);
+				if(ipadd_nullList!=NULL)
+					free(ipadd_nullList);
+				if(iname_nullList!=NULL)
+					free(iname_nullList);
+				if(submask_nullList!=NULL)
+					free(submask_nullList);
 				if(numrows_inserted!=NULL)
-				{
-					for(i=0;i<_ip_addNbElementUpdate;i++)
-						numrows_inserted[i]=0;
-				}
-				if( submask==NULL || iname==NULL||ipadd==NULL||numrows_inserted==NULL)
-				{
-					status=-10;
-					rescode=ShowErrors (status, ociError, "Invalid pointer allocation unsuccessful");
-
-					status =OCIHandleFree (hstmt,OCI_HTYPE_STMT);
-					rescode=ShowErrors (status, ociError, "Invalid pointer allocation unsuccessful");
-					GetErrorMess(appliName, "Malloc unsuccessful",ErrMess,1);
-					status=freeIPEthernetUpdate();
-
-					if(ipadd!=NULL)
-						free(ipadd);
-					if(iname!=NULL)
-						free(iname);
-					if(submask!=NULL)
-						free(submask);
-					if(numrows_inserted!=NULL)
-						free(numrows_inserted);
-					return -1;
-				}	
-			}
-
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindByName unsuccessful");
-			}
-			else
-				status =OCIBindByName(hstmt, &bndp[0], ociError,(text*) ":ipadd", -1,(dvoid*)ipadd, _max_ip_add_lenUpdate,  SQLT_STR, (dvoid *)&_ipadd_nullvalueUpdate[0],(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
-
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindByName unsuccessful");
-			}
-			else
-				status =OCIBindByName(hstmt, &bndp[1], ociError,(text*) ":submask", -1,(dvoid*)submask,_max_subnet_mask_lenUpdate,  SQLT_STR, (dvoid *) &_subnetmask_nullvalueUpdate[0],(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
-
-
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindByName unsuccessful");
-			}
-			else
-				status =OCIBindByName(hstmt, &bndp[2], ociError,(text*) ":ipname", -1,(dvoid*)iname, _max_ipname_lenUpdate,  SQLT_STR, (dvoid *) &_ipname_nullvalueUpdate[0],(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
-
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindByName unsuccessful");
-			}
-			else
-				status =OCIBindByName(hstmt, &bndp3, ociError,(text*) ":numrows", -1,(dvoid*)&numrows_inserted[0], sizeof(numrows),SQLT_INT, (dvoid *) 0,(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
-
-
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindByName unsuccessful");
-			}
-			else
-				status=OCIBindArrayOfStruct(bndp[0], ociError,_max_ip_add_lenUpdate, sizeof(int),0, 0);
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindArrayOfStruct unsuccessful");
-			}
-			else
-				status=OCIBindArrayOfStruct(bndp[1], ociError,_max_subnet_mask_lenUpdate, sizeof(int),0, 0);
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindArrayOfStruct unsuccessful");
-			}
-			else
-				status=OCIBindArrayOfStruct(bndp[2], ociError,_max_ipname_lenUpdate, sizeof(int),0, 0);
-
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindArrayOfStruct unsuccessful");
-			}
-			else
-				status=OCIBindArrayOfStruct(bndp3, ociError, sizeof(int),0, 0, 0);
-
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindArrayOfStruct unsuccessful");
-			}
-			else
-				status= OCIStmtExecute(ociHdbc, hstmt, ociError, _ip_addNbElementUpdate, 0, 0, 0, OCI_DEFAULT );
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIStmtExecute unsuccessful");
-			}
-			else
-			{
-				numrows=-1;
-				for(i=0;i< _ip_addNbElementUpdate;i++)
-				{
-					if(numrows_inserted[i]==0)
-					{
-						numrows=0;
-						i=  _ip_addNbElementUpdate+5;
-					}
-					else
-						numrows=numrows_inserted[i];
-				}
-				if(numrows==0)
-				{
-					status = OCITransCommit(ociHdbc, ociError, 0);
-					status =OCIHandleFree (hstmt,OCI_HTYPE_STMT);
-					status=freeIPEthernetUpdate();
-
-					if(ipadd!=NULL)
-						free(ipadd);
-					if(iname!=NULL)
-						free(iname);
-					if(submask!=NULL)
-						free(submask);
 					free(numrows_inserted);
-					GetErrorMess(appliName, "COULDNOT_UPDATE_ALL_ROWS",ErrMess,1);
-					return -1;
+				
+				for(i=0;i<NbElement;i++)
+					delete macIPList[i];
+				if(macIPList!=NULL)
+                    free(macIPList);
+				
+				NbElement=0;				
+				return -1;
+			}
+			else
+			{
+				for(i=0;i<NbElement;i++)
+					numrows_inserted[i]=0;
+			}			
+
+			try{
+                HandleAlloc(ociEnv,(dvoid**)&hstmt,OCI_HTYPE_STMT,&status);
+				sprintf(sqlstmt,"BEGIN  update %s set subnet_info=decode(nvl(:submask,'none'),'none',subnet_info,:submask),ipname=decode(nvl(:ipname,'none'),'none',ipname,:ipname),LAST_UPDATE=sysdate,author='%s' where ipaddress=:ipadd; :numrows:=%s; end; ",IPINFO_TABLE,login,SQLROWCOUNT);
+				StmtPrepare(hstmt,ociError, sqlstmt, &status);
+
+				BindByName(hstmt,&bndp[0],ociError,":ipadd",ipadd,max_ipaddlen,SQLT_STR,&ipadd_nullList[0],&status);
+				BindByName(hstmt,&bndp[1],ociError,":submask",submask,max_submasklen,SQLT_STR,&submask_nullList[0],&status);
+				BindByName(hstmt,&bndp[2],ociError,":ipname",iname,max_inamelen,SQLT_STR,&iname_nullList[0],&status);
+				BindByName(hstmt,&bndp[3],ociError,":numrows",&numrows_inserted[0],sizeof(int),SQLT_INT,0,&status);
+
+				BindArrayOfStruct(bndp[0],ociError,max_ipaddlen,sizeof(int),&status);
+				BindArrayOfStruct(bndp[1],ociError,max_submasklen,sizeof(int),&status);				
+				BindArrayOfStruct(bndp[2],ociError,max_inamelen,sizeof(int),&status);
+				BindArrayOfStruct(bndp[3],ociError,sizeof(int),0,&status);
+				
+				StmtExecute(ociHdbc, hstmt, ociError,NbElement, &status);
+			}catch(Error err){
+				sprintf(appliName,"UpdateMultipleAttributeMacIPs");	///////
+				rescode=ShowErrors (status, err.ociError, err.log);
+				
+				if(ociError!=0)
+					OCIReportError(ociError,appliName,ErrMess,1); 
+				else
+					GetErrorMess(appliName,err.msg,ErrMess,1);
+			}
+			
+			numrows=-1;
+			for(i=0;i< NbElement;i++)
+			{
+				if(numrows_inserted[i]==0)
+				{
+					numrows=0;
+					i= NbElement+5;
 				}
 				else
-					status = OCITransCommit(ociHdbc, ociError, 0);
-
-				if(status!=OCI_SUCCESS)
-				{
-					if(rescode==0)	
-						rescode=ShowErrors (status, ociError, "OCITransCommit unsuccessful");
-				}			
+					numrows=numrows_inserted[i];
 			}
+			if(numrows==0)
+			{
+				status = OCITransCommit(ociHdbc, ociError, 0);
+				status =OCIHandleFree (hstmt,OCI_HTYPE_STMT);
+				FIRST_TIME=0;
+				
+				if(ipadd!=NULL)
+					free(ipadd);
+				if(iname!=NULL)
+					free(iname);
+				if(submask!=NULL)
+					free(submask);
+				if(ipadd_nullList!=NULL)
+					free(ipadd_nullList);
+				if(iname_nullList!=NULL)
+					free(iname_nullList);
+				if(submask_nullList!=NULL)
+					free(submask_nullList);
+				if(numrows_inserted!=NULL)
+					free(numrows_inserted);
+							
+				for(i=0;i<NbElement;i++)
+					delete macIPList[i];
+				if(force_insert==1)
+				{
+                    FIRST_TIME=1;
+					force_insert=0;
+					macIPList=(macIP**)realloc(macIPList, 0*sizeof(macIP));
+				}
+				else if(macIPList!=NULL)
+                    free(macIPList);
 
+				NbElement=0;
 
-			status=freeIPEthernetUpdate();
+				GetErrorMess(appliName, "COULDNOT_UPDATE_ALL_ROWS",ErrMess,1);
+				return -1;
+			}
+			else
+				status = OCITransCommit(ociHdbc, ociError, 0);
+
+			if(status!=OCI_SUCCESS)
+			{
+				if(rescode==0)	
+					rescode=ShowErrors (status, ociError, "OCITransCommit unsuccessful");
+			}			
+	
+			FIRST_TIME=0;
+			status =OCIHandleFree (hstmt,OCI_HTYPE_STMT);
+
 			if(rescode!=0)
 				if(ociError!=0)
 					OCIReportError(ociError,appliName, ErrMess,1); 
@@ -431,115 +322,132 @@ extern "C" {
 					GetErrorMess(appliName,  "NOT CONNECTED TO ANY DB",ErrMess,1); 
 			else
 				OCIReportError(ociError,appliName, ErrMess,0); 
+			
+			for(i=0;i<NbElement;i++)
+				delete macIPList[i];
 
-
-
-			if(ipadd!=NULL)
-				free(ipadd);
-			if(iname!=NULL)
-				free(iname);
-			if(submask!=NULL)
-				free(submask);
-			if(numrows_inserted!=NULL)
-				free(numrows_inserted);
-
-			status+=OCIHandleFree (hstmt,OCI_HTYPE_STMT);
-			if(rescode==0 && force_insert==1)
-				FIRST_TIME_MACUPDATE=1;
+			if(force_insert==1)
+			{
+				FIRST_TIME=1;
+				force_insert=0;
+				macIPList=(macIP**)realloc(macIPList, 0*sizeof(macIP));
+			}
+			else if(macIPList!=NULL)
+                free(macIPList);
+			NbElement=0;
+	
 		}
 		else
 		{
 			if(res_query!=0)
 			{
-				status=freeIPEthernetUpdate();
+				FIRST_TIME=0;
 				GetErrorMess(appliName, "Cache Problem",ErrMess,1);
-			}
-			if(FIRST_TIME_MACUPDATE!=1)
-			{
-				status=freeIPEthernetUpdate();
-				res_query=-1;
-				GetErrorMess(appliName, "CACHE HAS NOT BEEN INITIALIZED",ErrMess,1);
+				for(i=0;i<NbElement;i++)
+					delete macIPList[i];
+				if(macIPList!=NULL)
+                    free(macIPList);
 			}
 			if(ociEnv==0)
 			{
-				status=freeIPEthernetUpdate();
+				FIRST_TIME=0;
 				res_query=-1;
 				GetErrorMess(appliName, "NOT CONNECTED TO ANY DB",ErrMess,1);
+				for(i=0;i<NbElement;i++)
+					delete macIPList[i];
+				if(macIPList!=NULL)
+                    free(macIPList);
 			}
-			if(ociEnv!=0 && FIRST_TIME_MACUPDATE==1 && res_query==0)
+			status+=res_query;
+			if(ociEnv!=0 && FIRST_TIME==1 && res_query==0)
 			{
 				status=0;
 				GetErrorMess(appliName, "NO_ERROR",ErrMess,0);
-			}
-			rescode=res_query;
+			}	
 		}
+		if(ipadd!=NULL)
+			free(ipadd);
+		if(iname!=NULL)
+			free(iname);
+		if(submask!=NULL)
+			free(submask);
+		if(ipadd_nullList!=NULL)
+			free(ipadd_nullList);
+		if(iname_nullList!=NULL)
+			free(iname_nullList);
+		if(submask_nullList!=NULL)
+			free(submask_nullList);
+		if(numrows_inserted!=NULL)
+			free(numrows_inserted);
 
 		return (rescode+status);
 	}
 
-
-
-	/**
-	* Update MAC entries,  returning an integer value.
-	* The user should manage the memory : there is no memory allocation.
-	* @param oldip_add :  ip address entry you want to modify. 
-	* @param ip_add : new value of ip address entry you want to modify. 
-	* @param first_time1 : 1 if it's your first MacIP insert (save it into the database), 0 otherwise
-	* @param last_rows1 : 1 if it's your last MacIP insert (save it into the database), 0 otherwise
-	* @param ErrMess : error message in case of failure
-	* @return 0 if it is successful
-	*/ 
-
-
-
-	EXTERN_CONFDB
-		int UpdateMultipleIPAddresses(char* ip_add,char* oldip_add,int first_time1,int last_rows1,char* ErrMess)
+/**
+* Update MAC entries,  returning an integer value.
+* The user should manage the memory : there is no memory allocation.
+* @param oldip_add :  ip address entry you want to modify. 
+* @param ip_add : new value of ip address entry you want to modify. 
+* @param first_time1 : 1 if it's your first MacIP insert (save it into the database), 0 otherwise
+* @param last_rows1 : 1 if it's your last MacIP insert (save it into the database), 0 otherwise
+* @param ErrMess : error message in case of failure
+* @return 0 if it is successful
+*/ 
+EXTERN_CONFDB
+	int UpdateMultipleIPAddresses(char* ip_add,char* oldip_add,int first_time,int last_rows,char* ErrMess)
 	{
 		char appliName[100]="UpdateMultipleIPAddresses";
-		int* numrows_inserted=NULL;
-		int numrows=0;
-		OCIBind  *bndp3 = (OCIBind *) 0;
-		OCIBind  *bndp4 = (OCIBind *) 0;
 		char sqlstmt[2000];
 		OCIStmt *hstmt;
-		OCIBind  *bndp[3]; 
-		int res_query=0;
+		OCIBind  *bndp[4]; 
 		int rescode=0;
+		int res_query=0;
 		sword status=0;
-		char* oldipadd=NULL;
-		char* ipadd=NULL;
 		int i=0;
-		int* numrows_inserted1=NULL;
 
+		char* ipadd=NULL;
+		char* ipaddold=NULL;
+						
+		int* ipadd_nullList=NULL;
+		int* ipaddold_nullList=NULL;
+		
+		static int FIRST_TIME=0;
 		int force_insert=0;
-		int first_time=first_time1;
-		int last_rows=last_rows1;
+		int* numrows_inserted=NULL;
+		int* numrows_inserted1=NULL;
+		int numrows=0;
 
-		int oldipadd1=null_charptr(oldip_add);
-		int ipadd1=null_charptr(ip_add);
+		static int NbElement;
+		UpdtmacIP** macIPList;
+		int max_ipaddlen=0;
+		int max_ipaddoldlen=0;
+						
+		if (first_time==1)
+		{
+			FIRST_TIME=1;
+			NbElement=1;
+			macIPList=(UpdtmacIP**)malloc( NbElement*sizeof(UpdtmacIP));			
+		}
+		else 
+		{
+			if (FIRST_TIME==0&&force_insert==0)
+			{
+				GetErrorMess(appliName, "CACHE HAS NOT BEEN INITIALIZED",ErrMess,1);
+				return -1;
+			}
+			NbElement++;
+			macIPList=(UpdtmacIP**)realloc(macIPList, NbElement*sizeof(UpdtmacIP));
+		}
 
-		if(FIRST_TIME_MACUPDATE3==1 && _ip1_addListUpdate==NULL)
-			first_time=1;
-
-		res_query+=AppendString(ip_add,_ip1_addListUpdate,_ip1_addList_lenUpdate,_ip1_addNbElementUpdate,_max_ip1_add_lenUpdate,first_time);
-		res_query+=AppendString(oldip_add,_oldip_addListUpdate,_oldip_addList_lenUpdate,_oldip_addNbElementUpdate,_max_oldip_add_lenUpdate,first_time);
-
-
-		res_query+=AppendInt(ipadd1,_ip1_nullvalueUpdate,_ip1NbElUpdate,first_time);
-		res_query+=AppendInt(oldipadd1,_oldip_nullvalueUpdate,_oldipNbElUpdate,first_time);
-
-
-		status=res_query;
-		if(first_time==1)
-			FIRST_TIME_MACUPDATE3=1;
-
-		if(last_rows!=1 && _ip_addNbElementUpdate==MAXROWS)
+		macIPList[NbElement-1]=new UpdtmacIP(ip_add,oldip_add);
+		
+		if(NbElement==MAXROWS && last_rows!=1)
 		{
 			force_insert=1;
 			last_rows=1;
 		}
 
-		if(last_rows==1 && res_query==0 && ociEnv!=0 && FIRST_TIME_MACUPDATE3==1)
+		if(last_rows==1 && res_query==0 && ociEnv!=0 && FIRST_TIME==1)
 		{
 			int len_host=LOGIN_LEN;
 			char login[LOGIN_LEN];
@@ -583,190 +491,170 @@ extern "C" {
 					else
 						strcpy(ErrMess,errmessg2);
 				}
-				rescode=-1;
-
-
+				FIRST_TIME=0;
+		
 				if(ipadd!=NULL)
 					free(ipadd);
-				if(oldipadd!=NULL)
-					free(oldipadd);
-				status=freeIPEthernetUpdate3();
+				if(ipaddold!=NULL)
+					free(ipaddold);
+				if(ipadd_nullList!=NULL)
+					free(ipadd_nullList);
+				if(ipaddold_nullList!=NULL)
+					free(ipaddold_nullList);
+				
+				for(i=0;i<NbElement;i++)
+					delete macIPList[i];
+				if(macIPList!=NULL)
+					free(macIPList);
+				
 				free(errmessg1);
 				free(errmessg2);
 				return -1;
 			}
-			//need to proceed with messages
-
-
-			status =OCIHandleAlloc (ociEnv, (void**)&hstmt, OCI_HTYPE_STMT , 0, 0);
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIHandleAlloc unsuccessful");
+			for(i=0;i<NbElement;i++){
+				if (macIPList[i]->ipaddlen > max_ipaddlen)
+					max_ipaddlen=macIPList[i]->ipaddlen;
+				if (macIPList[i]->ipaddoldlen > max_ipaddoldlen)
+					max_ipaddoldlen=macIPList[i]->ipaddoldlen;
 			}
-			else
-				sprintf(sqlstmt,"BEGIN :numrows1:=%s(:old_ip,:ipadd,'%s');  :numrows:=%s; end; ",_updateIPaddress,login,SQLROWCOUNT);
-			if (OCIStmtPrepare(hstmt, ociError, (text*)sqlstmt, (ub4)strlen((char *)sqlstmt), (ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT))
+
+			ipadd=(char*)malloc(NbElement*max_ipaddlen*sizeof(char));
+			ipaddold=(char*)malloc(NbElement*max_ipaddoldlen*sizeof(char));
+			
+			ipadd_nullList=(int*)malloc(NbElement*sizeof(int));
+			ipaddold_nullList=(int*)malloc(NbElement*sizeof(int));
+			
+			if(ipadd!=NULL && ipadd_nullList!=NULL && ipaddold!=NULL && ipaddold_nullList!=NULL)
+			for(i=0;i<NbElement;i++)
 			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIStmtPrepare unsuccessful");
+				memcpy(ipadd+i*max_ipaddlen,macIPList[i]->ipadd,macIPList[i]->ipaddlen);
+				ipadd_nullList[i]=macIPList[i]->ipadd_null;
+				memcpy(ipaddold+i*max_ipaddoldlen,macIPList[i]->ipaddold,macIPList[i]->ipaddoldlen);
+				ipaddold_nullList[i]=macIPList[i]->ipaddold_null;				
 			}
-			else
+			numrows_inserted=(int*)malloc(sizeof(int)*NbElement);
+			numrows_inserted1=(int*)malloc(sizeof(int)*NbElement);
+
+			if(ipadd==NULL || ipadd_nullList==NULL || ipaddold==NULL || ipaddold_nullList==NULL || numrows_inserted==NULL || numrows_inserted==NULL)
 			{
-				ipadd=(char*)malloc(_ip1_addNbElementUpdate*_max_ip1_add_lenUpdate*sizeof(char));
+				rescode=ShowErrors (status, ociError, "Invalid pointer allocation unsuccessful");
+				GetErrorMess(appliName, "Malloc unsuccessful",ErrMess,1);
+				
+				FIRST_TIME=0;
 				if(ipadd!=NULL)
-					status+=NormalizeVector(_ip1_addListUpdate,_ip1_addNbElementUpdate,_max_ip1_add_lenUpdate,ipadd);
-
-
-				oldipadd=(char*)malloc(_oldip_addNbElementUpdate*_max_oldip_add_lenUpdate*sizeof(char));
-				if(oldipadd!=NULL)
-					status+=NormalizeVector(_oldip_addListUpdate,_oldip_addNbElementUpdate,_max_oldip_add_lenUpdate,oldipadd);
-
-				numrows_inserted=(int*)malloc(sizeof(int)*_oldip_addNbElementUpdate);
-				numrows_inserted1=(int*)malloc(sizeof(int)*_oldip_addNbElementUpdate);
-				if(numrows_inserted!=NULL && numrows_inserted1!=NULL)
-				{
-					for(i=0;i<_oldip_addNbElementUpdate;i++)
-					{
-						numrows_inserted[i]=0;
-						numrows_inserted1[i]=0;
-					}
-				}
-				if(oldipadd==NULL ||ipadd==NULL||numrows_inserted==NULL)
-				{
-					status=-10;
-					rescode=ShowErrors (status, ociError, "Invalid pointer allocation unsuccessful");
-
-					status =OCIHandleFree (hstmt,OCI_HTYPE_STMT);
-					rescode=ShowErrors (status, ociError, "Invalid pointer allocation unsuccessful");
-					GetErrorMess(appliName, "Malloc unsuccessful",ErrMess,1);
-					status=freeIPEthernetUpdate3();
-					if(ipadd!=NULL)
-						free(ipadd);
-					if(oldipadd!=NULL)
-						free(oldipadd);
-					if(numrows_inserted1!=NULL)
-						free(numrows_inserted1);
-					if(numrows_inserted!=NULL)
-						free(numrows_inserted);
-					return -1;
-				}
-				else
-					status =OCIBindByName(hstmt, &bndp[0], ociError,(text*) ":ipadd", -1,(dvoid*)ipadd,_max_ip1_add_lenUpdate,  SQLT_STR, (dvoid *)&_ip1_nullvalueUpdate[0],(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
-
-			}
-
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindByName unsuccessful");
-			}
-			else
-				status =OCIBindByName(hstmt, &bndp[1], ociError,(text*) ":old_ip", -1,(dvoid*)oldipadd,_max_oldip_add_lenUpdate,  SQLT_STR, (dvoid *)&_oldip_nullvalueUpdate[0],(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
-
-
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindByName unsuccessful");
-			}
-			else
-				status =OCIBindByName(hstmt, &bndp3, ociError,(text*) ":numrows", -1,(dvoid*)&numrows_inserted[0], sizeof(numrows),SQLT_INT, (dvoid *) 0,(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
-
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindByName unsuccessful");
-			}
-			else
-				status =OCIBindByName(hstmt, &bndp4, ociError,(text*) ":numrows1", -1,(dvoid*)&numrows_inserted1[0], sizeof(numrows),SQLT_INT, (dvoid *) 0,(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
-
-
-
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindByName unsuccessful");
-			}
-			else
-				status=OCIBindArrayOfStruct(bndp[0], ociError,_max_ip_add_lenUpdate, sizeof(int),0, 0);
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindByName unsuccessful");
-			}
-			else
-				status=OCIBindArrayOfStruct(bndp[1], ociError,_max_oldip_add_lenUpdate, sizeof(int),0, 0);
-
-
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindArrayOfStruct unsuccessful");
-			}
-			else
-				status=OCIBindArrayOfStruct(bndp3, ociError, sizeof(int),0, 0, 0);
-
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindArrayOfStruct unsuccessful");
-			}
-			else
-				status=OCIBindArrayOfStruct(bndp4, ociError, sizeof(int),0, 0, 0);
-
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIBindArrayOfStruct unsuccessful");
-			}
-			else
-				status= OCIStmtExecute(ociHdbc, hstmt, ociError, _oldip_addNbElementUpdate, 0, 0, 0, OCI_DEFAULT );
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCIStmtExecute unsuccessful");
-			}
-			else
-			{
-				numrows=-1;
-				for(i=0;i< _oldip_addNbElementUpdate;i++)
-				{
-					if(numrows_inserted1[i]!=1)
-					{
-						numrows=0;
-						i=  _oldip_addNbElementUpdate+5;
-					}
-					else
-						numrows=numrows_inserted1[i];
-				}
-				if(numrows==0)
-				{
-					status = OCITransCommit(ociHdbc, ociError, 0);
-					status =OCIHandleFree (hstmt,OCI_HTYPE_STMT);
-					status=freeIPEthernetUpdate3();
-
-					if(ipadd!=NULL)
-						free(ipadd);
-					if(oldipadd!=NULL)
-						free(oldipadd);
+					free(ipadd);
+				if(ipaddold!=NULL)
+					free(ipaddold);
+				if(ipadd_nullList!=NULL)
+					free(ipadd_nullList);
+				if(ipaddold_nullList!=NULL)
+					free(ipaddold_nullList);
+				if(numrows_inserted!=NULL)
 					free(numrows_inserted);
+				if(numrows_inserted1!=NULL)
 					free(numrows_inserted1);
-					GetErrorMess(appliName, "COULDNOT_UPDATE_ALL_ROWS",ErrMess,1);
-					return -1;
+				
+				for(i=0;i<NbElement;i++)
+					delete macIPList[i];
+				if(macIPList!=NULL)
+                    free(macIPList);
+				
+				NbElement=0;				
+				return -1;
+			}
+			else
+			{
+				for(i=0;i<NbElement;i++)
+				{
+					numrows_inserted[i]=0;
+					numrows_inserted1[i]=0;
+				}
+			}			
+
+			try{
+                HandleAlloc(ociEnv,(dvoid**)&hstmt,OCI_HTYPE_STMT,&status);
+				sprintf(sqlstmt,"BEGIN :numrows1:=%s(:old_ip,:ipadd,'%s');  :numrows:=%s; end; ",_updateIPaddress,login,SQLROWCOUNT);
+				StmtPrepare(hstmt,ociError, sqlstmt, &status);
+				
+				BindByName(hstmt,&bndp[0],ociError,":ipadd",ipadd,max_ipaddlen,SQLT_STR,&ipadd_nullList[0],&status);
+				BindByName(hstmt,&bndp[1],ociError,":old_ip",ipaddold,max_ipaddoldlen,SQLT_STR,&ipaddold_nullList[0],&status);
+				BindByName(hstmt,&bndp[2],ociError,":numrows",&numrows_inserted[0],sizeof(int),SQLT_INT,0,&status);
+				BindByName(hstmt,&bndp[3],ociError,":numrows1",&numrows_inserted1[0],sizeof(int),SQLT_INT,0,&status);
+
+				BindArrayOfStruct(bndp[0],ociError,max_ipaddlen,sizeof(int),&status);
+				BindArrayOfStruct(bndp[1],ociError,max_ipaddoldlen,sizeof(int),&status);
+				BindArrayOfStruct(bndp[2],ociError,sizeof(int),0,&status);
+				BindArrayOfStruct(bndp[3],ociError,sizeof(int),0,&status);
+				
+				StmtExecute(ociHdbc, hstmt, ociError,NbElement, &status);
+			}catch(Error err){
+				sprintf(appliName,"UpdateMultipleIPAddresses");	///////
+				rescode=ShowErrors (status, err.ociError, err.log);
+				
+				if(ociError!=0)
+					OCIReportError(ociError,appliName,ErrMess,1); 
+				else
+					GetErrorMess(appliName,err.msg,ErrMess,1);
+			}
+			
+			numrows=-1;
+			for(i=0;i< NbElement;i++)
+			{
+				if(numrows_inserted1[i]==0)
+				{
+					numrows=0;
+					i= NbElement+5;
 				}
 				else
-					status = OCITransCommit(ociHdbc, ociError, 0);
-
-				if(status!=OCI_SUCCESS)
-				{
-					if(rescode==0)	
-						rescode=ShowErrors (status, ociError, "OCITransCommit unsuccessful");
-				}			
+					numrows=numrows_inserted1[i];
 			}
+			if(numrows==0)
+			{
+				status = OCITransCommit(ociHdbc, ociError, 0);
+				status =OCIHandleFree (hstmt,OCI_HTYPE_STMT);
+				FIRST_TIME=0;
+				
+				if(ipadd!=NULL)
+					free(ipadd);
+				if(ipaddold!=NULL)
+					free(ipaddold);
+				if(ipadd_nullList!=NULL)
+					free(ipadd_nullList);
+				if(ipaddold_nullList!=NULL)
+					free(ipaddold_nullList);
+				if(numrows_inserted!=NULL)
+					free(numrows_inserted);
+				if(numrows_inserted1!=NULL)
+					free(numrows_inserted1);
+							
+				for(i=0;i<NbElement;i++)
+					delete macIPList[i];
+				if(force_insert==1)
+				{
+                    FIRST_TIME=1;
+					force_insert=0;
+					macIPList=(UpdtmacIP**)realloc(macIPList, 0*sizeof(UpdtmacIP));
+				}
+				else if(macIPList!=NULL)
+                    free(macIPList);
 
+				NbElement=0;
 
-			status=freeIPEthernetUpdate3();
+				GetErrorMess(appliName, "COULDNOT_UPDATE_ALL_ROWS",ErrMess,1);
+				return -1;
+			}
+			else
+				status = OCITransCommit(ociHdbc, ociError, 0);
+
+			if(status!=OCI_SUCCESS)
+			{
+				if(rescode==0)	
+					rescode=ShowErrors (status, ociError, "OCITransCommit unsuccessful");
+			}			
+
+			FIRST_TIME=0;
+			status =OCIHandleFree (hstmt,OCI_HTYPE_STMT);
+
 			if(rescode!=0)
 				if(ociError!=0)
 					OCIReportError(ociError,appliName, ErrMess,1); 
@@ -774,83 +662,84 @@ extern "C" {
 					GetErrorMess(appliName,  "NOT CONNECTED TO ANY DB",ErrMess,1); 
 			else
 				OCIReportError(ociError,appliName, ErrMess,0); 
+			
+			for(i=0;i<NbElement;i++)
+				delete macIPList[i];
 
-
-
-			if(ipadd!=NULL)
-				free(ipadd);
-			if(oldipadd!=NULL)
-				free(oldipadd);
-			if(numrows_inserted1!=NULL)
-				free(numrows_inserted1);
-			if(numrows_inserted!=NULL)
-				free(numrows_inserted);
-
-			status+=OCIHandleFree (hstmt,OCI_HTYPE_STMT);
-			if(rescode==0 && force_insert==1)
-				FIRST_TIME_MACUPDATE3=1;
+			if(force_insert==1)
+			{
+				FIRST_TIME=1;
+				force_insert=0;
+				macIPList=(UpdtmacIP**)realloc(macIPList, 0*sizeof(UpdtmacIP));
+			}
+			else if(macIPList!=NULL)
+                free(macIPList);
+			NbElement=0;
 		}
 		else
 		{
 			if(res_query!=0)
 			{
-				status=freeIPEthernetUpdate3();
+				FIRST_TIME=0;
 				GetErrorMess(appliName, "Cache Problem",ErrMess,1);
-			}
-			if(FIRST_TIME_MACUPDATE3!=1)
-			{
-				status=freeIPEthernetUpdate3();
-				res_query=-1;
-				GetErrorMess(appliName, "CACHE HAS NOT BEEN INITIALIZED",ErrMess,1);
+				for(i=0;i<NbElement;i++)
+					delete macIPList[i];
+				if(macIPList!=NULL)
+                    free(macIPList);
 			}
 			if(ociEnv==0)
 			{
-				status=freeIPEthernetUpdate3();
+				FIRST_TIME=0;
 				res_query=-1;
 				GetErrorMess(appliName, "NOT CONNECTED TO ANY DB",ErrMess,1);
+				for(i=0;i<NbElement;i++)
+					delete macIPList[i];
+				if(macIPList!=NULL)
+                    free(macIPList);
 			}
-			if(ociEnv!=0 && FIRST_TIME_MACUPDATE3==1 && res_query==0)
+			status+=res_query;
+			if(ociEnv!=0 && FIRST_TIME==1 && res_query==0)
 			{
 				status=0;
 				GetErrorMess(appliName, "NO_ERROR",ErrMess,0);
 			}
-			rescode=res_query;
-
 		}
+		if(ipadd!=NULL)
+			free(ipadd);
+		if(ipaddold!=NULL)
+			free(ipaddold);
+		if(ipadd_nullList!=NULL)
+			free(ipadd_nullList);
+		if(ipaddold_nullList!=NULL)
+			free(ipaddold_nullList);
+		if(numrows_inserted!=NULL)
+			free(numrows_inserted);
+		if(numrows_inserted1!=NULL)
+			free(numrows_inserted1);
 
 		return (rescode+status);
 	}
-	/**
-	* Update IP alias entries,  returning an integer value.
-	* The user should manage the memory : there is no memory allocation.
-	* @param old_ipalias :  ip address entry you want to modify. 
-	* @param new_ipalias : new value of ip address entry you want to modify. 
-	* @param ErrMess : error message in case of failure
-	* @return 0 if it is successful
-	*/ 
-	/*************************************************************************/
-	EXTERN_CONFDB int UpdateIPalias(char* old_ipalias,char* new_ipalias,char* ErrMess)
+/**
+* Update IP alias entries,  returning an integer value.
+* The user should manage the memory : there is no memory allocation.
+* @param old_ipalias :  ip address entry you want to modify. 
+* @param new_ipalias : new value of ip address entry you want to modify. 
+* @param ErrMess : error message in case of failure
+* @return 0 if it is successful
+*************************************************************************/
+EXTERN_CONFDB 
+	int UpdateIPalias(char* old_ipalias,char* new_ipalias,char* ErrMess)
 	{
-
-		//extern "C" __declspec(dllexport)
 		char appliName[100]="UpdateIPalias";
 		char sqlstmt[2000];
 		OCIStmt *hstmt;
-		OCIBind  *bndp[2]; 
+		OCIBind  *bndp[3]; 
 		int rescode=0;
-		int free_mem=0;
-		char res_query1[100]="blabla";
 		int res_query=0;
-		int deviceid=0;
 		sword status=0;
-		int i=0;
 		int numrows_inserted=0;
 		int numrows=0;
-		OCIBind  *bndp3 = (OCIBind *) 0;
-
-
-
-
+	
 		int len_host=LOGIN_LEN;
 		char login[LOGIN_LEN];
 		char host[LOGIN_LEN];
@@ -895,89 +784,49 @@ extern "C" {
 			}
 			rescode=-1;
 
-
-
-
 			free(errmessg1);
 			free(errmessg2);
 			return rescode;
 		}
-		//need to proceed with messages
-
-		status =OCIHandleAlloc (ociEnv, (void**)&hstmt, OCI_HTYPE_STMT , 0, 0);
-		if(status!=OCI_SUCCESS)
-		{
-			if(rescode==0)	
-				rescode=ShowErrors (status, ociError, "OCIHandleAlloc unsuccessful");
-		}
-		else
-		{
-
-			//sprintf(sqlstmt,"BEGIN update %s set nodeused=decode(:nused,1,1,0,0,nodeused),last_update=sysdate,user_update='%s' where devicename=:dname; if :numrows1=1 then update %s e set e.last_update=sysdate,e.user_update='%s',e.lkused=(select t.nodeused*f.nodeused from %s t,%s f, %s l,%s m where t.deviceid=l.deviceid and l.portid=e.portidfrom and f.deviceid=m.deviceid and m.portid=e.portidto); end if; :numrows:=%s; END;",LOGICAL_DEVICE_TABLE,login,MACRO_CONNECTIVITY_TABLE,login,LOGICAL_DEVICE_TABLE,LOGICAL_DEVICE_TABLE,PORT_TABLE,PORT_TABLE,SQLROWCOUNT);
-			sprintf(sqlstmt,"BEGIN update %s set ipalias=:new_ipalias, last_update=sysdate where ipalias=:old_ipalias; :numrows:=%s; END;",IPALIAS_TABLE,SQLROWCOUNT);
-			status=OCIStmtPrepare(hstmt, ociError, (text*)sqlstmt, (ub4)strlen((char *)sqlstmt), (ub4) OCI_NTV_SYNTAX, (ub4) OCI_DEFAULT);
-			//std::cout<<"sql stmt "<<sqlstmt<<std::endl;
-
-		}
-		if(status!=OCI_SUCCESS)
-		{
-			if(rescode==0)	
-				rescode=ShowErrors (status, ociError, "OCIStmtPrepare unsuccessful");
-		}
-		else
-		{
-
-			status =OCIBindByName(hstmt, &bndp[0], ociError,(text*) ":old_ipalias", -1,(dvoid*)old_ipalias,strlen(old_ipalias)+1,  SQLT_STR, (dvoid *) 0,(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
-
-		}
-		if(status!=OCI_SUCCESS)
-		{
-			if(rescode==0)	
-				rescode=ShowErrors (status, ociError, "OCIBindByName unsuccessful");
-		}
-		else
-			status =OCIBindByName(hstmt, &bndp[1], ociError,(text*) ":new_ipalias", -1,(dvoid*)new_ipalias,strlen(new_ipalias)+1,  SQLT_STR, (dvoid *) 0,(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
-
-		if(status!=OCI_SUCCESS)
-		{
-			if(rescode==0)	
-				rescode=ShowErrors (status, ociError, "OCIBindByName unsuccessful");
-		}
-		else
-			status =OCIBindByName(hstmt, &bndp3, ociError,(text*) ":numrows", -1,(dvoid*)&numrows_inserted, sizeof(int),SQLT_INT, (dvoid *) 0,(ub2 *) 0, (ub2*) 0, (ub4) 0, (ub4 *) 0,  OCI_DEFAULT);
-
-
-		if(status!=OCI_SUCCESS)
-		{
-			if(rescode==0)	
-				rescode=ShowErrors (status, ociError, "OCIBindByName unsuccessful");
-		}
-		else
-			status= OCIStmtExecute(ociHdbc, hstmt, ociError, 1, 0, 0, 0, OCI_DEFAULT );
-		//std::cout<<"res_query "<<res_query<<std::endl;
-		if(status!=OCI_SUCCESS)
-		{
-			if(rescode==0)	
-				rescode=ShowErrors (status, ociError, "OCIStmtExecute unsuccessful");
-		}
-		else
-		{
-			if (numrows_inserted==0)
-			{
-				status = OCITransCommit(ociHdbc, ociError, 0);
-				status =OCIHandleFree (hstmt,OCI_HTYPE_STMT);
-				GetErrorMess(appliName, "COULDNOT_UPDATE_ALL_ROWS",ErrMess,1);
-				return -1;
-			}
+		
+		try{
+			HandleAlloc(ociEnv,(dvoid**)&hstmt,OCI_HTYPE_STMT,&status);
+			//sprintf(sqlstmt,"BEGIN update %s set ipalias=:new_ipalias, last_update=sysdate where ipalias=:old_ipalias; :numrows:=%s; END;",IPALIAS_TABLE,SQLROWCOUNT);
+			sprintf(sqlstmt,"BEGIN update %s set ipaddress=:new_ipalias, last_update=sysdate where ipaddress=:old_ipalias; :numrows:=%s; END;",IPALIAS_TABLE,SQLROWCOUNT);
+			StmtPrepare(hstmt,ociError, sqlstmt, &status);
+			BindByName(hstmt,&bndp[0],ociError,":old_ipalias",old_ipalias,strlen(old_ipalias)+1,SQLT_STR,0,&status);
+			BindByName(hstmt,&bndp[1],ociError,":new_ipalias",new_ipalias,strlen(new_ipalias)+1,SQLT_STR,0,&status);
+			BindByName(hstmt,&bndp[2],ociError,":numrows",&numrows_inserted,sizeof(int),SQLT_INT,0,&status);			
+			StmtExecute(ociHdbc, hstmt, ociError,1, &status);
+			
+		}catch(Error err){
+			sprintf(appliName,"UpdateIPalias");	///////
+			rescode=ShowErrors (status, err.ociError, err.log);
+			
+			if(ociError!=0)
+				OCIReportError(ociError,appliName,ErrMess,1); 
 			else
-				status = OCITransCommit(ociHdbc, ociError, 0);
-
-			if(status!=OCI_SUCCESS)
-			{
-				if(rescode==0)	
-					rescode=ShowErrors (status, ociError, "OCITransCommit unsuccessful");
-			}		
+				GetErrorMess(appliName,err.msg,ErrMess,1);
+			
+			if(strstr(err.msg,"NOT CONNECTED TO ANY DB")!=NULL)
+			return -1;
 		}
+
+		if (numrows_inserted==0)
+		{
+			status = OCITransCommit(ociHdbc, ociError, 0);
+			status =OCIHandleFree (hstmt,OCI_HTYPE_STMT);
+			GetErrorMess(appliName, "COULDNOT_UPDATE_ALL_ROWS",ErrMess,1);
+			return -1;
+		}
+		else
+			status = OCITransCommit(ociHdbc, ociError, 0);
+		if(status!=OCI_SUCCESS)
+		{
+			if(rescode==0)	
+				rescode=ShowErrors (status, ociError, "OCITransCommit unsuccessful");
+		}		
+
 		status =OCIHandleFree (hstmt,OCI_HTYPE_STMT);
 
 		if(rescode!=0)
@@ -990,8 +839,6 @@ extern "C" {
 		else
 			OCIReportError(ociError,appliName, ErrMess,0); 
 
-
-		//std::cout<<"end of fct "<<std::endl;
 		return (status+rescode);
 	}
 

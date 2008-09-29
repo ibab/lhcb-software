@@ -7046,7 +7046,7 @@ extern "C" {
 
 
 	EXTERN_CONFDB
-		int GetAllPathsPerDevice(char* systemnameList,char* devname,int& len_array, int* lkid_list5,int* pathid_list,int* link_pos_list,int reload_connectivity,int delete_connectivity,char* ErrMessage)
+		int _GetAllPathsPerDevice(char* systemnameList,char* devname,int& len_array, int* lkid_list5,int* pathid_list,int* link_pos_list,int reload_connectivity,int delete_connectivity,char* ErrMessage)
 	{
 		char appliName[100]="GetAllPathsPerDevice";
 		int rescode;
@@ -7184,7 +7184,7 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 	EXTERN_CONFDB
-		int GetConnOutBetweenDeviceDeviceType(char* dev_from, char* devtype,int devtype_give, int& len_array, char* pfrom_arraylist, int reload_connectivity,int delete_connectivity,char* ErrMess)
+		int _GetConnOutBetweenDeviceDeviceType(char* dev_from, char* devtype,int devtype_give, int& len_array, char* pfrom_arraylist, int reload_connectivity,int delete_connectivity,char* ErrMess)
 	{
 		char appliName[100]="GetConnOutBetweenDeviceDeviceType";
 		int rescode=0;
@@ -7308,7 +7308,7 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 	EXTERN_CONFDB
-		int GetConnectivityBetweenDevices(char* dev_from, char* dev_to, int& len_array, int &pfrom1_arraylen,int &nfrom1_arraylen,int &pto1_arraylen,int &nto1_arraylen,int &lkinfo_arraylen,char* nfrom1_list,char* nto1_list,char* pfrom1_list,int* pfrom_list,char* pto1_list,int* pto_list,int* pathid_list,int* link_pos_list,char* lkinfo_list,int reload_connectivity,int delete_connectivity,char* ErrMess)
+		int _GetConnectivityBetweenDevices(char* dev_from, char* dev_to, int& len_array, int &pfrom1_arraylen,int &nfrom1_arraylen,int &pto1_arraylen,int &nto1_arraylen,int &lkinfo_arraylen,char* nfrom1_list,char* nto1_list,char* pfrom1_list,int* pfrom_list,char* pto1_list,int* pto_list,int* pathid_list,int* link_pos_list,char* lkinfo_list,int reload_connectivity,int delete_connectivity,char* ErrMess)
 	{
 		char appliName[100]="GetConnectivityBetweenDevices";
 		int rescode=0;
@@ -7353,7 +7353,7 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 	EXTERN_CONFDB
-		int GetDetailedConnectivityBetweenDevices(char* dev_from, char* dev_to, char* nfrom_list,int& len_array,int & nfrom_arraylen,int & pfrom_arraylen, int & nto_arraylen, int & pto_arraylen,int &lkinfo_arraylen,char* pfrom_list,char* pto_list,int* pfrom1_list,int* pto1_list,char* nto_list,int* pathid_list, int* link_pos_list,char* lkinfo_list,int reload_connectivity,int delete_connectivity,char* ErrMess)
+		int _GetDetailedConnectivityBetweenDevices(char* dev_from, char* dev_to, char* nfrom_list,int& len_array,int & nfrom_arraylen,int & pfrom_arraylen, int & nto_arraylen, int & pto_arraylen,int &lkinfo_arraylen,char* pfrom_list,char* pto_list,int* pfrom1_list,int* pto1_list,char* nto_list,int* pathid_list, int* link_pos_list,char* lkinfo_list,int reload_connectivity,int delete_connectivity,char* ErrMess)
 	{
 
 		char appliName[100]="GetDetailedConnectivityBetweenDevices";
@@ -7401,7 +7401,7 @@ extern "C" {
 	* @return 0 if it is successful
 	*/
 	EXTERN_CONFDB
-		int GetDetailedConnBetweenDeviceDevType(char* dev_from, char* dev_to,int devto_type_given,  char* nfrom_list,char* pfrom_list,char* pto_list,int& len_array,int & nfrom_arraylen,int & pfrom_arraylen, int & nto_arraylen, int & pto_arraylen,int &lkinfo_arraylen, int* pfrom1_list,int* pto1_list,char* nto_list,int* pathid_list, int* link_pos_list,char* lkinfo_list,int reload_connectivity,int delete_connectivity,char* ErrMess)
+		int _GetDetailedConnBetweenDeviceDevType(char* dev_from, char* dev_to,int devto_type_given,  char* nfrom_list,char* pfrom_list,char* pto_list,int& len_array,int & nfrom_arraylen,int & pfrom_arraylen, int & nto_arraylen, int & pto_arraylen,int &lkinfo_arraylen, int* pfrom1_list,int* pto1_list,char* nto_list,int* pathid_list, int* link_pos_list,char* lkinfo_list,int reload_connectivity,int delete_connectivity,char* ErrMess)
 	{
 
 		char appliName[100]="GetDetailedConnBetweenDeviceDevType";
