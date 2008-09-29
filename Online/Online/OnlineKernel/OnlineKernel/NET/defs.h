@@ -22,6 +22,8 @@
 #include <cerrno>
 #include <winsock.h>
 #define socket_close closesocket
+#define ESOCK_INTR        WSAEINTR
+#define ESOCK_TIMEDOUT    WSAETIMEDOUT
 #define ESOCK_WOULDBLOCK  WSAEWOULDBLOCK
 #define ESOCK_NOTCONN     WSAENOTCONN
 #define ESOCK_CONNREFUSED WSAECONNREFUSED
@@ -31,10 +33,11 @@
 #define ESOCK_NETRESET    WSAENETRESET
 #define ESOCK_NETDOWN     WSAENETDOWN
 #define ESOCK_SHUTDOWN    WSAESHUTDOWN
-
-#define ESOCK_AGAIN       EAGAIN
+#define ESOCK_OPNOTSUPP   WSAEOPNOTSUPP
 #define ESOCK_INVAL       WSAEINVAL
 #define ESOCK_FAULT       WSAEFAULT
+#define ESOCK_NOBUFS      WSAENOBUFS
+#define ESOCK_AGAIN       EAGAIN
 #define ESOCK_BADF        EBADF
 
 #elif defined(__linux)
@@ -47,6 +50,7 @@
 #include <netdb.h>
 #define socket_close close
 
+#define ESOCK_INTR        EINTR
 #define ESOCK_WOULDBLOCK  EWOULDBLOCK
 #define ESOCK_NOTCONN     ENOTCONN
 #define ESOCK_CONNREFUSED ECONNREFUSED
@@ -55,7 +59,9 @@
 #define ESOCK_NETRESET    ENETRESET
 #define ESOCK_NETDOWN     ENETDOWN
 #define ESOCK_SHUTDOWN    ESHUTDOWN
-
+#define ESOCK_TIMEDOUT    ETIMEDOUT
+#define ESOCK_NOBUFS      WSAENOBUFS
+#define ESOCK_OPNOTSUPP   EOPNOTSUPP
 #define ESOCK_AGAIN       EAGAIN
 #define ESOCK_NOTSOCK     ENOTSOCK
 #define ESOCK_INVAL       EINVAL
