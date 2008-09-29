@@ -1,5 +1,6 @@
 2008-09-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* scripts/LbLogin.py: fixed a few glitches on windows.
 	* cmt/requirements: fixed building problems on windows for 
 	the generateLogin script
 	* scripts/LbLogin: fixed platform test

@@ -1,6 +1,5 @@
 
 
-
 if ${?SOURCESHELLALIASLIST} then
   foreach a ( $SOURCESHELLALIASLIST)
     if ( -e $a.csh ) then
@@ -10,3 +9,4 @@ if ${?SOURCESHELLALIASLIST} then
   unsetenv SOURCESHELLALIASLIST
   unset a
 endif
+

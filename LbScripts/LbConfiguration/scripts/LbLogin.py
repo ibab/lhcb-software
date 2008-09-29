@@ -20,6 +20,7 @@ from LbUtils.Env import Environment, Aliases
 from tempfile import mkstemp
 import sys, os, logging
 import re
+import shutil
 
 
 def getLbLoginEnv(debug=False, 
@@ -86,7 +87,7 @@ class LbLoginScript(Script):
             self.output_file.close()
     def _add_echo(self, line):
         if line[-1] == "\n" :
-            line = line[:-1]            
+            line = line[:-1]           
         outline = "echo '%s'\n" % line
         
         self._extra += outline
@@ -315,7 +316,7 @@ class LbLoginScript(Script):
             ev["LCG_release_area"] = os.path.join(ev["MYSITEROOT"], "lcg" ,"external")
             ev["LHCBRELEASES"] = os.path.join(ev["LHCBHOME"], "lhcb")
             ev["GAUDISOFT"] = ev["LHCBRELEASES"]
-            ev["LHCBPROJECTPATH"] = os.pathsep.join([ev["LHCb_release_area"],ev["LCG_release_area"]])
+            ev["LHCBPROJECTPATH"] = os.pathsep.join([ev["LHCBRELEASES"],ev["LCG_release_area"]])
         else :
             ev["LHCBHOME"] = os.path.join(ev["SITEROOT"], "lhcb")
             ev["DIM_release_area"] = os.path.join(ev["LHCBHOME"], "online", "control")
@@ -339,16 +340,19 @@ class LbLoginScript(Script):
     def setHomeDir(self):
         ev = self._env
         opts = self.options
-        if sys.platform == "win32" :
-            homedir = os.path.join(ev["HOMEDRIVE"], ev["HOMEPATH"])
-        else :
-            homedir = ev["HOME"]
+        if sys.platform == "win32" and not ev.has_key("HOME") :
+            ev["HOME"] = os.path.join(ev["HOMEDRIVE"], ev["HOMEPATH"])
+        homedir = ev["HOME"]
         rhostfile = os.path.join(homedir,".rhosts")
-        if not os.path.exists(rhostfile) and sys.platform == "win32" :
+        if sys.platform != "win32" :
+            username = ev["USER"]
+        else :
+            username = ev["USERNAME"]
+        if not os.path.exists(rhostfile) and sys.platform != "win32" :
             self._add_echo( "Creating a %s file to use CMT" % rhostfile ) 
             self._add_echo("Joel.Closier@cern.ch")
             f = open(rhostfile, "w")
-            f.write("+ %s\n") % ev["USER"]
+            f.write("+ %s\n") % username
             f.close()
         # remove any .cmtrc file stored in the $HOME directory
         cmtrcfile = os.path.join(homedir, ".cmtrc")
@@ -360,8 +364,9 @@ class LbLoginScript(Script):
             if opts.cmtsite == "CERN" :
                 srcrootrcfile = os.path.join(ev["AFSROOT"], "cern.ch", "lhcb", "scripts", ".rootauthrc")
             elif opts.cmtsite == "LOCAL" :
-                srcrootrcfile = os.path.join(ev["MYSITEROOT"].split(os.pathsep)[0], "cern.ch", "lhcb", "scripts", ".rootauthrc")                
-            shutil.copy(srcrootrcfile, rootauthrc)
+                srcrootrcfile = os.path.join(ev["MYSITEROOT"].split(os.pathsep)[0], "cern.ch", "lhcb", "scripts", ".rootauthrc")
+            if os.path.exists(srcrootrcfile) :                
+                shutil.copy(srcrootrcfile, rootrcfile)
 
         if not ev.has_key("LD_LIBRARY_PATH") :
             ev["LD_LIBRARY_PATH"] = ""
@@ -378,11 +383,7 @@ class LbLoginScript(Script):
         al = self._aliases
         newdir = False
         if not opts.userarea :
-            # @todo: the windows part has to be reviewed
-            if sys.platform == "win32" :
-                opts.userarea = os.path.join(ev["HOMEDRIVE"], ev["HOMEPATH"], "cmtuser")
-            else :
-                opts.userarea = os.path.join(ev["HOME"], "cmtuser") # @todo: use something different for window
+            opts.userarea = os.path.join(ev["HOME"], "cmtuser") # @todo: use something different for window
         ev["User_release_area"] = opts.userarea
 
         if os.path.exists(opts.userarea) :
@@ -426,7 +427,13 @@ class LbLoginScript(Script):
         ev = self._env
         opts = self.options
         gcclist = []
-        if sys.platform.find("linux") != -1 or ev["OSTYPE"] == "linux" or ev["OSTYPE"] == "linux-gnu" :
+        islinux = False
+        if sys.platform.find("linux") != -1 :
+            islinux = True
+        if ev.has_key("OSTYPE") :
+            if ev["OSTYPE"] == "linux" or ev["OSTYPE"] == "linux-gnu" :
+                islinux = True
+        if islinux :
             for l in os.popen("gcc --version") :
                 if l.find("gcc") != -1 :
                     gcclist = l[:-1].split()[2]
