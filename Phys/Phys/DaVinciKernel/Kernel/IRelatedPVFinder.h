@@ -1,4 +1,4 @@
-// $Id: IRelatedPVFinder.h,v 1.3 2008-09-29 15:50:25 jpalac Exp $
+// $Id: IRelatedPVFinder.h,v 1.4 2008-09-29 17:13:02 jpalac Exp $
 #ifndef KERNEL_IRELATEDPVFINDER_H 
 #define KERNEL_IRELATEDPVFINDER_H 1
 
@@ -44,7 +44,7 @@ public:
    */
   virtual StatusCode relatedPVs(const LHCb::Particle* particle,
                                 const LHCb::RecVertex::Container& PVs,
-                                Particle2Vertex::Range& relatedPVRange)=0;
+                                Particle2Vertex::Range& relatedPVRange) const =0;
   /**
    * Return a range of weighted relations between an LHCb::Particle and a
    * vector of const LHCb::RecVertex pointers
@@ -58,7 +58,7 @@ public:
    */
   virtual StatusCode relatedPVs(const LHCb::Particle* particle,
                                 const LHCb::RecVertex::ConstVector& PVs,
-                                Particle2Vertex::Range& relatedPVRange)=0;
+                                Particle2Vertex::Range& relatedPVRange) const =0;
   /**
    * Return a range of weighted relations between an LHCb::Particle and a
    * keyed container of LHCb::RecVertices from a TES location
@@ -74,7 +74,7 @@ public:
    */
   virtual StatusCode relatedPVs(const LHCb::Particle* particle,
                                 const std::string& PVLocation,
-                                Particle2Vertex::Range& relatedPVRange)=0;
+                                Particle2Vertex::Range& relatedPVRange) const =0;
 
 };
 #endif // KERNEL_IRELATEDPVFINDER_H
