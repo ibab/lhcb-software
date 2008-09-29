@@ -91,7 +91,11 @@ class Control(PVSS.PyDeviceListener):
   # ===========================================================================
   def makeAnswer(self,status,msg):
     "Create answer object from status."
+    print 'Answer message:',status,msg
+    PVSS.error('Result ('+msg+')',timestamp=1,type=PVSS.UNEXPECTEDSTATE)
     m = status + msg
+    print 'Answer message:',m
+    print 'DP:',self.state.name()
     self.writer.clear()
     self.state.data = m
     self.writer.add(self.state)
@@ -214,6 +218,7 @@ class Control(PVSS.PyDeviceListener):
                 return self.makeAnswer(command,answer+'/'+result)
             elif command == "DEALLOCATE":
               result = self.doExecute('free',runDpName,partition)
+              PVSS.error('Result ('+command+')',timestamp=1,type=PVSS.UNEXPECTEDSTATE)
               if result == "WAS_NOT_ALLOCATED":
                 msg = '[WAS_NOT_ALLOCATED] Ignore Error on deallocate on request from Clara'
                 PVSS.error(msg,timestamp=1,type=PVSS.UNEXPECTEDSTATE)

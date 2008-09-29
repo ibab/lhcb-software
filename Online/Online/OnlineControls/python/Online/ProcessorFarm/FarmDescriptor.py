@@ -86,6 +86,7 @@ class FarmRunInfo(Online.RunInfoClasses.General.General):
     if hasattr(self,'storeFlag'):
       to.storeFlag.data   = self.storeFlag.data
       to.storageDir.data  = self.storageDir.data
+      to.storeSlice.data  = self.storeSlice.data
       to.rcvStrategy.data = self.rcvStrategy.data
       to.rcvInfra.data    = self.rcvInfra.data
       to.strStrategy.data = self.strStrategy.data
@@ -107,6 +108,7 @@ class FarmRunInfo(Online.RunInfoClasses.General.General):
     if hasattr(self,'storeFlag'):
       print self.name,'COPY STORAGE INFO....'
       self.storeFlag.data   = fr.storeFlag.data
+      self.storeSlice.data  = fr.storeSlice.data
       self.storageDir.data  = fr.storageDir.data
       self.rcvStrategy.data = fr.rcvStrategy.data
       self.rcvInfra.data    = fr.rcvInfra.data
@@ -129,6 +131,7 @@ class FarmRunInfo(Online.RunInfoClasses.General.General):
     if hasattr(self,'storeFlag'):
       deviceIO.add(self.storeFlag)
       deviceIO.add(self.storageDir)
+      deviceIO.add(self.storeSlice);
       deviceIO.add(self.rcvStrategy)
       deviceIO.add(self.rcvInfra)
       deviceIO.add(self.strStrategy)
@@ -149,6 +152,7 @@ class FarmRunInfo(Online.RunInfoClasses.General.General):
     if hasattr(self,'storeFlag'):
       self.storeFlag.data     = 1
       self.storageDir.data    = ''
+      self.storageSlice.data  = ''
       self.rcvStrategy.data = 0
       self.rcvInfra.data.clear()
       self.strStrategy.data = 0
@@ -726,14 +730,16 @@ class FarmConfigurator(FarmDescriptor):
   # ===========================================================================
   def loadRecoRunInfo(self,manager,dp):
     do_load = 0
-    info = FarmRunInfo(manager,dp)
+    print 'Loading farm info:',dp,
+    info = FarmRunInfo(manager,self.manager.dpElementName(dp))
     info.addBasic()
     info.addHLT()
     if info.load():
-      activity_name = self.manager.dpSysElementName(dp)
-      print 'Loading run info from ',info.runTyp.data,' to ',dp
-      print 'Storeflag:',info.storeFlag.data,info.storeFlag.name()
       if do_load:
+        activity_name = self.manager.dpSysElementName(dp)
+        print 'Loading run info from ',info.runTyp.data,' to ',dp
+        print 'Storeflag:',info.storeFlag.data,info.storeFlag.name()
+        print 'Activity name:',activity_name
         activity_info = FarmRunInfo(self.manager,info.runTyp.data).load()
         info.copyFrom(activity_info)
         wr = self.manager.devWriter()
@@ -835,21 +841,18 @@ class FarmConfigurator(FarmDescriptor):
   # ===========================================================================
   def configure(self,rundp_name,partition):
     # import Online.ProcessorFarm.Sopts as Sopts
-    print '-------------------------------------- 1'
-    time.sleep(5)
+    time.sleep(2)
     res = self.getPartition(rundp_name,partition)
-    print '-------------------------------------- 2'
     if res:
       name,dp = res
-      print '-------------------------------------- 3'
       run_info = self.loadRunInfo(self.manager,name)
       if run_info:
-        print '-------------------------------------- 4'
         numSF = run_info.nSubFarm.data
-        activity = run_info.runTyp.data
-        print 'Writing job options to to /group/online/dataflow/options/RECO'
-        nam = run_info.storageSlice.data
-        storage = PartitionInfo(Online.PVSSSystems.controlsMgr(FarmSetup.storage_system),nam).load()
+        ##print '1111',self.name,self.manager.name(),run_info.name,run_info.runTyp.name()
+        nam = run_info.storageSlice()
+        ##print '-------------------------------------- 4',name,rundp_name,nam
+        ##print '------------------',run_info.storeSlice,run_info.storeSlice.name()
+        storage = PartitionInfo( Online.PVSSSystems.controlsMgr(FarmSetup.storage_system),nam).load()
         if storage:
           Online.Streaming.PartitionInfo.showRecStorage(storage,extended=1)
           if not writeOptions(run_info, storage, self):
@@ -879,11 +882,13 @@ class FarmConfigurator(FarmDescriptor):
   def free(self,rundp_name,partition):
     #partition = rundp_name
     res = self.getPartition(rundp_name,partition)
+    print 'free:',rundp_name,partition
     if res:
       name,context = res
       if FarmDescriptor.free(self,partition,name):
         if self.configureFSM(name,partition,'DISABLE'):
           self.freePartition(context,rundp_name,partition)
+          print 'free [6]:',name,context
           return 'SUCCESS'
         return self.error('Failed to reset subfarm FSMs for partitionn:'+partition,timestamp=1)
       return self.error('Failed to free subfarms for partitionn:'+partition,timestamp=1)
@@ -1133,10 +1138,11 @@ class FarmOptionsWriter:
       return None
     for recvSender in recvSenders:
       item     = recvSender.split('/')
+      print item
       reqNode  = item[0]
       info     = item[1]
       task     = item[2]
-      exec('nodeInfo = %s' %item[7])
+      nodeInfo = eval(item[7])
       node      = nodeInfo[0]
       nodeIndex = nodeInfo[1]
       nodeName  = run_info.subFarms.data[nodeIndex]
@@ -1153,7 +1159,7 @@ class FarmOptionsWriter:
       targetNode = item[0]
       info       = item[1]
       task       = item[2]
-      exec('nodeInfo = %s' %item[7])
+      nodeInfo = eval(item[7])
       node      = nodeInfo[0]
       nodeIndex = nodeInfo[1]
       nodeName  = run_info.subFarms.data[nodeIndex]

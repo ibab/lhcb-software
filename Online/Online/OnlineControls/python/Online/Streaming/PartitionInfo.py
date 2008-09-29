@@ -153,7 +153,7 @@ def showRecStorage(partition,extended=None):
       log('     %-38s on %-12s of type:%-10s streams:%s'%(task+'/'+clazz,node,type,str(opt)))
     log('   Infrastructure Tasks:')
     for i in partition.streamInfrastructure():
-      node,task,nick,type,clazz,dns,sys,sl,opt = i.split('/')
+      node,task,nick,type,clazz,dns,sys,opt = i.split('/')
       log('     %-38s on %-12s as %s'%(task+'/'+clazz,node,type))
     return
   log('-> Partition:'+name+' is FREE.')

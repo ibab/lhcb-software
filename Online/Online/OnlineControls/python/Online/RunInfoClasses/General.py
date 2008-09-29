@@ -119,8 +119,11 @@ class General:
     if self.devMgr.exists(dpn):
       self.tae = self.dp('general.TAE')
     dpn = self.manager.name()+':'+self.name+postfix+'.Storage.storeSlice'
+    print dpn
     if self.devMgr.exists(dpn):
       self.storeSlice = self.dp('Storage.storeSlice')
+    else:
+      print 'No Slice information present for',dpn
     dpn = self.manager.name()+':'+self.name+postfix+'.MonFarm.monSlice'
     if self.devMgr.exists(dpn):
       self.monSlice = self.dp('MonFarm.monSlice')
@@ -343,7 +346,10 @@ class General:
     "Show output stream related information of the RunInfo datapoint."
     streams = self.streams.data
     multiplicity = self.strMult.data
-    log('Output to %d logical streams'%len(self.streams.data))
+    msg = 'Output to %d logical streams'%len(self.streams.data)
+    if self.storeSlice is not None:
+      msg = msg + ' using slice:'+str(self.storeSlice.data)
+    log(msg)
     for i in xrange(len(streams)):
       log(' -> Data stream:%-24s with  mutiplicity:%d'%(streams[i],multiplicity[i]))
 

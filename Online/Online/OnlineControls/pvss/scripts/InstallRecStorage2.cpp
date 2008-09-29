@@ -12,7 +12,7 @@ main()   {
   // Finally generate all FSMs
   ctrlUtils_genAllFSM();
   ctrlUtils_startAllTree();
-  fwInstallation_addManager("PVSS00dim","always", 30, 3, 3, "-num 40 -dim_dp_config DimStorage -dim_dns_node "+ctrl_node);
+  fwInstallation_addManager("PVSS00dim","always", 30, 3, 3, "-num 40 -dim_dp_config "+ctrlUtils_dimMapName()+" -dim_dns_node "+ctrl_node);
   ctrlUtils_installPythonManager(58,"PVSS00Storage","../python/PVSS00RecStorage.py");
   // Status display server
   StreamStatusDisplay_install();
