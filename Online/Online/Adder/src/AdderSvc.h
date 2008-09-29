@@ -37,7 +37,8 @@ private:
   std::string m_utgid;
   std::string m_nodeName;
   
-  std::vector<std::string> m_taskName;
+  //std::vector<std::string> m_taskName;
+  std::string m_taskName;
   std::vector<std::string> m_subfarmName;
   std::vector<std::string> m_algorithmName;
   std::vector<std::string> m_objectName;
