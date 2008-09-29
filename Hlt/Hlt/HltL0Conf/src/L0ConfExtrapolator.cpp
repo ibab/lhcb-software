@@ -1,4 +1,4 @@
-// $Id: L0ConfExtrapolator.cpp,v 1.6 2008-08-29 14:28:06 albrecht Exp $
+// $Id: L0ConfExtrapolator.cpp,v 1.7 2008-09-29 11:29:33 graven Exp $
 // Include files 
 
 #include <cmath>
@@ -36,7 +36,8 @@ L0ConfExtrapolator::L0ConfExtrapolator( const std::string& type,
                                         const std::string& name,
                                         const IInterface* parent )
   : GaudiTool ( type, name , parent )
-    , zEndT3(9315.0), m_fieldOff(false)
+  , m_fieldOff(false)
+  , zEndT3(9315.0)
 {
   declareInterface<IL0ConfExtrapolator>(this);
 
@@ -190,6 +191,12 @@ FwdHypothesis L0ConfExtrapolator::getFwdHypothesis( const LHCb::Track& veloTrack
   //Parametrization to get Fwd hypothesis from velo track + calo point
   //from Olivier Callot
   const LHCb::State& caloState = caloTrack.firstState();
+  int reg = getCaloRegion(caloState.x(),caloState.y(),caloState.z());
+  if ( reg < 0 || reg > 4 ) {
+    error()<<"region not meaningful .. "<<endmsg;
+    return FwdHypothesis(0.,0.,0.,0.,0.,0.,0.,0.,0.);
+  }
+  
   // end of Velo, to extrapolate.
   const LHCb::State& veloState = veloTrack.closestState( 1000. );
   
@@ -217,13 +224,6 @@ FwdHypothesis L0ConfExtrapolator::getFwdHypothesis( const LHCb::Track& veloTrack
     by = veloState.ty();
     cx = 0;
     dx = 0;
-  }
-  
-  int reg = getCaloRegion(caloState.x(),caloState.y(),caloState.z());
-  
-  if ( reg < 0 || reg > 4 ) {
-    error()<<"region not meaningful .. "<<endmsg;
-    return FwdHypothesis(1,1,1,1,1,1,1,1,1);
   }
   
   return FwdHypothesis( ax, bx, cx,dx,
