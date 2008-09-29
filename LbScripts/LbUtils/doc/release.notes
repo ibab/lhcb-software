@@ -1,5 +1,6 @@
 2008-09-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* cmt/requirements: release of version v1r3
 	* python/LbUtils/_helpers/__init__.py: New file.
 	* python/LbUtils/_helpers/optparse.py: New file.
 	* python/LbUtils/_helpers/subprocess.py: New file.
