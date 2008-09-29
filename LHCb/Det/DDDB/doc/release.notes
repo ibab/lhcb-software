@@ -4,6 +4,9 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+! 2008-09-29 - Marco Clemencic
+ - New default tag for 2008 (head-20080929).
+
 ! 2008-09-26 - Marco Clemencic
  - New default tag for 2008 (head-20080926).
 
