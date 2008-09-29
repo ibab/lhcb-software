@@ -1,4 +1,4 @@
-// $Id: ParticleCuts.h,v 1.28 2008-09-23 16:10:44 ibelyaev Exp $
+// $Id: ParticleCuts.h,v 1.29 2008-09-29 16:50:40 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSPARTICLECUTS_H 
 #define LOKI_PHYSPARTICLECUTS_H 1
@@ -1215,6 +1215,142 @@ namespace LoKi
      */
     typedef LoKi::Particles::ChildPredicate                          CUTCHILD ;
     // ========================================================================
+    /** @typedef D2DVVD 
+     *  Evaluate the 3D-vertex-vertex distance for the various daughter particles
+     *  in the cascade decay
+     *   
+     *  @code 
+     * 
+     *   const LHCb::Particle* B = ... ;
+     *
+     *   // distance between 1st and 2nd daugher vertices 
+     *   const D2DVVD d2d1 ( 1 , 2 ) ; 
+     *   // distance between 1st daughetr vertex and the mother vertex 
+     *   const D2DVVD d2d2 ( 1 ) ; 
+     * 
+     *   const double distance12 = d2d1 ( B ) ;
+     *   const double distance1  = d2d2 ( B ) ;
+     * 
+     *  @endcode 
+     * 
+     *  @see LoKi::Particles::DaughterVertexDistance
+     *  @see LoKi::Vertices::VertexDistance 
+     *  @see LoKi::Cuts::VVD 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-09-29
+     */
+    typedef LoKi::Particles::DaughterVertexDistance                    D2DVVD ;
+    // ========================================================================
+    /** @typedef D2DVVDCHI2
+     *  Evaluate the \f$\chi^2\f$-vertex-vertex signed distance 
+     *  for the various 
+     *  daughter particles in the cascade decay
+     *   
+     *  @code 
+     * 
+     *   const LHCb::Particle* B = ... ;
+     *
+     *   // chi2-distance between 1st and 2nd daugher vertices 
+     *   const D2DVVDCIH2 d2d1 ( 1 , 2 ) ; 
+     *   // chi2-distance between 1st daughetr vertex and the mother vertex 
+     *   const D2DVVDCHI2 d2d2 ( 1 ) ; 
+     * 
+     *   const double chi2_1 = d2d1 ( B ) ;
+     *   const double cih2_2 = d2d2 ( B ) ;
+     * 
+     *  @endcode 
+     * 
+     *  @see LoKi::Particles::DaughterVertexDistanceChi2
+     *  @see LoKi::Vertices::VertexChi2Distance 
+     *  @see LoKi::Cuts::VDCHI2  
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-09-29
+     */
+    typedef LoKi::Particles::DaughterVertexDistanceChi2            D2DVVDCHI2 ;
+    // ========================================================================
+    /** @typedef D2DVVDCHI2SIGN
+     *  Evaluate the signed \f$\chi^2\f$-vertex-vertex distance 
+     *  for the various daughter particles in the cascade decay.
+     *  The sign is evaluated from the sign of the expresion:
+     *   \f$ \left( \vect{v}_1-\vetc{v}_2\right)\cdot \vect{p}_1 \f$ 
+     *   
+     *  @code 
+     * 
+     *   const LHCb::Particle* B = ... ;
+     *
+     *   // chi2-distance between 1st and 2nd daugher vertices 
+     *   const D2DVVDCHI2SIGN d2d1 ( 1 , 2 ) ; 
+     *   // chi2-distance between 1st daughetr vertex and the mother vertex 
+     *   const D2DVVDCHI2SIGN d2d2 ( 1 ) ; 
+     * 
+     *   const double chi2_1 = d2d1 ( B ) ;
+     *   const double cih2_2 = d2d2 ( B ) ;
+     * 
+     *  @endcode 
+     * 
+     *  @see LoKi::Particles::DaughterVertexDistanceSignedChi2
+     *  @see LoKi::Vertices::VertexChi2Distance 
+     *  @see LoKi::Cuts::VDCHI2  
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-09-29
+     */
+    typedef LoKi::Particles::DaughterVertexDistanceSignedChi2  D2DVVDCHI2SIGN ;
+    // ========================================================================
+    /** @typedef D2DVVDDOT
+     *  Evaluate the 'dot'-vertex-vertex distance 
+     *  for the various daughter particles in the cascade decay.
+     *  It is a projectioof the distance between  vertices to the 
+     *  direction of the monetum of the first particle 
+     *   
+     *  @code 
+     * 
+     *   const LHCb::Particle* B = ... ;
+     *
+     *   // 'dot'-distance between 1st and 2nd daugher vertices 
+     *   const D2DVVDDOT d2d1 ( 1 , 2 ) ; 
+     *   // 'dot'-distance between 1st daughetr vertex and the mother vertex 
+     *   const D2DVVDDOTd2d2 ( 1 ) ; 
+     * 
+     *   const double dot_1 = d2d1 ( B ) ;
+     *   const double dot_2 = d2d2 ( B ) ;
+     * 
+     *  @endcode 
+     * 
+     *  @see LoKi::Particles::DaughterVertexDistanceDot
+     *  @see LoKi::Partcles::VertexDotDistance 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-09-29
+     */
+    typedef LoKi::Particles::DaughterVertexDistanceDot              D2DVVDDOT ;
+    // ========================================================================
+    /** @typedef D2DVVDSIGN 
+     *  Evaluate the 3D-vertex-vertex signed distance for the various 
+     *  daughter particles in the cascade decay
+     *  The sign is prescribed according to \f$\Delta z \f$
+     *   
+     *  @code 
+     * 
+     *   const LHCb::Particle* B = ... ;
+     *
+     *   // distance between 1st and 2nd daugher vertices 
+     *   const D2DVVDSIGN d2d1 ( 1 , 2 ) ; 
+     *   // distance between 1st daughetr vertex and the mother vertex 
+     *   const D2DVVDSIGN d2d2 ( 1 ) ; 
+     * 
+     *   const double distance12 = d2d1 ( B ) ;
+     *   const double distance1  = d2d2 ( B ) ;
+     * 
+     *  @endcode 
+     * 
+     *  @see LoKi::Particles::DaughterVertexSignedDistance
+     *  @see LoKi::Vertices::VertexSignedDistance 
+     *  @see LoKi::Cuts::VVDSIGN 
+     *  @see LoKi::Cuts::D2DVVD
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-09-29
+     */
+    typedef LoKi::Particles::DaughterVertexSignedDistance          D2DVVDSIGN ;
+    // ========================================================================    
     /** @typedef DANG
      *  Simple function which evalutes the coside of the angle inbetween
      *  the particle momentum and the vector from the primary to the secondary

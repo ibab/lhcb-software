@@ -1,11 +1,31 @@
-! $Id: release.notes,v 1.71 2008-09-23 16:10:44 ibelyaev Exp $ 
+! $Id: release.notes,v 1.72 2008-09-29 16:50:40 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
-! 2008-09-23 - Vanay BELYAEV
+! 2008-09-29 - Vanya BELYAEV
+ - new functors 
+
+    D2DVVD          LoKi::Particles::DaughterVertexVertexDistance:
+            3D-vertex-vertex distance between vertices in the cascade decay
+    D2DVVDCHI2      LoKi::Particles::DaughterVertexVertexDistanceChi2:
+            chi2-vertex-vertex distance between vertices in the cascade decay
+    D2DVVDCHI2SIGN  LoKi::Particles::DaughterVertexVertexDistanceSignedChi2:
+            signed chi2-vertex-vertex distance between evrtices in the cascade decay, 
+            the sign is according to (v1-v2)*p1 
+    D2DVVDDOT      LoKi::Particles::DaughterVertexVertexDistanceDot:
+            'dot'-vertex-vertex distance between vertices in the cascade decay
+            (== projected distance on the momentum direction of the first component)
+    D2DVVDSIGN  LoKi::Particles::DaughterVertexVertexSignedDistance:
+            signed 3D-vertex-vertex distance between vertices in the cascade decay, 
+            the sign is according to (v1-v2).Z() 
+   
+  new files:
+    LoKi/Particle22.h, src/Particles22.cpp
+
+! 2008-09-23 - Vanya BELYAEV
 
  - new functors:
 

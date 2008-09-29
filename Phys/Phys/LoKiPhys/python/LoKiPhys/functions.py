@@ -595,6 +595,17 @@ CHI2PDGM     = LoKi.Particles.DeltaNominalMassChi2 ()
 CHI2PDGMASS  = LoKi.Particles.DeltaNominalMassChi2 ()
 
 
+## @see LoKi::Cuts::D2DVVD 
+D2DVVD          = LoKi.Particles.DaughterVertexDistance 
+## @see LoKi::Cuts::D2DVVDCHI2  
+D2DVVDCHI2      = LoKi.Particles.DaughterVertexDistanceChi2 
+## @see LoKi::Cuts::D2DVVDCHI2SIGN  
+D2DVVDCHI2SIGN  = LoKi.Particles.DaughterVertexDistanceSignedChi2 
+## @see LoKi::Cuts::D2DVVDDOT
+D2DVVDDOT       = LoKi.Particles.DaughterVertexDistanceDot 
+## @see LoKi::Cuts::D2DVVDSIGN
+D2DVVDSIGN      = LoKi.Particles.DaughterVertexSignedDistance
+
 
 # =============================================================================
 # Functional part: 
