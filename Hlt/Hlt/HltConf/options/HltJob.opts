@@ -10,9 +10,14 @@
 // Configure application for DC06 
 //
 
+#include "$DAVINCIROOT/options/DaVinciCommon.opts"
 #include "$STDOPTS/LHCbApplication.opts"
-#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
+#include "$STDOPTS/DstDicts.opts"
 #include "$DDDBROOT/options/DC06.opts"
+#include "$STDOPTS/DecodeRawEvent.opts"
+ApplicationMgr.ExtSvc += {"DataOnDemandSvc"};
+#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
+
 
 //
 // L0 and HLT sequences
