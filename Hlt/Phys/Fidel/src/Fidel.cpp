@@ -1,4 +1,4 @@
-// $Id: Fidel.cpp,v 1.11 2008-08-19 11:47:35 pkoppenb Exp $ // Include files
+// $Id: Fidel.cpp,v 1.12 2008-09-29 11:33:50 graven Exp $ // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/ToolFactory.h"
@@ -122,12 +122,12 @@ StatusCode Fidel::execute() {
   double impCand=0;
   double ipchi2=0;
   double dist_B=0; double errdist_B=0; double fs_B=0;
-  double distB1=-9; double errdistB1=-9;double FsB1=-999;
-  double distB2=-9; double errdistB2=-9;double FsB2=-999;
-  double angleP=0;
-  double Pchi2=0;
-  double dist1,errdist1,fs1;
-  double dist2,errdist2,fs2;
+  //double distB1=-9; double errdistB1=-9;double FsB1=-999;
+  //double distB2=-9; double errdistB2=-9;double FsB2=-999;
+  //double angleP=0;
+  //double Pchi2=0;
+  //double dist1,errdist1,fs1;
+  //double dist2,errdist2,fs2;
   
 
   //============================================
@@ -199,7 +199,7 @@ StatusCode Fidel::execute() {
       Gaudi::XYZPoint Origin = bestPV->position();
 
       const LHCb::Particle *myBCand = BCand.clone();
-      const LHCb::VertexBase *BVtx = BCand.endVertex();
+      //const LHCb::VertexBase *BVtx = BCand.endVertex();
       
       StatusCode sc = distanceCalculator()->distance(myBCand,bestPV,impCand,ipchi2);
       if (!sc) return sc;
