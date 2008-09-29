@@ -3,10 +3,8 @@
 
 // Include files
 
-//#include "GaudiAlg/GaudiAlgorithm.h"
-//#include "GaudiAlg/GaudiHistoAlg.h"
 
-#include "GaudiKernel/Algorithm.h"
+#include "GaudiKernel/Service.h"
 #include "GaudiKernel/Property.h"
 
 
@@ -30,29 +28,28 @@
 
 /* deprecated
  */
-static const std::string s_converterName("RATE_SERVICE_V2R2");
+static const std::string s_converterName("RATE_SERVICE_V2R3");
 
 // Forward declarations
 class DimInfoMonRate;
 
+namespace LHCb {
 
-/** RateService is an Algorithm subscribing to MonRate services and publishing
+/** @class RateService is a Service subscribing to MonRate services and publishing
   * structured services to PVSS.
   *
   * @class RateService
   * @author Jean-Francois Menou
   */
-class RateService : public Algorithm {
+class RateService : public Service {
 public:
   /// Constructor of this form must be provided
   RateService(const std::string& name, ISvcLocator* pSvcLocator); 
-  
-  // Three mandatory member functions of any algorithm
-  /// Initialize mandatory member functions of any algorithm
+  virtual ~RateService();
+  /// Initialize mandatory member functions of any service
   StatusCode initialize();
-  /// Execute mandatory member functions of any algorithm
-  StatusCode execute();
-  /// Finalize mandatory member functions of any algorithm
+
+  /// Finalize mandatory member functions of any service
   StatusCode finalize();
 
 private:
@@ -80,8 +77,8 @@ private:
     */
   std::vector<DimInfoMonRate *> m_dimInfoMonRate;
     
-  /// Time to sleep betwen 
-  int sleepTime;
+  /// partitionname
+  std::string m_partitionName;
   
   /* RatePublisher to publish the number of MonRate services currently processed
    * by the RateService.
@@ -105,4 +102,5 @@ private:
   StatusCode findServices();
 };
 
+} //end namespace LHCb
 #endif    // RATESERVICE_RATESERVICE_H

@@ -1,5 +1,5 @@
 // Include files
-#include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/DataObject.h"
 #include "Gaucho/MonStatEntity.h"
 #include "Gaucho/MonRate.h"
@@ -26,6 +26,10 @@
 #include <vector>
 
 #include <cmath>
+// for online monitoring
+#include "RTL/rtl.h"
+#include "CPP/IocSensor.h"
+
 
 #ifdef WIN32
 namespace win {
@@ -39,12 +43,14 @@ namespace win {
 
 
 // Static Factory declaration
-DECLARE_ALGORITHM_FACTORY(RateService)
+DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,RateService)
+
+using namespace LHCb;
   
   // Constructor
   //------------------------------------------------------------------------------
   RateService::RateService(const std::string& name, ISvcLocator* ploc)
-    : Algorithm(name, ploc),
+    : Service(name, ploc),
     m_dimName(name),
     m_found(false),
     m_dimInfoMonRate(0),
@@ -52,24 +58,28 @@ DECLARE_ALGORITHM_FACTORY(RateService)
 {
   m_monRateServiceName = "*";
   m_nbCounterInMonRate = 0;
-  sleepTime=5;
   
   declareProperty("MonRateCounterNumber", m_nbCounterInMonRate);
-  declareProperty("SleepTime",sleepTime); // Sleeping time between events, in seconds
+  declareProperty("PartitionName",m_partitionName); // Sleeping time between events, in seconds
   declareProperty("MonRateServiceName", m_monRateServiceName);
   
 }
 
+//default destructor
+RateService::~RateService() {
+}
+
+
 //------------------------------------------------------------------------------
 StatusCode RateService::initialize() {
   //------------------------------------------------------------------------------
-  StatusCode sc = Algorithm::initialize(); // must be executed first
+  StatusCode sc = Service::initialize(); // must be executed first
   MsgStream msg(msgSvc(), name());
   
   
   COUT_DEBUG("MonRateServiceName   : " << m_monRateServiceName);
   COUT_DEBUG("MonRateCounterNumber : " << m_nbCounterInMonRate);
-  COUT_DEBUG("SleepTime            : " << sleepTime);
+ // COUT_DEBUG("SleepTime            : " << sleepTime);
   
   msg << MSG::INFO << "Initialize" << endreq;
 
@@ -98,6 +108,27 @@ StatusCode RateService::initialize() {
   
   msg << MSG::INFO << "Initialize DONE" << endreq;
   
+  
+    
+/*  try
+  {  
+    if(!findServices().isSuccess())
+    {
+      msg << MSG::INFO << "Unable to find " << m_monRateServiceName << endreq;
+    }
+    
+    m_numberOfMonRatesPublisher->updateService(m_dimInfoMonRate.size());
+  }catch(std::exception e)
+  {
+   msg << MSG::WARNING << "EXCEPTION CAUGHT INT RateService::execute()" << endreq;
+  }
+  
+//  msg << MSG::INFO << "Execute DONE, found=" << m_found << endreq;
+  
+  mysleep(sleepTime);*/
+  
+  
+  
   return sc;
 }
 
@@ -121,7 +152,14 @@ StatusCode RateService::findServices() {
   StatusCode sc;
   
   int nbNewServices = 0;
-  
+  std::string firstpart;
+  std::string secondpart;
+  std::string::size_type loc=m_monRateServiceName.find("*PartitionName*",0);
+  if (loc == std::string::npos ) { 
+     firstpart=m_monRateServiceName.substr(0,loc);
+     secondpart=m_monRateServiceName.substr(loc+1);
+  }
+  m_monRateServiceName =firstpart+"*"+m_partitionName+"*"+secondpart;  
   msg << MSG::INFO << "Looking for " << m_monRateServiceName << " pattern" << endreq;
   
   
@@ -210,34 +248,6 @@ StatusCode RateService::findServices() {
 }
 
 
-//------------------------------------------------------------------------------
-StatusCode RateService::execute() {
-  //------------------------------------------------------------------------------
-  MsgStream         msg( msgSvc(), name() );
-  
-//  msg << MSG::INFO << "Execute" << endreq;
-
-    /* looking for new service
-     */
-  try
-  {  
-    if(!findServices().isSuccess())
-    {
-      msg << MSG::INFO << "Unable to find " << m_monRateServiceName << endreq;
-    }
-    
-    m_numberOfMonRatesPublisher->updateService(m_dimInfoMonRate.size());
-  }catch(std::exception e)
-  {
-   msg << MSG::WARNING << "EXCEPTION CAUGHT INT RateService::execute()" << endreq;
-  }
-  
-//  msg << MSG::INFO << "Execute DONE, found=" << m_found << endreq;
-  
-  mysleep(sleepTime);
-   
-  return StatusCode::SUCCESS;
-}
 
 
 //------------------------------------------------------------------------------
