@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.cpp,v 1.51 2008-09-29 09:10:25 odescham Exp $ 
+// $Id: DeCalorimeter.cpp,v 1.52 2008-09-29 16:01:43 odescham Exp $ 
 // ============================================================================
 #define  CALODET_DECALORIMETER_CPP 1
 // STL
@@ -192,21 +192,19 @@ StatusCode DeCalorimeter::initialize()
   if ( sc.isSuccess() ) {
     m_initialized = true;
     // INFO
-    msg << MSG::INFO << "'DeCalorimeter " << name() << " correctly initalized with : " <<endreq;
-    msg << MSG::INFO << " - " << numberOfCells()  << " channels "    << endreq;
-    msg << MSG::INFO << " - " << numberOfCards()  << " FE-boards "   << endreq;
-    msg << MSG::INFO << " - " << numberOfTell1s() << " Tell1s "      << endreq;
-    msg << MSG::INFO << " - " << numberOfPins()   << " PIN-diodes "  << endreq;
-    msg << MSG::INFO << " - " << numberOfLeds()   << " LEDs "        << endreq;
+    msg << MSG::DEBUG << "'DeCalorimeter " << name() << " correctly initalized with : " <<endreq;
+    msg << MSG::DEBUG << " - " << numberOfCells()  << " channels "    << endreq;
+    msg << MSG::DEBUG << " - " << numberOfCards()  << " FE-boards "   << endreq;
+    msg << MSG::DEBUG << " - " << numberOfTell1s() << " Tell1s "      << endreq;
+    msg << MSG::DEBUG << " - " << numberOfPins()   << " PIN-diodes "  << endreq;
+    msg << MSG::DEBUG << " - " << numberOfLeds()   << " LEDs "        << endreq;
 
 
-    // DEBUG
+    // 
     msg << MSG::DEBUG << "DDDB parameters : " 
         << " Y/X ratio = " <<  m_YToXSizeRatio 
         << " zOffset   = " <<  m_zOffset
         << " zSize     = " <<  m_zSize 
-        << " Middle plane " << this->plane ( CaloPlane::Middle )
-        << " ShowerMax plane " << this->plane ( CaloPlane::ShowerMax )
         << endreq;
 
 
@@ -259,7 +257,7 @@ Gaudi::Plane3D DeCalorimeter::plane( const double dz) const{
   Gaudi::XYZPoint local(0. , 0. , dz);
   if ( fabs(dz-m_zOffset) > m_zSize/2. ) {  
     MsgStream msg( msgSvc(), name() + "Plane " );
-    msg << MSG::WARNING 
+    msg << MSG::DEBUG 
         << " THE REQUESTED PLANE IS OUTSIDE THE ACTIVE VOLUME of : " << name()
         << " dz = " << dz
         << " z-enveloppe of the active area = ["<< m_zOffset-m_zSize/2. << " ; " 
