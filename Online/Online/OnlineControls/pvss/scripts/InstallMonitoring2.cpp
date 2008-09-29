@@ -39,7 +39,7 @@ main()   {
     StreamTaskMgr_installStream(stream);
     StreamTaskMgr_createAllTree(stream,num_relay_tasks,num_worker_tasks,storage_sys,num_sender_tasks);  
   }
-  fwInstallation_addManager("PVSS00dim","always", 30, 3, 3, "-num 40 -dim_dp_config DimStorage -dim_dns_node "+ctrl_node);
+  fwInstallation_addManager("PVSS00dim","always", 30, 3, 3, "-num 40 -dim_dp_config "+ctrlUtils_dimMapName()+" -dim_dns_node "+ctrl_node);
   StreamTaskMgr_connectTaskManager(storage_sys);
   StreamTaskMgr_connectTaskManager(stream);
   // Finally generate all FSMs

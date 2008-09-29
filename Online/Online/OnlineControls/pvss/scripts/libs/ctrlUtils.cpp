@@ -1,5 +1,17 @@
+#uses "fwUi"
 #uses "fwDIM"
+#uses "fwTree.ctl"
+#uses "fwFsmUtil.ctl"
+#uses "fwFsmEvent.ctl"
+#uses "fwTreeDisplay.ctl"
 #uses "fwFsmTreeDisplay.ctl"
+
+//=============================================================================
+string ctrlUtils_dimMapName() {
+  string sys = getSystemName();
+  string dimMap = "DimMap"+substr(sys,0,strlen(sys)-1);
+  return dimMap;
+}
 //=============================================================================
 void ctrlUtils_trace(string msg)  {
   DebugN(msg);
@@ -115,12 +127,12 @@ int ctrlUtils_uninstallDataType(string type,bool delete_datapoints=false)  {
 }
 //=============================================================================
 string ctrlUtils_addFsmTreeNode(string parent, string node, string type, int isCU) {
-  if ( 0 == fwFsmTree_isNode(node) ) {
+  //if ( 0 == fwFsmTree_isNode(node) ) {
     DebugN("Create Node:"+parent+"::"+node+" ["+type+"]");
     return fwFsmTree_addNode(parent, node, type, isCU);
-  }
-  DebugN("Node "+parent+"::"+node+" Exists already....");
-  return node;
+    //}
+//DebugN("Node "+parent+"::"+node+" Exists already....");
+//return node;
 }
 //=============================================================================
 int ctrlUtils_createFsmTasks(string node, string name, int howmany, int first) {
@@ -158,12 +170,12 @@ int ctrlUtils_createFsmTaskTree(string stream, string slice, dyn_string sets, in
   if ( node != "" )   {
     if ( have_config )  {
       string dev = node+"_Config";
-      ctrlUtils_addFsmTreeNode(node, dev, "StreamConfigurator", 0);
-      fwFsmTree_setNodeLabel(dev,"Configurator");
       if ( !dpExists(dev) )  {
         dpCreate(dev,"StreamConfigurator");
       }  
       dpSet(dev+".State","NOT_READY");
+      ctrlUtils_addFsmTreeNode(node, dev, "StreamConfigurator", 0);
+      fwFsmTree_setNodeLabel(dev,"Configurator");
     }
     for(int i=1; i<=dynlen(sets); ++i)  {
       name = node+"_"+sets[i];

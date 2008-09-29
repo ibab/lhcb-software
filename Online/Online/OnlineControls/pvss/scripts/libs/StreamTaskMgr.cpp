@@ -128,7 +128,7 @@ int StreamTaskMgr_uninstall()  {
 //=============================================================================
 int StreamTaskMgr_connectTaskManager(string stream)  {
   dyn_string recvNodes, strmNodes;
-  string cfg = "DimStorage";
+  string cfg = ctrlUtils_dimMapName();
   fwDim_createConfig(cfg);
   int res = dpGet(stream+"Alloc.RecvNodes",recvNodes,stream+"Alloc.StreamNodes",strmNodes);
   if ( 0 == res )  {
