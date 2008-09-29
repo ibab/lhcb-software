@@ -1,4 +1,4 @@
-// $Id: MessageLogger.cpp,v 1.13 2008-09-26 16:05:41 frankb Exp $
+// $Id: MessageLogger.cpp,v 1.14 2008-09-29 07:44:38 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/MessageLogger.cpp,v 1.13 2008-09-26 16:05:41 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/MessageLogger.cpp,v 1.14 2008-09-29 07:44:38 frankb Exp $
 // Framework include files
 #include <cerrno>
 #include <cstdarg>
@@ -33,6 +33,7 @@ extern "C" {
 }
 #ifdef _WIN32
 #define vsnprintf _vsnprintf
+#define popen     _popen
 #endif
 
 using namespace ROLogger;
