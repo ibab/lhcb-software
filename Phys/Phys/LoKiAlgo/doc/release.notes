@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.43 2008-09-16 15:02:20 ibelyaev Exp $ 
+! $Id: release.notes,v 1.44 2008-09-30 11:41:53 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgo
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -6,6 +6,7 @@
 ! -----------------------------------------------------------------------------
 
 
+!========================== LoKiAlgo v7r6 2008-09-30 ==========================
 ! 2008-09-16 - Vanya BELYAEV
 
  - python/LoKiAlgo/decorators.py
