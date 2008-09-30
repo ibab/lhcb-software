@@ -1,4 +1,5 @@
 #include "PyRPC.h"
+#include "RTL/rtl.h"
 #include <list>
 #include <cerrno>
 #include <sstream>
@@ -131,7 +132,7 @@ void _ContBase::loadValues(const string& vals, const string& tag)  {
 }
 
 /// Print object content to stdout
-void _ContBase::print(const std::string& prefix) const {
+void _ContBase::print(const string& prefix) const {
   list<Arg>* l = (list<Arg>*)data;
   for(list<Arg>::const_iterator i=l->begin(); i != l->end(); ++i)
     (*i).print(prefix+" ->");
@@ -415,7 +416,7 @@ string Arg::datatype() const {
 }
 
 /// Print object content to stdout
-void Arg::print(const std::string& prefix) const {
+void Arg::print(const string& prefix) const {
   ostream& os=cout;
   string typ = datatype();
   os << prefix << setw(12) << left << typ << "[ ";
@@ -452,7 +453,7 @@ Time::Time(const struct tm& t) : time(t) {}
 Time::Time(const char* date) {
   if ( ::strptime(date,TIME_FMT,&time) ) return;
   string err = "XMLRPC: Failed to convert data item of type dateTime.iso8601: ";
-  throw std::runtime_error(err + date);
+  throw runtime_error(err + date);
 }
 
 bool Time::operator<(const Time& c)  const  {
@@ -479,7 +480,7 @@ string Time::str() const  {
 Time& Time::load(const string& date) {
   if ( ::strptime(date.c_str(),TIME_FMT,&time) ) return *this;
   string err = "XMLRPC: Failed to convert data item of type dateTime.iso8601: ";
-  throw std::runtime_error(err + date);
+  throw runtime_error(err + date);
 }
 
 /// Copy constructor
@@ -524,8 +525,8 @@ string Blob::str() const  {
 }
 
 /// Print object content to stdout
-void Blob::print(const std::string& prefix) const {
-  std::cout << prefix << "Length:" << length << " Pointer: " << pointer << std::endl;
+void Blob::print(const string& prefix) const {
+  cout << prefix << "Length:" << length << " Pointer: " << pointer << endl;
 }
 
 /// Load object from string representation
@@ -561,7 +562,7 @@ string Pair::str() const  {
 }
 
 /// Print object content to stdout
-void Pair::print(const std::string& prefix) const {
+void Pair::print(const string& prefix) const {
   key.print(  prefix+" KEY:  ");
   val.print(prefix+" VALUE:");
 }
@@ -624,7 +625,7 @@ string MethodCall::str(const string& host, int port) const  {
 }
 
 /// Print object to standard output
-void MethodCall::print(const std::string& prefix) const {
+void MethodCall::print(const string& prefix) const {
   cout << prefix << "Method call:" << endl;
   values.print(prefix+"  ");
 }
@@ -694,7 +695,7 @@ string MethodResponse::str() const
 {  return dump(values,"<param>\n","</param>\n");               }
 
 /// Print object to standard output
-void MethodResponse::print(const std::string& prefix) const {
+void MethodResponse::print(const string& prefix) const {
   cout << prefix << "Method response:" << endl;
   values.print(prefix+"  ");
 }
@@ -731,12 +732,13 @@ bool Server::connect(const string& server, int port) {
     if (m_channel->connect(sin,Connect_TMO) != -1) {
       return true;
     }
+    cout << RTL::processName() << " Connect failed to " << server
+	 << ::strerror(m_channel->error()) << endl;
     delete m_channel;
     m_channel = 0;
-    cout << "Connect failed!" << endl;
     return false;
   }
-  cout << "Host not found.!" << endl;
+  cout << RTL::processName() << " Host not found.!" << endl;
   return false;
 }
 
@@ -748,7 +750,7 @@ bool Server::disconnect() {
 }
 
 Server::Response Server::error(int err_num) const {
-  std::cout << ::strerror(err_num);
+  cout << RTL::processName() << " " << ::strerror(err_num) << endl;
   return Response("");
 }
 

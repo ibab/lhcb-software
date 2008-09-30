@@ -1,4 +1,4 @@
-// $Id: PVSSLogListener.cpp,v 1.2 2008-09-26 16:05:41 frankb Exp $
+// $Id: PVSSLogListener.cpp,v 1.3 2008-09-30 14:05:26 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PVSSLogListener.cpp,v 1.2 2008-09-26 16:05:41 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PVSSLogListener.cpp,v 1.3 2008-09-30 14:05:26 frankb Exp $
 
 // Framework include files
 #include "ROLogger/PVSSLogListener.h"
@@ -43,10 +43,10 @@ PVSSLogListener::PVSSLogListener(Interactor* parent,const string& n) : m_parent(
   string nam = "RunInfo/" + m_name + "/HLTsubFarms";
   m_subFarmDP = ::dic_info_service((char*)nam.c_str(),MONITORED,0,0,0,subFarmHandler,(long)this,0,0);
   ::upic_write_message2("Subfarm content for %s_RunInfo from:%s",m_name.c_str(),nam.c_str());
-  f->push_back("/HLT01/pvss/log");
-  f->push_back("/STORECTL01/pvss/log");
-  f->push_back("/MONA08/pvss/log");
-  if ( name() == "LHCb" ) f->push_back("/CALD07/pvss/log");
+  f->push_back("/HLT01/logger/pvss/log");
+  f->push_back("/STORECTL01/logger/pvss/log");
+  f->push_back("/MONA08/logger/pvss/log");
+  if ( name() == "LHCb" ) f->push_back("/CALD07/logger/pvss/log");
   IocSensor::instance().send(m_parent,CMD_UPDATE_FARMS,f.release());
 }
 
@@ -63,12 +63,12 @@ void PVSSLogListener::subFarmHandler(void* tag, void* address, int* size) {
   for(const char* data = (char*)address, *end=data+*size;data<end;data += strlen(data)+1) {
     svc = "/";
     svc += data;
-    svc += "/pvss/log";
+    svc += "/logger/pvss/log";
     f->push_back(svc);
   }
-  f->push_back("/HLT01/pvss/log");
-  f->push_back("/STORECTL01/pvss/log");
-  f->push_back("/MONA08/pvss/log");
-  if ( h->name() == "LHCb" ) f->push_back("/CALD07/pvss/log");
+  f->push_back("/HLT01/logger/pvss/log");
+  f->push_back("/STORECTL01/logger/pvss/log");
+  f->push_back("/MONA08/logger/pvss/log");
+  if ( h->name() == "LHCb" ) f->push_back("/CALD07/logger/pvss/log");
   IocSensor::instance().send(h->m_parent,CMD_UPDATE_FARMS,f.release());
 }

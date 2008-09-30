@@ -1,4 +1,4 @@
-// $Id: PartitionListener.cpp,v 1.12 2008-09-26 16:05:41 frankb Exp $
+// $Id: PartitionListener.cpp,v 1.13 2008-09-30 14:05:26 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionListener.cpp,v 1.12 2008-09-26 16:05:41 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionListener.cpp,v 1.13 2008-09-30 14:05:26 frankb Exp $
 
 // Framework include files
 #include "ROLogger/PartitionListener.h"
@@ -75,7 +75,7 @@ void PartitionListener::storSliceHandler(void* tag, void* address, int* size) {
       IocSensor::instance().send(h->m_parent,CMD_DISCONNECT_STORAGE,(void*)0);
     }
     else {
-      string svc = "/STORECTL01/";
+      string svc = "/STORECTL01/logger/";
       svc += (char*)address;
       svc += "/log";
       IocSensor::instance().send(h->m_parent,CMD_CONNECT_STORAGE,new string(svc));
@@ -92,7 +92,7 @@ void PartitionListener::monSliceHandler(void* tag, void* address, int* size) {
       IocSensor::instance().send(h->m_parent,CMD_DISCONNECT_MONITORING,(void*)0);
     }
     else {
-      string svc = "/MONA08/";
+      string svc = "/MONA08/logger/";
       svc += (char*)address;
       svc += "/log";
       IocSensor::instance().send(h->m_parent,CMD_CONNECT_MONITORING,new string(svc));
@@ -108,10 +108,10 @@ void PartitionListener::subFarmHandler(void* tag, void* address, int* size) {
   for(const char* data = (char*)address, *end=data+*size;data<end;data += strlen(data)+1) {
     svc = "/";
     svc += data;
-    svc += "/gaudi/log";
+    svc += "/logger/gaudi/log";
     f->push_back(svc);
   }
-  if ( h->name() == "LHCb" ) f->push_back("/CALD07/gaudi/log");
+  if ( h->name() == "LHCb" ) f->push_back("/CALD07/logger/gaudi/log");
   IocSensor::instance().send(h->m_parent,CMD_UPDATE_FARMS,f.release());
 }
 

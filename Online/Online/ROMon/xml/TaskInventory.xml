@@ -90,6 +90,13 @@
  <Task name="LogGaudiSrv"/>
 </TaskList>
 
+<TaskList name="StandardReconstruction">
+ <Task name="Reconstruction_Slice00Srv"/>
+ <Task name="Reconstruction_Slice01Srv"/>
+ <Task name="Reconstruction_Slice02Srv"/>
+ <Task name="Reconstruction_Slice03Srv"/>
+</TaskList>
+
 <TaskList name="StandardMonitoring">
  <Task name="Monitoring_Slice00Srv"/>
  <Task name="Monitoring_Slice01Srv"/>
@@ -163,7 +170,21 @@
  <Task name="Storage_Slice0FCollect"/>
 </TaskList>
 
+<TaskList name="ReconstructionControl">
+ <Task name="Reconstruction_Slice00SumSrv"/>
+ <Task name="Reconstruction_Slice01SumSrv"/>
+ <Task name="Reconstruction_Slice02SumSrv"/>
+ <Task name="Reconstruction_Slice03SumSrv"/>
+ <Task name="Reconstruction_Slice00Collect"/>
+ <Task name="Reconstruction_Slice01Collect"/>
+ <Task name="Reconstruction_Slice02Collect"/>
+ <Task name="Reconstruction_Slice03Collect"/>
+</TaskList>
+
 <TaskList name="MonitoringWorker">
+</TaskList>
+
+<TaskList name="ReconstructionWorker">
 </TaskList>
 
 <TaskList name="MonitoringControl">
@@ -273,16 +294,16 @@
 
 <NodeType name="ReconstructionControl">
   <TaskList name="FMC"/>
-  <TaskList name="StandardMonitoring"/>
-  <TaskList name="MonitoringControl"/>
+  <TaskList name="StandardReconstruction"/>
+  <TaskList name="ReconstructionControl"/>
   <ConnectionList name="ControlsPC"/>
   <Project name="RECONSTRUCTION"/>
 </NodeType>
 
 <NodeType name="ReconstructionWorker">
   <TaskList name="FMC"/>
-  <TaskList name="StandardMonitoring"/>
-  <TaskList name="MonitoringWorker"/>
+  <TaskList name="StandardReconstruction"/>
+  <TaskList name="ReconstructionWorker"/>
   <ConnectionList name="Standard"/>
   <ConnectionList name="StorageReceiver"/>
 </NodeType>
