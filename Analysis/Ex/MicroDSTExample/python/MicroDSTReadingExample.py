@@ -136,8 +136,8 @@ particle2mcPath = selectionPath + '/Particles/RelatedMCParticles'
 vertexAssociationPath = selectionPath + '/Particle2VertexRelations'
 mcParticlePath = '/Event/microDST/MC/Particles'
 while (nextEvent(appMgr)) :
-#    print "HELLO!!!!!"
-#    evt.dump()
+    print "HELLO!!!!!"
+    evt.dump()
     nEvents+=1
     vertices = evt['/Event/microDST/Rec/Vertex/Primary']
     if (vertices !=None) :
@@ -155,11 +155,12 @@ while (nextEvent(appMgr)) :
         for p in particles:
             if (bestVertexAssoc !=None) :
                 PVRange = bestVertexAssoc.relations(p)
-                vertex = PVRange.back().to()
-                makeProperTimePlots(p,
-                                    vertex,
-                                    properTimeFitter,
-                                    propTimePlots)
+                if ( not PVRange.empty()) :
+                    vertex = PVRange.back().to()
+                    makeProperTimePlots(p,
+                                        vertex,
+                                        properTimeFitter,
+                                        propTimePlots)
             else :
                 print "Found no particle->PV associations at ", vertexAssociationPath
 
