@@ -1,4 +1,4 @@
-// $Id: FilterAlg.cpp,v 1.1 2008-09-23 13:05:46 ibelyaev Exp $
+// $Id: FilterAlg.cpp,v 1.2 2008-09-30 15:58:41 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -29,21 +29,34 @@ LoKi::FilterAlg::FilterAlg
   // the type/name for LoKi/Bender "hybrid" factory 
   , m_factory ( "<UNSPECIFIED>" )
   // the filter/code criteria itself 
-  ,m_code   ( "<unspecified>" ) 
+  , m_code   ( "<unspecified>" ) 
+  // the preambulo 
+  , m_preambulo_ () 
+  // the preambulo 
+  , m_preambulo  ()
   //
+  , m_factory_updated   ( false )
+  , m_code_updated      ( false )
+  , m_preambulo_updated ( false )
 {
   // the factory
   declareProperty 
     ( "Factory" , 
       m_factory , 
       "The type/name of LoKiBender \"hybrid\" factory" ) 
-    -> declareUpdateHandler ( &LoKi::FilterAlg::updateFactory , this ) ;
+    -> declareUpdateHandler ( &LoKi::FilterAlg::updateFactory  , this ) ;
   // the code 
   declareProperty 
     ( "Code"    , 
       m_code    , 
       "The Bender/Python code to be used" ) 
-    -> declareUpdateHandler ( &LoKi::FilterAlg::updateCode    , this ) ;
+    -> declareUpdateHandler ( &LoKi::FilterAlg::updateCode     , this ) ;
+  // the code 
+  declareProperty 
+    ( "Preambulo"  , 
+      m_preambulo_ , 
+      "The preambulo to be used for the temporary python script" ) 
+    -> declareUpdateHandler ( &LoKi::FilterAlg::updatePreambulo , this ) ;
 }
 // ============================================================================
 // virtual and protected destructor 
@@ -59,15 +72,17 @@ void LoKi::FilterAlg::updateFactory ( Property& /* p */ ) // update the factory
   /// mark as "to-be-updated" 
   m_factory_updated = true ;
   //
-  if ( !m_code_updated ) { return ; } // postpone the action 
+  // postpone the action 
+  if ( !m_code_updated || !m_preambulo_updated ) { return ; } 
   
   // perform the actual immediate decoding  
   
   StatusCode sc = decode () ;
   Assert ( sc.isSuccess () , "Error from LoKi::FilterAlg::decode()" , sc ) ;
   
-  m_code_updated    = false ;
-  m_factory_updated = false ;
+  m_code_updated      = false ;
+  m_factory_updated   = false ;
+  m_preambulo_updated = false ;
 }
 // ============================================================================
 // update the code 
@@ -79,15 +94,46 @@ void LoKi::FilterAlg::updateCode ( Property& /* p */ )    // update the factory
   /// mark as "to-be-updated" 
   m_code_updated = true ;
   //
-  if ( !m_factory_updated ) { return ; } // postpone the action 
+  // postpone the action 
+  if ( !m_factory_updated || !m_preambulo_updated ) { return ; } 
   
   // perform the actual immediate decoding  
   
   StatusCode sc = decode  () ;
   Assert ( sc.isFailure() , "Error from LoKi::FilterAlg::decode()" , sc ) ;
   
-  m_code_updated    = false ;
-  m_factory_updated = false ;
+  m_code_updated      = false ;
+  m_factory_updated   = false ;
+  m_preambulo_updated = false ;
+}
+// ============================================================================
+// update the preambulo
+// ============================================================================
+void LoKi::FilterAlg::updatePreambulo ( Property& /* p */ )  // update preambulo
+{
+  // decode the preambulo:
+  m_preambulo.clear() ;
+  for ( std::vector<std::string>::const_iterator iline = 
+          m_preambulo_.begin() ; m_preambulo_.end() != iline ; ++iline ) 
+  { 
+    if ( m_preambulo_.begin() != iline ) { m_preambulo += "\n" ; }
+    m_preambulo += (*iline) ;
+  }
+  // no further action if not yet initialized 
+  if ( Gaudi::StateMachine::INITIALIZED > FSMState() ) { return ; }
+  /// mark as "to-be-updated"
+  m_preambulo_updated = true ;
+  // postpone the action 
+  if ( !m_factory_updated || !m_code_updated ) { return ; } 
+  
+  // perform the actual immediate decoding  
+  
+  StatusCode sc = decode  () ;
+  Assert ( sc.isFailure() , "Error from LoKi::FilterAlg::decode()" , sc ) ;
+  
+  m_code_updated      = false ;
+  m_factory_updated   = false ;
+  m_preambulo_updated = false ;
 }
 // ============================================================================
 // the initialization of the algorithm 

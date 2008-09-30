@@ -1,4 +1,4 @@
-// $Id: FilterAlg.h,v 1.1 2008-09-23 13:05:46 ibelyaev Exp $
+// $Id: FilterAlg.h,v 1.2 2008-09-30 15:58:41 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FILTERALG_H 
 #define LOKI_FILTERALG_H 1
@@ -18,8 +18,9 @@ namespace LoKi
    *
    *  The basic algorithm properties properties  
    *   (in additon to properties form GaudiAlgortuhm base class) are:
-   *   - "Factory" : the type/name of LoKi/Bender "hybrid" factory
-   *   - "Code"    : the string represenattion of the functor 
+   *   - "Factory"   : the type/name of LoKi/Bender "hybrid" factory
+   *   - "Code"      : the string represenattion of the functor 
+   *   - "Preambulo" : the list of strings for "preambulo"-code
    * 
    *  The methods, convinient for defined class are:
    *     - <c>factory()</c> : gets the access to LoKi/Bende "hybrid" 
@@ -103,19 +104,25 @@ namespace LoKi
   public: // property update handlers 
     // ========================================================================
     /// update the factory 
-    void updateFactory ( Property& p ) ;            // update the factory 
-    /// update the code 
-    void updateCode    ( Property& p ) ;               // update the code 
+    void updateFactory   ( Property& /* p */ ) ;          // update the factory 
+    /// update the code  
+    void updateCode      ( Property& /* p */ ) ;             // update the code 
+    /// update the preambulo 
+    void updatePreambulo ( Property& /* p */ ) ;        // update the preambulo 
     // ========================================================================
   protected:
     // ========================================================================
     /// get the type/name of the factory 
-    const std::string& factory () const { return m_factory ; }
+    const std::string& factory   () const { return m_factory ; }
     /// get the code itself 
-    const std::string& code    () const { return m_code    ; }
+    const std::string& code      () const { return m_code    ; }
+    /// get the preambulo
+    const std::vector<std::string>& preambulo_() const { return m_preambulo_ ; }
+    /// get the preambulo
+    const std::string& preambulo() const { return m_preambulo ; }    
     // check the nesessity of updated 
     inline bool updateRequired () const 
-    { return m_factory_updated || m_code_updated ; }
+    { return m_factory_updated || m_code_updated || m_preambulo_updated ; }
     // ========================================================================
   public:
     /// =======================================================================
@@ -147,7 +154,7 @@ namespace LoKi
       // get the factory 
       FACTORY* _factory = tool<FACTORY> ( factory() , this ) ;
       // use the factory 
-      StatusCode sc = _factory-> get( code() , functor ) ;
+      StatusCode sc = _factory-> get ( code() , functor , preambulo () ) ;
       // release the factory (not needed anymore) 
       this->release ( _factory ) ;
       if ( sc.isFailure() ) 
@@ -158,8 +165,9 @@ namespace LoKi
       log << " The code    is '" << code () << "'" << endreq
           << " The functor is '" << functor << "'" << endreq ;
       //
-      m_factory_updated = false ;
-      m_code_updated    = false ;
+      m_factory_updated   = false ;
+      m_code_updated      = false ;
+      m_preambulo_updated = false ;
       //
       return sc ;
     }
@@ -167,22 +175,29 @@ namespace LoKi
   private:
     // ========================================================================
     /// the type/name for LoKi/Bender "hybrid" factory 
-    std::string m_factory ;   // the type/name for LoKi/Bender "hybrid" factory 
+    std::string m_factory   ; // the type/name for LoKi/Bender "hybrid" factory 
     /// the filter/code criteria itself 
-    std::string m_code    ;                  // the filter/code criteria itself
+    std::string m_code      ;                // the filter/code criteria itself
+    /// the preambulo itself 
+    std::vector<std::string> m_preambulo_ ;             // the preambulo itself
+    /// the preambulo itself 
+    std::string m_preambulo ;                           // the preambulo itself
     // ========================================================================
   private:
     // ========================================================================
     /// flag which indicated that factory has been updated 
-    bool m_factory_updated ;                    // the factory has been updated 
+    bool m_factory_updated   ;                  // the factory has been updated 
     /// flag which indicated that code has been updated 
-    bool m_code_updated    ;                       // the code has been updated 
+    bool m_code_updated      ;                     // the code has been updated 
+    /// flag which indicated that preambulo has been updated 
+    bool m_preambulo_updated ;                // the preambulo has been updated 
     // ========================================================================
   };
   // ==========================================================================
 } // end of namespace LoKi 
 // ============================================================================
-// The END 
+// The END
 // ============================================================================
 #endif // LOKI_FILTERALG_H
 // ============================================================================
+
