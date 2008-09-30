@@ -22,10 +22,6 @@
       <method name="swap"/>
     </class>
 
-    <class name="std::pair<const std::string,LHCb::L0DUChannel*>">
-      <method name="swap"/>
-    </class>
-
   </exclusion>
 
 </lcgdict>
