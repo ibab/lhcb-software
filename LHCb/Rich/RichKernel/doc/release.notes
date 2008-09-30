@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.197 2008-09-30 11:56:39 jonrob Exp $
+! $Id: release.notes,v 1.198 2008-09-30 12:02:51 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
+!====================== RichKernel v7r16 2008-09-30 ====================
 ! 2008-09-30 - Christopher Rob JONES
  - (G. Rogers) Added functions to return the maximum local coordinates in 
    the x and y axis.
