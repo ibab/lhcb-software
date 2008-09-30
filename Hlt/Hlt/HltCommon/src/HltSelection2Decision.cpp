@@ -1,4 +1,4 @@
-// $Id: HltSelection2Decision.cpp,v 1.2 2008-09-09 11:00:44 graven Exp $
+// $Id: HltSelection2Decision.cpp,v 1.3 2008-09-30 11:32:27 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -25,6 +25,9 @@ DECLARE_ALGORITHM_FACTORY( HltSelection2Decision );
 HltSelection2Decision::HltSelection2Decision( const std::string& name,
                     ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ) 
+  , m_dataSvc(0)
+  , m_annSvc(0)
+  , m_input(0)
 {
   declareProperty("InputSelection", m_inputName.property());
   declareProperty("Decision", m_decisionName = name );
