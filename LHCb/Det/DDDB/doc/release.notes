@@ -6,6 +6,9 @@
 
 !========================== DDDB v1r12 2008-09-30 ============================
 ! 2008-09-30 - Marco Cattaneo
+ - Change requirements to look for SQLDDDB v5r*, due to incompatibility between
+   new ONLINE implementation and previous software releases missing the bug fix
+   in DetCond v12r3
  - New default tag for DC06 (DC06-20080930)
 
 ! 2008-09-29 - Marco Cattaneo
