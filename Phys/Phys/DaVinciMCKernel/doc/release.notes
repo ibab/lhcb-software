@@ -1,13 +1,14 @@
-! $Id: release.notes,v 1.46 2008-09-25 12:04:52 odescham Exp $
+! $Id: release.notes,v 1.47 2008-09-30 11:40:31 cattanem Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciMCKernel
 ! Responsible : Juan PALACIOS
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
 
+!====================== DaVinciMCKernel v2r11 2008-09-30 =====================
 ! 2008-09-25 - O. Deschamps
- - Particle2MCLinker.{h,icpp} : make context() to be contagious from the mother alg/tool to the associating method algorithm
-
+ - Particle2MCLinker.{h,icpp} : make context() to be contagious from the mother
+                                alg/tool to the associating method algorithm
 
 !====================== DaVinciMCKernel v2r10 2008-07-16 =====================
 ! 2008-07-04 - V. Gligorov
