@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.5 2008-09-29 10:11:44 jpalac Exp $
+!$Id: release.notes,v 1.6 2008-09-30 07:00:27 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Ex/MicroDSTExample
 ! Responsible : Juan PALACIOS
 ! Purpose     : MicroDST making and reading examples.
 !-----------------------------------------------------------------------------
+
+! 2008-09-29 - Juan PALACIOS
+ - python/MicroDSTReadingExample.py
+  . Put safety for the case of emty Particle->PV relation table.
 
 ! 2008-09-29 - Juan PALACIOS
  - options/TestMicroDSTMake.opts
