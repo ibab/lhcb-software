@@ -1,4 +1,4 @@
-// $Id: IRelatedPVFinder.h,v 1.4 2008-09-29 17:13:02 jpalac Exp $
+// $Id: IRelatedPVFinder.h,v 1.5 2008-09-30 14:18:58 jpalac Exp $
 #ifndef KERNEL_IRELATEDPVFINDER_H 
 #define KERNEL_IRELATEDPVFINDER_H 1
 
@@ -12,6 +12,8 @@
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
+
+class IDistanceCalculator;
 
 static const InterfaceID IID_IRelatedPVFinder ( "IRelatedPVFinder", 2, 0 );
 
@@ -37,28 +39,32 @@ public:
    * 
    * @param particle       The LHCb::Particle for which related PVs will be searched
    * @param PVs            Container of LHCb::RecVertices to be related to particle
-   * @param relatedPVRange Range of weighted relations between particle and the vertices in PVs. 
-   * Should be empty, if not, it it cleared before filling.
+   * @param distanceCalculator IDistanceCalculator pointer. Tool in charge of
+   * estimating distances internally.
+   *
+   * @return               Range of weighted relations between particle and the vertices in PVs. 
+   * Must return empty range if something goes wrong in association.
    *
    * @author Juan Palacios juan.palacios@nikhef.nl
    */
-  virtual StatusCode relatedPVs(const LHCb::Particle* particle,
-                                const LHCb::RecVertex::Container& PVs,
-                                Particle2Vertex::Range& relatedPVRange) const =0;
+  virtual const Particle2Vertex::Range relatedPVs(const LHCb::Particle* particle,
+                                                  const LHCb::RecVertex::Container& PVs,
+                                                  const IDistanceCalculator* distanceCalculator) const =0;
   /**
    * Return a range of weighted relations between an LHCb::Particle and a
    * vector of const LHCb::RecVertex pointers
    *
    * @param particle       The LHCb::Particle for which related PVs will be searched
    * @param PVs            std::vector of LHCb::RecVertex* to be related to particle
-   * @param relatedPVRange Range of weighted relations between particle and the vertices in PVs. 
-   * Should be empty, if not, it it cleared before filling.
+   *
+   * @return               Range of weighted relations between particle and the vertices in PVs. 
+   * Must return empty range if something goes wrong in association.
    *
    * @author Juan Palacios juan.palacios@nikhef.nl
    */
-  virtual StatusCode relatedPVs(const LHCb::Particle* particle,
-                                const LHCb::RecVertex::ConstVector& PVs,
-                                Particle2Vertex::Range& relatedPVRange) const =0;
+  virtual const Particle2Vertex::Range relatedPVs(const LHCb::Particle* particle,
+                                                  const LHCb::RecVertex::ConstVector& PVs,
+                                                  const IDistanceCalculator* distanceCalculator) const =0;
   /**
    * Return a range of weighted relations between an LHCb::Particle and a
    * keyed container of LHCb::RecVertices from a TES location
@@ -66,15 +72,16 @@ public:
    * @param particle       The LHCb::Particle for which related PVs will be searched
    * @param PVLocation     String giving the TES location of a keyed container 
    * of LHCb::RecVertices to be related to particle
-   * @param relatedPVRange Range of weighted relations between particle 
-   * and the vertices in PVs. 
-   * Should be empty, if not, it it cleared before filling.
+   *
+   * @return               Range of weighted relations between particle and the vertices in PVs. 
+   * Must return empty range if something goes wrong in association.
+   *
    *
    * @author Juan Palacios juan.palacios@nikhef.nl
    */
-  virtual StatusCode relatedPVs(const LHCb::Particle* particle,
-                                const std::string& PVLocation,
-                                Particle2Vertex::Range& relatedPVRange) const =0;
+  virtual const Particle2Vertex::Range relatedPVs(const LHCb::Particle* particle,
+                                                  const std::string& PVLocation,
+                                                  const IDistanceCalculator* distanceCalculator) const =0;
 
 };
 #endif // KERNEL_IRELATEDPVFINDER_H
