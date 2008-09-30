@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.356 2008-09-30 14:54:56 pkoppenb Exp $
+! $Id: release.notes,v 1.357 2008-09-30 14:59:26 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+!========================== DaVinciTools v17r3 2008-09-30== =================
 
 ! 2008-09-30 - Patrick Koppenburg
  - FilterDesktop : check statuscodes
