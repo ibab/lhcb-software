@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.h,v 1.35 2008-09-29 09:10:24 odescham Exp $ 
+// $Id: DeCalorimeter.h,v 1.36 2008-09-30 08:51:24 odescham Exp $ 
 // ============================================================================
 #ifndef       CALODET_DECALORIMETER_H
 #define       CALODET_DECALORIMETER_H 1
@@ -117,7 +117,7 @@ public:
   double        pinPedestalShift ()     const { return m_pinPedShift  ; };  
   double        L0EtGain         ()     const { return m_l0Et         ; };
   // for simulation only
-  double        activeToTotal    ()     const { return m_activeToTotal; };
+  double        activeToTotal    ()     const { return m_activeToTotal; };    
 
   // accessing the hardware parameter(s)
   // ---------------------------------
@@ -142,6 +142,11 @@ public:
   inline double cellSize ( const LHCb::CaloCellID& ) const ;
   inline double cellSine ( const LHCb::CaloCellID& ) const ;
   inline double cellGain ( const LHCb::CaloCellID& ) const ;
+  // convert ADC to energy in MeV for a given cellID
+  double  cellEnergy(int adc ,LHCb::CaloCellID id) {
+    double offset = isPinId( id ) ? pinPedestalShift () : pedestalShift    ()  ;
+    return cellGain(id) * ((double) adc - offset);
+  };
   inline double cellTime ( const LHCb::CaloCellID& ) const ;
   inline const Gaudi::XYZPoint cellCenter       ( const LHCb::CaloCellID& ) const ;
   inline const CaloNeighbors& neighborCells    ( const LHCb::CaloCellID& ) const ;
@@ -279,7 +284,7 @@ private:
   SmartRef<Condition> m_hardware;
   SmartRef<Condition> m_readout;
   SmartRef<Condition> m_monitor;
-  bool loadCondition(SmartRef<Condition>& cond, std::string name, bool mandatory = false,std::string alternate="");
+  bool loadCondition(SmartRef<Condition>& cond, std::string name, bool mandatory = false);
 
   // cache
   StatusCode updHardware();

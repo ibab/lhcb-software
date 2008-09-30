@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.cpp,v 1.53 2008-09-29 16:33:57 odescham Exp $ 
+// $Id: DeCalorimeter.cpp,v 1.54 2008-09-30 08:51:24 odescham Exp $ 
 // ============================================================================
 #define  CALODET_DECALORIMETER_CPP 1
 // STL
@@ -170,19 +170,13 @@ StatusCode DeCalorimeter::initialize()
   updMgrSvc()->registerCondition(this, m_reco.path(), &DeCalorimeter::updReco);  
 
   // condition : 'Readout' (MUST EXIST : SPD points onto PRS readout in recent DDDB)
-  //if( !loadCondition( m_readout, "Readout", mandatory ) )return StatusCode::FAILURE;
-  //updMgrSvc()->registerCondition(this, m_readout.path(), &DeCalorimeter::updReadout);
-
-  // (temporary) patch to restore condDB DC06-tag backward compatibility
-  // facultative condition (e.g. Spd) 
-  if( loadCondition( m_readout, "Readout", false, "CellsToCards" ) )
-    updMgrSvc()->registerCondition(this, m_readout.path(), &DeCalorimeter::updReadout);
-  
+  if( !loadCondition( m_readout, "Readout", mandatory ) )return StatusCode::FAILURE;
+  updMgrSvc()->registerCondition(this, m_readout.path(), &DeCalorimeter::updReadout);  
 
   // condition : 'Monitoring" (FACULTATIF)
-  if( loadCondition( m_monitor, "Monitoring", false, "MonitoringSystem"  ) )
-      updMgrSvc()->registerCondition(this, m_monitor.path(), &DeCalorimeter::updMonitor); //test
-
+  if( loadCondition( m_monitor, "Monitoring" ) )
+    updMgrSvc()->registerCondition(this, m_monitor.path(), &DeCalorimeter::updMonitor); 
+  
   // ================= INITIALIZE ALL CONDITIONS
   
   sc = updMgrSvc()->update(this);
@@ -191,7 +185,7 @@ StatusCode DeCalorimeter::initialize()
 
   if ( sc.isSuccess() ) {
     m_initialized = true;
-    // INFO
+    // DEBUG
     msg << MSG::DEBUG << "'DeCalorimeter " << name() << " correctly initalized with : " <<endreq;
     msg << MSG::DEBUG << " - " << numberOfCells()  << " channels "    << endreq;
     msg << MSG::DEBUG << " - " << numberOfCards()  << " FE-boards "   << endreq;
@@ -200,15 +194,15 @@ StatusCode DeCalorimeter::initialize()
     msg << MSG::DEBUG << " - " << numberOfLeds()   << " LEDs "        << endreq;
 
 
-    // 
-    msg << MSG::DEBUG << "DDDB parameters : " 
+    // VERBOSE
+    msg << MSG::VERBOSE << "DDDB parameters : " 
         << " Y/X ratio = " <<  m_YToXSizeRatio 
         << " zOffset   = " <<  m_zOffset
         << " zSize     = " <<  m_zSize 
         << endreq;
 
 
-    // VERBOSE
+    // LONG VERBOSE
     MsgStream msg1( msgSvc(), m_caloDet + ".Gain" );
     MsgStream msg2( msgSvc(), m_caloDet + ".L0Gain" );
     MsgStream msg3( msgSvc(), m_caloDet + ".Cells" );
@@ -466,23 +460,19 @@ StatusCode DeCalorimeter::buildCards( )  {
   m_pinArea = 0;
   
   // check the condition
-    // (temporary) patch to restore condDB DC06-tag backward compatibility
-  if( !hasCondition("Readout") && !hasCondition("CellsToCards") )return StatusCode::SUCCESS ; 
+  if( !hasCondition("Readout") )return StatusCode::SUCCESS ; 
   // condition not mandatory (e.g. Spd)
   // get FEB readout
-  if ( (!m_readout->exists( "FEB" ) || !m_readout->exists( "size") ) &&  
-       (!m_readout->exists( "cards" ) ||!m_readout->exists( "CardArraySize") ) ) { // DC06-tag patch
-    
+  if ( !m_readout->exists( "FEB" ) || !m_readout->exists( "size") ) {    
     msg << MSG::ERROR << "incomplete 'cards' description in 'Readout' condition" << endreq;
     return StatusCode::FAILURE; 
   }
   // get pin ID.area
-  // DC06-tag patch
-  if ( !m_readout->exists( "pinArea" )  && !m_readout->exists("PinArea") ) {
+  if ( !m_readout->exists( "pinArea" ) ) {
     msg << MSG::DEBUG << "No PIN FE-board for " << m_caloDet << endreq;
     m_pinArea = -1;
   } else{
-    m_pinArea = m_readout->exists( "pinArea" ) ? m_readout->paramAsInt( "pinArea" ) :  m_readout->paramAsInt( "PinArea" ) ; 
+    m_pinArea = m_readout->paramAsInt( "pinArea" ) ; 
   }
 
 
@@ -516,13 +506,9 @@ StatusCode DeCalorimeter::buildCards( )  {
   msg << MSG::DEBUG << "Defined " << maps.size() << " different channel mappings" << endreq;
 
   // decode cards array
-  //  int aSize = m_readout->paramAsInt( "size" );
-  //  std::vector<int> temp = m_readout->paramAsIntVect( "FEB" );
-  // ----------
-  // (temporary) patch to restore condDB DC06-tag backward compatibility
-  int aSize = m_readout->exists("size") ?  m_readout->paramAsInt( "size" ) : m_readout->paramAsInt( "CardArraySize" );
-  std::vector<int> temp =m_readout->exists("FEB")?  m_readout->paramAsIntVect( "FEB" ) : m_readout->paramAsIntVect( "cards" );
-  // ----------
+  // ------------------
+  int aSize = m_readout->paramAsInt( "size" );
+  std::vector<int> temp = m_readout->paramAsIntVect( "FEB" );
   msg << MSG::DEBUG << "The calorimeter has " << temp.size()/aSize << " front end cards." << endreq;
   int firstCrate = temp[6];
   for ( unsigned int kk = 0; temp.size()/aSize > kk  ; ++kk ) {
@@ -602,13 +588,9 @@ StatusCode DeCalorimeter::buildCards( )  {
 
   // Selection Board  Type ( e,g.pi0L,pi0G = -1 , hadron master = 0 , had. slave1 = 1, had. slave 2 = 2)
 
-  // ----------
-  // (temporary) patch to restore condDB DC06-tag backward compatibility
-  if ( m_readout->exists( "SelectionBoard" ) || m_readout->exists("HadronSB" ) ) {
-    //std::vector<int> sb = m_readout->paramAsIntVect( "SelectionBoard" );
-    std::vector<int> sb =m_readout->exists("SelectionBoard")?  
-      m_readout->paramAsIntVect( "SelectionBoard" ) : m_readout->paramAsIntVect( "HadronSB" );
-
+  // ---------- HcalDet only : SelectionBoard -> Hcal FE relation
+  if ( m_readout->exists( "SelectionBoard" ) ) {
+    std::vector<int> sb = m_readout->paramAsIntVect( "SelectionBoard" );
     std::vector<int>::iterator it = sb.begin();
     while( sb.end() > it ) {
       unsigned int num = (*it++);
@@ -623,7 +605,7 @@ StatusCode DeCalorimeter::buildCards( )  {
     msg << MSG::DEBUG << "No 'SelectionBoard' parameters in 'Readout' condition" << endreq;
   }   
 
-  // Ecal Validation Board -> Hcal FE relation 
+  // EcalDet only :  Validation Board -> Hcal FE relation 
   if ( m_readout->exists( "ValidationBoard" ) ) {
     std::vector<int> vb = m_readout->paramAsIntVect( "ValidationBoard" );
     std::vector<int>::iterator it = vb.begin();
@@ -800,10 +782,7 @@ StatusCode DeCalorimeter::buildMonitoring( )  {
   m_leds.clear();
   
   // check conditions
-  // (temporary) patch to restore condDB DC06-tag backward compatibility
-  if ( !hasCondition("Monitoring") && !hasCondition("MonitoringSystem") )return StatusCode::SUCCESS; 
-  // monitoring not mandatory (Prs/Spd)
-
+  if ( !hasCondition("Monitoring") )return StatusCode::SUCCESS;// monitoring not mandatory (Prs/Spd)
   
   // check PIN array
   if ( !m_monitor->exists( "PIN" ) ) {
@@ -1241,17 +1220,12 @@ MsgStream&    DeCalorimeter::printOut( MsgStream&    os ) const {
 
 
 //
-bool DeCalorimeter::loadCondition( SmartRef<Condition>& cond, std::string name , bool mandatory, std::string alternate){
+bool DeCalorimeter::loadCondition( SmartRef<Condition>& cond, std::string name , bool mandatory){
   MsgStream msg( msgSvc(), m_caloDet );
   msg << MSG::DEBUG << "Loading condition '"<<name<<"'"<<endreq;
-
   if ( hasCondition(name) ){
     cond = condition( name );
     return true;
-  }
-  else if( alternate !="" && hasCondition(alternate ) ){ // (temporary patch for condDB DC06-tag backward compatibility
-    cond = condition( alternate );
-    return true;    
   }
   msg << (mandatory ? MSG::ERROR  : MSG::DEBUG) <<"'" << name << "'  condition not found" << endreq;
   return false;
@@ -1270,16 +1244,8 @@ StatusCode DeCalorimeter::updGain(){
   // Gain parameters
   if( !m_gain->exists("EtInCenter") || !m_gain->exists("EtSlope"))return StatusCode::FAILURE;
 
-  // DC06-tag patch
-  std::vector<double> etInCenter;
-  std::vector<double> etSlope;
-  if( m_gain->isVector("EtSlope") && m_gain->isVector("EtInCenter") ){
-    etSlope    = m_gain->paramAsDoubleVect( "EtSlope"      );
-    etInCenter = m_gain->paramAsDoubleVect( "EtInCenter"      );
-  }else {
-    etSlope.push_back(m_gain->paramAsDouble( "EtSlope" ) );
-    etInCenter.push_back(m_gain->paramAsDouble( "EtInCenter" ) );
-  }
+  std::vector<double> etSlope    = m_gain->paramAsDoubleVect( "EtSlope"      );
+  std::vector<double> etInCenter = m_gain->paramAsDoubleVect( "EtInCenter"      );
 
 
   if( etInCenter.size() != etSlope.size() ){
@@ -1344,8 +1310,7 @@ StatusCode DeCalorimeter::updHardware(){
 StatusCode DeCalorimeter::updReadout(){
   MsgStream msg( msgSvc(), m_caloDet );
   msg << MSG::DEBUG << "Updating condition 'Readout'" << endreq;
-  // (temporary) patch to restore condDB DC06-tag backward compatibility
-  if( !hasCondition("Readout") && !hasCondition("CellsToCards") )return StatusCode::SUCCESS;  
+  if( !hasCondition("Readout") )return StatusCode::SUCCESS;  
   // the readout condition is not mandatory (e.g Spd)
   StatusCode sc = buildCards();
   if(sc.isSuccess())sc=buildTell1s();
@@ -1355,8 +1320,7 @@ StatusCode DeCalorimeter::updReadout(){
 StatusCode DeCalorimeter::updMonitor(){
   MsgStream msg( msgSvc(), m_caloDet );
   msg << MSG::DEBUG << "Updating condition 'Monitoring'" << endreq;
-  // (temporary) patch to restore condDB DC06-tag backward compatibility
-  if( !hasCondition("Monitoring") && !hasCondition("MonitoringSystem") )return StatusCode::SUCCESS; 
+  if( !hasCondition("Monitoring") )return StatusCode::SUCCESS; 
       //  the monitoring condition is not mandatory (e.g Spd/Prs)
   StatusCode sc = buildMonitoring();
   return sc;
