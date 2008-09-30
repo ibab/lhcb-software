@@ -13,8 +13,8 @@ from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, Gaud
 #
 importOptions( "$B2DILEPTONROOT/options/DVDC06SelBu2eeK.opts")
 HltCorrelations("Hlt2SelectionsCorrs").Algorithms += [ "DC06SelBu2eeK" ]
-PrintHeader("PrintDiLeptonForPreselBu2LLK").OutputLevel = 3 
-PrintHeader("PrintPreselBu2LLK").OutputLevel = 3 
+PrintHeader("PrintDiLeptonForPreselBu2LLK").OutputLevel = 4 
+PrintHeader("PrintPreselBu2LLK").OutputLevel = 4
 #
 # Hlt test
 #
