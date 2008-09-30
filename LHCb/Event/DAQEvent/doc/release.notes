@@ -4,10 +4,10 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
-
+!================ DAQEvent v7r15 2008-09-30 ===========================
 ! 2008-09-15 - Olivier Deschamps
- - Add 'MissingStatus' in RawBankReadoutStatus type - modify RawBankReadoutStatus algo accordingly
-
+ - Add 'MissingStatus' in RawBankReadoutStatus type
+ - modify RawBankReadoutStatus algo accordingly
 
 !================ DAQEvent v7r14 2008-09-03 ===========================
 ! 2008-08-25 - Jaap Panman
