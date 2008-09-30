@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.46 2008-09-22 00:50:30 odescham Exp $
+! $Id: release.notes,v 1.47 2008-09-30 09:18:07 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloInterfaces
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+!========================== CaloInterfaces v7r8 2008-09-30 ====================
 ! 2008-09-21 - Olivier Deschamps 
   - ICaloClusterization : add iterations() virtual method (return the number of iterations)
 
