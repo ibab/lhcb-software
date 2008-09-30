@@ -1,4 +1,4 @@
-// $Id: ContextTool.cpp,v 1.9 2008-08-04 17:19:49 pkoppenb Exp $
+// $Id: ContextTool.cpp,v 1.10 2008-09-30 15:11:34 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -109,7 +109,7 @@ StatusCode ContextTool::getTools(){
   }
   
   // now get default tools if needed 
-  if ( 0==m_fitter ) m_fitter = tool<IVertexFit>(m_onOffline->vertexFitter(),this);
+  if ( 0==m_fitter ) m_fitter = tool<IVertexFit>(m_onOffline->vertexFitterType(),this);
   if ( 0==m_onOffline ) m_onOffline = tool<IOnOffline>("OnOfflineTool",this);
   if ( 0==m_dist ) m_dist = tool<IDistanceCalculator>("DistanceCalculator",this);
   
@@ -124,9 +124,10 @@ LHCb::RecVertex::ConstVector ContextTool::primaryVertices() const {
     return desktop()->primaryVertices();
   }
   LHCb::RecVertex::ConstVector PV ;
-  verbose() << "Will get PVs from OnOffline tool at : " << m_onOffline->getPVLocation() << endmsg ;
-  if ( !exist<LHCb::RecVertices>( m_onOffline->getPVLocation() ) ) return PV ; // no PV
-  LHCb::RecVertices* verts = get<LHCb::RecVertices>( m_onOffline->getPVLocation() );
+  verbose() << "Will get PVs from OnOffline tool at : " 
+            << m_onOffline->primaryVertexLocation() << endmsg ;
+  if ( !exist<LHCb::RecVertices>( m_onOffline->primaryVertexLocation() ) ) return PV ; // no PV
+  LHCb::RecVertices* verts = get<LHCb::RecVertices>( m_onOffline->primaryVertexLocation() );
   for( LHCb::RecVertices::const_iterator ivert = verts->begin();
        ivert != verts->end(); ivert++ ) {
     verbose() << "    Vertex coordinates =  "

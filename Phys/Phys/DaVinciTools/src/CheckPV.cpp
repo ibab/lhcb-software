@@ -1,4 +1,4 @@
-// $Id: CheckPV.cpp,v 1.16 2008-05-19 14:10:00 pkoppenb Exp $
+// $Id: CheckPV.cpp,v 1.17 2008-09-30 15:11:34 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -73,7 +73,7 @@ StatusCode CheckPV::execute() {
 
   if (msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
 
-  std::string m_PVContainer = m_OnOfflineTool->getPVLocation() ;
+  const std::string& m_PVContainer = m_OnOfflineTool->primaryVertexLocation() ;
   int n = 0 ;
   bool ok = 0 ;
   
