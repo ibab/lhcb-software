@@ -1,5 +1,5 @@
 ! ------------------------------------------------------------------------------
-! $Id: release.notes,v 1.39 2008-09-26 14:47:46 cattanem Exp $ 
+! $Id: release.notes,v 1.40 2008-09-30 12:29:53 cattanem Exp $ 
 ! ------------------------------------------------------------------------------
 ! Package     : Det/DetDescChecks
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -7,6 +7,7 @@
 !               Detector Description, Material Budget etc 
 ! ------------------------------------------------------------------------------
 
+!======================= DetDescChecks v4r9 2008-09-30 ========================
 ! 2008-09-26 - Marco Cattaneo
  - Clean up LoadDDDB.py options
  - Add a test for 2008 geometry
