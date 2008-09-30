@@ -1,4 +1,4 @@
-// $Id: RelatedPVFinder.h,v 1.4 2008-07-11 14:46:01 pkoppenb Exp $
+// $Id: RelatedPVFinder.h,v 1.5 2008-09-30 15:12:19 jpalac Exp $
 #ifndef RELATEDPVFINDER_H 
 #define RELATEDPVFINDER_H 1
 
@@ -8,7 +8,6 @@
 #include "Kernel/IRelatedPVFinder.h"            // Interface
 
 class IDistanceCalculator;
-class IContextTool ;
 
 /** @class RelatedPVFinder RelatedPVFinder.h
  *  
@@ -30,23 +29,34 @@ public:
 
   StatusCode initialize() ; ///< Initialize
 
-  /// Return all related PVs
-  StatusCode relatedPVs(const LHCb::Particle* p, 
-                       Particle2Vertex::Table* ) const ;
+  virtual const Particle2Vertex::Range relatedPVs(const LHCb::Particle* particle,
+                                                  const LHCb::RecVertex::Container& PVs,
+                                                  const IDistanceCalculator* distanceCalculator) const;
 
-  virtual StatusCode setDefaults(std::string PVloc, std::string geomTool) ;
+  virtual const Particle2Vertex::Range relatedPVs(const LHCb::Particle* particle,
+                                                  const LHCb::RecVertex::ConstVector& PVs,
+                                                  const IDistanceCalculator* distanceCalculator) const;
+  
 
-protected:
+  virtual const Particle2Vertex::Range relatedPVs(const LHCb::Particle* particle,
+                                                  const std::string& PVLocation,
+                                                  const IDistanceCalculator* distanceCalculator) const;
+  
   
 private:
 
-  const IDistanceCalculator* m_dist; ///< pointer to Geom tool. Take same as DVAlgo.
+  template <typename Iter> 
+  const Particle2Vertex::Range relatedPVs(const LHCb::Particle* particle,
+                                          Iter begin,
+                                          Iter end,
+                                          const IDistanceCalculator* distanceCalculator) const;
+
+private:
 
   bool m_closestZ ; ///< Take closest PV in Z
   bool m_closest ; ///< Take closest PV
   bool m_smallestIP ; ///< Take the one with smallest IP
   bool m_chi2 ; ///< Cut on chi2 significance, not absolute numbers
-  std::string m_pvLocation ; ///< Location of PV
   
 };
 #endif // RELATEDPVFINDER_H
