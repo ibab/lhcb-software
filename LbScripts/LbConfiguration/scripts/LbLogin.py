@@ -8,7 +8,7 @@ import sys
 import os
 
 # bootstraping the location of the file
-_this_file = find_module("LbLogin")[1]
+_this_file = find_module(os.path.splitext(os.path.basename(__file__))[0])[1]
 _scripts_dir = os.path.dirname(_this_file)
 _base_dir = os.path.dirname(_scripts_dir)
 # updating the sys.path for the bare minimum of the available scripts
