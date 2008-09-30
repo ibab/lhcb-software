@@ -4,6 +4,7 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!===================== RichRecBase v3r17 2008-09-30 ==========================
 ! 2008-09-28 - Marco Cattaneo
  - Add dependency of reflex dictionary on god_headers, needed for make -j
 
