@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.5 2008-09-24 13:59:21 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.6 2008-09-30 08:57:52 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -12,7 +12,7 @@ import GaudiKernel.ProcessJobOptions
 
 class HltConf(LHCbConfigurableUser):
     __slots__ = {
-          "hltType" :          'PA+LU+VE+MU'
+          "hltType" :          'Physics_Hlt1+Hlt2'
         , "userAlgorithms":    [ ]  # put here user algorithms to add
         , "oldStyle" :         True # old style options configuration
         }   

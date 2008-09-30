@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.23 2008-09-29 13:07:04 agomesdo Exp $ 
+! $Id: release.notes,v 1.24 2008-09-30 08:57:52 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : 
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2008-09-30 - Gerhard Raven
+ - fix default for configurable, default to oldstyle, Hlt1 + Hlt2
 
 ! 2008-09-29 - Alvaro dos Santos, JA. Hernando
  - update HltJob to work with the current L0
