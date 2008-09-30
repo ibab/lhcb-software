@@ -1,4 +1,4 @@
-// $Id: FilterDesktop.cpp,v 1.4 2008-09-23 13:52:23 pkoppenb Exp $
+// $Id: FilterDesktop.cpp,v 1.5 2008-09-30 14:54:56 pkoppenb Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -79,7 +79,7 @@ using namespace LoKi ;
            "None" != m_inputPlotsTool    ) 
       {
         m_inputPlots = tool<IPlotTool>( m_inputPlotsTool, this ) ;
-        m_inputPlots -> setPath ( m_inputPlotsPath ) ;
+        m_inputPlots -> setPath ( m_inputPlotsPath ).ignore() ;
       }
       //
       if ( produceHistos ()            && 
@@ -89,7 +89,7 @@ using namespace LoKi ;
            "None" != m_outputPlotsTool    ) 
       {
         m_outputPlots = tool<IPlotTool>( m_outputPlotsTool, this ) ;
-        m_outputPlots -> setPath ( m_outputPlotsPath ) ;
+        m_outputPlots -> setPath ( m_outputPlotsPath ).ignore() ;
       }
       //
       return StatusCode::SUCCESS ;
