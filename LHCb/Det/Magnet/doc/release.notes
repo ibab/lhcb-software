@@ -4,6 +4,7 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
+!====================== Magnet v5r1p1 2008-09-30 =============================
 ! 2008-09-12 - Chris Jones
  - Fix bug in updateTool( int polarity ) where m_fieldTool was only updated
    on the first instance for each field configuration change due to a scoping
