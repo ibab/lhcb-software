@@ -1,13 +1,16 @@
-! $Id: release.notes,v 1.97 2008-09-30 08:51:24 odescham Exp $ 
+! $Id: release.notes,v 1.98 2008-09-30 12:24:40 cattanem Exp $ 
 ! =============================================================================
 ! Package         : CaloDet   
 ! Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
 
+!======================== CaloDet v10r0 2008-09-30 ============================
 ! 2008-09-28 Olivier Deschamps
-  - revert to tag odescham_20080926 : remove temporary patches (there will be a new DC06-tag with new condDB format)
-  - DeCalorimeter.h : add new inline method 'cellEnergy(adc, cellId)' : convert adc to calibrated Energy in Mev for a given cell
+  - revert to tag odescham_20080926 : remove temporary patches 
+    (there will be a new DC06-tag with new condDB format)
+  - DeCalorimeter.h : add new inline method 'cellEnergy(adc, cellId)' :
+    convert adc to calibrated Energy in Mev for a given cell
 
 ! 2008-09-28 Olivier Deschamps
   - reduce verbosity  
@@ -16,8 +19,10 @@
   - add temporary patches to restore the backward compatibility with DC06-tag condDB
 
 ! 2008-09-25 Olivier Deschamps
- - DeCalorimeter : check the condition existence with hasCondition(name) to please change in DetDesc
- - new component alg : DeCaloCalib : allow to generate Calo (mis)-calibration (similar to DeCaloTiming)
+ - DeCalorimeter : check the condition existence with hasCondition(name) 
+                   to please change in DetDesc
+ - new component alg : DeCaloCalib : allow to generate Calo (mis)-calibration 
+   (similar to DeCaloTiming)
  - update CaloDetTest.opts  options:
 
 ! 2008-09-02 Olivier Deschamps
