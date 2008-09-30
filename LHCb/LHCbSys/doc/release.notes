@@ -15,7 +15,7 @@ This version uses Gaudi v20r2 and LCG_55a
     Magnet v5r1p1, OTDet v8r1, RichDet v11r2, EventSys v24r9, DAQEvent v7r15,
     DigiEvent v2r9, HltEvent v8r13, L0Event v17r2, RecEvent v2r16,
     TrackEvent v4r15, CaloUtils v8r2, CaloInterfaces v7r8, CondDBUI v2r13,
-    DaVinciMCKernel v2r11, LoKiAlgo v7r6, LoKiCore v7r8, LoKiPhys v7r8,
+    DaVinciMCKernel v2r11, LoKiAlgo v7r6, LoKiCore v7r8, LoKiPhys v7r8,MDF v3r13,
     RichRecBase v3r17, SimComponents v2r12p1, STTELL1Event v1r6, TfKernel v2r8,
     TrackInterfaces v3r17, DetDescChecks v4r9, DetDescExample v7r7
 

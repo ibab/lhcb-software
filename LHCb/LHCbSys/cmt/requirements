@@ -90,7 +90,7 @@ use LoKiPhys              v7r8   Phys    # Ivan Belyaev
 use LoKiPhysMC            v7r4   Phys    # Ivan Belyaev
 use L0Interfaces          v1r2   L0      # Olivier Deschamps
 use MCInterfaces          v1r5   Kernel  # Marco Cattaneo et al.
-use MDF                   v3r12  DAQ     # Markus Frank
+use MDF                   v3r13  DAQ     # Markus Frank
 use MDF_ROOT              v1r2   DAQ     # Markus Frank
 use PatKernel             v2r1   Tf      # Stephanie Hansmann-Menzemer
 use RecInterfaces         v1r0   Kernel  # Marco Cattaneo et al.
