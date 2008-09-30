@@ -194,4 +194,4 @@ if "MuonAlignTracks" in TrackSys().getProp("expertTracking"):
   importOptions("$TRACKSYSROOT/options/AlignMuonRec.opts")
   if TrackSys().getProp("fieldOff"):
      AlignMuonRec("AlignMuonRec").BField = False;
-          
+     importOptions( "$STDOPTS/DstContentMuonAlign.opts" );  
