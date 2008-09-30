@@ -4,6 +4,7 @@
 ! Package manager: Stefan Roiser
 !-----------------------------------------------------------------------------
 
+!======================== GaudiObjDesc v11r5 2008-09-30 ======================
 ! 2008-09-26 - Marco Cattaneo
  - In GenClasses.py: change ifndef around boost allocators to GOD_NOALLOC
                      (was _WIN32)
