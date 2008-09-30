@@ -1,8 +1,36 @@
-! $Id: release.notes,v 1.357 2008-09-30 14:59:26 jpalac Exp $
+! $Id: release.notes,v 1.358 2008-09-30 15:13:42 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-09-30 - Juan PALACIOS
+
+ - src/CheckPV.cpp
+ - src/ContextTool.cpp
+  . Adapt to changes in IOnOffline interface.
+
+ - src/OnOfflineTool{.h, .cpp}
+  . Conform to changes in IOnOffline interface. Interface now only returns
+    strings with names of PV location or some tools, depenting on context.
+    It no longer holds any tools of its own.
+
+ - src/RelatedPVFinder{.h, .cpp}
+  . Conform to new IRelatedPVDinfer interface. Now contains 
+    three simple methods taking a particle, some primary vertices, and a
+    pointer to an IDistanceCalculator, and return a range of weighted
+    Particle->RecVertex relations. The parent algorithm or tool is now
+    fully in control.
+
+ - src/PhysDesktop{.h, .cpp}
+  . Desktop now uses new IOnOfflineTool and it's own IRelatedPVFinder.
+    Defaults for IRelatedPVFinder and IDistanceCalculator are now "".
+    In this case, IOnOfflineTool is in charge of getting the type name
+    of the implementation of these two. A similar logic applies to the 
+    location of primary vertices.
+
+ - cmt/requirements
+  . Increase version to v17r4
 
 !========================== DaVinciTools v17r3 2008-09-30== =================
 
