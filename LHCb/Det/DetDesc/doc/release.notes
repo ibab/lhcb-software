@@ -1,10 +1,11 @@
 ! =============================================================================
-! $Id: release.notes,v 1.379 2008-09-25 13:53:03 marcocle Exp $ 
+! $Id: release.notes,v 1.380 2008-09-30 12:28:41 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+!====================== DetDesc v18r9 2008-09-30 ==============================
 ! 2008-09-24 - Marco Cattaneo
  - Cleaned the logic in IDetectorElement::condition.
 
