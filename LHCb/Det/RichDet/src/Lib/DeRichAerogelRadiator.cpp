@@ -5,7 +5,7 @@
  *  Implementation file for detector description class : DeRichAerogelRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichAerogelRadiator.cpp,v 1.10 2008-08-18 18:30:39 jonrob Exp $
+ *  $Id: DeRichAerogelRadiator.cpp,v 1.11 2008-09-30 13:23:23 cattanem Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-03-02
@@ -75,14 +75,17 @@ StatusCode DeRichAerogelRadiator::initialize ( )
   // configure refractive index updates
 
   // aerogel parameters from cond DB
-  m_AerogelCond = condition( "AerogelParameters" );
-  if ( m_AerogelCond ) {
+  if ( hasCondition( "AerogelParameters" ) ) {
+    m_AerogelCond = condition( "AerogelParameters" );
     updMgrSvc()->registerCondition( this,
                                     m_AerogelCond.path(),
-                                    &DeRichAerogelRadiator::updateProperties ); }
+                                    &DeRichAerogelRadiator::updateProperties );
+  }
   else
-  { msg << MSG::WARNING << "Cannot load Condition AerogelParameters" << endmsg; }
-
+  { 
+    m_AerogelCond = 0;
+    msg << MSG::WARNING << "Cannot load Condition AerogelParameters" << endmsg;
+  }
 
   sc = updMgrSvc()->update(this);
   if ( sc.isFailure() )

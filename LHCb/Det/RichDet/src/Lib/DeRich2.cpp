@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich2
  *
- *  $Id: DeRich2.cpp,v 1.36 2008-07-24 18:28:57 papanest Exp $
+ *  $Id: DeRich2.cpp,v 1.37 2008-09-30 13:23:23 cattanem Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -190,18 +190,26 @@ StatusCode DeRich2::initialize()
   IUpdateManagerSvc* ums = updMgrSvc();
 
   bool needUpdate( false );
-  m_sphMirAlignCond = condition( "Rich2SphMirrorAlign" );
-  if ( m_sphMirAlignCond )
+  if ( hasCondition( "Rich2SphMirrorAlign" ) ) 
   {
+    m_sphMirAlignCond = condition( "Rich2SphMirrorAlign" );
     ums->registerCondition(this,m_sphMirAlignCond.path(),&DeRich2::alignSphMirrors );
     needUpdate = true;
   }
-  m_secMirAlignCond = condition( "Rich2SecMirrorAlign" );
-  if ( m_secMirAlignCond )
+  else {
+    m_sphMirAlignCond = 0;
+  }
+  
+  if ( hasCondition( "Rich2SecMirrorAlign" ) ) 
   {
+    m_secMirAlignCond = condition( "Rich2SecMirrorAlign" );
     ums->registerCondition(this,m_secMirAlignCond.path(),&DeRich2::alignSecMirrors );
     needUpdate = true;
   }
+  else {
+    m_secMirAlignCond = 0;
+  }
+
   StatusCode upsc = StatusCode::SUCCESS;
   if ( needUpdate ) upsc = ums->update(this);
 

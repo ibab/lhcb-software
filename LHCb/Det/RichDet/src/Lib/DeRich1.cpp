@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich1
  *
- *  $Id: DeRich1.cpp,v 1.33 2008-08-18 18:30:39 jonrob Exp $
+ *  $Id: DeRich1.cpp,v 1.34 2008-09-30 13:23:23 cattanem Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -193,17 +193,24 @@ StatusCode DeRich1::initialize()
 
   // DC06 compatible mirror (mis)alignment
   bool alignMirros( false );
-  m_sphMirAlignCond = condition( "Rich1Mirror1Align" );
-  if ( m_sphMirAlignCond )
+  if ( hasCondition( "Rich1Mirror1Align" ) )
   {
+    m_sphMirAlignCond = condition( "Rich1Mirror1Align" );
     alignMirros = true;
     updMgrSvc()->registerCondition(this,m_sphMirAlignCond.path(),&DeRich1::alignSphMirrors);
   }
-  m_secMirAlignCond = condition( "Rich1Mirror2Align" );
-  if ( m_secMirAlignCond )
+  else {
+    m_sphMirAlignCond = 0;
+  }
+  
+  if ( hasCondition( "Rich1Mirror2Align" ) )
   {
+    m_secMirAlignCond = condition( "Rich1Mirror2Align" );
     alignMirros = true;
     updMgrSvc()->registerCondition(this,m_secMirAlignCond.path(),&DeRich1::alignSecMirrors);
+  }
+  else {
+    m_secMirAlignCond = 0;
   }
 
   StatusCode upsc = StatusCode::SUCCESS;

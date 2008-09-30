@@ -4,7 +4,7 @@
  *
  * Implementation file for class : DeRichHPD
  *
- * $Id: DeRichHPD.cpp,v 1.16 2008-09-25 16:52:46 papanest Exp $
+ * $Id: DeRichHPD.cpp,v 1.17 2008-09-30 13:23:23 cattanem Exp $
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-09-19
@@ -267,10 +267,15 @@ StatusCode DeRichHPD::initialize ( )
       //<< " within:"<<m_RandomBFieldMinimum<<"-"<<m_RandomBFieldMaximum
         << endmsg;
 
-    m_demagCond = condition( "DemagParameters" );
-    if ( m_demagCond ) updMgrSvc()->
-                         registerCondition(this, m_demagCond.path(),
-                                           &DeRichHPD::updateDemagProperties );
+    if ( hasCondition( "DemagParameters" ) ) {
+      m_demagCond = condition( "DemagParameters" );
+      updMgrSvc()->registerCondition(this, m_demagCond.path(),
+                                     &DeRichHPD::updateDemagProperties );
+    }
+    else {
+      m_demagCond = 0;
+    }
+    
     sc = updMgrSvc()->update(this);
     if ( sc.isFailure() ) {
       msg << MSG::FATAL << "Demagnification ums update failure."<<endmsg;

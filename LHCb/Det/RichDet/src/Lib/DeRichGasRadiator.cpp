@@ -5,7 +5,7 @@
  *  Implementation file for detector description class : DeRichGasRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichGasRadiator.cpp,v 1.10 2008-08-18 18:30:39 jonrob Exp $
+ *  $Id: DeRichGasRadiator.cpp,v 1.11 2008-09-30 13:23:23 cattanem Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-03-02
@@ -62,21 +62,27 @@ StatusCode DeRichGasRadiator::initialize ( )
   // configure refractive index updates
 
   // temperature
-  m_temperatureCond = condition( "GasTemperature" );
-  if ( m_temperatureCond )
+  if ( hasCondition( "GasTemperature" ) ) {
+    m_temperatureCond = condition( "GasTemperature" );
     updMgrSvc()->registerCondition(this,m_temperatureCond.path(),
                                    &DeRichGasRadiator::updateProperties );
-  else
+  }
+  else {
+    m_temperatureCond = 0;
     msg << MSG::WARNING << "Cannot load Condition GasTemperature" << endmsg;
-
+  }
+  
   // pressure
-  m_pressureCond = condition( "GasPressure" );
-  if ( m_pressureCond )
+  if ( hasCondition( "GasPressure" ) ) {
+    m_pressureCond = condition( "GasPressure" );
     updMgrSvc()->registerCondition(this,m_pressureCond.path(),
                                    &DeRichGasRadiator::updateProperties );
-  else
+  }
+  else {
+    m_pressureCond = 0;
     msg << MSG::WARNING << "Cannot load Condition GasPressure" << endmsg;
-
+  }
+  
   sc = updMgrSvc()->update(this);
   if ( sc.isFailure() )
   {
