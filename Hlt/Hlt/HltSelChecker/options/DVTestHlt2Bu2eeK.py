@@ -11,8 +11,8 @@ from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, Gaud
 #
 # Preselection
 #
-importOptions( "$B2DILEPTONROOT/options/DVPreselBu2LLK.opts")
-HltCorrelations("Hlt2SelectionsCorrs").Algorithms += [ "PreselBu2LLK" ]
+importOptions( "$B2DILEPTONROOT/options/DVDC06SelBu2eeK.opts")
+HltCorrelations("Hlt2SelectionsCorrs").Algorithms += [ "DC06SelBu2eeK" ]
 PrintHeader("PrintDiLeptonForPreselBu2LLK").OutputLevel = 3 
 PrintHeader("PrintPreselBu2LLK").OutputLevel = 3 
 #
