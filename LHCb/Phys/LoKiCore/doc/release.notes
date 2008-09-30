@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.108 2008-09-23 13:05:46 ibelyaev Exp $ 
+! $Id: release.notes,v 1.109 2008-09-30 11:44:10 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,6 +15,7 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+! =========================== LoKiCore v7r8 2008-09-30 ========================
 ! 2008-09-23 - Vanya BELYAEV
 
  - LoKi/FilterAlg.h, src/Filteralg.cpp 
