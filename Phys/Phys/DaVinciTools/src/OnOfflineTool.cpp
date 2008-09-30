@@ -1,4 +1,4 @@
-// $Id: OnOfflineTool.cpp,v 1.15 2008-07-10 15:44:38 pkoppenb Exp $
+// $Id: OnOfflineTool.cpp,v 1.16 2008-09-30 15:11:56 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -27,24 +27,34 @@ DECLARE_TOOL_FACTORY( OnOfflineTool );
 OnOfflineTool::OnOfflineTool( const std::string& type,
                               const std::string& name,
                               const IInterface* parent )
-  : GaudiTool ( type, name , parent ), m_pvRelator(0){
+  : 
+  GaudiTool ( type, name , parent ),
+  m_onlinePVLocation(LHCb::RecVertexLocation::Primary),
+  m_offlinePVLocation("Hlt/Vertex/PV2D"),
+  m_online(false),
+  m_offlineDistTool("LoKi::DistanceCalculator"),
+  m_onlineDistTool("LoKi::TrgDistanceCalculator"),
+  m_offlineVertexFitter("OfflineVertexFitter" ),
+  m_onlineVertexFitter("TrgVertexFitter"),
+  m_offlinePVRelatorName("RelatedPVFinder"),
+  m_onlinePVRelatorName("OnlineRelatedPVFinder")
+{
+
   declareInterface<IOnOffline>(this);
 
-  declareProperty( "OfflinePVLocation", m_offlinePVLocation = LHCb::RecVertexLocation::Primary);
-  //  declareProperty( "OnlinePVLocation", m_onlinePVLocation = LHCb::RecVertexLocation::Velo3D );
-  declareProperty( "OnlinePVLocation", m_onlinePVLocation = "Hlt/Vertex/PV2D" );
+  declareProperty( "OfflinePVLocation",    m_offlinePVLocation    );
+  declareProperty( "OnlinePVLocation",     m_onlinePVLocation     );
 
-  declareProperty( "Online", m_online = false );
+  declareProperty( "Online",               m_online               );
 
-  /// @todo There is only one Distance Calculator presently
-  declareProperty( "OfflineDistanceTool", m_offlineDistTool = "LoKi::DistanceCalculator" );
-  declareProperty( "OnlineDistanceTool", m_onlineDistTool = "LoKi::DistanceCalculator" );
+  declareProperty( "OfflineDistanceTool",  m_offlineDistTool      );
+  declareProperty( "OnlineDistanceTool",   m_onlineDistTool       );
 
-  declareProperty( "OfflineVertexFitter", m_offlineVertexFitter = "OfflineVertexFitter" );
-  declareProperty( "OnlineVertexFitter", m_onlineVertexFitter = "TrgVertexFitter" );
+  declareProperty( "OfflineVertexFitter",  m_offlineVertexFitter  );
+  declareProperty( "OnlineVertexFitter",   m_onlineVertexFitter   );
 
-  declareProperty( "OfflinePVRelatorName", m_offlinePVRelatorName = "RelatedPVFinder" );
-  declareProperty( "OnlinePVRelatorName", m_onlinePVRelatorName = "RelatedPVFinder/OnlinePVFinder" );
+  declareProperty( "OfflinePVRelatorName", m_offlinePVRelatorName );
+  declareProperty( "OnlinePVRelatorName",  m_onlinePVRelatorName  );
   
 }
 //=============================================================================
@@ -56,6 +66,7 @@ OnOfflineTool::~OnOfflineTool() {};
 // initialize
 //=============================================================================
 StatusCode OnOfflineTool::initialize(){
+
   StatusCode sc = GaudiTool::initialize();
   if (!sc) return sc ;
   
@@ -73,35 +84,24 @@ StatusCode OnOfflineTool::initialize(){
     return StatusCode::FAILURE;
   }
 
-  if ( m_online) {
-    m_pvRelator = tool<IRelatedPVFinder>(m_onlinePVRelatorName); // not private
-  } else {
-    m_pvRelator = tool<IRelatedPVFinder>(m_offlinePVRelatorName); // not private    
-  }
-  sc = m_pvRelator->setDefaults(getPVLocation(),distanceCalculator());
-
   return sc;
    
 }
+//=============================================================================
+const std::string& OnOfflineTool::primaryVertexLocation() const {
+  return online() ? m_onlinePVLocation : m_offlinePVLocation ;
+};
+//=============================================================================
+const std::string& OnOfflineTool::distanceCalculatorType() const {
+  return online() ? m_onlineDistTool : m_offlineDistTool ;
+};
+//=============================================================================
+const std::string& OnOfflineTool::relatedPVFinderType() const {
+  return online() ? m_onlinePVRelatorName : m_offlinePVRelatorName ;
+};
 
 //=============================================================================
-// get PV
-//=============================================================================
-std::string OnOfflineTool::getPVLocation(void) const {
-  if ( m_online ) return m_onlinePVLocation ;
-  else return m_offlinePVLocation ;
+const std::string& OnOfflineTool::vertexFitterType() const {
+  return online() ? m_onlineVertexFitter : m_offlineVertexFitter ;
 };
 //=============================================================================
-// 
-//=============================================================================
-std::string OnOfflineTool::distanceCalculator() const {
-  if ( m_online ) return m_onlineDistTool ;
-  else return m_offlineDistTool ;
-};
-//=============================================================================
-// 
-//=============================================================================
-std::string OnOfflineTool::vertexFitter() const {
-  if ( m_online ) return m_onlineVertexFitter ;
-  else return m_offlineVertexFitter ;
-};

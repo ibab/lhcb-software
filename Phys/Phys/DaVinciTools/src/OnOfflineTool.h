@@ -1,4 +1,4 @@
-// $Id: OnOfflineTool.h,v 1.6 2008-07-10 15:44:38 pkoppenb Exp $
+// $Id: OnOfflineTool.h,v 1.7 2008-09-30 15:11:56 jpalac Exp $
 #ifndef ONOFFLINETOOL_H 
 #define ONOFFLINETOOL_H 1
 
@@ -13,7 +13,6 @@
  *  @author Patrick KOPPENBURG
  *  @date   2005-06-08
  */
-class IRelatedPVFinder ;
 class OnOfflineTool : public GaudiTool, virtual public IOnOffline {
 public: 
   /// Standard constructor
@@ -26,22 +25,19 @@ public:
   StatusCode initialize();
 
   /// On or Offline ?
-  bool online(void) const {return m_online;} ;
+  virtual const bool online() const {return m_online;} ;
 
   /// Return DistanceCalculator
-  std::string distanceCalculator() const  ;
+  virtual const std::string& distanceCalculatorType() const  ;
 
   /// Return Unconstrained Vertex Fitter
-  std::string vertexFitter() const  ;
+  virtual const std::string& vertexFitterType() const  ;
+
+  /// Return name of IRelatedPVFinder implementation
+  virtual const std::string& relatedPVFinderType() const;
 
   /// Get PV location in TES
-  std::string getPVLocation(void) const  ;
-
-  /// Set PV location in TES
-  StatusCode setPVLocation(const std::string&)  ;
-
-  /// Get PV relator
-  IRelatedPVFinder* pvRelator(void) const { return m_pvRelator ; } ;
+  virtual const std::string& primaryVertexLocation() const  ;
 
 protected :
 
@@ -55,6 +51,6 @@ private:
   std::string m_onlineVertexFitter ; ///< online vertex fitter
   std::string m_offlinePVRelatorName ; ///< offline PV Relator Name
   std::string m_onlinePVRelatorName ; ///< online PV Relator Name
-  IRelatedPVFinder* m_pvRelator ; ///< PV relator
+
 };
 #endif // ONOFFLINETOOL_H
