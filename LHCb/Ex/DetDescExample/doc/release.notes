@@ -1,14 +1,13 @@
-$Id: release.notes,v 1.40 2008-09-27 22:37:40 odescham Exp $
-Package: DetDescExample
-Package Manager: Marco Clemencic
-Purpose: Demonstrate how to access detector elements, their geometry 
-         parameters and materials from detector description XML database.
+!$Id: release.notes,v 1.41 2008-09-30 11:23:16 cattanem Exp $
+!Package: DetDescExample
+!Package Manager: Marco Clemencic
+!Purpose: Demonstrate how to access detector elements, their geometry 
+!         parameters and materials from detector description XML database.
+!------------------------------------------------------------------------
 
-
-
+!==================DetDescExample v7r7 2008-09-30 ====================
 ! 2008-09-27 - Olivier Deschamps
  - Adapt to changes in CaloDet v9r0
-
 
 !==================DetDescExample v7r6 2008-02-22 ====================
 ! 2008-02-22 - Marco Cattaneo
