@@ -10,7 +10,7 @@
 #include "Kernel/IParticleMaker.h"
 #include "Kernel/IOnOffline.h"
 #include "Kernel/IRelatedPVFinder.h"
-
+#include "Kernel/IDistanceCalculator.h"
 #include "Event/RecVertex.h"
 
 /*-----------------------------------------------------------------------------
@@ -86,11 +86,14 @@ PhysDesktop::PhysDesktop( const std::string& type,
     m_primVtxLocn(""),
     m_outputLocn     (),
     m_pMaker         (0),
+    m_pMakerType(""),
     m_locationWarned (false),
     m_OnOffline      (0),
     m_p2VtxTable(),
-    m_pvRelator(),
-    m_pvRelatorName("RelatedPVFinder/OnlinePVFinder")
+    m_distanceCalculator(0),
+    m_distanceCalculatorType(""),
+    m_pvRelator(0),
+    m_pvRelatorName("")
 {
 
   // Declaring implemented interfaces
@@ -101,7 +104,7 @@ PhysDesktop::PhysDesktop( const std::string& type,
   //                    loading conditions
 
   // Type of input particles (Ax, MC, Proto) maker.
-  declareProperty( "ParticleMakerType",m_pMakerType="" );
+  declareProperty( "ParticleMakerType", m_pMakerType );
 
   //                    input & output locations
   declareProperty( "InputPrimaryVertices", m_primVtxLocn );
@@ -130,6 +133,8 @@ PhysDesktop::PhysDesktop( const std::string& type,
   };
   // check that output location is set to *SOME* value
   if (m_outputLocn.empty()) Exception("OutputLocation is not set") ;
+
+  declareProperty("IDistanceCalculator", m_distanceCalculatorType);
 
   // instance of PV relator
   declareProperty( "RelatedPVFinderName", m_pvRelatorName );
@@ -187,23 +192,22 @@ StatusCode PhysDesktop::initialize()
     }
   }
 
-  // OnOffline tool
   m_OnOffline = tool<IOnOffline>("OnOfflineTool",this);
 
-  if (m_primVtxLocn=="") m_primVtxLocn = m_OnOffline->getPVLocation();
+  if (m_primVtxLocn=="") m_primVtxLocn = m_OnOffline->primaryVertexLocation();
 
   if (msgLevel(MSG::DEBUG)) {
     debug() << "Primary vertex location set to " << getPVLocation() << endmsg;
   }
   
+  if (""==m_distanceCalculatorType) m_distanceCalculatorType=m_OnOffline->distanceCalculatorType();
+
+  m_distanceCalculator = tool<IDistanceCalculator>(m_distanceCalculatorType, this);
+
+  if (""==m_pvRelatorName) m_pvRelatorName=m_OnOffline->relatedPVFinderType();
 
   // PV relator
   m_pvRelator = tool<IRelatedPVFinder>(m_pvRelatorName, this);
-
-  sc = m_pvRelator->setDefaults(getPVLocation(),
-                                m_OnOffline->distanceCalculator());
-
-
   
   return sc;
 }
@@ -234,7 +238,7 @@ const LHCb::RecVertex::ConstVector& PhysDesktop::primaryVertices(){
     if (!sc) Exception("Cannot get PVs").ignore();
   } if ( m_primVerts.empty()) {
     if ( m_primVtxLocn == "" ){
-      Warning("Empty primary vertex container at "+m_OnOffline->getPVLocation()).ignore() ;      
+      Warning( "Empty primary vertex container at "+getPVLocation() ).ignore() ;      
     } else {
       Warning("Empty primary vertex container at "+m_primVtxLocn).ignore();
     } 
@@ -780,15 +784,33 @@ StatusCode PhysDesktop::writeEmptyContainerIfNeeded(){
 }
 //=============================================================================
 const LHCb::VertexBase* PhysDesktop::relatedVertex(const LHCb::Particle* part){
+
   if (  particle2Vertices(part).empty() ){
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Table is empty for particle " << part->key() << " " 
-                                          << part->particleID().pid() << endmsg ;
-    StatusCode sc = m_pvRelator->relatedPVs(part,&m_p2VtxTable);
-    if (!sc) Error("Error in relatedPVs");
-  }
+
+    if (msgLevel(MSG::VERBOSE)) {
+      verbose() << "Table is empty for particle " << part->key() << " " 
+                << part->particleID().pid() << endmsg ;
+    }
+
+
+    const std::string pvLocation = getPVLocation();
+    const Particle2Vertex::Range range = m_pvRelator->relatedPVs(part,
+                                                                 pvLocation,
+                                                                 m_distanceCalculator);
+
+    for (Particle2Vertex::Range::const_iterator iRel = range.begin();
+         iRel != range.end();
+         ++iRel) {
+      m_p2VtxTable.relate(part, iRel->to(), iRel->weight());
+    }
+
+  } // relations for particle not empty
+
   if (msgLevel(MSG::VERBOSE)) verbose() << "P2V returns particle2Vertices" << endmsg ;
   if ( particle2Vertices(part).empty() ) return NULL ;
-  else return particle2Vertices(part).back().to();
+
+  return particle2Vertices(part).back().to();
+
 }
 //=============================================================================
 void PhysDesktop::relate(const LHCb::Particle*   part, 

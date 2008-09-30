@@ -16,6 +16,7 @@ class IDataProviderSvc;
 class IParticleMaker;
 class IOnOffline;
 class IRelatedPVFinder ;
+class IDistanceCalculator;
 
 /** @class PhysDesktop PhysDesktop.h Kernel/PhysDesktop.h
  *  
@@ -237,6 +238,10 @@ private: // data
   IOnOffline* m_OnOffline ;   ///< locate PV
 
   Particle2Vertex::Table m_p2VtxTable; ///< Table of Particle to PV relations
+
+  IDistanceCalculator* m_distanceCalculator;
+
+  std::string m_distanceCalculatorType;
 
   IRelatedPVFinder* m_pvRelator ; ///< Tool that relates the Particle to a PV
 
