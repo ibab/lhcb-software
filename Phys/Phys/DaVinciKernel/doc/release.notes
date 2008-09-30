@@ -3,6 +3,13 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2008-09-30 - Juan PALACIOS
+ - Kernel/IRelatedPVFinder.h
+  . relatedPVs methods now return a Particle2Vertex::Range
+  . IDistanceCalculator* is passed as function argument.
+ - Kernel/Particle2Vertex.h
+  . Add some useful typedefs to Particle2Vertex namespace.
+
 ! 2008-09-29 - Juan PALACIOS
  - Kernel/IRelatedPVFinder.h
   . Make all methods const.
