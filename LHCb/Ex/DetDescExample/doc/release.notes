@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.41 2008-09-30 11:23:16 cattanem Exp $
+!$Id: release.notes,v 1.42 2008-09-30 12:25:53 cattanem Exp $
 !Package: DetDescExample
 !Package Manager: Marco Clemencic
 !Purpose: Demonstrate how to access detector elements, their geometry 
@@ -7,7 +7,7 @@
 
 !==================DetDescExample v7r7 2008-09-30 ====================
 ! 2008-09-27 - Olivier Deschamps
- - Adapt to changes in CaloDet v9r0
+ - Adapt to changes in CaloDet v10r0
 
 !==================DetDescExample v7r6 2008-02-22 ====================
 ! 2008-02-22 - Marco Cattaneo
