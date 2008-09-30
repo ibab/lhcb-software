@@ -4,13 +4,10 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
-
+!========================== DigiEvent v2r9 2008-09-30 ========================
 ! 2008-09-20 M Needham
- -Changes to STCluster class: add clone/copy constructor+ contains method
-
-
-! 2008-09-09 Add method to return max adc value of a cluster
-
+  - Changes to STCluster class: add clone/copy constructor+ contains method
+  - 2008-09-09: Add method to return max adc value of a cluster
 
 !========================== DigiEvent v2r8 2008-09-03 ========================
 ! 2008-09-03 - Marco Cattaneo
@@ -20,7 +17,7 @@
  - Add shortcuts to station, layer etc to STCluster classes
 
 ! 2008-08-23 M Needham
- - Add accessor to liteCluster form Cluster class 
+ - Add accessor to liteCluster from Cluster class 
 
 !========================== DigiEvent v2r7 2008-07-16 ========================
 ! 2008-07-14 M Needham
