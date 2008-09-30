@@ -1,14 +1,14 @@
 <lcgdict>
   <class name="std::map<std::string,LHCb::L0DUElementaryData*>"/>
-  <class pattern="std::_Rb_tree_*iterator<std::pair<const std::basic_string<char>,LHCb::L0DUElementaryData*> >"/>
+  <class pattern="std::_Rb_tree_*iterator<std::pair<const std::*string<char>,LHCb::L0DUElementaryData*> >"/>
   <class name="std::pair<const std::string,LHCb::L0DUElementaryData*>"/>
 
   <class name="std::map<std::string,LHCb::L0DUElementaryCondition*>"/>
-  <class pattern="std::_Rb_tree_*iterator<std::pair<const std::basic_string<char>,LHCb::L0DUElementaryCondition*> >"/>
+  <class pattern="std::_Rb_tree_*iterator<std::pair<const std::*string<char>,LHCb::L0DUElementaryCondition*> >"/>
   <class name="std::pair<const std::string,LHCb::L0DUElementaryCondition*>"/>
 
   <class name="std::map<std::string,LHCb::L0DUChannel*>"/>
-  <class pattern="std::_Rb_tree_*iterator<std::pair<const std::basic_string<char>,LHCb::L0Channel*> >"/>
+  <class pattern="std::_Rb_tree_*iterator<std::pair<const std::*string<char>,LHCb::L0Channel*> >"/>
   <class name="std::pair<const std::string,LHCb::L0DUChannel*>"/>
 
   <exclusion>
