@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.354 2008-09-23 13:57:44 pkoppenb Exp $
+! $Id: release.notes,v 1.355 2008-09-30 09:17:19 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-09-30 - Patrick Koppenburg
+ - SpotLight : New algorithm to highlight very hot candidates in the stripping.
 
 ! 2008-09-23 - Patrick Koppenburg
  - Renamed LoKi_FilterDesktop to FilterDesktop and FilterDesktop to OldFilterDesktop
