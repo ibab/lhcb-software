@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.6 2008-09-30 08:57:52 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.7 2008-09-30 09:04:10 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -15,6 +15,7 @@ class HltConf(LHCbConfigurableUser):
           "hltType" :          'Physics_Hlt1+Hlt2'
         , "userAlgorithms":    [ ]  # put here user algorithms to add
         , "oldStyle" :         True # old style options configuration
+        , "replaceL0BanksWithEmulated" : False
         }   
     def validHltTypes(self):
         return [ 'PA',
@@ -30,6 +31,7 @@ class HltConf(LHCbConfigurableUser):
         GaudiKernel.ProcessJobOptions.printing_level += 1
 
         importOptions('$HLTCONFROOT/options/HltInit.opts')
+        if self.getProp('replaceL0BanksWithEmulated') : importOptions('$L0DUROOT/options/ReplaceL0BanksWithEmulated.opts')
         hlttype = self.getProp('hltType')
         if self.getProp('oldStyle') :
             if hlttype not in self.validHltTypes() :  raise TypeError("Unknown hlttype '%s'"%hlttype)
@@ -42,7 +44,7 @@ class HltConf(LHCbConfigurableUser):
             if hlttype.find('Velo') != -1 :   importOptions('$HLTCONFROOT/options/HltVeloAlleySequence.opts')
         else :
             if hlttype == 'DEFAULT'       : hlttype = 'PA+LU+VE'
-            if hlttype == 'HLT1'          : hlttype = 'PA+LU+VE+MU+HA+PH+EL'
+            if hlttype == 'Physics_Hlt1'  : hlttype = 'PA+LU+VE+MU+HA+PH+EL'
             type2conf = { 'PA' : '$HLTCONFROOT/options/HltCommissioningLines.py' # PA for 'Pass-Thru' (PT was considered bad)
                         , 'LU' : '$HLTCONFROOT/options/HltLumiLines.py'
                         , 'VE' : '$HLTCONFROOT/options/HltVeloLines.py'

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.24 2008-09-30 08:57:52 graven Exp $ 
+! $Id: release.notes,v 1.25 2008-09-30 09:04:10 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : 
@@ -7,6 +7,7 @@
 
 ! 2008-09-30 - Gerhard Raven
  - fix default for configurable, default to oldstyle, Hlt1 + Hlt2
+ - add replaceL0BanksWithEmulated options to configurable
 
 ! 2008-09-29 - Alvaro dos Santos, JA. Hernando
  - update HltJob to work with the current L0
