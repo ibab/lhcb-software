@@ -6,8 +6,8 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+!========================= LHCbMath v3r3 2008-09-30 ==========================
 ! 2008-09-17 - Vanya BELYAEV
-
  - LHCbMath/LHCbMath.h
     add the functions for comparison of double and int, and double 
     and unsigned int:
