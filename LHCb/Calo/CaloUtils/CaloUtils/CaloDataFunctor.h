@@ -1,4 +1,4 @@
-// $Id: CaloDataFunctor.h,v 1.1 2008-09-22 00:44:44 odescham Exp $
+// $Id: CaloDataFunctor.h,v 1.2 2008-09-30 09:00:48 cattanem Exp $
 // ============================================================================
 #ifndef EVENT_CALODATAFUNCTOR_H 
 #define EVENT_CALODATAFUNCTOR_H 1
@@ -32,7 +32,7 @@ class LHCb::CaloClusterEntry ;   // RecEvent/Event
 template <class TYPE> 
 class SmartRef  ;     // GaudiKernel
 
-/** @namespace CaloDataFunctor CaloDataFunctor.h Event/CaloDataFunctor.h
+/** @namespace CaloDataFunctor CaloDataFunctor.h CaloUtils/CaloDataFunctor.h
  *    
  *  collection of some  useful functors, which could be used for 
  *  manipulation with CaloDigit, MCCaloDigit, MCCaloHit, 
@@ -102,7 +102,7 @@ namespace CaloDataFunctor
   // ==========================================================================
   
   // ==========================================================================
-  /** @class Over_E_Threshold CaloDataFunctor.h Event/CaloDataFuctor.h
+  /** @class Over_E_Threshold CaloDataFunctor.h CaloUtils/CaloDataFuctor.h
    * 
    *  Comparison of the energy of the object with given threshold 
    *
@@ -186,7 +186,7 @@ namespace CaloDataFunctor
   // ==========================================================================
   
   // ==========================================================================
-  /** @class EnergyTransverse CaloDataFunctor.h Event/CaloDataFucntor.h
+  /** @class EnergyTransverse CaloDataFunctor.h CaloUtils/CaloDataFucntor.h
    * 
    *  Calculate the transverse energy for the object 
    *
@@ -243,7 +243,7 @@ namespace CaloDataFunctor
   // ==========================================================================
   
   // ==========================================================================
-  /** @class Over_Et_Threshold CaloDataFunctor.h Event/CaloDataFucntor.h
+  /** @class Over_Et_Threshold CaloDataFunctor.h CaloUtils/CaloDataFucntor.h
    * 
    *  Comparison of the transverse energy of the object with 
    *  given threshold value 
@@ -295,7 +295,7 @@ namespace CaloDataFunctor
   // ==========================================================================
   
   // ==========================================================================
-  /** @class Less_by_Energy CaloDataFunctor.h Event/CaloDataFunctor.h
+  /** @class Less_by_Energy CaloDataFunctor.h CaloUtils/CaloDataFunctor.h
    *  
    *  Comparison of the energy of one object with the energy of 
    *  another object. Types of objects could be different! 
@@ -378,7 +378,7 @@ namespace CaloDataFunctor
   // ==========================================================================
 
   // ==========================================================================
-  /** @class Less_by_TransverseEnergy CaloDataFunctor.h Event/CaloDataFunctor.h
+  /** @class Less_by_TransverseEnergy CaloDataFunctor.h CaloUtils/CaloDataFunctor.h
    *  
    *  Comparison of the transverse energy of one object with 
    *  the transverse energy of another object
@@ -452,7 +452,7 @@ namespace CaloDataFunctor
   // ==========================================================================
 
   // ==========================================================================
-  /** @class Accumulate_Energy CaloDataFunctor.h Event/CaloDataFunctor.h 
+  /** @class Accumulate_Energy CaloDataFunctor.h CaloUtils/CaloDataFunctor.h 
    *  
    *  Accumulate the energy of the objects
    * 
@@ -545,7 +545,7 @@ namespace CaloDataFunctor
   // ==========================================================================
   
   // ==========================================================================
-  /** @class IsCaloCellID CaloDataFunctor.h Event/CaloDataFunctor.h
+  /** @class IsCaloCellID CaloDataFunctor.h CaloUtils/CaloDataFunctor.h
    * 
    *  compare calorimtery cell identifier of the object with 
    *  given value (equality test). Coudl be used for location 
