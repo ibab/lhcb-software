@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.113 2008-09-25 10:04:56 janos Exp $
+! $Id: release.notes,v 1.114 2008-09-30 12:32:31 cattanem Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 !--------------------------------------------------------------------------
 
+!========================== OTDet v8r1 2008-09-30 =========================
 ! 2008-09-25 - Jan Amoraal
  - Head of DetDesc/DetectorElement now has a hasCondition method.
  - Was still asking for calibration condition without checking if it existed.
