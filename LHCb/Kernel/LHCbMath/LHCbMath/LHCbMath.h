@@ -4,7 +4,7 @@
  *  Collection of math related functions for general use in LHCb
  *
  *  CVS Log :-
- *  $Id: LHCbMath.h,v 1.6 2008-10-01 09:46:01 ibelyaev Exp $
+ *  $Id: LHCbMath.h,v 1.7 2008-10-01 13:49:56 ibelyaev Exp $
  *
  *  @author Juan PALACIOS
  *  @date   2005-11-21
@@ -254,7 +254,7 @@ namespace LHCb
     ( const int    ref          , 
       const double val          , 
       const double eps1 = 1.e-6 , 
-      const double eps2 = 0.5.e-3 / boost::integer_traits<int>::const_max ) 
+      const double eps2 = 0.5e-3 / boost::integer_traits<int>::const_max ) 
     { 
       BOOST_STATIC_ASSERT(boost::integer_traits<int>::is_specialized ) ;
       return equal_to_int ( val , ref , eps1 , eps2 ) ; 
