@@ -4,6 +4,7 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+!=============================== STDAQ v3r12 2008-10-01 ======================
 ! 2008-09-20 M Needham
  - better bookkeeping of recovered banks
  - make put really the first thing I do !
@@ -29,11 +30,9 @@
 ! 2008-09-12 M. Needham
  - Fix warnings for doubles
 
-
 ! 2008-09-12 - Marco Cattaneo
  - Change return type of RawBankToSTClusterAlg::createCluster to void,
    fixes untested StatusCode warnings in Brunel
-
 
 ! 2008-09-09 M Needham
  - Make recovery mode default for cluster decoding
