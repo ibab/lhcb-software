@@ -211,7 +211,7 @@ private:
     return;
   }
 
-  inline std::string& getPVLocation() { return m_primVtxLocn; }
+  inline std::string& primaryVertexLocation() { return m_primVtxLocn; }
   
 
 private: // data

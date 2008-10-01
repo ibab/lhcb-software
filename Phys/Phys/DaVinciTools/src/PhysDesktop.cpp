@@ -197,7 +197,7 @@ StatusCode PhysDesktop::initialize()
   if (m_primVtxLocn=="") m_primVtxLocn = m_OnOffline->primaryVertexLocation();
 
   if (msgLevel(MSG::DEBUG)) {
-    debug() << "Primary vertex location set to " << getPVLocation() << endmsg;
+    debug() << "Primary vertex location set to " << primaryVertexLocation() << endmsg;
   }
   
   if (""==m_distanceCalculatorType) m_distanceCalculatorType=m_OnOffline->distanceCalculatorType();
@@ -236,13 +236,12 @@ const LHCb::RecVertex::ConstVector& PhysDesktop::primaryVertices(){
   if ( m_primVerts.empty()) {
     StatusCode sc = getPrimaryVertices();
     if (!sc) Exception("Cannot get PVs").ignore();
-  } if ( m_primVerts.empty()) {
-    if ( m_primVtxLocn == "" ){
-      Warning( "Empty primary vertex container at "+getPVLocation() ).ignore() ;      
-    } else {
-      Warning("Empty primary vertex container at "+m_primVtxLocn).ignore();
-    } 
   }
+  if ( m_primVerts.empty()) {
+      Warning( "Empty primary vertex container at "+primaryVertexLocation() ).ignore() ;      
+    }
+  }
+
   return m_primVerts;
 }
 //=============================================================================
@@ -719,16 +718,16 @@ StatusCode PhysDesktop::getRelations(){
 StatusCode PhysDesktop::getPrimaryVertices(){
 
 
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Getting PV from " << getPVLocation() << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Getting PV from " << primaryVertexLocation() << endmsg;
 
-  if ( !exist<LHCb::RecVertices>( getPVLocation())){
+  if ( !exist<LHCb::RecVertices>( primaryVertexLocation())){
     return StatusCode::SUCCESS; // no PV
   }
-  LHCb::RecVertices* verts = get<LHCb::RecVertices>( getPVLocation() );
+  LHCb::RecVertices* verts = get<LHCb::RecVertices>( primaryVertexLocation() );
   if( ! verts ) {
-    if (msgLevel(MSG::VERBOSE)) verbose() << " Unable to retrieve vertices from " << getPVLocation() << endmsg;
+    if (msgLevel(MSG::VERBOSE)) verbose() << " Unable to retrieve vertices from " << primaryVertexLocation() << endmsg;
   } else if( verts->empty() ) {
-    if (msgLevel(MSG::VERBOSE)) verbose() << " No vertices retrieved from  " << getPVLocation() << endmsg;
+    if (msgLevel(MSG::VERBOSE)) verbose() << " No vertices retrieved from  " << primaryVertexLocation() << endmsg;
   } else {
     if (msgLevel(MSG::VERBOSE)) verbose() << "    Number of primary vertices  = " << verts->size() << endmsg;
 
@@ -748,7 +747,7 @@ StatusCode PhysDesktop::getPrimaryVertices(){
     }
   }
   if (msgLevel(MSG::VERBOSE)) verbose() << "Number of Vertices from " 
-                                        << getPVLocation() << " are " 
+                                        << primaryVertexLocation() << " are " 
                                         << m_primVerts.size() << endmsg;
   return StatusCode::SUCCESS;
 }
@@ -793,7 +792,7 @@ const LHCb::VertexBase* PhysDesktop::relatedVertex(const LHCb::Particle* part){
     }
 
 
-    const std::string pvLocation = getPVLocation();
+    const std::string pvLocation = primaryVertexLocation();
     const Particle2Vertex::Range range = m_pvRelator->relatedPVs(part,
                                                                  pvLocation,
                                                                  m_distanceCalculator);
