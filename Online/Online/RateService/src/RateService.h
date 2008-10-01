@@ -23,7 +23,7 @@
 #include<time.h>
 
 
-#include "dis.hxx"
+#include <dis.hxx>
 
 
 /* deprecated
@@ -33,6 +33,7 @@ static const std::string s_converterName("RATE_SERVICE_V2R3");
 // Forward declarations
 class DimInfoMonRate;
 
+
 namespace LHCb {
 
 /** @class RateService is a Service subscribing to MonRate services and publishing
@@ -41,7 +42,7 @@ namespace LHCb {
   * @class RateService
   * @author Jean-Francois Menou
   */
-class RateService : public Service {
+class RateService : public Service, public DimTimer {
 public:
   /// Constructor of this form must be provided
   RateService(const std::string& name, ISvcLocator* pSvcLocator); 
@@ -51,7 +52,14 @@ public:
 
   /// Finalize mandatory member functions of any service
   StatusCode finalize();
+  void timerHandler();
+  /** Discovers MonRate services
+    *
+    * @return A StatusCode.
+    */
 
+  int checktime;
+  int nbNewServices;
 private:
 
   /** utgid given to this algorithm.
@@ -79,7 +87,6 @@ private:
     
   /// partitionname
   std::string m_partitionName;
-  
   /* RatePublisher to publish the number of MonRate services currently processed
    * by the RateService.
    */
@@ -94,12 +101,8 @@ private:
     */
   bool isHandledService(std::string serviceName);
 
-
-  /** Discovers MonRate services
-    *
-    * @return A StatusCode.
-    */
   StatusCode findServices();
+
 };
 
 } //end namespace LHCb

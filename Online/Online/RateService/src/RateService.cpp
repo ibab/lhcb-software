@@ -29,7 +29,9 @@
 // for online monitoring
 #include "RTL/rtl.h"
 #include "CPP/IocSensor.h"
-
+#include "dis.hxx"
+#include <dic.hxx>
+#include <ctime>
 
 #ifdef WIN32
 namespace win {
@@ -81,10 +83,12 @@ StatusCode RateService::initialize() {
   COUT_DEBUG("MonRateCounterNumber : " << m_nbCounterInMonRate);
  // COUT_DEBUG("SleepTime            : " << sleepTime);
   
-  msg << MSG::INFO << "Initialize" << endreq;
+  msg << MSG::INFO << "Running Initialize" << endreq;
 
   m_UTGID = RTL::processName();
   
+  checktime=30;
+
   try
   {  
     sc = findServices();
@@ -106,28 +110,10 @@ StatusCode RateService::initialize() {
   
   sc = StatusCode::SUCCESS;
   
-  msg << MSG::INFO << "Initialize DONE" << endreq;
+  msg << MSG::INFO << "Initialize DONE. Starting Dim timer." << endreq;
+ 
   
-  
-    
-/*  try
-  {  
-    if(!findServices().isSuccess())
-    {
-      msg << MSG::INFO << "Unable to find " << m_monRateServiceName << endreq;
-    }
-    
-    m_numberOfMonRatesPublisher->updateService(m_dimInfoMonRate.size());
-  }catch(std::exception e)
-  {
-   msg << MSG::WARNING << "EXCEPTION CAUGHT INT RateService::execute()" << endreq;
-  }
-  
-//  msg << MSG::INFO << "Execute DONE, found=" << m_found << endreq;
-  
-  mysleep(sleepTime);*/
-  
-  
+  DimTimer::start(checktime);
   
   return sc;
 }
@@ -150,100 +136,100 @@ StatusCode RateService::findServices() {
   //------------------------------------------------------------------------------
   MsgStream msg(msgSvc(), name());
   StatusCode sc;
-  
-  int nbNewServices = 0;
+
+  nbNewServices = 0;
   std::string firstpart;
   std::string secondpart;
-  std::string::size_type loc=m_monRateServiceName.find("*PartitionName*",0);
-  if (loc == std::string::npos ) { 
+  std::size_t loc=m_monRateServiceName.find("*PartitionName*");
+  if (loc != std::string::npos ) { 
      firstpart=m_monRateServiceName.substr(0,loc);
-     secondpart=m_monRateServiceName.substr(loc+1);
+     secondpart=m_monRateServiceName.substr(loc+15);
   }
-  m_monRateServiceName =firstpart+"*"+m_partitionName+"*"+secondpart;  
-  msg << MSG::INFO << "Looking for " << m_monRateServiceName << " pattern" << endreq;
+  std::string findServiceName = firstpart+"*"+m_partitionName+"*"+secondpart;  
+  msg << MSG::INFO << "Looking for " << findServiceName << " pattern" << endreq;
   
   
   //DimClient::setDnsNode(m_dimClientDns.c_str());
-  DimBrowser dbr;
+
   
   // actual name and format of the found service
   char * serviceNameC;
   char * formatC;
+
+  DimBrowser dbr;
   
-  dbr.getServices( m_monRateServiceName.c_str() );
+  if (dbr.getServices( findServiceName.c_str() )>0 ) {
 
-  while( 0 != dbr.getNextService(serviceNameC, formatC) )
-  {
-    msg << MSG::INFO << " ### Matching service" << endreq;
-    msg << MSG::INFO << " ### Service Name : " << serviceNameC << " ; format : " <<
-    formatC << endreq;
+     while( 0 != dbr.getNextService(serviceNameC, formatC) )
+     {
+       msg << MSG::INFO << " ### Matching service" << endreq;
+       msg << MSG::INFO << " ### Service Name : " << serviceNameC <<" ; format : " << formatC << endreq;
     
-    if(isHandledService(serviceNameC))
-      continue;
+       if(isHandledService(serviceNameC))
+        continue;
       
-    bool exceptionRaised = false;
+        bool exceptionRaised = false;
     
-    DimInfoMonRate * pNew = 0;
+        DimInfoMonRate * pNew = 0;
     
-    try
-    {
-      pNew = new DimInfoMonRate(serviceNameC, 5, m_UTGID, m_nbCounterInMonRate);
+        try
+        {
+          pNew = new DimInfoMonRate(serviceNameC, 5, m_UTGID, m_nbCounterInMonRate);
       
-      if(pNew)
-        pNew->setMsgService(msgSvc());
+          if(pNew)
+            pNew->setMsgService(msgSvc());
     
-      msg << MSG::DEBUG << "creating MonRate" << endreq;
+            msg << MSG::DEBUG << "creating MonRate" << endreq;
 
-      /* create the MonDouble to receive the data
-       */    
-      try{
-        pNew->createMonRate();
-      }catch(const std::exception & e){
-        msg << MSG::INFO << __LINE__ << ": error in createMonRate() : " << e.what() << endreq;
-	exceptionRaised = true;
-        try{
-	  if(pNew) delete pNew;
-	}catch(const std::exception & e)
-	{
-	  msg << MSG::FATAL << __LINE__ << ": fatal 1 :" << e.what() << endreq;
-	  exit(1);
-	}
-      }
+            /* create the MonDouble to receive the data
+            */    
+           try{
+             pNew->createMonRate();
+           }catch(const std::exception & e){
+             msg << MSG::INFO << __LINE__ << ": error in createMonRate() : " << e.what() << endreq;
+	     exceptionRaised = true;
+             try{
+	       if(pNew) delete pNew;
+	     }catch(const std::exception & e)
+	     {
+	       msg << MSG::FATAL << __LINE__ << ": fatal 1 :" << e.what() << endreq;
+	       exit(1);
+	     }
+           }
 
-    }
-    /* some exception will be probably due to a non MonRate service
-     */
-    catch(std::exception e)
-    {
-      msg << MSG::WARNING << " >>> an error occured while registering MonRate" << endreq;
-      msg << MSG::WARNING << " >>> in RateService::findServices()" << endreq;
-      msg << MSG::WARNING << " >>> can't register " << serviceNameC << endreq;
-      exceptionRaised = true;
-      try{
-        if(pNew) delete pNew;
-      }catch(const std::exception & e)
-      {
-         msg << MSG::FATAL << "fatal 2 : " << e.what() << endreq;
-         exit(2);
-      }
-    }
+         }
+         /* some exception will be probably due to a non MonRate service
+         */
+         catch(std::exception e)
+         {
+           msg << MSG::WARNING << " >>> an error occured while registering MonRate" << endreq;
+           msg << MSG::WARNING << " >>> in RateService::findServices()" << endreq;
+           msg << MSG::WARNING << " >>> can't register " << serviceNameC << endreq;
+           exceptionRaised = true;
+           try{
+            if(pNew) delete pNew;
+           }catch(const std::exception & e)
+           {
+             msg << MSG::FATAL << "fatal 2 : " << e.what() << endreq;
+             exit(2);
+           }
+         }
     
-    /* if nothing has been caught then it's OK
-     */
-    if(!exceptionRaised)
-    {
-      m_dimInfoMonRate.push_back(pNew);
-      sc = StatusCode::SUCCESS;
-      nbNewServices++; 
-    }
-          
+        /* if nothing has been caught then it's OK
+         */
+       if(!exceptionRaised)
+       {
+         m_dimInfoMonRate.push_back(pNew);
+         sc = StatusCode::SUCCESS;
+         nbNewServices++; 
+       }
+    }      
   }
-  
   msg << MSG::INFO << nbNewServices << " found" << endreq;
   
   
   msg << MSG::INFO << "Looking for DONE" <<endreq;
-  
+
   return StatusCode::SUCCESS;
 }
 
@@ -270,3 +256,26 @@ StatusCode RateService::finalize() {
   return StatusCode::SUCCESS;
 }
 
+
+void RateService::timerHandler() {
+  MsgStream msg(msgSvc(), name());
+  StatusCode sc;
+  msg << MSG::INFO << "Timerhandler called " << endreq;
+
+  sc=findServices();
+  try {
+    if(!findServices().isSuccess())
+    {
+      msg << MSG::INFO << "Unable to find " << m_monRateServiceName << endreq;
+    }
+    
+   if (nbNewServices>0) m_numberOfMonRatesPublisher->updateService(m_dimInfoMonRate.size());
+  }
+  catch(std::exception e)
+  {
+   msg << MSG::WARNING << "EXCEPTION CAUGHT INT RateService::execute()" << endreq;
+  }
+
+  //check every 10 mins
+  DimTimer::start(checktime);
+}
