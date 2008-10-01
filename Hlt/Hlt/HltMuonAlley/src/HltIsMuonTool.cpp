@@ -1,4 +1,4 @@
-// $Id: HltIsMuonTool.cpp,v 1.8 2008-06-27 11:04:00 pkoppenb Exp $
+// $Id: HltIsMuonTool.cpp,v 1.9 2008-10-01 09:32:53 leandrop Exp $
 // Include files 
 
 // from Gaudi
@@ -96,24 +96,6 @@ double  HltIsMuonTool::function(const Track& ctrack)
         if(!(tileM4.isValid())||!(isInFOI(track,tileM4))) return 0;
       }else if(tile.station()==2){
         tileM3=tile;
-        // This Checking should be moved to a filter
-        // Checking dP/P
-        float ptrack=ctrack.p(); 
-        float pL0 = l0Momentum(tileM3);
-        float dpop = (ptrack-pL0)/ptrack;
-        if (msgLevel (MSG::DEBUG)) debug() << " pTt = " << ptrack << "  pL0 = " << pL0 << " dpop = " << dpop << endreq;
-        if(dpop<-2){
-          int region = tileM3.region();
-          if((region==0) && (ptrack < 60000)) return 0; 
-          if((region==1) && (ptrack < 30000)) return 0; 
-          if((region==2) && (ptrack < 15000)) return 0; 
-          if((region==3) && (ptrack <  7500)) return 0; 
-
-        }
-
-
-
-
         // M3 hit out of FOI or invalid
         if(!(tileM3.isValid())||!(isInFOI(track,tileM3))) return 0;
       }else if(tile.station()==1){
@@ -144,7 +126,7 @@ double  HltIsMuonTool::function(const Track& ctrack)
     for ( iCoord = coords->end() -1 ; iCoord >= coords->begin() ; iCoord-- ){
       int region = (*iCoord)->key().region();
       int station = (*iCoord)->key().station();
-      if (msgLevel (MSG::DEBUG)) debug()<<station<<" "<<region<<endreq;
+      if (msgLevel (MSG::DEBUG)) debug()<<"Station "<<station<<" - Region "<<region<<endreq;
       //if(region!=0 && (*iCoord)->uncrossed())continue;
       if(station==4){
         if(inFOIM5) continue;
@@ -221,18 +203,3 @@ bool  HltIsMuonTool::isInFOI(Track* track, MuonTileID tileMX){
   
   return result;
 }
-//===================================
-float  HltIsMuonTool::l0Momentum(MuonTileID tileMX){
-  float pL0;
-  m_inputL0Muon=get<L0MuonCandidates>(L0MuonCandidateLocation::Default);
-  std::vector<L0MuonCandidate*>::const_iterator itL0;
-  for (itL0=m_inputL0Muon->begin();itL0!=m_inputL0Muon->end();itL0++){
-     std::vector<MuonTileID> list_of_tile= (*itL0)->muonTileIDs(2);
-     MuonTileID l0tileM3=*(list_of_tile.begin());
-     if(l0tileM3==tileMX){
-        return pL0 = fabs((*itL0)->pt())/sin((*itL0)->theta());
-     }
-  }
-  return 0;
-} 
-

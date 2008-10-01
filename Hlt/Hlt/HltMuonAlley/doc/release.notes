@@ -5,6 +5,11 @@
 !-----------------------------------------------------------------------------
 
 !========================== HltMuonAlley v2r5 2008-08-06 ===================
+! 2008-10-01 - Leandro de Paula 
+ - HltIsMuonTool split into HltDeltaPTool and HltIsMuonTool
+ - HltDeltaPTool.h, cpp: implements dp/p cut
+ - HltIsMuonTool.h, cpp: implements IsMuon cut
+!========================== HltMuonAlley v2r5 2008-08-06 ===================
 ! 2008-07-21 - Johannes Albrecht
  - HltMatchTVeloTracks.h, cpp adapt interface for ITrackMomentumEstimate tool
 

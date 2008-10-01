@@ -1,6 +1,6 @@
-// $Id: HltIsMuonTool.h,v 1.7 2008-10-01 09:32:53 leandrop Exp $
-#ifndef HLTISMUONTOOL_H 
-#define HLTISMUONTOOL_H 1
+// $Id: HltDeltaPTool.h,v 1.1 2008-10-01 09:32:53 leandrop Exp $
+#ifndef HLTDELTAPTOOL_H 
+#define HLTDELTAPTOOL_H 1
 
 // Include files
 // from Gaudi
@@ -11,43 +11,40 @@
 #include "TrackInterfaces/IFunctionTool.h"            // Interface
 #include "Event/L0MuonCandidate.h"
 
-/** @class HltIsMuonTool HltIsMuonTool.h
+/** @class HltDeltaPTool HltDeltaPTool.h
  *  
  *
  *  @author Leandro de Paula
- *  @date   2008-01-25
+ *  @date   2008-09-25
  */
-class HltIsMuonTool : public GaudiTool, 
+class HltDeltaPTool : public GaudiTool, 
                       virtual public ITrackFunctionTool {
 public: 
   /// Standard constructor
-  HltIsMuonTool( const std::string& type, 
+  HltDeltaPTool( const std::string& type, 
                  const std::string& name,
                  const IInterface* parent);
 
-  virtual ~HltIsMuonTool( ); ///< Destructor
+  virtual ~HltDeltaPTool( ); ///< Destructor
 
   StatusCode initialize();
   
   double function(const LHCb::Track& track);
 
 private:
-  bool isInFOI(LHCb::Track* track, LHCb::MuonTileID tile);
+  float  l0Momentum(LHCb::MuonTileID tileMX);
+  float  mSMomentum(LHCb::MuonTileID tileMX);
 
   IMuonPosTool*      m_iPosTool;
   IMuonRawBuffer*    m_muonBuffer;
 
 private:
 
-// FOI parameters
-  std::vector<double> m_p1x;
-  std::vector<double> m_p2x;
-  std::vector<double> m_p3x;
-  std::vector<double> m_p1y;
-  std::vector<double> m_p2y;
-  std::vector<double> m_p3y;
-  LHCb::L0MuonCandidates* m_inputL0Muon;
-  bool m_useFastDecoding; 
+// DeltaP parameters
+  std::vector<double> m_pCut;
+
+  LHCb::L0MuonCandidates*     m_inputL0Muon;
+  LHCb::Tracks*               m_inputMuSeg;
 
 };
-#endif // HLTISMUONTOOL_H
+#endif // HLTDELTAPTOOL_H
