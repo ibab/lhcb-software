@@ -1,10 +1,10 @@
 package L0MuonMonitor
-version v1r1p1
+version v1r2
 
 
 # =========== structure =======================================================
 
-branches src cmt doc options L0MuonMonitor
+branches src cmt doc
 
 # =========== dependencies ====================================================
 
