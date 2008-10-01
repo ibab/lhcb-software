@@ -4,7 +4,7 @@
  *  Collection of math related functions for general use in LHCb
  *
  *  CVS Log :-
- *  $Id: LHCbMath.h,v 1.5 2008-09-17 13:45:53 ibelyaev Exp $
+ *  $Id: LHCbMath.h,v 1.6 2008-10-01 09:46:01 ibelyaev Exp $
  *
  *  @author Juan PALACIOS
  *  @date   2005-11-21
@@ -227,9 +227,7 @@ namespace LHCb
     ( const double val          , 
       const int    ref          , 
       const double eps1 = 1.e-6 , 
-      const double eps2 = 1.e-3 /
-      ( boost::integer_traits<int>::const_max - 
-        boost::integer_traits<int>::const_min ) )
+      const double eps2 = 0.5e-3 / boost::integer_traits<int>::const_max )
     {
       BOOST_STATIC_ASSERT(boost::integer_traits<int>::is_specialized ) ;
       // 1) try the straightforward comparison 
@@ -256,9 +254,7 @@ namespace LHCb
     ( const int    ref          , 
       const double val          , 
       const double eps1 = 1.e-6 , 
-      const double eps2 = 1.e-3 /
-      ( boost::integer_traits<int>::const_max - 
-        boost::integer_traits<int>::const_min ) )
+      const double eps2 = 0.5.e-3 / boost::integer_traits<int>::const_max ) 
     { 
       BOOST_STATIC_ASSERT(boost::integer_traits<int>::is_specialized ) ;
       return equal_to_int ( val , ref , eps1 , eps2 ) ; 
@@ -276,8 +272,7 @@ namespace LHCb
     ( const double       val         , 
       const unsigned int ref         , 
       const double eps1 = 1.e-6      , 
-      const double eps2 = 1.e-3 /
-      ( boost::integer_traits<unsigned int>::const_max ) )
+      const double eps2 = 1.e-3 / boost::integer_traits<unsigned int>::const_max )
     {
       BOOST_STATIC_ASSERT(boost::integer_traits<unsigned int>::is_specialized ) ;
       // 1) straightforward comparison 
@@ -303,8 +298,7 @@ namespace LHCb
     ( const unsigned int ref          , 
       const double       val          ,
       const double       eps1 = 1.e-6 , 
-      const double       eps2 = 1.e-3 /
-      ( boost::integer_traits<unsigned int>::const_max ) )
+      const double       eps2 = 1.e-3 / boost::integer_traits<unsigned int>::const_max )
     { return equal_to_uint ( val , ref , eps1 , eps2 ) ; }
     // ========================================================================
   } // end of namespace LHcb::Math 
