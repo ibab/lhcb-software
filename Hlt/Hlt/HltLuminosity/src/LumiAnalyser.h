@@ -1,0 +1,99 @@
+// $Id: LumiAnalyser.h,v 1.1 2008-10-01 15:04:12 panmanj Exp $
+#ifndef LUMIANALYSER_H 
+#define LUMIANALYSER_H 1
+
+// Include files
+#include "GaudiKernel/IHistogramSvc.h"
+#include "Event/HltSummary.h"
+#include "Event/RecVertex.h"
+#include "HltBase/HltTypes.h"
+#include "HltBase/HltBaseAlg.h"
+#include "Event/HltLumiSummary.h"
+#include "HltBase/ANNSvc.h"
+
+/** @class LumiAnalyser 
+ *  
+ *
+ *  functionality: Collect Counters in the HltLumiSummary and calculate "R"
+ *
+ *  options:
+ *
+ *  @author Jaap Panman
+ *  @date   2008-08-15
+ */
+class LumiAnalyser : public HltBaseAlg {
+public:
+
+  // Standard constructor
+  LumiAnalyser( const std::string& name, ISvcLocator* pSvcLocator );
+
+  // Standard destructor
+  virtual ~LumiAnalyser( ); 
+
+  // initialize algorithm
+  virtual StatusCode initialize();
+
+  // finalize algorithm
+  virtual StatusCode finalize  ();
+
+protected:
+  // initialize the counters
+  virtual void initCounters();
+
+  // analyse histos
+  virtual StatusCode accumulate  ();
+  virtual StatusCode analyse  ();
+  virtual void storeTrend  (std::string varname, double lumiValue) ;
+  
+  // set up store
+  virtual void setupStore  ();
+
+  // to set interval
+  ulonglong LumiAnalyser::gpsTime  ();
+  bool LumiAnalyser::gpsTimeInterval  ();
+
+  // force decision to the value of decision
+  void setDecision(bool decision);
+    
+private:  
+  // driver of the execute()
+  StatusCode execute();
+
+private:
+  // period to update filling of histogram
+  int m_histogramUpdatePeriod;
+
+protected:
+  IHistogramSvc* m_histogramSvc;
+
+  // counter with all the entries of the algorithm
+  Hlt::Counter m_counterEntries;
+
+  // counter with all the events with fine inputs
+  IANNSvc* m_annSvc;
+  Hlt::Counter m_counterHistoInputs;
+  std::string m_DataName;                      // input location of summary data
+  LHCb::HltLumiSummary* m_HltLumiSummary;      // summary data
+
+  std::vector< std::string > m_Variables;        // list of variables to look at
+  std::vector< std::string > m_Averages;         // list of averages to look at
+  std::vector<int> m_Thresholds;                 // thresholds to apply
+  int m_Threshold;                               // default threshold
+  std::vector< std::string > m_BXTypes;          // list of bunch crossing types to look at
+  std::vector< std::string > m_addBXTypes;       // list of bunch crossing types to be added
+  std::vector< std::string > m_subtractBXTypes;  // list of bunch crossing types to be subtracted
+
+  typedef std::pair< long, long > iiPair;
+  typedef std::map< std::string, iiPair* > iiMap;    // simple map of pairs
+  typedef std::map< std::string, iiMap* > iiStore;   // map of maps
+  iiStore m_theStore;                                // main store
+  iiStore m_prevStore;                               // previous values store
+  iiMap m_resultMap;                                 // to keep results per variable
+
+  typedef std::map< std::string, AIDA::IHistogram1D* > histoMap;  // simple map of histos
+  histoMap m_trendMap;                                            // trends
+  long m_trendSize;                                               // size of trend histos
+  long m_trendInterval;                                           // interval for trending
+  unsigned long m_gpsPrevious;                                    // to keep previous time when analysed
+};
+#endif // LUMIANALYSER_H
