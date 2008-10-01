@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactories.cpp,v 1.13 2008-08-27 11:43:07 graven Exp $
+// $Id: HltFunctionFactories.cpp,v 1.14 2008-10-01 09:49:00 leandrop Exp $
 // Include files 
 
 // from Gaudi
@@ -61,6 +61,7 @@ StatusCode HltTrackFunctionFactory::initialize() {
 
   declare<ITrackFunctionTool>("MuonIDDistance","HltMuonIDDistanceTool");
 
+  declare<ITrackFunctionTool>("DeltaP","HltDeltaPTool");
   declare<ITrackFunctionTool>("IsMuon","HltIsMuonTool");
   declare<ITrackFunctionTool>("IsPhoton","HltIsPhotonTool");
 
