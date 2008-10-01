@@ -1,3 +1,7 @@
+2008-10-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/LbLogin.py: fixed system guessing for the core CMT environment
+
 2008-10-01  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* scripts/SetupProject.py: removed explicit version of sys package from

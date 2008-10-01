@@ -227,6 +227,11 @@ class LbLoginScript(Script):
             may_use_afs = True
             if uname == "Darwin" :
                 may_use_afs = False
+            if uname == "Linux" or uname == "LynxOS" :
+                uname2 = os.popen("uname -m").read()[:-1].strip()
+                system = "%s-%s" % (uname, uname2)
+            elif uname == "Darwin" or uname.startswith("CYGWIN") :
+                system = uname
             if may_use_afs :
                 f = os.popen("fs sysname")
                 a = f.read()
@@ -237,12 +242,6 @@ class LbLoginScript(Script):
                    a = a.replace("Currentsysnameis","")
                    a = a.replace("Currentsysnamelistis","")
                    system = a.split()[0]
-            else :
-                if uname == "Linux" or uname == "LynxOS" :
-                    uname2 = os.popen("uname -m").read()[:-1].strip()
-                    system = "%s-%s" % (uname, uname2)
-                elif uname == "Darwin" or uname.startswith("CYGWIN") :
-                    system = uname
         else :
             if ev.has_key("CMTCONFIG") :
                 system = ev["CMTCONFIG"]
