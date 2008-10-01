@@ -1,4 +1,4 @@
-// $Id: PatVeloTrackTool.h,v 1.3 2008-03-03 11:21:59 krinnert Exp $
+// $Id: PatVeloTrackTool.h,v 1.4 2008-10-01 14:33:58 dhcroft Exp $
 #ifndef TF_PATVELOTRACKTOOL_H 
 #define TF_PATVELOTRACKTOOL_H 1
 
@@ -60,7 +60,8 @@ namespace Tf {
     /// Convert a pat track into a normal track
     StatusCode makeTrackFromPatVeloSpace(PatVeloSpaceTrack * patTrack,
 					 LHCb::Track *newTrack,
-					 double forwardStepError) const;
+					 double forwardStepError,
+					 double beamState = true ) const;
     
     /// compare the phi of a sector with the RZ track to see if compatible
     bool phiRange( double radius, int RZone, double tol,

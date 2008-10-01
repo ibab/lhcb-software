@@ -1,4 +1,4 @@
-// $Id: PatVeloTrackTool.cpp,v 1.7 2008-03-03 11:21:59 krinnert Exp $
+// $Id: PatVeloTrackTool.cpp,v 1.8 2008-10-01 14:33:58 dhcroft Exp $
 // Include files 
 
 // from Gaudi
@@ -190,9 +190,11 @@ namespace Tf {
       return newTrack;
     }
 
-  StatusCode PatVeloTrackTool::makeTrackFromPatVeloSpace(PatVeloSpaceTrack * patTrack,
-      LHCb::Track *newTrack, 
-      double forwardStepError) const{
+  StatusCode 
+  PatVeloTrackTool::makeTrackFromPatVeloSpace(PatVeloSpaceTrack * patTrack,
+					      LHCb::Track *newTrack, 
+					      double forwardStepError, 
+					      double beamState) const{
 
     if ( !patTrack->valid() ) return StatusCode::FAILURE;
     LHCb::Track::History history = newTrack->history();
@@ -233,7 +235,12 @@ namespace Tf {
         patTrack->slopeY(),
         0.); // q/p unknown from the VELO
 
-    newTrack->firstState().setLocation( LHCb::State::ClosestToBeam );
+
+    if(beamState){
+      newTrack->firstState().setLocation( LHCb::State::ClosestToBeam );
+    }else{
+      newTrack->firstState().setLocation( LHCb::State::FirstMeasurement );
+    }
     newTrack->firstState().setCovariance( patTrack->covariance() );
     newTrack->setChi2PerDoF( patTrack->chi2Dof( ) );
     newTrack->setNDoF( patTrack->rCoords()->size() + 

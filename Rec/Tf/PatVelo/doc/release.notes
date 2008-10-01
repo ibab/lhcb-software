@@ -4,6 +4,10 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2008-10-01 - David Hutchcroft
+ - Updated PatVeloFitLHCbIDs to allow a first measurement state and a variable
+   multiple scattering term based on the input track's momentum
+
 ! 2008-09-08 - Marco Gersabeck
  - Added PatVeloAlignTrackFilter.cpp/h 
    This algorithm is a fast filter for tracks parallel to the beam axis and

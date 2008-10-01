@@ -1,4 +1,4 @@
-// $Id: PatVeloFitLHCbIDs.h,v 1.2 2008-04-04 06:36:13 mneedham Exp $
+// $Id: PatVeloFitLHCbIDs.h,v 1.3 2008-10-01 14:33:58 dhcroft Exp $
 #ifndef TF_PATVELOFITLHCBIDS_H 
 #define TF_PATVELOFITLHCBIDS_H 1
 
@@ -59,10 +59,16 @@ namespace Tf {
     /// Pat Velo Track Tool
     PatVeloTrackTool * m_PatVeloTrackTool;
 
-    // standard MS fitting parameter at vertex
+    /// standard MS fitting parameter at vertex
     double m_stepError;
-    // standard MS fitting parameter at end of VELO
+    /// standard MS fitting parameter at end of VELO
     double m_forwardStepError;
+    
+    /// make a state at the beam position, if false at first measurement 
+    bool m_beamState;
+
+    /// use the momentum dependant formula for MS correction
+    bool m_variableMS;
 
   };
 }

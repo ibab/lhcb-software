@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTrack.h,v 1.4 2008-02-08 06:49:49 cattanem Exp $
+// $Id: PatVeloSpaceTrack.h,v 1.5 2008-10-01 14:33:58 dhcroft Exp $
 #ifndef TF_PATVELOSPACETRACK_H
 #define TF_PATVELOSPACETRACK_H 1
 
@@ -50,7 +50,8 @@ namespace Tf {
       void setPhiInterpolated( PatVeloRHit* myCoord );
 
       /// fit the track, computes point, direction and covariance matrix.
-      void fitSpaceTrack ( double stepError, bool inwardFit = true );
+      void fitSpaceTrack ( double stepError, bool inwardFit = true, 
+			   bool beamState = true );
 
       /// set the tracks ancestor (RZ track normally)
       void setAncestor( const LHCb::Track* tr )      { m_ancestor = tr; }

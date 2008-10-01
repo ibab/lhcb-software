@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTrack.cpp,v 1.3 2007-10-16 08:56:39 dhcroft Exp $
+// $Id: PatVeloSpaceTrack.cpp,v 1.4 2008-10-01 14:33:58 dhcroft Exp $
 // Include files 
 
 // local
@@ -99,7 +99,7 @@ namespace Tf {
   // Fit the track, computes point, direction and covariance matrix.
   //========================================================================
   void PatVeloSpaceTrack::fitSpaceTrack ( double stepError, 
-      bool inwardFit ) {
+					  bool inwardFit, bool beamState ) {
     // Note: defaults to inwardFit = true
 
     // if fitting toward z = 0 (inward fit) and forward track
@@ -200,9 +200,20 @@ namespace Tf {
     double zUse; // z to evaluate track at
 
     if( inwardFit ) {
-      // want point of closest approach to z axis
-      zUse = - ( u.x0 * u.dxdz + v.x0 * v.dxdz ) / 
-        (u.dxdz * u.dxdz + v.dxdz * v.dxdz );
+      if( beamState ){
+	// want point of closest approach to z axis
+	zUse = - ( u.x0 * u.dxdz + v.x0 * v.dxdz ) / 
+	  (u.dxdz * u.dxdz + v.dxdz * v.dxdz );
+      }else{
+	if( !m_backward ){
+	  // want the first measured point
+	  zUse = GSL_MIN_DBL((*m_rCoord.rbegin())->z(),
+			     (*m_phiCoord.rbegin())->z());
+	}else{
+	  zUse = GSL_MAX_DBL((*m_rCoord.rbegin())->z(),
+			     (*m_phiCoord.rbegin())->z());
+	}
+      }
     }else{
       if( !m_backward ){
         // want last measurement point

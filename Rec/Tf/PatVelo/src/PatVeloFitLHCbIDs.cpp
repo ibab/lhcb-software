@@ -1,4 +1,4 @@
-// $Id: PatVeloFitLHCbIDs.cpp,v 1.2 2008-04-04 06:36:13 mneedham Exp $
+// $Id: PatVeloFitLHCbIDs.cpp,v 1.3 2008-10-01 14:33:58 dhcroft Exp $
 // Include files
 
 // from Gaudi
@@ -36,13 +36,15 @@ Tf::PatVeloFitLHCbIDs::PatVeloFitLHCbIDs( const std::string& type,
   : GaudiTool ( type, name , parent )
 {
   declareInterface<ITrackFitter>(this);
+  declareProperty( "beamState",             m_beamState = false   );
+  declareProperty( "stepError"       , m_stepError        = 0.002     );
+  declareProperty( "variableMS"      , m_variableMS       = false     );
+  declareProperty( "forwardStepError", m_forwardStepError = 0.00035   );
 }
 //=============================================================================
 // Destructor
 //=============================================================================
 Tf::PatVeloFitLHCbIDs::~PatVeloFitLHCbIDs() {
-  declareProperty( "stepError"       , m_stepError        = 0.002     );
-  declareProperty( "forwardStepError", m_forwardStepError = 0.00035   );
 }
 
 StatusCode Tf::PatVeloFitLHCbIDs::initialize(){
@@ -53,19 +55,22 @@ StatusCode Tf::PatVeloFitLHCbIDs::initialize(){
   m_phiHitManager = tool<PatVeloPhiHitManager>( "Tf::PatVeloPhiHitManager" );
   m_PatVeloTrackTool = 
     tool<PatVeloTrackTool>("Tf::PatVeloTrackTool","PatVeloTrackTool"); 
-  m_stepError        = 0.002;
-  m_forwardStepError = 0.00035; 
+  m_stepError        = m_stepError;
+  m_forwardStepError = m_forwardStepError; 
   return StatusCode::SUCCESS;
 }
 
 StatusCode Tf::PatVeloFitLHCbIDs::fit( LHCb::Track & track, LHCb::ParticleID){
+
+  // place to store the LHCbIDs ignored in the PatSpaceTrack fit
+  std::vector<LHCb::LHCbID> nonVELOIDs;
+   
   PatVeloSpaceTrack * patVeloTrack = new  PatVeloSpaceTrack();
-   std::vector<LHCb::LHCbID>::const_iterator iID;
+  std::vector<LHCb::LHCbID>::const_iterator iID;
   for( iID = track.lhcbIDs().begin() ; iID != track.lhcbIDs().end() ; ++iID){
     if( ! iID->isVelo() ) {
-      Warning("Only VeloIDs work for PatVeloFitLHCbIDs");
-      delete(patVeloTrack);
-      return StatusCode::FAILURE;
+      nonVELOIDs.push_back(*iID);
+      continue;
     }
     if( iID->isVeloPhi() ){
       int sensor = iID->veloID().sensor();
@@ -96,16 +101,74 @@ StatusCode Tf::PatVeloFitLHCbIDs::fit( LHCb::Track & track, LHCb::ParticleID){
       patVeloTrack->addRCoord(rHit);
     }
   }
+
+  // collect all states past the end of the VELO plus q/p if present
+  // to copy back into track
+  double veloQoverP = 0.;
+  double veloQoverPerr2 = 0.;
+
+  LHCb::Track::StateContainer savedStates;
+
+  const std::vector< LHCb::State * > states = track.states();
+  std::vector< LHCb::State * >::const_iterator iState;
+  for( iState = states.begin() ; iState != states.end() ; ++iState ){
+    LHCb::State::Location location = (*iState)->location();
+    if( ( location == LHCb::State::ClosestToBeam || 
+	  location == LHCb::State::FirstMeasurement ||
+	  location == LHCb::State::EndVelo ) && veloQoverP == 0.){
+      veloQoverP = (*iState)->qOverP();
+      veloQoverPerr2 = (*iState)->errQOverP2();
+    }else{
+      // clone state to add back to track
+      savedStates.push_back((*iState)->clone());
+    }
+  }
+
+
   patVeloTrack->fitRZ();
   // set R on phi hits
   m_PatVeloTrackTool->setPhiCoords(patVeloTrack);
   // fit the track trajectory
-  patVeloTrack->fitSpaceTrack( m_stepError );
+  double msCorr = m_stepError;
+  // use a rough functional form but only if the momentum has been estimated
+  if(m_variableMS && veloQoverP!=0.){
+    if( fabs(veloQoverP) > 2.e-4 ) {
+      msCorr = 0.03; // fixed below 5 GeV/c
+    }else{
+      msCorr = 0.00025 + 0.04*exp(-7.e-5/fabs(veloQoverP));
+    }
+  }
 
-  track.reset();
+  patVeloTrack->fitSpaceTrack( msCorr, true, m_beamState );
+
+  
   StatusCode sc =
     m_PatVeloTrackTool->makeTrackFromPatVeloSpace(patVeloTrack,&track,
-						  m_forwardStepError);
+						  m_forwardStepError,
+						  m_beamState);
   delete(patVeloTrack);
+
+  // add back the non-velo LHCbIDs
+  for( iID = nonVELOIDs.begin() ; iID != nonVELOIDs.end() ; ++iID){
+    track.addToLhcbIDs(*iID);
+  }
+
+  // now copy back q/p and error from remade track states
+  const std::vector< LHCb::State * > newStates = track.states();
+  for( iState = newStates.begin() ; iState != newStates.end() ; ++iState ){
+    LHCb::State::Location location = (*iState)->location();
+    if( location == LHCb::State::ClosestToBeam || 
+	location == LHCb::State::FirstMeasurement ||
+	location == LHCb::State::EndVelo ) {
+      (*iState)->setQOverP(veloQoverP);
+      (*iState)->setErrQOverP2(veloQoverPerr2);
+    }
+  }
+  // copy the other track states back into the new track
+  if(!savedStates.empty()){
+    track.addToStates(savedStates);
+  }
+  
+
   return sc;
 }
