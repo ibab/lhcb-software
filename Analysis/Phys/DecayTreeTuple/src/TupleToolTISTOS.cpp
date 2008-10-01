@@ -79,7 +79,7 @@ StatusCode TupleToolTISTOS::fill( const LHCb::Particle*
     const L0DUReport* pL0DUReport = get<L0DUReport>( L0DUReportLocation::Default );
     verbose() << " L0 decision= " << pL0DUReport->decision() << endmsg;
 
-    std::vector<std::string> l0NamesInHlt = m_TriggerTisTosTool->triggerSelectionNames("L0*", 
+    std::vector<std::string> l0NamesInHlt = m_TriggerTisTosTool->triggerSelectionNames("L0*Decision", 
                                                                                      ITriggerTisTos::kAllTriggerSelections);
     verbose() << " Names of L0 triggers in Hlt="; dumpvs( l0NamesInHlt );  verbose() << endmsg;
 
@@ -94,13 +94,10 @@ StatusCode TupleToolTISTOS::fill( const LHCb::Particle*
     verbose() << " Hlt Alleys decision= " << hltAlleysDecision;
     verbose() << " from OR between "; dumpvs( m_TriggerTisTosTool->triggerSelectionNames() ); verbose() << endmsg;
 
-    //  Hlt Selections (B and D)
+    //  Hlt2 Selections 
     bool hltSelDecision;
-    std::vector< std::string > hltSel;
-    hltSel.push_back("HltSelD*");
-    hltSel.push_back("HltSelB*");
     //done m_TriggerTisTosTool->setOfflineInput();   
-    m_TriggerTisTosTool->triggerTisTos(hltSel,hltSelDecision,dummyTis,dummyTos, ITriggerTisTos::kAllTriggerSelections);
+    m_TriggerTisTosTool->triggerTisTos("Hlt2*Decision",hltSelDecision,dummyTis,dummyTos, ITriggerTisTos::kAllTriggerSelections);
     verbose() << " HltSelections (B and D) decision= " << hltSelDecision;
     verbose() << " from OR between "; dumpvs( m_TriggerTisTosTool->triggerSelectionNames() ); verbose() << endmsg;
 
@@ -114,7 +111,7 @@ StatusCode TupleToolTISTOS::fill( const LHCb::Particle*
     //     see which Hlt Selections were on
     //done m_TriggerTisTosTool->setOfflineInput();   
     std::vector<std::string> selPass = m_TriggerTisTosTool->triggerSelectionNames(
-    hltSel,ITriggerTisTos::kAllTriggerSelections,
+    "Hlt2*Decision",ITriggerTisTos::kAllTriggerSelections,
     ITriggerTisTos::kTrueRequired, ITriggerTisTos::kAnything, ITriggerTisTos::kAnything);
     verbose() << " Hlt Selections that succedded="; dumpvs( selPass );  verbose() << endmsg;
 
@@ -130,7 +127,7 @@ StatusCode TupleToolTISTOS::fill( const LHCb::Particle*
 
     // L0 Info ---------------------------------------------------------------------------
     bool decisionL0,tisL0,tosL0;
-    m_TriggerTisTosTool->triggerTisTos(*P,"L0*",decisionL0,tisL0,tosL0, ITriggerTisTos::kAllTriggerSelections);
+    m_TriggerTisTosTool->triggerTisTos(*P,"L0*Decision",decisionL0,tisL0,tosL0, ITriggerTisTos::kAllTriggerSelections);
     if( !decisionL0 ) {
       test &= tuple->column( head+"_L0TIS", -1 );
       test &= tuple->column( head+"_L0TOS", -1 );
@@ -260,7 +257,7 @@ StatusCode TupleToolTISTOS::fill( const LHCb::Particle*
 
     // Hlt SelB Info --------------------------------------------------------------------
     bool decisionSelB,tisSelB,tosSelB;
-    m_TriggerTisTosTool->triggerTisTos("HltSelB*",decisionSelB,tisSelB,tosSelB, ITriggerTisTos::kAllTriggerSelections);
+    m_TriggerTisTosTool->triggerTisTos("Hlt2*Decision",decisionSelB,tisSelB,tosSelB, ITriggerTisTos::kAllTriggerSelections);
     if( !decisionSelB ) {
       test &= tuple->column( head+"_HLTSELTIS", -1 );
       test &= tuple->column( head+"_HLTSELTOS", -1 );
@@ -270,7 +267,7 @@ StatusCode TupleToolTISTOS::fill( const LHCb::Particle*
     } else {
     
       if( tisSelB ){
-        verbose() << "          Hlt SelB TIS selections= ";
+        verbose() << "          Hlt2 Sel TIS selections= ";
         dumpvs( m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kAnything, 
                                                      ITriggerTisTos::kTrueRequired,
                                                      ITriggerTisTos::kAnything ) );
@@ -296,7 +293,7 @@ StatusCode TupleToolTISTOS::fill( const LHCb::Particle*
         test &= tuple->column( head+"_HLTSELTIS", 0 );
       }
       if( tosSelB ){
-        verbose() << "          Hlt SelB TOS selections= ";
+        verbose() << "          Hlt2 Sel TOS selections= ";
         dumpvs( m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kAnything, 
                                                      ITriggerTisTos::kAnything,
                                                      ITriggerTisTos::kTrueRequired ) );
