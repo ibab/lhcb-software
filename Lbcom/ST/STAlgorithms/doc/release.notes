@@ -2,8 +2,9 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+!======================= STAlgorithms v3r1 2008-10-01 ========================
 ! 2008-09-20 M Needham
-- Add algorithm to merge spills
+ - Add algorithm to merge spills
 
 !======================= STAlgorithms v3r0 2008-02-15 ========================
 ! 2008-02-15 - Marco Cattaneo
