@@ -4,6 +4,10 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2008-10-01 - Christopher Rob JONES
+ - Remove incorrect attempt to use conditions in
+	 Rich::Rec::TabulatedGasQuartzWindowAbs
+
 ! 2008-09-19 - Chris Jones
  - Turn off histogram printing by default in RichPIDPlots.cpp
 

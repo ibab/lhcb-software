@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::TabulatedGasQuartzWindowAbs
  *
  *  CVS Log :-
- *  $Id: RichTabulatedGasQuartzWindowAbs.h,v 1.12 2008-08-19 12:54:46 jonrob Exp $
+ *  $Id: RichTabulatedGasQuartzWindowAbs.h,v 1.13 2008-10-01 14:07:52 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -73,11 +73,6 @@ namespace Rich
       // Rayleigh scattering probability for given pathlength (segment) and photon energy
       double photonTransProb( const LHCb::RichRecSegment * segment,
                               const double energy ) const;
-
-    private: // methods
-
-      /// Update the cached parameters
-      StatusCode umsUpdate(); 
 
     private: // Private data
 
