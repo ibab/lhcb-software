@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.64 2008-10-01 11:37:47 jpalac Exp $
+# $Id: requirements,v 1.65 2008-10-01 11:43:21 jpalac Exp $
 package AnalysisSys
 version v2r2
 
@@ -25,7 +25,7 @@ use  DecayTreeTuple             v1r6     Phys   # Jeremie Borel
 ####################################################################
 use  PhysSelSys          	v10r11  PhysSel
 #===================================================================
-use Ccbar	                v1r8    PhysSel # Jan Amoraal, Miriam Calvo
+use Ccbar	                v1r8p1  PhysSel # Jan Amoraal, Miriam Calvo
 use B2Dilepton			v1r7p1	PhysSel # Rare Decays Working Group
 use B2D0X			v1r14p1	PhysSel # WGs
 use B2DplusX			v1r2p1	PhysSel # WGs
