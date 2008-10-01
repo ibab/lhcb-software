@@ -149,7 +149,8 @@ Hlt1MuonSingleTUTConf.InputSelection = "Hlt1MuonSingleTFL0";
 Hlt1MuonSingleTUTConf.RecoName = "TConf";
  
 Hlt1MuonSingleTFTConf.InputSelection = "Hlt1MuonSingleTUTConf";
-Hlt1MuonSingleTFTConf.FilterDescriptor = {"IsMuon,>,0."};
+Hlt1MuonSingleTFTConf.FilterDescriptor = {"DeltaP,>,0.",
+                                          "IsMuon,>,0."};
 
 Hlt1MuonSingleTFRZVelo.InputSelection = "RZVelo";
 Hlt1MuonSingleTFRZVelo.FilterDescriptor = {"RZVeloTMatch_Hlt1MuonSingleTFTConf,||<,80."};
@@ -205,7 +206,8 @@ Hlt1MuonDiMuonTUTConf.InputSelection = "Hlt1MuonDiMuonV2TL0";
 Hlt1MuonDiMuonTUTConf.RecoName = "TConf";
 
 Hlt1MuonDiMuonTFTConf.InputSelection = "Hlt1MuonDiMuonTUTConf";
-Hlt1MuonDiMuonTFTConf.FilterDescriptor = {"IsMuon,>,0."};
+Hlt1MuonDiMuonTFTConf.FilterDescriptor = {"DeltaP,>,0.",
+                                          "IsMuon,>,0."};
 
 Hlt1MuonDiMuonTFRZVelo.InputSelection = "RZVelo";
 Hlt1MuonDiMuonTFRZVelo.FilterDescriptor = {"RZVeloTMatch_Hlt1MuonDiMuonTFTConf,||<,80."};
@@ -317,7 +319,8 @@ Hlt1MuonDiMuonMuonSegTUTConf.InputSelection = "Hlt1PrepareMuonSeg";
 Hlt1MuonDiMuonMuonSegTUTConf.RecoName = "TConf";
 
 Hlt1MuonDiMuonMuonSegTFTConf.InputSelection = "Hlt1MuonDiMuonMuonSegTUTConf";
-Hlt1MuonDiMuonMuonSegTFTConf.FilterDescriptor = {"IsMuon,>,0."};
+Hlt1MuonDiMuonMuonSegTFTConf.FilterDescriptor = {"DeltaP,>,0.",
+                                                 "IsMuon,>,0."};
 
 Hlt1MuonDiMuonMuonSegTFRZVelo.InputSelection = "RZVelo";
 Hlt1MuonDiMuonMuonSegTFRZVelo.FilterDescriptor = {"RZVeloTMatch_Hlt1MuonDiMuonMuonSegTFTConf,||<,80."};
