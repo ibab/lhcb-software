@@ -1,8 +1,9 @@
-!  $Id: release.notes,v 1.68 2008-09-21 21:42:22 jucogan Exp $
+!  $Id: release.notes,v 1.69 2008-10-01 15:12:43 cattanem Exp $
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev - Julien Cogan
-!-------------------------------------------------------------------------
+!---------------------------------------------------------------------------
 
+!========================= L0Muon v8r2p1 2008-10-01 ========================
 ! 2008-09-21 - Julien Cogan
  - minor clean up
 
