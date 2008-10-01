@@ -1,4 +1,4 @@
-// $Id: DeOTModule.cpp,v 1.37 2008-09-25 10:04:46 janos Exp $
+// $Id: DeOTModule.cpp,v 1.38 2008-10-01 17:16:18 janos Exp $
 // GaudiKernel
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
@@ -433,8 +433,27 @@ StatusCode DeOTModule::cacheInfo() {
   // propagation velocity along y-direction (includes correction for readout side)
   m_propagationVelocityY = m_propagationVelocity * m_dir.y() ;
 
+  // the t0 will be defined such that 
+  // 
+  //  tdc = drifttime + propagationtime + delta-tof + t0 
+  //
+  // the delta-tof is the tof compared to a straight line to the
+  // midpoint of the straw. does that make sense, actually?
+      
+  // The following just makes sense for MC, of course.
+  m_strawdefaulttof.resize( 2*m_nStraws, 0 ) ;
+  for(unsigned int istraw=1; istraw<=2*m_nStraws; ++istraw) {
+    OTChannelID id(stationID(),layerID(),quarterID(),moduleID(),istraw,0) ;
+    std::auto_ptr<Trajectory> traj = trajectory(id) ;
+    Gaudi::XYZPoint p0 = traj->position(0.5*(traj->beginRange()+traj->endRange())) ;
+    // to get same results as with old OTTimeCreator, use x-z plane only
+    //double defaulttof = p0.r() / Gaudi::Units::c_light;
+    double defaulttof = sqrt(p0.x()*p0.x() + p0.z()*p0.z()) / Gaudi::Units::c_light;
+    m_strawdefaulttof[istraw - 1] = defaulttof ;
+  }
+  
   /// Only call this one if the calibration condition doesn't exist
-  /// Call it after all the trajectory stuff
+  /// Call it after all the trajectory stuff and after we've set some default tofs
   if ( !hasCondition( m_calibrationName ) ) fallbackDefaults();
   
   return StatusCode::SUCCESS;
@@ -584,16 +603,8 @@ void DeOTModule::fallbackDefaults() {
       
   // The following just makes sense for MC, of course.
   m_strawt0.resize( 2*m_nStraws, 0 ) ;
-  m_strawdefaulttof.resize( 2*m_nStraws, 0 ) ;
-  for(unsigned int istraw=1; istraw<=2*m_nStraws; ++istraw) {
-    OTChannelID id(stationID(),layerID(),quarterID(),moduleID(),istraw,0) ;
-    std::auto_ptr<Trajectory> traj = trajectory(id) ;
-    Gaudi::XYZPoint p0 = traj->position(0.5*(traj->beginRange()+traj->endRange())) ;
-    // to get same results as with old OTTimeCreator, use x-z plane only
-    //double defaulttof = p0.r() / Gaudi::Units::c_light;
-    double defaulttof = sqrt(p0.x()*p0.x() + p0.z()*p0.z()) / Gaudi::Units::c_light;
-    m_strawdefaulttof[istraw - 1] = defaulttof ;
-    m_strawt0[istraw - 1]         = defaulttof - thisModuleStartReadOutGate ;
-  }
+  for( unsigned int istraw = 1; istraw <= 2*m_nStraws; ++istraw ) 
+    m_strawt0[istraw - 1] = m_strawdefaulttof[istraw - 1] - thisModuleStartReadOutGate ;
+  
 }
 
