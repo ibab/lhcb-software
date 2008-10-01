@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.51 2008-09-22 00:47:12 odescham Exp $
+! $Id: release.notes,v 1.52 2008-10-01 15:08:01 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
+!========================== CaloTools v5r5 2008-10-01 =========================
 ! 2008-09-11 - Olivier Deschamps
  - Calo2Calo :: add multiplicity method
  - new tool : CaloHypo2Calo : specialized version of Calo2Calo
