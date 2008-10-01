@@ -4,7 +4,7 @@ import os, sys, tempfile, re, sys, time
 from stat import S_ISDIR
 import getopt
 
-_cvs_id = "$Id: SetupProject.py,v 1.29 2008-09-19 12:09:48 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.30 2008-10-01 07:22:15 marcocle Exp $"
 
 ########################################################################
 # Useful constants
@@ -1052,12 +1052,7 @@ class SetupProject:
         if not self.external_only and self.project_info.sys:
             # if we were not asked only for external and the Sys package exists,
             # we use it
-            req.write("use %s" % self.project_info.sys)
-            # this is to handle projects without version
-            if self.project_info.version:
-                req.write(" %s\n" % self.project_info.version)
-            else:
-                req.write(" v*\n")
+            req.write("use %s *\n" % self.project_info.sys)
         
         # add user specified tags
         for t in self.tag_add:

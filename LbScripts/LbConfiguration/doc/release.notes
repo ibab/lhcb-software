@@ -1,3 +1,8 @@
+2008-10-01  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* scripts/SetupProject.py: removed explicit version of sys package from
+	  the temporary requirements file    
+
 2008-09-30  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v1r4
