@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.53 2008-09-23 10:32:32 odescham Exp $
+! $Id: release.notes,v 1.54 2008-10-01 15:05:46 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloAssociators
 ! =============================================================================
@@ -6,10 +6,14 @@
 !               Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+!===================== CaloAssociators v6r6 2008-10-01 ========================
+! 2008-10-01 - Marco Cattaneo
+ - Fix a doxygen warning
 
 ! 2008-09-23 - Yasmine Amhis & Olivier Deschamps
  - add HLT CaloCluster MC association in CaloAssociators.opts
- - CaloClusterMCTruth.cpp : - make use of context() for HLT - protect against missing clusters
+ - CaloClusterMCTruth.cpp : - make use of context() for HLT 
+                            - protect against missing clusters
                             - correct typo in property "Clustes"->"Clusters"
  - remove obsolete stuff (CaloTrgClusterMCTruch & CaloClustersMCTruthAlg)
 

@@ -1,6 +1,6 @@
-// $Id: CaloDigitMCTruth.cpp,v 1.10 2007-08-27 14:05:25 odescham Exp $
+// $Id: CaloDigitMCTruth.cpp,v 1.11 2008-10-01 15:05:46 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.10 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.11 $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -41,7 +41,7 @@
 //
 // ============================================================================
 
-/** @class CaloDigitMCTruth CaloDigitMCTruth.h
+/** @class CaloDigitMCTruth CaloDigitMCTruth.cpp
  *
  *  Simple algorithm to build Linkers for CaloDigit -> MCParticle relations 
  *
