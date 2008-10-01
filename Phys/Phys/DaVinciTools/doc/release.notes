@@ -1,8 +1,43 @@
-! $Id: release.notes,v 1.359 2008-10-01 07:37:49 jpalac Exp $
+! $Id: release.notes,v 1.360 2008-10-01 13:23:38 ibelyaev Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-10-01 - Vanya BELYAEV
+
+ - src/FilterDesktop.cpp,  
+   src/CombineParticles.cpp
+
+   few coherent changes
+
+   1) add the new property "Preambulo", which is a the list of 
+   python strings to beinserted into the effective Python/Bender script
+   just before the actual creation of LoKi-functors.
+ 
+   2) the major "structural" properties 
+      ( "DecayDescriptor", "DecayDescriptors", 
+        "Factory", "Preambulo", "DaughtersCuts", 
+        "CombinationCut" and "MotherCuts") for CombineParticles and 
+      ( "Factory", "Preambulo" and "Code" ) for FilterDesktop are equipped
+      with 'update'-property handlers. From now the "post"-initialization
+      change in the algorithm is propagated properly and it takes effect   at 
+      the next "execute". The corresponding warning message is produced.  
+      (Clearly it is needed only for the interactive work in GaudiPython, 
+       for any batch-like application  it is irrelevant) 
+      
+   3) All "histogram"-related properties are also equipped with similar
+      property handlers, thus one can interactively switch on/off the 
+      histogramming, modify/substitute the plot tools, etc ... 
+
+   4) Make more coherent treatment of the names for plot tool, 
+      empty name or any name which after conversion to lowercase is equal to 
+      "none" is interpreted as "no-corresponding-tool-to-be-used".
+
+ - src/FilterDesktop.h
+
+     remove the file 
+
 
 ! 2008-10-01 - Juan PALACIOS
  - src/OnOfflineTool.cpp
