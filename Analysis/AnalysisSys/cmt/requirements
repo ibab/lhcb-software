@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.61 2008-09-10 07:57:48 jpalac Exp $
+# $Id: requirements,v 1.62 2008-10-01 05:47:54 jpalac Exp $
 package AnalysisSys
 version v2r1
 
@@ -46,16 +46,16 @@ use Bd2PiPiPi0       	   	v4r3p3   PhysSel # Olivier Deschamps
 use  Stripping          	v6r6     Tools   # Patrick Koppenburg
 
 ####################################################################
-use  MicroDSTBase        	v1r2  MicroDST          # Juan Palacios
+use  MicroDSTBase        	v1r2    MicroDST          # Juan Palacios
 use  MicroDSTInterfaces  	v1r1    MicroDST          # Juan Palacios
 use  MicroDSTTools      	v1r3    MicroDST          # Juan Palacios
-use  MicroDSTAlgorithm   	v3r3  MicroDST          # Ulrich Kerzel
+use  MicroDSTAlgorithm   	v3r3p1  MicroDST          # Juan Palacios
 
 
 ####################################################################
 use Analysis            	v7r5    Tutorial          # P. Koppenburg
 use LoKiExample         	v7r6    Ex                # Vanya Belyaev
-
+use MicroDSTExample             v1r0    Ex                # Juan Palacios
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
