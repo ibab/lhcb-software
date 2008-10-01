@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.132 2008-10-01 13:20:40 cattanem Exp $
+! $Id: release.notes,v 1.133 2008-10-01 15:11:22 cattanem Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
-!-------------------------------------------------------------------------
+!--------------------------------------------------------------------------
 
+!========================== L0DU v8r10 2008-10-01 =========================
 ! 2008-10-01 - Marco Cattaneo
  - Remove from L0Sequence.opts duplicate inclusion of $L0TCK/L0DUConfig.opts
 
