@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.109 2008-09-30 11:44:10 cattanem Exp $ 
+! $Id: release.notes,v 1.110 2008-10-01 09:37:59 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,7 +15,16 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+
 ! =========================== LoKiCore v7r8 2008-09-30 ========================
+
+! 2008-10-01 - Vanya BELYAEV
+ 
+ - LoKi/FilterAlg.h, src/Filteralg.cpp 
+
+    add the property "Preambulo" to provide few python lines 
+    to be executed BEFORE the evaluation of the actual code 
+
 ! 2008-09-23 - Vanya BELYAEV
 
  - LoKi/FilterAlg.h, src/Filteralg.cpp 
