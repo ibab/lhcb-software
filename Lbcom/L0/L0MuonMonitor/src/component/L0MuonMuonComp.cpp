@@ -1,4 +1,4 @@
-// $Id: L0MuonMuonComp.cpp,v 1.1 2008-09-21 21:45:17 jucogan Exp $
+// $Id: L0MuonMuonComp.cpp,v 1.2 2008-10-01 15:55:45 cattanem Exp $
 // Include files 
 
 #include <math.h>
@@ -218,7 +218,7 @@ void L0MuonMuonComp::diffL0MuonAndMuon(std::vector<std::pair<LHCb::MuonTileID,in
         std::pair<int,int> time=itmuon->second;
         int ts=time.first;
         int dT=ts-itl0muon->second;
-        deltaT = fabs(deltaT)<fabs(dT) ? deltaT : dT;
+        deltaT = abs(deltaT)<abs(dT) ? deltaT : dT;
       }
 
     } // End of loop over the muon hits

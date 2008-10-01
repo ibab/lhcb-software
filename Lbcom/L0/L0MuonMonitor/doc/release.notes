@@ -1,10 +1,13 @@
-! $Id: release.notes,v 1.14 2008-10-01 15:14:12 cattanem Exp $
+! $Id: release.notes,v 1.15 2008-10-01 15:55:45 cattanem Exp $
 ! Package     : L0MuonMonitor
 ! Responsible : Julien Cogan
 ! Purpose     : Monitoring of the L0Muon
 !--------------------------------------------------------------------------
 
 !========================== L0MuonMonitor v1r2 2008-10-01 =================
+! 2008-10-01 - Marco Cattaneo
+ - Fix for windows: fabs() cannot take integer argument, use abs()
+
 ! 2008-09-21 - Julien Cogan
  - Update monitoring :
    - add new histo for online
