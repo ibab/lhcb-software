@@ -6,6 +6,13 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v6r23>2008-10-02 LbcomSys v6r23</A></H1><PRE>
+This version uses Gaudi v20r2 and LHCb v25r2
+
+- Packages modified: Caloassociators v6r6, CaloTools v5r5, L0Calo v9r18,
+    L0DU v8r10, L0Muon v8r2p1, L0MuonMonitor v1r2, STAlgorithms v3r1,
+    STDAQ v3r12, VeloSimulation v3r6
+
 </PRE><H1><A NAME=v6r22>2008-09-08 LbcomSys v6r22</A></H1><PRE>
 This version uses Gaudi v20r2 and LHCb v25r1
 
