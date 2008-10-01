@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.358 2008-09-30 15:13:42 jpalac Exp $
+! $Id: release.notes,v 1.359 2008-10-01 07:37:49 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-10-01 - Juan PALACIOS
+ - src/OnOfflineTool.cpp
+  . fix bug: on and offline PV locations were swapped.
 
 ! 2008-09-30 - Juan PALACIOS
 
