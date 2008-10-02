@@ -1,4 +1,4 @@
-// $Id: HltSummaryWriter.cpp,v 1.15 2008-08-13 06:38:43 graven Exp $
+// $Id: HltSummaryWriter.cpp,v 1.16 2008-10-02 13:12:31 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -81,11 +81,7 @@ StatusCode HltSummaryWriter::execute() {
 
   for (std::vector<stringKey>::iterator it = m_selectionIDs.begin();
        it != m_selectionIDs.end(); ++it) {
-    if (dataSvc().hasSelection(*it)) {
       if (dataSvc().selection(*it,this).decision()) writeSelection(*summary,*it);
-    } else {
-      error() << " no such selection : " << *it << endmsg;
-    }
   }
 
   setFilterPassed(true);
