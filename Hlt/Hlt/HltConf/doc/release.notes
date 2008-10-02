@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.28 2008-10-02 13:00:12 graven Exp $ 
+! $Id: release.notes,v 1.29 2008-10-02 14:46:35 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : 
@@ -7,6 +7,7 @@
 ! 2008-10-02 - Gerhard Raven
  - by default, don't print Hlt sequence
  - update routing bits definition
+ - add createDecReportsHack to Hlt1 sequencer
 
 ! 2008-10-01- Leando de Paula
  - Change HltMuonAlleyConfSequence.opts to be compatible with new DeltaPTool 
