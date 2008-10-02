@@ -1,4 +1,4 @@
-// $Id: TupleToolMCTruth.cpp,v 1.8 2008-09-25 06:38:08 ahicheur Exp $
+// $Id: TupleToolMCTruth.cpp,v 1.9 2008-10-02 14:44:31 ahicheur Exp $
 // Include files
 #include "gsl/gsl_sys.h"
 // from Gaudi
@@ -159,13 +159,22 @@ StatusCode TupleToolMCTruth::fill( const LHCb::Particle*
     test &= tuple->column( head + "_TRUETAU", mcTau );
 
   // true angles information:
-  if(m_fillangles && mcp) {
+  if(m_fillangles) {
     // only for Bs or Bd (patch, not meant to be elegant)
     if (abs(assignedPid) == 511 || abs(assignedPid) == 531) {
       
     //Helicity
     double thetaL(9999), thetaK(9999), phi(9999);
-    StatusCode sc_hel = m_angleTool->calculateAngles( mcp, thetaL, thetaK, phi);
+
+    StatusCode sc_hel = false;
+    if (mcp) sc_hel = m_angleTool->calculateAngles( mcp, thetaL, thetaK, phi);
+
+    if ( !sc_hel ) {
+      thetaL=9999.;
+      thetaK=9999.;
+      phi=9999.;      
+    }
+    
       
     if (msgLevel(MSG::DEBUG)) debug() << "Three true helicity angles are theta_L : " 
                                       << thetaL 
@@ -173,7 +182,7 @@ StatusCode TupleToolMCTruth::fill( const LHCb::Particle*
                                       << " phi: " << phi << endmsg ;
       
       
-    if ( !sc_hel ) return sc_hel;
+    
       test &= tuple->column( head+"_TRUEThetaL", thetaL );
       test &= tuple->column( head+"_TRUEThetaK", thetaK );
       test &= tuple->column( head+"_TRUEPhi",    phi  );
@@ -181,11 +190,17 @@ StatusCode TupleToolMCTruth::fill( const LHCb::Particle*
     //Transversity
     double Theta_tr(9999), Phi_tr(9999), Theta_V(9999);
       
-    StatusCode sc_tr = m_angleTool->calculateTransversityAngles( mcp, 
-                                                                  Theta_tr, 
-                                                                 Phi_tr, 
-                                                                 Theta_V );
+    StatusCode sc_tr = false;
+    if (mcp) sc_tr = m_angleTool->calculateTransversityAngles( mcp,Theta_tr,Phi_tr,Theta_V );
       
+
+    if ( !sc_tr ) {
+      Theta_tr=9999.;
+      Phi_tr=9999.;
+      Theta_V=9999.;
+    }
+    
+
       if (msgLevel(MSG::DEBUG)) debug() << "Three true transversity angles are Theta_tr : " 
 					<< Theta_tr 
 					<< " Phi_tr: " << Phi_tr
@@ -194,7 +209,7 @@ StatusCode TupleToolMCTruth::fill( const LHCb::Particle*
       
       
       
-      if ( !sc_tr ) return sc_tr;
+
           test &= tuple->column( head+"_TRUEThetaTr", Theta_tr );
           test &= tuple->column( head+"_TRUEPhiTr", Phi_tr );
           test &= tuple->column( head+"_TRUEThetaVtr", Theta_V  );
