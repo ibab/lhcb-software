@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.231 2008-09-10 06:58:02 jpalac Exp $
+! $Id: release.notes,v 1.232 2008-10-02 19:43:27 gligorov Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2008-10-02 - V. Gligorov
+ - src/BackgroundCategory.{cpp}
+    Changed remaining function which used findByPythiaID.
 
 !========================== DaVinciMCTools v9r16 2008-09-10 ===================
 

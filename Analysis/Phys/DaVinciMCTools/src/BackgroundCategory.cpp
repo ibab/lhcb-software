@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.42 2008-08-20 18:28:54 gligorov Exp $
+// $Id: BackgroundCategory.cpp,v 1.43 2008-10-02 19:43:32 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -867,7 +867,7 @@ bool BackgroundCategory::checkLowMassBackground(const LHCb::Particle* candidate)
   bool carryon = false;
   
   if ( (m_commonMother->virtualMass() - m_lowMassCut) < 
-       (m_ppSvc->findByPythiaID(candidate->particleID().pid())->mass()) ) carryon = true;
+       (m_ppSvc->findByStdHepID(candidate->particleID().pid())->mass()) ) carryon = true;
 
   return carryon;
 }
