@@ -4,6 +4,7 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+!========================== TrackFitEvent v3r18 2008-10-02 ===================
 ! 2008-09-26 - Marco Cattaneo
  - Use GOD_NOALLOC flag to switch off custom allocators
 
