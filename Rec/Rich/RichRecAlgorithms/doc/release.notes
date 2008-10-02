@@ -4,6 +4,7 @@
 ! Purpose     : Common reconstruction algorithms for the RICH
 !-----------------------------------------------------------------------------
 
+!===================== RichRecAlgorithms v2r14 2008-10-02 ====================
 ! 2008-09-12 - Chris Jones
  - Update the isolated Ring finding algorithm
 
