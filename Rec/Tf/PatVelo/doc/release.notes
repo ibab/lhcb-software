@@ -4,6 +4,7 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+!========================== PatVelo v3r9 2008-10-02 ==========================
 ! 2008-10-01 - David Hutchcroft
  - Updated PatVeloFitLHCbIDs to allow a first measurement state and a variable
    multiple scattering term based on the input track's momentum
