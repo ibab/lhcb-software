@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.23 2008-09-23 05:47:55 cattanem Exp $ 
+! $Id: release.notes,v 1.24 2008-10-02 07:26:46 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
 
+!========================== CaloMoniDst v3r2 2008-10-02 =======================
 ! 2008-09-23 - Marco Cattaneo
  - Fix compilation warning
 
