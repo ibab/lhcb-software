@@ -4,6 +4,7 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!======================= RichRecQC v2r23 2008-10-02 ==========================
 ! 2008-09-12 - Chris Jones
  - Only fill occupancy plots when #hits > 0
 
