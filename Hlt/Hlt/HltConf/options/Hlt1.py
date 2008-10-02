@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1.py,v 1.7 2008-10-02 09:45:33 graven Exp $
+# $Id: Hlt1.py,v 1.8 2008-10-02 13:00:12 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of HLT1
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -59,6 +59,11 @@ vertexWriter =  HltVertexReportsWriter( )
 
 veloVertex = Sequencer( 'VeloVertex',  Members = [ summaryWriter, vertexMaker, vertexWriter ])
 
+def XOnly( dec ) :
+    return dec + '&!(' + '|'.join([ i for i in hlt1Decisions() if i != dec ]) + ') '
+
+def AnyIgnoring( dec ) :
+    return '|'.join([ i for i in hlt1Decisions() if i != dec ])
 
 ## set triggerbits
 #  0-31: reserved for L0  // need to add L0DU support to routing bit writer
@@ -66,19 +71,19 @@ veloVertex = Sequencer( 'VeloVertex',  Members = [ summaryWriter, vertexMaker, v
 # 64-91: reserved for Hlt2
 
 #### TODO: check that the used lines are actually in use!!!
-### non-existant strings always evaluate to false, and or not an error (yet)
+### non-existant strings always evaluate to false, and are not an error (yet)
 routingBits = { 32 : 'Hlt1Global'
-              , 33 : 'Hlt1RandomDecision'
-              , 34 : 'Hlt1PhysicsDecision'
-              , 35 : 'Hlt1LumiDecision'
-              , 36 : 'Hlt1VeloASideDecision|Hlt1VeloCSideDecision'
+              , 33 : 'Hlt1LumiDecision'
+              , 34 : AnyIgnoring('Hlt1LumiDecision')
+              , 35 : 'Hlt1VeloASideDecision|Hlt1VeloCSideDecision'
+              , 36 : 'Hlt1RandomDecision'
+              , 37 : 'Hlt1PhysicsDecision'
               }
 
 triggerBits = HltRoutingBitsWriter( routingBitDefinitions = routingBits )
 
 
-def XOnly( dec ) :
-    return dec + '&!(' + '|'.join([ i for i in hlt1Decisions() if i != dec ]) + ') '
+
 
 
 rawbankLumiStripper = Sequence( 'LumiStripper'
