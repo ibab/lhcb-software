@@ -1,4 +1,4 @@
-// $Id: VeloClusterMonitor.cpp,v 1.9 2008-09-17 22:49:03 krinnert Exp $
+// $Id: VeloClusterMonitor.cpp,v 1.10 2008-10-02 17:27:08 erodrigu Exp $
 // Include files 
 // -------------
 
@@ -103,6 +103,7 @@ StatusCode Velo::VeloClusterMonitor::veloClusters() {
   
   if ( !exist<LHCb::VeloClusters>( m_clusterCont ) ) {
     debug() << "No VeloClusters container found for this event !" << endmsg;
+   return StatusCode::FAILURE;
   }
   else {
     m_clusters = get<LHCb::VeloClusters>( m_clusterCont );
