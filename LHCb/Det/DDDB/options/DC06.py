@@ -8,3 +8,6 @@ import os
 tag = "DC06-20081002"
 CondDBAccessSvc("DDDB",DefaultTAG = tag)
 CondDBAccessSvc("LHCBCOND",DefaultTAG = tag)
+
+# Force negative polarity (i.e. don't take it from ONLINE)
+MagneticFieldSvc().Polarity = -1

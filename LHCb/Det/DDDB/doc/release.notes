@@ -8,6 +8,7 @@
 ! 2008-10-02 - Marco Cattaneo
  - New default tag for 2008 (head-20081002).
  - New default tag for DC06 (DC06-20081002).
+ - Force positive magnet polarity for DC06 (i.e. don't take default from ONLINE) 
 
 ! 2008-09-30 - Marco Cattaneo
  - Change requirements to look for SQLDDDB v5r*, due to incompatibility between
