@@ -1,12 +1,12 @@
-! $Id: release.notes,v 1.115 2008-10-02 04:55:06 janos Exp $
+! $Id: release.notes,v 1.116 2008-10-02 07:00:32 cattanem Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 !--------------------------------------------------------------------------
 
-! 2008-10-09 - Jan Amoraal
+!========================== OTDet v8r1 2008-10-02 =========================
+! 2008-10-01 - Jan Amoraal
  - Default tofs weren't filled (caused Brunel to crash)
  
-!========================== OTDet v8r1 2008-09-30 =========================
 ! 2008-09-25 - Jan Amoraal
  - Head of DetDesc/DetectorElement now has a hasCondition method.
  - Was still asking for calibration condition without checking if it existed.
