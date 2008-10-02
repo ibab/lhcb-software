@@ -1,4 +1,4 @@
-// $Id: HltLine.cpp,v 1.1 2008-10-02 13:12:49 graven Exp $
+// $Id: HltLine.cpp,v 1.2 2008-10-02 14:08:29 graven Exp $
 // Include files
 #include "HltLine.h"
 
@@ -23,41 +23,24 @@ DECLARE_ALGORITHM_FACTORY( HltLine );
 //
 // 2008-09-13 : Gerhard Raven
 //-----------------------------------------------------------------------------
-template <>
-inline StatusCode
-PropertyWithValue<HltLine::HltStage>::fromString ( const std::string& source )  
-{
-  HltLine::HltStage tmp ;
-  StatusCode sc = tmp.fromString(source);
-  if ( sc.isFailure() ) { return sc ; }
-  return setValue ( tmp ) ? StatusCode::SUCCESS : StatusCode::FAILURE ;
-}
-
-template <>
-inline std::string 
-PropertyWithValue<HltLine::HltStage>::toString () const 
-{ return this->value().toString() ; }
-
-StatusCode
-HltLine::HltStage::fromString(const std::string& s) {
+void
+HltLine::HltStage::updateHandler(Property&) {
     if (!m_initialized) { 
-        std::cout << "HltStage: delaying assignment of " << s << std::endl;
-        m_dirty=true; m_name = s;
-        return StatusCode::SUCCESS;
+        std::cout << "HltStage: delaying assignment of " << m_property.value() << std::endl;
+        m_dirty=true;
     } 
     if (m_algorithm!=0) m_algorithm->release();
-    std::cout << "HltStage: attempting assignment of " << s << std::endl;
-    m_algorithm = m_parent->getSubAlgorithm(s);
-    if (!m_algorithm) return StatusCode::FAILURE;
+    std::cout << "HltStage: attempting assignment of " << m_property.value() << std::endl;
+    m_algorithm = m_parent->getSubAlgorithm(m_property.value());
+    if (!m_algorithm) throw GaudiException( "could not obtain algorithm" , m_property.value(), StatusCode::FAILURE);
     m_algorithm->addRef();
     m_dirty = false;
-    return StatusCode::SUCCESS;
 }
 
 StatusCode
 HltLine::HltStage::initialize(ISequencerTimerTool* timer) {
     m_initialized=true;
-    if ( m_dirty ) fromString(m_name);
+    if ( m_dirty ) updateHandler(m_property);
     if ( timer ) setTimer( timer->addTimer( algorithm()->name() ) );
     return algorithm()->sysInitialize();
 }
@@ -65,6 +48,7 @@ HltLine::HltStage::initialize(ISequencerTimerTool* timer) {
 StatusCode
 HltLine::HltStage::execute(ISequencerTimerTool* timertool) {
     assert(!m_dirty);
+    if (algorithm()==0) return StatusCode::SUCCESS;
     if (!algorithm()->isEnabled() ) return StatusCode::SUCCESS;
     if ( algorithm()->isExecuted()) return StatusCode::SUCCESS;
     // TODO: bind timer at init time
@@ -98,14 +82,14 @@ HltLine::HltLine( const std::string& name,
   , m_algMgr(0)
   , m_hltANNSvc(0)
 {
-  for (unsigned i=0; i<m_stages.size(); ++i) {
-    //declareProperty( transition( stage(i) ) , m_stages[i] );
+  for (unsigned i=0; i<m_stages.size()-1; ++i) {
+    declareProperty( transition( stage(i) ) , m_stages[i].property() );
   }
-  declareProperty( "HltDecReportsLocation"  , m_outputContainerName   = LHCb::HltDecReportsLocation::Default );
-  declareProperty( "IgnoreFilterPassed"  , m_ignoreFilter   = false );
-  declareProperty( "MeasureTime"         , m_measureTime    = false );
-  declareProperty( "ReturnOK"            , m_returnOK       = false );
-  declareProperty( "AcceptOnError"       , m_acceptOnError  = false );
+  declareProperty( "HltDecReportsLocation", m_outputContainerName   = LHCb::HltDecReportsLocation::Default );
+  declareProperty( "IgnoreFilterPassed"   , m_ignoreFilter   = false );
+  declareProperty( "MeasureTime"          , m_measureTime    = false );
+  declareProperty( "ReturnOK"             , m_returnOK       = false );
+  declareProperty( "AcceptOnError"        , m_acceptOnError  = false );
 }
 //=============================================================================
 // Destructor

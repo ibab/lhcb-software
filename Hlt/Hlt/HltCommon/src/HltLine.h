@@ -1,4 +1,4 @@
-// $Id: HltLine.h,v 1.1 2008-10-02 13:12:49 graven Exp $
+// $Id: HltLine.h,v 1.2 2008-10-02 14:08:29 graven Exp $
 #ifndef HLTLINE_H
 #define HLTLINE_H 1
 
@@ -43,25 +43,38 @@ public:
     , m_reverse(false)
     , m_dirty(true)
     , m_initialized(false)
-    { }
+    { m_property.declareUpdateHandler(&HltStage::updateHandler,this); }
+
+    HltStage( HltStage& rhs )
+    : m_parent(rhs.m_parent)
+    , m_timerTool(rhs.m_timerTool) 
+    , m_algorithm(0)
+    , m_reverse(false)
+    , m_dirty(true)
+    , m_property( rhs.m_property )
+    , m_initialized(false)
+    { m_property.declareUpdateHandler(&HltStage::updateHandler,this); }
+
     ~HltStage() { if (m_algorithm) m_algorithm->release();}; ///< Destructor
     bool passed() const            { return algorithm()?algorithm()->filterPassed():true; }
     StatusCode execute(ISequencerTimerTool* = 0);
     StatusCode initialize(ISequencerTimerTool* = 0);
     std::string toString() const { return name(); }
     StatusCode  fromString(const std::string& name);
-    const std::string& name()     const { return m_name; }
+    const std::string& name()     const { return m_property.value(); }
     void resetExecuted() const          { if (algorithm()) algorithm()->resetExecuted(); }
+    StringProperty& property()          { return m_property; }
   private:
-    void setTimer( int nb )        { m_timer = nb;       }
+    void setTimer( int nb )              { m_timer = nb;       }
     Algorithm* algorithm()        const  { return m_algorithm; }
     bool       reverse()          const  { return m_reverse;   }
     int        timer()            const  { return m_timer;     }
+    void updateHandler(Property& prop);
 
     HltLine*    m_parent;
     ISequencerTimerTool* m_timerTool;      ///< Pointer to the timer tool
     Algorithm*  m_algorithm;   ///< Algorithm pointer
-    std::string m_name;
+    StringProperty  m_property;
     bool        m_reverse;     ///< Indicates that the flag has to be inverted
     bool        m_dirty;
     bool        m_initialized;
@@ -72,22 +85,24 @@ private:
   //TODO: move into DecReport...
   enum stage { initial=          0,  // i.e. did not pass 'prescale
                prescaled =       1,  // i.e. did not pass 'seed'
-               seeded =          2 , // i.e. did not pass 'filter'
-               filtered =        3,  // i.e. did not pass 'postscale'
-               postscaled =      4 ,
+               seeded =          2 , // i.e. did not pass 'filter0'
+               filter0ed =       3,  // i.e. did not pass 'filter1'
+               filter1ed =       4,  // i.e. did not pass 'filter2'
+               filter2ed =       5,  // i.e. did not pass 'postscale'
+               postscaled =      6 ,
                nStages };
   const std::string& transition( const stage &s) const {
         static std::vector<std::string> s_map;
         if (s_map.empty()) {
-            s_map.push_back("prescale");
-            s_map.push_back("seed");
-            s_map.push_back("filter");
-            s_map.push_back("postscale");
+            s_map.push_back("Prescale");
+            s_map.push_back("Seed");
+            s_map.push_back("Filter0");
+            s_map.push_back("Filter1");
+            s_map.push_back("Filter2");
+            s_map.push_back("Postscale");
         }
         return s_map[s];
-  }
-
-
+  };
 
   /** Decode a vector of string. */
   StatusCode decodeNames(  );
