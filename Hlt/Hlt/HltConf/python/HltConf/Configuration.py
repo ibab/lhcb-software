@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.7 2008-09-30 09:04:10 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.8 2008-10-02 09:45:33 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -9,6 +9,7 @@ from LHCbKernel.Configuration import *
 from Gaudi.Configuration import *
 from GaudiConf.Configuration import *
 import GaudiKernel.ProcessJobOptions
+from Configurables       import GaudiSequencer as Sequence
 
 class HltConf(LHCbConfigurableUser):
     __slots__ = {
@@ -16,6 +17,7 @@ class HltConf(LHCbConfigurableUser):
         , "userAlgorithms":    [ ]  # put here user algorithms to add
         , "oldStyle" :         True # old style options configuration
         , "replaceL0BanksWithEmulated" : False
+        , "verbose" :          False # print the generated Hlt sequence
         }   
     def validHltTypes(self):
         return [ 'PA',
@@ -58,5 +60,6 @@ class HltConf(LHCbConfigurableUser):
                 importOptions( type2conf[i] )
             importOptions('$HLTCONFROOT/options/HltMain.py')
             importOptions('$HLTCONFROOT/options/Hlt1.py')
+            if self.getProp("verbose") : print Sequence('Hlt') 
         for userAlg in self.getProp("userAlgorithms"):
             ApplicationMgr().TopAlg += [ userAlg ]

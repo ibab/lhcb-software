@@ -1,9 +1,11 @@
-! $Id: release.notes,v 1.26 2008-10-01 09:38:04 leandrop Exp $ 
+! $Id: release.notes,v 1.27 2008-10-02 09:45:33 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : 
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+! 2008-10-02 - Gerhard Raven
+ - by default, don't print Hlt sequence
 
 ! 2008-10-01- Leando de Paula
  - Change HltMuonAlleyConfSequence.opts to be compatible with new DeltaPTool 
