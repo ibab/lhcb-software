@@ -1,4 +1,4 @@
-// $Id: LumiHistoMaker.cpp,v 1.6 2008-09-24 19:13:50 graven Exp $
+// $Id: LumiHistoMaker.cpp,v 1.7 2008-10-02 14:28:57 graven Exp $
 // Include files 
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -72,7 +72,7 @@ StatusCode LumiHistoMaker::initialize() {
 
   // create the histograms
   bool useMaxBins = (m_Variables.size()==m_MaxBins.size());
-  info() << "list of histograms booked:" << endreq;
+  debug() << "list of histograms booked:" << endreq;
   int i=0;
   for(std::vector< std::string >::iterator ivar = m_Variables.begin() ; 
       ivar!= m_Variables.end() ; ++ivar, ++i ){
@@ -99,8 +99,8 @@ StatusCode LumiHistoMaker::initialize() {
 	" Bins: " << bins << " Threshold: " << m_Thresholds[i] << endreq;
     }
   }
-  info() << m_keys.size()<< " variables used " << endmsg ;
-  info() << "Initialised Lumi Histo Maker" << endmsg ;
+  debug() << m_keys.size()<< " variables used " << endmsg ;
+  debug() << "Initialised Lumi Histo Maker" << endmsg ;
   return sc;
 
 }
@@ -111,7 +111,7 @@ void LumiHistoMaker::initCounters()
    // counters
   initializeCounter(m_counterEntries,    "Entries");
   initializeCounter(m_counterHistoInputs,     "HistoInputs");
-  info()<< "Counters initialised!"<<endmsg;
+  debug()<< "Counters initialised!"<<endmsg;
   
 }
 

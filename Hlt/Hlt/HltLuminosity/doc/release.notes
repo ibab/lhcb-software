@@ -4,6 +4,9 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+! 2008-10-02 - Gerhard Raven
+ - move some messages from INFO to DEBUG
+
 ! 2008-10-01 - Jaap Panman
  -LumiHistoCollector: experimental code to analyse LumiHistos
  -LumiAnalyser: experimental code to accumulate rates
