@@ -1,4 +1,4 @@
-// $Id: HadronSeedTool.cpp,v 1.6 2008-08-29 14:27:50 albrecht Exp $
+// $Id: HadronSeedTool.cpp,v 1.7 2008-10-02 10:33:44 albrecht Exp $
 // Include files 
 
 #include <cmath>
@@ -106,7 +106,7 @@ StatusCode HadronSeedTool::initialize()
 
   m_magFieldSvc = svc<ILHCbMagnetSvc>( "MagneticFieldSvc", true );
   
-  if( m_magFieldSvc->scaleFactor() < 0.1 ) {
+  if( fabs(m_magFieldSvc->scaleFactor()) < 0.1 ) {
     info()<<"magnetic field is: "<<m_magFieldSvc->scaleFactor()
           <<" %, below 10% of nominal field! \n Use options for no field!"<<endmsg;
     m_fieldOff=true;

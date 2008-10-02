@@ -1,4 +1,4 @@
-// $Id: L0ConfirmWithT.cpp,v 1.11 2008-08-29 14:33:12 albrecht Exp $
+// $Id: L0ConfirmWithT.cpp,v 1.12 2008-10-02 10:33:57 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -72,7 +72,7 @@ StatusCode L0ConfirmWithT::initialize()
 
   m_magFieldSvc = svc<ILHCbMagnetSvc>( "MagneticFieldSvc", true );
   
-  if( m_magFieldSvc->scaleFactor() < 0.1 ) {
+  if( fabs(m_magFieldSvc->scaleFactor()) < 0.1 ) {
     info()<<"magnetic field is: "<<m_magFieldSvc->scaleFactor()
           <<" %, below 10% of nominal field! \n Use options for no field!"<<endmsg;
     m_fieldOff=true;
@@ -107,7 +107,7 @@ StatusCode L0ConfirmWithT::tracksFromTrack(
   
   while (nStates--) {
     sc = m_TrackConfirmTool->tracks( seedStates[nStates], tracks );
-	  if (sc.isFailure()) break;
+    if (sc.isFailure()) break;
   }
   return sc;
 }

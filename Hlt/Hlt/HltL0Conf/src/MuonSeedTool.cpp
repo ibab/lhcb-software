@@ -1,4 +1,4 @@
-// $Id: MuonSeedTool.cpp,v 1.10 2008-09-26 05:42:48 albrecht Exp $
+// $Id: MuonSeedTool.cpp,v 1.11 2008-10-02 10:33:49 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -89,7 +89,7 @@ StatusCode MuonSeedTool::initialize()
   
   m_magFieldSvc = svc<ILHCbMagnetSvc>( "MagneticFieldSvc", true );
 
-  if( m_magFieldSvc->scaleFactor() < 0.1 ) {
+  if( fabs(m_magFieldSvc->scaleFactor()) < 0.1 ) {
     info()<<"magnetic field is: "<<m_magFieldSvc->scaleFactor()
           <<" %, below 10% of nominal field! \n Use options for no field!"<<endmsg;
     m_fieldOff=true;

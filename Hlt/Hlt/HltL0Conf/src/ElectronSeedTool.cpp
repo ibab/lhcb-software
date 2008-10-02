@@ -93,7 +93,7 @@ StatusCode ElectronSeedTool::initialize()
 
   m_magFieldSvc = svc<ILHCbMagnetSvc>( "MagneticFieldSvc", true );
   
-  if( m_magFieldSvc->scaleFactor() < 0.1 ) {
+  if( fabs(m_magFieldSvc->scaleFactor()) < 0.1 ) {
     info()<<"magnetic field is: "<<m_magFieldSvc->scaleFactor()
           <<" %, below 10% of nominal field! \n Use options for no field!"<<endmsg;
     m_fieldOff=true;
