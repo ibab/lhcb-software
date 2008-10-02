@@ -4,6 +4,7 @@
 ! Purpose     : Option-steered tuples. Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+!========================== DecayTreeTuple v1r7 2008-10-02 ===================
 ! 2008-10-02 - Tomasz Skwarnicki
  - TupleToolTISTOS: proper fix for L0 and Hlt2 new trigger names
 
