@@ -5,6 +5,6 @@ from Configurables import CondDBAccessSvc, MagneticFieldSvc
 import os
 
 # DC06 database tags
-tag = "DC06-20080930"
+tag = "DC06-20081002"
 CondDBAccessSvc("DDDB",DefaultTAG = tag)
 CondDBAccessSvc("LHCBCOND",DefaultTAG = tag)

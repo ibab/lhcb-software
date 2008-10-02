@@ -1,5 +1,5 @@
 // Defines standard conditions for DC06 production data
 
 // DC06 database tags
-DDDB.DefaultTAG = "DC06-20080930";
-LHCBCOND.DefaultTAG = "DC06-20080930";
+DDDB.DefaultTAG = "DC06-20081002";
+LHCBCOND.DefaultTAG = "DC06-20081002";

@@ -7,6 +7,7 @@
 !========================== DDDB v1r12 2008-10-02 ============================
 ! 2008-10-02 - Marco Cattaneo
  - New default tag for 2008 (head-20081002).
+ - New default tag for DC06 (DC06-20081002).
 
 ! 2008-09-30 - Marco Cattaneo
  - Change requirements to look for SQLDDDB v5r*, due to incompatibility between
