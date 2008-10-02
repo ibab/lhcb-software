@@ -61,7 +61,7 @@ StatusCode TrajOTProjector::project( const LHCb::StateVector& statevector,
   }
   m_errResidual = m_errMeasure ;
   
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 //-----------------------------------------------------------------------------
