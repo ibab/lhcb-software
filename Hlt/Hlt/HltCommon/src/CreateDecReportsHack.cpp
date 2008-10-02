@@ -1,4 +1,4 @@
-// $Id: CreateDecReportsHack.cpp,v 1.1 2008-09-21 16:44:57 graven Exp $
+// $Id: CreateDecReportsHack.cpp,v 1.2 2008-10-02 08:00:43 graven Exp $
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -34,7 +34,7 @@ CreateDecReportsHack::~CreateDecReportsHack() {};
 // Main execution
 //=============================================================================
 StatusCode CreateDecReportsHack::execute() {
-  LHCb::HltDecReports* decisions = getOrCreate<LHCb::HltDecReports,LHCb::HltDecReports>( m_location );
+  getOrCreate<LHCb::HltDecReports,LHCb::HltDecReports>( m_location );
   setFilterPassed(true);
   return StatusCode::SUCCESS;
 };

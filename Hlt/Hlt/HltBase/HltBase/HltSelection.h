@@ -1,4 +1,4 @@
-// $Id: HltSelection.h,v 1.7 2008-09-26 08:42:17 graven Exp $
+// $Id: HltSelection.h,v 1.8 2008-10-02 08:00:12 graven Exp $
 #ifndef HLTBASE_HLTSELECTION_H 
 #define HLTBASE_HLTSELECTION_H 1
 
@@ -31,7 +31,7 @@ namespace Hlt
     }
 
     void setDecision(bool value) {m_decision = value; m_processed = true;}
-    void setError(bool value) { m_error = true;}
+    void setError(bool value) { m_error = value;}
 
     bool decision() const {return m_decision;}
     bool processed() const {return m_processed;}
