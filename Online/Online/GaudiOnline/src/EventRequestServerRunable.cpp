@@ -1,4 +1,4 @@
-// $Id: EventRequestServerRunable.cpp,v 1.1 2008-07-07 14:33:30 frankb Exp $
+// $Id: EventRequestServerRunable.cpp,v 1.2 2008-10-02 06:19:00 frankb Exp $
 //====================================================================
 //  EventRequestServerRunable
 //--------------------------------------------------------------------
@@ -14,7 +14,7 @@
 //  Created    : 4/12/2007
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/EventRequestServerRunable.cpp,v 1.1 2008-07-07 14:33:30 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/EventRequestServerRunable.cpp,v 1.2 2008-10-02 06:19:00 frankb Exp $
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiOnline/EventRequestServerRunable.h"
 #include "WT/wt_facilities.h"
@@ -48,7 +48,9 @@ StatusCode EventRequestServerRunable::initialize()   {
 StatusCode EventRequestServerRunable::finalize()     {
   shutdownRequests();
   if ( m_consumer ) {
-    m_consumer->exclude();
+    // The MEPManager at this stage is already excluded since we are a runable.
+    // Don't fuck it up here!
+    //m_consumer->exclude();
   }
   return EventServerRunable::finalize();
 }
