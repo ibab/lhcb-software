@@ -19,9 +19,10 @@ use  AIDA         v*   LCG_Interfaces
 
 use  GaudiAlg     v*
 
-use  VeloDet      v*   Det
-use  DigiEvent    v*   Event
-use  TrackEvent   v*   Event
+use  VeloDet         v*   Det
+use  DigiEvent       v*   Event
+use  TrackEvent      v*   Event
+use  TrackFitEvent   v*   Tr
 
 include_path      none
 

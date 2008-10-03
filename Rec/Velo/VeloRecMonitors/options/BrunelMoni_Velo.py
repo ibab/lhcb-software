@@ -7,10 +7,11 @@
 from Configurables import ProcessPhase, GaudiSequencer
 
 from Configurables import Velo__VeloClusterMonitor
-
-# ProcessPhase( 'Moni' ).DetectorList += [ 'VELO' ] # done in configurables
+from Configurables import Velo__VeloTrackMonitor
 
 GaudiSequencer( 'MoniVELOSeq' ).Members +=\
-                [ Velo__VeloClusterMonitor( 'VeloClusterMonitor' ) ]
+                [   Velo__VeloClusterMonitor( 'VeloClusterMonitor' )
+#                  , Velo__VeloTrackMonitor  ( 'VeloTrackMonitor'   )
+                  ]
 
 ##############################################################################

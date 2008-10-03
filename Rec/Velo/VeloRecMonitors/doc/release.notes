@@ -4,6 +4,12 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2008-10-03 - Sadia Khalil
+ - first version of the track-based monitoring algorithm VeloTrackMonitor:
+   - default settings are for online monitoring
+   - user options to switch from online to offline analysis are available 
+     for unbiased residuals and hitmap plots
+
 ! 2008-10-02 - Eduardo Rodrigues
  - added StatusCode missing
 
