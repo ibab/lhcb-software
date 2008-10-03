@@ -1,4 +1,4 @@
-// $Id: CircleTraj.h,v 1.12 2008-09-26 16:44:35 cattanem Exp $
+// $Id: CircleTraj.h,v 1.13 2008-10-03 16:44:42 cattanem Exp $
 #ifndef LHCbKernel_CircleTraj_H
 #define LHCbKernel_CircleTraj_H 1
 
@@ -87,7 +87,7 @@ namespace LHCb
     /// arclength.
     virtual double arclength(double mu1, double mu2) const { return mu2 - mu1 ; }
 
-#ifndef GOD_NOALLOC
+#ifndef _WIN32
     /// operator new
     static void* operator new ( size_t size )
     {
