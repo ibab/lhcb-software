@@ -1,4 +1,4 @@
-// $Id: HltSelection2Decision.cpp,v 1.3 2008-09-30 11:32:27 graven Exp $
+// $Id: HltSelection2Decision.cpp,v 1.4 2008-10-03 11:30:58 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -86,7 +86,8 @@ StatusCode HltSelection2Decision::execute() {
   if (decision.invalidIntSelectionID()) {
     warning() << " selectionName=" << key->first << " has invalid intSelectionID=" << key->second << " Skipped. " << endmsg;
   } else {
-    decisions->insert( m_decisionName, decision );
+    StatusCode sc = decisions->insert( m_decisionName, decision );
+    if (sc.isFailure()) return sc;
   }
   return StatusCode::SUCCESS;
 };

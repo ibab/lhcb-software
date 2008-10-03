@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.cpp,v 1.24 2008-07-30 13:37:33 graven Exp $
+// $Id: HltVertexMaker.cpp,v 1.25 2008-10-03 11:30:58 graven Exp $
 // Include files 
 
 
@@ -169,8 +169,8 @@ StatusCode HltVertexMaker<Selections>::execute() {
       const LHCb::Track* track2 = combinations().second;
       assert(track1!=0);
       assert(track2!=0);
-      verbose() << " track 1 " << track1->key() << track1->slopes() << endreq;
-      verbose() << " track 2 " << track2->key() << track2->slopes() << endreq;
+      verbose() << " track 1 " << track1->key() << " " << track1->slopes() << endreq;
+      verbose() << " track 2 " << track2->key() << " " << track2->slopes() << endreq;
       
       // can not be the same track
       if (track1 == track2) continue;
@@ -210,7 +210,7 @@ StatusCode HltVertexMaker<Selections>::execute() {
       }
       if (m_debug) printInfo(" make vertex ",*sv);
   } 
-  return StatusCode::SUCCESS;  
+  return sc;
 }
 
 template <typename Selections>
