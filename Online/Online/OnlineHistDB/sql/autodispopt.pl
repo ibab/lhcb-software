@@ -34,7 +34,7 @@ close LIST;
 $nopts=@opts;
 
 open CSTRUCT,">OHDB_ocitypes.h";
-print CSTRUCT '// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/sql/autodispopt.pl,v 1.2 2007-11-22 17:38:35 ggiacomo Exp $
+print CSTRUCT '// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/sql/autodispopt.pl,v 1.3 2008-10-03 15:45:31 ggiacomo Exp $
 #ifndef OHDB_OCITYPES_H
 #define OHDB_OCITYPES_H 1
 struct dispopt_s
@@ -78,13 +78,13 @@ close CINIT;
 
 
 open PLSQL,">Getdo.sql";
-print PLSQL "procedure GET_DISPLAYOPTIONS(theDOID IN int\n";
+print PLSQL "procedure GET_DISPLAYOPTIONS(theDOID IN int\n  ";
 $il=0;
 for ($i=0; $i<$nopts ; $i++) {
   $opt=$opts[$i];
   print PLSQL ",${opt} OUT ".$sqltyp{$opt};
   if($il++ == 5) {
-    print PLSQL "\n";
+    print PLSQL "\n  ";
     $il =0;
   }
 }

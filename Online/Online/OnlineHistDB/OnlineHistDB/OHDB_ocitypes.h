@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OHDB_ocitypes.h,v 1.3 2008-07-30 15:54:33 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OHDB_ocitypes.h,v 1.4 2008-10-03 15:45:30 ggiacomo Exp $
 #ifndef OHDB_OCITYPES_H
 #define OHDB_OCITYPES_H 1
 struct dispopt_s
@@ -51,6 +51,11 @@ struct dispopt_s
   OCINumber HTIT_X_OFFS;
   OCINumber HTIT_Y_SIZE;
   OCINumber HTIT_Y_OFFS;
+  OCINumber NDIVX;
+  OCINumber NDIVY;
+  OCINumber MARKERSIZE;
+  OCINumber MARKERCOLOR;
+  OCINumber MARKERSTYLE;
 };
 typedef struct dispopt_s dispopt;
 
@@ -105,6 +110,11 @@ struct dispopt_ind
   OCIInd HTIT_X_OFFS;
   OCIInd HTIT_Y_SIZE;
   OCIInd HTIT_Y_OFFS;
+  OCIInd NDIVX;
+  OCIInd NDIVY;
+  OCIInd MARKERSIZE;
+  OCIInd MARKERCOLOR;
+  OCIInd MARKERSTYLE;
 };
 typedef struct dispopt_ind dispoptInd;
 

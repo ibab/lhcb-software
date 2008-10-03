@@ -237,9 +237,9 @@ function histo_display($id,$htype,$mode)
   echo "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
   printf(" Log scale <input ${cw_dis} type='checkbox' name='LOGX' value='1' %s>&nbsp&nbsp\n",
 	 $_POST["LOGX"] ? "checked" : "");
-  printf(" Grid <input ${cw_dis} type='checkbox' name='GRIDX' value='1' %s><br> \n",
+  printf(" Grid <input ${cw_dis} type='checkbox' name='GRIDX' value='1' %s> &nbsp&nbsp \n",
 	 $_POST["GRIDX"] ? "checked" : "");
-  
+  printf("Number of divisions <input name='NDIVX' size=4 value='%s' ${cw_ro}> <br>\n",$_POST["NDIVX"]);
   
   printf("<br>Y Axis &nbsp&nbsp  title <input name='LABEL_Y' size=15 value='%s' ${cw_ro}> &nbsp&nbsp \n",$_POST["LABEL_Y"]);
   printf("size <input name='TIT_Y_SIZE' size=5 value='%s' ${cw_ro}> &nbsp&nbsp \n",$_POST["TIT_Y_SIZE"]);
@@ -250,8 +250,9 @@ function histo_display($id,$htype,$mode)
   echo "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
   printf(" Log scale <input ${cw_dis} type='checkbox' name='LOGY' value='1' %s>&nbsp&nbsp\n",
 	 $_POST["LOGY"] ? "checked" : "");
-  printf(" Grid <input ${cw_dis} type='checkbox' name='GRIDY' value='1' %s><br>\n",
+  printf(" Grid <input ${cw_dis} type='checkbox' name='GRIDY' value='1' %s>&nbsp&nbsp\n",
 	 $_POST["GRIDY"] ? "checked" : "");
+  printf("Number of divisions <input name='NDIVY' size=4 value='%s' ${cw_ro}> <br>\n",$_POST["NDIVY"]);
 
   if ($_POST["HSTYPE"]=='H2D' || $_POST["HSTYPE"]=='P2D') {
     printf("<br>Z Axis &nbsp&nbsp  title <input name='LABEL_Z' size=15 value='%s' ${cw_ro}> &nbsp&nbsp \n",$_POST["LABEL_Z"]);
@@ -292,6 +293,10 @@ function histo_display($id,$htype,$mode)
   printf("Line Width <input name='LINEWIDTH' size=2 value='%s' ${cw_ro}> &nbsp&nbsp ",$_POST["LINEWIDTH"]);
   printf("Line Style <input name='LINESTYLE' size=2 value='%s' ${cw_ro}> &nbsp&nbsp ",$_POST["LINESTYLE"]);
   printf("Line Color <input name='LINECOLOR' size=2 value='%s' ${cw_ro}><br>\n",$_POST["LINECOLOR"]);
+  printf("Marker Style <input name='MARKERSTYLE' size=2 value='%s' ${cw_ro}> &nbsp&nbsp ",$_POST["MARKERSTYLE"]);
+  printf("Marker Color <input name='MARKERCOLOR' size=2 value='%s' ${cw_ro}>\n",$_POST["MARKERCOLOR"]);
+  printf("Marker Size <input name='MARKERSIZE' size=2 value='%s' ${cw_ro}><br>\n",$_POST["MARKERSIZE"]);
+
   printf("ROOT Draw options <input name='DRAWOPTS' size=20 value='%s' ${cw_ro}><br>\n",$_POST["DRAWOPTS"]);
   // printf("Display Refresh Time (s)  <input name='REFRESH' size=5 value='%s' ${cw_ro}><br>\n",$_POST["REFRESH"]);
   printf("<br>Overplot reference (if available)    <select name='REF'>");
@@ -317,6 +322,101 @@ function histo_display($id,$htype,$mode)
       echo "<input type='hidden' name='${field}' value='".$_POST[$field]."'>\n";
     echo "<input type='hidden' name='hsid' value='${id}'>\n";
     echo "<center> <input type='submit' value='See Options for all histograms in set' name='analist'></center>\n";
+    echo "</form>";
+  }
+}
+
+function get_labels($hid,$nl) {
+ global $conn;
+ global $debug;
+ $query=" SELECT ";
+ for ($i=1 ; $i<=$nl; $i++) {
+   $query .= "parcomponent(BINLABELS,${i}) LAB${i}";
+   if ($i<$nl) {
+     $query .= ",";
+   }
+ }
+ $query .= " from HISTOGRAM where HID='${hid}'";
+ if($debug) echo "query is $query <br>\n";
+ $stid = OCIParse($conn,$query);
+ OCIExecute($stid);
+ OCIFetchInto($stid, $hlabels, OCI_ASSOC );
+ for ($i=1 ; $i<=$nl; $i++) {
+   $_POST["LAB${i}"]=$hlabels["LAB${i}"];
+ }
+ ocifreestatement($stid);
+}
+
+function histo_labels($id,$htype,$mode)
+{
+  global $canwrite;
+  global $histo;
+  global $debug;
+  global $conn;
+  $cw_dis=  ($canwrite ? "" : "DISABLED");
+  $cw_ro=  ($canwrite ? "" : "READONLY");
+  $script=$_SERVER[PHP_SELF];
+  $setlist=0;
+  if($mode == "display") {
+    $script='write/histo_labels.php';
+    foreach (array("NHS","NLABELS") 
+	     as $field)  
+      $_POST[$field]=$histo[$field];
+    if($htype == 'HSID'){
+      if ($histo["NHS"]>1) 
+	echo "<B> labels for the the first histogram in set</B><br>";
+    }
+    get_labels(SingleHist($id),$histo['NLABELS']);
+    $nlab = $_POST["NLABELS"];
+  } 
+  else {
+    $nlab = 20;
+    if($_POST["nlab"] > $nlab) {
+      $nlab = $_POST["nlab"];
+    }
+  }
+  echo "<form action='${script}' method='POST'>\n"; 
+  if ($mode == "update") {
+    echo " Defining Custom Bin Labels for Histogram ID <span class=normal>$id</span><br>\n";
+    if($htype == "HID") {
+     $hsid=HistoSet($id);
+     echo "<B>You are setting bin labels for this particular histogram only.<br>
+           Go to <a href='../Histogram.php?hsid=${hsid}'> Histogram set record $hsid </a> to change labels for 
+           all histograms in set </B><br>";
+    }
+    if($htype == "HSID" && $_POST["NHS"]>1 )
+     echo "<B>You are setting bin labels for all histograms in set $id.<br>
+           To change bin labels for a single histogram, select it from the 
+           <a href='../Histogram.php?hsid=${id}&fulllist=1#LIST'> histogram list </a> </B><br>\n";
+  }
+  foreach (array("NHS","NLABELS") as $field)
+    echo "<input type='hidden' name='${field}' value='".$_POST[$field]."'>\n";
+  echo "<input type='hidden' name='id' value='${id}'>\n";
+  echo "<input type='hidden' name='htype' value='${htype}'>\n";
+  echo "<input type='hidden' name='nlab' value='${nlab}'>\n";
+  for ($i=1 ; $i<=$nlab; $i++) {
+    echo "Label for Bin ${i}  <input type='text' name='LAB${i}' size=15 value='".$_POST["LAB${i}"]."'><br>\n";
+  }
+
+
+  if( $canwrite) {
+    $action= ($mode == "display") ? "Update Bin Labels" : "Confirm";
+    echo "<table align=right><tr><td> <input align=right type='submit' name='Update_labels' value='${action}'></tr></table>";
+  }
+  echo "</form>";
+  
+  if ($mode != "display") {
+    $nlab += 20;
+    echo "<form action=${script} method='POST'>\n";
+    foreach (array("NHS","NLABELS") as $field)
+      echo "<input type='hidden' name='${field}' value='".$_POST[$field]."'>\n";
+    echo "<input type='hidden' name='id' value='${id}'>\n";
+    echo "<input type='hidden' name='htype' value='${htype}'>\n";
+    echo "<input type='hidden' name='nlab' value='${nlab}'>\n";
+    for ($i=1 ; $i<=$nlab; $i++) {
+      echo "<input type='hidden' name='LAB${i}' value='".$_POST["LAB${i}"]."'>\n";
+  }
+    echo "<center> <input type='submit' value='Need More Labels' name='moreLabels'></center>\n";
     echo "</form>";
   }
 }
@@ -348,10 +448,12 @@ function get_ana_parameters($alg,$type,$aid,$ia,$hhid,$mask=1,$names=1,$values=1
     //  parameters to be checked for check algorithms (names and values),
     // input parameters for creator algorithms (names and $hcvalues)
     if($names) {
-      $dstid = OCIParse($conn,"begin OnlineHistDB.GetAlgoParname('$alg',$ip,:pname); end;");
+      $dstid = OCIParse($conn,"begin OnlineHistDB.GetAlgoParname('$alg',$ip,:pname,:pdefv); end;");
       ocibindbyname($dstid,":pname",$pname,500);
+      ocibindbyname($dstid,":pdefv",$pdefv,50);
       OCIExecute($dstid);
       $_POST["a${ia}_p${ip}_name"]=$pname;
+      $_POST["a${ia}_p${ip}_defv"]=$pdefv;
       ocifreestatement($dstid);
     }
     if($values && $type == "CHECK") {
@@ -377,10 +479,12 @@ function get_ana_parameters($alg,$type,$aid,$ia,$hhid,$mask=1,$names=1,$values=1
       // input parameters for check algorithms (names and values)
       $ipa=$ip-$np;
       if($names) {
-        $dstid = OCIParse($conn,"begin OnlineHistDB.GetAlgoParname('$alg',$ip,:pname); end;");
+        $dstid = OCIParse($conn,"begin OnlineHistDB.GetAlgoParname('$alg',$ip,:pname,:pdefv); end;");
         ocibindbyname($dstid,":pname",$pname,500);
+        ocibindbyname($dstid,":pdefv",$pdefv,50);
         OCIExecute($dstid);
         $_POST["a${ia}_i${ipa}_name"]=$pname;
+	$_POST["a${ia}_i${ipa}_defv"]=$pdefv;
         ocifreestatement($dstid);
       }
       if($values) {
@@ -494,7 +598,10 @@ function histo_analysis($id,$htype,$mode) {
         $ip=0;
         while ($ip++<$_POST["a${ia}_ni"]){
           printf("<tr><td> <input READONLY type='text' size=15 name='a${ia}_i${ip}_name' value='%s'>\n",$_POST["a${ia}_i${ip}_name"]);
-          $fw=myfloatformat($_POST["a${ia}_i${ip}_v"]); 
+	  if($mode == "newana") { 
+	    $_POST["a${ia}_i${ip}_v"] = $_POST["a${ia}_i${ip}_defv"]; 
+	  }
+	  $fw=myfloatformat($_POST["a${ia}_i${ip}_v"]);
           printf("<td> <input type='text' size=8 name='a${ia}_i${ip}_v' value='$fw'>\n",$_POST["a${ia}_i${ip}_v"]);
         }
         echo "</table>";
@@ -504,7 +611,12 @@ function histo_analysis($id,$htype,$mode) {
         $ip=0;
         while ($ip++<$_POST["a${ia}_np"]){
           printf("<tr><td> <input READONLY type='text' size=15 name='a${ia}_p${ip}_name' value='%s'>\n",$_POST["a${ia}_p${ip}_name"]);
-          $fw=myfloatformat($_POST["a${ia}_p${ip}_w"]); $fa=myfloatformat($_POST["a${ia}_p${ip}_a"]); 
+	  if($mode == "newana") {
+	    $_POST["a${ia}_p${ip}_w"] = $_POST["a${ia}_p${ip}_defv"];
+	    $_POST["a${ia}_p${ip}_a"] = $_POST["a${ia}_p${ip}_defv"];
+	  }
+          $fw= myfloatformat($_POST["a${ia}_p${ip}_w"]);
+	  $fa= myfloatformat($_POST["a${ia}_p${ip}_a"]);
           printf("<td> <input type='text' size=8 name='a${ia}_p${ip}_w' value='$fw'>\n",$_POST["a${ia}_p${ip}_w"]);
           printf("<td> <input type='text' size=8 name='a${ia}_p${ip}_a' value='$fa'></tr>\n",$_POST["a${ia}_p${ip}_a"]);
         }

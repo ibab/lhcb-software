@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.23 2008-04-30 13:29:16 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDB.h,v 1.24 2008-10-03 15:45:30 ggiacomo Exp $
 #ifndef ONLINEHISTDB_H
 #define ONLINEHISTDB_H 1
 /** @class  OnlineHistDB OnlineHistDB.h OnlineHistDB/OnlineHistDB.h
@@ -64,8 +64,10 @@ class  OnlineHistDB : public OnlineHistDBEnv,
   bool declareCheckAlgorithm(std::string Name, 
                              int NoutPars, 
                              std::vector<std::string> *outPars = NULL,
+			     std::vector<float> *outDefv = NULL,
                              int NinPars = 0, 
                              std::vector<std::string> *inPars =NULL ,
+			     std::vector<float> *inDefv = NULL,
                              std::string doc="NONE");
   /// declares to the DB an available algorithm to produce histograms at
   /// analysis time. Ninput is the number of input histograms, SetAsInput
@@ -74,10 +76,11 @@ class  OnlineHistDB : public OnlineHistDBEnv,
   /// description of the algorithm.
   bool declareCreatorAlgorithm(std::string Name, 
 			       int Ninput,
-             bool SetAsInput=false,
+			       bool SetAsInput=false,
 			       HistType OutputType = H1D,
 			       int Npars=0, 
 			       std::vector<std::string> *pars=NULL,
+			       std::vector<float> *defv = NULL,
 			       std::string doc="NONE");
 
 

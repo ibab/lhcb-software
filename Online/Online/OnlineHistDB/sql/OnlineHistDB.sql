@@ -18,9 +18,10 @@ create or replace package OnlineHistDB AUTHID CURRENT_USER as
  function RenameHistogram(oldIdentifier IN varchar2, 
                 newTask IN varchar2, newAlgo IN varchar2, newTitle IN varchar2) return number;
  function SetDimServiceName(theHID IN  HISTOGRAM.HID%TYPE, theDSN IN DIMSERVICENAME.SN%TYPE) return number;
- procedure DeclareCheckAlgorithm(Name varchar2,pars parameters,doc varchar2:=NULL, nin integer :=0 );
+ procedure DeclareCheckAlgorithm(Name varchar2,pars parameters,doc varchar2:=NULL, nin integer :=0, defVals thresholds);
  procedure DeclareCreatorAlgorithm(Name IN varchar2,Ninp IN number:=0,pars IN parameters,
-			thetype IN varchar2 := 'H1D', doc IN varchar2:=NULL, thegetset in ALGORITHM.GETSET%TYPE := 0);
+			thetype IN varchar2 := 'H1D', doc IN varchar2:=NULL, thegetset in ALGORITHM.GETSET%TYPE := 0,
+			defVals thresholds);
 
  function DeclareAnalysis(theSet IN HISTOGRAMSET.HSID%TYPE, Algo IN varchar2, warn IN thresholds, alr IN thresholds, 
 	instance IN integer:=1, inputs IN thresholds:=thresholds()) return number;
@@ -41,13 +42,14 @@ create or replace package OnlineHistDB AUTHID CURRENT_USER as
   ,TIT_Y_SIZE OUT FLOAT,TIT_Y_OFFS OUT FLOAT,TIT_Z_SIZE OUT FLOAT,TIT_Z_OFFS OUT FLOAT,LAB_X_SIZE OUT FLOAT,LAB_X_OFFS OUT FLOAT
   ,LAB_Y_SIZE OUT FLOAT,LAB_Y_OFFS OUT FLOAT,LAB_Z_SIZE OUT FLOAT,LAB_Z_OFFS OUT FLOAT,GRIDX OUT INT,GRIDY OUT INT
   ,THETA OUT FLOAT,PHI OUT FLOAT,CNTPLOT OUT VARCHAR2,DRAWPATTERN OUT VARCHAR2,STAT_X_SIZE OUT FLOAT,STAT_X_OFFS OUT FLOAT
-  ,STAT_Y_SIZE OUT FLOAT,STAT_Y_OFFS OUT FLOAT,HTIT_X_SIZE OUT FLOAT,HTIT_X_OFFS OUT FLOAT,HTIT_Y_SIZE OUT FLOAT,HTIT_Y_OFFS OUT FLOAT);
+  ,STAT_Y_SIZE OUT FLOAT,STAT_Y_OFFS OUT FLOAT,HTIT_X_SIZE OUT FLOAT,HTIT_X_OFFS OUT FLOAT,HTIT_Y_SIZE OUT FLOAT,HTIT_Y_OFFS OUT FLOAT
+  ,NDIVX OUT INT,NDIVY OUT INT,MARKERSIZE OUT INT,MARKERCOLOR OUT INT,MARKERSTYLE OUT INT);
 
  function GetBestDO(theHID IN HISTOGRAM.HID%TYPE, thePage IN varchar2 := NULL,TheInstance IN int := 1) return number;
  function GetHID(theHistoName IN varchar2,Subindex OUT HISTOGRAM.IHS%TYPE) return number;
  function GetName(theHID IN varchar2) return varchar2;
  procedure GetAlgoNpar(theAlg IN varchar2, Npar OUT integer, Ninp OUT integer);
- procedure GetAlgoParname(theAlg IN varchar2, Ipar IN integer, name OUT varchar2);
+ procedure GetAlgoParname(theAlg IN varchar2, Ipar IN integer, name OUT varchar2, defVal OUT float);
  procedure GetAnaSettings(theAna IN integer, theHisto IN varchar2, Ipar IN integer, warn OUT float, alr OUT float);
  procedure GetAnaInput(theAna IN integer, theHisto IN varchar2, Ipar IN integer, input OUT float);
  procedure GetAnaSettings(theAna IN integer, theHisto IN varchar2, warn OUT thresholds, alr OUT thresholds,
@@ -72,8 +74,9 @@ create or replace package OnlineHistDB AUTHID CURRENT_USER as
 	theTask OUT varchar2, theAlgo OUT varchar2, theNanalysis OUT int,
 	theDescr OUT varchar2, theDoc OUT varchar2, theIsanalysishist OUT int, theCreation OUT int,
         theObsolete OUT int, theDisplay out int, theHSDisplay out int, theSHDisplay out int,
-	theDIMServiceName OUT varchar2)
+	theDIMServiceName OUT varchar2, theLabels OUT parameters)
 	return number;
+ procedure DeclareBinLabels(theSet IN HISTOGRAMSET.HSID%TYPE, theHID IN HISTOGRAM.HID%TYPE, labels parameters);
  function DeleteHistogramSet(theSet IN HISTOGRAMSET.HSID%TYPE) return number;
  function DeleteHistogram(theHID IN HISTOGRAM.HID%TYPE) return number;
  procedure TaskCleanup;
@@ -555,7 +558,8 @@ begin
 end SetDimServiceName;
 -----------------------
 
-procedure DeclareCheckAlgorithm(Name varchar2,pars parameters,doc varchar2:=NULL, nin integer := 0) is
+procedure DeclareCheckAlgorithm(Name varchar2,pars parameters,doc varchar2:=NULL, nin integer := 0,
+				defVals thresholds) is
 -- pars must contain the names of output parameters, followed by input parameters
  cursor al is  select ALGNAME from ALGORITHM where ALGNAME=Name;	
  algo ALGORITHM.ALGNAME%TYPE;
@@ -565,9 +569,9 @@ begin
  open al;
  fetch al into  algo;
  if al%NOTFOUND then
-   insert into ALGORITHM(ALGNAME,ALGTYPE,NINPUT,NPARS,ALGPARS) VALUES(Name,'CHECK',nin,np,pars);
+   insert into ALGORITHM(ALGNAME,ALGTYPE,NINPUT,NPARS,ALGPARS,PARDEFVAL) VALUES(Name,'CHECK',nin,np,pars,defVals);
  else
-   update ALGORITHM set ALGTYPE='CHECK',NPARS=np,NINPUT=nin,ALGPARS=pars where ALGNAME=Name;
+   update ALGORITHM set ALGTYPE='CHECK',NPARS=np,NINPUT=nin,ALGPARS=pars,PARDEFVAL=defVals where ALGNAME=Name;
  end if;
  close al;
  if (LENGTH(doc) > 0 ) then
@@ -582,7 +586,7 @@ end DeclareCheckAlgorithm;
 -----------------------
 procedure DeclareCreatorAlgorithm(Name IN varchar2,Ninp IN number:=0,
 	        pars IN parameters, thetype IN varchar2 := 'H1D', doc IN varchar2:=NULL, 
-                thegetset in ALGORITHM.GETSET%TYPE := 0) is
+                thegetset in ALGORITHM.GETSET%TYPE := 0, defVals thresholds) is
  cursor al is  select ALGNAME from ALGORITHM where ALGNAME=Name;	
  algo ALGORITHM.ALGNAME%TYPE;
  nin integer := pars.COUNT;
@@ -599,7 +603,7 @@ begin
  end if;
  close al;
  if (nin > 0) then
-    update ALGORITHM set NPARS=nin,ALGPARS=pars where ALGNAME=Name;
+    update ALGORITHM set NPARS=nin,ALGPARS=pars,PARDEFVAL=defVals where ALGNAME=Name;
  end if;
  if (LENGTH(doc) > 0 ) then
     update ALGORITHM set ALGDOC=doc where ALGNAME=Name;
@@ -810,7 +814,7 @@ procedure GET_DISPLAYOPTIONS(theDOID IN int
 ,LAB_Y_SIZE OUT FLOAT,LAB_Y_OFFS OUT FLOAT,LAB_Z_SIZE OUT FLOAT,LAB_Z_OFFS OUT FLOAT,GRIDX OUT INT,GRIDY OUT INT
 ,THETA OUT FLOAT,PHI OUT FLOAT,CNTPLOT OUT VARCHAR2,DRAWPATTERN OUT VARCHAR2,STAT_X_SIZE OUT FLOAT,STAT_X_OFFS OUT FLOAT
 ,STAT_Y_SIZE OUT FLOAT,STAT_Y_OFFS OUT FLOAT,HTIT_X_SIZE OUT FLOAT,HTIT_X_OFFS OUT FLOAT,HTIT_Y_SIZE OUT FLOAT,HTIT_Y_OFFS OUT FLOAT
-) is
+,NDIVX OUT INT,NDIVY OUT INT,MARKERSIZE OUT INT,MARKERCOLOR OUT INT,MARKERSTYLE OUT INT) is
  mydo dispopt; 
 begin
  SELECT OPT INTO mydo FROM DISPLAYOPTIONS WHERE DOID = theDOID;
@@ -862,7 +866,13 @@ begin
  HTIT_X_OFFS := mydo.HTIT_X_OFFS;
  HTIT_Y_SIZE := mydo.HTIT_Y_SIZE;
  HTIT_Y_OFFS := mydo.HTIT_Y_OFFS;
+ NDIVX := mydo.NDIVX;
+ NDIVY := mydo.NDIVY;
+ MARKERSIZE := mydo.MARKERSIZE;
+ MARKERCOLOR := mydo.MARKERCOLOR;
+ MARKERSTYLE := mydo.MARKERSTYLE;
 end GET_DISPLAYOPTIONS;
+
 
 -------------------------------
 
@@ -918,17 +928,24 @@ end GetAlgoNpar;
 
 -----------------------
 
-procedure GetAlgoParname(theAlg IN varchar2, Ipar IN integer, name OUT varchar2) is
- cursor np is select ALGPARS from ALGORITHM where ALGNAME=theAlg;
+procedure GetAlgoParname(theAlg IN varchar2, Ipar IN integer, name OUT varchar2, defVal OUT float) is
+ cursor np is select ALGPARS,PARDEFVAL from ALGORITHM where ALGNAME=theAlg;
  mypars parameters;
+ mydefval thresholds;
 begin
+ name := 'Unknown';
+ defVal := NULL;
  open np;
- fetch np into mypars;
+ fetch np into mypars,mydefval;
  if (np%NOTFOUND) then
-     name := 'Unknown';
      raise_application_error(-20006,'Cannot find Algorithm '||theAlg);
  end if;
- name := mypars(Ipar);
+ if (Ipar>0 and Ipar <= mypars.COUNT) then
+  name := mypars(Ipar);
+  if (mydefval is not NULL) then
+   defVal := mydefval(Ipar);
+  end if;
+ end if;
  close np;
 end GetAlgoParname;
 
@@ -1418,14 +1435,14 @@ function GetHistogramData(theName IN varchar2, thePage IN varchar2, theInstance 
 	theTask OUT varchar2, theAlgo OUT varchar2, theNanalysis OUT int,
 	theDescr OUT varchar2, theDoc OUT varchar2, theIsanalysishist OUT int, theCreation OUT int,
         theObsolete OUT int, theDisplay OUT int, theHSDisplay OUT int, theSHDisplay OUT int,
-	theDIMServiceName OUT varchar2) 
+	theDIMServiceName OUT varchar2, theLabels OUT parameters) 
 	return number is
 cursor myh(XName HISTOGRAM.NAME%TYPE) is SELECT HS.HSID,HS.NHS,HS.HSTYPE,HS.HSTITLE,HS.HSALGO,HS.HSTASK,
         HS.NANALYSIS,HS.DESCR,HS.DOC,HS.HSDISPLAY,
         H.HID,H.IHS,H.SUBTITLE,H.ISANALYSISHIST,
 	(NEW_TIME(H.CREATION,'EST','GMT')-TO_DATE('01-JAN-1970','DD-MON-YYYY'))*(86400),
 	(NEW_TIME(H.OBSOLETENESS,'EST','GMT')-TO_DATE('01-JAN-1970','DD-MON-YYYY'))*(86400),
-	H.DISPLAY FROM HISTOGRAMSET HS,HISTOGRAM H WHERE H.NAME=XName AND H.HSET=HS.HSID;
+	H.DISPLAY,H.BINLABELS FROM HISTOGRAMSET HS,HISTOGRAM H WHERE H.NAME=XName AND H.HSET=HS.HSID;
 cursor mysh(Xhid HISTOGRAM.HID%TYPE) is SELECT SDISPLAY FROM SHOWHISTO 
 	WHERE PAGE=thePage AND HISTO=Xhid AND INSTANCE=theInstance;
 cursor mysn(Xhid HISTOGRAM.HID%TYPE) is SELECT SN from DIMSERVICENAME where PUBHISTO=Xhid;
@@ -1433,7 +1450,8 @@ out number := 1;
 begin
  open myh(theName);
  fetch myh into theHsid,theNhs,theHstype,theHstitle,theAlgo,theTask,theNanalysis,theDescr,
-   theDoc,theHSDisplay,theHid,theIhs,theSubtitle,theIsanalysishist,theCreation,theObsolete,theDisplay;
+   theDoc,theHSDisplay,theHid,theIhs,theSubtitle,theIsanalysishist,theCreation,theObsolete,theDisplay,
+   theLabels;
  if (myh%NOTFOUND) then
   close myh;
   raise_application_error(-20050,'Histogram '||theName||' not found');
@@ -1455,12 +1473,25 @@ begin
  return out;
 end GetHistogramData;
 -----------------------
+procedure DeclareBinLabels(theSet IN HISTOGRAMSET.HSID%TYPE, theHID IN HISTOGRAM.HID%TYPE, labels parameters) is
+begin
+if (labels.COUNT >0) then
+ if (theHID is not NULL) then
+  UPDATE HISTOGRAM SET BINLABELS=labels where HID=theHID;
+ else
+  UPDATE HISTOGRAM SET BINLABELS=labels where HSET=theSet;
+ end if;
 
+end if;
+end DeclareBinLabels;
+
+-----------------------
 function DeleteHistogramSet(theSet IN HISTOGRAMSET.HSID%TYPE) return number is
  cursor vh is SELECT HID from HISTOGRAM where HSET=theSet;
  myhid HISTOGRAM.HID%TYPE;
  pagenames varchar2(800);
  np int;
+ nd int;
 begin
  savepoint beforeDHSdelete;
  open vh;
@@ -1476,7 +1507,10 @@ begin
  delete from DISPLAYOPTIONS where DOID in (select HSDISPLAY from histogramset where hsid=theSet);
  delete from DISPLAYOPTIONS where DOID in (select DISPLAY from histogram where HSET=theSet);
  delete from histogramset where hsid=theSet;
- return SQL%ROWCOUNT; -- returns the number of deleted objects (0 or 1)
+ nd := SQL%ROWCOUNT;
+ -- in case an analysis hist was deleted in cascade
+ delete from histogram where isanalysishist=1 and hid not in (select HCID from hcreator);
+ return nd; -- returns the number of deleted objects (0 or 1)
 EXCEPTION
  when OTHERS then
   ROLLBACK TO beforeDHSdelete;
@@ -1491,7 +1525,7 @@ function DeleteHistogram(theHID IN HISTOGRAM.HID%TYPE) return number is
  myhsid HISTOGRAMSET.HSID%TYPE;
  mynhs HISTOGRAMSET.NHS%TYPE;
  myihs HISTOGRAM.IHS%TYPE;
- 
+ nd int;
 begin
  savepoint beforeDHdelete;
  open vh;
@@ -1509,7 +1543,10 @@ begin
   else
    update HISTOGRAMSET set NHS=NHS-1 where HSID=myhsid;
    delete from histogram where HID=theHID;
-   return SQL%ROWCOUNT; -- returns the number of deleted objects (0 or 1)
+   nd := SQL%ROWCOUNT;
+   -- in case an analysis hist was deleted in cascade
+   delete from histogram where isanalysishist=1 and hid not in (select HCID from hcreator);
+   return nd; -- returns the number of deleted objects (0 or 1)
   end if;
  end if;
  close vh;

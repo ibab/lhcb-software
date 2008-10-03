@@ -46,7 +46,12 @@ $DispOpt = array("LABEL_X",
 "HTIT_X_SIZE",
 "HTIT_X_OFFS",
 "HTIT_Y_SIZE",
-"HTIT_Y_OFFS");
+"HTIT_Y_OFFS",
+"NDIVX",
+"NDIVY",
+"MARKERSIZE",
+"MARKERCOLOR",
+"MARKERSTYLE");
 function get_displayoptions($disp) {
   global $conn;
   $query="BEGIN ONLINEHISTDB.GET_DISPLAYOPTIONS($disp";
@@ -146,6 +151,16 @@ function get_displayoptions($disp) {
   $_POST["HTIT_Y_SIZE"] = 9999999999.;
   $query .= ",:HTIT_Y_OFFS";
   $_POST["HTIT_Y_OFFS"] = 9999999999.;
+  $query .= ",:NDIVX";
+  $_POST["NDIVX"] = 9999999999.;
+  $query .= ",:NDIVY";
+  $_POST["NDIVY"] = 9999999999.;
+  $query .= ",:MARKERSIZE";
+  $_POST["MARKERSIZE"] = 9999999999.;
+  $query .= ",:MARKERCOLOR";
+  $_POST["MARKERCOLOR"] = 9999999999.;
+  $query .= ",:MARKERSTYLE";
+  $_POST["MARKERSTYLE"] = 9999999999.;
   $query .= "); END;";
   $dstid = OCIParse($conn,$query);
   ocibindbyname($dstid,":LABEL_X",$_POST["LABEL_X"],50);
@@ -196,6 +211,11 @@ function get_displayoptions($disp) {
   ocibindbyname($dstid,":HTIT_X_OFFS",$_POST["HTIT_X_OFFS"]);
   ocibindbyname($dstid,":HTIT_Y_SIZE",$_POST["HTIT_Y_SIZE"]);
   ocibindbyname($dstid,":HTIT_Y_OFFS",$_POST["HTIT_Y_OFFS"]);
+  ocibindbyname($dstid,":NDIVX",$_POST["NDIVX"]);
+  ocibindbyname($dstid,":NDIVY",$_POST["NDIVY"]);
+  ocibindbyname($dstid,":MARKERSIZE",$_POST["MARKERSIZE"]);
+  ocibindbyname($dstid,":MARKERCOLOR",$_POST["MARKERCOLOR"]);
+  ocibindbyname($dstid,":MARKERSTYLE",$_POST["MARKERSTYLE"]);
   OCIExecute($dstid);
   ocifreestatement($dstid);
 }

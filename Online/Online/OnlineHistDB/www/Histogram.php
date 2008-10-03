@@ -20,7 +20,7 @@ $fulllist =array_key_exists("fulllist",$_GET);
 if(isset($htype) ) {
   $conn=HistDBconnect(1);
   // query general variables
-  $query="select VH.NAME,T.TASKNAME,T.SUBSYS1,T.SUBSYS2,T.SUBSYS3,T.REFERENCE,HS.HSID,HS.NHS,HS.HSALGO,HS.HSTITLE,HS.HSTYPE,HS.NANALYSIS,HS.DESCR,HS.DOC,HS.HSDISPLAY,H.HID,H.IHS,H.SUBTITLE,H.ISTEST,H.ISANALYSISHIST,H.CREATION,H.OBSOLETENESS,H.DISPLAY,TO_CHAR(H.CREATION,'DD-Mon-YYYY') CRE_DATE from VIEWHISTOGRAM VH,HISTOGRAM H,HISTOGRAMSET HS, TASK T where H.HSET=HS.HSID and HS.HSTASK=T.TASKNAME and VH.HID=H.HID AND VH.${htype}='${id}' order by H.IHS";
+  $query="select VH.NAME,T.TASKNAME,T.SUBSYS1,T.SUBSYS2,T.SUBSYS3,T.REFERENCE,HS.HSID,HS.NHS,HS.HSALGO,HS.HSTITLE,HS.HSTYPE,HS.NANALYSIS,HS.DESCR,HS.DOC,HS.HSDISPLAY,H.HID,H.IHS,H.SUBTITLE,H.ISTEST,H.ISANALYSISHIST,H.CREATION,H.OBSOLETENESS,H.DISPLAY,TO_CHAR(H.CREATION,'DD-Mon-YYYY') CRE_DATE,PARLENGTH(BINLABELS) NLABELS from VIEWHISTOGRAM VH,HISTOGRAM H,HISTOGRAMSET HS, TASK T where H.HSET=HS.HSID and HS.HSTASK=T.TASKNAME and VH.HID=H.HID AND VH.${htype}='${id}' order by H.IHS";
   if ($debug) echo "query is $query <br>\n";
   $stid = OCIParse($conn,$query);
   OCIExecute($stid);
@@ -60,6 +60,23 @@ if(isset($htype) ) {
     }
     echo "</td></tr>\n";
     
+    // Custom Bin Labels
+    echo "<tr id=DISPLAY><td><H3> Custom Bin Labels </H3><br>\n";
+    if ($histo["NLABELS"] > 0)
+      histo_labels($id,$htype,"display");
+    else {
+      echo "No Custom Bin Labels";
+      if( $canwrite) {
+	echo "<br><form method='post' action='write/histo_labels.php'>";
+	printf("<input type='hidden' name='id' value='%s'>\n",$id);
+	printf("<input type='hidden' name='htype' value='%s'>\n",$htype);
+	printf("<input type='hidden' name='NHS' value='%s'>\n",$histo["NHS"]);
+	echo "<table align=right><tr><td><input type='submit' name='New' value='Specify Custom Bin Labels'></tr></table>";
+	echo "</form>";
+      }
+    }
+    echo "</td></tr>\n";
+
     //Automatic Analysis
     echo "<tr id=ANALYSIS><td><H3> Automatic Analysis </H3><br>\n";
     if ($histo["NANALYSIS"]>0) 

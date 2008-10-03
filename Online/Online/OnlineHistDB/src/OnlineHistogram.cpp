@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.33 2008-07-30 15:54:33 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.34 2008-10-03 15:45:31 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -207,7 +207,7 @@ void OnlineHistogram::load() {
   OCIStmt *stmt=NULL;
   m_StmtMethod = "OnlineHistogram::load";
   std::string command = 
-    "BEGIN :out := ONLINEHISTDB.GETHISTOGRAMDATA(:nm,:pg,:in,:hid,:hsd,:ihs,:nhs,:ty,:hst,:sub,:tk,:alg,:na,:des,:doc,:isa,:cre,:obs,:dis,:hdi,:shd, :dsn); END;";
+    "BEGIN :out := ONLINEHISTDB.GETHISTOGRAMDATA(:nm,:pg,:in,:hid,:hsd,:ihs,:nhs,:ty,:hst,:sub,:tk,:alg,:na,:des,:doc,:isa,:cre,:obs,:dis,:hdi,:shd, :dsn,:lbl); END;";
   if (OCI_SUCCESS == prepareOCITaggedStatement(stmt, command.c_str(), "HLOAD") ) {
     
     text  hid[VSIZE_HID]="";
@@ -220,6 +220,10 @@ void OnlineHistogram::load() {
     text  doc[VSIZE_DOC]="";
     text  dsn[VSIZE_SN]="";
     int isAnaHist=0;
+    OCITable *parameters;
+    checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_TABLE,
+			     OCIparameters, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
+			     (dvoid **) &parameters));
     myOCIBindInt   (stmt,":out", out);  
     myOCIBindString(stmt,":nm" , m_identifier);
     myOCIBindString(stmt,":pg" , m_page);
@@ -243,6 +247,9 @@ void OnlineHistogram::load() {
     myOCIBindInt   (stmt,":hdi", m_hsdisp, &m_hsdisp_null);
     myOCIBindInt   (stmt,":shd", m_shdisp, &m_shdisp_null);
     myOCIBindString(stmt,":dsn", dsn, VSIZE_SN, &m_dimServiceName_null);
+    myOCIBindObject(stmt,":lbl", (void **) &parameters, OCIparameters );
+    
+    
 
     sword status=myOCIStmtExecute(stmt);
     
@@ -269,12 +276,14 @@ void OnlineHistogram::load() {
         if (m_shdisp_null) m_shdisp = 0;
         m_dimServiceName = m_dimServiceName_null ? "" : std::string((const char *) dsn);
         m_isAnaHist = (isAnaHist>0);
+	stringVarrayToVector(parameters, m_binlabels);
       }
       
     }
     else {
       m_isAbort=true;
     }
+    checkerr(OCIObjectFree ( m_envhp, m_errhp, parameters, OCI_OBJECTFREE_FORCE) );
     releaseOCITaggedStatement(stmt, "HLOAD");
     
     if (!m_isAbort) {
@@ -297,11 +306,9 @@ void OnlineHistogram::createDisplayOptions() {
     checkerr( OCIObjectGetInd ( m_envhp,   m_errhp,
 				(dvoid *) m_dispopt,
 				(dvoid **) &m_dispopt_null), SEVERE);
-
-
-    m_do.reserve(48);
+    m_do.reserve(53);
     m_do.push_back(new OnlineDisplayOption("LABEL_X",OnlineDisplayOption::STRING,
-             (void*) &(m_dispopt->LABEL_X),
+					   (void*) &(m_dispopt->LABEL_X),
 					   &(m_dispopt_null->LABEL_X), this ) );
     m_do.push_back(new OnlineDisplayOption("LABEL_Y",OnlineDisplayOption::STRING,
 					   (void*) &(m_dispopt->LABEL_Y),
@@ -444,6 +451,21 @@ void OnlineHistogram::createDisplayOptions() {
     m_do.push_back(new OnlineDisplayOption("HTIT_Y_OFFS",OnlineDisplayOption::FLOAT,
 					   (void*) &(m_dispopt->HTIT_Y_OFFS),
 					   &(m_dispopt_null->HTIT_Y_OFFS), this ) );
+    m_do.push_back(new OnlineDisplayOption("NDIVX",OnlineDisplayOption::INT,
+					   (void*) &(m_dispopt->NDIVX),
+					   &(m_dispopt_null->NDIVX), this ) );
+    m_do.push_back(new OnlineDisplayOption("NDIVY",OnlineDisplayOption::INT,
+					   (void*) &(m_dispopt->NDIVY),
+					   &(m_dispopt_null->NDIVY), this ) );
+    m_do.push_back(new OnlineDisplayOption("MARKERSIZE",OnlineDisplayOption::INT,
+					   (void*) &(m_dispopt->MARKERSIZE),
+					   &(m_dispopt_null->MARKERSIZE), this ) );
+    m_do.push_back(new OnlineDisplayOption("MARKERCOLOR",OnlineDisplayOption::INT,
+					   (void*) &(m_dispopt->MARKERCOLOR),
+					   &(m_dispopt_null->MARKERCOLOR), this ) );
+    m_do.push_back(new OnlineDisplayOption("MARKERSTYLE",OnlineDisplayOption::INT,
+					   (void*) &(m_dispopt->MARKERSTYLE),
+					   &(m_dispopt_null->MARKERSTYLE), this ) );
   }
 
   if(m_shdisp) {

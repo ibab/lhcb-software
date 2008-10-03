@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.24 2008-08-28 09:55:49 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.25 2008-10-03 15:45:31 ggiacomo Exp $
 #ifndef ONLINEHISTOGRAM_H
 #define ONLINEHISTOGRAM_H 1
 /** @class  OnlineHistogram OnlineHistogram.h OnlineHistDB/OnlineHistogram.h
@@ -162,7 +162,11 @@ class  OnlineHistogram : public OnlineHistDBEnv
   /// success.
   bool initHistoPageDisplayOptionsFromHist(std::string FullPathPageName = "_DEFAULT_",
 					   int Instance=-1); 
-
+  inline unsigned int nbinlabels() {return m_binlabels.size();}
+  inline std::string binlabel(unsigned int i) { 
+    if(i<m_binlabels.size()) return m_binlabels[i];
+    else return "";
+  }
   // ANALYSIS OPTIONS
   /// for analysis histogram, get the directions for creating histogram
   bool getCreationDirections(std::string& Algorithm,
@@ -308,6 +312,8 @@ class  OnlineHistogram : public OnlineHistDBEnv
   dispopt *m_dispopt;
   dispoptInd *m_dispopt_null;
   std::vector<OnlineDisplayOption*> m_do;
+  std::vector<std::string> m_binlabels;
+
   bool verifyPage(std::string &Page, int Instance);
   bool checkHSDisplayFromDB();
   bool checkHDisplayFromDB();

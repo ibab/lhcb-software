@@ -79,7 +79,12 @@ CREATE OR REPLACE TYPE DISPOPT AS OBJECT (
   HTIT_X_SIZE   FLOAT,
   HTIT_X_OFFS   FLOAT,
   HTIT_Y_SIZE   FLOAT,
-  HTIT_Y_OFFS   FLOAT
+  HTIT_Y_OFFS   FLOAT,
+  NDIVX         smallint,
+  NDIVY         smallint,
+  MARKERSIZE    smallint,
+  MARKERCOLOR   smallint,
+  MARKERSTYLE   smallint
 );
 /
 
@@ -121,7 +126,8 @@ CREATE SEQUENCE Displayoptions_ID START WITH 1
 create table DISPLAYOPTIONS (
   DOID integer constraint DO_PK primary key 
         USING INDEX (create index DO_PK_IX on DISPLAYOPTIONS(DOID) ),
-  OPT dispopt
+  OPT dispopt,
+  
 );
 
 
@@ -167,8 +173,9 @@ create table HISTOGRAM (
  IsAnalysisHist number(1) DEFAULT 0 NOT NULL,
  CREATION TIMESTAMP,
  OBSOLETENESS TIMESTAMP,
- DISPLAY integer  CONSTRAINT H_DISP references DISPLAYOPTIONS(DOID) ON DELETE SET NULL
-);
+ DISPLAY integer  CONSTRAINT H_DISP references DISPLAYOPTIONS(DOID) ON DELETE SET NULL,
+ BINLABELS parameters
+) NESTED TABLE BINLABELS STORE AS BINLABELS_STORE ;
 CREATE INDEX H_SET_IX on HISTOGRAM(HSET) ;
 CREATE INDEX H_SUB_IX on HISTOGRAM(SUBTITLE) ;
 CREATE INDEX H_DISP_IX on HISTOGRAM(DISPLAY) ;
@@ -191,9 +198,10 @@ create table ALGORITHM (
  GETSET number(1) DEFAULT 0,
  NPARS smallint DEFAULT 0,
  ALGPARS parameters,
+ PARDEFVAL thresholds,
  ALGDOC varchar2(1000),
  HCTYPE varchar2(3) default NULL
-)NESTED TABLE ALGPARS STORE AS ALGPARS_STORE ;
+)NESTED TABLE ALGPARS STORE AS ALGPARS_STORE, NESTED TABLE PARDEFVAL STORE AS PARDEFVAL_STORE ;
 
 
 create table HCREATOR (
@@ -301,6 +309,28 @@ BEGIN
    ELSE RETURN SET_SEPARATOR()||subtit;
    END IF;
 END;
+/
+
+CREATE or replace FUNCTION parlength(pars parameters) return int as
+begin
+if (pars is null) then
+ return 0;
+else
+ return pars.COUNT;
+end if;
+end;
+/
+
+CREATE or replace FUNCTION parcomponent(pars parameters, i int) return VARCHAR2 as
+out VARCHAR2(15) := NULL;
+begin
+if (pars is not null) then
+ if ( i <= pars.COUNT and i>0) then
+  out := pars(i);
+ end if;
+end if;
+return out;
+end;
 /
 
 

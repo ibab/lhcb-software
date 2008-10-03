@@ -11,6 +11,7 @@ function showhisto_display($hid,$doid,$instance)
 {
   global $canwrite;
   global $conn;
+  $page=$_POST["PAGENAME"];
   
   $query="select NAME,HSTYPE from VIEWHISTOGRAM where HID='$hid'";
   $hstid = OCIParse($conn,$query);
@@ -24,13 +25,16 @@ function showhisto_display($hid,$doid,$instance)
     echo "<table align=right> <tr><td align=right>";
     if ($doid) {
       $act= $canwrite ? 'See/Update' : 'See';
-       echo "Using Special Display Options for this Histogram in this page<br>";
+      echo "Using Special Display Options for this Histogram in this page<br>";
+      if($canwrite) {
+	echo "<center><a class='submit' href='write/delete_opt.php?doid=${doid}&hid=${hid}&name=".
+	  toGet($histo["NAME"])."&page=".toGet(${page})."'>  Delete Special Options </a></center><br>\n";
+      }
     }
     else {
       $act= $canwrite ? 'Specify' : 0;
       echo "Using Histogram Default Display Options<br>";
     }
-    $page=$_POST["PAGENAME"];
     if ($act) {
       $type=$histo["HSTYPE"];
       $getp=toGet($page);

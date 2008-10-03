@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.31 2008-04-30 13:29:16 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.32 2008-10-03 15:45:31 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -216,21 +216,24 @@ OnlineHistogram* OnlineHistDB::declareAnalysisHistogram
 bool OnlineHistDB::declareCheckAlgorithm(std::string Name, 
                                          int NoutPars, 
                                          std::vector<std::string> *outPars,
+					 std::vector<float> *outDefv,
                                          int NinPars, 
                                          std::vector<std::string> *inPars,
+					 std::vector<float> *inDefv,
                                          std::string doc) {
   bool out=true;
   if(NoutPars>0) {
-    if (!outPars) { out=false; }
+    if (outPars == NULL || outDefv == NULL) 
+      { out=false; }
     else {
-      if ((int) outPars->size() != NoutPars)
+      if ((int) outPars->size() < NoutPars || (int) outDefv->size() < NoutPars)
         out=false;
     }
   }
   if(NinPars>0) {
-    if (!inPars) { out=false; }
+    if (inPars == NULL || inDefv == NULL) { out=false; }
     else {
-      if ((int) inPars->size() != NinPars)
+      if ((int) inPars->size() != NinPars|| (int) inDefv->size() < NinPars)
         out=false;
     }
   }
@@ -241,7 +244,7 @@ bool OnlineHistDB::declareCheckAlgorithm(std::string Name,
     if (doc != "NONE")
       statement << ",doc => :d";
     statement << ",nin => :nin";
-    statement << "); END;";
+    statement << ",defVals => :dv); END;";
     
     m_StmtMethod = "OnlineHistDB::declareCheckAlgorithm";
     OCIStmt *stmt=NULL;
@@ -261,12 +264,28 @@ bool OnlineHistDB::declareCheckAlgorithm(std::string Name,
 
       stringVectorToVarray(allPars, parameters);
       myOCIBindObject(stmt, ":par",(void **) &parameters , OCIparameters);
+
+      OCITable *defvalues;
+      checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_TABLE,
+			       OCIthresholds, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
+			       (dvoid **) &defvalues));
+
+      std::vector<float> allDefv;
+      if (NoutPars>0)
+        allDefv.insert(allDefv.end(), outDefv->begin(), outDefv->end());
+      if (NinPars>0)
+        allDefv.insert(allDefv.end(), inDefv->begin(), inDefv->end());
+
+      floatVectorToVarray(allDefv, defvalues);
+      myOCIBindObject(stmt, ":dv",(void **) &defvalues , OCIthresholds);
+
       if (doc != "NONE") 
         myOCIBindString(stmt, ":d", doc);
       myOCIBindInt(stmt, ":nin", NinPars);
 
       out = (OCI_SUCCESS == myOCIStmtExecute(stmt));
       checkerr(OCIObjectFree ( m_envhp, m_errhp, parameters, OCI_OBJECTFREE_FORCE) );
+      checkerr(OCIObjectFree ( m_envhp, m_errhp, defvalues , OCI_OBJECTFREE_FORCE) );
       releaseOCIStatement(stmt);
     }
   }
@@ -278,8 +297,16 @@ bool OnlineHistDB::declareCreatorAlgorithm(std::string Name,
                                            OnlineHistDBEnv::HistType OutputType,
                                            int Npars, 
                                            std::vector<std::string> *pars, 
+					   std::vector<float> *defv,
                                            std::string doc) {
   bool out=false;
+  if(Npars>0) {
+    if (pars == NULL || defv == NULL)
+      return out;
+    if ((int)pars->size() < Npars || (int)defv->size() < Npars)
+      return out;
+  }
+
   std::stringstream statement;
   statement << "BEGIN ONLINEHISTDB.DECLARECREATORALGORITHM(Name =>:x1,Ninp=>:x2,pars=>PARAMETERS(";
   int ipar=0;
@@ -292,7 +319,13 @@ bool OnlineHistDB::declareCreatorAlgorithm(std::string Name,
   statement << "),thetype=>:type";
   if (doc != "NONE")
     statement << ",doc=>:d";
-  statement << ",thegetset=>:setflag); END;";
+  statement << ",thegetset=>:setflag,defVals=>THRESHOLDS(";
+  ipar=0;
+  while (ipar++<Npars) {
+    statement << ":dv" << ipar;
+    if(ipar<Npars) statement << ",";
+  } 
+  statement << ") ); END;";
 
   m_StmtMethod = "OnlineHistDB::declareCreatorAlgorithm";
   OCIStmt *stmt=NULL;
@@ -301,9 +334,11 @@ bool OnlineHistDB::declareCreatorAlgorithm(std::string Name,
     myOCIBindInt   (stmt, ":x2", Ninput);
     ipar=0;
     while (ipar++<Npars) {
-      std::stringstream pname;
+      std::stringstream pname,dvname;
       pname << ":p" << ipar;
+      dvname << ":dv" << ipar;
       myOCIBindString(stmt, pname.str().c_str(), pars->at(ipar) );
+      myOCIBindFloat(stmt, dvname.str().c_str(), defv->at(ipar) );
     }
     std::string myType( HistTypeName[(int)OutputType] );
     myOCIBindString(stmt,":type",myType);

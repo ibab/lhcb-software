@@ -1,10 +1,17 @@
-! $Id: release.notes,v 1.34 2008-08-28 08:50:01 ggiacomo Exp $
+! $Id: release.notes,v 1.35 2008-10-03 15:45:31 ggiacomo Exp $
 ! Package     : OnlineHistDB
 ! Responsible : Giacomo Graziani
 !
 ! user manual in pdf format is available at /afs/cern.ch/user/g/ggrazian/www/lhcb/histdbdoc.pdf
 ! or using makedoc script in this folder
 !
+
+! 20081003 OnlineHistDB v4r12
+  - support for custom bin labels (can be added from the web interface)
+  - new display options: NDIVX, NDIVY, MARKERSIZE, MARKERSTYLE, MARKERCOLOR
+  - support default values for analysis parameters
+  - fix problem with deletion of analysis histograms
+  - page-specific display options can be now deleted from the web interface
 
 ! 20080828 OnlineHistDB v4r11
   - add tool to change algorithm names

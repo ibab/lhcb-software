@@ -13,7 +13,7 @@ using namespace std;
 
 int main() {
   bool ok =true;
-  boole sure=false;
+  bool sure=false;
 
   std::string options;
   int optioni;
