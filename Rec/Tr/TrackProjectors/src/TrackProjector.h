@@ -1,4 +1,4 @@
-// $Id: TrackProjector.h,v 1.8 2008-09-15 13:19:27 wouter Exp $
+// $Id: TrackProjector.h,v 1.9 2008-10-03 13:58:22 wouter Exp $
 #ifndef TRACKPROJECTORS_TRACKPROJECTOR_H 
 #define TRACKPROJECTORS_TRACKPROJECTOR_H 1
 
@@ -78,7 +78,7 @@ protected:
   mutable Gaudi::TrackProjectionMatrix m_H;
   mutable double m_sMeas  ;
   mutable double m_sState ;
-  mutable Gaudi::XYZVector m_dist ;
+  mutable double m_doca ;
   mutable Gaudi::XYZVector m_unitPocaVector ;
   bool m_useBField;                   /// Create StateTraj with or without BField information.
   double             m_tolerance;     ///< Required accuracy of the projection

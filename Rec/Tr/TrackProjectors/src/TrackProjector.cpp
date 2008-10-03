@@ -1,4 +1,4 @@
-// $Id: TrackProjector.cpp,v 1.16 2008-09-15 13:19:27 wouter Exp $
+// $Id: TrackProjector.cpp,v 1.17 2008-10-03 13:58:22 wouter Exp $
 // Include files 
 
 // local
@@ -110,20 +110,19 @@ StatusCode TrackProjector::project( const StateVector& statevector,
   m_sMeas = measTraj.muEstimate( refTraj.position(m_sState) );
   
   // Determine the actual minimum with the Poca tool
+  Gaudi::XYZVector dist ;
   StatusCode sc = m_poca -> minimize( refTraj, m_sState,
-				      measTraj, m_sMeas, m_dist, m_tolerance );
+				      measTraj, m_sMeas, dist, m_tolerance );
   if( sc.isFailure() ) { return sc; }
 
   // Set up the vector onto which we project everything. This should
   // actually be parallel to dist.
   m_unitPocaVector = (measTraj.direction(m_sMeas).Cross( refTraj.direction(m_sState) ) ).Unit() ;
-  DualVector unit = dual( m_unitPocaVector ) ;
+  m_doca = m_unitPocaVector.Dot(dist) ;
   
   // compute the projection matrix from parameter space onto the (signed!) unit
-  m_H = unit*refTraj.derivative(m_sState);
-  
-  // Calculate the residual by projecting the distance onto unit
-  m_residual = - dot( unit, m_dist ) ;
+  m_residual = -m_doca ;
+  m_H = dual( m_unitPocaVector ) * refTraj.derivative(m_sState);
   
   // Set the error on the measurement so that it can be used in the fit
   double errMeasure2 = meas.resolution2( refTraj.position(m_sState), 
