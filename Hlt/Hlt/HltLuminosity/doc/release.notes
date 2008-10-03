@@ -4,15 +4,13 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
-! 2008-10-02 - Gerhard Raven
+!========================== HltLuminosity v2r2 2008-10-03 ===================
+ 2008-10-02 - Gerhard Raven
  - move some messages from INFO to DEBUG
 
 ! 2008-10-01 - Jaap Panman
  -LumiHistoCollector: experimental code to analyse LumiHistos
  -LumiAnalyser: experimental code to accumulate rates
-
-!========================== HltLuminosity v2r2 2008-10-01 ===================
-
 
 ! 2008-09-24 - Gerhard Raven
  - remove unneeded include files
