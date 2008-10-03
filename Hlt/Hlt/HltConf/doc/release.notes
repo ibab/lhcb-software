@@ -1,9 +1,11 @@
-! $Id: release.notes,v 1.29 2008-10-02 14:46:35 graven Exp $ 
+! $Id: release.notes,v 1.30 2008-10-03 12:45:30 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : 
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+!========================== HltConf v1r4 2008-10-03 ===================
 ! 2008-10-02 - Gerhard Raven
  - by default, don't print Hlt sequence
  - update routing bits definition
