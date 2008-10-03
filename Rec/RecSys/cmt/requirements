@@ -75,7 +75,7 @@ use RichRecTrackTools   v1r6    Rich  # Chris Jones
 use GlobalReco          v6r17   Rec   # Chris Jones
 
 # Velo
-use VeloRecMonitors     v1r0    Velo  # Malcom John, Eduardo Rodrigues
+use VeloRecMonitors     v1r1    Velo  # Malcom John, Eduardo Rodrigues
 
 # Setup Python Configurables
 apply_pattern install_python_modules

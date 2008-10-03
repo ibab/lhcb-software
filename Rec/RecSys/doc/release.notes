@@ -12,7 +12,8 @@ This version uses Gaudi v20r2 and LHCb v25r2.
     MuonTrackAlign v1r7, RichMarkovRingFinder v2r2, RichRecAlgorithms v2r14, 
     RichRecQC v2r23, RichRecTools v4r6, PatAlgorithms v3r11, PatVelo v3r9,
     TrackSys v4r18, TsaAlgorithms v3r6, TrackCheckers v4r3, TrackFitEvent v3r18,
-    TrackFitter v2r28, TrackMonitors v1r4, TrackProjectors v2r19, TrackTools v3r12
+    TrackFitter v2r28, TrackMonitors v1r4, TrackProjectors v2r19,
+    TrackTools v3r12, VeloRecMonitors v1r1
 
 </PRE><H1><A NAME=v5r11>2008-09-08 RecSys v5r11</A></H1><PRE>
 This version uses Gaudi v20r2 and LHCb v25r1.
