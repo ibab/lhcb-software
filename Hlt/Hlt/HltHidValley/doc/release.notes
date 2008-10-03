@@ -1,14 +1,15 @@
-!$Id: release.notes,v 1.6 2008-09-19 10:23:50 marcin Exp $
+!$Id: release.notes,v 1.7 2008-10-03 12:36:11 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltHidValley
 ! Responsible : Marcin Kucharczyk
 ! Purpose     : Holds algorithms for selections of Hidden Valley particles
 !-----------------------------------------------------------------------------
 
-! ====================== HltHidValley v1r1 2008-09-10 =====================
-
+!========================== HltHidValley v1r2 2008-10-03 ===================
 ! 2008-09-19 - Marcin Kucharczyk
   - Removing irrelevant cut
+
+! ====================== HltHidValley v1r1 2008-09-10 =====================
 
 ! 2008-08-28 - Marcin Kucharczyk
   - Some improvements in the algorithm

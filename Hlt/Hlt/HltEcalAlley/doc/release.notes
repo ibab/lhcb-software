@@ -4,6 +4,7 @@
 ! Purpose     : Ecal alley specific algorithms and tools
 !----------------------------------------------------------------------------
 
+!========================== HltEcalAlley v1r2 2008-10-03 ===================
 ! 2008-09-15 - Mariusz Witek
  - improve photon line. IsPhoton function is continuous (adjustable) variable now.
 
