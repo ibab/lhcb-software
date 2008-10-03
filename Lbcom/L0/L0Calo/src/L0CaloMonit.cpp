@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloMonit.cpp,v 1.25 2008-10-03 10:05:56 robbep Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloMonit.cpp,v 1.26 2008-10-03 10:08:11 robbep Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -331,7 +331,7 @@ StatusCode L0CaloMonit::execute() {
   int nHadronL0Cand = 0 ; 
   m_nEvents++ ; 
 
-  unsigned long long event = -999 ; 
+  unsigned long long event = 0 ; 
   double BCId  = -999 ; 
 
   if(exist<LHCb::ODIN>(LHCb::ODINLocation::Default) ){
