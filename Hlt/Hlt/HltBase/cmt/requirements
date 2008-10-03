@@ -1,10 +1,10 @@
-#$Id: requirements,v 1.29 2008-09-10 13:22:33 jpalac Exp $
+#$Id: requirements,v 1.30 2008-10-03 12:22:10 graven Exp $
 #============================================================================
 # Created    : 2005-11-15
 # Maintainer : Jose Angel Hernando Morata 
 #============================================================================
 package           HltBase
-version           v5r2
+version           v5r3
 
 # Structure, i.e. directories to process. 
 #============================================================================
