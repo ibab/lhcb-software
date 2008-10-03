@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAlib.cpp,v 1.9 2008-09-26 14:35:41 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAlib.cpp,v 1.10 2008-10-03 15:48:11 ggiacomo Exp $
 /*
   Online Monitoring Analysis library
   G. Graziani (INFN Firenze)
@@ -95,8 +95,11 @@ void OMAlib::syncList() {
         if (m_debug>1) 
           cout << "  sending algorithm "<<alg->name() <<" ... ";
         std::vector<std::string> parnames(alg->npars());
-        for (int ip=0 ; ip<alg->npars(); ip++)
+	std::vector<float> pardefval(alg->npars());
+        for (int ip=0 ; ip<alg->npars(); ip++) {
           parnames[ip] = alg->parName(ip);
+	  pardefval[ip] = alg->parDefValue(ip);
+	}
         if (OMAalg::HCREATOR == alg->type() ) {
           OMAHcreatorAlg* hcalg = dynamic_cast<OMAHcreatorAlg*> (alg);
           algok=m_histDB->declareCreatorAlgorithm
@@ -106,19 +109,25 @@ void OMAlib::syncList() {
               hcalg->outHType(),
               hcalg->npars(),
               &parnames,
+	      &pardefval,
               hcalg->doc() );
         }
         else {
           OMACheckAlg* calg= dynamic_cast<OMACheckAlg*> (alg);
           std::vector<std::string> inputnames(calg->ninput());
-          for (int ip=0 ; ip<calg->ninput(); ip++)
+	  std::vector<float> inputdefv(calg->ninput());
+          for (int ip=0 ; ip<calg->ninput(); ip++) {
             inputnames[ip] = calg->inputName(ip);
+	    inputdefv[ip] = calg->inputDefValue(ip);
+	  }
           algok=m_histDB->declareCheckAlgorithm
             (calg->name(),
              calg->npars(),
              &parnames,
+	     &pardefval,
              calg->ninput(),
              &inputnames,
+	     &inputdefv,
              calg->doc() ); 
         }
         if (m_debug>1) cout << (algok ? " OK!" : " ERROR! ") <<endl;

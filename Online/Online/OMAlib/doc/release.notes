@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.10 2008-09-26 14:35:41 ggiacomo Exp $
+! $Id: release.notes,v 1.11 2008-10-03 15:48:11 ggiacomo Exp $
 ! Package     : OMAlib
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
+
+! 20081003 
+  - add default parameter values to algorithm declaration
 
 ! 20080926 - OMAlib v1r4
   - improvements on finding reference histograms
