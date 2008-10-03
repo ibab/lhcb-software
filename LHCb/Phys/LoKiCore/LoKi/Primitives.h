@@ -1,4 +1,4 @@
-// $Id: Primitives.h,v 1.10 2008-09-21 13:19:11 ibelyaev Exp $
+// $Id: Primitives.h,v 1.11 2008-10-03 13:02:06 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PRIMITIVES_H 
 #define LOKI_PRIMITIVES_H 1
@@ -1174,12 +1174,12 @@ namespace LoKi
     // the default constructor is disabled    
     SimpleSwitch() ; // the default constructor is disabled    
   private:
-    // the condiftion 
-    LoKi::FunctorFromFunctor <TYPE,bool> m_cut  ; ///< the condiftion 
-    // the first value 
-    TYPE2                                m_val1 ; ///< the first value 
-    // the second value 
-    TYPE2                                m_val2 ; ///< the second value 
+    /// the condition 
+    LoKi::FunctorFromFunctor <TYPE,bool> m_cut  ; // the condiftion 
+    /// the first value 
+    TYPE2                                m_val1 ; // the first value 
+    /// the second value 
+    TYPE2                                m_val2 ; // the second value 
   };  
   // ==========================================================================
   /** @class Switch

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.110 2008-10-01 09:37:59 ibelyaev Exp $ 
+! $Id: release.notes,v 1.111 2008-10-03 13:02:06 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,30 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2008-10-03 - Vanya BELYAEV
+ - LoKi/FuncOps.h
+
+   add possibility to create "binary"-switches in python, 
+
+    condition ? condidition1 : condition2
+
+  Of course formally it acts accoring to the rule
+   
+    (condition&&contion1)||(!condition&&condition2) 
+ 
+  but keeping it in a dictiory very useful, since it allows 
+  in python to create it using the ordinary "switch" function 
+  from the module LoKiCore.functions:
+
+    cut0= ...
+    cut1=...
+    cut2=...
+
+    cut = switch (cut0,cut1,cut2)     
+
+ - cmt/requirements
+    version increment to v7r9 
 
 
 ! =========================== LoKiCore v7r8 2008-09-30 ========================

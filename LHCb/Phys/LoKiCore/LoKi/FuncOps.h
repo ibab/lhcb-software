@@ -1,4 +1,4 @@
-// $Id: FuncOps.h,v 1.14 2008-09-21 13:19:11 ibelyaev Exp $
+// $Id: FuncOps.h,v 1.15 2008-10-03 13:02:06 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FUNCOPS_H 
 #define LOKI_FUNCOPS_H 1
@@ -299,6 +299,10 @@ namespace LoKi
                                 const double fun1 ,
                                 const double fun2 )
       { return LoKi::SimpleSwitch<TYPE> ( cut , fun1 , fun2 ) ; }
+      static Cut __switch__   ( const Cuts&  cut  , 
+                                const Cuts&  cut1 ,
+                                const Cuts&  cut2 )
+      { return LoKi::Switch<TYPE,bool> ( cut , cut1 , cut2 ) ; }
       // ======================================================================
       // functional part 
       // ======================================================================

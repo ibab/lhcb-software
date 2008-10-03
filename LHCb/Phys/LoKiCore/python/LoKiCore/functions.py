@@ -37,7 +37,7 @@ def monitor ( o  , *m ) :
     """
     return o.__monitor__ ( *m )
 # =============================================================================
-def debug  ( c ) :
+def debug  ( c , *arg ) :
     """
     Create 'debug'- predicate/function:
 
@@ -45,7 +45,7 @@ def debug  ( c ) :
     >>> deb = debug ( obj )
 
     """
-    return monitor ( c ) 
+    return monitor ( c , *arg ) 
 # =============================================================================
 def switch ( c  , v1 , v2  ) :
     """
@@ -53,10 +53,10 @@ def switch ( c  , v1 , v2  ) :
 
             result  = c ? v1 : v2 
 
-    Make monitored function ( see LoKi::Monitoring::Stat )
     >>>  fun1 = switch ( 0 < Q , 1 , -1 ) 
-    >>>  fun2 = sqitch ( 0 < Q ,  PT , 1/PT )
-    >>>  fun3 = sqitch ( 0 < Q ,  P  , -100 )
+    >>>  fun2 = switch ( 0 < Q ,  PT , 1/PT )
+    >>>  fun3 = switch ( 0 < Q ,  P  , -100 )
+    >>>  cut4 = switch ( 0 < Q ,  P>0.5*GeV  , P>1.5*GeV)
     
     """
     return c.__switch__ ( v1 , v2  )
@@ -67,7 +67,7 @@ def equal_to  ( f  , v ) :
     """
     Create the predicate which efficiently checks the equality of the
     function to some predefined value. Logically it is just 'operator==',
-    b ut it should be more efficient 
+    but it should be more efficient 
 
     >>> cut = equal_to ( TrTYPE , LHCb.Track.Long )
     
