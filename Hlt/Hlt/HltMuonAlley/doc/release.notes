@@ -4,6 +4,7 @@
 ! Purpose     : Decision Algorithms for the muon trigger
 !-----------------------------------------------------------------------------
 
+!========================== HltMuonAlley v2r6 2008-10-03 ===================
 ! 2008-10-01 - Leandro de Paula 
  - HltIsMuonTool split into HltDeltaPTool and HltIsMuonTool
  - HltDeltaPTool.h, cpp: implements dp/p cut
