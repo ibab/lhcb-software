@@ -1,4 +1,4 @@
-// $Id: HLT.h,v 1.2 2008-09-21 14:50:34 ibelyaev Exp $
+// $Id: HLT.h,v 1.3 2008-10-03 13:07:02 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_HLT_H 
 #define LOKI_HLT_H 1
@@ -228,6 +228,55 @@ namespace LoKi
       { return s << "HLT_DECISION" ; }
       // ======================================================================
     } ;
+    // ========================================================================
+    /** @class DecisionBut
+     *  Simple predicate which checks the positive decisison, ignoring 
+     *  "the special" cases
+     *  @see LHCb::HltDecReports 
+     *  @see LoKi::Cuts::HLT_PASSBUT 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-10-03
+     */
+    class DecisionBut 
+      : public LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate
+    {
+    protected:
+      // ======================================================================
+      typedef std::vector<std::string>                                  Names ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from one "special" decicion
+      DecisionBut ( const std::string& name ) ;
+      /// constructor from two "special" decicions
+      DecisionBut ( const std::string& name1 , 
+                    const std::string& name2 ) ;
+      /// constructor from three "special" decicions
+      DecisionBut ( const std::string& name1 , 
+                    const std::string& name2 , 
+                    const std::string& name3 ) ;
+      /// constructor from four "special" decicions
+      DecisionBut ( const std::string& name1 , 
+                    const std::string& name2 , 
+                    const std::string& name3 ,
+                    const std::string& name4 ) ;
+      /// constructor from vector of "special" decicions
+      DecisionBut ( const Names&       names ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~DecisionBut() {} ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  DecisionBut* clone () const { return new DecisionBut ( *this ) ; }
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator () ( argument a ) const ;
+      /// OPTIONAL: the nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual vector of "special" decision 
+      Names m_special ; // the actual vector of "special" decision 
+      // ======================================================================
+    };
     // ========================================================================
   } //end of namespace LoKi::HLT
   // ==========================================================================

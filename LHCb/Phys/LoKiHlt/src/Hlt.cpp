@@ -1,4 +1,4 @@
-// $Id: Hlt.cpp,v 1.1.1.1 2008-09-21 14:41:20 ibelyaev Exp $
+// $Id: Hlt.cpp,v 1.2 2008-10-03 13:07:02 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -182,6 +182,123 @@ LoKi::HLT::Decision::operator()
   //
   return false ;
 }
+
+
+// ============================================================================
+// constructor from one "special" decicion
+// ============================================================================
+LoKi::HLT::DecisionBut::DecisionBut 
+( const std::string& name )
+  : LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate () 
+  , m_special ( 1 , name ) 
+{}
+// ============================================================================
+// constructor from two "special" decicions
+// ============================================================================
+LoKi::HLT::DecisionBut::DecisionBut 
+( const std::string& name1 , 
+  const std::string& name2 ) 
+  : LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate () 
+  , m_special () 
+{
+  m_special.push_back ( name1 ) ;
+  m_special.push_back ( name2 ) ;
+}
+// ============================================================================
+// constructor from three "special" decicions
+// ============================================================================
+LoKi::HLT::DecisionBut::DecisionBut 
+( const std::string& name1 , 
+  const std::string& name2 , 
+  const std::string& name3 ) 
+  : LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate () 
+  , m_special () 
+{
+  m_special.push_back ( name1 ) ;
+  m_special.push_back ( name2 ) ;
+  m_special.push_back ( name3 ) ;
+}
+// ============================================================================
+// constructor from four "special" decicions
+// ============================================================================
+LoKi::HLT::DecisionBut::DecisionBut 
+( const std::string& name1 , 
+  const std::string& name2 , 
+  const std::string& name3 ,
+  const std::string& name4 ) 
+  : LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate () 
+  , m_special () 
+{
+  m_special.push_back ( name1 ) ;
+  m_special.push_back ( name2 ) ;
+  m_special.push_back ( name3 ) ;
+  m_special.push_back ( name4 ) ;
+}
+// ============================================================================
+// constructor from vector of "special" decicions
+// ============================================================================
+LoKi::HLT::DecisionBut::DecisionBut 
+( const LoKi::HLT::DecisionBut::Names& names ) 
+  : LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate () 
+  , m_special ( names ) 
+{}
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::HLT::DecisionBut::result_type 
+LoKi::HLT::DecisionBut::operator() 
+  ( LoKi::HLT::DecisionBut::argument a ) const 
+{
+  Assert ( 0 != a , "const LHCb::HltDecReports* points to NULL!" ) ;
+  //
+  typedef LHCb::HltDecReports::Container::const_iterator IT ;
+  IT _end = a -> end   () ;
+  size_t nPositive = 0 ;
+  for ( IT it = a -> begin () ; _end != it ; ++it ) 
+  {
+    // the decision 
+    const bool decision = it->second.decision () ;
+    if ( !decision ) { continue ; }                    // CONTINUE ;
+    ++nPositive ;
+    if ( nPositive > m_special.size () )     { return true ; }  // RETURN 
+    if ( m_special.end() == 
+         std::find ( m_special.begin () , 
+                     m_special.end   () , 
+                     it->first ) )           { return true ; }   // RETURN 
+  }
+  //
+  return false ;
+}
+// ============================================================================
+// OPTIONAL: the nice printout 
+// ============================================================================
+std::ostream& LoKi::HLT::DecisionBut::fillStream 
+( std::ostream& s ) const 
+{
+  s << "HLT_PASSBBUT(" ;
+  switch ( m_special.size() ) 
+  {
+  case 1 : 
+    s << "'"  << m_special[0] << "'"    ; break ;
+  case 2 : 
+    s << "'"  << m_special[0] << "'" 
+      << ",'" << m_special[1] << "'"    ; break ;
+  case 3 : 
+    s << "'"  << m_special[0] << "'" 
+      << ",'" << m_special[1] << "'"
+      << ",'" << m_special[2] << "'"    ; break ;
+  case 4 : 
+    s << "'"  << m_special[0] << "'" 
+      << ",'" << m_special[1] << "'"
+      << ",'" << m_special[2] << "'"
+      << ",'" << m_special[3] << "'"    ; break ;
+  default : 
+    s << Gaudi::Utils::toString ( m_special ) ;
+  }
+  //
+  return s << ")" ;
+}
+
 
 
 // ============================================================================

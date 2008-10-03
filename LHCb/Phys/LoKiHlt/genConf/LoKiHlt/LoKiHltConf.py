@@ -1,4 +1,4 @@
-#Tue Sep 23 15:09:20 2008
+#Fri Oct  3 13:32:06 2008
 """Automatically generated. DO NOT EDIT please"""
 from GaudiKernel.Proxy.Configurable import *
 
@@ -35,10 +35,12 @@ class LoKi__ODINFilter( ConfigurableAlgorithm ) :
     'RegisterForContextService' : True, # bool
     'Factory' : 'LoKi::Hybrid::HltFactory/HltFactory::PUBLIC', # str
     'Code' : 'ODIN_NONE', # str
+    'Preambulo' : [  ], # list
     'Location' : 'DAQ/ODIN', # str
   }
   _propertyDocDct = { 
     'Code' : """ The Bender/Python code to be used """,
+    'Preambulo' : """ The preambulo to be used for the temporary python script """,
     'Factory' : """ The type/name of LoKiBender "hybrid" factory """,
     'StatTableHeader' : """ The header row for the output Stat-table """,
     'Location' : """ TES location of LHCb::ODIN object """,
@@ -91,10 +93,12 @@ class LoKi__L0Filter( ConfigurableAlgorithm ) :
     'RegisterForContextService' : True, # bool
     'Factory' : 'LoKi::Hybrid::HltFactory/HltFactory::PUBLIC', # str
     'Code' : 'L0_NONE', # str
+    'Preambulo' : [  ], # list
     'Location' : 'Trig/L0/L0DUReport', # str
   }
   _propertyDocDct = { 
     'Code' : """ The Bender/Python code to be used """,
+    'Preambulo' : """ The preambulo to be used for the temporary python script """,
     'Factory' : """ The type/name of LoKiBender "hybrid" factory """,
     'StatTableHeader' : """ The header row for the output Stat-table """,
     'Location' : """ TES location of LHCb::L0DUReport object """,
@@ -195,10 +199,12 @@ class LoKi__HDRFilter( ConfigurableAlgorithm ) :
     'RegisterForContextService' : True, # bool
     'Factory' : 'LoKi::Hybrid::HltFactory/HltFactory::PUBLIC', # str
     'Code' : 'HLT_NONE', # str
+    'Preambulo' : [  ], # list
     'Location' : 'Hlt/DecReports', # str
   }
   _propertyDocDct = { 
     'Code' : """ The Bender/Python code to be used """,
+    'Preambulo' : """ The preambulo to be used for the temporary python script """,
     'Factory' : """ The type/name of LoKiBender "hybrid" factory """,
     'StatTableHeader' : """ The header row for the output Stat-table """,
     'Location' : """ TES location of LHCb::HltDecReports object """,
