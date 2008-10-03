@@ -3,6 +3,8 @@
 ! Responsible : Johannes Albrecht
 ! Purpose     : L0-T-track Confirmation algorithms
 !-----------------------------------------------------------------------------
+
+!========================== HltL0Conf v2r5 2008-10-03 ===================
 ! 2008-10-02 - Johannes Albrecht
  - Muon / Electron / Hadron SeedTool, L0ConfirmWithT, L0ConfExtrapoolator: fix 
 	missing fabs() in B-scale test.
