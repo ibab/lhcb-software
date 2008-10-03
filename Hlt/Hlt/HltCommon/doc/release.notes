@@ -4,7 +4,8 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
-!2008-10-01 - Leandro de Paula
+!========================== HltCommon v4r4 2008-10-03 ===================
+! 2008-10-01 - Leandro de Paula
  - Change HltFunctionFactories.cpp to include HltDeltaPTool
 
 !========================== HltCommon v4r3 2008-09-21 ===================
