@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloMonit.cpp,v 1.26 2008-10-03 10:08:11 robbep Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloMonit.cpp,v 1.27 2008-10-03 10:47:30 robbep Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -657,12 +657,17 @@ void L0CaloMonit::SearchForHotCellsAndReset(IHistogram1D* hist , int caloType ) 
     data.push_back( hist->binEntries(i) ) ; 
     if (data[i] != 0) nUsedCells++ ; 
   } 
+
+  double meanOcc = 0. ;
+  if (nUsedCells > 0 ) meanOcc = ( (double) nIn)/( (double) nUsedCells ) ; 
+  if (nUsedCells == 0 ) {
+    info()<<" Empty histogram .. do not analyze "<<endreq ;
+    meanOcc  = 1. ;
+  }
   bool hotChannels = false ; 
-  double meanOcc = ( (double) nIn)/( (double) nUsedCells ) ; 
   for ( int i = 0 ; i<nBin ; i++) { 
     if (data[i] > meanOcc*m_alarmThresholdRatio ) { 
       hotChannels = true ; 
-      break ; 
     }
   }
 
@@ -672,7 +677,6 @@ void L0CaloMonit::SearchForHotCellsAndReset(IHistogram1D* hist , int caloType ) 
     info()<<"|   Data     |    Hot(?) Cell    |    Crate    | Slot     |   Channel   |"<<endreq ; 
     info()<<"-------------------------------------------------------------------------"<<endreq ; 
     for ( int i = 0 ; i<nBin ; i++) { 
-      data[i] = hist->binEntries(i) ; 
       if (data[i] > meanOcc*m_alarmThresholdRatio ) { 
 	double idAll = xAxis.binLowerEdge(i) ; 
 	LHCb::CaloCellID caloCell ((int)idAll)  ; 
