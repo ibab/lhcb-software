@@ -1,5 +1,5 @@
 package HltSys
-version v4r2
+version v4r3
 
 branches cmt doc options
 
@@ -7,40 +7,40 @@ branches cmt doc options
 # HLT1 and common packages
 #=======================================================
 
-use HltConf             v1r2    Hlt   # Vanya Belyaev, Gerhard Raven
-use HltBase             v5r2    Hlt   # Jose Angel Hernando-Morata
-use HltCommon           v4r2    Hlt   # Jose Angel Hernando-Morata
+use HltConf             v1r4    Hlt   # Vanya Belyaev, Gerhard Raven
+use HltBase             v5r3    Hlt   # Jose Angel Hernando-Morata
+use HltCommon           v4r4    Hlt   # Jose Angel Hernando-Morata
 
 use HltTracking         v3r6    Hlt   # Jose Angel Hernando-Morata
 use HltHadAlley         v3r3    Hlt   # Jose Angel Hernando-Morata
 
-use HltEcalAlley        v1r1    Hlt   # Mariusz Witek
+use HltEcalAlley        v1r2    Hlt   # Mariusz Witek
 
 use HltMuon             v3r4    Hlt   # Alessia Satta          
-use HltMuonAlley        v2r5    Hlt   # Sandra Amato 
-use HltL0Conf           v2r4    Hlt   # Johannes Albrecht
+use HltMuonAlley        v2r6    Hlt   # Sandra Amato 
+use HltL0Conf           v2r5    Hlt   # Johannes Albrecht
 use HltL0MuonConf       v3r4    Hlt   # Alessia Satta/Sandra Amato  
 
 use HltRecChecker	v1r7	Hlt   # Jose Angel Hernando-Morata
-use HltGlobalMonitor	v1r3	Hlt   # Bruno de Paula
-use HltLuminosity       v2r1    Hlt   # Jaap Panman
+use HltGlobalMonitor	v1r5	Hlt   # Bruno de Paula
+use HltLuminosity       v2r2    Hlt   # Jaap Panman
 
-use HltRawData          v1r3    Hlt   # Tomasz Skwarnicki
+use HltRawData          v1r4    Hlt   # Tomasz Skwarnicki
 
 # And now for something completely different
-use HltPython	        v1r9    Hlt   # Jose Angel Hernando-Morata
+use HltPython	        v1r10   Hlt   # Jose Angel Hernando-Morata
 use LoKiHlt             v1r0    Phys  # Vanya Belyaev
 
 #=======================================================
 # HLT2 packages
 #=======================================================
 
-use HltSelections       v8r2    Hlt   # Patrick Koppenburg
+use HltSelections       v8r4    Hlt   # Patrick Koppenburg
 use Fidel               v1r3    Phys  # Sara Furcas    
 use HltKshort           v1r4    Hlt   # Jaap Panman
-use HltHidValley        v1r1    Hlt   # Marcin Kucharczyk
+use HltHidValley        v1r2    Hlt   # Marcin Kucharczyk
 
-use HltSelChecker       v7r2    Hlt   # Patrick Koppenburg
+use HltSelChecker       v7r2p1  Hlt   # Patrick Koppenburg
 
 #=============================================================
 # Stuff added temporarily to allow a fast development cycle
