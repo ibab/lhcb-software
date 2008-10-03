@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloMonit.cpp,v 1.24 2008-09-16 16:29:06 odescham Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloMonit.cpp,v 1.25 2008-10-03 10:05:56 robbep Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -114,25 +114,25 @@ StatusCode L0CaloMonit::initialize() {
 
   debug() << "==> Default Monitoring histograms booking " << endmsg;
   
-  float delta  ; 
+  double delta  ; 
 
   int   nBinEt = 255 ; 
-  float xMinEt = 0   ; 
-  float xMaxEt = 255. ; 
+  double xMinEt = 0.   ; 
+  double xMaxEt = 255. ; 
   delta = (xMaxEt - xMinEt)/nBinEt ; 
   xMinEt = xMinEt - delta*.5 ; 
   xMaxEt = xMaxEt - delta*.5 ; 
 
   int   nBinSumEt = 16383 ; 
-  float xMinSumEt = 0 ; 
-  float xMaxSumEt = 16383. ; 
+  double xMinSumEt = 0. ; 
+  double xMaxSumEt = 16383. ; 
   delta = (xMaxSumEt - xMinSumEt)/nBinSumEt ; 
   xMinSumEt = xMinSumEt - delta*.5 ; 
   xMaxSumEt = xMaxSumEt - delta*.5 ; 
 
   int   nBinSpdMult = 6016 ; 
-  float xMinSpdMult = 0 ; 
-  float xMaxSpdMult = 6016. ; 
+  double xMinSpdMult = 0. ; 
+  double xMaxSpdMult = 6016. ; 
   delta = (xMaxSpdMult - xMinSpdMult)/nBinSpdMult ; 
   xMinSpdMult = xMinSpdMult - delta*.5 ; 
   xMaxSpdMult = xMaxSpdMult - delta*.5 ; 
@@ -331,7 +331,7 @@ StatusCode L0CaloMonit::execute() {
   int nHadronL0Cand = 0 ; 
   m_nEvents++ ; 
 
-  double event = -999 ; 
+  unsigned long long event = -999 ; 
   double BCId  = -999 ; 
 
   if(exist<LHCb::ODIN>(LHCb::ODINLocation::Default) ){
@@ -647,19 +647,19 @@ StatusCode L0CaloMonit::execute() {
 
 //============================================================================
 void L0CaloMonit::SearchForHotCellsAndReset(IHistogram1D* hist , int caloType ) { 
-  float nIn = hist->entries() ;
+  int nIn = hist->entries() ;
   const IAxis& xAxis = hist->axis() ; 
   int nBin = xAxis.bins() ; 
-  float data[nBin] ; 
-  float nUsedCells = 0 ; 
+  std::vector< int > data ;
+  data.reserve( nBin ) ; 
+  int nUsedCells = 0 ; 
   for ( int i = 0 ; i<nBin ; i++) {
-    data[i] = hist->binEntries(i) ; 
-    if (data[i] !=0) nUsedCells++ ; 
+    data.push_back( hist->binEntries(i) ) ; 
+    if (data[i] != 0) nUsedCells++ ; 
   } 
   bool hotChannels = false ; 
-  float meanOcc = nIn/nUsedCells ; 
+  double meanOcc = ( (double) nIn)/( (double) nUsedCells ) ; 
   for ( int i = 0 ; i<nBin ; i++) { 
-    data[i] = hist->binEntries(i) ; 
     if (data[i] > meanOcc*m_alarmThresholdRatio ) { 
       hotChannels = true ; 
       break ; 
