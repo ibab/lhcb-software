@@ -1,12 +1,12 @@
-! $Id: release.notes,v 1.124 2008-10-03 10:05:56 robbep Exp $
+! $Id: release.notes,v 1.125 2008-10-03 11:02:50 cattanem Exp $
 ! Package	        : L0/L0Calo
 ! Package Manager : Patrick Robbe & M-H. Schune
 !--------------------------------------------------------------------------
 
+!========================= L0Calo v9r18 2008-10-03 ========================
 ! 2008-10-03 - Patrick Robbe
  - src/L0CaloMonit.cpp: fix compilation errors and warnings for windows
 
-!========================= L0Calo v9r18 2008-10-01 ========================
 ! 2008-09-16 Marie-Helene Schune
  - src/L0CaloMonit.cpp : change the range of SpdMult monitoring histo
 
