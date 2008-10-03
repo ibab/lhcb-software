@@ -47,15 +47,23 @@ StatusCode TrajOTProjector::project( const LHCb::StateVector& statevector,
                                      const OTMeasurement& meas )
 {
   StatusCode sc = TrackProjector::project( statevector, meas ) ;
-  // Calculate the reference distance and set the ambiguity "on the fly"
-  double distToWire = -m_residual ;
-  (const_cast<OTMeasurement&>(meas)).setAmbiguity( distToWire > 0 ? 1 : -1 ) ;
+  // set the ambiguity "on the fly"
+  (const_cast<OTMeasurement&>(meas)).setAmbiguity( m_doca > 0 ? 1 : -1 ) ;
   
-  if (m_useDrift) {
-    OTDet::RadiusWithError radiusWithError(meas.driftRadiusWithError(m_sMeas)) ;
-    //m_residual   = -( distToWire - meas.ambiguity() * radiusWithError.val  ) ;
-    m_residual   += meas.ambiguity() * radiusWithError.val ;
-    m_errMeasure = radiusWithError.err ;
+  if (m_useDriftTime) {
+    if(m_fitDriftTime) {
+      const OTDet::RtRelation& rtr = meas.module().rtRelation() ;
+      double radius = std::min( rtr.rmax(), std::abs(m_doca) ) ;
+      OTDet::DriftTimeWithError time = rtr.drifttimeWithError( radius ) ;
+      double dtdr                    = rtr.dtdr( radius ) ;
+      m_residual   = meas.driftTime(m_sMeas) - time.val ;
+      m_errMeasure = time.err ;
+      m_H          *= ( meas.ambiguity() * dtdr ) ;
+    } else {
+      OTDet::RadiusWithError radiusWithError(meas.driftRadiusWithError(m_sMeas)) ;
+      m_residual = -m_doca + meas.ambiguity() * radiusWithError.val ;
+      m_errMeasure = radiusWithError.err ;
+     }
   } else {
     m_errMeasure = meas.module().cellRadius()/std::sqrt(3.0) ;
   }
@@ -70,7 +78,8 @@ StatusCode TrajOTProjector::project( const LHCb::StateVector& statevector,
 StatusCode TrajOTProjector::initialize()
 {
   StatusCode sc = TrackProjector::initialize();
-  info() << "Use drifttime = " << m_useDrift << endreq ;
+  info() << "Use drifttime           = " << m_useDriftTime << endreq ;
+  info() << "Fit drifttime residuals = " << m_fitDriftTime << endreq ;
   return sc;
 }
 
@@ -83,8 +92,9 @@ TrajOTProjector::TrajOTProjector( const std::string& type,
   : TrackProjector( type, name, parent )
 {
   declareInterface<ITrackProjector>(this);
-  m_tolerance = 0.01 ;
-  declareProperty( "UseDrift", m_useDrift = true );
+  m_tolerance = 0.001 ;
+  declareProperty( "UseDrift", m_useDriftTime = true );
+  declareProperty( "FitDriftTime", m_fitDriftTime = false );
 }
 
 //-----------------------------------------------------------------------------

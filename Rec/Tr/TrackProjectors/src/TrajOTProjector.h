@@ -1,4 +1,4 @@
-// $Id: TrajOTProjector.h,v 1.14 2008-09-15 13:19:27 wouter Exp $
+// $Id: TrajOTProjector.h,v 1.15 2008-10-03 13:59:55 wouter Exp $
 #ifndef TRAJOTPROJECTOR_H 
 #define TRAJOTPROJECTOR_H 1
 
@@ -42,9 +42,10 @@ public:
 
 protected:
   StatusCode project( const LHCb::StateVector& state, const LHCb::OTMeasurement& meas );
-  bool useDrift() const { return m_useDrift ; }
+  bool useDriftTime() const { return m_useDriftTime ; }
+  bool fitDriftTime() const { return m_fitDriftTime ; }
 private:
-  bool m_useDrift;      ///< Use measured drift distance
-
+  bool m_useDriftTime ;  ///< Use measured drift time 
+  bool m_fitDriftTime ;  ///< Fit drift times residuals instead of 'distance' residuals
 };
 #endif // TRACKPROJECTORS_TRAJOTPROJECTOR_H

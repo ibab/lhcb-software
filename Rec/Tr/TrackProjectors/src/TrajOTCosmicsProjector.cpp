@@ -68,23 +68,26 @@ StatusCode TrajOTCosmicsProjector::project( const LHCb::StateVector& statevector
     double eventt0 = statevector.parameters()[4] ;
     // ugly const-cast to update the measurement's time-of-flight
     (const_cast< LHCb::OTMeasurement&>(meas)).setDeltaTimeOfFlight( tof + eventt0 ) ;
-    
+
     // call the standard projector (which uses the time-of-flight)
     sc = TrajOTProjector::project( statevector, meas ) ;
-    double distToWire = m_dist.Dot( m_unitPocaVector ) ;
     // update the projection matrix with the derivative to event-t0.
-    if( useDrift() && m_fitEventT0 ) {
-      double vdrift = meas.module().rtRelation().drdt() ;
-      if( !m_useConstantDriftVelocity ) {
-	// get the drift velocity. for the linearization it is best to
-	// have something as closest to the truth as possible. that's not
-	// the drift time. so, instead, we compute the inverse:
-	double dtdr = meas.module().rtRelation().dtdr( fabs(distToWire) ) ;
-	vdrift = 1/dtdr ;
+    if( useDriftTime() && m_fitEventT0 ) {
+      if ( fitDriftTime() ) {
+	m_H(0,4) = 1 ;
+      } else {
+	double vdrift = meas.module().rtRelation().drdt() ;
+	if( !m_useConstantDriftVelocity ) {
+	  // get the drift velocity. for the linearization it is best to
+	  // have something as closest to the truth as possible. that's not
+	  // the drift time. so, instead, we compute the inverse:
+	  double dtdr = meas.module().rtRelation().dtdr( fabs(m_doca) ) ;
+	  vdrift = 1/dtdr ;
+	}
+	// now we just need to get the sign right. I think that H is MINUS
+	// the derivative of the residual in Fruhwirth's languague
+	m_H(0,4) = meas.ambiguity() * vdrift ;
       }
-      // now we just need to get the sign right. I think that H is MINUS
-      // the derivative of the residual in Fruhwirth's languague
-      m_H(0,4) = meas.ambiguity() * vdrift ;
     }
   }
   return StatusCode::SUCCESS;
