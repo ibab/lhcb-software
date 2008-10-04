@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.144 2008-09-26 17:00:41 cattanem Exp $
+# $Id: requirements,v 1.145 2008-10-04 15:45:47 cattanem Exp $
 # =============================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
@@ -49,3 +49,8 @@ apply_pattern linker_library    library=LHCbKernel
 # Debug flag for RichSmartID
 macro_append LHCbKernel_cppflags "" \
                    Linux&debug " -DRICHDEBUG "
+# propagate GOD_NOALLOC to all compilations
+macro_remove cppflags -DGOD_NOALLOC
+macro_append LHCbKernel_cppflags "" \
+                debug " -DGOD_NOALLOC " \
+                WIN32 " -DGOD_NOALLOC "

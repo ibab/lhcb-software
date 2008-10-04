@@ -6,7 +6,7 @@
 
 !===================== LHCbKernel v9r2 2008-10-03 =========================
 ! 2008-10-03 - Marco Cattaneo
- - Undo GOD_NOALLOC change of 26-Sep, possible cause of double delete
+ - Make GOD_NOALLOC flag public
 
 ! 2008-09-26 - Marco Cattaneo
  - Use GOD_NOALLOC flag to switch off custom allocators in classes where
