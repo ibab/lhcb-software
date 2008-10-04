@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.152 2008-09-11 08:08:33 jpalac Exp $
+! $Id: release.notes,v 1.153 2008-10-04 11:25:15 xieyu Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+! 2008-10-4 - Yuehong Xie
+ - OfflineVertexFitter: fix problem in pi0 mass constraint reported 
+   by Steven Blust
 
 !========================== VertexFit v5r4 2008-09-11 ===================
 

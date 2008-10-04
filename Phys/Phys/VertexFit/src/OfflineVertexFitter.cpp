@@ -1,4 +1,4 @@
-// $Id: OfflineVertexFitter.cpp,v 1.32 2008-04-16 09:20:25 jpalac Exp $
+// $Id: OfflineVertexFitter.cpp,v 1.33 2008-10-04 11:25:15 xieyu Exp $
 // Include files 
 
 // from Gaudi
@@ -971,7 +971,7 @@ StatusCode OfflineVertexFitter::addPhotonPair(LHCb::Particle& part,
     for(int l2=0; l2<7; l2++) Cold(l1,l2)=0.0;
 
   for(int l1=10; l1<=12;l1++)
-    for(int l2=0; l2<13; l2++) Cold(l1,l2)=0.0;
+    for(int l2=0; l2<10; l2++) Cold(l1,l2)=0.0;
 
   ROOT::Math::SMatrix<double, 8, 13> JA;
   for(int i=0;i<7;i++) JA(i,i)=1.;
@@ -1190,7 +1190,7 @@ StatusCode OfflineVertexFitter::addMergedPi0(LHCb::Particle& part,
     for(int l2=0; l2<7; l2++) Cold(l1,l2)=0.0;
 
   for(int l1=10; l1<=12;l1++)
-    for(int l2=0; l2<13; l2++) Cold(l1,l2)=0.0;
+    for(int l2=0; l2<10; l2++) Cold(l1,l2)=0.0;
 
   ROOT::Math::SMatrix<double, 8, 13> JA;
   for(int i=0;i<7;i++) JA(i,i)=1.;
