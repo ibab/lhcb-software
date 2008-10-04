@@ -1,11 +1,24 @@
-! $Id: release.notes,v 1.39 2008-09-25 11:51:41 ibelyaev Exp $ 
+! $Id: release.notes,v 1.40 2008-10-04 16:14:46 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.39 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.40 $
 ! -----------------------------------------------------------------------------
 ! Package     :  LoKiExamples
 ! Responsible :  Vanya BELYAEV  ibelyaev@physics.syr.edu
 ! Purpose     :  Collection of examples for LoKi package 
 ! -----------------------------------------------------------------------------
+
+!========================== Ex/LoKiExample v8r0 2008-10-04 ===================
+
+! 2008-10-04 - Vanya BELYAEV
+
+ - remove amjority of *.opts examples 
+    few remaning exmaples will be removed *SOON*
+ - create many checked&tested *.py exmaples 
+    (see python/LoKiExmaple directory) 
+
+ - cmt/requirements
+    version increment to v8r0 
+
 
 ! 2008-09-25 - Vanya BELYAEV
  - options/LoKi_Decay.py 
