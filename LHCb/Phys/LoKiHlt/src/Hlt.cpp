@@ -1,4 +1,4 @@
-// $Id: Hlt.cpp,v 1.2 2008-10-03 13:07:02 ibelyaev Exp $
+// $Id: Hlt.cpp,v 1.3 2008-10-04 11:48:55 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -275,7 +275,7 @@ LoKi::HLT::DecisionBut::operator()
 std::ostream& LoKi::HLT::DecisionBut::fillStream 
 ( std::ostream& s ) const 
 {
-  s << "HLT_PASSBBUT(" ;
+  s << "HLT_PASSIGNORING(" ;
   switch ( m_special.size() ) 
   {
   case 1 : 

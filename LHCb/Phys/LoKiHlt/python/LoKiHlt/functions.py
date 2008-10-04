@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: functions.py,v 1.3 2008-10-03 13:07:02 ibelyaev Exp $ 
+# $Id: functions.py,v 1.4 2008-10-04 11:48:55 ibelyaev Exp $ 
 # =============================================================================
 ## @file LoKiHlt/functions.py
 #  The full set of useful objects from LoKiHlt library 
@@ -12,7 +12,7 @@
 The full set of useful objects from LoKiHlt library
 """
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl   "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $  "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $  "
 # =============================================================================
 
 import LoKiCore.decorators as _LoKiCore 
@@ -237,8 +237,8 @@ HLT_ONE      =    LoKi.Constant ( _hlt + ',double' ) ( 1 )
 ## @see LoKi::Cuts::HLT_PASS
 HLT_PASS     =    LoKi.HLT.PassSelection 
 
-## @see LoKi::Cuts::HLT_PASSBUT
-HLT_PASSBUT  =    LoKi.HLT.DecisionBut
+## @see LoKi::Cuts::HLT_PASSIGNORING 
+HLT_PASSIGNORING  =    LoKi.HLT.DecisionBut
 
 ## @see LoKi::Cuts::HLT_SIZE
 HLT_SIZE     =    LoKi.HLT.Size () 
