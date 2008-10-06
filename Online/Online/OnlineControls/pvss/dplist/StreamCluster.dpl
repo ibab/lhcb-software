@@ -1,0 +1,48 @@
+# ascii dump of database
+
+# Datapoint/DpId
+DpName	TypeName	ID
+fwOT_StreamCluster	_FwFsmObjectType	168580
+
+# DpValue
+ElementName	TypeName	_original.._value	_original.._status	_original.._stime
+fwOT_StreamCluster.panel	_FwFsmObjectType	"StreamControl/StreamControl.pnl"	0x101	19.09.2008 16:09:51.452
+fwOT_StreamCluster.states	_FwFsmObjectType	"READY", "FwStateOKPhysics", "when ( $ANY$FwCHILDREN in_state ERROR )  move_to ERROR
+|", "", "", "ERROR", "FwStateAttention3", "when ( $ALL$FwCHILDREN not_in_state ERROR )  move_to READY
+|", "", ""	0x101	25.09.2008 13:13:23.126
+fwOT_StreamCluster.actions	_FwFsmObjectType	"READY/ALLOCATE", "int PART_ID = 0
+string PART_NAME = \"LHCb\"
+string RUN_INFO_DP = \"ECS:LHCb_RunInfo\"
+", "1", "do ALLOCATE(PART_ID=PART_ID,PART_NAME=PART_NAME,RUN_INFO_DP=RUN_INFO_DP)  $ALL$StreamControl
+if ( $ALL$StreamControl in_state {READY,ERROR} ) then
+  set CURRPARTNAME = $StreamControl.CURRPARTNAME
+  set CURRPARTID = $StreamControl.CURRPARTID
+endif
+", "0", "READY/DEALLOCATE", "int PART_ID = 0
+string PART_NAME = \"LHCb\"
+string RUN_INFO_DP = \"ECS:LHCb_RunInfo\"
+", "1", "do DEALLOCATE(PART_ID=PART_ID,PART_NAME=PART_NAME,RUN_INFO_DP=RUN_INFO_DP)  $ALL$StreamControl
+if ( $ANY$StreamControl in_state {READY,ERROR} )  then 
+  set CURRPARTNAME = $StreamControl.CURRPARTNAME
+  set CURRPARTID = $StreamControl.CURRPARTID
+endif
+", "0", "READY/REALLOCATE", "int PART_ID = 0
+string PART_NAME = \"LHCb\"
+string RUN_INFO_DP = \"ECS:LHCb_RunInfo\"
+", "1", "do REALLOCATE(PART_ID=PART_ID,PART_NAME=PART_NAME,RUN_INFO_DP=RUN_INFO_DP)  $ALL$StreamControl
+if ( $ALL$StreamControl in_state {READY,ERROR} ) then
+  set CURRPARTNAME = $StreamControl.CURRPARTNAME
+  set CURRPARTID = $StreamControl.CURRPARTID
+endif
+", "0", "ERROR/RECOVER", "int PART_ID = 0
+string PART_NAME = \"LHCb\"
+string RUN_INFO_DP = \"ECS:LHCb_RunInfo\"
+", "1", "do RECOVER(PART_ID=PART_ID,PART_NAME=PART_NAME,RUN_INFO_DP=RUN_INFO_DP) $ALL$FwCHILDREN
+if ( $ANY$FwCHILDREN not_in_state READY )  then
+  move_to ERROR
+endif
+set CURRPARTNAME = $StreamControl.CURRPARTNAME
+set CURRPARTID = $StreamControl.CURRPARTID
+move_to READY
+", "0"	0x101	25.09.2008 13:13:23.126
+fwOT_StreamCluster.parameters	_FwFsmObjectType	"int CURRPARTID = 0", "string CURRPARTNAME = \"\""	0x101	19.09.2008 16:09:51.459

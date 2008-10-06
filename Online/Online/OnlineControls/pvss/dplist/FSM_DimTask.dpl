@@ -1,0 +1,241 @@
+# ascii dump of database
+
+# Datapoint/DpId
+DpName	TypeName	ID
+fwOT_FSM_DimTask	_FwFsmObjectType	52820
+
+# DpValue
+ElementName	TypeName	_original.._value	_original.._status	_original.._stime
+fwOT_FSM_DimTask.panel	_FwFsmObjectType	"FSM_DimTask.pnl"	0x101	25.09.2008 13:13:05.075
+fwOT_FSM_DimTask.components	_FwFsmObjectType	"string State
+", "", "#uses \"fwExternalAlertHandler/fwExternalAlertHandler.ctl\"
+dyn_string     m_lastCommand;
+dyn_string     m_lastState;
+dyn_string     m_targetState;
+dyn_string     m_tasks;
+
+int getTaskIndex(string domain, string device)  {
+  int index;
+  if ( !(index=dynContains(m_tasks,domain+device)) )  {
+    index = dynAppend(m_tasks,domain+device);
+  }
+  return index;
+}
+
+
+FSM_DimTask_initialize(string domain, string device)   {
+  int index = getTaskIndex(domain,device);
+  m_lastCommand[index] = \"\";
+  m_lastState[index] = \"\";
+  m_targetState[index] = \"\";
+}
+
+int makeErrorFSM_DimTask(string error)  {
+  string err = error;
+  if ( dynlen(getLastError()) > 0 )  {
+    err = err + \" Error:\" + getLastError();
+  }
+  DebugN(err);
+  return -1;
+}
+
+int ignoreErrorFSM_DimTask(string msg)  {
+  DebugN(msg);
+  return 0;
+}
+
+int actionFSM_DimTask(string name, string value)  {
+  int result = dpSetWait(name,value);
+  if ( result == 0 )  return 0;
+  return makeErrorFSM_DimTask(\"Failed to set datapoint:\"+name+\" to value:\"+value);
+}
+
+void sendErrorFSM_DimTask(string device, string msg)  {
+  string name=\"Unknown\";
+  dpGet(device+\".Name\",name);
+  fwExternalAlertHandler_sendAlarm(\"error\",device,msg+\":\"+name);
+}
+
+int startFSM_DimTask(string domain, string device)  {
+  string cmd, node, type, name;
+  int prio, inuse;
+  int res = dpGet(device+\".FMC_Start\",cmd, 
+                  device+\".Name\", name,
+                  device+\".Node\", node,
+                  device+\".Type\", type,
+                  device+\".InUse\", inuse,
+                  device+\".Priority\", prio
+                  );
+  fwExternalAlertHandler_deactivateAllAlarms(device);
+  if ( res != 0      )  {
+    sendError(device,\"Failed to start FSM Task\");
+    return sendErrorFSM_DimTask(\"Failed to start task:\"+node+\"::\"+name+\" Cmd:'\"+cmd+\"'\");
+  }
+  if ( cmd == \"NONE\" ) {
+    sendError(device,\"Failed to start FSM Task\");
+    return ignoreErrorFSM_DimTask(\"INVALID TASK: FSM tries to start:\"+device+\" on \"+node+\" : \"+cmd);
+  }
+  dyn_string cmd_vals = strsplit(cmd,\"#\");
+  if ( dynlen(cmd_vals)>= 2 )  {
+    string dev = cmd_vals[1]+\":\"+node+\"_StreamTaskCreator.Start\";
+    DebugN(\"Starting task:\"+dev+\" on \"+node+\" : \"+cmd);
+    if ( actionFSM_DimTask(dev,cmd_vals[2])==0 ) return 0;
+    sendErrorFSM_DimTask(device,\"Failed to start FSM Task\");
+  }
+  sendErrorFSM_DimTask(device,\"Failed to start FSM Task\");
+  return 0;
+}
+
+int killFSM_DimTask(string domain, string device)  {
+  string node, name, cmd;
+  int res = dpGet(device+\".FMC_Start\",cmd,device+\".Name\", name, device+\".Node\", node);
+  fwExternalAlertHandler_deactivateAlarm(\"error\",device,\"Failed to kill FSM Task\");
+  if ( res != 0 ) {
+    fwExternalAlertHandler_sendAlarm(\"error\",device,\"Failed to kill FSM Task\");
+    return makeErrorFSM_DimTask(\"Failed to kill task:\"+node+\"::\"+name);
+  }
+  if ( cmd == \"NONE\" )   {
+    fwExternalAlertHandler_sendAlarm(\"error\",device,\"Failed to kill FSM Task\");
+    return ignoreErrorFSM_DimTask(\"INVALID TASK: FSM tries to kill:\"+device+\" on \"+node+\" : \"+cmd);
+  }
+  dyn_string cmd_vals = strsplit(cmd,\"#\");
+  fwExternalAlertHandler_deactivateAlarm(\"error\",device,\"Failed to kill FSM Task\");
+  if ( dynlen(cmd_vals)>= 2 )  {
+    string dev = cmd_vals[1]+\":\"+node+\"_StreamTaskCreator.Stop\";
+    DebugN(\"Stop task:\"+dev+\" on \"+node+\" : \"+cmd);
+    if ( actionFSM_DimTask(dev,\"-s 9 -d 2 \"+name)==0 ) return 0;
+    fwExternalAlertHandler_sendAlarm(\"error\",device,\"Failed to kill FSM Task\");
+    return -1;
+  }
+  DebugN(\"Invalid KILL command parameter:\"+cmd);
+  fwExternalAlertHandler_sendAlarm(\"error\",device,\"Failed to kill FSM Task\");
+  return 0;
+}
+
+int stopFSM_DimTask(string domain, string device)  {
+  string node, name, cmd;
+  int res = dpGet(device+\".FMC_Start\",cmd,device+\".Name\",name,device+\".Node\",node);
+  fwExternalAlertHandler_deactivateAlarm(\"error\",device,\"Failed to stop FSM Task\");
+  if ( res != 0 )  {
+    fwExternalAlertHandler_sendAlarm(\"error\",device,\"Failed to stop FSM Task\");
+    return makeErrorFSM_DimTask(\"Failed to stop task:\"+node+\"::\"+name);
+  }
+  if ( cmd == \"NONE\" )   {
+    fwExternalAlertHandler_sendAlarm(\"error\",device,\"Failed to stop FSM Task\");
+    return ignoreErrorFSM_DimTask(\"INVALID TASK: FSM tries to stop:\"+device+\" on \"+node+\" : \"+cmd);
+  }
+  dyn_string cmd_vals = strsplit(cmd,\"#\");
+  if ( dynlen(cmd_vals)>= 2 )  {
+    string dev = cmd_vals[1]+\":\"+node+\"_StreamTaskCreator.Stop\";
+    DebugN(\"Stop task:\"+dev+\" on \"+node+\" : \"+cmd);
+    if ( actionFSM_DimTask(dev,\"-s 9 -d 2 \"+name)==0 ) return 0;
+    fwExternalAlertHandler_sendAlarm(\"error\",device,\"Failed to stop FSM Task\");
+    return -1;
+  }
+  fwExternalAlertHandler_sendAlarm(\"error\",device,\"Failed to stop FSM Task\");
+  DebugN(\"Invalid STOP command parameter:\"+cmd);
+  return 0;
+}
+", "FSM_DimTask_valueChanged( string domain, string device, string State, string &fwState )
+{
+  int index = getTaskIndex(domain,device);
+  m_lastState[index] = State;
+  if (State == \"OFFLINE\" || State == \"UNKNOWN\" )  {
+    fwExternalAlertHandler_deactivateAllAlarms(device);
+    fwState = \"OFFLINE\";
+  }
+  else if (State == \"NOT_READY\")  {
+    fwState = \"NOT_READY\";
+  }
+  else if (State == \"READY\")  {
+    if ( m_targetState[index] == \"STOPPED\" )  
+      fwState = \"STOPPED\";
+    else 
+      fwState = \"READY\";
+  }
+  else if (State == \"RUNNING\")  {
+    fwExternalAlertHandler_deactivateAllAlarms(device);
+    fwState = \"RUNNING\";
+  }
+  else if (State == \"STOPPED\")  {
+    fwState = \"STOPPED\";
+  }
+  else   {
+    sendErrorFSM_DimTask(device,\"FSM Task in state ERROR\");
+    DebugN(domain+\" \"+device+\"> Task goes to ERROR:\"+State);
+    fwState = \"ERROR\";
+  }
+}
+
+
+", "FSM_DimTask_doCommand(string domain, string device, string command)   { 
+  string cmd = strtoupper(command);
+  int index = getTaskIndex(domain,device);
+  m_lastCommand[index] = cmd;
+  DebugN(device+\"> Executing command:\"+cmd);
+  if (cmd == \"LOAD\")  {
+    string sys=getSystemName();
+    sys = substr(sys,0,strlen(sys)-1);
+    m_lastState[index]   = \"OFFLINE\";
+    m_targetState[index] = \"NOT_READY\";
+    startFSM_DimTask(domain,device);
+    if ( sys==\"RECONSTRUCTION\" )
+      fwDU_startTimeout(45,domain,device,\"OFFLINE\");
+    else
+      fwDU_startTimeout(25,domain,device,\"OFFLINE\");
+  }
+  else if (cmd == \"STOP\")  {
+    m_lastState[index]   = \"RUNNING\";
+    m_targetState[index] = \"STOPPED\";
+    fwDU_startTimeout(15,domain,device,\"ERROR\");
+    dpSetWait(device+\".Command\",\"stop\"); 
+  }
+  else if (cmd == \"RESET\")  {
+    m_lastState[index]   = \"STOPPED\";
+    m_targetState[index] = \"NOT_READY\";
+    fwDU_startTimeout(10,domain,device,\"ERROR\");
+    dpSetWait(device+\".Command\",\"reset\");  
+  }
+  else if (cmd == \"START\")  {
+    m_lastState[index]   = \"READY\";
+    m_targetState[index] = \"RUNNING\";
+    fwDU_startTimeout(20,domain,device,\"ERROR\");
+    dpSetWait(device+\".Command\",\"start\");  
+  }
+  else if (cmd == \"CONFIGURE\")  {
+    string sys=getSystemName();
+    sys = substr(sys,0,strlen(sys)-1);
+    m_lastState[index]   = \"NOT_READY\";
+    m_targetState[index] = \"READY\";
+    if ( sys==\"RECONSTRUCTION\" )
+      fwDU_startTimeout(300,domain,device,\"NOT_READY\");
+    else if ( sys==\"MONITORING\" )
+      fwDU_startTimeout(60,domain,device,\"NOT_READY\");
+    else
+      fwDU_startTimeout(40,domain,device,\"NOT_READY\");
+    dpSetWait(device+\".Command\",\"configure\");   
+  }
+  else if (cmd == \"UNLOAD\")  {
+    int tmo = 10;
+    bool isUnknown = m_targetState[index] == \"OFFLINE\";
+    m_lastState[index]   = \"NOT_READY\";
+    m_targetState[index] = \"OFFLINE\";
+    if ( isUnknown ) tmo = 3;
+    fwDU_startTimeout(tmo,domain,device,\"OFFLINE\");
+    dpSetWait(device+\".Command\",\"unload\");
+  }
+  else if (cmd == \"KILL\")  {
+    m_targetState[index] = \"OFFLINE\";
+    stopFSM_DimTask(domain,device);   
+    dpSetWait(device+\".Command\",\"unload\");
+    fwDU_startTimeout(5,domain,device,\"OFFLINE\");
+  }
+  else {
+    DebugN(device+\"> Received unknown command:\"+cmd);
+    dpSetWait(device+\".State\",\"ERROR\");
+  }
+} 
+"	0x101	25.09.2008 13:13:18.461
+fwOT_FSM_DimTask.states	_FwFsmObjectType	"OFFLINE", "FwStateAttention2", "", "", "", "NOT_READY", "FwStateAttention1", "", "", "", "READY", "FwStateOKNotPhysics", "", "", "", "STOPPED", "FwStateAttention1", "", "", "", "RUNNING", "FwStateOKPhysics", "", "", "", "ERROR", "FwStateAttention3", "", "", ""	0x101	25.09.2008 13:13:18.457
+fwOT_FSM_DimTask.actions	_FwFsmObjectType	"OFFLINE/Load", "", "1", "", "0", "OFFLINE/Kill", "", "1", "", "0", "OFFLINE/Unload", "", "1", "", "0", "NOT_READY/Configure", "", "1", "", "0", "NOT_READY/Unload", "", "1", "", "0", "NOT_READY/Kill", "", "1", "", "0", "READY/Start", "", "1", "", "0", "READY/Reset", "", "1", "", "0", "READY/Kill", "", "1", "", "0", "READY/Unload", "", "1", "", "0", "STOPPED/Reset", "", "1", "", "0", "STOPPED/Kill", "", "1", "", "0", "STOPPED/Start", "", "1", "", "0", "STOPPED/Unload", "", "1", "", "0", "RUNNING/Stop", "", "1", "", "0", "RUNNING/Kill", "", "1", "", "0", "ERROR/Unload", "", "1", "", "0", "ERROR/Kill", "", "1", "", "0", "ERROR/Reset", "", "1", "", "0", "ERROR/Start", "", "1", "", "0"	0x101	25.09.2008 13:13:18.457
+fwOT_FSM_DimTask.parameters	_FwFsmObjectType		0x141	19.09.2008 16:09:51.420

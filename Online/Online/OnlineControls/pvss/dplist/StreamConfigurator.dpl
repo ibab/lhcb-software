@@ -1,0 +1,190 @@
+# ascii dump of database
+
+# Datapoint/DpId
+DpName	TypeName	ID
+fwOT_StreamConfigurator	_FwFsmObjectType	168054
+
+# DpValue
+ElementName	TypeName	_original.._value	_original.._status	_original.._stime
+fwOT_StreamConfigurator.panel	_FwFsmObjectType	"StreamControl/Allocate.pnl"	0x101	09.07.2008 16:36:52.236
+fwOT_StreamConfigurator.components	_FwFsmObjectType	"string State
+", "", "#uses \"fwExternalAlertHandler/fwExternalAlertHandler.ctl\"
+#uses \"ctrlUtils.cpp\"
+
+int m_restart = 0;
+StreamConfigurator_initialize(string domain, string device)
+{
+  fwExternalAlertHandler_deactivateAllAlarms(device);
+  m_restart = 0;
+}
+
+int StreamConfigurator_gotoError(string device, string message, string err)  {
+  DebugN(\"Error: \"+message);
+  dpSet(device+\".State\",err);
+  return 0;
+}
+
+string StreamConfigurator_sliceName(string device)  {
+  dyn_string items = strsplit(device,\"_\");
+  string slice = items[1]+\"_\"+items[2];
+  return slice;
+}
+
+StreamConfigurator_Configured(string domain, string device, string State, string& fwState)  {
+  if ( 0 == m_restart )  {
+    string cfg = ctrlUtils_dimMapName();
+    dyn_string items = strsplit(device,\"_\");
+    if ( dynlen(items)>=2 )  {
+      string typ = dpTypeName(items[1]+\"_\"+items[2]);
+      if ( typ == \"FarmRunInfo\" )  {
+        fwState = \"CONFIGURED\";
+        m_restart = 0;
+        return;
+      }
+      string slice = StreamConfigurator_sliceName(device);
+      dyn_int    dim_immed, dim_tmo, dim_flg;
+      dyn_string val_tasks, dps_cmds, dim_cmds, dps_svcs, dim_svcs, dim_defaults;
+      dyn_string names = dpNames(slice+\"_*\",\"FSM_DimTask\");
+      dyn_string tasks = dpNames(slice+\"_*.Name\",\"FSM_DimTask\");
+  
+      int res = dpGet(tasks,val_tasks);
+      DebugN(\"Allocating [\"+slice+\"]..... got \"+dynlen(names)+\" \"+dynlen(tasks)+\" datapoints. dpGet result:\"+res);
+      for(int j=1, m=dynlen(val_tasks);j<=m; ++j)  {
+        if (val_tasks[j] != \"NONE\")  {
+          DebugN(\"Tsk:\"+tasks[j]+\" \"+val_tasks[j]);
+          dynAppend(dim_cmds,val_tasks[j]);
+          dynAppend(dps_cmds,names[j]+\".Command\");
+       
+          dynAppend(dim_svcs,val_tasks[j]+\"/status\");
+          dynAppend(dps_svcs,names[j]+\".State\");
+          dynAppend(dim_defaults,\"OFFLINE\");
+          dynAppend(dim_tmo,0);
+          dynAppend(dim_flg,0);
+          dynAppend(dim_immed,1);
+        }
+      }
+      fwDim_unSubscribeCommandsByDp(cfg,\"*:\"+slice+\"_*\");
+      fwDim_unSubscribeServicesByDp(cfg,\"*:\"+slice+\"_*\");
+      fwDim_subscribeCommands(cfg,dim_cmds,dps_cmds);
+      fwDim_subscribeServices(cfg,dim_svcs,dps_svcs,dim_defaults,dim_tmo,dim_flg,dim_immed);
+      delay(5);  // Need to wait a bit to settle down SMI
+    }
+  }
+  fwState = \"CONFIGURED\";
+  m_restart = 0;
+}
+
+int StreamConfigurator_Error(string domain, string device, string State, string& fwState)  {
+  fwExternalAlertHandler_sendAlarm(\"error\",device,\"Failed to configure dataflow.\");
+  fwState = \"ERROR\";
+  return 1;
+}
+
+int StreamConfigurator_NotReady(string domain, string device, string State, string& fwState)  {
+  fwState = \"NOT_READY\";
+  fwExternalAlertHandler_deactivateAllAlarms(device);
+  /*
+  if ( 0 == m_restart )  {
+    string cfg = ctrlUtils_dimMapName();
+    string slice = StreamConfigurator_sliceName(device);
+    DebugN(\"Deallocating [\"+slice+\"] datapoints.\");
+    fwDim_unSubscribeCommandsByDp(cfg,\"*:\"+slice+\"_*\");
+    fwDim_unSubscribeServicesByDp(cfg,\"*:\"+slice+\"_*\");
+  }
+  else  {
+    DebugN(device+\"> Restart flag is set. Resources stay allocated. Do not forget it!!!\");
+  }
+  */
+  return 1;
+}
+
+int StreamConfigurator_reset(string domain, string device, string action, string target, string err) {
+  m_restart = 0;
+  DebugN(device+\"> Restart flag is 0. Will deallocate resources.\");
+  dpSetWait(device+\".State\",target);
+  return 1;
+}
+
+int StreamConfigurator_restart(string domain, string device, string action, string target, string err) {
+  m_restart = 1;
+  DebugN(device+\"> Restart flag is set. Will not deallocate resources. Do not forget this!!!\");
+  dpSetWait(device+\".State\",target);
+  return 1;
+}
+
+int StreamConfigurator_execute(string domain, string device, string action, string target, string err) {
+  dyn_string items = strsplit(device,\"_\");
+  int restart = m_restart;
+  if (restart==1 && action == \"CONFIGURE\")   {
+    dpSetWait(device+\".State\",target);
+    return 1;
+  }
+  else if ( dynlen(items)>=2 )  {
+    int partID;
+    string partName, rundp, cmd, sys = items[1];
+    string info_dp = sys+\"_\"+items[2];
+    string typ = dpTypeName(info_dp);
+    if ( typ == \"FarmRunInfo\" )
+      rundp = info_dp;    
+    else if ( 0 != dpGet(info_dp+\".RunInfo\",rundp) )
+      return StreamConfigurator_gotoError(device,\"Failed to access run info location from datapoint:\"+device,err);
+    string typ = dpTypeName(info_dp);
+    DebugN(\"StreamConfigurator> \"+domain+\" \"+device+\" [\"+typ+\"]\");
+    if ( typ == \"FarmSubInfo\" ) sys = sys+\"_\"+items[2];
+    sys = sys + \"Alloc\";
+    if ( 0 == dpGet(rundp+\".general.partName\",partName,rundp+\".general.partId\",partID) )  {
+      fwDU_startTimeout(15,domain,device,\"ERROR\");
+      cmd = action+\"/\"+sys+\"/\"+partName+\"/\"+partID+\"/\"+rundp+\"/\"+device+\".State/\"+target+\"/\"+err;
+      dpSetWait(sys+\".Command\",cmd);
+      return 1;
+    }
+    return StreamConfigurator_gotoError(device,\"Failed to access run information from datapoint:\"+rundp,err);
+  }
+  return StreamConfigurator_gotoError(device,\"Illegal device name:\"+device,err);
+}
+", "StreamConfigurator_valueChanged( string domain, string device,
+                                 string State, string &fwState )
+{
+  string st = strtoupper(State);
+  if      (st == \"OFFLINE\")        StreamConfigurator_NotReady(domain,device,st,fwState);
+  else if (st == \"NOT_READY\")      StreamConfigurator_NotReady(domain,device,st,fwState);
+  else if (st == \"CONFIGURED\")     StreamConfigurator_Configured(domain,device,st,fwState);
+  else if (st == \"CREATED\")        fwState = \"CREATED\";
+  else if (st == \"READY\")          fwState = \"READY\";
+  else if (st == \"RUNNING\")        fwState = \"RUNNING\";
+  else if (st == \"STOPPED\")        fwState = \"STOPPED\";
+  else if (st == \"FINALIZED\")      fwState = \"FINALIZED\";
+  else                             StreamConfigurator_Error(domain,device,st,fwState);
+}
+", "StreamConfigurator_doCommand(string domain, string device, string command)
+{ 
+  string action = strtoupper(command);
+  DebugN(device+\"> Executing action:\"+action+\" Restart:\"+m_restart);
+  if (action == \"CONFIGURE\")
+    StreamConfigurator_execute(domain,device,\"CONFIGURE\",\"CONFIGURED\",\"ERROR\");
+  else if (action == \"RESET\")
+    StreamConfigurator_reset(domain,device,\"RESET\",\"NOT_READY\",\"ERROR\");
+  else if (action == \"RESTART\")
+    StreamConfigurator_restart(domain,device,\"RESTART\",\"NOT_READY\",\"ERROR\");
+  else if (action == \"RECOVER\")
+    StreamConfigurator_execute(domain,device,\"RECOVER_SLICE\",\"NOT_READY\",\"ERROR\");
+  else if (action == \"UNLOAD\" || action == \"KILL\" )
+    dpSetWait(device+\".State\",\"NOT_READY\");
+  else if (action == \"LOAD\")       dpSetWait(device+\".State\",\"NOT_READY\");
+  else if (action == \"CREATE\")     dpSetWait(device+\".State\",\"CREATED\");
+  else if (action == \"INITIALIZE\") dpSetWait(device+\".State\",\"READY\");
+  else if (action == \"START\")      dpSetWait(device+\".State\",\"RUNNING\");
+  else if (action == \"STOP\")       dpSetWait(device+\".State\",\"STOPPED\");
+  else if (action == \"FINALIZE\")   dpSetWait(device+\".State\",\"FINALIZED\");
+  else   DebugN(device+\"> Received unknown action:\"+action);
+} 
+"	0x101	09.07.2008 16:37:02.583
+fwOT_StreamConfigurator.states	_FwFsmObjectType	"NOT_READY", "FwStateAttention1", "", "", "", "READY", "FwStateOKNotPhysics", "", "", "", "STOPPED", "FwStateAttention1", "", "", "", "RUNNING", "FwStateOKPhysics", "", "", "", "ERROR", "FwStateAttention3", "", "", "", "CONFIGURED", "FwStateAttention1", "", "", "", "CREATED", "FwStateAttention1", "", "", "", "FINALIZED", "FwStateAttention1", "", "", ""	0x101	09.07.2008 16:37:02.578
+fwOT_StreamConfigurator.actions	_FwFsmObjectType	"NOT_READY/Configure", "int PART_ID = 0
+string PART_NAME = \"LHCb\"
+string RUN_INFO_DP = \"ECS:LHCb_RunInfo\"
+", "1", "", "0", "NOT_READY/Kill", "", "1", "", "0", "NOT_READY/Reset", "", "1", "", "0", "READY/Start", "", "1", "", "0", "READY/Reset", "", "1", "", "0", "READY/Kill", "", "1", "", "0", "READY/Unload", "", "1", "", "0", "READY/Restart", "", "1", "", "0", "STOPPED/Reset", "", "1", "", "0", "STOPPED/Start", "", "1", "", "0", "STOPPED/Finalize", "", "1", "", "0", "STOPPED/Restart", "", "1", "", "0", "RUNNING/Stop", "", "1", "", "0", "ERROR/Reset", "", "1", "", "0", "ERROR/Start", "", "1", "", "0", "ERROR/Recover", "int PART_ID = 0
+string PART_NAME = \"LHCb\"
+string RUN_INFO_DP = \"ECS:LHCb_RunInfo\"
+", "1", "", "0", "ERROR/Restart", "", "1", "", "0", "CONFIGURED/Reset", "", "1", "", "0", "CONFIGURED/Kill", "", "1", "", "0", "CONFIGURED/Create", "", "1", "", "0", "CONFIGURED/Unload", "", "1", "", "0", "CONFIGURED/Restart", "", "1", "", "0", "CREATED/Initialize", "", "1", "", "0", "CREATED/Kill", "", "1", "", "0", "CREATED/Reset", "", "1", "", "0", "CREATED/Unload", "", "1", "", "0", "CREATED/Restart", "", "1", "", "0", "FINALIZED/Reset", "", "1", "", "0", "FINALIZED/Unload", "", "1", "", "0", "FINALIZED/Kill", "", "1", "", "0", "FINALIZED/Restart", "", "1", "", "0"	0x101	09.07.2008 16:37:02.576
+fwOT_StreamConfigurator.parameters	_FwFsmObjectType	"int m_needDimSetup = 0"	0x101	09.07.2008 16:30:09.677

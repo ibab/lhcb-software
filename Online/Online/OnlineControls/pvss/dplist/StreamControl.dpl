@@ -1,0 +1,79 @@
+# ascii dump of database
+
+# Datapoint/DpId
+DpName	TypeName	ID
+fwOT_StreamControl	_FwFsmObjectType	52828
+
+# DpValue
+ElementName	TypeName	_original.._value	_original.._status	_original.._stime
+fwOT_StreamControl.panel	_FwFsmObjectType	"StreamControl/StreamControl.pnl"	0x101	19.09.2008 16:09:51.432
+fwOT_StreamControl.components	_FwFsmObjectType	"string State
+", "", "#uses \"fwExternalAlertHandler/fwExternalAlertHandler.ctl\"
+
+StreamControl_initialize(string domain, string device)
+{
+}
+
+", "StreamControl_valueChanged(string domain, string device, string State, string &fwState )  {
+  // Receiving string of type:  \"READY/StorageSystem/LHCb/203\"
+  DebugN(\"Acting on interrupt> Domain:\"+domain+\" Device:\"+device+\" State:\"+State);
+  dyn_string items = strsplit(State,\"/\");
+  if ( dynlen(items) >= 5 )  {
+    string stateName = items[1];
+    string systemName= items[2];
+    string partName  = items[3];
+    int    partID    = items[4];
+    string slice     = \"NONE\";
+    if ( dynlen(items)>4 ) slice = items[5]; 
+    fwDU_setParameter(domain,device,\"CURRPARTNAME\",slice);
+    fwDU_setParameter(domain,device,\"CURRPARTID\",partID);
+    
+    if (stateName == \"ALLOCATE\" || stateName == \"DEALLOCATE\" || stateName == \"REALLOCATE\")  {
+      fwState = \"READY\";
+      DebugN(\"Deallocating [\"+slice+\"] datapoints.\");
+      fwDim_unSubscribeCommandsByDp(\"DimStorage\",\"*:\"+slice+\"_*\");
+      fwDim_unSubscribeServicesByDp(\"DimStorage\",\"*:\"+slice+\"_*\");
+      return;
+    }
+    else if (stateName == \"READY\")  {
+      fwExternalAlertHandler_deactivateAlarm(\"error\",device,\"Failed to (DE)ALLOCATE dataflow slice.\");
+      fwState = \"READY\";
+      return;
+    }
+  }
+  fwExternalAlertHandler_sendAlarm(\"error\",device,\"Failed to (DE)ALLOCATE dataflow slice.\");
+  fwState = \"READY\";
+}
+
+
+", "StreamControl_doCommand(string domain, string device, string command)  {
+  int partID;
+  string cmd, partName, rundpName;
+  DebugN(\"Acting on Storage instance:\"+device);
+  fwDU_getCommandParameter(domain, device, \"PART_ID\", partID);
+  fwDU_getCommandParameter(domain, device, \"PART_NAME\", partName);
+  fwDU_getCommandParameter(domain, device, \"RUN_INFO_DP\", rundpName);
+  // Set timeout in case the allocation task is dead ...
+  // We cannot go to error on timeout since this will never recover again.....
+  // fwDU_startTimeout(20,domain,device,\"ERROR\");
+  fwDU_startTimeout(30,domain,device,\"READY\");
+  cmd = strtoupper(command)+\"/\"+device+\"/\"+partName+\"/\"+partID+\"/\"+rundpName;
+  DebugN(device,cmd);
+  dpSet(device+\".Command\",cmd);
+}
+"	0x101	25.09.2008 13:13:19.628
+fwOT_StreamControl.states	_FwFsmObjectType	"READY", "FwStateOKPhysics", "", "", "", "ERROR", "FwStateAttention3", "", "", ""	0x101	25.09.2008 13:13:19.625
+fwOT_StreamControl.actions	_FwFsmObjectType	"READY/ALLOCATE", "int PART_ID = 0
+string PART_NAME = \"LHCb\"
+string RUN_INFO_DP = \"ECS:LHCb_RunInfo\"
+", "1", "", "0", "READY/DEALLOCATE", "int PART_ID = 0
+string PART_NAME = \"LHCb\"
+string RUN_INFO_DP = \"ECS:LHCb_RunInfo\"
+", "1", "", "0", "READY/REALLOCATE", "int PART_ID = 0
+string PART_NAME = \"LHCb\"
+string RUN_INFO_DP = \"ECS:LHCb_RunInfo\"
+", "1", "", "0", "ERROR/RECOVER", "int PART_ID = 0
+string PART_NAME = \"LHCb\"
+string RUN_INFO_DP = \"ECS:LHCb_RunInfo\"
+", "1", "", "0"	0x101	25.09.2008 13:13:19.624
+fwOT_StreamControl.parameters	_FwFsmObjectType	"int CURRPARTID = 0", "string CURRPARTNAME = \"0\""	0x101	19.09.2008 16:09:51.440

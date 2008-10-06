@@ -1,0 +1,19 @@
+# ascii dump of database
+
+# Datapoint/DpId
+DpName	TypeName	ID
+fwOT_FSM_Holder	_FwFsmObjectType	175458
+
+# DpValue
+ElementName	TypeName	_original.._value	_original.._status	_original.._stime
+fwOT_FSM_Holder.panel	_FwFsmObjectType	"StreamControl/FSM_Holder.pnl"	0x101	18.08.2008 07:11:35.242
+fwOT_FSM_Holder.states	_FwFsmObjectType	"READY", "FwStateOKPhysics", "", "", ""	0x101	01.09.2008 09:54:55.625
+fwOT_FSM_Holder.actions	_FwFsmObjectType	"READY/Reset", "", "1", "do Reset $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state READY )  then
+  MOVE_TO READY
+endif
+MOVE_TO READY", "0", "READY/Recover", "", "1", "do Recover $ALL$FwCHILDREN", "0", "READY/Stop", "", "1", "do Stop $ALL$FwCHILDREN", "0", "READY/Kill", "", "1", "do Kill $ALL$FwCHILDREN
+if ( $ALL$FwCHILDREN in_state READY )  then
+  MOVE_TO READY
+endif
+MOVE_TO READY", "0"	0x101	01.09.2008 09:54:55.622
