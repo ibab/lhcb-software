@@ -1,4 +1,4 @@
-// $Id: TupleToolGeometry.h,v 1.2 2008-07-11 09:21:04 pkoppenb Exp $
+// $Id: TupleToolGeometry.h,v 1.3 2008-10-06 17:47:18 pkoppenb Exp $
 #ifndef JBOREL_TUPLETOOLGEOMETRY_H
 #define JBOREL_TUPLETOOLGEOMETRY_H 1
 
@@ -21,7 +21,9 @@ namespace LHCb {
  * \brief Fill geometry related informatio for DecayTreeTuple
  *
  * - head_IP : impact parameter with respect to the PhysDesktop::relatedVertex()
- * - head_IPERR : impact parameter error estimate
+ * - head_IPCHI2 : impact parameter chi2
+ * - head_MINIP : minimum impact parameter on any PV
+ * - head_MINIPCHI2 : minimum chi2 IP on all PVs
  * - head_FD : flight distance of composite particle wrt. the origin
  *   associated origin vertex (maybe not the relatedVertex()).
  * - head_FDERR : flight distance error estimate

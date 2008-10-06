@@ -1,4 +1,4 @@
-// $Id: TupleToolGeometry.cpp,v 1.3 2008-07-11 09:21:04 pkoppenb Exp $
+// $Id: TupleToolGeometry.cpp,v 1.4 2008-10-06 17:47:18 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -89,8 +89,21 @@ StatusCode TupleToolGeometry::fill( const Particle* mother
     chi2=-1;
   }
   test &= tuple->column( head + "_IP", ip );
-  // test &= tuple->column( head + "_IPS", ip/eip );
   test &= tuple->column( head + "_IPCHI2", chi2 );
+
+  // minimum IP
+  double ipmin = -1;
+  double minchi2 = -1 ;
+  const RecVertex::ConstVector& PV = m_context->primaryVertices();
+  for ( RecVertex::ConstVector::const_iterator pv = PV.begin() ; pv!=PV.end() ; ++pv){
+    StatusCode test2 = m_dist->distance ( P, *pv, ip, chi2 );
+    if( test2 ) {
+      if ((ip<ipmin) || (ipmin<0.)) ipmin = ip ;
+      if ((chi2<minchi2) || (minchi2<0.)) minchi2 = chi2 ;
+    }
+  }
+  test &= tuple->column( head + "_MINIP", ipmin );
+  test &= tuple->column( head + "_MINIPCHI2", minchi2 );
 
   // nothing more for basic particles
   if( P->isBasicParticle() ) return StatusCode(test);

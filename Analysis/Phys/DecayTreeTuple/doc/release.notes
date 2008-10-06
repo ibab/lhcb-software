@@ -4,6 +4,12 @@
 ! Purpose     : Option-steered tuples. Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+!======================== DecayTreeTuple v1r8 2008-10-06 ===================
+! 2008-10-06 - Patrick Koppenburg
+ - Added minimum IP on all PVs in TupleToolGeometry. This is what one actually
+   cuts on when requiring (MIPCHI2DV(PRIMARY)>4)
+ - Increment to v1r8
+
 !======================== DecayTreeTuple v1r7p1 2008-10-06 ===================
 
 - 2008-10-02 - Adlene Hicheur
