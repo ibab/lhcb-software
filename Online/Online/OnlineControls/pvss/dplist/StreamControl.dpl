@@ -19,6 +19,8 @@ StreamControl_initialize(string domain, string device)
   DebugN(\"Acting on interrupt> Domain:\"+domain+\" Device:\"+device+\" State:\"+State);
   dyn_string items = strsplit(State,\"/\");
   if ( dynlen(items) >= 5 )  {
+    string sys       = getSystemName();
+    string dimMap    = \"DimMap\"+substr(sys,0,strlen(sys)-1);
     string stateName = items[1];
     string systemName= items[2];
     string partName  = items[3];
@@ -31,8 +33,8 @@ StreamControl_initialize(string domain, string device)
     if (stateName == \"ALLOCATE\" || stateName == \"DEALLOCATE\" || stateName == \"REALLOCATE\")  {
       fwState = \"READY\";
       DebugN(\"Deallocating [\"+slice+\"] datapoints.\");
-      fwDim_unSubscribeCommandsByDp(\"DimStorage\",\"*:\"+slice+\"_*\");
-      fwDim_unSubscribeServicesByDp(\"DimStorage\",\"*:\"+slice+\"_*\");
+      fwDim_unSubscribeCommandsByDp(dimMap,\"*:\"+slice+\"_*\");
+      fwDim_unSubscribeServicesByDp(dimMap,\"*:\"+slice+\"_*\");
       return;
     }
     else if (stateName == \"READY\")  {
