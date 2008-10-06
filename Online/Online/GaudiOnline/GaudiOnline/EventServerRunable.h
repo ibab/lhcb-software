@@ -1,4 +1,4 @@
-// $Id: EventServerRunable.h,v 1.5 2008-07-07 14:32:51 frankb Exp $
+// $Id: EventServerRunable.h,v 1.6 2008-10-06 11:49:19 frankb Exp $
 //====================================================================
 //  EventServerRunable
 //--------------------------------------------------------------------
@@ -13,7 +13,7 @@
 //  Created    : 4/12/2007
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/EventServerRunable.h,v 1.5 2008-07-07 14:32:51 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/EventServerRunable.h,v 1.6 2008-10-06 11:49:19 frankb Exp $
 #ifndef GAUDISVC_EVENTSERVERRUNABLE_H
 #define GAUDISVC_EVENTSERVERRUNABLE_H 1
 
@@ -99,19 +99,19 @@ namespace LHCb  {
     /// IService implementation: finalize the service
     virtual StatusCode finalize();
     /// Incident handler implemenentation: Inform that a new incident has occured
-    void handle(const Incident& inc);
+    virtual void handle(const Incident& inc);
     /// IRunable implementation : Run the class implementation
     virtual StatusCode run();
     /// Remove a given target process from the list of pending clients
-    void removeTarget(const std::string& src);
+    virtual void removeTarget(const std::string& src);
     /// Callback to handle a new request of a client to receive a given event
-    void handleEventRequest(DataTransfer::netentry_t* e, const DataTransfer::netheader_t& hdr);
+    virtual void handleEventRequest(DataTransfer::netentry_t* e, const DataTransfer::netheader_t& hdr);
     /// Rescan client tables, reformulate possibly pending requests and renew the request
-    void restartRequests();
+    virtual void restartRequests();
     /// Send event data to a list of waiting clients
-    void sendEvent();
+    virtual StatusCode sendEvent();
     /// Shutdown all event requests from the network
-    void shutdownRequests();
+    virtual void shutdownRequests();
     /// Accessor the netplu object
     DataTransfer::NET* netPlug() const {  return m_netPlug; }
   };

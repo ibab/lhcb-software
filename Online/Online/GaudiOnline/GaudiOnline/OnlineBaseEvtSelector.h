@@ -1,4 +1,4 @@
-// $Id: OnlineBaseEvtSelector.h,v 1.3 2008-09-24 12:49:30 frankb Exp $
+// $Id: OnlineBaseEvtSelector.h,v 1.4 2008-10-06 11:49:19 frankb Exp $
 //====================================================================
 //  OnlineBaseEvtSelector.h
 //--------------------------------------------------------------------
@@ -13,7 +13,7 @@
 //  Created    : 4/01/99
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineBaseEvtSelector.h,v 1.3 2008-09-24 12:49:30 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineBaseEvtSelector.h,v 1.4 2008-10-06 11:49:19 frankb Exp $
 #ifndef GAUDIONLINE_ONLINEBASEEVTSELECTOR_H
 #define GAUDIONLINE_ONLINEBASEEVTSELECTOR_H 1
 
@@ -56,7 +56,7 @@ namespace LHCb  {
     bool                         m_needFree;
   public:
     /// Standard constructor
-    OnlineContext(const OnlineBaseEvtSelector* s) : m_sel(s), m_needFree(false) {}
+    OnlineContext(const OnlineBaseEvtSelector* s);
     /// Standard destructor 
     virtual ~OnlineContext() {}
     /// IEvtSelector::Context overload; context identifier

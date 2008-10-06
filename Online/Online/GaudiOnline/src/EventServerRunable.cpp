@@ -1,4 +1,4 @@
-// $Id: EventServerRunable.cpp,v 1.7 2008-07-07 14:32:51 frankb Exp $
+// $Id: EventServerRunable.cpp,v 1.8 2008-10-06 11:49:19 frankb Exp $
 //====================================================================
 //  EventServerRunable
 //--------------------------------------------------------------------
@@ -13,7 +13,7 @@
 //  Created    : 4/12/2007
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/EventServerRunable.cpp,v 1.7 2008-07-07 14:32:51 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/EventServerRunable.cpp,v 1.8 2008-10-06 11:49:19 frankb Exp $
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
@@ -25,6 +25,7 @@
 // Instantiation of a static factory class used by clients to create instances of this service
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,EventServerRunable)
 
+using namespace std;
 using namespace LHCb;
 using namespace DataTransfer;
 
@@ -43,7 +44,7 @@ static void handle_req(netentry_t* e, const netheader_t& hdr, void* param)  {
 }
 
 // Standard Constructor
-EventServerRunable::EventServerRunable(const std::string& nam, ISvcLocator* svcLoc)   
+EventServerRunable::EventServerRunable(const string& nam, ISvcLocator* svcLoc)   
 : OnlineService(nam, svcLoc), m_mepMgr(0), 
   m_evtCount(0), m_consumer(0), m_netPlug(0), 
   m_suspend(0), m_consState(WAIT_REQ)
@@ -84,14 +85,14 @@ StatusCode EventServerRunable::initialize()   {
   if ( !(sc=service(m_mepMgrName,m_mepMgr)).isSuccess() )  {
     return error("Failed to access MEP manager service.");
   }
-  std::map<std::string,BMID>::const_iterator i = m_mepMgr->buffers().find(m_input);
+  map<string,BMID>::const_iterator i = m_mepMgr->buffers().find(m_input);
   if ( i == m_mepMgr->buffers().end() ) {
     return error("Failed to access Input buffer:"+m_input+".");
   }
   m_consumer = new MBM::Consumer((*i).second,RTL::processName(),m_mepMgr->partitionID());
   m_request.parse(m_req);
   m_consState = WAIT_REQ;
-  std::string self = RTL::dataInterfaceName()+"::"+RTL::processName();
+  string self = RTL::dataInterfaceName()+"::"+RTL::processName();
   m_netPlug = net_init(self);
   net_subscribe(netPlug(),this,WT_FACILITY_CBMREQEVENT,handle_req,handle_death);
   incidentSvc()->addListener(this,"DAQ_CANCEL");
@@ -145,7 +146,7 @@ void EventServerRunable::handle(const Incident& inc)    {
   }
 }
 
-void EventServerRunable::removeTarget(const std::string& src)   {
+void EventServerRunable::removeTarget(const string& src)   {
   Recipients::iterator j = m_recipients.find(src);
   if (j != m_recipients.end())   {
     try {
@@ -163,14 +164,14 @@ void EventServerRunable::removeTarget(const std::string& src)   {
 /// Handle request from new network data consumer
 void EventServerRunable::handleEventRequest(netentry_t* e, const netheader_t& hdr)   {
   char buff[2048];
-  std::string src = hdr.name;
+  string src = hdr.name;
   MBM::Requirement* r = (MBM::Requirement*)buff;
   int sc = net_receive(netPlug(),e,buff);
   if ( sc == NET_SUCCESS )  {
     //info("Got event request from "+src);
     try {
       ::lib_rtl_lock(m_lock);
-      m_recipients[src] = std::make_pair(*r,e);
+      m_recipients[src] = make_pair(*r,e);
       restartRequests();
     }
     catch(...) {
@@ -180,6 +181,7 @@ void EventServerRunable::handleEventRequest(netentry_t* e, const netheader_t& hd
   }
 }
 
+/// Restart event request handling
 void EventServerRunable::restartRequests()  {
   MBM::Requirement old = m_request;
   for(int j=0; j<BM_MASK_SIZE;++j)  {
@@ -215,7 +217,8 @@ void EventServerRunable::restartRequests()  {
   }
 }
 
-void EventServerRunable::sendEvent()  {
+StatusCode EventServerRunable::sendEvent()  {
+  int cnt = 0;
   const MBM::EventDesc& e = m_consumer->event();
   for(Recipients::iterator i=m_recipients.begin(); i!=m_recipients.end(); )  {
     MBM::Requirement& r = (*i).second.first;
@@ -226,6 +229,7 @@ void EventServerRunable::sendEvent()  {
           if ( sc==NET_SUCCESS )   {
             m_recipients.erase(i);
             i = m_recipients.begin();
+	    ++cnt;
             continue;
           }
 	  error("Cannot Send event data to "+(*i).first);
@@ -234,6 +238,7 @@ void EventServerRunable::sendEvent()  {
     }
     ++i;
   }
+  return cnt>0 ? StatusCode::SUCCESS : StatusCode::FAILURE;
 }
 
 /// IRunable implementation : Run the class implementation

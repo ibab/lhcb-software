@@ -1,4 +1,4 @@
-// $Id: OnlineBaseEvtSelector.cpp,v 1.4 2008-09-24 12:49:30 frankb Exp $
+// $Id: OnlineBaseEvtSelector.cpp,v 1.5 2008-10-06 11:49:19 frankb Exp $
 //====================================================================
 //  OnlineBaseEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -22,9 +22,16 @@
 #include "MDF/RawEventHelpers.h"
 #include "MBM/mepdef.h"
 
+using namespace std;
 using namespace LHCb;
 
-OnlineBaseEvtSelector::OnlineBaseEvtSelector(const std::string& nam, ISvcLocator* svc)
+/// Standard constructor
+OnlineContext::OnlineContext(const OnlineBaseEvtSelector* s) : m_sel(s), m_needFree(false) {
+  m_evdesc.setHeader(0);
+  m_evdesc.setSize(0);
+}
+
+OnlineBaseEvtSelector::OnlineBaseEvtSelector(const string& nam, ISvcLocator* svc)
 : OnlineService(nam,svc), m_suspendLock(0), m_evtCount(0), m_reqCount(0), m_isWaiting(false)
 {
   // Requirement format:
@@ -168,8 +175,8 @@ StatusCode OnlineBaseEvtSelector::next(Context& ctxt) const {
       return sc;
     }
   }
-  catch(const std::exception& e)  {
-    error("Exception: "+std::string(e.what())+" Failed to receive the next event.");
+  catch(const exception& e)  {
+    error("Exception: "+string(e.what())+" Failed to receive the next event.");
   }
   catch(...)  {
     error("Unknown exception: Failed to receive the next event.");
@@ -206,25 +213,26 @@ OnlineBaseEvtSelector::createAddress(const Context& ctxt, IOpaqueAddress*& pAddr
     const RawEventDescriptor& d = pctxt->descriptor();
     unsigned long   p0 = (unsigned long)&d;
     RawDataAddress* pA = new RawDataAddress(RAWDATA_StorageType,CLID_DataObject,"","0",p0,0);
-    pA->setData(std::pair<char*,int>(0,0));
+    pA->setData(pair<char*,int>(0,0));
     if ( m_decode && d.eventType() == EVENT_TYPE_EVENT )  {
       pA->setType(RawDataAddress::BANK_TYPE);
       pA->setBanks(&pctxt->banks());
     }
     else if ( d.eventType() == EVENT_TYPE_EVENT ) {
       pA->setType(RawDataAddress::DATA_TYPE);
-      pA->setData(std::make_pair((char*)d.header(),d.size()));
+      if ( d.size()>0 ) pA->setData(make_pair((char*)d.header(),d.size()));
     }
     else if ( d.eventType() == EVENT_TYPE_MEP ) {
       pA->setType(RawDataAddress::MEP_TYPE);
       MEPEVENT* ev = (MEPEVENT*)d.header();
-      pA->setData(std::make_pair(ev->data,d.size()));
+      pA->setData(make_pair(ev->data,d.size()));
     }
     else  {
-      pA->setData(std::make_pair((char*)d.header(),d.size()));
+      pA->setData(make_pair((char*)d.header(),d.size()));
     }
     pA->setFileOffset(0);
     pAddr = pA;
+    //return pA->data().first ? StatusCode::SUCCESS : StatusCode::FAILURE;
     return StatusCode::SUCCESS;
   }
   return StatusCode::FAILURE;
@@ -242,7 +250,7 @@ StatusCode OnlineBaseEvtSelector::releaseContext(Context*& ctxt) const  {
 }
 
 StatusCode 
-OnlineBaseEvtSelector::resetCriteria(const std::string& crit,Context& ct) const {
+OnlineBaseEvtSelector::resetCriteria(const string& crit,Context& ct) const {
   OnlineContext* ctxt = dynamic_cast<OnlineContext*>(&ct);
   if ( ctxt )  {
     ctxt->close();

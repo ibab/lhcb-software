@@ -1,4 +1,4 @@
-// $Id: MBMEvtSelector.cpp,v 1.4 2008-09-23 13:03:23 frankb Exp $
+// $Id: MBMEvtSelector.cpp,v 1.5 2008-10-06 11:49:19 frankb Exp $
 //====================================================================
 //  MBMEvtSelector
 //--------------------------------------------------------------------
@@ -13,7 +13,7 @@
 //  Created    : 4/01/99
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMEvtSelector.cpp,v 1.4 2008-09-23 13:03:23 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMEvtSelector.cpp,v 1.5 2008-10-06 11:49:19 frankb Exp $
 #ifndef GAUDIONLINE_MBMEVTSELECTOR_H
 #define GAUDIONLINE_MBMEVTSELECTOR_H 1
 
@@ -96,7 +96,7 @@ namespace LHCb  {
 }
 #endif // GAUDIONLINE_MBMEVTSELECTOR_H
 
-// $Id: MBMEvtSelector.cpp,v 1.4 2008-09-23 13:03:23 frankb Exp $
+// $Id: MBMEvtSelector.cpp,v 1.5 2008-10-06 11:49:19 frankb Exp $
 //====================================================================
 //  MBMEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -165,6 +165,8 @@ namespace LHCb {
 }
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,OnlineEvtSelector)
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MBMEvtSelector)
+
+using namespace std;
 using namespace LHCb;
 
 MBMContext::MBMContext(MBMEvtSelector* s)
@@ -176,10 +178,10 @@ void MBMContext::testExceptions() {
   static int test = 888;
   --test;
   if ( test >300 && test<330 ) {
-    throw std::runtime_error("Bad magic pattern --- test");
+    throw runtime_error("Bad magic pattern --- test");
   }
   if ( test >30 && test<50 ) {
-    throw std::runtime_error("Unknown Bank --- test");
+    throw runtime_error("Unknown Bank --- test");
   }
   if ( test == 0 ) test = 888;
 }
@@ -188,8 +190,10 @@ StatusCode MBMContext::freeEvent()  {
   if ( m_consumer )  {
     if ( m_needFree )   {
       try  {
-        m_consumer->freeEvent();
         m_needFree = false;
+        m_consumer->freeEvent();
+        m_evdesc.setHeader(0);
+        m_evdesc.setSize(0);
       }
       catch(...) {
       }
@@ -228,8 +232,8 @@ StatusCode MBMContext::receiveEvent()  {
         return StatusCode::SUCCESS;
       }
     }
-    catch(const std::exception& e)  {
-      std::string err = e.what();
+    catch(const exception& e)  {
+      string err = e.what();
       m_sel->error("Failed to read next event:"+err);
       if ( max_retry-- > 0 )  {
 	if (err.substr(0,9)  == "Bad magic" ||
@@ -247,7 +251,7 @@ StatusCode MBMContext::receiveEvent()  {
   return StatusCode::FAILURE;
 }
 
-StatusCode MBMContext::connect(const std::string& input)  {
+StatusCode MBMContext::connect(const string& input)  {
   StatusCode sc = StatusCode::SUCCESS;
   if ( input=="EVENT" || input=="RESULT" || input=="MEP" )
     sc = connectMEP(input);
@@ -263,7 +267,7 @@ StatusCode MBMContext::connect(const std::string& input)  {
   return sc;
 }
 
-StatusCode MBMContext::connectMEP(const std::string& input)  {
+StatusCode MBMContext::connectMEP(const string& input)  {
   IMEPManager* m = m_onlineSel->mepMgr();
   MEPID mepID = m->mepID();
   if ( mepID != MEP_INV_DESC )  {
@@ -288,10 +292,10 @@ StatusCode MBMContext::connectMEP(const std::string& input)  {
   return StatusCode::FAILURE;
 }
 
-StatusCode MBMContext::connectMBM(const std::string& input)  {
+StatusCode MBMContext::connectMBM(const string& input)  {
   if ( m_sel )  {
     IMEPManager* m = m_onlineSel->mepMgr();
-    std::map<std::string,BMID>::const_iterator i = m->buffers().find(input);
+    map<string,BMID>::const_iterator i = m->buffers().find(input);
     if ( i != m->buffers().end() ) {
       m_consumer = new MBM::Consumer((*i).second,RTL::processName(),m->partitionID());
       if ( m_consumer->id() == MBM_INV_DESC ) {
@@ -316,7 +320,7 @@ void MBMContext::close()  {
   m_mepStart = 0;
 }
 
-MBMEvtSelector::MBMEvtSelector(const std::string& nam, ISvcLocator* svc)
+MBMEvtSelector::MBMEvtSelector(const string& nam, ISvcLocator* svc)
 : OnlineBaseEvtSelector(nam,svc), m_mepMgr(0)
 {
   m_input = "EVENT";

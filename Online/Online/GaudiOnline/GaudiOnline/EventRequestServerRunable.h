@@ -1,4 +1,4 @@
-// $Id: EventRequestServerRunable.h,v 1.1 2008-07-07 14:33:29 frankb Exp $
+// $Id: EventRequestServerRunable.h,v 1.2 2008-10-06 11:49:19 frankb Exp $
 //====================================================================
 //  EventRequestServerRunable
 //--------------------------------------------------------------------
@@ -13,7 +13,7 @@
 //  Created    : 4/12/2007
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/EventRequestServerRunable.h,v 1.1 2008-07-07 14:33:29 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/EventRequestServerRunable.h,v 1.2 2008-10-06 11:49:19 frankb Exp $
 #ifndef GAUDISVC_EVENTREQUESTSERVERRUNABLE_H
 #define GAUDISVC_EVENTREQUESTSERVERRUNABLE_H 1
 
@@ -35,6 +35,12 @@ namespace LHCb  {
     *  @version 1.0
     */
   class EventRequestServerRunable : public EventServerRunable  {
+    /// Consistemncy check counter for events sent
+    int   m_sendCount;
+    /// Consistemncy check counter for events retrieved
+    int   m_mbmCount;
+    /// Get next client from queue
+    DataTransfer::netentry_t* getClient();
   public:
     /// Standard Constructor
     EventRequestServerRunable(const std::string& nam, ISvcLocator* svcLoc);
@@ -46,9 +52,11 @@ namespace LHCb  {
     virtual StatusCode finalize();
 
     /// Rescan client tables, reformulate possibly pending requests and renew the request
-    void restartRequests();
+    virtual void restartRequests();
     /// Send event data to a list of waiting clients
-    void sendEvent();
+    virtual StatusCode sendEvent();
+    /// IRunable implementation : Run the class implementation
+    virtual StatusCode run();
   };
 }      // End namespace LHCb
 #endif // GAUDISVC_EVENTREQUESTSERVERRUNABLE_H

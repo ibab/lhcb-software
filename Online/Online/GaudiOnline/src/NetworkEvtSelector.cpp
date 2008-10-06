@@ -1,4 +1,4 @@
-// $Id: NetworkEvtSelector.cpp,v 1.3 2008-01-29 08:54:05 frankb Exp $
+// $Id: NetworkEvtSelector.cpp,v 1.4 2008-10-06 11:49:19 frankb Exp $
 //====================================================================
 //  NetworkEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -23,6 +23,7 @@
 #include "RTL/Lock.h"
 
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,NetworkEvtSelector)
+using namespace std;
 using namespace LHCb;
 using namespace DataTransfer;
 
@@ -44,7 +45,7 @@ NetworkContext::NetworkContext(const NetworkEvtSelector* s)
   m_evdesc.setEventType(EVENT_TYPE_EVENT);
 }
 
-void NetworkContext::taskDead(const std::string& who)  {
+void NetworkContext::taskDead(const string& who)  {
   m_sel->error("The event data source "+who+" died ....");
 }
 
@@ -53,6 +54,8 @@ StatusCode NetworkContext::freeEvent()  {
     try  {
       m_needFree = false;
       delete [] (char*)m_evdesc.header();
+      m_evdesc.setSize(0);
+      m_evdesc.setHeader(0);
     }
     catch(...) {
     }
@@ -60,7 +63,7 @@ StatusCode NetworkContext::freeEvent()  {
   return StatusCode::SUCCESS;
 }
 
-void NetworkContext::handleData(const std::string& src, size_t siz, char* buff) {
+void NetworkContext::handleData(const string& src, size_t siz, char* buff) {
   MsgStream log(m_sel->msgSvc(),m_sel->name());
   log << MSG::DEBUG << "Got event data from " << src << ": " << siz <<" Bytes" << endreq;
   m_banks.clear();
@@ -98,8 +101,8 @@ StatusCode NetworkContext::rearmEvent()  {
     log << MSG::ERROR << "Failed to send event request to " << m_input << endreq;
     return StatusCode::FAILURE;
   }
-  catch(const std::exception& e)  {
-    m_sel->error(std::string("Failed to read next event:")+e.what());
+  catch(const exception& e)  {
+    m_sel->error(string("Failed to read next event:")+e.what());
   }
   catch(...)  {
     m_sel->error("Failed to read next event - Unknown exception.");
@@ -112,8 +115,8 @@ StatusCode NetworkContext::receiveEvent()  {
   return StatusCode::SUCCESS;
 }
 
-StatusCode NetworkContext::connect(const std::string& input)  {
-  std::string self = RTL::dataInterfaceName()+"::"+RTL::processName();
+StatusCode NetworkContext::connect(const string& input)  {
+  string self = RTL::dataInterfaceName()+"::"+RTL::processName();
   if ( m_sel->numReq() > 0 )   {
     m_request = m_sel->req(0);
     for(int j=0; j<BM_MASK_SIZE;++j)  {
@@ -143,7 +146,7 @@ void NetworkContext::close()  {
 }
 
 /// Standard constructor
-NetworkEvtSelector::NetworkEvtSelector(const std::string& nam, ISvcLocator* svc)
+NetworkEvtSelector::NetworkEvtSelector(const string& nam, ISvcLocator* svc)
 : OnlineBaseEvtSelector(nam,svc)
 {
   m_decode = false;

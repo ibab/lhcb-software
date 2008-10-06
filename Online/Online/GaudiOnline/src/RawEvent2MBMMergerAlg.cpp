@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/RawEvent2MBMMergerAlg.cpp,v 1.2 2008-09-23 13:03:23 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/RawEvent2MBMMergerAlg.cpp,v 1.3 2008-10-06 11:49:19 frankb Exp $
 //  ====================================================================
 //  DecisionSetterAlg.cpp
 //  --------------------------------------------------------------------
@@ -39,6 +39,7 @@ namespace LHCb  {
     unsigned int  m_routingBits;
     /// Monitoring quantity: Counter of number of bytes sent
     int           m_bytesDeclared;
+
   public:
     /// Standard algorithm constructor
     RawEvent2MBMMergerAlg(const std::string& nam, ISvcLocator* pSvc)
@@ -53,17 +54,13 @@ namespace LHCb  {
     virtual StatusCode initialize()   {
       StatusCode status = service("MEPManager",m_mepMgr);
       if ( !status.isSuccess() )   {
-	MsgStream err(msgSvc(),name());
-	err << MSG::ERROR << "Failed to access MEPManager service." << endmsg;
-        return status;
+	return error("Failed to access MEPManager service.");
       }
       m_prod = m_mepMgr->createProducer(m_bufferName,RTL::processName());
       //MEPID mepID = m_mepMgr->mepID();
       //m_prod = new Producer(mepID->resBuffer,mepID->processName,mepID->partitionID);
       if ( 0 == m_prod ) {
-	MsgStream err(msgSvc(),name());
-	err << MSG::ERROR << "Failed to create event producer for buffer:" << m_bufferName << endmsg;
-	return StatusCode::FAILURE;
+	return error("Failed to create event producer for buffer:"+m_bufferName);
       }
       declareInfo("SpaceCalls", m_spaceActions=0,  "Total number successful space requests.");
       declareInfo("SpaceErrors",m_spaceErrors=0,   "Total number failed space requests.");
@@ -86,6 +83,13 @@ namespace LHCb  {
       return StatusCode::SUCCESS;
     }
 
+    /// Issue error condition
+    StatusCode error(const std::string& msg) const {
+      MsgStream log(msgSvc(),name());
+      log << MSG::ERROR << msg << endmsg;
+      return StatusCode::FAILURE;
+    }
+
     /// Allocate space for IO buffer
     virtual MDFIO::MDFDescriptor getDataSpace(void* const /* ioDesc */, size_t len)  {
       try {
@@ -97,49 +101,60 @@ namespace LHCb  {
 	}
       }
       catch(std::exception& e)  {
-	MsgStream log(msgSvc(),name());
-	log << MSG::ERROR << "Got exception when asking for BM space:" << e.what() << endmsg;
+	error("Got exception when asking for BM space:"+std::string(e.what()));
       }
       catch(...)  {
-	MsgStream log(msgSvc(),name());
-	log << MSG::ERROR << "Got unknown exception when asking for BM space" << endmsg;
+	error("Got unknown exception when asking for BM space");
       }
-      MsgStream err(msgSvc(),name());
-      err << MSG::ERROR << "Failed to get space for buffer manager." << endmsg;
+      error("Failed to get space for buffer manager.");
       return MDFDescriptor(0,-1);
     }
 
     /// Write MDF record from serialization buffer
-    StatusCode writeBuffer(void* const /* ioDesc */, const void* /* data */, size_t len)  {
+    StatusCode writeBuffer(void* const ioDesc, const void* data, size_t len)  {
       try {
 	EventDesc& e = m_prod->event();
-	RawBank*   b = (RawBank*)e.data;
-	MDFHeader* h = (MDFHeader*)b->data();
-	e.type       = EVENT_TYPE_EVENT;
-	e.len        = len;
-	const unsigned int* mask = h->subHeader().H1->triggerMask();
-	if ( m_routingBits != NO_ROUTING ) {
-	  unsigned int m[] = { mask[0], mask[1], mask[2], m_routingBits };
-	  h->subHeader().H1->setTriggerMask(m);
+	if ( 0 == e.data ) {
+	  // If we end up here, the data were assembled from the raw event, but rather
+	  // taken from an already existing MDF or BANK buffer.
+	  // In this event we have to copy the data to the requested space.
+	  MDFIO::MDFDescriptor dsc = getDataSpace(ioDesc,len);
+	  if ( dsc.first == 0 ) {
+	    return error("Failed to get space to copy data!");
+	  }
+	  ::memcpy(dsc.first,data,len);
 	}
-	::memcpy(e.mask,h->subHeader().H1->triggerMask(),sizeof(e.mask));
-	int ret = m_prod->sendEvent();
-	if ( MBM_NORMAL == ret )   {
-	  m_bytesDeclared += len;
-	  MsgStream log(msgSvc(),name());
-	  log << MSG::DEBUG << "Wrote data of size:" << len << " to buffer " << m_bufferName << endmsg;
-	  return StatusCode::SUCCESS;
+	if ( 0 != e.data ) {
+	  RawBank*   b = (RawBank*)e.data;
+	  MDFHeader* h = (MDFHeader*)b->data();
+	  e.type       = EVENT_TYPE_EVENT;
+	  e.len        = len;
+	  const unsigned int* mask = h->subHeader().H1->triggerMask();
+	  if ( m_routingBits != NO_ROUTING ) {
+	    unsigned int m[] = { mask[0], mask[1], mask[2], m_routingBits };
+	    h->subHeader().H1->setTriggerMask(m);
+	  }
+	  ::memcpy(e.mask,h->subHeader().H1->triggerMask(),sizeof(e.mask));
+	  int ret = m_prod->sendEvent();
+	  if ( MBM_NORMAL == ret )   {
+	    MsgStream log(msgSvc(),name());
+	    e.len = 0;
+	    e.data = 0;
+	    m_bytesDeclared += len;
+	    log << MSG::DEBUG << "Wrote data of size:" << len << " to buffer " << m_bufferName << endmsg;
+	    return StatusCode::SUCCESS;
+	  }
+	  e.len = 0;
+	  e.data = 0;
+	  return error("Failed to declare event to buffer manager:"+m_bufferName);
 	}
-	MsgStream log(msgSvc(),name());
-	log << MSG::ERROR << "Failed to declare event to buffer manager." << endmsg;
+	return error("Failed to declare event - no data present!");
       }
       catch(std::exception& e)  {
-	MsgStream log(msgSvc(),name());
-	log << MSG::ERROR << "Got exception when declaring event:" << e.what() << endmsg;
+	return error("Got exception when declaring event:"+m_bufferName+" "+std::string(e.what()));
       }
       catch(...)  {
-	MsgStream log(msgSvc(),name());
-	log << MSG::ERROR << "Got unknown exception when declaring event." << endmsg;
+	return error("Got unknown exception when declaring event:"+m_bufferName);
       }
       return StatusCode::FAILURE;
     }
