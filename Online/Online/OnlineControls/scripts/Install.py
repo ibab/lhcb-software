@@ -121,26 +121,41 @@ def installFiles():
   print 'Now in:',os.getcwd()
 
 
-def installDpList():
+def importDpList(fname):
   print 'Installing datapoint list...'
-  if projectName()[:6]=='RECMON' or projectName()[:6]=='RECHLT':
-    dplist = sourceDir()+'/pvss/dplist/ProcessorFarm.dpl'
-  else:
-    dplist = sourceDir()+'/pvss/dplist/'+projectName()+'.dpl'
+  dplist = sourceDir()+'/pvss/dplist/'+fname
   try:
     os.stat(dplist)
     execCmd(pvssASCII()+' -in '+dplist)
   except:
     print 'No datapoints to be imported ....:',dplist
   
+def installDpList():
+  if projectName()[:6]=='RECMON' or projectName()[:6]=='RECHLT':
+    dplist = sourceDir()+'/pvss/dplist/ProcessorFarm.dpl'
+  else:
+    dplist = sourceDir()+'/pvss/dplist/'+projectName()+'.dpl'
+  importDpList(dplist)
+  
+def importStreamDpLists():
+  print '......... --> Importing datapoint lists....'
+  importDpList('FSM_DimTask.dpl')
+  importDpList('FSM_Tasks.dpl')
+  importDpList('FSM_Slice.dpl')
+  importDpList('FSM_Holder.dpl')
+  importDpList('StreamControl.dpl')
+  importDpList('StreamCluster.dpl')
+  importDpList('StreamConfigurator.dpl')
+  
 def install():
   print 'Installing...'
   installFiles()
-  installDpList()
+  #installDpList()
   pro = projectName()
   if pro=="MONITORING":
     print '......... --> Executing PVSS setup controller for project '+pro
     execCmd(pvssCTRL()+'InstallMonitoring.cpp')
+    importStreamDpLists()
     print '......... --> Executing python setup....'
     execCmd("""python -c "import Online.Streaming.MonitoringInstaller as IM; IM.install('Monitoring','"""+pro+"""')";""")
     print '......... --> Executing final PVSS setup controller for project '+pro
@@ -148,6 +163,7 @@ def install():
   elif pro=="MONITORING2":
     print '......... --> Executing PVSS setup controller for project '+pro
     execCmd(pvssCTRL()+'InstallMonitoring.cpp')
+    importStreamDpLists()
     print '......... --> Executing python setup....'
     execCmd("""python -c "import Online.Streaming.MonitoringInstaller as IM; IM.install('Monitoring2','"""+pro+"""')";""")
     print '......... --> Executing final PVSS setup controller for project '+pro
@@ -155,6 +171,7 @@ def install():
   elif pro=='RECONSTRUCTION':
     print '......... --> Executing PVSS setup controller for project '+pro
     execCmd(pvssCTRL()+'InstallMonitoring.cpp')
+    importStreamDpLists()
     print '......... --> Executing python setup....'
     execCmd("""python -c "import Online.Streaming.MonitoringInstaller as IM; IM.install('Reconstruction','"""+pro+"""')";""")
     print '......... --> Executing final PVSS setup controller for project '+pro
@@ -162,6 +179,7 @@ def install():
   elif pro=="STORAGE":
     print '......... --> Executing PVSS setup controller for project '+pro
     execCmd(pvssCTRL()+'InstallStorage.cpp')
+    importStreamDpLists()
     print '......... --> Executing python setup....'
     execCmd("""python -c "import Online.Streaming.StorageInstaller as IM; IM.install('Storage','"""+pro+"""')";""")
     print '......... --> Executing final PVSS setup controller for project '+pro
@@ -169,22 +187,40 @@ def install():
   elif pro=="RECSTORAGE":
     print '......... --> Executing PVSS setup controller for project '+pro
     #execCmd(pvssCTRL()+'InstallStorage.cpp')
+    importStreamDpLists()
     print '......... --> Executing python setup....'
     #execCmd("""python -c "import Online.Streaming.StorageInstaller as IM; IM.install('Storage','"""+pro+"""')";""")
     print '......... --> Executing final PVSS setup controller for project '+pro
     execCmd(pvssCTRL()+'InstallRecStorage2.cpp')
-  elif pro[:6]=='RECMON' or pro[:6]=='RECHLT':
+  elif pro[:6]=='RECHLT':
     print '......... --> Executing PVSS setup controller for project '+pro
     execCmd(pvssCTRL()+'InstallSubFarm.cpp')
+    print '......... --> Importing datapoint lists....'
+    importDpList('FSM_DimTask.dpl')
+    importDpList('FSM_Tasks.dpl')
+    importDpList('FSM_Slice.dpl')
+    importDpList('StreamConfigurator.dpl')
     print '......... --> Executing python setup....'
     execCmd("""python -c "import Online.ProcessorFarm.FarmInstaller as IM; IM.installSubFarm('Farm','"""+pro+"""')";""")
     print '......... --> Executing final PVSS setup controller for project '+pro
     execCmd(pvssCTRL()+'InstallSubFarm2.cpp')
   elif pro=='RECFARM':
     print '......... --> Executing PVSS setup controller for project '+pro
+    importDpList('FSM_DimTask.dpl')
+    importDpList('FSM_Farm.dpl')
+    importDpList('FSM_Slice.dpl')
+    #importDpList('FSM_Tasks.dpl')
+    importDpList('StreamConfigurator.dpl')
+    importDpList('StreamControl.dpl')
+    importDpList('StreamCluster.dpl')
     execCmd(pvssCTRL()+'InstallFarm.cpp')
   elif pro=='RECCTRL':
     print '......... --> Executing PVSS setup controller for project '+pro
+    importDpList('FSM_Farm.dpl')
+    importDpList('FSM_Slice.dpl')
+    importDpList('FSM_Alloc.dpl')
+    importDpList('FSM_Holder.dpl')
+    importDpList('FSM_FarmCtrl.dpl')
     execCmd(pvssCTRL()+'InstallRecCtrl.cpp')
   elif pro[:4]=='RECO':
     print '......... --> Executing PVSS setup controller for project '+pro
