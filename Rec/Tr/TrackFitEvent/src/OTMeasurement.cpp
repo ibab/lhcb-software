@@ -1,4 +1,4 @@
-// $Id: OTMeasurement.cpp,v 1.18 2008-05-29 14:03:58 smenzeme Exp $
+// $Id: OTMeasurement.cpp,v 1.19 2008-10-06 14:45:52 wouter Exp $
 // Include files
 
 // OTDet
@@ -64,22 +64,12 @@ double LHCb::OTMeasurement::stereoAngle() const
 
 OTDet::RadiusWithError  LHCb::OTMeasurement::driftRadiusWithError( double arclen ) const 
 {
-  // Get the distance to the readout
-  double distToReadout = trajectory().endRange() - arclen;
-  // Drifttime
-  double drifttime = calibratedTime() - deltaTimeOfFlight() - distToReadout / module().propagationVelocity() ;
-  // The rest is done by the module
-  return module().driftRadiusWithError( drifttime ) ;
+  return module().driftRadiusWithError( driftTime(arclen) ) ;
 }
 
 OTDet::RadiusWithError  LHCb::OTMeasurement::driftRadiusWithErrorFromY( double globalY ) const 
 {
-  // Get the distance to the readout
-  double deltaY = trajectory().endPoint().y() - globalY ;
-  // Drifttime
-  double drifttime = calibratedTime() - deltaTimeOfFlight() - deltaY / module().propagationVelocityY() ;
-  // The rest is done by the module
-  return module().driftRadiusWithError( drifttime ) ;
+  return module().driftRadiusWithError( driftTimeFromY( globalY ) ) ;
 }
 
 double LHCb::OTMeasurement::propagationTimeFromY( double globalY ) const

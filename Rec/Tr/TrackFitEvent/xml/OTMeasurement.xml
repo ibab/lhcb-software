@@ -123,6 +123,30 @@
       </method>
 
       <method
+	type = 'double'
+	name = 'driftTime'
+	desc = 'Retrieve the drift time'
+	const = 'TRUE'> 
+	<arg type='double' name='arclen' />
+        <code> 
+        double propagationTime = ( trajectory().endRange() - arclen ) / module().propagationVelocity() ;
+        return calibratedTime() - deltaTimeOfFlight() - propagationTime ;
+        </code>
+      </method>
+
+      <method
+	type = 'double'
+	name = 'driftTimeFromY'
+	desc = 'Retrieve the drift time'
+	const = 'TRUE'> 
+	<arg type='double' name='globalY' />
+        <code>
+        double propagationTime = ( trajectory().endPoint().y() - globalY ) / module().propagationVelocityY() ;
+        return calibratedTime() - deltaTimeOfFlight() - propagationTime ;
+        </code>
+      </method>
+
+      <method
         type    = 'LHCb::OTMeasurement*'
         name    = 'clone'
         desc    = 'Clone the OTMeasurement'
