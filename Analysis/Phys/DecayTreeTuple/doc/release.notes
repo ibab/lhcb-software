@@ -4,6 +4,8 @@
 ! Purpose     : Option-steered tuples. Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+!======================== DecayTreeTuple v1r7p1 2008-10-06 ===================
+
 - 2008-10-02 - Adlene Hicheur
  - Fix bug in true angular information ntuple filling (from Conor)
 
