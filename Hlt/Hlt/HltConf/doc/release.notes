@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.30 2008-10-03 12:45:30 pkoppenb Exp $ 
+! $Id: release.notes,v 1.31 2008-10-06 09:40:37 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : 
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2008-10-06 - Gerhard Raven
+ - allow Hlt2 only configuration
 
 !========================== HltConf v1r4 2008-10-03 ===================
 ! 2008-10-02 - Gerhard Raven

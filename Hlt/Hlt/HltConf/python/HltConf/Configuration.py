@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.8 2008-10-02 09:45:33 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.9 2008-10-06 09:39:42 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -13,20 +13,17 @@ from Configurables       import GaudiSequencer as Sequence
 
 class HltConf(LHCbConfigurableUser):
     __slots__ = {
-          "hltType" :          'Physics_Hlt1+Hlt2'
+          "hltType" :          'Hlt1+Hlt2'
         , "userAlgorithms":    [ ]  # put here user algorithms to add
         , "oldStyle" :         True # old style options configuration
         , "replaceL0BanksWithEmulated" : False
         , "verbose" :          False # print the generated Hlt sequence
         }   
     def validHltTypes(self):
-        return [ 'PA',
-                 'PA+LU',
-                 'PA+LU+VE',
-                 'PA+LU+VE+MU',
-                 'PA+LU+VE+MU+HA+EL+PH',
-                 'Physics_Hlt1',
-                 'Physics_Hlt1+Hlt2',
+        return [ 'NONE',
+                 'Hlt1',
+                 'Hlt2',
+                 'Hlt1+Hlt2',
                  'DEFAULT' ]
                 
     def applyConf(self):
@@ -45,8 +42,9 @@ class HltConf(LHCbConfigurableUser):
             if hlttype.find('Lumi') != -1 :   importOptions('$HLTCONFROOT/options/Lumi.opts')
             if hlttype.find('Velo') != -1 :   importOptions('$HLTCONFROOT/options/HltVeloAlleySequence.opts')
         else :
-            if hlttype == 'DEFAULT'       : hlttype = 'PA+LU+VE'
-            if hlttype == 'Physics_Hlt1'  : hlttype = 'PA+LU+VE+MU+HA+PH+EL'
+            if hlttype == 'NONE'    : hlttype = ''
+            if hlttype == 'DEFAULT' : hlttype = 'PA+LU+VE'
+            if hlttype == 'Hlt1'    : hlttype = 'PA+LU+VE+MU+HA+PH+EL'
             type2conf = { 'PA' : '$HLTCONFROOT/options/HltCommissioningLines.py' # PA for 'Pass-Thru' (PT was considered bad)
                         , 'LU' : '$HLTCONFROOT/options/HltLumiLines.py'
                         , 'VE' : '$HLTCONFROOT/options/HltVeloLines.py'
