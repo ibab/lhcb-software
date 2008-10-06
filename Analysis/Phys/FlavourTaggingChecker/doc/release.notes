@@ -1,15 +1,17 @@
-! $Id: release.notes,v 1.39 2008-09-25 06:52:22 pkoppenb Exp $
+! $Id: release.notes,v 1.40 2008-10-06 12:59:38 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Checker package for Phys/FlavourTagging
 !-----------------------------------------------------------------------------
 
+!=====================FlavourTaggingChecker v3r1p1 2008-10-06 ==============
+
 ! 2008-09-25 - Patrick Koppenburg
  - Removed obsolete and unused HltEnums
  - increment to v3r1p1
 
-!========================== FlavourTaggingChecker v3r1 2008-08-05 ===================
+!========================== FlavourTaggingChecker v3r1 2008-08-05 ==========
 ! 2008-07-24 - Marco Cattaneo
  - Fixes to CheatedSelection, TaggingUtilsChecker, TaggingTublesSignal, 
    BTaggingInclusive, BTaggingChecker to compile with HepMC 2 (Gaudi v20r2)
