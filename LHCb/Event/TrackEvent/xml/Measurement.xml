@@ -51,7 +51,7 @@
       <constructor 
 	desc     = "Constructor" 
 	argList  = "const LHCb::Measurement::Type type, const LHCb::LHCbID id, const DetectorElement* elem=0"
-        initList = "m_mtype(type), m_lhcbID(id), m_detectorElement(elem)" >
+        initList = "m_mtype(type), m_z(0), m_measure(0), m_errMeasure(0), m_lhcbID(id), m_detectorElement(elem)" >
       </constructor>
 
      <attribute

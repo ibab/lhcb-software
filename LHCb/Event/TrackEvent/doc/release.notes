@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !======================= TrackEvent v4r15 2008-09-30 =========================
+! 2008-10-06 - Wouter Hulsbergen
+ - fix uninitialized data members in Measurement constructor
+
 ! 2008-09-25 - Stephanie Hansmann-Menzemer
  - make computation of probChi2 of track safe for FPE
 
