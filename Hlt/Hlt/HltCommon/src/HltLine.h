@@ -1,4 +1,4 @@
-// $Id: HltLine.h,v 1.2 2008-10-02 14:08:29 graven Exp $
+// $Id: HltLine.h,v 1.3 2008-10-06 13:21:15 graven Exp $
 #ifndef HLTLINE_H
 #define HLTLINE_H 1
 
@@ -36,22 +36,23 @@ public:
 
   class HltStage {
   public:
-    HltStage( )
-    : m_parent(0)
+    HltStage(HltLine& parent, const std::string& name)
+    : m_parent(parent)
     , m_timerTool(0) 
     , m_algorithm(0)
+    , m_property(name, std::string())
     , m_reverse(false)
     , m_dirty(true)
     , m_initialized(false)
-    { m_property.declareUpdateHandler(&HltStage::updateHandler,this); }
+    {  m_property.declareUpdateHandler(&HltStage::updateHandler,this); }
 
     HltStage( HltStage& rhs )
     : m_parent(rhs.m_parent)
     , m_timerTool(rhs.m_timerTool) 
     , m_algorithm(0)
+    , m_property( rhs.m_property )
     , m_reverse(false)
     , m_dirty(true)
-    , m_property( rhs.m_property )
     , m_initialized(false)
     { m_property.declareUpdateHandler(&HltStage::updateHandler,this); }
 
@@ -71,7 +72,7 @@ public:
     int        timer()            const  { return m_timer;     }
     void updateHandler(Property& prop);
 
-    HltLine*    m_parent;
+    HltLine&    m_parent;
     ISequencerTimerTool* m_timerTool;      ///< Pointer to the timer tool
     Algorithm*  m_algorithm;   ///< Algorithm pointer
     StringProperty  m_property;
@@ -88,9 +89,10 @@ private:
                seeded =          2 , // i.e. did not pass 'filter0'
                filter0ed =       3,  // i.e. did not pass 'filter1'
                filter1ed =       4,  // i.e. did not pass 'filter2'
-               filter2ed =       5,  // i.e. did not pass 'postscale'
-               postscaled =      6 ,
-               nStages };
+               filter2ed =       5,  // i.e. did not pass 'filter3'
+               filter3ed =       6,  // i.e. did not pass 'postscale'
+               postscaled =      7 ,
+               nStages = postscaled };
   const std::string& transition( const stage &s) const {
         static std::vector<std::string> s_map;
         if (s_map.empty()) {
@@ -99,6 +101,7 @@ private:
             s_map.push_back("Filter0");
             s_map.push_back("Filter1");
             s_map.push_back("Filter2");
+            s_map.push_back("Filter3");
             s_map.push_back("Postscale");
         }
         return s_map[s];
@@ -116,12 +119,13 @@ private:
   HltLine& operator=( const HltLine& a );
 
 
-  boost::array<HltStage,nStages> m_stages; ///< List of algorithms to process.
+  boost::array<HltStage*,nStages> m_stages; ///< List of algorithms to process.
   ISequencerTimerTool* m_timerTool;      ///< Pointer to the timer tool
   IJobOptionsSvc* m_jos;                 ///< Pointer to job options service
   IAlgManager* m_algMgr;                 ///< Pointer to algorithm manager
   mutable IANNSvc *m_hltANNSvc;
   std::string m_outputContainerName;
+  std::string m_decision;
   bool m_ignoreFilter;                   ///< True if one continues always.
   bool m_isInitialized;                  ///< Indicate that we are ready
   bool m_measureTime;                    ///< Flag to measure time

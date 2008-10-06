@@ -1,4 +1,4 @@
-// $Id: HltLine.cpp,v 1.2 2008-10-02 14:08:29 graven Exp $
+// $Id: HltLine.cpp,v 1.3 2008-10-06 13:21:15 graven Exp $
 // Include files
 #include "HltLine.h"
 
@@ -26,14 +26,16 @@ DECLARE_ALGORITHM_FACTORY( HltLine );
 void
 HltLine::HltStage::updateHandler(Property&) {
     if (!m_initialized) { 
-        std::cout << "HltStage: delaying assignment of " << m_property.value() << std::endl;
         m_dirty=true;
+        return;
     } 
     if (m_algorithm!=0) m_algorithm->release();
-    std::cout << "HltStage: attempting assignment of " << m_property.value() << std::endl;
-    m_algorithm = m_parent->getSubAlgorithm(m_property.value());
-    if (!m_algorithm) throw GaudiException( "could not obtain algorithm" , m_property.value(), StatusCode::FAILURE);
-    m_algorithm->addRef();
+    if (!m_property.value().empty()) {
+        m_algorithm = m_parent.getSubAlgorithm(m_property.value());
+        if (!m_algorithm) throw GaudiException( "could not obtain algorithm for " , m_property.value(), StatusCode::FAILURE);
+        m_algorithm->addRef();
+    } else {
+    }
     m_dirty = false;
 }
 
@@ -41,14 +43,16 @@ StatusCode
 HltLine::HltStage::initialize(ISequencerTimerTool* timer) {
     m_initialized=true;
     if ( m_dirty ) updateHandler(m_property);
-    if ( timer ) setTimer( timer->addTimer( algorithm()->name() ) );
-    return algorithm()->sysInitialize();
+    // TODO: bind timer call...
+    if ( timer!=0 && algorithm()!=0 ) setTimer( timer->addTimer( algorithm()->name() ) );
+    // empty transition is allowed...
+    return algorithm()!=0 ? algorithm()->sysInitialize() : StatusCode::SUCCESS;
 }
 
 StatusCode
 HltLine::HltStage::execute(ISequencerTimerTool* timertool) {
     assert(!m_dirty);
-    if (algorithm()==0) return StatusCode::SUCCESS;
+    if (!algorithm()              ) return StatusCode::SUCCESS;
     if (!algorithm()->isEnabled() ) return StatusCode::SUCCESS;
     if ( algorithm()->isExecuted()) return StatusCode::SUCCESS;
     // TODO: bind timer at init time
@@ -82,10 +86,12 @@ HltLine::HltLine( const std::string& name,
   , m_algMgr(0)
   , m_hltANNSvc(0)
 {
-  for (unsigned i=0; i<m_stages.size()-1; ++i) {
-    declareProperty( transition( stage(i) ) , m_stages[i].property() );
+  for (unsigned i=0; i<m_stages.size(); ++i) {
+    m_stages[i] = new HltStage(*this, transition(stage(i)));
+    declareProperty( m_stages[i]->property().name() , m_stages[i]->property() );
   }
   declareProperty( "HltDecReportsLocation", m_outputContainerName   = LHCb::HltDecReportsLocation::Default );
+  declareProperty( "DecisionName"         , m_decision       = name+"Decision");
   declareProperty( "IgnoreFilterPassed"   , m_ignoreFilter   = false );
   declareProperty( "MeasureTime"          , m_measureTime    = false );
   declareProperty( "ReturnOK"             , m_returnOK       = false );
@@ -120,9 +126,9 @@ StatusCode HltLine::initialize() {
 
   //== Initialize the algorithms
   StatusCode sc;
-  BOOST_FOREACH( HltStage& i, m_stages) {
-    sc = i.initialize(m_timerTool);
-    if (!sc.isSuccess()) Error( "Can not initialize " + i.name(), sc );
+  BOOST_FOREACH( HltStage* i, m_stages) {
+    sc = i->initialize(m_timerTool);
+    if (!sc.isSuccess()) Error( "Can not initialize " + i->name(), sc );
   }
   if ( m_measureTime ) m_timerTool->decreaseIndent();
 
@@ -139,22 +145,22 @@ StatusCode HltLine::execute() {
   debug() << "==> Execute" << endreq;
   StatusCode result = StatusCode::SUCCESS;
   LHCb::HltDecReports* reports = getOrCreate<LHCb::HltDecReports,LHCb::HltDecReports>(m_outputContainerName);
-  if (reports->hasSelectionName( name() ) ) { 
+  if (reports->hasSelectionName( m_decision ) ) { 
     error() << "HltDecReports already contains report" << endmsg;
     return StatusCode::FAILURE;
   }
-  boost::optional<IANNSvc::minor_value_type> key = annSvc().value("Hlt1SelectionID",name());
+  boost::optional<IANNSvc::minor_value_type> key = annSvc().value("Hlt1SelectionID",m_decision);
   //TODO: add c'tor with only selID
   LHCb::HltDecReport report( 0, 0, 0, key->second );
   bool accept = true;
   for (unsigned i=0;i<m_stages.size();++i) {
-     result = m_stages[i].execute();
+     result = m_stages[i]->execute();
      if (result.isFailure()) {
         report.setErrorBits(1); //TODO: different value depending on error type..
         accept = m_acceptOnError;
         break;
      }
-     accept = m_stages[i].passed();
+     accept = m_stages[i]->passed();
      if ( !accept ) break;
      report.setExecutionStage( i+1 );
   }
@@ -188,7 +194,7 @@ StatusCode HltLine::finalize() {
 void HltLine::resetExecuted ( ) {
   Algorithm::resetExecuted();
   // algorithm doesn't call resetExecuted of subalgos! should it???
-  BOOST_FOREACH( HltStage& i, m_stages) i.resetExecuted();
+  BOOST_FOREACH( HltStage* i, m_stages) i->resetExecuted();
 }
 
 //=========================================================================
