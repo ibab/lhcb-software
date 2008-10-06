@@ -1,6 +1,6 @@
-// $Id: DVTestBd2DstarPi.opts,v 1.4 2008-09-25 12:26:48 pkoppenb Exp $
+// $Id: DVTestBd2DstarPi.opts,v 1.5 2008-10-06 16:09:23 jpalac Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 /** @file DVTestBd2DstarPi.opts
  *
@@ -23,8 +23,8 @@ FindTrueDecay.IgnoreFilterPassed = true ;
 //
 // Truth filter for B0 -> D*pi  No PID
 //
-FindTrueDecay.Members += { "FilterDesktop/SelectTrueNoPIDsDecay"};
-
+FindTrueDecay.Members += { "OldFilterDesktop/SelectTrueNoPIDsDecay"};
+SelectTrueNoPIDsDecay.FilterCriterion = "ByPIDFilterCriterion";
 SelectTrueNoPIDsDecay.PhysDesktop.InputLocations = { "Phys/StdNoPIDsPions",
                                                      "Phys/StdNoPIDsKaons"} ;
 
@@ -44,7 +44,8 @@ AllTrueNoPIDsDecay.DecayDescriptor = "[B0 -> pi- K+ pi- pi+]cc" ; // all particl
 //
 // Truth filter for Bd -> D*Pi Loose PID : copy of above with NoPIDs -> Loose 
 //
-FindTrueDecay.Members += { "FilterDesktop/SelectTrueLooseDecay"};
+FindTrueDecay.Members += { "OldFilterDesktop/SelectTrueLooseDecay"};
+SelectTrueLooseDecay.FilterCriterion = "ByPIDFilterCriterion";
 SelectTrueLooseDecay.PhysDesktop.InputLocations = { "Phys/StdLoosePions",
                                                     "Phys/StdLooseKaons"} ;
 
