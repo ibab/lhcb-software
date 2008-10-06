@@ -1,4 +1,4 @@
-// $Id: DeOTModule.h,v 1.36 2008-09-25 10:04:46 janos Exp $
+// $Id: DeOTModule.h,v 1.37 2008-10-06 15:08:46 wouter Exp $
 #ifndef OTDET_DEOTMODULE_H
 #define OTDET_DEOTMODULE_H 1
 
@@ -80,6 +80,7 @@ public:
   /// some handy typedefs
   typedef std::vector<DeOTModule*> Container;
   typedef std::vector<unsigned int> Straws;
+  enum { MAXNUMCHAN = 128 } ;
   
   /** Constructor */
   DeOTModule(const std::string& name = "");
@@ -440,8 +441,8 @@ private :
   double m_dy[2] ;                              ///< difference in y coordinates of straw end points 
   Gaudi::XYZVectorF m_dp0di ;                   ///< vector with change in straw position in units of pitch in y-line coordinates
   Gaudi::XYZPointF  m_p0[2] ;                   ///< position of first straw in y-line coordinates
-  std::vector<double> m_strawt0 ;               ///< vector with t0 for every straw
-  std::vector<double> m_strawdefaulttof ;       ///< vector with default tof correction for straw
+  double m_strawt0[MAXNUMCHAN] ;                ///< vector with t0 for every straw
+  double m_strawdefaulttof[MAXNUMCHAN] ;        ///< vector with default tof correction for straw
   OTDet::RtRelation m_rtrelation ;              ///< rt-relation
   double m_propagationVelocity ;                ///< propagation velocity
   double m_propagationVelocityY ;               ///< propagation velocity in y-direction (cached for speed)

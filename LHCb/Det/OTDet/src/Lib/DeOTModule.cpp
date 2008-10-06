@@ -1,4 +1,4 @@
-// $Id: DeOTModule.cpp,v 1.38 2008-10-01 17:16:18 janos Exp $
+// $Id: DeOTModule.cpp,v 1.39 2008-10-06 15:08:47 wouter Exp $
 // GaudiKernel
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
@@ -440,8 +440,8 @@ StatusCode DeOTModule::cacheInfo() {
   // the delta-tof is the tof compared to a straight line to the
   // midpoint of the straw. does that make sense, actually?
       
-  // The following just makes sense for MC, of course.
-  m_strawdefaulttof.resize( 2*m_nStraws, 0 ) ;
+  // The following just makes sense for MC, of course. 
+  std::fill( m_strawdefaulttof, m_strawdefaulttof + MAXNUMCHAN, 0 ) ;
   for(unsigned int istraw=1; istraw<=2*m_nStraws; ++istraw) {
     OTChannelID id(stationID(),layerID(),quarterID(),moduleID(),istraw,0) ;
     std::auto_ptr<Trajectory> traj = trajectory(id) ;
@@ -466,12 +466,31 @@ StatusCode DeOTModule::calibrationCallback() {
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Updating Calibration parameters" << endmsg;
   try {
-    std::vector< double > trParameters     = m_calibration->param< std::vector<double> >( "TRParameters" ); ///< in ns
-    std::vector< double > sigmaTParameters = m_calibration->param< std::vector<double> >( "STParameters" ); ///< in ns
+    const std::vector<double>& trParameters = 
+      m_calibration->param< std::vector<double> >( "TRParameters" ); // in ns
+    const std::vector<double>& sigmaTParameters = 
+      m_calibration->param< std::vector<double> >( "STParameters" ); // in ns
+    const std::vector<double>& t0Parameters = 
+      m_calibration->param< std::vector<double> >( "TZero" );
+
     // Here we assume the cell radius is the same for all straws. Should be  ;)
     // Maybe add the number of bins to the conditions
     m_rtrelation = OTDet::RtRelation( m_cellRadius, trParameters, sigmaTParameters ) ;
-    m_strawt0    = m_calibration->param< std::vector<double> >( "TZero" );
+
+    // how we set the straw t0 depends on the size of the vector.  we
+    // allow that the calibration sets either every connected channel,
+    // or for all channels
+    if( t0Parameters.size() == nChannels() || t0Parameters.size() == MAXNUMCHAN ) // 1 t0 per channel
+      std::copy( t0Parameters.begin(), t0Parameters.end(), m_strawt0 ) ;
+    else if( t0Parameters.size()== nChannels()/32 || t0Parameters.size()== 4 ) // 1 t0 per otis
+      for( size_t ichan=0; ichan<nChannels(); ++ichan)
+	m_strawt0[ichan] = t0Parameters[ichan/32] ;
+    else if( t0Parameters.size() == 1 )      // 1 t0 per module
+      std::fill( m_strawt0, m_strawt0 + MAXNUMCHAN, t0Parameters.front() ) ;
+    else {
+      msg << MSG::ERROR << "Bad length of t0 vector in conditions: " << t0Parameters.size() << endmsg ;
+      std::fill( m_strawt0, m_strawt0 + MAXNUMCHAN, 0 ) ;
+    }
   }
   catch (...) {
     msg << MSG::ERROR << "Failed to update calibration conditions for " << this->name() << "!" << endmsg;
@@ -602,9 +621,9 @@ void DeOTModule::fallbackDefaults() {
   // midpoint of the straw. does that make sense, actually?
       
   // The following just makes sense for MC, of course.
-  m_strawt0.resize( 2*m_nStraws, 0 ) ;
+  std::fill( m_strawt0, m_strawt0 + MAXNUMCHAN, 0 ) ;
   for( unsigned int istraw = 1; istraw <= 2*m_nStraws; ++istraw ) 
     m_strawt0[istraw - 1] = m_strawdefaulttof[istraw - 1] - thisModuleStartReadOutGate ;
-  
+
 }
 
