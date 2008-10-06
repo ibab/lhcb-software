@@ -1,4 +1,4 @@
-// $Id: PatSeedingTool.h,v 1.13 2008-08-26 09:57:02 mschille Exp $
+// $Id: PatSeedingTool.h,v 1.14 2008-10-06 22:27:05 mschille Exp $
 #ifndef PATSEEDINGTOOL_H
 #define PATSEEDINGTOOL_H 1
 
@@ -285,7 +285,14 @@ class PatSeedingTool : public GaudiTool,  virtual public IPatSeedingTool,
     double m_forwardCloneMaxShared;
     bool m_forwardCloneMergeSeg;
 
+    // are we reconstructing cosmics? If so, combine upper/lower half
     bool m_cosmics;
+
+    // maximum occupancies
+    double m_maxITOccupancy;
+    double m_maxOTOccupancy;
+    unsigned m_ITChannels;
+    unsigned m_OTChannels;
 
     static const unsigned int m_nSta = Tf::RegionID::OTIndex::kNStations;
     static const unsigned int m_nLay = Tf::RegionID::OTIndex::kNLayers;

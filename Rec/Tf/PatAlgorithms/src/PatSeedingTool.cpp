@@ -1,4 +1,4 @@
-// $Id: PatSeedingTool.cpp,v 1.23 2008-08-30 21:13:52 mschille Exp $
+// $Id: PatSeedingTool.cpp,v 1.24 2008-10-06 22:27:05 mschille Exp $
 // Include files
 
 #include <cmath>
@@ -11,6 +11,7 @@
 #include "GaudiKernel/SystemOfUnits.h"
 
 #include "OTDet/DeOTDetector.h"
+#include "STDet/DeSTDetector.h"
 // from TrackEvent
 #include "Event/StateParameters.h"
 // from boost
@@ -168,6 +169,9 @@ PatSeedingTool::PatSeedingTool(  const std::string& type,
   declareProperty( "ITIsolation",		m_ITIsolation		=   15. * Gaudi::Units::mm );
   declareProperty( "OTIsolation",		m_OTIsolation		=   20. * Gaudi::Units::mm );
   declareProperty( "Cosmics",			m_cosmics		= false );
+  // maximal occupancy
+  declareProperty( "MaxITOccupancy",		m_maxITOccupancy	= 0.2 );
+  declareProperty( "MaxOTOccupancy",		m_maxOTOccupancy	= 0.2 );
 }
 //=============================================================================
 // Destructor
@@ -237,6 +241,12 @@ StatusCode PatSeedingTool::initialize() {
       "lower limit <= upper limit" << endreq;
     std::swap(m_driftRadiusRange[0], m_driftRadiusRange[1]);
   }
+
+  // obtain total number of channels from IT and OT
+  DeSTDetector *IT = getDet<DeSTDetector>(DeSTDetLocation::IT);
+  DeOTDetector *OT = getDet<DeOTDetector>(DeOTDetectorLocation::Default);
+  m_ITChannels = IT->nStrip();
+  m_OTChannels = OT->nChannels();
 
   return StatusCode::SUCCESS;
 }
@@ -375,6 +385,26 @@ StatusCode PatSeedingTool::performTracking(
     std::vector<LHCb::Track*>& outputTracks,
     const LHCb::State* state )
 {
+  {
+    // protect against very hot events
+    unsigned nHitsIT = 0, nHitsOT = 0;
+    for (unsigned sta = 0; sta < m_nSta; ++sta) {
+      for (unsigned lay = 0; lay < m_nLay; ++lay) {
+	for (unsigned reg = 0; reg < m_nReg; ++reg) {
+	  // keep track of number of hits
+	  if (isRegionOT(reg)) nHitsOT += hits(sta, lay, reg).size();
+	  else nHitsIT += hits(sta, lay, reg).size();
+	}
+      }
+    }
+    if (double(nHitsIT) / double(m_ITChannels) > m_maxITOccupancy ||
+	double(nHitsOT) / double(m_OTChannels) > m_maxOTOccupancy) {
+      warning() << "Skipping very hot event! (" << nHitsIT << " IT hits "
+	<< nHitsOT << " OT hits)" << endreq;
+      return StatusCode::SUCCESS;
+    }
+  }
+
   // if we are to extract the seed part from Forward tracks, do so now
   if (m_useForwardTracks)
     processForwardTracks(m_inputTracksName, outputTracks);

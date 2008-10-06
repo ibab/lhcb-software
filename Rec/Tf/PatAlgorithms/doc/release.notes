@@ -4,6 +4,10 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2008-10-06 - Manuel Tobias Schiller
+ - PatSeedingTool: add option to skip events above a certain maximum
+   occupancy (currently maximum is set to 20 percent)
+
 !========================== PatAlgorithms v3r11 2008-10-02 ===================
 ! 2008-09-25 - Stephanie Hansmann-Menzemer
 - PatForward.py configure PatForwardTool as private tool
