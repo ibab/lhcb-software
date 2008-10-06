@@ -26,6 +26,7 @@
 #include "Gaucho/MonRate.h"
 #include "MonitorSvc.h"
 #include "DimPropServer.h"
+#include "DimRpcGaucho.h"
 #include "DimCmdServer.h"
 #include "RTL/rtl.h"
 
@@ -45,6 +46,7 @@ MonitorSvc::MonitorSvc(const std::string& name, ISvcLocator* sl):
    declareProperty("disableMonRate", m_disableMonRate = 0);
    declareProperty("disableDimPropServer", m_disableDimPropServer = 0);
    declareProperty("disableDimCmdServer", m_disableDimCmdServer = 0);
+   declareProperty("disableDimRcpGaucho", m_disableDimRcpGaucho = 0);
    
    declareProperty("disableMonObjectsForBool", m_disableMonObjectsForBool = 1);
    declareProperty("disableMonObjectsForInt", m_disableMonObjectsForInt = 1);
@@ -101,13 +103,21 @@ StatusCode MonitorSvc::initialize() {
   m_utgid = RTL::processName();
   msg << MSG::DEBUG << "initialize: Setting up DIM for UTGID " << m_utgid << endreq;
 
+  if ( 0 == m_disableDimRcpGaucho) {
+    m_dimRpcGaucho = new DimRpcGaucho(m_utgid+"/GauchoRpc", serviceLocator());
+    m_dimRpcGaucho->setUtgId(m_utgid);
+    msg << MSG::DEBUG << "DimRpcGaucho created with name " << m_utgid+"/GauchoRpc" << endreq;
+  }
+  else msg << MSG::DEBUG << "DimRpcGaucho process is disabled." << endreq;
+  
+  
   if ( 0 == m_disableDimPropServer) {
     m_dimpropsvr= new DimPropServer(m_utgid, serviceLocator());
     msg << MSG::DEBUG << "DimPropServer created with name " << m_utgid << endreq;
   }
   else msg << MSG::DEBUG << "DimPropServer process is disabled." << endreq;
 
-  if ( 0 == m_disableDimPropServer) {
+  if ( 0 == m_disableDimCmdServer) {
     m_dimcmdsvr = new DimCmdServer( (m_utgid+"/"), serviceLocator(), this);
     msg << MSG::DEBUG << "DimCmdServer created with name " << (m_utgid+"/") << endreq;
   }
@@ -122,6 +132,8 @@ StatusCode MonitorSvc::initialize() {
   }
   else  msg << MSG::DEBUG << "MonRate process is disabled." << endreq; 
 
+  //DimServer::start(m_utgid.c_str());
+  
   return StatusCode::SUCCESS;
 }
 
@@ -132,6 +144,10 @@ StatusCode MonitorSvc::finalize() {
   MsgStream msg(msgSvc(),"MonitorSvc");
   msg << MSG::DEBUG << "MonitorSvc Destructor" << endreq;
 //  m_InfoNamesMap.clear();
+  if ( 0 == m_disableDimRcpGaucho){
+    msg << MSG::DEBUG << "delete m_dimRcpGaucho" << endreq;
+    if (m_dimRpcGaucho) delete m_dimRpcGaucho;  m_dimRpcGaucho = 0;
+  }
   if ( 0 == m_disableDimCmdServer){
     msg << MSG::DEBUG << "delete m_dimcmdsvr" << endreq;
     if (m_dimcmdsvr) delete m_dimcmdsvr;  m_dimcmdsvr = 0;
@@ -313,7 +329,7 @@ void MonitorSvc::declareInfo(const std::string& name, const double& var,
         m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, m_monRate);
         m_monRateDeclared = true;
       }
-      msg << MSG::DEBUG << "Adding Counter to MonRate"<< newName << ", whit description: " << desc << endreq; 
+      msg << MSG::DEBUG << "Adding Counter to MonRate"<< newName << ", with description: " << desc << endreq; 
       m_monRate->addCounter(newName, desc, var);
     }
     else msg << MSG::INFO << "Counter "<< newName << " can not be declared because MonRate process is disable." << endreq; 
@@ -435,7 +451,7 @@ void MonitorSvc::declareInfo(const std::string& name, const AIDA::IBaseHistogram
                              const std::string& desc, const IInterface* owner) 
 {
   MsgStream msg(msgSvc(),"MonitorSvc");
-  msg << MSG::DEBUG << "m_disableDeclareInfoHistos : " << m_disableDeclareInfoHistos << endreq;
+  //msg << MSG::DEBUG << "m_disableDeclareInfoHistos : " << m_disableDeclareInfoHistos << endreq;
 
   if (0 != m_disableDeclareInfoHistos) return;
 
@@ -524,7 +540,9 @@ bool MonitorSvc::registerName(const std::string& name, const IInterface* owner)
   std::string ownerName = infoOwnerName(owner);
   if( m_InfoNamesMapIt != m_InfoNamesMap.end()) {
     std::pair<std::set<std::string>::iterator,bool> p = (*m_InfoNamesMapIt).second.insert(name);
-    if( p.second) msg << MSG::DEBUG << "Declaring info: Owner: " << ownerName << " Name: " << name << endreq;
+    if( p.second) {
+      //msg << MSG::DEBUG << "Declaring info: Owner: " << ownerName << " Name: " << name << endreq;
+    }
     else 
     { // Insertion failed: Name already exists
       msg << MSG::ERROR << "Already existing info " << name << " from owner " << ownerName << " not published" << endreq;
@@ -683,26 +701,37 @@ void MonitorSvc::updateAll( bool endOfRun, const IInterface* owner)
   }
 }
 
-void MonitorSvc::resetHistos( const IInterface* owner ) 
-{
- MsgStream msg(msgSvc(),"MonitorSvc");
- if( 0!=owner ){
-    std::string ownerName = infoOwnerName( owner );
-    std::set<std::string> * infoNamesSet = getInfos( owner );
-    if( 0 == infoNamesSet ) {
-      msg << MSG::DEBUG << "resethistos: No histograms to reset for " 
-          << ownerName << endreq;
-      return;
-    }
-   ownerName=ownerName+"/";
-   DimRpcInfo rpc(ownerName.c_str(),"");
-   rpc.setData("resethistos");
- }
- else{ // Null pointer. reset for all owners
-    for(m_InfoNamesMapIt = m_InfoNamesMap.begin();
-        m_InfoNamesMapIt != m_InfoNamesMap.end();++m_InfoNamesMapIt)
-      resetHistos(m_InfoNamesMapIt->first);
- }
+// void MonitorSvc::resetHistos( const IInterface* owner ) 
+// {
+//  MsgStream msg(msgSvc(),"MonitorSvc");
+//  if( 0!=owner ){
+//    std::string ownerName = infoOwnerName( owner );
+//    std::set<std::string> * infoNamesSet = getInfos( owner );
+//    if( 0 == infoNamesSet ) {
+//      msg << MSG::INFO << "resethistos: No histograms to reset for " << ownerName << endreq;
+//      return;
+//    }
+//    msg << MSG::INFO << "reset histogram for " << ownerName << endreq;
+//    ownerName = ownerName + "/";
+//    DimRpcInfo rpc(ownerName.c_str(),"");
+//    
+//    //DimRpcInfo rpc(m_dimpropsvr->getName(),"Not found RCP Service");
+//    rpc.setData("resethistos");
+//  }
+//  else{ // Null pointer. reset for all owners
+//     for(m_InfoNamesMapIt = m_InfoNamesMap.begin();
+//         m_InfoNamesMapIt != m_InfoNamesMap.end();++m_InfoNamesMapIt)
+//       resetHistos(m_InfoNamesMapIt->first);
+//  }
+// }
+
+void MonitorSvc::resetHistos(bool saveHistos) {
+  MsgStream msg(msgSvc(),"MonitorSvc");
+  DimRpcInfo rpc(m_dimRpcGaucho->getName(),"Not found RCP Service");
+  
+  if (saveHistos) rpc.setData("reset_save_histos");
+  else   rpc.setData("reset_histos");
+  
 }
 
 void MonitorSvc::undeclService(std::string infoName)

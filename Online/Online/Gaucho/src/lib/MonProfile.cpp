@@ -528,7 +528,7 @@ void MonProfile::reset(){
   m_fTsumwy  = 0;
   m_fTsumwy2 = 0;
 
-  m_fSumSize = 0;
+//  m_fSumSize = 0;
 }
 
 void MonProfile::print(){

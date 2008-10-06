@@ -110,7 +110,6 @@ void BaseServiceMap::includeServerInMaps(const std::string &serverName) {
         insertDimService(*svcSetIt, serverName);
       }
     }
-    
   }
   else {
     for (svcSetIt = m_serviceSet.begin(); svcSetIt != m_serviceSet.end(); ++svcSetIt) {
@@ -206,7 +205,8 @@ void BaseServiceMap::loadDimInfo(const std::string &serviceName, const std::stri
       std::vector<std::string> serviceParts = Misc::splitString(termSvcName, "/");
       std::string newName="";
       int n = serviceParts.size();
-      newName=serviceParts[2];
+      
+      newName = serviceParts[2];
       for (int i=3; i < n; i++) {
         newName = newName + "/" + serviceParts[i];
       }
@@ -405,62 +405,6 @@ std::string BaseServiceMap::createSaverName (const std::string &serviceName){
 }
 
 
-void BaseServiceMap::writeOld(std::string saveDir, std::string &fileName)
-{
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::INFO << " We will try to Write " << endreq;
-
-  if ((0 == m_serverMap.size())||(0 == m_serviceSet.size())||(0 == m_dimInfo.size())) {
-    msg << MSG::INFO << " Writer can't write because ServerMap, ServiceMap or DimInfoMap is empty " << endreq;
-    return;
-  }
-
-  std::map<std::string, bool, std::less<std::string> > serverMap = m_processMgr->dimInfoServers()->serverMap();
-  std::map<std::string, bool, std::less<std::string> >::iterator it;
-  std::map<std::string, DimInfoMonObject*>::iterator it2;
-
-  TFile *f=0;
-
-  char timestr[64];
-  time_t rawTime=time(NULL);
-  struct tm* timeInfo = localtime(&rawTime);
-  ::strftime(timestr, sizeof(timestr),"%Y%m%dT%H%M%S", timeInfo);
-
-  for (it = serverMap.begin(); it != serverMap.end(); ++it){
-    msg << MSG::INFO << "Server : " << it->first << endreq;
-
-    if (!it->second) continue;
-
-    std::string tmpfile = saveDir + "/" +  it->first + "-" + timestr + ".root"; 
-    fileName.replace(0, fileName.length(), tmpfile);
-    msg << MSG::INFO << "SaverSvc will save histograms in file " << fileName << endreq;
-
-    f = new TFile(fileName.c_str(),"create");
-    //TFile f(fileName.c_str(),"create");
-
-    msg << MSG::INFO << "Writing MonObjects"<< endreq;
-
-    std::string groupName = it->first;
-
-    for (it2 = m_dimInfo[groupName].begin(); it2 != m_dimInfo[groupName].end(); ++it2)
-    {
-      if(0 == it2->second->monObject()) continue;
-      it2->second->loadMonObject();
-      std::string type = it2->second->monObject()->typeName();
-      msg << MSG::INFO << " Service " << it2->first << " is a " << type <<endreq;
-      if ((s_monH1F == type)||(s_monH1D == type)||(s_monH1F == type)||(s_monH2D == type)||(s_monProfile == type)) {
-        it2->second->monObject()->loadObject();
-        it2->second->monObject()->write();
-      }
-      else {
-        msg << MSG::ERROR << "MonObject of type " << type << " can not be writed."<< endreq; 
-      }
-    }
-    
-    f->Close();
-    delete f;f=0;
-  }
-}
 
 void BaseServiceMap::write(std::string saveDir, std::string &fileName)
 {
@@ -483,7 +427,6 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName)
 
   for (m_dimInfoIt=m_dimInfo.begin(); m_dimInfoIt!=m_dimInfo.end(); ++m_dimInfoIt) 
   {
-   // std::cout << "========================SAVER=================================" << std::endl;
     std::string tmpfile = saveDir + m_dimInfoIt->first + "-" + timestr + ".root";
     fileName.replace(0, fileName.length(), tmpfile);
     msg << MSG::INFO << "SaverSvc will save histograms in file " << fileName << endreq;
@@ -497,12 +440,76 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName)
       //msg << MSG::DEBUG << "Term : " << it->first << endreq;
       msg << MSG::DEBUG << "Term : " << it->second->dimInfo()->getName() << endreq;
 
-      it->second->loadMonObject();
       std::string type = it->second->monObject()->typeName();
       msg << MSG::INFO << " Service " << it->first << " is a " << type <<endreq;
       if ((s_monH1F == type)||(s_monH1D == type)||(s_monH2F == type)||(s_monH2D == type)||(s_monProfile == type)) {
-        it->second->monObject()->loadObject();
-        it->second->monObject()->write();
+//        if (!m_processMgr->saveDiff()) {
+          it->second->loadMonObject();
+          it->second->monObject()->loadObject();
+          it->second->monObject()->write();
+//         }
+//         else {
+//           if (s_monH1F == type) {
+//             TH1F oldTH1F;
+//             ((MonH1F*) it->second->monObject())->hist()->Copy(oldTH1F);
+//             it->second->loadMonObject();
+//             it->second->monObject()->loadObject();
+//             TH1F newTH1F;
+//             ((MonH1F*) it->second->monObject())->hist()->Copy(newTH1F);
+//             newTH1F.Add(&oldTH1F, -1);
+//             newTH1F.Write();
+//           }
+//           else if (s_monH1D == type) {
+//             TH1D oldTH1D;
+//             ((MonH1D*) it->second->monObject())->hist()->Copy(oldTH1D);
+//             it->second->loadMonObject();
+//             it->second->monObject()->loadObject();
+//             TH1D newTH1D;
+//             ((MonH1D*) it->second->monObject())->hist()->Copy(newTH1D);
+//             newTH1D.Add(&oldTH1D, -1);
+//             newTH1D.Write();
+//           }
+//           else if (s_monH2F == type) {
+//             TH2F oldTH2F;
+//             ((MonH2F*) it->second->monObject())->hist()->Copy(oldTH2F);
+//             it->second->loadMonObject();
+//             it->second->monObject()->loadObject();
+//             TH2F newTH2F;
+//             ((MonH2F*) it->second->monObject())->hist()->Copy(newTH2F);
+//             newTH2F.Add(&oldTH2F, -1);
+//             newTH2F.Write();
+//           }
+//           else if (s_monH2D == type) {
+//             TH2D oldTH2D;
+//             ((MonH2D*) it->second->monObject())->hist()->Copy(oldTH2D);
+//             it->second->loadMonObject();
+//             it->second->monObject()->loadObject();
+//             TH2D newTH2D;
+//             ((MonH2D*) it->second->monObject())->hist()->Copy(newTH2D);
+//             newTH2D.Add(&oldTH2D, -1);
+//             newTH2D.Write();
+//           }
+//           else if (s_monProfile == type) {
+//             //TH1F* th1f =  ((MonH1F*) it2->second->monObject())->hist();
+// 	    TProfile oldTProfile;
+// 	    msg << MSG::INFO << " A1" <<endreq;
+// 	    TProfile *oldOldProfile = ((MonProfile*) it->second->monObject())->profile();
+// 	    msg << MSG::INFO << " A2" <<endreq;
+// 	    oldOldProfile->Copy(oldTProfile);
+// 	    msg << MSG::INFO << " B" <<endreq;
+// 	    it->second->loadMonObject();
+//             msg << MSG::INFO << " C" <<endreq;
+//             it->second->monObject()->loadObject();
+//             msg << MSG::INFO << " D" <<endreq;
+// 	    TProfile newTProfile;
+//             msg << MSG::INFO << " E" <<endreq;
+// 	    ((MonProfile*) it->second->monObject())->profile()->Copy(newTProfile);
+//             msg << MSG::INFO << " F" <<endreq;
+//             newTProfile.Add(&oldTProfile, -1);
+//             msg << MSG::INFO << " G" <<endreq;
+//             newTProfile.Write();
+//           }
+// 	}
       }
       else {
         msg << MSG::ERROR << "MonObject of type " << type << " can not be writed."<< endreq; 

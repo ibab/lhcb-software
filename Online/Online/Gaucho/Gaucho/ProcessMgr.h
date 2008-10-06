@@ -16,6 +16,11 @@ static const int s_startTimer(126);
 static const int s_stopTimer(127);
 static const int s_createInfoServices(128);
 
+static const std::string s_Adder("Adder");
+static const std::string s_Saver("Saver");
+static const std::string s_MonRateService("MonRateService");
+
+
 //  Author: jotalo, 19/06/2008
 
 class DimInfoServers;
@@ -25,7 +30,7 @@ class Interactor;
 class DimTimerProcess;
 class ProcessMgr {
 public:
-  ProcessMgr(IMessageSvc* msgSvc, Interactor *service, const int &m_refreshTime);
+  ProcessMgr(std::string serviceOwner, IMessageSvc* msgSvc, Interactor *service, const int &m_refreshTime);
   virtual ~ProcessMgr();
   DimInfoServers*  dimInfoServers() {return m_dimInfoServers;}
   DimInfoServices* dimInfoServices(){return m_dimInfoServices;}
@@ -34,7 +39,6 @@ public:
   DimTimerProcess* dimTimerProcess(){return m_dimTimerProcess;}
   std::string utgid() {return m_utgid;}
 
-  bool isAdder() {return m_isAdder;}
   int refreshTime(){return m_refreshTime;}
   
   bool isMonitoringFarm() {return m_monitoringFarm;}
@@ -59,6 +63,8 @@ public:
   void setNodeName(const std::string &nodeName){m_nodeName=nodeName;}
 
   void setSaveDir(const std::string &saveDir){m_saveDir = saveDir;}
+  void setSaveDiff(const int &saveDiff){m_saveDiff = saveDiff;}
+  bool saveDiff () {if (0 == m_saveDiff) return false; else return true;}
   void timerHandler();
   void write();
   std::string taskName() {return m_taskName;}
@@ -67,16 +73,17 @@ public:
   //void setFileStaus(std::string& file) {m_pFile = &file;}
   //void fileName() {}
   std::string* fileNamePointer(){return &m_fileName;}
+  bool isAdder () {if (s_Adder == m_serviceOwner) return true;else return false;}
   
 private:
   std::set<std::string> decodeServerList(const std::string &serverListS);
 
 protected:
+  std::string m_serviceOwner;
   std::string m_name;
   IMessageSvc* m_msgSvc;
   Interactor* m_service;
   int m_refreshTime;
-  bool m_isAdder;
     
   std::string m_utgid;
   std::string m_nodeName;
@@ -93,6 +100,7 @@ protected:
   std::vector<std::string> m_algorithmName;
   std::vector<std::string> m_objectName;
   std::string m_saveDir;
+  int m_saveDiff;
   
   DimInfoServers*  m_dimInfoServers;
   DimInfoServices* m_dimInfoServices;

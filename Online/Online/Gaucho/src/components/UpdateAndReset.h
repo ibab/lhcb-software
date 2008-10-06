@@ -15,6 +15,8 @@ static const std::string s_statusNoUpdated("NO_UPDATED");
 static const std::string s_statusProcessingUpdate("PROCESSINGUPDATE");
 static const std::string s_statusUpdated("UPDATED");
 
+class IRegistry;
+
 class UpdateAndReset : public GaudiAlgorithm, public DimTimer {
 public:
    /// Constructor of this form must be provided
@@ -23,7 +25,9 @@ public:
   StatusCode initialize();
   StatusCode execute();
   StatusCode finalize();
+  StatusCode testeExecute();
   
+    
   void timerHandler();
   
   void retrieveRunNumber(int runNumber, ulonglong gpsTime);
@@ -39,11 +43,18 @@ public:
   void verifyAndProcessRunChange();
   void verifyAndProcessCycleChange(bool isFromTimerHandler);
   double offsetToBoundary(int cycleNumber, ulonglong time, bool inferior);
+private:
+  bool isSaveCycle(int m_cycleNumber);
+  void manageTESHistos(bool list, bool reset, bool save);
+  void histogramIdentifier(IRegistry* object, std::vector<std::string> &idList, bool reset, bool save, int &level);
+  IRegistry* rootObject();
   
 private:
   
   IGauchoMonitorSvc* m_pGauchoMonitorSvc; ///< Online Gaucho Monitoring Service
-  
+  IHistogramSvc* m_histogramSvc;
+
+    
   int m_desiredDeltaTCycle;// integer because dimTimer can only accept seconds
   
   // MonRate information
@@ -63,10 +74,14 @@ private:
   int m_countExecutes;
   int m_runNumberTest;
   
+  int m_teste;
+  
   bool m_firstExecute;
   
+  std::string m_utgid;
   std::string m_cycleStatus;
   std::string m_runStatus;
+  std::string m_infoFileStatus;
   
   int m_disableMonRate;
   int m_disableReadOdin;
@@ -74,6 +89,13 @@ private:
   int m_disableChekInExecute;
   int m_disableUpdateData;
   int m_disableResetHistos;
+  int m_saveHistograms;
+  std::string m_saveSetDir;
+  int m_saverCycle;
+  int m_timerCycle;
+  int m_numCyclesToSave;
+  int m_resetHistosAfterSave;
+  
 };
 
 #endif  // GAUCHO_UPDATEANDRESET_H

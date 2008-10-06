@@ -46,7 +46,6 @@ public:
   void printServiceSet();
   
   void write(std::string saveDir, std::string &fileName);
-  void writeOld(std::string saveDir, std::string &fileName);
   void add();
   
   void setServiceSet(const std::set<std::string>& serviceSet){m_serviceSet = serviceSet;}
