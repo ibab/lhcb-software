@@ -1,4 +1,8 @@
+<<<<<<< LoKiHltConf.py
+#Fri Oct  3 12:52:12 2008
+=======
 #Fri Oct  3 15:09:32 2008
+>>>>>>> 1.5
 """Automatically generated. DO NOT EDIT please"""
 from GaudiKernel.Proxy.Configurable import *
 
