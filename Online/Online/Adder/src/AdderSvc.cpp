@@ -90,7 +90,7 @@ StatusCode AdderSvc::initialize() {
   msg << MSG::DEBUG << "***************************************************** " << endreq;
 
   msg << MSG::DEBUG << "creating ProcessMgr" << endreq;
-  m_processMgr = new ProcessMgr (msgSvc(), this, m_refreshTime);
+  m_processMgr = new ProcessMgr (s_Adder, msgSvc(), this, m_refreshTime);
   m_processMgr->setSubFarmVector(m_subfarmName);
   m_processMgr->setTaskName(m_taskName);
   m_processMgr->setAlgorithmVector(m_algorithmName);
