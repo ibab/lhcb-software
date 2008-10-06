@@ -318,8 +318,8 @@ namespace LHCb
 
   LHCb::TwoProngVertex* TrackStateVertex::createTwoProngVertex(bool computemomcov) const 
   {
-    LHCb::TwoProngVertex* vertex = new LHCb::TwoProngVertex() ;
-    vertex = new LHCb::TwoProngVertex(Gaudi::XYZPoint(m_pos(0),m_pos(1),m_pos(2))) ;
+    LHCb::TwoProngVertex* vertex = 
+      new LHCb::TwoProngVertex(Gaudi::XYZPoint(m_pos(0),m_pos(1),m_pos(2))) ;
     vertex->setChi2(chi2()) ;
     vertex->setCovMatrix( m_poscov ) ;
     vertex->setNDoF(m_tracks.size()*2-3) ;

@@ -4,7 +4,10 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
-!========================== TrackFitEvent v3r18 2008-10-02 ===================
+!========================== TrackFitEvent v3r18 2008-10-06 ===================
+! 2008-10-06 - Marco Cattaneo
+ - Fix memory leak in TrackStateVertex.cpp
+
 ! 2008-09-26 - Marco Cattaneo
  - Use GOD_NOALLOC flag to switch off custom allocators
 
