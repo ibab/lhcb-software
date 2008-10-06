@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.232 2008-10-02 19:43:27 gligorov Exp $
+! $Id: release.notes,v 1.233 2008-10-06 13:44:15 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+!========================== DaVinciMCTools v9r17 2008-10-06 ===================
 
 ! 2008-10-02 - V. Gligorov
  - src/BackgroundCategory.{cpp}
