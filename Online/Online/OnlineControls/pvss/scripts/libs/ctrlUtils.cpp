@@ -7,14 +7,14 @@
 #uses "fwFsmTreeDisplay.ctl"
 
 //=============================================================================
-string ctrlUtils_dimMapName() {
-  string sys = getSystemName();
-  string dimMap = "DimMap"+substr(sys,0,strlen(sys)-1);
-  return dimMap;
-}
-//=============================================================================
 void ctrlUtils_trace(string msg)  {
   DebugN(msg);
+}
+//=============================================================================
+string ctrlUtils_dimMapName() {
+  string sys = getSystemName();
+  string dimMap = "DimStorage";//"DimMap"+substr(sys,0,strlen(sys)-1);
+  return dimMap;
 }
 //=============================================================================
 bool ctrlUtils_checkErrors(int res, string msg="")  {

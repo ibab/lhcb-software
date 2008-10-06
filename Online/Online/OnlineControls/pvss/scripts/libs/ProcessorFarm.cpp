@@ -436,6 +436,8 @@ void ProcessorFarmAlloc_initAllocPanel(string rundp)  {
   m_ctrlInfra.font          = font;
   m_farmInfra.font          = font;
   m_farmWorker.font         = font;
+  m_writeInfra.font         = font;
+  m_sendInfra.font          = font;
   m_newDpName.font          = font;
   m_newDpName.visible       = 0;
   m_newDpNameText.visible   = 0;
@@ -466,13 +468,17 @@ void ProcessorFarmAlloc_setupAllocWidgets()  {
 //=============================================================================
 void ProcessorFarmAlloc_initAllocData(string rundp)  {
   string worker_type, dp = rundp;
-  dyn_int strmMult;
-  dyn_string farmInfra, ctrlInfra, strmTypes, streams;
+  dyn_string farmInfra, ctrlInfra, wrTypes, sendInfra, wrInfra, streams;
   int res = -1;
   if ( dpExists(dp) )  {
+    DebugN("ProcessorFarmAlloc_initAllocData> "+dp);
     res = dpGet(dp+".Control.Infrastructure",ctrlInfra,
                 dp+".Farm.Infrastructure",farmInfra,
-                dp+".Farm.Worker",worker_type);
+                dp+".Farm.Worker",worker_type,
+                dp+".Storage.recvInfrastructure",sendInfra,
+                dp+".Storage.streamInfrastructure",wrInfra,
+                dp+".Storage.streamTypes",wrTypes
+                );
   }
   if ( 0 != res )  {
     ctrlUtils_checkErrors(res);
@@ -491,6 +497,18 @@ void ProcessorFarmAlloc_initAllocData(string rundp)  {
     if ( i < n ) s = s+ "\n";
   }
   m_ctrlInfra.text = s;
+  s = "";
+  for(int i=1, n=dynlen(sendInfra); i<=n; ++i)  {
+    s = s + sendInfra[i];
+    if ( i < n ) s = s+ "\n";
+  }
+  m_sendInfra.text = s;
+  s = "";
+  for(int i=1, n=dynlen(wrInfra); i<=n; ++i)  {
+    s = s + wrInfra[i];
+    if ( i < n ) s = s+ "\n";
+  }
+  m_writeInfra.text = s;
 }
 //=============================================================================
 void ProcessorFarmAlloc_showJobOptions()  {
@@ -503,17 +521,26 @@ int ProcessorFarmAlloc_Save()  {
   m_newDpName.visible = 0;
   m_newDpNameText.visible = 0;  
   if ( ctrlUtils_confirm("Are you sure you want to save the parameters ?") )   {
-    string dp = m_runInfoDP.text, farmWorker = m_farmWorker.text, s1 = m_ctrlInfra.text, s2 = m_farmInfra.text;
+    string dp = m_runInfoDP.text, s1 = m_ctrlInfra.text, s2 = m_farmInfra.text;
+    string s3 = m_sendInfra.text, s4 = m_writeInfra.text;
     strreplace(s1,"\n"," ");
     while ( strpos(s1,"  ")>0 ) strreplace(s1,"  "," ");
     strreplace(s2,"\n"," ");
     while ( strpos(s2,"  ")>0 ) strreplace(s2,"  "," ");
-    dyn_string ctrlInfra = strsplit(s1," ");
-    dyn_string farmInfra = strsplit(s2," ");
-
+    strreplace(s3,"\n"," ");
+    while ( strpos(s3,"  ")>0 ) strreplace(s3,"  "," ");
+    strreplace(s4,"\n"," ");
+    while ( strpos(s4,"  ")>0 ) strreplace(s4,"  "," ");
+    dyn_string ctrlInfra  = strsplit(s1," ");
+    dyn_string farmInfra  = strsplit(s2," ");
+    dyn_string sendInfra  = strsplit(s3," ");
+    dyn_string writeInfra = strsplit(s4," ");
+    dyn_string items;
     if ( ctrlUtils_checkTasks(ctrlInfra,2) &&
          ctrlUtils_checkTasks(farmInfra,2) &&
-         ctrlUtils_checkTask(farmWorker,2) &&
+         ctrlUtils_checkTask(m_farmWorker.text,2) &&
+         ctrlUtils_checkTasks(sendInfra,2) &&
+         ctrlUtils_checkTasks(writeInfra,2) &&
          dpExists(dp) )   {
       int res = 0;
       if ( strlen(newDp)>0 )  {
@@ -522,7 +549,9 @@ int ProcessorFarmAlloc_Save()  {
       }
       res = dpSet(dp+".Control.Infrastructure",ctrlInfra,
                   dp+".Farm.Infrastructure",farmInfra,
-                  dp+".Farm.Worker",farmWorker);
+                  dp+".Farm.Worker",m_farmWorker.text,
+                  dp+".Storage.streamInfrastructure",writeInfra,
+                  dp+".Storage.recvInfrastructure",sendInfra);
       ctrlUtils_checkErrors(res);
       ProcessorFarmAlloc_initAllocData(m_runInfoDP.text);
       return res;

@@ -24,8 +24,8 @@ def _dbg(val):
 # =============================================================================
 def _startupInfo(self,task_typ):
   " Return startup script of a given task type."
-  script  = FarmSetup.gaudiScript
-  account = 'online'
+  script   = FarmSetup.gaudiScript
+  account  = 'online'
   detector = 'ANY'
   return (script,account,detector)
 

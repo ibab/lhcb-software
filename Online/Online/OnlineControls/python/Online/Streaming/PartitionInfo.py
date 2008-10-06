@@ -131,29 +131,29 @@ def showRecStorage(partition,extended=None):
     log('-> Partition:'+name+' is used by '+partName)
     printSlots(recvNodes,'   SENDING layer nodes in use['+str(len(recvNodes))+', '+str(len(partition.recvSlices()))+' Slices]:',99,10)
     for i in partition.recvSenders():
-      node,task,nick,type,clazz,dns,sys,farm = i.split('/')
+      node,task,nick,type,clazz,dns,sys,sl,farm = i.split('/')
       log('     %-38s on %-10s of type %s sends to %s'%(task+'/'+clazz,node,type,farm))
     log('   File readers:')
     for i in partition.recvReceivers():
-      node,task,nick,type,clazz,dns,sys,t = i.split('/')
+      node,task,nick,type,clazz,dns,sys,sl,t = i.split('/')
       log('     %-38s on %-10s of type %-12s reads from file'%(task+'/'+clazz,node,type))
     log('   Infrastructure Tasks:')
     for i in partition.recvInfrastructure():
-      node,task,nick,type,clazz,dns,sys,opt = i.split('/')
+      node,task,nick,type,clazz,dns,sys,sl,opt = i.split('/')
       log('     %-38s on %-12s as %s'%(task+'/'+clazz,node,type))
     log('')
     printSlots(strmNodes,'   WRITING. Layer nodes in use['+str(len(strmNodes))+', '+str(len(partition.streamSlices()))+' Slices]:',99,10)
     log('   Receiver Tasks:')
     for i in partition.streamReceivers():
-      node,task,nick,type,clazz,dns,sys,opt = i.split('/')
+      node,task,nick,type,clazz,dns,sys,sl,opt = i.split('/')
       log('     %-38s on %-12s of type:%-10s receives from:%s'%(task+'/'+clazz,node,type,str(opt)))
     log('   Streaming Tasks:')
     for i in partition.streamSenders():
-      node,task,nick,type,clazz,dns,sys,opt = i.split('/')
+      node,task,nick,type,clazz,dns,sys,sl,opt = i.split('/')
       log('     %-38s on %-12s of type:%-10s streams:%s'%(task+'/'+clazz,node,type,str(opt)))
     log('   Infrastructure Tasks:')
     for i in partition.streamInfrastructure():
-      node,task,nick,type,clazz,dns,sys,opt = i.split('/')
+      node,task,nick,type,clazz,dns,sys,sl,opt = i.split('/')
       log('     %-38s on %-12s as %s'%(task+'/'+clazz,node,type))
     return
   log('-> Partition:'+name+' is FREE.')

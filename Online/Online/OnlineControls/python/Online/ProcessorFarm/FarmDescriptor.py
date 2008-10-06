@@ -15,6 +15,12 @@ log    = Online.Utils.log
 error  = Online.Utils.error
 debug  = None
 
+# Enumerations to access task item fields in the storage
+STORAGE_NODENAME=0
+STORAGE_TASKUTGID=1
+STORAGE_TASKNAME=2
+STORAGE_OPTITEMS=8
+
 # =============================================================================
 class FarmSlice(Online.DatapointLoader.DatapointLoader):
   """ @class FarmActivity
@@ -509,7 +515,45 @@ class SubFarmDescriptor(Online.DatapointLoader.DatapointLoader):
       return tasks
     error('Failed to load data for activity:'+str(activity),timestamp=1)
     return None
-      
+
+# =============================================================================
+class SubFarmFSM:
+  """ @class SubFarmFSM
+   
+      @author  M.Frank
+      @version 1.0
+  """
+  # ===========================================================================
+  def __init__(self,fsm_manip,subfarmDescriptor):
+    self.manip = fsm_manip
+    self.subfarm = subfarmDescriptor
+    self.manip.configureTask = self._configureTask
+
+  # ===========================================================================
+  def _configureTask(self, fsm_node, item, task):
+    "Configure single task object"
+    node    = task[0]
+    utgid   = task[1]
+    sysname = task[6]
+    dimdns  = task[5]
+    type    = task[3]
+    clazz   = task[4]
+    script  = FarmSetup.gaudiScript
+    account = 'online'
+    detector= 'ANY'
+    script,account,detector=self.manip._startupInfo(type)
+    if len(account) == 0: account = 'online'
+    opts    = type+'.opts'
+    cmd = sysname+'#-E /tmp/logReco.fifo -O /tmp/logReco.fifo -c -u '+utgid+' -n '+account+\
+          ' -D TASKTYPE='+type+\
+          ' -D TASKCLASS='+clazz+\
+          ' -D PARTITION='+self.subfarm.usedby.data+\
+          ' -D LOGFIFO=/tmp/logReco.fifo'
+    if len(detector)>0: cmd = cmd + ' -D DETECTOR='+detector
+    cmd = cmd + ' '+script+' '+opts+' '+clazz+' '+type+' '+dimdns
+    self.manip.setupTask(item,node=fsm_node,name=utgid,type=type,inUse=1,prio=0,cmd=cmd,sysname=sysname,dimdns=dimdns,nodename=node)
+    return self
+
 # =============================================================================
 class SubFarmConfigurator(Online.AllocatorControl.AllocatorClient,Online.DatapointLoader.DatapointLoader):
   """ @class StreamingDescriptor
@@ -538,49 +582,14 @@ class SubFarmConfigurator(Online.AllocatorControl.AllocatorClient,Online.Datapoi
     return self.dp2(self.name+'Alloc',name)
 
   # ===========================================================================
-  def _configureTask(self, fsm_node, item, task):
-    "Configure single task object"
-    node    = task[0]
-    utgid   = task[1]
-    sysname = task[6]
-    dimdns  = task[5]
-    type    = task[3]
-    clazz   = task[4]
-    script,account,detector = self.startupInfo(type)
-    if len(account) == 0: account = 'online'
-    opts    = self.optionsFile(utgid,type)
-    cmd = sysname+'#-e -o -c -u '+utgid+' -n '+account+\
-          ' -D TASKTYPE='+type+\
-          ' -D TASKCLASS='+clazz+\
-          ' -D PARTITION='+self.info.detectorName()
-    if len(detector)>0: cmd = cmd + ' -D DETECTOR='+detector
-    cmd = cmd + ' '+script+' '+opts+' '+clazz+' '+type+' '+dimdns
-    self.setupTask(item,node=fsm_node,name=utgid,type=type,inUse=1,prio=0,cmd=cmd,sysname=sysname,dimdns=dimdns,nodename=node)
-    return self
-
-  # ===========================================================================
-  def _startupInfo(self,task_typ):
-    " Return startup script of a given task type."
-    script  = FarmSetup.gaudiScript
-    account = 'online'
-    detector = 'ANY'
-    return (script,account,detector)
-  
-  # ===========================================================================
-  def _optsFile(self,name,type):
-    return type+'.opts'
-  
-  # ===========================================================================
   def configure(self,rundp_name,partition):
     "Configure partition content after all information is set."
-    sfn = self.name
-    sfDesc = SubFarmDescriptor(self.manager,sfn).load()
-    if sfDesc:
-      tasks = sfDesc.defineTasks()
+    dsc = SubFarmDescriptor(self.manager,self.name).load()
+    if dsc:
+      tasks = dsc.defineTasks()
       if tasks:
-        fsm_manip = FSMmanip(sfDesc,'_FwFsmDevice',match='*')
-        fsm_manip.startupInfo = self._startupInfo
-        fsm_manip.optionsFile = self._optsFile
+        fsm_manip = FSMmanip(dsc,'_FwFsmDevice',match='*')
+        sfManip = SubFarmFSM(fsm_manip,dsc)
         slots = fsm_manip.collectTaskSlots()
         if slots:
           used_tasks = {}
@@ -588,23 +597,21 @@ class SubFarmConfigurator(Online.AllocatorControl.AllocatorClient,Online.Datapoi
             items = t.split('/')
             if not used_tasks.has_key(items[0]): used_tasks[items[0]] = []
             used_tasks[items[0]].append(items)
-          #for key in used_tasks.keys():
-          #  print key, len(used_tasks[key]),used_tasks[key]
-          #print used_tasks
-          #print 'Slots:',slots
-          sfDesc.show()
+          dsc.show()
           fsm_manip.disableTasks(slots)
           slots = fsm_manip.allocateProcesses(used_tasks,slots)
           if slots is None:
             return None
           if fsm_manip.commit(slots) is None:
+            self.manip=None
             return None
+          self.manip=None
           return self
-        error('No task slots found of:'+sfn+' for partition:'+partition,timestamp=1)
+        error('No task slots found of:'+self.name+' for partition:'+partition,timestamp=1)
         return None
-      error('Failed to configure slots of:'+sfn+' for partition:'+partition,timestamp=1)
+      error('Failed to configure slots of:'+self.name+' for partition:'+partition,timestamp=1)
       return None
-    error('Failed to access config info of subfarm:'+sfn+' for partition:'+partition,timestamp=1)
+    error('Failed to access config info of subfarm:'+self.name+' for partition:'+partition,timestamp=1)
     return None
 
 
@@ -848,10 +855,7 @@ class FarmConfigurator(FarmDescriptor):
       run_info = self.loadRunInfo(self.manager,name)
       if run_info:
         numSF = run_info.nSubFarm.data
-        ##print '1111',self.name,self.manager.name(),run_info.name,run_info.runTyp.name()
         nam = run_info.storageSlice()
-        ##print '-------------------------------------- 4',name,rundp_name,nam
-        ##print '------------------',run_info.storeSlice,run_info.storeSlice.name()
         storage = PartitionInfo( Online.PVSSSystems.controlsMgr(FarmSetup.storage_system),nam).load()
         if storage:
           Online.Streaming.PartitionInfo.showRecStorage(storage,extended=1)
@@ -1108,6 +1112,7 @@ class FarmOptionsWriter:
           opts.add('Activity',       run_type);
           opts.add('TaskType',       task.name)
           opts.add('OutputLevel',    self.run.outputLevel())
+          opts.add('MessageSvc.fifoPath = "$LOGFIFO";')
         else: opts.add('// ---------------- NO partition information')
         if task.options.data:
           opts.add('//\n// ---------------- Task specific information:')
@@ -1122,9 +1127,9 @@ class FarmOptionsWriter:
         return None
       for nodeOptions in farmOpts.values():
         opts = Options( '//  Farm options for partition:'+partition+\
-               ' activity:'+run_type+'  '+time.ctime()+'\n' )        
-        opts.add( 'reqNode', nodeOptions['reqNode'] )
-        opts.add( 'targetNode', nodeOptions['targetNode'] )
+               ' activity:'+run_type+'  '+time.ctime()+'\n' )
+        for o in nodeOptions.keys():
+          opts.add(o, nodeOptions[o])
         if not self.writeOptionsFile( partition, nodeOptions['opts'], opts.value ):
           return None
       return self.run
@@ -1137,37 +1142,34 @@ class FarmOptionsWriter:
     if not recvSenders:
       return None
     for recvSender in recvSenders:
-      item     = recvSender.split('/')
-      print item
-      reqNode  = item[0]
-      info     = item[1]
-      task     = item[2]
-      nodeInfo = eval(item[7])
+      items     = recvSender.split('/')
+      nodeInfo  = eval(items[STORAGE_OPTITEMS])
       node      = nodeInfo[0]
       nodeIndex = nodeInfo[1]
       nodeName  = run_info.subFarms.data[nodeIndex]
-      ret[nodeName.lower()] = {}
-      print "%s.opts %s::%s" %(nodeName.lower(),reqNode,info)
-      ret[nodeName.lower()][ 'opts' ] =  nodeName.lower()
-      ret[nodeName.lower()][ 'reqNode' ] = reqNode
+      nl = nodeName.lower()
+      ret[nl] = {}
+      print "%s.opts %s::%s" %(nl,items[STORAGE_NODENAME],items[STORAGE_TASKUTGID])
+      ret[nl][ 'opts' ] =  nl
+      ret[nl][ 'reqNode' ] = items[STORAGE_NODENAME]+'-d1'
+      ret[nl][ 'reqTask' ] = items[STORAGE_NODENAME]+'-d1::'+items[STORAGE_TASKUTGID]
 
     streamReceivers=storage_info.streamReceivers()
     if not streamReceivers:
       return None
     for streamReceiver in streamReceivers:
-      item       = streamReceiver.split('/')
-      targetNode = item[0]
-      info       = item[1]
-      task       = item[2]
-      nodeInfo = eval(item[7])
-      node      = nodeInfo[0]
-      nodeIndex = nodeInfo[1]
-      nodeName  = run_info.subFarms.data[nodeIndex]
-      print "%s.opts: %s::%s" %(nodeName.lower(),targetNode,info)
-      if not nodeName.lower() in ret:
+      items      = streamReceiver.split('/')
+      nodeInfo   = eval(items[STORAGE_OPTITEMS])
+      node       = nodeInfo[0]
+      nodeIndex  = nodeInfo[1]
+      nodeName   = run_info.subFarms.data[nodeIndex]
+      nl = nodeName.lower()
+      print "%s.opts: %s::%s" %(nl,items[STORAGE_NODENAME],items[STORAGE_TASKUTGID])
+      if not nl in ret:
         print "Node name does not match!!"
         return None
-      ret[nodeName.lower()][ 'targetNode' ] = targetNode
+      ret[nl][ 'targetNode' ] = items[STORAGE_NODENAME]+'-d1'
+      ret[nl][ 'targetTask' ] = items[STORAGE_NODENAME]+'-d1::'+items[STORAGE_TASKUTGID]
     return ret  
 
 def writeOptions(run_info,storage_info,farm_info):

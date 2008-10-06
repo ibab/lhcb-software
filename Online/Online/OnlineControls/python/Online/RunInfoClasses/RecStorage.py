@@ -59,11 +59,9 @@ class StorageInfo(General):
     strm_slots = partition.streamSlices()
     recvNodes = partition.recvNodesFromSlots()
     strmNodes = partition.streamNodesFromSlots()
-    opt = '/'+self.manager.hostName()+'/'+partition.manager.name()+'/'
+    opt = '/'+self.manager.hostName()+'/'+partition.manager.name()+'/'+partition.name+'/'
     cl0 = '/Class0'+opt
     cl1 = '/Class1'+opt
-    cl2 = '/Class2'+opt
-
 
     partition.setDataSources([])
     tasks = []
@@ -90,9 +88,9 @@ class StorageInfo(General):
     tasks = []
     infra = []
     for j in recvNodes:
-      tasks.append(j+'/'+pn+'_'+j+'_Reader/Reader/RecStorageRead'+cl1+'[]')
-      for i in self.rcvInfra.data:
-        infra.append(j+'/'+pn+'_'+j+'_'+i+'/'+i+'/'+i+cl0+'("'+str(cnt)+'",)')
+      for itm in self.rcvInfra.data:
+        i,cl=itm.split('/')
+        infra.append(j+'/'+pn+'_'+j+'_'+i+'/'+i+'/'+i+'/'+cl+opt+'("'+str(cnt)+'",)')
       cnt = cnt + 1
     partition.setRecvInfrastructure(infra)
     partition.setRecvReceivers(tasks)
@@ -100,9 +98,9 @@ class StorageInfo(General):
     tasks = []
     infra = []
     for j in strmNodes:
-      tasks.append(node+'/'+pn+'_'+node+'_Writer/Writer/RecStorageWrite'+cl1+'[]')
-      for i in self.strInfra.data:
-        infra.append(j+'/'+pn+'_'+j+'_'+i+'/'+i+'/'+i+cl0+'("'+str(cnt)+'",)')
+      for itm in self.strInfra.data:
+        i,cl=itm.split('/')
+        infra.append(j+'/'+pn+'_'+j+'_'+i+'/'+i+'/'+i+'/'+cl+opt+'("'+str(cnt)+'",)')
       cnt = cnt + 1
     partition.setStreamInfrastructure(infra)
     partition.setStreamSenders(tasks)
