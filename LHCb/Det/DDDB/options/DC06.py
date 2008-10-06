@@ -11,3 +11,4 @@ CondDBAccessSvc("LHCBCOND",DefaultTAG = tag)
 
 # Force negative polarity (i.e. don't take it from ONLINE)
 MagneticFieldSvc().Polarity = -1
+MagneticFieldSvc().OutputLevel = ERROR
