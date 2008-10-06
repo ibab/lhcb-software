@@ -3,6 +3,72 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v7r2>2008-10-06 Phys v7r2 </A></H1><PRE>
+
+###############################################################################
+#                                  PHYS v7r2                                  #
+###############################################################################
+
+ - Based on LHCb v25r2 and Gaudi v20r2
+
+! 2008-10-06
+ - Add options/MagneticField.py
+  . Configuration of MagneticFieldSvc
+
+!========================== DaVinciTools v17r3 2008-09-30== =================
+
+! 2008-09-30 - Patrick Koppenburg
+ - FilterDesktop : check statuscodes
+
+! 2008-09-30 - Patrick Koppenburg
+ - SpotLight : New algorithm to highlight very hot candidates in the stripping.
+
+! 2008-09-23 - Patrick Koppenburg
+ - Renamed LoKi_FilterDesktop to FilterDesktop and FilterDesktop to OldFilterDesktop
+   and moved to DaVinciFilter
+
+! 2008-09-22 - Vanya BELYAEV
+
+ - src/LoKi_FilterDesktop.cpp
+   new algorithm LoKi::FilterDesktop (temporary, to be renamed after 
+   some validation&tests) - LoKi/Bender "Hybrid" implementation of 
+   FilterDesktop concept.
+
+ - cmt/requirements
+   version incremen to v17r3 
+
+!========================== VertexFit v5r4p1 2008-10-06 =================
+
+! 2008-10-06 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v5r4p1
+
+! 2008-10-4 - Yuehong Xie
+ - OfflineVertexFitter: fix problem in pi0 mass constraint reported 
+   by Steven Blust
+
+
+! 2008-09-30 - Patrick Koppenburg
+ - FilterDesktop : check statuscodes
+
+! 2008-09-30 - Patrick Koppenburg
+ - SpotLight : New algorithm to highlight very hot candidates in the stripping.
+
+! 2008-09-23 - Patrick Koppenburg
+ - Renamed LoKi_FilterDesktop to FilterDesktop and FilterDesktop to OldFilterDesktop
+   and moved to DaVinciFilter
+
+! 2008-09-22 - Vanya BELYAEV
+
+ - src/LoKi_FilterDesktop.cpp
+   new algorithm LoKi::FilterDesktop (temporary, to be renamed after 
+   some validation&tests) - LoKi/Bender "Hybrid" implementation of 
+   FilterDesktop concept.
+
+ - cmt/requirements
+   version incremen to v17r3 
+
+
 </PRE><H1><A NAME=v7r1>2008-09-10 Phys v7r1 </A></H1><PRE>
 
 ###############################################################################
