@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !========================== TrackFitEvent v3r18 2008-10-06 ===================
+! 2008-10-06 - Wouter Hulsbergen
+ - Add driftTime function to OTMeasurement
+
 ! 2008-10-06 - Marco Cattaneo
  - Fix memory leak in TrackStateVertex.cpp
 
