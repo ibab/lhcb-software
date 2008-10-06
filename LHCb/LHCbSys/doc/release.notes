@@ -5,7 +5,7 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v25r2>2008-10-06 LHCbSys v25r2</A></H1><PRE>
+</PRE><H1><A NAME=v25r2>2008-10-07 LHCbSys v25r2</A></H1><PRE>
 This version uses Gaudi v20r2 and LCG_55a
 
 - Packages added:    LoKiHlt v1r0 - functors for L0, ODIN, HLT
@@ -78,6 +78,8 @@ This version uses Gaudi v20r2 and LCG_55a
   . New default tag for 2008 (head-20081002).
   . New default tag for DC06 (DC06-20081002).
   . Force positive magnet polarity for DC06 (i.e. don't take default from ONLINE)
+    N.B. MagneticFieldSvc warnings are suppressed in DC06 case, to avoid warning
+    from manual setting of polarity
   . In DDDB.py, ensure that DetectorDataSvc is loaded as first ExtSvc
 
 - In DetCond v12r3
