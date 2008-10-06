@@ -28,6 +28,7 @@ SaverSvc::SaverSvc(const std::string& name, ISvcLocator* ploc) : Service(name, p
   declareProperty("refreshTime",  m_refreshTime=10);
   declareProperty("dimclientdns",m_dimClientDns);
   declareProperty("savedir", m_saveDir);
+  declareProperty("saveDiff", m_saveDiff=0);
   m_monitoringFarm = true;
   m_enablePostEvents = true;
 }
@@ -136,13 +137,14 @@ StatusCode SaverSvc::initialize() {
   
   for (it = m_taskName.begin(); it < m_taskName.end(); it++){
     msg << MSG::DEBUG << "creating ProcessMgr for taskName " << *it << endreq;
-    ProcessMgr* processMgr = new ProcessMgr (msgSvc(), this, m_refreshTime);
+    ProcessMgr* processMgr = new ProcessMgr (s_Saver, msgSvc(), this, m_refreshTime);
     if (m_monitoringFarm) processMgr->setPartVector(m_partName);
     processMgr->setTaskName(*it);
     processMgr->setAlgorithmVector(m_algorithmName);
     processMgr->setObjectVector(m_objectName);
     processMgr->setNodeName(m_nodeName);
     processMgr->setSaveDir(m_saveDir);
+    processMgr->setSaveDiff(m_saveDiff);
     processMgr->createInfoServers();
     processMgr->createTimerProcess();
   

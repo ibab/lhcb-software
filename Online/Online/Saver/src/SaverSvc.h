@@ -64,7 +64,7 @@ private:
   std::string m_dimClientDns;
   int m_refreshTime;
   std::string m_saveDir;
-    
+  int m_saveDiff;
   bool m_enablePostEvents;
     
   };
