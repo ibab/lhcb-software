@@ -140,6 +140,7 @@ This version uses Gaudi v20r2 and LCG_55a
 - In TrackEvent v4r15
   . Make computation of probChi2 of track safe for FPE
   . Enable string <-> enum conversion in Track.xml
+  . Fix uninitialized data members in Measurement constructor
 
 - In CaloUtils v8r2
   . Calo2Dview.cpp : add new features (Flux and energyWeighted properties)
