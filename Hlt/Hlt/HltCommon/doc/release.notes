@@ -4,10 +4,10 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!========================== HltCommon v4r4 2008-10-06 ===================
 ! 2008-10-06 - Gerhard Raven
  - Add HltLine algorithm
 
-!========================== HltCommon v4r4 2008-10-03 ===================
 ! 2008-10-01 - Leandro de Paula
  - Change HltFunctionFactories.cpp to include HltDeltaPTool
 

@@ -1,17 +1,17 @@
-! $Id: release.notes,v 1.32 2008-10-07 07:06:25 graven Exp $ 
+! $Id: release.notes,v 1.33 2008-10-07 12:29:37 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : 
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+!========================== HltConf v1r4 2008-10-03 ===================
 ! 2008-10-07 - Gerhard Raven
  - Switch to use HltLine (the C++ algorithm) inside HltLine (the python setup code)
 
 ! 2008-10-06 - Gerhard Raven
  - allow Hlt2 only configuration
 
-!========================== HltConf v1r4 2008-10-03 ===================
 ! 2008-10-02 - Gerhard Raven
  - by default, don't print Hlt sequence
  - update routing bits definition
