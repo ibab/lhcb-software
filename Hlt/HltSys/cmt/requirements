@@ -29,7 +29,7 @@ use HltRawData          v1r4    Hlt   # Tomasz Skwarnicki
 
 # And now for something completely different
 use HltPython	        v1r10   Hlt   # Jose Angel Hernando-Morata
-use LoKiHlt             v1r0    Phys  # Vanya Belyaev
+use LoKiHlt             v1r1    Phys  # Vanya Belyaev
 
 #=======================================================
 # HLT2 packages
