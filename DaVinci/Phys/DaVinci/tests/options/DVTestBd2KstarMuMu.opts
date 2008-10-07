@@ -1,6 +1,6 @@
-// $Id: DVTestBd2KstarMuMu.opts,v 1.6 2008-10-06 16:09:23 jpalac Exp $
+// $Id: DVTestBd2KstarMuMu.opts,v 1.7 2008-10-07 13:24:39 jpalac Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
 // ============================================================================
 /** @file DVTestBd2KstarMuMu.opts
  *
@@ -25,9 +25,9 @@ FindTrueDecay.IgnoreFilterPassed = true ;
 //
 FindTrueDecay.Members += { "OldFilterDesktop/SelectTrueNoPIDsDecay"};
 SelectTrueNoPIDsDecay.FilterCriterion = "ByPIDFilterCriterion";
-SelectTrueNoPIDsDecay.PhysDesktop.InputLocations = { "Phys/StdNoPIDsPions", 
-                                                     "Phys/StdNoPIDsKaons",
-                                                     "Phys/StdNoPIDsMuons" } ;
+SelectTrueNoPIDsDecay.PhysDesktop.InputLocations = { "Phys/StdDC06NoPIDsPions", 
+                                                     "Phys/StdDC06NoPIDsKaons",
+                                                     "Phys/StdDC06NoPIDsMuons" } ;
 SelectTrueNoPIDsDecay.Filter.Selections =  { "K+ : TrueMCFilterCriterion/Decay",
                                              "pi+ : TrueMCFilterCriterion/Decay",
                                              "mu+ : TrueMCFilterCriterion/Decay"} ;
@@ -47,7 +47,7 @@ AllTrueNoPIDsDecay.DecayDescriptor = "[B0 -> K+ pi- mu- mu+]cc" ; // all particl
 //
 FindTrueDecay.Members += { "OldFilterDesktop/SelectTrueLooseDecay"};
 SelectTrueLooseDecay.FilterCriterion = "ByPIDFilterCriterion";
-SelectTrueLooseDecay.PhysDesktop.InputLocations = { "Phys/StdLoosePions", "Phys/StdLooseKaons","Phys/StdLooseMuons" } ;
+SelectTrueLooseDecay.PhysDesktop.InputLocations = { "Phys/StdDC06LoosePions", "Phys/StdDC06LooseKaons","Phys/StdDC06LooseMuons" } ;
 SelectTrueLooseDecay.Filter.Selections =  { "K+ : TrueMCFilterCriterion/Decay",
                                             "pi+ : TrueMCFilterCriterion/Decay",
                                             "mu+ : TrueMCFilterCriterion/Decay"} ;
@@ -67,7 +67,7 @@ AllTrueLooseDecay.DecayDescriptor = "[B0 -> K+ pi- mu- mu+]cc" ; // all particle
 ApplicationMgr.TopAlg += { "SelResultCorrelations/TestCorrelations" };
 TestCorrelations.AlgorithmCorrelations.OnlyNonZero = false;
 TestCorrelations.Algorithms = { "AllTrueNoPIDsDecay", "AllTrueLooseDecay",                               // truth
-                                "PreselBd2KstarMuMu", "StdLoosePenguinDimuon", "StdLooseKstar2KPi" };    // presel
+                                "PreselBd2KstarMuMu", "StdDC06LoosePenguinDimuon", "StdDC06LooseKstar2KPi" };    // presel
 //
 // Options
 //

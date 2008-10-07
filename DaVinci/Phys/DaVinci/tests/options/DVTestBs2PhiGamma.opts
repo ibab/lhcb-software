@@ -1,6 +1,6 @@
-// $Id: DVTestBs2PhiGamma.opts,v 1.4 2008-10-06 16:09:23 jpalac Exp $
+// $Id: DVTestBs2PhiGamma.opts,v 1.5 2008-10-07 13:24:39 jpalac Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 /** @file DVTestBs2PhiGamma.opts
  *
@@ -25,8 +25,8 @@ FindTrueDecay.IgnoreFilterPassed = true ;
 //
 FindTrueDecay.Members += { "OldFilterDesktop/SelectTrueLooseDecay"};
 SelectTrueLooseDecay.FilterCriterion = "ByPIDFilterCriterion";
-SelectTrueLooseDecay.PhysDesktop.InputLocations = { "Phys/StdLooseAllPhotons", 
-                                                    "Phys/StdLooseKaons"} ;
+SelectTrueLooseDecay.PhysDesktop.InputLocations = { "Phys/StdDC06LooseAllPhotons", 
+                                                    "Phys/StdDC06LooseKaons"} ;
 SelectTrueLooseDecay.Filter.Selections =  { "K+ : TrueMCFilterCriterion/DecayK",
                                             "gamma : TrueMCFilterCriterion/DecayGamma"} ;
 //SelectTrueLooseDecay.Filter.Selections =  { "K+ : TrueMCFilterCriterion/Decay"};
@@ -50,7 +50,7 @@ ApplicationMgr.TopAlg += { "SelResultCorrelations/TestCorrelations" };
 TestCorrelations.AlgorithmCorrelations.OnlyNonZero = false;
 TestCorrelations.Algorithms = { "AllTrueLooseDecay",                           
                                 "PreselXb2GammaX", 
-                                "StdLoosePhi2KK"    };
+                                "StdDC06LoosePhi2KK"    };
 //
 // Options
 //
