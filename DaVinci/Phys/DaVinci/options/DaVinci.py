@@ -1,6 +1,6 @@
 ########################################################################
 #
-#$Id: DaVinci.py,v 1.14 2008-10-07 14:32:45 pkoppenb Exp $
+#$Id: DaVinci.py,v 1.15 2008-10-07 14:35:02 pkoppenb Exp $
 #
 # Options for a typical DaVinci job
 #
@@ -83,9 +83,6 @@ EventSelector().FirstEvent = 1
 EventSelector().PrintFreq  = 100
 ########################################################################
 #
-# Some test data
+# Test data : add it as a separate option file.
 #
-importOptions( "$DAVINCIROOT/options/DaVinciTestData.opts" )
 ########################################################################
-
-MagneticFieldSvc().OutputLevel = 1 
