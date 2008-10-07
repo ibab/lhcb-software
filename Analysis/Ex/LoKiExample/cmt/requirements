@@ -1,19 +1,19 @@
-# $Id: requirements,v 1.42 2008-10-04 16:14:46 ibelyaev Exp $ 
+# $Id: requirements,v 1.43 2008-10-07 15:33:08 ibelyaev Exp $ 
 # =============================================================================
 package         LoKiExample
 version         v8r0
 
 # ============= structure =====================================================
-branches        cmt doc src
-
-# ============= patterns ======================================================
-apply_pattern install_python_modules 
+branches        cmt doc src python
 
 # ============= dependencies  =================================================
 use             Python      v* LCG_Interfaces -no_auto_imports 
 use             LoKi        v* Phys
 use             HbookCnv    v* 
 use             LHCbMath    v* Kernel  
+
+# ============= patterns ======================================================
+apply_pattern install_python_modules 
 
 # ============= constituents ==================================================
 library         LoKiExample  *.cpp 
