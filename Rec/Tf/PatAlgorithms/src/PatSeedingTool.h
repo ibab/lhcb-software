@@ -1,4 +1,4 @@
-// $Id: PatSeedingTool.h,v 1.14 2008-10-06 22:27:05 mschille Exp $
+// $Id: PatSeedingTool.h,v 1.15 2008-10-07 15:05:44 mschille Exp $
 #ifndef PATSEEDINGTOOL_H
 #define PATSEEDINGTOOL_H 1
 
@@ -105,6 +105,12 @@ class PatSeedingTool : public GaudiTool,  virtual public IPatSeedingTool,
      */
     virtual unsigned prepareHits();
 
+    /// status codes put into ProcStatus
+    enum ProcStatusCodes {
+      Success = 0,
+      ETooManyHits = -3
+    };
+    
   protected:
     /// helper for debugging printouts
     void debugFwdHit ( const PatFwdHit* coord, MsgStream& msg ) const;

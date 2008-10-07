@@ -1,4 +1,4 @@
-// $Id: PatSeedingTool.cpp,v 1.24 2008-10-06 22:27:05 mschille Exp $
+// $Id: PatSeedingTool.cpp,v 1.25 2008-10-07 15:05:43 mschille Exp $
 // Include files
 
 #include <cmath>
@@ -14,6 +14,8 @@
 #include "STDet/DeSTDetector.h"
 // from TrackEvent
 #include "Event/StateParameters.h"
+
+#include "Event/ProcStatus.h"
 // from boost
 #include <boost/assign/list_of.hpp>
 #include <boost/array.hpp>
@@ -399,8 +401,20 @@ StatusCode PatSeedingTool::performTracking(
     }
     if (double(nHitsIT) / double(m_ITChannels) > m_maxITOccupancy ||
 	double(nHitsOT) / double(m_OTChannels) > m_maxOTOccupancy) {
+      // in L0 confirmation context, we just return to save time
+      if (0 == state) return StatusCode::SUCCESS;
+      
       warning() << "Skipping very hot event! (" << nHitsIT << " IT hits "
 	<< nHitsOT << " OT hits)" << endreq;
+      // Create a ProcStatus if it does not already exist
+      LHCb::ProcStatus* procStat =
+	getOrCreate<LHCb::ProcStatus,LHCb::ProcStatus>(
+	    LHCb::ProcStatusLocation::Default);
+      // give some indication that we had to skip this event
+      // (ProcStatus returns zero status for us in cases where we don't
+      // explicitly add a status code)
+      procStat->addAlgorithmStatus(name(), ETooManyHits);
+      
       return StatusCode::SUCCESS;
     }
   }

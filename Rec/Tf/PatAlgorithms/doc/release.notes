@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2008-10-07 - Manuel Tobias Schiller
+ - PatSeedingTool: set a flag in ProcStatus when skipping events due to high
+   occupancy
 ! 2008-10-06 - Manuel Tobias Schiller
  - PatSeedingTool: add option to skip events above a certain maximum
    occupancy (currently maximum is set to 20 percent)
