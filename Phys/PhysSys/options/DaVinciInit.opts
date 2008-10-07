@@ -19,3 +19,7 @@ ApplicationMgr.ExtSvc += { "ParticlePropertySvc" };
 // Data on demand service for unpacking DST
 //--------------------------------------------------------------
 // #include "$PACKEDEVENTROOT/options/UnpackDst.opts"
+//--------------------------------------------------------------
+// TEMPORARY FOR DC06 DATA
+//--------------------------------------------------------------
+#include "$PHYSSYSROOT/options/MagneticField.py"

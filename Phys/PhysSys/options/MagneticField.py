@@ -1,4 +1,4 @@
-#$Id: MagneticField.py,v 1.1 2008-10-06 12:18:46 jpalac Exp $
+#$Id: MagneticField.py,v 1.2 2008-10-07 15:37:45 pkoppenb Exp $
 from Configurables import MagneticFieldSvc
-MagneticFieldSvc().Polarity() = -1
-MagneticFieldSvc().OutputLevel = ERROR
+MagneticFieldSvc().Polarity = -1
+MagneticFieldSvc().OutputLevel = 4

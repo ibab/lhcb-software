@@ -3,6 +3,7 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
+
 </PRE><H1><A NAME=v7r2>2008-10-06 Phys v7r2 </A></H1><PRE>
 
 ###############################################################################
@@ -10,6 +11,9 @@ Purpose             : LHCb physics packages
 ###############################################################################
 
  - Based on LHCb v25r2 and Gaudi v20r2
+
+! 2008-10-07 - Patrick Koppenburg
+ - Include Magnetic field in DaVinciInit.
 
 ! 2008-10-06
  - Add options/MagneticField.py
