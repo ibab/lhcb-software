@@ -1,3 +1,8 @@
+2008-10-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/fragments/python_alias_header:
+	* cmt/fragments/install_script_header: fix permissions of the scripts.
+
 2008-09-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v1r2
