@@ -191,9 +191,9 @@ StatusCode SpdMonitor::execute()
 {   
 	
 
-  debug() <<"  == > Execute "<<endreq;
+  debug() << "==> Execute " << endreq;
   m_nEvents++;  
-  debug() << "... processing Event " << ++m_nEvents << endreq;
+  debug() << "...processing Event " << m_nEvents << endreq;
 
 
   int mult[3]={0};	
