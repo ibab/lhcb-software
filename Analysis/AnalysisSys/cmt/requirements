@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.66 2008-10-06 13:51:11 jpalac Exp $
+# $Id: requirements,v 1.67 2008-10-07 07:05:15 jpalac Exp $
 package AnalysisSys
 version v2r2
 
@@ -21,7 +21,7 @@ use  FlavourTaggingChecker      v3r1p1   Phys   # Marco Musy
 use  DaVinciUser      	        v8r5     Phys   # Juan Palacios
 use  ParticleMakerChecker       v1r2     Phys   # Chris Jones
 use  LoKiUser                   v6r1     Phys   # Vanya Belyaev
-use  DecayTreeTuple             v1r7p1   Phys   # Jeremie Borel
+use  DecayTreeTuple             v1r8     Phys   # Jeremie Borel
 ####################################################################
 use  PhysSelSys          	v10r11  PhysSel
 #===================================================================
