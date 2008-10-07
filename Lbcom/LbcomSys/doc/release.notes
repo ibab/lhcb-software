@@ -6,12 +6,61 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v6r23>2008-10-02 LbcomSys v6r23</A></H1><PRE>
+</PRE><H1><A NAME=v6r23>2008-10-07 LbcomSys v6r23</A></H1><PRE>
 This version uses Gaudi v20r2 and LHCb v25r2
 
-- Packages modified: Caloassociators v6r6, CaloTools v5r5, L0Calo v9r18,
+- Packages modified: CaloAssociators v6r6, CaloTools v5r5, L0Calo v9r18,
     L0DU v8r10, L0Muon v8r2p1, L0MuonMonitor v1r2, STAlgorithms v3r1,
     STDAQ v3r12, VeloSimulation v3r6
+
+- In CaloAssociators v6r6
+  . Add HLT CaloCluster MC association in CaloAssociators.opts
+  . CaloClusterMCTruth.cpp : - make use of context() for HLT 
+                             - protect against missing clusters
+                             - correct typo in property "Clustes"->"Clusters"
+  . Remove obsolete stuff (CaloTrgClusterMCTruth & CaloClustersMCTruthAlg)
+  . Fix a doxygen warning
+
+- In CaloTools v5r5
+  . Calo2Calo : add multiplicity method
+  . New tool CaloHypo2Calo : specialized version of Calo2Calo
+
+- In L0Calo v9r18
+  . src/L0CaloMonit.cpp : change the range of SpdMult monitoring histo
+
+- In L0DU v8r10
+  . Remove configuration options (migrated to DBASE/TCK/L0TCK)
+  . New monitoring histos (timing) in L0DUReportMonitor
+
+- In L0Muon v8r2p1
+  . Minor clean up, add printout protection.
+
+- In L0MuonMonitor v1r2
+  . Add new histo for online
+  . Add new tool to make histo for OL
+  . Update Muon and L0Muon comparison
+  . Upgrade comparison with emulator
+  . Change histogram names in L0MuonMonitor
+  . Add checks in L0MuonErrorHistos + modify the histogram filling
+
+- In STAlgorithms v3r1
+  . Add algorithm to merge spills
+
+- In STDAQ v3r12
+  . Better bookkeeping of recovered banks
+  . Bug fix in recovery mode
+  . Fix bug in printout of decoded fraction in finalize
+  . Fix case of only having central spill
+  . Make check on valid spill after container is put in store
+  . Check spill is read out before retrieving it
+  . Reduce number of warnings printed out
+  . Change return type of RawBankToSTClusterAlg::createCluster to void,
+    fixes untested StatusCode warnings in Brunel
+  . Make recovery mode default for cluster decoding
+  . Protect against zero banks processed 
+
+- In VeloSimulation v3r6
+  . Removed finalize printout of nan when no events processed 
 
 </PRE><H1><A NAME=v6r22>2008-09-08 LbcomSys v6r22</A></H1><PRE>
 This version uses Gaudi v20r2 and LHCb v25r1
