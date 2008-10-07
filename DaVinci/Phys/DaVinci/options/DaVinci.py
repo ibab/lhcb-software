@@ -1,6 +1,6 @@
 ########################################################################
 #
-#$Id: DaVinci.py,v 1.15 2008-10-07 14:35:02 pkoppenb Exp $
+#$Id: DaVinci.py,v 1.16 2008-10-07 15:04:59 pkoppenb Exp $
 #
 # Options for a typical DaVinci job
 #
@@ -25,7 +25,7 @@ importOptions( "$DAVINCIROOT/options/DaVinciCommon.opts" )
 #from HltConf.Configuration import *
 #
 ## enable if you want to rerun L0
-#HltConf().replaceL0DUBankWithEmulated = True
+#HltConf().replaceL0BanksWithEmulated = True
 #
 ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
 #HltConf().hltType = 'Hlt1'
