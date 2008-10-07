@@ -59,6 +59,7 @@ for side in [ 'ASide', 'CSide' ] :
     pv3D.PVOfflineTool.PVSeedingName = "PVSeed3DTool"
 
     line =Line( 'Velo' + side
+              ,  ODIN = { 'TriggerTypes' : [ 'PhysicsTrigger', 'NonZSupTrigger' ] }
               , algos =
               [ DecodeVeloRawBuffer()
               , cf, rt, st, gt, pv3D

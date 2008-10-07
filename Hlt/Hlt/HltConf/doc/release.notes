@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.31 2008-10-06 09:40:37 graven Exp $ 
+! $Id: release.notes,v 1.32 2008-10-07 07:06:25 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : 
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2008-10-07 - Gerhard Raven
+ - Switch to use HltLine (the C++ algorithm) inside HltLine (the python setup code)
 
 ! 2008-10-06 - Gerhard Raven
  - allow Hlt2 only configuration

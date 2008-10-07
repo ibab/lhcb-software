@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.20 2008-09-24 13:59:22 graven Exp $ 
+# $Id: HltLine.py,v 1.21 2008-10-07 07:06:25 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -21,7 +21,7 @@ The module defines three major public symbols :
       helper class to represent the member of Hl1 'line'
  - function htl1Lines   :
       bookeeping routine which keeps the track of all created Hlt1 'lines'
- - function hlt1Decsions:
+ - function hlt1Decisions:
       simle function which returns decisions for all created Hlt lines
       
 Also few helper symbols are defined:
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.20 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.21 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt line itself 
@@ -73,7 +73,7 @@ __all__ = ( 'Hlt1Line'     ,  ## the Hlt line itself
 import re
 from Gaudi.Configuration import GaudiSequencer, Sequencer, Configurable 
 
-from Configurables import DeterministicPrescaler as PreScaler
+from Configurables import DeterministicPrescaler as Scaler
 
 from Configurables import HltL0Filter            as L0Filter 
 from Configurables import HltSelectionFilter     as HLTFilter 
@@ -93,9 +93,13 @@ from Configurables import HltAddPhotonToVertex   as AddPhotonToVertex
 from Configurables import HltDummySelection      as Dummy 
 
 ## @todo introduce the proper decision 
-from Configurables import HltSelection2Decision            as LineDecision 
+from Configurables import HltLine                as Line
 
 
+## Convention: the name of 'Filter' algorithm inside HltLine
+def filterName   ( line ) :
+    """Convention: the name of 'Filter' algorithm(s) inside HltLine"""
+    return 'Hlt1%sFilterSequence'   % line
 ## Convention: the name of 'PreScaler' algorithm inside HltLine
 def prescalerName  ( line ) :
     """ Convention: the name of 'PreScaler' algorithm inside HltLine """
@@ -124,7 +128,6 @@ def memberName     ( member, line ) :
 def decisionName   ( line ) :
     """Convention: the name of 'Decision' algorithm inside HltLine"""
     return 'Hlt1%sDecision'   % line
-
 
 ## the list of all created lines 
 _hlt_1_lines__ = []
@@ -431,8 +434,8 @@ class bindMembers (object) :
             _subs_cand_ =  ['FilterDescriptor', 'OutputSelection', 'InputSelections'
                            , 'InputSelection', 'InputSelection1','InputSelection2','InputSelecion3' ]
             for key in set(margs).intersection(set(_subs_cand_)) :
-                if (type(margs[key]) is str)  : margs[key] =   re.sub('%','Hlt1%s'%line,margs[key])
-                if (type(margs[key]) is list) : margs[key] = [ re.sub('%','Hlt1%s'%line,i) for i in margs[key] ]
+                if type(margs[key]) is str  : margs[key] =   re.sub('%','Hlt1%s'%line,margs[key])
+                if type(margs[key]) is list : margs[key] = [ re.sub('%','Hlt1%s'%line,i) for i in margs[key] ]
             algName = alg.name ( line )
             
             ## need input selection?
@@ -641,7 +644,6 @@ class Hlt1Line(object):
                    L0        = [] ,   # list of L0 channels  
                    HLT       = [] ,   # list of HLT selections  
                    postscale = 1  ,   # prescale factor
-                   makesDecision = True, # whether or not this line contributes to the overall HLT decision
                    algos     = [] ,   # the list of algorithms/members
                    **args         ) : # other configuration parameters
         """
@@ -681,7 +683,7 @@ class Hlt1Line(object):
         if HLT and ODIN :
             raise AttributeError, "The attribute HLT and ODIN are exclusive %s" % name 
         
-        # decision:
+        # decision: (pre)set to None, and assign once we're successfully completed ourselfs...
         self._decision  = None 
         
         # check for forbidden attributes
@@ -690,12 +692,11 @@ class Hlt1Line(object):
             if key in _protected_ :
                 raise AttributeError, "The attribute'%s' is protected for %s"%(key,self.type())
             mdict[key] = args[key] 
-        #start to contruct the sequence        
-        _members = []
 
+        #start to contruct the sequence        
         line = self.subname()
         
-        _members += [ PreScaler ( prescalerName  ( line ) , AcceptFraction = self._prescale  ) ]
+        _seed = None
         if ODIN  :
             for key in self._ODIN.keys():
                 if key not in [ 'BXTypes','TriggerTypes' ] :
@@ -704,31 +705,23 @@ class Hlt1Line(object):
             TriggerTypes_  = self._ODIN['TriggerTypes'] if 'TriggerTypes' in self._ODIN else [ 'ALL' ]
             if type(BXTypes_)      is not list : BXTypes_      = list( BXTypes_      )
             if type(TriggerTypes_) is not list : TriggerTypes_ = list( TriggerTypes_ )
-            _members += [ ODINFilter ( odinentryName( line ) 
-                                     , TriggerTypes = TriggerTypes_ 
-                                     , BXTypes = BXTypes_  
-                                     ) ]
+            _seed = ODINFilter ( odinentryName( line ) 
+                               , TriggerTypes = TriggerTypes_ 
+                               , BXTypes = BXTypes_  
+                               ) 
         elif L0  :
-            _members += [ L0Filter   ( l0entryName  ( line ) , L0Channels      = self._L0    ) ]
+            _seed = L0Filter   ( l0entryName  ( line ) , L0Channels      = self._L0    ) 
         elif HLT : 
-            _members += [ HLTFilter  ( hltentryName ( line ) , InputSelections = self._HLT   ) ]
+            _seed = HLTFilter  ( hltentryName ( line ) , InputSelections = self._HLT   )
         
         # most recent output selection
         self._outputsel = None
 
         # bind members to line
         _boundMembers = bindMembers( line, algos )
-        _members += _boundMembers.members()
+        _members = _boundMembers.members()
         self._outputsel = _boundMembers.outputSelection()
         
-        ## finally add the decision algorithm!
-        if  makesDecision  :
-            if not self._outputsel :
-                raise TypeError( "line '%s' has been requested to create a decision, but it has no output selection"%name)
-            _members += [ PreScaler    ( postscalerName ( line ) , AcceptFraction = self._postscale ) 
-                        , LineDecision ( decisionName   ( line ) , InputSelection = self._outputsel ) ]   
-            self._decision = decisionName ( line )
-
         # register selections:
         _input_selection_properties_ = [ 'InputSelection' , 'InputSelection1'
                                        , 'InputSelection2', 'InputSelection3' 
@@ -744,10 +737,18 @@ class Hlt1Line(object):
                 else :
                     _add_to_hlt1_output_selections_ ( _m.name         () )
 
-        # finally create the sequence
-        self._sequencer = GaudiSequencer ( self.name()        ,
-                                           Members = _members ,
-                                           **mdict            ) ;
+        # create the line configurable
+        self._configurable = Line ( self.name()
+                                  , DecisionName =           decisionName ( line ) 
+                                  , Prescale = Scaler (     prescalerName ( line ) , AcceptFraction = self._prescale  )
+                                  , Seed = _seed
+                                  , Filter1 = GaudiSequencer(  filterName ( line ) ,        Members = _members        )
+                                  , Postscale = Scaler(    postscalerName ( line ) , AcceptFraction = self._postscale ) 
+                                  , **mdict            
+                                  )
+
+        ## finally assign the decision name!
+        self._decision = decisionName ( line )
 
         # register into the local storage of all created Lines
         _add_to_hlt1_lines_( self ) 
@@ -780,7 +781,7 @@ class Hlt1Line(object):
         >>> conf = line.sequencer()
         
         """
-        return self._sequencer
+        return self._configurable
     ## Get the underlying 'Configurable'
     #  probably it is the most important method except the constructor
     #
@@ -1031,10 +1032,18 @@ def __enroll__ ( self       ,   ## the object
     if hasattr ( self , 'Members' ) :
         _ms = self.Members
         for _m in _ms : line = line + __enroll__ ( _m , level + 1 , lst ) 
+
+    if type(self) is Line :
+        line = line + __enroll__( self.Prescale,  level + 1, lst )
+        line = line + __enroll__( self.Seed,      level + 1, lst )
+        line = line + __enroll__( self.Filter1,   level + 1, lst )
+        line = line + __enroll__( self.Postscale, level + 1, lst )
+
     return line
 
 
 Hlt1Line       . __str__ = __enroll__    
+Line           . __str__ = __enroll__ 
 GaudiSequencer . __str__ = __enroll__ 
 Sequencer      . __str__ = __enroll__ 
 

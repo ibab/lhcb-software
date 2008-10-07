@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1.py,v 1.9 2008-10-02 14:46:35 graven Exp $
+# $Id: Hlt1.py,v 1.10 2008-10-07 07:06:25 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of HLT1
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -27,7 +27,6 @@ from Configurables       import HltVertexReportsMaker, HltVertexReportsWriter
 from Configurables       import HltRoutingBitsWriter
 from Configurables       import HltLumiWriter
 from Configurables       import HltGlobalMonitor
-from Configurables       import CreateDecReportsHack
 from Configurables       import bankKiller
 from HltConf.HltLine     import hlt1Lines
 from HltConf.HltLine     import hlt1Decisions
@@ -95,8 +94,7 @@ rawbankLumiStripper = Sequence( 'LumiStripper'
                               ])
 
 Hlt  = Sequence('Hlt')
-Hlt.Members = [ CreateDecReportsHack()
-              , Hlt1
+Hlt.Members = [ Hlt1
               , Sequence( 'HltEndSequence', ModeOR = True, ShortCircuit = False
                         , Members = [ HltGlobalMonitor( Hlt1Decisions = list( hlt1Decisions() ) )
                                     , HltDecReportsWriter()
