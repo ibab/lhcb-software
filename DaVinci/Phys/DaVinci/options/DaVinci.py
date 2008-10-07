@@ -1,6 +1,6 @@
 ########################################################################
 #
-#$Id: DaVinci.py,v 1.13 2008-10-07 14:24:24 graven Exp $
+#$Id: DaVinci.py,v 1.14 2008-10-07 14:32:45 pkoppenb Exp $
 #
 # Options for a typical DaVinci job
 #
@@ -89,4 +89,3 @@ importOptions( "$DAVINCIROOT/options/DaVinciTestData.opts" )
 ########################################################################
 
 MagneticFieldSvc().OutputLevel = 1 
-MakeResonances("DiLeptonForPreselBu2LLK").OutputLevel = 1 
