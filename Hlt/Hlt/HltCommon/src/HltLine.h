@@ -1,11 +1,11 @@
-// $Id: HltLine.h,v 1.3 2008-10-06 13:21:15 graven Exp $
+// $Id: HltLine.h,v 1.4 2008-10-07 11:35:38 graven Exp $
 #ifndef HLTLINE_H
 #define HLTLINE_H 1
 
 // Include files
 // from Gaudi
 #include "Kernel/IANNSvc.h"
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "GaudiAlg/GaudiHistoAlg.h"
 #include "boost/array.hpp"
 
 // Forward declarations
@@ -20,7 +20,7 @@ class IAlgManager;
  *  @author Gerhard Raven
  *  @date   2008-09-13
  */
-class HltLine : public GaudiAlgorithm {
+class HltLine : public GaudiHistoAlg{
 public:
   /// Standard constructor
   HltLine( const std::string& name, ISvcLocator* pSvcLocator );
@@ -123,6 +123,8 @@ private:
   ISequencerTimerTool* m_timerTool;      ///< Pointer to the timer tool
   IJobOptionsSvc* m_jos;                 ///< Pointer to job options service
   IAlgManager* m_algMgr;                 ///< Pointer to algorithm manager
+  AIDA::IHistogram1D* m_stageHisto;
+  AIDA::IHistogram1D* m_errorHisto;
   mutable IANNSvc *m_hltANNSvc;
   std::string m_outputContainerName;
   std::string m_decision;

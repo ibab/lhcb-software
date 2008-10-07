@@ -1,4 +1,4 @@
-// $Id: HltLine.cpp,v 1.3 2008-10-06 13:21:15 graven Exp $
+// $Id: HltLine.cpp,v 1.4 2008-10-07 11:35:38 graven Exp $
 // Include files
 #include "HltLine.h"
 
@@ -80,10 +80,12 @@ IANNSvc& HltLine::annSvc() const {
 //=============================================================================
 HltLine::HltLine( const std::string& name,
                   ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiHistoAlg ( name , pSvcLocator )
   , m_timerTool( 0 )
   , m_jos(0)
   , m_algMgr(0)
+  , m_stageHisto(0)
+  , m_errorHisto(0)
   , m_hltANNSvc(0)
 {
   for (unsigned i=0; i<m_stages.size(); ++i) {
@@ -124,14 +126,17 @@ StatusCode HltLine::initialize() {
     m_timerTool = 0;
   }
 
-  //== Initialize the algorithms
+  //== Initialize the stages
   StatusCode sc;
   BOOST_FOREACH( HltStage* i, m_stages) {
     sc = i->initialize(m_timerTool);
-    if (!sc.isSuccess()) Error( "Can not initialize " + i->name(), sc );
+    if (!sc.isSuccess()) Error( "Failed to initialize " + i->name(), sc );
   }
-  if ( m_measureTime ) m_timerTool->decreaseIndent();
+  //== Create the monitoring histogram
+  m_errorHisto = book1D(name()+" error",name()+" error",-0.5,7.5,8);
+  m_stageHisto = book1D(m_decision,m_decision,-0.5,7.5,8);
 
+  if ( m_measureTime ) m_timerTool->decreaseIndent();
   return StatusCode::SUCCESS;
 };
 
@@ -165,13 +170,17 @@ StatusCode HltLine::execute() {
      report.setExecutionStage( i+1 );
   }
 
+
   if (accept) report.setDecision(accept ? 1u : 0u);
-  //TODO: publish monitoring
   if ( !m_ignoreFilter ) setFilterPassed( accept );
   setExecuted( true );
 
   //TODO: allow insert at the beginning, and non-const access to update...
   reports->insert( key->first , report );
+
+  // publish monitoring
+  fill( m_stageHisto, report.executionStage(),1.0);
+  fill( m_errorHisto, report.errorBits(),1.0);
 
   if ( m_measureTime ) m_timerTool->stop( m_timer );
 
