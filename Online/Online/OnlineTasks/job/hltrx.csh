@@ -10,7 +10,6 @@
 killall -q Gaudi.exe
 killall -q test.exe
 killall -q gentest.exe
-rm -f /dev/shm/bm_*  /dev/shm/sem.bm_* /dev/shm/TAN* /dev/shm/sem.TAN*
 
 # message are send via the DIM Messageservice
 setenv MSGSVC MessageSvc

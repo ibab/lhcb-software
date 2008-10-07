@@ -14,7 +14,6 @@ pkill Gaudi.exe
 pkill test.exe
 pkill gentest.exe
 #pkill logViewer
-sudo rm -f /dev/shm/bm_*  /dev/shm/sem.bm_* /dev/shm/TAN* /dev/shm/sem.TAN*
 HOST=/$(hostname --short | awk '{ print toupper($1) }')
 # message are send via the DIM Messageservice
 #export MSGSVC=LHCb::MessageSvc
