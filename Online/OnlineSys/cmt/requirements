@@ -27,7 +27,7 @@ use GaudiSerialize    v0r2     Online
 use HPDMonitor        v1r5     Online
 use InsertDB          v1r2     Online
 use MBMDump           v1r9     Online
-use OMAlib            v1r4     Online
+use OMAlib            v1r5     Online
 use OnlineDummyReader v1r4     Online
 use OnlineHistDB      v4r12    Online
 use OnlineKernel      v1r20    Online
