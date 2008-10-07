@@ -1,6 +1,6 @@
 ########################################################################
 #
-#$Id: DaVinci.py,v 1.12 2008-10-07 14:07:23 graven Exp $
+#$Id: DaVinci.py,v 1.13 2008-10-07 14:24:24 graven Exp $
 #
 # Options for a typical DaVinci job
 #
@@ -24,32 +24,13 @@ importOptions( "$DAVINCIROOT/options/DaVinciCommon.opts" )
 #
 #from HltConf.Configuration import *
 #
+## enable if you want to rerun L0
 #HltConf().replaceL0DUBankWithEmulated = True
 #
-## Default is 'old style' configuration, 'new style' is available
-## for the brave ones who would like to test it out, but no guarantee
-## is given for the quality of the result...
-#
-#if True :
-#    # pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
-#    HltConf().oldStyle = True
-#    HltConf().hltType = 'Hlt1'
-#    # HltConf().hltType = 'Hlt2'
-#    # HltConf().hltType = 'Hlt1+Hlt2'
-#else :
-#    # valid 'components' are 
-#    #  PA (pass through -- PT was considered a bad name for this ;-)
-#    #  LU (luminosity)
-#    #  VE (velo)
-#    #  MU (muon, includes muon+hadron)
-#    #  HA (hadron)
-#    #  EL (electron)
-#    #  PH (photon)
-#    # components can be combined by joining them with a '+' sign
-#    # e.g. to run PA, VE, HA by selecting 'PA+VE+HA'
-#    HltConf().oldStyle = False
-#    HltConf().hltType = 'PA+LU+VE+MU+HA+EL+PH'
-#
+## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
+#HltConf().hltType = 'Hlt1'
+#HltConf().hltType = 'Hlt2'
+#HltConf().hltType = 'Hlt1+Hlt2'
 ## don't forget to actually apply the configuration!!!
 #HltConf().applyConf()
 #
