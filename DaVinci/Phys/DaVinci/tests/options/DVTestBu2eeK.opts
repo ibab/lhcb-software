@@ -1,6 +1,6 @@
-// $Id: DVTestBu2eeK.opts,v 1.5 2008-10-06 16:09:23 jpalac Exp $
+// $Id: DVTestBu2eeK.opts,v 1.6 2008-10-07 15:28:22 jpalac Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 // ============================================================================
 /** @file DVTestBu2eeK.opts
  *
@@ -25,8 +25,8 @@ FindTrueDecay.IgnoreFilterPassed = true ;
 //
 FindTrueDecay.Members += { "OldFilterDesktop/SelectTrueNoPIDsDecay"};
 SelectTrueNoPIDsDecay.FilterCriterion = "ByPIDFilterCriterion";
-SelectTrueNoPIDsDecay.PhysDesktop.InputLocations = { "Phys/StdNoPIDsKaons",
-                                                     "Phys/StdNoPIDsElectrons"} ;
+SelectTrueNoPIDsDecay.PhysDesktop.InputLocations = { "Phys/StdDC06NoPIDsKaons",
+                                                     "Phys/StdDC06NoPIDsElectrons"} ;
 
 SelectTrueNoPIDsDecay.Filter.Selections =  { "K+ : TrueMCFilterCriterion/Decay",
                                              "e+ : TrueMCFilterCriterion/Decay"} ;
@@ -46,8 +46,8 @@ AllTrueNoPIDsDecay.DecayDescriptor = "[B+ -> K+ e- e+]cc" ; // all particles nee
 //
 FindTrueDecay.Members += { "OldFilterDesktop/SelectTrueLooseDecay"};
 SelectTrueLooseDecay.FilterCriterion = "ByPIDFilterCriterion";
-SelectTrueLooseDecay.PhysDesktop.InputLocations = { "Phys/StdLooseKaons",
-                                                    "Phys/StdLooseElectrons"} ;
+SelectTrueLooseDecay.PhysDesktop.InputLocations = { "Phys/StdDC06LooseKaons",
+                                                    "Phys/StdDC06LooseElectrons"} ;
 
 SelectTrueLooseDecay.Filter.Selections =  { "K+ : TrueMCFilterCriterion/Decay",
                                             "e+ : TrueMCFilterCriterion/Decay"} ;
