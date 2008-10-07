@@ -1,4 +1,4 @@
- $Id: release.notes,v 1.241 2008-10-06 16:09:46 jpalac Exp $
+ $Id: release.notes,v 1.242 2008-10-07 13:26:56 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,18 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2008-10-07 - Juan PALACIOS
+ - options/DVTestBd2DstarPi.opts
+   options/DVTestBd2KstarMuMu.opts
+   options/DVTestBs2PhiGamma.opts
+   options/DVTestBu2D0K_D02KsPiPi.opts
+  . Change Std for StdDC06 in all common particles.
+ - qmtest/davinci.qms/preselections.qms/test_bd2dstarpi.qmt
+   qmtest/davinci.qms/preselections.qms/test_bd2kstarmumu.qmt
+   qmtest/davinci.qms/preselections.qms/test_bs2phigamma.qmt
+   qmtest/davinci.qms/preselections.qms/test_bu2d0k_d02kspipi.qmt
+  . Change Std for StdDC06 in all correlation tables
 
 ! 2008-10-06 - Juan PALACIOS
  - /tests/qmtest/davinci.qms/preselections.qms/*.qmt
