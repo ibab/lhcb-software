@@ -37,7 +37,7 @@ use LoKiHlt             v1r1    Phys  # Vanya Belyaev
 
 use HltSelections       v8r4    Hlt   # Patrick Koppenburg
 use Fidel               v1r3p1   Phys  # Sara Furcas    
-use HltKshort           v1r4    Hlt   # Jaap Panman
+use HltKshort           v1r4p1  Hlt   # Jaap Panman
 use HltHidValley        v1r2    Hlt   # Marcin Kucharczyk
 
 use HltSelChecker       v7r2p1  Hlt   # Patrick Koppenburg
