@@ -1,4 +1,4 @@
-// $Id: PatVeloGeneric.cpp,v 1.4 2008-06-01 17:32:05 mjohn Exp $
+// $Id: PatVeloGeneric.cpp,v 1.5 2008-10-07 14:27:36 krinnert Exp $
 // Include files
 
 // from Gaudi
@@ -36,7 +36,7 @@ namespace Tf {
       declareProperty( "PrivateBest", m_privateBest = false );
       declareProperty( "KalmanState", m_kalmanState = 1);
       declareProperty( "ClusterCut",  m_clusterCut = 10000 );
-      declareProperty( "FullAlignment", m_align = false );
+      declareProperty( "FullAlignment", m_align = true );
       declareProperty( "ForwardProp", m_forward = false ); 
       declareProperty( "CheckReadOut",m_checkIfSensorIsReadOut   = false ); 
       declareProperty( "ACDC",        m_acdc = false );  
