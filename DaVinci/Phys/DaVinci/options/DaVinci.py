@@ -1,5 +1,7 @@
 ########################################################################
 #
+#$Id: DaVinci.py,v 1.11 2008-10-07 13:43:47 jpalac Exp $
+#
 # Options for a typical DaVinci job
 #
 # @author Patrick Koppenburg
@@ -19,11 +21,18 @@ importOptions( "$DAVINCIROOT/options/DaVinciCommon.opts" )
 ########################################################################
 #
 # Trigger. Uncomment what you need. Hlt1 needs L0, Hlt2 doesn't.
+from HltConf.Configuration import *
+HltConf().replaceL0DUBankWithEmulated = True
+old = False
+if old :
+    HltConf().hltType = 'Physics_Hlt1'
+    #HltConf().hltType = 'Physics_Hlt1+Hlt2'
+else :
+    HltConf().oldStyle = False
+    HltConf().hltType = 'PA+LU+VE+MU+HA+EL+PH'
+
+HltConf().applyConf()
 #
-#importOptions( "$L0DUROOT/options/ReplaceL0DUBankWithEmulated.opts" )
-#
-#importOptions( "$HLTCONFROOT/options/Hlt1.opts" )
-#importOptions( "$HLTCONFROOT/options/Hlt2.opts" )
 ########################################################################
 #
 # enable standard particles monitors
