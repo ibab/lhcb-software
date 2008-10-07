@@ -1,3 +1,8 @@
+2008-10-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/fragments/create_bat_aliases_header: fixed permissions of the 
+	created bat files.
+
 2008-10-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/LbLogin.py: fixed system guessing for the core CMT environment
