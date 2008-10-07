@@ -11,7 +11,7 @@ branches cmt doc
 #=======================================================
 # LHCb Online packages
 #=======================================================
-use Adder             v5r2     Online
+use Adder             v5r3     Online
 use confDB            v1r6     Online
 use confDBpython      v1r7     Online
 use $(CCPCHist_use)
@@ -20,7 +20,7 @@ use DIM               v17r11   Online
 use ExampleGaucho     v3r0     Online
 # Does not work on WIN32
 # use FarmMonitor     v1r0     Online
-use Gaucho            v6r3     Online
+use Gaucho            v6r4     Online
 use GaudiOnline       v2r22    Online
 use GaudiUPI          v1r9     Online
 use GaudiSerialize    v0r2     Online
@@ -29,17 +29,17 @@ use InsertDB          v1r2     Online
 use MBMDump           v1r9     Online
 use OMAlib            v1r4     Online
 use OnlineDummyReader v1r4     Online
-use OnlineHistDB      v4r11    Online
+use OnlineHistDB      v4r12    Online
 use OnlineKernel      v1r20    Online
 use OnlineTools       v1r0     Online
 use OnlineTasks       v1r14    Online
 use Presenter         v0r12    Online
 use PyDIM             v2r6     Online
-use RateService       v2r3     Online
+use RateService       v2r4     Online
 use RawBankSizes      v1r4     Online
 use ROMon             v1r9     Online
 use ROLogger          v0r7     Online
-use Saver             v2r2     Online
+use Saver             v2r3     Online
 use UPI               v1r13    Online
 use UPIR              v1r1     Online
 use Viewer            v1r5     Online
