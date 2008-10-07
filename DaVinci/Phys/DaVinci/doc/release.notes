@@ -1,4 +1,4 @@
- $Id: release.notes,v 1.242 2008-10-07 13:26:56 jpalac Exp $
+ $Id: release.notes,v 1.243 2008-10-07 13:44:05 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -10,11 +10,16 @@
 !-----------------------------------------------------------------------------
 
 ! 2008-10-07 - Juan PALACIOS
+
+ - options/DaVinci.py
+  . Replace HLT options with HltConf() lines.
+
  - options/DVTestBd2DstarPi.opts
    options/DVTestBd2KstarMuMu.opts
    options/DVTestBs2PhiGamma.opts
    options/DVTestBu2D0K_D02KsPiPi.opts
   . Change Std for StdDC06 in all common particles.
+
  - qmtest/davinci.qms/preselections.qms/test_bd2dstarpi.qmt
    qmtest/davinci.qms/preselections.qms/test_bd2kstarmumu.qmt
    qmtest/davinci.qms/preselections.qms/test_bs2phigamma.qmt
