@@ -1,9 +1,11 @@
-! $Id: release.notes,v 1.6 2008-10-06 08:07:18 pkoppenb Exp $ 
+! $Id: release.notes,v 1.7 2008-10-08 11:23:25 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiHlt
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : collection of functors&factory for HLT 
 ! -----------------------------------------------------------------------------
+
+!============================= LoKiHlt v1r1 2008-10-08 ========================
 
 ! 2008-10-06 - Patrick Koppenburg
  - Remove automatically generated py files from cvs to avoid conflicts.
