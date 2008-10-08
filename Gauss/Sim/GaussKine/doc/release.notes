@@ -4,6 +4,10 @@
 ! Purpose     : Code to exchange kinematic information with Geant4
 !-----------------------------------------------------------------------------
 
+! 2008-10-08 - Gloria CORTI
+ - Move printout to debug level
+   . G4HepMCToMCTruth.cpp
+
 ! 2008-09-23 - Patrick Robbe
  - GeneratorToG4.cpp: fix optical photon polarization part
 

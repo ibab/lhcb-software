@@ -1,4 +1,4 @@
-// $Id: G4HepMCToMCTruth.cpp,v 1.7 2007-10-03 17:46:26 gcorti Exp $
+// $Id: G4HepMCToMCTruth.cpp,v 1.8 2008-10-08 10:03:38 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -133,9 +133,9 @@ StatusCode G4HepMCToMCTruth::execute() {
     
     g4Vertex = g4Vertex->GetNext();
   }
-  info() << "Number of primaries vtx " << vtxcont->size() << "/ "
-         << primariesVtx.size() << "/ " << g4Event->GetNumberOfPrimaryVertex()
-         << endmsg;
+  debug() << "Number of primaries vtx " << vtxcont->size() << "/ "
+          << primariesVtx.size() << "/ " << g4Event->GetNumberOfPrimaryVertex()
+          << endmsg;
 
   // Update the MCHeader info
   LHCb::MCHeader* mcHead = get<LHCb::MCHeader>(LHCb::MCHeaderLocation::Default);
