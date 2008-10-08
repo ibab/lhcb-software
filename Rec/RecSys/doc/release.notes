@@ -5,7 +5,7 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v5r12>2008-10-03 RecSys v5r12</A></H1><PRE>
+</PRE><H1><A NAME=v5r12>2008-10-08 RecSys v5r12</A></H1><PRE>
 This version uses Gaudi v20r2 and LHCb v25r2.
 
 - Packages modified: CaloMoniDst v3r2, CaloReco v4r16, MuonPIDChecker v2r4,
@@ -14,6 +14,123 @@ This version uses Gaudi v20r2 and LHCb v25r2.
     TrackSys v4r18, TsaAlgorithms v3r6, TrackCheckers v4r3, TrackFitEvent v3r18,
     TrackFitter v2r28, TrackMonitors v1r4, TrackProjectors v2r19,
     TrackTools v3r12, VeloRecMonitors v1r1
+
+- In CaloMoniDst v3r2
+  . Review histogram production & prepare XXXMonitor for real data.
+  . Cleanup algorithm and options
+  . Add #units directive to CaloMonitor.opts, needed by Brunel pythonisation
+
+- In CaloReco v4r16
+  . New cluster selection tools : 
+    o CaloSelectCluster               : selection with energy and #entries
+    o CaloSelectClusterWithPrs        : selection with Prs energy & multiplicity
+    o CaloSelectNeutralClusterWithSpd : selection with Spd hits multiplicity
+    o CaloSelectNeutralClusterWithTracks (replaces CaloSelectNeutralCluster)
+  . CaloExtraDigits : use of the new CaloHypo2Calo tool (located in CaloTools)  
+      as CaloSelectClusterWithPrs & CaloSelectNeutralClusterWithSpd 
+      Bonus : the matching now takes the actual calo alignment into account 
+  . CaloElectronAlg : remove hardcoded Prs/Spd criteria (use selection tool)
+  . CellularAutomaton & CellularAutomatonAlg & CaloClusterizationTool : 
+    o fix problem of incomplete  clusteriwation due to rare digits configuration
+    o add statistics printout in finalize()
+    o complete CellularAutomatonAlg (Level property + missing HLT/Calo context)
+    o include the possibility to select digit for energy computation using 
+      CaloUtils/CellSelector (mask by options)  : default '3x3' mask
+    o CellularAutomatonAlg is now the default in Brunel options (and on-Demand)
+      and replaces 'CellularAutomaton' everywhere 
+  . New options :   
+    o (Hlt)ClusterSelection.opts : based on tracks (default)
+    o CaloStandaloneClusterSelection.opts : based on Prs/Spd
+    o CaloStandalonePartialReco.opts : partial reco (no pid) for commissioning
+    o remove ExtraDigits.opts (default setting now in CaloTools/CaloHypo2Calo) 
+    o Et(cluster)>2GeV is now the default for offline MergedPi0 reconstruction
+  . Adapt here and there to change in CaloUtils & CaloTools
+
+- In MuonPIDChecker v2r4
+  . Added MuonPIDMonitor.opts, switches off use of MC true information
+
+- In MuonTrackAlign v1r7
+  . Remove some of the verbosity of AlignMuonRec.cpp
+
+- In RichMarkovRingFinder v2r2
+  . Update Monitoring code
+  . RichMarkovRingFinderAlg.cpp, ThreePointCircleProposerB.cc
+    o Reduce severity of messages to info and debug
+    o Remove special characters ( | ) from histogram name/titles to please DIM
+
+- In RichRecAlgorithms v2r14
+  . Update the isolated Ring finding algorithm
+ 
+- In RichRecQC v2r23
+  . Only fill occupancy plots when #hits > 0
+
+- In RichRecTools v4r6
+  . Remove incorrect attempt to use conditions in
+	  Rich::Rec::TabulatedGasQuartzWindowAbs
+  . Turn off histogram printing by default in RichPIDPlots.cpp
+  . Fix unchecked StatusCode in Sellmeir tool
+
+- In PatAlgorithms v3r11
+  . In PatForward.py configure PatForwardTool as private tool
+
+- In PatVelo v3r9
+  . Updated PatVeloFitLHCbIDs to allow a first measurement state and a variable
+    multiple scattering term based on the input track's momentum
+  . Added PatVeloAlignTrackFilter{.cpp,.h} : Fast filter for tracks parallel to
+    the beam axis
+
+- In TrackSys v4r18
+  . Add MuonTrackAlignRec to RecoTracking.py
+  . Add TrackRecoHLT.py to run HLT2 sequence
+  . Add VeloTEDOne.py to optimise the reconstruction of the VELO for TED data
+    taken in August and up to Sept 10th 2008.
+  . Change TrackClones.opts to python (directly included in RecoTracking.py)
+  . Add missing CMT use statements to requirements file
+  . Replace Fitting.py with ConfiguredFitters
+
+- In TsaAlgorithms v3r6
+  . Bug fixes in generic tracking code 
+  . Add ITGenericTrackingCode
+  . Fix untested StatusCode
+
+- In TrackCheckers v4r3
+  . Fix warning when filling histograms with nan
+  . Fix output for event weighted ghost rate
+
+- In TrackFitEvent v3r18
+  . Add driftTime function to OTMeasurement
+  . Fix memory leak in TrackStateVertex.cpp
+  . Use GOD_NOALLOC flag to switch off custom allocators
+  . Added 'pocaVector' to fitnode
+
+- In TrackFitter v2r28
+  . Added ConfiguredStraightLineFit
+  . Use new function in TrackProjector interface
+  . Added python configurables for track fitters, including a 'fast fit'
+  . Add option to ignore e-loss corrections
+  . Move setting of FitStatus flag from event fitter to master fitter
+
+- In TrackMonitors v1r4
+  . Added configurable for creating monitoring sequence
+  . Added residuals
+
+- In TrackProjectors v2r19
+  . Major cleanup 
+  . Added project method for FitNode
+  . Added TrajOTCosmicsProjector
+
+- In TrackTools v3r12
+  . Added option to set cluster location
+  . Made TrackVertexer and MeasurementProvider less verbose
+
+- In VeloRecMonitors v1r1
+  . First version of the track-based monitoring algorithm VeloTrackMonitor:
+    o default settings are for online monitoring
+    o user options to switch from online to offline analysis are available 
+      for unbiased residuals and hitmap plots
+  . Added StatusCode missing
+  . Added number of clusters per sensor to cluster monitor, off by default.
+  . Added sampling monitor plots separated for A and C side.
 
 </PRE><H1><A NAME=v5r11>2008-09-08 RecSys v5r11</A></H1><PRE>
 This version uses Gaudi v20r2 and LHCb v25r1.
