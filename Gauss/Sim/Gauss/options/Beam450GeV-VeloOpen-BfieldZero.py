@@ -1,11 +1,11 @@
 # File for setting SIMCOND settings from python promt for a given
 # configuration: Beam energy, Velo Status, Magnetic Field Status 
 #
-# Beam5TeV-VeloOpen-BfieldZero 
+# Beam450GeV-VeloOpen-BfieldZero 
 #
 # Syntax is: 
 #  gaudirun.py $GAUSSOPTS/Gauss-2008.py
-#              $GAUSSOPTS/Beam5TeV-VeloClose-BfieldZero.py
+#              $GAUSSOPTS/Beam450GeV-VeloClose-BfieldZero.py
 #              $DECFILESROOT/options/30000000.opts (ie. event type)
 #              $GAUSSOPTS/Gauss-JobExample.py (ie. job specific: random seed,
 #                                                  output file names...)
