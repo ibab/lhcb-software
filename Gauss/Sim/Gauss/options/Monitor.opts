@@ -1,4 +1,4 @@
-// $Id: Monitor.opts,v 1.25 2007-07-04 08:33:01 gcorti Exp $ 
+// $Id: Monitor.opts,v 1.26 2008-10-08 13:05:36 gcorti Exp $ 
 
 /** @file 
  * 
@@ -37,6 +37,7 @@ GenMonitorAlg.HistoProduce  = true;
 // MCParticles & MCVertices
 SimMonitor.Members   += { "GiGaGetEventAlg" };
 SimMonitor.Members   += { "MCTruthMonitor" };
+GiGaGetEventAlg.Vertices = "";
 
 // MC(XXX)Hits summary
 SimMonitor.Members   += { "GiGaGetHitsAlg" };
