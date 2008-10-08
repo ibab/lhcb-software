@@ -1,4 +1,4 @@
- $Id: release.notes,v 1.243 2008-10-07 13:44:05 jpalac Exp $
+ $Id: release.notes,v 1.244 2008-10-08 07:27:46 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,12 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+!========================== DaVinci v20r3 2008-10-08 ===================
+
+! 2008-10-08 - Juan PALACIOS
+ - job/DaVinci_Ganga.py
+  . Update version to v20r3
 
 ! 2008-10-07 - Juan PALACIOS
 
@@ -39,6 +45,8 @@
   . Temporary file to get back the typedefs for templated MicroDSTAlgorithms.
  - cmt/requirements
   . Install python modules
+
+!========================== DaVinci v20r2 2008-09-11 ===================
 
 ! 2008-09-10 - Juan PALACIOS
  - job/DaVinci_Ganga.py
