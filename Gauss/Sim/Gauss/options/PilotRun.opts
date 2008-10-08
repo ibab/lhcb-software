@@ -1,4 +1,4 @@
-// $Id: PilotRun.opts,v 1.9 2008-09-09 16:15:12 gcorti Exp $ 
+// $Id: PilotRun.opts,v 1.10 2008-10-08 13:00:55 gcorti Exp $ 
 
 /** @file 
  * 
@@ -16,6 +16,13 @@ Generation.FixedNInteractions.Luminosity = 1.0e-05*LumiUnit;
  
 // == Beam momentum and vertex smearing for pp collisions 
 Generation.MinimumBias.PythiaProduction.CollidingBeams.BeamMomentum = 450.0*GeV;
+Generation.Inclusive.PythiaProduction.CollidingBeams.BeamMomentum = 450.0*GeV;
+Generation.SignalPlain.PythiaProduction.CollidingBeams.BeamMomentum = 450.0*GeV;
+Generation.SignalRepeatedHadronization.PythiaProduction.CollidingBeams.BeamMomentum = 450.0*GeV;
+Generation.SignalForcedFragmentation.PythiaProduction.CollidingBeams.BeamMomentum = 450.0*GeV;
+Generation.StandAloneDecayTool.PythiaProduction.CollidingBeams.BeamMomentum = 450.0*GeV;
+Generation.Special.PythiaProduction.CollidingBeams.BeamMomentum = 450.0*GeV;
+
 Generation.BeamSpotSmearVertex.SigmaX = 0.200*mm; 
 Generation.BeamSpotSmearVertex.SigmaY = 0.200*mm; 
 Generation.BeamSpotSmearVertex.SigmaZ = 7.95*cm;
