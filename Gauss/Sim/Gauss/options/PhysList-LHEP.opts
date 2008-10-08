@@ -1,4 +1,4 @@
-// $Id: PhysList-LHEP.opts,v 1.4 2008-06-27 13:13:02 gcorti Exp $ 
+// $Id: PhysList-LHEP.opts,v 1.5 2008-10-08 16:35:29 gcorti Exp $ 
 
 /** @file 
  * 
@@ -18,7 +18,7 @@
 
 // == EM physics: standard
 //    replace with one of the commented lines for a different physics list
-GiGa.ModularPL.PhysicsConstructors += {
+GiGa.ModularPL.PhysicsConstructors = {
 //  "GiGaExtPhysics<G4EmStandardPhysics>/EmPhysics" };  // default G4 8.2.p01
   "GiGaExtPhysics<G4EmStandardPhysics_option1>/EmOpt1Physics" };   // without step limit
 //  "GiGaExtPhysics<G4EmStandardPhysics_option2>/EmOpt2Physics" }; // with sub cut off
