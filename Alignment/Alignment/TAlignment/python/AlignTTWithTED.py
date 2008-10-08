@@ -1,6 +1,6 @@
 from Gaudi.Configuration import *
 
-nEvents            = 1000000
+nEvents            = 100000
 nIter              = 3
 datasample = 'TED2'
 condname = 'Detectors'
@@ -45,7 +45,7 @@ AlConfigurable().AlignInputTrackCont           = "Alignment/AlignmentTracks"
 AlConfigurable().UseCorrelations              = True
 AlConfigurable().Constraints                  = constraints
 AlConfigurable().UseWeightedAverageConstraint = False
-AlConfigurable().MinNumberOfHits              = 100
+AlConfigurable().MinNumberOfHits              = 10
 AlConfigurable().UsePreconditioning           = True
 AlConfigurable().SolvTool                     = "gslSolver"
 AlConfigurable().SolvTool                     = "DiagSolvTool"
@@ -121,6 +121,7 @@ velocopy = TrackContainerCopy("VeloSelectionAlg")
 velocopy.inputLocation =   'Rec/Track/Velo'
 velocopy.outputLocation =   'Rec/Track/VeloSelection'
 velocopy.addTool( trackselector, name = "Selector") ;
+veloreco.Members += [ velocopy ]
 
 # configure Velo-TT reconstruction
 patVeloTT = PatVeloTT("PatVeloTT")
@@ -199,25 +200,18 @@ if datasample == 'TED1':
            'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/PHYSICS_COSMICS/30931/030931_0000077700.raw']
 
 if datasample == 'TED2':
-   data = ['PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/32474/032474_0000081642.raw',
-           'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/32476/032476_0000081643.raw',
-           'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/32477/032477_0000081644.raw',
+   data = ['PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/32477/032477_0000081644.raw',
            'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/32479/032479_0000081647.raw',
            'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/32481/032481_0000081648.raw',
            'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/32484/032484_0000081651.raw',
            'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/32493/032493_0000081660.raw',
            'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/32498/032498_0000081699.raw',
-           'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/32500/032500_0000081701.raw',
            'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/32501/032501_0000081702.raw',
-           'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/32576/032576_0000081818.raw',
-           'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/32578/032578_0000081820.raw',
-           'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/32580/032580_0000081822.raw',
            'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/32581/032581_0000081823.raw',
            'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/32583/032583_0000081825.raw',
            'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/32586/032586_0000081828.raw'
            ]
-
-
+   
    # these last data need some modifications because velo timing is off
    from Configurables import (DecodeVeloRawBuffer,RawBankToSTClusterAlg,RawBankToSTLiteClusterAlg,UpdateManagerSvc)
    DecodeVeloRawBuffer('createVeloClusters').RawEventLocation='Prev2/DAQ/RawEvent'
