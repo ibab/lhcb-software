@@ -14,6 +14,7 @@ Generator = GaudiSequencer("Generator")
 Generator.Members  = [GaussGen]
 
 Generator.Members += ["Generation"]
+Generator.Members += ["GaudiSequencer/GenMonitor"]
 
 #--Number of events
 nEvts = 5
