@@ -196,11 +196,13 @@ namespace Al
 
       if( track.fitHistory() == LHCb::Track::StdKalman ) {
 	// we have run the smoother. that makes things really easy.
+	Warning("StdKalman trackfit: Using smoother gain matrix from track fit",StatusCode::SUCCESS,1) ;
 	smoothergainmatrix[k-1] = prevnode->smootherGainMatrix() ;
 	Gaudi::TrackMatrix C_km1_k = smoothergainmatrix[k-1] * node->state().covariance() ;
 	offdiagcov[k][k-1] = new Gaudi::TrackMatrix(Transpose(C_km1_k)) ;
       } else {
 	// we have run the bi-directional fit. that basically means we have to rerun the smoother
+	Warning("BiDirectional trackfit: Computing smoother gain matrix on the fly",StatusCode::SUCCESS,1) ;
 
 	// this is the transport matrix  from  k-1 to k
 	const Gaudi::TrackMatrix& F          = node->transportMatrix();
