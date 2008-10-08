@@ -46,3 +46,6 @@ for i in l:
 
 ApplicationMgr().ExtSvc = new_l
 
+#--Take particle property table from DDDB instead of text file
+VFSSvc().FileAccessTools.append(CondDBEntityResolver())
+ParticlePropertySvc().ParticlePropertiesFile = 'conddb:///param/ParticleTable.txt'
