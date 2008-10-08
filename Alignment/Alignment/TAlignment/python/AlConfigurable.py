@@ -3,6 +3,8 @@ from os.path import expandvars
 
 from Gaudi.Configuration import *
 from DetCond.Configuration import *
+from TrackSys.Configuration import TrackSys
+
 
 class AlConfigurable( ConfigurableUser ) :
     __slots__ = {
@@ -265,19 +267,12 @@ class AlConfigurable( ConfigurableUser ) :
             alignAlg.Chi2Outlier                  = self.getProp( "Chi2Outlier"         )
             alignAlg.HistoPrint                   = False
 
-            # and also the update tool is in the toolsv
+            # and also the update tool is in the toolsvc
             updatetool = Al__AlignUpdateTool("Al::AlignUpdateTool")
             updatetool.MinNumberOfHits              = self.getProp( "MinNumberOfHits"              )
             updatetool.UsePreconditioning           = self.getProp( "UsePreconditioning"           )
-            updatetool.LogFile                      = self.getProp( "LogFile"             ) 
-            if self.getProp( "SolvTool" ) == "gslSolver" :
-                updatetool.addTool( gslSVDsolver(), name = "MatrixSolverTool" )
-            if self.getProp( "SolvTool" ) == "CLHEPSolver" :
-                updatetool.addTool( CLHEPSolver(), name = "MatrixSolverTool" )
-            if self.getProp( "SolvTool" ) == "MA27Solver" :
-                updatetool.addTool( MA27Solver(), name = "MatrixSolverTool" )
-            if self.getProp( "SolvTool" ) == "DiagSolvTool" :
-                updatetool.addTool( DiagSolvTool(), name = "MatrixSolverTool" )
+            updatetool.LogFile                      = self.getProp( "LogFile"             )
+            updatetool.MatrixSolverTool = self.getProp( "SolvTool" )
                 
             # configure in the tool service
             elementtool = GetElementsToBeAligned( "GetElementsToBeAligned" )
@@ -293,7 +288,9 @@ class AlConfigurable( ConfigurableUser ) :
             
             alignSequencer.Members.append(alignAlg)
 
-            if self.getProp( "WriteCondToXML" ) :                 
+            if self.getProp( "WriteCondToXML" ) :
+                writeSequencer = GaudiSequencer( "WriteCondSeq" )
+                alignSequencer.Members.append(writeSequencer)
                 from Configurables import WriteAlignmentConditions
                 listOfCondToWrite = self.getProp( "WriteCondSubDetList" )
                 if listOfCondToWrite:
@@ -301,7 +298,8 @@ class AlConfigurable( ConfigurableUser ) :
                         writeCondInstName = 'Write' + subDet + 'ConditionsToXML'
                         topLevelElement = subDet + 'TopLevelElement'
                         condFileName = subDet + self.getProp( "CondFileName" )
-                        alignSequencer.Members.append (
+                        writeSequencer.Members += WriteAlignmentConditions()
+                        writeSequencer.Members.append (
                             WriteAlignmentConditions( writeCondInstName,
                                                       OutputLevel = outputLevel,
                                                       topElement = self.getProp( topLevelElement ),
@@ -357,7 +355,8 @@ class AlConfigurable( ConfigurableUser ) :
             print "\n ****************************************************************************** \n"
         
     def applyConf( self ) :
+        if self.getProp( "SimplifiedGeom" ) : TrackSys().expertTracking += "simplifiedGeometry"
+        TrackSys().expertTracking += "kalmanSmoother"
         self.defineApp()
         self.defineDB()
         self.sequencers( )
-        if self.getProp( "SimplifiedGeom" ) : self.simplifiedGeom()
