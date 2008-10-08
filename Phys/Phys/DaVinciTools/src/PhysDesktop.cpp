@@ -238,8 +238,7 @@ const LHCb::RecVertex::ConstVector& PhysDesktop::primaryVertices(){
     if (!sc) Exception("Cannot get PVs").ignore();
   }
   if ( m_primVerts.empty()) {
-      Warning( "Empty primary vertex container at "+primaryVertexLocation() ).ignore() ;      
-    }
+    Warning( "Empty primary vertex container at "+primaryVertexLocation() ).ignore() ;      
   }
 
   return m_primVerts;
