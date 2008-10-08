@@ -4,6 +4,10 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
+! 2008-10-08 - Gloria CORTI
+ - Change printout level to debug during event processing
+   . GenMonitorAlg.cpp
+
 !====================== GaussMonitor v6r0 2008-08-25 =========================
 ! 2008-07-26 - Patrick Robbe
  - Move to HEPMC2

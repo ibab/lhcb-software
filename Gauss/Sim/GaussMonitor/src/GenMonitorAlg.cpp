@@ -1,4 +1,4 @@
-// $Id: GenMonitorAlg.cpp,v 1.13 2008-07-26 18:01:29 robbep Exp $
+// $Id: GenMonitorAlg.cpp,v 1.14 2008-10-08 09:51:18 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -196,8 +196,8 @@ StatusCode GenMonitorAlg::execute() {
   m_counterChInEta += nParChStabEtaAcc;
   m_nEvents++ ;
   
-  info() << "Event number " << m_nEvents << " contains "
-         << nParticles << " particles" << endmsg;
+  debug() << "Event number " << m_nEvents << " contains "
+          << nParticles << " particles" << endmsg;
   
   return StatusCode::SUCCESS;
 };
