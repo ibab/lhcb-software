@@ -115,9 +115,11 @@ macro Gauss_linkopts  "$(application_linkopts)"
 macro_append Gauss_linkopts " -Wl,-Map,Linux.map " \
              WIN32          " /STACK:4000000"
 
-#-- For visualization make appropriate engine visible (DAWN)
-#path_remove    PATH  "" Linux&Vis "/dawn/"
+#-- For visualization make appropriate engine visible (dawn and david)
+path_remove    PATH  "" Linux&Vis "/dawn/"
 path_append    PATH  "" Linux&Vis "$(DAWN_HOME)/$(LCG_system)/bin"
+path_remove    PATH  "" Linux&Vis "/david/"
+path_append    PATH  "" Linux&Vis "$(DAVID_HOME)/$(LCG_system)/bin"
 
 #===========================================================================
 apply_pattern install_python_modules
