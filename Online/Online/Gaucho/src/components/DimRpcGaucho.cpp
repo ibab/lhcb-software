@@ -19,7 +19,7 @@
 #include "GaudiKernel/IHistogramSvc.h"
 #include "AIDA/IHistogram.h"
 #include "AIDA/IProfile1D.h"
-#include  <time.h>
+#include  <ctime>
 
 DimRpcGaucho::DimRpcGaucho(std::string name, ISvcLocator* svcLocator) : DimRpc(name.c_str(),"C", "C")
  , m_svcLocator(svcLocator)
