@@ -113,7 +113,17 @@ class Alignables( list ):
         elements = []
         elements.append( self.m_velo + "/Velo(Left|Right)/Module.{1,2}" )
         self.__append( elements, dofs )
-        
+
+    def VeloLeftModules( self, dofs = "" ) :
+        elements = []
+        elements.append( self.m_velo + "/VeloLeft/Module.{1,2}" )
+        self.__append( elements, dofs )
+
+    def VeloRightModules( self, dofs = "" ) :
+        elements = []
+        elements.append( self.m_velo + "/VeloRight/Module.{1,2}" )
+        self.__append( elements, dofs )
+
     def VeloPileUpSensors( self, dofs = "" ) :
         elements = []
         elements.append( self.m_velo + "/Velo(Left|Right)/Module.{1,2}/RPhiPair.{1,2}/DetectorPU.{1,5}" )
