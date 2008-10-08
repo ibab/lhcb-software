@@ -24,3 +24,4 @@ library          VeloDAQ    ../src/*.cpp
 
 apply_pattern component_library library=VeloDAQ
 
+apply_pattern install_python_modules

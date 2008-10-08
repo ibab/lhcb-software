@@ -7,6 +7,7 @@
  - added DefaultVeloRawBufferDecoders.py, a new Python helper module
    containing default configurations of the DecodeVeloRawBuffer algorithm
    for decoding into VeloLiteClusters or VeloClusters.
+ - requirements file changed to produce configurable
 
 !=========================  VeloDAQ v4r3 2008-09-04 =======================
 ! 2008-08-31 - Kurt Rinnert
