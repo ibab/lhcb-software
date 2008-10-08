@@ -1,4 +1,4 @@
-// $Id: GiGaPhysListModular.cpp,v 1.17 2008-07-26 15:43:52 robbep Exp $
+// $Id: GiGaPhysListModular.cpp,v 1.18 2008-10-08 16:39:09 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -73,8 +73,7 @@ StatusCode GiGaPhysListModular::initialize()
   if( sc.isFailure() )
     { return Error("Could not initialize GiGaPhysListBase class!", sc); }
   
-  MsgStream log( msgSvc(), name() );
-  log << MSG::INFO << "GiGaPhysListModular initializing" << endreq;
+  info() << "GiGaPhysListModular initializing" << endmsg;
   
   if( m_physconstr.empty() ) 
     { return Error ( "Invalid/Empty list of Physics constructors" ) ; }
@@ -97,6 +96,10 @@ StatusCode GiGaPhysListModular::initialize()
     
     // register 
     RegisterPhysics( theconstr -> physicsConstructor() ) ;
+    
+    // Print name of physics constructors registered
+    info() << "Registered " << theconstr->name() << endmsg;
+
   }
   
   return StatusCode::SUCCESS;

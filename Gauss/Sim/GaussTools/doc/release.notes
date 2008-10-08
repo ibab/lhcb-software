@@ -4,6 +4,11 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+! 2008-10-08 - Gloria CORTI
+ - Add printout in initialization of physics contructor registered for the 
+   job
+   . GiGaPhysListModular.cpp
+
 !======================== GaussTools v15r0 2008-08-25 ========================
 ! 2008-07-25 - Patrick Robbe
  - MCTruthManager.h/.cpp: Adapt to HEPMC2
