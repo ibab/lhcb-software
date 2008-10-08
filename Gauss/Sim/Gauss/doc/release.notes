@@ -4,6 +4,43 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2008-10-08 - Gloria CORTI
+ - Remove include of Pythia64.opts options no longer necessary since the
+   default in PythiaProduction
+   . Generator.opts
+ - Remove options no longer working: will need to be replaced with other
+   doing the same things
+   . lhcb-2008-GenPhase.opts
+   . lhcb-2008-SimPhase.opts
+ - Add options for beam energy with other Production tools
+   . BeamCond-5TeV.opts
+   . PilotRun.opts
+ - Add GenMonitor in Generator sequence
+   . Gauss-Job.opts
+ - Do not print vertex multiplicity in monitoring by default to reduce 
+   printout in production
+   . Monitor.opts
+ - New python options for stearing a default Gauss job with 2008 geometry 
+   setup, for 450GeV
+   . Beam450GeV-VeloOpen-BfieldNeg.py
+ - Read particle table from DDDB rather than from text file
+   . Gauss-2008.py
+   . python/Gauss/Configuration.py
+ - Put initial value in list with "=" rather than "+=" as to be able to just
+   pass the options as argument and override the default one.
+   One can now do:
+    > gaudirun.py $GAUSSOPTS/Gauss-2008.py $GAUSSOPTS/PhysList-QGSP.opts ...
+   to switch to QGSP hadronic phyics
+   . PhysList-{LHEP,QGSP}.opts
+ - New options for turning delta rays on (lower production cuts) and for
+   delta rays on and low kinetic energy cuts (lower tracking cuts)
+   . DRaysOn-{LT,HT}.opts 
+
+! 2008-10-08 - Gloria CORTI for Marco PAPPAGALLO
+ - Add Visualization service to activate colors in Gauss G4-internal
+   visualization
+   . GaussVis.opts
+
 ! 2008-09-16 - Gloria CORTI
  - Remove lhcb-2008*.{py,opts} that are obsolete and no longer working.
    Use Gauss-2008.py instead.
