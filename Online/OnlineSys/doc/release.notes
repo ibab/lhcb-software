@@ -6,7 +6,7 @@
 !-----------------------------------------------------------------------------
 
 </PRE><H1><A NAME=v4r16>2008-09-23 OnlineSys v4r16</A></H1><PRE>
-     New version v4r16 built against LHCb v25r1.
+     New version v4r16 built against LHCb v25r2.
      - Updates to Adder, Gaucho, Saver, RateService, 
      OnlineHistDB, GaudiOnline, GaudiSerialize, MBMDump, OnlineKernel,
      PyDIM, ROMon, ROLogger and UPI
