@@ -1,0 +1,12 @@
+// $Id: Pythia.opts,v 1.1 2008-10-08 13:12:32 gcorti Exp $
+ 
+/** @file
+ *
+ *  Empty Pythia options to be included in production to generate
+ *  standard events as to havethe same structure for all generators
+ *
+ *  @author G.Corti
+ *  @date 2008-10-08
+ *
+ */
+
