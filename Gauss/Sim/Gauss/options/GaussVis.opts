@@ -1,4 +1,4 @@
-// $Id: GaussVis.opts,v 1.13 2008-09-09 16:25:12 gcorti Exp $ 
+// $Id: GaussVis.opts,v 1.14 2008-10-08 13:03:14 gcorti Exp $ 
 
 /** @file 
  *  The base configuration file to run Gauss exceutable with 
@@ -17,8 +17,14 @@
 
 #include "$PARTICLEGUNSROOT/options/ParticleGun.opts"
 
+// Activate the visualization
 GiGa.VisManager = "GiGaVisManager/GiGaVis" ;
+
+// Activate the Geant4 user interactive control
 //GiGa.UIsession  = "GiGaUIsession/GiGaUI"   ;
+
+// setting visualization attributes
+GiGa.GiGaMgr.RunTools += { "GiGaSetVisAttributes" };
 
 // Switch off geometry from Calorimeters onward but for beam pipe
 Geo.StreamItems  -= {"/dd/Structure/LHCb/DownstreamRegion/Spd"};
