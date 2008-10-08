@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.51 2008-09-10 12:30:09 wouter Exp $
+// $Id: AlignAlgorithm.cpp,v 1.52 2008-10-08 11:50:33 wouter Exp $
 // Include files
 // from std
 // #include <utility>
@@ -105,6 +105,9 @@ AlignAlgorithm::AlignAlgorithm( const std::string& name,
   declareProperty("OutputDataFile"              , m_outputDataFileName           = "alignderivatives.dat" ) ;
   declareProperty("InputDataFiles"              , m_inputDataFileNames ) ;
   declareProperty("Chi2Outlier"                 , m_chi2Outlier                  = 10000 ) ;
+  declareProperty("UpdateTool",m_updatetool) ;
+  declareProperty("TrackResidualTool",m_trackresidualtool) ;
+  declareProperty("VertexResidualTool",m_vertexresidualtool) ;
 }
 
 AlignAlgorithm::~AlignAlgorithm() {}
