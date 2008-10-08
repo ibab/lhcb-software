@@ -18,5 +18,3 @@ ToolSvc.EvtGenDecay.DecayFile         = "$DECFILESROOT/dkfiles/DECAY.DEC";
 // To generate single interactions
 //#include "$GAUSSOPTS/FixedNInteractions.opts"
 
-// New settings for Pythia 6.4
-#include "$LBPYTHIAROOT/options/Pythia64.opts"
