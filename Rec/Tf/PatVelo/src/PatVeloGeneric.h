@@ -1,4 +1,4 @@
-// $Id: PatVeloGeneric.h,v 1.3 2008-04-16 12:28:09 krinnert Exp $
+// $Id: PatVeloGeneric.h,v 1.4 2008-10-09 11:57:37 krinnert Exp $
 #ifndef TF_PAT_PATVELOGENERIC_H 
 #define TF_PAT_PATVELOGENERIC_H 1
 
@@ -59,6 +59,7 @@ namespace Tf {
       bool m_doNotRefit;  ///< Force no re-fitting during track propagation
       bool m_considerOverlaps; ///< Look for clusters in the other hals during propagation
 
+      double m_maxGapForOverlapSearch; ///< Maximum gap between halfs for which overlap search is enabled 
       double m_binary;
       double m_sigma;    ///< Corridor width in standard deviations
       double m_rOff;     ///< Alignment tolerance in R
@@ -69,6 +70,10 @@ namespace Tf {
       double m_inner2;
       double m_outer2;  
 
+      
+      std::vector<double> m_shiftL;
+      std::vector<double> m_shiftR;
+
       int  m_kalmanState; ///< Kalman seeding (0=standard, 1=last module, 2=first module)
 
       int m_nEvt;
@@ -78,6 +83,11 @@ namespace Tf {
       unsigned int numberOfRSectors;
       unsigned int numberOfPSectors;
 
+
+      ///  Check whether the VELO is closed
+      bool veloIsClosed() {
+        return fabs(m_velo->halfBoxOffset(0).x() - m_velo->halfBoxOffset(1).x()) < m_maxGapForOverlapSearch;
+      }
 
       /// Returns R-cluster candidate
       PatVeloRHit* rCandidate(PatVeloRHitManager::Station* rStation, unsigned int zone, double rEst)  {    

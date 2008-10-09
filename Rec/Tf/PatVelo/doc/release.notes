@@ -4,6 +4,12 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2008-10-09 - Kurt Rinnert
+ - added a configurable threshold for the gap between the two VELO halfs to
+   PatVeloGeneric.  The onverlap search is only performed when the distance
+   between the two halfs in x is smaller than the threshold.  Default is 10
+   um.  
+
 ! 2008-10-07 - Kurt Rinnert
  - changed default for full alignment in PatVeloGeneric to true
 

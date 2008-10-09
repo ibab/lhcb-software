@@ -1,4 +1,4 @@
-// $Id: PatVeloGeneric.cpp,v 1.5 2008-10-07 14:27:36 krinnert Exp $
+// $Id: PatVeloGeneric.cpp,v 1.6 2008-10-09 11:57:37 krinnert Exp $
 // Include files
 
 // from Gaudi
@@ -54,6 +54,7 @@ namespace Tf {
       declareProperty( "DefaultMomentum", m_momentumDefault = 1/(10 * Gaudi::Units::GeV) );
 
       declareProperty( "ConsiderOverlaps", m_considerOverlaps=false );
+      declareProperty( "MaxGapForOverlapSearch", m_maxGapForOverlapSearch=10.0*Gaudi::Units::micrometer );
 
       m_binary = 1/sqrt(12.);  // digital resolution a priori
 
@@ -84,14 +85,6 @@ namespace Tf {
     m_velo = getDet<DeVelo>( DeVeloLocation::Default );
     m_nEvt = 0;
 
-    std::string det_rightbox = "/dd/Conditions/Alignment/Velo/VeloRight";
-    std::string det_leftbox  = "/dd/Conditions/Alignment/Velo/VeloLeft";
-    const AlignmentCondition* myAlignCondLeft = getDet<AlignmentCondition>(det_leftbox);
-    const AlignmentCondition* myAlignCondRight = getDet<AlignmentCondition>(det_rightbox);
-
-    std::vector<double> shiftL = myAlignCondLeft->paramAsDoubleVect("dPosXYZ");
-    std::vector<double> shiftR = myAlignCondRight->paramAsDoubleVect("dPosXYZ");
-
     info() << "========== Algorithm parameters ======"           << endreq
       << "Tolerance in sigma        = " << m_sigma          << endreq
       << "R alignment tolerance     = " << m_rOff           << endreq
@@ -108,8 +101,8 @@ namespace Tf {
       << "ACDC flag (real data)     = " << m_acdc           << endreq
       << "Output path               = " << m_outputTracksLocation << endreq
       << "Do not re-fit tracks      = " << m_doNotRefit     << endreq
-      << "Left half x-offset        = " << shiftL[0]<< " mm"<< endreq
-      << "Right half x-offset       = " << shiftR[0]<< " mm"<< endreq
+      << "Left half x-offset        = " << m_velo->halfBoxOffset(0).x() << " mm"<< endreq
+      << "Right half x-offset       = " << m_velo->halfBoxOffset(1).x() << " mm"<< endreq
       << "======================================"           << endreq;
 
     std::vector<DeVeloPhiType*>::const_iterator phiIt = m_velo->phiSensorsBegin();  
@@ -304,8 +297,9 @@ namespace Tf {
             PatVeloRHitManager::StationReverseIterator stationRItr         = stationRItr2;
             PatVeloRHitManager::StationReverseIterator reversePropagateEnd = rStationsReverseEnd;
 
-            // switch to global iterators if overlaps are considered
-            if ( m_considerOverlaps ) {
+            // switch to global iterators if overlaps are considered, only do so
+            // if the VELO is closed.
+            if ( m_considerOverlaps && veloIsClosed() ) {
               PatVeloRHitManager::StationIterator si = m_rHitManager->stationIterAll((*stationRItr)->sensorNumber());
               stationRItr         = PatVeloRHitManager::StationReverseIterator(++si);
               reversePropagateEnd = m_rHitManager->stationsAllReverseEnd(); 
@@ -360,8 +354,9 @@ namespace Tf {
               PatVeloRHitManager::StationIterator stationRItr  = (++sri).base();
               PatVeloRHitManager::StationIterator propagateEnd = rStationsEnd;
 
-              // switch to global iterators if overlaps are considered
-              if ( m_considerOverlaps ) {
+              // switch to global iterators if overlaps are considered, only do so
+              // if the VELO is closed.
+              if ( m_considerOverlaps && veloIsClosed() ) {
                 stationRItr  = m_rHitManager->stationIterAll((*stationRItr)->sensorNumber());
                 propagateEnd = m_rHitManager->stationsAllEnd(); 
               }
@@ -590,5 +585,7 @@ StatusCode PatVeloGeneric::finalize() {
   debug() << "==> Finalize" << endmsg;
   return GaudiAlgorithm::finalize();
 }
+
+
 }
 
