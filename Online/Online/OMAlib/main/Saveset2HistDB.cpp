@@ -1,4 +1,4 @@
-// $Id: Saveset2HistDB.cpp,v 1.1 2008-10-09 17:59:17 ggiacomo Exp $
+// $Id: Saveset2HistDB.cpp,v 1.2 2008-10-09 18:01:46 ggiacomo Exp $
 #include <iostream>
 #include <TFile.h>
 #include <TKey.h>
@@ -86,28 +86,30 @@ int main(int narg,char **argv ) {
   }
 
   // ask for confirmation
-  std::string answ;
-  cout << "Commit changes to DB? (Y/N) ";
-  cin >> answ;
-  cout<<endl;
-
-  std::vector<SavesetHistID*>::iterator ih;
-  if ( answ == "Y") {
-    cout << "committing"<<flush;
-    // declare and commit
-    int j=0;
-    for ( ih=histos.begin(); ih != histos.end() ; ih++) {
-      HistDB->declareHistogram(Task, 
-                               (*ih)->alg,
-                               (*ih)->name,
-                               (*ih)->type);
-      if (j%50 == 0) cout <<"."<<flush;
+  if(nh>0) {
+    std::string answ;
+    cout << "Commit changes to DB? (Y/N) ";
+    cin >> answ;
+    cout<<endl;
+    
+    std::vector<SavesetHistID*>::iterator ih;
+    if ( answ == "Y") {
+      cout << "committing"<<flush;
+      // declare and commit
+      int j=0;
+      for ( ih=histos.begin(); ih != histos.end() ; ih++) {
+        HistDB->declareHistogram(Task, 
+                                 (*ih)->alg,
+                                 (*ih)->name,
+                                 (*ih)->type);
+        if (j%50 == 0) cout <<"."<<flush;
+      }
+      HistDB->commit();
+      cout << " OK"<<endl;
     }
-    HistDB->commit();
-    cout << " OK"<<endl;
-  }
-  for ( ih=histos.begin(); ih != histos.end() ; ih++) {
-    delete (*ih);
+    for ( ih=histos.begin(); ih != histos.end() ; ih++) {
+      delete (*ih);
+    }
   }
   delete HistDB;
   return 0;
