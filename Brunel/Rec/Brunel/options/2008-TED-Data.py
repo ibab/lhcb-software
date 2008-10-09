@@ -33,6 +33,7 @@ if inputType == "MDF":
     from Configurables import (RawBankToSTClusterAlg, RawBankToSTLiteClusterAlg,
                                DecodeVeloRawBuffer, UpdateManagerSvc )
     DecodeVeloRawBuffer().ForceBankVersion=3
+    DecodeVeloRawBuffer().RawEventLocation='Prev2/DAQ/RawEvent'
     DecodeVeloRawBuffer('DecodeVeloClusters').RawEventLocation='Prev2/DAQ/RawEvent'
     DecodeVeloRawBuffer('DecodeVeloClusters').ForceBankVersion=3
     UpdateManagerSvc().ConditionsOverride +=  ["Conditions/Online/Velo/MotionSystem := double ResolPosRC =-29. ; double ResolPosLA = 29. ;"]
