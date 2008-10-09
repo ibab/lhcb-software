@@ -1,4 +1,4 @@
-// $Id: Saveset2HistDB.cpp,v 1.2 2008-10-09 18:01:46 ggiacomo Exp $
+// $Id: Saveset2HistDB.cpp,v 1.3 2008-10-09 18:03:14 ggiacomo Exp $
 #include <iostream>
 #include <TFile.h>
 #include <TKey.h>
@@ -102,7 +102,7 @@ int main(int narg,char **argv ) {
                                  (*ih)->alg,
                                  (*ih)->name,
                                  (*ih)->type);
-        if (j%50 == 0) cout <<"."<<flush;
+        if ((++j)%50 == 0) cout <<"."<<flush;
       }
       HistDB->commit();
       cout << " OK"<<endl;
