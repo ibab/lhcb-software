@@ -5,6 +5,7 @@ Purpose: LHCb Digitization program
 
 ! 2008-10-09 - Marco Cattaneo
  - Update CaloDigit, DigiAlg, Boole versions
+ - Update QMTest reference
 
 ! 2008-09-10 - Marco Cattaneo
  - Add a qmtest that tests the initialisation of Boole, used by Dirac to test

@@ -1,8 +1,8 @@
-# --> Including file '/build/cattanem/Boole_v16r2/BooleSys/tests/options/testBoole.py'
+# --> Including file '/build/cattanem/BOOLE/BOOLE_v16r3/BooleSys/tests/options/testBoole.py'
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Boole version v16r2
-                                          running on lxbuild120.cern.ch on Tue Sep 16 13:50:35 2008
+                                                   Welcome to Boole version v16r3
+                                          running on lxbuild120.cern.ch on Thu Oct  9 09:05:57 2008
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
@@ -22,8 +22,11 @@ BooleInit         SUCCESS ======================================================
 HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 RootHistSvc          INFO Writing ROOT histograms to: UndefinedROOTOutputFileName
 HistogramPersis...   INFO Added successfully Conversion service:RootHistSvc
-HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v7r2/data/muonlow-G4.root as LowEnergy
-HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v7r2/data/muonflat-G4.root as MuonFlatSpillover
+HistogramDataSvc     INFO Added stream file:/build/cattanem/PARAM/ParamFiles/v7r3/data/muonlow-G4.root as LowEnergy
+HistogramDataSvc     INFO Added stream file:/build/cattanem/PARAM/ParamFiles/v7r3/data/muonflat-G4.root as MuonFlatSpillover
+BooleInit            INFO Thresholds for Interaction processes : 0.01 0.03 0.05
+BooleInit            INFO Thresholds for Diffractive processes : 0.1 0.3 0.6
+BooleInit            INFO Thresholds for Elastic processes : 0.25 0.5 0.75
 InitDataSeq          INFO Member list: MergeEventAlg/SpilloverAlg
 SpilloverAlg         INFO Spillover events will be added to the main event in paths Prev PrevPrev Next
 ToolSvc.LumiTool     INFO BunchCrossRate  29.49
@@ -32,8 +35,8 @@ InitMUONSeq          INFO Member list: MuonBackground/MuonLowEnergy, MuonBackgro
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
 EventClockSvc.F...   INFO Event times generated from 0 with steps of 0
-RFileCnv             INFO opening Root file "/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v7r2/data/muonlow-G4.root" for reading
-RFileCnv             INFO opening Root file "/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v7r2/data/muonflat-G4.root" for reading
+RFileCnv             INFO opening Root file "/build/cattanem/PARAM/ParamFiles/v7r3/data/muonlow-G4.root" for reading
+RFileCnv             INFO opening Root file "/build/cattanem/PARAM/ParamFiles/v7r3/data/muonflat-G4.root" for reading
 DigiPrev2            INFO Member list: , with rootInTES 'Prev2/', with globalTimeOffset 50
 DigiPrev1            INFO Member list: , with rootInTES 'Prev1/', with globalTimeOffset 25
 Digi                 INFO Member list: GaudiSequencer/DigiVELOSeq, GaudiSequencer/DigiTTSeq, GaudiSequencer/DigiITSeq, GaudiSequencer/DigiOTSeq, GaudiSequencer/DigiRICHSeq, GaudiSequencer/DigiCALOSeq, GaudiSequencer/DigiMUONSeq, GaudiSequencer/DigiL0Seq
@@ -48,7 +51,7 @@ DigiRICHSeq          INFO Member list: Rich::MC::Digi::Signal/RichPDSignal, Rich
 DeRichSystem         INFO Update triggered for HPD numbering maps
 DeRichSystem         INFO Built mappings for  7 L1 and 196 HPDs in Rich1
 DeRichSystem         INFO Built mappings for  8 L1 and 288 HPDs in Rich2
-ParticlePropert...   INFO Opened particle properties file : /afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v7r2/data/ParticleTable.txt
+ParticlePropert...   INFO Opened particle properties file : /build/cattanem/PARAM/ParamFiles/v7r3/data/ParticleTable.txt
 RichChargeShare      INFO Will add charge sharing at 2.5 % level
 ToolSvc.RichSma...   INFO Created active HPD channel list : # channels RICH(1/2) = 167776 / 246528
 RichPDResponse       INFO Time Calibration (Rich1/RICH2) = 10 6
@@ -85,7 +88,7 @@ L0EmulatorSeq        INFO Member list: GaudiSequencer/L0ProcessorsSeq, L0DUAlg/L
 L0ProcessorsSeq      INFO Member list: L0CaloAlg/L0Calo, L0MuonAlg/L0Muon, PuVetoAlg/L0PuVeto
 L0Calo               INFO 192 Ecal and 54 Hcal front end cards.
 ChronoStatSvc        INFO  Number of skipped events for MemStat-1
-L0Muon               INFO XML file = /afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v7r2/data/L0MuonKernel.xml
+L0Muon               INFO XML file = /build/cattanem/PARAM/ParamFiles/v7r3/data/L0MuonKernel.xml
 L0Muon               INFO MuonTriggerUnit properties are:
 L0Muon               INFO  foiXSize = 4,5,0,2,4
 L0Muon               INFO  foiYSize = 0,0,0,1,1
@@ -93,7 +96,7 @@ L0Muon               INFO  ignoreM1 = 0
 L0Muon               INFO  ignoreM2 = 0
 L0Muon               INFO  procVersion = 2
 L0Muon               INFO  ptParameters = 40.000000,7.000000
-L0MuonTrigger I...   INFO Time User   : Tot= 1.65  [s]                                             #=  1
+L0MuonTrigger I...   INFO Time User   : Tot= 1.62  [s]                                             #=  1
 ToolSvc.L0DUCon...   INFO **** L0DU Configs loading : TCK = 0xFFFF
 ToolSvc.L0DUCon...   INFO Short description ::  TCK = 0xFFFF : Algorithm[1] Setting[0] lumi[2] - 2007 tuning - gain:Calo[20] : Muon[40]
 L0DU                 INFO The L0DUConfig (TCK=0xFFFF) have been succesfully loaded
@@ -372,8 +375,8 @@ DataOnDemandSvc      INFO  #Incidents: Alg/Node/All: 0/0/0 Algorithms: Time User
 *****Chrono*****     INFO ****************************************************************************************************
 *****Chrono*****     INFO  The Final CPU consumption ( Chrono ) Table (ordered)
 *****Chrono*****     INFO ****************************************************************************************************
-L0MuonTrigger I...   INFO Time User   : Tot= 1.65  [s]                                             #=  1
-ChronoStatSvc        INFO Time User   : Tot= 2.66  [s]                                             #=  1
+L0MuonTrigger I...   INFO Time User   : Tot= 1.62  [s]                                             #=  1
+ChronoStatSvc        INFO Time User   : Tot= 2.71  [s]                                             #=  1
 *****Chrono*****     INFO ****************************************************************************************************
 ChronoStatSvc.f...   INFO  Service finalized succesfully
 ApplicationMgr       INFO Application Manager Finalized successfully
