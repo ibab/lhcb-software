@@ -1,4 +1,4 @@
-// $Id: LoKi_MCDecay.cpp,v 1.1 2008-07-09 17:00:48 ibelyaev Exp $
+// $Id: LoKi_MCDecay.cpp,v 1.2 2008-10-09 10:26:11 ibelyaev Exp $
 // =============================================================================
 // Include files 
 // =============================================================================
@@ -28,8 +28,8 @@ LOKI_MCALGORITHM( MCDecayDescriptor )
   
   MsgStream& log = info() ;
   
-  LoKi::Decays::Trees::MCExclusive p1 
-    ( LoKi::Decays::Nodes::HasQuark ( LHCb::ParticleID::bottom ) ) ;
+   LoKi::Decays::Node bquark = LoKi::Decays::Nodes::HasQuark ( LHCb::ParticleID::bottom ) ;
+  LoKi::Decays::Trees::MCExclusive p1 ( bquark ) ;
 
 
   LoKi::Decays::Trees::MCExclusive p2 ( "B_s0" ) ;

@@ -1,4 +1,4 @@
-// $Id: LoKi_GenDecay.cpp,v 1.2 2008-08-04 15:40:03 ibelyaev Exp $
+// $Id: LoKi_GenDecay.cpp,v 1.3 2008-10-09 10:26:11 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -30,8 +30,8 @@ LOKI_MCALGORITHM( GenDecayDescriptor )
   
   MsgStream& log = info() ;
   
-  LoKi::Decays::Trees::GenExclusive p1 
-    ( LoKi::Decays::Nodes::HasQuark ( LHCb::ParticleID::bottom ) ) ;
+  LoKi::Decays::Node bquark = LoKi::Decays::Nodes::HasQuark ( LHCb::ParticleID::bottom ) ;
+  LoKi::Decays::Trees::GenExclusive p1 ( bquark ) ;
   
   LoKi::Decays::Trees::GenExclusive p2 ( "B_s0" ) ;
   

@@ -1,4 +1,4 @@
-// $Id: LoKi_Decay.cpp,v 1.1 2008-07-09 17:00:48 ibelyaev Exp $
+// $Id: LoKi_Decay.cpp,v 1.2 2008-10-09 10:26:11 ibelyaev Exp $
 // =============================================================================
 // Include files 
 // =============================================================================
@@ -32,9 +32,9 @@ LOKI_ALGORITHM( DecayDescriptor )
   MsgStream& log = always() ;
   
   log << "Number of input particles: " << b.size() << endreq ;
-  
-  LoKi::Decays::Trees::Exclusive p1 
-    ( LoKi::Decays::Nodes::HasQuark ( LHCb::ParticleID::bottom ) ) ;
+
+  LoKi::Decays::Node bquark = LoKi::Decays::Nodes::HasQuark ( LHCb::ParticleID::bottom ) ;
+  LoKi::Decays::Trees::Exclusive p1 ( bquark ) ;
   
   LoKi::Decays::Trees::Exclusive p2 
     ( LoKi::Decays::Nodes::CC ( "B_s0" ) ) ;
