@@ -1,3 +1,4 @@
+// $Id $
 // TH1::SetMaximum() and TH1::SetMinimum() 
 
 #include <TPad.h>
@@ -66,7 +67,7 @@ DbRootHist::DbRootHist(const std::string & identifier,
   m_session(histogramDB),
   m_onlineHistogram(NULL),
   m_isEmptyHisto(false),
-  m_refOption("NOREF"),
+  m_refOption("AREA"),
   m_reference(NULL),
   m_startRun(1),
   m_dataType("default"),  
@@ -75,7 +76,9 @@ DbRootHist::DbRootHist(const std::string & identifier,
   m_dimInfoMonObject(NULL),
   m_verbosity(verbosity),
   m_dimBrowser(DimBr),
-  m_partition("")
+  m_partition(""),
+  m_titpave(NULL),
+  m_statpave(NULL)
 {
   // Prevent ROOT booking
   TH1::AddDirectory(kFALSE);
@@ -103,7 +106,6 @@ DbRootHist::DbRootHist(const std::string & identifier,
     }
   }
   
-  
   initHistogram();
   if (m_verbosity >= Verbose && m_isEmptyHisto) {
     std::cout << "Histogram " << m_identifier << " empty after Init"<<std::endl;
@@ -129,6 +131,8 @@ DbRootHist::~DbRootHist()
   if (hostingPad) { delete hostingPad; hostingPad = NULL; }
   if (m_dimInfo) { delete m_dimInfo; m_dimInfo = NULL; }
   if (m_dimInfoMonObject) { delete m_dimInfoMonObject; m_dimInfoMonObject = NULL; }
+  if (m_titpave) {delete m_titpave; m_titpave=NULL; }
+  if (m_statpave) {delete m_statpave; m_statpave=NULL; }
   cleanAnaSources();
 }
 void DbRootHist::cleanAnaSources()
@@ -231,19 +235,29 @@ void DbRootHist::enableClear()
     if (!m_isAnaHist) {
       m_cleared = true;
       if (m_offsetHistogram) { delete m_offsetHistogram; m_offsetHistogram = 0;}
-      if (s_H1D == m_histogramType) {
+      if (s_H1D == m_histogramType || 
+//        s_pfixMonH1D == m_histogramType ||
+          s_pfixMonH1F == m_histogramType) {
         m_offsetHistogram = new TH1F(*dynamic_cast<TH1F*>(rootHistogram));
         m_offsetHistogram->SetBit(kNoContextMenu);
 //      m_offsetHistogram->Reset(); //"ICE: Integral Contents, Errors"
 //    m_offsetHistogram = (TH1F*)rootHistogram->Clone("m_offsetHistogram");
-      } else if (s_H2D == m_histogramType) {
+      } else if (s_H2D == m_histogramType ||
+        //      s_pfixMonH2D == type ||
+                s_pfixMonH2F == m_histogramType) {
         m_offsetHistogram = new TH2F(*dynamic_cast<TH2F*>(rootHistogram));
         m_offsetHistogram->SetBit(kNoContextMenu);
 //      m_offsetHistogram->Reset(); //"ICE: Integral Contents, Errors"
-      } else if (s_P1D == m_histogramType || s_HPD == m_histogramType) {
+      } else if (s_P1D == m_histogramType ||
+                 s_HPD == m_histogramType) {
+//               s_P2D == m_histogramType                  
         m_offsetHistogram = new TH1F(*dynamic_cast<TH1F*>(rootHistogram));        
         m_offsetHistogram->SetBit(kNoContextMenu);
-//      m_offsetHistogram->Reset(); //"ICE: Integral Contents, Errors"  
+//      m_offsetHistogram->Reset(); //"ICE: Integral Contents, Errors"
+      } else if (s_pfixMonProfile == m_histogramType) {
+        m_offsetHistogram = new TProfile(*dynamic_cast<TProfile*>(rootHistogram));        
+        m_offsetHistogram->SetBit(kNoContextMenu);
+//      m_offsetHistogram->Reset(); //"ICE: Integral Contents, Errors"
       }
       if (m_offsetHistogram) { m_offsetHistogram->AddDirectory(kFALSE); }
     } else { // analysis histogram
@@ -267,7 +281,8 @@ void DbRootHist::initHistogram()
   // If not AnaLib hist:
   if (!m_isAnaHist) {
     if (s_P1D == m_histogramType || s_HPD == m_histogramType || s_H2D == m_histogramType ||
-        s_H1D == m_histogramType || s_CNT == m_histogramType || s_P2D == m_histogramType) {
+        s_H1D == m_histogramType || s_CNT == m_histogramType ) {
+// || s_P2D == m_histogramType          
       if (m_dimInfo) {
         beRegularHisto();
         std::string noGauchocomment = "No gauchocomment";
@@ -491,8 +506,8 @@ void DbRootHist::beEmptyHisto()
     rootHistogram = new TH1F(m_histoRootName.Data(),
                                  dummyTitle.c_str(),
                                  1, 0., 1.);
-  } else if (s_P2D == m_histogramType) {
-  } else if (s_CNT == m_histogramType) {
+//  } else if (s_P2D == m_histogramType) {
+//  } else if (s_CNT == m_histogramType) {
   }
   if(rootHistogram) {
     rootHistogram->SetBit(kNoContextMenu);
@@ -509,7 +524,8 @@ void DbRootHist::fillHistogram()
   }
   if (!m_isAnaHist) {
     if (s_P1D == m_histogramType || s_HPD == m_histogramType || s_H2D == m_histogramType ||
-        s_H1D == m_histogramType || s_CNT == m_histogramType || s_P2D == m_histogramType) {
+        s_H1D == m_histogramType || s_CNT == m_histogramType ) {
+// || s_P2D == m_histogramType          
       if (m_dimInfo) {
     // wait until data has arrived
     int m_serviceSize = m_dimInfo->getSize()/sizeof(float);
@@ -609,35 +625,9 @@ void DbRootHist::fillHistogram()
           
         }
         rootHistogram->SetEntries(entries);
-      } else if (s_P2D == m_histogramType) {
-      } else if (s_CNT == m_histogramType) {
+//      } else if (s_P2D == m_histogramType) {
+//      } else if (s_CNT == m_histogramType) {
       }
-
-      if (m_cleared && m_offsetHistogram) {
-//        rootHistogram->Add(m_offsetHistogram,-1.0); - does not reset errors
-        if (s_H1D == m_histogramType ||
-            s_P1D == m_histogramType || s_HPD == m_histogramType) {
-          for (int i = 1; i <= rootHistogram->GetNbinsX(); ++i) {
-            rootHistogram->SetBinContent(i, rootHistogram->GetBinContent(i)
-              - m_offsetHistogram->GetBinContent(i));
-            rootHistogram->SetBinError(i, sqrt(pow(rootHistogram->
-              GetBinError(i), 2) - pow(m_offsetHistogram->
-              GetBinError(i), 2)));
-          }
-        } else if (s_H2D == m_histogramType) {
-          for (int i=1; i<= rootHistogram->GetNbinsX() ; ++i) {
-            for (int j=1; j <= rootHistogram->GetNbinsY() ; ++j) {
-              rootHistogram->SetBinContent(i, j,
-                rootHistogram->GetBinContent(i, j) -
-                m_offsetHistogram->GetBinContent(i, j));
-              rootHistogram->SetBinError(i, j, sqrt(pow(rootHistogram->
-                GetBinError(i, j), 2) -
-                pow(m_offsetHistogram->GetBinError(i, j), 2)));
-            }
-          }
-        }
-      }
-      if (hostingPad) { hostingPad->Modified(); }
     }
 //    m_toRefresh = false;
     }
@@ -665,10 +655,39 @@ void DbRootHist::fillHistogram()
           MonProfile* monProfile = (MonProfile*) m_dimInfoMonObject->monObject();
           if (monProfile) { monProfile->loadObject(); }
         }
-
-        if (hostingPad) hostingPad->Modified();
+//        if (hostingPad) hostingPad->Modified();
       }
     }
+    if (m_cleared && m_offsetHistogram) {
+//        rootHistogram->Add(m_offsetHistogram,-1.0); - does not reset errors
+        if (s_H1D == m_histogramType ||
+            s_P1D == m_histogramType || s_HPD == m_histogramType ||
+            s_pfixMonProfile == m_histogramType ||
+            s_pfixMonH1D == m_histogramType  ||
+            s_pfixMonH1F == m_histogramType) {
+          for (int i = 1; i <= rootHistogram->GetNbinsX(); ++i) {
+            rootHistogram->SetBinContent(i, rootHistogram->GetBinContent(i)
+              - m_offsetHistogram->GetBinContent(i));
+            rootHistogram->SetBinError(i, sqrt(pow(rootHistogram->
+              GetBinError(i), 2) - pow(m_offsetHistogram->
+              GetBinError(i), 2)));
+          }
+        } else if (s_H2D == m_histogramType ||
+                   s_pfixMonH2D == m_histogramType  ||
+                   s_pfixMonH2F == m_histogramType) {
+          for (int i=1; i<= rootHistogram->GetNbinsX() ; ++i) {
+            for (int j=1; j <= rootHistogram->GetNbinsY() ; ++j) {
+              rootHistogram->SetBinContent(i, j,
+                rootHistogram->GetBinContent(i, j) -
+                m_offsetHistogram->GetBinContent(i, j));
+              rootHistogram->SetBinError(i, j, sqrt(pow(rootHistogram->
+                GetBinError(i, j), 2) -
+                pow(m_offsetHistogram->GetBinError(i, j), 2)));
+            }
+          }
+        }
+      }
+      if (hostingPad) { hostingPad->Modified(); }    
   
 } else if (m_isAnaHist && m_anaSources.size()>0)  {
     std::vector<TH1*> sources(m_anaSources.size());
@@ -777,7 +796,7 @@ void DbRootHist::setTH1FromDB()
     }
 //    rootHistogram->SetStats(true);
     if (m_onlineHistogram->getDisplayOption("STATS", &iopt)) {
-      gStyle->SetOptStat(iopt);
+      //gStyle->SetOptStat(iopt);
       rootHistogram->SetStats(0 != iopt);
     }
         
@@ -799,6 +818,15 @@ void DbRootHist::setTH1FromDB()
     if (m_onlineHistogram->getDisplayOption("LINEWIDTH", &iopt)) {
       rootHistogram->SetLineWidth(iopt);
     }
+    if (m_onlineHistogram->getDisplayOption("MARKERSIZE", &iopt)) {
+      rootHistogram->SetMarkerSize(iopt);
+    }
+    if (m_onlineHistogram->getDisplayOption("MARKERSTYLE", &iopt)) {
+      rootHistogram->SetMarkerStyle(iopt);
+    }
+    if (m_onlineHistogram->getDisplayOption("MARKERCOLOR", &iopt)) {
+      rootHistogram->SetMarkerColor(iopt);
+    }
 
     if (m_onlineHistogram->getDisplayOption("TIT_X_SIZE", &fopt)) {
       rootHistogram->GetXaxis()->SetTitleSize(fopt);
@@ -811,6 +839,9 @@ void DbRootHist::setTH1FromDB()
     }
     if (m_onlineHistogram->getDisplayOption("LAB_X_OFFS", &fopt)) {
       rootHistogram->GetXaxis()->SetLabelOffset(fopt);
+    }
+    if (m_onlineHistogram->getDisplayOption("NDIVX", &iopt)) {
+      rootHistogram->SetNdivisions(iopt,"X");
     }
 
     if (m_onlineHistogram->getDisplayOption("TIT_Y_SIZE", &fopt)) {
@@ -825,6 +856,9 @@ void DbRootHist::setTH1FromDB()
     if (m_onlineHistogram->getDisplayOption("LAB_Y_OFFS", &fopt)) {
       rootHistogram->GetYaxis()->SetLabelOffset(fopt);
     }
+    if (m_onlineHistogram->getDisplayOption("NDIVY", &iopt)) {
+      rootHistogram->SetNdivisions(iopt,"Y");
+    }
 
     if (m_onlineHistogram->getDisplayOption("TIT_Z_SIZE", &fopt)) {
       rootHistogram->GetZaxis()->SetTitleSize(fopt);
@@ -838,23 +872,86 @@ void DbRootHist::setTH1FromDB()
     if (m_onlineHistogram->getDisplayOption("LAB_Z_OFFS", &fopt)) {
       rootHistogram->GetZaxis()->SetLabelOffset(fopt);
     }
+    // custom bin labels
+    if(m_onlineHistogram->nbinlabels() > 0) {
+      for (unsigned int il=0; il<m_onlineHistogram->nbinlabels() ; il++) {
+	sopt=m_onlineHistogram->binlabel(il);
+	rootHistogram->GetXaxis()->SetBinLabel(il+1,sopt.c_str());
+      }
+    }
   }
 }
 // TODO: should rather use hostingPad
 void DbRootHist::setDrawOptionsFromDB(TPad* &pad)
 {
+  pad->Draw();
   if (m_onlineHistogram && rootHistogram) {
     int iopt = 0;
     float fopt = 0.0;
     std::string sopt("");
 
-    // TPaveStats is obtained after a pad->Draw(), but changing OptStat
-    // doesn't resize the Pave.. using gStyle->SetOptStat in Draw() instead
+    // TPaveStats is obtained after a pad->Draw(), but note that changing OptStat
+    // doesn't resize the Pave.. thus it's better to set the global stat options also 
+    // before drawing
     if (m_onlineHistogram->getDisplayOption("STATS", &iopt)) {
        TPaveStats* stats =  (TPaveStats*)rootHistogram->GetListOfFunctions()->FindObject("stats");
-       if (stats) stats->SetOptStat(iopt);
+       if (stats) {
+         stats->SetOptStat(iopt);
+         double x1=stats->GetX1NDC();
+         double x2=stats->GetX2NDC();
+         double y1=stats->GetY1NDC();
+         double y2=stats->GetY2NDC();
+         if (m_onlineHistogram->getDisplayOption("STAT_X_OFFS", &fopt)) {
+           x1 = fopt;
+         }
+         if (m_onlineHistogram->getDisplayOption("STAT_X_SIZE", &fopt)) {
+           x2=x1+fopt;
+         }
+         if (m_onlineHistogram->getDisplayOption("STAT_Y_OFFS", &fopt)) {
+           y1 = fopt;
+         }
+         if (m_onlineHistogram->getDisplayOption("STAT_Y_SIZE", &fopt)) {
+           y2=y1+fopt;
+         }
+         stats->SetX1NDC(x1);
+         stats->SetX2NDC(x2);
+         stats->SetY1NDC(y1);
+         stats->SetY2NDC(y2);
+         // save it to check if was chanegd at saving time
+         if(m_statpave) delete m_statpave;
+         m_statpave = (TPave*) stats->Clone();
+       }
     }
-    
+    // title pave
+    TPaveText* titpave = (TPaveText*) pad->GetPrimitive("title");
+    if(titpave) {
+      double x1=titpave->GetX1NDC();
+      double x2=titpave->GetX2NDC();
+      double y1=titpave->GetY1NDC();
+      double y2=titpave->GetY2NDC();
+      if (m_onlineHistogram->getDisplayOption("HTIT_X_OFFS", &fopt)) {
+        x1 = fopt;
+      }
+      if (m_onlineHistogram->getDisplayOption("HTIT_X_SIZE", &fopt)) {
+        x2=x1+fopt;
+      }
+      if (m_onlineHistogram->getDisplayOption("HTIT_Y_OFFS", &fopt)) {
+        y1 = fopt;
+      }
+      if (m_onlineHistogram->getDisplayOption("HTIT_Y_SIZE", &fopt)) {
+        y2=y1+fopt;
+      }
+      titpave->SetX1NDC(x1);
+      titpave->SetX2NDC(x2);
+      titpave->SetY1NDC(y1);
+      titpave->SetY2NDC(y2);
+      // save it to check if was chanegd at saving time
+      if(m_titpave) delete m_titpave;
+      m_titpave = (TPave*) titpave->Clone();
+    }
+
+
+
     if (m_onlineHistogram->getDisplayOption("DRAWOPTS", &sopt)) {
       rootHistogram->SetDrawOption(sopt.c_str());
     }
@@ -921,15 +1018,45 @@ bool DbRootHist::saveTH1ToDB(TPad* pad)
                                                       ->FindObject("stats");
     // if histogram has not been plotted (or has been plotted without stats),
     // do nothing
-    if (stats) {
+    if (stats && m_statpave) {
       iopt = (int) stats->GetOptStat();
       // 111110 seems to be hardcoded in root
       out |= updateDBOption("STATS", &iopt, iopt == 111110 );
+      fopt = stats->GetX1NDC();
+      out |= updateDBOption("STAT_X_OFFS", &fopt, 
+                            TMath::Abs(fopt - m_statpave->GetX1NDC())<0.001);
+      fopt = stats->GetX2NDC() - stats->GetX1NDC();
+      out |= updateDBOption("STAT_X_SIZE", &fopt, 
+                            TMath::Abs(fopt - (m_statpave->GetX2NDC()-m_statpave->GetX1NDC())) <0.001);
+      fopt = stats->GetY1NDC();
+      out |= updateDBOption("STAT_Y_OFFS", &fopt, 
+                            TMath::Abs(fopt - m_statpave->GetY1NDC())<0.001);
+      fopt = stats->GetY2NDC() - stats->GetY1NDC();
+      out |= updateDBOption("STAT_Y_SIZE", &fopt, 
+                            TMath::Abs(fopt - (m_statpave->GetY2NDC()-m_statpave->GetY1NDC())) <0.001);
+      delete m_statpave;
+      m_statpave = (TPave*) stats->Clone();
+    }
+    // now title options
+    TPaveText* tit = (TPaveText*) pad->GetPrimitive("title");
+    if(tit && m_titpave) {
+      fopt = tit->GetX1NDC();
+      out |= updateDBOption("HTIT_X_OFFS", &fopt, 
+                            TMath::Abs(fopt - m_titpave->GetX1NDC())<0.001);
+      fopt = tit->GetX2NDC() - tit->GetX1NDC();
+      out |= updateDBOption("HTIT_X_SIZE", &fopt, 
+                            TMath::Abs(fopt - (m_titpave->GetX2NDC()-m_titpave->GetX1NDC())) <0.001);
+      fopt = tit->GetY1NDC();
+      out |= updateDBOption("HTIT_Y_OFFS", &fopt, 
+                            TMath::Abs(fopt - m_titpave->GetY1NDC())<0.001);
+      fopt = tit->GetY2NDC() - tit->GetY1NDC();
+      out |= updateDBOption("HTIT_Y_SIZE", &fopt, 
+                            TMath::Abs(fopt - (m_titpave->GetY2NDC()-m_titpave->GetY1NDC())) <0.001);
+      delete m_titpave;
+      m_titpave = (TPave*) tit->Clone();
     }
     
-    sopt = m_refOption;
-    out |= updateDBOption("REF", &sopt, sopt.empty());
-    
+
     iopt = (int) rootHistogram->GetFillStyle();
     out |= updateDBOption("FILLSTYLE", &iopt,
                           iopt == (int) gStyle->GetHistFillStyle());
@@ -945,6 +1072,15 @@ bool DbRootHist::saveTH1ToDB(TPad* pad)
     iopt = (int) rootHistogram->GetLineWidth();
     out |= updateDBOption("LINEWIDTH", &iopt,
                           iopt == (int) gStyle->GetHistLineWidth());
+    iopt = (int) rootHistogram->GetMarkerStyle();
+    out |= updateDBOption("MARKERSTYLE", &iopt,
+                          iopt == (int) gStyle->GetMarkerStyle());
+    iopt = (int) rootHistogram->GetMarkerSize();
+    out |= updateDBOption("MARKERSIZE", &iopt,
+                          iopt == (int) gStyle->GetMarkerSize());
+    iopt = (int) rootHistogram->GetMarkerColor();
+    out |= updateDBOption("MARKERCOLOR", &iopt,
+                          iopt == (int) gStyle->GetMarkerColor());
 
     sopt = rootHistogram->GetDrawOption();
     if (sopt.empty()) { sopt = rootHistogram->GetOption(); }
@@ -962,6 +1098,10 @@ bool DbRootHist::saveTH1ToDB(TPad* pad)
     fopt = rootHistogram->GetXaxis()->GetLabelOffset();
     out |= updateDBOption("LAB_X_OFFS", &fopt,
                           fopt == (float) gStyle->GetLabelOffset("X"));
+    iopt = rootHistogram->GetNdivisions("X");
+    out |= updateDBOption("NDIVX", &iopt,
+                          iopt == (int) gStyle->GetNdivisions("X"));
+
     fopt = rootHistogram->GetYaxis()->GetTitleSize();
     out |= updateDBOption("TIT_Y_SIZE", &fopt,
                           fopt == (float) gStyle->GetTitleSize("Y"));
@@ -974,6 +1114,9 @@ bool DbRootHist::saveTH1ToDB(TPad* pad)
     fopt = rootHistogram->GetYaxis()->GetLabelOffset();
     out |= updateDBOption("LAB_Y_OFFS", &fopt,
                           fopt == (float) gStyle->GetLabelOffset("Y"));
+    iopt = rootHistogram->GetNdivisions("Y");
+    out |= updateDBOption("NDIVY", &iopt,
+                          iopt == (int) gStyle->GetNdivisions("Y"));
 
     if (m_onlineHistogram->dimension() > 1) {
       sopt = rootHistogram->GetZaxis()->GetTitle();
@@ -1023,24 +1166,24 @@ bool DbRootHist::saveTH1ToDB(TPad* pad)
 void DbRootHist::Draw(TPad* &pad)
 {
   if (rootHistogram) {
-    int curStat = 0;
-    int iopt = 0;
-    if (m_onlineHistogram) {
-      if (m_onlineHistogram->getDisplayOption("STATS", &iopt)) {
-        if (0 != iopt) {
-          curStat = gStyle->GetOptStat();
-          gStyle->SetOptStat(iopt);
-        }
-      } else {
-        gStyle->SetOptStat("emrou"); // seems to be hardcoded in root
-      }
-    }
+//    int curStat = 0;
+//    int iopt = 0;
+//    if (m_onlineHistogram) {
+//       if (m_onlineHistogram->getDisplayOption("STATS", &iopt)) {
+//         if (0 != iopt) {
+//           curStat = gStyle->GetOptStat();
+//           gStyle->SetOptStat(iopt);
+//         }
+//       } else {
+//         gStyle->SetOptStat("emrou"); // seems to be hardcoded in root
+//       }
+//     }
     rootHistogram->Draw();
     setDrawOptionsFromDB(pad);
 
-    if (s_NoReference != m_refOption) {
+//    if (s_NoReference != m_refOption) {
 //      if (getReference()) { drawReference(); }
-    }
+//    }
   }
 }
 
@@ -1068,21 +1211,11 @@ void DbRootHist::referenceHistogram(ReferenceVisibility visibility)
 {
   if (0 == m_reference &&
       s_NoReference != m_refOption) {
-    TFile* f = new TFile(m_onlineHistogram->getTask()->reference().c_str(),
-                         "READ");
-    if (f) {
-      if (false == f->IsZombie()) {
-        TH1* ref = (TH1*) f->Get(m_onlineHistogram->hname().c_str());
-        if (ref) {
-          if (m_reference) { delete m_reference; m_reference = 0; }
-          ref->SetDirectory(0);
-          m_reference = ref;
-        }
-        f->Close();
-      }
+    TH1* ref = (TH1*) m_analysisLib->getReference(m_onlineHistogram);
+    if (ref) {
+      if (m_reference) { delete m_reference; m_reference = 0; }
+      m_reference = ref;
     }
-    delete f;
-    f = NULL;
   } 
   if (0 != m_reference &&
       Show == visibility) {
@@ -1108,10 +1241,15 @@ std::string DbRootHist::findDimServiceName(const std::string & dimServiceType) {
   char *dimFormat;
   int dimType;
   std::string dimServiceName("");
+  std::string dimServiceNameQueryBegining("");
 
-  std::string dimServiceNameQueryBegining = dimServiceType + s_slash +
-                                            m_partition +
-                                            s_underscrore + "*";
+  if (m_partition != "") {
+    dimServiceNameQueryBegining= dimServiceType + s_slash +
+                                  m_partition +
+                                  s_underscrore + "*";
+  } else {
+    dimServiceNameQueryBegining = dimServiceType + s_slash + "*";    
+  }
 
   m_dimBrowser->getServices(dimServiceNameQueryBegining.c_str());
   while(dimType = m_dimBrowser->getNextService(dimService, dimFormat)) {
