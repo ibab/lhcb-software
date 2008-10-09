@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.16 2008-09-26 15:11:00 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.17 2008-10-09 06:47:34 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -72,7 +72,6 @@ class Boole(LHCbConfigurableUser):
         # POOL Persistency
         importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
 
-
     def defineOptions(self):
         tae   = self.getProp("generateTAE")
         spill = self.getProp("useSpillover")
@@ -128,7 +127,8 @@ class Boole(LHCbConfigurableUser):
         digi = self.getProp( "writeDigi" )
         if digi:
             # Objects to be written to output file
-            importOptions("$BOOLEOPTS/DigiContent.opts")
+            OutputStream("DigiWriter").Preload = False
+            importOptions("$STDOPTS/DigiContent.opts")
             extended = self.getProp("extendedDigi")
             if ( extended ): importOptions( "$STDOPTS/ExtendedDigi.opts" )
             MyWriter = OutputStream( "DigiWriter" )

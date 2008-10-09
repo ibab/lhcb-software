@@ -12,7 +12,9 @@ ApplicationMgr.ExtSvc  += { "DataOnDemandSvc" };
 DataOnDemandSvc.AlgMap += { "MC/Particles" : "UnpackMCParticle"
                           , "MC/Vertices"  : "UnpackMCVertex"
                           };
-
+// And pack them for the output if not on the input file...
+DataOnDemandSvc.AlgMap += { "pSim/MCParticles" : "PackMCParticle",
+                            "pSim/MCVertices"  : "PackMCVertex" };
 // Phases to be executed
 ApplicationMgr.TopAlg += { "ProcessPhase/Init"
                          , "ProcessPhase/DigiPrev2"

@@ -13,13 +13,11 @@ from Boole.Configuration import *
 FileCatalog().Catalogs = [ "xmlcatalog_file:NewCatalog.xml" ]
 
 #-- Main ('signal') event input
-# Events from Gauss v31r2, DB tag head-20080603
-datasetName = '11144103-100ev-20080613'
-EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/g/gcorti/Gauss/2008/v31r2/" + datasetName + ".sim' TYP='POOL_ROOTTREE' OPT='READ'"]
+# Events from Gauss v35r1, DB tag head-20081002
+datasetName = '11144101-100ev-20081006'
+EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/g/gcorti/Gauss/2008/v35r1/" + datasetName + ".sim' TYP='POOL_ROOTTREE' OPT='READ'"]
 
-#-- Spillover events not available for this tag
-#spilloverName = '30000000-1000ev-20080319' # Gauss v31r0, head-20080225-no-TT
-#EventSelector("SpilloverSelector").Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/g/gcorti/Gauss/2008/v31r0/" + spilloverName + ".sim' TYP='POOL_ROOTTREE' OPT='READ'"]
+#-- Spillover events not used in 2008 configuration
 
 # Set the property used to build other file names
 Boole().setProp( "datasetName", datasetName )
