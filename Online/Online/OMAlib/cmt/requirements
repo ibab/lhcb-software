@@ -25,6 +25,8 @@ macro_append OMAlib_shlibflags " -lHist  -lGraf -lRIO  " WIN32 " libHist.lib lib
 
 #macro_remove Boost_linkopts " $(Boost_linkopts_regex) $(Boost_linkopts_thread) -lboost_filesystem-gcc-mt " 
 
+application  Saveset2HistDB ../main/Saveset2HistDB.cpp
+
 private
 use   GaudiOnline      v*       Online -no_auto_imports
 use   Gaudi            v*              -no_auto_imports
