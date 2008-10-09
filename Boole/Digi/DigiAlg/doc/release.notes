@@ -4,6 +4,18 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+!========================== DigiAlg v4r11 2008-10-09 =========================
+! 2008-10-09 - Marco Cattaneo for Antonio Maria Pérez-Calero Yzquierdo
+ - BooleInit now adds to ODIN a beam current, beam crossing type and 
+   trigger type, switch off by ModifyOdin = False, default True.
+   o TriggerType is controlled by ThresTriggerType option. By default, 5% of
+     events with hard collision are set to trigger type random, 95% physics.
+     For elastic or diffractive events, trigger type is set to random
+   o "ThresInteraction", "ThresDiffractive" and "ThresElastic" are thresholds
+     to distribute bunch crossing types for each kind of event, elastic, 
+     diffractive of hard collision (no beam, single beam left/right, two beams)
+   o Bunch current is hardwired to a constant number for now.
+
 !========================== DigiAlg v4r10 2008-07-29 =========================
 ! 2008-07-22 - Marco Cattaneo
  - Adapt to new location of IEventTimeDecode and IGenericTool interfaces
