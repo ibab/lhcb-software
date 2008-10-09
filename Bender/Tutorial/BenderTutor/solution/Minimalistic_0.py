@@ -1,4 +1,4 @@
-# $Id: Minimalistic_0.py,v 1.8 2008-06-12 12:43:58 ibelyaev Exp $
+# $Id: Minimalistic_0.py,v 1.9 2008-10-09 13:11:41 ibelyaev Exp $
 # =============================================================================
 
 
@@ -11,12 +11,10 @@ importOptions( '$DAVINCIROOT/options/DaVinci.opts')
 ## get or create application manager 
 gaudi = appMgr() 
 
-
-## define input files 
-import BenderTutor.data_tutorial as data 
-
+## redefine input files 
 evtSel = gaudi.evtSel()
-evtSel.open( data.FILEs ) 
+import LoKiExample.Bs2Jpsiphi_mm_data as data 
+evtSel.open( data.Files ) 
 
 ## run DaVinci 
 gaudi.run(100)

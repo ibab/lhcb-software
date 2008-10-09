@@ -11,7 +11,8 @@
 # @author Vanya BELYAEV  ibelyaev@physics.syr.edu
 # @date   2004-10-12
 # =============================================================================
-__author__ = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
+__author__  = ' Vanya BELYAEV  Ivan.Belyaev@nikhef.nl '
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $  '  
 # =============================================================================
 ## import everything from BENDER
 from Bender.MainMC import *
@@ -74,10 +75,10 @@ def configure() :
     gaudi.setAlgorithms( [ alg ] )
     
     ## redefine input files 
-    import BenderTutor.data_tutorial as data 
     evtSel = gaudi.evtSel()
-    evtSel.open( data.FILEs ) 
     evtSel.PrintFreq = 10
+    import LoKiExample.Bs2Jpsiphi_mm_data as data 
+    evtSel.open( data.Files ) 
     
     return SUCCESS
 # =============================================================================

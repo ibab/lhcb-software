@@ -1,25 +1,19 @@
-# $Id: requirements,v 1.16 2008-09-16 14:30:28 ibelyaev Exp $ 
+# $Id: requirements,v 1.17 2008-10-09 13:11:40 ibelyaev Exp $ 
 # ============================================================================
 # Created    : 2004-10-11	
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 # ============================================================================
 package           BenderTutor
-version           v9r0
+version           v9r1
 
 # =============== structure ==================================================
 branches          cmt doc python solution 
-
-# =============== environment ================================================
-set               BENDERTUTORPYTHON    $(BENDERTUTORROOT)/python
-set               BENDERTUTORSOLUTION  $(BENDERTUTORROOT)/solution
-
 
 # =============== dependencies ===============================================
 use               Bender        v*    Phys 
 use               BenderExample v*    Ex
 
 # =============== standard patterns ===========================================
-apply_pattern     application_path 
 apply_pattern     install_python_modules 
 
 # ============================================================================

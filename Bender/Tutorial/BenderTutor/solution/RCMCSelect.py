@@ -9,7 +9,8 @@
 #  @author Vanya BELYAEV  ibelyaev@physics.syr.edu
 #  @date   2004-10-12
 # =============================================================================
-__author__ = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
+__author__  = ' Vanya BELYAEV  Ivan.Belyaev@nikhef.nl '
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $  '  
 # =============================================================================
 ## import everything from BENDER
 from Bender.MainMC import *
@@ -81,7 +82,7 @@ class RCMCSelect(AlgoMC):
             if not 0 == SUMQ( phi )          : continue
             if not 0 <= VCHI2( phi ) < 49    : continue            
             self.plot ( M(phi) / 1000  ,
-                        " dikaon invarinat mass " ,
+                        " dikaon invariant mass " ,
                         1.0 , 1.050         )
             if not dmPhi( phi ) : continue
             phi.save('phi')
@@ -97,7 +98,7 @@ class RCMCSelect(AlgoMC):
             if not 4.5 < m           < 6.5  : continue
             if not 0   < VCHI2( B )  < 49   : continue
             self.plot ( M(B) / 1000 ,
-                        " psi phi invarinat mass " ,
+                        " psi phi invariant mass " ,
                         5.0  , 6.0        )
             if not dmBs ( B ) : continue
             B.save('Bs')
@@ -143,11 +144,11 @@ def configure() :
     ## configure the desktop:
     alg.PP2MCs = ['Relations/Rec/ProtoP/Charged']
      
-    ## define the proper input data:
-    import BenderTutor.data_tutorial as data 
+    ## redefine input files 
     evtSel = gaudi.evtSel()
-    evtSel.PrintFreq = 20
-    evtSel.open( data.FILEs ) 
+    import LoKiExample.Bs2Jpsiphi_mm_data as data 
+    evtSel.open( data.Files ) 
+
     
     return SUCCESS
 # =============================================================================

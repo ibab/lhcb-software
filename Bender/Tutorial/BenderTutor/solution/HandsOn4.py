@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # =============================================================================
 """
-'Solution'-file for 'RCRaons.py' example (Bender Tutorial)
+'Solution'-file for RC-kaons cexample (Bender Tutorial)
 """ 
 # =============================================================================
 # @file
@@ -11,7 +11,8 @@
 # @author Vanya BELYAEV ibelyaev@physics.syr.edu
 # @date   2004-10-12
 # =============================================================================
-__author__ = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
+__author__  = ' Vanya BELYAEV  Ivan.Belyaev@nikhef.nl '
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $  '  
 # =============================================================================
 ## import everything from BENDER
 from Bender.MainMC import *
@@ -130,11 +131,11 @@ def configure() :
     alg.NTupleLUN = 'PHI'
     
     # redefine input files 
-    import BenderTutor.data_tutorial as data 
     evtSel = gaudi.evtSel()
     evtSel.PrintFreq = 50
-    evtSel.open( data.FILEs ) 
-
+    import LoKiExample.Bs2Jpsiphi_mm_data as data 
+    evtSel.open( data.Files ) 
+    
     return SUCCESS
 # =============================================================================
 

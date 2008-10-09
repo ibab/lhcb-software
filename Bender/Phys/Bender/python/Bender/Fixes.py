@@ -27,24 +27,24 @@ It applies some last-moment (version-dependent) fixes
 # =============================================================================
 __author__  = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 # =============================================================================
-__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $' 
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $' 
 # =============================================================================
 
 
 
-from LoKiAlgo.decorators    import Algo   as _Algo
-from LoKiAlgoMC.decorators  import AlgoMC as _AlgoMC
-from GaudiPython.GaudiAlgs  import _start_
-from GaudiPython.GaudiAlgs  import _stop_
+## from LoKiAlgo.decorators    import Algo   as _Algo
+## from LoKiAlgoMC.decorators  import AlgoMC as _AlgoMC
+## from GaudiPython.GaudiAlgs  import _start_
+## from GaudiPython.GaudiAlgs  import _stop_
 
-_Algo   .start = _start_
-_AlgoMC .start = _start_
-_Algo   .stop  = _stop_
-_AlgoMC .stop  = _stop_
+## _Algo   .start = _start_
+## _AlgoMC .start = _start_
+## _Algo   .stop  = _stop_
+## _AlgoMC .stop  = _stop_
 
 
-print __name__ + ': LoKi.Algo*.start '
-print __name__ + ': LoKi.Algo*.stop  '
+## print __name__ + ': LoKi.Algo*.start '
+## print __name__ + ': LoKi.Algo*.stop  '
 
 
 

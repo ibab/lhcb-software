@@ -11,13 +11,14 @@
 #  @author Vanya BELYAEV  belyaev@lapp.in2p3.fr
 #  @date   2004-10-12
 # =============================================================================
-__author__ = 'Vanya BELYAEV  ibelyaev@physics.syr.edu'
+__author__  = ' Vanya BELYAEV  Ivan.Belyaev@nikhef.nl '
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $  '  
 # =============================================================================
 ## import everything from BENDER
 from Bender.MainMC import *
 # =============================================================================
 ## @class GetData
-#  Simple algotithm to access the data 
+#  Simple algorithm to access the data 
 class GetData(Algo):
     # =========================================================================
     ## standard constructor 
@@ -67,8 +68,6 @@ def configure( **args ) :
     The configuration of the job
     """
     
-    import BenderTutor.data_tutorial as data 
-    
     ## general configuration :
     importOptions ( '$DAVINCIROOT/options/DaVinciCommon.opts' )
 
@@ -89,7 +88,8 @@ def configure( **args ) :
     evtSel = gaudi.evtSel()
     
     ## configure Event Selector
-    evtSel.open( data.FILEs[0:5] ) 
+    import LoKiExample.Bs2Jpsiphi_mm_data as data 
+    evtSel.open( data.Files ) 
     
     return SUCCESS 
 # =============================================================================

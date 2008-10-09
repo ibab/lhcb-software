@@ -10,7 +10,8 @@ using '*'.opts configuration
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 #  @date 2006-11-16
 # =============================================================================
-__author__ = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
+__author__  = ' Vanya BELYAEV  Ivan.Belyaev@nikhef.nl '
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $  '  
 # =============================================================================
 ## get EVERYTHING from Bender
 from Bender.Main import *
@@ -27,10 +28,10 @@ def configure() :
     ## get/create application manager
     gaudi = appMgr() 
 
-    ## define input files 
-    import BenderTutor.data_tutorial as data 
-    evtSel = gaudi.evtSel()    
-    evtSel.open( data.FILEs ) 
+    ## redefine input files 
+    evtSel = gaudi.evtSel()
+    import LoKiExample.Bs2Jpsiphi_mm_data as data 
+    evtSel.open( data.Files ) 
         
     return SUCCESS 
 # =============================================================================
