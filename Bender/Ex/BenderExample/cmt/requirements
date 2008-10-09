@@ -1,20 +1,15 @@
 
-# $Id: requirements,v 1.45 2008-09-16 11:47:27 ibelyaev Exp $ 
+# $Id: requirements,v 1.46 2008-10-09 12:10:18 ibelyaev Exp $ 
 # ============================================================================
 # Created    : 2003-09-10
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@itep.ru
 # ============================================================================
 package          BenderExample
 author           Vanya BELYAEV
-version          v9r0
+version          v9r1
 
 # ============== structure ===================================================
 branches         cmt doc src python options 
-
-# ============== environment =================================================
-set              BENDEREXAMPLEPYTHON  $(BENDEREXAMPLEROOT)/python
-set              BENDEREXAMPLEOPTS    $(BENDEREXAMPLEROOT)/options
-set              BENDEREXAMPLEJOBS    $(BENDEREXAMPLEROOT)/jobs 
 
 # ============== dependencies ================================================
 use              Bender       v* Phys 

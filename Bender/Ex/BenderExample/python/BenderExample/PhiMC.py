@@ -24,12 +24,11 @@
 The simple Bender-based example plot dikaon mass peak with MC-truth
 """
 # =============================================================================
-__author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
+__author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ "
 # =============================================================================
 ## import everything form bender
 from Bender.MainMC import *
-
-
 
 # =============================================================================
 ## Simple class for access MC-truth 
@@ -46,7 +45,7 @@ class PhiMC(AlgoMC) :
         """ 
         return AlgoMC.__init__ ( self , name )
 
-    ## standard mehtod for analyses
+    ## standard method for analyses
     def analyse( self ) :
         """
         Standard method for analyses
@@ -75,12 +74,12 @@ class PhiMC(AlgoMC) :
             if 1.1 < m12  : continue
             mass = M(phi)/1000
             if 0   > mass : continue 
-            self.plot ( mass , "K+K- mass            " , 1. , 1.1 ) 
+            self.plot ( mass , 'K+ K- mass'           , 1. , 1.1 ) 
             chi2 = VCHI2( phi )
             if 0 > chi2 or 49 < chi2 : continue
-            self.plot ( mass , "K+K- mass 0<chi2<49  " , 1. , 1.1 )  
+            self.plot ( mass , 'K+ K- mass,0<chi2<49' , 1. , 1.1 )  
             if not mc ( phi ) : continue 
-            self.plot ( mass , "K+K- mass mctruth    " , 1. , 1.1 ) 
+            self.plot ( mass , 'K+ K- mass,mctruth'   , 1. , 1.1 ) 
            
         self.setFilterPassed( True ) 
         return SUCCESS
@@ -96,17 +95,18 @@ def configure ( **args ) :
     importOptions('$DAVINCIROOT/options/DaVinciCommon.opts')
     importOptions('$COMMONPARTICLESROOT/options/StandardKaons.opts')
     
+    from Configurables import HistogramPersistencySvc
+    HistogramPersistencySvc ( OutputFile = 'PhiMC_Histos.root' ) 
+
+
     gaudi = appMgr() 
     
-    ## get the input data
-    import data_Bs2Jpsiphi_mm as input 
-
     ## create local algorithm:
     alg = PhiMC()
     
-    ## if runs locally at CERN lxplus 
-    gaudi.setAlgorithms( [alg] ) ## gaudi.addAlgorithm ( alg ) 
-   
+    ## gaudi.addAlgorithm ( alg ) 
+    gaudi.setAlgorithms( [alg] )
+    
     alg.PP2MCs = [ 'Relations/Rec/ProtoP/Charged' ]
     ## print histos 
     alg.HistoPrint = True
@@ -117,12 +117,11 @@ def configure ( **args ) :
     desktop.PropertiesPrint = True
         
     ## get input data 
+    import LoKiExample.Bs2Jpsiphi_mm_data as input 
     evtSel = gaudi.evtSel()    
-    evtSel.open ( input.FILEs ) 
-    evtSel.PrintFreq = 100
+    evtSel.open ( input.Files ) 
+    evtSel.PrintFreq = 20
 
-    print ' INPUT FILES ARE "%s" ' % input.FILEs
-    
     return SUCCESS 
     
 # =============================================================================
@@ -136,7 +135,7 @@ if __name__ == '__main__' :
     configure()
 
     ## run the job
-    run(100)
+    run(2000)
     
 
 # =============================================================================

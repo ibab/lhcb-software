@@ -18,15 +18,16 @@
 #  "No Vanya's lines are allowed in LHCb/Gaudi software."
 #
 #  @date 2006-10-12
-#  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+#  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 # =============================================================================
 """
-The most trivial Bender-based : HelloWorld example
+The most trivial Bender-based  'Hello,World' example
 """
 # =============================================================================
-__author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
+__author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ "
 # =============================================================================
-## import everything from bender 
+## import everything from Bender 
 from Bender.Main import * 
 # =============================================================================
 ## the most primitive algorithm 
@@ -35,8 +36,13 @@ class HelloWorld(Algo) :
     The most primitive Bender-based algorithm
     """
     def analyse( self ) :
+
+        ## use thenative Pthon printout 
         print 'PYTHON: Hello world!'
+
+        ## use the standard Gaudi streams 
         self.Print('Hello, World!')
+        
         self.setFilterPassed( True ) 
         return SUCCESS                                     # RETURN 
     
@@ -50,33 +56,33 @@ def configure ( **args ) :
     ## read external configruation files
     importOptions('$DAVINCIROOT/options/DaVinciCommon.opts') 
 
-    ## get or create Algorithm manager
+    ## get or create the Application Manager
     gaudi = appMgr()
     
     ## create local algorithm:
-    hello = HelloWorld('Hello')
+    hello = HelloWorld ('Hello')
 
-    ## set it as main algorithm toebexecuted 
+    ## set it as main algorithm to be executed 
     gaudi.setAlgorithms ( hello )
     
     ## get input data 
-    import data_Bs2Jpsiphi_mm as input 
+    import LoKiExample.Bs2Jpsiphi_mm_data as input 
     evtSel = gaudi.evtSel()    
-    evtSel.open ( input.FILEs ) 
+    evtSel.open ( input.Files ) 
     evtSel.PrintFreq = 1    
-
-    return SUCCESS                                          # RETURN 
     
+    return SUCCESS                                          # RETURN 
+
 # =============================================================================
 ## job steering 
 if __name__ == '__main__' :
-
+    
     ## print own documentation string
     print __doc__
     
     ## configure the job:
-    configure()
-
+    configure ()
+    
     ## run the job
     run(50)
     

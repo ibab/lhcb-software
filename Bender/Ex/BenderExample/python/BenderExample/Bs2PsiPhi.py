@@ -24,9 +24,10 @@
 The simple Bender-based example for Bs-> Jpsi phi selection
 """
 # =============================================================================
-__author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
+__author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ "
 # =============================================================================
-## import everything form bender 
+## import everything from bender 
 from Bender.All                import *
 from GaudiKernel.SystemOfUnits import GeV
 # =============================================================================
@@ -201,16 +202,16 @@ class Bs2PsiPhi(AlgoMC) :
 def configure ( **args ) :
     """ Configure the job """
     
-    ## get the input data
-    import data_Bs2Jpsiphi_mm as input 
-    
     ## read external configuration files
     importOptions('$DAVINCIROOT/options/DaVinciCommon.opts')
     importOptions('$COMMONPARTICLESROOT/options/StandardKaons.opts')
     importOptions('$COMMONPARTICLESROOT/options/StandardMuons.opts')
-    from Configurables import NTupleSvc
-    NTupleSvc( Output = [ "PsiPhi DATAFILE='Bs2PsiPhi.root' TYPE='ROOT' OPT='NEW'"] ) 
-
+    
+    from Configurables import NTupleSvc, HistogramPersistencySvc
+    HistogramPersistencySvc ( OutputFile = 'Bs2PsiPhi_Histos.root' ) 
+    NTupleSvc ( Output = [ "PsiPhi DATAFILE='Bs2PsiPhi_Tuples.root' TYPE='ROOT' OPT='NEW'"] )
+    
+    
 
     ## get the actual application manager (create if needed)
     gaudi = appMgr()
@@ -240,8 +241,9 @@ def configure ( **args ) :
         ]
     
     ## get input data 
+    import LoKiExample.Bs2Jpsiphi_mm_data as input
     evtSel = gaudi.evtSel()    
-    evtSel.open ( input.FILEs ) 
+    evtSel.open ( input.Files ) 
     evtSel.PrintFreq = 100
     
     return SUCCESS 
@@ -257,7 +259,7 @@ if __name__ == '__main__' :
     configure()
 
     ## run the job
-    run(500)
+    run(1000)
 
 
 # =============================================================================

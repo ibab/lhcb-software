@@ -24,7 +24,8 @@
 The simple Bender-based example plot dikaon mass peak
 """
 # =============================================================================
-__author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
+__author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ "
 # =============================================================================
 ## import everything form bender 
 from Bender.Main import * 
@@ -61,9 +62,9 @@ class Phi(Algo) :
             if 0 > m12 or 1.1 < m12  : continue
             chi2 = VCHI2( phi )
             if 0 > chi2              : continue 
-            self.plot( M(phi)/1000 , "K+K- mass " , 1. , 1.1 ) 
+            self.plot( M(phi)/1000 , 'K+ K- mass' , 1. , 1.1 ) 
             if 0 > chi2 or 49 < chi2 : continue
-            self.plot( M(phi)/1000 , "K+K- mass chi2<49  " , 1. , 1.1 ) 
+            self.plot( M(phi)/1000 , 'K+ K- mass, chi2_vx<49' , 1. , 1.1 ) 
             
         self.setFilterPassed( True )
 
@@ -75,13 +76,13 @@ def configure () :
     """
     Configure the job
     """
-
+    
     importOptions ('$DAVINCIROOT/options/DaVinciCommon.opts')
-    importOptions ('$COMMONPARTICLESROOT/options/StandardKaons.opts') 
-        
-    ## get the input data
-    import data_Bs2Jpsiphi_mm as input 
-
+    
+    from Configurables import HistogramPersistencySvc
+    HistogramPersistencySvc ( OutputFile = 'Phi_Histos.root' ) 
+    
+    
     ## get the actual application manager (create if needed)
     gaudi = appMgr() 
     
@@ -91,16 +92,17 @@ def configure () :
     ## print histos 
     alg.HistoPrint = True
 
-    ## if runs locally at CERN lxplus 
-    gaudi.setAlgorithms( [alg] ) ## gaudi.addAlgorithm ( alg ) 
-    
+    ## gaudi.addAlgorithm ( alg ) 
+    gaudi.setAlgorithms( [alg] )
+     
     ## configure the desktop
     desktop = gaudi.tool ( 'Phi.PhysDesktop' )
     desktop.InputLocations = [ '/Event/Phys/StdTightKaons' ]    
     
     ## get input data 
+    import LoKiExample.Bs2Jpsiphi_mm_data as input 
     evtSel = gaudi.evtSel()    
-    evtSel.open ( input.FILEs ) 
+    evtSel.open ( input.Files ) 
     evtSel.PrintFreq = 100
     
     return SUCCESS 
@@ -116,7 +118,7 @@ if __name__ == '__main__' :
     configure()
     
     ## run the job
-    run(500)
+    run(2000)
 
     
 # =============================================================================

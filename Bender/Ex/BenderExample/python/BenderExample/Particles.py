@@ -24,7 +24,10 @@
 The simple Bender-based example: count the particles
 """
 # =============================================================================
-__author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
+__author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $   "
+# =============================================================================
+
 # =============================================================================
 ## import everything form bender 
 from Bender.Main import * 
@@ -81,37 +84,33 @@ def configure ( **args ) :
     Configure the job
     """
     
-    ## get the input data
-    import data_Bs2Jpsiphi_mm as input 
-
     ## read external configruation files
     importOptions('$DAVINCIROOT/options/DaVinciCommon.opts')
     importOptions('$COMMONPARTICLESROOT/options/StandardKaons.opts')
     importOptions('$COMMONPARTICLESROOT/options/StandardPions.opts')
     importOptions('$COMMONPARTICLESROOT/options/StandardMuons.opts')
 
-    ## get (createed if needed) the actual application manager
+    ## get (create if needed) the actual application manager
     gaudi = appMgr()
     
     ## create local algorithm:
     alg = Particles()
     
-    ## print histos 
-    alg.HistoPrint = True
-
-    ## if runs locally at CERN lxplus 
-    gaudi.setAlgorithms( [alg] ) ## gaudi.addAlgorithm ( alg ) 
+    ##gaudi.addAlgorithm ( alg ) 
+    gaudi.setAlgorithms( [alg] ) 
     
     ## configure the desktop
     desktop = gaudi.tool ( 'Particles.PhysDesktop' )
     desktop.InputLocations = [
+        '/Event/Phys/StdTightPions' ,
         '/Event/Phys/StdTightKaons' ,
         '/Event/Phys/StdTightMuons' ]
     
+    ## get input data
+    import LoKiExample.Bs2Jpsiphi_mm_data as input 
     
-    ## get input data 
     evtSel = gaudi.evtSel()    
-    evtSel.open ( input.FILEs ) 
+    evtSel.open ( input.Files ) 
     evtSel.PrintFreq = 1
     
     return SUCCESS                                # RETURN 
