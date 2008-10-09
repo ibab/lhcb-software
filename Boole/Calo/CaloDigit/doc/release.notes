@@ -4,6 +4,7 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
+!======================== CaloDigit v2r9 2008-10-09 ==========================
 ! 2008-09-10 - Marco Cattaneo
  - One more protection against FPE
 
