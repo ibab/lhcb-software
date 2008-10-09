@@ -1,11 +1,13 @@
-! $Id: release.notes,v 1.41 2008-10-09 10:26:11 ibelyaev Exp $ 
+! $Id: release.notes,v 1.42 2008-10-09 14:35:40 jpalac Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.41 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.42 $
 ! -----------------------------------------------------------------------------
 ! Package     :  LoKiExamples
 ! Responsible :  Vanya BELYAEV  ibelyaev@physics.syr.edu
 ! Purpose     :  Collection of examples for LoKi package 
 ! -----------------------------------------------------------------------------
+
+!========================== Ex/LoKiExample v8r0 2008-10-09 ===================
 
 ! 2008-10-09 - Vanya BELYAEV
 
@@ -14,9 +16,6 @@
    LoKi_MCDecay.cpp
 
       fix compilation errors fro Win32 platform 
-
-
-!========================== Ex/LoKiExample v8r0 2008-10-04 ===================
 
 ! 2008-10-04 - Vanya BELYAEV
 
