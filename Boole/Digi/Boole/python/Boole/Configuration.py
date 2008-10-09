@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.17 2008-10-09 06:47:34 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.18 2008-10-09 13:38:26 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -93,7 +93,10 @@ class Boole(LHCbConfigurableUser):
         """
         print "# WARNING: Spillover is disabled"
         initDataSeq = GaudiSequencer( "InitDataSeq" )
-        initDataSeq.Members.remove( "MergeEventAlg/SpilloverAlg" )    
+        initDataSeq.Members.remove( "MergeEventAlg/SpilloverAlg" )
+        from Configurables import ( MuonBackground, MuonDigitization )
+        MuonBackground("MuonLowEnergy").OutputLevel = ERROR
+        MuonDigitization().OutputLevel = ERROR
 
     def defineMonitors(self):
         # get all defined monitors
