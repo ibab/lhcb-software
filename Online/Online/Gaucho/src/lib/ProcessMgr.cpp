@@ -11,6 +11,7 @@
 ProcessMgr::ProcessMgr(std::string serviceOwner, IMessageSvc* msgSvc, Interactor *service, const int &refreshTime): m_serviceOwner(serviceOwner), m_name("ProcessMgr"), m_msgSvc(msgSvc), m_service(service), m_refreshTime(refreshTime)
 {
   m_monitoringFarm = false;
+  m_nbCounterInMonRate = 30;
   m_fileName = "Waiting for command to save histograms............."; 
 }
 
@@ -29,6 +30,8 @@ void ProcessMgr::updateMap(){
 void ProcessMgr::createInfoServers() {
   MsgStream msg(msgSvc(), name());
   m_serviceMap = new BaseServiceMap(this);
+  m_serviceMap->setNbCounterInMonRate(m_nbCounterInMonRate);
+  
   msg << MSG::DEBUG << "Creating Server Status"<< endreq;
   m_dimInfoServers = new DimInfoServers(this);
 }

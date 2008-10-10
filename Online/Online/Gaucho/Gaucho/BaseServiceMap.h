@@ -52,7 +52,8 @@ public:
   void updateNumberOfMonRates();
   
   void setServiceSet(const std::set<std::string>& serviceSet){m_serviceSet = serviceSet;}
-  
+  void setNbCounterInMonRate(int nbCounterInMonRate){m_nbCounterInMonRate =
+  nbCounterInMonRate;}
   int dimInfoMonRateSize(){return m_dimInfoMR.size();}
   
 private:

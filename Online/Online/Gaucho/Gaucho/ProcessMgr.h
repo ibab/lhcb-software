@@ -74,6 +74,8 @@ public:
   
   void setMonitorSvc(IGauchoMonitorSvc* pGauchoMonitorSvc){m_pGauchoMonitorSvc = pGauchoMonitorSvc;}
   //void setFileStaus(std::string& file) {m_pFile = &file;}
+  void setNbCounterInMonRate(int nbCounterInMonRate){m_nbCounterInMonRate =
+  nbCounterInMonRate;}
   //void fileName() {}
   std::string* fileNamePointer(){return &m_fileName;}
   //bool isAdder () {if (s_Adder == m_serviceOwner) return true;else return false;}
@@ -106,6 +108,7 @@ protected:
   std::vector<std::string> m_objectName;
   std::string m_saveDir;
   int m_saveDiff;
+  int m_nbCounterInMonRate;
   
   DimInfoServers*  m_dimInfoServers;
   DimInfoServices* m_dimInfoServices;
