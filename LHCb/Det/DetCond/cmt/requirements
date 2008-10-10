@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.91 2008-09-29 10:28:47 marcocle Exp $
+# $Id: requirements,v 1.92 2008-10-10 08:24:27 marcocle Exp $
 # =============================================================================
 package       DetCond
 version       v12r3
@@ -24,7 +24,7 @@ apply_pattern	install_more_includes more=DetCond
 #==============================================================================
 # Needed to resolve external symbols
 apply_tag   NEEDS_COOL_FACTORY
-apply_tag   NEEDS_CORAL_BASE
+apply_tag   NEEDS_CORAL_RELATIONAL_ACCESS
 
 # =============== LCG Dictionary ==============================================
 apply_pattern     reflex_dictionary                                     \

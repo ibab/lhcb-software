@@ -1,9 +1,15 @@
-# $Id: release.notes,v 1.150 2008-09-30 12:27:30 cattanem Exp $
+# $Id: release.notes,v 1.151 2008-10-10 08:24:27 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+                           NEEDS: LCGCMT > 55a
+                           
+! 2008-10-10 - Marco Clemencic
+ - Modified the requirements file following the changes in the CORAL interface
+   package (see bug #41579).
 
 !===================== Det/DetCond v12r3 2008-09-30 ==========================
 ! 2008-09-29 - Marco Clemencic
