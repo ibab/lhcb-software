@@ -134,7 +134,6 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   if(m_CombinationTechnique == "NNet") {
 
     double IP, IPerr, ip, iperr, IPT=0.;
-    double B0p  = ptotB.P()/GeV;
     double B0the= ptotB.Theta();
     double B0phi= ptotB.Phi();
     double ang = asin((ipionS->pt()/GeV)/(ipionS->p()/GeV));

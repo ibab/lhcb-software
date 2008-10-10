@@ -56,7 +56,7 @@ StatusCode TaggerVertexChargeTool::initialize() {
 }
 
 //=====================================================================
-Tagger TaggerVertexChargeTool::tag( const Particle* AXB0, 
+Tagger TaggerVertexChargeTool::tag( const Particle* /*AXB0*/, 
                                     const RecVertex* RecVert,
                                     Vertex::ConstVector& allVtx, 
                                     Particle::ConstVector& vtags ) {
