@@ -3,8 +3,8 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v16r3>2008-10-09 Boole v16r3</A></H1><PRE>
- - Add options/FST09.opts, default options for full scale test production
+</PRE><H1><A NAME=v16r3>2008-10-10 Boole v16r3</A></H1><PRE>
+ - Add options/Boole/FST09.py, default options for full scale test production
  - Remove DigiContent.opts, moved into Configurable
  - Clean up DDDB intialisation in Configurable, needs GaudiConf v10r13
  - Update 2008-Files.py to use sim file produced with Gauss v35r1
