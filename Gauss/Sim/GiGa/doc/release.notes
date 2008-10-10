@@ -1,10 +1,15 @@
-! $Id: release.notes,v 1.122 2008-06-09 17:26:58 gcorti Exp $
+! $Id: release.notes,v 1.123 2008-10-10 09:15:33 gcorti Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Sim/GiGa
 ! Responsible : Gloria CORTI, Vanya BELYAEV
 ! Purpose     : Holds interfaces and base classes plus generic implementation
 !               for G4 <-> Gaudi applications 
 !-----------------------------------------------------------------------------
+
+! 2008-10-10 - Gloria CORTI for Marco PAPPAGALLO
+ - Comment out lines for G4 UI session in initializeKernel() method, that 
+   prevented loading of colors and visualization attributes
+   . GiGaRunManager.cpp
 
 !======================= GiGa v19r2 2008-06-09 ===============================
 ! 2008-05-30 - Gloria CORTI

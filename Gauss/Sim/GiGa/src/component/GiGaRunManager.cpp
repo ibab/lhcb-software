@@ -1,4 +1,4 @@
-// $Id: GiGaRunManager.cpp,v 1.17 2007-03-18 18:25:05 gcorti Exp $ 
+// $Id: GiGaRunManager.cpp,v 1.18 2008-10-10 09:15:33 gcorti Exp $ 
 // Include files
 
 // STD & STL 
@@ -226,7 +226,7 @@ StatusCode GiGaRunManager::processTheEvent()
       ///
       set_uis_Is_Started( true  ) ; 
       m_g4UIsession->SessionStart() ; 
-      set_uis_Is_Started( false ) ; 
+      set_uis_Is_Started( false ) ;
     } 
   ///
   return Print("Geant4 Event is processed successfully" , 
@@ -396,13 +396,13 @@ StatusCode GiGaRunManager::initializeKernel()
   ///
   set_krn_Is_Initialized( true );
   ///
-  if( 0 != m_g4UIsession  && !uis_Is_Started()      )
-    { 
-      ///
-      set_uis_Is_Started( true  ) ; 
-      m_g4UIsession->SessionStart() ; 
-      set_uis_Is_Started( false ) ; 
-    } 
+  //mpa if( 0 != m_g4UIsession  && !uis_Is_Started()      )
+  //mpa  { 
+  //mpa    ///
+  //mpa    set_uis_Is_Started( true  ) ; 
+  //mpa    m_g4UIsession->SessionStart() ; 
+  //mpa    set_uis_Is_Started( false ) ; 
+  //mpa  } 
   ///
   return Print("Geant4 Kernel is initialized  successfully" , 
                StatusCode::SUCCESS                          , MSG::VERBOSE );
