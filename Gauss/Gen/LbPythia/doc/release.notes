@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================= LbPythia v8r1 2008-10-10 ==========================
 ! 2008-10-08 - Gloria CORTI
  - Introduce dummy Pythia.opts to be included by the production when selecting
    Pythia as generators so that the structure is always the same.
