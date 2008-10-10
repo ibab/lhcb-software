@@ -4,6 +4,15 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!======================== Gauss v35r1 2008-10-10 =============================
+! 2008-10-10 - Gloria CORTI
+ - Adapt visualization options to run not as steering but as modifier in 
+   gaudirun.py. Also make comments clearer for switching between G4 UI control
+   and pure visualization with pre-defined viewer (in options dawn)
+   . GaussVis.opts
+ - Remove release_notes.html that where how release notes were done up to
+   Gauss v19r0
+
 ! 2008-10-08 - Gloria CORTI
  - Remove include of Pythia64.opts options no longer necessary since the
    default in PythiaProduction
@@ -15,7 +24,9 @@
  - Add options for beam energy with other Production tools
    . BeamCond-5TeV.opts
    . PilotRun.opts
- - Add GenMonitor in Generator sequence
+ - Do not add algorithms to generator sequence (setting properties by keeping
+   the name for the algorithm works). This reactivate the monitoring histogram
+   for the generator
    . Gauss-Job.opts
  - Do not print vertex multiplicity in monitoring by default to reduce 
    printout in production
