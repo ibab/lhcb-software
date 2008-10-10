@@ -302,8 +302,8 @@ StatusCode SaverSvc::save(ProcessMgr* processMgr) {
   MsgStream  msg( msgSvc(), name() );
     
     msg << MSG::DEBUG << "save_histos command received." << endreq;
-    if (processMgr->isAdder()) {
-      msg << MSG::INFO << "Sorry Adders can't save." << endreq;
+    if (processMgr->serviceOwner().compare(s_Saver) != 0 ) {
+      msg << MSG::INFO << "Sorry Only Savers can save." << endreq;
       return StatusCode::SUCCESS;
     }
     std::string *fileName = processMgr->fileNamePointer();
@@ -318,8 +318,6 @@ StatusCode SaverSvc::save(ProcessMgr* processMgr) {
         //processMgr->serviceMap()->write(m_saveDir, m_file[i]);
       }
     }*/
-    
-    
     
     msg << MSG::INFO << "Finished saving histograms in file "<< *fileName << endreq;
   
