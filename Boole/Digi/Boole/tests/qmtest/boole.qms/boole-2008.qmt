@@ -3,6 +3,5 @@
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="args"><set><text>../options/testBoole-2008.py</text></set></argument>
   <argument name="reference"><text>../refs/testBoole-2008.ref</text></argument>
-  <argument name="error_reference"><text>../refs/OldHepMC.ref</text></argument>
   <argument name="unsupported_platforms"><set><text>slc4_ia32_gcc34_dbg</text></set></argument>
 </extension>
