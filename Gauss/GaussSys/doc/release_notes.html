@@ -3,6 +3,152 @@ Package : GaussSys
 Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
+
+</PRE><H1><A NAME="v35r1">2008-10-10 - GaussSys v35r1</A></H1><PRE>
+<H2><A NAME="Note">FST DEVELOPEMENT version. Support SIMCOND tag head-2008 
+   </A></H2>
+<H3><A NAME="Use">This version uses:
+   <b>LHCb v25r2 (and Gaudi v20r2)</b>
+   <b>pythia6 418.2</b>, photos 215.2, lhapdf 5.3.1 
+   (via LCG_GeneratorsInterfaces)
+   <b>HepMC 2.03.09 (via LCG_Interfaces)</b>
+   Geant4 v91r2p3 (based on geant4.9.1.p02) and Geant4Files v91r0
+   <b>DecFiles v15r* (latest to date v15r2, DC06 incompatible)</b>, 
+   ParamFiles v7r3, 
+   DDDB v1r* (latest to date v1r12), FieldMap v5r* (latest v5r1), 
+   XmlVis v1r* (latest v1r7),
+   herwig 6.510.2, jimmy 4.31.2 (via LCG_GeneratorsInterfaces),
+   hijing 1.383bs.2 (via LCG_GeneratorsInterfaces),
+   pythia8 107.1,
+   bcvegpy (LHCb build)
+</A></H3>
+
+!======================== Gauss v35r1 2008-10-10 =============================
+! 2008-10-10 - Gloria CORTI
+ - Adapt visualization options to run not as steering but as modifier in
+   gaudirun.py. Also make comments clearer for switching between G4 UI control
+   and pure visualization with pre-defined viewer (in options dawn)
+   . GaussVis.opts
+ - Remove release_notes.html that where how release notes were done up to
+   Gauss v19r0
+
+! 2008-10-08 - Gloria CORTI
+ - Remove include of Pythia64.opts options no longer necessary since the
+   default in PythiaProduction
+   . Generator.opts
+ - Remove options no longer working: will need to be replaced with other
+   doing the same things
+   . lhcb-2008-GenPhase.opts
+   . lhcb-2008-SimPhase.opts
+ - Add options for beam energy with other Production tools
+   . BeamCond-5TeV.opts
+   . PilotRun.opts
+ - Do not add algorithms to generator sequence (setting properties by keeping
+   the name for the algorithm works). This reactivate the monitoring histogram
+   for the generator
+   . Gauss-Job.opts
+ - Do not print vertex multiplicity in monitoring by default to reduce
+   printout in production
+   . Monitor.opts
+ - New python options for stearing a default Gauss job with 2008 geometry
+   setup, for 450GeV
+   . Beam450GeV-VeloOpen-BfieldNeg.py
+ - Read particle table from DDDB rather than from text file
+   . Gauss-2008.py
+   . python/Gauss/Configuration.py
+ - Put initial value in list with "=" rather than "+=" as to be able to just
+   pass the options as argument and override the default one.
+   One can now do:
+    > gaudirun.py $GAUSSOPTS/Gauss-2008.py $GAUSSOPTS/PhysList-QGSP.opts ...
+   to switch to QGSP hadronic phyics
+   . PhysList-{LHEP,QGSP}.opts
+ - New options for turning delta rays on (lower production cuts) and for
+   delta rays on and low kinetic energy cuts (lower tracking cuts)
+   . DRaysOn-{LT,HT}.opts
+
+! 2008-10-08 - Gloria CORTI for Marco PAPPAGALLO
+ - Add Visualization service to activate colors in Gauss G4-internal
+   visualization
+   . GaussVis.opts
+
+! 2008-09-16 - Gloria CORTI
+ - Remove lhcb-2008*.{py,opts} that are obsolete and no longer working.
+   Use Gauss-2008.py instead.
+   . REMOVED: lhcb-2008.opts      lhcb-2008.py      lhcb-2008-BOff.opts
+              lhcb-2008-5TeV.opts lhcb-2008-5TeV.py lhcb-2008-5TeV-BOff.py
+              lhcb-2008-5TeV-BOff.opts lhcb-2008-450GeV-OpenVelo-BOff.opts
+              lhcb-2008-450GeV-BOff.py lhcb-2008-450GeV-BOff.opts
+
+!========================= GaussKine v3r1 2008-10-10 ========================= 
+! 2008-10-08 - Gloria CORTI
+ - Move printout to debug level
+   . G4HepMCToMCTruth.cpp
+
+! 2008-09-23 - Patrick Robbe
+ - GeneratorToG4.cpp: fix optical photon polarization part
+
+!===================== GaussMonitor v6r0p1 2008-10-10 ========================
+! 2008-10-08 - Gloria CORTI
+ - Change printout level to debug during event processing
+   . GenMonitorAlg.cpp
+
+!======================= GaussTools v15r0p1 2008-10-10 =======================
+! 2008-10-08 - Gloria CORTI
+ - Add printout in initialization of physics contructor registered for the
+   job
+   . GiGaPhysListModular.cpp
+
+!======================= GiGa v19r3 2008-10-10 ===============================
+! 2008-10-10 - Gloria CORTI for Marco PAPPAGALLO
+ - Comment out lines for G4 UI session in initializeKernel() method, that
+   prevented loading of colors and visualization attributes
+   . GiGaRunManager.cpp
+
+!======================= ParticleGuns v6r1 2008-10-10 =======================
+! 2008-10-09 - Gloria CORTI for Silvia BORGHI
+ - Fix bug #42653. Variable assoicated to yVertexMin and zVertexMin was
+   xmin instead of ymin and zmin.
+   . FlatSmearVertex.cpp
+
+!========================= LbPythia v8r1 2008-10-10 ==========================
+! 2008-10-08 - Gloria CORTI
+ - Introduce dummy Pythia.opts to be included by the production when selecting
+   Pythia as generators so that the structure is always the same.
+
+! 2008-09-23 - Patrick Robbe
+ - PythiaProduction.cpp: set new charmonium models as default
+   and switch on weighting of events.
+
+! 2008-09-20 - Patrick Robbe
+ - Pythia64.opts: set new charmonium models as default
+
+!====================== Generators v9r1 2008-10-10 ===========================
+! 2008-09-20 - Patrick Robbe
+ - ExternalGenerator.cpp: create ParticlePropertySvc if not existing (needed
+   if DecayTool is not used)
+ - Signal.cpp: protect in case of empty decay tool
+
+!========================== EvtGen v10r0 2008-10-10 ==========================
+! 2008-09-20 - Patrick Robbe
+ - EvtGen/EvtGen.hh, src/EvtGen.cpp: remove CLHEP dependancy (remove 2
+   obsolete functions)
+ - src/EvtConst.cpp: update pi value to be equal to the GAUDI one
+ - src/EvtPythiaPart.F: remove "external pydata" since it is done in GENSER
+   package
+ - src/EvtVub.cpp, EvtVubdGamma.cpp: start to remove CLHEP dependancy (usage
+   of CLHEP physical constants replaced by EvtConst::pi)
+ - src/Pythia.F: update for Pythia6.4
+
+!========================== GENSER v4r3 2008-10-10 ===========================
+! 2008-09-23 - Patrick Robbe
+ - pyevwt.F: reweight events only if quarkonium
+ - pyrand.F: call pyevwt even if minimum bias processes activated
+
+! 2008-09-20 - Patrick Robbe
+ - Add temporary fixes in pyevnw.F and pyptfs.F which will be
+   incorporated in pythia 6.4.19
+
+!=============================================================================
 </PRE><H1><A NAME="v35r0">2008-09-09 - GaussSys v35r0</A></H1><PRE>
 <H2><A NAME="Note">DEVELOPEMENT version. Support SIMCOND tag head-20080727 
    </A></H2>
