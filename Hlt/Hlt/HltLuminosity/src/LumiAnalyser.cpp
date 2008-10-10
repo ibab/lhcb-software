@@ -1,4 +1,4 @@
-// $Id: LumiAnalyser.cpp,v 1.1 2008-10-01 15:04:12 panmanj Exp $
+// $Id: LumiAnalyser.cpp,v 1.2 2008-10-10 15:21:25 panmanj Exp $
 // Include files 
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -29,6 +29,8 @@
 #include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/SmartDataPtr.h"
 
+#include "boost/foreach.hpp"
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : LumiAnalyser
 //
@@ -47,11 +49,14 @@ LumiAnalyser::LumiAnalyser( const std::string& name,
   declareProperty("InputVariables",         m_Variables );
   declareProperty("Thresholds",             m_Thresholds );
   declareProperty("Threshold",              m_Threshold = 5 );
+  declareProperty("MaxBin",                 m_MaxBin = 500 );
+  declareProperty("RawHistos",              m_rawHistos = true );
   declareProperty("TrendSize"             , m_trendSize = 100 );
   declareProperty("TrendInterval"         , m_trendInterval = 100 );
   declareProperty("BXTypes"               , m_BXTypes ) ;
   declareProperty("AddBXTypes"            , m_addBXTypes ) ;
   declareProperty("SubtractBXTypes"       , m_subtractBXTypes ) ;
+  declareProperty("PublishToDIM"          , m_publishToDIM = true ) ;
 }
 
 LumiAnalyser::~LumiAnalyser()
@@ -100,7 +105,7 @@ StatusCode LumiAnalyser::initialize() {
   // set the default threshold
   if (m_Thresholds.empty()) {
     for(std::vector< std::string >::iterator ivar = m_Variables.begin() ; 
-	ivar!= m_Variables.end() ; ++ivar ){  
+        ivar!= m_Variables.end() ; ++ivar ){  
       m_Thresholds.push_back(m_Threshold);
     }
   }
@@ -117,6 +122,24 @@ StatusCode LumiAnalyser::initialize() {
 
   debug()<< "going to set up"<<endmsg;
   setupStore();
+
+  // to publish to DIM 
+  m_size = m_Variables.size();
+  m_means = new double[m_size];            // create a fixed location for DIM to look at
+  m_thresholds = new double[m_size];       // create a fixed location for DIM to look at
+  m_infoKeys = new unsigned int[m_size];   // corresponding key in the info 
+  int k = 0;
+  for(std::vector< std::string >::iterator ivar = m_Variables.begin() ; 
+      ivar!= m_Variables.end() ; ++ivar, ++k ){  
+    std::string name  = *ivar;
+    // announce the values
+    if (m_publishToDIM ) {
+      declareInfo("COUNTER_TO_RATE["+name+"_mean]", m_means[k], "mean of "+name);
+      declareInfo("COUNTER_TO_RATE["+name+"_threshold]", m_thresholds[k], "fraction over threshold of "+name);
+      info() << "counter " << name << " declared at " << k << endmsg;
+    }
+  }
+
   
   debug() << "Initialised Lumi Analyser" << endmsg ;
   return sc;
@@ -160,6 +183,31 @@ StatusCode LumiAnalyser::finalize() {
   debug() << "LumiAnalyser::finalize()" << endmsg;
   infoTotalEvents(m_counterEntries);
   infoSubsetEvents(m_counterEntries,m_counterHistoInputs, " events to Histos ");
+
+  // report avergaes of all counters
+  for (std::vector<std::string>::iterator iVar = m_Averages.begin(); iVar != m_Averages.end(); ++iVar) {
+    std::string var=*iVar;
+    info() << "R/N for " << var;
+    for (std::vector<std::string>::iterator iBx = m_BXTypes.begin(); iBx != m_BXTypes.end(); ++iBx) {
+      std::string bx=*iBx;
+      iiMap *theMap=m_theStore[bx];
+      iiPair *thePair = (*theMap)[var];
+      // take average
+      double norm = thePair->first;
+      double sums = thePair->second;
+      double R = 0;
+      if (norm) {R = sums/norm;}
+      info() << "  " << bx << ": " << R << "/" << thePair->first;
+    }
+    info() << endmsg;
+  }
+
+
+  // release storage
+  delete[] m_means;
+  delete[] m_thresholds;
+  delete[] m_infoKeys;
+
   return HltBaseAlg::finalize();
 }
 
@@ -167,22 +215,41 @@ StatusCode LumiAnalyser::finalize() {
 void LumiAnalyser::setupStore() {
   debug() << "LumiAnalyser::setupStore()0" << endmsg;
 
-  // set up store of pairs for averaging
+  // set up store of pairs for averaging and for raw R histos
   for (std::vector<std::string>::iterator iBx = m_BXTypes.begin(); iBx != m_BXTypes.end(); ++iBx) {
     std::string bx=*iBx;
     iiMap *theMap = new iiMap();
     iiMap *prevMap = new iiMap();
     m_theStore[bx] = theMap;
     m_prevStore[bx] = prevMap;
+    histoMap* hMap=new histoMap();     // create storage for the existing histograms 
+    m_histoStore[bx]=hMap;
     for (std::vector<std::string>::iterator iVar = m_Averages.begin(); iVar != m_Averages.end(); ++iVar) {
       std::string var=*iVar;
       iiPair *thePair = new iiPair();
       iiPair *prevPair = new iiPair();
       (*theMap)[var] = thePair;
       (*prevMap)[var] = prevPair;
+
+      // the raw histos for R
+      if ( m_rawHistos ) {
+        std::string prefix="RawR_";
+        // defaults for threshold histos
+        double x_min = 0;
+        double x_max = 1.;
+        unsigned int nbin = 100;
+        if ( var.find("_threshold") == std::string::npos ) {
+          // direct R
+          x_min = -0.5;
+          x_max = m_MaxBin-x_min;
+          nbin = m_MaxBin;
+        }
+        AIDA::IHistogram1D* theHisto = initializeHisto(prefix+var+'_'+bx, x_min, x_max, nbin);
+        (*hMap)[var]=theHisto;  // store in map
+      }
     }
   }
-  
+
   // the trend histos
   std::string prefix="Trend_";
   for (std::vector<std::string>::iterator iVar = m_Averages.begin(); iVar != m_Averages.end(); ++iVar) {
@@ -241,7 +308,7 @@ StatusCode LumiAnalyser::analyse() {
   debug() << "LumiAnalyser::analyse()" << endmsg;
 
 
-  // take delta from all histos
+  // take delta from all counters
   for (std::vector<std::string>::iterator iVar = m_Averages.begin(); iVar != m_Averages.end(); ++iVar) {
     std::string var=*iVar;
     double meanR = 0;  // for R calculation
@@ -263,9 +330,7 @@ StatusCode LumiAnalyser::analyse() {
       double norm = deltaPair.first;
       double sums = deltaPair.second;
       double R = 0;
-      if (norm) {
-        R = sums/norm;
-      }
+      if (norm) {R = sums/norm;}
       // add or subtract this crossing type
       for (std::vector<std::string>::iterator iABx = m_addBXTypes.begin(); iABx != m_addBXTypes.end(); ++iABx) {
         if ( (*iABx) == bx ) {
@@ -282,11 +347,24 @@ StatusCode LumiAnalyser::analyse() {
       // save the data in store for the next time
       prevPair->first = thePair->first;
       prevPair->second = thePair->second;
+      // fill the rawR histos
+      (*(m_histoStore[bx]))[var]->fill(R);
     }
     // R-calculation
-    info() << var << ": R from pairs: " << meanR << endmsg;
+    m_resultMap[var] = meanR;
+    
+    debug() << var << ": R from pairs: " << meanR << endmsg;
     // store trend
     storeTrend(var, meanR);
+  }
+
+  // update DIM locations
+  int k = 0;
+  for(std::vector< std::string >::iterator ivar = m_Variables.begin() ; 
+      ivar!= m_Variables.end() ; ++ivar, ++k ){  
+    m_means[k] = m_resultMap[*ivar];
+    m_thresholds[k] = m_resultMap[(*ivar)+"_threshold"];
+    debug() << "DIM data: " << m_means[k] << " and " << m_thresholds[k] << endmsg;
   }
   return StatusCode::SUCCESS;
   
@@ -334,7 +412,7 @@ void LumiAnalyser::storeTrend(std::string varname, double lumiValue)
   AIDA::IHistogram1D *theHist = m_trendMap[varname];
   const AIDA::IAxis& axis = theHist->axis();
   long bins = axis.bins();
-  info() << "trend " << varname << ": ";
+  debug() << "trend " << varname << ": ";
   for ( long i = 0; i < bins; ++i ) {
     double binValue = theHist->binHeight(i);
     double nextValue;
@@ -346,7 +424,7 @@ void LumiAnalyser::storeTrend(std::string varname, double lumiValue)
     }
     double x = 0.5*(axis.binUpperEdge(i)+axis.binLowerEdge(i));
     theHist->fill(x, nextValue - binValue);
-    info() << theHist->binHeight(i) << " ";
+    debug() << theHist->binHeight(i) << " ";
   }
-  info() << endmsg;
+  debug() << endmsg;
 }

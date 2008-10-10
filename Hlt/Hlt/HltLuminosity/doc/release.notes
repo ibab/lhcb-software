@@ -4,6 +4,9 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+! 2008-10-10 - Jaap Panman
+ -LumiAnalyser: update code to accumulate rates and some histos for monitoring
+
 !========================== HltLuminosity v2r2 2008-10-03 ===================
  2008-10-02 - Gerhard Raven
  - move some messages from INFO to DEBUG

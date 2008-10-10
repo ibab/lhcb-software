@@ -1,4 +1,4 @@
-// $Id: HltLumiSummaryDecoder.cpp,v 1.2 2008-08-26 14:03:14 panmanj Exp $
+// $Id: HltLumiSummaryDecoder.cpp,v 1.3 2008-10-10 15:21:25 panmanj Exp $
 // Include files
 #include <algorithm>
 
@@ -64,11 +64,11 @@ StatusCode HltLumiSummaryDecoder::execute() {
     m_HltLumiSummary = new LHCb::HltLumiSummary();
     // locate them in the TES
     put(m_HltLumiSummary, m_OutputContainerName); 
-    info() << m_OutputContainerName << " not found, made a new one" << endmsg ;
+    debug() << m_OutputContainerName << " not found, made a new one" << endmsg ;
   }
   else {
     // in this case should just do nothing!!!
-    info() << m_OutputContainerName << " found, do nothing" << endmsg ;
+    debug() << m_OutputContainerName << " found, do nothing" << endmsg ;
     return StatusCode::SUCCESS;
   }
   

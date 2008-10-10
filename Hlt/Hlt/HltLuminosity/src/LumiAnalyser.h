@@ -1,4 +1,4 @@
-// $Id: LumiAnalyser.h,v 1.1 2008-10-01 15:04:12 panmanj Exp $
+// $Id: LumiAnalyser.h,v 1.2 2008-10-10 15:21:25 panmanj Exp $
 #ifndef LUMIANALYSER_H 
 #define LUMIANALYSER_H 1
 
@@ -72,12 +72,14 @@ protected:
   // counter with all the events with fine inputs
   IANNSvc* m_annSvc;
   Hlt::Counter m_counterHistoInputs;
-  std::string m_DataName;                      // input location of summary data
-  LHCb::HltLumiSummary* m_HltLumiSummary;      // summary data
+  std::string m_DataName;                        // input location of summary data
+  LHCb::HltLumiSummary* m_HltLumiSummary;        // summary data
+  bool m_rawHistos;                              // flag to store raw histos of R
 
   std::vector< std::string > m_Variables;        // list of variables to look at
   std::vector< std::string > m_Averages;         // list of averages to look at
   std::vector<int> m_Thresholds;                 // thresholds to apply
+  int m_MaxBin;                                  // default maximum bin number
   int m_Threshold;                               // default threshold
   std::vector< std::string > m_BXTypes;          // list of bunch crossing types to look at
   std::vector< std::string > m_addBXTypes;       // list of bunch crossing types to be added
@@ -88,12 +90,22 @@ protected:
   typedef std::map< std::string, iiMap* > iiStore;   // map of maps
   iiStore m_theStore;                                // main store
   iiStore m_prevStore;                               // previous values store
-  iiMap m_resultMap;                                 // to keep results per variable
+  std::map< std::string, double > m_resultMap;       // to keep results per variable
 
   typedef std::map< std::string, AIDA::IHistogram1D* > histoMap;  // simple map of histos
+  typedef std::map< std::string, histoMap* > histoStore;          // map of maps
+  histoStore m_histoStore;                                        // main store for raw histos
   histoMap m_trendMap;                                            // trends
   long m_trendSize;                                               // size of trend histos
   long m_trendInterval;                                           // interval for trending
   unsigned long m_gpsPrevious;                                    // to keep previous time when analysed
+
+  bool m_publishToDIM;                               // to publish to DIM
+  std::vector<IANNSvc::minor_value_type> m_items;    
+  unsigned int m_size;
+  double *m_means;
+  double *m_thresholds;
+  unsigned int *m_infoKeys;
+
 };
 #endif // LUMIANALYSER_H
