@@ -15,13 +15,13 @@ branches src doc options cmt job python
 
 #-- Databases
 use DDDB               v1r*   Det            -no_auto_imports
-use ParamFiles         v7r1                  -no_auto_imports
-use FieldMap           v5r0                  -no_auto_imports
+use ParamFiles         v7r3                  -no_auto_imports
+use FieldMap           v5r*                  -no_auto_imports
 use DecFiles           v15r*  Gen            -no_auto_imports
 use Geant4Files	       v91r0	             -no_auto_imports
-use XmlVis             v1r*   Vis            -no_auto_imports
 use MIBData            v2r0                  -no_auto_imports
 use MCatNLOData        v1r1                  -no_auto_imports
+use XmlVis             v*     Vis            -no_auto_imports
 
 #===========================================================================
 
