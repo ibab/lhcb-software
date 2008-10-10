@@ -1,27 +1,31 @@
-// $Id: GaussVis.opts,v 1.14 2008-10-08 13:03:14 gcorti Exp $ 
+// $Id: GaussVis.opts,v 1.15 2008-10-10 08:32:48 gcorti Exp $ 
 
 /** @file 
  *  The base configuration file to run Gauss exceutable with 
- *  visualiation stuff
+ *  visualiation and G4 UI.
+ *  Modified to run as argument of gaudirun.py
+ *   > gaudirun.py $GAUSSOPTS/Gauss-2008.py ... $GAUSSOPTS/GaussVis.opts
  *
  *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
  *  @author G.Corti
  *  @date 2005-02-21
  *  @date 2008-04-29
+ *  @date 2008-10-10
  */
 
-#include "$GAUSSOPTS/lhcb-2008.opts"
+// To see any of the additional extended geometry uncomment one of the lines
+// below
 //#include "$GAUSSOPTS/BCMSimulation.opts"
 //#include "$GAUSSOPTS/BeamScintillators.opts"
 
-
-#include "$PARTICLEGUNSROOT/options/ParticleGun.opts"
+// Select event type by given the options as argument of gaudirun.py
 
 // Activate the visualization
 GiGa.VisManager = "GiGaVisManager/GiGaVis" ;
 
-// Activate the Geant4 user interactive control
-//GiGa.UIsession  = "GiGaUIsession/GiGaUI"   ;
+// Activate the Geant4 user interactive control (switch off to run in
+// "batch", i.e. to have G4 UI prompt)
+GiGa.UIsession  = "GiGaUIsession/GiGaUI"   ;
 
 // setting visualization attributes
 GiGa.GiGaMgr.RunTools += { "GiGaSetVisAttributes" };
@@ -34,43 +38,30 @@ Geo.StreamItems  -= {"/dd/Structure/LHCb/DownstreamRegion/Ecal"};
 Geo.StreamItems  -= {"/dd/Structure/LHCb/DownstreamRegion/Hcal"};
 Geo.StreamItems  -= {"/dd/Structure/LHCb/DownstreamRegion/Muon"};
 
+// To control level of drawing of track while traveling through detector
 //GiGa.StepSeq.Members  += { "GiGaStepActionDraw/DrawStep"} ;
 
-GiGa.EventSeq.Members += { "GiGaEventActionDraw/DrawEvent"} ;
-GiGa.EventSeq.Members += { "GiGaEventActionCommand/VisEvtCmd"} ;
-//GiGa.EventSeq.OutputLevel = 1 ;
-ApplicationMgr.EvtMax = 1;
+// Switch on when running in "batch", i.e. no G4 UI
+//GiGa.EventSeq.Members += { "GiGaEventActionDraw/DrawEvent"} ;
+//GiGa.EventSeq.Members += { "GiGaEventActionCommand/VisEvtCmd"} ;
 
 GiGa.EventSeq.VisEvtCmd.EndOfEventCommands = 
   { "/vis/scene/add/volume"               , 
     "/vis/scene/add/trajectories"         ,
     "/vis/viewer/update"                  };
-#ifdef WIN32
 GiGa.EventSeq.VisEvtCmd.BeginOfEventCommands = 
-  { "/vis/scene/create"                   , 
-    "/vis/sceneHandler/create OIWIN32"    ,
+  { "/vis/scene/create", 
+    "/vis/sceneHandler/create DAWNFILE"   ,
     "/vis/viewer/create"                  ,
+    "/vis/viewer/set/viewpointThetaPhi -90 -90",
     "/vis/scene/add/volume"               , 
     "/vis/scene/add/trajectories"         ,
     "/vis/scene/notifyHandlers   "        } ;
-#else 
-// GiGa.EventSeq.VisEvtCmd.BeginOfEventCommands = 
-//   { "/vis/scene/create"                   , 
-//     "/vis/sceneHandler/create DAWNFILE"   ,
-//     "/vis/viewer/create"                  ,
-//     "/vis/viewer/set/viewpointThetaPhi -90 -90",
-//     "/vis/scene/add/volume"               , 
-//     "/vis/scene/add/trajectories"         ,
-//     "/vis/scene/notifyHandlers   "        } ;
-// #endif 
+
 // To dump the geometry tree on an ASCII file, comments lines above for 
 // BeginOFEventCommands and uncomment those below
-GiGa.EventSeq.VisEvtCmd.BeginOfEventCommands =
-  { "/vis/ASCIITree/verbose 10"           ,
-    "/vis/drawTree"                       } ;
-#endif
+// GiGa.EventSeq.VisEvtCmd.BeginOfEventCommands =
+//   { "/vis/ASCIITree/verbose 10"           ,
+//     "/vis/drawTree"                       } ;
 
-// ============================================================================
-// The END 
-// ============================================================================
 
