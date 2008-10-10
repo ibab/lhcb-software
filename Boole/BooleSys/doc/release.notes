@@ -3,22 +3,61 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-! 2008-10-09 - Marco Cattaneo
- - Update CaloDigit, DigiAlg, Boole versions
- - Update QMTest reference
+</PRE><H1><A NAME=v16r3>2008-09-10 Boole v16r3</A></H1><PRE>
+This version uses projects Gaudi v20r2, LHCb v25r2, Lbcom v6r23
+ and SQLDDDB v5r0, ParamFiles v7r3, FieldMap v5r1, L0TCK v1r0
 
-! 2008-09-10 - Marco Cattaneo
- - Add a qmtest that tests the initialisation of Boole, used by Dirac to test
-   the installation. Invoked with:
-   cmt TestPackage sam
+This version will be used for the Full Scale Test (FST09) production.
+Output requires Brunel v33r3 or later
+
+- Geometry changes (SQLDDDB v5r0, with DC06-20081002 or head-20081002 tags)
+  . Corrections to IT 2008 geometry parameters (IT boxes moved by 3mm in z)
+    requires data produced with tag head-20081002 or later
+  . Fix to Prs reference plane position
+  . Add new Calo conditions : (L0)calibration, channel quality (CaloDet v10r0)
+  . Added Outer Tracker T0 and RT relation conditions (OTDet v8r1)
+
+- New features
+  . BooleInit now adds to ODIN a beam current, beam crossing type and trigger
+    type. By default, 5% of events with hard collision are set to trigger type
+    random, 95% physics. For elastic or diffractive events, trigger type is set
+    to random. Events are distributed across bunch crossing types (no beam,
+    single beam left/right, two beams) according to tunable thresholds.
+    Bunch current is hardwired to a constant number for now. (DigiAlg v4r11)
+  . Add a qmtest that tests the initialisation of Boole, used by Dirac to test
+    the installation. Invoked with: "cmt TestPackage sam"  (BooleSys v16r3)
+  . Add options/Boole-FST09.py, default options for full scale test production
+
+- New tuning
+  . Update 2008-Files.py to use sim file produced with Gauss v35r1
+  . Update SuppressWarnings.opts
+  . Improvements to monitoring
+    (L0Calo v9r18, L0DU v8r10, L0MuonMonitor v1r2, L0MuonKernel v8r3)
+
+- New packaging
+  . L0DU configurations are now taken from TCK/L0TCK DBASE package (L0TCK v1r0)
+  . Remove DigiContent.opts, moved into Configurable
+  . Clean up DDDB intialisation in Configurable (uses GaudiConf v10r13)
+
+- Bug fixes and protections
+  . Add FPE protections(CaloDigit v2r9,VeloSimulation v3r6,SimComponents v2r12p1)
+    Now Boole runs on complete example files without any FPE
+  . Fix in L0Muon configuration file (ParamFiles v7r3)
+  . Protect against using non-existent conditions 
+    (DetDesc v18r9, CaloDet v10r0, OTDet v8r1, RichDet v11r2)
+  . Disable boole-2008.qmt on slc4_ia32_gcc34_dbg
+    (fails with FPE in std::numeric_limits)
+  . Protect against missing clusters (CaloAssociators v6r6)
+  . Fixed a bug in CondDBCommon::generateXMLCatalog, failing for folders with
+    names shorter than 4 chars. Requires SQLDDDB v5r0 (DetCond v12r3)
 
 </PRE><H1><A NAME=v16r2>2008-09-09 Boole v16r2</A></H1><PRE>
 This version uses projects Gaudi v20r2, LHCb v25r1, Lbcom v6r22
- and DDDB v1r* (SQLDDDB v4r9 or greater), ParamFiles v7r2, FieldMap v5r1
+ and DDDB v1r* (SQLDDDB v4r9), ParamFiles v7r2, FieldMap v5r1
 
 This is a development version. It can process DC06 data, but output format and
 tuning is different from DC06. Processing of 2008 data is possible but not yet
-commissioned. Output requires Brunel v33r2 or later
+commissioned. Output requires Brunel v33r2
 
 - Geometry changes
   . Fix staggering of straws in a OT module. The offsets are retrieved from DDDB.
@@ -43,7 +82,7 @@ commissioned. Output requires Brunel v33r2 or later
 
 </PRE><H1><A NAME=v16r1>2008-07-29 Boole v16r1</A></H1><PRE>
 This version uses projects Gaudi v20r2, LHCb v25r0, Lbcom v6r21
- and DDDB v1r* (SQLDDDB v4r7 or greater), ParamFiles v7r2, FieldMap v5r1
+ and DDDB v1r* (SQLDDDB v4r7 to v4r9), ParamFiles v7r2, FieldMap v5r1
 
 This is a development version. It can process DC06 data, but output format and
 tuning is different from DC06. Processing of 2008 data is possible but not yet
@@ -88,7 +127,7 @@ commissioned. Output requires Brunel v33r1
 
 </PRE><H1><A NAME=v16r0>2008-07-21 Boole v16r0</A></H1><PRE>
 This version uses projects Gaudi v20r1, LHCb v24r1, Lbcom v6r20
- and DDDB v1r* (SQLDDDB v4r6 or greater), ParamFiles v7r2, FieldMap v5r1
+ and DDDB v1r* (SQLDDDB v4r6 to v4r9), ParamFiles v7r2, FieldMap v5r1
 
 This is a development version. It can process DC06 data, but output format and
 tuning is different from DC06. Processing of 2008 data is possible but not yet
@@ -129,7 +168,7 @@ commissioned. Output requires Brunel v33r0
 
 </PRE><H1><A NAME=v15r2>2008-07-07 Boole v15r2</A></H1><PRE>
 This version uses projects Gaudi v20r1, LHCb v24r0, Lbcom v6r19
- and DDDB v1r* (SQLDDDB v4r5 or greater), ParamFiles v7r1, FieldMap v5r1
+ and DDDB v1r* (SQLDDDB v4r5 to v4r9), ParamFiles v7r1, FieldMap v5r1
 
 This is a development version. It can process DC06 data, but output format and
 tuning is different from DC06. Processing of 2008 data is possible but not yet
@@ -165,7 +204,7 @@ commissioned. Output requires Brunel v32r7 or v32r8
 
 </PRE><H1><A NAME=v15r1>2008-06-03 Boole v15r1</A></H1><PRE>
 This version uses projects Gaudi v19r9, LHCb v23r7, Lbcom v6r18
- and DDDB v1r* (SQLDDDB v4r4 or greater), ParamFiles v7r1, FieldMap v5r1
+ and DDDB v1r* (SQLDDDB v4r4 to v4r9), ParamFiles v7r1, FieldMap v5r1
 
 This is a development version. It can process DC06 data, but output format and
 tuning is different from DC06. Processing of 2008 data is possible but not yet
@@ -200,7 +239,7 @@ commissioned. Output requires Brunel v32r7 or v32r8
 
 </PRE><H1><A NAME=v15r0>2008-05-19 Boole v15r0</A></H1><PRE>
 This version uses projects Gaudi v19r9, LHCb v23r6, Lbcom v6r17
- and DDDB v1r* (SQLDDDB v4r3 or greater), ParamFiles v7r1, FieldMap v5r0
+ and DDDB v1r* (SQLDDDB v4r3 to v4r9), ParamFiles v7r1, FieldMap v5r0
 
 This is a development version. It can process DC06 data, but output format and
 tuning is different from DC06. Processing of 2008 data is possible but not yet
@@ -282,7 +321,7 @@ commissioned. Output requires Brunel v32r5 or later
 
 </PRE><H1><A NAME=v14r10>2008-03-07 Boole v14r10</A></H1><PRE>
 This version uses projects Gaudi v19r8, LHCb v23r4, Lbcom v6r15
- and DDDB v1r* (SQLDDDB v4r0 or greater), ParamFiles v7r1, FieldMap v4r7
+ and DDDB v1r* (SQLDDDB v4r0 to v4r9), ParamFiles v7r1, FieldMap v4r7
 
 It can process DC06 data, but output format is different from DC06, requires
 Brunel v32r1 or greater
@@ -312,7 +351,7 @@ Brunel v32r1 or greater
 
 </PRE><H1><A NAME=v14r9>2008-02-04 Boole v14r9</A></H1><PRE>
 This version uses projects Gaudi v19r7, LHCb v23r3, Lbcom v6r14
- and DDDB v1r* (SQLDDDB v4r0 or greater), ParamFiles v7r1, FieldMap v4r7
+ and DDDB v1r* (SQLDDDB v4r0 to v4r9), ParamFiles v7r1, FieldMap v4r7
 
 It can process DC06 data, but output format is different from DC06, requires
 Brunel v32r1 or greater
