@@ -3,6 +3,8 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+- Add QMTest for intialisatoin, and corresponding sam test
+
 </PRE><H1><A NAME=v33r2>2008-09-09 Brunel v33r2</A></H1><PRE>
 This version uses projects Gaudi v20r2, LHCb v25r1, Lbcom v6r22, Rec v5r11
  and DDDB v1r* (SQLDDDB v4r8 or greater), ParamFiles v7r2, FieldMap v5r*
