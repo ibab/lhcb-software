@@ -28,6 +28,8 @@ class DimInfoServices;
 class BaseServiceMap;
 class Interactor;
 class DimTimerProcess;
+class DimInfoMonRate;
+class RatePublisher;
 class ProcessMgr {
 public:
   ProcessMgr(std::string serviceOwner, IMessageSvc* msgSvc, Interactor *service, const int &m_refreshTime);
@@ -55,6 +57,7 @@ public:
   void updateMap(); //this method update data when we dont have the ServerMap 
 
   void setPartVector(const std::vector<std::string> &partName) {m_partName = partName; m_monitoringFarm = true;}
+  void setPartName(std::string partName) {m_partName.push_back(partName);}
   void setTaskName(const std::string &taskName) {m_taskName = taskName;}
   void setSubFarmVector(const std::vector<std::string> &subfarmName) {m_subfarmName = subfarmName;}
   void setAlgorithmVector(const std::vector<std::string> &algorithmName) {m_algorithmName = algorithmName;}
@@ -73,7 +76,9 @@ public:
   //void setFileStaus(std::string& file) {m_pFile = &file;}
   //void fileName() {}
   std::string* fileNamePointer(){return &m_fileName;}
-  bool isAdder () {if (s_Adder == m_serviceOwner) return true;else return false;}
+  //bool isAdder () {if (s_Adder == m_serviceOwner) return true;else return false;}
+  
+  std::string serviceOwner() {return m_serviceOwner;}
   
 private:
   std::set<std::string> decodeServerList(const std::string &serverListS);
@@ -106,10 +111,7 @@ protected:
   DimInfoServices* m_dimInfoServices;
   BaseServiceMap*  m_serviceMap;
   DimTimerProcess* m_dimTimerProcess;
-  
-  // this variable is used only in the case of savers to exclude multiple servers with the same taskname
-  std::string m_serverNameChoosen;
-  
+
 };
 
 #endif // SaverSvc_ProcessMgr_H

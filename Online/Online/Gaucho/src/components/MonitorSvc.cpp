@@ -64,7 +64,7 @@ MonitorSvc::MonitorSvc(const std::string& name, ISvcLocator* sl):
    declareProperty("disableDeclareInfoPair", m_disableDeclareInfoPair = 0);
    declareProperty("disableDeclareInfoFormat", m_disableDeclareInfoFormat = 0);
    declareProperty("disableDeclareInfoHistos", m_disableDeclareInfoHistos = 0);
-   declareProperty("maxNumCountersMonRate", m_maxNumCountersMonRate = 10);
+   declareProperty("maxNumCountersMonRate", m_maxNumCountersMonRate = 30);
       
    declareProperty("teste", m_teste);
  

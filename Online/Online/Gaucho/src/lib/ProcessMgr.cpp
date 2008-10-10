@@ -11,7 +11,6 @@
 ProcessMgr::ProcessMgr(std::string serviceOwner, IMessageSvc* msgSvc, Interactor *service, const int &refreshTime): m_serviceOwner(serviceOwner), m_name("ProcessMgr"), m_msgSvc(msgSvc), m_service(service), m_refreshTime(refreshTime)
 {
   m_monitoringFarm = false;
-  m_serverNameChoosen = "";
   m_fileName = "Waiting for command to save histograms............."; 
 }
 
@@ -52,11 +51,11 @@ void ProcessMgr::timerHandler(){
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG << "inside timerHandler"<< endreq;
 
-  if (s_Adder == m_serviceOwner){
+  if (m_serviceOwner.compare(s_Adder) == 0){
     msg << MSG::DEBUG << "isAdder"<< endreq;
     m_serviceMap->add();
   }
-  else if (s_Saver == m_serviceOwner) { //it's a saver May be we have to save every deltaT
+  else if (m_serviceOwner.compare(s_Saver) == 0) { //it's a saver May be we have to save every deltaT
     msg << MSG::DEBUG << "isSaver"<< endreq;
     //std::string fileName = "from timerHandler";
     //int fileSize = 0;
@@ -68,6 +67,10 @@ void ProcessMgr::timerHandler(){
     m_pGauchoMonitorSvc->updateAll(false);
     msg << MSG::DEBUG << "After UpdateAll in Monitoring Service: "<< m_fileName << endreq;
   }
+  else if (m_serviceOwner.compare(s_MonRateService) == 0) {
+    msg << MSG::DEBUG << "isMonRateService"<< endreq;
+    m_serviceMap->updateNumberOfMonRates();
+  }
 }
 
 void ProcessMgr::write(){
@@ -77,15 +80,11 @@ void ProcessMgr::write(){
 void ProcessMgr::setUtgid(const std::string &utgid)
 {
   m_utgid = utgid;
+  if (s_MonRateService == m_serviceOwner) return;
   std::size_t first_us = m_utgid.find("_");
-  std::size_t second_us = m_utgid.find("_", first_us + 1);
   m_nodeName = m_utgid.substr(0, first_us);
-  std::string other = m_utgid.substr(first_us + 1, second_us - first_us - 1);
-  // if ((other.compare("Adder")==0)||(other.compare("ADDER")==0)) m_isAdder = true;
 }  
   
- 
-
 void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> &serviceSet) {
   
   MsgStream msg(msgSvc(), name());
@@ -154,7 +153,7 @@ void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> 
     msg << MSG::DEBUG << "svctype = " << svctype << endreq;
 
     
-    if (s_MonRateService == m_serviceOwner) { // savers do not save MonRate
+    if (s_MonRateService == m_serviceOwner) {
       if (svctype.compare(s_pfixMonRate) != 0 ) {
         msg << MSG::DEBUG << "REFUSED because MonRateService only decode MonRates !!" << endreq;
         continue; 
@@ -190,9 +189,11 @@ void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> 
       if ((task.compare("Saver")==0)||(task.compare("SAVER")==0)) continue; 
 
       if ((task.compare("Adder")==0)||(task.compare("ADDER")==0)) {
-        if (serviceParts.size() < 5 ) continue; 
-        task = serviceParts[index];
-        index++;
+        if (s_MonRateService != m_serviceOwner) {
+          if (serviceParts.size() < 5 ) continue; 
+          task = serviceParts[index];
+          index++;
+        }
       }
     }
     
@@ -206,11 +207,8 @@ void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> 
     
     msg << MSG::DEBUG << "object = " << object << endreq;
     
-    
-    if (s_Saver != s_MonRateService) { // we don't verify the taskName when its a MonRateService
-      msg << MSG::DEBUG << "task match : " << m_taskName << " vs " << task << endreq;
-      if (Misc::findCaseIns(m_taskName, task) == std::string::npos) continue;
-    }
+    msg << MSG::DEBUG << "task match : " << m_taskName << " vs " << task << endreq;
+    if (Misc::findCaseIns(m_taskName, task) == std::string::npos) continue;
     
     bool matched = true;
     if (m_algorithmName.size() > 0)  matched = false;
@@ -422,6 +420,30 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
           msg << MSG::DEBUG << "REFUSED because in the EFF savers can save only adders. Taskname= "<< taskName << endreq;
           continue; 
         }
+      }
+    }
+    else if (s_MonRateService == m_serviceOwner) {
+      partName = (*serverListTotIt).substr(0, first_us);
+      taskName = (*serverListTotIt).substr(first_us + 1, second_us - first_us - 1);
+      
+      bool chooseIt=true;
+      if (m_partName.size()) chooseIt=false;
+      for(it=m_partName.begin(); it!=m_partName.end(); ++it){
+        msg << MSG::DEBUG << "comparing partName="<< partName << " with "<< (*it) << endreq;
+        if (Misc::findCaseIns((*it), partName) != std::string::npos) {
+          chooseIt=true;
+          break;
+        }
+      }
+      if (!chooseIt) {
+        msg << MSG::DEBUG << "REFUSED because partName NOT OK " <<(*serverListTotIt) << endreq;
+        continue; 
+      }
+      else msg << MSG::DEBUG << "partName OK server accepted: " << (*serverListTotIt) <<endreq;
+      
+      if (m_taskName.compare(taskName)!= 0) {
+        msg << MSG::DEBUG << "REFUSED because taskName NOT OK" << endreq;
+        continue; 
       }
     }
     

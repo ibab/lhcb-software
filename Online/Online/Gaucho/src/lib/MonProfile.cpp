@@ -192,11 +192,20 @@ TProfile* MonProfile::profile(){
   return m_profile;
 }
 
+void MonProfile::deleteProfile(){
+  if (m_profile) {
+    MsgStream msg = createMsgStream();
+    msg <<MSG::DEBUG<<"deleting m_profile" << endreq;
+    delete m_profile; m_profile = 0;
+  }
+}
+
 void MonProfile::createObject(std::string name){
   if (!isLoaded) return;
   MsgStream msgStream = createMsgStream();
   msgStream <<MSG::DEBUG<<"Creating TProfile " << name << endreq;
-  if (m_profile==0) m_profile = new TProfile(name.c_str(), sTitle.c_str(), nbinsx, Xmin, Xmax, Ymin, Ymax);
+  //if (m_profile==0) m_profile = new TProfile(name.c_str(), sTitle.c_str(), nbinsx, Xmin, Xmax, Ymin, Ymax);
+  if (m_profile==0) m_profile = new TProfile(name.c_str(), sTitle.c_str(), nbinsx, Xmin, Xmax);
   objectCreated = true;
 }
 void MonProfile::createObject(){

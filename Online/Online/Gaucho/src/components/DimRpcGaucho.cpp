@@ -7,6 +7,7 @@
 #include "GaudiKernel/SmartIF.h"
 #include "DimRpcGaucho.h"
 #include "TFile.h"
+#include <time.h>
 #include "TH1.h"
 #include "TProfile.h"
 #include <GaudiUtils/Aida2ROOT.h>
@@ -19,7 +20,6 @@
 #include "GaudiKernel/IHistogramSvc.h"
 #include "AIDA/IHistogram.h"
 #include "AIDA/IProfile1D.h"
-#include  <ctime>
 
 DimRpcGaucho::DimRpcGaucho(std::string name, ISvcLocator* svcLocator) : DimRpc(name.c_str(),"C", "C")
  , m_svcLocator(svcLocator)

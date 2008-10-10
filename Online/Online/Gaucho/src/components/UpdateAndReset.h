@@ -20,8 +20,8 @@ class IRegistry;
 class UpdateAndReset : public GaudiAlgorithm, public DimTimer {
 public:
    /// Constructor of this form must be provided
-   UpdateAndReset(const std::string& name, ISvcLocator* pSvcLocator); 
-
+  UpdateAndReset(const std::string& name, ISvcLocator* pSvcLocator); 
+   
   StatusCode initialize();
   StatusCode execute();
   StatusCode finalize();
@@ -45,7 +45,7 @@ public:
   double offsetToBoundary(int cycleNumber, ulonglong time, bool inferior);
 private:
   bool isSaveCycle(int m_cycleNumber);
-  void manageTESHistos(bool list, bool reset, bool save);
+  void manageTESHistos(bool list, bool reset, bool save, bool isFromEndOfRun);
   void histogramIdentifier(IRegistry* object, std::vector<std::string> &idList, bool reset, bool save, int &level);
   IRegistry* rootObject();
   
@@ -60,6 +60,7 @@ private:
   // MonRate information
   int m_runNumber;  
   int m_cycleNumber;
+  int m_firstCycleNumber;
   ulonglong m_timeStart;
   ulonglong m_timeFirstEvInRun;
   double m_offsetTimeFirstEvInRun;

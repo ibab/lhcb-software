@@ -15,6 +15,8 @@ class ProcessMgr;
 class MonObject;
 class DimInfoMonObject;
 class DimServiceMonObject;
+class DimInfoMonRate;
+class RatePublisher;
 class BaseServiceMap {
 public:
   BaseServiceMap(ProcessMgr *processMgr); 
@@ -47,8 +49,11 @@ public:
   
   void write(std::string saveDir, std::string &fileName);
   void add();
+  void updateNumberOfMonRates();
   
   void setServiceSet(const std::set<std::string>& serviceSet){m_serviceSet = serviceSet;}
+  
+  int dimInfoMonRateSize(){return m_dimInfoMR.size();}
   
 private:
   std::string m_name;
@@ -64,6 +69,11 @@ protected:
   
   std::map<std::string, std::map<std::string, DimInfoMonObject*>, std::less<std::string> > m_dimInfo;
   std::map<std::string, std::map<std::string, DimInfoMonObject*>, std::less<std::string> >::iterator m_dimInfoIt;
+  
+  // Objects for MonRateService 
+  std::map<std::string, DimInfoMonRate*, std::less<std::string> > m_dimInfoMR;
+  RatePublisher * m_numberOfMonRatesPublisher;
+  int m_nbCounterInMonRate;
 };
 
 #endif    // SaverSvc_BaseServiceMap_H

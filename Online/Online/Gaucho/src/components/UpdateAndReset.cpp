@@ -75,6 +75,7 @@ UpdateAndReset::UpdateAndReset(const std::string& name, ISvcLocator* ploc)
   
 }
 
+
 //------------------------------------------------------------------------------
 StatusCode UpdateAndReset::initialize() {
 //------------------------------------------------------------------------------
@@ -191,7 +192,7 @@ StatusCode UpdateAndReset::execute() {
 
   m_countExecutes++;
 //  msg << MSG::DEBUG << "*****************************************************************************" << endreq;
-  msg << MSG::DEBUG << "Execute method # " << m_countExecutes << endreq;
+  //msg << MSG::DEBUG << "Execute method # " << m_countExecutes << endreq;
 //  msg << MSG::DEBUG << "********************************************************************" << endreq;
 
   if (0 == m_disableChekInExecute){
@@ -204,9 +205,10 @@ StatusCode UpdateAndReset::execute() {
   // This is because of plot method declareinfo in the execute method...
   if (m_firstExecute){
     m_firstExecute = false;
-    DimTimer::start(m_timerCycle); 
+    DimTimer::start(m_timerCycle);
+    m_firstCycleNumber = currentCycleNumber(GauchoTimer::currentTime()).first;
   }
-  msg << MSG::DEBUG << "End of Execute method # " << m_countExecutes << endreq;
+  //msg << MSG::DEBUG << "End of Execute method # " << m_countExecutes << endreq;
 //  msg << MSG::DEBUG << "*****************************************************************************" << endreq;
   return StatusCode::SUCCESS;
 }
@@ -243,6 +245,7 @@ StatusCode UpdateAndReset::finalize() {
 //------------------------------------------------------------------------------
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG << "finalizing...." << endreq;
+  manageTESHistos (false, false, true, true);
   DimTimer::stop();
   return StatusCode::SUCCESS;
 }
@@ -265,7 +268,7 @@ std::pair<std::pair<int, ulonglong>, bool> UpdateAndReset::currentRunNumber() {
   ulonglong gpsTime = GauchoTimer::currentTime();
   bool changed = false;
 
-  msg << MSG::DEBUG<< "Reading ODIN Bank. " <<endreq;
+  //msg << MSG::DEBUG<< "Reading ODIN Bank. " <<endreq;
 
   if (0 == m_disableReadOdin) {
     if (exist<LHCb::ODIN> ( LHCb::ODINLocation::Default)) {
@@ -282,7 +285,7 @@ std::pair<std::pair<int, ulonglong>, bool> UpdateAndReset::currentRunNumber() {
     }
   }
   else {
-    msg << MSG::DEBUG<< "===============> Reading Odin bank is disabled. Then runNumber = 0 and gpsTime = currentTime" <<endreq;
+//    msg << MSG::DEBUG<< "===============> Reading Odin bank is disabled. Then runNumber = 0 and gpsTime = currentTime" <<endreq;
   }
 
   if (m_runNumber != runNumber) changed = true;
@@ -375,8 +378,13 @@ void UpdateAndReset::updateData(bool isRunNumberChanged, bool isFromTimerHandler
     if (0 == m_disableUpdateData) m_pGauchoMonitorSvc->updateAll(true); //the first parameter is the endOfRun flag
     else msg << MSG::DEBUG << "===============> Data was not updated because the UpdateData process is disable." << endreq;
     if (0 == m_disableResetHistos) {
-      if ( 1 == m_saveHistograms ) manageTESHistos(false, true, true);
-      else manageTESHistos(false, true, false);
+      if ( 1 == m_saveHistograms ) {
+         msg << MSG::DEBUG << "==============> SAVING HISTOS BECAUSE FAST RUN CHANGE<=======================" << endreq;
+         msg << MSG::DEBUG << "==============> SAVING HISTOS BECAUSE FAST RUN CHANGE<=======================" << endreq;
+         msg << MSG::DEBUG << "==============> SAVING HISTOS BECAUSE FAST RUN CHANGE<=======================" << endreq;
+         manageTESHistos(false, true, true, false);
+      }
+      else manageTESHistos(false, true, false, false);
     }
     else msg << MSG::DEBUG << "===============> resetHistos disabled." << endreq;
   }
@@ -385,7 +393,12 @@ void UpdateAndReset::updateData(bool isRunNumberChanged, bool isFromTimerHandler
     if ( 1 == m_saveHistograms ) {
       bool resetHistos = false;
       if(1 == m_resetHistosAfterSave) resetHistos = true;
-      if (isSaveCycle(m_cycleNumber)) manageTESHistos(false, resetHistos, true);
+      if (isSaveCycle(m_cycleNumber)) {
+        msg << MSG::DEBUG << "==============> SAVING HISTOS BECAUSE CYCLE SAVER <=======================" << endreq;
+        msg << MSG::DEBUG << "==============> SAVING HISTOS BECAUSE CYCLE SAVER <=======================" << endreq;
+        msg << MSG::DEBUG << "==============> SAVING HISTOS BECAUSE CYCLE SAVER <=======================" << endreq;
+        manageTESHistos(false, resetHistos, true, false);
+      }
     }
   }
   msg << MSG::DEBUG << "***************************  End updateData  *************************" << endreq;
@@ -393,12 +406,13 @@ void UpdateAndReset::updateData(bool isRunNumberChanged, bool isFromTimerHandler
 }
 
 bool UpdateAndReset::isSaveCycle(int m_cycleNumber) {
-  div_t divresult = div (m_cycleNumber, m_numCyclesToSave);
-  if (0 == divresult.rem) return true;
-  return false;
+  if (m_cycleNumber == m_firstCycleNumber) return false;
+  div_t divresult = div (m_cycleNumber - m_firstCycleNumber, m_numCyclesToSave);
+  if (0 != divresult.rem) return false;
+  return true;
 }
 
-void UpdateAndReset::manageTESHistos (bool list, bool reset, bool save) {
+void UpdateAndReset::manageTESHistos (bool list, bool reset, bool save, bool isFromEndOfRun) {
   MsgStream msg( msgSvc(), name() );
   IRegistry* object = rootObject();
   int level = 0;
@@ -418,6 +432,7 @@ void UpdateAndReset::manageTESHistos (bool list, bool reset, bool save) {
   else if (4 == serviceParts.size()) groupName = serviceParts[0] + "-" +  serviceParts[2];
   
   std::string tmpfile = m_saveSetDir + groupName + "-" + timestr + ".root";  
+  if (isFromEndOfRun) tmpfile = m_saveSetDir + "EOR_"+ groupName + "-" + timestr + ".root";  
   
   m_infoFileStatus.replace(0, m_infoFileStatus.length(), tmpfile);
 
