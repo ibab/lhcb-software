@@ -1,4 +1,4 @@
-// $Id: LoKi_Fitters.cpp,v 1.4 2008-07-11 15:19:20 ibelyaev Exp $
+// $Id: LoKi_Fitters.cpp,v 1.5 2008-10-10 12:37:55 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -97,7 +97,8 @@ LOKI_MCALGORITHM(Fitters)
   if ( 0 == mcv ) { return Warning("No MCVertex", SUCCESS ) ; }
   
   
-  const double mc_tau = MCCTAU ( mcbs.front() ) ;
+  // const double mc_tau = MCCTAU ( mcbs.front() ) ;
+
   const LHCb::VertexBase* primary = primaries.front() ;
   
   Fun dira = acos ( DIRA ( primary ) ) ;
