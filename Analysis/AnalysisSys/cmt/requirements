@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.70 2008-10-10 12:59:13 jpalac Exp $
+# $Id: requirements,v 1.71 2008-10-10 14:19:39 jpalac Exp $
 package AnalysisSys
 version v2r3
 
@@ -9,7 +9,7 @@ branches doc cmt
 
 #===================================================================
 use  CommonParticles            v4r1p1   Phys   # Juan Palacios, WGs
-use  FlavourTagging             v8r0     Phys   # Marco Musy
+use  FlavourTagging             v8r0p1   Phys   # Marco Musy
 use  DaVinciFilter              v6r10p1  Phys   # Patrick Koppenburg - deprecated
 
 ####################################################################
