@@ -1,4 +1,4 @@
-# Example 2008 data files for Brunel.
+# Example 2008 MC files for Brunel. For real data use 2008-TED-Data.py
 # This file must be given as last argument to gaudirun.py, after Brunel<conf>.py
 
 # Syntax is:
@@ -16,23 +16,11 @@ FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml",
 inputType   = Brunel().getProp("inputType").upper()
 
 if inputType == "MDF":
-    # Example MDF file. File MUST be described in the FileCatalog, with an FID
-    # generated externally, as it is not contained in the MDF file. If the FID is
-    # not provided in the Catalog, the output dataset will not contain the
-    # information to allow navigation back to the MDF data when reading
-    datasetName =  "032484_0000081651"
-    EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/32484/032484_0000081651.raw' SVC='LHCb::MDFSelector'"] #TED data 20080906
-    # Above file requires following special options for Velo
-    from Configurables import (RawBankToSTClusterAlg, RawBankToSTLiteClusterAlg,
-                               DecodeVeloRawBuffer, UpdateManagerSvc )
-    DecodeVeloRawBuffer().ForceBankVersion=3
-    DecodeVeloRawBuffer('DecodeVeloClusters').RawEventLocation='Prev2/DAQ/RawEvent'
-    DecodeVeloRawBuffer('DecodeVeloClusters').ForceBankVersion=3
-    UpdateManagerSvc().ConditionsOverride +=  ["Conditions/Online/Velo/MotionSystem := double ResolPosRC =-29. ; double ResolPosLA = 29. ;"]
-    RawBankToSTClusterAlg('CreateTTClusters').rawEventLocation = "/Event/Prev2/DAQ/RawEvent"
-    RawBankToSTLiteClusterAlg('CreateTTLiteClusters').rawEventLocation = "/Event/Prev2/DAQ/RawEvent"
-    
-    # EventSelector().Input = [ "DATA='FID:94ACC0F5-09A3-DC11-8140-003048836626' SVC='LHCb::MDFSelector'" ] # Can use FID or LFN or PFN.
+    import sys
+    print "**********************************************************************"
+    print " 2008 real data requires special options. Use 2008-TED-Data.py instead"
+    print "**********************************************************************"
+    sys.exit()
 
 elif inputType == "DST":
     # Example POOL DST (reprocessing)
@@ -48,9 +36,9 @@ elif inputType == "ETC":
     
 else:
     # Example POOL DIGI (default, MC production)
-    datasetName =  "11144103-100ev-20080613"
-    # B->J/Psi(mumu)Ks events with Boole v16r0, Gauss v31r2, DB tag head-20080603
-    EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v16r2/" + datasetName + ".digi' TYP='POOL_ROOTTREE' OPT='READ'"]
+    datasetName =  "11144101-100ev-20081006"
+    # B->J/Psi(mumu)Ks events with Boole v16r3, Gauss v35r1, DB tag head-20081002
+    EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v16r3/" + datasetName + ".digi' TYP='POOL_ROOTTREE' OPT='READ'"]
 
 # Set the property, used to build other file names
 Brunel().setProp( "datasetName", datasetName )

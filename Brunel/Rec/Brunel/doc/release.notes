@@ -3,9 +3,13 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v33r3>2008-10-10 Brunel v33r3</A></H1><PRE>
+ - Add 2008-TED-Data.py, options for 2008 real data processing
  - Reorganise Configuration.py, remove Brunel.opts and Brunel().mainOptions
  - Clean up DDDB intialisation in Configurable, needs GaudiConf v10r13
  - Replace BrunelMoni.opts wih BrunelMoni.py, add Track Moni sequence
+ - New PatChecking sequence, uses TrackAssociators, TrackResCheckers,
+   TrackEffCheckers instead of PatTrack2MCParticle and PatChecker
  - Add Muon histograms to Moni sequence
  - Fix default options in Brunel_Ganga.py for consistency with new defaults
  - Use ParamFiles v7r3, do not set DDDB major version (taken from LHCbSys)

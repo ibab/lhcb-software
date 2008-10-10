@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.23 2008-09-26 14:50:33 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.24 2008-10-10 15:10:41 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -118,9 +118,7 @@ class Brunel(LHCbConfigurableUser):
             # "Check" histograms filled only with simulated data 
             ProcessPhase("Check").DetectorList += self.getProp("mcCheckSequence")
             # Tracking
-            GaudiSequencer("CheckPatSeq").Members += [ "PatLHCbID2MCParticle"
-                                                       ,"PatTrack2MCParticle"
-                                                       ,"PatChecker" ]
+            importOptions("$TRACKSYSROOT/options/PatChecking.opts")
             # Muon
             importOptions("$MUONPIDCHECKERROOT/options/MuonPIDChecker.opts")
             # RICH

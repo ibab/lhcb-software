@@ -1,3 +1,6 @@
+# Special options for processing TED data taken in September 2008
+# Details of these datasets are at https://lbtwiki.cern.ch/bin/view/Computing/VeryFirstData
+
 from Gaudi.Configuration import *
 from GaudiConf.Configuration import *
 from Brunel.Configuration import *
@@ -20,7 +23,7 @@ if inputType == "MDF":
         "DATAFILE='rfio:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM//32481/032481_0000081648.raw'  SVC='LHCb::MDFSelector'",
         "DATAFILE='rfio:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM//32484/032484_0000081651.raw'  SVC='LHCb::MDFSelector'",
         "DATAFILE='rfio:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM//32493/032493_0000081660.raw'  SVC='LHCb::MDFSelector'",
-    "DATAFILE='rfio:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM//32498/032498_0000081699.raw'  SVC='LHCb::MDFSelector'",
+        "DATAFILE='rfio:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM//32498/032498_0000081699.raw'  SVC='LHCb::MDFSelector'",
         "DATAFILE='rfio:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM//32500/032500_0000081701.raw'  SVC='LHCb::MDFSelector'",
         "DATAFILE='rfio:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM//32501/032501_0000081702.raw'  SVC='LHCb::MDFSelector'",
         "DATAFILE='rfio:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM//32576/032576_0000081818.raw'  SVC='LHCb::MDFSelector'",
