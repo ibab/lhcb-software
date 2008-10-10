@@ -41,7 +41,8 @@ public:
   virtual StatusCode reFit(LHCb::VertexBase* ) const;
 
   /// remove track used for a (B) LHCb::Particle and refit PV
-  virtual StatusCode remove(const LHCb::Particle*,  LHCb::VertexBase*) const;
+  virtual StatusCode remove(const LHCb::Particle*,  
+                            LHCb::VertexBase*) const;
 
   virtual ~CheatedPVReFitter( ); ///< Destructor
 

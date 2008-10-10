@@ -1,4 +1,4 @@
-// $Id: CheatedPVReFitter.cpp,v 1.3 2008-07-03 12:25:06 jpalac Exp $
+// $Id: CheatedPVReFitter.cpp,v 1.4 2008-10-10 12:58:17 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -121,7 +121,8 @@ StatusCode CheatedPVReFitter::reFit(LHCb::VertexBase* PV) const {
 //=============================================================================
 // remove track used for a LHCb::Particle and refit PV
 //=============================================================================
-StatusCode CheatedPVReFitter::remove(const LHCb::Particle* part,  LHCb::VertexBase* PV) const {
+StatusCode CheatedPVReFitter::remove(const LHCb::Particle* /*part*/,  
+                                     LHCb::VertexBase* /*PV*/) const {
 
   warning() <<"remove method not implemented! "<< endreq;
 
@@ -339,9 +340,7 @@ StatusCode CheatedPVReFitter::seedPV(LHCb::RecVertex* PV,
       ROOT::Math::SVector<double, 1> f;
       f(0)=(vfit(5)-vfit(0))*(vfit(8)*vfit(4)-vfit(3)*vfit(9))-
            (vfit(6)-vfit(1))*(vfit(7)*vfit(4)-vfit(2)*vfit(9));
-
       verbose() << "constraint values   " << f << endreq;
-
       //D is the derivative matrix
       ROOT::Math::SMatrix<double, 1, 10> D;
       D(0,0)=-(vfit(8)*vfit(4)-vfit(3)*vfit(9));
