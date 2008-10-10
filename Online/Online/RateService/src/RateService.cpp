@@ -1,281 +1,163 @@
-// Include files
+#include "Gaucho/ProcessMgr.h"
+#include "Gaucho/DimInfoServers.h"
+#include "Gaucho/Misc.h"
+
+#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SvcFactory.h"
-#include "GaudiKernel/DataObject.h"
-#include "Gaucho/MonStatEntity.h"
-#include "Gaucho/MonRate.h"
-
+#include "GaudiKernel/Incident.h"
+#include "GaudiKernel/IIncidentSvc.h"
+#include "Gaucho/BaseServiceMap.h"
+#include "Gaucho/DimTimerProcess.h"
+#include "Gaucho/DimInfoServices.h"
 #include "RateService.h"
-#include "DimInfoMonRate.h"
-#include "Gaucho/DimInfoMonObject.h"
 
-#include "debugMacro.h"
-
-
-#include "AIDA/IHistogram1D.h"
-#include "AIDA/IHistogram2D.h"
-#include "AIDA/IHistogram3D.h"
-#include "AIDA/IProfile1D.h"
-#include "AIDA/IProfile2D.h"
-#include "AIDA/IAxis.h"
-
-#include "RTL/rtl.h"
-
-#include <cstring>
-#include <string>
-#include <iostream>
-#include <vector>
-
-#include <cmath>
-// for online monitoring
-#include "RTL/rtl.h"
-#include "CPP/IocSensor.h"
-#include "dis.hxx"
-#include <dic.hxx>
 #include <ctime>
 
-#ifdef WIN32
-namespace win {
-#include <windows.h>
-}
-# define mysleep(x) win::Sleep(x) 
-#else
-# include <unistd.h>
-# define mysleep(x) usleep(x*1000000) 
-#endif
+#include "RTL/rtl.h"
+#include "CPP/IocSensor.h"
+#include "CPP/Event.h"
 
+DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb, RateService)
 
-// Static Factory declaration
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,RateService)
-
-using namespace LHCb;
-  
-  // Constructor
-  //------------------------------------------------------------------------------
-  RateService::RateService(const std::string& name, ISvcLocator* ploc)
-    : Service(name, ploc),
-    m_dimName(name),
-    m_found(false),
-    m_dimInfoMonRate(0),
-    m_numberOfMonRatesPublisher(0)
+RateService::RateService(const std::string& name, ISvcLocator* ploc) : Service(name, ploc)
 {
-  m_monRateServiceName = "*";
-  m_nbCounterInMonRate = 0;
-  
-  declareProperty("MonRateCounterNumber", m_nbCounterInMonRate);
-  declareProperty("PartitionName",m_partitionName); // Sleeping time between events, in seconds
-  declareProperty("MonRateServiceName", m_monRateServiceName);
-  
+  declareProperty("refreshTime",  m_refreshTime=10);
+  declareProperty("dimclientdns", m_dimClientDns);
+  declareProperty("partName", m_partName);
+  declareProperty("taskName", m_taskName="Adder");
+  declareProperty("monRateCounterNumber", m_nbCounterInMonRate=30);  
+  m_enablePostEvents = true;
 }
 
-//default destructor
-RateService::~RateService() {
-}
+RateService::~RateService() {}
 
-
-//------------------------------------------------------------------------------
 StatusCode RateService::initialize() {
-  //------------------------------------------------------------------------------
   StatusCode sc = Service::initialize(); // must be executed first
+  
   MsgStream msg(msgSvc(), name());
-  
-  
-  COUT_DEBUG("MonRateServiceName   : " << m_monRateServiceName);
-  COUT_DEBUG("MonRateCounterNumber : " << m_nbCounterInMonRate);
- // COUT_DEBUG("SleepTime            : " << sleepTime);
-  
-  msg << MSG::INFO << "Running Initialize" << endreq;
-
-  m_UTGID = RTL::processName();
-  
-  checktime=30;
-
-  try
-  {  
-    sc = findServices();
-    if(!sc.isSuccess())
-    {
-      msg << MSG::INFO << "Unable to find dim services." << endreq;
-    }
-    
-    m_numberOfMonRatesPublisher = new RatePublisher();
-    m_numberOfMonRatesPublisher->setValue(0);
-    m_numberOfMonRatesPublisher->setComment("Number of MonRates processed by this RateService");
-    m_numberOfMonRatesPublisher->publishService(m_UTGID + "/NumberOfMonRates");
-    
-  }catch(const std::exception & e)
-  {
-    msg << MSG::WARNING << "EXCEPTION CAUGHT IN RateService::initialize() : "
-    << e.what() << endreq;
+  if ( !sc.isSuccess() )  {
+    msg << MSG::ERROR << "Cannot initialize service base class." << endreq;
+    return StatusCode::FAILURE;
   }
   
-  sc = StatusCode::SUCCESS;
-  
-  msg << MSG::INFO << "Initialize DONE. Starting Dim timer." << endreq;
- 
-  
-  DimTimer::start(checktime);
-  
-  return sc;
-}
+  m_utgid = RTL::processName();
+  std::size_t first_us = m_utgid.find("_");
+  std::size_t second_us = m_utgid.find("_", first_us + 1);
+  std::string partName = m_utgid.substr(0, first_us);
+  std::string taskName = m_utgid.substr(first_us + 1, second_us - first_us - 1);
 
-bool RateService::isHandledService(std::string serviceName)
-{
-  for(std::vector<DimInfoMonRate *>::iterator it = m_dimInfoMonRate.begin();
-      it != m_dimInfoMonRate.end();
-      it++)
-  {
-    if( *it && serviceName == (*it)->getServiceName())
-      return true;
+  if (m_partName.compare("") == 0)  m_partName = partName;
+  
+  if ((taskName != "RateSvc")&&(taskName != "RATESVC")) {
+    msg << MSG::ERROR << "This is not a MonRateService !" << endreq;
+    msg << MSG::ERROR << "Please try partName_RateSvc_1" << endreq;
+    return StatusCode::FAILURE;
+  }
+
+  msg << MSG::DEBUG << "***************************************************** " << endreq;
+  msg << MSG::DEBUG << "******************Welcome to MonRateService********** " << endreq;
+  msg << MSG::DEBUG << "***************************************************** " << endreq;
+  
+  msg << MSG::DEBUG << "***************************************************** " << endreq;
+  msg << MSG::DEBUG << "***************************************************** " << endreq;
+    
+  sc = service("MonitorSvc",m_pGauchoMonitorSvc,true);
+  if ( !sc.isSuccess() )  {
+    msg << MSG::ERROR << "Cannot access monitoring service." << endmsg;
+    return StatusCode::FAILURE;
   }
   
-  return false;
-}
-
-//------------------------------------------------------------------------------
-StatusCode RateService::findServices() {
-  //------------------------------------------------------------------------------
-  MsgStream msg(msgSvc(), name());
-  StatusCode sc;
-
-  nbNewServices = 0;
-  std::string firstpart;
-  std::string secondpart;
-  std::size_t loc=m_monRateServiceName.find("*PartitionName*");
-  if (loc != std::string::npos ) { 
-     firstpart=m_monRateServiceName.substr(0,loc);
-     secondpart=m_monRateServiceName.substr(loc+15);
-  }
-  std::string findServiceName = firstpart+"*"+m_partitionName+"*"+secondpart;  
-  msg << MSG::INFO << "Looking for " << findServiceName << " pattern" << endreq;
+  m_pGauchoMonitorSvc->enableMonObjectsForString();
   
+
+  msg << MSG::DEBUG << "creating ProcessMgr " << endreq;
+  m_processMgr = new ProcessMgr (s_MonRateService, msgSvc(), this, m_refreshTime);
+  m_processMgr->setPartName(m_partName);
+  m_processMgr->setTaskName(m_taskName);
+  m_processMgr->setUtgid(m_utgid);
+  m_processMgr->setNbCounterInMonRate(m_nbCounterInMonRate);
   
-  //DimClient::setDnsNode(m_dimClientDns.c_str());
+  m_processMgr->createInfoServers();
+  m_processMgr->createTimerProcess();
+  m_processMgr->setMonitorSvc(m_pGauchoMonitorSvc);
 
+  msg << MSG::DEBUG << "Activing PostEvent to StartTimer............." << endreq;
+  IocSensor::instance().send(this, s_startTimer, m_processMgr); //start Timer
   
-  // actual name and format of the found service
-  char * serviceNameC;
-  char * formatC;
-
-  DimBrowser dbr;
-  
-  if (dbr.getServices( findServiceName.c_str() )>0 ) {
-
-     while( 0 != dbr.getNextService(serviceNameC, formatC) )
-     {
-       msg << MSG::INFO << " ### Matching service" << endreq;
-       msg << MSG::INFO << " ### Service Name : " << serviceNameC <<" ; format : " << formatC << endreq;
-    
-       if(isHandledService(serviceNameC))
-        continue;
-      
-        bool exceptionRaised = false;
-    
-        DimInfoMonRate * pNew = 0;
-    
-        try
-        {
-          pNew = new DimInfoMonRate(serviceNameC, 5, m_UTGID, m_nbCounterInMonRate);
-      
-          if(pNew)
-            pNew->setMsgService(msgSvc());
-    
-            msg << MSG::DEBUG << "creating MonRate" << endreq;
-
-            /* create the MonDouble to receive the data
-            */    
-           try{
-             pNew->createMonRate();
-           }catch(const std::exception & e){
-             msg << MSG::INFO << __LINE__ << ": error in createMonRate() : " << e.what() << endreq;
-	     exceptionRaised = true;
-             try{
-	       if(pNew) delete pNew;
-	     }catch(const std::exception & e)
-	     {
-	       msg << MSG::FATAL << __LINE__ << ": fatal 1 :" << e.what() << endreq;
-	       exit(1);
-	     }
-           }
-
-         }
-         /* some exception will be probably due to a non MonRate service
-         */
-         catch(std::exception e)
-         {
-           msg << MSG::WARNING << " >>> an error occured while registering MonRate" << endreq;
-           msg << MSG::WARNING << " >>> in RateService::findServices()" << endreq;
-           msg << MSG::WARNING << " >>> can't register " << serviceNameC << endreq;
-           exceptionRaised = true;
-           try{
-            if(pNew) delete pNew;
-           }catch(const std::exception & e)
-           {
-             msg << MSG::FATAL << "fatal 2 : " << e.what() << endreq;
-             exit(2);
-           }
-         }
-    
-        /* if nothing has been caught then it's OK
-         */
-       if(!exceptionRaised)
-       {
-         m_dimInfoMonRate.push_back(pNew);
-         sc = StatusCode::SUCCESS;
-         nbNewServices++; 
-       }
-    }      
-  }
-  msg << MSG::INFO << nbNewServices << " found" << endreq;
-  
-  
-  msg << MSG::INFO << "Looking for DONE" <<endreq;
-
+  msg << MSG::DEBUG << "Finishing the initialize method." << endreq;
   return StatusCode::SUCCESS;
 }
 
+void RateService::handle(const Event&  ev) {
+  MsgStream msg(msgSvc(), name());
+  
+  if (!m_enablePostEvents) return;
+  
+  if(s_startTimer == ev.type) {
+     msg << MSG::DEBUG << " We are inside a PostEvent to Start the Timer " << endreq;
+     m_processMgr->dimTimerProcess()->start(m_refreshTime);
+     msg << MSG::DEBUG << " End PostEvent to Start the Timer " << endreq;
+  }
+  else if(s_stopTimer == ev.type) {
+     msg << MSG::DEBUG << " We are inside a PostEvent to Sop the Timer " << endreq;
+     m_processMgr->dimTimerProcess()->stop();
+     msg << MSG::DEBUG << " End PostEvent to Stop Timer " << endreq;
+  }
+  else if(s_createInfoServices == ev.type ){
+    msg << MSG::DEBUG << " We are inside a PostEvent to Create the DimInfoServices " << endreq;
+    msg << MSG::DEBUG << "Choosing Server to get ServicesSet.........." << endreq;
+    
+    std::string serverChoosed;
+    while (true) {
+      m_processMgr->dimInfoServers()->chooseServer();
+      serverChoosed = m_processMgr->dimInfoServers()->serverChoosed();
+      if ("" != serverChoosed) {
+        msg << MSG::DEBUG << "Server Choosed = " << m_processMgr->dimInfoServers()->serverChoosed() << endreq;
+        break;
+      }
+    }
+    msg << MSG::DEBUG << "Before createInfoServices............." << endreq;
+    m_processMgr->createInfoServices(serverChoosed);
+   // IocSensor::instance().send(this, s_updateServiceMap, ev.data); //start Timer*/
+    msg << MSG::DEBUG << " End PostEvent to Create the DimInfoServices " << endreq;
+  }
+  else if(s_updateSvcMapFromInfoServer == ev.type) {
+    msg << MSG::DEBUG << " We are inside a PostEvent to UpdateServiceMapFromInfoServer " << endreq;
+    
+    std::map<std::string, bool, std::less<std::string> > serverMap = m_processMgr->dimInfoServers()->serverMap();
 
+    m_processMgr->serviceMap()->updateMap(serverMap);
+    m_processMgr->serviceMap()->printMap();
+    msg << MSG::DEBUG << " End PostEvent to UpdateServiceMap " << endreq;
+    
+  }
+  else if(s_updateSvcMapFromInfoService == ev.type) {
+    msg << MSG::DEBUG << " We are inside a PostEvent to UpdateServiceMapFromInfoService " << endreq;
+    
+    std::set<std::string> serviceSet = m_processMgr->dimInfoServices()->serviceSet();
+    m_processMgr->serviceMap()->setServiceSet(serviceSet);
+    m_processMgr->updateMap();
 
+    m_processMgr->serviceMap()->printMap();
+
+    msg << MSG::DEBUG << " End PostEvent to UpdateServiceMapFromInfoService " << endreq;
+  }
+}
 
 //------------------------------------------------------------------------------
 StatusCode RateService::finalize() {
-  //------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
   MsgStream msg(msgSvc(), name());
-  msg << MSG::INFO << "finalizing...." << endreq;
+  m_enablePostEvents = false;
   
-
-  for(std::vector<DimInfoMonRate *>::iterator it = m_dimInfoMonRate.begin();
-      it != m_dimInfoMonRate.end();
-      it++)
-  {
-    if( *it ) delete (*it);
+  if (m_processMgr) {delete m_processMgr; m_processMgr=0;}
+ 
+  if ( m_pGauchoMonitorSvc ) {
+    m_pGauchoMonitorSvc->undeclareAll(this);
+    m_pGauchoMonitorSvc->release();
+    m_pGauchoMonitorSvc = 0;
   }
-  
-  if(m_numberOfMonRatesPublisher)
-    delete m_numberOfMonRatesPublisher;
-  
-  return StatusCode::SUCCESS;
+   
+  return Service::finalize();
 }
 
-
-void RateService::timerHandler() {
-  MsgStream msg(msgSvc(), name());
-  StatusCode sc;
-  msg << MSG::INFO << "Timerhandler called " << endreq;
-
-  sc=findServices();
-  try {
-    if(!findServices().isSuccess())
-    {
-      msg << MSG::INFO << "Unable to find " << m_monRateServiceName << endreq;
-    }
-    
-   if (nbNewServices>0) m_numberOfMonRatesPublisher->updateService(m_dimInfoMonRate.size());
-  }
-  catch(std::exception e)
-  {
-   msg << MSG::WARNING << "EXCEPTION CAUGHT INT RateService::execute()" << endreq;
-  }
-
-  //check every 10 mins
-  DimTimer::start(checktime);
-}

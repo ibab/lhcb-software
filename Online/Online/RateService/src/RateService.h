@@ -1,109 +1,46 @@
-#ifndef RATESERVICE_RATESERVICE_H
-#define RATESERVICE_RATESERVICE_H 1
+#ifndef RateService_RateService_H
+#define RateService_RateService_H 1
 
 // Include files
-
-
+#include "CPP/Interactor.h"
 #include "GaudiKernel/Service.h"
-#include "GaudiKernel/Property.h"
+#include "Gaucho/IGauchoMonitorSvc.h"
 
-
-#include "GaudiKernel/RndmGenerators.h"
-
-#include <cstring>
-#include <string>
-#include <iostream>
-#include <vector>
-#include <stdlib.h>
-
-#include "RatePublisher.h"
-
-// boost
-#include "boost/lexical_cast.hpp"
-#include<time.h>
-
-
-#include <dis.hxx>
-
-
-/* deprecated
- */
-static const std::string s_converterName("RATE_SERVICE_V2R3");
-
-// Forward declarations
-class DimInfoMonRate;
-
-
+class ProcessManager;
 namespace LHCb {
 
-/** @class RateService is a Service subscribing to MonRate services and publishing
-  * structured services to PVSS.
-  *
-  * @class RateService
-  * @author Jean-Francois Menou
-  */
-class RateService : public Service, public DimTimer {
-public:
-  /// Constructor of this form must be provided
-  RateService(const std::string& name, ISvcLocator* pSvcLocator); 
-  virtual ~RateService();
-  /// Initialize mandatory member functions of any service
-  StatusCode initialize();
+  class RateService : virtual public Service, public Interactor  {
+  public:
+    /// Constructor of this form must be provided
+    RateService(const std::string& name, ISvcLocator* pSvcLocator); 
+    /// Default destructor
+    virtual ~RateService();
+    /// Iservice overload: Initialize service
+    StatusCode initialize();
+    /// Iservice overload: Finalize service
+    StatusCode finalize();
+    /// Interactor handler
+    virtual void handle(const Event& ev);
 
-  /// Finalize mandatory member functions of any service
-  StatusCode finalize();
-  void timerHandler();
-  /** Discovers MonRate services
-    *
-    * @return A StatusCode.
-    */
-
-  int checktime;
-  int nbNewServices;
 private:
-
-  /** utgid given to this algorithm.
-    */
-  std::string m_UTGID;
-
-  /// ???
-  std::string m_dimName;
-
-  /** name of the service puclishing the MonRate object to be subscribed
-    */
-  std::string m_monRateServiceName;
+  /// Reference to monitoring service
+  //IMonitorSvc*  m_monitorSvc;
+  IGauchoMonitorSvc* m_pGauchoMonitorSvc; ///< Online Gaucho Monitoring Service
   
-  /** option-defined number of counter per MonRate
-    */
+  ProcessMgr* m_processMgr;
+  
+  std::string m_utgid;
+  std::string m_nodeName;
+  std::string m_partName;
+  std::string m_taskName;
   int m_nbCounterInMonRate;
+  std::vector<std::string> m_objectName;
   
-  /** if the service has been found then don't ; if the service has been found then don't
-    */
-  bool m_found;
-  
-  /** Pointers to the DimInfoMonObject handling the MonRate services.
-    */
-  std::vector<DimInfoMonRate *> m_dimInfoMonRate;
+  std::string m_dimClientDns;
+  int m_refreshTime;
+  bool m_enablePostEvents;
     
-  /// partitionname
-  std::string m_partitionName;
-  /* RatePublisher to publish the number of MonRate services currently processed
-   * by the RateService.
-   */
-  RatePublisher * m_numberOfMonRatesPublisher;
+  };
+}  //end namespace LHCb  
 
-  
-  /** Checks if a MonRate service is already being processed by a DimInFoMonRate.
-    *
-    * @param serviceName The DIM service name to be checked.
-    *
-    * @return True if the service is already handled.
-    */
-  bool isHandledService(std::string serviceName);
-
-  StatusCode findServices();
-
-};
-
-} //end namespace LHCb
-#endif    // RATESERVICE_RATESERVICE_H
+#endif    // RateService_RateService_H
