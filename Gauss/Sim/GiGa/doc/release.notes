@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.123 2008-10-10 09:15:33 gcorti Exp $
+! $Id: release.notes,v 1.124 2008-10-10 13:42:00 gcorti Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Sim/GiGa
 ! Responsible : Gloria CORTI, Vanya BELYAEV
@@ -6,6 +6,7 @@
 !               for G4 <-> Gaudi applications 
 !-----------------------------------------------------------------------------
 
+!======================= GiGa v19r3 2008-10-10 ===============================
 ! 2008-10-10 - Gloria CORTI for Marco PAPPAGALLO
  - Comment out lines for G4 UI session in initializeKernel() method, that 
    prevented loading of colors and visualization attributes
