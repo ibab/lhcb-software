@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.43 2008-10-02 19:43:32 gligorov Exp $
+// $Id: BackgroundCategory.cpp,v 1.44 2008-10-10 14:36:27 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -303,7 +303,7 @@ const LHCb::MCParticle* BackgroundCategory::get_lowest_common_mother(MCParticleV
 
   verbose() << "Starting search for lowest common mother (single)" << endmsg;
 
-  bool carryon; 
+  bool carryon = false; 
   verbose() << "Step 1" << endmsg;
   MCParticleVector::const_iterator iMCP = mc_particles_to_compare.begin();
   verbose() << "Step 2" << endmsg;
