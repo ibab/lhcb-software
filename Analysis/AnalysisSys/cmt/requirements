@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.69 2008-10-08 17:39:08 jpalac Exp $
+# $Id: requirements,v 1.70 2008-10-10 12:59:13 jpalac Exp $
 package AnalysisSys
 version v2r3
 
@@ -15,7 +15,7 @@ use  DaVinciFilter              v6r10p1  Phys   # Patrick Koppenburg - deprecate
 ####################################################################
 use  DaVinciMCTools     	v9r17    Phys   # Juan Palacios
 use  DaVinciAssociators         v9r3     Phys   # Philippe Charpentier
-use  VertexFitCheck             v1r3     Phys   # Yuehong Xie
+use  VertexFitCheck             v1r3p1   Phys   # Yuehong Xie
 use  MCStandardParticles        v1r2     Phys   # Juan Palacios
 use  FlavourTaggingChecker      v3r1p1   Phys   # Marco Musy
 use  DaVinciUser      	        v8r5     Phys   # Juan Palacios
