@@ -321,19 +321,32 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
       nodeName = (*serverListTotIt).substr(0, first_us);
       taskName = (*serverListTotIt).substr(first_us + 1, second_us - first_us - 1);
       
-      if ((taskName.compare("Saver")==0)||(taskName.compare("SAVER")==0)) {
-        msg << MSG::DEBUG << "refused because we don't add nor save SAVERS. "<< endreq;    
-        continue; // we don't do nothing with Savers
-      }
-
-      if ((taskName.compare("Adder")==0)||(taskName.compare("ADDER")==0)){
-        if (nodeName.size() ==  m_nodeName.size()) {
-          msg << MSG::DEBUG << "REFUSED because it is an adder with the same node name size. "<< endreq;
-          continue; // The nodeName have to be smaller size if the Adder is adding Adders
+      if (nodeName.compare("Bridge")!=0) {
+        if ((taskName.compare("Saver")==0)||(taskName.compare("SAVER")==0)) {
+          msg << MSG::DEBUG << "refused because we don't add nor save SAVERS. "<< endreq;    
+          continue; // we don't do nothing with Savers
         }
+        if ((taskName.compare("Adder")==0)||(taskName.compare("ADDER")==0)){
+          if (nodeName.size() ==  m_nodeName.size()) {
+            msg << MSG::DEBUG << "REFUSED because it is an adder with the same node name size. "<< endreq;
+            continue; // The nodeName have to be smaller size if the Adder is adding Adders
+          }
+        }
+        if (nodeName.size() !=  m_nodeName.size()) { // If nodeName have smaller size 
+          nodeName = nodeName.substr(0, m_nodeName.size()); // we resize the nodename to do the match.
+          msg << MSG::DEBUG << "nodeName="<< nodeName << endreq;
+        }
+
+        // checking the nodeName
+        msg << MSG::DEBUG << "comparing nodeName="<< nodeName << " with "<< m_nodeName << endreq;    
+        if (Misc::findCaseIns(m_nodeName, nodeName) == std::string::npos){
+          msg << MSG::DEBUG << "REFUSED because nodeName NOT OK" << endreq;
+          continue;
+        }
+        else msg << MSG::DEBUG << "nodeName OK" << endreq;
+
       }
-      
-      if (nodeName.compare("Bridge")==0) {
+      else {
         std::string subfarmName = taskName;
         bool chooseIt=true;
         if (m_subfarmName.size()) chooseIt=false;
@@ -355,20 +368,6 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
         }
         continue;
       }
-      
-      if (nodeName.size() !=  m_nodeName.size()) { // If nodeName have smaller size 
-        nodeName = nodeName.substr(0, m_nodeName.size()); // we resize the nodename to do the match.
-        msg << MSG::DEBUG << "nodeName="<< nodeName << endreq;
-      }
-
-      // checking the nodeName
-      msg << MSG::DEBUG << "comparing nodeName="<< nodeName << " with "<< m_nodeName << endreq;    
-      if (Misc::findCaseIns(m_nodeName, nodeName) == std::string::npos){
-        msg << MSG::DEBUG << "REFUSED because nodeName NOT OK" << endreq;
-        continue;
-      }
-      else msg << MSG::DEBUG << "nodeName OK" << endreq;
-
       // when the Server is not an Adder we can check the task name here.
       if ((taskName.compare("Adder")!=0)&&(taskName.compare("ADDER")!=0)) {
         if (Misc::findCaseIns(m_taskName, taskName) == std::string::npos) {
