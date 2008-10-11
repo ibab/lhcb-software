@@ -4,6 +4,9 @@
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
 
+! 2008-10-11 - Marco Cattaneo
+- In TrackChecherNT.cpp adapt to new return type of KeyedContainer::size()
+
 !======================= TrackCheckers v4r3 2009-10-02 =======================
 ! 2008-09-25 - Stephanie Hansmann-Menzemer
 - fix warning when filling histograms with nan

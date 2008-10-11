@@ -1,4 +1,4 @@
-// $Id: TrackCheckerNT.cpp,v 1.8 2008-02-08 08:13:01 cattanem Exp $
+// $Id: TrackCheckerNT.cpp,v 1.9 2008-10-11 16:09:39 cattanem Exp $
 // Include files 
 
 // local
@@ -215,16 +215,16 @@ StatusCode TrackCheckerNT::execute()
   // ok, save the number of MCParticles and Tracks we have here in Brunel,
   // and also save the number of MCParticles/Tracks saved to the NTuple
   tuple->column("nMCParticles", particles->size());
-  tuple->column("nSavedMCParticles", std::min(particles->size(), m_maxMCParticles));
+  tuple->column("nSavedMCParticles", std::min((long)particles->size(), m_maxMCParticles));
   tuple->column("nTracks", tracks->size());
-  tuple->column("nSavedTracks", std::min(tracks->size(), m_maxTracks));
+  tuple->column("nSavedTracks", std::min((long)tracks->size(), m_maxTracks));
   
   // warn if we lose Tracks_MCParticles
-  if (particles->size() > m_maxMCParticles)
+  if ((long)particles->size() > m_maxMCParticles)
     warning() << "Event has " << particles->size() << " MCParticles, "
       "saving only " << m_maxMCParticles << " to avoid NTuple array/matrix "
       "overflows." << endmsg;
-  if (tracks->size() > m_maxTracks)
+  if ((long)tracks->size() > m_maxTracks)
     warning() << "Event has " << tracks->size() << " Tracks, "
       "saving only " << m_maxTracks << " to avoid NTuple array/matrix "
       "overflows." << endmsg;
@@ -474,7 +474,7 @@ StatusCode TrackCheckerNT::fillGlobalTrackParameters(
     LinkedTo<MCParticle, Track>& directLink,
     Tuples::Tuple& tuple)
 {
-  int nTracks = std::min(m_maxTracks, tracks->size());
+  int nTracks = std::min(m_maxTracks, (long)tracks->size());
   // ok, now we declare the vectors to hold our data
   Array type(nTracks, -1.);	// track type
   Array chi2(nTracks, -1.);	// chi square
@@ -619,7 +619,7 @@ void TrackCheckerNT::fillDetTrackParametersAtMeasurements(
     LinkedTo<MCParticle, Track>& directLink,	// Track to MCParticle linker
     Tuples::Tuple &tuple)	// tuple to write things to
 {
-  int nTracks = std::min(m_maxTracks, tracks->size());
+  int nTracks = std::min(m_maxTracks, (long)tracks->size());
 
   // the preprocessor was meant to save a little typing work and to generally
   // come in handy for all sorts of tasks, and that's what we'll use it for
@@ -999,7 +999,7 @@ StatusCode TrackCheckerNT::fillHitPurEff(
     Tracks* tracks,
     LinkedTo<MCParticle, Track>& directLink)
 {
-  int nTracks = std::min(m_maxTracks, tracks->size());
+  int nTracks = std::min(m_maxTracks, (long)tracks->size());
   Array TotalHits(nTracks), MCTotalHits(nTracks), GoodHits(nTracks);
   Array TotalVelo(nTracks), TotalTT(nTracks), TotalIT(nTracks),
 	TotalOT(nTracks);
@@ -1198,7 +1198,7 @@ StatusCode TrackCheckerNT::fillMCGeneralInfo(
 {
   // Loop over the MCParticles - we're doing rather simple stuff here
   const int maxAssocTracks = 10;
-  int nParts = std::min(m_maxMCParticles, particles->size());
+  int nParts = std::min(m_maxMCParticles, (long)particles->size());
   // PID of MC particle
   Array PID(nParts, -1.);
   // mother of MC particle (idx into NTuple MCParticles, neg. if unav.)
@@ -1274,7 +1274,7 @@ StatusCode TrackCheckerNT::fillMCHitStatistics(
     Tuples::Tuple& tuple,
     MCParticles* particles)
 {
-  int nParts = std::min(m_maxMCParticles, particles->size());
+  int nParts = std::min(m_maxMCParticles, (long)particles->size());
   // again, we rely on the preprocessor to do some dirty work for us
 #define DECL(det, type, thing) Array n##det##type##thing(nParts, 0.)
 #define DECLVELO(type) DECL(Velo, type, Hits); DECL(Velo, type, Stations)
