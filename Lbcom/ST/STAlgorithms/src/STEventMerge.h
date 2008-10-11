@@ -1,4 +1,4 @@
-// $Id: STEventMerge.h,v 1.1 2008-09-20 12:56:35 mneedham Exp $
+// $Id: STEventMerge.h,v 1.2 2008-10-11 10:42:23 mneedham Exp $
 #ifndef STEVENTMERGE_H
 #define STEVENTMERGE_H 1
 
@@ -31,11 +31,23 @@ public:
   virtual StatusCode execute();
 
 private:
+
+
+  void overlappingClusters(const LHCb::STClusters* inCont, 
+                           const LHCb::STCluster* testClus,
+                           std::vector<LHCb::STCluster*>& outCont) const;
+
+
+  unsigned int spillDifference(const LHCb::STCluster* clus1, 
+                               const LHCb::STCluster* clus2 ) const;
   
+  LHCb::STCluster* selectBestCluster(const std::vector<LHCb::STCluster*>& clusters, const LHCb::STCluster* testClus) const;
+
   std::vector<std::string> m_spillsVector;
   std::vector<std::string> m_spillPath;
   std::string m_inputLocation;
   std::string m_clusterLocation;
+  std::string m_detType;
 
   class Less_by_Channel : public std::binary_function<LHCb::STLiteCluster,LHCb::STLiteCluster ,bool>{
   public:

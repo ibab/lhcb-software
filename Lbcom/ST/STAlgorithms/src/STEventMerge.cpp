@@ -1,9 +1,8 @@
-// $Id: STEventMerge.cpp,v 1.1 2008-09-20 12:56:35 mneedham Exp $
+// $Id: STEventMerge.cpp,v 1.2 2008-10-11 10:42:23 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/IRndmGenSvc.h"
-#include "GaudiKernel/RndmGenerators.h"
+
 
 // LHCbKernel includes
 #include "Kernel/STChannelID.h"
@@ -17,11 +16,11 @@ DECLARE_ALGORITHM_FACTORY( STEventMerge );
 
 STEventMerge::STEventMerge( const std::string& name,
                                     ISvcLocator* pSvcLocator):
-  GaudiAlgorithm(name, pSvcLocator){
+  GaudiAlgorithm(name, pSvcLocator),
+  m_inputLocation(STClusterLocation::ITClusters){
   
   declareProperty("spills", m_spillsVector);
-
-  m_inputLocation = STClusterLocation::ITClusters;
+  declareProperty("detType", m_detType = "IT");
   declareProperty("clusterLocation", m_clusterLocation = "/Event/Raw/IT/MergedSpills");
 
 }
@@ -36,7 +35,9 @@ StatusCode STEventMerge::initialize()
   StatusCode sc = GaudiAlgorithm::initialize();
   if (sc.isFailure()) return Error("Failed to initialize", sc);
 
-
+  STDetSwitch::flip(m_detType,m_inputLocation);
+  STDetSwitch::flip(m_detType,m_clusterLocation); 
+ 
   std::vector<std::string>::const_iterator iSpillName = m_spillsVector.begin();
   while( iSpillName != m_spillsVector.end()) {
     m_spillPath.push_back("/Event"+(*iSpillName)+m_inputLocation);
@@ -52,21 +53,27 @@ StatusCode STEventMerge::execute()
   
   STClusters* fCont = new STClusters();
   fCont->reserve(5000);  
+  put(fCont, m_clusterLocation);
+
   std::vector<std::string>::const_iterator iterS = m_spillPath.begin();
   for ( ;iterS != m_spillPath.end(); ++iterS){
     STClusters* clusterCont = get<STClusters>(*iterS);
     STClusters::iterator iterC = clusterCont->begin();
     for (; iterC != clusterCont->end() ; ++iterC){
 
-      STCluster* testCluster = fCont->object((*iterC)->channelID()) ;
-      if (testCluster == 0){ 
+      std::vector<STCluster*> clusters;
+      overlappingClusters(fCont,*iterC,clusters);   
+
+      if (clusters.empty() == true){ 
 	// not in the container insert     
         fCont->insert((*iterC)->clone(),(*iterC)->channelID());
       }
       else {
         // if this is a better cluster take it...
-	if ((*iterC)->totalCharge() > testCluster->totalCharge()){
-	  fCont->remove(testCluster);
+	// first pick the best in the container
+        STCluster* bestCluster = selectBestCluster(clusters,(*iterC));
+	if ((*iterC)->totalCharge() > bestCluster->totalCharge()){
+	  fCont->remove(bestCluster);
           fCont->insert((*iterC)->clone(),(*iterC)->channelID()); 
 	}
       }
@@ -76,11 +83,52 @@ StatusCode STEventMerge::execute()
   // sort 
   std::sort(fCont->begin(),fCont->end(), STDataFunctor::Less_by_Channel<const STCluster*>());
 
-  put(fCont, m_clusterLocation);
-
   return StatusCode::SUCCESS;
 }
 
+STCluster* STEventMerge::selectBestCluster(const std::vector<STCluster*>& clusters, const STCluster* testClus) const{
 
+  if (testClus->key() == clusters.front()->key()) return clusters.front();
 
+  STCluster* bestC = 0; double bestCharge = -100;
+  for (std::vector<STCluster*>::const_iterator iterC = clusters.begin(); iterC != clusters.end(); ++iterC){
+    if ((*iterC)->totalCharge() > bestCharge) {
+      bestCharge = (*iterC)->totalCharge();
+      bestC = *iterC;
+    }
+  } // iterC
+
+  return bestC;
+}
+
+void STEventMerge::overlappingClusters(const STClusters* inCont, 
+                                       const STCluster* testClus,
+                                       std::vector<STCluster*>& outCont) const{
+
+  // test if a cluster with the same key exists
+  STCluster* aCluster = inCont->object(testClus->key());
+  if (aCluster != 0){
+    outCont.push_back(aCluster);
+  }
+
+  // get list of channels to test
+  std::vector<STChannelID> chans = testClus->channels();
+  for (std::vector<STChannelID>::const_iterator iterC = chans.begin(); 
+       iterC != chans.end(); ++iterC ){
+    STCluster* aCluster2 = inCont->object(*iterC);
+    if (aCluster2 != 0){ 
+      if (spillDifference(testClus,aCluster2) == 1){
+      // overlapping clusters from 'spillover'
+        outCont.push_back(aCluster2);
+      }
+    }
+  } // iterC
+
+  //  std::unique(outCont.begin(), outCont.end());
+  
+}
+
+unsigned int STEventMerge::spillDifference(const STCluster* clus1, const STCluster* clus2 ) const{ 
+  return abs(clus1->spill() - clus2->spill());
+} 
 
