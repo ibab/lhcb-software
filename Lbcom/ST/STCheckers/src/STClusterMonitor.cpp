@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.cpp,v 1.10 2008-08-04 07:22:33 mneedham Exp $
+// $Id: STClusterMonitor.cpp,v 1.11 2008-10-11 10:44:25 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -95,13 +95,20 @@ void STClusterMonitor::fillHistograms(const STCluster* aCluster)
   plot((double)aCluster->highThreshold(),3,"High threshold",-0.5,1.5,2);
 
   // histogram by station
-  const int iStation = aCluster->channelID().station();
+  const int iStation = aCluster->station();
   plot((double)iStation,3,"Number of clusters per station",-0.5,4.5,5);
  
   // by layer
-  const int iLayer = aCluster->channelID().layer();
+  const int iLayer = aCluster->layer();
   plot((double)(10*iStation+iLayer),4,"Number of clusters per layer",
        -0.5,40.5,41);
+
+  // by strip, modulo a few things....
+  const unsigned int strip = aCluster->strip();
+  plot(strip%8,"strip modulo 8", -0.5, 8.5, 9);
+  plot(strip%32,"strip modulo 32", -0.5, 32.5, 33);
+  plot(strip%128,"strip modulo 128", -0.5, 128.5, 129);
+
 
   if (fullDetail() == true) {
  
@@ -121,6 +128,10 @@ void STClusterMonitor::fillHistograms(const STCluster* aCluster)
       plot(aCluster->neighbourSum()/aCluster->totalCharge(),
            9,"Relative neighbour sum (1- and 2-strip clusters)", -1.02, 1.02, 51);
     }
+
+    plot(aCluster->sourceID(),"sourceID", -0.5, 50.5, 51);
+
+    plot(aCluster->spill(), "spill", -10.5, 10.5, 21);
 
     const DeSTSector* aSector = m_tracker->findSector(aCluster->channelID());
     if (aSector != 0) {
