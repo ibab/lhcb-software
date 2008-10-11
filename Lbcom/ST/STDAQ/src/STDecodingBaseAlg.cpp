@@ -1,4 +1,4 @@
-// $Id: STDecodingBaseAlg.cpp,v 1.20 2008-09-17 12:57:05 mneedham Exp $
+// $Id: STDecodingBaseAlg.cpp,v 1.21 2008-10-11 10:40:30 mneedham Exp $
 
 #include <algorithm>
 
@@ -360,21 +360,21 @@ std::string STDecodingBaseAlg::toSpill(const std::string& location) const{
   return theSpill;
 }
 
-unsigned int STDecodingBaseAlg::spillOffset(const std::string& spill) const{
+LHCb::STCluster::Spill STDecodingBaseAlg::spillOffset(const std::string& spill) const{
 
   // convert spill to offset in time
-  unsigned int offset = 0;
-  if (spill.size() > 4u){
-    std::string spillNumber = spill.substr(4u,spill.size() - 4u);
-    offset = boost::lexical_cast<unsigned int>(spillNumber);
-  }
-  return offset;
+  return (spill.size() > 4u ? LHCb::STCluster::SpillToType(spill) : LHCb::STCluster::Central);
+    
+   //std::string spillNumber = spill.substr(4u,spill.size() - 4u);
+   //offset = boost::lexical_cast<unsigned int>(spillNumber);
+   //  }
+   // return offset;
 }
 
 bool STDecodingBaseAlg::validSpill() const{
 
   // check spill is actually read out using the ODIN
-  ODIN* odin = get<ODIN>(ODINLocation::Default); 
+  const ODIN* odin = get<ODIN>(ODINLocation::Default); 
   const unsigned int numberOfSpills = odin->timeAlignmentEventWindow();
-  return m_spillOffset <= numberOfSpills ;
+  return abs(m_spillOffset) <= numberOfSpills ;
 }

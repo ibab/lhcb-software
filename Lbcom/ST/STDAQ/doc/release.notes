@@ -4,6 +4,9 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2008-11-10 M Needham
+ - Follow changes in STCluster class [add spill]
+
 !=============================== STDAQ v3r12 2008-10-01 ======================
 ! 2008-09-20 M Needham
  - better bookkeeping of recovered banks

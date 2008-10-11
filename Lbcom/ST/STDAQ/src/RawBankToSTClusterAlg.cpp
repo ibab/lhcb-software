@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.48 2008-09-20 09:53:31 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.49 2008-10-11 10:40:30 mneedham Exp $
 
 #include <algorithm>
 
@@ -265,7 +265,7 @@ void RawBankToSTClusterAlg::createCluster( const STClusterWord& aWord,
                                                                nearestChan.first,
                                                                nearestChan.second),
                                                                adcs,neighbour, aBoard->boardID().id(), 
-                                                               aWord.channelID());
+                                                               aWord.channelID(), spill());
 
   if (!clusCont->object(nearestChan.first)) {
     clusCont->insert(newCluster,nearestChan.first);

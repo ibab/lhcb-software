@@ -1,4 +1,4 @@
-// $Id: STDecodingBaseAlg.h,v 1.14 2008-09-13 12:33:21 mneedham Exp $
+// $Id: STDecodingBaseAlg.h,v 1.15 2008-10-11 10:40:30 mneedham Exp $
 #ifndef STDECODINGBASEALG_H 
 #define STDECODINGBASEALG_H 1
 
@@ -84,6 +84,9 @@ protected:
  /** check the spill is read out **/
  bool validSpill() const;
 
+ /** return spill offset */
+ LHCb::STCluster::Spill spill() const;
+
  bool m_skipErrors;
  std::string m_bankTypeString;
  std::string m_rawEventLocation;
@@ -95,8 +98,8 @@ private:
 
 
   std::string toSpill(const std::string& location) const;
-  unsigned int spillOffset(const std::string& spill) const;
-  unsigned int m_spillOffset;
+  LHCb::STCluster::Spill spillOffset(const std::string& spill) const;
+  LHCb::STCluster::Spill m_spillOffset;
 
   std::string m_detType;
 
@@ -163,6 +166,9 @@ inline bool STDecodingBaseAlg::canBeRecovered(const LHCb::STTELL1BoardErrorBank*
   return ok ; 
 }
 
+inline LHCb::STCluster::Spill STDecodingBaseAlg::spill() const{
+  return m_spillOffset;
+}
 
 
 #endif // STDECODINGBASEALG_H 
