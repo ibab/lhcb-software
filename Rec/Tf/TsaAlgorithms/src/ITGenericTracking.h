@@ -1,4 +1,4 @@
-// $Id: ITGenericTracking.h,v 1.2 2008-09-19 09:09:37 mneedham Exp $
+// $Id: ITGenericTracking.h,v 1.3 2008-10-11 10:48:15 mneedham Exp $
 #ifndef ITGenericTracking_H
 #define ITGenericTracking_H 1
 
@@ -12,7 +12,7 @@ namespace LHCb{
 };
 class ISTSignalToNoiseTool;
 class DeSTDetector;
-
+class IHitExpectation;
 
 /** @class ITGenericTracking ITGenericTracking.h
  *
@@ -42,6 +42,7 @@ public:
 
 private:
 
+
   typedef std::pair<Tf::STHit*,Gaudi::XYZPoint> yInfo;
 
   bool collectXHits13(const Tf::Tsa::Line& line,
@@ -68,13 +69,22 @@ private:
                std::vector<Tf::STHit*>& selected2 );
 
   bool allowedBox(const Tf::STHit* hit) const;
-
+  bool allowedFirstStation(const Tf::STHit* hit) const;
+  bool allowedLastStation(const Tf::STHit* hit) const;
   bool sameBox(const Tf::STHit* hit1, const Tf::STHit* hit2) const;
 
+  unsigned int countHigh(const std::vector<Tf::STHit*>& xhits, const std::vector<Tf::STHit*>& yhits, 
+                         const LHCb::STClusters* clusterCont) const;
+
+  IHitExpectation* m_hitExpectation;
+  IHitExpectation* m_otHitExpectation;
   DeSTDetector* m_tracker;
   
   std::vector<unsigned int> m_allowedBoxes;
+  std::vector<unsigned int> m_firstStation;
+  std::vector<unsigned int> m_lastStation;
   
+
   std::string m_clusterLocation;
 
   bool m_requireFirstAndLast;
@@ -84,6 +94,7 @@ private:
   double m_yWindow;
   double m_yTol;
   unsigned int m_maxHits;
+  int m_maxFaults;
 
   double m_zRef;
   double m_maxTx;
@@ -96,6 +107,8 @@ private:
   unsigned int m_minHits;
   unsigned int m_minXHitsToConfirm;
   bool m_requireSameBox; 
+  unsigned int m_maxClusterSize;
+  double m_minCharge;
 
 };
 
@@ -104,6 +117,18 @@ inline bool ITGenericTracking::allowedBox(const Tf::STHit* hit) const {
   const unsigned int testBox = hit->cluster().detRegion();
   return (std::find(m_allowedBoxes.begin(), m_allowedBoxes.end(), testBox) == m_allowedBoxes.end() ? false : true ); 
 }
+
+
+inline bool ITGenericTracking::allowedFirstStation(const Tf::STHit* hit) const {
+  const unsigned int station = hit->cluster().station();
+  return (std::find(m_firstStation.begin(), m_firstStation.end(), station) == m_firstStation.end() ? false : true ); 
+}
+
+inline bool ITGenericTracking::allowedLastStation(const Tf::STHit* hit) const {
+  const unsigned int station = hit->cluster().station();
+  return (std::find(m_lastStation.begin(), m_lastStation.end(), station) == m_lastStation.end() ? false : true ); 
+}
+
 
 inline bool ITGenericTracking::sameBox(const Tf::STHit* hit1, const Tf::STHit* hit2) const{
   return(m_requireSameBox == true ? hit1->cluster().detRegion() == hit2->cluster().detRegion() : true);
