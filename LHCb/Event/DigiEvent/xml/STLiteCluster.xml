@@ -20,9 +20,27 @@
      serializers = "FALSE">
      <location name="TTClusters"   place="Raw/TT/LiteClusters"   />
      <location name="ITClusters"   place="Raw/IT/LiteClusters"   />
+      <import name = "Kernel/TTNames"/>
+      <import name = "Kernel/ITNames" />
 
   &STLiteClusterClass;
   &STLiteClusterChannelIDFunctions;
+
+
+ <method
+   name = "fillStream"
+   desc = "Print the lite cluster in a human readable way"
+   type = "std::ostream&amp;"
+   virtual = "FALSE"
+   const = "TRUE">
+   <arg type = "std::ostream"
+    name = "s" />
+     <code >
+       s &lt;&lt; "{ STLiteCluster with key: " &lt;&lt; (int) channelID() &lt;&lt; " channel: " &lt;&lt; sectorName() &lt;&lt; " strip " &lt;&lt; strip()     
+         &lt;&lt; "Pseudo size " &lt;&lt; pseudoSize() &lt;&lt; " high threshold :" &lt;&lt; highThreshold() &lt;&lt; " interStripFraction " &lt;&lt; interStripFraction()  &lt;&lt;  std::endl &lt;&lt; " }";
+      return s;
+     </code>
+  </method>
 
   </class>
 </package>

@@ -64,9 +64,52 @@
  desc = "short cut for strip"
  const = "TRUE" >
   <code>
-  return &channelIDFunction;.sector();
+  return &channelIDFunction;.strip();
   </code> 
 </method>
 
+<method
+   name = "sectorName"
+   desc = "Print the unique sector name"
+   type = "std::string"
+   virtual = "FALSE"
+   const = "TRUE">
+     <code >
+      return isIT() ?  ITNames().UniqueSectorToString(&channelIDFunction;) : TTNames().UniqueSectorToString(&channelIDFunction;);
+     </code>
+</method>
+
+<method
+   name = "layerName"
+   desc = "Print the unique layer name"
+   type = "std::string"
+   virtual = "FALSE"
+   const = "TRUE">
+     <code >
+      return isIT() ?  ITNames().UniqueLayerToString(&channelIDFunction;) : TTNames().UniqueLayerToString(&channelIDFunction;);
+     </code>
+</method>
 
 
+<method
+   name = "detRegionName"
+   desc = "Print the unique det region name"
+   type = "std::string"
+   virtual = "FALSE"
+   const = "TRUE">
+     <code >
+      return isIT() ?  ITNames().UniqueBoxToString(&channelIDFunction;) : TTNames().UniqueRegionToString(&channelIDFunction;);
+     </code>
+</method>
+
+
+<method
+   name = "stationName"
+   desc = "Print the station name"
+   type = "std::string"
+   virtual = "FALSE"
+   const = "TRUE">
+     <code >
+      return isIT() ?  ITNames().StationToString(&channelIDFunction;) : TTNames().StationToString(&channelIDFunction;);
+     </code>
+</method>

@@ -20,26 +20,43 @@
 
      <import name="vector"  std="TRUE"/> 
      <import name="utility" std="TRUE"/> 
-
+     <import name = "Kernel/TTNames"/>
+     <import name = "Kernel/ITNames" />
      <location name="TTClusters"   place="Raw/TT/Clusters"   />
      <location name="ITClusters"   place="Raw/IT/Clusters"   />
+
+ 
+     <enum
+        desc="spill names"
+        name="Spill"
+        strTypConv = "TRUE" 
+        unknownValue="UnknownSpill" 
+        value="UnknownSpill=99, Central = 0, Prev1 = -1, Prev2 = -2, 
+               Prev3 = -3 , Prev4 = -4 ,Prev5 = -5, Prev6 = -6, 
+               Prev7 = -7, Prev8 = -8, Prev9 = -9, Prev10 = -10,
+               Next1 = 1, Next2 = 2, Next3 = 3, Next4 = 4, Next5 =5,
+               Next6 = 6, Next7 = 7, Next8 = 8, Next9 = 9, Next10 = 10 "
+        access="PUBLIC"
+      />
+
+
 
      <constructor desc="Constructor" 
        argList='&liteClusterName; lCluster, 
                 ADCVector strips,
                 double neighbourSum'
-        initList='m_liteCluster(lCluster), m_stripValues(strips),m_neighbourSum(neighbourSum) , m_sourceID(999), m_tell1Channel(9999)' >
+        initList='m_liteCluster(lCluster), m_stripValues(strips),m_neighbourSum(neighbourSum) , m_sourceID(999), m_tell1Channel(9999), m_spill(STCluster::Central)' >
      </constructor>
 
     <constructor desc="Constructor with source id" 
        argList='&liteClusterName; lCluster, 
                 ADCVector strips,
-                double neighbourSum, unsigned sourceID, unsigned int tell1Chan'
-        initList='m_liteCluster(lCluster), m_stripValues(strips),m_neighbourSum(neighbourSum) , m_sourceID(sourceID), m_tell1Channel(tell1Chan)' >
+                double neighbourSum, unsigned sourceID, unsigned int tell1Chan,                 const LHCb::STCluster::Spill&amp; spill '
+        initList='m_liteCluster(lCluster), m_stripValues(strips),m_neighbourSum(neighbourSum) , m_sourceID(sourceID), m_tell1Channel(tell1Chan), m_spill(spill)' >
      </constructor>
 
    <constructor desc = 'copy constructor'
-      initList = "KeyedObject&lt;LHCb::&channelID;&gt;(),m_liteCluster(cluster.m_liteCluster), m_stripValues(cluster.m_stripValues),m_neighbourSum(cluster.m_neighbourSum) , m_sourceID(cluster.m_sourceID), m_tell1Channel(cluster.m_tell1Channel) " > 
+      initList = "KeyedObject&lt;LHCb::&channelID;&gt;(),m_liteCluster(cluster.m_liteCluster), m_stripValues(cluster.m_stripValues),m_neighbourSum(cluster.m_neighbourSum) , m_sourceID(cluster.m_sourceID), m_tell1Channel(cluster.m_tell1Channel), m_spill(cluster.m_spill) " > 
       <arg const = 'TRUE' name = "cluster" type = "LHCb::STCluster" />
 	</constructor>
 
@@ -75,6 +92,13 @@
     name = "tell1Channel"
     type= "unsigned int"
     desc = "tell1 channel number"
+  />
+
+  <attribute
+    name = "spill"
+    type = "LHCb::STCluster::Spill"
+    desc = "spill the cluster corresponds to"
+    setMeth = "FALSE"
   />
 
    <method
@@ -134,6 +158,26 @@
   </method>
 
 
+  <method name = "overlaps"
+          type = "bool"
+          desc = "true if clusters have strips in common"
+          argList = "const STCluster* testCluster"
+  const = "TRUE">
+     <code>
+        bool overlap = false;
+        if (channelID().uniqueSector() == testCluster->channelID().uniqueSector()){
+          std::vector&lt;LHCb::STChannelID&gt; chans = channels();
+          std::vector&lt;LHCb::STChannelID&gt; testchans = testCluster->channels();
+          for (std::vector&lt;LHCb::STChannelID&gt;::const_iterator iterC1 = testchans.begin();
+                iterC1 != testchans.end() &amp;&amp; overlap == false ; ++iterC1){
+            if (contains(*iterC1) == true) overlap = true;
+          } // loop chans
+        } // if
+        return overlap;
+     </code>
+  </method>
+ 
+
  <method
    name = "maxADCValue"
    type = "unsigned int"
@@ -150,6 +194,22 @@
     </code>
  </method>
 
+
+ <method
+   name = "fillStream"
+   desc = "Print the cluster in a human readable way"
+   type = "std::ostream&amp;"
+   virtual = "FALSE"
+   const = "TRUE">
+   <arg type = "std::ostream"
+    name = "s" />
+     <code >
+       s &lt;&lt; "{ SCluster with key: " &lt;&lt; (int) key() &lt;&lt; " channel: " &lt;&lt; sectorName() &lt;&lt; " strip " &lt;&lt; strip()     
+         &lt;&lt; "Size " &lt;&lt; size() &lt;&lt; " charge :" &lt;&lt; totalCharge() &lt;&lt; " source ID " &lt;&lt; sourceID()  &lt;&lt;  
+        " tell1 channel " &lt;&lt; tell1Channel()  &lt;&lt; " Spill "  &lt;&lt; spill() &lt;&lt;  std::endl &lt;&lt; " }";
+      return s;
+     </code>
+  </method>
 
 
  &STClusterChannelIDFunctions;

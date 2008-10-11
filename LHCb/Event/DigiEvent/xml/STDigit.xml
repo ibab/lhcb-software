@@ -1,5 +1,8 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE gdd SYSTEM 'gdd.dtd'>
+<!DOCTYPE gdd SYSTEM 'gdd.dtd' [
+<!ENTITY STClusterChannelIDFunctions SYSTEM "STChannelID.ent">
+<!ENTITY channelIDFunction "channelID()" >
+]>
 <gdd>
   <package name='DigiEvent'>
 
@@ -9,15 +12,51 @@
       <location name="TTDigits"   place="Raw/TT/Digits"   />
       <location name="ITDigits"   place="Raw/IT/Digits"   />
       <import name ="Kernel/STChannelID"/>
+      <import name = "Kernel/TTNames"/>
+      <import name = "Kernel/ITNames" />
        <constructor argList="double charge" 
                     initList="m_depositedCharge(charge)"
                     desc="special constructor">
        <code></code>
       </constructor>
+
+  <constructor desc = 'copy constructor'
+      initList = "KeyedObject&lt;LHCb::STChannelID&gt;(),m_depositedCharge(digit.m_depositedCharge)" > 
+      <arg const = 'TRUE' name = "digit" type = "LHCb::STDigit" />
+	</constructor>
+
+  <method desc= 'clone method'
+   name = 'clone' 
+   const = 'TRUE'
+   type = "LHCb::STDigit*"
+   access = "PUBLIC">
+   <code>
+     return new LHCb::STDigit( *this );
+   </code>
+  </method>
+
       <attribute name="depositedCharge" type="double" setMeth = "FALSE" desc="charge deposited on strip"/>
       <method type='LHCb::STChannelID' name='channelID' const='TRUE'  desc='channel = key'>
         <code>return key();</code>
       </method>
+
+  <method
+   name = "fillStream"
+   desc = "Print the digit in a human readable way"
+   type = "std::ostream&amp;"
+   virtual = "FALSE"
+   const = "TRUE">
+   <arg type = "std::ostream"
+    name = "s" />
+     <code >
+       s &lt;&lt; "{ STDigit with key: " &lt;&lt; (int) key() &lt;&lt; " channel: " &lt;&lt; sectorName() &lt;&lt; " strip " &lt;&lt; strip()     
+         &lt;&lt; " depositedCharge :" &lt;&lt; (float)m_depositedCharge &lt;&lt; std::endl &lt;&lt; " }";
+      return s;
+     </code>
+  </method>
+
+  &STClusterChannelIDFunctions;
+
   </class>
   
  </package>
