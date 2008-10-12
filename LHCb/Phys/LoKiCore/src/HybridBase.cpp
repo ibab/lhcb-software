@@ -1,4 +1,4 @@
-// $Id: HybridBase.cpp,v 1.7 2008-07-21 15:05:50 ibelyaev Exp $
+// $Id: HybridBase.cpp,v 1.8 2008-10-12 12:19:18 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -14,6 +14,10 @@
 // ============================================================================
 #include "LoKi/HybridBase.h"
 #include "LoKi/ILoKiSvc.h"
+// ============================================================================
+// Boots 
+// ============================================================================
+#include "boost/algorithm/string/trim.hpp"
 // ============================================================================
 // Python 
 // ============================================================================
@@ -50,7 +54,23 @@ namespace
       pos = str.find ( '\n' , pos + 2 ) ;
     }
     return str ;
-  } 
+  }
+  /// prepare the actual code: trim and remove the paired quotes 
+  std::string trimCode ( std::string code ) 
+  {
+    // trim leading and trailing blanks:
+    boost::trim ( code ) ;
+    if ( code.empty() )                { return code ; } 
+    // check for paired quotes:
+    std::string::const_iterator ifront = code.begin () + 1 ;
+    std::string::const_iterator iback  = code.end   () - 1 ;
+    //
+    if ( *ifront != *iback ) { return code ; }
+    // 
+    if ( '\'' != *ifront && '"' != *ifront ) { return code ; }
+    //
+    return trimCode ( std::string ( ifront , iback ) ) ;
+  }
 }
 // ============================================================================
 // Standard constructor
@@ -203,7 +223,10 @@ std::string LoKi::Hybrid::Base::makeCode
       _code.replace( pos , 1 , " " ) ;
       pos = _code.find ('\n') ;
     }
-  }    
+  }
+  // trim and remove the paired quotes:
+  _code = trimCode ( _code ) ;
+  //
   std::ostringstream stream ;
   // start the code:
   stream << "# " << std::string(78,'=') << std::endl ;

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.111 2008-10-03 13:02:06 ibelyaev Exp $ 
+! $Id: release.notes,v 1.112 2008-10-12 12:19:18 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,15 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2008-10-12 - Vanya BELYAEV
+
+ - src/HybridBase.cpp
+
+   add some treatment for the python  code strings, namely 
+   the trings are trimmed and the paired quotes are removed.
+   This is appears to be rather important for HLT
+ 
 
 ! 2008-10-03 - Vanya BELYAEV
  - LoKi/FuncOps.h
