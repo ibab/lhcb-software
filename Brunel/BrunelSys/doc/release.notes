@@ -3,7 +3,94 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-- Add QMTest for intialisatoin, and corresponding sam test
+</PRE><H1><A NAME=v33r3>2008-10-13 Brunel v33r3</A></H1><PRE>
+This version uses projects Gaudi v20r2, LHCb v25r2, Lbcom v6r23
+ and SQLDDDB v5r0, ParamFiles v7r3, FieldMap v5r1
+
+This version is a development version to prepare for reconstruction of real data
+- Should be used to reconstruct 2008 geometries
+- For 2008 simulation, needs data digitised with Boole v16r3 or later
+- Can reconstruct DC06 data, except if digitised with Boole v15r1 or v15r2,
+  but material seen is different from DC06
+
+- Geometry changes (SQLDDDB v5r0, with DC06-20081002 or head-20081002 tags)
+  . Corrections to IT 2008 geometry parameters (IT boxes moved by 3mm in z)
+    requires data produced with tag head-20081002 or later
+  . Fix to Prs reference plane position
+  . Add new Calo conditions : (L0)calibration, channel quality (CaloDet v10r0)
+  . Added Outer Tracker T0 and RT relation conditions (OTDet v8r1)
+
+- New features
+    Bunch current is hardwired to a constant number for now. (DigiAlg v4r11)
+  . Add a qmtest that tests the initialisation of Brunel, used by Dirac to test
+    the installation. Invoked with: "cmt TestPackage sam"  (BrunelSys v33r3)
+  . Add options/2008-TED-Data.py, options for 2008 real data processing
+  . New ExpertTracking option "MuonAlignTracks" to reconstruct and fit tracks in
+    the Muons and add the states to the DST (disabled by default)
+    (TrackSys v4r18, MuonTrackAlign v1r7, GaudiConf v10r13)
+  . Add option to ignore e-loss corrections (TrackFitter v2r28)
+  . Possibility to process multiple spills in same TAE event 
+    (STAlgorithms v3r1, STDAQ v3r12, GaudiConf v10r13, RichKernel v7r17)
+  . Debug libraries now built without Boost memory allocators, to allow search
+    for TES memory leaks
+    (TrackFitEvent v3r18, GaudiObjDesc v10r13, LHCbKernel v9r2))
+
+- New tuning
+  . Update 2008-Files.py to use digi file produced with Boole v16r3
+  . Major reorganisation of Calorimeter reconstruction
+    (CaloReco v4r16, CaloDet v10r0, CaloUtils v8r2, CaloInterfaces v7r8)
+  . Minor updates to Rich reconstruction
+    (RichMarkovRingFinder v2r2, RichRecAlgorithms v2r14, RichRecTools v4r6)
+  . Updated PatVeloFitLHCbIDs to allow a first measurement state and a variable
+    multiple scattering term based on the input track's momentum (PatVelo v3r9)
+  . Add driftTime function to OTMeasurement (TrackFitEvent v3r18)
+  . Major cleanup of TrackProjectors
+    (TrackProjectors v2r19, TrackFitter v2r28, TrackInterfaces v3r17)
+  . Improved performance of matrix inversion routines (LHCbMath v3r3)
+
+- Monitoring changes
+  . Replace BrunelMoni.opts wih BrunelMoni.py, add Track Moni sequence
+  . New PatChecking sequence, uses TrackAssociators, TrackResCheckers,
+    TrackEffCheckers instead of PatTrack2MCParticle and PatChecker
+  . Add Muon histograms to Moni sequence (MuonPIDChecker v2r4)
+  . Review histogram production & prepare for real data (CaloMoniDst v3r2)
+  . Minor changes to Rich histograms (RichMarkovRingFinder v2r2, RichRecQC v2r23)
+  . RichPID histogram statistics no longer printed by default (RichRecTools v4r6)
+  . Added configurable for Track monitoring sequence (TrackMonitors v1r4)
+  . Added residuals (TrackMonitors v1r4)
+  . First version of the track-based monitoring algorithm VeloTrackMonitor
+    (VeloRecMonitors v1r1)
+  . Added number of clusters per sensor to cluster monitor, off by default.
+    (VeloRecMonitors v1r1)
+  . Added sampling monitor plots separated for A and C side.
+    (VeloRecMonitors v1r1)
+  . Update SuppresWarnings.opts
+
+- New packaging
+  . Use ParamFiles v7r3, do not set DDDB major version (taken from LHCbSys)
+  . Reorganise Configuration.py, remove Brunel.opts and Brunel().mainOptions
+  . Clean up DDDB intialisation in Configurable, needs GaudiConf v10r13
+  . Fix default options in Brunel_Ganga.py for consistency with new defaults
+  . Change TrackClones.opts to python (TrackSys v4r18)
+  . Replace Fitting.py with ConfiguredFitters (TrackSys v4r18, TrackFitter v2r28)
+
+- Bug fixes and protections
+  . More improvements and protections for real data decoding
+    (STDAQ v3r12, DigiEvent v2r9)
+  . Fix warning when filling histograms with nan (TrackCheckers v4r3)
+  . Fix output for event weighted ghost rate (TrackCheckers v4r3)
+  . Fix untested StatusCode
+    (STDAQ v3r12, TsaAlgorithms v3r6, VeloRecMonitors v1r1, Magnet v5r1p1)
+  . Fix memory leak in TrackStateVertex.cpp (TrackFitEvent v3r18)
+  . Protect against using non-existent conditions 
+    (DetDesc v18r9, CaloDet v10r0, OTDet v8r1, RichDet v11r2)
+  . Fixed a bug in CondDBCommon::generateXMLCatalog, failing for folders with
+    names shorter than 4 chars. Requires SQLDDDB v5r0 (DetCond v12r3)
+  . Rich component names no longer contain blank spaces (LHCbKernel v9r2)
+  . Fix bug in updateTool where m_fieldTool was only updated on the first
+    instance for each field configuration change (Magnet v5r1p1)
+  . More FPE protections (TrackEvent v4r15, TfKernel v2r3)
+  . Fix uninitialized data members in Measurement constructor (TrackEvent v4r15)
 
 </PRE><H1><A NAME=v33r2>2008-09-09 Brunel v33r2</A></H1><PRE>
 This version uses projects Gaudi v20r2, LHCb v25r1, Lbcom v6r22, Rec v5r11

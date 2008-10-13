@@ -8,7 +8,7 @@ branches cmt doc
 #=======================================================
 
 # Brunel application
-use Brunel v33r2 Rec
+use Brunel v33r3 Rec
 
 # Allow the generation of the SAM QMTest
 apply_pattern QMTest

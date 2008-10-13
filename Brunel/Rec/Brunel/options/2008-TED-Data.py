@@ -46,7 +46,8 @@ else:
     print "********************************************************************************"
     print "The 2008-TED-Files.py file requires Brunel be set up to process MDF data"
     print "********************************************************************************"
-
+    import sys
+    sys.exit()
 
 # Set the property, used to build other file names
 Brunel().setProp( "datasetName", datasetName )
