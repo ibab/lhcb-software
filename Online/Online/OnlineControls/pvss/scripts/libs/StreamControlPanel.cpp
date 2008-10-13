@@ -62,7 +62,7 @@ void StreamControlPanel_initTasksPanel(string stream, string partition, string n
 }
 //=============================================================================
 void StreamControl_trace(string msg)  {
-  //DebugN(msg);
+  DebugN(msg);
 }
 //=============================================================================
 //
@@ -237,13 +237,13 @@ void StreamControlPanel_CheckAllocPanel(string dp, string value)  {
   if ( dpExists(value+".general.partName") )  {
     m_sliceNotInUse.visible = 0;
     dpGet(value+".general.partName",partition);
-    StreamControl_trace("Rebuilding Stream allocation panel with runInfo:"+value+ "Partition:"+value);
+    StreamControl_trace("Rebuilding Stream allocation panel with runInfo:"+value+ " Partition:"+value);
     StreamControlPanel_initAllocPanel(stream,partition);
     return;
   }
   else if ( dpExists(value) )   {
     m_sliceNotInUse.visible = 0;
-    StreamControl_trace("Rebuilding Stream allocation panel with runInfo:"+value+ "Partition:"+slice);
+    StreamControl_trace("Rebuilding Stream allocation panel with runInfo:"+value+ " Partition:"+slice);
     StreamControlPanel_initAllocPanel(sys,slice);
     m_streamName.text = substr(slice,0,strpos(slice,"_Slice"));
     //m_partition.enabled = 0;
@@ -266,7 +266,7 @@ void StreamControlPanel_startAllocPanel(string slice, string stream)  {
     sys = substr(sys,0,strlen(sys)-1);
     dp = sys+":"+slice+".RunInfo";
   }
-  StreamControl_trace("System ID:"+sysId+" System:"+sys+" DP:"+dp+" Slice:"+slice+" Stream:"+stream);
+  DebugN("System ID:"+sysId+" System:"+sys+" DP:"+dp+" Slice:"+slice+" Stream:"+stream);
   m_streamName.text = stream;
   if ( dpExists(dp) )  {
     dpConnect("StreamControlPanel_CheckAllocPanel",dp);
@@ -325,25 +325,42 @@ void StreamControlPanel_setupAllocWidgets()  {
   m_Save.toolTipText              = "Save changes to datapoints but keep panel open.";
   m_Ok.toolTipText                = "Save changes to datapoints and close panel.";
 }
+
+//=============================================================================
+void StreamControlPanel_runInfoDP(string stream, string partition, string& info, int& res) {
+  string dp = strtoupper(stream)+":"+m_runInfoDP.text;
+  if ( !dpExists(dp) ) {
+    res = -1;
+    StreamControl_trace("StreamControlPanel_initAllocData-1> dpExists(dp):"+res+" Dp="+dp);
+  }
+  if ( 0 == res ) res = dpGet(dp,info);
+  if ( !dpExists(info) )   {
+    StreamControl_trace("StreamControlPanel_initAllocData-2> dpExists(dp):"+res+" Dp="+dp+" Info:"+info);
+    res = -1;
+  }
+  if ( 0 != res ) {   // RECSTORAGE
+    res = 0;
+    info = getSystemName()+m_runInfoDP.text;
+    if ( !dpExists(info) )   {
+      StreamControl_trace("StreamControlPanel_initAllocData-3> dpExists(dp):"+res+" Dp="+dp+" Info:"+info);
+      res = -1;
+    }
+    else if ( !dpExists(info+".HLTFarm.nSubFarms") ) {
+      dpGet(info,info);
+    }
+  }
+}
+
 //=============================================================================
 void StreamControlPanel_initAllocData(string stream, string partition)  {
-  int recv_slots = 1, strm_slots = 0, recvStrategy = 2, strmStrategy = 2;
-  string dp, info = "LBECS:"+partition+"_RunInfo";
+  string info;
   dyn_int strmMult;
   dyn_string rcvInfra, strmInfra, strmTypes, streams;
   bool isStorage = strpos(stream,"Storage") >= 0;
   bool isMonitoring = strpos(stream,"Monitoring") >= 0;
-  int res = 0;
-  dp = strtoupper(stream)+":"+m_runInfoDP.text;
-  if ( !dpExists(dp) ) {
-    res = -1;
-    StreamControl_trace("StreamControlPanel_initAllocData> dpExists(dp)",res,dp);
-  }
-  if ( 0 == res ) res = dpGet(dp,info);
-  if ( !dpExists(info) )   {
-    StreamControl_trace("StreamControlPanel_initAllocData> dpExists(dp)",res,dp,info);
-    res = -1;
-  }
+  int res = 0, recv_slots = 1, strm_slots = 0, recvStrategy = 2, strmStrategy = 2;
+
+  StreamControlPanel_runInfoDP(stream,partition,info,res);
   if ( isStorage )  {
     if ( 0 == res )  {
       res = dpGet(info+".HLTFarm.nSubFarms",recv_slots,
@@ -443,33 +460,26 @@ void StreamControlPanel_showJobOptions()  {
 }
 //=============================================================================
 int StreamControlPanel_AllocSave(string stream, string partition)  {
-  // Are you sure ....
-  string info;
   dyn_float df;
   dyn_string ds;
-  string msg = "Are you sure you want to save the parameters ?";
+  string info, msg = "Are you sure you want to save the parameters ?";
   ChildPanelOnReturn("vision/MessageInfo","Please Confirm",
                      makeDynString("$1:"+msg,"$2:Cancel","$3:Ok"),50,50,ds,df);
   if ( ds[1] == 0 )   {
-    
     bool isStorage = strpos(stream,"Storage") >= 0;
     bool isMonitoring = strpos(stream,"Monitoring") >= 0;
     string s0 = m_strmTypes.text, s1 = m_recvInfraTaskTypes.text, s2 = m_strmInfraTaskTypes.text;
     int recvStrategy = m_recvStrategy.text;
     int strmStrategy = m_strmStrategy.text;
-    //strreplace(s0,"\n"," ");
-    //while ( strpos(s0,"  ")>0 ) strreplace(s0,"  "," ");
     strreplace(s1,"\n"," ");
     while ( strpos(s1,"  ")>0 ) strreplace(s1,"  "," ");
     strreplace(s2,"\n"," ");
     while ( strpos(s2,"  ")>0 ) strreplace(s2,"  "," ");
     dyn_string strm_typs  = strsplit(s0,"\n");
-    dyn_string rcvInfra = strsplit(s1," ");
-    dyn_string strmInfra = strsplit(s2," ");
+    dyn_string rcvInfra   = strsplit(s1," ");
+    dyn_string strmInfra  = strsplit(s2," ");
     dyn_int mult;
     dyn_string items, types, strm;
-    
-    // DebugN("Length:",dynlen(strm_typs),strm_typs);
     
     for(int i=1, n=dynlen(strm_typs); i<=n; ++i)  {
       items = strsplit(strm_typs[i],"/");
@@ -481,35 +491,28 @@ int StreamControlPanel_AllocSave(string stream, string partition)  {
         ChildPanelOn("vision/MessageInfo1","Bad input",makeDynString("Parameter 'Stream Types' is incorrect"),50,50);
         return 1;
       }
-      dynAppend(types,items[1]);
       dynAppend(mult,items[2]);
+      dynAppend(types,items[1]);
       if ( isMonitoring ) dynAppend(strm,items[3]);
     }
     int res = -1;
-    if ( isStorage )  {
-      res = dpGet(strtoupper(stream)+":"+m_runInfoDP.text,info);
-      if ( !dpExists(info) ) res = -1;
-      if ( 0 == res )  {
-        res = dpSet(info+".Storage.recvInfrastructure", rcvInfra,
-                    info+".Storage.streamInfrastructure", strmInfra,
-                    info+".Storage.streamMultiplicity", mult,
-                    info+".Storage.streamTypes", types,
-                    info+".Storage.recvStrategy", recvStrategy,
-                    info+".Storage.strmStrategy", strmStrategy);
-      }
+    StreamControlPanel_runInfoDP(stream,partition,info,res);
+    if ( isStorage && 0 == res )  {
+      res = dpSet(info+".Storage.recvInfrastructure", rcvInfra,
+		  info+".Storage.streamInfrastructure", strmInfra,
+		  info+".Storage.streamMultiplicity", mult,
+		  info+".Storage.streamTypes", types,
+		  info+".Storage.recvStrategy", recvStrategy,
+		  info+".Storage.strmStrategy", strmStrategy);
     }
-    else if ( strpos(stream,"Monitoring") >= 0 )  {
-      res = dpGet(strtoupper(stream)+":"+m_runInfoDP.text,info);
-      if ( !dpExists(info) ) res = -1;
-      if ( 0 == res )  {
-        res = dpSet(info+".MonFarm.relayInfrastructure", rcvInfra,
-                    info+".MonFarm.monInfrastructure", strmInfra,
-                    info+".MonFarm.monMultiplicity", mult,
-                    info+".MonFarm.monTypes", types,
-                    info+".MonFarm.monStreams", strm,
-                    info+".MonFarm.recvStrategy", recvStrategy,
-                    info+".MonFarm.strmStrategy", strmStrategy);
-      }
+    else if ( isMonitoring && 0 == res )  {
+      res = dpSet(info+".MonFarm.relayInfrastructure", rcvInfra,
+		  info+".MonFarm.monInfrastructure", strmInfra,
+		  info+".MonFarm.monMultiplicity", mult,
+		  info+".MonFarm.monTypes", types,
+		  info+".MonFarm.monStreams", strm,
+		  info+".MonFarm.recvStrategy", recvStrategy,
+		  info+".MonFarm.strmStrategy", strmStrategy);
     }
     ctrlUtils_checkErrors(res);
     StreamControlPanel_initAllocData(stream,partition);
@@ -540,18 +543,18 @@ void StreamControlPanel_AllocReset(string stream, string partition)  {
 //=============================================================================
 void StreamControlPanel_init(string stream, string partition)  {
   StreamControl_trace("Stream:"+stream+" Partition:"+partition);
-  m_streamName.text = stream;
-  m_partition.text   = partition;
+  m_streamName.text       = stream;
+  m_partition.text        = partition;
   StreamControlPanel_setupWidgets();
-  m_partition.visible = 0;
-  m_streamName.visible = 0;
+  m_partition.visible     = 0;
+  m_streamName.visible    = 0;
 
-  m_streamName.visible = 1;
-  m_streamName.backCol = "yellow";
-  m_partition.visible = 1;
-  m_partition.backCol = "yellow";
+  m_streamName.visible    = 1;
+  m_streamName.backCol    = "yellow";
+  m_partition.visible     = 1;
+  m_partition.backCol     = "yellow";
 
-  m_partitionName.text = "Partition:"+partition;
+  m_partitionName.text    = "Partition:"+partition;
   m_partitionName.visible = 1;
   m_partitionList.enabled = 1;
   if ( strlen(partition)>0 )  {

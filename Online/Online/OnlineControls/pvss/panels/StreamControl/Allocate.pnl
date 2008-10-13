@@ -8,6 +8,7 @@ PANEL,-1 -1 383 430 N "_3DFace" 2
 main()  {
   string strm = \"Monitoring\", partition = \"LHCb\";
   string slice = $1;
+  DebugN(\"$1=\"+$1+\" $2=\"+$2);
   if ( slice != \"\" )  {
     setValue(\"m_Ok\",\"visible\",0);
     setValue(\"m_Cancel\",\"visible\",0);
