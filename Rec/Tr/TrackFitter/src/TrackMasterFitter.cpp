@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.56 2008-09-08 12:02:42 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.57 2008-10-13 09:17:42 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -239,11 +239,9 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
 
   // determine the track states at user defined z positions
   sc = determineStates( track, pid );
-  if ( sc.isFailure() ) {
-    track.clearNodes() ;
+  if ( sc.isFailure() ) 
     return failure( "failed in determining states" ) ;
-  }
-
+  
   if ( m_debugLevel && !track.states().empty() )
     debug() << "first state = " << track.firstState() << endmsg;
 
@@ -716,7 +714,7 @@ StatusCode TrackMasterFitter::updateTransport(LHCb::Track& track) const
       
       // correct for energy loss
       double dE = node->deltaEnergy() ;
-      if ( fabs(statevector.qOverP()) > LHCb::Math::lowTolerance ) {
+      if ( std::abs(statevector.qOverP()) > LHCb::Math::lowTolerance ) {
 	double charge = statevector.qOverP() > 0 ? 1 :  -1 ;
 	double momnew = std::max( m_minMomentumForELossCorr,
 				  fabs(1/statevector.qOverP()) + dE ) ;  
