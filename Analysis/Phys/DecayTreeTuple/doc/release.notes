@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+! 2008-10-13 - Patrick Koppenburg
+ - Add a wraning when HltDecReports are not here
+
 !======================== DecayTreeTuple v1r8 2008-10-06 ===================
 ! 2008-10-06 - Patrick Koppenburg
  - Added minimum IP on all PVs in TupleToolGeometry. This is what one actually

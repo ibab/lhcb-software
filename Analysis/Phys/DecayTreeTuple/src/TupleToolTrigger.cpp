@@ -1,4 +1,4 @@
-// $Id: TupleToolTrigger.cpp,v 1.8 2008-09-16 09:50:50 pkoppenb Exp $
+// $Id: TupleToolTrigger.cpp,v 1.9 2008-10-13 18:40:33 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -105,6 +105,6 @@ StatusCode TupleToolTrigger::fillHlt( Tuples::Tuple& tuple, const std::string & 
           return StatusCode::FAILURE;
       } 
     }
-  }
+  } else Warning("No HltDecReports at "+LHCb::HltDecReportsLocation::Default,StatusCode::FAILURE,1);
   return StatusCode::SUCCESS ;
 }
