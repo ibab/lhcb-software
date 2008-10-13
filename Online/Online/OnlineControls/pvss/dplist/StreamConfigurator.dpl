@@ -6,7 +6,7 @@ fwOT_StreamConfigurator	_FwFsmObjectType	168054
 
 # DpValue
 ElementName	TypeName	_original.._value	_original.._status	_original.._stime
-fwOT_StreamConfigurator.panel	_FwFsmObjectType	"StreamControl/Allocate.pnl"	0x101	09.07.2008 16:36:52.236
+fwOT_StreamConfigurator.panel	_FwFsmObjectType	"StreamControl/Allocate.pnl"	0x101	13.10.2008 09:06:56.871
 fwOT_StreamConfigurator.components	_FwFsmObjectType	"string State
 ", "", "#uses \"fwExternalAlertHandler/fwExternalAlertHandler.ctl\"
 #uses \"ctrlUtils.cpp\"
@@ -178,13 +178,13 @@ int StreamConfigurator_execute(string domain, string device, string action, stri
   else if (action == \"FINALIZE\")   dpSetWait(device+\".State\",\"FINALIZED\");
   else   DebugN(device+\"> Received unknown action:\"+action);
 } 
-"	0x101	09.07.2008 16:37:02.583
-fwOT_StreamConfigurator.states	_FwFsmObjectType	"NOT_READY", "FwStateAttention1", "", "", "", "READY", "FwStateOKNotPhysics", "", "", "", "STOPPED", "FwStateAttention1", "", "", "", "RUNNING", "FwStateOKPhysics", "", "", "", "ERROR", "FwStateAttention3", "", "", "", "CONFIGURED", "FwStateAttention1", "", "", "", "CREATED", "FwStateAttention1", "", "", "", "FINALIZED", "FwStateAttention1", "", "", ""	0x101	09.07.2008 16:37:02.578
+"	0x101	13.10.2008 09:06:56.670
+fwOT_StreamConfigurator.states	_FwFsmObjectType	"NOT_READY", "FwStateAttention1", "", "", "", "READY", "FwStateOKNotPhysics", "", "", "", "STOPPED", "FwStateAttention1", "", "", "", "RUNNING", "FwStateOKPhysics", "", "", "", "ERROR", "FwStateAttention3", "", "", "", "CONFIGURED", "FwStateAttention1", "", "", "", "CREATED", "FwStateAttention1", "", "", "", "FINALIZED", "FwStateAttention1", "", "", ""	0x101	13.10.2008 09:06:56.663
 fwOT_StreamConfigurator.actions	_FwFsmObjectType	"NOT_READY/Configure", "int PART_ID = 0
 string PART_NAME = \"LHCb\"
 string RUN_INFO_DP = \"ECS:LHCb_RunInfo\"
-", "1", "", "0", "NOT_READY/Kill", "", "1", "", "0", "NOT_READY/Reset", "", "1", "", "0", "READY/Start", "", "1", "", "0", "READY/Reset", "", "1", "", "0", "READY/Kill", "", "1", "", "0", "READY/Unload", "", "1", "", "0", "READY/Restart", "", "1", "", "0", "STOPPED/Reset", "", "1", "", "0", "STOPPED/Start", "", "1", "", "0", "STOPPED/Finalize", "", "1", "", "0", "STOPPED/Restart", "", "1", "", "0", "RUNNING/Stop", "", "1", "", "0", "ERROR/Reset", "", "1", "", "0", "ERROR/Start", "", "1", "", "0", "ERROR/Recover", "int PART_ID = 0
+", "1", "", "0", "NOT_READY/Kill", "", "1", "", "0", "NOT_READY/Reset", "", "1", "", "0", "READY/Start", "", "1", "", "0", "READY/Reset", "", "1", "", "0", "READY/Kill", "", "1", "", "0", "READY/Unload", "", "1", "", "0", "READY/Restart", "", "1", "", "0", "STOPPED/Reset", "", "1", "", "0", "STOPPED/Start", "", "1", "", "0", "STOPPED/Finalize", "", "1", "", "0", "STOPPED/Restart", "", "1", "", "0", "STOPPED/Kill", "", "1", "", "0", "STOPPED/Unload", "", "1", "", "0", "RUNNING/Stop", "", "1", "", "0", "RUNNING/Reset", "", "1", "", "0", "RUNNING/Restart", "", "1", "", "0", "RUNNING/Kill", "", "1", "", "0", "RUNNING/Unload", "", "1", "", "0", "ERROR/Reset", "", "1", "", "0", "ERROR/Start", "", "1", "", "0", "ERROR/Recover", "int PART_ID = 0
 string PART_NAME = \"LHCb\"
 string RUN_INFO_DP = \"ECS:LHCb_RunInfo\"
-", "1", "", "0", "ERROR/Restart", "", "1", "", "0", "CONFIGURED/Reset", "", "1", "", "0", "CONFIGURED/Kill", "", "1", "", "0", "CONFIGURED/Create", "", "1", "", "0", "CONFIGURED/Unload", "", "1", "", "0", "CONFIGURED/Restart", "", "1", "", "0", "CREATED/Initialize", "", "1", "", "0", "CREATED/Kill", "", "1", "", "0", "CREATED/Reset", "", "1", "", "0", "CREATED/Unload", "", "1", "", "0", "CREATED/Restart", "", "1", "", "0", "FINALIZED/Reset", "", "1", "", "0", "FINALIZED/Unload", "", "1", "", "0", "FINALIZED/Kill", "", "1", "", "0", "FINALIZED/Restart", "", "1", "", "0"	0x101	09.07.2008 16:37:02.576
-fwOT_StreamConfigurator.parameters	_FwFsmObjectType	"int m_needDimSetup = 0"	0x101	09.07.2008 16:30:09.677
+", "1", "", "0", "ERROR/Restart", "", "1", "", "0", "ERROR/Kill", "", "1", "", "0", "ERROR/Unload", "", "1", "", "0", "CONFIGURED/Reset", "", "1", "", "0", "CONFIGURED/Kill", "", "1", "", "0", "CONFIGURED/Create", "", "1", "", "0", "CONFIGURED/Unload", "", "1", "", "0", "CONFIGURED/Restart", "", "1", "", "0", "CREATED/Initialize", "", "1", "", "0", "CREATED/Kill", "", "1", "", "0", "CREATED/Reset", "", "1", "", "0", "CREATED/Unload", "", "1", "", "0", "CREATED/Restart", "", "1", "", "0", "FINALIZED/Reset", "", "1", "", "0", "FINALIZED/Unload", "", "1", "", "0", "FINALIZED/Kill", "", "1", "", "0", "FINALIZED/Restart", "", "1", "", "0"	0x101	13.10.2008 09:06:56.662
+fwOT_StreamConfigurator.parameters	_FwFsmObjectType	"int m_needDimSetup = 0"	0x101	13.10.2008 09:06:56.871

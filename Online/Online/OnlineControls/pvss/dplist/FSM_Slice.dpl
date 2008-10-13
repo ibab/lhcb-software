@@ -6,8 +6,8 @@ fwOT_FSM_Slice	_FwFsmObjectType	168583
 
 # DpValue
 ElementName	TypeName	_original.._value	_original.._status	_original.._stime
-fwOT_FSM_Slice.panel	_FwFsmObjectType	"StreamControl/StreamEditor.pnl"	0x101	19.09.2008 16:09:51.460
-fwOT_FSM_Slice.components	_FwFsmObjectType		0x141	19.09.2008 16:09:51.462
+fwOT_FSM_Slice.panel	_FwFsmObjectType	"StreamControl/StreamEditor.pnl"	0x101	13.10.2008 09:06:40.754
+fwOT_FSM_Slice.components	_FwFsmObjectType		0x141	13.10.2008 07:10:23.549
 fwOT_FSM_Slice.states	_FwFsmObjectType	"NOT_READY", "FwStateAttention1", "when ( $ANY$FwCHILDREN in_state ERROR ) move_to ERROR
 |when ( $ALL$FwCHILDREN in_state {CONFIGURED,CREATED,READY,RUNNING} )  move_to CONFIGURED
 |", "", "", "ERROR", "FwStateAttention3", "when ( ( $ANY$FwCHILDREN in_state NOT_READY ) and
@@ -40,7 +40,7 @@ fwOT_FSM_Slice.states	_FwFsmObjectType	"NOT_READY", "FwStateAttention1", "when (
 |", "", "", "FINALIZED", "FwStateAttention1", "when ( $ANY$FwCHILDREN in_state ERROR )  move_to ERROR
 |when ( $ALL$FwCHILDREN in_state NOT_READY )  move_to NOT_READY
 |when ( $ALL$FwCHILDREN in_state {STOPPED,READY} )  move_to STOPPED
-|", "", ""	0x101	25.09.2008 13:13:20.796
+|", "", ""	0x101	13.10.2008 09:06:40.549
 fwOT_FSM_Slice.actions	_FwFsmObjectType	"NOT_READY/Configure", "", "1", "do Configure $ALL$StreamConfigurator
 if ( $ALL$StreamConfigurator not_in_state {CONFIGURED,CREATED,READY,RUNNING} )  then
         move_to NOT_READY
@@ -75,8 +75,26 @@ endif
 if ( $ALL$FwCHILDREN in_state NOT_READY )  then
   move_to NOT_READY 
 endif
+", "0", "NOT_READY/Stop_Run", "", "1", "if ( $ANY$FwCHILDREN in_state RUNNING ) then
+  do Stop $ALL$FwCHILDREN
+endif
+if ( $ANY$FwCHILDREN in_state STOPPED )  then
+  do Finalize $ALL$FwCHILDREN
+endif
+if ( $ANY$FSM_Tasks in_state {FINALIZED,CREATED,READY,CONFIGURED,ERROR} ) then
+  do Reset $ALL$FSM_Tasks
+endif
+if ( $ANY$StreamConfigurator in_state {FINALIZED,CREATED,READY,CONFIGURED,ERROR} ) then
+  do Reset $ALL$StreamConfigurator
+endif
+if ( $ANY$FwCHILDREN not_in_state NOT_READY ) then 
+  do Kill $ALL$FwCHILDREN
+endif
+if ( $ALL$FwCHILDREN in_state NOT_READY )  then
+  move_to NOT_READY 
+endif
 ", "0", "ERROR/Recover", "", "1", "do Recover $ALL$FwCHILDREN
-if ( $ALL$FwCHILDREN not_in_state NOT_READY )  then
+if ( $ANY$FwCHILDREN not_in_state NOT_READY )  then
     move_to NOT_READY
 endif
 move_to NOT_READY
@@ -181,6 +199,24 @@ endif
 if ( $ALL$FwCHILDREN in_state NOT_READY )  then
    move_to NOT_READY 
 endif
+", "0", "CONFIGURED/Stop_run", "", "1", "if ( $ANY$FwCHILDREN in_state RUNNING ) then
+  do Stop $ALL$FwCHILDREN
+endif
+if ( $ANY$FwCHILDREN in_state STOPPED )  then
+  do Finalize $ALL$FwCHILDREN
+endif
+if ( $ANY$FSM_Tasks in_state {FINALIZED,CREATED,CONFIGURED,REDAY,ERROR} ) then
+  do Reset $ALL$FSM_Tasks
+endif
+if ( $ANY$StreamConfigurator in_state {FINALIZED,CREATED,CONFIGURED,READY,ERROR} ) then
+  do Reset $ALL$StreamConfigurator
+endif
+if ( $ANY$FwCHILDREN not_in_state NOT_READY ) then 
+  do Kill $ALL$FwCHILDREN
+endif
+if ( $ALL$FwCHILDREN in_state NOT_READY )  then
+   move_to NOT_READY 
+endif
 ", "0", "CREATED/Initialize", "", "1", "do Initialize $ALL$FwCHILDREN
 if ( $ALL$FwCHILDREN in_state {READY,RUNNING} ) then
         move_to READY
@@ -199,10 +235,10 @@ endif
 if ( $ANY$FwCHILDREN in_state STOPPED )  then
   do Finalize $ALL$FwCHILDREN
 endif
-if ( $ANY$FSM_Tasks in_state {FINALIZED,CREATED,CONFIGURED,READY} ) then
+if ( $ANY$FSM_Tasks in_state {FINALIZED,CREATED,CONFIGURED,READY,ERROR} ) then
   do Reset $ALL$FSM_Tasks
 endif
-if ( $ANY$StreamConfigurator in_state {FINALIZED,CREATED,CONFIGURED,READY} ) then
+if ( $ANY$StreamConfigurator in_state {FINALIZED,CREATED,CONFIGURED,READY,ERROR} ) then
   do Reset $ALL$StreamConfigurator
 endif
 if ( $ANY$FwCHILDREN not_in_state NOT_READY ) then 
@@ -223,6 +259,24 @@ endif
 if ( $ALL$FwCHILDREN in_state NOT_READY )  then
    move_to NOT_READY 
 endif
+", "0", "CREATED/Stop_run", "", "1", "if ( $ANY$FwCHILDREN in_state RUNNING ) then
+  do Stop $ALL$FwCHILDREN
+endif
+if ( $ANY$FwCHILDREN in_state STOPPED )  then
+  do Finalize $ALL$FwCHILDREN
+endif
+if ( $ANY$FSM_Tasks in_state {FINALIZED,CREATED,CONFIGURED,READY,ERROR} ) then
+  do Reset $ALL$FSM_Tasks
+endif
+if ( $ANY$StreamConfigurator in_state {FINALIZED,CREATED,CONFIGURED,READY,ERROR} ) then
+  do Reset $ALL$StreamConfigurator
+endif
+if ( $ANY$FwCHILDREN not_in_state NOT_READY ) then 
+  do Kill $ALL$FwCHILDREN
+endif
+if ( $ALL$FwCHILDREN in_state NOT_READY )  then
+   move_to NOT_READY 
+endif
 ", "0", "READY/Start", "", "1", "do Start $ALL$FwCHILDREN
 if ( $ALL$FwCHILDREN in_state RUNNING )  then
   move_to RUNNING
@@ -233,10 +287,10 @@ endif
 if ( $ANY$FwCHILDREN in_state STOPPED ) then
   do Finalize $ALL$FwCHILDREN
 endif
-if ( $ANY$FSM_Tasks in_state {FINALIZED,CREATED,CONFIGURED,READY} ) then
+if ( $ANY$FSM_Tasks in_state {FINALIZED,CREATED,READY,CONFIGURED,READY} ) then
   do Reset $ALL$FSM_Tasks
 endif
-if ( $ANY$StreamConfigurator in_state {FINALIZED,CREATED,CONFIGURED,READY} ) then
+if ( $ANY$StreamConfigurator in_state {FINALIZED,CREATED,READY,CONFIGURED,READY} ) then
   do Reset $ALL$StreamConfigurator
 endif
 if ( $ANY$FwCHILDREN not_in_state NOT_READY ) then 
@@ -272,6 +326,24 @@ endif
 if ( $ALL$FwCHILDREN in_state NOT_READY )  then
    move_to NOT_READY
 endif
+", "0", "READY/Stop_run", "", "1", "if ( $ANY$FwCHILDREN in_state RUNNING ) then
+  do Stop $ALL$FwCHILDREN
+endif
+if ( $ANY$FwCHILDREN in_state STOPPED )  then
+  do Finalize $ALL$FwCHILDREN
+endif
+if ( $ANY$FSM_Tasks in_state {FINALIZED,CREATED,READY,CONFIGURED,ERROR} ) then
+  do Reset $ALL$FSM_Tasks
+endif
+if ( $ANY$StreamConfigurator in_state {FINALIZED,CREATED,READY,CONFIGURED,ERROR} ) then
+  do Reset $ALL$StreamConfigurator
+endif
+if ( $ANY$FwCHILDREN not_in_state NOT_READY ) then 
+  do Kill $ALL$FwCHILDREN
+endif
+if ( $ALL$FwCHILDREN in_state NOT_READY )  then
+   move_to NOT_READY 
+endif
 ", "0", "RUNNING/Stop", "", "1", "if ( $ANY$FwCHILDREN in_state RUNNING ) then
   do Stop $ALL$FwCHILDREN
 endif
@@ -298,10 +370,10 @@ endif
 if ( $ANY$FwCHILDREN in_state STOPPED ) then
   do Finalize $ALL$FwCHILDREN
 endif
-if ( $ANY$FSM_Tasks in_state {FINALIZED,CREATED,CONFIGURED,READY} ) then
+if ( $ANY$FSM_Tasks in_state {FINALIZED,CREATED,CONFIGURED,READY,ERROR} ) then
   do Reset $ALL$FSM_Tasks
 endif
-if ( $ANY$StreamConfigurator in_state {FINALIZED,CREATED,CONFIGURED,READY} ) then
+if ( $ANY$StreamConfigurator in_state {FINALIZED,CREATED,CONFIGURED,READY,ERROR} ) then
   do Reset $ALL$StreamConfigurator
 endif
 if ( $ANY$FwCHILDREN not_in_state NOT_READY ) then 
@@ -309,6 +381,24 @@ if ( $ANY$FwCHILDREN not_in_state NOT_READY ) then
 endif
 if ( $ALL$FwCHILDREN in_state NOT_READY )  then
    move_to NOT_READY
+endif
+", "0", "RUNNING/Stop_run", "", "1", "if ( $ANY$FwCHILDREN in_state RUNNING ) then
+  do Stop $ALL$FwCHILDREN
+endif
+if ( $ANY$FwCHILDREN in_state STOPPED )  then
+  do Finalize $ALL$FwCHILDREN
+endif
+if ( $ANY$FSM_Tasks in_state {FINALIZED,CREATED,CONFIGURED,READY,ERROR} ) then
+  do Reset $ALL$FSM_Tasks
+endif
+if ( $ANY$StreamConfigurator in_state {FINALIZED,CREATED,CONFIGURED,READY,ERROR} ) then
+  do Reset $ALL$StreamConfigurator
+endif
+if ( $ANY$FwCHILDREN not_in_state NOT_READY ) then 
+  do Kill $ALL$FwCHILDREN
+endif
+if ( $ALL$FwCHILDREN in_state NOT_READY )  then
+   move_to NOT_READY 
 endif
 ", "0", "STOPPED/Reset", "", "1", "if ( $ANY$FwCHILDREN in_state RUNNING ) then
   do Stop $ALL$FwCHILDREN
@@ -418,5 +508,5 @@ endif
 if ( $ALL$FwCHILDREN in_state {NOT_READY,CONFIGURED} )  then
    move_to NOT_READY 
 endif
-", "0"	0x101	25.09.2008 13:13:20.795
-fwOT_FSM_Slice.parameters	_FwFsmObjectType		0x141	19.09.2008 16:09:51.470
+", "0"	0x101	13.10.2008 09:06:40.546
+fwOT_FSM_Slice.parameters	_FwFsmObjectType		0x101	13.10.2008 09:06:40.753
