@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.361 2008-10-08 17:10:46 jpalac Exp $
+! $Id: release.notes,v 1.362 2008-10-13 08:51:01 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-10-13 - Juan PALACIOS
+ - src/Bd2KstarMuMuAngleCalculator.cpp
+  . Remove unused variable.
 
 ! 2008-10-08 - Juan PALACIOS
  - src/PhysDesktop.h
