@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.33 2008-10-07 12:29:37 pkoppenb Exp $ 
+! $Id: release.notes,v 1.34 2008-10-13 08:07:04 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : 
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2008-10-13 - Patrick Koppenburg for Yasmine Amhis
+ - Resolved pi0 mass cut changed to 30 MeV
 
 !========================== HltConf v1r4 2008-10-03 ===================
 ! 2008-10-07 - Gerhard Raven
