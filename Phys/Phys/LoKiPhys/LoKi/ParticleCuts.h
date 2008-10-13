@@ -1,4 +1,4 @@
-// $Id: ParticleCuts.h,v 1.29 2008-09-29 16:50:40 ibelyaev Exp $
+// $Id: ParticleCuts.h,v 1.30 2008-10-13 16:32:23 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSPARTICLECUTS_H 
 #define LOKI_PHYSPARTICLECUTS_H 1
@@ -6036,6 +6036,65 @@ namespace LoKi
      *  @date 2006-02-15
      */
     const   LoKi::Particles::Weight                                    WEIGHT ;
+    // ========================================================================
+    /** @typedef WMASS 
+     *  simepl functor to evaluate the mass of the mother 
+     *  particle using the alternative mass hypothesses for daughter particles:
+     * 
+     *  @code 
+     *
+     * 
+     *   const WMASS wmass1 ("K+", "K-") ;
+     *   const WMASS wmass2 ( LHCb::ParticleID(121), LHCb::ParticleID(121) ) ;
+     *   const WMASS wmass3 ( 137 * Gaudi::Units::MeV , 137 * Gaudi::Units::MeV ) ;
+     *
+     *   const LHCb::Particle* D0 = ... ;
+     * 
+     *   const double m1 = wmass1 ( D0 ) ;
+     *   const double m2 = wmass2 ( D0 ) ;
+     *   const double m3 = wmass3 ( D0 ) ;
+     *   
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::WrongMass 
+     *  @see LoKi::AParticles::WrongMass 
+     *  @see LoKi::Cuts::WM
+     *  @see LoKi::Cuts::AWM
+     *  @see LoKi::Kinematics::wrongMass
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-15
+     */
+    typedef LoKi::Particles::WrongMass                                  WMASS ;
+    // ========================================================================
+    /** @typedef WM 
+     *  simepl functor to evaluate the mass of the mother 
+     *  particle using the alternative mass hypothesses for daughter particles:
+     * 
+     *  @code 
+     *
+     * 
+     *   const WM wm1 ("K+", "K-") ;
+     *   const WM wm2 ( LHCb::ParticleID(121), LHCb::ParticleID(121) ) ;
+     *   const WM wm3 ( 137 * Gaudi::Units::MeV , 137 * Gaudi::Units::MeV ) ;
+     *
+     *   const LHCb::Particle* D0 = ... ;
+     * 
+     *   const double m1 = wm1 ( D0 ) ;
+     *   const double m2 = wm2 ( D0 ) ;
+     *   const double m3 = wm3 ( D0 ) ;
+     *   
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::WrongMass 
+     *  @see LoKi::AParticles::WrongMass 
+     *  @see LoKi::Cuts::WM
+     *  @see LoKi::Cuts::WMASS
+     *  @see LoKi::Cuts::AWM
+     *  @see LoKi::Kinematics::wrongMass
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-15
+     */
+    typedef LoKi::Particles::WrongMass                                     WM ;
     // ========================================================================
     /** @var ZERO
      *  the trivial functor which always evaluates to 0

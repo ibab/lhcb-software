@@ -1,4 +1,4 @@
-// $Id: Particles.h,v 1.14 2008-09-29 16:50:40 ibelyaev Exp $
+// $Id: Particles.h,v 1.15 2008-10-13 16:32:23 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES_H 
 #define LOKI_PARTICLES_H 1
@@ -33,6 +33,7 @@
 #include "LoKi/Particles19.h"
 #include "LoKi/Particles21.h"
 #include "LoKi/Particles22.h"
+#include "LoKi/Particles23.h"
 // ============================================================================
 /** @file
  *

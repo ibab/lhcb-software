@@ -1,9 +1,25 @@
-! $Id: release.notes,v 1.73 2008-09-30 11:45:39 cattanem Exp $ 
+! $Id: release.notes,v 1.74 2008-10-13 16:32:23 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2008-10-13 - Vanya BELYAEV
+ - LoKi/Particles23.h
+   src/Particle23.cpp
+   python/LoKiPhys/functions.py 
+
+   new functor
+
+    WM & WMASS  LoKi::Particles::WrongMass 
+
+       evaluatethemass of mothe rparticles taking the alternative 
+       'wrong'-mass hypotheses for daughter particles
+
+  - cmt/requirements 
+
+    version increment to v7r9 
 
 !========================== LoKiPhys v7r8 2008-09-30 ==========================
 ! 2008-09-29 - Vanya BELYAEV

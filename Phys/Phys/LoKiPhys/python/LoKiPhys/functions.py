@@ -398,7 +398,10 @@ INGENERATION  = LoKi.Particles.InGeneration
 ## @see LoKi::Cuts::NINGENERATION 
 NINGENERATION = LoKi.Particles.NinGeneration
 
-
+## @see LoKi::Cuts::WM 
+WM    = LoKi.Particles.WrongMass
+## @see LoKi::Cuts::WMASS 
+WMASS = LoKi.Particles.WrongMass
 
 ## @see LoKi::Cuts::LIFETIME
 LIFETIME         = LoKi.Particles.LifeTime
