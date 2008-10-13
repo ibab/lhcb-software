@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.362 2008-10-13 08:51:01 jpalac Exp $
+! $Id: release.notes,v 1.363 2008-10-13 12:40:47 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-10-13 - Patrick Koppenburg
+ - Removed a compilation warning in reclexer.
 
 ! 2008-10-13 - Juan PALACIOS
  - src/Bd2KstarMuMuAngleCalculator.cpp
