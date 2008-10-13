@@ -1,4 +1,4 @@
-// $Id: Bd2KstarMuMuAngleCalculator.cpp,v 1.5 2008-06-04 16:18:14 pkoppenb Exp $
+// $Id: Bd2KstarMuMuAngleCalculator.cpp,v 1.6 2008-10-13 08:50:28 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -358,7 +358,6 @@ double Bd2KstarMuMuAngleCalculator::calculateTransThetaV(
 {
 
    LHCb::Particle::ConstVector descendants = m_descendants->finalStates(particle); //->daughtersVector() ;
-   int motherID = particle->particleID().pid();
   
    const LHCb::Particle* particleKaon = 0;
    const LHCb::Particle* particlePion = 0;
