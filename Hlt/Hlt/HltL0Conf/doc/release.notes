@@ -3,6 +3,10 @@
 ! Responsible : Johannes Albrecht
 ! Purpose     : L0-T-track Confirmation algorithms
 !-----------------------------------------------------------------------------
+! 2008-10-13 - Johannes Albrecht
+ - HadronSeedTool: in case hadron candidate is not valid (region cannot be determined
+ 	because the position is not inside HCal), do not exit event loop. Give a warning
+  instead and set cov matrix to the outermost region.
 
 !========================== HltL0Conf v2r5 2008-10-03 ===================
 ! 2008-10-02 - Johannes Albrecht
