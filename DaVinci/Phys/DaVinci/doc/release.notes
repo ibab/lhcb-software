@@ -1,4 +1,4 @@
- $Id: release.notes,v 1.244 2008-10-08 07:27:46 jpalac Exp $
+ $Id: release.notes,v 1.245 2008-10-13 12:56:49 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,11 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2008-10-13 - Juan PALACIOS
+ - tests/qmtest/davinci.qms/preselections.qms/test_bu2d0k_d02kspipi.qmt
+  . Change in correlation table due to small drop in StdDC06LooseKsDD 
+    efficiency.
 
 !========================== DaVinci v20r3 2008-10-08 ===================
 
