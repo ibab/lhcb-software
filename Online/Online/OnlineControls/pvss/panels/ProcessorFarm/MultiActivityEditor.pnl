@@ -1,7 +1,7 @@
 V 10
 1
 LANG:1 26 Setup Stream Configuration
-PANEL,-1 -1 437 419 N "_3DFace" 1
+PANEL,-1 -1 437 599 N "_3DFace" 1
 "$1"
 "main()  {
   string match = \"*:FarmActivity_*\";
@@ -65,7 +65,7 @@ LANG:1 20 Farm Activity Editor
 13 60
 "m_Ok"
 ""
-1 364 383 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 367 558 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 12 0 0 0 0 0
 E E E
@@ -77,7 +77,7 @@ LANG:1 0
 1
 LANG:1 112 -*-Bitstream Vera Sans-*-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,505,0,0,0,0,0,0,0,0,Bitstream Vera Sans
 0 ""
- 362 381 423 405
+ 365 556 426 580
 
 T 
 1

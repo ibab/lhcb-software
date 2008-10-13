@@ -186,23 +186,23 @@ def install():
     execCmd(pvssCTRL()+'InstallStorage2.cpp')
   elif pro=="RECSTORAGE":
     print '......... --> Executing PVSS setup controller for project '+pro
-    #execCmd(pvssCTRL()+'InstallStorage.cpp')
+    execCmd(pvssCTRL()+'InstallStorage.cpp')
     importStreamDpLists()
     print '......... --> Executing python setup....'
-    #execCmd("""python -c "import Online.Streaming.StorageInstaller as IM; IM.install('Storage','"""+pro+"""')";""")
+    execCmd("""python -c "import Online.Streaming.StorageInstaller as IM; IM.install('Storage','"""+pro+"""')";""")
     print '......... --> Executing final PVSS setup controller for project '+pro
     execCmd(pvssCTRL()+'InstallRecStorage2.cpp')
   elif pro[:6]=='RECHLT':
-    print '......... --> Executing PVSS setup controller for project '+pro
-    execCmd(pvssCTRL()+'InstallSubFarm.cpp')
     print '......... --> Importing datapoint lists....'
     importDpList('FSM_DimTask.dpl')
     importDpList('FSM_Tasks.dpl')
     importDpList('FSM_Slice.dpl')
     importDpList('StreamConfigurator.dpl')
+    print '......... --> Executing PVSS setup controller for project '+pro
+    execCmd(pvssCTRL()+'InstallSubFarm.cpp')
     print '......... --> Executing python setup....'
     execCmd("""python -c "import Online.ProcessorFarm.FarmInstaller as IM; IM.installSubFarm('Farm','"""+pro+"""')";""")
-    print '......... --> Executing final PVSS setup controller for project '+pro
+    print '......... --> Executing final PVSS setup controller for project '+pro+'\n\n'
     execCmd(pvssCTRL()+'InstallSubFarm2.cpp')
   elif pro=='RECFARM':
     print '......... --> Executing PVSS setup controller for project '+pro
@@ -245,7 +245,8 @@ def copyProject():
   nam = projectName()
   sysN = systemNumber()
   cfg = '/localdisk/pvss/'+nam+'/config/config'
-  execCmd(pvssPMON()+' -stopWait')
+  os.environ['PVSS_II']=cfg
+  execCmd(pvssPMON()+' -config '+cfg+' -stopWait')
   execCmd('rm -rf /localdisk/pvss'+os.sep+nam)
   execCmd('cp -r '+src+' /localdisk/pvss'+os.sep+nam)
   print '......... --> Patching project configuration file'
@@ -262,6 +263,9 @@ def copyProject():
       print >>fout, 'eventPort = '+str(sysN+100)+'02'
       print >>fout, '[dist]'
       print >>fout, 'distPort = '+str(sysN+100)+'10'
+      print >>fout, 'distPeer= "storectl01:49910" 399 # LBECS'
+      print >>fout, 'distPeer= "mona07:40610"     398 # RECCTRL'
+      print >>fout, 'distPeer= "mona07:40310"     303 # RECFARM'
     elif content.find('[dist]')==0:
       pass
     elif content.find('pmonPort = ')==0:
@@ -273,8 +277,8 @@ def copyProject():
     elif content.find('distPort = ')==0:
       pass
   print '......... --> Patching project name and project number'
-  execCmd('/opt/pvss/pvss2_v3.6/bin/PVSStoolSyncTypes -proj '+nam+\
-          ' -config '+cfg+' -report -autoreg -system '+str(sysN)+' '+nam)
+  execCmd('/opt/pvss/pvss2_v3.6/bin/PVSStoolSyncTypes -proj '+nam+' -config '+\
+          cfg+' -report -autoreg -system '+str(sysN)+' '+nam)
   print '......... --> Project',nam,' System number',sysN,' is ready for farm installation'
   print '......... 1rst. Installation step finished. This took %d seconds.'%(time.time()-start,)
 
@@ -284,7 +288,8 @@ def copyProject2():
   nam = projectName()
   sysN = systemNumber()
   cfg = '/localdisk/pvss/'+nam+'/config/config'
-  execCmd(pvssPMON()+' -autoreg &')
+  os.environ['PVSS_II']=cfg
+  execCmd(pvssPMON()+' -config '+cfg+' -autoreg &')
   print '......... --> Project',nam,' System number',sysN,' started.'
   print '......... --> Project',nam,' Continue to install after the project is up....'
   time.sleep(5)

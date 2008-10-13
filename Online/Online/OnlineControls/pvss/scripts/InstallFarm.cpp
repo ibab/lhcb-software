@@ -28,9 +28,12 @@ createActivity(string name) {
   string nn = "FarmActivity_"+name;
   if ( !dpExists(nn) ) dpCreate(nn,"FarmActivity");
   dpSet(nn+".Name",name,
-	nn+".Farm.Infrastructure",makeDynString("MBM/Class0","Receiver/Class1","Sender/Class2"),
-	nn+".Farm.Worker","Brunel/Class1",
-        nn+".Control.Infrastructure","Adder/Class1");
+	nn+".Farm.Infrastructure",makeDynString("RecMBM/Class0","RecFarmRecv/Class2","RecFarmSend/Class2"),
+	nn+".Farm.Worker","RecBrunel_vXYrZ/Class1",
+        nn+".Control.Infrastructure",makeDynString("Adder/Class1"),
+        nn+".Storage.recvInfrastructure",makeDynString("RecStorageMBM/Class0","RecStorageRead/Class2"),
+        nn+".Storage.streamInfrastructure",makeDynString("RecStorageMBM/Class0","RecStorageWrite/Class2")
+	);
 }
 
 removeInstallation(string typ) {

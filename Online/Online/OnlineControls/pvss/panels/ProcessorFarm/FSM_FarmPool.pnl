@@ -1,0 +1,311 @@
+V 10
+1
+LANG:1 8 FarmPool
+PANEL,-1 -1 409 210 N "_3DFace" 0
+"main()
+{
+
+}" 0
+ E E E E 1 -1 -1 0  90 80
+""0  1
+E E 2
+"CBRef" "1"
+"EClose" E
+""
+DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
+LAYER, 0 
+1
+LANG:1 0 
+17 2
+"FarmList"
+""
+1 12 32 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+2 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 82 -*-Sans-*-r-normal-*-10-*-100-100-*-*-iso8859-1|-10,0,0,0,505,0,0,0,0,0,0,0,0,Sans
+0 ""
+ 10 30 174 194
+1
+1
+LANG:1 0 
+
+0
+
+"main()
+{
+  dpConnect(\"updateFarmList\",true,\"RECFARM:Farm.SubFarms\");
+}
+
+updateFarmList( string dp1 , dyn_string dpFarmList ){
+  FarmList.items = dpFarmList;
+}" 0
+
+E
+E
+
+0 0
+17 3
+"FarmListGarage"
+""
+1 232 32 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+4 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 82 -*-Sans-*-r-normal-*-10-*-100-100-*-*-iso8859-1|-10,0,0,0,505,0,0,0,0,0,0,0,0,Sans
+0 ""
+ 230 30 394 194
+1
+1
+LANG:1 0 
+
+0
+
+"main()
+{
+  dpConnect(\"updateFarmListGarage\",true,\"RECFARM:Farm.SubFarmGarage\");
+}
+
+updateFarmListGarage( string dp1 , dyn_string dpFarmList ){
+  FarmListGarage.items = dpFarmList;
+}" 0
+
+E
+E
+
+0 0
+13 4
+"SelectedRight"
+""
+1 190 80 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+5 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 82 -*-Sans-*-r-normal-*-10-*-100-100-*-*-iso8859-1|-10,0,0,0,505,0,0,0,0,0,0,0,0,Sans
+0 ""
+ 188 78 212 102
+
+T 
+1
+LANG:1 1 >
+"main()
+{
+  int selected = FarmList.selectedPos();
+  dyn_string dpFarmList , dpFarmListGarage , InUse;
+  dpGet(\"RECFARM:Farm.SubFarms\",dpFarmList);
+  dpGet(\"RECFARM:Farm.SubFarmGarage\",dpFarmListGarage);  
+  dpGet(\"RECFARM:Farm.InUse\",InUse);
+  if ( \"\" == InUse[selected] ) {
+    dynAppend(dpFarmListGarage,dpFarmList[selected]);
+    dynRemove(dpFarmList,selected);
+    dynRemove(InUse,selected);
+    dpSet(\"RECFARM:Farm.SubFarmGarage\",dpFarmListGarage);
+    dpSet(\"RECFARM:Farm.SubFarms\",dpFarmList);
+    dpSet(\"RECFARM:Farm.InUse\",InUse);
+  }
+  else {
+    DebugTN(\"Cannot park the selected farm because it is in use by partition \"+InUse[selected]);
+  }
+}" 0
+ E E E
+13 5
+"SelectedLeft"
+""
+1 190 110 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+7 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 82 -*-Sans-*-r-normal-*-10-*-100-100-*-*-iso8859-1|-10,0,0,0,505,0,0,0,0,0,0,0,0,Sans
+0 ""
+ 188 108 212 132
+
+T 
+1
+LANG:1 1 <
+"main()
+{
+  int selected = FarmListGarage.selectedPos();
+  dyn_string dpFarmList , dpFarmListGarage , InUse;
+  dpGet(\"RECFARM:Farm.SubFarms\",dpFarmList);
+  dpGet(\"RECFARM:Farm.SubFarmGarage\",dpFarmListGarage);  
+  dpGet(\"RECFARM:Farm.InUse\",InUse);    
+  dynAppend(dpFarmList, dpFarmListGarage[selected]);
+  dynAppend(InUse , \"\" );
+  dynRemove(dpFarmListGarage,selected);
+  dpSet(\"RECFARM:Farm.SubFarms\",dpFarmList);
+  dpSet(\"RECFARM:Farm.InUse\",InUse);
+  dpSet(\"RECFARM:Farm.SubFarmGarage\",dpFarmListGarage);
+}" 0
+ E E E
+13 6
+"AllRight"
+""
+1 190 50 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+9 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 82 -*-Sans-*-r-normal-*-10-*-100-100-*-*-iso8859-1|-10,0,0,0,505,0,0,0,0,0,0,0,0,Sans
+0 ""
+ 188 48 212 72
+
+T 
+1
+LANG:1 2 >>
+"main()
+{
+  dyn_string dpFarmList,dpFarmListGarage,InUse;
+  dpGet(\"RECFARM:Farm.SubFarms\",dpFarmList);
+  dpGet(\"RECFARM:Farm.SubFarmGarage\",dpFarmListGarage);
+  dpGet(\"RECFARM:Farm.InUse\",InUse);
+  int nloop = dynlen(InUse);
+  int prev = 0;
+  for (int i=1 ; i <= nloop; i++){
+    if (\"\" == InUse[i-prev]){
+      dynAppend( dpFarmListGarage , dpFarmList[i-prev] );
+      dynRemove( dpFarmList , i - prev );
+      dynRemove( InUse , i - prev );
+      prev = i;
+    } else {
+      DebugTN(\"Cannot park subfarm \"+dpFarmList[i]+\" because it is currently being used by \"+InUse[i]);
+    }   
+  }
+  dpSet(\"RECFARM:Farm.SubFarmGarage\",dpFarmListGarage);
+  dpSet(\"RECFARM:Farm.SubFarms\",dpFarmList);
+  dpSet(\"RECFARM:Farm.InUse\",InUse); 
+}" 0
+ E E E
+2 7
+"PRIMITIVE_TEXT1"
+""
+1 12 12 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+10 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 12 12 172 32
+0 2 2 "0s" 0 0 0 65 0 0  12 12 1
+1
+LANG:1 97 -*-Sans Serif-bold-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,758,0,0,0,0,0,0,0,0,Sans Serif
+0 ""
+1
+LANG:1 12 Active Farms
+2 8
+"PRIMITIVE_TEXT2"
+""
+1 234 14 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+12 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 234 14 394 34
+0 2 2 "0s" 0 0 0 65 0 0  234 14 1
+1
+LANG:1 97 -*-Sans Serif-bold-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,758,0,0,0,0,0,0,0,0,Sans Serif
+0 ""
+1
+LANG:1 14 "Parked" Farms
+13 9
+"PUSH_BUTTON1"
+""
+1 190 140 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+14 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 82 -*-Sans-*-r-normal-*-10-*-100-100-*-*-iso8859-1|-10,0,0,0,505,0,0,0,0,0,0,0,0,Sans
+0 ""
+ 188 138 212 162
+
+T 
+1
+LANG:1 2 <<
+"main()
+{
+  dyn_string dpFarmList,dpFarmListGarage,InUse;
+  dpGet(\"RECFARM:Farm.SubFarms\",dpFarmList);
+  dpGet(\"RECFARM:Farm.SubFarmGarage\",dpFarmListGarage);
+  dpGet(\"RECFARM:Farm.InUse\",InUse);
+  for (int i=1; i<=dynlen(dpFarmListGarage);i++) {
+    dynAppend(InUse,\"\");
+  }
+  dynAppend(dpFarmList,dpFarmListGarage);
+  dpSet(\"RECFARM:Farm.SubFarmGarage\",dpFarmListGarage);
+  dpSet(\"RECFARM:Farm.SubFarms\",dpFarmList);
+  dpSet(\"RECFARM:Farm.InUse\",InUse);  
+}" 0
+ E E E
+0
+LAYER, 1 
+1
+LANG:1 0 
+0
+LAYER, 2 
+1
+LANG:1 0 
+0
+LAYER, 3 
+1
+LANG:1 0 
+0
+LAYER, 4 
+1
+LANG:1 0 
+0
+LAYER, 5 
+1
+LANG:1 0 
+0
+LAYER, 6 
+1
+LANG:1 0 
+0
+LAYER, 7 
+1
+LANG:1 0 
+0
+0

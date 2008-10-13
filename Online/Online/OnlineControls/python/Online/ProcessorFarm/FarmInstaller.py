@@ -107,9 +107,10 @@ class Installer(Online.InstallerBase.InstallerBase):
     log('Accessing farm activity '+nam,timestamp=1)
     self.name = nam
     self.set('Name',name)
-    self.set('Farm.Infrastructure',   ['MBM/Class0','Receiver/Class1','Sender/Class2'])
-    self.set('Farm.Worker',            'Brunel/Class1')
-    self.set('Control.Infrastructure',['Adder/Class1'])
+    self.set('Farm.Infrastructure',   ['RecMBM/Class0','RecFarmRecv/Class2','RecFarmSend/Class2'])
+    self.set('Farm.Worker',            'RecBrunel_vXYrZ/Class1')
+    self.set('Storage.recvInfrastructure',  ['RecStorageMBM/Class0','RecStorageRead/Class2'])
+    self.set('Storage.streamInfrastructure',['RecStorageMBM/Class0','RecStorageWrite/Class2'])
     self.name = self.myName
     return self.write(prefix='FarmInstaller('+self.name+'): ')
   

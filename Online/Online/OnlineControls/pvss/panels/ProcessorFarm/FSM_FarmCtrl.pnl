@@ -1,0 +1,434 @@
+V 10
+1
+LANG:1 0 
+PANEL,-1 -1 413 222 N "_3DFace" 2
+"$1"
+"$2"
+"main()
+{
+  string State;
+  dpConnect(\"updateframe\",true, $1+\"|\"+$1+\".fsm.currentState\");
+}
+
+updateframe(string dp1, string State){
+    if (State!=\"NOT_ALLOCATED\"){
+      frame.color(\"Black\");
+      frame.text(\"RunInfo configured\");
+      nSubFarmsValue.enabled(false);
+      partNameValue.enabled(false);
+      runTypeValue.enabled(false);     
+      SaveButton.enabled(false);
+      RefreshButton.enabled(false);
+      RevertButton.enabled(false);
+      EditorButton.enabled(false);       
+    } else {   
+      frame.color(\"Red\");
+      frame.text(\"Configure RunInfo (not saved)\");
+      nSubFarmsValue.enabled(true);
+      partNameValue.enabled(true);
+      runTypeValue.enabled(true);     
+      SaveButton.enabled(true);
+      RefreshButton.enabled(true);
+      RevertButton.enabled(true);
+      EditorButton.enabled(true);
+   }
+}" 0
+ E E E E 1 -1 -1 0  0 0
+""0  1
+E E 2
+"CBRef" "1"
+"EClose" E
+""
+DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
+LAYER, 0 
+1
+LANG:1 0 
+30 0
+"frame"
+""
+1 10 4 E E E 1 E 1 E N "_WindowText" E N {0,0,0} E E
+ E E
+0 0 0 0 0 0
+E E E
+1
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 0 1 0 1 E 0.8297872340425532 0 0.6341463414634146 1.702127659574468 1.463414634146341 0 E 10 4 481 251
+1
+LANG:1 97 -*-Sans Serif-bold-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,758,0,0,0,0,0,0,0,0,Sans Serif
+0 ""
+1
+LANG:1 17 Configure RunInfo
+2 1
+"nSubFarmsLabel"
+""
+1 22 33 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+1 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 22 33 122 47
+0 2 2 "0s" 0 0 0 64 0 0  22 33 1
+1
+LANG:1 82 -*-Sans-*-r-normal-*-10-*-100-100-*-*-iso8859-1|-10,0,0,0,505,0,0,0,0,0,0,0,0,Sans
+0 ""
+1
+LANG:1 18 Number of subfarms
+21 2
+"nSubFarmsValue"
+""
+1 130 30 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+2 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 82 -*-Sans-*-r-normal-*-10-*-100-100-*-*-iso8859-1|-10,0,0,0,505,0,0,0,0,0,0,0,0,Sans
+0 ""
+ 128 28 172 52
+0
+
+"main()
+{
+  string number=$1;
+  strreplace(number,\"Reco_Ctrl\",\"\");  
+  int nSubFarms;
+  dpGet(\"RECFARM:Farm_Reco\"+number+\".HLTFarm.nSubFarms\", nSubFarms);
+  nSubFarmsValue.text(nSubFarms);
+}" 0
+
+"main()
+{
+    frame.color(\"Red\");
+    frame.text(\"Configure RunInfo (not saved)\");
+}" 0
+
+E
+
+N 0 100 1 0 1 1
+2 3
+"partNameLabel"
+""
+1 22 63 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+4 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 22 63 122 77
+0 2 2 "0s" 0 0 0 64 0 0  22 63 1
+1
+LANG:1 82 -*-Sans-*-r-normal-*-10-*-100-100-*-*-iso8859-1|-10,0,0,0,505,0,0,0,0,0,0,0,0,Sans
+0 ""
+1
+LANG:1 14 Partition Name
+14 5
+"partNameValue"
+""
+1 130 60 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+7 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"textChangedCB" "main()
+{
+    frame.color(\"Red\");
+    frame.text(\"Configure RunInfo (not saved)\");
+}"
+1
+LANG:1 82 -*-Sans-*-r-normal-*-10-*-100-100-*-*-iso8859-1|-10,0,0,0,505,0,0,0,0,0,0,0,0,Sans
+0 ""
+ 128 58 392 81
+3 "0s" 0 0 0 0 0 -1  E "main()
+{
+  string number=$1;
+  strreplace(number,\"Reco_Ctrl\",\"\");
+  string partName;
+  dpGet(\"RECFARM:Farm_Reco\"+number+\".general.partName\", partName);
+  partNameValue.text(partName);
+}
+" 0
+ E
+2 6
+"runType"
+""
+1 22 92 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+9 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 22 92 122 106
+0 2 2 "0s" 0 0 0 64 0 0  22 92 1
+1
+LANG:1 82 -*-Sans-*-r-normal-*-10-*-100-100-*-*-iso8859-1|-10,0,0,0,505,0,0,0,0,0,0,0,0,Sans
+0 ""
+1
+LANG:1 8 Activity
+22 7
+"runTypeValue"
+""
+1 130 90 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+10 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 82 -*-Sans-*-r-normal-*-10-*-100-100-*-*-iso8859-1|-10,0,0,0,505,0,0,0,0,0,0,0,0,Sans
+0 ""
+ 128 88 392 112
+0
+
+"main()
+{
+  string number=$1;
+  strreplace(number,\"Reco_Ctrl\",\"\");
+  string actualRunType;
+  dpGet(\"RECFARM:Farm_Reco\"+number+\".general.runType\", actualRunType);
+  dyn_string runTypeName=dpNames(\"RECFARM:FarmActivity_*\");
+  runTypeValue.items(runTypeName);
+  runTypeValue.text(actualRunType);
+}" 0
+
+"main()
+{
+    frame.color(\"Red\");
+    frame.text(\"Configure RunInfo (not saved)\");
+}" 0
+
+E
+ 0 0
+13 8
+"SaveButton"
+""
+1 130 120 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+11 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 82 -*-Sans-*-r-normal-*-10-*-100-100-*-*-iso8859-1|-10,0,0,0,505,0,0,0,0,0,0,0,0,Sans
+0 ""
+ 128 118 182 142
+
+T 
+1
+LANG:1 4 Save
+"main()
+{
+  string number=$1;
+  dyn_string recvInfra, strmInfra;
+  strreplace(number,\"Reco_Ctrl\",\"\");
+  int partId=(int)number[1];
+  dpGet(runTypeValue.text+\".Storage.recvInfrastructure\",recvInfra,
+        runTypeValue.text+\".Storage.streamInfrastructure\",strmInfra);
+  dpSet(\"RECFARM:Farm_Reco\"+number+\".HLTFarm.nSubFarms\",nSubFarmsValue.text);
+  dpSet(\"RECFARM:Farm_Reco\"+number+\".general.partName\",partNameValue.text); 
+  dpSet(\"RECFARM:Farm_Reco\"+number+\".general.runType\",runTypeValue.text);   
+  dpSet(\"RECFARM:Farm_Reco\"+number+\".general.partId\",partId);
+  dpSet(\"RECFARM:Farm_Reco\"+number+\".Storage.storeFlag\",1);
+  dpSet(\"RECFARM:Farm_Reco\"+number+\".Storage.recvStrategy\",1);
+  dpSet(\"RECFARM:Farm_Reco\"+number+\".Storage.recvInfrastructure\",recvInfra);
+  dpSet(\"RECFARM:Farm_Reco\"+number+\".Storage.strmStrategy\",1);
+  dpSet(\"RECFARM:Farm_Reco\"+number+\".Storage.streamInfrastructure\",strmInfra);  
+  frame.color(\"Black\");
+  frame.text(\"Configure RunInfo (saved)\");
+}" 0
+ E E E
+13 9
+"RevertButton"
+""
+1 190 120 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+12 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 82 -*-Sans-*-r-normal-*-10-*-100-100-*-*-iso8859-1|-10,0,0,0,505,0,0,0,0,0,0,0,0,Sans
+0 ""
+ 188 118 242 142
+
+T 
+1
+LANG:1 6 Revert
+"main()
+{
+  string number=$1;
+  strreplace(number,\"Reco_FarmCtrl\",\"\");  
+  int nSubFarms;
+  dpGet(\"RECFARM:Reco_Farm\"+number+\".HLTFarm.nSubFarms\", nSubFarms);
+  nSubFarmsValue.text(nSubFarms);
+  string partName;
+  dpGet(\"RECFARM:Reco_Farm\"+number+\".general.partName\", partName);
+  partNameValue.text(partName);
+  string actualRunType;
+  dpGet(\"RECFARM:Reco_Farm\"+number+\".general.runType\", actualRunType);
+  dyn_string runTypeName=dpNames(\"RECFARM:FarmActivity_*\");
+  runTypeValue.items(runTypeName);
+  runTypeValue.text(actualRunType);
+}" 0
+ E E E
+13 10
+"RefreshButton"
+""
+1 250 120 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+13 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 82 -*-Sans-*-r-normal-*-10-*-100-100-*-*-iso8859-1|-10,0,0,0,505,0,0,0,0,0,0,0,0,Sans
+0 ""
+ 248 118 302 142
+
+T 
+1
+LANG:1 7 Refresh
+"main()
+{
+  string number=$1;
+  strreplace(number,\"Reco_Ctrl\",\"\");
+  string actualRunType;
+  dpGet(\"RECFARM:Farm_Reco\"+number+\".general.runType\", actualRunType);
+  dyn_string runTypeName=dpNames(\"RECFARM:FarmActivity_*\");
+  runTypeValue.items(runTypeName);
+  runTypeValue.text(actualRunType);
+}" 0
+ E E E
+13 11
+"EditorButton"
+""
+1 310 120 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+14 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 82 -*-Sans-*-r-normal-*-10-*-100-100-*-*-iso8859-1|-10,0,0,0,505,0,0,0,0,0,0,0,0,Sans
+0 ""
+ 308 118 392 142
+
+T 
+1
+LANG:1 15 Activity Editor
+"main()   {
+  ChildPanelOn(\"ProcessorFarm/MultiActivityEditor\",\"MultiActivityEditor\",makeDynString($1,$2),100,100);
+}" 0
+ E E E
+30 12
+"FRAME1"
+""
+1 10 4 E E E 1 E 1 E N "_WindowText" E N {0,0,0} E E
+ E E
+16 0 0 0 0 0
+E E E
+1
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 0 1 0 1 E 0.8297872340425532 0 0.2032520325203252 1.702127659574468 159.1869918699187 0 E 10 4 481 251
+1
+LANG:1 97 -*-Sans Serif-bold-r-normal-*-11-*-100-100-*-*-iso8859-1|-11,0,0,0,758,0,0,0,0,0,0,0,0,Sans Serif
+0 ""
+1
+LANG:1 18 Configure SubFarms
+13 13
+"PUSH_BUTTON1"
+""
+1 270 180 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+18 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 82 -*-Sans-*-r-normal-*-10-*-100-100-*-*-iso8859-1|-10,0,0,0,505,0,0,0,0,0,0,0,0,Sans
+0 ""
+ 268 178 392 202
+
+T 
+1
+LANG:1 21 Active SubFarm Editor
+"main()   {
+  ChildPanelOn(\"fwFSMuser/FSM_FarmPool\",\"Active Farm Editor\",makeDynString($1,$2),100,100);
+}" 0
+ E E E
+0
+LAYER, 1 
+1
+LANG:1 0 
+0
+LAYER, 2 
+1
+LANG:1 0 
+0
+LAYER, 3 
+1
+LANG:1 0 
+0
+LAYER, 4 
+1
+LANG:1 0 
+0
+LAYER, 5 
+1
+LANG:1 0 
+0
+LAYER, 6 
+1
+LANG:1 0 
+0
+LAYER, 7 
+1
+LANG:1 0 
+0
+0

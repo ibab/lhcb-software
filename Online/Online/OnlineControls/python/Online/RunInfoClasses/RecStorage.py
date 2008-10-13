@@ -71,7 +71,7 @@ class StorageInfo(General):
       slot = recv_slots[i]
       node = slot[:slot.find(':')]
       sub_farm = 'SF%02d'%(i,)
-      short_name = 'Send_'+sub_farm
+      short_name = sub_farm+'_SND' # Keep this name to ensure storageMon is working!
       task = pn+'_'+node+'_'+short_name
       tasks.append(node+'/'+task+'/'+short_name+'/RecStorageSend'+cl1+'("'+sub_farm+'",'+str(i)+',)')
     partition.setRecvSenders(tasks)
@@ -80,7 +80,7 @@ class StorageInfo(General):
       slot = strm_slots[i]
       node = slot[:slot.find(':')]
       sub_farm = 'SF%02d'%(i,)
-      short_name = 'Recv_'+sub_farm
+      short_name = sub_farm+'_HLT' # Keep this name to ensure storageMon is working!
       task = pn+'_'+node+'_'+short_name
       tasks.append(node+'/'+task+'/'+short_name+'/RecStorageRecv'+cl1+'("'+sub_farm+'",'+str(i)+',)')
     partition.setStreamReceivers(tasks)

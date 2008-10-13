@@ -13,7 +13,8 @@ void ctrlUtils_trace(string msg)  {
 //=============================================================================
 string ctrlUtils_dimMapName() {
   string sys = getSystemName();
-  string dimMap = "DimStorage";//"DimMap"+substr(sys,0,strlen(sys)-1);
+  string dimMap;// = "DimStorage";
+  dimMap = "DimMap"+substr(sys,0,strlen(sys)-1);
   return dimMap;
 }
 //=============================================================================

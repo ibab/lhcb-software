@@ -8,6 +8,6 @@ installSubfarm()
 	echo "No subfarm number given.";
 	else
 	echo Executing: ssh -X ${1} bash ${ONLINECONTROLSROOT}/scripts/InstallSubfarm.sh REC${1} ${2}
-	ssh -X ${1} bash ${ONLINECONTROLSROOT}/scripts/InstallSubfarm.sh REC${1} ${2}
+	ssh -q -f -Y ${1} "bash ${ONLINECONTROLSROOT}/scripts/InstallSubfarm.sh REC${1} ${2}" &
 	fi;
 }
