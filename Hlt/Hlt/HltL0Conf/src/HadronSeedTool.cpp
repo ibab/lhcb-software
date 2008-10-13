@@ -1,4 +1,4 @@
-// $Id: HadronSeedTool.cpp,v 1.7 2008-10-02 10:33:44 albrecht Exp $
+// $Id: HadronSeedTool.cpp,v 1.8 2008-10-13 06:27:53 albrecht Exp $
 // Include files 
 
 #include <cmath>
@@ -145,8 +145,11 @@ StatusCode HadronSeedTool::makeTrack(const LHCb::L0CaloCandidate& hadL0Cand,
   //region:  0-2 for ECal, 3-4 for HCal
   int region = m_l0ConfExtrapolator->getCaloRegion(x,y,z);
   if( -1 == region ){
-    error()<<"calo region not valid, region = "<<region<<endmsg;
-    return StatusCode::FAILURE;
+    warning()<<"calo region not valid, region = "<<region<<endmsg;
+    //if position of calo candidate no valid, 
+    //assume outermost region --> largest search window
+    region = 4;
+    //return StatusCode::SUCCESS;
   }
   
   // set the covariance matrix
