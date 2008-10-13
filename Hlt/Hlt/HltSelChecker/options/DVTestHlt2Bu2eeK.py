@@ -7,6 +7,7 @@
 ###
 from Gaudi.Configuration import *
 from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, GaudiSequencer, PhysDesktop, DecayTreeTuple, PrintHeader
+from Configurables import CheckSelResult, L0Filter, SelResultCorrelations
 #--------------------------------------------------------------
 #
 # Preselection
@@ -51,6 +52,13 @@ EventSelector().Input   = [
   "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol3/dijkstra/Selections/Bu2Kee-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
 
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
+#
+# correlations on signal
+#
+ApplicationMgr().TopAlg += [ GaudiSequencer("Corrs") ]
+GaudiSequencer("Corrs").Members += [ CheckSelResult("CheckOffline"), L0Filter(), SelResultCorrelations("eeK") ]
+CheckSelResult("CheckOffline").Algorithms = [ "DC06SelBu2eeK" ]
+SelResultCorrelations("eeK").Algorithms = [ "Hlt2SelBu2LLK", "Hlt2SelBu2LLKSignal", "Hlt2SelBu2LLKHighMass", "Hlt2SelBu2LLKJpsi", "Hlt2SelBiasedDiElectron", "Hlt2SelBiasedDiMuon", "Hlt2SelUnbiasedDiMuon", "Hlt2Decision" ]
 
 ApplicationMgr().ExtSvc +=  [ "NTupleSvc" ]                             
 NTupleSvc().Output =  [ "FILE1 DATAFILE='HLT-Bu2eeK.root' TYP='ROOT' OPT='NEW'" ] 
@@ -58,3 +66,4 @@ HistogramPersistencySvc().OutputFile = "DVHlt2-Bu2eeK.root"
 
 ApplicationMgr().EvtMax = -1 
 EventSelector().FirstEvent = 1 
+

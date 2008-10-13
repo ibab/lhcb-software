@@ -6,7 +6,8 @@
  #  @date 2007-07-20
 ###
 from Gaudi.Configuration import *
-from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, GaudiSequencer, PhysDesktop, DecayTreeTuple, TupleToolDecay
+from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, GaudiSequencer, PhysDesktop, DecayTreeTuple, TupleToolDecay, ReadHltSummary, PrintTree, PrintMCTree, TupleToolTrigger
+# from Configurables ChargedProtoPAlg, PreLoadParticles, CombineParticles, FilterDesktop
 #--------------------------------------------------------------
 #
 # Preselection
@@ -48,13 +49,18 @@ ApplicationMgr().ExtSvc +=  [ "NTupleSvc" ]
 NTupleSvc().Output =  [ "FILE1 DATAFILE='HLT-Bd2MuMuKstar.root' TYP='ROOT' OPT='NEW'" ] 
 HistogramPersistencySvc().OutputFile = "DVHlt2-Bd2MuMuKstar.root"
 
-ApplicationMgr().EvtMax = -1 
+ApplicationMgr().EvtMax = 200
 EventSelector().FirstEvent = 1 
-EventSelector().PrintFreq = 10 
+EventSelector().PrintFreq = 1 
 
-# ApplicationMgr().TopAlg += [ "PrintTree", "PrintMCTree" ]
-# PrintTree.PhysDesktop.InputLocations = [ "Phys/Hlt2SharedDiMuon" ]
-# PrintMCTree.ParticleNames = [ "B0", "B~0" ]
+#
+ApplicationMgr().TopAlg += [ PrintTree("PrintHlt2"), PrintTree("PrintPresel"), PrintMCTree() ]
+#
+PrintTree("PrintHlt2").addTool(PhysDesktop())
+PrintTree("PrintHlt2").PhysDesktop.InputLocations = [ "Phys/Hlt2SelBd2MuMuKstar" ]
+PrintTree("PrintPresel").addTool(PhysDesktop())
+PrintTree("PrintPresel").PhysDesktop.InputLocations = [ "Phys/PreselBd2KstarMuMu"  ]
+PrintMCTree().ParticleNames = [ "B0", "B~0" ]
 ###
  # Tuple
 ###
@@ -68,8 +74,23 @@ DecayTreeTuple("Hlt2DecayTreeTuple").Branches = {
 }
 DecayTreeTuple("Hlt2DecayTreeTuple").addTool(TupleToolDecay("Head"))
 DecayTreeTuple("Hlt2DecayTreeTuple").Head.ToolList += [ "TupleToolP2VV" ]
+DecayTreeTuple("Hlt2DecayTreeTuple").addTool(TupleToolTrigger())
+DecayTreeTuple("Hlt2DecayTreeTuple").TupleToolTrigger.VerboseL0 = True
+
 # importOptions( "$FLAVOURTAGGINGOPTS/BTaggingTool.opts")
 
 # HltBackgroundCategory.FillAll = false 
 
+#ReadHltSummary().OutputLevel = 1
+
+#CombineParticles("Hlt2SelBd2MuMuKstar").OutputLevel = 1
+
+#ApplicationMgr().TopAlg += [ FilterDesktop() ]
+#FilterDesktop().addTool(PhysDesktop())
+#FilterDesktop().PhysDesktop.InputLocations = ["Phys/Hlt2SelBd2MuMuKstar"]
+#FilterDesktop().OutputLevel = 1
+#FilterDesktop().Code = "ALL"
+
+#from Configurables import CondDBAccessSvc, MagneticFieldSvc, MagFieldToolDC06
+#MagneticFieldSvc().Polarity = 2
 

@@ -1,4 +1,4 @@
-### @file
+t### @file
 #
 #   Hlt 2 selections test job
 #
@@ -8,24 +8,21 @@
 from Gaudi.Configuration import *
 from Configurables import HistogramPersistencySvc, ReadHltSummary, GaudiSequencer, PrintHeader, HltSelectionsDecision
 importOptions ("$DAVINCIROOT/options/DaVinciCommon.opts")
-##################################################################
-# 
-# to get Hlt1 only
+########################################################################
 #
-#importOptions( "$L0DUROOT/options/ReplaceL0DUBankWithEmulated.opts" )
+# Trigger. Uncomment what you need. Hlt1 needs L0, Hlt2 doesn't.
 #
-# Temporary hack to get L0 to do what it should
+from HltConf.Configuration import *
 #
-importOptions('$L0DUROOT/options/L0DUBankSwap.opts')
-importOptions('$L0DUROOT/options/DefaultTCK.opts')
+## enable if you want to rerun L0
+HltConf().replaceL0BanksWithEmulated = True
 #
-importOptions( "$HLTSYSROOT/options/Hlt1.opts")
-##################################################################
-# 
-# to get Hlt2 only
-#
-#GaudiSequencer("Hlt2").Members += [ "L0Filter" ]
-importOptions( "$HLTSYSROOT/options/Hlt2.opts")
+## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
+#HltConf().hltType = 'Hlt1'
+#HltConf().hltType = 'Hlt2'
+HltConf().hltType = 'Hlt1+Hlt2'
+## don't forget to actually apply the configuration!!!
+HltConf().applyConf()
 ##################################################################
 # 
 # to get Hlt2 correlations

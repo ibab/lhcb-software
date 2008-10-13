@@ -7,11 +7,12 @@
 ###
 from Gaudi.Configuration import *
 from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, GaudiSequencer, PhysDesktop, DecayTreeTuple, PrintHeader
+from Configurables import CheckSelResult, L0Filter, SelResultCorrelations
 #--------------------------------------------------------------
 #
 # Preselection
 #
-importOptions( "$B2DILEPTONROOT/options/DVPreselBu2LLK.opts")
+importOptions( "$B2DILEPTONROOT/options/DVDC06SelBu2MuMuK.py")
 HltCorrelations("Hlt2SelectionsCorrs").Algorithms += [ "PreselBu2LLK" ]
 PrintHeader("PrintDiLeptonForPreselBu2LLK").OutputLevel = 3 
 PrintHeader("PrintPreselBu2LLK").OutputLevel = 3 
@@ -45,6 +46,13 @@ importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
 DecayTreeTuple("Hlt2DecayTreeTuple").addTool(PhysDesktop())
 DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Phys/Hlt2SelBu2LLK"]
 DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[B+ -> (^J/psi(1S) => ^mu+ ^mu-) ^K+ ]cc"
+#
+# correlations on signal
+#
+ApplicationMgr().TopAlg += [ GaudiSequencer("Corrs") ]
+GaudiSequencer("Corrs").Members += [ CheckSelResult("CheckOffline"), L0Filter(), SelResultCorrelations("eeK") ]
+CheckSelResult("CheckOffline").Algorithms = [ "DC06SelBu2MuMuK" ]
+SelResultCorrelations("eeK").Algorithms = [ "Hlt2SelBu2LLK", "Hlt2SelBu2LLKSignal", "Hlt2SelBu2LLKHighMass", "Hlt2SelBu2LLKJpsi", "Hlt2SelBiasedDiElectron", "Hlt2SelBiasedDiMuon", "Hlt2SelUnbiasedDiMuon", "Hlt2Decision" ]
 #
 # Options
 #
