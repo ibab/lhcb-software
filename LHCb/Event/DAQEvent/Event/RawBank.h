@@ -108,6 +108,8 @@ namespace LHCb
                    HltSelReports,   // 54
                    HltVertexReports,// 55
                    HltLumiSummary,  // 56
+                   L0PUFull,        // 57
+                   L0PUError,       // 58
                    // Add new types here. Don't forget to update also RawBank.cpp
                    LastType    // LOOP Marker; add new bank types ONLY before!
     };
