@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.117 2008-10-06 15:08:46 wouter Exp $
+! $Id: release.notes,v 1.118 2008-10-14 11:50:29 wouter Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 !--------------------------------------------------------------------------
+
+! 2008-10-14 - Wouter Hulsbergen
+ - Added accessor for vector of T0s from conditions
 
 !========================== OTDet v8r1 2008-10-02 =========================
 ! 2008-10-06 - Wouter Hulsbergen

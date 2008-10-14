@@ -1,4 +1,4 @@
-// $Id: DeOTModule.h,v 1.37 2008-10-06 15:08:46 wouter Exp $
+// $Id: DeOTModule.h,v 1.38 2008-10-14 11:50:29 wouter Exp $
 #ifndef OTDET_DEOTMODULE_H
 #define OTDET_DEOTMODULE_H 1
 
@@ -287,9 +287,10 @@ public:
 		  double& xAtYEq0, double& zAtYEq0, double& ybegin, double& yend) const ;
 
   /** Set the t0 for a straw in this module */
-  // void setStrawT0(unsigned int iStraw, double t0)  ;
-  
   StatusCode setStrawT0s( const std::vector< double >& tzeros );
+
+  /** Get the vector of straw t0s from the condition */
+  const std::vector< double >& getStrawT0s() const;
   
   /** Time offset correction for a straw */
   double strawT0(unsigned int iStraw) const ;

@@ -1,4 +1,4 @@
-// $Id: DeOTModule.cpp,v 1.39 2008-10-06 15:08:47 wouter Exp $
+// $Id: DeOTModule.cpp,v 1.40 2008-10-14 11:50:29 wouter Exp $
 // GaudiKernel
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
@@ -550,7 +550,6 @@ std::auto_ptr<LHCb::Trajectory> DeOTModule::trajectory(const OTChannelID& aChan,
 
 StatusCode DeOTModule::setStrawT0s( const std::vector< double >& tzeros ) {
   if ( hasCondition( m_calibrationName ) ) {
-    // @TODO: Make me smarter so i can handle a vector of otis t0s
     /// Modify condition in TES
     m_calibration->param< std::vector<double> >( "TZero" ) = tzeros;
     /// m_calibration->neverUpdateMode() /// Always valid for any and all IOV
@@ -570,6 +569,19 @@ StatusCode DeOTModule::setStrawT0s( const std::vector< double >& tzeros ) {
   }
   
   return StatusCode::SUCCESS;
+}
+
+const std::vector<double>&  DeOTModule::getStrawT0s() const {
+  const std::vector<double> *rc(0) ;
+  if ( hasCondition( m_calibrationName ) ) {
+    rc =&( m_calibration->param< std::vector<double> >( "TZero" )) ;
+  } else {
+    MsgStream msg( msgSvc(), name() );
+    msg << MSG::ERROR << "Condition " << m_calibrationName << " doesn't exist for " << this->name() << "!" << endmsg;
+    static std::vector<double> dummy ;
+    rc = &dummy ;
+  }
+  return *rc ;
 }
 
 StatusCode DeOTModule::setRtRelation(const OTDet::RtRelation& rtr) {
