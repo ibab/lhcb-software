@@ -3,6 +3,9 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+! 2008-10-14 - Marco Cattaneo
+ - Update qmtest reference 
+
 </PRE><H1><A NAME=v33r3>2008-10-13 Brunel v33r3</A></H1><PRE>
 This version uses projects Gaudi v20r2, LHCb v25r2, Lbcom v6r23
  and SQLDDDB v5r0, ParamFiles v7r3, FieldMap v5r1
