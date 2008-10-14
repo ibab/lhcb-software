@@ -1,4 +1,4 @@
-// $Id: STEventMerge.cpp,v 1.2 2008-10-11 10:42:23 mneedham Exp $
+// $Id: STEventMerge.cpp,v 1.3 2008-10-14 08:49:05 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -6,7 +6,7 @@
 
 // LHCbKernel includes
 #include "Kernel/STChannelID.h"
-#include "Kernel/STDetSwitch.h"
+//#include "Kernel/STDetSwitch.h"
 #include "Event/STCluster.h"
 #include "STEventMerge.h"
 #include "Kernel/STDataFunctor.h"
@@ -16,12 +16,13 @@ DECLARE_ALGORITHM_FACTORY( STEventMerge );
 
 STEventMerge::STEventMerge( const std::string& name,
                                     ISvcLocator* pSvcLocator):
-  GaudiAlgorithm(name, pSvcLocator),
+  ST::AlgBase(name, pSvcLocator),
   m_inputLocation(STClusterLocation::ITClusters){
   
   declareProperty("spills", m_spillsVector);
-  declareProperty("detType", m_detType = "IT");
-  declareProperty("clusterLocation", m_clusterLocation = "/Event/Raw/IT/MergedSpills");
+  declareSTConfigProperty("clusterLocation", m_clusterLocation ,"/Event/Raw/IT/MergedSpills");
+
+  addToFlipList(&m_inputLocation);
 
 }
 
@@ -34,9 +35,6 @@ StatusCode STEventMerge::initialize()
 {
   StatusCode sc = GaudiAlgorithm::initialize();
   if (sc.isFailure()) return Error("Failed to initialize", sc);
-
-  STDetSwitch::flip(m_detType,m_inputLocation);
-  STDetSwitch::flip(m_detType,m_clusterLocation); 
  
   std::vector<std::string>::const_iterator iSpillName = m_spillsVector.begin();
   while( iSpillName != m_spillsVector.end()) {

@@ -1,8 +1,8 @@
-// $Id: STEventMerge.h,v 1.2 2008-10-11 10:42:23 mneedham Exp $
+// $Id: STEventMerge.h,v 1.3 2008-10-14 08:49:05 mneedham Exp $
 #ifndef STEVENTMERGE_H
 #define STEVENTMERGE_H 1
 
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "Kernel/STAlgBase.h"
 #include "Event/STCluster.h"
 
 
@@ -18,7 +18,7 @@ namespace LHCb{
   class STChannelID;
 }
 
-class STEventMerge :public GaudiAlgorithm {
+class STEventMerge :public ST::AlgBase {
 
 public:
   
@@ -47,7 +47,6 @@ private:
   std::vector<std::string> m_spillPath;
   std::string m_inputLocation;
   std::string m_clusterLocation;
-  std::string m_detType;
 
   class Less_by_Channel : public std::binary_function<LHCb::STLiteCluster,LHCb::STLiteCluster ,bool>{
   public:

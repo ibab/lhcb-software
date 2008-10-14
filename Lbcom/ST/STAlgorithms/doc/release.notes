@@ -2,6 +2,9 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+! 2008-10-14 M Needham
+ - Move to new algorithm base classes 
+
 ! 2008-10-11 M Needham
  - Add trivial convertor from clusters to lite clusters
  - Changes in event merging code

@@ -1,4 +1,4 @@
-// $Id: STClusterKiller.cpp,v 1.1 2007-11-06 09:53:22 mneedham Exp $
+// $Id: STClusterKiller.cpp,v 1.2 2008-10-14 08:49:04 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -16,11 +16,10 @@ DECLARE_ALGORITHM_FACTORY( STClusterKiller );
 
 STClusterKiller::STClusterKiller( const std::string& name,
                                     ISvcLocator* pSvcLocator):
-  GaudiAlgorithm(name, pSvcLocator),
+  ST::AlgBase(name, pSvcLocator),
   m_uniformDist( (IRndmGen*)0 ) {
 
-  declareProperty("InputLocation",m_inputLocation= STClusterLocation::TTClusters);
-  declareProperty("DetType", m_detType = "TT"); 
+  declareSTConfigProperty("InputLocation",m_inputLocation, STClusterLocation::TTClusters);
   declareProperty("Efficiency", m_eff = 0.995); 
 }
 
@@ -33,8 +32,6 @@ StatusCode STClusterKiller::initialize()
 {
   StatusCode sc = GaudiAlgorithm::initialize();
   if (sc.isFailure()) return Error("Failed to initialize", sc);
-
-  STDetSwitch::flip(m_detType,m_inputLocation); 
 
   /// initialize, flat generator...
   IRndmGenSvc* tRandNumSvc = svc<IRndmGenSvc>("RndmGenSvc", true);

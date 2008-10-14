@@ -1,8 +1,8 @@
-// $Id: STClustersToLite.h,v 1.1 2008-10-11 10:42:23 mneedham Exp $
+// $Id: STClustersToLite.h,v 1.2 2008-10-14 08:49:05 mneedham Exp $
 #ifndef STCLUSTERSTOLITE_H
 #define STCLUSTERSTOLITE_H 1
 
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "Kernel/STAlgBase.h"
 
 /** @class STClustersToLite
  *
@@ -16,7 +16,7 @@ namespace LHCb{
   class STChannelID;
 }
 
-class STClustersToLite :public GaudiAlgorithm {
+class STClustersToLite :public ST::AlgBase {
 
 public:
   
@@ -25,12 +25,10 @@ public:
   virtual ~STClustersToLite();  
 
   // IAlgorithm members
-  virtual StatusCode initialize();
   virtual StatusCode execute();
 
 private:
 
-  std::string m_detType;
   std::string m_inputLocation;
   std::string m_outputLocation;
 

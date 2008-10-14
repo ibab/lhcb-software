@@ -1,8 +1,8 @@
-// $Id: STClusterKiller.h,v 1.1 2007-11-06 09:53:22 mneedham Exp $
+// $Id: STClusterKiller.h,v 1.2 2008-10-14 08:49:04 mneedham Exp $
 #ifndef STCLUSTERKILLER_H
 #define STCLUSTERKILLER_H 1
 
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "Kernel/STAlgBase.h"
 #include "Event/STCluster.h"
 
 
@@ -18,7 +18,7 @@ namespace LHCb{
   class STChannelID;
 }
 
-class STClusterKiller :public GaudiAlgorithm {
+class STClusterKiller :public ST::AlgBase {
 
 public:
   
@@ -37,7 +37,6 @@ private:
 
    // smart interface to generator
   SmartIF<IRndmGen> m_uniformDist; 
-  std::string m_detType;
   std::string m_inputLocation;
   double m_eff;
 };
