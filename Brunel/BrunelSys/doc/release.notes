@@ -21,7 +21,6 @@ This version is a development version to prepare for reconstruction of real data
   . Added Outer Tracker T0 and RT relation conditions (OTDet v8r1)
 
 - New features
-    Bunch current is hardwired to a constant number for now. (DigiAlg v4r11)
   . Add a qmtest that tests the initialisation of Brunel, used by Dirac to test
     the installation. Invoked with: "cmt TestPackage sam"  (BrunelSys v33r3)
   . Add options/2008-TED-Data.py, options for 2008 real data processing
