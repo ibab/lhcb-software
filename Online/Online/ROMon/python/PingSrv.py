@@ -1,6 +1,9 @@
 #!/bin/bash
 export UTGID
-exec -a ${UTGID} /usr/bin/python <</EOF
+runit()
+{
+#exec -a ${UTGID} /usr/bin/python <</EOF
+/usr/bin/python <</EOF
 import os, sys, socket, SimpleXMLRPCServer
 class PingSrv:
   def ping(self,who,count,size):
@@ -21,3 +24,8 @@ if __name__ == "__main__":
   print '..... Ping server instance is now running.....'
   server.serve_forever()
 /EOF
+
+sleep 10;
+}
+
+while [ 1 ]; do  runit; done;
