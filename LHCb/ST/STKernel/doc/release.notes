@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.35 2008-10-14 10:08:20 mneedham Exp $
+! $Id: release.notes,v 1.36 2008-10-14 11:51:21 mneedham Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
+
+! 2008-10-14 M Needham
+ - add setDetType
 
 ! 2008-10-14 M Needham
  - bug fix in retrieval of readout tool 

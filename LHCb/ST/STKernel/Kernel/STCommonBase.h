@@ -5,7 +5,7 @@
  *  Header file for ST base class : STCommonBase
  *
  *  CVS Log :-
- *  $Id: STCommonBase.h,v 1.1 2008-10-14 08:47:05 mneedham Exp $
+ *  $Id: STCommonBase.h,v 1.2 2008-10-14 11:51:21 mneedham Exp $
  *
  *  @author Matthew Needham    Matthew.Needham@cern.ch
  *  @date   2005-11-10
@@ -80,6 +80,9 @@ namespace ST
   
    /** force init of base class tool */
    void setForcedInit();
+
+   /** set the detType */
+   void setDetType(const std::string& aString);
   
    /** detector type (IT or TT) */
    const std::string& detType() const; 

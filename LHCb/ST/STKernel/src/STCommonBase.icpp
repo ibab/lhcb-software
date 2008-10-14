@@ -5,7 +5,7 @@
  *  Implementation file for RICH base class : ST::CommonBase
  *
  *  CVS Log :-
- *  $Id: STCommonBase.icpp,v 1.2 2008-10-14 10:08:20 mneedham Exp $
+ *  $Id: STCommonBase.icpp,v 1.3 2008-10-14 11:51:21 mneedham Exp $
  *
  *  @author Matthew Needham    Matthew.Needham@cern.ch
  *  @date   2008-11-10
@@ -74,7 +74,7 @@ StatusCode ST::CommonBase<PBASE>::finalize()
 //=============================================================================
 
 template <class PBASE>
-void ST::CommonBase<PBASE>::commonInit(){
+inline void ST::CommonBase<PBASE>::commonInit(){
 
   m_tracker = 0; 
   m_readoutTool = 0;
@@ -84,6 +84,10 @@ void ST::CommonBase<PBASE>::commonInit(){
   addToFlipList(&m_readoutToolName);
 }
 
+template <class PBASE>
+inline void ST::CommonBase<PBASE>::setDetType(const std::string& aString){
+ m_detType = aString;
+}
 
 #include "STDet/DeSTDetector.h"
 #include "Kernel/ISTReadoutTool.h"
