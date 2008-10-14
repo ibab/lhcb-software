@@ -789,25 +789,13 @@ const LHCb::VertexBase* PhysDesktop::relatedVertex(const LHCb::Particle* part){
       verbose() << "Table is empty for particle " << part->key() << " " 
                 << part->particleID().pid() << endmsg ;
     }
-
-
-    const std::string pvLocation = primaryVertexLocation();
-    const Particle2Vertex::Range range = m_pvRelator->relatedPVs(part,
-                                                                 pvLocation,
-                                                                 m_distanceCalculator);
-
-    for (Particle2Vertex::Range::const_iterator iRel = range.begin();
-         iRel != range.end();
-         ++iRel) {
-      m_p2VtxTable.relate(part, iRel->to(), iRel->weight());
-    }
-
-  } // relations for particle not empty
-
+    storeRelationsInTable(part);
+  }
+  
   if (msgLevel(MSG::VERBOSE)) verbose() << "P2V returns particle2Vertices" << endmsg ;
   if ( particle2Vertices(part).empty() ) return NULL ;
 
-  return particle2Vertices(part).back().to();
+  return m_p2VtxTable.relations(part).back().to();
 
 }
 //=============================================================================
@@ -843,5 +831,23 @@ const Particle2Vertex::Table PhysDesktop::particle2VertexTable() const
 {
   return m_p2VtxTable;
 }
+//=============================================================================
+void PhysDesktop::storeRelationsInTable(const LHCb::Particle* part){
 
+
+  if ( ! particle2Vertices(part).empty() ) return;
+
+  const std::string pvLocation = primaryVertexLocation();
+
+  const Particle2Vertex::Relations rel = m_pvRelator->relatedPVs(part,
+                                                                 pvLocation,
+                                                                 m_distanceCalculator);
+
+  for (Particle2Vertex::Relations::const_iterator iRel = rel.begin();
+       iRel != rel.end();
+       ++iRel) {
+    m_p2VtxTable.relate(part, iRel->to(), iRel->weight());
+  }
+
+}
 //=============================================================================

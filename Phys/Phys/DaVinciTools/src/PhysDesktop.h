@@ -213,6 +213,8 @@ private:
 
   inline std::string& primaryVertexLocation() { return m_primVtxLocn; }
 
+  void storeRelationsInTable(const LHCb::Particle* part);
+
 private: // data
 
   /// TES pathname for Primary Vertices 
