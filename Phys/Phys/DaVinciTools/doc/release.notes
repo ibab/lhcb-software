@@ -1,8 +1,19 @@
-! $Id: release.notes,v 1.363 2008-10-13 12:40:47 pkoppenb Exp $
+! $Id: release.notes,v 1.364 2008-10-14 16:54:57 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-10-14 - Juan PALACIOS
+
+ - src/PhysDesktop{.cpp, .h}
+  . Add helper private method 
+      void storeRelationsInTable(const LHCb::Particle* part);
+  . Use new IRelatedPVFinder
+
+ - src/RelatedPVFinder{.cpp, .h}
+  . Adapt to change in Kernel/IRelatedPVFinder.h: 
+    Now return Particle2Vertex::Relations instead of Particle2Vertex::Range
 
 ! 2008-10-13 - Patrick Koppenburg
  - Removed a compilation warning in reclexer.
