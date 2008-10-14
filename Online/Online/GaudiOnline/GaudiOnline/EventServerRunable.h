@@ -1,4 +1,4 @@
-// $Id: EventServerRunable.h,v 1.6 2008-10-06 11:49:19 frankb Exp $
+// $Id: EventServerRunable.h,v 1.7 2008-10-14 08:37:21 frankb Exp $
 //====================================================================
 //  EventServerRunable
 //--------------------------------------------------------------------
@@ -13,7 +13,7 @@
 //  Created    : 4/12/2007
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/EventServerRunable.h,v 1.6 2008-10-06 11:49:19 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/EventServerRunable.h,v 1.7 2008-10-14 08:37:21 frankb Exp $
 #ifndef GAUDISVC_EVENTSERVERRUNABLE_H
 #define GAUDISVC_EVENTSERVERRUNABLE_H 1
 
@@ -54,8 +54,12 @@ namespace LHCb  {
     /// Request entry definition
     typedef std::pair<MBM::Requirement,DataTransfer::netentry_t*> ReqEntry;
     /// Definition of the container containing waiting clients
+#ifdef EventServerRunable_USE_MAP
     typedef std::map<std::string, ReqEntry > Recipients;
-
+#else
+    typedef std::pair<std::string,ReqEntry> Recipient;
+    typedef std::list<Recipient> Recipients;
+#endif
     /// Reference to MEP manager service
     MEPManager*          m_mepMgr;
     /// Property: MEP manager service name/type
@@ -74,6 +78,8 @@ namespace LHCb  {
     lib_rtl_event_t      m_suspend;
     /// Lock to protect internal data structures
     lib_rtl_lock_t       m_lock;
+    /// Lock to protect internal data structures
+    lib_rtl_lock_t       m_rcpLock;
     /// String containing node_name::UTGID of event data provider task
     std::string          m_input;
     /// String representation of basic request (trigger and veto masks will be taken from requestors)

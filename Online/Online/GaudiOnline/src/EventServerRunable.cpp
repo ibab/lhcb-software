@@ -1,4 +1,4 @@
-// $Id: EventServerRunable.cpp,v 1.8 2008-10-06 11:49:19 frankb Exp $
+// $Id: EventServerRunable.cpp,v 1.9 2008-10-14 08:37:21 frankb Exp $
 //====================================================================
 //  EventServerRunable
 //--------------------------------------------------------------------
@@ -13,7 +13,7 @@
 //  Created    : 4/12/2007
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/EventServerRunable.cpp,v 1.8 2008-10-06 11:49:19 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/EventServerRunable.cpp,v 1.9 2008-10-14 08:37:21 frankb Exp $
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
@@ -56,12 +56,14 @@ EventServerRunable::EventServerRunable(const string& nam, ISvcLocator* svcLoc)
   declareProperty("PrintNum",  m_printNum=1000);
   ::lib_rtl_create_event(0,&m_suspend);
   ::lib_rtl_create_lock(0,&m_lock);
+  ::lib_rtl_create_lock(0,&m_rcpLock);
 }
 
 // Standard Destructor
 EventServerRunable::~EventServerRunable()  {
   ::lib_rtl_delete_event(m_suspend);
   ::lib_rtl_delete_lock(m_lock);
+  ::lib_rtl_delete_lock(m_rcpLock);
   m_suspend = 0;
   m_lock = 0;
 }
@@ -107,6 +109,7 @@ StatusCode EventServerRunable::finalize()     {
     incidentSvc()->removeListener(this);
   }
   shutdownRequests();
+  m_recipients.clear();
   if ( m_consumer ) {
     delete m_consumer;
   }
@@ -147,7 +150,17 @@ void EventServerRunable::handle(const Incident& inc)    {
 }
 
 void EventServerRunable::removeTarget(const string& src)   {
+#ifdef EventServerRunable_USE_MAP
   Recipients::iterator j = m_recipients.find(src);
+#else
+  Recipients::iterator j = m_recipients.end();
+  for(Recipients::iterator i=m_recipients.begin(); i!=m_recipients.end(); ++i)  {
+    if ( src == (*i).first ) {
+      j = i;
+      break;
+    }
+  }
+#endif
   if (j != m_recipients.end())   {
     try {
       ::lib_rtl_lock(m_lock);
@@ -171,7 +184,11 @@ void EventServerRunable::handleEventRequest(netentry_t* e, const netheader_t& hd
     //info("Got event request from "+src);
     try {
       ::lib_rtl_lock(m_lock);
+#ifdef EventServerRunable_USE_MAP
       m_recipients[src] = make_pair(*r,e);
+#else
+      m_recipients.push_back(make_pair(src,make_pair(*r,e)));
+#endif
       restartRequests();
     }
     catch(...) {
