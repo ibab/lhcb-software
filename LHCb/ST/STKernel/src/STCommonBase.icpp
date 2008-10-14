@@ -5,7 +5,7 @@
  *  Implementation file for RICH base class : ST::CommonBase
  *
  *  CVS Log :-
- *  $Id: STCommonBase.icpp,v 1.1 2008-10-14 08:47:06 mneedham Exp $
+ *  $Id: STCommonBase.icpp,v 1.2 2008-10-14 10:08:20 mneedham Exp $
  *
  *  @author Matthew Needham    Matthew.Needham@cern.ch
  *  @date   2008-11-10
@@ -80,6 +80,7 @@ void ST::CommonBase<PBASE>::commonInit(){
   m_readoutTool = 0;
   declareProperty("DetType", m_detType = "TT");
   declareProperty("ForcedInit", m_forcedInit = false); 
+  m_readoutToolName = m_detType+"ReadoutTool";
   addToFlipList(&m_readoutToolName);
 }
 
