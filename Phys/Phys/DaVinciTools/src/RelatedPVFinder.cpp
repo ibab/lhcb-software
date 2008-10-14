@@ -1,4 +1,4 @@
-// $Id: RelatedPVFinder.cpp,v 1.7 2008-09-30 15:12:19 jpalac Exp $
+// $Id: RelatedPVFinder.cpp,v 1.8 2008-10-14 16:50:50 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -78,21 +78,21 @@ StatusCode RelatedPVFinder::initialize(){
   return StatusCode::SUCCESS;
 }
 //============================================================================
-const Particle2Vertex::Range RelatedPVFinder::relatedPVs(const LHCb::Particle* p,
+const Particle2Vertex::Relations RelatedPVFinder::relatedPVs(const LHCb::Particle* p,
                                                          const LHCb::RecVertex::Container& PVs,
                                                          const IDistanceCalculator* distanceCalculator) const 
 {
   return relatedPVs<>(p, PVs.begin(), PVs.end(), distanceCalculator);
 }
 //============================================================================
-const Particle2Vertex::Range RelatedPVFinder::relatedPVs(const LHCb::Particle* p,
+const Particle2Vertex::Relations RelatedPVFinder::relatedPVs(const LHCb::Particle* p,
                                                          const LHCb::RecVertex::ConstVector& PVs,
                                                          const IDistanceCalculator* distanceCalculator) const 
 {
   return relatedPVs(p, PVs.begin(), PVs.end(), distanceCalculator);
 }
 //============================================================================
-const Particle2Vertex::Range RelatedPVFinder::relatedPVs(const LHCb::Particle* p,
+const Particle2Vertex::Relations RelatedPVFinder::relatedPVs(const LHCb::Particle* p,
                                                          const std::string& PVLocation,
                                                          const IDistanceCalculator* distanceCalculator) const 
 {
@@ -104,11 +104,11 @@ const Particle2Vertex::Range RelatedPVFinder::relatedPVs(const LHCb::Particle* p
   } else {
     Error("No LHcb::RecVertex::Container found at "+PVLocation).ignore();
   }
-  return Particle2Vertex::Range();
+  return Particle2Vertex::Relations();
 }
 //============================================================================
 template <typename Iter> 
-const Particle2Vertex::Range RelatedPVFinder::relatedPVs(const LHCb::Particle* p,
+const Particle2Vertex::Relations RelatedPVFinder::relatedPVs(const LHCb::Particle* p,
                                                          Iter begin,
                                                          Iter end,
                                                          const IDistanceCalculator* distanceCalculator ) const
@@ -118,7 +118,7 @@ const Particle2Vertex::Range RelatedPVFinder::relatedPVs(const LHCb::Particle* p
 
   if (0==p) {
     Error("Particle is 0").ignore() ;
-    return Particle2Vertex::Range();
+    return Particle2Vertex::Relations();
   }
 
   StatusCode sc(StatusCode::SUCCESS);
@@ -127,7 +127,7 @@ const Particle2Vertex::Range RelatedPVFinder::relatedPVs(const LHCb::Particle* p
 
   if ( (m_closestZ || m_closest) && (0==v)) {    
     Error("Cannot measure distances without vertex. You have been warned at initialisation!").ignore();
-    return Particle2Vertex::Range();
+    return Particle2Vertex::Relations();
   }
 
   if (msgLevel(MSG::DEBUG)) {
@@ -173,7 +173,8 @@ const Particle2Vertex::Range RelatedPVFinder::relatedPVs(const LHCb::Particle* p
   if (msgLevel(MSG::VERBOSE)) {
     verbose() << "Done relations for " << end-begin << " PVs" << endmsg ;
   }
-  
-  return Particle2Vertex::Range(relations.begin(), relations.end()) ;
+
+  return relations ;
+
 }
 //============================================================================

@@ -1,4 +1,4 @@
-// $Id: RelatedPVFinder.h,v 1.5 2008-09-30 15:12:19 jpalac Exp $
+// $Id: RelatedPVFinder.h,v 1.6 2008-10-14 16:50:50 jpalac Exp $
 #ifndef RELATEDPVFINDER_H 
 #define RELATEDPVFINDER_H 1
 
@@ -29,27 +29,27 @@ public:
 
   StatusCode initialize() ; ///< Initialize
 
-  virtual const Particle2Vertex::Range relatedPVs(const LHCb::Particle* particle,
-                                                  const LHCb::RecVertex::Container& PVs,
-                                                  const IDistanceCalculator* distanceCalculator) const;
+  virtual const Particle2Vertex::Relations relatedPVs(const LHCb::Particle* particle,
+                                                      const LHCb::RecVertex::Container& PVs,
+                                                      const IDistanceCalculator* distanceCalculator) const;
 
-  virtual const Particle2Vertex::Range relatedPVs(const LHCb::Particle* particle,
-                                                  const LHCb::RecVertex::ConstVector& PVs,
-                                                  const IDistanceCalculator* distanceCalculator) const;
+  virtual const Particle2Vertex::Relations relatedPVs(const LHCb::Particle* particle,
+                                                      const LHCb::RecVertex::ConstVector& PVs,
+                                                      const IDistanceCalculator* distanceCalculator) const;
   
 
-  virtual const Particle2Vertex::Range relatedPVs(const LHCb::Particle* particle,
-                                                  const std::string& PVLocation,
-                                                  const IDistanceCalculator* distanceCalculator) const;
+  virtual const Particle2Vertex::Relations relatedPVs(const LHCb::Particle* particle,
+                                                      const std::string& PVLocation,
+                                                      const IDistanceCalculator* distanceCalculator) const;
   
   
 private:
 
   template <typename Iter> 
-  const Particle2Vertex::Range relatedPVs(const LHCb::Particle* particle,
-                                          Iter begin,
-                                          Iter end,
-                                          const IDistanceCalculator* distanceCalculator) const;
+  const Particle2Vertex::Relations relatedPVs(const LHCb::Particle* particle,
+                                              Iter begin,
+                                              Iter end,
+                                              const IDistanceCalculator* distanceCalculator) const;
 
 private:
 
