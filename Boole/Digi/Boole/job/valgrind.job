@@ -45,13 +45,15 @@ set Bversion = "v16r3"
 echo "Executing valgrind for Boole $Bversion using options $options"
 #
 
-if ($?LS_SUBCWD) then 
-# in BATCH, WORKDIR is set by the system
-# in BATCH, location of options has to be given explicitly
-  setenv MYJOBROOT ~/cmtuser/Boole_$Bversion/Digi/Boole/$Bversion
-else
-# in interactive set WORKDIR to submission directory
+# If not set (interactive and CAF), set WORKDIR to submission directory
+if !($?WORKDIR) then
   set WORKDIR = $PWD
+endif
+
+if ($?LS_SUBCWD) then 
+# in BATCH, location of options has to be given explicitly
+  setenv MYJOBROOT ~/cmtuser/Boole_$Bversion/Digi/Boole
+else
 # in interactive, executable is under same root directory as this command file
   cd `dirname $0` 
   cd ..
@@ -65,18 +67,15 @@ source /afs/cern.ch/lhcb/scripts/SetupProject.csh Boole $Bversion
 # Go to working directory
 cd $WORKDIR
 
-
-if ($?LS_SUBCWD) then
-# == in batch copy the executable and options files to $WORKDIR
+# Copy options locally if not already there (usually needed for batch)
+if !(-d ../options) then
   mkdir job
   mkdir options
-  cp $MYJOBROOT/job/Boole.supp job/Boole.supp
   cp $MYJOBROOT/options/*.* options
-  set SuppFile = "./Boole.supp"
   cd job
-else
-  set SuppFile = "$MYJOBROOT/job/Boole.supp"
 endif
+
+set SuppFile = "$MYJOBROOT/job/Boole.supp"
 
 # Flatten the options and force 5 events only
 gaudirun.py -n -v --old-opts $options >! ./valgrind.opts

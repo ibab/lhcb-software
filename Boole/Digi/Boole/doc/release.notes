@@ -5,6 +5,7 @@ Purpose: LHCb Digitization program
 
 ! 2008-10-14 - Marco Cattaneo
  - Fix valgrind.job for use in interactive lsf, and to remove version directory
+ - Add Boole-2008-VeloOpen.py to digitize velo open geometry
 
 </PRE><H1><A NAME=v16r3>2008-10-10 Boole v16r3</A></H1><PRE>
  - Add options/Boole/FST09.py, default options for full scale test production
