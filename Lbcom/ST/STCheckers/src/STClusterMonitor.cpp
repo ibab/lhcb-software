@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.cpp,v 1.11 2008-10-11 10:44:25 mneedham Exp $
+// $Id: STClusterMonitor.cpp,v 1.12 2008-10-14 08:49:57 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -12,7 +12,6 @@
 
 // from LHCbKernel
 #include "Kernel/ISTSignalToNoiseTool.h"
-#include "Kernel/STDetSwitch.h"
 
 // local
 #include "STClusterMonitor.h"
@@ -29,35 +28,31 @@ DECLARE_ALGORITHM_FACTORY( STClusterMonitor );
 
 STClusterMonitor::STClusterMonitor( const std::string& name, 
                                     ISvcLocator* pSvcLocator ) :
-  GaudiHistoAlg(name, pSvcLocator),
-  m_tracker(0)
+ ST::HistoAlgBase(name, pSvcLocator)
 {
   // constructer
   declareProperty("SigNoiseTool",m_sigNoiseToolName = "STSignalToNoiseTool");
-  declareProperty("DetType", m_detType = "TT"); 
-  declareProperty("InputData", m_clusterLocation = STClusterLocation::TTClusters);
-  declareProperty("summaryLocation", m_summaryLocation = STSummaryLocation::TTSummary);
+  declareSTConfigProperty("InputData", m_clusterLocation , STClusterLocation::TTClusters);
+  declareSTConfigProperty("summaryLocation", m_summaryLocation , STSummaryLocation::TTSummary);
+
+  setForcedInit(); // know we want that detector element
 }
 
 STClusterMonitor::~STClusterMonitor() { }
 
 StatusCode STClusterMonitor::initialize()
 {
-  if( "" == histoTopDir() ) setHistoTopDir(m_detType+"/");
+  if( "" == histoTopDir() ) setHistoTopDir(this->detType()+"/");
 
-  StatusCode sc = GaudiHistoAlg::initialize();
+  StatusCode sc = ST::HistoAlgBase::initialize();
   if (sc.isFailure()) return Error("Failed to initialize", sc);
     
   // detector element     
-  m_tracker = getDet<DeSTDetector>(DeSTDetLocation::location(m_detType));
-
-  // Determine the location of the STClusters
-  STDetSwitch::flip(m_detType,m_clusterLocation);
-  STDetSwitch::flip(m_detType,m_summaryLocation);
+  m_tracker = getDet<DeSTDetector>(DeSTDetLocation::location(detType()));
 
   // sig to noise tool
   m_sigNoiseTool = tool<ISTSignalToNoiseTool>( m_sigNoiseToolName,
-                                               m_sigNoiseToolName + m_detType);
+                                               m_sigNoiseToolName + detType());
 
   return StatusCode::SUCCESS;
 }
@@ -129,16 +124,15 @@ void STClusterMonitor::fillHistograms(const STCluster* aCluster)
            9,"Relative neighbour sum (1- and 2-strip clusters)", -1.02, 1.02, 51);
     }
 
+    // the source id
     plot(aCluster->sourceID(),"sourceID", -0.5, 50.5, 51);
 
+    // the spill
     plot(aCluster->spill(), "spill", -10.5, 10.5, 21);
 
-    const DeSTSector* aSector = m_tracker->findSector(aCluster->channelID());
-    if (aSector != 0) {
-      plot(aCluster->totalCharge(),aSector->type()+"/1", "Charge",
-           -0.5, 500.5, 501);
-      plot(m_sigNoiseTool->signalToNoise(aCluster), 
-           aSector->type()+"/2","S/N",0., 100., 100);
-    }
+    // charge and S/N
+    plot(aCluster->totalCharge(),detectorType(aCluster->channelID())+"/1", "Charge",-0.5, 500.5, 501);
+    plot(m_sigNoiseTool->signalToNoise(aCluster),detectorType(aCluster->channelID())+"/2","S/N",0., 100., 100);
+   
   }
 }

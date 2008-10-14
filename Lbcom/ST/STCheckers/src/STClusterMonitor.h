@@ -1,8 +1,8 @@
-// $Id: STClusterMonitor.h,v 1.3 2008-05-06 15:09:09 mneedham Exp $
+// $Id: STClusterMonitor.h,v 1.4 2008-10-14 08:49:57 mneedham Exp $
 #ifndef STClusterMonitor_H
 #define STClusterMonitor_H 1
 
-#include "GaudiAlg/GaudiHistoAlg.h"
+#include "Kernel/STHistoAlgBase.h"
 
 namespace LHCb{
   class STCluster;
@@ -20,7 +20,7 @@ class DeSTDetector;
  *  @date   04/12/2006
  */
 
-class STClusterMonitor : public GaudiHistoAlg {
+class STClusterMonitor : public ST::HistoAlgBase {
 
 public:
  
@@ -49,7 +49,6 @@ private:
 
   std::string m_summaryLocation;
   std::string m_clusterLocation;
-  std::string m_detType;
   
 };
 

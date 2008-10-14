@@ -2,6 +2,9 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2008-10-14 M Needham
+ - Move STClusterMonitor to new base class
+
 ! 2008-11-10 M Needham
  - Add some histograms to STClusterMonitor
 
