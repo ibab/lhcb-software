@@ -43,7 +43,7 @@
 #-------------------------------------------------------------------------------
 # Make a new job object for Brunel
 #-------------------------------------------------------------------------------
-j = Job( application = Brunel( version = 'v33r3' ) )
+j = Job( application = Brunel( version = 'v33r4' ) )
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
@@ -57,8 +57,7 @@ j.name = 'MyBrunel'
 #-------------------------------------------------------------------------------
 # Define the configuration file(s) to use
 myOptsPath = ( j.application.user_release_area + '/Brunel_' +
-               j.application.version + '/Rec/Brunel/' +
-               j.application.version + '/options/' )
+               j.application.version + '/Rec/Brunel/options/' +
 j.application.optsfile = [ File ( myOptsPath + 'Brunel-Default.py' ),
                            File ( myOptsPath + '2008-Files.py'     ) ]
 # Extra options

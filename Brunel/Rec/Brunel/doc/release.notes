@@ -3,6 +3,11 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2008-10-14 - Marco Cattaneo
+ - Adapt valgrind.job for use on interactive LSF.
+ - Adapt valgrind.job and Brunel_Ganga.job for use without version directory
+ - Add Brunel-2008-MC-VeloOpen.py and Brunel-2008-MC-BOff-VeloOpen.py
+
 </PRE><H1><A NAME=v33r3>2008-10-13 Brunel v33r3</A></H1><PRE>
  - Add 2008-TED-Data.py, options for 2008 real data processing
  - Reorganise Configuration.py, remove Brunel.opts and Brunel().mainOptions

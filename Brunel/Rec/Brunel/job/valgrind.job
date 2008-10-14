@@ -40,18 +40,18 @@ while ($i < $nar)
   echo ${options}  
 end
 
-#   
-set Bversion = "v33r3"
+set Bversion = "v33r4"
 echo "Executing valgrind for Brunel $Bversion using options $options"
-#
+
+# If not set (interactive and CAF), set WORKDIR to submission directory
+if !($?WORKDIR) then
+  set WORKDIR = $PWD
+endif
 
 if ($?LS_SUBCWD) then 
-# in BATCH, WORKDIR is set by the system
 # in BATCH, location of options has to be given explicitly
-  setenv MYJOBROOT ~/cmtuser/Brunel_$Bversion/Rec/Brunel/$Bversion
+  setenv MYJOBROOT ~/cmtuser/Brunel_$Bversion/Rec/Brunel
 else
-# in interactive set WORKDIR to submission directory
-  set WORKDIR = $PWD
 # in interactive, executable is under same root directory as this command file
   cd `dirname $0` 
   cd ..
@@ -65,18 +65,15 @@ source /afs/cern.ch/lhcb/scripts/SetupProject.csh Brunel $Bversion
 # Go to working directory
 cd $WORKDIR
 
-
-if ($?LS_SUBCWD) then
-# == in batch copy the executable and options files to $WORKDIR
+# Copy options locally if not already there (usually needed for batch)
+if !(-d ../options) then
   mkdir job
   mkdir options
-  cp $MYJOBROOT/job/Brunel.supp job/Brunel.supp
   cp $MYJOBROOT/options/*.* options
-  set SuppFile = "./Brunel.supp"
   cd job
-else
-  set SuppFile = "$MYJOBROOT/job/Brunel.supp"
 endif
+
+set SuppFile = "$MYJOBROOT/job/Brunel.supp"
 
 # Flatten the options and force 5 events only
 gaudirun.py -n -v --old-opts $options >! ./valgrind.opts
@@ -89,7 +86,6 @@ valgrind --tool=memcheck --demangle=no --error-limit=no --leak-check=yes --num-c
 # == job is finished: remove temporary files ==========
 rm valgrind.opts
 if ($?LS_SUBCWD) then
-  rm -rf ../options
 # if in batch copy output files to user directories
   ls *.* >! RETURN
 endif
