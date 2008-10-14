@@ -13,7 +13,7 @@ from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, Gaud
 # Preselection
 #
 importOptions( "$CCBARROOT/options/DVDC06SelBd2JpsiKS_Jpsi2MuMu_lifetime_biased.opts")
-HltCorrelations("Hlt2SelectionsCorrs").Algorithms += [ "DoDC06SelBd2JpsiKS_Jpsi2MuMu_lifetime_biased" ]
+HltCorrelations("Hlt2SelectionsCorrs").Algorithms += [ "DC06SelBd2Jpsi2MuMuKs" ]
 #
 # Hlt test
 #
@@ -48,7 +48,7 @@ ApplicationMgr().ExtSvc +=  [ "NTupleSvc" ]
 NTupleSvc().Output =  [ "FILE1 DATAFILE='HLT-Bd2JpsiMuMuKsDDBiased.root' TYP='ROOT' OPT='NEW'" ] 
 HistogramPersistencySvc().OutputFile = "DVHlt2-Bd2JpsiMuMuKsDDBiased.root"
 
-ApplicationMgr().EvtMax = 20000 
+ApplicationMgr().EvtMax = 10000 
 EventSelector().FirstEvent = 1 
 EventSelector().PrintFreq = 500 
 

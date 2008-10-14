@@ -20,7 +20,7 @@ filter.Algorithms = [ "Hlt2Decision" ]
 
 
 # make Hlt2 statistics
-statseq.Members += ["L0Filter", "Hlt2Statistics" ]
+statseq.Members += [L0Filter(), Hlt2Statistics() ]
 
 # add event-info tuple
 tuple = EventTuple("TriggerTuple")
@@ -28,6 +28,7 @@ statseq.Members += [tuple ]
 tuple.ToolList = [ "TupleToolTrigger", "TupleToolEventInfo" , "TupleToolGeneration" ]
 tuple.addTool( TupleToolTrigger() )
 tuple.TupleToolTrigger.VerboseHlt2 = TRUE
+#tuple.TupleToolTrigger.OutputLevel = 1
 #tuple.addTool( TupleToolGeneration() )
 #tuple.TupleToolGeneration.OutputLevel = 1
 #tuple.OutputLevel = 1
@@ -39,7 +40,7 @@ NTupleSvc().Output = ["FILE1 DATAFILE='Hlt12StatsTuple.root' TYP='ROOT' OPT='NEW
 
 importOptions("$HLTSELECTIONSROOT/options/MinimumBiasDst.py")
 
-ApplicationMgr().EvtMax = 100000
+ApplicationMgr().EvtMax = 1000
 
 EventSelector().PrintFreq = 1000 
 
