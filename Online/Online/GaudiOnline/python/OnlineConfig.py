@@ -285,7 +285,7 @@ def mdf2mbmApp(partID, partName, buffers, input, partitionBuffers=True,routing=0
   mepMgr               = mepManager(partID,partName,buffers,partitionBuffers=partitionBuffers)
   runable              = evtRunable(mepMgr)
   evtSel               = CFG.EventSelector()
-  evtSel.PrintFreq     = 1
+  evtSel.PrintFreq     = 100
   evtSel.Input         = input
   evtdata              = evtDataSvc()  
   evtPers              = rawPersistencySvc()

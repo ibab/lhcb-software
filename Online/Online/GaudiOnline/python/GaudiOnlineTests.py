@@ -1,6 +1,6 @@
 from OnlineEnv import *
 
-def _run(app):     end_config()
+def _run(app,prt=True):     end_config(prt)
 
 pid = PartitionID
 pnam = PartitionName
@@ -23,7 +23,7 @@ def runMDF2MBM(buffers,input=["DATA='file:///dev/shm/032484_0000081651.raw' SVC=
 #------------------------------------------------------------------------------------------------
 def runMDF2MBM2(buffers):
   import data;
-  _run(mdf2mbmApp(pid,pnam,buffers=buffers,input=data.Input,partitionBuffers=True))
+  _run(mdf2mbmApp(pid,pnam,buffers=buffers,input=data.Input,partitionBuffers=True),False)
 #------------------------------------------------------------------------------------------------
 def runEvtServer(buffer, partitionBuffers):
   _run(evtServerApp(pid,pnam,buffer=buffer,partitionBuffers=partitionBuffers))
