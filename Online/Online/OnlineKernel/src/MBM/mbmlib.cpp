@@ -55,6 +55,7 @@ using namespace MBM;
 static qentry_t *desc_head;
 static int reference_count = 0;
 
+static int USER_PID = -1;
 static int USER_next_off;
 static int USER_ws_off;
 static int USER_we_off;
@@ -275,6 +276,7 @@ int mbm_unmap_memory(BMID bm)  {
 
 BMID mbm_include (const char* bm_name, const char* name, int partid) {
   int status;
+  USER_PID = ::lib_rtl_pid();
   _mbm_fill_offsets();
   _mbm_wes_ast_add  = _mbm_wes_ast;
   std::auto_ptr<BMDESCRIPT> bm(mbm_map_memory(bm_name));
@@ -305,7 +307,7 @@ BMID mbm_include (const char* bm_name, const char* name, int partid) {
     _mbm_unlock_tables(bm.get());
     return MBM_INV_DESC;
   }
-  USER* us = _mbm_ualloc (bm.get());  // find free user slot
+  USER* us = _mbm_ualloc(bm.get());  // find free user slot
   if (us == 0)  {
     ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to allocate user slot of %s for %s.",bm_name,name);
     //::fprintf(stdout,"Failed to allocate user slot for %s: %s.",bm_name,name);
@@ -324,7 +326,7 @@ BMID mbm_include (const char* bm_name, const char* name, int partid) {
   us->partid  = partid;
   ::strncpy (us->name, name, sizeof(us->name));
   us->name[sizeof(us->name)-1] = 0;
-  us->pid = ::lib_rtl_pid ();
+  us->pid           = USER_PID;
   us->space_add     = 0;
   us->space_size    = 0;
   us->ev_produced   = 0;
@@ -1175,6 +1177,7 @@ int _mbm_uclean (BMID bm)  {
     }
   }
   _mbm_ufree (bm, u);  // de-allocate user slot
+  bm->owner = -1;
   bm->ctrl->i_users--;
   return MBM_NORMAL;
 }
@@ -1262,6 +1265,13 @@ int _mbm_shutdown (void* /* param */) {
     lib_rtl_unmap_section(bm->user_add);
     lib_rtl_unmap_section(bm->event_add);
     lib_rtl_unmap_section(bm->ctrl_add);
+    bm->ctrl = 0;
+    bm->user = 0;
+    bm->usDesc = 0;
+    bm->event = 0;
+    bm->evDesc = 0;
+    bm->bitmap = 0;
+    bm->buffer_add = 0;
     _mbm_unlock_tables(bm);
   }
   /*  bm_exh_unlink (); */
@@ -1809,9 +1819,15 @@ int _mbm_lock_tables(BMID bm)  {
   if ( bm && bm != MBM_INV_DESC )  {
     if ( bm->lockid )  {
       int status = ::lib_rtl_lock(bm->lockid);
-      if (!lib_rtl_is_success(status))    { 
-        ::lib_rtl_signal_message(LIB_RTL_OS,"error in unlocking tables. Status %d",status);
+      if (lib_rtl_is_success(status)) {
+	if ( bm->ctrl ) {
+	  bm->ctrl->pid_lock = USER_PID;
+	  bm->ctrl->previous_pid_lock = -1;
+	}
+	return status;
       }
+      ::lib_rtl_signal_message(LIB_RTL_OS,"Error in lock tables '%s'. Status %d",
+			       bm->bm_name,status);
       return status;
     }
     ::lib_rtl_signal_message(0,"Error in locking MBM tables [Invalid Mutex] %s",bm->mutexName);
@@ -1824,8 +1840,21 @@ int _mbm_lock_tables(BMID bm)  {
 int _mbm_unlock_tables(BMID bm)    {
   if ( bm && bm != MBM_INV_DESC )  {
     if ( bm->lockid )  {
+      if ( bm->ctrl ) {
+	bm->ctrl->previous_pid_lock = USER_PID;
+	bm->ctrl->pid_lock = -1;
+	if ( bm->ctrl->pid_lock != USER_PID && 
+	     bm->ctrl->pid_lock != -1 &&
+	     bm->ctrl->pid_lock != 0 ) {
+	  ::lib_rtl_signal_message(0,"Error in unlock tables '%s' PID mismatch: %d <->%d. [Internal Error]",
+				   bm->bm_name,USER_PID,bm->ctrl->pid_lock);
+	}
+      }
       int status = ::lib_rtl_unlock(bm->lockid);
       if (!lib_rtl_is_success(status))    { 
+	if ( bm->ctrl ) {
+	  bm->ctrl->pid_lock = USER_PID;
+	}
         ::lib_rtl_signal_message(LIB_RTL_OS,"Error in unlocking tables %s. Status %d",bm->mutexName,status);
       }
       return status;
@@ -1930,6 +1959,13 @@ int _mbm_unmap_sections(BMID bm)  {
   if ( bm->user       ) lib_rtl_unmap_section(bm->user_add);
   if ( bm->event      ) lib_rtl_unmap_section(bm->event_add);
   if ( bm->ctrl       ) lib_rtl_unmap_section(bm->ctrl_add);
+  bm->ctrl = 0;
+  bm->user = 0;
+  bm->usDesc = 0;
+  bm->event = 0;
+  bm->evDesc = 0;
+  bm->bitmap = 0;
+  bm->buffer_add = 0;
   return MBM_NORMAL;
 }
 

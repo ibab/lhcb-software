@@ -231,6 +231,8 @@ struct CONTROL  {
   int bytes_p_Bit;        // Number of bytes per bit in bitmap.
   int version;            // Buffer manager version
   int spare1;             // Last element
+  int pid_lock;
+  int previous_pid_lock;
 } PACKED_DATA;
 
 struct BUFFERS  {

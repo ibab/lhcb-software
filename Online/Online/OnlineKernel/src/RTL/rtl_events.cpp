@@ -70,7 +70,7 @@ int lib_rtl_create_event (const char* name, lib_rtl_event_t* event_flag)    {
   }
 #if defined(USE_PTHREADS)
   h->handle = h->name[0] ? ::i_sem_open(h->name, O_CREAT|O_EXCL, 0666, 1) : &h->handle2;
-  if (h->name[0] && !h->handle) {
+  if (h->name[0] && h->handle == SEM_FAILED ) {
     h->handle = ::i_sem_open(h->name, O_CREAT, 0666, 1);
     if ( !h->handle ) {
       ::perror("SEVERE: sem_open: ");
