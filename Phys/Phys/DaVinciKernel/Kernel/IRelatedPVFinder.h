@@ -1,4 +1,4 @@
-// $Id: IRelatedPVFinder.h,v 1.5 2008-09-30 14:18:58 jpalac Exp $
+// $Id: IRelatedPVFinder.h,v 1.6 2008-10-14 16:35:49 jpalac Exp $
 #ifndef KERNEL_IRELATEDPVFINDER_H 
 #define KERNEL_IRELATEDPVFINDER_H 1
 
@@ -42,14 +42,14 @@ public:
    * @param distanceCalculator IDistanceCalculator pointer. Tool in charge of
    * estimating distances internally.
    *
-   * @return               Range of weighted relations between particle and the vertices in PVs. 
-   * Must return empty range if something goes wrong in association.
+   * @return               container of weighted relations between particle and the vertices in PVs. 
+   * Must return empty container if something goes wrong in association.
    *
    * @author Juan Palacios juan.palacios@nikhef.nl
    */
-  virtual const Particle2Vertex::Range relatedPVs(const LHCb::Particle* particle,
-                                                  const LHCb::RecVertex::Container& PVs,
-                                                  const IDistanceCalculator* distanceCalculator) const =0;
+  virtual const Particle2Vertex::Relations relatedPVs(const LHCb::Particle* particle,
+                                                      const LHCb::RecVertex::Container& PVs,
+                                                      const IDistanceCalculator* distanceCalculator) const =0;
   /**
    * Return a range of weighted relations between an LHCb::Particle and a
    * vector of const LHCb::RecVertex pointers
@@ -57,14 +57,14 @@ public:
    * @param particle       The LHCb::Particle for which related PVs will be searched
    * @param PVs            std::vector of LHCb::RecVertex* to be related to particle
    *
-   * @return               Range of weighted relations between particle and the vertices in PVs. 
-   * Must return empty range if something goes wrong in association.
+   * @return               Container of weighted relations between particle and the vertices in PVs. 
+   * Must return empty container if something goes wrong in association.
    *
    * @author Juan Palacios juan.palacios@nikhef.nl
    */
-  virtual const Particle2Vertex::Range relatedPVs(const LHCb::Particle* particle,
-                                                  const LHCb::RecVertex::ConstVector& PVs,
-                                                  const IDistanceCalculator* distanceCalculator) const =0;
+  virtual const Particle2Vertex::Relations relatedPVs(const LHCb::Particle* particle,
+                                                      const LHCb::RecVertex::ConstVector& PVs,
+                                                      const IDistanceCalculator* distanceCalculator) const =0;
   /**
    * Return a range of weighted relations between an LHCb::Particle and a
    * keyed container of LHCb::RecVertices from a TES location
@@ -73,15 +73,15 @@ public:
    * @param PVLocation     String giving the TES location of a keyed container 
    * of LHCb::RecVertices to be related to particle
    *
-   * @return               Range of weighted relations between particle and the vertices in PVs. 
-   * Must return empty range if something goes wrong in association.
+   * @return               Container of weighted relations between particle and the vertices in PVs. 
+   * Must return empty container if something goes wrong in association.
    *
    *
    * @author Juan Palacios juan.palacios@nikhef.nl
    */
-  virtual const Particle2Vertex::Range relatedPVs(const LHCb::Particle* particle,
-                                                  const std::string& PVLocation,
-                                                  const IDistanceCalculator* distanceCalculator) const =0;
+  virtual const Particle2Vertex::Relations relatedPVs(const LHCb::Particle* particle,
+                                                      const std::string& PVLocation,
+                                                      const IDistanceCalculator* distanceCalculator) const =0;
 
 };
 #endif // KERNEL_IRELATEDPVFINDER_H
