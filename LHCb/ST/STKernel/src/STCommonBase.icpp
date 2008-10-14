@@ -1,0 +1,180 @@
+
+//-----------------------------------------------------------------------------
+/** @file STCommonBase.icpp
+ *
+ *  Implementation file for RICH base class : ST::CommonBase
+ *
+ *  CVS Log :-
+ *  $Id: STCommonBase.icpp,v 1.1 2008-10-14 08:47:06 mneedham Exp $
+ *
+ *  @author Matthew Needham    Matthew.Needham@cern.ch
+ *  @date   2008-11-10
+ */
+//-----------------------------------------------------------------------------
+
+// local
+#include "Kernel/STCommonBase.h"
+
+// GaudiAlg
+#include "GaudiAlg/GaudiAlgorithm.h"
+#include "GaudiAlg/GaudiTool.h"
+#include "GaudiAlg/GaudiTupleAlg.h"
+#include "GaudiAlg/GaudiTupleTool.h"
+#include "GaudiAlg/GaudiHistoAlg.h"
+#include "GaudiAlg/GaudiHistoTool.h"
+
+
+//=============================================================================
+// Destructor
+//=============================================================================
+template <class PBASE>
+ST::CommonBase<PBASE>::~CommonBase() {}
+
+//=============================================================================
+// Initialisation
+//=============================================================================
+template <class PBASE>
+StatusCode ST::CommonBase<PBASE>::initialize()
+{
+  // Execute the base class initialize
+  const StatusCode sc = PBASE::initialize();
+  if ( sc.isFailure() )
+  { return this -> Error( "Failed to initialise Gaudi Base class", sc ); }
+
+  // Printout from initialize
+  if ( this -> msgLevel(MSG::DEBUG) )
+    this -> debug() << "Initialize" << endreq;
+
+ 
+  if (m_forcedInit == true){
+     // force getting of the tools
+     getTracker();
+     getReadoutTool(); 
+  }
+
+  flip();
+
+  return sc;
+}
+//=============================================================================
+
+//=============================================================================
+// Finalisation
+//=============================================================================
+template <class PBASE>
+StatusCode ST::CommonBase<PBASE>::finalize()
+{
+  // Printout from finalization
+  if ( this -> msgLevel(MSG::DEBUG) )
+    this -> debug() << "Finalize" << endreq;
+
+  // Finalise base class and return
+  return PBASE::finalize();
+}
+//=============================================================================
+
+template <class PBASE>
+void ST::CommonBase<PBASE>::commonInit(){
+
+  m_tracker = 0; 
+  m_readoutTool = 0;
+  declareProperty("DetType", m_detType = "TT");
+  declareProperty("ForcedInit", m_forcedInit = false); 
+  addToFlipList(&m_readoutToolName);
+}
+
+
+#include "STDet/DeSTDetector.h"
+#include "Kernel/ISTReadoutTool.h"
+
+template <class PBASE>
+inline DeSTDetector* ST::CommonBase<PBASE>::tracker() const {
+  return m_tracker != 0 ? m_tracker : getTracker();
+}
+
+template <class PBASE>
+inline DeSTDetector* ST::CommonBase<PBASE>::getTracker() const {
+  m_tracker = this->template getDet<DeSTDetector>(DeSTDetLocation::location(m_detType));
+  return m_tracker;
+}
+
+template <class PBASE>
+inline ISTReadoutTool* ST::CommonBase<PBASE>::readoutTool() const {
+  return m_readoutTool != 0 ? m_readoutTool : getReadoutTool();
+}
+
+template <class PBASE>
+inline ISTReadoutTool* ST::CommonBase<PBASE>::getReadoutTool() const {
+  m_readoutTool = this -> template tool<ISTReadoutTool>(m_readoutToolName,m_readoutToolName);
+  return m_readoutTool;
+}
+
+template <class PBASE>
+void ST::CommonBase<PBASE>::setForcedInit() {
+  m_forcedInit = true;
+}
+
+template <class PBASE>
+inline const std::string& ST::CommonBase<PBASE>::detType() const {
+  return m_detType;
+}
+
+#include "Kernel/ITNames.h"
+#include "Kernel/TTNames.h"
+#include "Kernel/STChannelID.h"
+
+template <class PBASE>
+inline std::string ST::CommonBase<PBASE>::station(const LHCb::STChannelID& chan) const{
+  return m_detType == "IT" ? LHCb::ITNames().StationToString(chan) : LHCb::TTNames().StationToString(chan) ;
+} 
+
+template <class PBASE>
+inline std::string ST::CommonBase<PBASE>::uniqueDetRegion(const LHCb::STChannelID& chan) const{
+  return m_detType == "IT" ? LHCb::ITNames().UniqueBoxToString(chan) : LHCb::TTNames().UniqueRegionToString(chan) ;
+} 
+
+template <class PBASE>
+inline std::string ST::CommonBase<PBASE>::uniqueLayer(const LHCb::STChannelID& chan) const{
+  return m_detType == "IT" ? LHCb::ITNames().UniqueLayerToString(chan) : LHCb::TTNames().UniqueLayerToString(chan) ;
+} 
+
+template <class PBASE>
+inline std::string ST::CommonBase<PBASE>::uniqueSector(const LHCb::STChannelID& chan) const{
+  return m_detType == "IT" ? LHCb::ITNames().UniqueSectorToString(chan) : LHCb::TTNames().UniqueSectorToString(chan) ;
+} 
+
+template <class PBASE>
+inline std::string ST::CommonBase<PBASE>::detectorType(const LHCb::STChannelID& chan) const{
+  const DeSTSector* sector = tracker()->findSector(chan);
+  return sector ? sector->type()  : "Unknown" ;
+} 
+
+#include "boost/lexical_cast.hpp"
+template <class PBASE> template <typename T>
+inline std::string ST::CommonBase<PBASE>::toString(T type) const{
+  // hide the boost syntax
+  return boost::lexical_cast<std::string>(type);
+}
+
+
+#include "Kernel/STDetSwitch.h"
+template <class PBASE>
+inline void ST::CommonBase<PBASE>::addToFlipList(std::string* aString) const{
+  m_toBeFlipped.push_back(aString);
+}
+
+template <class PBASE>
+inline void ST::CommonBase<PBASE>::flip() const {
+
+ // turn IT into TT or TT into IT
+ for (std::vector<std::string*>::const_iterator iterS = m_toBeFlipped.begin();
+      iterS != m_toBeFlipped.end(); ++iterS){
+   flip(**iterS);
+  } // iterS   
+}
+
+template <class PBASE> 
+void ST::CommonBase<PBASE>::flip(std::string& aString) const{
+  STDetSwitch::flip(m_detType,aString);
+}
+

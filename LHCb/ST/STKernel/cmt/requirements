@@ -1,11 +1,12 @@
 package STKernel 
-version v1r8
+version v1r9
 
 use GaudiKernel v*
 use LHCbKernel  v* Kernel
 use DigiEvent   v* Event
 use DAQEvent    v* Event
 use SiDAQ       v* Si
+use STDet       v* Det
 
 branches Kernel doc cmt src 
 

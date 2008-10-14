@@ -1,0 +1,53 @@
+
+//-----------------------------------------------------------------------------
+/** @file STHistoBase.h
+ *
+ *  Header file for algorithm base class : ST::AlgBase
+ *
+ *  CVS Log :-
+ *  $Id: STTupleToolBase.h,v 1.1 2008-10-14 08:47:06 mneedham Exp $
+ *
+ *  @author Matthew Needham
+ *  @date   11/10/2008
+ */
+//-----------------------------------------------------------------------------
+
+#ifndef STKERNEL_STHISTOTOOLBASE_H
+#define STKERNEL_STHISTOTOOLBASE_H 1
+
+// GaudiAlg
+#include "GaudiAlg/GaudiTupleTool.h"
+
+// local
+#include "Kernel/STCommonBase.h"
+
+namespace ST
+{
+
+  //-----------------------------------------------------------------------------
+  /** @class AlgBase STTupleToolBase.h STKernel/STTupleToolBase.h
+   *
+   *  Abstract base class for ST algorithms providing
+   *  some basic functionality.
+   *
+   *  @author Matthew Needham
+   *  @date   11/10/2008
+   */
+  //-----------------------------------------------------------------------------
+
+  class TupleToolBase : public ST::CommonBase<GaudiTupleTool>
+  {
+
+  public:
+
+    /// Standard constructor
+    TupleToolBase( const std::string& name,
+             ISvcLocator* pSvcLocator )
+      : ST::CommonBase<GaudiTupleTool> ( name, pSvcLocator ) { }
+
+  };
+
+}
+
+
+#endif // STKERNEL_STHISTOTOOLBASE_H
