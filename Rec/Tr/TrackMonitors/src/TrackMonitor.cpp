@@ -1,4 +1,4 @@
-// $Id: TrackMonitor.cpp,v 1.4 2008-09-17 21:29:42 wouter Exp $
+// $Id: TrackMonitor.cpp,v 1.5 2008-10-14 11:59:43 wouter Exp $
 // Include files 
 #include "TrackMonitor.h"
 
@@ -137,14 +137,13 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
   plot(track.history(),type+"/history","history",-0.5,20.5,21) ;
   plot(track.fitStatus(),type+"/fitstatus","fit status",-0.5,5.5,6) ;
   plot(track.nMeasurements(),type+"/100","#nMeas",  -0.5, 60., 61);
-  plot(track.nMeasurementsRemoved(),type+"/101","#outliers", -0.5, 10.5, 11);
   const LHCb::State& firststate = track.firstState() ;
-  plot(firststate.x(),type + "/110","x of first state",-100,100) ;
-  plot(firststate.y(),type + "/111","y of first state",-100,100) ;
-  plot(firststate.z(),type + "/112","z of first state",-500,500) ;
-  plot(firststate.tx(),type + "/113","tx of first state",-0.3,0.3) ;
-  plot(firststate.ty(),type + "/114","ty of first state",-0.3,0.3) ;
-  plot(firststate.qOverP(),type + "/115","q/p of first state",-0.001,0.001) ; 
+  plot(firststate.x(),type + "/120","x of first state",-100,100) ;
+  plot(firststate.y(),type + "/121","y of first state",-100,100) ;
+  plot(firststate.z(),type + "/122","z of first state",-500,500) ;
+  plot(firststate.tx(),type + "/123","tx of first state",-0.3,0.3) ;
+  plot(firststate.ty(),type + "/124","ty of first state",-0.3,0.3) ;
+  plot(firststate.qOverP(),type + "/125","q/p of first state",-0.001,0.001) ; 
 
   // found hits of each type
   const std::vector<LHCb::LHCbID>& ids = track.lhcbIDs();
@@ -162,6 +161,7 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
   plot(nVeloRHits, type+"/114","# Velo R hits" ,-0.5, 20.5 ,21);
   plot(nVeloPhiHits, type+"/115","# Velo phi hits" ,-0.5, 20.5 ,21);
   
+  size_t numoutliers(0) ;
   if( track.nodes().size()>0 ) {
     std::string names[] = { "VeloR","VeloPhi","TT","IT","OT","Muon" } ;
     double resmax[] = { 0.1,0.1,0.5,0.5,2.0,10 } ;
@@ -213,9 +213,12 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
 		 type+"/"+names[mtype]+"residualVsPitch",names[mtype]+" residual vs pitch",
 		 0.04,0.100,-resmax[mtype],resmax[mtype], 12, 50);
  	}
+      } else if( (*inode)->type() == LHCb::Node::Outlier ) {
+	++numoutliers ;
       }
   }
-  
+  plot(numoutliers,type+"/101","#outliers", -0.5, 10.5, 11);
+
   // expert checks  
   if (fullDetail() == true){
 
