@@ -57,8 +57,7 @@ j.name = 'MyBoole'
 #-------------------------------------------------------------------------------
 # Define the configuration file(s) to use
 myOptsPath = ( j.application.user_release_area + '/Boole_' +
-               j.application.version + '/Digi/Boole/' +
-               j.application.version + '/options/' )
+               j.application.version + '/Digi/Boole/options/' +
 j.application.optsfile = [ File ( myOptsPath + 'Boole-Default.py' ),
                            File ( myOptsPath + 'DC06-Files.py'    ) ]
 # Extra options

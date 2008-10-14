@@ -88,7 +88,6 @@ valgrind --tool=memcheck --demangle=no --error-limit=no --leak-check=yes --num-c
 # == job is finished: remove temporary files ==========
 rm valgrind.opts
 if ($?LS_SUBCWD) then
-  rm -rf ../options
 # if in batch copy output files to user directories
   ls *.* >! RETURN
 endif
