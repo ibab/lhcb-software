@@ -15,6 +15,7 @@ apply_pattern god_headers files=../xml/*.xml
 apply_pattern install_more_includes more=Event
 
 # ==================== Produce LCG dictionary ===============================
+macro DAQEventGen_dependencies DAQEventObj2Doth
 apply_pattern     reflex_dictionary                            \
                   dictionary=DAQEvent                               \
                   headerfiles=$(DAQEVENTROOT)/xml/lcgdict/lcg_headers.h     \

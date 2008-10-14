@@ -4,6 +4,9 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+! 2008-10-14 - Marco Cattaneo
+ - Add missing dependency of dictionary generation on header file generation
+
 ! 2008-10-13 - Marco Cattaneo for Martin van Beuzekom
  - Add L0PUFull and L0PUError bank types
 
