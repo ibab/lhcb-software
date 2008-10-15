@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::DAQ::RawBufferToSmartIDsTool
  *
  *  CVS Log :-
- *  $Id: RichRawBufferToSmartIDsTool.h,v 1.17 2008-09-23 14:54:01 jonrob Exp $
+ *  $Id: RichRawBufferToSmartIDsTool.h,v 1.18 2008-10-15 12:29:30 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -31,6 +31,9 @@
 // Interfaces
 #include "RichKernel/IRichRawBufferToSmartIDsTool.h"
 #include "RichKernel/IRichRawDataFormatTool.h"
+
+// RichDet
+#include "RichDet/DeRichSystem.h"
 
 namespace Rich
 {
@@ -78,14 +81,16 @@ namespace Rich
       const Rich::DAQ::L1Map & allRichSmartIDs() const;
       
       // Access the vector of RichSmartIDs for the given HPD identifier
-      const LHCb::RichSmartID::Vector& richSmartIDs( const LHCb::RichSmartID hpdID ) const;
+      const LHCb::RichSmartID::Vector& richSmartIDs( const LHCb::RichSmartID hpdID,
+                                                     const bool createIfMissing = false ) const;
 
       // Access all RichSmartIDs for the current Event
       const Rich::DAQ::L1Map & allRichSmartIDs( const IRawBufferToSmartIDsTool::RawEventLocations& taeLocs ) const;
 
       // Access the vector of RichSmartIDs for the given HPD identifier
       const LHCb::RichSmartID::Vector& richSmartIDs( const IRawBufferToSmartIDsTool::RawEventLocations& taeLocs,
-                                                     const LHCb::RichSmartID hpdID ) const;
+                                                     const LHCb::RichSmartID hpdID,
+                                                     const bool createIfMissing = false ) const;
       
     private: // private methods
 
@@ -103,9 +108,13 @@ namespace Rich
 
       /// Find the given HPD data from the given L1Map
       const LHCb::RichSmartID::Vector& richSmartIDs( const LHCb::RichSmartID hpdID,
-                                                     const Rich::DAQ::L1Map & data ) const;
+                                                     const Rich::DAQ::L1Map & data,
+                                                     const bool createIfMissing ) const;
 
     private: // private data
+
+      /// Rich System detector element
+      const DeRichSystem * m_richSys;
 
       /// Pointer to RICH raw data format tool
       const IRawDataFormatTool * m_rawFormatT;

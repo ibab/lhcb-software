@@ -4,6 +4,9 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2008-10-15 - Chris Jones
+ - Move some components to RichTools and RichAlgorithms packages
+
 !========================== RichDAQ v3r22 2008-10-01 =========================
 ! 2008-09-23 - Christopher Rob JONES
  - Update DAQ tools for even better TAE support. Implement new methods in

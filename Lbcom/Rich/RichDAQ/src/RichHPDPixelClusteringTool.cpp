@@ -5,7 +5,7 @@
  * Implementation file for class : RichHPDPixelClusteringTool
  *
  * CVS Log :-
- * $Id: RichHPDPixelClusteringTool.cpp,v 1.10 2008-01-31 17:22:26 jonrob Exp $
+ * $Id: RichHPDPixelClusteringTool.cpp,v 1.11 2008-10-15 12:29:30 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   21/03/2006
@@ -64,9 +64,14 @@ HPDPixelClusteringTool::findClusters( LHCb::RichSmartID::Vector & smartIDs ) con
 
   // loop over pixels
   // requires them to be sorted by row then column
+  if ( msgLevel(MSG::VERBOSE) ) 
+    verbose() << "Clustering with " << smartIDs.size() << " RichSmartIDs" << endreq;
   for ( LHCb::RichSmartID::Vector::const_iterator iS = smartIDs.begin();
         iS != smartIDs.end(); ++iS )
   {
+    // Print the input hits
+    if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> " << *iS << endreq;
+
     // get row and column data
     const int col     = pixelData->colNumber(*iS);
     const int row     = pixelData->rowNumber(*iS);
