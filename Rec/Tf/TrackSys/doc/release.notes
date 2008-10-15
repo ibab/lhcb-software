@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2008-10-15 - Marco Cattaneo
+ - Remove obsolete TrackPython package from requirements
+
 ! 2008-10-15 - David Hutchcroft
  - Removed TELL1->Velo sensor mapping from VeloTEDOne.py as it is now in CondDB
 
