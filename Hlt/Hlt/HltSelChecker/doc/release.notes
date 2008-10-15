@@ -9,6 +9,7 @@
 ! end
 !-----------------------------------------------------------------------------
 
+!========================== HltSelChecker v7r3 2008-10-15 ===================
 ! 2008-10-15 - Patrick Koppenburg
  - Run correlations only on offline selected events
 
