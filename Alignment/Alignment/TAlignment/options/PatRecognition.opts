@@ -1,5 +1,5 @@
 /// Decoding of tracking detectors, track pattern recognition, track fit
-#include "$TRACKSYSROOT/options/RecoTracking.opts"
+#include "$TRACKSYSROOT/options/RecoTracking.py"
 
 FitTsa.Fitter.MeasProvider.IgnoreTT = true;
 FitTsa.OutputLevel = 3;
