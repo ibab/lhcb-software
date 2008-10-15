@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::DetailedTrSegMakerFromRecoTracks
  *
  * CVS Log :-
- * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.6 2008-08-15 14:45:28 jonrob Exp $
+ * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.7 2008-10-15 12:43:09 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -486,31 +486,34 @@ constructSegments( const ContainedObject * obj,
     }
     //---------------------------------------------------------------------------------------------
 
+    //---------------------------------------------------------------------------------------------
     // a special hack for the Rich1Gas - since the aerogel volume
     // is placed INSIDE the Rich1Gas, the default entry point is wrong.
+    //---------------------------------------------------------------------------------------------
     if ( Rich::Rich1Gas == rad ) fixRich1GasEntryPoint( entryPState, entryPStateRaw );
+    //---------------------------------------------------------------------------------------------
 
+    //---------------------------------------------------------------------------------------------
     // check for intersection with spherical mirror for gas radiators
     // and if need be correct exit point accordingly
-    if ( rad != Rich::Aerogel ) correctRadExitMirror( *radiator, exitPState, exitPStateRaw );
+    //---------------------------------------------------------------------------------------------
+    if ( Rich::Aerogel != rad  ) correctRadExitMirror( *radiator, exitPState, exitPStateRaw );
+    //---------------------------------------------------------------------------------------------
 
-    // Final check that info is reaonable
-    if ( (entryPState->z() > exitPState->z()) )
+    //---------------------------------------------------------------------------------------------
+    // Final check that info is reasonable
+    //---------------------------------------------------------------------------------------------
+    const bool Zcheck     = entryPState->z() > exitPState->z();
+    const bool ZdiffCheck = (exitPState->z()-entryPState->z()) < m_minStateDiff[rad];
+    counter( "Entry state after exit state for " + Rich::text(rad)     ) += (int)Zcheck;
+    counter( "Track states for " + Rich::text(rad) + " too close in z" ) += (int)ZdiffCheck;
+    if ( Zcheck || ZdiffCheck )
     {
       delete entryPState;
       delete exitPState;
-      Warning( "Entry state after exit state for " + Rich::text(rad) + " -> rejecting segment",
-               StatusCode::SUCCESS, 5 ).ignore();
       continue;
     }
-    if ( (exitPState->z()-entryPState->z()) < m_minStateDiff[rad] )
-    {
-      delete entryPState;
-      delete exitPState;
-      Warning( "Track states for " + Rich::text(rad) + " too close in z -> rejecting segment",
-               StatusCode::SUCCESS, 5 ).ignore();
-      continue;
-    }
+    //---------------------------------------------------------------------------------------------
 
     //---------------------------------------------------------------------------------------------
     // Radiator path length cut
