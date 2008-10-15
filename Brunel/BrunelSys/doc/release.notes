@@ -3,8 +3,31 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-! 2008-10-14 - Marco Cattaneo
- - Update qmtest reference 
+</PRE><H1><A NAME=v33r3p1>2008-10-15 Brunel v33r3p1</A></H1><PRE>
+This version uses projects Gaudi v20r2, LHCb v25r2, Lbcom v6r23
+ and SQLDDDB v5r0, ParamFiles v7r3, FieldMap v5r1
+
+This version is a patch release for the production of 2008 MC alignment samples
+
+- New features
+  . Add Brunel-2008-MC-VeloOpen.py and Brunel-2008-MC-BOff-VeloOpen.py
+  . Rename Brunel-2008-Stripping.py to Brunel-Stripping.py 
+  . Rename Brunel-2008-Rdst.py to Brunel-Rdst.py
+
+- New tuning
+  . In Brunel-2008.py, set magnetic field off by default
+  . In PatSeedingTool, add option to skip events above a certain maximum
+    occupancy (currently maximum is set to 20 percent) and set a flag in
+    ProcStatus when skipping events (PatAlgorithms v3r12)
+
+- Bug fixes
+  . Adapt valgrind.job for use on interactive LSF.
+  . Adapt valgrind.job and Brunel_Ganga.job for use without version directory
+  . In Brunel() configurable, for veloOpen case, switch off PatChecking for
+    VeloRZ and Downstream track types, since these are not produced in this case
+  . Protect divide by zero when magnetic field is off
+    (MuonPIDChecker v2r4p1, PatAlgorithms v3r12)
+
 
 </PRE><H1><A NAME=v33r3>2008-10-13 Brunel v33r3</A></H1><PRE>
 This version uses projects Gaudi v20r2, LHCb v25r2, Lbcom v6r23

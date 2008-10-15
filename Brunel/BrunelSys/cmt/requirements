@@ -1,5 +1,5 @@
 package BrunelSys
-version v33r3
+version v33r3p1
 
 branches cmt doc
  
@@ -8,7 +8,11 @@ branches cmt doc
 #=======================================================
 
 # Brunel application
-use Brunel v33r3 Rec
+use Brunel v33r3p1 Rec
+
+# Bug fixes for this patch release
+use MuonPIDChecker v2r4p1 Muon
+use PatAlgorithms  v3r12  Tf 
 
 # Allow the generation of the SAM QMTest
 apply_pattern QMTest
