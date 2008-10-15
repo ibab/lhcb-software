@@ -1,4 +1,4 @@
-// $Id: PatFwdTool.cpp,v 1.9 2008-07-18 16:10:14 cattanem Exp $
+// $Id: PatFwdTool.cpp,v 1.10 2008-10-15 08:04:15 wouter Exp $
 // Include files
 
 // from Gaudi
@@ -595,19 +595,21 @@ double PatFwdTool::chi2PerDoF ( PatFwdTrackCandidate& track ) const {
 //  Returns the q/p of the track
 //=========================================================================
 double PatFwdTool::qOverP ( const PatFwdTrackCandidate& track ) const {
-  double bx = track.bx();
-  double bx2 = bx * bx;
-  double coef = ( m_momentumParams[0] +
-                  m_momentumParams[1] * bx2 +
-                  m_momentumParams[2] * bx2 * bx2 +
-                  m_momentumParams[3] * bx * track.slX() +
-                  m_momentumParams[4] * track.slY2() +
-                  m_momentumParams[5] * track.slY2() * track.slY2() );
-  double proj = sqrt( ( 1. + track.slX2() + track.slY2() ) / ( 1. + track.slX2() ) );
-
-  return track.dSlope() / ( coef * Gaudi::Units::GeV * proj * m_magFieldSvc->scaleFactor());
-
-
+  double qop(0) ;
+  double magscalefactor = m_magFieldSvc->scaleFactor() ;
+  if( std::abs(magscalefactor) > 0 ) {
+    double bx = track.bx();
+    double bx2 = bx * bx;
+    double coef = ( m_momentumParams[0] +
+		    m_momentumParams[1] * bx2 +
+		    m_momentumParams[2] * bx2 * bx2 +
+		    m_momentumParams[3] * bx * track.slX() +
+		    m_momentumParams[4] * track.slY2() +
+		    m_momentumParams[5] * track.slY2() * track.slY2() );
+    double proj = sqrt( ( 1. + track.slX2() + track.slY2() ) / ( 1. + track.slX2() ) );
+    qop = track.dSlope() / ( coef * Gaudi::Units::GeV * proj * magscalefactor) ;
+  }
+  return qop ;
 }
 
 //=========================================================================
