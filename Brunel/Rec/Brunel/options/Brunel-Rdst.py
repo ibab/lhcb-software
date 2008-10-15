@@ -1,7 +1,8 @@
 ##############################################################################
-# File for producing .rdst from 2008 real data.
+# File for producing .rdst with default settings
+# (real data, field on, default database tags)
 # Syntax is:
-#   gaudirun.py Brunel-2008-Rdst.py <someDataFiles>.py
+#   gaudirun.py Brunel-Rdst.py <someDataFiles>.py
 ##############################################################################
 
 from Brunel.Configuration import *

@@ -7,9 +7,9 @@
 
 from Brunel.Configuration import *
 
+Brunel().fieldOff = True # All 2008 real data was taken with Magnet OFF
 Brunel().applyConf()
 
-
 ##############################################################################
-# I/O datasets are defined in a separate file, see examples in 2008-Files.py
+# I/O datasets are defined in a separate file, see examples in 2008-TED_Data.py
 ##############################################################################
