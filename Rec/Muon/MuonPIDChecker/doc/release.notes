@@ -2,6 +2,10 @@
 ! Responsible : E. Polycarpo, M. Gandelman
 !----------------------------------------------------------------------------
 
+!====================== MuonPIDChecker v2r4p1 2008-10-15 ====================
+! 2008-10-15 - Marco Cattaneo
+ - Protect divide by zero when magnetic field is off
+
 !====================== MuonPIDChecker v2r4 2008-09-17 ====================
 ! 2008-09-17 -  Marco Cattaneo
  - Fixed MuonPIDMonitor.opts to really run without MC

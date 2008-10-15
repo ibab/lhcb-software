@@ -1,4 +1,5 @@
 // Include files
+#include <cmath>
 #include <iomanip>
 
 
@@ -192,8 +193,16 @@ StatusCode MuonPIDChecker::execute() {
 	   m_TrMuonLhd= (*imuid)->MuonLLMu();
 	   m_TrNMuonLhd = (*imuid)->MuonLLBg();
 	   m_TrNShared = (*imuid)->nShared();
-	   m_Trp0 = (1./stateP0->qOverP())/Gaudi::Units::GeV; 
-
+     if( std::abs( stateP0->qOverP() ) > 0.001 / Gaudi::Units::GeV ) {
+       m_Trp0 = (1./stateP0->qOverP())/Gaudi::Units::GeV; 
+     }
+     else if( stateP0->qOverP() > 0. ) {
+       m_Trp0 = 1000. / Gaudi::Units::GeV;
+     }
+     else {
+       m_Trp0 = -1000. / Gaudi::Units::GeV;
+     }
+     
 	   // Retrieve track type (MC)
            if (m_RunningMC) {
 	     LHCb::MCParticle* mcP = myLinkToTrack->first(*iTrack);
