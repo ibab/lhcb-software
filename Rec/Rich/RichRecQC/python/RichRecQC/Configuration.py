@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.3 2008-08-28 22:32:08 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.4 2008-10-15 12:40:53 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -21,6 +21,7 @@ class RichRecQCConf(RichConfigurableUser):
     ## Steering options
     __slots__ = {
         "context": "Offline"  # The context within which to run
+       ,"rawMonitoring": True
        ,"pidMonitoring": True
        ,"pixelMonitoring": True
        ,"photonMonitoring": True
@@ -43,6 +44,15 @@ class RichRecQCConf(RichConfigurableUser):
         MessageSvc().setFatal += [ "LinkedTo::MC/Rich/Hits2MCRichOpticalPhotons",
                                    "LinkedTo::MC/Rich/MCPartsToMCRichTracks",
                                    "LinkedTo::MC/Rich/MCRichHitsToOpPhotons" ]
+
+        # Some monitoring of raw information
+        if self.getProp("rawMonitoring") :
+            pixSeq = GaudiSequencer("RichRawMoni")
+            pixSeq.MeasureTime = True
+            sequence.Members += [pixSeq]
+            from Configurables import Rich__DAQ__DataDBCheck
+            dbCheck = Rich__DAQ__DataDBCheck("RichRawDataDBCheck")
+            pixSeq.Members += [dbCheck]
 
         # RICH data monitoring
         if self.getProp("pixelMonitoring") :

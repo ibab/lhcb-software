@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2008-10-15 - Chris Jones
+ - Add new monitor to compare numbering information in the decoded data to that
+   in the database
+
 !======================= RichRecQC v2r23 2008-10-02 ==========================
 ! 2008-09-12 - Chris Jones
  - Only fill occupancy plots when #hits > 0
