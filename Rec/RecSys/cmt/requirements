@@ -1,5 +1,5 @@
 package RecSys
-version v5r12
+version v5r13
 
 branches cmt doc python
  
@@ -29,7 +29,6 @@ use TrackIdealPR        v2r15   Tr    # Eduardo Rodrigues
 use TrackMCTools        v2r19   Tr    # Eduardo Rodrigues
 use TrackProjectors     v2r19   Tr    # Eduardo Rodrigues, Edwin Bos
 use TrackMonitors       v1r4    Tr    # Wouter Hulsbergen, Stephanie Menzemer
-use TrackPython         v3r1    Tr    # Eduardo Rodrigues
 use TrackTools          v3r12   Tr    # Eduardo Rodrigues
 use TrackUtils          v1r21   Tr    # Eduardo Rodrigues
 
