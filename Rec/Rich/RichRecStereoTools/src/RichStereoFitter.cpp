@@ -4,7 +4,7 @@
  *  Implementation file for tool : RichStereoFitter
  *
  *  CVS Log :-
- *  $Id: RichStereoFitter.cpp,v 1.12 2008-07-02 09:40:02 jonrob Exp $
+ *  $Id: RichStereoFitter.cpp,v 1.13 2008-10-15 12:41:27 jonrob Exp $
  *
  *  @author Luigi Delbuono   delbuono@in2p3.fr
  *  @date   27/06/2007
@@ -840,7 +840,7 @@ bool StereoFitter::solveChi2Equations(RichRecRing &recRing) const {
 
   //fabs not needed because matrix should be positive definite
   if(det < 1.0e-17) {
-    Warning( "solveChi2Equations : Fit failed : |M| too small", StatusCode::SUCCESS, 3 ).ignore();
+    ++counter( "solveChi2Equations : Fit failed : |M| too small" );
     return false;
   }
 
@@ -866,7 +866,7 @@ int StereoFitter::transferFitSolution(RichRecRing &recRing) const {
   const double radius2 = radiusFittedSquare();
   if ( !(radius2>0) )
   {
-    Warning( "transferFitSolution : radius^2 <= 0 !!", StatusCode::SUCCESS, 3 ).ignore();
+    ++counter( "transferFitSolution : radius^2 <= 0 !!" );
     return 0;
   }
   double err_R   = m_errPar[2][2];
@@ -884,7 +884,7 @@ int StereoFitter::transferFitSolution(RichRecRing &recRing) const {
 
   if ( m_chi2<0 || m_chi2Exp<0 )
   {   //bad chi2 //####DBL
-    Warning( "transferFitSolution : Poor fit Chi^2", StatusCode::SUCCESS, 3 ).ignore();
+    ++counter( "transferFitSolution : Poor fit Chi^2" );
     return 0;
   }
 
@@ -1065,7 +1065,7 @@ bool StereoFitter::invert3x3Matrix ( double mat   [3][3],
 
   if(fabs(det)<1.0e-15)
   {
-    Warning( "invert3x3Matrix : Fit failed : |M| too small", StatusCode::SUCCESS, 3 ).ignore();
+    ++counter( "invert3x3Matrix : Fit failed : |M| too small" );
     return false;
   }
 

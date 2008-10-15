@@ -4,6 +4,9 @@
 ! Purpose     : Stereographic tools
 !-----------------------------------------------------------------------------
 
+! 2008-10-10 - Chris Jones
+ - Downgrade Warning messages to counters in stereo fitter
+
 !======================= RichRecStereoTools v1r3 2008-07-02 ==================
 ! 2008-06-24 - Chris Jones
  - Implement a better solution to the FPE's issued by GSL, using the new 
