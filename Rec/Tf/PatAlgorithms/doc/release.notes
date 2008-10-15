@@ -4,6 +4,7 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================== PatAlgorithms v3r12 2008-10-15 ===================
 ! 2008-10-15 - Wouter Hulsbergen
  - fix PatFwdTool::qOverP for zero magnetic field scale factor
 
