@@ -56,5 +56,7 @@
   <class name    = "Rich::ISnellsLawRefraction"          />
   <class name    = "Rich::IDetParameters::RadLimits"     />
   <class name    = "Rich::Mon::IHpdUkL1DisableTool"      />
+  <class name    = "Rich::IAddBackground"                />
+  <class name    = "Rich::IAddBackground::HPDBackgrounds" />
 
 </lcgdict>

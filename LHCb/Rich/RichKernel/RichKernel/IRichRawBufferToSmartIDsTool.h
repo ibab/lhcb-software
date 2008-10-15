@@ -5,7 +5,7 @@
  *  Header file for tool interface : Rich::DAQ::IRawBufferToSmartIDsTool
  *
  *  CVS Log :-
- *  $Id: IRichRawBufferToSmartIDsTool.h,v 1.12 2008-09-23 14:31:40 jonrob Exp $
+ *  $Id: IRichRawBufferToSmartIDsTool.h,v 1.13 2008-10-15 12:25:17 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -44,7 +44,7 @@ namespace Rich
      */
     //-----------------------------------------------------------------------------
 
-    class IRawBufferToSmartIDsTool : public virtual IAlgTool 
+    class IRawBufferToSmartIDsTool : public virtual IAlgTool
     {
 
     public:
@@ -68,9 +68,11 @@ namespace Rich
 
       /** Access the vector of RichSmartIDs for the given HPD identifier, for all configured TAE spills
        *  @param hpdID The HPD identifier
+       *  @param createIfMissing If data is missing for the given HPD, create the entry in the L1Map
        *  @return The vector of hits (RichSmartIDs) for the given HPD
        */
-      virtual const LHCb::RichSmartID::Vector& richSmartIDs( const LHCb::RichSmartID hpdID ) const = 0;
+      virtual const LHCb::RichSmartID::Vector& richSmartIDs( const LHCb::RichSmartID hpdID,
+                                                             const bool createIfMissing = false ) const = 0;
 
       /** Access all the RichSmartIDs, for the given list of TAE spills
        *  @param taeLocs The TAE location(s) ( "" for main event, "Prev1" for -25 ns etc. )
@@ -81,10 +83,12 @@ namespace Rich
       /** Access the vector of RichSmartIDs for the given HPD identifier, for the given list of TAE spills
        *  @param taeLocs The TAE location(s) ( "" for main event, "Prev1" for -25 ns etc. )
        *  @param hpdID   The HPD identifier
+       *  @param createIfMissing If data is missing for the given HPD, create the entry in the L1Map
        *  @return The vector of hits (RichSmartIDs) for the given HPD
        */
       virtual const LHCb::RichSmartID::Vector& richSmartIDs( const RawEventLocations& taeLocs,
-                                                             const LHCb::RichSmartID hpdID ) const = 0;
+                                                             const LHCb::RichSmartID hpdID,
+                                                             const bool createIfMissing = false ) const = 0;
 
       /** Access all RichSmartIDs for the given TAE spill
        *  @param taeLoc The TAE location ( "" for main event, "Prev1" for -25 ns etc. )
@@ -98,12 +102,14 @@ namespace Rich
       /** Access the vector of RichSmartIDs for the given HPD identifier, for the given TAE spill
        *  @param taeLoc The TAE location ( "" for main event, "Prev1" for -25 ns etc. )
        *  @param hpdID  The HPD identifier
+       *  @param createIfMissing If data is missing for the given HPD, create the entry in the L1Map
        *  @return The vector of hits (RichSmartIDs) for the given HPD
        */
       inline const LHCb::RichSmartID::Vector& richSmartIDs( const RawEventLocation& taeLoc,
-                                                            const LHCb::RichSmartID hpdID ) const
+                                                            const LHCb::RichSmartID hpdID,
+                                                            const bool createIfMissing = false ) const
       {
-        return this->richSmartIDs ( RawEventLocations(1,taeLoc), hpdID );
+        return this->richSmartIDs ( RawEventLocations(1,taeLoc), hpdID, createIfMissing );
       }
 
     };

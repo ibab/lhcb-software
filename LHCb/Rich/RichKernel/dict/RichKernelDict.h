@@ -28,6 +28,16 @@
 #include "RichKernel/IRichSmartIDTool.h"
 #include "RichKernel/IRichToolRegistry.h"
 #include "RichKernel/IRichSnellsLawRefraction.h"
+#include "RichKernel/IRichAddBackground.h"
+
+// instanciate templated classes
+namespace 
+{
+  struct _Instantiations 
+  {
+    Rich::IAddBackground::HPDBackgrounds obj_1;
+  };
+}
 
 #endif // DICT_RICHKERNELDICT_H
 

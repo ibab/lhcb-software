@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.199 2008-09-30 12:07:48 cattanem Exp $
+! $Id: release.notes,v 1.200 2008-10-15 12:25:17 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
+
+! 2008-10-15 - Chris Jones
+ - Add new tool interface for adding background to the raw decoded data
+ - Update IRichRawBufferToSmartIDsTool.h with flag to create missing HPD
+   data blocks on demand.
 
 !====================== RichKernel v7r17 2008-09-30 ====================
 ! 2008-09-30 - Christopher Rob JONES
