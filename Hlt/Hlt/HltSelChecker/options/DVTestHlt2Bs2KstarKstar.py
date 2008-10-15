@@ -15,7 +15,7 @@ importOptions( "$B2UDSROOT/options/DVPreselBs2Kst0Kst0.opts" )
 # Run correlations only on offline selected events
 #
 GaudiSequencer("Hlt2CorrsSeq").Members += [ CheckSelResult("CheckOffline") ]
-CheckSelResult("CheckOffline").Algorithms += [ "PreselBs2Kst0Ks0" ]
+CheckSelResult("CheckOffline").Algorithms += [ "PreselBs2Kst0Kst0" ]
 #
 # Hlt test
 #
