@@ -9,7 +9,10 @@ Purpose: LHCb reconstruction program
  - Add Brunel-2008-MC-VeloOpen.py and Brunel-2008-MC-BOff-VeloOpen.py
  - Rename Brunel-2008-Stripping.py to Brunel-Stripping.py 
  - Rename Brunel-2008-Rdst.py to Brunel-Rdst.py
- - In Brunel-2008.py, set magnetic field off by default 
+ - In Brunel-2008.py, set magnetic field off by default
+ - In Brunel() configurable, for veloOpen case, switch off PatChecking for VeloRZ
+   and Downstream track types, since these are not produced in this case
+   (this logic should be moved to TrackSys)
 
 </PRE><H1><A NAME=v33r3>2008-10-13 Brunel v33r3</A></H1><PRE>
  - Add 2008-TED-Data.py, options for 2008 real data processing

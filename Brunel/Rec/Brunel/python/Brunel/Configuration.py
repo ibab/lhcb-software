@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.24 2008-10-10 15:10:41 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.25 2008-10-15 14:14:03 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -119,6 +119,11 @@ class Brunel(LHCbConfigurableUser):
             ProcessPhase("Check").DetectorList += self.getProp("mcCheckSequence")
             # Tracking
             importOptions("$TRACKSYSROOT/options/PatChecking.opts")
+            if self.getProp( "veloOpen" ):
+                GaudiSequencer("CheckPatSeq").Members.remove("TrackAssociator/AssocVeloRZ")
+                GaudiSequencer("CheckPatSeq").Members.remove("TrackAssociator/AssocDownstream")
+                GaudiSequencer("CheckPatSeq").Members.remove("TrackEffChecker/VeloRZ")
+                GaudiSequencer("CheckPatSeq").Members.remove("TrackEffChecker/Downstream")
             # Muon
             importOptions("$MUONPIDCHECKERROOT/options/MuonPIDChecker.opts")
             # RICH
