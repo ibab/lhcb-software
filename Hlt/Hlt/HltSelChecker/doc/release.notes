@@ -8,6 +8,11 @@
 !   gaudirun.py options/DVTestHlt2${a}.py | tee test-$a
 ! end
 
+! 2008-10-15 - Patrick Koppenburg
+ - Add K*K8 from Diego Martinez
+ - Update J/psiKs from  Carla Gobel
+ - Typo fix in HidValley
+
 ! 2008-10-13 - Patrick Koppenburg
  - Add J/Ks tests from Carla Gobel.
  - Minor changes here and there.

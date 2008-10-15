@@ -5,7 +5,7 @@
  #  @date 2008-06-24
  #
 from Gaudi.Configuration import *
-from Configurables import Hlt2Statistics, CheckSelResult, EventTuple, TupleToolGeneration, TupleToolTrigger, L0Filter
+from Configurables import Hlt2Statistics, CheckSelResult, EventTuple, TupleToolGeneration, TupleToolTrigger, L0Filter, HltDecReportsMaker
 
 from Gaudi.Configuration import *
 from Configurables import HistogramPersistencySvc, ReadHltSummary
@@ -36,7 +36,12 @@ importOptions( "$HLTSELECTIONSROOT/options/Hlt2Correlations.py")
 #
 # to get Hlt2 moniror plots
 #
-importOptions( "$HLTSELECTIONSROOT/options/Hlt2MonitorPlots.py")
+#importOptions( "$HLTSELECTIONSROOT/options/Hlt2MonitorPlots.py")
+###################################################################
+#
+# Make DecReports
+#
+ApplicationMgr().TopAlg += [ HltDecReportsMaker() ]
 # sequencer
 statseq = GaudiSequencer("StatisticsSeq")
 ApplicationMgr().TopAlg += [ statseq ]
@@ -69,8 +74,12 @@ NTupleSvc().Output = ["FILE1 DATAFILE='Hlt2-StatsTuple.root' TYP='ROOT' OPT='NEW
 
 importOptions("$HLTSELECTIONSROOT/options/MinimumBiasDst.py")
 
-ApplicationMgr().EvtMax = 100000
+ApplicationMgr().EvtMax = 1000
 
 EventSelector().PrintFreq = 1000 
 
 
+#
+# TMP
+#
+importOptions( "$HLTSELECTIONSROOT/options/TMP.opts")

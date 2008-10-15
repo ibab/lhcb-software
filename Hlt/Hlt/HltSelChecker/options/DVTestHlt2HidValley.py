@@ -1,4 +1,4 @@
-t### @file
+### @file
 #
 #   Hlt 2 selections test job
 #

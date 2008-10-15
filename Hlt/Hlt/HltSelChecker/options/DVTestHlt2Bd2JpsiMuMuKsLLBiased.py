@@ -48,7 +48,7 @@ ApplicationMgr().ExtSvc +=  [ "NTupleSvc" ]
 NTupleSvc().Output =  [ "FILE1 DATAFILE='HLT-Bd2JpsiMuMuKsLLBiased.root' TYP='ROOT' OPT='NEW'" ] 
 HistogramPersistencySvc().OutputFile = "DVHlt2-Bd2JpsiMuMuKsLLBiased.root"
 
-ApplicationMgr().EvtMax = 10000 
+ApplicationMgr().EvtMax = 5000 
 EventSelector().FirstEvent = 1 
 EventSelector().PrintFreq = 500 
 
