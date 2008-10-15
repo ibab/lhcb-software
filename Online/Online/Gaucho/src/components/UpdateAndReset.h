@@ -46,7 +46,8 @@ public:
 private:
   bool isSaveCycle(int m_cycleNumber);
   void manageTESHistos(bool list, bool reset, bool save, bool isFromEndOfRun);
-  void histogramIdentifier(IRegistry* object, std::vector<std::string> &idList, bool reset, bool save, int &level);
+  void histogramIdentifier(IRegistry* object, std::vector<std::string> &idList, bool reset, bool save, int &level,
+                           TDirectory* rootdir);
   IRegistry* rootObject();
   
 private:

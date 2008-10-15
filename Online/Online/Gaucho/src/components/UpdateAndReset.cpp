@@ -30,6 +30,7 @@
 #include "TFile.h"
 #include "TH1.h"
 #include "TProfile.h"
+#include "TDirectory.h"
 #include <GaudiUtils/Aida2ROOT.h>
 #include "Gaucho/Misc.h"
 
@@ -441,7 +442,7 @@ void UpdateAndReset::manageTESHistos (bool list, bool reset, bool save, bool isF
     f = new TFile(m_infoFileStatus.c_str(),"create");
   }
   
-  histogramIdentifier(object, idList, reset, save, level);
+  histogramIdentifier(object, idList, reset, save, level, (TDirectory*) f);
   
   if (0 == idList.size()) msg << MSG::INFO << "No histogram found" << endreq;
   
@@ -458,13 +459,13 @@ void UpdateAndReset::manageTESHistos (bool list, bool reset, bool save, bool isF
   }
 }
 
-void UpdateAndReset::histogramIdentifier(IRegistry* object, std::vector<std::string> &idList, bool reset, bool save, int &level){
+void UpdateAndReset::histogramIdentifier(IRegistry* object, std::vector<std::string> &idList, bool reset, bool save, int &level,
+                                         TDirectory* rootdir){
   MsgStream msg( msgSvc(), name() );
   std::vector<IRegistry*> leaves;
   std::vector<IRegistry*>::const_iterator  it;
   
-  msg << MSG::INFO << "Looking for histos in object " << object->identifier() << ", level  " << level << endreq;
-  
+  msg << MSG::DEBUG << "Looking for histos in object " << object->identifier() << ", level  " << level << endreq;
   SmartIF<IDataManagerSvc> dataManagerSvc(m_histogramSvc);
   if (!dataManagerSvc) {
     msg << MSG::WARNING << "    Unable to go to the transient store. " << endreq;
@@ -476,6 +477,7 @@ void UpdateAndReset::histogramIdentifier(IRegistry* object, std::vector<std::str
       
   for ( it=leaves.begin(); it != leaves.end(); it++ ) {
     const std::string& id = (*it)->identifier();
+    rootdir->cd();
     //msg << MSG::DEBUG << "    Object found: " << id << endreq;
     
     DataObject* dataObject;
@@ -489,10 +491,14 @@ void UpdateAndReset::histogramIdentifier(IRegistry* object, std::vector<std::str
     //TH1* hRoot = dynamic_cast<TH1*> (dataObject);
     if ( 0 != histogram) {
 //    if ( 0 != hRoot) {
-      //msg << MSG::DEBUG << ", title = " << histogram->title() << endreq;
       if (save) {
         TH1* hRoot = (TH1*) Gaudi::Utils::Aida2ROOT::aida2root(histogram);
-        hRoot->Write();
+        std::vector<std::string> HistoFullName = Misc::splitString(hRoot->GetName(), "/");
+        TH1* copy = (TH1*) hRoot->Clone( HistoFullName[HistoFullName.size()-1].c_str() );
+        msg << MSG::DEBUG << ", saving name=" << copy->GetName() << " directory="
+            << (copy->GetDirectory() ? copy->GetDirectory()->GetName() : "none") <<endreq;
+        copy->Write();
+        delete copy;
       }
       if (reset) histogram->reset();
 //      if (reset) hRoot->Reset();
@@ -506,7 +512,12 @@ void UpdateAndReset::histogramIdentifier(IRegistry* object, std::vector<std::str
       //msg << MSG::DEBUG << ", title = " << profile->title() << endreq;
       if (save)  {
         TProfile* hRoot = (TProfile*) Gaudi::Utils::Aida2ROOT::aida2root(profile);
-        hRoot->Write();
+        std::vector<std::string> HistoFullName = Misc::splitString(hRoot->GetName(), "/");
+        TH1* copy = (TH1*) hRoot->Clone( HistoFullName[HistoFullName.size()-1].c_str() );
+        msg << MSG::DEBUG << ", saving name=" << copy->GetName() << " directory="
+            << (copy->GetDirectory() ? copy->GetDirectory()->GetName() : "none") <<endreq;
+        copy->Write();
+        delete copy;
       }
       if (reset) profile->reset();
 //      if (reset) hProf->Reset();
@@ -514,9 +525,16 @@ void UpdateAndReset::histogramIdentifier(IRegistry* object, std::vector<std::str
       continue;
     }
     
+    // not an histogram: must be a directory: create corresponding TDirectory
+    std::vector<std::string> rootDirs = Misc::splitString(id, "/");
+    TDirectory* newdir = rootdir;
+    if(NULL != newdir) {
+      newdir = rootdir->mkdir(rootDirs[rootDirs.size()-1].c_str());
+      newdir->cd();
+    }
     int newLevel = level + 1;
     if (newLevel >= 10) continue;
-    histogramIdentifier(*it, idList, reset, save, newLevel);
+    histogramIdentifier(*it, idList, reset, save, newLevel, newdir);
   }
 } 
 
