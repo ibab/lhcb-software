@@ -13,7 +13,7 @@
 #! /usr/bin/env python
 
 
-import ghostsClassifyTools as gh
+import ghostsClassifyTools as ghc
 import holesIntrudersTools as hi
 import causeTools as ca
 
@@ -34,11 +34,11 @@ def classifyTrackByGhosts(TES,track):
 
 	## find IDs from TStations and VELO
 	lhcbIDs=track.lhcbIDs()
-	vID,tID=gh.IDs(lhcbIDs)
+	vID,tID=ghc.IDs(lhcbIDs)
 
 	## find wether there are ghosts in them and if not, associated particles
-	mcparVe,HVs = gh.IsNotGhost(TES,vID,0.7)
-	mcparTs,HTs = gh.IsNotGhost(TES,tID,0.7)	
+	mcparVe,HVs = ghc.IsNotGhost(TES,vID,0.7)
+	mcparTs,HTs = ghc.IsNotGhost(TES,tID,0.7)	
 
 	## stablish categories
 	if HVs:
@@ -57,11 +57,12 @@ def classifyTrackByGhosts(TES,track):
 
 #---------------------------------------------------
 
-def reasonOfTrigger(TES,track):
-	""" classify pre trigger track according to reason of trigger:
+def reasonOfTrigger(TES,track,single_di="single"):
+	""" classify 'pre trigger' track according to reason of trigger:
 
 	@param TES Transient Event Store
 	@param track LHCb track
+	@param single_di Are you talking about 'single' or 'di' alleys?
 	@returns
 
 	   - ghost:          Has less than 70% of hits from same MC particle
@@ -86,7 +87,7 @@ def reasonOfTrigger(TES,track):
 	"""
 
 	## find mcpar associated to track
-	mcpar=gh.track_to_mcp(TES,track)
+	mcpar=ghc.track_to_mcp(TES,track)
 
 	## if there is no, is a ghost
 	if not mcpar: return "ghost"
@@ -96,7 +97,7 @@ def reasonOfTrigger(TES,track):
 	rcvertex=ca.getrcvertex(TES,track)
 
 	## define wether the track is physics
-	if ca.isPhys(mcpar,mcvertex): return "phys"
+	if ca.isPhys(mcpar,mcvertex,single_di): return "phys"
 
 	else:
 		## if wrong ip causes triggering
@@ -115,7 +116,7 @@ def reasonOfTrigger(TES,track):
 def hasHoles(TES,track,VELO):
 	"""find out whether 8 first mcpar hits are 8 first used in track reconstruction
 
-	@param TES Transient Event Store
+	@param TES Transient Event Store. In order to have this function working you need to add to HltMCSeq.Members 'HltLHCbIDMCParticleRelation', in HltMC.opts
 	@param track LHCb track
 	@param VELO VELO = det['/dd/Structure/LHCb/BeforeMagnetRegion/Velo'], where det = gaudi.detsvc()
 	@returns True if track has holes or False if not
@@ -123,9 +124,9 @@ def hasHoles(TES,track,VELO):
 	@author Jose Angel Hernando jose.angel.hernando-morata@cern.ch
 	"""
 	## find hits in velo
-	vID,tID=gh.IDs(track.lhcbIDs())
+	vID,tID=ghc.IDs(track.lhcbIDs())
 	## find mcpar associated to VELO track
-	mcpar=gh.getmcparvelo(TES,track)
+	mcpar=ghc.getmcparvelo(TES,track)
 	rel = TES["Hlt/Link/MCParticleLHCbID"]
 	## find sensors where we should find hits from this particle
 	sensho=hi.sensors_should(mcpar,rel)
@@ -137,11 +138,9 @@ def hasHoles(TES,track,VELO):
 	comp=hi.compare(sensho,senhas,mcpar,VELO)
 	## determine if we miss one amongst 8 first
 	for el in comp:
-		if not cond:
-			for ra in range(1,9):
-				if el==ra and not cond:
-					cond=True
-					break
+		if el in range(1,9):
+			cond=True
+			break
 
 	return cond
 
@@ -161,28 +160,29 @@ def hasIntruders(TES,track,VELO):
 	"""
 
 	## find velo hits sosrted according to z
-	vID,tID=gh.IDs_sorted(track.lhcbIDs(),VELO)
+	vID,tID=ghc.IDs_sorted(track.lhcbIDs(),VELO)
 	## find mcpars associated to 8 first hits
-	mcpars8=gh.getmcpars(TES,vID[:8])
+	mcpars8=ghc.getmcpars(TES,vID[:8],all_opt=False)
 	## find most popular amongst them
-	mcp8=gh.getmcpar(TES,vID[:8])
+	mcp8=ghc.getmcpar(TES,vID[:8],remove_none=True)
 
 	## returns True if one these hits wasn't left by the most popular mcpar
 	return hi.intruder(mcpars8,mcp8)
 
 #---------------------------------------------------
 
-def findHTvertices(HLTSUM):
-	"""Find vertices triggering HadTrigger after removing repeated ones
+def findHLTvertices(HLTSUM,TRIG):
+	"""Find vertices triggering HLT after removing repeated ones
 
 	@param HLTSUM = gaudi.toolsvc().create('HltSummaryTool',interface='IHltConfSummaryTool')
 
-	@returns vertices for HadTrigger removing repeated
+	@param TRIG Trigger to be analysed. Can be either Hlt1HadronDiDecision or Hlt1HadronDiVFForward.
+	@returns vertices for hadHLT dialley, removing repeated
 	@author Xabier Cid Vidal xabier.cid.vidal@cern.ch
 	
 	"""
 	## find original vertices in HLTSUM
-	hvertices0=HLTSUM.selectionVertices("HadTrigger")
+	hvertices0=HLTSUM.selectionVertices(TRIG)
 
 	hvertices=[]
 	pos=[]
@@ -216,7 +216,7 @@ def findHTvertices(HLTSUM):
 
 #---------------------------------------------------
 def classifyVertexByGhosts(TES,vertex):
-	"""Classify vertices from HadTrigger in ghost and no ghosts:
+	"""Classify vertices from dialley in ghost and no ghosts:
 
 	@param TES Transient Event Store
 	@param vertex LHCb vertex
@@ -238,7 +238,7 @@ def classifyVertexByGhosts(TES,vertex):
 #---------------------------------------------------
 
 def classifyVertexByReasonOfTrigger(TES,vertex):
-	""" Classify vertices from HadTrigger according to the reason of their trigger.
+	""" Classify vertices from dialley according to the reason of their trigger.
 
 	@param TES Transient Event Store
 	@param vertex LHCb vertex
@@ -271,12 +271,12 @@ def classifyVertexByReasonOfTrigger(TES,vertex):
 	## get vertex tracks
 	tracks=vertex.tracks()
 	reasons=[]
-	## classify them according to pt (HadPreTrig-High pt, Confirmed -Low pt)
+	## classify them according to pt (PreTrig-High pt, Confirmed -Low pt)
 	track_pt,track_ht=class_pt(tracks)
 
 	## find reason of Trigger in both cases
-	reasons.append(reasonOfTrigger(TES,track_pt))
-	reasons.append(ca.reasonOfTriggerHT(TES,track_ht))
+	reasons.append(reasonOfTrigger(TES,track_pt,single_di="di"))
+	reasons.append(ca.reasonOfTriggerCF(TES,track_ht))
 
 	## if both tracks are physics
 	if reasons.count("phys")==2:

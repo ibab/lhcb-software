@@ -8,11 +8,11 @@
 # =============================================================================
 
 
-import gaudimodule
+import GaudiPython
 import ghostsClassifyTools as ghc
 
 DEBUG=False
-LHCbID        = gaudimodule.gbl.LHCb.LHCbID
+LHCbID        = GaudiPython.gbl.LHCb.LHCbID
 
 #---------------------------------------------------
 
@@ -51,7 +51,7 @@ def sensors_have(TES,vID,mkey):
     """find sensors whose hits were used to make the track
     """
     out=[]
-    allmcpars=ghc.getmcpars_all(TES,vID)
+    allmcpars=ghc.getmcpars(TES,vID)
     i=0
     for e in allmcpars:
             if e and e.key()==mkey:
@@ -72,27 +72,14 @@ def compare(sho,has,mcpar,VELO):
                     if VELO.sensor(i) and VELO.sensor(i).sensorNumber()==sens: return VELO.sensor(i).z()
 
     def sortz(sh,pz):
-            zs={}
-            out=[]
-
-            for s in sh:
-                    zs[getz(s)]=s
-            ke=zs.keys()
-            if pz>0: ke.sort()
-            else: ke.sort(reverse=True)
-            for k in ke: out.append(zs[k])
-            return out
-
+        zs=map(lambda x: [getz(x),x],sh)
+        if pz>0: zs.sort()
+        else: zs.sort(reverse=True)
+        return map(lambda x: x[1],zs)
 
     pz=mcpar.momentum().z()
     sho=sortz(sho,pz)
-    j=1
     out=[]
     for s in sho:
-            i=0
-            for h in has:
-                    if s==h: break
-                    i+=1
-            if i==len(has): out.append(j)
-            j+=1
+            if s not in has: out.append(s)
     return out

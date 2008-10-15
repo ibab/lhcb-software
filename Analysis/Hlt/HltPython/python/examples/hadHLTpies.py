@@ -2,13 +2,13 @@
 # =============================================================================
 """
 @namespace hadHLTpies
-@brief Build pies and extract information of events triggering Hadronic HLT. Includes functions to test inputs (check if job was correctly configured), two functions to classify tracks triggering HadPreTriggerSingle depending on ghosts' category and reason of trigger, and another to do the same with vertices from HadTrigger. Also includes functions to draw output of just mentioned functions.  There's one extra function to test module including one job ready to be used and return some info in the form of plots.
+@brief Build pies and extract information of events triggering Hadronic HLT. Includes functions to test inputs (check if job was correctly configured), two functions to classify tracks triggering Hlt1HadronSingleDecision depending on ghosts' category and reason of trigger, and another to do the same with vertices from Hlt1HadronDiDecision. Also includes functions to draw output of just mentioned functions.  There's one extra function to test module including one job ready to be used and return some info in the form of plots.
 @author Xabier Cid Vidal xabier.cid.vidal@cern.ch
 @date 2008-\17-03
 """
 # =============================================================================
 
-import gaudimodule
+import GaudiPython
 
 import array
 import copy
@@ -19,15 +19,18 @@ import tracksAndVerticesClassifyTools as trve
 import drawPiesAndHistos as dph
 import oqTools as oq
 
-off_q=oq.HPTtracksOfflineQuality
+off_q=oq.HLTtracksOfflineQuality
+
+
+TRIG_DICT={"single":"Hlt1HadronSingleTFGFwrd","single_conf":"Hlt1HadronSingleDecision","didec":"Hlt1HadronDiVFForward","didec_conf":"Hlt1HadronDiDecision"}
 
 DEBUG=False
 
 #---------------------------------------------------
 
 
-def checkGaudiModule(gaudimod):
-    """Check if gaudimodule was properly stablished
+def checkGaudiPython(gaudimod):
+    """Check if GaudiPython was properly stablished
     @param gaudimod Configuration of the analysis (DATACARDS and extra opts).
     @returns
     gaudimod if its correcty stablished
@@ -39,7 +42,7 @@ def checkGaudiModule(gaudimod):
     ##No gaudimod input
     if gaudimod==0:
 
-        print "\n ERROR: Please input your gaudimodule.AppMgr()"
+        print "\n ERROR: Please input your GaudiPython.AppMgr()"
         return "wgm",None,None
            
     else:
@@ -55,19 +58,20 @@ def checkGaudiModule(gaudimod):
                                         interface="IHltConfSummaryTool")
             
     except:
-            print "\n\n      WRONG OPTIONS FOR GAUDIMODULE, PLEASE CHECK THEM"
+            print "\n\n      WRONG OPTIONS FOR GAUDIPYTHON, PLEASE CHECK THEM"
             return "wgm",None,None
             
     return gaudi,HLTSUM,TES
 
 
-def classifyHPTtracksByGhosts(gaudimod=0,g_mode=False,oq_mode=False,N=10000000):
+def classifyHLTtracksByGhosts(gaudimod=0,g_mode=False,TRIG="Hlt1HadronSingleDecision",oq_mode=False,N=10000000):
 
     """Classify tracks triggering in HLT according to the presence of ghosts. Need to input:
 
     @param gaudimod Configuration of the analysis (DATACARDS and extra opts).
     @param g_mode Boolean. Return or not Pie with information. Default False.
-    @param oq_mode Boolean. Use offline counterpart to HPT online tracks if they exist and still trigger. Default False.
+    @param TRIG Trigger to be analysed. Can be either Hlt1HadronSingleDecision or Hlt1HadronSingleTFGFwrd.  
+    @param oq_mode Boolean. Use offline counterpart to HLT online tracks if they exist and still trigger. Default False.
     @param N Number of events you want to check. Default all.
     @returns numeric information and, if 'g_mode', also TPie with percentage of 111,110,10,01,00 tracks, where: 111 is 70% of hits in VELO from MCP1,70% of hits in TS MPC1 (same)/ 110 is 70% of hits in VELO from MCP1, 70% of hits in TS MPC2 (different)/ 01 is ghost in VELO (less than 70 % of hits from same MCP), 70% of hits in TS from MCP1/ 10  is 70% of hits in VELO from MCP1, ghost in TS (less than 70 % of hits from same MCP)/ 00 is ghost in VELO (less than 70 % of hits from same MCP), ghost in TS (less than 70 % of hits from same MCP).
 
@@ -76,10 +80,13 @@ def classifyHPTtracksByGhosts(gaudimod=0,g_mode=False,oq_mode=False,N=10000000):
     """
 
 
-    TRIG="HadPreTriggerSingle"
+    if TRIG not in ["Hlt1HadronSingleDecision","Hlt1HadronSingleTFGFwrd"]:
+        TRIG="Hlt1HadronSingleDecision"
+        print "ERROR TRIGGER CHANGED TO ",TRIG
+    else: print "TRIGGER IS ",TRIG
     
-    ## check if gaudimodule was properly stablished
-    gaudi,HLTSUM,TES=checkGaudiModule(gaudimod)
+    ## check if GaudiPython was properly stablished
+    gaudi,HLTSUM,TES=checkGaudiPython(gaudimod)
 
     if gaudi=="wgm":
             if g_mode: return None,None
@@ -99,8 +106,11 @@ def classifyHPTtracksByGhosts(gaudimod=0,g_mode=False,oq_mode=False,N=10000000):
                 
                     ## run event 
                     gaudi.run(1)
-                    try: sels = HLTSUM.selections()
-                    except: break
+                    
+                    mcpars=TES["MC/Particles"]
+                    if not mcpars: break
+                    
+                    sels=HLTSUM.selections()
 
                     if trig in sels:
 
@@ -108,7 +118,7 @@ def classifyHPTtracksByGhosts(gaudimod=0,g_mode=False,oq_mode=False,N=10000000):
                             if not oq_mode: types["events"]+=1
 
                             ## get online or offline tracks depending on oq_mode
-                            if oq_mode: tracks=off_q(TES,HLTSUM)
+                            if oq_mode: tracks=off_q(TES,HLTSUM,TRIG)
                             else: tracks=HLTSUM.selectionTracks(trig)
                             
                             ## count number of events depending on oq_mode
@@ -148,8 +158,9 @@ def classifyHPTtracksByGhosts(gaudimod=0,g_mode=False,oq_mode=False,N=10000000):
             if not out.has_key(l):
                     out[l]=0
 
-    print "\n\n OUT=",out
-    print "\n\n"
+    if DEBUG:
+        print "\n\n OUT=",out
+        print "\n\n"
 
     out_copy=copy.copy(out)
     
@@ -157,24 +168,28 @@ def classifyHPTtracksByGhosts(gaudimod=0,g_mode=False,oq_mode=False,N=10000000):
     if not g_mode: return out_copy
 
     #else, draw Pie and return both
-    return out_copy,drawHPTtracksByGhosts(out,oq_mode)
+    return out_copy,drawHLTtracksByGhosts(out,TRIG=TRIG,oq_mode=oq_mode)
 
 
 #---------------------------------------------------
 
 
-def drawHPTtracksByGhosts(out,oq_mode=False):
-    """Draw output of classifyHPTtracksByGhosts (in same module). Provides with a pie classifying tracks triggering in HLT according to the presence of ghosts. Need to input:
+def drawHLTtracksByGhosts(out,TRIG="Hlt1HadronSingleDecision",oq_mode=False):
+    """Draw output of classifyHLTtracksByGhosts (in same module). Provides with a pie classifying tracks triggering in HLT according to the presence of ghosts. Need to input:
 
     @param out Dictionary being the 'classify' function
+    @param TRIG Trigger to be analysed. Can be either Hlt1HadronSingleDecision or Hlt1HadronSingleTFGFwrd.  
     @param oq_mode Mention in titles you're using 'offline quality' tracks. Default False.
     @returns TPie with percentage of 111,110,10,01,00 tracks, where: 111 is 70% of hits in VELO from MCP1,70% of hits in TS MPC1 (same)/ 110 is 70% of hits in VELO from MCP1, 70% of hits in TS MPC2 (different)/ 01 is ghost in VELO (less than 70 % of hits from same MCP), 70% of hits in TS from MCP1/ 10  is 70% of hits in VELO from MCP1, ghost in TS (less than 70 % of hits from same MCP)/ 00 is ghost in VELO (less than 70 % of hits from same MCP), ghost in TS (less than 70 % of hits from same MCP).
     @author Xabier Cid Vidal, xabier.cid.vidal@cern.ch
     """
 
+    if TRIG not in ["Hlt1HadronSingleDecision","Hlt1HadronSingleTFGFwrd"]:
+        TRIG="Hlt1HadronSingleDecision"
+        print "ERROR TRIGGER CHANGED TO ",TRIG
+    else: print "TRIGGER IS ",TRIG
 
-
-    TRIG="HadPreTriggerSingle"
+    
     ## prepare input to drawPie function
     out_c=copy.copy(out)
     tracks=out_c.pop("tracks")
@@ -189,18 +204,19 @@ def drawHPTtracksByGhosts(out,oq_mode=False):
 
 #---------------------------------------------------
 
-
-def getInformationFromHPTtracks(gaudimod=0,classify_ghosts=[],intruders=[],holes=[],g_mode=False,oq_mode=False,N=10000000):
+                                                
+def getInformationFromHLTtracks(gaudimod=0,TRIG="Hlt1HadronSingleDecision",classify_ghosts=[],intruders=[],holes=[],g_mode=False,oq_mode=False,N=10000000):
 
     """
-    Build pies with information about forward tracks triggering in HadPreTrigger Single. 
+    Build pies with information about forward tracks triggering in HLT. 
 
-    @param gaudimod Configuration of the analysis (DATACARDS and extra opts).
+in    @param gaudimod Configuration of the analysis (DATACARDS and extra opts).
+    @param TRIG Trigger to be analysed. Can be either Hlt1HadronSingleDecision or Hlt1HadronSingleTFGFwrd.  
     @param classify_ghosts (string): 111,110,10,01,00; where 111 is 70% of hits in VELO from MCP1,70% of hits in TS MPC1 (same)/ 110 is 70% of hits in VELO from MCP1, 70% of hits in TS MPC2 (different)/ 01 is ghost in VELO (less than 70 % of hits from same MCP), 70% of hits in TS from MCP1/ 10  is 70% of hits in VELO from MCP1, ghost in TS (less than 70 % of hits from same MCP)/ 00 is ghost in VELO (less than 70 % of hits from same MCP), ghost in TS (less than 70 % of hits from same MCP).
     @param Intruders (boolean): 8 first mcpar hits are 8 first used in track reconstruction  
     @param Holes (boolean): track has hits amongst 8 first from different mcpars
     @param g_mode (boolean) Graphical mode. If true returns three groups of pies. First histogram of delta p. Second dict with info of physics tracks when they don't come from b or c (histogram of decay radio, histogram of decay z and pie with most popular eves). Third list of main pies. Default False.
-    @param oq_mode Boolean. Use offline counterpart to HPT online tracks if they exist and still trigger. Default False.
+    @param oq_mode Boolean. Use offline counterpart to HLT online tracks if they exist and still trigger. Default False.
     @param N (int) Number of events to be analysed. Default all
 
     @returns
@@ -242,11 +258,17 @@ def getInformationFromHPTtracks(gaudimod=0,classify_ghosts=[],intruders=[],holes
     @author Xabier Cid Vidal, xabier.cid.vidal@cern.ch
     """
 
-    TRIG="HadPreTriggerSingle"
+
+    if TRIG not in ["Hlt1HadronSingleDecision","Hlt1HadronSingleTFGFwrd"]:
+        TRIG="Hlt1HadronSingleDecision"
+        print "ERROR TRIGGER CHANGED TO ",TRIG
+    else: print "TRIGGER IS ",TRIG
 
 
-    ## check if gaudimodule was properly stablished    
-    gaudi,HLTSUM,TES=checkGaudiModule(gaudimod)
+
+
+    ## check if GaudiPython was properly stablished    
+    gaudi,HLTSUM,TES=checkGaudiPython(gaudimod)
 
     if gaudi=="wgm":
         if g_mode: return None,None,None,None,None,None
@@ -289,14 +311,18 @@ def getInformationFromHPTtracks(gaudimod=0,classify_ghosts=[],intruders=[],holes
 
             gaudi.run(1)
             if DEBUG: print "\n  EVENT NUMB=",j
-            try: sels = HLTSUM.selections()
-            except: break
+
+            mcpars=TES["MC/Particles"]
+            if not mcpars: break
+            
+            sels=HLTSUM.selections()
+            
 
             ## make sure our event triggers our TRIG
             if TRIG in sels:
                 
                     ## get online or offline tracks depending on oq_mode
-                    if oq_mode: tracks=off_q(TES,HLTSUM)
+                    if oq_mode: tracks=off_q(TES,HLTSUM,TRIG)
                     else: tracks = HLTSUM.selectionTracks(TRIG)
 
                     for track in tracks:
@@ -373,7 +399,7 @@ def getInformationFromHPTtracks(gaudimod=0,classify_ghosts=[],intruders=[],holes
 
     ## ELSE, RETURN ALL
 
-    pies_all,nbc_plots,deltap_plots=drawInformationFromHPTtracks(out_pies,out_nbc,out_deltap,oq_mode)
+    pies_all,nbc_plots,deltap_plots=drawInformationFromHLTtracks(out_pies,out_nbc,out_deltap,TRIG=TRIG,oq_mode=oq_mode)
     
     return out_pies,out_nbc,out_deltap,pies_all,nbc_plots,deltap_plots
 
@@ -381,18 +407,19 @@ def getInformationFromHPTtracks(gaudimod=0,classify_ghosts=[],intruders=[],holes
 #---------------------------------------------------
 
 
-def drawInformationFromHPTtracks(out_pies=0,out_nbc=0,out_deltap=0,oq_mode=False):
+def drawInformationFromHLTtracks(out_pies=0,out_nbc=0,out_deltap=0,TRIG="Hlt1HadronSingleDecision",oq_mode=False):
     
-    """ Build pies with information about forward tracks triggering in HadPreTrigger Single. Uses info from getInformationFromHPTtracks, in this module. There's one output for each input from it.
-    @param out_pies First output of getInformationFromHPTtracks. Dictionary with all the info about 'reason of trigger'.
-    @param out_nbc Second output of getInformationFromHPTtracks. List of with all the info about 'physics' tracks not coming from a B or a C.
-    @param out_pies Third output of getInformationFromHPTtracks. List with deltap/p for tracks analysed in the function.
+    """ Build pies with information about forward tracks triggering in HLT. Uses info from getInformationFromHLTtracks, in this module. There's one output for each input from it.
+    @param TRIG Trigger to be analysed. Can be either Hlt1HadronSingleDecision or Hlt1HadronSingleTFGFwrd.  
+    @param out_pies First output of getInformationFromHLTtracks. Dictionary with all the info about 'reason of trigger'.
+    @param out_nbc Second output of getInformationFromHLTtracks. List of with all the info about 'physics' tracks not coming from a B or a C.
+    @param out_pies Third output of getInformationFromHLTtracks. List with deltap/p for tracks analysed in the function.
     @param oq_mode Mention in titles you're using 'offline quality' tracks. Default False.
     
     @returns
       Graphic information with one set of plots per each set of info in the input.
       If all three possible inputs present, returns one histogram, one dictionary and one list with the same info in the form of histograms and pies. Particularly plots_nbc['eves'] is a list where first element is a pie an second another list keeping a legend for this pie and boxes used in this legend. Just need to type 'plots_nbc['eves'][0].Draw()' and 'plots_nbc['eves'][1][0].Draw()' to see everything.
-      For more info of classification introduced, type 'help(getInformationFromHPTtracks)' in this module.
+      For more info of classification introduced, type 'help(getInformationFromHLTtracks)' in this module.
     @author Xabier Cid Vidal, xabier.cid.vidal@cern.ch
     """
 
@@ -402,7 +429,12 @@ def drawInformationFromHPTtracks(out_pies=0,out_nbc=0,out_deltap=0,oq_mode=False
         print "ERROR: NO INPUT"
         return None
 
-    TRIG="HadPreTriggerSingle"
+
+    if TRIG not in ["Hlt1HadronSingleDecision","Hlt1HadronSingleTFGFwrd"]:
+        TRIG="Hlt1HadronSingleDecision"
+        print "ERROR TRIGGER CHANGED TO ",TRIG
+    else: print "TRIGGER IS ",TRIG
+
 
     
     if out_pies!=0: tracks_numb=out_pies[0]["phys"]+out_pies[0]["non_phys"]
@@ -519,16 +551,16 @@ def drawInformationFromHPTtracks(out_pies=0,out_nbc=0,out_deltap=0,oq_mode=False
 #---------------------------------------------------
 
 
-def getInformationFromHTvertices(gaudimod=0,intruders=[],holes=[],g_mode=False,oq_mode=False,N=10000000):
+def getInformationFromHLTvertices(gaudimod=0,TRIG="Hlt1HadronDiDecision",intruders=[],holes=[],g_mode=False,oq_mode=False,N=10000000):
 
     """
-    Build pies with information about vertices triggering in HadTrigger. 
+    Build pies with information about vertices triggering in HLT.
 
     @param gaudimod Configuration of the analysis (DATACARDS and extra opts).
-
+    @param TRIG Trigger to be analysed. Can be either Hlt1HadronDiDecision or Hlt1HadronDiVFForward.
     @param Intruders (boolean): 8 first mcpar hits are 8 first used in track reconstruction (for tracks linked to vertices)  
     @param Holes (boolean): track has hits amongst 8 first from different mcpars (for tracks linked to vertices)
-    @param oq_mode Boolean. Use offline counterpart to HT online tracks (those forming vertices) if they exist and still trigger. Default False.
+    @param oq_mode Boolean. Use offline counterpart to HLT online tracks (those forming vertices) if they exist and still trigger. Default False.
     @param g_mode (boolean) Graphical mode. If true returns a list of 4 pies. First, percentage of ghost and no ghost vertices. Second, percentage of physics and no physics no ghost vertices. Third, percentage of physics vertices coming from B and C. Fourth, percentage of non physics vertices types. Default false
     @param N (int) Number of events to be analysed. Default all
 
@@ -551,17 +583,23 @@ def getInformationFromHTvertices(gaudimod=0,intruders=[],holes=[],g_mode=False,o
                     - random_vertex: all tracks linked to vertex are physics but they don't come from same MC particle.
                     - no_phys_other: there is at least one track linked to vertex being non physics
 
-      To see explanation of types of tracks mentioned here type 'help(getInformationFromHPTtracks)' and 'help(classifyHPTtracksByGhosts)' in same module.
+      To see explanation of types of tracks mentioned here type 'help(getInformationFromHLTtracks)' and 'help(classifyHLTtracksByGhosts)' in same module.
       If  'g_mode' also returns list with 4 pies.
 
     @author Xabier Cid Vidal, xabier.cid.vidal@cern.ch
     """
 
-    TRIG="HadTrigger"
+    
+    if TRIG not in ["Hlt1HadronDiDecision","Hlt1HadronDiVFForward"]:
+        TRIG="Hlt1HadronDiDecision"
+        print "ERROR TRIGGER CHANGED TO ",TRIG
+    else: print "TRIGGER IS ",TRIG
+
+    
 
 
-    ## check if gaudimodule was properly stablished
-    gaudi,HLTSUM,TES=checkGaudiModule(gaudimod)
+    ## check if GaudiPython was properly stablished
+    gaudi,HLTSUM,TES=checkGaudiPython(gaudimod)
 
     if gaudi=="wgm":
         if g_mode: return None,None
@@ -594,14 +632,19 @@ def getInformationFromHTvertices(gaudimod=0,intruders=[],holes=[],g_mode=False,o
 
             gaudi.run(1)
             if DEBUG: print "\n  EVENT NUMB=",j
-            try: sels = HLTSUM.selections()
-            except:
-                    break
+            
+            
+            mcpars=TES["MC/Particles"]
+            if not mcpars: break
+            
+            sels=HLTSUM.selections()
+
+            
             ## make sure our event triggers our TRIG
             if TRIG in sels:
-                    ## find vertices triggering HadTrigger according to oq_mode
-                    if oq_mode: vertices=oq.HTverticesOfflineQuality(TES,HLTSUM)
-                    else: vertices=trve.findHTvertices(HLTSUM)
+                    ## find vertices triggering Hlt1HadronDiDecision according to oq_mode
+                    if oq_mode: vertices=oq.HLTverticesOfflineQuality(TES,HLTSUM,TRIG)
+                    else: vertices=trve.findHLTvertices(HLTSUM,TRIG)
 
                     for vert in vertices:
 
@@ -676,23 +719,28 @@ def getInformationFromHTvertices(gaudimod=0,intruders=[],holes=[],g_mode=False,o
 
     ## ELSE, RETURN ALL
         
-    return out_pies,drawInformationFromHTvertices(out_pies,oq_mode)
+    return out_pies,drawInformationFromHLTvertices(out_pies,TRIG=TRIG,oq_mode=oq_mode)
 
 
 #---------------------------------------------------
 
-def drawInformationFromHTvertices(out_pies,oq_mode=False):
-    """ Build pies with information about 'reason of trigger' in vertices from HadTrigger. Uses output from getInformationFromHTvertices, in this module.
+def drawInformationFromHLTvertices(out_pies,TRIG="Hlt1HadronDiDecision",oq_mode=False):
+    """ Build pies with information about 'reason of trigger' in vertices from HLT. Uses output from getInformationFromHLTvertices, in this module.
 
-    @param out_pies First output of getInformationFromHPTtracks. Dictionary with all the info about 'reason of trigger'.
-    @param out_pies Output of getInformationFromHTvertices.
+    @param out_pies Output of getInformationFromHLTvertices.
+    @param TRIG Trigger to be analysed. Can be either Hlt1HadronDiDecision or Hlt1HadronDiVFForward.
     @param oq_mode Mention in titles you're using 'offline quality' tracks. Default False.
     @returns Returns list with 4 pies.
-      For more info on classification introduced, type 'help(getInformationFromHTvertices)' in this module.
+      For more info on classification introduced, type 'help(getInformationFromHLTvertices)' in this module.
     @author Xabier Cid Vidal, xabier.cid.vidal@cern.ch
     """
 
-    TRIG="HadTrigger"
+    if TRIG not in ["Hlt1HadronDiDecision","Hlt1HadronDiVFForward"]:
+        TRIG="Hlt1HadronDiDecision"
+        print "ERROR TRIGGER CHANGED TO ",TRIG
+    else: print "TRIGGER IS ",TRIG
+
+
 
     ## BUILD A LIST WITH 4 MAIN PIES
     piesn=[2,2,3,2]
@@ -739,8 +787,8 @@ def drawInformationFromHTvertices(out_pies,oq_mode=False):
     titles=[]
 
     for t in titles_o:
-            if oq_mode: titles.append(t+"'offline quality' vertices from HadTrigger")
-            else: titles.append(t+"vertices from HadTrigger")
+            if oq_mode: titles.append(t+"'offline quality' vertices from "+TRIG)
+            else: titles.append(t+"vertices from "+TRIG)
 
     
     ## Build TPies
@@ -759,44 +807,44 @@ def drawInformationFromHTvertices(out_pies,oq_mode=False):
 
 def testForHadHLTpies():
     	"""
-        Test for functions in hadHLTpies. Prepares a job to run with a set of events which fired HadPreTriggerSingle. Configuration includes Datacards, HltJob and HltMC options. 
-	@returns Prints information about ghosts' and 'reason of trigger' classification of HadTriggerSingle tracks and the same for HadTrigger vertices. Returns one pie and two other lists of pies with same information. For further reading in categories do help for the other functions in this module.
+        Test for functions in hadHLTpies. Prepares a job to run with a set of events which fired Hlt1HadronSingleTFGFwrd. Configuration includes Datacards, HltJob and HltMC options. 
+	@returns Prints information about ghosts' and 'reason of trigger' classification of Hlt1HadronSingleDecision tracks and the same for Hlt1HadronDiDecision vertices. Returns one pie and two other lists of pies with same information. For further reading in categories do help for the other functions in this module.
 	@author Xabier Cid Vidal, xabier.cid.vidal@cern.ch
 	"""
-
+        
 	## set physical location for different options
-	HOMEDIR = "/afs/cern.ch/user/j/jcidvida/cmtuser/DaVinci_v19r5"
+	HOMEDIR = "/afs/cern.ch/user/j/jcidvida/cmtuser/HLT/DaVinci_v19r14"
 
 	## options for HLT
-	HLTJOB    = HOMEDIR+"/opts/HltJob.opts"
-	## datacards to be read (min bias events)
-	DATACARDS = HOMEDIR+"/opts/diesti/dstPT_long.opts"
+	HLTJOB = "$HLTSYSROOT/options/HltJob.opts"
+	## DaVinci Job
+	DVJOB = "$DAVINCIROOT/options/DaVinci.opts"
+	## datacards to be read (set of min bias events having triggered Hlt1HadronSingleTFGFwrd with DaVinci v19r14)
+	DATACARD= HOMEDIR+"/opts/dstHLThadSingleAlley_r14.opts"
 	## options to have access to montecarlo information
-	UNPACK    = HOMEDIR+"/opts/UnpackMC.opts"
-	MCOPTS = HOMEDIR+"/opts/HltMC.opts"
-
+	MCOPTS   = HOMEDIR+"/opts/HltMC.opts"
+	
 	## prepare job configuration
-	FILES=[HLTJOB,DATACARDS,MCOPTS,UNPACK]
-	EOPTS=['HltSummaryWriter.SaveAll = true', 'HltSelectionDataToTes.CopyAll = true', 'HistogramPersistencySvc.OutputFile = "freq_and_bperc.root"']
+	EOPTS = ["HltSummaryWriter.SaveAll = true"]
+	## configure job to make it ready for quarksAndFrequencyInfo
+	gaudi = GaudiPython.AppMgr(outputlevel=3)
+	gaudi.config(files = [DVJOB,HLTJOB,DATACARD,MCOPTS],options=EOPTS)
 
-	## configure job to make it ready to quarksAndFrequencyInfo
-	gaudi = gaudimodule.AppMgr(outputlevel=3)
-	gaudi.config(files = FILES,options=EOPTS)
-
-        ## find percentage of ghosts tracks triggering HadPreTriggerSingle
-        count1,pie_tracks_ghosts=classifyHPTtracksByGhosts(gaudi,N=500,g_mode=True)
-
-        ## find all plots related to reason of triger for tracks triggering HadPreTriggerSingle
-        pies_info,nbc,deltap,pies_tracks_reason,h_nbc,h_dp=getInformationFromHPTtracks(gaudi,classify_ghosts="111",g_mode=True,N=500)
-
-        ## find all plots related to ghosts and reason of trigger for vertices in HadTrigger
-        count2,pies_vertices=getInformationFromHTvertices(gaudi,g_mode=True,N=1000)
-
+        print "\n\n*================================================*\n\classifyHLTtracksByGhostsn\n"
+        ## find percentage of ghosts tracks triggering Hlt1HadronSingleDecision
+        count1,pie_tracks_ghosts=classifyHLTtracksByGhosts(gaudi,N=500,g_mode=True)
+        print "\n\n*================================================*\ngetInformationFromHLTtracks\n\n"
+        ## find all plots related to reason of triger for tracks triggering Hlt1HadronSingleDecision
+        pies_info,nbc,deltap,pies_tracks_reason,h_nbc,h_dp=getInformationFromHLTtracks(gaudi,classify_ghosts="111",g_mode=True,N=500)
+        print "\n\n*================================================*\ngetInformationFromHLTvertices\n\n"
+        ## find all plots related to ghosts and reason of trigger for vertices in Hlt1HadronDiDecision
+        count2,pies_vertices=getInformationFromHLTvertices(gaudi,g_mode=True,N=1000)
+        print "\n\n*================================================*\n\n"
 
         ## print some information
-        print "\nclassify HPT tracks by ghosts\n",count1
-        print "\nclassify HPT tracks by reason of trigger\n",pies_info
-        print "\nclassify HT vertices by ghosts and reasons of trigger\n",count2
+        print "\nclassify HLT tracks by ghosts\n",count1
+        print "\nclassify HLT tracks by reason of trigger\n",pies_info
+        print "\nclassify HLT vertices by ghosts and reasons of trigger\n",count2
 
         ## return 3 groups of pies only with most relevant information
         return pie_tracks_ghosts,pies_tracks_reason,pies_vertices

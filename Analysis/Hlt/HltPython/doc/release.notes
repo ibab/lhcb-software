@@ -5,7 +5,11 @@
 !-----------------------------------------------------------------------------
 
 !========================== HltPython v1r10 2008-10-03 ===================
-Undocumented changes
+! 2008-10-15 - Xabier Cid Vidal
+   - general update of hadHLTpies,oqTools,freqAndBpercentage,tracksAndVerticesClassifyTools and low level modules: holesIntrudersTools.py, ghostsClassifyTools and causeTools. Adequation to new HLT version (DaVinci v19r14) and reprogramming of some functions.
+	- mctools.py change from deprecated gaudimodule to GaudiPython
+
+
 !========================== HltPython v1r9 2008-08-28 ===================
 
 ! 2008-9-17 Antonio Perez-Calero

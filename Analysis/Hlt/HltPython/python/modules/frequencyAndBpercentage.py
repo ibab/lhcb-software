@@ -8,12 +8,16 @@
 """
 # =============================================================================
 
-import gaudimodule
+import GaudiPython
 import math
 import copy
 import drawPiesAndHistos as dph
 import oqTools as oq
 #---------------------------------------------------
+
+
+TRIG_DICT={"single":"Hlt1HadronSingleTFGFwrd","single_conf":"Hlt1HadronSingleDecision","didec":"Hlt1HadronDiVFForward","didec_conf":"Hlt1HadronDiDecision"}
+
 
 def eventHasQuark(TES,quark):
 	"""find out wether there's a certain quark in an event
@@ -37,7 +41,7 @@ def eventHasQuark(TES,quark):
 
 #---------------------------------------------------
 	
-def getQuarksAndFrequencyInfo(gaudimod=0, TRIGGERS=['L0TriggerHadron',"HadPreTriggerSingle","HadTrigger"],input_f=1000,g_mode=False,oq_mode=False,N=10000000):
+def getQuarksAndFrequencyInfo(gaudimod=0, TRIGGERS=["L0HadronDecision","Hlt1HadronSingleDecision" , "Hlt1HadronDiDecision"],input_f=1000,g_mode=False,oq_mode=False,N=10000000):
 
 	"""Find percentage of events with at least a b quark and also of events with at least a c quark (when there's no b in it). Also find output rate of each trigger in TRIGGERS.
 
@@ -56,7 +60,7 @@ def getQuarksAndFrequencyInfo(gaudimod=0, TRIGGERS=['L0TriggerHadron',"HadPreTri
 	## check if gaudimodule was properly stablished
 	
         if gaudimod==0:
-            print "\n ERROR: Please input your gaudimodule.AppMgr()"
+            print "\n ERROR: Please input your GaudiPython.AppMgr()"
             return None
 
         else:
@@ -88,9 +92,11 @@ def getQuarksAndFrequencyInfo(gaudimod=0, TRIGGERS=['L0TriggerHadron',"HadPreTri
 		## run event
 		
 		gaudi.run(1)
-		
-		try: sels = HLTSUM.selections()
-		except: break
+
+		mcpars=TES["MC/Particles"]
+		if not mcpars: break
+
+		sels=HLTSUM.selections()
 
 		## count all events
 		counters["all"]+=1
@@ -126,7 +132,7 @@ def getQuarksAndFrequencyInfo(gaudimod=0, TRIGGERS=['L0TriggerHadron',"HadPreTri
 
 #----------------------------------------
 
-def drawQuarksAndFrequencyInfo(counters,TRIGGERS=['L0TriggerHadron',"HadPreTriggerSingle","HadTrigger"],input_f=1000,oq_mode=False):
+def drawQuarksAndFrequencyInfo(counters,TRIGGERS=["L0HadronDecision","Hlt1HadronSingleDecision" , "Hlt1HadronDiDecision"],input_f=1000,oq_mode=False):
 
         """ Build pies with information about output rate and purities given output from getQuarksAndFrequencyInfo and a list of triggers.
         @param counters Output of getQuarksAndFrequencyInfo. Dictionary with all the info about 'reason of trigger'.
@@ -170,7 +176,7 @@ def drawQuarksAndFrequencyInfo(counters,TRIGGERS=['L0TriggerHadron',"HadPreTrigg
 		f_unc[trig]=math.sqrt(all_t*all*(all_t+all))/all**2*input_f
 		## the information goes to "titles"
 		titles[trig]=trig+" purities. Output rate = ("+str(round(freq[trig],3))+"+-"+str(round(f_unc[trig],3))+" KHz)"
-		if oq_mode and (trig=="HadPreTriggerSingle" or trig=="HadTrigger"): titles[trig]+=", having used 'offline quality' tracks"
+		if oq_mode and (trig in TRIG_DICT.values()): titles[trig]+=", having used 'offline quality' tracks"
 
 		## Draw pies for each trigger. In titles we include output frequency info
 		pies[trig]=dph.drawPieFromDict(count_trig,title=titles[trig],labels=newlabels[trig],sort=True)
@@ -185,28 +191,27 @@ def drawQuarksAndFrequencyInfo(counters,TRIGGERS=['L0TriggerHadron',"HadPreTrigg
 	
 def testForQuarksAndFrequencyInfo():
 	"""Test for quarksAndFrequencyInfo. Prepares job to run in a set of minbias events. Configuration includes Datacards, HltJob and HltMC options. 
-	@returns Returns a dictionary with information collected (number of events of each type) and corresponding pies for L0TriggerHadron,HadPreTriggerSingle and HadTrigger in selected datacards (running HltJob in minbias set of events).
+	@returns Returns a dictionary with information collected (number of events of each type) and corresponding pies for 'L0HadronDecision','Hlt1HadronSingleDecision' , 'Hlt1HadronDiDecision' in selected datacards (running HltJob in minbias set of events).
 	@author Xabier Cid Vidal, xabier.cid.vidal@cern.ch
 	"""
 
 	## set physical location for different options
-	HOMEDIR = "/afs/cern.ch/user/j/jcidvida/cmtuser/DaVinci_v19r5"
+	HOMEDIR = "/afs/cern.ch/user/j/jcidvida/cmtuser/HLT/DaVinci_v19r14"
 
 	## options for HLT
-	HLTJOB    = HOMEDIR+"/opts/HltJob.opts"
+	HLTJOB = "$HLTSYSROOT/options/HltJob.opts"
+	## DaVinci Job
+	DVJOB = "$DAVINCIROOT/options/DaVinci.opts"
 	## datacards to be read (min bias events)
-	DATACARDS = HOMEDIR+"/opts/dstL0_minbias_lumi2.opts"
+	DATACARD= HOMEDIR+"/opts/dstL0_minbias_lumi2.opts"
 	## options to have access to montecarlo information
-	UNPACK    = HOMEDIR+"/opts/UnpackMC.opts"
-	MCOPTS = HOMEDIR+"/opts/HltMC.opts"
-
+	MCOPTS   = HOMEDIR+"/opts/HltMC.opts"
+	
 	## prepare job configuration
-	FILES=[HLTJOB,DATACARDS,MCOPTS,UNPACK]
-	EOPTS=['HltSummaryWriter.SaveAll = true', 'HltSelectionDataToTes.CopyAll = true', 'HistogramPersistencySvc.OutputFile = "freq_and_bperc.root"']
-
-	## configure job to make it ready to quarksAndFrequencyInfo
-	gaudi = gaudimodule.AppMgr(outputlevel=3)
-	gaudi.config(files = FILES,options=EOPTS)
+	EOPTS = ["HltSummaryWriter.SaveAll = true"]
+	## configure job to make it ready for quarksAndFrequencyInfo
+	gaudi = GaudiPython.AppMgr(outputlevel=3)
+	gaudi.config(files = [DVJOB,HLTJOB,DATACARD,MCOPTS],options=EOPTS)
 
 	## return info and pies
 	return getQuarksAndFrequencyInfo(gaudi,g_mode=True,N=3000)

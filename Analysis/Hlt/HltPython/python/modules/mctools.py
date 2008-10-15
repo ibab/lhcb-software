@@ -14,10 +14,10 @@ from kintools import mag
 import math
 from ROOT import *
 
-import gaudimodule
-Track = gaudimodule.gbl.LHCb.Track
-State = gaudimodule.gbl.LHCb.State
-LinkRef = gaudimodule.gbl.LHCb.LinkReference()
+import GaudiPython
+Track = GaudiPython.gbl.LHCb.Track
+State = GaudiPython.gbl.LHCb.State
+LinkRef = GaudiPython.gbl.LHCb.LinkReference()
 
 DEBUG = False
         
@@ -166,11 +166,11 @@ def getDecays( decayDescriptor, TES, MCDecayFinder) :
 
     mc = TES['MC/Particles']
     MCDecayFinder.setDecay( decayDescriptor )
-    partPointer  = MakeNullPointer(gaudimodule.gbl.LHCb.MCParticle)
+    partPointer  = MakeNullPointer(GaudiPython.gbl.LHCb.MCParticle)
 
     while MCDecayFinder.findDecay(mc,partPointer):
         tempPartPointer = partPointer.clone()
-        part = gaudimodule.gbl.LHCb.MCParticle(tempPartPointer)
+        part = GaudiPython.gbl.LHCb.MCParticle(tempPartPointer)
         del tempPartPointer
         decayList.append(part)
 
@@ -258,7 +258,7 @@ def showDecayTree( decayDescriptor, TES, MCDecayFinder, MCDebugTool,  maxDepth =
     @author Hugo Ruiz, hugo.ruiz@cern.ch"""
 
     decayList = getDecays( decayDescriptor,TES, MCDecayFinder)
-    daughters = gaudimodule.gbl.std.vector('const LHCb::MCParticle*')() 
+    daughters = GaudiPython.gbl.std.vector('const LHCb::MCParticle*')() 
     for decay in decayList :
         MCDecayFinder.descendants(decay,daughters)
         MCDebugTool.printTree(decay,maxDepth)

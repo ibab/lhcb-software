@@ -109,30 +109,25 @@ def getrcvertex(TES,track):
 	return vertex
 
 
-#---------------------------------------------------
-
-def IsGoodPt(mcpar):
-	if mcpar.pt()>2400: return True
-	else: return False
-
-
 
 #---------------------------------------------------
 
-def isPhys(mcpar,mcvertex):
+def isPhys(mcpar,mcvertex,single_di="single"):
 	"""set if the pretrigger track is physics
 	"""
 
+	if single_di=="single": mcptmin=5000
+	else: mcptmin=2400
 	
 	IPphys=imppar1(mcpar,mcvertex)
-	if IPphys>=0.1 and mcpar.pt()>=2400: phys=True
+	if IPphys>=0.1 and mcpar.pt()>=mcptmin: phys=True
 	else: phys=False
 
 	return phys
 
 #---------------------------------------------------
 
-def isPhysHT(mcpar,mcvertex):
+def isPhysCF(mcpar,mcvertex):
 	"""set if the confirmation track is physics
 	"""
 
@@ -182,69 +177,6 @@ def whichIP(track,mcpar,rcvertex,mcvertex):
 	else: return "IP_combination"
 
 	return counters
-
-#---------------------------------------------------
-
-def find_Htracks_all(TES):
-	"""find confirmation tracks in HadTrigger
-	"""
-
-	# get track with second biggest pt
-	def secondbg_pt(tracks):
-
-		tracks_l=[]
-		for t in tracks:
-			tracks_l.append(t)
-			
-		def biggest_pt(tracks):
-			tout=None
-			pt=-1e50
-			for t in tracks:
-				if t.pt()>pt:
-					tout=t
-					pt=t.pt()
-			return tout
-
-		big=biggest_pt(tracks)
-		tracks_l.remove(big)
-		return biggest_pt(tracks_l)
-
-	hvertices0=TES["/Event/Hlt/Vertex/HadTrigger"]
-	hvertices=[]
-	pos=[]
-
-	# remove repeated vertices
-	for h in hvertices0:
-
-		par=[h.position().x(),h.position().y(),h.position().z()]
-		cond_eq=False
-
-		for p in pos:
-			k=0
-			m=0
-			for el in p:
-
-				if round(el,10)==round(par[k],10): m+=1
-
-				k+=1
-
-			if m>=2:
-				cond_eq=True
-				break
-		if not cond_eq:
-			pos.append(par)
-			hvertices.append(h)
-
-
-	cf_tracks={}
-
-	# get tracks from hvertices. We get from every vertex the track with second biggest pt and check is not already in the list
-	for h in hvertices:
-		t=secondbg_pt(h.tracks())
-		if t.key() not in cf_tracks.keys():
-			cf_tracks[t.key()]=t
-			
-	return cf_tracks.values()
 
 #---------------------------------------------------
 
@@ -308,7 +240,7 @@ def origin_quark(TES,track):
 
 #---------------------------------------------------
 
-def reasonOfTriggerHT(TES,track):
+def reasonOfTriggerCF(TES,track):
 	""" classify confirmation track according to reason of trigger:
 
 	- ghost:          Has less than 70% of hits from same MC particle
@@ -340,7 +272,7 @@ def reasonOfTriggerHT(TES,track):
 	rcvertex=getrcvertex(TES,track)
 
 	## define wether the track is physics
-	if isPhysHT(mcpar,mcvertex): return "phys"
+	if isPhysCF(mcpar,mcvertex): return "phys"
 
 	else:
 		## if wrong ip causes triggering
