@@ -6,13 +6,17 @@
  #  @date 2007-07-20
  #/
 from Gaudi.Configuration import *
-from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, GaudiSequencer, PhysDesktop, DecayTreeTuple
+from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, GaudiSequencer, PhysDesktop, DecayTreeTuple, CheckSelResult
 #--------------------------------------------------------------
 #
 # Preselection
 #
 importOptions( "$B2DSXROOT/options/DVPreselBs2DsH.opts")
-HltCorrelations("Hlt2SelectionsCorrs").Algorithms += [ "PreselBs2DsH" ]
+#
+# Run correlations only on offline selected events
+#
+GaudiSequencer("Hlt2CorrsSeq").Members += [ CheckSelResult("CheckOffline") ]
+CheckSelResult("CheckOffline").Algorithms += [ "PreselBs2DsH" ]
 #
 # Hlt test
 #

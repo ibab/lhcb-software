@@ -6,14 +6,18 @@
  #  @date 2007-07-20
 ###
 from Gaudi.Configuration import *
-from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, GaudiSequencer, PhysDesktop, DecayTreeTuple, TupleToolDecay, ReadHltSummary, PrintTree, PrintMCTree, TupleToolTrigger
+from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, GaudiSequencer, PhysDesktop, DecayTreeTuple, TupleToolDecay, ReadHltSummary, PrintTree, PrintMCTree, TupleToolTrigger, CheckSelResult, PrintHeader
 # from Configurables ChargedProtoPAlg, PreLoadParticles, CombineParticles, FilterDesktop
 #--------------------------------------------------------------
 #
 # Preselection
 #
 importOptions( "$B2DILEPTONROOT/options/DVPreselBd2KstarMuMu.opts")
-HltCorrelations("Hlt2SelectionsCorrs").Algorithms += [ "PreselBd2KstarMuMu" ]
+#
+# Run correlations only on offline selected events
+#
+GaudiSequencer("Hlt2CorrsSeq").Members += [ CheckSelResult("CheckOffline") ]
+CheckSelResult("CheckOffline").Algorithms += [ "PreselBd2KstarMuMu" ]
 #
 # Hlt test
 #
@@ -54,7 +58,7 @@ EventSelector().FirstEvent = 1
 EventSelector().PrintFreq = 1 
 
 #
-ApplicationMgr().TopAlg += [ PrintTree("PrintHlt2"), PrintTree("PrintPresel"), PrintMCTree() ]
+#ApplicationMgr().TopAlg += [ PrintTree("PrintHlt2"), PrintTree("PrintPresel"), PrintMCTree() ]
 #
 PrintTree("PrintHlt2").addTool(PhysDesktop())
 PrintTree("PrintHlt2").PhysDesktop.InputLocations = [ "Phys/Hlt2SelBd2MuMuKstar" ]

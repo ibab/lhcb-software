@@ -13,9 +13,10 @@ from Configurables import CheckSelResult, L0Filter, SelResultCorrelations
 # Preselection
 #
 importOptions( "$B2DILEPTONROOT/options/DVDC06SelBu2MuMuK.py")
-HltCorrelations("Hlt2SelectionsCorrs").Algorithms += [ "PreselBu2LLK" ]
-PrintHeader("PrintDiLeptonForPreselBu2LLK").OutputLevel = 3 
-PrintHeader("PrintPreselBu2LLK").OutputLevel = 3 
+GaudiSequencer("Hlt2CorrsSeq").Members += [ CheckSelResult("CheckOffline") ]
+CheckSelResult("CheckOffline").Algorithms += [ "PreselBu2LLK" ]
+PrintHeader("PrintDiLeptonForPreselBu2LLK").OutputLevel = 4
+PrintHeader("PrintPreselBu2LLK").OutputLevel = 4
 #
 # Hlt test
 #

@@ -6,16 +6,19 @@
  #  @date 2007-07-23
 ###
 from Gaudi.Configuration import *
-from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, GaudiSequencer, PhysDesktop, DecayTreeTuple, PrintHeader
+from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, GaudiSequencer, PhysDesktop, DecayTreeTuple, PrintHeader, PrintTree
 from Configurables import CheckSelResult, L0Filter, SelResultCorrelations
 #--------------------------------------------------------------
 #
 # Preselection
 #
 importOptions( "$B2DILEPTONROOT/options/DVDC06SelBu2eeK.opts")
-HltCorrelations("Hlt2SelectionsCorrs").Algorithms += [ "DC06SelBu2eeK" ]
+GaudiSequencer("Hlt2CorrsSeq").Members += [ CheckSelResult("CheckOffline") ]
+CheckSelResult("CheckOffline").Algorithms += [ "DC06SelBu2eeK" ]
 PrintHeader("PrintDiLeptonForPreselBu2LLK").OutputLevel = 4 
 PrintHeader("PrintPreselBu2LLK").OutputLevel = 4
+PrintHeader("PrintDC06SelBu2eeK").OutputLevel = 4
+PrintTree("PrintTreeDC06SelBu2eeK").OutputLevel = 4
 #
 # Hlt test
 #

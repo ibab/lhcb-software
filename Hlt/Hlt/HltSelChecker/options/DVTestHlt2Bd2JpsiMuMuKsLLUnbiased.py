@@ -6,14 +6,19 @@
  #  @date 2008-10-09
 ###
 from Gaudi.Configuration import *
-from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, GaudiSequencer, PhysDesktop, DecayTreeTuple, TupleToolDecay
+from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, GaudiSequencer, PhysDesktop, DecayTreeTuple, TupleToolDecay, CheckSelResult, PrintHeader
 
 #--------------------------------------------------------------
 #
 # Preselection
 #
 importOptions( "$CCBARROOT/options/DVDC06SelBd2JpsiKS_Jpsi2MuMu_lifetime_unbiased.opts")
-HltCorrelations("Hlt2SelectionsCorrs").Algorithms += [ "DC06selBd2Jpsi2MuMuKs" ]
+PrintHeader("PrintDC06selBd2Jpsi2MuMuKs").OutputLevel = 4 
+#
+# Run correlations only on offline selected events
+#
+GaudiSequencer("Hlt2CorrsSeq").Members += [ CheckSelResult("CheckOffline") ]
+CheckSelResult("CheckOffline").Algorithms += [ "DC06selBd2Jpsi2MuMuKs" ]
 #
 # Hlt test
 #

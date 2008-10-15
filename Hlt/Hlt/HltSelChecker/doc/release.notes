@@ -7,6 +7,10 @@
 ! foreach a (`ls -1 options/DVTestHlt2* | awk -FTestHlt2 '{print $2}' | awk -F. '{print $1}'`)
 !   gaudirun.py options/DVTestHlt2${a}.py | tee test-$a
 ! end
+!-----------------------------------------------------------------------------
+
+! 2008-10-15 - Patrick Koppenburg
+ - Run correlations only on offline selected events
 
 ! 2008-10-15 - Patrick Koppenburg
  - Various bug fixes
