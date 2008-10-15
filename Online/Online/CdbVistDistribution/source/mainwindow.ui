@@ -1,0 +1,344 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>GUImainWindow</class>
+<widget class="QMainWindow">
+    <property name="name">
+        <cstring>GUImainWindow</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>800</width>
+            <height>600</height>
+        </rect>
+    </property>
+    <property name="minimumSize">
+        <size>
+            <width>23</width>
+            <height>392</height>
+        </size>
+    </property>
+    <property name="caption">
+        <string>CdbVis - Configuration Database Visualizer</string>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QFrame" row="0" column="0">
+            <property name="name">
+                <cstring>panelFrame</cstring>
+            </property>
+            <property name="frameShape">
+                <enum>StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Raised</enum>
+            </property>
+        </widget>
+    </grid>
+</widget>
+<menubar>
+    <property name="name">
+        <cstring>MenuBar</cstring>
+    </property>
+    <item text="&amp;File" name="fileMenu">
+        <action name="aConnect"/>
+        <action name="aDisconn"/>
+        <separator/>
+        <action name="fileLoad_SettingAction"/>
+        <action name="fileMass_insert_data_from_fileAction"/>
+        <separator/>
+        <action name="Store_object_in_DBAction"/>
+        <action name="fileGenerate_ConfDBLibrary_fileAction"/>
+        <separator/>
+        <action name="fileExport_as_textAction"/>
+        <separator/>
+    </item>
+    <item text="Edit" name="Edit_2">
+    </item>
+    <item text="View" name="View">
+    </item>
+    <item text="Create" name="Create">
+    </item>
+    <item text="Modify" name="Modify">
+    </item>
+    <item text="Delete" name="Delete">
+    </item>
+    <item text="Visual" name="Visual">
+    </item>
+    <item text="Test" name="Test">
+    </item>
+    <item text="&amp;Help" name="helpMenu">
+    </item>
+</menubar>
+<toolbars>
+    <toolbar dock="2">
+        <property name="name">
+            <cstring>Toolbar</cstring>
+        </property>
+        <property name="focusPolicy">
+            <enum>TabFocus</enum>
+        </property>
+        <property name="frameShape">
+            <enum>ToolBarPanel</enum>
+        </property>
+        <property name="frameShadow">
+            <enum>Raised</enum>
+        </property>
+        <property name="movingEnabled">
+            <bool>false</bool>
+        </property>
+        <property name="label">
+            <string>Toolbar</string>
+        </property>
+        <action name="aConnect"/>
+        <action name="aDisconn"/>
+        <action name="zoomIn"/>
+        <action name="zoomOut"/>
+        <action name="OnChangeView"/>
+        <action name="createLinkModeAction"/>
+        <action name="Store_object_in_DBAction"/>
+    </toolbar>
+</toolbars>
+<actions>
+    <action>
+        <property name="name">
+            <cstring>fileExitAction</cstring>
+        </property>
+        <property name="text">
+            <string>Exit</string>
+        </property>
+        <property name="menuText">
+            <string>E&amp;xit</string>
+        </property>
+        <property name="accel">
+            <string></string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>filedisconnectAction</cstring>
+        </property>
+        <property name="text">
+            <string>Disconnect</string>
+        </property>
+        <property name="menuText">
+            <string>Disconnect</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>fileLoad_SettingAction</cstring>
+        </property>
+        <property name="text">
+            <string>Load Setting...</string>
+        </property>
+        <property name="menuText">
+            <string>Load Setting...</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>fileMass_insert_data_from_fileAction</cstring>
+        </property>
+        <property name="text">
+            <string>Mass insert data from file</string>
+        </property>
+        <property name="menuText">
+            <string>Mass insert data from file</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>Store_object_in_DBAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>image0</iconset>
+        </property>
+        <property name="text">
+            <string>Store object in ConfDB</string>
+        </property>
+        <property name="menuText">
+            <string>Store object in ConfDB</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>fileGenerate_ConfDBLibrary_fileAction</cstring>
+        </property>
+        <property name="text">
+            <string>Generate ConfDBLibrary function file</string>
+        </property>
+        <property name="menuText">
+            <string>Generate ConfDBLibrary function file</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>fileExport_as_textAction</cstring>
+        </property>
+        <property name="text">
+            <string>Export as text</string>
+        </property>
+        <property name="menuText">
+            <string>Export as text</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>aConnect</cstring>
+        </property>
+        <property name="toggleAction">
+            <bool>true</bool>
+        </property>
+        <property name="iconSet">
+            <iconset>image1</iconset>
+        </property>
+        <property name="text">
+            <string>Connect</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>aDisconn</cstring>
+        </property>
+        <property name="toggleAction">
+            <bool>true</bool>
+        </property>
+        <property name="enabled">
+            <bool>false</bool>
+        </property>
+        <property name="iconSet">
+            <iconset>image2</iconset>
+        </property>
+        <property name="text">
+            <string>Disconnect</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>zoomIn</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>image3</iconset>
+        </property>
+        <property name="text">
+            <string>Action</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>zoomOut</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>image4</iconset>
+        </property>
+        <property name="text">
+            <string>Action</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>OnChangeView</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>image5</iconset>
+        </property>
+        <property name="text">
+            <string>Action</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>createLinkModeAction</cstring>
+        </property>
+        <property name="toggleAction">
+            <bool>true</bool>
+        </property>
+        <property name="iconSet">
+            <iconset>image6</iconset>
+        </property>
+        <property name="text">
+            <string>Action</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>aCreateDevices</cstring>
+        </property>
+        <property name="text">
+            <string>Action</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>aCreateDeviceType</cstring>
+        </property>
+        <property name="text">
+            <string>Action</string>
+        </property>
+    </action>
+</actions>
+<images>
+    <image name="image0">
+        <data format="PNG" length="1914">89504e470d0a1a0a0000000d4948445200000020000000200806000000737a7af40000074149444154789cdd975b6c1c671dc57fdf37b357ef7a1defb25e3b694ae23a4e2312a54e803644b43642285180888b4520a88dfa1024141eb8880724245e222181444b91f280da201e10a10aa251532e4d508aaa36895bc0757053db1bef26f666edbdcfceeccece8d07e3959dab5b092171a44fa399fd34e7fccfffcc7f67e07f0cb1d68dcf3efbeca6402030108944d6673299587777b7158fc74bb55a2d6ddbf6ccd1a3470bff15012fbef8e2d6582cb67fddba758f7776766e0987c349d77503524ad7f33cdd308c1bb55a6dbc56abfd319bcdfee5c89123950f22e4368c8d8d6dbf72e5caa97c3edf304dd3731cc7731cc7b36d7bd55abea6ebba97c96432972f5ffefea953a7426be5b9a303efbcf3ced3d168f467dddddd1121048ee3dcff464220a5a4d56a91cfe72f552a95afedd9b367fa7d0b989c9c7c4a55d517a2d128009ee7ddbf8c5b84b8aecbe2e2e28ca6699fdcbb77effcbdf6ab2b4f66666636964aa567bababad075fd7d112fc3f33ca494a8aada2fa5fc31f0f5350bd075fd50b3d9ec344d734db6df0d422c19ab69da97c6c6c67eb07bf7eeec9a044c4f4f6f0d87c30821da3781a5aa96af4929dbbf799e87ebbab8aedb261642e0791e9ee751afd783d7af5fef07d62660767696643249b55a4555555455455114028100c16010bfdf8fa228482901701c07cff3701c8766b3c9b2739665e1ba2ebaae73e6cc19792fb7560948a552dedcdc1cb1580cc77150559568348aa228abaa5cc672b58ee3609a26d56ab59d1d45512897cb98a6792f7e56a9dbb2650bb95c8e5aad46a3d14055d576e53e9f0f4551501465953baaaae2f3f9da2e01e8ba4e2e97c3f33cfafafad62e60fdfaf5567f7f3f5353530821dac4cb842bd74af2952b1008601806d96c96ddbb77d3d9d9d95a730bce9e3deb3f70e0009aa6a1691a89446255f056dabf122bf7d8b64dcb6cb2ef33c3747775629a6660cd02d2e934376fde64747494f1f1714cd3c4755d2ccb425555a494ed2702c0755d6cdbc6b22c2ccb424a4928e46768d7a34c960778efb58b580dcd5db380fefe7e5e7ef965f6eddbc7e0e020e572192104c160109fcf07ac9e8c524a7c3e1fc16090482442b55a213f97e6d71713585d416af587d968fcc9be970065e5c973cf3df7b90b172e3c32393989cfe723128950afd72997cbe8ba4eabd5a2d56a619a66fb681846bb65d9e97ff1ea6c8257ca1f61645794eb4a82b4fcb0bffac60ba7ef26605553df7cf3cde71b8dc69193274f924aa5d8b87123ddddddb8ae4ba552a1582c522c16595858201c0ed3dbdb4b4f4f0ff144825a619e8b59c14bee411edd16e35b8f4779bbe0f2ca9c8f744b7eefc621f193fb3af0c0030f1c1c1919d9994aa5a8d7eb288a826d2f39e8f3f9f0fbfd04020142a110f1789c6432492c16a3565e6462b6ccabe12fb063c7069eded3017e9554974a4f97a05aac7fca3c74fc62edb73f9ab955c0aa0c048341ce9f3fcfc8c808f1789c62b1d80e9ee338abfe1f8410a8aa8f86ae91cbe5f847ea8b0cf66fe1f076414b15546cc081cd3138fcb188f2c2b985df587ff076e53f2faeddb505e3e3e3274f9c38f1e4d0d010434343589645b3d924180c120a855055b53dfd1445a1d56a313d7985df950628f73dc2a16d024b40cd0124b872e9b83d0a8e07c75fcabdfbb748ef471915f53b3a90cfe773c3c3c39c3e7d9a72b9cce0e020aaaa92cbe5a8d7eb5896856ddb689a462010a055af32137e90e69e9d1cde28680a983741fac015e009b0804b06ec5b07dffc786cebc2d9d95f5c8527ef988152a9d43a76ecd853b66d8b7c3e4fa3d1c0711c8410589645a552616e6e8e4c2643a150402b15a90d3cc6679fd88200260db004981e343d6838603a5036e1a6095fd9e4e3cfef36489ff9e9893b0a989a9a9a7fe8a187fa0f1e3cb823140ab5e7fbf2b31e8bc54826936cdab489dede5ea4f068f83751f2e2bc326da38603d82e18d6d26a58d0b0a1de82d75e5f34c7aee9566eb63e3ff7d79ffff28e2d00ece3c78fff5055d5e4f0f0f0a70b85029665110a85da83c8755da494388e4375600057288c67cf214b1aef45bf4cb83382eb820bb81e78c0d4df176ac50dc94fdc70281563c9e25d43f81fc8bebebe81d1d1d1efecdfbfffab7ebfbfa35aad6259168aa2b445288a82dfef475514de9df827738b152e3dfa6de88ae33a4ba1b3bda516e427f2b9f9eff66c0071db58566ea3074fd3b4d2c4c4c41b636363e39aa6b952caa86118915c2e27af5ebdca5b6fbd452693c1300c2cdbe6663eafcd64b26fbf97d81b2c2a5d1d35036a26684d305a602ed6168d739dcfdc81ebbe1f26b2a3a323118fc7071289c4b66834daeff7fb3fe4384e544a69298a52320c63be52294e2f2e6ad7e4377eff2bf1e0d036e1b44008c003358079f972c67bfe89c70a8651011a2b096ecdc0ad70755d5fd0757d219bcdbe0ef880c0e6cd9b95743aed022610e8e9e94904153766cd4e5c6b851f1e144e53b0fcdea87aaebf7ee592170a7526c2610a85420b684fb4357f1bde077e408da4521d9dc99d1bd450500258b6ed49c77302b5c9d9743a6db094cd0ffebafd7f897f0317db97519fc2835f0000000049454e44ae426082</data>
+    </image>
+    <image name="image1">
+        <data format="XPM.GZ" length="674">789c8dd04b6ac3301006e0bd4f21ac9d29496cc9b244c811025d164a17926cc58ee33cfc0894d2bbd733c21425503a5a7da341fec7eb84bcbdee49b28e86518f8d25b6d63d49caa9eb3edf3f765f519ce624e524e3248d5fa298124be8060bd8019961c6f304145248cf3bb0e005df28e015a90b9d67c016287399fbe17e21d74087b4d266783b029556da0f5ba0965ab21c78001a3d1f069c90ce383f7c03da723e02780196a214fe432b245e030760c52b9e1ae07961862bd40b050e1f91aa529e06e898630687f5428b212ba4724ae2fa0d722e8631ca851233afc2fab345a182169d7f45d89af7af1c3d04adba39b6a7708a76e7cbf516bed50fdde3f3ed38d1c71077fa9ceb39eabf16fa6d7d6fa31fac818ebe</data>
+    </image>
+    <image name="image2">
+        <data format="XPM.GZ" length="629">789c65d0cd6e84201007f0bb4f41e4661a76554448d34768d26393a68701647577dd0fdd1e9aa6ef5e67a85b4de120bfff4018dc64ecf5e599659b64bcc1ad73ccb530b0cc7ff4fde7dbfbd35792e615cb252b7296a70f490acc31bea5813c204b5bdac83d5269a52347642d6bb935c89e08355405f282d495aee2e64074da15c42bd2808158dd212d4cb3440ec46043ac9e90ce4f53218f48afbc928014442a23cfc8463632b7c876a6a26a47348d8974c85086d2d213ec4c57211ba20946d38b3831cc3fc74786a089828bbfc105458b6c5ac5085780036bbf91e0609da5e41e01f74de0bb55d4f28eef6115c1811ffbd3329a4e9e39ac76097eb90eb197fb8d024610cb1ba9aff85d740fabeeffbf71994c59fafd98fc00a62b86ae</data>
+    </image>
+    <image name="image3">
+        <data format="PNG" length="693">89504e470d0a1a0a0000000d4948445200000018000000180806000000e0773df80000027c49444154789ced94cd4fd2611cc03fbf17206431458c193a699a1bb365343b707179a83537e799837f41ff438097b6b62e6d1e3d71f0ec6caee521e7a18b2d5cd3b115b47211210849f222fc5e3aa80d881fc8aa5bdfcbb33ddf97cff7e579bef05f3a88d0c96031b2a9b7ba7fb470b7a36f5bc079e0dbd7af727f6aac41f7f24d9cb71fbe5e08d452b918d9d46f8d0d32e31b45d574745d47af73100401491478154db0134fb585c8460aff84874259415135b4a6268902c892887fc2c34e3cd5ae00c456d97b475c1c9515f2c51af9e2e9e9715af138ad0d77476505ef88cb704e86154c8e0f7354aa51ae69d4540dbdcefd7ba98620804912b19a4426c787897d4e1b56d012503ad138ae6894aa2a0f6e3a1b7433de7e005ebccba2aa20899a617043c0fb6fc724f327e48a55a6aed901705e360390fd5105e0753c87c366c6dd67e91e204b22b2049228f064fd23aaa6f334e005e0f1f304922860b348c8d2a96dd7804ce6006b4f2f1659a5aa680d994ba2804912b0c82256b3442673d01dc0674f85a3598237bc03d494d3e99e281acf363e0160b348586491de1e130e9b89ddfd1c3e7b2a6c0430fc686e573f7d0e27b9628d72554551cf3292c06a9670d84ce4735992e943fc856500ee3d8cfc16af658b7cf654389a26984c1fe2723a700f5c4151b53380482673c0ee7e0e007f6119b7771a808d25f46688e1175f5b5d0901440b8341a3242e7d590fbabdd38c4edc0120b1b74d32b6d55049c78d780e6a96b9f94068636941af07b4825c68e5b6833757d10c69ff883bc8dc7c2054199a0d27635b24f6b65bda186ed36e206bab2b2463ebbf66958c6d51199a0d43e4cf5a542fe7ed02a80ccd86e7e603a1bf15bb0162f428fe99fc04a14b126b86ea60fe0000000049454e44ae426082</data>
+    </image>
+    <image name="image4">
+        <data format="PNG" length="688">89504e470d0a1a0a0000000d4948445200000018000000180806000000e0773df80000027749444154789ced943f4f535118c67fe79c7bfb3710a808c182928018c280253a74213ae840d23033f009fc0e4259fc048c4c1d980986410691154319248d480788b5b685121b28a5edbdd7a14068b9b785a89b4f7297fb9cf3fecef39e3ff05f2d245a0d988fad5b76ffdfcebc6839b729e0b2f0f8e307bc7e3654e77df8bcc7d6b71fb702d99af3b175ebe9502f2f438318a685655958d72608215052f0319e647b2fdd14a23919e1d1010a6755aa8689d9d02429405392f0e800db7be966016e26988fad5b238f7a083d7948a96252352c4ccbc2ba80080152083425f0e892f8d70312fb19c714b609c686fbf955ac705631a918e655f1ab5509d095c4ab4bc686fb49ec671c13d8028ae72627259362d9a05235898c77d7f92b5b5974cdc2304049d3b1b82360f7e709a9e373f2a7658a6583f0e38e3affd3ee113e9722e07711ec74df1da02989a6404981148277ef9375be92b553a4a9dad866b27573b92c5e97c2ad4974552b2644adf74a0a7425706b12af4b91cb65ef0608b5a7a399c33c01bf4e874fa7cda3e1772b7caedae7772bda3c1a1d3e9d805f27739827d49e8e3a011c2f5ab0e71e9d812ef2a715ceca0655a3e6690abc2e45c0af739c3f249539225c5804e0d59bd88d7ab67b106a4f47e319665399237aba0204ef775335cc0b802497cbf2e5200f40b8b04870640280b505ac4688e3155f595e9a0388177a679d16e1f9be3a1b1c996070f43900c99d4d52898dba242d5fc44b50a32253d3736b0b33d675801de4564f6e3378638a4648f343dc4291a9e9b952df643495d820b9b3693bc6f135bd0b646579895462f56aaf52890d4a7d935188fd598baeebb25d00a5bec968646a7aee6fd5ae83381d8a7fa6df7ab1f5c69c34903b0000000049454e44ae426082</data>
+    </image>
+    <image name="image5">
+        <data format="XPM.GZ" length="358">789cd3d7528808f055d0d2e72a2e492cc94c5648ce482c52d04a29cdcdad8c8eb5ade65232345530345130563054d2e152525648565036000310570fc44d490641103711c44d0303b0ac9e9e320c00d930a144084016c2540502ca501a2e0453832c043509bf2a4cb310162284e0cec2a70a9bbb12816a12d185126142b5d65c00b2e94504</data>
+    </image>
+    <image name="image6">
+        <data format="PNG" length="1626">89504e470d0a1a0a0000000d4948445200000020000000200806000000737a7af40000062149444154789cbd966d6c53d719c77fd7be7e8de39898c27849704242cb5b310deb52551b4945290c5427a8fd403b119b55639b56914aeb264d93806d1f36698c524d9b26d13a99a669da3ac055204d57e444aa58c754c569d2b84a4b7193342c0888f30a8e7dcfd9876b92f86d0995d6473a92cff5b9e7f77ffecf73cfbd0a79e227bfbc122e2936d60d0dde08fcf6577b5bf2adf9bfc5b153bdcd27cf44e50f4f749dfb32786a26fc9acbe914c726c7c7e34921025fba008b0dbfcd6e728ddde695d327eae3856e3ada1476a9c5f29894d2af49f9d2e9dfed6a590cf4c1b73925c1b3ed351a175e37644c0c065f71b11989122ab4d14b2f869b8dc5f25a89cbdafce8e3652ea40cfee048bb7f51b842b32672ffcb70c05962f5aa260545e0ca5e78f448d86334c9a02265dd633b3d6cde5e864155b11415f1ce850f82470eb7f187d7f7b764dfd7f3027e09cd528210e424a62c9c9c7c7da8bbe6abcbbd1d6d7d91e4c854eb6c2ae99b9d4dc42c265b8f51351c7b60a5c3b5e7e98db8963b100234019a061ff60cf38fb6085a2a1538d3da3827a2bb09afa212065c424242a3e2b156620505fce2f7d7fc2bdc6af0f3de61ac45262a37afe4ca3b03484da1a6762df5bbab75681a3c2742405f64888e37df47d3b440eb9f9e69e96ec2a5a8741b6d78d452988e11dbf1472ab21dc8e8819f7eafa2a5fff2c7af589d66763e53c3e8d0246693cafe030fb16b6f358a42c1b1e9e1329edcbf1d890c7eebb9bffad3997bd6bf0c899b20a1331b0e593d0030119ff03e585bc9954b1f337af5064ddf7984075616a309dd2f45d16dcb10909e6fdeb60e4d4894767f10096587f53d93d3a0e5a97f5e01333333b1be773fc2248c1cfe6e0dab56ebf039d00238e48ad9a27682a18b65b550fa288cbc0952c29dc9fc0e18b22f386cb6d38694c23edf062aab96cd67bd84c160275c08605f0fe50781599888822688d487c87baee43860b5d84e6dd9ba82afd795cf67bec0e64265603c86f6f746d465507948876b77617c0084cc6f7f8e03df7fa1dd6fb3ab75070f6dc90443c1390077e324ffd688429cca836034ce672f055c9ef515e2cf0b686a3ae79288537bf6adc76e57f3675d60244201b4eb11d63c0936b70e270132094242ad31e40bfb720fb70c0156556d2e75db5c4fecf2e4eff4026548749e20193dcf571e07f7c6343c3d4aaba0aa012478150bdd1dcfe22d28404ab973c7d7d640da62b2c179ca908c9ee7cea5e318cce05805939f8236992962c51678f81018ad785441f8ad03342c1430d7842921b8715b303601cb9c4b6b3e79378e907ab345ffa23f6e52eab69b9d50f104b8aba16435789f87fe10ae89ff70aec347e0a9102d1902a4d01042323caacf4b8a0b9441991764dbe1c7bcdd4f6a268e652c82c30ee3d12ea662116efefb3c776f01ebf4b58e5278e439f8e7199889136cfb2691fd1789cc09d08486262442c0e82d48a6c05db2781914059ca52edc957500dcb66de3fdb667a934c1caea7429d24fcb8d7e988983d08824a7f597d25c0f689aecfae4a36166ee24110226a7213eb578198a8bc09deeef586c8c93c7ff4cf9f4255654a7ed4df7c2480ff45ed4e18909ea1bbbf483c9784f406fdf1b9d9ef2bd9e4f3fb9eeddb4751d66b31129c0600093295ddfb986d57f3b1de0b0cfc38f1f7f9b9a99206e06d9f40d505540c048147a2fe5c2330400f47d7836545eb67bfceac0c89ead5e0f66b311a42ec268d4c1a4e10e3b582d99f0d4d4add84ea5d5b5a622c92a4f1a3e00bd9dfa713c9b05cf1100d0df7ffebdb56b777f7675e07ac386875653546446014caa2e4448b05bc162ce844f4d2522cff3a3b76c4cd66edc0166138c5c85de770bc3337a60619c3d1b68f97cf866e0d55f5f6078680c4dc06c521760b7ea9b67c35329516f67aca16439389c69f8e5ff0dcfebc0bd88464391aaaa7d9ff5740f366cdcbc0697cb8641d1e18a920b7fd1186840c1bfc10be337a1f75f8bc30b3ab0d089e9e93b81577ff3368383630801c85c782814884b386ab14132b17438647d13168a0307827e87c3167cf9c7bbb159e1e73fcb84b7fba8538d845dcbe1d6e8d2e14b16b05004c0f4f43c1ca0a381305027e5fdc1ef4bc03d118a62f0a55222700fdeeec36350b826f4effefb82dfb7807c71f169828a82ff8bc06191265c6278bf281ce0bf2100e9b4073b845a0000000049454e44ae426082</data>
+    </image>
+</images>
+<connections>
+    <connection>
+        <sender>aConnect</sender>
+        <signal>activated()</signal>
+        <receiver>GUImainWindow</receiver>
+        <slot>OnConnect()</slot>
+    </connection>
+    <connection>
+        <sender>aDisconn</sender>
+        <signal>activated()</signal>
+        <receiver>GUImainWindow</receiver>
+        <slot>OnDisconn()</slot>
+    </connection>
+    <connection>
+        <sender>createLinkModeAction</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>GUImainWindow</receiver>
+        <slot>CreateLinkMode()</slot>
+    </connection>
+    <connection>
+        <sender>Store_object_in_DBAction</sender>
+        <signal>activated()</signal>
+        <receiver>GUImainWindow</receiver>
+        <slot>OnSave()</slot>
+    </connection>
+</connections>
+<slots>
+    <slot>fileNew()</slot>
+    <slot>fileOpen()</slot>
+    <slot>fileSave()</slot>
+    <slot>fileSaveAs()</slot>
+    <slot>filePrint()</slot>
+    <slot>OnDisconn()</slot>
+    <slot>OnConnect()</slot>
+    <slot>CreateLinkMode()</slot>
+    <slot>OnSave()</slot>
+</slots>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

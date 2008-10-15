@@ -1,0 +1,496 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>GUIcreateDevices</class>
+<widget class="QDialog">
+    <property name="name">
+        <cstring>GUIcreateDevices</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>591</width>
+            <height>439</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Create Devices</string>
+    </property>
+    <property name="iconText">
+        <string>Create/Modify ports ...</string>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <property name="resizeMode">
+            <enum>Fixed</enum>
+        </property>
+        <widget class="QLabel" row="2" column="0" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>textLabel2_4_4_2</cstring>
+            </property>
+            <property name="text">
+                <string>Device Name:</string>
+            </property>
+        </widget>
+        <widget class="QLineEdit" row="3" column="0" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>_prefixtxtbox</cstring>
+            </property>
+            <property name="frameShape">
+                <enum>LineEditPanel</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Sunken</enum>
+            </property>
+        </widget>
+        <widget class="QLabel" row="2" column="3" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>textLabel2_4_4</cstring>
+            </property>
+            <property name="text">
+                <string>Device ID:</string>
+            </property>
+        </widget>
+        <widget class="QLineEdit" row="3" column="3" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>_deviceidtxtbox</cstring>
+            </property>
+            <property name="enabled">
+                <bool>false</bool>
+            </property>
+            <property name="maximumSize">
+                <size>
+                    <width>100</width>
+                    <height>32767</height>
+                </size>
+            </property>
+        </widget>
+        <widget class="QLabel" row="4" column="0" rowspan="1" colspan="6">
+            <property name="name">
+                <cstring>textLabel2_3</cstring>
+            </property>
+            <property name="text">
+                <string>Device Type:</string>
+            </property>
+        </widget>
+        <widget class="QComboBox" row="5" column="0" rowspan="1" colspan="6">
+            <property name="name">
+                <cstring>_devicetypetxtbox</cstring>
+            </property>
+        </widget>
+        <widget class="QCheckBox" row="6" column="0" rowspan="2" colspan="3">
+            <property name="name">
+                <cstring>_chk_node</cstring>
+            </property>
+            <property name="text">
+                <string>This is a node (starts or ends a path)</string>
+            </property>
+        </widget>
+        <widget class="QCheckBox" row="6" column="3" rowspan="2" colspan="3">
+            <property name="name">
+                <cstring>_chk_prommode</cstring>
+            </property>
+            <property name="text">
+                <string>Promiscuous mode</string>
+            </property>
+        </widget>
+        <widget class="QLayoutWidget" row="11" column="0" rowspan="1" colspan="8">
+            <property name="name">
+                <cstring>layout68</cstring>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <spacer>
+                    <property name="name">
+                        <cstring>spacer1</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>220</width>
+                            <height>20</height>
+                        </size>
+                    </property>
+                </spacer>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>_portbutton</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Create/Modify ports</string>
+                    </property>
+                </widget>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>_okbutton</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Ok</string>
+                    </property>
+                </widget>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>_cancelbutton</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Cancel</string>
+                    </property>
+                </widget>
+            </hbox>
+        </widget>
+        <widget class="QLayoutWidget" row="0" column="0" rowspan="2" colspan="2">
+            <property name="name">
+                <cstring>layout51</cstring>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>textLabel2</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Create in:</string>
+                    </property>
+                </widget>
+                <widget class="QLineEdit">
+                    <property name="name">
+                        <cstring>_systemnametxtbox</cstring>
+                    </property>
+                    <property name="enabled">
+                        <bool>false</bool>
+                    </property>
+                </widget>
+            </vbox>
+        </widget>
+        <widget class="QLayoutWidget" row="0" column="2" rowspan="2" colspan="2">
+            <property name="name">
+                <cstring>layout52</cstring>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>textLabel2_2</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Add to subsystem:</string>
+                    </property>
+                </widget>
+                <widget class="QComboBox">
+                    <property name="name">
+                        <cstring>_sysnamescmbbox</cstring>
+                    </property>
+                </widget>
+            </vbox>
+        </widget>
+        <widget class="QPushButton" row="0" column="4" rowspan="2" colspan="1">
+            <property name="name">
+                <cstring>_addbutton</cstring>
+            </property>
+            <property name="maximumSize">
+                <size>
+                    <width>30</width>
+                    <height>30</height>
+                </size>
+            </property>
+            <property name="focusPolicy">
+                <enum>TabFocus</enum>
+            </property>
+            <property name="text">
+                <string></string>
+            </property>
+            <property name="pixmap">
+                <pixmap>image0</pixmap>
+            </property>
+            <property name="flat">
+                <bool>true</bool>
+            </property>
+        </widget>
+        <widget class="QPushButton" row="0" column="5" rowspan="2" colspan="1">
+            <property name="name">
+                <cstring>_delbutton</cstring>
+            </property>
+            <property name="maximumSize">
+                <size>
+                    <width>30</width>
+                    <height>30</height>
+                </size>
+            </property>
+            <property name="focusPolicy">
+                <enum>TabFocus</enum>
+            </property>
+            <property name="autoMask">
+                <bool>false</bool>
+            </property>
+            <property name="text">
+                <string></string>
+            </property>
+            <property name="pixmap">
+                <pixmap>image1</pixmap>
+            </property>
+            <property name="flat">
+                <bool>true</bool>
+            </property>
+        </widget>
+        <widget class="QLabel" row="0" column="7">
+            <property name="name">
+                <cstring>textLabel2_4_3_2</cstring>
+            </property>
+            <property name="text">
+                <string>Hardware type:</string>
+            </property>
+        </widget>
+        <widget class="QLabel" row="4" column="7">
+            <property name="name">
+                <cstring>textLabel2_4_3_2_2_2</cstring>
+            </property>
+            <property name="text">
+                <string>Location:</string>
+            </property>
+        </widget>
+        <widget class="QLineEdit" row="1" column="7">
+            <property name="name">
+                <cstring>_hwtypetxtbox</cstring>
+            </property>
+        </widget>
+        <widget class="QLineEdit" row="3" column="7">
+            <property name="name">
+                <cstring>_responsibletxtbox</cstring>
+            </property>
+        </widget>
+        <widget class="QLineEdit" row="5" column="7">
+            <property name="name">
+                <cstring>_locationtxtbox</cstring>
+            </property>
+        </widget>
+        <widget class="QLabel" row="2" column="7">
+            <property name="name">
+                <cstring>textLabel2_4_3_2_2</cstring>
+            </property>
+            <property name="text">
+                <string>Responsible:</string>
+            </property>
+        </widget>
+        <widget class="QLabel" row="6" column="7">
+            <property name="name">
+                <cstring>textLabel2_4_3_2_2_2_3</cstring>
+            </property>
+            <property name="text">
+                <string>URL :</string>
+            </property>
+        </widget>
+        <widget class="QButtonGroup" row="10" column="0" rowspan="1" colspan="6">
+            <property name="name">
+                <cstring>buttonGroup20</cstring>
+            </property>
+            <property name="maximumSize">
+                <size>
+                    <width>32767</width>
+                    <height>210</height>
+                </size>
+            </property>
+            <property name="title">
+                <string>Create multiple devices</string>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLabel" row="2" column="0" rowspan="1" colspan="3">
+                    <property name="name">
+                        <cstring>textLabel2_4_2_2</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Start nr:</string>
+                    </property>
+                </widget>
+                <widget class="QSpinBox" row="1" column="2" rowspan="1" colspan="2">
+                    <property name="name">
+                        <cstring>_paddingspinbox</cstring>
+                    </property>
+                    <property name="enabled">
+                        <bool>false</bool>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="1" column="4">
+                    <property name="name">
+                        <cstring>textLabel2_4_2</cstring>
+                    </property>
+                    <property name="text">
+                        <string>digits max.</string>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="0" column="0">
+                    <property name="name">
+                        <cstring>pixmapLabel4</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>0</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="pixmap">
+                        <pixmap>image2</pixmap>
+                    </property>
+                    <property name="scaledContents">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="0" column="1" rowspan="1" colspan="4">
+                    <property name="name">
+                        <cstring>textLabel2_4</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Prefix:  in the Device Name field put %d where to place number</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="1" column="0" rowspan="1" colspan="2">
+                    <property name="name">
+                        <cstring>_paddingchkbox</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Pad with 0s?:</string>
+                    </property>
+                </widget>
+                <widget class="QSpinBox" row="3" column="0" rowspan="1" colspan="3">
+                    <property name="name">
+                        <cstring>_startspinbox</cstring>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="2" column="3" rowspan="1" colspan="2">
+                    <property name="name">
+                        <cstring>textLabel2_4_2_2_2</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Total:</string>
+                    </property>
+                </widget>
+                <widget class="QSpinBox" row="3" column="3" rowspan="1" colspan="2">
+                    <property name="name">
+                        <cstring>_endspinbox</cstring>
+                    </property>
+                </widget>
+            </grid>
+        </widget>
+        <spacer row="10" column="6">
+            <property name="name">
+                <cstring>spacer4</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Fixed</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>20</width>
+                    <height>20</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QLineEdit" row="7" column="7" rowspan="2" colspan="1">
+            <property name="name">
+                <cstring>_deviceurl</cstring>
+            </property>
+        </widget>
+        <widget class="QLabel" row="8" column="0" rowspan="2" colspan="1">
+            <property name="name">
+                <cstring>textLabel2_4_3</cstring>
+            </property>
+            <property name="text">
+                <string>Serial Number:</string>
+            </property>
+        </widget>
+        <widget class="QLineEdit" row="8" column="1" rowspan="2" colspan="5">
+            <property name="name">
+                <cstring>_serialtxtbox</cstring>
+            </property>
+            <property name="frameShape">
+                <enum>LineEditPanel</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Sunken</enum>
+            </property>
+        </widget>
+        <widget class="QTextEdit" row="10" column="7">
+            <property name="name">
+                <cstring>_commentstxtbox</cstring>
+            </property>
+        </widget>
+        <widget class="QLabel" row="9" column="7">
+            <property name="name">
+                <cstring>textLabel2_4_3_2_2_2_2</cstring>
+            </property>
+            <property name="text">
+                <string>Comments:</string>
+            </property>
+        </widget>
+    </grid>
+</widget>
+<images>
+    <image name="image0">
+        <data format="PNG" length="1026">89504e470d0a1a0a0000000d49484452000000300000003008060000005702f987000003c949444154789ced974b4c5c551880bffb9c99ce036686d7c0145aa6a5bc4a5aa2d2a6a186d8aa6dd3745717766113635c90b8766962ea4a1335a6892e9ab8d460422ab60d31903454a3f26a9102159c02033294c161861966867baf8ba174e1c2a4f726b8b85f7293b338f9cfff9dff9e7bfe0b3636363636363636363636cf896079bc0b9cc3c16b88c24944e10800ba318d6efc448e3bf4710b30ac5bd0aa385dd413e0bda30dcdef5c6a3fe7683fd84e6da00e0c58587fccf09f23f48edcca3d9899fc92049f32c01c1688489624ff2a11a9928f2e9eecbada7de65db9b3f165021e3fa2282248227eb79fa650332de1c3724e4a75cc6e44434688516659ff3f08c84a071f9c686979ebcaa92b54076a58cfc6e91befe3db5f7b189c1a6425192358e2a5d4eda7c61f229e996f59de5c95f507dc01f4bd1410a437b8d818095d3bddf4921c2aad24915d249699e4eec3617abb7fe4f28b6ff271ff87f803db647359445140963492f9b5b6b5eaf4b8f13b336612904d0ac81e1fe71bc2758e2d638db9e438ba944496a1c0c6eea40229525a8cf5dc229256c296b14643b8ceb1105f3e9f841f80c25e09284e371d415f29f1ec0cd34f1eb2b9099224204bcf8a5b1053dc1e1e46d3743c6e11bf5b25e86bc0e9a62309cade0a7889785c0a0923cb526295fbef67ff3569a07b6e77dc7ccd41a9af028f4bc1e9254251e0b9312b203a9da0aa2225c23e54f5bfc3a98a886b9f8caa88389dc5186612302b80a4131545a1b5dc5bc591fd1a67ae57a1ca0e1441a2f7ede2ce5ff8aa8ebc9623a7e5a9af0e52eeadc2d8d69174a266d7372ba093672ca3255b1b4b9ba92d0f62c84bf89c25dc1c5cda9de4525c5ceaaa21915d47d9aec369d430bb12853c6398fc8c9a1528a417195c6a9abadc5efb82eaf754a23a221498c725259e09484ebcaa8f32b50d63db436a53e7aff44c3ebdc820260e3058709125c758761c4f873d01e3684bc50982ae6aca1c07d0749dafef7d46dfc40d8e1d6ce058b813b75085a1bbf825d6cfc8c4cc37d39f701d4861a20a66050cc048e589e7828b21d5b315097bea2973d5d2163eced9d65738ddd8c9a1ca4644c3cd93cc2af762df7377fce7fec99b7c5e98670ed832938015ad845e98e7ef448ae8863bea48c853870b464692440587e8644bcb114b3d62343ec0c0e39efcd06f133df7bfe38bcc10a3401a9367c08a6e54a078967c40f9a1abbc5ed9ca294f05adaa97fd00f9140be938132b130cfd7183dbc02ab0016c63b223b5ae9d2e56d34551c4bb337e7a4915802cc5f77d6367ac61413b6dfd0f4db11acacef3f492d2294a14b060d76d6c6c6c6c6c6c6c6c6c6c2ce11f5adc4db9859ef7520000000049454e44ae426082</data>
+    </image>
+    <image name="image1">
+        <data format="PNG" length="1012">89504e470d0a1a0a0000000d49484452000000300000003008060000005702f987000003bb49444154789ced97cb6fdc541487bfebe7783299b8794df3ac92494a8992d05244fa203bc4a30821160181c4820d0b3615fc11b046c0862d2b16d942ab6e2aa0548a28992a55d284a4491bdabc9a99e94cec99b1c7360bb71b90108a2d65e34fb2e4cdb9e7f7bbc7e7de634848484848484848484848382422eef54e5ff8e84d45355e9724715e08e9398020f0977d3fb8d9746b570bbf7dff1310c49630ae7546cebe3f6cb6a42fe787063e39fff2987ef2e420bdb90e08607b779fbb2b0fb839b7d8585bdffcae6cd95faddefae11e311891e3103f766626df6e9a5fbe74f6f98fdf7d6b5a39f3c228d94c1a210442085a3369864ef430d0d7add41d77aa52b27ab2e6f0fcdef662296a7225060372c6cc7e961fee9d993e37499bd9c25f5b7b580736b65d0702d269834c264d5b5b0bd3e726a93c39985959f3f680cb403352f288e2c5e90b1fbe3d30d8f3c5e8709f629a1976778adcbfbf45a95cc5b26a58964db9526567a7886dd7111278cd2675c79d4cb59eb8bdbdb9b0124540d40a2899947629d769eac56285c5e5755c27dcd07f365700ec3e2ea16a0a95b245aed3d41f6fed5c027e04dc430b38b4f410554e6953baaef2e7ea03820d01b28210ff3e1b82200002f03c841c303a32889cd2a60095a33490d2b5bc002cbb81e3c02f57bff9cf80575efb145d0f2b94d2b53ca1814323450906245911484246d31484f43f4e652121490a081959119135443e857ccfd9503579bce39849c001afbef339b21c9a110820c0f7037cdfa3e9791886427b5b06450963a3e68f6ac06fd4ec82e707e323f97ef44745ec7a1dc348a1691a8a22e1f901aee350ab35b0ad1a991683c1fe2e9a4e8346cd2e00fe511a704bfbdbd7cb4f4aef4d8c9dd2b2d92ca5aac58155c7300c6445c2f77cea8d068a62d3dfd38dd996c648a92c2daf38a5fdedeb4468e0580c14e6ae5de9e8cacdb6b71ffb6062ec147d7dddb84d9f9ae3e2384d5cdf4595147455465365f07c169757b9bf716fb63077ed4a5403512fb200082ceb6057d5523d29c3c877777772fc7827bdb97606fa73f47777d0d19e25934e51af3bacaeadb370a770adf0fbaf5f5bd5d23da07e9406007cab5a2a97cbe50dcf13badb6c8e7a812f6b8a86aeab78be4fb158667d6393a5a5bbceedc2fcecadb99fbfdddb5a9f070e88d803714ca382f053cc025d132f5e7ca3b76fe862ab991dd753e9018046dddeac962b771e3d5cbfb1f0c78d2bc01e50219c83224da4b18dd384d534088db43e7d7f7649b9400da8120aaf011e318cd3b1ffd01056437dfa3cbba47c42132e31ec7a42424242424242424242422cfc0d689c6e3303c7236e0000000049454e44ae426082</data>
+    </image>
+    <image name="image2">
+        <data format="PNG" length="739">89504e470d0a1a0a0000000d4948445200000018000000180806000000e0773df8000002aa49444154789ced944f4f134118879f99e9965641400b581208460c86688c34c6e0450f1e4c8c47e3c9efe149fe9cf81e9c0c4763e2c1035c4c8841c3c560c4a82101baa5546165db6e67d6c3b64b614ae16ae22fd9ececcc3bbfe79d77df0cfceb12a705ccce2f86edd65f3e7fd0d6e3c4c586f1c4b5411edd192504080f7709e0ed87753e7edd6c0b6a39393bbf18de1ecdf230378a0943c2ba71581f0821ea6f9042f06e659d4feb5b2d21d6c4ecfc6278eb6a96fbb7ae5033c480f79f3758dbd801e0fa50867be3433120216169f53babdf6c48a2d509266f8ce05534351d62c2106342d6367678f1f42e00730bcbdcbc72192945045082c91b23ac7edbb2bce4f1ecc74706f0ca9a7d3f7a3c5fe3958db5d12b1b3cbf29aeac191f19b09ac23ac1c4d8305ea546253004dac4f5cf66ba995b588ec77faab5a8c6021c25098c64626c98cf3ff247fc2c805f35f8158d5fd5043a72ffb95da050da3b52a2c1be4cfc031d653046a184dd3316a012180eaa06bf6a6240b37973220d394a102270945d4a0bb0b6edb159aa503a08f0ab1a804e99646e61f90864e94b311ea7938ade730e83bd1d16401e9f505220254871d8c39e49591b1b1244b152467b4f05384ae22851079d7a93206514eb2881a32c3b1be0ba79528ec2513282b4614841dd5c927214ae9bb7639a3f723df919b758a23b9da02ba5482715893ae8b894142494249d5474a514dde9046eb144ae273fd31cd7f2aac8f65d247de112bb5e95fdb226d00655fb4322ac0050131de8c4791c25e94a292e7626f1f78a6c15764fbf2a723df99995025359e0726f8674b24639d004ba1b53efc20e19b566ca8932ff5dda61abb06b65dff204006f5ebf9a5ef9353005d07fa997fefe01026dd0268ccbe32889ebe6718ba538b1c74f9e4d9f09d08000344027a991752bf3b680e3a0937492f17f9d597f01547823f1520ae2e10000000049454e44ae426082</data>
+    </image>
+</images>
+<connections>
+    <connection>
+        <sender>_cancelbutton</sender>
+        <signal>released()</signal>
+        <receiver>GUIcreateDevices</receiver>
+        <slot>reject()</slot>
+    </connection>
+    <connection>
+        <sender>_okbutton</sender>
+        <signal>released()</signal>
+        <receiver>GUIcreateDevices</receiver>
+        <slot>accept()</slot>
+    </connection>
+</connections>
+<tabstops>
+    <tabstop>_systemnametxtbox</tabstop>
+    <tabstop>_sysnamescmbbox</tabstop>
+    <tabstop>_addbutton</tabstop>
+    <tabstop>_delbutton</tabstop>
+    <tabstop>_prefixtxtbox</tabstop>
+    <tabstop>_deviceidtxtbox</tabstop>
+    <tabstop>_devicetypetxtbox</tabstop>
+    <tabstop>_chk_node</tabstop>
+    <tabstop>_chk_prommode</tabstop>
+    <tabstop>_serialtxtbox</tabstop>
+    <tabstop>_paddingchkbox</tabstop>
+    <tabstop>_paddingspinbox</tabstop>
+    <tabstop>_startspinbox</tabstop>
+    <tabstop>_endspinbox</tabstop>
+    <tabstop>_hwtypetxtbox</tabstop>
+    <tabstop>_responsibletxtbox</tabstop>
+    <tabstop>_locationtxtbox</tabstop>
+    <tabstop>_deviceurl</tabstop>
+    <tabstop>_commentstxtbox</tabstop>
+    <tabstop>_portbutton</tabstop>
+    <tabstop>_okbutton</tabstop>
+    <tabstop>_cancelbutton</tabstop>
+</tabstops>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

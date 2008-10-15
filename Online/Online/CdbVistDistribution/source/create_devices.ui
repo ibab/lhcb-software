@@ -1,0 +1,675 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>Create_Devices</class>
+<widget class="QDialog">
+    <property name="name">
+        <cstring>Create_Devices</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>579</width>
+            <height>461</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Create Device(s)</string>
+    </property>
+    <widget class="QLayoutWidget">
+        <property name="name">
+            <cstring>layout6</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>11</x>
+                <y>374</y>
+                <width>331</width>
+                <height>44</height>
+            </rect>
+        </property>
+        <vbox>
+            <property name="name">
+                <cstring>unnamed</cstring>
+            </property>
+            <widget class="QLabel">
+                <property name="name">
+                    <cstring>textLabel2_3_2</cstring>
+                </property>
+                <property name="text">
+                    <string>List of Functions :</string>
+                </property>
+            </widget>
+            <widget class="QComboBox">
+                <property name="name">
+                    <cstring>__functiontxtbox</cstring>
+                </property>
+            </widget>
+        </vbox>
+    </widget>
+    <widget class="QLayoutWidget">
+        <property name="name">
+            <cstring>layout5</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>11</x>
+                <y>259</y>
+                <width>183</width>
+                <height>44</height>
+            </rect>
+        </property>
+        <vbox>
+            <property name="name">
+                <cstring>unnamed</cstring>
+            </property>
+            <widget class="QLabel">
+                <property name="name">
+                    <cstring>textLabel2_4_2_2</cstring>
+                </property>
+                <property name="text">
+                    <string>Start nr:</string>
+                </property>
+            </widget>
+            <widget class="QSpinBox">
+                <property name="name">
+                    <cstring>__startspinbox</cstring>
+                </property>
+            </widget>
+        </vbox>
+    </widget>
+    <widget class="QLayoutWidget">
+        <property name="name">
+            <cstring>layout4</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>200</x>
+                <y>259</y>
+                <width>142</width>
+                <height>44</height>
+            </rect>
+        </property>
+        <vbox>
+            <property name="name">
+                <cstring>unnamed</cstring>
+            </property>
+            <widget class="QLabel">
+                <property name="name">
+                    <cstring>textLabel2_4_2_2_2</cstring>
+                </property>
+                <property name="text">
+                    <string>Total:</string>
+                </property>
+            </widget>
+            <widget class="QSpinBox">
+                <property name="name">
+                    <cstring>__endspinbox</cstring>
+                </property>
+            </widget>
+        </vbox>
+    </widget>
+    <spacer>
+        <property name="name">
+            <cstring>spacer4</cstring>
+        </property>
+        <property name="orientation">
+            <enum>Horizontal</enum>
+        </property>
+        <property name="sizeType">
+            <enum>Fixed</enum>
+        </property>
+        <property name="sizeHint">
+            <size>
+                <width>20</width>
+                <height>20</height>
+            </size>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>348</x>
+                <y>212</y>
+                <width>20</width>
+                <height>20</height>
+            </rect>
+        </property>
+    </spacer>
+    <widget class="QLayoutWidget">
+        <property name="name">
+            <cstring>layout9</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>11</x>
+                <y>11</y>
+                <width>158</width>
+                <height>44</height>
+            </rect>
+        </property>
+        <vbox>
+            <property name="name">
+                <cstring>unnamed</cstring>
+            </property>
+            <widget class="QLabel">
+                <property name="name">
+                    <cstring>textLabel2</cstring>
+                </property>
+                <property name="text">
+                    <string>Create in:</string>
+                </property>
+            </widget>
+            <widget class="QLineEdit">
+                <property name="name">
+                    <cstring>__systemnametxtbox</cstring>
+                </property>
+                <property name="enabled">
+                    <bool>false</bool>
+                </property>
+            </widget>
+        </vbox>
+    </widget>
+    <widget class="QLayoutWidget">
+        <property name="name">
+            <cstring>layout7</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>11</x>
+                <y>161</y>
+                <width>331</width>
+                <height>44</height>
+            </rect>
+        </property>
+        <vbox>
+            <property name="name">
+                <cstring>unnamed</cstring>
+            </property>
+            <widget class="QLabel">
+                <property name="name">
+                    <cstring>textLabel2_4</cstring>
+                </property>
+                <property name="text">
+                    <string>Prefix: (%d - where to place nr)</string>
+                </property>
+            </widget>
+            <widget class="QLineEdit">
+                <property name="name">
+                    <cstring>__prefixtxtbox</cstring>
+                </property>
+            </widget>
+        </vbox>
+    </widget>
+    <widget class="QLayoutWidget">
+        <property name="name">
+            <cstring>layout8</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>11</x>
+                <y>111</y>
+                <width>331</width>
+                <height>44</height>
+            </rect>
+        </property>
+        <vbox>
+            <property name="name">
+                <cstring>unnamed</cstring>
+            </property>
+            <widget class="QLabel">
+                <property name="name">
+                    <cstring>textLabel2_3</cstring>
+                </property>
+                <property name="text">
+                    <string>Device Type:</string>
+                </property>
+            </widget>
+            <widget class="QComboBox">
+                <property name="name">
+                    <cstring>__devicetypetxtbox</cstring>
+                </property>
+            </widget>
+        </vbox>
+    </widget>
+    <widget class="QLayoutWidget">
+        <property name="name">
+            <cstring>layout7_2_2</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>11</x>
+                <y>61</y>
+                <width>214</width>
+                <height>44</height>
+            </rect>
+        </property>
+        <vbox>
+            <property name="name">
+                <cstring>unnamed</cstring>
+            </property>
+            <widget class="QLabel">
+                <property name="name">
+                    <cstring>textLabel2_4_4_2</cstring>
+                </property>
+                <property name="text">
+                    <string>Device Name:</string>
+                </property>
+            </widget>
+            <widget class="QLineEdit">
+                <property name="name">
+                    <cstring>__devicetxtbox</cstring>
+                </property>
+            </widget>
+        </vbox>
+    </widget>
+    <widget class="QLayoutWidget">
+        <property name="name">
+            <cstring>layout7_2</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>231</x>
+                <y>61</y>
+                <width>111</width>
+                <height>44</height>
+            </rect>
+        </property>
+        <vbox>
+            <property name="name">
+                <cstring>unnamed</cstring>
+            </property>
+            <widget class="QLabel">
+                <property name="name">
+                    <cstring>textLabel2_4_4</cstring>
+                </property>
+                <property name="text">
+                    <string>Device ID:</string>
+                </property>
+            </widget>
+            <widget class="QLineEdit">
+                <property name="name">
+                    <cstring>__deviceidtxtbox</cstring>
+                </property>
+            </widget>
+        </vbox>
+    </widget>
+    <widget class="QTextEdit">
+        <property name="name">
+            <cstring>__commentstxtbox</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>374</x>
+                <y>259</y>
+                <width>194</width>
+                <height>109</height>
+            </rect>
+        </property>
+    </widget>
+    <widget class="QLineEdit">
+        <property name="name">
+            <cstring>__locationtxtbox</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>374</x>
+                <y>183</y>
+                <width>194</width>
+                <height>22</height>
+            </rect>
+        </property>
+    </widget>
+    <widget class="QLineEdit">
+        <property name="name">
+            <cstring>__responsibletxtbox</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>374</x>
+                <y>133</y>
+                <width>194</width>
+                <height>22</height>
+            </rect>
+        </property>
+    </widget>
+    <widget class="QLineEdit">
+        <property name="name">
+            <cstring>__serialtxtbox</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>374</x>
+                <y>33</y>
+                <width>194</width>
+                <height>22</height>
+            </rect>
+        </property>
+        <property name="frameShape">
+            <enum>LineEditPanel</enum>
+        </property>
+        <property name="frameShadow">
+            <enum>Sunken</enum>
+        </property>
+    </widget>
+    <widget class="QLineEdit">
+        <property name="name">
+            <cstring>__hwtypetxtbox</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>374</x>
+                <y>83</y>
+                <width>194</width>
+                <height>22</height>
+            </rect>
+        </property>
+    </widget>
+    <widget class="QLabel">
+        <property name="name">
+            <cstring>textLabel2_4_3_2</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>374</x>
+                <y>61</y>
+                <width>106</width>
+                <height>16</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>Hardware type:</string>
+        </property>
+    </widget>
+    <widget class="QLabel">
+        <property name="name">
+            <cstring>textLabel2_4_3</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>374</x>
+                <y>11</y>
+                <width>106</width>
+                <height>16</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>Serial Number:</string>
+        </property>
+    </widget>
+    <widget class="QLabel">
+        <property name="name">
+            <cstring>textLabel2_4_3_2_2</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>374</x>
+                <y>111</y>
+                <width>106</width>
+                <height>16</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>Responsible:</string>
+        </property>
+    </widget>
+    <widget class="QLabel">
+        <property name="name">
+            <cstring>textLabel2_4_3_2_2_2</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>374</x>
+                <y>161</y>
+                <width>106</width>
+                <height>16</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>Location:</string>
+        </property>
+    </widget>
+    <widget class="QLabel">
+        <property name="name">
+            <cstring>textLabel2_4_3_2_2_2_2</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>374</x>
+                <y>239</y>
+                <width>106</width>
+                <height>16</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>Comments:</string>
+        </property>
+    </widget>
+    <widget class="QPushButton">
+        <property name="name">
+            <cstring>__portbutton</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>374</x>
+                <y>383</y>
+                <width>194</width>
+                <height>26</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>Create/Modify ports ...</string>
+        </property>
+    </widget>
+    <widget class="QPushButton">
+        <property name="name">
+            <cstring>__okbutton</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>398</x>
+                <y>424</y>
+                <width>82</width>
+                <height>26</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>Ok</string>
+        </property>
+    </widget>
+    <widget class="QPushButton">
+        <property name="name">
+            <cstring>__cancelbutton</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>486</x>
+                <y>424</y>
+                <width>82</width>
+                <height>26</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>Cancel</string>
+        </property>
+    </widget>
+    <spacer>
+        <property name="name">
+            <cstring>spacer1</cstring>
+        </property>
+        <property name="orientation">
+            <enum>Horizontal</enum>
+        </property>
+        <property name="sizeType">
+            <enum>Expanding</enum>
+        </property>
+        <property name="sizeHint">
+            <size>
+                <width>310</width>
+                <height>20</height>
+            </size>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>11</x>
+                <y>427</y>
+                <width>381</width>
+                <height>20</height>
+            </rect>
+        </property>
+    </spacer>
+    <widget class="QPushButton">
+        <property name="name">
+            <cstring>__addbutton</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>294</x>
+                <y>33</y>
+                <width>21</width>
+                <height>21</height>
+            </rect>
+        </property>
+        <property name="maximumSize">
+            <size>
+                <width>21</width>
+                <height>21</height>
+            </size>
+        </property>
+        <property name="text">
+            <string>+</string>
+        </property>
+    </widget>
+    <widget class="QPushButton">
+        <property name="name">
+            <cstring>__delbutton</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>321</x>
+                <y>33</y>
+                <width>21</width>
+                <height>21</height>
+            </rect>
+        </property>
+        <property name="maximumSize">
+            <size>
+                <width>21</width>
+                <height>21</height>
+            </size>
+        </property>
+        <property name="text">
+            <string>-</string>
+        </property>
+    </widget>
+    <widget class="QLayoutWidget">
+        <property name="name">
+            <cstring>layout11</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>200</x>
+                <y>11</y>
+                <width>88</width>
+                <height>44</height>
+            </rect>
+        </property>
+        <vbox>
+            <property name="name">
+                <cstring>unnamed</cstring>
+            </property>
+            <widget class="QLabel">
+                <property name="name">
+                    <cstring>textLabel2_2</cstring>
+                </property>
+                <property name="text">
+                    <string>Add to subsystem:</string>
+                </property>
+            </widget>
+            <widget class="QComboBox">
+                <property name="name">
+                    <cstring>__sysnamescmbbox</cstring>
+                </property>
+            </widget>
+        </vbox>
+    </widget>
+    <widget class="QCheckBox">
+        <property name="name">
+            <cstring>__chk_node</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>11</x>
+                <y>341</y>
+                <width>277</width>
+                <height>19</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>This is a node (starts or ends a path)</string>
+        </property>
+    </widget>
+    <widget class="QCheckBox">
+        <property name="name">
+            <cstring>__chk_prommode</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>11</x>
+                <y>309</y>
+                <width>183</width>
+                <height>19</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>Promiscuous mode</string>
+        </property>
+    </widget>
+    <widget class="QCheckBox">
+        <property name="name">
+            <cstring>__paddingchkbox</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>11</x>
+                <y>212</y>
+                <width>158</width>
+                <height>19</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>Pad with 0s?:</string>
+        </property>
+    </widget>
+    <widget class="QSpinBox">
+        <property name="name">
+            <cstring>__paddingspinbox</cstring>
+        </property>
+        <property name="enabled">
+            <bool>false</bool>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>175</x>
+                <y>211</y>
+                <width>82</width>
+                <height>22</height>
+            </rect>
+        </property>
+    </widget>
+    <widget class="QLabel">
+        <property name="name">
+            <cstring>textLabel2_4_2</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>263</x>
+                <y>211</y>
+                <width>52</width>
+                <height>22</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>digits max.</string>
+        </property>
+    </widget>
+</widget>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

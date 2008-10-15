@@ -1,0 +1,246 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>Form1</class>
+<widget class="QDialog">
+    <property name="name">
+        <cstring>Form1</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>315</width>
+            <height>441</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Form1</string>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <spacer row="9" column="0" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>spacingButtons</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>110</width>
+                    <height>20</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QPushButton" row="9" column="2" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>buttonOk</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;OK</string>
+            </property>
+            <property name="accel">
+                <string></string>
+            </property>
+            <property name="autoDefault">
+                <bool>true</bool>
+            </property>
+            <property name="default">
+                <bool>true</bool>
+            </property>
+        </widget>
+        <widget class="QPushButton" row="9" column="5" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>buttonCancel</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;Cancel</string>
+            </property>
+            <property name="accel">
+                <string></string>
+            </property>
+            <property name="autoDefault">
+                <bool>true</bool>
+            </property>
+        </widget>
+        <widget class="QTextEdit" row="8" column="0" rowspan="1" colspan="7">
+            <property name="name">
+                <cstring>Description</cstring>
+            </property>
+        </widget>
+        <widget class="QSpinBox" row="6" column="1">
+            <property name="name">
+                <cstring>Inputnumber</cstring>
+            </property>
+        </widget>
+        <spacer row="6" column="2" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>spacinginputOutput</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>51</width>
+                    <height>20</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QLabel" row="6" column="4" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>outputLabel</cstring>
+            </property>
+            <property name="text">
+                <string>Output ports:</string>
+            </property>
+        </widget>
+        <widget class="QSpinBox" row="6" column="6">
+            <property name="name">
+                <cstring>Outputnumber</cstring>
+            </property>
+        </widget>
+        <widget class="QLabel" row="4" column="0" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>addsybsystemLabel</cstring>
+            </property>
+            <property name="text">
+                <string>Add to subsystem:</string>
+            </property>
+        </widget>
+        <widget class="QLabel" row="6" column="0">
+            <property name="name">
+                <cstring>inputLabel</cstring>
+            </property>
+            <property name="text">
+                <string>Input ports:</string>
+            </property>
+        </widget>
+        <widget class="QLabel" row="7" column="0" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>descriptionLabel</cstring>
+            </property>
+            <property name="text">
+                <string>Description :</string>
+            </property>
+        </widget>
+        <spacer row="1" column="3">
+            <property name="name">
+                <cstring>spacingNameColor</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Minimum</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>31</width>
+                    <height>20</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QLabel" row="2" column="0" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>createinLabel</cstring>
+            </property>
+            <property name="text">
+                <string>Create in:</string>
+            </property>
+        </widget>
+        <widget class="QLineEdit" row="1" column="0" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>devicetypenameEdit</cstring>
+            </property>
+        </widget>
+        <widget class="QLineEdit" row="3" column="0" rowspan="1" colspan="7">
+            <property name="name">
+                <cstring>CreateinLineedit</cstring>
+            </property>
+        </widget>
+        <widget class="QListBox" row="5" column="0" rowspan="1" colspan="7">
+            <item>
+                <property name="text">
+                    <string>New Item</string>
+                </property>
+            </item>
+            <item>
+                <property name="text">
+                    <string>New Item</string>
+                </property>
+            </item>
+            <item>
+                <property name="text">
+                    <string>New Item</string>
+                </property>
+            </item>
+            <item>
+                <property name="text">
+                    <string>New Item</string>
+                </property>
+            </item>
+            <item>
+                <property name="text">
+                    <string>New Item</string>
+                </property>
+            </item>
+            <item>
+                <property name="text">
+                    <string>New Item</string>
+                </property>
+            </item>
+            <item>
+                <property name="text">
+                    <string>New Item</string>
+                </property>
+            </item>
+            <item>
+                <property name="text">
+                    <string>New Item</string>
+                </property>
+            </item>
+            <item>
+                <property name="text">
+                    <string>New Item</string>
+                </property>
+            </item>
+            <property name="name">
+                <cstring>addsubsystemList</cstring>
+            </property>
+        </widget>
+        <widget class="QPushButton" row="1" column="4" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>pushButton16</cstring>
+            </property>
+            <property name="text">
+                <string>pushButton16</string>
+            </property>
+        </widget>
+        <widget class="QLabel" row="0" column="0" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>DeviceNameLabel</cstring>
+            </property>
+            <property name="text">
+                <string>Device Type Name:</string>
+            </property>
+        </widget>
+        <widget class="QLabel" row="0" column="4" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>colorLabel</cstring>
+            </property>
+            <property name="text">
+                <string>Choose color:</string>
+            </property>
+        </widget>
+    </grid>
+</widget>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

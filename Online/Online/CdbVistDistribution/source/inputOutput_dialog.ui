@@ -1,0 +1,377 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>Input_output</class>
+<widget class="QDialog">
+    <property name="name">
+        <cstring>Input_output</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>200</width>
+            <height>376</height>
+        </rect>
+    </property>
+    <property name="minimumSize">
+        <size>
+            <width>200</width>
+            <height>0</height>
+        </size>
+    </property>
+    <property name="caption">
+        <string>Input / Output devices</string>
+    </property>
+    <property name="icon">
+        <pixmap>image0</pixmap>
+    </property>
+    <property name="focusPolicy">
+        <enum>TabFocus</enum>
+    </property>
+    <property name="modal">
+        <bool>false</bool>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <property name="margin">
+            <number>2</number>
+        </property>
+        <widget class="QSplitter" row="0" column="0">
+            <property name="name">
+                <cstring>splitter15</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Vertical</enum>
+            </property>
+            <property name="opaqueResize">
+                <bool>true</bool>
+            </property>
+            <property name="childrenCollapsible">
+                <bool>true</bool>
+            </property>
+            <widget class="QLayoutWidget">
+                <property name="name">
+                    <cstring>layout13</cstring>
+                </property>
+                <vbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <spacer>
+                        <property name="name">
+                            <cstring>spacer2</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Fixed</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>3</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QLayoutWidget">
+                        <property name="name">
+                            <cstring>layout12</cstring>
+                        </property>
+                        <hbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QLabel">
+                                <property name="name">
+                                    <cstring>textLabel6</cstring>
+                                </property>
+                                <property name="minimumSize">
+                                    <size>
+                                        <width>0</width>
+                                        <height>0</height>
+                                    </size>
+                                </property>
+                                <property name="text">
+                                    <string>Input devices</string>
+                                </property>
+                                <property name="alignment">
+                                    <set>WordBreak|AlignVCenter</set>
+                                </property>
+                            </widget>
+                            <spacer>
+                                <property name="name">
+                                    <cstring>spacer4</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>0</width>
+                                        <height>20</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                            <widget class="QLabel">
+                                <property name="name">
+                                    <cstring>textLabel8</cstring>
+                                </property>
+                                <property name="minimumSize">
+                                    <size>
+                                        <width>20</width>
+                                        <height>0</height>
+                                    </size>
+                                </property>
+                                <property name="text">
+                                    <string></string>
+                                </property>
+                                <property name="pixmap">
+                                    <pixmap>image1</pixmap>
+                                </property>
+                            </widget>
+                        </hbox>
+                    </widget>
+                    <widget class="QListBox">
+                        <item>
+                            <property name="text">
+                                <string>New Item</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>New Item</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>New Item</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>New Item</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>New Item</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>New Item</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>New Item</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>New Item</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>New Item</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>New Item</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>New Item</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>New Item</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>listBox14</cstring>
+                        </property>
+                        <property name="minimumSize">
+                            <size>
+                                <width>0</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </widget>
+                </vbox>
+            </widget>
+            <widget class="QLayoutWidget">
+                <property name="name">
+                    <cstring>layout17</cstring>
+                </property>
+                <vbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <spacer>
+                        <property name="name">
+                            <cstring>spacer7</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Fixed</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>3</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QLayoutWidget">
+                        <property name="name">
+                            <cstring>layout16</cstring>
+                        </property>
+                        <hbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QLabel">
+                                <property name="name">
+                                    <cstring>textLabel9</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Output devices</string>
+                                </property>
+                            </widget>
+                            <spacer>
+                                <property name="name">
+                                    <cstring>spacer8</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>41</width>
+                                        <height>20</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                            <widget class="QLabel">
+                                <property name="name">
+                                    <cstring>textLabel10</cstring>
+                                </property>
+                                <property name="minimumSize">
+                                    <size>
+                                        <width>20</width>
+                                        <height>0</height>
+                                    </size>
+                                </property>
+                                <property name="text">
+                                    <string></string>
+                                </property>
+                                <property name="pixmap">
+                                    <pixmap>image2</pixmap>
+                                </property>
+                            </widget>
+                        </hbox>
+                    </widget>
+                    <widget class="QListBox">
+                        <item>
+                            <property name="text">
+                                <string>New Item</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>New Item</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>New Item</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>New Item</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>New Item</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>New Item</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>New Item</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>New Item</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>New Item</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>New Item</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>New Item</string>
+                            </property>
+                        </item>
+                        <item>
+                            <property name="text">
+                                <string>New Item</string>
+                            </property>
+                        </item>
+                        <property name="name">
+                            <cstring>listBox17</cstring>
+                        </property>
+                        <property name="minimumSize">
+                            <size>
+                                <width>0</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </widget>
+                </vbox>
+            </widget>
+        </widget>
+    </grid>
+</widget>
+<images>
+    <image name="image0">
+        <data format="PNG" length="496">89504e470d0a1a0a0000000d4948445200000018000000180806000000e0773df8000001b749444154789ced94bf4ac35014c6bf68d06845c5411fa155111cc4c142451c2c28b6437717c1e94eba88be822074109f211d1c2cd44a97623bd4be42370541a5d23635b9d11c87d0b4c96da3eda283df74ff70bedffdce810bfcebb725790f1863348851329914bc0431c6485555ea57aaaa52af87c9de83dd580cdc34717478d8770ac618799308005de7383d39462412412291e80b904aa500c0051100ef860ec04e92cd66512816c10dc3b9d7344d300e04020887c3d88dc590cfe75d7722e05d7792dc150ad8db3f80051980dde25165cc59db92409f1c17e76788ac6f0870016070d349f256ada2660ea1da683a96444dc164664241b3a939e97d01f55ac395e4b9a6e3a9da100a3b6591e4aaf1057893d4348ed73af7058c8f7057cd8f00ad242f2fd378781cf7052834e2aaf9110000645986040bf23040648f962cef88bb7c077e8072a9d87e993286d9490e892410011601d2f0a800989bfa444551be07ec6c6fe23a9d73f6c1d03cee6f2f617eb47b6be8e2202b8a826068e17bc056342edd64aee83a9d43b954c4caea1a169796bb16765367fa96bab6af0519443bdb9bd88ac61ddf9ef3b9c95c0df46d779affeb6fe80bcf00ebc3afdcc1530000000049454e44ae426082</data>
+    </image>
+    <image name="image1">
+        <data format="PNG" length="559">89504e470d0a1a0a0000000d4948445200000018000000180806000000e0773df8000001f649444154789ced954d6b135114869f49e623b6d3522d2248d12e2a1a6dbb514a68c64d551a8482820ef44744c1851b45fc0582e6471424e088adcc20e946a9d55a37c684d0412d2858415ca8884eccb89866e83593eaa4dd08beab7b0f87f739ef7cdc0bffbaa4df0b8e6df91bf793b9332d3d7124b7006a7e545fc712a6736ccb776a3e17a64f01706be6019307e307d8983a4ce0d8963f3b5742199a109a67e74ab1018e6df94d88dc2cacacbcc6c86678b2065ebd11369f37cf85eb1dddbbfe68feece982305400a8f9c020afd660f4c0001f3f7f0782b5f5fc6dd8ecb9c54dcd0fa58f3096c952795916010047d3fbc9650ee3357cbe7cab03901b1f66ca18c15eacb05c5d257de26a5bf3bdfd2aa5dbd718cb6485ba0c70e3e259e9d2cd3b7e4282d3e3c3e19b4f2949ee2f9459aeae827c0cf7dd8f4d1344294ce0b9f32c3141322131658c0070efd10b962a8179a712fe83e9e343cc3c7491a420c362f9cd96cc5b003dbd3a9e3bcf63824f7560701ff0e1af8c76f7eb54d73dda025425d89ecc8ef2fed3d7589376a764c12312a0692a007dba46bdd1208efa744df08806a85ad89c4cc43b227aba54c12312905aa7efe9d5d9d9f533164095938247244055150cc3e0fa95cbb1cc9b320c035555da03ee5a16a669629a6647008062513c4e84079dcfe7b7e53228140a5bbaa4fe6b7bf50b3dae86f4ac245ed90000000049454e44ae426082</data>
+    </image>
+    <image name="image2">
+        <data format="PNG" length="560">89504e470d0a1a0a0000000d4948445200000018000000180806000000e0773df8000001f749444154789ced95416b134118869fc434878220781044688b86b64915416cb624a7149a422226fd1f4ba1072f82f4e2c543a0e44708d9437b50b0875ed2b58aa60aa55aa43d34120f9a20314d93ee6693f1500999668ddda6a007dfd3cec7cef37c333033f03f7f3baece81aaaae23ca0e974dad555545555689a26fa8da669a2b3514fa7e47e2241269341d7f533751e0e8749cecd91cd66db3549609a0d745d67f1f1134cabe908eef55c60f1e10362f17b525d121c1926005f2b550e6aa623c1c541afc4b01518a60140b96a50aad41d099a2d2131ec05bfece5aa41e9873381c7ed9618b602b3610170786451ae354e0d2fec7f66fb04c3567050a902502c5da2f065f074742bc7d4cd11005e1169336c058e63e5502686898726001042f0747def9c04568ebbfe21a24a804afd783ba34a80664bf0960890febde0ea656f4ff65e7e833be343cc04fdd41b4daaf5e37d17c04cd04f4bc0c2d2b248cd275d5d82b1f1006b99473d050337226ceee4d9dcc973cb778db1ebc300e8eff7d9da2d48ff4a82dc9b0d269510934aa8a7a07ef8bdfdbdf2ae40e8f628005bbb0582576a148bdff0f94648750ae2b1699e3d5fe3e387ed2ee09f5633e071b7c7facbd7c463d34467132e6905d1d9846bf5c58ae3eb7af5933ca5130e27de83b36461695932a4e69312b3bf73004447e51e53fd02ffb9fc04d0a7003608ec11600000000049454e44ae426082</data>
+    </image>
+</images>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

@@ -1,0 +1,354 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>GUIcreateLink</class>
+<widget class="QDialog">
+    <property name="name">
+        <cstring>GUIcreateLink</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>339</width>
+            <height>469</height>
+        </rect>
+    </property>
+    <property name="paletteForegroundColor">
+        <color>
+            <red>0</red>
+            <green>0</green>
+            <blue>0</blue>
+        </color>
+    </property>
+    <property name="caption">
+        <string>Create Link</string>
+    </property>
+    <property name="acceptDrops">
+        <bool>true</bool>
+    </property>
+    <property name="sizeGripEnabled">
+        <bool>true</bool>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <spacer row="8" column="0" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>spacer7</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>87</width>
+                    <height>20</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QPushButton" row="8" column="4">
+            <property name="name">
+                <cstring>cancelbutton</cstring>
+            </property>
+            <property name="text">
+                <string>Cancel</string>
+            </property>
+        </widget>
+        <widget class="QPushButton" row="8" column="2" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>okbutton</cstring>
+            </property>
+            <property name="text">
+                <string>Ok</string>
+            </property>
+        </widget>
+        <widget class="QTextEdit" row="7" column="0" rowspan="1" colspan="5">
+            <property name="name">
+                <cstring>comment</cstring>
+            </property>
+        </widget>
+        <widget class="QLabel" row="6" column="0" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>textLabel3_3</cstring>
+            </property>
+            <property name="text">
+                <string>Comments:</string>
+            </property>
+        </widget>
+        <widget class="QCheckBox" row="5" column="0" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>bidirectionallink</cstring>
+            </property>
+            <property name="text">
+                <string>Bidirectional link</string>
+            </property>
+        </widget>
+        <widget class="QCheckBox" row="5" column="3" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>usethislink</cstring>
+            </property>
+            <property name="text">
+                <string>Use this Link</string>
+            </property>
+        </widget>
+        <widget class="QLineEdit" row="4" column="3" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>linkid</cstring>
+            </property>
+            <property name="frameShape">
+                <enum>LineEditPanel</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Sunken</enum>
+            </property>
+        </widget>
+        <widget class="QComboBox" row="4" column="0" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>linktype</cstring>
+            </property>
+        </widget>
+        <widget class="QLabel" row="3" column="0" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>textLabel3</cstring>
+            </property>
+            <property name="text">
+                <string>Link Type:</string>
+            </property>
+        </widget>
+        <widget class="QLabel" row="3" column="3" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>textLabel3_2_2</cstring>
+            </property>
+            <property name="text">
+                <string>Link Name/ID:</string>
+            </property>
+        </widget>
+        <widget class="QButtonGroup" row="2" column="0" rowspan="1" colspan="5">
+            <property name="name">
+                <cstring>buttonGroup13</cstring>
+            </property>
+            <property name="title">
+                <string>To (IN):</string>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QComboBox" row="1" column="1">
+                    <property name="name">
+                        <cstring>portto</cstring>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="1" column="0">
+                    <property name="name">
+                        <cstring>textLabel6_2_2</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Port To:</string>
+                    </property>
+                </widget>
+                <widget class="QPushButton" row="1" column="2">
+                    <property name="name">
+                        <cstring>addporttobutton</cstring>
+                    </property>
+                    <property name="focusPolicy">
+                        <enum>TabFocus</enum>
+                    </property>
+                    <property name="text">
+                        <string>Add</string>
+                    </property>
+                    <property name="iconSet">
+                        <iconset>image0</iconset>
+                    </property>
+                    <property name="flat">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+                <widget class="QLineEdit" row="0" column="1">
+                    <property name="name">
+                        <cstring>deviceto</cstring>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="0" column="0">
+                    <property name="name">
+                        <cstring>textLabel6_3</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Device To:</string>
+                    </property>
+                </widget>
+                <widget class="QPushButton" row="0" column="2">
+                    <property name="name">
+                        <cstring>pushButton19_3</cstring>
+                    </property>
+                    <property name="focusPolicy">
+                        <enum>TabFocus</enum>
+                    </property>
+                    <property name="text">
+                        <string>search</string>
+                    </property>
+                    <property name="iconSet">
+                        <iconset>image1</iconset>
+                    </property>
+                    <property name="flat">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+            </grid>
+        </widget>
+        <widget class="QButtonGroup" row="0" column="0" rowspan="1" colspan="5">
+            <property name="name">
+                <cstring>buttonGroup11</cstring>
+            </property>
+            <property name="title">
+                <string>From (OUT):</string>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLabel" row="0" column="0">
+                    <property name="name">
+                        <cstring>textLabel6</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Device From:</string>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="1" column="0">
+                    <property name="name">
+                        <cstring>textLabel6_2</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Port From:</string>
+                    </property>
+                </widget>
+                <widget class="QComboBox" row="1" column="1">
+                    <property name="name">
+                        <cstring>portfrom</cstring>
+                    </property>
+                </widget>
+                <widget class="QLineEdit" row="0" column="1">
+                    <property name="name">
+                        <cstring>devicefrom</cstring>
+                    </property>
+                </widget>
+                <widget class="QPushButton" row="0" column="2">
+                    <property name="name">
+                        <cstring>pushButton19</cstring>
+                    </property>
+                    <property name="focusPolicy">
+                        <enum>TabFocus</enum>
+                    </property>
+                    <property name="text">
+                        <string>search</string>
+                    </property>
+                    <property name="iconSet">
+                        <iconset>image2</iconset>
+                    </property>
+                    <property name="flat">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+                <widget class="QPushButton" row="1" column="2">
+                    <property name="name">
+                        <cstring>addportfrombutton</cstring>
+                    </property>
+                    <property name="focusPolicy">
+                        <enum>TabFocus</enum>
+                    </property>
+                    <property name="text">
+                        <string>Add</string>
+                    </property>
+                    <property name="iconSet">
+                        <iconset>image3</iconset>
+                    </property>
+                    <property name="flat">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+            </grid>
+        </widget>
+        <widget class="QPushButton" row="1" column="1" rowspan="1" colspan="3">
+            <property name="name">
+                <cstring>swapbutton</cstring>
+            </property>
+            <property name="text">
+                <string>Swap Input and Output</string>
+            </property>
+            <property name="iconSet">
+                <iconset>image4</iconset>
+            </property>
+        </widget>
+        <spacer row="1" column="0">
+            <property name="name">
+                <cstring>spacer10</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>31</width>
+                    <height>20</height>
+                </size>
+            </property>
+        </spacer>
+        <spacer row="1" column="4">
+            <property name="name">
+                <cstring>spacer11</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>51</width>
+                    <height>20</height>
+                </size>
+            </property>
+        </spacer>
+    </grid>
+</widget>
+<images>
+    <image name="image0">
+        <data format="PNG" length="493">89504e470d0a1a0a0000000d4948445200000018000000180806000000e0773df8000001b449444154789ced94bf6b144114c73f6f6677b9e3f4da0b1808873f2a09888520c1d65652fb17a858db899db518ff026b112cc4c64282d80996224820c26d158809b9eceebc67b1c7996537b911af125ff518bedff9cc9bf932f0bf1694c4889ebfba6f5deb0f36b716fa93d893dcbbf30cc366a7125ebc7e18e58b06042d30740670b1b63f03a805009cf8e503ca3045b5aa012eda160fa8aa29c14a00bca6d180460a4e4bcba5d575ae5dd9685cd1e7afdb7cdbfdd2b9e9c974b526b87bfb115538226889a1a805542b8aea00359d011c572f5e67fdf20d9c780487772989eff3f2ddd3c67e2dc071b94f511d10b4000c33abd363d6882922080e110104ef32b2a46c4dd302ec559f382c7e50e83e98cea6a8300b0d8088c7495247561c991b32e0c262403f19019086f3a895049d52ea21c1a6a816f515b90c2f3d5237c0bb1e4e52323f9c7bcf04bc79ffb6255a199d6375ad8749fdc85e7aeceec024cf5bda3301e3f4d6932ed1f7fcc3e3f17884da713d9d1b30c9f353f5b035efa23fbb8d9b6b1c951300fae90adb1f7796fbd9394941dcef3eb2a201991f52869ff37ee9809309e94acb5f03bad2b534404c5afeddfa053705a4b0fceb8c940000000049454e44ae426082</data>
+    </image>
+    <image name="image1">
+        <data format="PNG" length="673">89504e470d0a1a0a0000000d4948445200000017000000180806000000117c66750000026849444154789ced94c14e13511486bf7befcc94b62129156db4a1928018c202b1bae886e84237c09a154fe03b48cb3bb064d5156b60230b095b4458481a151690541c0a450914683b735d14086da71330b8f324b3b9e7ccf7ff73ee9903ffc323845f722abba4bdcedf4fbcf27dcf177e097dfee4116f5ff4d6e53e7cdae4f3f71f3712694a4e6597f4b3de87bc1eeac171355a6bf4b56221044a0a3eae6db1beb9eb2b60781da606ba393aad52755cdc86c648018692a406ba59dfdcf5335eef7c2abba4fb1fc7187a9ae0ace2527534aed6e80b0121400a81a1046da664edeb0eb96dbba5fb26e7837d5dfc2e5538adb8541cf70a7ce54680a924415332d8d7456edb6ee9bc095e3a77393e7329951d2a5597c671118069681c0794745b823de1df7e1e933f3ca77852a654763c9d872c45346c11ef08f8c265939a92180a941448d1dc4a79312d86aad5de0a5e28ec11b414014362aa1a48889a632505a612040c49d052140a7b3787272376c6de2f120d9b444226ed6d06e1802264d59e7040d1de6610099944c326f67e9164c4ceb4827bfe44f1d83d3aa29d144f2a9c961daa4e2d6728085a8a68d8e4b0b84fde3e20753403c09b77d92656d38526237666d566326f1f10eb8c12bfff80aae35ec02585c21e5f768a00a48e6688f70f03b0388d6e14f01cfe85b9d934c0eaafd8a4573e19b133d6cefc64bc7f989e8197006c6dac90cf2dd77d81efe2b914698c91b1f1f4e2f484be0ef712b8d1ea6c25dce8be51c07f507d62646c3c5d4e8c66f2b965b636563c6b3cb7e26d0416e666c9e7e6afee269f5ba69c18cd40f6efdb723d2e5b04504e8c6646c6c6d377c1ad13683500ff24fe00541ff0d49c3606440000000049454e44ae426082</data>
+    </image>
+    <image name="image2">
+        <data format="PNG" length="673">89504e470d0a1a0a0000000d4948445200000017000000180806000000117c66750000026849444154789ced94c14a1b511486bf7bef4c6212049d6aa50db601ad455c584bb3c846da450b22b873e913f41d6ae23bb87495a53b4184baa8b84da92e2aa1ad4215521b4723158d9acccced22514c3219b4b4bb1e98cd3d67beff9f73cf1cf81f3e21829273d935ed77fe6ee665e07b81f02be8f3270f79f362b021f7fee3369fbefdb895484b722ebba69f0d3ee0d5d800aea7d15aa36f140b215052f0616387cdedfd4001c3ef303592e0e4dcc1713dbca6c648018692a446126c6eef07196f743e975dd3c38ffb187bfa888baa87e36a3cadd1750121400a81a1041da664e3cb1ef9dd625bf72dce4787faf955ae725ef5a8bade35f8da8d00534922a66474a89ffc6eb1adf31678f9d2e3f4c2a35c71a93a1ecde32200d3d0b82e28e9b505fbc2bffe3ca5707c49e9ac42b9e2fa3a8f8614562c44bc3b1c08972d6a4a6228505220456b2b657d5a0c55abbd13dcb60f888414614362aa1a48889a632505a612840d4924a4b0ed83dbc393969d291e96b062265d5193ce0e835858110dd59e5858d1d961d01535b16226c5c31249cbceb483fbfe44f1be7b745b3d94ceaa9c575c1cb796331444420a2b66725c3aa4503c2275b200c0ebb7d91656cb85262d3b932b325b281ed1d76311efbd8fe37a75b8c4b60ff8bc57022075b2407c781c80d57974b380eff0af2c2fa60172a5de59bf7cd2b233c6f7a5d9f8f0380323490076b67214f2eb0d5f10b878ae449a6362723abd3a3fa36fc2fd046eb53adb0937bb6f16081ed48098989c4e3b89a94c21bfcece56ceb7c6772bde4560657991427ee9fa6e0af9759cc45406b27fde969b71d5220027319599989c4eff0d6e8340bb01f827f11b9977f0f4af1b73c40000000049454e44ae426082</data>
+    </image>
+    <image name="image3">
+        <data format="PNG" length="493">89504e470d0a1a0a0000000d4948445200000018000000180806000000e0773df8000001b449444154789ced94b16b144114c67f6f6677bde3f4da0b241042d44a026221480a3b5b49ed5fa0626d2776d662fc0bac45b0101bb1086227588a168108b795101372d9dd79cf628f33cb6e72235e25beea317cdffce6cd7c0cfcaf392531a2672fef59d7fafdadedb9fe24f624776f3fc5b0e9a984e7af1e44f9a201410b0c9d025cacedcf006a0100277ef180324c50ad6a808bb6c503aa6a42b01200af6934a09182d3d272716583ab97371b57f4e9cb0e5ff73e776e7a325dad09eedc7a48158e085a62286a01d58aa23a404da700c795f56b6c5cba8e138fe0f02e25f17d5ebc7dd2d8af05382ef729aa038216806166757acc1a314504c1212280e05d469694ad695a801fd5470e8bef14ba0fa6d3292acc420320e27192d4911547e6860c589e0fe8272300d27001b592a0134a3d24d804d5a2be2297e1a547ea0678d7c3494ae68733ef9980d7efdeb4444ba3f3acacf630a91fd94b8fbd5d18e7794b7b2660fddccdc75da26ff9fb476b6b23d48eebe9dc80719e9faa87ed5917fdd96dde58e5a81c03d04f97d8f9b0bbd8cfce490ae27ef791150dc8fc9032fc9cf50b079c4c48575afe1ad095ae850162d2f2efd62f570ba4be9a5eeea50000000049454e44ae426082</data>
+    </image>
+    <image name="image4">
+        <data format="PNG" length="1724">89504e470d0a1a0a0000000d4948445200000020000000200806000000737a7af40000068349444154789cc5976d6c14d715869f99d999ddd90f58db6b0c36665d2806b7604a95d004307129ad927e446dd40ae88f56952a558248f951a5f951c58a1408a48a14b5522468a5284a0b4969231421204894041aa050db3131c136c4601bdb6159db8bf7733eeff407f56a6dd96017a41e6974ce48a379df79efb9efb903ffe7904a6adf9e3d7b7aeaeaea6a6ddb160f0bc0f33c3ccf2bd6070e1cd87ff2e4c9e78aa013453c1ef7d5d6d6566ddbb64d7d58e0d3c5b163c7aa4bef8b04fafbfb853741f50163e2ab8510c50ce0ba2e8ee34c52d737ed1b1e3278e9124c0df97f051a2b8c31303e302b702144f17a28044cd7e4fccdf3ec3ebd9bf7aebc47cece15094c073e41ac74392662d64b60b916e76e9ee3e2e045928524966b513daf9a33fd67f8b8fb63763db58ba03f382309605a056645e0f3b1cfd9dfba9fa1cc10b290515d151595c1e0206ec665c73776100a84b01dfbbe0acc9940eb702baffcf3152cc7226805d9b478139b576c26e364d87b722f2d5b5a58bb742db63d19dcaff8715c07431845e0392b30303ec08ba75e24954fb15c5bce4b4fbec4b245cb00486692b47ca78535f135d8b68d8c8cebb90821d0159de3bdc789e9311a2b1bc9db79f0a6df05f724f0dab9d7e81ae96295be8ad77ff83ab1680cc331e81debc5744d145de1f4f5d3f87d7eaa43d5d4846bd0148d0fae7fc0b3279ea5bea29eb7bffb369aa215c94d8d19774157b28bc35d87b10a162f34bf402c1a236da639d27384b6e1367a467ae8f8a2034d52b99d4bf08f81535cf8e2223232615f184992383f749e83570ea22bfa243f98158113d74e30981ca47141234d2b9a0078a7f31dcef49fe6f2c8a77c9268c5731c1aaa1ae84c5ee2f2ed4b1ceafa2b6db7da69aa6b62fb57b692cea539f0d941d2461a09695a123312f824d10e02362d5d0f40ef582f87ba0e72357389b6d487f4e42fd0b46c23e5c10aaa430b1928f4d09a3ccba1ee7711b6e047cb9f211096e91ce9e0fa9deb282873eb818c9382102c892d06a023d14ac7f819e6457c789a83e7c2b899a22bd5c19f865a18ce26b14d09e5b6472a9fa22654c3b2582d9fddea673837c4cab29573eb81b0aa830e595200d805074f0339e240089e8eff80af2f7c8c80acf348743d7a14948887e31ab8b6409614227a00b4bb4368ce3eb0b27c2568d031761e80af96af26aac3dab246d685b6b021fe4d760f3ec3cdc2559e6cd8c9bfbadfc7f16085b282b0368fe1423f696e531684a86f3e8eebcccd079a977c9bcaab2f736eec3837d23dacae69e47be55b892e74180a9ee28ddc5b14bc1cf3b518b66952158ce0cb586cfdd22fd17c1a97d3ff66c44bb1245cc3e2501cd3b5e6b60b1e5fdcc41395cd24449e57af3c872b5c7efbe81f30532a296b8cf9c172e2d17ac2c1089faa47f9b2b68e9db1dfb3a1ae99b47187c3237fc451a0a9620b313d86e3dab357400881ec9379fe6bbbb8747623fe7c04c33688cdafe037f56f7071f423c6cc1b289240120a76466179e0511a1636a2783e0e8ceee5a279866a45e727b53fc3f2ac19c7f12402a59eedba2e8fd43cce5beb4ed150b90645f151b0f2e87e3fcd8b9ea26098a49d31c64592ba79abf02b7e326e8a77b32ff397dcefc0815fc49e6765c51ab2f6389ee7a1aa2a9224dd9fc0c440713d97c7963c81e998d8cedd35b4858dec29a83e8523620f15f262caa54a2e5b1f71ca7c9336e72ca601dbb59d6c5fba839c93460881a6690402012449f2ee4ba074aa15dcc2e4b9ee49185e8ef7c5ab5c924e10951670c1fb1bb7bc1bdc31f34446aaf8a9f26bbebfece7985e01d775515595502884e77964b3d9c27d7be05e271bd5d3389ef833a7fd7f6751652566d6239bf451656ca049ac6763c5d3d444e2e49c74113c180c128944482412188661cd4981a9d9f40a34477fccbcd16a3e1c7893e57a3ddff2ff8a703884aee998c2206b8f23842882078341344d637878589495955d9d750fcc94155966c3822dd4671bb9e324a90847315d939c9329767b29b8aeeb005cbb76cdb06dbbeb811498c8792f4bd81f22ac85311c63d2e9772ab82cdfb59beeeeee82cfe7cb3db002f7ec91ff365c381c26100814dfddd9d9495f5f9fa3ebba362d81783c2efb7c3e0940d3b4495f34dd197f6a3d01aeeb3aaaaa625916030303747676baededed766f6faf2184e8cbe7f37d332a303838d8be6fdfbed5b66dbba5be3df5cfa6344fd41306639aa6c864329964329948a55239cbb2fa64594ea8aadaeb795ec7d1a347af956296da92bc79f3e64a4dd32ac4749e39cb90655916426446474747474646447f7fbf71afe7ff03d56a98dcb0339bac0000000049454e44ae426082</data>
+    </image>
+</images>
+<connections>
+    <connection>
+        <sender>okbutton</sender>
+        <signal>released()</signal>
+        <receiver>GUIcreateLink</receiver>
+        <slot>accept()</slot>
+    </connection>
+    <connection>
+        <sender>cancelbutton</sender>
+        <signal>released()</signal>
+        <receiver>GUIcreateLink</receiver>
+        <slot>reject()</slot>
+    </connection>
+</connections>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>
