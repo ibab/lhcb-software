@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2008-10-15 - Chris Jones
+ - New tool for adding random pixel backgrounds to the decoded data.
+
 !=========================== RichTools v2r22 2008-09-04 ======================
 ! 2008-08-15 - Chris Jones
  - Updates for Configurables. Update default property values to those used
