@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.5 2008-08-26 19:50:32 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.6 2008-10-15 12:42:19 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -47,6 +47,7 @@ class RichRecSysConf(RichConfigurableUser):
        ,"pidConfig": "FullGlobal" # The PID algorithm configuration
        ,"makeSummaryObjects": False # Make the reconstruction summary TES data objects
        ,"testOldOpts": False
+       ,"hpdRandomBackgroundProb" : -1.0 # If positive, will add additional random background to the data at the given pixel percentage
         }
 
     ## Initialise 
@@ -143,12 +144,23 @@ class RichRecSysConf(RichConfigurableUser):
             # Raw decoding algorithm
             decodeRich = Rich__DAQ__RawBufferToRichDigitsAlg("DecodeRawRich"+cont)
             decodeRich.DecodeBufferOnly = True
+            pixelSeq.Members += [ decodeRich ]
+            # Add random background ?
+            pixBackPercent = self.getProp("hpdRandomBackgroundProb")
+            if pixBackPercent > 0 :
+                from Configurables import ( Rich__AddBackground,
+                                            Rich__RandomPixelBackgroundTool )
+                bkgAlg  = Rich__AddBackground("AddRichBackgrounds")
+                bkgTool = Rich__RandomPixelBackgroundTool("RichAddBackground")
+                bkgTool.PixelBackgroundProb = pixBackPercent
+                bkgAlg.addTool(bkgTool)
+                pixelSeq.Members += [ bkgAlg ]
             # Make RichRecPixels
             recoPixs = Rich__Rec__Initialise("Create"+cont+"Pixels")
             recoPixs.CheckProcStatus   = False
             recoPixs.CreatePixels      = True
             # Add algs to sequence
-            pixelSeq.Members += [ decodeRich, recoPixs ]
+            pixelSeq.Members += [ recoPixs ]
 
         if self.getProp("initTracks") :
             # Make a track sequence

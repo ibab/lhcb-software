@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: PixelCreator.py,v 1.2 2008-08-15 14:41:23 jonrob Exp $"
+__version__ = "$Id: PixelCreator.py,v 1.3 2008-10-15 12:42:19 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -92,7 +92,7 @@ class RichPixelCreatorConfig(RichConfigurableUser):
 
             pixmaker.ApplyPixelSuppression = False
             
-        else:
+        else :
             
             raise RuntimeError("Unknown pixel cleaning option '%s'"%pixCleanMode)
         # -------------------------------------------------------------------------------------------
