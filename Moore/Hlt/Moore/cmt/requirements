@@ -1,5 +1,5 @@
 #============================================================================
-# $Id: requirements,v 1.37 2008-09-23 13:15:08 graven Exp $
+# $Id: requirements,v 1.38 2008-10-15 11:35:01 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : P. Koppenburg & M. Cattaneo
 #============================================================================
@@ -97,4 +97,10 @@ document install_TCK_manifest manifest MANIFEST_VERSION=${MOOREVERSION}
 #===============================================================
 private
   apply_pattern QMTest
+
+# create pathsetup 
+macro create_pathsetup_output "../job/pathsetup"
+macro create_pathsetup_command "python $(LHCBSCRIPTS)/python/SetupProject.py --silent --shell=sh --output=$(create_pathsetup_output) Moore"
+apply_pattern CallCommand  target=create_pathsetup
+
 end_private

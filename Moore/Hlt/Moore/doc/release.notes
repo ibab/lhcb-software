@@ -2,6 +2,9 @@ Package     : Hlt/Moore
 Package Coordinator : Patrick Koppenburg and Marco Cattaneo
 Purpose     : LHCb HLT application
 
+! 2008-10-15 - Gerhard Raven
+ - autogenerate pathsetup during make
+
 ! 2008-09-25 - Gerhard Raven
  - use LHCbConfigurableUser to inherit from 
 
