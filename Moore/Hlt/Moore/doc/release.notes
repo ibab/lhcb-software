@@ -4,6 +4,7 @@ Purpose     : LHCb HLT application
 
 ! 2008-10-15 - Gerhard Raven
  - autogenerate pathsetup during make
+ - propagate verbose to HltConf configurable
 
 ! 2008-09-25 - Gerhard Raven
  - use LHCbConfigurableUser to inherit from 

@@ -1,7 +1,7 @@
 """
 High level configuration tools for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.30 2008-09-25 07:10:08 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.31 2008-10-15 11:37:10 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -34,6 +34,7 @@ class Moore(LHCbConfigurableUser):
         , "enableAuditor" :    [ ]  # put here eg . [ NameAuditor(), ChronoAuditor(), MemoryAuditor() ]
         , "userAlgorithms":    [ ]  # put here user algorithms to add
         , "oldStyle" :         False# old style options configuration
+        , "verbose" :          True # whether or not to print Hlt sequence
         }   
                 
 
@@ -71,6 +72,7 @@ class Moore(LHCbConfigurableUser):
             EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
         importOptions('$STDOPTS/DecodeRawEvent.opts')
         ApplicationMgr().ExtSvc.append(  "DataOnDemandSvc"   ); # needed for DecodeRawEvent...
+        ApplicationMgr().ExtSvc.append(  "LoKiSvc"   );         # needed for LoKiTrigger
 
         # forward some other settings... TODO: make a dictionary..
         # self.setOtherProp( LHCbApp(), 'useOracleCondDB' )
@@ -107,7 +109,8 @@ class Moore(LHCbConfigurableUser):
                               , ConfigAccessSvc = self.getConfigAccessSvc().getFullName() ) 
             ApplicationMgr().ExtSvc.append(cfg.getFullName())
         else:
-            for i in [ 'hltType','oldStyle','userAlgorithms' ] : self.setOtherProp( HltConf(), i )
+            for i in [ 'hltType','oldStyle','userAlgorithms','verbose' ] : self.setOtherProp( HltConf(), i )
+            print HltConf()
             HltConf().applyConf()
 
             
