@@ -2,6 +2,9 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2008-10-16 M Needham
+ - Move STSignalToNoise tool to ST::ToolBase
+
 !=========================== STTools v3r5 2008-01-09 ==========================
 ! 2008-01-08 M Needham
  - Move STFun.h/.cpp to STKernel

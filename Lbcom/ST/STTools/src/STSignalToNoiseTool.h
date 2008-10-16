@@ -1,9 +1,9 @@
-// $Id: STSignalToNoiseTool.h,v 1.3 2007-01-09 15:02:25 jvantilb Exp $
+// $Id: STSignalToNoiseTool.h,v 1.4 2008-10-16 13:05:27 mneedham Exp $
 #ifndef STSIGNALTONOISETOOL_H
 #define STSIGNALTONOISETOOL_H 1
 
 // Gaudi
-#include "GaudiAlg/GaudiTool.h"
+#include "Kernel/STToolBase.h"
 
 // LHCbKernel
 #include "Kernel/ISTSignalToNoiseTool.h"
@@ -19,7 +19,7 @@ class DeSTSector;
  *  @date   14/3/2002
  */
 
-class STSignalToNoiseTool : public GaudiTool, 
+class STSignalToNoiseTool : public ST::ToolBase, 
                             virtual public ISTSignalToNoiseTool {
 
 public: 
@@ -49,13 +49,13 @@ public:
 
 private:
 
-  DeSTDetector* m_tracker;
+
   std::vector<double> m_paramsInADC;
 
   // job options
   std::vector<double> m_paramsInElectron;
   double m_conversionToADC;
-  std::string m_detType;
+
 
 };
 

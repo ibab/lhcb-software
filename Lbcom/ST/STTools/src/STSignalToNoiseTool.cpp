@@ -1,4 +1,4 @@
-// $Id: STSignalToNoiseTool.cpp,v 1.7 2007-03-20 17:36:56 jvantilb Exp $
+// $Id: STSignalToNoiseTool.cpp,v 1.8 2008-10-16 13:05:27 mneedham Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
@@ -17,6 +17,8 @@
 // local
 #include "STSignalToNoiseTool.h"
 
+#include <boost/assign/std/vector.hpp>
+
 //------------------------------------------------------------
 // 
 //------------------------------------------------------------
@@ -26,15 +28,15 @@ DECLARE_TOOL_FACTORY( STSignalToNoiseTool );
 STSignalToNoiseTool::STSignalToNoiseTool( const std::string& type, 
                                           const std::string& name, 
                                           const IInterface* parent ) : 
-  GaudiTool( type, name, parent ),
-  m_tracker(0) 
+  ST::ToolBase( type, name, parent )
 { 
   declareProperty("NoiseParams",     m_paramsInElectron         ); 
   declareProperty("ConversionToADC", m_conversionToADC = 0.0009 );
-  declareProperty("DetType",         m_detType         = "TT"   );
 
-  m_paramsInElectron.push_back(776);
-  m_paramsInElectron.push_back(47.9/Gaudi::Units::picofarad);
+  using namespace boost::assign;
+  m_paramsInElectron += 776, 47.9/Gaudi::Units::picofarad;
+
+  setForcedInit();
 
   // to get correct interface
   declareInterface<ISTSignalToNoiseTool>(this);
@@ -47,10 +49,9 @@ STSignalToNoiseTool::~STSignalToNoiseTool()
 
 StatusCode STSignalToNoiseTool::initialize()
 {
-  StatusCode sc = GaudiTool::initialize();
+  StatusCode sc = ST::ToolBase::initialize();
   if (sc.isFailure()) return Error("Failed to initialize", sc);
-   
-  m_tracker = getDet<DeSTDetector>(DeSTDetLocation::location(m_detType));
+  
 
   // convert params to ADC
   for (unsigned int iParam = 0; iParam < m_paramsInElectron.size(); ++iParam){
@@ -98,14 +99,14 @@ double STSignalToNoiseTool::noiseInElectrons( const DeSTSector* aSector )
 double STSignalToNoiseTool::noiseInADC(const LHCb::STChannelID& aChan)
 {
   // look up noise of Channel in ADC
-  DeSTSector* tSector = m_tracker->findSector(aChan);
+  DeSTSector* tSector = tracker()->findSector(aChan);
   return (tSector != 0 ?  noiseInADC(tSector) : 99999. ) ;
 }
 
 double STSignalToNoiseTool::noiseInElectrons(const LHCb::STChannelID& aChan)
 {
   // look up noise of channel in electrons
-  DeSTSector* tSector = m_tracker->findSector(aChan);
+  DeSTSector* tSector = tracker()->findSector(aChan);
   return (tSector != 0 ?  noiseInElectrons(tSector) : 99999. ) ;
 }
 
