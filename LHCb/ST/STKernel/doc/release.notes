@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.37 2008-10-16 08:38:24 jluisier Exp $
+! $Id: release.notes,v 1.38 2008-10-16 13:08:02 mneedham Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
+
+! 2008-10-16 M Needham
+ - add method to return list of all flippables in CommonBase
+ - add method to return sector corresponding to channel in CommonBase
 
 ! 2008-10-16 J Luisier
  - remove toString method from CommonBase class

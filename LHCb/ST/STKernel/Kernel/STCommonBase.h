@@ -5,7 +5,7 @@
  *  Header file for ST base class : STCommonBase
  *
  *  CVS Log :-
- *  $Id: STCommonBase.h,v 1.3 2008-10-16 08:38:24 jluisier Exp $
+ *  $Id: STCommonBase.h,v 1.4 2008-10-16 13:08:02 mneedham Exp $
  *
  *  @author Matthew Needham    Matthew.Needham@cern.ch
  *  @date   2005-11-10
@@ -20,6 +20,7 @@
 
 class ISTReadoutTool;
 class DeSTDetector; 
+class DeSTSector;
 
 namespace LHCb{
   class STChannelID;
@@ -87,10 +88,6 @@ namespace ST
    /** detector type (IT or TT) */
    const std::string& detType() const; 
 
-   /** convert to string */ 
-   //template <typename T>
-   //std::string toString(T type) const;
-  
    /** station as a string */
    std::string station(const LHCb::STChannelID& chan) const;
   
@@ -123,6 +120,12 @@ namespace ST
     addToFlipList(&value);  // add to list of flippable
     return this->declareProperty(name, value = def , doc);  // normal property declaration
    }
+
+   /** accessor to the list of things to be flipped */
+   const std::vector<std::string*>& flipList() const;
+
+   /** safe finding of the sector - exception thrown if not valid */
+   DeSTSector* findSector(const LHCb::STChannelID& aChannel) const;
 
   private:
 

@@ -5,7 +5,7 @@
  *  Implementation file for RICH base class : ST::CommonBase
  *
  *  CVS Log :-
- *  $Id: STCommonBase.icpp,v 1.4 2008-10-16 08:38:24 jluisier Exp $
+ *  $Id: STCommonBase.icpp,v 1.5 2008-10-16 13:08:03 mneedham Exp $
  *
  *  @author Matthew Needham    Matthew.Needham@cern.ch
  *  @date   2008-11-10
@@ -97,6 +97,15 @@ inline DeSTDetector* ST::CommonBase<PBASE>::tracker() const {
   return m_tracker != 0 ? m_tracker : getTracker();
 }
 
+template <class PBASE> 
+inline DeSTSector* ST::CommonBase<PBASE>::findSector(const LHCb::STChannelID& aChannel) const{
+
+  DeSTSector* sector = tracker()->findSector(aChannel);
+  if (sector == 0) throw GaudiException( "No sector found",
+                         this->template name(), StatusCode::FAILURE );
+  return sector;
+}
+
 template <class PBASE>
 inline DeSTDetector* ST::CommonBase<PBASE>::getTracker() const {
   m_tracker = this->template getDet<DeSTDetector>(DeSTDetLocation::location(m_detType));
@@ -167,7 +176,7 @@ inline void ST::CommonBase<PBASE>::flip() const {
  // turn IT into TT or TT into IT
  for (std::vector<std::string*>::const_iterator iterS = m_toBeFlipped.begin();
       iterS != m_toBeFlipped.end(); ++iterS){
-   flip(**iterS);
+   STDetSwitch::flip(m_detType,**iterS);
   } // iterS   
 }
 
@@ -176,3 +185,7 @@ void ST::CommonBase<PBASE>::flip(std::string& aString) const{
   STDetSwitch::flip(m_detType,aString);
 }
 
+template <class PBASE>
+inline const std::vector<std::string*>& ST::CommonBase<PBASE>::flipList() const{
+ return m_toBeFlipped;
+}
