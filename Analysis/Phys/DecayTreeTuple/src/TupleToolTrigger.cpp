@@ -1,4 +1,4 @@
-// $Id: TupleToolTrigger.cpp,v 1.10 2008-10-16 13:07:51 pkoppenb Exp $
+// $Id: TupleToolTrigger.cpp,v 1.11 2008-10-16 13:26:47 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -99,12 +99,14 @@ StatusCode TupleToolTrigger::fillHlt( Tuples::Tuple& tuple, const std::string & 
       for(LHCb::HltDecReports::Container::const_iterator it=decReports->begin();
           it!=decReports->end();++it){
         if( ( it->first.find(level) == 0 ) && 
-            ( it->first.find("Decision") != std::string::npos ) ) 
+            ( it->first.find("Decision") != std::string::npos ) ){
           if (msgLevel(MSG::DEBUG))  debug() << " Hlt trigger name= " << it->first  
                                              << " decision= " << it->second.decision() << endmsg;
-        if ( ! tuple->column(it->first  , it->second.decision() ) ) 
-          return StatusCode::FAILURE;
-        nsel+= it->second.decision();
+          if ( ! tuple->column(it->first  , it->second.decision() ) ) 
+            return StatusCode::FAILURE;
+          nsel += it->second.decision();
+          if (msgLevel(MSG::VERBOSE) && (it->second.decision())) verbose() << "Added " << it->first << " to " << nsel << endmsg ;
+        }
       } 
       if ( ! tuple->column(level+"nSelections" , nsel ) ) return StatusCode::FAILURE;
     }
