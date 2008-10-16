@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::DigitSel
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDDigitSel.cpp,v 1.22 2008-03-25 16:26:44 jonrob Exp $
+ *  $Id: RichGlobalPIDDigitSel.cpp,v 1.23 2008-10-16 11:38:20 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -75,7 +75,7 @@ StatusCode DigitSel::execute()
     richStatus()->setEventOK( false );
     return Warning( "Event contains no pixels -> Abort", StatusCode::SUCCESS );
   }
-  else if ( m_maxUsedPixels < richPixels()->size() ) 
+  else if ( m_maxUsedPixels < (int)richPixels()->size() ) 
   { // too many pixels
     procStatus()->addAlgorithmStatus( gpidName(), Rich::Rec::ReachedPixelLimit );
     richStatus()->setEventOK( false );

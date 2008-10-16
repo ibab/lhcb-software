@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::TrackSel
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDTrTrackSel.cpp,v 1.35 2008-08-15 14:30:22 jonrob Exp $
+ *  $Id: RichGlobalPIDTrTrackSel.cpp,v 1.36 2008-10-16 11:38:20 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -110,7 +110,7 @@ StatusCode TrackSel::eventInit()
     deleteGPIDEvent();
     return Warning("No tracks selected -> Abort",StatusCode::SUCCESS);
   } 
-  else if ( richTracks()->size() > m_maxUsedTracks )
+  else if ( (int)richTracks()->size() > m_maxUsedTracks )
   {
     procStatus()->addAlgorithmStatus( gpidName(), Rich::Rec::ReachedRichTrackLimit );
     richStatus()->setEventOK( false );
