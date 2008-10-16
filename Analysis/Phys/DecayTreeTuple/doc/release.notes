@@ -4,8 +4,11 @@
 ! Purpose     : Option-steered tuples. Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+! 2008-10-16 - Patrick Koppenburg
+ - Count number of selections in trigger
+
 ! 2008-10-13 - Patrick Koppenburg
- - Add a wraning when HltDecReports are not here
+ - Add a warning when HltDecReports are not here
 
 !======================== DecayTreeTuple v1r8 2008-10-06 ===================
 ! 2008-10-06 - Patrick Koppenburg

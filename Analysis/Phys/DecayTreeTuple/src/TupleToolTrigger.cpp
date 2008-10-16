@@ -1,4 +1,4 @@
-// $Id: TupleToolTrigger.cpp,v 1.9 2008-10-13 18:40:33 pkoppenb Exp $
+// $Id: TupleToolTrigger.cpp,v 1.10 2008-10-16 13:07:51 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -94,16 +94,19 @@ StatusCode TupleToolTrigger::fillHlt( Tuples::Tuple& tuple, const std::string & 
     if( !tuple->column( level+"Global", (decReports->decReport(level+"Global"))? 
                         (decReports->decReport(level+"Global")->decision()):0 )) return StatusCode::FAILURE;
     if ( individual) {
+      unsigned int nsel = 0 ;
       // individual Hlt trigger lines
       for(LHCb::HltDecReports::Container::const_iterator it=decReports->begin();
           it!=decReports->end();++it){
         if( ( it->first.find(level) == 0 ) && 
             ( it->first.find("Decision") != std::string::npos ) ) 
-          if (msgLevel(MSG::DEBUG))  debug() << " Hlt2 trigger name= " << it->first  
+          if (msgLevel(MSG::DEBUG))  debug() << " Hlt trigger name= " << it->first  
                                              << " decision= " << it->second.decision() << endmsg;
         if ( ! tuple->column(it->first  , it->second.decision() ) ) 
           return StatusCode::FAILURE;
+        nsel+= it->second.decision();
       } 
+      if ( ! tuple->column(level+"nSelections" , nsel ) ) return StatusCode::FAILURE;
     }
   } else Warning("No HltDecReports at "+LHCb::HltDecReportsLocation::Default,StatusCode::FAILURE,1);
   return StatusCode::SUCCESS ;
