@@ -4,6 +4,10 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2008-10-16 - David Hutchcroft
+ - Added a tool to "promote" VeloLiteClusters to faked VeloClusters 
+   the ADC values are not right, may be used by HLT to refit VELO quickly
+
 ! 2008-10-09 - Kurt Rinnert
  - added a configurable threshold for the gap between the two VELO halfs to
    PatVeloGeneric.  The onverlap search is only performed when the distance
