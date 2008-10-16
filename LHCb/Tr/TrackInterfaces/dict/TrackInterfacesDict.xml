@@ -9,6 +9,7 @@
   <class name    = "IPatDebugTTTool"         />
   <class name    = "IPatForwardTool"         />
   <class name    = "IPatSeedingTool"         />
+  <class name    = "IPromoteClusters"        />
   <class name    = "IPtTransporter"          />
   <class name    = "IPVOfflineTool"          />
   <class name    = "IRecVertexFunctionTool"  />

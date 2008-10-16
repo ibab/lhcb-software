@@ -12,6 +12,7 @@
 #include "TrackInterfaces/IPatDebugTTTool.h"
 #include "TrackInterfaces/IPatForwardTool.h"
 #include "TrackInterfaces/IPatSeedingTool.h"
+#include "TrackInterfaces/IPromoteClusters.h"
 #include "TrackInterfaces/IPtTransporter.h"
 #include "TrackInterfaces/IPVOfflineTool.h"
 #include "TrackInterfaces/IStateCorrectionTool.h"
