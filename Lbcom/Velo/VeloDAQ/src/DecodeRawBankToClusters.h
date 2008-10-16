@@ -1,6 +1,8 @@
-// $Id: DecodeRawBankToClusters.h,v 1.4 2007-09-16 16:56:23 krinnert Exp $
+// $Id: DecodeRawBankToClusters.h,v 1.5 2008-10-16 15:31:30 krinnert Exp $
 #ifndef VELODAQ_DECODERAWBANKTOCLUSTERS_H 
 #define VELODAQ_DECODERAWBANKTOCLUSTERS_H 1
+
+#include <string>
 
 #include "Event/VeloCluster.h"
 #include "SiDAQ/SiRawBufferWord.h"
@@ -52,6 +54,7 @@ namespace VeloDAQ {
       const DeVeloSensor* sensor,
       const bool assumeChipChannels,
       LHCb::VeloClusters* clusters,
-      int& byteCount); 
+      int& byteCount,
+      std::string& errorMsg); 
 }
 #endif // VELODAQ_DECODERAWBANKTOCLUSTERS_H

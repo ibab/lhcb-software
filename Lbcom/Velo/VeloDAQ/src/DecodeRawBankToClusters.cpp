@@ -1,7 +1,8 @@
-// $Id: DecodeRawBankToClusters.cpp,v 1.14 2007-09-19 20:43:53 krinnert Exp $
+// $Id: DecodeRawBankToClusters.cpp,v 1.15 2008-10-16 15:31:30 krinnert Exp $
 
 #include <vector>
 #include <algorithm>
+#include <sstream>
 
 #include "VeloDet/DeVeloSensor.h"
 
@@ -83,7 +84,8 @@ unsigned int VeloDAQ::decodeRawBankToClustersV3(
     const DeVeloSensor* sensor,
     const bool assumeChipChannels,
     LHCb::VeloClusters* clusters,
-    int& byteCount)
+    int& byteCount, 
+    std::string& errorMsg )
 {
   // construct new raw decoder, implicitely decodes header
   VeloRawBankDecoder decoder(bank);
@@ -136,8 +138,21 @@ unsigned int VeloDAQ::decodeRawBankToClustersV3(
 		       static_cast<unsigned int>(adcWords[i].adc())) );
     }
 
+    
+    // DEBUG: check for "this should never happen"
+    LHCb::VeloCluster* clu =  clusters->object(vcid);
+    if ( 0 != clu ) {
+      std::ostringstream errmsg;
+      errmsg << "Cluster of size " << clu->size() << " already in container. " 
+          << "Strip = " << vcid.strip() << ", sensor = " << vcid.sensor()  
+          << ". This inidicates a TELL1 problem." << std::endl;
+      errorMsg = errmsg.str();  
+      return 0;
+    }
+
     // got all we need, now append new cluster
     clusters->insert(new LHCb::VeloCluster(lc,adcs),vcid);
+    
   }
 
   // fetch number of decoded bytes, including 4 byte header, without

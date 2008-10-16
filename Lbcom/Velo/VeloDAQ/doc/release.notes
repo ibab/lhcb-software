@@ -3,6 +3,13 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+! 2008-10-16 - Kurt Rinnert
+ - The decoding of full VELO clusters for bank version 3 now checks whether a
+   key already exists in the container before insertion.  This is a change in
+   policy, not a bug fix.  We will no longer crash in the case of duplicate
+   keys.  Instead an error message containing the problematic source ID is 
+   issued and all clusters from this source are removed.  
+
 ! 2008-10-08 - Eduardo Rodrigues
  - added DefaultVeloRawBufferDecoders.py, a new Python helper module
    containing default configurations of the DecodeVeloRawBuffer algorithm

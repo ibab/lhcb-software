@@ -1,4 +1,4 @@
-// $Id: DecodeVeloRawBuffer.cpp,v 1.15 2008-08-31 16:05:46 krinnert Exp $
+// $Id: DecodeVeloRawBuffer.cpp,v 1.16 2008-10-16 15:31:30 krinnert Exp $
 
 #include "GaudiKernel/AlgFactory.h"
 
@@ -192,15 +192,21 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloClusters(const std::vector<LHCb::Raw
       continue;
     }
 
+    //info() << "Decoding Clusters on sensor " << sensor << endmsg;
+
     unsigned int oldSize = clusters->size();
     unsigned int bankVersion = m_forcedBankVersion ? m_forcedBankVersion : rb->version();
 
+    std::string errorMsg;
     switch (bankVersion) {
       case VeloDAQ::v2:
         VeloDAQ::decodeRawBankToClustersV2(rawBank,sensor,m_assumeChipChannelsInRawBuffer,clusters,byteCount);
         break;
       case VeloDAQ::v3:
-        VeloDAQ::decodeRawBankToClustersV3(rawBank,sensor,m_assumeChipChannelsInRawBuffer,clusters,byteCount);
+        VeloDAQ::decodeRawBankToClustersV3(rawBank,sensor,m_assumeChipChannelsInRawBuffer,clusters,byteCount,errorMsg);
+        if ( !errorMsg.empty() ) {
+          error() << errorMsg << endmsg;
+        }
         break;
       default: // bank version is not supported
         error() << "VELO raw buffer version "
@@ -218,15 +224,11 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloClusters(const std::vector<LHCb::Raw
       LHCb::VeloClusters::iterator start = clusters->begin();
       std::advance(start,oldSize);
       clusters->erase(start,clusters->end());
-    }
+    } 
 
   }
 
-  // finally sort the clusters (by sensor and strip number from channel ID)  
-  //  std::sort(clusters->begin(),clusters->end(),VeloDAQ::veloClusterPtrLessThan);
-
   put(clusters,m_veloClusterLocation);
-   
   if (m_dumpVeloClusters) dumpVeloClusters(clusters);
 
   return StatusCode::SUCCESS;
