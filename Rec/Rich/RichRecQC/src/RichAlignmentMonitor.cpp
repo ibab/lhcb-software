@@ -4,7 +4,7 @@
  *  Implementation file for algorithm class : RichAlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.cpp,v 1.4 2008-08-28 19:08:43 jonrob Exp $
+ *  $Id: RichAlignmentMonitor.cpp,v 1.5 2008-10-16 09:34:01 cattanem Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2004-02-19
@@ -151,7 +151,7 @@ StatusCode AlignmentMonitor::execute() {
     debug() << " Found " << richTracks()->size() << " tracks" << endreq;
   }
 
-  if ( richTracks()->size() > m_maxUsedTracks ) {
+  if ( (int)richTracks()->size() > m_maxUsedTracks ) {
     debug() << "Found " << richTracks()->size() << ">"
             << m_maxUsedTracks << " max usable tracks, stopping." << endreq;
     return StatusCode::SUCCESS;

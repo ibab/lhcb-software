@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2008-10-16 - Marco Cattaneo
+ - Fix trivial compilation warning introduced by Gaudi v20r3
+
 ! 2008-10-15 - Chris Jones
  - Add new monitor to compare numbering information in the decoded data to that
    in the database
