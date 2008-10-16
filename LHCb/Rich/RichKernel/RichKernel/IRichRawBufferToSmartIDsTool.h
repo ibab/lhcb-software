@@ -5,7 +5,7 @@
  *  Header file for tool interface : Rich::DAQ::IRawBufferToSmartIDsTool
  *
  *  CVS Log :-
- *  $Id: IRichRawBufferToSmartIDsTool.h,v 1.13 2008-10-15 12:25:17 jonrob Exp $
+ *  $Id: IRichRawBufferToSmartIDsTool.h,v 1.14 2008-10-16 15:59:34 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -72,7 +72,7 @@ namespace Rich
        *  @return The vector of hits (RichSmartIDs) for the given HPD
        */
       virtual const LHCb::RichSmartID::Vector& richSmartIDs( const LHCb::RichSmartID hpdID,
-                                                             const bool createIfMissing = false ) const = 0;
+                                                             const bool createIfMissing = true ) const = 0;
 
       /** Access all the RichSmartIDs, for the given list of TAE spills
        *  @param taeLocs The TAE location(s) ( "" for main event, "Prev1" for -25 ns etc. )
@@ -88,7 +88,7 @@ namespace Rich
        */
       virtual const LHCb::RichSmartID::Vector& richSmartIDs( const RawEventLocations& taeLocs,
                                                              const LHCb::RichSmartID hpdID,
-                                                             const bool createIfMissing = false ) const = 0;
+                                                             const bool createIfMissing = true ) const = 0;
 
       /** Access all RichSmartIDs for the given TAE spill
        *  @param taeLoc The TAE location ( "" for main event, "Prev1" for -25 ns etc. )
@@ -107,7 +107,7 @@ namespace Rich
        */
       inline const LHCb::RichSmartID::Vector& richSmartIDs( const RawEventLocation& taeLoc,
                                                             const LHCb::RichSmartID hpdID,
-                                                            const bool createIfMissing = false ) const
+                                                            const bool createIfMissing = true ) const
       {
         return this->richSmartIDs ( RawEventLocations(1,taeLoc), hpdID, createIfMissing );
       }
