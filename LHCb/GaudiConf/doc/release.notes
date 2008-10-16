@@ -2,6 +2,9 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2008-10-16 - Marco Cattaneo
+ - Remove gaudirun.py script, to take fixed version from Gaudi v20r3
+
 !======================== GaudiConf v10r13 2008-09-30 =======================
 ! 2008-09-28 - Stephanie Hansmann-Menzemer
  - added option file to write out muon-long tracks for alignment
