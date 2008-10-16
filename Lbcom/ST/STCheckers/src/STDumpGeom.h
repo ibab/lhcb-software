@@ -1,10 +1,10 @@
-// $Id: STDumpGeom.h,v 1.2 2006-12-21 17:54:48 jvantilb Exp $
+// $Id: STDumpGeom.h,v 1.3 2008-10-16 13:10:34 mneedham Exp $
 #ifndef STDumpGeom_H
 #define STDumpGeom_H 1
 
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "Kernel/STAlgBase.h"
 
-class DeSTDetector;
+class DetectorElement;
 
 /** @class STDumpGeom STDumpGeom.h
  *
@@ -15,7 +15,7 @@ class DeSTDetector;
  *  @date   21/12/2006
  */
 
-class STDumpGeom : public GaudiAlgorithm {
+class STDumpGeom : public ST::AlgBase {
 
 public:
  
@@ -37,7 +37,6 @@ private:
   void children(std::string indent, DetectorElement* parent);
 
   // job options
-  std::string m_detType;   ///< Switch between TT and IT
   bool m_fullDetail;       ///< Print out the details of each DetectorElement
 };
 

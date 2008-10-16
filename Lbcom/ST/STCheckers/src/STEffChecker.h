@@ -1,9 +1,9 @@
-// $Id: STEffChecker.h,v 1.3 2007-03-21 14:24:44 jvantilb Exp $
+// $Id: STEffChecker.h,v 1.4 2008-10-16 13:10:34 mneedham Exp $
 #ifndef STEffChecker_H
 #define STEffChecker_H 1
 
 // GaudiAlg
-#include "GaudiAlg/GaudiHistoAlg.h"
+#include "Kernel/STHistoAlgBase.h"
 
 // linkers
 #include "Linker/LinkerTool.h"
@@ -15,7 +15,6 @@ namespace LHCb {
   class STChannelID;
 };
 
-class DeSTDetector;
 class DeSTLayer;
 class IMCParticleSelector;
 
@@ -38,7 +37,7 @@ class AIDA::IHistogram2D;
  *  @date   21/12/2006
  */
 
-class STEffChecker : public GaudiHistoAlg {
+class STEffChecker : public ST::HistoAlgBase {
 
 public:
  
@@ -79,9 +78,7 @@ private:
   Table* m_table;
   
 
-  std::string m_detType;
   std::string m_asctLocation;
-  DeSTDetector* m_tracker;
   std::string m_clusterLocation;
   bool m_includeGuardRings; 
   bool m_pEff;

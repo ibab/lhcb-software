@@ -2,6 +2,11 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2008-10-16 M Needham
+ - Move all algorithms to new base class
+ - Tidy up the code
+ - Add templated occupancy algorithms for IT and TT clusters and digits
+
 ! 2008-10-14 M Needham
  - Move STClusterMonitor to new base class
 

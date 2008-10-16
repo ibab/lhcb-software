@@ -1,8 +1,5 @@
-// $Id: STClusterClassification.cpp,v 1.5 2008-01-18 10:15:09 mneedham Exp $
+// $Id: STClusterClassification.cpp,v 1.6 2008-10-16 13:10:34 mneedham Exp $
 
-// BOOST
-#include "boost/lexical_cast.hpp"
-#include <boost/assign/std/vector.hpp>
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -15,15 +12,12 @@
 #include "Event/STCluster.h"
 #include "Event/MCHit.h"
 
-// LHCbKernel
-#include "Kernel/STDetSwitch.h"
-
 // local
 #include "STClusterClassification.h"
 
+#include <boost/assign/std/vector.hpp>
+
 using namespace LHCb;
-using namespace boost::assign;
-using namespace boost;
 
 DECLARE_ALGORITHM_FACTORY( STClusterClassification );
 
@@ -35,17 +29,22 @@ DECLARE_ALGORITHM_FACTORY( STClusterClassification );
 
 STClusterClassification::STClusterClassification(const std::string& name, 
                               ISvcLocator* pSvcLocator) :
-  GaudiAlgorithm(name, pSvcLocator) 
+  ST::HistoAlgBase(name, pSvcLocator) 
 {
   // constructer
   this->declareProperty("SpillVector", m_spillVector);
-  this->declareProperty("DetType", m_detType = "TT");
-  declareProperty("inputData", m_clusterLocation = STClusterLocation::TTClusters);
+  declareSTConfigProperty("inputData", m_clusterLocation , STClusterLocation::TTClusters);
 
+  using namespace boost::assign;
   m_spillVector += "/", "/Prev/", "/PrevPrev/"; 
+  m_hitLocation = MCHitLocation::TT;
+  m_asctLocation = m_clusterLocation + "2MCHits";
 
-
+  // register to be flippable from IT to TT
+  addToFlipList(&m_hitLocation);
+  addToFlipList(&m_asctLocation);
 }
+
 
 STClusterClassification::~STClusterClassification()
 {
@@ -54,13 +53,8 @@ STClusterClassification::~STClusterClassification()
 
 StatusCode STClusterClassification::initialize()
 { 
-  StatusCode sc = GaudiAlgorithm::initialize();
+  StatusCode sc = ST::HistoAlgBase::initialize();
   if (sc.isFailure()) return Error("Failed to initialize", sc);
-
-  m_hitLocation = MCHitLocation::TT;
-  STDetSwitch::flip(m_detType,m_clusterLocation);
-  STDetSwitch::flip(m_detType,m_hitLocation);
-  m_asctLocation = m_clusterLocation + "2MCHits";
 
   // construct container names once
   std::vector<std::string>::const_iterator iSpillName = m_spillVector.begin() ;
@@ -126,7 +120,7 @@ StatusCode  STClusterClassification::finalize()
   }
   info() <<"----------------------------------------" << endmsg;
   
-  return  GaudiAlgorithm::finalize();
+  return  ST::HistoAlgBase::finalize();
 }
 
 unsigned int STClusterClassification::tCount() const

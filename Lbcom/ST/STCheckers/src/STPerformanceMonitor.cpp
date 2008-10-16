@@ -1,10 +1,9 @@
-// $Id: STPerformanceMonitor.cpp,v 1.3 2008-08-15 08:23:02 mneedham Exp $
+// $Id: STPerformanceMonitor.cpp,v 1.4 2008-10-16 13:10:34 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
 // LHCbKernel
-#include "Kernel/STDetSwitch.h"
 #include "Kernel/STTell1ID.h"
 #include "Kernel/ISTReadoutTool.h"
 
@@ -30,16 +29,16 @@ DECLARE_ALGORITHM_FACTORY( STPerformanceMonitor );
 
 STPerformanceMonitor::STPerformanceMonitor( const std::string& name, 
                                 ISvcLocator* pSvcLocator ) :
-  GaudiHistoAlg(name, pSvcLocator),
-  m_tracker(0),
+  ST::HistoAlgBase(name, pSvcLocator),
   m_event(0) 
 {
   // constructer
-  declareProperty("DetType", m_detType = "TT" );
-  declareProperty("summaryLocation",m_summaryLocation = STSummaryLocation::TTSummary );
-  declareProperty("readoutToolName",m_readoutToolName = "ITReadoutTool" );
-  declareProperty("InputData", m_clusterLocation = STClusterLocation::TTClusters);
+
+  declareSTConfigProperty("summaryLocation",m_summaryLocation , STSummaryLocation::TTSummary );
+  declareSTConfigProperty("InputData", m_clusterLocation , STClusterLocation::TTClusters);
   declareProperty("ExpectedEvents", m_expectedEvents = 100000);
+
+  setForcedInit();
 }
 
 STPerformanceMonitor::~STPerformanceMonitor()
@@ -50,23 +49,12 @@ STPerformanceMonitor::~STPerformanceMonitor()
 StatusCode STPerformanceMonitor::initialize()
 {
   // Set the top directory to IT or TT.
-  if( "" == histoTopDir() ) setHistoTopDir(m_detType+"/");
+  if( "" == histoTopDir() ) setHistoTopDir(detType()+"/");
 
   // Initialize GaudiHistoAlg
-  StatusCode sc = GaudiHistoAlg::initialize();
+  StatusCode sc = ST::HistoAlgBase::initialize();
   if (sc.isFailure()) return Error("Failed to initialize", sc);
     
-  // detector element     
-  m_tracker = getDet<DeSTDetector>(DeSTDetLocation::location(m_detType));
- 
-  // flip  
-  STDetSwitch::flip(m_detType,m_summaryLocation); 
-  STDetSwitch::flip(m_detType,m_readoutToolName);
-  STDetSwitch::flip(m_detType,m_clusterLocation);
-  
-  // readout tool
-  m_readoutTool = tool<ISTReadoutTool>(m_readoutToolName,m_readoutToolName);
-
   return StatusCode::SUCCESS;
 }
 
@@ -92,7 +80,7 @@ StatusCode STPerformanceMonitor::execute()
 
   // then all we have to do is loop over the sectors + count
   double frac = 0.0;
-  const DeSTDetector::Sectors& sectors = m_tracker->sectors();
+  const DeSTDetector::Sectors& sectors = tracker()->sectors();
   for (DeSTDetector::Sectors::const_iterator iterS = sectors.begin();
        iterS != sectors.end(); ++iterS){
     std::vector<DeSTSector*>::const_iterator testIter = std::find(deadSectors.begin(),
@@ -106,7 +94,7 @@ StatusCode STPerformanceMonitor::execute()
   plot2D(m_event, frac, 11,"active fraction versus time", 0., m_expectedEvents, 0., 1., 50, 200);
 
   // get the occupancy
-  const double occ = clusterCont->size()/(m_tracker->nStrip()*frac); 
+  const double occ = clusterCont->size()/(tracker()->nStrip()*frac); 
   plot(occ, 2,"occupancy", 0., 1., 200);
   plot2D(m_event, occ, 12,"occ versus time", 0., m_expectedEvents, 0., 0.5e-3, 50, 200);
 
@@ -120,7 +108,7 @@ void STPerformanceMonitor::getDeadSectors(std::vector<DeSTSector*>& deadSectors,
   for (std::vector<unsigned int>::const_iterator iter= banks.begin(); 
        iter != banks.end(); ++iter){
     // sectors
-    std::vector<DeSTSector*> sectors = m_readoutTool->sectors(STTell1ID(*iter));  
+    std::vector<DeSTSector*> sectors = readoutTool()->sectors(STTell1ID(*iter));  
     deadSectors.insert(deadSectors.begin(),sectors.begin(),sectors.end());
   } // iter
 }

@@ -1,8 +1,8 @@
-// $Id: MCSTDigitMonitor.h,v 1.2 2007-01-10 16:02:22 cattanem Exp $
+// $Id: MCSTDigitMonitor.h,v 1.3 2008-10-16 13:10:34 mneedham Exp $
 #ifndef MCSTDigitMonitor_H
 #define MCSTDigitMonitor_H 1
 
-#include "GaudiAlg/GaudiHistoAlg.h"
+#include "Kernel/STHistoAlgBase.h"
 
 namespace LHCb{
   class MCSTDigit;
@@ -17,7 +17,7 @@ namespace LHCb{
  *  @date   04/12/2006
  */
 
-class MCSTDigitMonitor : public GaudiHistoAlg{
+class MCSTDigitMonitor : public ST::HistoAlgBase{
 
 public:
  
@@ -38,9 +38,9 @@ private:
 
   void fillHistograms(const LHCb::MCSTDigit* aDigit) const;
   
-  std::string m_detType;
+
   std::string m_digitLocation;
-  std::string m_depositLocation;
+
 
 };
 

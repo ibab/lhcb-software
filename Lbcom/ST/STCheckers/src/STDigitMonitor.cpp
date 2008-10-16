@@ -1,14 +1,7 @@
-// $Id: STDigitMonitor.cpp,v 1.4 2008-01-18 10:15:10 mneedham Exp $
+// $Id: STDigitMonitor.cpp,v 1.5 2008-10-16 13:10:34 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
-
-// LHCbKernel
-#include "Kernel/STDetSwitch.h"
-
-// STDet
-#include "STDet/DeSTDetector.h"
-#include "STDet/DeSTSector.h"
 
 // Event
 #include "Event/STDigit.h"
@@ -28,12 +21,10 @@ DECLARE_ALGORITHM_FACTORY( STDigitMonitor );
 
 STDigitMonitor::STDigitMonitor( const std::string& name, 
                                 ISvcLocator* pSvcLocator ) :
-  GaudiHistoAlg(name, pSvcLocator),
-  m_tracker(0)
+  ST::HistoAlgBase(name, pSvcLocator)
 {
   // constructer
-  declareProperty("DetType", m_detType = "TT" );
-  declareProperty("InputData",m_dataLocation = STDigitLocation::TTDigits );
+  declareSTConfigProperty("InputData",m_dataLocation , STDigitLocation::TTDigits );
 }
 
 STDigitMonitor::~STDigitMonitor()
@@ -44,18 +35,12 @@ STDigitMonitor::~STDigitMonitor()
 StatusCode STDigitMonitor::initialize()
 {
   // Set the top directory to IT or TT.
-  if( "" == histoTopDir() ) setHistoTopDir(m_detType+"/");
+  if( "" == histoTopDir() ) setHistoTopDir(detType()+"/");
 
   // Initialize GaudiHistoAlg
   StatusCode sc = GaudiHistoAlg::initialize();
   if (sc.isFailure()) return Error("Failed to initialize", sc);
-    
-  // detector element     
-  m_tracker = getDet<DeSTDetector>(DeSTDetLocation::location(m_detType));
- 
-  // flip  
-  STDetSwitch::flip(m_detType,m_dataLocation); 
- 
+     
   return StatusCode::SUCCESS;
 }
 
@@ -79,20 +64,17 @@ StatusCode STDigitMonitor::execute()
 void STDigitMonitor::fillHistograms(const STDigit* aDigit)
 {
   // histogram by station
-  const int iStation = aDigit->channelID().station();
+  const int iStation = aDigit->station();
   plot((double)iStation, 2, "Number of digits per station" , -0.5, 4.5, 5);
   
   // by layer
-  const int iLayer = aDigit->channelID().layer();
+  const int iLayer = aDigit->layer();
   plot((double)(10*iStation+iLayer), 3, "Number of digits per layer",
        -0.5, 40.5, 41);
 
   if ( fullDetail() ){
-    const DeSTSector* aSector = m_tracker->findSector(aDigit->channelID());
-    if (aSector != 0) {
-      plot(aDigit->depositedCharge(),aSector->type()+"/1", 
+      plot(aDigit->depositedCharge(),detectorType(aDigit->channelID())+"/1", 
             "Deposited charge ", 0., 128., 128);
-    }
   }
 
 }

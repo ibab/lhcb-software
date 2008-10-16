@@ -1,8 +1,8 @@
-// $Id: MCSTDepositMonitor.h,v 1.2 2007-01-10 16:02:21 cattanem Exp $
+// $Id: MCSTDepositMonitor.h,v 1.3 2008-10-16 13:10:34 mneedham Exp $
 #ifndef MCSTDepositMonitor_H
 #define MCSTDepositMonitor_H 1
 
-#include "GaudiAlg/GaudiHistoAlg.h"
+#include "Kernel/STHistoAlgBase.h"
 
 namespace LHCb{
   class MCSTDeposit;
@@ -19,7 +19,7 @@ class DeSTDetector;
  *  @date   04/12/2006
  */
 
-class MCSTDepositMonitor : public GaudiHistoAlg {
+class MCSTDepositMonitor : public ST::HistoAlgBase {
 
 public:
  
@@ -40,8 +40,6 @@ private:
 
   void fillHistograms(const LHCb::MCSTDeposit* aDeposit) const;
 
-  DeSTDetector* m_tracker;
-  std::string m_detType;
   std::string m_depositLocation;
 };
 

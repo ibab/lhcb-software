@@ -1,9 +1,9 @@
-// $Id: STClusterChecker.h,v 1.6 2007-01-10 16:02:22 cattanem Exp $
+// $Id: STClusterChecker.h,v 1.7 2008-10-16 13:10:34 mneedham Exp $
 #ifndef STClusterChecker_H
 #define STClusterChecker_H 1
 
 // base class
-#include "GaudiAlg/GaudiHistoAlg.h"
+#include "Kernel/STHistoAlgBase.h"
 
 // from Associators
 #include "Linker/LinkerTool.h"
@@ -28,7 +28,7 @@ class ISTSignalToNoiseTool;
  *  @date   21/12/2006
  */
 
-class STClusterChecker : public GaudiHistoAlg {
+class STClusterChecker : public ST::HistoAlgBase {
 
 public:
  
@@ -54,8 +54,7 @@ private:
 
   double betaGamma(const LHCb::MCParticle* aParticle) const;
   
-  DeSTDetector* m_tracker;
-  std::string m_detType;
+
   std::string m_clusterLocation; 
   std::string m_asctLocation; 
 

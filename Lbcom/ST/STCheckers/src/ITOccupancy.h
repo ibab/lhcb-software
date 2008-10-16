@@ -1,13 +1,12 @@
-// $Id: ITOccupancy.h,v 1.4 2007-03-21 14:24:44 jvantilb Exp $
+// $Id: ITOccupancy.h,v 1.5 2008-10-16 13:10:34 mneedham Exp $
 #ifndef ITOccupancy_H
 #define ITOccupancy_H 1
 
-#include "GaudiAlg/GaudiHistoAlg.h"
+#include "Kernel/STHistoAlgBase.h"
 
 class AIDA::IHistogram1D;
 
 namespace LHCb{
- class STDigit;
  class STChannelID;
 };
 
@@ -25,7 +24,8 @@ class ISTSignalToNoiseTool;
  */
 
 
-class ITOccupancy : public GaudiHistoAlg {
+template <class PBASE>
+class ITOccupancy : public ST::HistoAlgBase {
 
 public:
  
@@ -43,8 +43,14 @@ public:
 
 private:
 
-  virtual void initHistograms();
-  virtual void fillHistograms(const LHCb::STDigit* aDigit);
+  const std::string& dataLocation() const;
+ 
+  const std::string histoDirName() const;
+
+  double defaultThreshold() const;
+
+  void initHistograms();
+  void fillHistograms(const PBASE* obj);
 
   int uniqueInt(const LHCb::STChannelID aChan) const;
 
@@ -55,14 +61,13 @@ private:
   std::vector<AIDA::IHistogram1D*> m_stripOccVector;
   
   ISTSignalToNoiseTool* m_sigNoiseTool;  
-  DeSTDetector* m_tracker;
-
+ 
   // job options
   std::vector<double> m_threshold;   ///< List of threshold values
   std::string m_sigNoiseToolName;    ///< Name of the S/N tool 
   int m_binSize;                     ///< Number of channels in each bin
   std::string m_dataLocation;        ///< Location of the digits
-  
+ 
 };
 
 #endif // ITOccupancy_H

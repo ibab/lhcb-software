@@ -1,8 +1,8 @@
-// $Id: STDigitMonitor.h,v 1.2 2007-01-10 16:02:23 cattanem Exp $
+// $Id: STDigitMonitor.h,v 1.3 2008-10-16 13:10:34 mneedham Exp $
 #ifndef STDigitMonitor_H
 #define STDigitMonitor_H 1
 
-#include "GaudiAlg/GaudiHistoAlg.h"
+#include "Kernel/STHistoAlgBase.h"
 
 namespace LHCb{
  class STDigit;
@@ -19,7 +19,7 @@ class DeSTDetector;
  *  @date   04/12/2006
  */
 
-class STDigitMonitor : public GaudiHistoAlg{
+class STDigitMonitor : public ST::HistoAlgBase{
 
 public:
  
@@ -40,8 +40,6 @@ private:
 
   void fillHistograms(const LHCb::STDigit* aDigit) ;
 
-  DeSTDetector* m_tracker;
-  std::string m_detType; 
   std::string m_dataLocation;
 };
 

@@ -1,14 +1,9 @@
-// $Id: TTOccupancy.h,v 1.5 2007-03-21 14:24:45 jvantilb Exp $
+// $Id: TTOccupancy.h,v 1.6 2008-10-16 13:10:34 mneedham Exp $
 #ifndef TTOccupancy_H
 #define TTOccupancy_H 1
 
-#include "GaudiAlg/GaudiHistoAlg.h"
+#include "Kernel/STHistoAlgBase.h"
 
-namespace LHCb{
-  class STDigit;
-};
-
-class DeSTDetector;
 class ISTSignalToNoiseTool;
 
 /** @class TTOccupancy TTOccupancy.h
@@ -21,7 +16,8 @@ class ISTSignalToNoiseTool;
  */
 
 
-class TTOccupancy : public GaudiHistoAlg {
+template <class PBASE >
+class TTOccupancy : public ST::HistoAlgBase {
 
 public:
  
@@ -39,10 +35,17 @@ public:
 
 private:
 
-  virtual void fillHistograms(const LHCb::STDigit* aDigit);
+  const std::string& dataLocation() const;
+ 
+  const std::string histoDirName() const;
+
+  double defaultThreshold() const;
+
+
+  void fillHistograms(const PBASE* obj);
   
   ISTSignalToNoiseTool* m_sigNoiseTool;
-  DeSTDetector* m_tracker;
+ 
   int m_nBins; 
   int m_hMax;  
 

@@ -1,4 +1,4 @@
-// $Id: STEffChecker.cpp,v 1.9 2008-06-18 07:40:39 mneedham Exp $
+// $Id: STEffChecker.cpp,v 1.10 2008-10-16 13:10:34 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -20,8 +20,7 @@
 #include "MCInterfaces/IMCParticleSelector.h"
 #include "Kernel/STDetSwitch.h"
 
-// BOOST
-#include "boost/lexical_cast.hpp"
+#include "Kernel/STLexicalCaster.h"
 
 // local
 #include "HistFun.h"
@@ -39,15 +38,19 @@ DECLARE_ALGORITHM_FACTORY( STEffChecker );
 
 STEffChecker::STEffChecker( const std::string& name, 
                             ISvcLocator* pSvcLocator ) :
-  GaudiHistoAlg(name, pSvcLocator),
-  m_tracker(0)
+  ST::HistoAlgBase(name, pSvcLocator)
 { 
-  declareProperty("InputData" , m_clusterLocation  = STClusterLocation::TTClusters);
+  declareSTConfigProperty("InputData" , m_clusterLocation  , STClusterLocation::TTClusters);
   declareProperty("SelectorName", m_selectorName = "MCParticleSelector" );
-  declareProperty("DetType", m_detType = "TT");
   declareProperty("IncludeGuardRings", m_includeGuardRings = false);
   declareProperty("PrintEfficiency", m_pEff = true);
   setProperty( "HistoPrint", false );
+
+  setForcedInit();
+  m_hitTableLocation = LHCb::MCParticleLocation::Default + "2MCTTHits";
+  m_asctLocation = m_clusterLocation + "2MCHits";
+  addToFlipList(&m_hitTableLocation);
+  addToFlipList(&m_asctLocation);
 }
 
 STEffChecker::~STEffChecker()
@@ -57,26 +60,15 @@ STEffChecker::~STEffChecker()
 
 StatusCode STEffChecker::initialize()
 {
-  if( "" == histoTopDir() ) setHistoTopDir(m_detType+"/");
+  if( "" == histoTopDir() ) setHistoTopDir(detType()+"/");
 
   // Initialize GaudiHistoAlg 
-  StatusCode sc = GaudiHistoAlg::initialize();
+  StatusCode sc = ST::HistoAlgBase::initialize();
   if (sc.isFailure()) return Error("Failed to initialize", sc);
 
-  // detector element
-  m_tracker = getDet<DeSTDetector>(DeSTDetLocation::location(m_detType));
-
-  // Make location of STClusters and relation table consistent with m_detType
-
-  m_hitTableLocation = LHCb::MCParticleLocation::Default + "2MCTTHits";
-  STDetSwitch::flip( m_detType, m_clusterLocation );
-  STDetSwitch::flip( m_detType, m_hitTableLocation );
 
   // MCParticle selector
   m_selector = tool<IMCParticleSelector>(m_selectorName,m_selectorName,this);
-
-  // Location of STCluster to MCHit relation table
-  m_asctLocation = m_clusterLocation + "2MCHits";
 
   // init histos
   initHistograms();
@@ -91,8 +83,8 @@ void STEffChecker::initHistograms()
   int histID;  
 
   // Intialize histograms 
-  std::vector<DeSTLayer*>::const_iterator iterLayer=m_tracker->layers().begin();
-  for ( ; iterLayer != m_tracker->layers().end(); ++iterLayer) {
+  std::vector<DeSTLayer*>::const_iterator iterLayer=tracker()->layers().begin();
+  for ( ; iterLayer != tracker()->layers().end(); ++iterLayer) {
    
     // uniquely id using station and layer
     // add to map
@@ -101,8 +93,7 @@ void STEffChecker::initHistograms()
     m_mapping[uniqueID] = numInVector;
     
     // Create layer name
-    std::string layerName = ", layer " + 
-      boost::lexical_cast<std::string>((int)uniqueID);
+    std::string layerName = ", layer " + ST::toString((int)uniqueID);
 
     // Book x distribution histogram MCHits
     histID = (int)uniqueID+5000;
@@ -153,7 +144,7 @@ void STEffChecker::initHistograms()
 StatusCode STEffChecker::execute()
 {
   // Get the MCParticles
-  MCParticles* particles = get<MCParticles>(MCParticleLocation::Default);
+  const MCParticles* particles = get<MCParticles>(MCParticleLocation::Default);
 
   // Get the STCluster to MCHit associator
   AsctTool associator(evtSvc(), m_asctLocation);
@@ -188,8 +179,8 @@ StatusCode STEffChecker::finalize()
   }
 
   // print out efficiencys
-  std::vector<DeSTLayer*>::const_iterator iterLayer=m_tracker->layers().begin();
-  for ( ; iterLayer != m_tracker->layers().end(); ++iterLayer){
+  std::vector<DeSTLayer*>::const_iterator iterLayer = tracker()->layers().begin();
+  for ( ; iterLayer != tracker()->layers().end(); ++iterLayer){
     
     STChannelID aChan = (*iterLayer)->elementID();
     int iHistoId = findHistoId(uniqueHistoID(aChan));
@@ -205,24 +196,16 @@ StatusCode STEffChecker::finalize()
       if (m_pEff = false) eff = 1-eff;
     }
 
-    if ( m_detType == "TT" ) {
-      info() << "Station "  << aChan.station()
-             << " Layer" <<  aChan.layer()
+    info() << uniqueLayer(aChan) 
              << " eff " << eff <<" +/- " << err << endmsg;
-    }
-    else {
-      info() << "Station "  << aChan.station()
-             << " Box " << aChan.detRegion() 
-             << " Layer" <<  aChan.layer()
-             << " eff " << eff << " +/- " << err << endmsg;
-    }
+
   } // iterLayer
 
   info() << " -----------------------" << endreq;
 
 
   // hack to prevent crash
-  StatusCode sc = GaudiHistoAlg::finalize();
+  StatusCode sc = ST::HistoAlgBase::finalize();
   if (sc.isFailure()){
     return Warning("Failed to finalize base class", sc);
   }
@@ -243,8 +226,8 @@ void STEffChecker::layerEff(const MCParticle* aParticle)
   HitTable::InverseType::Range hits = m_hitTable->relations(aParticle ) ;
   if (hits.empty()) return;
   
-  std::vector<DeSTLayer*>::const_iterator iterLayer=m_tracker->layers().begin();
-  for ( ; iterLayer != m_tracker->layers().end(); ++iterLayer){
+  std::vector<DeSTLayer*>::const_iterator iterLayer=tracker()->layers().begin();
+  for ( ; iterLayer != tracker()->layers().end(); ++iterLayer){
     
     // look for MCHit in this layer.....
     HitTable::InverseType::Range::iterator iterHit = hits.begin();
@@ -311,7 +294,7 @@ int STEffChecker::findHistoId(unsigned int aLayerId)
 
 int STEffChecker::uniqueHistoID(const STChannelID aChan) const
 {
-  return m_detType == "TT" ? aChan.station()*100 + aChan.layer()  :
+  return detType() == "TT" ? aChan.station()*100 + aChan.layer()  :
     aChan.station()*100 + aChan.detRegion()*10 + aChan.layer();
 } 
 
@@ -321,8 +304,10 @@ bool STEffChecker::isInside(const DeSTLayer* aLayer, const MCHit* aHit) const
   bool isFound = false;
   if (aLayer->isInside(aHit->midPoint()) == true){
     if (m_includeGuardRings == false){
-      DeSTSector* aSector = m_tracker->findSector(aHit->midPoint());
-      if (aSector) isFound = aSector->globalInActive(aHit->midPoint());
+      const DeSTSector* aSector = tracker()->findSector(aHit->midPoint());
+      if (aSector != 0){
+        isFound = aSector->globalInActive(aHit->midPoint());
+      }
     }
     else {
       isFound = true;

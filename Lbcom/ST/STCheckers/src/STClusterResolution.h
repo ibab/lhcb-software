@@ -1,9 +1,9 @@
-// $Id: STClusterResolution.h,v 1.6 2008-03-14 18:27:09 mneedham Exp $
+// $Id: STClusterResolution.h,v 1.7 2008-10-16 13:10:34 mneedham Exp $
 #ifndef STClusterResolution_H
 #define STClusterResolution_H 1
 
 // base class
-#include "GaudiAlg/GaudiHistoAlg.h"
+#include "Kernel/STHistoAlgBase.h"
 
 #include "Linker/LinkerTool.h"
 
@@ -34,7 +34,7 @@ class ITrajPoca;
  *  @date   04/12/2006
  */
 
-class STClusterResolution : public GaudiHistoAlg {
+class STClusterResolution : public ST::HistoAlgBase {
 
 public:
  
@@ -65,10 +65,9 @@ private:
   double calculateUTrue( const LHCb::MCHit* aHit, 
                          const DeSTSensor* aSector) const;
 
-  std::string m_detType;
+
   std::string m_clusterLocation;
   std::string m_asctLocation;
-  DeSTDetector* m_tracker;
 
   // selector
   std::string m_selectorName;

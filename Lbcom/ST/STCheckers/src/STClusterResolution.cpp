@@ -1,10 +1,10 @@
-// $Id: STClusterResolution.cpp,v 1.18 2008-05-08 09:57:45 mneedham Exp $
+// $Id: STClusterResolution.cpp,v 1.19 2008-10-16 13:10:34 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
 // BOOST
-#include "boost/lexical_cast.hpp"
+#include "Kernel/STLexicalCaster.h"
 
 // Event
 #include "Event/STCluster.h"
@@ -16,7 +16,6 @@
 #include "STDet/DeSTSensor.h"
 
 // STTools interfaces from LHCbKernel and MCInterfaces
-#include "Kernel/STDetSwitch.h"
 #include "MCInterfaces/IMCParticleSelector.h"
 #include "Kernel/ISTClusterPosition.h"
 #include "Kernel/LineTraj.h"
@@ -41,16 +40,13 @@ DECLARE_ALGORITHM_FACTORY( STClusterResolution );
 
 STClusterResolution::STClusterResolution(const std::string& name, 
                                          ISvcLocator* pSvcLocator) :
-  GaudiHistoAlg(name, pSvcLocator),
-  m_tracker(0)
+ ST::HistoAlgBase(name, pSvcLocator)
 {
   // constructer
   this->declareProperty("PositionToolName", m_positionToolName = 
                         "STOfflinePosition");
   this->declareProperty("SelectorName", m_selectorName = "MCParticleSelector" );
-  this->declareProperty("DetType", m_detType = "TT");
-  this->declareProperty("AsctLocation", m_asctLocation = "TTClusters2MCHits");
-  this->declareProperty("InputData", m_clusterLocation = STClusterLocation::TTClusters);
+  this->declareSTConfigProperty("InputData", m_clusterLocation , STClusterLocation::TTClusters);
 }
 
 STClusterResolution::~STClusterResolution()
@@ -61,14 +57,12 @@ STClusterResolution::~STClusterResolution()
 StatusCode STClusterResolution::initialize()
 {
   // Set the top directory to IT or TT.
-  if ( "" == histoTopDir() ) setHistoTopDir(m_detType+"/");
+  if ( "" == histoTopDir() ) setHistoTopDir(detType()+"/");
 
   // Initialize GaudiHistoAlg
-  StatusCode sc = GaudiHistoAlg::initialize();
+  StatusCode sc = ST::HistoAlgBase::initialize();
   if (sc.isFailure()) return Error("Failed to initialize", sc);
 
-  // detector element
-  m_tracker =  getDet<DeSTDetector>(DeSTDetLocation::location(m_detType));
 
   // selector
   m_selector = tool<IMCParticleSelector>(m_selectorName,m_selectorName, this);
@@ -79,7 +73,7 @@ StatusCode STClusterResolution::initialize()
 
   m_poca = tool<ITrajPoca>( "TrajPoca" );
 
-  STDetSwitch::flip(m_detType,m_clusterLocation);
+  // location of the cluster tool
   m_asctLocation = m_clusterLocation+"2MCHits";
 
   return sc;
@@ -117,11 +111,8 @@ void STClusterResolution::fillHistograms( const STCluster* aCluster,
 
     // get true u - need stereoangle/z info from channel
     const STChannelID aChan = aCluster->channelID();
-    const DeSTSector* aSector = m_tracker->findSector(aChan);
-    if (aSector == 0){
-      Warning("Failed to find sector", StatusCode::SUCCESS).ignore();
-      return;
-    }
+    const DeSTSector* aSector = findSector(aChan);
+  
     const DeSTSensor* aSensor = aSector->findSensor(aHit->midPoint());
     if (aSensor == 0){
       Warning("Failed to find sensor", StatusCode::SUCCESS).ignore();
@@ -142,8 +133,8 @@ void STClusterResolution::fillHistograms( const STCluster* aCluster,
     const double error = measVal.fractionalError * aSensor->pitch();
 
     // Fill offline resolution and pull
-    std::string histTitle = m_detType + " " + 
-      boost::lexical_cast<std::string>(id) + "-strip clusters";
+    std::string histTitle = detType() + " " + 
+      ST::toString(id) + "-strip clusters";
     plot( uRec-uTrue, 10+id,"Resolution "+histTitle, -0.5, 0.5, 100 );
     plot( (uRec-uTrue)/error, 20+id, "Pull "+histTitle, -10., 10., 100 );
 

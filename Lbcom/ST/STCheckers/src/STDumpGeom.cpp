@@ -1,11 +1,11 @@
-// $Id: STDumpGeom.cpp,v 1.3 2006-12-21 17:54:48 jvantilb Exp $
+// $Id: STDumpGeom.cpp,v 1.4 2008-10-16 13:10:34 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
 // xml geometry
 #include "STDet/DeSTDetector.h"
-#include "STDet/DeSTSector.h"
+
 
 // local
 #include "STDumpGeom.h"
@@ -20,11 +20,11 @@ DECLARE_ALGORITHM_FACTORY( STDumpGeom );
 
 STDumpGeom::STDumpGeom( const std::string& name, 
                         ISvcLocator* pSvcLocator ) :
-  GaudiAlgorithm(name, pSvcLocator)
+  ST::AlgBase(name, pSvcLocator)
 {
   // constructer
-  declareProperty("DetType",  m_detType  = "TT"  );
   declareProperty("FullDetail", m_fullDetail = false );
+  setForcedInit();
 }
 
 STDumpGeom::~STDumpGeom()
@@ -35,17 +35,14 @@ STDumpGeom::~STDumpGeom()
 StatusCode STDumpGeom::initialize()
 {
   // initialize  
-  StatusCode sc = GaudiAlgorithm::initialize();
+  StatusCode sc = ST::AlgBase::initialize();
   if (sc.isFailure()) return Error("Failed to initialize", sc);
 
   // Print out the full tree
-  DeSTDetector* det =getDet<DeSTDetector>(DeSTDetLocation::location(m_detType));
-  if (det != 0 ){
-    std::cout << "Printing out the full geometry tree of\n"
-              << det->name() << std::endl;
-    children("", det);
-  }
-
+  std::cout << "Printing out the full geometry tree of\n"
+            << tracker()->name() << std::endl;
+  children("", tracker());
+  
   return StatusCode::SUCCESS;
 }
 

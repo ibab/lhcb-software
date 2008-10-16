@@ -1,8 +1,8 @@
-// $Id: STClusterClassification.h,v 1.2 2006-12-21 17:54:48 jvantilb Exp $
+// $Id: STClusterClassification.h,v 1.3 2008-10-16 13:10:34 mneedham Exp $
 #ifndef STClusterClassification_H
 #define STClusterClassification_H 1
 
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "Kernel/STHistoAlgBase.h"
 
 #include "Linker/LinkerTool.h"
 
@@ -27,7 +27,7 @@ namespace LHCb{
  */
 
 
-class STClusterClassification : public GaudiAlgorithm {
+class STClusterClassification : public ST::HistoAlgBase {
 
 public:
  
@@ -70,7 +70,6 @@ private:
   std::string m_asctLocation;
   std::string m_clusterLocation;
   std::string m_hitLocation; 
-  std::string m_detType;
 
   mutable std::map<std::string, unsigned int> m_infoMap;
 
