@@ -1,4 +1,4 @@
-// $Id: TrackResChecker.cpp,v 1.6 2008-09-25 15:18:18 smenzeme Exp $
+// $Id: TrackResChecker.cpp,v 1.7 2008-10-16 07:48:27 wouter Exp $
 // Include files 
 #include "TrackResChecker.h"
 
@@ -190,18 +190,12 @@ void TrackResChecker::pullplots(const LHCb::State& trueState, const LHCb::State&
   const double dy   = vec(1) - trueVec(1);
   const double dtx  = vec(2) - trueVec(2);
   const double dty  = vec(3) - trueVec(3);
-  const double trkP = recState.p();
-  const double mcP  = trueState.p();
 
   // fill the histograms
   plot1D( dx/Gaudi::Units::cm, location+"/x_res", "x resolution", -0.06, 0.06, 101 );
   plot1D( dy/Gaudi::Units::cm, location+"/y_res","y resolution", -0.06,0.06, 101 );
   plot1D( dtx, location+"/tx_res", "tx resolution", -0.01, 0.01, 100 );
   plot1D( dty, location+"/ty_res", "ty resolution", -0.01, 0.01, 100 );
-
-  if (fabs(trkP) > 1.0 * Gaudi::Units::keV)
-    plot1D(1.0  - mcP / trkP,
-	   location+"/dpoverp", "dp/p", -0.05, 0.05, 100 );
 
   plot1D( dx / sqrt(cov(0,0)+trueCov(0,0)),
           location+"/xpull", "x pull", -5., 5., 100 );
@@ -211,12 +205,20 @@ void TrackResChecker::pullplots(const LHCb::State& trueState, const LHCb::State&
           location+"/txpull", "tx pull", -5., 5., 100 );
   plot1D( dty / sqrt(cov(3,3)+trueCov(3,3)),
           location+"/typull", "ty pull", -5., 5., 100 );
-
-  if (fabs(trkP) > 1.0 * Gaudi::Units::keV && fabs(cov(4,4)+trueCov(4,4)) > 1e-20){
-    plot1D(( fabs(vec(4)) - 1.0/mcP ) / sqrt(cov(4,4)+trueCov(4,4)),
-	   location+"/ppull", "p pull", -5., 5., 100 ); 
-    plot1D(sqrt(recState.errP2()) / trkP,
-	   location+"/dpoverp", "expected dp/p", 0., 0.01, 100 );
+  
+  if ( std::abs(cov(4,4)) > 1e-20 ) { // test that there was a momentum measurement
+    const double qop      = vec(4) ;
+    const double qoptrue  = trueVec(4);
+    const double invp     = std::abs(qop) ;
+    const double invptrue = std::abs(qoptrue) ;
+    const double qoperr   = std::sqrt(cov(4,4)+trueCov(4,4)) ;
+    // make two pulls, to be sensitive to both a curvature and a momentum bias
+    plot1D( (qop - qoptrue) / qoperr, location+"/qoppull", "qop pull", -5., 5., 100 );
+    plot1D( (invp - invptrue) / qoperr, location+"/ppull", "p pull", -5., 5., 100 );
+    plot1D( invp / invptrue  - 1, location+"/dpoverp", "dp/p", -0.05, 0.05, 100 );
+    if( invp > 0 )
+      plot1D( std::sqrt( cov(4,4) ) / invp, 
+	      location+"/expecteddpoverp", "expected dp/p", 0., 0.01, 100 );
   }
 }
 
@@ -362,13 +364,20 @@ StatusCode TrackResChecker::finalize () {
 	 aida->title() == "tx pull" ||
 	 aida->title() == "ty pull")  
 
-       info() << aida->title() << format( ":  mean =  %5.3f +/- %5.3f",
-					  aida->mean(), Gaudi::Utils::HistoStats::meanErr(aida)) << endreq;
+       info() << aida->title() << format( ":  mean =  %5.3f +/- %5.3f, RMS = %5.3f +/- %5.3f",
+					  aida->mean(), Gaudi::Utils::HistoStats::meanErr(aida),
+					  aida->rms(), Gaudi::Utils::HistoStats::rmsErr(aida)) << endreq;
      
      if (aida->title() == "y resolution" ||
 	 aida->title() == "x resolution" )
        info() << aida->title() << format( ":  RMS =  %5.3f +/- %5.3f micron",
 					   aida->rms()*1000, Gaudi::Utils::HistoStats::rmsErr(aida)*1000) << endreq; 
+     
+     if (aida->title() == "dp/p" )
+       info() << aida->title() << format( ":  mean =  %6.4f +/- %6.4f, RMS =  %6.4f +/- %6.4f",
+					  aida->mean(), Gaudi::Utils::HistoStats::meanErr(aida),
+					  aida->rms(), Gaudi::Utils::HistoStats::rmsErr(aida)) << endreq; 
+     
    }
  }
 

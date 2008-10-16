@@ -4,6 +4,9 @@
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
 
+! 2008-10-16 - Wouter Hulsbergen
+- Added momentum reso to output of TrackChecker
+
 ! 2008-10-11 - Marco Cattaneo
 - In TrackChecherNT.cpp adapt to new return type of KeyedContainer::size()
 
