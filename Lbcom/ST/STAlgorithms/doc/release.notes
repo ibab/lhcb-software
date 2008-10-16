@@ -2,6 +2,9 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+! 2008-10-16 M Needham
+ - make merge algorithm default to TT type
+
 ! 2008-10-14 M Needham
  - Move to new algorithm base classes 
 
