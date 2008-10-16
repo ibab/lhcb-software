@@ -6,6 +6,9 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+! 2008-10-16 - Chris Jones
+ - Add Rich/RichAlgorithms
+
 </PRE><H1><A NAME=v6r23>2008-10-07 LbcomSys v6r23</A></H1><PRE>
 This version uses Gaudi v20r2 and LHCb v25r2
 

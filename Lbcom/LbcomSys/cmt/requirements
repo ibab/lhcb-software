@@ -33,6 +33,7 @@ use RichDAQ           v3r22   Rich      # Chris Jones
 use RichMCMonitors    v1r6    Rich      # Chris Jones
 use RichMCTools       v3r9    Rich      # Chris Jones
 use RichTools         v2r22   Rich      # Chris Jones
+use RichAlgorithms    v1r0    Rich      # Chris Jones
 
 # Silicon detectors
 use SiTools           v1r5    Si        # Matt Needham
