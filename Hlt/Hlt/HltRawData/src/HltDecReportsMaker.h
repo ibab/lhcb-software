@@ -1,4 +1,4 @@
-// $Id: HltDecReportsMaker.h,v 1.1.1.1 2008-08-02 16:40:07 tskwarni Exp $
+// $Id: HltDecReportsMaker.h,v 1.2 2008-10-16 21:44:54 tskwarni Exp $
 #ifndef HLTDECREPORTSMAKER_H 
 #define HLTDECREPORTSMAKER_H 1
 
@@ -34,9 +34,7 @@ public:
   };
 
 
-  enum ErrorBitFlags { kNoHltSummary=1,
-                       kNotConfigured=2,
-                       kDecisionNotConfigured=4
+  enum ErrorBitFlags { kDecisionNotConfigured=1
   };
   
 

@@ -1,4 +1,4 @@
-// $Id: HltDecReportsWriter.cpp,v 1.3 2008-09-17 16:14:56 tskwarni Exp $
+// $Id: HltDecReportsWriter.cpp,v 1.4 2008-10-16 21:44:54 tskwarni Exp $
 // Include files 
 
 // from Gaudi
@@ -92,16 +92,25 @@ StatusCode HltDecReportsWriter::execute() {
   for( HltDecReports::Container::const_iterator iRep=inputSummary->begin();
        iRep!=inputSummary->end();++iRep){
     const unsigned int decRep = iRep->second.decReport();
-    if( decRep & 0x0000FFFFL ){  // only non-empty reports go into Raw Bank!      
+    //    if( decRep & 0x0000FFFFL ){  // only non-empty reports go into Raw Bank!      
       bankBody.push_back( decRep );
-    }
+    // }
   }  
 
   // order according to the values, essentially orders by intSelectionID 
   // this is important since it will put "*Global" reports at the beginning of the bank
   if( !bankBody.empty() ) std::sort( bankBody.begin(), bankBody.end(), UDless() );
 
+  // delete any previously inserted dec reports
+  const std::vector<RawBank*> hltdecreportsRawBanks = rawEvent->banks( RawBank::HltDecReports );
+  for( std::vector<RawBank*>::const_iterator b=hltdecreportsRawBanks.begin();
+       b!=hltdecreportsRawBanks.end(); ++b){
+    rawEvent->removeBank(*b);
+    if ( msgLevel(MSG::VERBOSE) ){ verbose() << " Deleted previosuly inserted HltDecReports bank " << endmsg;
+    }    
+  }
   
+ 
   rawEvent->addBank(  kSourceID, RawBank::HltDecReports, kVersionNumber, bankBody );
 
   if ( msgLevel(MSG::VERBOSE) ){

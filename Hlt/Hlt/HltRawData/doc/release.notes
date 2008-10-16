@@ -1,9 +1,16 @@
-!$Id: release.notes,v 1.14 2008-09-21 18:04:59 graven Exp $
+!$Id: release.notes,v 1.15 2008-10-16 21:44:54 tskwarni Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltRawData
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Writers and Readers, Makers of persisted TES info
 !-----------------------------------------------------------------------------
+
+! 2008-10-16 - Tomasz Skwarnicki
+ - Makers of Vertex & Sel Reports now take input data from dataSvc(), with additional 
+   input from HltSummary (if available)
+ - Maker of Dec Reports now starts from existing HltDecReports (if already present)
+   adding from HltSummary (if available). Global decisions added if missing.
+   Empty decisions no longer added if missing.
 
 !========================== HltRawData v1r4 2008-09-21 ===================
 ! 2008-09-17 - Tomasz Skwarnicki

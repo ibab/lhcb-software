@@ -1,4 +1,4 @@
-// $Id: HltDecReportsReader.cpp,v 1.2 2008-09-17 16:14:56 tskwarni Exp $
+// $Id: HltDecReportsReader.cpp,v 1.3 2008-10-16 21:44:54 tskwarni Exp $
 // Include files 
 
 // from Gaudi
@@ -113,10 +113,7 @@ StatusCode HltDecReportsReader::execute() {
   // get string-to-int selection ID map
   std::vector<IANNSvc::minor_value_type> selectionNameToIntMap;  
 
-  // std::vector<IANNSvc::minor_value_type> hlt = m_hltANNSvc->items("SelectionID"); // old style
-  // selectionNameToIntMap.insert( selectionNameToIntMap.end(),hlt.begin(),hlt.end() );
-
-  std::vector<IANNSvc::minor_value_type> hlt1 = m_hltANNSvc->items("Hlt1SelectionID"); // new style
+  std::vector<IANNSvc::minor_value_type> hlt1 = m_hltANNSvc->items("Hlt1SelectionID"); 
   selectionNameToIntMap.insert( selectionNameToIntMap.end(),hlt1.begin(),hlt1.end() );
 
   std::vector<IANNSvc::minor_value_type> hlt2 = m_hltANNSvc->items("Hlt2SelectionID");
@@ -146,7 +143,7 @@ StatusCode HltDecReportsReader::execute() {
     }    
     if( selName != "Dummy" ){
       if( outputSummary->hasSelectionName( selName ) ){
-        Warning(" Duplicate decision report in storage ", StatusCode::SUCCESS, 20 );
+        Warning(" Duplicate decision report in storage "+selName, StatusCode::SUCCESS, 20 );
       } else {
         outputSummary->insert( selName, *dec );
       }
@@ -157,6 +154,9 @@ StatusCode HltDecReportsReader::execute() {
       Error(mess.str(), StatusCode::SUCCESS, 50 );
     }
   }
+
+#if 0
+  // make this part inactive until have access to real config in off-line
 
   // ---------------- put decision=false decisions for "*Decision"s in configuration
 
@@ -188,6 +188,7 @@ StatusCode HltDecReportsReader::execute() {
     
 
   }
+#endif 
  
   if ( msgLevel(MSG::VERBOSE) ){
     // debugging info

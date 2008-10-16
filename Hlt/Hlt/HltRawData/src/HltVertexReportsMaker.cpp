@@ -1,4 +1,4 @@
-// $Id: HltVertexReportsMaker.cpp,v 1.2 2008-09-17 16:14:56 tskwarni Exp $
+// $Id: HltVertexReportsMaker.cpp,v 1.3 2008-10-16 21:44:54 tskwarni Exp $
 // Include files 
 
 // from Gaudi
@@ -74,57 +74,89 @@ StatusCode HltVertexReportsMaker::execute() {
   HltVertexReports* outputSummary = new HltVertexReports();
   put( outputSummary, m_outputHltVertexReportsLocation );
 
-  // get input selection summary
-  if( !exist<HltSummary>(m_inputHltSummaryLocation) ){    
-    Warning( " No HltSummary at "+ m_inputHltSummaryLocation.value(),StatusCode::SUCCESS, 20 );
-    return StatusCode::SUCCESS;  
-  }  
-  HltSummary* inputSummary = get<HltSummary>(m_inputHltSummaryLocation);
+  // get input HltSummary if exists
+  HltSummary* inputSummary(0);  
+  if( exist<HltSummary>(m_inputHltSummaryLocation) ){    
+    inputSummary = get<HltSummary>(m_inputHltSummaryLocation);
+  }
 
-
-  // selection names in HltSummary
-  std::vector<std::string> selIDs = inputSummary->selectionSummaryIDs();
-  if( 0==selIDs.size() )return StatusCode::SUCCESS;
   
   // get string-to-int selection ID map
   std::vector<IANNSvc::minor_value_type> selectionNameToIntMap;  
-  if( selIDs.size() ){
-    //    std::vector<IANNSvc::minor_value_type> hlt = m_hltANNSvc->items("SelectionID"); // old style
-    //    selectionNameToIntMap.insert( selectionNameToIntMap.end(),hlt.begin(),hlt.end() );
-    std::vector<IANNSvc::minor_value_type> hlt1 = m_hltANNSvc->items("Hlt1SelectionID"); // new style
-    selectionNameToIntMap.insert( selectionNameToIntMap.end(),hlt1.begin(),hlt1.end() );
-    std::vector<IANNSvc::minor_value_type> hlt2 = m_hltANNSvc->items("Hlt2SelectionID");
-    selectionNameToIntMap.insert( selectionNameToIntMap.end(),hlt2.begin(),hlt2.end() );
-  }
+  std::vector<IANNSvc::minor_value_type> hlt1 = m_hltANNSvc->items("Hlt1SelectionID"); // new style
+  selectionNameToIntMap.insert( selectionNameToIntMap.end(),hlt1.begin(),hlt1.end() );
+  std::vector<IANNSvc::minor_value_type> hlt2 = m_hltANNSvc->items("Hlt2SelectionID");
+  selectionNameToIntMap.insert( selectionNameToIntMap.end(),hlt2.begin(),hlt2.end() );
+
 
   // loop over selections given in the input list
   for( std::vector<std::string>::const_iterator is=m_vertexSelections.value().begin();
        is!=m_vertexSelections.value().end();++is){
      const std::string selName(*is);     
+     const stringKey name(*is);
 
      // prevent duplicate selections
      if( outputSummary->hasSelectionName( selName ) )continue;
 
-     if( ! inputSummary->hasSelectionSummary( selName ) )continue;
+     std::vector<ContainedObject*> candidates;
 
-     const LHCb::HltSelectionSummary& selSumIn = inputSummary->selectionSummary(selName);
+     // try dataSvc first
+     if ( dataSvc().hasSelection(name) ) {
 
-     // unsuccessful selections can't save candidates
-     if( !selSumIn.decision() )continue;
+       Hlt::Selection& sel = dataSvc().selection(name,this);
 
-     // number of candidates
-     int noc = selSumIn.data().size();
-     // empty selections have nothing to save
-     if( !noc )continue;
+        // unsuccessful selections can't save candidates
+       if( !sel.decision() )continue;
+
+       if (sel.classID() != LHCb::RecVertex::classID()) {
+         Error(" Selection name "+selName+" did not select vertices. ");
+         continue;
+       }
+       
+
+       Hlt::VertexSelection& tsel = dynamic_cast<Hlt::VertexSelection&>(sel);      
+       // number of candidates
+       int noc = tsel.size();
+       // empty selections have nothing to save
+       if( !noc )continue;
+
+       for (Hlt::VertexSelection::iterator it = tsel.begin(); it != tsel.end(); ++it) {
+         candidates.push_back( (ContainedObject*)(*it) );
+       }
+         
+     } else if( inputSummary ) {
+       
+       if( ! inputSummary->hasSelectionSummary( selName ) )continue;
+
+       const LHCb::HltSelectionSummary& selSumIn = inputSummary->selectionSummary(selName);
+
+       // unsuccessful selections can't save candidates
+       if( !selSumIn.decision() )continue;
+
+       // number of candidates
+       int noc = selSumIn.data().size();
+       // empty selections have nothing to save
+       if( !noc )continue;
   
-     const std::vector<ContainedObject*>& candidates = selSumIn.data();
+       // const std::vector<ContainedObject*>& candidates = selSumIn.data();
+       candidates = selSumIn.data();
 
-     std::vector<ContainedObject*>::const_iterator ic0 = candidates.begin();
-     RecVertex* candi = dynamic_cast<RecVertex*>(*ic0);
-     if( !candi ){
-       Error(" Selection name "+selName+" did not select vertices. ");
+       std::vector<ContainedObject*>::const_iterator ic0 = candidates.begin();
+       RecVertex* candi = dynamic_cast<RecVertex*>(*ic0);
+       if( !candi ){
+         Error(" Selection name "+selName+" did not select vertices. ");
+         continue;
+       }
+       
+     } else {
+
+       Error(" Selection name "+selName+" not in dataSvc and no HltSummary at "+ m_inputHltSummaryLocation.value()
+             ,StatusCode::SUCCESS, 20 );
        continue;
+       
      }
+     
+     if( ! candidates.size() )continue;
 
      // save selection ---------------------------
 
@@ -138,7 +170,7 @@ StatusCode HltVertexReportsMaker::execute() {
        }
      }
      if( !intSelID ){
-       Warning( " selectionName="+selName+ " from HltSummary not found in HltANNSvc. Skipped. ",StatusCode::SUCCESS, 20 );
+       Warning( " selectionName="+selName+ " not found in HltANNSvc. Skipped. ",StatusCode::SUCCESS, 20 );
        continue;
      }
 
