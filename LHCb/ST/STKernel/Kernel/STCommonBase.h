@@ -5,7 +5,7 @@
  *  Header file for ST base class : STCommonBase
  *
  *  CVS Log :-
- *  $Id: STCommonBase.h,v 1.2 2008-10-14 11:51:21 mneedham Exp $
+ *  $Id: STCommonBase.h,v 1.3 2008-10-16 08:38:24 jluisier Exp $
  *
  *  @author Matthew Needham    Matthew.Needham@cern.ch
  *  @date   2005-11-10
@@ -88,8 +88,8 @@ namespace ST
    const std::string& detType() const; 
 
    /** convert to string */ 
-   template <typename T>
-   std::string toString(T type) const;
+   //template <typename T>
+   //std::string toString(T type) const;
   
    /** station as a string */
    std::string station(const LHCb::STChannelID& chan) const;
