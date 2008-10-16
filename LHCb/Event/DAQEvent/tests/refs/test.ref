@@ -1,14 +1,7 @@
-# --> Including file '/build/cattanem/Gaudi_v20r2/Event/DAQEvent/tests/options/test.opts'
-# ApplicationMgr.TopAlg += { "DAQEventTests::ByteStreamTests",                           "DAQEventTests::DummyRawEventCreator",                           "RawEventDump" };
-# ApplicationMgr.EvtMax = 1;
-# ApplicationMgr.EvtSel = "NONE";
-# EventDataSvc.ForceLeaves = 1;
-# RawEventDump.DumpData = true;
-# <-- End of file '/build/cattanem/Gaudi_v20r2/Event/DAQEvent/tests/options/test.opts'
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr $Revision: 1.4 $
-                                          running on lxbuild120.cern.ch on Mon Jul 21 15:31:31 2008
+                                                   Welcome to ApplicationMgr $Revision: 1.5 $
+                                          running on lxbuild120.cern.ch on Thu Oct 16 18:11:05 2008
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DAQEventTests::...   INFO 5

@@ -4,6 +4,9 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+! 2008-10-16 - Marco Cattaneo
+ - Update test.ref reference file for Gaudi v20r3
+
 ! 2008-10-14 - Marco Cattaneo
  - Add missing dependency of dictionary generation on header file generation
 
