@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.25 2008-10-15 14:14:03 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.26 2008-10-16 16:07:13 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -252,7 +252,7 @@ class Brunel(LHCbConfigurableUser):
 
     ## Apply the configuration
     def applyConf(self):
-        GaudiKernel.ProcessJobOptions.printing_level += 1
+        GaudiKernel.ProcessJobOptions._logFilter.printing_level += 1
         self.setOtherProp(TrackSys(),"expertTracking") 
         self.setOtherProps(RecSysConf(),["fieldOff","veloOpen","recoSequence"])
         brunelSeq = GaudiSequencer("BrunelSequencer")

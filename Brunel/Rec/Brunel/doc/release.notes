@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2008-10-16 - Marco Cattaneo
+ - Fix Configurable for Gaudi v20r3. Not compatible with Gaudi v20r2
+
 </PRE><H1><A NAME=v33r3p1>2008-10-15 Brunel v33r3p1</A></H1><PRE>
  - Adapt valgrind.job for use on interactive LSF.
  - Adapt valgrind.job and Brunel_Ganga.job for use without version directory
