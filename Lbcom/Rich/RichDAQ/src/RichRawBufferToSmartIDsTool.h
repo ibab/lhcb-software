@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::DAQ::RawBufferToSmartIDsTool
  *
  *  CVS Log :-
- *  $Id: RichRawBufferToSmartIDsTool.h,v 1.18 2008-10-15 12:29:30 jonrob Exp $
+ *  $Id: RichRawBufferToSmartIDsTool.h,v 1.19 2008-10-16 16:04:54 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -82,7 +82,7 @@ namespace Rich
       
       // Access the vector of RichSmartIDs for the given HPD identifier
       const LHCb::RichSmartID::Vector& richSmartIDs( const LHCb::RichSmartID hpdID,
-                                                     const bool createIfMissing = false ) const;
+                                                     const bool createIfMissing = true ) const;
 
       // Access all RichSmartIDs for the current Event
       const Rich::DAQ::L1Map & allRichSmartIDs( const IRawBufferToSmartIDsTool::RawEventLocations& taeLocs ) const;
@@ -90,7 +90,7 @@ namespace Rich
       // Access the vector of RichSmartIDs for the given HPD identifier
       const LHCb::RichSmartID::Vector& richSmartIDs( const IRawBufferToSmartIDsTool::RawEventLocations& taeLocs,
                                                      const LHCb::RichSmartID hpdID,
-                                                     const bool createIfMissing = false ) const;
+                                                     const bool createIfMissing = true ) const;
       
     private: // private methods
 
@@ -110,6 +110,9 @@ namespace Rich
       const LHCb::RichSmartID::Vector& richSmartIDs( const LHCb::RichSmartID hpdID,
                                                      const Rich::DAQ::L1Map & data,
                                                      const bool createIfMissing ) const;
+
+      /// Dummy vector of hits
+      const LHCb::RichSmartID::Vector & dummyVector() const;
 
     private: // private data
 

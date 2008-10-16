@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.84 2008-10-15 12:29:30 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.85 2008-10-16 16:04:54 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -566,8 +566,11 @@ void RawDataFormatTool::fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs
       // Eventually, should be done by default for all formats
       // (once DC04/06 compatibility is no longer needed)
       // In this case this if clause can be removed
-      if ( version != LHCb0 && version != LHCb1 &&
-           version != LHCb2 && version != LHCb3 && version != LHCb4 )
+      if ( version != LHCb0 && 
+           version != LHCb1 &&
+           version != LHCb2 && 
+           version != LHCb3 && 
+           version != LHCb4 )
       {
         // create ingress header word
         L1IngressHeader ingressWord;

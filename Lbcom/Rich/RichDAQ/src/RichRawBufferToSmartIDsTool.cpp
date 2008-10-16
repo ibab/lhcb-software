@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::DAQ::RawBufferToSmartIDsTool
  *
  * CVS Log :-
- * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.24 2008-10-15 12:29:30 jonrob Exp $
+ * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.25 2008-10-16 16:04:54 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -46,13 +46,13 @@ StatusCode RawBufferToSmartIDsTool::initialize()
 
   // RichDet
   m_richSys = getDet<DeRichSystem>( DeRichLocations::RichSystem );
-  
+
   // acquire tools
   acquireTool( "RichRawDataFormatTool", "RawDecoder", m_rawFormatT, this );
-  
+
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
-  
+
   debug() << "RawEvent TAEs : " << m_rawEventLocs << endreq;
 
   return sc;
@@ -87,6 +87,14 @@ RawBufferToSmartIDsTool::richSmartIDs( const LHCb::RichSmartID hpdID,
   return richSmartIDs( hpdID, data, createIfMissing );
 }
 
+const LHCb::RichSmartID::Vector & RawBufferToSmartIDsTool::dummyVector() const
+{
+  // dummy vector for cases where nothing is found or created
+  static LHCb::RichSmartID::Vector dummy_vector;
+  dummy_vector.clear();
+  return dummy_vector;
+}
+
 const LHCb::RichSmartID::Vector&
 RawBufferToSmartIDsTool::richSmartIDs( const LHCb::RichSmartID hpdID,
                                        const Rich::DAQ::L1Map & data,
@@ -94,12 +102,14 @@ RawBufferToSmartIDsTool::richSmartIDs( const LHCb::RichSmartID hpdID,
 {
   // find the data for the requested HPD ...
 
+  const LHCb::RichSmartID::Vector * found_data = NULL;
+
+  // First seach in a read-only way
+
   /** @attention This implementation is not particulary efficient.
    *             Could maybe be improved if needed for speed reasons.
    *  @todo      Look into speeding this up if needed.
    */
-
-  const LHCb::RichSmartID::Vector * found_data = NULL;
 
   // Loop over L1 boards
   for ( Rich::DAQ::L1Map::const_iterator iL1 = data.begin();
@@ -128,26 +138,32 @@ RawBufferToSmartIDsTool::richSmartIDs( const LHCb::RichSmartID hpdID,
   // If not found and requested, create appropriate entry
   if ( !found_data && createIfMissing )
   {
+    // Get some L1 information for this HPD from the DB
     const Rich::DAQ::Level1HardwareID l1HID   = m_richSys->level1HardwareID(hpdID);
-    const Rich::DAQ::Level1Input 	    l1Input = m_richSys->level1InputNum(hpdID);
-    // require non-const access
+    const Rich::DAQ::Level1Input      l1Input = m_richSys->level1InputNum(hpdID);
+
+    // require non-const access to L1 Map
     Rich::DAQ::L1Map & l1Map = *(const_cast<Rich::DAQ::L1Map*>(&data));
     Rich::DAQ::IngressMap & ingressMap   = l1Map[l1HID];
     Rich::DAQ::IngressInfo & ingressInfo = ingressMap[l1Input.ingressID()];
-    // what to do about header words ??
     Rich::DAQ::HPDInfo & hpdInfo = ingressInfo.hpdData()[l1Input];
-    if ( hpdInfo.hpdID() != hpdID )
-    {
-      error() << "HPD Mis-match : Expected " << hpdID           << endreq;
-      error() << "              : Received " << hpdInfo.hpdID() << endreq;
-    }
+
+    // check HPDID is invalid (should be as not set so far ....)
+    if ( hpdInfo.hpdID().isValid()   ) { Error( "HPDID already set ...." ).ignore();     }
+    // check hit vector is empty
+    if ( !hpdInfo.smartIDs().empty() ) { Error( "Hit list is not empty ...." ).ignore(); }
+
+    // Set some information
+    hpdInfo.setHpdID(hpdID);
+    // Set what we can in the header / footer
+    hpdInfo.header().setL0ID(m_richSys->level0ID(hpdID));
+
+    // set found data pointer
+    found_data = &(hpdInfo.smartIDs());
   }
 
-  // dummy vector for cases where nothing is found
-  static const LHCb::RichSmartID::Vector dummy_vector;
-
   // return either the found data or the dummy
-  return ( found_data ? *found_data : dummy_vector );
+  return ( found_data ? *found_data : dummyVector() );
 }
 
 const Rich::DAQ::L1Map &
@@ -175,4 +191,3 @@ const Rich::DAQ::L1Map & RawBufferToSmartIDsTool::allRichSmartIDs() const
   }
   return m_richData;
 }
-
