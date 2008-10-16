@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : Rich::Rec::EventSelectionAlg
  *
  *  CVS Log :-
- *  $Id: RichRecEventSelectionAlg.cpp,v 1.5 2008-09-23 15:38:21 jonrob Exp $
+ *  $Id: RichRecEventSelectionAlg.cpp,v 1.6 2008-10-16 09:42:35 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -55,7 +55,7 @@ StatusCode EventSelectionAlg::execute()
   {
     if ( !pixelCreator()->newPixels() ) return StatusCode::FAILURE;
     // enough hits overall ?
-    OK = ( richPixels()->size() >= m_minPixels );
+    OK = ( (int)richPixels()->size() >= m_minPixels );
     if ( OK && m_minHPDsWithHits > 0 )
     {
       Rich::Map<LHCb::RichSmartID,unsigned int> hpdCount;
@@ -84,7 +84,7 @@ StatusCode EventSelectionAlg::execute()
       // get the rings
       const LHCb::RichRecRings * rings = get<LHCb::RichRecRings>(m_ringLoc);
       // enough rings ?
-      OK = ( rings->size() >= m_minRings );
+      OK = ( (int)rings->size() >= m_minRings );
     }
   }
 
@@ -93,7 +93,7 @@ StatusCode EventSelectionAlg::execute()
   {
     if ( !trackCreator()->newTracks() ) return StatusCode::FAILURE;
     // enough tracks ?
-    OK = ( richTracks()->size() >= m_minTracks );
+    OK = ( (int)richTracks()->size() >= m_minTracks );
   }
 
   // set if this events is selected
