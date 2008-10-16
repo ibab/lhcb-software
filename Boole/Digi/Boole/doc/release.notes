@@ -3,6 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+! 2008-10-16 - Marco Cattaneo
+ - Fix Configurable for Gaudi v20r3. Not compatible with Gaudi v20r2
+
 ! 2008-10-14 - Marco Cattaneo
  - Fix valgrind.job for use in interactive lsf, and to remove version directory
  - Add Boole-2008-VeloOpen.py to digitize velo open geometry
