@@ -150,9 +150,9 @@ void VeloClusterMaker::makeClusters(){
 	// Cluster failed its global S/N cut: unmark channels as used
 	unmarkCluster(currentCluster);
       }
-      if( m_clusters->size()>= m_maxClusters ) {
+      if( (int)m_clusters->size()>= m_maxClusters ) {
 	// Too many clusters to add more after this one.
-	Warning("Too many clusters in this event processing incomplete");
+	Warning("Too many clusters in this event processing incomplete").ignore();
 	info() << "Processing limit is" <<  m_maxClusters 
 	       << " clusters. VeloClusterMaker::MakeClusters "
 	       << "is stopping clusterization while processing "
@@ -316,12 +316,12 @@ bool VeloClusterMaker::TryToAddChannel(LHCb::InternalVeloCluster * currentCluste
     LHCb::VeloChannelID innerStripId;
     StatusCode sc = sens->neighbour(currentDigit->key(),inner_offset,
                                     innerStripId);
-    if(!sc) return false; // Invalid channel somehow
+    if(sc.isFailure()) return false; // Invalid channel somehow
 
     // Hit object corresponding to that strip
     LHCb::VeloDigit* innerDigit=m_digits->object(innerStripId); 
     if( !innerDigit ){
-      Warning("Asking for a +2 VeloDigit where +1 VeloDigit does not exist!");
+      Warning("Asking for a +2 VeloDigit where +1 VeloDigit does not exist!").ignore();
       if(m_isDebug) debug() << "innerStripID = " << innerStripId << endmsg;
       return (false);
     }
@@ -430,7 +430,7 @@ double VeloClusterMaker::signalToNoise(LHCb::VeloDigit* digit){
   // get the noise in ADC counts from the Detector Element
   double noise = m_velo->sensor(digit->channelID())->stripNoise(digit->channelID().strip());
   if(fabs(noise) < 0.00001) {
-    Warning("Strip with |noise| < 0.00001, S/N not valid here");
+    Warning("Strip with |noise| < 0.00001, S/N not valid here").ignore();
     noise = 0.00001; // sanity check for zero noise...
   }
   // calc the S/N for this digit  
