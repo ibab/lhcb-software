@@ -2,9 +2,7 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/SmartIF.h"
-#include "GaudiKernel/IDetDataSvc.h"
-#include "GaudiKernel/IRegistry.h"
+
 // Math definitions
 #include "GaudiKernel/Transform3DTypes.h"
 #include "GaudiKernel/Point3DTypes.h"
@@ -391,7 +389,7 @@ StatusCode TrackSeedFind::getData() {
       if ( 0 == OTTimes) {
           warning() << " No OTTimes container! " << endreq;
           warning() << " continuing without OT " << endreq;
-      } else if (OTTimes->size()>m_maxOTHits) {
+      } else if ((int)OTTimes->size()>m_maxOTHits) {
          warning() << " Too many OT hits, too high multiplicity " << OTTimes->size() << endreq; 
          warning() << " Skipping OT for this event " << endreq;
 	 // return StatusCode::SUCCESS;
