@@ -1,30 +1,7 @@
-# --> Including file '/build/cattanem/LHCb_HEAD/Ex/IOExample/tests/options/ReadHepMC.opts'
-# ApplicationMgr.HistogramPersistency = "NONE";
-# ApplicationMgr.EvtMax   = 2;
-# EventSelector.PrintFreq = 1;
-# --> Including file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v20r2/GaudiPoolDb/v4r0/options/GaudiPoolDbRoot.opts'
-# ApplicationMgr.ExtSvc    += { "Gaudi::MultiFileCatalog/FileCatalog",                              "Gaudi::IODataManager/IODataManager",                              "PoolDbCacheSvc/PoolDbCacheSvc",                              "PoolDbCnvSvc/PoolRootEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootKeyEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootTreeEvtCnvSvc"                            };
-# EventPersistencySvc.CnvServices += { "PoolRootEvtCnvSvc" };
-# EventPersistencySvc.CnvServices += { "PoolRootTreeEvtCnvSvc" };
-# EventPersistencySvc.CnvServices += { "PoolRootKeyEvtCnvSvc" };
-# PoolRootEvtCnvSvc.DbType         = "POOL_ROOT";
-# PoolRootKeyEvtCnvSvc.DbType      = "POOL_ROOTKEY";
-# PoolRootTreeEvtCnvSvc.DbType     = "POOL_ROOTTREE";
-# PoolDbCacheSvc.Dlls              = {"lcg_RootStorageSvc", "GaudiKernelDict" };
-# PoolDbCacheSvc.OutputLevel       = 4;
-# PoolDbCacheSvc.DomainOpts        = { "Domain[ROOT_All].TREE_MAX_SIZE=500000000000 TYP=longlong" };
-# <-- End of file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v20r2/GaudiPoolDb/v4r0/options/GaudiPoolDbRoot.opts'
-# --> Including file '/build/cattanem/LHCb_HEAD/Ex/IOExample/options/PoolDst.opts'
-# EventSelector.Input   = {  "DATAFILE='PFN:rfio:/castor/cern.ch/user/c/cattanem/Brunel/v32r1/00001820_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"};
-# InputCopyStream.Output = "DATAFILE='PFN:PoolDst.root' TYP='POOL_ROOTTREE' OPT='REC'";
-# ApplicationMgr.Dlls += { "HepMCBack" };
-# <-- End of file '/build/cattanem/LHCb_HEAD/Ex/IOExample/options/PoolDst.opts'
-# ApplicationMgr.TopAlg += { "DumpHepMC" };
-# <-- End of file '/build/cattanem/LHCb_HEAD/Ex/IOExample/tests/options/ReadHepMC.opts'
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr $Revision: 1.1 $
-                                          running on lxbuild120.cern.ch on Wed Jul 23 19:54:14 2008
+                                                   Welcome to ApplicationMgr $Revision: 1.2 $
+                                          running on lxbuild120.cern.ch on Thu Oct 16 18:26:39 2008
 ====================================================================================================================================
 ApplicationMgr       INFO Successfully loaded modules : HepMCBack
 ApplicationMgr       INFO Application Manager Configured successfully

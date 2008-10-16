@@ -1,30 +1,7 @@
-# --> Including file '/build/cattanem/LHCb_HEAD/Ex/IOExample/tests/options/WriteDigi.opts'
-# ApplicationMgr.HistogramPersistency = "NONE";
-# ApplicationMgr.EvtMax = 5;
-# EventSelector.PrintFreq = 1;
-# ApplicationMgr.OutStream += {"InputCopyStream/InputCopyStream"};
-# --> Including file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v20r2/GaudiPoolDb/v4r0/options/GaudiPoolDbRoot.opts'
-# ApplicationMgr.ExtSvc    += { "Gaudi::MultiFileCatalog/FileCatalog",                              "Gaudi::IODataManager/IODataManager",                              "PoolDbCacheSvc/PoolDbCacheSvc",                              "PoolDbCnvSvc/PoolRootEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootKeyEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootTreeEvtCnvSvc"                            };
-# EventPersistencySvc.CnvServices += { "PoolRootEvtCnvSvc" };
-# EventPersistencySvc.CnvServices += { "PoolRootTreeEvtCnvSvc" };
-# EventPersistencySvc.CnvServices += { "PoolRootKeyEvtCnvSvc" };
-# PoolRootEvtCnvSvc.DbType         = "POOL_ROOT";
-# PoolRootKeyEvtCnvSvc.DbType      = "POOL_ROOTKEY";
-# PoolRootTreeEvtCnvSvc.DbType     = "POOL_ROOTTREE";
-# PoolDbCacheSvc.Dlls              = {"lcg_RootStorageSvc", "GaudiKernelDict" };
-# PoolDbCacheSvc.OutputLevel       = 4;
-# PoolDbCacheSvc.DomainOpts        = { "Domain[ROOT_All].TREE_MAX_SIZE=500000000000 TYP=longlong" };
-# <-- End of file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v20r2/GaudiPoolDb/v4r0/options/GaudiPoolDbRoot.opts'
-# --> Including file '/build/cattanem/LHCb_HEAD/Ex/IOExample/options/PoolDigi.opts'
-# EventSelector.Input = {  "DATAFILE='PFN:rfio:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001820/DIGI/0000/00001820_00000001_4.digi' TYP='POOL_ROOT' OPT='READ'"};
-# InputCopyStream.Output = "DATAFILE='PFN:PoolDigi.root' TYP='POOL_ROOTTREE' OPT='REC'";
-# ApplicationMgr.Dlls += { "HepMCBack" };
-# <-- End of file '/build/cattanem/LHCb_HEAD/Ex/IOExample/options/PoolDigi.opts'
-# <-- End of file '/build/cattanem/LHCb_HEAD/Ex/IOExample/tests/options/WriteDigi.opts'
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr $Revision: 1.2 $
-                                          running on lxbuild120.cern.ch on Wed Jul 23 20:01:15 2008
+                                                   Welcome to ApplicationMgr $Revision: 1.3 $
+                                          running on lxbuild120.cern.ch on Thu Oct 16 18:23:06 2008
 ====================================================================================================================================
 ApplicationMgr       INFO Successfully loaded modules : HepMCBack
 ApplicationMgr       INFO Application Manager Configured successfully
@@ -40,7 +17,7 @@ ApplicationMgr       INFO Application Manager Started successfully
 rfio:/castor/ce...SUCCESS Root file version:51304
 rfio:/castor/ce...SUCCESS Root file version:51304
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
-IODataManager        INFO Referring to dataset PoolDigi.root by its file ID:AA1D8D5F-E158-DD11-8B7C-0030487C5E0E
+IODataManager        INFO Referring to dataset PoolDigi.root by its file ID:D2421FBC-9E9B-DD11-9123-0030487C5E0E
 PoolDigi.root     SUCCESS Root file version:51800
 EventSelector     SUCCESS Reading Event record 2. Record number within stream 1: 2
 EventSelector     SUCCESS Reading Event record 3. Record number within stream 1: 3
@@ -50,7 +27,7 @@ ApplicationMgr       INFO Application Manager Stopped successfully
 InputCopyStream      INFO Events output: 5
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
-PoolRootTreeEvt...   INFO Disconnected data IO:AA1D8D5F-E158-DD11-8B7C-0030487C5E0E[PoolDigi.root]
+PoolRootTreeEvt...   INFO Disconnected data IO:D2421FBC-9E9B-DD11-9123-0030487C5E0E[PoolDigi.root]
 PoolRootEvtCnvSvc    INFO Disconnected data IO:7230E749-29DA-DB11-A4E7-0002B3B0DEA0[rfio:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001820/DIGI/0000/00001820_00000001_4.digi]
 XMLCatalog           INFO File 'test_catalog.xml' does not exist. New file created.
 ApplicationMgr       INFO Application Manager Finalized successfully
