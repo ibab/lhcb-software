@@ -124,7 +124,7 @@ void BaseServiceMap::includeServerInMaps(const std::string &serverName) {
   for (svcSetIt = m_serviceSet.begin(); svcSetIt != m_serviceSet.end(); ++svcSetIt) {
     msg << MSG::DEBUG << "Service " << *svcSetIt << endreq;    
     loadDimInfo(*svcSetIt, serverName);
-      if (insertDimSvc) {
+    if (insertDimSvc) {
       msg << MSG::DEBUG << "creating the Adder Service " << endreq;    
       insertDimService(*svcSetIt, serverName);
     } 
@@ -259,8 +259,12 @@ void BaseServiceMap::loadDimInfo(const std::string &serviceName, const std::stri
   msg << MSG::DEBUG << "creating MonObject in DimInfoMonObject " << termSvcName << endreq;
   
   bool created = false;  
+  int maxtries=100;
+  int tries=0;
   while (!created) {
     created = m_dimInfo[groupName][elementName]->createMonObject();  
+    tries++;
+    if (tries > maxtries) break;
   }
   
   msg << MSG::DEBUG << "after creating MonObject in DimInfoMonObject " << endreq;
@@ -508,7 +512,21 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName)
 
   for (m_dimInfoIt=m_dimInfo.begin(); m_dimInfoIt!=m_dimInfo.end(); ++m_dimInfoIt) 
   {
-    std::string tmpfile = saveDir + m_dimInfoIt->first + "-" + timestr + ".root";
+    
+     std::vector<std::string> serviceParts = Misc::splitString(m_dimInfoIt->first, "_");
+  
+     std::string taskName = "unknownTask";
+  
+     if (3 == serviceParts.size()) {
+       taskName = "Moore";
+     }
+     else if (4 == serviceParts.size()) {
+       taskName = serviceParts[2];
+     }
+
+    
+   // std::string tmpfile = saveDir + m_dimInfoIt->first + "-" + timestr + ".root";
+    std::string tmpfile = saveDir + taskName + "-" + timestr + ".root";
     fileName.replace(0, fileName.length(), tmpfile);
     msg << MSG::INFO << "SaverSvc will save histograms in file " << fileName << endreq;
 

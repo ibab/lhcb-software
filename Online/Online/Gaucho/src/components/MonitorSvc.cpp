@@ -224,7 +224,7 @@ void MonitorSvc::declareInfo(const std::string& name, const int&  var,
       //m_monRate->addCounter(newName, desc, (double&) var);
       m_monRate->addCounter(newName, desc, var);
     }
-    else msg << MSG::INFO << "Counter "<< newName << " can not be declared because MonRate process is disable." << endreq; 
+    else msg << MSG::INFO << "Counter "<< newName << " can not be declared because MonRate process is disabled." << endreq; 
     return;
   }  
   
@@ -278,7 +278,7 @@ void MonitorSvc::declareInfo(const std::string& name, const long&  var,
       
       m_monRate->addCounter(newName, desc, (double&) var);
     }
-    else msg << MSG::INFO << "Counter "<< newName << " can not be declared because MonRate process is disable." << endreq; 
+    else msg << MSG::INFO << "Counter "<< newName << " can not be declared because MonRate process is disabled." << endreq; 
     return;
   } 
   
@@ -332,7 +332,7 @@ void MonitorSvc::declareInfo(const std::string& name, const double& var,
       msg << MSG::DEBUG << "Adding Counter to MonRate"<< newName << ", with description: " << desc << endreq; 
       m_monRate->addCounter(newName, desc, var);
     }
-    else msg << MSG::INFO << "Counter "<< newName << " can not be declared because MonRate process is disable." << endreq; 
+    else msg << MSG::INFO << "Counter "<< newName << " can not be declared because MonRate process is disabled." << endreq; 
     return;
   }
 
@@ -499,7 +499,7 @@ void MonitorSvc::declareMonRateComplement( int& runNumber, int& cycleNumber, dou
     m_monRate->addComplement(&runNumber, &cycleNumber, &deltaT, &offsetTimeFirstEvInRun, &offsetTimeLastEvInCycle, &offsetGpsTimeLastEvInCycle);
     m_monRate->print();
   }
-  else  msg << MSG::INFO << "Complemet of MonRate was not declared because MonRate process is disable." << endreq; 
+  else  msg << MSG::INFO << "Complement of MonRate was not declared because MonRate process is disabled." << endreq; 
 
 }
 

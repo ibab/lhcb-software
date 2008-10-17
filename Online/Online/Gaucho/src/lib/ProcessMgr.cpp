@@ -108,9 +108,14 @@ void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> 
     bool includeService = true;
     if (oper.compare("-") == 0) includeService = false;
     
-    msg << MSG::DEBUG << "Verifying service = " << serviceName<< endreq;
-
-    if (s_Adder != m_serviceOwner) {
+    msg << MSG::DEBUG << "Verifying service = " << serviceName << ". This is an" << m_serviceOwner <<   endreq;
+    if (m_serviceOwner.compare(s_Adder)==0){
+      msg << MSG::DEBUG << "Trying to decode Service List in Adder whit " << m_subfarmName.size() << " subfarms in joboptions" << endreq;
+      std::vector<std::string>::const_iterator it;
+      for(it=m_subfarmName.begin(); it!=m_subfarmName.end(); ++it){
+        msg << MSG::DEBUG << "subfarmName "<< (*it) << endreq;
+      }
+      
       if (m_subfarmName.size() != 0) {
         bool chooseIt=false;
         std::vector<std::string>::const_iterator it;
@@ -136,7 +141,7 @@ void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> 
         }
       }
     }
-    else if (s_Saver != m_serviceOwner) {
+    else if (m_serviceOwner.compare(s_Saver)==0){
       if (!m_monitoringFarm) {
         if (serviceName.find("/" + m_nodeName) == std::string::npos) {
           msg << MSG::DEBUG << "REFUSED because nodeName NOT OK" << endreq;
@@ -144,7 +149,7 @@ void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> 
         }
       }
     }
-    else if (s_MonRateService != m_serviceOwner) {
+    else if (m_serviceOwner.compare(s_MonRateService)==0){
       
     }
     
@@ -315,7 +320,7 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
     std::string nodeName;
     std::string taskName;
     
-    if (s_Adder == m_serviceOwner){
+    if (m_serviceOwner.compare(s_Adder)==0){
       msg << MSG::DEBUG << " We are inside an ADDER " << endreq;
       
       nodeName = (*serverListTotIt).substr(0, first_us);
@@ -377,8 +382,8 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
         else msg << MSG::DEBUG << "taskName OK" << endreq;
       }
     }
-    else if (s_Saver == m_serviceOwner) {
-      msg << MSG::DEBUG << " We are inside an SAVER " << endreq;
+    else if (m_serviceOwner.compare(s_Saver)==0){
+      msg << MSG::DEBUG << " We are inside a SAVER " << endreq;
       if (m_monitoringFarm) { 
         std::size_t third_us = (*serverListTotIt).find("_", second_us + 1);
         if (third_us == std::string::npos) continue;
@@ -414,7 +419,13 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
         
         if (nodeName.compare("Bridge")==0) {
           msg << MSG::DEBUG << "refused because we don't save Bridges. "<< endreq;    
-          continue; // we don't do nothing with Savers
+          continue; 
+        }
+	//inside EFF should have nodename = partition
+	 msg << MSG::DEBUG << "checking partition= "<< nodeName << endreq;
+	if (nodeName.compare(m_nodeName)!=0) {
+          msg << MSG::DEBUG << "refused saver for partition " << m_nodeName << " ignores partition "<< nodeName << endreq;    
+          continue; 
         }
         
         msg << MSG::DEBUG << "checking taskname= "<< taskName << endreq;
@@ -424,7 +435,7 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
         }
       }
     }
-    else if (s_MonRateService == m_serviceOwner) {
+    else if (m_serviceOwner.compare(s_MonRateService)==0){
       partName = (*serverListTotIt).substr(0, first_us);
       taskName = (*serverListTotIt).substr(first_us + 1, second_us - first_us - 1);
       

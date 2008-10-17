@@ -31,6 +31,8 @@
 #include "TH1.h"
 #include "TProfile.h"
 #include "TDirectory.h"
+#include "TROOT.h"
+#include "TSystem.h"
 #include <GaudiUtils/Aida2ROOT.h>
 #include "Gaucho/Misc.h"
 
@@ -246,7 +248,10 @@ StatusCode UpdateAndReset::finalize() {
 //------------------------------------------------------------------------------
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG << "finalizing...." << endreq;
-  manageTESHistos (false, false, true, true);
+  if ( 1 == m_saveHistograms ) {
+     //calling finalize - don't need to reset, they probably don't exist anymore
+     manageTESHistos(false, false, true, true);
+  }
   DimTimer::stop();
   return StatusCode::SUCCESS;
 }
@@ -422,40 +427,60 @@ void UpdateAndReset::manageTESHistos (bool list, bool reset, bool save, bool isF
   TFile *f=0;
   m_infoFileStatus = "......this is the file name were we will save histograms...........";
   char timestr[64];
+  char year[5];
   time_t rawTime=time(NULL);
   struct tm* timeInfo = localtime(&rawTime);
   ::strftime(timestr, sizeof(timestr),"%Y%m%dT%H%M%S", timeInfo);
-  
+  ::strftime(year, sizeof(year),"%Y", timeInfo);
+
   std::vector<std::string> serviceParts = Misc::splitString(m_utgid, "_");
   
-  std::string groupName = "GroupName";
-  if (3 == serviceParts.size()) groupName = serviceParts[1];
-  else if (4 == serviceParts.size()) groupName = serviceParts[0] + "-" +  serviceParts[2];
+  std::string taskName = "unknownTask";
+  std::string partName = "unknownPartition";
   
-  std::string tmpfile = m_saveSetDir + groupName + "-" + timestr + ".root";  
-  if (isFromEndOfRun) tmpfile = m_saveSetDir + "EOR_"+ groupName + "-" + timestr + ".root";  
+  if (3 == serviceParts.size()) {
+    taskName = serviceParts[1];
+  }
+  else if (4 == serviceParts.size()) {
+    partName = serviceParts[0];
+    taskName = serviceParts[2];
+  }
+
+  std::string dirName = m_saveSetDir + "/" + year + "/" + partName + "/" + taskName;  
+  void *dir = gSystem->OpenDirectory(dirName.c_str());
+  if (dir == 0) {
+    gSystem->mkdir(dirName.c_str(),true);
+  }
+  
+  std::string tmpfile = dirName + "/" + timestr + ".root"; 
+  if (isFromEndOfRun) tmpfile = dirName + "/" + "EOR_"+ timestr + ".root"; 
   
   m_infoFileStatus.replace(0, m_infoFileStatus.length(), tmpfile);
 
   if (save)  {
-    msg << MSG::INFO << "SaverSvc will save histograms in file " << m_infoFileStatus << endreq;
+    msg << MSG::INFO << "We will save histograms in file " << m_infoFileStatus << endreq;
     f = new TFile(m_infoFileStatus.c_str(),"create");
   }
+  if(! f->IsZombie()) {
+
+    histogramIdentifier(object, idList, reset, save, level, (TDirectory*) f);
   
-  histogramIdentifier(object, idList, reset, save, level, (TDirectory*) f);
-  
-  if (0 == idList.size()) msg << MSG::INFO << "No histogram found" << endreq;
-  
-  if (save) {
-    f->Close();
-    delete f;f=0;
-  }
-  
-  if ((list)&&(0 != idList.size())) {
-    msg << MSG::INFO << "Printing identified histograms/profiles " << endreq;
-    for (std::vector<std::string>::iterator it = idList.begin(); it != idList.end(); it++){
-      msg << MSG::INFO << "    " << (*it) << endreq;
+    if (0 == idList.size()) msg << MSG::INFO << "No histogram found" << endreq;
+    
+    if (save) {
+      f->Close();
+      delete f;f=0;
     }
+    
+    if ((list)&&(0 != idList.size())) {
+      msg << MSG::INFO << "Printing identified histograms/profiles " << endreq;
+      for (std::vector<std::string>::iterator it = idList.begin(); it != idList.end(); it++){
+        msg << MSG::INFO << "    " << (*it) << endreq;
+      }
+    }
+  }
+  else {
+    msg << MSG::ERROR << "error opening file "<< m_infoFileStatus << endreq;
   }
 }
 
@@ -542,7 +567,7 @@ IRegistry* UpdateAndReset::rootObject(){
   MsgStream msg( msgSvc(), name() );
   std::string  path;
   SmartDataPtr<DataObject> smartDataPtr(m_histogramSvc, path);
-  msg << MSG::INFO << "root identifier : " << smartDataPtr->registry()->identifier() << endreq;
+  msg << MSG::DEBUG << "root identifier : " << smartDataPtr->registry()->identifier() << endreq;
   return smartDataPtr->registry();
 }
 
