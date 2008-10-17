@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.38 2008-10-16 13:08:02 mneedham Exp $
+! $Id: release.notes,v 1.39 2008-10-17 14:11:26 mneedham Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
+
+! 2008-10-16 M Needham
+  - fix in new base class
 
 ! 2008-10-16 M Needham
  - add method to return list of all flippables in CommonBase
