@@ -1,4 +1,4 @@
-//$Id: STRawBankMonitor.h,v 1.1 2006-02-10 08:59:31 mneedham Exp $
+//$Id: STRawBankMonitor.h,v 1.2 2008-10-17 14:10:22 mneedham Exp $
 #ifndef _STRawBankMonitor_H
 #define _STRawBankMonitor_H
 
@@ -7,7 +7,7 @@
 #include "Event/RawBank.h"
 
 // base class
-#include "GaudiAlg/GaudiHistoAlg.h"
+#include "Kernel/STHistoAlgBase.h"
 
 /** @class STRawBankMonitor STRawBankMonitor.h 
  * ITCheckers/STRawBankMonitor.h
@@ -20,7 +20,7 @@
 
 class STTell1ID;
 
-class STRawBankMonitor : public GaudiHistoAlg{
+class STRawBankMonitor : public ST::HistoAlgBase{
 
 public:
  
@@ -41,7 +41,6 @@ private:
   
   StatusCode configureBankType();
  
-  std::string m_type;
   LHCb::RawBank::BankType m_bankType;
 
 };

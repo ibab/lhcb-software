@@ -1,4 +1,4 @@
-// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.31 2008-09-20 09:53:31 mneedham Exp $
+// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.32 2008-10-17 14:10:22 mneedham Exp $
 
 
 #include <algorithm>
@@ -45,8 +45,8 @@ STDecodingBaseAlg (name , pSvcLocator){
  
 
  // Standard constructor, initializes variables
-  declareProperty( "clusterLocation", m_clusterLocation = STLiteClusterLocation::TTClusters);
-  declareProperty("BankType", m_bankTypeString = "TT");
+  declareSTConfigProperty( "clusterLocation", m_clusterLocation , STLiteClusterLocation::TTClusters);
+  declareSTConfigProperty("BankType", m_bankTypeString , detType() );
 }
 
 RawBankToSTLiteClusterAlg::~RawBankToSTLiteClusterAlg() {

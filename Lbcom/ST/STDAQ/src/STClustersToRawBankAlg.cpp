@@ -1,4 +1,4 @@
-// $Id: STClustersToRawBankAlg.cpp,v 1.9 2008-06-25 06:55:14 mneedham Exp $
+// $Id: STClustersToRawBankAlg.cpp,v 1.10 2008-10-17 14:10:22 mneedham Exp $
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -7,7 +7,6 @@
 #include "STClustersToRawBankAlg.h"
 #include "STBoardToBankMap.h"
 #include "Kernel/STRawBankMap.h"
-#include "Kernel/ISTReadoutTool.h"
 #include "Kernel/STTell1ID.h"
 
 #include "Kernel/STTell1Board.h"
@@ -17,7 +16,7 @@
 #include "SiDAQ/SiADCWord.h"
 #include "STDAQFunctor.h"
 
-#include "Kernel/STDetSwitch.h"
+#include "Kernel/ISTReadoutTool.h"
 
 // Event
 #include "Event/STCluster.h"
@@ -43,20 +42,19 @@ DECLARE_ALGORITHM_FACTORY( STClustersToRawBankAlg );
 
 STClustersToRawBankAlg::STClustersToRawBankAlg( const std::string& name,
                                                       ISvcLocator* pSvcLocator )
-  :GaudiAlgorithm( name, pSvcLocator ),
-   m_readoutTool(0),
+  :ST::AlgBase( name, pSvcLocator ),
    m_bankMapping(0),
    m_overflow(0),
    m_maxClusterSize(4)
 {
   // constructer
-  declareProperty("type", m_detType = "TT");
-  declareProperty("readoutTool", m_readoutToolName = "TTReadoutTool");
- 
-  declareProperty("clusterLocation", m_clusterLocation = STClusterLocation::TTClusters);
+
+  declareSTConfigProperty("clusterLocation", m_clusterLocation , STClusterLocation::TTClusters);
   declareProperty("maxClusters", m_maxClustersPerPPx = 512);
 
   m_bankMapping = new STBoardToBankMap();
+
+  setForcedInit();
 }
 
 // Destructor
@@ -82,17 +80,11 @@ StatusCode STClustersToRawBankAlg::finalize() {
 StatusCode STClustersToRawBankAlg::initialize() {
 
   // initialize
-  StatusCode sc = GaudiAlgorithm::initialize();
+  StatusCode sc = ST::AlgBase::initialize();
   if (sc.isFailure()){
     return Error("Failed to initialize", sc);
   }
 
-  STDetSwitch::flip(m_detType,m_clusterLocation); 
-  STDetSwitch::flip(m_detType,m_readoutToolName);
-  
-  // tools
-  m_readoutTool = tool<ISTReadoutTool>(m_readoutToolName,m_readoutToolName);
-    
   // banktype
   if (configureBankType().isFailure()){
     fatal() << "unknown bank type" << endreq;
@@ -100,10 +92,10 @@ StatusCode STClustersToRawBankAlg::initialize() {
   }
 
   // init the map
-  unsigned int nBoard = m_readoutTool->nBoard();
+  unsigned int nBoard = readoutTool()->nBoard();
   for (unsigned int iVal = 0; iVal<nBoard; ++iVal ){
 
-    STTell1Board* aBoard = m_readoutTool->findByOrder(iVal);
+    STTell1Board* aBoard = readoutTool()->findByOrder(iVal);
     m_bankMapping->addEntry(aBoard->boardID(),iVal);
 
     STClustersOnBoard* tVec = new STClustersOnBoard(m_maxClustersPerPPx); 
@@ -119,7 +111,7 @@ StatusCode STClustersToRawBankAlg::configureBankType(){
   // configure the type of bank to write (TT or IT)
   StatusCode sc = StatusCode::SUCCESS;
 
-  m_bankType = STRawBankMap::stringToType(m_detType);
+  m_bankType = STRawBankMap::stringToType(detType());
   if (m_bankType == RawBank::Velo){
     sc = StatusCode::FAILURE;
   }
@@ -135,7 +127,7 @@ StatusCode STClustersToRawBankAlg::execute() {
   initEvent();
 
   // get the data....
-  STClusters* clusCont = get<STClusters>(m_clusterLocation);
+  const STClusters* clusCont = get<STClusters>(m_clusterLocation);
 
   // group the data by banks..
   StatusCode sc = groupByBoard(clusCont);
@@ -144,7 +136,7 @@ StatusCode STClustersToRawBankAlg::execute() {
   }
 
   // convert to a bank and add to buffer
-  unsigned int nBoard = m_readoutTool->nBoard();
+  unsigned int nBoard = readoutTool()->nBoard();
   for (unsigned int iBoard = 0u; iBoard < nBoard; ++iBoard){   
     // get the data ....
     STTell1ID aBoardID = m_bankMapping->findBoard(iBoard);
@@ -195,16 +187,12 @@ StatusCode STClustersToRawBankAlg::groupByBoard(const STClusters* clusCont){
     // find the online channel and board
     STChannelID chan = (*iterClus)->channelID();
     double isf = (*iterClus)->interStripFraction();
-    STDAQ::chanPair aPair = m_readoutTool->offlineChanToDAQ(chan,isf);
+    STDAQ::chanPair aPair = readoutTool()->offlineChanToDAQ(chan,isf);
 
     if (aPair.first.id() == STTell1ID::nullBoard) {
       // screwed
       err()  << "failed to link "   
-             << chan.station() 
-             << " " << chan.layer()
-             << " " << chan.detRegion()  
-             << " " << chan.sector() << 
-             endreq;
+             << uniqueSector(chan) << endreq;
       return StatusCode::FAILURE;
     }
     else {
@@ -212,10 +200,6 @@ StatusCode STClustersToRawBankAlg::groupByBoard(const STClusters* clusCont){
       if (iterMap != m_clusMap.end() ){
         STClustersOnBoard* tVec = iterMap->second;
         tVec->addCluster(*iterClus,aPair.second);
-
-        // look for consistancy...
-        //STTell1Board* board =  m_readoutTool->findByBoardID(aPair.first);
-        //STChannelID chan2 = board->DAQToOffline(aPair.second);
       }
       else {
         warning() << "Failed to find board in map " << endreq;
@@ -266,7 +250,7 @@ void STClustersToRawBankAlg::writeBank(STClustersOnBoard::ClusterVector&
     STCluster* aClus = clusCont[iCluster].first;
     STChannelID aChan = aClus->channelID();
 
-    double isf = m_readoutTool->interStripToDAQ(aChan,
+    double isf = readoutTool()->interStripToDAQ(aChan,
                                                 aBoardID,
                                                 aClus->interStripFraction());
     STClusterWord aWord = STClusterWord(clusCont[iCluster].second,
@@ -293,7 +277,7 @@ void STClustersToRawBankAlg::writeBank(STClustersOnBoard::ClusterVector&
 
     //flip ADC values for rotated modules
     STChannelID channelID = aCluster->channelID();
-    m_readoutTool->ADCOfflineToDAQ(channelID,aBoardID,adcs);
+    readoutTool()->ADCOfflineToDAQ(channelID,aBoardID,adcs);
     
     for (unsigned int i = 0; i < nToWrite; ++i){
       bool last;

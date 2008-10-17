@@ -30,11 +30,10 @@ using namespace LHCb;
 
 STRawBankMonitor::STRawBankMonitor(const std::string& name, 
                               ISvcLocator* pSvcLocator) :
-  GaudiHistoAlg(name, pSvcLocator)
+  ST::HistoAlgBase(name, pSvcLocator)
  
 {
   // constructer
-  declareProperty("type", m_type ="TT");
 }
 
 STRawBankMonitor::~STRawBankMonitor(){
@@ -43,7 +42,7 @@ STRawBankMonitor::~STRawBankMonitor(){
 
 StatusCode STRawBankMonitor::initialize(){
 
-  if( "" == histoTopDir() ) setHistoTopDir(m_type);
+  if( "" == histoTopDir() ) setHistoTopDir(detType()+"/");
   StatusCode sc = GaudiHistoAlg::initialize();
   if (sc.isFailure()){
     return Error("Failed to initialize", sc);
@@ -114,7 +113,7 @@ StatusCode STRawBankMonitor::configureBankType(){
 
   StatusCode sc = StatusCode::SUCCESS;
 
-  m_bankType = STRawBankMap::stringToType(m_type);
+  m_bankType = STRawBankMap::stringToType(detType());
   if (m_bankType == RawBank::Velo){
     sc = StatusCode::FAILURE;
   }

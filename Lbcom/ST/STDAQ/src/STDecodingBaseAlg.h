@@ -1,8 +1,8 @@
-// $Id: STDecodingBaseAlg.h,v 1.15 2008-10-11 10:40:30 mneedham Exp $
+// $Id: STDecodingBaseAlg.h,v 1.16 2008-10-17 14:10:22 mneedham Exp $
 #ifndef STDECODINGBASEALG_H 
 #define STDECODINGBASEALG_H 1
 
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "Kernel/STAlgBase.h"
 #include "Event/RawBank.h"
 #include "Kernel/STDAQDefinitions.h"
 
@@ -28,10 +28,10 @@
 
 #include <string>
 
-class ISTReadoutTool;
+
 class STTell1Board;
 
-class STDecodingBaseAlg : public GaudiAlgorithm {
+class STDecodingBaseAlg : public ST::AlgBase {
 
 public:
 
@@ -42,15 +42,11 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
    
-  virtual StatusCode finalize();
 
 protected:
 
- ISTReadoutTool* readoutTool() const;
 
  LHCb::RawBank::BankType bankType() const;
-
- std::string detType() const;
 
  bool forceVersion() const;  
 
@@ -101,7 +97,7 @@ private:
   LHCb::STCluster::Spill spillOffset(const std::string& spill) const;
   LHCb::STCluster::Spill m_spillOffset;
 
-  std::string m_detType;
+
 
   std::string m_errorLocation;
   std::string m_errorBankString;
@@ -110,23 +106,15 @@ private:
   std::string m_summaryLocation;
   LHCb::RawBank::BankType m_bankType;
 
-  std::string m_readoutToolName;
-  ISTReadoutTool* m_readoutTool;
  
   bool m_recoverMode;
 
 };
 
-inline ISTReadoutTool* STDecodingBaseAlg::readoutTool() const{
-  return m_readoutTool;
-}
+
 
 inline LHCb::RawBank::BankType STDecodingBaseAlg::bankType() const {
   return m_bankType;
-}
-
-inline std::string STDecodingBaseAlg::detType() const{
-  return m_detType;
 }
 
 inline bool STDecodingBaseAlg::forceVersion() const{

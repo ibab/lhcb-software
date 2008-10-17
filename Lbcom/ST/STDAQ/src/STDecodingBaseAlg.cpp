@@ -1,4 +1,4 @@
-// $Id: STDecodingBaseAlg.cpp,v 1.21 2008-10-11 10:40:30 mneedham Exp $
+// $Id: STDecodingBaseAlg.cpp,v 1.22 2008-10-17 14:10:22 mneedham Exp $
 
 #include <algorithm>
 
@@ -19,7 +19,7 @@
 #include "Kernel/STTell1ID.h"
 #include "Kernel/STRawBankMap.h"
 #include "Kernel/STDecoder.h"
-#include "Kernel/STDetSwitch.h"
+
 
 #include "SiDAQ/SiHeaderWord.h"
 #include "SiDAQ/SiADCWord.h"
@@ -40,22 +40,23 @@ using namespace LHCb;
 
 STDecodingBaseAlg::STDecodingBaseAlg( const std::string& name,
                                            ISvcLocator* pSvcLocator ):
-GaudiAlgorithm (name , pSvcLocator),
+ST::AlgBase (name , pSvcLocator),
 m_bankTypeString(""){
  
  // Standard constructor, initializes variables
- declareProperty("readoutTool", m_readoutToolName = "TTReadoutTool");     
- declareProperty("detType", m_detType = "TT" );
+
  
- declareProperty("ErrorLocation",m_errorLocation=STTELL1BoardErrorBankLocation::TTErrors );
- declareProperty("summaryLocation", m_summaryLocation = STSummaryLocation::TTSummary);
- declareProperty("ErrorBank", m_errorBankString = "TTError"); 
+ declareSTConfigProperty("ErrorLocation",m_errorLocation, STTELL1BoardErrorBankLocation::TTErrors );
+ declareSTConfigProperty("summaryLocation", m_summaryLocation , STSummaryLocation::TTSummary);
+ declareSTConfigProperty("ErrorBank", m_errorBankString , "TTError"); 
  
  declareProperty("skipBanksWithErrors", m_skipErrors = false );
  declareProperty("recoverMode", m_recoverMode = true);
  
  declareProperty("rawEventLocation",m_rawEventLocation = RawEventLocation::Default);
  declareProperty("forcedVersion", m_forcedVersion = -1);
+
+ setForcedInit();
 }
 
 STDecodingBaseAlg::~STDecodingBaseAlg() {
@@ -65,31 +66,22 @@ STDecodingBaseAlg::~STDecodingBaseAlg() {
 StatusCode STDecodingBaseAlg::initialize() {
 
   // Initialization
-  StatusCode sc = GaudiAlgorithm::initialize();
+  StatusCode sc = ST::AlgBase::initialize();
   if (sc.isFailure()){
     return Error("Failed to initialize", sc);
   }
 
-  STDetSwitch::flip(m_detType,m_readoutToolName);
-  STDetSwitch::flip(m_detType,m_summaryLocation);
-  STDetSwitch::flip(m_detType,m_errorLocation);
-  STDetSwitch::flip(m_detType,m_errorBankString);
-
   std::string spill = toSpill(m_rawEventLocation);
   m_spillOffset = spillOffset(spill); 
-
-  // readout tool
-  m_readoutTool = tool<ISTReadoutTool>(m_readoutToolName,m_readoutToolName);
    
   // bank type
-  if (m_bankTypeString != "") {
-    STDetSwitch::flip(m_detType,m_bankTypeString);
+  if (m_bankTypeString != ""){
     m_bankType =  STRawBankMap::stringToType(m_bankTypeString);
     if (m_bankType ==  LHCb::RawBank::Velo){
       fatal() << "Wrong detector type: only IT or TT !"<< endmsg;
       return StatusCode::FAILURE; 
     }
-  } 
+  }
 
   // bank type
   m_errorType =  STRawBankMap::stringToType(m_errorBankString);
@@ -337,11 +329,6 @@ StatusCode STDecodingBaseAlg::decodeErrors() const{
 } 
 
 
-
-StatusCode STDecodingBaseAlg::finalize() {
-    
-  return GaudiAlgorithm::finalize();
-}
 
 
 std::string STDecodingBaseAlg::toSpill(const std::string& location) const{

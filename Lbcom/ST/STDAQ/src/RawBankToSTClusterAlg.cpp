@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.49 2008-10-11 10:40:30 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.50 2008-10-17 14:10:22 mneedham Exp $
 
 #include <algorithm>
 
@@ -23,7 +23,6 @@
 #include "Kernel/STFun.h"
 #include "SiDAQ/SiADCWord.h"
 #include "Kernel/STDecoder.h"
-#include "Kernel/STDetSwitch.h"
 
 
 #include "boost/lexical_cast.hpp"
@@ -43,8 +42,8 @@ RawBankToSTClusterAlg::RawBankToSTClusterAlg( const std::string& name,
 STDecodingBaseAlg (name , pSvcLocator){
  
  // Standard constructor, initializes variables
-  declareProperty("clusterLocation", m_clusterLocation = STClusterLocation::TTClusters);
-  declareProperty("BankType", m_bankTypeString = "TT");
+  declareSTConfigProperty("clusterLocation", m_clusterLocation , STClusterLocation::TTClusters);
+  declareSTConfigProperty("BankType", m_bankTypeString , "TT");
 }
 
 RawBankToSTClusterAlg::~RawBankToSTClusterAlg() {
@@ -58,8 +57,6 @@ StatusCode RawBankToSTClusterAlg::initialize() {
   if (sc.isFailure()){
     return Error("Failed to initialize", sc);
   }
-
-  STDetSwitch::flip(detType(),m_clusterLocation); 
   
   return StatusCode::SUCCESS;
 }

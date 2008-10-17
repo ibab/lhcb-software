@@ -1,4 +1,4 @@
-// $Id: STClustersToRawBankAlg.h,v 1.4 2007-11-16 16:43:36 mneedham Exp $
+// $Id: STClustersToRawBankAlg.h,v 1.5 2008-10-17 14:10:22 mneedham Exp $
 #ifndef STClustersToRawBankAlg_H
 #define STClustersToRawBankAlg_H 1
 
@@ -8,7 +8,7 @@
 #include <map>
 
 // gaudi
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "Kernel/STAlgBase.h"
 
 // event
 #include "Event/STCluster.h"
@@ -35,7 +35,7 @@ namespace LHCb {class RawBank;};
 class ISTReadoutTool;
 
 
-class STClustersToRawBankAlg : public GaudiAlgorithm {
+class STClustersToRawBankAlg : public ST::AlgBase {
 
 public:
 
@@ -69,11 +69,6 @@ private:
   void writeBank(STClustersOnBoard::ClusterVector& clusCont , 
                  LHCb::BankWriter& bWriter,
                  const STTell1ID aBoardID);
- 
-  ISTReadoutTool* m_readoutTool; 
-  std::string m_readoutToolName;
-  
-  std::string m_detType;
   
   std::string m_clusterLocation;
 
