@@ -21,7 +21,7 @@ DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb, SaverSvc)
 
 SaverSvc::SaverSvc(const std::string& name, ISvcLocator* ploc) : Service(name, ploc),/*m_monitorSvc(0), */m_incidentSvc(0)
 {
-  declareProperty("partname",m_partName);
+  declareProperty("partname",m_tmpPart="LHCb");
   declareProperty("taskname",m_taskName);
   declareProperty("algorithmname",m_algorithmName);
   declareProperty("objectname",m_objectName);
@@ -87,7 +87,7 @@ StatusCode SaverSvc::initialize() {
   msg << MSG::DEBUG << "***************************************************** " << endreq;
   msg << MSG::DEBUG << "This Saver will save data published in : " << m_dimClientDns << endreq;
   
-  msg << MSG::DEBUG << "Consider node " << m_nodeName << " partition " << m_partName << endreq;
+  msg << MSG::DEBUG << "Consider node " << m_nodeName << endreq;
 
   std::string utgidformat = "nodename_taskname_#";
   if (m_monitoringFarm){
@@ -96,6 +96,7 @@ StatusCode SaverSvc::initialize() {
     
   msg << MSG::DEBUG << "This Saver will save services with UTGID format " << utgidformat << endreq;
   
+  m_partName.push_back(m_tmpPart);
   if (m_partName.size() > 0) msg << MSG::DEBUG << "Partition Names: " << endreq;
   for(unsigned int i=0; i < m_partName.size();++i) {
      msg << MSG::DEBUG << "         partName: " << m_partName[i] << endreq;
@@ -133,8 +134,16 @@ StatusCode SaverSvc::initialize() {
   std::vector<std::string>::iterator  it;
   int i =0;
   
-  m_file = new std::string[m_taskName.size()];
+  char timestr[64];
+  char year[5];
+  time_t rawTime=time(NULL);
+  struct tm* timeInfo = localtime(&rawTime);
+  ::strftime(timestr, sizeof(timestr),"%Y%m%dT%H%M%S", timeInfo);
+  ::strftime(year, sizeof(year),"%Y", timeInfo);
   
+  m_file = new std::string[m_taskName.size()];
+  m_saveDir=m_saveDir+"/"+year+"/"+m_tmpPart+"/";
+  msg << MSG::DEBUG << "savedir " << m_saveDir << endreq;  
   for (it = m_taskName.begin(); it < m_taskName.end(); it++){
     msg << MSG::DEBUG << "creating ProcessMgr for taskName " << *it << endreq;
     ProcessMgr* processMgr = new ProcessMgr (s_Saver, msgSvc(), this, m_refreshTime);

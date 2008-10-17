@@ -57,6 +57,7 @@ private:
   std::string m_nodeName;
   bool m_monitoringFarm;
   
+  std::string m_tmpPart;
   std::vector<std::string> m_partName;
   std::vector<std::string> m_taskName;
   std::vector<std::string> m_algorithmName;
