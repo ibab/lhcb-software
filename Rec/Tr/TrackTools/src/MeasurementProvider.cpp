@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.cpp,v 1.35 2008-09-18 08:22:58 wouter Exp $
+// $Id: MeasurementProvider.cpp,v 1.36 2008-10-17 12:03:23 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -142,12 +142,6 @@ StatusCode MeasurementProvider::load( Track& track ) const
   // Update the status flag of the Track
   track.setPatRecStatus( Track::PatRecMeas );
   
-  if ( track.nLHCbIDs() != track.nMeasurements() )
-    warning() << "-> Track (key=" << track.key()
-              << "): loaded successfully only " << track.nMeasurements()
-              << " Measurements out of " << track.nLHCbIDs()
-              << " LHCbIDs!" << endreq;
-
   return StatusCode::SUCCESS;
 }
 
