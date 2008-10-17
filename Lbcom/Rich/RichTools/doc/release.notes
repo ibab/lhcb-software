@@ -6,6 +6,7 @@
 
 ! 2008-10-15 - Chris Jones
  - New tool for adding random pixel backgrounds to the decoded data.
+ - Import some components from Rich/RichDAQ
 
 !=========================== RichTools v2r22 2008-09-04 ======================
 ! 2008-08-15 - Chris Jones
