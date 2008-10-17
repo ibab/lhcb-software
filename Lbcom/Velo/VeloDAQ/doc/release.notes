@@ -2,6 +2,12 @@
 ! Package     : VeloDAQ
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
+! 2008-10-16 - Tomasz Szumlak
+ - Modified SmartErrorBankDecoder - if there is no error banks
+   detected it continue processing and skips to the next event
+   (some minor improvement that makes the code compatible with
+    new RawEvent object and allows at the same time to process
+    the older files)
 
 ! 2008-10-16 - Kurt Rinnert
  - The decoding of full VELO clusters for bank version 3 now checks whether a

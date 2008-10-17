@@ -1,4 +1,4 @@
-// $Id: SmartVeloErrorBankDecoder.h,v 1.1 2008-08-26 09:42:55 szumlat Exp $
+// $Id: SmartVeloErrorBankDecoder.h,v 1.2 2008-10-17 16:17:24 szumlat Exp $
 #ifndef SMARTVELOERRORBANKDECODER_H 
 #define SMARTVELOERRORBANKDECODER_H 1
 

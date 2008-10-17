@@ -1,4 +1,4 @@
-// $Id: SmartVeloErrorBankDecoder.cpp,v 1.1 2008-08-26 09:42:55 szumlat Exp $
+// $Id: SmartVeloErrorBankDecoder.cpp,v 1.2 2008-10-17 16:17:24 szumlat Exp $
 // Include files 
 
 // from Gaudi
@@ -30,11 +30,13 @@ SmartVeloErrorBankDecoder::SmartVeloErrorBankDecoder( const std::string& name,
                                                       ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
     m_rawEvent ( 0 ),
-    m_rawEventLoc ( LHCb::RawEventLocation::Default ),
-    m_errorBank ( 0 ),
-    m_errorBankLoc ( VeloErrorBankLocation::Default )
+    m_errorBank ( 0 )
 {
   declareProperty("PrintBankHeader", m_printBankHeader=0);
+  declareProperty("RawEventLocation",
+                  m_rawEventLoc=LHCb::RawEventLocation::Default);
+  declareProperty("ErrorBankLocation",
+                  m_errorBankLoc=VeloErrorBankLocation::Default);
 }
 //=============================================================================
 // Destructor
@@ -63,7 +65,12 @@ StatusCode SmartVeloErrorBankDecoder::execute() {
   StatusCode rawEvtStatus=getRawEvent();
   StatusCode bankStatus;
   if(rawEvtStatus.isSuccess()) bankStatus=cacheErrorRawBanks();
-  if(bankStatus.isSuccess()) bankStatus=storeErrorRawBanks();
+  if(bankStatus.isSuccess()){
+    bankStatus=storeErrorRawBanks();
+  }else{
+    // go to the next event
+    bankStatus=StatusCode::SUCCESS;
+  }
   //
   return ( bankStatus );
 }
@@ -133,8 +140,7 @@ StatusCode SmartVeloErrorBankDecoder::cacheErrorRawBanks()
       debug()<< " --> bank body size: " << (dist*sizeof(unsigned int)) <<endmsg;
     }
   }else{
-    info()<< " --> No error bank detected - The deecoding will be terminated "
-          <<endmsg;
+    Warning(" --> No error bank detected - skipping to the next event ");
     return ( StatusCode::FAILURE );
   }
   debug()<< " --> cached error bank strucure's size:" 
