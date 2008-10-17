@@ -4,6 +4,9 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+! 2008-10-17 - Marco Cattaneo
+ - Fix BooleInit::modifyODIN to work in TAE mode
+
 !========================== DigiAlg v4r11 2008-10-09 =========================
 ! 2008-10-09 - Marco Cattaneo for Antonio Maria Pérez-Calero Yzquierdo
  - BooleInit now adds to ODIN a beam current, beam crossing type and 

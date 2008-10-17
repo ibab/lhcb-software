@@ -1,4 +1,4 @@
-// $Id: BooleInit.cpp,v 1.26 2008-10-09 06:28:36 cattanem Exp $
+// $Id: BooleInit.cpp,v 1.27 2008-10-17 16:06:19 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -174,7 +174,7 @@ StatusCode BooleInit::execute() {
 void BooleInit::modifyOdin(unsigned int *odin) {
   
   //Get info from Gen
-  LHCb::GenCollisions* Collisions = get<LHCb::GenCollisions>( m_genCollisionLocation );
+  LHCb::GenCollisions* Collisions = get<LHCb::GenCollisions>( m_genCollisionLocation, IgnoreRootInTES );
   int numCollisions = Collisions->size();
   if(msgLevel(MSG::DEBUG))
     debug() << "Number of Collisions: "<< numCollisions << endmsg;
