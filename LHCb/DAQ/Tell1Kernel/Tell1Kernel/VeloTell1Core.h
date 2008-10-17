@@ -1,4 +1,4 @@
-// $Id: VeloTell1Core.h,v 1.4 2008-04-29 11:06:21 szumlat Exp $
+// $Id: VeloTell1Core.h,v 1.5 2008-10-17 16:20:55 szumlat Exp $
 #ifndef VELOTELL1CORE_H 
 #define VELOTELL1CORE_H 1
 
@@ -22,6 +22,14 @@ namespace VeloTELL1{
   enum dbConfig{
     STATIC=0,
     DYNAMIC=1
+  };
+
+  enum sumBeetle{
+    BEETLE_CHIPS=4
+  };
+  
+  enum sumLink{
+    BEETLE_ALINKS=4
   };
 
   enum strips{
@@ -112,8 +120,11 @@ namespace VeloTELL1{
   typedef std::vector<int> FIRCoeffVec;
   // heders
   typedef int Header [PP_FPGA][PROCESSING_CHANNELS][HEADERS_PER_ALINK];
+  // Data
   typedef int Data [PP_FPGA][PROCESSING_CHANNELS][ALINKS];
-  typedef int* iT;          /// iterator
+  // PedSum - change in engine interface!!
+  typedef int PedSum [PP_FPGA][BEETLE_CHIPS][BEETLE_ALINKS][CHANNELS_PER_ALINK];
+  typedef int* iT;               /// iterator
   typedef const int* const_iT;   /// const_iterator
   // seeding thresholds for cluster maker - both hit and inclusion
   typedef int Thresholds [PP_FPGA][PROCESSING_CHANNELS][ALINKS];
