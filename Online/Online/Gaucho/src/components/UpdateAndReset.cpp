@@ -233,12 +233,15 @@ void UpdateAndReset::verifyAndProcessCycleChange(bool isFromTimerHandler) {
 
 void UpdateAndReset::verifyAndProcessRunChange() { // this method can not be called from TimerHandler
   std::pair<std::pair<int, ulonglong>, bool> runNumber = currentRunNumber(); // if this is too late, we can not avoid two process calling it.
-  if (!runNumber.second) return;// false means that the runNumber wasn't change
-  if (s_statusNoUpdated != m_runStatus) return; // We update if the runStatus is different of ProcessingUpdate and Updated
   MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << " The Run Number has changed then we UpdateAll and reset Histograms" << endreq;
+  msg << MSG::DEBUG << " runnumber " << runNumber.first.first << " gps time " << runNumber.first.second << " runNumber.second " << runNumber.second << endreq;
+  if (!runNumber.second) return;// false means that the runNumber wasn't changed
+  if (s_statusNoUpdated != m_runStatus) return; // We update if the runStatus is different of ProcessingUpdate and Updated
+
+  msg << MSG::INFO << " The Run Number has changed then we UpdateAll and reset Histograms " << runNumber.first.first << endreq;
   m_runStatus = s_statusProcessingUpdate;
-  updateData(true, false); //1er param true means that the update was called because the runNumber changed and 2d false means no TimerHandler
+  //don't update the first time
+  if (runNumber.first.first!=0) updateData(true, false); //1er param true means that the update was called because the runNumber changed and 2d false means no TimerHandler
   m_runStatus = s_statusUpdated;
   retrieveRunNumber(runNumber.first.first, runNumber.first.second);
 }
@@ -294,8 +297,10 @@ std::pair<std::pair<int, ulonglong>, bool> UpdateAndReset::currentRunNumber() {
 //    msg << MSG::DEBUG<< "===============> Reading Odin bank is disabled. Then runNumber = 0 and gpsTime = currentTime" <<endreq;
   }
 
-  if (m_runNumber != runNumber) changed = true;
-
+  if ((m_runNumber != runNumber) && (m_runNumber !=0)) {
+     changed = true;
+  }   
+  m_runNumber = runNumber;
   std::pair<int, ulonglong> runNumberGpsTime = std::pair<int, ulonglong>(runNumber, gpsTime);
   
   // return std::pair<int, bool>(runNumber,changed);
@@ -423,7 +428,7 @@ void UpdateAndReset::manageTESHistos (bool list, bool reset, bool save, bool isF
   IRegistry* object = rootObject();
   int level = 0;
   std::vector<std::string> idList;
-  
+  msg << MSG::DEBUG << "managing histos" << endreq;
   TFile *f=0;
   m_infoFileStatus = "......this is the file name were we will save histograms...........";
   char timestr[64];
@@ -448,21 +453,22 @@ void UpdateAndReset::manageTESHistos (bool list, bool reset, bool save, bool isF
 
   std::string dirName = m_saveSetDir + "/" + year + "/" + partName + "/" + taskName;  
   void *dir = gSystem->OpenDirectory(dirName.c_str());
-  if (dir == 0) {
+  if ((dir == 0) && (save)) {
     gSystem->mkdir(dirName.c_str(),true);
   }
   
-  std::string tmpfile = dirName + "/" + timestr + ".root"; 
-  if (isFromEndOfRun) tmpfile = dirName + "/" + "EOR_"+ timestr + ".root"; 
-  
+  std::string tmpfile = dirName + "/" + taskName + "-" + timestr + ".root"; 
+  if (isFromEndOfRun) tmpfile = dirName + "/" + taskName + "-" + timestr + "-EOR.root"; 
+    msg << MSG::DEBUG << "updating infofile status" << endreq;
   m_infoFileStatus.replace(0, m_infoFileStatus.length(), tmpfile);
 
   if (save)  {
-    msg << MSG::INFO << "We will save histograms in file " << m_infoFileStatus << endreq;
+    msg << MSG::DEBUG << "We will save histograms in file " << m_infoFileStatus << endreq;
     f = new TFile(m_infoFileStatus.c_str(),"create");
   }
   if(! f->IsZombie()) {
-
+     msg << MSG::DEBUG << "Identifying histos" << endreq;
+    //f=0 because should also be able to reset without saving
     histogramIdentifier(object, idList, reset, save, level, (TDirectory*) f);
   
     if (0 == idList.size()) msg << MSG::INFO << "No histogram found" << endreq;
@@ -508,7 +514,7 @@ void UpdateAndReset::histogramIdentifier(IRegistry* object, std::vector<std::str
     DataObject* dataObject;
     sc = m_histogramSvc->retrieveObject(id, dataObject);
     if (sc.isFailure()) {
-      msg << MSG::INFO << "Could not retrieve object from TES " << endreq;
+      msg << MSG::DEBUG << "Could not retrieve object from TES " << endreq;
       continue;
     }
 
@@ -519,12 +525,11 @@ void UpdateAndReset::histogramIdentifier(IRegistry* object, std::vector<std::str
       if (save) {
         TH1* hRoot = (TH1*) Gaudi::Utils::Aida2ROOT::aida2root(histogram);
         std::vector<std::string> HistoFullName = Misc::splitString(hRoot->GetName(), "/");
-        TH1* copy = (TH1*) hRoot->Clone( HistoFullName[HistoFullName.size()-1].c_str() );
-        msg << MSG::DEBUG << ", saving name=" << copy->GetName() << " directory="
-            << (copy->GetDirectory() ? copy->GetDirectory()->GetName() : "none") <<endreq;
-        copy->Write();
-        delete copy;
+	hRoot->Write( HistoFullName[HistoFullName.size()-1].c_str() );
+        msg << MSG::DEBUG << ", saving name=" << hRoot->GetName() << " directory="
+            << (hRoot->GetDirectory() ? hRoot->GetDirectory()->GetName() : "none") <<endreq;
       }
+       msg << MSG::INFO << "Resetting histogram" << endreq;
       if (reset) histogram->reset();
 //      if (reset) hRoot->Reset();
       idList.push_back(id);
@@ -538,11 +543,9 @@ void UpdateAndReset::histogramIdentifier(IRegistry* object, std::vector<std::str
       if (save)  {
         TProfile* hRoot = (TProfile*) Gaudi::Utils::Aida2ROOT::aida2root(profile);
         std::vector<std::string> HistoFullName = Misc::splitString(hRoot->GetName(), "/");
-        TH1* copy = (TH1*) hRoot->Clone( HistoFullName[HistoFullName.size()-1].c_str() );
-        msg << MSG::DEBUG << ", saving name=" << copy->GetName() << " directory="
-            << (copy->GetDirectory() ? copy->GetDirectory()->GetName() : "none") <<endreq;
-        copy->Write();
-        delete copy;
+	hRoot->Write( HistoFullName[HistoFullName.size()-1].c_str() );
+        msg << MSG::DEBUG << ", saving name=" << hRoot->GetName() << " directory="
+            << (hRoot->GetDirectory() ? hRoot->GetDirectory()->GetName() : "none") <<endreq;
       }
       if (reset) profile->reset();
 //      if (reset) hProf->Reset();
