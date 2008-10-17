@@ -2,7 +2,7 @@
 # Created    : 2003-11-06
 # Maintainer : Christopher Rob Jones
 #============================================================================
-# $Id: requirements,v 1.77 2008-10-16 15:59:53 jonrob Exp $
+# $Id: requirements,v 1.78 2008-10-17 12:45:08 jonrob Exp $
 #============================================================================
 
 package RichKernel
@@ -16,6 +16,9 @@ use DAQEvent           v*   Event
 use LHCbKernel         v*   Kernel
 use GaudiAlg           v*
 use Boost              v*   LCG_Interfaces
+private
+use GaudiObjDesc       v* -no_auto_imports
+end_private
 
 # ================ environment ===============================================
 apply_pattern install_more_includes more=RichKernel
@@ -31,6 +34,5 @@ apply_pattern reflex_dictionary                                       \
               headerfiles=$(RICHKERNELROOT)/dict/RichKernelDict.h     \
               selectionfile=$(RICHKERNELROOT)/dict/RichKernelDict.xml \
               options="-U__MINGW32__"
-
 # Debug flag
 macro_append cppflags "" Linux&debug " -DRICHDEBUG "

@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.200 2008-10-15 12:25:17 jonrob Exp $
+! $Id: release.notes,v 1.201 2008-10-17 12:45:08 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
+
+! 2008-10-17 - Chris Jones
+ - Update requirements to properly use GOD_NOALLOC flag with genreflex
 
 ! 2008-10-15 - Chris Jones
  - Add new tool interface for adding background to the raw decoded data
