@@ -89,14 +89,10 @@ private:
 	unsigned int m_nEvents;
 	DeCalorimeter *m_detSpd;
 	DeCalorimeter *m_detEcal;
-	CaloVector<int> m_cellHit;
-	CaloVector<int> m_neighHit;
-	CaloVector<int> m_neighHitEcal;
-	CaloVector<int> m_neighN;
 	unsigned int n_cells;
 	/// ECAL
 	double m_ecalThres;
-	
+	CaloVector<int> m_neighN;	
 	
 };		
 DECLARE_ALGORITHM_FACTORY( SpdMonitor );
@@ -157,7 +153,7 @@ StatusCode SpdMonitor::initialize()
   
   // Initialize neighbor matrix
   for(unsigned int cellIt = 0; cellIt!=m_detSpd->numberOfCells(); cellIt++){
-    CaloCellID cell = m_detSpd->cellIdByIndex(cellIt);
+    const LHCb::CaloCellID cell = m_detSpd->cellIdByIndex(cellIt);
     const CaloNeighbors& neigh = m_detSpd->zsupNeighborCells(cell);    
     m_neighN.addEntry( neigh.size() , cell);      
   }  
@@ -204,9 +200,13 @@ StatusCode SpdMonitor::execute()
 // -------------------------------SPD Standalone Histograms---------------------------------------  
   CaloDigits* digitsSpd = get<CaloDigits>(CaloDigitLocation::Spd);  
 
+  
+	CaloVector<int> m_neighHit;
+	CaloVector<int> m_neighHitEcal;
+	CaloVector<int> m_cellHit;
   // Initialize the occupancy matrices
   for(unsigned int cellIt = 0; cellIt!=n_cells; cellIt++){	
-    CaloCellID id = m_detSpd->cellIdByIndex(cellIt);
+    const LHCb ::CaloCellID id = m_detSpd->cellIdByIndex(cellIt);
     m_cellHit.addEntry(0, id);
     m_neighHit.addEntry( 0, id);
     m_neighHitEcal.addEntry( 0, id);
