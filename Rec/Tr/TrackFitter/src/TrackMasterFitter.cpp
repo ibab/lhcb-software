@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.57 2008-10-13 09:17:42 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.58 2008-10-17 11:52:42 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -478,6 +478,10 @@ StatusCode TrackMasterFitter::makeNodes( Track& track, LHCb::ParticleID pid ) co
 	      << ", " << track.nMeasurements() << endreq;
   }
 
+  // check that there are sufficient measurements
+  if( track.nMeasurements() < track.firstState().nParameters() )
+    return Warning("Not enough measurements to fit track", StatusCode::FAILURE, 0);
+  
   // Create the nodes for the measurements.
   const std::vector<Measurement*>& measures = track.measurements();
   Track::NodeContainer& nodes = track.nodes();
