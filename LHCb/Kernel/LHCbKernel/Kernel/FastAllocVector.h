@@ -5,7 +5,7 @@
  *  Header file for vector class LHCb::FastAllocVector
  *
  *  CVS Log :-
- *  $Id: FastAllocVector.h,v 1.1 2007-09-04 16:38:23 jonrob Exp $
+ *  $Id: FastAllocVector.h,v 1.2 2008-10-17 11:41:47 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   29/03/2007
@@ -19,6 +19,7 @@
 #include <vector>
 
 // need to use macro as template typedefs don't work yet :(
+#ifndef GOD_NOALLOC
 
 #ifdef __GNUC__
 #if __GNUC_MINOR__ > 3
@@ -35,6 +36,13 @@
 #else
 // Windows
 #define LHCb_FastAllocVector_allocator(TYPE) std::allocator< TYPE >
+#endif
+
+#else
+
+// Disable memory pools completely
+#define LHCb_FastAllocVector_allocator(TYPE) std::allocator< TYPE >
+
 #endif
 
 namespace LHCb

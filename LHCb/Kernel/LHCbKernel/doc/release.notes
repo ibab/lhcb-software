@@ -4,6 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2008-10-17 - Chris Jones
+ - Switch off custom vector allocators in FastAllocVector when the flag 
+   GOD_NOALLOC is set.
+
 !===================== LHCbKernel v9r2 2008-10-03 =========================
 ! 2008-10-03 - Marco Cattaneo
  - Make GOD_NOALLOC flag public
