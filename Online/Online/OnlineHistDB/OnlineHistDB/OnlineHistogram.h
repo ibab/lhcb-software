@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.25 2008-10-03 15:45:31 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.26 2008-10-17 09:07:12 ggiacomo Exp $
 #ifndef ONLINEHISTOGRAM_H
 #define ONLINEHISTOGRAM_H 1
 /** @class  OnlineHistogram OnlineHistogram.h OnlineHistDB/OnlineHistogram.h
@@ -127,6 +127,8 @@ class  OnlineHistogram : public OnlineHistDBEnv
 			void* option);
   /// unsets a display option (in the current display mode)
   virtual bool unsetDisplayOption(std::string ParameterName);
+  /// unsets all display options (in the current display mode)
+  void unsetAllDisplayOptions();
   /// returns true if the current option value is different from *option
   virtual bool changedDisplayOption(std::string ParameterName, 
 				    void* option);

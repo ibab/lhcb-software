@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.34 2008-10-03 15:45:31 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.35 2008-10-17 09:07:12 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -1009,6 +1009,14 @@ bool OnlineHistogram::unsetDisplayOption(std::string ParameterName) {
   }
   return out;
 }
+
+void OnlineHistogram::unsetAllDisplayOptions() {
+  std::vector<OnlineDisplayOption*>::iterator ip;
+  for (ip = m_do.begin();ip != m_do.end(); ++ip) {
+    (*ip)->unset();
+  }
+}
+
 
 bool OnlineHistogram::changedDisplayOption(std::string ParameterName, 
 					   void* option)
