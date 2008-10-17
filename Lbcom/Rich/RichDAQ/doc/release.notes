@@ -4,6 +4,9 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2008-10-17 - Chris Jones
+ - Update RawBufferToSmartIDsTool to create on demand missing raw data entries
+
 ! 2008-10-15 - Chris Jones
  - Move some components to RichTools and RichAlgorithms packages
 

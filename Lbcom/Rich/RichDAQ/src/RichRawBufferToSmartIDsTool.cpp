@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::DAQ::RawBufferToSmartIDsTool
  *
  * CVS Log :-
- * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.25 2008-10-16 16:04:54 jonrob Exp $
+ * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.26 2008-10-17 11:03:42 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -156,7 +156,7 @@ RawBufferToSmartIDsTool::richSmartIDs( const LHCb::RichSmartID hpdID,
     // Set some information
     hpdInfo.setHpdID(hpdID);
     // Set what we can in the header / footer
-    hpdInfo.header().setL0ID(m_richSys->level0ID(hpdID));
+    //hpdInfo.header().setL0ID(m_richSys->level0ID(hpdID));
 
     // set found data pointer
     found_data = &(hpdInfo.smartIDs());
