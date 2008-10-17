@@ -5,7 +5,7 @@
  *  Implementation file for monitor : Rich::DAQ::DataDBCheck
  *
  *  CVS Log :-
- *  $Id: RichDataDBCheck.cpp,v 1.1 2008-10-15 12:40:54 jonrob Exp $
+ *  $Id: RichDataDBCheck.cpp,v 1.2 2008-10-17 11:10:16 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2008-10-14
@@ -66,34 +66,36 @@ StatusCode DataDBCheck::initialize()
 StatusCode DataDBCheck::execute()
 {
 
-  // get the raw data 
+  // get the raw data
   const Rich::DAQ::L1Map & l1Map = m_SmartIDDecoder->allRichSmartIDs(m_taeEvents);
 
-  for ( Rich::DAQ::L1Map::const_iterator iL1Map = l1Map.begin(); 
-        iL1Map != l1Map.end(); ++iL1Map ) 
+  for ( Rich::DAQ::L1Map::const_iterator iL1Map = l1Map.begin();
+        iL1Map != l1Map.end(); ++iL1Map )
   {
     const Rich::DAQ::Level1HardwareID l1HardID = iL1Map->first;
     const Rich::DAQ::IngressMap & ingressMap  = iL1Map->second;
-    for ( Rich::DAQ::IngressMap::const_iterator iIngressMap = ingressMap.begin(); 
+    for ( Rich::DAQ::IngressMap::const_iterator iIngressMap = ingressMap.begin();
           iIngressMap != ingressMap.end(); ++iIngressMap )
     {
       const Rich::DAQ::L1IngressID   l1IngressID = iIngressMap->first;
       const Rich::DAQ::IngressInfo & ingressInfo = iIngressMap->second;
       const Rich::DAQ::HPDMap & hpdMap = ingressInfo.hpdData();
-      for ( Rich::DAQ::HPDMap::const_iterator iHPDMap = hpdMap.begin(); 
-            iHPDMap != hpdMap.end(); ++iHPDMap ) 
+      for ( Rich::DAQ::HPDMap::const_iterator iHPDMap = hpdMap.begin();
+            iHPDMap != hpdMap.end(); ++iHPDMap )
       {
-        const Rich::DAQ::Level1Input l1Input = iHPDMap->first;     
+        const Rich::DAQ::Level1Input l1Input = iHPDMap->first;
         const Rich::DAQ::HPDInfo & hpdInfo   = iHPDMap->second;
         const LHCb::RichSmartID  & hpdID     = hpdInfo.hpdID();
 
         // loo up information from DB for this HPD
         const Rich::DAQ::Level1HardwareID db_l1HardID = m_RichSys->level1HardwareID(hpdID);
-        const Rich::DAQ::Level1Input 	    db_l1Input  = m_RichSys->level1InputNum(hpdID);
+        const Rich::DAQ::Level1Input      db_l1Input  = m_RichSys->level1InputNum(hpdID);
+        const Rich::DAQ::Level0ID 	      db_l0ID     = m_RichSys->level0ID(hpdID);
 
         // compare to that in the data itself
-        compare( "Level1HardwareID", l1HardID, db_l1HardID );
-        compare( "Level1Input",      l1Input,  db_l1Input  );
+        compare( "Level1HardwareID", l1HardID,                db_l1HardID );
+        compare( "Level1Input",      l1Input,                 db_l1Input  );
+        compare( "Level0ID",         hpdInfo.header().l0ID(), db_l0ID     );
 
       } // loop over HPDs
 
