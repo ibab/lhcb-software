@@ -1,4 +1,4 @@
-// $Id: MeasurementProviderT.cpp,v 1.13 2008-10-18 10:39:03 mneedham Exp $
+// $Id: MeasurementProviderT.cpp,v 1.14 2008-10-18 10:57:04 mneedham Exp $
 // Include files
 
 //=============================================================================
@@ -300,8 +300,8 @@ namespace MeasurementProviderTypes {
     typedef DeSTDetector             DetectorType ;
     static std::string positionToolName() { return "STOfflinePosition/ITClusterPosition" ; }
     static std::string defaultDetectorLocation() { return DeSTDetLocation::location("IT") ; }
-    static std::string defaultClusterLocation() { return "/Event/Raw/IT/MergedSpills" ; }
-    //  static std::string defaultClusterLocation() { return "/Event/Next1/Raw/IT/Clusters" ; }
+ 
+    static std::string defaultClusterLocation() { return LHCb::STClusterLocation::ITClusters ; }
     
 
     static LHCb::STChannelID channelId( const LHCb::LHCbID& id ) { return id.stID() ; }
