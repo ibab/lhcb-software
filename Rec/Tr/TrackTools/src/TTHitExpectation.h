@@ -1,4 +1,4 @@
-// $Id: TTHitExpectation.h,v 1.4 2008-07-14 10:24:08 mneedham Exp $
+// $Id: TTHitExpectation.h,v 1.5 2008-10-18 10:35:02 mneedham Exp $
 #ifndef _TTHitExpectation_H
 #define _TTHitExpectation_H
 
@@ -78,7 +78,8 @@ private:
                   const unsigned int firstStrip, 
                   const unsigned int lastStrip) const;
 
- 
+
+  std::string m_extrapolatorName; 
   ITrackExtrapolator* m_extrapolator;
   DeSTDetector* m_ttDet;
   double m_zTTa;

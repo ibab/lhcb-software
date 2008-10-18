@@ -1,4 +1,4 @@
-// $Id: THitExpectation.cpp,v 1.3 2008-02-08 07:37:58 cattanem Exp $
+// $Id: THitExpectation.cpp,v 1.4 2008-10-18 10:35:02 mneedham Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/PhysicalConstants.h"
@@ -7,6 +7,8 @@
 // Event
 #include "Event/Track.h"
 #include "Event/State.h"
+#include "Event/StateVector.h"
+#include "Event/StateParameters.h"
 
 // Tsa
 #include "TsaKernel/Line.h"
@@ -27,6 +29,7 @@ THitExpectation::THitExpectation(const std::string& type,
 { 
   // constructor
 
+  declareProperty("extrapolatorName", m_extrapolatorName = "TrackFastParabolicExtrapolator");
   declareInterface<IHitExpectation>(this);
 }
 
@@ -43,7 +46,7 @@ StatusCode THitExpectation::initialize()
   }
 
 
-  m_extrapolator = tool<ITrackExtrapolator>("TrackFastParabolicExtrapolator");
+  m_extrapolator = tool<ITrackExtrapolator>(m_extrapolatorName);
 
   m_pIMF = svc<IMagneticFieldSvc>("MagneticFieldSvc", true);
 
@@ -54,13 +57,12 @@ Tf::Tsa::Parabola THitExpectation::xParabola(const LHCb::Track& aTrack, const do
   
   // find the closest state
   const LHCb::State& aState = aTrack.closestState(z);
-
-  //  double m_curvFactor = 42.0;
+  LHCb::StateVector stateVector(aState.position(),aState.slopes());
+  m_extrapolator->propagate(stateVector,StateParameters::ZMidT); 
 
   // make a parabola from this...
   const double zS = aState.z();
   const double a = curvature(aState);
-  //const double a = aState.qOverP()/m_curvFactor;
   const double b = aState.tx() -2*zS*a;  
   const double c = aState.x() - zS*(b + a*zS); 
   return Tf::Tsa::Parabola(a,b,c);
@@ -84,6 +86,8 @@ Tf::Tsa::Line THitExpectation::yLine(const LHCb::Track& aTrack, const double z)c
 
   // find the closest state
   LHCb::State aState = aTrack.closestState(z);
+  LHCb::StateVector stateVector(aState.position(),aState.slopes());
+  m_extrapolator->propagate(stateVector,StateParameters::ZMidT); 
 
   const double m = aState.ty();
   const double c = aState.y() - m*aState.z();

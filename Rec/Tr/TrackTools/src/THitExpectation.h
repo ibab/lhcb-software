@@ -1,4 +1,4 @@
-// $Id: THitExpectation.h,v 1.2 2007-10-10 18:32:17 smenzeme Exp $
+// $Id: THitExpectation.h,v 1.3 2008-10-18 10:35:02 mneedham Exp $
 #ifndef _THitExpectation_H
 #define _THitExpectation_H
 
@@ -20,7 +20,6 @@ namespace LHCb{
   class Track;
   class State;
 }
-
 
 
 class ITrackExtrapolator;
@@ -49,6 +48,7 @@ protected:
   Tf::Tsa::Line yLine(const LHCb::Track& aTrack, const double z) const;
 
   ITrackExtrapolator* m_extrapolator;
+  std::string m_extrapolatorName;
 
 private:
 

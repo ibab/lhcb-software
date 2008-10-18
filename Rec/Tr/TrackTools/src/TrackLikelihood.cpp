@@ -1,4 +1,4 @@
-// $Id: TrackLikelihood.cpp,v 1.5 2008-06-06 11:39:49 lnicolas Exp $
+// $Id: TrackLikelihood.cpp,v 1.6 2008-10-18 10:35:02 mneedham Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -43,7 +43,12 @@ DECLARE_TOOL_FACTORY( TrackLikelihood );
 TrackLikelihood::TrackLikelihood(const std::string& type,
                                          const std::string& name,
                                          const IInterface* parent):
- GaudiTool(type, name, parent)
+  GaudiTool(type, name, parent),
+  m_veloExpectation(0),
+  m_ttExpectation(0),
+  m_itExpectation(0),
+  m_otExpectation(0)
+
 { 
   // constructer
   declareProperty("veloREff", m_veloREff = 0.965);
@@ -82,10 +87,10 @@ StatusCode TrackLikelihood::initialize() {
     return Error("Failed to initialize", sc);
   }
 
-  m_veloExpectation = tool<IVeloExpectation>("VeloExpectation");
-  m_ttExpectation = tool<IHitExpectation>("TTHitExpectation");
-  m_itExpectation = tool<IHitExpectation>("ITHitExpectation");
-  m_otExpectation = tool<IHitExpectation>("OTHitExpectation");
+  if (m_useVelo) m_veloExpectation = tool<IVeloExpectation>("VeloExpectation");
+  if (m_useTT) m_ttExpectation = tool<IHitExpectation>("TTHitExpectation");
+  if (m_useIT) m_itExpectation = tool<IHitExpectation>("ITHitExpectation");
+  if (m_useOT) m_otExpectation = tool<IHitExpectation>("OTHitExpectation");
 
   return StatusCode::SUCCESS;
 }

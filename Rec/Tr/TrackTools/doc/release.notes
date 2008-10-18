@@ -4,8 +4,15 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+
+! 2008-10-19 M Needham
+ - Changes in likelihood tool [allow detector to be missing in init
+ - Changes in expected hit tools [allow choice of extrapolator ]
+
+
 ! 2008-10-17 - Wouter Hulsbergen
  - made MeasurementProvider even less verbose
+
 
 !======================== TrackTools v3r12 2008-10-02 ========================
 ! 2008-09-26 - Wouter Hulsbergen

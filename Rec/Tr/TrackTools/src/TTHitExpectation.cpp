@@ -1,4 +1,4 @@
-// $Id: TTHitExpectation.cpp,v 1.4 2008-07-14 10:24:08 mneedham Exp $
+// $Id: TTHitExpectation.cpp,v 1.5 2008-10-18 10:35:02 mneedham Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -13,6 +13,7 @@
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeSTSensor.h"
 #include "TrackInterfaces/ITrackExtrapolator.h"
+#include "Event/StateParameters.h"
 
 #include "TTHitExpectation.h"
 
@@ -31,6 +32,8 @@ TTHitExpectation::TTHitExpectation(const std::string& type,
   GaudiTool(type, name, parent)
 { 
   // constructer
+
+  declareProperty("extrapolatorName", m_extrapolatorName = "TrackFastParabolicExtrapolator");
   declareInterface<IHitExpectation>(this);
 };
 
@@ -53,7 +56,7 @@ StatusCode TTHitExpectation::initialize()
   }
 
  
-  m_extrapolator = tool<ITrackExtrapolator>("TrackFastParabolicExtrapolator");
+  m_extrapolator = tool<ITrackExtrapolator>(m_extrapolatorName);
   m_ttDet = getDet<DeSTDetector>(DeSTDetLocation::location("TT"));
 
   if (m_ttDet->nStation() != 2u){
