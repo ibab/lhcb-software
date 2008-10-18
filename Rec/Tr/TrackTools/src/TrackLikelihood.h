@@ -1,4 +1,4 @@
-// $Id: TrackLikelihood.h,v 1.1 2007-09-11 14:41:26 mneedham Exp $
+// $Id: TrackLikelihood.h,v 1.2 2008-10-18 10:39:03 mneedham Exp $
 #ifndef _TrackLikelihood_H
 #define _TrackLikelihood_H
 
@@ -49,10 +49,11 @@ class TrackLikelihood: public GaudiTool,
   double addOT(LHCb::Track& aTrack) const;
   double addIT(LHCb::Track& aTrack) const;
 
-  IHitExpectation* m_ttExpectation;
-  IHitExpectation* m_otExpectation;
-  IHitExpectation* m_itExpectation;
   IVeloExpectation* m_veloExpectation;
+  IHitExpectation* m_ttExpectation;
+  IHitExpectation* m_itExpectation;
+  IHitExpectation* m_otExpectation;
+ 
 
   double m_veloREff;
   double m_veloPhiEff;
