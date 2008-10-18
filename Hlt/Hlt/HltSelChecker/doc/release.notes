@@ -9,6 +9,9 @@
 ! end
 !-----------------------------------------------------------------------------
 
+! 2008-10-18 - Adlene Hicheur
+ - Add test file for Bs ->J/psi(ee) Phi selection
+
 !========================== HltSelChecker v7r3 2008-10-15 ===================
 ! 2008-10-15 - Patrick Koppenburg
  - Run correlations only on offline selected events
