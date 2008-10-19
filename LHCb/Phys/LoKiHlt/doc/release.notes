@@ -1,9 +1,24 @@
-! $Id: release.notes,v 1.7 2008-10-08 11:23:25 graven Exp $ 
+! $Id: release.notes,v 1.8 2008-10-19 16:28:37 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiHlt
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : collection of functors&factory for HLT 
 ! -----------------------------------------------------------------------------
+
+! 2008-10-19 - Vanya BELYAEV
+
+  IMPORTANT! IT REQUIRES Phys/LoKiCore version >= v8r0 
+
+ - change in the generation of dictionaries! 
+ - add dictionaries for 'algorithm'-related functors 
+
+   functors and helepr functions are defiend in the separate module:
+	
+      python/LoKiHlt/algorithms.py
+
+ - cmt/requirements 
+
+   versioninrement to v2r0
 
 !============================= LoKiHlt v1r1 2008-10-08 ========================
 
