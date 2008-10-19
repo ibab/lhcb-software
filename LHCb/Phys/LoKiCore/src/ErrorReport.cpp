@@ -1,4 +1,4 @@
-// $Id: ErrorReport.cpp,v 1.5 2007-07-23 17:07:43 ibelyaev Exp $
+// $Id: ErrorReport.cpp,v 1.6 2008-10-19 16:11:40 ibelyaev Exp $
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -128,12 +128,13 @@ StatusCode LoKi::ErrorReport::setReporter
 // ============================================================================
 StatusCode LoKi::ErrorReport::Error     
 ( const std::string&  msg , 
-  const StatusCode    st  , 
+  const StatusCode&   st  , 
   const size_t        mx ) const 
 { 
+  st.ignore() ;
   if ( 0 != m_reporter ) { return m_reporter->Error( msg , st , mx ) ; }
   const size_t ne = ++m_errors[msg] ;
-  if ( ne <= mx ) { Print( msg , st , MSG::ERROR ) ; }
+  if ( ne <= mx ) { Print ( msg , st , MSG::ERROR ) ; }
   if ( ne == mx ) 
   { Print ( "The ERROR   message '" + msg + 
             "' is suppressed from now" , st , MSG::ERROR ) ; }
@@ -148,9 +149,10 @@ StatusCode LoKi::ErrorReport::Error
 // ============================================================================
 StatusCode LoKi::ErrorReport::Warning   
 ( const std::string&  msg , 
-  const StatusCode    st  ,
+  const StatusCode&   st  ,
   const size_t        mx ) const  
 {
+  st.ignore() ;
   if( 0 != m_reporter ) { return m_reporter->Warning( msg , st , mx ) ; }
   const size_t ne = ++m_warnings[msg] ;
   if ( ne <= mx ) { Print( msg , st , MSG::WARNING ) ; }
@@ -169,9 +171,10 @@ StatusCode LoKi::ErrorReport::Warning
 // ============================================================================
 StatusCode LoKi::ErrorReport::Print     
 ( const std::string& msg , 
-  const StatusCode   st  ,
+  const StatusCode&  st  ,
   const MSG::Level   lev ) const 
 {  
+  st.ignore() ;
   if( 0 != m_reporter ) { return m_reporter->Print( msg , st , lev ) ; }
   // 
   std::cerr << "LoKi::ErrorReport\t"  ;
@@ -199,8 +202,9 @@ StatusCode LoKi::ErrorReport::Print
 StatusCode LoKi::ErrorReport::Exception
 ( const std::string    & msg ,
   const GaudiException & exc ,
-  const StatusCode       sc  ) const
+  const StatusCode&      sc  ) const
 {
+  sc.ignore() ;
   if ( 0 != m_reporter ) 
   {  return m_reporter->Exception ( msg , exc , sc ) ; } 
   // increase local counter of exceptions
@@ -217,8 +221,9 @@ StatusCode LoKi::ErrorReport::Exception
 StatusCode LoKi::ErrorReport::Exception
 ( const std::string    & msg ,
   const std::exception & exc ,
-  const StatusCode       sc  ) const
+  const StatusCode&      sc  ) const
 {
+  sc.ignore() ;
   if ( 0 != m_reporter ) 
   {  return m_reporter->Exception ( msg , exc , sc ) ; } 
   // increase local counter of exceptions
@@ -233,8 +238,9 @@ StatusCode LoKi::ErrorReport::Exception
 // ============================================================================
 StatusCode LoKi::ErrorReport::Exception
 ( const std::string    & msg ,
-  const StatusCode       sc  ) const
+  const StatusCode&      sc  ) const
 {
+  sc.ignore() ;
   if ( 0 != m_reporter ) 
   {  return m_reporter->Exception ( msg , sc ) ; }  
   // increase local counter of exceptions

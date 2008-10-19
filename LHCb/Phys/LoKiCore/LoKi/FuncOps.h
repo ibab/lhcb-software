@@ -1,4 +1,4 @@
-// $Id: FuncOps.h,v 1.15 2008-10-03 13:02:06 ibelyaev Exp $
+// $Id: FuncOps.h,v 1.16 2008-10-19 16:11:40 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FUNCOPS_H 
 #define LOKI_FUNCOPS_H 1
@@ -22,13 +22,13 @@ namespace LoKi
   namespace Dicts
   {
     // ========================================================================
-    /** @class FuncOps
+    /** @class FuncOps_
      *  Wrapper class for operations with functions 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-10-07
      */
     template <class TYPE, class TYPE2=TYPE>
-    class FuncOps 
+    class FuncOps_ 
     {
     private:
       typedef typename LoKi::BasicFunctors<TYPE>::Function               Func ;
@@ -81,6 +81,7 @@ namespace LoKi
                               const double fun2 ) { return fun1 + fun2  ; }
       static Fun __sub__    ( const Func&  fun1 , 
                               const double fun2 ) { return fun1 - fun2  ; }
+
       static Fun __mul__    ( const Func&  fun1 , 
                               const double fun2 ) { return fun1 * fun2  ; }
       static Fun __div__    ( const Func&  fun1 , 
@@ -197,6 +198,7 @@ namespace LoKi
       { return LoKi::plot    ( c , d , i , h ) ; }
       static Fun __monitor__ ( const Func&              c , 
                                const std::string&       d , 
+
                                const int                i , 
                                const Gaudi::Histo1DDef& h )
       { return LoKi::plot    ( c , d , i , h ) ; }
@@ -208,6 +210,22 @@ namespace LoKi
       { return LoKi::EqualToValue<TYPE> ( fun , val ) ; }
       static Cut __equal_to__ ( const Func&   fun  , 
                                 const Func&   fun1 ) { return fun == fun1 ; }
+    } ;
+    // ========================================================================
+    /** @class FuncOps
+     *  Wrapper class for operations with functions 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2006-10-07
+     */
+    template <class TYPE, class TYPE2=TYPE>
+    class FuncOps : public FuncOps_<TYPE>
+    {
+    private:
+      typedef typename LoKi::BasicFunctors<TYPE>::Function               Func ;
+      typedef typename LoKi::BasicFunctors<TYPE>::Predicate              Cuts ;
+      typedef typename LoKi::BasicFunctors<TYPE>::FunctionFromFunction   Fun  ;
+      typedef typename LoKi::BasicFunctors<TYPE>::PredicateFromPredicate Cut  ;
+    public:   
       // ======================================================================
       // functional part 
       // ======================================================================
@@ -253,13 +271,13 @@ namespace LoKi
       { return LoKi::max_abs_element<TYPE2>( fun ) ; }
     } ;
     // ========================================================================
-    /** @class CutsOps
+    /** @class CutsOps_
      *  Wrapper class for operations with predicates  
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-10-07
      */
     template <class TYPE, class TYPE2=TYPE>
-    class CutsOps 
+    class CutsOps_ 
     {
     private:
       typedef typename LoKi::BasicFunctors<TYPE>::Function               Func ;
@@ -295,14 +313,33 @@ namespace LoKi
                                 const double fun1 ,
                                 const Func&  fun2 )
       { return Switch<TYPE>             ( cut , fun1 , fun2 ) ; }
+      // switch 
       static Fun __switch__   ( const Cuts&  cut  , 
                                 const double fun1 ,
                                 const double fun2 )
       { return LoKi::SimpleSwitch<TYPE> ( cut , fun1 , fun2 ) ; }
+      // switch 
       static Cut __switch__   ( const Cuts&  cut  , 
                                 const Cuts&  cut1 ,
                                 const Cuts&  cut2 )
       { return LoKi::Switch<TYPE,bool> ( cut , cut1 , cut2 ) ; }
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class CutsOps
+     *  Wrapper class for operations with predicates  
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2006-10-07
+     */
+    template <class TYPE, class TYPE2=TYPE>
+    class CutsOps : public CutsOps_<TYPE> 
+    {
+    private:
+      typedef typename LoKi::BasicFunctors<TYPE>::Function               Func ;
+      typedef typename LoKi::BasicFunctors<TYPE>::Predicate              Cuts ;
+      typedef typename LoKi::BasicFunctors<TYPE>::FunctionFromFunction   Fun  ;
+      typedef typename LoKi::BasicFunctors<TYPE>::PredicateFromPredicate Cut  ;
+    public:   
       // ======================================================================
       // functional part 
       // ======================================================================
@@ -314,6 +351,14 @@ namespace LoKi
       static LoKi::FunctorFromFunctor<std::vector<TYPE2>,std::vector<TYPE2> >
       __process__ ( const Cuts& cut ) 
       { return LoKi::process<TYPE2> ( cut ) ; }
+      // count 
+      static LoKi::FunctorFromFunctor<std::vector<TYPE2>,double >
+      __count__ ( const Cuts& cut ) 
+      { return LoKi::count<TYPE2,TYPE,bool> ( cut ) ; }
+      // has
+      static LoKi::FunctorFromFunctor<std::vector<TYPE2>,bool>
+      __has__ ( const Cuts& cut ) 
+      { return LoKi::has<TYPE2,TYPE,bool> ( cut ) ; }
     } ;
     // ========================================================================
     /** @class MapsOps

@@ -1,4 +1,4 @@
-// $Id: Report.cpp,v 1.6 2007-07-23 17:07:43 ibelyaev Exp $
+// $Id: Report.cpp,v 1.7 2008-10-19 16:11:40 ibelyaev Exp $
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -34,7 +34,7 @@
 // ============================================================================
 StatusCode LoKi::Report::Error     
 ( const std::string&  msg , 
-  const StatusCode    st  ,
+  const StatusCode&   st  ,
   const size_t        mx  ) 
 { 
   st.ignore() ;
@@ -49,11 +49,11 @@ StatusCode LoKi::Report::Error
 // ============================================================================
 StatusCode LoKi::Report::Warning   
 ( const std::string&  msg , 
-  const StatusCode    st  , 
+  const StatusCode&   st  , 
   const size_t        mx  ) 
 {
   st.ignore() ;
-  return LoKi::ErrorReport::instance().Warning( msg , st , mx ) ;
+  return LoKi::ErrorReport::instance().Warning ( msg , st , mx ) ;
 } 
 // ============================================================================
 /*  Print the message and return status code 
@@ -65,7 +65,7 @@ StatusCode LoKi::Report::Warning
 // ============================================================================
 void LoKi::Report::Print     
 ( const std::string& msg , 
-  const StatusCode   st  ,
+  const StatusCode&  st  ,
   const MSG::Level   lev )
 { 
   st.ignore() ; 
@@ -84,7 +84,7 @@ void LoKi::Report::Print
 void LoKi::Report::Exception 
 ( const std::string    & msg ,  
   const GaudiException & exc , 
-  const StatusCode       sc  ) 
+  const StatusCode&      sc  ) 
 { 
   sc.ignore() ; 
   LoKi::ErrorReport::instance().Exception( msg , exc , sc ).ignore() ; 
@@ -102,7 +102,7 @@ void LoKi::Report::Exception
 void LoKi::Report::Exception 
 ( const std::string    & msg ,  
   const std::exception & exc , 
-  const StatusCode       sc  ) 
+  const StatusCode&      sc  ) 
 { 
   sc.ignore() ;
   LoKi::ErrorReport::instance().Exception( msg , exc , sc ).ignore() ; 
@@ -118,7 +118,7 @@ void LoKi::Report::Exception
 // ============================================================================
 void LoKi::Report::Exception 
 ( const std::string& msg ,  
-  const StatusCode   sc  ) 
+  const StatusCode&  sc  ) 
 { 
   sc.ignore() ;
   LoKi::ErrorReport::instance().Exception( msg , sc ).ignore() ; 

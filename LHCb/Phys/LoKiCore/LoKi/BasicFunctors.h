@@ -1,4 +1,4 @@
-// $Id: BasicFunctors.h,v 1.3 2007-12-11 09:35:48 ibelyaev Exp $
+// $Id: BasicFunctors.h,v 1.4 2008-10-19 16:11:40 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_BASICFUNCTORS_H 
 #define LOKI_BASICFUNCTORS_H 1
@@ -26,6 +26,20 @@
 namespace LoKi
 {
   // ==========================================================================
+  template <class TYPE>
+  struct Assignable ;
+  // ==========================================================================
+  /** @struct Assignable 
+   *  helper structire to defien the correspondig assignable functors 
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date   2007-10-31   
+   */ 
+  template <class TYPE1, class TYPE2>
+  struct Assignable<LoKi::Functor<TYPE1,TYPE2> > 
+  {
+    typedef LoKi::FunctorFromFunctor<TYPE1,TYPE2>  Type ;
+  };
+  // ==========================================================================
   /** @struct BasicFunctors 
    *
    *  The helper structure to propagate the actual types for the basic functors 
@@ -44,9 +58,9 @@ namespace LoKi
     // the basic type for "predicate" (interface)
     typedef LoKi::Functor<TYPE,bool>                 Predicate              ;
     // the basic type for "function"  (assignable)
-    typedef LoKi::FunctorFromFunctor<TYPE,double>    FunctionFromFunction   ;
+    typedef typename Assignable<Function>::Type      FunctionFromFunction   ;
     // the basic type for "predicate" (assignable)
-    typedef LoKi::FunctorFromFunctor<TYPE,bool>      PredicateFromPredicate ;
+    typedef typename Assignable<Predicate>::Type     PredicateFromPredicate ;
     //
     typedef LoKi::Constant<TYPE,double>              Constant               ;
     typedef LoKi::Constant<TYPE,bool>                BooleanConstant        ;
@@ -67,15 +81,6 @@ namespace LoKi
     typedef LoKi::Functor<void,std::vector<TYPE> >                Source     ;
     //
   } ;
-  // ==========================================================================
-  template <class TYPE>
-  struct Assignable ;
-  // ==========================================================================
-  template <class TYPE1, class TYPE2>
-  struct Assignable<LoKi::Functor<TYPE1,TYPE2> > 
-  {
-    typedef LoKi::FunctorFromFunctor<TYPE1,TYPE2>  Type ;
-  };
   // ==========================================================================
 } // end of namespace LoKi 
 // ============================================================================

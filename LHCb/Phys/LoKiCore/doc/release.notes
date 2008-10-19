@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.112 2008-10-12 12:19:18 ibelyaev Exp $ 
+! $Id: release.notes,v 1.113 2008-10-19 16:11:40 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,27 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2008-10-19 - Vanya BELYAEV
+
+ - 1) MANY improvements in the area of functors which gets 'void' ( "sources")
+   2) redesign of python decorators 
+   3) "algorithm"-functors 
+   4) "CoreFactory" for following functors:
+    
+       void -> bool 
+       void -> double 
+       double -> bool 
+       double -> double 
+       std::vector<double> -> std::vector<double>
+       std::vector<double> -> double
+       void -> std::vector<double>
+
+    4) generic "LoKi::VoidFilter" algorithm, based on "CoreFactory" 
+ 
+ - cmt/requirement 
+     increment the major version 
+
 
 ! 2008-10-12 - Vanya BELYAEV
 

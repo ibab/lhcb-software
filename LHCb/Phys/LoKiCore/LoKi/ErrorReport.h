@@ -1,4 +1,4 @@
-// $Id: ErrorReport.h,v 1.9 2008-07-27 18:19:27 ibelyaev Exp $
+// $Id: ErrorReport.h,v 1.10 2008-10-19 16:11:40 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ERRORREPORT_H 
 #define LOKI_ERRORREPORT_H 1
@@ -67,7 +67,7 @@ namespace LoKi
      */
     StatusCode Error     
     ( const std::string&  msg                   , 
-      const StatusCode    st  = 
+      const StatusCode&   st  = 
       StatusCode ( StatusCode::FAILURE , true ) ,
       const size_t        mx  = 10              ) const  ;
     // ========================================================================
@@ -79,7 +79,7 @@ namespace LoKi
      */
     StatusCode Warning   
     ( const std::string&  msg                   , 
-      const StatusCode    st  = 
+      const StatusCode&   st  = 
       StatusCode ( StatusCode::FAILURE , true ) , 
       const size_t        mx  = 10              ) const  ;
     // ========================================================================
@@ -91,7 +91,7 @@ namespace LoKi
      */
     StatusCode Print     
     ( const std::string& msg                    , 
-      const StatusCode   st  = 
+      const StatusCode&  st  = 
       StatusCode ( StatusCode::SUCCESS , true ) ,
       const MSG::Level   lev = MSG::INFO        ) const ;
     // ========================================================================
@@ -108,7 +108,7 @@ namespace LoKi
     inline StatusCode Assert 
     ( const bool         ok                     , 
       const std::string& message = ""           , 
-      const StatusCode   sc      = 
+      const StatusCode&  sc      = 
       StatusCode ( StatusCode::FAILURE , true ) ) const 
     {
       return ( ok ? StatusCode::SUCCESS : Exception( message , sc ) ) ;
@@ -125,7 +125,7 @@ namespace LoKi
     StatusCode Exception 
     ( const std::string    & msg                        ,  
       const GaudiException & exc                        , 
-      const StatusCode       sc  = 
+      const StatusCode&      sc  = 
       StatusCode ( StatusCode::FAILURE , true ) ) const ;
     // ========================================================================
     /** Create and (re)-throw the exception  
@@ -139,7 +139,7 @@ namespace LoKi
     StatusCode Exception 
     ( const std::string    & msg                        ,  
       const std::exception & exc                        , 
-      const StatusCode       sc  = 
+      const StatusCode&      sc  = 
       StatusCode ( StatusCode::FAILURE , true ) ) const ;
     // ========================================================================
     /** Create and throw the exception  
@@ -151,7 +151,7 @@ namespace LoKi
      */
     StatusCode Exception 
     ( const std::string& msg = "no message"        ,  
-      const StatusCode   sc  = 
+      const StatusCode&  sc  = 
       StatusCode ( StatusCode::FAILURE , true ) ) const ;
     // ========================================================================
   private:

@@ -77,6 +77,7 @@ def equal_to  ( f  , v ) :
     # use the generic version:
     return f == v 
 
+
 # =============================================================================
 ## Get the number of children for the object.
 def nChildren ( o )  :
@@ -494,6 +495,33 @@ def info ( index , fun , update = False ) :
 
 
 # =============================================================================
+def has ( cut ) :
+    """
+    Create the vector function that checks certain scalar predicate
+
+    >>> cut = ...
+    >>> checker = has ( cut )
+    >>> ok = checker ( data )
+    
+    The concept belongs to Gerhard 'The Great' Raven
+    
+    """
+    return cut.__has__ ()
+
+# =============================================================================
+def count ( cut ) :
+    """
+    Create the vector function that counts certain scalar predicate
+
+    >>> cut = ...
+    >>> counter = count ( cut )
+    
+    The concept belongs to Gerhard 'The Great' Raven
+    
+    """
+    return cut.__count__ ()
+
+# =============================================================================
 ## construct std::vector<std::string> from the arguments 
 def strings ( arg1 , *args ) :
     """
@@ -530,6 +558,30 @@ def doubles ( arg1 , *args ) :
     """
     from LoKiCore.decorators import std
     _vt = std.vector('double')
+    vct = _vt () 
+    if 0 != len( args ) :
+        vct.push_back ( arg1 )
+        for a in args : vct.push_back ( a )
+        return vct
+    if list == type( arg1 )  :
+        for a in arg1 : vct.push_back ( a )
+        return vct
+    vct.push_back ( arg1 )
+    return vct 
+
+# =============================================================================
+## construct std::vector<int> from the arguments 
+def ints ( arg1 , *args ) :
+    """
+    Construct the std::vector<int> from the arguments
+    
+    >>> v1 = ints ( 1 )
+    >>> v2 = ints ( 1 , 1 , 10  )
+    >>> v3 = ints ( [ 1 , 2 , 3 ] )
+    
+    """
+    from LoKiCore.decorators import std
+    _vt = std.vector('int')
     vct = _vt () 
     if 0 != len( args ) :
         vct.push_back ( arg1 )

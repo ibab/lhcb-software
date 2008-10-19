@@ -1,4 +1,4 @@
-// $Id: Filters.h,v 1.3 2008-04-03 11:27:10 cattanem Exp $
+// $Id: Filters.h,v 1.4 2008-10-19 16:11:40 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FILTERS_H 
 #define LOKI_FILTERS_H 1
@@ -706,9 +706,102 @@ namespace LoKi
       // the default construct is private:
       AbsMinElement() ; ///< no default contructor
     private:
-      // the basic functor itself 
-      LoKi::FunctorFromFunctor<TYPE2,TYPE1> m_functor ; ///< the functor
+      // ======================================================================
+      /// the basic functor itself 
+      LoKi::FunctorFromFunctor<TYPE2,TYPE1> m_functor ; // the functor
+      // ======================================================================
     } ;
+    // ========================================================================
+    template <class TYPE,class TYPE1=TYPE, class TYPE2=bool>
+    class Count : public LoKi::Functor<std::vector<TYPE>,double> 
+    {
+    public:
+      // the base 
+      typedef LoKi::Functor<std::vector<TYPE>,double>  uBase    ; ///< the base 
+    public:
+      // ======================================================================
+      /// constructor from the predicate 
+      Count ( const LoKi::Functor<TYPE1,TYPE2>& cut ) 
+        :  LoKi::Functor<std::vector<TYPE>,double> () 
+        , m_cut ( cut ) 
+      {}
+      /// MANDATORY: virtual destructor 
+      virtual ~Count () {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Count* clone() const { return new Count ( *this ) ; }
+      /// MANDATORY: the only one essential method:
+      virtual typename uBase::result_type operator() 
+        ( typename uBase::argument a ) const
+      {
+        const LoKi::Apply<TYPE1,TYPE2> app ( &m_cut.fun() ) ;
+        //
+        size_t count = 0 ;
+        typedef typename std::vector<TYPE>::const_iterator     _I ;
+        for ( _I it = a.begin() ; a.end() != it ; ++it ) 
+        { if ( app ( *it ) ) { ++count ; } }
+        //
+        return count ; 
+      }
+      /// OPTIONAL: the basic printout method 
+      virtual std::ostream& fillStream( std::ostream& s ) const 
+      { return  s << "count(" << m_cut << ")" ; } 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      Count() ; /// default constructor is disabled 
+      // ======================================================================      
+    private:
+      // ======================================================================
+      /// the predicate 
+      LoKi::FunctorFromFunctor<TYPE1,TYPE2> m_cut ;            // the predicate 
+      // ======================================================================
+    };
+    // ========================================================================
+    template <class TYPE,class TYPE1=TYPE, class TYPE2=bool>
+    class Has : public LoKi::Functor<std::vector<TYPE>,bool> 
+    {
+    public:
+      // the base 
+      typedef LoKi::Functor<std::vector<TYPE>,bool>  uBase    ; ///< the base 
+    public:
+      // ======================================================================
+      /// constructor from the predicate 
+      Has ( const LoKi::Functor<TYPE1,TYPE2>& cut ) 
+        :  LoKi::Functor<std::vector<TYPE>,bool> () 
+        , m_cut ( cut ) 
+      {}
+      /// MANDATORY: virtual destructor 
+      virtual ~Has () {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Has* clone() const { return new Has ( *this ) ; }
+      /// MANDATORY: the only one essential method:
+      virtual typename uBase::result_type operator() 
+        ( typename uBase::argument a ) const
+      {
+        const LoKi::Apply<TYPE1,TYPE2> app ( &m_cut.fun() ) ;
+        //
+        typedef typename std::vector<TYPE>::const_iterator     _I ;
+        for ( _I it = a.begin() ; a.end() != it ; ++it ) 
+        { if ( app ( *it ) ) { return true ; } }  // RETURN 
+        //
+        return false; 
+      }
+      /// OPTIONAL: the basic printout method 
+      virtual std::ostream& fillStream( std::ostream& s ) const 
+      { return  s << "has(" << m_cut << ")" ; } 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      Has() ; /// default constructor is disabled 
+      // ======================================================================      
+    private:
+      // ======================================================================
+      /// the predicate 
+      LoKi::FunctorFromFunctor<TYPE1,TYPE2> m_cut ;            // the predicate 
+      // ======================================================================
+    };
     // ========================================================================
   } // end of namespace LoKi::Filters 
   // ==========================================================================
@@ -1095,6 +1188,60 @@ namespace LoKi
   min_abs_element ( const LoKi::Functor<TYPE2,TYPE1>& fun ) 
   {
     return LoKi::Functors::AbsMinElement<TYPE,TYPE2,TYPE1>( fun ) ;
+  }
+  // ==========================================================================
+  /**  simple "count" function
+   *
+   *  @code 
+   *  
+   *   std::vector<TYPE> in = ... ;
+   *
+   *   // some predicate
+   *   const LoKi::BasicFunctors<TYPE>::Predicate& cut = ...; 
+   *
+   *   // count the number of elements
+   *   in >> count<TYPE>( cut ) ;
+   *
+   *  @endcode 
+   *
+   *  The concept belongs to the Gerhard "The Great" Raven. 
+   *
+   *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+   *  @date 2008-10-17   
+   */      
+  template <class TYPE,class TYPE1,class TYPE2>
+  inline 
+  LoKi::Functors::Count<TYPE,TYPE1,TYPE2>
+  count ( const LoKi::Functor<TYPE1,TYPE2>& cut ) 
+  {
+    return LoKi::Functors::Count<TYPE,TYPE1,TYPE2>( cut ) ;
+  }
+  // ==========================================================================
+  /**  simple "has" function
+   *
+   *  @code 
+   *  
+   *   std::vector<TYPE> in = ... ;
+   *
+   *   // some predicate
+   *   const LoKi::BasicFunctors<TYPE>::Predicate& cut = ...; 
+   *
+   *   // check the elements
+   *   in >> has<TYPE>( cut ) ;
+   *
+   *  @endcode 
+   *
+   *  The concept belongs to the Gerhard "The Great" Raven. 
+   *
+   *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+   *  @date 2008-10-17   
+   */      
+  template <class TYPE,class TYPE1,class TYPE2>
+  inline 
+  LoKi::Functors::Has<TYPE,TYPE1,TYPE2>
+  has ( const LoKi::Functor<TYPE1,TYPE2>& cut ) 
+  {
+    return LoKi::Functors::Has<TYPE,TYPE1,TYPE2>( cut ) ;
   }
   // ==========================================================================
 } // end of namespace LoKi 

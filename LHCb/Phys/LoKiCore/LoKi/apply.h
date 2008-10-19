@@ -1,4 +1,4 @@
-// $Id: apply.h,v 1.3 2008-03-30 13:31:28 ibelyaev Exp $
+// $Id: apply.h,v 1.4 2008-10-19 16:11:40 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_APPLY_H 
 #define LOKI_APPLY_H 1
@@ -295,6 +295,44 @@ namespace LoKi
   private:
     /// the functor itself 
     const LoKi::Functor<TYPE,TYPE2>* m_functor ; // the functor itself 
+  } ;
+  // ============================================================================
+  template <class TYPE2>
+  struct Apply<void,TYPE2> 
+  {
+  private:
+    // ========================================================================
+    typedef void TYPE ;
+    // ========================================================================
+  public:
+    // ========================================================================
+    /// needed for the proper template instantiation 
+    typedef typename LoKi::Functor<TYPE,TYPE2>::result_type result_type ;
+    // ========================================================================
+  public:
+    // ========================================================================
+    /// the constructor 
+    Apply ( const LoKi::Functor<TYPE,TYPE2>* fun ) : m_functor ( fun ) {}
+    // ========================================================================
+  public:
+    // ========================================================================
+    /// the only one essential method 
+    inline typename LoKi::Functor<TYPE,TYPE2>::result_type 
+    operator() () const { return (*m_functor) () ; }
+    /// the only one essential method 
+    inline typename LoKi::Functor<TYPE,TYPE2>::result_type 
+    eval       () const { return (*m_functor) () ; }
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// the default constructor is disabled 
+    Apply() ;                           // the default constructor is disabled
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// the functor itself 
+    const LoKi::Functor<TYPE,TYPE2>* m_functor ;         // the functor itself 
+    // ========================================================================
   } ;
   // ==========================================================================
 } // end of namespace LoKi

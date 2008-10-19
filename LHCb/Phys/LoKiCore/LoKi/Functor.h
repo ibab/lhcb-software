@@ -1,4 +1,4 @@
-// $Id: Functor.h,v 1.4 2008-05-28 13:40:29 cattanem Exp $
+// $Id: Functor.h,v 1.5 2008-10-19 16:11:40 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FUNCTOR_H 
 #define LOKI_FUNCTOR_H 1
@@ -165,7 +165,9 @@ namespace LoKi
     inline typename functor::result_type fun 
     ( typename functor::argument a ) const { return (*m_fun) ( a ) ; }
     /// accessor to the function 
-    inline const functor& fun () const { return *m_fun ; }
+    inline const functor& fun  () const { return *m_fun ; }
+    // accessor to the function 
+    inline const functor& func () const { return *m_fun ; }
   private:
     // default constructor is private 
     FunctorFromFunctor(); ///< the default constructor is private 
@@ -228,11 +230,14 @@ namespace LoKi
     , public virtual LoKi::AuxFunBase 
   {
   public:
-    // parameters: argument
-    typedef void  Type1 ; ///< parameters: argument
-    // parameters: return value 
-    typedef TYPE2 Type2 ; ///< parameters: return value
+    // ========================================================================
+    /// parameters: argument
+    typedef void  Type1 ; // parameters: argument
+    /// parameters: return value 
+    typedef TYPE2 Type2 ; // parameters: return value
+    // ========================================================================
   public:
+    // ========================================================================
     /// the type of the argument
     typedef void        TYPE;
     typedef TYPE        Type ;
@@ -245,19 +250,22 @@ namespace LoKi
     typedef          void                   argument_type ;
     /// type for the argument 
     typedef          void                   argument      ;
+    // ========================================================================
   public:
+    // ========================================================================
     /// the only one essential method ("function")
-    virtual result_type operator () ( /* argument  */ ) const = 0 ;
+    virtual result_type operator () ( /* argument */ ) const = 0 ;
     /// the only one essential method ("function")
-    virtual result_type evaluate    ( /* argument  */ ) const 
-    { return (*this)( /* */ ) ; }
+    virtual result_type evaluate    ( /* argument */ ) const 
+    { return (*this) ( /* */ ) ; }
     /// the only one essential method ("function")
-    virtual result_type eval        ( /* argument  */ ) const 
-    { return (*this)( /* */ ) ; }
+    virtual result_type eval        ( /* argument */ ) const 
+    { return (*this) ( /* */ ) ; }
     /// clone method 
     virtual  Functor* clone    ()                   const = 0 ;
     /// virtual destructor 
     virtual ~Functor(){}
+    // ========================================================================
   protected:
     // protected default constructor 
     Functor()                              ///< protected default constructor 
@@ -274,14 +282,19 @@ namespace LoKi
   class FunctorFromFunctor<void,TYPE2>: public LoKi::Functor<void,TYPE2>
   {
   public:
+    // ========================================================================
     /// the fixed type 
     typedef void TYPE ;
-    // the underlying type of functor 
-    typedef LoKi::Functor<TYPE,TYPE2>   functor ; ///< the underlying type of functor 
+    /// the underlying type of functor 
+    typedef LoKi::Functor<TYPE,TYPE2>   functor ; // the underlying type of functor 
+    // ========================================================================
   protected:
-    // own type 
-    typedef FunctorFromFunctor<TYPE,TYPE2> Self ; ///< the own type 
+    // ========================================================================
+    /// own type 
+    typedef FunctorFromFunctor<TYPE,TYPE2> Self ; // the own type 
+    // ========================================================================
   public:
+    // ========================================================================
     /// constructor 
     FunctorFromFunctor ( const Functor<TYPE,TYPE2>& right ) 
       : LoKi::Functor<TYPE,TYPE2> () 
@@ -303,8 +316,7 @@ namespace LoKi
     { return new FunctorFromFunctor ( *this ) ; }
     /// MANDATORY: the only one essential method 
     virtual typename functor::result_type operator() 
-      ( /* typename functor::argument a */ ) const
-    { return fun ( /* a */ ) ; }    
+      ( /* typename functor::argument a */ ) const { return fun ( /* a */ ) ; }    
     /// OPTIONAL: the basic printout method, delegate to the underlying object
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return  m_fun->fillStream( s ) ; };
@@ -312,7 +324,9 @@ namespace LoKi
     virtual std::size_t   id () const { return m_fun->id() ; }
     /// OPTIONAL: delegate the object type
     virtual std::string   objType () const { return m_fun -> objType() ; }
+    // ========================================================================
   public:
+    // ========================================================================
     /// the assignement operator is enabled 
     FunctorFromFunctor& operator= ( const FunctorFromFunctor& right )
     {
@@ -341,29 +355,39 @@ namespace LoKi
       m_fun = newf ;
       return *this ;                                             // RETURN 
     }  
+    // ========================================================================
   public:   
+    // ========================================================================
     /// evaluate the function
     inline typename functor::result_type fun 
     ( /* typename functor::argument a */ ) const { return (*m_fun) ( /* a */ ) ; }
     // accessor to the function 
-    // inline const functor& fun () const { return *m_fun ; }
+    inline const functor& func () const { return *m_fun ; }
+    // ========================================================================
   private:
-    // default constructor is private 
-    FunctorFromFunctor(); ///< the default constructor is private 
+    // ========================================================================
+    /// default constructor is private 
+    FunctorFromFunctor(); // the default constructor is private 
+    // ========================================================================
   private:
-    // the underlaying function 
-    const functor* m_fun ; ///< the underlaying functor
+    // ========================================================================
+    /// the underlaying function 
+    const functor* m_fun ; // the underlaying functor
+    // ========================================================================
   } ;
   // ==========================================================================
   template <class TYPE2>
   class Constant<void,TYPE2> : public LoKi::Functor<void,TYPE2>
   {
   public:
+    // ========================================================================
     /// the fixed type 
     typedef void TYPE ;
     /// argument type 
     typedef typename boost::call_traits<const TYPE2>::param_type T2 ;
+    // ========================================================================
   public:
+    // ========================================================================
     /// constructor 
     Constant ( T2 value )
       : LoKi::Functor<TYPE,TYPE2>() 
@@ -387,16 +411,21 @@ namespace LoKi
     virtual Constant* clone   () const { return new Constant( *this ) ; }
     /// the only one essential method ("function")      
     virtual typename LoKi::Functor<TYPE,TYPE2>::result_type operator() 
-      ( /* typename LoKi::Functor<TYPE,TYPE2>::argument */ ) const 
+      ( /* typename LoKi::Functor<TYPE,TYPE2>::argument a */ ) const 
     { return m_value ; }
     /// the basic printout method  
     virtual std::ostream& fillStream( std::ostream& s ) const ;
+    // ========================================================================
   private:
+    // ========================================================================
     /// no default constructor 
-    Constant() ; ///< no default constructor 
+    Constant() ;                                      // no default constructor 
+    // ========================================================================
   private:
-    // the constant itself 
-    TYPE2 m_value ; ///< the constant itself 
+    // ========================================================================
+    /// the constant itself 
+    TYPE2 m_value ;                                      // the constant itself 
+    // ========================================================================
   } ;
   // ==========================================================================
   // the generic printout method 
@@ -412,13 +441,6 @@ namespace LoKi
   inline std::ostream& 
   Constant<void,TYPE2>::fillStream( std::ostream& s ) const 
   { return  Gaudi::Utils::toStream ( this->m_value , s ) ; }
-  // ==========================================================================
-  // the basic printout method  
-  // ==========================================================================
-  template <>
-  inline std::ostream& 
-  Constant<double,bool>::fillStream( std::ostream& s ) const 
-  { return s << ( this->m_value ? "XALL" : "XNONE" ) ; } 
   // ==========================================================================
 } // end of namespace LoKi
 // ============================================================================

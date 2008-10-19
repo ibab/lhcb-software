@@ -1,4 +1,4 @@
-// $Id: Monitoring.h,v 1.4 2008-02-29 16:09:11 ibelyaev Exp $
+// $Id: Monitoring.h,v 1.5 2008-10-19 16:11:40 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MONITORING_H 
 #define LOKI_MONITORING_H 1
@@ -61,6 +61,7 @@ namespace LoKi
     class Counter : public LoKi::Functor<TYPE,TYPE2>
     {
     public:
+      // ======================================================================
       /// constructor from the predicate and the generic counter 
       Counter ( const LoKi::Functor<TYPE,TYPE2>& cut  , 
                 StatEntity*                      stat )
@@ -85,8 +86,61 @@ namespace LoKi
       {
         const typename LoKi::Functor<TYPE,TYPE2>::result_type result = 
           m_cut.fun ( a ) ;
-        // perform monitoring
-        if ( 0 != m_stat ){ (*m_stat) += result ; } ///< perform monitoring
+        ///  perform monitoring
+        if ( 0 != m_stat ){ (*m_stat) += result ; }       // perform monitoring
+        return result ;                                               // RETURN 
+      }
+      /// OPTIONAL: just a nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const 
+      { return m_cut.fillStream ( s ) ; }
+      /// OPTIONAL: delegate ID:
+      virtual std::size_t id() const { return m_cut.id() ; }
+      // ======================================================================
+    private: 
+      // ======================================================================
+      /// no default constructor
+      Counter () ; //  no default constructor
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the "main" predicate:
+      LoKi::FunctorFromFunctor<TYPE,TYPE2> m_cut ;      // the "main" predicate
+      /// generic counter used for monitoring:
+      StatEntity* m_stat ;               // generic counter used for monitoring
+      // ======================================================================
+    };
+    // ========================================================================
+    template <class TYPE2> 
+    class Counter<void,TYPE2> : public LoKi::Functor<void,TYPE2>
+    {
+    public:
+      // ======================================================================
+      /// constructor from the predicate and the generic counter 
+      Counter ( const LoKi::Functor<void,TYPE2>& cut  , 
+                StatEntity*                      stat )
+        : LoKi::Functor<void,TYPE2>() 
+        , m_cut  ( cut  ) 
+        , m_stat ( stat ) 
+      {} 
+      /// copy constructor 
+      Counter ( const Counter& right )
+        : LoKi::AuxFunBase          ( right        ) 
+        , LoKi::Functor<void,TYPE2> ( right        ) 
+        , m_cut                     ( right.m_cut  ) 
+        , m_stat                    ( right.m_stat ) 
+      {} 
+      /// MANDATORY: virtual constructor
+      virtual ~Counter() { m_stat = 0 ; }
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Counter* clone() const { return new Counter(*this); }
+      /// MANDATORY: the only one essential method:
+      virtual typename LoKi::Functor<void,TYPE2>::result_type operator() 
+        ( /* argument a */ ) const 
+      {
+        const typename LoKi::Functor<void,TYPE2>::result_type result = 
+          m_cut.fun ( /* a */ ) ;
+        /// perform monitoring
+        if ( 0 != m_stat ){ (*m_stat) += result ; } // perform monitoring
         return result ;                                           // RETURN 
       }
       /// OPTIONAL: just a nice printout 
@@ -94,14 +148,19 @@ namespace LoKi
       { return m_cut.fillStream ( s ) ; }
       /// OPTIONAL: delegate ID:
       virtual std::size_t id() const { return m_cut.id() ; }
+      // ======================================================================
     private: 
-      // no default constructor
-      Counter () ; ///<  no default constructor
+      // ======================================================================
+      /// no default constructor
+      Counter () ; //  no default constructor
+      // ======================================================================
     private:
-      // the "main" predicate:
-      LoKi::FunctorFromFunctor<TYPE,TYPE2> m_cut ; ///< the "main" predicate:
-      // generic counter used for monitoring:
-      StatEntity* m_stat ;///< generic counter used for monitoring
+      // ======================================================================
+      /// the "main" predicate:
+      LoKi::FunctorFromFunctor<void,TYPE2> m_cut ;      // the "main" predicate
+      /// generic counter used for monitoring:
+      StatEntity* m_stat ;               // generic counter used for monitoring
+      // ======================================================================
     };
     // ========================================================================
     /** @class Plot
@@ -131,6 +190,7 @@ namespace LoKi
     class Plot: public LoKi::Functor<TYPE,TYPE2>
     {
     public:
+      // ======================================================================
       /// constructor from the function and the histogram  
       Plot ( const LoKi::Functor<TYPE,TYPE2>& fun   , 
              AIDA::IHistogram1D*              histo )
@@ -171,14 +231,79 @@ namespace LoKi
       { return m_fun.fillStream ( s ) ; }
       /// delegate ID:
       virtual std::size_t id() const { return m_fun.id() ; }
+      // ======================================================================
     private:
-      // no default constructor
-      Plot() ;
+      // ======================================================================
+      /// no default constructor
+      Plot() ;                                       // no default constructor
+      // ======================================================================
     private:
-      // the "main" function:
-      LoKi::FunctorFromFunctor<TYPE,TYPE2> m_fun ; ///< the "main" function
-      // the histogram for monitoring 
-      AIDA::IHistogram1D*              m_histo ; ///< the histogram for monitoring 
+      // ======================================================================
+      /// the "main" function:
+      LoKi::FunctorFromFunctor<TYPE,TYPE2> m_fun ; // the "main" function
+      /// the histogram for monitoring 
+      AIDA::IHistogram1D*              m_histo ; // the histogram for monitoring 
+      // ======================================================================
+    };
+    // ========================================================================
+    template <class TYPE2> 
+    class Plot<void,TYPE2>: public LoKi::Functor<void,TYPE2>
+    {
+    public:
+      // ======================================================================
+      /// constructor from the function and the histogram  
+      Plot ( const LoKi::Functor<void,TYPE2>& fun   , 
+             AIDA::IHistogram1D*              histo )
+        : LoKi::Functor<void,TYPE2>() 
+        , m_fun     ( fun   ) 
+        , m_histo   ( histo ) 
+      {} 
+      /// constructor from the function and the histogram  
+      Plot ( AIDA::IHistogram1D*              histo ,
+             const LoKi::Functor<void,TYPE2>& fun   ) 
+        : LoKi::Functor<void,TYPE2>() 
+        , m_fun     ( fun   ) 
+        , m_histo   ( histo ) 
+      {} 
+      /// copy constructor 
+      Plot ( const Plot& right )
+        : LoKi::AuxFunBase          ( right ) 
+        , LoKi::Functor<void,TYPE2> ( right ) 
+        , m_fun                 ( right.m_fun   ) 
+        , m_histo               ( right.m_histo ) 
+      {} 
+      /// MANDATORY: virtual constructor
+      virtual ~Plot () { m_histo = 0 ; }
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Plot* clone() const { return new Plot(*this); }
+      /// MANDATORY: the only one essential method:
+      virtual typename LoKi::Functor<void,TYPE2>::result_type operator() 
+        ( /* argument a */ ) const 
+      {
+        const typename LoKi::Functor<void,TYPE2>::result_type result = 
+          m_fun.fun ( /* a */ ) ;
+        // perform monitoring
+        if ( 0 != m_histo ) { m_histo -> fill ( result ) ;  } ///< perform monitoring
+        return result ;
+      }
+      /// OPTIONAL: just a nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const 
+      { return m_fun.fillStream ( s ) ; }
+      /// delegate ID:
+      virtual std::size_t id() const { return m_fun.id() ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// no default constructor
+      Plot() ; // no default constructor
+     // ======================================================================
+    private:
+      // ======================================================================
+      /// the "main" function:
+      LoKi::FunctorFromFunctor<void,TYPE2> m_fun ; // the "main" function
+      /// the histogram for monitoring 
+      AIDA::IHistogram1D*              m_histo ; // the histogram for monitoring 
+      // ======================================================================
     };
     // ========================================================================
     /** @class Printer 
@@ -261,10 +386,14 @@ namespace LoKi
       { return m_fun.fillStream ( s ) ; }
       /// OPTIONAL: delegate ID:
       virtual std::size_t id() const { return m_fun.id() ; }
+      // ======================================================================
     private:
+      // ======================================================================
       /// the default constructor is disabled 
       Printer() ; // the default constructor is disabled 
+      // ======================================================================
     private:
+      // ======================================================================
       /// the "main" functor 
       LoKi::FunctorFromFunctor<TYPE,TYPE2> m_fun ; // the "main" functor 
       /// the reference for the stream 
@@ -273,6 +402,87 @@ namespace LoKi
       std::string   m_suffix ; // the suffix
       /// the prefix 
       std::string   m_prefix ; // the prefix 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    template <class TYPE2> 
+    class Printer<void,TYPE2> : public LoKi::Functor<void,TYPE2>
+    {
+    public:
+      // ======================================================================
+      /** constructor from the functor, stream, suffix and prefix
+       *  @param fun the functor 
+       *  @param stream the stream 
+       *  @param suffix the suffix 
+       *  @param prefix the prefix 
+       */
+      Printer 
+      ( const LoKi::Functor<void,TYPE2>& fun                , 
+        std::ostream&                    stream = std::cout ,
+        const std::string&               suffix = "\n"      , 
+        const std::string&               prefix = ""        ) 
+        : LoKi::Functor<void,TYPE2>() 
+        , m_fun    ( fun    ) 
+        , m_stream ( stream )
+        , m_suffix ( suffix ) 
+        , m_prefix ( prefix ) {}
+      // ======================================================================
+      /** constructor from the functor, stream, suffix and prefix
+       *  @param fun the functor 
+       *  @param stream the stream 
+       *  @param suffix the suffix 
+       *  @param prefix the prefix 
+       */
+      Printer 
+      ( std::ostream&                    stream        ,
+        const LoKi::Functor<void,TYPE2>& fun           , 
+        const std::string&               suffix = "\n" , 
+        const std::string&               prefix = ""   ) 
+        : LoKi::Functor<void,TYPE2>() 
+        , m_fun    ( fun    ) 
+        , m_stream ( stream )
+        , m_suffix ( suffix ) 
+        , m_prefix ( prefix ) {}
+      // ======================================================================
+      /// MANDATORY: virtual destrcutor 
+      virtual ~Printer() {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  Printer* clone() const { return new Printer ( *this ) ; }
+      /// MANDATORY: the only one essential method 
+      virtual typename LoKi::Functor<void,TYPE2>::result_type operator() 
+        ( /* argument a */ ) const 
+      {
+        // evaluate the underlying functor: 
+        const typename LoKi::Functor<void,TYPE2>::result_type result = 
+          m_fun.fun ( /* a */ )        ;
+        // perform the actual printout 
+        m_stream << m_prefix << m_fun << "=" ;
+        Gaudi::Utils::toStream ( result , m_stream ) ; // print the result 
+        m_stream << m_suffix       ;
+        return result ;
+      }
+      /// OPTIONAL: just a nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const 
+      { return m_fun.fillStream ( s ) ; }
+      /// OPTIONAL: delegate ID:
+      virtual std::size_t id() const { return m_fun.id() ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      Printer() ; // the default constructor is disabled 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the "main" functor 
+      LoKi::FunctorFromFunctor<void,TYPE2> m_fun ; // the "main" functor 
+      /// the reference for the stream 
+      std::ostream& m_stream ; // the reference for the stream 
+      /// the suffix
+      std::string   m_suffix ; // the suffix
+      /// the prefix 
+      std::string   m_prefix ; // the prefix 
+      // ======================================================================
     } ;
     // ========================================================================
   } // end of namespace LoKi::Monitoring

@@ -1,4 +1,4 @@
-// $Id: AuxFunBase.cpp,v 1.10 2007-12-09 17:56:43 ibelyaev Exp $
+// $Id: AuxFunBase.cpp,v 1.11 2008-10-19 16:11:40 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -101,11 +101,12 @@ LoKi::AuxFunBase::~AuxFunBase()
  *  @return status code 
  */
 // ============================================================================
-void LoKi::AuxFunBase::Error
+StatusCode LoKi::AuxFunBase::Error
 ( const std::string& msg , 
   const StatusCode&  sc  ) const 
 {
-  LoKi::Report::Error( objType() + ": \t" + msg  , sc ) ; sc.ignore() ;
+  sc.ignore() ;
+  return LoKi::Report::Error( objType() + ": \t" + msg  , sc ) ; 
 }
 // ============================================================================
 /*  print Warning message 
@@ -114,25 +115,26 @@ void LoKi::AuxFunBase::Error
  *  @return status code 
  */
 // ============================================================================
-void LoKi::AuxFunBase::Warning
+StatusCode LoKi::AuxFunBase::Warning
 ( const std::string& msg , 
   const StatusCode&  sc  ) const 
 {
-  LoKi::Report::Warning( objType() + ": \t " + msg , sc ) ; sc.ignore() ;
+  sc.ignore() ;
+  return LoKi::Report::Warning ( objType() + ": \t " + msg , sc ) ; 
 } 
 // ============================================================================
 /*  thrown an exception  
  *  @param msg  error message 
  *  @param sc   status code 
- *  @return status code (fictive)
  */
 // ============================================================================
 void LoKi::AuxFunBase::Exception
 ( const std::string& msg , 
   const StatusCode&  sc  ) const 
 {
-  LoKi::Report::Error( objType() + " *EXCEPTION* : \t" + msg  , sc ) ;
   sc.ignore() ;
+  //
+  LoKi::Report::Error( objType() + " *EXCEPTION* : \t" + msg  , sc ) ;
   //
   throw LoKi::Exception( objType() + ": \t" + msg , sc ) ;
   //

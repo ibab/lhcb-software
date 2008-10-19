@@ -1,4 +1,4 @@
-// $Id: AuxFunBase.h,v 1.9 2008-03-30 13:31:28 ibelyaev Exp $
+// $Id: AuxFunBase.h,v 1.10 2008-10-19 16:11:40 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_AUXFUNBASE_H 
 #define LOKI_AUXFUNBASE_H 1
@@ -65,20 +65,19 @@ namespace LoKi
      *  @param msg  error message 
      *  @param sc   status code 
      */
-    virtual void Error
+    virtual StatusCode Error
     ( const std::string& msg                                             , 
       const StatusCode&  sc  = StatusCode ( StatusCode::FAILURE , true ) ) const ;
     /** print warning message 
      *  @param msg  warning message 
      *  @param sc   status code 
      */
-    virtual void Warning
+    virtual StatusCode Warning
     ( const std::string& msg                                             , 
       const StatusCode&  sc  = StatusCode ( StatusCode::FAILURE , true ) ) const ;
     /** thrown an exception 
      *  @param msg  warning message 
      *  @param sc   status code 
-     *  @return status code  (fictive)
      */
     virtual void Exception
     ( const std::string& msg                                             , 
@@ -157,11 +156,11 @@ namespace LoKi
     // ========================================================================
   };
   // ==========================================================================
-  /** simple fuctiin to generate the default generic 
+  /** simple fuction to generate the default generic 
    *  (hopefully unique?) ID for the functor 
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    */
-  std::size_t genericID( const AuxFunBase& ) ;  
+  std::size_t genericID ( const AuxFunBase& ) ;  
   // ==========================================================================
 } // end of namespace LoKi
 // ============================================================================

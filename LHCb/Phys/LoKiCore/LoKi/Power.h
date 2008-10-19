@@ -1,4 +1,4 @@
-// $Id: Power.h,v 1.10 2007-11-28 13:56:33 ibelyaev Exp $
+// $Id: Power.h,v 1.11 2008-10-19 16:11:40 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_POWER_H 
 #define LOKI_POWER_H 1
@@ -43,11 +43,14 @@ namespace LoKi
   class Power : public LoKi::Functor<TYPE,TYPE2>
   {
   private:
+    // ========================================================================
     /// argument type
     typedef typename LoKi::Functor<TYPE,TYPE2>::argument argument  ; 
     /// result type 
     typedef typename LoKi::Functor<TYPE,TYPE2>::result_type result_type ; 
+    // ========================================================================
   public:
+    // ========================================================================
     /** Standard constructor
      *  @param fun function to be used in "pow"
      *  @param val power itself
@@ -85,12 +88,84 @@ namespace LoKi
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << "pow("  << m_fun << "," << m_val << ")" ; };
+    // ========================================================================
   private:
-    // default constructor is disabled 
-    Power() ; ///< default constructor is disabled 
+    // ========================================================================
+    /// default constructor is disabled 
+    Power() ;                                // default constructor is disabled
+    // ========================================================================
   private:
-    LoKi::FunctorFromFunctor<TYPE,TYPE2>  m_fun ;
-    int                                   m_val ;
+    // ========================================================================
+    /// the functor 
+    LoKi::FunctorFromFunctor<TYPE,TYPE2>  m_fun ;                // the functor 
+    /// the power 
+    int                                   m_val ;                  // the power
+    // ========================================================================
+  };
+  // ==========================================================================
+  template <class TYPE2>
+  class Power<void,TYPE2> : public LoKi::Functor<void,TYPE2>
+  {
+  private:
+    // ========================================================================
+    typedef void TYPE ;
+    /// argument type
+    typedef typename LoKi::Functor<TYPE,TYPE2>::argument argument  ; 
+    /// result type 
+    typedef typename LoKi::Functor<TYPE,TYPE2>::result_type result_type ; 
+    // ========================================================================
+  public:
+    // ========================================================================
+    /** Standard constructor
+     *  @param fun function to be used in "pow"
+     *  @param val power itself
+     */
+    Power ( const LoKi::Functor<TYPE,TYPE2>& fun , 
+            const int                        val ) 
+      : LoKi::Functor<TYPE,TYPE2>() 
+      , m_fun ( fun ) 
+      , m_val ( val ) 
+    {}
+    /// copy constructor 
+    Power ( const Power & right ) 
+      : LoKi::AuxFunBase ( right ) 
+      , LoKi::Functor<TYPE,TYPE2> ( right ) 
+      , m_fun ( right.m_fun ) 
+      , m_val ( right.m_val ) 
+    {}
+    /// MANDATORY: virtual destructor 
+    virtual ~Power( ) {} ;
+    /// MANDATORY: clone method ("virtual constructor")
+    virtual  Power* clone() const { return new Power ( *this ) ; }
+    /// MANDATORY: the only one essential method 
+    virtual  result_type operator() ( /* argument a */ ) const 
+    {
+      if ( 0 == m_val ) { return TYPE2(1) ; }
+      // evaluate the function
+      result_type value = m_fun.fun ( /* a */ ) ;
+      // evaluate the result
+      if ( 0 <  m_val ) { return Gaudi::Math::pow ( value ,  m_val ) ; }
+      if ( 0 == value ) 
+      { this->Error ( " ZERO in NEGATIVE power! return -1.e+9" ) ; return -1.e+9 ; }
+      //
+      return Gaudi::Math::pow ( 1.0/value , -m_val ) ; 
+    }
+    /// the basic printout method 
+    virtual std::ostream& fillStream( std::ostream& s ) const 
+    { return s << "pow("  << m_fun << "," << m_val << ")" ; };
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// default constructor is disabled 
+    Power() ;                                // default constructor is disabled 
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// the functor 
+    LoKi::FunctorFromFunctor<TYPE,TYPE2>  m_fun ;                // the functor 
+    /// the power 
+    int                                   m_val ;                  // the power 
+    // ========================================================================
   };
   // ==========================================================================
   /** pow for LoKi functions
