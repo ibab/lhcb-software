@@ -4,6 +4,16 @@
 ! Purpose     : Set of dictionaries for LoKi functions 
 ! -----------------------------------------------------------------------------
 
+! 2008-10-19 - Vanya BELYAEV
+
+ - add the dictionary for various "void"-functors 
+
+ - new module python/LoKiNumbers/sources.py with basic "void"-functors 
+
+ - cmt/requirements 
+
+    version incremen tto v8r0 
+
 ! =========================== LoKiNumbers v7r3p1 2008-06-30 ===================
 ! 2008-06-11 - Vanya  BELYAEV
  - dict/LoKiNumbers.xml

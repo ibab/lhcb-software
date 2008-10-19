@@ -1,15 +1,20 @@
-// $Id: LoKiNumbersDict.h,v 1.5 2008-04-09 20:19:56 ibelyaev Exp $
+// $Id: LoKiNumbersDict.h,v 1.6 2008-10-19 16:20:25 ibelyaev Exp $
 // ============================================================================
 #ifndef DICT_LOKINUMBERSDICT_H 
 #define DICT_LOKINUMBERSDICT_H 1
 // ============================================================================
 // Include files
 // ============================================================================
+//  STD & STL 
+// ============================================================================
+#include <algorithm>
+// ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/Dicts.h"
 #include "LoKi/FuncOps.h"
 #include "LoKi/BasicFunctors.h"
+#include "LoKi/CoreTypes.h"
 #include "LoKi/Random.h"
 // ============================================================================
 /** @file
@@ -162,7 +167,7 @@ namespace LoKi
       ( const Fun& fun  , const Fun&             o ) { return fun >> o  ; }
     } ;
     // ========================================================================
-    /** the explicit full template specialzation of  LoKi::Dicts::PipeOps
+    /** the explicit full template specialization of  LoKi::Dicts::PipeOps
      *  for the case of "std::vector<double>" argument
      *  @see LoKi::Dicts::PipeOps
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -215,7 +220,7 @@ namespace LoKi
       { return LoKi::tee<TYPE>( fun ) ; }        
     };
     // ========================================================================
-    /** the explicit full template specialzation of  LoKi::Dicts::FunValOps
+    /** the explicit full template specialization of  LoKi::Dicts::FunValOps
      *  for the case of "std::vector<double>" argument
      *  @see LoKi::Dicts::FunValOps
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -230,6 +235,7 @@ namespace LoKi
       typedef LoKi::BasicFunctors<TYPE>::Function       Func    ;
       typedef LoKi::BasicFunctors<TYPE>::Predicate      Cuts    ;      
     public:
+      // ======================================================================
       // __rshift__ 
       static LoKi::FunctorFromFunctor<std::vector<TYPE>,double>
       __rshift__ 
@@ -240,7 +246,9 @@ namespace LoKi
       __rshift__ 
       ( const FunVal& fun , const Cuts&    fun2 )  
       { return fun >>                      fun2 ; }
+      // ======================================================================
     public:
+      // ======================================================================
       // __rrshift__ 
       static double 
       __rrshift__ ( const FunVal& fun , const std::vector<TYPE>& val ) 
@@ -250,12 +258,128 @@ namespace LoKi
       __rrshift__ ( const FunVal& fun , 
                     const double val ) 
       { return fun ( std::vector<double>( 1 , val ) ) ; }
+      // ======================================================================
     public:
+      // ======================================================================
       // __tee__ 
       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> > 
       __tee__     ( const FunVal& fun ) 
       { return LoKi::tee<TYPE>( fun ) ; }        
+      // ======================================================================
     };
+    // ========================================================================
+    
+    // ========================================================================
+    /** the explicit full template specialzation of  LoKi::Dicts::FunCalls
+     *  for the case of "void" argument
+     *  @see LoKi::Dicts::FunCalls
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2007-12-01
+     */
+    template <>
+    class FunCalls<void> 
+    {
+    private:
+      typedef LoKi::BasicFunctors<void>::Function Fun  ;
+    public:
+      // ======================================================================
+      // __call__
+      static Fun::result_type __call__ ( const Fun& fun  ) { return fun () ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      // __rshift__
+      static LoKi::FunctorFromFunctor<void,double> __rshift__            
+      ( const Fun&                          fun  , 
+        const LoKi::Functor<double,double>& o    ) { return fun >> o  ; }
+      // ======================================================================
+      // __rshift__
+      static LoKi::FunctorFromFunctor<void,bool> __rshift__            
+      ( const Fun&                          fun  , 
+        const LoKi::Functor<double,bool>&   o    ) { return fun >> o  ; }
+      // ======================================================================
+      // __rshift__
+      static std::vector<double>& __rshift__            
+      ( const Fun&           fun    , 
+        std::vector<double>& result ) 
+      {
+        std::generate  
+          ( result.begin () , 
+            result.end   () , 
+            Apply<void,double> ( &fun ) ) ;
+        return result ;
+      }
+      // ======================================================================
+    public:
+      // ======================================================================
+      // __rrshift__
+      static std::vector<double> __rrshift__ 
+      ( const Fun&         fun , 
+        const unsigned int num ) 
+      {
+        std::vector<double> result ( num ) ;
+        std::generate  
+          ( result.begin () , 
+            result.end   () , 
+            Apply<void,double> ( &fun ) ) ;
+        return result ;
+      }
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** the explicit full template specialization of  LoKi::Dicts::CutCalls
+     *  for the case of "void" argument
+     *  @see LoKi::Dicts::CutCalls
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2007-12-01
+     */
+    template <>
+    class CutCalls<void> 
+    {
+    private:
+      typedef LoKi::BasicFunctors<void>::Predicate Fun  ;
+    public:
+      //
+      static Fun::result_type __call__ ( const Fun& fun  ) { return fun () ; }
+      // __rshift__
+      static LoKi::FunctorFromFunctor<void,bool> __rshift__            
+      ( const Fun&                          fun  , 
+        const LoKi::Functor<void,bool>&     o    ) { return fun >> o  ; }
+      // ======================================================================
+      // __rshift__
+      static std::vector<bool>& __rshift__            
+      ( const Fun&         fun    , 
+        std::vector<bool>& result ) 
+      {
+        std::generate  
+          ( result.begin () , 
+            result.end   () , 
+            Apply<void,bool>( &fun) ) ;
+        return result ;
+      }
+      // ======================================================================
+    public:
+      // ======================================================================
+      // __rrshift__
+      static std::vector<bool> __rrshift__ 
+      ( const Fun&         fun , 
+        const unsigned int num ) 
+      {
+        std::vector<bool> result ( num ) ;
+        std::generate  
+          ( result.begin () , 
+            result.end   () , 
+            Apply<void,bool> ( &fun ) ) ;
+        return result ;
+      }
+      // ======================================================================      
+    } ;
+    // ========================================================================
+    template <>
+    class FuncOps<void,void>: public FuncOps_<void> {} ;
+    // ========================================================================
+    template <>
+    class CutsOps<void,void>: public CutsOps_<void> {} ;
     // ========================================================================
   } // end of namespace LoKi::Dicts 
 } // end of namespace LoKi
@@ -295,6 +419,20 @@ namespace
     /// 
     LoKi::Identity<double>                                             m_id01 ;
     LoKi::Identity<std::vector<double> >                               m_id02 ;
+    // ========================================================================
+    // function& predicate  
+    LoKi::FunctorFromFunctor<void,double>                              m_101  ;
+    LoKi::FunctorFromFunctor<void,bool>                                m_102  ;    
+    // constant 
+    LoKi::Constant<void,double>                                        m_co11 ;
+    LoKi::Constant<void,bool>                                          m_co12 ;    
+    // operations:
+    LoKi::Dicts::FuncOps<void>                                         m_op11 ;
+    LoKi::Dicts::CutsOps<void>                                         m_op12 ;
+    // calls 
+    LoKi::Dicts::FunCalls<void>                                        m_cs11 ;
+    LoKi::Dicts::CutCalls<void>                                        m_cs12 ;    
+    // ========================================================================
     /// fictive non-existent constructor 
     _Instantiations() ;
   };  

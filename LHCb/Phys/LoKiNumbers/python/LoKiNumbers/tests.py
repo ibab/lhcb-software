@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: tests.py,v 1.3 2008-02-11 10:03:58 ibelyaev Exp $
+# $Id: tests.py,v 1.4 2008-10-19 16:20:25 ibelyaev Exp $
 # =============================================================================
 ## @file
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -18,12 +18,8 @@ from LoKiNumbers.decorators import *
 from LoKiCore.functions     import *
 from LoKiCore.math          import *
 
-
-## prepare some input vector with data 
-inp=XVector()
-inp.push_back(1)
-inp.push_back(4)
-inp.push_back(3)
+## prepare some input vector with some data 
+inp = 5 >> FONE >> ( 10 * XRAND_(1) )  
 
 print 'inp                                    :%s' % inp
 print 'inp >>   sin(X)                        :%s' % ( inp >>    sin(X)        )

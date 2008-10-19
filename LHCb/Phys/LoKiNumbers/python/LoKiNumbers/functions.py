@@ -1,14 +1,17 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: functions.py,v 1.4 2008-03-30 13:40:40 ibelyaev Exp $ 
+# $Id: functions.py,v 1.5 2008-10-19 16:20:25 ibelyaev Exp $ 
 # =============================================================================
 ## @file LoKiNumbers/functions.py
 #  The full set of useful objects from LoKiNumbers library 
 #  The file is a part of LoKi and Bender projects
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
-""" The full set of useful objects from LoKiGen library """
-_author_ = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
+"""
+Few useful objects from LoKiNumbers library
+"""
+__author__  = "Vanya BELYAEV ibelyaev@physics.syr.edu"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ " 
 # =============================================================================
 
 import LoKiCore.decorators as _LoKiCore 
@@ -72,6 +75,7 @@ XRND      = LoKi.Random.Uniform
 XRNDM     = XRND  ( 0 , 1 )
 XGAUS     = LoKi.Random.Gaussian
 XGAUSS    = XGAUS ( 0 , 1 ) 
+XRAND_    = LoKi.Random.Rand
 XRAND     = LoKi.Random.Rand ( )
 
 # =============================================================================

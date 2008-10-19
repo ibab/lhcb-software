@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: decorators.py,v 1.3 2008-02-11 10:03:58 ibelyaev Exp $
+# $Id: decorators.py,v 1.4 2008-10-19 16:20:25 ibelyaev Exp $
 # =============================================================================
 ## @file decorators.py LoKiNumbers/decorators.py
 #  The set of basic decorator for objects from LoKiNumberslibrary
@@ -14,6 +14,7 @@ _author_ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 # =============================================================================
 
 from   LoKiNumbers.functions   import *
+from   LoKiNumbers.sources     import *
 
 
 
@@ -58,10 +59,35 @@ def _decorate ( name = _name  ) :
         LoKi.Dicts.FunValOps(_d)                         ) ## stremers    
 
     return _decorated
+
+
+def decorateVoids ( name = _name ) :
+    """
+    Make the decoration of 'void'-functors this module
+    """
+    import LoKiCore.decorators as _LoKiCore
+    _d = 'double'
+    _b = 'bool'
+    _v = 'void'
+
+    _decorated   = _LoKiCore.getAndDecorateFunctions  (
+        name                                             , ## module name 
+        LoKi.Functor        (_v,_d)                      , ## the base 
+        LoKi.Dicts.FunCalls (_v)                         , ## call-traits 
+        LoKi.Dicts.FuncOps  (_v,_v)                      ) ## operators
+
+    _decorated  |= _LoKiCore.getAndDecoratePredicates (
+        name                                             , ## module name 
+        LoKi.Functor        (_v,_b)                      , ## the base 
+        LoKi.Dicts.CutCalls (_v)                         , ## call-traits 
+        LoKi.Dicts.CutsOps  (_v,_v)                      ) ## operators
     
+    return _decorated 
+
 # =============================================================================
 ## perform the decoration 
-_decorated = _decorate ()                         ## ATTENTION 
+_decorated  = _decorate     ()
+_decorated |= decorateVoids ()                       ## ATTENTION 
 # =============================================================================
 
 # =============================================================================
