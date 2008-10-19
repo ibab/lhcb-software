@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiTrigger.xml,v 1.10 2007-12-09 19:04:41 ibelyaev Exp $ 
+     * $Id: LoKiTrigger.xml,v 1.11 2008-10-19 17:54:10 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiGen package
@@ -42,6 +42,12 @@
   <class pattern   = "LoKi::Dicts::FuncOps<*LHCb::R*>"    />
   <class pattern   = "LoKi::Dicts::CutsOps<*LHCb::T*>"    />
   <class pattern   = "LoKi::Dicts::CutsOps<*LHCb::R*>"    />
+
+  <class pattern   = "LoKi::Dicts::FuncOps_<*LHCb::T*>"   />
+  <class pattern   = "LoKi::Dicts::FuncOps_<*LHCb::R*>"   />
+  <class pattern   = "LoKi::Dicts::CutsOps_<*LHCb::T*>"   />
+  <class pattern   = "LoKi::Dicts::CutsOps_<*LHCb::R*>"   />
+
   <class pattern   = "LoKi::Dicts::MapsOps<*LHCb::T*>"    />
   <class pattern   = "LoKi::Dicts::MapsOps<*LHCb::R*>"    />
   <class pattern   = "LoKi::Dicts::PipeOps<*LHCb::T*>"    />

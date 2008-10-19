@@ -1,9 +1,20 @@
-! $Id: release.notes,v 1.11 2008-04-25 16:48:21 pkoppenb Exp $
+! $Id: release.notes,v 1.12 2008-10-19 17:54:10 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiTrigger
 ! Responsible : Vanya BELYAEV
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
+
+! 2008-10-19 - Vanya BELYAEV
+
+ - adaptation for new LoKiCore v8r0 
+
+     the new structure of decorators 
+
+ - cmt/requirements 
+
+    version inctrement to v8r0 
+
 
 !========================== LoKiTrigger v7r3 2008-04-25 ===================
 ! 2008-04-15 - Patrick Koppenburg
