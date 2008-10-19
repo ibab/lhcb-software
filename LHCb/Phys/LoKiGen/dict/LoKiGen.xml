@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiGen.xml,v 1.13 2007-12-09 19:17:43 ibelyaev Exp $ 
+     * $Id: LoKiGen.xml,v 1.14 2008-10-19 16:39:29 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiGen package
@@ -54,6 +54,8 @@
   
   <class pattern   = "LoKi::Dicts::FuncOps<*HepMC::*>"    />
   <class pattern   = "LoKi::Dicts::CutsOps<*HepMC::*>"    />
+  <class pattern   = "LoKi::Dicts::FuncOps_<*HepMC::*>"   />
+  <class pattern   = "LoKi::Dicts::CutsOps_<*HepMC::*>"   />
 
   <class pattern   = "LoKi::Dicts::MapsOps<*HepMC::*>"    />
   <class pattern   = "LoKi::Dicts::PipeOps<*HepMC::*>"    />
