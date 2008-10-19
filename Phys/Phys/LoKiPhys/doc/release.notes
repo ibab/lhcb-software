@@ -1,9 +1,20 @@
-! $Id: release.notes,v 1.74 2008-10-13 16:32:23 ibelyaev Exp $ 
+! $Id: release.notes,v 1.75 2008-10-19 17:13:28 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2008-10-19 - Vanya BELYAEV
+
+  - adaptation to new Phys/LoKiCore v8r0
+
+     new structure of decorators 
+
+ - cmt/requirements 
+
+   version incrmeent to v8r0 
+
 
 ! 2008-10-13 - Vanya BELYAEV
  - LoKi/Particles23.h
