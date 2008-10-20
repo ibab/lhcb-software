@@ -1,8 +1,11 @@
-// $Id: GiGaPrimaryParticleInformation.h,v 1.5 2006-01-31 10:39:33 gcorti Exp $ 
+// $Id: GiGaPrimaryParticleInformation.h,v 1.6 2008-10-20 12:31:41 robbep Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/01/31 10:39:33  gcorti
+// adapt to event model
+//
 // Revision 1.4  2005/01/17 18:14:40  robbep
 // Use generator energy instead of Geant4 energy for short lived particles.
 //
@@ -30,6 +33,10 @@
 // Event
 #include "Event/HepMCEvent.h"
 
+namespace LHCb {
+  class MCParticle ;
+};
+
 /** @class GiGaPrimaryParticleInformation
  *  
  *  Class to hold oscillation and signal information to be passed along with
@@ -47,7 +54,8 @@ public:
     m_hasOscillated(  osc  ) , 
     m_isSignal     ( false ) ,
     m_signalBarcode( -1    ) ,
-    m_pHepMCEvent  (   0   ) { ; }  
+    m_pHepMCEvent  (   0   ) , 
+    m_mcParticle   (   0   ) { ; }  
 
   /// Sets link to HepMC Particle
   GiGaPrimaryParticleInformation( bool sig, int code, LHCb::HepMCEvent *event ) :
@@ -55,7 +63,8 @@ public:
     m_hasOscillated ( false ),
     m_isSignal      (  sig  ),
     m_signalBarcode ( code  ),
-    m_pHepMCEvent   ( event ) { ; }
+    m_pHepMCEvent   ( event ),
+    m_mcParticle    (   0   ) { ; }
 
   
   virtual ~GiGaPrimaryParticleInformation( ) {;} ///< Destructor
@@ -72,6 +81,9 @@ public:
   /// Sets HepMCEvent pointer
   void setHepMCPointer( LHCb::HepMCEvent * event ) { m_pHepMCEvent = event ; }
   
+  /// Sets pointer to mother MCParticle
+  void setMotherMCParticle( LHCb::MCParticle * mcp ) { m_mcParticle = mcp ; }
+  
   /// returns true if the particle has oscillated  
   bool hasOscillated( ) { return m_hasOscillated ; }
   
@@ -83,6 +95,9 @@ public:
 
   /// returns a pointer to the HepMC Event containing the signal HepMC particle
   LHCb::HepMCEvent * pHepMCEvent ( ) { return m_pHepMCEvent ; }
+  
+  /// Returns a pointer to the mother MCParticle
+  LHCb::MCParticle * motherMCParticle( ) { return m_mcParticle ; }
   
   /// Print function needed in G4VUserPrimaryParticleInformation   
   virtual void Print( ) const { if ( m_hasOscillated ) 
@@ -101,6 +116,8 @@ private:
   int m_signalBarcode ;
   /// Pointer to HepMCEvent which the HepMC particle belongs to
   LHCb::HepMCEvent * m_pHepMCEvent ;
+  /// Pointer to the MCParticle which is the mother of this G4PrimaryParticle
+  LHCb::MCParticle * m_mcParticle ;
 };
 // ============================================================================
 
