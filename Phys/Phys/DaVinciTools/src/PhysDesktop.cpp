@@ -840,8 +840,7 @@ void PhysDesktop::storeRelationsInTable(const LHCb::Particle* part){
   const std::string pvLocation = primaryVertexLocation();
 
   const Particle2Vertex::Relations rel = m_pvRelator->relatedPVs(part,
-                                                                 pvLocation,
-                                                                 m_distanceCalculator);
+                                                                 pvLocation);
 
   for (Particle2Vertex::Relations::const_iterator iRel = rel.begin();
        iRel != rel.end();
