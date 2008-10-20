@@ -1,0 +1,38 @@
+<?xml version="1.0" ?>
+<!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+<argument name="program"><text>gaudirun.py</text></argument>
+<argument name="args"><set>
+  <text>../options/DVTestB2DiMuon.opts</text>
+</set></argument>
+<argument name="validator"><text>
+reference = """
+============================================================
+           TestCorrelations.AlgorithmCorrelations
+============================================================
+    Algorithm             Eff.      1      2      3  
+------------------------------------------------------------
+  1 AllTrueNoPIDsDecay    0.0% |  #####  *****   0.0%
+  2 AllTrueLooseDecay     0.0% |  *****  #####   0.0%
+  3 PreselB2DiMuon       26.8% |  *****  *****  #####
+============================================================
+"""
+
+# split reference file, sanitize EOLs and remove empty lines
+reflines = filter(None,map(lambda s: s.rstrip(), reference.splitlines()))
+# the same on standard output
+outlines = filter(None,map(lambda s: s.rstrip(), stdout.splitlines()))
+
+# find the reference block in the output file
+try:
+    sign_pos = 1
+    pos = outlines.index(reflines[1])
+    outlines = outlines[pos-1:pos+len(reflines)-sign_pos]
+    if reflines != outlines:
+        causes.append("correlation table")
+        result["CorrelationTest.expected"] = result.Quote("\n".join(reflines))
+        result["CorrelationTest.observer"] = result.Quote("\n".join(outlines))
+except ValueError:
+    causes.append("missing correlation table")
+</text></argument>
+</extension>
