@@ -1,4 +1,4 @@
-// $Id: MCTruthManager.h,v 1.4 2008-07-26 15:43:15 robbep Exp $
+// $Id: MCTruthManager.h,v 1.5 2008-10-20 08:23:11 robbep Exp $
 #ifndef COMPONENTS_MCTRUTHMANAGER_H 
 #define COMPONENTS_MCTRUTHMANAGER_H 1
 
@@ -6,6 +6,10 @@
 // Include files
 //#include "Event/HepMCEvent.h"
 #include "HepMC/GenEvent.h"
+
+namespace LHCb {
+  class MCParticle ;
+};
 
 /** @class MCTruthManager MCTruthManager.h Components/MCTruthManager.h
  *  
@@ -42,13 +46,17 @@ public:
   void AddParticle(HepMC::FourVector& fourMom, 
                    HepMC::FourVector& prodPos, HepMC::FourVector& endPos, 
                    int pdg, int trID, int parentID, bool directParent,
-                   int creatorID, bool oscillated = false );
+                   int creatorID, LHCb::MCParticle * motherMCP , 
+                   bool oscillated = false );
  
   const std::vector<int>& GetPrimaryBarcodes();
 
   int GetCreatorID(int barcode);
 
   const std::vector<int>& GetOscillatedBarcodes();
+
+  /// returns the pre-filled MCParticle mother of the G4 particle
+  LHCb::MCParticle * GetMotherMCParticle( const int barcode ) ;
 
 protected:
   MCTruthManager( );
@@ -71,6 +79,9 @@ private:
   // which were created 'in-flight', for instance bremstrahlung gammas, etc)
   std::map<int,int> segmentations;
 
+  /// Map containing links between G4 and pre-filled MCParticles
+  std::map< int , LHCb::MCParticle * > m_mcparticles ;
+  
   // recursive printing of the tree
   void printTree(HepMC::GenParticle*,std::string);
 

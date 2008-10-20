@@ -335,6 +335,7 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
              if ( uInf -> isSignal() ) traj->setIsSignal( true ) ;
              traj->setSignalBarcode( uInf -> signalBarcode() ) ;
              traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
+             traj->setMotherMCParticle( uInf -> motherMCParticle() ) ;
            }  
          }
        }       
@@ -399,6 +400,7 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
                 if ( uInf -> isSignal() )  traj->setIsSignal( true ) ;
                 traj->setSignalBarcode( uInf -> signalBarcode() ) ;
                 traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
+                traj->setMotherMCParticle( uInf -> motherMCParticle() ) ;
               }  
             }
           }  
@@ -433,6 +435,7 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
             if ( uInf -> isSignal() ) traj->setIsSignal( true ) ;
             traj->setSignalBarcode( uInf -> signalBarcode() ) ;
             traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
+            traj->setMotherMCParticle( uInf -> motherMCParticle() ) ;            
           }  
         }
       }  
@@ -466,6 +469,7 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
             if ( uInf -> isSignal() ) traj->setIsSignal( true ) ;
             traj->setSignalBarcode( uInf -> signalBarcode() ) ;
             traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
+            traj->setMotherMCParticle( uInf -> motherMCParticle() ) ;            
           }  
         }
       }  
@@ -503,6 +507,7 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
             if ( uInf -> isSignal() ) traj->setIsSignal( true ) ;
             traj->setSignalBarcode( uInf -> signalBarcode() ) ;
             traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
+            traj->setMotherMCParticle( uInf -> motherMCParticle() ) ;            
           }  
         }
       }  
@@ -549,6 +554,7 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
             if ( uInf -> isSignal() ) traj->setIsSignal( true ) ;
             traj->setSignalBarcode( uInf -> signalBarcode() ) ;
             traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
+            traj->setMotherMCParticle( uInf -> motherMCParticle() ) ;            
           }  
         }
       }  
@@ -588,6 +594,7 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
                     if ( uInf -> isSignal() ) traj->setIsSignal( true ) ;
                     traj->setSignalBarcode( uInf -> signalBarcode() ) ;
                     traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
+                    traj->setMotherMCParticle( uInf -> motherMCParticle() ) ;
                   }  
                 }
               }  
@@ -636,6 +643,7 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
                     if ( uInf -> isSignal() ) traj->setIsSignal( true ) ;
                     traj->setSignalBarcode( uInf -> signalBarcode() ) ;
                     traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
+                    traj->setMotherMCParticle( uInf -> motherMCParticle() ) ;
                   }  
                 }
               }  
@@ -677,6 +685,7 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
                 if ( uInf -> isSignal() ) traj->setIsSignal( true ) ;
                 traj->setSignalBarcode( uInf -> signalBarcode() ) ;
                 traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
+                traj->setMotherMCParticle( uInf -> motherMCParticle() ) ;
               }  
             }
           }  
@@ -717,6 +726,7 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
                 if ( uInf -> isSignal() ) traj->setIsSignal( true ) ;
                 traj->setSignalBarcode( uInf -> signalBarcode() ) ;
                 traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
+                traj->setMotherMCParticle( uInf -> motherMCParticle() ) ;
               }  
             }
           }  

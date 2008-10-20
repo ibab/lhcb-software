@@ -1,4 +1,4 @@
-// $Id: MCTruthManager.cpp,v 1.7 2008-07-26 15:43:15 robbep Exp $
+// $Id: MCTruthManager.cpp,v 1.8 2008-10-20 08:23:11 robbep Exp $
 // Include files 
 
 // local
@@ -100,11 +100,15 @@ void MCTruthManager::AddParticle(HepMC::FourVector& momentum,
                                  HepMC::FourVector& endpos, 
                                  int pdg_id, int partID, int motherID,
                                  bool directParent, int creatorID,
+                                 LHCb::MCParticle * motherMCP ,
                                  bool hasOscillated)
 {
   // we create a new particle with barcode = partID
   HepMC::GenParticle* particle = new HepMC::GenParticle(momentum, pdg_id);
   particle->suggest_barcode(partID);
+  // fill link particle -> MCParticle
+  if ( 0 != motherMCP ) m_mcparticles[ partID ] = motherMCP ;
+  
   // we initialize the 'segmentations' map
   // for the moment particle is not 'segmented' 
   segmentations[partID] = 1;
@@ -269,3 +273,14 @@ void MCTruthManager::printTree(HepMC::GenParticle* particle, std::string offset)
     printTree((*it), offset + deltaoffset);
   } 
 }
+
+//=================================================================================
+// Retrieve pre-filled MCParticle from the G4 particle
+//=================================================================================
+LHCb::MCParticle * MCTruthManager::GetMotherMCParticle( const int barcode ) {
+  std::map< int , LHCb::MCParticle * >::iterator it = 
+    m_mcparticles.find( barcode ) ;
+  if ( m_mcparticles.end() == it ) return 0 ;
+  return ( (*it).second ) ;
+}
+

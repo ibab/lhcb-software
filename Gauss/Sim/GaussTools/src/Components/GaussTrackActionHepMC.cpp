@@ -1,4 +1,4 @@
-// $Id: GaussTrackActionHepMC.cpp,v 1.8 2008-07-26 15:43:15 robbep Exp $
+// $Id: GaussTrackActionHepMC.cpp,v 1.9 2008-10-20 08:23:11 robbep Exp $
 // Include files 
 
 // STD & STL 
@@ -225,6 +225,7 @@ void GaussTrackActionHepMC::PostUserTrackingAction  ( const G4Track* track )
     // Get User information from primary particle to set Vertex type 
     // OscillatedAndDecay
     bool hasOscillated = false;
+    LHCb::MCParticle * mcp = 0 ;
     if( NULL != track->GetDynamicParticle() ) {
       if( NULL != track->GetDynamicParticle()->GetPrimaryParticle() ) {
         G4VUserPrimaryParticleInformation* g4uInf = 
@@ -233,13 +234,14 @@ void GaussTrackActionHepMC::PostUserTrackingAction  ( const G4Track* track )
           GiGaPrimaryParticleInformation* uInf = 
             (GiGaPrimaryParticleInformation*) g4uInf;
           hasOscillated = uInf->hasOscillated();
+          mcp = uInf -> motherMCParticle() ;
         }
       }
     }
 
     m_mcMgr->AddParticle( fourmomentum, prodpos, endpos,
                           pdgID, track->GetTrackID(), track->GetParentID(), 
-                          ginf->directParent(), creatorID, hasOscillated );
+                          ginf->directParent(), creatorID, mcp , hasOscillated );
   }
 
   // For the moment the following is in GaussPostTrackAction
