@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2008-10-20 - Wouter Hulsbergen
+ - Added TrackListFilter
+
 !========================== TrackUtils v1r21 2008-07-17 ======================
 ! 2008-05-28 - Louis Nicolas
  - TrackRemoveDoubleHits: Go back to removing lhcbIDs. User has to make sure
