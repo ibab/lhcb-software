@@ -4,6 +4,10 @@
 ! Purpose     : Hold converters between LHCb and Geant4
 !-----------------------------------------------------------------------------
 
+! 2008-10-20 - Patrick Robbe
+ - Add link to generator HepMC mother particle in 
+   GiGaPrimaryParticleInformation.h
+
 !========================= GiGaCnv v18r5 2008-06-09 ==========================
 ! 2008-05-30 - Gloria CORTI
  - Adapt to change introduced by patch #1757 stopping execution when loop in
