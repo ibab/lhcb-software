@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.cpp,v 1.19 2008-09-10 12:31:18 wouter Exp $
+// $Id: AlignmentElement.cpp,v 1.20 2008-10-20 10:16:50 wouter Exp $
 // Include files
 
 // from STD
@@ -118,7 +118,7 @@ const std::string AlignmentElement::name() const {
   std::string middle;
   for (ElemIter i = m_elements.begin(), iEnd = m_elements.end(); i != iEnd; ++i) {
     std::string nameElem = boost::algorithm::erase_all_regex_copy((*i)->name(), boost::regex("/dd/Structure/LHCb/.*Region/"))
-      + (i != (iEnd - 1u)?", \n":"");
+      + (i != (iEnd - 1u)?", ":"");
     middle += nameElem;
   }
 
