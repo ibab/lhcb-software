@@ -1,4 +1,4 @@
-// $Id: ErrorLog.cpp,v 1.9 2008-08-05 21:24:52 frankb Exp $
+// $Id: ErrorLog.cpp,v 1.10 2008-10-20 08:05:35 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrorLog.cpp,v 1.9 2008-08-05 21:24:52 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrorLog.cpp,v 1.10 2008-10-20 08:05:35 frankb Exp $
 
 // Framework include files
 #include <sstream>
@@ -23,6 +23,7 @@
 #include "ROLogger/Logger.h"
 #include "ROLogger/ErrorLog.h"
 #include "ROLogger/PartitionDisplay.h"
+#include "ROLogger/AlarmListener.h"
 #include "ROLogger/PVSSLogListener.h"
 #include "ROLogger/PartitionListener.h"
 
@@ -52,6 +53,8 @@ ErrorLog::ErrorLog(int argc, char** argv)
   m_partDisplay = new PartitionDisplay(this,m_messageLog,m_historyLog,name);
   if ( cli.getopt("pvss",1) == 0 )  
     m_partListener = new PartitionListener(this,name);
+  else if ( cli.getopt("alarms",1) == 0 )  
+    m_partListener = new AlarmListener(this,name);
   else
     m_partListener = new PVSSLogListener(this,name);
 }

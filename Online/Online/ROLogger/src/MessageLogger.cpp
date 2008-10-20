@@ -1,4 +1,4 @@
-// $Id: MessageLogger.cpp,v 1.14 2008-09-29 07:44:38 frankb Exp $
+// $Id: MessageLogger.cpp,v 1.15 2008-10-20 08:05:35 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/MessageLogger.cpp,v 1.14 2008-09-29 07:44:38 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/MessageLogger.cpp,v 1.15 2008-10-20 08:05:35 frankb Exp $
 // Framework include files
 #include <cerrno>
 #include <cstdarg>
@@ -58,9 +58,10 @@ MessageLogger::MessageLogger(int argc, char** argv)
   RTL::CLI cli(argc, argv, help_fun);
   cli.getopt("service",1,name);
   cli.getopt("buffer",1,m_historySize);
-  m_colors  = cli.getopt("colors",1) != 0;
-  m_debug   = cli.getopt("debug",2) != 0;
+  m_colors  = cli.getopt("colors",1)  != 0;
+  m_debug   = cli.getopt("debug",2)   != 0;
   m_display = cli.getopt("display",2) != 0;
+  m_alarm   = cli.getopt("alarm",2)   != 0;
   m_output  = stdout;
   m_numMsg.resize(MessageLine::Msg_Always+1);
   m_history.resize(m_historySize);
@@ -73,7 +74,7 @@ MessageLogger::MessageLogger(int argc, char** argv)
     ::exit(2);
   }
   ::lib_rtl_output(LIB_RTL_INFO,"Service name:         %s", name.c_str());
-  ::lib_rtl_output(LIB_RTL_INFO,"Message buffer size:  %d",m_historySize);
+  ::lib_rtl_output(LIB_RTL_INFO,"Message buffer size:  %d", m_historySize);
   m_service = ::dis_add_cmnd((char*)name.c_str(),(char*)"C",requestHandler,(long)this);
   if ( m_colors ) bg_black();
 }
@@ -120,6 +121,48 @@ void MessageLogger::removeAllServices() {
 
 /// Print single message retrieved from error logger
 void MessageLogger::printMessage(const char* msg, bool crlf)  {
+  int sev = MessageLine::msgSeverity(msg);
+  if ( m_numMsg.empty() ) m_numMsg.resize(MessageLine::Msg_Always+1);
+  ++m_numMsg[sev];
+  if ( sev >= m_severity ) {
+    if ( m_colors ) {
+      bg_black();
+      switch(sev)      {
+      case 0:             /* No label - white     */
+        white();
+        break;
+      case MessageLine::Msg_Verbose:   /* VERBOSE - blue       */
+        blue();
+        break;
+      case MessageLine::Msg_Debug:     /* DEBUG - green        */
+        green();
+        break;
+      case MessageLine::Msg_Info:      /* INFO - white         */
+        white();
+        break;
+      case MessageLine::Msg_Warning:   /* WARN - bold yellow   */
+        bold(); yellow();
+        break;
+      case MessageLine::Msg_Error:     /* ERROR - bold red     */
+        bold(); red();
+        break;
+      case MessageLine::Msg_Fatal:     /* FATAL - bold magenta */
+        bold(); magenta();
+        break;
+      case MessageLine::Msg_Always:    /* ALWAYS - bold white  */
+        bold(); white();
+        break;
+      } 
+    }
+    ::fprintf(m_output,msg);
+    if ( crlf ) ::fprintf(m_output,"\n");
+    if ( m_colors ) ::plain();
+    if ( m_output != stdout ) ::fflush(m_output);
+  }
+}
+
+/// Print single message retrieved from error logger
+void MessageLogger::printAlarm(const char* msg, bool crlf)  {
   int sev = MessageLine::msgSeverity(msg);
   if ( m_numMsg.empty() ) m_numMsg.resize(MessageLine::Msg_Always+1);
   ++m_numMsg[sev];
@@ -568,7 +611,10 @@ void MessageLogger::handleMessage(const char* msg) {
   updateHistory(msg);
   if ( m_display )  {
     if ( checkFilters(msg) ) {
-      printMessage(msg,false);
+      if ( m_alarm )
+	printAlarm(msg,false);
+      else
+	printMessage(msg,false);
     }
     else if ( m_debug ) {
       printMessage(" ---------------------------- IGNORED:",false);
@@ -584,14 +630,14 @@ void MessageLogger::historyInfoHandler(void* tag, void* address, int* size)  {
     MessageLogger *logger = e->self;
     Services& s = logger->m_infos;
     char *msg = (char*)address, *end = msg + *size, *ptr = msg;
-    string title = "Logger history of:";
+    string title = logger->m_alarm ? "Alarm history of:" : "Logger history of:";
     title += e->name;
     logger->printHeader(title);
     while (ptr<=end) {
       char* p = strchr(ptr,'\n');
       if ( p ) {
         *p = 0;
-        logger->printMessage(ptr);
+        logger->m_alarm ? logger->printAlarm(ptr) : logger->printMessage(ptr);
         ptr = p;
       }
       ++ptr;

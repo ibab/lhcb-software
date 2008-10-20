@@ -1,4 +1,4 @@
-// $Id: MessageLogger.h,v 1.9 2008-09-18 13:04:14 frankb Exp $
+// $Id: MessageLogger.h,v 1.10 2008-10-20 08:05:35 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/MessageLogger.h,v 1.9 2008-09-18 13:04:14 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/MessageLogger.h,v 1.10 2008-10-20 08:05:35 frankb Exp $
 #ifndef ROLOGGER_MESSAGELOGGER_H
 #define ROLOGGER_MESSAGELOGGER_H
 
@@ -77,6 +77,8 @@ namespace ROLogger {
     bool              m_wrapped;
     /// Flag to indicate debugging
     bool              m_debug;
+    /// Flag to indicate if alarm messages should be processed rather than standard output
+    bool              m_alarm;
     /// Monitoring slice name
     std::string       m_monitoring;
     /// Storage slice name
@@ -111,6 +113,9 @@ namespace ROLogger {
 
     /// Print single message retrieved from error logger
     virtual void printMessage(const char* msg, bool crlf=true);
+
+    /// Print alarm message with special format
+    virtual void printAlarm(const char* msg, bool crlf=true);
 
     /// Execute command from message
     void execute(const std::string& cmd);
