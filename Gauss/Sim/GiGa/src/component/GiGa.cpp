@@ -1,4 +1,4 @@
-// $Id: GiGa.cpp,v 1.14 2007-03-26 09:02:22 gcorti Exp $ 
+// $Id: GiGa.cpp,v 1.15 2008-10-20 10:17:21 robbep Exp $ 
 #define GIGA_GIGASVC_CPP 1 
 
 // Include files 
@@ -15,6 +15,7 @@
 #include    "GaudiKernel/IToolSvc.h"
 #include    "GaudiKernel/SvcFactory.h"
 #include    "GaudiKernel/MsgStream.h"
+#include    "GaudiKernel/IParticlePropertySvc.h"
 #include    "GaudiKernel/ParticleProperty.h"
 #include    "GaudiKernel/Bootstrap.h"
 #include    "GaudiKernel/MsgStream.h"
@@ -26,6 +27,7 @@
 #include    "G4UIsession.hh"
 #include    "G4VVisManager.hh"
 #include    "G4ParticleTable.hh"
+#include    "G4ParticlePropertyTable.hh"  
 
 // from GiGa
 #include    "GiGa/IGiGaPhysicsList.h"
@@ -106,6 +108,8 @@ GiGa::GiGa( const std::string& name, ISvcLocator* svcloc )
   declareProperty( "VisManager",          m_visManagerName = "" );  
   /// Random Numbers Service   
   declareProperty( "RandomNumberService", m_rndmSvcName = "RndmGenSvc" );  
+  /// Update G4 particle properties
+  declareProperty( "UpdateG4Particles",    m_updateG4ParticleProperties = false );
   /// Control print out of G4 particles list
   declareProperty( "PrintG4Particles",    m_printParticles = false );
 }
@@ -331,6 +335,33 @@ StatusCode GiGa::initialize()
         { return Error("Unable to locate Random Number service '"
                        + m_rndmSvcName + "'" , sc ) ; }
     }
+
+  // If requested by option, update Geant4 particle properties
+  // from Gaudi/LHCb ParticlePropertySvc
+  if ( m_updateG4ParticleProperties ) {
+    IParticlePropertySvc * ppSvc ; 
+    StatusCode sc = 
+      svcLoc() -> service( "ParticlePropertySvc" , ppSvc , true ) ;
+      
+    if( sc.isFailure()   ) 
+      { return Error("Unable to locate Particle Property service" , sc ) ; } 
+    if( 0 == rndmSvc() ) 
+      { return Error("Unable to locate Particle Property service" , sc ) ; }
+
+    G4ParticlePropertyTable* PPT = G4ParticlePropertyTable::GetParticlePropertyTable();
+    G4ParticleTable * particleTable = G4ParticleTable::GetParticleTable() ;
+    for ( int i = 0 ; i < particleTable -> size() ; ++i ) {
+      G4ParticleDefinition * PDef = particleTable -> GetParticle( i ) ;
+      ParticleProperty * pp = ppSvc -> findByStdHepID( PDef -> GetPDGEncoding() ) ;
+      if ( 0 != pp ) {
+        G4ParticlePropertyData * PPData = PPT -> GetParticleProperty( PDef ) ;
+        PPData -> SetPDGMass( pp -> mass() ) ;
+        PPT -> SetParticleProperty( *PPData ) ;
+      }
+    }
+  }
+  
+    
   /// Dump all particles known to Geant4 
   if( m_printParticles ) {
     G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
