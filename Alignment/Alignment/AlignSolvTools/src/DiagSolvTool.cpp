@@ -1,4 +1,4 @@
-// $Id: DiagSolvTool.cpp,v 1.13 2008-04-22 11:52:32 wouter Exp $
+// $Id: DiagSolvTool.cpp,v 1.14 2008-10-20 10:18:24 wouter Exp $
 // Include files 
 
 #include <stdio.h>
@@ -46,12 +46,27 @@ DiagSolvTool::DiagSolvTool( const std::string& type,
   declareProperty( "LowerModCut",par_modcut=0);
   declareProperty( "EigenValueThreshold", m_eigenValueThreshold = -1 ) ;
   declareProperty( "WriteMonNTuple",par_writentp=false);
-  declareProperty( "ApplyScaling", m_applyScaling=true) ;
+  declareProperty( "ApplyScaling", m_applyScaling=false) ;
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
 DiagSolvTool::~DiagSolvTool() {} 
+
+//=============================================================================
+// Initialize
+//=============================================================================
+StatusCode DiagSolvTool::initialize() 
+{
+  StatusCode sc = GaudiTupleTool::initialize() ;
+  info() << "EigenValueThreshold = " << m_eigenValueThreshold << endreq ;
+  info() << "WriteMonNTuple = " << par_writentp << endreq ;
+  return sc ;
+}
+
+
+
 
 //=============================================================================
 
@@ -147,12 +162,20 @@ int DiagSolvTool::SolvDiag(AlSymMat& m_bigmatrix, AlVec& m_bigvector) {
 
     //compute alignment corrections and their variance. first flag modes that we cut away by eigenvalue
     std::vector<bool> keepEigenValue(N,true) ;
+    // cut away a fixed number of modes (still need to pass the constraints!)
     for (size_t i=0;i<par_modcut;i++) keepEigenValue[i] = false ;
+    // or cut by value (constraints have large negative value, so the 'abs' should do)
     if( m_eigenValueThreshold > 0 )
-      for( size_t i=0; i<N; i++)      keepEigenValue[i] = w[i]>m_eigenValueThreshold ;
+      for( size_t i=0; i<N; i++) 
+	keepEigenValue[i] = std::abs(w[i]) > m_eigenValueThreshold ;
+    
+    for( size_t i=0; i<N; i++) 
+      if( !keepEigenValue[i] )
+	info() << "Rejecting eigenvalue: val = " << w[i]
+	       << " chisq = " << D[i]*D[i]/w[i] << endreq ;
     info() << "Number of rejected eigenvalues: "
 	   << std::count( keepEigenValue.begin(), keepEigenValue.end(), false) << endreq ;
-
+    
     // reset the input
     for( size_t i=0; i<N; i++) {
       m_bigvector[i] = 0 ;
@@ -169,9 +192,12 @@ int DiagSolvTool::SolvDiag(AlSymMat& m_bigmatrix, AlVec& m_bigvector) {
 	    m_bigmatrix[i][j] += (z[k][i]*z[k][j]/(w[k]*scale));
 	}
     
-    // fill the ntuple
-    if (par_writentp) MonitorDiag(z,w,D,scale);
-    
+    // fill the ntuple, but only the first time the solver tool is called
+    if( par_writentp) {
+      static bool first=true ;
+      if (first) MonitorDiag(z,w,D,scale);
+      first = false ;
+    }
   }
   else {
     

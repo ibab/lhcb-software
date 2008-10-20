@@ -1,4 +1,4 @@
-// $Id: DiagSolvTool.h,v 1.7 2008-04-09 12:42:25 wouter Exp $
+// $Id: DiagSolvTool.h,v 1.8 2008-10-20 10:18:24 wouter Exp $
 #ifndef ALIGNSOLVTOOLS_DIAGSOLVTOOL_H 
 #define ALIGNSOLVTOOLS_DIAGSOLVTOOL_H 1
 
@@ -34,6 +34,7 @@ public:
   /// inverse matrix and solution vector in output.
   virtual bool compute(AlSymMat& ,AlVec&) const; 
 
+  StatusCode initialize() ;
   //enum Solver {SPMINV, 
   //               DIAG, 
   //             MINRES};
