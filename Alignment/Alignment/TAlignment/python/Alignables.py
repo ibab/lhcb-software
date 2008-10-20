@@ -227,6 +227,15 @@ class Alignables( list ):
                 elements.append( "Group : " + station + j + self.m_otQuarters[0] + "/Module." )
         self.__append( elements, dofs )
         
+    def OTLayersASide( self, dofs = "" ) :
+        elements = []
+        for i in self.m_otStations :
+            station = self.m_ot + i
+            for j in self.m_otLayers :
+                ## C-side layers
+                elements.append( "Group : " + station + j + self.m_otQuarters[1] + "/Module." )
+        self.__append( elements, dofs )
+        
     def OTCFramesASide( self, dofs = "" ) :
         elements = []
         for i in self.m_otStations :
