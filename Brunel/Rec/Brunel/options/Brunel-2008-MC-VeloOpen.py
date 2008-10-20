@@ -9,6 +9,7 @@ from Brunel.Configuration import *
 
 Brunel().inputType    = "DIGI"
 Brunel().withMC       = True
+Brunel().useSimCond   = True
 Brunel().veloOpen     = True
 Brunel().applyConf()
 

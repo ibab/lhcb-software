@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2008-10-20 - Patrick Koppenburg
+ - New option useSimCond that allows to use withMC = False on 
+   digi files while still using SimCond.
+
 ! 2008-10-16 - Marco Cattaneo
  - Fix Configurable for Gaudi v20r3. Not compatible with Gaudi v20r2
 

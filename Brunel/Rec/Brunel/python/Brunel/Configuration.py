@@ -1,10 +1,9 @@
-
 ## @package Brunel
 #  High level configuration tools for Brunel
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.26 2008-10-16 16:07:13 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.27 2008-10-20 13:52:33 pkoppenb Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -25,6 +24,7 @@ class Brunel(LHCbConfigurableUser):
        ,"skipEvents":   0     # events to skip
        ,"printFreq":    1     # The frequency at which to print event numbers
        ,"withMC":       False # set to True to use MC truth
+       ,"useSimCond":   False # set to True to use SimCond
        ,"recL0Only":    False # set to True to reconstruct only L0-yes events
        ,"inputType":    "MDF" # or "DIGI" or "ETC" or "RDST" or "DST"
        ,"outputType":   "DST" # or "RDST" or "NONE"
@@ -91,6 +91,10 @@ class Brunel(LHCbConfigurableUser):
             withMC = False # Force it, MDF and RDST never contain MC truth
         if outputType == "RDST":
             withMC = False # Force it, RDST never contains MC truth
+
+        useSimCond = self.getProp("useSimCond")
+        if outputType == "DIGI":
+            useSimCond = True # Force it, DIGI always from MC
 
         self.configureInput( inputType )
 
@@ -270,6 +274,6 @@ class Brunel(LHCbConfigurableUser):
         from Configurables import RecInit
         RecInit("BrunelInit").PrintFreq = self.getProp("printFreq")
         # Use SIMCOND for Simulation, if not DC06
-        if self.getProp("withMC") and LHCbApp().getProp("condDBtag").find("DC06") == -1:
+        if self.getProp("useSimCond") and LHCbApp().getProp("condDBtag").find("DC06") == -1:
             from Configurables import CondDBCnvSvc
             CondDBCnvSvc( CondDBReader = allConfigurables["SimulationCondDBReader"] )

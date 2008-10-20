@@ -8,7 +8,8 @@
 from Brunel.Configuration import *
 
 Brunel().inputType    = "DIGI"
-Brunel().withMC       = True
+Brunel().withMC       = True   
+Brunel().useSimCond   = True  
 
 Brunel().applyConf()
 
