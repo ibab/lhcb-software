@@ -1,4 +1,4 @@
-// $Id: GenericParticle2PVRelator.h,v 1.1 2008-10-20 15:14:04 jpalac Exp $
+// $Id: GenericParticle2PVRelator.h,v 1.2 2008-10-20 15:39:03 jpalac Exp $
 #ifndef GENERICPARTICLE2PVRELATOR_H 
 #define GENERICPARTICLE2PVRELATOR_H 1
 
@@ -53,7 +53,7 @@ public:
     
     StatusCode sc( GaudiTool::initialize() );
     if (sc.isSuccess()) {
-      m_distCalculator = tool<IDistanceCalculator>(DistCalcName::value, this);
+      m_distCalculator = tool<IDistanceCalculator>(DistCalcName::value);
     }
     return sc;
   }
