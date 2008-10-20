@@ -4,6 +4,10 @@
 ! Purpose     : MC checker algorithms for ParticleMakers
 !-----------------------------------------------------------------------------
 
+! 2008-10-20 - Chris Jones
+ - Properly initialize the MC truth tool to NULL in the ParticleEffPurMoni 
+   constructor.
+
 !!========================== ParticleMakerChecker v1r2 2008-08-05 ===================
  2008-07-10 - Chris Jones
  - Add code to produce Protoparticle efficiency correlation information when

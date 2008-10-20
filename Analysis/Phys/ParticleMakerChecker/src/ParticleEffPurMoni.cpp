@@ -4,7 +4,7 @@
  *  Implementation file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.39 2008-07-31 16:59:12 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.cpp,v 1.40 2008-10-20 15:16:52 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -28,6 +28,7 @@ DECLARE_ALGORITHM_FACTORY( ParticleEffPurMoni );
 ParticleEffPurMoni::ParticleEffPurMoni( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : DVAlgorithm      ( name , pSvcLocator ),
+    m_truthTool      ( NULL ),
     m_trSel          ( NULL ),
     m_mcRec          ( NULL ),
     m_mcSel          ( NULL ),
