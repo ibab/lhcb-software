@@ -1,4 +1,4 @@
-// $Id: JetProduction.cpp,v 1.3 2008-07-24 22:19:59 robbep Exp $
+// $Id: JetProduction.cpp,v 1.4 2008-10-20 07:51:40 robbep Exp $
 // Include files 
 
 // local
@@ -957,14 +957,15 @@ StatusCode JetProduction::toHepMC
   
   // Now convert to LHCb units:
   for ( HepMC::GenEvent::particle_iterator p = theEvent -> particles_begin() ;
-        p != theEvent -> particles_end() ; ++p ) 
+        p != theEvent -> particles_end() ; ++p ) {
 
     (*p)->set_momentum(
           HepMC::FourVector( (*p) -> momentum().px() * Gaudi::Units::GeV ,
                              (*p) -> momentum().py() * Gaudi::Units::GeV , 
                              (*p) -> momentum().pz() * Gaudi::Units::GeV , 
                              (*p) -> momentum().e() * Gaudi::Units::GeV ) ) ;
-  
+    (*p) -> set_generated_mass( (*p) -> generated_mass() * Gaudi::Units::GeV ) ;
+  }
   
   for ( HepMC::GenEvent::vertex_iterator v = theEvent -> vertices_begin() ;
         v != theEvent -> vertices_end() ; ++v ) {
