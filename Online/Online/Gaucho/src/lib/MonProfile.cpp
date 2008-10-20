@@ -385,7 +385,14 @@ void MonProfile::combine(MonObject * H){
   }
 
   for (int i = 0; i < (nbinsx+2); ++i){
+    double tmpCont;
+    double HHtmpCont;
+    tmpCont=binCont[i]*binEntries[i];
+    HHtmpCont=HH->binCont[i]*HH->binEntries[i];   
     binCont[i] += HH->binCont[i];
+    if ((binEntries[i]+HH->binEntries[i]) > 0) {
+       binCont[i] = binCont[i]/(binEntries[i]+HH->binEntries[i]); 
+    } 
     binEntries[i] += HH->binEntries[i];
     binErr[i] = sqrt(pow(binErr[i],2)+pow(HH->binErr[i],2));
   }
@@ -576,7 +583,7 @@ void MonProfile::print(){
   if (bBinLabelX){
     msg <<MSG::INFO<<"BinLabelsX:"<<endreq;
     std::vector<std::string>::iterator it;
-    std::cout << "size:" << binLabelX.size() << std::endl;
+    msg <<MSG::INFO << "size:" << binLabelX.size() << endreq;
     for ( it=binLabelX.begin() ; it < binLabelX.end(); it++ ) {
       msg <<MSG::INFO<< *it << " " ;
     }

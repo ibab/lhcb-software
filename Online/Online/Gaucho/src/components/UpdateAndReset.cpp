@@ -383,19 +383,19 @@ void UpdateAndReset::updateData(bool isRunNumberChanged, bool isFromTimerHandler
   
   msg << MSG::DEBUG << "m_gpsTimeLastEvInCycle  = " << m_gpsTimeLastEvInCycle << endreq;
   msg << MSG::DEBUG << "m_offsetGpsTimeLastEvInCycle  = " << m_offsetGpsTimeLastEvInCycle << endreq;
-  msg << MSG::DEBUG << "TimeLastEvent error = " << (m_timeLastEvInCycle - m_gpsTimeLastEvInCycle) << " microseconds" << endreq;
-
+  msg << MSG::DEBUG << "TimeLastEvent error = " << (m_timeLastEvInCycle - m_gpsTimeLastEvInCycle) << " microseconds runnumberchanged " << isRunNumberChanged << " disablupdatedata " << m_disableUpdateData << endreq;
+ 
   if (isRunNumberChanged) {
     if (0 == m_disableUpdateData) m_pGauchoMonitorSvc->updateAll(true); //the first parameter is the endOfRun flag
-    else msg << MSG::DEBUG << "===============> Data was not updated because the UpdateData process is disable." << endreq;
+    else msg << MSG::DEBUG << "===============> Data was not updated because the UpdateData process is disabled." << endreq;
     if (0 == m_disableResetHistos) {
       if ( 1 == m_saveHistograms ) {
          msg << MSG::DEBUG << "==============> SAVING HISTOS BECAUSE FAST RUN CHANGE<=======================" << endreq;
          msg << MSG::DEBUG << "==============> SAVING HISTOS BECAUSE FAST RUN CHANGE<=======================" << endreq;
          msg << MSG::DEBUG << "==============> SAVING HISTOS BECAUSE FAST RUN CHANGE<=======================" << endreq;
-         manageTESHistos(false, true, true, false);
+         manageTESHistos(false, true, true, true);
       }
-      else manageTESHistos(false, true, false, false);
+      else manageTESHistos(false, true, false, true);
     }
     else msg << MSG::DEBUG << "===============> resetHistos disabled." << endreq;
   }
@@ -428,7 +428,7 @@ void UpdateAndReset::manageTESHistos (bool list, bool reset, bool save, bool isF
   IRegistry* object = rootObject();
   int level = 0;
   std::vector<std::string> idList;
-  msg << MSG::DEBUG << "managing histos" << endreq;
+  msg << MSG::DEBUG << "managing histos list " << list << " reset " << reset << " save " << save << " endofrun " << isFromEndOfRun << endreq;
   TFile *f=0;
   m_infoFileStatus = "......this is the file name were we will save histograms...........";
   char timestr[64];
@@ -450,44 +450,46 @@ void UpdateAndReset::manageTESHistos (bool list, bool reset, bool save, bool isF
     partName = serviceParts[0];
     taskName = serviceParts[2];
   }
-
-  std::string dirName = m_saveSetDir + "/" + year + "/" + partName + "/" + taskName;  
-  void *dir = gSystem->OpenDirectory(dirName.c_str());
-  if ((dir == 0) && (save)) {
-    gSystem->mkdir(dirName.c_str(),true);
-  }
   
-  std::string tmpfile = dirName + "/" + taskName + "-" + timestr + ".root"; 
-  if (isFromEndOfRun) tmpfile = dirName + "/" + taskName + "-" + timestr + "-EOR.root"; 
-    msg << MSG::DEBUG << "updating infofile status" << endreq;
-  m_infoFileStatus.replace(0, m_infoFileStatus.length(), tmpfile);
-
   if (save)  {
-    msg << MSG::DEBUG << "We will save histograms in file " << m_infoFileStatus << endreq;
+     std::string dirName = m_saveSetDir + "/" + year + "/" + partName + "/" + taskName;  
+     void *dir = gSystem->OpenDirectory(dirName.c_str());
+     if ((dir == 0) && (save)) {
+     gSystem->mkdir(dirName.c_str(),true);
+    }
+  
+    std::string tmpfile = dirName + "/" + taskName + "-" + timestr + ".root"; 
+    if (isFromEndOfRun) tmpfile = dirName + "/" + taskName + "-" + timestr + "-EOR.root"; 
+    msg << MSG::DEBUG << "updating infofile status" << endreq;
+    m_infoFileStatus.replace(0, m_infoFileStatus.length(), tmpfile);
+   
+
+    msg << MSG::INFO << "We will save histograms in file " << m_infoFileStatus << endreq;
     f = new TFile(m_infoFileStatus.c_str(),"create");
   }
-  if(! f->IsZombie()) {
-     msg << MSG::DEBUG << "Identifying histos" << endreq;
-    //f=0 because should also be able to reset without saving
-    histogramIdentifier(object, idList, reset, save, level, (TDirectory*) f);
-  
-    if (0 == idList.size()) msg << MSG::INFO << "No histogram found" << endreq;
-    
-    if (save) {
-      f->Close();
-      delete f;f=0;
-    }
-    
-    if ((list)&&(0 != idList.size())) {
-      msg << MSG::INFO << "Printing identified histograms/profiles " << endreq;
-      for (std::vector<std::string>::iterator it = idList.begin(); it != idList.end(); it++){
-        msg << MSG::INFO << "    " << (*it) << endreq;
+  if (f!=0) {
+    if(! f->IsZombie()) {
+      histogramIdentifier(object, idList, reset, save, level, (TDirectory*) f);  
+      if (0 == idList.size()) msg << MSG::INFO << "No histogram found" << endreq;    
+      if (save) {
+        f->Close();
+        delete f;f=0;
+      }    
+      if ((list)&&(0 != idList.size())) {
+        msg << MSG::INFO << "Printing identified histograms/profiles " << endreq;
+        for (std::vector<std::string>::iterator it = idList.begin(); it != idList.end(); it++){
+          msg << MSG::INFO << "    " << (*it) << endreq;
+        }
       }
+    }
+    else {
+      msg << MSG::ERROR << "error opening file "<< m_infoFileStatus << endreq;
     }
   }
   else {
-    msg << MSG::ERROR << "error opening file "<< m_infoFileStatus << endreq;
-  }
+     //f=0 because should also be able to reset without saving
+     histogramIdentifier(object, idList, reset, save, level, (TDirectory*) f);     
+  }  
 }
 
 void UpdateAndReset::histogramIdentifier(IRegistry* object, std::vector<std::string> &idList, bool reset, bool save, int &level,
@@ -508,13 +510,13 @@ void UpdateAndReset::histogramIdentifier(IRegistry* object, std::vector<std::str
       
   for ( it=leaves.begin(); it != leaves.end(); it++ ) {
     const std::string& id = (*it)->identifier();
-    rootdir->cd();
-    //msg << MSG::DEBUG << "    Object found: " << id << endreq;
+    if (rootdir !=0) rootdir->cd();
+    msg << MSG::DEBUG << "    Object found: " << id << endreq;
     
     DataObject* dataObject;
     sc = m_histogramSvc->retrieveObject(id, dataObject);
     if (sc.isFailure()) {
-      msg << MSG::DEBUG << "Could not retrieve object from TES " << endreq;
+      msg << MSG::WARNING << "Could not retrieve object from TES " << endreq;
       continue;
     }
 
@@ -529,7 +531,7 @@ void UpdateAndReset::histogramIdentifier(IRegistry* object, std::vector<std::str
         msg << MSG::DEBUG << ", saving name=" << hRoot->GetName() << " directory="
             << (hRoot->GetDirectory() ? hRoot->GetDirectory()->GetName() : "none") <<endreq;
       }
-       msg << MSG::INFO << "Resetting histogram" << endreq;
+       msg << MSG::DEBUG << "Resetting histogram" << endreq;
       if (reset) histogram->reset();
 //      if (reset) hRoot->Reset();
       idList.push_back(id);

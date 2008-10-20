@@ -659,7 +659,7 @@ void MonitorSvc::undeclareAll( const IInterface* owner)
       std::string dimName = (*infoNamesIt);
       if (dimName.find(ownerName) == std::string::npos) dimName = ownerName + "/" + dimName;
       undeclService( dimName ) ;
-      msg << MSG::INFO << "undeclareAll: Undeclared info " << (*infoNamesIt) 
+      msg << MSG::DEBUG << "undeclareAll: Undeclared info " << (*infoNamesIt) 
           << " from owner " << ownerName << endreq;
     }
     m_InfoNamesMap.erase(owner );
