@@ -1,8 +1,11 @@
-// $Id: GiGaTrajectory.h,v 1.23 2005-12-16 19:50:27 gcorti Exp $ 
+// $Id: GiGaTrajectory.h,v 1.24 2008-10-20 10:24:48 robbep Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.23  2005/12/16 19:50:27  gcorti
+// adapt to LHCb namespace
+//
 // Revision 1.22  2004/04/07 15:23:08  gcorti
 // transfer signal info
 //
@@ -29,6 +32,7 @@ class G4Step     ;
 class G4VProcess ;
 namespace LHCb {
   class HepMCEvent ;
+  class MCParticle ;
 }
 
 ///
@@ -99,6 +103,8 @@ public:
   { return m_signalBarcode ; }
   LHCb::HepMCEvent *                 pHepMCEvent  () const
   { return m_pHepMCEvent   ; }
+  LHCb::MCParticle *                 motherMCParticle() const 
+  { return m_motherMCParticle ; } 
   
   /// 
   G4int                              GetTrackID   () const 
@@ -148,6 +154,9 @@ public:
   inline void setHepMCEvent( LHCb::HepMCEvent * event )
   {  m_pHepMCEvent = event ;  }
   
+  inline void setMotherMCParticle( LHCb::MCParticle * p ) 
+  { m_motherMCParticle = p ; } 
+  
   // get the name of the creator process 
   const std::string& processname() const ;
   
@@ -175,6 +184,7 @@ private:
   bool                         m_isSignal      ;
   int                          m_signalBarcode ;
   LHCb::HepMCEvent*            m_pHepMCEvent   ;
+  LHCb::MCParticle *           m_motherMCParticle ;
   /// 
 };
 // ============================================================================
