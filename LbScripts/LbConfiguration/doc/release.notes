@@ -1,3 +1,13 @@
+2008-10-20  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* scripts/SetupProject.py: Changed the order in which the dev_dirs are
+	added to the CMTPROJECTPATH. Now it uses the same order as on the
+	command line.
+	Modified the option --nightly to use the configuration.xml file in the
+	slot to correctly prepare the CMTPROJECTPATH.
+	* scripts/SetupProjectTest.py: Minor changes to follow the changes in
+	SetupProject.
+
 2008-10-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v1r5

@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 
 import os, sys, tempfile, re, sys, time
+from xml.sax import parse, ContentHandler
 from stat import S_ISDIR
 import getopt
 
-_cvs_id = "$Id: SetupProject.py,v 1.30 2008-10-01 07:22:15 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.31 2008-10-20 13:04:20 marcocle Exp $"
 
 ########################################################################
 # Useful constants
@@ -23,6 +24,9 @@ project_names = ["Gaudi", "LHCb", "Lbcom", "Rec", "Boole", "Brunel" ,
 auto_override_projects = [("ExtraPackages", []),
                           #("LHCbGrid", ["LHCbGridSys"]), # enabled with --use-grid
                           ]
+
+# List of abbreviations for weekdays
+days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 
 ########################################################################
 # Utility classes
@@ -380,6 +384,7 @@ def makeProjectInfo(project = None, version = None, versions = None, search_path
             raise TypeError("makeProjectInfo() requires either 'project' or 'versions'")
         if not search_path: # default search path
             search_path = _defaultSearchPath()
+            #raise TypeError("makeProjectInfo() requires 'search_path' if 'versions' is not specified")
         versions = FindProjectVersions(project, search_path, user_area)
     vers_tuple = _GetVersionTuple(version,versions)
     if not vers_tuple:
@@ -405,6 +410,69 @@ class CMT:
             return None
         else:
             return self.show(["macro_value",k]).strip()
+        
+class GetNightlyCMTPROJECTPATH(ContentHandler):
+    """SAX content handler to extract the CMTPROJECTPATH from lcg nightly build
+    configuration for a given slot/day.
+    Usage:
+    from xml.sax import parse
+    getter = GetNightlyCMTPROJECTPATH("lhcb2","Mon")
+    parse(filename, getter)
+    print getter.value()
+    """
+    def __init__(self, slot, day = None):
+        ContentHandler.__init__(self)
+        self.slot = slot
+        self._path = []
+        self._in_slot = False
+        self._in_cmtpp = False
+        if day is None:
+            self._day = time.localtime()[6] # today
+        elif day in days:
+            self._day = days.index(day)
+        elif day in range(7):
+            self._day = day
+        else:
+            raise TypeError("What do you mean with day = %r?" % day)
+    def startElement(self, name, attrs):
+        """SAX implementation.
+        """
+        if name == "slot":
+            if attrs["name"] == self.slot:
+                self._in_slot = True
+        elif name == "cmtprojectpath":
+            self._in_cmtpp = True
+        elif name == "path":
+            if self._in_slot  and self._in_cmtpp:
+                self._path.append(attrs["value"])
+    def endElement(self, name):
+        """SAX implementation.
+        """
+        if name == "slot":
+            self._in_slot = False
+        elif name == "cmtprojectpath":
+            self._in_cmtpp = False
+    def dirs(self):
+        """Return the list of entries in the CMTPROJECTPATH.
+        """
+        today = days[self._day]
+        yesterday = days[self._day-1]
+        d = [ s.replace("%TODAY%",today).replace("%YESTERDAY%",yesterday)
+              for s in self._path ]
+        return d
+    def value(self):
+        """Return the CMTPROJECTPATH.
+        """
+        return os.path.pathsep.join(self.dirs())
+
+def getNightlyCMTPROJECTPATH(path, slot, day):
+    """Simple wrapper around GetNightlyCMTPROJECTPATH.
+    Returns the list of entries in the CMTPROJECTPATH of the slot of the nightly
+    build.
+    """
+    getter = GetNightlyCMTPROJECTPATH(slot, day)
+    parse(path, getter)
+    return getter.dirs()
 
 ########################################################################
 # Utility functions
@@ -672,26 +740,8 @@ class SetupProject:
                                                         env['CMTPATH'] ])
             self._debug("----- CMTPATH set to '%s' -----"%env['CMTPATH'])
         else:
-            if not self.keep_CMTPROJECTPATH:
-                # Generate the CMTPROJECTPATH in a convenient way
-                cmtProjPath = []
-                # explicit dev dirs must always be taken into account
-                for d in self.dev_dirs:
-                    if d not in cmtProjPath:
-                        cmtProjPath.insert(0,d)
-                # Prepend the user release area, if not there
-                if self.user_area and self.user_area not in cmtProjPath:
-                    cmtProjPath.insert(0, self.user_area)
-                # the project directory should be appended, if not there
-                if self.project_info.path not in cmtProjPath:
-                    cmtProjPath.append(self.project_info.path)
-                # append search_path directories too, to be sure that everything is there
-                for d in self.search_path:
-                    if d not in cmtProjPath:
-                        cmtProjPath.append(d)
-                        
-                env['CMTPROJECTPATH'] = os.pathsep.join(cmtProjPath)
-                self._debug("----- CMTPROJECTPATH set to '%s' -----"%env['CMTPROJECTPATH'])
+            env['CMTPROJECTPATH'] = os.pathsep.join(self.search_path)
+            self._debug("----- CMTPROJECTPATH set to '%s' -----"%env['CMTPROJECTPATH'])
             
             # unset CMTPATH if present
             if 'CMTPATH' in env:
@@ -860,7 +910,6 @@ class SetupProject:
                           help="sets only the environment for the externals (the project is used only to select the version of LCG)")
         
         def dev_dir_cb(option, opt_str, value, parser):
-            parser.values.dev = True
             if value is None:
                 if "LHCBDEV" in os.environ:
                     value = os.environ["LHCBDEV"]
@@ -869,10 +918,14 @@ class SetupProject:
             parser.values.dev_dirs.append(value)
         parser.add_option("--dev", action="callback",
                           callback = dev_dir_cb,
-                          help="prepend $LHCBDEV to the search path or DEVDIR if the option --dev-dir is specified")
+                          help="prepend $LHCBDEV to the search path. " +
+                               "Note: the directories are searched in the "+
+                               "order specified on the command line.")
         parser.add_option("--dev-dir", action="callback", metavar="DEVDIR",
                           type = "string", callback = dev_dir_cb,                
-                          help="define a custom DEVDIR to be used instead of $LHCBDEV, implies --dev")
+                          help="prepend DEVDIR to the search path. " +
+                               "Note: the directories are searched in the "+
+                               "order specified on the command line.")
     
         def external_version_option(option, opt_str, value, parser):
             if len(parser.largs) < 2:
@@ -937,7 +990,6 @@ class SetupProject:
             if len(parser.rargs) < 1:
                 raise OptionValueError("%s must be followed by the slot of the nightlies and optionally by the day"%opt_str)
             slot = parser.rargs.pop(0)
-            days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
             if len(parser.rargs) and parser.rargs[0].capitalize() in days:
                 day = parser.rargs.pop(0).capitalize()
             else:
@@ -949,6 +1001,11 @@ class SetupProject:
             if not os.path.isdir(path):
                 raise OptionValueError("The directory %s does not exists. Check the values of the option %s" % (path, opt_str))
             parser.values.dev_dirs.append(path)
+            # Parse the configuration file of the nightlies to look for a special CMTPROJECTPATH
+            config_file = os.path.join(path, "configuration.xml")
+            if os.path.exists(config_file):
+                cmt_p_p = getNightlyCMTPROJECTPATH(config_file, slot, day)
+                parser.values.dev_dirs += cmt_p_p
         
         parser.add_option("--nightly", action="callback",
                           metavar = "SLOT [DAY]",  type="string",
@@ -957,13 +1014,14 @@ class SetupProject:
                           help = "Add the required slot of the LHCb nightly " +
                                  "builds to the list of DEV dirs. DAY must be "+
                                  "a 3 digit abbreviation of the weekday, " +
-                                 "by default the current day.")
+                                 "by default the current day. Special settings "+
+                                 "of the CMTPROJECTPATH needed for the "+
+                                 "nightly build slot are taken into account.")
         
         parser.set_defaults(output=None,
                             mktemp=False,
                             loglevel = 3,
                             disable_CASTOR=False,
-                            dev=False,
                             dev_dirs=[],
                             ext_versions = {},
                             use = [],
@@ -1223,20 +1281,28 @@ class SetupProject:
             self._error("Internal error: shell type not specified")
             return 1
         
+        #------------- set user area
+        self.user_area = os.environ.get('User_release_area', None)
+        
         #------------- prepare search_path
         self.search_path = []
-        if self.dev:
+        # user area
+        if self.user_area:
+            self.search_path.append(self.user_area)
+        # dev dirs
+        if self.dev_dirs:
             self.search_path += self.dev_dirs
         # default locations
-        for v in ["LHCBPROJECTPATH"]:
+        projpathvars = ["LHCBPROJECTPATH"]
+        if self.keep_CMTPROJECTPATH:
+            projpathvars.insert(0, "CMTPROJECTPATH")
+        for v in projpathvars:
             if v in os.environ:
                 self.search_path += os.environ[v].split(os.pathsep)
+        
         # remove duplicates
         self.search_path = uniq(self.search_path)
         
-        #------------- set user area
-        self.user_area = os.environ.get('User_release_area', None)
-                    
         #------------- discover all project versions
         # debug printout: print project, search path and, optionally, user area
         self._debug("Look for all versions of '%s' in %s" % (self.project_name, self.search_path)
