@@ -1,4 +1,4 @@
- $Id: release.notes,v 1.245 2008-10-13 12:56:49 jpalac Exp $
+ $Id: release.notes,v 1.246 2008-10-20 15:42:18 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,12 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2008-10-20 - Juan PALACIOS
+ - tests/options/DVTestAllPreselections.opts
+  . 10000 events -> 5000 events
+ - tests/qmtest/davinci.qms/preselections.qms/test_bbstripping.qmt
+  . Update correlation table after PV relator bug fix.
 
 ! 2008-10-13 - Juan PALACIOS
  - tests/qmtest/davinci.qms/preselections.qms/test_bu2d0k_d02kspipi.qmt
