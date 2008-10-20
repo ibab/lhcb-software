@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-10-20 - Patrick Robbe
+ - PythiaProduction.cpp: change also units of generated mass to GeV (now
+   stored in HepMC2)
+
 !========================= LbPythia v8r1 2008-10-10 ==========================
 ! 2008-10-08 - Gloria CORTI
  - Introduce dummy Pythia.opts to be included by the production when selecting
