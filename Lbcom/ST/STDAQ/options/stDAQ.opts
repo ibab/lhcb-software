@@ -1,5 +1,5 @@
-createTTRawBuffer.type = "TT";
-createITRawBuffer.type = "IT";
+createTTRawBuffer.DetType = "TT";
+createITRawBuffer.DetType = "IT";
 
 //ToolSvc.ITReadoutTool.printMapping = true;
 //ToolSvc.TTReadoutTool.printMapping = true;
