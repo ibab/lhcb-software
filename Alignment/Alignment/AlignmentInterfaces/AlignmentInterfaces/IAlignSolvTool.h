@@ -1,4 +1,4 @@
-// $Id: IAlignSolvTool.h,v 1.3 2007-11-21 13:07:46 janos Exp $
+// $Id: IAlignSolvTool.h,v 1.4 2008-10-20 10:18:59 wouter Exp $
 #ifndef ALIGNSOLVTOOLS_IALIGNSOLVTOOL_H 
 #define ALIGNSOLVTOOLS_IALIGNSOLVTOOL_H 1
 
@@ -29,9 +29,15 @@ public:
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_IAlignSolvTool; }
   
-  virtual bool compute(AlSymMat& ,AlVec&) const = 0;
-
-
+  // Solves the system Ax=b for x. Returns A=A^{-1} and b=x.
+  virtual bool compute(AlSymMat& A, AlVec&b) const = 0;
+  
+  // Solves the system Ax=b for x. Returns A=A^{-1}, b=x and S =
+  // eigenvalues of A.
+  virtual bool compute(AlSymMat& A, AlVec& b, AlVec& S) const {
+    return compute(A,b) ;
+  }
+  
 protected:
 
 private:
