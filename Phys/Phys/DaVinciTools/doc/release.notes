@@ -1,8 +1,52 @@
-! $Id: release.notes,v 1.364 2008-10-14 16:54:57 jpalac Exp $
+! $Id: release.notes,v 1.365 2008-10-20 15:16:16 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-10-20 - Juan PALACIOS
+
+ - Remove RelatedPVFinder
+
+ - Add new Particle -> PV association code. Add compile-time 
+   configured implementations of IRelatedPVFinder, with no run-time 
+   configuration allowed. They are specialisations
+   of the new GenericParticle2PVRelator template class. The template parameters
+   control the "bestness logic" in calculating the best PVs for a given
+   particle, plus the name of the IDistanceCalculator tool implementation
+   to be used internally. The classes are actually simplt typedefs.
+
+ - New IRelatedPVFinder implementations.
+  . src/P2PVWithIP.cpp
+    Uses LoKi::DistanceCalculator to get the best vertices based on impact 
+    paramerer.
+  . src/P2PVWithIPChi2.cpp
+    Uses LoKi::DistanceCalculator to get the best vertices based on impact 
+    paramerer chi2.
+  . src/OnlineP2PVWithIPChi2.cpp
+    Uses LoKi::TrgDistanceCalculator to get the best vertices based on impact 
+    paramerer chi2.
+ - "Bestness" logic:
+  . src/P2PVLogic.h
+    Structs implementing
+    static double weight(const LHCb::Particle*,
+                         const LHCb::VertexBase*,
+                         const IDistanceCalculator*)
+ - IDistanceCalculator implementation control
+  . src/DistanceCalculatorNames.h
+    Structs holding strings with the names of IDistanceCalculator 
+    implementation class names.
+ - IRelatedPVFinder implementation template
+   src/GenericParticle2PVRelator.h
+   Template class with the core ingredients for an implementation of
+   the IRelatedPVFinder interface.
+
+ - src/PhysDesktop.cpp
+  . Adapt to change in IRelatedPVFinder interface
+
+ - src/OnOfflineTool.cpp
+  . Change names of Online and Offline IRelatedPVFinders to new templated
+    ones.
 
 ! 2008-10-14 - Juan PALACIOS
 
