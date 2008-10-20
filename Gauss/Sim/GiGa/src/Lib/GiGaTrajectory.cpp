@@ -1,8 +1,11 @@
-// $Id: GiGaTrajectory.cpp,v 1.21 2004-04-07 15:23:09 gcorti Exp $ 
+// $Id: GiGaTrajectory.cpp,v 1.22 2008-10-20 10:20:40 robbep Exp $ 
 // ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.21  2004/04/07 15:23:09  gcorti
+// transfer signal info
+//
 // Revision 1.20  2004/03/17 08:54:59  ranjard
 // v16r1 - fix printout
 //
@@ -114,6 +117,7 @@ GiGaTrajectory::GiGaTrajectory (   )
   , m_isSignal                        ( false )
   , m_signalBarcode                   ( -1 )
   , m_pHepMCEvent                     ( 0 ) 
+  , m_motherMCParticle                ( 0 ) 
 {
 #ifdef GIGA_DEBUG
   GiGaTrajectoryLocal::s_Counter.increment () ;
@@ -138,6 +142,7 @@ GiGaTrajectory::GiGaTrajectory   ( const G4Track* aTrack )
     , m_isSignal      ( false                                        )
     , m_signalBarcode ( -1                                           )
     , m_pHepMCEvent   ( 0                                            )
+    , m_motherMCParticle( 0 ) 
 {
   ///
   double time = aTrack->GetGlobalTime() ;
@@ -183,6 +188,7 @@ GiGaTrajectory::GiGaTrajectory ( const GiGaTrajectory & right )
   , m_isSignal                        ( right.isSignal      ()       )
   , m_signalBarcode                   ( right.signalBarcode ()       )
   , m_pHepMCEvent                     ( right.pHepMCEvent   ()       )
+  , m_motherMCParticle                ( right.motherMCParticle()     )  
 {
   clear();
   for( const_iterator it = right.begin() ; right.end() != it ; ++it ) 
