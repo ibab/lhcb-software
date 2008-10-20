@@ -3,6 +3,12 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2008-10-20 - Juan PALACIOS
+ - Kernel/IRelatedPVFinder.h
+  . Interface methods no longer take IDistanceCalculator* as argument. 
+    Implementation should now take care of getting it's own 
+    IDistanceCalculator.
+
 ! 2008-10-14 - Juan PALACIOS
  - Kernel/IRelatedPVFinder.h
   . Change interface to now return Particle2Vertex::Relations instead of
