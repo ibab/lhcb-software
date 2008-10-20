@@ -1,4 +1,4 @@
-// $Id: OnOfflineTool.cpp,v 1.17 2008-10-01 07:37:28 jpalac Exp $
+// $Id: OnOfflineTool.cpp,v 1.18 2008-10-20 15:12:25 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -36,8 +36,8 @@ OnOfflineTool::OnOfflineTool( const std::string& type,
   m_onlineDistTool("LoKi::TrgDistanceCalculator"),
   m_offlineVertexFitter("OfflineVertexFitter" ),
   m_onlineVertexFitter("TrgVertexFitter"),
-  m_offlinePVRelatorName("RelatedPVFinder"),
-  m_onlinePVRelatorName("RelatedPVFinder")
+  m_offlinePVRelatorName("GenericParticle2PVRelator__p2PVWithIPChi2_OfflineDistanceCalculatorName_/P2PVWithIPChi2"),
+  m_onlinePVRelatorName("GenericParticle2PVRelator__p2PVWithIPChi2_OnlineDistanceCalculatorName_/OnlineP2PVWithIPChi2")
 {
 
   declareInterface<IOnOffline>(this);
