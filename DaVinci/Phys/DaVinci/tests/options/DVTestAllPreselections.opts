@@ -1,6 +1,6 @@
-// $Id: DVTestAllPreselections.opts,v 1.2 2008-09-25 12:26:48 pkoppenb Exp $
+// $Id: DVTestAllPreselections.opts,v 1.3 2008-10-20 15:42:02 jpalac Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 /*
  * Options to test stripping
@@ -31,7 +31,8 @@ PreselCorrelations.AlgorithmCorrelations.OnlyNonZero = false;
  * Job steering
  */
 EventClocksvc.EventTimeDecoder = "FakeEventTime";
-ApplicationMgr.EvtMax = 10000 ;
+//ApplicationMgr.EvtMax = 10000 ;
+ApplicationMgr.EvtMax = 5000 ;
 EventSelector.PrintFreq  = 100;
 
 MessageSvc.OutputLevel = 3 ;
