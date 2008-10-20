@@ -1,4 +1,4 @@
-// $Id: IRelatedPVFinder.h,v 1.6 2008-10-14 16:35:49 jpalac Exp $
+// $Id: IRelatedPVFinder.h,v 1.7 2008-10-20 13:14:36 jpalac Exp $
 #ifndef KERNEL_IRELATEDPVFINDER_H 
 #define KERNEL_IRELATEDPVFINDER_H 1
 
@@ -39,8 +39,6 @@ public:
    * 
    * @param particle       The LHCb::Particle for which related PVs will be searched
    * @param PVs            Container of LHCb::RecVertices to be related to particle
-   * @param distanceCalculator IDistanceCalculator pointer. Tool in charge of
-   * estimating distances internally.
    *
    * @return               container of weighted relations between particle and the vertices in PVs. 
    * Must return empty container if something goes wrong in association.
@@ -48,8 +46,7 @@ public:
    * @author Juan Palacios juan.palacios@nikhef.nl
    */
   virtual const Particle2Vertex::Relations relatedPVs(const LHCb::Particle* particle,
-                                                      const LHCb::RecVertex::Container& PVs,
-                                                      const IDistanceCalculator* distanceCalculator) const =0;
+                                                      const LHCb::RecVertex::Container& PVs) const =0;
   /**
    * Return a range of weighted relations between an LHCb::Particle and a
    * vector of const LHCb::RecVertex pointers
@@ -63,8 +60,7 @@ public:
    * @author Juan Palacios juan.palacios@nikhef.nl
    */
   virtual const Particle2Vertex::Relations relatedPVs(const LHCb::Particle* particle,
-                                                      const LHCb::RecVertex::ConstVector& PVs,
-                                                      const IDistanceCalculator* distanceCalculator) const =0;
+                                                      const LHCb::RecVertex::ConstVector& PVs) const =0;
   /**
    * Return a range of weighted relations between an LHCb::Particle and a
    * keyed container of LHCb::RecVertices from a TES location
@@ -80,8 +76,7 @@ public:
    * @author Juan Palacios juan.palacios@nikhef.nl
    */
   virtual const Particle2Vertex::Relations relatedPVs(const LHCb::Particle* particle,
-                                                      const std::string& PVLocation,
-                                                      const IDistanceCalculator* distanceCalculator) const =0;
+                                                      const std::string& PVLocation) const =0;
 
 };
 #endif // KERNEL_IRELATEDPVFINDER_H
