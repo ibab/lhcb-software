@@ -1,8 +1,11 @@
-// $Id: CaloID2DLL.cpp,v 1.6 2008-06-30 15:37:34 odescham Exp $
+// $Id: CaloID2DLL.cpp,v 1.7 2008-10-20 09:22:36 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , verison $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $ , verison $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2008/06/30 15:37:34  odescham
+// prepare for HLT processing
+//
 // Revision 1.5  2007/08/24 21:25:18  odescham
 // fix uncheck. StatusCodes
 //
@@ -59,14 +62,17 @@ CaloID2DLL::CaloID2DLL
   , m_title_dt  () 
   , m_title_tt  () 
   , m_title_ut  () 
+  , m_title_vt  () 
   , m_pScale_lt ( -1 ) 
   , m_pScale_dt ( -1 ) 
   , m_pScale_tt ( -1 ) 
   , m_pScale_ut ( -1 ) 
+  , m_pScale_vt ( -1 ) 
   , m_vScale_lt ( -1 ) 
   , m_vScale_dt ( -1 ) 
   , m_vScale_tt ( -1 )
   , m_vScale_ut ( -1 ) 
+  , m_vScale_vt ( -1 ) 
   , m_histo_lt ( 0 )
   , m_histo_dt ( 0 )
   , m_histo_tt ( 0 )

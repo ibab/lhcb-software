@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.60 2008-07-18 06:27:06 cattanem Exp $ 
+! $Id: release.notes,v 1.61 2008-10-20 09:22:35 odescham Exp $ 
 !------------------------------------------------------------------------------
 ! Package     : Calo/CaloPIDs
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calorimeter PIDs 
 !------------------------------------------------------------------------------
+
+! 2008-10-10 - Olivier Deschamps
+ - fix unitialized variable in CaloID2DLL.cpp
+
 
 !========================== CaloPIDs v4r13 2008-07-18 =========================
 ! 2008-07-17 - Olivier Deschamps

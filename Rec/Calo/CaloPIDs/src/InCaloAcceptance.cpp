@@ -1,4 +1,4 @@
-// $Id: InCaloAcceptance.cpp,v 1.5 2008-05-13 12:25:51 odescham Exp $
+// $Id: InCaloAcceptance.cpp,v 1.6 2008-10-20 09:22:36 odescham Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -95,7 +95,7 @@ StatusCode InCaloAcceptance::initialize()
     m_plane = calo()->plane ( CaloPlane::Middle    )  ;
     break ;                                                     // BREAK 
   default :
-    return Error ( "Invald calorimeter TYPE! '" + detectorName() + "'" ) ;
+    return Error ( "Invalid calorimeter TYPE! '" + detectorName() + "'" ) ;
   }
   //
   if ( propsPrint() || msgLevel ( MSG::DEBUG ) ) 
