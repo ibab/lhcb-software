@@ -34,6 +34,7 @@ def getmcpar(TES,fIDs,remove_none=False):
 	"""
 
 	mcpars = mct.mcParticlesFromLHCbIDs(fIDs,TES)
+	mcpars.reverse()
 	if not remove_none: return mcpars[0][0]
 	for m in mcpars:
 		if m[0]: return m[0]
@@ -46,6 +47,7 @@ def track_to_mcp(TES,track):
 	"""
 	
 	mcpars = mct.mcParticlesFromLHCbIDs(track.lhcbIDs(),TES)
+	mcpars.reverse()
 	if mcpars[0][1]>.7 and mcpars[0][0]: return mcpars[0][0]
 	else: return None
 
@@ -56,6 +58,7 @@ def IsNotGhost(TES,fIDs,cut=0.7):
 	"""
 
 	mcpars=mct.mcParticlesFromLHCbIDs(fIDs, TES)
+	mcpars.reverse()
 	if mcpars[0][1]>=cut: return mcpars[0][0],True
 	return None,False
 
