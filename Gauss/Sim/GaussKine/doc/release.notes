@@ -4,6 +4,11 @@
 ! Purpose     : Code to exchange kinematic information with Geant4
 !-----------------------------------------------------------------------------
 
+! 2008-10-20 - Patrick Robbe
+ - Add new algorithms to send and retrieve MCTruth to/from G4
+   . GenerationToSimulation: generator HepMC -> Geant4 
+   . SimulationToMCTruth: Geant4 -> MCParticles/MCVertices
+
 ! 2008-10-08 - Gloria CORTI
  - Move printout to debug level
    . G4HepMCToMCTruth.cpp
