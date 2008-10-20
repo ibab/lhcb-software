@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.cpp,v 1.12 2008-09-23 16:18:58 robbep Exp $
+// $Id: PythiaProduction.cpp,v 1.13 2008-10-20 07:53:01 robbep Exp $
 
 // Include files
 // STD * STL 
@@ -1001,13 +1001,16 @@ StatusCode PythiaProduction::toHepMC
   
   // Now convert to LHCb units:
   for ( HepMC::GenEvent::particle_iterator p = theEvent -> particles_begin() ;
-        p != theEvent -> particles_end() ; ++p ) 
+        p != theEvent -> particles_end() ; ++p ) {
     (*p) -> 
       set_momentum(
-HepMC::FourVector( (*p) -> momentum().px() * Gaudi::Units::GeV ,
-                   (*p) -> momentum().py() * Gaudi::Units::GeV , 
-                   (*p) -> momentum().pz() * Gaudi::Units::GeV , 
-                   (*p) -> momentum().e() * Gaudi::Units::GeV ) ) ;
+        HepMC::FourVector( (*p) -> momentum().px() * Gaudi::Units::GeV ,
+                           (*p) -> momentum().py() * Gaudi::Units::GeV , 
+                           (*p) -> momentum().pz() * Gaudi::Units::GeV , 
+			   (*p) -> momentum().e() * Gaudi::Units::GeV ) ) ;
+    // Since HepMC 2, the generated mass is also stored
+    (*p) -> set_generated_mass( (*p)-> generated_mass() * Gaudi::Units::GeV ) ;
+  }
   
   for ( HepMC::GenEvent::vertex_iterator v = theEvent -> vertices_begin() ;
         v != theEvent -> vertices_end() ; ++v ) {
