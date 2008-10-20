@@ -58,8 +58,8 @@ GaudiSequencer("RecoTTSeq").Members += [ RawBankToSTClusterAlg("CreateTTClusters
 ## IT clusters for pattern recognition and track fit
 createITClusters = RawBankToSTClusterAlg("CreateITClusters")
 createITLiteClusters = RawBankToSTLiteClusterAlg("CreateITLiteClusters")
-createITClusters.detType     = "IT";
-createITLiteClusters.detType = "IT";
+createITClusters.DetType     = "IT";
+createITLiteClusters.DetType = "IT";
 
 GaudiSequencer("RecoITSeq").Members += [ createITClusters, createITLiteClusters ]
 

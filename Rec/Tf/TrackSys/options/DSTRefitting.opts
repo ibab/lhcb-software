@@ -39,7 +39,7 @@ RefitTTSeq.Members += { "RawBankToSTClusterAlg/CreateTTClusters" };
 
 // Decode the IT STClusters
 RefitITSeq.Members += { "RawBankToSTClusterAlg/CreateITClusters" };
-CreateITClusters.detType = "IT";
+CreateITClusters.DetType = "IT";
 
 // Decode the OTTimes
 RefitOTSeq.Members += {"OTTimeCreator" };

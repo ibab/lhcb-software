@@ -35,8 +35,8 @@ RecoTTSeq.Members += { "RawBankToSTClusterAlg/CreateTTClusters"
 RecoITSeq.Members += { "RawBankToSTClusterAlg/CreateITClusters"
                        ,"RawBankToSTLiteClusterAlg/CreateITLiteClusters"
 };
-CreateITClusters.detType     = "IT";
-CreateITLiteClusters.detType = "IT";
+CreateITClusters.DetType     = "IT";
+CreateITLiteClusters.DetType = "IT";
 #include "$STTOOLSROOT/options/Brunel.opts"
 
 // OTTimes for pattern recognition and track fit
