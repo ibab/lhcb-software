@@ -169,7 +169,7 @@ class SetupProjectTestCase(unittest.TestCase):
         self.assert_(sp.ignore_context)
         self.assert_(sp.list_versions)
         self.assert_(sp.external_only)
-        self.assert_(sp.dev)
+        self.assert_(sp.dev_dirs)
         self.assert_(sp.ask)
         self.assertEquals(sp.loglevel,2)
         self.assertEquals(sp.output,"/tmp")
@@ -185,7 +185,7 @@ class SetupProjectTestCase(unittest.TestCase):
         self.assert_(not sp.ignore_context)
         self.assert_(not sp.list_versions)
         self.assert_(not sp.external_only)
-        self.assert_(not sp.dev)
+        self.assert_(not sp.dev_dirs)
         self.assert_(not sp.ask)
         self.assertEquals(sp.loglevel,3)
         self.assert_(not sp.output)
@@ -217,20 +217,18 @@ class SetupProjectTestCase(unittest.TestCase):
         # --dev-dir implies --dev
         sp = SetupProject.SetupProject()
         sp.parse_args(['--dev-dir=MyDevDir'])
-        self.assert_(sp.dev)
+        self.assert_(sp.dev_dirs)
         
         days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
         # --nightly implies --dev and append to dev_dirs
         sp = SetupProject.SetupProject()
         sp.parse_args(['--nightly', 'lhcb1'])
-        self.assert_(sp.dev)
-        self.assert_(len(sp.dev_dirs) == 1 and ("lhcb1/" + days[datetime.date.today().weekday()]) in  sp.dev_dirs[0])
+        self.assert_(len(sp.dev_dirs) >= 1 and ("lhcb1/" + days[datetime.date.today().weekday()]) in  sp.dev_dirs[0])
         
         # --nightly implies --dev and append to dev_dirs
         sp = SetupProject.SetupProject()
         sp.parse_args(['--nightly', 'lhcb1', 'tUe'])
-        self.assert_(sp.dev)
-        self.assert_(len(sp.dev_dirs) == 1 and "lhcb1/Tue" in  sp.dev_dirs[0])
+        self.assert_(len(sp.dev_dirs) >= 1 and "lhcb1/Tue" in  sp.dev_dirs[0])
         
         # runtime dependencies on projects
         sp = SetupProject.SetupProject()
