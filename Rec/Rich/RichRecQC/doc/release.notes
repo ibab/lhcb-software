@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2008-10-20 - Chris Jones
+ - Add protection against exceptions from DB lookup in new DataDBCheck monitor
+
 ! 2008-10-16 - Marco Cattaneo
  - Fix trivial compilation warning introduced by Gaudi v20r3
 

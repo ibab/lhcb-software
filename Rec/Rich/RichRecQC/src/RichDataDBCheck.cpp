@@ -5,7 +5,7 @@
  *  Implementation file for monitor : Rich::DAQ::DataDBCheck
  *
  *  CVS Log :-
- *  $Id: RichDataDBCheck.cpp,v 1.2 2008-10-17 11:10:16 jonrob Exp $
+ *  $Id: RichDataDBCheck.cpp,v 1.3 2008-10-20 15:08:43 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2008-10-14
@@ -87,15 +87,22 @@ StatusCode DataDBCheck::execute()
         const Rich::DAQ::HPDInfo & hpdInfo   = iHPDMap->second;
         const LHCb::RichSmartID  & hpdID     = hpdInfo.hpdID();
 
-        // loo up information from DB for this HPD
-        const Rich::DAQ::Level1HardwareID db_l1HardID = m_RichSys->level1HardwareID(hpdID);
-        const Rich::DAQ::Level1Input      db_l1Input  = m_RichSys->level1InputNum(hpdID);
-        const Rich::DAQ::Level0ID 	      db_l0ID     = m_RichSys->level0ID(hpdID);
-
-        // compare to that in the data itself
-        compare( "Level1HardwareID", l1HardID,                db_l1HardID );
-        compare( "Level1Input",      l1Input,                 db_l1Input  );
-        compare( "Level0ID",         hpdInfo.header().l0ID(), db_l0ID     );
+        // use a try block in case of DB lookup errors
+        try
+        {
+          // look up information from DB for this HPD
+          const Rich::DAQ::Level1HardwareID db_l1HardID = m_RichSys->level1HardwareID(hpdID);
+          const Rich::DAQ::Level1Input      db_l1Input  = m_RichSys->level1InputNum(hpdID);
+          const Rich::DAQ::Level0ID         db_l0ID     = m_RichSys->level0ID(hpdID);
+          // compare to that in the data itself
+          compare( "Level1HardwareID", l1HardID,                db_l1HardID );
+          compare( "Level1Input",      l1Input,                 db_l1Input  );
+          compare( "Level0ID",         hpdInfo.header().l0ID(), db_l0ID     );
+        }
+        catch ( const GaudiException & excpt )
+        {
+          Error( excpt.message() ).ignore();
+        }
 
       } // loop over HPDs
 
