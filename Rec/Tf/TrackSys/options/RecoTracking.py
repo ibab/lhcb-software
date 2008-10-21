@@ -29,28 +29,28 @@ ApplicationMgr().ExtSvc.append("TransportSvc")
 ## Pattern Recognition and Fitting
 ## --------------------------------------------------------------------
 
+# Which algs to run ?
+trackAlgs = TrackSys().getProp("trackPatRecAlgorithms")
 
 ## Velo tracking
-
-patVeloSpaceTracking = Tf__PatVeloSpaceTracking("PatVeloSpaceTracking");
-
-if TrackSys().getProp( "veloOpen" ):
-   GaudiSequencer("RecoVELOSeq").Members += [ DecodeVeloRawBuffer(), Tf__PatVeloGeneralTracking("PatVeloGeneralTracking")]
-   Tf__PatVeloGeneralTracking("PatVeloGeneralTracking").PointErrorMin = 2*mm;
-   Tf__PatVeloGeneralTracking("PatVeloGeneralTracking").addTool(Tf__PatVeloTrackTool("PatVeloTrackTool"))
-   Tf__PatVeloTrackTool("PatVeloTrackTool").highChargeFract = 0.5;
-else:
-   GaudiSequencer("RecoVELOSeq").Members += [ DecodeVeloRawBuffer(), Tf__PatVeloRTracking("PatVeloRTracking"),
-                                              Tf__PatVeloSpaceTracking("PatVeloSpaceTracking"),
-                                              Tf__PatVeloGeneralTracking("PatVeloGeneralTracking")]
-   Tf__PatVeloSpaceTracking("PatVeloSpaceTracking").addTool( Tf__PatVeloSpaceTool(), name="PatVeloSpaceTool" )
-   Tf__PatVeloSpaceTracking("PatVeloSpaceTracking").PatVeloSpaceTool.MarkClustersUsed = True;
-
-GaudiSequencer("RecoVELOSeq").Members += [ DecodeVeloRawBuffer("DecodeVeloClusters") ]
-
-DecodeVeloRawBuffer("DecodeVeloClusters").DecodeToVeloLiteClusters = False;
-DecodeVeloRawBuffer("DecodeVeloClusters").DecodeToVeloClusters     = True;
-
+if "Velo" in trackAlgs :
+   if TrackSys().veloOpen():
+      GaudiSequencer("RecoVELOSeq").Members += [ DecodeVeloRawBuffer(),
+                                                 Tf__PatVeloGeneralTracking("PatVeloGeneralTracking")]
+      Tf__PatVeloGeneralTracking("PatVeloGeneralTracking").PointErrorMin = 2*mm;
+      Tf__PatVeloGeneralTracking("PatVeloGeneralTracking").addTool(Tf__PatVeloTrackTool("PatVeloTrackTool"))
+      Tf__PatVeloTrackTool("PatVeloTrackTool").highChargeFract = 0.5;
+   else:
+      GaudiSequencer("RecoVELOSeq").Members += [ DecodeVeloRawBuffer(), Tf__PatVeloRTracking("PatVeloRTracking"),
+                                                 Tf__PatVeloSpaceTracking("PatVeloSpaceTracking"),
+                                                 Tf__PatVeloGeneralTracking("PatVeloGeneralTracking")]
+      Tf__PatVeloSpaceTracking("PatVeloSpaceTracking").addTool( Tf__PatVeloSpaceTool(), name="PatVeloSpaceTool" )
+      Tf__PatVeloSpaceTracking("PatVeloSpaceTracking").PatVeloSpaceTool.MarkClustersUsed = True;
+   veloClusters = DecodeVeloRawBuffer("DecodeVeloClusters")
+   veloClusters.DecodeToVeloLiteClusters = False;
+   veloClusters.DecodeToVeloClusters     = True;
+   GaudiSequencer("RecoVELOSeq").Members += [ veloClusters ]
+   
 ## TT clusters for pattern recognition and track fit
 GaudiSequencer("RecoTTSeq").Members += [ RawBankToSTClusterAlg("CreateTTClusters"),
                                          RawBankToSTLiteClusterAlg("CreateTTLiteClusters")]
@@ -72,126 +72,139 @@ GaudiSequencer("RecoOTSeq").Members += [ OTTimeCreator() ]
 track = ProcessPhase("Track");
 GaudiSequencer("RecoTrSeq").Members += [ track ]
 
-if TrackSys().getProp("fieldOff"):
-  track.DetectorList += [ "ForwardPat",   "ForwardPreFit",   "ForwardFit"
-                        , "SeedPat",      "SeedPreFit",      "SeedFit"
-                        , "MatchPat",     "MatchPreFit",     "MatchFit"] 
-
-  MagneticFieldSvc().ScaleFactor = 0;
-else:
-  track.DetectorList += [ "ForwardPat",   "ForwardPreFit",   "ForwardFit"
-                        , "SeedPat",      "SeedPreFit",      "SeedFit"
-                        , "MatchPat",     "MatchPreFit",     "MatchFit"
-                        ,  "DownstreamPat","DownstreamPreFit","DownstreamFit"]
-
-track.DetectorList += [ "VeloTTPat",    "VeloTTPreFit",    "VeloTTFit"
-                        , "PostFit"
-                        , "VeloPreFit", "VeloFit"
-                        , "AddExtraInfo", "MuonRec"
-                        ]
+if TrackSys().fieldOff() : MagneticFieldSvc().ScaleFactor = 0
                
 ## get all the trackfitters
 from TrackFitter.ConfiguredFitters import *
 
-if "noDrifttimes" in TrackSys().getProp("expertTracking"):
-   Tf__OTHitCreator("OTHitCreator").NoDriftTimes = True
-
-## Forward pattern
-GaudiSequencer("TrackForwardPatSeq").Members +=  [ PatForward("PatForward") ]
-importOptions("$PATALGORITHMSROOT/options/PatForward.py")
-
-## Forward prefit
-GaudiSequencer("TrackForwardPreFitSeq").Members += [ConfiguredPreFitForward()]
-
-## Forward fit
-GaudiSequencer("TrackForwardFitSeq").Members += [ConfiguredFitForward()]
-
-## Seed pattern
-  
-if "usePatSeeding" in TrackSys().getProp("expertTracking"):
-   GaudiSequencer("TrackSeedPatSeq").Members += [PatSeeding("PatSeeding")]
-   importOptions("$PATALGORITHMSROOT/options/PatSeeding.py")
-else:     
-   GaudiSequencer("TrackSeedPatSeq").Members += [Tf__Tsa__Seed("TsaSeed"),
-                                                 Tf__Tsa__SeedTrackCnv( "TsaSeedTrackCnv" )]
-   importOptions("$TSAALGORITHMSROOT/options/TsaSeeding.py")
-
 ##get parameters for fast momentum estimate
 importOptions ("$TRACKTOOLSROOT/options/FastMomentumEstimate.opts")
 
-## Seed fit
-GaudiSequencer("TrackSeedFitSeq").Members += [ConfiguredFitSeed()]
+if "noDrifttimes" in TrackSys().getProp("expertTracking"):
+   Tf__OTHitCreator("OTHitCreator").NoDriftTimes = True
 
-## Match pattern
-GaudiSequencer("TrackMatchPatSeq").Members += [ TrackMatchVeloSeed("TrackMatch")]
+# Clone killer
+cloneKiller = TrackEventCloneKiller()
+cloneKiller.TracksInContainers = []
 
-importOptions("$TRACKMATCHINGROOT/options/TrackMatch.py")
+## Forward pattern
+if "Forward" in trackAlgs :
+   track.DetectorList += [ "ForwardPat", "ForwardPreFit", "ForwardFit" ]
+   GaudiSequencer("TrackForwardPatSeq").Members +=  [ PatForward("PatForward") ]
+   importOptions("$PATALGORITHMSROOT/options/PatForward.py")
+   ## Forward prefit
+   GaudiSequencer("TrackForwardPreFitSeq").Members += [ConfiguredPreFitForward()]
+   ## Forward fit
+   GaudiSequencer("TrackForwardFitSeq").Members += [ConfiguredFitForward()]
+   ## Add to output best tracks
+   cloneKiller.TracksInContainers += ["Rec/Track/Forward"]
 
-## Match prefit
-GaudiSequencer("TrackMatchPreFitSeq").Members += [ConfiguredPreFitMatch()]
+## Seed pattern
+if "TsaSeed" in trackAlgs and "PatSeed" in trackAlgs :
+   raise RuntimeError("Cannot run both Tsa and Pat Seeding at once")
+if "TsaSeed" in trackAlgs :
+   track.DetectorList += [ "SeedPat" ]
+   GaudiSequencer("TrackSeedPatSeq").Members += [Tf__Tsa__Seed("TsaSeed"),
+                                                 Tf__Tsa__SeedTrackCnv( "TsaSeedTrackCnv" )]
+   importOptions("$TSAALGORITHMSROOT/options/TsaSeeding.py")
+if "PatSeed" in trackAlgs :
+   track.DetectorList += [ "SeedPat" ]
+   GaudiSequencer("TrackSeedPatSeq").Members += [PatSeeding("PatSeeding")]
+   importOptions("$PATALGORITHMSROOT/options/PatSeeding.py")
+   if TrackSys().cosmics() :
+      importOptions("$PATALGORITHMSROOT/options/PatSeedingTool-Cosmics.opts")
+if "TsaSeed" in trackAlgs or "PatSeed" in trackAlgs :
+   ## Seed fit
+   track.DetectorList += [ "SeedPreFit","SeedFit" ]
+   GaudiSequencer("TrackSeedFitSeq").Members += [ConfiguredFitSeed()]
+   ## Add to output best tracks
+   cloneKiller.TracksInContainers += ["Rec/Track/Seed"]
 
-## Match fit
-GaudiSequencer("TrackMatchFitSeq").Members += [ConfiguredFitMatch()]
+## Match
+if "Match" in trackAlgs :
+   track.DetectorList += [ "MatchPat", "MatchPreFit", "MatchFit" ]
+   GaudiSequencer("TrackMatchPatSeq").Members += [ TrackMatchVeloSeed("TrackMatch") ]
+   importOptions("$TRACKMATCHINGROOT/options/TrackMatch.py")
+   ## Match prefit
+   GaudiSequencer("TrackMatchPreFitSeq").Members += [ConfiguredPreFitMatch()]
+   ## Match fit
+   GaudiSequencer("TrackMatchFitSeq").Members += [ConfiguredFitMatch()]
+   ## Add to output best tracks
+   cloneKiller.TracksInContainers += ["Rec/Track/Match"]
 
-## Downstream pattern
-GaudiSequencer("TrackDownstreamPatSeq").Members += [ PatDownstream() ];
-
-## Downstream prefit
-GaudiSequencer("TrackDownstreamPreFitSeq").Members += [ConfiguredPreFitDownstream()]
-
-## Downstream fit
-GaudiSequencer("TrackDownstreamFitSeq").Members += [ConfiguredFitDownstream()]
-
+## Downstream
+if "Downstream" in trackAlgs and TrackSys().fieldOff() == False :
+   track.DetectorList += [ "DownstreamPat","DownstreamPreFit","DownstreamFit" ]
+   GaudiSequencer("TrackDownstreamPatSeq").Members += [ PatDownstream() ];
+   ## Downstream prefit
+   GaudiSequencer("TrackDownstreamPreFitSeq").Members += [ConfiguredPreFitDownstream()]
+   ## Downstream fit
+   GaudiSequencer("TrackDownstreamFitSeq").Members += [ConfiguredFitDownstream()]
+   ## Add to output best tracks
+   cloneKiller.TracksInContainers += ["Rec/Track/Downstream"]
+   
 ## Velo-TT pattern
-GaudiSequencer("TrackVeloTTPatSeq").Members += [ PatVeloTT("PatVeloTT")] 
-importOptions ("$PATVELOTTROOT/options/PatVeloTT.py")
-
-## Velo-TT fit
-GaudiSequencer("TrackVeloTTFitSeq").Members += [ ConfiguredFitVeloTT() ]
+if "VeloTT" in trackAlgs :
+   track.DetectorList += ["VeloTTPat", "VeloTTPreFit", "VeloTTFit"]
+   GaudiSequencer("TrackVeloTTPatSeq").Members += [ PatVeloTT("PatVeloTT")] 
+   importOptions ("$PATVELOTTROOT/options/PatVeloTT.py")
+   ## Velo-TT fit
+   GaudiSequencer("TrackVeloTTFitSeq").Members += [ ConfiguredFitVeloTT() ]
+   ## Add to output best tracks
+   cloneKiller.TracksInContainers += ["Rec/Track/VeloTT"]
 
 ## Clone tracks killer: output is "best" container
-GaudiSequencer("TrackPostFitSeq").Members += [ TrackEventCloneKiller() ]
+track.DetectorList += ["PostFit"]
+GaudiSequencer("TrackPostFitSeq").Members += [ cloneKiller ]
 
-if TrackSys().getProp("fieldOff"):
-  TrackEventCloneKiller().TracksInContainers = ["Rec/Track/Forward", "Rec/Track/Match",
-                                                "Rec/Track/VeloTT", "Rec/Track/Seed"]
-else:
-  TrackEventCloneKiller().TracksInContainers  = [ "Rec/Track/Forward", "Rec/Track/Match",
-                                                  "Rec/Track/Downstream", "Rec/Track/VeloTT",
-                                                  "Rec/Track/Seed"]
-                                                    
-## Prepare the velo tracks for the fit
-GaudiSequencer("TrackVeloPreFitSeq").Members += [ TrackPrepareVelo() ] 
+## Velo fitting
+if "Velo" in trackAlgs :
+   ## Prepare the velo tracks for the fit
+   track.DetectorList += ["VeloPreFit", "VeloFit"]
+   GaudiSequencer("TrackVeloPreFitSeq").Members += [ TrackPrepareVelo() ] 
+   ## Fit the velo tracks and copy them to the "best" container
+   GaudiSequencer("TrackVeloFitSeq").Members += [ ConfiguredFitVelo() ]
+   copyVelo = TrackContainerCopy( "CopyVelo" )
+   copyVelo.inputLocation = "Rec/Track/PreparedVelo";
+   GaudiSequencer("TrackVeloFitSeq").Members += [ copyVelo ]
 
-## Fit the velo tracks and copy them to the "best" container
-GaudiSequencer("TrackVeloFitSeq").Members += [ ConfiguredFitVelo() ]
-copyVelo = TrackContainerCopy( "CopyVelo" )
-copyVelo.inputLocation = "Rec/Track/PreparedVelo";
-GaudiSequencer("TrackVeloFitSeq").Members += [ copyVelo ]
+## Extra track information sequence
+extraInfos = TrackSys().getProp("trackExtraInfoAlgorithms")
+if len(extraInfos) > 0 :
 
-## Clone finding and flagging
-trackClones = GaudiSequencer("TrackClonesSeq")
-GaudiSequencer("TrackAddExtraInfoSeq").Members += [ trackClones ];
-trackClones.MeasureTime = True;
-cloneTable = TrackBuildCloneTable("FindTrackClones")
-cloneTable.maxDz   = 500*mm
-cloneTable.zStates = [ 0*mm, 990*mm, 9450*mm ]
-cloneTable.klCut   = 5e3
-cloneCleaner = TrackCloneCleaner("FlagTrackClones")
-cloneCleaner.CloneCut = 5e3
-trackClones.Members += [ cloneTable, cloneCleaner ]
+   track.DetectorList += ["AddExtraInfo"]
 
-## Add the likelihood information & ghost probability using TMVA package
-trackAddLikelihood = TrackAddLikelihood()
-trackAddLikelihood.addTool( TrackLikelihood, name = "TrackMatching_likTool" )
-trackAddLikelihood.TrackMatching_likTool.otEff = 0.9
-GaudiSequencer("TrackAddExtraInfoSeq").Members += [ trackAddLikelihood, NeuralNetTmva() ]
-importOptions ("$NNTOOLSROOT/options/NeuralNetTmva.opts")
+   ## Clone finding and flagging
+   if "CloneFlagging" in extraInfos :
+      trackClones = GaudiSequencer("TrackClonesSeq")
+      GaudiSequencer("TrackAddExtraInfoSeq").Members += [ trackClones ]
+      trackClones.MeasureTime = True
+      cloneTable = TrackBuildCloneTable("FindTrackClones")
+      cloneTable.maxDz   = 500*mm
+      cloneTable.zStates = [ 0*mm, 990*mm, 9450*mm ]
+      cloneTable.klCut   = 5e3
+      cloneCleaner = TrackCloneCleaner("FlagTrackClones")
+      cloneCleaner.CloneCut = 5e3
+      trackClones.Members += [ cloneTable, cloneCleaner ]
 
-if "MuonAlignTracks" in TrackSys().getProp("expertTracking"):
-  GaudiSequencer("TrackMuonRecSeq").Members += [ AlignMuonRec("AlignMuonRec"),
-                                                 TrackEventFitter("MuonTrackFitter") ];
-  importOptions("$TRACKSYSROOT/options/AlignMuonRec.opts")
-  if TrackSys().getProp("fieldOff"):
-     AlignMuonRec("AlignMuonRec").BField = False;
-     importOptions( "$STDOPTS/DstContentMuonAlign.opts" );  
+   ## Add the likelihood information
+   if "TrackLikelihood" in extraInfos :
+      trackAddLikelihood = TrackAddLikelihood()
+      trackAddLikelihood.addTool( TrackLikelihood, name = "TrackMatching_likTool" )
+      trackAddLikelihood.TrackMatching_likTool.otEff = 0.9
+      GaudiSequencer("TrackAddExtraInfoSeq").Members += [ trackAddLikelihood ]
+
+   ## ghost probability using TMVA package
+   if "GhostProbability" in extraInfos :
+      GaudiSequencer("TrackAddExtraInfoSeq").Members += [ NeuralNetTmva() ]
+      importOptions ("$NNTOOLSROOT/options/NeuralNetTmva.opts")
+
+## Muon alignment tracks
+if "MuonAlign" in trackAlgs :
+   track.DetectorList += ["MuonRec"]
+   GaudiSequencer("TrackMuonRecSeq").Members += [ AlignMuonRec("AlignMuonRec"),
+                                                  TrackEventFitter("MuonTrackFitter") ]
+   importOptions("$TRACKSYSROOT/options/AlignMuonRec.opts")
+   if TrackSys().fieldOff():
+      AlignMuonRec("AlignMuonRec").BField = False;
+      importOptions( "$STDOPTS/DstContentMuonAlign.opts" )
