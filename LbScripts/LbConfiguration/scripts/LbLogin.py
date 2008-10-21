@@ -40,6 +40,19 @@ def getLbLoginEnv(debug=False,
 
     return s.setEnv(debug)
 
+def _multiPathJoin(path, subdir):
+    pathlist = []
+    for d in path.split(os.pathsep) :
+        pathlist.append(os.path.join(d,subdir))
+    return os.pathsep.join(pathlist)
+
+def _multiPathGet(path, subdir):
+    for d in path.split(os.pathsep) :
+        sd = os.path.join(d, subdir)
+        if os.path.exists(sd) :
+            break
+    return sd
+
 def _check_output_options_cb(option, opt_str, value, parser):
     if opt_str == "--mktemp":
         if parser.values.output:
@@ -295,13 +308,14 @@ class LbLoginScript(Script):
         if opts.cmtsite == "CERN" :
             ev["CONTRIBDIR"] = os.path.join(ev["SITEROOT"], "sw", "contrib")
         else :
+            ev["CONTRIBDIR"] = _multiPathJoin(ev["SITEROOT"], "contrib")            
             ev["CONTRIBDIR"] = os.path.join(ev["SITEROOT"], "contrib")
 
         if sys.platform == "darwin" :
             opts.cmtvers = "v1r20p20070524"
             
         ev["CMT_DIR"] = ev["CONTRIBDIR"]
-        ev["CMTROOT"] = os.path.join(ev["CMT_DIR"], "CMT", opts.cmtvers)
+        ev["CMTROOT"] = _multiPathGet(ev["CMT_DIR"], os.path.join("CMT", opts.cmtvers))
         
         self.setCMTInternals()
 #-----------------------------------------------------------------------------------
@@ -312,8 +326,8 @@ class LbLoginScript(Script):
             ev["LHCBHOME"] = ev["MYSITEROOT"]
             ev["DIM_release_area"] = ev["CONTRIBDIR"]
             ev["XMLRPC_release_area"] = ev["CONTRIBDIR"]
-            ev["LCG_release_area"] = os.path.join(ev["MYSITEROOT"], "lcg" ,"external")
-            ev["LHCBRELEASES"] = os.path.join(ev["LHCBHOME"], "lhcb")
+            ev["LCG_release_area"] = _multiPathJoin(ev["MYSITEROOT"], os.path.join("lcg" ,"external"))
+            ev["LHCBRELEASES"] = _multiPathJoin(ev["LHCBHOME"], "lhcb")
             ev["GAUDISOFT"] = ev["LHCBRELEASES"]
             ev["LHCBPROJECTPATH"] = os.pathsep.join([ev["LHCBRELEASES"],ev["LCG_release_area"]])
         else :
@@ -363,7 +377,7 @@ class LbLoginScript(Script):
             if opts.cmtsite == "CERN" :
                 srcrootrcfile = os.path.join(ev["AFSROOT"], "cern.ch", "lhcb", "scripts", ".rootauthrc")
             elif opts.cmtsite == "LOCAL" :
-                srcrootrcfile = os.path.join(ev["MYSITEROOT"].split(os.pathsep)[0], "cern.ch", "lhcb", "scripts", ".rootauthrc")
+                srcrootrcfile = os.path.join(ev["MYSITEROOT"].split(os.pathsep)[0], "lhcb", "scripts", ".rootauthrc")
             if os.path.exists(srcrootrcfile) :                
                 shutil.copy(srcrootrcfile, rootrcfile)
 

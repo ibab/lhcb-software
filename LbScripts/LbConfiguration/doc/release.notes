@@ -1,3 +1,8 @@
+2008-10-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+    * scripts/LbLogin.py: added support for MYSITEROOT as a path (path collection
+    separated with os.pathsep)
+
 2008-10-20  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* scripts/SetupProject.py: Changed the order in which the dev_dirs are
