@@ -1,6 +1,7 @@
-// $Id: OMAcommon.cpp,v 1.4 2008-09-26 14:35:41 ggiacomo Exp $
+// $Id: OMAcommon.cpp,v 1.5 2008-10-21 16:27:27 ggiacomo Exp $
 
 #include "OMAlib/OMAcommon.h"
+#include <stdlib.h>
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : OMAcommon
@@ -11,14 +12,25 @@
 // sets the default path of reference histogram files
 void OMAcommon::setDefRefRoot() {
 #ifdef _WIN32
-  m_RefRoot = "G:";
+  m_RefRoot = "H:";
 #else
-  m_RefRoot = "/group/";
+  m_RefRoot = "/hist/";
 #endif
-  if(m_histDB)
+  char * envHistDir = getenv ("HISTDIR");
+  if (envHistDir !=NULL) {
+    m_RefRoot = envHistDir;
+    m_RefRoot += "/";
+  }
+  if(m_histDB) {
     m_RefRoot += m_histDB->refRoot();
-  else
-    m_RefRoot += OnlineHistDBEnv_constants::StdRefRoot;
+  }
+  else {
+    char * envRefRoot = getenv ("HISTREFPATH");
+    if (envRefRoot !=NULL)
+      m_RefRoot += envRefRoot;
+    else
+      m_RefRoot += OnlineHistDBEnv_constants::StdRefRoot;
+  }
 }
 
 TH1* OMAcommon::getReference(OnlineHistogram* h,
