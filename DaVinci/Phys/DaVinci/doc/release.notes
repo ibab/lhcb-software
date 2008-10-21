@@ -1,4 +1,4 @@
- $Id: release.notes,v 1.247 2008-10-21 14:23:52 jpalac Exp $
+ $Id: release.notes,v 1.248 2008-10-21 15:34:10 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -10,6 +10,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2008-10-21 - Juan PALACIOS
+ - tests/qmtest/davinci.qms/preselections.qms/test_bbstripping.qmt
+  . Correlation table entry order seems to be out of our control, so useless in
+    tests. Test for number of filtered events for each pre-selection, regardless
+    of order.
  - tests/qmtest/davinci.qms/preselections.qms/*.qmt
   . Use Marco Clemencic's findReferenceBlock python function to
     greatly reduce the number of duplicated lines of code. 
