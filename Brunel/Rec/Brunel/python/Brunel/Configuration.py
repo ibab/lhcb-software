@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.28 2008-10-21 15:34:51 marcocle Exp $"
+__version__ = "$Id: Configuration.py,v 1.29 2008-10-21 19:49:53 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -47,8 +47,7 @@ class Brunel(LHCbConfigurableUser):
        ,"monitors": []        # list of monitors to execute, see KnownMonitors
         # Following are options forwarded to RecSys
        ,"recoSequence"   : [] # The Sub-detector reconstruction sequencing. See RecSys for default
-       ,"fieldOff":     False # set to True for magnetic field off data
-       ,"veloOpen":     False # set to True for Velo open data
+       ,"specialData"    : [] # Various special data processing options. See KnownSpecialData for all options
         # Following are options forwarded to TrackSys
        ,"expertTracking": []  # list of expert Tracking options, see KnownExpertTracking
         }
@@ -100,7 +99,6 @@ class Brunel(LHCbConfigurableUser):
 
         self.configureOutput( outputType, withMC )
 
-
         # Set up monitoring (i.e. not using MC truth)
         ProcessPhase("Moni").DetectorList += self.getProp("moniSequence")
         importOptions("$BRUNELOPTS/BrunelMoni.py") # Filled in all cases
@@ -123,7 +121,7 @@ class Brunel(LHCbConfigurableUser):
             ProcessPhase("Check").DetectorList += self.getProp("mcCheckSequence")
             # Tracking
             importOptions("$TRACKSYSROOT/options/PatChecking.opts")
-            if self.getProp( "veloOpen" ):
+            if "veloOpen" in self.getProp( "specialData" ) :
                 GaudiSequencer("CheckPatSeq").Members.remove("TrackAssociator/AssocVeloRZ")
                 GaudiSequencer("CheckPatSeq").Members.remove("TrackAssociator/AssocDownstream")
                 GaudiSequencer("CheckPatSeq").Members.remove("TrackEffChecker/VeloRZ")
@@ -256,9 +254,8 @@ class Brunel(LHCbConfigurableUser):
 
     ## Apply the configuration
     def applyConf(self):
-        GaudiKernel.ProcessJobOptions.PrintOff()
-        self.setOtherProp(TrackSys(),"expertTracking") 
-        self.setOtherProps(RecSysConf(),["fieldOff","veloOpen","recoSequence"])
+        self.setOtherProp(TrackSys(),"expertTracking")
+        self.setOtherProps(RecSysConf(),["specialData","recoSequence"])
         brunelSeq = GaudiSequencer("BrunelSequencer")
         ApplicationMgr().TopAlg = [ brunelSeq ]
         brunelSeq.Members += self.getProp("mainSequence")

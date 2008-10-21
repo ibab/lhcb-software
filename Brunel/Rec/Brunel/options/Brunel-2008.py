@@ -7,7 +7,8 @@
 
 from Brunel.Configuration import *
 
-Brunel().fieldOff = True # All 2008 real data was taken with Magnet OFF
+Brunel().specialData = ["fieldOff"] # All 2008 real data was taken with Magnet OFF
+
 Brunel().applyConf()
 
 ##############################################################################

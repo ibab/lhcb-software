@@ -43,8 +43,8 @@ else:
     EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001820/DIGI/0000/" + datasetName + "_4.digi' TYP='POOL_ROOTTREE' OPT='READ'"]
 
 #-- Example field off and velo open files
-if( Brunel().getProp("fieldOff")):
-    if( Brunel().getProp("veloOpen")):
+if "fieldOff" in Brunel().getProp("specialData") :
+    if "veloOpen" in Brunel().getProp("specialData") :
         # 450 GeV on 450 GeV pp collisions, single interactions, no beam crossing angle, beam sigma(X) = sigma(Y) = 280 microns, magnetic field OFF, Velo Open
         datasetName = "B_OFF.VeloOpen"
         EventSelector().Input = ["DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/background/Pilot_2007/30000000.5k." + datasetName + ".digi' TYP='POOL_ROOT' OPT='READ'"]
