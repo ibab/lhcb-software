@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.6 2008-10-15 12:42:19 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.7 2008-10-21 12:10:00 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -31,6 +31,7 @@ class RichRecSysConf(RichConfigurableUser):
     ## Steering options
     __slots__ = {
         "fieldOff":       False   # set to True for magnetic field off data
+       ,"useCaloMomentumTracks" : False # Use Tracks cloned from originals with P updated using the CALO
        ,"veloOpen":       False   # set to True for Velo open data
        ,"context":    "Offline"   # The context within which to run
        ,"radiators": None         # The radiators to use
@@ -169,7 +170,7 @@ class RichRecSysConf(RichConfigurableUser):
             initSeq.Members += [ trackSeq ]
             
             # Field Off ?
-            if self.getProp("fieldOff") :
+            if self.getProp("useCaloMomentumTracks") :
                 from Configurables import TrackUseCaloMomentumAlg
                 caloTrackAlg = TrackUseCaloMomentumAlg(cont+"TracksWithCALOP")
                 caloTrackAlg.OutputTracks = "Rec/Track/BestWithCALOInfo"
@@ -254,7 +255,7 @@ class RichRecSysConf(RichConfigurableUser):
         # Tracks and segments
         tkConf = RichTrackCreatorConfig()
         tkConf.setProp("radiators",self.usedRadiators())
-        self.setOtherProps(tkConf,["context","fieldOff"])
+        self.setOtherProps(tkConf,["context","fieldOff","useCaloMomentumTracks"])
         tkConf.applyConf()
         del tkConf
 

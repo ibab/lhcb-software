@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: TrackCreator.py,v 1.2 2008-08-15 14:41:23 jonrob Exp $"
+__version__ = "$Id: TrackCreator.py,v 1.3 2008-10-21 12:10:00 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration  import *
@@ -24,6 +24,7 @@ class RichTrackCreatorConfig(RichConfigurableUser):
         "context":       "Offline"  # The context within which to run
        ,"fieldOff":       False # set to True for magnetic field off data
        ,"radiators": [True,True,True] # The radiators to use (Aerogel/Rich1Gas/Rich2Gas)
+       ,"useCaloMomentumTracks" : False # Use Tracks cloned from originals with P updated using the CALO
         }
 
     ## @brief Apply the configuration
@@ -42,7 +43,7 @@ class RichTrackCreatorConfig(RichConfigurableUser):
         # Track creator
         trackCr = RichTools().trackCreator(nickname)
 
-        if self.getProp("fieldOff") :
+        if self.getProp("useCaloMomentumTracks") :
             trackCr.TracksLocation = "Rec/Track/BestWithCALOInfo"
             
         # Track selector

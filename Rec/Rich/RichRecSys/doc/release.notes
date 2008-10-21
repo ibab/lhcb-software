@@ -4,6 +4,12 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2008-10-21 - Chris Jones
+ - Remove all evidence of obsolete Job Options !
+ - Add explicit option "useCaloMomentumTracks" to python configuration. 
+   Previously controlled implicitly by "fieldOff" option, but in some case
+   this was not appropriate.
+
 !====================== RichRecSys v3r13 2008-09-04 ==========================
 ! 2008-08-07 - Chris Jones
  - Add python Configuration. Job Option files remain for the moment to allow, 
