@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.7 2008-10-21 12:10:00 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.8 2008-10-21 13:39:11 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -47,7 +47,6 @@ class RichRecSysConf(RichConfigurableUser):
        ,"checkProcStatus": True   # Check the status of the ProcStatus object
        ,"pidConfig": "FullGlobal" # The PID algorithm configuration
        ,"makeSummaryObjects": False # Make the reconstruction summary TES data objects
-       ,"testOldOpts": False
        ,"hpdRandomBackgroundProb" : -1.0 # If positive, will add additional random background to the data at the given pixel percentage
         }
 
@@ -96,15 +95,10 @@ class RichRecSysConf(RichConfigurableUser):
         # Tool mapping
         self.setOtherProp(RichTools(),"context")
 
-        # Temporary option to use old options, for testing
-        if self.getProp("testOldOpts") :
-            importOptions( "$RICHRECSYSOPTS/RecoOfflineToolPara.opts" )
-            importOptions( "$RICHRECSYSOPTS/RecoOfflineAlgs.opts")
-        else:
-            if self.getProp("configureTools") :
-                self.configTools()
-            if sequence != None and self.getProp("configureAlgs") :
-                self.configAlgorithms(sequence)
+        if self.getProp("configureTools") :
+            self.configTools()
+        if sequence != None and self.getProp("configureAlgs") :
+            self.configAlgorithms(sequence)
         
     ## @brief Configure the RICH algorithms
     #  @param sequence The GaudiSequencer to add the RICH reconstruction to      
