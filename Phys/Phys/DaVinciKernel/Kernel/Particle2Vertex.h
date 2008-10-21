@@ -1,10 +1,11 @@
-// $Id: Particle2Vertex.h,v 1.4 2008-09-30 14:18:41 jpalac Exp $
+// $Id: Particle2Vertex.h,v 1.5 2008-10-21 10:11:47 jpalac Exp $
 #ifndef KERNEL_PARTICLE2VERTEX_H 
 #define KERNEL_PARTICLE2VERTEX_H 1
 
 // Include files
 #include "Event/VertexBase.h"
 #include "Event/Particle.h"
+#include "Relations/RelationWeighted.h"
 #include "Relations/RelationWeighted1D.h"
 /** @namespace Particle2Vertex Particle2Vertex.h Kernel/Particle2Vertex.h
  *  
@@ -19,6 +20,10 @@ namespace Particle2Vertex {
   typedef LHCb::RelationWeighted1D<LHCb::Particle, 
                                    LHCb::VertexBase, 
                                    WeightType>            Table      ;
+
+  typedef Relations::RelationWeighted<LHCb::Particle, 
+                                      LHCb::VertexBase, 
+                                      WeightType>         LightTable ;
   typedef Table::Range                                    Range      ;
   typedef Table::IBase::TypeTraits::Entry                 Relation   ;
   typedef Table::IBase::TypeTraits::Entries               Relations  ;
