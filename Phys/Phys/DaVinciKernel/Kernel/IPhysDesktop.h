@@ -1,4 +1,4 @@
-// $Id: IPhysDesktop.h,v 1.24 2008-04-29 14:17:45 pkoppenb Exp $
+// $Id: IPhysDesktop.h,v 1.25 2008-10-21 13:04:32 jpalac Exp $
 #ifndef DAVINCIKERNEL_IPHYSDESKTOP_H 
 #define DAVINCIKERNEL_IPHYSDESKTOP_H 1
 
@@ -126,18 +126,9 @@ public:
   /// Obtain a range of weighted LHCb::VertexBase related to an LHCb::Particle
   virtual Particle2Vertex::Range particle2Vertices(const LHCb::Particle* part ) const =0;
 
-  /// Obtain a copy of the current 1D relations table 
-  /// relating LHCb::Particles to LHCb::VertexBases
-  virtual const Particle2Vertex::Table particle2VertexTable() const = 0;
-
   /// Clean desktop
   virtual StatusCode cleanDesktop() = 0;
   
-
-protected:
-
-private:
-
 };
 #endif // DAVINCIKERNEL_IPHYSDESKTOP_H
 
