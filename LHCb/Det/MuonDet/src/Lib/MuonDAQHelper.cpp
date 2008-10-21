@@ -1,4 +1,4 @@
-// $Id: MuonDAQHelper.cpp,v 1.8 2008-07-15 11:45:29 asatta Exp $
+// $Id: MuonDAQHelper.cpp,v 1.9 2008-10-21 09:10:50 asatta Exp $
 // Include files 
 
 #include "GaudiKernel/SmartDataPtr.h"
@@ -882,7 +882,8 @@ LHCb::MuonTileID MuonDAQHelper::getADDInLink(unsigned int Tell1_num,
   if(Tell1_num<=m_TotTell1){
     if(link_num<24){
       if((m_linkInTell1[Tell1_num])[link_num]>0&&
-         (m_linkInTell1[Tell1_num])[link_num]<MuonDAQHelper_maxODENumber){
+         (m_linkInTell1[Tell1_num])[link_num]<
+	static_cast<int>(MuonDAQHelper_maxODENumber)){
         if(static_cast<unsigned int> (ch)<
            (m_mapTileInODE[(m_linkInTell1[Tell1_num])[link_num]]).size())
           return (m_mapTileInODE[(m_linkInTell1[Tell1_num])[link_num]])[ch];
@@ -895,7 +896,7 @@ LHCb::MuonTileID MuonDAQHelper::getADDInLink(unsigned int Tell1_num,
 };
 LHCb::MuonTileID MuonDAQHelper::getADDInODE(long ODE_num, long ch){
   MuonTileID emptyTile;
-  if(ODE_num<MuonDAQHelper_maxODENumber){
+  if(ODE_num<static_cast<int>(MuonDAQHelper_maxODENumber)){
     if(static_cast<unsigned int> (ch)<
        (m_mapTileInODE[ODE_num]).size())return (m_mapTileInODE[ODE_num])[ch];
   }
@@ -903,7 +904,7 @@ LHCb::MuonTileID MuonDAQHelper::getADDInODE(long ODE_num, long ch){
 };
 LHCb::MuonTileID MuonDAQHelper::getADDInODENoHole(long ODE_num, long ch){
   MuonTileID emptyTile;
-  if(ODE_num<MuonDAQHelper_maxODENumber){
+  if(ODE_num<static_cast<int>(MuonDAQHelper_maxODENumber)){
     if(static_cast<unsigned int> (ch)<(m_mapTileInODEDC06[ODE_num]).size())
       return (m_mapTileInODEDC06[ODE_num])[ch];
   }
@@ -1609,7 +1610,7 @@ MuonL1Board* MuonDAQHelper::getL1Board(unsigned int board_num){
       std::string L1path=cablingBasePath+
         cabling->getL1Name(L1Board);
       SmartDataPtr<MuonL1Board>  l1(m_detSvc,L1path); 
-      if(l1->L1Number()==board_num)return l1;      
+      if(static_cast<unsigned int>(l1->L1Number())==board_num)return l1;      
     }
   }
   return empty;  
@@ -1630,7 +1631,8 @@ MuonODEBoard* MuonDAQHelper::getODEBoard(MuonL1Board* l1,
       +l1->getODEName(ODEBoard);
   
     SmartDataPtr<MuonODEBoard>  ode(m_detSvc,ODEpath);
-    if(ode->getODESerialNumber()==board)return ode;
+    if(static_cast<unsigned int>(ode->getODESerialNumber())
+	==board)return ode;
     
   }
   
@@ -1683,7 +1685,7 @@ StatusCode  MuonDAQHelper::findHWNumber(LHCb::MuonTileID digit,
  if(ode_ch<0)return sc;
   
  for(int i=0;i<24;i++){
-   if(getODENumberInLink(L1Number,i)==ODE_number){
+   if(static_cast<int>(getODENumberInLink(L1Number,i))==ODE_number){
      link_number=i;
      return StatusCode::SUCCESS;
    }   
