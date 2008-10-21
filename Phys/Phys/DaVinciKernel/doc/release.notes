@@ -1,10 +1,15 @@
-!$Id: release.notes,v 1.265 2008-10-21 10:13:12 jpalac Exp $
+!$Id: release.notes,v 1.266 2008-10-21 13:04:45 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
 
 ! 2008-10-21 - Juan PALACIOS
+
+ - Kernel/IPhysDesktop.h
+  . Remove Particle2Vertex::Table Table() method. The state of the table is 
+    not well defined until it is stored on the TES. So better to use other
+    methods to access the relations.
 
  - Kernel/Particle2Vertex.h
   . Add typedef LightTable for light 1D relation table
