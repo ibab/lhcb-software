@@ -4,7 +4,8 @@
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
 
-! 2008-10-16 - Wouter Hulsbergen
+! 2008-10-21 - Wouter Hulsbergen
+- Add option to TrackResChecker to split histos by track type
 - Added momentum reso to output of TrackChecker
 
 ! 2008-10-11 - Marco Cattaneo
