@@ -6,8 +6,8 @@
 
 from Brunel.Configuration import *
 
-Brunel().EvtMax       = 20
-Brunel().PrintFreq    = 10
+Brunel().EvtMax       = -1
+Brunel().printFreq    = 100
 
 Brunel().outputType   = "NONE"
 
