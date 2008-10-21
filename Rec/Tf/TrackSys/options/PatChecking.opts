@@ -18,53 +18,13 @@ AssocTTrack.TracksInContainer     = "Rec/Track/Seed";
 AssocMatch.TracksInContainer      = "Rec/Track/Match";
 AssocDownstream.TracksInContainer = "Rec/Track/Downstream";
 
-
-CheckPatSeq.Members  += { "TrackResChecker/CheckFitForward",
-			  "TrackResChecker/CheckFitMatch",
-			  "TrackResChecker/CheckFitTTrack",
-			  "TrackResChecker/CheckFitVelo",
-                          "TrackResChecker/CheckFitBest" };
-
-CheckFitForward.fullDetail = false;
-CheckFitForward.TracksInContainer = "Rec/Track/Forward";
-CheckFitForward.Selector.Selector.rejectElectrons = true;
-CheckFitForward.Selector.Selector.rejectInteractions = true;
-CheckFitForward.Selector.Selector.zInteraction = 9400.;
-CheckFitForward.HistoPrint = false;
-CheckFitForward.SelectionCriteria = "ChargedLong";
-
-CheckFitBest.fullDetail = false;
-CheckFitBest.TracksInContainer = "Rec/Track/Best";
-CheckFitBest.Selector.Selector.rejectElectrons = true;
-CheckFitBest.Selector.Selector.rejectInteractions = true;
-CheckFitBest.Selector.Selector.zInteraction = 9400.;
-CheckFitBest.HistoPrint = false;
-CheckFitBest.SelectionCriteria = "ChargedLong";
-
-CheckFitMatch.fullDetail = false;
-CheckFitMatch.TracksInContainer = "Rec/Track/Match";
-CheckFitMatch.Selector.Selector.rejectElectrons = true;
-CheckFitMatch.Selector.Selector.rejectInteractions = true;
-CheckFitMatch.Selector.Selector.zInteraction = 9400.;
-CheckFitMatch.HistoPrint = false;
-CheckFitMatch.SelectionCriteria = "ChargedLong";
-
-CheckFitTTrack.fullDetail = false;
-CheckFitTTrack.TracksInContainer = "Rec/Track/Seed";
-CheckFitTTrack.Selector.Selector.rejectElectrons = true;
-CheckFitTTrack.Selector.Selector.rejectInteractions = true;
-CheckFitTTrack.Selector.Selector.zInteraction = 9400.;
-CheckFitTTrack.HistoPrint = false;
-CheckFitTTrack.SelectionCriteria = "ChargedLong";
-
-CheckFitVelo.fullDetail = false;
-CheckFitVelo.TracksInContainer = "Rec/Track/Velo";
-CheckFitVelo.Selector.Selector.rejectElectrons = true;
-CheckFitVelo.Selector.Selector.rejectInteractions = true;
-CheckFitVelo.Selector.Selector.zInteraction = 9400.;
-CheckFitVelo.HistoPrint = false;
-CheckFitVelo.SelectionCriteria = "ChargedLong";
-
+CheckPatSeq.Members  += { "TrackResChecker" };
+TrackResChecker.SplitByType = true;
+TrackResChecker.Selector.Selector.rejectElectrons = true;
+TrackResChecker.Selector.Selector.rejectInteractions = true;
+TrackResChecker.Selector.Selector.zInteraction = 9400.;
+TrackResChecker.FullDetail = false;
+TrackResChecker.HistoPrint = false;
 
 // example of how to use the 
 CheckPatSeq.Members  += { "TrackEffChecker/VeloRZ",

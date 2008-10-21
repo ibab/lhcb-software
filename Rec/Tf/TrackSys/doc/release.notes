@@ -4,18 +4,18 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
-<<<<<<< release.notes
+! 2008-10-21 Wouter Hulsbergen
+ - keep only one instance of TrackResChecker
+
 ! 2008-10-20 M Needham
  - Change detType IT decoding option name to DetType 
 
-=======
 ! 2008-10-15 - Marco Cattaneo
  - Remove obsolete TrackPython package from requirements
 
 ! 2008-10-15 - David Hutchcroft
  - Removed TELL1->Velo sensor mapping from VeloTEDOne.py as it is now in CondDB
 
->>>>>>> 1.43
 !============================ TrackSys v4r18 2008-10-02 ======================
 ! 2008-09-28 - Stephanie Hansmann-Menzemer
  - Add MuonTrackAlignRec to RecoTracking.py
