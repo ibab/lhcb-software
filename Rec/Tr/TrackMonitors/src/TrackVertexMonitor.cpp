@@ -100,6 +100,8 @@ StatusCode TrackVertexMonitor::initialize()
   sc = m_vertexer.retrieve() ;
 
   // book histograms
+  static const std::string histoDir = "Track/" ;
+  if ( "" == histoTopDir() ) setHistoTopDir(histoDir);
 
   // impact parameters of the hightest Pt track wrt the vertex
   m_trackTransverseIP   = book1D("fast track transverse IP",-m_ipmax,m_ipmax) ;
