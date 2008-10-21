@@ -1,6 +1,7 @@
-// $Id: OTRawBankDecoder.cpp,v 1.18 2008-08-26 09:10:12 wouter Exp $
+// $Id: OTRawBankDecoder.cpp,v 1.19 2008-10-21 09:43:49 jonrob Exp $
 // Include files
 #include <algorithm>
+#include <sstream>
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -22,9 +23,6 @@
 #include "GolHeaderDC06.h"
 
 //#include "Event/DataWord.h"
-
-// GSL
-#include <algorithm>
 
 // local
 #include "Event/OTBankVersion.h"
@@ -353,7 +351,13 @@ StatusCode OTRawBankDecoder::decodeGolHeadersV3(const RawBank& bank, int bankver
   if( msgLevel(MSG::DEBUG)) 
     debug() << "OTSpecificHeader in bank:" << otheader << endmsg ;
   if( otheader.error() ) 
-    warning() << "OTSpecificHeader has error bit set in bank " << bank.sourceID() << endreq ;
+  {
+    std::ostringstream mess;
+    mess << "OTSpecificHeader has error bit set in bank " << bank.sourceID();
+    Warning( mess.str(), StatusCode::FAILURE, 0 ).ignore();
+    if ( msgLevel( MSG::DEBUG ) ) debug() << mess.str() << endmsg;
+  }
+ 
   // The data starts at the next 4byte
   const unsigned int* begin = bank.data() + 1 ;
   const unsigned int* end   = bank.data() + bank.size()/4 ;
