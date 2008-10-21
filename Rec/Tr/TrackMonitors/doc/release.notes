@@ -4,6 +4,10 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2008-10-21 Wouter Hulsbergen
+ - fix histo IDs in TrackMonitor
+ - fix histoTopDir in TrackVertexMonitor
+
 !============================ TrackMonitors v1r4 2008-10-02 ==================
 ! 2008-09-17 Wouter Hulsbergen
  - added configurable for creating monitoring sequence
