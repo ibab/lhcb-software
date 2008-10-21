@@ -559,6 +559,19 @@ double LHCb::Track::info( const int key, const double def ) const
 }
 
 //=============================================================================
+// Count the number of outliers
+//=============================================================================
+
+unsigned int LHCb::Track::nMeasurementsRemoved() const 
+{
+  size_t noutlier(0) ;
+  for( NodeContainer::const_iterator inode = nodes().begin() ;
+       inode != nodes().end(); ++inode)
+    if( (*inode)->type() == LHCb::Node::Outlier ) ++noutlier ;
+  return noutlier ;
+}
+
+//=============================================================================
 /** erase the information associated with the given key
  *
  *  @code

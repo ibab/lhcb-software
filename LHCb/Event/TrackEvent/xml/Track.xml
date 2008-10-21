@@ -864,9 +864,6 @@
         name    = 'nMeasurementsRemoved'
         desc    = 'Retrieve the number of Measurements removed by the track fit (the number of LHCbIDs remains unchanged)'
         const   = 'TRUE'>
-        <code>
-  return ( ( nMeasurements() > 0 ) ? ( nLHCbIDs() - nMeasurements() ) : 0 );
-        </code>
       </method>
 
       <method

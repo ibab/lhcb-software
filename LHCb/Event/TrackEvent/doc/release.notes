@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2008-10-21 Wouter Hulsbergen
+  - fix method that computes number of outliers
+	
 ! 2008-10-15 Wouter Hulsbergen
   - protect Track::probchi2 against ndof=0
 
