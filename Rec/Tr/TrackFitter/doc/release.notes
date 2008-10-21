@@ -3,6 +3,9 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+! 2008-10-21 - Chris Jones
+ - Adapt to python changes in TrackSys
+
 ! 2008-10-21 - Wouter Hulsbergen
  - change strategy for FitVelo: don't use curvature
  - add configurable for ConfiguredFastVeloOnlyFit for use in trigger

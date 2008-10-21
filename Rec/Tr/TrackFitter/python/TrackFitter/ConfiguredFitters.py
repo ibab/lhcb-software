@@ -14,10 +14,10 @@ from Configurables import ( TrackEventFitter, TrackMasterFitter, TrackKalmanFilt
 
 def ConfiguredFitter( Name = "DefaultEventFitter",
                       TracksInContainer = "Rec/Tracks/Best",
-                      FieldOff = TrackSys().getProp( "fieldOff" ),
-                      SimplifiedGeometry = "simplifiedGeometry" in TrackSys().getProp("expertTracking"),
-                      NoDriftTimes =  "noDrifttimes" in TrackSys().getProp("expertTracking"),
-                      KalmanSmoother = "kalmanSmoother" in TrackSys().getProp("expertTracking") ):
+                      FieldOff = TrackSys().fieldOff(),
+                      SimplifiedGeometry = TrackSys().simplifiedGeometry(),
+                      NoDriftTimes = TrackSys().noDrifttimes(),
+                      KalmanSmoother = TrackSys().kalmanSmoother() ):
 
     # start with the event fitter
     eventfitter = TrackEventFitter(Name)
@@ -57,8 +57,8 @@ def ConfiguredFitter( Name = "DefaultEventFitter",
 
 def ConfiguredPrefitter( Name = "DefaultEventFitter",
                          TracksInContainer = "Rec/Tracks/Best",
-                         FieldOff = TrackSys().getProp( "fieldOff" ),
-                         SimplifiedGeometry = "simplifiedGeometry" in TrackSys().getProp("expertTracking")):
+                         FieldOff = TrackSys().fieldOff(),
+                         SimplifiedGeometry = TrackSys().simplifiedGeometry() ):
     eventfitter = ConfiguredFitter(Name,TracksInContainer,FieldOff,SimplifiedGeometry,NoDriftTimes=True)
     eventfitter.Fitter.NumberFitIterations = 2
     eventfitter.Fitter.MaxNumberOutliers = 0
