@@ -10,6 +10,7 @@
 #include "CPP/IocSensor.h"
 #include "CPP/Event.h"
 #include <sstream>
+#include <cstring>
 
 static int s_lineNo = Gaudi::SubMenu::CMD_CLOSE+1000;
 

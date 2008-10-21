@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFProducer.cpp,v 1.3 2008-03-05 07:39:56 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MDFProducer.cpp,v 1.4 2008-10-21 16:15:16 frankb Exp $
 //  ====================================================================
 //  RawBufferCreator.cpp
 //  --------------------------------------------------------------------
@@ -13,6 +13,7 @@
 #include "WT/wt_facilities.h"
 #include "Event/RawBank.h"
 #include <fcntl.h>
+#include <cstring>
 #ifdef _WIN32
 #include <io.h>
 #else

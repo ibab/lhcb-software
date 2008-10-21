@@ -1,4 +1,4 @@
-// $Id: OnlineMessageSvc.cpp,v 1.13 2008-09-25 12:13:09 frankb Exp $
+// $Id: OnlineMessageSvc.cpp,v 1.14 2008-10-21 16:15:16 frankb Exp $
 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiOnline/IErrorLogger.h"
@@ -177,16 +177,20 @@ bool LHCb::OnlineMessageSvc::i_reportMessage(const Message& msg)  {
   return reported;
 }
 
-/// Dispatch a message to the relevant streams.
-void LHCb::OnlineMessageSvc::reportMessage(const Message& msg)  {
+/// Implementation of IMessageSvc::reportMessage()
+void LHCb::OnlineMessageSvc::reportMessage(const Message& msg, int lvl) {  
   bool report_always = m_printAlways;
   bool reported = i_reportMessage(msg);
-  int lvl = msg.getType();
-  if (lvl >= MSG::NIL && lvl <= MSG::NUM_LEVELS) ++m_msgCount[lvl];
+  if ( lvl >= MSG::NIL && lvl <= MSG::NUM_LEVELS) ++m_msgCount[lvl];
   if ( lvl==MSG::ALWAYS && !report_always ) 
     return;
   else if ( reported )
-    this->report(msg.getType(), msg.getSource(), msg.getMessage());
+    this->report(lvl, msg.getSource(), msg.getMessage());
+}
+
+/// Dispatch a message to the relevant streams.
+void LHCb::OnlineMessageSvc::reportMessage(const Message& msg)  {
+  reportMessage(msg,msg.getType());
 }
 
 /// Dispatch a message to the relevant streams.

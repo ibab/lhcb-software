@@ -51,9 +51,9 @@ namespace MBMDump  {
     /// Standard constructor defining defaults
     Format();
     /// Access to HEX data format
-    static const char* Format::FMT_HEX08();
+    static const char* FMT_HEX08();
     /// Access to decimal data format
-    static const char* Format::FMT_DEC10();
+    static const char* FMT_DEC10();
   };
 
   /**@class DataBlock MBMDump.h  MBMDump/MBMDump.h

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/DecisionSetterAlg.cpp,v 1.16 2006-12-14 18:59:18 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/DecisionSetterAlg.cpp,v 1.17 2008-10-21 16:15:15 frankb Exp $
 //  ====================================================================
 //  DecisionSetterAlg.cpp
 //  --------------------------------------------------------------------
@@ -15,6 +15,7 @@
 #include "MDF/RawEventDescriptor.h"
 #include "MDF/RawDataAddress.h"
 #include "MBM/Producer.h"
+#include <cstring>
 
 using namespace MBM;
 

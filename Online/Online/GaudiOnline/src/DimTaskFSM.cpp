@@ -43,7 +43,7 @@ namespace  {
   public:
     /// Constructor
     Command(const std::string& nam, DimTaskFSM* target) 
-    : DimCommand(nam.c_str(), "C"), m_target(target) { }
+    : DimCommand(nam.c_str(), (char*)"C"), m_target(target) { }
     /// DimCommand overload: handle DIM commands
     virtual void commandHandler()   {
       // Decauple as quickly as possible from the DIM command loop !
@@ -105,7 +105,7 @@ DimTaskFSM::DimTaskFSM(IInterface*)
   m_monitor.metaState = SUCCESS_ACTION;
   m_monitor.pid = ::lib_rtl_pid();
   m_monitor.pad = 0;
-  m_fsmService = new DimService(svcname.c_str(),"L:2;I:1;C",&m_monitor,sizeof(m_monitor));
+  m_fsmService = new DimService(svcname.c_str(),(char*)"L:2;I:1;C",&m_monitor,sizeof(m_monitor));
   propertyMgr().declareProperty("HaveEventLoop",m_haveEventLoop);
   propertyMgr().declareProperty("Name",m_procName);
   ::lib_rtl_install_printer(printout,this);

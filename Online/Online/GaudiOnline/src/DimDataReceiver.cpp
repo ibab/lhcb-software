@@ -56,9 +56,9 @@ namespace LHCb  {
       MsgStream debug(msgSvc(),name());
       std::string nam = RTL::processName() + "/Event";
       debug << MSG::DEBUG << "Creating data sources:" << nam << " and " << nam << "Source" << endmsg;
-      m_evtSvcID = ::dis_add_cmnd((char*)nam.c_str(),"C",i_evt_receive_handler,(long)this);
+      m_evtSvcID = ::dis_add_cmnd((char*)nam.c_str(),(char*)"C",i_evt_receive_handler,(long)this);
       nam = RTL::processName() + "/EventSource";
-      m_evtSrcID = ::dis_add_cmnd((char*)nam.c_str(),"C",i_src_add_handler,(long)this);
+      m_evtSrcID = ::dis_add_cmnd((char*)nam.c_str(),(char*)"C",i_src_add_handler,(long)this);
       DimServer::start();
       return StatusCode::SUCCESS;
     }

@@ -10,6 +10,7 @@
 #include "GaudiUPI/DialogMenu.h"
 #include "CPP/IocSensor.h"
 #include "CPP/Event.h"
+#include <cstring>
 
 static const char* s_normalize[][2] =  {
     {"  ",                     " " }

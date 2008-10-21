@@ -1,3 +1,4 @@
+#include <cstring>
 #include "RTL/rtl.h"
 #include "CPP/Event.h"
 #include "GaudiUPI/DialogMenu.h"
@@ -117,7 +118,7 @@ int DialogSubDisplay::map()    {
 
 DialogMainDisplay::DialogMainDisplay (const AbstractMainDisplay& source) 
 {
-  char *place_holder = " ^^^^^^^^^^^^ ^^^^^ ^^^^^^^ ";
+  const char *place_holder = " ^^^^^^^^^^^^ ^^^^^ ^^^^^^^ ";
   m_actor = 0;
   m_handler = 0;
   m_width = source.width();

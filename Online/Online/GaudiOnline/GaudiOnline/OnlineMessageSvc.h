@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineMessageSvc.h,v 1.7 2008-09-25 12:13:09 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineMessageSvc.h,v 1.8 2008-10-21 16:15:15 frankb Exp $
 #ifndef GAUDI_ONLINEMESSAGESVC_H
 #define GAUDI_ONLINEMESSAGESVC_H
 
@@ -61,6 +61,9 @@ namespace LHCb {
 
     // Implementation of IMessageSvc::reportMessage()
     virtual void reportMessage( const char* source, int type, const char* message);
+
+    /// Implementation of IMessageSvc::reportMessage()
+    virtual void reportMessage(const Message& message, int outputLevel);
 
     // Implementation of IMessageSvc::reportMessage()
     virtual void reportMessage( const std::string& source, int type, const std::string& message);

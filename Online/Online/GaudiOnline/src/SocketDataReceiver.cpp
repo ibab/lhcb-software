@@ -3,6 +3,8 @@
 #include "NET/DataTransfer.h"
 #include "WT/wt_facilities.h"
 #include "RTL/Lock.h"
+#include <cstring>
+
 int gauditask_task_lock();
 int gauditask_task_trylock();
 int gauditask_task_unlock();

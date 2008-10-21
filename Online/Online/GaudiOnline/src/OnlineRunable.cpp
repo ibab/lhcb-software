@@ -14,6 +14,7 @@
 #include "GaudiOnline/OnlineRunable.h"
 #include "WT/wtdef.h"
 #include "RTL/rtl.h"
+#include <cstring>
 
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,OnlineRunable)
 
@@ -58,7 +59,7 @@ StatusCode LHCb::OnlineRunable::run() {
         char* items[64];
         std::string tmp = m_initFlags;
         if ( !m_initFlags.empty() )  {
-          items[0] = "dummy.exe";
+          items[0] = (char*)"dummy.exe";
           for(char* tok=::strtok((char*)tmp.c_str()," "); tok; tok=::strtok(NULL," ")) {
             items[ikey++] = tok;
           }

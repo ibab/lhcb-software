@@ -110,8 +110,8 @@ MEPErrorAdder::initialize() {
   	m_log << MSG::INFO << "Number of subfarms in partition: " << m_nrSubFarms << endmsg;
   
   	sprintf(temp,"RunInfo/%s/HLTsubFarms",m_partitionName.c_str());
-  	DimCurrentInfo SubFarms(temp,"NA");
-  	char* subFarmsChar = SubFarms.getString(); 
+  	DimCurrentInfo SubFarms(temp,(char*)"NA");
+  	const char* subFarmsChar = SubFarms.getString(); 
  
   	m_subFarms.resize(m_nrSubFarms);
   	int start = 0;

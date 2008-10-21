@@ -1,4 +1,4 @@
-// $Id: DimRPCFileReader.cpp,v 1.12 2008-10-21 13:53:50 frankb Exp $
+// $Id: DimRPCFileReader.cpp,v 1.13 2008-10-21 16:15:16 frankb Exp $
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IAppMgrUI.h"
@@ -78,8 +78,8 @@ StatusCode DimRPCFileReader::initialize()   {
   // Init the extra Services
   std::string svcName=RTL::processName()+"/RpcOut";
   std::string cmdName=RTL::processName()+"/RpcIn";
-  m_rpc.first  = ::dis_add_service((char*) svcName.c_str(),"C",0,0,publishEvents,(long) this);
-  m_rpc.second = ::dis_add_cmnd((char*) cmdName.c_str(),"C",cmndCallback,(long) this);
+  m_rpc.first  = ::dis_add_service((char*) svcName.c_str(),(char*)"C",0,0,publishEvents,(long) this);
+  m_rpc.second = ::dis_add_cmnd((char*) cmdName.c_str(),(char*)"C",cmndCallback,(long) this);
   ::lib_rtl_lock(m_lock);
   return sc;
 }

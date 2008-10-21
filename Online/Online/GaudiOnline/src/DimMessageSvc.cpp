@@ -1,4 +1,4 @@
-// $Id: DimMessageSvc.cpp,v 1.5 2007-06-01 13:49:45 frankm Exp $
+// $Id: DimMessageSvc.cpp,v 1.6 2008-10-21 16:15:16 frankb Exp $
 #if !defined(i386) && !defined(_WIN32)
 #define GAUDIKERNEL_KERNEL_H    // disable include
 #endif
@@ -68,7 +68,7 @@ StatusCode LHCb::DimMessageSvc::initialize() {
   if( sc.isFailure() ) return sc;
   std::string srvcname = /* "/" + RTL::nodeNameShort() + "/" + */ RTL::processName() + "/Output";
   m_mess.makeBuffer(MSG::INFO,srvcname,"DIM Service Starting up");
-  m_logger = new DimService(srvcname.c_str(),"I:2;C:256;C",(void*)m_mess.buffer(),m_mess.size());
+  m_logger = new DimService(srvcname.c_str(),(char*)"I:2;C:256;C",(void*)m_mess.buffer(),m_mess.size());
   return StatusCode::SUCCESS;
 }
 

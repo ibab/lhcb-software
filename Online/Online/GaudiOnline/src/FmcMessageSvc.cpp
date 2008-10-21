@@ -1,9 +1,10 @@
 #ifndef _WIN32
 #include <iostream>
+#include <cstring>
 #include <string>
 #include <syslog.h>                                              /* syslog() */
-#include <stdarg.h>                                         /* va_list, etc. */
-#include <errno.h>
+#include <cstdarg>                                         /* va_list, etc. */
+#include <cerrno>
 #include <sys/types.h>                                             /* open() */
 #include <sys/stat.h>                                              /* open() */
 #include <fcntl.h>                                                 /* open() */
@@ -73,7 +74,7 @@ void LHCb::FmcMessageSvc::changeFifo(Property& ) {
 }
 
 StatusCode LHCb::FmcMessageSvc::openFifo() {
-  char *dfltFifoPath="/tmp/logSrv.fifo";
+  const char *dfltFifoPath="/tmp/logSrv.fifo";
   int errU=0;
   struct stat statBuf;
   enum outType{L_DIM=0x1,L_STD=0x2,L_SYS=0x4};
@@ -85,8 +86,8 @@ StatusCode LHCb::FmcMessageSvc::openFifo() {
   /* process name */
   if(!pName)getPName();
   /* utgid */
-  if(!utgid)utgid=getenv("UTGID");
-  if(!utgid)utgid="no UTGID";
+  if(!utgid) utgid = getenv("UTGID");
+  if(!utgid) utgid = "no UTGID";
   /* host name */
   if(hostName[0]=='\0')
   {
@@ -239,7 +240,7 @@ StatusCode LHCb::FmcMessageSvc::finalize()
 // msg = the message string
 void LHCb::FmcMessageSvc::report(int typ,const std::string& src,const std::string& msg)
 {
-  char *sl[8]={"[NIL]  ","[VERB] ","[DEBUG]","[INFO] ","[WARN] ","[ERROR]",
+  const char *sl[8]={"[NIL]  ","[VERB] ","[DEBUG]","[INFO] ","[WARN] ","[ERROR]",
                "[FATAL]", "[ALWAYS]"};
   time_t now;
   struct tm lNow;
@@ -333,10 +334,10 @@ void LHCb::FmcMessageSvc::getPName()
 /* Time, severity, host name, process name and function name prepended       */
 /*****************************************************************************/
 int LHCb::FmcMessageSvc::printM(int out,int severity,const char* fName,
-                                char *format,...)
+                                const char *format,...)
 {
-  char *sl[8]={"[NIL]  ","[VERB] ","[DEBUG]","[INFO] ","[WARN] ","[ERROR]",
-               "[FATAL]", "[ALWAYS]"};
+  const char *sl[8]={"[NIL]  ","[VERB] ","[DEBUG]","[INFO] ","[WARN] ","[ERROR]",
+		     "[FATAL]", "[ALWAYS]"};
   enum outType{L_DIM=0x1,L_STD=0x2,L_SYS=0x4};
   time_t now;
   struct tm lNow;

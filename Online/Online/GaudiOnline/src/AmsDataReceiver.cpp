@@ -3,7 +3,9 @@
 #include "WT/wt_facilities.h"
 #include "AMS/amsdef.h"
 #include "WT/wtdef.h"
+#include <cstring>
 #include <memory>
+
 /*
  *   LHCb namespace declaration
  */

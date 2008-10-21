@@ -234,7 +234,7 @@ namespace LHCb  {
 
     // Constructor
     MEPRQCommand(MEPRxSvc *mepRxObj, IMessageSvc *log, const std::string& cmd_name) 
-   : DimCommand(std::string(cmd_name + "/sendMEPRQ").c_str(), "I"),
+   : DimCommand(std::string(cmd_name + "/sendMEPRQ").c_str(), (char*)"I"),
       m_mepRxObj(mepRxObj),m_msgSvc(log) {
     }
 

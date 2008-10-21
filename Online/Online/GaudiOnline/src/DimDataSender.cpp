@@ -35,7 +35,7 @@ namespace LHCb  {
       MsgStream output(msgSvc(),name());
       std::string nam = RTL::processName() + "/EventRequest";
       output << MSG::DEBUG << "Access command service:" << nam << endmsg;
-      m_svcID = ::dis_add_cmnd((char*)nam.c_str(),"C",i_req_receive_handler,(long)this);
+      m_svcID = ::dis_add_cmnd((char*)nam.c_str(),(char*)"C",i_req_receive_handler,(long)this);
       if ( !m_target.empty() )  {
         char req[256];
         ::sprintf(req,"EVENT_SOURCE:%s",RTL::processName().c_str());

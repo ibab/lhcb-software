@@ -1,5 +1,6 @@
 #include "GaudiUPI/DialogItem.h"
 #include "RTL/strdef.h"
+#include <cstring>
 
 template<typename T> static inline void release(T*& x) { if ( x != 0 ) { delete x; x = 0; } }
 

@@ -99,11 +99,11 @@ namespace LHCb  {
         MsgStream log(msgSvc(),name());
         std::string nam = RTL::processName() + "/Event";
         log << MSG::DEBUG << "Creating data source:" << nam << endmsg;
-        long id = ::dis_add_service((char*)nam.c_str(),"C",0,0,i_evt_send_handler,(long)this);
+        long id = ::dis_add_service((char*)nam.c_str(),(char*)"C",0,0,i_evt_send_handler,(long)this);
         m_svcIDs.push_back(id);
         nam += "Request";
         log << "Creating command service:" << nam << endmsg;
-        id = ::dis_add_cmnd((char*)nam.c_str(),"C",i_req_receive_handler,(long)this);
+        id = ::dis_add_cmnd((char*)nam.c_str(),(char*)"C",i_req_receive_handler,(long)this);
         m_svcIDs.push_back(id);
         DimServer::start();
       }

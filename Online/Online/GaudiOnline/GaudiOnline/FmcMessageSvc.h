@@ -35,8 +35,8 @@ namespace LHCb
     StringProperty m_fifoPath;
     int m_tryN;
     char hostName[80];
-    char *pName;
-    char *utgid;
+    const char *pName;
+    const char *utgid;
     int fifoFD;
     int dfltFifoFD;
     int droppedN;
@@ -45,7 +45,7 @@ namespace LHCb
     void changeFifo(Property& prop);
     virtual void getPName();
     virtual int printM(int out,int severity,const char* fName,
-                       char *format,...);
+                       const char *format,...);
     virtual int dimLoggerMsgSend(char *buf,int fifoFD);
     virtual int stdErrMsgSend(char *buf);
     virtual int sysLogMsgSend(char *buf,int severity);

@@ -10,6 +10,11 @@
 //  System dependent parts of the eventbuilder MEPRxSvc
 //  ===========================================================
 #include "GaudiOnline/MEPRxSys.h"
+#include <cstring>
+#include <cstdlib>
+#include <cerrno>
+#include <ctime>
+
 #ifdef _WIN32
 #include <WinSock2.h>
 #include <Ws2tcpip.h>
@@ -24,7 +29,6 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 #include <netdb.h>
-#include <ctime>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <sys/select.h>
@@ -32,8 +36,8 @@
 #include <netinet/ip.h>
 #include <arpa/inet.h>
 #include <sys/time.h> 
-#include <cerrno>
 #endif // ifndef _WIN32
+
 // Like the Windows and Unix syscalls
 // *all* functions return 0 on success and > 0 on a failure 
 // this differs from OnlineKernel, which provides a (sentimental) mimickry
@@ -214,7 +218,7 @@ send_msg_arb_source(int raw_socket, u_int8_t proto, u_int32_t srcAddr, u_int32_t
 
 //Also socket need some special treatment.
 int
-open_sock_arb_source(int ipproto, int rxbufsiz, std::string &errmsg) {
+  open_sock_arb_source(int /* ipproto */, int rxbufsiz, std::string &errmsg) {
   int raw_socket;
 #ifndef _WIN32
   int fd;

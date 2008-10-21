@@ -80,9 +80,9 @@ public:
   const std::string& text()   const {   return m_text;              }
   bool useList()              const {   return m_listOnly;          }
   ClientData item(int num)    const {   return value(m_list[num]);  }
-  const ClientData current()  const {   return value(&m_def);       }
-  const ClientData min()      const {   return value(&m_low);       }
-  const ClientData max()      const {   return value(&m_high);      }
+  ClientData current()        const {   return value(&m_def);       }
+  ClientData min()            const {   return value(&m_low);       }
+  ClientData max()            const {   return value(&m_high);      }
   ClientData buffer();
   ClientData list();
   bool isEqual (DialogItemContainer* it1,DialogItemContainer* it2);

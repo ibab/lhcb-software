@@ -41,7 +41,7 @@ DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,DimMonitoringEngine);
 DimHistogram::DimHistogram(const std::string& nam,IMessageSvc* msg,AIDA::IHistogram* h)
 : DimService(), Histogram(nam,msg,h), m_service(0)
 {
-  m_service = new DimService((char*)nam.c_str(),"F",&m_data[0],m_data.size()*sizeof(Buffer::value_type));
+  m_service = new DimService((char*)nam.c_str(),(char*)"F",&m_data[0],m_data.size()*sizeof(Buffer::value_type));
 }
 
 void DimHistogram::serviceHandler()  {
@@ -66,7 +66,7 @@ void DimMonitoringEngine::publishItem(CSTR owner_name, CSTR nam, CSTR dsc, int t
   m_services[d] = Item(INTEGER,new DimService(dd.c_str(),(char*)dsc.c_str()));
   switch(typ)  {
     case BOOLEAN:
-      m_services[n] = Item(typ,new DimService(nn.c_str(),"C:1",(void*)var,sizeof(bool)));
+      m_services[n] = Item(typ,new DimService(nn.c_str(),(char*)"C:1",(void*)var,sizeof(bool)));
       return;
     case INTEGER:
       m_services[n] = Item(typ,new DimService(nn.c_str(),*p.INT));

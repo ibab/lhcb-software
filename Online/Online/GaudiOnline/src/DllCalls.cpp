@@ -11,6 +11,7 @@
 #include "RTL/rtl.h"
 
 #include <iostream>
+#include <cstring>
 #include <fstream>
 #include <sstream>
 #include <cstdarg>
@@ -101,7 +102,7 @@ extern "C" int OnlineDeamon(int argc, char** argv)  {
   if ( cli.getopt("debug",5) != 0 ) {
     ::lib_rtl_start_debugger();
   }
-  arg.push_back("OnlineDeamon");
+  arg.push_back((char*)"OnlineDeamon");
   for ( int i=0, use=0; i<argc; ++i ) {
     if ( 0 == strcmp(argv[i],"-args") && 0 == use ) {
       use = 1;

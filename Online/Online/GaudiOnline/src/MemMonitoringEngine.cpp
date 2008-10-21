@@ -4,6 +4,8 @@
 #include "GaudiKernel/DataObject.h"
 #include "GaudiOnline/MemMonitorSvc.h"
 #include "RTL/GlobalSection.h"
+#include <memory>
+#include <cstring>
 using namespace LHCb;
 using namespace std;
 

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/MEPManager.h,v 1.7 2008-03-10 15:38:07 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/MEPManager.h,v 1.8 2008-10-21 16:15:15 frankb Exp $
 //	====================================================================
 //  MEPManager.cpp
 //	--------------------------------------------------------------------
@@ -12,6 +12,7 @@
 #include "GaudiKernel/Service.h"
 #include "MBM/mepdef.h"
 #include "MBM/bmdef.h"
+#include <cstring>
 #include <map>
 #include <set>
 

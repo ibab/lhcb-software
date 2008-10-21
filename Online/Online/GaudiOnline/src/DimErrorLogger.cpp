@@ -1,4 +1,4 @@
-// $Id: DimErrorLogger.cpp,v 1.14 2007-09-18 08:19:40 frankm Exp $
+// $Id: DimErrorLogger.cpp,v 1.15 2008-10-21 16:15:15 frankb Exp $
 
 #if !(defined(i386) || defined(_WIN32))
 #define GAUDIKERNEL_KERNEL_H    // disable include
@@ -77,7 +77,7 @@ namespace LHCb  {
       //std::cout << "Received : " << getString() << std::endl;
     }
   public :
-    DnsInfo(DimErrorLogger& l) : DimInfo("DIS_DNS/SERVER_LIST","DEAD"), m_logger(l) {
+    DnsInfo(DimErrorLogger& l) : DimInfo((char*)"DIS_DNS/SERVER_LIST",(char*)"DEAD"), m_logger(l) {
       m_process = RTL::processName();
       m_node = "";//RTL::nodeNameShort();
     }
