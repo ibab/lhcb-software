@@ -1,8 +1,8 @@
-# --> Including file '/build/cattanem/BOOLE/BOOLE_v16r3/BooleSys/tests/options/testBoole.py'
+# --> Including file '/build/cattanem/Boole_HEAD/BooleSys/tests/options/testBoole.py'
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Boole version v16r3
-                                          running on lxbuild120.cern.ch on Fri Oct 10 08:29:14 2008
+                                                   Welcome to Boole version v16r4
+                                          running on lxbuild120.cern.ch on Tue Oct 21 09:43:48 2008
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
@@ -96,7 +96,7 @@ L0Muon               INFO  ignoreM1 = 0
 L0Muon               INFO  ignoreM2 = 0
 L0Muon               INFO  procVersion = 2
 L0Muon               INFO  ptParameters = 40.000000,7.000000
-L0MuonTrigger I...   INFO Time User   : Tot= 1.76  [s]                                             #=  1
+L0MuonTrigger I...   INFO Time User   : Tot= 1.62  [s]                                             #=  1
 ToolSvc.L0DUCon...   INFO **** L0DU Configs loading : TCK = 0xFFFF
 ToolSvc.L0DUCon...   INFO Short description ::  TCK = 0xFFFF : Algorithm[1] Setting[0] lumi[2] - 2007 tuning - gain:Calo[20] : Muon[40]
 L0DU                 INFO The L0DUConfig (TCK=0xFFFF) have been succesfully loaded
@@ -194,61 +194,61 @@ VeloRawClusters...   INFO | Number of Clusters/Event: 0 +/- 0
 VeloRawClusters...   INFO | ==> No VeloClusters found!
 VeloRawClusters...   INFO ======================================================
 ITEffChecker         INFO  -------Efficiency %---------
-ITEffChecker         INFO Station 1 Box 4 Layer1 eff 9999 +/- 9999
-ITEffChecker         INFO Station 1 Box 4 Layer2 eff 9999 +/- 9999
-ITEffChecker         INFO Station 1 Box 4 Layer3 eff 9999 +/- 9999
-ITEffChecker         INFO Station 1 Box 4 Layer4 eff 9999 +/- 9999
-ITEffChecker         INFO Station 1 Box 3 Layer1 eff 9999 +/- 9999
-ITEffChecker         INFO Station 1 Box 3 Layer2 eff 9999 +/- 9999
-ITEffChecker         INFO Station 1 Box 3 Layer3 eff 9999 +/- 9999
-ITEffChecker         INFO Station 1 Box 3 Layer4 eff 9999 +/- 9999
-ITEffChecker         INFO Station 1 Box 2 Layer1 eff 9999 +/- 9999
-ITEffChecker         INFO Station 1 Box 2 Layer2 eff 9999 +/- 9999
-ITEffChecker         INFO Station 1 Box 2 Layer3 eff 9999 +/- 9999
-ITEffChecker         INFO Station 1 Box 2 Layer4 eff 9999 +/- 9999
-ITEffChecker         INFO Station 1 Box 1 Layer1 eff 9999 +/- 9999
-ITEffChecker         INFO Station 1 Box 1 Layer2 eff 9999 +/- 9999
-ITEffChecker         INFO Station 1 Box 1 Layer3 eff 9999 +/- 9999
-ITEffChecker         INFO Station 1 Box 1 Layer4 eff 9999 +/- 9999
-ITEffChecker         INFO Station 2 Box 4 Layer1 eff 9999 +/- 9999
-ITEffChecker         INFO Station 2 Box 4 Layer2 eff 9999 +/- 9999
-ITEffChecker         INFO Station 2 Box 4 Layer3 eff 9999 +/- 9999
-ITEffChecker         INFO Station 2 Box 4 Layer4 eff 9999 +/- 9999
-ITEffChecker         INFO Station 2 Box 3 Layer1 eff 9999 +/- 9999
-ITEffChecker         INFO Station 2 Box 3 Layer2 eff 9999 +/- 9999
-ITEffChecker         INFO Station 2 Box 3 Layer3 eff 9999 +/- 9999
-ITEffChecker         INFO Station 2 Box 3 Layer4 eff 9999 +/- 9999
-ITEffChecker         INFO Station 2 Box 2 Layer1 eff 9999 +/- 9999
-ITEffChecker         INFO Station 2 Box 2 Layer2 eff 9999 +/- 9999
-ITEffChecker         INFO Station 2 Box 2 Layer3 eff 9999 +/- 9999
-ITEffChecker         INFO Station 2 Box 2 Layer4 eff 9999 +/- 9999
-ITEffChecker         INFO Station 2 Box 1 Layer1 eff 9999 +/- 9999
-ITEffChecker         INFO Station 2 Box 1 Layer2 eff 9999 +/- 9999
-ITEffChecker         INFO Station 2 Box 1 Layer3 eff 9999 +/- 9999
-ITEffChecker         INFO Station 2 Box 1 Layer4 eff 9999 +/- 9999
-ITEffChecker         INFO Station 3 Box 4 Layer1 eff 9999 +/- 9999
-ITEffChecker         INFO Station 3 Box 4 Layer2 eff 9999 +/- 9999
-ITEffChecker         INFO Station 3 Box 4 Layer3 eff 9999 +/- 9999
-ITEffChecker         INFO Station 3 Box 4 Layer4 eff 9999 +/- 9999
-ITEffChecker         INFO Station 3 Box 3 Layer1 eff 9999 +/- 9999
-ITEffChecker         INFO Station 3 Box 3 Layer2 eff 9999 +/- 9999
-ITEffChecker         INFO Station 3 Box 3 Layer3 eff 9999 +/- 9999
-ITEffChecker         INFO Station 3 Box 3 Layer4 eff 9999 +/- 9999
-ITEffChecker         INFO Station 3 Box 2 Layer1 eff 9999 +/- 9999
-ITEffChecker         INFO Station 3 Box 2 Layer2 eff 9999 +/- 9999
-ITEffChecker         INFO Station 3 Box 2 Layer3 eff 9999 +/- 9999
-ITEffChecker         INFO Station 3 Box 2 Layer4 eff 9999 +/- 9999
-ITEffChecker         INFO Station 3 Box 1 Layer1 eff 9999 +/- 9999
-ITEffChecker         INFO Station 3 Box 1 Layer2 eff 9999 +/- 9999
-ITEffChecker         INFO Station 3 Box 1 Layer3 eff 9999 +/- 9999
-ITEffChecker         INFO Station 3 Box 1 Layer4 eff 9999 +/- 9999
+ITEffChecker         INFO IT1TopX1 eff 9999 +/- 9999
+ITEffChecker         INFO IT1TopU eff 9999 +/- 9999
+ITEffChecker         INFO IT1TopV eff 9999 +/- 9999
+ITEffChecker         INFO IT1TopX2 eff 9999 +/- 9999
+ITEffChecker         INFO IT1BottomX1 eff 9999 +/- 9999
+ITEffChecker         INFO IT1BottomU eff 9999 +/- 9999
+ITEffChecker         INFO IT1BottomV eff 9999 +/- 9999
+ITEffChecker         INFO IT1BottomX2 eff 9999 +/- 9999
+ITEffChecker         INFO IT1ASideX1 eff 9999 +/- 9999
+ITEffChecker         INFO IT1ASideU eff 9999 +/- 9999
+ITEffChecker         INFO IT1ASideV eff 9999 +/- 9999
+ITEffChecker         INFO IT1ASideX2 eff 9999 +/- 9999
+ITEffChecker         INFO IT1CSideX1 eff 9999 +/- 9999
+ITEffChecker         INFO IT1CSideU eff 9999 +/- 9999
+ITEffChecker         INFO IT1CSideV eff 9999 +/- 9999
+ITEffChecker         INFO IT1CSideX2 eff 9999 +/- 9999
+ITEffChecker         INFO IT2TopX1 eff 9999 +/- 9999
+ITEffChecker         INFO IT2TopU eff 9999 +/- 9999
+ITEffChecker         INFO IT2TopV eff 9999 +/- 9999
+ITEffChecker         INFO IT2TopX2 eff 9999 +/- 9999
+ITEffChecker         INFO IT2BottomX1 eff 9999 +/- 9999
+ITEffChecker         INFO IT2BottomU eff 9999 +/- 9999
+ITEffChecker         INFO IT2BottomV eff 9999 +/- 9999
+ITEffChecker         INFO IT2BottomX2 eff 9999 +/- 9999
+ITEffChecker         INFO IT2ASideX1 eff 9999 +/- 9999
+ITEffChecker         INFO IT2ASideU eff 9999 +/- 9999
+ITEffChecker         INFO IT2ASideV eff 9999 +/- 9999
+ITEffChecker         INFO IT2ASideX2 eff 9999 +/- 9999
+ITEffChecker         INFO IT2CSideX1 eff 9999 +/- 9999
+ITEffChecker         INFO IT2CSideU eff 9999 +/- 9999
+ITEffChecker         INFO IT2CSideV eff 9999 +/- 9999
+ITEffChecker         INFO IT2CSideX2 eff 9999 +/- 9999
+ITEffChecker         INFO IT3TopX1 eff 9999 +/- 9999
+ITEffChecker         INFO IT3TopU eff 9999 +/- 9999
+ITEffChecker         INFO IT3TopV eff 9999 +/- 9999
+ITEffChecker         INFO IT3TopX2 eff 9999 +/- 9999
+ITEffChecker         INFO IT3BottomX1 eff 9999 +/- 9999
+ITEffChecker         INFO IT3BottomU eff 9999 +/- 9999
+ITEffChecker         INFO IT3BottomV eff 9999 +/- 9999
+ITEffChecker         INFO IT3BottomX2 eff 9999 +/- 9999
+ITEffChecker         INFO IT3ASideX1 eff 9999 +/- 9999
+ITEffChecker         INFO IT3ASideU eff 9999 +/- 9999
+ITEffChecker         INFO IT3ASideV eff 9999 +/- 9999
+ITEffChecker         INFO IT3ASideX2 eff 9999 +/- 9999
+ITEffChecker         INFO IT3CSideX1 eff 9999 +/- 9999
+ITEffChecker         INFO IT3CSideU eff 9999 +/- 9999
+ITEffChecker         INFO IT3CSideV eff 9999 +/- 9999
+ITEffChecker         INFO IT3CSideX2 eff 9999 +/- 9999
 ITEffChecker         INFO  -----------------------
 ITEffChecker      SUCCESS Booked 288 Histogram(s) : 1D=192 2D=96
 TTEffChecker         INFO  -------Efficiency %---------
-TTEffChecker         INFO Station 1 Layer1 eff 9999 +/- 9999
-TTEffChecker         INFO Station 1 Layer2 eff 9999 +/- 9999
-TTEffChecker         INFO Station 2 Layer2 eff 9999 +/- 9999
-TTEffChecker         INFO Station 2 Layer1 eff 9999 +/- 9999
+TTEffChecker         INFO TTaX eff 9999 +/- 9999
+TTEffChecker         INFO TTaU eff 9999 +/- 9999
+TTEffChecker         INFO TTbX eff 9999 +/- 9999
+TTEffChecker         INFO TTbV eff 9999 +/- 9999
 TTEffChecker         INFO  -----------------------
 TTEffChecker      SUCCESS Booked 24 Histogram(s) : 1D=16 2D=8
 MCOTDepositMonitorSUCCESS Booked 3 Histogram(s) : 1D=3
@@ -375,8 +375,8 @@ DataOnDemandSvc      INFO  #Incidents: Alg/Node/All: 0/0/0 Algorithms: Time User
 *****Chrono*****     INFO ****************************************************************************************************
 *****Chrono*****     INFO  The Final CPU consumption ( Chrono ) Table (ordered)
 *****Chrono*****     INFO ****************************************************************************************************
-L0MuonTrigger I...   INFO Time User   : Tot= 1.76  [s]                                             #=  1
-ChronoStatSvc        INFO Time User   : Tot= 2.93  [s]                                             #=  1
+L0MuonTrigger I...   INFO Time User   : Tot= 1.62  [s]                                             #=  1
+ChronoStatSvc        INFO Time User   : Tot= 2.71  [s]                                             #=  1
 *****Chrono*****     INFO ****************************************************************************************************
 ChronoStatSvc.f...   INFO  Service finalized succesfully
 ApplicationMgr       INFO Application Manager Finalized successfully

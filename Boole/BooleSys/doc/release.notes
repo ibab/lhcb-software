@@ -3,6 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+! 2008-10-21 - Marco Cattaneo
+ - Update QMTest reference for change in STEffChecker printout
+
 </PRE><H1><A NAME=v16r3>2008-09-10 Boole v16r3</A></H1><PRE>
 This version uses projects Gaudi v20r2, LHCb v25r2, Lbcom v6r23
  and SQLDDDB v5r0, ParamFiles v7r3, FieldMap v5r1, L0TCK v1r0
