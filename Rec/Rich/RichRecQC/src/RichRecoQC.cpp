@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::RecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.cpp,v 1.43 2008-08-29 10:41:30 jonrob Exp $
+ *  $Id: RichRecoQC.cpp,v 1.44 2008-10-21 19:23:41 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -141,6 +141,7 @@ StatusCode RecoQC::execute()
     const double beta = m_richPartProp->beta( pTot, mcType );
     // selection cuts
     if ( beta < m_minBeta[rad] ) continue; // skip non-saturated tracks
+    verbose() << "   => Passed min beta cut" << endreq;
 
     // isolated track ?
     const bool isolated = m_isoTrack->isIsolated( segment, mcType );

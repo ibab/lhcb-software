@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.4 2008-10-15 12:40:53 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.5 2008-10-21 19:23:41 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -170,6 +170,7 @@ class RichRecQCConf(RichConfigurableUser):
             # Trackselector
             tkSel = RichTools().trackSelector(private=True)
             if trackType != ["All"] : tkSel.TrackAlgs = trackType
+            if trackType == ["All"] : mon.MinBeta = [ 0.0, 0.0, 0.0 ]
             mon.addTool( tkSel )
 
             # Add to sequence
