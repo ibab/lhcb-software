@@ -1,4 +1,4 @@
-// $Id: TrackMonitor.cpp,v 1.5 2008-10-14 11:59:43 wouter Exp $
+// $Id: TrackMonitor.cpp,v 1.6 2008-10-21 07:33:12 wouter Exp $
 // Include files 
 #include "TrackMonitor.h"
 
@@ -130,8 +130,6 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
   plot(track.probChi2(),type+"/2","probChi2", -0.01, 1.01, 51);
   plot(track.chi2PerDoF(),type+"/3","chi2/ndof",0,20);
   plot(track.nLHCbIDs(),type+"/4","#nLHCbIDs", -0.5, 60.5, 61);
-  plot(track.p()/Gaudi::Units::GeV, type+"/5" ,"momentum", -5., 205., 21);
-  plot(track.pt()/Gaudi::Units::GeV,type+"/6", "pt", -0.1, 10.1, 51);
   plot(track.pseudoRapidity(),type+"/7", "eta", 0.95 , 6.05, 50);
   plot(track.flag(),type+"/flag","flag",-0.5,255.5,256) ;
   plot(track.history(),type+"/history","history",-0.5,20.5,21) ;
@@ -144,6 +142,11 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
   plot(firststate.tx(),type + "/123","tx of first state",-0.3,0.3) ;
   plot(firststate.ty(),type + "/124","ty of first state",-0.3,0.3) ;
   plot(firststate.qOverP(),type + "/125","q/p of first state",-0.001,0.001) ; 
+
+  if( firststate.qOverP()!=0 ) {
+    plot(track.p()/Gaudi::Units::GeV, type+"/5" ,"momentum", -5., 205., 21);
+    plot(track.pt()/Gaudi::Units::GeV,type+"/6", "pt", -0.1, 10.1, 51);
+  }
 
   // found hits of each type
   const std::vector<LHCb::LHCbID>& ids = track.lhcbIDs();
