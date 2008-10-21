@@ -1,8 +1,18 @@
+!$Id: release.notes,v 1.265 2008-10-21 10:13:12 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2008-10-21 - Juan PALACIOS
+
+ - Kernel/Particle2Vertex.h
+  . Add typedef LightTable for light 1D relation table
+    Relations::RelationWeighted<LHCb::Particle, LHCb::VertexBase, double>
+
+ - Kernel/IRelatedPVFinder.h
+  . Return Particle2Vertex::LightTable instead of Particle2Vertex::Relations
+ 
 ! 2008-10-20 - Juan PALACIOS
  - Kernel/IRelatedPVFinder.h
   . Interface methods no longer take IDistanceCalculator* as argument. 
