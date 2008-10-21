@@ -17,3 +17,7 @@ use HltGlobalMonitor v1r4 Hlt
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
 
+
+# dummy to avoid warnings...
+tag ONLINE_OVERRULE_MOORE_SETUP
+macro Moore_Dummy_ "" ONLINE_OVERRULE_MOORE_SETUP ""

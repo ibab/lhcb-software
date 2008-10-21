@@ -5,6 +5,11 @@ Purpose     : LHCb HLT application
 
 
 Based on Phys v7r2, Rec v5r12, HLT v4r3, Lbcom v6r23, LHCb v25r2, Gaudi v20r2, LCGCMT 55a, Online v4r16
+ add ONLINE_OVERRULE_MOORE_SETUP as tag to the requirements.
+ This tag is used to change the setup for runMooreOnline_EFF.sh: default is to
+ take the environment from $LHCBSCRIPTS/SetupMoore_vxxx.sh, which runs the
+ version in the release area. If this is set, the environment corresponding
+ to the checked out version of Moore is generated and used instead
 
 </PRE><H1><A NAME=v5r3>2008-09-21 Moore v5r3</A></H1><PRE>
 Based on Phys v7r1, Rec v5r11, HLT v4r2, Lbcom v6r22, LHCb v25r1, Gaudi v20r2, LCGCMT 55a, Online v4r15
