@@ -1,4 +1,4 @@
-// $Id: Win32Start.cpp,v 1.5 2008-09-26 16:05:41 frankb Exp $
+// $Id: Win32Start.cpp,v 1.6 2008-10-21 13:53:52 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,13 +11,14 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/Win32Start.cpp,v 1.5 2008-09-26 16:05:41 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/Win32Start.cpp,v 1.6 2008-10-21 13:53:52 frankb Exp $
 
 #ifdef _WIN32
 #include <windows.h>
 #endif
 
 #include <iostream>
+#include <cstring>
 #include <string>
 #include "RTL/rtl.h"
 using namespace std;

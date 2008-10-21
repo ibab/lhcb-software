@@ -97,7 +97,7 @@ namespace {
   
   class EntryMap : public std::map<__NetworkChannel__,PortEntry*> {
   protected:
-    friend class IOPortManager;
+    friend class ::IOPortManager;
     lib_rtl_thread_t m_thread;
     __NetworkPort__  m_port;
     bool             m_dirty;
@@ -108,6 +108,8 @@ namespace {
     static int consoleCall(void* param);
     EntryMap(__NetworkPort__ p);
     ~EntryMap();
+    const lib_rtl_thread_t& thread() const { return m_thread; }
+    __NetworkPort__ port() const { return m_port; }
     void setDirty() { m_dirty = true; }
     void stop();
     void join();

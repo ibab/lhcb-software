@@ -10,6 +10,7 @@ namespace  {
   const char ins_text[81] = "";
   const char ins_help[81] = "";
   const char ins_type[16] = "COMMENT";
+  int render = 0;
   int  ins_id = 0;
   int  ins_menu = 0;
   int  ins_before = 0;
@@ -19,39 +20,12 @@ namespace  {
     "PARAM  ",
   };
 
-  /*  Variables for creating a parameter  */
-
-  int  param_id   = 0;
-  char param_format[12] = "";
-  const char* param_type_list[] = {
-    "INTEGER",
-    "REAL   ",
-    "STRING ",
-  };
-  int  param_number = 0;
+  //  Variables for creating a parameter
   const char param_type[] = "INTEGER";
-  int    param_int[10] = {
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-  double param_real[10] = {
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-  const char   param_string[10][81] = {
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-  };
+  const char   param_string[10][81] = {"","","","","","","","","",""};
 
   int Replay[80];
   int Replay_size = 0;
-
-  int Pb;
-  int Show_mem_display;
 
   void build_insert_menu (int father, int father_c)  {
     upic_open_param (12, father, father_c, "Line definition", "", "");
@@ -358,43 +332,19 @@ namespace  {
 
         sprintf (buffer, "Unrendered:  [%d] Menu %d Item %d Param %d ", ++_cnt, menu, item, param);
         upic_write_message (buffer, "");
-        static int render = 0;
-        render = (++render)%8;
+        render = ((render+1)%8);
         sprintf (buffer, "Rendered[%d]: [%d] Menu %d Item %d Param %d ", render, ++_cnt, menu, item, param);
         upic_write_rendered_message (buffer, "", render);
       }
       upic_quit();
       return (0);
   }
-
-  /*
-  show_memory()
-  {
-    int memory;
-    char text[20];
-    int i;
-    static int n = 0;
-    
-    scrc_begin_pasteboard_update (Pb);
-    
-    memory = upic_show_memory() +
-            scrc_memory_of_display (Show_mem_display);
-    sprintf (text, "%d\0", memory);
-    scrc_put_chars (Show_mem_display, text, SCR::NORMAL, 1, 1, 1);
-
-    if (n) scrc_change_rendition (Show_mem_display,  2, n, 1, 1, SCR::NORMAL);
-    n++;
-    if (n > 10) n = 1;
-    scrc_change_rendition (Show_mem_display,  2, n, 1, 1, SCR::INVERSE);
-    
-    scrc_end_pasteboard_update (Pb);
-  }
-  */
 }
+
 extern "C" int upi_test (int argc, char** argv )   {
   RTL::CLI cli(argc,argv,0);
   if ( cli.getopt("debug",1) != 0 ) ::lib_rtl_start_debugger();
-  while (loop());
-    return 1;
+  while (loop()) {}
+  return 1;
 }
 #endif

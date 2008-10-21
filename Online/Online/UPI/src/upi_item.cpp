@@ -79,8 +79,8 @@ int upic_delete_command (int menu_id, int item_id)  {
   }
 
 #ifdef SCREEN
-  while (d)  {  //  Rearrange the pages
-    if ( d->item.cur = dropped ) d->item.cur=0;
+  while(0 != d )  {  //  Rearrange the pages
+    if (d->item.cur == dropped) d->item.cur=0;
     if (d->cur_line > row) d->cur_line--;
     else if (d->cur_line == row && d->item.cur)
       d->item.cur = d->item.cur->next;

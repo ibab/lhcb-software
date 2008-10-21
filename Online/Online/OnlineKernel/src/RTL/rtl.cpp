@@ -4,8 +4,16 @@
 #include <ctime>
 #include <cerrno>
 #include <cstdarg>
+#include <cstring>
 #include <iostream>
 #include <fcntl.h>
+namespace {
+  template<class T> union func_desc   {
+    void* ptr;
+    T     fun;
+    func_desc(T t) { fun = t; }
+  };
+}
 #ifdef _WIN32
 #define vsnprintf _vsnprintf
 #include <winsock.h>
@@ -122,16 +130,16 @@ void RTL::ExitSignalHandler::install(int num, const std::string& name, struct si
   old_action.first = name;
 }
 
-
-void RTL::ExitSignalHandler::handler(int signum, siginfo_t *info,void * ) {
+void RTL::ExitSignalHandler::handler(int signum, siginfo_t *info, void * ) {
   RTL::ExitHandler::execute();
   SigMap& m = instance().m_map;
   SigMap::iterator i=m.find(signum);
   if ( i != m.end() ) {
     __sighandler_t old = (*i).second.second.sa_handler;
+    func_desc<void (*)(int)> dsc(old);
     std::cout << "Handled signal: " << info->si_signo;
     std::cout << " [" << (*i).second.first;
-    std::cout << "] Old action:" << (void*)old << std::endl;
+    std::cout << "] Old action:" << dsc.ptr << std::endl;
     if ( old && old != SIG_IGN ) {
       (*old)(signum);
     }

@@ -2,8 +2,10 @@
 #include <sstream>
 #include <iostream>
 #include <iomanip>
+#include <cstring>
 #include <cstdio>
 #include <cerrno>
+#include <memory>
 
 #include <fcntl.h>
 #include "RTL/rtl.h"

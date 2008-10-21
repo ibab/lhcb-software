@@ -1,4 +1,4 @@
-// $Id: OnlineBaseEvtSelector.h,v 1.4 2008-10-06 11:49:19 frankb Exp $
+// $Id: OnlineBaseEvtSelector.h,v 1.5 2008-10-21 13:53:50 frankb Exp $
 //====================================================================
 //  OnlineBaseEvtSelector.h
 //--------------------------------------------------------------------
@@ -13,7 +13,7 @@
 //  Created    : 4/01/99
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineBaseEvtSelector.h,v 1.4 2008-10-06 11:49:19 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineBaseEvtSelector.h,v 1.5 2008-10-21 13:53:50 frankb Exp $
 #ifndef GAUDIONLINE_ONLINEBASEEVTSELECTOR_H
 #define GAUDIONLINE_ONLINEBASEEVTSELECTOR_H 1
 
@@ -185,20 +185,20 @@ namespace LHCb  {
     OnlineBaseEvtSelector(const std::string& name, ISvcLocator* svcloc);
 
     /// Standard destructor
-    virtual ~OnlineBaseEvtSelector()    {}
+    virtual ~OnlineBaseEvtSelector()         {                    }
 
     /// Increase event request counter
-    void increaseReqCount()    const     {  m_reqCount++;     }
+    void increaseReqCount()    const         {  m_reqCount++;     }
     /// Increase event receive counter
-    void increaseEvtCount()    const     {  m_evtCount++;     }
+    void increaseEvtCount()    const         {  m_evtCount++;     }
     /// Flag to indicate that event decoding is required
-    bool mustDecode() const              {  return m_decode;  }
+    bool mustDecode() const                  {  return m_decode;  }
     /// Set flag to indicate that event decoding is required
-    void setDecode(bool value)           {  m_decode = value; }
+    void setDecode(bool value)               {  m_decode = value; }
     /// Number of active requests required by the job options
-    int numReq() const                   {  return m_nreqs;   }
+    int numReq() const                       {  return m_nreqs;   }
     /// Access requests given by the job option data
-    const MBM::Requirement& req(int i) const { return m_Reqs[i]; }
+    const MBM::Requirement& req(int i) const { return m_Reqs[i];  }
 
   protected:
     /// Lock handle to suspend/resume operations

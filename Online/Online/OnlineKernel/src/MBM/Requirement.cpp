@@ -2,6 +2,7 @@
 #include "MBM/bmdef.h"
 #include <cctype>
 #include <cstdio>
+#include <cstring>
 
 /// Default constructor
 MBM::Requirement::Requirement () {

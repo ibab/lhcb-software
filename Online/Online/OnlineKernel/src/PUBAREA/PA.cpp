@@ -378,7 +378,7 @@ int PubArea::CleanProcessArea() {
   }
   if (head->NumIndex==0) return PA_SUCCESS;
   PubAreaIndex  *ind = m_index;
-  for (int ret=0, i=0; i<head->NumIndex; i++, ind )  {
+  for (int ret=0, i=0; i<head->NumIndex; i++, ++ind )  {
     ret = strcmp(LocalProcess,ind->SlotProcess);
     if (ret==0)     {
       ind->InUse = 0;

@@ -2,9 +2,11 @@
 #define BUFFERMANAGER_BITS_H
 #ifdef __cplusplus
 #include <cstdlib>
+#include <cstring>
 extern "C" {
 #else
 #include <stdio.h>
+#include <string.h>
 #endif
   inline int bit_set(unsigned int* mask,int pos)  {
     mask[pos/32] |= (1<<(pos%32));
@@ -101,7 +103,7 @@ namespace Bits  {
     const unsigned int* bits()  const  {
       return m_mask;
     }
-    const unsigned int word(int which)  const  {
+    unsigned int word(int which)  const  {
       return m_mask[which];
     }
     void setWord(int which, int value)  {

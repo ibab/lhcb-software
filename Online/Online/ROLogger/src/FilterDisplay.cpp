@@ -10,7 +10,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/FilterDisplay.cpp,v 1.6 2008-09-26 16:05:41 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/FilterDisplay.cpp,v 1.7 2008-10-21 13:53:52 frankb Exp $
 
 // Framework include files
 #include "ROLogger/FilterDisplay.h"
@@ -21,6 +21,7 @@
 #include "UPI/upidef.h"
 #include "RTL/rtl.h"
 #include "ROLoggerDefs.h"
+#include <cstring>
 #include <sstream>
 #include <fstream>
 extern "C" {
@@ -49,8 +50,8 @@ const char* s_matchType[] = {
 FilterDisplay::FilterDisplay(Interactor* parent, Interactor* msg, Interactor* history) 
 : m_parent(parent), m_msg(msg), m_history(history)
 { //                      123456789
-  static char* hist[] = {"[History]"};
-  static char* mess[] = {"[Messages]"};
+  static const char* hist[] = {"[History]"};
+  static const char* mess[] = {"[Messages]"};
   m_id = UpiSensor::instance().newID();
   ::memset(m_file,0,sizeof(m_file));
   ::strcpy(m_file,"Logfilters.txt");

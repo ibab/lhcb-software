@@ -12,6 +12,7 @@ namespace {
   class InteractorTarget;
 
   class Period {
+    friend class ::TimeSensor;
   private:
     int           Time; 
     unsigned long m_alrmID;
@@ -19,7 +20,6 @@ namespace {
     bool          m_rearmPending;
     bool          m_cyclic;
     Period*       m_next;
-    friend class TimeSensor;
   public:
     Period( char* );
     ~Period();
@@ -32,10 +32,10 @@ namespace {
   };
 
   class InteractorTarget {
+    friend      class ::TimeSensor;
   private:
     Interactor* Inter;
     void*       Data;
-    friend      class TimeSensor;
   public:
     InteractorTarget( Interactor* i, void* d = 0 ) { Inter = i; Data = d;}
   };
@@ -128,8 +128,8 @@ void TimeSensor::remove( Interactor* interactor, void* data ) {
   for( Period* pd = s_periodHead, *last = 0; pd; last = pd, pd = pd->next())  {
     InteractorTable::iterator i = s_interactorTable.find(pd);
     if ( i != s_interactorTable.end() )  {
-      InteractorTarget  *it = (*i).second;
-      if( it->Inter == interactor && ( data == 0 || it->Data == data ) )  {
+      InteractorTarget *it = (*i).second;
+      if( it->Inter == interactor && (data == 0 || it->Data == data) )  {
         s_interactorTable.erase(i);
         pd->cancel();
         if( !last )

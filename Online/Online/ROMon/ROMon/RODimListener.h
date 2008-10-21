@@ -1,4 +1,4 @@
-// $Id: RODimListener.h,v 1.3 2008-06-25 22:53:23 frankb Exp $
+// $Id: RODimListener.h,v 1.4 2008-10-21 13:53:52 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,13 +11,15 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/RODimListener.h,v 1.3 2008-06-25 22:53:23 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/RODimListener.h,v 1.4 2008-10-21 13:53:52 frankb Exp $
 #ifndef ROMON_ROMONDIMLISTENER_H
 #define ROMON_ROMONDIMLISTENER_H 1
 
 // C++ include files
 #include <map>
 #include <string>
+#include <cstdlib>
+#include <cstring>
 
 /*
  *   ROMon namespace declaration

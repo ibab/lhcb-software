@@ -10,13 +10,14 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/Filter.cpp,v 1.4 2008-09-26 16:05:41 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/Filter.cpp,v 1.5 2008-10-21 13:53:51 frankb Exp $
 
 // Framework include files
 #include "ROLogger/Filter.h"
 #include "ROLogger/MessageLine.h"
 #include "RTL/strdef.h"
 #include <iomanip>
+#include <cstring>
 #ifdef _WIN32
 #define strcasecmp _stricmp
 #endif

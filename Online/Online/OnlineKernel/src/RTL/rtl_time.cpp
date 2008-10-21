@@ -1,5 +1,6 @@
 #include "RTL/rtl.h"
 #include "RTL/time.h"
+#include <cstring>
 
 time_t str2time(const char* buff,const char* fmt) {
   struct tm tim;

@@ -1,4 +1,4 @@
-// $Id: AlarmListener.cpp,v 1.1 2008-10-20 08:05:48 frankb Exp $
+// $Id: AlarmListener.cpp,v 1.2 2008-10-21 13:53:51 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/AlarmListener.cpp,v 1.1 2008-10-20 08:05:48 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/AlarmListener.cpp,v 1.2 2008-10-21 13:53:51 frankb Exp $
 
 // Framework include files
 #include "ROLogger/AlarmListener.h"
@@ -20,7 +20,9 @@
 #include "UPI/upidef.h"
 #include "ROLoggerDefs.h"
 
+#include <cstring>
 #include <vector>
+#include <memory>
 
 extern "C" {
 #include "dic.h"

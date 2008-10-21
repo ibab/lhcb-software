@@ -1,5 +1,6 @@
 #include "RTL/rtl.h"
 #include "PyRPC.h"
+#include <cstring>
 #include <string>
 #include <ctime>
 using namespace PyRPC;

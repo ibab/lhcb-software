@@ -83,7 +83,7 @@ template <class T> struct bm_iterator  {
   }
   operator bool()  const {
     if ( m_ent == ((T*)~0x0) || m_ent == 0 ) return false;
-    if ( m_ent->block_id != int(T::BID) ) return false;
+    if ( m_ent->block_id != T::BID ) return false;
     if ( m_ent->busy == 0 ) return false;
     return true;
   }
@@ -91,7 +91,7 @@ template <class T> struct bm_iterator  {
   void operator++()  {
     for (m_ent=&m_head[++m_curr];m_curr<m_max;++m_curr,++m_ent) {
       if ( m_ent == ((T*)~0x0) || m_ent == 0 ) break;
-      if ( m_ent->block_id != int(T::BID) ) continue;
+      if ( m_ent->block_id != T::BID ) continue;
       if ( m_ent->busy == 0 ) continue;
       return;
     }
@@ -103,7 +103,7 @@ struct USER : public qentry_t  {
   qentry_t wsnext;
   qentry_t wenext;
   qentry_t wesnext;
-  int  block_id;  
+  unsigned int block_id;         // Slot magic word  
   int  busy;                     // slot busy flag       
   int  uid;                      // BM user id       
   int  c_state;                  // consumer state (Active,Pause)   
@@ -164,9 +164,7 @@ struct USER : public qentry_t  {
 #endif
   char  __spare[32];
   inline bool isValid()   const  {
-    if ( block_id == int(MBM::BID_USER) )   {
-      return true;
-    }
+    if ( block_id == MBM::BID_USER ) return true;
     lib_rtl_signal_message(0, "mbmlib: bad USER pointer:%p",this);
     return false;
   }
@@ -182,7 +180,7 @@ struct USERDesc : public qentry_t  { // active consumers
 };
 
 struct EVENT : public qentry_t {
-  int   block_id;         // Block identifier
+  unsigned int block_id;  // Block identifier
   int   busy;             // event busy flag
   int   eid;              // event ID
   UserMask umask0;        // Mask of privilidged consumers
@@ -197,9 +195,7 @@ struct EVENT : public qentry_t {
   int count;              //
   int spare[4];           //
   inline bool isValid()   const  {
-    if ( block_id == int(MBM::BID_EVENT) )   {
-      return true;
-    }
+    if ( block_id == MBM::BID_EVENT ) return true;
     lib_rtl_signal_message(0, "mbmlib: bad EVENT pointer:%p",this);
     return false;
   }

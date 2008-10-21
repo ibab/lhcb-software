@@ -9,6 +9,7 @@
 #include <iomanip>
 #include <stdexcept>
 #include <iostream>
+#include <cstring>
 #include <sstream>
 #include <cerrno>
 #include "rpc/PyRPC.h"
@@ -473,7 +474,7 @@ int SubfarmTaskMon::start() {
   for_each(m_nodes.begin(),m_nodes.end(),m);
   if ( 0 != m_serviceID ) ::dis_remove_service(m_serviceID);
   ::dis_set_dns_node((char*)PUBLISHING_NODE.c_str());
-  m_serviceID = ::dis_add_service((char*)svc.c_str(),"C",0,0,feedData,(long)this);
+  m_serviceID = ::dis_add_service((char*)svc.c_str(),(char*)"C",0,0,feedData,(long)this);
   cout << "Service " << svc << " [" << PUBLISHING_NODE 
        << "] with monitoring information of " << name() << " started." << endl;
   return m.check();

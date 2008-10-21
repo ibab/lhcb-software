@@ -327,7 +327,8 @@ int upic_key_action (unsigned int /* event */, void*)
         break;
       case SCR::DELETE_KEY:
         if (input && buf_pos)    {
-          ::strcpy (--buf, buf);
+          ::strcpy(buf-1,buf);
+	  --buf;
           p->buf[p->size - 1] = ' ';
           if (buf_pos > pos)   {        /* scroll to right */
             pos++;

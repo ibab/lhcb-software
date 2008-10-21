@@ -220,9 +220,9 @@ void MBM::XMLMonitorServer::dumpBuffers(XMLStream& o)   {
       o << XML::item("NAME", XML::text(dsc->bm_name));
       dumpControl(o,ctr);
       for (j=0,us=dsc->user;j<ctr->p_umax;j++,us++)    {
-        if ( us == utst || us == 0         ) break;
-        if ( us->block_id != int(BID_USER) ) continue;
-        if ( us->busy     == 0             ) continue;
+        if ( us == utst || us == 0    ) break;
+        if ( us->block_id != BID_USER ) continue;
+        if ( us->busy     == 0        ) continue;
         XML::Guard user(o, "USER", j);
         dumpUser(o, us);
       }

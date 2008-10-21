@@ -14,7 +14,7 @@ enum EventType {
 
 class Message;
 class Address;
-
+class Sensor;
 class Interactor;
 
 class Event {

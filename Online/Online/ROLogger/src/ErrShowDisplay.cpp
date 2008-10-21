@@ -10,7 +10,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrShowDisplay.cpp,v 1.12 2008-09-26 16:05:41 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrShowDisplay.cpp,v 1.13 2008-10-21 13:53:51 frankb Exp $
 
 // Framework include files
 #include "ROLogger/ErrShowDisplay.h"
@@ -26,6 +26,7 @@
 #include "ROLoggerDefs.h"
 #include <sstream>
 #include <fstream>
+#include <cstring>
 #include <cerrno>
 #ifdef _WIN32
 static const char* LOG_DIR="G:/online/dataflow/logs/";

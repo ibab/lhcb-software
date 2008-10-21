@@ -1,5 +1,6 @@
 #include "ROLogger/MessageLine.h"
 #include <iostream>
+#include <cstring>
 
 using namespace ROLogger;
 using namespace std;

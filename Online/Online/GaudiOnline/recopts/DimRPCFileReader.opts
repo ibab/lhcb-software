@@ -16,4 +16,4 @@ Writer.Buffer                        = "READ";
 Writer.DataType                      = 1;
 Writer.Compress                      = 0;
 MessageSvc.OutputLevel               = 3;
-// EventSelector.Input                 = { "DATA='file:///daqarea/CCRC/v0/00002090/RAW/0000/00002090_00002563_1.raw' SVC='LHCb::MDFSelector'" };
+

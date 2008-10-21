@@ -2,6 +2,7 @@
 #include "MBM/Requirement.h"
 #include "WT/wtdef.h"
 #include <stdexcept>
+#include <cstring>
 
 // Initializing constructor
 MBM::Consumer::Consumer(const std::string& buffer_name, const std::string& client_name, int partition_id)

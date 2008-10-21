@@ -4,6 +4,7 @@
 #include <memory>
 #include <vector>
 #include <cstdio>
+#include <cstring>
 #include <iostream>
 
 //inline int rtl_printf(const char* fmt, ...)  {

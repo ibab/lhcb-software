@@ -194,9 +194,9 @@ int MBM::Monitor::show_information()   {
       BMDESCRIPT* dsc = m_bms[i].m_mgr.m_bm;
       CONTROL*    ctr = dsc->ctrl;
       for (j=0,us=dsc->user;j<ctr->p_umax;j++,us++)    {
-        if ( us == utst || us == 0         ) break;
-        if ( us->block_id != int(BID_USER) ) continue;
-        if ( us->busy     == 0             ) continue;
+        if ( us == utst || us == 0    ) break;
+        if ( us->block_id != BID_USER ) continue;
+        if ( us->busy     == 0        ) continue;
         char spy_val[5] = {' ',' ',' ',' ',0};
         for (k=0; k<us->n_req; ++k )  {
           if      ( us->req[k].user_type == BM_REQ_ONE  ) spy_val[1] = '1';

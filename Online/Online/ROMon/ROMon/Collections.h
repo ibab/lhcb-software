@@ -1,4 +1,4 @@
-// $Id: Collections.h,v 1.3 2008-06-05 18:40:00 frankb Exp $
+// $Id: Collections.h,v 1.4 2008-10-21 13:53:52 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,10 +12,11 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/Collections.h,v 1.3 2008-06-05 18:40:00 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/Collections.h,v 1.4 2008-10-21 13:53:52 frankb Exp $
 #ifndef ROMON_COLLECTIONS_H
 #define ROMON_COLLECTIONS_H 1
 
+#include <climits>
 #include <iomanip>
 #include <iostream>
 #include "ROMon/Collections.h"
@@ -65,7 +66,7 @@ namespace ROMon {
     pointer_type begin()  const
       {  return (pointer_type)data();                  }
     /// Iterator implementation: end of object iteration
-    const pointer_type end() const 
+    const_iterator end() const 
       {  return begin()+size();                        }
     /// Iterator implementation: Next element of iteration
     const_iterator next(const_iterator prev) const
@@ -117,7 +118,7 @@ namespace ROMon {
       {  return (pointer_type)data();                            }
 
     /// Iterator implementation: end of object iteration
-    const pointer_type end()   const
+    const_iterator end()   const
       {  return (pointer_type)(data()+data_length());            }
 
     /// Iterator implementation: Next element of iteration
@@ -130,9 +131,11 @@ namespace ROMon {
 
     /// Add new element to container and return pointer to next object
     pointer_type add(pointer_type prev)            {
+      pointer_type t;
       m_size++;
       m_length += prev->length();
-      return end()->reset();
+      t = (pointer_type)(data()+data_length());
+      return t->reset();
     }
   };
 

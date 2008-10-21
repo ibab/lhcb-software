@@ -15,6 +15,7 @@
 #include "xercesc/util/XMLString.hpp"
 #include "xercesc/dom/DOM.hpp"
 
+#include <memory>
 #include <fstream>
 #include <iostream>
 #include <stdexcept>

@@ -1,4 +1,4 @@
-// $Id: FileLogger.cpp,v 1.8 2008-09-26 16:05:41 frankb Exp $
+// $Id: FileLogger.cpp,v 1.9 2008-10-21 13:53:51 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,12 +11,13 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/FileLogger.cpp,v 1.8 2008-09-26 16:05:41 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/FileLogger.cpp,v 1.9 2008-10-21 13:53:51 frankb Exp $
 
 #include "ROLogger/FileLogger.h"
 
 // Framework include files
 #include <sstream>
+#include <cstring>
 #include "RTL/rtl.h"
 #include "CPP/Event.h"
 #include "CPP/IocSensor.h"

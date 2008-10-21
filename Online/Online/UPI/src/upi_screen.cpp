@@ -150,7 +150,7 @@ int upic_begin_update ()  {
 //---------------------------------------------------------------------------
 int upic_end_update ()  {
 #ifdef SCREEN
-  while (scrc_end_pasteboard_update(Sys.pb));
+  while (scrc_end_pasteboard_update(Sys.pb)) {}
 #else
   upir_end_update();
 #endif

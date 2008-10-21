@@ -1,4 +1,4 @@
-// $Id: NetworkEvtSelector.h,v 1.1 2007-12-06 14:39:34 frankb Exp $
+// $Id: NetworkEvtSelector.h,v 1.2 2008-10-21 13:53:50 frankb Exp $
 //====================================================================
 //  NetworkEvtSelector
 //--------------------------------------------------------------------
@@ -13,7 +13,7 @@
 //  Created    : 4/12/2007
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/NetworkEvtSelector.h,v 1.1 2007-12-06 14:39:34 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/NetworkEvtSelector.h,v 1.2 2008-10-21 13:53:50 frankb Exp $
 #ifndef GAUDIONLINE_NETWORKEVTSELECTOR_H
 #define GAUDIONLINE_NETWORKEVTSELECTOR_H 1
 
@@ -84,7 +84,7 @@ namespace LHCb  {
     /// Standard destructor
     virtual ~NetworkEvtSelector()    {}
     /// Event printout
-    void NetworkEvtSelector::printEvt(const std::string& src);
+    void printEvt(const std::string& src);
   };
 }      // End namespace LHCb
 #endif // GAUDIONLINE_NETWORKEVTSELECTOR_H

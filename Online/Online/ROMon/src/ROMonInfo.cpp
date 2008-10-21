@@ -1,4 +1,4 @@
-// $Id: ROMonInfo.cpp,v 1.3 2008-07-02 14:55:09 frankb Exp $
+// $Id: ROMonInfo.cpp,v 1.4 2008-10-21 13:53:52 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonInfo.cpp,v 1.3 2008-07-02 14:55:09 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonInfo.cpp,v 1.4 2008-10-21 13:53:52 frankb Exp $
 
 // Framework include files
 #include "dic.hxx"
@@ -26,13 +26,13 @@ using namespace ROMon;
 /// Standard constructor
 ROMonInfo::ROMonInfo(RODimListener* s) {
   if ( s ) m_servers.push_back(s);
-  m_info = ::dic_info_service("DIS_DNS/SERVER_LIST",MONITORED,0,0,0,infoHandler,(long)this,0,0);
+  m_info = ::dic_info_service((char*)"DIS_DNS/SERVER_LIST",MONITORED,0,0,0,infoHandler,(long)this,0,0);
 }
 
 /// Standard constructor
 ROMonInfo::ROMonInfo(const Servers& s)  {
   m_servers = s;
-  m_info = ::dic_info_service("DIS_DNS/SERVER_LIST",MONITORED,0,0,0,infoHandler,(long)this,0,0);
+  m_info = ::dic_info_service((char*)"DIS_DNS/SERVER_LIST",MONITORED,0,0,0,infoHandler,(long)this,0,0);
 }
 
 /// Standard destructor

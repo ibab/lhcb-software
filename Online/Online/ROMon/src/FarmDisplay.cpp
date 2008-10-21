@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.cpp,v 1.26 2008-09-17 15:40:11 frankb Exp $
+// $Id: FarmDisplay.cpp,v 1.27 2008-10-21 13:53:52 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.26 2008-09-17 15:40:11 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.27 2008-10-21 13:53:52 frankb Exp $
 
 #include "ROMon/CtrlSubfarmDisplay.h"
 #include "ROMon/RecSubfarmDisplay.h"
@@ -730,7 +730,7 @@ FarmDisplay::FarmDisplay(int argc, char** argv)
   ::wtc_subscribe(WT_FACILITY_SCR, key_rearm, key_action, m_pasteboard);
   MouseSensor::instance().start(pasteboard());
   if ( all ) {
-    m_svc = ::dic_info_service("DIS_DNS/SERVER_LIST",MONITORED,0,0,0,dnsDataHandler,(long)this,0,0);
+    m_svc = ::dic_info_service((char*)"DIS_DNS/SERVER_LIST",MONITORED,0,0,0,dnsDataHandler,(long)this,0,0);
   }
   else {
     m_listener = std::auto_ptr<PartitionListener>(new PartitionListener(this,m_name));

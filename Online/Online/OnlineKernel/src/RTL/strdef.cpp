@@ -99,7 +99,7 @@ static bool match0(const char *pattern, const char *candidate)  {
   case '\0':
     return !*candidate;
   case '*':
-    return match0(pattern+1, candidate) || *candidate && match0(pattern, candidate+1);
+    return match0(pattern+1, candidate) || (*candidate && match0(pattern, candidate+1));
   case '?':
     return *candidate && match0(pattern+1, candidate+1);
   default:

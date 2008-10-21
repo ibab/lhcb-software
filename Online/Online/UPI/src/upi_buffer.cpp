@@ -308,9 +308,8 @@ char* UpiBufferAddress (UpiBuffer buffer, int offset) {
 /*--------------------------------------------------------------------------*/
 void UpiBufferPutInt (UpiBuffer buffer, int value)  {
   if (upibufferlog == 1)  {
-    fprintf (buffer_log_file,"UpiBufferPutInt: ");
-    fprintf (buffer_log_file,"Buffer: %p, Value %d\n",
-      (void*)buffer, value);
+    ::fprintf (buffer_log_file,"UpiBufferPutInt: ");
+    ::fprintf (buffer_log_file,"Buffer: %p, Value %d\n",(void*)buffer, value);
   }
   int* p = (int*)UpiBufferExtend(buffer,sizeof(value));
   *p = value;
@@ -319,18 +318,16 @@ void UpiBufferPutInt (UpiBuffer buffer, int value)  {
 void UpiBufferGetInt (UpiBuffer buffer, int* address) {
   int* p = (int*) UpiBufferMove (buffer, sizeof(int));
   if (upibufferlog == 1)  {
-    fprintf (buffer_log_file, "UpiBufferGetInt: ");
-    fprintf (buffer_log_file,"Buffer: %p, Value %d\n",
-      (void*)buffer, *p);
+    ::fprintf (buffer_log_file, "UpiBufferGetInt: ");
+    ::fprintf (buffer_log_file,"Buffer: %p, Value %d\n",(void*)buffer, *p);
   }
   *address = *p;
 }
 /*--------------------------------------------------------------------------*/
 void UpiBufferPutLong (UpiBuffer buffer, long value)  {
   if (upibufferlog == 1)  {
-    fprintf (buffer_log_file,"UpiBufferPutLong: ");
-    fprintf (buffer_log_file,"Buffer: %p, Value %d\n",
-      (void*)buffer, value);
+    ::fprintf (buffer_log_file,"UpiBufferPutLong: ");
+    ::fprintf (buffer_log_file,"Buffer: %p, Value %ld\n",(void*)buffer, value);
   }
   long* p = (long*)UpiBufferExtend(buffer,sizeof(value));
   *p = value;
@@ -339,9 +336,8 @@ void UpiBufferPutLong (UpiBuffer buffer, long value)  {
 void UpiBufferGetLong(UpiBuffer buffer,long* address) {
   long* p = (long*) UpiBufferMove (buffer, sizeof(long));
   if (upibufferlog == 1)  {
-    fprintf (buffer_log_file, "UpiBufferGetInt: ");
-    fprintf (buffer_log_file,"Buffer: %p, Value %d\n",
-      (void*)buffer, *p);
+    ::fprintf (buffer_log_file, "UpiBufferGetInt: ");
+    ::fprintf (buffer_log_file,"Buffer: %p, Value %ld\n",(void*)buffer, *p);
   }
   *address = *p;
 }
@@ -349,9 +345,8 @@ void UpiBufferGetLong(UpiBuffer buffer,long* address) {
 /*--------------------------------------------------------------------------*/
 void UpiBufferPutDouble (UpiBuffer buffer, double value)    {
   if (upibufferlog == 1)  {
-    fprintf (buffer_log_file, "UpiBufferPutDouble: ");
-    fprintf (buffer_log_file,"Buffer: %p, Value %f\n",
-      (void*)buffer, value);
+    ::fprintf (buffer_log_file, "UpiBufferPutDouble: ");
+    ::fprintf (buffer_log_file,"Buffer: %p, Value %f\n",(void*)buffer, value);
   }
   double* p = (double*) UpiBufferExtend (buffer, sizeof(double));
   *p = value;
@@ -361,9 +356,8 @@ void UpiBufferPutDouble (UpiBuffer buffer, double value)    {
 void UpiBufferGetDouble (UpiBuffer buffer, double* address) {
   double* p= (double*) UpiBufferMove (buffer, sizeof(double));
   if (upibufferlog == 1)  {
-    fprintf (buffer_log_file, "UpiBufferGetDouble: ");
-    fprintf (buffer_log_file,"Buffer: %p, Value %f\n",
-      (void*)buffer, *p);
+    ::fprintf (buffer_log_file, "UpiBufferGetDouble: ");
+    ::fprintf (buffer_log_file,"Buffer: %p, Value %f\n",(void*)buffer, *p);
   }
   *address = *p;
 }
@@ -371,8 +365,8 @@ void UpiBufferGetDouble (UpiBuffer buffer, double* address) {
 /*--------------------------------------------------------------------------*/
 void UpiBufferPutText (UpiBuffer buffer, const char* value) {
   if (upibufferlog == 1)  {
-    fprintf (buffer_log_file, "UpiBufferPutText: ");
-    fprintf (buffer_log_file,"Buffer: %p, Value %s\n",(void*)buffer, value);
+    ::fprintf (buffer_log_file, "UpiBufferPutText: ");
+    ::fprintf (buffer_log_file,"Buffer: %p, Value %s\n",(void*)buffer, value);
   }
   size_t len = strlen (value);
   UpiBufferPutInt (buffer, len);
@@ -387,9 +381,8 @@ void UpiBufferGetText (UpiBuffer buffer, char** address)  {
   UpiBufferGetInt (buffer, &len);
   char* p = UpiBufferMove (buffer, len + 1);
   if (upibufferlog == 1)  {
-    fprintf (buffer_log_file, "UpiBufferGetText: ");
-    fprintf (buffer_log_file,"Buffer: %p, Value %s\n",
-      (void*)buffer, p);
+    ::fprintf (buffer_log_file, "UpiBufferGetText: ");
+    ::fprintf (buffer_log_file,"Buffer: %p, Value %s\n",(void*)buffer, p);
   }
   *address = p;
   /*
@@ -408,40 +401,37 @@ void UpiBufferPutList (UpiBuffer buffer, int type, void* list, int size)  {
     fprintf (buffer_log_file,"Buffer: %p, Bytes %d\n",(void*)buffer, size);
   }
   switch (type)  {
-  case ASC_FMT : 
-    {
-      char** s = (char**)list;
-      for (int i=0; i<size; i++,s++) UpiBufferPutText (buffer, *s);
-    }
+  case ASC_FMT :     {
+    char** s = (char**)list;
+    for (int i=0; i<size; i++,s++) UpiBufferPutText (buffer, *s);
     break;
+  }
   case DEC_FMT :
   case HEX_FMT :
   case OCT_FMT :
   case BIN_FMT :
-  case LOG_FMT :
-    {
-      int* s = (int*)list;
-      int bytes = size * sizeof(int);
-      int* p = (int*) UpiBufferExtend (buffer, bytes);
-      for (int i=0; i<size; i++,p++,s++) *p = *s;
-    }
+  case LOG_FMT :    {
+    int* s = (int*)list;
+    int bytes = size * sizeof(int);
+    int* p = (int*) UpiBufferExtend (buffer, bytes);
+    for (int i=0; i<size; i++,p++,s++) *p = *s;
     break;
-  case REAL_FMT :
-    {
-      double* s = (double*)list;
-      int bytes = size * sizeof(double);
-      double *p = (double*) UpiBufferExtend (buffer, bytes);
-      for (int i=0; i<size; i++,p++,s++) *p = *s;
-    }
+  }
+  case REAL_FMT :    {
+    double* s = (double*)list;
+    int bytes = size * sizeof(double);
+    double *p = (double*) UpiBufferExtend (buffer, bytes);
     break;
+    for (int i=0; i<size; i++,p++,s++) *p = *s;
+  }
   }
 }
 
 /*--------------------------------------------------------------------------*/
 void UpiBufferGetList (UpiBuffer buffer, int type, void** list, int size) {
   if (upibufferlog == 1)  {
-    fprintf (buffer_log_file, "UpiBufferGetList: ");
-    fprintf (buffer_log_file,"Buffer: %p, Bytes %d\n",(void*)buffer, size);
+    ::fprintf (buffer_log_file, "UpiBufferGetList: ");
+    ::fprintf (buffer_log_file,"Buffer: %p, Bytes %d\n",(void*)buffer, size);
   }
   switch (type)  {
   case ASC_FMT :

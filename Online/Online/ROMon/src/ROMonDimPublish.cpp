@@ -1,4 +1,4 @@
-// $Id: ROMonDimPublish.cpp,v 1.3 2008-08-20 19:49:31 frankb Exp $
+// $Id: ROMonDimPublish.cpp,v 1.4 2008-10-21 13:53:52 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonDimPublish.cpp,v 1.3 2008-08-20 19:49:31 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonDimPublish.cpp,v 1.4 2008-10-21 13:53:52 frankb Exp $
 // C++ include files
 #include <stdexcept>
 
@@ -33,7 +33,7 @@ ROMonDimPublish::ROMonDimPublish(int argc , char** argv) : ROMonPublish(argc,arg
   std::string svc;
   cli.getopt("publish",1,svc);
   if ( !svc.empty() )  {
-    m_service = ::dis_add_service((char*)svc.c_str(),"C",0,0,feedData,(long)this);
+    m_service = ::dis_add_service((char*)svc.c_str(),(char*)"C",0,0,feedData,(long)this);
   }
   else  {
     log() << "Unknown data type -- cannot be published." << std::endl;

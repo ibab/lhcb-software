@@ -69,4 +69,4 @@ macro_append DIM_cflags        " -DPROTOCOL=1 -DMIPSEL "
 # temporary fixes
 macro cdebugflags   "$(cppdebugflags)"
 macro clinkflags    "$(cpplinkflags)"
-macro cflags        "$(cppflags) -Wno-unused-parameters "     WIN32 "$(cppflags) /TC"
+macro cflags        "$(cppflags) -Wno-unused "     WIN32 "$(cppflags) /TC"

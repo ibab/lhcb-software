@@ -1,4 +1,4 @@
-// $Id: ROMonServer.cpp,v 1.4 2008-08-21 14:04:17 frankb Exp $
+// $Id: ROMonServer.cpp,v 1.5 2008-10-21 13:53:52 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonServer.cpp,v 1.4 2008-08-21 14:04:17 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonServer.cpp,v 1.5 2008-10-21 13:53:52 frankb Exp $
 
 // C++ include files
 #include "sys/timeb.h"
@@ -89,9 +89,9 @@ void ROMonServer::dumpBufferInfo(const char* bm_name, BMID dsc, MBMBuffer* mbm) 
   ::strncpy(mbm->name,bm_name,sizeof(mbm->name));
   mbm->name[sizeof(mbm->name)-1] = 0;
   for (int j=0; j < ctr->p_umax; j++,us++)    {
-    if ( us == utst || us == 0              ) break;
-    if ( us->block_id != int(MBM::BID_USER) ) continue;
-    if ( us->busy     == 0                  ) continue;
+    if ( us == utst || us == 0         ) break;
+    if ( us->block_id != MBM::BID_USER ) continue;
+    if ( us->busy     == 0             ) continue;
     t->reqs[0] = t->reqs[1] = t->reqs[2] = t->reqs[3] = ' ';
     for (int k=0; k<us->n_req; ++k )  {
       if      ( us->req[k].user_type == BM_REQ_ONE  ) t->reqs[1] = '1';

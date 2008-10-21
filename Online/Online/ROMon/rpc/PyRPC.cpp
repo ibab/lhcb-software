@@ -3,6 +3,7 @@
 #include <list>
 #include <cerrno>
 #include <sstream>
+#include <cstring>
 #include <iomanip>
 #include <stdexcept>
 #include "RTL/time.h"
@@ -15,6 +16,41 @@
 
 using namespace std;
 using namespace PyRPC;
+
+namespace PyRPC {
+static string dump(const _ContBase& t, const string& pre="", const string& post="")  {
+  stringstream os;
+  list<Arg>* p = (list<Arg>*)t.data;
+  for(list<Arg>::const_iterator i=p->begin(); i != p->end(); ++i)  {
+    string s = (*i).str();
+    if ( !s.empty() ) os << pre << s << post;
+  }
+  return os.str();
+}
+template <> _Cont<0>& _Cont<0>::load(const string& vals) 
+{  loadValues(vals,"value");  return *this;                   }
+
+template <> string _Cont<0>::str() const  
+{  return dump(*this);                                        }
+
+template <> _Cont<1>& _Cont<1>::load(const string& vals)
+{  loadValues(vals,"value");  return *this;                   }
+
+template <> string _Cont<1>::str() const
+{  return dump(*this);                                        }
+
+template <> _Cont<2>& _Cont<2>::load(const string& vals) 
+{  loadValues(vals,"member");  return *this;                  }
+
+template <> string _Cont<2>::str() const
+{  return dump(*this);                                        }
+
+template <> _Cont<3>& _Cont<3>::load(const string& vals) 
+{  loadValues(vals,"value");   return *this;                  }
+
+template <> string _Cont<3>::str() const  
+{  return dump(*this,"<param>\n","</param>\n");               }
+}
 
 #define TIME_FMT "%Y%m%dT%H:%M:%S" 
 
@@ -137,40 +173,6 @@ void _ContBase::print(const string& prefix) const {
   for(list<Arg>::const_iterator i=l->begin(); i != l->end(); ++i)
     (*i).print(prefix+" ->");
 }
-
-static string dump(const _ContBase& t, const string& pre="", const string& post="")  {
-  stringstream os;
-  list<Arg>* p = (list<Arg>*)t.data;
-  for(list<Arg>::const_iterator i=p->begin(); i != p->end(); ++i)  {
-    string s = (*i).str();
-    if ( !s.empty() ) os << pre << s << post;
-  }
-  return os.str();
-}
-
-template <> _Cont<0>& _Cont<0>::load(const string& vals) 
-{  loadValues(vals,"value");  return *this;                   }
-
-template <> string _Cont<0>::str() const  
-{  return dump(*this);                                        }
-
-template <> _Cont<1>& _Cont<1>::load(const string& vals)
-{  loadValues(vals,"value");  return *this;                   }
-
-template <> string _Cont<1>::str() const
-{  return dump(*this);                                        }
-
-template <> _Cont<2>& _Cont<2>::load(const string& vals) 
-{  loadValues(vals,"member");  return *this;                  }
-
-template <> string _Cont<2>::str() const
-{  return dump(*this);                                        }
-
-template <> _Cont<3>& _Cont<3>::load(const string& vals) 
-{  loadValues(vals,"value");   return *this;                  }
-
-template <> string _Cont<3>::str() const  
-{  return dump(*this,"<param>\n","</param>\n");               }
 
 Arg::Arg() : type(NONE)                    { data.i64val = 0;          }
 Arg::Arg(bool b) : type(BOOL)              { data.boolean = b;         }

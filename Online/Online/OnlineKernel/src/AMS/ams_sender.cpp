@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <string>
+#include <cstring>
 #include "RTL/rtl.h"
 #include "WT/wtdef.h"
 #include "AMS/amsdef.h"

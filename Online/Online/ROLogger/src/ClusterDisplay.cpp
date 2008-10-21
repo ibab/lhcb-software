@@ -1,4 +1,4 @@
-// $Id: ClusterDisplay.cpp,v 1.6 2008-09-26 16:05:41 frankb Exp $
+// $Id: ClusterDisplay.cpp,v 1.7 2008-10-21 13:53:51 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ClusterDisplay.cpp,v 1.6 2008-09-26 16:05:41 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ClusterDisplay.cpp,v 1.7 2008-10-21 13:53:51 frankb Exp $
 
 #include "ROLogger/ClusterDisplay.h"
 #include "UPI/UpiSensor.h"
@@ -21,6 +21,7 @@
 #include "RTL/rtl.h"
 #include "ROLoggerDefs.h"
 #include <sstream>
+#include <cstring>
 
 using namespace ROLogger;
 using namespace std;

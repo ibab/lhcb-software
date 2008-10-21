@@ -1,4 +1,4 @@
-// $Id: MessageLogger.cpp,v 1.15 2008-10-20 08:05:35 frankb Exp $
+// $Id: MessageLogger.cpp,v 1.16 2008-10-21 13:53:52 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,9 +11,10 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/MessageLogger.cpp,v 1.15 2008-10-20 08:05:35 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/MessageLogger.cpp,v 1.16 2008-10-21 13:53:52 frankb Exp $
 // Framework include files
 #include <cerrno>
+#include <cstring>
 #include <cstdarg>
 #include <sstream>
 #include <iostream>
@@ -44,7 +45,7 @@ using namespace std;
 static string msg_src(const string& m) {
   size_t idx = m.find("]"), idq = m.find(":");
   if ( idx != string::npos && idq != string::npos ) {
-    while(m[++idx]==' ');
+    while(m[++idx]==' '){}
     return m.substr(idx,idq-idx);
   }
   return "";

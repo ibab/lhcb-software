@@ -10,7 +10,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineTools/src/ProcessorDisplay.cpp,v 1.2 2008-09-26 16:05:41 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineTools/src/ProcessorDisplay.cpp,v 1.3 2008-10-21 13:53:51 frankb Exp $
 
 // Framework include files
 #include "OnlineTools/ProcessorDisplay.h"
@@ -21,6 +21,7 @@
 #include "UPI/upidef.h"
 #include "RTL/rtl.h"
 #include <sstream>
+#include <cstring>
 #include "Defs.h"
 
 using namespace std;
@@ -101,16 +102,16 @@ void ProcessorDisplay::handle(const Event& ev) {
     }
     break;
   case UpiEvent:
-    if ( (p=strchr(s_action_buff,' ')) ) *p = 0;
-    if ( strcmp(s_action_buff,s_action[0])==0 )
+    if ( (p=::strchr(s_action_buff,' ')) ) *p = 0;
+    if ( ::strcmp(s_action_buff,s_action[0])==0 )
       pmf = &NodeManipulator::doPing;	   // PING
-    else if ( strcmp(s_action_buff,s_action[1])==0 )
+    else if ( ::strcmp(s_action_buff,s_action[1])==0 )
       pmf = &NodeManipulator::doStatus;       // STATUS
-    else if ( strcmp(s_action_buff,s_action[2])==0 )
+    else if ( ::strcmp(s_action_buff,s_action[2])==0 )
       pmf = &NodeManipulator::doSwitchON;     // Switch ON
-    else if ( strcmp(s_action_buff,s_action[3])==0 )
+    else if ( ::strcmp(s_action_buff,s_action[3])==0 )
       pmf = &NodeManipulator::doSwitchOFF;    // Switch OFF
-    else if ( strcmp(s_action_buff,s_action[4])==0 )
+    else if ( ::strcmp(s_action_buff,s_action[4])==0 )
       pmf = &NodeManipulator::doReset;        // Reset
 
     switch(ev.command_id) {

@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <cstring>
 #include <fcntl.h>
 #include "RTL/rtl.h"
 #include "RTL/Lock.h"

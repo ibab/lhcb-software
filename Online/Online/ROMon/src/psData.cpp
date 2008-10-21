@@ -1,4 +1,4 @@
-// $Id: psData.cpp,v 1.1 2008-09-17 15:11:00 frankb Exp $
+// $Id: psData.cpp,v 1.2 2008-10-21 13:53:52 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,9 +11,10 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/psData.cpp,v 1.1 2008-09-17 15:11:00 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/psData.cpp,v 1.2 2008-10-21 13:53:52 frankb Exp $
 
 // C++ include files
+#include <cstring>
 #include <iostream>
 
 // Framework includes

@@ -1,4 +1,4 @@
-// $Id: DimRPCFileReader.cpp,v 1.11 2008-07-09 09:46:19 frankb Exp $
+// $Id: DimRPCFileReader.cpp,v 1.12 2008-10-21 13:53:50 frankb Exp $
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IAppMgrUI.h"
@@ -29,9 +29,8 @@ void DimRPCFileReader::cmndCallback(void* tag, void* address, int* size){
 
 /// Standard Constructor
 DimRPCFileReader::DimRPCFileReader(const std::string& nam, ISvcLocator* svcLoc)   
-  : OnlineService(nam, svcLoc), m_mepMgr(0), m_dataSvc(0), 
-    m_evtSelector(0), m_evtLoopMgr(0),
-    m_receiveEvts(false), m_evtCount(0), m_rpc(0,0)
+: OnlineService(nam, svcLoc), m_mepMgr(0), m_dataSvc(0), m_evtSelector(0), m_evtLoopMgr(0),
+  m_receiveEvts(false), m_evtCount(0), m_rpc(0,0)
 {
   ::lib_rtl_create_lock(0,&m_lock);
 }

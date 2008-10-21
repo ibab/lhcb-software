@@ -205,7 +205,7 @@ static int verify_dim_format(const char *format)
   const char digits[]="0123456789";
 
   while (ptr<size) {
-    for (newptr=ptr; newptr<size && format[newptr]!=delimiter; newptr++);
+    for (newptr=ptr; newptr<size && format[newptr]!=delimiter; newptr++){}
     /* We have found a new group of parameters */
     if (!strchr(itemtypes, format[ptr]))
       /* This means the type letter is unknown */

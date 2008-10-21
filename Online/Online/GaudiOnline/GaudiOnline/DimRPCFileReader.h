@@ -1,4 +1,4 @@
-// $Id: DimRPCFileReader.h,v 1.6 2008-06-10 12:36:13 apuignav Exp $
+// $Id: DimRPCFileReader.h,v 1.7 2008-10-21 13:53:50 frankb Exp $
 #ifndef GAUDIONLINE_DIMRPCFILEREADER_H
 #define GAUDIONLINE_DIMRPCFILEREADER_H
 
@@ -9,7 +9,7 @@
 #include "OnlineKernel/RTL/rtl.h"
 #include <GaudiKernel/IEventProcessor.h>
 #include "DimRPCFileReaderCommand.h"
-# include <time.h>
+#include <ctime>
 
 // Forward declarations
 class IIncidentSvc;
@@ -44,8 +44,9 @@ namespace LHCb  {
     MEPManager*       m_mepMgr;
     /// IDataProvider pointer to event data service
     IDataProviderSvc* m_dataSvc;
-    /// IEventProcessor pointer to the event selector
+    /// Pointer to the event selector
     IService*         m_evtSelector;
+    /// Pointer to the event loop manager
     IService*         m_evtLoopMgr;
     /// Flag indicating that MBM event retrieval is active
     bool              m_receiveEvts;
@@ -60,11 +61,12 @@ namespace LHCb  {
     /// Buffer with reply data after successful event processing
     std::string       m_reply;
     /// File ID info
-    int             m_fileID;
+    int               m_fileID;
     /// Static DIM callback for command input
     static void cmndCallback(void* tag, void* address, int* size);
     /// Service for publishing info on read events
     static void publishEvents(void* tag, void** buf, int* size, int* first);
+    /// Handle command interrupt
     void handleCommand(const char* address, int size);
     /// Timer for testing purposes
     time_t m_timerStartPrep;

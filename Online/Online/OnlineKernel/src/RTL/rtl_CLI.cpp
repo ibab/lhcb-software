@@ -1,5 +1,6 @@
 #include "RTL/rtl.h"
 #include <cstdarg>
+#include <cstring>
 #include <cstdio>
 #include <string>
 

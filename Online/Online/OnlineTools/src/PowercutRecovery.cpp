@@ -1,4 +1,4 @@
-// $Id: PowercutRecovery.cpp,v 1.2 2008-09-26 16:05:41 frankb Exp $
+// $Id: PowercutRecovery.cpp,v 1.3 2008-10-21 13:53:51 frankb Exp $
 //====================================================================
 //  OnlineTools
 //--------------------------------------------------------------------
@@ -11,10 +11,11 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineTools/src/PowercutRecovery.cpp,v 1.2 2008-09-26 16:05:41 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineTools/src/PowercutRecovery.cpp,v 1.3 2008-10-21 13:53:51 frankb Exp $
 
 // Framework include files
 #include <sstream>
+#include <cstring>
 #include <fstream>
 #include <cerrno>
 #include "RTL/rtl.h"
