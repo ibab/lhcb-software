@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : Rich::Rec::PhotonCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorBase.cpp,v 1.27 2008-08-18 19:09:07 jonrob Exp $
+ *  $Id: RichPhotonCreatorBase.cpp,v 1.28 2008-10-21 19:15:25 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -529,7 +529,10 @@ namespace Rich
         }
 
       }
-
+      if ( !ok && msgLevel(MSG::VERBOSE) )
+      {
+        verbose() << "    -> photon FAILED checkAngleInRange test" << endreq;
+      } 
       return ok;
     }
 
