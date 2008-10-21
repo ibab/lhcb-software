@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.5 2008-09-23 14:31:40 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.6 2008-10-21 19:12:57 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -233,9 +233,14 @@ class RichTools(RichConfigurableUser):
         if predType == "CKthetaBands" :
             from Configurables import Rich__Rec__CKthetaBandsPhotonPredictor
             tool = self.__makeRichTool( Rich__Rec__CKthetaBandsPhotonPredictor, nickname, private )
+        elif predType == "Simple" :
+            from Configurables import Rich__Rec__SimplePhotonPredictor
+            tool = self.__makeRichTool( Rich__Rec__SimplePhotonPredictor, nickname, private )
         elif predType == "SelectAll" :
             from Configurables import Rich__Rec__SimplePhotonPredictor
             tool = self.__makeRichTool( Rich__Rec__SimplePhotonPredictor, nickname, private )
+            tool.MaxTrackROI = [ 999, 999, 999 ]
+            tool.MinTrackROI = [ 000, 000, 000 ]
         else:
             raise RuntimeError("Unknown Photon Predictor '%s'"%predType)
         return tool
