@@ -1,10 +1,10 @@
-// $Id: TrackResChecker.h,v 1.4 2008-08-27 19:47:31 smenzeme Exp $
+// $Id: TrackResChecker.h,v 1.5 2008-10-21 15:06:03 wouter Exp $
 #ifndef TRACKRESCHECKER_H
 #define TRACKRESCHECKER_H 1
  
 // Include files
-#include <vector>
- 
+#include <map>
+
 // from Gaudi
 #include "TrackCheckerBase.h"
 
@@ -15,6 +15,7 @@
 #include "Event/OTTime.h"
 
 class ITrackProjectorSelector;
+class IHistoTool ;
 
 namespace LHCb{
   class Track;
@@ -31,7 +32,7 @@ namespace LHCb{
                                                            
 class TrackResChecker : public TrackCheckerBase {
                                                                              
- public:
+public:
                                                                              
   /** Standard construtor */
   TrackResChecker( const std::string& name, ISvcLocator* pSvcLocator );                                                                             /** Destructor */
@@ -47,37 +48,42 @@ class TrackResChecker : public TrackCheckerBase {
   virtual StatusCode finalize();
  
 
- private:
-
- void resolutionHistos(const LHCb::Track* track, 
-                       const LHCb::MCParticle* mcPart,
-                       const std::string& type) const;
-
- void pullplots(const LHCb::State& trueState, const LHCb::State& recState,
-                const std::string& location ) const;
+private:
   
- void checkAmbiguity(const LHCb::Track* track, 
-                     const LHCb::MCParticle* mcPart,
-                     const std::string& type ) const;
+  void resolutionHistos(const IHistoTool& histotool,
+			const LHCb::Track& track, 
+			const LHCb::MCParticle& mcPart) const ;
+  
+  void pullplots(const IHistoTool& histotool,
+		 const LHCb::State& trueState, const LHCb::State& recState,
+		 const std::string& location) const;
+  
+  void checkAmbiguity(const IHistoTool& histotool,
+		      const LHCb::Track& track, 
+		      const LHCb::MCParticle& mcPart) const;
+  
+  void plotsByMeasType(const IHistoTool& histotool,
+		       const LHCb::Track& track, 
+		       const LHCb::MCParticle& mcPart ) const;
 
- bool checkAmbiguity(const LHCb::MCParticle* mcPart, 
-                     const LHCb::OTMeasurement* otMeas) const;
+  const IHistoTool* createHistoTool( const std::string& name ) const ;
 
- void TrackResChecker::plotsByMeasType(const LHCb::Track* track, 
-                                       const LHCb::MCParticle* mcPart,
-                                       const std::string& type) const;
+private:
 
- std::vector<double> m_zPositions;
- bool m_plotsByMeasType;
-
- typedef LinkedTo<LHCb::MCParticle,LHCb::OTTime> OTLinks;
- mutable OTLinks m_otLinker;
- unsigned int  m_minToCountAmb;
- bool m_checkAmbiguity;
- double m_minAmbDist;
-
- ITrackProjectorSelector* m_projectorSelector;
-
+  bool m_plotsByMeasType;
+  
+  typedef LinkedTo<LHCb::MCParticle,LHCb::OTTime> OTLinks;
+  mutable OTLinks m_otLinker;
+  unsigned int  m_minToCountAmb;
+  bool m_checkAmbiguity;
+  double m_minAmbDist;
+  
+  ITrackProjectorSelector* m_projectorSelector;
+  //typedef std::map< int, const ITrackResCheckerTool*> ToolMap ;
+  //ToolMap m_toolmap ;
+  typedef std::map< int, const IHistoTool*> HistoToolMap ;
+  HistoToolMap m_histoTools ;
+  
 };
 
 #endif // TRACKRESCHECKER_H
