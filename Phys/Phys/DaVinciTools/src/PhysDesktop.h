@@ -122,10 +122,6 @@ public:
   /// Obtain a range of weighted LHCb::VertexBase related to an LHCb::Particle
   virtual Particle2Vertex::Range particle2Vertices(const LHCb::Particle* part ) const;
 
-  /// Obtain a copy of the current 1D relations table 
-  /// relating LHCb::Particles to LHCb::VertexBases
-  virtual const Particle2Vertex::Table particle2VertexTable() const;
-
 private:
   /// Find all particles & vertices in a tree. 
   void findAllTree( const LHCb::Particle* part, 
@@ -175,11 +171,11 @@ private:
 
   /// Add to list of Particles known to be in TES
   /// inline private method for speed.
-  inline const Particle2Vertex::Table* i_p2PVTable()  const { 
-    return &m_p2VtxTable; 
+  inline const Particle2Vertex::LightTable& i_p2PVTable()  const { 
+    return m_p2VtxTable; 
   }
-  inline Particle2Vertex::Table* i_p2PVTable() { 
-    return &m_p2VtxTable; 
+  inline Particle2Vertex::LightTable& i_p2PVTable() { 
+    return m_p2VtxTable; 
   }
 
   /// Find the position of an LHCb::VertexBase inside a range
@@ -238,7 +234,7 @@ private: // data
   
   IOnOffline* m_OnOffline ;   ///< locate PV
 
-  Particle2Vertex::Table m_p2VtxTable; ///< Table of Particle to PV relations
+  Particle2Vertex::LightTable m_p2VtxTable; ///< Table of Particle to PV relations
 
   IDistanceCalculator* m_distanceCalculator;
 
