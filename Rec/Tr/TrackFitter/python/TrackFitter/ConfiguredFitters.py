@@ -9,7 +9,8 @@ from Configurables import ( TrackEventFitter, TrackMasterFitter, TrackKalmanFilt
                             TrackProjectorSelector, TrajOTProjector, TrackMasterExtrapolator,
                             TrackSimpleExtraSelector, TrackDistanceExtraSelector,
                             TrackHerabExtrapolator,
-                            SimplifiedMaterialLocator, DetailedMaterialLocator)
+                            SimplifiedMaterialLocator, DetailedMaterialLocator,
+                            MeasurementProvider)
 
 def ConfiguredFitter( Name = "DefaultEventFitter",
                       TracksInContainer = "Rec/Tracks/Best",
@@ -65,15 +66,18 @@ def ConfiguredPrefitter( Name = "DefaultEventFitter",
     return eventfitter
 
 def ConfiguredFitVelo( Name = "FitVelo",
-                       TracksInContainer = "Rec/Track/PreparedVelo" ):
+                       TracksInContainer = "Rec/Track/PreparedVelo",
+                       FieldOff = True):
+    # note that we ignore curvatue in velo. in the end that seems the
+    # most sensible thing to do.
     eventfitter = ConfiguredFitter(Name,TracksInContainer)
     eventfitter.Fitter.NumberFitIterations = 2
     eventfitter.Fitter.ZPositions = []
-    eventfitter.Fitter.ErrorP= [0.01, 5e-08]
+    #eventfitter.Fitter.ErrorP= [0.01, 5e-08]
     #eventfitter.Fitter.ErrorX2 = 100
     #eventfitter.Fitter.ErrorY2 = 100
     #eventfitter.Fitter.ErrorP= [0,0.01]
-    eventfitter.Fitter.Extrapolator.ApplyEnergyLossCorr = False
+    #eventfitter.Fitter.Extrapolator.ApplyEnergyLossCorr = False
     return eventfitter
 
 def ConfiguredFitVeloTT( Name = "FitVeloTT",
@@ -140,6 +144,20 @@ def ConfiguredFastFit( Name, TracksInContainer ):
     eventfitter.Fitter.NodeFitter.Smooth = False
     # at some point, need to switch to analytic evaluation
     # TrackHerabExtrapolator().extrapolatorID = 4
+    return eventfitter
+
+def ConfiguredFastVeloOnlyFit( Name, TracksInContainer ):
+    eventfitter = ConfiguredFastFit( Name, TracksInContainer )
+    eventfitter.Fitter.ZPositions = []
+    eventfitter.Fitter.ErrorP = [0,1e-8] # choose something very small such that momentum not changed
+    eventfitter.Fitter.ApplyEnergyLossCorr = False
+    eventfitter.Fitter.Extrapolator.ApplyEnergyLossCorr = False
+    eventfitter.Fitter.Extrapolator.ApplyElectronEnergyLossCorr = False
+    eventfitter.Fitter.addTool( MeasurementProvider(), name = 'MeasProvider')
+    eventfitter.Fitter.MeasProvider.IgnoreIT = True
+    eventfitter.Fitter.MeasProvider.IgnoreOT = True
+    eventfitter.Fitter.MeasProvider.IgnoreTT = True
+    eventfitter.Fitter.MeasProvider.IgnoreMuon = True
     return eventfitter
 
 def ConfiguredStraightLineFit( Name, TracksInContainer ):
