@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.58 2008-10-17 11:52:42 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.59 2008-10-21 14:57:16 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -81,6 +81,7 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   declareProperty( "ErrorTy2"       , m_errorTy2 = 0.01                     );
   declareProperty( "ErrorP"         , m_errorP = boost::assign::list_of(0.0)(0.001) );
   declareProperty( "MakeNodes"      , m_makeNodes = false                   );
+  declareProperty( "MakeMeasurements", m_makeMeasurements = false           );
   declareProperty( "MaterialLocator", m_materialLocatorName = "DetailedMaterialLocator");
   declareProperty( "UpdateTransport", m_updateTransport = false             );
   declareProperty( "MinMomentumForTransport", m_minMomentumForELossCorr = 10.*Gaudi::Units::MeV );
@@ -209,8 +210,7 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
   
   // Outlier removal iterations
   iter = 1;
-  while ( iter <= m_numOutlierIter &&
-          nNodesWithMeasurement( track ) > seed.nParameters() + 1 &&
+  while ( iter <= m_numOutlierIter && track.nDoF() > 1 &&
           outlierRemoved( track ) ) {
     if ( m_debugLevel ) debug() << "Outlier iteration # " << iter << endmsg;
 
@@ -238,7 +238,7 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
   }
 
   // determine the track states at user defined z positions
-  sc = determineStates( track, pid );
+  sc = determineStates( track );
   if ( sc.isFailure() ) 
     return failure( "failed in determining states" ) ;
   
@@ -256,31 +256,13 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
 //=============================================================================
 // 
 //=============================================================================
-StatusCode TrackMasterFitter::determineStates( Track& track, ParticleID pid ) const
+StatusCode TrackMasterFitter::determineStates( Track& track ) const
 {
   StatusCode sc = StatusCode::SUCCESS ;
 
   // clean the non-fitted states in the track!
   track.clearStates();
   
-  // Add state closest to the beam-line
-  // ----------------------------------
-  if ( m_stateAtBeamLine ) {
-    // Get the state closest to z=0. from the nodes
-    State closeState = track.closestState( 0. );
-    // Get the z-position of the "intersection" with the beam line
-    double z = closestToBeamLine( closeState );    
-    sc = m_extrapolator -> propagate( closeState , z, pid );
-    if ( sc.isFailure() ) {
-      if( m_debugLevel ) debug() << "Extrapolating to z = " << z << " failed " << endmsg;
-      Warning("State closest to beam line not added, extrapolation failed",StatusCode::FAILURE,1).ignore() ;
-    } else {
-      // add the state at the position closest to the beam line
-      closeState.setLocation( State::ClosestToBeam );
-      track.addToStates( closeState );
-    }
-  }
-
   std::vector<Node*>& nodes = track.nodes();
 
   // Add the state at the first measurement position
@@ -301,45 +283,12 @@ StatusCode TrackMasterFitter::determineStates( Track& track, ParticleID pid ) co
     track.addToStates( state );
   }
 
-  // Add the states at the predefined positions
+  // Add the states at the reference positions
   // ------------------------------------------
-  for( std::vector<double>::const_iterator iz = m_zPositions.begin(); 
-       iz != m_zPositions.end(); ++iz ) {
-    double z = *iz ;
-    // find the closest node
-    std::vector<Node*>::const_iterator inode = nodes.begin();
-    const Node* closestnode = *inode ;
-    for (++inode;inode != nodes.end(); ++inode ) 
-      if( fabs((*inode)->z() - z) < fabs(closestnode->z() - z) ) closestnode = *inode ;
-    // copy the state
-    LHCb::State state = closestnode->state() ; 
-    // extrapolate if necessary
-    StatusCode thissc = StatusCode::SUCCESS ;
-    if( fabs(closestnode->z() - z) > TrackParameters::propagationTolerance ) {
-      // this is wrong for interpolations. we need to work on that, 
-      // but we anyway plan to remove filling states from the fit.
-      thissc = m_extrapolator -> propagate(state,z, pid);
-      state.setLocation( State::LocationUnknown ) ;
-    }
-    if ( thissc.isFailure() ) {
-      warning() << "Extrapolating to z = " << z << " failed. Will not add state at reference position" << endreq ;
-      sc = StatusCode::FAILURE ;
-    } else {
-      // set the location (must find a better way to do this!)
-      if ( fabs(z - StateParameters::ZBegRich1) < TrackParameters::lowTolerance )
-        state.setLocation( State::BegRich1 );
-      else if ( fabs(z - StateParameters::ZEndRich1 ) < TrackParameters::lowTolerance )
-        state.setLocation( State::EndRich1 );
-      else if ( fabs(z - StateParameters::ZBegRich2 ) < TrackParameters::lowTolerance )
-        state.setLocation( State::BegRich2 );
-      else if ( fabs(z - StateParameters::ZEndRich2 ) < TrackParameters::lowTolerance )
-        state.setLocation( State::EndRich2 );
-      else if ( fabs(z - StateParameters::ZEndVelo ) < TrackParameters::lowTolerance )
-	state.setLocation( State::EndVelo );
-      // add to the track
-      track.addToStates( state );
-    }
-  }
+  for( LHCb::Track::NodeContainer::const_iterator inode = nodes.begin() ;
+       inode != nodes.end(); ++inode )
+    if( (*inode)->type() == LHCb::Node::Reference )
+      track.addToStates( (*inode)->state() ) ;
 
   if ( m_debugLevel ) {
     debug() << "Track " << track.key() << " has " << track.nStates() 
@@ -426,9 +375,9 @@ StatusCode TrackMasterFitter::updateRefVectors( Track& track ) const
 // Determine the z-position of the closest approach to the beam line
 //  by linear extrapolation.
 //=========================================================================
-double TrackMasterFitter::closestToBeamLine( State& state ) const
+double TrackMasterFitter::closestToBeamLine( const State& state ) const
 {
-  TrackVector& vec = state.stateVector();
+  const TrackVector& vec = state.stateVector();
   double z = state.z();
   // check on division by zero (track parallel to beam line!)
   if ( vec[2] != 0 || vec[3] != 0 ) {
@@ -447,9 +396,8 @@ unsigned int TrackMasterFitter::nNodesWithMeasurement( const Track& track )
   unsigned int nMeas = 0;
   const std::vector<Node*>& nodes = track.nodes();
   std::vector<Node*>::const_iterator iNode;
-  for ( iNode = nodes.begin(); iNode != nodes.end(); ++iNode ) {    
-    if ( (*iNode)->hasMeasurement() ) ++nMeas;
-  }
+  for ( iNode = nodes.begin(); iNode != nodes.end(); ++iNode )
+    if( (*iNode)->type() == LHCb::Node::HitOnTrack ) ++nMeas ;
   return nMeas;
 }
 
@@ -460,6 +408,9 @@ StatusCode TrackMasterFitter::makeNodes( Track& track, LHCb::ParticleID pid ) co
 {
   // Clear the nodes
   track.clearNodes() ;
+  
+  // Clear the measurements if asked for
+  if(m_makeMeasurements) track.clearMeasurements() ;
 
   // make sure the track has sufficient reference states
   if( m_debugLevel ) debug() << "Track before making nodes: " << track << endmsg ;
@@ -468,7 +419,8 @@ StatusCode TrackMasterFitter::makeNodes( Track& track, LHCb::ParticleID pid ) co
     return Warning("Problems setting reference info", StatusCode::FAILURE, 1);
   
   // Check if it is needed to populate the track with measurements
-  if ( track.checkPatRecStatus( Track::PatRecIDs ) ) {
+  if ( track.checkPatRecStatus( Track::PatRecIDs ) ||
+       track.measurements().empty() ) {
     StatusCode sc = m_measProvider -> load( track );
     if ( sc.isFailure() )
       return Error( "Unable to load measurements!", StatusCode::FAILURE );
@@ -486,13 +438,10 @@ StatusCode TrackMasterFitter::makeNodes( Track& track, LHCb::ParticleID pid ) co
   const std::vector<Measurement*>& measures = track.measurements();
   Track::NodeContainer& nodes = track.nodes();
   nodes.reserve( measures.size() + m_zPositions.size() );
-  double zmin(99999*Gaudi::Units::m),zmax(-99999*Gaudi::Units::m) ;
   for ( std::vector<Measurement*>::const_reverse_iterator it =
           measures.rbegin(); it != measures.rend(); ++it ) {
     FitNode* node = new FitNode( **it );
     nodes.push_back( node );
-    zmin = std::min( zmin, node->z()) ;
-    zmax = std::max( zmax, node->z()) ;
   }
 
   // Loop over the predefined z positions and add them to the nodes.
@@ -512,6 +461,14 @@ StatusCode TrackMasterFitter::makeNodes( Track& track, LHCb::ParticleID pid ) co
       state.setLocation( State::EndRich2 );
     else if ( fabs(z - StateParameters::ZEndVelo ) < TrackParameters::lowTolerance )
       state.setLocation( State::EndVelo );
+    nodes.push_back( node ) ;
+  }
+
+  // At a node for the position at the beamline
+  if ( m_stateAtBeamLine ) {
+    const LHCb::State& refstate = *(track.checkFlag(Track::Backward) ? track.states().back() : track.states().front()) ;
+    FitNode* node = new FitNode( closestToBeamLine(refstate) );
+    node->state().setLocation( State::ClosestToBeam );
     nodes.push_back( node ) ;
   }
 

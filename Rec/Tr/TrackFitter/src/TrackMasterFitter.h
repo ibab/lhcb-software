@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.h,v 1.18 2008-09-05 09:58:14 wouter Exp $
+// $Id: TrackMasterFitter.h,v 1.19 2008-10-21 14:57:16 wouter Exp $
 #ifndef TRACKFITTER_TRACKMASTERFITTER_H 
 #define TRACKFITTER_TRACKMASTERFITTER_H 1
 
@@ -52,7 +52,7 @@ private:
   StatusCode initializeRefStates(LHCb::Track& track, LHCb::ParticleID pid ) const ;
 
   //! determine track state at various z positions
-  StatusCode determineStates( LHCb::Track& track, LHCb::ParticleID pid ) const;
+  StatusCode determineStates( LHCb::Track& track ) const;
 
   //! remove outliers from the node vector
   bool outlierRemoved( LHCb::Track& track ) const;
@@ -62,7 +62,7 @@ private:
 
   //! determine the z-position of the closest approach to the beam line
   //! by linear extrapolation.
-  double closestToBeamLine( LHCb::State& state ) const;
+  double closestToBeamLine( const LHCb::State& state ) const;
 
   //! Retrieve the number of nodes with a measurement
   unsigned int nNodesWithMeasurement( const LHCb::Track& track ) const;
@@ -103,6 +103,7 @@ private:
   double m_errorTy2;                ///< Error^2 on slope y
   std::vector<double> m_errorP;     ///< Error on dp/p
   bool m_makeNodes;
+  bool m_makeMeasurements;
   bool m_updateTransport ;          ///< Update the transport matrices between iterations
   double m_minMomentumForELossCorr ; ///< Minimum momentum used in correction for energy loss
   bool m_applyMaterialCorrections ; ///< Apply material corrections
