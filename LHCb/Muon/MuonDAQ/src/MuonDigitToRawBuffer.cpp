@@ -1,4 +1,4 @@
-// $Id: MuonDigitToRawBuffer.cpp,v 1.21 2008-05-29 11:21:20 asatta Exp $
+// $Id: MuonDigitToRawBuffer.cpp,v 1.22 2008-10-21 08:32:48 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -401,8 +401,11 @@ StatusCode MuonDigitToRawBuffer::ProcessV1()
   LHCb::RawEvent* raw = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
 
   sc=ProcessDigitV1();
-  
+  if(sc.isFailure())return sc;  
+
   sc=ProcessPads();
+  if(sc.isFailure())return sc;  
+
   unsigned int pp_counter[4];
   
   

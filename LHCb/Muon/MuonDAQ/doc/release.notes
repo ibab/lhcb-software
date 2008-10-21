@@ -3,6 +3,8 @@
 ! Responsible : Alessia Satta
 ! Purpose     : Muon System Raw Buffer coding and decoding algorithms
 !-----------------------------------------------------------------------------
+! 2008-10-20 - Alessia Satta
+ - fix for unchecked StatusCode in MuonDigitToRawBuffer
 
 !========================== MuonDAQ v4r4 2008-09-04 ==========================
 ! 2008-08-28 - Alessia Satta
