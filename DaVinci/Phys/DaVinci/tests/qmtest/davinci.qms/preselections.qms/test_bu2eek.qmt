@@ -6,7 +6,7 @@
   <text>../options/DVTestBu2eeK.opts</text>
 </set></argument>
 <argument name="validator"><text>
-reference = """
+findReferenceBlock("""
 ========================================================================
                  TestCorrelations.AlgorithmCorrelations
 ========================================================================
@@ -17,23 +17,6 @@ reference = """
   3 DiLeptonForPreselBu2LLK   26.0% |  *****  75.0%  ##### 100.0%
   4 PreselBu2LLK               3.0% |  *****  25.0%  11.5%  #####
 ========================================================================
-"""
-
-# split reference file, sanitize EOLs and remove empty lines
-reflines = filter(None,map(lambda s: s.rstrip(), reference.splitlines()))
-# the same on standard output
-outlines = filter(None,map(lambda s: s.rstrip(), stdout.splitlines()))
-
-# find the reference block in the output file
-try:
-    sign_pos = 1
-    pos = outlines.index(reflines[1])
-    outlines = outlines[pos-sign_pos:pos+len(reflines)-sign_pos]
-    if reflines != outlines:
-        causes.append("correlation table")
-        result["CorrelationTest.expected"] = result.Quote("\n".join(reflines))
-        result["CorrelationTest.observer"] = result.Quote("\n".join(outlines))
-except ValueError:
-    causes.append("missing correlation table")
+""", stdout, result, causes, signature_offset = 1)
 </text></argument>
 </extension>

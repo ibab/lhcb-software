@@ -6,7 +6,7 @@
   <text>../options/DVTestBd2DstarPi.opts</text>
 </set></argument>
 <argument name="validator"><text>
-reference = """
+findReferenceBlock("""
 ==========================================================================================
                           TestCorrelations.AlgorithmCorrelations
 ==========================================================================================
@@ -19,23 +19,6 @@ reference = """
   5 FilterDstarForBd2DstarPi      11.4% | 100.0% 100.0%  45.6%  96.6%  ##### 100.0%
   6 PreselBd2DstarPi               0.6% |   0.0%   0.0%   2.4%   5.1%   5.3%  #####
 ==========================================================================================
-"""
-
-# split reference file, sanitize EOLs and remove empty lines
-reflines = filter(None,map(lambda s: s.rstrip(), reference.splitlines()))
-# the same on standard output
-outlines = filter(None,map(lambda s: s.rstrip(), stdout.splitlines()))
-
-# find the reference block in the output file
-try:
-    sign_pos = 1
-    pos = outlines.index(reflines[1])
-    outlines = outlines[pos-sign_pos:pos+len(reflines)-sign_pos]
-    if reflines != outlines:
-        causes.append("correlation table")
-        result["CorrelationTest.expected"] = result.Quote("\n".join(reflines))
-        result["CorrelationTest.observer"] = result.Quote("\n".join(outlines))
-except ValueError:
-    causes.append("missing correlation table")
+""", stdout, result, causes, signature_offset = 1)
 </text></argument>
 </extension>
