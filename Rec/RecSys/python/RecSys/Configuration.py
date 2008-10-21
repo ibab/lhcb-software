@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.2 2008-09-05 15:30:54 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.3 2008-10-21 19:34:43 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -24,22 +24,28 @@ class RecSysConf(LHCbConfigurableUser):
     DefaultSubDetsFieldOn  = DefaultTrackingSubdets+["RICH","CALO","MUON","PROTO"]
     ## Default reconstruction sequence for field-off data
     DefaultSubDetsFieldOff = DefaultTrackingSubdets+["CALO","RICH","MUON","PROTO"]
+    ## List of known special data processing options
+    KnownSpecialData = [ "cosmics", "veloOpen", "fieldOff" ]
     
     ## Steering options
     __slots__ = {
         "recoSequence" : []      # The Sub-detector sequencing. Default is all known
-       ,"fieldOff":        False # set to True for magnetic field off data
-       ,"veloOpen":        False # set to True for Velo open data
-       ,"expertHistos":    False # set to True to write out expert histos
+       ,"specialData"  : []      # Various special data processing options. See KnownSpecialData for all options
+       ,"expertHistos":  False   # set to True to write out expert histos
        ,"context":     "Offline" # The context within which to run the reco sequences
         }
 
     ## Apply the configuration
     def applyConf(self):
+
+        # Check the special data options
+        for option in self.getProp("specialData"):
+            if option not in self.KnownSpecialData:
+                raise RuntimeError("Unknown SpecialData option '%s'"%option)
         
         # Phases
         if len(self.getProp("recoSequence")) == 0 :
-            if self.getProp("fieldOff"):
+            if "fieldOff" in self.getProp("specialData"):
                 self.setProp("recoSequence",self.DefaultSubDetsFieldOff)
             else:
                 self.setProp("recoSequence",self.DefaultSubDetsFieldOn)
@@ -49,14 +55,14 @@ class RecSysConf(LHCbConfigurableUser):
         # Primary Vertex
         if "Vertex" in recoSeq:
             GaudiSequencer("RecoVertexSeq").Members += [ PatPVOffline() ];
-
+     
         # Tracking (Should make it more fine grained ??)
         DoTracking = False
         for seq in self.DefaultTrackingSubdets:
             if seq in recoSeq: DoTracking = True
         if DoTracking:
             trackConf = TrackSys()
-            self.setOtherProps(trackConf,["expertHistos","fieldOff","veloOpen"])
+            self.setOtherProps(trackConf,["expertHistos","specialData"])
             trackConf.applyConf()
             # delete config object (to allow reuse from defaults)
             del trackConf
@@ -64,8 +70,7 @@ class RecSysConf(LHCbConfigurableUser):
         # RICH
         if "RICH" in recoSeq:
             richConf = RichRecSysConf()
-            self.setOtherProps(richConf,["expertHistos","fieldOff",
-                                         "veloOpen","context"])
+            self.setOtherProps(richConf,["expertHistos","specialData","context"])
             richConf.applyConf(GaudiSequencer("RecoRICHSeq"))
             # delete config object (to allow reuse from defaults)
             del richConf

@@ -5,6 +5,9 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+! 2008-10-21 - Chris Jones
+ - Improvements to Python configuration
+
 ! 2008-10-15 - Marco Cattaneo
  - Remove obsolete TrackPython package
 
