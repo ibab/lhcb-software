@@ -6,8 +6,8 @@
 
 from Brunel.Configuration import *
 
-Brunel().EvtMax       = -1
-Brunel().printFreq    = 100
+Brunel().EvtMax       = 100
+Brunel().printFreq    = 1
 
 Brunel().outputType   = "NONE"
 
@@ -20,27 +20,16 @@ Brunel().specialData  = ["fieldOff","cosmics"]
 Brunel().expertTracking += [ "noDrifttimes" ]
 TrackSys().trackPatRecAlgorithms = [ "PatSeed" ]
 
-# Customise PatSeeding cuts
-#from Configurables import ( PatSeeding, PatSeedingTool )
-#patSeedAlg  = PatSeeding("PatSeeding")
-#patSeedTool = PatSeedingTool("PatSeedingTool")
-#patSeedTool.MaxITOccupancy = 0.03
-#patSeedTool.MaxOTOccupancy = 0.05
-#patSeedAlg.addTool(patSeedTool)
-
 #--------------------------------------------------------------------------------
 # RICH options for cosmics
 # NB : Ultimately (before release) will (largely) move to RichRecSys
 #--------------------------------------------------------------------------------
-# Disable pixel cleaning when creating RichRecPixels
 RichPixelCreatorConfig().pixelCleaning = "None"
-
 RichTools().photonPredictorType = "SelectAll"
 RichTools().photonCreator().MaxAllowedCherenkovTheta = [ 99999, 99999, 99999 ]
 RichTools().photonCreator().MinAllowedCherenkovTheta = [ 0,     0,     0     ]
 RichTools().photonCreator().NSigma                   = [ 99999, 99999, 99999 ]
 RichTools().photonCreator().MinPhotonProbability     = [ 0,     0,     0     ]
-
 # Attempt to add calo momentum info to field off tracks for the RICH
 RichRecSysConf().useCaloMomentumTracks = True
 
