@@ -1,8 +1,20 @@
-! $Id: release.notes,v 1.365 2008-10-20 15:16:16 jpalac Exp $
+! $Id: release.notes,v 1.366 2008-10-21 13:38:47 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-10-21 - Juan PALACIOS
+ - src/GenericParticle2PVRelator.h
+  . Adapt to new IRelatedPVFinder interface: return Particle2Vertex::LightTable
+    instead of Particle2Vertex::Relation
+ - src/PhysDesktop.cpp
+  . Adapt to change above.
+ - src/PhysDesktop{.h, .cpp}
+  . Adapt to IPhysDesktop change: remove Particle2Vertex::Table Table() method.
+    The state of the table is  not well defined until it is stored on the TES. 
+    So better to use other methods to access the relations.
+
 
 ! 2008-10-20 - Juan PALACIOS
 
