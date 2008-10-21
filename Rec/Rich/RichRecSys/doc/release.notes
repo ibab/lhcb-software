@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2008-10-21 - Chris Jones
+ - Improvements to python configuration for cosmic reconstruction 
+  (To be improved further).
+
+! 2008-10-21 - Chris Jones
  - Remove all evidence of obsolete Job Options !
  - Add explicit option "useCaloMomentumTracks" to python configuration. 
    Previously controlled implicitly by "fieldOff" option, but in some case

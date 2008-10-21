@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.8 2008-10-21 13:39:11 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.9 2008-10-21 19:26:23 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -30,9 +30,7 @@ class RichRecSysConf(RichConfigurableUser):
     
     ## Steering options
     __slots__ = {
-        "fieldOff":       False   # set to True for magnetic field off data
-       ,"useCaloMomentumTracks" : False # Use Tracks cloned from originals with P updated using the CALO
-       ,"veloOpen":       False   # set to True for Velo open data
+        "useCaloMomentumTracks" : False # Use Tracks cloned from originals with P updated using the CALO
        ,"context":    "Offline"   # The context within which to run
        ,"radiators": None         # The radiators to use
        ,"particles": None         # The particle species to consider. Default is (el,mu,pi,ka,pr)
@@ -48,6 +46,7 @@ class RichRecSysConf(RichConfigurableUser):
        ,"pidConfig": "FullGlobal" # The PID algorithm configuration
        ,"makeSummaryObjects": False # Make the reconstruction summary TES data objects
        ,"hpdRandomBackgroundProb" : -1.0 # If positive, will add additional random background to the data at the given pixel percentage
+       ,"specialData"  : []      # Various special data processing options. See KnownSpecialData in RecSys for all options
         }
 
     ## Initialise 
@@ -64,6 +63,9 @@ class RichRecSysConf(RichConfigurableUser):
         context = self.getProp("context")
         if context not in self.KnownContexts:
             raise RuntimeError("ERROR : Unknown RichRecSys context '%s'"%context)
+
+    ## Shortcut to the cosmics option
+    def cosmics(self) : return "cosmics" in self.getProp("specialData")
 
     ## @brief The RICH radiators to use
     #  @return a vector of bools indicating if (Aerogel,Rich1Gas,Rich2Gas) should be used
@@ -163,7 +165,7 @@ class RichRecSysConf(RichConfigurableUser):
             trackSeq.MeasureTime = True
             initSeq.Members += [ trackSeq ]
             
-            # Field Off ?
+            # Calo tracks
             if self.getProp("useCaloMomentumTracks") :
                 from Configurables import TrackUseCaloMomentumAlg
                 caloTrackAlg = TrackUseCaloMomentumAlg(cont+"TracksWithCALOP")
@@ -243,13 +245,19 @@ class RichRecSysConf(RichConfigurableUser):
 
         # The context
         context = self.getProp("context")
+
+        # Special options for cosmics
+        #if self.cosmics() :
+        #    RichPixelCreatorConfig().pixelCleaning  = "None"
+        #    RichTools().photonPredictorType         = "SelectAll"
+        #    RichPhotonCreatorConfig().selectionMode = "All"
         
         #--------------------------------------------------------------------
                 
         # Tracks and segments
         tkConf = RichTrackCreatorConfig()
         tkConf.setProp("radiators",self.usedRadiators())
-        self.setOtherProps(tkConf,["context","fieldOff","useCaloMomentumTracks"])
+        self.setOtherProps(tkConf,["context","specialData","useCaloMomentumTracks"])
         tkConf.applyConf()
         del tkConf
 
@@ -291,5 +299,4 @@ class RichRecSysConf(RichConfigurableUser):
         RichTools().sigDetEff()
   
         #--------------------------------------------------------------------
-        
-          
+
