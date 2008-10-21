@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.30 2008-10-03 15:45:31 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.31 2008-10-21 16:12:22 ggiacomo Exp $
 #ifndef ONLINEHISTDBENV_H
 #define ONLINEHISTDBENV_H 1
 /** @class  OnlineHistDBEnv OnlineHistDBEnv.h OnlineHistDB/OnlineHistDBEnv.h
@@ -30,8 +30,8 @@ namespace OnlineHistDBEnv_constants {
     "H1D", "H2D", "P1D", "P2D", "CNT", "SAM"
   };  
 
-  static const std::string StdRefRoot = "online/Histograms/Reference"; 
-  static const std::string StdSavesetsRoot = "online/Histograms/Savesets"; 
+  static const std::string StdRefRoot = "Reference"; 
+  static const std::string StdSavesetsRoot = "Savesets"; 
   static const std::string m_SetSeparator = "_$";
 
   static const unsigned int VSIZE_SN          = 131;

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.32 2008-10-03 15:45:31 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.33 2008-10-21 16:12:22 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -6,6 +6,7 @@
 */
 
 #include "OnlineHistDB/OnlineHistDB.h"
+#include <stdlib.h>
 using namespace std;
 using namespace OnlineHistDBEnv_constants;
 OnlineHistDB::OnlineHistDB(std::string passwd,
@@ -48,7 +49,14 @@ OnlineHistDB::OnlineHistDB(std::string passwd,
   getOCITypes();
   m_TaggedStatement = new std::set<std::string>;
   m_refRoot = new std::string(OnlineHistDBEnv_constants::StdRefRoot);
+  char * envRefRoot = getenv ("HISTREFPATH");
+  if (envRefRoot !=NULL)
+    *m_refRoot = envRefRoot;
+
   m_savesetsRoot = new std::string(OnlineHistDBEnv_constants::StdSavesetsRoot);
+  char * envSvsRoot = getenv ("HISTSAVESETSPATH");
+  if (envSvsRoot !=NULL)
+    *m_savesetsRoot = envSvsRoot;
 
   // set up object cache to avoid object duplication
   m_TStorage = (OnlineTaskStorage*) this;
