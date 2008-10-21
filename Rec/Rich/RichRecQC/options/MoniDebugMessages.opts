@@ -1,8 +1,0 @@
-// Turn on debug printout
-
-RiPIDMonAll2To100.OutputLevel = 2;
-RiPIDMonAll2To10.OutputLevel = 2;
-RiPIDMonAll10To70.OutputLevel = 2;
-RiPIDMonAll70To100.OutputLevel = 2;
-
-Rich::Rec::MC::RecoQC.OutputLevel = 2;
