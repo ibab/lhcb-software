@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.19 2008-10-16 15:43:13 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.20 2008-10-21 15:30:52 marcocle Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -172,7 +172,7 @@ class Boole(LHCbConfigurableUser):
             return ApplicationMgr().getDefaultProperties()["EvtMax"]
 
     def applyConf(self):
-        GaudiKernel.ProcessJobOptions._logFilter.printing_level += 1
+        GaudiKernel.ProcessJobOptions.PrintOff()
         importOptions( self.getProp( "mainOptions" ) )
         self.defineDB()
         self.defineEvents()
