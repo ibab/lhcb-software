@@ -3,7 +3,11 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
-! 2008-10-17 - Wouter Hulsbergen
+! 2008-10-21 - Wouter Hulsbergen
+ - change strategy for FitVelo: don't use curvature
+ - add configurable for ConfiguredFastVeloOnlyFit for use in trigger
+ - added flag to force making measurements
+ - create node for state at beamline before fitting track
  - protection for tracks with insufficient active measurements
 
 !=========================== TrackFitter v2r28 2008-10-02 ===================
