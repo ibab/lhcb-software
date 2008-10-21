@@ -1,4 +1,4 @@
-// $Id: TrackCheckerBase.cpp,v 1.3 2007-09-14 13:01:04 jonrob Exp $
+// $Id: TrackCheckerBase.cpp,v 1.4 2008-10-21 07:22:01 wouter Exp $
 // Include files 
 #include "TrackCheckerBase.h"
 #include "Event/Track.h"
@@ -23,6 +23,7 @@ TrackCheckerBase::TrackCheckerBase( const std::string& name,
   declareProperty( "LinkerInTable",   m_linkerInTable = ""       );
 
   declareProperty("SplitByAlgorithm", m_splitByAlgorithm = false);
+  declareProperty("SplitByType",      m_splitByType = false);
 
   declareProperty("GhostClassification",
                   m_ghostToolName = "LongGhostClassification" );

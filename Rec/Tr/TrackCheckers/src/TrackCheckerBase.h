@@ -1,4 +1,4 @@
-// $Id: TrackCheckerBase.h,v 1.3 2008-06-03 06:39:07 cattanem Exp $
+// $Id: TrackCheckerBase.h,v 1.4 2008-10-21 07:22:01 wouter Exp $
 #ifndef TRACKCHECKERBASE_H
 #define TRACKCHECKERBASE_H 1
  
@@ -56,7 +56,7 @@ class TrackCheckerBase : public GaudiHistoAlg {
   const std::string& inputContainer() const; 
 
 
- protected:
+ public:
    
   /** Get a pointer to Magnetic field service
   *  @return field service
@@ -142,6 +142,11 @@ class TrackCheckerBase : public GaudiHistoAlg {
   */ 
   bool splitByAlgorithm() const;
 
+  /** Whether to split by algorithm
+  *  @return splitByType true or false
+  */ 
+  bool splitByType() const { return m_splitByType ; }
+
   /** To avoid hard coding...
   *  @return string all
   */ 
@@ -162,6 +167,8 @@ class TrackCheckerBase : public GaudiHistoAlg {
   * @return bool true/false 
   */ 
   bool bAncestor(const LHCb::MCParticle* mcPart) const;
+
+  const std::string& tracksInContainer() { return m_tracksInContainer ; }
 
  private:
 
@@ -189,6 +196,7 @@ class TrackCheckerBase : public GaudiHistoAlg {
   InverseTable* m_inverseTable;
 
   bool m_splitByAlgorithm;
+  bool m_splitByType;
   std::string m_all;                                                                       
 
   IMCDecayFinder* m_decayFinder;
