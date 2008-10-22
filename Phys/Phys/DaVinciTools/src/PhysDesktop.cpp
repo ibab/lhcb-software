@@ -791,9 +791,25 @@ const LHCb::VertexBase* PhysDesktop::relatedVertex(const LHCb::Particle* part){
     storeRelationsInTable(part);
   }
   
-  if (msgLevel(MSG::VERBOSE)) verbose() << "P2V returns particle2Vertices" << endmsg ;
-  if ( particle2Vertices(part).empty() ) return NULL ;
+  const Particle2Vertex::Range range = i_p2PVTable().i_relations(part);
 
+  if ( particle2Vertices(part).empty() ) {
+  if (msgLevel(MSG::VERBOSE)) {
+    verbose() << "particle2Vertices table empty, return NULL" << endmsg;
+  }
+    return NULL ;
+  }
+  
+  if (msgLevel(MSG::VERBOSE)) {
+    verbose() << "P2V returns particle2Vertices" << endmsg ;
+    for (Particle2Vertex::Range::const_iterator i = range.begin();
+         i!=range.end(); ++i) {
+      verbose() << "P2PV weight " << (*i).weight() << endmsg;
+    }
+  }
+  if (msgLevel(MSG::VERBOSE)) {
+    verbose() << "Returning PV with weight " << range.back().weight() << endmsg;
+  }
   return i_p2PVTable().i_relations(part).back().to();
 
 }
@@ -817,12 +833,12 @@ double PhysDesktop::weight(const LHCb::Particle*   part,
   return (range.end() == ifind ) ? 0. : ifind->weight();
 }
 //=============================================================================
-Particle2Vertex::Range 
-PhysDesktop::particle2Vertices(const LHCb::Particle* part ) const 
+Particle2Vertex::Range
+PhysDesktop::particle2Vertices(const LHCb::Particle* part ) const
 {
-  if (msgLevel(MSG::VERBOSE)) verbose() << "PhysDesktop::particle2Vertices. Empty: " 
+  if (msgLevel(MSG::VERBOSE)) verbose() << "PhysDesktop::particle2Vertices.empty(): " 
                                         <<  i_p2PVTable().i_relations(part).empty() 
-                                        << " " << i_p2PVTable().i_relations(part).size()<< endmsg ;
+                                        << " .size() " << i_p2PVTable().i_relations(part).size()<< endmsg ;
   return i_p2PVTable().i_relations(part);
 }
 //=============================================================================
@@ -844,5 +860,8 @@ void PhysDesktop::storeRelationsInTable(const LHCb::Particle* part){
     i_p2PVTable().i_relate(part, iRel->to(), iRel->weight());
   }
 
+  if (msgLevel(MSG::VERBOSE)) verbose() << "PhysDesktop::storeRelationsInTable stored " 
+                                        << i_p2PVTable().i_relations(part).size() << " relations" 
+                                        << endmsg;
 }
 //=============================================================================
