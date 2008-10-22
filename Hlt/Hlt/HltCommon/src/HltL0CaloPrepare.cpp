@@ -1,4 +1,4 @@
-// $Id: HltL0CaloPrepare.cpp,v 1.12 2008-08-27 14:39:52 graven Exp $
+// $Id: HltL0CaloPrepare.cpp,v 1.13 2008-10-22 14:38:20 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -73,7 +73,7 @@ HltL0CaloPrepare::HltL0CaloPrepare( const std::string& name,
   , m_selection(*this)
   , m_caloMaker(0)
   , m_histoEt(0)
-  , m_histoEt1(0)
+  , m_histoEtBest(0)
   , m_caloType("Hadron")
 {
   declareProperty("MinEt", m_minEt = 3500.);
@@ -100,9 +100,11 @@ StatusCode HltL0CaloPrepare::initialize() {
 
   m_selection.registerSelection();
 
-  m_histoEt = initializeHisto("Et",0.,6000.,100);
-  m_histoEt1 = initializeHisto("Et1",0.,6000.,100);
+  m_L0ETID = hltInfoID("L0ET");
+  info() << " L0 ET " << m_L0ETID << endreq;
 
+  m_histoEt = initializeHisto("Et",0.,6000.,100);
+  m_histoEtBest = initializeHisto("EtBest",0.,6000.,100);
 
   m_caloMaker = (m_caloMakerName.empty() 
                     ? (ICaloSeedTool*)0
@@ -180,13 +182,15 @@ void HltL0CaloPrepare::addExtras(const L0CaloCandidate& calo,
   double ex     = calo.posTol()*(4./sqrt(12.0));
   double ey     = ex;
 
+  track.addInfo(m_L0ETID,calo.et());
+
   BOOST_FOREACH( State* state, track.states() ) {
     if (state->location() == State::MidHCal){
       state->setTx(ex); // ???
       state->setTy(ey); // ???
       debug() << " changed slopes! " << state->slopes() << endreq;
     }
-  }
+  }  
 
   CaloCellID id = calo.id();
   LHCb::CaloCellID id1(id.calo(), id.area(), id.row()+1, id.col()   );

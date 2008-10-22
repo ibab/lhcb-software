@@ -1,4 +1,4 @@
-// $Id: HltL0CaloPrepare.h,v 1.4 2008-08-13 07:19:27 graven Exp $
+// $Id: HltL0CaloPrepare.h,v 1.5 2008-10-22 14:38:20 hernando Exp $
 #ifndef HLTCOMMON_HLTLOCALOPREPARE_H 
 #define HLTCOMMON_HLTL0CALOPREPARE_H 1
 
@@ -39,8 +39,10 @@ private:
   std::string m_caloMakerName;  
   ICaloSeedTool* m_caloMaker;
   
+  int m_L0ETID;
+
   Hlt::Histo* m_histoEt;
-  Hlt::Histo* m_histoEt1;
+  Hlt::Histo* m_histoEtBest;
 
   class caloTypeProperty {
   public:

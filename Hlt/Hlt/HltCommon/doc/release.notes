@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2008-10-22 - Jose A. Hernando
+ - HltL0CaloPrepare to store in extrainfo of the calo-track the Et of the L0
+
 !========================== HltCommon v4r4 2008-10-06 ===================
 ! 2008-10-06 - Gerhard Raven
  - Add HltLine algorithm
