@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.h,v 1.29 2008-04-16 11:13:49 cattanem Exp $
+// $Id: DeMuonDetector.h,v 1.30 2008-10-22 11:20:00 cattanem Exp $
 // ============================================================================
 #ifndef MUONDET_DEMUONDETECTOR_H
 #define MUONDET_DEMUONDETECTOR_H 1
@@ -269,10 +269,10 @@ public:
   std::vector<DeMuonChamber*> Tile2Chamber(const LHCb::MuonTileID aTile);
 
   //Returns the station (as DetectorElement pointer) from a Hit 
-  DetectorElement* DeMuonDetector::Hit2Station(const Gaudi::XYZPoint myPoint);
+  DetectorElement* Hit2Station(const Gaudi::XYZPoint myPoint);
   
   //Returns the chamber (as DetectorElement pointer) from a Hit 
-  DeMuonChamber* DeMuonDetector::Hit2Chamber(const Gaudi::XYZPoint myPoint);
+  DeMuonChamber* Hit2Chamber(const Gaudi::XYZPoint myPoint);
 
 
 // unsigned int getReadoutType(int station, int region,MuonLayout lay);  
