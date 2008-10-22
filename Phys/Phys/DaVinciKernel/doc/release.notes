@@ -1,8 +1,13 @@
-!$Id: release.notes,v 1.266 2008-10-21 13:04:45 jpalac Exp $
+!$Id: release.notes,v 1.267 2008-10-22 12:25:55 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2008-10-22 - Juan PALACIOS
+ - Kernel/IPhysDesktop.h
+  . Pass Particle->PV relations range by reference, not copy. 
+    Provide const and non-const methods.
 
 ! 2008-10-21 - Juan PALACIOS
 
