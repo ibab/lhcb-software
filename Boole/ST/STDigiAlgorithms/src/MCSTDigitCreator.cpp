@@ -1,4 +1,4 @@
-// $Id: MCSTDigitCreator.cpp,v 1.1.1.1 2008-02-15 13:18:48 cattanem Exp $
+// $Id: MCSTDigitCreator.cpp,v 1.2 2008-10-22 14:44:05 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -6,7 +6,7 @@
 // Event
 #include "Event/MCSTDeposit.h"
 #include "Event/MCSTDigit.h"
-#include "Kernel/STDetSwitch.h"
+
 
 // local
 #include "MCSTDigitCreator.h"
@@ -17,13 +17,15 @@ DECLARE_ALGORITHM_FACTORY( MCSTDigitCreator );
 
 MCSTDigitCreator::MCSTDigitCreator(const std::string& name,
                                              ISvcLocator* pSvcLocator):
-  GaudiAlgorithm(name, pSvcLocator)
+  ST::AlgBase(name, pSvcLocator)
 {
   // MCSTDigitCreator constructor
-  declareProperty("DetType", m_detType = "TT"); 
 
   m_inputLocation = MCSTDepositLocation::TTDeposits;
   m_outputLocation = MCSTDigitLocation::TTDigits; 
+
+  addToFlipList(&m_inputLocation);
+  addToFlipList(&m_outputLocation);
 }
 
 MCSTDigitCreator::~MCSTDigitCreator()
@@ -31,21 +33,11 @@ MCSTDigitCreator::~MCSTDigitCreator()
   // MCSTDigitCreator destructor
 }
 
-StatusCode MCSTDigitCreator::initialize()
-{
-  StatusCode sc = GaudiAlgorithm::initialize();
-  if (sc.isFailure()) return Error("Failed to initialize", sc);
-
-  STDetSwitch::flip(m_detType,m_inputLocation);
-  STDetSwitch::flip(m_detType,m_outputLocation);
-
-  return StatusCode::SUCCESS;
-}
 
 StatusCode MCSTDigitCreator::execute()
 {
   // retrieve Deposits
-  MCSTDeposits* depositCont = get<MCSTDeposits>(m_inputLocation);
+  const MCSTDeposits* depositCont = get<MCSTDeposits>(m_inputLocation);
 
   // digits container
   MCSTDigits* digitCont = new MCSTDigits();
@@ -67,7 +59,7 @@ StatusCode MCSTDigitCreator::execute()
     // make a new MCSTDigit and add it to the vector
     MCSTDigit* newDigit = new MCSTDigit();
     newDigit->setMcDeposit(depositVector);
-    STChannelID aChan = (*iterDep)->channelID();
+    const STChannelID aChan = (*iterDep)->channelID();
     digitCont->insert(newDigit,aChan);
 
     iterDep = jterDep;

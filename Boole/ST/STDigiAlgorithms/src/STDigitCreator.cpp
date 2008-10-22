@@ -1,4 +1,4 @@
-// $Id: STDigitCreator.cpp,v 1.3 2008-07-18 09:49:39 mneedham Exp $
+// $Id: STDigitCreator.cpp,v 1.4 2008-10-22 14:44:05 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -17,7 +17,7 @@
 // LHCbKernel
 #include "Kernel/ISTSignalToNoiseTool.h"
 #include "Kernel/STDataFunctor.h"
-#include "Kernel/STDetSwitch.h"
+
 
 // local
 #include "STDigitCreator.h"
@@ -28,20 +28,20 @@ DECLARE_ALGORITHM_FACTORY( STDigitCreator );
 
 STDigitCreator::STDigitCreator( const std::string& name,
                                 ISvcLocator* pSvcLocator ) :
-  GaudiAlgorithm(name, pSvcLocator),
-  m_tracker(0)
+  ST::AlgBase(name, pSvcLocator)
 {
   //constructer
   declareProperty("EffToolName", m_effToolName="STEffCalculator");
   declareProperty("SigNoiseTool",m_sigNoiseToolName = "STSignalToNoiseTool");
-  declareProperty("InputLocation", m_inputLocation=MCSTDigitLocation::TTDigits);
-  declareProperty("OutputLocation", m_outputLocation=STDigitLocation::TTDigits);
+  declareSTConfigProperty("InputLocation", m_inputLocation ,MCSTDigitLocation::TTDigits);
+  declareSTConfigProperty("OutputLocation", m_outputLocation, STDigitLocation::TTDigits);
   declareProperty("TailStart", m_tailStart = 3.0);
   declareProperty("Saturation", m_saturation = 127.);
-  declareProperty("DetType", m_detType = "TT");
+ 
   declareProperty("allStrips", m_allStrips = false);
   declareProperty("useStatusConditions", m_useStatusConditions = true);
 
+  setForcedInit();
 }
 
 STDigitCreator::~STDigitCreator()
@@ -51,17 +51,11 @@ STDigitCreator::~STDigitCreator()
 
 StatusCode STDigitCreator::initialize()
 {
-  StatusCode sc = GaudiAlgorithm::initialize();
+  StatusCode sc = ST::AlgBase::initialize();
   if (sc.isFailure()) return Error("Failed to initialize", sc);
 
-  m_tracker = getDet<DeSTDetector>(DeSTDetLocation::location(m_detType));
-
-  STDetSwitch::flip(m_detType,m_inputLocation);
-  STDetSwitch::flip(m_detType,m_outputLocation);
-
-
   m_sigNoiseTool = tool<ISTSignalToNoiseTool>( m_sigNoiseToolName,
-                                               m_sigNoiseToolName+m_detType);
+                                               m_sigNoiseToolName+detType());
 
   // random numbers generators (flat, gaussian and gaussian tail)
   sc = randSvc()->generator(Rndm::Flat(0.,1.),m_uniformDist.pRef());
@@ -72,10 +66,10 @@ StatusCode STDigitCreator::initialize()
   // cache the number of noise strips
   if (!m_allStrips){
     double fracOfNoiseStrips = 0.5*gsl_sf_erfc(m_tailStart/sqrt(2.0));
-    m_numNoiseStrips = (int)(fracOfNoiseStrips*m_tracker->nStrip());
+    m_numNoiseStrips = (int)(fracOfNoiseStrips*tracker()->nStrip());
   }
   else {
-    m_numNoiseStrips = m_tracker->nStrip();
+    m_numNoiseStrips = tracker()->nStrip();
   }
   return sc;
 }
@@ -83,7 +77,7 @@ StatusCode STDigitCreator::initialize()
 StatusCode STDigitCreator::execute()
 {
   // Retrieve MCSTDigits
-  MCSTDigits* mcDigitCont = get<MCSTDigits>(m_inputLocation);
+  const MCSTDigits* mcDigitCont = get<MCSTDigits>(m_inputLocation);
 
   // create STDigits
   STDigits* digitsCont = new STDigits();
@@ -126,10 +120,10 @@ void STDigitCreator::genRanNoiseStrips(std::vector<digitPair>& noiseCont) const
 {
   // generate random noise strips
   noiseCont.reserve(m_numNoiseStrips);
-  unsigned int nSector = m_tracker->sectors().size();
+  unsigned int nSector = tracker()->sectors().size();
 
   // create noise strips in loop
-  const DeSTDetector::Sectors& tSectors = m_tracker->sectors();
+  const DeSTDetector::Sectors& tSectors = tracker()->sectors();
   if (!m_allStrips){
     for (unsigned int iNoiseStrip=0u; iNoiseStrip<m_numNoiseStrips; ++iNoiseStrip){
       // generate a random readout sector
@@ -162,7 +156,7 @@ void STDigitCreator::genRanNoiseStrips(std::vector<digitPair>& noiseCont) const
   std::sort( noiseCont.begin(), noiseCont.end(), Less_by_Channel() );
 }
 
-void STDigitCreator::createDigits(MCSTDigits* mcDigitCont, STDigits* digitsCont)
+void STDigitCreator::createDigits(const MCSTDigits* mcDigitCont, STDigits* digitsCont)
 {
   // add gaussian noise to real hit channels + allow xxx% dead channels
   digitsCont->reserve( mcDigitCont->size() + m_numNoiseStrips );
@@ -222,7 +216,7 @@ void STDigitCreator::addNeighbours(STDigits* digitsCont) const
   for( ; curDigit != digitsCont->end(); ++curDigit ) {
 
     // Get left neighbour
-    const DeSTSector* aSector = m_tracker->findSector((*curDigit)->channelID());
+    const DeSTSector* aSector =tracker()->findSector((*curDigit)->channelID());
     STChannelID leftChan = aSector->nextLeft((*curDigit)->channelID());
 
     // Don't add left neighbour if this neighbour is already hit
@@ -256,7 +250,7 @@ void STDigitCreator::addNeighbours(STDigits* digitsCont) const
   for ( ; iterP != tmpCont.end(); ++iterP){
     if (!digitsCont->object(iterP->second)){
       // do better sometimes we can make twice ie we start with 101
-      DeSTSector* aSector = m_tracker->findSector(iterP->second);
+      DeSTSector* aSector = tracker()->findSector(iterP->second);
       if (m_useStatusConditions == false|| aSector->isOKStrip(iterP->second) == true){
         STDigit* aDigit = new STDigit( adcValue(iterP->first) );
         digitsCont->insert(aDigit,iterP->second);

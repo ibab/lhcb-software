@@ -1,16 +1,15 @@
-// $Id: MCSTDepositCreator.h,v 1.3 2008-03-14 18:27:25 mneedham Exp $
+// $Id: MCSTDepositCreator.h,v 1.4 2008-10-22 14:44:05 mneedham Exp $
 #ifndef MCSTDEPOSITCREATOR_H
 #define MCSTDEPOSITCREATOR_H 1
 
 // Gaudi
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "Kernel/STAlgBase.h"
 
 // Event
 #include "Event/MCSTDeposit.h"
 #include "Event/MCHit.h"
 
-class DeSTDetector;
-class DeSTSector;
+
 class DeSTSensor;
 class ISTChargeSharingTool;
 class ISiAmplifierResponse;
@@ -37,7 +36,7 @@ class ISiDepositedCharge;
  *  @date   05/01/2006
  */
 
-class MCSTDepositCreator : public GaudiAlgorithm {
+class MCSTDepositCreator : public ST::AlgBase {
 
 public:
 
@@ -80,8 +79,6 @@ private:
   std::string m_outputLocation;          ///< Output: MCSTDeposits
   std::vector<std::string> m_spillPaths; ///< Full path name of spills
 
-  /// Pointer to the main Detector Element
-  DeSTDetector* m_tracker;
 
   /// List of tools for different beetle responses
   std::vector<ISiAmplifierResponse*> m_amplifierResponse;
@@ -96,7 +93,7 @@ private:
   double m_siteSize;                     ///< Binning for charge sharing
   int m_maxNumSites;                     ///< Max number of charge sharing bins
   std::vector<double> m_xTalkParams;     ///< Cross talk parameters
-  std::string m_detType;                 ///< Detector type: IT or TT
+
   std::string m_sigNoiseToolName;        ///< Name of tool to calculate S/N 
   double m_scaling;                      ///< Scale the deposited charge
   /// Define tool names for different response types

@@ -1,4 +1,4 @@
-// $Id: MCSTDepositCreator.cpp,v 1.7 2008-07-18 09:35:21 mneedham Exp $
+// $Id: MCSTDepositCreator.cpp,v 1.8 2008-10-22 14:44:05 mneedham Exp $
 
 // GSL 
 #include "gsl/gsl_math.h"
@@ -10,7 +10,7 @@
 // LHCbKernel
 #include "Kernel/STChannelID.h"
 #include "Kernel/STDataFunctor.h"
-#include "Kernel/STDetSwitch.h"
+
 #include "LHCbMath/LHCbMath.h"
 #include "Kernel/ISiAmplifierResponse.h"
 #include "MCInterfaces/ISiDepositedCharge.h"
@@ -32,7 +32,7 @@ DECLARE_ALGORITHM_FACTORY( MCSTDepositCreator );
 
 MCSTDepositCreator::MCSTDepositCreator( const std::string& name, 
                                         ISvcLocator* pSvcLocator ) :
-  GaudiAlgorithm(name, pSvcLocator)
+  ST::AlgBase(name, pSvcLocator)
 {
   m_spillNames.push_back("/");
   m_spillTimes.push_back(0.*Gaudi::Units::ns);
@@ -53,7 +53,7 @@ MCSTDepositCreator::MCSTDepositCreator( const std::string& name,
   m_xTalkParams.push_back(0.08);
   m_xTalkParams.push_back(0.092/(55*Gaudi::Units::picofarad));
 
-  declareProperty("DetType", m_detType = "TT"); 
+
 
   declareProperty("SigNoiseTool", m_sigNoiseToolName = "STSignalToNoiseTool");
   declareProperty("Scaling", m_scaling = 1.0);
@@ -65,7 +65,10 @@ MCSTDepositCreator::MCSTDepositCreator( const std::string& name,
   m_inputLocation = MCHitLocation::TT; 
   m_outputLocation = MCSTDepositLocation::TTDeposits;
 
- 
+  addToFlipList(&m_inputLocation);
+  addToFlipList(&m_outputLocation);
+
+  setForcedInit();
 }
 
 MCSTDepositCreator::~MCSTDepositCreator() 
@@ -75,16 +78,13 @@ MCSTDepositCreator::~MCSTDepositCreator()
 
 StatusCode MCSTDepositCreator::initialize() 
 {
-  StatusCode sc = GaudiAlgorithm::initialize();
+  StatusCode sc = ST::AlgBase::initialize();
   if (sc.isFailure()) return Error("Failed to initialize", sc);
 
-  m_tracker = getDet<DeSTDetector>(DeSTDetLocation::location(m_detType));
-  STDetSwitch::flip(m_detType,m_outputLocation);
-  STDetSwitch::flip(m_detType,m_inputLocation);
 
   // signal to noise tool
   m_sigNoiseTool = tool<ISTSignalToNoiseTool>(m_sigNoiseToolName, 
-                                              m_sigNoiseToolName+m_detType);
+                                              m_sigNoiseToolName+detType());
 
   // charge sharing tool
   m_chargeSharer = tool<ISTChargeSharingTool>(m_chargeSharerName, 
@@ -155,7 +155,7 @@ void MCSTDepositCreator::createDeposits( const MCHits* mcHitsCont,
   for (; iterHit!=mcHitsCont->end();++iterHit){    
     MCHit* aHit = *iterHit;
 
-    DeSTSector* aSector = m_tracker->findSector(aHit->midPoint());
+    DeSTSector* aSector = tracker()->findSector(aHit->midPoint());
     if (aSector == 0) {
       debug() << "point " << aHit->midPoint() << endreq;
       Warning("Failed to find sector", StatusCode::SUCCESS, 1).ignore();

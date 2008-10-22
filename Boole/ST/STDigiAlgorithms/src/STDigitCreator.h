@@ -1,9 +1,9 @@
-// $Id: STDigitCreator.h,v 1.2 2008-04-08 05:32:12 cattanem Exp $
+// $Id: STDigitCreator.h,v 1.3 2008-10-22 14:44:05 mneedham Exp $
 #ifndef STDigitCreator_H
 #define STDigitCreator_H 1
 
 // Gaudi
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "Kernel/STAlgBase.h"
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/IRndmGen.h"
 
@@ -35,7 +35,7 @@ class DeSTSector;
  *  @date   05/01/2006
  */
 
-class STDigitCreator : public GaudiAlgorithm {
+class STDigitCreator : public ST::AlgBase {
 
 public:
   // Constructor
@@ -52,7 +52,7 @@ private:
   typedef std::pair<double,LHCb::STChannelID> digitPair;
 
   void genRanNoiseStrips(std::vector<digitPair>& noiseCont) const;
-  void createDigits(LHCb::MCSTDigits* mcDigitCont,LHCb::STDigits* digitCont);
+  void createDigits(const LHCb::MCSTDigits* mcDigitCont,LHCb::STDigits* digitCont);
   void mergeContainers(const std::vector<digitPair>& noiseCont, 
                        LHCb::STDigits* digitsCont);
   void addNeighbours(LHCb::STDigits* digitsCont) const;

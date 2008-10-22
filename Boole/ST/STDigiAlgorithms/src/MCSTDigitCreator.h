@@ -1,8 +1,8 @@
-// $Id: MCSTDigitCreator.h,v 1.1.1.1 2008-02-15 13:18:48 cattanem Exp $
+// $Id: MCSTDigitCreator.h,v 1.2 2008-10-22 14:44:05 mneedham Exp $
 #ifndef MCSTDIGITCREATOR_H
 #define MCSTDIGITCREATOR_H 1
 
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "Kernel/STAlgBase.h"
 
 namespace LHCb {
   class MCSTDeposit;
@@ -16,15 +16,13 @@ namespace LHCb {
  *  @date   10/03/2002
  */
 
-class MCSTDigitCreator : public GaudiAlgorithm {
+class MCSTDigitCreator : public ST::AlgBase {
 
 public:
   // Constructor
   MCSTDigitCreator( const std::string& name, ISvcLocator* pSvcLocator); 
 
   virtual ~MCSTDigitCreator(); 
-
-  StatusCode initialize();
 
   StatusCode execute();
  
@@ -33,7 +31,6 @@ private:
   bool keepAdding(const LHCb::MCSTDeposit* firstDep, 
                   const LHCb::MCSTDeposit* secondDep) const;
 
-  std::string m_detType;
 
   std::string m_inputLocation;
   std::string m_outputLocation;

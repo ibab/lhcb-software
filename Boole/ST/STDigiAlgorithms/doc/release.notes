@@ -4,6 +4,9 @@
 ! Purpose     : Algorithms for ST Digitization
 !-----------------------------------------------------------------------------
 
+! 2008-10-22 M Needham
+ - Move to new base class
+
 !========================= STDigiAlgorithms v1r3 2008-07-29 ==================
 ! 2008-07-18 M Needham
  - use dead strip conditions
