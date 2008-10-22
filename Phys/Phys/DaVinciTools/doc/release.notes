@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.366 2008-10-21 13:38:47 jpalac Exp $
+! $Id: release.notes,v 1.367 2008-10-22 13:49:54 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-10-22 - Juan PALACIOS
+ - src/GenericParticle2PVRelator.h
+  . Add check for particle null pointer.
+ - src/PhysDesktop.h
+  . remove all comments for IPhysDesktop methods. These are in the interface!
 
 ! 2008-10-21 - Juan PALACIOS
  - src/GenericParticle2PVRelator.h
