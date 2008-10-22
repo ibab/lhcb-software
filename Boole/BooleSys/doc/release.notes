@@ -25,8 +25,9 @@ Output requires Brunel v33r3 or later
     type. By default, 5% of events with hard collision are set to trigger type
     random, 95% physics. For elastic or diffractive events, trigger type is set
     to random. Events are distributed across bunch crossing types (no beam,
-    single beam left/right, two beams) according to tunable thresholds.
-    Bunch current is hardwired to a constant number for now. (DigiAlg v4r11)
+    single beam left/right, two beams) according to tunable thresholds. 
+    Bunch current is hardwired to a constant number for now. See
+    <a href="http://indico.cern.ch/materialDisplay.py?contribId=7&materialId=slides&confId=40813">talk on 2008-10-22</a> (DigiAlg v4r11)
   . Add a qmtest that tests the initialisation of Boole, used by Dirac to test
     the installation. Invoked with: "cmt TestPackage sam"  (BooleSys v16r3)
   . Add options/Boole-FST09.py, default options for full scale test production
