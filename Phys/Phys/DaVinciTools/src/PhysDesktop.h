@@ -43,37 +43,23 @@ public:
   /// IListener interface for cleaning at end of event
   //  virtual void handle(const Incident&);
   
-  /// Initialize method 
   virtual StatusCode initialize();
   
-  /// Finalize method 
   virtual StatusCode finalize();
-  
-  /// Load Input particles and vertices (in local data) from various input
-  /// locations filled with previous processings and  
-  /// create new Particles starting from reconstruction objects as
-  /// requested in jobOptions. The creation of new Particles if delegated
-  /// to ParticleMakers. Only DVAlgorithm::sysExecute() should call this function.
+
   virtual StatusCode getEventInput();
 
-  /// Retrieve the particles container 
   virtual const LHCb::Particle::ConstVector& particles() const;
   
-  /// Retrieve the PV from vertex container
+
   virtual const LHCb::RecVertex::ConstVector& primaryVertices();
 
-  /// Retrieve the secondary vertices
   virtual const LHCb::Vertex::ConstVector& secondaryVertices() const;
 
-   /// Register the new particles in the Desktop, pass ownership, 
-  /// return pointer to new particle
   virtual const LHCb::Particle* keep( const LHCb::Particle* input ) ;
 
-  /// Register the new vertices in the Desktop, pass ownership, 
-  /// return pointer to new vertex
   virtual const LHCb::Vertex* keep( const LHCb::Vertex* input ) ;
   
-  /// Save all particles and vertices in the Desktop to the TES
   virtual StatusCode saveDesktop() const{
 
     if (msgLevel(MSG::VERBOSE)) verbose() << "Save all new particles and vertices in desktop " << endmsg;
@@ -81,45 +67,32 @@ public:
     
   }
   
-  /// Save a vector of Particles in TES.
-  /// If a particle is composite its descendents are also saved, but the
-  /// rest of the particles in the Desktop are not saved.
   virtual StatusCode saveTrees( const LHCb::Particle::ConstVector& ) const;
   
-  /// Clone all particles given by a list. This duplicates information on the TES
-  /// and should be used only when necessary.
   virtual StatusCode cloneTrees( const LHCb::Particle::ConstVector& );
   
-  /// Save all Particles and its descendent with a given particleID code,
-  /// the rest of the particles in the Desktop are not saved.
   virtual StatusCode saveTrees(int partid) const;
 
-  /// Internal method to clean the local data
   virtual StatusCode cleanDesktop();
   
-  /// Set output location
   virtual void imposeOutputLocation(const std::string& outputLocationString);
 
-  /// Get output location
   virtual std::string getOutputLocation() const { return m_outputLocn ;}
 
-  /// Make sure the PhysDesktop has written out the container
   virtual StatusCode writeEmptyContainerIfNeeded() ;
 
-  /// Get the vertex with the highest weight in the association
-  /// between LHCb::Particle and LHCb::VertexBase
   virtual const LHCb::VertexBase* relatedVertex(const LHCb::Particle* part);
   
-  /// Establish a relation between an LHCb::Particle and an LHCb::VertexBase
+
   virtual void relate(const LHCb::Particle*   part, 
                       const LHCb::VertexBase* vert,
                       const double weight=1.);
 
-  /// Obtain the weight relating an LHCb::Particle and an LHCb::VertexBase
+
   virtual double weight(const LHCb::Particle*   part, 
                         const LHCb::VertexBase* vert ) const;
   
-  /// Obtain a range of weighted LHCb::VertexBase related to an LHCb::Particle
+
   virtual Particle2Vertex::Range particle2Vertices(const LHCb::Particle* part ) const;
 
 private:
