@@ -1,4 +1,4 @@
-// $Id: GenericParticle2PVRelator.h,v 1.3 2008-10-21 13:38:00 jpalac Exp $
+// $Id: GenericParticle2PVRelator.h,v 1.4 2008-10-22 13:47:01 jpalac Exp $
 #ifndef GENERICPARTICLE2PVRELATOR_H 
 #define GENERICPARTICLE2PVRELATOR_H 1
 
@@ -93,14 +93,17 @@ private:
                                                Iter end     ) const
   {
     Particle2Vertex::LightTable table;
-
-    for ( Iter iPV = begin ; iPV != end ; ++iPV){
-      const double wt = BestLogic::weight(particle, *iPV, m_distCalculator);
-      if (wt > 0. ) {
-        table.i_push(particle,*iPV, wt );
+    if (0!=particle) {
+      for ( Iter iPV = begin ; iPV != end ; ++iPV){
+        const double wt = BestLogic::weight(particle, *iPV, m_distCalculator);
+        if (wt > 0. ) {
+          table.i_push(particle,*iPV, wt );
+        }
       }
+      table.i_sort();
+    } else {
+      Warning("No particle!").ignore();
     }
-    table.i_sort();
     return table;
   }
   
