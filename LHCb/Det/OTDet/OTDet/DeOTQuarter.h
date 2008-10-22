@@ -1,4 +1,4 @@
-// $Id: DeOTQuarter.h,v 1.15 2007-07-23 09:59:04 cattanem Exp $
+// $Id: DeOTQuarter.h,v 1.16 2008-10-22 11:12:50 cattanem Exp $
 #ifndef OTDET_DEOTQUARTER_H
 #define OTDET_DEOTQUARTER_H 1
 
@@ -65,7 +65,7 @@ class DeOTQuarter : public DetectorElement {
    *  @param  aChannel The channel to check
    *  @return bool
    */
-  bool DeOTQuarter::contains(const LHCb::OTChannelID aChannel) const;
+  bool contains(const LHCb::OTChannelID aChannel) const;
 
   /** Const method to return the module for a given channel id
    * @param  aChannel  an OT channel id

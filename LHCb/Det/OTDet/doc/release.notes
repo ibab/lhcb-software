@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.118 2008-10-14 11:50:29 wouter Exp $
+! $Id: release.notes,v 1.119 2008-10-22 11:12:50 cattanem Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 !--------------------------------------------------------------------------
+
+! 2008-10-22 - Marco Cattaneo
+ - Remove extra qualifier in DeOTQuarter.h, to please latest genreflex
 
 ! 2008-10-14 - Wouter Hulsbergen
  - Added accessor for vector of T0s from conditions
