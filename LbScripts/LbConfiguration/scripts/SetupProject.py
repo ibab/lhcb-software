@@ -5,7 +5,7 @@ from xml.sax import parse, ContentHandler
 from stat import S_ISDIR
 import getopt
 
-_cvs_id = "$Id: SetupProject.py,v 1.31 2008-10-20 13:04:20 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.32 2008-10-22 14:48:32 marcocle Exp $"
 
 ########################################################################
 # Useful constants
@@ -474,6 +474,39 @@ def getNightlyCMTPROJECTPATH(path, slot, day):
     parse(path, getter)
     return getter.dirs()
 
+    
+def smartExpandVarsPath(path):
+    """
+    Expand the environment variables in a path. If the variable in the entry of
+    the path is a path itself, one entry is added for each element of the
+    variable. (The code is more or less inspired by posixpath.py)
+    Note: replaces only the first variable in each entry.
+    """
+    entries = path.split(os.pathsep)
+    new_entries = []
+    # matches:
+    #   $varname
+    #   ${varname}
+    #   %varname%
+    var_re = re.compile(r'(?:\$(\w+|\{[^}]*\})|%(\w+)%)')
+    for e in entries:
+        if '$' not in e and '%' not in e:
+            new_entries.append(e)
+        else:
+            match = var_re.search(e)
+            if match:
+                name = match.group(1) or match.group(2) 
+                if name.startswith('{') and name.endswith('}'):
+                    name = name[1:-1]
+                if name not in os.environ:
+                    new_entries.append(e)
+                else:
+                    a, b = match.span(0)
+                    ea, eb = e[:a], e[b:]
+                    for ve in os.environ[name].split(os.pathsep):
+                        new_entries.append(ea+ve+eb)
+    return os.pathsep.join(new_entries)
+
 ########################################################################
 # Utility functions
 ########################################################################
@@ -732,8 +765,27 @@ class SetupProject:
             if 'CMTPROJECTPATH' in env:
                 self._debug("----- unsetenv CMTPROJECTPATH -----")
                 del env['CMTPROJECTPATH']
-            env['CMTPATH'] = os.popen("cmt show set_value CMTPATH").readline().strip()
+            # check if we have ExtraPackages in the override_projects
+            ep_pi = None
+            for pi in self.overriding_projects:
+                if pi.name == "ExtraPackages":
+                    ep_pi = pi
+                    break
+            if ep_pi:
+                # if ExtraPackages is there, I prepend it to the CMTPATH
+                if 'CMTPATH' in env:
+                    env['CMTPATH'] = os.pathsep.join([env['CMTPATH'], pi.project_dir])
+                else:
+                    env['CMTPATH'] = pi.project_dir
+            # get the CMTPATH from  <Project>Env
+            cmtpath = os.popen("cmt show set CMTPATH").readlines()[-1].strip()
+            if cmtpath.startswith("CMTPATH="): # remove head of the line
+                cmtpath = cmtpath[8:]
+            cmtpath = cmtpath.strip("'") # remove quotes
+            # expand the environment variables and set CMTPATH
+            env['CMTPATH'] = smartExpandVarsPath(cmtpath)
             os.chdir(olddir)
+            # prepend User_release_area if defined
             if 'User_release_area' in env:
                 if env['CMTPATH'].find(env['User_release_area']) < 0:
                     env['CMTPATH'] =  os.pathsep.join([ env['User_release_area'],
@@ -1443,7 +1495,7 @@ class SetupProject:
             if len(lines) > 1:
                 lines = [ '(%s,' % lines[0] ] + [ ' %s,' % l for l in lines[1:-1] ] + [ ' %s)' % lines[-1] ]
             else:
-                lines[0] = '(taken from %s)' % lines[0]
+                lines[0] = '(%s)' % lines[0]
             messages += lines
             
             # FIXME: Hack to hide the fact that old projects were not setting the PATH for the executable

@@ -1,3 +1,9 @@
+2008-10-22  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* scripts/SetupProject.py: added a couple of hacks to set_build_env for
+	old style project to handle correctly the installation with local and
+	shared area.
+
 2008-10-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v1r6
