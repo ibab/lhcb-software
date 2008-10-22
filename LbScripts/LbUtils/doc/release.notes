@@ -1,3 +1,9 @@
+2008-10-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/castor: implemented the walk generator-like walk function
+	* python/LbUtils/SelfExtract.py: started the implementation of the
+	self extractiing python script.
+
 2008-09-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v1r3

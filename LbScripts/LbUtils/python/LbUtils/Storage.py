@@ -22,7 +22,7 @@ def convert(size, srcunit, trgunit):
     return value
 
 def customPrint(pathname, size, unit):
-    print pathname, convert(size, "B", unit)
+    print pathname, convert(size, "B", unit), unit
 
 def getHumanUnit(size, unit="B"):
     size = convert(size, unit, "B")

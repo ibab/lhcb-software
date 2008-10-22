@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.4
+#!/usr/bin/env python
 
 from LbUtils import castor
 import os
@@ -8,7 +8,7 @@ stagepool = os.environ["STAGE_POOL"]
 
 def getstatus(filename):
     status = ""
-    if castor.path.isfile(filename):
+    if castor.isfile(filename):
         status = "NotPresent"
         stcmd  = "stageqry --noheader"
         stcmd += " -p %s "%stagepool
@@ -24,13 +24,13 @@ def stageinvisitor(data,dirname,fileindir):
         stcmd += " -p %s "%stagepool
         for f in fileindir:
             fulname = dirname + "/" + f
-            if getstatus(fulname) == "NotPresent" and castor.path.ismigrated(fulname):
+            if getstatus(fulname) == "NotPresent" and castor.ismigrated(fulname):
                 stcmd += " -M " + castor.path.abspath(fulname)
         print stcmd
         os.system(stcmd)
 
 def stagedir(pathname):
-    if castor.path.isdir(pathname):
+    if castor.isdir(pathname):
         data = None
         castor.path.walk(pathname,stageinvisitor,data)
     else:

@@ -19,3 +19,5 @@ import CMT, Log, Set
 import afs, castor
 import Storage
 import Script
+import SelfExtract
+import Tar
