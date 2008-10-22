@@ -1,3 +1,7 @@
+2008-10-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/LbLogin.py: fixed mistake in the CONTRIBDIR location
+
 2008-10-22  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* scripts/SetupProject.py: added a couple of hacks to set_build_env for

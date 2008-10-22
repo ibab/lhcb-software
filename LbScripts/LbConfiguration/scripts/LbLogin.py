@@ -309,7 +309,6 @@ class LbLoginScript(Script):
             ev["CONTRIBDIR"] = os.path.join(ev["SITEROOT"], "sw", "contrib")
         else :
             ev["CONTRIBDIR"] = _multiPathJoin(ev["SITEROOT"], "contrib")            
-            ev["CONTRIBDIR"] = os.path.join(ev["SITEROOT"], "contrib")
 
         if sys.platform == "darwin" :
             opts.cmtvers = "v1r20p20070524"
