@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.36 2008-10-17 12:59:18 gligorov Exp $ 
+! $Id: release.notes,v 1.37 2008-10-22 14:37:17 hernando Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : 
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2008-10-22 - J.A. Hernando
+ - update of HltInit.opts
 
 ! 2008-10-16 - V Gligorov
  - update of HltHadAlleyConfSequenceForSwimming.opts 
