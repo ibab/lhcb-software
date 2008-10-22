@@ -4,7 +4,7 @@
 #============================================================================
 
 package LHCbMath
-version v3r3
+version v3r4
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -19,7 +19,7 @@ use GaudiKernel     v*
 use ROOT            v*      LCG_Interfaces
 use Boost           v*      LCG_Interfaces
 use GSL             v*      LCG_Interfaces
-use GaudiPython     v*
+use GaudiPython     v*                     -no_auto_imports
 
 apply_pattern install_more_includes more=LHCbMath
 
