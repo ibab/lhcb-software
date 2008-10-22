@@ -1,4 +1,4 @@
-// $Id: IHltConfSummaryTool.h,v 1.9 2008-06-17 21:42:49 pkoppenb Exp $
+// $Id: IHltConfSummaryTool.h,v 1.10 2008-10-22 15:52:43 hernando Exp $
 #ifndef HLTBASE_IHLTCONFSUMMARYTOOL_H 
 #define HLTBASE_IHLTCONFSUMMARYTOOL_H 1
 
@@ -55,6 +55,9 @@ public:
 
   /// returns the list of selection stored in the summmary
   virtual std::vector<std::string> selections() = 0;
+
+  /// returns selections matching the name, which admits the '*' 
+  virtual std::vector<std::string> selections(const std::string& name) = 0;
 
   /// returns the number of candidates of a given selection
   virtual size_t selectionNCandidates(const std::string& name) = 0;

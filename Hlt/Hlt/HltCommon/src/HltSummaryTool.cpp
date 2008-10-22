@@ -86,9 +86,34 @@ bool HltSummaryTool::hasSelection(const std::string& name) {
 
 bool HltSummaryTool::selectionDecision(const std::string& name) {
   return checkSelection(name) 
-         ? getSummary().selectionSummary(name).decision()
-         : false;
+    ? getSummary().selectionSummary(name).decision()
+    : false;
 }
+
+std::vector<std::string> HltSummaryTool::selections(const std::string& name) {
+  const std::vector<std::string>& sels = selections();
+  std::vector<std::string> cromos = EParser::parse(name,"*");
+  std::vector<std::string> msels;
+  for (std::vector<std::string>::const_iterator it = sels.begin(); 
+       it != sels.end(); ++it) {
+    const std::string& sel = *it;
+    bool ok = true;
+    for (std::vector<std::string>::iterator it2 = cromos.begin();
+         it2 != cromos.end(); ++it2) {
+      if (!ok) continue;
+      std::string cromo = *it2;
+      std::string::size_type i = sel.find(cromo);
+      if (i < sel.size()) ok = true;
+      else ok = false;
+    }
+    if (ok) {
+      debug() << " matched selection " << sel << ", " << name << endreq;
+      msels.push_back(sel);
+    }
+  }
+  return msels;  
+}
+
 
 bool HltSummaryTool::selectionDecisionType(const std::string& name,
                                            const std::string& type) {

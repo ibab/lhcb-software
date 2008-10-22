@@ -1,4 +1,4 @@
-// $Id: HltSummaryTool.h,v 1.13 2008-07-30 18:07:39 graven Exp $
+// $Id: HltSummaryTool.h,v 1.14 2008-10-22 15:53:01 hernando Exp $
 #ifndef HLTCOMMON_HLTSUMMARYTOOL_H 
 #define HLTCOMMON_HLTSUMMARYTOOL_H 1
 
@@ -62,6 +62,9 @@ public:
   // returns the list of selection stored in the summmary
   std::vector<std::string> selections();
 
+  // returns the list of selections replacing the wildchar "*"
+  std::vector<std::string> selections(const std::string& name);
+  
   // returns the number of candidates of a given selection
   size_t selectionNCandidates(const std::string& name);
   
