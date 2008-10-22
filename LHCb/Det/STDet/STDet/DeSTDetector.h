@@ -1,4 +1,4 @@
-// $Id: DeSTDetector.h,v 1.22 2008-07-14 07:38:36 mneedham Exp $
+// $Id: DeSTDetector.h,v 1.23 2008-10-22 11:06:08 cattanem Exp $
 #ifndef _DeSTDetector_H_
 #define _DeSTDetector_H_
 
@@ -176,7 +176,7 @@ public:
   double fractionActive() const;
 
   /** find a list of sectors from channelIDs **/
-  DeSTDetector::Sectors findSectors(const std::vector<LHCb::STChannelID>& vec);
+  Sectors findSectors(const std::vector<LHCb::STChannelID>& vec);
 
 protected:
 
