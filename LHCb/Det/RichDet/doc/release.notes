@@ -4,6 +4,9 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2008-10-22 - Marco Cattaneo
+ - Remove extra qualifier in Rich1DTabFunc.h, to please latest genreflex
+
 !======================== RichDet v11r2 2008-09-30 ===========================
 ! 2008-09-30 - Marco Cattaneo
  - Protect use of condition() method following changes to DetDesc

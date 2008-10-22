@@ -5,7 +5,7 @@
  *  Header file for utility class : Rich::TabulatedFunction1D
  *
  *  CVS Log :-
- *  $Id: Rich1DTabFunc.h,v 1.12 2008-08-18 18:30:39 jonrob Exp $
+ *  $Id: Rich1DTabFunc.h,v 1.13 2008-10-22 11:17:17 cattanem Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-08-13
@@ -52,7 +52,7 @@ namespace Rich
      *
      *  @param interType   GSL Interpolator type.
      */
-    TabulatedFunction1D::TabulatedFunction1D( const gsl_interp_type * interType = gsl_interp_linear );
+    TabulatedFunction1D( const gsl_interp_type * interType = gsl_interp_linear );
 
     /** Constructor from arrays containing x and y values
      *
@@ -64,10 +64,10 @@ namespace Rich
      *  @param size      Number of data points
      *  @param interType GSL Interpolator type
      */
-    TabulatedFunction1D::TabulatedFunction1D( const double x[],
-                                              const double y[],
-                                              const int size,
-                                              const gsl_interp_type * interType = gsl_interp_linear );
+    TabulatedFunction1D( const double x[],
+                         const double y[],
+                         const int size,
+                         const gsl_interp_type * interType = gsl_interp_linear );
 
     /** Constructor from std::vectors containing x and y values
      *
@@ -78,25 +78,25 @@ namespace Rich
      *  @param y         Vector of y values
      *  @param interType GSL Interpolator type
      */
-    TabulatedFunction1D::TabulatedFunction1D( const std::vector<double> & x,
-                                              const std::vector<double> & y,
-                                              const gsl_interp_type * interType = gsl_interp_linear );
+    TabulatedFunction1D( const std::vector<double> & x,
+                         const std::vector<double> & y,
+                         const gsl_interp_type * interType = gsl_interp_linear );
 
     /** Constructor from map of x,y values
      *
      *  @param data      map containing x(key) and y(data) values
      *  @param interType GSL Interpolator type
      */
-    TabulatedFunction1D::TabulatedFunction1D( const std::map<double,double> & data,
-                                              const gsl_interp_type * interType = gsl_interp_linear );
+    TabulatedFunction1D( const std::map<double,double> & data,
+                         const gsl_interp_type * interType = gsl_interp_linear );
 
     /** Constructor from vector of a pair of x,y values
      *
      *  @param data      std::vector containing and pair of x(first) and y(second) values
      *  @param interType GSL Interpolator type
      */
-    TabulatedFunction1D::TabulatedFunction1D( const std::vector< std::pair<double,double> > & data,
-                                              const gsl_interp_type * interType = gsl_interp_linear );
+    TabulatedFunction1D( const std::vector< std::pair<double,double> > & data,
+                         const gsl_interp_type * interType = gsl_interp_linear );
 
     /// Destructor
     virtual ~TabulatedFunction1D( );
