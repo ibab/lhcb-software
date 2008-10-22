@@ -5,7 +5,7 @@
  *  Header file for track finding class Tf::STHit
  *
  *  CVS Log :-
- *  $Id: STHit.h,v 1.5 2008-05-29 11:53:56 cattanem Exp $
+ *  $Id: STHit.h,v 1.6 2008-10-22 11:22:28 cattanem Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -46,7 +46,7 @@ namespace Tf
      *  @param[in] aSector Reference to the associated DeSTSector
      *  @param[in] clus    The raw ST hit (STLiteCluster)
      */
-    STHit::STHit( const DeSTSector& aSector, const LHCb::STLiteCluster& clus ) ;
+    STHit( const DeSTSector& aSector, const LHCb::STLiteCluster& clus ) ;
 
   public: // Simple accessors to internal data members
    

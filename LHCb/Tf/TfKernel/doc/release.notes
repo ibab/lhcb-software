@@ -4,6 +4,9 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2008-10-22 - Marco Cattaneo
+ - Remove extra qualifier in STHit.h, to please latest genreflex
+
 !============================ TfKernel v2r8 2008-09-30 =======================
 ! 2008-09-30 - Stephanie Hansmann-Menzemer
  - fix in LineHit (FPE in computation of cos of stereo angle)
