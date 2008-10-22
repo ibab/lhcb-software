@@ -1,4 +1,4 @@
-// $Id: IPhysDesktop.h,v 1.25 2008-10-21 13:04:32 jpalac Exp $
+// $Id: IPhysDesktop.h,v 1.26 2008-10-22 12:25:45 jpalac Exp $
 #ifndef DAVINCIKERNEL_IPHYSDESKTOP_H 
 #define DAVINCIKERNEL_IPHYSDESKTOP_H 1
 
@@ -67,7 +67,12 @@ public:
   /// Retrieve interface ID
   static const InterfaceID& interfaceID() { return IID_IPhysDesktop; }
 
-  /// Fill the particle and vertex containers. Called by DVAlgorithm::sysExecute()
+  /// Load Input particles and vertices (in local data) from various input
+  /// locations filled with previous processings and  
+  /// create new Particles starting from reconstruction objects as
+  /// requested in jobOptions. The creation of new Particles if delegated
+  /// to ParticleMakers. 
+  /// Only DVAlgorithm::sysExecute() should call this function.
   virtual StatusCode getEventInput() = 0;
 
   /// Retrieve the particles containers
@@ -79,12 +84,12 @@ public:
   /// Retrieve the secondary vertices
   virtual const LHCb::Vertex::ConstVector& secondaryVertices() const = 0;
 
-  /// Keep for future use: Register the new particles in the Desktop, pass ownership, 
-  /// return pointer to new particle
+  /// Keep for future use: Register the new particles in the Desktop, 
+  /// pass ownership, return pointer to new particle
   virtual const LHCb::Particle* keep( const LHCb::Particle* input ) = 0;
 
-  /// Keep for future use: Register the new vertices in the Desktop, pass ownership, 
-  /// return pointer to new vertex
+  /// Keep for future use: Register the new vertices in the Desktop, 
+  /// pass ownership, return pointer to new vertex
   virtual const LHCb::Vertex* keep( const LHCb::Vertex* input ) = 0;
 
   /// Save particles, vertices and particle->vertices relations to the TES
@@ -124,7 +129,8 @@ public:
                         const LHCb::VertexBase* vert ) const = 0;
   
   /// Obtain a range of weighted LHCb::VertexBase related to an LHCb::Particle
-  virtual Particle2Vertex::Range particle2Vertices(const LHCb::Particle* part ) const =0;
+  virtual const Particle2Vertex::Range& particle2Vertices(const LHCb::Particle* part ) const =0;
+  virtual Particle2Vertex::Range& particle2Vertices(const LHCb::Particle* part ) = 0;
 
   /// Clean desktop
   virtual StatusCode cleanDesktop() = 0;
