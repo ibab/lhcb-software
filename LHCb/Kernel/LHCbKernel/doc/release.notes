@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2008-10-22 - Chris Jones
+ - Fix for python bug https://savannah.cern.ch/bugs/index.php?43179
+
 ! 2008-10-17 - Chris Jones
  - Switch off custom vector allocators in FastAllocVector when the flag 
    GOD_NOALLOC is set.

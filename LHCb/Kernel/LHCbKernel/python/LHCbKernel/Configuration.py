@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.3 2008-08-26 19:25:08 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.4 2008-10-22 16:53:37 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -16,6 +16,9 @@ from Gaudi.Configuration import *
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 class LHCbConfigurableUser(ConfigurableUser):
+
+    ## Default options are empty
+    __slots__ = { }
 
     ## @brief Object 'Constructor'
     def __init__( self, name = Configurable.DefaultName, **kwargs ):
