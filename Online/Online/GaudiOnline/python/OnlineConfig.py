@@ -113,6 +113,11 @@ def evtRunable(mepMgr,name='Runable'):
   return svc
   
 #------------------------------------------------------------------------------------------------
+def dimFileReaderRunable(name='Runable'):
+  svc = Configs.LHCb__DimRPCFileReader(name)
+  return svc
+  
+#------------------------------------------------------------------------------------------------
 def onlineRunable(wait,name='Runable'):
   svc = Configs.LHCb__OnlineRunable(name)
   svc.Wait = wait
@@ -281,7 +286,7 @@ def diskWRApp(partID, partName, buffer, partitionBuffers, decode, output):
   return _application('NONE',extsvc=[Configs.MonitorSvc(),mepMgr,evtSel],runable=evtRunable(mepMgr),algs=algs)
 
 #------------------------------------------------------------------------------------------------
-def mdf2mbmApp(partID, partName, buffers, input, partitionBuffers=True,routing=0x1):
+def mdf2mbmApp(partID, partName, buffers, input, partitionBuffers=True, routing=0x1):
   mepMgr               = mepManager(partID,partName,buffers,partitionBuffers=partitionBuffers)
   runable              = evtRunable(mepMgr)
   evtSel               = CFG.EventSelector()
@@ -290,4 +295,15 @@ def mdf2mbmApp(partID, partName, buffers, input, partitionBuffers=True,routing=0
   evtdata              = evtDataSvc()  
   evtPers              = rawPersistencySvc()
   algs                 = [evtMerger(buffer=buffers[0],name='MDF2MBM',location='DAQ/RawEvent',routing=routing)]
+  return _application('NONE',extsvc=[Configs.MonitorSvc(),mepMgr,evtSel],runable=runable,algs=algs)
+
+#------------------------------------------------------------------------------------------------
+def dimFileReaderApp(partID, partName, buffer, partitionBuffers=True, routing=0x1):
+  mepMgr               = mepManager(partID,partName,[buffer],partitionBuffers=partitionBuffers)
+  runable              = dimFileReaderRunable()
+  evtSel               = CFG.EventSelector()
+  evtSel.PrintFreq     = 1
+  evtdata              = evtDataSvc()  
+  evtPers              = rawPersistencySvc()
+  algs                 = [evtMerger(buffer=buffer,name='Writer',location='DAQ/RawEvent',routing=routing)]
   return _application('NONE',extsvc=[Configs.MonitorSvc(),mepMgr,evtSel],runable=runable,algs=algs)

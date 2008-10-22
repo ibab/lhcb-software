@@ -6,6 +6,8 @@ pid = PartitionID
 pnam = PartitionName
 
 #------------------------------------------------------------------------------------------------
+def runDimReader(buffer): _run(dimFileReaderApp(pid,pnam,buffer,True))
+#------------------------------------------------------------------------------------------------
 def runSender(target): _run(dataSenderApp(pid,pnam,target,'RESULT',False,True))
 #------------------------------------------------------------------------------------------------
 def runReceiver():     _run(dataReceiverApp(pid,pnam,'OUT',True))
@@ -27,6 +29,9 @@ def runMDF2MBM2(buffers):
 #------------------------------------------------------------------------------------------------
 def runEvtServer(buffer, partitionBuffers):
   _run(evtServerApp(pid,pnam,buffer=buffer,partitionBuffers=partitionBuffers))
+#------------------------------------------------------------------------------------------------
+def runBuffer(buffer='Events', partitionBuffers=True):
+  _run(mbmInitApp(pid,pnam,flags='-s=8096 -e=64 -u=64 -i='+buffer+' -c',partitionBuffers=partitionBuffers))
 #------------------------------------------------------------------------------------------------
 def runOutBuffer():
   _run(mbmInitApp(pid,pnam,flags='-s=8096 -e=64 -u=64 -i=OUT -c',partitionBuffers=True))
