@@ -5,7 +5,6 @@ PatForward("PatForward").addTool( PatForwardTool("PatForwardTool") )
 PatForward("PatForward").PatForwardTool.AddTTClusterName = "PatAddTTCoord"
 PatForward("PatForward").PatForwardTool.addTool( PatFwdTool("PatFwdTool"))
 
-
-if TrackSys().getProp("fieldOff"):
-  PatForward("PatForward").PatForwardTool.PatFwdTool.withoutBField  = True;
-  PatForward("PatForward").PatForwardTool.WithoutBField = True;
+if TrackSys().fieldOff():
+  PatForward("PatForward").PatForwardTool.PatFwdTool.withoutBField  = True
+  PatForward("PatForward").PatForwardTool.WithoutBField = True

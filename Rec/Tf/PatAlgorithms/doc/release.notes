@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2008-10-22 - Chris Jones
+ - Adapt to changes in TrackSys python configurable
+
 ! 2008-10-22 - Manuel Tobias Schiller
  - fix PatSeedingTool: track history is now set to PatSeeding instead of
    PatForward

@@ -1,7 +1,7 @@
 from TrackSys.Configuration import *
 from Configurables import (PatSeeding, PatSeedingTool)
 
-if TrackSys().getProp("fieldOff"):
+if TrackSys().fieldOff():
    PatSeeding("PatSeeding").addTool(PatSeedingTool, name="PatSeedingTool")
    PatSeeding("PatSeeding").PatSeedingTool.xMagTol = 4e2;
    PatSeeding("PatSeeding").PatSeedingTool.zMagnet = 0.;

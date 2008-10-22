@@ -1,30 +1,32 @@
 from TrackSys.Configuration import *
 
 from Configurables import ( PatVeloTT, PatVeloTTTool,
-                            TrackMasterFitter, TrackMasterExtrapolator, TrackKalmanFilter, TrackSimpleExtraSelector )
+                            TrackMasterFitter, TrackMasterExtrapolator,
+                            TrackKalmanFilter, TrackSimpleExtraSelector )
 
-PatVeloTT("PatVeloTT").InputUsedTracksNames = ["Rec/Track/Forward","Rec/Track/Match"]
-PatVeloTT("PatVeloTT").addTool(TrackMasterFitter, name="Fitter")
-PatVeloTT("PatVeloTT").Fitter.ZPositions        = [ 990.0, 2165.0 ];
-PatVeloTT("PatVeloTT").Fitter.ErrorP            = [1.2, 5e-8];
-PatVeloTT("PatVeloTT").Fitter.NumberFitIterations = 1
-PatVeloTT("PatVeloTT").Fitter.MaxNumberOutliers = 1
-PatVeloTT("PatVeloTT").Fitter.addTool(TrackMasterExtrapolator, "Extrapolator")
-PatVeloTT("PatVeloTT").Fitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector"
-PatVeloTT("PatVeloTT").Fitter.Extrapolator.addTool(TrackSimpleExtraSelector, "ExtraSelector")
-PatVeloTT("PatVeloTT").Fitter.addTool(TrackKalmanFilter, "NodeFitter")
-PatVeloTT("PatVeloTT").Fitter.NodeFitter.addTool(TrackMasterExtrapolator, "Extrapolator")
-PatVeloTT("PatVeloTT").Fitter.NodeFitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
-PatVeloTT("PatVeloTT").Fitter.StateAtBeamLine = False;
+patVTT = PatVeloTT("PatVeloTT")
+patVTT.InputUsedTracksNames = ["Rec/Track/Forward","Rec/Track/Match"]
+patVTT.addTool(TrackMasterFitter, name="Fitter")
+patVTT.Fitter.ZPositions        = [ 990.0, 2165.0 ]
+patVTT.Fitter.ErrorP            = [1.2, 5e-8]
+patVTT.Fitter.NumberFitIterations = 1
+patVTT.Fitter.MaxNumberOutliers = 1
+patVTT.Fitter.addTool(TrackMasterExtrapolator, "Extrapolator")
+patVTT.Fitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector"
+patVTT.Fitter.Extrapolator.addTool(TrackSimpleExtraSelector, "ExtraSelector")
+patVTT.Fitter.addTool(TrackKalmanFilter, "NodeFitter")
+patVTT.Fitter.NodeFitter.addTool(TrackMasterExtrapolator, "Extrapolator")
+patVTT.Fitter.NodeFitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector";
+patVTT.Fitter.StateAtBeamLine = False
 
-PatVeloTT("PatVeloTT").addTool(PatVeloTTTool, name="PatVeloTTTool")
-if TrackSys().getProp("fieldOff"):
-   PatVeloTT("PatVeloTT").PatVeloTTTool.minMomentum = 5000.;
-   PatVeloTT("PatVeloTT").PatVeloTTTool.maxPseudoChi2 = 256;
-   PatVeloTT("PatVeloTT").maxChi2 = 256.;
-   PatVeloTT("PatVeloTT").PatVeloTTTool.DxGroupFactor = 0.0;
-   PatVeloTT("PatVeloTT").fitTracks = False;
+patVTT.addTool(PatVeloTTTool, name="PatVeloTTTool")
+if TrackSys().fieldOff():
+   patVTT.PatVeloTTTool.minMomentum = 5000.
+   patVTT.PatVeloTTTool.maxPseudoChi2 = 256
+   patVTT.maxChi2 = 256.
+   patVTT.PatVeloTTTool.DxGroupFactor = 0.0
+   patVTT.fitTracks = False
 else:
-   PatVeloTT("PatVeloTT").PatVeloTTTool.minMomentum = 800.;
-   PatVeloTT("PatVeloTT").PatVeloTTTool.maxPseudoChi2 = 10000.;
-   PatVeloTT("PatVeloTT").maxChi2 = 5.;
+   patVTT.PatVeloTTTool.minMomentum = 800.
+   patVTT.PatVeloTTTool.maxPseudoChi2 = 10000.
+   patVTT.maxChi2 = 5.

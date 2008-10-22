@@ -4,6 +4,9 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+! 2008-10-22 - Chris Jones
+ - Adapt to changes in TrackSys python configurable
+
 !======================= TrackMatching v2r19 2008-07-29 ======================
 ! 2008-07-29 - Marco Cattaneo
  - In options, use TrackSys instead of Brunel configurable

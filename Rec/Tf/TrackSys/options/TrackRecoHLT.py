@@ -23,28 +23,28 @@ GaudiSequencer("RecoHLTTrSeq").Members += [  Tf__PatVeloResetClusterUsed("HLT"),
                                              HltTrackFilter("HltPrepareForward")]
 
 
-Tf__PatVeloResetClusterUsed("HLT").ResetRClusters = True; 
+Tf__PatVeloResetClusterUsed("HLT").ResetRClusters = True
   
-Tf__PatVeloRTracking("HltRecoRZVelo").OutputTracksName = "Hlt/Track/RZVelo";
+Tf__PatVeloRTracking("HltRecoRZVelo").OutputTracksName = "Hlt/Track/RZVelo"
 
-PatPV2D("HltRecoPV2D").InputTracksName = "Hlt/Track/RZVelo";
-PatPV2D("HltRecoPV2D").OutputVerticesName = "Hlt/Vertex/PV2D";
+PatPV2D("HltRecoPV2D").InputTracksName = "Hlt/Track/RZVelo"
+PatPV2D("HltRecoPV2D").OutputVerticesName = "Hlt/Vertex/PV2D"
 
-Tf__PatVeloSpaceTracking("HltRecoSpaceVelo").InputTracksName = "Hlt/Track/RZVelo";
-Tf__PatVeloSpaceTracking("HltRecoSpaceVelo").OutputTracksName = "Hlt/Track/Velo";
+Tf__PatVeloSpaceTracking("HltRecoSpaceVelo").InputTracksName = "Hlt/Track/RZVelo"
+Tf__PatVeloSpaceTracking("HltRecoSpaceVelo").OutputTracksName = "Hlt/Track/Velo"
 Tf__PatVeloSpaceTracking("HltRecoSpaceVelo").addTool( Tf__PatVeloSpaceTool(), name="HLTVeloSpaceTool" )
-Tf__PatVeloSpaceTracking("HltRecoSpaceVelo").HLTVeloSpaceTool.OutputLevel = 4;
-Tf__PatVeloSpaceTracking("HltRecoSpaceVelo").HLTVeloSpaceTool.MarkClustersUsed = True;
+Tf__PatVeloSpaceTracking("HltRecoSpaceVelo").HLTVeloSpaceTool.OutputLevel = 4
+Tf__PatVeloSpaceTracking("HltRecoSpaceVelo").HLTVeloSpaceTool.MarkClustersUsed = True
 
-PatForward("HltRecoForward").InputTracksName = "Hlt/Track/Velo";
-PatForward("HltRecoForward").OutputTracksName = "Hlt/Track/Forward";
+PatForward("HltRecoForward").InputTracksName = "Hlt/Track/Velo"
+PatForward("HltRecoForward").OutputTracksName = "Hlt/Track/Forward"
 PatForward("HltRecoForward").addTool( PatForwardTool("PatForwardTool")) 
 PatForward("HltRecoForward").PatForwardTool.AddTTClusterName = "PatAddTTCoord"
 
-HltTrackFilter("HltPrepareVelo").InputSelection = "TES:Hlt/Track/Velo";
-HltTrackFilter("HltPrepareVelo").OutputSelection = "Velo1";
-HltTrackFilter("HltPrepareVelo").RequirePositiveInputs = false;
+HltTrackFilter("HltPrepareVelo").InputSelection = "TES:Hlt/Track/Velo"
+HltTrackFilter("HltPrepareVelo").OutputSelection = "Velo1"
+HltTrackFilter("HltPrepareVelo").RequirePositiveInputs = False
 
-HltTrackFilter("HltPrepareForward").InputSelection = "TES:Hlt/Track/Forward";
-HltTrackFilter("HltPrepareForward").OutputSelection = "Forward1";
-HltTrackFilter("HltPrepareForward").RequirePositiveInputs = false;
+HltTrackFilter("HltPrepareForward").InputSelection = "TES:Hlt/Track/Forward"
+HltTrackFilter("HltPrepareForward").OutputSelection = "Forward1"
+HltTrackFilter("HltPrepareForward").RequirePositiveInputs = False
