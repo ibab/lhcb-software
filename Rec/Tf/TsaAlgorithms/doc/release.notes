@@ -4,10 +4,11 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2008-10-22 - Chris Jones
+ - Adapt to changes in TrackSys python configurable
 
 ! 2008-11-10 M Needham
  - Improve generic tracking algorithm
-
 
 !======================= TsaAlgorithms v3r6 2008-10-02 ======================
 
