@@ -1,4 +1,8 @@
-2008-10-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+2008-10-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v1r7
+
+2008-10-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/LbLogin.py: fixed mistake in the CONTRIBDIR location
 
