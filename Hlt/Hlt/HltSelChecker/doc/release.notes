@@ -9,6 +9,9 @@
 ! end
 !-----------------------------------------------------------------------------
 
+! 2008-10-22 - Patrick Koppenburg
+ - Rename Kst0Kst0 to KstarKstar
+
 ! 2008-10-18 - Adlene Hicheur
  - Add test file for Bs ->J/psi(ee) Phi selection
 

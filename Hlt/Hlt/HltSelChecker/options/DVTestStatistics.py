@@ -42,6 +42,6 @@ importOptions("$HLTSELECTIONSROOT/options/MinimumBiasDst.py")
 
 ApplicationMgr().EvtMax = 1000
 
-EventSelector().PrintFreq = 1000 
+EventSelector().PrintFreq = 100
 
 

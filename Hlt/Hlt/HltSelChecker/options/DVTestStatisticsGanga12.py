@@ -73,7 +73,6 @@ ApplicationMgr().EvtMax = -1
 
 EventSelector().PrintFreq = 1000 
 
-
 #
 # TMP
 #

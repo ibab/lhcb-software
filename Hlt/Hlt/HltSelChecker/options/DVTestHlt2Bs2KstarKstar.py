@@ -1,4 +1,4 @@
-### @file 
+ ### @file 
  #  Test file for HLT2, Bs K*0K*~0
  #
  #  @author Diego Martinez Santos (USC)
@@ -10,12 +10,12 @@ from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, Gaud
 #
 # Preselection
 #
-importOptions( "$B2UDSROOT/options/DVPreselBs2Kst0Kst0.opts" )
+importOptions( "$B2UDSROOT/options/DVPreselBs2KstarKstar.opts" )
 #
 # Run correlations only on offline selected events
 #
 GaudiSequencer("Hlt2CorrsSeq").Members += [ CheckSelResult("CheckOffline") ]
-CheckSelResult("CheckOffline").Algorithms += [ "PreselBs2Kst0Kst0" ]
+CheckSelResult("CheckOffline").Algorithms += [ "PreselBs2KstarKstar" ]
 #
 # Hlt test
 #
@@ -39,17 +39,24 @@ GaudiSequencer("SeqHlt2TruthFilter").IgnoreFilterPassed = TRUE
 # Overwrite input - uncomment to run HLT on TRUE signal only
 #
 # importOptions( "$HLTSELCHECKERROOT/options/OverwriteWithTruth.py")
+###
+ # Tuple
+###
+importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
+DecayTreeTuple("Hlt2DecayTreeTuple").addTool(PhysDesktop())
+DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Phys/Hlt2SelBs2KstarKstar"]
+DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[B_s0 -> (^K*(892)0 -> ^K+ ^pi-)(^K*(892)~0 -> ^K- ^pi+)]cc"
 #
 # Options
 #
 EventSelector().Input   = [
-  "DATAFILE='PFN:castor:/castor/cern.ch/user/d/diegoms/BsKst0Kst0.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
+  "DATAFILE='PFN:castor:/castor/cern.ch/user/d/diegoms/BsKstarKstar.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
 
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
 ApplicationMgr().ExtSvc +=  [ "NTupleSvc" ]                             
-NTupleSvc().Output =  [ "FILE1 DATAFILE='HLT-Bs2Kst0Kst0.root' TYP='ROOT' OPT='NEW'" ] 
-HistogramPersistencySvc().OutputFile = "DVHlt2-Bs2Kst0Kst0.root"
+NTupleSvc().Output =  [ "FILE1 DATAFILE='HLT-Bs2KstarKstar.root' TYP='ROOT' OPT='NEW'" ] 
+HistogramPersistencySvc().OutputFile = "DVHlt2-Bs2KstarKstar.root"
 
 ApplicationMgr().EvtMax = -1 
 EventSelector().FirstEvent = 1 
