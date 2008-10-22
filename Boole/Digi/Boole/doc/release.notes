@@ -3,6 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+! 2008-10-22 - Marco Cattaneo
+ - Do not suppress INFO from RawWriter (finalize message needed by DIRAC)
+
 ! 2008-10-21 - Marco Clemencic
  - Updated the fix for of Configurable for Gaudi v20r3. 
 

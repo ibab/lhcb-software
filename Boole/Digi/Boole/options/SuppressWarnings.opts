@@ -16,6 +16,7 @@ BooleInit.OutputLevel = 3;
 SpilloverAlg.OutputLevel = 3;
 EventSelector.OutputLevel = 3;
 DigiWriter.OutputLevel = 3;
+RawWriter.OutputLevel = 3;
 TimingAuditor.OutputLevel = 3;
 EventLoopMgr.OutputLevel = 3;
 StatusCodeSvc.OutputLevel = 3;
