@@ -3,6 +3,8 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
+! 2008-10-22 - Stephanie Hansmann-Menzemer
+ - translate PatChecking.opts in PatChecking.py
 
 ! 2008-10-21 - Chris Jones
  - Improvements to Python configuration to allow easier re-configuration for
