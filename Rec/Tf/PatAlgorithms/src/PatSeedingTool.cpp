@@ -1,4 +1,4 @@
-// $Id: PatSeedingTool.cpp,v 1.25 2008-10-07 15:05:43 mschille Exp $
+// $Id: PatSeedingTool.cpp,v 1.26 2008-10-22 08:44:26 mschille Exp $
 // Include files
 
 #include <cmath>
@@ -1184,7 +1184,7 @@ void PatSeedingTool::storeTrack ( const PatSeedTrack& track,
 {
   LHCb::Track* out = new LHCb::Track();
   out->setType( LHCb::Track::Ttrack );
-  out->setHistory( LHCb::Track::PatForward );
+  out->setHistory( LHCb::Track::PatSeeding );
   out->setPatRecStatus( LHCb::Track::PatRecIDs );
 
   debug() << "==== Storing track " << outputTracks.size() << endreq;
