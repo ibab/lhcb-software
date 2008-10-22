@@ -1,5 +1,5 @@
 #============================================================================
-# $Id: requirements,v 1.39 2008-10-21 12:06:34 graven Exp $
+# $Id: requirements,v 1.40 2008-10-22 07:52:55 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : P. Koppenburg & M. Cattaneo
 #============================================================================
@@ -53,7 +53,7 @@ use RecSys              v*         -no_auto_imports
 
 #-- HLT packages 
 use HltSys		v*	     -no_auto_imports
-use HltConf	    v*
+use HltConf	    v*        Hlt
 
 #-- Phys packages 
 use PhysSys		v*	     -no_auto_imports
