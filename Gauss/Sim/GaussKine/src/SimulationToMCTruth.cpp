@@ -1,4 +1,4 @@
-// $Id: SimulationToMCTruth.cpp,v 1.1 2008-10-20 08:08:54 robbep Exp $
+// $Id: SimulationToMCTruth.cpp,v 1.2 2008-10-23 12:08:36 robbep Exp $
 // Include files 
 
 // local 
@@ -61,6 +61,7 @@ SimulationToMCTruth::SimulationToMCTruth(const std::string& name,
                    m_vertices = LHCb::MCVertexLocation::Default ); 
   declareProperty( "GiGaService",    m_gigaSvcName  = "GiGa" );
   declareProperty( "KineCnvService", m_kineSvcName  = IGiGaCnvSvcLocation::Kine );
+  declareProperty( "CheckForUnknownParticle" , m_checkUnknown = false ) ;
 }
 
 //=============================================================================
@@ -156,6 +157,7 @@ StatusCode SimulationToMCTruth::execute() {
   MCTruthManager * mcmanager = MCTruthManager::GetInstance();
 
   HepMC::GenEvent * ev = mcmanager -> GetCurrentEvent() ;
+  ev -> print() ;
   std::vector< int > primbar = mcmanager -> GetPrimaryBarcodes() ;
 
   for ( std::vector<int>::const_iterator it=primbar.begin() ;
@@ -165,11 +167,9 @@ StatusCode SimulationToMCTruth::execute() {
     
     // Check to which primary vertex they belong to
     LHCb::MCVertex * primvtx = findPrimaryVertex( Gaudi::XYZPoint( genprodvtx -> point3d() ) ) ;
-    if( 0 == primvtx ) {
-      return Error("Primary vertex not found !");
-    }
+    if( 0 == primvtx ) return Error("Primary vertex not found !");
     
-    convert( genpart , primvtx ) ;
+    convert( genpart , primvtx , true ) ;
   }
   
   // Reset oscillation flags
@@ -196,7 +196,8 @@ StatusCode SimulationToMCTruth::execute() {
 // Convert method to fill a MCParticle
 //=============================================================================
 void SimulationToMCTruth::convert( const HepMC::GenParticle * part , 
-				   LHCb::MCVertex * prodvertex ) {
+				   LHCb::MCVertex * prodvertex , 
+				   bool isPrimary ) {
   LHCb::MCParticle * mcpart = 0;
   int barcode = part -> barcode() ;
   
@@ -213,6 +214,12 @@ void SimulationToMCTruth::convert( const HepMC::GenParticle * part ,
     mcpart -> setMomentum     ( Gaudi::LorentzVector( part->momentum() ) ) ;
     mcpart -> setParticleID   ( LHCb::ParticleID( part->pdg_id() ) ) ;
     
+    if ( m_checkUnknown ) {
+      if ( 0 == m_ppSvc -> findByStdHepID( part->pdg_id() ) ) 
+	  warning() << "The particle with pdg_id " << part->pdg_id()
+		    << " is not known to LHCb." << endreq ;
+    } 
+    
     // Check if the particle from Geant4 has already a link to a MCParticle
     MCTruthManager * mcmanager = MCTruthManager::GetInstance();
     LHCb::MCParticle * linkedMother = mcmanager -> GetMotherMCParticle( barcode ) ;
@@ -222,21 +229,27 @@ void SimulationToMCTruth::convert( const HepMC::GenParticle * part ,
         const_cast< LHCb::MCVertex *>(linkedMother -> endVertices().front().data()) ;
       linkedVertex -> addToProducts( mcpart ) ;
       mcpart -> setOriginVertex( linkedVertex ) ;
-      // and link this mother to the prodvertex of the root particle of the linkedMother
-      // decay tree, except if this MCParticle has already been treated.
-      bool treatTree = ! std::binary_search( m_treatedParticles.begin() , 
-		                             m_treatedParticles.end() ,
-	                                     linkedMother -> key() ) ;
-      if ( treatTree ) m_treatedParticles.insert( linkedMother -> key() ) ;
-      while ( treatTree && ( 0 != linkedMother -> mother() ) ) {
-        linkedMother = const_cast< LHCb::MCParticle *>( linkedMother -> mother() ) ;
-        treatTree = ! std::binary_search( m_treatedParticles.begin() , m_treatedParticles.end() ,
-	                                  linkedMother -> key() ) ;
+      
+      // if the particle is a primary particle, then the tree has already been
+      // attached to the primary vertex in GenerationToSimulation
+      if ( ! isPrimary ) {
+	// and link this mother to the prodvertex of the root particle of the linkedMother
+	// decay tree, except if this MCParticle has already been treated.
+	bool treatTree = ! std::binary_search( m_treatedParticles.begin() , 
+					       m_treatedParticles.end() ,
+					       linkedMother -> key() ) ;
 	if ( treatTree ) m_treatedParticles.insert( linkedMother -> key() ) ;
-      }
-      if ( treatTree ) { 
-        linkedMother -> setOriginVertex( prodvertex ) ;
-        prodvertex -> addToProducts( linkedMother ) ;
+	while ( treatTree && ( 0 != linkedMother -> mother() ) ) {
+	  linkedMother = const_cast< LHCb::MCParticle *>( linkedMother -> mother() ) ;
+	  treatTree = ! std::binary_search( m_treatedParticles.begin() , 
+					    m_treatedParticles.end() ,
+	                                    linkedMother -> key() ) ;
+	  if ( treatTree ) m_treatedParticles.insert( linkedMother -> key() ) ;
+	}
+	if ( treatTree ) { 
+	  linkedMother -> setOriginVertex( prodvertex ) ;
+          prodvertex -> addToProducts( linkedMother ) ;
+	}
       }  
     } else {
       mcpart -> setOriginVertex ( prodvertex ) ;
@@ -252,29 +265,44 @@ void SimulationToMCTruth::convert( const HepMC::GenParticle * part ,
     // Note - const const needed here to allow "addToEndVertices" below
     // in general this should be avoid but here it provides a quick and 
     // reasonably neat solution
-    mcpart = const_cast<LHCb::MCParticle*>( prodvertex->mother() );
+    mcpart = const_cast< LHCb::MCParticle* >( prodvertex -> mother() );
   }
   
   HepMC::GenVertex * genendvtx = part -> end_vertex();
 
-  LHCb::MCVertex * mcendvtx = new LHCb::MCVertex();
-  m_vertexContainer -> insert( mcendvtx );
+  if ( ! isEndOfWorldVertex( genendvtx ) ) {
 
-  mcendvtx -> setPosition ( Gaudi::XYZPoint(genendvtx->point3d()) );
-  mcendvtx -> setTime     ( genendvtx->position().t() );
-  mcendvtx -> setMother   ( mcpart );
-  int typeID = 
-    MCTruthManager::GetInstance() -> GetCreatorID( genendvtx -> barcode() );
-  mcendvtx -> setType( vertexType( typeID ) ) ;
+    LHCb::MCVertex * mcendvtx = new LHCb::MCVertex();
+    m_vertexContainer -> insert( mcendvtx );
 
-  mcpart -> addToEndVertices( mcendvtx ) ;
-
-  // now process the daughters
-  for ( HepMC::GenVertex::particles_out_const_iterator 
-          daughter=genendvtx->particles_out_const_begin();
-        daughter!=genendvtx->particles_out_const_end(); ++daughter ) {
-    convert( (*daughter) , mcendvtx ) ;
+    mcendvtx -> setPosition ( Gaudi::XYZPoint(genendvtx->point3d()) );
+    mcendvtx -> setTime     ( genendvtx->position().t() );
+    mcendvtx -> setMother   ( mcpart );
+    int typeID = 
+      MCTruthManager::GetInstance() -> GetCreatorID( genendvtx -> barcode() );
+    mcendvtx -> setType( vertexType( typeID ) ) ;
+  
+    mcpart -> addToEndVertices( mcendvtx ) ;
+    
+      // now process the daughters
+    for ( HepMC::GenVertex::particles_out_const_iterator 
+	  daughter=genendvtx->particles_out_const_begin();
+	  daughter!=genendvtx->particles_out_const_end(); ++daughter ) {
+      convert( (*daughter) , mcendvtx , false ) ;
+    }
   }
+}
+
+//=============================================================================
+// Check if the HepMC vertex is at the end of the world
+//=============================================================================
+bool SimulationToMCTruth::isEndOfWorldVertex( HepMC::GenVertex * ev ) {
+  if ( 0 == ev ) return true ;
+  if ( 0 != ev -> particles_out_size() ) return false ;
+  HepMC::ThreeVector V = ev -> point3d() ;
+  if ( ( 50.0 * m == V.x() ) || ( 50.0 * m == V.y() ) || ( 50.0 * m == V.z() ) ) 
+    return true ;
+  return false ;
 }
 
 //=============================================================================

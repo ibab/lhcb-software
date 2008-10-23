@@ -1,4 +1,4 @@
-// $Id: SimulationToMCTruth.h,v 1.1 2008-10-20 08:08:54 robbep Exp $
+// $Id: SimulationToMCTruth.h,v 1.2 2008-10-23 12:08:36 robbep Exp $
 #ifndef SIMULATIONTOMCTRUTH_H 
 #define SIMULATIONTOMCTRUTH_H 1
  
@@ -15,6 +15,7 @@ class IGiGaKineCnvSvc ;
 class IParticlePropertySvc ;
 namespace HepMC {
   class GenParticle ;
+  class GenVertex ;
 };
 namespace LHCb {
   class MCHeader ;
@@ -57,7 +58,11 @@ private:
   } 
   
   /// Convert a HepMC particle from Geant4 to a MC Particle
-  void convert( const HepMC::GenParticle* genpart, LHCb::MCVertex* prodvertex );
+  void convert( const HepMC::GenParticle* genpart, LHCb::MCVertex* prodvertex , 
+                bool isPrimary );
+                
+  /// Check if a vertex is at the Geant4 volume boundary
+  bool isEndOfWorldVertex( HepMC::GenVertex * ev ) ;
   
   /// Determines the MCVertex event type
   LHCb::MCVertex::MCVertexType vertexType( int id );
@@ -67,6 +72,7 @@ private:
 
   std::string        m_gigaSvcName;      ///< Name of GiGa Service
   std::string        m_kineSvcName;      ///< Name of GiGaCnv Service
+  bool               m_checkUnknown;     ///< Check for unknown PDG Ids
   IGiGaSvc*          m_gigaSvc;          ///< Pointer to GiGa Service
   IGiGaKineCnvSvc*   m_gigaKineCnvSvc;   ///< Pointer to GiGaKine Service
 
