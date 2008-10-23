@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.22 2008-10-23 12:44:16 graven Exp $ 
+# $Id: HltLine.py,v 1.23 2008-10-23 13:45:45 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.22 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.23 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt line itself 
@@ -273,7 +273,7 @@ _types_ = { TrackUpgrade  : 'TU'
           } 
 
 ## protected attributes 
-_protected_ = ( 'IgnoreFilterPassed' , 'Members' , 'ModeOR' )
+_protected_ = ( 'IgnoreFilterPassed' , 'Members' , 'ModeOR', 'DecisionName', 'Prescale','Postscale','Filter1' )
 ## own slots for HltLine 
 _myslots_   = ( 'name' , 'prescale'  , 'postscale' , 'ODIN' , 'L0DU' , 'HLT' , 'algos' ) 
 
@@ -709,6 +709,8 @@ class Hlt1Line(object):
         #start to contruct the sequence        
         line = self.subname()
         
+        #TODO: shouldn't we just allow all three of them? 
+        #      and shouldn't each correspond to a stage in the DecReport?
         _seed = None
         if  ODIN  : _seed = ODINFilter ( odinentryName( line ) , Code = self._ODIN ) 
         elif L0DU : _seed = L0Filter   ( l0entryName  ( line ) , Code = self._L0DU ) 
@@ -741,14 +743,12 @@ class Hlt1Line(object):
             print "# WARNING: Line '%s' has a final output selection named '%s'"%(line,self._outputsel)
 
         # create the line configurable
-        self._configurable = Line ( self.name()
-                                  , DecisionName =           decisionName ( line ) 
-                                  , Prescale = Scaler (     prescalerName ( line ) , AcceptFraction = self._prescale  )
-                                  , Seed = _seed
-                                  , Filter1 = GaudiSequencer(  filterName ( line ) ,        Members = _members        )
-                                  , Postscale = Scaler(    postscalerName ( line ) , AcceptFraction = self._postscale ) 
-                                  , **mdict            
-                                  )
+        mdict.update( { 'DecisionName' : decisionName ( line ) 
+                      , 'Prescale'     : Scaler(     prescalerName ( line ) , AcceptFraction = self._prescale  )
+                      , 'Postscale'    : Scaler(    postscalerName ( line ) , AcceptFraction = self._postscale ) 
+                      , 'Seed'         : _seed } )
+        if _members : mdict.update( { 'Filter1' : GaudiSequencer( filterName ( line ) , Members = _members ) })
+        self._configurable = Line ( self.name() , **mdict )
 
         ## finally assign the decision name!
         self._decision = decisionName ( line )
@@ -1039,7 +1039,7 @@ def __enroll__ ( self       ,   ## the object
     if type(self) is Line :
         line = line + __enroll__( self.Prescale,  level + 1, lst )
         line = line + __enroll__( self.Seed,      level + 1, lst )
-        line = line + __enroll__( self.Filter1,   level + 1, lst )
+        if hasattr(self,'Filter1') : line = line + __enroll__( self.Filter1,   level + 1, lst )
         line = line + __enroll__( self.Postscale, level + 1, lst )
 
     return line

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.39 2008-10-23 12:45:24 graven Exp $ 
+! $Id: release.notes,v 1.40 2008-10-23 13:45:45 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : 
@@ -11,6 +11,7 @@
  - Update lines so that they satisfy the above 
  - replace ODIN,L0DU and HltDecReports filters by 'hybrids' 
  - make Hlt1Global an ordinary Line with an exceptional name
+ - empty sequencer optimization in HltLine: if empty, skip it...
 
 ! 2008-10-22 - J.A. Hernando
  - update of HltInit.opts
