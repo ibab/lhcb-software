@@ -29,14 +29,14 @@ using namespace LHCb;
 /**
  * Macro for initialising a close command.
  */
-#define INIT_CLOSE_COMMAND(h, fname, adler32, md5, seqno, rno, siz, events) { \
+#define INIT_CLOSE_COMMAND(h, fname, adler_32, md_5, seqno, rno, thesize, noofevents) { \
     (h)->cmd = CMD_CLOSE_FILE; \
-    (h)->run_no = rno;	\
+    (h)->run_no = rno;  \
     (h)->data.chunk_data.seq_num = seqno; \
-    (h)->data.stop_data.adler32_sum = (adler32); \
-    (md5)->Final((h)->data.stop_data.md5_sum); \
-    (h)->data.stop_data.size = siz; \
-    (h)->data.stop_data.events = events; \
+    (h)->data.stop_data.adler32_sum = (adler_32); \
+    (md_5)->Final((h)->data.stop_data.md5_sum); \
+    (h)->data.stop_data.size = thesize; \
+    (h)->data.stop_data.events = noofevents; \
     strncpy((h)->file_name, (fname), MAX_FILE_NAME); \
 }
 
