@@ -33,7 +33,7 @@ namespace OTDet
     /// constructor from a polynomial t(r) and sigmat(r).  the
     /// coefficients are actually those of a polynominal in r/rmax,
     /// such that they all have unit [ns].
-    RtRelation(double rmax, const std::vector<double>& tcoeff, const std::vector<double>& terrcoeff, size_t nbins=25) ;
+    RtRelation(double rmax, const std::vector<double>& tcoeff, const std::vector<double>& terrcoeff, size_t nbins=49) ;
     ///  constructor from a polynomial t(r) and a fixed error in r. this is only for convenience with MC.
     RtRelation(double rmax, const std::vector<double>& tcoeff, double sigmaR, size_t nbins=25) ;
     /// constructor from a table o bins r[t]. decapricated.
@@ -122,12 +122,12 @@ namespace OTDet
   
   inline double RtRelation::drifttime( double r ) const 
   {
-    return polyeval(m_tcoeff,r/m_rmax ) ;
+    return polyeval(m_tcoeff, r<m_rmax ? r/m_rmax : 1 ) ;
   }
 
   inline double RtRelation::drifttimeError( double r ) const 
   {
-    return polyeval(m_terrcoeff,r/m_rmax) ;
+    return polyeval(m_terrcoeff, r<m_rmax ? r/m_rmax : 1) ;
   }
 
   inline DriftTimeWithError RtRelation::drifttimeWithError( double r ) const 
