@@ -1,4 +1,4 @@
-// $Id: SimulationToMCTruth.cpp,v 1.2 2008-10-23 12:08:36 robbep Exp $
+// $Id: SimulationToMCTruth.cpp,v 1.3 2008-10-23 12:14:30 robbep Exp $
 // Include files 
 
 // local 
@@ -157,7 +157,6 @@ StatusCode SimulationToMCTruth::execute() {
   MCTruthManager * mcmanager = MCTruthManager::GetInstance();
 
   HepMC::GenEvent * ev = mcmanager -> GetCurrentEvent() ;
-  ev -> print() ;
   std::vector< int > primbar = mcmanager -> GetPrimaryBarcodes() ;
 
   for ( std::vector<int>::const_iterator it=primbar.begin() ;
