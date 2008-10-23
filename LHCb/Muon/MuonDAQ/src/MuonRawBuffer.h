@@ -1,4 +1,4 @@
-// $Id: MuonRawBuffer.h,v 1.11 2008-07-14 12:17:54 asatta Exp $
+// $Id: MuonRawBuffer.h,v 1.12 2008-10-23 13:42:17 asatta Exp $
 #ifndef MUONRAWBUFFER_H 
 #define MUONRAWBUFFER_H 1
 
@@ -37,13 +37,15 @@ public:
 
   StatusCode getNZSupp(std::vector<std::pair<LHCb::MuonTileID,unsigned int> > & tileAndTDC);
   // to get muon data belonging to one particular raw bank
+private:
   StatusCode getTile(const LHCb::RawBank* r,std::vector<LHCb::MuonTileID>& tile);
   StatusCode getTileAndTDC(const LHCb::RawBank* r,std::vector<std::pair<LHCb::MuonTileID,unsigned int> > & tileAndTDC);
   StatusCode getPads(const LHCb::RawBank* r,std::vector<LHCb::MuonTileID>& pads);
-  StatusCode getTile( LHCb::RawEvent* raw,std::vector<LHCb::MuonTileID>& tile);
-  StatusCode getTileAndTDC( LHCb::RawEvent* raw,std::vector<std::pair<LHCb::MuonTileID,unsigned int> > & tileAndTDC);
-  StatusCode getPads( LHCb::RawEvent* raw,std::vector<LHCb::MuonTileID>& pads);
-   StatusCode getNZSupp( LHCb::RawEvent* raw,std::vector<std::pair<LHCb::MuonTileID,unsigned int> > & tileAndTDC);
+public: 
+ StatusCode getTile( LHCb::RawEvent* raw,std::vector<LHCb::MuonTileID>& tile,std::string offset);
+  StatusCode getTileAndTDC( LHCb::RawEvent* raw,std::vector<std::pair<LHCb::MuonTileID,unsigned int> > & tileAndTDC,std::string offset);
+  StatusCode getPads( LHCb::RawEvent* raw,std::vector<LHCb::MuonTileID>& pads,std::string offset);
+   StatusCode getNZSupp( LHCb::RawEvent* raw,std::vector<std::pair<LHCb::MuonTileID,unsigned int> > & tileAndTDC,std::string offset);
   StatusCode getNZSupp(const LHCb::RawBank* r,std::vector<std::pair<LHCb::MuonTileID,unsigned int> > & tileAndTDC);
   StatusCode dumpNZSupp(const LHCb::RawBank* r,unsigned int ode_num);
   MuonPPEventInfo getPPInfo(const LHCb::RawBank* r,unsigned int pp_num);
@@ -63,7 +65,12 @@ public:
   unsigned int BXCounter(unsigned int tell1Number);
   bool PPReachedHitLimit(unsigned int Tell1Number,int pp_num);
   bool LinkReachedHitLimit(unsigned int Tell1Number,int link_num);
+private:
   MuonTell1Header getHeader(const LHCb::RawBank* r);
+public:
+  LHCb::RawBankReadoutStatus status(){return m_status;};
+  void putStatusOnTES();
+
   std::vector<std::pair<MuonTell1Header, unsigned int> > getHeaders(LHCb::RawEvent* raw);
   std::vector<std::pair<MuonTell1Header, unsigned int> > getHeaders();
   
@@ -86,7 +93,11 @@ private:
   StatusCode checkBankSize(const LHCb::RawBank* rawdata);
   StatusCode checkAllHeaders(LHCb::RawEvent* raw);
   void fillTell1Header(unsigned int tell1,unsigned int data);
-  
+  void setTESOffset(std::string offset="");
+  void restoreTESOffset();
+  void initStatus();	  
+  void initStatusNZS();	  
+
   unsigned int m_NLink;
   unsigned int m_ODEWord;
   unsigned int m_M1Tell1;
@@ -118,7 +129,12 @@ private:
   unsigned int m_tell1_header_SYNCH_data_error[  MuonDAQHelper_maxTell1Number];
   unsigned int m_tell1_header_SYNCH_BC_error[  MuonDAQHelper_maxTell1Number];
   unsigned int m_tell1_header_SYNCH_Evt_error[  MuonDAQHelper_maxTell1Number];
+  std::string m_offsetForTES;
+  bool m_TESChanged;
+  std::string m_storeOriginalValue;
   
-
+  LHCb::RawBankReadoutStatus m_status;
+  LHCb::RawBankReadoutStatus m_statusFull;
+  bool m_statusCreated;
 };
 #endif // MUONRAWBUFFER_H

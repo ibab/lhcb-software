@@ -1,4 +1,4 @@
-// $Id: IMuonRawBuffer.h,v 1.9 2008-06-30 11:43:46 asatta Exp $
+// $Id: IMuonRawBuffer.h,v 1.10 2008-10-23 13:42:16 asatta Exp $
 #ifndef MUONDAQ_IMUONRAWBUFFER_H 
 #define MUONDAQ_IMUONRAWBUFFER_H 1
 
@@ -11,6 +11,7 @@
 #include "Event/MuonPPEventInfo.h"
 #include "Event/MuonODEData.h"
 #include "Event/MuonTell1Header.h"
+#include "Event/RawBankReadoutStatus.h"
 #include <vector>
 #include <utility>
 
@@ -37,12 +38,17 @@ public:
   virtual StatusCode getTileAndTDC(std::vector<std::pair<LHCb::MuonTileID,unsigned int> > & tileAndTDC)=0;
   virtual StatusCode getPads(std::vector<LHCb::MuonTileID>& pads)=0; 
   virtual StatusCode getNZSupp(std::vector<std::pair<LHCb::MuonTileID,unsigned int> > & tileAndTDC)=0;
+private:
   // to get muon data belonging to one particular raw bank
   virtual StatusCode getTile(const LHCb::RawBank* r,std::vector<LHCb::MuonTileID>& tile)=0;
   virtual StatusCode getTileAndTDC(const LHCb::RawBank* r,std::vector<std::pair<LHCb::MuonTileID,unsigned int> > & tileAndTDC)=0;
   virtual StatusCode getPads(const LHCb::RawBank* r,std::vector<LHCb::MuonTileID>& pads)=0;
 
   virtual MuonTell1Header getHeader(const LHCb::RawBank* r)=0;
+public:
+  virtual LHCb::RawBankReadoutStatus status()=0;
+  virtual void putStatusOnTES()=0;
+
   virtual std::vector<std::pair<MuonTell1Header, unsigned int> > getHeaders(LHCb::RawEvent* raw)=0;
   virtual  std::vector<std::pair<MuonTell1Header, unsigned int> > getHeaders()=0;
 
@@ -55,11 +61,11 @@ public:
 ode_num)=0;
   virtual MuonPPEventInfo getPPInfo(const LHCb::RawBank* r,unsigned int pp_num)=0;
   virtual MuonPPEventInfo getPPInfo(unsigned int tell1Number,unsigned int pp_num)=0;
-  virtual StatusCode getPads( LHCb::RawEvent* raw,std::vector<LHCb::MuonTileID>& pads)=0;
+  virtual StatusCode getPads( LHCb::RawEvent* raw,std::vector<LHCb::MuonTileID>& pads,std::string offset)=0;
  
-  virtual StatusCode getTile( LHCb::RawEvent* raw,std::vector<LHCb::MuonTileID>& tile)=0;
-  virtual StatusCode getTileAndTDC( LHCb::RawEvent* raw,std::vector<std::pair<LHCb::MuonTileID,unsigned int> > & tileAndTDC)=0;
-  virtual StatusCode getNZSupp( LHCb::RawEvent* raw,std::vector<std::pair<LHCb::MuonTileID,unsigned int> > & tileAndTDC)=0;
+  virtual StatusCode getTile( LHCb::RawEvent* raw,std::vector<LHCb::MuonTileID>& tile,std::string offset)=0;
+  virtual StatusCode getTileAndTDC( LHCb::RawEvent* raw,std::vector<std::pair<LHCb::MuonTileID,unsigned int> > & tileAndTDC,std::string offset)=0;
+  virtual StatusCode getNZSupp( LHCb::RawEvent* raw,std::vector<std::pair<LHCb::MuonTileID,unsigned int> > & tileAndTDC,std::string offset)=0;
   virtual StatusCode getPads( int tell1,std::vector<LHCb::MuonTileID>& pads)  =0;
   virtual StatusCode getPads( int tell1)  =0;
   virtual StatusCode getPadsInStation( int station,std::vector<std::vector<LHCb::MuonTileID>* >& pads)=0;

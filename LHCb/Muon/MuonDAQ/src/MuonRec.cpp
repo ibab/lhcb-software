@@ -1,4 +1,4 @@
-// $Id: MuonRec.cpp,v 1.6 2008-05-28 10:02:38 asatta Exp $
+// $Id: MuonRec.cpp,v 1.7 2008-10-23 13:42:17 asatta Exp $
 // Include files 
 #include <cstdio>
 
@@ -119,7 +119,7 @@ StatusCode MuonRec::execute() {
       // get mapping of input to output from region
       // in fact we are reversing the conversion done in the digitisation
       int NLogicalMap = m_muonDetector->getLogMapInRegion(station,region);     
-      debug()<<" station and region "<<station<<" "<<region<<" maps "<<NLogicalMap<<endreq;
+      verbose()<<" station and region "<<station<<" "<<region<<" maps "<<NLogicalMap<<endreq;
       
       if(1 == NLogicalMap){
         // straight copy of the input + making SmartRefs to the MuonDigits
@@ -176,7 +176,7 @@ StatusCode MuonRec::addCoordsNoMap(MuonCoords *coords,
     if( (iD->first).station() == static_cast<unsigned int>(station) &&
         (iD->first).region() == static_cast<unsigned int>(region) ){
       // make the coordinate to be added to coords
-      debug()<<" digit tile "<<iD->first<<endreq;
+      verbose()<<" digit tile "<<iD->first<<endreq;
       
       MuonCoord *current = new MuonCoord();
       
@@ -191,7 +191,7 @@ StatusCode MuonRec::addCoordsNoMap(MuonCoords *coords,
       
       // need to clear the layer and readout bits
       MuonTileID pad = iD->first;
-      debug()<<pad<<endreq;
+      verbose()<<pad<<endreq;
       
       // as no change between digit and coord in this mapping key is the same
       coords->insert(current,pad);
@@ -268,7 +268,7 @@ StatusCode MuonRec::addCoordsCrossingMap(MuonCoords *coords,
         iOne->second = true;
         iTwo->second = true;
         
-        debug() << " Made an crossed pad " << pad 
+        verbose() << " Made an crossed pad " << pad 
             << " from " << (iOne->first) << " and "
             << (iTwo->first) << endreq;
       }
@@ -290,7 +290,7 @@ StatusCode MuonRec::addCoordsCrossingMap(MuonCoords *coords,
       current->setDigitTile(link);
       current->setDigitTDC1((iOne->first).second);
 
-      debug() << " Found an uncrossed pad type 1 " << pad 
+      verbose() << " Found an uncrossed pad type 1 " << pad 
           << endreq;
 
       coords->insert(current,pad);
@@ -312,7 +312,7 @@ StatusCode MuonRec::addCoordsCrossingMap(MuonCoords *coords,
       link.push_back((iTwo->first).first);
       current->setDigitTile(link);     
 
-      debug() << " Found an uncrossed pad type 2 " << pad 
+      verbose() << " Found an uncrossed pad type 2 " << pad 
           << endreq;
 
       coords->insert(current,pad);      

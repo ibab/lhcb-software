@@ -1,4 +1,4 @@
-// $Id: MuonRawBuffer.cpp,v 1.21 2008-08-28 08:45:59 asatta Exp $
+// $Id: MuonRawBuffer.cpp,v 1.22 2008-10-23 13:42:17 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -85,8 +85,9 @@ void MuonRawBuffer::handle ( const Incident& incident )
 void MuonRawBuffer::clearData(){
   debug()<<" reset all buffers "<<endreq;
   m_checkTell1HeaderPerformed=false;
-  m_checkTell1HeaderResult=false;
- 
+  m_checkTell1HeaderResult=true;
+  m_statusCreated=false;
+  
   for (unsigned int i=0;i<MuonDAQHelper_maxTell1Number;i++){
     m_storage[i].clear();
     m_alreadyDecoded[i]=false;
@@ -225,7 +226,7 @@ StatusCode MuonRawBuffer::getTile(std::vector<LHCb::MuonTileID>& storage)
 
   LHCb::RawEvent* raw = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default);  
   StatusCode sc=StatusCode::SUCCESS;
-  sc= getTile(raw,storage);
+  sc= getTile(raw,storage,rootInTES());
   
   return sc;
   
@@ -235,7 +236,7 @@ StatusCode MuonRawBuffer::getTileAndTDC(std::vector<std::pair<LHCb::MuonTileID,u
 {
   LHCb::RawEvent* raw = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default);  
   StatusCode sc=StatusCode::SUCCESS;
-  sc= getTileAndTDC(raw,storage);  
+  sc= getTileAndTDC(raw,storage,rootInTES());  
   return sc;
 }
 
@@ -342,7 +343,7 @@ StatusCode  MuonRawBuffer::decodeTileAndTDCV1(const RawBank* rawdata){
   if(sc.isFailure()){
     m_hit_checkSize[tell1Number]++;
     
-    return sc;
+    return StatusCode::SUCCESS;
   }
   
   bool print_bank=false;
@@ -469,7 +470,7 @@ StatusCode MuonRawBuffer::getPads(std::vector<LHCb::MuonTileID>& storage)
 
 
 
-  StatusCode sc= getPads(raw,storage);
+  StatusCode sc= getPads(raw,storage,rootInTES());
   
     return sc;
 
@@ -505,25 +506,18 @@ StatusCode MuonRawBuffer::decodePadsV1(const LHCb::RawBank* r)
   StatusCode sc=checkBankSize(r);
   if(sc.isFailure()){    
     m_pad_checkSize[tell]++;
-    return sc;
+    return StatusCode::SUCCESS;;
   }
   
   const short * it=r->begin<short>();    
-  if((unsigned int)(r)->sourceID()>=m_M1Tell1){
-  
+  if((unsigned int)(r)->sourceID()>=m_M1Tell1){  
     unsigned int pads=*it;
-//info()<<"pads inside "<<*it<<endreq;
     it++;      
-    //skip/fill  event header
     m_eventHeader[tell]=*it;
-//info()<<" header inside "<<*it<<" "<<((*it)&(0xFF))<<endreq;
-    it++;
-    
+    it++;    
     for(unsigned int loop=0;loop<pads;loop++){
       unsigned int address=*it;
-      MuonTileID tile =(m_muonDet->getDAQInfo())->getPadInTell1V1(tell, address);
-//      info()<<" pad "<<address<<" "<<tile<<endreq;
-      
+      MuonTileID tile =(m_muonDet->getDAQInfo())->getPadInTell1V1(tell, address);      
       (m_padStorage[tell]).push_back(tile);        
       it++;        
     }      
@@ -554,7 +548,8 @@ StatusCode MuonRawBuffer::getTile(const LHCb::RawBank* r,std::vector<LHCb::MuonT
   
   unsigned int tell1Number=(r)->sourceID(); 
   StatusCode sc=DecodeData(r);
-  if(sc.isFailure())return sc;
+  if(sc.isFailure()) return StatusCode::SUCCESS;
+  //return sc;
   
   //copy in output container
   int output_size=m_storage[tell1Number].size();
@@ -570,69 +565,90 @@ StatusCode MuonRawBuffer::getTile(const LHCb::RawBank* r,std::vector<LHCb::MuonT
   
 };
 
-StatusCode MuonRawBuffer::getTile( LHCb::RawEvent* raw,std::vector<LHCb::MuonTileID>& storage)
+StatusCode MuonRawBuffer::getTile( LHCb::RawEvent* raw,std::vector<LHCb::MuonTileID>& storage,std::string offset)
 { 
+
+
+  setTESOffset(offset);
+  initStatus();
+  
   StatusCode sc=checkAllHeaders(raw);
-  if(sc.isFailure())return sc;
+
   storage.clear();
-  
-  const std::vector<RawBank*>& b = raw->banks(RawBank::Muon);
-  std::vector<RawBank*>::const_iterator itB;
-  if ( msgLevel(MSG::VERBOSE) )  verbose()<<" tell1 "<<b.size()<<endreq;
-
-
- //first decode data and insert in buffer
-  for( itB = b.begin(); itB != b.end(); itB++ ) {    
-    const RawBank* r = *itB;  
-    StatusCode sc=DecodeData(r);
-    if(sc.isFailure())return sc;    
-   }
-  //compact storage in one container
-  
-  for( itB = b.begin(); itB != b.end(); itB++ ) {  
-    unsigned int tell1Number=(*itB)->sourceID();    
-    std::vector<std::pair<LHCb::MuonTileID,unsigned int> >::iterator itStorage;
-    for(itStorage=(m_storage[tell1Number]).begin();
-        itStorage<(m_storage[tell1Number]).end();itStorage++){
-      storage.push_back(itStorage->first);
-     }
+  if(!sc.isFailure()){
+ 
+    const std::vector<RawBank*>& b = raw->banks(RawBank::Muon);
+    std::vector<RawBank*>::const_iterator itB;
+    if ( msgLevel(MSG::VERBOSE) )  verbose()<<" tell1 "<<b.size()<<endreq;
+    
+    
+    //first decode data and insert in buffer
+    for( itB = b.begin(); itB != b.end(); itB++ ) {    
+      const RawBank* r = *itB;  
+      StatusCode sc=DecodeData(r);
+      if(sc.isFailure())return sc;    
+    }
+    //compact storage in one container
+    
+    for( itB = b.begin(); itB != b.end(); itB++ ) {  
+      unsigned int tell1Number=(*itB)->sourceID();    
+      std::vector<std::pair<LHCb::MuonTileID,unsigned int> >::iterator itStorage;
+      for(itStorage=(m_storage[tell1Number]).begin();
+          itStorage<(m_storage[tell1Number]).end();itStorage++){
+        storage.push_back(itStorage->first);
+      }
+    }
   }
+  
+  putStatusOnTES();
+  restoreTESOffset();
+  
   return StatusCode::SUCCESS;
   
 }
 
 
-StatusCode MuonRawBuffer::getTileAndTDC(LHCb::RawEvent* raw,std::vector<std::pair<LHCb::MuonTileID,unsigned int> > & storage)
+StatusCode MuonRawBuffer::getTileAndTDC(LHCb::RawEvent* raw,std::vector<std::pair<LHCb::MuonTileID,unsigned int> > & storage, 
+                                        std::string offset)
 {
+
+  setTESOffset(offset);
+  initStatus();
   
   StatusCode sc=checkAllHeaders(raw);
-  if(sc.isFailure())return sc;
+  if(!sc.isFailure()){
+ 
 
 
-  storage.clear();
-  verbose()<<" start the real decoding "<<endreq;
+    storage.clear();
+    verbose()<<" start the real decoding "<<endreq;
+    
+    const std::vector<RawBank*>& b = raw->banks(RawBank::Muon);
+    std::vector<RawBank*>::const_iterator itB;  
+    
+    //first decode data and insert in buffer
+    for( itB = b.begin(); itB != b.end(); itB++ ) {    
+      const RawBank* r = *itB;   
+      StatusCode sc=DecodeData(r);
+      if(sc.isFailure())return sc; 
+    }
+    verbose()<<" the decoding is finished "<<endreq;
+    //compact data  in one container
+    
+    for( itB = b.begin(); itB != b.end(); itB++ ) {  
+      unsigned int tell1Number=(*itB)->sourceID();
+      
+      std::vector<std::pair<LHCb::MuonTileID,unsigned int> >::iterator itStorage;
+      for(itStorage=(m_storage[tell1Number]).begin();
+          itStorage<(m_storage[tell1Number]).end();itStorage++){
+        storage.push_back(*itStorage);
+      }
+    }
+  }
   
-  const std::vector<RawBank*>& b = raw->banks(RawBank::Muon);
-  std::vector<RawBank*>::const_iterator itB;  
- 
-  //first decode data and insert in buffer
-  for( itB = b.begin(); itB != b.end(); itB++ ) {    
-    const RawBank* r = *itB;   
-    StatusCode sc=DecodeData(r);
-    if(sc.isFailure())return sc; 
-  }
-  verbose()<<" the decoding is finished "<<endreq;
-  //compact data  in one container
- 
-  for( itB = b.begin(); itB != b.end(); itB++ ) {  
-    unsigned int tell1Number=(*itB)->sourceID();
- 
-     std::vector<std::pair<LHCb::MuonTileID,unsigned int> >::iterator itStorage;
-     for(itStorage=(m_storage[tell1Number]).begin();
-         itStorage<(m_storage[tell1Number]).end();itStorage++){
-       storage.push_back(*itStorage);
-     }
-  }
+  putStatusOnTES();
+  restoreTESOffset();
+
   return StatusCode::SUCCESS;
 }
 
@@ -648,7 +664,8 @@ StatusCode MuonRawBuffer::getTileAndTDC(const LHCb::RawBank* r,std::vector<std::
   tile.clear();
   
   StatusCode sc=DecodeData(r);
-  if(sc.isFailure())return sc;
+  //if(sc.isFailure())return sc;  
+  if(sc.isFailure()) return StatusCode::SUCCESS;
   unsigned int tell1Number=(r)->sourceID();
 
   //copy in output container
@@ -667,34 +684,42 @@ StatusCode MuonRawBuffer::getTileAndTDC(const LHCb::RawBank* r,std::vector<std::
 
 
 
-StatusCode MuonRawBuffer::getPads(LHCb::RawEvent* raw,std::vector<LHCb::MuonTileID> & pads)
+StatusCode MuonRawBuffer::getPads(LHCb::RawEvent* raw,std::vector<LHCb::MuonTileID> & pads, std::string offset)
 {
-  StatusCode sc=checkAllHeaders(raw);
-  if(sc.isFailure())return sc;
+  setTESOffset(offset);
+  initStatus();
 
-  pads.clear();
   
-  const std::vector<RawBank*>& b = raw->banks(RawBank::Muon);
-  std::vector<RawBank*>::const_iterator itB;  
-
- //first decode data and insert in buffer
-  for( itB = b.begin(); itB != b.end(); itB++ ) {    
-    const RawBank* r = *itB;   
-    StatusCode sc=DecodeDataPad(r);
-    if(sc.isFailure())return sc; 
-  }
-
-  //compact data  in one container
+  StatusCode sc=checkAllHeaders(raw);  
+  pads.clear();
+  if(!sc.isFailure()){
+    pads.clear();
+    
+    const std::vector<RawBank*>& b = raw->banks(RawBank::Muon);
+    std::vector<RawBank*>::const_iterator itB;  
+    
+    //first decode data and insert in buffer
+    for( itB = b.begin(); itB != b.end(); itB++ ) {    
+      const RawBank* r = *itB;   
+      StatusCode sc=DecodeDataPad(r);
+      if(sc.isFailure())return sc; 
+    }
+    
+    //compact data  in one container
+    
+    for( itB = b.begin(); itB != b.end(); itB++ ) {  
+      unsigned int tell1Number=(*itB)->sourceID();
  
-  for( itB = b.begin(); itB != b.end(); itB++ ) {  
-    unsigned int tell1Number=(*itB)->sourceID();
- 
-     std::vector<LHCb::MuonTileID>::iterator itStorage;
-     for(itStorage=(m_padStorage[tell1Number]).begin();
+      std::vector<LHCb::MuonTileID>::iterator itStorage;
+      for(itStorage=(m_padStorage[tell1Number]).begin();
          itStorage<(m_padStorage[tell1Number]).end();itStorage++){
-       pads.push_back(*itStorage);
-     }
+        pads.push_back(*itStorage);
+      }
+    }
   }
+  
+  putStatusOnTES();
+  restoreTESOffset();
   return StatusCode::SUCCESS;
 }
 
@@ -724,8 +749,12 @@ StatusCode MuonRawBuffer::DecodeData(const LHCb::RawBank* r)
 { 
   StatusCode sc=StatusCode::FAILURE;
   unsigned int tell1Number=(r)->sourceID();
-  if(tell1Number>MuonDAQHelper_maxTell1Number)return StatusCode::FAILURE; 
-   
+  if(tell1Number>MuonDAQHelper_maxTell1Number){
+    error()<<" in muon data a Tell1 Source ID is gretare than maximum "<<endreq;
+    
+    return StatusCode::FAILURE; 
+  }
+  
   if(!m_alreadyDecoded[tell1Number]){
     if(r->version()==MuonBankVersion::DC06){
       sc=decodeTileAndTDCDC06(r);
@@ -748,7 +777,11 @@ StatusCode MuonRawBuffer::DecodeDataPad(const LHCb::RawBank* r)
   StatusCode sc=StatusCode::FAILURE;
   sc.ignore();
   unsigned int tell=(r)->sourceID();
-  if(tell>MuonDAQHelper_maxTell1Number)return StatusCode::FAILURE;
+  if(tell>MuonDAQHelper_maxTell1Number){
+    error()<<" in raw data there is a muon bank with source ID greater than maximum "<<endreq;    
+    return StatusCode::FAILURE;
+  }
+  
   //  debug()<<tell<<" "<<m_padAlreadyDecoded[tell]<<endreq; 
   if((unsigned int)(r)->sourceID()>=m_M1Tell1){
     if(!m_padAlreadyDecoded[tell]){
@@ -991,7 +1024,7 @@ StatusCode MuonRawBuffer::getNZSupp(std::vector<std::pair<LHCb::MuonTileID,
 {
   LHCb::RawEvent* raw = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default);  
   StatusCode sc=StatusCode::SUCCESS;
-  sc= getNZSupp(raw,tileAndTDC);
+  sc= getNZSupp(raw,tileAndTDC,rootInTES());
   
   return sc;
    
@@ -1000,8 +1033,14 @@ StatusCode MuonRawBuffer::getNZSupp(std::vector<std::pair<LHCb::MuonTileID,
 
 StatusCode MuonRawBuffer::getNZSupp( LHCb::RawEvent* raw,
                                      std::vector<std::pair<LHCb::MuonTileID,
-                                     unsigned int> > & tileAndTDC)
+                                     unsigned int> > & tileAndTDC,
+                                     std::string offset)
 {
+
+
+  setTESOffset(offset);
+  
+  initStatusNZS();
   
   const std::vector<RawBank*>& b = raw->banks(RawBank::MuonFull);
   std::vector<RawBank*>::const_iterator itB;
@@ -1025,6 +1064,8 @@ StatusCode MuonRawBuffer::getNZSupp( LHCb::RawEvent* raw,
            tileAndTDC.push_back(*itStorage);
     }
   }
+  putStatusOnTES();
+  restoreTESOffset();
   return StatusCode::SUCCESS;
 }
 
@@ -1039,6 +1080,7 @@ StatusCode MuonRawBuffer::checkBankSize(const LHCb::RawBank* rawdata)
   if(bank_size<12){
     err()<< " muon bank "<<tell1Number<<" is too short "<<
       bank_size<<endreq;    
+    m_status.addStatus(tell1Number,RawBankReadoutStatus::Incomplete);
     return StatusCode::FAILURE;
   }  
   //how many pads ?
@@ -1059,6 +1101,7 @@ StatusCode MuonRawBuffer::checkBankSize(const LHCb::RawBank* rawdata)
   if((bank_size-skip*4)<0){
     err()<<"bank_size "<<bank_size<<" pad size to read "<<nPads*4<<endreq;
     err()<< "so muon bank "<<tell1Number<<" is too short in pad part "<<endreq;    
+  m_status.addStatus(tell1Number,RawBankReadoutStatus::Incomplete);
     return StatusCode::FAILURE;
     
   }
@@ -1081,6 +1124,7 @@ StatusCode MuonRawBuffer::checkBankSize(const LHCb::RawBank* rawdata)
     if(bank_size-read_data*2<pp_cnt*2){
       err()<<"bank_size "<<bank_size<<"read data "<<read_data<<" hit size to read "<<pp_cnt*2<<endreq;
       err()<< "so muon bank "<<tell1Number<<" is too short in hit part "<<endreq;   
+      m_status.addStatus(tell1Number,RawBankReadoutStatus::Incomplete);
       break;
       
       return StatusCode::FAILURE;
@@ -1241,31 +1285,57 @@ StatusCode MuonRawBuffer::checkAllHeaders(LHCb::RawEvent* raw)
   verbose()<<" check headers consistency "<<endreq;
 
   if( m_checkTell1HeaderPerformed)return m_checkTell1HeaderResult;
+  m_checkTell1HeaderPerformed=true;
   verbose()<<" check headers consistency not yet done"<<endreq;
-
+  
   std::vector<unsigned int> tell1InEvent;
   
   std::vector<unsigned int>::iterator  iList;
   const std::vector<RawBank*>& b = raw->banks(RawBank::Muon);
   std::vector<RawBank*>::const_iterator itB;  
+
   if(b.size()==0){
     if ( msgLevel(MSG::VERBOSE) )  verbose()<<" no muon banks in event"<<endreq;
-    return StatusCode::SUCCESS;
-    
+    for(int i=0;i<  static_cast<int>(MuonDAQHelper_maxTell1Number);i++){      
+      m_status.addStatus( i,RawBankReadoutStatus::Missing);
+    }    
+    m_checkTell1HeaderResult=false;
+    return StatusCode::SUCCESS;    
   }
   //first decode data and insert in buffer
+  bool foundError=false;
+  
   for( itB = b.begin(); itB != b.end(); itB++ ) {    
   
     unsigned int tell1Number=(*itB)->sourceID();
+    m_status.addStatus( tell1Number,RawBankReadoutStatus::OK);
+    
+    if((*itB)->size()==0)  m_status.addStatus( tell1Number,RawBankReadoutStatus::Empty);
     iList=std::find(tell1InEvent.begin(), tell1InEvent.end(),tell1Number );
     if(iList<tell1InEvent.end()){
       m_checkTell1HeaderResult=false;
       m_checkTell1HeaderPerformed=true;
       verbose()<<" failed "<<endreq;
-      return StatusCode::FAILURE;      
+      foundError=true;      
+      m_status.addStatus( tell1Number,RawBankReadoutStatus::NonUnique);
+      break;
+      
+      //return StatusCode::FAILURE;      
     }    
     tell1InEvent.push_back(tell1Number);   
   }
+
+  //set missing bank readout status
+  for(int i=0;i< static_cast<int>( MuonDAQHelper_maxTell1Number);i++){
+    if(m_status.status(i)==LHCb::RawBankReadoutStatus::Unknown){      
+      m_status.addStatus( i,RawBankReadoutStatus::Missing);
+    }    
+  } 
+  if(foundError){ 
+    m_checkTell1HeaderResult=false;
+    return StatusCode::FAILURE;   
+  }
+  
   //there is repeated Tell1
   //now check the fw version
 
@@ -1273,13 +1343,14 @@ StatusCode MuonRawBuffer::checkAllHeaders(LHCb::RawEvent* raw)
   int ReferenceVersion=(*(b.begin()))->version();
 
   for( itB = b.begin(); itB != b.end(); itB++ ) {  
-
+    unsigned int tell1Number=(*itB)->sourceID();
     if((*itB)->version()!=ReferenceVersion){
       error()<<
         " The muon Tell1 boards: not all the same version so  skip the event"
              << endreq;      
       m_checkTell1HeaderResult=false;
       m_checkTell1HeaderPerformed=true;
+      m_status.addStatus( tell1Number,RawBankReadoutStatus::Tell1Error );
       return StatusCode::FAILURE; // return m_checkTell1HeaderResult;
     }    
   }
@@ -1302,4 +1373,85 @@ void MuonRawBuffer::fillTell1Header(unsigned int tell1Number,unsigned int data)
   if(dataWord.getSYNCHBCNCntErrorInODE())m_tell1_header_SYNCH_BC_error[tell1Number]++;
   if(dataWord.getSYNCHEventCntErrorInODE())m_tell1_header_SYNCH_Evt_error[tell1Number]++;
 
+}
+
+
+void MuonRawBuffer::setTESOffset(std::string offset)
+{
+  if(m_TESChanged)return;
+  
+  debug()<<" chainging root in tes "<<endreq;
+  m_storeOriginalValue=this->rootInTES();
+  IProperty* prop = dynamic_cast<IProperty*>( this );
+  if( prop ) {  
+    StatusCode sc = prop->setProperty( "RootInTES", offset );
+    if(sc.isFailure())warning()<<" eunable to set property "<<endreq;
+    
+    m_TESChanged=true;
+    
+  }
+  
+}
+
+void MuonRawBuffer::restoreTESOffset()
+{
+  IProperty* prop = dynamic_cast<IProperty*>( this );
+  if( prop ) {  
+    StatusCode sc = prop->setProperty( "RootInTES", m_storeOriginalValue );
+    if(sc.isFailure())warning()<<" eunable to set property "<<endreq;
+    m_TESChanged=false;
+    
+  }
+  
+}
+
+
+
+
+
+void MuonRawBuffer::putStatusOnTES(){
+  // Readout Status
+  typedef LHCb::RawBankReadoutStatus Status;
+  typedef LHCb::RawBankReadoutStatuss Statuss;
+
+  
+  Statuss* statuss = getOrCreate<Statuss,Statuss>( LHCb::RawBankReadoutStatusLocation::Default );
+  Status* status = statuss->object ( m_status.key() );  
+
+  if( NULL == status ){ 
+    std::stringstream type("");
+    type << LHCb::RawBank::typeName(m_status.key()) ;
+    if ( msgLevel( MSG::VERBOSE) )verbose() << "Status for bankType " <<  type.str()  << " created now" << endreq;
+    status = new Status( m_status  );
+    statuss->insert( status );
+
+    
+  } else {
+    std::stringstream type("");
+    type << LHCb::RawBank::typeName(m_status.key()) ;
+
+    if ( msgLevel( MSG::DEBUG) )debug() << "Status for bankType " <<  type.str()  << " already exists" << endreq;
+    if( status->status() != m_status.status() ){
+      Warning("Status for bankType " +  type.str() + " already exists  with different status value -> merge both"
+              , StatusCode::SUCCESS).ignore();
+      for( std::map< int, long >::iterator it = m_status.statusMap().begin() ; it != m_status.statusMap().end() ; ++it){
+        status->addStatus((*it).first , (*it).second);
+      }
+    }
+  }
+
+}
+
+void  MuonRawBuffer::initStatus()
+{  
+  if(!m_statusCreated){
+    m_statusCreated=true;    
+    m_status= LHCb::RawBankReadoutStatus(RawBank::Muon );
+  }
+  
+  if ( msgLevel( MSG::VERBOSE) )verbose()<<" init "<<m_status.key()<<" "<<m_status<<endreq;
+}
+void  MuonRawBuffer::initStatusNZS()
+{
+    m_statusFull= LHCb::RawBankReadoutStatus(RawBank::MuonFull );  
 }
