@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2008-10-23 - Jan Amoraal
+ - Make TrackEventCloneKiller less verbose at initialisation. Used to print all properties.
+
 ! 2008-10-20 - Wouter Hulsbergen
  - Added TrackListFilter
 
