@@ -1,4 +1,4 @@
-// $Id: L0DUReportMonitor.cpp,v 1.18 2008-09-22 01:48:49 odescham Exp $
+// $Id: L0DUReportMonitor.cpp,v 1.19 2008-10-23 09:43:09 odescham Exp $
 // Include files 
 #include <cmath>
 // from Gaudi
@@ -341,7 +341,7 @@ StatusCode L0DUReportMonitor::execute() {
       
       // correlations
       if( report->conditionValue( id ) ){
-        for(LHCb::L0DUElementaryCondition::Map::iterator jt = it ;jt!=conditions.end();jt++){
+        for(LHCb::L0DUElementaryCondition::Map::iterator jt = conditions.begin() ;jt!=conditions.end();jt++){
           int jd = ((*jt).second)->id() ;
           if( report->conditionValue( jd ) ){
             // Inclusive 2D counters
@@ -443,7 +443,7 @@ StatusCode L0DUReportMonitor::execute() {
 
       // correlations
       if( report->channelDecision( id ) ){
-        for(LHCb::L0DUChannel::Map::iterator jt = it ;jt!=channels.end();jt++){
+        for(LHCb::L0DUChannel::Map::iterator jt = channels.begin() ;jt!=channels.end();jt++){
           int jd = ((*jt).second)->id() ;
           if( report->channelDecision( jd ) ){
             // inclusive 2D counters
@@ -542,7 +542,7 @@ StatusCode L0DUReportMonitor::execute() {
 
       // correlations
       if( report->triggerDecisionByName( name ) ){
-        for(LHCb::L0DUTrigger::Map::iterator jt = it ;jt!=triggers.end();jt++){
+        for(LHCb::L0DUTrigger::Map::iterator jt = triggers.begin() ;jt!=triggers.end();jt++){
           int jd = (*jt).second->id();
           if( report->triggerDecision( jd ) ){
             // inclusive 2D counters
