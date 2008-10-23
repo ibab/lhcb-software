@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.9 2008-10-06 09:39:42 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.10 2008-10-23 18:10:44 pkoppenb Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -10,6 +10,7 @@ from Gaudi.Configuration import *
 from GaudiConf.Configuration import *
 import GaudiKernel.ProcessJobOptions
 from Configurables       import GaudiSequencer as Sequence
+from Configurables       import L0Filter
 
 class HltConf(LHCbConfigurableUser):
     __slots__ = {
@@ -24,6 +25,7 @@ class HltConf(LHCbConfigurableUser):
                  'Hlt1',
                  'Hlt2',
                  'Hlt1+Hlt2',
+                 'Hlt1|Hlt2',
                  'DEFAULT' ]
                 
     def applyConf(self):
@@ -35,12 +37,13 @@ class HltConf(LHCbConfigurableUser):
         if self.getProp('oldStyle') :
             if hlttype not in self.validHltTypes() :  raise TypeError("Unknown hlttype '%s'"%hlttype)
             if hlttype.find('Hlt1') != -1 :   importOptions('$HLTCONFROOT/options/Hlt1.opts')
-            if hlttype.find('Hlt2') != -1 :   importOptions('$HLTCONFROOT/options/Hlt2.opts')
+            if hlttype.find('Hlt2') != -1 :   importOptions('$HLTCONFROOT/options/Hlt2.py')
             if hlttype ==  'DEFAULT'      :   importOptions('$HLTCONFROOT/options/RandomPrescaling.opts')
             if hlttype == 'readBackLumi'  :   importOptions('$HLTCONFROOT/options/HltJob_readLumiPy.opts')
             if hlttype == 'writeLumi'     :   importOptions('$HLTCONFROOT/options/HltJob_onlyLumi.opts')
             if hlttype.find('Lumi') != -1 :   importOptions('$HLTCONFROOT/options/Lumi.opts')
             if hlttype.find('Velo') != -1 :   importOptions('$HLTCONFROOT/options/HltVeloAlleySequence.opts')
+            if hlttype.find('Hlt1|Hlt2') != -1 : Sequence("Hlt2CheckHlt1Passed").Members = [ L0Filter() ]
         else :
             if hlttype == 'NONE'    : hlttype = ''
             if hlttype == 'DEFAULT' : hlttype = 'PA+LU+VE'

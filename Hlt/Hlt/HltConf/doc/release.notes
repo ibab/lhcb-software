@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.40 2008-10-23 13:45:45 graven Exp $ 
+! $Id: release.notes,v 1.41 2008-10-23 18:10:44 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : 
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2008-10-23 - Patrick Koppenburg
+ - Translate Hlt2.opts to Hlt2.py
+ - Remove Hlt.opts. It's not used anywhere.
+ - Add the possibility to do "Hlt1|Hlt2" in HltConf(). This runs Hlt1 and then Hlt2 
+   irrespective of the Hlt1 decision.
 
 ! 2008-10-23 - Gerhard Raven
  - Update HltLine so that it warns if 'outputSelection' doesn't match 'decisionName'
