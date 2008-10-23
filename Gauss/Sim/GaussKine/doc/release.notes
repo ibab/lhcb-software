@@ -4,6 +4,11 @@
 ! Purpose     : Code to exchange kinematic information with Geant4
 !-----------------------------------------------------------------------------
 
+! 2008-10-23 - Patrick Robbe
+ - In SimulationToMCTrugh: check if pdg code from Geant4 is unknown
+   and don't create a vertex for a particle reaching Geant4 'world'
+   volume
+
 ! 2008-10-20 - Patrick Robbe
  - Add new algorithms to send and retrieve MCTruth to/from G4
    . GenerationToSimulation: generator HepMC -> Geant4 
