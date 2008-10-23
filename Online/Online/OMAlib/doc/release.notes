@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.13 2008-10-09 17:59:17 ggiacomo Exp $
+! $Id: release.notes,v 1.14 2008-10-23 06:37:44 cattanem Exp $
 ! Package     : OMAlib
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
+
+! 2008-10-23 - Marco Cattaneo
+ - In requirements, add dependency of application on library, to please make -j
 
 ! 20081009
   - add a tool to declare histograms to DB from a saveset 
