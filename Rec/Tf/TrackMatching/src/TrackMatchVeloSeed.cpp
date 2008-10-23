@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.6 2007-12-01 07:13:55 wouter Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.7 2008-10-23 12:27:12 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -10,6 +10,7 @@
 // from TrackEvent
 #include "Event/State.h"
 #include "Event/StateParameters.h"
+#include "Event/Node.h"
 
 // from DigiEvent
 #include "Event/STCluster.h"
@@ -89,7 +90,8 @@ TrackMatchVeloSeed::TrackMatchVeloSeed( const std::string& name,
 
   declareProperty("nUseT", m_nUseT = 0u);
   declareProperty("nUseVelo", m_nUseVelo = 0u);
-
+  
+  declareProperty("OmitSeedFitOutliers", m_omitSeedFitOutliers = true) ;
   /*switch on or off NN var. writing*/
   declareProperty( "writeNNVariables", m_writeNNVariables = true);
 }
@@ -415,7 +417,8 @@ StatusCode TrackMatchVeloSeed::storeTracks( Tracks* matchCont )
     }
 
     // Copy seed hits (= LHCbIDs) -- if track is not fitted
-    if (seedTrack->fitStatus() == Track::FitStatusUnknown ){
+    if (seedTrack->fitStatus() == Track::FitStatusUnknown ||
+	!m_omitSeedFitOutliers){
       const std::vector<LHCbID>& sids = seedTrack -> lhcbIDs();
       std::vector<LHCbID>::const_iterator itsids = sids.begin();
       while ( itsids != sids.end() ) {
@@ -424,12 +427,11 @@ StatusCode TrackMatchVeloSeed::storeTracks( Tracks* matchCont )
       }
     }
     else {
-      std::vector<Measurement*>::const_iterator iSeedMeas;
-      for ( iSeedMeas = seedTrack->measurements().begin(); 
-            iSeedMeas != seedTrack->measurements().end(); ++iSeedMeas) {
-	LHCb::Measurement* meas = *iSeedMeas;
-        if (meas != 0 ) aTrack -> addToLhcbIDs( meas->lhcbID());
-      }
+      for( LHCb::Track::NodeContainer::const_iterator 
+	     inode = seedTrack->nodes().begin() ;
+	   inode != seedTrack->nodes().end(); ++inode) 
+	if( (*inode)->hasMeasurement() && (*inode)->type() != LHCb::Node::Outlier ) 
+	  aTrack -> addToLhcbIDs( (*inode)->measurement().lhcbID() ) ;
     }
 
     // copy all the states from the seed

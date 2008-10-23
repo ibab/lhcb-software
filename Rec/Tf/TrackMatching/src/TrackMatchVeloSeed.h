@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.h,v 1.2 2007-11-16 15:38:45 aperiean Exp $
+// $Id: TrackMatchVeloSeed.h,v 1.3 2008-10-23 12:27:12 wouter Exp $
 #ifndef TRACKMATCHVELOSEED_H 
 #define TRACKMATCHVELOSEED_H 1
 
@@ -153,6 +153,8 @@ private:
 
   std::vector<double> m_yTParams;
   std::vector<double> m_tyTParams; 
+
+  bool m_omitSeedFitOutliers; /// Omit outliers of SeedFit when creating new track
 
   bool m_writeNNVariables; /*switch on or off NN var. writing*/
 };

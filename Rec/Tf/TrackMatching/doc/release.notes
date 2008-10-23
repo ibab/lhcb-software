@@ -4,6 +4,10 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+! 2008-10-23 - Wouter Hulsbergen
+ - Add joboption to make it explicit that seed outliers are not copied to new track
+   (needed after change in TrackMasterFitter)
+
 ! 2008-10-22 - Chris Jones
  - Adapt to changes in TrackSys python configurable
 
