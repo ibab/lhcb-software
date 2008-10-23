@@ -3,6 +3,8 @@
 ! Responsible : Edwin Bos
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
+! 2008-10-23 - Stephanie Hansmann-Menzemer
+- Remove dependency on MCDecayFinder from TrackBaseChecker
 
 ! 2008-10-21 - Wouter Hulsbergen
 - Add option to TrackResChecker to split histos by track type

@@ -1,4 +1,4 @@
-// $Id: TrackCheckerBase.cpp,v 1.4 2008-10-21 07:22:01 wouter Exp $
+// $Id: TrackCheckerBase.cpp,v 1.5 2008-10-23 13:42:47 smenzeme Exp $
 // Include files 
 #include "TrackCheckerBase.h"
 #include "Event/Track.h"
@@ -64,8 +64,7 @@ StatusCode TrackCheckerBase::initialize()
   m_stateCreator = tool<IIdealStateCreator>("IdealStateCreator");
   m_visPrimVertTool = tool<IVisPrimVertTool>("VisPrimVertTool");
   m_ghostClassification = tool<ITrackGhostClassification>(m_ghostToolName,"GhostTool",this); 
-  m_decayFinder = tool<IMCDecayFinder>("MCDecayFinder","DecayFinder", this);
-
+  
   const TrackMaps::RecMap& theMap = TrackMaps::recDescription();
   m_recCat = theMap.find(m_selectionCriteria)->second;
 

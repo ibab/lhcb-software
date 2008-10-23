@@ -1,4 +1,4 @@
-// $Id: TrackCheckerBase.h,v 1.4 2008-10-21 07:22:01 wouter Exp $
+// $Id: TrackCheckerBase.h,v 1.5 2008-10-23 13:42:50 smenzeme Exp $
 #ifndef TRACKCHECKERBASE_H
 #define TRACKCHECKERBASE_H 1
  
@@ -18,7 +18,7 @@
 #include "MCInterfaces/IIdealStateCreator.h"
 #include "MCInterfaces/IVisPrimVertTool.h"
 #include "MCInterfaces/ITrackGhostClassification.h"
-#include "MCInterfaces/IMCDecayFinder.h"
+
 
 #include "Event/Track.h"
 #include "Event/MCParticle.h"
@@ -83,11 +83,7 @@ class TrackCheckerBase : public GaudiHistoAlg {
   */
   ITrackExtrapolator* extrapolator() const;
 
-  /** Get a pointer to the MCDecayFinder
-  * @return IMCDecayFinder 
-  */
-  IMCDecayFinder* decayFinder() const;
-
+  
   typedef LinkerTool<LHCb::Track, LHCb::MCParticle> AsctTool;
   typedef AsctTool::InverseType InverseTable;
   typedef InverseTable::Range InverseRange;
@@ -199,9 +195,6 @@ class TrackCheckerBase : public GaudiHistoAlg {
   bool m_splitByType;
   std::string m_all;                                                                       
 
-  IMCDecayFinder* m_decayFinder;
-
-
 };
 
 inline IMagneticFieldSvc* TrackCheckerBase::fieldSvc() const{
@@ -256,8 +249,5 @@ inline ITrackGhostClassification* TrackCheckerBase::ghostClassification() const 
   return m_ghostClassification;
 }
 
-inline IMCDecayFinder* TrackCheckerBase::decayFinder() const{
-  return m_decayFinder;
-}
 
 #endif // TRACKCHECKERBASE_H
