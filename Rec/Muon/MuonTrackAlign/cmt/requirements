@@ -1,5 +1,5 @@
 package MuonTrackAlign
-version v1r7
+version v1r7p1
 
 # ================ structure =========================================
 
@@ -11,7 +11,8 @@ use MuonDAQ     v*    Muon
 use MuonDet     v*    Det
 use MCEvent     v*    Event
 use LinkerEvent v*    Event
-use GaudiAlg      v*
+use GaudiAlg    v*
+use AIDA        v*    LCG_Interfaces
 
 # build a component library
 
