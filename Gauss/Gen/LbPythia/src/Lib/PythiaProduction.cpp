@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.cpp,v 1.14 2008-10-23 15:34:15 robbep Exp $
+// $Id: PythiaProduction.cpp,v 1.15 2008-10-23 16:07:09 robbep Exp $
 
 // Include files
 // STD * STL 
@@ -175,9 +175,9 @@ PythiaProduction::PythiaProduction( const std::string& type,
   m_defaultSettings.push_back( "pypars mstp 51 10042" ) ;
   m_defaultSettings.push_back( "pypars mstp 142 2" ) ;
   m_defaultSettings.push_back( "pypars parp 67 1.0" ) ;
-  m_defaultSettings.push_back( "pypars parp 82 4.50" ) ;
+  m_defaultSettings.push_back( "pypars parp 82 4.28" ) ;
   m_defaultSettings.push_back( "pypars parp 89 14000" ) ;
-  m_defaultSettings.push_back( "pypars parp 90 0.116" ) ;
+  m_defaultSettings.push_back( "pypars parp 90 0.119" ) ;
   m_defaultSettings.push_back( "pypars parp 85 0.33" ) ;
   m_defaultSettings.push_back( "pypars parp 86 0.66" ) ;
   m_defaultSettings.push_back( "pypars parp 91 1.0" ) ;
