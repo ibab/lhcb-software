@@ -1,4 +1,4 @@
-// $Id: DeOTModule.h,v 1.38 2008-10-14 11:50:29 wouter Exp $
+// $Id: DeOTModule.h,v 1.39 2008-10-23 09:16:28 janos Exp $
 #ifndef OTDET_DEOTMODULE_H
 #define OTDET_DEOTMODULE_H 1
 
@@ -38,7 +38,7 @@ namespace LHCb
  *  The numbering scheme for the OT modules in the digitization is:
  *  
  *  @verbatim
-                                                                ^ Z 
+                                                                ^ Y 
           Quarter 3                      Quarter 2              |
      __________________________     _________________________   |
     |  |  |  |  |  |  |  |  |  |   | |  |  |  |  |  |  |  |  |  |
@@ -676,14 +676,22 @@ inline unsigned int DeOTModule::hitStrawB(const double u) const {
 /// See LHCb note: 2003-019
 inline bool DeOTModule::isEfficientA(const double y) const {
   // check if hit is not inside the inefficient region
-  return !((m_moduleID < 8u) && (m_quarterID > 1u) && 
-           ((m_yMaxLocal + y) < m_inefficientRegion));
+//   return !((m_moduleID < 8u) && (m_quarterID > 1u) && 
+//           ((m_yMaxLocal + y) < m_inefficientRegion));
+  /// In local frame
+  bool topeven   = ( m_quarterID > 1u && m_layerID%2 == 0 ) && ( ( m_yMaxLocal + y ) < m_inefficientRegion );
+  bool bottomodd = ( m_quarterID < 2u && m_layerID%2 != 0 ) && ( ( m_yMaxLocal - y ) < m_inefficientRegion );
+  return !( m_moduleID < 8u  && ( topeven || bottomodd ) );
+
 }
 
 inline bool DeOTModule::isEfficientB(const double y) const {
   // check if hit is not inside the inefficient region
-  return !((m_moduleID < 8u) && (m_quarterID < 2u) && 
-	   ((m_yMaxLocal - y) < m_inefficientRegion));
+//   return !((m_moduleID < 8u) && (m_quarterID < 2u) && 
+//   	   ((m_yMaxLocal - y) < m_inefficientRegion));
+  bool bottomeven = ( m_quarterID < 2u && m_layerID%2 == 0 ) && ( ( m_yMaxLocal - y ) < m_inefficientRegion );
+  bool topodd     = ( m_quarterID > 1u && m_layerID%2 != 0 ) && ( ( m_yMaxLocal + y ) < m_inefficientRegion );
+  return !( m_moduleID < 8u  && ( bottomeven || topodd ) );
 }
 
 inline void DeOTModule::trajectory(unsigned int aStraw,

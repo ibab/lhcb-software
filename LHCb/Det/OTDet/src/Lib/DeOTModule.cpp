@@ -1,4 +1,4 @@
-// $Id: DeOTModule.cpp,v 1.40 2008-10-14 11:50:29 wouter Exp $
+// $Id: DeOTModule.cpp,v 1.41 2008-10-23 09:16:28 janos Exp $
 // GaudiKernel
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
@@ -395,8 +395,12 @@ StatusCode DeOTModule::cacheInfo() {
   /// second mono layer
   m_range[1] = std::make_pair(m_yMinLocal, m_yMaxLocal);
   // correct for inefficient regions in long modules
-  if (longModule() && topModule()) m_range[0].first=m_yMinLocal+m_inefficientRegion;
-  if (longModule() && bottomModule()) m_range[1].first=m_yMinLocal+m_inefficientRegion;
+  //if (longModule() && topModule()) m_range[0].first=m_yMinLocal+m_inefficientRegion;
+  //if (longModule() && bottomModule()) m_range[1].first=m_yMinLocal+m_inefficientRegion;
+  // correct for inefficient regions in long modules
+  // m_dir "corrects" for sign of min and max
+  if (longModule() && topModule()    )     m_range[m_layerID%2].first = m_yMinLocal + m_inefficientRegion;
+  if (longModule() && bottomModule() ) m_range[1 - m_layerID%2].first = m_yMinLocal + m_inefficientRegion;
   
   /// plane
   m_plane = Gaudi::Plane3D(g1, g2, g4[0] + 0.5*(g4[1]-g4[0]));
