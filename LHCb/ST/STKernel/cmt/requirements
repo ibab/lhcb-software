@@ -2,11 +2,13 @@ package STKernel
 version v1r9
 
 use GaudiKernel v*
+use GaudiAlg    v*
 use LHCbKernel  v* Kernel
 use DigiEvent   v* Event
 use DAQEvent    v* Event
 use SiDAQ       v* Si
 use STDet       v* Det
+use Boost       v* LCG_Interfaces
 
 branches Kernel doc cmt src 
 

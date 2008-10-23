@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.39 2008-10-17 14:11:26 mneedham Exp $
+! $Id: release.notes,v 1.40 2008-10-23 06:13:06 cattanem Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
+
+! 2008-10-23 - Marco Cattaneo
+ - Add explicit dependencies on GaudiAlg and Boost
 
 ! 2008-10-16 M Needham
   - fix in new base class
