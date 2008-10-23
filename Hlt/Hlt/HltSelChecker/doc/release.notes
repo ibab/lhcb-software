@@ -9,6 +9,9 @@
 ! end
 !-----------------------------------------------------------------------------
 
+! 2008-10-23 - Patrick Koppenburg
+ - Remove Hlt2TestStatisticsGanga12.py
+
 ! 2008-10-22 - Patrick Koppenburg
  - Rename Kst0Kst0 to KstarKstar
 
