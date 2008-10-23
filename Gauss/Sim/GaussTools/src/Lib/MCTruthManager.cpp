@@ -1,4 +1,4 @@
-// $Id: MCTruthManager.cpp,v 1.8 2008-10-20 08:23:11 robbep Exp $
+// $Id: MCTruthManager.cpp,v 1.9 2008-10-23 12:11:57 robbep Exp $
 // Include files 
 
 // local
@@ -20,6 +20,7 @@ MCTruthManager::MCTruthManager(  ): event(0)
   creators.clear();
   oscillated.clear();
   segmentations.clear();
+  m_mcparticles.clear() ;
 }
 
 //-----------------------------------------------------------------------------
@@ -33,7 +34,7 @@ MCTruthManager::~MCTruthManager()
 //-----------------------------------------------------------------------------
 MCTruthManager* MCTruthManager::GetInstance()
 {
-  if (instance == 0 )
+  if ( instance == 0 )
   {
     instance = new MCTruthManager();
   }
@@ -56,6 +57,9 @@ void MCTruthManager::NewEvent()
 
   // clear the map of segmentation of tracks
   segmentations.clear();
+  
+  // clear the map of links to MCParticles
+  m_mcparticles.clear() ;
 
   // we delete the old event  
   delete event;
@@ -85,7 +89,6 @@ const std::vector<int>& MCTruthManager::GetOscillatedBarcodes()
 //-----------------------------------------------------------------------------
 int MCTruthManager::GetCreatorID(int barcode)
 {
-
   int id = 0;
   std::map<int,int>::const_iterator i = creators.find( barcode );
   if ( i != creators.end() ) id = (*i).second;
