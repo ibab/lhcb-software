@@ -2,7 +2,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v33r3p1
-                                          running on lxbuild120.cern.ch on Tue Oct 21 10:02:50 2008
+                                          running on lxbuild120.cern.ch on Thu Oct 23 13:07:57 2008
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
@@ -93,7 +93,7 @@ OTTimeCreator.O...   INFO  numberOfBX  = 3
 OTTimeCreator.O...   INFO  timePerBX = 25
 OTTimeCreator.O...   INFO  ForceBankVersion = 255
 RecoTrSeq            INFO Member list: ProcessPhase/Track
-Track                INFO Member list: GaudiSequencer/TrackForwardPatSeq, GaudiSequencer/TrackForwardPreFitSeq, GaudiSequencer/TrackForwardFitSeq, GaudiSequencer/TrackSeedPatSeq, GaudiSequencer/TrackSeedPreFitSeq, GaudiSequencer/TrackSeedFitSeq, GaudiSequencer/TrackMatchPatSeq, GaudiSequencer/TrackMatchPreFitSeq, GaudiSequencer/TrackMatchFitSeq, GaudiSequencer/TrackDownstreamPatSeq, GaudiSequencer/TrackDownstreamPreFitSeq, GaudiSequencer/TrackDownstreamFitSeq, GaudiSequencer/TrackVeloTTPatSeq, GaudiSequencer/TrackVeloTTPreFitSeq, GaudiSequencer/TrackVeloTTFitSeq, GaudiSequencer/TrackPostFitSeq, GaudiSequencer/TrackVeloPreFitSeq, GaudiSequencer/TrackVeloFitSeq, GaudiSequencer/TrackAddExtraInfoSeq, GaudiSequencer/TrackMuonRecSeq
+Track                INFO Member list: GaudiSequencer/TrackForwardPatSeq, GaudiSequencer/TrackForwardPreFitSeq, GaudiSequencer/TrackForwardFitSeq, GaudiSequencer/TrackSeedPatSeq, GaudiSequencer/TrackSeedPreFitSeq, GaudiSequencer/TrackSeedFitSeq, GaudiSequencer/TrackMatchPatSeq, GaudiSequencer/TrackMatchPreFitSeq, GaudiSequencer/TrackMatchFitSeq, GaudiSequencer/TrackDownstreamPatSeq, GaudiSequencer/TrackDownstreamPreFitSeq, GaudiSequencer/TrackDownstreamFitSeq, GaudiSequencer/TrackVeloTTPatSeq, GaudiSequencer/TrackVeloTTPreFitSeq, GaudiSequencer/TrackVeloTTFitSeq, GaudiSequencer/TrackPostFitSeq, GaudiSequencer/TrackVeloPreFitSeq, GaudiSequencer/TrackVeloFitSeq, GaudiSequencer/TrackAddExtraInfoSeq
 TrackForwardPatSeq   INFO Member list: PatForward
 ToolSvc.OTRawBa...   INFO  countsPerBX = 64
 ToolSvc.OTRawBa...   INFO  numberOfBX  = 3
@@ -289,7 +289,7 @@ TrackEventClone...   INFO Property ['Name': Value] =  'SkipSameContainerTracks':
 TrackEventClone...   INFO Property ['Name': Value] =  'StoreCloneTracks':False
 TrackEventClone...   INFO Property ['Name': Value] =  'IgnoredTrackTypes':[  ]
 TrackEventClone...   INFO Property ['Name': Value] =  'TracksOutContainer':Rec/Track/Best
-TrackEventClone...   INFO Property ['Name': Value] =  'TracksInContainers':[ 'Rec/Track/Forward' , 'Rec/Track/Match' , 'Rec/Track/Downstream' , 'Rec/Track/VeloTT' , 'Rec/Track/Seed' ]
+TrackEventClone...   INFO Property ['Name': Value] =  'TracksInContainers':[ 'Rec/Track/Forward' , 'Rec/Track/Seed' , 'Rec/Track/Match' , 'Rec/Track/Downstream' , 'Rec/Track/VeloTT' ]
 TrackEventClone...   INFO Property ['Name': Value] =  'RegisterForContextService':True
 TrackEventClone...   INFO Property ['Name': Value] =  'ContextService':AlgContextSvc
 TrackEventClone...   INFO Property ['Name': Value] =  'UseEfficiencyRowFormat':True
@@ -376,7 +376,6 @@ NeuralNetTmva        INFO The MVAnalysis_pf_CFMlpANN.weights.txt weights file is
 --- Reader       : Read method name  : "CFMlpANN"
 --- Reader       :    - method title : "CFMlpANN"
 --- Reader       : Method tag : "CFMlpANN method"
-TrackMuonRecSeq      INFO Member list:
 RecoVertexSeq        INFO Member list: PatPVOffline
 RecoRICHSeq          INFO Member list: GaudiSequencer/RichRecInitOfflineSeq, GaudiSequencer/RichOfflinePIDSeq, with context 'Offline'
 RichRecInitOffl...   INFO Member list: Rich::Rec::Initialise/CheckProcOfflineStatus, GaudiSequencer/RichOfflinePixelsSeq, GaudiSequencer/RichOfflineTracksSeq, GaudiSequencer/RichOfflinePhotonsSeq, with context 'Offline'
@@ -818,7 +817,7 @@ SpdMon            SUCCESS List of booked 2D histograms in directory         "Cal
  ID=m_occupancy                "Occupancy of the middle SPD"                    Ents/All=    0/0    <X>/sX=0/0,<Y>/sY=0/0
 RiCKResAll           INFO ==============================================================================
 RiCKResAll           INFO  Track Selection : Forward Match Seed VeloTT KsTrack
-RiCKResAll           INFO                  : beta > 0.999 0.999 0.999
+RiCKResAll           INFO                  : beta > 0 0 0
 RiCKResAll           INFO ==============================================================================
 RiCKResForwardM...   INFO ==============================================================================
 RiCKResForwardM...   INFO  Track Selection : Forward Match
