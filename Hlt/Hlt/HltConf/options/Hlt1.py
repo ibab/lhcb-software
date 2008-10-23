@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1.py,v 1.11 2008-10-23 12:44:15 graven Exp $
+# $Id: Hlt1.py,v 1.12 2008-10-23 12:59:18 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of HLT1
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.11 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.12 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -44,7 +44,7 @@ importOptions('$HLTCONFROOT/options/HltLumiInit.opts')
 
 
 # Hlt1Global = Line('Hlt1Global', HLT =  ' | '.join( [ 'HLT_DECISION('+i+')' for i in hlt1Decisions() ] ))
-Hlt1Global = Line('Global', HLT = 'HLT_DECISION()' )
+Hlt1Global = Line('Global', HLT = 'HLT_DECISION' )
 
 Hlt1 = Sequence('Hlt1',  ModeOR = True, ShortCircuit = False
                , Members = [ i.sequencer() for i in  hlt1Lines() ]
