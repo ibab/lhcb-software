@@ -3,6 +3,9 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2008-10-23 - Stephanie Hansmann-Menzemer
+ - modify PatFwdTool::qOverP for zero magnetic field scale factor to be
+   consistent with FastMomentumTool
 
 ! 2008-10-22 - Chris Jones
  - Adapt to changes in TrackSys python configurable
