@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-10-23 - Patrick Robbe for Neal Gueissaz
+  - PythiaProduction.cpp: read LHA files
+
 ! 2008-10-20 - Patrick Robbe
  - PythiaProduction.cpp: change also units of generated mass to GeV (now
    stored in HepMC2)
