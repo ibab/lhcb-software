@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.38 2008-10-23 12:44:15 graven Exp $ 
+! $Id: release.notes,v 1.39 2008-10-23 12:45:24 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : 
@@ -10,6 +10,7 @@
    if it exists
  - Update lines so that they satisfy the above 
  - replace ODIN,L0DU and HltDecReports filters by 'hybrids' 
+ - make Hlt1Global an ordinary Line with an exceptional name
 
 ! 2008-10-22 - J.A. Hernando
  - update of HltInit.opts
