@@ -30,6 +30,7 @@ void MonRate::save(boost::archive::binary_oarchive & ar, const unsigned int vers
     m_numCounters = m_counterMap.size();
 //     msg <<MSG::INFO<<"m_numCounters: " << m_numCounters << endreq;
     m_profile = new TProfile("profile","MonRate Profile", m_maxNumCounters+7, 0, m_maxNumCounters+7);
+//    m_profile = new TProfile("profile","MonRate Profile", m_numCounters+7, 0, m_numCounters+7);
     m_profile->Fill(0.50, *m_offsetTimeFirstEvInRun, 1.00);
     m_profile->Fill(1.50, *m_offsetTimeLastEvInCycle, 1.00);
     m_profile->Fill(2.50, *m_offsetGpsTimeLastEvInCycle, 1.00);
@@ -38,13 +39,13 @@ void MonRate::save(boost::archive::binary_oarchive & ar, const unsigned int vers
     m_profile->Fill(5.60, (double) (*m_cycleNumber), 1.00);
     m_profile->Fill(6.50, (double) (*m_deltaT), 1.00);
     
-/*    msg <<MSG::INFO<<"bin[1]=" << (*m_offsetTimeFirstEvInRun) << ", OffsetTimeFirstEvInRun" << endreq;    
+ /*   msg <<MSG::INFO<<"bin[1]=" << (*m_offsetTimeFirstEvInRun) << ", OffsetTimeFirstEvInRun" << endreq;    
     msg <<MSG::INFO<<"bin[2]=" << (*m_offsetTimeLastEvInCycle) << ", OffsetTimeLastEvInCycle" << endreq;
     msg <<MSG::INFO<<"bin[3]=" << (*m_offsetGpsTimeLastEvInCycle) << ", OffsetGpsTimeLastEvInCycle" << endreq;
     msg <<MSG::INFO<<"bin[4]=" << 1 << ", one" << endreq;
     msg <<MSG::INFO<<"bin[5]=" << (*m_runNumber) << ", RunNumber" << endreq;
     msg <<MSG::INFO<<"bin[6]=" << (*m_cycleNumber) << ", CycleNumber" << endreq;
-    msg <<MSG::INFO<<"bin[7]=" << (*m_deltaT) << ", deltaT" << endreq;*/
+    msg <<MSG::INFO<<"bin[7]=" << (*m_deltaT) << ", deltaT" << endreq; */
     int i = 8;
     for (m_counterMapIt = m_counterMap.begin(); m_counterMapIt != m_counterMap.end(); m_counterMapIt++) {
         
@@ -66,9 +67,9 @@ void MonRate::save(boost::archive::binary_oarchive & ar, const unsigned int vers
 //       msg <<MSG::INFO<<"bin [" << i << "]="<< (double)(*(m_counterMapIt->second.first)) << endreq;
       i++;
     }
-    for (int j = 7+m_numCounters; j < 7+m_maxNumCounters; j++) {
-       m_profile->Fill((double)j - 0.5, 0, 1.00);
-    }
+//    for (int j = 7+m_numCounters; j < 7+m_maxNumCounters; j++) {
+//       m_profile->Fill((double)j - 0.5, 0, 1.00);
+//    }
     
     m_profile->GetXaxis()->SetBinLabel(1, "OffsetTimeFirstEvInRun");
     m_profile->GetXaxis()->SetBinLabel(2, "OffsetTimeLastEvInCycle");
@@ -84,9 +85,9 @@ void MonRate::save(boost::archive::binary_oarchive & ar, const unsigned int vers
       m_profile->GetXaxis()->SetBinLabel(i, (*(m_counterMapIt->second.first)).c_str());
       i++;
     }
-    for (int j = 7+m_numCounters; j < 7+m_maxNumCounters; j++) {
-      m_profile->GetXaxis()->SetBinLabel(i, " ");
-    }
+//    for (int j = 7+m_numCounters; j < 7+m_maxNumCounters; j++) {
+ //     m_profile->GetXaxis()->SetBinLabel(i, " ");
+ //   }
     
   }  
   else{
@@ -94,10 +95,10 @@ void MonRate::save(boost::archive::binary_oarchive & ar, const unsigned int vers
     //m_profile =  profile(); //NEVER CALL THIS FUNCTION IN ADDERS
   }
 
-/*  msg <<MSG::INFO<<"m_numCounters = " << m_profile->GetNbinsX() << endreq;
-  for (int j = 0; j< m_profile->GetNbinsX()+2; j++) {
-    msg <<MSG::INFO<<"bin["<<j<<"] = " << (ulonglong) m_profile->GetBinContent(j) << ", description: "<< m_profile->GetXaxis()->GetBinLabel(j) << ", entries: " << m_profile->GetBinEntries(j) << endreq;
-  }*/
+//  msg <<MSG::INFO<<"m_numCounters = " << m_profile->GetNbinsX() << endreq;
+//  for (int j = 0; j< m_profile->GetNbinsX()+2; j++) {
+//    msg <<MSG::INFO<<"bin["<<j<<"] = " << (ulonglong) m_profile->GetBinContent(j) << ", description: "<< m_profile->GetXaxis()->GetBinLabel(j) << ", errors: " << m_profile->GetBinError(j) << endreq;
+ // }
   
   
   MonProfile::save(ar, version);

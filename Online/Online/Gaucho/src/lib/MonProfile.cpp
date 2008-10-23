@@ -305,6 +305,8 @@ void MonProfile::splitObject(){
 
   for (int i = 0; i < (nbinsx+2) ; ++i){
     binErr[i] = ((double) (m_profile->GetBinError(i))); 
+   msg <<MSG::DEBUG<<"Saving binErr["<<i <<"]: "<< binErr[i] << endreq;
+  
   }
 
   for (int i = 0; i < (nbinsx+2) ; ++i){
@@ -385,16 +387,18 @@ void MonProfile::combine(MonObject * H){
   }
 
   for (int i = 0; i < (nbinsx+2); ++i){
-    double tmpCont;
-    double HHtmpCont;
-    tmpCont=binCont[i]*binEntries[i];
-    HHtmpCont=HH->binCont[i]*HH->binEntries[i];   
+  //  double tmpCont;
+  //  double HHtmpCont;
+ //   tmpCont=binCont[i]*binEntries[i];
+ //   HHtmpCont=HH->binCont[i]*HH->binEntries[i];   
     binCont[i] += HH->binCont[i];
-    if ((binEntries[i]+HH->binEntries[i]) > 0) {
-       binCont[i] = binCont[i]/(binEntries[i]+HH->binEntries[i]); 
-    } 
+ //   if ((binEntries[i]+HH->binEntries[i]) > 0) {
+ //      binCont[i] = binCont[i]/(binEntries[i]+HH->binEntries[i]); 
+ //   } 
     binEntries[i] += HH->binEntries[i];
-    binErr[i] = sqrt(pow(binErr[i],2)+pow(HH->binErr[i],2));
+    //root just adds - its the sum of squares
+ //   binErr[i] = sqrt(pow(binErr[i],2)+pow(HH->binErr[i],2));
+    binErr[i] += HH->binErr[i];
   }
   
   m_fTsumw += HH->m_fTsumw;
@@ -466,7 +470,7 @@ void MonProfile::copyFrom(MonObject * H){
   
   if (bBinLabelX){
     for ( it=binLabelX.begin() ; it < binLabelX.end(); it++ ) {
-      msg <<MSG::INFO<< *it << endreq;
+      msg <<MSG::DEBUG<< *it << endreq;
     }
     binLabelX.clear();
     for ( it=HH->binLabelX.begin() ; it < HH->binLabelX.end(); it++ ) {
@@ -564,7 +568,8 @@ void MonProfile::print(){
   msg <<MSG::INFO<<"*************************************"<<endreq;
   msg <<MSG::INFO<<"BinContents:"<<endreq;
   for (int i = 0; i < (nbinsx+2) ; ++i){
-    msg << (int) binCont[i]<<" ";
+//    msg << (int) binCont[i]<<" ";
+    msg <<  binCont[i]<<" ";
   }
   msg << endreq;
   msg <<MSG::INFO<<"*************************************"<<endreq;
