@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.120 2008-10-23 09:16:38 janos Exp $
+! $Id: release.notes,v 1.121 2008-10-23 13:55:32 wouter Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 !--------------------------------------------------------------------------
+
+! 2008-10-23 - Wouter Hulsbergen
+ - truncated distance at rmax in RtRelation::driftTime( distance )
 
 ! 2008-10-23 - Jan Amoraal
  - Fix inefficient region around y = 0 in F-modules in odd layers see 
