@@ -286,6 +286,7 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
   if( m_storeUpToZmax && (track->GetVertexPosition().z() > m_zMaxToStore) ) { 
     zstore = false; 
   }
+  
   if( m_rejectRICHphe ) {
     const G4VProcess* process  = track->GetCreatorProcess() ;
     if ( 0 != process ) {
@@ -295,9 +296,7 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
                   StatusCode::SUCCESS, 0 );
         return;
       }
-      
     }
-    
   }
   
   if( m_rejectOptPhot ) {
@@ -309,435 +308,167 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
 
   // if reject rich photoelectrons check and store
   // (3) store  all     particles ? 
-  if ( m_storeAll && zstore )                                        
-    {      
-      trackMgr()->SetStoreTrajectory( true );
-      gi->setStoreHepMC(true); // flag for storing in HepMC (Witek)
-      
-      if(track->GetCreatorProcess())
-        {
-          GaussTrajectory* traj=(GaussTrajectory*)(trackMgr()->GimmeTrajectory());
-          traj->setProcessName(track->GetCreatorProcess()->GetProcessName());
-        }
-
-       if ( track->GetDynamicParticle() ) {
-         if ( track->GetDynamicParticle()->GetPrimaryParticle() ) {
-           if ( track->GetDynamicParticle()->GetPrimaryParticle()
-                ->GetUserInformation() ) {
-             GiGaPrimaryParticleInformation * uInf =
-               ( GiGaPrimaryParticleInformation *)
-               track->GetDynamicParticle()->GetPrimaryParticle()
-               ->GetUserInformation() ;
-             GaussTrajectory* traj=
-               (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
-             
-             if ( uInf -> hasOscillated() ) traj->setHasOscillated( true ) ;
-             if ( uInf -> isSignal() ) traj->setIsSignal( true ) ;
-             traj->setSignalBarcode( uInf -> signalBarcode() ) ;
-             traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
-             traj->setMotherMCParticle( uInf -> motherMCParticle() ) ;
-           }  
-         }
-       }       
-
-       return ; 
-    } /// RETURN !!!  
+  if ( m_storeAll && zstore ) {      
+    trackMgr()->SetStoreTrajectory( true );
+    gi->setStoreHepMC(true); // flag for storing in HepMC (Witek)
+    setProcess( track ) ;
+    fillGaussTrackInformation( track ) ;
+    return ; 
+  } /// RETURN !!!  
 
   // (3.5) store forced-decay products 
   if (m_storeDecayProducts && 
-      track->GetDynamicParticle()->GetPreAssignedDecayProducts()) 
-    {
-      if( 0 != trackMgr()->GimmeSecondaries() ) 
-        {
-          G4TrackVector* childrens = trackMgr()->GimmeSecondaries();
-          
-          for(unsigned int index = 0; index < childrens->size(); ++index)
-            {
-              G4Track* dtr = (*childrens)[index] ;
-              if( 0 == dtr ) { continue ; } 
+      track->GetDynamicParticle()->GetPreAssignedDecayProducts()) {
+    if ( 0 != trackMgr()->GimmeSecondaries() ) {
+      G4TrackVector* childrens = trackMgr()->GimmeSecondaries();
 
-              if(!(dtr->GetDynamicParticle()->GetPreAssignedDecayProducts()))
-                {
-                  //
-                  // check if GaussTrackInformation already exists and if not
-                  // attach it to the track
-                  G4VUserTrackInformation* duinf = dtr->GetUserInformation();
-                  GaussTrackInformation* dti;
-                  
-                  if(duinf)
-                    {
-                      dti = (GaussTrackInformation*) duinf;
-                    }
-                  else
-                    {
-                      dti = new GaussTrackInformation(); 
-                      dtr->SetUserInformation(dti);
-                    }   
-                  dti->setToBeStored(true);
-                }
-            }
-          trackMgr()->SetStoreTrajectory( true );
-          gi->setStoreHepMC(true); // flag for storing in HepMC (Witek)
+      for (unsigned int index = 0; index < childrens->size(); ++index) {
+        G4Track* dtr = (*childrens)[index] ;
+	if( 0 == dtr ) { continue ; } 
+	if( !(dtr->GetDynamicParticle()->GetPreAssignedDecayProducts())) {
+	  //
+	  // check if GaussTrackInformation already exists and if not
+	  // attach it to the track
+	  G4VUserTrackInformation* duinf = dtr->GetUserInformation();
+	  GaussTrackInformation* dti;
 
-          if(track->GetCreatorProcess())
-            {
-              GaussTrajectory* traj=(GaussTrajectory*)(trackMgr()->GimmeTrajectory());
-              traj->setProcessName(track->GetCreatorProcess()->GetProcessName());
-            }
-
-          if ( track->GetDynamicParticle() ) {
-            if ( track->GetDynamicParticle()->GetPrimaryParticle() ) {
-              if ( track->GetDynamicParticle()->GetPrimaryParticle()
-                   ->GetUserInformation() ) {
-                GiGaPrimaryParticleInformation * uInf =
-                  ( GiGaPrimaryParticleInformation *)
-                  track->GetDynamicParticle()->GetPrimaryParticle()
-                  ->GetUserInformation() ;
-                GaussTrajectory* traj=
-                  (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
-                
-                if ( uInf -> hasOscillated() ) traj->setHasOscillated( true );
-                if ( uInf -> isSignal() )  traj->setIsSignal( true ) ;
-                traj->setSignalBarcode( uInf -> signalBarcode() ) ;
-                traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
-                traj->setMotherMCParticle( uInf -> motherMCParticle() ) ;
-              }  
-            }
-          }  
-          
-          return ; 
-        }
-    }
-  
-  // (4) store  primary particles ? 
-  if ( m_storePrimaries &&  0 == track->GetParentID() )     
-    { 
-      if(track->GetCreatorProcess())
-        {
-          GaussTrajectory* traj=(GaussTrajectory*)(trackMgr()->GimmeTrajectory());
-          traj->setProcessName(track->GetCreatorProcess()->GetProcessName());
-        }
-
+	  if(duinf) {
+	    dti = (GaussTrackInformation*) duinf;
+	  } else {
+	    dti = new GaussTrackInformation(); 
+	    dtr->SetUserInformation(dti);
+	  }   
+	  dti->setToBeStored(true);
+	}
+      }
       trackMgr()->SetStoreTrajectory( true );
       gi->setStoreHepMC(true); // flag for storing in HepMC (Witek)
+
+      setProcess( track ) ;
+      fillGaussTrackInformation( track ) ;
+      return ; 
+    }
+  }
+  
+  // (4) store  primary particles ? 
+  if ( m_storePrimaries &&  0 == track->GetParentID() ) { 
+    setProcess( track ) ;
+    trackMgr()->SetStoreTrajectory( true );
+    gi->setStoreHepMC(true); // flag for storing in HepMC (Witek)
       
-      if ( track->GetDynamicParticle() ) {
-        if ( track->GetDynamicParticle()->GetPrimaryParticle() ) {
-          if ( track->GetDynamicParticle()->GetPrimaryParticle()
-               ->GetUserInformation() ) {
-            GiGaPrimaryParticleInformation * uInf =
-              ( GiGaPrimaryParticleInformation *)
-              track->GetDynamicParticle()->GetPrimaryParticle()
-              ->GetUserInformation() ;
-            GaussTrajectory* traj=
-              (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
-            if ( uInf -> hasOscillated() ) traj->setHasOscillated( true ); 
-            if ( uInf -> isSignal() ) traj->setIsSignal( true ) ;
-            traj->setSignalBarcode( uInf -> signalBarcode() ) ;
-            traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
-            traj->setMotherMCParticle( uInf -> motherMCParticle() ) ;            
-          }  
-        }
-      }  
-      
-      return; 
-    } /// RETURN !!!  
+    fillGaussTrackInformation( track ) ;
+    return; 
+  } /// RETURN !!!  
+  
   // (5) store particles with kinetic energy over the threshold value. 
   //     See also PreAction
   if( m_storeByOwnEnergy 
-      && ( track->GetKineticEnergy() > 
-           m_ownEnergyThreshold      ) 
-      && zstore ) 
-    { 
-      if(track->GetCreatorProcess())
-        {
-          GaussTrajectory* traj=(GaussTrajectory*)(trackMgr()->GimmeTrajectory());
-          traj->setProcessName(track->GetCreatorProcess()->GetProcessName());
-        }
-      if ( track->GetDynamicParticle() ) {
-        if ( track->GetDynamicParticle()->GetPrimaryParticle() ) {
-          if ( track->GetDynamicParticle()->GetPrimaryParticle()
-               ->GetUserInformation() ) {
-            GiGaPrimaryParticleInformation * uInf =
-              ( GiGaPrimaryParticleInformation *)
-              track->GetDynamicParticle()->GetPrimaryParticle()
-              ->GetUserInformation() ;
-            GaussTrajectory* traj=
-              (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
-               
-            if ( uInf -> hasOscillated() ) traj->setHasOscillated( true );
-            if ( uInf -> isSignal() ) traj->setIsSignal( true ) ;
-            traj->setSignalBarcode( uInf -> signalBarcode() ) ;
-            traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
-            traj->setMotherMCParticle( uInf -> motherMCParticle() ) ;            
-          }  
-        }
-      }  
-      
-      trackMgr()->SetStoreTrajectory( true ) ;     
-      gi->setStoreHepMC(true); // flag for storing in HepMC (Witek)
+      && ( track->GetKineticEnergy() > m_ownEnergyThreshold      ) 
+      && zstore ) { 
+    setProcess( track ) ;
+    fillGaussTrackInformation( track ) ;      
+    trackMgr()->SetStoreTrajectory( true ) ;     
+    gi->setStoreHepMC(true); // flag for storing in HepMC (Witek)
 
-      return ; } /// RETURN !!! 
+    return ; 
+  } /// RETURN !!! 
+  
   // (6) store all predefined particle types: 
   if ( m_storeByOwnType  
        && ( std::find( m_ownStoredTypes.begin() ,  
                        m_ownStoredTypes.end  () , 
                        track->GetDefinition  () ) 
             != m_ownStoredTypes.end() )
-       && zstore )
-    { 
-      if(track->GetCreatorProcess())
-        {
-          GaussTrajectory* traj=(GaussTrajectory*)(trackMgr()->GimmeTrajectory());
-          traj->setProcessName(track->GetCreatorProcess()->GetProcessName());
-        }
-
-      if ( track->GetDynamicParticle() ) {
-        if ( track->GetDynamicParticle()->GetPrimaryParticle() ) {
-          if ( track->GetDynamicParticle()->GetPrimaryParticle()
-               ->GetUserInformation() ) {
-            GiGaPrimaryParticleInformation * uInf =
-              ( GiGaPrimaryParticleInformation *)
-              track->GetDynamicParticle()->GetPrimaryParticle()
-              ->GetUserInformation() ;
-            GaussTrajectory* traj=
-              (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
-            
-            if ( uInf -> hasOscillated() ) traj->setHasOscillated( true );
-            if ( uInf -> isSignal() ) traj->setIsSignal( true ) ;
-            traj->setSignalBarcode( uInf -> signalBarcode() ) ;
-            traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
-            traj->setMotherMCParticle( uInf -> motherMCParticle() ) ;            
-          }  
-        }
-      }  
-      
-      trackMgr()->SetStoreTrajectory( true );     
-      gi->setStoreHepMC(true); // flag for storing in HepMC (Witek)
-
-      return; } /// RETURN !!!
+       && zstore ) { 
+    setProcess( track ) ;
+    fillGaussTrackInformation( track ) ;
+    trackMgr()->SetStoreTrajectory( true );     
+    gi->setStoreHepMC(true); // flag for storing in HepMC (Witek)
+    return; 
+  } /// RETURN !!!
+  
   // (7) store the particle if it has a certain type of daughter particle 
   //     or at least one from secondaries  particle have kinetic energy over 
   //     threshold  
   if( m_storeByChildType || m_storeByChildEnergy 
       && 0 != trackMgr()->GimmeSecondaries()    
-      && zstore )
-    {
-      const G4TrackVector* childrens = trackMgr()->GimmeSecondaries() ; 
-      for( unsigned int index = 0 ; index < childrens->size() ; ++index )
-        {
-          const G4Track* tr = (*childrens)[index];
-          if( 0 == tr ) { continue; }
-          // 
-          if( m_storeByChildEnergy 
-              && ( tr->GetKineticEnergy() > 
-                   m_childEnergyThreshold ) ) 
-            { 
-      if(track->GetCreatorProcess())
-        {
-          GaussTrajectory* traj=(GaussTrajectory*)(trackMgr()->GimmeTrajectory());
-          traj->setProcessName(track->GetCreatorProcess()->GetProcessName());
-        }
-
-      if ( track->GetDynamicParticle() ) {
-        if ( track->GetDynamicParticle()->GetPrimaryParticle() ) {
-          if ( track->GetDynamicParticle()->GetPrimaryParticle()
-               ->GetUserInformation() ) {
-            GiGaPrimaryParticleInformation * uInf =
-              ( GiGaPrimaryParticleInformation *)
-              track->GetDynamicParticle()->GetPrimaryParticle()
-              ->GetUserInformation() ;
-            GaussTrajectory* traj=
-              (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
-            
-            if ( uInf -> hasOscillated() ) traj->setHasOscillated( true );
-            if ( uInf -> isSignal() ) traj->setIsSignal( true ) ;
-            traj->setSignalBarcode( uInf -> signalBarcode() ) ;
-            traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
-            traj->setMotherMCParticle( uInf -> motherMCParticle() ) ;            
-          }  
-        }
-      }  
-      
-      trackMgr()->SetStoreTrajectory( true );   
-      gi->setStoreHepMC(true); // flag for storing in HepMC (Witek)
-
-      return; } /// RETURN 
+      && zstore ) {
+    const G4TrackVector* childrens = trackMgr()->GimmeSecondaries() ; 
+    for( unsigned int index = 0 ; index < childrens->size() ; ++index ) {
+      const G4Track* tr = (*childrens)[index];
+      if( 0 == tr ) { continue; }
+      // 
+      if( m_storeByChildEnergy 
+	  && ( tr->GetKineticEnergy() > 
+		m_childEnergyThreshold ) ) { 
+	setProcess( track ) ;
+	fillGaussTrackInformation( track ) ;      
+	trackMgr()->SetStoreTrajectory( true );   
+	gi->setStoreHepMC(true); // flag for storing in HepMC (Witek)
+	return; 
+      } /// RETURN 
           //
-          if( m_storeByChildType
-              && ( std::find( m_childStoredTypes.begin() ,  
-                              m_childStoredTypes.end  () , 
-                              tr->GetDefinition       () ) 
-                   != m_childStoredTypes.end() )         
-              && zstore ) 
-            { 
-              if(track->GetCreatorProcess())
-                {
-                  GaussTrajectory* traj=(GaussTrajectory*)(trackMgr()->GimmeTrajectory());
-                  traj->setProcessName(track->GetCreatorProcess()->GetProcessName());
-                }
-
-              if ( track->GetDynamicParticle() ) {
-                if ( track->GetDynamicParticle()->GetPrimaryParticle() ) {
-                  if ( track->GetDynamicParticle()->GetPrimaryParticle()
-                       ->GetUserInformation() ) {
-                    GiGaPrimaryParticleInformation * uInf =
-                      ( GiGaPrimaryParticleInformation *)
-                      track->GetDynamicParticle()->GetPrimaryParticle()
-                      ->GetUserInformation() ;
-
-                    GaussTrajectory* traj=
-                      (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
-                    
-                    if ( uInf -> hasOscillated() ) 
-                      traj->setHasOscillated( true ); 
-                    if ( uInf -> isSignal() ) traj->setIsSignal( true ) ;
-                    traj->setSignalBarcode( uInf -> signalBarcode() ) ;
-                    traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
-                    traj->setMotherMCParticle( uInf -> motherMCParticle() ) ;
-                  }  
-                }
-              }  
-              
-              trackMgr()->SetStoreTrajectory( true );   
-              gi->setStoreHepMC(true); // flag for storing in HepMC (Witek)
-
-              return; } /// RETURN
-              ///
-              }
+      if( m_storeByChildType
+	  && ( std::find( m_childStoredTypes.begin() ,  
+			  m_childStoredTypes.end  () , 
+			  tr->GetDefinition       () ) 
+		!= m_childStoredTypes.end() )         
+	  && zstore ) { 
+	setProcess( track ) ;
+        fillGaussTrackInformation( track ) ;      
+	trackMgr()->SetStoreTrajectory( true );   
+	gi->setStoreHepMC(true); // flag for storing in HepMC (Witek)
+	return; 
+      } /// RETURN
+	    ///
     }
+  }
 
   // (7.5) store tracks according to creator process of its daughters
   if( m_storeBySecondariesProcess && 0 != trackMgr()->GimmeSecondaries()
-      && zstore )
-    {
-      const G4TrackVector* childrens = trackMgr()->GimmeSecondaries() ; 
-      for( unsigned int index = 0 ; index < childrens->size() ; ++index )
-        {
-          const G4Track* tr = (*childrens)[index];
-          if( 0 == tr ) { continue; }
-          // 
-          if(std::find(m_childStoredProcess.begin(), m_childStoredProcess.end(), 
-                       tr->GetCreatorProcess()->GetProcessName()) 
-             != m_childStoredProcess.end()) 
-            { 
-              if(track->GetCreatorProcess())
-                {
-                  GaussTrajectory* traj=(GaussTrajectory*)(trackMgr()->GimmeTrajectory());
-                  traj->setProcessName(track->GetCreatorProcess()->GetProcessName());
-                }
-              
-              if ( track->GetDynamicParticle() ) {
-                if ( track->GetDynamicParticle()->GetPrimaryParticle() ) {
-                  if ( track->GetDynamicParticle()->GetPrimaryParticle()
-                       ->GetUserInformation() ) {
-                    GiGaPrimaryParticleInformation * uInf =
-                      ( GiGaPrimaryParticleInformation *)
-                      track->GetDynamicParticle()->GetPrimaryParticle()
-                      ->GetUserInformation() ;
-                    GaussTrajectory* traj=
-                      (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
-                    
-                    if ( uInf -> hasOscillated() ) 
-                      traj->setHasOscillated( true );        
-                    if ( uInf -> isSignal() ) traj->setIsSignal( true ) ;
-                    traj->setSignalBarcode( uInf -> signalBarcode() ) ;
-                    traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
-                    traj->setMotherMCParticle( uInf -> motherMCParticle() ) ;
-                  }  
-                }
-              }  
-              
-              trackMgr()->SetStoreTrajectory( true );   
-              gi->setStoreHepMC(true); // flag for storing in HepMC (Witek)
-
-              return; /// RETURN
-            } 
-          ///
-        }
-    }
-  // (7.6) store tracks according to creator process 
-  if( m_storeByOwnProcess && zstore )
-    {
+      && zstore ) {
+    const G4TrackVector* childrens = trackMgr()->GimmeSecondaries() ; 
+    for( unsigned int index = 0 ; index < childrens->size() ; ++index ) {
+      const G4Track* tr = (*childrens)[index];
+      if( 0 == tr ) { continue; }
       // 
-      if(std::find(m_ownStoredProcess.begin(), m_ownStoredProcess.end(), 
-                   track->GetCreatorProcess()->GetProcessName()) 
-         != m_ownStoredProcess.end()) 
-        { 
-          if(track->GetCreatorProcess())
-            {
-              GaussTrajectory* traj=(GaussTrajectory*)(trackMgr()->GimmeTrajectory());
-              traj->setProcessName(track->GetCreatorProcess()->GetProcessName());
-            }
-
-          if ( track->GetDynamicParticle() ) {
-            if ( track->GetDynamicParticle()->GetPrimaryParticle() ) {
-              if ( track->GetDynamicParticle()->GetPrimaryParticle()
-                   ->GetUserInformation() ) {
-                GiGaPrimaryParticleInformation * uInf =
-                  ( GiGaPrimaryParticleInformation *)
-                  track->GetDynamicParticle()->GetPrimaryParticle()
-                  ->GetUserInformation() ;
-                GaussTrajectory* traj=
-                  (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
-                
-                if ( uInf -> hasOscillated() ) traj->setHasOscillated( true ); 
-                if ( uInf -> isSignal() ) traj->setIsSignal( true ) ;
-                traj->setSignalBarcode( uInf -> signalBarcode() ) ;
-                traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
-                traj->setMotherMCParticle( uInf -> motherMCParticle() ) ;
-              }  
-            }
-          }  
-          
-          trackMgr()->SetStoreTrajectory( true );   
-          gi->setStoreHepMC(true); // flag for storing in HepMC (Witek)
-
-          return; /// RETURN
-        } 
-      ///
+      if(std::find(m_childStoredProcess.begin(), m_childStoredProcess.end(), 
+		   tr->GetCreatorProcess()->GetProcessName()) 
+		  != m_childStoredProcess.end()) { 
+	setProcess( track ) ;
+        fillGaussTrackInformation( track ) ;      
+	trackMgr()->SetStoreTrajectory( true );   
+	gi->setStoreHepMC(true); // flag for storing in HepMC (Witek)
+	return; /// RETURN
+      } 
+	///
     }
+  }
+  
+  // (7.6) store tracks according to creator process 
+  if( m_storeByOwnProcess && zstore ) {
+    if(std::find(m_ownStoredProcess.begin(), m_ownStoredProcess.end(), 
+		track->GetCreatorProcess()->GetProcessName()) 
+	      != m_ownStoredProcess.end()) { 
+      setProcess( track ) ;    
+      fillGaussTrackInformation( track ) ;
+      trackMgr()->SetStoreTrajectory( true );   
+      gi->setStoreHepMC(true); // flag for storing in HepMC (Witek)
+      return; /// RETURN
+    } 
+  }
   
   // (8) store  tracks, marked through GaussTrackInformation class
-  if( m_storeMarkedTracks ) 
-    {
-//       G4VUserTrackInformation* ui = track->GetUserInformation(); 
-//       GaussTrackInformation* gi = (GaussTrackInformation*) ui;
-      if( 0 != gi && gi->toBeStored() ) 
-        { 
-          if(track->GetCreatorProcess())
-            {
-              GaussTrajectory* traj=(GaussTrajectory*)(trackMgr()->GimmeTrajectory());              
-              
-              traj->setProcessName(track->GetCreatorProcess()->GetProcessName());
-            }
-
-          if ( track->GetDynamicParticle() ) {
-            if ( track->GetDynamicParticle()->GetPrimaryParticle() ) {
-              if ( track->GetDynamicParticle()->GetPrimaryParticle()
-                   ->GetUserInformation() ) {
-                GiGaPrimaryParticleInformation * uInf =
-                  ( GiGaPrimaryParticleInformation *)
-                  track->GetDynamicParticle()->GetPrimaryParticle()
-                  ->GetUserInformation() ;
-                GaussTrajectory* traj=
-                  (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
-                if ( uInf -> hasOscillated() ) traj->setHasOscillated( true ); 
-                if ( uInf -> isSignal() ) traj->setIsSignal( true ) ;
-                traj->setSignalBarcode( uInf -> signalBarcode() ) ;
-                traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
-                traj->setMotherMCParticle( uInf -> motherMCParticle() ) ;
-              }  
-            }
-          }  
-          
-          trackMgr()->SetStoreTrajectory( true );   
-          gi->setStoreHepMC(true); // flag for storing in HepMC (Witek)
-
-          return; }  /// RETURN 
-    }
+  if( m_storeMarkedTracks ) {
+    if( 0 != gi && gi->toBeStored() ) { 
+      setProcess( track ) ;
+      fillGaussTrackInformation( track ) ;          
+      trackMgr()->SetStoreTrajectory( true );   
+      gi->setStoreHepMC(true); // flag for storing in HepMC (Witek)
+      return; 
+    }  /// RETURN 
+  }
   
-  //  
   // check if track is to be stored ???????????????????????????????????????
   if (trackMgr()->GetStoreTrajectory()) { 
     gi->setStoreHepMC(true);
@@ -795,15 +526,39 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
     }
 }; 
 // ============================================================================
+// Fill Track User information from Primary Info from Generator part
+// (oscillation, signal barcode, HepMC Event link, etc...
+// ============================================================================
+void GaussPostTrackAction::fillGaussTrackInformation( const G4Track* track ) 
+  const { 
+  const G4DynamicParticle * dynamicParticle = track -> GetDynamicParticle() ;
+  if ( 0 == dynamicParticle ) return ;
+  
+  G4PrimaryParticle * primaryParticle = dynamicParticle -> GetPrimaryParticle() ;
+  if ( 0 == primaryParticle ) return ;
+  
+  G4VUserPrimaryParticleInformation * g4UserInfo = 
+    track->GetDynamicParticle()->GetPrimaryParticle()->GetUserInformation() ;
+  if ( 0 == g4UserInfo ) return ;
+  
+  GiGaPrimaryParticleInformation * uInf =
+    ( GiGaPrimaryParticleInformation *) g4UserInfo ;
+  GaussTrajectory* traj=
+    (GaussTrajectory*) (trackMgr()->GimmeTrajectory());
+             
+  if ( uInf -> hasOscillated() ) traj->setHasOscillated( true ) ;
+  if ( uInf -> isSignal() ) traj->setIsSignal( true ) ;
+  traj->setSignalBarcode( uInf -> signalBarcode() ) ;
+  traj->setHepMCEvent( uInf -> pHepMCEvent() ) ;
+  traj->setMotherMCParticle( uInf -> motherMCParticle() ) ;
+}
 
-
-
-
-
-
-
-
-
-
-
-
+// ==============================================================================
+// Set track creation processus
+// ==============================================================================
+void GaussPostTrackAction::setProcess( const G4Track * track ) const {
+  const G4VProcess * process = track -> GetCreatorProcess() ;
+  if ( 0 == process ) return ;
+  GaussTrajectory * traj = (GaussTrajectory*) (trackMgr()->GimmeTrajectory()) ;
+  traj->setProcessName( process -> GetProcessName() ) ;
+}

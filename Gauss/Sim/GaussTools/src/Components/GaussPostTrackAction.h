@@ -116,7 +116,11 @@ private:
   GaussPostTrackAction& operator=( const GaussPostTrackAction& ) ; 
 
 private:
-
+  /// Utility function to fill GaussTrack informations
+  void fillGaussTrackInformation( const G4Track* track ) const ;
+  
+  /// Utility function to fill process information of a track
+  void setProcess( const G4Track * track ) const ;
   //  Flags:
   ///  all tracks to be stored         
   bool m_storeAll;
