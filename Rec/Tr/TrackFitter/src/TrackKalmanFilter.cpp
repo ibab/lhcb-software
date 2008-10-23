@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.67 2008-09-15 13:37:04 wouter Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.68 2008-10-23 12:31:06 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -105,26 +105,28 @@ StatusCode TrackKalmanFilter::fit( LHCb::Track& track, NodeRange& nodes, const G
     // save predicted state
     node.setPredictedStateForward( state ) ;
 
-    // filter if there is a measurement
+    // this should actually be done somewhere else
+    node.setResidual( 0 );
+    node.setDeltaChi2Forward( 0 );
+    node.setDeltaChi2Backward( 0 ) ;
+
+    // filter if there is an active measurement
     if ( node.hasMeasurement() ) {
       // Project the reference (only in the forward filter)
       sc = projectReference( node );
       if ( sc.isFailure() ) return Warning( "Fit Failure: unable to project reference", StatusCode::FAILURE, 0 );
 
-      // Filter step
-      sc = filter( node, state );
-      if ( sc.isFailure() ) return Warning( "Fit failure:unable to filter node", StatusCode::FAILURE, 0 );
-
-      // add the chisquare
-      chisq += node.chi2();
-      node.setDeltaChi2Forward( node.chi2() );
-      ++ndof ;
-    } else {
-      // this should actually be done somewhere else
-      node.setResidual( 0 );
-      node.setDeltaChi2Forward( 0 );
-      node.setDeltaChi2Backward( 0 ) ;
-    }
+      // Filter step, only for non-outliers
+      if( node.type() != LHCb::Node::Outlier) {
+	sc = filter( node, state );
+	if ( sc.isFailure() ) return Warning( "Fit failure:unable to filter node", StatusCode::FAILURE, 0 );
+	
+	// add the chisquare
+	chisq += node.chi2();
+	node.setDeltaChi2Forward( node.chi2() );
+	++ndof ;
+      }
+    } 
 
     // save filtered state
     node.setState( state );
@@ -162,10 +164,10 @@ StatusCode TrackKalmanFilter::fit( LHCb::Track& track, NodeRange& nodes, const G
       node.setPredictedStateBackward( state ) ;
 
       // filter, if there is a measuerment
-      if ( node.hasMeasurement() ) {
+      if ( node.hasMeasurement() && node.type() != LHCb::Node::Outlier ) {
         // Filter step
-        sc = filter( node, state );
-        if ( sc.isFailure() ) return Warning( "Fit Failure unable to filter node!",StatusCode::FAILURE, 1 );
+	sc = filter( node, state );
+	if ( sc.isFailure() ) return Warning( "Fit Failure unable to filter node!",StatusCode::FAILURE, 1 );
 	
         // add the chisquare
         chisqreverse += node.chi2() ;
@@ -567,7 +569,7 @@ StatusCode TrackKalmanFilter::biSmooth( FitNode& thisNode ) const
   }
 
   // this is the simplest check to see that things went really wrong
-  if(thisNode.hasMeasurement()) {
+  if(thisNode.type() == LHCb::Node::HitOnTrack) {
     const TrackProjectionMatrix& H  = thisNode.projectionMatrix();
     double V = thisNode.errMeasure2();
     double HCH = Similarity( H, smoothedC )(0,0);

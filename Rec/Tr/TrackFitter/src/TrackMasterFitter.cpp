@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.59 2008-10-21 14:57:16 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.60 2008-10-23 12:31:06 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -323,7 +323,8 @@ bool TrackMasterFitter::outlierRemoved( Track& track ) const
   std::vector<Node*>::iterator iWorstNode = nodes.end();
   double worstChi2 = m_chi2Outliers;
   for ( iNode = nodes.begin(); iNode != nodes.end(); ++iNode ) {
-    if ( (*iNode)->hasMeasurement() ) {
+    if ( (*iNode)->hasMeasurement() &&
+	 (*iNode)->type() == LHCb::Node::HitOnTrack ) {
       const double chi2 = (*iNode)->chi2();
       if ( chi2 > worstChi2 ) {
         worstChi2 = chi2;
@@ -347,11 +348,7 @@ bool TrackMasterFitter::outlierRemoved( Track& track ) const
 
     // Remove measurement from node (node still exists w/o measurement)
     // One also needs to delete the measurement from the track!
-    Measurement& meas = (*iWorstNode) -> measurement();
-    (*iWorstNode) -> removeMeasurement();
     (*iWorstNode)->setType( LHCb::Node::Outlier ) ;
-    track.removeFromMeasurements( &meas );
-
     outlierWasRemoved = true;
   }
 
