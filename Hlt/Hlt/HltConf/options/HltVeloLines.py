@@ -59,32 +59,26 @@ for side in [ 'ASide', 'CSide' ] :
     pv3D.PVOfflineTool.PVSeedingName = "PVSeed3DTool"
 
     line =Line( 'Velo' + side
-              ,  ODIN = { 'TriggerTypes' : [ 'PhysicsTrigger', 'NonZSupTrigger' ] }
+              ,  ODIN = "( ODIN_TRGTYP == LHCb.ODIN.PhysicsTrigger ) | ( ODIN_TRGTYP == LHCb.ODIN.NonZSupTrigger )"
               , algos =
-              [ DecodeVeloRawBuffer()
-              , cf, rt, st, gt, pv3D
+              [ cf, rt, st, gt, pv3D
               , Member( 'VF' , 'Decision'
+                      , OutputSelection = '%Decision'
                       , InputSelection  = 'TES:Hlt/Vertex/' + side + 'PV3D'
                       , FilterDescriptor = ['VertexNumberOf' + side + 'Tracks,>,4']
                       , HistogramUpdatePeriod = 1
-                      #, HistoDescriptor = {'VertexNumberOf' + side + 'Tracks' : ( 'VertexNumberOf'+side+'Tracks',-0.5,39.5,40)})
+                      , HistoDescriptor = {'VertexNumberOf' + side + 'Tracks' : ( 'VertexNumberOf'+side+'Tracks',-0.5,39.5,40)}
                       )
               ] )
 
 
 #Line( 'VeloAlignTracks' 
-#    , algos = 
-#    [ PatVeloAlignTrackFilter( 'AlignTrackFilter' )
-#    , Member('Dummy','Selection',OutputSelection = '%Decision') # add a dummy selection which is used as input to the decision
-#    ] )
+#    , algos = [ PatVeloAlignTrackFilter( 'AlignTrackFilter' ) ] )
 #
 #
 #Line( 'VeloOverlapTracks' 
-#    ,  algos = 
-#    [ PatVeloAlignTrackFilter( 'OverlapAlignTrackFilter', Overlap = True )
-#    ,  Member('Dummy','Selection',OutputSelection = '%Decision') # add a dummy selection which is used as input to the decision
-#    ] )
-
+#    ,  algos = [ PatVeloAlignTrackFilter( 'OverlapAlignTrackFilter', Overlap = True ) ] )
+#
 #
 # Overlap-track-finding sequence
 #
@@ -135,11 +129,11 @@ for side in [ 'ASide', 'CSide' ] :
 ## VELO-specific, HLT-resident monitoring sequence
 #
 GaudiSequencer( 'HltVeloAligningSequence', IgnoreFilterPassed = True
-              , Members = [ GaudiSequencer( 'OverlapTracksSequence' , MeasureTime=True, ModeOR=False ) ]
+              , Members = [ GaudiSequencer( 'OverlapTracksSequence' , MeasureTime=True  ) ]
               )
 
 GaudiSequencer( 'HltVeloMonitoringSequence' , IgnoreFilterPassed=True
-              , Members = [ GaudiSequencer('LiteClusterMonitorSequence', MeasureTime=True,  ModeOR=False ) ]
+              , Members = [ GaudiSequencer('LiteClusterMonitorSequence', MeasureTime=True ) ]
               )
 
 GaudiSequencer( 'LiteClusterMonitorSequence'

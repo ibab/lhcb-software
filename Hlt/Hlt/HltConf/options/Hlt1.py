@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1.py,v 1.10 2008-10-07 07:06:25 graven Exp $
+# $Id: Hlt1.py,v 1.11 2008-10-23 12:44:15 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of HLT1
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.11 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -32,9 +32,10 @@ from HltConf.HltLine     import hlt1Lines
 from HltConf.HltLine     import hlt1Decisions
 from HltConf.HltLine     import hlt1Selections
 from HltConf.HltLine     import addHlt1Prop
+from HltConf.HltLine     import Hlt1Line   as Line
 
 # add a few thing to our printout
-for i in [ 'routingBitDefinitions', 'Accept', 'FilterDescriptor' ] :
+for i in [ 'routingBitDefinitions', 'Accept', 'FilterDescriptor', 'Code' ] :
     addHlt1Prop(i)
 
 importOptions('$HLTCONFROOT/options/HltInit.opts')
@@ -42,13 +43,11 @@ importOptions('$HLTCONFROOT/options/HltLumiInit.opts')
 # importOptions('$HLTCONFROOT/options/HltMain.py')
 
 
-Hlt1Global =  HltDecisionFilter('Hlt1Global'
-                                , Accept = ' | '.join( hlt1Decisions() )
-                                )
+# Hlt1Global = Line('Hlt1Global', HLT =  ' | '.join( [ 'HLT_DECISION('+i+')' for i in hlt1Decisions() ] ))
+Hlt1Global = Line('Global', HLT = 'HLT_DECISION()' )
 
-### TODO: check dependencies, and re-order if needed! 
 Hlt1 = Sequence('Hlt1',  ModeOR = True, ShortCircuit = False
-               , Members = [ i.sequencer() for i in  hlt1Lines() ] + [ Hlt1Global ] 
+               , Members = [ i.sequencer() for i in  hlt1Lines() ]
                )
 
 ## needed to feed HltVertexReportsMaker... needed for Velo!

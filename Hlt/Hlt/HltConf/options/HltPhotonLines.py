@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltPhotonLines.py,v 1.6 2008-09-24 13:47:54 graven Exp $
+# $Id: HltPhotonLines.py,v 1.7 2008-10-23 12:44:16 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Photon Lines
@@ -12,7 +12,7 @@
 '''
 # =============================================================================
 __author__  = 'Gerhard Raven Gerhard.Raven@nikhef.nl'
-__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $'
+__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $'
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -33,11 +33,11 @@ from HltConf.HltLine import hlt1Lines, addHlt1Prop, rmHlt1Prop
 #// in Had Alley #include '$HLTCONFROOT/options/HltRecoSequence.opts'
 #
 #//---------------------------
-#// HLT Pho Alley
+#// HLT Photon Alley
 #//--------------------------
 
 Line ('Photon' 
-      , L0 = [ 'Photon' ]
+      , L0DU = "L0_CHANNEL('Photon')"
       , algos = 
       [ HltL0CaloPrepare('L0PhotonDecision', CaloType = 'Photon', MinEt = 2300.0 )
       , Member ('TF', 'Photon'
@@ -76,5 +76,6 @@ Line ('Photon'
       , Member ( 'AddPhotonToVertex', 'DiTrackDecision' # add photon track to ditrack vertex to save all objects into summary
                , InputSelection1 = '%VFDiTrack'
                , InputSelection2 = '%TFPhoton'
+               , OutputSelection = '%Decision'
                )
       ] )

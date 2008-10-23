@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.21 2008-10-07 07:06:25 graven Exp $ 
+# $Id: HltLine.py,v 1.22 2008-10-23 12:44:16 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.21 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.22 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt line itself 
@@ -75,9 +75,9 @@ from Gaudi.Configuration import GaudiSequencer, Sequencer, Configurable
 
 from Configurables import DeterministicPrescaler as Scaler
 
-from Configurables import HltL0Filter            as L0Filter 
-from Configurables import HltSelectionFilter     as HLTFilter 
-from Configurables import OdinTypesFilter        as ODINFilter 
+from Configurables import LoKi__L0Filter    as L0Filter
+from Configurables import LoKi__HDRFilter   as HDRFilter
+from Configurables import LoKi__ODINFilter  as ODINFilter
 
 from Configurables import HltTrackUpgrade        as TrackUpgrade 
 from Configurables import HltTrackMatch          as TrackMatch   
@@ -112,10 +112,10 @@ def postscalerName ( line ) :
 def odinentryName    ( line ) :
     """ Convention: the name of 'ODINFilter' algorithm inside HltLine """
     return 'Hlt1%sODINFilter'   % line
-## Convention: the name of 'L0Filter' algorithm inside HltLine
+## Convention: the name of 'L0DUFilter' algorithm inside HltLine
 def l0entryName    ( line ) :
-    """ Convention: the name of 'L0Filter' algorithm inside HltLine """
-    return 'Hlt1%sL0Filter'   % line
+    """ Convention: the name of 'L0DUFilter' algorithm inside HltLine """
+    return 'Hlt1%sL0DUFilter'   % line
 ## Convention: the name of 'HLTFilter' algorithm inside HltLine
 def hltentryName    ( line ) :
     """ Convention: the name of 'HLTFilter' algorithm inside HltLine """
@@ -127,7 +127,7 @@ def memberName     ( member, line ) :
 ## Convention: the name of 'Decision' algorithm inside HltLine
 def decisionName   ( line ) :
     """Convention: the name of 'Decision' algorithm inside HltLine"""
-    return 'Hlt1%sDecision'   % line
+    return 'Hlt1%sDecision'   % line if line != 'Hlt1Global' else line
 
 ## the list of all created lines 
 _hlt_1_lines__ = []
@@ -275,7 +275,7 @@ _types_ = { TrackUpgrade  : 'TU'
 ## protected attributes 
 _protected_ = ( 'IgnoreFilterPassed' , 'Members' , 'ModeOR' )
 ## own slots for HltLine 
-_myslots_   = ( 'name' , 'prescale'  , 'postscale' , 'ODIN' , 'L0' , 'HLT' , 'algos' ) 
+_myslots_   = ( 'name' , 'prescale'  , 'postscale' , 'ODIN' , 'L0DU' , 'HLT' , 'algos' ) 
 
 # =============================================================================
 ## Get the full algorithm type from short nick
@@ -394,6 +394,12 @@ def _checkSelections ( args      ,   # the dictionary with arguments
     if list is not type(check)     and tuple is not type(check)     : check     =  (check,) 
     for _c in check : _checkSelection ( _c , args , name , line )
 
+#def _last_algo_with_output( algos ) :
+#    print algos
+#    for i in  algos : print i
+#    for i in range(len(algos)-1,-1,-1) : 
+#        if 'OutputSelection' in algos[i].Type.__slots__ : return i
+#    return None
 # =============================================================================
 ## Bind members to an HLT line
 #  @author Gerhard Raven Gerhard.Raven@nikhef.nl
@@ -407,17 +413,26 @@ class bindMembers (object) :
     def members( self ) : return self._members
     def outputSelection( self ) : return self._outputsel
 
+
     def __init__( self, line, algos ) :
         if line == None: raise AttributeError, 'Must have a line name to bind to'
 
         self._members = []
         self._outputsel = None
 
-        for alg in algos :
+
+        # last_output_index = _last_algo_with_output(algos)
+        # for algi in range(len(algos)) :
+        for alg in algos:
+            # print 'iterator: at ' + str(algi)
+            # print '  type: ' + str(type(algos[algi]))
+            # alg  = algos[algi]
+            # last = ( last_output_index and algi == last_output_index ) 
+            # print 'last? ' + str(last)
 
             # allow chaining of previously bound members...
             if type(alg) is bindMembers:
-                self._members += alg.members()
+                self._members  += alg.members()
                 self._outputsel = alg.outputSelection()
                 continue
 
@@ -427,7 +442,6 @@ class bindMembers (object) :
                 continue
                 
             # if Hlt1Member, verify, expand, and chain
-
             margs = alg.Args.copy() 
             #### TODO: use _checkSelection to make sure the result is valid!!!
             #    expand '%' in FilterDescriptor, InputSelection{,1,2} to allow bound selections
@@ -488,7 +502,10 @@ class bindMembers (object) :
 
             
             ## output selection (default: the algorithm instance name)
+            ## TODO: make sure the 'last' algorithm in the line (which has 'OutputSelection' in 
+            ## its __slots__) has an OutputSelection which matches the decision name...
             if 'OutputSelection' in alg.Type.__slots__ : 
+                # self._outputsel = algName if not last else 'Hlt1%sDecision'%line
                 self._outputsel = algName
                 if margs.has_key ( 'OutputSelection' ) :
                     _checkSelection ( 'OutputSelection' , margs , algName , line ) 
@@ -611,7 +628,7 @@ class Hlt1Member ( object ) :
 #  The structure of each line is fixed to be
 # 
 #    - Prescaler
-#    - ODINFilter | L0Filter | HLTFilter
+#    - ODINFilter | L0DUFilter | HLTFilter
 #       - Member_1
 #       - Member_2
 #       - ...
@@ -633,55 +650,51 @@ class Hlt1Line(object):
     #    - 'name'      : short name of the line, e.g, 'SingleMuon'
     #    - 'prescale'  : the prescaler factor
     #    - 'ODIN'      : the list of ODINtype names for ODINFilter 
-    #    - 'L0'        : the list of L0Channels names for L0Filter 
+    #    - 'L0DU'      : the list of L0Channels names for L0Filter 
     #    - 'HLT'       : the list of HLT selections for HLTFilter
     #    - 'algos'     : the list of actual members 
     #    - 'postscale' : the postscale factor
     def __init__ ( self           ,
                    name           ,   # the base name for the Line
                    prescale  = 1  ,   # prescale factor
-                   ODIN      = [] ,   # list of ODIN types  
-                   L0        = [] ,   # list of L0 channels  
-                   HLT       = [] ,   # list of HLT selections  
-                   postscale = 1  ,   # prescale factor
+                   ODIN      = None ,   # ODIN predicate  
+                   L0DU      = None ,   # L0DU predicate  
+                   HLT       = None ,   # HltDecReports predicate
                    algos     = [] ,   # the list of algorithms/members
+                   postscale = 1  ,   # prescale factor
                    **args         ) : # other configuration parameters
         """
-        The constructor, whcih essentially defines the line
+        The constructor, which essentially defines the line
         
         The major arguments
         - 'name'      : short name of the line, e.g, 'SingleMuon'
         - 'prescale'  : the prescaler factor
-        - 'ODIN'      : the list of ODIN types for ODINFilter (mutally exclusive with L0 and HLT)
-        - 'L0'        : the list of L0Channels names for L0Filter (mutally exclusive with ODIN and HLT)
+        - 'ODIN'      : the list of ODIN types for ODINFilter (mutally exclusive with L0DU and HLT)
+        - 'L0DU'      : the list of L0Channels names for L0Filter (mutally exclusive with ODIN and HLT)
         - 'HLT'       : the list of HLT selections for HLTFilter (mutally exclusive with ODIN and L0)
         - 'algos'     : the list of actual members 
         - 'postscale' : the postscale factor
         
         """
+        # verify exclusivity...
+        if L0DU and HLT :
+            raise AttributeError, "The attribute L0DU and HLT should be exclusive -- line %s" % name 
+        if L0DU and ODIN :
+            raise AttributeError, "The attribute L0DU and ODIN should be exclusive -- line %s" % name 
+        if HLT and ODIN :
+            raise AttributeError, "The attribute HLT and ODIN should be exclusive -- line %s" % name 
         # 1) save all parameters (needed for the proper cloning)
         self._name      = name
         self._prescale  = prescale
         
-        if list is not type(L0)  : L0  = [L0]
-        self._L0        = L0
-        
-        if list is not type(HLT) : HLT = [HLT] 
-        self._HLT       = [ i if type(i) is not Hlt1Line else i.outputSelection() for i in HLT ]
-
-        #if str is type(ODIN) : ODIN = [ODIN] 
         self._ODIN      = ODIN
+        self._L0DU      = L0DU
+        self._HLT       = HLT
         
         self._postscale = postscale
         self._algos     = algos
         self._args      = args
 
-        if L0 and HLT :
-            raise AttributeError, "The attribute L0 and HLT are exclusive %s" % name 
-        if L0 and ODIN :
-            raise AttributeError, "The attribute L0 and ODIN are exclusive %s" % name 
-        if HLT and ODIN :
-            raise AttributeError, "The attribute HLT and ODIN are exclusive %s" % name 
         
         # decision: (pre)set to None, and assign once we're successfully completed ourselfs...
         self._decision  = None 
@@ -697,22 +710,9 @@ class Hlt1Line(object):
         line = self.subname()
         
         _seed = None
-        if ODIN  :
-            for key in self._ODIN.keys():
-                if key not in [ 'BXTypes','TriggerTypes' ] :
-                    raise AttributeError, 'Unknown key %s for ODIN Filter configuration '%key
-            BXTypes_       = self._ODIN['BXTypes']      if 'BXTypes'      in self._ODIN else [ 'ALL' ]
-            TriggerTypes_  = self._ODIN['TriggerTypes'] if 'TriggerTypes' in self._ODIN else [ 'ALL' ]
-            if type(BXTypes_)      is not list : BXTypes_      = list( BXTypes_      )
-            if type(TriggerTypes_) is not list : TriggerTypes_ = list( TriggerTypes_ )
-            _seed = ODINFilter ( odinentryName( line ) 
-                               , TriggerTypes = TriggerTypes_ 
-                               , BXTypes = BXTypes_  
-                               ) 
-        elif L0  :
-            _seed = L0Filter   ( l0entryName  ( line ) , L0Channels      = self._L0    ) 
-        elif HLT : 
-            _seed = HLTFilter  ( hltentryName ( line ) , InputSelections = self._HLT   )
+        if  ODIN  : _seed = ODINFilter ( odinentryName( line ) , Code = self._ODIN ) 
+        elif L0DU : _seed = L0Filter   ( l0entryName  ( line ) , Code = self._L0DU ) 
+        elif HLT  : _seed = HDRFilter  ( hltentryName ( line ) , Code = self._HLT  )
         
         # most recent output selection
         self._outputsel = None
@@ -736,6 +736,9 @@ class Hlt1Line(object):
                     _add_to_hlt1_output_selections_ ( _m.OutputSelection )
                 else :
                     _add_to_hlt1_output_selections_ ( _m.name         () )
+
+        if self._outputsel is not None and self._outputsel!= decisionName( line ) :
+            print "# WARNING: Line '%s' has a final output selection named '%s'"%(line,self._outputsel)
 
         # create the line configurable
         self._configurable = Line ( self.name()
@@ -853,7 +856,7 @@ class Hlt1Line(object):
         __name       = name
         __prescale   = args.get ( 'prescale'  , self._prescale  ) 
         __ODIN       = args.get ( 'ODIN'      , self._ODIN      )         
-        __L0         = args.get ( 'L0'        , self._L0        )         
+        __L0DU       = args.get ( 'L0DU'      , self._L0DU      )         
         __HLT        = args.get ( 'HLT'       , self._HLT       )         
         __postscale  = args.get ( 'postscale' , self._postscale )  
         __algos      = args.get ( 'algos'     , self._algos     )      
@@ -877,7 +880,7 @@ class Hlt1Line(object):
         return Hlt1Line ( name      = __name       ,
                           prescale  = __prescale   ,
                           ODIN      = __ODIN       ,
-                          L0        = __L0         ,
+                          L0DU      = __L0DU         ,
                           HLT       = __HLT        ,
                           postscale = __postscale  ,
                           algos     = __algos      , **__args )

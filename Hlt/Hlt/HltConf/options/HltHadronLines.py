@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltHadronLines.py,v 1.5 2008-09-24 12:31:02 graven Exp $
+# $Id: HltHadronLines.py,v 1.6 2008-10-23 12:44:16 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hadron Lines
@@ -12,7 +12,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -67,10 +67,11 @@ prepMainHadron = bindMembers( 'MainHadronPrep',
 
 
 Line ( 'SingleHadron' 
-     , L0 = [ 'Hadron' ]
+     ,  L0DU = "L0_CHANNEL('Hadron')"
      , algos = 
      [ prepMainHadron 
      , Member ( 'TF' , 'Decision'
+              , OutputSelection = '%Decision'
               , FilterDescriptor = ['PT,>,5000.']
               , HistogramUpdatePeriod = 1
               , HistoDescriptor = { 'PT':('PT',0.,6000.,100), 'PTBest':('PTBest',0.,6000.,100) }
@@ -78,7 +79,7 @@ Line ( 'SingleHadron'
      ])
 
 Line ('DiHadron' 
-     , L0 = [ 'Hadron' ]
+     ,  L0DU = "L0_CHANNEL('Hadron')"
      , algos =  
      [ prepMainHadron
      , Member ( 'TF', 'Forward'
@@ -105,6 +106,7 @@ Line ('DiHadron'
               )
      , Member ( 'VU', 'Forward' , RecoName = 'Forward')
      , Member ( 'VF', 'Decision'
+              , OutputSelection = '%Decision'
               , FilterDescriptor = [ 'VertexMinPT,>,1000.', 'VertexPointing_PV2D,<,0.4' ]
               , HistogramUpdatePeriod = 1
               , HistoDescriptor = { 'VertexMinPT':('VertexMinPT',0.,6000.,100), 'VertexMinPTBest':('VertexMinPTBest',0.,6000.,100), 'VertexPointing_PV2D':('VertexPointing_PV2D',0.,1.,100), 'VertexPointing_PV2DBest':('VertexPointing_PV2DBest',0.,1.,100) }

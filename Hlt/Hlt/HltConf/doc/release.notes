@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.37 2008-10-22 14:37:17 hernando Exp $ 
+! $Id: release.notes,v 1.38 2008-10-23 12:44:15 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : 
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2008-10-23 - Gerhard Raven
+ - Update HltLine so that it warns if 'outputSelection' doesn't match 'decisionName'
+   if it exists
+ - Update lines so that they satisfy the above 
+ - replace ODIN,L0DU and HltDecReports filters by 'hybrids' 
 
 ! 2008-10-22 - J.A. Hernando
  - update of HltInit.opts

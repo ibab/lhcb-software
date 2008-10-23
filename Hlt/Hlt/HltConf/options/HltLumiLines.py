@@ -8,11 +8,11 @@ from Configurables import GaudiSequencer as Sequence
 from Configurables import GaudiSequencer
 from Configurables import DeterministicPrescaler as Prescale
 from Configurables import HltDummySelection as Dummy
-from Configurables import OdinTypesFilter 
 from Configurables import HltTrackFilter, HltSelectionFilter
 from Configurables import LumiCountVertices, LumiCountTracks, LumiFromL0DU, LumiCountHltTracks
 from Configurables import HltLumiOdinReader, LumiHistoMaker
 from Configurables import RawEventDump, HltLumiSummaryDecoder, HltLumiWriter, bankKiller
+from Configurables import LoKi__ODINFilter  as ODINFilter
 from HltConf.HltLine import Hlt1Line   as Line
 from HltConf.HltLine import Hlt1Member as Member
 
@@ -99,7 +99,7 @@ BXMembers = []
 for i in [ 'NoBeam', 'BeamCrossing','SingleBeamRight','SingleBeamLeft'] :
     HistoMembers=[]
     if debugging: HistoMembers.append(HltLumiOdinReader('OdinReaderBefore'+i, OutputLevel = debugOPL ))
-    HistoMembers.append(OdinTypesFilter('Filter'+i, BXTypes = [i], OutputLevel = debugOPL ))
+    HistoMembers.append( ODINFilter('Filter'+i, Code = 'ODIN_BXTYP == LHCb.ODIN.'+i, OutputLevel = debugOPL ))
     if debugging: HistoMembers.append(HltLumiOdinReader('OdinReaderAfter'+i, OutputLevel = debugOPL ))
     HistoMembers.append(LumiHistoMaker('Histo'+i, InputVariables = createdCounters, OutputLevel = 3 ))
 
@@ -126,14 +126,11 @@ lumiRecoSequence  = Sequence( 'Hlt1LumiRecoSequence'
 
 
 lumiSequence = Line ( 'Lumi'
-                    , ODIN = 
-                    { 'TriggerTypes' : [ 'RandomTrigger' ]  # should become 'Random', now 'TimingTrigger' or 'Reserve'
-                    }
+                    , ODIN = 'ODIN_TRGTYP == LHCb.ODIN.RandomTrigger'# should become 'Random', now 'TimingTrigger' or 'Reserve'
                     , algos =
                     [ # lumiRecoSequence
                     lumiCountSequence
                     , BXTypes
-                    , Member('Dummy','Selection',OutputSelection = '%Decision') # add a dummy selection which is used as input to the decision
                     ] )
 
 

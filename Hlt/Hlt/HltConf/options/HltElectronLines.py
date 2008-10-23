@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltElectronLines.py,v 1.5 2008-10-07 07:06:25 graven Exp $
+# $Id: HltElectronLines.py,v 1.6 2008-10-23 12:44:15 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Photon Lines
@@ -12,7 +12,7 @@
 '''
 # =============================================================================
 __author__  = 'Gerhard Raven Gerhard.Raven@nikhef.nl'
-__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $'
+__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $'
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -58,10 +58,11 @@ prepElectron =  bindMembers( 'PrepElectron',
 
 
 Line ('SingleElectron'
-     , L0 = ['Electron']
+     ,  L0DU = "L0_CHANNEL('Electron')"
      , algos = 
      [ prepElectron
      , Member( 'TF','Decision'
+             , OutputSelection = '%Decision'
              , InputSelection  = prepElectron.outputSelection()
              , FilterDescriptor = ['PT,>,3000.']
              , HistogramUpdatePeriod = 0
@@ -71,7 +72,7 @@ Line ('SingleElectron'
 
 
 Line( 'ElectronTrack' 
-    , L0 = [ 'Electron' ]
+    ,  L0DU = "L0_CHANNEL('Electron')"
     , algos = 
     [ prepElectron
     , HltTrackUpgrade( 'Hlt1RecoVelo' )
@@ -97,6 +98,7 @@ Line( 'ElectronTrack'
              , HistoDescriptor = { 'DOCA' :     ('DOCA',0.,1.,100), 'DOCABest' : ('DOCABest',0.,0.5,100) }
              )
     , Member ( 'VF', 'Decision' # // select vertices if Pt, poiting, and distance
+             , OutputSelection = '%Decision'
              , FilterDescriptor = [ 'VertexPointing_PV2D,<,0.5', 'VertexDz_PV2D,>,0.' ]
              , HistogramUpdatePeriod = 0
              , HistoDescriptor = { 'VertexPointing'    : ('VertexPointing',0.,1.,100), 'VertexPointingBest': ('VertexPointingBest',0.,1.,100), 'VertexDz'          : ('VertexDz',-10.,50.,100), 'VertexDzBest'      : ('VertexDzBest',-10.,50.,100) }
