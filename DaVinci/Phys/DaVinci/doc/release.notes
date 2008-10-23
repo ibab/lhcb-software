@@ -1,4 +1,4 @@
- $Id: release.notes,v 1.248 2008-10-21 15:34:10 jpalac Exp $
+! $Id: release.notes,v 1.249 2008-10-23 11:35:33 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,11 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2008-10-23 - Juan PALACIOS
+ - tests/qmtest/davinci.qms/preselections.qms/test_bbstripping.qmt
+  . Hand-made test that searches lines containing info about filtered events
+    for each selection.
 
 ! 2008-10-21 - Juan PALACIOS
  - tests/qmtest/davinci.qms/preselections.qms/test_bbstripping.qmt
