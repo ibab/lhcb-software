@@ -1,12 +1,18 @@
-// $Id: TrackEventCloneKiller.cpp,v 1.11 2008-05-06 10:01:14 aperiean Exp $
+// $Id: TrackEventCloneKiller.cpp,v 1.12 2008-10-23 14:40:19 janos Exp $
 // Include files 
 // -------------
+// from STD
+#include <algorithm>
+
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
 // TrackEvent
 #include "Event/Track.h"
 #include "Event/TrackFunctor.h"
+
+// from BOOST
+#include <boost/lambda/lambda.hpp>
 
 // local
 #include "TrackEventCloneKiller.h"
@@ -77,8 +83,19 @@ StatusCode TrackEventCloneKiller::initialize()
   
   // Print out the user-defined settings
   // -----------------------------------
-  printProps( MSG::INFO );
+  info() << endmsg
+         << "============ TrackEventCloneKiller Settings ===========" << endmsg
+         << "TracksInContainers                    : " << getProperty( "TracksInContainers" ).toString()                    << endmsg
+         << "TrackOutContainer                     : " << m_tracksOutContainer                                              << endmsg
+         << "IgnoredTrackTypes                     : " << getProperty( "IgnoredTrackTypes" ).toString()                     << endmsg
+         << "CloneFinderTool                       : " << m_cloneFinderName                                                 << endmsg                 
+         << "StoreCloneTracks                      : " << getProperty( "StoreCloneTracks" ).toString()                      << endmsg
+         << "SkipSameContainerTracks               : " << getProperty( "SkipSameContainerTracks" ).toString()               << endmsg
+         << "CompareInSameContainerForwardUpstream : " << getProperty( "CompareInSameContainerForwardUpstream" ).toString() << endmsg
+         << "=======================================================" << endmsg
+         << endmsg;
   
+
   return StatusCode::SUCCESS;
 };
 
