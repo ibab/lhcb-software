@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.cpp,v 1.13 2008-10-20 07:53:01 robbep Exp $
+// $Id: PythiaProduction.cpp,v 1.14 2008-10-23 15:34:15 robbep Exp $
 
 // Include files
 // STD * STL 
@@ -37,7 +37,7 @@
  *  Implementation file for class PythiaProduction
  *
  *  @date 2005-08-16 
- *  @author Patrick Robbe
+ *  @author Patrick Robbe, modified by Neal Gueissaz
  */
 //-----------------------------------------------------------------------------
 
@@ -86,7 +86,8 @@ PythiaProduction::PythiaProduction( const std::string& type,
     m_had_mstu_2 ( 0 ) , 
     // list of particles to be printed using PyList(12) 
     m_pdtlist    (   ) , 
-    m_widthLimit ( 1.5e-6 * Gaudi::Units::GeV ) 
+    m_widthLimit ( 1.5e-6 * Gaudi::Units::GeV ) ,
+    m_pdecaylist (   )
   /// boolean flag to force the valiadation of IO_HEPEVT 
   , m_validate_HEPEVT ( false ) // force the valiadation of IO_HEPEVT 
   /// the file to dump the HEPEVT inconsistencies 
@@ -100,6 +101,8 @@ PythiaProduction::PythiaProduction( const std::string& type,
   declareProperty( "BeamToolName" , m_beamToolName = "CollidingBeams" ) ;
   declareProperty( "WidthLimit" , m_widthLimit = 1.5e-6 * Gaudi::Units::GeV ) ;
   declareProperty( "SLHADecayFile" , m_slhaDecayFile = "empty" ) ;
+  declareProperty( "PDecayList" , m_pdecaylist ) ;
+  declareProperty( "SLHASpectrumFile" , m_slhaSpectrumFile = "empty" ) ;
 
   declareProperty 
     ( "ValidateHEPEVT"  , 
@@ -222,12 +225,28 @@ StatusCode PythiaProduction::initialize( ) {
     if ( "UNKNOWN" != System::getEnv( "DECFILESROOT" ) ) {
       std::string temp = m_slhaDecayFile ;
       m_slhaDecayFile = System::getEnv( "DECFILESROOT" ) +
-        "/dkfiles/" + temp ;
+	"/LHA/" + temp ;
     }
     // Check if file exists
     boost::filesystem::path slhaDecayFile( m_slhaDecayFile ) ;
     if ( ! boost::filesystem::exists( slhaDecayFile ) ) 
       return Error( "The SLHA decay file does not exist" ) ;
+
+  }
+
+  // Name of PYSLHA mass spectrum file to read
+  if ( "empty" != m_slhaSpectrumFile ) {
+
+    if ( "UNKNOWN" != System::getEnv( "DECFILESROOT" ) ) {
+      std::string temp = m_slhaSpectrumFile ;
+      m_slhaSpectrumFile = System::getEnv( "DECFILESROOT" ) +
+	"/LHA/" + temp ;
+    }
+
+    // Check if file exists
+    boost::filesystem::path shlaSpectrumFile( m_slhaSpectrumFile ) ;
+    if ( ! boost::filesystem::exists( shlaSpectrumFile ) ) 
+      return Error( "The SLHA mass spectrum file does not exist" ) ;
   }
 
   // Set size of common blocks in HEPEVT: note these correspond to stdhep
@@ -337,24 +356,57 @@ StatusCode PythiaProduction::initializeGenerator( ) {
   std::remove( m_pythiaListingFileName.c_str() ) ;
   Pythia::InitPyBlock( m_pythiaListingUnit , m_pythiaListingFileName ) ;
 
-  // if specified, read SHLA decay file
-  if ( "empty" != m_slhaDecayFile ) {
-    int lunUnit = F77Utils::getUnit( msgLevel( MSG::DEBUG ) ) ;
-    if ( 0 >= lunUnit ) 
+ // if specified, read SHLA mass spectrum file
+  int lunUnit = -1;
+  if ( "empty" != m_slhaSpectrumFile ) {
+    lunUnit = F77Utils::getUnit( msgLevel( MSG::DEBUG ) ) ;
+    if ( 0 >= lunUnit )
       return Error( "No Fortran Unit available" ) ;
-    sc = F77Utils::openOld( lunUnit , m_slhaDecayFile , 
-                                       msgLevel( MSG::INFO ) ) ;
-    if ( sc.isFailure() ) 
+    sc = F77Utils::openOld( lunUnit , m_slhaSpectrumFile ,
+                            msgLevel( MSG::INFO ) ) ;
+    if ( sc.isFailure() )
+      return Error( "Cannot open SLHA mass spectrum file" ) ;
+    Pythia::pymssm().imss(21) = lunUnit ;
+    //If no decay file provided, assume it is in the spectrum file
+    if ( "empty" == m_slhaDecayFile ) Pythia::pymssm().imss(22) = lunUnit ;
+  }
+
+  // if specified, read SHLA decay file
+  int lunUnit2 = -1;
+  if ( "empty" != m_slhaDecayFile ) {
+    lunUnit2 = F77Utils::getUnit( msgLevel( MSG::DEBUG ) ) ;
+    if ( 0 >= lunUnit2 )
+      return Error( "No Fortran Unit available" ) ;
+    sc = F77Utils::openOld( lunUnit2 , m_slhaDecayFile ,
+                            msgLevel( MSG::INFO ) ) ;
+    if ( sc.isFailure() )
       return Error( "Cannot open SLHA decay file" ) ;
 
-    Pythia::pymssm().imss(22) = lunUnit ;
-    // KSUSY1 = 1000000
-    int KSUSY1 = 1000000 ;
+    Pythia::pymssm().imss(22) = lunUnit2 ;
     int status = 0 ;
-    Pythia::PySlha( 2 , KSUSY1+22 , status ) ;
+    for( std::vector<int>::const_iterator i = m_pdecaylist.begin();
+         i != m_pdecaylist.end(); i++ ){
+      Pythia::PySlha( 2 , *i , status ) ;
+      debug() << "Status " << status << endreq ;
+      if(status != 0){
+	return Error( "Could not update particle " ) ;
+      }
+    }
+  }
+  
+  Pythia::PyInit( m_frame, m_beam, m_target, m_win ) ;  
 
+  //Close mass spectrum file
+  if ( "empty" != m_slhaSpectrumFile ) {
     sc = F77Utils::close( lunUnit , msgLevel( MSG::INFO ) ) ;
-    if ( sc.isFailure() ) 
+    if ( sc.isFailure() )
+      return Error( "Cannot close SLHA mass spectrum file" ) ;
+  }
+
+  //Close decay file
+  if ( "empty" != m_slhaDecayFile ) {
+    sc = F77Utils::close( lunUnit2 , msgLevel( MSG::INFO ) ) ;
+    if ( sc.isFailure() )
       return Error( "Cannot close SLHA decay file" ) ;
   }
   
@@ -423,14 +475,30 @@ void PythiaProduction::setStable( const ParticleProperty * thePP ) {
 void PythiaProduction::updateParticleProperties( const ParticleProperty * 
                                                  thePP ) {
   int pythiaId = thePP -> pythiaID() ;
+
+  //If MSSM mass spectrum is provided, no need to update susy particles.
+  if( m_slhaSpectrumFile != "empty" ){
+    if( abs(pythiaId)>1000000 && abs(pythiaId)<1001000 ) return;
+    if( abs(pythiaId)>2000000 && abs(pythiaId)<2001000 ) return;
+    if( pythiaId == 25 || pythiaId == 35 || pythiaId == 36 ||
+        abs(pythiaId) == 37 ) return;
+  }
+
+  //If MSSM decay file is provided, do not update particles from PDecayList.
+  if( m_slhaDecayFile != "empty" ){
+    for( std::vector<int>::const_iterator i = m_pdecaylist.begin();
+	 i != m_pdecaylist.end(); i++ ){
+      if( pythiaId == *i ) return;
+    }
+  }
+
   double pwidth , lifetime ;
   if ( 0 != pythiaId ) {
     int kc = Pythia::PyComp( pythiaId ) ;
     if ( kc > 0 ) {
       if ( 0 == thePP -> lifetime() ) pwidth = 0. ;
       else pwidth = ( Gaudi::Units::hbarc / 
-                      ( thePP -> lifetime() * Gaudi::Units::c_light ) ) ;
-      //      if ( pwidth < ( 1.5e-6 * GeV ) ) pwidth = 0. ;
+		      ( thePP -> lifetime() * Gaudi::Units::c_light ) ) ;
       if ( pwidth < m_widthLimit ) pwidth = 0. ;
 
       lifetime =  thePP -> lifetime() * Gaudi::Units::c_light ;
