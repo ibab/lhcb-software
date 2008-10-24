@@ -1,5 +1,6 @@
 #include "OTDet/RtRelation.h"
-#include <math.h>
+//#include <math.h>
+#include <cmath>
 #include <iostream>
 
 namespace OTDet
@@ -45,19 +46,16 @@ namespace OTDet
     // the rest goes numeric (newton-raphson) 
     for(size_t i = 1; i<ntbins-1; ++i) {
       double t = m_tmin + i*m_dt ;
-      const double precision = 0.0001 ;
-      double r =0.5 ;
-      double residual = t - drifttime(r) ;
+      const double precision = 0.001 ;
+      double r = m_rtable[i-1].val ;
       const unsigned char maxtries = 10 ;
-      unsigned char ntries = 0 ;
-      while ( fabs(residual) > precision) {
-	r += residual / polyeval(derivcoeff,r/m_rmax) ;
+      size_t ntries = 0 ;
+      double residual(0) ;
+      do {
 	residual = t - drifttime(r) ;
-	if(++ntries>maxtries) {
-	  r=-1 ;
-	  break ;
-	}
-      }
+	r += residual / polyeval(derivcoeff,r/m_rmax) ;
+      } while( ++ntries<maxtries && std::abs(residual) > precision) ;
+      
       double dtdr = polyeval(derivcoeff,r/m_rmax) ;
       m_rtable[i] = RadiusWithError(r, drifttimeError(r)/dtdr ) ;
     }
