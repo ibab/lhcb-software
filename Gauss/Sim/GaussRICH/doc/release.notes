@@ -5,6 +5,9 @@
 !----------------------------------------------------------------------------- 
 
 !========================= GaussRICH v9r1 2008-08-26 =========================
+! 2008-10-24 - Sajan Easo
+   In RichSensDet fixed a bug related to storing mctracks corresponding to MIPs passing through the
+   Hpd-Silicon, in order to avoid the occurance of related mc hits without mc tracks. 
 ! 2008-08-08 - Sajan Easo
   Modified the RichG4Cerenkov to be a poststep process , similar to
   what is suggested in the recent G4.9. This needed a modification in 

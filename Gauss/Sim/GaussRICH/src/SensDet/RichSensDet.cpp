@@ -1,4 +1,4 @@
-// $Id: RichSensDet.cpp,v 1.22 2008-03-28 13:25:32 seaso Exp $
+// $Id: RichSensDet.cpp,v 1.23 2008-10-24 09:39:28 seaso Exp $
 // Include files 
 
 // from CLHEP
@@ -363,9 +363,10 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
                                                   // like Charged track -> Cherenkov photon -> photoelectron-> hit
                                                    //  photoelectron-> backscattered electron->hit.
 
-     if( CurOptPhotMotherChTrackID == 0) {           // this is for mip particle and the possible backscatted electrons from them.
-     newHit ->setTrackID(CurPETrackID);
-     if(aRichPETrackInfo) aRichPETrackInfo ->setToBeStored (true);       
+      //     if( CurOptPhotMotherChTrackID == 0) { // this line fixed as below on Oct-24-2008 by SE to avoid mc hit without mc tracks.
+     if( CurOptPhotMotherChTrackID <= 0) {           // this is for mip particle and the possible backscatted electrons from them.
+       newHit ->setTrackID(CurPETrackID);
+       if(aRichPETrackInfo) aRichPETrackInfo ->setToBeStored (true);       
      }
 
      //    if( CurElectronBackScatFlag > 0 ) {
