@@ -6,6 +6,7 @@
 // Tsa
 #include "TrackCaloMatch.h"
 #include "Event/Track.h"
+#include "CaloUtils/Calo2Track.h"
 
 using namespace LHCb;
 
@@ -25,6 +26,7 @@ m_configured(false)
   declareProperty("alpha", m_alpha = 8. );
   declareProperty("beta", m_beta = 1. );
   declareProperty("gamma", m_gamma = 1. );
+
 }
 
 TrackCaloMatch::~TrackCaloMatch(){
@@ -40,6 +42,11 @@ StatusCode TrackCaloMatch::initialize()
     return Error("Failed to initialize", sc);
   }
 
+  
+  m_ecalLocation = rootInTES() + CaloIdLocation::EcalE ;
+  m_hcalLocation = rootInTES() + CaloIdLocation::HcalE;
+  m_prsLocation = rootInTES()+ CaloIdLocation::PrsE;
+
   incSvc()->addListener( this, IncidentType::BeginEvent );
  
   return StatusCode::SUCCESS; 
@@ -50,18 +57,9 @@ double TrackCaloMatch::energy(const Track& aTrack) const{
   // get the input - seeds
   if (!m_configured) initEvent();       
 
-  double eEcal = 0 ;
-  double eHcal = 0 ;
-  double ePrs = 0 ;
-
-  Table::Range rEcal = m_ecalE->relations( &aTrack ) ;
-  if ( !rEcal.empty() ) { eEcal += rEcal.front().to() ; }
-
-  Table::Range rHcal = m_hcalE->relations( &aTrack ) ;
-  if ( !rHcal.empty() ) { eHcal += rHcal.front().to() ; }
-
-  Table::Range rPs = m_psE->relations( &aTrack ) ;
-  if ( !rPs.empty() ) { ePrs += rPs.front().to() ; }
+  double eEcal = energy(aTrack, m_ecalE) ;
+  double eHcal = energy(aTrack, m_hcalE) ;
+  double ePrs = energy(aTrack, m_psE);
  
   // known bug - sometimes ps gives -ve energy
   if (ePrs < 0) {
@@ -69,9 +67,14 @@ double TrackCaloMatch::energy(const Track& aTrack) const{
     ePrs = 0;
   }
 
-  double energy = (m_alpha * ePrs) + (m_beta * eEcal) + (m_gamma * eHcal) ;
+  return (m_alpha * ePrs) + (m_beta * eEcal) + (m_gamma * eHcal) ;
   
-  return energy;
+}
+
+double TrackCaloMatch::energy(const Track& aTrack, const TrackCaloMatch::Table* table ) const{
+
+  Table::Range aRange = table->relations( &aTrack ) ;
+  return( !aRange.empty()  ? aRange.front().to() : 0);
 }
 
 void TrackCaloMatch::handle ( const Incident& incident )
@@ -82,8 +85,10 @@ void TrackCaloMatch::handle ( const Incident& incident )
 void TrackCaloMatch::initEvent() const{
 
  m_configured = true;
- m_ecalE = get<Table>("Rec/Calo/EcalE") ;
- m_hcalE = get<Table>("Rec/Calo/HcalE") ;
- m_psE = get<Table>("Rec/Calo/PrsE" ) ;
+
+ using namespace LHCb::CaloIdLocation;
+ m_ecalE = get<Table>(m_ecalLocation) ;
+ m_hcalE = get<Table>(m_hcalLocation) ;
+ m_psE = get<Table>(m_prsLocation) ;
 
 }

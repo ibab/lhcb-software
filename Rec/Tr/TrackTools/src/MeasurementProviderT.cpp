@@ -1,4 +1,4 @@
-// $Id: MeasurementProviderT.cpp,v 1.14 2008-10-18 10:57:04 mneedham Exp $
+// $Id: MeasurementProviderT.cpp,v 1.15 2008-10-24 13:45:07 mneedham Exp $
 // Include files
 
 //=============================================================================
@@ -278,12 +278,9 @@ namespace MeasurementProviderTypes {
 template<>
 double MeasurementProviderT<MeasurementProviderTypes::TT>::nominalZ( const LHCb::LHCbID& id ) const
 {
-  // extremely ugly. need more functionality in det elements to do this quicker.
   LHCb::STChannelID stid(id.stID()) ;
   const DeSTSector* sector = const_cast<DeSTDetector*>(m_det)->findSector(stid) ;
-  double dxdy, dzdy, xAtYEq0, zAtYEq0, ybegin, yend ;
-  sector->trajectory(stid.strip(),0,dxdy,dzdy,xAtYEq0,zAtYEq0,ybegin,yend) ;
-  return zAtYEq0 + (ybegin+yend)/2 * dzdy ;
+  return sector->globalCentre().z();
 }
 
 typedef MeasurementProviderT<MeasurementProviderTypes::TT> TTMeasurementProvider ;
@@ -300,8 +297,8 @@ namespace MeasurementProviderTypes {
     typedef DeSTDetector             DetectorType ;
     static std::string positionToolName() { return "STOfflinePosition/ITClusterPosition" ; }
     static std::string defaultDetectorLocation() { return DeSTDetLocation::location("IT") ; }
- 
-    static std::string defaultClusterLocation() { return LHCb::STClusterLocation::ITClusters ; }
+    static std::string defaultClusterLocation() { return LHCb::STClusterLocation::ITClusters; }
+    
     
 
     static LHCb::STChannelID channelId( const LHCb::LHCbID& id ) { return id.stID() ; }
@@ -315,9 +312,7 @@ double MeasurementProviderT<MeasurementProviderTypes::IT>::nominalZ( const LHCb:
   // extremely ugly. need more functionality in det elements to do this quicker.
   LHCb::STChannelID stid(id.stID()) ;
   const DeSTSector* sector = const_cast<DeSTDetector*>(m_det)->findSector(stid) ;
-  double dxdy, dzdy, xAtYEq0, zAtYEq0, ybegin, yend ;
-  sector->trajectory(stid.strip(),0,dxdy,dzdy,xAtYEq0,zAtYEq0,ybegin,yend) ;
-  return zAtYEq0 + (ybegin+yend)/2 * dzdy ;
+  return sector->globalCentre().z() ;
 }
 
 typedef MeasurementProviderT<MeasurementProviderTypes::IT> ITMeasurementProvider ;

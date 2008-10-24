@@ -99,6 +99,7 @@ void TrackUsedLHCbID::initEvent() const{
  std::sort(m_usedCont.begin(),m_usedCont.end(), lessByID());
  
  // strip out duplicates
- std::unique(m_usedCont.begin(), m_usedCont.end());
+ m_usedCont.erase(std::unique(m_usedCont.begin(), m_usedCont.end()),
+                  m_usedCont.end());
 
 }

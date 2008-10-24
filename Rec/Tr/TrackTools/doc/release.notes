@@ -5,6 +5,12 @@
 !-----------------------------------------------------------------------------
 
 
+! 2008-10-24 M Needham
+ - Tidy up TrackCaloMatch algorithm
+ - Add selector [ITTrackConfirmation]
+ - Use centre of sector to get nominal z [MeasurementProviderT.cpp]
+ - Bug fix in TrackUsedLHCbID [duplicates handled correctly]
+
 ! 2008-10-19 M Needham
  - Changes in likelihood tool [allow detector to be missing in init
  - Changes in expected hit tools [allow choice of extrapolator ]

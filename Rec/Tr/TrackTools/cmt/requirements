@@ -28,6 +28,7 @@ use   STDet           v*     Det
 use   OTDet           v*     Det
 use   VeloDet         v*     Det
 use   MuonDet         v*     Det
+use   CaloUtils       v*     Calo
 
 use   OTDAQ           v*     OT
 # Component library building rule

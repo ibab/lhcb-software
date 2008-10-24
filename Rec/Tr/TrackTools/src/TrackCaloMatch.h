@@ -1,4 +1,4 @@
-// $Id: TrackCaloMatch.h,v 1.2 2007-03-13 14:32:31 cattanem Exp $
+// $Id: TrackCaloMatch.h,v 1.3 2008-10-24 13:45:07 mneedham Exp $
 #ifndef _TrackCaloMatch_H
 #define _TrackCaloMatch_H
 
@@ -54,10 +54,15 @@ private:
   void initEvent() const;
 
   typedef IRelation<LHCb::Track,float> Table ;
+  double energy(const LHCb::Track& aTrack, const TrackCaloMatch::Table* table ) const;
+
   mutable Table* m_ecalE;                 
   mutable Table* m_hcalE;     
   mutable Table* m_psE;   
-                                                       
+  std::string m_ecalLocation;
+  std::string m_hcalLocation;
+  std::string m_prsLocation;               
+                                        
   double m_alpha;
   double m_beta;
   double m_gamma;
