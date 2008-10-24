@@ -1,0 +1,10 @@
+!-----------------------------------------------------------------------------
+! Package     : Boole_v16r3/Rich
+! Responsible : Chris Jones
+! Purpose     : Configure the RICH digitisation simulation
+!-----------------------------------------------------------------------------
+
+! 2008-10-24 - Chris Jones
+ - First version. RICH digitisation configuration, ported from job options
+   previously in Rich/RichReadout
+
