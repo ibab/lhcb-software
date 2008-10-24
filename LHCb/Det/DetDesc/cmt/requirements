@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.112 2008-09-23 13:05:25 marcocle Exp $ 
+# $Id: requirements,v 1.113 2008-10-24 09:35:22 cattanem Exp $ 
 # =============================================================================
 package       DetDesc
-version       v18r9
+version       v18r9p1
 
 # =========== structure =======================================================
 branches      DetDesc doc cmt src
@@ -29,3 +29,6 @@ apply_pattern     reflex_dictionary                                 \
 
 macro_append ROOT_linkopts " -lMathCore " \
              WIN32 " libMathCore.lib "
+macro_append ROOT_linkopts "" \
+             ROOT_GE_5_19&WIN32 " libGenVector.lib " \
+             ROOT_GE_5_19 " -lGenVector "
