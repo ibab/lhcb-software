@@ -1,6 +1,0 @@
-// debug printout levels for digi algs
-
-RichPDResponse.OutputLevel = 2;
-RichPDSignal.OutputLevel = 2;
-RichDigitCreator.OutputLevel = 2;
-RichInitSICBData.OutputLevel = 2;

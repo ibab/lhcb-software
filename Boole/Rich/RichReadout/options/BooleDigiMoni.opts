@@ -1,3 +1,0 @@
-
-// Digitisation algorithm monitor
-MoniRICHSeq.Members += { "Rich::MC::Digi::AlgMoni/RiDigiAlgMon" };
