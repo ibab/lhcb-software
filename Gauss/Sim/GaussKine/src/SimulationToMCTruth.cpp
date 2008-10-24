@@ -1,4 +1,4 @@
-// $Id: SimulationToMCTruth.cpp,v 1.3 2008-10-23 12:14:30 robbep Exp $
+// $Id: SimulationToMCTruth.cpp,v 1.4 2008-10-24 09:20:48 robbep Exp $
 // Include files 
 
 // local 
@@ -216,7 +216,8 @@ void SimulationToMCTruth::convert( const HepMC::GenParticle * part ,
     if ( m_checkUnknown ) {
       if ( 0 == m_ppSvc -> findByStdHepID( part->pdg_id() ) ) 
 	  warning() << "The particle with pdg_id " << part->pdg_id()
-		    << " is not known to LHCb." << endreq ;
+		    << " is not known to LHCb. " 
+		    << "Mass is " << part -> generated_mass() << endreq ;
     } 
     
     // Check if the particle from Geant4 has already a link to a MCParticle
