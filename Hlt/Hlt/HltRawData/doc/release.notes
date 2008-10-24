@@ -1,9 +1,14 @@
-!$Id: release.notes,v 1.15 2008-10-16 21:44:54 tskwarni Exp $
+!$Id: release.notes,v 1.16 2008-10-24 19:33:22 tskwarni Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltRawData
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Writers and Readers, Makers of persisted TES info
 !-----------------------------------------------------------------------------
+
+<<<<<<< release.notes
+! 2008-10-24 - Tomasz Skwarnicki
+ - HltSelReportsMaker now outputs Global selections for Hlt1 and Hlt2
+   minor changes in option files 
 
 ! 2008-10-16 - Tomasz Skwarnicki
  - Makers of Vertex & Sel Reports now take input data from dataSvc(), with additional 
@@ -12,6 +17,15 @@
    adding from HltSummary (if available). Global decisions added if missing.
    Empty decisions no longer added if missing.
 
+=======
+! 2008-10-16 - Tomasz Skwarnicki
+ - Makers of Vertex & Sel Reports now take input data from dataSvc(), with additional 
+   input from HltSummary (if available)
+ - Maker of Dec Reports now starts from existing HltDecReports (if already present)
+   adding from HltSummary (if available). Global decisions added if missing.
+   Empty decisions no longer added if missing.
+
+>>>>>>> 1.15
 !========================== HltRawData v1r4 2008-09-21 ===================
 ! 2008-09-17 - Tomasz Skwarnicki
  - fix bugs is HltSelReports maker,writer related to empty events
