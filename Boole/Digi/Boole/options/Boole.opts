@@ -102,11 +102,6 @@ EcalFillRawBuffer.DataCodingType = 2;
 HcalFillRawBuffer.DataCodingType = 2;
 CaloFillPrsSpdRawBuffer.DataCodingType = 3;
 
-
-// Rich digitisation
-#include "$RICHREADOUTOPTS/BooleDigi.opts"
-#include "$RICHDAQROOT/options/Boole_FillRawBuffer.opts"
-
 // Muon digitisation
 DigiMUONSeq.Members += { "MuonDigitization" };
 DigiMUONSeq.Members += { "MuonDigitToRawBuffer" };
@@ -181,7 +176,11 @@ RelationsOTSeq.Members += { "OTMCParticleLinker" };
 
 RelationsTrSeq.Members += { "BuildMCTrackInfo" };
 
-#include "$RICHMCASSOCIATORSROOT/options/BooleRelations.opts"
+// RICH
+RelationsRICHSeq.Members += { "Rich::MC::MCRichDigitSummaryAlg" };
+// Extended relations. Do nothing if input data is not on Sim file so always run
+RelationsRICHSeq.Members += { "Rich::MC::MCPartToMCRichTrackAlg",
+                              "Rich::MC::MCRichHitToMCRichOpPhotAlg" };
 
 #include "$CALOASSOCIATORSROOT/options/BooleRelations.opts"
 

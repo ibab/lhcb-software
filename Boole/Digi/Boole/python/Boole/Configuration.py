@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.20 2008-10-21 15:30:52 marcocle Exp $"
+__version__ = "$Id: Configuration.py,v 1.21 2008-10-24 13:09:49 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -174,6 +174,12 @@ class Boole(LHCbConfigurableUser):
     def applyConf(self):
         GaudiKernel.ProcessJobOptions.PrintOff()
         importOptions( self.getProp( "mainOptions" ) )
+        
+        # CRJ : Rich Digitisation now in python configurables
+        from RichDigiSys.Configuration import RichDigiSysConf
+        self.setOtherProp(RichDigiSysConf(),"useSpillover")
+        RichDigiSysConf().applyConf(GaudiSequencer("DigiRICHSeq"))
+        
         self.defineDB()
         self.defineEvents()
         self.defineOptions()

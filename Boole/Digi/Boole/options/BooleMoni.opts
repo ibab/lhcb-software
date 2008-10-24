@@ -77,7 +77,7 @@ TTEffChecker.MCParticleSelector.betaGammaMin = 1.0;
 MoniOTSeq.Members += { "MCOTDepositMonitor" };
 
 // Rich
-#include "$RICHDIGIQCOPTS/DigiQC_Boole.opts"
+MoniRICHSeq.Members += { "Rich::MC::Digi::DigitQC/RiDigitQC" };
 
 // Calorimeters
 #include "$CALOMONIDIGIOPTS/CaloDigitChecker.opts"

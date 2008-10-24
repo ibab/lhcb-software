@@ -3,6 +3,10 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+! 2008-10-24 - Chris Jones
+ - Adapt to changes in RICH digitisation. New python configurable +
+   removeal of a few minimal options files.
+
 ! 2008-10-22 - Marco Cattaneo
  - Do not suppress INFO from RawWriter (finalize message needed by DIRAC)
 
