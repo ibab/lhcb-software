@@ -1,6 +1,6 @@
 ########################################################################
 #
-#$Id: DaVinci.py,v 1.16 2008-10-07 15:04:59 pkoppenb Exp $
+# $Id: DaVinci.py,v 1.17 2008-10-24 14:36:59 pkoppenb Exp $
 #
 # Options for a typical DaVinci job
 #

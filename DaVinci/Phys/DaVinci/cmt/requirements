@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.394 2008-10-08 12:29:29 jpalac Exp $
+# $Id: requirements,v 1.395 2008-10-24 14:36:59 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : J. Palacios
 #
@@ -10,6 +10,9 @@ version           v20r4
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc src job options tests python
+
+# Set the default path for DaVinci options.
+set DAVINCIOPTS ${DAVINCIROOT}/options
 
 # Packages needed to compile and link the application
 use GaudiConf          v*                   -no_auto_imports

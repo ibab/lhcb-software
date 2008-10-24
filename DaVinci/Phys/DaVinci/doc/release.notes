@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.249 2008-10-23 11:35:33 jpalac Exp $
+! $Id: release.notes,v 1.250 2008-10-24 14:36:59 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,11 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2008-10-24 - Patrick Koppenburg
+ - Changes to please team Dirac :
+   . Added DaVinci-2008.py that does nothing but include DaVinci.py
+   . Created DAVINCIOPTS variable
 
 ! 2008-10-23 - Juan PALACIOS
  - tests/qmtest/davinci.qms/preselections.qms/test_bbstripping.qmt
