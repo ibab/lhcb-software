@@ -2,7 +2,7 @@
 # Created    : 2002-06-13
 # Maintainer : Chris Jones
 #============================================================================
-# $Id: requirements,v 1.32 2008-07-26 11:49:17 jonrob Exp $
+# $Id: requirements,v 1.33 2008-10-24 12:51:45 jonrob Exp $
 #============================================================================
 
 package           RichDigiQC
@@ -10,7 +10,7 @@ version           v3r10
 
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src options
+branches          cmt doc src
 include_path none
 
 #================ environment ==============================================

@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH digitisation
 !-----------------------------------------------------------------------------
 
+! 2008-10-24 - Chris Jones
+ - Remove options files. Monitors now configured directly by Boole
+
 !======================== RichDigiQC v3r10 2008-07-29 ========================
 ! 2008-07-26 - Chris Jones
  - Adapt to changes in L1 ID classes in RichKernel

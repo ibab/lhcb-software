@@ -1,4 +1,0 @@
-// Turn on debug printout
-
-RiDigitQC.OutputLevel = 2;
-RichDigiEventPrint.OutputLevel = 2;

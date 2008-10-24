@@ -5,7 +5,7 @@
  *  Implementation file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.cpp,v 1.38 2008-07-26 11:49:17 jonrob Exp $
+ *  $Id: RichDigitQC.cpp,v 1.39 2008-10-24 12:51:45 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -33,11 +33,11 @@ DigitQC::DigitQC( const std::string& name,
     m_mcTool         ( 0                 ),
     m_evtC           ( 0                 )
 {
-
+  setProperty("HistoDir","DIGI/DIGITQC");
+  setProperty("HistoOffSet",10000);
   // Declare job options
   declareProperty( "InputDigits", m_digitTDS = LHCb::MCRichDigitLocation::Default );
   declareProperty( "ExtraHistos", m_extraHists = false );
-
 }
 
 // Destructor
