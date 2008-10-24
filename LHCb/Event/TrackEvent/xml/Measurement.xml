@@ -37,7 +37,9 @@
         name    = 'Type'
         value   = 'Unknown,VeloR,VeloPhi,TT,IT,OT,Muon'
         desc    = 'enumerator for the type of Measurement'
-        access  = 'PUBLIC' />
+        access  = 'PUBLIC'
+        strTypConv = 'TRUE' 
+      />
 
       <constructor 
 	desc     = "Copy constructor" 

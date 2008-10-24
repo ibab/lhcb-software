@@ -4,6 +4,10 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2008-1-24 M Needham
+  - enable string to enum conversion in State, Node and Measurement
+  - Add constructors to track
+
 ! 2008-10-21 Wouter Hulsbergen
   - fix method that computes number of outliers
 	

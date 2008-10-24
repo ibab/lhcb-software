@@ -71,7 +71,10 @@
 		 MidHCal,
 		 EndHCal,
                  Muon'
-       access = 'PUBLIC' />
+       access = 'PUBLIC'
+       strTypConv = 'TRUE'
+       unknownValue = 'LocationUnknown'
+        />
 
       <constructor
         desc    = 'Default constructor' />

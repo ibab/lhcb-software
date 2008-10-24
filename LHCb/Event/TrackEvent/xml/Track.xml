@@ -214,6 +214,37 @@
 	initList = "KeyedObject&lt;int&gt;( key ), m_chi2PerDoF(0.0), m_nDoF(0), m_flags(0), m_lhcbIDs(), m_states(), m_measurements(), m_nodes(), m_ancestors()">
       </constructor>
 
+  <constructor 
+	desc     = "Constructor" 
+	argList  = "const LHCb::Track::History&amp; history, 
+                    const LHCb::Track::Types&amp; trackType,  const LHCb::Track::PatRecStatus&amp; patStatus,
+                    std::vector&lt;LHCb::LHCbID&gt; ids,
+                    const LHCb::State&amp; aState"
+	explicit = "TRUE"
+	initList = "KeyedObject&lt;int&gt;(), m_chi2PerDoF(0.0), m_nDoF(0), m_flags(0), m_lhcbIDs(ids), m_states(), m_measurements(), m_nodes(), m_ancestors()">
+      <code>
+      addToStates(aState);
+      setHistory(history);
+      setType(trackType);
+      setPatRecStatus( patStatus ); 
+      </code>
+      </constructor>
+
+  <constructor 
+	desc     = "Constructor" 
+	argList  = "const LHCb::Track::History&amp; history, const LHCb::Track::Types&amp; trackType,
+                    const LHCb::Track::PatRecStatus&amp; patStatus"
+	explicit = "TRUE"
+	initList = "KeyedObject&lt;int&gt;(), m_chi2PerDoF(0.0), m_nDoF(0), m_flags(0), m_lhcbIDs(), m_states(), m_measurements(), m_nodes(), m_ancestors()">
+      <code>
+      setHistory(history);
+      setType(trackType);
+      setPatRecStatus( patStatus ); 
+      </code>
+      </constructor>
+
+
+
       <destructor
         desc = 'Track destructor'>
         <code>

@@ -24,7 +24,9 @@
         name    = 'Type'
         value   = 'Unknown,HitOnTrack,Outlier,Reference'
         desc    = 'enumerator for the type of Node'
-        access  = 'PUBLIC' />
+        access  = 'PUBLIC'
+        strTypConv = 'TRUE' 
+        />
 
       <constructor 
 	desc     = "Constructor from a Measurement" 
