@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.367 2008-10-22 13:49:54 jpalac Exp $
+! $Id: release.notes,v 1.368 2008-10-24 12:01:30 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-10-24 - Juan PALACIOS
+ - Add src/OnlineP2PVWithIP.cpp
+  . Online Particle->PV relator using IP.
 
 ! 2008-10-22 - Juan PALACIOS
  - src/GenericParticle2PVRelator.h
