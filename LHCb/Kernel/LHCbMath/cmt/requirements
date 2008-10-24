@@ -27,6 +27,9 @@ apply_pattern install_python_modules
 
 macro_append ROOT_linkopts " -lMathCore " \
              WIN32 " libMathCore.lib "
+macro_append ROOT_linkopts "" \
+             ROOT_GE_5_19&WIN32 " libGenVector.lib " \
+             ROOT_GE_5_19 " -lGenVector "
 
 # ================= constituents: linker library ============================
 library             LHCbMathLib    ../src/*.cpp

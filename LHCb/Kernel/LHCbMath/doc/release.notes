@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2008-10-24 - Marco Cattaneo
+ - Add link to libGenVector when using ROOT_GE_5_19
+
 ! 2008-10-22 - Marco Cattaneo
  - Add -no_auto_imports to GaudiPython use
 
