@@ -37,3 +37,13 @@ ConfiguredTrackMonitorSequence(Name='MoniTrackSeq')
 # Muon Monitoring algorithms
 #--------------------------------------------------------------
 importOptions("$MUONPIDCHECKERROOT/options/MuonPIDMonitor.opts")
+
+#--------------------------------------------------------------
+# ST Monitoring algorithms
+#--------------------------------------------------------------
+from Configurables import STClusterMonitor, GaudiSequencer
+
+GaudiSequencer( "MoniSTSeq" ).Members += [ STClusterMonitor("TTClusterMonitor"),
+                                           STClusterMonitor("ITClusterMonitor")]
+STClusterMonitor("TTClusterMonitor").DetType = "TT" ## default anyway 
+STClusterMonitor("ITClusterMonitor").DetType = "IT" 
