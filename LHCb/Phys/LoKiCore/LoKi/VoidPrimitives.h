@@ -1,4 +1,4 @@
-// $Id: VoidPrimitives.h,v 1.1 2008-10-19 16:11:40 ibelyaev Exp $
+// $Id: VoidPrimitives.h,v 1.2 2008-10-24 15:28:20 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_VOIDPRIMITIVES_H 
 #define LOKI_VOIDPRIMITIVES_H 1
@@ -331,7 +331,7 @@ namespace LoKi
   public:
     // ========================================================================
     /// the actual comparison:
-    inline result_type equal ( argument /* a */ ) const 
+    inline result_type equal ( /* argument a */ ) const 
     { 
       LHCb::Math::Equal_To<TYPE2> cmp  ( m_eps ) ;
       return cmp ( m_two.fun1 ( /* a */ ) , m_two.fun2 ( /* a */ ) ) ; 
