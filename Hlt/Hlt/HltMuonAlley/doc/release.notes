@@ -3,6 +3,8 @@
 ! Responsible : Sandra Amato & Alessia Satta
 ! Purpose     : Decision Algorithms for the muon trigger
 !-----------------------------------------------------------------------------
+! 2008-10-01 - Leandro de Paula 
+ - HltDeltaPTool.h, cpp: changed to use ancertors
 
 !========================== HltMuonAlley v2r6 2008-10-03 ===================
 ! 2008-10-01 - Leandro de Paula 

@@ -1,4 +1,4 @@
-// $Id: HltDeltaPTool.h,v 1.1 2008-10-01 09:32:53 leandrop Exp $
+// $Id: HltDeltaPTool.h,v 1.2 2008-10-24 13:32:21 leandrop Exp $
 #ifndef HLTDELTAPTOOL_H 
 #define HLTDELTAPTOOL_H 1
 
@@ -32,19 +32,8 @@ public:
   double function(const LHCb::Track& track);
 
 private:
-  float  l0Momentum(LHCb::MuonTileID tileMX);
-  float  mSMomentum(LHCb::MuonTileID tileMX);
-
-  IMuonPosTool*      m_iPosTool;
-  IMuonRawBuffer*    m_muonBuffer;
-
-private:
-
 // DeltaP parameters
   std::vector<double> m_pCut;
-
-  LHCb::L0MuonCandidates*     m_inputL0Muon;
-  LHCb::Tracks*               m_inputMuSeg;
 
 };
 #endif // HLTDELTAPTOOL_H
