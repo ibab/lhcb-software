@@ -1,4 +1,4 @@
-// $Id: DeSTDetector.h,v 1.23 2008-10-22 11:06:08 cattanem Exp $
+// $Id: DeSTDetector.h,v 1.24 2008-10-24 13:37:22 mneedham Exp $
 #ifndef _DeSTDetector_H_
 #define _DeSTDetector_H_
 
@@ -296,7 +296,7 @@ inline DeSTDetector::Sectors DeSTDetector::findSectors(const std::vector<LHCb::S
     DeSTSector* aSector = findSector(*iter);
     if (aSector != 0) sectors.push_back(aSector);
   }  // for 
-  std::unique(sectors.begin(), sectors.end());
+  sectors.erase(std::unique(sectors.begin(), sectors.end()), sectors.end());
   return sectors;
 }
 
