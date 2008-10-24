@@ -398,14 +398,13 @@ int MuonPIDChecker::getTrType( const LHCb::Track *pTrack,
   StatusCode sc = checkMCAss( pTrack , mcP);
 
   // Fill Histograms
-  if ( sc.isFailure() ) {      // ghost
+  if ( sc.isFailure() || 0 == mcP->mother() ) {      // ghost
 
     type = 0;  
 	       
   }else{                        // there is MC association
 
     m_TrMCp0 = mcP->p()/Gaudi::Units::GeV;
-
     if (( abs (mcP->particleID().pid()) == 13) && ((m_TrnLinks==1 &&
 	  ( abs (mcP->mother()->particleID().pid()) == 211 || 
 	    abs (mcP->mother()->particleID().pid()) == 321 )) || 
@@ -414,7 +413,6 @@ int MuonPIDChecker::getTrType( const LHCb::Track *pTrack,
 	    (m_TrzDecay > 0 && m_TrzDecay<20000.)) ){
 
       type = 2;  
-
     }else if ( abs (mcP->particleID().pid()) == 13  && m_TrnLinks == 1 ){ 
         
       type = 1;  
@@ -468,7 +466,7 @@ if (m_RunningMC) {
     misIDnShared = -1.;
   }
 
-  info()<<"------------------Total MuonPID Efficiencies (%)------------------"
+  info()<<"------------------MIMIMITotal MuonPID Efficiencies (%)------------------"
         <<  endreq;
   info()<<"-------------------          IsMuon             ------------------"
         <<  endreq;
