@@ -1,4 +1,4 @@
-// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.32 2008-10-17 14:10:22 mneedham Exp $
+// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.33 2008-10-24 13:39:01 mneedham Exp $
 
 
 #include <algorithm>
@@ -183,11 +183,12 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt,STLiteCluster
       
   } // iterBank
 
-  // sort 
+  // sort and remove any duplicates
   std::stable_sort(fCont->begin(),fCont->end(), Less_by_Channel());
-  const size_t decodedSize = fCont->size();
-  std::unique(fCont->begin(), fCont->end(), Equal_Channel()); 
-  if (fCont->size() != decodedSize){
+  STLiteCluster::STLiteClusters::iterator iter =  std::unique(fCont->begin(), fCont->end(), Equal_Channel()); 
+  if (iter != fCont->end()){
+    const unsigned int nvalid = iter - fCont->begin();
+    fCont->resize(nvalid);    
     return Warning("Removed duplicate clusters in the decoding", StatusCode::SUCCESS, 100);
   }
 
