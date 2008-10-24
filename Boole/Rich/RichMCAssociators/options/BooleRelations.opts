@@ -1,8 +1,0 @@
-
-// standard DST relations
-RelationsRICHSeq.Members += { "Rich::MC::MCRichDigitSummaryAlg" };
-
-// Extended relations. Do nothing if input data is not on Sim file so always run
-RelationsRICHSeq.Members += { "Rich::MC::MCPartToMCRichTrackAlg",
-                              "Rich::MC::MCRichHitToMCRichOpPhotAlg" };
-

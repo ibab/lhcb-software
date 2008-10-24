@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-10-24 - Chris Jones
+ - Remove job options
+
 !======================= RichMCAssociators v2r5 2007-05-29 ===================
 ! 2007-05-29 - Marco Cattaneo
  - Adapt to move of interfaces to MCInterfaces 
