@@ -12,36 +12,36 @@ include_path      none
 
 # Used packages
 #============================================================================
-use   TrackEvent           v4r*    Event
-use   TrackFitEvent        v3r*    Tr
+use   TrackEvent           v*    Event
+use   TrackFitEvent        v*    Tr
 
-use   TrackInterfaces      v3r*    Tr
+use   TrackInterfaces      v*    Tr
 
-use   TrackExtrapolators   v2r*    Tr
-use   TrackProjectors      v2r*    Tr
-use   TrackMCTools         v2r*    Tr
-use   TrackTools           v3r*    Tr
+use   TrackExtrapolators   v*    Tr
+use   TrackProjectors      v*    Tr
+use   TrackMCTools         v*    Tr
+use   TrackTools           v*    Tr
 
-use   TrackFitter          v2r*    Tr
+use   TrackFitter          v*    Tr
 
-use   TrackUtils           v1r*    Tr
+use   TrackUtils           v*    Tr
 
-use   TsaKernel            v3r*    Tf
-use   TsaAlgorithms        v3r*    Tf
-use   TrackSeeding         v1r*    Tf
-use   TrackMatching        v2r*    Tf
+use   TsaKernel            v*    Tf
+use   TsaAlgorithms        v*    Tf
+use   TrackSeeding         v*    Tf
+use   TrackMatching        v*    Tf
 
-use   TrackIdealPR         v2r*    Tr
-use   TrackAssociators     v2r*    Tr
-use   TrackCheckers        v4r*    Tr
-use   TrackMonitors        v1r*    Tr
+use   TrackIdealPR         v*    Tr
+use   TrackAssociators     v*    Tr
+use   TrackCheckers        v*    Tr
+use   TrackMonitors        v*    Tr
 
 #use   STTools              v3r*    ST
-use   PatAlgorithms        v3r*    Tf
-use   TrackMatching        v2r*    Tf
-use   PatVelo              v3r*    Tf
-use   PatVeloTT            v3r*    Tf
-use   NNTools              v1r*    Tr
+use   PatAlgorithms        v*    Tf
+use   TrackMatching        v*    Tf
+use   PatVelo              v*    Tf
+use   PatVeloTT            v*    Tf
+use   NNTools              v*    Tr
 
 #============================================================================
 # Install the configurable

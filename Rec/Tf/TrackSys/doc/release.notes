@@ -3,6 +3,11 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
+
+! 2008-10-24 - Marco Cattaneo
+ - Fix an option in Fitting.py for using a public tool (to please Gaudi v20r3)
+ - Remove version numbers from uses in requirements
+
 ! 2008-10-22 - Stephanie Hansmann-Menzemer
  - translate PatChecking.opts in PatChecking.py
 

@@ -20,8 +20,7 @@ from Configurables import ( ToolSvc, TrackEventFitter, TrackMasterFitter, TrackK
 
 from TrackSys.Configuration import *
 
-ToolSvc().addTool(TrajOTProjector, "OTNoDrifttimesProjector")
-ToolSvc().OTNoDrifttimesProjector.UseDrift = False
+TrajOTProjector("OTNoDrifttimesProjector").UseDrift = False
  
 # Forward fit
 TrackEventFitter("FitForward").TracksInContainer = "Rec/Track/Forward"
