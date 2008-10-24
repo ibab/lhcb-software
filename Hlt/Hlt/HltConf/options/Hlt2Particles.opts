@@ -15,15 +15,6 @@ SeqHlt2Particles.Members += { "GaudiSequencer/SeqHlt2Charged" } ;
 SeqHlt2Charged.MeasureTime = true ;
 SeqHlt2Charged.IgnoreFilterPassed = false ;
 /**
-* @todo TEMPORARY clone killer - waiting to understand duplicated tracks
-*/
-SeqHlt2Charged.Members += {
- "TrackEventCloneKiller/HltFullRecoTEMPORARYCloneKiller"} ;
-HltFullRecoTEMPORARYCloneKiller.TracksInContainers = { "Hlt/Track/Forward" };
-HltFullRecoTEMPORARYCloneKiller.TracksOutContainer = "Hlt/Track/ForwardCLEANED" ;
-HltFullRecoTEMPORARYCloneKiller.SkipSameContainerTracks = false ;
-HltFullRecoTEMPORARYCloneKiller.CloneFinderTool.CompareAtLHCbIDsLevel = true ;
-/**
 * @todo TEMPORARY kill huge events
 */
 SeqHlt2Charged.Members += { "NumberOfTracksFilter" };
