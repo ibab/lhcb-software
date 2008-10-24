@@ -1,4 +1,4 @@
-// $Id: ITGenericTracking.h,v 1.3 2008-10-11 10:48:15 mneedham Exp $
+// $Id: ITGenericTracking.h,v 1.4 2008-10-24 13:33:34 mneedham Exp $
 #ifndef ITGenericTracking_H
 #define ITGenericTracking_H 1
 
@@ -51,16 +51,19 @@ private:
                       std::vector<Tf::STHit*>& selected) const;
 
   bool collectXHits2(const Tf::Tsa::Line& line,
-                     Tf::STHit* hit1,
+                     Tf::STHit* hit1 ,
 		     const std::vector<Tf::STHit*>& xhits,  
                      std::vector<Tf::STHit*>& selected) const;
 
 
-
   void collectYHits(const Tf::Tsa::Line& line,
-		    const std::vector<Tf::STHit*>& yhits, const Tf::STHit* hit,  std::vector<yInfo>& selected) const;
+		    const std::vector<Tf::STHit*>& yhits, 
+                    const Tf::STHit* hit1,
+                    std::vector<yInfo>& selected) const;
 
-  void selectY(const std::vector<yInfo>& hits, std::vector<Tf::STHit*>& selected, Tf::Tsa::Line& yLine ) const; 
+  typedef std::vector<std::vector<Tf::STHit*> > CandidateHits;
+  typedef std::vector<Tf::Tsa::Line> CandidateLines;
+  void selectY(const std::vector<yInfo>& hits, CandidateHits& canhits, CandidateLines& lines ) const; 
 
   void collectIDs( std::vector<Tf::STHit*> hits , std::vector<LHCb::LHCbID>& ids)  const;
 
@@ -77,7 +80,7 @@ private:
                          const LHCb::STClusters* clusterCont) const;
 
   IHitExpectation* m_hitExpectation;
-  IHitExpectation* m_otHitExpectation;
+ 
   DeSTDetector* m_tracker;
   
   std::vector<unsigned int> m_allowedBoxes;
@@ -100,6 +103,7 @@ private:
   double m_maxTx;
   double m_maxTy;
   double m_maxRefX;
+  double m_minRefX;
   double m_maxRefY;
 
   unsigned int m_minYHits;
@@ -109,6 +113,8 @@ private:
   bool m_requireSameBox; 
   unsigned int m_maxClusterSize;
   double m_minCharge;
+  bool m_confirmY2;
+  bool m_selectBestY;
 
 };
 

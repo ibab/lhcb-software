@@ -4,8 +4,17 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+
+! 2008-10-24 M Needham
+ - Use new constructors in TsaSeedTrackCnvTool
+ - Major upgrade of ITGenericTracking algorithm
+      * bugs fixes
+      * new functionality
+      * use new constructors
+
 ! 2008-10-22 - Chris Jones
  - Adapt to changes in TrackSys python configurable
+
 
 ! 2008-11-10 M Needham
  - Improve generic tracking algorithm

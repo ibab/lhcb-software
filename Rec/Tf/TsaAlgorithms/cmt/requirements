@@ -17,6 +17,8 @@ branches          cmt doc src
 use TsaKernel       v* Tf
 use TrackInterfaces v* Tr
 use TrackFitEvent   v* Tr
+use CaloUtils       v* Calo
+use Relations v* Kernel
 
 include_path      none
 #============================================================================
@@ -28,3 +30,5 @@ library          TsaAlgorithms    ../src/*.cpp
 # define component library link options
 #============================================================================
 apply_pattern    component_library library=TsaAlgorithms
+
+#macro_append cppflags ' -g '

@@ -1,4 +1,4 @@
-// $Id: ITGenericTracking.cpp,v 1.3 2008-10-11 10:48:15 mneedham Exp $
+// $Id: ITGenericTracking.cpp,v 1.4 2008-10-24 13:33:34 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -61,11 +61,12 @@ ITGenericTracking::ITGenericTracking( const std::string& name,
   declareProperty("xWindow1", m_xWindow1 = 1.0);
   declareProperty("xWindow2", m_xWindow2 = 1.0);
   declareProperty("yWindow", m_yWindow =  10.0);
-  declareProperty("yTol", m_yTol = 5.0);
+  declareProperty("yTol", m_yTol = 2.0);
   declareProperty("maxTx", m_maxTx = 0.1);
   declareProperty("maxTy", m_maxTy = 0.1);
-  declareProperty("zRef", m_zRef = 300000.);
-  declareProperty("maxXRef", m_maxRefX = 5000.);
+  declareProperty("zRef", m_zRef = 350000.);
+  declareProperty("maxXRef", m_maxRefX = 6000.);
+  declareProperty("minXRef", m_minRefX = 2000.);
   declareProperty("maxYRef", m_maxRefY = 1000000.);
   declareProperty("minXHits", m_minXHits = 5);
   declareProperty("minYHits", m_minYHits = 5); 
@@ -76,10 +77,11 @@ ITGenericTracking::ITGenericTracking( const std::string& name,
   declareProperty("minXHitsToConfirm", m_minXHitsToConfirm = 0u);
   declareProperty("requireFirstAndLast", m_requireFirstAndLast = true);
   declareProperty("requireSameBox", m_requireSameBox = true );
-  declareProperty("maxFaults", m_maxFaults = 3);
+  declareProperty("maxFaults", m_maxFaults = 100);
   declareProperty("maxClusterSize", m_maxClusterSize = 4);
-  declareProperty("minCharge", m_minCharge = 15);
-
+  declareProperty("minCharge", m_minCharge = 10);
+  declareProperty("confirmY2", m_confirmY2 = false);
+  declareProperty("selectBestY",m_selectBestY = true);
 }
 
 ITGenericTracking::~ITGenericTracking() { }
@@ -93,8 +95,7 @@ StatusCode ITGenericTracking::initialize()
 
   // hit expectation
   m_hitExpectation = tool<IHitExpectation>("ITHitExpectation");
-  m_otHitExpectation = tool<IHitExpectation>("OTHitExpectation");
-    
+     
   // detector element     
   m_tracker = getDet<DeSTDetector>(DeSTDetLocation::location("IT"));
 
@@ -119,6 +120,9 @@ StatusCode ITGenericTracking::execute()
   for (STClusters::const_iterator iter = clusterCont->begin();
     iter != clusterCont->end(); ++iter){
     const DeSTSector* aSector = m_tracker->findSector((*iter)->channelID());
+    if (aSector == 0) {
+      std::cout << "Error: sector not found" << std::endl;
+    }
     if ((*iter)->size() < m_maxClusterSize && (*iter)->totalCharge() > m_minCharge){
       Tf::STHit* newHit = new Tf::STHit(*aSector,(*iter)->liteCluster());
       hits.push_back(newHit);
@@ -150,12 +154,14 @@ StatusCode ITGenericTracking::execute()
     if (m_requireFirstAndLast && (*iterX2)->cluster().channelID().layer() != 4) continue;
 
 
-	  // make a line and constrain the parameters 
+      // make a line and constrain the parameters 
       Tf::Tsa::Line xLine = Tf::Tsa::Line((*iterX1)->x(), (*iterX2)->x(), (*iterX1)->z(), (*iterX2)->z());
-      plot(xLine.m(),"tx", -0.5, 0.5, 100);
-      const double xRef = xLine.value(300000.);  
+      plot(xLine.m(),"tx", -0.5, 0.5, 100); 
+      const double xRef = xLine.value(m_zRef);  
+      plot(xRef, "xRef before", -20000, 20000. , 100);
+      if (fabs(xLine.m()) > m_maxTx) continue;
       plot(xRef, "xRef", -20000, 20000. , 100);
-      if (fabs(xRef) > m_maxRefX || fabs(xLine.m()) > m_maxTx) continue;
+      if (xRef > m_maxRefX || xRef < m_minRefX || fabs(xLine.m()) > m_maxTx) continue;
 
 	  // collected consistant hits, first station 3 then the rest
       std::vector<Tf::STHit*> selectedX; selectedX.reserve(8);
@@ -167,71 +173,71 @@ StatusCode ITGenericTracking::execute()
       plot(selectedX.size(), "# selected x", -0.5, 10.5, 11);
       if (selectedX.size() < m_minXHits) continue;
 
+      plot(xRef, "xRef2", -20000, 20000. , 100);
+
       // now collect the stereo
       std::vector<yInfo> selectedY; 
-      collectYHits(xLine,stereoHits, *iterX1 , selectedY);
-      plot(selectedY.size(), "# selected y", -0.5, 10.5, 11);  
+      collectYHits(xLine,stereoHits, *iterX1 ,  selectedY);
+      plot(selectedY.size(), "# selected y", -0.5, 50.5, 51);  
       if (selectedY.size() < m_minYHits) continue;
 
       // now select the best in y
-      std::vector<Tf::STHit*> selectedY2; Tf::Tsa::Line yLine(0.,0.);
-      selectY(selectedY,selectedY2 ,yLine);
-      plot(selectedY2.size()," # selected y2", -0.5, 10.5, 11);  
+      CandidateHits hits; CandidateLines lines;
+      selectY(selectedY,hits ,lines);
 
-      if (selectedY2.size() < m_minYHits) continue;
-
-       // confirm x hits are consistant with y
-      std::vector<Tf::STHit*> selectedX2; 
-      selectX(selectedX, yLine, selectedX2 );
-      plot(selectedX2.size(), "selected x2", -0.5, 10.5, 11);  
-      if (selectedX2.size() < m_minXHits) continue;
-
-      // make a track !!
-      std::vector<LHCb::LHCbID> ids; ids.reserve(12);
-      collectIDs(selectedX2, ids);
-      collectIDs(selectedY2, ids);
-
-      plot(ids.size(), "nhits", -0.5, 20.5, 21);
-      if (ids.size() < m_minHits) continue;
-
-      // count the number above the high threshold
-      unsigned int nHigh = countHigh(selectedX2, selectedY2, clusterCont);
-      plot(nHigh/double(ids.size()), "frac high", 0., 1., 100);
-      if (nHigh/double(ids.size()) < 0.6) continue; 
-
-      Gaudi::TrackVector stateVec = Gaudi::TrackVector();
-      Gaudi::TrackSymMatrix stateCov = Gaudi::TrackSymMatrix();
-      double zMidT = StateParameters::ZMidT;
-      LHCb::State aState = LHCb::State(stateVec,stateCov,zMidT,LHCb::State::AtT);
-      aState.setX(xLine.value(zMidT));
-      aState.setY(yLine.value(zMidT));
-      aState.setTx(xLine.m());
-      aState.setTy(yLine.m());
-      aState.setQOverP(1/10000.);
+      for (unsigned int iCan = 0 ; iCan < hits.size(); ++iCan){
   
-      LHCb::Track* aTrack = new LHCb::Track();
-      aTrack->setHistory(LHCb::Track::TsaTrack);
-      aTrack->setLhcbIDs(ids);
-      aTrack->setType(LHCb::Track::Ttrack);
-      aTrack->setPatRecStatus( LHCb::Track::PatRecIDs );
-      aTrack->addToStates(aState);
+	std::vector<Tf::STHit*> selectedY2 = hits[iCan];
+	Tf::Tsa::Line yLine = lines[iCan];
 
-      const unsigned int itExpected = m_hitExpectation->nExpected(*aTrack);
-      const int faults = itExpected - ids.size();
+	//        if (selectedY2.size() < m_minYHits) continue;
+
+        plot(xRef, "xRef 3", -20000, 20000. , 100);
+        plot(yLine.value(m_zRef), "yRef", -50000, 50000. , 100);
+  
+        // confirm x hits are consistant with y
+        std::vector<Tf::STHit*> selectedX2; 
+        selectX(selectedX, yLine, selectedX2 );
+        plot(selectedX2.size(), "selected x2", -0.5, 10.5, 11);  
+        if (selectedX2.size() < m_minXHits) continue;
+
+        // make a track !!
+        std::vector<LHCb::LHCbID> ids; ids.reserve(12);
+        collectIDs(selectedX2, ids);
+        collectIDs(selectedY2, ids);
+
+        plot(ids.size(), "nhits", -0.5, 20.5, 21);
+        if (ids.size() < m_minHits) continue;
+
+        // count the number above the high threshold
+        unsigned int nHigh = countHigh(selectedX2, selectedY2, clusterCont);
+        plot(nHigh/double(ids.size()), "frac high", 0., 1., 100);
+        if (nHigh/double(ids.size()) < 0.6) continue;
+
+	// make a track ! 
+        const double zMidT = StateParameters::ZMidT;
+        Gaudi::TrackVector stateVec = Gaudi::TrackVector(xLine.value(zMidT), yLine.value(zMidT),
+                                                         xLine.m(), yLine.m(), 1/20000.);
+        Gaudi::TrackSymMatrix stateCov = Gaudi::TrackSymMatrix();
+        LHCb::State aState = LHCb::State(stateVec,stateCov,zMidT,LHCb::State::AtT);
+  
+
+        LHCb::Track* aTrack = new LHCb::Track(LHCb::Track::TsaTrack, LHCb::Track::Ttrack, 
+                                              LHCb::Track::PatRecIDs, ids, aState);
+
+        const unsigned int itExpected = m_hitExpectation->nExpected(*aTrack);
+        const int faults = itExpected - ids.size();
    
-      plot(faults , "nFaults", -10.5, 10.5, 21);
-      if (faults < m_maxFaults ) {
-        
-        const unsigned int otExpected =  m_otHitExpectation->nExpected(*aTrack);
-        plot(otExpected, "expected OT", -0.5, 30.5, 31);
-        aTrack->addInfo(LHCb::Track::nExpectedOT, otExpected);
-        aTrack->addInfo(LHCb::Track::nExpectedIT, itExpected);
-        tracks->insert(aTrack);
-        setFilterPassed(true);
-      }
-      else {
-        delete aTrack;
-      } 
+        plot(faults , "nFaults", -10.5, 10.5, 21);
+        if (faults < m_maxFaults ) {
+          aTrack->addInfo(LHCb::Track::nExpectedIT, itExpected);
+          tracks->insert(aTrack);
+          setFilterPassed(true);
+        }
+        else {
+          delete aTrack;
+        }
+      } // loop over candidates 
     } // iterX2
   } // iterX1
 
@@ -263,57 +269,99 @@ void ITGenericTracking::selectX(const std::vector<Tf::STHit*>& hits,
    }
 }
 
-void ITGenericTracking::selectY(const std::vector<yInfo>& hits, std::vector<Tf::STHit*>& selected, Tf::Tsa::Line& bestLine ) const{
+void ITGenericTracking::selectY(const std::vector<yInfo>& hits, CandidateHits& canhits, 
+                                 CandidateLines& lines ) const{
 
   // select the y hits. Count hits in a window around each pairs of hits
   // take pair that has highest number of hits in the window as being the correct line
-  unsigned int bestHits = 0u;
+  unsigned int nCand = 0u;
   for (std::vector<yInfo>::const_iterator iter1 = hits.begin(); iter1 != hits.end(); ++iter1){
+    if (!allowedFirstStation(iter1->first)) continue;
     std::vector<yInfo>::const_iterator iter2 = iter1; ++iter2;
-    for (; iter2 != hits.end(); ++iter2){ 
+    for (; iter2 != hits.end(); ++iter2){
+      if (!allowedLastStation(iter2->first)) continue; 
       const Gaudi::XYZPoint point1 = iter1->second;
       const Gaudi::XYZPoint point2= iter2->second;
       if (fabs(point1.z() - point2.z()) < 1.0 ) continue; // not at same z
       Tf::Tsa::Line yline = Tf::Tsa::Line(point1.y(), point2.y(), point1.z(), point2.z()); 
-      if (fabs(yline.m()) > m_maxTy || yline.value(m_zRef) > m_maxRefY ) continue;
-      unsigned int nWindow = 0u;
-       for (std::vector<yInfo>::const_iterator iter3 = hits.begin(); iter3 != hits.end(); ++iter3){
-         const Gaudi::XYZPoint point3 = iter3->second;
-	     const double yDiff = yline.value(point3.z()) - point3.y();
-         if (fabs(yDiff) < m_yWindow) {
-           ++nWindow;
-           if ((*iter2) != (*iter3) && ((*iter3) != (*iter1))) plot(yDiff, 161, "yLine", -20., 20., 200);
-		} 
-	  }
+      if (fabs(yline.m()) > m_maxTy || fabs(yline.value(m_zRef)) > m_maxRefY ) continue;
 
-	  if (nWindow > bestHits ){
-		bestHits = nWindow;
-		bestLine = yline; 
-	  } 
+      std::vector<unsigned int> nLayers; nLayers.reserve(12); 
+      bool hasT2 = false;
+      nLayers.push_back(iter1->first->cluster().channelID().uniqueSector());
+      nLayers.push_back(iter2->first->cluster().channelID().uniqueSector());
+      for (std::vector<yInfo>::const_iterator iter3 = hits.begin(); iter3 != hits.end(); ++iter3){
+
+	// should not be in the same module 
+        const Gaudi::XYZPoint point3 = iter3->second;
+	if (fabs(point1.z() - point3.z()) < 1.0 ) continue; // not at same z
+        if (fabs(point2.z() - point3.z()) < 1.0 ) continue; // not at same z
+        if (iter3->first->cluster().station() == ITNames::IT2) hasT2 = true;
+
+	const double yDiff = yline.value(point3.z()) - point3.y();
+        if (fabs(yDiff) < m_yWindow) {
+          nLayers.push_back(iter3->first->cluster().channelID().uniqueSector());
+          plot(yDiff, 161, "yLine", -20., 20., 200);
+	}		    			    
+      } //iter3
+
+      std::sort(nLayers.begin(), nLayers.end());
+      nLayers.erase(std::unique(nLayers.begin(), nLayers.end()), nLayers.end());
+      unsigned int nWindow = nLayers.size();
+      plot(nWindow,"nWindow y", -0.5, 50.5,51);
+   
+      bool confirmed;
+      m_confirmY2 == false ? confirmed = true : confirmed = hasT2; 
+      if (nWindow > m_minYHits && confirmed ){
+        ++nCand;
+	std::vector<Tf::STHit*> selected;
+        // loop again and collect hits
+        for (std::vector<yInfo>::const_iterator iter4 = hits.begin(); iter4 != hits.end(); ++iter4){
+          const Gaudi::XYZPoint point = iter4->second;
+          double yDiff = yline.value(point.z()) - point.y();
+          plot(yDiff,"yDiff", -100., 100., 100);
+          if (fabs(yDiff) < m_yWindow) selected.push_back(iter4->first); 
+        }  // iter4        
+
+        if (m_selectBestY == false ){
+          canhits.push_back(selected); lines.push_back(yline);
+	} 
+        else {
+          if (canhits.empty() == true) {
+            canhits.push_back(selected); lines.push_back(yline);
+	  }
+          else if (selected.size() > canhits.front().size()){
+            canhits.pop_back();
+            canhits.push_back(selected); lines.push_back(yline);
+	  }
+	} // select best 
+      } // if good candidate
     } // iter2
   } // iter1 
+  
+  plot(nCand,"nCand y", -0.5, 50.5, 51);
 
-  // loop again and collect hits
-  for (std::vector<yInfo>::const_iterator iter4 = hits.begin(); iter4 != hits.end(); ++iter4){
-    const Gaudi::XYZPoint point = iter4->second;
-    double yDiff = bestLine.value(point.z()) - point.y();
-    if (fabs(yDiff) < m_yWindow) selected.push_back(iter4->first); 
-  }
 } 
 
+
 void ITGenericTracking::collectYHits(const Tf::Tsa::Line& xLine, 
-                                 const std::vector<Tf::STHit*>& yhits, const Tf::STHit* hit,
+				      const std::vector<Tf::STHit*>& yhits, const Tf::STHit* hit1,
                                  std::vector<ITGenericTracking::yInfo>& selected) const{
   
   using namespace Tf::Tsa;
   
   // make a plane... 
   Gaudi::XYZVector vec(1., TsaConstants::tilt * xLine.m(), -xLine.m());  
-  Gaudi::XYZPoint point = Gaudi::XYZPoint(hit->xMid(),hit->yMid(),hit->zMid()) ;
-  Gaudi::Plane3D plane = Gaudi::Plane3D(vec,point);
+  Gaudi::XYZPoint point1 = Gaudi::XYZPoint(hit1->xMid(),hit1->yMid(),hit1->zMid()) ;
+  // Gaudi::XYZPoint point2 = Gaudi::XYZPoint(hit2->xMid(),hit2->yMid(),hit2->zMid()) ;
+  //Gaudi::XYZPoint point3 = Gaudi::XYZPoint(hit1->xMax(),hit1->yMax(),hit1->z(hit1->yMax())) ;
+
+
+  Gaudi::Plane3D plane = Gaudi::Plane3D(vec,point1);
+  //Gaudi::Plane3D plane = Gaudi::Plane3D(point1, point2, point3);
   Gaudi::XYZPoint iPoint;
 
-  unsigned int box = hit->cluster().detRegion(); 
+  unsigned int box = hit1->cluster().detRegion(); 
  
   for (std::vector<Tf::STHit*>::const_iterator iter = yhits.begin(); iter != yhits.end(); ++iter){
     const double xTest = xLine.value((*iter)->z());
@@ -387,6 +435,8 @@ bool ITGenericTracking::collectXHits2(const Tf::Tsa::Line& line,
       const double xDiff = (*iterX1)->x() - line.value((*iterX1)->z());
       plot(xDiff,"xDiff_2_"+ITNames().UniqueLayerToString((*iterX1)->cluster().channelID()), -10., 10., 400);
       plot(xDiff,"xDiff_2_"+ITNames().UniqueBoxToString((*iterX1)->cluster().channelID()), -10., 10., 400);
+      ///plot(xDiff,ITNames().BoxToString((*iterX1)->cluster().channelID())+"xDiff_2_"+ITNames().UniqueSectorToString((*iterX1)->cluster().channelID()), -10., 10., 400);
+  
       if (fabs(xDiff) < m_xWindow2){
         ++collected;
         selected.push_back(*iterX1);

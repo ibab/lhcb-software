@@ -1,4 +1,4 @@
-// $Id: TsaSeedTrackCnvTool.cpp,v 1.6 2008-07-17 13:22:20 smenzeme Exp $
+// $Id: TsaSeedTrackCnvTool.cpp,v 1.7 2008-10-24 13:33:34 mneedham Exp $
 // Include files 
 
 // from Gaudi
@@ -87,8 +87,7 @@ StatusCode SeedTrackCnvTool::initialize()
 LHCb::Track* SeedTrackCnvTool::convert(const SeedTrack* aTrack) const
 {
   // make a fit track...
-  LHCb::Track* fitTrack = new LHCb::Track();
-
+  LHCb::Track* fitTrack = new LHCb::Track(LHCb::Track::TsaTrack, LHCb::Track::Ttrack, LHCb::Track::PatRecIDs);
 
   std::vector<SeedPnt> pnts = aTrack->usedPnts();
   for ( std::vector<SeedPnt>::const_iterator itP = pnts.begin(); pnts.end() != itP; ++itP ) {
@@ -101,9 +100,6 @@ LHCb::Track* SeedTrackCnvTool::convert(const SeedTrack* aTrack) const
   } // iterZ
 
   // add history
-  fitTrack->setHistory(LHCb::Track::TsaTrack);
-  fitTrack->setType(LHCb::Track::Ttrack);
-  fitTrack ->setPatRecStatus( LHCb::Track::PatRecIDs );
   fitTrack->addInfo(LHCb::Track::TsaLikelihood, aTrack->lik());
 
   return fitTrack;
