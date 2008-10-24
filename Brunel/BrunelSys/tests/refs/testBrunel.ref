@@ -2,7 +2,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v33r3p1
-                                          running on lxbuild120.cern.ch on Thu Oct 23 13:07:57 2008
+                                          running on lxbuild120.cern.ch on Fri Oct 24 07:49:06 2008
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
@@ -282,43 +282,17 @@ FitVeloTT            INFO   Fitter name              : TrackMasterFitter/Fitter
 FitVeloTT            INFO ==================================================
 FitVeloTT            INFO
 TrackPostFitSeq      INFO Member list: TrackEventCloneKiller
-TrackEventClone...   INFO List of ALL properties of TrackEventCloneKiller/TrackEventCloneKiller  #properties = 36
-TrackEventClone...   INFO Property ['Name': Value] =  'CloneFinderTool':TrackCloneFinder
-TrackEventClone...   INFO Property ['Name': Value] =  'CompareInSameContainerForwardUpstream':False
-TrackEventClone...   INFO Property ['Name': Value] =  'SkipSameContainerTracks':True
-TrackEventClone...   INFO Property ['Name': Value] =  'StoreCloneTracks':False
-TrackEventClone...   INFO Property ['Name': Value] =  'IgnoredTrackTypes':[  ]
-TrackEventClone...   INFO Property ['Name': Value] =  'TracksOutContainer':Rec/Track/Best
-TrackEventClone...   INFO Property ['Name': Value] =  'TracksInContainers':[ 'Rec/Track/Forward' , 'Rec/Track/Seed' , 'Rec/Track/Match' , 'Rec/Track/Downstream' , 'Rec/Track/VeloTT' ]
-TrackEventClone...   INFO Property ['Name': Value] =  'RegisterForContextService':True
-TrackEventClone...   INFO Property ['Name': Value] =  'ContextService':AlgContextSvc
-TrackEventClone...   INFO Property ['Name': Value] =  'UseEfficiencyRowFormat':True
-TrackEventClone...   INFO Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
-TrackEventClone...   INFO Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
-TrackEventClone...   INFO Property ['Name': Value] =  'StatTableHeader': |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
-TrackEventClone...   INFO Property ['Name': Value] =  'GlobalTimeOffset':0
-TrackEventClone...   INFO Property ['Name': Value] =  'RootOnTES':
-TrackEventClone...   INFO Property ['Name': Value] =  'RootInTES':
-TrackEventClone...   INFO Property ['Name': Value] =  'Context':
-TrackEventClone...   INFO Property ['Name': Value] =  'TypePrint':True
-TrackEventClone...   INFO Property ['Name': Value] =  'StatPrint':True
-TrackEventClone...   INFO Property ['Name': Value] =  'PropertiesPrint':False
-TrackEventClone...   INFO Property ['Name': Value] =  'ErrorsPrint':True
-TrackEventClone...   INFO Property ['Name': Value] =  'MonitorService':MonitorSvc
-TrackEventClone...   INFO Property ['Name': Value] =  'AuditStop':True
-TrackEventClone...   INFO Property ['Name': Value] =  'AuditStart':True
-TrackEventClone...   INFO Property ['Name': Value] =  'AuditEndRun':True
-TrackEventClone...   INFO Property ['Name': Value] =  'AuditBeginRun':True
-TrackEventClone...   INFO Property ['Name': Value] =  'AuditFinalize':True
-TrackEventClone...   INFO Property ['Name': Value] =  'AuditExecute':True
-TrackEventClone...   INFO Property ['Name': Value] =  'AuditRestart':True
-TrackEventClone...   INFO Property ['Name': Value] =  'AuditReinitialize':True
-TrackEventClone...   INFO Property ['Name': Value] =  'AuditInitialize':True
-TrackEventClone...   INFO Property ['Name': Value] =  'AuditAlgorithms':True
-TrackEventClone...   INFO Property ['Name': Value] =  'ErrorCount':0
-TrackEventClone...   INFO Property ['Name': Value] =  'ErrorMax':1
-TrackEventClone...   INFO Property ['Name': Value] =  'Enable':True
-TrackEventClone...   INFO Property ['Name': Value] =  'OutputLevel':3
+TrackEventClone...   INFO
+TrackEventClone...   INFO ============ TrackEventCloneKiller Settings ===========
+TrackEventClone...   INFO TracksInContainers                    : [ 'Rec/Track/Forward' , 'Rec/Track/Seed' , 'Rec/Track/Match' , 'Rec/Track/Downstream' , 'Rec/Track/VeloTT' ]
+TrackEventClone...   INFO TrackOutContainer                     : Rec/Track/Best
+TrackEventClone...   INFO IgnoredTrackTypes                     : [  ]
+TrackEventClone...   INFO CloneFinderTool                       : TrackCloneFinder
+TrackEventClone...   INFO StoreCloneTracks                      : False
+TrackEventClone...   INFO SkipSameContainerTracks               : True
+TrackEventClone...   INFO CompareInSameContainerForwardUpstream : False
+TrackEventClone...   INFO =======================================================
+TrackEventClone...   INFO
 TrackVeloPreFitSeq   INFO Member list: TrackPrepareVelo
 TrackVeloFitSeq      INFO Member list: TrackEventFitter/FitVelo, TrackContainerCopy/CopyVelo
 FitVelo.Fitter       INFO
