@@ -18,12 +18,13 @@ from HltConf.Configuration import *
 #
 ## enable if you want to rerun L0
 HltConf().replaceL0BanksWithEmulated = True
+## both levels
+HltConf().Hlt2IgnoreHlt1Decision = True
 #
 ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
 #HltConf().hltType = 'Hlt1'
 #HltConf().hltType = 'Hlt2'
 #HltConf().hltType = 'Hlt1+Hlt2'
-HltConf().hltType = 'Hlt1|Hlt2'
 ## don't forget to actually apply the configuration!!!
 HltConf().applyConf()
 ##################################################################
