@@ -44,6 +44,12 @@ HltSelReportsMaker.InfoLevelParticleDebug=3;
 HltSelReportsMaker.InfoLevelCaloCluster=3;
 HltSelReportsMaker.InfoLevelCaloClusterDebug=3;
 
+// maximal number of candidates to save (0=none)
+HltSelReportsMaker.MaxCandidatesDecision =100;
+HltSelReportsMaker.MaxCandidatesDecisionDebug =500;
+HltSelReportsMaker.MaxCandidatesNonDecision =0;
+HltSelReportsMaker.MaxCandidatesNonDecisionDebug =500;
+
 
 // selection specific setting
 HltSelReportsMaker.SelectionMaxCandidates = { 

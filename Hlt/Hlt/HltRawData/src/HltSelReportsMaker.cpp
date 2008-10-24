@@ -1,4 +1,4 @@
-// $Id: HltSelReportsMaker.cpp,v 1.3 2008-10-16 21:44:54 tskwarni Exp $
+// $Id: HltSelReportsMaker.cpp,v 1.4 2008-10-24 19:33:22 tskwarni Exp $
 // Include files 
 
 // from Gaudi
@@ -130,7 +130,7 @@ StatusCode HltSelReportsMaker::execute() {
 
   // create output container for Object Summaries and put it on TES
   m_objectSummaries = new HltObjectSummary::Container();
-  put( m_objectSummaries, m_outputHltSelReportsLocation + "/Candidates" );
+  put( m_objectSummaries, m_outputHltSelReportsLocation.value() + "/Candidates" );
   
 
   // get input HltSummary if exists
@@ -138,6 +138,7 @@ StatusCode HltSelReportsMaker::execute() {
   if( exist<HltSummary>(m_inputHltSummaryLocation) ){    
     inputSummary = get<HltSummary>(m_inputHltSummaryLocation);
   }
+
 
   // get string-to-int selection ID map
   std::vector<IANNSvc::minor_value_type> selectionNameToIntMap;  
@@ -419,14 +420,125 @@ StatusCode HltSelReportsMaker::execute() {
      
   }
   
-  // clone HltObjectSummary-s of selection and insert them into object store (needed for raw data storage)
+  // -------------------------------------------------------------------------------------
+  // clone HltObjectSummary-s of selection and insert them into object store (needed for raw data storage
+  // and global selections)
+  // -------------------------------------------------------------------------------------
   for( HltSelReports::Container::const_iterator i=outputSummary->begin();i!=outputSummary->end();++i){
     const HltObjectSummary& sHos= i->second;  
     HltObjectSummary* hos= new HltObjectSummary( sHos );    
     m_objectSummaries->push_back(hos);
   }
-  
 
+
+  // -------------------------------------------------------------------------------------
+  // create global selections ------------------------------------------------------------
+  // -------------------------------------------------------------------------------------
+  if( !outputSummary->hasSelectionName("Hlt1Global") ){
+
+     HltObjectSummary* selSumOut = new HltObjectSummary();    
+     selSumOut->setSummarizedObjectCLID( 1 ); // use special CLID for selection summaries (lowest number for sorting to the end)
+     
+     // integer selection id 
+     selSumOut->addToInfo("0#SelectionID",float(kHlt1GlobalID));
+
+     // see which decisions contributed to it
+     for( HltSelReports::Container::const_iterator it=outputSummary->begin();it!=outputSummary->end();++it){
+       const std::string & selName = it->first;
+       if( ( selName.find("Hlt1") == 0 ) && 
+           ( selName.find("Decision") != std::string::npos ) ) {         
+         const LHCb::HltObjectSummary& selRep = it->second;
+         // must find corresponding HltObjectSummary in the object store
+         HltObjectSummary::Info::const_iterator i = selRep.numericalInfo().find("0#SelectionID");
+         if( i!=selRep.numericalInfo().end() ){               
+           int id = (int)(i->second+0.1);
+           for( HltObjectSummary::Container::const_iterator pObj=m_objectSummaries->begin();
+                pObj!=m_objectSummaries->end();++pObj){
+             if( (*pObj)->summarizedObjectCLID()!=1 )continue; 
+             HltObjectSummary::Info::const_iterator j=(*pObj)->numericalInfo().find("0#SelectionID");
+             if( j!=(*pObj)->numericalInfo().end() ){
+               if( id == (int)(j->second+0.1) ){
+                 selSumOut->addToSubstructure( (const SmartRef<HltObjectSummary>)(*pObj) );
+                 break;                     
+               }
+             } else {
+               Error(" (2) HltObjectSummary of selection-summary-type has no SelectionID info ",StatusCode::SUCCESS,20);
+             }
+           }
+         } else {               
+           Error(" (1) HltObjectSummary of selection-summary-type has no SelectionID info ",StatusCode::SUCCESS,20);
+         }
+       }
+     }
+     if( selSumOut->substructure().size() ){
+       
+       // insert selection into the container
+       if( outputSummary->insert("Hlt1Global",*selSumOut) == StatusCode::FAILURE ){
+         Error( "  Failed to add Hlt selection name Hlt1Global to its container ", StatusCode::SUCCESS, 10 );
+       } 
+       HltObjectSummary* hos= new HltObjectSummary(  *selSumOut );    
+       m_objectSummaries->push_back(hos);
+       
+     } else {
+       
+       delete selSumOut;
+       
+     }
+  }
+
+  if( !outputSummary->hasSelectionName("Hlt2Global") ){
+
+     HltObjectSummary* selSumOut = new HltObjectSummary();    
+     selSumOut->setSummarizedObjectCLID( 1 ); // use special CLID for selection summaries (lowest number for sorting to the end)
+     
+     // integer selection id 
+     selSumOut->addToInfo("0#SelectionID",float(kHlt2GlobalID));
+
+     // see which decisions contributed to it
+     for( HltSelReports::Container::const_iterator it=outputSummary->begin();it!=outputSummary->end();++it){
+       const std::string & selName = it->first;
+       if( ( selName.find("Hlt2") == 0 ) && 
+           ( selName.find("Decision") != std::string::npos ) ) {         
+         const LHCb::HltObjectSummary& selRep = it->second;
+         // must find corresponding HltObjectSummary in the object store
+         HltObjectSummary::Info::const_iterator i = selRep.numericalInfo().find("0#SelectionID");
+         if( i!=selRep.numericalInfo().end() ){               
+           int id = (int)(i->second+0.1);
+           for( HltObjectSummary::Container::const_iterator pObj=m_objectSummaries->begin();
+                pObj!=m_objectSummaries->end();++pObj){
+             if( (*pObj)->summarizedObjectCLID()!=1 )continue; 
+             HltObjectSummary::Info::const_iterator j=(*pObj)->numericalInfo().find("0#SelectionID");
+             if( j!=(*pObj)->numericalInfo().end() ){
+               if( id == (int)(j->second+0.1) ){
+                 selSumOut->addToSubstructure( (const SmartRef<HltObjectSummary>)(*pObj) );
+                 break;                     
+               }
+             } else {
+               Error(" (2) HltObjectSummary of selection-summary-type has no SelectionID info ",StatusCode::SUCCESS,20);
+             }
+           }
+         } else {               
+           Error(" (1) HltObjectSummary of selection-summary-type has no SelectionID info ",StatusCode::SUCCESS,20);
+         }
+       }
+     }
+     if( selSumOut->substructure().size() ){
+       
+       // insert selection into the container
+       if( outputSummary->insert("Hlt2Global",*selSumOut) == StatusCode::FAILURE ){
+         Error( "  Failed to add Hlt selection name Hlt2Global to its container ", StatusCode::SUCCESS, 10 );
+       } 
+       HltObjectSummary* hos= new HltObjectSummary(  *selSumOut );    
+       m_objectSummaries->push_back(hos);
+       
+     } else {
+       
+       delete selSumOut;
+       
+     }
+  }
+
+  // ----------------- printout ------------------------
   if ( msgLevel(MSG::VERBOSE) ){
 
    verbose() << " ======= HltSelReports size= " << outputSummary->size() << endmsg;  
@@ -744,7 +856,8 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::storeParticle(const LHCb::Part
               if( exist<LHCb::Tracks>(m_HltMuonTracksLocation) ){
                 m_HLTmuonTracks = get<LHCb::Tracks>(m_HltMuonTracksLocation);
               } else {
-                Warning(" Found track which is a muon but no muon tracks at " + m_HltMuonTracksLocation,StatusCode::SUCCESS,20 );
+                Warning(" Found track which is a muon but no muon tracks at " + m_HltMuonTracksLocation.value()
+                        ,StatusCode::SUCCESS,20 );
               }
             }
             if( m_HLTmuonTracks ){          

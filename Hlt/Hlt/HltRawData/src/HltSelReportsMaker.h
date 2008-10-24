@@ -1,4 +1,4 @@
-// $Id: HltSelReportsMaker.h,v 1.1.1.1 2008-08-02 16:40:07 tskwarni Exp $
+// $Id: HltSelReportsMaker.h,v 1.2 2008-10-24 19:33:22 tskwarni Exp $
 #ifndef HLTSELREPORTSMAKER_H 
 #define HLTSELREPORTSMAKER_H 1
 
@@ -34,6 +34,11 @@ public:
                          kMaxInfoLevel=3 ///< lhcbIDs + standard + extra numerical info 
   };
   
+  enum GlobalSelectionIDs { kHlt1GlobalID=1,
+                            kHlt2GlobalID=2,
+                            kL0GlobalID=3 
+  };
+
   
 
   /// Standard constructor
@@ -95,14 +100,14 @@ private:
 
   // ----------------------- data members 
 
-  /// location of input Hlt Summary
-  std::string m_inputHltSummaryLocation;
+  /// location of input Hlt Summary (optional)
+  StringProperty m_inputHltSummaryLocation;
 
   /// location of output Hlt Summary
-  std::string m_outputHltSelReportsLocation;
+  StringProperty m_outputHltSelReportsLocation;
 
   /// location of HLT muon-track-stubs 
-  std::string m_HltMuonTracksLocation;
+  StringProperty m_HltMuonTracksLocation;
   /// pointer to container of the HLT muon-track-stubs
   LHCb::Tracks* m_HLTmuonTracks;
 
