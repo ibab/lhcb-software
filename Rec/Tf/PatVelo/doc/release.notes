@@ -4,6 +4,10 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2008-10-24 - David Hutchcroft
+ - Added very hot sensor triplet trap to PatVeloGeneralTracking to reduce
+   total number of combinations of clusters considered in a triplet
+
 ! 2008-10-16 - David Hutchcroft
  - Added a tool to "promote" VeloLiteClusters to faked VeloClusters 
    the ADC values are not right, may be used by HLT to refit VELO quickly

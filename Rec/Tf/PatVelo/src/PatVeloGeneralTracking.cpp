@@ -1,4 +1,4 @@
-// $Id: PatVeloGeneralTracking.cpp,v 1.13 2008-06-06 12:38:53 dhcroft Exp $
+// $Id: PatVeloGeneralTracking.cpp,v 1.14 2008-10-24 12:46:43 dhcroft Exp $
 // Include files
 
 // from Gaudi
@@ -287,6 +287,22 @@ makeAllGoodTriplets(std::vector<PatVeloLocalPoint> &one,
       std::vector<PatVeloLocalPoint>::iterator iTwoEnd = 
         upper_bound(iTwoBegin,two.end(), predX+dPredX, 
             PatVeloLocalPoint::lessX() );
+      while( iTwoEnd - iTwoBegin > 20 ) {
+	Warning("Very hot VELO triplet, reducing search windows");
+	if (m_isVerbose) 
+	  verbose() << "Number of middle sensor compatible hits was " 
+		    << iTwoEnd - iTwoBegin 
+		    << " dPredX " << dPredX << " dPredY " << dPredY << endreq;
+	dPredX /= 2.;
+	dPredY /= 2.;
+	iTwoBegin = 
+	  lower_bound(two.begin(),two.end(), predX-dPredX, 
+		      PatVeloLocalPoint::lessX() );
+	iTwoEnd = 
+	  upper_bound(iTwoBegin,two.end(), predX+dPredX,  
+		      PatVeloLocalPoint::lessX() );
+      }
+
       for( iTwo = iTwoBegin; iTwo != iTwoEnd ; ++iTwo ){
         if( iTwo->used() ) continue;
         if( fabs(iTwo->y()-predY) < (dPredY+iTwo->deltaY()) ){
