@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.cpp,v 1.20 2008-10-20 10:16:50 wouter Exp $
+// $Id: AlignmentElement.cpp,v 1.21 2008-10-27 14:52:09 janos Exp $
 // Include files
 
 // from STD
@@ -215,7 +215,7 @@ std::ostream& AlignmentElement::fillStream(std::ostream& lhs) const {
   static const std::vector<std::string> dofs = boost::assign::list_of("Tx")("Ty")("Tz")("Rx")("Ry")("Rz");
   
   lhs << std::endl;
-  lhs << std::left << std::setw(s.size()+30u) << std::setfill('*') << "" << std::endl;
+  lhs << std::left << std::setw(80u) << std::setfill('*') << "" << std::endl;
   lhs << "* Element  : " << s << "\n"
       << "* Index    : " << index() << "\n"
       << "* dPosXYZ  : " << Gaudi::XYZPoint(t[0], t[1], t[2]) << "\n"
@@ -226,7 +226,7 @@ std::ostream& AlignmentElement::fillStream(std::ostream& lhs) const {
     if ((*j)) lhs << dofs.at(std::distance(m_dofMask.begin(), j)) + " ";
   }
   lhs << std::endl;
-  lhs << std::left << std::setw(s.size()+30u) << std::setfill('*') << "" << std::endl;
+  lhs << std::left << std::setw(80u) << std::setfill('*') << "" << std::endl;
 
   return lhs;
 }
