@@ -1,6 +1,4 @@
-// $Id: CaloCellCode.h,v 1.4 2008-01-26 13:31:18 mneedham Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
+// $Id: CaloCellCode.h,v 1.5 2008-10-27 16:36:01 cattanem Exp $ 
 // ============================================================================
 #ifndef      KERNEL_CALOCELLCODE_H 
 #define      KERNEL_CALOCELLCODE_H 1
@@ -11,6 +9,7 @@
 #include <functional>
 #include <algorithm>
 #include <numeric>
+#include <cstring>  // for strlen with gcc 4.3
 
 /** @class CaloCellCode CaloCellCode.h Kernel/CaloCellCode.h
  *
@@ -94,7 +93,7 @@ namespace CaloCellCode
     unsigned int   len ;
   };
   // return calorimeter number from name, returns -1 for wrong name! 
-  static inline const int   CaloNumFromName( const char* name ) 
+  static inline int CaloNumFromName( const char* name ) 
   {
     typedef const char* const* iterator;  
     iterator  begin = CaloNames          ;
@@ -103,7 +102,7 @@ namespace CaloCellCode
     return end == it ? -1 : (int) ( it - begin) ;
   };
   // return calorimeter number from name, returns -1 for wrong name! 
-  static inline const int   CaloNumFromName( const std::string & name ) 
+  static inline int CaloNumFromName( const std::string & name ) 
   { return CaloNumFromName( name.c_str() ); } 
   // return calorimeter names from nums
   static inline const std::string CaloNameFromNum( const int num )

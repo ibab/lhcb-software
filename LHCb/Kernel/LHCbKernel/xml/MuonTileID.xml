@@ -88,17 +88,17 @@
         desc="convert the MuonTileID to an int for use as a key">
         <code> return static_cast&lt;long int&gt;(m_muonid);</code>
       </method>	 
-      <method const="TRUE"  name="station" type="const unsigned int"
+      <method const="TRUE"  name="station" type="unsigned int"
         inline="TRUE"
         desc="Function to extract station">
         <code> return ( m_muonid &amp; MuonBase::MaskStation ) &gt;&gt; MuonBase::ShiftStation ;</code>
       </method> 
-      <method const="TRUE"  name="region" type="const unsigned int"
+      <method const="TRUE"  name="region" type="unsigned int"
         inline="TRUE"
         desc="Function to extract region">
         <code> return ( m_muonid &amp; MuonBase::MaskRegion ) &gt;&gt; MuonBase::ShiftRegion ;</code>
       </method>
-      <method const="TRUE"  name="quarter" type="const unsigned int"
+      <method const="TRUE"  name="quarter" type="unsigned int"
         inline="TRUE"
         desc="Function to extract quarter">
         <code> return ( m_muonid &amp; MuonBase::MaskQuarter ) &gt;&gt; MuonBase::ShiftQuarter ;</code>
@@ -111,22 +111,22 @@
           return  MuonLayout(xg,yg) ;
         </code>
       </method>
-      <method const="TRUE"  name="nX" type="const unsigned int"
+      <method const="TRUE"  name="nX" type="unsigned int"
         inline="TRUE"
         desc="Function to extract index in x">
         <code> return ( m_muonid &amp; MuonBase::MaskX ) &gt;&gt; MuonBase::ShiftX ;</code>
       </method>
-      <method const="TRUE"  name="nY" type="const unsigned int"
+      <method const="TRUE"  name="nY" type="unsigned int"
         inline="TRUE"
         desc="Function to extract index in y">
         <code> return ( m_muonid &amp; MuonBase::MaskY ) &gt;&gt; MuonBase::ShiftY ;</code>
       </method>
-      <method const="TRUE"  name="index" type="const unsigned int"
+      <method const="TRUE"  name="index" type="unsigned int"
         inline="TRUE"
         desc="Function to extract lower part of the identifier">
         <code> return ( m_muonid &amp; MuonBase::MaskIndex ) &gt;&gt; MuonBase::ShiftIndex ;</code>
       </method>
-      <method const="TRUE"  name="key" type="const unsigned int"
+      <method const="TRUE"  name="key" type="unsigned int"
         inline="TRUE"
         desc="Function to extract lower part of the identifier with station information">
         <code> return ( m_muonid &amp; MuonBase::MaskKey ) &gt;&gt; MuonBase::ShiftKey ;</code>

@@ -1,4 +1,4 @@
-// $Id: MuonLayout.h,v 1.1 2005-12-02 16:28:07 cattanem Exp $
+// $Id: MuonLayout.h,v 1.2 2008-10-27 16:36:02 cattanem Exp $
 
 #ifndef KERNEL_MUONLAYOUT_H
 #define KERNEL_MUONLAYOUT_H 1   
@@ -24,7 +24,9 @@
 
 // Forward declarations
 
-class LHCb::MuonTileID;
+namespace LHCb {
+  class MuonTileID;
+}
 
 class MuonLayout : public IMuonLayout {
 
