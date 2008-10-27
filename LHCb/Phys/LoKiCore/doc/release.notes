@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.114 2008-10-24 15:28:20 cattanem Exp $ 
+! $Id: release.notes,v 1.115 2008-10-27 14:37:35 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2008-10-27 - Marco Cattaneo
+ - Add a missing include in iNode.cpp to please gcc43
 
 ! 2008-10-24 - Marco Cattaneo
  - Fix function signature in VoidPrimitives.h to please new version of genreflex

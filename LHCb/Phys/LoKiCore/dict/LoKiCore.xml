@@ -1,7 +1,7 @@
 <!-- 
-     * $Id: LoKiCore.xml,v 1.9 2008-10-19 16:11:40 ibelyaev Exp $ 
+     * $Id: LoKiCore.xml,v 1.10 2008-10-27 14:37:35 cattanem Exp $ 
      * ========================================================================
-     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.9 $ 
+     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.10 $ 
      * ======================================================================== 
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiCore package
@@ -37,15 +37,11 @@
   <variable pattern = "LoKi::Constants::*"     />
 
   <function name = "LoKi::throwException"  />
-  <function name = "LoKi::Assert"          />
+  <!--function name = "LoKi::Assert"          /-->
   <function name = "LoKi::Print::toString" />
 
   <class name    = "Bender::Welcome"      />
   
-  <!--
-      <class name      = "LHCb::ParticleID"   />
-  -->
- 
   <class name = "LoKi::Hybrid::ICoreFactory"               />
   <class name = "LoKi::Hybrid::ICoreAntiFactory"           />
   <class name = "LoKi::Hybrid::CoreEngine"                 />
