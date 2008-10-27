@@ -1,6 +1,6 @@
 from Gaudi.Configuration import *
 
-nIter               = 5
+nIter               = 1# 5
 nEvents             = 1000000
 minNumHits          = 10
 eigenvalueThreshold = 50
@@ -38,11 +38,12 @@ else :
       "T3UA  : /.*?/OT/T3/Vlayer/Quarter(1|3)/.*?  : Tx",
       ]
 
-elements.ITBoxes("TxTy")
+#elements.ITBoxes("TxTy")
 
 # configure some tracking opts
 from TrackSys.Configuration import *
-TrackSys().fieldOff = True
+#TrackSys().fieldOff = True
+TrackSys().specialData += [ 'fieldOff' ]
 #TrackSys().expertTracking.append('simplifiedGeometry')
 TrackSys().expertTracking += ['noDrifttimes' ]
 
@@ -78,7 +79,7 @@ AlConfigurable().Constraints                  = constraints
 AlConfigurable().UseWeightedAverageConstraint = False
 AlConfigurable().MinNumberOfHits              = minNumHits
 AlConfigurable().UsePreconditioning           = True
-AlConfigurable().SolvTool                     = "gslSolver"
+#AlConfigurable().SolvTool                     = "gslSolver"
 AlConfigurable().SolvTool                     = "DiagSolvTool"
 AlConfigurable().WriteCondToXML               = True
 AlConfigurable().CondFileName                 = "Elements.xml"
@@ -149,7 +150,7 @@ seedselectoralg.addTool( TrackSelector("SeedSelector"), name = "Selector") ;
 seedselectoralg.inputLocation =   'Rec/Track/Seed'
 seedselectoralg.outputLocation =   'Rec/Track/SelectedSeed'
 seedselectoralg.Selector.MaxChi2Cut = 5
-seedselectoralg.Selector.MinNOTHits = 12
+#seedselectoralg.Selector.MinNOTHits = 12
 
 if useDriftTime:
    # load a calibration
@@ -182,8 +183,7 @@ if useDriftTime:
 
 from Configurables import TrackMonitor
 
-patseq.Members += [ seedselectoralg
-                    ]
+patseq.Members += [ seedselectoralg ]
 
 
 # add the alignment. this is a bit tricky, but for now I just want the histograms
@@ -269,7 +269,7 @@ mainSeq = appMgr.algorithm( 'AlignmentMainSeq' )
 AlConfigurable().printFlow(appMgr)
 
 evtSel           = appMgr.evtSel()
-evtSel.printfreq = 100
+evtSel.printfreq = 1000
 ##evtSel.FirstEvent = 604
 
 ## Open Files; Also initialises Application Manager
@@ -306,10 +306,11 @@ for i in range( nIter ) :
     evtSel.rewind()
     mainSeq.Enable = True
     appMgr.algorithm('PreMonitorSeq').Enable = ( i == 0)
-    appMgr.algorithm('PostMonitorSeq').Enable = ( i ==nIter-1)
+    appMgr.algorithm('PostMonitorSeq').Enable = ( i == nIter-1)
     appMgr.run( nEvents )
     update( "Alignment", appMgr )
 
-appMgr.finalize()
+appMgr.algorithm('PreMonitorSeq').Enable = True
+#appMgr.finalize()
 
 
