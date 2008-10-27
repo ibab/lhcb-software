@@ -51,7 +51,7 @@ def ConfiguredFitter( Name = "DefaultEventFitter",
         defaultOTNoDriftTimeProjector = TrajOTProjector("OTNoDrifttimesProjector")
         defaultOTNoDriftTimeProjector.UseDrift = False
         eventfitter.Fitter.NodeFitter.addTool( TrackProjectorSelector(), "Projector" )
-        eventfitter.Fitter.NodeFitter.Projector.OT = "TrajOTProjector/" + defaultOTNoDriftTimeProjector.name()
+        eventfitter.Fitter.NodeFitter.Projector.OT = defaultOTNoDriftTimeProjector
 
     return eventfitter
 
