@@ -1,4 +1,4 @@
-// $Id: CaloDigitsFromRaw.cpp,v 1.12 2007-12-06 09:31:24 odescham Exp $
+// $Id: CaloDigitsFromRaw.cpp,v 1.13 2008-10-27 18:14:26 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -30,9 +30,37 @@ CaloDigitsFromRaw::CaloDigitsFromRaw( const std::string& name,
   declareProperty( "Extension"  ,  m_extension = "" );
   declareProperty( "OutputType" , m_outputType = "Digits"  ) ;
   declareProperty( "PinContainer"  ,  m_pinContainerName );
-  declareProperty( "StatusOnTES"   , m_statusOnTES = true);
+  declareProperty( "DigitsContainer"  ,  m_outputDigits );
+  declareProperty( "AdcsContainer"   ,  m_outputADCs);
+  declareProperty( "PinContainer"    ,  m_pinContainerName );
+  declareProperty( "StatusOnTES"     , m_statusOnTES = true);
+
+
   m_digitOnTES =false  ;
   m_adcOnTES =false  ;
+
+
+  if( 2 == m_detectorNum ) {
+    m_outputDigits     = LHCb::CaloDigitLocation::Ecal  + m_extension;
+    m_outputADCs       = LHCb::CaloAdcLocation::Ecal    + m_extension;
+    m_pinContainerName = LHCb::CaloAdcLocation::EcalPin + m_extension;
+  }
+  else if( 3 == m_detectorNum ) {
+    m_outputDigits     = LHCb::CaloDigitLocation::Hcal  + m_extension;
+    m_outputADCs       = LHCb::CaloAdcLocation::Hcal    + m_extension;
+    m_pinContainerName = LHCb::CaloAdcLocation::HcalPin + m_extension;
+  }
+  else if( 1 == m_detectorNum ) {
+    m_outputDigits     = LHCb::CaloDigitLocation::Prs + m_extension;
+    m_outputADCs       = LHCb::CaloAdcLocation::Prs + m_extension;
+    m_pinContainerName = "None";
+   }
+  else if( 0 == m_detectorNum ) {
+    m_outputDigits     = LHCb::CaloDigitLocation::Spd + m_extension;
+    m_outputADCs       = LHCb::CaloAdcLocation::Spd + m_extension;
+    m_pinContainerName = "None";
+  }
+
 }
 
 //=============================================================================
@@ -51,27 +79,15 @@ StatusCode CaloDigitsFromRaw::initialize ( ) {
   // get DeCalorimeter
   if( 2 == m_detectorNum ) {
     m_calo = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal );
-    m_outputDigits     = LHCb::CaloDigitLocation::Ecal  + m_extension;
-    m_outputADCs       = LHCb::CaloAdcLocation::Ecal    + m_extension;
-    m_pinContainerName = LHCb::CaloAdcLocation::EcalPin + m_extension;
   }
   else if( 3 == m_detectorNum ) {
     m_calo = getDet<DeCalorimeter>( DeCalorimeterLocation::Hcal );
-    m_outputDigits     = LHCb::CaloDigitLocation::Hcal  + m_extension;
-    m_outputADCs       = LHCb::CaloAdcLocation::Hcal    + m_extension;
-    m_pinContainerName = LHCb::CaloAdcLocation::HcalPin + m_extension;
   }
   else if( 1 == m_detectorNum ) {
     m_calo = getDet<DeCalorimeter>( DeCalorimeterLocation::Prs );
-    m_outputDigits     = LHCb::CaloDigitLocation::Prs + m_extension;
-    m_outputADCs       = LHCb::CaloAdcLocation::Prs + m_extension;
-    m_pinContainerName = "None";
    }
   else if( 0 == m_detectorNum ) {
     m_calo = getDet<DeCalorimeter>( DeCalorimeterLocation::Spd );
-    m_outputDigits     = LHCb::CaloDigitLocation::Spd + m_extension;
-    m_outputADCs       = LHCb::CaloAdcLocation::Spd + m_extension;
-    m_pinContainerName = "None";
   }
   else {
     return( Error( "Invalid detector Num =  " + m_detectorNum ) );
@@ -86,14 +102,17 @@ StatusCode CaloDigitsFromRaw::initialize ( ) {
   }
   
   // 
-  if( m_outputType == "Digits" || 
-      m_outputType == "CaloDigits" || 
-      m_outputType == "Both")m_digitOnTES = true;
-  if( m_outputType == "ADCs" ||
-      m_outputType == "CaloAdcs" || 
-      m_outputType == "Both")m_adcOnTES = true;
+  std::string out( m_outputType );
+  std::transform( m_outputType.begin() , m_outputType.end() , out.begin () , ::toupper ) ;
+  m_outputType = out;
+  if( m_outputType == "DIGITS" ||  m_outputType == "CALODIGITS" || 
+      m_outputType == "DIGIT"  ||  m_outputType == "CALODIGIT"  || 
+      m_outputType == "BOTH") m_digitOnTES = true;
+  if(m_outputType == "ADCS" ||  m_outputType == "CALOADCS" || 
+     m_outputType == "ADC"  ||  m_outputType == "CALOADC"  || 
+     m_outputType == "BOTH")m_adcOnTES = true;
   if( !m_adcOnTES && !m_digitOnTES ){
-    error()<< "CaloDigitsFromRaw configured to produce ** NO ** output" << endreq;
+    error()<< "CaloDigitsFromRaw configured to produce ** NO ** output (outputType = '" << m_outputType <<"')" << endreq;
     return StatusCode::FAILURE;
   }
   if( m_digitOnTES )debug() <<  "CaloDigitsFromRaw will produce CaloDigits on TES at " 
@@ -175,7 +194,7 @@ void CaloDigitsFromRaw::convertCaloEnergies ( std::string containerName ) {
           allDigits.end() != itD; ++itD ) {
       LHCb::CaloDigit* dig = (*itD).clone();
       digits->insert( dig );
-      debug() << "ID " << dig->cellID() << " energy " << dig->e() << endreq;
+      verbose() << "ID " << dig->cellID() << " energy " << dig->e() << endreq;
     }
     std::stable_sort ( digits->begin(), digits->end(), 
                        CaloDigitsFromRaw::IncreasingByCellID() );
@@ -192,25 +211,30 @@ void CaloDigitsFromRaw::convertCaloEnergies ( std::string containerName ) {
           allAdcs.end() != itA; ++itA ) {
       LHCb::CaloAdc* adc = new LHCb::CaloAdc( (*itA).cellID(), (*itA).adc() ); // 'clone'
       adcs->insert(adc);
-      debug() << "ID " << adc->cellID() << " ADC value " << adc->adc() << endreq;
+      verbose() << "ID " << adc->cellID() << " ADC value " << adc->adc() << endreq;
     }
-    debug() << " CaloAdc container "  << containerName  << "size = " << adcs->size() << endreq;
+    debug() << " CaloAdc container '"  << containerName  << "' -> size = " << adcs->size() << endreq;
 
 
-    // PinDiode ADC in a different container
+    // PinDiode ADC (possibly in a different container)
     // MUST BE AFTER STANDARD ADCs
     std::vector<LHCb::CaloAdc>& allPinAdcs = m_energyTool->pinAdcs( );
     if( "None" != m_pinContainerName && 0 !=allPinAdcs.size() ){
-      LHCb::CaloAdcs* pinAdcs = new LHCb::CaloAdcs();
-      put(pinAdcs , m_pinContainerName);
+      LHCb::CaloAdcs*  pinAdcs;
+      if(m_pinContainerName == m_outputDigits || m_pinContainerName == "SAME"|| m_pinContainerName == "Same"){
+        pinAdcs = adcs ;
+      }else{
+        pinAdcs = new LHCb::CaloAdcs();
+        put(pinAdcs , m_pinContainerName);
+      }
       for ( std::vector<LHCb::CaloAdc>::const_iterator itA = allPinAdcs.begin();
             allPinAdcs.end() != itA; ++itA ) {
         LHCb::CaloAdc* pinAdc = new LHCb::CaloAdc( (*itA).cellID(), (*itA).adc() ); // 'clone'
         pinAdcs->insert( pinAdc );
-        debug() << "Pin-diode : ID " << pinAdc->cellID() << " ADC value " << pinAdc->adc() << endreq;
+        verbose() << "Pin-diode : ID " << pinAdc->cellID() << " ADC value " << pinAdc->adc() << endreq;
       }
-      debug() << " PIN-Diode CaloAdc container " << m_pinContainerName 
-              << " size = " << pinAdcs->size() << endreq;
+      debug() << " Adding PIN-Diode CaloAdc to container '" << m_pinContainerName 
+              << "' -> size = " << pinAdcs->size() << endreq;
     }
   }
 }

@@ -1,4 +1,4 @@
-// $Id: CaloMergeTAE.h,v 1.1 2008-10-27 11:50:48 odescham Exp $
+// $Id: CaloMergeTAE.h,v 1.2 2008-10-27 18:14:26 odescham Exp $
 #ifndef CALOMERGETAE_H 
 #define CALOMERGETAE_H 1
 
@@ -30,6 +30,18 @@ public:
 protected:
 
 private:
+  bool fromAdc(){
+    std::string out( m_data );
+    std::transform( m_data.begin() , m_data.end() , out.begin () , ::toupper ) ;
+    if( out == "ADC" || out == "CALOADC" || out == "ADCS" || out == "CALOADCS")return true;
+    return false;
+  }
+  bool fromDigit(){
+    std::string out( m_data );
+    std::transform( m_data.begin() , m_data.end() , out.begin () , ::toupper ) ;
+    if( out == "DIGIT" || out == "CALODIGIT" || out == "DIGITS" || out == "CALODIGITS")return true;
+    return false;
+  }
   void mergeDigits();
   void mergeAdcs();
   std::vector<std::string> m_slots;

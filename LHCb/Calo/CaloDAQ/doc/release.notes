@@ -5,6 +5,12 @@
 !-----------------------------------------------------------------------------
 
 
+! 2008-10-27 - Olivier Deschamps
+ - new tool : CaloDataProviderFromTES produce CaloDigits/CaloAdcs from the TES (using the same interface than CaloDataProvider)
+ - adjust verbosity in CaloZsupAlg and CaloDigitsFromRawAlg.
+ - make the string 'outputType' property case-independant in CaloZsupAlg and CaloDigitsFromRawAlg.
+ - CaloDigitsFromRawAlg : allow to write pin-diode ADC in the same container as PMT ADC
+
 ! 2008-10-24 - Olivier Deschamps
  - new algorithm : CaloMergeTAE produce CaloDigits/CaloAdcs as the sum over a given TAE sequence
 

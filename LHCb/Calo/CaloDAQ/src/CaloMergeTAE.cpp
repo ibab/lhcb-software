@@ -1,4 +1,4 @@
-// $Id: CaloMergeTAE.cpp,v 1.1 2008-10-27 11:50:48 odescham Exp $
+// $Id: CaloMergeTAE.cpp,v 1.2 2008-10-27 18:14:26 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -88,11 +88,16 @@ StatusCode CaloMergeTAE::initialize() {
     return StatusCode::FAILURE;
   }
   //
-  std::string out( m_data );
-  std::transform( m_data.begin() , m_data.end() , out.begin () , ::toupper ) ;
-  m_data = out;
   //
-  std::string loc = (m_data == "CALODIGITS" || m_data == "DIGITS") ?  m_outDigit : m_outAdc;
+  std::string loc ;
+  if( fromDigit() ){
+    loc = m_outDigit;
+  }else if(fromAdc() ){
+    loc= m_outAdc ;
+  }  else {
+    Error("Unknown data type " + m_data).ignore();
+    return StatusCode::FAILURE;
+  }  
   info() << "Will merge " << m_data << " from " << m_slots << " into " << loc << endreq;
   return StatusCode::SUCCESS; 
 }
@@ -105,8 +110,8 @@ StatusCode CaloMergeTAE::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
 
-  if(m_data == "CALODIGITS" || m_data == "DIGITS")mergeDigits();
-  else if(m_data == "CALOADCS" || m_data == "ADCS")mergeAdcs();
+  if( fromDigit()    )mergeDigits();
+  else if( fromAdc() ) mergeAdcs();
   else{
     Warning("Unable to merged data type " + m_data).ignore();
   }

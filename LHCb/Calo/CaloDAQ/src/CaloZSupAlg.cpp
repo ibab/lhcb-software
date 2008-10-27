@@ -1,4 +1,4 @@
-// $Id: CaloZSupAlg.cpp,v 1.11 2008-07-23 10:42:03 odescham Exp $
+// $Id: CaloZSupAlg.cpp,v 1.12 2008-10-27 18:14:26 odescham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -77,14 +77,18 @@ StatusCode CaloZSupAlg::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize();
   if( sc.isFailure() ) return sc;
 
-  if( m_outputType == "Digits" || 
-      m_outputType == "CaloDigits" || 
-      m_outputType == "Both") m_digitOnTES = true;
-  if(m_outputType == "ADCs" || 
-     m_outputType == "CaloAdcs" || 
-     m_outputType == "Both")m_adcOnTES = true;
+
+  std::string out( m_outputType );
+  std::transform( m_outputType.begin() , m_outputType.end() , out.begin () , ::toupper ) ;
+  m_outputType = out;
+  if( m_outputType == "DIGITS" ||  m_outputType == "CALODIGITS" || 
+      m_outputType == "DIGIT"  ||  m_outputType == "CALODIGIT"  || 
+      m_outputType == "BOTH") m_digitOnTES = true;
+  if(m_outputType == "ADCS" ||  m_outputType == "CALOADCS" || 
+     m_outputType == "ADC"  ||  m_outputType == "CALOADC"  || 
+     m_outputType == "BOTH")m_adcOnTES = true;
   if( !m_adcOnTES && !m_digitOnTES ){
-    error() << "CaloZSupAlg configured to produce ** NO ** output" << endreq;
+    error() << "CaloZSupAlg configured to produce ** NO ** output (outputType = '" << m_outputType <<"')" << endreq;
     return StatusCode::FAILURE;
   }  
   if( m_digitOnTES )debug() <<  "CaloZSupAlg will produce CaloDigits on TES" 
@@ -185,11 +189,11 @@ StatusCode CaloZSupAlg::execute() {
     index         = m_calo->cellIndex( id );
     int    digAdc = (*anAdc).adc();
     if( m_zsupThreshold <= digAdc ) {
-      if( isDebug ) {
-        debug() << id 
+      if( isVerbose ) {
+        verbose() << id 
                 << format( " Energy adc %4d", digAdc );
         if (  m_zsupThreshold <= digAdc ) debug() << " seed";
-        debug() << endreq;
+        verbose() << endreq;
       }
       
       caloFlags[index] = SeedFlag ;
