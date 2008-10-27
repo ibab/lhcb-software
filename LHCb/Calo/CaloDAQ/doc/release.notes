@@ -4,6 +4,11 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+
+! 2008-10-24 - Olivier Deschamps
+ - new algorithm : CaloMergeTAE produce CaloDigits/CaloAdcs as the sum over a given TAE sequence
+
+
 !========================== CaloDAQ v4r7 2008-07-27 ==========================
 ! 2008-07-23 - Olivier Deschamps
  - CaloZSupAlg : protect against large negative noise in 2D 0-sup method (via ZsupNeighbor property)
