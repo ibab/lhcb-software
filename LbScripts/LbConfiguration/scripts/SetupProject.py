@@ -5,7 +5,7 @@ from xml.sax import parse, ContentHandler
 from stat import S_ISDIR
 import getopt
 
-_cvs_id = "$Id: SetupProject.py,v 1.32 2008-10-22 14:48:32 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.33 2008-10-27 17:03:04 marcocle Exp $"
 
 ########################################################################
 # Useful constants
@@ -624,7 +624,7 @@ def shParser(script, env):
             var = l.split()[-1]
             if var in env:
                 del env[var]
-        elif "export" in l:
+        elif "export " in l:
             l = l.split(";")[0]
             var, value = l.split("=",1)
             value = os.path.expandvars(value.strip('"')) # unix style vars
