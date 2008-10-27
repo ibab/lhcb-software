@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.46 2008-07-18 09:31:14 mneedham Exp $
+// $Id: DeSTSector.cpp,v 1.47 2008-10-27 12:29:25 mneedham Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -53,7 +53,6 @@ std::ostream& DeSTSector::printOut( std::ostream& os ) const{
   os << " Sector :  "  << name() << std::endl;
   os << " Nickname: " << m_nickname 
      << "\n ID " << id() 
-     << "\n layer " << elementID().layer()
      << "\n type  " << type() 
      << "\n pitch " << m_pitch 
      << "\n strip " << m_nStrip

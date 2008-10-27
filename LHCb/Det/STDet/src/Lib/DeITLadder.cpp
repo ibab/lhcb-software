@@ -67,7 +67,7 @@ StatusCode DeITLadder::initialize() {
 std::ostream& DeITLadder::printOut( std::ostream& os ) const{
 
   // stream to cout
-  os << " Ladder : "  << name() 
+  os << " Ladder : "  << name()  << std::endl
      << " id " << id() 
      << std::endl;
 

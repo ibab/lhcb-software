@@ -65,9 +65,9 @@ StatusCode DeITBox::initialize() {
 std::ostream& DeITBox::printOut( std::ostream& os ) const{
 
   // stream to cout
-  os << " Box : "  << name() 
-     << " id " << id() 
-     << " nickname " << nickname()
+  os << " Box : "  << name() << std::endl
+     << " id " << id()  << std::endl
+     << " nickname " << nickname() 
      << std::endl;
 
   return os;

@@ -1,4 +1,4 @@
-// $Id: DeSTSensor.cpp,v 1.2 2008-07-03 09:48:20 mneedham Exp $
+// $Id: DeSTSensor.cpp,v 1.3 2008-10-27 12:29:25 mneedham Exp $
 #include "STDet/DeSTSensor.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -55,7 +55,6 @@ std::ostream& DeSTSensor::printOut( std::ostream& os ) const{
 
    os << " Sensor :  "  << name()
       << "\n ID " << id() 
-      << "\n layer " << elementID().layer() 
      << "\n pitch " << m_pitch 
      << "\n strip " << m_nStrip
      << "\n active width" << m_uMaxLocal - m_uMinLocal

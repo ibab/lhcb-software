@@ -56,7 +56,7 @@ std::ostream& DeSTLayer::printOut( std::ostream& os ) const{
 
   // stream to cout
   os << " Layer: "  << m_id << std::endl;
-  os << "stereo angle " << m_angle
+  os << "stereo angle " << m_angle << std::endl
      << " Nickname: " << m_nickname 
      << std::endl;
 

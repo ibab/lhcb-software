@@ -1,7 +1,10 @@
-!$Id: release.notes,v 1.146 2008-10-24 13:37:22 mneedham Exp $
+!$Id: release.notes,v 1.147 2008-10-27 12:29:25 mneedham Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
+
+! 2008-10-26 M Needham
+ - Improve print methods
 
 ! 2008-10-24 M Needham
  - Bug fix in findSectors method
