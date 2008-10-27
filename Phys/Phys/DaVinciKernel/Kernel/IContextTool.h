@@ -1,4 +1,4 @@
-// $Id: IContextTool.h,v 1.2 2008-07-10 14:55:05 pkoppenb Exp $
+// $Id: IContextTool.h,v 1.3 2008-10-27 15:19:33 jpalac Exp $
 #ifndef DAVINCIKERNEL_ICONTEXTTOOL_H 
 #define DAVINCIKERNEL_ICONTEXTTOOL_H 1
 
@@ -35,7 +35,7 @@ public:
   static const InterfaceID& interfaceID() { return IID_IContextTool; }
 
   /// Get primary vertices
-  virtual LHCb::RecVertex::ConstVector primaryVertices() const = 0 ;
+  virtual const LHCb::RecVertex::Container* primaryVertices() const = 0 ;
   
   /// Get geom tool
   virtual const IGeomDispCalculator* geomTool() const = 0 ;
