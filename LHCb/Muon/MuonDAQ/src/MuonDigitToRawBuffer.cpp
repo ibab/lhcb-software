@@ -1,4 +1,4 @@
-// $Id: MuonDigitToRawBuffer.cpp,v 1.22 2008-10-21 08:32:48 asatta Exp $
+// $Id: MuonDigitToRawBuffer.cpp,v 1.23 2008-10-27 13:00:25 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -35,7 +35,7 @@ MuonDigitToRawBuffer::MuonDigitToRawBuffer( const std::string& name,
                                             ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
-  declareProperty("VType" , m_vtype=1) ;
+  declareProperty("VType" , m_vtype=2) ;
 }
 //=============================================================================
 // Destructor
