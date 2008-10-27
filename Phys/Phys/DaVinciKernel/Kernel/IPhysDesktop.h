@@ -1,4 +1,4 @@
-// $Id: IPhysDesktop.h,v 1.27 2008-10-22 12:41:54 jpalac Exp $
+// $Id: IPhysDesktop.h,v 1.28 2008-10-27 15:19:24 jpalac Exp $
 #ifndef DAVINCIKERNEL_IPHYSDESKTOP_H 
 #define DAVINCIKERNEL_IPHYSDESKTOP_H 1
 
@@ -78,8 +78,8 @@ public:
   /// Retrieve the particles containers
   virtual const LHCb::Particle::ConstVector& particles() const = 0;
 
-  /// Retrieve the PV from vertex container
-  virtual const LHCb::RecVertex::ConstVector& primaryVertices() = 0;
+  /// Retrieve the PVs from the TES
+  virtual const LHCb::RecVertex::Container* primaryVertices() const = 0;
 
   /// Retrieve the secondary vertices
   virtual const LHCb::Vertex::ConstVector& secondaryVertices() const = 0;
@@ -110,7 +110,7 @@ public:
   virtual void imposeOutputLocation(const std::string& outputLocationString) = 0;
 
   /// Get output location
-  virtual std::string getOutputLocation() const = 0 ;
+  virtual const std::string& getOutputLocation() const = 0 ;
 
   /// Make sure the PhysDesktop has written out the container
   virtual StatusCode writeEmptyContainerIfNeeded() = 0 ;
