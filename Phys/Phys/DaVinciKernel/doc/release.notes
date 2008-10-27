@@ -1,8 +1,15 @@
-!$Id: release.notes,v 1.268 2008-10-22 12:41:54 jpalac Exp $
+!$Id: release.notes,v 1.269 2008-10-27 15:19:47 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2008-10-27 - Juan PALACIOS
+ - Kernel/IPhysDesktop.h
+  . getOutputLocation() is now const, and returns a const std::string&
+  . primaryVertices() in now const, and returns const RecVertex::Container*
+ - Kernel/IContextTool.h
+  . primaryVertices() in now const, and returns const RecVertex::Container*
 
 ! 2008-10-21 - Juan PALACIOS
 
