@@ -1,5 +1,6 @@
-// $Id: RawEvent.cpp,v 1.13 2006-11-14 20:17:44 frankb Exp $
+// $Id: RawEvent.cpp,v 1.14 2008-10-28 12:21:48 cattanem Exp $
 #include "Event/RawEvent.h"
+#include <cstring> // for memcpy with gcc 4.3
 
 namespace {
   inline LHCb::RawBank* allocateBank(size_t len)  {

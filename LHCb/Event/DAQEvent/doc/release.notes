@@ -4,9 +4,13 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+! 2008-10-28 - Marco Cattaneo
+ - Add missing include for gcc 4.3
+
 ! 2008-10-28 - Olivier Deschamps 
  - new component algorithm 'OdinBCIDFilter' : allow to filter on BCID 
-   - default : filter odd-parity BCID (can be inverted to even-parity setting the 'Revert' property to 'true')
+   - default : filter odd-parity BCID (can be inverted to even-parity setting
+               the 'Revert' property to 'true')
    - to be used for Prs/Spd to monitor separatly the Very Front-End parities
 
 ! 2008-10-16 - Marco Cattaneo
