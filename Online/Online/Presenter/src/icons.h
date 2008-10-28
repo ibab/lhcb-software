@@ -26,6 +26,7 @@
 #include "../icons/folderOpen16.xpm" //folder_open
 //#include "../icons/stock_new-labels.xpm" // quarter-level
 #include "../icons/inspectHistogram16.xpm" // inspect histo
+#include "../icons/stock_new-formula.xpm" // inspect histo
 //#include "../icons/edit-find-replace16.xpm" // inspect page
 //#include "../icons/editDelete16.xpm" // del
 //#include "../icons/applications-system16.xpm" // task

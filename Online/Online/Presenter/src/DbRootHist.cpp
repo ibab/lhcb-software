@@ -78,7 +78,8 @@ DbRootHist::DbRootHist(const std::string & identifier,
   m_dimBrowser(DimBr),
   m_partition(""),
   m_titpave(NULL),
-  m_statpave(NULL)
+  m_statpave(NULL),
+  m_historyplot(false)
 {
   // Prevent ROOT booking
   TH1::AddDirectory(kFALSE);
@@ -1180,6 +1181,8 @@ void DbRootHist::Draw(TPad* &pad)
 //     }
     rootHistogram->Draw();
     setDrawOptionsFromDB(pad);
+    if(m_historyplot)
+      rootHistogram->SetDrawOption("E1");
 
 //    if (s_NoReference != m_refOption) {
 //      if (getReference()) { drawReference(); }

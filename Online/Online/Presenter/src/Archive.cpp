@@ -151,7 +151,24 @@ void Archive::fillHistogram(DbRootHist* histogram,
         ++foundRootFilesIt;
       }
       if (histogram->rootHistogram) {
-        (histogram->rootHistogram)->Merge(list);
+        if (false == m_mainFrame->isHistoryPlotMode()) {
+          (histogram->rootHistogram)->Merge(list);
+        } else {
+          if(list->GetSize()>0) {
+            std::string histogramTitle("History plot for ");
+            histogramTitle += histogram->rootHistogram->GetTitle();
+            TH1* newh = new TH1F(histogramTitle.c_str(), histogramTitle.c_str(),
+                                 list->GetSize(), 0.5,  list->GetSize() +0.5);
+            newh->Sumw2();
+            for (int i=0; i<list->GetSize(); i++) {
+              newh->SetBinContent(i+1, ((TH1*)list->At(i))->GetMean() );
+              newh->SetBinError(i+1, ((TH1*)list->At(i))->GetRMS() );
+            }
+            if (histogram->rootHistogram) { delete histogram->rootHistogram; }
+            histogram->rootHistogram = newh;
+            histogram->setHistoryPlotMode(true);
+          }
+        }
       }
 
       TH1* histo;
