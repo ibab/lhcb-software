@@ -1,4 +1,4 @@
-// $Id: MDFWriter.cpp,v 1.25 2008-02-22 16:33:58 frankb Exp $
+// $Id: MDFWriter.cpp,v 1.26 2008-10-28 12:34:36 cattanem Exp $
 //  ====================================================================
 //  MDFWriter.cpp
 //  --------------------------------------------------------------------
@@ -17,6 +17,7 @@
 #include "Event/RawEvent.h"
 #include "TMD5.h"
 #include <iomanip>
+#include <cstring> // For memcpy with gcc 4.3
 
 DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,MDFWriter)
 

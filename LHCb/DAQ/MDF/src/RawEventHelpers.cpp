@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.41 2008-09-25 13:07:46 frankb Exp $
+// $Id: RawEventHelpers.cpp,v 1.42 2008-10-28 12:34:36 cattanem Exp $
 //  ====================================================================
 //  RawEventHelpers.cpp
 //  --------------------------------------------------------------------
@@ -15,6 +15,7 @@
 #include "Event/RawEvent.h"
 #include <stdexcept>
 #include <iostream>
+#include <cstring> // For memcpy with gcc 4.3
 
 #ifdef _WIN32
 #define NOATOM

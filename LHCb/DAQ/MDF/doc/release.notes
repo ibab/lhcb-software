@@ -6,6 +6,9 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+! 2008-10-28 - Marco Cattaneo
+ - Add missing includes for gcc 4.3
+
 !========================= MDF v3r13 2008-09-30 ===============================
 ! 2008-09-23- Markus Frank
  - Add deep copy of raw event structure to helpers.

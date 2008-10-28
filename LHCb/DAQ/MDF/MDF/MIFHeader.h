@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MIFHeader.h,v 1.2 2006-09-25 12:32:26 frankb Exp $
+// $Id: MIFHeader.h,v 1.3 2008-10-28 12:34:36 cattanem Exp $
 #ifndef EVENT_MIFHEADER
 #define EVENT_MIFHEADER
 
@@ -6,6 +6,7 @@
 #include "GaudiKernel/Kernel.h"
 #include <utility>
 #include <string>
+#include <cstring> // For memcpy, memset with gcc 4.3
 #ifdef _WIN32
 #pragma pack(push, mdfheader_aligment, 1)
 #define MIFHEADER_ALIGNED(x) x

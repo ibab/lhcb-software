@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.32 2008-05-13 15:42:01 frankb Exp $
+// $Id: MDFIO.cpp,v 1.33 2008-10-28 12:34:36 cattanem Exp $
 //  ====================================================================
 //  MDFIO.cpp
 //  --------------------------------------------------------------------
@@ -6,7 +6,6 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-//#include "GaudiKernel/IFileCatalogSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/MsgStream.h"
@@ -17,6 +16,8 @@
 #include "MDF/MDFIO.h"
 #include "Event/RawEvent.h"
 #include "Event/ODIN.h"
+
+#include <cstring> // For memcpy, memmove with gcc 4.3
 
 using namespace LHCb;
 

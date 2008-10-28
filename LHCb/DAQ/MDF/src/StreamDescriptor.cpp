@@ -1,3 +1,4 @@
+// $Id: StreamDescriptor.cpp,v 1.19 2008-10-28 12:34:36 cattanem Exp $
 //====================================================================
 //  OnlineEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -6,7 +7,6 @@
 //
 //  Author     : M.Frank
 //====================================================================
-// $Id: StreamDescriptor.cpp,v 1.18 2008-03-03 20:05:04 frankb Exp $
 
 // Include files
 #include "MDF/StreamDescriptor.h"
@@ -16,6 +16,7 @@
 #include <cstdlib>
 #include <exception>
 #include <map>
+#include <cstring> // For memcpy, memset with gcc 4.3
 
 #ifdef _WIN32
   #include <io.h>
