@@ -51,7 +51,7 @@ public:
     m_StationNumber = nStation;
   }
 
-  const int sensitiveVolumeID( const Gaudi::XYZPoint& point )const;
+  int sensitiveVolumeID( const Gaudi::XYZPoint& point )const;
   
 private:
   int m_StationNumber;

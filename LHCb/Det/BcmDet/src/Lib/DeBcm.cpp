@@ -31,7 +31,7 @@ StatusCode DeBcm::initialize()
   return sc;
 }
 
-const int DeBcm::sensitiveVolumeID( const Gaudi::XYZPoint& point )const{
+int DeBcm::sensitiveVolumeID( const Gaudi::XYZPoint& point )const{
   const IDetectorElement* sensor = childDEWithPoint(point);
   if( sensor ){
     int nSensor = sensor->sensitiveVolumeID(point);

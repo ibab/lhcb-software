@@ -31,7 +31,7 @@ StatusCode DeBcmSens::initialize()
   return sc;
 }
 
-const int DeBcmSens::sensitiveVolumeID( const Gaudi::XYZPoint& point )const{
+int DeBcmSens::sensitiveVolumeID( const Gaudi::XYZPoint& point )const{
   if( isInside( point ) ){
     return sensorNumber();
   }
