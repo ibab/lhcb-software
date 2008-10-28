@@ -1,4 +1,4 @@
-// $Id: TestDST.cpp,v 1.12 2008-02-12 13:12:51 jpalac Exp $
+// $Id: TestDST.cpp,v 1.13 2008-10-28 13:02:56 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -174,17 +174,17 @@ StatusCode TestDST::finalize() {
 //=============================================================================
 StatusCode  TestDST::PrintDefaultPV(){
 
-  const LHCb::RecVertex::ConstVector &primaryVertices = desktop()->primaryVertices();
-  int nPrimVertices = primaryVertices.size();
+  const LHCb::RecVertex::Container* primaryVertices = desktop()->primaryVertices();
+  int nPrimVertices = primaryVertices->size();
   debug() << "*** got # primary vertices " << nPrimVertices << endmsg;
   if (nPrimVertices == 0) {
     err() << "no primary Vertices found in this event, skip" << endmsg;
     return StatusCode::SUCCESS;
   } // if #primVert
 
-  LHCb::RecVertex::ConstVector::const_iterator iPV;
-  LHCb::RecVertex::ConstVector::const_iterator iPVBegin = primaryVertices.begin();
-  LHCb::RecVertex::ConstVector::const_iterator iPVEnd   = primaryVertices.end();  
+  LHCb::RecVertex::Container::const_iterator iPV;
+  LHCb::RecVertex::Container::const_iterator iPVBegin = primaryVertices->begin();
+  LHCb::RecVertex::Container::const_iterator iPVEnd   = primaryVertices->end();  
   LHCb::RecVertices* verts                              = get<LHCb::RecVertices>(LHCb::RecVertexLocation::Primary);
 
   for (iPV = iPVBegin;  iPV !=iPVEnd ; iPV++){      
