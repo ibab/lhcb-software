@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.44 2008-04-16 11:13:49 cattanem Exp $
+// $Id: DeMuonDetector.cpp,v 1.45 2008-10-28 15:06:04 cattanem Exp $
 
 // Include files
 #include "MuonChamberLayout.h"
@@ -1196,8 +1196,7 @@ void DeMuonDetector::fillGeoArray()
 
 
 
-const int DeMuonDetector::sensitiveVolumeID(const Gaudi::XYZPoint & 
-myPoint) const
+int DeMuonDetector::sensitiveVolumeID(const Gaudi::XYZPoint &myPoint) const
 {
   int nsta =0;
   int nreg =0;   

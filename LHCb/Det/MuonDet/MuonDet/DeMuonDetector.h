@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.h,v 1.30 2008-10-22 11:20:00 cattanem Exp $
+// $Id: DeMuonDetector.h,v 1.31 2008-10-28 15:06:04 cattanem Exp $
 // ============================================================================
 #ifndef MUONDET_DEMUONDETECTOR_H
 #define MUONDET_DEMUONDETECTOR_H 1
@@ -113,7 +113,7 @@ public:
                           LHCb::MuonTileID& tile) const ;
 
 
-  const int sensitiveVolumeID(const Gaudi::XYZPoint &  myPoint) const;
+  int sensitiveVolumeID(const Gaudi::XYZPoint &  myPoint) const;
   
 
   unsigned int gapID( int sensDetID);
