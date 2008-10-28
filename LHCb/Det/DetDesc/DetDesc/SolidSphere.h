@@ -1,4 +1,4 @@
-// $Id: SolidSphere.h,v 1.18 2008-10-28 12:04:37 cattanem Exp $ 
+// $Id: SolidSphere.h,v 1.19 2008-10-28 14:41:39 cattanem Exp $ 
 // ===========================================================================
 #ifndef     DETDESC_SOLIDSPHERE_H
 #define     DETDESC_SOLIDSPHERE_H 1 
@@ -225,9 +225,9 @@ public:
 protected:
   
   /// gap in phi   ?
-  const bool noPhiGap   () const { return m_noPhiGap   ; }
+  bool noPhiGap   () const { return m_noPhiGap   ; }
   /// gap in theta ?
-  const bool noThetaGap () const { return m_noThetaGap ; }
+  bool noThetaGap () const { return m_noThetaGap ; }
   
   /** check for R 
    *  @param point to be checked 

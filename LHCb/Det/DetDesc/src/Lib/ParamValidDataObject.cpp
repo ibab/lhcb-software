@@ -1,5 +1,6 @@
-//$Id: ParamValidDataObject.cpp,v 1.13 2008-02-22 12:12:12 marcocle Exp $
+//$Id: ParamValidDataObject.cpp,v 1.14 2008-10-28 14:41:39 cattanem Exp $
 #include <string>
+#include <cstring> // for strlen with gcc 4.3
 
 #include "GaudiKernel/System.h"
 #include "DetDesc/ParamValidDataObject.h"

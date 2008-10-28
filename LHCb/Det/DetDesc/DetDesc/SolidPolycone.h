@@ -1,4 +1,4 @@
-// $Id: SolidPolycone.h,v 1.13 2007-10-25 07:31:27 cattanem Exp $ 
+// $Id: SolidPolycone.h,v 1.14 2008-10-28 14:41:39 cattanem Exp $ 
 // ============================================================================
 #ifndef DETDESC_SOLIDPOLYCONE_H 
 #define DETDESC_SOLIDPOLYCONE_H 1
@@ -138,8 +138,7 @@ public:
   /** accessor to number of triplets 
    *  @return number of z-planes 
    */
-  inline const unsigned int       
-  number   () const { return triplets().size() ; }
+  inline unsigned int number   () const { return triplets().size() ; }
   
   /** accessor to all triplets 
    *  @return reference to all triplets 
@@ -163,32 +162,32 @@ public:
    *  @param index   plane index 
    *  @return z-position
    */
-  inline const double  z( Triplets::size_type index ) const 
+  inline double  z( Triplets::size_type index ) const 
   { return ( begin() + index )->first ; }
   
   /** accessor to rMax of plane indexed with some index
    *  @param index   plane index 
    *  @return rMax
    */
-  inline const double  RMax( Triplets::size_type index ) const 
+  inline double  RMax( Triplets::size_type index ) const 
   { return ( begin() + index )->second.first ; }
   
   /** accessor to rMin of plane indexed with some index
    *  @param index   plane index 
    *  @return rMin
    */
-  inline const double  RMin( Triplets::size_type index ) const 
+  inline double  RMin( Triplets::size_type index ) const 
   { return ( begin() + index )->second.second ; }
   
   /** accessor to start phi angle 
    *  @return start phi angle 
    */
-  inline const double startPhiAngle() const { return m_startPhiAngle;}
+  inline double startPhiAngle() const { return m_startPhiAngle;}
 
   /** accessor to delta phi angle 
    *  @return delta phi angle 
    */
-  inline const double deltaPhiAngle() const { return m_deltaPhiAngle;}
+  inline double deltaPhiAngle() const { return m_deltaPhiAngle;}
   
   
   /** find the index from the z position
@@ -276,7 +275,7 @@ private:
   }
 
   /// gap in phi ?
-  const bool noPhiGap() const { return m_deltaPhiAngle == 360 * Gaudi::Units::degree ; }
+  bool noPhiGap() const { return m_deltaPhiAngle == 360 * Gaudi::Units::degree ; }
 
 private:
   
