@@ -1,4 +1,4 @@
-// $Id: CheckMCEventTool.h,v 1.1.1.1 2005-12-15 14:29:30 gcorti Exp $
+// $Id: CheckMCEventTool.h,v 1.2 2008-10-28 15:34:08 cattanem Exp $
 #ifndef CHECKMCEVENTTOOL_H 
 #define CHECKMCEVENTTOOL_H 1
 
@@ -26,7 +26,7 @@ public:
 
   virtual ~CheckMCEventTool( ); ///< Destructor
 
-  virtual StatusCode CheckMCEventTool::check(); ///< Perform the check
+  virtual StatusCode check(); ///< Perform the check
   
 protected:
 

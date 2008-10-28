@@ -5,6 +5,9 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+! 2008-10-28 - Marco Cattaneo
+ - Fixes for gcc 4.3 compilation
+
 !====================== SimComponents v2r13 2008-09-30 =======================
 ! 2008-09-08 - Marco Cattaneo
  - Improve FPE protection of CompareMCVertex (was failing on ia32)

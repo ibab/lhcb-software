@@ -10,8 +10,12 @@ namespace LHCb {
   class MCHit;
   class MCParticle;
 }
-class AIDA::IHistogram1D;
-class AIDA::IHistogram2D;
+
+namespace AIDA {
+  class IHistogram1D;
+  class IHistogram2D;
+}
+
 class IMCParticleSelector;
 
 /** class TrMCHitMonitor, package TrMCHitMonitor
@@ -68,11 +72,3 @@ private:
 };
  
 #endif // TrMCHitMonitor_H
-
-
-
-
-
-
-
-
