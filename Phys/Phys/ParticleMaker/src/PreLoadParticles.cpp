@@ -1,4 +1,4 @@
-// $Id: PreLoadParticles.cpp,v 1.8 2007-06-15 10:06:25 jpalac Exp $
+// $Id: PreLoadParticles.cpp,v 1.9 2008-10-28 07:41:00 jpalac Exp $
 // Include files
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -54,7 +54,7 @@ StatusCode PreLoadParticles::execute()
     debug() << "Number of particles in desktop = " 
             << desktop()->particles().size() << endmsg;
     debug() << "Number of primary vertices in desktop = " 
-            << desktop()->primaryVertices().size() << endmsg;
+            << desktop()->primaryVertices()->size() << endmsg;
     debug() << "Number of secondary vertices in desktop = " 
             <<desktop()->secondaryVertices().size() << endmsg;
   }
