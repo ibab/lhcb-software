@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltMuonLines.py,v 1.8 2008-10-23 12:44:16 graven Exp $
+# $Id: HltMuonLines.py,v 1.9 2008-10-28 14:48:49 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -12,7 +12,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -245,7 +245,7 @@ Line( 'MuonHadron'
                ) # // NEED TO CHANGE TO MAKEVERTICES TO HAVE A GOOD CONFIRMATION LOGIC
        , HltTrackUpgrade('Hlt1RecoVelo')
        , Member( 'TF', 'CompanionVelo' # // Select Velo tracks with an IP and good DOCA to Muon
-               , InputSelection  = HltTrackUpgrade('Hlt1RecoVelo').OutputSelection
+               , InputSelection  = HltTrackUpgrade('Hlt1RecoVelo')
                , HistogramUpdatePeriod = 0
                , FilterDescriptor = ['IP_PV2D,||[],0.1,3.', 'DOCA_%TFMuon,<,0.2' ]
                , HistoDescriptor = { 'IP'         : ( 'IP',-1.,3.,400), 'IPBest'     : ( 'IPBest',-1.,3.,400), 'DOCA'       : ( 'DOCA',0.,1.,400), 'DOCABest'   : ( 'DOCABest',0.,1.,400) }

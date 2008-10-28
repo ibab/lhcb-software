@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1.py,v 1.13 2008-10-23 13:45:45 graven Exp $
+# $Id: Hlt1.py,v 1.14 2008-10-28 14:48:49 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of HLT1
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.13 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.14 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -28,6 +28,7 @@ from Configurables       import HltRoutingBitsWriter
 from Configurables       import HltLumiWriter
 from Configurables       import HltGlobalMonitor
 from Configurables       import bankKiller
+from Configurables       import LoKi__HDRFilter   as HltFilter
 from HltConf.HltLine     import hlt1Lines
 from HltConf.HltLine     import hlt1Decisions
 from HltConf.HltLine     import hlt1Selections
@@ -35,7 +36,7 @@ from HltConf.HltLine     import addHlt1Prop
 from HltConf.HltLine     import Hlt1Line   as Line
 
 # add a few thing to our printout
-for i in [ 'routingBitDefinitions', 'Accept', 'FilterDescriptor', 'Code' ] :
+for i in [ 'routingBitDefinitions', 'Accept', 'FilterDescriptor', 'Code', 'OutputSelection' ] :
     addHlt1Prop(i)
 
 importOptions('$HLTCONFROOT/options/HltInit.opts')
@@ -56,9 +57,6 @@ vertexMaker = HltVertexReportsMaker( VertexSelections = [ 'Hlt1VeloASideVFDecisi
 vertexWriter =  HltVertexReportsWriter( )
 
 veloVertex = Sequencer( 'VeloVertex',  Members = [ summaryWriter, vertexMaker, vertexWriter ])
-
-def XOnly( dec ) :
-    return dec + '&!(' + '|'.join([ i for i in hlt1Decisions() if i != dec ]) + ') '
 
 def AnyIgnoring( dec ) :
     return '|'.join([ i for i in hlt1Decisions() if i != dec ])
@@ -84,10 +82,8 @@ triggerBits = HltRoutingBitsWriter( routingBitDefinitions = routingBits )
 
 
 
-rawbankLumiStripper = Sequence( 'LumiStripper'
-                              , IgnoreFilterPassed = True
-                              , Members = 
-                              [ HltDecisionFilter('LumiOnlyFilter' , Accept = XOnly( 'Hlt1LumiDecision' ) )
+rawbankLumiStripper = Sequence( 'LumiStripper' , Members = 
+                              [ HltFilter('LumiOnlyFilter' , Code = "HLT_PASS('Hlt1LumiDecision') & ( HLT_NPASS==1 ) " ) 
                               , bankKiller( BankTypes=[ 'ODIN','HltLumiSummary'],  DefaultIsKill=True )
                               ])
 
@@ -99,6 +95,6 @@ Hlt.Members = [ Hlt1
                                     , veloVertex
                                     , triggerBits
                                     , HltLumiWriter()
-                                    #, rawbankLumiStripper
+                                    , rawbankLumiStripper
                                     ] )
               ]

@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.42 2008-10-24 12:50:43 pkoppenb Exp $ 
+! $Id: release.notes,v 1.43 2008-10-28 14:48:49 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : 
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2008-10-28 - Gerhard Raven
+ - streamline some settings
 
 ! 2008-10-24 - Patrick Koppenburg
  - Instead of HltType "Hlt1|Hlt2", disliked by Gerhard, do 

@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltHadronLines.py,v 1.6 2008-10-23 12:44:16 graven Exp $
+# $Id: HltHadronLines.py,v 1.7 2008-10-28 14:48:49 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hadron Lines
@@ -12,7 +12,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -67,7 +67,7 @@ prepMainHadron = bindMembers( 'MainHadronPrep',
 
 
 Line ( 'SingleHadron' 
-     ,  L0DU = "L0_CHANNEL('Hadron')"
+     , L0DU  = "L0_CHANNEL('Hadron')"
      , algos = 
      [ prepMainHadron 
      , Member ( 'TF' , 'Decision'
@@ -79,7 +79,7 @@ Line ( 'SingleHadron'
      ])
 
 Line ('DiHadron' 
-     ,  L0DU = "L0_CHANNEL('Hadron')"
+     , L0DU  = "L0_CHANNEL('Hadron')"
      , algos =  
      [ prepMainHadron
      , Member ( 'TF', 'Forward'
@@ -89,7 +89,7 @@ Line ('DiHadron'
               )
      , HltTrackUpgrade( 'Hlt1RecoVelo' )
      , Member ( 'TF', 'Velo'
-              , InputSelection = 'Velo' # should become reco1Velo.OutputSelection()
+              , InputSelection = HltTrackUpgrade('Hlt1RecoVelo') ## TODO: is this line still needed?
               , FilterDescriptor = [ 'IP_PV2D,||>,0.1', 'MatchIDsFraction_%TFForward,<,0.9' ]
               , HistogramUpdatePeriod = 1
               , HistoDescriptor = { 'IP_PV2D':('IP_PV2D',0.,3.,100), 'IP_PV2DBest':('IP_PV2DBest',0.,3.,100) }

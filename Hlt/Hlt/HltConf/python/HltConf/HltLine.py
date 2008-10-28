@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.25 2008-10-28 13:53:19 graven Exp $ 
+# $Id: HltLine.py,v 1.26 2008-10-28 14:48:49 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.25 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.26 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt line itself 
@@ -305,7 +305,10 @@ def _selectionName ( name ,      ## the selection name or pattern
     
     The convention is
 
-    - if the selection is of type Hlt1Line, replace it by its output selection
+    - if the selection is of type Hlt1Line or bindMembers, replace it by its output selection
+
+    - if the object is not a string, see if it has either a member function 'outputSelection'
+      or an attribute called 'OutputSelection'
     
     - if the selection name is defined as  'pattern', e.g. '%RZVelo',
       the full name would include the Hlt line name: 'Hlt1SingleMuonRZVelo'
@@ -318,12 +321,15 @@ def _selectionName ( name ,      ## the selection name or pattern
 
     >>> _selectionName ( '%RZVelo' , 'SingleMuon' )   #    pattern 
     'Hlt1SingleMuonRZVelo'
-    >>> _selectionName ( 'RZVelo'  , 'SingleMuon' )   # no patetrn 
+    >>> _selectionName ( 'RZVelo'  , 'SingleMuon' )   # no pattern 
     'RZVelo'
     
     """
     if not name : return None
     if type(name) in [ Hlt1Line, bindMembers ] : name = name.outputSelection()
+    if type(name) is not str :
+        if 'outputSelection' in dir(name)  : name = name.outputSelection()
+        if hasattr(name,'OutputSelection') : name = getattr(name,'OutputSelection')
     if '%' != name[0] : return name 
     return 'Hlt1' + line + name[1:]
 

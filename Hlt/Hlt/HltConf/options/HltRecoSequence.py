@@ -8,21 +8,21 @@ from Configurables import PatPV2D, PatPV3D, PatForward, PatForwardTool
 from Configurables import Tf__PatVeloRTracking, Tf__PatVeloSpaceTracking
 from Configurables import RawBankToSTLiteClusterAlg
 from Configurables import HltTrackFilter, HltVertexFilter, HltTrackUpgrade
-from Configurables import DummyLumiAlley as Dummy
 
 #----------------------- HltTrack sequence
 # ---------------------
 ## make sure we continue, even if no PV is found
+patVeloR = Tf__PatVeloRTracking('HltRecoRZVelo' , OutputTracksName = "Hlt/Track/RZVelo" ) 
+
+recoRZVeloTracksSequence = GaudiSequencer( 'HltRecoRZVeloTracksSequence', MeasureTime = True
+                                         , Members = [ DecodeVeloRawBuffer() , patVeloR ] 
+                                         )
+
 recoRZPVSequence = GaudiSequencer( 'HltRecoRZPVSequence' , MeasureTime = True, IgnoreFilterPassed = True
                                  , Members = 
                                  [ PatPV2D( 'HltRecoPV2D'
-                                          , InputTracksName = "Hlt/Track/RZVelo"
+                                          , InputTracksName = patVeloR.OutputTracksName
                                           , OutputVerticesName = "Hlt/Vertex/PV2D" ) ] )
-
-recoRZVeloTracksSequence = GaudiSequencer( 'HltRecoRZVeloTracksSequence', MeasureTime = True
-                                         , Members = 
-                                         [ DecodeVeloRawBuffer()
-                                         , Tf__PatVeloRTracking('HltRecoRZVelo' , OutputTracksName = "Hlt/Track/RZVelo" ) ] )
 
 recoRZVeloSequence = GaudiSequencer ( 'HltRecoRZVeloSequence', MeasureTime = True
                                     , Members = 
@@ -38,25 +38,28 @@ decodeT = GaudiSequencer( 'HltDecodeT', MeasureTime = True
                         [ RawBankToSTLiteClusterAlg('createITLiteClusters', detType = 'IT') ] )
 
 recoVelo = Tf__PatVeloSpaceTracking('HltRecoVelo'
-                                   , InputTracksName = "Hlt/Track/RZVelo"
+                                   , InputTracksName = patVeloR.OutputTracksName
                                    , OutputTracksName = "Hlt/Track/Velo" )
 
 prepareVelo = HltTrackFilter('HltPrepareVelo'
-                            , InputSelection = "TES:Hlt/Track/Velo"
+                            , InputSelection = "TES:" + recoVelo.OutputTracksName
                             , OutputSelection = "Velo1"
                             , RequirePositiveInputs = False )
 
 recoForward = PatForward( 'HltRecoForward'
-                        , InputTracksName = "Hlt/Track/Velo"
+                        , InputTracksName = recoVelo.OutputTracksName
                         , OutputTracksName = "Hlt/Track/Forward" )
 
 prepareForward = HltTrackFilter( 'HltPrepareForward' 
-                               , InputSelection = "TES:Hlt/Track/Forward"
+                               , InputSelection = "TES:" + recoForward.OutputTracksName
                                , OutputSelection = "Forward1"
                                , RequirePositiveInputs = False )
 
-recoPV3D =  PatPV3D('Hlt1RecoPV3D' ) # FIXME: check InputTracksName = "Hlt/Track/Velo" )
+recoPV3D =  PatPV3D('Hlt1RecoPV3D' ) #TODO: check IPVOfflineTool config!!! InputTracksName = recoVelo.OutputTracksName )
+#Hlt1RecoPV3D.PVOfflineTool.InputTracks = [ recoVelo.OutputTracksName ]
 
+
+#TODO: could this be a 'boundMembers' instance? 
 trackRecoSequence = GaudiSequencer( 'HltTrackRecoSequence'
                                   ,  Members =
                                   [  recoRZVeloSequence
@@ -74,14 +77,14 @@ trackRecoSequence = GaudiSequencer( 'HltTrackRecoSequence'
 #-----------------------------
 
 prepareRZVelo = HltTrackFilter( 'Hlt1PrepareRZVelo'
-                              , InputSelection   = "TES:Hlt/Track/RZVelo"
+                              , InputSelection   = "TES:" + patVeloR.OutputTracksName
                               , RequirePositiveInputs = False
                               , AddInfo = False
                               , FilterDescriptor = ["IsBackward,<,0.5"]
                               , OutputSelection     = "RZVelo" )
 
 preparePV2D = HltVertexFilter( 'Hlt1PreparePV2D'
-                             , InputSelection = "TES:Hlt/Vertex/PV2D"
+                             , InputSelection = "TES:" + PatPV2D('HltRecoPV2D').OutputVerticesName
                              , RequirePositiveInputs = False
                              , OutputSelection   = "PV2D" )
 
@@ -92,18 +95,22 @@ hlt1RecoRZVeloTracksSequence = GaudiSequencer( 'Hlt1RecoRZVeloTracksSequence' , 
 hlt1RecoRZPVSequence = GaudiSequencer( 'Hlt1RecoRZPVSequence', MeasureTime = True
                                      , Members = [ recoRZPVSequence , preparePV2D ] )
 
+#TODO: could this be a 'boundMembers' instance? That would buy us automated OutputSelection
+#      recognition... 
+# (can we make 'boundMembers' instances singletons, like configurables?)
+# (and make them check that once 'OutputSelection' is picked up, they become 'immutable')
 recoRZVelo = GaudiSequencer( 'Hlt1RecoRZVeloSequence' , MeasureTime = True
                            , Members = 
                            [ recoRZVeloSequence , prepareRZVelo, preparePV2D ] ) 
 
 reco1Velo = HltTrackUpgrade( 'Hlt1RecoVelo'
-                          , InputSelection = "RZVelo"
+                          , InputSelection = prepareRZVelo.OutputSelection
                           , OutputSelection = "Velo"
                           , RecoName = "Velo"
                           , HistogramUpdatePeriod = 0 )
 
 recoFwd = HltTrackUpgrade( 'Hlt1RecoForward'
-                         , InputSelection = "Velo"
+                         , InputSelection = reco1Velo.OutputSelection
                          , OutputSelection = "Forward"
                          , RecoName = "Forward"
                          , HistogramUpdatePeriod = 0 )
@@ -113,7 +120,7 @@ hlt1RecoSequence = GaudiSequencer( 'Hlt1RecoSequence', MeasureTime = True
                                  [ hlt1RecoRZVeloTracksSequence
                                  , hlt1RecoRZPVSequence
                                  , reco1Velo
-                                 , recoPV3D
+                                 , recoPV3D # does this not abort the remainder of the sequence if no primary??
                                  , decodeTT
                                  , decodeT
                                  , recoFwd ] )
@@ -135,9 +142,5 @@ recoSeq = GaudiSequencer('HltRecoSequence', MeasureTime = True
 importOptions( "$CALORECOROOT/options/HltCaloSeq.opts" )
 GaudiSequencer('HltCaloRecoSequence', Members = [ GaudiSequencer('RecoCALOSeq') ] )
 
-#/// PATCH /// @todo remove
-#print 'Before patch: ' + str(HltRecoCALOSeq.Members)
-#HltRecoCALOSeq.Members = [ i in HltRecoCALOSeq.Members if i is not "GaudiSequencer/HltCaloDigits" ] 
-#print 'After  patch: ' + str(HltRecoCALOSeq.Members)
 #/// @todo This cannot work, as tracking must have been done to process the rest.
 #//recoSeq.IgnoreFilterPassed = True; // process both track and calo independently
