@@ -303,8 +303,8 @@ StatusCode BTaggingAnalysis::execute() {
   //----------------------------------------------------------------------
   //PhysDeskTop
   const Particle::ConstVector&  parts = desktop()->particles();
-  const RecVertex::ConstVector& verts = desktop()->primaryVertices();
-  debug() << "  Nr of rec. Vertices: " << verts.size() 
+  const RecVertex::Container* verts = desktop()->primaryVertices();
+  debug() << "  Nr of rec. Vertices: " << verts->size() 
           << "  Nr of rec. Particles: " << parts.size() <<endreq;
   desktop()->saveDesktop();
 
@@ -501,9 +501,9 @@ StatusCode BTaggingAnalysis::execute() {
   //this is a guess for the actual PV chosen by the selection.
   const RecVertex* RecVert = 0; 
   m_krec = 0;
-  RecVertex::ConstVector::const_iterator iv;
+  RecVertex::Container::const_iterator iv;
   double kdmin = 1000000;
-  for(iv=verts.begin(); iv!=verts.end(); iv++){
+  for(iv=verts->begin(); iv!=verts->end(); iv++){
     m_krec++;
     double ip, iperr;
     m_util->calcIP(AXBS, *iv, ip, iperr);
@@ -520,7 +520,7 @@ StatusCode BTaggingAnalysis::execute() {
 
   //build VertexVector of pileup ----------------------------
   RecVertex::ConstVector PileUpVtx(0);
-  for( iv=verts.begin(); iv!=verts.end(); iv++){
+  for( iv=verts->begin(); iv!=verts->end(); iv++){
     if( (*iv) == RecVert ) continue;
     PileUpVtx.push_back(*iv);
     debug()<<"Pileup Vtx z="<< (*iv)->position().z()/Gaudi::Units::mm <<endreq;

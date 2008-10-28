@@ -1,4 +1,4 @@
-// $Id: TupleToolPrimaries.cpp,v 1.2 2008-07-11 09:21:04 pkoppenb Exp $
+// $Id: TupleToolPrimaries.cpp,v 1.3 2008-10-28 11:00:47 jpalac Exp $
 // Include files
 
 // from Gaudi
@@ -96,23 +96,23 @@ StatusCode TupleToolPrimaries::fill( Tuples::Tuple& tuple ) {
   Assert( m_context, "The context is not set!" );
 
   
-  const RecVertex::ConstVector& PV = m_context->primaryVertices();
+  const RecVertex::Container* PV = m_context->primaryVertices();
 //   //  std::vector<double> pvx,pvy,pvz,pvex,pvey,pvez;
   std::vector<flat> pvs;
   std::vector<const flat*> refPvs;
 
-  int size = std::min<int>( PV.size(), 40 );
+  int size = std::min<int>( PV->size(), 40 );
 
   pvs.reserve( size );
   refPvs.reserve( size );
 
-  RecVertex::ConstVector::const_iterator it = PV.begin();
-  for( ; (PV.end()!=it && it-PV.begin() < size ) ; ++it ){
+  RecVertex::Container::const_iterator it = PV->begin();
+  for( ; (PV->end()!=it && it-PV->begin() < size ) ; ++it ){
     pvs.push_back( **it ); // doing this avoid using delete at the end...
     refPvs.push_back( &(pvs.back()) ); // to use mem_fun
   }
 
-  if( PV.size() > 40 ){
+  if( PV->size() > 40 ){
     Warning("More than 40 primaries, some PVs will not be stored.");
   }
 
