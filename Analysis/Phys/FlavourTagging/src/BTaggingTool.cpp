@@ -163,19 +163,19 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
     }
   }
 
-  const RecVertex::ConstVector& verts = m_physd->primaryVertices();
-  debug() << "  Nr Vertices: "  << verts.size() 
+  const RecVertex::Container* verts = m_physd->primaryVertices();
+  debug() << "  Nr Vertices: "  << verts->size() 
           << "  Nr Particles: " << parts.size() <<endreq;
   
   //----------------------------
-  RecVertex::ConstVector::const_iterator iv;
+  RecVertex::Container::const_iterator iv;
   if( ! RecVert ) {
     //NEEDS TO BE CHANGED:
     //if the prim vtx is not provided by the user,
     //choose as primary vtx the one with smallest IP wrt B signal
     //this is a guess for the actual PV chosen by the selection.
     double kdmin = 1000000;
-    for(iv=verts.begin(); iv!=verts.end(); iv++){
+    for(iv=verts->begin(); iv!=verts->end(); iv++){
       double ip, iperr;
       m_util->calcIP(AXB, *iv, ip, iperr);
       debug() << "Vertex IP="<< ip <<" iperr="<<iperr<<endreq;
@@ -192,7 +192,7 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
 
   //build a vector of pileup vertices --------------------------
   RecVertex::ConstVector PileUpVtx(0); //contains all the other primary vtx's
-  for(iv=verts.begin(); iv!=verts.end(); iv++){
+  for(iv=verts->begin(); iv!=verts->end(); iv++){
     if( (*iv) == RecVert ) continue;
     PileUpVtx.push_back(*iv);
     debug() <<"Pileup Vtx z=" << (*iv)->position().z()/mm <<endreq;
