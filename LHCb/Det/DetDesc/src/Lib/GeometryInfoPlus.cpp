@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.cpp,v 1.30 2007-10-01 11:40:48 marcocle Exp $
+// $Id: GeometryInfoPlus.cpp,v 1.31 2008-10-28 12:04:37 cattanem Exp $
 // Include files 
 
 // GaudiKernel
@@ -612,7 +612,7 @@ const Gaudi::Transform3D GeometryInfoPlus::ownToOffNominalMatrix() const
   return ownToNominalMatrix().Inverse();
 }
 //=============================================================================
-IGeometryInfo* const GeometryInfoPlus::supportIGeometryInfo() const
+IGeometryInfo* GeometryInfoPlus::supportIGeometryInfo() const
 {
 
   if ( !hasSupport() ) return 0;

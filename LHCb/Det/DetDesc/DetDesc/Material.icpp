@@ -1,4 +1,4 @@
-// $Id: Material.icpp,v 1.6 2005-12-07 13:19:07 cattanem Exp $
+// $Id: Material.icpp,v 1.7 2008-10-28 12:04:37 cattanem Exp $
 #ifndef     DETDESC_MATERIAL_ICPP 
 #define     DETDESC_MATERIAL_ICPP  1 
 /// GaudiKernel
@@ -36,31 +36,31 @@ inline const std::string& Material::name      () const {
 }
 
 /////////////////////////////////////////////////////////////////////////////////
-inline void               Material::setName( const std::string& value ) { m_name = value; }
+inline void         Material::setName( const std::string& value ) { m_name = value; }
 /////////////////////////////////////////////////////////////////////////////////
-inline const double       Material::density   () const { return m_density; }
+inline double       Material::density   () const { return m_density; }
 /////////////////////////////////////////////////////////////////////////////////
-inline void               Material::setDensity( const double value ) {m_density = value; }
+inline void         Material::setDensity( const double value ) {m_density = value; }
 /////////////////////////////////////////////////////////////////////////////////
-inline const double       Material::temperature() const { return m_temperature; }
+inline double       Material::temperature() const { return m_temperature; }
 /////////////////////////////////////////////////////////////////////////////////
-inline void               Material::setTemperature( const double value ) { m_temperature = value; }
+inline void         Material::setTemperature( const double value ) { m_temperature = value; }
 /////////////////////////////////////////////////////////////////////////////////
-inline const double       Material::pressure() const { return m_pressure; }
+inline double       Material::pressure() const { return m_pressure; }
 /////////////////////////////////////////////////////////////////////////////////
-inline void               Material::setPressure( const double value ) { m_pressure = value; }
+inline void         Material::setPressure( const double value ) { m_pressure = value; }
 /////////////////////////////////////////////////////////////////////////////////
-inline const eState       Material::state() const { return m_state; }
+inline eState       Material::state() const { return m_state; }
 /////////////////////////////////////////////////////////////////////////////////
-inline void               Material::setState( eState value ) {  m_state = value; }
+inline void         Material::setState( eState value ) {  m_state = value; }
 /////////////////////////////////////////////////////////////////////////////////
-inline const double       Material::radiationLength() const { return m_radiationLength; }
+inline double       Material::radiationLength() const { return m_radiationLength; }
 /////////////////////////////////////////////////////////////////////////////////
-inline void               Material::setRadiationLength( const double value ) {m_radiationLength = value; }
+inline void         Material::setRadiationLength( const double value ) {m_radiationLength = value; }
 /////////////////////////////////////////////////////////////////////////////////
-inline const double       Material::absorptionLength() const { return m_absorptionLength; }
+inline double       Material::absorptionLength() const { return m_absorptionLength; }
 /////////////////////////////////////////////////////////////////////////////////
-inline void               Material::setAbsorptionLength( const double value ) { m_absorptionLength = value; }
+inline void         Material::setAbsorptionLength( const double value ) { m_absorptionLength = value; }
 /////////////////////////////////////////////////////////////////////////////////
 inline       Material::Tables& Material::tabulatedProperties()       { return m_props; } 
 /////////////////////////////////////////////////////////////////////////////////

@@ -1,4 +1,4 @@
-// $Id: SolidCons.h,v 1.21 2007-10-25 07:31:27 cattanem Exp $ 
+// $Id: SolidCons.h,v 1.22 2008-10-28 12:04:37 cattanem Exp $ 
 // ===========================================================================
 #ifndef     DETDESC_SOLIDCONS_H
 #define     DETDESC_SOLIDCONS_H 1   
@@ -276,7 +276,7 @@ protected:
 
 
   /// gap in phi ?
-  const bool noPhiGap() const { return m_noPhiGap ; }
+  bool noPhiGap() const { return m_noPhiGap ; }
   
   /// check if phi is in phi range
   inline bool insidePhi ( const double phi /* [-pi,pi] */ ) const ;
@@ -286,7 +286,7 @@ protected:
    *  @return true if point is "inside phi" 
    */
   template <class aPoint>
-  inline const bool insidePhi ( const aPoint& point ) const ;
+  inline bool insidePhi ( const aPoint& point ) const ;
 
   /** Calculate the maximum number of ticks that a straight line could
       make with this solid
@@ -401,7 +401,7 @@ inline bool SolidCons::insidePhi ( const double phi /* [-pi,pi] */ ) const
  */
 // ===========================================================================
 template< class aPoint>
-inline const bool SolidCons::insidePhi ( const aPoint& point ) const 
+inline bool SolidCons::insidePhi ( const aPoint& point ) const 
 {
   return noPhiGap() || insidePhi( point.phi() ) ;
 };

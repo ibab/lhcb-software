@@ -1,4 +1,4 @@
-// $Id: Element.cpp,v 1.16 2008-06-05 07:00:52 mneedham Exp $
+// $Id: Element.cpp,v 1.17 2008-10-28 12:04:37 cattanem Exp $
 /// STL and STD 
 #include <math.h>
 #include <iostream>
@@ -70,7 +70,7 @@ const SmartRef<Isotope>&  Element::isotope( const unsigned int i ) const
   return isotopes()[i].second;  
 };
 /////////////////////////////////////////////////////////////////////////////////
-const double               Element::isotopeFraction( const unsigned int i ) const 
+double Element::isotopeFraction( const unsigned int i ) const 
 {
   if( i >= isotopes().size() )
     { throw MaterialException("Element::isotope(indx), wrong index! " , this );}

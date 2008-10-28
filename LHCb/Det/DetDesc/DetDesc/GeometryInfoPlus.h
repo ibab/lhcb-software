@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.h,v 1.11 2007-10-01 11:40:48 marcocle Exp $
+// $Id: GeometryInfoPlus.h,v 1.12 2008-10-28 12:04:36 cattanem Exp $
 #ifndef LIB_GEOMETRYINFOPLUS_H 
 #define LIB_GEOMETRYINFOPLUS_H 1
 
@@ -213,7 +213,7 @@ public:
                        ILVolume::ReplicaPath&       replicaPath ) const ;
 
   ///  return the IGeometryInfo supporting this one.
-  IGeometryInfo* const supportIGeometryInfo() const;
+  IGeometryInfo* supportIGeometryInfo() const;
   
 
   /// return the name of the logical volume with a given address 

@@ -1,4 +1,4 @@
-// $Id: DetectorElement.h,v 1.38 2008-10-27 09:50:13 cattanem Exp $
+// $Id: DetectorElement.h,v 1.39 2008-10-28 12:04:36 cattanem Exp $
 #ifndef  DETDESC_DETECTORELEMENT_H
 #define  DETDESC_DETECTORELEMENT_H 1
 
@@ -252,7 +252,7 @@ public:
    * global reference frame.
    */
 
-  virtual const int sensitiveVolumeID(const Gaudi::XYZPoint& globalPos) const;
+  virtual int sensitiveVolumeID(const Gaudi::XYZPoint& globalPos) const;
 
   /// Used to create a link with a given name to the condition at 'path' in the detector data store.
   void createCondition(std::string &name, std::string &path);

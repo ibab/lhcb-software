@@ -1,4 +1,4 @@
-// $Id: Surface.h,v 1.3 2005-12-07 13:19:07 cattanem Exp $
+// $Id: Surface.h,v 1.4 2008-10-28 12:04:37 cattanem Exp $
 #ifndef     DETDESC_SURFACE_H 
 #define     DETDESC_SURFACE_H  1
 /// STL
@@ -49,17 +49,17 @@ public:
   ///
   /// accessors: (naming from Geant4, except for last)
   /// "model" 
-  inline const unsigned int    model       () const ;  
-  inline Surface&           setModel       ( const unsigned int ); 
+  inline unsigned int    model       () const ;  
+  inline Surface&     setModel       ( const unsigned int ); 
   /// "finish"
-  inline const unsigned int    finish      () const ; 
-  inline Surface&           setFinish      ( const unsigned int ); 
+  inline unsigned int    finish      () const ; 
+  inline Surface&     setFinish      ( const unsigned int ); 
   /// "type"
-  inline const unsigned int    type        () const ; 
-  inline Surface&           setType        ( const unsigned int ); 
+  inline unsigned int    type        () const ; 
+  inline Surface&     setType        ( const unsigned int ); 
   /// "value" - (NB: ugly name!)
-  inline const double          value       () const ; 
-  inline Surface&           setValue       ( const double       ); 
+  inline double          value       () const ; 
+  inline Surface&     setValue       ( const double       ); 
   /// name of first  physical volume 
   inline const std::string&    firstVol    () const ;
   inline Surface&           setFirstVol    ( const std::string& ); 

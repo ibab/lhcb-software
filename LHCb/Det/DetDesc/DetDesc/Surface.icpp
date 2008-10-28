@@ -1,4 +1,4 @@
-// $Id: Surface.icpp,v 1.3 2005-12-07 13:19:07 cattanem Exp $
+// $Id: Surface.icpp,v 1.4 2008-10-28 12:04:37 cattanem Exp $
 #ifndef      DETDESC_SURFACE_ICPP
 #define      DETDESC_SURFACE_ICPP 1 
 ///  Gaudi 
@@ -23,24 +23,24 @@ inline MsgStream&    operator<<( MsgStream&    os , const Surface* surf )
 
 
 /// "model" //////////////////////////////////////////////////////////////
-inline const unsigned int Surface::   model     () const { return m_model;  }  
+inline unsigned int Surface::   model     () const { return m_model;  }  
 //////////////////////////////////////////////////////////////////////////
-inline Surface&           Surface::setModel     ( const unsigned int val )
+inline Surface&     Surface::setModel     ( const unsigned int val )
 { m_model  = val ; return *this; }  
 /// "finish" /////////////////////////////////////////////////////////////
-inline const unsigned int Surface::   finish    () const { return m_finish; }
+inline unsigned int Surface::   finish    () const { return m_finish; }
 //////////////////////////////////////////////////////////////////////////
-inline Surface&           Surface::setFinish    ( const unsigned int val ) 
+inline Surface&     Surface::setFinish    ( const unsigned int val ) 
 { m_finish = val ; return *this; }  
 /// "type" ///////////////////////////////////////////////////////////////
-inline const unsigned int Surface::   type      () const { return m_type  ; }
+inline unsigned int Surface::   type      () const { return m_type  ; }
 //////////////////////////////////////////////////////////////////////////
-inline Surface&           Surface::setType      ( const unsigned int val ) 
+inline Surface&     Surface::setType      ( const unsigned int val ) 
 { m_type   = val ; return *this; }  
 /// "value" - (NB: ugly name!) ///////////////////////////////////////////
-inline const double       Surface::   value     () const { return m_value ; }
+inline double       Surface::   value     () const { return m_value ; }
 //////////////////////////////////////////////////////////////////////////
-inline Surface&           Surface::setValue     ( const double       val ) 
+inline Surface&     Surface::setValue     ( const double       val ) 
 { m_value  = val ; return *this; }  
 /// name of first  physical volume ///////////////////////////////////////
 inline const std::string& Surface::   firstVol  () const { return m_firstVol ; }

@@ -1,9 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.382 2008-10-27 09:50:13 cattanem Exp $ 
+! $Id: release.notes,v 1.383 2008-10-28 12:04:37 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2008-10-28 - Marco Cattaneo
+ - Fix gcc 3.4 compilation warnings and errors
 
 ! 2008-10-27 - Marco Cattaneo
  - Clean up includes in DetectorElement.h

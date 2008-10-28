@@ -1,4 +1,4 @@
-// $Id: SolidTubs.h,v 1.19 2007-10-25 07:31:27 cattanem Exp $
+// $Id: SolidTubs.h,v 1.20 2008-10-28 12:04:37 cattanem Exp $
 // ===========================================================================
 #ifndef     DETDESC_SOLIDTUBS_H
 #define     DETDESC_SOLIDTUBS_H 1  
@@ -213,7 +213,7 @@ protected:
    *  @return true if point is "inside rho" 
    */
   template <class aPoint>
-  inline const bool insideRho ( const aPoint& point ) const ;
+  inline bool insideRho ( const aPoint& point ) const ;
   
   /// check if phi is in phi range
   inline bool insidePhi ( const double phi /* [-pi,pi] */ ) const ;
@@ -223,10 +223,10 @@ protected:
    *  @return true if point is "inside phi" 
    */
   template <class aPoint>
-  inline const bool insidePhi ( const aPoint& point ) const ;  
+  inline bool insidePhi ( const aPoint& point ) const ;  
   
   /// gap in phi ?
-  inline const bool noPhiGap() const { return m_noPhiGap ; }
+  inline bool noPhiGap() const { return m_noPhiGap ; }
   
 protected:
   
@@ -286,7 +286,7 @@ private:
  */
 // ===========================================================================
 template<class aPoint>
-inline const bool SolidTubs::insideRho ( const aPoint& point ) const 
+inline bool SolidTubs::insideRho ( const aPoint& point ) const 
 {
   const double rho2 = point.perp2();
   if( rho2 > outerRadius() * outerRadius() ) { return false ; }
@@ -321,7 +321,7 @@ inline bool SolidTubs::insidePhi ( const double phi /* [-pi,pi] */ ) const
  */
 // ===========================================================================
 template< class aPoint>
-inline const bool SolidTubs::insidePhi ( const aPoint& point ) const 
+inline bool SolidTubs::insidePhi ( const aPoint& point ) const 
 {
   return noPhiGap() || insidePhi( point.phi() ) ;
 };

@@ -1,4 +1,4 @@
-// $Id: Element.icpp,v 1.7 2008-05-20 08:15:06 smenzeme Exp $
+// $Id: Element.icpp,v 1.8 2008-10-28 12:04:36 cattanem Exp $
 #ifndef      DETDESC_ELEMENT_ICPP
 #define      DETDESC_ELEMENT_ICPP 1 
 /// DetDesc
@@ -7,45 +7,45 @@
 #include "GaudiKernel/SystemOfUnits.h"
 
 /////////////////////////////////////////////////////////////////////////////////
-inline const int    Element::nOfIsotopes() const { return isotopes().size(); }
+inline int    Element::nOfIsotopes() const { return isotopes().size(); }
 /////////////////////////////////////////////////////////////////////////////////
-inline const double Element::coulombFactor() const { return m_coulomb; }
+inline double Element::coulombFactor() const { return m_coulomb; }
 /////////////////////////////////////////////////////////////////////////////////
-inline const double Element::tsaiFactor   () const { return m_tsai; }
+inline double Element::tsaiFactor   () const { return m_tsai; }
 /////////////////////////////////////////////////////////////////////////////////
-inline const double Element::A() const { return m_Aeff; }
+inline double Element::A() const { return m_Aeff; }
 /////////////////////////////////////////////////////////////////////////////////
-inline void         Element::setA( const double value ) { m_Aeff = value; }
+inline void   Element::setA( const double value ) { m_Aeff = value; }
 /////////////////////////////////////////////////////////////////////////////////
-inline const double Element::Z() const { return m_Zeff; }
+inline double Element::Z() const { return m_Zeff; }
 /////////////////////////////////////////////////////////////////////////////////
-inline void         Element::setZ( const double value ) { m_Zeff = value; }
+inline void   Element::setZ( const double value ) { m_Zeff = value; }
 /////////////////////////////////////////////////////////////////////////////////
-inline const double Element::I() const { return m_Ieff; }
+inline double Element::I() const { return m_Ieff; }
 /////////////////////////////////////////////////////////////////////////////////
-inline void         Element::setI( const double value ) { m_Ieff = value; }
+inline void   Element::setI( const double value ) { m_Ieff = value; }
 /////////////////////////////////////////////////////////////////////////////////
-inline const double Element::C() const { return m_C; }
+inline double Element::C() const { return m_C; }
 /////////////////////////////////////////////////////////////////////////////////
-inline void         Element::setC( const double value ) { m_C = value; }
+inline void   Element::setC( const double value ) { m_C = value; }
 /////////////////////////////////////////////////////////////////////////////////
-inline const double Element::a() const { return m_a; }
+inline double Element::a() const { return m_a; }
 /////////////////////////////////////////////////////////////////////////////////
-inline void         Element::seta( const double value ) { m_a = value; }
+inline void   Element::seta( const double value ) { m_a = value; }
 /////////////////////////////////////////////////////////////////////////////////
-inline const double Element::m() const { return m_m; }
+inline double Element::m() const { return m_m; }
 /////////////////////////////////////////////////////////////////////////////////
-inline void         Element::setm( const double value ) { m_m = value; }
+inline void   Element::setm( const double value ) { m_m = value; }
 /////////////////////////////////////////////////////////////////////////////////
-inline const double Element::X0() const { return m_X0; }
+inline double Element::X0() const { return m_X0; }
 /////////////////////////////////////////////////////////////////////////////////
-inline void         Element::setX0( const double value ) { m_X0 = value; }
+inline void   Element::setX0( const double value ) { m_X0 = value; }
 /////////////////////////////////////////////////////////////////////////////////
-inline const double Element::X1() const { return m_X1; }
+inline double Element::X1() const { return m_X1; }
 /////////////////////////////////////////////////////////////////////////////////
-inline void         Element::setX1( const double value ) { m_X1 = value; }
+inline void   Element::setX1( const double value ) { m_X1 = value; }
 /////////////////////////////////////////////////////////////////////////////////
-inline const double Element::N() const { return m_Aeff*Gaudi::Units::mole/Gaudi::Units::g; }
+inline double Element::N() const { return m_Aeff*Gaudi::Units::mole/Gaudi::Units::g; }
 /////////////////////////////////////////////////////////////////////////////////
 inline const Element::Isotopes& Element::isotopes () const { return m_isotopes; }
 /////////////////////////////////////////////////////////////////////////////////

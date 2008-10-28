@@ -1,4 +1,4 @@
-// $Id: Mixture.h,v 1.14 2008-05-20 08:15:16 smenzeme Exp $ 
+// $Id: Mixture.h,v 1.15 2008-10-28 12:04:37 cattanem Exp $ 
 // ============================================================================ 
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================ 
@@ -47,7 +47,7 @@ public:
   virtual ~Mixture();
   
   /// Number of components in the material mixture
-  inline const int nOfItems() const;
+  inline int nOfItems() const;
   
   /** Add an element into the mixture by specifying:
    *   a) the fraction of the mass ( material mixture )
@@ -79,35 +79,35 @@ public:
   StatusCode compute();
   
   /// Return fraction of mass of the i-th element
-  const double   elementFraction( const unsigned int i ) const ;
+  double   elementFraction( const unsigned int i ) const ;
   
   /// Obligatory implementation of Material interface
   
   ///        Atomic mass [g/mole]
-  virtual inline const double    A() const;
-  virtual inline void         setA( const double value );
+  virtual inline double    A() const;
+  virtual inline void   setA( const double value );
   ///        Atomic number
-  virtual inline const double    Z() const;
-  virtual inline void         setZ( const double value );  
+  virtual inline double    Z() const;
+  virtual inline void   setZ( const double value );  
   ///        Mean excitation energy
-  virtual inline const double    I() const;
-  virtual inline void         setI( const double value ); 
+  virtual inline double    I() const;
+  virtual inline void   setI( const double value ); 
   ///       Parameters for Density Effect Correction
-  virtual inline const double    C() const;
-  virtual inline void         setC( const double value );
-  virtual inline const double    a() const;
-  virtual inline void         seta( const double value );
-  virtual inline const double    m() const;
-  virtual inline void         setm( const double value );
-  virtual inline const double    X0() const;
-  virtual inline void         setX0( const double value );
-  virtual inline const double    X1() const;
-  virtual inline void         setX1( const double value );
+  virtual inline double    C() const;
+  virtual inline void   setC( const double value );
+  virtual inline double    a() const;
+  virtual inline void   seta( const double value );
+  virtual inline double    m() const;
+  virtual inline void   setm( const double value );
+  virtual inline double    X0() const;
+  virtual inline void   setX0( const double value );
+  virtual inline double    X1() const;
+  virtual inline void   setX1( const double value );
 
  
 
  ///        Number of nucleons
-  virtual inline const double    N() const;
+  virtual inline double    N() const;
   ///
   virtual inline const CLID& clID    () const { return Mixture::classID(); }
   static         const CLID& classID ()       { return CLID_Mixture      ; } 

@@ -1,4 +1,4 @@
-// $Id: IDetectorElement.h,v 1.21 2008-09-23 12:32:15 marcocle Exp $
+// $Id: IDetectorElement.h,v 1.22 2008-10-28 12:04:36 cattanem Exp $
 // $ID:  $
 #ifndef  DETDESC_IDETECTORELEMENT_H
 #define  DETDESC_IDETECTORELEMENT_H 1
@@ -172,7 +172,7 @@ class IDetectorElement : virtual public IInterface
    * global reference frame.
    */
 
-  virtual const int sensitiveVolumeID(const Gaudi::XYZPoint& globalPos ) const=0;
+  virtual int sensitiveVolumeID(const Gaudi::XYZPoint& globalPos ) const=0;
 
   /**
    * This method initializes the detector element. It should be overridden

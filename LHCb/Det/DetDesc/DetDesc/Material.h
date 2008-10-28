@@ -1,4 +1,4 @@
-// $Id: Material.h,v 1.12 2008-05-20 08:15:10 smenzeme Exp $
+// $Id: Material.h,v 1.13 2008-10-28 12:04:37 cattanem Exp $
 #ifndef DETDESC_MATERIAL_H
 #define DETDESC_MATERIAL_H
 /// STL
@@ -50,58 +50,58 @@ public:
   
   /// Material name accessors
   virtual const std::string& name() const;
-  virtual void            setName( const std::string& value );
+  virtual void            setName(  const std::string& value );
   
   /// Material density accessors [g/cm3]
-  virtual const double density() const;
-  virtual void      setDensity( const double value );
+  virtual double  density() const;
+  virtual void setDensity(  const double value );
   
   /// Material temperature, by default is STP [K]
-  virtual const double temperature() const;
-  virtual void      setTemperature( const double value );
+  virtual double  temperature() const;
+  virtual void setTemperature(  const double value );
   
   /// Material pressure, by default is STP [atm]
-  virtual const double pressure() const;
-  virtual void      setPressure( const double value );
+  virtual double  pressure() const;
+  virtual void setPressure(  const double value );
   
   /// Material state, by default is stateUndefined
-  virtual const eState state() const;
-  virtual void      setState( const eState value );
+  virtual eState  state() const;
+  virtual void setState(  const eState value );
   
   /// Material radiation length [cm]
-  virtual const double radiationLength() const;
-  virtual void      setRadiationLength( const double value );
+  virtual double  radiationLength() const;
+  virtual void setRadiationLength(  const double value );
   
   /// Material absorption length [cm]
-  virtual const double absorptionLength() const;
-  virtual void      setAbsorptionLength( const double value );
+  virtual double  absorptionLength() const;
+  virtual void setAbsorptionLength(  const double value );
   
   /// Atomic mass [g/mole]
-  virtual const double A() const = 0;
-  virtual void      setA ( const double value ) = 0;
+  virtual double  A() const = 0;
+  virtual void setA(  const double value ) = 0;
   
   /// Atomic number
-  virtual const double Z() const = 0;
-  virtual void      setZ( const double value ) = 0; 
+  virtual double  Z() const = 0;
+  virtual void setZ(  const double value ) = 0; 
 
   /// Mean excitiation energy
-  virtual const double I() const = 0;
-  virtual void      setI ( const double value ) = 0;
+  virtual double  I() const = 0;
+  virtual void setI(  const double value ) = 0;
 
   /// Parameters for density effect correction
-  virtual const double C() const = 0;
-  virtual void      setC ( const double value ) = 0;
-  virtual const double a() const = 0;
-  virtual void      seta ( const double value ) = 0;
-  virtual const double m() const = 0;
-  virtual void      setm ( const double value ) = 0;
-  virtual const double X1() const = 0;
-  virtual void      setX1 ( const double value ) = 0;
-  virtual const double X0() const = 0;
-  virtual void      setX0 ( const double value ) = 0;
+  virtual double  C()  const = 0;
+  virtual void setC(   const double value ) = 0;
+  virtual double  a()  const = 0;
+  virtual void seta(   const double value ) = 0;
+  virtual double  m()  const = 0;
+  virtual void setm(   const double value ) = 0;
+  virtual double  X1() const = 0;
+  virtual void setX1(  const double value ) = 0;
+  virtual double  X0() const = 0;
+  virtual void setX0(  const double value ) = 0;
 
   /// Number of nucleons
-  virtual const double N() const = 0;
+  virtual double N() const = 0;
   
   /// some tabulated properties
   inline       Tables&  tabulatedProperties()       ;

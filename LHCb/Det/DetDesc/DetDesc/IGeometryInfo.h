@@ -1,4 +1,4 @@
-// $Id: IGeometryInfo.h,v 1.28 2007-10-25 07:31:27 cattanem Exp $ 
+// $Id: IGeometryInfo.h,v 1.29 2008-10-28 12:04:36 cattanem Exp $ 
 // ===========================================================================
 #ifndef  DETDESC_IGEOMETRYINFO_H
 #define  DETDESC_IGEOMETRYINFO_H 1
@@ -541,7 +541,7 @@ public:
 
   //  virtual IGeometryInfo* supportIGeometryInfo() = 0 ;
 
-  virtual IGeometryInfo* const supportIGeometryInfo() const = 0 ;
+  virtual IGeometryInfo* supportIGeometryInfo() const = 0 ;
 
   /** (reference to) container of children IGeometryInfo
    *  return  reference to container of children IGeometryInfo

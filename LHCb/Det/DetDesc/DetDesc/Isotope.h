@@ -1,4 +1,4 @@
-// $Id: Isotope.h,v 1.12 2008-05-20 08:15:06 smenzeme Exp $
+// $Id: Isotope.h,v 1.13 2008-10-28 12:04:36 cattanem Exp $
 #ifndef DETDESC_ISOTOPE_H
 #define DETDESC_ISOTOPE_H
 
@@ -35,33 +35,33 @@ public:
   virtual ~Isotope();
   
   //        Atomic mass [g/mole]
-  virtual inline const double   A() const;
-  virtual inline void        setA(  const double value );
+  virtual inline double   A() const;
+  virtual inline void  setA(  const double value );
   
   //        Atomic number
-  virtual inline const double   Z() const;
-  virtual inline void        setZ(  const double value ); 
+  virtual inline double   Z() const;
+  virtual inline void  setZ(  const double value ); 
 
  //        Mean excitation energy
-  virtual inline const double   I() const;
-  virtual inline void        setI(  const double value );
+  virtual inline double   I() const;
+  virtual inline void  setI(  const double value );
 
   //       Parameters for density effect correction
-  virtual inline const double   C() const;
-  virtual inline void        setC(  const double value );
-  virtual inline const double   a() const;
-  virtual inline void        seta(  const double value );
-  virtual inline const double   m() const;
-  virtual inline void        setm(  const double value );
-  virtual inline const double   X0() const;
-  virtual inline void        setX0(  const double value );
-  virtual inline const double   X1() const;
-  virtual inline void        setX1(  const double value );
+  virtual inline double   C() const;
+  virtual inline void  setC(  const double value );
+  virtual inline double   a() const;
+  virtual inline void  seta(  const double value );
+  virtual inline double   m() const;
+  virtual inline void  setm(  const double value );
+  virtual inline double   X0() const;
+  virtual inline void  setX0(  const double value );
+  virtual inline double   X1() const;
+  virtual inline void  setX1(  const double value );
 
 
   
   //        Number of nucleons
-  virtual inline const double   N() const;
+  virtual inline double   N() const;
   
   inline const CLID& clID    () const { return Isotope::classID(); } 
   static const CLID& classID ()       { return CLID_Isotope; } 

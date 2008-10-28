@@ -1,4 +1,4 @@
-// $Id: SolidSphere.h,v 1.17 2007-09-20 15:17:05 wouter Exp $ 
+// $Id: SolidSphere.h,v 1.18 2008-10-28 12:04:37 cattanem Exp $ 
 // ===========================================================================
 #ifndef     DETDESC_SOLIDSPHERE_H
 #define     DETDESC_SOLIDSPHERE_H 1 
@@ -234,21 +234,21 @@ protected:
    *  @return true if point is "inside rho" 
    */
   template<class aPoint>
-  inline const bool insideR     ( const aPoint& point ) const ;
+  inline bool insideR     ( const aPoint& point ) const ;
   
   /** check for phi 
    *  @param point to be checked 
    *  @return true if point is "inside phi" 
    */
   template<class aPoint>
-  inline const bool insidePhi   ( const aPoint& point ) const ;
+  inline bool insidePhi   ( const aPoint& point ) const ;
   
   /** check for theta
    *  @param point to be checked 
    *  @return true if point is "inside theta" 
    */
   template<class aPoint>
-  inline const bool insideTheta ( const aPoint& point ) const ;
+  inline bool insideTheta ( const aPoint& point ) const ;
   
 protected:
 
@@ -309,7 +309,7 @@ private:
  */
 // ===========================================================================
 template <class aPoint>
-inline const bool SolidSphere::insideR( const aPoint& point ) const 
+inline bool SolidSphere::insideR( const aPoint& point ) const 
 {
   const double r2 = point.mag2();
   if(  r2 >  outerR2 () ) { return false ; }
@@ -326,7 +326,7 @@ inline const bool SolidSphere::insideR( const aPoint& point ) const
  */
 // ===========================================================================
 template <class aPoint>
-inline const bool SolidSphere::insidePhi( const aPoint& point ) const 
+inline bool SolidSphere::insidePhi( const aPoint& point ) const 
 {
   if( noPhiGap()                                    ) { return true ; }
   double phi = point.phi() ;   // [-180,180] 
@@ -347,7 +347,7 @@ inline const bool SolidSphere::insidePhi( const aPoint& point ) const
  */
 // ===========================================================================
 template <class aPoint>
-inline const bool SolidSphere::insideTheta( const aPoint& point ) const 
+inline bool SolidSphere::insideTheta( const aPoint& point ) const 
 {
   if( noThetaGap()                                        ) { return true ; }
   const double theta = point.theta() ;  

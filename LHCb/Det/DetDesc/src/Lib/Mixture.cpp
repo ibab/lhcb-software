@@ -1,4 +1,4 @@
-// $Id: Mixture.cpp,v 1.13 2008-07-14 08:35:31 smenzeme Exp $ 
+// $Id: Mixture.cpp,v 1.14 2008-10-28 12:04:37 cattanem Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -44,7 +44,7 @@ const SmartRef<Element>& Mixture::element( const unsigned int i ) const
   return m_elements[i].second ; 
 };
 //
-const double Mixture::elementFraction( const unsigned int i ) const        
+double Mixture::elementFraction( const unsigned int i ) const        
 {
   if( i >= m_elements.size() ) 
     { throw MaterialException("Mixture::element:: wrong index! ", this ); } 

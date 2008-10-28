@@ -1,4 +1,4 @@
-// $Id: DetectorElement.cpp,v 1.39 2008-09-25 13:53:04 marcocle Exp $
+// $Id: DetectorElement.cpp,v 1.40 2008-10-28 12:04:37 cattanem Exp $
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/IDataManagerSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -349,7 +349,7 @@ const ParamValidDataObject *DetectorElement::params() const {
   return this;
 }
 /// sensitive volume identifier ///////////////////////////////////////////////
-const int DetectorElement::sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const
+int DetectorElement::sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const
 {
   if (!isInside(globalPoint)) return -1;
   const IDetectorElement* child = childDEWithPoint(globalPoint);
