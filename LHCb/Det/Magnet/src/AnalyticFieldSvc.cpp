@@ -23,6 +23,7 @@
 
 #include <cstdlib>
 #include <fstream>
+#include <cstring> // for strtok with gcc 4.3
 
 // number of regions for the parametrization
 #define NREG 15

@@ -1,4 +1,4 @@
-// $Id: MagFieldToolDC06.cpp,v 1.2 2008-07-31 09:22:32 cattanem Exp $
+// $Id: MagFieldToolDC06.cpp,v 1.3 2008-10-28 15:43:28 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -9,6 +9,7 @@
 #include "MagFieldToolDC06.h"
 
 #include <fstream>
+#include <cstring> // for strtok with gcc 4.3
 
 
 //-----------------------------------------------------------------------------

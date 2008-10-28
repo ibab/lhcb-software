@@ -1,4 +1,4 @@
-// $Id: MagFieldTool.cpp,v 1.2 2008-07-31 09:22:32 cattanem Exp $
+// $Id: MagFieldTool.cpp,v 1.3 2008-10-28 15:43:27 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -9,6 +9,7 @@
 #include "MagFieldTool.h"
 
 #include <fstream>
+#include <cstring> // for strtok with gcc 4.3
 
 
 //-----------------------------------------------------------------------------

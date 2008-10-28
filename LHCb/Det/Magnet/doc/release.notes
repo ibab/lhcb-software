@@ -4,6 +4,9 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
+! 2008-10-28 - Marco Cattaneo
+ - Add missing includes for gcc 4.3 compilation
+
 !====================== Magnet v5r1p1 2008-09-30 =============================
 ! 2008-09-12 - Chris Jones
  - Fix bug in updateTool( int polarity ) where m_fieldTool was only updated
