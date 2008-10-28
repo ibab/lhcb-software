@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1.py,v 1.16 2008-10-28 15:27:48 graven Exp $
+# $Id: Hlt1.py,v 1.17 2008-10-28 15:45:16 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of HLT1
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.16 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.17 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -74,7 +74,7 @@ def AnyIgnoring( dec ) :
 routingBits = { 32 : 'Hlt1Global'
               , 33 : 'Hlt1LumiDecision'
               , 34 : AnyIgnoring('Hlt1LumiDecision')
-              , 35 : 'Hlt1VeloASideDecision|Hlt1VeloCSideDecision'
+              , 35 : '|'.join(veloVertices)
               , 36 : 'Hlt1RandomDecision'
               , 37 : 'Hlt1PhysicsDecision'
               }
