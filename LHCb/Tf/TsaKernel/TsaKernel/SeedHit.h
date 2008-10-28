@@ -1,4 +1,4 @@
-// $Id: SeedHit.h,v 1.5 2008-05-29 10:56:06 smenzeme Exp $
+// $Id: SeedHit.h,v 1.6 2008-10-28 15:11:34 cattanem Exp $
 #ifndef SEEDHIT_H
 #define SEEDHIT_H 1
 
@@ -84,7 +84,7 @@ namespace Tf
 
       Tf::Tsa::SeedingHit * tfHit() const { return m_hit; }
 
-      inline SeedHit* SeedHit::clone()
+      inline SeedHit* clone()
       {
         return new SeedHit(*this);
       }
@@ -148,18 +148,18 @@ namespace Tf
         return chan == LHCb::OTChannelID( m_hit->otChannelID().geometry() );
       }
 
-      inline bool SeedHit::sameChan(const LHCb::STChannelID chan) const
+      inline bool sameChan(const LHCb::STChannelID chan) const
       {
         return chan == m_hit->stChannelID();
       }
 
-      inline bool SeedHit::sameLayer(const LHCb::OTChannelID chan) const
+      inline bool sameLayer(const LHCb::OTChannelID chan) const
       {
         return( chan.layer()   == m_hit->otChannelID().layer() &&
                 chan.station() == m_hit->otChannelID().station() );
       }
 
-      inline bool SeedHit::sameID(const LHCb::LHCbID id) const
+      inline bool sameID(const LHCb::LHCbID id) const
       {
         return id == m_hit->hit()->lhcbID();
       }
