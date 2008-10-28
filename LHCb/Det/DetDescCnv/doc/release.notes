@@ -4,6 +4,9 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !------------------------------------------------------------------------------
 
+! 2008-10-27 - Marco Cattaneo
+ - Add a missing header for gcc 4.3 compilation
+
 !================ DetDescCnv v4r7 2008-06-30 ==================================
 ! 2008-06-11 - Marco Clemencic
  - Modified the XmlGenericCnv to allow generic URLs in the href attributes (like

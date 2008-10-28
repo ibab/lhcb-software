@@ -1,8 +1,10 @@
-// $Id: AddressTools.cpp,v 1.1 2005-06-20 12:40:28 jpalac Exp $
+// $Id: AddressTools.cpp,v 1.2 2008-10-28 12:07:10 cattanem Exp $
 // Include files 
 
 // local
 #include "AddressTools.h"
+
+#include <cstdlib> // for getenv with gcc 4.3
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : AddressTools
