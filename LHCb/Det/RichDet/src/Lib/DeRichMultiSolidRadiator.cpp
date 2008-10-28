@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichMultiSolidRadiator
  *
- *  $Id: DeRichMultiSolidRadiator.cpp,v 1.19 2007-09-13 13:10:55 jpalac Exp $
+ *  $Id: DeRichMultiSolidRadiator.cpp,v 1.20 2008-10-28 10:17:22 cattanem Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -21,6 +21,7 @@
 
 /// Detector description classes
 #include "DetDesc/SolidBoolean.h"
+#include "DetDesc/IPVolume.h"
 
 //----------------------------------------------------------------------------
 

@@ -5,7 +5,7 @@
  *  Header file for detector description class : DeRichHPD
  *
  *  CVS Log :-
- *  $Id: DeRichHPD.h,v 1.15 2008-01-10 17:30:13 papanest Exp $
+ *  $Id: DeRichHPD.h,v 1.16 2008-10-28 10:17:22 cattanem Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-09-19
@@ -18,6 +18,7 @@
 // DetDesc
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/IGeometryInfo.h"
+#include "DetDesc/IPVolume.h"
 
 // LHCbKernel
 #include "Kernel/RichSmartID.h"
