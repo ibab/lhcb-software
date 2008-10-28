@@ -1,4 +1,4 @@
-// $Id: DeSTDetector.cpp,v 1.16 2008-07-14 07:38:36 mneedham Exp $
+// $Id: DeSTDetector.cpp,v 1.17 2008-10-28 12:43:08 cattanem Exp $
 
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeSTStation.h"
@@ -75,7 +75,7 @@ void DeSTDetector::setFirstStation(const unsigned int iStation){
   m_firstStation = iStation;
 }
 
-const int DeSTDetector::sensitiveVolumeID(const Gaudi::XYZPoint& point) const 
+int DeSTDetector::sensitiveVolumeID(const Gaudi::XYZPoint& point) const 
 {
   DeSTDetector* nonConstThis = const_cast<DeSTDetector*>(this);
   DeSTSector* sector = nonConstThis->findSector( point );

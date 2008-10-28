@@ -1,8 +1,9 @@
-// $Id: DeSTSensor.h,v 1.3 2008-06-16 14:24:03 mneedham Exp $
+// $Id: DeSTSensor.h,v 1.4 2008-10-28 12:43:08 cattanem Exp $
 #ifndef _DeSTSensor_H_
 #define _DeSTSensor_H_
 
 #include <string>
+#include <memory> // for auto_ptr with gcc 4.3
 
 #include "Kernel/STChannelID.h"
 

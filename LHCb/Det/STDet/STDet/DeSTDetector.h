@@ -1,9 +1,10 @@
-// $Id: DeSTDetector.h,v 1.24 2008-10-24 13:37:22 mneedham Exp $
+// $Id: DeSTDetector.h,v 1.25 2008-10-28 12:43:08 cattanem Exp $
 #ifndef _DeSTDetector_H_
 #define _DeSTDetector_H_
 
 #include <string>
 #include <vector>
+#include <memory> // for auto_ptr with gcc 4.3
 
 #include "Kernel/STChannelID.h"
 #include "Kernel/LHCbID.h"
@@ -79,7 +80,7 @@ public:
   /** Implementation of sensitive volume identifier for a given point in the 
       global reference frame. This is the sensor number defined in the xml.
   */
-  const int sensitiveVolumeID(const Gaudi::XYZPoint& globalPos) const;
+  int sensitiveVolumeID(const Gaudi::XYZPoint& globalPos) const;
 
   /**  locate the station based on a channel id
   @return  station */

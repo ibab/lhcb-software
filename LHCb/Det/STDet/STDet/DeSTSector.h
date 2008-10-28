@@ -1,4 +1,4 @@
-// $Id: DeSTSector.h,v 1.31 2008-07-18 09:31:14 mneedham Exp $
+// $Id: DeSTSector.h,v 1.32 2008-10-28 12:43:08 cattanem Exp $
 #ifndef _DeSTSector_H_
 #define _DeSTSector_H_
 
@@ -6,6 +6,7 @@
 #include <vector>
 #include <map>
 #include <utility>
+#include <memory> // for auto_ptr with gcc 4.3
 
 #include "Kernel/STChannelID.h"
 #include "Kernel/LHCbConstants.h"

@@ -1,7 +1,10 @@
-!$Id: release.notes,v 1.147 2008-10-27 12:29:25 mneedham Exp $
+!$Id: release.notes,v 1.148 2008-10-28 12:43:08 cattanem Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
+
+! 2008-10-28 - Marco Cattaneo
+ - Fix compilation errors with gcc 4.3
 
 ! 2008-10-26 M Needham
  - Improve print methods
