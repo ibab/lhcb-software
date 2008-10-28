@@ -1,6 +1,7 @@
 // Include files 
 // from std
 #include <algorithm>
+#include <cstring> // for memcpy with gcc 4.3
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
@@ -57,13 +58,13 @@ namespace {
                       m_channels(),
                       m_encode(false) {};
 
-   const size_t id() const { return m_id; };
+   size_t id() const { return m_id; };
 
    void addChannel( const LHCb::OTChannelID& channel ) { m_channels.push_back( channel ); };
    
-   const size_t nChannels() const { return m_channels.size(); }; ///< == Number of hits in gol
+   size_t nChannels() const { return m_channels.size(); }; ///< == Number of hits in gol
 
-   const bool encode() const { return m_encode; };
+   bool encode() const { return m_encode; };
         
    void setEncode( const bool& encode ) { m_encode = encode; } ;
         
@@ -99,7 +100,7 @@ namespace {
      for (size_t i = 1u, iEnd = m_nGols+1u; i != iEnd; ++i) m_gols.push_back( i );
    };
 
-   const size_t id() const { return m_id; };
+   size_t id() const { return m_id; };
    
    void addChannel( const LHCb::OTChannelID& channel ) { 
      /// Gols start from 1
@@ -119,13 +120,13 @@ namespace {
      }
    };
 
-   const size_t nChannels() const { return m_nChannels; }; ///< == Number of hits in bank
+   size_t nChannels() const { return m_nChannels; }; ///< == Number of hits in bank
 
-   const bool encode() const { return m_encode; };
+   bool encode() const { return m_encode; };
         
-   const size_t nGols() const { return m_nGols; };
+   size_t nGols() const { return m_nGols; };
    
-   const size_t nGolsToEncode() const { return m_nGolsToEncode; };
+   size_t nGolsToEncode() const { return m_nGolsToEncode; };
    
    std::vector<OTGol>::const_iterator firstGol() const { return m_gols.begin(); };
    

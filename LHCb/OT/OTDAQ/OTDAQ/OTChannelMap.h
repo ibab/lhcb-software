@@ -1,7 +1,9 @@
+// $Id: OTChannelMap.h,v 1.4 2008-10-28 14:24:33 cattanem Exp $
 #ifndef OTDAQ_OTCHANNELMAP_H_
 #define OTDAQ_OTCHANNELMAP_H_
 
 #include <vector>
+#include <cstring> // For memset with gcc 4.3
 #include "Kernel/OTChannelID.h"
 
 class OTChannelMapTool ;
@@ -37,7 +39,7 @@ namespace OTDAQ
       Module() ;
       unsigned int straw( unsigned int channel ) const { return m_channelToStraw[channel] ; }
       unsigned int channel( unsigned int straw ) const { return m_strawToChannel[straw-OffsetStraws] ; }
-      friend class OTChannelMapTool ;
+      friend class ::OTChannelMapTool ;
     private:
       void fillStrawToChannelMap() ;
     private:
@@ -96,7 +98,7 @@ namespace OTDAQ
       } ;
       
       private:
-      friend class OTChannelMapTool ;
+      friend class ::OTChannelMapTool ;
       
       Module& module( unsigned int station,  unsigned int layer,
                       unsigned int quadrant, unsigned int module) {

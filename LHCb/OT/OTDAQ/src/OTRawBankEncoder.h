@@ -58,7 +58,7 @@ private:
   typedef std::vector< unsigned int > OTRawBank;
   
   /// Returns the bank == Tell1 number for a given channel
-  const size_t channelToBank( const LHCb::OTChannelID& channel ) const;
+  size_t channelToBank( const LHCb::OTChannelID& channel ) const;
   /// Creates a RawBank for a given bank
   const OTRawBank& createRawBank(const OTBank& bank) const;
   /// Clear OTBanks and OTRawbank after each event
@@ -72,7 +72,7 @@ private:
   mutable OTRawBank  m_rawBank;          ///< A raw bank. This goes into the raw buffer
 };
 
-inline const size_t OTRawBankEncoder::channelToBank( const LHCb::OTChannelID& channel ) const {
+inline size_t OTRawBankEncoder::channelToBank( const LHCb::OTChannelID& channel ) const {
   /// Tells1 start from 1 and go to 48
   return ( ( channel.station() - 1 )*16 + channel.layer()*4 + ( channel.quarter() + 1 ) );
 };

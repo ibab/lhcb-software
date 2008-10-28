@@ -2,6 +2,9 @@ Package         : OTDAQ
 Package manager : J.Amoraal
 !---------------------------------------------------------------------
 
+! 2008-10-28 - Marco Cattaneo
+ - Fixes for gcc 4.3 compilation
+
 ! 2008-10-21 - Chris Jones
  - Use Warning(..) method to suppress OTSpecificHeader error bit message
 
