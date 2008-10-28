@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.cpp,v 1.30 2007-06-09 13:56:48 janos Exp $
+// $Id: DeOTDetector.cpp,v 1.31 2008-10-28 12:53:40 cattanem Exp $
 /// Kernel
 #include "Kernel/LHCbID.h"
 #include "Kernel/OTChannelID.h"
@@ -157,7 +157,7 @@ const DeOTModule* DeOTDetector::findModule(const Gaudi::XYZPoint& aPoint) const 
   return(q == 0 ? 0 : q->findModule(aPoint));
 }
 
-const int DeOTDetector::sensitiveVolumeID( const Gaudi::XYZPoint& aPoint ) const {
+int DeOTDetector::sensitiveVolumeID( const Gaudi::XYZPoint& aPoint ) const {
   const DeOTModule* m = findModule(aPoint);
   if (m==0) return -1;
   return m->elementID();
