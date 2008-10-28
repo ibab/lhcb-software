@@ -1,6 +1,7 @@
 
 # Job options to configure the data on demand service for decoding the RawEvent
 
+from Gaudi.Configuration import *
 from Configurables import ( DataOnDemandSvc,
                             DecodeVeloRawBuffer,
                             RawBankToSTClusterAlg,
@@ -9,25 +10,21 @@ from Configurables import ( DataOnDemandSvc,
                             Rich__DAQ__RawBufferToRichDigitsAlg )
                            
 # Set up the algorithms
-DataOnDemandSvc().AlgMap += [
-   "Raw/Velo/Clusters"     : "DecodeVeloRawBuffer/createVeloClusters"
-  ,"Raw/TT/Clusters"       : "RawBankToSTClusterAlg/createTTClusters"
-  ,"Raw/IT/Clusters"       : "RawBankToSTClusterAlg/createITClusters"
-  ,"Raw/Velo/LiteClusters" : "DecodeVeloRawBuffer/createVeloLiteClusters"
-  ,"Raw/TT/LiteClusters"   : "RawBankToSTLiteClusterAlg/createTTLiteClusters"
-  ,"Raw/IT/LiteClusters"   : "RawBankToSTLiteClusterAlg/createITLiteClusters"
-  ,"Raw/OT/Times"          : "OTTimeCreator"
-  ,"Raw/Muon/Coords"       : "MuonRec"
-  ,"DAQ/ODIN"              : "createODIN"
-  ,"Raw/Rich/Digits"       : "Rich::DAQ::RawBufferToRichDigitsAlg/RichRawEventToDigits"
-]
+DataOnDemandSvc().AlgMap["Raw/Velo/Clusters"]     = "DecodeVeloRawBuffer/createVeloClusters"
+DataOnDemandSvc().AlgMap["Raw/TT/Clusters"]       = "RawBankToSTClusterAlg/createTTClusters"
+DataOnDemandSvc().AlgMap["Raw/IT/Clusters"]       = "RawBankToSTClusterAlg/createITClusters"
+DataOnDemandSvc().AlgMap["Raw/Velo/LiteClusters"] = "DecodeVeloRawBuffer/createVeloLiteClusters"
+DataOnDemandSvc().AlgMap["Raw/TT/LiteClusters"]   = "RawBankToSTLiteClusterAlg/createTTLiteClusters"
+DataOnDemandSvc().AlgMap["Raw/IT/LiteClusters"]   = "RawBankToSTLiteClusterAlg/createITLiteClusters"
+DataOnDemandSvc().AlgMap["Raw/OT/Times"]          = "OTTimeCreator"
+DataOnDemandSvc().AlgMap["Raw/Muon/Coords"]       = "MuonRec"
+DataOnDemandSvc().AlgMap["DAQ/ODIN"]              = "createODIN"
+DataOnDemandSvc().AlgMap["Raw/Rich/Digits"]       = "Rich::DAQ::RawBufferToRichDigitsAlg/RichRawEventToDigits"
 
-RawBankToSTClusterAlg("createITCluster").detType           = "IT"
-RawBankToSTLiteClusterAlg("createITLiteClusters").detType  = "IT"
+RawBankToSTClusterAlg("createITCluster").DetType           = "IT"
+RawBankToSTLiteClusterAlg("createITLiteClusters").DetType  = "IT"
 DecodeVeloRawBuffer("createVeloLiteClusters").DecodeToVeloClusters     = True
 DecodeVeloRawBuffer("createVeloLiteClusters").DecodeToVeloLiteClusters = False
 Rich__DAQ__RawBufferToRichDigitsAlg("RichRawEventToDigits").DecodeBufferOnly = False
-
 importOptions( "$CALODAQROOT/options/CaloDigitsOnDemand.opts" )
 importOptions( "$L0DUOPTS/L0OnDemand.opts" )
-
