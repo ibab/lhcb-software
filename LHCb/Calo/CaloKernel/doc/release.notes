@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.41 2007-09-04 16:16:51 cattanem Exp $
+! $Id: release.notes,v 1.42 2008-10-28 15:25:55 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloKernel
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -7,6 +7,8 @@
 ! which are essentially independent from Detector and Event models
 ! =============================================================================
 
+! 2008-10-28 - Marco Cattaneo
+ - Fixes for gcc 4.3 compilation
 
 !======================= CaloKernel v5r1 2007-09-04 ===========================
 ! 2007-08-06 - Olivier Deschamps

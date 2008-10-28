@@ -1,14 +1,4 @@
-// $Id: CaloVector.h,v 1.6 2007-08-06 21:08:29 odescham Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.5  2005/12/16 17:02:42  odescham
-// v4r0 - migration LHCb v20 + cleaning
-//
-// Revision 1.4  2004/09/05 20:21:40  ibelyaev
-//  tiny modifications
-//
+// $Id: CaloVector.h,v 1.7 2008-10-28 15:25:55 cattanem Exp $ 
 // ============================================================================
 #ifndef     CALOKERNEL_CALOVECTOR_H
 #define     CALOKERNEL_CALOVECTOR_H 1 
@@ -19,7 +9,10 @@
 #include "GaudiKernel/Kernel.h"     
 #include "GaudiKernel/StatusCode.h" 
 // forward declaration
-class LHCb::CaloCellID;                  
+namespace LHCb {
+  class CaloCellID;                  
+}
+
 
 /** @class CaloVector CaloVector.h CaloKernel/CaloVector.h 
  *  
@@ -83,7 +76,7 @@ public:
   /** returns the position in the vector, -1 if not present
    *  @param  id index 
    */
-  const int index ( INDEX id ) const 
+  int index ( INDEX id ) const 
   {
     const unsigned int indx = id.index();
     return ( ( m_index.size() > indx ) ? m_index[indx] : -1 ); 

@@ -1,11 +1,11 @@
-# $Id: requirements,v 1.28 2007-09-04 16:16:51 cattanem Exp $
+# $Id: requirements,v 1.29 2008-10-28 15:25:55 cattanem Exp $
 # =============================================================================
 # Created    : 25/11/2001
 # Maintainer : Vanya Belyaev Ivan.Belyaev@itep.ru 
 # =============================================================================
 
 package           CaloKernel
-version           v5r1
+version           v5r2
 
 # =============== structure ===================================================
 branches          src cmt doc CaloKernel
@@ -13,12 +13,6 @@ branches          src cmt doc CaloKernel
 # =============== own includes ================================================
 use GaudiPolicy v*
 apply_pattern 	install_more_includes more=CaloKernel
-
-# =============== used packages ===============================================
-        
-# =============== linker library ==============================================
-
-# =============== mandatory patterns ==========================================
 
 # ============================================================================= 
 # The End 

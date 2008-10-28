@@ -4,16 +4,18 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+! 2008-10-28 - Marco Cattaneo
+ - Fixes for gcc 4.3 compilation
 
 ! 2008-10-27 - Olivier Deschamps
- - new tool : CaloDataProviderFromTES produce CaloDigits/CaloAdcs from the TES (using the same interface than CaloDataProvider)
+ - new tool : CaloDataProviderFromTES produce CaloDigits/CaloAdcs from the TES
+              (using the same interface than CaloDataProvider)
  - adjust verbosity in CaloZsupAlg and CaloDigitsFromRawAlg.
  - make the string 'outputType' property case-independant in CaloZsupAlg and CaloDigitsFromRawAlg.
  - CaloDigitsFromRawAlg : allow to write pin-diode ADC in the same container as PMT ADC
 
 ! 2008-10-24 - Olivier Deschamps
  - new algorithm : CaloMergeTAE produce CaloDigits/CaloAdcs as the sum over a given TAE sequence
-
 
 !========================== CaloDAQ v4r7 2008-07-27 ==========================
 ! 2008-07-23 - Olivier Deschamps

@@ -1,4 +1,4 @@
-// $Id: CaloDataProviderFromTES.h,v 1.1 2008-10-27 18:14:26 odescham Exp $
+// $Id: CaloDataProviderFromTES.h,v 1.2 2008-10-28 15:24:31 cattanem Exp $
 #ifndef CALODATAPROVIDERFROMTES_H 
 #define CALODATAPROVIDERFROMTES_H 1
 
@@ -36,7 +36,7 @@ public:
   std::string _rootInTES(){return rootInTES(); };
   StatusCode  _setProperty(const std::string& p,const std::string& v){return  setProperty(p,v);}; 
   //
-  void setBanks(const std::vector<LHCb::RawBank*>* bank ){}; // harmless method
+  void setBanks(const std::vector<LHCb::RawBank*>* /* bank */ ){}; // harmless method
   LHCb::RawBankReadoutStatus status(){return LHCb::RawBankReadoutStatus(); }; // harmless method
   unsigned int nTell1s(){return 0;}; // harmless method
   void putStatusOnTES(){}; // harmless method

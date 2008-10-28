@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.h,v 1.6 2008-06-04 09:49:51 odescham Exp $
+// $Id: CaloReadoutTool.h,v 1.7 2008-10-28 15:24:32 cattanem Exp $
 #ifndef CALODAQ_CALOREADOUTTOOL_H 
 #define CALODAQ_CALOREADOUTTOOL_H 1
 
@@ -60,7 +60,7 @@ protected:
   int findCardbyCode(std::vector<int> feCards, int code );
   bool checkCards(int nCards, std::vector<int> feCards );
   void checkCtrl(int word, int sourceID);
-  bool CaloReadoutTool::checkSrc(int source);
+  bool checkSrc(int source);
 
   std::string  m_detectorName;
   bool m_packedIsDefault; 
