@@ -1,3 +1,10 @@
+2008-09-29  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
+
+	* python/LbUtils/Lock.py: New file. Module which implements simple 
+        file-based locking mechanism.
+	* scripts/lockdo.py: New file. Script to execute shell commands
+        using locking mechanism.
+
 2008-10-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v1r4
