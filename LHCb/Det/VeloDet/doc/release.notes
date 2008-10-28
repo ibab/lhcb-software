@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.203 2008-07-27 13:17:19 cattanem Exp $
+! $Id: release.notes,v 1.204 2008-10-28 15:00:39 cattanem Exp $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
+
+! 2008-10-28 - Marco Cattaneo
+ - Follow changes in DetDesc for gcc 4.3 compilation
 
 !======================== VeloDet v13r3 2008-07-27 ===========================
 ! 2008-07-23 - Marco Clemencic

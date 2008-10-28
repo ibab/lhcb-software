@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.55 2008-02-14 16:15:46 cattanem Exp $
+// $Id: DeVelo.h,v 1.56 2008-10-28 15:00:39 cattanem Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -56,7 +56,7 @@ public:
   /** Implementation of sensitive volume identifier for a given point in the 
       global reference frame.  This is the sensor number defined in the xml.
   */
-  virtual const int sensitiveVolumeID(const Gaudi::XYZPoint& globalPos) const;
+  virtual int sensitiveVolumeID(const Gaudi::XYZPoint& globalPos) const;
 
   /// Return the number of sensors
   inline unsigned int numberSensors() const {return m_vpSensors.size();}

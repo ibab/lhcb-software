@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.87 2008-02-14 16:15:47 cattanem Exp $
+// $Id: DeVelo.cpp,v 1.88 2008-10-28 15:00:39 cattanem Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -233,7 +233,7 @@ const DeVeloSensor* DeVelo::sensor(const Gaudi::XYZPoint& point) const {
 }
 
 // return the sensitive volume if for a point in the global frame
-const int DeVelo::sensitiveVolumeID(const Gaudi::XYZPoint& point) const {
+int DeVelo::sensitiveVolumeID(const Gaudi::XYZPoint& point) const {
   std::vector<DeVeloSensor*>::const_iterator iDeVeloSensor;
   for(iDeVeloSensor=m_vpSensors.begin(); iDeVeloSensor!=m_vpSensors.end(); ++iDeVeloSensor){
     Gaudi::XYZPoint localPoint=(*iDeVeloSensor)->globalToLocal(point);
