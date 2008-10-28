@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1.py,v 1.15 2008-10-28 15:19:59 graven Exp $
+# $Id: Hlt1.py,v 1.16 2008-10-28 15:27:48 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of HLT1
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.15 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.16 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -50,12 +50,15 @@ Hlt1 = Sequence('Hlt1',  ModeOR = True, ShortCircuit = False
                , Members = [ i.sequencer() for i in  hlt1Lines() ]
                )
 
+# TODO: remove summaryWriter in next release
 ## needed to feed HltVertexReportsMaker... needed for Velo!
 # run for all selections which have 'velo' in them
-summaryWriter = HltSummaryWriter( Save = list(hlt1Selections()['All']) )
-vertexMaker = HltVertexReportsMaker( VertexSelections = [ 'Hlt1VeloASideDecision','Hlt1VeloCSideDecision']  )
-vertexWriter =  HltVertexReportsWriter( )
+veloVertices = [ i for i in hlt1Selections()['All'] if i.startswith('Hlt1Velo') ]
+summaryWriter = HltSummaryWriter(      Save             = veloVertices ) 
+vertexMaker   = HltVertexReportsMaker( VertexSelections = veloVertices )
+vertexWriter  = HltVertexReportsWriter( )
 
+# TODO: remove summaryWriter in next release
 veloVertex = Sequencer( 'VeloVertex',  Members = [ summaryWriter, vertexMaker, vertexWriter ])
 
 def AnyIgnoring( dec ) :

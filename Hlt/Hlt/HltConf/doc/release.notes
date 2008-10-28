@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.45 2008-10-28 15:19:59 graven Exp $ 
+! $Id: release.notes,v 1.46 2008-10-28 15:27:48 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : 
@@ -8,7 +8,7 @@
 ! 2008-10-28 - Gerhard Raven
  - streamline some settings
  - enable raw bank killer on lumi only events
- - correct name of Velo vertex selection in vertex rawbank writer
+ - automatically use correct names for Velo vertex selection(s) in vertex rawbank writer
 
 ! 2008-10-24 - Patrick Koppenburg
  - Instead of HltType "Hlt1|Hlt2", disliked by Gerhard, do 
