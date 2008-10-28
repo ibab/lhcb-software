@@ -1,8 +1,18 @@
-! $Id: release.notes,v 1.368 2008-10-24 12:01:30 jpalac Exp $
+! $Id: release.notes,v 1.369 2008-10-28 07:50:23 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-10-24 - Juan PALACIOS
+ - src/PhysDesktop.h
+  . Return strings by const reference.
+  . Adapt to changes in IPhysDesktop
+ - src/PhysDesktop.cpp
+  . Adapt to changes in IPhysDesktop. Clean up PV getting code.
+ - src/ContextTool{.h,.cpp}
+  . Return primary vertex container as const RecVertex::Container*, like in new
+    IPhysDesktop.
 
 ! 2008-10-24 - Juan PALACIOS
  - Add src/OnlineP2PVWithIP.cpp
