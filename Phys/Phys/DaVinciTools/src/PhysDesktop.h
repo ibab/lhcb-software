@@ -50,9 +50,8 @@ public:
   virtual StatusCode getEventInput();
 
   virtual const LHCb::Particle::ConstVector& particles() const;
-  
 
-  virtual const LHCb::RecVertex::ConstVector& primaryVertices();
+  virtual const LHCb::RecVertex::Container* primaryVertices() const;
 
   virtual const LHCb::Vertex::ConstVector& secondaryVertices() const;
 
@@ -77,7 +76,7 @@ public:
   
   virtual void imposeOutputLocation(const std::string& outputLocationString);
 
-  virtual std::string getOutputLocation() const { return m_outputLocn ;}
+  virtual const std::string& getOutputLocation() const { return m_outputLocn ;}
 
   virtual StatusCode writeEmptyContainerIfNeeded() ;
 
@@ -180,7 +179,10 @@ private:
     return;
   }
 
-  inline std::string& primaryVertexLocation() { return m_primVtxLocn; }
+  virtual const std::string& primaryVertexLocation() const 
+  { 
+    return m_primVtxLocn; 
+  }
 
   void storeRelationsInTable(const LHCb::Particle* part);
 
@@ -195,7 +197,8 @@ private: // data
   
   LHCb::Particle::ConstVector m_parts;          ///< Local Container of particles
   LHCb::Vertex::ConstVector m_secVerts;         ///< Local Container of secondary vertices
-  LHCb::RecVertex::ConstVector m_primVerts;    ///< Local Container of primary vertices
+  //  LHCb::RecVertex::ConstVector m_primVerts;    ///< Local Container of primary vertices
+  LHCb::RecVertex::Container* m_primVerts;    ///< Local Container of primary vertices
 
   IParticleMaker* m_pMaker;        ///< Reference to LHCb::Particle maker tool
 

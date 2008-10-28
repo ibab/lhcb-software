@@ -231,16 +231,13 @@ const LHCb::Particle::ConstVector& PhysDesktop::particles() const{
 //=============================================================================
 // Provides a reference to its internal container of vertices
 //=============================================================================
-const LHCb::RecVertex::ConstVector& PhysDesktop::primaryVertices(){
-  /// @todo Find a smarter way of checking this is done only once...
-  if ( m_primVerts.empty()) {
-    StatusCode sc = getPrimaryVertices();
-    if (!sc) Exception("Cannot get PVs").ignore();
+const LHCb::RecVertex::Container* PhysDesktop::primaryVertices() const {
+  verbose() << "Returning PVs!" << endmsg;
+  if (0!=m_primVerts) {
+    verbose() << "Size " << m_primVerts->size() << endmsg;
+  } else {
+    error() <<"NULL LHCb::RecVertex::Container*" << endmsg;
   }
-  if ( m_primVerts.empty()) {
-    Warning( "Empty primary vertex container at "+primaryVertexLocation() ).ignore() ;      
-  }
-
   return m_primVerts;
 }
 //=============================================================================
@@ -275,7 +272,7 @@ StatusCode PhysDesktop::cleanDesktop(){
     verbose() << "LHCb::Particle in TES = " << iTEScount << endmsg;
     verbose() << "Removing all vertices from desktop" << endmsg;
     verbose() << "Number of vertices before cleaning = "
-              << m_secVerts.size() + m_primVerts.size() << endmsg;
+              << m_secVerts.size() + m_primVerts->size() << endmsg;
   }
   
   iTEScount = 0;
@@ -285,12 +282,12 @@ StatusCode PhysDesktop::cleanDesktop(){
     if( ivert->parent() ) iTEScount++;
     else delete ivert;
   }
-  while ( m_primVerts.size() > 0 ) {
-    const LHCb::VertexBase* ivert = m_primVerts.back();
-    m_primVerts.pop_back();
-    if( ivert->parent() ) iTEScount++;
-    else delete ivert;
-  }
+//   while ( m_primVerts->size() > 0 ) {
+//     const LHCb::VertexBase* ivert = m_primVerts->back();
+//     m_primVerts->pop_back();
+//     if( ivert->parent() ) iTEScount++;
+//     else delete ivert;
+//   }
 
   if (msgLevel(MSG::VERBOSE)) verbose() << "Removing all entries from Particle2Vertex relations" << endmsg;
 
@@ -547,11 +544,9 @@ void PhysDesktop::findAllTree( const LHCb::Particle* part,
 StatusCode PhysDesktop::getEventInput(){
 
   if (msgLevel(MSG::VERBOSE)) verbose() << ">>> Hello from getEventInput " << endmsg;
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Initial size of local containers (P,PV,SV) = " << m_parts.size()
-                                        << ", " << m_primVerts.size() << ", " <<  m_secVerts.size()<< endmsg;
-  
-  // OD : Before makeParticles in case new vertex are produced (?)
-  if ( !m_primVerts.empty()) m_primVerts.clear(); // to make sure it is clean in this event
+//   if (msgLevel(MSG::VERBOSE)) verbose() << "Initial size of local containers (P,PV,SV) = " << m_parts.size()
+//                                         << ", " << m_primVerts->size() << ", " <<  m_secVerts.size()<< endmsg;
+
   if ( !m_secVerts.empty()) m_secVerts.clear(); // to make sure it is clean in this event
 
   // Make particles with particle maker
@@ -564,8 +559,15 @@ StatusCode PhysDesktop::getEventInput(){
   if( "None" == m_primVtxLocn ) {
     if (msgLevel(MSG::VERBOSE)) verbose() << "Not loading any primary vertices" << endmsg;
   } else {
+    if (msgLevel(MSG::VERBOSE)) {
+      verbose() << "Loading any primary vertices from "
+                << primaryVertexLocation() << endmsg;
+    }
     StatusCode sc = getPrimaryVertices();
-    if (!sc) return sc;
+    if ( sc.isFailure() ) return sc;
+    if ( m_primVerts->empty()) {
+      Warning( "Empty primary vertex container at "+primaryVertexLocation() ).ignore() ;      
+    }
   }
 
   // Retrieve Particles & Vertices from all previous processing
@@ -713,41 +715,53 @@ StatusCode PhysDesktop::getRelations(){
 //=============================================================================
 // Get PV
 //=============================================================================
-StatusCode PhysDesktop::getPrimaryVertices(){
+StatusCode PhysDesktop::getPrimaryVertices() {
 
 
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Getting PV from " << primaryVertexLocation() << endmsg;
-
-  if ( !exist<LHCb::RecVertices>( primaryVertexLocation())){
-    return StatusCode::SUCCESS; // no PV
+  if (msgLevel(MSG::VERBOSE)) {
+    verbose() << "Getting PV from " << primaryVertexLocation() << endmsg;
   }
-  LHCb::RecVertices* verts = get<LHCb::RecVertices>( primaryVertexLocation() );
-  if( ! verts ) {
-    if (msgLevel(MSG::VERBOSE)) verbose() << " Unable to retrieve vertices from " << primaryVertexLocation() << endmsg;
-  } else if( verts->empty() ) {
-    if (msgLevel(MSG::VERBOSE)) verbose() << " No vertices retrieved from  " << primaryVertexLocation() << endmsg;
-  } else {
-    if (msgLevel(MSG::VERBOSE)) verbose() << "    Number of primary vertices  = " << verts->size() << endmsg;
+  
+  if ( !exist<LHCb::RecVertices>( primaryVertexLocation() ) ) {
+    return Warning("No PV container at "+primaryVertexLocation(),
+                   StatusCode::SUCCESS);
+  }
 
-    for( LHCb::RecVertices::const_iterator ivert = verts->begin();
-         ivert != verts->end(); ivert++ ) {
-      if (msgLevel(MSG::VERBOSE)) {
-        verbose() << "    Vertex coordinates = ( "
-                  << (*ivert)->position().x()
-                  << " , " << (*ivert)->position().y()
-                  << " , " << (*ivert)->position().z() << " ) " << endmsg;
-        verbose() << "    Vertex ChiSquare = " << (*ivert)->chi2()
-                  << endmsg;
-      }
+  m_primVerts = get<LHCb::RecVertices>( primaryVertexLocation() );
+
+  if (0!= m_primVerts && msgLevel(MSG::VERBOSE)) {
+    verbose() << "Got " << m_primVerts->size() << " PVs from " 
+              << primaryVertexLocation() << endmsg;
+  }
+
+  return (0!=m_primVerts) ? StatusCode::SUCCESS : StatusCode::FAILURE;
+
+//   if( ! verts ) {
+//     if (msgLevel(MSG::VERBOSE)) verbose() << " Unable to retrieve vertices from " << primaryVertexLocation() << endmsg;
+//   } else if( verts->empty() ) {
+//     if (msgLevel(MSG::VERBOSE)) verbose() << " No vertices retrieved from  " << primaryVertexLocation() << endmsg;
+//   } else {
+//     if (msgLevel(MSG::VERBOSE)) verbose() << "    Number of primary vertices  = " << verts->size() << endmsg;
+
+//     for( LHCb::RecVertices::const_iterator ivert = verts->begin();
+//          ivert != verts->end(); ivert++ ) {
+//       if (msgLevel(MSG::VERBOSE)) {
+//         verbose() << "    Vertex coordinates = ( "
+//                   << (*ivert)->position().x()
+//                   << " , " << (*ivert)->position().y()
+//                   << " , " << (*ivert)->position().z() << " ) " << endmsg;
+//         verbose() << "    Vertex ChiSquare = " << (*ivert)->chi2()
+//                   << endmsg;
+//       }
       
-      // Put them in local containers
-      m_primVerts.push_back(*ivert);
-    }
-  }
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Number of Vertices from " 
-                                        << primaryVertexLocation() << " are " 
-                                        << m_primVerts.size() << endmsg;
-  return StatusCode::SUCCESS;
+//       // Put them in local containers
+//       m_primVerts->push_back(*ivert);
+//     }
+//   }
+//   if (msgLevel(MSG::VERBOSE)) verbose() << "Number of Vertices from " 
+//                                         << primaryVertexLocation() << " are " 
+//                                         << m_primVerts->size() << endmsg;
+//   return StatusCode::SUCCESS;
 }
 //=============================================================================
 // Impose OutputLocation
