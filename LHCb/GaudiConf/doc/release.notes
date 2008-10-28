@@ -2,6 +2,9 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2008-10-28 - Chris Jones
+ - Remove DecodeRawEvent.opts - replace with DecodeRawEvent.py
+
 ! 2008-10-16 - Marco Cattaneo
  - Remove gaudirun.py script, to take fixed version from Gaudi v20r3
 
