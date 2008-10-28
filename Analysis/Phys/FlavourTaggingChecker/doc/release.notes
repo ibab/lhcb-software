@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.40 2008-10-06 12:59:38 jpalac Exp $
+! $Id: release.notes,v 1.41 2008-10-28 10:58:46 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Checker package for Phys/FlavourTagging
 !-----------------------------------------------------------------------------
+
+! 2008-10-28 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v3r1p2
+ - src/BTaggingAnalysis.cpp
+  . Adapt to new IPhysDesktop::primaryVertices() method
 
 !=====================FlavourTaggingChecker v3r1p1 2008-10-06 ==============
 
