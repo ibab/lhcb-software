@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.82 2008-07-08 16:40:00 pkoppenb Exp $ 
+! $Id: release.notes,v 1.83 2008-10-28 07:41:14 jpalac Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : Chris Jones, J. Palacios
 !==============================================================================
+
+! 2008-10-28 - Juan PALACIOS
+ - src/PreeLoadParticles.cpp
+  . Adapt to new IPhysDeskTop::primaryVertices()
+ - cmt/requirements
+  . Increase to v4r1p1
 
 !======================== ParticleMaker v4r1 2008-07-03 ===================
 
