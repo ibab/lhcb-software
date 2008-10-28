@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.71 2008-09-25 15:36:36 jpalac Exp $
+! $Id: release.notes,v 1.72 2008-10-28 13:06:18 jpalac Exp $
 ! Package     : MicroDST/MicroDSTAlgorithm
 ! Responsible : Ulrich Kerzel, Juan Palacios
 !============================================================
+
+! 2008-10-28 - Juan PALACIOS
+ - src/TestDST.cpp
+  . Adapt to new IPhysDesktop
+ - cmt/requirements
+  . Increase version to v3r3p2
 
 !========================== MicroDSTAlgorithm v3r3p1 2008-09-25 ===============
 
