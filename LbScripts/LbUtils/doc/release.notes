@@ -1,9 +1,10 @@
 2008-09-29  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
-	* python/LbUtils/Lock.py: New file. Module which implements simple 
-        file-based locking mechanism.
+	* python/LbUtils/Lock.py: New file. Module which implements simple
+    file-based locking mechanism.
 	* scripts/lockdo.py: New file. Script to execute shell commands
-        using locking mechanism.
+    using locking mechanism.
+    * cmt/requirements: added python alias for lockdo.py script
 
 2008-10-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
@@ -21,7 +22,7 @@
 	* python/LbUtils/_helpers/__init__.py: New file.
 	* python/LbUtils/_helpers/optparse.py: New file.
 	* python/LbUtils/_helpers/subprocess.py: New file.
-	* python/LbUtils/__init__.py: added helpers modules if python 2.5 is not 
+	* python/LbUtils/__init__.py: added helpers modules if python 2.5 is not
 	present.
 	* python/LbUtils/Script.py: fixed class declaration
 
@@ -31,8 +32,8 @@
 
 2008-09-24  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbUtils/Option.py: added the possibility to print the help messages 
-	to a custom file. By default it is stdout. But for shell wrappers, it is needed 
+	* python/LbUtils/Option.py: added the possibility to print the help messages
+	to a custom file. By default it is stdout. But for shell wrappers, it is needed
 	to have stderror instead.
 	* python/LbUtils/Script.py: added the possiblity to print the help messages
 	to a custom file and to have a custom parser.
@@ -40,26 +41,26 @@
 2008-08-27  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/Storage.py: added Unit class
-	* python/LbUtils/__init__.py: 
-	* python/LbUtils/CMT/__init__.py: 
-	* python/LbUtils/CMT/Common.py: 
-	* python/LbUtils/CMT/Graph.py: 
-	* python/LbUtils/CMT/Package.py: 
+	* python/LbUtils/__init__.py:
+	* python/LbUtils/CMT/__init__.py:
+	* python/LbUtils/CMT/Common.py:
+	* python/LbUtils/CMT/Graph.py:
+	* python/LbUtils/CMT/Package.py:
 	* python/LbUtils/CMT/Project.py: reorganised the packages imports statements
 		- relative imports for local modules
 		- relative imports for __init__ frontends
-		- absolute imports in any other case  
+		- absolute imports in any other case
 	* scripts/showCMTProjects.py: placed the script in the Graph module.
 
 2008-08-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/CMT/Common.py: New file.
 	* python/LbUtils/CMT/Graph.py: New file.
-	* python/LbUtils/__init__.py: 
-	* python/LbUtils/CMT/__init__.py: 
-	* python/LbUtils/CMT/Package.py: 
-	* python/LbUtils/CMT/Project.py: 
-	* scripts/showCMTProjects.py: refactored completely the way to access CMT projects 
+	* python/LbUtils/__init__.py:
+	* python/LbUtils/CMT/__init__.py:
+	* python/LbUtils/CMT/Package.py:
+	* python/LbUtils/CMT/Project.py:
+	* scripts/showCMTProjects.py: refactored completely the way to access CMT projects
 	with their dependencies
 	* python/LbUtils/CVS.py: fixed warning about unused variable
 	* python/LbUtils/Set.py: added a few access and update methods
