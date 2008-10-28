@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+! 2008-10-28 - Juan PALACIOS
+ - src/TupleToolGeometry.cpp, src/TupleToolPrimaries.cpp
+  . Adapt to new IPhysDesktop::primaryVertices() method
+
 ! 2008-10-16 - Patrick Koppenburg
  - Count number of selections in trigger
 
