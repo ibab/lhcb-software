@@ -4,7 +4,7 @@
  *
  *  Implementation file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.cpp,v 1.68 2008-06-24 09:13:13 jonrob Exp $
+ *  $Id: DeRichHPDPanel.cpp,v 1.69 2008-10-28 14:51:39 cattanem Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -633,7 +633,7 @@ DeRichHPDPanel::globalPosition( const Gaudi::XYZPoint& localPoint,
 //=========================================================================
 // sensitiveVolumeID
 //=========================================================================
-const int DeRichHPDPanel::sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const
+int DeRichHPDPanel::sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const
 {
   // Create a RichSmartID for this RICH and panel
   LHCb::RichSmartID id( rich(), side() );

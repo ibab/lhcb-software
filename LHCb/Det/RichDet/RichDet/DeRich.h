@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRich
  *
  *  CVS Log :-
- *  $Id: DeRich.h,v 1.25 2008-01-10 17:30:12 papanest Exp $
+ *  $Id: DeRich.h,v 1.26 2008-10-28 14:51:39 cattanem Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -186,7 +186,7 @@ public:
   virtual StatusCode alignSecMirrors() = 0;
 
   /// sensitive volume identifier
-  virtual const int sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const;
+  virtual int sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const;
 
 protected:
 

@@ -4,7 +4,7 @@
  *
  * Implementation file for class : DeRichSystem
  *
- * $Id: DeRichSystem.cpp,v 1.19 2008-09-27 15:21:10 jonrob Exp $
+ * $Id: DeRichSystem.cpp,v 1.20 2008-10-28 14:51:39 cattanem Exp $
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-01-27
@@ -603,7 +603,7 @@ DeRichSystem::l1HPDHardIDs( const Rich::DAQ::Level1HardwareID l1ID ) const
 //=========================================================================
 // richDetector
 //=========================================================================
-const Rich::DetectorType
+Rich::DetectorType
 DeRichSystem::richDetector( const Rich::DAQ::Level1HardwareID l1ID ) const
 {
   // See if this L1 ID is known

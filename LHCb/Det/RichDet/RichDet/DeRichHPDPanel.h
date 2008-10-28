@@ -4,7 +4,7 @@
  *
  *  Header file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.h,v 1.53 2008-06-06 16:09:24 papanest Exp $
+ *  $Id: DeRichHPDPanel.h,v 1.54 2008-10-28 14:51:39 cattanem Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -106,14 +106,14 @@ public:
    *
    * @return The offset for the globalToPanel method
    */
-  inline const double localOffset() const { return m_localOffset; }
+  inline double localOffset() const { return m_localOffset; }
 
   /**
    * Returns the Z coordinate of the detection plane in the local coordinate system.
    *
    * @return The detection plane Z coordinate (local system).
    */
-  inline const double detectPlaneZcoord() const { return m_detPlaneZ; }
+  inline double detectPlaneZcoord() const { return m_detPlaneZ; }
 
   /** @brief Converts a Gaudi::XYZPoint in global coordinates to a RichSmartID.
    *
@@ -234,7 +234,7 @@ public:
   inline Rich::Side side() const { return m_side; }
 
   /// sensitive volume identifier
-  virtual const int sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const;
+  virtual int sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const;
 
   /// The number of HPD columns in this panel
   inline unsigned int nHPDColumns() const { return m_HPDColumns; }

@@ -5,7 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2008-10-28 - Marco Cattaneo
- - Add missing includes
+ - Fixes for gcc 4.3 compilation
 
 ! 2008-10-22 - Marco Cattaneo
  - Remove extra qualifier in Rich1DTabFunc.h, to please latest genreflex

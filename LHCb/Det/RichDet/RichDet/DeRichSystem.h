@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRichSystem
  *
  *  CVS Log :-
- *  $Id: DeRichSystem.h,v 1.13 2008-09-27 15:21:10 jonrob Exp $
+ *  $Id: DeRichSystem.h,v 1.14 2008-10-28 14:51:39 cattanem Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-01-26
@@ -203,7 +203,7 @@ public:
    *  @param l1ID The Level 1 hardware ID
    *  @return The RICH detector
    */
-  const Rich::DetectorType richDetector( const Rich::DAQ::Level1HardwareID l1ID ) const;
+  Rich::DetectorType richDetector( const Rich::DAQ::Level1HardwareID l1ID ) const;
 
   /// Direct access to the mapping between Level1 IDs and HPD RichSmartIDs
   const Rich::DAQ::L1ToSmartIDs & l1HPDSmartIDs() const;

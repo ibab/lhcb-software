@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich
  *
- *  $Id: DeRich.cpp,v 1.22 2008-01-10 17:30:15 papanest Exp $
+ *  $Id: DeRich.cpp,v 1.23 2008-10-28 14:51:39 cattanem Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -236,7 +236,7 @@ StatusCode DeRich::alignMirrors ( std::vector<const ILVolume*> mirrorContainers,
 //=========================================================================
 //  return a RichSmartID for a particular point in the LHCb coord system
 //=========================================================================
-const int DeRich::sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const
+int DeRich::sensitiveVolumeID(const Gaudi::XYZPoint& globalPoint) const
 {
   return ( m_HPDPanels[side(globalPoint)]->sensitiveVolumeID( globalPoint ) );
 }
