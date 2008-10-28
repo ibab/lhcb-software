@@ -187,8 +187,8 @@ void MonProfile::setProfile(TProfile * tProfile){
 
 TProfile* MonProfile::profile(){  
   if (!objectCreated) createObject(sName);
-  //print();
   loadObject();
+  //print();
   return m_profile;
 }
 
@@ -387,18 +387,23 @@ void MonProfile::combine(MonObject * H){
   }
 
   for (int i = 0; i < (nbinsx+2); ++i){
-  //  double tmpCont;
-  //  double HHtmpCont;
- //   tmpCont=binCont[i]*binEntries[i];
- //   HHtmpCont=HH->binCont[i]*HH->binEntries[i];   
-    binCont[i] += HH->binCont[i];
- //   if ((binEntries[i]+HH->binEntries[i]) > 0) {
- //      binCont[i] = binCont[i]/(binEntries[i]+HH->binEntries[i]); 
- //   } 
+ //   binCont[i] += HH->binCont[i];
+ //   if (i==5) msg << MSG::INFO<<"  Adding binCont["<<i<<"] "<<binCont[i] << " binEntries["<<i<<"] "<< binEntries[i] << " to HH->binCont["<<i<<"] "<<HH->binCont[i]<< " HH->binEntries["<<i<<"] " << HH->binEntries[i] << endreq;
+    if ((this->typeName()=="MonRate") && ((i==5)||(i==6))) {
+       //do not add the runnumber or cyclenumber; we assume they are all the same.
+       //this code needs to be corrected when we ensure consistency at end of run
+       binCont[i] = HH->binCont[i];
+    }
+    else {   
+       if ((binEntries[i]+HH->binEntries[i]) > 0) {
+          binCont[i] = (binCont[i]*binEntries[i]+HH->binCont[i]*HH->binEntries[i])/(binEntries[i]+HH->binEntries[i]); 
+       } 
+       else binCont[i] = (binCont[i]*binEntries[i]+HH->binCont[i]*HH->binEntries[i]);
+    }   
     binEntries[i] += HH->binEntries[i];
-    //root just adds - its the sum of squares
- //   binErr[i] = sqrt(pow(binErr[i],2)+pow(HH->binErr[i],2));
-    binErr[i] += HH->binErr[i];
+  //  if (i==5) msg << MSG::INFO<<"  Result binCont["<<i<<"] "<<binCont[i] << " binEntries["<<i<<"] "<< binEntries[i] << endreq;
+    binErr[i] = sqrt(pow(binErr[i],2)+pow(HH->binErr[i],2));
+  //  binErr[i] += HH->binErr[i];
   }
   
   m_fTsumw += HH->m_fTsumw;
@@ -556,7 +561,7 @@ void MonProfile::print(){
   if (!isLoaded) return;
 
   MsgStream msg = createMsgStream();
-  msg <<MSG::INFO<<"*************************************"<<endreq;
+  msg <<MSG::INFO<<"Printing*****************************"<<endreq;
   msg <<MSG::INFO<<"**************Profile 1D*************"<<endreq;
   msg <<MSG::INFO<<"Title="<<sTitle<<endreq;
   msg <<MSG::INFO<<"nEntries="<<nEntries<<endreq;
@@ -568,8 +573,8 @@ void MonProfile::print(){
   msg <<MSG::INFO<<"*************************************"<<endreq;
   msg <<MSG::INFO<<"BinContents:"<<endreq;
   for (int i = 0; i < (nbinsx+2) ; ++i){
-//    msg << (int) binCont[i]<<" ";
-    msg <<  binCont[i]<<" ";
+    if (i==6)    msg << " cycle nr " << (int) binCont[i]<<" ";
+    else msg <<  binCont[i]<<" ";
   }
   msg << endreq;
   msg <<MSG::INFO<<"*************************************"<<endreq;

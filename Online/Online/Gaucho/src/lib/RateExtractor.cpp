@@ -47,8 +47,8 @@ std::string RateExtractor::makeServiceName(std::string nameHeader)
 
     std::stringstream streamName;
     streamName << nameHeader << "/rateFromCounter#" << m_counterId;
-  
-    name = streamName.str();
+ //    name = streamName.str();
+   name="";
   }else{
     name = nameHeader + "/" + name;
   }
@@ -63,13 +63,15 @@ std::string RateExtractor::makeServiceName(std::string nameHeader)
 void RateExtractor::publishService(std::string nameHeader)
 {
   setValue(0);
-  setComment(getCommentFromMonRate());
+  if (getCommentFromMonRate()!="") {
+     setComment(getCommentFromMonRate());
   
-  std::string serviceName = makeServiceName(nameHeader);
+     std::string serviceName = makeServiceName(nameHeader);
   
-  RatePublisher::publishService(serviceName);
+     RatePublisher::publishService(serviceName);
   
-  COUT_DEBUG(" FOR COUNTER " << m_counterId);
+   //  COUT_DEBUG(" FOR COUNTER " << m_counterId);
+  }   
 }
 
 double RateExtractor::getCounterFromMonRate()
@@ -79,18 +81,17 @@ double RateExtractor::getCounterFromMonRate()
     
   TProfile * profile = m_pMonRate->profile();
   
-  double numberOfProcesses = profile->GetBinEntries(4);
-  
-  double counterMean = profile->GetBinContent(8 + m_counterId);
-  
-  return numberOfProcesses * counterMean;
+  double numberOfProcesses = profile->GetBinEntries(4);  
+  //double counterMean = profile->GetBinContent(8 + m_counterId);
+  double counterMean = m_pMonRate->binCont[8 + m_counterId];
+ return numberOfProcesses * counterMean;
 }
 
 longlong RateExtractor::getCycleLengthFromMonRate()
 {
-  TProfile * profile = m_pMonRate->profile();
-  
-  return (longlong)profile->GetBinContent(7);
+ // TProfile * profile = m_pMonRate->profile();
+ // return (longlong)profile->GetBinContent(7);  
+  return (longlong)m_pMonRate->binCont[7];
 }
 
 std::string RateExtractor::getCommentFromMonRate()
@@ -101,7 +102,7 @@ std::string RateExtractor::getCommentFromMonRate()
   TProfile * profile = m_pMonRate->profile();  
   std::string comment(profile->GetXaxis()->GetBinLabel(8 + m_counterId));
   
-   COUT_DEBUG("Comment for rate from counter #" << m_counterId << " = " << comment);
+  // COUT_DEBUG("Comment for rate from counter #" << m_counterId << " = " << comment);
    
    return comment;
 
@@ -114,6 +115,7 @@ std::string RateExtractor::getCommentFromMonRate()
 //  return comment.str();
 }
 
+//bool RateExtractor::extractData(longlong time, int nbElapsedCycles)
 bool RateExtractor::extractData(longlong time, int nbElapsedCycles)
 {
   bool success = true;
@@ -139,13 +141,15 @@ bool RateExtractor::extractData(longlong time, int nbElapsedCycles)
   double oldValue = getValue();
   
   double deltaT = (double)(m_newTime - m_oldTime);
-  deltaT += (double)(nbElapsedCycles * getCycleLengthFromMonRate());
-  
+  //this number is the difference between two averages, we set it to 1
+ // nbElapsedCycles=1;
+// COUT_DEBUG("m_counterOldValue " << m_counterOldValue << " m_counterNewValue " << m_counterNewValue );
+  deltaT += (double)(nbElapsedCycles * getCycleLengthFromMonRate());    
   double newValueForRate = m_counterNewValue - m_counterOldValue;
   newValueForRate *= 1000000.0;
   newValueForRate /= deltaT;
   
-  //std::cout << "NEW CALCULATED VALUE FOR RATE " << m_counterId << " IS " << newValueForRate << std::endl;
+//  COUT_DEBUG("NEW CALCULATED VALUE FOR RATE " << m_counterId << " IS " << newValueForRate);
   setValue( newValueForRate );
     
   if(oldValue != getValue())

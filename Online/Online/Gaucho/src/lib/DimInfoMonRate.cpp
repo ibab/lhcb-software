@@ -80,17 +80,24 @@ DimInfoMonRate::DimInfoMonRate(std::string monRateSvcName,
   //COUT_DEBUG("m_doubleServiceName = " << m_doubleServiceName)
 }
 
+
+//double DimInfoMonRate::getCycleNumberFromMonRate()
 int DimInfoMonRate::getCycleNumberFromMonRate()
 {
-  return (int)m_profile->GetBinContent(6);
+  //the cyclenumber is the exact bincontent
+ // COUT_DEBUG("*********************** cyclenumber (from monrate): " << m_profile->GetBinContent(6));
+ //   COUT_DEBUG("cyclenumber (from monrate): " <<   m_monRate->binCont[6]);
+//  return (int)m_profile->GetBinContent(6);
+  return (int)m_monRate->binCont[6];
 }
 
 longlong DimInfoMonRate::getTimeLastEventInCycleFromMonRate()
 {
   //COUT_DEBUG("getTimeLastEventInCycleFromMonRate");
-  longlong time = (longlong)m_profile->GetBinContent(3);
+//  longlong time = (longlong)m_profile->GetBinContent(3);
+   longlong time = (longlong)m_monRate->binCont[3];
   //COUT_DEBUG("getTimeLastEventInCycleFromMonRate DONE");
-  
+  //this is the average last time
   return time;
 }
 
@@ -102,12 +109,15 @@ void DimInfoMonRate::createMonRate()
   tmpStringSize = getSize()/sizeof(char);
   
   char * c;
+  int tries = 0;
+  int maxtries = 100;
+  
   while (true) {
     while ( tmpStringSize <= 0 ) {
       //gSystem->Sleep(m_waitTime);
       usleep(10000);
       tmpStringSize = getSize()/sizeof(char);
-      std::cout << "size for service "<< m_monRateServiceName << " " << tmpStringSize << std::endl;
+ //     COUT_DEBUG("size for service "<< m_monRateServiceName << " " << tmpStringSize);
     }
 
     c = const_cast<char *>((const char *)getString());
@@ -116,9 +126,9 @@ void DimInfoMonRate::createMonRate()
       std::cout << MSG::WARNING << s_noValidMonRate << ", for service "<< m_monRateServiceName << std::endl; 
       tmpStringSize = -1;
       usleep(10000);
-      continue;
+      tries ++;
+      if (tries < maxtries) continue;
     }
-    
     break;
   }
   
@@ -218,7 +228,7 @@ void DimInfoMonRate::loadMonRate()
       //gSystem->Sleep(m_waitTime);
       usleep(10000);
       tmpStringSize = getSize()/sizeof(char);
-      std::cout << "size for service "<< m_monRateServiceName << " " << tmpStringSize << std::endl;
+   //   std::cout << "size for service "<< m_monRateServiceName << " " << tmpStringSize << std::endl;
     }
 
     c = const_cast<char *>((const char *)getString());
@@ -248,7 +258,6 @@ void DimInfoMonRate::loadMonRate()
   m_monRate->load(*ia, 0);
   
   m_profile = m_monRate->profile();
-  
   if(ia) delete ia; 
   
  // COUT_DEBUG("loadMonRate DONE");
@@ -293,7 +302,11 @@ DimInfoMonRate::~DimInfoMonRate()
 void DimInfoMonRate::infoHandler() 
 {
  // COUT_DEBUG("infoHandler");
-  if (!m_monRateCreated) return;
+  if (!m_monRateCreated) {
+  
+ // COUT_DEBUG("**************** MonRate doesnt' exist");
+  return;}    
+//  COUT_DEBUG("**************** MonRate exists");
   try
   {
     //COUT_DEBUG("void DimInfoMonRate::infoHandler() ")
@@ -348,10 +361,10 @@ void DimInfoMonRate::infoHandler()
 void DimInfoMonRate::extractData()
 {
  // COUT_DEBUG("extractData");
+
   if(m_monRate)
   {
-    //COUT_DEBUG("extractData   m_monRate != 0");
-    
+//    COUT_DEBUG("extractData   m_monRate != 0");
     if(m_pNOPExtractor)
     {
       m_pNOPExtractor->extractData();
@@ -363,13 +376,15 @@ void DimInfoMonRate::extractData()
     //COUT_DEBUG("extractData    <=================");
     int newRates = lookForNewRates();
     
-    if(newRates != 0)
-      COUT_DEBUG("extractData    new = " << newRates << "<=================");
+//    if(newRates != 0) COUT_DEBUG("extractData    new = " << newRates << "<=================");
     
     //COUT_DEBUG("extractData   new counters search done");
     
     int gotCycleNumber = getCycleNumberFromMonRate();
     int nbElapsedCycles = gotCycleNumber - m_currentCycleNumber;
+//    COUT_DEBUG("***********got Cycle Number " << getCycleNumberFromMonRate() );
+  //  double gotCycleNumber = getCycleNumberFromMonRate();
+  //  double nbElapsedCycles = gotCycleNumber - m_currentCycleNumber;
     
     //COUT_DEBUG("extractData   got cycle number ===> " << gotCycleNumber);
     
@@ -379,7 +394,7 @@ void DimInfoMonRate::extractData()
     {
       m_currentCycleNumber = gotCycleNumber;
       
-      COUT_DEBUG("extractData   ---------- >>> NEW CYCLE " << m_currentCycleNumber);
+//      COUT_DEBUG("extractData   ---------- >>> NEW CYCLE. cyclenumber: " << m_currentCycleNumber);
       
       /* get the time reference
        */
@@ -388,7 +403,7 @@ void DimInfoMonRate::extractData()
       //COUT_DEBUG("extractData   got last evt in cycle ===> " << time);
 
 
-      COUT_DEBUG("Rates calculated after counters:");
+  //    COUT_DEBUG("Rates calculated after counters:");
       /* try to extract the rate value for each counter
        */
       for(ExtractorMap::iterator it = m_extractorMap.begin();
@@ -399,7 +414,7 @@ void DimInfoMonRate::extractData()
 	  RateExtractor * extractor = it->second;
 	  extractor->extractData(time, nbElapsedCycles);
 	  double value = extractor->getValue();
-	  COUT_DEBUG("counter #" << extractor->getCounterId() << " ===> " << value << "Hz");
+//	  COUT_DEBUG("counter #" << extractor->getCounterId() << " ===> " << value << "Hz");
 	}catch(const std::exception & e){
 	  COUT_DEBUG(e.what());
 	  /* unable to process this counter
@@ -411,12 +426,12 @@ void DimInfoMonRate::extractData()
       
     }else
     {
-      COUT_DEBUG("extractData   SAME CYCLE " << gotCycleNumber);
+ //     COUT_DEBUG("extractData  SAME CYCLE. NUMBER: " << gotCycleNumber);
     }
   }
   else
   {
-    COUT_DEBUG("extractData   NO MON RATE");  
+//    COUT_DEBUG("extractData   NO MON RATE");  
   }
   
  // COUT_DEBUG("extractData DONE");
