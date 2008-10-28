@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.75 2008-10-19 17:13:28 ibelyaev Exp $ 
+! $Id: release.notes,v 1.76 2008-10-28 10:46:55 jpalac Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2008-10-28 - Juan PALACIOS
+ - src/PhysSources.cpp
+  . Adapt to change to new IPhysDesktop::primaryVertices() method.
 
 ! 2008-10-19 - Vanya BELYAEV
 
