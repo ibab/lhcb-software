@@ -1,5 +1,8 @@
+// $Id: Property.cpp,v 1.6 2008-10-28 15:56:01 cattanem Exp $
+
 #include "ProcessorKernel/Property.h"
 
+#include <cstring> // For strlen with gcc 4.3
 
 
 /** 

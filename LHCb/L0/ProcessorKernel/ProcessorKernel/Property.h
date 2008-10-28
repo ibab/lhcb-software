@@ -50,27 +50,27 @@ class Property{
    /**
      Convert to bool.
   */
-  operator const bool() const {return (( atoi(m_value.c_str()) != 0 ) ? true : false );}
+  operator bool() const {return (( atoi(m_value.c_str()) != 0 ) ? true : false );}
 
   /**
      Convert to int.
   */
-  operator const int() const {return atoi(m_value.c_str());}
+  operator int() const {return atoi(m_value.c_str());}
 
   /**
      Convert to long.
   */
-  operator const long() const {return atol(m_value.c_str());}
+  operator long() const {return atol(m_value.c_str());}
 
   /**
      Convert to float.
   */
-  operator const float() const {return float(atof(m_value.c_str()));}
+  operator float() const {return float(atof(m_value.c_str()));}
 
   /**
      Convert to double.
   */
-  operator const double() const {return atof(m_value.c_str());}
+  operator double() const {return atof(m_value.c_str());}
 
   /**
      Convert to vector of int.
