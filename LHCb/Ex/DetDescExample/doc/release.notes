@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.42 2008-09-30 12:25:53 cattanem Exp $
+!$Id: release.notes,v 1.43 2008-10-28 09:55:58 cattanem Exp $
 !Package: DetDescExample
 !Package Manager: Marco Clemencic
 !Purpose: Demonstrate how to access detector elements, their geometry 
 !         parameters and materials from detector description XML database.
 !------------------------------------------------------------------------
+
+! 2008-10-28 - Marco Cattaneo
+ - Add missing include
 
 !==================DetDescExample v7r7 2008-09-30 ====================
 ! 2008-09-27 - Olivier Deschamps

@@ -1,4 +1,4 @@
-// $Id: SimpleAlgorithm.cpp,v 1.22 2008-09-27 22:37:40 odescham Exp $
+// $Id: SimpleAlgorithm.cpp,v 1.23 2008-10-28 09:55:58 cattanem Exp $
 
 /// Include files
 #include <vector>
@@ -12,6 +12,7 @@
 /// Detector description classes
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/ILVolume.h"
+#include "DetDesc/IPVolume.h"
 #include "DetDesc/Material.h"
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/TabulatedProperty.h"
