@@ -4,6 +4,10 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2008-10-28 - Chris Jones
+ - Add a new method to TracySys to allow user to more easily set the special
+   data options (Used in Panoramix).
+
 ! 2008-10-24 - Marco Cattaneo
  - Fix an option in Fitting.py for using a public tool (to please Gaudi v20r3)
  - Remove version numbers from uses in requirements
