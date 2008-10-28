@@ -151,7 +151,7 @@ void Archive::fillHistogram(DbRootHist* histogram,
         ++foundRootFilesIt;
       }
       if (histogram->rootHistogram) {
-        if (false == m_mainFrame->isHistoryPlotMode()) {
+        if (false == m_mainFrame->isHistoryTrendPlotMode()) {
           (histogram->rootHistogram)->Merge(list);
         } else {
           if(list->GetSize()>0) {
@@ -166,7 +166,7 @@ void Archive::fillHistogram(DbRootHist* histogram,
             }
             if (histogram->rootHistogram) { delete histogram->rootHistogram; }
             histogram->rootHistogram = newh;
-            histogram->setHistoryPlotMode(true);
+            histogram->setHistoryTrendPlotMode(true);
           }
         }
       }
