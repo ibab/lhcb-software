@@ -2,6 +2,12 @@
 ! Package     : VeloDAQ
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
+! 2008-10-28 - Tomasz Szumlak
+ - Degrading some message level from info() to debug() - related with
+   new data that can contain errors only for one ppfpga processor
+ - Add property for PrepareVeloFullRawBuffer - used when consecutive
+   events are analysed  
+
 ! 2008-10-16 - Tomasz Szumlak
  - Modified SmartErrorBankDecoder - if there is no error banks
    detected it continue processing and skips to the next event

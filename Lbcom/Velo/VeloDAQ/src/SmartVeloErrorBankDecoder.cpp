@@ -1,4 +1,4 @@
-// $Id: SmartVeloErrorBankDecoder.cpp,v 1.2 2008-10-17 16:17:24 szumlat Exp $
+// $Id: SmartVeloErrorBankDecoder.cpp,v 1.3 2008-10-28 10:03:52 szumlat Exp $
 // Include files 
 
 // from Gaudi
@@ -163,7 +163,8 @@ StatusCode SmartVeloErrorBankDecoder::storeErrorRawBanks()
     // get information on error sources
     SECTORS sectors=errorDetector(bankIT->first);
     if(sectors.size()!=SOURCES)
-      info()<< " --> Error bank format is wrong! " <<endmsg;
+      debug()<< " --> Error detected for " << (sectors.size()) 
+             << " PPFPGA(s) "<<endmsg;
     // store words in error bank
     SECTORS::iterator secIT=sectors.begin();
     for( ; secIT!=sectors.end(); ++secIT){

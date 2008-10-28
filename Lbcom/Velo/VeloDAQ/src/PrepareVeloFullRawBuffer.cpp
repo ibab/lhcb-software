@@ -1,4 +1,4 @@
-// $Id: PrepareVeloFullRawBuffer.cpp,v 1.3 2008-08-26 09:42:55 szumlat Exp $
+// $Id: PrepareVeloFullRawBuffer.cpp,v 1.4 2008-10-28 10:03:52 szumlat Exp $
 // Include files 
 #include <stdexcept>
 #include <exception>
@@ -31,19 +31,19 @@ PrepareVeloFullRawBuffer::PrepareVeloFullRawBuffer( const std::string& name,
                                                   ISvcLocator* pSvcLocator)
   : GaudiTupleAlg ( name , pSvcLocator ),
     m_rawEvent ( 0 ),
-    m_rawEventLoc ( LHCb::RawEventLocation::Default ),
     m_data ( ),
     m_ped ( ),
     m_numberOfSensors ( 0 ),
     m_sensors ( ),
     m_veloADCData ( 0 ),
     m_veloPedestals ( 0 ),
-    m_veloADCDataContainer ( VeloFullBankLocation::Default ),
-    m_veloPedestalsContainer ( VeloFullBankLocation::Pedestals ),
     m_adcBankPresent ( false ),
     m_pedBankPresent ( false )
 {
-  declareProperty("RunWithODIN", m_runWithODIN=true);  
+  declareProperty("RunWithODIN", m_runWithODIN=true);
+  declareProperty("RawEventLoc", m_rawEventLoc=LHCb::RawEventLocation::Default);
+  declareProperty("ADCLoc", m_veloADCDataContainer=VeloFullBankLocation::Default);
+  declareProperty("PedLoc", m_veloPedestalsContainer=VeloFullBankLocation::Pedestals);
 }
 //=============================================================================
 // Destructor
