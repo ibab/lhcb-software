@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.24 2008-10-28 13:52:27 graven Exp $ 
+# $Id: HltLine.py,v 1.25 2008-10-28 13:53:19 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.24 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.25 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt line itself 
@@ -127,7 +127,7 @@ def memberName     ( member, line ) :
 ## Convention: the name of 'Decision' algorithm inside HltLine
 def decisionName   ( line ) :
     """Convention: the name of 'Decision' algorithm inside HltLine"""
-    return 'Hlt1%sDecision'   % line if line != 'Global' else line
+    return 'Hlt1%sDecision'   % line if line != 'Global' else 'Hlt1Global'
 
 ## the list of all created lines 
 _hlt_1_lines__ = []
