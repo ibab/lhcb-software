@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.6 2008-10-21 19:12:57 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.7 2008-10-29 13:55:04 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -17,7 +17,10 @@ from Configurables import ( Rich__ToolRegistry )
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 class RichConfigurableUser(LHCbConfigurableUser):
-
+    
+    ## Default options are empty
+    __slots__ = { }
+    
     ## Context specific defaultvalues for each property
     _context_defaults_ = { }
 
