@@ -1,4 +1,4 @@
-// $Id: DecayChain.h,v 1.10 2008-07-22 13:45:52 ibelyaev Exp $
+// $Id: DecayChain.h,v 1.11 2008-10-29 14:08:48 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_DECAYCHAIN_H 
 #define LOKI_DECAYCHAIN_H 1
@@ -189,7 +189,7 @@ namespace LoKi
     const MSG::Color& bg          () const { return m_bg ; }
     void              setBG       (  const MSG::Color& value ) 
     { m_bg         = value ; }
-    const Mode        mode        () const { return m_mode ; }
+    Mode              mode        () const { return m_mode ; }
     void              setMode     (  const Mode&  value ) 
     { m_mode = value ; }
     // ========================================================================    
