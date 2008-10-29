@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::DelegatedTrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichDelegatedTrackCreatorFromRecoTracks.h,v 1.1.1.1 2007-11-26 17:28:18 jonrob Exp $
+ *  $Id: RichDelegatedTrackCreatorFromRecoTracks.h,v 1.2 2008-10-29 13:17:21 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -71,7 +71,7 @@ namespace Rich
       const StatusCode newTracks() const;
 
       // Returns the number of tracks in the input Track container.
-      const long nInputTracks() const;
+      long nInputTracks() const;
 
     protected: // methods
 

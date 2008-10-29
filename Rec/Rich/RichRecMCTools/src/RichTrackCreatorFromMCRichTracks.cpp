@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichTrackCreatorFromMCRichTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromMCRichTracks.cpp,v 1.17 2008-02-17 13:37:59 jonrob Exp $
+ *  $Id: RichTrackCreatorFromMCRichTracks.cpp,v 1.18 2008-10-29 13:16:49 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -90,7 +90,7 @@ const StatusCode TrackCreatorFromMCRichTracks::newTracks() const
   return StatusCode::SUCCESS;
 }
 
-const long TrackCreatorFromMCRichTracks::nInputTracks() const
+long TrackCreatorFromMCRichTracks::nInputTracks() const
 {
   const LHCb::MCRichTracks * tracks = trTracks();
   return ( tracks ? tracks->size() : 0 );

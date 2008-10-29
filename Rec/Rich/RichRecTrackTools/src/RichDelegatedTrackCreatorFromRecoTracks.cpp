@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::DelegatedTrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichDelegatedTrackCreatorFromRecoTracks.cpp,v 1.1.1.1 2007-11-26 17:28:18 jonrob Exp $
+ *  $Id: RichDelegatedTrackCreatorFromRecoTracks.cpp,v 1.2 2008-10-29 13:17:21 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -110,7 +110,7 @@ const StatusCode DelegatedTrackCreatorFromRecoTracks::newTracks() const
   return StatusCode::SUCCESS;
 }
 
-const long DelegatedTrackCreatorFromRecoTracks::nInputTracks() const
+long DelegatedTrackCreatorFromRecoTracks::nInputTracks() const
 {
   return ( recoTracks() ? recoTracks()->size() : 0 );
 }

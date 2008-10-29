@@ -4,6 +4,9 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2008-10-29 - Chris Jones
+ - Adapt to change in ITrackCreator interface (for gcc 4.3)
+
 ! 2008-10-15 - Chris Jones
  - Downgrade Warning messages to counters
 

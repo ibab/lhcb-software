@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::TrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.6 2008-08-26 19:56:06 jonrob Exp $
+ *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.7 2008-10-29 13:17:21 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -99,7 +99,7 @@ const StatusCode TrackCreatorFromRecoTracks::newTracks() const
   return StatusCode::SUCCESS;
 }
 
-const long TrackCreatorFromRecoTracks::nInputTracks() const
+long TrackCreatorFromRecoTracks::nInputTracks() const
 {
   const LHCb::Tracks * tracks = trTracks();
   return ( tracks ? tracks->size() : 0 );

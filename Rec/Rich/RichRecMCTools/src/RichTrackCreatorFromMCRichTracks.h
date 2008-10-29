@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::TrackCreatorFromMCRichTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromMCRichTracks.h,v 1.8 2007-03-09 22:57:42 jonrob Exp $
+ *  $Id: RichTrackCreatorFromMCRichTracks.h,v 1.9 2008-10-29 13:16:49 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -79,7 +79,7 @@ namespace Rich
         virtual const StatusCode newTracks() const;
 
         /// Returns the number of tracks in the input Track container.
-        virtual const long nInputTracks() const;
+        virtual long nInputTracks() const;
 
       protected: // methods
 
@@ -89,7 +89,7 @@ namespace Rich
         /// Finalise current event
         virtual void FinishEvent();
 
-      private: // defintions
+      private: // definitions
 
         /// typedef of the Linker object for Tracks to MCParticle
         typedef LinkerWithKey<LHCb::MCParticle,LHCb::Track> TrackToMCP;
