@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.369 2008-10-28 07:50:23 jpalac Exp $
+! $Id: release.notes,v 1.370 2008-10-29 13:56:04 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-10-29 - Patrick Koppenburg
+ - Renamed SelResultsCorrelations to AlgorithmCorrelationsAlg. Can use SelResult
+   but is also able to be independent of SelResult.
+   . Now it uses LoKi's functors to test Algorithms filterPassed.
 
 ! 2008-10-24 - Juan PALACIOS
  - src/PhysDesktop.h

@@ -1,4 +1,4 @@
-// $Id: SelResultCorrelations.h,v 1.1 2007-03-05 09:05:36 pkoppenb Exp $
+// $Id: AlgorithmCorrelationsAlg.h,v 1.1 2008-10-29 13:56:04 pkoppenb Exp $
 #ifndef SELRESULTCOMBINATORICS_H 
 #define SELRESULTCOMBINATORICS_H 1
 
@@ -7,18 +7,18 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 
 
-/** @class SelResultCorrelations SelResultCorrelations.h
+/** @class AlgorithmCorrelationsAlg AlgorithmCorrelationsAlg.h
  *  
  *
  *  @author Patrick KOPPENBURG
  *  @date   2004-09-01
  */
-class SelResultCorrelations : public GaudiAlgorithm {
+class AlgorithmCorrelationsAlg : public GaudiAlgorithm {
 public: 
   /// Standard constructor
-  SelResultCorrelations( const std::string& name, ISvcLocator* pSvcLocator );
+  AlgorithmCorrelationsAlg( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~SelResultCorrelations( ); ///< Destructor
+  virtual ~AlgorithmCorrelationsAlg( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
@@ -27,9 +27,15 @@ public:
 protected:
 
 private:
-  std::string m_selResults;        ///< Location of mother Particle in TES
+  /// method to test if algorithm passed selresult
+  bool selResultPassed(std::string,const LHCb::SelResults*);
+
+private:
+  bool m_useSelResults ;    ///< Use SelResults, i.e. look in DST if algorithm is not run in process.
+  std::string m_selResults;        ///< Location of selresults container
   std::vector<std::string> m_algorithmsRow ; ///< Algorithms to check
   std::vector<std::string> m_algorithmsColumn ; ///< Algorithms to against (= Row by default)
+  std::vector<std::string> m_algorithms ; ///< All Algorithms
   mutable IAlgorithmCorrelations* m_algoCorr ; ///< Correlation tool
   
   bool m_printTable ; ///< print output in Table format

@@ -1,4 +1,4 @@
-// $Id: SelResultCorrelations.cpp,v 1.4 2008-01-15 18:05:12 pkoppenb Exp $
+// $Id: AlgorithmCorrelationsAlg.cpp,v 1.1 2008-10-29 13:56:04 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -6,24 +6,25 @@
 #include "Event/SelResult.h"
 
 #include "Kernel/IAlgorithmCorrelations.h"            // Interface
+#include "LoKi/AlgFunctors.h"
 // local
-#include "SelResultCorrelations.h"
+#include "AlgorithmCorrelationsAlg.h"
 
 using namespace LHCb;
 //-----------------------------------------------------------------------------
-// Implementation file for class : SelResultCorrelations
+// Implementation file for class : AlgorithmCorrelationsAlg
 //
 // 2004-09-01 : Patrick KOPPENBURG
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
 
-DECLARE_ALGORITHM_FACTORY( SelResultCorrelations );
+DECLARE_ALGORITHM_FACTORY( AlgorithmCorrelationsAlg );
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-SelResultCorrelations::SelResultCorrelations( const std::string& name,
+AlgorithmCorrelationsAlg::AlgorithmCorrelationsAlg( const std::string& name,
                                                 ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
     , m_selResults      (SelResultLocation::Default)
@@ -31,8 +32,7 @@ SelResultCorrelations::SelResultCorrelations( const std::string& name,
     , m_algorithmsColumn ()
     , m_algoCorr()
 {
-  m_algorithmsRow.clear();
-  m_algorithmsColumn.clear();
+  declareProperty( "UseSelResults", m_useSelResults = true );
   declareProperty( "Algorithms", m_algorithmsColumn );
   declareProperty( "AlgorithmsRow", m_algorithmsRow );
   declareProperty( "PrintTable", m_printTable = true );
@@ -41,12 +41,12 @@ SelResultCorrelations::SelResultCorrelations( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-SelResultCorrelations::~SelResultCorrelations() {}; 
+AlgorithmCorrelationsAlg::~AlgorithmCorrelationsAlg() {}; 
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode SelResultCorrelations::initialize() {
+StatusCode AlgorithmCorrelationsAlg::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
@@ -71,8 +71,21 @@ StatusCode SelResultCorrelations::initialize() {
   } else {
     if (msgLevel(MSG::DEBUG)) debug() << "Algorithms to check correlations against:" << m_algorithmsRow << endmsg ;
     sc = m_algoCorr->algorithmsRow(m_algorithmsRow); // resets stuff
+    // now add algorithmsRow to algorithms for further processing
+    m_algorithms = m_algorithmsColumn ;
+    for ( std::vector<std::string>::const_iterator r = m_algorithmsRow.begin() ; r!= m_algorithmsRow.end() ; r++){
+      bool found = false ;
+      for ( std::vector<std::string>::const_iterator c = m_algorithmsColumn.begin() ; c!= m_algorithmsColumn.end() ; c++){
+        if ( *c == *r ) {
+          found = true ;
+          break ;
+        }
+        if (!found) m_algorithms.push_back(*r);
+      }
+    }
+    
     if (!sc) return sc ;
-  }  
+  }
 
   return StatusCode::SUCCESS;
 };
@@ -80,36 +93,53 @@ StatusCode SelResultCorrelations::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode SelResultCorrelations::execute() {
+StatusCode AlgorithmCorrelationsAlg::execute() {
 
   debug() << "==> Execute" << endmsg;
 
-  if (!exist<SelResults>(m_selResults)){
-    setFilterPassed(false);
-    Warning("SelResult container not found at "+m_selResults) ;
-    return StatusCode::SUCCESS;   
+  SelResults* SelResCtr = 0 ;
+  if (m_useSelResults){
+    if (!exist<SelResults>(m_selResults)){
+      setFilterPassed(false);
+      Warning("SelResult container not found at "+m_selResults) ;
+      return StatusCode::SUCCESS;   
+    }
+    SelResCtr = get<SelResults>(m_selResults);
   }
-  SelResults* SelResCtr = get<SelResults>(m_selResults);
-  if (!SelResCtr ) {
-    err() << "No valid data at " << m_selResults << endreq;
-    setFilterPassed(false);
-    return StatusCode::FAILURE; 
+  
+  for ( std::vector<std::string>::const_iterator a = m_algorithms.begin() ; a!= m_algorithms.end() ; a++){
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Looking at " << *a << endmsg ;
+    LoKi::Algorithms::Passed pass(*a) ;
+    if ( pass()) {
+      if (msgLevel(MSG::DEBUG)) debug() << *a << " passed during this processing " << endmsg ;
+      m_algoCorr->fillResult(*a,true) ;
+    } else if ( m_useSelResults ){
+      m_algoCorr->fillResult(*a,selResultPassed(*a,SelResCtr)) ;
+    }
   }
-
-  for ( SelResults::const_iterator iselRes  = SelResCtr->begin() ; 
-        iselRes != SelResCtr->end(); ++iselRes ) { 
-    debug() << "Filling result for " << (*iselRes)->location() << endmsg ;
-    StatusCode sc = m_algoCorr->fillResult((*iselRes)->location(),(*iselRes)->found()) ;
-    if (!sc) return sc;
-  }
-
+  
   return m_algoCorr->endEvent();
 };
 
+//=========================================================================
+// method to test if algorithm passed selresult
+//=========================================================================
+bool AlgorithmCorrelationsAlg::selResultPassed( std::string algo, const LHCb::SelResults* SelResCtr) {
+  for ( SelResults::const_iterator iselRes  = SelResCtr->begin() ; 
+        iselRes != SelResCtr->end(); ++iselRes ) { 
+    if ("/Event/Phys/"+algo == (*iselRes)->location()){
+      if (msgLevel(MSG::DEBUG)) debug() << "Found SelResult for " << algo << " with result " 
+                                        << (*iselRes)->found() << endmsg ;
+      return (*iselRes)->found() ;
+    }
+  }
+  if (msgLevel(MSG::DEBUG)) debug() << "Did not find SelResult for " << algo << endmsg ;
+  return false ;
+}
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode SelResultCorrelations::finalize() {
+StatusCode AlgorithmCorrelationsAlg::finalize() {
 
   debug() << "==> Finalize" << endmsg;
 
