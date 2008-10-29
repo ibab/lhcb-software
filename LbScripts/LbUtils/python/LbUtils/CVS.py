@@ -9,6 +9,7 @@ def CVS2Version(name, revision):
     version = name.replace("$", "").replace("Name:", "").strip()
     if not version :
         version = revision.replace("$", "").replace("Revision:", "").strip()
+    return version
 
 class Module(object):
     def __init__(self, name=None):

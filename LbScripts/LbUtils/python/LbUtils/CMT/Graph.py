@@ -72,7 +72,6 @@ class Graph(object):
     
     
 class showCMTProjScript(Script):
-    _version = "fake version"
     def defineOpts(self): 
         parser = self.parser
         parser.set_defaults(casesensitive=False)
