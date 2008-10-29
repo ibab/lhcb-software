@@ -1,6 +1,6 @@
-// $Id: DVTestBd2DstarPi.opts,v 1.6 2008-10-07 13:24:39 jpalac Exp $
+// $Id: DVTestBd2DstarPi.opts,v 1.7 2008-10-29 13:50:58 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
 // ============================================================================
 /** @file DVTestBd2DstarPi.opts
  *
@@ -65,7 +65,7 @@ AllTrueLooseDecay.DecayDescriptor = "[B0 -> pi- K+ pi- pi+]cc" ; // all particle
 //
 // Correlations
 //
-ApplicationMgr.TopAlg += { "SelResultCorrelations/TestCorrelations" };
+ApplicationMgr.TopAlg += { "AlgorithmCorrelationsAlg/TestCorrelations" };
 TestCorrelations.AlgorithmCorrelations.OnlyNonZero = false;
 TestCorrelations.Algorithms = { "AllTrueNoPIDsDecay", 
                                 "AllTrueLooseDecay",

@@ -1,6 +1,6 @@
-// $Id: DVTestBu2D0K_D02KsPiPi.opts,v 1.5 2008-10-07 13:24:39 jpalac Exp $
+// $Id: DVTestBu2D0K_D02KsPiPi.opts,v 1.6 2008-10-29 13:50:58 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 // ============================================================================
 /** @file DVTestHltBu2D0K_D02KsPiPi.opts
  *
@@ -63,7 +63,7 @@ AllTrueLooseDecay.DecayDescriptor = "[B+ -> K+ pi- pi+ pi- pi+]cc" ; // all part
 //
 // Correlations
 //
-ApplicationMgr.TopAlg += { "SelResultCorrelations/TestCorrelations" };
+ApplicationMgr.TopAlg += { "AlgorithmCorrelationsAlg/TestCorrelations" };
 TestCorrelations.AlgorithmCorrelations.OnlyNonZero = false;
 TestCorrelations.Algorithms = { "AllTrueNoPIDsDecay", 
                                 "AllTrueLooseDecay",

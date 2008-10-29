@@ -1,6 +1,6 @@
-// $Id: DVTestBd2KstarMuMu.opts,v 1.7 2008-10-07 13:24:39 jpalac Exp $
+// $Id: DVTestBd2KstarMuMu.opts,v 1.8 2008-10-29 13:50:58 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
 // ============================================================================
 /** @file DVTestBd2KstarMuMu.opts
  *
@@ -64,7 +64,7 @@ AllTrueLooseDecay.DecayDescriptor = "[B0 -> K+ pi- mu- mu+]cc" ; // all particle
 //
 // Correlations
 //
-ApplicationMgr.TopAlg += { "SelResultCorrelations/TestCorrelations" };
+ApplicationMgr.TopAlg += { "AlgorithmCorrelationsAlg/TestCorrelations" };
 TestCorrelations.AlgorithmCorrelations.OnlyNonZero = false;
 TestCorrelations.Algorithms = { "AllTrueNoPIDsDecay", "AllTrueLooseDecay",                               // truth
                                 "PreselBd2KstarMuMu", "StdDC06LoosePenguinDimuon", "StdDC06LooseKstar2KPi" };    // presel
