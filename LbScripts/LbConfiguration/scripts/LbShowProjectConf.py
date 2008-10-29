@@ -1,8 +1,11 @@
 from LbUtils.Script import Script
+from LbUtils.CVS import CVS2Version
 from LbConfiguration.Project import project_list, getProject
 
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.2 $")
+
 class LbShowProjectConfScript(Script):
-    _version = "fake version"
+    _version = __version__
     def defineOpts(self):
         pass 
     def main(self):

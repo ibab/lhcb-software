@@ -1,10 +1,14 @@
 #!/usr/bin/env python
+# $Id: AllProjectsSetup.py,v 1.7 2008-10-29 17:44:12 hmdegaud Exp $
 
 from LbUtils.Script import Script
 from LbUtils.Env import Environment, Aliases
+from LbUtils.CVS import CVS2Version
 import LbConfiguration.Project as Project
 from tempfile import mkstemp
 import sys, os
+
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.7 $")
 
 def _check_output_options_cb(option, opt_str, value, parser):
     if opt_str == "--mktemp":
@@ -19,7 +23,7 @@ def _check_output_options_cb(option, opt_str, value, parser):
 
 
 class AllProjectsSetupScript(Script):
-    _version = "fake version"
+    _version = __version__
     def _write_script(self, env):
         """ select the ouput stream according to the cmd line options """
         close_output = False

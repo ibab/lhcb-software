@@ -17,10 +17,13 @@ sys.path.append(os.path.join(_base_dir, "python"))
 
 from LbUtils.Script import Script
 from LbUtils.Env import Environment, Aliases
+from LbUtils.CVS import CVS2Version
 from tempfile import mkstemp
 import sys, os, logging
 import re
 import shutil
+
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.14 $")
 
 
 def getLbLoginEnv(debug=False, 
@@ -66,7 +69,7 @@ def _check_output_options_cb(option, opt_str, value, parser):
 
 
 class LbLoginScript(Script):
-    _version = "fake version"
+    _version = __version__
     
     def __init__(self, usage=None, version=None):
         Script.__init__(self, usage, version, help_output=sys.stderr)

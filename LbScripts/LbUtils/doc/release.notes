@@ -1,5 +1,10 @@
 2008-10-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* added __version__ to various script. This version is extracted from the Name 
+	or the Revision CVS keywords. 
+
+2008-10-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* python/LbUtils/CVS.py: added the function to extract the version from
 	the CVS keywords. First tries the tag name and falls back on the RCS 
 	revision number if the tag doesn't exist.

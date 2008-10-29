@@ -1,12 +1,14 @@
 #!/usr/bin/env python
-# $Id: showProjects.py,v 1.2 2008-08-27 08:27:52 hmdegaud Exp $
+# $Id: showProjects.py,v 1.3 2008-10-29 17:43:56 hmdegaud Exp $
 
 from LbRelease.CMT import LbGraph
 from LbUtils.Script import Script
+from LbUtils.CVS import CVS2Version
 
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.3 $")
 
 class showProjScript(Script):
-    _version = "fake version"
+    _version = __version__
     def defineOpts(self): 
         parser = self.parser
         parser.set_defaults(casesensitive=False)

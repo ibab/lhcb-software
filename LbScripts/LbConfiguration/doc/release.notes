@@ -1,5 +1,10 @@
 2008-10-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* added __version__ to various script. This version is extracted from the Name 
+	or the Revision CVS keywords. 
+
+2008-10-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* cmt/requirements: release of version v1r8
 
 2008-10-22  Marco Clemencic  <Marco.Clemencic@cern.ch>

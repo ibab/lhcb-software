@@ -1,9 +1,13 @@
 #!/usr/bin/env python
-# $Id: fixWinCVSRoot.py,v 1.1 2008-06-20 17:46:49 hmdegaud Exp $
+# $Id: fixWinCVSRoot.py,v 1.2 2008-10-29 17:43:40 hmdegaud Exp $
 
 from LbUtils.Script import Script
-from LbUtils.CVS import fixRoot
+from LbUtils.CVS import fixRoot, CVS2Version
+
 import os, logging
+
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.2 $")
+
 
 def dryRunCallBack(option, opt_str, value, parser):
     log = logging.getLogger()
@@ -13,7 +17,7 @@ def dryRunCallBack(option, opt_str, value, parser):
         log.setLevel(logging.INFO)
     
 class FixWinCVSRootScript(Script):
-    _version = "Jun 20, 2008 1:46:45 PM"
+    _version = __version__
     def defineOpts(self):
         parser = self.parser
         parser.set_defaults(dryrun=False)

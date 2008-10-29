@@ -4,10 +4,12 @@ import os
 from LbUtils import CVS
 from optparse import OptionParser
 
+__version__ = CVS.CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.2 $")
+
 if __name__ == '__main__':
     usage = "%prog cvsroot"
 
-    parser = OptionParser(usage=usage, version="%prog v1r0")
+    parser = OptionParser(usage=usage, version=__version__)
     
     
     parser.set_defaults(verbose=False)

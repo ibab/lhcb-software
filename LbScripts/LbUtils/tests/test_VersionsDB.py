@@ -1,8 +1,13 @@
+#!/usr/bin/env python
 # pylint: disable-msg=W0212
+# $Id: test_VersionsDB.py,v 1.9 2008-10-29 17:43:40 hmdegaud Exp $
+
 import unittest
 from LbUtils import VersionsDB
+from LbUtils.CVS import CVS2Version
+
 __author__ = "Marco Clemencic <Marco.Clemencic@cern.ch>"
-__version__ = "$Id: test_VersionsDB.py,v 1.8 2008-05-08 21:22:36 marcocle Exp $"
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.9 $")
 
 class VersionsDBTest(unittest.TestCase):
     def _prepareXML(self, data):

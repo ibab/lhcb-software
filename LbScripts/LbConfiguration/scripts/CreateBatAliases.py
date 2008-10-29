@@ -1,10 +1,14 @@
 #!/usr/bin/env python
 from LbUtils.Script import Script
+from LbUtils.CVS import CVS2Version
 from LbConfiguration.Project import project_list
 import sys, os
 import logging
 
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.3 $")
+
 class CreateBatAliasesScript(Script):
+    _version = __version__
     def defineOpts(self):
         parser = self.parser
         parser.set_defaults(outputdir=None)

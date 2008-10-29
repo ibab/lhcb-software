@@ -5,7 +5,13 @@ from xml.sax import parse, ContentHandler
 from stat import S_ISDIR
 import getopt
 
-_cvs_id = "$Id: SetupProject.py,v 1.33 2008-10-27 17:03:04 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.34 2008-10-29 17:44:12 hmdegaud Exp $"
+
+try:
+    from LbUtils.CVS import CVS2Version
+    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.34 $")
+except ImportError :
+    __version__ = _cvs_id
 
 ########################################################################
 # Useful constants
@@ -904,7 +910,7 @@ class SetupProject:
                 return OptionParser.print_version(self,file)
         
         parser = MyOptionParser(usage = "%prog [options] <project_name> [version|--ask] [options] [externals]",
-                                version = _cvs_id,
+                                version = __version__,
                                 formatter = MyHelpFormatter())
         
         def check_output_options_cb(option, opt_str, value, parser):

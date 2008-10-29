@@ -1,11 +1,14 @@
 from LbUtils.Links import showLinks
+from LbUtils.CVS import CVS2Version
+
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.2 $")
 
 import sys
 from optparse import OptionParser
 
 if __name__ == '__main__':
     usage = "usage: %prog [options] package version hat"
-    parser = OptionParser(usage=usage, version="%prog v1r0")
+    parser = OptionParser(usage=usage, version=__version__)
     
     
     parser.set_defaults(verbose=False)

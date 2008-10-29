@@ -6,9 +6,11 @@ Main program for castor usage.
 from LbUtils.Storage import humanPrint, printInByte, printInKByte
 from LbUtils.Storage import printInMByte, printInGByte, printInTByte
 from LbUtils.castor.usage import getdirsize
+from LbUtils.CVS import CVS2Version
 from optparse import OptionParser
 from os import environ
 
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.2 $")
 
 
 def print_in_bytes(option, opt_str, value, parser):
@@ -33,7 +35,7 @@ def print_for_human(option, opt_str, value, parser):
 if __name__ == '__main__':
     
     usage = "usage: %prog [options] castor_path1 castor_path2 ..."
-    parser = OptionParser(usage=usage, version="%prog v1r0")
+    parser = OptionParser(usage=usage, version=__version__)
     
     
     parser.set_defaults(verbose=False)

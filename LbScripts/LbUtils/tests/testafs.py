@@ -1,13 +1,14 @@
-# $Id: testafs.py,v 1.3 2008-10-29 15:31:28 hmdegaud Exp $
+# $Id: testafs.py,v 1.4 2008-10-29 17:43:40 hmdegaud Exp $
 """ test file for the AFS module """
-
-__version__= "$Name: not supported by cvs2svn $".replace("$", "").replace("Name:", "").strip()
-__revision__ = "$Revision: 1.3 $"
 
 from os import environ, sep
 from LbUtils.afs.directory import getDirID, getDirVolumeID, getDirVolumeName
 from LbUtils.afs.directory import getParentMountPoint
 from LbUtils.afs.directory import isMountPoint
+from LbUtils.CVS import CVS2Version
+
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.4 $")
+
 
 if __name__ == '__main__':
     print isMountPoint(environ["HOME"])
