@@ -1,4 +1,4 @@
-// $Id: AlgorithmCorrelations.cpp,v 1.4 2008-02-11 16:41:04 pkoppenb Exp $
+// $Id: AlgorithmCorrelations.cpp,v 1.5 2008-10-29 10:01:10 pkoppenb Exp $
 // Include files 
 #include <boost/format.hpp>
 #include <boost/lexical_cast.hpp>
@@ -28,7 +28,7 @@ AlgorithmCorrelations::AlgorithmCorrelations( const std::string& type,
   : GaudiTool ( type, name , parent )
     , m_conditionAlgorithms ()
     , m_algorithmsToTest ()
-    , m_SelResultMatrices ()
+    , m_AlgoMatrices ()
     , m_conditionResults()
     , m_testResults()
     , m_longestName(10)
@@ -68,7 +68,7 @@ StatusCode AlgorithmCorrelations::reset(){
     return StatusCode::FAILURE;
   }
 
-  m_SelResultMatrices.clear();
+  m_AlgoMatrices.clear();
   m_conditionResults.clear();
   m_testResults.clear();
 
@@ -106,7 +106,7 @@ StatusCode AlgorithmCorrelations::reset(){
     for( std::vector<std::string>::iterator ialg2 =  m_conditionAlgorithms.begin() ; 
          ialg2 != m_conditionAlgorithms.end(); ++ialg2 ){
       AlgoMatrix SRM( *(ialg1), *(ialg2) );
-      m_SelResultMatrices.push_back( SRM ) ;
+      m_AlgoMatrices.push_back( SRM ) ;
       if (msgLevel(MSG::DEBUG)) debug() << "Pushed back pair " << *(ialg1) << ", " << *(ialg2) << endmsg ;
     }
   }
@@ -141,12 +141,12 @@ StatusCode AlgorithmCorrelations::resetAlgoResult(std::vector<AlgoResult>& Resul
 StatusCode AlgorithmCorrelations::addResults(){
   if (msgLevel(MSG::DEBUG)) debug() << "Put all results in matrices" << endmsg ;
   // fill statistics
-  std::vector<AlgoMatrix>::iterator isrm = m_SelResultMatrices.begin();
+  std::vector<AlgoMatrix>::iterator isrm = m_AlgoMatrices.begin();
   for ( std::vector<AlgoResult>::const_iterator iar1 = m_testResults.begin();
         iar1 != m_testResults.end(); ++iar1){
     for ( std::vector<AlgoResult>::const_iterator iar2 = m_conditionResults.begin();
           iar2 != m_conditionResults.end(); ++iar2){
-      if (isrm == m_SelResultMatrices.end()){
+      if (isrm == m_AlgoMatrices.end()){
         err() << "Reached end of matrices" << endmsg;
          return StatusCode::FAILURE;      
       }
@@ -210,9 +210,12 @@ StatusCode AlgorithmCorrelations::fillResult(const std::string& algo,
       break ;
     }
   }
-  if (found) if (msgLevel(MSG::DEBUG)) debug() << "Algorithm " << algo << " has been found" << endmsg ;
-  else if (msgLevel(MSG::VERBOSE)) verbose() << "Algorithm " << algo << " has not been found" << endmsg ;
-
+  if (found) {
+    if (msgLevel(MSG::DEBUG)) debug() << "Algorithm " << algo << " has been found" << endmsg ;
+  } else {
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Algorithm " << algo << " has not been found" << endmsg ;
+  }
+  
   return StatusCode::SUCCESS;
 }
 //=============================================================================
@@ -240,8 +243,8 @@ StatusCode  AlgorithmCorrelations::printList() {
   boost::format algo("%1$-25S");
 
   always() << "Correlation list:\n" ;
-  for( std::vector<AlgoMatrix>::iterator isrm = m_SelResultMatrices.begin() ; 
-       isrm != m_SelResultMatrices.end(); ++isrm ){
+  for( std::vector<AlgoMatrix>::iterator isrm = m_AlgoMatrices.begin() ; 
+       isrm != m_AlgoMatrices.end(); ++isrm ){
     std::string a1, a2;
     isrm->getAlgorithms( a1, a2 );
     if ( isEffective( a2 )){
@@ -320,8 +323,8 @@ StatusCode AlgorithmCorrelations::printTable(void) {
   // the table
   bool doprint = true ;
   bool addline = false ;
-  for( std::vector<AlgoMatrix>::iterator isrm = m_SelResultMatrices.begin() ;
-       isrm != m_SelResultMatrices.end(); 
+  for( std::vector<AlgoMatrix>::iterator isrm = m_AlgoMatrices.begin() ;
+       isrm != m_AlgoMatrices.end(); 
        ++isrm ){
     std::string a1, a2;
     isrm->getAlgorithms( a1, a2 );
@@ -379,8 +382,8 @@ StatusCode AlgorithmCorrelations::printTable(void) {
   if (msgLevel(MSG::VERBOSE)) {
     printList() ;
   
-    for( std::vector<AlgoMatrix>::iterator isrm = m_SelResultMatrices.begin() ;
-         isrm != m_SelResultMatrices.end(); 
+    for( std::vector<AlgoMatrix>::iterator isrm = m_AlgoMatrices.begin() ;
+         isrm != m_AlgoMatrices.end(); 
          ++isrm ){
       std::string a1, a2;
       isrm->getAlgorithms( a1, a2 );
@@ -414,8 +417,8 @@ unsigned int AlgorithmCorrelations::getDecimals(void) const {
   if (m_decimals>=0) return m_decimals ;
 
   int maxevt = 1;
-  for( std::vector<AlgoMatrix>::const_iterator isrm = m_SelResultMatrices.begin() ; 
-       isrm != m_SelResultMatrices.end(); ++isrm ){
+  for( std::vector<AlgoMatrix>::const_iterator isrm = m_AlgoMatrices.begin() ; 
+       isrm != m_AlgoMatrices.end(); ++isrm ){
     int sum = isrm->getFullStatistics();
     if (sum>maxevt) maxevt = sum;
     //    if (msgLevel(MSG::VERBOSE)) verbose() << sum << " -> max = " << maxevt << endmsg ;
@@ -439,8 +442,8 @@ bool AlgorithmCorrelations::isEffective(const std::string& name ) const {
 //=============================================================================
 double AlgorithmCorrelations::algoRate(const std::string& name ) const {
 
-  for( std::vector<AlgoMatrix>::const_iterator isrm = m_SelResultMatrices.begin() ;
-       isrm != m_SelResultMatrices.end(); 
+  for( std::vector<AlgoMatrix>::const_iterator isrm = m_AlgoMatrices.begin() ;
+       isrm != m_AlgoMatrices.end(); 
        ++isrm ){
     std::string a1, a2;
     isrm->getAlgorithms( a1, a2 );

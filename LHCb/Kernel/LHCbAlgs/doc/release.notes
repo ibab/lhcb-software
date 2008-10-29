@@ -4,6 +4,11 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2008-10-29 - Patrick Koppenburg
+ - AlgorithmCorrelations : 
+   . Fix compilation warning from gcc 4.3
+   . Remove all references to SelResult
+
 !======================== LHCbAlgs v2r21 2008-09-04 ==========================
 ! 2008-08-17 Gerhard Raven
  - make sure DeterministicPrescaler does not crash on events without ODIN

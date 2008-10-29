@@ -1,4 +1,4 @@
-// $Id: AlgorithmCorrelations.h,v 1.3 2008-02-11 16:41:04 pkoppenb Exp $
+// $Id: AlgorithmCorrelations.h,v 1.4 2008-10-29 10:01:10 pkoppenb Exp $
 #ifndef ALGORITHMCORRELATIONS_H 
 #define ALGORITHMCORRELATIONS_H 1
 
@@ -60,7 +60,7 @@ protected:
 private:
   std::vector<std::string> m_conditionAlgorithms ;    ///< Algorithms to check against
   std::vector<std::string> m_algorithmsToTest ; ///< Algorithms to check
-  std::vector<AlgoMatrix> m_SelResultMatrices ; ///< Pairs of correlations
+  std::vector<AlgoMatrix> m_AlgoMatrices ; ///< Pairs of correlations
   std::vector<AlgoResult> m_conditionResults;         ///< results of algorithms in this event
   std::vector<AlgoResult> m_testResults;      ///< results of algorithms in this event
   
@@ -93,7 +93,7 @@ private:
     bool m_updated; ///< Already in this event?
   };
   
-  // container of SelResults matrix for two algorithms
+  // container of Algos matrix for two algorithms
   class AlgoMatrix{
   public:
     /// Standard constructor
@@ -105,7 +105,7 @@ private:
     /// Standard destructor
     ~AlgoMatrix(){};
 
-    /// Add SelResult
+    /// Add Algo
     void addConditionalResult(const bool&, const bool&);
 
     /// Return full statistics
