@@ -3,6 +3,9 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
+! 2008-10-29 - Patrick Koppenburg
+ - DecodeRawEvents.opts -> .py
+
 
 </PRE><H1><A NAME=v7r2>2008-10-06 Phys v7r2 </A></H1><PRE>
 
