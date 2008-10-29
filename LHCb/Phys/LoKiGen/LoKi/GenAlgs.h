@@ -1,4 +1,4 @@
-// $Id: GenAlgs.h,v 1.12 2008-06-12 08:19:05 ibelyaev Exp $
+// $Id: GenAlgs.h,v 1.13 2008-10-29 19:23:43 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GENALGS_H
 #define LOKI_GENALGS_H 1
@@ -196,8 +196,9 @@ namespace LoKi
         result = LoKi::GenAlgs::count_if
           ( particle->end_vertex() , cut , HepMC::descendants ) ;    
       }
+      if ( cut ( particle ) ) { ++result ;}
       // check the particle itself 
-      return cut ( particle ) ? result : ++result ;
+      return result ;
     }
     // ========================================================================
     /** useful helper function (a'la STL) to count a number of
