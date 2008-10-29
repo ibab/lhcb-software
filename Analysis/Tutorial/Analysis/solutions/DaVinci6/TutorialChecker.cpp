@@ -1,4 +1,4 @@
-// $Id: TutorialChecker.cpp,v 1.14 2008-08-12 13:07:16 pkoppenb Exp $
+// $Id: TutorialChecker.cpp,v 1.15 2008-10-29 08:37:05 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -105,14 +105,14 @@ StatusCode TutorialChecker::fillReco(Tuple& tuple,const LHCb::Particle* b) {
   // in the meantime I do:
   tuple->column( "P", b->momentum());
   // store IPs
-  LHCb::RecVertex::ConstVector PVs = desktop()->primaryVertices();
-  if (PVs.size()>20) {
-    err() << "Cannot store more than 20 PVs. Resize ntuple" << endmsg;
+  const LHCb::RecVertex::Container* PVs = desktop()->primaryVertices();
+  if (PVs->size()>20) {
+    err() << "Cannot store more than 20 PVs-> Resize ntuple" << endmsg;
     return StatusCode::FAILURE ;
   }
   std::vector<double> ips, ipchi2s;
-  for ( LHCb::RecVertex::ConstVector::const_iterator ipv = PVs.begin() ; 
-        ipv != PVs.end() ; ++ipv ){
+  for ( LHCb::RecVertex::Container::const_iterator ipv = PVs->begin() ; 
+        ipv != PVs->end() ; ++ipv ){
     double ip, ipchi2;
     distanceCalculator()->distance(b, (*ipv), ip, ipchi2);
     ips.push_back(ip);

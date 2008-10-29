@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.cpp,v 1.9 2008-07-10 16:47:00 pkoppenb Exp $
+// $Id: TutorialAlgorithm.cpp,v 1.10 2008-10-29 08:37:05 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -151,9 +151,9 @@ StatusCode TutorialAlgorithm::plotDaughter(const LHCb::Particle* da, const std::
   plot(da->p(),  head+"P", head+" Daughter P",  0., 50.*GeV);    // momentum
   plot(da->pt(), head+"Pt", head+" Daughter Pt", 0., 5.*GeV );  // Pt
   debug() << da->momentum() << endmsg ;
-  const LHCb::RecVertex::ConstVector& prims = desktop()->primaryVertices() ;
-  for ( LHCb::RecVertex::ConstVector::const_iterator ipv = prims.begin() ;
-        ipv != prims.end() ; ++ipv ){
+  const LHCb::RecVertex::Container* prims = desktop()->primaryVertices() ;
+  for ( LHCb::RecVertex::Container::const_iterator ipv = prims->begin() ;
+        ipv != prims->end() ; ++ipv ){
     double IP, IPE;
     debug() << (*ipv)->position() << endmsg ;
     StatusCode sc = distanceCalculator()->distance(da, (*ipv), IP, IPE);
