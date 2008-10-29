@@ -47,16 +47,16 @@ PrintPhi.PhysDesktop.InputLocations += { "/Event/Phys/StdLoosePhi2KK" } ;
 ApplicationMgr.EvtMax    = 1000 ;
 //EventSelector.FirstEvent  = 616 ;
 
-DaVinciMainSeq.Members += { "SelResultCorrelations/CorrJpsi" };
+DaVinciMainSeq.Members += { "AlgorithmCorrelationsAlg/CorrJpsi" };
 CorrJpsi.Algorithms = { "StdUnbiasedJpsi2MuMu", "StdLooseJpsi2MuMu"  } ;
                  
-DaVinciMainSeq.Members += { "SelResultCorrelations/CorrDstar" };
+DaVinciMainSeq.Members += { "AlgorithmCorrelationsAlg/CorrDstar" };
 CorrDstar.Algorithms = { "StdLooseD02KPi", "StdLooseD02KK", "StdLooseD02PiPi",
                          "StdLooseD02KsPiPi", "StdLooseD02KsPiPi", "StdLooseD2KPiPi",
                           "StdLooseDstarWithD02KPi", "StdLooseDstarWithD02KK", 
                     "StdLooseDstarWithD02PiPi",} ;
 
-DaVinciMainSeq.Members += { "SelResultCorrelations/BroadResonances" };
+DaVinciMainSeq.Members += { "AlgorithmCorrelationsAlg/BroadResonances" };
 BroadResonances.Algorithms = { "StdLooseKstar2KPi", "StdLooseRho02PiPi", "StdLoosePhi2KK" } ;
 
 // the noisy ones
