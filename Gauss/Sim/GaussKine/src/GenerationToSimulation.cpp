@@ -1,4 +1,4 @@
-// $Id: GenerationToSimulation.cpp,v 1.1 2008-10-20 08:08:54 robbep Exp $
+// $Id: GenerationToSimulation.cpp,v 1.2 2008-10-29 18:26:37 robbep Exp $
 // Include files 
 // local
 #include "GenerationToSimulation.h"
@@ -39,7 +39,7 @@ GenerationToSimulation::GenerationToSimulation( const std::string& name,
   : GaudiAlgorithm     ( name , pSvcLocator )
   , m_gigaSvc          ( 0 )
   , m_particleContainer( 0 )
-  , m_vertexContainer  ( 0 )  
+  , m_vertexContainer  ( 0 ) 
 {
 
   declareProperty( "GiGaService",    m_gigaSvcName    = "GiGa" );
@@ -66,7 +66,6 @@ StatusCode GenerationToSimulation::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   
   debug() << "==> Initialize" << endmsg;
-
   m_gigaSvc = svc<IGiGaSvc>( m_gigaSvcName, true ); // Create if necessary
   
   return StatusCode::SUCCESS;
@@ -147,7 +146,6 @@ StatusCode GenerationToSimulation::execute() {
     std::vector< HepMC::GenParticle * >::iterator it ;
     for ( it = mctruthList.begin() ; mctruthList.end() != it ; ++it ) {
       HepMC::GenVertex * prodVertex = (*it) -> production_vertex() ;
-      HepMC::GenVertex * endVertex  = (*it) -> end_vertex() ;
       if ( 0 == prodVertex ) 
 	warning() << "The particle has no production vertex !!" << endreq ;
       else if ( 0 == prodVertex -> id() )
