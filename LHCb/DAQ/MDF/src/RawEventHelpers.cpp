@@ -1,4 +1,4 @@
-// $Id: RawEventHelpers.cpp,v 1.42 2008-10-28 12:34:36 cattanem Exp $
+// $Id: RawEventHelpers.cpp,v 1.43 2008-10-29 08:59:27 cattanem Exp $
 //  ====================================================================
 //  RawEventHelpers.cpp
 //  --------------------------------------------------------------------
@@ -16,6 +16,7 @@
 #include <stdexcept>
 #include <iostream>
 #include <cstring> // For memcpy with gcc 4.3
+#include <memory> // For memcpy with gcc 4.3
 
 #ifdef _WIN32
 #define NOATOM
