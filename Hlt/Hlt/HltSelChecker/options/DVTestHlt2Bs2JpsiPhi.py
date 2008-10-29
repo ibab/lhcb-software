@@ -45,8 +45,8 @@ GaudiSequencer("SeqHlt2TruthFilter").IgnoreFilterPassed = TRUE
 ###
 importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
 DecayTreeTuple("Hlt2DecayTreeTuple").addTool(PhysDesktop())
-DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Phys/Hlt2SelB2DiMuon"]
-DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "J/psi(1S) -> ^mu+ ^mu-"
+DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Phys/Hlt2SelBs2JpsiPhi"]
+DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[B_s0 -> (^J/psi(1S) => ^mu+ ^mu-) (^phi(1020) -> ^K+ ^K-)]cc"
 #
 # Overwrite input - uncomment to run HLT on TRUE signal only
 #
