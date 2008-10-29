@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.49 2008-10-19 16:49:51 ibelyaev Exp $ 
+! $Id: release.notes,v 1.50 2008-10-29 13:41:15 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 !
 ! -----------------------------------------------------------------------------
+
+! 2008-10-29 - Vanya BELYAEV
+ - fixes for gcc43 compilation 
 
 ! 2008-10-19 - Vanya BELYAEV
 

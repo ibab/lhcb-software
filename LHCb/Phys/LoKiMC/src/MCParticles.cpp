@@ -1,4 +1,4 @@
-// $Id: MCParticles.cpp,v 1.15 2007-11-28 14:14:00 ibelyaev Exp $
+// $Id: MCParticles.cpp,v 1.16 2008-10-29 13:41:15 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -1331,7 +1331,7 @@ std::ostream& LoKi::MCParticles::DeltaPhi::fillStream ( std::ostream& s ) const
 // ============================================================================
 //  adjust delta phi into the range of [-180:180]degrees 
 // ============================================================================
-const double LoKi::MCParticles::DeltaPhi::adjust ( double phi ) const 
+double LoKi::MCParticles::DeltaPhi::adjust ( double phi ) const 
 {
   static const double s_180 = 180 * Gaudi::Units::degree ;
   static const double s_360 = 360 * Gaudi::Units::degree ;

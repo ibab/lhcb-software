@@ -1,4 +1,4 @@
-// $Id: VoidPrimitives.h,v 1.2 2008-10-24 15:28:20 cattanem Exp $
+// $Id: VoidPrimitives.h,v 1.3 2008-10-29 13:35:59 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_VOIDPRIMITIVES_H 
 #define LOKI_VOIDPRIMITIVES_H 1
@@ -1462,7 +1462,7 @@ namespace LoKi
   public:
     // ========================================================================
     const LoKi::Functor<TYPE,TYPE2>& func () const { return m_fun.func() ; }
-    const int                        val  () const { return m_val        ; }
+    int                              val  () const { return m_val        ; }
     // ========================================================================
   private:
     // ========================================================================
@@ -1618,7 +1618,7 @@ namespace LoKi
   public:
     // ========================================================================
     const LoKi::Functor<TYPE,TYPE2>& func () const { return m_fun.func() ; }
-    const unsigned int               val  () const { return m_val        ; }
+    unsigned int                     val  () const { return m_val        ; }
     // ========================================================================
   private:
     // ========================================================================

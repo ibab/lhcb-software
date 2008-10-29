@@ -1,4 +1,4 @@
-// $Id: ParticleProperties.cpp,v 1.10 2008-04-10 11:50:39 ibelyaev Exp $
+// $Id: ParticleProperties.cpp,v 1.11 2008-10-29 13:35:59 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -193,7 +193,7 @@ const ParticleProperty* LoKi::Particles::ppFromPID
  *  @param particle mass 
  */
 // ============================================================================
-const double LoKi::Particles::massFromPID  ( const LHCb::ParticleID& pid   ) 
+double LoKi::Particles::massFromPID  ( const LHCb::ParticleID& pid   ) 
 {
   const ParticleProperty* pp = LoKi::Particles::ppFromPID( pid ) ;
   if ( 0 == pp ) 
@@ -212,7 +212,7 @@ const double LoKi::Particles::massFromPID  ( const LHCb::ParticleID& pid   )
  *  @param particle property 
  */
 // ============================================================================
-const double LoKi::Particles::massFromName ( const std::string&  name ) 
+double LoKi::Particles::massFromName ( const std::string&  name ) 
 {
   const ParticleProperty* pp = LoKi::Particles::ppFromName( name ) ;
   if ( 0 == pp ) 
@@ -364,7 +364,7 @@ std::string  LoKi::Particles::nameFromPID ( const LHCb::ParticleID& pid )
  *  @param name particle name 
  */
 // ============================================================================
-const double LoKi::Particles::lifeTime     
+double LoKi::Particles::lifeTime     
 ( const std::string&      name ) 
 {
   const ParticleProperty* pp = LoKi::Particles::_ppFromName ( name ) ;
@@ -384,7 +384,7 @@ const double LoKi::Particles::lifeTime
  *  @param name particle name 
  */
 // ============================================================================
-const double LoKi::Particles::lifeTime     
+double LoKi::Particles::lifeTime     
 ( const LHCb::ParticleID& pid ) 
 {
   const ParticleProperty* pp = LoKi::Particles::_ppFromPID ( pid ) ;

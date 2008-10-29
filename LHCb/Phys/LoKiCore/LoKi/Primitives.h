@@ -1,4 +1,4 @@
-// $Id: Primitives.h,v 1.12 2008-10-19 16:11:40 ibelyaev Exp $
+// $Id: Primitives.h,v 1.13 2008-10-29 13:35:59 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PRIMITIVES_H 
 #define LOKI_PRIMITIVES_H 1
@@ -1880,7 +1880,7 @@ namespace LoKi
   public:
     // ========================================================================
     const LoKi::Functor<TYPE,TYPE2>& fun () const { return m_fun.fun() ; }
-    T2                               val () const { return m_val       ; }
+    const TYPE2&                     val () const { return m_val       ; }
     // ========================================================================
   private:
     // ========================================================================
@@ -2036,7 +2036,7 @@ namespace LoKi
   public:
     // ========================================================================
     const LoKi::Functor<TYPE,TYPE2>& fun () const { return m_fun.fun() ; }
-    const int                        val () const { return m_val       ; }
+    int                              val () const { return m_val       ; }
     // ========================================================================
   private:
     // ========================================================================
@@ -2199,7 +2199,7 @@ namespace LoKi
   public:
     // ========================================================================
     const LoKi::Functor<TYPE,TYPE2>& fun () const { return m_fun.fun() ; }
-    const unsigned int               val () const { return m_val       ; }
+    unsigned int                     val () const { return m_val       ; }
     // ========================================================================
   private:
     // ========================================================================
@@ -2278,7 +2278,7 @@ namespace LoKi
   public:
     // ========================================================================
     const LoKi::Functor<TYPE,TYPE2>& fun () const { return m_fun.fun() ; }
-    const unsigned int               val () const { return m_val       ; }
+    unsigned int                     val () const { return m_val       ; }
     // ========================================================================
   private:
     // ========================================================================
@@ -2357,6 +2357,7 @@ namespace LoKi
     virtual  typename LoKi::Functor<TYPE,TYPE2>::result_type operator () 
       ( typename LoKi::Functor<TYPE,TYPE2>::argument a ) const { return a ; }    
   private:
+    Identity& operator=( const Identity& ) ;
   } ;
   // ==========================================================================
   /** @class PrintOut

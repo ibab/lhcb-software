@@ -1,4 +1,4 @@
-// $Id: GenExtract.h,v 1.9 2007-07-23 17:23:36 ibelyaev Exp $
+// $Id: GenExtract.h,v 1.10 2008-10-29 13:40:35 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GENEXTRACT_H 
 #define LOKI_GENEXTRACT_H 1
@@ -37,6 +37,23 @@ namespace LoKi
 {
   namespace Extract
   {
+    // ========================================================================
+    /** simple function which allow to extract a certain 
+     *  particles from HepMC graph.
+     *   
+     *  @see LoKi::Cuts::GABSID
+     *  @see LoKi::Cuts::GNINTREE
+     *  @see HepMC::GenEvent
+     *
+     *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
+     *  @date   2005-03-26
+     */
+    template <class INPUT,class OUTPUT, class PREDICATE> 
+    inline OUTPUT getGenParticles 
+    ( INPUT            first     ,
+      INPUT            last      , 
+      OUTPUT           output    , 
+      const PREDICATE& predicate ) ;
     // ========================================================================
     /** Simple function which allow to extract a certain 
      *  particles from HepMC graph.

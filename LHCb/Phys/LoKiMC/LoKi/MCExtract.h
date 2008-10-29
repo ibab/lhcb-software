@@ -1,4 +1,4 @@
-// $Id: MCExtract.h,v 1.9 2008-06-12 08:16:49 ibelyaev Exp $
+// $Id: MCExtract.h,v 1.10 2008-10-29 13:41:15 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_EXTRACT_H 
 #define LOKI_EXTRACT_H 1
@@ -45,12 +45,7 @@ namespace LoKi
       MCPARTICLE        end               , 
       OUTPUT            output            , 
       const PREDICATE&  cut               ,
-      const bool        decayOnly = false )
-    {
-      for ( ; begin != end ; ++begin ) 
-      { output = getMCParticles ( *begin , output , cut , decayOnly ) ; }
-      return output ;
-    }
+      const bool        decayOnly = false ) ;
     // ========================================================================
     /** Simple function to extract (recursively) all Monte Carlo 
      *  particles form the given 
@@ -107,6 +102,17 @@ namespace LoKi
     // ========================================================================
     template <class OUTPUT, class PREDICATE> 
     inline OUTPUT  getMCParticles 
+    ( const SmartRef<LHCb::MCParticle>& particle , 
+      OUTPUT                  output            , 
+      const PREDICATE&        cut               , 
+      const bool              decayOnly = false )
+    {
+      return getMCParticles 
+        ( particle.target() , output , cut , decayOnly ) ;
+    }
+    // ========================================================================
+    template <class OUTPUT, class PREDICATE> 
+    inline OUTPUT  getMCParticles 
     ( const LHCb::MCVertex*   vertex            , 
       OUTPUT                  output            , 
       const PREDICATE&        cut               , 
@@ -117,6 +123,14 @@ namespace LoKi
       const SmartRefVector<LHCb::MCParticle>& ps = vertex->products() ;
       return getMCParticles ( ps.begin() , ps.end() , output , cut , decayOnly ) ;
     }
+    // ========================================================================
+    template <class OUTPUT, class PREDICATE> 
+    inline OUTPUT  getMCParticles 
+    ( const SmartRef<LHCb::MCVertex>& vertex    , 
+      OUTPUT                  output            , 
+      const PREDICATE&        cut               , 
+      const bool              decayOnly = false )
+    { return getMCParticles ( vertex.target() , output , cut , decayOnly ) ; }
     // ========================================================================
     template <class OUTPUT> 
     inline OUTPUT  getMCParticles 
@@ -133,6 +147,19 @@ namespace LoKi
       const bool        decayOnly = false )
     { return getMCParticles ( begin , end , output , LoKi::Objects::_ALL_ , decayOnly ) ; }
     // ======================================================================== 
+    template <class MCPARTICLE , class OUTPUT, class PREDICATE>
+    inline OUTPUT getMCParticles 
+    ( MCPARTICLE        begin             , 
+      MCPARTICLE        end               , 
+      OUTPUT            output            , 
+      const PREDICATE&  cut               ,
+      const bool        decayOnly = false )
+    {
+      for ( ; begin != end ; ++begin ) 
+      { output = getMCParticles ( *begin , output , cut , decayOnly ) ; }
+      return output ;
+    }
+    // ========================================================================
     /** Simple function to extract all Monte Carlo particles that 
      *  make contribution to the given particle. 
      *  Indeed it is just a flat representation of the Monet Carlo decay tree.

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.116 2008-10-27 15:03:40 cattanem Exp $ 
+! $Id: release.notes,v 1.117 2008-10-29 13:35:59 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2008-10-29 - Vanya BELYAEV
+
+ - few fixes to pelase gcc43 
 
 ! 2008-10-27 - Marco Cattaneo
  - Add a missing include in iNode.cpp and iTree.h to please gcc43

@@ -4,6 +4,9 @@
 ! Purpose     : Set of dictionaries for LoKi functions 
 ! -----------------------------------------------------------------------------
 
+! 2008-10-29 - Vanya BELYAEV
+ - fixes for gcc43 compilation 
+
 ! 2008-10-19 - Vanya BELYAEV
 
  - add the dictionary for various "void"-functors 

@@ -1,4 +1,4 @@
-// $Id: RangeList.h,v 1.8 2007-07-23 17:07:40 ibelyaev Exp $
+// $Id: RangeList.h,v 1.9 2008-10-29 13:35:59 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_RANGELIST_H 
 #define LOKI_RANGELIST_H 1
@@ -68,7 +68,7 @@ namespace LoKi
     /// empty list ? 
     bool          empty() const { return m_ranges.empty() ; }
     /// number of components 
-    const size_t  size () const { return  m_ranges.size() ; }
+    size_t        size () const { return  m_ranges.size() ; }
     /// indexing operator 
     const Range& operator[] ( size_t index ) const 
     { return m_ranges[ index ] ; }    

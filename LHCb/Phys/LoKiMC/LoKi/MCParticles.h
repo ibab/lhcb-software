@@ -1,4 +1,4 @@
-// $Id: MCParticles.h,v 1.16 2008-06-12 08:16:49 ibelyaev Exp $
+// $Id: MCParticles.h,v 1.17 2008-10-29 13:41:15 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCPARTICLES_H 
 #define LOKI_MCPARTICLES_H 1
@@ -921,9 +921,9 @@ namespace LoKi
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
     public:
       /// adjust delta phi into the raneg of [-180:180]degrees 
-      const double adjust ( double phi ) const ;
+      double adjust ( double phi ) const ;
     public:
-      // accessor to phi0
+      /// accessor to phi0
       double phi0() const { return m_phi ; }      
     private:
       // the default constructor is disabled 

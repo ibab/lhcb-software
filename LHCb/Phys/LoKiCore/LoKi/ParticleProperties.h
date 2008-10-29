@@ -1,4 +1,4 @@
-// $Id: ParticleProperties.h,v 1.7 2008-05-28 13:40:29 cattanem Exp $
+// $Id: ParticleProperties.h,v 1.8 2008-10-29 13:35:59 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLEPROPERTIES_H 
 #define LOKI_PARTICLEPROPERTIES_H 1
@@ -82,25 +82,25 @@ namespace LoKi
      *  @param pid particle ID 
      *  @return particle mass 
      */
-    const double massFromPID  ( const LHCb::ParticleID& pid   ) ;
+    double massFromPID  ( const LHCb::ParticleID& pid   ) ;
     // ========================================================================    
     /** retrieve ParticleProperty from ParticleID 
      *  @param name particle name 
      *  @return particle mass 
      */
-    const double massFromName ( const std::string&      name ) ;
+    double massFromName ( const std::string&      name ) ;
     // ========================================================================    
     /** retrieve the lifetime (c*tau) for the particle from the name 
      *  @param name particle name 
      *  @return particle lifetime
      */
-    const double lifeTime     ( const std::string&      name ) ;
+    double lifeTime     ( const std::string&      name ) ;
     // ========================================================================    
     /** retrieve the lifetime (c*tau) for the particle form the pid 
      *  @param pid particle ID 
      *  @return particle lifetime
      */
-    const double lifeTime     ( const LHCb::ParticleID& pid ) ;
+    double lifeTime     ( const LHCb::ParticleID& pid ) ;
     // ========================================================================    
     /** get name of 'antiparticle'
      *  @param name particlre name 
