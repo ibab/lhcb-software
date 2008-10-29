@@ -1,4 +1,4 @@
-// $Id: MCParticleMakerBase.h,v 1.2 2008-06-03 15:24:14 cattanem Exp $
+// $Id: MCParticleMakerBase.h,v 1.3 2008-10-29 09:14:33 cattanem Exp $
 // ============================================================================
 #ifndef DAVINCIMCTOOLS_MCPARTICLEMAKERBASE_H 
 #define DAVINCIMCTOOLS_MCPARTICLEMAKERBASE_H 1
@@ -124,8 +124,8 @@ protected:
   /// get correlation matrix 
   inline const Gaudi::SymMatrix6x6& rho() const { return m_rho ; }
   /// generate a vector of correlated random numbers according cov matrix
-StatusCode MCParticleMakerBase::correlatedRandomVectorGenerator
-( const  Gaudi::SymMatrix7x7& cov, Gaudi::Vector7& vector );
+  StatusCode correlatedRandomVectorGenerator
+  ( const  Gaudi::SymMatrix7x7& cov, Gaudi::Vector7& vector );
 protected:  
   /// (optional) location of output relation table
   const std::string& outputTable() const { return m_outputTable ; }
