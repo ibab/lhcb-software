@@ -5,7 +5,7 @@
  *  Implementation of templated constructors for ST::CommonBase
  *
  *  CVS Log :-
- *  $Id: STCommonConstructors.cpp,v 1.1 2008-10-14 08:47:06 mneedham Exp $
+ *  $Id: STCommonConstructors.cpp,v 1.2 2008-10-29 12:50:01 mneedham Exp $
  *
  *  @author Matthew Needham
  *  @date   2008-11-10
@@ -26,15 +26,17 @@
 //=============================================================================
 // Implementation of STCommonBase for GaudiAlgorithm
 //=============================================================================
+
+namespace ST{
 template <>
-ST::CommonBase<GaudiAlgorithm>::CommonBase( const std::string& name,
+  CommonBase<GaudiAlgorithm>::CommonBase( const std::string& name,
                                               ISvcLocator* pSvcLocator )
   : GaudiAlgorithm ( name, pSvcLocator             )
  {
    commonInit();
 }
 template <>
-ST::CommonBase<GaudiAlgorithm>::CommonBase( const std::string& /* type */,
+CommonBase<GaudiAlgorithm>::CommonBase( const std::string& /* type */,
                                               const std::string& /* name */,
                                               const IInterface* /* parent */ )
   : GaudiAlgorithm ( "ERROR", NULL )
@@ -48,14 +50,14 @@ ST::CommonBase<GaudiAlgorithm>::CommonBase( const std::string& /* type */,
 // Implementation of STCommonBase for GaudiHistoAlg
 //=============================================================================
 template <>
-ST::CommonBase<GaudiHistoAlg>::CommonBase( const std::string& name,
+CommonBase<GaudiHistoAlg>::CommonBase( const std::string& name,
                                              ISvcLocator* pSvcLocator )
   : GaudiHistoAlg  ( name, pSvcLocator             )
 {
   commonInit();
 }
 template <>
-ST::CommonBase<GaudiHistoAlg>::CommonBase( const std::string& /* type */,
+CommonBase<GaudiHistoAlg>::CommonBase( const std::string& /* type */,
                                              const std::string& /* name */,
                                              const IInterface* /* parent */ )
   : GaudiHistoAlg ( "ERROR", NULL )
@@ -69,14 +71,14 @@ ST::CommonBase<GaudiHistoAlg>::CommonBase( const std::string& /* type */,
 // Implementation of CommonBase for GaudiTupleAlg
 //=============================================================================
 template <>
-ST::CommonBase<GaudiTupleAlg>::CommonBase( const std::string& name,
+CommonBase<GaudiTupleAlg>::CommonBase( const std::string& name,
                                              ISvcLocator* pSvcLocator )
   : GaudiTupleAlg  ( name, pSvcLocator             )
 {
  commonInit();
 }
 template <>
-ST::CommonBase<GaudiTupleAlg>::CommonBase( const std::string& /* type */,
+CommonBase<GaudiTupleAlg>::CommonBase( const std::string& /* type */,
                                              const std::string& /* name */,
                                              const IInterface* /* parent */ )
   : GaudiTupleAlg ( "ERROR", NULL )
@@ -90,7 +92,7 @@ ST::CommonBase<GaudiTupleAlg>::CommonBase( const std::string& /* type */,
 // Implementation of CommonBase for GaudiTool
 //=============================================================================
 template <>
-ST::CommonBase<GaudiTool>::CommonBase( const std::string& type,
+CommonBase<GaudiTool>::CommonBase( const std::string& type,
                                          const std::string& name,
                                          const IInterface* parent )
   : GaudiTool   ( type, name, parent            )
@@ -98,7 +100,7 @@ ST::CommonBase<GaudiTool>::CommonBase( const std::string& type,
  commonInit();
 }
 template <>
-ST::CommonBase<GaudiTool>::CommonBase( const std::string& /* name */,
+CommonBase<GaudiTool>::CommonBase( const std::string& /* name */,
                                          ISvcLocator* /* pSvcLocator */ )
   : GaudiTool ( "ERROR", "ERROR", NULL )
 {
@@ -111,7 +113,7 @@ ST::CommonBase<GaudiTool>::CommonBase( const std::string& /* name */,
 // Implementation of CommonBase for GaudiHistoTool
 //=============================================================================
 template <>
-ST::CommonBase<GaudiHistoTool>::CommonBase( const std::string& type,
+CommonBase<GaudiHistoTool>::CommonBase( const std::string& type,
                                               const std::string& name,
                                               const IInterface* parent )
   : GaudiHistoTool ( type, name, parent            )
@@ -119,7 +121,7 @@ ST::CommonBase<GaudiHistoTool>::CommonBase( const std::string& type,
  commonInit();
 }
 template <>
-ST::CommonBase<GaudiHistoTool>::CommonBase( const std::string& /* name */,
+CommonBase<GaudiHistoTool>::CommonBase( const std::string& /* name */,
                                               ISvcLocator* /* pSvcLocator */ )
   : GaudiHistoTool ( "ERROR", "ERROR", NULL )
 {
@@ -132,7 +134,7 @@ ST::CommonBase<GaudiHistoTool>::CommonBase( const std::string& /* name */,
 // Implementation of STCommonBase for GaudiTupleTool
 //=============================================================================
 template <>
-ST::CommonBase<GaudiTupleTool>::CommonBase( const std::string& type,
+CommonBase<GaudiTupleTool>::CommonBase( const std::string& type,
                                               const std::string& name,
                                               const IInterface* parent )
   : GaudiTupleTool ( type, name, parent            )
@@ -140,7 +142,7 @@ ST::CommonBase<GaudiTupleTool>::CommonBase( const std::string& type,
  commonInit();
 }
 template <>
-ST::CommonBase<GaudiTupleTool>::CommonBase( const std::string& /* name */,
+CommonBase<GaudiTupleTool>::CommonBase( const std::string& /* name */,
                                               ISvcLocator* /* pSvcLocator */ )
   : GaudiTupleTool ( "ERROR", "ERROR", NULL )
 {
@@ -148,3 +150,4 @@ ST::CommonBase<GaudiTupleTool>::CommonBase( const std::string& /* name */,
                         "ST::CommonBase", StatusCode::FAILURE );
 }
 //=============================================================================
+} // ST namespace
