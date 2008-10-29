@@ -8,6 +8,9 @@
 from Gaudi.Configuration import *
 from Configurables import Z0Checker, HltBackgroundCategory
 importOptions ("$HLTSELECTIONSROOT/options/DVTestHlt2.py")
+from HltConf.Configuration import *
+HltConf().Hlt2IgnoreHlt1Decision = True  # do both Hlt1 and 2
+HltConf().applyConf()
 #
 # background category
 #

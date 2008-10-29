@@ -10,7 +10,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2008-10-29 - Patrick Koppenburg
- - Renamed DVTestHlt2BiasedDimuon into Bs2JpsiMuMuPhi for consistency.
+ - Renamed DVTestHlt2BiasedDimuon into Bs2JpsiPhi for consistency.
  - Run Hlt1 and 2 and ignore Hlt1 decision in all tests. 
 
 ! 2008-10-23 - Patrick Koppenburg
