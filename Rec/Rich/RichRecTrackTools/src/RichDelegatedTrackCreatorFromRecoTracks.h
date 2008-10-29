@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::DelegatedTrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichDelegatedTrackCreatorFromRecoTracks.h,v 1.2 2008-10-29 13:17:21 jonrob Exp $
+ *  $Id: RichDelegatedTrackCreatorFromRecoTracks.h,v 1.3 2008-10-29 14:41:38 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -68,7 +68,7 @@ namespace Rich
       virtual LHCb::RichRecTrack * newTrack ( const ContainedObject * obj ) const;
 
       // Form all possible RichRecTracks from input Tracks
-      const StatusCode newTracks() const;
+      StatusCode newTracks() const;
 
       // Returns the number of tracks in the input Track container.
       long nInputTracks() const;

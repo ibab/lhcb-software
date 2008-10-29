@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::TrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.7 2008-10-29 13:17:21 jonrob Exp $
+ *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.8 2008-10-29 14:41:38 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -74,7 +74,7 @@ StatusCode TrackCreatorFromRecoTracks::initialize()
   return sc;
 }
 
-const StatusCode TrackCreatorFromRecoTracks::newTracks() const
+StatusCode TrackCreatorFromRecoTracks::newTracks() const
 {
 
   if ( !m_allDone )
