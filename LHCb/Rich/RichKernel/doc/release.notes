@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.202 2008-10-21 19:12:57 jonrob Exp $
+! $Id: release.notes,v 1.203 2008-10-29 11:07:15 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
+
+! 2008-10-29 - Marco Cattaneo
+ - Partial fix for compilation with gcc 4.3
 
 ! 2008-10-21 - Chris Jones
  - Update tools configuration in python configurable

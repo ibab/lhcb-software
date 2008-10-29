@@ -5,7 +5,7 @@
  *  Implementation file for pixel clustering class Rich::DAQ::PixelCluster
  *
  *  CVS Log :-
- *  $Id: RichPixelCluster.cpp,v 1.6 2007-12-21 12:12:34 jonrob Exp $
+ *  $Id: RichPixelCluster.cpp,v 1.7 2008-10-29 11:07:15 cattanem Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   02/02/2007
@@ -18,6 +18,8 @@
 
 // boost
 #include "boost/format.hpp"
+
+#include <cstring> // for memset with gcc 4.3
 
 using namespace Rich;
 
