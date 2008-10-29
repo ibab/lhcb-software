@@ -1,4 +1,4 @@
-// $Id: SimulationToMCTruth.cpp,v 1.4 2008-10-24 09:20:48 robbep Exp $
+// $Id: SimulationToMCTruth.cpp,v 1.5 2008-10-29 18:27:17 robbep Exp $
 // Include files 
 
 // local 
@@ -116,6 +116,14 @@ StatusCode SimulationToMCTruth::execute() {
 
   // clear set of treated MCParticles
   m_treatedParticles.clear() ;
+  
+  // store in an intermediate vector the particles already created
+  // then at the end of the processing, these particles with a null production
+  // vertex must be deleted
+  std::vector< LHCb::MCParticle * > particleVector ;
+  LHCb::MCParticles::const_iterator ip;
+  for( ip = m_particleContainer -> begin() ; m_particleContainer -> end() != ip;
+       ++ip ) particleVector.push_back( (*ip) ) ;
 
   // clear reference table
   GiGaKineRefTable& table = m_gigaKineCnvSvc->table();
@@ -187,8 +195,36 @@ StatusCode SimulationToMCTruth::execute() {
     }
   }
   
+  // Now eliminates all decay trees which have no production vertices
+  // They have been eliminated by Geant4 (for example a Lambda0 has
+  // interacted then the decay products don't exist anymore)
+  std::vector< LHCb::MCParticle *>::const_iterator ipart;
+  for( ipart = particleVector.begin() ; particleVector.end() != ipart;
+       ++ipart ) {
+    if ( 0 == (*ipart) -> originVertex() ) deleteParticle( (*ipart) ) ;
+  }
+  
   debug() << "Conversion G4 -> MCTruth is finished" << endmsg ;  
   return StatusCode::SUCCESS;
+}
+
+//=============================================================================
+// Delete a particle and all decay tree
+//=============================================================================
+void SimulationToMCTruth::deleteParticle( LHCb::MCParticle * P ) {
+  for( SmartRefVector<LHCb::MCVertex>::const_iterator endV = P -> endVertices().begin();
+       P -> endVertices().end() != endV ; ++endV ) {
+    for ( SmartRefVector<LHCb::MCParticle>::const_iterator prod = (*endV) -> products().begin();
+	  prod != (*endV) -> products().end() ; ++prod ) {
+      const LHCb::MCParticle * constParticle = *prod ;
+      LHCb::MCParticle * Particle = const_cast<LHCb::MCParticle *>( constParticle ) ;
+      deleteParticle( Particle ) ;
+    }
+    const LHCb::MCVertex * constV = *endV ;
+    LHCb::MCVertex * V = const_cast<LHCb::MCVertex *>( constV ) ;
+    m_vertexContainer -> erase( V ) ;
+  }
+  m_particleContainer -> erase( P ) ;
 }
 
 //=============================================================================
@@ -278,10 +314,21 @@ void SimulationToMCTruth::convert( const HepMC::GenParticle * part ,
     mcendvtx -> setPosition ( Gaudi::XYZPoint(genendvtx->point3d()) );
     mcendvtx -> setTime     ( genendvtx->position().t() );
     mcendvtx -> setMother   ( mcpart );
-    int typeID = 
-      MCTruthManager::GetInstance() -> GetCreatorID( genendvtx -> barcode() );
-    mcendvtx -> setType( vertexType( typeID ) ) ;
-  
+    
+    if ( 0 != genendvtx -> particles_out_size() ) {
+      // take the first daughter and get its creator ID to assign it to this vertex
+      HepMC::GenParticle * daughter = *(genendvtx -> particles_out_const_begin()) ;
+      int typeID = 
+	MCTruthManager::GetInstance() -> GetCreatorID( -daughter -> barcode() );
+      LHCb::MCVertex::MCVertexType vType = vertexType( typeID ) ;
+      mcendvtx -> setType( vType ) ;
+    } else {
+      // review this: perhaps add new vertex type for particle stoppping (in ECAL, ...)
+      // for the moment, give its own creation process
+      mcendvtx -> 
+	setType( vertexType( MCTruthManager::GetInstance() -> GetCreatorID( -barcode ) ) ) ;
+    }
+    
     mcpart -> addToEndVertices( mcendvtx ) ;
     
       // now process the daughters
@@ -300,7 +347,8 @@ bool SimulationToMCTruth::isEndOfWorldVertex( HepMC::GenVertex * ev ) {
   if ( 0 == ev ) return true ;
   if ( 0 != ev -> particles_out_size() ) return false ;
   HepMC::ThreeVector V = ev -> point3d() ;
-  if ( ( 50.0 * m == V.x() ) || ( 50.0 * m == V.y() ) || ( 50.0 * m == V.z() ) ) 
+  if ( ( 50.0 * m == std::fabs(V.x()) ) || ( 50.0 * m == std::fabs(V.y()) ) || 
+      ( 50.0 * m == std::fabs(V.z()) ) ) 
     return true ;
   return false ;
 }

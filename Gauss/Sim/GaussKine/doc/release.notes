@@ -4,8 +4,13 @@
 ! Purpose     : Code to exchange kinematic information with Geant4
 !-----------------------------------------------------------------------------
 
+! 2008-10-29 - Patrick Robbe
+ - SimulationToMCTruth: remove particles which are left with 
+   null production vertex after Geant4, because of interactions
+   (mainly Lambda interactions) which destroyed the particle
+
 ! 2008-10-23 - Patrick Robbe
- - In SimulationToMCTrugh: check if pdg code from Geant4 is unknown
+ - In SimulationToMCTruth: check if pdg code from Geant4 is unknown
    and don't create a vertex for a particle reaching Geant4 'world'
    volume
 

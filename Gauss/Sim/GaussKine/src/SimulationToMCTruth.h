@@ -1,4 +1,4 @@
-// $Id: SimulationToMCTruth.h,v 1.2 2008-10-23 12:08:36 robbep Exp $
+// $Id: SimulationToMCTruth.h,v 1.3 2008-10-29 18:27:25 robbep Exp $
 #ifndef SIMULATIONTOMCTRUTH_H 
 #define SIMULATIONTOMCTRUTH_H 1
  
@@ -42,20 +42,8 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   
 private:
-
-  /** accessor to GiGa Service
-   *  @return pointer to GiGa Service
-   */
-  IGiGaSvc* gigaSvc() const { 
-    return m_gigaSvc; 
-  }
-
-  /** accessor to kinematics  conversion service 
-   *  @return pointer to kinematics conversion service 
-   */
-  IGiGaKineCnvSvc*      kineSvc   () const { 
-    return m_gigaKineCnvSvc;
-  } 
+  /// Delete a complete tree from event record
+  void deleteParticle( LHCb::MCParticle * P ) ;
   
   /// Convert a HepMC particle from Geant4 to a MC Particle
   void convert( const HepMC::GenParticle* genpart, LHCb::MCVertex* prodvertex , 
