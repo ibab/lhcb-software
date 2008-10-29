@@ -22,6 +22,9 @@ CheckSelResult("CheckOffline").Algorithms += [ "PreselBd2KstarMuMu" ]
 # Hlt test
 #
 importOptions( "$HLTSELECTIONSROOT/options/DVTestHlt2.py")
+from HltConf.Configuration import *
+HltConf().Hlt2IgnoreHlt1Decision = True  # do both Hlt1 and 2
+HltConf().applyConf()
 #
 # Plots
 #
@@ -53,7 +56,7 @@ ApplicationMgr().ExtSvc +=  [ "NTupleSvc" ]
 NTupleSvc().Output =  [ "FILE1 DATAFILE='HLT-Bd2MuMuKstar.root' TYP='ROOT' OPT='NEW'" ] 
 HistogramPersistencySvc().OutputFile = "DVHlt2-Bd2MuMuKstar.root"
 
-ApplicationMgr().EvtMax = 200
+ApplicationMgr().EvtMax = -1
 EventSelector().FirstEvent = 1 
 EventSelector().PrintFreq = 1 
 
@@ -80,7 +83,7 @@ DecayTreeTuple("Hlt2DecayTreeTuple").addTool(TupleToolDecay("Head"))
 DecayTreeTuple("Hlt2DecayTreeTuple").Head.ToolList += [ "TupleToolP2VV" ]
 DecayTreeTuple("Hlt2DecayTreeTuple").addTool(TupleToolTrigger())
 DecayTreeTuple("Hlt2DecayTreeTuple").TupleToolTrigger.VerboseL0 = True
-
+DecayTreeTuple("Hlt2DecayTreeTuple").ToolList += [ "TupleToolTISTOS" ]
 # importOptions( "$FLAVOURTAGGINGOPTS/BTaggingTool.opts")
 
 # HltBackgroundCategory.FillAll = false 
