@@ -1,4 +1,4 @@
-// $Id: Particles17.cpp,v 1.5 2007-11-28 14:39:30 ibelyaev Exp $
+// $Id: Particles17.cpp,v 1.6 2008-10-29 13:55:59 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -103,7 +103,7 @@ std::ostream& LoKi::Particles::DeltaPhi::fillStream ( std::ostream& s ) const
 // ============================================================================
 // adjust delta phi into the range of [-180:180]degrees 
 // ============================================================================
-const double LoKi::Particles::DeltaPhi::adjust ( double phi ) const 
+double LoKi::Particles::DeltaPhi::adjust ( double phi ) const 
 {
   static const double s_180 = 180 * Gaudi::Units::degree ;
   static const double s_360 = 360 * Gaudi::Units::degree ;

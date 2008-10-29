@@ -1,4 +1,4 @@
-// $Id: PhysExtract.h,v 1.6 2008-06-03 15:47:08 cattanem Exp $
+// $Id: PhysExtract.h,v 1.7 2008-10-29 13:55:58 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSEXTRACT_H 
 #define LOKI_PHYSEXTRACT_H 1
@@ -327,7 +327,22 @@ namespace LoKi
     ( PARTICLE   first  , 
       PARTICLE   last   , 
       OUTPUT     output )
-    { return getProtoParticles ( first , last , output ) ; }
+    { return getProtoParticles ( first , last , output ) ; } 
+    // ========================================================================
+    template <class OUTPUT,class PREDICATE> 
+    inline  OUTPUT getParticles 
+    ( const LHCb::Particle*   particle , 
+      OUTPUT            output   , 
+      const PREDICATE&  cut      ) ;
+    // ========================================================================
+    template <class OUTPUT,class PREDICATE> 
+    inline  OUTPUT getParticles 
+    ( const SmartRef<LHCb::Particle>& particle , 
+      OUTPUT            output   , 
+      const PREDICATE&  cut      ) 
+    {
+      return getParticles ( particle.target() , output , cut ) ;
+    }
     // ========================================================================
     /** Simple function to extract recursively all reconstructed 
      *  particles that make contribution to the given particle. 
@@ -382,7 +397,7 @@ namespace LoKi
       const Daughters& daugs = particle->daughters() ;      
       for ( Daughters::const_iterator idau = daugs.begin() ; 
             daugs.end() != idau ; ++idau ) 
-      { output = getParticles ( *idau , output ) ; }           // RECURSION
+      { output = getParticles ( *idau , output , cut ) ; }           // RECURSION
       //
       return output ;
     }

@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.76 2008-10-28 10:46:55 jpalac Exp $ 
+! $Id: release.notes,v 1.77 2008-10-29 13:55:59 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+
+! 2008-10-29 - Vanya BELYAEV
+ - fixes for gcc43 compilation 
+
 
 ! 2008-10-28 - Juan PALACIOS
  - src/PhysSources.cpp

@@ -1,4 +1,4 @@
-// $Id: Particles17.h,v 1.5 2007-11-28 14:39:29 ibelyaev Exp $
+// $Id: Particles17.h,v 1.6 2008-10-29 13:55:58 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES17_H 
 #define LOKI_PARTICLES17_H 1
@@ -87,7 +87,7 @@ namespace LoKi
       double phi() const { return  m_phi ; }
     public:
       /// adjust delta phi into the raneg of [-180:180]degrees 
-      const double adjust ( double phi ) const ;
+      double adjust ( double phi ) const ;
     private:
       // the default constructor is disabled 
       DeltaPhi ();
