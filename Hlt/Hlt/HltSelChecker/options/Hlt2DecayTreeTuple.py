@@ -38,4 +38,7 @@ Hlt2DecayTreeTuple.ToolList += [
     , "TupleToolEventInfo"
     , "LoKi::Hybrid::TupleTool/LoKiTool" ]
 
-
+#
+# event tuple
+#
+importOptions( "$HLTSELCHECKERROOT/options/Hlt2EventTuple.py" )

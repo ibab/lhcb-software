@@ -5,9 +5,7 @@
  #  @date 2008-06-24
  #
 from Gaudi.Configuration import *
-from Configurables import Hlt2Statistics, CheckSelResult, EventTuple, TupleToolGeneration, TupleToolTrigger, L0Filter
-
-from Gaudi.Configuration import *
+from Configurables import Hlt2Statistics, CheckSelResult
 from Configurables import HistogramPersistencySvc, ReadHltSummary
 importOptions ("$DAVINCIROOT/options/DaVinciCommon.opts")
 ########################################################################
@@ -54,22 +52,13 @@ filter.Algorithms = [ "Hlt2Decision" ]
 # make Hlt2 statistics
 statseq.Members += ["L0Filter", "Hlt2Statistics" ]
 
-# add event-info tuple
-tuple = EventTuple("TriggerTuple")
-statseq.Members += [tuple ]
-tuple.ToolList = [ "TupleToolTrigger", "TupleToolEventInfo" , "TupleToolGeneration" ]
-tuple.addTool( TupleToolTrigger() )
-tuple.TupleToolTrigger.VerboseHlt1 = TRUE
-tuple.TupleToolTrigger.VerboseHlt2 = TRUE
-#tuple.addTool( TupleToolGeneration() )
-#tuple.TupleToolGeneration.OutputLevel = 1
-#tuple.OutputLevel = 1
-
+# event tuple
+importOptions( "$HLTSELCHECKERROOT/options/Hlt2EventTuple.py" )
 
 # save tuple
 NTupleSvc().Output = ["FILE1 DATAFILE='Hlt12-StatsTuple.root' TYP='ROOT' OPT='NEW'"]
 
-ApplicationMgr().EvtMax = -1
+ApplicationMgr().EvtMax = 100000
 
 EventSelector().PrintFreq = 1000 
 

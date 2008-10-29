@@ -12,6 +12,7 @@
 ! 2008-10-29 - Patrick Koppenburg
  - Renamed DVTestHlt2BiasedDimuon into Bs2JpsiPhi for consistency.
  - Run Hlt1 and 2 and ignore Hlt1 decision in all tests. 
+ - Move EventTuple to Hlt2EventTuple.py. Load it from TestStatistics and from Hlt2DecayTreeTuple.
 
 ! 2008-10-23 - Patrick Koppenburg
  - Remove Hlt2TestStatisticsGanga12.py
