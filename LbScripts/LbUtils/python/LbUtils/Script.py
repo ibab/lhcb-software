@@ -5,7 +5,7 @@ import logging
 import sys
 
 class Script:
-    _version = "$Name: not supported by cvs2svn $"
+    _version = "$Id: Script.py,v 1.6 2008-10-29 15:49:12 hmdegaud Exp $"
     def __init__(self, usage=None, version = None, parser=Parser, help_output=sys.stdout):
         """ constructor of the Script. provides default options parser 
         and logger """
