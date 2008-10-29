@@ -1,4 +1,4 @@
-// $Id: L0.h,v 1.1.1.1 2008-09-21 14:41:20 ibelyaev Exp $
+// $Id: L0.h,v 1.2 2008-10-29 14:05:08 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_L0_H 
 #define LOKI_L0_H 1
@@ -174,11 +174,11 @@ namespace LoKi
       // ======================================================================
     public:
       // ======================================================================
-      const unsigned int index () const { return m_channel ; }
+      unsigned int index () const { return m_channel ; }
       const Names&       names () const { return m_names   ; }      
       // ======================================================================
-      const Flag mode () const { return m_mode ; }
-      const int  bx   () const { return m_bx   ; }
+      Flag mode () const { return m_mode ; }
+      int  bx   () const { return m_bx   ; }
       // ======================================================================
     private:
       // ======================================================================

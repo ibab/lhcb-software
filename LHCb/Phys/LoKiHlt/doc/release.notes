@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.8 2008-10-19 16:28:37 ibelyaev Exp $ 
+! $Id: release.notes,v 1.9 2008-10-29 14:05:08 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiHlt
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : collection of functors&factory for HLT 
 ! -----------------------------------------------------------------------------
+
+! 2008-10-29 - Vanya BELYAEV
+
+ - fix the warnings for gcc43 compilation 
+
 
 ! 2008-10-19 - Vanya BELYAEV
 
