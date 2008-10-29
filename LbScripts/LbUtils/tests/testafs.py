@@ -1,7 +1,8 @@
-# $Id: testafs.py,v 1.2 2008-10-29 15:05:46 hmdegaud Exp $
+# $Id: testafs.py,v 1.3 2008-10-29 15:31:28 hmdegaud Exp $
 """ test file for the AFS module """
 
-__version__= "$Name: not supported by cvs2svn $"
+__version__= "$Name: not supported by cvs2svn $".replace("$", "").replace("Name:", "").strip()
+__revision__ = "$Revision: 1.3 $"
 
 from os import environ, sep
 from LbUtils.afs.directory import getDirID, getDirVolumeID, getDirVolumeName
