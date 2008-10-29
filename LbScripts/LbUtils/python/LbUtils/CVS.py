@@ -4,6 +4,12 @@ from subprocess import Popen, PIPE
 import logging
 import shutil
 
+
+def CVS2Version(name, revision):
+    version = name.replace("$", "").replace("Name:", "").strip()
+    if not version :
+        version = revision.replace("$", "").replace("Revision:", "").strip()
+
 class Module(object):
     def __init__(self, name=None):
         self._name = name

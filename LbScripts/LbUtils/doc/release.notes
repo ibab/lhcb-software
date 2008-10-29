@@ -1,5 +1,13 @@
 2008-10-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbUtils/CVS.py: added the function to extract the version from
+	the CVS keywords. First tries the tag name and falls back on the RCS 
+	revision number if the tag doesn't exist.
+	* scripts/showCMTProjects.py : example of the usage of the above mentioned
+	feature.
+
+2008-10-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* cmt/requirements: release of version v1r5
 
 2008-09-29  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
