@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.50 2008-07-29 12:54:31 cattanem Exp $ 
+! $Id: release.notes,v 1.51 2008-10-29 08:48:19 cattanem Exp $ 
 ! =============================================================================
 ! package DetDescSvc
 ! package manager : Marco Clemencic, Juan Palacios ?
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
+
+! 2008-10-29 - Marco Cattaneo
+ - Add missing include for gcc 4.3
 
 !========================= DetDescSvc v2r1 2008-07-29 =========================
 ! 2008-07-29 - Marco Clemencic

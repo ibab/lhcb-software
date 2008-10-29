@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.cpp,v 1.20 2008-09-23 12:29:18 marcocle Exp $
+// $Id: UpdateManagerSvc.cpp,v 1.21 2008-10-29 08:48:19 cattanem Exp $
 // Include files
 
 #include "GaudiKernel/SvcFactory.h"
@@ -17,6 +17,7 @@
 #include <set>
 #include <sstream>
 #include <fstream>
+#include <memory> // for auto_ptr with gcc 4.3
 
 // local
 #include "UpdateManagerSvc.h"
