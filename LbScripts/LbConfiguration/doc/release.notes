@@ -1,3 +1,7 @@
+2008-10-22  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v1r8
+
 2008-10-22  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
         * scripts/SetupProject.py: fixed bug #43305 (failure when the path
