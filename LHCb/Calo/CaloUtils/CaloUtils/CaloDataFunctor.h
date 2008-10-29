@@ -1,4 +1,4 @@
-// $Id: CaloDataFunctor.h,v 1.2 2008-09-30 09:00:48 cattanem Exp $
+// $Id: CaloDataFunctor.h,v 1.3 2008-10-29 10:47:44 cattanem Exp $
 // ============================================================================
 #ifndef EVENT_CALODATAFUNCTOR_H 
 #define EVENT_CALODATAFUNCTOR_H 1
@@ -25,9 +25,11 @@
 // ============================================================================
 // forward declaration 
 // ============================================================================
-class LHCb::CaloDigit        ;   // RecEvent/Event
-class LHCb::CaloCluster      ;   // RecEvent/Event 
-class LHCb::CaloClusterEntry ;   // RecEvent/Event 
+namespace LHCb {
+  class CaloDigit        ;   // RecEvent/Event
+  class CaloCluster      ;   // RecEvent/Event 
+  class CaloClusterEntry ;   // RecEvent/Event 
+}
 
 template <class TYPE> 
 class SmartRef  ;     // GaudiKernel

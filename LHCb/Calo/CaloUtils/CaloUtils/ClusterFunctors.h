@@ -1,4 +1,4 @@
-// $Id: ClusterFunctors.h,v 1.10 2008-09-22 00:44:44 odescham Exp $ 
+// $Id: ClusterFunctors.h,v 1.11 2008-10-29 10:47:44 cattanem Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -206,7 +206,7 @@ namespace ClusterFunctors
      *  @param cluster pointer to CaloCluster object 
      *  @return index of calorimeter area for given cluster 
      */
-    const unsigned int operator() ( const LHCb::CaloCluster* cluster ) const 
+    unsigned int operator() ( const LHCb::CaloCluster* cluster ) const 
     {
       if( 0 == cluster ) 
         { Exception( " CaloCluster* points to NULL! "); }
@@ -244,7 +244,7 @@ namespace ClusterFunctors
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   02/12/2001
    */
-  inline const unsigned int clusterArea( const LHCb::CaloCluster* cluster )
+  inline unsigned int clusterArea( const LHCb::CaloCluster* cluster )
   {
     ClusterArea evaluator;
     return evaluator( cluster );
@@ -269,7 +269,7 @@ namespace ClusterFunctors
      *  @param cluster pointer to CaloCluster object 
      *  @return index of calorimeter area for given cluster 
      */
-    const unsigned int operator() ( const LHCb::CaloCluster* cluster ) const 
+    unsigned int operator() ( const LHCb::CaloCluster* cluster ) const 
     {
       if( 0 == cluster ) 
         { Exception( " CaloCluster* points to NULL! "); }
@@ -308,7 +308,7 @@ namespace ClusterFunctors
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   02/12/2001
    */
-  inline const unsigned int clusterCalo( const LHCb::CaloCluster* cluster )
+  inline unsigned int clusterCalo( const LHCb::CaloCluster* cluster )
   {
     ClusterCalo evaluator;
     return evaluator( cluster );
@@ -472,7 +472,7 @@ namespace ClusterFunctors
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   02/12/2001
    */
-  inline const bool onTheBoundary( const LHCb::CaloCluster* cluster )
+  inline bool onTheBoundary( const LHCb::CaloCluster* cluster )
   {
     OnTheBoundary evaluator ;
     return evaluator( cluster );

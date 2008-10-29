@@ -1,3 +1,4 @@
+// $Id: CaloMomentum.h,v 1.4 2008-10-29 10:47:44 cattanem Exp $
 #ifndef CaloUtils_CaloMomentum_H
 #define CaloUtils_CaloMomentum_H 1
 
@@ -141,13 +142,13 @@ namespace LHCb
     void evaluate(int param);
     void evaluate(){ this->evaluate(Momentum & Covariance);  }
     // Shortcuts
-    const double e(){return momentum().E() ; }
-    const double px(){return momentum().Px() ; }
-    const double py(){return momentum().Py() ; }
-    const double pz(){return momentum().Pz() ; }
-    const double pt(){return momentum().Pt() ; }
-    const double mass(){return momentum().M() ; }
-    const double emass();
+    double e(){return momentum().E() ; }
+    double px(){return momentum().Px() ; }
+    double py(){return momentum().Py() ; }
+    double pz(){return momentum().Pz() ; }
+    double pt(){return momentum().Pt() ; }
+    double mass(){return momentum().M() ; }
+    double emass();
     
     
       

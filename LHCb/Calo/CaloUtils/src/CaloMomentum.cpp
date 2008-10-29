@@ -456,7 +456,7 @@ void LHCb::CaloMomentum::evaluate(int param){
 
 //--- mass error
 //--------------
-const double LHCb::CaloMomentum::emass(){
+double LHCb::CaloMomentum::emass(){
   this->evaluate();
   Gaudi::Vector4 momentum(m_momentum.Px(),m_momentum.Py(),m_momentum.Pz(),m_momentum.E());
   return sqrt( Similarity(momentum, m_momCovMatrix) / m_momentum.M2() );

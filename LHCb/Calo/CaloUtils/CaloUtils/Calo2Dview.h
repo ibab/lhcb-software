@@ -1,4 +1,4 @@
-// $Id: Calo2Dview.h,v 1.4 2008-09-22 00:44:44 odescham Exp $
+// $Id: Calo2Dview.h,v 1.5 2008-10-29 10:47:43 cattanem Exp $
 #ifndef CALODAQ_CALO2DVIEW_H 
 #define CALODAQ_CALO2DVIEW_H 1
 
@@ -35,14 +35,14 @@ public:
 protected:
   AIDA::IHistogram2D* bookCalo2D(const HistoID unit,const std::string title, std::string name );
   AIDA::IHistogram2D* bookCalo2D(const HistoID unit,const std::string title, unsigned  int calo );
-  AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::MCCaloHit mchit, const std::string title="");
-  AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::MCCaloDigit mcdigit, const std::string title="");
-  AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::CaloDigit digit, const std::string title="");
-  AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::CaloAdc adc, const std::string title="");
-  AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::L0CaloAdc l0adc, const std::string title="");
-  AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::L0PrsSpdHit hit, const std::string title="");
-  AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::L0CaloCandidate l0calo, const std::string title="");
-  AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::CaloCluster cluster, const std::string title="");  
+  AIDA::IHistogram2D* fillCalo2D(const HistoID unit, LHCb::MCCaloHit mchit, const std::string title="");
+  AIDA::IHistogram2D* fillCalo2D(const HistoID unit, LHCb::MCCaloDigit mcdigit, const std::string title="");
+  AIDA::IHistogram2D* fillCalo2D(const HistoID unit, LHCb::CaloDigit digit, const std::string title="");
+  AIDA::IHistogram2D* fillCalo2D(const HistoID unit, LHCb::CaloAdc adc, const std::string title="");
+  AIDA::IHistogram2D* fillCalo2D(const HistoID unit, LHCb::L0CaloAdc l0adc, const std::string title="");
+  AIDA::IHistogram2D* fillCalo2D(const HistoID unit, LHCb::L0PrsSpdHit hit, const std::string title="");
+  AIDA::IHistogram2D* fillCalo2D(const HistoID unit, LHCb::L0CaloCandidate l0calo, const std::string title="");
+  AIDA::IHistogram2D* fillCalo2D(const HistoID unit, LHCb::CaloCluster cluster, const std::string title="");  
   AIDA::IHistogram2D* fillCalo2D(const HistoID unit, LHCb::CaloCellID id , double value, const std::string title="");
   AIDA::IHistogram2D* fillCaloPin2D(const HistoID unit,  LHCb::CaloCellID id , double value, const std::string title="");
   void reset(const HistoID unit,std::string title="");

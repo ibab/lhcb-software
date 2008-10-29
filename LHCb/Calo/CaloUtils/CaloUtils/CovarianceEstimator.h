@@ -1,6 +1,4 @@
-// $Id: CovarianceEstimator.h,v 1.8 2006-05-26 12:49:17 cattanem Exp $ 
-// ===========================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
+// $Id: CovarianceEstimator.h,v 1.9 2008-10-29 10:47:44 cattanem Exp $ 
 // ===========================================================================
 #ifndef CALOALGS_COVARIANCEESTIMATOR_H
 #define CALOALGS_COVARIANCEESTIMATOR_H 1
@@ -11,8 +9,10 @@
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/StatusCode.h"
 
-// forward declaration
-class  LHCb::CaloCluster    ;
+// forward declarations
+namespace LHCb {
+  class  CaloCluster;
+}
 class  DeCalorimeter  ;
 class  MsgStream      ;
 
