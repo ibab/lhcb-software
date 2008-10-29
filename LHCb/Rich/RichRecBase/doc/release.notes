@@ -4,6 +4,9 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2008-10-29 - Chris Jones
+ - Small change to ITrackCreator interface for gcc 4.3
+
 !===================== RichRecBase v3r17 2008-09-30 ==========================
 ! 2008-09-28 - Marco Cattaneo
  - Add dependency of reflex dictionary on god_headers, needed for make -j

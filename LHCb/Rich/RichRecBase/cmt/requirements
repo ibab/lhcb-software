@@ -2,11 +2,11 @@
 # Created    : 2002-11-19
 # Maintainer : Chris Jones   Christopher.Rob.Jones@cern.ch 
 #============================================================================
-# $Id: requirements,v 1.75 2008-09-28 13:15:26 cattanem Exp $
+# $Id: requirements,v 1.76 2008-10-29 13:20:57 jonrob Exp $
 #============================================================================
 
 package   RichRecBase
-version   v3r17
+version   v3r18
 
 #============================================================================
 # Structure

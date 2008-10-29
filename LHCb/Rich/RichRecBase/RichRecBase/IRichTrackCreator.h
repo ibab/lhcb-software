@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool interface : Rich::Rec::ITrackCreator
  *
  *  CVS Log :-
- *  $Id: IRichTrackCreator.h,v 1.11 2007-03-09 18:04:33 jonrob Exp $
+ *  $Id: IRichTrackCreator.h,v 1.12 2008-10-29 13:18:48 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -69,7 +69,7 @@ namespace Rich
        * @retval StatusCode::SUCCESS All possible RichRecTracks were successfully built
        * @retval StatusCode::FAILURE A problem occurred whilst building the RichRecTracks
        */
-      virtual const StatusCode newTracks() const = 0;
+      virtual StatusCode newTracks() const = 0;
 
       /** Access to all RichRecTracks currently created using this tool
        *  Tool should never return a null pointer.
@@ -84,7 +84,7 @@ namespace Rich
        *
        *  @return The number of data objects in the input container
        */
-      virtual const long nInputTracks() const = 0;
+      virtual long nInputTracks() const = 0;
 
     };
 
