@@ -1,5 +1,5 @@
 // -*- C++ -*-
-// $Id: Evaluator.cpp,v 1.2 2006-02-22 17:53:05 marcocle Exp $
+// $Id: Evaluator.cpp,v 1.3 2008-10-29 15:09:34 truf Exp $
 // ---------------------------------------------------------------------------
 
 #include "XmlTools/Evaluator.h"
@@ -179,8 +179,13 @@ static int operand(pchar begin, pchar end, double & result,
   //   G E T   N U M B E R
 
   if (!isalpha(*pointer)) {
-    errno = 0;
-    result = strtod(pointer, (char **)(&pointer));
+	errno = 0;
+#ifdef _WIN32
+	if ( pointer[0] == '0' && pointer < end && (pointer[1] == 'x' || pointer[1] == 'X') )
+      result = strtol(pointer, (char **)(&pointer), 0);
+	else
+#endif
+      result = strtod(pointer, (char **)(&pointer));
     if (errno == 0) {
       EVAL_EXIT( EVAL::OK, --pointer );
     }else{

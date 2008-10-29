@@ -4,6 +4,11 @@
 ! Purpose     : Interface to XML Xerces Parser plus some extra services
 !-----------------------------------------------------------------------------
 
+! 2008-10-29 - Marco Clemencic
+ - Fixed a problem in the evaluator on windows.
+   Linux strtod understands hex constants, while windows' one not. Added a
+   work-around using strtol.
+
 !======================== XmlTools v6r1 2008-07-16 ===========================
 ! 2008-07-12 - Marco Clemencic
  - Fixed bug #38890: XmlParserSvc does not work with default options.
