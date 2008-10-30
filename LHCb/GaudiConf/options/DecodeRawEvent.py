@@ -23,8 +23,8 @@ DataOnDemandSvc().AlgMap["Raw/Rich/Digits"]       = "Rich::DAQ::RawBufferToRichD
 
 RawBankToSTClusterAlg("createITCluster").DetType           = "IT"
 RawBankToSTLiteClusterAlg("createITLiteClusters").DetType  = "IT"
-DecodeVeloRawBuffer("createVeloLiteClusters").DecodeToVeloClusters     = True
-DecodeVeloRawBuffer("createVeloLiteClusters").DecodeToVeloLiteClusters = False
+DecodeVeloRawBuffer("createVeloClusters").DecodeToVeloClusters     = True
+DecodeVeloRawBuffer("createVeloClusters").DecodeToVeloLiteClusters = False
 Rich__DAQ__RawBufferToRichDigitsAlg("RichRawEventToDigits").DecodeBufferOnly = False
 importOptions( "$CALODAQROOT/options/CaloDigitsOnDemand.opts" )
 importOptions( "$L0DUOPTS/L0OnDemand.opts" )
