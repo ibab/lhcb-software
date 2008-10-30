@@ -1,9 +1,13 @@
 2008-10-30  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbUtils/fixDoxygenLinks.py: added script to fix broken links in the 
+	doxygen documentation
+	 
+2008-10-30  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* python/LbUtils/Scripts.py: added support for the description of the script in
 	the help message. It is intended that the __doc__ string of the created script is
 	used for this information 
-	
 	
 2008-10-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
