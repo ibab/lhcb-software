@@ -21,7 +21,7 @@ DataOnDemandSvc().AlgMap["Raw/Muon/Coords"]       = "MuonRec"
 DataOnDemandSvc().AlgMap["DAQ/ODIN"]              = "createODIN"
 DataOnDemandSvc().AlgMap["Raw/Rich/Digits"]       = "Rich::DAQ::RawBufferToRichDigitsAlg/RichRawEventToDigits"
 
-RawBankToSTClusterAlg("createITCluster").DetType           = "IT"
+RawBankToSTClusterAlg("createITClusters").DetType          = "IT"
 RawBankToSTLiteClusterAlg("createITLiteClusters").DetType  = "IT"
 DecodeVeloRawBuffer("createVeloClusters").DecodeToVeloClusters     = True
 DecodeVeloRawBuffer("createVeloClusters").DecodeToVeloLiteClusters = False
