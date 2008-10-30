@@ -1,4 +1,4 @@
-// $Id: HltBase.icpp,v 1.15 2008-09-26 08:42:17 graven Exp $
+// $Id: HltBase.icpp,v 1.16 2008-10-30 13:41:29 graven Exp $
 // Include files
 
 
@@ -20,6 +20,7 @@ void HltBase<EBASE>::hltBaseConstructor() {
   EBASE::declareProperty("HistoDescriptor", m_histoDescriptor);
 
   m_dataSvc = 0;
+  m_hltANNSvc = 0;
 }
 
 template <class EBASE>

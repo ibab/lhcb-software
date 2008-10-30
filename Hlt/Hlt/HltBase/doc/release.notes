@@ -3,6 +3,8 @@
 ! Responsible : Jose Angel Hernando Morata
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+! 2008-10-30 - Gerhard Raven
+ - initialize m_hltANNSvc to 0 in HltBase
 
 ! 2008-10-22 J.A Hernando
  - add method in IHltConfSummaryTool to retrieve selection using a *
