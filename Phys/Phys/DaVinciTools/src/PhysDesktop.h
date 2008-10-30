@@ -127,8 +127,10 @@ private:
 
   StatusCode getParticles();       ///< get Particles
 
-  StatusCode getRelations();       ///< get Relation table
+  StatusCode getInputRelations();       ///< get all Relation tables
 
+  StatusCode getInputRelations(std::vector<std::string>::const_iterator begin,
+                               std::vector<std::string>::const_iterator end);       ///< get Relation table
 
   ///  Is in TES
   inline bool inTES(const LHCb::Particle* P) const {
@@ -186,6 +188,19 @@ private:
 
   void storeRelationsInTable(const LHCb::Particle* part);
 
+  /**
+   * 
+   * Store a range of Particle -> VertexBase relations in the local
+   * relations table. 
+   * <b>Note: If relations for the same particle already exist they are
+   * removed before inserting the new ones!</b> 
+   * 
+   * @author Juan Palacios juan.palacios@nikhef.nl
+   */
+
+  void storeRelationsInTable(Particle2Vertex::Range::const_iterator begin,
+                             Particle2Vertex::Range::const_iterator end);
+
 private: // data
 
   /// TES pathname for Primary Vertices 
@@ -194,6 +209,15 @@ private: // data
   std::vector<std::string> m_inputLocn;
   /// TES pathname for Output Particles & Vertices
   std::string m_outputLocn;
+
+  /** 
+   *  TES location of default Particle->PV relaitons tables.
+   *  These are the InputLocations + "/Particle2VertexRelations"
+   */
+  std::vector<std::string> m_p2PVDefaultLocations;
+
+  /// TES locations of user-defined Particle->PV relations
+  std::vector<std::string> m_p2PVInputLocations;
   
   LHCb::Particle::ConstVector m_parts;          ///< Local Container of particles
   LHCb::Vertex::ConstVector m_secVerts;         ///< Local Container of secondary vertices

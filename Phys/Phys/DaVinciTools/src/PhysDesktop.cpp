@@ -111,6 +111,11 @@ PhysDesktop::PhysDesktop( const std::string& type,
   m_inputLocn.clear();
   declareProperty( "InputLocations", m_inputLocn );
 
+
+  m_p2PVInputLocations.clear();
+  
+  declareProperty("P2PVInputLocations", m_p2PVInputLocations);
+
   IInterface* p = const_cast<IInterface*>( parent ) ;
   if ( 0 != p )
   {
@@ -130,7 +135,8 @@ PhysDesktop::PhysDesktop( const std::string& type,
       // release the used interface
       pp->release() ;
     }
-  };
+  }
+
   // check that output location is set to *SOME* value
   if (m_outputLocn.empty()) Exception("OutputLocation is not set") ;
 
@@ -191,6 +197,12 @@ StatusCode PhysDesktop::initialize()
       debug() << endreq ;
     }
   }
+
+  for ( std::vector<std::string>::iterator iloc = m_inputLocn.begin();
+        iloc != m_inputLocn.end(); ++iloc ) {
+    m_p2PVDefaultLocations.push_back((*iloc)+"/Particle2VertexRelations");
+  }
+
 
   m_OnOffline = tool<IOnOffline>("OnOfflineTool",this);
 
@@ -481,7 +493,7 @@ StatusCode PhysDesktop::saveTrees(const LHCb::Particle::ConstVector& pToSave) co
 //=============================================================================
 StatusCode PhysDesktop::saveTrees( int partid ) const {
 
-  if (msgLevel(MSG::VERBOSE)) verbose() << "PhysDesktop saveParticles(pid code)"
+  if (msgLevel(MSG::VERBOSE)) verbose() << "PhysDesktop saveTrees(pid code)"
                                         << "type = " << partid << endmsg;
 
   LHCb::Particle::ConstVector pToSave;
@@ -575,7 +587,7 @@ StatusCode PhysDesktop::getEventInput(){
   if (!m_inputLocn.empty()) {
     StatusCode sc = getParticles();
     if (!sc) return sc;
-    sc = getRelations();
+    sc = getInputRelations();
     if (!sc) return sc;
   }
 
@@ -632,7 +644,8 @@ StatusCode PhysDesktop::makeParticles(){
 //=============================================================================
 StatusCode PhysDesktop::getParticles(){
 
-  if (msgLevel(MSG::DEBUG)) debug() << "Looking for particles in " << m_inputLocn.size() 
+  if (msgLevel(MSG::DEBUG)) debug() << "Looking for particles in " 
+                                    << m_inputLocn.size() 
                                     << " places" << endmsg ;
 
   for( std::vector<std::string>::iterator iloc = m_inputLocn.begin();
@@ -692,24 +705,45 @@ StatusCode PhysDesktop::getParticles(){
 //=============================================================================
 // Get Relations
 //=============================================================================
-StatusCode PhysDesktop::getRelations(){
-  for( std::vector<std::string>::iterator iloc = m_inputLocn.begin();
-       iloc != m_inputLocn.end(); iloc++ ) {
+StatusCode PhysDesktop::getInputRelations(){
 
-    // Retrieve the particles to PV relations
-    std::string location = (*iloc)+"/Particle2VertexRelations";
-    if (!exist<Particle2Vertex::Table>(location)){
-      Warning("No relations table at "+location+" under "+rootInTES(),StatusCode::SUCCESS, 1).ignore();
-      continue ;
-    } else if (msgLevel(MSG::DEBUG)) debug() << "Reading table from " << location << endmsg ;
-    Particle2Vertex::Table* table = get<Particle2Vertex::Table>(location);
-    Particle2Vertex::Range all = table->relations();
-    for ( Particle2Vertex::Range::const_iterator i = all.begin() ; i!= all.end() ; ++i){
-      (i_p2PVTable().i_relate(i->from(),i->to(),i->weight())).ignore() ;
-      if (msgLevel(MSG::VERBOSE)) verbose() << "Reading a " << i->from()->particleID().pid() << " related to " 
-                                            <<  i->to()->position() << " at " << i->weight() << endmsg ;
+  StatusCode sc = getInputRelations(m_p2PVDefaultLocations.begin(), 
+                                    m_p2PVDefaultLocations.end());
+  
+  sc = getInputRelations(m_p2PVInputLocations.begin(), 
+                         m_p2PVInputLocations.end());
+
+  return sc;
+}
+//=============================================================================
+StatusCode PhysDesktop::getInputRelations(std::vector<std::string>::const_iterator begin,
+                                          std::vector<std::string>::const_iterator end)
+{
+
+  for( std::vector<std::string>::const_iterator iloc = begin; 
+       iloc != end; iloc++ ) 
+  {
+    const std::string location( *iloc );
+    if (exist<Particle2Vertex::Table>(location)){
+      if (msgLevel(MSG::DEBUG)) 
+        debug() << "Reading table from " << location << endmsg ;
+      const Particle2Vertex::Table* table = 
+        get<Particle2Vertex::Table>(location);
+      if (0!=table) {
+        const Particle2Vertex::Range all = table->relations();
+        storeRelationsInTable(all.begin(), all.end());
+      } else {
+        Warning("NULL Particle2Vertex::Table* at "+location+" under "+rootInTES(),
+                StatusCode::FAILURE).ignore();
+      }
+
+    } else {
+      Warning("No relations table exists at "+location+" under "+rootInTES(),
+              StatusCode::SUCCESS, 1).ignore();
     }
+
   }
+
   return StatusCode::SUCCESS ; // could be sc
 }
 //=============================================================================
@@ -736,32 +770,6 @@ StatusCode PhysDesktop::getPrimaryVertices() {
 
   return (0!=m_primVerts) ? StatusCode::SUCCESS : StatusCode::FAILURE;
 
-//   if( ! verts ) {
-//     if (msgLevel(MSG::VERBOSE)) verbose() << " Unable to retrieve vertices from " << primaryVertexLocation() << endmsg;
-//   } else if( verts->empty() ) {
-//     if (msgLevel(MSG::VERBOSE)) verbose() << " No vertices retrieved from  " << primaryVertexLocation() << endmsg;
-//   } else {
-//     if (msgLevel(MSG::VERBOSE)) verbose() << "    Number of primary vertices  = " << verts->size() << endmsg;
-
-//     for( LHCb::RecVertices::const_iterator ivert = verts->begin();
-//          ivert != verts->end(); ivert++ ) {
-//       if (msgLevel(MSG::VERBOSE)) {
-//         verbose() << "    Vertex coordinates = ( "
-//                   << (*ivert)->position().x()
-//                   << " , " << (*ivert)->position().y()
-//                   << " , " << (*ivert)->position().z() << " ) " << endmsg;
-//         verbose() << "    Vertex ChiSquare = " << (*ivert)->chi2()
-//                   << endmsg;
-//       }
-      
-//       // Put them in local containers
-//       m_primVerts->push_back(*ivert);
-//     }
-//   }
-//   if (msgLevel(MSG::VERBOSE)) verbose() << "Number of Vertices from " 
-//                                         << primaryVertexLocation() << " are " 
-//                                         << m_primVerts->size() << endmsg;
-//   return StatusCode::SUCCESS;
 }
 //=============================================================================
 // Impose OutputLocation
@@ -877,5 +885,20 @@ void PhysDesktop::storeRelationsInTable(const LHCb::Particle* part){
   if (msgLevel(MSG::VERBOSE)) verbose() << "PhysDesktop::storeRelationsInTable stored " 
                                         << i_p2PVTable().i_relations(part).size() << " relations" 
                                         << endmsg;
+}
+//=============================================================================
+void PhysDesktop::storeRelationsInTable(Particle2Vertex::Range::const_iterator begin,
+                                        Particle2Vertex::Range::const_iterator end)
+{
+  //  always() << "storeRelationsInTable: Storing " << end-begin << " P->PV relations" << endmsg;
+  for ( Particle2Vertex::Range::const_iterator i = begin ; i!= end ; ++i){
+    ( i_p2PVTable().i_removeFrom(i->from()) ).ignore();
+    (i_p2PVTable().i_relate(i->from(),i->to(),i->weight())).ignore() ;
+    if (msgLevel(MSG::VERBOSE)) {
+      verbose() << "Reading a " << i->from()->particleID().pid() 
+                << " related to " <<  i->to()->position() 
+                << " at " << i->weight() << endmsg ;
+    }
+  }
 }
 //=============================================================================
