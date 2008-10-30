@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::TrackCreatorFromMCRichTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromMCRichTracks.h,v 1.9 2008-10-29 13:16:49 jonrob Exp $
+ *  $Id: RichTrackCreatorFromMCRichTracks.h,v 1.10 2008-10-30 08:36:42 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -76,7 +76,7 @@ namespace Rich
         virtual LHCb::RichRecTrack * newTrack ( const ContainedObject * obj ) const;
 
         // Form all possible RichRecTracks from input Tracks
-        virtual const StatusCode newTracks() const;
+        virtual StatusCode newTracks() const;
 
         /// Returns the number of tracks in the input Track container.
         virtual long nInputTracks() const;
