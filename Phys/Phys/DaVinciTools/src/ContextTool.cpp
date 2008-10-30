@@ -1,4 +1,4 @@
-// $Id: ContextTool.cpp,v 1.11 2008-10-28 07:49:39 jpalac Exp $
+// $Id: ContextTool.cpp,v 1.12 2008-10-30 16:44:24 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -122,20 +122,15 @@ const LHCb::RecVertex::Container* ContextTool::primaryVertices() const {
   if (0!=m_desktop){
     if (msgLevel(MSG::DEBUG)) debug() << "Getting PVs from desktop" << endmsg;
     return desktop()->primaryVertices();
+  } else {
+    
+    LHCb::RecVertex::ConstVector PV ;
+    verbose() << "Will get PVs from OnOffline tool at : " 
+              << m_onOffline->primaryVertexLocation() << endmsg ;
+    return (exist<LHCb::RecVertices>( m_onOffline->primaryVertexLocation() )) ?
+      get<LHCb::RecVertices>( m_onOffline->primaryVertexLocation() ) : 0;
   }
-//   LHCb::RecVertex::ConstVector PV ;
-//   verbose() << "Will get PVs from OnOffline tool at : " 
-//             << m_onOffline->primaryVertexLocation() << endmsg ;
-//   if ( !exist<LHCb::RecVertices>( m_onOffline->primaryVertexLocation() ) ) return PV ; // no PV
-//   LHCb::RecVertices* verts = get<LHCb::RecVertices>( m_onOffline->primaryVertexLocation() );
-//   for( LHCb::RecVertices::const_iterator ivert = verts->begin();
-//        ivert != verts->end(); ivert++ ) {
-//     verbose() << "    Vertex coordinates =  "
-//               << (*ivert)->position()  << ", Chi^2 = " << (*ivert)->chi2()
-//               << endmsg;
-//     PV.push_back(*ivert);
-//   }
-//   return PV ;
+  
 }
 
 //=============================================================================
