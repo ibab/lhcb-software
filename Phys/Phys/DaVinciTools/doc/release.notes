@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.371 2008-10-30 15:01:42 jpalac Exp $
+! $Id: release.notes,v 1.372 2008-10-30 16:45:16 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-10-30 - Juan PALACIOS
+ - src/ContextTool.h
+  . Add virtual keyword where applicable
+ - src/ContextTool.cpp
+  . Fix compilaiton warning.
 
 ! 2008-10-30 - Juan PALACIOS
  - PhysDesktop class
