@@ -67,6 +67,7 @@ DbRootHist::DbRootHist(const std::string & identifier,
   m_session(histogramDB),
   m_onlineHistogram(NULL),
   m_isEmptyHisto(false),
+  m_retryInit(2),
   m_refOption("AREA"),
   m_reference(NULL),
   m_startRun(1),
@@ -94,27 +95,20 @@ DbRootHist::DbRootHist(const std::string & identifier,
     else { connectToDB(histogramDB, "_NONE_", 1); }
   }
 
-  if( false == m_isAnaHist) {
-    if(m_dimBrowser) {
-      m_dimServiceName = assembleCurrentDimServiceName();
-    }
-    
-    if( m_dimServiceName.size() >0 ) {
-      m_dimInfo = new DimInfo(m_dimServiceName.c_str(), refreshTime, (float)-1.0);
-      if (m_verbosity >= Verbose) {
-        std::cout << "DimInfo dimServiceName: " << m_dimServiceName << std::endl;
-      }
-    }
-  }
+//  if( false == m_isAnaHist) {
+//    if(m_dimBrowser) {
+//      m_dimServiceName = assembleCurrentDimServiceName();
+//    }
+//  }
   
   initHistogram();
   if (m_verbosity >= Verbose && m_isEmptyHisto) {
-    std::cout << "Histogram " << m_identifier << " empty after Init"<<std::endl;
+    std::cout << "Histogram " << m_identifier << " empty after Init" << std::endl;
   }
   if (false == m_isEmptyHisto) {
     fillHistogram();
-    if(m_verbosity >= Verbose && m_isEmptyHisto) {
-      std::cout << "Histogram " << m_identifier << " empty after Fill"<<std::endl;
+    if (m_verbosity >= Verbose && m_isEmptyHisto) {
+      std::cout << "Histogram " << m_identifier << " empty after Fill" << std::endl;
     }
   } else {
     beEmptyHisto(); 
@@ -132,8 +126,8 @@ DbRootHist::~DbRootHist()
   if (hostingPad) { delete hostingPad; hostingPad = NULL; }
   if (m_dimInfo) { delete m_dimInfo; m_dimInfo = NULL; }
   if (m_dimInfoMonObject) { delete m_dimInfoMonObject; m_dimInfoMonObject = NULL; }
-  if (m_titpave) {delete m_titpave; m_titpave=NULL; }
-  if (m_statpave) {delete m_statpave; m_statpave=NULL; }
+  if (m_titpave) {delete m_titpave; m_titpave = NULL; }
+  if (m_statpave) {delete m_statpave; m_statpave = NULL; }
   cleanAnaSources();
 }
 void DbRootHist::cleanAnaSources()
@@ -195,8 +189,12 @@ void DbRootHist::setDimServiceName(std::string newDimServiceName)
       m_dimInfo = new DimInfo(newDimServiceName.c_str(), m_refreshTime,
                             (float)-1.0);
     } else {
-      if (m_dimInfoMonObject) { delete m_dimInfoMonObject; m_dimInfoMonObject = NULL; }
-      m_dimInfoMonObject = new DimInfoMonObject(newDimServiceName.c_str(), m_refreshTime, "Presenter");
+      if (m_dimInfoMonObject) {
+        delete m_dimInfoMonObject;
+        m_dimInfoMonObject = NULL;
+      }
+      m_dimInfoMonObject = new DimInfoMonObject(newDimServiceName.c_str(),
+                                                m_refreshTime, "Presenter");
     }
 
     m_dimServiceName = newDimServiceName;
@@ -275,14 +273,33 @@ void DbRootHist::disableClear()
 }
 void DbRootHist::initHistogram()
 {
+  
   if (m_offsetHistogram) { delete m_offsetHistogram; m_offsetHistogram = NULL;}
   if (rootHistogram) { delete rootHistogram; rootHistogram = NULL; }
   if (m_reference) { delete  m_reference; m_reference = NULL; }
 
   // If not AnaLib hist:
-  if (!m_isAnaHist) {
-    if (s_P1D == m_histogramType || s_HPD == m_histogramType || s_H2D == m_histogramType ||
-        s_H1D == m_histogramType || s_CNT == m_histogramType ) {
+  if (!m_isAnaHist && (m_retryInit > 0) ) {
+    
+    // sed partition   
+    if (m_onlineHistogram && (m_retryInit > 1)) {
+      m_dimServiceName = m_onlineHistogram->dimServiceName();
+      if (m_verbosity >= Verbose) {
+        std::cout << "dimServiceName from DB: " << m_dimServiceName << std::endl;
+      }      
+    }    
+
+    HistogramIdentifier histogramIdentifier(m_dimServiceName);
+    m_histogramType = histogramIdentifier.histogramType();
+
+    if (s_P1D == m_histogramType || s_HPD == m_histogramType ||
+        s_H2D == m_histogramType || s_H1D == m_histogramType ||
+        s_CNT == m_histogramType ) {
+
+      if( m_dimServiceName.size() > 0 ) {
+        if (m_dimInfo) { delete m_dimInfo; m_dimInfo = 0; }
+        m_dimInfo = new DimInfo(m_dimServiceName.c_str(), m_refreshTime, (float)-1.0);
+      }       
 // || s_P2D == m_histogramType          
       if (m_dimInfo) {
         beRegularHisto();
@@ -332,6 +349,13 @@ void DbRootHist::initHistogram()
         }    
         float* histoDimData;
         if (-1.0 != m_dimInfo->getFloat()) {
+
+          m_retryInit = 0;
+          
+          if (m_verbosity >= Verbose) {
+            std::cout << "Using dimServiceName from DB." << std::endl;
+          }
+          
           histoDimData = (float*) m_dimInfo->getData();
           if (s_H1D == m_histogramType) {
             const int   nBins   = (int) histoDimData[1];
@@ -376,82 +400,123 @@ void DbRootHist::initHistogram()
                                        m_histoRootTitle.Data(),
                                        nBins, xMin, xMax);
             }
-          } else {
-            // cannot get sources from DIM
-            beEmptyHisto();
-          }
-        }
-      }
-    } else if (s_pfixMonProfile == m_histogramType || s_pfixMonH1D == m_histogramType || s_pfixMonH1F == m_histogramType
-                || s_pfixMonH2D == m_histogramType || s_pfixMonH2F == m_histogramType) {
-      if (m_dimInfoMonObject) { delete m_dimInfoMonObject; m_dimInfoMonObject = NULL; }
-      m_dimInfoMonObject = new DimInfoMonObject(m_dimServiceName.c_str(), m_refreshTime, "Presenter");
-        if (m_dimInfoMonObject && m_dimInfoMonObject->createMonObject()) {
-    
-        TString histoRootName;
-        TString histoRootTitle;
-  
-        if (s_pfixMonH1F == m_histogramType){
-          MonH1F* monTH1F = static_cast<MonH1F*>(m_dimInfoMonObject->monObject());
-          if (NULL != monTH1F) {
-            histoRootName = TString(Form("%s__instance__%i", monTH1F->histName().c_str(), m_instance));
-            histoRootTitle = TString(Form("%s", monTH1F->histTitle().c_str()));
-            monTH1F->createObject(histoRootName.Data());
-            monTH1F->hist()->SetTitle(histoRootTitle);
-            if (m_verbosity >= Verbose) { monTH1F->print(); }
-            rootHistogram = monTH1F->hist();
-          }
-        } else if (s_pfixMonH2F == m_histogramType){
-          MonH2F* monTH2F = static_cast<MonH2F*>(m_dimInfoMonObject->monObject());
-          if (NULL != monTH2F) {
-            histoRootName = TString(Form("%s__instance__%i", monTH2F->histName().c_str(), m_instance));
-            histoRootTitle = TString(Form("%s", monTH2F->histTitle().c_str()));
-            monTH2F->createObject(histoRootName.Data());
-            monTH2F->hist()->SetTitle(histoRootTitle);
-            if (m_verbosity >= Verbose) { monTH2F->print(); }
-            rootHistogram = monTH2F->hist();
-          }
-        } else if (s_pfixMonH1D == m_histogramType){
-          MonH1D* monTH1D = static_cast<MonH1D*>(m_dimInfoMonObject->monObject());
-          if (NULL != monTH1D) {
-            histoRootName = TString(Form("%s__instance__%i", monTH1D->histName().c_str(), m_instance));
-            histoRootTitle = TString(Form("%s", monTH1D->histTitle().c_str()));
-            monTH1D->createObject(histoRootName.Data());
-            monTH1D->hist()->SetTitle(histoRootTitle);
-            if (m_verbosity >= Verbose) { monTH1D->print(); }
-            rootHistogram = monTH1D->hist();
-          }
-        } else if (s_pfixMonH2D == m_histogramType){
-          MonH2D* monTH2D = static_cast<MonH2D*>(m_dimInfoMonObject->monObject());
-          if (NULL != monTH2D) {
-            histoRootName = TString(Form("%s__instance__%i", monTH2D->histName().c_str(), m_instance));
-            histoRootTitle = TString(Form("%s", monTH2D->histTitle().c_str()));
-            monTH2D->createObject(histoRootName.Data());
-            monTH2D->hist()->SetTitle(histoRootTitle);
-            if (m_verbosity >= Verbose) { monTH2D->print(); }
-            rootHistogram = monTH2D->hist();
-          }
-        } else if (s_pfixMonProfile == m_histogramType){
-          MonProfile* monProfile = static_cast<MonProfile*>(m_dimInfoMonObject->monObject());
-          if (NULL != monProfile) {
-            histoRootName = TString(Form("%s__instance__%i", monProfile->profileName().c_str(), m_instance));
-            histoRootTitle = TString(Form("%s", monProfile->profileTitle().c_str()));
-            monProfile->createObject(histoRootName.Data());
-            monProfile->profile()->SetTitle(histoRootTitle);
-            if (m_verbosity >= Verbose) { monProfile->print(); }
-            rootHistogram = monProfile->profile();
           }
         } else {
-          std::cout << "MonObject not included in the Presenter: " << m_histogramType << std::endl;
-          rootHistogram =  0;
+          // cannot get sources from DIM
+          if (m_retryInit == 1) { beEmptyHisto(); }
         }
-        if (rootHistogram) { rootHistogram->AddDirectory(kFALSE); }
       }
-    } else {
-      // cannot get sources from DIM
-      if (m_verbosity >= Verbose) { std::cout << "cannot get sources from DIM"
-                                              << std::endl; }
-      beEmptyHisto();
+    } else if (s_pfixMonProfile == m_histogramType ||
+               s_pfixMonH1D == m_histogramType ||
+               s_pfixMonH1F == m_histogramType ||
+               s_pfixMonH2D == m_histogramType ||
+               s_pfixMonH2F == m_histogramType) {
+      if (m_dimInfoMonObject) {
+        delete m_dimInfoMonObject;
+        m_dimInfoMonObject = NULL;
+      }
+      m_dimInfoMonObject = new DimInfoMonObject(m_dimServiceName.c_str(),
+                                                m_refreshTime, "Presenter");
+        if (m_dimInfoMonObject && m_dimInfoMonObject->createMonObject()) {
+          
+          m_retryInit = 0;          
+          
+          if (m_verbosity >= Verbose) {
+            std::cout << "Using dimServiceName from DB." << std::endl;
+          } 
+      
+          TString histoRootName;
+          TString histoRootTitle;
+    
+          if (s_pfixMonH1F == m_histogramType){
+            MonH1F* monTH1F = static_cast<MonH1F*>(m_dimInfoMonObject->monObject());
+            if (NULL != monTH1F) {
+              histoRootName = TString(Form("%s__instance__%i",
+                                           monTH1F->histName().c_str(),
+                                           m_instance));
+              histoRootTitle = TString(Form("%s",
+                                            monTH1F->histTitle().c_str()));
+              monTH1F->createObject(histoRootName.Data());
+              monTH1F->hist()->SetTitle(histoRootTitle);
+              if (m_verbosity >= Verbose) { monTH1F->print(); }
+              rootHistogram = monTH1F->hist();
+            }
+          } else if (s_pfixMonH2F == m_histogramType) {
+            MonH2F* monTH2F = static_cast<MonH2F*>(m_dimInfoMonObject->monObject());
+            if (NULL != monTH2F) {
+              histoRootName = TString(Form("%s__instance__%i",
+                                           monTH2F->histName().c_str(),
+                                           m_instance));
+              histoRootTitle = TString(Form("%s",
+                                            monTH2F->histTitle().c_str()));
+              monTH2F->createObject(histoRootName.Data());
+              monTH2F->hist()->SetTitle(histoRootTitle);
+              if (m_verbosity >= Verbose) { monTH2F->print(); }
+              rootHistogram = monTH2F->hist();
+            }
+          } else if (s_pfixMonH1D == m_histogramType){
+            MonH1D* monTH1D = static_cast<MonH1D*>(m_dimInfoMonObject->monObject());
+            if (NULL != monTH1D) {
+              histoRootName = TString(Form("%s__instance__%i",
+                                           monTH1D->histName().c_str(),
+                                           m_instance));
+              histoRootTitle = TString(Form("%s",
+                                            monTH1D->histTitle().c_str()));
+              monTH1D->createObject(histoRootName.Data());
+              monTH1D->hist()->SetTitle(histoRootTitle);
+              if (m_verbosity >= Verbose) { monTH1D->print(); }
+              rootHistogram = monTH1D->hist();
+            }
+          } else if (s_pfixMonH2D == m_histogramType){
+            MonH2D* monTH2D = static_cast<MonH2D*>(m_dimInfoMonObject->monObject());
+            if (NULL != monTH2D) {
+              histoRootName = TString(Form("%s__instance__%i",
+                                           monTH2D->histName().c_str(),
+                                           m_instance));
+              histoRootTitle = TString(Form("%s",
+                                            monTH2D->histTitle().c_str()));
+              monTH2D->createObject(histoRootName.Data());
+              monTH2D->hist()->SetTitle(histoRootTitle);
+              if (m_verbosity >= Verbose) { monTH2D->print(); }
+              rootHistogram = monTH2D->hist();
+            }
+          } else if (s_pfixMonProfile == m_histogramType){
+            MonProfile* monProfile = static_cast<MonProfile*>(m_dimInfoMonObject->monObject());
+            if (NULL != monProfile) {
+              histoRootName = TString(Form("%s__instance__%i",
+                                           monProfile->profileName().c_str(),
+                                           m_instance));
+              histoRootTitle = TString(Form("%s",
+                                            monProfile->profileTitle().c_str()));
+              monProfile->createObject(histoRootName.Data());
+              monProfile->profile()->SetTitle(histoRootTitle);
+              if (m_verbosity >= Verbose) { monProfile->print(); }
+              rootHistogram = monProfile->profile();
+            }
+          } else {
+            std::cout << "MonObject not included in the Presenter: " <<
+                         m_histogramType << std::endl;
+            rootHistogram =  0;
+          }
+          if (rootHistogram) { rootHistogram->AddDirectory(kFALSE); }
+        } else {
+          if (m_retryInit == 1) {beEmptyHisto(); }
+        }
+    }
+    // cannot get sources from DIM
+    if (m_retryInit > 0) {
+      m_dimServiceName = assembleCurrentDimServiceName();
+      if (m_verbosity >= Verbose) {
+        std::cout << "DB DIM field invalid, retrying init using "
+                  << m_dimServiceName 
+                  << std::endl;
+      }      
+     
+      --m_retryInit;
+      if (m_verbosity >= Verbose) {
+        std::cout << "retrying Init." << std::endl;
+      }
+      initHistogram();
     }
   } else if (m_isAnaHist && m_anaSources.size() > 0) { // analib hist
     std::vector<TH1*> sources(m_anaSources.size());
@@ -460,8 +525,9 @@ void DbRootHist::initHistogram()
       sources[i]= m_anaSources[i]->rootHistogram;
       if (m_anaSources[i]->isEmptyHisto() ) {
         sourcesOk = false;
-        if (m_verbosity >= Verbose) { std::cout << 
-            "source "<<i<<" is empty"<<std::endl; }
+        if (m_verbosity >= Verbose) {
+          std::cout << "source " << i << " is empty" << std::endl;
+        }
       }
     }
     OMAHcreatorAlg* creator = dynamic_cast<OMAHcreatorAlg*>
@@ -473,11 +539,13 @@ void DbRootHist::initHistogram()
                                     isEmptyHisto() ? NULL : rootHistogram);
       beRegularHisto();
       if (m_verbosity >= Verbose && (!rootHistogram)) { 
-        std::cout<< "creator alg. failed!"<<std::endl;}
+        std::cout<< "creator alg. failed!"<<std::endl;
+      }
     }
     else {
       if (m_verbosity >= Verbose) {
-        std::cout << "creator alg. or sources not found!"<<std::endl;}
+        std::cout << "creator alg. or sources not found!" << std::endl;
+      }
       beEmptyHisto(); 
     }
     if (!rootHistogram) {beEmptyHisto(); }
@@ -494,22 +562,32 @@ void DbRootHist::beEmptyHisto()
   if (rootHistogram) { delete rootHistogram; rootHistogram = 0; }
   std::string dummyTitle = "ERROR: missing sources for ";
   dummyTitle += identifier();
-  if (s_H1D == m_histogramType) {
-    rootHistogram = new TH1F(m_histoRootName.Data(),
-                             dummyTitle.c_str(),
-                             1, 0., 1.);
-  } else if (s_H2D == m_histogramType) {
-    rootHistogram = new TH2F(m_histoRootName.Data(),
-                             dummyTitle.c_str(),
-                             1, 0., 1.,
-                             1, 0., 1.);
-  } else if (s_P1D == m_histogramType || s_HPD == m_histogramType) {
+
+//  m_onlineHistogram->hstype().compare(s_P1D) ||
+//  m_onlineHistogram->hstype().compare(s_HPD)) {
+//  m_onlineHistogram->hstype().compare(s_H2D)) {
+//  m_onlineHistogram->hstype().compare(s_H1D)) {
+
+//  if (s_H1D  == m_histogramType ||
+//      s_pfixMonH1F == m_histogramType) {
+//    rootHistogram = new TH1F(m_histoRootName.Data(),
+//                             dummyTitle.c_str(),
+//                             1, 0., 1.);
+//  } else if (s_H2D == m_histogramType ||
+//             s_pfixMonH2F == m_histogramType) {
+//    rootHistogram = new TH2F(m_histoRootName.Data(),
+//                             dummyTitle.c_str(),
+//                             1, 0., 1.,
+//                             1, 0., 1.);
+//  } else if (s_P1D == m_histogramType ||
+//             s_HPD == m_histogramType ||
+//             s_pfixMonProfile == m_histogramType) {
     rootHistogram = new TH1F(m_histoRootName.Data(),
                                  dummyTitle.c_str(),
                                  1, 0., 1.);
 //  } else if (s_P2D == m_histogramType) {
 //  } else if (s_CNT == m_histogramType) {
-  }
+//  }
   if(rootHistogram) {
     rootHistogram->SetBit(kNoContextMenu);
     rootHistogram->AddDirectory(kFALSE);
@@ -874,10 +952,10 @@ void DbRootHist::setTH1FromDB()
       rootHistogram->GetZaxis()->SetLabelOffset(fopt);
     }
     // custom bin labels
-    if(m_onlineHistogram->nbinlabels() > 0) {
-      for (unsigned int il=0; il<m_onlineHistogram->nbinlabels() ; il++) {
-	sopt=m_onlineHistogram->binlabel(il);
-	rootHistogram->GetXaxis()->SetBinLabel(il+1,sopt.c_str());
+    if (m_onlineHistogram->nbinlabels() > 0) {
+      for (unsigned int il = 0; il < m_onlineHistogram->nbinlabels(); il++) {
+      	sopt = m_onlineHistogram->binlabel(il);
+      	rootHistogram->GetXaxis()->SetBinLabel(il+1, sopt.c_str());
       }
     }
   }
@@ -895,7 +973,7 @@ void DbRootHist::setDrawOptionsFromDB(TPad* &pad)
     // doesn't resize the Pave.. thus it's better to set the global stat options also 
     // before drawing
     if (m_onlineHistogram->getDisplayOption("STATS", &iopt)) {
-       TPaveStats* stats =  (TPaveStats*)rootHistogram->GetListOfFunctions()->FindObject("stats");
+       TPaveStats* stats = (TPaveStats*)rootHistogram->GetListOfFunctions()->FindObject("stats");
        if (stats) {
          stats->SetOptStat(iopt);
          double x1=stats->GetX1NDC();
@@ -906,26 +984,26 @@ void DbRootHist::setDrawOptionsFromDB(TPad* &pad)
            x1 = fopt;
          }
          if (m_onlineHistogram->getDisplayOption("STAT_X_SIZE", &fopt)) {
-           x2=x1+fopt;
+           x2 = x1 + fopt;
          }
          if (m_onlineHistogram->getDisplayOption("STAT_Y_OFFS", &fopt)) {
            y1 = fopt;
          }
          if (m_onlineHistogram->getDisplayOption("STAT_Y_SIZE", &fopt)) {
-           y2=y1+fopt;
+           y2 = y1 + fopt;
          }
          stats->SetX1NDC(x1);
          stats->SetX2NDC(x2);
          stats->SetY1NDC(y1);
          stats->SetY2NDC(y2);
-         // save it to check if was chanegd at saving time
-         if(m_statpave) delete m_statpave;
-         m_statpave = (TPave*) stats->Clone();
+         // save it to check if was changed at saving time
+         if (m_statpave) { delete m_statpave; m_statpave = 0; }
+         m_statpave = (TPave*)stats->Clone();
        }
     }
     // title pave
     TPaveText* titpave = (TPaveText*) pad->GetPrimitive("title");
-    if(titpave) {
+    if (titpave) {
       double x1=titpave->GetX1NDC();
       double x2=titpave->GetX2NDC();
       double y1=titpave->GetY1NDC();
@@ -934,24 +1012,22 @@ void DbRootHist::setDrawOptionsFromDB(TPad* &pad)
         x1 = fopt;
       }
       if (m_onlineHistogram->getDisplayOption("HTIT_X_SIZE", &fopt)) {
-        x2=x1+fopt;
+        x2 = x1 + fopt;
       }
       if (m_onlineHistogram->getDisplayOption("HTIT_Y_OFFS", &fopt)) {
         y1 = fopt;
       }
       if (m_onlineHistogram->getDisplayOption("HTIT_Y_SIZE", &fopt)) {
-        y2=y1+fopt;
+        y2 = y1 + fopt;
       }
       titpave->SetX1NDC(x1);
       titpave->SetX2NDC(x2);
       titpave->SetY1NDC(y1);
       titpave->SetY2NDC(y2);
-      // save it to check if was chanegd at saving time
-      if(m_titpave) delete m_titpave;
-      m_titpave = (TPave*) titpave->Clone();
+      // save it to check if was changed at saving time
+      if (m_titpave) { delete m_titpave; m_titpave = 0; }
+      m_titpave = (TPave*)titpave->Clone();
     }
-
-
 
     if (m_onlineHistogram->getDisplayOption("DRAWOPTS", &sopt)) {
       rootHistogram->SetDrawOption(sopt.c_str());
@@ -989,7 +1065,7 @@ bool DbRootHist::updateDBOption(std::string opt, void* value, bool isDefault)
   bool update = false;
   bool out = false;
   if (m_onlineHistogram && rootHistogram) {
-    if ( m_onlineHistogram->isSetDisplayOption(opt) ) {
+    if (m_onlineHistogram->isSetDisplayOption(opt)) {
       update = m_onlineHistogram->changedDisplayOption(opt, value);
     } else {
       if (!isDefault) { update=true; }
@@ -1012,10 +1088,10 @@ bool DbRootHist::saveTH1ToDB(TPad* pad)
 
     sopt = rootHistogram->GetYaxis()->GetTitle();
     out |= updateDBOption("LABEL_Y", &sopt, sopt.empty());
-    // note: axis mimina and maxima should not be set in this way, but
+    // note: axis minima and maxima should not be set in this way, but
     // through the web interface
 
-    TPaveStats* stats =  (TPaveStats*)rootHistogram->GetListOfFunctions()
+    TPaveStats* stats = (TPaveStats*)rootHistogram->GetListOfFunctions()
                                                       ->FindObject("stats");
     // if histogram has not been plotted (or has been plotted without stats),
     // do nothing
@@ -1036,10 +1112,10 @@ bool DbRootHist::saveTH1ToDB(TPad* pad)
       out |= updateDBOption("STAT_Y_SIZE", &fopt, 
                             TMath::Abs(fopt - (m_statpave->GetY2NDC()-m_statpave->GetY1NDC())) <0.001);
       delete m_statpave;
-      m_statpave = (TPave*) stats->Clone();
+      m_statpave = (TPave*)stats->Clone();
     }
     // now title options
-    TPaveText* tit = (TPaveText*) pad->GetPrimitive("title");
+    TPaveText* tit = (TPaveText*)pad->GetPrimitive("title");
     if(tit && m_titpave) {
       fopt = tit->GetX1NDC();
       out |= updateDBOption("HTIT_X_OFFS", &fopt, 
@@ -1181,8 +1257,7 @@ void DbRootHist::Draw(TPad* &pad)
 //     }
     rootHistogram->Draw();
     setDrawOptionsFromDB(pad);
-    if(m_historyTrendPlotMode)
-      rootHistogram->SetDrawOption("E1");
+    if (m_historyTrendPlotMode) { rootHistogram->SetDrawOption("E1"); }
 
 //    if (s_NoReference != m_refOption) {
 //      if (getReference()) { drawReference(); }
@@ -1214,7 +1289,7 @@ void DbRootHist::referenceHistogram(ReferenceVisibility visibility)
 {
   if (0 == m_reference &&
       s_NoReference != m_refOption) {
-    TH1* ref = (TH1*) m_analysisLib->getReference(m_onlineHistogram);
+    TH1* ref = (TH1*)m_analysisLib->getReference(m_onlineHistogram);
     if (ref) {
       if (m_reference) { delete m_reference; m_reference = 0; }
       m_reference = ref;
@@ -1276,9 +1351,9 @@ std::string DbRootHist::findDimServiceName(const std::string & dimServiceType) {
 }
 
 std::string DbRootHist::assembleCurrentDimServiceName() {
-
-  std::string dimServiceNameQueryBegining;
+  
   std::string dimServiceName("");
+  std::string dimServiceNameQueryBegining;
 
   if (0 == m_onlineHistogram->hstype().compare(s_P1D) ||
       0 == m_onlineHistogram->hstype().compare(s_HPD)) {
@@ -1287,7 +1362,7 @@ std::string DbRootHist::assembleCurrentDimServiceName() {
       dimServiceName = findDimServiceName(s_HPD);
     }
     if (dimServiceName.empty()) {
-      dimServiceName = findDimServiceName(s_P1D);                
+      dimServiceName = findDimServiceName(s_P1D);
     }        
   } else if (0 == m_onlineHistogram->hstype().compare(s_H2D)) {
     dimServiceName = findDimServiceName(s_pfixMonH2F);
@@ -1304,15 +1379,21 @@ std::string DbRootHist::assembleCurrentDimServiceName() {
     }
     if (dimServiceName.empty()) {
       dimServiceName = findDimServiceName(s_H1D);          
-    }              
+    }
   }
 
   if (!dimServiceName.empty()){
     if (m_verbosity >= Verbose) {
-      std::cout << std::endl << "assembled current Dim service name: " << dimServiceName
-                << std::endl << std::endl;
+      std::cout << std::endl << "assembled current Dim service name: "
+                << dimServiceName << std::endl << std::endl;
     }  
     setIdentifiersFromDim(dimServiceName);
+    if (m_onlineHistogram  && m_session) {
+      m_onlineHistogram->setDimServiceName(dimServiceName);
+      m_onlineHistogram->checkServiceName();
+      m_session->commit();
+    }
   }
+     
   return dimServiceName;
 }

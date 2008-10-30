@@ -108,6 +108,8 @@ class DbRootHist : public HistogramIdentifier
     
     void referenceHistogram(ReferenceVisibility visibilty);
     void setReferenceOption(std::string refOption) { m_refOption = refOption; }
+    void setHistoryTrendPlotMode(bool mode) { m_historyTrendPlotMode = mode; }
+    bool isHistoryTrendPlotMode() { return m_historyTrendPlotMode; }  
 
   private:
     DimInfo*  m_gauchocommentDimInfo;
@@ -148,6 +150,7 @@ class DbRootHist : public HistogramIdentifier
     OnlineHistDB* m_session;
     OnlineHistogram* m_onlineHistogram;
     bool m_isEmptyHisto;
+    int m_retryInit;
 
     std::string m_refOption;
     TH1* m_reference;
@@ -162,6 +165,8 @@ class DbRootHist : public HistogramIdentifier
 
     TPave* m_titpave;
     TPave* m_statpave;
+
+    bool m_historyTrendPlotMode; 
 
     void cleanAnaSources();
     void loadAnaSources();

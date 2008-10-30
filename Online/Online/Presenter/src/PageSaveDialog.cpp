@@ -162,7 +162,7 @@ void PageSaveDialog::ok()
         m_DbHistosOnPageIt = m_mainFrame->dbHistosOnPage.begin();
         while (m_DbHistosOnPageIt != m_mainFrame->dbHistosOnPage.end()) {
           if((*m_DbHistosOnPageIt)->onlineHistogram()->page() == page->name()) {
-// TODO: get rid of ->cd() because it stealthly diverts gPad
+// TODO: get rid of ->cd() because it stealthily diverts gPad
 // TODO: should rather use hostingPad internally: no args
 (*m_DbHistosOnPageIt)->hostingPad->cd();
             (*m_DbHistosOnPageIt)->saveTH1ToDB((*m_DbHistosOnPageIt)->hostingPad);

@@ -28,6 +28,7 @@ class HistogramIdentifier
     bool isDimFormat() const { return m_isDimFormat; };
     std::string gauchocommentBeat() const { return m_gauchocommentBeat; };
     std::string gauchocommentEric() const { return m_gauchocommentEric; };
+    std::string m_histogramUrl() const { return m_histogramUrlTS.Data(); };
 
   protected:
     TString m_histogramUrlTS;
