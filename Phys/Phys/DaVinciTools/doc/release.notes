@@ -1,8 +1,29 @@
-! $Id: release.notes,v 1.370 2008-10-29 13:56:04 pkoppenb Exp $
+! $Id: release.notes,v 1.371 2008-10-30 15:01:42 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-10-30 - Juan PALACIOS
+ - PhysDesktop class
+  . Add property P2PVInputLocations, vector of strings with TES locations of
+    Particle* -> VertexBase* relations. The PhysDesktop now can take 
+    user-defined P->PV relations tables. These over-write relations loaded
+    from the default location InputLocations + "/Particle2Vertices".
+  . When dealing with Particles and PVs, users should now use the relations
+    and not the primaryVertices() method directly.
+
+ - src/PhysDesktop{.h, .cpp}
+  . rename getRelations() to getInputRelations()
+  . Add private methods 
+
+    StatusCode getInputRelations(std::vector<std::string>::const_iterator begin,
+                                 std::vector<std::string>::const_iterator end)
+    void storeRelationsInTable(Particle2Vertex::Range::const_iterator begin,
+                               Particle2Vertex::Range::const_iterator end);
+
+    to allow loading of Particle -> VertexBase relation tables from many
+    TES locations and simplyfy code.
 
 ! 2008-10-29 - Patrick Koppenburg
  - Renamed SelResultsCorrelations to AlgorithmCorrelationsAlg. Can use SelResult
