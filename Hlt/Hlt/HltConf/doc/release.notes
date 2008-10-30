@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.47 2008-10-28 15:45:16 graven Exp $ 
+! $Id: release.notes,v 1.48 2008-10-30 10:08:46 hernando Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : 
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2008-10-30 - Jose A. Hernando
+ - updating HltHadronLines.py to do velo+calo guided forward reconstruction
 
 ! 2008-10-28 - Gerhard Raven
  - streamline some settings
