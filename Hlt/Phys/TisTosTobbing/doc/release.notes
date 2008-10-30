@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.29 2008-10-30 21:12:01 tskwarni Exp $
+! $Id: release.notes,v 1.30 2008-10-30 21:53:16 tskwarni Exp $
 ! Package     : TisTosTobbing
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
+
+!========================== TisTosTobbing v2r8 2008-10-30 ===================
 
 ! 2008-10-30 - Tomasz Skwarnicki
  - make TriggerSelectionTisTos inherit from GaudiTool rather than HltBase
