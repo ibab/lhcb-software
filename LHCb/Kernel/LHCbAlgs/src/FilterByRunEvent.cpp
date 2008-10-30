@@ -1,4 +1,4 @@
-// $Id: FilterByRunEvent.cpp,v 1.4 2008-04-28 11:43:47 cattanem Exp $
+// $Id: FilterByRunEvent.cpp,v 1.5 2008-10-30 12:27:12 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -26,6 +26,7 @@ FilterByRunEvent::FilterByRunEvent( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
+  m_events.clear();
   declareProperty( "RunEventNumList", m_events );
   declareProperty( "PassSelectedEvents", m_passSelect = true );
 }

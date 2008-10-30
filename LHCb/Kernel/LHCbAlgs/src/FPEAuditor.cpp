@@ -65,15 +65,15 @@ private:
 class FPEAuditor : public Auditor {
 public:
   FPEAuditor( const std::string& name, ISvcLocator* pSvcLocator);
-  FPEAuditor::~FPEAuditor() {  }
-  StatusCode FPEAuditor::initialize() {
+  ~FPEAuditor() {  }
+  StatusCode initialize() {
     if (!FPE::Guard::has_working_implementation) { // note: this is a compile-time constant...
       throw GaudiException("FPEAuditor: no FPE trapping support on this architecture...","",StatusCode::FAILURE);
     }
     if (m_activateSuperGuard) m_superGuard.reset( new FPE::Guard( m_mask.value() ) );
     return StatusCode::SUCCESS;
   }
-  StatusCode FPEAuditor::finalize() {
+  StatusCode finalize() {
     m_superGuard.reset( (FPE::Guard*)0 );
     return StatusCode::SUCCESS;
   }
