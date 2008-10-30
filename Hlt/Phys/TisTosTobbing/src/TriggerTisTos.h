@@ -1,4 +1,4 @@
-// $Id: TriggerTisTos.h,v 1.6 2008-07-01 01:44:49 tskwarni Exp $
+// $Id: TriggerTisTos.h,v 1.7 2008-10-30 21:12:01 tskwarni Exp $
 #ifndef TRIGGERTISTOS_H 
 #define TRIGGERTISTOS_H 1
 
@@ -128,7 +128,7 @@ private:
 
 
   /// HltANNSvc for valid trigger names
-  IANSvc* m_hltANNSvc;  
+  IANSvc* m_hltANSvc;  
 
 };
 #endif // TRIGGERTISTOS_H

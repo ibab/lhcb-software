@@ -1,4 +1,4 @@
-// $Id: TriggerSelectionTisTos.h,v 1.8 2008-07-03 14:12:20 tskwarni Exp $
+// $Id: TriggerSelectionTisTos.h,v 1.9 2008-10-30 21:12:01 tskwarni Exp $
 #ifndef TRIGGERSELECTIONTISTOS_H 
 #define TRIGGERSELECTIONTISTOS_H 1
 
@@ -8,7 +8,8 @@
 #include "Kernel/ITriggerSelectionTisTos.h"            // Interface
 
 #include "CaloInterfaces/ITrack2Calo.h"
-#include "HltBase/HltBaseTool.h"
+#include "HltBase/IHltDataSvc.h"
+// #include "HltBase/HltBaseTool.h"
 #include "Event/Track.h"
 
 namespace LHCb {
@@ -24,7 +25,7 @@ namespace LHCb {
  *  @sa  ITriggerSelectionTisTos docs for more explanation.
  *  This interface also defines inlined shortcuts to set Offline Input and get an output in one call. 
  */
-class TriggerSelectionTisTos : public HltBaseTool, virtual public ITriggerSelectionTisTos {
+class TriggerSelectionTisTos : public GaudiTool, virtual public ITriggerSelectionTisTos {
 public: 
 
   /// hits are split into @c HitType categories for matching in each category 
@@ -205,9 +206,6 @@ private:
   /// Location of Hlt Summary
   std::string m_HltSummaryLocation;
 
-  /// Counter for limiting number of warning messages
-  int m_warning_count;  
-  
   // Cache of results for the same Offline Input
   std::vector< std::string > m_cached_SelectionNames;
   std::vector< bool >        m_cached_decision;

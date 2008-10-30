@@ -1,8 +1,15 @@
-! $Id: release.notes,v 1.28 2008-10-30 14:30:01 graven Exp $
+! $Id: release.notes,v 1.29 2008-10-30 21:12:01 tskwarni Exp $
 ! Package     : TisTosTobbing
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
+
+! 2008-10-30 - Tomasz Skwarnicki
+ - make TriggerSelectionTisTos inherit from GaudiTool rather than HltBase
+   and allocate all services explicitely (overwrites Gerhard's changes to fix
+	 the same problem)
+ - protect against unreachable CaloClusters
+ - switch to use of Warning() and Error() from warning() and error()
 
 
 ! 2008-10-30 - Gerhard Raven

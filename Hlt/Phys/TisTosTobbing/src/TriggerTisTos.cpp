@@ -1,4 +1,4 @@
-// $Id: TriggerTisTos.cpp,v 1.7 2008-10-30 14:30:01 graven Exp $
+// $Id: TriggerTisTos.cpp,v 1.8 2008-10-30 21:12:01 tskwarni Exp $
 // Include files 
 #include <algorithm>
 
@@ -42,8 +42,7 @@ TriggerTisTos::TriggerTisTos( const std::string& type,
   declareProperty("InputTriggerSelectionsToIgnore",
                    m_InputSelectionsToIgnore);
 
-  m_error_count=0;
-
+  m_hltANSvc = 0;
 }
 //=============================================================================
 // Destructor
@@ -59,6 +58,7 @@ StatusCode TriggerTisTos::initialize() {
 
   debug() << "==> Initialize" << endmsg;
 
+  m_hltANSvc = svc<IANSvc>("HltANNSvc");
 
   setOfflineInput();
   setTriggerInput();
@@ -82,7 +82,7 @@ void TriggerTisTos::getAlleyExitSelections()
   if( m_alleyExitSelections.size() !=0 ){ return; }
   getHltSummary();
   // find matches to "Hlt1*Decision" in HltANNSvc 
-  std::vector<std::string> hlt1selIDs = annSvc().keys("Hlt1SelectionID");
+  std::vector<std::string> hlt1selIDs = m_hltANSvc->keys("Hlt1SelectionID");
   const std::string legalHlt1Triggers("Hlt1*Decision");  
   for(std::vector<std::string>::const_iterator i =
           hlt1selIDs.begin(); i!=hlt1selIDs.end(); ++i) {
@@ -106,7 +106,9 @@ void TriggerTisTos::getAlleyExitSelections()
           m_alleyExitSelections.begin(); i!=m_alleyExitSelections.end(); ++i) {
       if( find( hltAlleys.begin(), hltAlleys.end(), *i )
             == hltAlleys.end() ){
-        warning() << " Hlt1 Decision <" << *i << "> found in HltANNSvc but not in <HltAlleys> - kept " << endmsg;
+        std::ostringstream mess;
+        mess << " Hlt1 Decision <" << *i << "> found in HltANNSvc but not in <HltAlleys> - kept ";
+        Warning( mess.str(),StatusCode::SUCCESS, 1000 );        
       }
     }    
     for( std::vector<std::string>::const_iterator j =
@@ -115,9 +117,13 @@ void TriggerTisTos::getAlleyExitSelections()
             == m_alleyExitSelections.end() ){
         if( find( hlt1selIDs.begin(), hlt1selIDs.end(), *j )
             == hlt1selIDs.end() ){
-          warning() << " Hlt1 Selection <" << *j << "> found in <HltAlleys> but not in HltANNSvc - ignored " << endmsg;        
+          std::ostringstream mess;
+          mess <<  " Hlt1 Selection <" << *j << "> found in <HltAlleys> but not in HltANNSvc - ignored ";
+          Warning( mess.str(),StatusCode::SUCCESS, 1000 ); 
         } else {
-          warning() << " Hlt1 Selection <" << *j << "> found in <HltAlleys> has illegal name - added " << endmsg;
+          std::ostringstream mess;
+          mess << " Hlt1 Selection <" << *j << "> found in <HltAlleys> has illegal name - added ";
+          Warning( mess.str(),StatusCode::SUCCESS, 1000 ); 
           m_alleyExitSelections.push_back(*j);
         }
       }
@@ -148,12 +154,7 @@ void TriggerTisTos::getAlleyExitSelections()
     }
   }
   if( m_alleyExitSelections.size() == 0 ){
-    if( m_error_count++ < 50 ){
-      warning() << " No Alley Exit Selections found " << endmsg;
-      if( m_error_count==50 ){
-        warning() << " No more warnings will be printed " << endmsg;
-      }
-    } 
+    Warning( " No Alley Exit Selections found ", StatusCode::SUCCESS, 10 );
   }
 }
 
@@ -163,7 +164,7 @@ void TriggerTisTos::getTriggerNames()
   if( m_triggerNames.size() !=0 ){ return; }
 
   // use HltANNSvc to get Hlt1, then Hlt2 names
-  std::vector<std::string> selIDs = annSvc().keys("Hlt1SelectionID");
+  std::vector<std::string> selIDs = m_hltANSvc->keys("Hlt1SelectionID");
   for(std::vector<std::string>::const_iterator i =
           selIDs.begin(); i!=selIDs.end(); ++i) {
     if( find( m_triggerNames.begin(), m_triggerNames.end(), *i )
@@ -172,7 +173,7 @@ void TriggerTisTos::getTriggerNames()
     }
   }
   {    
-  std::vector<std::string> selIDs2 = annSvc().keys("Hlt2SelectionID");
+  std::vector<std::string> selIDs2 = m_hltANSvc->keys("Hlt2SelectionID");
   for(std::vector<std::string>::const_iterator i =
           selIDs2.begin(); i!=selIDs2.end(); ++i) {
     if( find( m_triggerNames.begin(), m_triggerNames.end(), *i )
@@ -197,7 +198,7 @@ void TriggerTisTos::getTriggerNames()
   }  
   
   if( m_triggerNames.size()==0 ){
-    warning() << "No known trigger names found" << endmsg;
+    Warning( "No known trigger names found" , StatusCode::SUCCESS, 50 );
   }
   
 }
@@ -238,14 +239,11 @@ void TriggerTisTos::addToTriggerInput( const std::string & selectionNameWithWild
     }
   }
   if( m_triggerInput_Selections.size()==sizeAtEntrance ){
-    if( m_error_count++ < 50 ){
-      warning() << " addToTriggerInput called with selectionNameWithWildChar="<< selectionNameWithWildChar 
-                << " alleyExitsOnly=" << int(alleyExitsOnly) 
-                << " added no selection to the Trigger Input, which has size=" << m_triggerInput_Selections.size() << endmsg;
-      if( m_error_count==50 ){
-        warning() << " No more warnings will be printed " << endmsg;
-      }
-    }
+    std::ostringstream mess;
+    mess << " addToTriggerInput called with selectionNameWithWildChar=" << selectionNameWithWildChar
+         << " alleyExitsOnly=" << int(alleyExitsOnly) 
+         << " added no selection to the Trigger Input, which has size=" << m_triggerInput_Selections.size();
+    Warning( mess.str(),StatusCode::SUCCESS, 50 );
   }
 }
  

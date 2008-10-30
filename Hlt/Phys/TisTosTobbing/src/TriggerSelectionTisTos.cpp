@@ -1,4 +1,4 @@
-// $Id: TriggerSelectionTisTos.cpp,v 1.9 2008-10-30 14:30:01 graven Exp $
+// $Id: TriggerSelectionTisTos.cpp,v 1.10 2008-10-30 21:12:01 tskwarni Exp $
 // Include files 
 #include <algorithm>
 
@@ -38,7 +38,7 @@ DECLARE_TOOL_FACTORY( TriggerSelectionTisTos );
 TriggerSelectionTisTos::TriggerSelectionTisTos( const std::string& type,
                                                 const std::string& name,
                                                 const IInterface* parent )
-  : HltBaseTool ( type, name , parent )
+  : GaudiTool ( type, name , parent )
 {
   declareInterface<ITriggerSelectionTisTos>(this);
 
@@ -71,12 +71,12 @@ TriggerSelectionTisTos::TriggerSelectionTisTos( const std::string& type,
 
   m_track2calo = 0;
   
-  m_warning_count=0;
- 
   m_cached_SelectionNames.reserve(500);
   m_cached_decision.reserve(500);
   m_cached_tis.reserve(500);
   m_cached_tos.reserve(500);
+  
+  m_hltconf =0;
   
  
 }
@@ -91,7 +91,7 @@ TriggerSelectionTisTos::~TriggerSelectionTisTos() {}
 // Initialization
 //=============================================================================
 StatusCode TriggerSelectionTisTos::initialize() {
-  StatusCode sc = HltBaseTool::initialize(); // must be executed first
+  StatusCode sc = GaudiTool::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   debug() << "==> Initialize" << endmsg;
@@ -326,27 +326,39 @@ void TriggerSelectionTisTos::particleListTISTOS(const SmartRefVector<LHCb::Parti
             const SmartRefVector< LHCb::CaloHypo > &caloVec = pp->calo();
             if( caloVec.size() > 0 ){
               const LHCb::CaloHypo*   hypo  = *(caloVec.begin());
-              LHCb::CaloCellID centerCell,centerCell1,dummyCell;      
-              if( 0!=onit ){
-                if( LHCb::CaloHypo::EmCharged == hypo->hypothesis() ){
-                  centerCell  = (*(hypo->clusters().begin()))->seed();
+              if( hypo ){                
+                LHCb::CaloCellID centerCell,centerCell1,dummyCell;      
+                if( 0!=onit ){
+                  if( LHCb::CaloHypo::EmCharged == hypo->hypothesis() ){
+                    if( (hypo->clusters().begin())->target() ){    
+                      centerCell  = (*(hypo->clusters().begin()))->seed();
+                    }                    
+                  }
+                } else {
+                  if( LHCb::CaloHypo::Photon == hypo->hypothesis() ){
+                    if( (hypo->clusters().begin())->target() ){              
+                      centerCell  = (*(hypo->clusters().begin()))->seed();
+                    }                    
+                  } else if (  LHCb::CaloHypo::Pi0Merged == hypo->hypothesis() ){
+                    // Split Photons
+                    const SmartRefVector<LHCb::CaloHypo>& hypos = hypo->hypos();
+                    const LHCb::CaloHypo* g1 = *(hypos.begin() );
+                    if( g1 ){              
+                      if( (g1->clusters().begin())->target() )
+                        centerCell  = (*(g1->clusters().begin()))->seed();
+                    }            
+                    const LHCb::CaloHypo* g2 = *(hypos.begin()+1 );
+                    if( g2 ){
+                      if( (g2->clusters().begin())->target() )              
+                        centerCell1 = (*(g2->clusters().begin()))->seed();
+                    }
+                  }        
                 }
-              } else {
-                if( LHCb::CaloHypo::Photon == hypo->hypothesis() ){
-                  centerCell  = (*(hypo->clusters().begin()))->seed();
-                } else if (  LHCb::CaloHypo::Pi0Merged == hypo->hypothesis() ){
-                  // Split Photons
-                  const SmartRefVector<LHCb::CaloHypo>& hypos = hypo->hypos();
-                  const LHCb::CaloHypo* g1 = *(hypos.begin() );
-                  centerCell  = (*(g1->clusters().begin()))->seed();
-                  const LHCb::CaloHypo* g2 = *(hypos.begin()+1 );
-                  centerCell1 = (*(g2->clusters().begin()))->seed();
-                }        
-              }
       
-              if( !(centerCell == dummyCell) ){
-                onlineT.addToLhcbIDs(centerCell);
-              }
+                if( !(centerCell == dummyCell) ){
+                  onlineT.addToLhcbIDs(centerCell);
+                }
+              }              
             }
           }
           
@@ -358,13 +370,8 @@ void TriggerSelectionTisTos::particleListTISTOS(const SmartRefVector<LHCb::Parti
               if( exist<LHCb::Tracks>(m_HltMuonTracksLocation) ){
                 m_HLTmuonTracks = get<LHCb::Tracks>(m_HltMuonTracksLocation);
               } else {
-                if( m_warning_count++ < 10 ){
-                  warning() << " No HLT muon tracks at " << m_HltMuonTracksLocation 
-                            << " thus, muon hits will be missing on trigger particles. " << endmsg;
-                  if( m_warning_count==10 ){
-                    warning() << " The above warning was printed for the last time " << endmsg;
-                  }
-                }
+                Warning(" No HLT muon tracks at " + m_HltMuonTracksLocation 
+                        + " thus, muon hits will be missing on trigger particles. " , StatusCode::SUCCESS, 10 );
               }
             }
             if( m_HLTmuonTracks != 0 ){
@@ -418,16 +425,20 @@ void TriggerSelectionTisTos::particleListTISTOS(const SmartRefVector<LHCb::Parti
 
 void TriggerSelectionTisTos::getHltSummary()
 {
-  if( (m_summary == 0) || (m_hltconf==0) ){
+  if( m_summary == 0 ){
     m_summary = get<HltSummary>(m_HltSummaryLocation);
-    if( m_summary == 0 ){ 
-      error() << " No HLT Summary at " << m_HltSummaryLocation << " No TisTosing possible " << endmsg; 
-    } else {
-      m_hltconf = &hltConf();
-      if( m_hltconf == 0 ){ error() << " No HLT Configuration! " << endreq;
-      }
-    }
   }
+  if( m_hltconf == 0 ){
+    // m_hltconf = &hltConf();
+    IHltDataSvc* dataS = svc<IHltDataSvc>("HltDataSvc");
+    if( dataS ){
+      m_hltconf = &(dataS->config());        
+    } else {
+      Error( " cannot get HltDataSvc " , StatusCode::FAILURE, 20 );
+    }
+    if( m_hltconf == 0 ){ Error( " No HLT Configuration! " , StatusCode::FAILURE, 20 ); }
+  }
+  
 }
 
 
@@ -449,7 +460,7 @@ void TriggerSelectionTisTos::setOfflineInput( )
   m_muonsOff = false;
 
   m_summary = 0;
-  m_hltconf = 0;
+  //  m_hltconf = 0;
 
   clearCache();
 
@@ -460,6 +471,7 @@ void TriggerSelectionTisTos::setOfflineInput( )
 void TriggerSelectionTisTos::addToOfflineInput( const std::vector<LHCb::LHCbID> & hitlist, ClassifiedHits hitidlist[] )
 {
   bool modified(false);
+  
   
   for( std::vector<LHCbID>::const_iterator id=hitlist.begin();id!=hitlist.end();++id){
 
@@ -481,6 +493,7 @@ void TriggerSelectionTisTos::addToOfflineInput( const std::vector<LHCb::CaloCell
 {
   bool modified(false);
   
+
   for( std::vector<CaloCellID>::const_iterator id=hitlist.begin();id!=hitlist.end();++id){
 
     int hitType=hitMatchType(*id);
@@ -499,6 +512,7 @@ void TriggerSelectionTisTos::addToOfflineInput( const std::vector<LHCb::CaloCell
 //    Track input ---------------------------------------------------------------
 void TriggerSelectionTisTos::addToOfflineInput( const LHCb::Track & track, ClassifiedHits hitidlist[]) 
 {
+
 
   //   add hits saved directly on the track ------------------------------------------------------------
   const std::vector<LHCbID>& ids = track.lhcbIDs();
@@ -564,6 +578,7 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::ProtoParticle & prot
                                       ClassifiedHits hitidlist[] ) 
 {
 
+
   const Track* t=protoParticle.track();
 
 
@@ -572,42 +587,59 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::ProtoParticle & prot
     const SmartRefVector< LHCb::CaloHypo > &caloVec = protoParticle.calo();
     if( caloVec.size() > 0 ){
       const LHCb::CaloHypo*   hypo  = *(caloVec.begin());
-      LHCb::CaloCellID centerCell,centerCell1,dummyCell;      
-      if( 0!=t ){
-        if( LHCb::CaloHypo::EmCharged == hypo->hypothesis() ){
-          centerCell  = (*(hypo->clusters().begin()))->seed();
-          //          info() << " EmCharged " << centerCell << endmsg;          
+      if( hypo !=0 ){
+
+        LHCb::CaloCellID centerCell,centerCell1,dummyCell;      
+        if( 0!=t ){
+          if( LHCb::CaloHypo::EmCharged == hypo->hypothesis() ){
+            if( (hypo->clusters().begin())->target() ){              
+              centerCell  = (*(hypo->clusters().begin()))->seed();
+              // info() << " EmCharged " << centerCell << endmsg;          
+            }
+          }
+        } else {
+          if( LHCb::CaloHypo::Photon == hypo->hypothesis() ){
+            if( (hypo->clusters().begin())->target() ){              
+              centerCell  = (*(hypo->clusters().begin()))->seed();
+              //    info() << " Photon " << centerCell << endmsg;          
+            }            
+          } else if (  LHCb::CaloHypo::Pi0Merged == hypo->hypothesis() ){
+            // Split Photons
+            const SmartRefVector<LHCb::CaloHypo>& hypos = hypo->hypos();
+            const LHCb::CaloHypo* g1 = *(hypos.begin() );
+            if( g1 ){              
+              if( (g1->clusters().begin())->target() )
+              centerCell  = (*(g1->clusters().begin()))->seed();
+            }            
+            const LHCb::CaloHypo* g2 = *(hypos.begin()+1 );
+            if( g2 ){
+              if( (g2->clusters().begin())->target() )              
+              centerCell1 = (*(g2->clusters().begin()))->seed();
+              // info() << " Pi0Merged " << centerCell << centerCell1 << endmsg;          
+            }
+            
+          }        
         }
-      } else {
-        if( LHCb::CaloHypo::Photon == hypo->hypothesis() ){
-          centerCell  = (*(hypo->clusters().begin()))->seed();
-          //    info() << " Photon " << centerCell << endmsg;          
-        } else if (  LHCb::CaloHypo::Pi0Merged == hypo->hypothesis() ){
-          // Split Photons
-          const SmartRefVector<LHCb::CaloHypo>& hypos = hypo->hypos();
-          const LHCb::CaloHypo* g1 = *(hypos.begin() );
-          centerCell  = (*(g1->clusters().begin()))->seed();
-          const LHCb::CaloHypo* g2 = *(hypos.begin()+1 );
-          centerCell1 = (*(g2->clusters().begin()))->seed();
-          // info() << " Pi0Merged " << centerCell << centerCell1 << endmsg;          
-        }        
-      }
       
-      if( !(centerCell == dummyCell) ){
-        if( m_ecalDeCal==0 ){ m_ecalDeCal = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal ); }
-        std::vector<LHCb::CaloCellID> cells3x3;
-        cells3x3.push_back(centerCell);
-        const std::vector<LHCb::CaloCellID> & neighbors = m_ecalDeCal->neighborCells( centerCell );
-        cells3x3.insert( cells3x3.end(), neighbors.begin(),  neighbors.end() );      
-        if( !(centerCell1 == dummyCell) ){
-          cells3x3.push_back(centerCell1);
-          const std::vector<LHCb::CaloCellID> & neighbors = m_ecalDeCal->neighborCells( centerCell1 );
+      
+        if( !(centerCell == dummyCell) ){
+        
+          if( m_ecalDeCal==0 ){ m_ecalDeCal = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal ); }
+          std::vector<LHCb::CaloCellID> cells3x3;
+          cells3x3.push_back(centerCell);
+          const std::vector<LHCb::CaloCellID> & neighbors = m_ecalDeCal->neighborCells( centerCell );
           cells3x3.insert( cells3x3.end(), neighbors.begin(),  neighbors.end() );      
+          if( !(centerCell1 == dummyCell) ){
+            cells3x3.push_back(centerCell1);
+            const std::vector<LHCb::CaloCellID> & neighbors = m_ecalDeCal->neighborCells( centerCell1 );
+            cells3x3.insert( cells3x3.end(), neighbors.begin(),  neighbors.end() );      
+          }
+          addToOfflineInput( cells3x3, hitidlist );
         }
-        addToOfflineInput( cells3x3, hitidlist );
       }
     }
   }
+  
   
    
     
@@ -622,13 +654,8 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::ProtoParticle & prot
           m_muonsOff = (m_muonTracks==0);          
         } else {
           m_muonsOff = true;          
-          if( m_warning_count++ < 10 ){
-            warning() << " No offline muon tracks at " << m_MuonTracksLocation 
-                      << " thus, muon hits will be ignored on trigger tracks. " << endmsg;
-            if( m_warning_count==10 ){
-              warning() << " The above warning was printed for the last time " << endmsg;
-            }
-          }
+          Warning( " No offline muon tracks at " + m_MuonTracksLocation
+                   + " thus, muon hits will be ignored on trigger tracks. " );
         }
       }
       if( m_muonTracks != 0 ){
@@ -653,6 +680,7 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::ProtoParticle & prot
 //    Particle input; for composite particles loop over daughters will be executed ------------------------------
 void TriggerSelectionTisTos::addToOfflineInput( const LHCb::Particle & particle, ClassifiedHits hitidlist[]  )
 {
+
   const SmartRefVector<LHCb::Particle> & daughters = particle.daughters();  
   if( daughters.size() >0 ){
     for(SmartRefVector<LHCb::Particle>::const_iterator p = daughters.begin(); p!=daughters.end(); ++p){
