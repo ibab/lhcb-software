@@ -1,4 +1,4 @@
-// $Id: IPhysDesktop.h,v 1.28 2008-10-27 15:19:24 jpalac Exp $
+// $Id: IPhysDesktop.h,v 1.29 2008-10-30 16:34:13 jpalac Exp $
 #ifndef DAVINCIKERNEL_IPHYSDESKTOP_H 
 #define DAVINCIKERNEL_IPHYSDESKTOP_H 1
 
@@ -75,13 +75,13 @@ public:
   /// Only DVAlgorithm::sysExecute() should call this function.
   virtual StatusCode getEventInput() = 0;
 
-  /// Retrieve the particles containers
+  /// Retrieve the local particle container
   virtual const LHCb::Particle::ConstVector& particles() const = 0;
 
   /// Retrieve the PVs from the TES
   virtual const LHCb::RecVertex::Container* primaryVertices() const = 0;
 
-  /// Retrieve the secondary vertices
+  /// Retrieve the local secondary vertex container
   virtual const LHCb::Vertex::ConstVector& secondaryVertices() const = 0;
 
   /// Keep for future use: Register the new particles in the Desktop, 
