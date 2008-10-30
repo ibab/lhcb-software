@@ -7,19 +7,16 @@
 #include "GaudiKernel/SystemOfUnits.h"
 
 
-#include "CaloDet/DeCalorimeter.h"//Test
+#include "CaloDet/DeCalorimeter.h"
 
 //#include "Kernel/CaloCellID.h"
 #include "GaudiAlg/Tuple.h"
 #include "GaudiAlg/TupleObj.h"
 
-
-
 // Event/CaloEvent
 #include "Event/MCCaloHit.h" 
 #include "Event/MCCaloDigit.h" 
 #include "Event/CaloDigit.h" 
-
 #include "Event/MCHeader.h"
 
 // local
@@ -44,7 +41,6 @@ CaloDigitChannel::CaloDigitChannel( const std::string& name,
 //=============================================================================
 CaloDigitChannel::~CaloDigitChannel() {};
 //=============================================================================
-//=============================================================================
 // Initialisation. Check parameters
 //=============================================================================
 StatusCode CaloDigitChannel::initialize() {
@@ -52,68 +48,34 @@ StatusCode CaloDigitChannel::initialize() {
   StatusCode sc = GaudiTupleAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   debug() << " ====> Initialize" << endreq;
-  
-  bool normal =  "TAE" != context() && "" == rootInTES();
   if ( "Ecal" ==  m_nameOfDetector) {
     debug() << "Detector name == ECAL  " <<  m_nameOfDetector << endmsg; 
     m_calo    = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal );
-    if ( normal ) {
-      m_inputData      =  LHCb::CaloDigitLocation::Ecal ;
- 
-      debug() << "Input data  ==> Normal  " <<m_inputData    <<endmsg;
-    }
-    
-    if(! normal)  {
-      m_inputData      =  rootInTES() + LHCb::CaloDigitLocation::Ecal ;
-      debug() << "Input  data  ==> TAE Context  " << m_inputData     << endmsg; }
+    m_inputData      =  LHCb::CaloDigitLocation::Ecal ;
+    debug() << "Input data :  " <<m_inputData    <<endmsg;
   }
+  
   
   if ( "Hcal" ==  m_nameOfDetector) {
     debug() << " Detector Name == HCAL  " <<  m_nameOfDetector << endmsg; 
     m_calo    = getDet<DeCalorimeter>( DeCalorimeterLocation::Hcal );
-    if ( normal ) {
-      m_inputData      =  LHCb::CaloDigitLocation::Hcal ;
-      
-      debug() << "Input data  ==> Normal  " <<m_inputData    <<endmsg;
-    }
-    
-    if(! normal)  {
-      m_inputData      =  rootInTES() + LHCb::CaloDigitLocation::Hcal ;
-      debug () << "Input   data  ==> TAE Context  " << m_inputData     << endmsg; }
-  }  
-  
+    m_inputData      =  LHCb::CaloDigitLocation::Hcal ;
+    debug() << "Input data  ==> Normal  " <<m_inputData    <<endmsg;
+  }
   
   if ( "Spd" ==  m_nameOfDetector) {
     debug() << "This is the Spd  " <<  m_nameOfDetector << endmsg; 
     m_calo    = getDet<DeCalorimeter>( DeCalorimeterLocation::Spd );
-    
-    if ( normal ) {
-      m_inputData      =  LHCb::CaloDigitLocation::Spd ;
-      debug() << "Input data  ==> Normal  " <<m_inputData    <<endmsg;
-    }
-    
-    
-    if(! normal)  {
-      m_inputData  =  rootInTES() + LHCb::CaloDigitLocation::Spd ;
-      debug() << "Input     data  ==> TAE Context  " << m_inputData     << endmsg; }
-  }  
-  
+    m_inputData      =  LHCb::CaloDigitLocation::Spd ;
+    debug() << "Input data  ==> Normal  " <<m_inputData    <<endmsg;
+  }
   
   if ( "Prs" ==  m_nameOfDetector) {
-    debug() << "This is the ECAL  " <<  m_nameOfDetector << endmsg; 
+    debug() << "This is the Prs  " <<  m_nameOfDetector << endmsg; 
     m_calo    = getDet<DeCalorimeter>( DeCalorimeterLocation::Prs );
-    if ( normal ) {
-      m_inputData      =  LHCb::CaloDigitLocation::Prs ;
-      debug() << "Input data ==> Normal  " <<m_inputData    <<endmsg;
-    }
-    
-    
-    if(! normal)  {
-      m_inputData      =  rootInTES() + LHCb::CaloDigitLocation::Prs ;
-      debug() << "Input data  ==> TAE Context  " << m_inputData     << endmsg; }
-  }  
-  
-  
+    m_inputData      =  LHCb::CaloDigitLocation::Prs ;
+    debug() << "Input data :  " <<m_inputData    <<endmsg;
+  }
   return StatusCode::SUCCESS; 
 };
 
@@ -136,26 +98,21 @@ StatusCode CaloDigitChannel::execute() {
   std::vector<double> area;
   std::vector<double> col;
   std::vector<double> row;
-  if(!exist<LHCb::CaloDigits>( m_inputData ))return StatusCode::SUCCESS;
-  
+
+
+  if(!exist<LHCb::CaloDigits>( m_inputData )) return StatusCode::SUCCESS;
   LHCb::CaloDigits* digits = get<LHCb::CaloDigits>( m_inputData );
-  
   if( 0 != digits ) { 
     LHCb::CaloDigits::const_iterator dig;  // LHCb Calo Digits
-    
     for ( dig = digits->begin() ; digits->end() != dig ; ++dig ) {
       nbDigit  += 1.;
+      
       LHCb::CaloCellID id    = (*dig)->cellID(); 
-      
-     
       energyDigit = (*dig)->e();
-      
       energy.push_back(energyDigit );
       x.push_back(m_calo->cellX(id));
       y.push_back(m_calo->cellY(id));
       z.push_back(m_calo->cellZ(id));
-      cellGain.push_back(m_calo->cellGain(id));
-      cellTime.push_back(m_calo->cellTime(id));
       index.push_back(id.index());  
       area.push_back(id.area());
       col.push_back(id.col());
@@ -167,21 +124,19 @@ StatusCode CaloDigitChannel::execute() {
       debug() << " row "  << row << endmsg;
       debug() << "The Number of Digits is : " << nbDigit<< endmsg;
     }
-    
-    
   }
-  tuple->array("index" ,index );
-  tuple->array("x",x);
-  tuple->array("y",y);
-  tuple->array("z",z);
-  tuple->array("cellTime",cellTime);
-  tuple->array("cellGain",cellGain);
-  tuple->array("energy",energy);
-  tuple->array("area", area);
-  tuple->array("col", col);
-  tuple->array("row", row);
+  tuple->farray("index" ,index,"Ndigits",7000 );
+  tuple->farray("x",x,"Ndigits",7000);
+  tuple->farray("y",y,"Ndigits",7000);
+  tuple->farray("z",z,"Ndigits",7000);
+  tuple->farray("energy",energy,"Ndigits",7000);
+  tuple->farray("area", area,"Ndigits",7000);
+  tuple->farray("col", col,"Ndigits",7000);
+  tuple->farray("row", row,"Ndigits",7000);
+  
+  
   sc = tuple->write();
-  always() << "written tuple" << endmsg ; 
+  info() << "written tuple" << endmsg ; 
   
   return sc ; 
   
@@ -190,7 +145,6 @@ StatusCode CaloDigitChannel::execute() {
 //  Finalize
 //=============================================================================
 StatusCode CaloDigitChannel::finalize() {
-  
   debug() << " ===> Finalize" << endreq;
   return GaudiTupleAlg::finalize(); 
 }

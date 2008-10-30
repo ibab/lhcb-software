@@ -15,6 +15,8 @@
 
 #include "CaloDet/DeCalorimeter.h"
 
+
+
 /** @class CaloDigitChannel CaloDigitChannel.h
  *  
  *  Evaluate the Energy in the Calo Channel by Channel
