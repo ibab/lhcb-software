@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.8 2007-11-01 13:36:48 cattanem Exp $ 
+# $Id: requirements,v 1.9 2008-10-30 15:32:00 odescham Exp $ 
 # ============================================================================
 # Created    : 2004-10-25
 # Author     : Vanya Belyaev
@@ -17,6 +17,7 @@ set               CALOMONIDIGIOPTS $(CALOMONIDIGIROOT)/options
 use             GaudiAlg     v*
 use             MCEvent      v*    Event
 use             DigiEvent    v*    Event
+use		CaloDet	     v*    Det
 
 # =============== constituents ===============================================
 library           CaloMoniDigi   -import=AIDA *.cpp
