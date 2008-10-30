@@ -1,4 +1,4 @@
-// $Id: GenParticles.h,v 1.19 2008-07-09 16:19:16 ibelyaev Exp $
+// $Id: GenParticles.h,v 1.20 2008-10-30 12:52:44 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GENPARTICLES_H 
 #define LOKI_GENPARTICLES_H 1
@@ -927,6 +927,7 @@ namespace LoKi
     class DeltaPhi : public LoKi::GenTypes::GFunc
     {
     public:
+      // ======================================================================
       /// constructor from the angle
       DeltaPhi ( const double phi ) ;
       /// constructor from the vector 
@@ -954,7 +955,7 @@ namespace LoKi
         if ( 0 == p ) { Exception("Invalid PARTICLE*") ;}
         m_phi = p->momentum().phi() ;
         m_phi = adjust ( m_phi ) ;
-      } ;
+      } 
       /// copy constructor
       DeltaPhi ( const DeltaPhi& right ) ;
       /// MANDATORY: virtual destructor 
@@ -965,20 +966,31 @@ namespace LoKi
       virtual result_type operator() ( argument p ) const ;
       /// OPTIONAL: "SHORT" representation
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     public:
+      // ======================================================================
       /// adjust delta phi into the raneg of [-180:180]degrees 
       const double adjust ( double phi ) const ;
+      // ======================================================================
     public:
-      // get the phi
-      double phi() const { return m_phi ; }
+      // ======================================================================
+      /// get the phi
+      double phi() const { return m_phi ; }                      // get the phi
+      // ======================================================================
     private:
-      // the default constructor is disabled 
-      DeltaPhi ();
+      // ======================================================================
+      /// the default constructor is disabled 
+      DeltaPhi ();                       // the default constructor is disabled 
+      /// no assignement 
+      DeltaPhi& operator=( const DeltaPhi& ) ;                // no assignement 
+      // ======================================================================
     private:
-      // the actual evaluator of phi
-      LoKi::GenParticles::Phi m_eval ; ///< the actual evaluator of phi
-      // the angle itself 
-      double                  m_phi  ; ///< the angle itself 
+      // ======================================================================
+      /// the actual evaluator of phi
+      LoKi::GenParticles::Phi m_eval ;           // the actual evaluator of phi
+      /// the angle itself 
+      double                  m_phi  ;                      // the angle itself 
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class DeltaEta
@@ -992,6 +1004,7 @@ namespace LoKi
     class DeltaEta : public LoKi::GenTypes::GFunc
     {
     public:
+      // ======================================================================
       /// constructor from the eta
       DeltaEta ( const double eta ) ;
       /// constructor from the vector 
@@ -1027,17 +1040,26 @@ namespace LoKi
       virtual result_type operator() ( argument p ) const ;
       /// OPTIONAL: "SHORT" representation
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     public:
-      // get the eta
+      // ======================================================================
+      /// get the eta
       double eta() const { return m_eta ; }
+      // ======================================================================
     private:
-      // the default constructor is disabled 
-      DeltaEta ();
+      // ======================================================================
+      /// the default constructor is disabled 
+      DeltaEta ();                       // the default constructor is disabled
+      /// no assignement 
+      DeltaEta& operator= (const DeltaEta& ) ;
+      // ======================================================================
     private:
-      // the actual evaluator of eta
-      LoKi::GenParticles::PseudoRapidity m_eval ; ///< the actual evaluator of eta
-      // the angle itself 
-      double                             m_eta  ; ///< the angle itself 
+      // ======================================================================
+      /// the actual evaluator of eta
+      LoKi::GenParticles::PseudoRapidity m_eval ; // the actual evaluator of eta
+      /// the angle itself 
+      double                             m_eta  ; // the angle itself 
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class DeltaR2

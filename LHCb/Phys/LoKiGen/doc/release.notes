@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.59 2008-10-29 13:40:35 ibelyaev Exp $ 
+! $Id: release.notes,v 1.60 2008-10-30 12:52:44 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGen
 ! Responsible : Vanya BELYAEV
@@ -13,6 +13,10 @@
 !   contributions and advices from G.Raven, J.van Tilburg, 
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
+
+! 2008-10-30 - Vanya BELYAEV
+
+ - fix for LCG-preview 
 
 ! 2008-10-29 - Vanya BELYAEV
  - fixes for gcc43 compilation 
