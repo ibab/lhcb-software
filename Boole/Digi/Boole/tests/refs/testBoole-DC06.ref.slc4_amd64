@@ -1,8 +1,8 @@
 # --> Including file '/build/cattanem/Boole_HEAD/Digi/Boole/tests/options/testBoole-DC06.py'
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Boole version v16r1
-                                          running on lxbuild120.cern.ch on Mon Sep  8 16:07:42 2008
+                                                   Welcome to Boole version v16r4
+                                          running on lxbuild120.cern.ch on Thu Oct 30 11:09:32 2008
 ====================================================================================================================================
 ApplicationMgr       INFO Successfully loaded modules : HepMCBack
 ApplicationMgr       INFO Application Manager Configured successfully
@@ -24,8 +24,11 @@ BooleInit         SUCCESS ======================================================
 HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 RootHistSvc          INFO Writing ROOT histograms to: 00001820_00000001-10ev-histos.root
 HistogramPersis...   INFO Added successfully Conversion service:RootHistSvc
-HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v7r2/data/muonlow-G4.root as LowEnergy
-HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v7r2/data/muonflat-G4.root as MuonFlatSpillover
+HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v7r3/data/muonlow-G4.root as LowEnergy
+HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v7r3/data/muonflat-G4.root as MuonFlatSpillover
+BooleInit            INFO Thresholds for Interaction processes : 0.01 0.03 0.05
+BooleInit            INFO Thresholds for Diffractive processes : 0.1 0.3 0.6
+BooleInit            INFO Thresholds for Elastic processes : 0.25 0.5 0.75
 InitDataSeq          INFO Member list: MergeEventAlg/SpilloverAlg
 SpilloverAlg         INFO Spillover events will be added to the main event in paths Prev PrevPrev Next
 ToolSvc.LumiTool     INFO BunchCrossRate  29.49
@@ -34,8 +37,8 @@ InitMUONSeq          INFO Member list: MuonBackground/MuonLowEnergy, MuonBackgro
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
 EventClockSvc.F...   INFO Event times generated from 0 with steps of 0
-RFileCnv             INFO opening Root file "/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v7r2/data/muonlow-G4.root" for reading
-RFileCnv             INFO opening Root file "/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v7r2/data/muonflat-G4.root" for reading
+RFileCnv             INFO opening Root file "/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v7r3/data/muonlow-G4.root" for reading
+RFileCnv             INFO opening Root file "/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v7r3/data/muonflat-G4.root" for reading
 DigiPrev2            INFO Member list: , with rootInTES 'Prev2/', with globalTimeOffset 50
 DigiPrev1            INFO Member list: , with rootInTES 'Prev1/', with globalTimeOffset 25
 Digi                 INFO Member list: GaudiSequencer/DigiVELOSeq, GaudiSequencer/DigiTTSeq, GaudiSequencer/DigiITSeq, GaudiSequencer/DigiOTSeq, GaudiSequencer/DigiRICHSeq, GaudiSequencer/DigiCALOSeq, GaudiSequencer/DigiMUONSeq, GaudiSequencer/DigiL0Seq
@@ -50,7 +53,7 @@ DigiRICHSeq          INFO Member list: Rich::MC::Digi::Signal/RichPDSignal, Rich
 DeRichSystem         INFO Update triggered for HPD numbering maps
 DeRichSystem         INFO Built mappings for 10 L1 and 196 HPDs in Rich1
 DeRichSystem         INFO Built mappings for  8 L1 and 288 HPDs in Rich2
-ParticlePropert...   INFO Opened particle properties file : /afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v7r2/data/ParticleTable.txt
+ParticlePropert...   INFO Opened particle properties file : /afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v7r3/data/ParticleTable.txt
 RichChargeShare      INFO Will add charge sharing at 2.5 % level
 ToolSvc.RichSma...   INFO Created active HPD channel list : # channels RICH(1/2) = 167776 / 246528
 RichPDResponse       INFO Time Calibration (Rich1/RICH2) = 10 6
@@ -87,7 +90,7 @@ L0EmulatorSeq        INFO Member list: GaudiSequencer/L0ProcessorsSeq, L0DUAlg/L
 L0ProcessorsSeq      INFO Member list: L0CaloAlg/L0Calo, L0MuonAlg/L0Muon, PuVetoAlg/L0PuVeto
 L0Calo               INFO 192 Ecal and 54 Hcal front end cards.
 ChronoStatSvc        INFO  Number of skipped events for MemStat-1
-L0Muon               INFO XML file = /afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v7r2/data/L0MuonKernel.xml
+L0Muon               INFO XML file = /afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v7r3/data/L0MuonKernel.xml
 L0Muon               INFO MuonTriggerUnit properties are:
 L0Muon               INFO  foiXSize = 4,5,0,2,4
 L0Muon               INFO  foiYSize = 0,0,0,1,1
@@ -95,7 +98,7 @@ L0Muon               INFO  ignoreM1 = 0
 L0Muon               INFO  ignoreM2 = 0
 L0Muon               INFO  procVersion = 2
 L0Muon               INFO  ptParameters = 40.000000,7.000000
-L0MuonTrigger I...   INFO Time User   : Tot= 1.62  [s]                                             #=  1
+L0MuonTrigger I...   INFO Time User   : Tot=  1.6  [s]                                             #=  1
 ToolSvc.L0DUCon...   INFO **** L0DU Configs loading : TCK = 0xFFFF
 ToolSvc.L0DUCon...   INFO Short description ::  TCK = 0xFFFF : Algorithm[1] Setting[0] lumi[2] - 2007 tuning - gain:Calo[20] : Muon[40]
 L0DU                 INFO The L0DUConfig (TCK=0xFFFF) have been succesfully loaded
@@ -157,30 +160,30 @@ castor:/castor/...SUCCESS Root file version:51304
 castor:/castor/...SUCCESS Root file version:51304
 SpilloverAlg         INFO +--> Evt 1,  Run 182002 [Nr. in job = 1] at /Event/Prev
 SpilloverAlg         INFO +--> Evt 2,  Run 182002 [Nr. in job = 2] at /Event/PrevPrev
-SpilloverAlg         INFO +--> Evt 3,  Run 182002 [Nr. in job = 3] at /Event/Next
 MCTTDepositCreatorWARNING MCSTDepositCreator:: The WARNING message is suppressed : 'Failed to find sensor'
 MCITDepositCreatorWARNING MCSTDepositCreator:: The WARNING message is suppressed : 'Failed to find sensor'
 00001820_000000...SUCCESS Root file version:51800
 00001820_000000...SUCCESS Root file version:51800
 PoolDbDatabaseCnv    INFO Recreate Database file:00001820_00000001-L0ETC.root as /EVTTAGS
 BooleInit            INFO Evt 2,  Run 182001,  Nr. in job = 2
-SpilloverAlg         INFO +--> Evt 4,  Run 182002 [Nr. in job = 4] at /Event/Next
+SpilloverAlg         INFO +--> Evt 3,  Run 182002 [Nr. in job = 3] at /Event/Prev
+SpilloverAlg         INFO +--> Evt 4,  Run 182002 [Nr. in job = 4] at /Event/PrevPrev
+SpilloverAlg         INFO +--> Evt 5,  Run 182002 [Nr. in job = 5] at /Event/Next
 BooleInit            INFO Evt 3,  Run 182001,  Nr. in job = 3
+SpilloverAlg         INFO +--> Evt 6,  Run 182002 [Nr. in job = 6] at /Event/PrevPrev
 BooleInit            INFO Evt 4,  Run 182001,  Nr. in job = 4
+SpilloverAlg         INFO +--> Evt 7,  Run 182002 [Nr. in job = 7] at /Event/PrevPrev
+SpilloverAlg         INFO +--> Evt 8,  Run 182002 [Nr. in job = 8] at /Event/Next
 BooleInit            INFO Evt 5,  Run 182001,  Nr. in job = 5
-SpilloverAlg         INFO +--> Evt 5,  Run 182002 [Nr. in job = 5] at /Event/Prev
-SpilloverAlg         INFO +--> Evt 6,  Run 182002 [Nr. in job = 6] at /Event/Next
+SpilloverAlg         INFO +--> Evt 9,  Run 182002 [Nr. in job = 9] at /Event/PrevPrev
 BooleInit            INFO Evt 6,  Run 182001,  Nr. in job = 6
-SpilloverAlg         INFO +--> Evt 7,  Run 182002 [Nr. in job = 7] at /Event/Prev
-SpilloverAlg         INFO +--> Evt 8,  Run 182002 [Nr. in job = 8] at /Event/PrevPrev
+SpilloverAlg         INFO +--> Evt 10,  Run 182002 [Nr. in job = 10] at /Event/Prev
+SpilloverAlg         INFO +--> Evt 11,  Run 182002 [Nr. in job = 11] at /Event/PrevPrev
 BooleInit            INFO Evt 7,  Run 182001,  Nr. in job = 7
-SpilloverAlg         INFO +--> Evt 9,  Run 182002 [Nr. in job = 9] at /Event/Prev
 BooleInit            INFO Evt 8,  Run 182001,  Nr. in job = 8
-SpilloverAlg         INFO +--> Evt 10,  Run 182002 [Nr. in job = 10] at /Event/PrevPrev
+SpilloverAlg         INFO +--> Evt 12,  Run 182002 [Nr. in job = 12] at /Event/Next
 BooleInit            INFO Evt 9,  Run 182001,  Nr. in job = 9
-SpilloverAlg         INFO +--> Evt 11,  Run 182002 [Nr. in job = 11] at /Event/Prev
 BooleInit            INFO Evt 10,  Run 182001,  Nr. in job = 10
-SpilloverAlg         INFO +--> Evt 12,  Run 182002 [Nr. in job = 12] at /Event/Prev
 ApplicationMgr       INFO Application Manager Stopped successfully
 PackMCVertex      SUCCESS Exceptions/Errors/Warnings Statistics : 0/0/2
 PackMCVertex      SUCCESS  #WARNINGS   = 8        Message = 'PackedVertex.tof overflow, set to max float'
@@ -189,7 +192,7 @@ BooleInit         SUCCESS ======================================================
 BooleInit         SUCCESS 10 events processed
 BooleInit         SUCCESS ==================================================================
 VeloSim              INFO Removed  0.00% MCVeloFEs due to bad strips and  0.00% as random removals
-VeloPUSim            INFO Removed  0.00% MCVeloFEs due to bad strips and  1.16% as random removals
+VeloPUSim            INFO Removed  0.00% MCVeloFEs due to bad strips and  0.80% as random removals
 MCTTDepositCreatorSUCCESS Exceptions/Errors/Warnings Statistics : 0/0/1
 MCTTDepositCreatorSUCCESS  #WARNINGS   = 5        Message = 'Failed to find sensor'
 MCITDepositCreatorSUCCESS Exceptions/Errors/Warnings Statistics : 0/0/1
@@ -198,41 +201,36 @@ RichPDSignal      SUCCESS Number of counters : 4
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "Found MCRichHits at MC/Rich/Hits"              |        10 |         10 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
  | "Found MCRichHits at Next/MC/Rich/Hits"         |         3 |          3 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
- | "Found MCRichHits at Prev/MC/Rich/Hits"         |         6 |          6 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
- | "Found MCRichHits at PrevPrev/MC/Rich/Hits"     |         3 |          3 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "Found MCRichHits at Prev/MC/Rich/Hits"         |         3 |          3 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "Found MCRichHits at PrevPrev/MC/Rich/Hits"     |         6 |          6 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
 EcalDigit            INFO noise fit (outer area):
-EcalDigit            INFO   chisquare = 55.8932/64
-EcalDigit            INFO   amplitude for gaus #1 = 5009.25 +- 69.6637 ( 5078.3 )
-EcalDigit            INFO   amplitude for gaus #2 = 1239.91 +- 38.3554 ( 1210.43 )
-EcalDigit            INFO   amplitude for gaus #3 = 156.221 +- 6.54264 ( 155.004 )
-EcalDigit            INFO   amplitude for gaus #4 = 8.67848 +- 0.980779 ( 9.48236 )
-EcalDigit            INFO   amplitude for gaus #5 = 7.11587 +- 1.04771 ( 8.81896 )
-EcalDigit            INFO   amplitude for gaus #6 = 2.47243 +- 0.484837 ( 2.13122 )
+EcalDigit            INFO   chisquare = 34.2875/64
+EcalDigit            INFO   amplitude for gaus #1 = 5157.23 +- 69.6056 ( 5078.3 )
+EcalDigit            INFO   amplitude for gaus #2 = 1149.31 +- 38.0639 ( 1210.43 )
+EcalDigit            INFO   amplitude for gaus #3 = 163.177 +- 6.60571 ( 155.004 )
+EcalDigit            INFO   amplitude for gaus #4 = 8.49686 +- 0.971826 ( 9.48236 )
+EcalDigit            INFO   amplitude for gaus #5 = 8.43936 +- 1.11311 ( 8.81896 )
+EcalDigit            INFO   amplitude for gaus #6 = 2.93975 +- 0.561138 ( 2.13122 )
 EcalDigit            INFO noise fit (middle area):
-EcalDigit            INFO   chisquare = 70.0463/62
-EcalDigit            INFO   amplitude for gaus #1 = 3174.9 +- 57.0744 ( 3160.7 )
-EcalDigit            INFO   amplitude for gaus #2 = 830.963 +- 32.9136 ( 855.171 )
-EcalDigit            INFO   amplitude for gaus #3 = 132.239 +- 6.09101 ( 127.08 )
-EcalDigit            INFO   amplitude for gaus #4 = 5.13834 +- 0.687401 ( 6.09546 )
-EcalDigit            INFO   amplitude for gaus #5 = 5.64193 +- 1.1434 ( 6.91032 )
-EcalDigit            INFO   amplitude for gaus #6 = 1.89454 +- 0.524694 ( 1.27092 )
+EcalDigit            INFO   chisquare = 38.0748/62
+EcalDigit            INFO   amplitude for gaus #1 = 3188.89 +- 57.0243 ( 3160.7 )
+EcalDigit            INFO   amplitude for gaus #2 = 839.086 +- 33.1303 ( 855.171 )
+EcalDigit            INFO   amplitude for gaus #3 = 128.407 +- 6.15104 ( 127.08 )
+EcalDigit            INFO   amplitude for gaus #4 = 4.54135 +- 0.658124 ( 6.09546 )
+EcalDigit            INFO   amplitude for gaus #5 = 6.15889 +- 1.20177 ( 6.91032 )
+EcalDigit            INFO   amplitude for gaus #6 = 1.37566 +- 0.399909 ( 1.27092 )
 EcalDigit            INFO noise fit (inner area):
-EcalDigit            INFO   chisquare = 56.4304/80
-EcalDigit            INFO   amplitude for gaus #1 = 2520.22 +- 46.5712 ( 2500.14 )
-EcalDigit            INFO   amplitude for gaus #2 = 637.254 +- 24.9097 ( 669.365 )
-EcalDigit            INFO   amplitude for gaus #3 = 110.629 +- 4.46893 ( 102.658 )
-EcalDigit            INFO   amplitude for gaus #4 = 3.30738 +- 0.44451 ( 4.20413 )
-EcalDigit            INFO   amplitude for gaus #5 = 1.53015 +- 0.331387 ( 0.756397 )
+EcalDigit            INFO   chisquare = 62.9913/86
+EcalDigit            INFO   amplitude for gaus #1 = 2480.62 +- 46.4305 ( 2500.14 )
+EcalDigit            INFO   amplitude for gaus #2 = 677.414 +- 24.7584 ( 669.365 )
+EcalDigit            INFO   amplitude for gaus #3 = 100.579 +- 4.30973 ( 102.658 )
+EcalDigit            INFO   amplitude for gaus #4 = 3.78991 +- 0.458352 ( 4.20413 )
+EcalDigit            INFO   amplitude for gaus #5 = 1.44304 +- 0.294403 ( 0.756397 )
 EcalDigit         SUCCESS Booked 3 Histogram(s) : 1D=3
-EcalDigit         SUCCESS List of booked 1D histograms in directory         "EcalDigit" :-
- | ID                        |   Title                                       |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |
- | middle                    | "middle"                                      |  17920  |    0.77905 | 3.4976     |      1.619 |     21.675 |
- | inner                     | "inner"                                       |  15360  |    0.87858 | 4.4985     |    0.92659 |     38.759 |
- | outer                     | "outer"                                       |  26880  |    0.72502 | 3.2759     |    0.72125 |     23.993 |
-CaloFillPrsSpdR...   INFO Average event size :   291.2 words,    87.6 for trigger  Mean bank size    36.4, maximum size    54.4
-EcalFillRawBuffer    INFO Average event size :  1895.7 words,  2206.0 for trigger  Mean bank size    72.9, maximum size    89.0
-HcalFillRawBuffer    INFO Average event size :   477.7 words,   530.8 for trigger  Mean bank size    59.7, maximum size    78.3
-L0Calo               INFO Average bank size :   177.0 words RAW.
+CaloFillPrsSpdR...   INFO Average event size :   294.2 words,    87.8 for trigger  Mean bank size    36.8, maximum size    55.2
+EcalFillRawBuffer    INFO Average event size :  1882.3 words,  2160.0 for trigger  Mean bank size    72.4, maximum size    88.5
+HcalFillRawBuffer    INFO Average event size :   472.0 words,   508.4 for trigger  Mean bank size    59.0, maximum size    76.9
+L0Calo               INFO Average bank size :   175.9 words RAW.
 L0Muon               INFO - ------------------------------------------------------------------
 L0Muon               INFO - ========> Final summary of the L0Muon trigger (emulator) <========
 L0Muon               INFO - Total number of events processed           :       10
@@ -240,238 +238,149 @@ L0Muon               INFO - Average raw banks size                     :       7
 L0Muon               INFO - ------------------------------------------------------------------
 EcalDigitMCTruth  SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "#Digit->MC links"                              |        10 |      72312 |     7231.2 |     2716.3 |      3434.0 |      12781. |
+ | "#Digit->MC links"                              |        10 |      72824 |     7282.4 |     2748.9 |      3524.0 |      12830. |
 HcalDigitMCTruth  SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "#Digit->MC links"                              |        10 |       8537 |     853.70 |     249.70 |      523.00 |      1366.0 |
+ | "#Digit->MC links"                              |        10 |       8500 |     850.00 |     250.59 |      515.00 |      1382.0 |
 VeloSimMoni          INFO ------------------------------------------------------
 VeloSimMoni          INFO                 - VeloSimMoni table -
 VeloSimMoni          INFO ------------------------------------------------------
-VeloSimMoni          INFO | Number of MCVeloFEs/Event: 4990 +/- 723.025
-VeloSimMoni          INFO | FEs from signal:                      39.44%
-VeloSimMoni          INFO | FEs from noise:                       44.84%
-VeloSimMoni          INFO | FEs from other, coupling + spillover: 15.72%
+VeloSimMoni          INFO | Number of MCVeloFEs/Event: 4612 +/- 562.312
+VeloSimMoni          INFO | FEs from signal:                      42.79%
+VeloSimMoni          INFO | FEs from noise:                       49.21%
+VeloSimMoni          INFO | FEs from other, coupling + spillover: 7.995%
 VeloSimMoni          INFO ------------------------------------------------------
 VeloDigiMoni         INFO ------------------------------------------------------
 VeloDigiMoni         INFO               - VeloDigiMoni table -
 VeloDigiMoni         INFO ------------------------------------------------------
-VeloDigiMoni         INFO | Number of VeloDigits/Event: 4990.1 +/- 722.956
+VeloDigiMoni         INFO | Number of VeloDigits/Event: 4612.8 +/- 561.655
 VeloDigiMoni         INFO ------------------------------------------------------
 VeloRawClusters...   INFO ======================================================
 VeloRawClusters...   INFO               - VeloClusterMoni table -
 VeloRawClusters...   INFO ------------------------------------------------------
-VeloRawClusters...   INFO | Number of Clusters/Event: 1684.8 +/- 298.445
-VeloRawClusters...   INFO | Clusters from signal:                      74.21%
-VeloRawClusters...   INFO | Clusters from noise:                       0.1781%
-VeloRawClusters...   INFO | Clusters from other (coupling+spillover):  25.61%
+VeloRawClusters...   INFO | Number of Clusters/Event: 1434.7 +/- 237.893
+VeloRawClusters...   INFO | Clusters from signal:                      87.18%
+VeloRawClusters...   INFO | Clusters from noise:                       0.237%
+VeloRawClusters...   INFO | Clusters from other (coupling+spillover):  12.59%
 VeloRawClusters...   INFO ------------------------------------------------------
 VeloRawClusters...   INFO               - Size of clusters (all)-
 VeloRawClusters...   INFO ------------------------------------------------------
-VeloRawClusters...   INFO | 1 strip clusters/event:     1010 (60.13%)
-VeloRawClusters...   INFO | 2 strip clusters/event:     538 (32.03%)
-VeloRawClusters...   INFO | 3 strip clusters/event:     106 (6.3%)
-VeloRawClusters...   INFO | 4 strip clusters/event:     25.9 (1.54%)
+VeloRawClusters...   INFO | 1 strip clusters/event:     819.2 (57.3%)
+VeloRawClusters...   INFO | 2 strip clusters/event:     491.5 (34.38%)
+VeloRawClusters...   INFO | 3 strip clusters/event:     92 (6.44%)
+VeloRawClusters...   INFO | 4 strip clusters/event:     26.9 (1.88%)
 VeloRawClusters...   INFO ======================================================
 MCITDepositMonitorSUCCESS Booked 4 Histogram(s) : 1D=4
-MCITDepositMonitorSUCCESS List of booked 1D histograms in directory         "IT/MCITDepositMonitor" :-
- | ID                        |   Title                                       |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |
- | 1                         | "Number of deposits"                          |    10   |     2994.3 | 1702.2     |     0.6318 |   -0.81817 |
- | 2                         | "Deposited charge"                            |  29943  |     8.9179 | 12.435     |     2.4067 |     7.9037 |
- | 3                         | "Number of deposits per station"              |  29943  |     1.8939 | 0.81915    |    0.19772 |    -1.4832 |
- | 4                         | "Number of deposits per layer"                |  29943  |     21.435 | 8.2474     |    0.18883 |    -1.4291 |
 MCITDigitMonitor  SUCCESS Booked 4 Histogram(s) : 1D=4
-MCITDigitMonitor  SUCCESS List of booked 1D histograms in directory         "IT/MCITDigitMonitor" :-
- | ID                        |   Title                                       |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |
- | 1                         | "Number of MCDigits"                          |    10   |     2818.7 | 1579.9     |    0.53537 |    -1.0068 |
- | 2                         | "Number of deposits per digit"                |  28187  |     1.0623 | 0.28457    |     7.5321 |      116.6 |
- | 3                         | "Number of digits per station"                |  28187  |     1.8943 | 0.82126    |    0.17725 |    -1.9616 |
- | Number of digits per laye | "Number of digits per layer"                  |  28187  |     21.437 | 8.2665     |    0.18844 |    -1.4364 |
 ITDigitMonitor    SUCCESS Booked 3 Histogram(s) : 1D=3
-ITDigitMonitor    SUCCESS List of booked 1D histograms in directory         "IT/ITDigitMonitor" :-
- | ID                        |   Title                                       |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |
- | 1                         | "Number of digits"                            |    10   |     4504.2 | 2175.8     |    0.52343 |    -1.0304 |
- | 2                         | "Number of digits per station"                |  45042  |     1.9082 | 0.82241    |    0.17119 |    -1.5015 |
- | 3                         | "Number of digits per layer"                  |  45042  |     21.585 | 8.2834     |    0.16605 |    -1.4461 |
-ITClusterMonitor  SUCCESS Booked 4 Histogram(s) : 1D=4
-ITClusterMonitor  SUCCESS List of booked 1D histograms in directory         "IT/ITClusterMonitor" :-
- | ID                        |   Title                                       |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |
- | 1                         | "Number of clusters"                          |    10   |        433 | 201.54     |    0.72374 |   -0.49223 |
- | 2                         | "Size of cluster"                             |   4330  |     2.0746 | 0.85952    |    0.48929 |   -0.37879 |
- | 3                         | "High threshold"                              |   8660  |    0.91854 | 0.27354    |    -3.0601 |     7.3642 |
- | 4                         | "Number of clusters per layer"                |   4330  |     21.444 | 8.2123     |    0.19081 |    -1.4047 |
+ITClusterMonitor  SUCCESS Booked 7 Histogram(s) : 1D=7
 ITEffChecker         INFO  -------Efficiency %---------
-ITEffChecker         INFO Station 1 Box 4 Layer1 eff 100 +/- 0
-ITEffChecker         INFO Station 1 Box 4 Layer2 eff 100 +/- 0
-ITEffChecker         INFO Station 1 Box 4 Layer3 eff 100 +/- 0
-ITEffChecker         INFO Station 1 Box 4 Layer4 eff 100 +/- 0
-ITEffChecker         INFO Station 1 Box 3 Layer1 eff 100 +/- 0
-ITEffChecker         INFO Station 1 Box 3 Layer2 eff 100 +/- 0
-ITEffChecker         INFO Station 1 Box 3 Layer3 eff 100 +/- 0
-ITEffChecker         INFO Station 1 Box 3 Layer4 eff 100 +/- 0
-ITEffChecker         INFO Station 1 Box 2 Layer1 eff 100 +/- 0
-ITEffChecker         INFO Station 1 Box 2 Layer2 eff 100 +/- 0
-ITEffChecker         INFO Station 1 Box 2 Layer3 eff 96.875 +/- 3.07578
-ITEffChecker         INFO Station 1 Box 2 Layer4 eff 100 +/- 0
-ITEffChecker         INFO Station 1 Box 1 Layer1 eff 100 +/- 0
-ITEffChecker         INFO Station 1 Box 1 Layer2 eff 94.7368 +/- 5.12278
-ITEffChecker         INFO Station 1 Box 1 Layer3 eff 100 +/- 0
-ITEffChecker         INFO Station 1 Box 1 Layer4 eff 100 +/- 0
-ITEffChecker         INFO Station 2 Box 4 Layer1 eff 100 +/- 0
-ITEffChecker         INFO Station 2 Box 4 Layer2 eff 100 +/- 0
-ITEffChecker         INFO Station 2 Box 4 Layer3 eff 100 +/- 0
-ITEffChecker         INFO Station 2 Box 4 Layer4 eff 100 +/- 0
-ITEffChecker         INFO Station 2 Box 3 Layer1 eff 100 +/- 0
-ITEffChecker         INFO Station 2 Box 3 Layer2 eff 100 +/- 0
-ITEffChecker         INFO Station 2 Box 3 Layer3 eff 94.4444 +/- 5.39903
-ITEffChecker         INFO Station 2 Box 3 Layer4 eff 100 +/- 0
-ITEffChecker         INFO Station 2 Box 2 Layer1 eff 100 +/- 0
-ITEffChecker         INFO Station 2 Box 2 Layer2 eff 100 +/- 0
-ITEffChecker         INFO Station 2 Box 2 Layer3 eff 100 +/- 0
-ITEffChecker         INFO Station 2 Box 2 Layer4 eff 100 +/- 0
-ITEffChecker         INFO Station 2 Box 1 Layer1 eff 100 +/- 0
-ITEffChecker         INFO Station 2 Box 1 Layer2 eff 100 +/- 0
-ITEffChecker         INFO Station 2 Box 1 Layer3 eff 100 +/- 0
-ITEffChecker         INFO Station 2 Box 1 Layer4 eff 100 +/- 0
-ITEffChecker         INFO Station 3 Box 4 Layer1 eff 87.5 +/- 11.6927
-ITEffChecker         INFO Station 3 Box 4 Layer2 eff 100 +/- 0
-ITEffChecker         INFO Station 3 Box 4 Layer3 eff 100 +/- 0
-ITEffChecker         INFO Station 3 Box 4 Layer4 eff 100 +/- 0
-ITEffChecker         INFO Station 3 Box 3 Layer1 eff 100 +/- 0
-ITEffChecker         INFO Station 3 Box 3 Layer2 eff 92.8571 +/- 6.88303
-ITEffChecker         INFO Station 3 Box 3 Layer3 eff 100 +/- 0
-ITEffChecker         INFO Station 3 Box 3 Layer4 eff 92.8571 +/- 6.88303
-ITEffChecker         INFO Station 3 Box 2 Layer1 eff 100 +/- 0
-ITEffChecker         INFO Station 3 Box 2 Layer2 eff 100 +/- 0
-ITEffChecker         INFO Station 3 Box 2 Layer3 eff 100 +/- 0
-ITEffChecker         INFO Station 3 Box 2 Layer4 eff 100 +/- 0
-ITEffChecker         INFO Station 3 Box 1 Layer1 eff 100 +/- 0
-ITEffChecker         INFO Station 3 Box 1 Layer2 eff 100 +/- 0
-ITEffChecker         INFO Station 3 Box 1 Layer3 eff 92.8571 +/- 6.88303
-ITEffChecker         INFO Station 3 Box 1 Layer4 eff 100 +/- 0
+ITEffChecker         INFO IT1TopX1 eff 100 +/- 0
+ITEffChecker         INFO IT1TopU eff 100 +/- 0
+ITEffChecker         INFO IT1TopV eff 100 +/- 0
+ITEffChecker         INFO IT1TopX2 eff 100 +/- 0
+ITEffChecker         INFO IT1BottomX1 eff 100 +/- 0
+ITEffChecker         INFO IT1BottomU eff 100 +/- 0
+ITEffChecker         INFO IT1BottomV eff 100 +/- 0
+ITEffChecker         INFO IT1BottomX2 eff 100 +/- 0
+ITEffChecker         INFO IT1ASideX1 eff 100 +/- 0
+ITEffChecker         INFO IT1ASideU eff 100 +/- 0
+ITEffChecker         INFO IT1ASideV eff 100 +/- 0
+ITEffChecker         INFO IT1ASideX2 eff 100 +/- 0
+ITEffChecker         INFO IT1CSideX1 eff 100 +/- 0
+ITEffChecker         INFO IT1CSideU eff 100 +/- 0
+ITEffChecker         INFO IT1CSideV eff 100 +/- 0
+ITEffChecker         INFO IT1CSideX2 eff 100 +/- 0
+ITEffChecker         INFO IT2TopX1 eff 100 +/- 0
+ITEffChecker         INFO IT2TopU eff 100 +/- 0
+ITEffChecker         INFO IT2TopV eff 100 +/- 0
+ITEffChecker         INFO IT2TopX2 eff 100 +/- 0
+ITEffChecker         INFO IT2BottomX1 eff 100 +/- 0
+ITEffChecker         INFO IT2BottomU eff 100 +/- 0
+ITEffChecker         INFO IT2BottomV eff 100 +/- 0
+ITEffChecker         INFO IT2BottomX2 eff 100 +/- 0
+ITEffChecker         INFO IT2ASideX1 eff 100 +/- 0
+ITEffChecker         INFO IT2ASideU eff 100 +/- 0
+ITEffChecker         INFO IT2ASideV eff 100 +/- 0
+ITEffChecker         INFO IT2ASideX2 eff 100 +/- 0
+ITEffChecker         INFO IT2CSideX1 eff 100 +/- 0
+ITEffChecker         INFO IT2CSideU eff 100 +/- 0
+ITEffChecker         INFO IT2CSideV eff 100 +/- 0
+ITEffChecker         INFO IT2CSideX2 eff 92.8571 +/- 6.88303
+ITEffChecker         INFO IT3TopX1 eff 100 +/- 0
+ITEffChecker         INFO IT3TopU eff 100 +/- 0
+ITEffChecker         INFO IT3TopV eff 100 +/- 0
+ITEffChecker         INFO IT3TopX2 eff 100 +/- 0
+ITEffChecker         INFO IT3BottomX1 eff 100 +/- 0
+ITEffChecker         INFO IT3BottomU eff 100 +/- 0
+ITEffChecker         INFO IT3BottomV eff 100 +/- 0
+ITEffChecker         INFO IT3BottomX2 eff 100 +/- 0
+ITEffChecker         INFO IT3ASideX1 eff 100 +/- 0
+ITEffChecker         INFO IT3ASideU eff 100 +/- 0
+ITEffChecker         INFO IT3ASideV eff 100 +/- 0
+ITEffChecker         INFO IT3ASideX2 eff 100 +/- 0
+ITEffChecker         INFO IT3CSideX1 eff 100 +/- 0
+ITEffChecker         INFO IT3CSideU eff 100 +/- 0
+ITEffChecker         INFO IT3CSideV eff 100 +/- 0
+ITEffChecker         INFO IT3CSideX2 eff 100 +/- 0
 ITEffChecker         INFO  -----------------------
 ITEffChecker      SUCCESS Booked 288 Histogram(s) : 1D=192 2D=96
 MCTTDepositMonitorSUCCESS Booked 4 Histogram(s) : 1D=4
-MCTTDepositMonitorSUCCESS List of booked 1D histograms in directory         "TT/MCTTDepositMonitor" :-
- | ID                        |   Title                                       |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |
- | 1                         | "Number of deposits"                          |    10   |     3433.2 | 2506.1     |    0.80999 |    -0.9849 |
- | 2                         | "Deposited charge"                            |  34332  |     9.9234 | 13.545     |     2.4417 |     8.0095 |
- | 3                         | "Number of deposits per station"              |  34332  |     1.5426 | 0.49818    |   -0.17108 |    -1.9707 |
- | 4                         | "Number of deposits per layer"                |  34332  |     16.922 | 4.9722     |   -0.16849 |    -1.9309 |
 MCTTDigitMonitor  SUCCESS Booked 4 Histogram(s) : 1D=4
-MCTTDigitMonitor  SUCCESS List of booked 1D histograms in directory         "TT/MCTTDigitMonitor" :-
- | ID                        |   Title                                       |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |
- | 1                         | "Number of MCDigits"                          |    10   |     3245.4 | 2345       |    0.82172 |   -0.94259 |
- | 2                         | "Number of deposits per digit"                |  32454  |     1.0579 | 0.2519     |     4.7118 |     25.013 |
- | 3                         | "Number of digits per station"                |  32454  |     1.5408 | 0.49834    |   0.085378 |     -2.305 |
- | Number of digits per laye | "Number of digits per layer"                  |  32454  |     16.905 | 4.9717     |   -0.16113 |    -1.9333 |
 TTDigitMonitor    SUCCESS Booked 3 Histogram(s) : 1D=3
-TTDigitMonitor    SUCCESS List of booked 1D histograms in directory         "TT/TTDigitMonitor" :-
- | ID                        |   Title                                       |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |
- | 1                         | "Number of digits"                            |    10   |     4377.9 | 2536.6     |     1.0373 |   -0.46564 |
- | 2                         | "Number of digits per station"                |  49812  |     1.5353 | 0.49875    |   -0.14152 |      -1.98 |
- | 3                         | "Number of digits per layer"                  |  49812  |     16.853 | 4.9885     |   -0.13939 |    -1.9403 |
-TTClusterMonitor  SUCCESS Booked 4 Histogram(s) : 1D=4
-TTClusterMonitor  SUCCESS List of booked 1D histograms in directory         "TT/TTClusterMonitor" :-
- | ID                        |   Title                                       |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |
- | 1                         | "Number of clusters"                          |    10   |      505.4 | 264.86     |    0.97904 |   -0.32791 |
- | 2                         | "Size of cluster"                             |   5054  |     2.2665 | 0.9375     |    0.30056 |   -0.78388 |
- | 3                         | "High threshold"                              |  10108  |     0.8573 | 0.34977    |     -2.043 |      2.174 |
- | 4                         | "Number of clusters per layer"                |   5054  |     16.789 | 5.0129     |   -0.11402 |    -1.9474 |
+TTClusterMonitor  SUCCESS Booked 7 Histogram(s) : 1D=7
 TTEffChecker         INFO  -------Efficiency %---------
-TTEffChecker         INFO Station 1 Layer1 eff 99.6552 +/- 0.344233
-TTEffChecker         INFO Station 1 Layer2 eff 99.654 +/- 0.345422
-TTEffChecker         INFO Station 2 Layer2 eff 99.3174 +/- 0.481017
-TTEffChecker         INFO Station 2 Layer1 eff 98.6207 +/- 0.684882
+TTEffChecker         INFO TTaX eff 98.2759 +/- 0.764382
+TTEffChecker         INFO TTaU eff 99.654 +/- 0.345422
+TTEffChecker         INFO TTbX eff 99.3174 +/- 0.481017
+TTEffChecker         INFO TTbV eff 97.2414 +/- 0.961773
 TTEffChecker         INFO  -----------------------
 TTEffChecker      SUCCESS Booked 24 Histogram(s) : 1D=16 2D=8
 MCOTDepositMonitorSUCCESS Booked 3 Histogram(s) : 1D=3
-MCOTDepositMonitorSUCCESS List of booked 1D histograms in directory         "OT/MCOTDepositMonitor" :-
- | ID                        |   Title                                       |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |
- | 1                         | "Number of deposits"                          |    10   |     6413.1 | 3871.4     |    0.67529 |    -1.0044 |
- | 3                         | "Number of deposits per layer"                |  64131  |     21.473 | 8.3023     |   0.004686 |    -1.4672 |
- | 6                         | "Drift distance"                              |  46537  |     1.2172 | 0.70976    |   0.025318 |    -1.2123 |
 RiDigitQC            INFO ===============================================================================================
 RiDigitQC            INFO                             RICH Digitisation Simulation Summary
 RiDigitQC            INFO -----------------------------------------------------------------------------------------------
-RiDigitQC            INFO  Rich1 : Av. total  hit occupancy      1235.80 +-11.12 hits/event
-RiDigitQC            INFO        : Av. signal hit occupancy       998.10 +- 9.99 hits/event
-RiDigitQC            INFO        :   /Event/Next/MC/Rich/Hits       0.02 +- 0.01 % of total,   0.01 +- 0.01 % signal eff.
-RiDigitQC            INFO        :   /Event/Prev/MC/Rich/Hits       0.14 +- 0.03 % of total,   0.17 +- 0.04 % signal eff.
-RiDigitQC            INFO        :   /Event/MC/Rich/Hits           99.85 +- 0.04 % of total,  99.82 +- 0.04 % signal eff.
-RiDigitQC            INFO        : Av. HPD hit occupancy            6.31 +- 0.06 hits/event
+RiDigitQC            INFO  Rich1 : Av. total  hit occupancy      1245.40 +-11.16 hits/event
+RiDigitQC            INFO        : Av. signal hit occupancy      1003.70 +-10.02 hits/event
+RiDigitQC            INFO        :   /Event/Prev/MC/Rich/Hits       0.26 +- 0.05 % of total,   0.03 +- 0.02 % signal eff.
+RiDigitQC            INFO        :   /Event/MC/Rich/Hits           99.74 +- 0.05 % of total,  99.97 +- 0.02 % signal eff.
+RiDigitQC            INFO        : Av. HPD hit occupancy            6.35 +- 0.06 hits/event
 RiDigitQC            INFO        :   Min Av. HPD occ. hID=   195    0.10 +- 0.10 hits/event
-RiDigitQC            INFO        :   Max Av. HPD occ. hID=   133   47.60 +- 2.18 hits/event
-RiDigitQC            INFO        : % overall background hits       19.23 +- 0.35 %
+RiDigitQC            INFO        :   Max Av. HPD occ. hID=   133   48.30 +- 2.20 hits/event
+RiDigitQC            INFO        : % overall background hits       19.41 +- 0.35 %
 RiDigitQC            INFO        :   % rayleigh scattered hits      0.00 +- 0.00 %
 RiDigitQC            INFO        :   % charged track on HPD hits    0.01 +- 0.01 %
-RiDigitQC            INFO        :   % gas quartz window CK hits    3.80 +- 0.17 %
-RiDigitQC            INFO        :   % hpd quartz window CK hits   15.39 +- 0.32 %
+RiDigitQC            INFO        :   % gas quartz window CK hits    3.81 +- 0.17 %
+RiDigitQC            INFO        :   % hpd quartz window CK hits   15.55 +- 0.32 %
 RiDigitQC            INFO        :   % nitrogen CK hits             0.05 +- 0.02 %
 RiDigitQC            INFO        :   % aerogel filter CK hits       0.06 +- 0.02 %
 RiDigitQC            INFO        :   % silicon back-scatter hits    0.00 +- 0.00 %
 RiDigitQC            INFO        :   % internal reflection hits     0.00 +- 0.00 %
-RiDigitQC            INFO        :   % silicon charge share hits    0.94 +- 0.09 %
+RiDigitQC            INFO        :   % silicon charge share hits    0.88 +- 0.08 %
 RiDigitQC            INFO -----------------------------------------------------------------------------------------------
-RiDigitQC            INFO  Rich2 : Av. total  hit occupancy       745.00 +- 8.63 hits/event
-RiDigitQC            INFO        : Av. signal hit occupancy       536.80 +- 7.33 hits/event
-RiDigitQC            INFO        :   /Event/Next/MC/Rich/Hits       0.01 +- 0.01 % of total,   0.00 +- 0.00 % signal eff.
-RiDigitQC            INFO        :   /Event/Prev/MC/Rich/Hits       0.48 +- 0.08 % of total,   0.00 +- 0.00 % signal eff.
-RiDigitQC            INFO        :   /Event/MC/Rich/Hits           99.50 +- 0.08 % of total, 100.00 +- 0.00 % signal eff.
-RiDigitQC            INFO        : Av. HPD hit occupancy            3.34 +- 0.04 hits/event
+RiDigitQC            INFO  Rich2 : Av. total  hit occupancy       770.00 +- 8.77 hits/event
+RiDigitQC            INFO        : Av. signal hit occupancy       541.60 +- 7.36 hits/event
+RiDigitQC            INFO        :   /Event/Next/MC/Rich/Hits       3.05 +- 0.20 % of total,   0.04 +- 0.03 % signal eff.
+RiDigitQC            INFO        :   /Event/MC/Rich/Hits           96.95 +- 0.20 % of total,  99.96 +- 0.03 % signal eff.
+RiDigitQC            INFO        : Av. HPD hit occupancy            3.45 +- 0.04 hits/event
 RiDigitQC            INFO        :   Min Av. HPD occ. hID=   201    0.10 +- 0.10 hits/event
-RiDigitQC            INFO        :   Max Av. HPD occ. hID=   399   10.80 +- 1.04 hits/event
-RiDigitQC            INFO        : % overall background hits       27.95 +- 0.52 %
+RiDigitQC            INFO        :   Max Av. HPD occ. hID=   406   11.10 +- 1.05 hits/event
+RiDigitQC            INFO        : % overall background hits       29.66 +- 0.52 %
 RiDigitQC            INFO        :   % rayleigh scattered hits      0.00 +- 0.00 %
-RiDigitQC            INFO        :   % charged track on HPD hits    0.00 +- 0.00 %
-RiDigitQC            INFO        :   % gas quartz window CK hits    2.50 +- 0.18 %
-RiDigitQC            INFO        :   % hpd quartz window CK hits   25.45 +- 0.50 %
+RiDigitQC            INFO        :   % charged track on HPD hits    0.01 +- 0.01 %
+RiDigitQC            INFO        :   % gas quartz window CK hits    2.56 +- 0.18 %
+RiDigitQC            INFO        :   % hpd quartz window CK hits   27.23 +- 0.51 %
 RiDigitQC            INFO        :   % nitrogen CK hits             0.01 +- 0.01 %
 RiDigitQC            INFO        :   % aerogel filter CK hits       0.00 +- 0.00 %
 RiDigitQC            INFO        :   % silicon back-scatter hits    0.00 +- 0.00 %
 RiDigitQC            INFO        :   % internal reflection hits     0.00 +- 0.00 %
-RiDigitQC            INFO        :   % silicon charge share hits    1.45 +- 0.14 %
+RiDigitQC            INFO        :   % silicon charge share hits    1.75 +- 0.15 %
 RiDigitQC            INFO ===============================================================================================
 RiDigitQC         SUCCESS Booked 6 Histogram(s) : 1D=6
-RiDigitQC         SUCCESS List of booked 1D histograms in directory         "RICH/DIGI/DIGITQC" :-
- | ID                        |   Title                                       |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |
- | Rich1 : Average HPD occup | "Rich1 : Average HPD occupancy (nHits>0)"     |   1328  |     7.5158 | 10.88      |     3.1686 |     12.034 |
- | Rich1 : Detector occupanc | "Rich1 : Detector occupancy"                  |    10   |      998.1 | 361.83     |    0.55327 |   -0.44398 |
- | Rich2 : Detector occupanc | "Rich2 : Detector occupancy"                  |    10   |      536.8 | 216.36     |     1.0094 |     0.6101 |
- | Rich2 : Average HPD occup | "Rich2 : Average HPD occupancy (nHits>0)"     |   1081  |     4.9658 | 4.7568     |     2.9268 |     12.237 |
- | Rich2 : Average L1 board  | "Rich2 : Average L1 board occupancy (nHits>0) |    80   |       67.1 | 31.07      |    0.97853 |     1.5958 |
- | Rich1 : Average L1 board  | "Rich1 : Average L1 board occupancy (nHits>0) |   100   |      99.81 | 41.791     |    0.69844 |  -0.052628 |
 SpdCheck          SUCCESS Booked 4 Histogram(s) : 1D=4
-SpdCheck          SUCCESS List of booked 1D histograms in directory         "Calo/SpdCheck" :-
- | ID                        |   Title                                       |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |
- | 1101                      | "Hits multiplicity Spd"                       |    10   |     1383.4 | 383.37     |   -0.28242 |    -1.6048 |
- | 1102                      | "MCDigits multiplicity Spd"                   |    10   |      307.1 | 162.28     |    0.55539 |    -1.1733 |
- | 1111                      | "Total energy (GeV) in Hits Spd"              |    10   |     1.0799 | 0.43783    |    0.22846 |   -0.87951 |
- | 1112                      | "Total energy (GeV) in MCDigits Spd"          |    10   |    0.90072 | 0.36062    |   0.055634 |    -1.2009 |
 PrsCheck          SUCCESS Booked 4 Histogram(s) : 1D=4
-PrsCheck          SUCCESS List of booked 1D histograms in directory         "Calo/PrsCheck" :-
- | ID                        |   Title                                       |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |
- | 1101                      | "Hits multiplicity Prs"                       |    10   |     1850.3 | 195.41     |   -0.74076 |    -1.4141 |
- | 1102                      | "MCDigits multiplicity Prs"                   |    10   |      544.3 | 269.02     |    0.60803 |    -1.2979 |
- | 1111                      | "Total energy (GeV) in Hits Prs"              |    10   |     3.7556 | 1.4205     |    0.58087 |   0.018244 |
- | 1112                      | "Total energy (GeV) in MCDigits Prs"          |    10   |     3.2109 | 1.2812     |    0.52564 |   -0.15518 |
 EcalCheck         SUCCESS Booked 6 Histogram(s) : 1D=6
-EcalCheck         SUCCESS List of booked 1D histograms in directory         "Calo/EcalCheck" :-
- | ID                        |   Title                                       |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |
- | 1101                      | "Hits multiplicity Ecal"                      |    10   |       3597 | 793.03     |   -0.18322 |    -1.3461 |
- | 1102                      | "MCDigits multiplicity Ecal"                  |    10   |     1958.5 | 487.83     |    0.43539 |   -0.66505 |
- | 1103                      | "Digits multiplicity Ecal"                    |    10   |       6016 | 0          |          0 |          0 |
- | 1111                      | "Total energy (GeV) in Hits Ecal"             |    10   |     418.88 | 127.02     |    0.15214 |   -0.34029 |
- | 1112                      | "Total energy (GeV) in MCDigits Ecal"         |    10   |     413.37 | 125.5      |    0.28216 |   -0.17881 |
- | 1113                      | "Total energy (GeV) in Digits Ecal"           |    10   |     447.54 | 125.36     |    0.39733 |   -0.12786 |
 HcalCheck         SUCCESS Booked 6 Histogram(s) : 1D=6
-HcalCheck         SUCCESS List of booked 1D histograms in directory         "Calo/HcalCheck" :-
- | ID                        |   Title                                       |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |
- | 1101                      | "Hits multiplicity Hcal"                      |    10   |      585.8 | 206.34     |    0.58138 |   -0.85194 |
- | 1102                      | "MCDigits multiplicity Hcal"                  |    10   |      248.4 | 55.303     |   -0.26162 |    -1.0546 |
- | 1103                      | "Digits multiplicity Hcal"                    |    10   |       1488 | 0          |          0 |          0 |
- | 1111                      | "Total energy (GeV) in Hits Hcal"             |    10   |     310.22 | 118.88     |    0.58648 |   -0.94641 |
- | 1112                      | "Total energy (GeV) in MCDigits Hcal"         |    10   |     303.23 | 115.95     |    0.48552 |    -1.2462 |
- | 1113                      | "Total energy (GeV) in Digits Hcal"           |    10   |      302.5 | 120.4      |    0.40821 |    -1.0095 |
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO        Muon Monitoring Table
 MuonDigitChecker     INFO -----------------------------------------------------------------
@@ -482,26 +391,26 @@ MuonDigitChecker     INFO ------------------------------------------------------
 MuonDigitChecker     INFO -----   Container: Geant------------------------
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO    M1     M2     M3     M4     M5
-MuonDigitChecker     INFO 51.900  37.800  4.800  0.700  2.300   R1
-MuonDigitChecker     INFO 44.700  19.100  5.200  1.200  1.600   R2
-MuonDigitChecker     INFO 48.000  6.200  1.600  1.300  1.400   R3
-MuonDigitChecker     INFO 48.300  5.100  1.800  1.300  1.400   R4
+MuonDigitChecker     INFO 51.400  39.600  4.600  0.600  1.800   R1
+MuonDigitChecker     INFO 46.700  18.700  5.500  1.300  1.700   R2
+MuonDigitChecker     INFO 46.600  5.800  1.400  1.200  1.200   R3
+MuonDigitChecker     INFO 47.400  4.500  1.600  1.300  1.400   R4
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO -----   Container: FlastSpillOver------------------------
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO    M1     M2     M3     M4     M5
-MuonDigitChecker     INFO 0.400  0.200  0.000  0.100  0.400   R1
-MuonDigitChecker     INFO 0.500  0.800  0.700  0.200  0.600   R2
-MuonDigitChecker     INFO 0.200  1.700  1.100  0.000  0.800   R3
-MuonDigitChecker     INFO 0.400  0.900  0.000  0.300  2.000   R4
+MuonDigitChecker     INFO 0.100  0.000  0.000  0.100  0.100   R1
+MuonDigitChecker     INFO 0.300  0.700  0.700  0.400  0.900   R2
+MuonDigitChecker     INFO 0.200  0.700  1.600  0.000  0.200   R3
+MuonDigitChecker     INFO 0.500  1.000  0.200  0.000  1.900   R4
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO -----   Container: Low Energy Background------------------------
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO    M1     M2     M3     M4     M5
-MuonDigitChecker     INFO 0.000  4.000  3.100  0.200  0.500   R1
-MuonDigitChecker     INFO 0.000  6.700  1.400  0.400  0.400   R2
-MuonDigitChecker     INFO 0.000  3.500  0.500  0.200  0.400   R3
-MuonDigitChecker     INFO 0.000  0.800  0.400  0.400  0.600   R4
+MuonDigitChecker     INFO 0.000  4.300  1.900  0.400  0.400   R1
+MuonDigitChecker     INFO 0.000  5.000  1.300  0.000  0.200   R2
+MuonDigitChecker     INFO 0.000  3.900  0.600  0.500  0.200   R3
+MuonDigitChecker     INFO 0.000  1.900  0.600  0.000  1.900   R4
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO -----   Container: Chamber Noise------------------------
 MuonDigitChecker     INFO -----------------------------------------------------------------
@@ -514,37 +423,22 @@ MuonDigitChecker     INFO ------------------------------------------------------
 MuonDigitChecker     INFO -----   Container: Crosstalk------------------------
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO    M1     M2     M3     M4     M5
-MuonDigitChecker     INFO 4.500  4.500  0.900  0.000  0.600   R1
-MuonDigitChecker     INFO 16.600  1.700  0.900  0.200  0.200   R2
-MuonDigitChecker     INFO 8.100  1.100  0.000  0.200  0.000   R3
-MuonDigitChecker     INFO 0.800  0.100  0.000  0.000  0.000   R4
+MuonDigitChecker     INFO 3.600  3.800  1.100  0.200  0.500   R1
+MuonDigitChecker     INFO 14.300  1.900  0.300  0.000  0.200   R2
+MuonDigitChecker     INFO 9.500  2.000  0.600  0.000  0.000   R3
+MuonDigitChecker     INFO 1.400  0.300  0.200  0.000  0.000   R4
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO -----   Container: Electronic Noise------------------------
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO    M1     M2     M3     M4     M5
-MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.100   R1
-MuonDigitChecker     INFO 0.000  0.000  0.100  0.000  0.000   R2
-MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.000   R3
-MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.000   R4
+MuonDigitChecker     INFO 0.100  0.000  0.000  0.000  0.000   R1
+MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.000   R2
+MuonDigitChecker     INFO 0.000  0.000  0.200  0.000  0.000   R3
+MuonDigitChecker     INFO 0.200  0.000  0.200  0.000  0.000   R4
 MuonDigitChecker  SUCCESS Booked 1 N-Tuples and 0 Event Tag Collections
 L0CaloMonit          INFO Number of events 10
 L0CaloMonit          INFO Number of useful events (Odin bank decoded) 10
 L0CaloMonit       SUCCESS Booked 12 Histogram(s) : 1D=7 2D=5
-L0CaloMonit       SUCCESS List of booked 1D histograms in directory         "L0CaloMonit" :-
- | ID                        |   Title                                       |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |
- | EtPil                     | "Et Pi0 Local "                               |    10   |      111.4 | 49.342     |    0.79616 |   -0.42931 |
- | EtPho                     | "Et photon "                                  |    10   |       41.3 | 10.955     |    0.11932 |    -1.1776 |
- | SumEt                     | "Sum Et "                                     |    10   |     1094.4 | 292.25     |    0.34312 |    -1.1824 |
- | EtEle                     | "Et electron "                                |    10   |       59.2 | 29.253     |      1.168 |    0.11705 |
- | EtHad                     | "Et hadron "                                  |    10   |     142.22 | 55.455     |    0.76172 |   -0.48458 |
- | SpdMult                   | "Spd Mult "                                   |    10   |      173.8 | 61.98      |    0.21227 |    -1.0962 |
- | EtPig                     | "Et Pi0 Global "                              |    10   |      125.1 | 59.904     |    0.76918 |   -0.81462 |
-L0CaloMonit       SUCCESS List of booked 2D histograms in directory         "L0CaloMonit" :-
- ID=EcalMapEle                 "Electron Ecal map"                              Ents/All=  178/178  <X>/sX=1317.6/2659.6,<Y>/sY=-1.2555/317.31
- ID=HcalMapHad                 "Hadron Hcal map"                                Ents/All=   25/25   <X>/sX=-659.13/2470.1,<Y>/sY=-391.27/1412.7
- ID=EcalMapPig                 "Pi0Global Ecal map"                             Ents/All=  161/161  <X>/sX=-605.53/2306.9,<Y>/sY=-294.21/962.84
- ID=EcalMapPil                 "Pi0Local Ecal map"                              Ents/All=  151/151  <X>/sX=969.62/2661.8,<Y>/sY=-92.77/283.3
- ID=EcalMapPho                 "Photon Ecal map"                                Ents/All=  188/188  <X>/sX=1672.8/1104.7,<Y>/sY=-901.82/849.06
 L0DUReportMonitor    INFO ========================================================================
 L0DUReportMonitor    INFO  L0DUReport Monitoring ran on 1 Configuration(s)
 L0DUReportMonitor    INFO ========================================================================
@@ -561,28 +455,28 @@ L0DUReportMonitor    INFO    ---------------------------------------------------
 L0DUReportMonitor    INFO               *  Accepted L0          :         9 events :  rate = (  90.00 +-  30.00) %
 L0DUReportMonitor    INFO    ------------------------ TRIGGERS ---------------------------------
 L0DUReportMonitor    INFO    * Trigger set :               L0Ecal :         1 events : rate =  10.00  %  (rel. rate =   11.11 % )
-L0DUReportMonitor    INFO    * Trigger set :               L0Hcal :         2 events : rate =  20.00  %  (rel. rate =   22.22 % )
-L0DUReportMonitor    INFO    * Trigger set :               L0Muon :         7 events : rate =  70.00  %  (rel. rate =   77.78 % )
+L0DUReportMonitor    INFO    * Trigger set :               L0Hcal :         3 events : rate =  30.00  %  (rel. rate =   33.33 % )
+L0DUReportMonitor    INFO    * Trigger set :               L0Muon :         8 events : rate =  80.00  %  (rel. rate =   88.89 % )
 L0DUReportMonitor    INFO    ------------------------ CHANNELS ---------------------------------
-L0DUReportMonitor    INFO    *    ENABLED     channel :               DiMuon :         3 events : rate =  30.00  %  (rel. rate =   33.33 % )
+L0DUReportMonitor    INFO    *    ENABLED     channel :               DiMuon :         4 events : rate =  40.00  %  (rel. rate =   44.44 % )
 L0DUReportMonitor    INFO    *    ENABLED     channel :          DiMuon,down :         0 events : rate =   0.00  %  (rel. rate =    0.00 % )
 L0DUReportMonitor    INFO    *    ENABLED     channel :             Electron :         0 events : rate =   0.00  %  (rel. rate =    0.00 % )
 L0DUReportMonitor    INFO    *    ENABLED     channel :        Electron,down :         0 events : rate =   0.00  %  (rel. rate =    0.00 % )
-L0DUReportMonitor    INFO    * ** DISABLED ** channel :                  GEC :         7 events : rate =  70.00  %
+L0DUReportMonitor    INFO    * ** DISABLED ** channel :                  GEC :         8 events : rate =  80.00  %
 L0DUReportMonitor    INFO    *    ENABLED     channel :            GlobalPi0 :         1 events : rate =  10.00  %  (rel. rate =   11.11 % )
 L0DUReportMonitor    INFO    *    ENABLED     channel :       GlobalPi0,down :         0 events : rate =   0.00  %  (rel. rate =    0.00 % )
-L0DUReportMonitor    INFO    *    ENABLED     channel :               Hadron :         2 events : rate =  20.00  %  (rel. rate =   22.22 % )
+L0DUReportMonitor    INFO    *    ENABLED     channel :               Hadron :         3 events : rate =  30.00  %  (rel. rate =   33.33 % )
 L0DUReportMonitor    INFO    *    ENABLED     channel :          Hadron,down :         0 events : rate =   0.00  %  (rel. rate =    0.00 % )
-L0DUReportMonitor    INFO    *    ENABLED     channel :             LocalPi0 :         1 events : rate =  10.00  %  (rel. rate =   11.11 % )
+L0DUReportMonitor    INFO    *    ENABLED     channel :             LocalPi0 :         0 events : rate =   0.00  %  (rel. rate =    0.00 % )
 L0DUReportMonitor    INFO    *    ENABLED     channel :        LocalPi0,down :         0 events : rate =   0.00  %  (rel. rate =    0.00 % )
-L0DUReportMonitor    INFO    *    ENABLED     channel :                 Muon :         5 events : rate =  50.00  %  (rel. rate =   55.56 % )
+L0DUReportMonitor    INFO    *    ENABLED     channel :                 Muon :         7 events : rate =  70.00  %  (rel. rate =   77.78 % )
 L0DUReportMonitor    INFO    *    ENABLED     channel :            Muon,down :         0 events : rate =   0.00  %  (rel. rate =    0.00 % )
-L0DUReportMonitor    INFO    *    ENABLED     channel :           MuonNoGlob :         7 events : rate =  70.00  %  (rel. rate =   77.78 % )
+L0DUReportMonitor    INFO    *    ENABLED     channel :           MuonNoGlob :         8 events : rate =  80.00  %  (rel. rate =   88.89 % )
 L0DUReportMonitor    INFO    *    ENABLED     channel :      MuonNoGlob,down :         0 events : rate =   0.00  %  (rel. rate =    0.00 % )
 L0DUReportMonitor    INFO    *    ENABLED     channel :               Photon :         0 events : rate =   0.00  %  (rel. rate =    0.00 % )
 L0DUReportMonitor    INFO    *    ENABLED     channel :          Photon,down :         0 events : rate =   0.00  %  (rel. rate =    0.00 % )
 L0DUReportMonitor    INFO    ------------------------ CONDITIONS ------------------------------
-L0DUReportMonitor    INFO    *  Elementary Condition         DiMuon,HighPt :         7 events : rate =  70.00  %
+L0DUReportMonitor    INFO    *  Elementary Condition         DiMuon,HighPt :         8 events : rate =  80.00  %
 L0DUReportMonitor    INFO    *  Elementary Condition          DiMuon,LowPt :         9 events : rate =  90.00  %
 L0DUReportMonitor    INFO    *  Elementary Condition       Electron,HighEt :         0 events : rate =   0.00  %
 L0DUReportMonitor    INFO    *  Elementary Condition        Electron,LowEt :        10 events : rate = 100.00  %
@@ -590,25 +484,21 @@ L0DUReportMonitor    INFO    *  Elementary Condition      GlobalPi0,HighEt :    
 L0DUReportMonitor    INFO    *  Elementary Condition       GlobalPi0,LowEt :        10 events : rate = 100.00  %
 L0DUReportMonitor    INFO    *  Elementary Condition         Hadron,HighEt :         3 events : rate =  30.00  %
 L0DUReportMonitor    INFO    *  Elementary Condition          Hadron,LowEt :        10 events : rate = 100.00  %
-L0DUReportMonitor    INFO    *  Elementary Condition       LocalPi0,HighEt :         1 events : rate =  10.00  %
+L0DUReportMonitor    INFO    *  Elementary Condition       LocalPi0,HighEt :         0 events : rate =   0.00  %
 L0DUReportMonitor    INFO    *  Elementary Condition        LocalPi0,LowEt :        10 events : rate = 100.00  %
-L0DUReportMonitor    INFO    *  Elementary Condition           Muon,HighPt :         7 events : rate =  70.00  %
-L0DUReportMonitor    INFO    *  Elementary Condition          Muon,HighPt2 :         7 events : rate =  70.00  %
+L0DUReportMonitor    INFO    *  Elementary Condition           Muon,HighPt :         8 events : rate =  80.00  %
+L0DUReportMonitor    INFO    *  Elementary Condition          Muon,HighPt2 :         8 events : rate =  80.00  %
 L0DUReportMonitor    INFO    *  Elementary Condition            Muon,LowPt :         9 events : rate =  90.00  %
 L0DUReportMonitor    INFO    *  Elementary Condition           Muon,LowPt2 :         9 events : rate =  90.00  %
-L0DUReportMonitor    INFO    *  Elementary Condition               Muon2Pt :         4 events : rate =  40.00  %
+L0DUReportMonitor    INFO    *  Elementary Condition               Muon2Pt :         5 events : rate =  50.00  %
 L0DUReportMonitor    INFO    *  Elementary Condition         Photon,HighEt :         0 events : rate =   0.00  %
 L0DUReportMonitor    INFO    *  Elementary Condition          Photon,LowEt :        10 events : rate = 100.00  %
 L0DUReportMonitor    INFO    *  Elementary Condition                PuMult :         9 events : rate =  90.00  %
-L0DUReportMonitor    INFO    *  Elementary Condition               PuPeak2 :         7 events : rate =  70.00  %
+L0DUReportMonitor    INFO    *  Elementary Condition               PuPeak2 :         9 events : rate =  90.00  %
 L0DUReportMonitor    INFO    *  Elementary Condition               SpdMult :        10 events : rate = 100.00  %
 L0DUReportMonitor    INFO    *  Elementary Condition                 SumEt :        10 events : rate = 100.00  %
 L0DUReportMonitor    INFO ========================================================================
-L0DUReportMonitor SUCCESS Booked 2 Histogram(s) : 1D=2
-L0DUReportMonitor SUCCESS List of booked 1D histograms in directory         "L0DUReportMonitor" :-
- | ID                        |   Title                                       |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |
- | Config_0xFFFF/L0Decision/ | "L0 Decision sequence over 5 BX (TCK = 0xFFFF |    10   |        3.6 | 1.2        |    -1.3443 |     1.7385 |
- | Config_0xFFFF/L0Decision/ | "L0 Decision counters (TCK = 0xFFFF) - Counte |    19   |   -0.52632 | 0.49931    |     4.1137 |     5.4556 |
+L0DUReportMonitor SUCCESS Booked 3 Histogram(s) : 1D=3
 CompareMCVertex   SUCCESS Exceptions/Errors/Warnings Statistics : 0/0/1
 CompareMCVertex   SUCCESS  #WARNINGS   = 8        Message = 'Packed MCVertex info truncated. Set DEBUG OutputLevel for details'
 DigiWriter           INFO Events output: 10
@@ -616,53 +506,53 @@ TagCreator           INFO Number of events 10
 TagCreator        SUCCESS Booked 0 N-Tuples and 1 Event Tag Collections
 WR                   INFO Events output: 10
 EventLoopMgr         INFO Histograms converted successfully according to request.
+PoolRootTreeEvt...   INFO Disconnected data IO:70737DCB-49D9-DB11-A9D4-0002B3B0DEA0[castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001820/SIM/0000/00001820_00000001_1.sim]
+PoolRootTreeEvt...   INFO Disconnected data IO:923DF321-7D9B-DD11-A7F9-0030487C5E0E[00001820_00000001-10ev.digi]
+PoolRootTreeEvt...   INFO Disconnected data IO:969FF8CE-CDD9-DB11-823E-0002B3B0DEA0[castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001820/SIM/0000/00001820_00000001_2.sim]
 EvtTupleSvc          INFO NTuples saved successfully
 EvtTupleSvc.EVT...   INFO File sharing enabled. Do not retire files.
 ToolSvc              INFO Removing all tools created by ToolSvc
-ToolSvc.RichRaw...SUCCESS ========================================================================================================================
-ToolSvc.RichRaw...SUCCESS                              RICH Level 1 : Encoding Summary : 10 events
-ToolSvc.RichRaw...SUCCESS ------------------------------------------------------------------------------------------------------------------------
-ToolSvc.RichRaw...SUCCESS  Rich1 L1ID(log/hard)  0/ 0 V129 | L1 size =  12.40 +- 1.11 hpds :   71.00 +- 2.66 words :  122.60 +- 3.50 hits / event
-ToolSvc.RichRaw...SUCCESS  Rich1 L1ID(log/hard)  1/ 1 V129 | L1 size =  14.10 +- 1.19 hpds :   74.60 +- 2.73 words :  131.50 +- 3.63 hits / event
-ToolSvc.RichRaw...SUCCESS  Rich1 L1ID(log/hard)  2/ 2 V129 | L1 size =  13.30 +- 1.15 hpds :   70.10 +- 2.65 words :  132.70 +- 3.64 hits / event
-ToolSvc.RichRaw...SUCCESS  Rich1 L1ID(log/hard)  3/ 3 V129 | L1 size =  13.60 +- 1.17 hpds :   72.40 +- 2.69 words :  117.00 +- 3.42 hits / event
-ToolSvc.RichRaw...SUCCESS  Rich1 L1ID(log/hard)  4/ 4 V129 | L1 size =  14.40 +- 1.20 hpds :   73.50 +- 2.71 words :  119.90 +- 3.46 hits / event
-ToolSvc.RichRaw...SUCCESS  Rich1 L1ID(log/hard)  5/ 5 V129 | L1 size =  13.00 +- 1.14 hpds :   61.50 +- 2.48 words :   90.20 +- 3.00 hits / event
-ToolSvc.RichRaw...SUCCESS  Rich1 L1ID(log/hard)  6/ 6 V129 | L1 size =  13.70 +- 1.17 hpds :   79.30 +- 2.82 words :  158.20 +- 3.98 hits / event
-ToolSvc.RichRaw...SUCCESS  Rich1 L1ID(log/hard)  7/ 7 V129 | L1 size =  14.80 +- 1.22 hpds :   82.40 +- 2.87 words :  150.30 +- 3.88 hits / event
-ToolSvc.RichRaw...SUCCESS  Rich1 L1ID(log/hard)  8/ 8 V129 | L1 size =  13.20 +- 1.15 hpds :   70.20 +- 2.65 words :  116.60 +- 3.41 hits / event
-ToolSvc.RichRaw...SUCCESS  Rich1 L1ID(log/hard)  9/ 9 V129 | L1 size =  12.80 +- 1.13 hpds :   62.90 +- 2.51 words :   96.80 +- 3.11 hits / event
-ToolSvc.RichRaw...SUCCESS ------------------------------------------------------------------------------------------------------------------------
-ToolSvc.RichRaw...SUCCESS  Rich2 L1ID(log/hard) 10/10 V129 | L1 size =  13.30 +- 1.15 hpds :   63.90 +- 2.53 words :  113.80 +- 3.37 hits / event
-ToolSvc.RichRaw...SUCCESS  Rich2 L1ID(log/hard) 11/11 V129 | L1 size =  13.70 +- 1.17 hpds :   52.90 +- 2.30 words :   64.70 +- 2.54 hits / event
-ToolSvc.RichRaw...SUCCESS  Rich2 L1ID(log/hard) 12/12 V129 | L1 size =  13.30 +- 1.15 hpds :   56.70 +- 2.38 words :   77.20 +- 2.78 hits / event
-ToolSvc.RichRaw...SUCCESS  Rich2 L1ID(log/hard) 13/13 V129 | L1 size =  14.80 +- 1.22 hpds :   68.00 +- 2.61 words :  113.30 +- 3.37 hits / event
-ToolSvc.RichRaw...SUCCESS  Rich2 L1ID(log/hard) 14/14 V129 | L1 size =  13.20 +- 1.15 hpds :   64.60 +- 2.54 words :  106.00 +- 3.26 hits / event
-ToolSvc.RichRaw...SUCCESS  Rich2 L1ID(log/hard) 15/15 V129 | L1 size =  14.30 +- 1.20 hpds :   63.30 +- 2.52 words :   92.40 +- 3.04 hits / event
-ToolSvc.RichRaw...SUCCESS  Rich2 L1ID(log/hard) 16/16 V129 | L1 size =  13.90 +- 1.18 hpds :   57.90 +- 2.41 words :   89.00 +- 2.98 hits / event
-ToolSvc.RichRaw...SUCCESS  Rich2 L1ID(log/hard) 17/17 V129 | L1 size =  14.20 +- 1.19 hpds :   61.10 +- 2.47 words :   88.60 +- 2.98 hits / event
-ToolSvc.RichRaw...SUCCESS ------------------------------------------------------------------------------------------------------------------------
-ToolSvc.RichRaw...SUCCESS  Rich1 Average                   | L1 size = 135.30 +- 3.68 hpds :  717.90 +- 8.47 words : 1235.80 +-11.12 hits / event
-ToolSvc.RichRaw...SUCCESS  Rich2 Average                   | L1 size = 110.70 +- 3.33 hpds :  488.40 +- 6.99 words :  745.00 +- 8.63 hits / event
-ToolSvc.RichRaw...SUCCESS ========================================================================================================================
+ToolSvc.RichRaw...   INFO ========================================================================================================================
+ToolSvc.RichRaw...   INFO                              RICH Level 1 : Encoding Summary : 10 events
+ToolSvc.RichRaw...   INFO ------------------------------------------------------------------------------------------------------------------------
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log)  0/ 0 V129 | L1 size =  12.40 +- 1.11 hpds :   71.10 +- 2.67 words :  122.50 +- 3.50 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log)  1/ 1 V129 | L1 size =  14.10 +- 1.19 hpds :   75.10 +- 2.74 words :  133.40 +- 3.65 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log)  2/ 2 V129 | L1 size =  13.30 +- 1.15 hpds :   70.20 +- 2.65 words :  133.20 +- 3.65 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log)  3/ 3 V129 | L1 size =  13.60 +- 1.17 hpds :   72.00 +- 2.68 words :  118.60 +- 3.44 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log)  4/ 4 V129 | L1 size =  14.40 +- 1.20 hpds :   73.30 +- 2.71 words :  118.70 +- 3.45 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log)  5/ 5 V129 | L1 size =  13.10 +- 1.14 hpds :   62.60 +- 2.50 words :   92.60 +- 3.04 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log)  6/ 6 V129 | L1 size =  13.80 +- 1.17 hpds :   79.20 +- 2.81 words :  158.20 +- 3.98 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log)  7/ 7 V129 | L1 size =  14.80 +- 1.22 hpds :   82.70 +- 2.88 words :  151.70 +- 3.89 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log)  8/ 8 V129 | L1 size =  13.30 +- 1.15 hpds :   70.70 +- 2.66 words :  118.40 +- 3.44 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log)  9/ 9 V129 | L1 size =  12.80 +- 1.13 hpds :   63.60 +- 2.52 words :   98.10 +- 3.13 hits / event
+ToolSvc.RichRaw...   INFO ------------------------------------------------------------------------------------------------------------------------
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 10/10 V129 | L1 size =  13.30 +- 1.15 hpds :   64.40 +- 2.54 words :  113.90 +- 3.37 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 11/11 V129 | L1 size =  13.80 +- 1.17 hpds :   53.20 +- 2.31 words :   68.30 +- 2.61 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 12/12 V129 | L1 size =  13.70 +- 1.17 hpds :   59.80 +- 2.45 words :   87.90 +- 2.96 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 13/13 V129 | L1 size =  15.10 +- 1.23 hpds :   69.10 +- 2.63 words :  116.70 +- 3.42 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 14/14 V129 | L1 size =  13.30 +- 1.15 hpds :   65.00 +- 2.55 words :  107.30 +- 3.28 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 15/15 V129 | L1 size =  14.50 +- 1.20 hpds :   63.50 +- 2.52 words :   93.80 +- 3.06 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 16/16 V129 | L1 size =  14.00 +- 1.18 hpds :   59.20 +- 2.43 words :   91.50 +- 3.02 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 17/17 V129 | L1 size =  14.40 +- 1.20 hpds :   62.00 +- 2.49 words :   90.60 +- 3.01 hits / event
+ToolSvc.RichRaw...   INFO ------------------------------------------------------------------------------------------------------------------------
+ToolSvc.RichRaw...   INFO  Rich1 Average                   | L1 size = 135.60 +- 3.68 hpds :  720.50 +- 8.49 words : 1245.40 +-11.16 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 Average                   | L1 size = 112.10 +- 3.35 hpds :  496.20 +- 7.04 words :  770.00 +- 8.77 hits / event
+ToolSvc.RichRaw...   INFO ========================================================================================================================
 BooleInit.Boole...SUCCESS Booked 2 Histogram(s) : 1D=2
-DataOnDemandSvc      INFO  #Incidents: Alg/Node/All: 20/10/943 Algorithms: Time User   : Tot=   48 [ms] Ave/Min/Max=  2.4(+- 1.11)/    1/    5 [ms] #= 20
-PoolRootTreeEvt...   INFO Disconnected data IO:70737DCB-49D9-DB11-A9D4-0002B3B0DEA0[castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001820/SIM/0000/00001820_00000001_1.sim]
-PoolRootTreeEvt...   INFO Disconnected data IO:969FF8CE-CDD9-DB11-823E-0002B3B0DEA0[castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001820/SIM/0000/00001820_00000001_2.sim]
-PoolRootTreeEvt...   INFO Disconnected data IO:CE6D23F0-467B-DD11-8142-0030487C5E0E[00001820_00000001-10ev.digi]
+DataOnDemandSvc      INFO Handled "DataFault" incidents: 20/10/954(Alg/Node/Total).
 *****Chrono*****     INFO ****************************************************************************************************
 *****Chrono*****     INFO  The Final CPU consumption ( Chrono ) Table (ordered)
 *****Chrono*****     INFO ****************************************************************************************************
-L0MuonTrigger E...   INFO Time User   : Tot=  137 [ms] Ave/Min/Max= 13.7(+- 2.05)/   11/   18 [ms] #= 10
-L0MuonTrigger I...   INFO Time User   : Tot= 1.62  [s]                                             #=  1
-ChronoStatSvc        INFO Time User   : Tot= 22.9  [s]                                             #=  1
+L0MuonTrigger E...   INFO Time User   : Tot=  139 [ms] Ave/Min/Max= 13.9(+- 2.17)/   11/   17 [ms] #= 10
+L0MuonTrigger I...   INFO Time User   : Tot=  1.6  [s]                                             #=  1
+ChronoStatSvc        INFO Time User   : Tot= 24.6  [s]                                             #=  1
 *****Chrono*****     INFO ****************************************************************************************************
 ChronoStatSvc.f...   INFO  Service finalized succesfully
 StatusCodeSvc        INFO listing all unchecked return codes:
 StatusCodeSvc        INFO
 Num | Function                       | Source Library
 ----+--------------------------------+------------------------------------------
-424 | ROOT::Reflex::NewDelFunctionsT<StatusCode>::delete_T(void*) | libGaudiKernelDict.so
+432 | ROOT::Reflex::NewDelFunctionsT<StatusCode>::delete_T(void*) | libGaudiKernelDict.so
 
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

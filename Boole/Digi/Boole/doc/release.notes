@@ -3,6 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+! 2008-10-30 - Marco Cattaneo
+ - Update QMTest reference files also for Boole v16r3 changes
+
 ! 2008-10-24 - Chris Jones
  - Adapt to changes in RICH digitisation. New python configurable +
    removeal of a few minimal options files.
