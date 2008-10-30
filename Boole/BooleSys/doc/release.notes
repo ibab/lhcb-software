@@ -3,6 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+! 2008-10-30 - Marco Cattaneo
+ - Update QMTest reference for Gaudi v20r2 changes to GaudiHistoAlg printout
+
 ! 2008-10-25 - Chris Jones
  - Add Rich/RichDigiSys usage.
 
