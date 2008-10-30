@@ -1,4 +1,4 @@
-// $Id: RawEventTestCreator.cpp,v 1.12 2008-01-25 22:58:45 frankb Exp $
+// $Id: RawEventTestCreator.cpp,v 1.13 2008-10-30 10:42:46 cattanem Exp $
 // Include files from Gaudi
 #include "GaudiKernel/Algorithm.h" 
 #include "GaudiKernel/IDataProviderSvc.h" 
@@ -7,6 +7,8 @@
 #include "MDF/MDFHeader.h"
 #include "Event/RawEvent.h"
 #include "Event/RawBank.h"
+
+#include <cstring> // for memset with gcc 4.3
 
 /*
  *    LHCb namespace declaration
