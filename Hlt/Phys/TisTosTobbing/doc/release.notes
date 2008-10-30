@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.27 2008-09-10 12:25:34 jpalac Exp $
+! $Id: release.notes,v 1.28 2008-10-30 14:30:01 graven Exp $
 ! Package     : TisTosTobbing
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
+
+
+! 2008-10-30 - Gerhard Raven
+ - Call HltBase::Initialize from TriggerTisTos tool instead of GaudiTool::Initialize
+ - use annSvc() provided by HltBase instead own version of it
 
 !========================== TisTosTobbing v2r7 2008-09-10 ===================
 

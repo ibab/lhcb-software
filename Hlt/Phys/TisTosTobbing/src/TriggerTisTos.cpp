@@ -1,4 +1,4 @@
-// $Id: TriggerTisTos.cpp,v 1.6 2008-09-01 13:37:49 pkoppenb Exp $
+// $Id: TriggerTisTos.cpp,v 1.7 2008-10-30 14:30:01 graven Exp $
 // Include files 
 #include <algorithm>
 
@@ -44,7 +44,6 @@ TriggerTisTos::TriggerTisTos( const std::string& type,
 
   m_error_count=0;
 
-  m_hltANNSvc = 0;
 }
 //=============================================================================
 // Destructor
@@ -60,7 +59,6 @@ StatusCode TriggerTisTos::initialize() {
 
   debug() << "==> Initialize" << endmsg;
 
-  m_hltANNSvc = svc<IANSvc>("HltANNSvc");
 
   setOfflineInput();
   setTriggerInput();
@@ -84,7 +82,7 @@ void TriggerTisTos::getAlleyExitSelections()
   if( m_alleyExitSelections.size() !=0 ){ return; }
   getHltSummary();
   // find matches to "Hlt1*Decision" in HltANNSvc 
-  std::vector<std::string> hlt1selIDs = m_hltANNSvc->keys("Hlt1SelectionID");
+  std::vector<std::string> hlt1selIDs = annSvc().keys("Hlt1SelectionID");
   const std::string legalHlt1Triggers("Hlt1*Decision");  
   for(std::vector<std::string>::const_iterator i =
           hlt1selIDs.begin(); i!=hlt1selIDs.end(); ++i) {
@@ -165,7 +163,7 @@ void TriggerTisTos::getTriggerNames()
   if( m_triggerNames.size() !=0 ){ return; }
 
   // use HltANNSvc to get Hlt1, then Hlt2 names
-  std::vector<std::string> selIDs = m_hltANNSvc->keys("Hlt1SelectionID");
+  std::vector<std::string> selIDs = annSvc().keys("Hlt1SelectionID");
   for(std::vector<std::string>::const_iterator i =
           selIDs.begin(); i!=selIDs.end(); ++i) {
     if( find( m_triggerNames.begin(), m_triggerNames.end(), *i )
@@ -174,7 +172,7 @@ void TriggerTisTos::getTriggerNames()
     }
   }
   {    
-  std::vector<std::string> selIDs2 = m_hltANNSvc->keys("Hlt2SelectionID");
+  std::vector<std::string> selIDs2 = annSvc().keys("Hlt2SelectionID");
   for(std::vector<std::string>::const_iterator i =
           selIDs2.begin(); i!=selIDs2.end(); ++i) {
     if( find( m_triggerNames.begin(), m_triggerNames.end(), *i )

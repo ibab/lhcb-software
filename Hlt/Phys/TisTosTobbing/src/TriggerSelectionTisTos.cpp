@@ -1,4 +1,4 @@
-// $Id: TriggerSelectionTisTos.cpp,v 1.8 2008-07-03 14:12:20 tskwarni Exp $
+// $Id: TriggerSelectionTisTos.cpp,v 1.9 2008-10-30 14:30:01 graven Exp $
 // Include files 
 #include <algorithm>
 
@@ -91,7 +91,7 @@ TriggerSelectionTisTos::~TriggerSelectionTisTos() {}
 // Initialization
 //=============================================================================
 StatusCode TriggerSelectionTisTos::initialize() {
-  StatusCode sc = GaudiTool::initialize(); // must be executed first
+  StatusCode sc = HltBaseTool::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   debug() << "==> Initialize" << endmsg;
