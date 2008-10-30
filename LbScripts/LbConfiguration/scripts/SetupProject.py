@@ -5,11 +5,11 @@ from xml.sax import parse, ContentHandler
 from stat import S_ISDIR
 import getopt
 
-_cvs_id = "$Id: SetupProject.py,v 1.34 2008-10-29 17:44:12 hmdegaud Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.35 2008-10-30 17:06:24 marcocle Exp $"
 
 try:
     from LbUtils.CVS import CVS2Version
-    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.34 $")
+    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.35 $")
 except ImportError :
     __version__ = _cvs_id
 
@@ -481,13 +481,15 @@ def getNightlyCMTPROJECTPATH(path, slot, day):
     return getter.dirs()
 
     
-def smartExpandVarsPath(path):
+def smartExpandVarsPath(path, env = None):
     """
     Expand the environment variables in a path. If the variable in the entry of
     the path is a path itself, one entry is added for each element of the
     variable. (The code is more or less inspired by posixpath.py)
     Note: replaces only the first variable in each entry.
     """
+    if env is None:
+        env = os.environ
     entries = path.split(os.pathsep)
     new_entries = []
     # matches:
@@ -504,12 +506,12 @@ def smartExpandVarsPath(path):
                 name = match.group(1) or match.group(2) 
                 if name.startswith('{') and name.endswith('}'):
                     name = name[1:-1]
-                if name not in os.environ:
+                if name not in env:
                     new_entries.append(e)
                 else:
                     a, b = match.span(0)
                     ea, eb = e[:a], e[b:]
-                    for ve in os.environ[name].split(os.pathsep):
+                    for ve in env[name].split(os.pathsep):
                         new_entries.append(ea+ve+eb)
     return os.pathsep.join(new_entries)
 
@@ -783,13 +785,20 @@ class SetupProject:
                     env['CMTPATH'] = os.pathsep.join([env['CMTPATH'], pi.project_dir])
                 else:
                     env['CMTPATH'] = pi.project_dir
-            # get the CMTPATH from  <Project>Env
+            # get all the variables from <Project>Env
+            localEnv = dict(env)
+            ShellParser[self.shell](self.cmt.setup("-" + self.shell), localEnv)
+            # get the CMTPATH from <Project>Env without variable expansion
             cmtpath = os.popen("cmt show set CMTPATH").readlines()[-1].strip()
             if cmtpath.startswith("CMTPATH="): # remove head of the line
                 cmtpath = cmtpath[8:]
             cmtpath = cmtpath.strip("'") # remove quotes
-            # expand the environment variables and set CMTPATH
-            env['CMTPATH'] = smartExpandVarsPath(cmtpath)
+            # expand (all) the environment variables and set CMTPATH
+            cmtpath_expanded = ""
+            while cmtpath_expanded != cmtpath:
+                if cmtpath_expanded: cmtpath = cmtpath_expanded
+                cmtpath_expanded = smartExpandVarsPath(cmtpath, localEnv)
+            env['CMTPATH'] = cmtpath
             os.chdir(olddir)
             # prepend User_release_area if defined
             if 'User_release_area' in env:

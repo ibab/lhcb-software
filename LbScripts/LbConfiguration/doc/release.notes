@@ -1,3 +1,8 @@
+2008-10-30  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+        * scripts/SetupProject.py: Fixed the hack in set_build_env for old style
+        projects.
+
 2008-10-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* added __version__ to various script. This version is extracted from the Name 
