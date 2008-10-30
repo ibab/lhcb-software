@@ -1,7 +1,8 @@
-// $Id: XmlParserSvc.cpp,v 1.18 2008-07-15 17:03:51 marcocle Exp $
+// $Id: XmlParserSvc.cpp,v 1.19 2008-10-30 10:35:32 cattanem Exp $
 
 // Include Files
 #include <limits.h>
+#include <memory> // for auto_ptr with gcc 4.3
 
 #include <xercesc/parsers/XercesDOMParser.hpp>
 #include <xercesc/util/PlatformUtils.hpp>

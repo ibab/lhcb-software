@@ -4,6 +4,9 @@
 ! Purpose     : Interface to XML Xerces Parser plus some extra services
 !-----------------------------------------------------------------------------
 
+! 2008-10-30 - Marco Cattaneo
+ - Add missing include for gcc 4.3
+
 ! 2008-10-29 - Marco Clemencic
  - Fixed a problem in the evaluator on windows.
    Linux strtod understands hex constants, while windows' one not. Added a
