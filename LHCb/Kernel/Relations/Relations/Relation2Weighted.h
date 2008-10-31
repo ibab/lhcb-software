@@ -1,8 +1,11 @@
-// $Id: Relation2Weighted.h,v 1.9 2006-06-11 19:37:02 ibelyaev Exp $
+// $Id: Relation2Weighted.h,v 1.10 2008-10-31 19:34:59 ibelyaev Exp $
 // =============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $
 // =============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2006/06/11 19:37:02  ibelyaev
+//  remove some extra classes + fix all virtual bases
+//
 // Revision 1.8  2006/06/11 15:23:46  ibelyaev
 //  The major  upgrade: see doc/release.notes
 //
@@ -25,7 +28,7 @@
 
 namespace Relations
 {  
-  /** @class Relation2Weighted Relation2Weighted.h Relations/Relation2Weighted.h
+  /** @class Relation2Weighted Relations/Relation2Weighted.h
    *  
    *  @brief Implementation of weighted bidirectional relations 
    * 
@@ -53,6 +56,7 @@ namespace Relations
     , public IRelationWeighted2D<FROM,TO,WEIGHT> 
   {  
   public:
+    // ========================================================================
     /// short cut for own     type
     typedef Relation2Weighted<FROM,TO,WEIGHT>               OwnType     ;
     /// short cut for inverse type
@@ -82,6 +86,9 @@ namespace Relations
     /// import basic types from Interface 
     typedef typename IBase::Weight                          Weight      ;    
     typedef typename IBase::Weight_                         Weight_     ;    
+    // ========================================================================
+  public:
+    // ========================================================================
     /// the default constructor
     Relation2Weighted
     ( const size_t reserve = 0  )
@@ -93,7 +100,7 @@ namespace Relations
       /// set cross-links 
       m_direct  .setInverseBase ( m_inverse .directBase () ) ;
       m_inverse .setInverseBase ( m_direct  .directBase () ) ;
-    };
+    }
     /// constructor from any "direct" interface 
     Relation2Weighted 
     ( const DirectType& copy ) 
@@ -133,10 +140,12 @@ namespace Relations
       /// set cross-links 
       m_direct  .setInverseBase ( m_inverse  .directBase () ) ;
       m_inverse .setInverseBase ( m_direct   .directBase () );
-    };
+    }
     /// destructor (virtual)
     virtual ~Relation2Weighted() {} ;
+    // ========================================================================
   public:  // major functional methods (fast, 100% inline)
+    // ========================================================================
     /// retrive all relations from the object (fast,100% inline)
     inline  Range i_relations ( From_ object ) const
     { return m_direct.i_relations( object ) ; }
@@ -188,7 +197,9 @@ namespace Relations
      *   mandatory to use after i_push 
      */
     inline void i_sort() { m_direct.i_sort() ; }
+    // ========================================================================
   public:  // abstract methods from interface
+    // ========================================================================
     /// retrive all relations from the object
     virtual Range relations ( From_ object) const 
     { return i_relations ( object ) ; }
@@ -236,7 +247,7 @@ namespace Relations
     /// remove ALL relations from ALL objects to ALL objects 
     virtual  StatusCode clear () { return i_clear () ; }    
     /// rebuild ALL relations from ALL  object to ALL objects 
-    virtual  StatusCode rebuild() { return i_rebuild () ; };
+    virtual  StatusCode rebuild() { return i_rebuild () ; }
     /// update the object after POOL/ROOT reading 
     virtual StatusCode update( int flag ) 
     {
@@ -245,8 +256,10 @@ namespace Relations
       m_inverse .setInverseBase ( m_direct   .directBase () );
       if ( 0 == flag ) { return i_rebuild() ; }
       return StatusCode::SUCCESS ;
-    };
+    }
+    // ========================================================================
   public:
+    // ========================================================================
     /// get the "direct" interface 
     inline       Direct*  i_direct  ()       { return &m_direct ; }
     /// get the "direct" interface  (const-version)
@@ -255,7 +268,9 @@ namespace Relations
     inline       Inverse* i_inverse ()       { return &m_inverse ; }
     /// get the "inverse" interface  (const version)
     inline const Inverse* i_inverse () const { return &m_inverse ; }
+    // ========================================================================
   public:
+    // ========================================================================
     /// get the "direct" interface 
     virtual       DirectType*  direct ()        { return i_direct () ; }    
     /// get the "direct" interface  (const-version)
@@ -264,7 +279,9 @@ namespace Relations
     virtual       InverseType* inverse ()       { return i_inverse() ; }
     /// get the "inverse" interface  (const version)
     virtual const InverseType* inverse () const { return i_inverse() ;  }
+    // ========================================================================
   public:    
+    // ========================================================================
     /// query the interface
     virtual StatusCode queryInterface
     ( const InterfaceID& id , void** ret )
@@ -280,8 +297,10 @@ namespace Relations
       ///
       addRef() ;
       return StatusCode::SUCCESS ;
-    };
+    }
+    // ========================================================================
   public: // other methods 
+    // ========================================================================
     /// increase the reference counter (artificial)
     virtual unsigned long addRef  () { return 1 ; }    
     /// release the reference counter (artificial)
@@ -289,15 +308,22 @@ namespace Relations
     /// reserve the relations (for efficiency reasons)
     inline StatusCode reserve ( const size_t num ) 
     { return m_direct.reserve( num ) ; };
+    // ========================================================================
   private:
+    // ========================================================================
     /// assignement operator is private!
-    Relation2Weighted& operator=( const OwnType& copy );
+    Relation2Weighted& operator=( const Relation2Weighted& copy );
+    // ========================================================================
   private:  
-    Direct    m_direct  ;  ///< the direct table 
-    Inverse   m_inverse ;  ///< the "inverse table"
+    // ========================================================================
+    /// the direct table 
+    Direct    m_direct  ;  
+    /// the inverse table 
+    Inverse   m_inverse ;  
+    // ========================================================================
   };
-} // end of namespace Relations 
-
+  // ==========================================================================
+} // end of namespace Relations
 // =============================================================================
 // The End 
 // =============================================================================

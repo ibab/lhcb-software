@@ -1,8 +1,11 @@
-// $Id: Relation1D.h,v 1.9 2006-06-11 19:37:02 ibelyaev Exp $
+// $Id: Relation1D.h,v 1.10 2008-10-31 19:34:59 ibelyaev Exp $
 // =============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.9 $ 
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.10 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2006/06/11 19:37:02  ibelyaev
+//  remove some extra classes + fix all virtual bases
+//
 // Revision 1.8  2006/06/11 17:46:06  ibelyaev
 //  fix for OLD gcc
 //
@@ -66,6 +69,7 @@ namespace LHCb
     , public IRelation<FROM,TO>
   {    
   public: 
+    // ========================================================================
     /// short cut for own     type
     typedef Relation1D<FROM,TO>              OwnType        ;
     /// short cut for inverse type
@@ -88,7 +92,9 @@ namespace LHCb
     typedef typename IBase::DirectType       IDirect        ;
     // shortcut for "inverse" interface 
     typedef typename IBase::InverseType      IInverse       ;
+    // ========================================================================
   public:
+    // ========================================================================
     /// the default constructor
     Relation1D 
     ( const size_t reserve = 0 ) 
@@ -100,7 +106,7 @@ namespace LHCb
 #ifdef COUNT_INSTANCES 
       Relations::InstanceCounter::instance().increment( type() ) ;
 #endif // COUNT_INSTANCES
-    };    
+    }
     /// constructor from any direct interface
     Relation1D 
     ( const IDirect& copy  )
@@ -112,7 +118,7 @@ namespace LHCb
 #ifdef COUNT_INSTANCES 
       Relations::InstanceCounter::instance().increment( type() ) ;
 #endif // COUNT_INSTANCES
-    };    
+    }    
     /** constructor from "inverted interface"
      *  @param inv object to be inverted
      *  @param flag artificial argument to distinguisch from 
@@ -129,7 +135,7 @@ namespace LHCb
 #ifdef COUNT_INSTANCES 
       Relations::InstanceCounter::instance().increment( type() ) ;
 #endif // COUNT_INSTANCES
-    };
+    }
     /// copy constructor 
     Relation1D 
     ( const OwnType& copy  )
@@ -141,30 +147,32 @@ namespace LHCb
 #ifdef COUNT_INSTANCES 
       Relations::InstanceCounter::instance().increment( type() ) ;
 #endif // COUNT_INSTANCES
-    };
+    }
     /// destructor (virtual)
     virtual ~Relation1D() 
     {
 #ifdef COUNT_INSTANCES 
       Relations::InstanceCounter::instance().decrement( type() ) ;
 #endif // COUNT_INSTANCES
-    };
+    }
     /// the type name 
     const std::string& type() const 
     {
       static const std::string s_type( System::typeinfoName( typeid(OwnType) ) ) ;
       return s_type ;
-    };
+    }
     /// object identification (static method)
     static  const CLID& classID()
     {
       static const CLID s_clid =
         Relations::clid( System::typeinfoName( typeid(OwnType) ) );
       return s_clid ;
-    };
+    }
     /// object identification (virtual method)
     virtual const CLID& clID()     const { return classID() ; }    
+    // ========================================================================
   public:  // major functional methods (fast, 100% inline)
+    // ========================================================================
     /// retrive all relations from the object (fast,100% inline)
     inline   Range i_relations ( From_ object ) const
     { return m_base.i_relations ( object ) ; }
@@ -183,9 +191,9 @@ namespace LHCb
     inline   StatusCode i_removeTo ( To_ object )
     { return m_base.i_removeTo( object ) ; }
     /// remove ALL relations form ALL  object to ALL objects  (fast,100% inline)
-    inline  StatusCode i_clear() { return m_base.i_clear() ; };
+    inline  StatusCode i_clear() { return m_base.i_clear() ; }
     /// rebuild ALL relations form ALL  object to ALL objects(fast,100% inline)
-    inline  StatusCode i_rebuild() { return m_base.i_rebuild() ; };
+    inline  StatusCode i_rebuild() { return m_base.i_rebuild() ; }
     /** make the relation between 2 objects (fast,100% inline method) 
      *   - the call for i_sort() is mandatory 
      */
@@ -195,7 +203,9 @@ namespace LHCb
      *   mandatory to use after i_push
      */
     inline  void i_sort() { m_base.i_sort() ; }
+    // ========================================================================
   public: // abstract methods from interface
+    // ========================================================================
     /// retrive all relations from the given object object
     virtual Range      relations ( From_ object ) const 
     { return i_relations( object ) ; }
@@ -222,8 +232,10 @@ namespace LHCb
     {
       if( 0 == flag ) { return i_rebuild() ; }
       return StatusCode::SUCCESS ;
-    };
+    }
+    // ========================================================================
   public:
+    // ========================================================================
     /// query the interface
     virtual StatusCode queryInterface
     ( const InterfaceID& id , void** ret )
@@ -237,20 +249,30 @@ namespace LHCb
       ///
       addRef() ;
       return StatusCode::SUCCESS ;
-    };
+    }
     /// increase the reference counter
     virtual unsigned long addRef  () { return  DataObject::addRef  () ; }
     /// release the reference counter
     virtual unsigned long release () { return  DataObject::release () ; }
+    // ========================================================================
   public:
+    // ========================================================================
     /// POOL identifier
     static std::string GUID() { return Relations::guid ( classID() ) ; }
+    // ========================================================================
   private:
-    Base m_base ;
+    // ========================================================================
+    /// assignement is disabled 
+    Relation1D& operator= (const Relation1D& ) ;     // assignement is disabled 
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// the base table itself 
+    Base m_base ;                                      // the base table itself 
+    // ========================================================================
   };
-  
-} ; // end of namepace LHCb
-
+  // ==========================================================================
+} // end of namepace LHCb
 // =============================================================================
 // The End
 // =============================================================================

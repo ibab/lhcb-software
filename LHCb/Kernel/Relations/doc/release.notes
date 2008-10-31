@@ -1,9 +1,17 @@
-! $Id: release.notes,v 1.54 2008-03-03 11:06:49 cattanem Exp $ 
+! $Id: release.notes,v 1.55 2008-10-31 19:34:59 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
 ! Responsible : Vanya BELYAEV   ibelyaev@physics.syr.edu
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
+
+! 2008-10-31 - Vanya BELYAEV
+
+ - fix for gcc43 compilations 
+
+ - cmt/requirements 
+
+   version increment to v5r5 
 
 !====================== Relations v5r4 2008-02-29 ============================
 ! 2008-02-29 - Vanya BELYAEV

@@ -1,8 +1,11 @@
-// $Id: RelationWeighted.h,v 1.12 2006-06-11 19:37:02 ibelyaev Exp $
+// $Id: RelationWeighted.h,v 1.13 2008-10-31 19:34:59 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.12  2006/06/11 19:37:02  ibelyaev
+//  remove some extra classes + fix all virtual bases
+//
 // Revision 1.11  2006/06/11 15:23:46  ibelyaev
 //  The major  upgrade: see doc/release.notes
 //
@@ -25,19 +28,20 @@
 
 namespace Relations
 {  
-/** @class RelationWeighted RelationWeighted.h Relations/RelationWeighted.h
- * 
- *  The simplest implementation of unidirectional weighted relations.
- *
- *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
- *  @date   28/01/2002
- */
+  /** @class RelationWeighted Relations/RelationWeighted.h
+   * 
+   *  The simplest implementation of unidirectional weighted relations.
+   *
+   *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
+   *  @date   28/01/2002
+   */
   template<class FROM, class TO, class WEIGHT>
   class RelationWeighted 
     : public BaseWeightedTable  
     , public IRelationWeighted<FROM,TO,WEIGHT> 
   {    
   public: 
+    // ========================================================================
     /// shortcut for own type  
     typedef RelationWeighted<FROM,TO,WEIGHT>                OwnType  ;
     /// shortcut for inverse type  
@@ -55,8 +59,7 @@ namespace Relations
     /// shortcut for direct  interface 
     typedef IBase                                           IDirect  ;
     /// shortcut for inverse base type 
-    typedef typename IDirect::InverseType                   IInverse ;
-    
+    typedef typename IDirect::InverseType                   IInverse ;    
     /// import basic types from Interface 
     typedef typename IBase::Range                           Range   ;
     /// import basic types from Interface 
@@ -69,7 +72,9 @@ namespace Relations
     /// import basic types from Interface 
     typedef typename IBase::Weight                          Weight  ;
     typedef typename IBase::Weight_                         Weight_ ;
+    // ========================================================================
   public:
+    // ========================================================================
     /// the standard/default constructor
     RelationWeighted 
     ( const size_t reserve = 0 ) 
@@ -77,7 +82,7 @@ namespace Relations
       , IBase         (         ) 
       , m_direct      ( reserve ) 
       , m_inverse_aux ( 0       ) 
-    {};
+    {}
     /// constructor from arbitrary "direct" interface 
     RelationWeighted 
     ( const IDirect& copy ) 
@@ -85,7 +90,7 @@ namespace Relations
       , IBase() 
       , m_direct      ( copy ) 
       , m_inverse_aux ( 0    ) 
-    {} ;
+    {} 
     /** constructor from "inverse interface"
      *  It is an efficient way to "invert" relation 
      *  @param inv interface to be inverted 
@@ -98,7 +103,7 @@ namespace Relations
       , IBase         (   ) 
       , m_direct      ( inv , flag ) 
       , m_inverse_aux ( 0 )  
-    {};
+    {}
     /** copy constructor is publc, 
      *  but it is not recommended for direct usage 
      *  @param copy object to be copied 
@@ -109,36 +114,38 @@ namespace Relations
       , IBase         ( copy          ) 
       , m_direct      ( copy.m_direct )
       , m_inverse_aux ( 0             ) 
-    {};
+    {}
     /// destructor (virtual)
-    virtual ~RelationWeighted () {} ;
+    virtual ~RelationWeighted () {} 
+    // ========================================================================
   public:  // major functional methods (fast, 100% inline)
+    // ========================================================================
     /// retrive all relations from the object (fast,100% inline)
     inline  Range i_relations ( From_ object) const
     {
       typename Base::IP ip = m_direct.i_relations( object );
       return Range(ip.first, ip.second);
-    };
+    }
     /// retrive ALL relations from ALL objects (fast,100% inline)
     inline  Range i_relations() const
     {
       typename Base::IP ip = m_direct.i_relations();
       return Range(ip.first, ip.second);
-    };
+    }
     /// retrive all relations from the object (fast,100% inline)
     inline   Range      i_relations
     ( From_ object, Weight_ threshold , const bool flag ) const 
     {
       typename Base::IP ip = m_direct.i_relations( object , threshold , flag );
       return Range(ip.first, ip.second);
-    };
+    }
     /// retrive all relations in the range from the object (fast,100% inline)
     inline   Range      i_inRange
     ( From_ object , Weight_ low , Weight_ high ) const 
     {
       typename Base::IP ip = m_direct.i_inRange ( object , low , high );
       return Range(ip.first, ip.second);
-    };
+    }
     /// make the relation between 2 objects (fast,100% inline)
     inline   StatusCode i_relate 
     ( From_ object1 , To_ object2 , Weight_ weight ) 
@@ -146,28 +153,28 @@ namespace Relations
       StatusCode sc = m_direct.  i_relate ( object1 , object2 , weight );
       if ( sc.isFailure() || 0 == m_inverse_aux ) { return sc ; }
       return m_inverse_aux -> i_relate ( object2 , object1 , weight ); 
-    };
+    }
     /// remove the concrete relation between objects (fast,100% inline)
     inline   StatusCode i_remove ( From_ object1 , To_ object2 ) 
     { 
       StatusCode sc = m_direct.  i_remove ( object1 , object2 ) ; 
       if ( sc.isFailure() || 0 == m_inverse_aux ) { return sc ; }
       return m_inverse_aux -> i_remove ( object2 , object1 ) ; 
-    };
+    }
     /// remove all relations FROM the defined object (fast,100% inline)
     inline   StatusCode i_removeFrom ( From_ object )
     { 
       StatusCode sc = m_direct.  i_removeFrom ( object ) ; 
       if ( sc.isFailure() || 0 == m_inverse_aux ) { return sc ; }
       return m_inverse_aux ->i_removeTo   ( object ) ; 
-    };
+    }
     /// remove all relations TO the defined object (fast,100% inline)
     inline   StatusCode i_removeTo ( To_ object )
     { 
       StatusCode sc = m_direct.  i_removeTo   ( object ) ; 
       if ( sc.isFailure() || 0 == m_inverse_aux ) { return sc ; }
       return m_inverse_aux -> i_removeFrom ( object ) ; 
-    };
+    }
     /// filter out the relations FROM the defined object (fast,100% inline)
     inline   StatusCode i_filterFrom 
     ( From_ object , Weight_ threshold , const bool flag )  
@@ -175,7 +182,7 @@ namespace Relations
       StatusCode sc = m_direct.  i_filterFrom ( object , threshold , flag ) ; 
       if ( sc.isFailure() || 0 == m_inverse_aux ) { return sc ; }
       return m_inverse_aux -> i_filterTo   ( object , threshold , flag ) ; 
-    };
+    }
     /// filter out the relations TO the defined object (fast,100% inline)
     inline   StatusCode i_filterTo 
     ( To_ object , Weight_ threshold , const bool flag )  
@@ -183,7 +190,7 @@ namespace Relations
       StatusCode sc =  m_direct.  i_filterTo   ( object , threshold , flag ) ; 
       if ( sc.isFailure() || 0 == m_inverse_aux ) { return sc ; }
       return m_inverse_aux -> i_filterFrom ( object , threshold , flag ) ; 
-    };
+    }
     /// filter out all relations (fast,100% inline)
     inline   StatusCode i_filter 
     ( Weight_ threshold , const bool flag )  
@@ -191,14 +198,14 @@ namespace Relations
       StatusCode sc =  m_direct.  i_filter( threshold , flag ) ; 
       if ( sc.isFailure() || 0 == m_inverse_aux ) { return sc ; }
       return m_inverse_aux -> i_filter( threshold , flag ) ; 
-    };
+    }
     /// remove ALL relations from ALL objects to ALL objects (fast,100% inline)
     inline  StatusCode i_clear () 
     { 
       StatusCode sc =  m_direct.  i_clear () ; 
       if ( sc.isFailure() || 0 == m_inverse_aux ) { return sc ; }
       return m_inverse_aux -> i_clear () ; 
-    };
+    }
     /// rebuild ALL relations from ALL object to ALL objects (fast,100% inline)
     inline  StatusCode i_rebuild ()
     { 
@@ -219,7 +226,7 @@ namespace Relations
       i_sort() ;
       //
       return StatusCode::SUCCESS ;
-    };
+    }
     /** make the relation between 2 objects (fast,100% inline)
      *  subsequent call for i_sort is mandatory! 
      */
@@ -228,7 +235,7 @@ namespace Relations
       m_direct.i_push( object1 , object2 , weight );
       if ( 0 != m_inverse_aux ) 
       { m_inverse_aux ->i_push( object2 , object1 , weight ) ; }
-    };
+    }
     /** (re)sort of the table 
      *   mandatory to use after i_push 
      */
@@ -237,7 +244,9 @@ namespace Relations
       m_direct.i_sort() ; 
       if ( 0 != m_inverse_aux ) { m_inverse_aux -> i_sort() ; } 
     }
+    // ========================================================================
   public:  // abstract methods from interface
+    // ========================================================================
     /// retrive all relations from the object
     virtual Range relations ( From_ object) const 
     { return i_relations ( object ) ; }
@@ -291,8 +300,10 @@ namespace Relations
     {
       if ( 0 == flag ) { return i_rebuild() ; }
       return StatusCode::SUCCESS ;
-    };   
+    }   
+    // ========================================================================
   public:
+    // ========================================================================
     /// query the interface 
     virtual StatusCode queryInterface( const InterfaceID& iID , void** ppI )
     {
@@ -305,7 +316,7 @@ namespace Relations
       ///
       addRef() ;
       return StatusCode::SUCCESS ;
-    };
+    }
     /// increase the reference counter
     virtual unsigned long addRef  () { return 1 ; }   
     /// release the reference counter
@@ -323,17 +334,23 @@ namespace Relations
     {
       if ( 0 != m_inverse_aux ) { m_inverse_aux -> i_reserve( num ) ; }
       return m_direct.i_reserve( num ) ;
-    };
+    }
+    // ========================================================================
   private:
+    // ========================================================================
     /// assignement operator is private!
-    RelationWeighted& operator= ( const OwnType& copy  );    
+    RelationWeighted& operator= ( const RelationWeighted& copy  );    
+    // ========================================================================
   private:
-    Direct   m_direct  ; ///< the actual relation store
-    Inverse* m_inverse_aux ; /// the pointer to inverse table
+    // ========================================================================
+    /// the actual store of relations 
+    Direct   m_direct      ;                   // the actual store of relations 
+    /// the pointer to inverse table
+    Inverse* m_inverse_aux ;                    // the pointer to inverse table
+    // ========================================================================
   };
-}; // end of namespace Relations 
-
-
+  // ==========================================================================
+} // end of namespace Relations
 // ============================================================================
 // The End 
 // ============================================================================

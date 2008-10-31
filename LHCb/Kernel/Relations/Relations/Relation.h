@@ -1,4 +1,4 @@
-// $Id: Relation.h,v 1.12 2008-02-19 15:26:09 ibelyaev Exp $
+// $Id: Relation.h,v 1.13 2008-10-31 19:34:59 ibelyaev Exp $
 // =============================================================================
 #ifndef RELATIONS_Relation_H
 #define RELATIONS_Relation_H 1
@@ -51,6 +51,7 @@ namespace Relations
     , public IRelation<FROM,TO>
   {  
   public:
+    // ========================================================================
     /// short cut for own     type
     typedef          Relation<FROM,TO>                OwnType        ;
     /// short cut for inverse type
@@ -77,7 +78,9 @@ namespace Relations
     /// basic types from Interface 
     typedef typename IBase::To_   To_   ;
     typedef typename IBase::To    To    ;
+    // ========================================================================
   public:    
+    // ========================================================================
     /// the default constructor
     Relation 
     ( const size_t reserve = 0 )
@@ -85,7 +88,7 @@ namespace Relations
       , IBase         (   ) 
       , m_direct      ( reserve ) 
       , m_inverse_aux ( 0 ) 
-    {};
+    {}
     /** constructor from arbitrary "direct" interface 
      *  @param copy object to be copied
      */
@@ -122,7 +125,9 @@ namespace Relations
     {}
     /// destructor (virtual)
     virtual ~Relation(){}
+    // ========================================================================
   public:  // major functional methods (fast, 100% inline)
+    // ========================================================================
     /// retrive all relations from the object (fast,100% inline)
     inline Range i_relations ( From_ object ) const
     {
@@ -208,7 +213,9 @@ namespace Relations
       m_direct.i_sort() ; 
       if ( 0 != m_inverse_aux ) { m_inverse_aux -> i_sort() ; } 
     }
+    // ========================================================================
   public:  // abstract methods from interface
+    // ========================================================================
     /// retrive all relations from the object
     virtual Range       relations ( From_ object ) const 
     { return i_relations( object ) ; }    
@@ -236,7 +243,9 @@ namespace Relations
       if ( 0 == flag ) { return i_rebuild() ; }
       return StatusCode::SUCCESS ;
     }
+    // ========================================================================
   public:
+    // ========================================================================
     /// query the interface
     virtual StatusCode queryInterface
     ( const InterfaceID& id , void** ret )
@@ -270,17 +279,24 @@ namespace Relations
       if ( 0 != m_inverse_aux ) { m_inverse_aux->i_reserve( num ) ; }
       return m_direct.i_reserve( num ) ;
     }
+    // ========================================================================
   private:
+    // ========================================================================
     /// assignement operator is private!
     Relation& operator= ( const OwnType& copy  );
+    // ========================================================================
   private:
-    Direct   m_direct  ;  ///< the holder of all direct relations
-    Inverse* m_inverse_aux ;  ///< the pointer to inverse table
+    // ========================================================================
+    /// the holder of all direct relations
+    Direct   m_direct      ;              // the holder of all direct relations
+    ///  the pointer to inverse table
+    Inverse* m_inverse_aux ;                    // the pointer to inverse table
+    // ========================================================================
   };
   // ==========================================================================
 } // end of namespace Relations
-// =============================================================================
+// ============================================================================
 // The End
-// =============================================================================
+// ============================================================================
 #endif // RELATIONS_Relation_H
-// =============================================================================
+// ============================================================================

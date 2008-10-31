@@ -1,8 +1,11 @@
-// $Id: RelationTypeTraits.h,v 1.5 2006-06-12 15:27:28 ibelyaev Exp $
+// $Id: RelationTypeTraits.h,v 1.6 2008-10-31 19:34:59 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/06/12 15:27:28  ibelyaev
+//  add Bases.h file to preserve the file independence
+//
 // Revision 1.4  2006/06/11 15:23:46  ibelyaev
 //  The major  upgrade: see doc/release.notes
 //
@@ -74,6 +77,7 @@ namespace Relations
                                const Entry& entry2 ) const
       { return LessF() ( entry1.m_from ,  entry2.m_from ) ; };
     };
+    // ========================================================================
     /** @struct  EqualByTo
      *  equality criteria using only "To" field
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -89,7 +93,8 @@ namespace Relations
       inline bool operator() ( const Entry& entry1 , 
                                const Entry& entry2 ) const
       { return EqualT() ( entry1.m_to , entry2.m_to ) ; };
-      };    
+    };    
+    // ========================================================================
     /// definition of the internal storage
     typedef std::vector<Entry>                Entries  ;    
     ///definition of the standard iterator types
@@ -103,9 +108,9 @@ namespace Relations
     typedef typename Entries::const_iterator CIT ;
     typedef std::pair<IT,IT>        IP  ;
     typedef std::pair<CIT,CIT>      CIP ;
-  }; //< end of struct
-} // end of namespace Relations 
-
+  }; // end of struct
+  // ==========================================================================
+} // end of namespace Relations
 // ============================================================================
 // The End
 // ============================================================================

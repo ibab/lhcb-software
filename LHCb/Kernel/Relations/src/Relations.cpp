@@ -1,4 +1,4 @@
-// $Id: Relations.cpp,v 1.6 2008-02-19 15:26:10 ibelyaev Exp $
+// $Id: Relations.cpp,v 1.7 2008-10-31 19:34:59 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ====================================================================
@@ -18,9 +18,9 @@
 // ============================================================================
 namespace 
 {
-  Relations::BaseRange                       _0_0_2 ;
-  Relations::BaseTable                       _0_0_3 ;  
-  Relations::BaseWeightedTable               _0_1_3 ;
+  //Relations::BaseRange                       _0_0_2 ;
+  //Relations::BaseTable                       _0_0_3 ;  
+  //Relations::BaseWeightedTable               _0_1_3 ;
   
   LHCb::Relation1D<int,float>                _1 ;
   LHCb::Relation2D<std::string,int>          _2 ;

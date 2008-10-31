@@ -1,8 +1,11 @@
-// $Id: RelationWeighted1D.h,v 1.10 2006-06-11 19:37:02 ibelyaev Exp $
+// $Id: RelationWeighted1D.h,v 1.11 2008-10-31 19:34:59 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.10 $
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.11 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2006/06/11 19:37:02  ibelyaev
+//  remove some extra classes + fix all virtual bases
+//
 // Revision 1.9  2006/06/11 15:23:46  ibelyaev
 //  The major  upgrade: see doc/release.notes
 //
@@ -26,12 +29,9 @@
 #include "Relations/IRelationWeighted.h"
 #include "Relations/RelationWeighted.h"
 // ============================================================================
-
-
 namespace LHCb
-{
-  
-  /** @class RelationWeighted1D RelationWeighted1D.h 
+{ 
+  /** @class RelationWeighted1D Relations/RelationWeighted1D.h 
    * 
    *  The simplest implementation of unidirectional weighted relations.
    *
@@ -43,10 +43,9 @@ namespace LHCb
     : public DataObject
     , public Relations::BaseWeightedTable 
     , public IRelationWeighted<FROM,TO,WEIGHT>
-  {
-    
+  { 
   public:
-    
+    // ========================================================================
     /// shortcut for own type 
     typedef RelationWeighted1D<FROM,TO,WEIGHT>              OwnType ;
     /// shortcut for inverse type 
@@ -70,7 +69,7 @@ namespace LHCb
     typedef typename IBase::DirectType                      IDirect        ;
     // shortcut for "inverse" interface 
     typedef typename IBase::InverseType                     IInverse       ;
-    
+    // ========================================================================    
   public:
     /// the standard/default constructor
     RelationWeighted1D 
@@ -83,7 +82,7 @@ namespace LHCb
 #ifdef COUNT_INSTANCES 
       Relations::InstanceCounter::instance().increment( type() ) ;
 #endif // COUNT_INSTANCES
-    };
+    }
     /// constructor from any direct interface
     RelationWeighted1D 
     ( const IDirect& copy  )
@@ -95,7 +94,7 @@ namespace LHCb
 #ifdef COUNT_INSTANCES 
       Relations::InstanceCounter::instance().increment( type() ) ;
 #endif // COUNT_INSTANCES
-    };
+    }
     /** constructor from "inverted interface"
      *  @param inv object to be inverted
      *  @param flag artificial argument to distinguisch from 
@@ -112,7 +111,7 @@ namespace LHCb
 #ifdef COUNT_INSTANCES 
       Relations::InstanceCounter::instance().increment( type() ) ;
 #endif // COUNT_INSTANCES
-    };    
+    }    
     /// copy constructor 
     RelationWeighted1D 
     ( const OwnType& copy  )
@@ -124,30 +123,32 @@ namespace LHCb
 #ifdef COUNT_INSTANCES 
       Relations::InstanceCounter::instance().increment( type() ) ;
 #endif // COUNT_INSTANCES
-    };
+    }
     /// destructor (virtual)
     virtual ~RelationWeighted1D ()
     {
 #ifdef COUNT_INSTANCES 
       Relations::InstanceCounter::instance().decrement( type() ) ;
 #endif // COUNT_INSTANCES
-    };
+    }
     /// the type name 
     const std::string& type() const 
     {
       static const std::string s_type( System::typeinfoName( typeid(OwnType) ) ) ;
       return s_type ;
-    };
+    }
     /// object identifier (static method)
     static  const CLID& classID() 
     {
       static const CLID s_clid =
         Relations::clid( System::typeinfoName( typeid(OwnType) ) );
       return s_clid ;
-    };    
+    }    
     /// object identification (virtual method)
     virtual const CLID& clID()     const { return classID() ; }    
+    // ========================================================================
   public:  // major functional methods (fast, 100% inline)
+    // ========================================================================
     /// retrive all relations from the object (fast,100% inline)
     inline   Range i_relations ( From_ object) const 
     { return m_base.i_relations ( object ) ;}
@@ -188,7 +189,7 @@ namespace LHCb
     /// remove ALL relations from ALL objects to ALL objects (fast,100% inline)
     inline   StatusCode i_clear () { return m_base.i_clear ( ) ; }
     /// rebuild ALL relations form ALL  object to ALL objects(fast,100% inline)
-    inline  StatusCode i_rebuild() { return m_base.i_rebuild() ; };
+    inline  StatusCode i_rebuild() { return m_base.i_rebuild() ; }
     /** make the relation between 2 objects (fast,100% inline)
      *  the subsequent call for i_sort is mandatory
      */
@@ -198,7 +199,9 @@ namespace LHCb
      *   mandatory to use after i_push 
      */
     inline   void  i_sort() { m_base.i_sort () ; }
+    // ========================================================================
   public:  // abstract methods from interface
+    // ========================================================================
     /// retrive all relations from the object
     virtual Range relations ( From_ object) const 
     { return i_relations ( object ) ; }
@@ -257,8 +260,10 @@ namespace LHCb
     {
       if ( 0 == flag ) { return i_rebuild() ; }
       return StatusCode::SUCCESS ;
-    };
+    }
+    // ========================================================================
   public:
+    // ========================================================================
     /// query the interface
     virtual StatusCode queryInterface
     ( const InterfaceID& id , void** ret )
@@ -272,18 +277,30 @@ namespace LHCb
       ///
       addRef() ;
       return StatusCode::SUCCESS ;
-    };
+    }
     /// increase the reference counter
     virtual unsigned long addRef  () { return  DataObject::addRef  () ; }    
     /// release the reference counter
     virtual unsigned long release () { return  DataObject::release () ; }    
+    // ========================================================================
   public:
+    // ========================================================================
     /// POOL identifier
     static std::string GUID() { return Relations::guid ( classID() ) ; }
+    // ========================================================================
   private:
-    Base m_base ;
+    // ========================================================================
+    /// the assignment operator is disabled 
+    RelationWeighted1D& operator=( const RelationWeighted1D& ) ;
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// the actual storage of relations 
+    Base m_base ;                            // the actual storage of relations 
+    // ========================================================================
   };
-} ; // end of namespace LHCb
+  // ==========================================================================
+} // end of namespace LHCb
 // ============================================================================
 // The End 
 // ============================================================================

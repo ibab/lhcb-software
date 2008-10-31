@@ -1,8 +1,11 @@
-// $Id: RelationBase.h,v 1.9 2007-08-27 23:18:20 odescham Exp $
+// $Id: RelationBase.h,v 1.10 2008-10-31 19:34:59 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.9 $ 
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.10 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2007/08/27 23:18:20  odescham
+// fix untested StatusCode
+//
 // Revision 1.8  2006/06/11 15:23:46  ibelyaev
 //  The major  upgrade: see doc/release.notes
 //
@@ -47,6 +50,7 @@ namespace Relations
   class RelationBase : BaseTable 
   {  
   public:
+    // ========================================================================
     /// short cut to own type 
     typedef RelationBase<FROM,TO>                           OwnType     ;
     /// short cut to type of inverse relations 
@@ -73,23 +77,29 @@ namespace Relations
     typedef typename TypeTraits::IP                         IP          ;
     /// const iterator type (internal)   
     typedef typename TypeTraits::CIT                        CIT         ;
+    /// the range   
+    typedef typename TypeTraits::Range                      Range       ;
     /// size_type 
     typedef typename Entries::size_type                     size_type   ;
+    // ========================================================================
   protected:
+    // ========================================================================
     /// comparison criteria for sorting 
     typedef typename TypeTraits::Less                       Less        ;
     /// comparison criteria ( "less" by "From" field )
     typedef typename TypeTraits::LessByFrom                 Less1       ;
     /// equality criteria   ( "equal" by "To" field ) 
     typedef typename TypeTraits::EqualByTo                  Equal       ;
-  public:    
+    // ========================================================================
+  public:   
+    // ========================================================================
     /// retrive all relations 
     inline  IP    i_relations () const 
-    { return IP( m_entries.begin() , m_entries.end() ) ;};
+    { return IP ( m_entries.begin() , m_entries.end() ) ; }
     /// retrive all relations from the object
     inline  IP    i_relations ( From_  object ) const
     { return std::equal_range ( m_entries.begin() , m_entries.end  () , 
-                                Entry ( object  ) , Less1()           ) ;};
+                                Entry ( object  ) , Less1()           ) ; }
     /// make the relation between 2 objects
     inline  StatusCode i_relate ( From_ object1 , To_ object2 ) 
     {
@@ -104,7 +114,7 @@ namespace Relations
       // insert new relation !
       m_entries.insert( it , ent ) ;
       return StatusCode::SUCCESS ;
-    };
+    }
     /// remove the concrete relation between objects
     inline  StatusCode i_remove ( From_ object1 , To_ object2 ) 
     {
@@ -119,7 +129,7 @@ namespace Relations
       // remove existing relation     
       m_entries.erase( it );
       return StatusCode::SUCCESS ; 
-    };
+    }
     /// remove all relations FROM the defined object
     inline  StatusCode i_removeFrom ( From_ object  )
     {
@@ -130,7 +140,7 @@ namespace Relations
       // erase relations 
       m_entries.erase( ip.first , ip.second ) ;
       return StatusCode::SUCCESS ;
-    };
+    }
     /// remove all relations TO the defined object
     inline  StatusCode i_removeTo ( To_ object ) 
     {
@@ -145,7 +155,7 @@ namespace Relations
       // erase the relations 
       m_entries.erase( it , m_entries.end() ) ;
       return StatusCode::SUCCESS ;
-    };
+    }
     /// remove ALL relations from ALL  object to ALL objects
     inline  StatusCode i_clear() 
     { m_entries.clear() ; return StatusCode::SUCCESS ; }
@@ -159,7 +169,7 @@ namespace Relations
      *  Call for this method is MANDATORY after usage of i_push 
      */ 
     inline void i_sort() 
-    { std::stable_sort( m_entries.begin() , m_entries.end() , Less() ) ; };
+    { std::stable_sort( m_entries.begin() , m_entries.end() , Less() ) ; }
     /** standard/default constructor
      *  @param reserve size of preallocated reserved space
      */ 
@@ -167,7 +177,7 @@ namespace Relations
     ( const size_type reserve = 0 ) 
       : BaseTable () 
       , m_entries () 
-    { if ( 0 < reserve ) { i_reserve( reserve ).ignore() ; } ; };
+    { if ( 0 < reserve ) { i_reserve( reserve ).ignore() ; } ; }
     /// constructor from any "direct" interface 
     RelationBase
     ( const IDirect& copy ) 
@@ -176,7 +186,7 @@ namespace Relations
     {
       typename IDirect::Range r = copy.relations() ;
       m_entries.insert ( m_entries.end() , r.begin() , r.end() ) ;
-    } ;
+    } 
     /** constructor from any "inverse" interface  
      *  @param inv object to be inverted
      *  @param int artificial agument to make the difference 
@@ -186,7 +196,7 @@ namespace Relations
     (  const IInverse&   inv     , 
        const int      /* flag */ ) 
       : BaseTable ()  
-        , m_entries ()
+      , m_entries ()
     {
       // get all relations from "inv"
       typename IInverse::Range r = inv.relations() ;
@@ -198,19 +208,46 @@ namespace Relations
       { i_push ( entry->to() , entry->from() ) ;  }
       // final sort 
       i_sort() ;      
-    };
+    }
     /// copy constructor
     RelationBase
     ( const OwnType& copy ) 
       : BaseTable ( copy ) 
       , m_entries ( copy.m_entries ) 
-    {} ;
+    {} 
+    // ========================================================================
+  public:
+//     // ========================================================================
+//     /** add *SORTED* range into the relation table 
+//      *  @see std::merge 
+//      *  @param range the range to be added 
+//      *  @return self reference 
+//      */
+//     RelationBase& merge ( const Range& range ) 
+//     {
+//       if ( range.empty() ) { return *this ; }
+//       Entries tmp ( m_entries.size() + range.size() ) ;
+//       std::merge 
+//         ( m_entries . begin () , m_entries . end () , 
+//           range     . begin () , range     . end () , Less() ) ;
+//       m_entries = tmp ;
+//       return *this ;              
+//     }
+//     /** add *SORTED* range into the relation table 
+//      *  @see std::merge 
+//      *  @param range the range to be added 
+//      *  @return self reference 
+//      */
+//     RelationBase& operator+=( const Range& range ) { return merge ( range ) ; }
+//     // ========================================================================
   private:
-    // the actual storage of references 
-    mutable Entries m_entries ; ///< the actual storage of references
+    // ========================================================================
+    /// the actual storage of relation links  
+    mutable Entries m_entries ;         // the actual storage of relation links  
+    // ========================================================================
   } ;
-}  // End of name space Relations
-
+  // ==========================================================================
+} // End of name space Relations
 // ============================================================================
 // The End
 // ============================================================================

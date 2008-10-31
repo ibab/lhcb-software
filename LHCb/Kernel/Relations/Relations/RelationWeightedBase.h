@@ -1,8 +1,11 @@
-// $Id: RelationWeightedBase.h,v 1.11 2007-08-27 23:18:20 odescham Exp $
+// $Id: RelationWeightedBase.h,v 1.12 2008-10-31 19:34:59 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.11 $
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.12 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2007/08/27 23:18:20  odescham
+// fix untested StatusCode
+//
 // Revision 1.10  2006/06/12 16:02:08  ibelyaev
 //  add Reserve.h file into include
 //
@@ -47,6 +50,7 @@ namespace Relations
   class RelationWeightedBase : public BaseWeightedTable 
   {
   public:
+    // ========================================================================
     /// shortcut for own type
     typedef RelationWeightedBase<FROM,TO,WEIGHT>                  OwnType    ;
     /// shortcut for inverse type
@@ -79,7 +83,11 @@ namespace Relations
     typedef typename TypeTraits::IP                               IP;
     /// const_iterator type (internal) 
     typedef typename TypeTraits::CIT                              CIT;    
+    /// range 
+    typedef typename TypeTraits::Range                            Range  ;
+    // ========================================================================
   protected:
+    // ========================================================================
     /// comparison criteria for full ordering
     typedef typename TypeTraits::Less                             Less;
     /// comparison criteria ( "less" by "From" value) 
@@ -103,8 +111,8 @@ namespace Relations
        */
       inline bool operator() ( const Entry& entry1 ,
                                const Entry& entry2 ) const
-      { return Equal()( entry1 , entry2 ) && Less2()( entry1 , entry2 ) ; };
-    };
+      { return Equal()( entry1 , entry2 ) && Less2()( entry1 , entry2 ) ; }
+    } ;
     /** @struct  Comp2
      *  comparison/ordering criteria using "Weight" and "To" fields
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -120,9 +128,11 @@ namespace Relations
        */
       inline bool operator() ( const Entry& entry1 ,
                                const Entry& entry2 ) const
-      { return Equal() ( entry1 , entry2 ) && !Less2()( entry1 , entry2 ) ; };
-    };
+      { return Equal() ( entry1 , entry2 ) && !Less2()( entry1 , entry2 ) ; }
+    } ;
+    // ========================================================================
   public:
+    // ========================================================================
     /// retrive all relations from the given object
     inline  IP    i_relations ( From_ object      ) const
     { return std::equal_range ( m_entries.begin () , m_entries.end () , 
@@ -145,7 +155,7 @@ namespace Relations
       iterator it = 
         std::lower_bound( ip.first , ip.second , entry , Less2()  );
       return flag ?  IP( it , ip.second ) : IP( ip.first , it );
-    };
+    }
     /// retrive all relations from the object which has weigth
     inline  IP i_inRange ( From_ object , Weight_ low , Weight_ high ) const 
     {
@@ -161,7 +171,7 @@ namespace Relations
       entry.m_weight = high  ;
       iterator it2 = std::lower_bound( it1      , ip.second , entry , Less2() ) ;
       return IP ( it1 , it2 ) ;
-    };
+    }
     /// make the relation between 2 objects
     inline StatusCode i_relate ( From_ object1 , To_ object2 , Weight_ weight  )
     {
@@ -176,7 +186,7 @@ namespace Relations
       it = std::lower_bound( ip.first , ip.second , entry , Less2() ) ;
       m_entries.insert( it , Entry( object1 , object2 , weight ) ) ;
       return StatusCode::SUCCESS ;
-    };
+    }
     /// remove the concrete relation between objects
     inline  StatusCode i_remove ( From_ object1 , To_ object2 )
     {
@@ -190,7 +200,7 @@ namespace Relations
       // remove the relation
       m_entries.erase( it );
       return StatusCode::SUCCESS ;
-    };
+    }
     /// remove all relations FROM the defined object
     inline  StatusCode i_removeFrom ( From_ object )
     {
@@ -201,7 +211,7 @@ namespace Relations
       // remove relations
       m_entries.erase( ip.first , ip.second );
       return StatusCode::SUCCESS ;
-    };
+    }
     /// remove all relations TO the defined object
     inline  StatusCode i_removeTo ( To_ object )
     {
@@ -215,7 +225,7 @@ namespace Relations
       // remove relations
       m_entries.erase( it , m_entries.end() ) ;
       return StatusCode::SUCCESS ;
-    };
+    }
     /** filter out the relations FROM the defined object, which
      *  have a weight larger(smaller)than the threshold weight
      */
@@ -229,7 +239,7 @@ namespace Relations
       // erase relations
       m_entries.erase( ip.first , ip.second );
       return StatusCode::SUCCESS ;
-    };
+    }
     /** filter out the relations TO the defined object, which
      *  have a weight larger/smaller than the threshold weight
      */
@@ -250,7 +260,7 @@ namespace Relations
       // erase the relations
       m_entries.erase( it , m_entries.end() );
       return StatusCode::SUCCESS ;
-    };
+    }
     /** filter out all relations which
      *  have a weight larger/smaller than the threshold weight
      */
@@ -269,13 +279,13 @@ namespace Relations
       // erase the relations
       m_entries.erase( it , m_entries.end() );
       return StatusCode::SUCCESS ;
-    };
+    }
     /// remove ALL relations from ALL objects to ALL objects
     inline  StatusCode i_clear ()
     {
       m_entries.clear() ;
       return StatusCode::SUCCESS ;
-    };
+    }
     /// reserve the space for relations 
     inline StatusCode i_reserve ( const size_t num  )
     { Relations::reserve ( m_entries , num ) ; return StatusCode::SUCCESS ; }
@@ -293,18 +303,18 @@ namespace Relations
      *  @param  weight  weigth for the relation
      */
     inline void i_push ( From_ object1 , To_ object2 , Weight_ weight  )
-    { m_entries.push_back( Entry( object1 , object2 , weight ) ) ; };
+    { m_entries.push_back( Entry( object1 , object2 , weight ) ) ; }
     /** (re)sort the whole underlying container 
      *  Call for this method is MANDATORY after usage of i_push 
      */ 
     inline void i_sort() 
-    { std::stable_sort ( m_entries.begin() , m_entries.end() , Less() ) ; };
+    { std::stable_sort ( m_entries.begin() , m_entries.end() , Less() ) ; }
     /// standard/default constructor
     RelationWeightedBase
     ( const size_t reserve = 0 )
       : BaseWeightedTable () 
       , m_entries () 
-    { if ( 0 < reserve ) { i_reserve ( reserve ).ignore() ; } };
+    { if ( 0 < reserve ) { i_reserve ( reserve ).ignore() ; } }
     /// destructor (virtual)
     virtual ~RelationWeightedBase() {} ;
     /// constructor from any "direct" interface 
@@ -315,7 +325,7 @@ namespace Relations
     {
       typename IDirect::Range r = copy.relations() ;
       m_entries.insert ( m_entries.end() , r.begin() , r.end() ) ;
-    } ;
+    } 
     /** constructor from any inverse interface
      *  @param inv relations to be inverted
      *  @param int artificial agument to make the difference 
@@ -336,18 +346,47 @@ namespace Relations
       { i_push ( entry->to() , entry->from() , entry->weight() ) ;  }
       // final sort 
       i_sort() ;      
-    };
+    }
     /// copy constructor 
     RelationWeightedBase
     ( const OwnType& copy )
       : BaseWeightedTable ( copy ) 
       , m_entries         ( copy.m_entries ) 
-    {};
+    {}
+    // ========================================================================
+  public:
+//     // ========================================================================
+//     /** add *SORTED* range into the relation table 
+//      *  @see std::merge 
+//      *  @param range the range to be added 
+//      *  @return self reference 
+//      */
+//     RelationWeightedBase& merge ( const Range& range ) 
+//     {
+//       if ( range.empty() ) { return *this ; }
+//       Entries tmp ( m_entries.size() + range.size() ) ;
+//       std::merge 
+//         ( m_entries . begin () , m_entries . end () , 
+//           range     . begin () , range     . end () , Less() ) ;
+//       m_entries = tmp ;
+//       return *this ;              
+//     }
+//     /** add *SORTED* range into the relation table 
+//      *  @see std::merge 
+//      *  @param range the range to be added 
+//      *  @return self reference 
+//      */
+//     RelationWeightedBase& operator+=( const Range& range ) 
+//     { return merge ( range ) ; }
+//     // ========================================================================
   private:
-    // the actual storage of relations 
-    mutable Entries m_entries ; ///< teh actual storage of relations
+    // ========================================================================
+    /// the actual storage of relation links  
+    mutable Entries m_entries ;         // the actual storage of relation links  
+    // ========================================================================
   };
-}; //  end of namespace Relations
+  // ==========================================================================
+} //  end of namespace Relations
 // ============================================================================
 // The End
 // ============================================================================
