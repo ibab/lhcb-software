@@ -3,7 +3,6 @@
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="args"><set><text>../options/ReadHepMC.opts</text></set></argument>
   <argument name="reference"><text>../refs/ReadHepMC.ref</text></argument>
-  <argument name="error_reference"><text>../refs/OldHepMC.ref</text></argument>
   <argument name="prerequisites"><set>
     <tuple><text>ioexample.writedst</text><enumeral>PASS</enumeral></tuple>
   </set></argument>

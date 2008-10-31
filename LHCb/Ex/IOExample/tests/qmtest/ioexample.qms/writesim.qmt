@@ -3,5 +3,4 @@
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="args"><set><text>../options/WriteSim.opts</text></set></argument>
   <argument name="reference"><text>../refs/WriteSim.ref</text></argument>
-  <argument name="error_reference"><text>../refs/OldHepMC.ref</text></argument>
 </extension>
