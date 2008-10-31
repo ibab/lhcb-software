@@ -1,10 +1,22 @@
-! $Id: release.notes,v 1.376 2008-10-31 14:30:32 jpalac Exp $
+! $Id: release.notes,v 1.377 2008-10-31 17:44:49 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
 
 ! 2008-10-31 - Juan PALACIOS
+ - src/PhysDesktop{.h, .cpp}
+  . Add method 
+    void fixInputLocations(std::vector<std::string>::iterator begin,
+                           std::vector<std::string>::iterator end);
+   which adds a leading "Phys" or "Hlt" to input locations that don't
+   contain any "/":
+   * "MyBsSelection" becomes "Phys/MyBsSelection" if m_OnOffline->online() ==false and 
+   * "MyBsSelection" becomes "Hlt/MyBsSelection" if m_OnOffline->online() == true.
+   * "Phys/MyBsSelection" remains unchanged.
+   * "Anything/MyBsSelection" remains unchanged.
+   * "/MyBsSelection" remains unchanged, but is most likely an error!
+
  - src/PhysDekstop.cpp
   . Use IOnOffline::trunkOnTES() to set output locations.
 
