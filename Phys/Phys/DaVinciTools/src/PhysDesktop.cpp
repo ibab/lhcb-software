@@ -116,29 +116,6 @@ PhysDesktop::PhysDesktop( const std::string& type,
   
   declareProperty("P2PVInputLocations", m_p2PVInputLocations);
 
-  IInterface* p = const_cast<IInterface*>( parent ) ;
-  if ( 0 != p )
-  {
-    // set the default value using parent's name
-    m_outputLocn = "/Event/Phys/" + nameFromInterface ( p ) ;
-    // try to overwrite the name from  parents's "OutputLocation" property:
-    void* tmp = 0 ;
-    StatusCode sc = p->queryInterface ( IProperty::interfaceID() , &tmp ) ;
-    if ( sc.isSuccess() && 0 != tmp ){
-      IProperty* pp = static_cast<IProperty*>( tmp ) ;
-      StringProperty output = StringProperty ( "OutputLocation" , "NOTDEFINED" ) ;
-      sc = pp->getProperty( &output ) ;
-      if ( sc.isSuccess() ) { {
-        if ( output.value() != "" )
-          m_outputLocn = output.value() ; }   // NB !!
-      }
-      // release the used interface
-      pp->release() ;
-    }
-  }
-
-  // check that output location is set to *SOME* value
-  if (m_outputLocn.empty()) Exception("OutputLocation is not set") ;
 
   declareProperty("IDistanceCalculator", m_distanceCalculatorType);
 
@@ -220,6 +197,34 @@ StatusCode PhysDesktop::initialize()
 
   // PV relator
   m_pvRelator = tool<IRelatedPVFinder>(m_pvRelatorName, this);
+
+  // Output Location
+  IInterface* p = const_cast<IInterface*>( this->parent() ) ;
+
+  if ( 0 != p )
+  {
+    // set the default value using parent's name
+    m_outputLocn = m_OnOffline->trunkOnTES() +"/"+ nameFromInterface ( p ) ;
+    // try to overwrite the name from  parents's "OutputLocation" property:
+    void* tmp = 0 ;
+    StatusCode sc = p->queryInterface ( IProperty::interfaceID() , &tmp ) ;
+    if ( sc.isSuccess() && 0 != tmp ){
+      IProperty* pp = static_cast<IProperty*>( tmp ) ;
+      StringProperty output = StringProperty ( "OutputLocation" , 
+                                               "NOTDEFINED" ) ;
+      sc = pp->getProperty( &output ) ;
+      if ( sc.isSuccess() ) { {
+        if ( output.value() != "" )
+          m_outputLocn = output.value() ; }   // NB !!
+      }
+      // release the used interface
+      pp->release() ;
+    }
+  }
+
+  // check that output location is set to *SOME* value
+  if (m_outputLocn.empty()) Exception("OutputLocation is not set") ;
+
   
   return sc;
 }
@@ -404,7 +409,7 @@ void PhysDesktop::saveParticles(const LHCb::Particle::ConstVector& pToSave) cons
 
   LHCb::Particles* particlesToSave = new LHCb::Particles();
 
-  std::string location( m_outputLocn+"/Particles");
+  const std::string location( m_outputLocn+"/Particles");
 
   for( p_iter icand = pToSave.begin(); icand != pToSave.end(); icand++ ) {
     // Check if this was already in a Gaudi container (hence in TES)
@@ -436,7 +441,7 @@ void PhysDesktop::saveVertices(const LHCb::Vertex::ConstVector& vToSave) const
     }
   }
 
-  std::string location(m_outputLocn+"/Vertices");
+  const std::string location(m_outputLocn+"/Vertices");
 
   if (msgLevel(MSG::VERBOSE)) verbose() << "Saving " << verticesToSave->size()
                                         << " new vertices in " << location << " from " << vToSave.size()
@@ -460,7 +465,7 @@ void PhysDesktop::saveTable(const  LHCb::Particle::ConstVector& pToSave) const {
     }
   }
   if (msgLevel(MSG::DEBUG)) debug() << "Saving table to " << m_outputLocn+"/Particle2VertexRelations" << endmsg ;
-  std::string location(m_outputLocn+"/Particle2VertexRelations");
+  const std::string location(m_outputLocn+"/Particle2VertexRelations");
   put(table, location);
   return ;
 }
