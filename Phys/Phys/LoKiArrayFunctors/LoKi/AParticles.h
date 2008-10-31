@@ -1,4 +1,4 @@
-// $Id: AParticles.h,v 1.8 2008-05-28 11:39:20 cattanem Exp $
+// $Id: AParticles.h,v 1.9 2008-10-31 17:58:35 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_APARTICLES_H 
 #define LOKI_APARTICLES_H 1
@@ -192,6 +192,10 @@ namespace LoKi
       // ======================================================================
     private:
       // ======================================================================
+      FourMomentum& operator=( const FourMomentum& ) ;
+      // ======================================================================
+    private:
+      // ======================================================================
       /// the actual list of indices 
       Indices m_indices ; // the actual list of indices 
       // ======================================================================
@@ -251,6 +255,10 @@ namespace LoKi
       virtual std::ostream& fillStream( std::ostream& s ) const 
       { return print_ ( s , "AMASS(" ) ; }
       // ======================================================================
+    private:
+      // ======================================================================
+      InvariantMass& operator=( const InvariantMass& ) ;
+      // ======================================================================
     public:
       // ======================================================================
       /// evaluate the mass 
@@ -300,6 +308,11 @@ namespace LoKi
       /// OPTIONAL: the nice printout  
       virtual std::ostream& fillStream( std::ostream& s ) const 
       { return print_ ( s , "AMOM(" ) ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      Momentum& operator=( const Momentum& ) ;
+      // ======================================================================
     public:
       // ======================================================================
       /// evaluate the momentum 
@@ -348,6 +361,11 @@ namespace LoKi
       /// OPTIONAL: the nice printout  
       virtual std::ostream& fillStream( std::ostream& s ) const 
       { return print_ ( s , "AMOMT(" ) ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      TransverseMomentum& operator=( const TransverseMomentum& ) ;
+      // ======================================================================
     public:
       // ======================================================================
       /// evaluate the transverse momentum 
@@ -397,6 +415,10 @@ namespace LoKi
       /// OPTIONAL: the nice printout  
       virtual std::ostream& fillStream( std::ostream& s ) const 
       { return print_ ( s , "AETAP(" ) ; }
+    private:
+      // ======================================================================
+      Eta& operator=( const Eta& ) ;
+      // ======================================================================
     public:
       // ======================================================================
       /// evaluate the transverse momentum 
@@ -721,6 +743,7 @@ namespace LoKi
       // ======================================================================
       /// the default constructor is disabled 
       DOCA() ; //                                        no default constructor
+      DOCA& operator=( const DOCA& ) ;
       // ======================================================================
     private:
       // ======================================================================
@@ -801,6 +824,7 @@ namespace LoKi
       // ======================================================================
       /// the default constructor is disabled 
       DOCAChi2() ; //                                    no default constructor
+      DOCAChi2& operator=( const DOCAChi2& ) ;
       // ======================================================================
     private:
       // ======================================================================
@@ -844,6 +868,7 @@ namespace LoKi
       // ======================================================================
       /// the default constructor is disabled
       MaxDOCA() ; // the default constructor is disabled
+      MaxDOCA& operator=( const MaxDOCA& ) ;
       // ======================================================================
     } ;
     // ========================================================================    
@@ -916,6 +941,7 @@ namespace LoKi
       // ======================================================================
       /// the default constructor is disabled
       MaxDOCACut() ; // the default constructor is disabled
+      MaxDOCAChi2& operator=( const MaxDOCAChi2& ) ;
       // ======================================================================
     public:
       // ======================================================================
@@ -972,6 +998,7 @@ namespace LoKi
     private:
       // the default constructor is disabled
       MaxDOCAChi2Cut() ; /// the default constructor is disabled
+      MaxDOCAChi2Cut& operator=( const MaxDOCAChi2Cut& ) ;
     public:
       // get the tool 
       const LoKi::Interface<IDistanceCalculator>& tool     () const 
@@ -1319,6 +1346,11 @@ namespace LoKi
       // ======================================================================      
     private:
       // ======================================================================      
+      DeltaMass () ;
+      DeltaMass& operator=( const DeltaMass& ) ;
+      // ======================================================================      
+    private:
+      // ======================================================================      
       /// the reference mass
       double m_m0 ; // the reference mass
       // ======================================================================      
@@ -1472,6 +1504,11 @@ namespace LoKi
       /// OPTIONAL: the nice printout  
       virtual std::ostream& fillStream( std::ostream& s ) const ;
       // ======================================================================
+    private:
+      // ======================================================================      
+      AbsDeltaMass () ;
+      AbsDeltaMass& operator=( const AbsDeltaMass& ) ;
+      // ======================================================================      
     public:
       // ======================================================================
       /// evaluate the delta mass mass 
