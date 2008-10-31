@@ -1,8 +1,12 @@
-!$Id: release.notes,v 1.269 2008-10-27 15:19:47 jpalac Exp $
+!$Id: release.notes,v 1.270 2008-10-31 06:54:29 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2008-10-31 - Juan PALACIOS
+ - src/OnOffline.h
+  . Add const std::string& trunkOnTES() const method
 
 ! 2008-10-27 - Juan PALACIOS
  - Kernel/IPhysDesktop.h
