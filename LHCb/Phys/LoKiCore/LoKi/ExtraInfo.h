@@ -1,4 +1,4 @@
-// $Id: ExtraInfo.h,v 1.7 2008-10-31 17:24:08 ibelyaev Exp $
+// $Id: ExtraInfo.h,v 1.8 2008-10-31 18:12:25 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_EXTRAINFO_H 
 #define LOKI_EXTRAINFO_H 1
@@ -223,8 +223,10 @@ namespace LoKi
       // ======================================================================
     private:
       // ======================================================================
-      // no default constructor 
-      GetSmartInfo() ; ///< no default constructor 
+      /// no default constructor 
+      GetSmartInfo() ;                                // no default constructor 
+      /// no assignement
+      GetSmartInfo& operator=( const GetSmartInfo& ) ;         // no assignment 
       // ======================================================================
     private:
       // ======================================================================
