@@ -1,4 +1,4 @@
-// $Id: AlgorithmCorrelationsAlg.h,v 1.1 2008-10-29 13:56:04 pkoppenb Exp $
+// $Id: AlgorithmCorrelationsAlg.h,v 1.2 2008-10-31 10:19:20 pkoppenb Exp $
 #ifndef SELRESULTCOMBINATORICS_H 
 #define SELRESULTCOMBINATORICS_H 1
 
@@ -9,6 +9,17 @@
 
 /** @class AlgorithmCorrelationsAlg AlgorithmCorrelationsAlg.h
  *  
+ *  Produces a correlations between algorithms. Uses both
+ *  filterPassed() and SelResult (which might be in DST)
+ *
+ *  Usage :
+ *
+ *  @code
+ *  ApplicationMgr().TopAlg += [ AlgorithmCorrelationsAlg() ]
+ *  AlgorithmCorrelationsAlg().Algorithms = [ "Hlt2Decision", 
+ *                                            "DiLeptonForPreselBu2LLK",
+ *                                            "PreselBu2LLK" ]
+ *  @endcode 
  *
  *  @author Patrick KOPPENBURG
  *  @date   2004-09-01

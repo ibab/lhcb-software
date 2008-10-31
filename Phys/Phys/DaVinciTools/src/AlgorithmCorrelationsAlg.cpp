@@ -1,4 +1,4 @@
-// $Id: AlgorithmCorrelationsAlg.cpp,v 1.1 2008-10-29 13:56:04 pkoppenb Exp $
+// $Id: AlgorithmCorrelationsAlg.cpp,v 1.2 2008-10-31 10:19:20 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -60,22 +60,27 @@ StatusCode AlgorithmCorrelationsAlg::initialize() {
   if (m_algorithmsColumn.empty()){
     err() << "No algorithms defined. Use Algorithms option." << endmsg;
     return StatusCode::FAILURE ;
-  } else {
-    if (msgLevel(MSG::DEBUG)) debug() << "Algorithms to check correlations:" << m_algorithmsColumn << endmsg ;
-    sc =  m_algoCorr->algorithms(m_algorithmsColumn);
-    if (!sc) return sc ;
-  }
+  } 
   
+  if (msgLevel(MSG::DEBUG)) debug() << "Algorithms to check correlations: " 
+                                    << m_algorithmsColumn << endmsg ;
+  sc =  m_algoCorr->algorithms(m_algorithmsColumn);
+  if (!sc) return sc ;
+  // all algorithms 
+  m_algorithms = m_algorithmsColumn ;
+
   if (m_algorithmsRow.empty()){
-    if (msgLevel(MSG::DEBUG)) debug() << "No algorithms row defined." << endmsg;
+    if (msgLevel(MSG::DEBUG)) debug() << "No algorithms row defined. -> square matrix." 
+                                      << endmsg;
   } else {
     if (msgLevel(MSG::DEBUG)) debug() << "Algorithms to check correlations against:" << m_algorithmsRow << endmsg ;
     sc = m_algoCorr->algorithmsRow(m_algorithmsRow); // resets stuff
     // now add algorithmsRow to algorithms for further processing
-    m_algorithms = m_algorithmsColumn ;
-    for ( std::vector<std::string>::const_iterator r = m_algorithmsRow.begin() ; r!= m_algorithmsRow.end() ; r++){
+    for ( std::vector<std::string>::const_iterator r = m_algorithmsRow.begin() ; 
+          r!= m_algorithmsRow.end() ; r++){
       bool found = false ;
-      for ( std::vector<std::string>::const_iterator c = m_algorithmsColumn.begin() ; c!= m_algorithmsColumn.end() ; c++){
+      for ( std::vector<std::string>::const_iterator c = m_algorithmsColumn.begin() ; 
+            c!= m_algorithmsColumn.end() ; c++){
         if ( *c == *r ) {
           found = true ;
           break ;
@@ -86,6 +91,9 @@ StatusCode AlgorithmCorrelationsAlg::initialize() {
     
     if (!sc) return sc ;
   }
+
+  if (msgLevel(MSG::DEBUG)) debug() << "All algorithms to be considered : " 
+                                    <<  m_algorithms << endmsg ;
 
   return StatusCode::SUCCESS;
 };
@@ -107,13 +115,19 @@ StatusCode AlgorithmCorrelationsAlg::execute() {
     SelResCtr = get<SelResults>(m_selResults);
   }
   
-  for ( std::vector<std::string>::const_iterator a = m_algorithms.begin() ; a!= m_algorithms.end() ; a++){
+  for ( std::vector<std::string>::const_iterator a = m_algorithms.begin() ; 
+        a!= m_algorithms.end() ; a++){
     if (msgLevel(MSG::VERBOSE)) verbose() << "Looking at " << *a << endmsg ;
     LoKi::Algorithms::Passed pass(*a) ;
     if ( pass()) {
-      if (msgLevel(MSG::DEBUG)) debug() << *a << " passed during this processing " << endmsg ;
+      if (msgLevel(MSG::DEBUG)) debug() << *a << " passed during this processing " 
+                                        << endmsg ;
       m_algoCorr->fillResult(*a,true) ;
     } else if ( m_useSelResults ){
+      if (msgLevel(MSG::VERBOSE)){
+        verbose() << *a << " not passed during this processing. Looking for SelResult." 
+                  << endmsg ;
+      }
       m_algoCorr->fillResult(*a,selResultPassed(*a,SelResCtr)) ;
     }
   }
@@ -124,7 +138,8 @@ StatusCode AlgorithmCorrelationsAlg::execute() {
 //=========================================================================
 // method to test if algorithm passed selresult
 //=========================================================================
-bool AlgorithmCorrelationsAlg::selResultPassed( std::string algo, const LHCb::SelResults* SelResCtr) {
+bool AlgorithmCorrelationsAlg::selResultPassed( std::string algo, 
+                                                const LHCb::SelResults* SelResCtr) {
   for ( SelResults::const_iterator iselRes  = SelResCtr->begin() ; 
         iselRes != SelResCtr->end(); ++iselRes ) { 
     if ("/Event/Phys/"+algo == (*iselRes)->location()){
