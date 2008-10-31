@@ -201,6 +201,28 @@ private:
   void storeRelationsInTable(Particle2Vertex::Range::const_iterator begin,
                              Particle2Vertex::Range::const_iterator end);
 
+  /**
+   *
+   * Add leading m_OnOffline->trunkOnTES()+"/" string to input locations,
+   * unless these contain a "/", in which case leave them untouched.
+   * <b> Examples: </b> 
+   *
+   * "MyBsSelection" becomes "Phys/MyBsSelection" if m_OnOffline->online() ==false and 
+   * "MyBsSelection" becomes "Hlt/MyBsSelection" if m_OnOffline->online() == true.
+   * "Phys/MyBsSelection" remains unchanged.
+   * "Anything/MyBsSelection" remains unchanged.
+   * "/MyBsSelection" remains unchanged, but is most likely an error!
+   * 
+   *
+   * @author Juan Palacios juan.palacios@nikhef.nl
+   * @date 2008-10-31
+   * @todo put this in some tool (not necessarily in the Gaudi sense of the word)
+   *
+   */
+  void fixInputLocations(std::vector<std::string>::iterator begin,
+                         std::vector<std::string>::iterator end);
+  
+
 private: // data
 
   /// TES pathname for Primary Vertices 

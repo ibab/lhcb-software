@@ -225,6 +225,7 @@ StatusCode PhysDesktop::initialize()
   // check that output location is set to *SOME* value
   if (m_outputLocn.empty()) Exception("OutputLocation is not set") ;
 
+  fixInputLocations(m_inputLocn.begin(), m_inputLocn.end());
   
   return sc;
 }
@@ -906,4 +907,21 @@ void PhysDesktop::storeRelationsInTable(Particle2Vertex::Range::const_iterator b
     }
   }
 }
+//=============================================================================
+void PhysDesktop::fixInputLocations(std::vector<std::string>::iterator begin,
+                                    std::vector<std::string>::iterator end)
+{
+  const std::string& prefix = m_OnOffline->trunkOnTES();
+ 
+  for (std::vector<std::string>::iterator loc = begin; loc!=end; ++loc) {
+    if ( (*loc).find("/") == std::string::npos ) {
+      *loc = prefix + "/" + *loc;
+      if ( msgLevel(MSG::VERBOSE) ) {
+        verbose() << "Input location changed to " << *loc << endmsg;
+      }
+    }
+  }
+
+}
+
 //=============================================================================
