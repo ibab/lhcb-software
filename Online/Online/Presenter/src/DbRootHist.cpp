@@ -504,12 +504,11 @@ void DbRootHist::initHistogram()
         }
     }
     // cannot get sources from DIM
-    if (m_retryInit > 0) {
+    if (m_dimBrowser && (m_retryInit > 0)) {
       m_dimServiceName = assembleCurrentDimServiceName();
       if (m_verbosity >= Verbose) {
         std::cout << "DB DIM field invalid, retrying init using "
-                  << m_dimServiceName 
-                  << std::endl;
+                  << m_dimServiceName << std::endl;
       }      
      
       --m_retryInit;
@@ -1322,7 +1321,7 @@ std::string DbRootHist::findDimServiceName(const std::string & dimServiceType) {
   std::string dimServiceNameQueryBegining("");
 
   if (m_partition != "") {
-    dimServiceNameQueryBegining= dimServiceType + s_slash +
+    dimServiceNameQueryBegining = dimServiceType + s_slash +
                                   m_partition +
                                   s_underscrore + "*";
   } else {

@@ -41,10 +41,38 @@ int main(int argc, char* argv[])
     std::cout << "error: LHCb Presenter cannot run in batch mode." << std::endl;
     exit(EXIT_FAILURE);
   }
-
+  
   int windowWidth(1000);
   int windowHeight(600);
   int titleFontSize(0);
+
+  std::string histdir("");
+  std::string referencePath("");
+  std::string savesetsPath("");
+
+
+  const char* histdirEnv = getenv(s_histdir.c_str());
+  if (NULL != histdirEnv) {
+    histdir = histdirEnv;
+    if (!histdir.empty()) {
+      histdir.append(s_slash);
+    }
+  }
+  const char* referencePathEnv = getenv(s_referencePath.c_str());
+  if (NULL != referencePathEnv) {
+    referencePath = referencePathEnv;
+    if (!referencePath.empty()) {
+      referencePath.append(s_slash);
+    }
+  }
+  const char* savesetsPathEnv = getenv(s_savesetsPath.c_str());
+  if (NULL != savesetsPathEnv) {
+    savesetsPath = savesetsPathEnv;
+    if (!savesetsPath.empty()) {
+      savesetsPath.append(s_slash);
+    }
+  }
+
 
   try {
     // cli
@@ -68,8 +96,8 @@ int main(int argc, char* argv[])
       ("verbosity,V", value<std::string>()->default_value("silent"),
        "verbosity level:\n" "silent, verbose or debug")
 //      ("dim-dns-node,D", value<std::string>(), "DIM DNS node name")
-      ("reference-path,R", value<std::string>(), "relative reference path")
-      ("saveset-path,S", value<std::string>(), "relative saveset path")
+      ("reference-path,R", value<std::string>()->default_value(referencePath), "reference path")
+      ("saveset-path,S", value<std::string>()->default_value(savesetsPath), "saveset path")
       ("config-file,C", value<std::string>(), "configuration file")
       ("title-font-size,F", value<int>(&titleFontSize),
        "title font size for plots")      
@@ -171,19 +199,13 @@ int main(int argc, char* argv[])
     } else {
       presenterMainFrame.setPresenterMode(Online);
     }
-    std::string groupMountPoint("");
-    const char* groupdirEnv = getenv(s_groupdir.c_str());
-    if (NULL != groupdirEnv) {
-      groupMountPoint = groupdirEnv;
-      if (!groupMountPoint.empty()) {
-        groupMountPoint.append(s_slash);
-        presenterMainFrame.setArchiveRoot(groupMountPoint);
-      }
-    }
-   // TODO: make GROUPDIR effect more visible, echo path on exit
+
+    presenterMainFrame.setArchiveRoot(histdir);
+
     if (startupSettings.count("saveset-path")) {
       path savesetPath(startupSettings["saveset-path"].as<std::string>());
-      if (exists(path(groupMountPoint)/savesetPath)) {
+      
+      if (exists(path(histdir)/savesetPath)) {
         presenterMainFrame.setSavesetPath(savesetPath.file_string());
       } else {
         std::cout << "error: saveset-path doesn't exist" << std::endl;
@@ -192,7 +214,7 @@ int main(int argc, char* argv[])
     }
     if (startupSettings.count("reference-path")) {
       path referencePath(startupSettings["reference-path"].as<std::string>());
-      if (exists(path(groupMountPoint)/referencePath)) {
+      if (exists(path(histdir)/referencePath)) {
         presenterMainFrame.setReferencePath(referencePath.file_string());
       } else {
         std::cout << "error: reference-path doesn't exist" << std::endl;

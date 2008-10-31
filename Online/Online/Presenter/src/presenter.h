@@ -10,9 +10,12 @@
  #define WIN32_LEAN_AND_MEAN
 #endif
 
-static const std::string s_presenterVersion("v0r12");
+static const std::string s_presenterVersion("v0r13");
 // environment variable for archive mount point (i.e. prefix to paths)
-static const std::string s_groupdir("GROUPDIR");
+static const std::string s_histdir("HISTDIR");
+static const std::string s_referencePath("HISTREFPATH");
+static const std::string s_savesetsPath("HISTSAVESETSPATH");
+ 
 
 // 4 slots+signals: cint hates namespaces
 enum FilterCriteria
@@ -104,21 +107,6 @@ namespace pres
 //  H2D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloEmulatorMonitoring/L0CaloEmulatorMonitoring/10002
 //  H2D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloEmulatorMonitoring/L0CaloEmulatorMonitoring/10003
 //  H2D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloEmulatorMonitoring/L0CaloEmulatorMonitoring/10004
-//  H2D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloEmulatorMonitoring/L0CaloEmulatorMonitoring/10005
-//  H1D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloEmulatorMonitoring/L0CaloEmulatorMonitoring/1001
-//  H1D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloEmulatorMonitoring/L0CaloEmulatorMonitoring/1002
-//  H1D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloEmulatorMonitoring/L0CaloEmulatorMonitoring/1003
-//  H1D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloEmulatorMonitoring/L0CaloEmulatorMonitoring/1004
-//  H1D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloEmulatorMonitoring/L0CaloEmulatorMonitoring/1005
-//  H1D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloEmulatorMonitoring/L0CaloEmulatorMonitoring/1006
-//  H1D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloEmulatorMonitoring/L0CaloEmulatorMonitoring/1007
-//  H1D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloDecoderMonitoring/L0CaloDecoderMonitoring/1001
-//  H1D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloDecoderMonitoring/L0CaloDecoderMonitoring/1002
-//  H1D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloDecoderMonitoring/L0CaloDecoderMonitoring/1003
-//  H1D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloDecoderMonitoring/L0CaloDecoderMonitoring/1004
-//  H1D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloDecoderMonitoring/L0CaloDecoderMonitoring/1005
-//  H1D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloDecoderMonitoring/L0CaloDecoderMonitoring/1006
-//  H1D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloDecoderMonitoring/L0CaloDecoderMonitoring/1007
 
 // I guess TPRegexp wrapper is buggy: other pcre-s can match the pattern below (-1 match is OK):
 //  static TPRegexp s_histogramUrlRegexp("^(H1D|H2D|P1D|HPD|P2D)?/?([^/_]+)_([^/_]+)_([^/]+)_([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");
@@ -127,7 +115,7 @@ namespace pres
   static TPRegexp s_histogramUrlRegexp("^(MonP1|MonH1F|MonH1D|MonH2F|MonH2D|H1D|H2D|P1D|HPD|P2D)?/?([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");
 //  static TPRegexp s_histogramUTGIDRegexp("^([^/_]+)?_?([^/_]+)_([^/]+)_([^/]+)$");
   static TPRegexp s_histogramUTGIDRegexp("^(([^/_]+)_)?([^/_]+)_([^/]+)_([^/]+)$");
-  static TPRegexp s_fileDateRegexp("(.*)-(\\d{8}T\\d{6})\\.root$");
+  static TPRegexp s_fileDateRegexp("(.*)-(\\d{8}T\\d{6})(?:-EOR)\\.root$");
 
   // Tunables:
   static const int s_estimatedDimServiceCount = 1000;
