@@ -1,6 +1,7 @@
 2008-10-31  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* cmt/requirements: remove the default generation of LbLogin.zsh
+	* cmt/requirements: remove the default generation of LbLogin.zsh. Fixed 
+	problem with the LbLogin.bat generation on windows.
 
 2008-10-31  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 

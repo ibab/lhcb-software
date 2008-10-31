@@ -50,6 +50,7 @@ source %s/scripts/SetupProject.csh --disable-CASTOR LbScripts %s --runtime LCGCM
 
 """ % (targetlocation, targetlocation, version)
     elif shell == "bat" :
+        wintargetlocation = targetlocation
         if sys.platform != "win32" :
             if targetlocation.startswith("/afs") :
                 wintargetlocation = "Z:" + targetlocation.replace("/afs","").replace("/","\\")
