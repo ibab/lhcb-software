@@ -7,7 +7,7 @@
 ###
 from Gaudi.Configuration import *
 from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, GaudiSequencer, PhysDesktop, DecayTreeTuple, PrintHeader, PrintTree
-from Configurables import CheckSelResult, L0Filter, SelResultCorrelations
+from Configurables import CheckSelResult, L0Filter, AlgorithmCorrelationsAlg
 #--------------------------------------------------------------
 #
 # Preselection
@@ -62,9 +62,9 @@ MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 # correlations on signal
 #
 ApplicationMgr().TopAlg += [ GaudiSequencer("Corrs") ]
-GaudiSequencer("Corrs").Members += [ CheckSelResult("CheckOffline"), L0Filter(), SelResultCorrelations("eeK") ]
+GaudiSequencer("Corrs").Members += [ CheckSelResult("CheckOffline"), L0Filter(), AlgorithmCorrelationsAlg("eeK") ]
 CheckSelResult("CheckOffline").Algorithms = [ "DC06SelBu2eeK" ]
-SelResultCorrelations("eeK").Algorithms = [ "Hlt2SelBu2LLK", "Hlt2SelBu2LLKSignal", "Hlt2SelBu2LLKHighMass", "Hlt2SelBu2LLKJpsi", "Hlt2SelBiasedDiElectron", "Hlt2SelBiasedDiMuon", "Hlt2SelUnbiasedDiMuon", "Hlt2Decision" ]
+AlgorithmCorrelationsAlg("eeK").Algorithms = [ "DC06SelBu2eeK", "Hlt2SelBu2LLK", "Hlt2SelBu2LLKSignal", "Hlt2SelBu2LLKHighMass", "Hlt2SelBu2LLKJpsi", "Hlt2SelBiasedDiElectron", "Hlt2SelBiasedDiMuon", "Hlt2SelUnbiasedDiMuon", "Hlt2Decision" ]
 
 ApplicationMgr().ExtSvc +=  [ "NTupleSvc" ]                             
 NTupleSvc().Output =  [ "FILE1 DATAFILE='HLT-Bu2eeK.root' TYP='ROOT' OPT='NEW'" ] 
@@ -72,4 +72,5 @@ HistogramPersistencySvc().OutputFile = "DVHlt2-Bu2eeK.root"
 
 ApplicationMgr().EvtMax = -1 
 EventSelector().FirstEvent = 1 
+EventSelector().PrintFreq = 1 
 

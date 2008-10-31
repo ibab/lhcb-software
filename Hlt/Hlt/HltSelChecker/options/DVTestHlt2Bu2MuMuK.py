@@ -7,7 +7,7 @@
 ###
 from Gaudi.Configuration import *
 from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, GaudiSequencer, PhysDesktop, DecayTreeTuple, PrintHeader
-from Configurables import CheckSelResult, L0Filter, SelResultCorrelations
+from Configurables import CheckSelResult, L0Filter, AlgorithmCorrelationsAlg
 #--------------------------------------------------------------
 #
 # Preselection
@@ -54,9 +54,9 @@ DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[B+ -> (^J/psi(1S) => ^mu+ ^mu-) ^
 # correlations on signal
 #
 ApplicationMgr().TopAlg += [ GaudiSequencer("Corrs") ]
-GaudiSequencer("Corrs").Members += [ CheckSelResult("CheckOffline"), L0Filter(), SelResultCorrelations("eeK") ]
+GaudiSequencer("Corrs").Members += [ CheckSelResult("CheckOffline"), L0Filter(), AlgorithmCorrelationsAlg("eeK") ]
 CheckSelResult("CheckOffline").Algorithms = [ "DC06SelBu2MuMuK" ]
-SelResultCorrelations("eeK").Algorithms = [ "Hlt2SelBu2LLK", "Hlt2SelBu2LLKSignal", "Hlt2SelBu2LLKHighMass", "Hlt2SelBu2LLKJpsi", "Hlt2SelBiasedDiElectron", "Hlt2SelBiasedDiMuon", "Hlt2SelUnbiasedDiMuon", "Hlt2Decision" ]
+AlgorithmCorrelationsAlg("eeK").Algorithms = [ "Hlt2SelBu2LLK", "Hlt2SelBu2LLKSignal", "Hlt2SelBu2LLKHighMass", "Hlt2SelBu2LLKJpsi", "Hlt2SelBiasedDiElectron", "Hlt2SelBiasedDiMuon", "Hlt2SelUnbiasedDiMuon", "Hlt2Decision" ]
 #
 # Options
 #

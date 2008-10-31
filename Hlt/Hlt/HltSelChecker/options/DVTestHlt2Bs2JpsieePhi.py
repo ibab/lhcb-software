@@ -7,7 +7,7 @@
 ###
 from Gaudi.Configuration import *
 from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, GaudiSequencer, PhysDesktop, DecayTreeTuple, PrintHeader, PrintTree
-from Configurables import CheckSelResult, L0Filter, SelResultCorrelations
+from Configurables import CheckSelResult
 #--------------------------------------------------------------
 #
 # Preselection

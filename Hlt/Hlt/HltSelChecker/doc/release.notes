@@ -9,6 +9,9 @@
 ! end
 !-----------------------------------------------------------------------------
 
+! 2008-10-31 - Patrick Koppenburg
+ - Renamed SelResults checking algorithms
+
 ! 2008-10-29 - Patrick Koppenburg
  - Renamed DVTestHlt2BiasedDimuon into Bs2JpsiPhi for consistency.
  - Run Hlt1 and 2 and ignore Hlt1 decision in all tests. 
