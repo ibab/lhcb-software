@@ -31,7 +31,7 @@ cmtpath_pattern \
 	
 private 
 
-macro generateLogin_output " ../scripts/LbLogin.csh ../scripts/LbLogin.sh ../scripts/LbLogin.zsh ../scripts/LbLogin.bat"
+macro generateLogin_output " ../scripts/LbLogin.csh ../scripts/LbLogin.sh ../scripts/LbLogin.bat"
 macro Lblogin_script_location "$(LbConfiguration_cmtpath)/$(cmt_installarea_prefix)"
 macro generateLogin_command "python ../scripts/generateLogin.py  $(version) $(Lblogin_script_location) $(generateLogin_output) "
 
