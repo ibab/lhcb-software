@@ -1,11 +1,10 @@
-// $Id: AlgorithmCorrelationsAlg.h,v 1.2 2008-10-31 10:19:20 pkoppenb Exp $
+// $Id: AlgorithmCorrelationsAlg.h,v 1.3 2008-10-31 18:41:39 pkoppenb Exp $
 #ifndef SELRESULTCOMBINATORICS_H 
 #define SELRESULTCOMBINATORICS_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
-
 
 /** @class AlgorithmCorrelationsAlg AlgorithmCorrelationsAlg.h
  *  
@@ -38,16 +37,11 @@ public:
 protected:
 
 private:
-  /// method to test if algorithm passed selresult
-  bool selResultPassed(std::string,const LHCb::SelResults*);
-
-private:
-  bool m_useSelResults ;    ///< Use SelResults, i.e. look in DST if algorithm is not run in process.
-  std::string m_selResults;        ///< Location of selresults container
   std::vector<std::string> m_algorithmsRow ; ///< Algorithms to check
   std::vector<std::string> m_algorithmsColumn ; ///< Algorithms to against (= Row by default)
   std::vector<std::string> m_algorithms ; ///< All Algorithms
   mutable IAlgorithmCorrelations* m_algoCorr ; ///< Correlation tool
+  mutable ICheckSelResults* m_selTool ; ///< Selection results tool
   
   bool m_printTable ; ///< print output in Table format
   bool m_printList ; ///< print output in List format

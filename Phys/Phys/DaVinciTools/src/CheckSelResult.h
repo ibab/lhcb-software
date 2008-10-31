@@ -1,4 +1,4 @@
-// $Id: CheckSelResult.h,v 1.3 2007-09-07 13:25:14 pkoppenb Exp $
+// $Id: CheckSelResult.h,v 1.4 2008-10-31 18:41:40 pkoppenb Exp $
 #ifndef CHECKSELRESULT_H 
 #define CHECKSELRESULT_H 1
 
@@ -7,6 +7,7 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 
 #include "Kernel/IWriteSelResult.h"
+#include "Kernel/ICheckSelResults.h"
 
 
 /** @class CheckSelResult CheckSelResult.h
@@ -31,19 +32,12 @@ protected:
 
 private:
 
-  LHCb::SelResults* readSelResult() ;              ///< Read in SelResults, create if needed.
-  StatusCode algoLoop(LHCb::SelResults*&);         ///< loop on algos
-
-  std::string m_selResults;                        ///< Location of selresult container
   std::vector<std::string> m_algorithms ;          ///< Algorithms to check
   bool m_ANDmode ;
   bool m_avoidSelResult ;                          ///< avoid selresult writing? default: yes.
-  
-  long        m_nEvents;                           ///< Counter of events accepted
-  long        m_totEvents;                         ///< Counter of events processed
-  std::string m_headerPath;                        ///< TES of RecHeader
 
   IWriteSelResult* m_writeTool ;                  ///< SelResultWriter
+  ICheckSelResults* m_readTool ;                  ///< Selresults Reader
 
 };
 #endif // CHECKSELRESULT_H

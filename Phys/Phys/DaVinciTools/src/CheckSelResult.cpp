@@ -1,4 +1,4 @@
-// $Id: CheckSelResult.cpp,v 1.7 2008-01-15 18:05:11 pkoppenb Exp $
+// $Id: CheckSelResult.cpp,v 1.8 2008-10-31 18:41:39 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -28,14 +28,9 @@ using namespace LHCb;
 CheckSelResult::CheckSelResult( const std::string& name,
                                 ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
-  , m_selResults      (SelResultLocation::Default)
   , m_algorithms ()
   , m_ANDmode(false)
   , m_avoidSelResult(true) // As in DVAlgorithm baseclass, Dummy. 
-  , m_nEvents(0)
-  , m_totEvents(0)
-  , m_headerPath(RecHeaderLocation::Default)
-    , m_writeTool()
 {
   m_algorithms.clear();
   declareProperty( "Algorithms", m_algorithms );
@@ -66,6 +61,7 @@ StatusCode CheckSelResult::initialize() {
     << "You have set AvoidSelResult to false -> will write out to TES" << endmsg; 
 
   m_writeTool = tool<IWriteSelResult>("WriteSelResult");
+  m_readTool = tool<ICheckSelResults>("CheckSelResultsTool",this);
 
   return StatusCode::SUCCESS;
 };
@@ -76,97 +72,23 @@ StatusCode CheckSelResult::initialize() {
 StatusCode CheckSelResult::execute() {
 
   if (msgLevel(MSG::VERBOSE)) verbose() << "==> Execute" << endmsg;
-  setFilterPassed(false);
+  StatusCode sc = StatusCode::SUCCESS ;
 
-  m_totEvents++ ;
-
-  SelResults* SelResCtr = readSelResult() ; // read in or create
-  if ( NULL!=SelResCtr ) { 
-    StatusCode sc = algoLoop(SelResCtr);   // loop
-    if (!sc) return sc;
-    if ( !m_avoidSelResult ) sc = m_writeTool->write(name(),filterPassed()) ; // write out
-    if (!sc) return sc;
-  }
-  // some stats
-  if ( filterPassed() ){
-    m_nEvents++;
-    if ((msgLevel(MSG::DEBUG)) && (exist<RecHeader>(m_headerPath))) {
-      RecHeader* rh = get<RecHeader>(m_headerPath);
-      debug() << "Run " << rh->runNumber() << ", Event " << rh->evtNumber() << endmsg;
-    }
-  }
+  bool pass = m_readTool->isSelected(m_algorithms, m_ANDmode) ;
+  if (msgLevel(MSG::DEBUG)) debug() << "Result is " << pass << endmsg ;
+  if ( !m_avoidSelResult ) sc = m_writeTool->write(name(),pass) ; // write out
+  if (!sc) return sc;
+  
+  setFilterPassed(pass);
+  
+  counter("Passed")+= pass ;
 
   return StatusCode::SUCCESS;
 };
-
-//=========================================================================
-//  Make loop on algos
-//=========================================================================
-StatusCode CheckSelResult::algoLoop(LHCb::SelResults*& SelResCtr){
-  bool m_allpassed = true ;
-  bool m_onepassed = m_algorithms.empty() ;
-  // loop on algorithms
-  std::vector<std::string>::iterator ialg ;
-  for( ialg = m_algorithms.begin(); ialg != m_algorithms.end(); ialg++ ){
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Looping on " << (*ialg) << endmsg ;
-    std::string location = "/Event/Phys/"+(*ialg) ;
-    bool m_thisfound = false ;
-    // loop on selresult objects
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Looping " << endmsg ;
-    for ( SelResults::const_iterator iselRes  = SelResCtr->begin() ;
-          iselRes != SelResCtr->end(); iselRes++ ) {     
-      if ( location == (*iselRes)->location() ){
-        m_thisfound = true ;
-        if ((*iselRes)->found()){
-          if (msgLevel(MSG::VERBOSE)) verbose() << "Algorithm " <<(*ialg) << " - Status: Passed." << endmsg ;
-          m_onepassed = true ;
-        } else {
-          if (msgLevel(MSG::VERBOSE)) verbose() << "Algorithm " <<(*ialg) << " - Status: Not passed." 
-                                                << endmsg ;
-          m_allpassed = false ;
-        }
-      } else if (msgLevel(MSG::VERBOSE)) verbose() << "Looping on SelResult location " 
-                                                   << (*iselRes)->location() << endmsg ;
-    }
-    if ((!m_thisfound) &&  (m_ANDmode)){
-      if (msgLevel(MSG::VERBOSE)) verbose() << "Cound not find algorithm " << (*ialg) << endmsg ;
-      m_allpassed = false ;
-    }    
-  }
-  if (m_ANDmode) setFilterPassed(m_allpassed);
-  else setFilterPassed(m_onepassed);
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Result is: " << filterPassed() << endmsg ;
-  return StatusCode::SUCCESS ;
-}
-//=========================================================================
-// Read in container. Create it if needed. 
-//=========================================================================
-SelResults* CheckSelResult::readSelResult ( ) {
-  SelResults* SelResCtr  = NULL ;
-  if ( !exist<SelResults>(m_selResults)){
-    Warning("SelResults container not found!",StatusCode::SUCCESS,1).ignore();
-    if ( !m_avoidSelResult ){ // need container
-      SelResCtr = new SelResults();
-      put(SelResCtr,m_selResults);   
-      if (msgLevel(MSG::DEBUG)) debug() << "SelResult container created at " << m_selResults << endmsg;
-    } else { // no container, nothing to do.
-      return NULL ; 
-    }
-  } else { // already there
-    if (msgLevel(MSG::VERBOSE)) verbose() << "SelResult container found at " << m_selResults << endmsg;
-    SelResCtr = get<SelResults>(m_selResults);
-  }
-  
-  return SelResCtr ;
-}
 //=============================================================================
 //  Finalize
 //=============================================================================
 StatusCode CheckSelResult::finalize() {
-
-  if (msgLevel(MSG::VERBOSE)) verbose() << "==> Finalize" << endmsg;
-  info() << "Filtered " << m_nEvents << " from " << m_totEvents << " events" << endmsg;
-
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
