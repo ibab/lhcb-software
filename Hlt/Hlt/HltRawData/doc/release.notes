@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.17 2008-10-24 19:35:28 tskwarni Exp $
+!$Id: release.notes,v 1.18 2008-10-31 10:43:48 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltRawData
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Writers and Readers, Makers of persisted TES info
 !-----------------------------------------------------------------------------
+
+! 2008-10-31 - Gerhard Raven
+ - HltRoutingBitsWriter: empty bit specification is not an error, will not set bit
 
 ! 2008-10-24 - Tomasz Skwarnicki
  - HltSelReportsMaker now outputs Global selections for Hlt1 and Hlt2

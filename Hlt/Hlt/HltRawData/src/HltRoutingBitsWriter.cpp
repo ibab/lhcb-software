@@ -1,4 +1,4 @@
-// $Id: HltRoutingBitsWriter.cpp,v 1.5 2008-09-18 07:45:01 graven Exp $
+// $Id: HltRoutingBitsWriter.cpp,v 1.6 2008-10-31 10:43:48 graven Exp $
 // Include files 
 #include <algorithm>
 // from Boost
@@ -12,6 +12,9 @@
 // local
 #include "HltRoutingBitsWriter.h"
 
+//
+// TODO: use same functor(s) as $LOKIHLTROOT/src/Components/HDRFilter.cpp
+//
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltRoutingBitsWriter
@@ -34,9 +37,13 @@ void HltRoutingBitsWriter::updateEvaluators(const IHltDecisionPredicateFactory& 
     typedef std::map<unsigned int,std::string>::const_iterator iter_t;
     for (iter_t i=m_specifications.begin();i!=m_specifications.end();++i) {
         if ( i->first>nBits ) throw GaudiException("Out of Range","",StatusCode::FAILURE);
-        combiner_t* eval = factory.create(i->second);
-        if (eval==0) throw GaudiException("Invalid Evaluator","",StatusCode::FAILURE);
-        m_evaluators[i->first] = eval;
+        if (i->second.empty()) { 
+            m_evaluators[i->first] = 0;
+        } else {
+            combiner_t* eval = factory.create(i->second);
+            if (eval==0) throw GaudiException("Invalid Evaluator","",StatusCode::FAILURE);
+            m_evaluators[i->first] = eval;
+        }
     }
     m_updateRequired = false;
 }
