@@ -34,11 +34,5 @@ from Boole.Configuration import *
 ##############################################################################
 
 ##############################################################################
-# IMPORTANT IMPORTANT IMPORTANT IMPORTANT IMPORTANT IMPORTANT IMPORTANT
-# The following line must always be *after* all Boole steering options
-##############################################################################
-Boole().applyConf()
-
-##############################################################################
 # I/O datasets are defined in a separate file, see examples in DC06-Files.py
 ##############################################################################

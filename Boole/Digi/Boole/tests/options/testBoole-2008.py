@@ -12,8 +12,6 @@ Boole().condDBtag    = "2008-default"
 Boole().writeL0ETC   = True   # Write also ETC of L0 selected events
 Boole().monitors    += ["FPE", "SC"] # Add Floating Point and StatusCode checks
 
-Boole().applyConf()
-
 # Do not compare times....
 TimingAuditor().OutputLevel = WARNING 
 

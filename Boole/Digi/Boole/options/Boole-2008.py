@@ -11,9 +11,6 @@ Boole().useSpillover = False
 Boole().DDDBtag      = "2008-default"
 Boole().condDBtag    = "2008-default"
 
-Boole().applyConf()
-
-
 ##############################################################################
 # I/O datasets are defined in a separate file, see examples in 2008-Files.py
 ##############################################################################
