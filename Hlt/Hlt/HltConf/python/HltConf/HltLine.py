@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.26 2008-10-28 14:48:49 graven Exp $ 
+# $Id: HltLine.py,v 1.27 2008-10-31 11:12:01 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.26 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.27 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt line itself 
@@ -90,7 +90,6 @@ from Configurables import HltL0MuonPrepare       as L0MuonPrepare
 from Configurables import HltL0CaloPrepare       as L0CaloPrepare 
 from Configurables import HltVertexToTracks      as VertexToTracks 
 from Configurables import HltAddPhotonToVertex   as AddPhotonToVertex
-from Configurables import HltDummySelection      as Dummy 
 
 ## @todo introduce the proper decision 
 from Configurables import HltLine                as Line
@@ -269,7 +268,6 @@ _types_ = { TrackUpgrade  : 'TU'
           , L0CaloPrepare : 'L0CaloPrepare'
           , L0MuonPrepare : 'L0MuonPrepare'
           , AddPhotonToVertex : 'AddPhotonToVertex'
-          , Dummy         : 'Dummy'
           } 
 
 ## protected attributes 

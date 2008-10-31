@@ -7,7 +7,6 @@ from Gaudi.Configuration import *
 from Configurables import GaudiSequencer as Sequence
 from Configurables import GaudiSequencer
 from Configurables import DeterministicPrescaler as Prescale
-from Configurables import HltDummySelection as Dummy
 from Configurables import HltTrackFilter, HltSelectionFilter
 from Configurables import LumiCountVertices, LumiCountTracks, LumiFromL0DU, LumiCountHltTracks
 from Configurables import HltLumiOdinReader, LumiHistoMaker
@@ -116,12 +115,9 @@ BXTypes = Sequence( 'Hlt1LumiBXTypesSequence'
 importOptions('$HLTCONFROOT/options/HltRecoSequence.py')
 
 lumiRecoSequence  = Sequence( 'Hlt1LumiRecoSequence'
-                  , Members = [ GaudiSequencer('HltRecoSequence')
-                              , Dummy( 'AlwaysPassReco' )  ## needed to pass this filter
-                              ]
-                  , ModeOR = True
-                  , ShortCircuit = False
-                  , MeasureTime = True )
+                            , Members = [ GaudiSequencer('HltRecoSequence') ]
+                            , IgnoreFilterPassed = True
+                            , MeasureTime = True )
 
 
 

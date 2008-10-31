@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1.py,v 1.17 2008-10-28 15:45:16 graven Exp $
+# $Id: Hlt1.py,v 1.18 2008-10-31 11:12:01 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of HLT1
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.17 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.18 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -22,6 +22,7 @@ from Configurables       import GaudiSequencer as Sequence
 from Configurables       import HltSummaryWriter
 from Configurables       import HltSelectionFilter, HltSelectionToTES
 from Configurables       import HltDecisionFilter
+from Configurables       import HltSelReportsMaker, HltSelReportsWriter
 from Configurables       import HltDecReportsMaker, HltDecReportsWriter
 from Configurables       import HltVertexReportsMaker, HltVertexReportsWriter
 from Configurables       import HltRoutingBitsWriter
@@ -29,6 +30,7 @@ from Configurables       import HltLumiWriter
 from Configurables       import HltGlobalMonitor
 from Configurables       import bankKiller
 from Configurables       import LoKi__HDRFilter   as HltFilter
+from Configurables       import DeterministicPrescaler as Prescale
 from HltConf.HltLine     import hlt1Lines
 from HltConf.HltLine     import hlt1Decisions
 from HltConf.HltLine     import hlt1Selections
@@ -41,19 +43,15 @@ for i in [ 'routingBitDefinitions', 'Accept', 'FilterDescriptor', 'Code', 'Outpu
 
 importOptions('$HLTCONFROOT/options/HltInit.opts')
 importOptions('$HLTCONFROOT/options/HltLumiInit.opts')
-# importOptions('$HLTCONFROOT/options/HltMain.py')
 
-
+## add the Hlt1Global line...
 Hlt1Global = Line('Global', HLT = 'HLT_DECISION' )
 
-Hlt1 = Sequence('Hlt1',  ModeOR = True, ShortCircuit = False
-               , Members = [ i.sequencer() for i in  hlt1Lines() ]
-               )
-
+# TODO: write all selections whose name matches a decision.
 # TODO: remove summaryWriter in next release
 ## needed to feed HltVertexReportsMaker... needed for Velo!
 # run for all selections which have 'velo' in them
-veloVertices = [ i for i in hlt1Selections()['All'] if i.startswith('Hlt1Velo') ]
+veloVertices = [ i for i in hlt1Selections()['All'] if i.startswith('Hlt1Velo')  and i.endswith('Decision') ]
 summaryWriter = HltSummaryWriter(      Save             = veloVertices ) 
 vertexMaker   = HltVertexReportsMaker( VertexSelections = veloVertices )
 vertexWriter  = HltVertexReportsWriter( )
@@ -71,6 +69,7 @@ def AnyIgnoring( dec ) :
 
 #### TODO: check that the used lines are actually in use!!!
 ### non-existant strings always evaluate to false, and are not an error (yet)
+### empty strings always evaluate to false, and are not an error
 routingBits = { 32 : 'Hlt1Global'
               , 33 : 'Hlt1LumiDecision'
               , 34 : AnyIgnoring('Hlt1LumiDecision')
@@ -81,14 +80,20 @@ routingBits = { 32 : 'Hlt1Global'
 
 rawbankLumiStripper = Sequence( 'LumiStripper' , Members = 
                               [ HltFilter('LumiOnlyFilter' , Code = "HLT_PASS('Hlt1LumiDecision') & ( HLT_NPASS==1 ) " ) 
+                              , Prescale('LumiStripperPrescaler',AcceptFraction=0.999) # don't strip on 1/1000 random triggers
                               , bankKiller( BankTypes=[ 'ODIN','HltLumiSummary'],  DefaultIsKill=True )
                               ])
 
 Hlt  = Sequence('Hlt')
-Hlt.Members = [ Hlt1
+Hlt.Members = [  Sequence('Hlt1',  ModeOR = True, ShortCircuit = False
+                         , Members = [ i.sequencer() for i in  hlt1Lines() ]
+                         )
+              ## TODO: insert Hlt2 here at some point...
               , Sequence( 'HltEndSequence', ModeOR = True, ShortCircuit = False
                         , Members = [ HltGlobalMonitor( Hlt1Decisions = list( hlt1Decisions() ) )
                                     , HltDecReportsWriter()
+                                    , HltSelReportsMaker()
+                                    , HltSelReportsWriter()
                                     , veloVertex
                                     , HltRoutingBitsWriter( routingBitDefinitions = routingBits )
                                     , HltLumiWriter()

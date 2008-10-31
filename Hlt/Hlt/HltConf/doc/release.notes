@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.49 2008-10-31 11:07:59 graven Exp $ 
+! $Id: release.notes,v 1.50 2008-10-31 11:12:01 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : 
@@ -6,7 +6,10 @@
 ! -----------------------------------------------------------------------------
 
 ! 2008-10-31 - Gerhard Raven
- - follow updates in GaudiKernel
+ - follow updates in GaudiKernel 
+ - enable writing of SelReports
+ - phase out the use of 'Dummy'
+
 
 ! 2008-10-30 - Jose A. Hernando
  - updating HltHadronLines.py to do velo+calo guided forward reconstruction

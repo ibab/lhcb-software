@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltHadronLines.py,v 1.8 2008-10-30 10:08:46 hernando Exp $
+# $Id: HltHadronLines.py,v 1.9 2008-10-31 11:12:01 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hadron Lines
@@ -12,7 +12,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -54,7 +54,7 @@ prepMainHadron = bindMembers( 'MainHadronPrep',
                                 , GaudiSequencer('HltDecodeT')
                                 , GaudiSequencer('HltDecodeTT')
                                 , Member ( 'TU', 'GuidedForward'
-                                           , InputSelection  = '%TMVeloCalo'
+                                           , InputSelection  = '%TMVeloCalo' ##TODO: can this line be deleted?
                                            , RecoName = 'GuidedForward'
                                            , HistogramUpdatePeriod = 1
                                            )
@@ -84,8 +84,7 @@ Line ('DiHadron'
                    )
         , HltTrackUpgrade( 'Hlt1RecoVelo' )
         , Member ( 'TF', 'Velo'
-                   , InputSelection = HltTrackUpgrade('Hlt1RecoVelo')
-                   ## TODO: is this line still needed?
+                   , InputSelection = HltTrackUpgrade('Hlt1RecoVelo') ## TODO: is this line still needed?
                    , FilterDescriptor = [ 'IP_PV2D,||>,0.1', 'MatchIDsFraction_%TFGuidedForward,<,0.9' ]
                    , HistogramUpdatePeriod = 1
                    , HistoDescriptor = { 'IP_PV2D':('IP_PV2D',0.,3.,100), 'IP_PV2DBest':('IP_PV2DBest',0.,3.,100) }
