@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.33 2008-10-31 16:42:39 cattanem Exp $
+# $Id: requirements,v 1.34 2008-10-31 16:45:20 cattanem Exp $
 package IOExample
-version v2r7
+version v2r6
 
 branches doc options cmt
 
