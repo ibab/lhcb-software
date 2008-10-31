@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.73 2008-10-22 13:39:31 jpalac Exp $
+# $Id: requirements,v 1.74 2008-10-31 14:48:40 jpalac Exp $
 package AnalysisSys
 version v2r3
 
@@ -8,7 +8,7 @@ branches doc cmt
 ####################################################################
 
 #===================================================================
-use  CommonParticles            v4r1p1   Phys   # Juan Palacios, WGs
+use  CommonParticles            v4r1p2   Phys   # Juan Palacios, WGs
 use  FlavourTagging             v8r0p1   Phys   # Marco Musy
 use  DaVinciFilter              v6r10p2  Phys   # Patrick Koppenburg - deprecated
 
@@ -17,11 +17,11 @@ use  DaVinciMCTools     	v9r17p1  Phys   # Juan Palacios
 use  DaVinciAssociators         v9r3     Phys   # Philippe Charpentier
 use  VertexFitCheck             v1r3p1   Phys   # Yuehong Xie
 use  MCStandardParticles        v1r2     Phys   # Juan Palacios
-use  FlavourTaggingChecker      v3r1p1   Phys   # Marco Musy
-use  DaVinciUser      	        v8r5     Phys   # Juan Palacios
+use  FlavourTaggingChecker      v3r1p2   Phys   # Marco Musy
+use  DaVinciUser      	        v8r5p1   Phys   # Juan Palacios
 use  ParticleMakerChecker       v1r2     Phys   # Chris Jones
 use  LoKiUser                   v6r1     Phys   # Vanya Belyaev
-use  DecayTreeTuple             v1r8     Phys   # Jeremie Borel
+use  DecayTreeTuple             v1r8p1   Phys   # Jeremie Borel
 ####################################################################
 use  PhysSelSys          	v10r11  PhysSel
 #===================================================================
@@ -36,24 +36,24 @@ use B2uds	   		v2r6p4  PhysSel # Juan Palacios, Gabriel Guerrer, Eric Conte
 use Radiative       	    	v2r4p5  PhysSel # Vanya BELYAEV
 
 # temporary packages
-use Bd2PiPiPi0       	   	v4r3p3   PhysSel # Olivier Deschamps
+use Bd2PiPiPi0       	   	v4r3p4   PhysSel # Olivier Deschamps
 
 ####################################################################
 # macro use_LoKiJets "LoKiJets            v4r0    Phys" WIN32 ""
 # use $(use_LoKiJets)
 
 ####################################################################
-use  Stripping          	v6r6     Tools   # Patrick Koppenburg
+use  Stripping          	v6r6p1  Tools   # Patrick Koppenburg
 
 ####################################################################
 use  MicroDSTBase        	v1r2    MicroDST          # Juan Palacios
 use  MicroDSTInterfaces  	v1r1    MicroDST          # Juan Palacios
 use  MicroDSTTools      	v1r3    MicroDST          # Juan Palacios
-use  MicroDSTAlgorithm   	v3r3p1  MicroDST          # Juan Palacios
+use  MicroDSTAlgorithm   	v3r3p2  MicroDST          # Juan Palacios
 
 
 ####################################################################
-use Analysis            	v7r6    Tutorial          # P. Koppenburg
+use Analysis            	v7r6p1  Tutorial          # P. Koppenburg
 use LoKiExample         	v8r0    Ex                # Vanya Belyaev
 use MicroDSTExample             v1r1    Ex                # Juan Palacios
 
