@@ -1,4 +1,4 @@
-// $Id: GenParticle_Streamer.cpp,v 1.4 2008-07-28 13:46:05 cattanem Exp $
+// $Id: GenParticle_Streamer.cpp,v 1.5 2008-10-31 16:40:15 cattanem Exp $
 // see TClass::AdoptStreamer(new TClassStreamer(GenParticle_Streamer))
 
 #include "TClassRef.h"
@@ -62,8 +62,10 @@ void GenParticle_Streamer(TBuffer &R__b, void *obj) {
 
       if (R__v < 10) {
          // First let's discover the real version!
-         TVirtualStreamerInfo *info = part_cl->GetStreamerInfo( R__v );
-         hepmc2 = !( info->GetCheckSum() == 0x50c9eb75 );
+         TVirtualStreamerInfo *info = (TVirtualStreamerInfo*)part_cl->GetStreamerInfos()->At( R__v );
+         if( info ) {
+           hepmc2 = !( info->GetCheckSum() == 0x50c9eb75 );
+         }
       }
 
       if (hepmc2) {

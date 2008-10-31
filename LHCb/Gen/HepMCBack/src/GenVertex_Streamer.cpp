@@ -1,4 +1,4 @@
-// $Id: GenVertex_Streamer.cpp,v 1.4 2008-07-28 13:46:05 cattanem Exp $
+// $Id: GenVertex_Streamer.cpp,v 1.5 2008-10-31 16:40:15 cattanem Exp $
 // see TClass::AdoptStreamer(new TClassStreamer(GenParticle_Streamer))
 
 #include "TClassRef.h"
@@ -60,8 +60,10 @@ void GenVertex_Streamer(TBuffer &R__b, void *obj);
       
       if (R__v < 10) {
          // First let's discover the real version!
-         TVirtualStreamerInfo *info = vert_cl->GetStreamerInfo( R__v );
-         hepmc2 = !( info->GetCheckSum() == 0xf1246706 );
+         TVirtualStreamerInfo *info = (TVirtualStreamerInfo*)vert_cl->GetStreamerInfos()->At( R__v );
+         if( info ) {
+           hepmc2 = !( info->GetCheckSum() == 0xf1246706 );
+         }
       }
 
       if (hepmc2) {

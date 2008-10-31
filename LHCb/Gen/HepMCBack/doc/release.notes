@@ -4,6 +4,11 @@
 ! Purpose     : Streamers to read back HepMC 1 data
 !-----------------------------------------------------------------------------
 
+! 2008-10-31 - Marco Cattaneo
+ - Fix to remove annoying "Warning in <TStreamerInfo::BuildOld>" message in
+   case when the Dll has been properly loaded. Now this message appears only when
+   there is a real problem (i.e. reading HepMC 1 data without HepMCBack loaded)
+
 !========================= HepMCBack v1r0 2008-07-28 =========================
 ! 2008-07-28 - Marco Cattaneo
  - Fix for windows linkage, move TClassRef.h before #define private public
