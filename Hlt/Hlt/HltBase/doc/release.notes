@@ -3,6 +3,8 @@
 ! Responsible : Jose Angel Hernando Morata
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+! 2008-10-31 - Gerhard Raven
+ - streamline uses of services in HltBase
 ! 2008-10-30 - Gerhard Raven
  - initialize m_hltANNSvc to 0 in HltBase
 

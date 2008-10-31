@@ -5,7 +5,7 @@
 HltBase<GaudiHistoAlg>::HltBase( const std::string& name,
                                  ISvcLocator* pSvcLocator)
   : GaudiHistoAlg ( name , pSvcLocator )
-{hltBaseConstructor();}
+{ hltBaseConstructor(); }
 
 HltBase<GaudiHistoAlg>::HltBase ( const std::string& type   ,
                                   const std::string& name   ,
@@ -28,7 +28,5 @@ HltBase<GaudiHistoTool>::HltBase ( const std::string& type   ,
                                    const std::string& name   ,
                                    const IInterface*  parent )
   : GaudiHistoTool(type,name,parent)
-{
-  hltBaseConstructor();
-}
+{ hltBaseConstructor(); }
 

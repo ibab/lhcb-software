@@ -1,4 +1,4 @@
-// $Id: HltBase.icpp,v 1.16 2008-10-30 13:41:29 graven Exp $
+// $Id: HltBase.icpp,v 1.17 2008-10-31 10:24:20 graven Exp $
 // Include files
 
 
@@ -31,8 +31,6 @@ StatusCode HltBase<EBASE>::initialize() {
   EBASE::debug() << "==> Initialize -- calling " <<System::typeinfoName( typeid(EBASE) ) <<  "::initialize"<< endreq;
   StatusCode sc = EBASE::initialize(); 
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-
-  if (!EBASE::service( "HltANNSvc", m_hltANNSvc).isSuccess()) return StatusCode::FAILURE;
   
   initializeMsg();
   initializeHistosFromDescriptor();
@@ -42,8 +40,6 @@ StatusCode HltBase<EBASE>::initialize() {
 
 template <class EBASE>
 StatusCode HltBase<EBASE>::finalize() {  
-  if (m_hltANNSvc) { m_hltANNSvc->release(); m_hltANNSvc=0;}
-  if (m_dataSvc)   { m_dataSvc->release(); m_dataSvc=0;}
   EBASE::debug() << "==> Finalize -- calling " <<System::typeinfoName( typeid(EBASE) ) <<  "::finalize"<< endreq;
   return EBASE::finalize();
 }  
@@ -156,20 +152,16 @@ void HltBase<EBASE>::increaseCounter( Hlt::Counter& count,
 
 template <class EBASE>
 IHltDataSvc& HltBase<EBASE>::dataSvc() const {
-  if (m_dataSvc == 0) {
-    StatusCode sc = EBASE::serviceLocator()->service("HltDataSvc", m_dataSvc);
-    EBASE::Assert( sc.isSuccess() && m_dataSvc != 0, " dataSvc() no HltDataSvc");
-  }
+  // see eg. http://womble.decadentplace.org.uk/c++/template-faq.html#disambiguation
+  // for an explanation why the keyword 'template' must be inserted to get this to compile...
+  if (m_dataSvc == 0)  m_dataSvc = EBASE::template svc<IHltDataSvc>("HltDataSvc",true);
   return *m_dataSvc;
 }
 
 
 template <class EBASE>
 IANNSvc& HltBase<EBASE>::annSvc() const {
-  if (m_hltANNSvc == 0) {
-    StatusCode sc = EBASE::serviceLocator()->service("HltANNSvc", m_hltANNSvc);
-    EBASE::Assert( sc.isSuccess() && m_hltANNSvc != 0, " no HltANNSvc??");
-  }
+  if (m_hltANNSvc == 0) m_hltANNSvc = EBASE::template svc<IANNSvc>("HltANNSvc",true);
   return *m_hltANNSvc;
 }
 
