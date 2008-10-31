@@ -1,4 +1,4 @@
-// $Id: Primitives.h,v 1.13 2008-10-29 13:35:59 ibelyaev Exp $
+// $Id: Primitives.h,v 1.14 2008-10-31 17:24:08 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PRIMITIVES_H 
 #define LOKI_PRIMITIVES_H 1
@@ -1729,11 +1729,14 @@ namespace LoKi
   class Valid : public LoKi::Functor<TYPE,bool>
   {
   private:
+    // ========================================================================
     /// argument type
     typedef typename LoKi::Functor<TYPE,bool>::argument argument  ; 
     /// result type 
     typedef typename LoKi::Functor<TYPE,bool>::result_type result_type ; 
+    // ========================================================================
   public:
+    // ========================================================================
     /// constructor 
     Valid() 
       : Functor<TYPE,bool> () 
@@ -1753,6 +1756,11 @@ namespace LoKi
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << "(Valid?)"; }
+    // ========================================================================
+  private:
+    // ========================================================================
+    Valid& operator=( const Valid& ) ;
+    // ========================================================================
   };
   // ==========================================================================
   /** @class TheSame 
@@ -1765,11 +1773,14 @@ namespace LoKi
   class TheSame : public LoKi::Functor<TYPE,bool>
   {
   private:
+    // ========================================================================
     /// argument type
     typedef typename LoKi::Functor<TYPE,bool>::argument argument  ; 
     /// result type 
     typedef typename LoKi::Functor<TYPE,bool>::result_type result_type ; 
+    // ========================================================================
   public:
+    // ========================================================================
     /// constructor form the value 
     TheSame ( argument value ) 
       : LoKi::Functor<TYPE,bool>() 
@@ -1792,12 +1803,18 @@ namespace LoKi
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << "(SAME?)"; }
+    // ========================================================================
   private :
+    // ========================================================================
     // the default contructor is disabled
     TheSame();
+    TheSame& operator=( const TheSame& ) ;
+    // ========================================================================
   private:
+    // ========================================================================
     // the predefined value 
     TYPE m_value ;
+    // ========================================================================
   };
   // ==========================================================================
   /** @class EqualToValue 

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.117 2008-10-29 13:35:59 ibelyaev Exp $ 
+! $Id: release.notes,v 1.118 2008-10-31 17:24:08 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,11 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2008-10-31 - Vanya BELYAEV
+
+ - fixes for stange behavour of Reflex in LCG-preview 
+
 
 ! 2008-10-29 - Vanya BELYAEV
 

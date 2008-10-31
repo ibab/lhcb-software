@@ -1,4 +1,4 @@
-// $Id: Keeper.h,v 1.12 2007-07-23 17:07:38 ibelyaev Exp $
+// $Id: Keeper.h,v 1.13 2008-10-31 17:24:08 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_KEEPER_H 
 #define LOKI_KEEPER_H 1
@@ -47,13 +47,16 @@ namespace LoKi
   class Keeper : public KeeperBase
   {
   public:
+    // ========================================================================
     typedef std::vector<const OBJECT*>                        Objects ;
     typedef typename Objects::const_iterator                 iterator ;
     typedef iterator                                   const_iterator ;
     typedef typename Objects::const_reverse_iterator reverse_iterator ;
     typedef reverse_iterator                   const_reverse_iterator ;
     typedef typename Objects::value_type                   value_type ;
+    // ========================================================================
   public:
+    // ========================================================================
     /// default constructor 
     Keeper() : m_objects() {}
     /// constructor form one object
@@ -82,7 +85,9 @@ namespace LoKi
       : m_objects () { addObjects ( first , last , cut ) ; } ;
     /// protected destructor 
     ~Keeper() { m_objects.clear() ; }
+    // ========================================================================
   public:
+    // ========================================================================
     /// size of the container 
     size_t           size   () const { return m_objects.size   () ; }
     /// empty container ?
@@ -95,13 +100,19 @@ namespace LoKi
     reverse_iterator rbegin () const { return m_objects.rbegin () ; }
     //
     reverse_iterator rend   () const { return m_objects.rend   () ; }
+    // ========================================================================
   public:
+    // ========================================================================
     /// make the conversion to the vector (useful for iteration in python)
     const std::vector<const OBJECT*>& toVector () const { return m_objects ; }
+    // ========================================================================
   public:
+    // ========================================================================
     /// clear the underlying container 
     void clear() { m_objects.clear() ; }
+    // ========================================================================
   public:
+    // ========================================================================
     /// get the object by index 
     const OBJECT*  object     ( const int index ) const 
     { return  *(begin()+index) ; }
@@ -114,7 +125,9 @@ namespace LoKi
     /// get the object by index 
     const OBJECT*  at         ( const int index ) const 
     { return object ( index ) ; }
+    // ========================================================================
   public:
+    // ========================================================================
     /// get a "slice" of the keeper, in Python style   
     inline Keeper slice( long index1 , long index2 ) const 
     {
@@ -132,13 +145,15 @@ namespace LoKi
       // construct the final keeper 
       return Keeper( begin() + index1 , begin() + index2 ) ;    // RETURN 
     }
+    // ========================================================================
   public:
+    // ========================================================================
     // append the valid objects to the end 
-    void push_back ( const OBJECT* o ) { addObject ( o ) ; } ;
+    void push_back ( const OBJECT* o ) { addObject ( o ) ; } 
     /** insert object into the container
      *  @param o object to be inserted 
      */
-    void insert    ( const OBJECT* o ) { addObject ( o ) ; } ;    
+    void insert    ( const OBJECT* o ) { addObject ( o ) ; } 
     /** insert the object at the fake position 
      *  (added to mimic STL behaviour) 
      *  @param o object to be inserted 
@@ -169,20 +184,22 @@ namespace LoKi
       OTHER     first  , 
       OTHER     last   , 
       PREDICATE cut    ) { addObjects ( first , last , cut ) ; }
+    // ========================================================================
   public:
+    // ========================================================================
     /// adding an object 
     Keeper& operator+= ( const OBJECT* o ) 
     {
       addObject ( o ) ;
       return *this ;
-    } ;
+    } 
     /// adding the another keeper 
     template <class OTHER>
     Keeper& operator+= ( const Keeper<OTHER>& o ) 
     {
       addObjects( o.begin() , o.end() ) ;
       return *this ;
-    } ;
+    } 
     /// adding the another keeper 
     template <class OTHER>
     Keeper& operator+= ( const UniqueKeeper<OTHER>& o ) ;
@@ -191,11 +208,15 @@ namespace LoKi
     {
       removeObject ( o ) ;
       return *this ;
-    } ;
+    } 
+    // ========================================================================
   public:
+    // ========================================================================
     /// accessor to the objects (const)
     const   Objects&   objects() const { return m_objects           ; }
+    // ========================================================================
   public:
+    // ========================================================================
     /** add the object to the container 
      *  @param o objects to be added 
      *  @return the actual size of container 
@@ -204,7 +225,7 @@ namespace LoKi
     {
       if ( 0 != o ) { m_objects.push_back ( o ) ; }
       return size() ;
-    } ;
+    } 
     /** add the objects from the sequence to the container 
      *  @param first 'begin'-iterator of the sequence of objects 
      *  @param last  'end'-iterator of the sequence of objects 
@@ -217,7 +238,7 @@ namespace LoKi
     {
       m_objects.insert ( m_objects.end() , first , last ) ;
       return removeObject() ;
-    } ;
+    } 
     /** add the objects from the sequence to the container 
      *  @param first 'begin'-iterator of the sequence of objects 
      *  @param last  'end'-iterator of the sequence of objects 
@@ -233,7 +254,7 @@ namespace LoKi
       LoKi::Algs::copy_if
         ( first , last , std::back_inserter ( m_objects ) , cut ) ;
       return removeObject() ;
-    } ;
+    } 
     /** remove the objects for the container 
      *  @param cut   objects which satisfy the criteri will be removed  
      *  @return the actual size of container 
@@ -257,7 +278,9 @@ namespace LoKi
                         m_objects.end   () , o ) , m_objects.end() ) ;
       return size() ;
     }
+    // ========================================================================
   public:
+    // ========================================================================
     /** sort the container using the sorting criteria 
      *  @param cmp operation used as corting criteria ("strickt less") 
      */
@@ -278,7 +301,7 @@ namespace LoKi
         ( std::unique ( m_objects.begin () , 
                         m_objects.end  () , cmp ) , m_objects.end() ) ;
       return size() ;
-    } ;
+    } 
     /// remove the duplicates from the container 
     size_t unique () 
     {
@@ -287,13 +310,13 @@ namespace LoKi
         ( std::unique ( m_objects.begin () , 
                         m_objects.end  () ) , m_objects.end() ) ;
       return size() ;
-    } ;
+    } 
+    // ========================================================================
   private:
-    // assignemenet oprator is disabled 
-    Keeper& operator=( const Keeper& ) ;
-  private:
-    // the actual container of object
-    Objects  m_objects ; ///< container of object
+    // ========================================================================
+    /// the actual container of object
+    mutable Objects  m_objects ; ///< container of object
+    // ========================================================================
   } ;
   // ==========================================================================
 }  // end of namespace LoKi

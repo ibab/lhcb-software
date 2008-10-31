@@ -1,4 +1,4 @@
-// $Id: ExtraInfo.h,v 1.6 2007-12-09 17:56:42 ibelyaev Exp $
+// $Id: ExtraInfo.h,v 1.7 2008-10-31 17:24:08 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_EXTRAINFO_H 
 #define LOKI_EXTRAINFO_H 1
@@ -40,6 +40,7 @@ namespace LoKi
     public:
       typedef typename LoKi::Constant<TYPE,TYPE2>::T2 T2 ;
     public:
+      // ======================================================================
       /// constructor from the index and the default value 
       GetInfo ( const int index , T2 value = defaultValue ) 
         : LoKi::Functor<TYPE,TYPE2>() 
@@ -66,20 +67,29 @@ namespace LoKi
        */
       virtual std::ostream& fillStream ( std::ostream& s ) const 
       { return s << this->objType() << "(" << m_index << "," << m_default << ")" ; }
+      // ======================================================================
     private:
-      // the default contructot is disabled 
-      GetInfo() ; ///< the default contructor is disabled
+      // ======================================================================
+      /// the default contructot is disabled 
+      GetInfo() ;                         // the default contructor is disabled
+      /// no assignement 
+      GetInfo& operator= (const GetInfo& ) ;                  // no assignement 
+      // ======================================================================
     public:
+      // ======================================================================
       /// get the index 
       int     index  () const { return m_index   ; }
       double  value  () const { return m_default ; }
+      // ======================================================================
     private:
-      // index to be searched 
-      int    m_index   ; ///< index to be searched 
-      // default value for non-existing index 
-      TYPE2  m_default ; ///< default value for non-existing index 
+      // ======================================================================
+      /// index to be searched 
+      int    m_index   ;                                // index to be searched 
+      /// default value for non-existing index 
+      TYPE2  m_default ;                // default value for non-existing index 
+      // ======================================================================
     };
-    // ==========================================================================
+    // ========================================================================
     /** @class CheckInfo
      *  simple predicate to check the existence of "key" in the "extraInfo"
      *  for classes equipped with "extraInfo" methods 
@@ -90,6 +100,7 @@ namespace LoKi
     class CheckInfo : public LoKi::Functor<TYPE,bool>
     {
     public:
+      // ======================================================================
       /// constructor fomr the index and default value 
       CheckInfo ( const int    index ) 
         : LoKi::Functor<TYPE,bool>() 
@@ -114,15 +125,24 @@ namespace LoKi
        */
       virtual std::ostream& fillStream ( std::ostream& s ) const 
       { return s <<  this->objType() << "(" << m_index << ")" ; }
+      // ======================================================================
     private:
-      // the default contructor is disabled 
-      CheckInfo() ; ///< the default contructor is disabled
+      // ======================================================================
+      /// the default contructor is disabled 
+      CheckInfo() ;                       // the default contructor is disabled
+      /// no assigenement 
+      CheckInfo& operator= ( CheckInfo& ) ;                  // no assigenement 
+      // ======================================================================
     public:
+      // ======================================================================
       /// get the index 
       int index() const { return m_index ; }
+      // ======================================================================
     private:
-      // index to be searched 
-      int    m_index   ; ///< index to be searched 
+      // ======================================================================
+      /// index to be searched 
+      int    m_index   ;                               // index to be searched 
+      // ======================================================================
     };
     // ========================================================================
     /** @class GetSmartInfo
@@ -140,6 +160,7 @@ namespace LoKi
     class GetSmartInfo : public LoKi::Functor<TYPE,TYPE2>
     {
     public:
+      // ======================================================================
       /// contructor from ID, function and the flag 
       GetSmartInfo 
       ( const int                        index ,
@@ -190,23 +211,30 @@ namespace LoKi
        *  @return the function-ID
        */
       virtual std::size_t         id     () const { return m_index ; }
+      // ======================================================================
     public:
+      // ======================================================================
       /// get the index 
       int                         index  () const { return m_index  ; }
       /// get the function 
       const LoKi::Functor<TYPE,TYPE2>& fun () const { return m_fun.fun() ; }
       /// get the flag 
       bool                        update () const { return m_update ; }
+      // ======================================================================
     private:
+      // ======================================================================
       // no default constructor 
       GetSmartInfo() ; ///< no default constructor 
+      // ======================================================================
     private:
-      // the function to be evaluated (if needed) 
-      LoKi::FunctorFromFunctor<TYPE,TYPE2> m_fun ; ///< the function to be evaluated (if needed) 
-      // the index ("ID") in "extraInfo" table 
-      int   m_index; ///< the index in "extraInfo" table
-      // "update"-flag (indicate the insertion of "extraInfo" for missing data
-      bool  m_update ; ///< "update flag"
+      // ======================================================================
+      /// the function to be evaluated (if needed) 
+      LoKi::FunctorFromFunctor<TYPE,TYPE2> m_fun ; // the function to be evaluated (if needed) 
+      /// the index ("ID") in "extraInfo" table 
+      int   m_index; // the index in "extraInfo" table
+      /// "update"-flag (indicate the insertion of "extraInfo" for missing data
+      bool  m_update ; // "update flag"
+      // ======================================================================
     } ;  
   } // end of namespace LoKi::ExtraInfo
   // ==========================================================================

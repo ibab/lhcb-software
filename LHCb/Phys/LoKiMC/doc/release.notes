@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.50 2008-10-29 13:41:15 ibelyaev Exp $ 
+! $Id: release.notes,v 1.51 2008-10-31 17:21:37 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,15 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 !
 ! -----------------------------------------------------------------------------
+
+! 2008-10-31 - Vanya BELYAEV
+
+ - fixes for LCG-preview
+
+    Reflex tries to generate the stubs for "operator="
+    but we do NOT NEED these operators (they are disabled 
+    through non-assignable bases.. Looks like somebug in Reflex)
+
 
 ! 2008-10-29 - Vanya BELYAEV
  - fixes for gcc43 compilation 
