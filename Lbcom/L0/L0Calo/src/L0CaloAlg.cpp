@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.cpp,v 1.55 2008-07-24 12:09:12 robbep Exp $
+// $Id: L0CaloAlg.cpp,v 1.56 2008-10-31 13:19:52 robbep Exp $
 
 /// Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -412,35 +412,50 @@ StatusCode L0CaloAlg::execute() {
     int hRow = m_hcalFe[hCard].rowMax();
     int eLink;
 
-
+    bool skipCandidate = false ;
     LHCb::CaloCellID ID = m_hcalFe[hCard].cellIdMax() ;
-    std::string particle = "";
-    particle += " hadron";
 
-    if ( m_addEcalToHcal ) {
-      for ( eLink=0; eLink < m_hcalFe[hCard].numberOfEcalCards() ; ++eLink) {
-        eCard = m_hcalFe[hCard].ecalCardNumber( eLink );
-        if ( m_ecalFe[eCard].match_included( hCol, hRow ) ) {
-          if ( m_ecalFe[eCard].etMax() > maxEcalEt ) {
-            maxEcalEt = m_ecalFe[eCard].etMax();
-          }
-        }
-      }
-    }    
-//    int etMax = m_hcalFe[hCard].addEcalEt( maxEcalEt );   // Add ECAL to HCAL
-    
-    int etMax = m_hcalFe[hCard].etMax() + maxEcalEt ;   // Add ECAL to HCAL 
-    sumEt += etMax ;
-    if(  hadron.et() < etMax ) {
-      cardMax = hCard;
-      hadron.setCandidate( etMax, m_hcalFe[hCard].cellIdMax() );
+    // Do not add if the HCAL energy is 0 and the address of the
+    // maximum is not on row 0, column 0 (ie do not treat half boards
+    // of the HCAL)
+    if ( 0 == m_hcalFe[hCard].etMax() ) {
+      int firstColumn = m_hcal -> cardFirstColumn( hCard ) ;
+      int firstValidCol = m_hcal -> cardFirstValidColumn( hCard ) ;
+      int firstRow    = m_hcal -> cardFirstRow( hCard ) ;
+      int firstValidRow = m_hcal -> cardFirstValidRow( hCard ) ;
+      if ( ( firstRow != firstValidRow ) ||
+	   ( firstColumn != firstValidCol ) ) skipCandidate = true ;
     }
-    //
-    //} // card not empty
-    //
+    if ( ! skipCandidate ) {
+    
+      std::string particle = "";
+      particle += " hadron";
+      
+      if ( m_addEcalToHcal ) {
+	for ( eLink=0; eLink < m_hcalFe[hCard].numberOfEcalCards() ; ++eLink) {
+	  eCard = m_hcalFe[hCard].ecalCardNumber( eLink );
+	  if ( m_ecalFe[eCard].match_included( hCol, hRow ) ) {
+	    if ( m_ecalFe[eCard].etMax() > maxEcalEt ) {
+	      maxEcalEt = m_ecalFe[eCard].etMax();
+	    }
+	  }
+	}
+      }    
+      //    int etMax = m_hcalFe[hCard].addEcalEt( maxEcalEt );   // Add ECAL to HCAL
+      
+      int etMax = m_hcalFe[hCard].etMax() + maxEcalEt ;   // Add ECAL to HCAL 
+      sumEt += etMax ;
+      if(  hadron.et() < etMax ) {
+	cardMax = hCard;
+	hadron.setCandidate( etMax, m_hcalFe[hCard].cellIdMax() );
+      }
+      //
+      //} // card not empty
+      //
+    }
   } // hCard
-
-
+  
+  
   if ( msgLevel( MSG::DEBUG ) ) {      
     for ( hCard = 0; hCard < m_hcal->nCards(); ++hCard ) {
       if( m_hcal->isPinCard(hCard) )continue;// reject pin readout FE-cards
@@ -453,18 +468,18 @@ StatusCode L0CaloAlg::execute() {
       default: typeName = "Unknown" ; break ;
       }
       debug()<<" hCard# "<<hCard<<" ID= "<<m_hcalFe[hCard].cellIdMax()
-            <<" type = "<<typeName<<endmsg;
+	     <<" type = "<<typeName<<endmsg;
     }
   }
-
+  
   int allhcalFe_Slave1[50];
   int allhcalFe_Slave2[50];
   int allhcalFe_Master[50];
-
+  
   int allSlave1 = 0 ; 
   int allSlave2 = 0 ; 
   int allMaster = 0 ; 
-
+  
   for ( hCard = 0; hCard < m_hcal->nCards(); ++hCard ) {
     if( m_hcal->isPinCard(hCard) )continue;// reject pin readout FE-cards
     int type = m_hcal->selectionType( hCard );
@@ -481,7 +496,7 @@ StatusCode L0CaloAlg::execute() {
       allSlave2++  ; 
     }
   }
-
+  
   debug()<<" #of hcal cards related to Master= "
          <<allMaster<<" related to Slave1= "
          <<allSlave1<<" related to Slave2= "<<allSlave2<<endmsg;
@@ -571,6 +586,18 @@ StatusCode L0CaloAlg::execute() {
     int hCol = m_hcalFe[hCard].colMax();
     int hRow = m_hcalFe[hCard].rowMax();
     int eLink;
+
+    bool skipCandidate = false ;
+    if ( 0 == m_hcalFe[hCard].etMax() ) {
+      int firstColumn = m_hcal -> cardFirstColumn( hCard ) ;
+      int firstValidCol = m_hcal -> cardFirstValidColumn( hCard ) ;
+      int firstRow    = m_hcal -> cardFirstRow( hCard ) ;
+      int firstValidRow = m_hcal -> cardFirstValidRow( hCard ) ;
+      if ( ( firstRow != firstValidRow ) || 
+	   ( firstColumn != firstValidCol ) ) skipCandidate = true ;
+    }    
+    if ( skipCandidate ) continue ;
+
     LHCb::CaloCellID ID = m_hcalFe[hCard].cellIdMax() ;
     std::string particle = "";
     particle += " hadron";
@@ -632,6 +659,18 @@ StatusCode L0CaloAlg::execute() {
     int hCol = m_hcalFe[hCard].colMax();
     int hRow = m_hcalFe[hCard].rowMax();
     int eLink;
+    
+    bool skipCandidate = false ;
+    if ( 0 == m_hcalFe[hCard].etMax() ) {
+      int firstColumn = m_hcal -> cardFirstColumn( hCard ) ;
+      int firstValidCol = m_hcal -> cardFirstValidColumn( hCard ) ;
+      int firstRow    = m_hcal -> cardFirstRow( hCard ) ;
+      int firstValidRow = m_hcal -> cardFirstValidRow( hCard ) ;
+      if ( ( firstRow != firstValidRow ) || 
+	   ( firstColumn != firstValidCol ) ) skipCandidate = true ;
+    }    
+    if ( skipCandidate ) continue ;
+    
     LHCb::CaloCellID ID = m_hcalFe[hCard].cellIdMax() ;
     std::string particle = "";
     particle += " hadron";
@@ -693,6 +732,18 @@ StatusCode L0CaloAlg::execute() {
     int hCol = m_hcalFe[hCard].colMax();
     int hRow = m_hcalFe[hCard].rowMax();
     int eLink;
+
+    bool skipCandidate = false ;
+    if ( 0 == m_hcalFe[hCard].etMax() ) {
+      int firstColumn = m_hcal -> cardFirstColumn( hCard ) ;
+      int firstValidCol = m_hcal -> cardFirstValidColumn( hCard ) ;
+      int firstRow    = m_hcal -> cardFirstRow( hCard ) ;
+      int firstValidRow = m_hcal -> cardFirstValidRow( hCard ) ;
+      if ( ( firstRow != firstValidRow ) || 
+	   ( firstColumn != firstValidCol ) ) skipCandidate = true ;
+    }    
+    if ( skipCandidate ) continue ;
+
     LHCb::CaloCellID ID = m_hcalFe[hCard].cellIdMax() ;
     std::string particle = "";
     particle += " hadron";
@@ -1285,8 +1336,8 @@ void L0CaloAlg::addSpdData( ) {
     m_spdMult++;
 
     m_ecal->cardAddress(id, card, row, col );
-    m_ecal->cardNeighbors( card, down, left, corner );
-    
+    m_ecal->cardNeighbors( card, down, left, corner );    
+ 
     m_ecalFe[card].setSpd( col, row );
     if ( (0 == row) && (0 <= down) ) {
       m_ecalFe[down].setSpd( col, nRowCaloCard );
