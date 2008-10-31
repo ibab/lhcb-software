@@ -1,6 +1,6 @@
-// $Id: DVTestB2DiMuon.opts,v 1.1 2008-10-20 16:14:08 jpalac Exp $
+// $Id: DVTestB2DiMuon.opts,v 1.2 2008-10-31 12:44:38 jpalac Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
 /** @file DVTestBd2KstarMuMu.opts
  *
@@ -60,7 +60,7 @@ AllTrueLooseDecay.DecayDescriptor = "J/psi(1S) -> mu- mu+" ; // all particles ne
 //
 // Correlations
 //
-ApplicationMgr.TopAlg += { "SelResultCorrelations/TestCorrelations" };
+ApplicationMgr.TopAlg += { "AlgorithmCorrelationsAlg/TestCorrelations" };
 TestCorrelations.AlgorithmCorrelations.OnlyNonZero = false;
 TestCorrelations.Algorithms = { "AllTrueNoPIDsDecay", "AllTrueLooseDecay",
                                 "PreselB2DiMuon"};
