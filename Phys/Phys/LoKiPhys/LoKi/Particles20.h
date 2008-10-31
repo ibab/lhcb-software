@@ -1,4 +1,4 @@
-// $Id: Particles20.h,v 1.6 2008-06-03 15:47:08 cattanem Exp $
+// $Id: Particles20.h,v 1.7 2008-10-31 17:27:45 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES20_H 
 #define LOKI_PARTICLES20_H 1
@@ -57,7 +57,7 @@ namespace LoKi
      *  @date 2008-01-16
      */
     class CosineDirectionAngleWithTheBestPV
-      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
+      : public LoKi::Particles::CosineDirectionAngle 
       , public virtual LoKi::AuxDesktopBase 
     {
     public:
@@ -71,9 +71,12 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
     private:
-      // the actual function evaluator 
-      LoKi::Particles::CosineDirectionAngle m_dira ; ///< the actual function evaluator 
+      // ======================================================================
+      CosineDirectionAngleWithTheBestPV& 
+      operator= ( const CosineDirectionAngleWithTheBestPV& ) ;
+      // ======================================================================
     } ;
     // ======================================================================== 
     /** @class ImpParWithTheBestPV
@@ -93,8 +96,8 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-16
      */
-    class ImpParWithTheBestPV
-      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
+    class ImpParWithTheBestPV 
+      : public LoKi::Particles::ImpPar 
       , public virtual LoKi::AuxDesktopBase 
     {
     public:
@@ -113,25 +116,13 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;
-    public:
-      // set the tool
-      void setTool ( const IDistanceCalculator* t ) const 
-      { m_ip.setTool ( t ) ; }      
-      // set the tool
-      void setTool ( const LoKi::Interface<IDistanceCalculator>& t ) const 
-      { m_ip.setTool ( t ) ; }
-    public:
-      /// get the tool
-      const LoKi::Vertices::ImpactParamTool& tool() const { return m_ip ; }
-    public:
-      // ======================================================================
-      /// cast to
-      operator const LoKi::Vertices::ImpactParamTool& () const { return m_ip ; }  
       // ======================================================================
     private:
       // ======================================================================
-      /// the actual functor 
-      LoKi::Particles::ImpPar   m_ip  ; // the actual functor 
+      ImpParWithTheBestPV& operator=( const ImpParWithTheBestPV& ) ;
+      // ======================================================================
+    private:
+      // ======================================================================
       /// the nick name or type name of the IDistanceCalculator
       std::string               m_geo ;
       // ======================================================================
@@ -155,7 +146,7 @@ namespace LoKi
      *  @date 2008-01-16
      */
     class ImpParChi2WithTheBestPV
-      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
+      : public LoKi::Particles::ImpParChi2 
       , public virtual LoKi::AuxDesktopBase 
     {
     public:
@@ -176,30 +167,15 @@ namespace LoKi
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;
       // ======================================================================
-    public:
+    private:
       // ======================================================================
-      // set the tool
-      void setTool ( const IDistanceCalculator* t ) const 
-      { m_ip.setTool ( t ) ; }      
-      // set the tool
-      void setTool ( const LoKi::Interface<IDistanceCalculator>& t ) const 
-      { m_ip.setTool ( t ) ; }
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// get the tool
-      const LoKi::Vertices::ImpactParamTool& tool() const { return m_ip ; }
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// cast to
-      operator const LoKi::Vertices::ImpactParamTool& () const { return m_ip ; } 
+      ImpParChi2WithTheBestPV& operator=( const ImpParChi2WithTheBestPV& ) ;
       // ======================================================================
     private:
-      /// the actual functor 
-      LoKi::Particles::ImpParChi2   m_ip  ; // the actual functor 
+      // ======================================================================
       /// the nick name or type name of the IDistanceCalculator
       std::string                   m_geo ;
+      // ======================================================================
     };
     // ========================================================================
     /** @class MinImpParWithSource
@@ -219,8 +195,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-16
      */
-    class MinImpParWithSource
-      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
+    class MinImpParWithSource : public LoKi::Particles::MinImpPar 
     {
       // ======================================================================
       // the source of vertices 
@@ -252,11 +227,7 @@ namespace LoKi
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
       // ======================================================================
     public:
-      /// get the tool
       // ======================================================================
-      const LoKi::Vertices::ImpactParamTool& tool() const { return m_mip.impPar()  ; }
-      /// cast to the tool 
-      operator const LoKi::Vertices::ImpactParamTool& () const { return m_mip.impPar()  ; } 
       /// get the source 
       const LoKi::BasicFunctors<const LHCb::VertexBase*>::Source& source () const 
       { return m_source ; }
@@ -265,18 +236,18 @@ namespace LoKi
       { return m_source ; }
       // ======================================================================
     public:
-      // get the nickname of full type/name of IDistanceCalculator tool
       // ======================================================================
+      // get the nickname of full type/name of IDistanceCalculator tool
       const std::string& geo() const { return m_geo ; }
+      // ======================================================================
     private:
       // ======================================================================
       // no default constructor 
       MinImpParWithSource () ; ///< no default constructor
+      MinImpParWithSource& operator=( const MinImpParWithSource& ) ;
       // ======================================================================
     private:
       // ======================================================================
-      /// the underlying functor 
-      mutable LoKi::Particles::MinImpPar m_mip    ; // the underlying functor 
       /// the source 
       LoKi::Assignable<_Source>::Type    m_source ; // the source 
       /// the nickname or type/name of IDistanceCalculator tool 
@@ -302,8 +273,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-16
      */
-    class MinImpParDV 
-      : public LoKi::Particles::MinImpParWithSource 
+    class MinImpParDV : public LoKi::Particles::MinImpParWithSource 
     {
     public:
       // ======================================================================
@@ -337,6 +307,10 @@ namespace LoKi
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
       // ======================================================================
+    private:
+      // ======================================================================
+      MinImpParDV& operator=( const MinImpParDV & ) ;
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class MinImpParTES
@@ -357,8 +331,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-16
      */
-    class MinImpParTES 
-      : public LoKi::Particles::MinImpParWithSource 
+    class MinImpParTES : public LoKi::Particles::MinImpParWithSource 
     {
     public:
       // ======================================================================
@@ -457,6 +430,10 @@ namespace LoKi
       // ======================================================================
     private:
       // ======================================================================
+      MinImpParTES& operator=( const MinImpParTES & ) ;
+      // ======================================================================
+    private:
+      // ======================================================================
       // the list of TES locations 
       std::vector<std::string> m_path ;
       // ======================================================================
@@ -479,8 +456,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-16
      */
-    class MinImpParChi2WithSource
-      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
+    class MinImpParChi2WithSource : public LoKi::Particles::MinImpParChi2
     {
       // ======================================================================
       // the source of vertices 
@@ -512,31 +488,18 @@ namespace LoKi
       // ======================================================================
     public:
       // ======================================================================
-      /// get the tool
-      const LoKi::Vertices::ImpactParamTool& tool() const { return m_mip.impParChi2()  ; }
-      /// cast to the tool 
-      operator const LoKi::Vertices::ImpactParamTool& () const { return m_mip.impParChi2()  ; } 
-      /// get the source 
-      const LoKi::BasicFunctors<const LHCb::VertexBase*>::Source& source () const 
-      { return m_source ; }
-      /// cast to the source 
-      operator const LoKi::BasicFunctors<const LHCb::VertexBase*>::Source& () const 
-      { return m_source ; }
-      // ======================================================================
-    public:
-      // ======================================================================
       // get the nickname of full type/name of IDistanceCalculator tool
       const std::string& geo() const { return m_geo ; }
       // ======================================================================
     private:
       // ======================================================================
-      // no default constructor 
-      MinImpParChi2WithSource () ; ///< no default constructor
+      /// no default constructor 
+      MinImpParChi2WithSource () ; // no default constructor
+      MinImpParChi2WithSource& 
+      operator=( const MinImpParChi2WithSource& ) ; // no asignement 
       // ======================================================================
     private:
       // ======================================================================
-      /// the underlying functor 
-      mutable LoKi::Particles::MinImpParChi2 m_mip ; // the underlying functor 
       /// the source 
       LoKi::Assignable<_Source>::Type    m_source ; // the source 
       /// the nickname or type/name of IDistanceCalculator tool 
@@ -598,6 +561,10 @@ namespace LoKi
       virtual  MinImpParChi2DV* clone () const ;
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
+      // ======================================================================
+    private:
+      // ======================================================================
+      MinImpParChi2DV& operator=( const MinImpParChi2DV& ) ; // no asignement 
       // ======================================================================
     } ;
     // ========================================================================
@@ -719,6 +686,10 @@ namespace LoKi
       // ======================================================================
     private:
       // ======================================================================
+      MinImpParChi2TES& operator=( const MinImpParChi2TES& ) ; // no asignement 
+      // ======================================================================
+    private:
+      // ======================================================================
       /// the list of TES locations 
       std::vector<std::string> m_path ; // the list of TES locations 
       // ======================================================================
@@ -742,7 +713,7 @@ namespace LoKi
      *  @date 2008-01-17
      */
     class VertexDistanceDV 
-      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
+      : public LoKi::Particles::VertexDistance 
       , public virtual LoKi::AuxDesktopBase
     {
     public:
@@ -759,9 +730,8 @@ namespace LoKi
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
       // ======================================================================
     private:
-      // ======================================================================
-      // the actual evaluator 
-      LoKi::Particles::VertexDistance m_fun ; ///< the actual evaluator
+      // =====================================================================
+      VertexDistanceDV& operator=(const VertexDistanceDV&) ;
       // ======================================================================
     } ;
     // ========================================================================
@@ -783,7 +753,7 @@ namespace LoKi
      *  @date 2008-01-17
      */
     class VertexSignedDistanceDV 
-      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
+      : public LoKi::Particles::VertexSignedDistance 
       , public virtual LoKi::AuxDesktopBase
     {
     public:
@@ -800,9 +770,8 @@ namespace LoKi
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
       // ======================================================================
     private:
-      // ======================================================================
-      /// the actual evaluator 
-      LoKi::Particles::VertexSignedDistance m_fun ; // the actual evaluator
+      // =====================================================================
+      VertexSignedDistanceDV& operator=( const VertexSignedDistanceDV&) ;
       // ======================================================================
     } ;
     // ========================================================================
@@ -824,7 +793,7 @@ namespace LoKi
      *  @date 2008-01-17
      */
     class VertexDotDistanceDV 
-      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
+      : public LoKi::Particles::VertexDotDistance 
       , public virtual LoKi::AuxDesktopBase
     {
     public:
@@ -841,9 +810,8 @@ namespace LoKi
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
       // ======================================================================
     private:
-      // ======================================================================
-      /// the actual evaluator 
-      LoKi::Particles::VertexDotDistance m_fun ; // the actual evaluator
+      // =====================================================================
+      VertexDotDistanceDV& operator=( const VertexDotDistanceDV&) ;
       // ======================================================================
     } ;
     // ========================================================================
@@ -865,7 +833,7 @@ namespace LoKi
      *  @date 2008-01-17
      */
     class VertexChi2DistanceDV 
-      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
+      : public LoKi::Particles::VertexChi2Distance 
       , public virtual LoKi::AuxDesktopBase
     {
     public:
@@ -882,9 +850,8 @@ namespace LoKi
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
       // ======================================================================
     private:
-      // ======================================================================
-      /// the actual evaluator 
-      LoKi::Particles::VertexChi2Distance m_fun ; // the actual evaluator
+      // =====================================================================
+      VertexChi2DistanceDV& operator=( const VertexChi2DistanceDV&) ;
       // ======================================================================
     } ;
     // ========================================================================
@@ -907,7 +874,7 @@ namespace LoKi
      *  @date 2008-01-17
      */
     class LifeTimeDV 
-      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
+      : public LoKi::Particles::LifeTime 
       , public virtual LoKi::AuxDesktopBase
     {
     public:
@@ -926,9 +893,10 @@ namespace LoKi
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
       // ======================================================================
     private:
+      // =====================================================================
+      LifeTimeDV& operator=( const LifeTimeDV&) ;
       // ======================================================================
-      /// the actual evaluator 
-      LoKi::Particles::LifeTime m_fun ; // the actual evaluator
+    private:
       /// the tool type/name 
       std::string               m_fit ;  // the tool type/name 
       // ======================================================================
@@ -953,7 +921,7 @@ namespace LoKi
      *  @date 2008-01-17
      */
     class LifeTimeChi2DV 
-      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
+      : public LoKi::Particles::LifeTimeChi2
       , public virtual LoKi::AuxDesktopBase
     {
     public:
@@ -972,9 +940,10 @@ namespace LoKi
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
       // ======================================================================
     private:
+      // =====================================================================
+      LifeTimeChi2DV& operator=( const LifeTimeChi2DV&) ;
       // ======================================================================
-      /// the actual evaluator 
-      LoKi::Particles::LifeTimeChi2 m_fun ;  // the actual evaluator
+    private:
       /// the tool type/name 
       std::string                   m_fit ;  // the tool type/name 
       // ======================================================================
@@ -999,7 +968,7 @@ namespace LoKi
      *  @date 2008-01-17
      */
     class LifeTimeSignedChi2DV 
-      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
+      : public LoKi::Particles::LifeTimeSignedChi2 
       , public virtual LoKi::AuxDesktopBase
     {
     public:
@@ -1019,8 +988,10 @@ namespace LoKi
       // ======================================================================
     private:
       // ======================================================================
-      /// the actual evaluator 
-      LoKi::Particles::LifeTimeSignedChi2 m_fun ; // the actual evaluator
+      /// no assignement
+      LifeTimeSignedChi2DV& operator=( const LifeTimeSignedChi2DV& ) ;
+      // ======================================================================
+    private:
       /// the tool type/name 
       std::string                         m_fit ; // the tool type/name 
       // ======================================================================
@@ -1045,7 +1016,7 @@ namespace LoKi
      *  @date 2008-01-17
      */
     class LifeTimeFitChi2DV 
-      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
+      : public LoKi::Particles::LifeTimeFitChi2 
       , public virtual LoKi::AuxDesktopBase
     {
     public:
@@ -1065,8 +1036,11 @@ namespace LoKi
       // ======================================================================
     private:
       // ======================================================================
-      /// the actual evaluator 
-      LoKi::Particles::LifeTimeFitChi2 m_fun ; // the actual evaluator
+      /// no assignement
+      LifeTimeFitChi2DV& operator=( const LifeTimeFitChi2DV& ) ;
+      // ======================================================================
+    private:
+      // ======================================================================
       /// the tool type/name 
       std::string                      m_fit ; // the tool type/name 
       // ======================================================================
@@ -1108,6 +1082,11 @@ namespace LoKi
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
       // ======================================================================
+    private:
+      // =====================================================================
+      VertexZDistanceWithTheBestPV&
+      operator=( const VertexZDistanceWithTheBestPV& ) ;
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class VertexRhoDistanceWithTheBestPV
@@ -1146,6 +1125,11 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
+      // ======================================================================
+    private:
+      // =====================================================================
+      VertexRhoDistanceWithTheBestPV&
+      operator=( const VertexRhoDistanceWithTheBestPV& ) ;
       // ======================================================================
     } ;
     // ========================================================================
@@ -1186,6 +1170,8 @@ namespace LoKi
       // ======================================================================
       /// the default constructor is disabled 
       MinVertexDistanceWithSource() ; // the default constructor is disabled 
+      /// no assigenement 
+      MinVertexDistanceWithSource& operator=( const MinVertexDistanceWithSource& ) ;
       // ======================================================================
     private:
       // ======================================================================
@@ -1225,6 +1211,11 @@ namespace LoKi
       virtual  result_type operator() ( argument v ) const ; 
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// no assigenement 
+      MinVertexDistanceDV& operator=( const MinVertexDistanceDV& ) ;
       // ======================================================================
     private:
       // ======================================================================
@@ -1285,6 +1276,8 @@ namespace LoKi
       // ======================================================================
       /// the default constructor is disabled 
       MinVertexDistanceTES() ; // the default constructor is disabled 
+      /// no assigenement 
+      MinVertexDistanceTES& operator=( const MinVertexDistanceTES& ) ;
       // ======================================================================
     private:
       // ======================================================================
@@ -1330,6 +1323,9 @@ namespace LoKi
       // ======================================================================
       /// the default constructor is disabled 
       MinVertexChi2DistanceWithSource() ; // the default constructor is disabled 
+      /// no assigenement 
+      MinVertexChi2DistanceWithSource& operator=
+      ( const MinVertexChi2DistanceWithSource& ) ;
       // ======================================================================
     private:
       // ======================================================================
@@ -1369,6 +1365,11 @@ namespace LoKi
       virtual  result_type operator() ( argument v ) const ; 
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// no assigenement 
+      MinVertexChi2DistanceDV& operator= ( const MinVertexChi2DistanceDV& ) ;
       // ======================================================================
     private:
       // ======================================================================
@@ -1429,6 +1430,10 @@ namespace LoKi
       // ======================================================================
       /// the default constructor is disabled 
       MinVertexChi2DistanceTES() ; // the default constructor is disabled 
+    private:
+      // ======================================================================
+      /// no assigenement 
+      MinVertexChi2DistanceTES& operator= ( const MinVertexChi2DistanceTES& ) ;
       // ======================================================================
     private:
       // ======================================================================

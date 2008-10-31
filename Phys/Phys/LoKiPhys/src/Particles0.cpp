@@ -1,4 +1,4 @@
-// $Id: Particles0.cpp,v 1.16 2008-09-23 16:10:44 ibelyaev Exp $
+// $Id: Particles0.cpp,v 1.17 2008-10-31 17:27:46 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -213,8 +213,8 @@ LoKi::Particles::Charge::operator()
   {
     Error ( " Invalid Particle, return -1000" ) ;
     return -1000 ;
-  } ;
-  return p->charge();
+  } 
+  return charge ( p );
 } 
 // ============================================================================
 std::ostream& 
@@ -226,32 +226,29 @@ LoKi::Particles::SumCharge::clone() const
 { return new LoKi::Particles::SumCharge(*this) ; }
 // ============================================================================
 LoKi::Particles::SumCharge::result_type
-LoKi::Particles::SumCharge::operator() 
-  ( LoKi::Particles::Charge::argument p ) const 
-{ return _charge( p ) ;}
-// ============================================================================
-LoKi::Particles::SumCharge::result_type
-LoKi::Particles::SumCharge::_charge 
+LoKi::Particles::SumCharge::sumCharge 
 ( LoKi::Particles::Charge::argument p ) const 
 {
   if ( 0 == p ) 
   { Error ( " Invalid Particle, return -1000" ) ; return -1000 ; } ; // RETURN 
-  if ( p->isBasicParticle() ) { return m_charge ( p ) ; }            // RETURN 
+  // basic ? 
+  if ( p->isBasicParticle() ) { return charge ( p ) ; }              // RETURN 
   // 
   typedef SmartRefVector<LHCb::Particle> DP;
   const DP& daughters = p->daughters() ;
+  // no daughters ?
   if ( daughters.empty() ) 
   {
     Warning ( "Empty list of daughters for '" + 
               LoKi::Particles::nameFromPID ( p->particleID() ) + "'" ) ;
-    return m_charge ( p )  ;                                      // RETURN 
+    return charge ( p )  ;                                         // RETURN 
   }
-  double charge = 0 ;
+  double q = 0 ;
   for ( DP::const_iterator idau = daughters.begin() ; 
         daughters.end() != idau ; ++idau ) 
-  { charge += _charge ( *idau ) ; }                               // RECURSION 
+  { q += sumCharge ( *idau ) ; }                                 // RECURSION 
   // 
-  return charge ;
+  return q ;
 } 
 // ============================================================================
 std::ostream& 
@@ -381,35 +378,19 @@ LoKi::Particles::PseudoRapidity::result_type
 LoKi::Particles::PseudoRapidity::operator() 
   ( LoKi::Particles::PseudoRapidity::argument p ) const
 {
-  if( 0 != p ) { return p -> momentum () . Eta () ; }    // RETURN 
+  if( 0 != p ) { return eta ( p ) ; }                        // RETURN 
   Error(" Invalid Particle, return 'InvalidMomenum'");
   return LoKi::Constants::InvalidMomentum;                   // RETURN 
 }
-// ============================================================================
-LoKi::Particles::PseudoRapidity*
-LoKi::Particles::PseudoRapidity::clone() const 
-{ return new LoKi::Particles::PseudoRapidity(*this) ; }
-// ============================================================================
-std::ostream& 
-LoKi::Particles::PseudoRapidity::fillStream( std::ostream& s ) const 
-{ return s << "ETA" ; }
 // ============================================================================
 LoKi::Particles::Phi::result_type 
 LoKi::Particles::Phi::operator() 
   ( LoKi::Particles::Phi::argument p ) const
 {
-  if( 0 != p ) { return p -> momentum () . Phi () ; }    // RETURN 
+  if( 0 != p ) { return phi ( p ) ; }    // RETURN 
   Error(" Invalid Particle, return 'InvalidMomenum'");
   return LoKi::Constants::InvalidMomentum;                   // RETURN 
 }
-// ============================================================================
-LoKi::Particles::Phi*
-LoKi::Particles::Phi::clone() const 
-{ return new LoKi::Particles::Phi(*this) ; }
-// ============================================================================
-std::ostream& 
-LoKi::Particles::Phi::fillStream( std::ostream& s ) const 
-{ return s << "PHI" ; }
 // ============================================================================
 LoKi::Particles::Theta::result_type 
 LoKi::Particles::Theta::operator() 
@@ -428,22 +409,14 @@ std::ostream&
 LoKi::Particles::Theta::fillStream( std::ostream& s ) const 
 { return s << "THETA" ; }
 // ============================================================================
-LoKi::Particles::Mass* 
-LoKi::Particles::Mass::clone() const 
-{ return new Mass( *this ) ; }
-// ============================================================================
 LoKi::Particles::Mass::result_type 
 LoKi::Particles::Mass::operator() 
   ( LoKi::Particles::Mass::argument p ) const 
 {
-  if ( 0 != p ) { return p -> momentum () . M  () ; }     // RETURN 
+  if ( 0 != p ) { return mass ( p )  ; }     // RETURN 
   Error(" Invalid Particle, return 'InvalidMass'");
   return LoKi::Constants::InvalidMass;                   // RETURN 
 }
-// ============================================================================
-std::ostream& 
-LoKi::Particles::Mass::fillStream( std::ostream& s ) const 
-{ return s << "M" ; }
 // ============================================================================
 LoKi::Particles::MeasuredMass* 
 LoKi::Particles::MeasuredMass::clone() const 
@@ -453,7 +426,7 @@ LoKi::Particles::MeasuredMass::result_type
 LoKi::Particles::MeasuredMass::operator() 
   ( LoKi::Particles::MeasuredMass::argument p ) const 
 {
-  if( 0 != p ) { return p -> measuredMass  () ; }             // RETURN 
+  if( 0 != p ) { return measuredMass  ( p ) ; }         // RETURN 
   Error(" Invalid Particle, return 'InvalidMass'");
   return LoKi::Constants::InvalidMass;                   // RETURN 
 }
@@ -580,9 +553,8 @@ LoKi::Particles::InvariantMass::fillStream( std::ostream& s ) const
 // ============================================================================
 LoKi::Particles::DeltaMass::DeltaMass
 ( const ParticleProperty&     pp     )
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
+  : LoKi::Particles::Mass ()
   , m_mass ( pp.mass() ) 
-  , m_eval () 
 {}
 // ============================================================================
 /*  constructor 
@@ -593,31 +565,14 @@ LoKi::Particles::DeltaMass::DeltaMass
 LoKi::Particles::DeltaMass::DeltaMass
 ( const std::string&    name   , 
   IParticlePropertySvc* ppsvc  )
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
+  : LoKi::Particles::Mass ()
   , m_mass ( 0 * Gaudi::Units::GeV ) 
-  , m_eval ()
 {
-  if ( 0 == ppsvc ) 
-  { Exception("DeltaMass(): IParticlePropertySvc* is invalid!");}
-  const ParticleProperty* pp = ppsvc->find( name );
+  const ParticleProperty* pp = 0 ; 
+  if ( 0 != ppsvc ) { pp = ppsvc->find ( name ) ; }
+  else              { pp = LoKi::Particles::ppFromName ( name ) ; }
   if ( 0 == pp    ) 
-  { Exception("DeltaMass(): Unknow particle name '"+name+"'");}
-  m_mass = pp->mass();
-}
-// ============================================================================
-/*  constructor 
- *  @param name particle name 
- */
-// ============================================================================
-LoKi::Particles::DeltaMass::DeltaMass
-( const std::string&    name   )
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
-  , m_mass ( 0 * Gaudi::Units::GeV )
-  , m_eval ()
-{
-  const ParticleProperty* pp = LoKi::Particles::ppFromName(  name ) ;
-  if ( 0 == pp    ) 
-  { Exception ( "DeltaMass(): Unknow particle name '"+name+"'");}
+  { Exception ("DeltaMass(): Unknow particle name '"+name+"'");}
   m_mass = pp->mass();
 }
 // ============================================================================
@@ -627,50 +582,24 @@ LoKi::Particles::DeltaMass::DeltaMass
  */
 // ============================================================================
 LoKi::Particles::DeltaMass::DeltaMass
-( const LHCb::ParticleID&     pid    , 
-  IParticlePropertySvc* ppsvc  )
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
+( const LHCb::ParticleID& pid    , 
+  IParticlePropertySvc*   ppsvc  )
+  : LoKi::Particles::Mass ()
   , m_mass ( 0 * Gaudi::Units::GeV )  
-  , m_eval ()
 {
-  if ( 0 == ppsvc ) 
-  { Exception("DeltaMass(): IParticlePropertySvc* is invalid!");}
-  const ParticleProperty* pp = ppsvc->findByStdHepID( pid.pid() );
+  const ParticleProperty* pp = 0 ; 
+  if ( 0 != ppsvc ) { pp = ppsvc->findByStdHepID ( pid.pid() ) ; }
+  else              { pp = LoKi::Particles::ppFromPID ( pid  ) ; }
   if ( 0 == pp    ) 
   { Exception("DeltaMass(): Unknow ParticleID " ) ; }
   m_mass = pp->mass();  
 }
-// ============================================================================
-/*  constructor 
- *  @param pid  particle ID 
- *  @param svp  ParticleProperty service 
- */
-// ============================================================================
-LoKi::Particles::DeltaMass::DeltaMass
-( const LHCb::ParticleID&     pid    )
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
-  , m_mass ( 0 * Gaudi::Units::GeV )  
-  , m_eval ()
-{
-  const ParticleProperty* pp = LoKi::Particles::ppFromPID( LHCb::ParticleID( pid.pid() )) ;
-  if( 0 == pp    ) 
-  { Exception("DeltaMass(): Unknow ParticleID " ) ; }
-  m_mass = pp->mass();  
-}
-// ============================================================================
-LoKi::Particles::DeltaMass::DeltaMass
-( const LoKi::Particles::DeltaMass& right )
-  : LoKi::AuxFunBase                       ( right ) 
-  , LoKi::BasicFunctors<const LHCb::Particle*>::Function ( right ) 
-  , m_mass ( right.m_mass )
-  , m_eval ( right.m_eval ) 
-{}
 // ============================================================================
 LoKi::Particles::DeltaMass::result_type 
 LoKi::Particles::DeltaMass::operator() 
   ( LoKi::Particles::DeltaMass::argument p ) const
 {
-  if ( 0 != p ) { return ( m_eval ( p ) - m_mass ) ; }    // RETURN 
+  if ( 0 != p ) { return ( mass ( p ) - m_mass ) ; }    // RETURN 
   Error (" Invalid Particle, return 'InvalidMass'");
   return LoKi::Constants::InvalidMass;                   // RETURN 
 }
@@ -687,207 +616,29 @@ std::ostream&
 LoKi::Particles::DeltaMass::fillStream( std::ostream& s ) const 
 { return s << "DMASS(" << m_mass << ")" ; }
 // ============================================================================
-/*  constructor  
- *  @param mass nominal mass 
- */
-// ============================================================================
-LoKi::Particles::AbsDeltaMass::AbsDeltaMass( const double mass ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
-  , m_eval ( mass ) {}
-// ============================================================================
-/*  constructor 
- *  @param pp particle property 
- */
-// ============================================================================
-LoKi::Particles::AbsDeltaMass::AbsDeltaMass ( const ParticleProperty& pp ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
-  , m_eval ( pp ) {}
-// ============================================================================
-/*  constructor 
- *  @param name particle name 
- *  @param svp  ParticleProperty service 
- */
-// ============================================================================
-LoKi::Particles::AbsDeltaMass::AbsDeltaMass 
-( const std::string&      name   , 
-  IParticlePropertySvc*   ppsvc  ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
-  , m_eval ( name , ppsvc ) {}
-// ============================================================================
-/*  constructor 
- *  @param pid  particle ID 
- *  @param svp  ParticleProperty service 
- */
-// ============================================================================
-LoKi::Particles::AbsDeltaMass::AbsDeltaMass
-( const LHCb::ParticleID& pid    , 
-  IParticlePropertySvc*   ppsvc  ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
-  , m_eval ( pid , ppsvc ) {}
-// ============================================================================
-/*  constructor 
- *  @param name particle name 
- */
-// ============================================================================
-LoKi::Particles::AbsDeltaMass::AbsDeltaMass 
-( const std::string&      name   ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
-  , m_eval ( name  ) {}
-// ============================================================================
-/*  constructor 
- *  @param pid  particle ID 
- */
-// ============================================================================
-LoKi::Particles::AbsDeltaMass::AbsDeltaMass 
-( const LHCb::ParticleID&       pid    ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
-  , m_eval ( pid ) {}
-// ============================================================================
-LoKi::Particles::AbsDeltaMass::AbsDeltaMass
-( const LoKi::Particles::DeltaMass& right ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_eval ( right ) {}
-// ============================================================================
-LoKi::Particles::AbsDeltaMass::AbsDeltaMass
-( const LoKi::Particles::AbsDeltaMass& right ) 
-  : LoKi::AuxFunBase                      ( right ) 
-  , LoKi::BasicFunctors<const LHCb::Particle*>::Function ( right ) 
-  , m_eval ( right.m_eval ) {}
-// ============================================================================
-LoKi::Particles::AbsDeltaMass::result_type 
-LoKi::Particles::AbsDeltaMass::operator() 
-  ( LoKi::Particles::AbsDeltaMass::argument p ) const
-{ return std::fabs( m_eval( p ) ) ; }
-// ============================================================================
-// clone function 
-// ============================================================================
-LoKi::Particles::AbsDeltaMass*
-LoKi::Particles::AbsDeltaMass::clone() const
-{ return new AbsDeltaMass( *this ) ; }
-// ============================================================================
 // specific printout 
 // ============================================================================
 std::ostream& 
 LoKi::Particles::AbsDeltaMass::fillStream( std::ostream& s ) const
-{ return s << "ADMASS(" << m_eval.m0() << ")" ; }
+{ return s << "ADMASS(" << m0() << ")" ; }
 // ============================================================================
-//  constructor  
-// ============================================================================
-LoKi::Particles::DeltaMeasuredMass::DeltaMeasuredMass 
-( const double mass ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
-  , m_mass ( mass ) , m_eval () {};
+LoKi::Particles::AbsDeltaMass::result_type 
+LoKi::Particles::AbsDeltaMass::operator() 
+  ( LoKi::Particles::AbsDeltaMass::argument p ) const
+{
+  if ( 0 != p ) { return ::fabs ( mass ( p ) - m0 () ) ; }    // RETURN 
+  Error (" Invalid Particle, return 'InvalidMass'");
+  return LoKi::Constants::InvalidMass;                   // RETURN 
+}
 // ============================================================================
 LoKi::Particles::DeltaMeasuredMass::result_type 
 LoKi::Particles::DeltaMeasuredMass::operator() 
   ( LoKi::Particles::DeltaMeasuredMass::argument p ) const 
 {
-  if ( 0 != p ) { return ( m_eval ( p ) - m_mass ) ; }        // RETURN 
+  if ( 0 != p ) { return ( measuredMass ( p ) - m0 ()  ) ; }        // RETURN 
   Error ( " Invalid Particle, return 'InvalidMass'");
   return LoKi::Constants::InvalidMass;                   // RETURN 
 }
-// ============================================================================
-/*  constructor 
- *  @param pp particle property 
- */
-// ============================================================================
-LoKi::Particles::DeltaMeasuredMass::DeltaMeasuredMass
-( const ParticleProperty&     pp     )
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
-  , m_mass ( pp.mass() ) 
-  , m_eval () 
-{}
-// ============================================================================
-/*  constructor 
- *  @param name particle name 
- *  @param svp  ParticleProperty service 
- */
-// ============================================================================
-LoKi::Particles::DeltaMeasuredMass::DeltaMeasuredMass
-( const std::string&    name   , 
-  IParticlePropertySvc* ppsvc  )
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
-  , m_mass ( 0 * Gaudi::Units::GeV ) 
-  , m_eval ()
-{
-  if ( 0 == ppsvc ) 
-  { Exception("DeltaMass(): IParticlePropertySvc* is invalid!");}
-  const ParticleProperty* pp = ppsvc->find( name );
-  if ( 0 == pp    ) 
-  { Exception("DeltaMass(): Unknow particle name '"+name+"'");}
-  m_mass = pp->mass();
-}
-// ============================================================================
-/*  constructor 
- *  @param name particle name 
- *  @param svp  ParticleProperty service 
- */
-// ============================================================================
-LoKi::Particles::DeltaMeasuredMass::DeltaMeasuredMass
-( const std::string&    name  )
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
-  , m_mass ( 0 * Gaudi::Units::GeV ) 
-  , m_eval ()
-{
-  IParticlePropertySvc* ppsvc = LoKi::Services::instance().ppSvc();
-  if ( 0 == ppsvc ) 
-  { Exception("DeltaMass(): IParticlePropertySvc* is invalid!");}
-  const ParticleProperty* pp = ppsvc->find( name );
-  if ( 0 == pp    ) 
-  { Exception("DeltaMass(): Unknow particle name '"+name+"'");}
-  m_mass = pp->mass();
-}
-// ============================================================================
-/*  constructor 
- *  @param pid  particle ID 
- *  @param svp  ParticleProperty service 
- */
-// ============================================================================
-LoKi::Particles::DeltaMeasuredMass::DeltaMeasuredMass
-( const LHCb::ParticleID&  pid    , 
-  IParticlePropertySvc*    ppsvc  )
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
-  , m_mass ( 0 * Gaudi::Units::GeV )  
-  , m_eval ()
-{
-  if( 0 == ppsvc ) 
-  { Exception ("DeltaMeaqsuredMass(): IParticlePropertySvc* is invalid!");}
-  const ParticleProperty* pp = ppsvc->findByStdHepID( pid.pid() );
-  if( 0 == pp    ) 
-  { Exception ("DeltaMeasuredMass(): Unknow ParticleID " ) ; }
-  m_mass = pp->mass();  
-}
-// ============================================================================
-/*  constructor 
- *  @param pid  particle ID 
- *  @param svp  ParticleProperty service 
- */
-// ============================================================================
-LoKi::Particles::DeltaMeasuredMass::DeltaMeasuredMass
-( const LHCb::ParticleID&     pid  )
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
-  , m_mass ( 0 * Gaudi::Units::GeV )  
-  , m_eval ()
-{
-  IParticlePropertySvc* ppsvc = LoKi::Services::instance().ppSvc();
-  if( 0 == ppsvc ) 
-  { Exception ( "DeltaMeasuredMass(): IParticlePropertySvc* is invalid!");}
-  const ParticleProperty* pp = ppsvc->findByStdHepID( pid.pid() );
-  if( 0 == pp    ) 
-  { Exception ("DeltaMeasuredMass(): Unknow ParticleID " ) ; }
-  m_mass = pp->mass();  
-}
-// ============================================================================
-/*  copy constructor 
- *  @param rigth object to be copied 
- */
-// ============================================================================
-LoKi::Particles::DeltaMeasuredMass::DeltaMeasuredMass
-( const LoKi::Particles::DeltaMeasuredMass& right ) 
-  : LoKi::AuxFunBase                      ( right ) 
-  , LoKi::BasicFunctors<const LHCb::Particle*>::Function ( right )
-  , m_mass ( right.m_mass ) 
-  , m_eval ( right.m_eval ) {}
 // ============================================================================
 //  virtual destructor 
 // ============================================================================
@@ -903,80 +654,7 @@ LoKi::Particles::DeltaMeasuredMass::clone() const
 // ============================================================================
 std::ostream& 
 LoKi::Particles::DeltaMeasuredMass::fillStream( std::ostream& s ) const 
-{ return s << "DMMASS("  << m_mass << ")"; }
-// ============================================================================
-/*  constructor  from particle mass 
- *  @param mass particle mass 
- */
-// ============================================================================
-LoKi::Particles::AbsDeltaMeasuredMass::AbsDeltaMeasuredMass 
-( const double mass ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
-  , m_eval ( mass ) {};
-// ============================================================================
-/*  constructor 
- *  @param pp particle property 
- */
-// ============================================================================
-LoKi::Particles::AbsDeltaMeasuredMass::AbsDeltaMeasuredMass 
-( const ParticleProperty& pp ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
-  , m_eval( pp ) {}
-// ============================================================================
-/*  constructor 
- *  @param name particle name 
- *  @param svp  ParticleProperty service 
- */
-// ============================================================================
-LoKi::Particles::AbsDeltaMeasuredMass::AbsDeltaMeasuredMass
-( const std::string&      name   , 
-  IParticlePropertySvc*   ppsvc  )
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
-  , m_eval ( name , ppsvc ) {} 
-// ============================================================================
-/*  constructor 
- *  @param pid  particle ID 
- *  @param svp  ParticleProperty service 
- */
-// ============================================================================
-LoKi::Particles::AbsDeltaMeasuredMass::AbsDeltaMeasuredMass
-( const LHCb::ParticleID& pid    , 
-  IParticlePropertySvc*   ppsvc  )
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
-  , m_eval ( pid  , ppsvc ) {} 
-// ============================================================================
-/*  constructor 
- *  @param name particle name 
- */
-// ============================================================================
-LoKi::Particles::AbsDeltaMeasuredMass::AbsDeltaMeasuredMass
-( const std::string&      name   ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
-  , m_eval ( name ) {} 
-// ============================================================================
-/*  constructor 
- *  @param pid  particle ID 
- */
-// ============================================================================
-LoKi::Particles::AbsDeltaMeasuredMass::AbsDeltaMeasuredMass
-( const LHCb::ParticleID&       pid    ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
-  , m_eval ( pid ) {} 
-// ============================================================================/
-LoKi::Particles::AbsDeltaMeasuredMass::AbsDeltaMeasuredMass
-( const LoKi::Particles::DeltaMeasuredMass& right ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
-  , m_eval ( right ) {} 
-// ============================================================================/
-/*  copy constructor
- *  @param right instance to be copied
- */
-// ============================================================================
-LoKi::Particles::AbsDeltaMeasuredMass::AbsDeltaMeasuredMass
-( const LoKi::Particles::AbsDeltaMeasuredMass& right ) 
-  : LoKi::AuxFunBase                      ( right ) 
-  , LoKi::BasicFunctors<const LHCb::Particle*>::Function ( right )
-  , m_eval ( right.m_eval  ) {} 
+{ return s << "DMMASS("  << m0 ()  << ")"; }
 // ============================================================================
 //  destructor (virtual)
 // ============================================================================
@@ -994,7 +672,7 @@ LoKi::Particles::AbsDeltaMeasuredMass::result_type
 LoKi::Particles::AbsDeltaMeasuredMass::operator() 
   ( LoKi::Particles::AbsDeltaMeasuredMass::argument p ) const 
 {
-  if ( 0 != p ) { return ::fabs( m_eval ( p ) ) ; } // RETURN 
+  if ( 0 != p ) { return ::fabs( measuredMass ( p ) - m0 () ) ; } // RETURN 
   Error(" Invalid Particle, return 'InvalidMass'");
   return LoKi::Constants::InvalidMass;                      // RETURN 
 };
@@ -1003,50 +681,7 @@ LoKi::Particles::AbsDeltaMeasuredMass::operator()
 // ============================================================================
 std::ostream& 
 LoKi::Particles::AbsDeltaMeasuredMass::fillStream( std::ostream& s ) const 
-{ return s << "ADMMASS(" << m_eval.m0() << ")" ; }
-// ============================================================================
-LoKi::Particles::DeltaMeasuredMassChi2::DeltaMeasuredMassChi2 
-( const double mass ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
-  , m_eval ( mass ) {} 
-// ============================================================================
-LoKi::Particles::DeltaMeasuredMassChi2::DeltaMeasuredMassChi2 
-( const ParticleProperty& pp ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
-  , m_eval ( pp   ) {} 
-// ============================================================================
-LoKi::Particles::DeltaMeasuredMassChi2::DeltaMeasuredMassChi2 
-( const std::string&    nam , 
-  IParticlePropertySvc* svc )
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
-  , m_eval ( nam , svc ) {} 
-// ============================================================================
-LoKi::Particles::DeltaMeasuredMassChi2::DeltaMeasuredMassChi2 
-( const LHCb::ParticleID&     pid , 
-  IParticlePropertySvc* svc )
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
-  , m_eval ( pid , svc ) {} 
-// ============================================================================
-LoKi::Particles::DeltaMeasuredMassChi2::DeltaMeasuredMassChi2 
-( const std::string&    nam )
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
-  , m_eval ( nam       ) {} 
-// ============================================================================
-LoKi::Particles::DeltaMeasuredMassChi2::DeltaMeasuredMassChi2 
-( const LHCb::ParticleID&     pid )
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
-  , m_eval ( pid       ) {} 
-// ============================================================================
-LoKi::Particles::DeltaMeasuredMassChi2::DeltaMeasuredMassChi2 
-( const LoKi::Particles::DeltaMeasuredMass& right )
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_eval ( right ) {} 
-// ============================================================================
-LoKi::Particles::DeltaMeasuredMassChi2::DeltaMeasuredMassChi2 
-( const LoKi::Particles::DeltaMeasuredMassChi2& right )
-  : LoKi::AuxFunBase                      ( right ) 
-  , LoKi::BasicFunctors<const LHCb::Particle*>::Function ( right ) 
-  , m_eval ( right.m_eval ) {} 
+{ return s << "ADMMASS(" << m0 () << ")" ; }
 // ============================================================================
 LoKi::Particles::DeltaMeasuredMassChi2::result_type 
 LoKi::Particles::DeltaMeasuredMassChi2::operator() 
@@ -1062,7 +697,10 @@ LoKi::Particles::DeltaMeasuredMassChi2::operator()
     Error(" Invalid MassError, return 'InvalidMass'");
     return LoKi::Constants::InvalidMass ;                       // RETURN
   }
-  return ::fabs ( m_eval( p ) ) / p -> measuredMassErr() ;
+  //
+  const double value = ( measuredMass ( p ) - m0() ) / p->measuredMassErr() ;
+  //
+  return value * value ;
 }
 // ============================================================================
 LoKi::Particles::DeltaMeasuredMassChi2*

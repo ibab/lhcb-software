@@ -1,4 +1,4 @@
-// $Id: Particles16.h,v 1.4 2007-11-28 14:39:29 ibelyaev Exp $
+// $Id: Particles16.h,v 1.5 2008-10-31 17:27:45 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES16_H 
 #define LOKI_PARTICLES16_H 1
@@ -43,6 +43,7 @@ namespace LoKi
       , public LoKi::Vertices::VertexHolder
     {
     public:
+      // ======================================================================
       /// constructor form vertex 
       CosineDirectionAngle ( const LHCb::VertexBase* vertex ) ;
       /// constructor form the point 
@@ -56,12 +57,21 @@ namespace LoKi
       /// MANDATORY: clone method ("virtual constructor")
       virtual  CosineDirectionAngle* clone() const ;
       /// MANDATORY: the only one essential method 
-      virtual result_type operator() ( argument p ) const ;
+      virtual result_type operator() ( argument p ) const
+      { return dira ( p ) ; }  
       /// OPTIONAL: the specific printout
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      result_type dira ( argument p ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       /// default constructor is private 
       CosineDirectionAngle();
+      CosineDirectionAngle& operator=( const CosineDirectionAngle& ) ;
+      // ======================================================================
     } ;
     // ========================================================================
   }  // end of namespace LoKi::Particles

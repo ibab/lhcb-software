@@ -1,4 +1,4 @@
-// $Id: Vertices1.h,v 1.11 2008-06-03 15:47:08 cattanem Exp $
+// $Id: Vertices1.h,v 1.12 2008-10-31 17:27:46 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_VERTICES1_H 
 #define LOKI_VERTICES1_H 1
@@ -49,6 +49,7 @@ namespace LoKi
       , public LoKi::Vertices::VertexHolder 
     {
     public:
+      // ======================================================================
       /// constructor 
       VertexDistance 
       ( const LHCb::VertexBase*  vertex ) ;
@@ -58,27 +59,32 @@ namespace LoKi
       /// constructor 
       VertexDistance 
       ( const LoKi::Vertices::VertexHolder& base ) ;
-      /// copy constructor 
-      VertexDistance ( const VertexDistance& right ) ;
       /// destructor 
-      virtual ~VertexDistance();
+      virtual ~VertexDistance(){}
       /// clone method (mandatory!)
-      virtual VertexDistance* clone() const ;
+      virtual VertexDistance* clone() const 
+      { return new VertexDistance(*this) ; }
       /** the only one essential method 
        *  @param v pointer to the vertex 
        *  @return the estimate of the distance between vertex and the 'vertex'
        */
-      virtual result_type operator() ( argument v ) const ;
+      virtual result_type operator() ( argument v ) const 
+      { return distance( v ) ; }
       /// OPTIONAL: the specific printout 
-      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      virtual std::ostream& fillStream( std::ostream& s ) const 
+      { return s << "VVDIST" ; }
       /** the only one essential method 
        *  @param v pointer to the vertex 
        *  @return the estimate of the distance between vertex and the 'vertex'
        */
       result_type         distance   ( argument v ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       /// default constructor is private 
       VertexDistance();
+      VertexDistance& operator=( const VertexDistance& ) ;
+      // ======================================================================
     };
     // ========================================================================
     /** @class VertexSignedDistance
@@ -96,51 +102,47 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2004-07-07
      */
-    class VertexSignedDistance 
-      : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function 
+    class VertexSignedDistance : public LoKi::Vertices::VertexDistance 
     {
     public:
       /// constructor 
       VertexSignedDistance 
-      ( const LHCb::VertexBase*  vertex ) ;
+      ( const LHCb::VertexBase*  vertex ) 
+        : LoKi::Vertices::VertexDistance( vertex ) {}
       /// constructor 
       VertexSignedDistance 
-      ( const LoKi::Point3D& vertex ) ;      
+      ( const LoKi::Point3D& vertex )       
+        : LoKi::Vertices::VertexDistance( vertex  ) {}
       /// constructor 
       VertexSignedDistance 
-      ( const LoKi::Vertices::VertexHolder& base ) ;
-      /// copy constructor 
-      VertexSignedDistance 
-      ( const LoKi::Vertices::VertexDistance& right ) ;
-      /// copy constructor 
-      VertexSignedDistance 
-      ( const VertexSignedDistance& right ) ;
+      ( const LoKi::Vertices::VertexHolder& base ) 
+        : LoKi::Vertices::VertexDistance( base   ) {}
       /// destructor 
-      virtual ~VertexSignedDistance();
+      virtual ~VertexSignedDistance() {}
       /// clone method (mandatory!)
-      virtual VertexSignedDistance* clone() const ;
+      virtual VertexSignedDistance* clone() const 
+      { return new VertexSignedDistance ( *this ) ; }
       /** the only one essential method 
        *  @param v pointer to the vertex 
        *  @return the estimate of the distance between vertex and the 'vertex'
        */
-      virtual result_type operator() ( argument v ) const ;
+      virtual result_type operator() ( argument v ) const 
+      { return signedDistance ( v ) ; }
       /// OPTIONAL: the specific printout 
-      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      virtual std::ostream& fillStream( std::ostream& s ) const 
+      { return s << "VVDSIGN" ; }
       /** the only one essential method 
        *  @param p pointer to the vertex 
        *  @return the estimate of the distance between vertex and the 'vertex'
        */
-      result_type distance   ( argument v ) const ;
-    public:
-      void setVertex ( const LHCb::VertexBase* vertex ) const 
-      { m_fun.setVertex ( vertex )  ; }
-      void setVertex ( const LoKi::Point3D&    vertex ) const 
-      { m_fun.setVertex ( vertex )  ; }
+      result_type signedDistance   ( argument v ) const ;
+      // =====================================================================
     private :
+      // =====================================================================
       /// default constructor is private 
       VertexSignedDistance();
-    private:
-      LoKi::Vertices::VertexDistance m_fun ;
+      VertexSignedDistance& operator=( const VertexSignedDistance& ) ;
+      // =====================================================================
     };
     // ========================================================================    
     /** @class VertexChi2Distance
@@ -150,41 +152,48 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2004-07-07
      */
-    class VertexChi2Distance 
-      : public    LoKi::BasicFunctors<const LHCb::VertexBase*>::Function 
-      , public    LoKi::Vertices::VertexHolder 
+    class VertexChi2Distance : public LoKi::Vertices::VertexDistance 
     {
     public:
+      // ======================================================================
       /// constructor 
       VertexChi2Distance 
-      ( const LHCb::VertexBase*  vertex ) ;
+      ( const LHCb::VertexBase*  vertex ) 
+        : LoKi::Vertices::VertexDistance ( vertex ) {}      
       /// constructor 
       VertexChi2Distance 
-      ( const LoKi::Point3D& vertex ) ;      
+      ( const LoKi::Point3D& vertex ) 
+        : LoKi::Vertices::VertexDistance ( vertex ) {}
       /// constructor 
       VertexChi2Distance 
-      ( const LoKi::Vertices::VertexHolder& base ) ;
-      /// copy constructor 
-      VertexChi2Distance ( const VertexChi2Distance& right ) ;
+      ( const LoKi::Vertices::VertexHolder& base ) 
+        : LoKi::Vertices::VertexDistance ( base ) {}
       /// destructor 
-      virtual ~VertexChi2Distance();
+      virtual ~VertexChi2Distance() {} ;
       /// clone method (mandatory!)
-      virtual VertexChi2Distance* clone() const ;
+      virtual VertexChi2Distance* clone() const 
+      { return new VertexChi2Distance ( *this ) ; }
       /** the only one essential method 
        *  @param v pointer to the vertex 
        *  @return the estimate of the distance between vertex and the 'vertex'
        */
-      virtual result_type operator() ( argument v ) const ;
+      virtual result_type operator() ( argument v ) const 
+      { return chi2 ( v ) ; }
       /// OPTIONAL: the specific printout 
-      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      virtual std::ostream& fillStream ( std::ostream& s ) const 
+      { return s << "VVDCHI2" ; }
       /** the only one essential method 
        *  @param v pointer to the vertex 
        *  @return the estimate of the distance between vertex and the 'vertex'
        */
       result_type         chi2       ( argument v ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       /// default constructor is private 
       VertexChi2Distance();
+      VertexChi2Distance& operator=( const VertexChi2Distance& ) ;
+      // ======================================================================
     };
     // ========================================================================    
     /** @class MinVertexDistance
@@ -194,11 +203,10 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-07-08
      */
-    class MinVertexDistance 
-      : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function 
-      , public LoKi::UniqueKeeper<LHCb::VertexBase>
+    class MinVertexDistance : public LoKi::Vertices::VertexDistance
     {
     public:
+      // ======================================================================
       /** constructor from container of vertices 
        *  @param vs container of primary vertices 
        */
@@ -286,27 +294,56 @@ namespace LoKi
       MinVertexDistance 
       ( VERTEX                          first , 
         VERTEX                          last  )
-        : LoKi::BasicFunctors<const LHCb::VertexBase*>::Function () 
-        , LoKi::UniqueKeeper<LHCb::VertexBase> ( first , last    )
-        , m_fun                            ( LoKi::Point3D() )
+        : LoKi::Vertices::VertexDistance ( LoKi::Point3D() ) 
+        , m_keeper ( first , last )
       {}
-      /// copy  constructor
-      MinVertexDistance 
-      ( const MinVertexDistance& right ) ;
       /// MANDATORY: destructor 
       virtual ~MinVertexDistance() {}
       /// MANDATORY: clone method ("virtual constructor")
       virtual  MinVertexDistance* clone() const 
       { return new MinVertexDistance(*this) ; }
       /// MANDATORY: the only one essential method 
-      virtual result_type operator() ( argument v ) const ;
+      virtual result_type operator() ( argument v ) const 
+      { return minvd ( v ) ; }
       /// OPTIONAL: the specific printout 
-      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      virtual std::ostream& fillStream( std::ostream& s ) const 
+      { return s << "MINVVD" ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      result_type minvd ( argument v ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      const LoKi::Keeper<LHCb::VertexBase>& keeper   () const { return m_keeper ; }
+      const LoKi::Keeper<LHCb::VertexBase>& vertices () const { return m_keeper ; }
+      operator const LoKi::Keeper<LHCb::VertexBase>& () const { return m_keeper ; }
+      LoKi::Keeper<LHCb::VertexBase>::const_iterator begin () const 
+      { return m_keeper.begin () ; }
+      LoKi::Keeper<LHCb::VertexBase>::const_iterator end   () const 
+      { return m_keeper.end   () ; }      
+      bool empty () const { return m_keeper.empty () ; }
+      bool size  () const { return m_keeper.size  () ; }
+      // ======================================================================      
+    protected:
+      // ======================================================================      
+      void clear () const { m_keeper.clear() ; }
+      // ======================================================================
+      template <class VERTEX>
+      size_t addObjects ( VERTEX first , VERTEX last ) const
+      { return m_keeper.addObjects ( first , last ) ; }
+      // ======================================================================      
     private:
-      // default constructor is disabled 
+      // ======================================================================
+      /// default constructor is disabled 
       MinVertexDistance () ;
+      MinVertexDistance& operator=( const MinVertexDistance& ) ;
+      // ======================================================================
     private:
-      LoKi::Vertices::VertexDistance m_fun  ;
+      // ======================================================================
+      /// keeper for the vertices 
+      mutable LoKi::Keeper<LHCb::VertexBase> m_keeper ;
+      // ======================================================================
     };
     // ========================================================================
     /** @class MinVertexChi2Distance
@@ -316,11 +353,10 @@ namespace LoKi
      *  @author Vanya ELYAEV Ivan.Belyaev@itep.ru
      *  @date   2004-07-08
      */
-    class MinVertexChi2Distance 
-      : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function 
-      , public LoKi::UniqueKeeper<LHCb::VertexBase>
+    class MinVertexChi2Distance : public LoKi::Vertices::VertexChi2Distance 
     {
     public:
+      // ======================================================================
       /** constructor from container of vertices 
        *  @param vs container of primary vertices 
        */
@@ -411,30 +447,60 @@ namespace LoKi
       MinVertexChi2Distance 
       ( VERTEX                          first , 
         VERTEX                          last  )
-        : LoKi::BasicFunctors<const LHCb::VertexBase*>::Function () 
-        , LoKi::UniqueKeeper<LHCb::Vertex> ( first , last    )
-        , m_fun                            ( LoKi::Point3D() )
+        : LoKi::Vertices::VertexChi2Distance ( LoKi::Point3D() )
+        , m_keeper ( first , last    )
       {}
-      /// copy  constructor
-      MinVertexChi2Distance 
-      ( const MinVertexChi2Distance& right ) ;
       /// MANDATORY: destructor 
       virtual ~MinVertexChi2Distance() {}
       /// MANDATORY: clone method ("virtual constructor")
       virtual  MinVertexChi2Distance* clone() const 
-      { return new MinVertexChi2Distance(*this) ; }
+      { return new MinVertexChi2Distance ( *this ) ; }
       /// MANDATORY: the only one essential method 
-      virtual result_type operator() ( argument v ) const ;
+      virtual result_type operator() ( argument v ) const 
+      { return minvdchi2 ( v ) ; }
       /// OPTIONAL: the specific printout 
-      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      virtual std::ostream& fillStream ( std::ostream& s ) const 
+      { return s << "MINVVDCHI2" ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      result_type minvdchi2 ( argument v ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      const LoKi::Keeper<LHCb::VertexBase>& keeper   () const { return m_keeper ; }
+      const LoKi::Keeper<LHCb::VertexBase>& vertices () const { return m_keeper ; }
+      operator const LoKi::Keeper<LHCb::VertexBase>& () const { return m_keeper ; }
+      LoKi::Keeper<LHCb::VertexBase>::const_iterator begin () const 
+      { return m_keeper.begin () ; }
+      LoKi::Keeper<LHCb::VertexBase>::const_iterator end   () const 
+      { return m_keeper.end   () ; }      
+      bool empty () const { return m_keeper.empty () ; }
+      bool size  () const { return m_keeper.size  () ; }
+      // ======================================================================      
+    protected:
+      // ======================================================================      
+      void clear () const { m_keeper.clear() ; }
+      // ======================================================================
+      template <class VERTEX>
+      size_t addObjects ( VERTEX first , VERTEX last ) const
+      { return m_keeper.addObjects ( first , last ) ; }
+      // ======================================================================      
     private:
-      // default constructor is disabled 
+      // ======================================================================
+      /// default constructor is disabled 
       MinVertexChi2Distance () ;
+      MinVertexChi2Distance& operator=( const MinVertexChi2Distance& ) ;
+      // ======================================================================
     private:
-      LoKi::Vertices::VertexChi2Distance m_fun  ;
+      // ======================================================================
+      /// keeper for the vertices 
+      mutable LoKi::Keeper<LHCb::VertexBase> m_keeper ;
+      // ======================================================================
     };
     // ========================================================================
   } // end of namespace LoKi::Vertices 
+  // ==========================================================================
 } // end of namespace LoKi
 // ============================================================================
 // The END 

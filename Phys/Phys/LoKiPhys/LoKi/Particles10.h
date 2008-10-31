@@ -1,4 +1,4 @@
-// $Id: Particles10.h,v 1.8 2008-06-03 15:47:08 cattanem Exp $
+// $Id: Particles10.h,v 1.9 2008-10-31 17:27:45 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES10_H 
 #define LOKI_PARTICLES10_H 1
@@ -128,10 +128,15 @@ namespace LoKi
       /// the actual size of the vector of tracks 
       size_t size  () const { return m_cut.size  () ; }      
     private:
+      // ======================================================================
       // The defualt costructor is disabled 
       HasTracksFromPV();
+      HasTracksFromPV& operator=( const HasTracksFromPV& ) ;
+      // ======================================================================
     private:
+      // ======================================================================
       LoKi::Particles::HasTracks m_cut ;
+      // ======================================================================
     } ;
     // ========================================================================    
     /** @class HasTracksInTreeFromPV 
@@ -243,6 +248,8 @@ namespace LoKi
     private:
       // The defualt costructor is disabled 
       HasTracksInTreeFromPV();
+      HasTracksInTreeFromPV& operator=( const HasTracksInTreeFromPV& ) ;
+      // ======================================================================
     private:
       LoKi::Particles::HasTracksFromPV m_cut ;
     } ;

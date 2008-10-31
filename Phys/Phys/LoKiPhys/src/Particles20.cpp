@@ -1,4 +1,4 @@
-// $Id: Particles20.cpp,v 1.5 2008-05-04 15:26:25 ibelyaev Exp $
+// $Id: Particles20.cpp,v 1.6 2008-10-31 17:27:46 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -111,8 +111,7 @@ namespace
 LoKi::Particles::CosineDirectionAngleWithTheBestPV::
 CosineDirectionAngleWithTheBestPV()
   : LoKi::AuxDesktopBase()
-  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_dira    ( s_VERTEX ) 
+  , LoKi::Particles::CosineDirectionAngle ( s_VERTEX ) 
 {}
 // ============================================================================
 // MANDATORY: the clone method ("virtual constructor")
@@ -137,8 +136,9 @@ LoKi::Particles::CosineDirectionAngleWithTheBestPV::operator()
   // check it!
   Assert ( validDesktop () , "No valid IPhysDesktop is found" );
   // get the best vertex from desktop and use it 
-  m_dira.setVertex ( desktop() -> relatedVertex ( p ) ) ;
-  return m_dira ( p ) ;
+  setVertex ( desktop() -> relatedVertex ( p ) ) ;
+  //
+  return dira ( p ) ;
 }
 // ============================================================================
 // OPTIONAL: the specific printout
@@ -151,8 +151,7 @@ std::ostream& LoKi::Particles::CosineDirectionAngleWithTheBestPV::fillStream
 LoKi::Particles::ImpParWithTheBestPV::ImpParWithTheBestPV 
 ( const std::string& geo ) 
   : LoKi::AuxDesktopBase()
-  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_ip  ( s_VERTEX , s_IPTOOL ) 
+  , LoKi::Particles::ImpPar ( s_VERTEX , s_IPTOOL ) 
   , m_geo ( geo )   
 {}
 // ============================================================================
@@ -178,12 +177,13 @@ LoKi::Particles::ImpParWithTheBestPV::operator()
   // check it!
   Assert ( validDesktop () , "No valid IPhysDesktop is found" );
   // get the IDistanceCalculator from DVAlgorithm 
-  if ( 0 == m_ip.tool() ) { loadTool ( m_ip , lokiSvc() , m_geo )  ; }
+  if ( 0 == tool() ) { loadTool ( *this , lokiSvc() , m_geo )  ; }
   // check it!
-  Assert ( 0 != m_ip.tool() , "No valid IDistanceCalculator is found" ) ;
+  Assert ( 0 != tool() , "No valid IDistanceCalculator is found" ) ;
   // get the best vertex from desktop and use it 
-  m_ip.setVertex ( desktop() -> relatedVertex ( p ) ) ;
-  return m_ip.ip ( p ) ;
+  setVertex ( desktop() -> relatedVertex ( p ) ) ;
+  //
+  return ip ( p ) ;
 }
 // ============================================================================
 // OPTIONAL: the specific printout
@@ -196,8 +196,7 @@ std::ostream& LoKi::Particles::ImpParWithTheBestPV::fillStream
 LoKi::Particles::ImpParChi2WithTheBestPV::ImpParChi2WithTheBestPV 
 ( const std::string& geo ) 
   : LoKi::AuxDesktopBase()
-  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_ip  ( s_VERTEX , s_IPTOOL ) 
+  , LoKi::Particles::ImpParChi2 ( s_VERTEX , s_IPTOOL ) 
   , m_geo ( geo )   
 {}
 // ============================================================================
@@ -223,12 +222,13 @@ LoKi::Particles::ImpParChi2WithTheBestPV::operator()
   // check it!
   Assert ( validDesktop () , "No valid IPhysDesktop is found" );
   // get the IDistanceCalculator from DVAlgorithm 
-  if ( 0 == m_ip.tool() ) { loadTool ( m_ip , lokiSvc() , m_geo )  ; }
+  if ( 0 == tool() ) { loadTool ( *this , lokiSvc() , m_geo )  ; }
   // check it!
-  Assert ( 0 != m_ip.tool() , "No valid IDistanceCalculator is found" ) ;
+  Assert ( 0 != tool() , "No valid IDistanceCalculator is found" ) ;
   // get the best vertex from desktop and use it 
-  m_ip.setVertex ( desktop() -> relatedVertex ( p ) ) ;
-  return m_ip.chi2 ( p ) ;
+  setVertex ( desktop() -> relatedVertex ( p ) ) ;
+  //
+  return chi2 ( p ) ;
 }
 // ============================================================================
 // OPTIONAL: the specific printout
@@ -246,8 +246,7 @@ std::ostream& LoKi::Particles::ImpParChi2WithTheBestPV::fillStream
 LoKi::Particles::MinImpParWithSource::MinImpParWithSource 
 ( const LoKi::BasicFunctors<const LHCb::VertexBase*>::Source& source ,
   const std::string&                                          geo    ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_mip    ( LHCb::VertexBase::ConstVector() , s_IPTOOL ) 
+  : LoKi::Particles::MinImpPar ( LHCb::VertexBase::ConstVector() , s_IPTOOL ) 
   , m_source ( source )   
   , m_geo    ( geo    )
 {}
@@ -270,23 +269,23 @@ LoKi::Particles::MinImpParWithSource::operator()
     return -1000 ;                                                     // RETURN 
   }
   // get the IDistanceCalculator from DVAlgorithm 
-  if ( 0 == tool().tool() ) { loadTool ( m_mip , lokiSvc() , m_geo )  ; }
+  if ( 0 == tool() ) { loadTool ( *this , lokiSvc() , m_geo )  ; }
   // check the event 
   if ( !sameEvent() ) 
   {
     // clear the list of vertices 
-    m_mip.clear() ;
+    clear() ;
     // get the primary vertices from the source 
     LHCb::VertexBase::ConstVector primaries = m_source() ;
     // fill the functor with primary vertices:
-    m_mip.addObjects ( primaries.begin() , primaries.end () ) ;
-    if ( m_mip.empty() ) 
+    addObjects ( primaries.begin() , primaries.end () ) ;
+    if ( empty() ) 
     { Error ( "Empty list of vertices is loaded!" ) ; }
     // update the event:
     setEvent () ;
   }
   // use the functor 
-  return m_mip.mip ( p ) ;
+  return mip ( p ) ;
 }
 // ============================================================================
 // OPTIONAL: the specific printout
@@ -495,8 +494,7 @@ std::ostream& LoKi::Particles::MinImpParTES::fillStream
 LoKi::Particles::MinImpParChi2WithSource::MinImpParChi2WithSource 
 ( const LoKi::BasicFunctors<const LHCb::VertexBase*>::Source& source ,
   const std::string&                                          geo    ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_mip    ( LHCb::VertexBase::ConstVector() , s_IPTOOL ) 
+  : LoKi::Particles::MinImpParChi2 ( LHCb::VertexBase::ConstVector() , s_IPTOOL ) 
   , m_source ( source )   
   , m_geo    ( geo    )
 {}
@@ -519,22 +517,22 @@ LoKi::Particles::MinImpParChi2WithSource::operator()
     return -1000 ;                                                     // RETURN 
   }
   // get the IDistanceCalculator from DVAlgorithm 
-  if ( 0 == tool().tool() ) { loadTool ( m_mip , lokiSvc() , m_geo )  ; }
+  if ( 0 == tool() ) { loadTool ( *this , lokiSvc() , m_geo )  ; }
   // check the event 
   if ( !sameEvent() ) 
   {
     // clear the list of vertices 
-    m_mip.clear() ;
+    clear() ;
     // get the primary vertices from the source 
     LHCb::VertexBase::ConstVector primaries = m_source() ;
     // fill the functor with primary vertices:
-    m_mip.addObjects ( primaries.begin() , primaries.end () ) ;
-    if ( m_mip.empty() ) { Error ( "Empty list of vertices is loaded!" ) ; }
+    addObjects ( primaries.begin() , primaries.end () ) ;
+    if ( empty() ) { Error ( "Empty list of vertices is loaded!" ) ; }
     // update the event:
     setEvent () ;
   }
   // use the functor 
-  return m_mip.mipchi2 ( p ) ;
+  return mipchi2 ( p ) ;
 }
 // ============================================================================
 // OPTIONAL: the specific printout
@@ -735,8 +733,7 @@ std::ostream& LoKi::Particles::MinImpParChi2TES::fillStream
 // ============================================================================
 LoKi::Particles::VertexDistanceDV::VertexDistanceDV ()
   : LoKi::AuxDesktopBase ()
-  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_fun ( s_VERTEX ) 
+  , LoKi::Particles::VertexDistance ( s_VERTEX ) 
 {}
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")
@@ -761,8 +758,9 @@ LoKi::Particles::VertexDistanceDV::operator()
   // check it!
   Assert ( validDesktop () , "No valid IPhysDesktop is found" );
   // get the best vertex from desktop and use it 
-  m_fun.setVertex ( desktop() -> relatedVertex ( p ) ) ;
-  return m_fun ( p ) ;                                           // RETURN 
+  setVertex ( desktop() -> relatedVertex ( p ) ) ;
+  //
+  return distance ( p ) ;                                           // RETURN 
 }
 // ============================================================================
 // OPTIONAL: the specific printout
@@ -774,8 +772,7 @@ std::ostream& LoKi::Particles::VertexDistanceDV::fillStream
 // ============================================================================
 LoKi::Particles::VertexSignedDistanceDV::VertexSignedDistanceDV ()
   : LoKi::AuxDesktopBase ()
-  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_fun ( s_VERTEX ) 
+  , LoKi::Particles::VertexSignedDistance ( s_VERTEX ) 
 {}
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")
@@ -800,8 +797,9 @@ LoKi::Particles::VertexSignedDistanceDV::operator()
   // check it!
   Assert ( validDesktop () , "No valid IPhysDesktop is found" );
   // get the best vertex from desktop and use it 
-  m_fun.setVertex ( desktop() -> relatedVertex ( p ) ) ;
-  return m_fun ( p ) ;                                           // RETURN 
+  setVertex ( desktop() -> relatedVertex ( p ) ) ;
+  //
+  return signedDistance ( p ) ;                                      // RETURN 
 }
 // ============================================================================
 // OPTIONAL: the specific printout
@@ -813,8 +811,7 @@ std::ostream& LoKi::Particles::VertexSignedDistanceDV::fillStream
 // ============================================================================
 LoKi::Particles::VertexDotDistanceDV::VertexDotDistanceDV ()
   : LoKi::AuxDesktopBase ()
-  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_fun ( s_VERTEX ) 
+  , LoKi::Particles::VertexDotDistance ( s_VERTEX ) 
 {}
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")
@@ -839,8 +836,9 @@ LoKi::Particles::VertexDotDistanceDV::operator()
   // check it!
   Assert ( validDesktop () , "No valid IPhysDesktop is found" );
   // get the best vertex from desktop and use it 
-  m_fun.setVertex ( desktop() -> relatedVertex ( p ) ) ;
-  return m_fun ( p ) ;                                           // RETURN 
+  setVertex ( desktop() -> relatedVertex ( p ) ) ;
+  //
+  return distance ( p ) ;                                           // RETURN 
 }
 // ============================================================================
 // OPTIONAL: the specific printout
@@ -853,8 +851,7 @@ std::ostream& LoKi::Particles::VertexDotDistanceDV::fillStream
 // ============================================================================
 LoKi::Particles::VertexChi2DistanceDV::VertexChi2DistanceDV ()
   : LoKi::AuxDesktopBase ()
-  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_fun ( s_VERTEX ) 
+  , LoKi::Particles::VertexChi2Distance ( s_VERTEX ) 
 {}
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")
@@ -879,8 +876,9 @@ LoKi::Particles::VertexChi2DistanceDV::operator()
   // check it!
   Assert ( validDesktop () , "No valid IPhysDesktop is found" );
   // get the best vertex from desktop and use it 
-  m_fun.setVertex ( desktop() -> relatedVertex ( p ) ) ;
-  return m_fun ( p ) ;                                           // RETURN 
+  setVertex ( desktop() -> relatedVertex ( p ) ) ;
+  //
+  return chi2 ( p ) ;                                           // RETURN 
 }
 // ============================================================================
 // OPTIONAL: the specific printout
@@ -892,8 +890,7 @@ std::ostream& LoKi::Particles::VertexChi2DistanceDV::fillStream
 // ============================================================================
 LoKi::Particles::LifeTimeDV::LifeTimeDV() 
   : LoKi::AuxDesktopBase ()
-  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_fun ( s_LTIME , s_VERTEX ) 
+  , LoKi::Particles::LifeTime ( s_LTIME , s_VERTEX ) 
   , m_fit ( s_LIFETIME         ) 
 {}
 // ============================================================================
@@ -902,8 +899,7 @@ LoKi::Particles::LifeTimeDV::LifeTimeDV()
 LoKi::Particles::LifeTimeDV::LifeTimeDV
 ( const std::string& fit ) 
   : LoKi::AuxDesktopBase ()
-  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_fun ( s_LTIME , s_VERTEX ) 
+  , LoKi::Particles::LifeTime ( s_LTIME , s_VERTEX ) 
   , m_fit ( fit  ) 
 {}
 // ============================================================================
@@ -925,17 +921,17 @@ LoKi::Particles::LifeTimeDV::operator()
     return -LoKi::Constants::InvalidTime ;
   }    
   // check the tool 
-  if ( 0 == m_fun.tool() ) { loadFitter ( m_fun , lokiSvc() , m_fit ) ; }
+  if ( 0 == tool() ) { loadFitter ( *this , lokiSvc() , m_fit ) ; }
   // check the fitter 
-  Assert ( 0 != m_fun.tool() , "No Valid ILifetimeFitter is availabe" ) ;
+  Assert ( 0 != tool() , "No Valid ILifetimeFitter is availabe" ) ;
   // load the desktop if needed 
   if ( !validDesktop() ) { loadDesktop() ; }
   // check it!
   Assert ( validDesktop () , "No valid IPhysDesktop is found" );
   // get the vertex from desktop 
-  m_fun.setVertex ( desktop() -> relatedVertex ( p ) ) ;
+  setVertex ( desktop() -> relatedVertex ( p ) ) ;
   // use the functor 
-  return m_fun ( p ) ;
+  return lifeTime ( p ) ;
 }
 // ============================================================================
 // OPTIONAL: the specific printout 
@@ -947,8 +943,7 @@ std::ostream& LoKi::Particles::LifeTimeDV::fillStream
 // ============================================================================
 LoKi::Particles::LifeTimeChi2DV::LifeTimeChi2DV() 
   : LoKi::AuxDesktopBase ()
-  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_fun ( s_LTIME , s_VERTEX ) 
+  , LoKi::Particles::LifeTimeChi2 ( s_LTIME , s_VERTEX ) 
   , m_fit ( s_LIFETIME         ) 
 {}
 // ============================================================================
@@ -957,8 +952,7 @@ LoKi::Particles::LifeTimeChi2DV::LifeTimeChi2DV()
 LoKi::Particles::LifeTimeChi2DV::LifeTimeChi2DV
 ( const std::string& fit ) 
   : LoKi::AuxDesktopBase ()
-  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_fun ( s_LTIME , s_VERTEX ) 
+  , LoKi::Particles::LifeTimeChi2 ( s_LTIME , s_VERTEX ) 
   , m_fit ( fit  ) 
 {}
 // ============================================================================
@@ -980,17 +974,17 @@ LoKi::Particles::LifeTimeChi2DV::operator()
     return LoKi::Constants::InvalidChi2 ;
   }    
   // check the tool 
-  if ( 0 == m_fun.tool() ) { loadFitter ( m_fun , lokiSvc() , m_fit ) ; }
+  if ( 0 == tool() ) { loadFitter ( *this , lokiSvc() , m_fit ) ; }
   // check the fitter 
-  Assert ( 0 != m_fun.tool() , "No Valid ILifetimeFitter is availabe" ) ;
+  Assert ( 0 != tool() , "No Valid ILifetimeFitter is availabe" ) ;
   // load the desktop if needed 
   if ( !validDesktop() ) { loadDesktop() ; }
   // check it!
   Assert ( validDesktop () , "No valid IPhysDesktop is found" );
   // get the vertex from desktop 
-  m_fun.setVertex ( desktop() -> relatedVertex ( p ) ) ;
+  setVertex ( desktop() -> relatedVertex ( p ) ) ;
   // use the functor 
-  return m_fun ( p ) ;
+  return lifeTimeChi2 ( p ) ;
 }
 // ============================================================================
 // OPTIONAL: the specific printout 
@@ -1001,9 +995,8 @@ std::ostream& LoKi::Particles::LifeTimeChi2DV::fillStream
 // constructor 
 // ============================================================================
 LoKi::Particles::LifeTimeSignedChi2DV::LifeTimeSignedChi2DV() 
-  : LoKi::AuxDesktopBase ()
-  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_fun ( s_LTIME , s_VERTEX  ) 
+  : LoKi::AuxDesktopBase () 
+  , LoKi::Particles::LifeTimeSignedChi2 ( s_LTIME , s_VERTEX ) 
   , m_fit ( s_LIFETIME          ) 
 {}
 // ============================================================================
@@ -1012,8 +1005,7 @@ LoKi::Particles::LifeTimeSignedChi2DV::LifeTimeSignedChi2DV()
 LoKi::Particles::LifeTimeSignedChi2DV::LifeTimeSignedChi2DV
 ( const std::string& fit ) 
   : LoKi::AuxDesktopBase ()
-  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_fun ( s_LTIME , s_VERTEX ) 
+  , LoKi::Particles::LifeTimeSignedChi2 ( s_LTIME , s_VERTEX ) 
   , m_fit ( fit  ) 
 {}
 // ============================================================================
@@ -1035,17 +1027,17 @@ LoKi::Particles::LifeTimeSignedChi2DV::operator()
     return LoKi::Constants::InvalidChi2 ;
   }    
   // check the tool 
-  if ( 0 == m_fun.tool() ) { loadFitter ( m_fun , lokiSvc() , m_fit ) ; }
+  if ( 0 == tool() ) { loadFitter ( *this , lokiSvc() , m_fit ) ; }
   // check the fitter 
-  Assert ( 0 != m_fun.tool() , "No Valid ILifetimeFitter is availabe" ) ;
+  Assert ( 0 != tool() , "No Valid ILifetimeFitter is availabe" ) ;
   // load the desktop if needed 
   if ( !validDesktop() ) { loadDesktop() ; }
   // check it!
   Assert ( validDesktop () , "No valid IPhysDesktop is found" );
   // get the vertex from desktop 
-  m_fun.setVertex ( desktop() -> relatedVertex ( p ) ) ;
+  setVertex ( desktop() -> relatedVertex ( p ) ) ;
   // use the functor 
-  return m_fun ( p ) ;
+  return lifeTimeSignedChi2 ( p ) ;
 }
 // ============================================================================
 // OPTIONAL: the specific printout 
@@ -1059,9 +1051,8 @@ std::ostream& LoKi::Particles::LifeTimeSignedChi2DV::fillStream
 // ============================================================================
 LoKi::Particles::LifeTimeFitChi2DV::LifeTimeFitChi2DV() 
   : LoKi::AuxDesktopBase ()
-  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_fun ( s_LTIME , s_VERTEX ) 
-  , m_fit ( s_LIFETIME         ) 
+  , LoKi::Particles::LifeTimeFitChi2 ( s_LTIME , s_VERTEX ) 
+  , m_fit ( s_LIFETIME ) 
 {}
 // ============================================================================
 // constructor 
@@ -1069,8 +1060,7 @@ LoKi::Particles::LifeTimeFitChi2DV::LifeTimeFitChi2DV()
 LoKi::Particles::LifeTimeFitChi2DV::LifeTimeFitChi2DV
 ( const std::string& fit ) 
   : LoKi::AuxDesktopBase ()
-  , LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_fun ( s_LTIME , s_VERTEX ) 
+  , LoKi::Particles::LifeTimeFitChi2 ( s_LTIME , s_VERTEX ) 
   , m_fit ( fit  ) 
 {}
 // ============================================================================
@@ -1092,17 +1082,17 @@ LoKi::Particles::LifeTimeFitChi2DV::operator()
     return LoKi::Constants::InvalidChi2 ;
   }    
   // check the tool 
-  if ( 0 == m_fun.tool() ) { loadFitter ( m_fun , lokiSvc() , m_fit ) ; }
+  if ( 0 == tool() ) { loadFitter ( *this , lokiSvc() , m_fit ) ; }
   // check the fitter 
-  Assert ( 0 != m_fun.tool() , "No Valid ILifetimeFitter is availabe" ) ;
+  Assert ( 0 != tool() , "No Valid ILifetimeFitter is availabe" ) ;
   // load the desktop if needed 
   if ( !validDesktop() ) { loadDesktop() ; }
   // check it!
   Assert ( validDesktop () , "No valid IPhysDesktop is found" );
   // get the vertex from desktop 
-  m_fun.setVertex ( desktop() -> relatedVertex ( p ) ) ;
+  setVertex ( desktop() -> relatedVertex ( p ) ) ;
   // use the functor 
-  return m_fun ( p ) ;
+  return lifeTimeFitChi2 ( p ) ;
 }
 // ============================================================================
 // OPTIONAL: the specific printout 

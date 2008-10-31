@@ -1,4 +1,4 @@
-// $Id: Particles17.h,v 1.6 2008-10-29 13:55:58 ibelyaev Exp $
+// $Id: Particles17.h,v 1.7 2008-10-31 17:27:45 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES17_H 
 #define LOKI_PARTICLES17_H 1
@@ -40,10 +40,10 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-03
      */
-    class DeltaPhi 
-      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
+    class DeltaPhi : public LoKi::Particles::Phi
     {
     public:
+      // ======================================================================
       /// constructor from the angle
       DeltaPhi ( const double phi ) ;
       /// constructor from the vector 
@@ -53,8 +53,7 @@ namespace LoKi
       /// templated constructor from vector 
       template <class VECTOR> 
       DeltaPhi ( const VECTOR& v ) 
-        : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-        , m_eval (         )
+        : LoKi::Particles::Phi () 
         , m_phi  ( v.phi() )
       { 
         m_phi = adjust ( m_phi ) ;
@@ -64,38 +63,46 @@ namespace LoKi
       /// templated constructor from particle
       template <class PARTICLE> 
       DeltaPhi ( const PARTICLE* p ) 
-        : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-        , m_eval (  )
+        : LoKi::Particles::Phi () 
         , m_phi  (  )
       { 
         if ( 0 == p ) { Exception("Invalid PARTICLE*") ;}
         m_phi = p->momentum().phi() ;
         m_phi = adjust ( m_phi ) ;
       } 
-      /// copy constructor
-      DeltaPhi ( const DeltaPhi& right ) ;
       /// MANDATORY: virtual destructor 
       virtual ~DeltaPhi() {}
       /// MANDATORY: clone method ("virtual constructor")
-      virtual  DeltaPhi* clone() const ; 
+      virtual  DeltaPhi* clone() const 
+      { return new DeltaPhi ( *this ) ; }
       /// MANDATORY: the only essential method 
-      virtual result_type operator() ( argument p ) const ;
+      virtual result_type operator() ( argument p ) const 
+      { return dphi ( p ) ; }  
       /// OPTIONAL: "SHORT" representation
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     public:
+      // ======================================================================
       /// get phi_0
-      double phi() const { return  m_phi ; }
+      double phi0() const { return  m_phi ; }
+      /// get delta phi
+      double dphi ( argument p ) const ;
+      // ======================================================================
     public:
+      // ======================================================================
       /// adjust delta phi into the raneg of [-180:180]degrees 
       double adjust ( double phi ) const ;
+      // ======================================================================
     private:
-      // the default constructor is disabled 
+      // ======================================================================
+      /// the default constructor is disabled 
       DeltaPhi ();
+      // ======================================================================
     private:
-      // the actual evaluator of phi
-      LoKi::Particles::Phi    m_eval ; ///< the actual evaluator of phi
-      // the angle itself 
-      double                  m_phi  ; ///< the angle itself 
+      // ======================================================================
+      /// the angle itself 
+      double                  m_phi  ;                      // the angle itself 
+      // ======================================================================
     } ;
     // ========================================================================    
     /** @class DeltaEta
@@ -106,10 +113,10 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-03
      */
-    class DeltaEta 
-      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
+    class DeltaEta : public LoKi::Particles::PseudoRapidity 
     {
     public:
+      // ======================================================================
       /// constructor from the eta
       DeltaEta ( const double eta ) ;
       /// constructor from the vector 
@@ -119,8 +126,7 @@ namespace LoKi
       /// templated constructor from vector 
       template <class VECTOR> 
       DeltaEta ( const VECTOR& v ) 
-        : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
-        , m_eval (         )
+        : LoKi::Particles::PseudoRapidity () 
         , m_eta  ( v.Eta() )
       {} 
       /// constructor from the particle
@@ -128,34 +134,40 @@ namespace LoKi
       /// templated constructor from particle
       template <class PARTICLE> 
       DeltaEta ( const PARTICLE* p ) 
-        : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
-        , m_eval (  )
+        : LoKi::Particles::PseudoRapidity () 
         , m_eta  (  )
       { 
         if ( 0 == p ) { Exception("Invalid PARTICLE*") ;}
         m_eta = p->momentum().Eta() ;
       } 
-      /// copy constructor
-      DeltaEta ( const DeltaEta& right ) ;
       /// MANDATORY: virtual destructor 
       virtual ~DeltaEta() {}
       /// MANDATORY: clone method ("virtual constructor")
-      virtual  DeltaEta* clone() const ; 
+      virtual  DeltaEta* clone() const 
+      { return new DeltaEta ( *this ) ; }
       /// MANDATORY: the only essential method 
-      virtual result_type operator() ( argument p ) const ;
+      virtual result_type operator() ( argument p ) const 
+      { return deta ( p ) ; }
       /// OPTIONAL: "SHORT" representation
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     public:
+      // ======================================================================
       /// get eta_0
-      double eta() const { return  m_eta ; }
+      double eta0 () const { return  m_eta ; }
+      /// get delta eta
+      double deta ( argument p ) const ;
+      // ======================================================================
     private:
-      // the default constructor is disabled 
-      DeltaEta ();
+      // ======================================================================
+      /// the default constructor is disabled 
+      DeltaEta (); // the default constructor is disabled 
+      // ======================================================================
     private:
-      // the actual evaluator of eta
-      LoKi::Particles::PseudoRapidity m_eval ; ///< the actual evaluator of eta
-      // the angle itself 
-      double                          m_eta  ; ///< the angle itself 
+      // ======================================================================
+      /// the angle itself 
+      double                          m_eta  ;             // the angle itself 
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class DeltaR2
@@ -189,7 +201,7 @@ namespace LoKi
         : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
         , m_dphi ( v )
         , m_deta ( v )
-      {} ;
+      {} 
       /// constructor from the particle
       DeltaR2 ( const LHCb::Particle* p ) ;
       /// templated constructor from particle
@@ -198,7 +210,7 @@ namespace LoKi
         : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
         , m_dphi ( p )
         , m_deta ( p )
-      {} ;
+      {} 
       /// copy constructor
       DeltaR2 ( const DeltaR2& right ) ;
       /// MANDATORY: virtual destructor 
@@ -209,14 +221,21 @@ namespace LoKi
       virtual result_type operator() ( argument p ) const ;
       /// OPTIONAL: "SHORT" representation
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     private:
-      // the default constructor is disabled 
-      DeltaR2 ();
+      // ======================================================================
+      /// the default constructor is disabled 
+      DeltaR2 () ;
+      /// no assigenement 
+      DeltaR2& operator=( const DeltaR2& ) ;
+      // ======================================================================
     private:
-      // the actual evaluator of delta phi
-      LoKi::Particles::DeltaPhi m_dphi ; ///< the actual evaluator of delta phi
-      // the actual evaluator of delta eta
-      LoKi::Particles::DeltaEta m_deta ; ///< the actual evaluator of delta eta
+      // ======================================================================
+      /// the actual evaluator of delta phi
+      LoKi::Particles::DeltaPhi m_dphi ; // the actual evaluator of delta phi
+      /// the actual evaluator of delta eta
+      LoKi::Particles::DeltaEta m_deta ; // the actual evaluator of delta eta
+      // ======================================================================
     } ;
     // ========================================================================
   } // end of namespace LoKi::Particles

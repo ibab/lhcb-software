@@ -1,4 +1,4 @@
-// $Id: Particles21.h,v 1.1 2008-09-23 17:18:35 ibelyaev Exp $
+// $Id: Particles21.h,v 1.2 2008-10-31 17:27:45 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES21_H 
 #define LOKI_PARTICLES21_H 1
@@ -44,6 +44,11 @@ namespace LoKi
       /// the evalautor of the delta mass 
       double delta ( argument p ) const ;
       // ======================================================================
+    private:
+      // ======================================================================
+      /// no asignement 
+      DeltaNominalMass& operator=( const DeltaNominalMass& ) ;
+      // ======================================================================
     };
     // ========================================================================
     /** @class AbsDeltaNominalMass
@@ -75,6 +80,11 @@ namespace LoKi
       /// the evalautor of the delta mass 
       double adelta ( argument p ) const ;
       // ======================================================================
+    private:
+      // ======================================================================
+      /// no asignement 
+      AbsDeltaNominalMass& operator=( const AbsDeltaNominalMass& ) ;
+      // ======================================================================
     };
     // ========================================================================
     /** @class DeltaNominalMassChi2
@@ -105,6 +115,11 @@ namespace LoKi
       // ======================================================================
       /// the evalautor of the delta mass 
       double chi2 ( argument p ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// no asignement 
+      DeltaNominalMassChi2& operator=( const DeltaNominalMassChi2& ) ;
       // ======================================================================
     };
     // ========================================================================

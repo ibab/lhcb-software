@@ -1,4 +1,4 @@
-// $Id: Vertices5.cpp,v 1.1 2008-03-30 13:43:37 ibelyaev Exp $
+// $Id: Vertices5.cpp,v 1.2 2008-10-31 17:27:46 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -43,8 +43,7 @@ namespace
 // ============================================================================
 LoKi::Vertices::MinVertexDistanceWithSource::MinVertexDistanceWithSource 
 ( const LoKi::Vertices::MinVertexDistanceWithSource::_Source& source )
-  : LoKi::BasicFunctors<const LHCb::VertexBase*>::Function() 
-  , m_mvd    ( s_EMPTY ) 
+  : LoKi::Vertices::MinVertexDistance ( s_EMPTY ) 
   , m_source ( source  ) 
 {}
 // ============================================================================
@@ -57,7 +56,7 @@ LoKi::Vertices::MinVertexDistanceWithSource::clone() const
 // MANDATORY: the only one essential method 
 // ============================================================================
 LoKi::Vertices::MinVertexDistanceWithSource::result_type 
-LoKi::Vertices::MinVertexDistanceWithSource::minvd 
+LoKi::Vertices::MinVertexDistanceWithSource::minvdsource
 ( LoKi::Vertices::MinVertexDistanceWithSource::argument v ) const 
 {
   if ( 0 == v ) 
@@ -69,17 +68,17 @@ LoKi::Vertices::MinVertexDistanceWithSource::minvd
   if ( !sameEvent() ) 
   {
     // clear the list of vertices 
-    m_mvd.clear() ;
+    clear() ;
     // get the primary vertices from the source 
     LHCb::VertexBase::ConstVector primaries = m_source() ;
     // fill the functor with primary vertices:
-    m_mvd.addObjects ( primaries.begin() , primaries.end () ) ;
-    if ( m_mvd.empty() ) { Error ( "Empty list of vertices is loaded!" ) ; }
+    addObjects ( primaries.begin() , primaries.end () ) ;
+    if ( empty() ) { Error ( "Empty list of vertices is loaded!" ) ; }
     // update the event:
     setEvent () ;
   }
   // use the functor 
-  return m_mvd ( v  ) ;
+  return minvd ( v  ) ;
 }
 // ============================================================================
 // OPTIONAL: the specific printout
@@ -205,8 +204,7 @@ LoKi::Vertices::MinVertexDistanceTES::fillStream
 // ============================================================================
 LoKi::Vertices::MinVertexChi2DistanceWithSource::MinVertexChi2DistanceWithSource 
 ( const LoKi::Vertices::MinVertexChi2DistanceWithSource::_Source& source )
-  : LoKi::BasicFunctors<const LHCb::VertexBase*>::Function() 
-  , m_mvd    ( s_EMPTY ) 
+  : LoKi::Vertices::MinVertexChi2Distance ( s_EMPTY ) 
   , m_source ( source  ) 
 {}
 // ============================================================================
@@ -219,7 +217,7 @@ LoKi::Vertices::MinVertexChi2DistanceWithSource::clone() const
 // MANDATORY: the only one essential method 
 // ============================================================================
 LoKi::Vertices::MinVertexChi2DistanceWithSource::result_type 
-LoKi::Vertices::MinVertexChi2DistanceWithSource::minvdchi2  
+LoKi::Vertices::MinVertexChi2DistanceWithSource::minvdchi2source
 ( LoKi::Vertices::MinVertexChi2DistanceWithSource::argument v ) const 
 {
   if ( 0 == v ) 
@@ -231,17 +229,17 @@ LoKi::Vertices::MinVertexChi2DistanceWithSource::minvdchi2
   if ( !sameEvent() ) 
   {
     // clear the list of vertices 
-    m_mvd.clear() ;
+    clear() ;
     // get the primary vertices from the source 
     LHCb::VertexBase::ConstVector primaries = m_source() ;
     // fill the functor with primary vertices:
-    m_mvd.addObjects ( primaries.begin() , primaries.end () ) ;
-    if ( m_mvd.empty() ) { Error ( "Empty list of vertices is loaded!" ) ; }
+    addObjects ( primaries.begin() , primaries.end () ) ;
+    if ( empty() ) { Error ( "Empty list of vertices is loaded!" ) ; }
     // update the event:
     setEvent () ;
   }
   // use the functor 
-  return m_mvd ( v  ) ;
+  return minvdchi2 ( v  ) ;
 }
 // ============================================================================
 // OPTIONAL: the specific printout

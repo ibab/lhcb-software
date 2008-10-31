@@ -1,4 +1,4 @@
-// $Id: Vertices2.h,v 1.3 2007-11-28 14:39:30 ibelyaev Exp $
+// $Id: Vertices2.h,v 1.4 2008-10-31 17:27:46 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_VERTICES2_H 
 #define LOKI_VERTICES2_H 1
@@ -72,8 +72,11 @@ namespace LoKi
       const LHCb::Particle* particle() const 
       { return m_particle ; }
     private:
+      // ======================================================================
       // default constructor is private 
-      ImpPar();
+      ImpPar(); 
+      ImpPar& operator= ( const ImpPar& ) ;
+      // ======================================================================
     private:
       LoKi::Particles::ImpPar   m_evaluator ;
       const LHCb::Particle*     m_particle  ;
@@ -131,11 +134,16 @@ namespace LoKi
       const LHCb::Particle* particle() const 
       { return m_particle ; }
     private:
+      // ======================================================================
       // default constructor is private 
       ImpParChi2();
+      ImpParChi2& operator= ( const ImpParChi2& ) ;
+      // ======================================================================
     private:
+      // ======================================================================
       LoKi::Particles::ImpParChi2 m_evaluator ;
       const LHCb::Particle*       m_particle  ;
+      // ======================================================================
     };
     // ========================================================================    
   } // end of namespace LoKi::Vertices 

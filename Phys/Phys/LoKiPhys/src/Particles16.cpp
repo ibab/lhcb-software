@@ -1,4 +1,4 @@
-// $Id: Particles16.cpp,v 1.5 2007-11-28 14:39:30 ibelyaev Exp $
+// $Id: Particles16.cpp,v 1.6 2008-10-31 17:27:46 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -72,25 +72,25 @@ LoKi::Particles::CosineDirectionAngle::clone() const
 { return new LoKi::Particles::CosineDirectionAngle(*this) ; }
 // ============================================================================
 LoKi::Particles::CosineDirectionAngle::result_type 
-LoKi::Particles::CosineDirectionAngle::operator() 
-  ( LoKi::Particles::CosineDirectionAngle::argument p ) const 
+LoKi::Particles::CosineDirectionAngle::dira
+( LoKi::Particles::CosineDirectionAngle::argument p ) const 
 {
   if ( 0 == p ) 
-    {
-      Error ( "LHCb::Particle* points to NULL, return -1000");
-      return -1000 ;
-    }
+  {
+    Error ( "LHCb::Particle* points to NULL, return -1000");
+    return -1000 ;
+  }
   const LHCb::VertexBase* v = p->endVertex() ;
   if ( 0 == v ) 
-    {
-      Error ( "LHCb::Particle::endVertex points to NULL, return -2000");
-      return -2000 ;
-    }
+  {
+    Error ( "LHCb::Particle::endVertex points to NULL, return -2000");
+    return -2000 ;
+  }
   if ( !valid() ) 
-    {
-      Error ( "VertexHolder base is invalid, return -3000");
-      return -3000 ;
-    }
+  {
+    Error ( "VertexHolder base is invalid, return -3000");
+    return -3000 ;
+  }
   const LoKi::ThreeVector m = p->momentum().Vect() ;
   const LoKi::ThreeVector d = v->position()-position() ;
   const double dot  = m.Dot(d) ;
@@ -98,10 +98,10 @@ LoKi::Particles::CosineDirectionAngle::operator()
   if ( 0 == dot ) { return 0  ;}
   const double norm = m.Mag2()*d.Mag2() ;
   if ( 0 >= norm ) 
-    {
-      Warning("Vectors of illegan length, return -4000") ;
-      return -4000 ;
-    }
+  {
+    Warning ( "Vectors of illegal length, return -4000") ;
+    return -4000 ;
+  }
   return  dot / ::sqrt( norm ) ;
 } 
 // ============================================================================

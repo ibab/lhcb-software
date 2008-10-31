@@ -1,4 +1,4 @@
-// $Id: Particles4.h,v 1.10 2008-01-25 14:42:22 ibelyaev Exp $
+// $Id: Particles4.h,v 1.11 2008-10-31 17:27:46 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES4_H 
 #define LOKI_PARTICLES4_H 1
@@ -61,6 +61,7 @@ namespace LoKi
       , public LoKi::Vertices::ImpParBase 
     {
     public:
+      // ======================================================================
       /// constructor 
       ImpPar 
       ( const LHCb::VertexBase*                 vertex ,   
@@ -87,21 +88,26 @@ namespace LoKi
         const LoKi::Vertices::VertexHolder&      vertex ) ;
       /// constructor 
       ImpPar ( const LoKi::Vertices::ImpParBase& tool   ) ;
-      /// copy constructor 
-      ImpPar ( const LoKi::Particles::ImpPar&    right  ) ;
       /// MANDATORY: virtual destructor 
       virtual ~ImpPar(){} 
       /// MANDATORY: clone method ("virtual constructor")
       virtual ImpPar* clone() const { return new ImpPar( *this ) ; }        
       /// MANDATORY: the only one essential method 
-      virtual result_type operator() ( argument p ) const { return ip( p ) ; }
+      virtual result_type operator() ( argument p ) const 
+      { return ip( p ) ; }
       /// OPTIONAL: the specific printout 
-      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      virtual std::ostream& fillStream( std::ostream& s ) const 
+      { return s <<  "IP" ; }
       /// the actual evaluator 
       result_type ip ( argument p ) const ;
+      // ======================================================================
     private:
-      // default constructor is private 
-      ImpPar();
+      // ======================================================================
+      /// default constructor is private 
+      ImpPar(); // default constructor is private 
+      /// no assigenement 
+      ImpPar& operator=(const ImpPar&) ; // no assigenement
+      // ======================================================================
     };
     // ========================================================================    
     /** @class ImpParChi2
@@ -119,39 +125,42 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class ImpParChi2 
-      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
-      , public LoKi::Vertices::ImpParBase 
+    class ImpParChi2 : public LoKi::Particles::ImpPar 
     {
     public:
       /// constructor 
       ImpParChi2 
       ( const LHCb::VertexBase*                vertex ,   
-        const LoKi::Vertices::ImpactParamTool& tool   ) ;
+        const LoKi::Vertices::ImpactParamTool& tool   ) 
+        : LoKi::Particles::ImpPar ( vertex , tool ) {}
       /// constructor 
       ImpParChi2 
       ( const LoKi::Point3D&                   point  ,   
-        const LoKi::Vertices::ImpactParamTool& tool   ) ;
+        const LoKi::Vertices::ImpactParamTool& tool   ) 
+        : LoKi::Particles::ImpPar ( point  , tool ) {}
       /// constructor 
       ImpParChi2  
       ( const LoKi::Vertices::VertexHolder&     vertex ,   
-        const LoKi::Vertices::ImpactParamTool&  tool   ) ;
+        const LoKi::Vertices::ImpactParamTool&  tool   ) 
+        : LoKi::Particles::ImpPar ( vertex , tool ) {}
       /// constructor 
       ImpParChi2 
       ( const LoKi::Vertices::ImpactParamTool& tool   ,
-        const LHCb::VertexBase*                vertex ) ;
+        const LHCb::VertexBase*                vertex ) 
+        : LoKi::Particles::ImpPar ( vertex , tool ) {}
       /// constructor 
       ImpParChi2 
       ( const LoKi::Vertices::ImpactParamTool& tool   , 
-        const LoKi::Point3D&                   point  ) ;
+        const LoKi::Point3D&                   point  ) 
+        : LoKi::Particles::ImpPar ( point  , tool ) {}
       /// constructor 
       ImpParChi2 
       ( const LoKi::Vertices::ImpactParamTool&   tool   ,
-        const LoKi::Vertices::VertexHolder&      vertex ) ;
+        const LoKi::Vertices::VertexHolder&      vertex ) 
+        : LoKi::Particles::ImpPar ( vertex , tool ) {}
       /// constructor 
-      ImpParChi2 ( const LoKi::Vertices::ImpParBase&  tool  ) ;
-      /// copy constructor 
-      ImpParChi2 ( const LoKi::Particles::ImpParChi2& right ) ;
+      ImpParChi2 ( const LoKi::Vertices::ImpParBase&  tool  ) 
+        : LoKi::Particles::ImpPar ( tool ) {}
       /// MANDATORY: virtual destructor 
       virtual ~ImpParChi2(){} ;
       /// MANDATORY: clone method ("virtual constructor")
@@ -159,12 +168,19 @@ namespace LoKi
       /// MANDATORY: the only one essential method 
       virtual result_type operator() ( argument p ) const { return chi2( p ) ; }
       /// OPTIONAL: the specific printout 
-      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      virtual std::ostream& fillStream ( std::ostream& s ) const 
+      { return s <<  "IPCHI2" ; }
       /// the actual evaluator 
-      result_type chi2 ( argument p ) const ;
+      result_type   chi2 ( argument p ) const { return ipchi2 ( p ) ; }
+      result_type ipchi2 ( argument p ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       // default constructor is private 
-      ImpParChi2();
+      ImpParChi2() ; // default constructor is private 
+      /// no assigenement 
+      ImpParChi2& operator=(const ImpParChi2&) ; // no assigenement
+      // ======================================================================
     };
     // ========================================================================    
     /** @class MinImpPar
@@ -188,7 +204,7 @@ namespace LoKi
      *  @date   2002-07-15
      */
     class MinImpPar 
-      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
+      : public LoKi::Particles::ImpPar 
       , public LoKi::Keeper<LHCb::VertexBase> 
     {
     public:
@@ -325,9 +341,8 @@ namespace LoKi
       ( VERTEX                                 first , 
         VERTEX                                 last  , 
         const LoKi::Vertices::ImpactParamTool& tool  ) 
-        : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
-        , LoKi::Keeper<LHCb::VertexBase>( first , last )
-        , m_fun      ( (const LHCb::VertexBase*) 0 , tool )
+        : LoKi::Particles::ImpPar ( (const LHCb::VertexBase*) 0 , tool )
+        , m_keeper ( first , last )
       {}
       /** templated constructor from arbitrary sequence 
        *  of objects, convertible to "const LHCb::Vertex*"
@@ -340,12 +355,9 @@ namespace LoKi
       ( const LoKi::Vertices::ImpactParamTool& tool  ,
         VERTEX                                 first , 
         VERTEX                                 last  ) 
-        : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
-        , LoKi::Keeper<LHCb::VertexBase>( first , last )
-        , m_fun      ( (const LHCb::VertexBase*) 0 , tool )
-      {};
-      /// copy constructor 
-      MinImpPar ( const LoKi::Particles::MinImpPar& right ) ;
+        : LoKi::Particles::ImpPar ( (const LHCb::VertexBase*) 0 , tool )
+        , m_keeper ( first , last )
+      {}
       /// MANDATORY: virtual destructor 
       virtual ~MinImpPar(){} ;
       /// MANDATORY: clone method ("virtual constructor")
@@ -357,16 +369,37 @@ namespace LoKi
       /// the actual evaluator 
       result_type mip ( argument p ) const ;
     public:
-      /// get the evaluator 
-      const LoKi::Particles::ImpPar& impPar() const { return m_fun ; }
-      /// cast to helper tool 
-      operator const LoKi::Vertices::ImpactParamTool& () const { return m_fun ; }  
+      // ======================================================================
+      const LoKi::Keeper<LHCb::VertexBase>& keeper  () const { return m_keeper ; }
+      const LoKi::Keeper<LHCb::VertexBase>& vertices() const { return m_keeper ; }
+      operator const LoKi::Keeper<LHCb::VertexBase>&() const { return m_keeper ; }
+      LoKi::Keeper<LHCb::VertexBase>::const_iterator begin () const 
+      { return m_keeper.begin () ; }
+      LoKi::Keeper<LHCb::VertexBase>::const_iterator end   () const 
+      { return m_keeper.end   () ; }      
+      bool empty () const { return m_keeper.empty () ; }
+      bool size  () const { return m_keeper.size  () ; }
+      // ======================================================================
+    protected:
+      // ======================================================================
+      void clear () const { m_keeper.clear() ; }
+      // ======================================================================
+      template <class VERTEX>
+      size_t addObjects ( VERTEX first , VERTEX last ) const
+      { return m_keeper.addObjects ( first , last ) ; }
+      // ======================================================================
     private:
+      /// ===================================================================== 
       // default constructor is private 
       MinImpPar();
-    private:
-      // the actual IP evaluator 
-      LoKi::Particles::ImpPar m_fun ; ///< the actual IP evaluator 
+      /// no assigenement 
+      MinImpPar& operator=(const MinImpPar&) ; // no assigenement
+      /// ===================================================================== 
+    public:
+      // ======================================================================
+      /// keeper for the vertices 
+      mutable LoKi::Keeper<LHCb::VertexBase> m_keeper ;
+      // ======================================================================
     };
     // ========================================================================
     /** @class MinImpParChi2
@@ -388,9 +421,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   2002-07-15
      */
-    class MinImpParChi2 
-      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
-      , public LoKi::Keeper<LHCb::VertexBase> 
+    class MinImpParChi2 : public LoKi::Particles::ImpParChi2 
     {
     public:
       /// constructor from vertices and the tool
@@ -524,9 +555,8 @@ namespace LoKi
       ( VERTEX                                 first , 
         VERTEX                                 last  , 
         const LoKi::Vertices::ImpactParamTool& tool  ) 
-        : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
+        : LoKi::Particles::ImpParChi2 ( (const LHCb::VertexBase*) 0 , tool )
         , LoKi::Keeper<LHCb::VertexBase>( first , last )
-        , m_fun      ( (const LHCb::VertexBase*) 0 , tool )
       {}
       /** templated constructor from arbitrary sequence 
        *  of objects, convertible to "const LHCb::Vertex*"
@@ -539,12 +569,9 @@ namespace LoKi
       ( const LoKi::Vertices::ImpactParamTool& tool  ,
         VERTEX                                 first , 
         VERTEX                                 last  ) 
-        : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
+        : LoKi::Particles::ImpParChi2 ( (const LHCb::VertexBase*) 0 , tool )
         , LoKi::Keeper<LHCb::VertexBase>( first , last )
-        , m_fun      ( (const LHCb::VertexBase*) 0 , tool )
       {}
-      /// copy constructor 
-      MinImpParChi2 ( const LoKi::Particles::MinImpParChi2& right ) ;
       /// MANDATORY: virtual destructor 
       virtual ~MinImpParChi2(){} ;
       /// MANDATORY: clone method ("virtual constructor")
@@ -557,20 +584,43 @@ namespace LoKi
       virtual std::ostream& fillStream( std::ostream& s ) const ;
       /// the actual evaluator 
       result_type mipchi2 ( argument p ) const ;
+      // ======================================================================
     public:
-      /// get the evaluator 
-      const LoKi::Particles::ImpParChi2& impParChi2() const { return m_fun ; }
-      /// cast to helper tool 
-      operator const LoKi::Vertices::ImpactParamTool& () const { return m_fun ; }  
+      // ======================================================================
+      const LoKi::Keeper<LHCb::VertexBase>& keeper  () const { return m_keeper ; }
+      const LoKi::Keeper<LHCb::VertexBase>& vertices() const { return m_keeper ; }
+      operator const LoKi::Keeper<LHCb::VertexBase>&() const { return m_keeper ; }
+      LoKi::Keeper<LHCb::VertexBase>::const_iterator begin () const 
+      { return m_keeper.begin () ; }
+      LoKi::Keeper<LHCb::VertexBase>::const_iterator end   () const 
+      { return m_keeper.end   () ; }      
+      bool empty () const { return m_keeper.empty () ; }
+      bool size  () const { return m_keeper.size  () ; }
+      // ======================================================================
+    protected:
+      // ======================================================================
+      void clear () const { m_keeper.clear() ; }
+      // ======================================================================
+      template <class VERTEX>
+      size_t addObjects ( VERTEX first , VERTEX last ) const
+      { return m_keeper.addObjects ( first , last ) ; }
+      // ======================================================================
     private:
+      // ======================================================================
       // default constructor is private 
       MinImpParChi2();
-    private:
-      // the actual IP evaluator 
-      LoKi::Particles::ImpParChi2 m_fun ; ///< the actual IP evaluator 
+      /// no assigenement 
+      MinImpParChi2& operator=(const MinImpParChi2&) ; // no assigenement
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// keeper for the vertices 
+      mutable LoKi::Keeper<LHCb::VertexBase> m_keeper ;
+      // ======================================================================
     };
     // ========================================================================    
-  }  // end of namespace LoKi::Particles
+  } // end of namespace LoKi::Particles
+  // ==========================================================================
 } // end of namespace LoKi
 // ============================================================================
 // The END 

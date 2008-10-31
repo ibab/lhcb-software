@@ -1,4 +1,4 @@
-// $Id: Particles19.h,v 1.1 2008-01-25 14:42:22 ibelyaev Exp $
+// $Id: Particles19.h,v 1.2 2008-10-31 17:27:45 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES19_H 
 #define LOKI_PARTICLES19_H 1
@@ -55,6 +55,7 @@ namespace LoKi
       , public LoKi::Vertices::VertexHolder 
     {
     public:
+      // ======================================================================
       /// constructor 
       LifeTime ( const LHCb::VertexBase* vertex , 
                  const ILifetimeFitter*  tool   ) ;
@@ -70,24 +71,46 @@ namespace LoKi
       /// MANDATORY: virtual destructor 
       virtual ~LifeTime() {}
       /// MANDATORY: clone method ("virtual constructor")
-      virtual  LifeTime* clone() const ;
+      virtual  LifeTime* clone() const { return new LifeTime ( *this ) ; }
       /// MANDATORY: the only one essential method 
-      virtual result_type operator() ( argument p ) const ;
+      virtual result_type operator() ( argument p ) const 
+      { return lifeTime ( p )  ; }
       /// OPTIONAL: the specific printout 
-      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      virtual std::ostream& fillStream ( std::ostream& s ) const 
+      { return s << "LIFETIME" ; }
+      // ======================================================================
     public:
+      // ======================================================================
       // set the fitter 
       void setTool ( const ILifetimeFitter* tool ) const { m_fitter = tool ; }
       // set the fitter 
-      void setTool ( const LoKi::Interface<ILifetimeFitter>& tool ) const { m_fitter = tool ; }      
+      void setTool ( const LoKi::Interface<ILifetimeFitter>& tool ) const 
+      { m_fitter = tool ; }      
       // get the fitter 
-      const ILifetimeFitter* tool() const { return m_fitter ; }
+      const ILifetimeFitter* tool   () const { return m_fitter ; }
+      // get the fitter 
+      const ILifetimeFitter* fitter () const { return m_fitter ; }
+      // cast to the fitter 
+      operator const LoKi::Interface<ILifetimeFitter>&() const 
+      { return m_fitter ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// evaluate the lifetime 
+      result_type lifeTime ( argument p ) const ;
+      // ======================================================================
     private:
-      // the default constructor is disabled 
-      LifeTime () ; ///< the default constructor is disabled
+      // ======================================================================
+      /// the default constructor is disabled 
+      LifeTime () ; // the default constructor is disabled
+      /// no assignement 
+      LifeTime& operator=( const LifeTime& ) ;                // no assignement 
+      // ======================================================================
     private:
-      // the lifetime fitter itself
-      mutable LoKi::Interface<ILifetimeFitter> m_fitter ; ///< the lifetime fitter
+      // ======================================================================
+      /// the lifetime fitter itself
+      mutable LoKi::Interface<ILifetimeFitter> m_fitter ; // the lifetime fitter
+      // ======================================================================
     };
     // ========================================================================
     /** @class LifeTimeChi2 
@@ -102,44 +125,49 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-17
      */
-    class LifeTimeChi2 
-      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
-      , public LoKi::Vertices::VertexHolder 
+    class LifeTimeChi2 : public LifeTime 
     {
     public:
       /// constructor 
       LifeTimeChi2 ( const LHCb::VertexBase* vertex , 
-                     const ILifetimeFitter*  tool   ) ;
+                     const ILifetimeFitter*  tool   ) 
+        : LifeTime ( vertex , tool ) {}      
       /// constructor 
       LifeTimeChi2 ( const ILifetimeFitter*  tool   , 
-                     const LHCb::VertexBase* vertex ) ;
+                     const LHCb::VertexBase* vertex ) 
+        : LifeTime ( vertex , tool ) {}      
       /// constructor 
       LifeTimeChi2 ( const LHCb::VertexBase*                  vertex , 
-                     const LoKi::Interface<ILifetimeFitter>&  tool   ) ;
+                     const LoKi::Interface<ILifetimeFitter>&  tool   ) 
+        : LifeTime ( vertex , tool ) {}      
       /// constructor 
       LifeTimeChi2 ( const LoKi::Interface<ILifetimeFitter>&  tool   , 
-                     const LHCb::VertexBase*                  vertex ) ;
+                     const LHCb::VertexBase*                  vertex ) 
+        : LifeTime ( vertex , tool ) {}      
       /// MANDATORY: virtual destructor 
       virtual ~LifeTimeChi2 () {}
       /// MANDATORY: clone method ("virtual constructor")
-      virtual  LifeTimeChi2* clone() const ;
+      virtual  LifeTimeChi2* clone() const 
+      { return new LifeTimeChi2 ( *this ) ; }
       /// MANDATORY: the only one essential method 
-      virtual result_type operator() ( argument p ) const ;
+      virtual result_type operator() ( argument p ) const 
+      { return lifeTimeChi2 ( p ) ; }
       /// OPTIONAL: the specific printout 
-      virtual std::ostream& fillStream ( std::ostream& s ) const ;
-    public:
-      // set the fitter 
-      void setTool ( const ILifetimeFitter* tool ) const { m_fitter = tool ; }
-      // set the fitter 
-      void setTool ( const LoKi::Interface<ILifetimeFitter>& tool ) const { m_fitter = tool ; }      
-      // get the fitter 
-      const ILifetimeFitter* tool() const { return m_fitter ; }
+      virtual std::ostream& fillStream ( std::ostream& s ) const 
+      { return s << "LTCHI2" ; }
+      // ======================================================================
+   public:
+      // ======================================================================
+      // evaluate the lifetime 
+      result_type lifeTimeChi2 ( argument p ) const ;
+      // ======================================================================
     private:
-      // the default constructor is disabled 
-      LifeTimeChi2 () ; ///< the default constructor is disabled
-    private:
-      // the lifetime fitter itself
-      mutable LoKi::Interface<ILifetimeFitter> m_fitter ; ///< the lifetime fitter
+      // ======================================================================
+      /// the default constructor is disabled 
+      LifeTimeChi2 () ; // the default constructor is disabled
+      /// no assignement 
+      LifeTimeChi2& operator=( const LifeTimeChi2& ) ;       // no assignement 
+      // ======================================================================
     };
     // ========================================================================
     /** @class LifeTimeSignedChi2 
@@ -154,52 +182,59 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-17
      */
-    class LifeTimeSignedChi2 
-      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
-      , public LoKi::Vertices::VertexHolder 
+    class LifeTimeSignedChi2 : public LoKi::Particles::LifeTimeChi2
     {
     public:
+      // ======================================================================
       /// constructor 
       LifeTimeSignedChi2
       ( const LHCb::VertexBase* vertex , 
-        const ILifetimeFitter*  tool   ) ;
+        const ILifetimeFitter*  tool   ) 
+        : LoKi::Particles::LifeTimeChi2 (  vertex , tool ) {}
       /// constructor 
       LifeTimeSignedChi2
       ( const ILifetimeFitter*  tool   , 
-        const LHCb::VertexBase* vertex ) ;
+        const LHCb::VertexBase* vertex ) 
+        : LoKi::Particles::LifeTimeChi2 (  vertex , tool ) {}
       /// constructor 
       LifeTimeSignedChi2
       ( const LHCb::VertexBase*                  vertex , 
-        const LoKi::Interface<ILifetimeFitter>&  tool   ) ;
+        const LoKi::Interface<ILifetimeFitter>&  tool   ) 
+        : LoKi::Particles::LifeTimeChi2 (  vertex , tool ) {}
       /// constructor 
       LifeTimeSignedChi2
       ( const LoKi::Interface<ILifetimeFitter>&  tool   , 
-        const LHCb::VertexBase*                  vertex ) ;
+        const LHCb::VertexBase*                  vertex ) 
+        : LoKi::Particles::LifeTimeChi2 (  vertex , tool ) {}
       /// MANDATORY: virtual destructor 
       virtual ~LifeTimeSignedChi2 () {}
       /// MANDATORY: clone method ("virtual constructor")
-      virtual  LifeTimeSignedChi2* clone() const ;
+      virtual  LifeTimeSignedChi2* clone() const 
+      { return new LifeTimeSignedChi2(*this ) ; }    
       /// MANDATORY: the only one essential method 
-      virtual result_type operator() ( argument p ) const ;
+      virtual result_type operator() ( argument p ) const 
+      { return lifeTimeSignedChi2 ( p ) ; }
       /// OPTIONAL: the specific printout 
-      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      virtual std::ostream& fillStream ( std::ostream& s ) const
+      { return s << "LTSIGNCHI2" ; }
+      // ======================================================================
     public:
-      // set the fitter 
-      void setTool ( const ILifetimeFitter* tool ) const { m_fitter = tool ; }
-      // set the fitter 
-      void setTool ( const LoKi::Interface<ILifetimeFitter>& tool ) const { m_fitter = tool ; }      
-      // get the fitter 
-      const ILifetimeFitter* tool() const { return m_fitter ; }
+      // ======================================================================
+      // evaluate the lifetime 
+      result_type lifeTimeSignedChi2 ( argument p ) const ;
+      // ======================================================================
     private:
-      // the default constructor is disabled 
-      LifeTimeSignedChi2 () ; ///< the default constructor is disabled
-    private:
-      // the lifetime fitter itself
-      mutable LoKi::Interface<ILifetimeFitter> m_fitter ; ///< the lifetime fitter
+      // ======================================================================
+      /// the default constructor is disabled 
+      LifeTimeSignedChi2 () ; // the default constructor is disabled
+      /// no assignement 
+      LifeTimeSignedChi2& operator=( const LifeTimeSignedChi2& ) ;
+      // ======================================================================
     };
     // ========================================================================
     /** @class LifeTimeFitChi2 
-     *  The simple function which evaliuates the chi2 for lifetime fit of the particle 
+     *  The simple function which evaliuates the chi2 for lifetime 
+     *  fit of the particle 
      *  using ILifetimeFitter tool
      *
      *  @see LoKi::Cuts::LTFITCHI2
@@ -210,49 +245,54 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-17
      */
-    class LifeTimeFitChi2 
-      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
-      , public LoKi::Vertices::VertexHolder 
+    class LifeTimeFitChi2 : public LoKi::Particles::LifeTime 
     {
     public:
+      // ======================================================================
       /// constructor 
       LifeTimeFitChi2
       ( const LHCb::VertexBase* vertex , 
-        const ILifetimeFitter*  tool   ) ;
+        const ILifetimeFitter*  tool   ) 
+        : LoKi::Particles::LifeTime ( vertex , tool ) {}
       /// constructor 
       LifeTimeFitChi2
       ( const ILifetimeFitter*  tool   , 
-        const LHCb::VertexBase* vertex ) ;
+        const LHCb::VertexBase* vertex ) 
+        : LoKi::Particles::LifeTime ( vertex , tool ) {}
       /// constructor 
       LifeTimeFitChi2
       ( const LHCb::VertexBase*                  vertex , 
-        const LoKi::Interface<ILifetimeFitter>&  tool   ) ;
+        const LoKi::Interface<ILifetimeFitter>&  tool   ) 
+        : LoKi::Particles::LifeTime ( vertex , tool ) {}
       /// constructor 
       LifeTimeFitChi2
       ( const LoKi::Interface<ILifetimeFitter>&  tool   , 
-        const LHCb::VertexBase*                  vertex ) ;
+        const LHCb::VertexBase*                  vertex ) 
+        : LoKi::Particles::LifeTime ( vertex , tool ) {}
       /// MANDATORY: virtual destructor 
       virtual ~LifeTimeFitChi2 () {}
       /// MANDATORY: clone method ("virtual constructor")
-      virtual  LifeTimeFitChi2* clone() const ;
+      virtual  LifeTimeFitChi2* clone() const 
+      { return  new LoKi::Particles::LifeTimeFitChi2 ( *this ) ; }
       /// MANDATORY: the only one essential method 
-      virtual result_type operator() ( argument p ) const ;
+      virtual result_type operator() ( argument p ) const 
+      { return lifeTimeFitChi2 ( p ) ; }
       /// OPTIONAL: the specific printout 
-      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      virtual std::ostream& fillStream ( std::ostream& s ) const 
+      { return s << "LTFITCHI2" ; }
+      // ======================================================================
     public:
-      // set the fitter 
-      void setTool ( const ILifetimeFitter* tool ) const { m_fitter = tool ; }
-      // set the fitter 
-      void setTool ( const LoKi::Interface<ILifetimeFitter>& tool ) const 
-      { m_fitter = tool ; }      
-      // get the fitter 
-      const ILifetimeFitter* tool() const { return m_fitter ; }
+      // ======================================================================
+      // evaluate the lifetime 
+      result_type lifeTimeFitChi2 ( argument p ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       // the default constructor is disabled 
       LifeTimeFitChi2 () ; ///< the default constructor is disabled
-    private:
-      // the lifetime fitter itself
-      mutable LoKi::Interface<ILifetimeFitter> m_fitter ; ///< the lifetime fitter
+      /// no assignement 
+      LifeTimeFitChi2& operator=( const LifeTimeFitChi2& ) ;
+      // ======================================================================
     };
    // ========================================================================
   } // end of namespace LoKi::Particles 

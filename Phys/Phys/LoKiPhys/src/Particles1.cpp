@@ -1,4 +1,4 @@
-// $Id: Particles1.cpp,v 1.8 2007-11-28 14:39:30 ibelyaev Exp $
+// $Id: Particles1.cpp,v 1.9 2008-10-31 17:27:46 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -173,17 +173,10 @@ LoKi::Particles::VertexSignedDistance*
 LoKi::Particles::VertexSignedDistance::clone() const
 { return new LoKi::Particles::VertexSignedDistance(*this) ; }
 // ============================================================================
-//  MANDATORY: the only one essential method 
-// ============================================================================
-LoKi::Particles::VertexSignedDistance::result_type 
-LoKi::Particles::VertexSignedDistance::operator() 
-  ( LoKi::Particles::VertexSignedDistance::argument p ) const
-{ return distance ( p ) ; }
-// ============================================================================
 //  the actual computation 
 // ============================================================================
 LoKi::Particles::VertexSignedDistance::result_type 
-LoKi::Particles::VertexSignedDistance::distance 
+LoKi::Particles::VertexSignedDistance::signedDistance 
 ( LoKi::Particles::VertexSignedDistance::argument p ) const
 { 
   if ( 0 == p )
@@ -192,8 +185,8 @@ LoKi::Particles::VertexSignedDistance::distance
     return LoKi::Constants::InvalidDistance;                   // RETURN 
   }
   // call for actual evalautor 
-  return m_fun.distance( p->endVertex() ) ;
-} ;
+  return m_fun.signedDistance ( p->endVertex() ) ;
+} 
 // ============================================================================
 //  OPTIONAL: the specific printout 
 // ============================================================================

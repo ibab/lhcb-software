@@ -1,4 +1,4 @@
-// $Id: Vertices0.h,v 1.9 2008-06-20 10:05:59 ibelyaev Exp $
+// $Id: Vertices0.h,v 1.10 2008-10-31 17:27:46 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_VERTICES0_H 
 #define LOKI_VERTICES0_H 1
@@ -92,6 +92,7 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function
     {      
     public:
+      // ======================================================================
       /// MANDATORY: virtual destructor 
       virtual ~VertexChi2() {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -100,11 +101,18 @@ namespace LoKi
       virtual result_type operator() ( argument v ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     public:
+      // ======================================================================
       double chi2( const LHCb::VertexBase& v ) const { return v.chi2() ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      VertexChi2& operator=( const VertexChi2& ) ;
+      // ======================================================================
     };
     // ========================================================================    
-    /** @class VertexChi2
+    /** @class VertexChi2PerDof
      *  evaluator of the Chi2 of the vertex  
      *  
      *  It relies on the method LHCb::VertexBase::chi2
@@ -258,6 +266,7 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Predicate
     {
     public:
+      // ======================================================================
       /** constructor from "info"
        *  @param key info index/mark/key
        */
@@ -272,11 +281,16 @@ namespace LoKi
       virtual result_type operator() ( argument p ) const ;
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       // the default constructor is disabled 
       HasInfo();
+      // ======================================================================
     private:
+      // ======================================================================
       int m_info ;
+      // ======================================================================
     };
     // ========================================================================    
     /** @class Info
@@ -294,6 +308,7 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function
     {
     public:
+      // ======================================================================
       /** constructor from "info"
        *  @param key info index/mark/key
        *  @param def default valeu for info 
@@ -320,13 +335,19 @@ namespace LoKi
       virtual result_type operator() ( argument p ) const ;
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       // the default constructor is disabled 
       Info();
+      Info& operator=( const Info& ) ;
+      // ======================================================================
     private:
+      // ======================================================================
       int    m_key ;
       double m_def ;
       double m_bad ;
+      // ======================================================================
     };
     // ========================================================================    
     /** @class  NumberOfTracks
@@ -365,9 +386,6 @@ namespace LoKi
      *  @see LHCb::VertexBase::chi2 
      *  @see LHCb::VertexBase::nDoF 
      *  @see LHCb::VertexBase
-     *
-     *  @attention: The "unphysical" values mean: 
-     *  <b>"get number of DoFs from the vertex itself"</b>
      *
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-02-28

@@ -1,4 +1,4 @@
-// $Id: PhysHelpers.h,v 1.4 2007-07-23 17:35:48 ibelyaev Exp $
+// $Id: PhysHelpers.h,v 1.5 2008-10-31 17:27:46 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSHELPERS_H 
 #define LOKI_PHYSHELPERS_H 1
@@ -66,7 +66,7 @@ namespace LoKi
       ++first ;                                     // ADVANCE 
       for ( ; first != last ; ++first ) 
       {
-        fun.setVertex( *first ) ;     // THE MOST IMPORTAN LINE HERE!
+        fun.setVertex( *first ) ;     // THE MOST IMPORTANT LINE HERE!
         typename FUNCTION::result_type _res = fun( arg ) ;
         if ( _res < result ) { result = _res  ; found = first ; }  
       }
@@ -112,7 +112,40 @@ namespace LoKi
       return found ;
     };
     // ========================================================================
-  } // end of namespace LoKi::Helpers 
+    template <class FUNCTOR>
+    struct PMFA : public std::unary_function
+    <typename FUNCTOR::argument,typename FUNCTOR::result_type>
+    {
+      typedef typename FUNCTOR::argument     argument        ;
+      typedef typename FUNCTOR::result_type  result_type     ;
+      typedef result_type (FUNCTOR::*PMF)( argument ) const  ;
+      // ======================================================================
+      /// constructor 
+      PMFA ( const FUNCTOR* fun , PMF _pmf ) 
+        : m_fun ( fun ) , m_pmf ( _pmf ) {}
+      /// the only one method 
+      result_type operator() ( argument a ) const 
+      { return (m_fun->*m_pmf) ( a ) ; }
+      // ======================================================================
+      template <class VERTEX> 
+      void setVertex ( VERTEX vertex ) const { m_fun ->setVertex ( vertex ) ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      PMFA () ;                   // the default constructor is disabled 
+      // ======================================================================      
+    private:
+      // ======================================================================
+      /// the functor 
+      const FUNCTOR* m_fun ;
+      /// member function 
+      PMF            m_pmf ;
+      // ======================================================================
+    } ;
+    // ========================================================================    
+  } // end of namespace LoKi::Helpers
+  // ==========================================================================
 } // end of namespace LoKi
 // ============================================================================
 // The END 

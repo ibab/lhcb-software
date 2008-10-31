@@ -1,4 +1,4 @@
-// $Id: Particles18.h,v 1.1 2007-07-23 17:35:46 ibelyaev Exp $
+// $Id: Particles18.h,v 1.2 2008-10-31 17:27:45 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES18_H 
 #define LOKI_PARTICLES18_H 1
@@ -33,6 +33,7 @@ namespace LoKi
     class HasInfo : public LoKi::ExtraInfo::CheckInfo<const LHCb::Particle*>
     {
     public:
+      // ======================================================================
       /** constructor from "info"
        *  @param key info index/mark/key
        */
@@ -45,9 +46,12 @@ namespace LoKi
       virtual HasInfo* clone() const { return new HasInfo(*this) ; }
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     private:
-      // the default constructor is disabled 
-      HasInfo();
+      // ======================================================================
+      /// the default constructor is disabled 
+      HasInfo() ;                        // the default constructor is disabled 
+      // ======================================================================      
     };
     // ========================================================================    
     /** @class Info

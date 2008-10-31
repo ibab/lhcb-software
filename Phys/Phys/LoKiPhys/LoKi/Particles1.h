@@ -1,4 +1,4 @@
-// $Id: Particles1.h,v 1.9 2008-01-25 14:42:22 ibelyaev Exp $
+// $Id: Particles1.h,v 1.10 2008-10-31 17:27:45 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES1_H 
 #define LOKI_PARTICLES1_H 1
@@ -56,6 +56,7 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
     {
     public:
+      // ======================================================================
       /// constructor 
       VertexDistance 
       ( const LHCb::VertexBase*               vertex ) ;
@@ -81,17 +82,26 @@ namespace LoKi
       virtual std::ostream& fillStream( std::ostream& s ) const ;
       /// the actual computation 
       result_type distance           ( argument p ) const ;
+      // ======================================================================
     public:
+      // ======================================================================
       void setVertex ( const LHCb::VertexBase* vertex ) const 
       { m_fun.setVertex ( vertex )  ; }
       void setVertex ( const LoKi::Point3D&    vertex ) const 
       { m_fun.setVertex ( vertex )  ; }
+      // ======================================================================
     private:
+      // ======================================================================
       /// default constructor is private
       VertexDistance();
+      /// no assigenement 
+      VertexDistance& operator=( const VertexDistance& ) ;
+      // ======================================================================
     private:
+      // ======================================================================
       // the actual evaluator 
       LoKi::Vertices::VertexDistance m_fun ;
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class VertexSignedDistance
@@ -142,22 +152,32 @@ namespace LoKi
       /// MANDATORY: clone method ("virtual constructor")
       virtual VertexSignedDistance* clone() const ;
       /// MANDATORY: the only one essential method 
-      virtual result_type operator() ( argument p ) const ;
+      virtual result_type operator() ( argument p ) const 
+      { return signedDistance ( p ) ; }
       /// OPTIONAL: the specific printout 
-      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
       /// the actual computation 
-      result_type distance           ( argument p ) const ;
+      result_type signedDistance       ( argument p ) const ;
+      // ======================================================================
     public:
+      // ======================================================================
       void setVertex ( const LHCb::VertexBase* vertex ) const 
       { m_fun.setVertex ( vertex )  ; }
       void setVertex ( const LoKi::Point3D&    vertex ) const 
       { m_fun.setVertex ( vertex )  ; }
+      // ======================================================================
     private:
+      // ======================================================================
       /// default constructor is private
       VertexSignedDistance();
+      /// no assigenement 
+      VertexSignedDistance& operator=( const VertexSignedDistance& ) ;
+      // ======================================================================
     private:
+      // ======================================================================
       // the actual evaluator 
       LoKi::Vertices::VertexSignedDistance m_fun ;
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class VertexDotDistance
@@ -180,6 +200,7 @@ namespace LoKi
       , public    LoKi::Vertices::VertexHolder 
     {
     public:
+      // ======================================================================
       /// constructor 
       VertexDotDistance 
       ( const LHCb::VertexBase*               vertex ) ;
@@ -202,9 +223,14 @@ namespace LoKi
       virtual std::ostream& fillStream( std::ostream& s ) const ;
       /// the actual computation 
       result_type distance           ( argument p ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       /// default constructor is private
-      VertexDotDistance();
+      VertexDotDistance(); // default constructor is private
+      /// no assigenement 
+      VertexDotDistance& operator=( const VertexDotDistance& ) ;
+      // ======================================================================
     } ;
     // ========================================================================    
     /** @class VertexChi2Distance
@@ -230,6 +256,7 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
     {
     public:
+      // ======================================================================
       /// constructor 
       VertexChi2Distance 
       ( const LHCb::VertexBase*               vertex ) ;
@@ -255,17 +282,26 @@ namespace LoKi
       virtual std::ostream& fillStream( std::ostream& s ) const ;
       /// the actual computation 
       result_type chi2 ( argument p ) const ;
+      // ======================================================================
     public:
+      // ======================================================================
       void setVertex ( const LHCb::VertexBase* vertex ) const 
       { m_fun.setVertex ( vertex )  ; }
       void setVertex ( const LoKi::Point3D&    vertex ) const 
       { m_fun.setVertex ( vertex )  ; }
+      // ======================================================================
     private:
+      // ======================================================================
       /// default constructor is private
       VertexChi2Distance();
+      /// no assignement 
+      VertexChi2Distance& operator= ( const VertexChi2Distance& ) ;
+      // ======================================================================
     private:
+      // ======================================================================
       // the actual evaluator 
       LoKi::Vertices::VertexChi2Distance m_fun ;
+      // ======================================================================
     } ;
     // ========================================================================    
     /** @class MinVertexDistance
@@ -283,6 +319,7 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
     {
     public:
+      // ======================================================================
       /** constructor from container of vertices 
        *  @param vs container of primary vertices 
        */
@@ -388,14 +425,24 @@ namespace LoKi
       virtual result_type operator() ( argument v ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     public:
+      // ======================================================================
       size_t size  () const { return m_fun.size  () ;  }
       bool   empty () const { return m_fun.empty () ;  }
+      // ======================================================================
     private:
+      // ======================================================================
       // default constructor is disabled 
       MinVertexDistance () ;
+      /// no assigenement 
+      MinVertexDistance& operator=( const MinVertexDistance& ) ;
+      // ======================================================================
     private:
+      // ======================================================================
+      /// the functor itself 
       LoKi::Vertices::MinVertexDistance m_fun  ;
+      // ======================================================================
     };
     // ========================================================================
     /** @class MinVertexChi2Distance
@@ -412,6 +459,7 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
     {
     public:
+      // ======================================================================
       /** constructor from container of vertices 
        *  @param vs container of primary vertices 
        */
@@ -517,17 +565,24 @@ namespace LoKi
       virtual result_type operator() ( argument v ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     private:
-      // default constructor is disabled 
+      // ======================================================================
+      /// default constructor is disabled 
       MinVertexChi2Distance () ;
+      /// no assigenement 
+      MinVertexChi2Distance& operator=( const MinVertexChi2Distance& ) ;
+      // ======================================================================
     private:
+      // ======================================================================
+      /// the functor 
       LoKi::Vertices::MinVertexChi2Distance m_fun  ;
+      // ======================================================================
     } ;
     // ========================================================================    
   }  // end of namespace LoKi::Particles
+  // ==========================================================================
 } // end of namespace LoKi
-
-
 // ============================================================================
 // The END 
 // ============================================================================
