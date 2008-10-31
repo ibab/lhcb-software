@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.373 2008-10-30 16:45:54 jpalac Exp $
+! $Id: release.notes,v 1.374 2008-10-31 07:20:37 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-10-31 - Juan PALACIOS
+ - src/OnOfflineTool{.h, .cpp}
+  . Add const std::string& trunkOnTES() const method. Returns "Phys" and "Hlt"
+    for Offline and Online respectively.
 
 ! 2008-10-30 - Juan PALACIOS
  - src/ContextTool.h
