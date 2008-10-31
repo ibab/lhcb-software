@@ -1,4 +1,4 @@
-// $Id: OnOfflineTool.cpp,v 1.18 2008-10-20 15:12:25 jpalac Exp $
+// $Id: OnOfflineTool.cpp,v 1.19 2008-10-31 07:20:12 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -37,7 +37,9 @@ OnOfflineTool::OnOfflineTool( const std::string& type,
   m_offlineVertexFitter("OfflineVertexFitter" ),
   m_onlineVertexFitter("TrgVertexFitter"),
   m_offlinePVRelatorName("GenericParticle2PVRelator__p2PVWithIPChi2_OfflineDistanceCalculatorName_/P2PVWithIPChi2"),
-  m_onlinePVRelatorName("GenericParticle2PVRelator__p2PVWithIPChi2_OnlineDistanceCalculatorName_/OnlineP2PVWithIPChi2")
+  m_onlinePVRelatorName("GenericParticle2PVRelator__p2PVWithIPChi2_OnlineDistanceCalculatorName_/OnlineP2PVWithIPChi2"),
+  m_offlineTESTrunk("Phys"),
+  m_onlineTESTrunk("HLT")
 {
 
   declareInterface<IOnOffline>(this);
@@ -55,6 +57,10 @@ OnOfflineTool::OnOfflineTool( const std::string& type,
 
   declareProperty( "OfflinePVRelatorName", m_offlinePVRelatorName );
   declareProperty( "OnlinePVRelatorName",  m_onlinePVRelatorName  );
+
+  declareProperty( "OfflineTrunkOnTES", m_offlineTESTrunk );
+  declareProperty( "OnlineTrunkOnTES",  m_onlineTESTrunk  );
+
   
 }
 //=============================================================================
@@ -105,3 +111,7 @@ const std::string& OnOfflineTool::vertexFitterType() const {
   return online() ? m_onlineVertexFitter : m_offlineVertexFitter ;
 };
 //=============================================================================
+const std::string& OnOfflineTool::trunkOnTES() const 
+{
+  return online() ? m_onlineTESTrunk : m_offlineTESTrunk ;
+}

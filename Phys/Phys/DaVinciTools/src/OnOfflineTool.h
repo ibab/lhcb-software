@@ -1,4 +1,4 @@
-// $Id: OnOfflineTool.h,v 1.7 2008-09-30 15:11:56 jpalac Exp $
+// $Id: OnOfflineTool.h,v 1.8 2008-10-31 07:20:12 jpalac Exp $
 #ifndef ONOFFLINETOOL_H 
 #define ONOFFLINETOOL_H 1
 
@@ -24,22 +24,17 @@ public:
 
   StatusCode initialize();
 
-  /// On or Offline ?
   virtual const bool online() const {return m_online;} ;
 
-  /// Return DistanceCalculator
   virtual const std::string& distanceCalculatorType() const  ;
 
-  /// Return Unconstrained Vertex Fitter
   virtual const std::string& vertexFitterType() const  ;
 
-  /// Return name of IRelatedPVFinder implementation
   virtual const std::string& relatedPVFinderType() const;
 
-  /// Get PV location in TES
   virtual const std::string& primaryVertexLocation() const  ;
 
-protected :
+  virtual const std::string& trunkOnTES() const ;
 
 private:
   std::string m_onlinePVLocation ; ///< PV location
@@ -51,6 +46,9 @@ private:
   std::string m_onlineVertexFitter ; ///< online vertex fitter
   std::string m_offlinePVRelatorName ; ///< offline PV Relator Name
   std::string m_onlinePVRelatorName ; ///< online PV Relator Name
+  std::string m_offlineTESTrunk; ///< offline root of TES location. Default "Phys".
+  std::string m_onlineTESTrunk; ///< online root of TES location. Default "Hlt".
 
+  
 };
 #endif // ONOFFLINETOOL_H
