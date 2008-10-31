@@ -9,6 +9,7 @@ Purpose: LHCb Digitization program
    TODO: Adapt Boole configurable to this change, since now functions to be
          called after applyConf are no longer working correctly
  - Rename Boole-FST09.py to Boole-FEST09.py
+ - Cleanup options files for tests
 
 ! 2008-10-30 - Marco Cattaneo
  - Update QMTest reference files also for Boole v16r3 changes

@@ -1,7 +1,4 @@
-##############################################################################
-# File for running a Boole test with default DC06 geometry
-##############################################################################
-
+# Default settings for all Boole tests
 from Boole.Configuration import *
 from Configurables import CondDBAccessSvc
 
@@ -15,6 +12,3 @@ TimingAuditor().OutputLevel = WARNING
 # Ignore changes to database tags
 CondDBAccessSvc('DDDB').OutputLevel = WARNING
 CondDBAccessSvc('LHCBCOND').OutputLevel = WARNING
-
-# Data files
-importOptions( "$BOOLEOPTS/DC06-Files.py" ) 
