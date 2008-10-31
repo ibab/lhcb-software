@@ -50,21 +50,24 @@ source %s/scripts/SetupProject.csh --disable-CASTOR LbScripts %s --runtime LCGCM
 
 """ % (targetlocation, targetlocation, version)
     elif shell == "bat" :
+        if sys.platform != "win32" :
+            if targetlocation.startswith("/afs") :
+                wintargetlocation = "Z:" + targetlocation.replace("/afs","").replace("/","\\")
         content = """ @echo off
         
-set LbLogin_tmpfile="%TEMP%\LbLogin_tmpsetup.bat"
+set LbLogin_tmpfile="%%TEMP%%\LbLogin_tmpsetup.bat"
 
-python %~d0\%~p0\LbLogin.py --shell=bat --output=%LbLogin_tmpfile% %1 %2 %3 %4 %5 %6 %7 %8 %9
+python %s\LbLogin.py --shell=bat --output=%%LbLogin_tmpfile%% %%1 %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9
 
-set LbLoginStatus=%ERRORLEVEL%
+set LbLoginStatus=%%ERRORLEVEL%%
 
-if %LbLoginStatus% EQU 0 (
-    call %LbLogin_tmpfile%
+if %%LbLoginStatus%% EQU 0 (
+    call %%LbLogin_tmpfile%%
 )
 
-if exist %LbLogin_tmpfile% del %LbLogin_tmpfile%
+if exist %%LbLogin_tmpfile%% del %%LbLogin_tmpfile%%
 set LbLogin_tmpfile=
-call %~d0\%~p0\SetupProject.bat --disable-CASTOR LbScripts """ + version + " --runtime LCGCMT Python -v 2.5"
+call %s\SetupProject.bat --disable-CASTOR LbScripts %s --runtime LCGCMT Python -v 2.5""" % (wintargetlocation, wintargetlocation, version)
     
     f.write(content)
     f.close()

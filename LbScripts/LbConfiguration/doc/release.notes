@@ -1,3 +1,8 @@
+2008-10-31  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/generateLogin.py:
+	* scripts/LbLogin.py: fixed the generated LbLogin.bat for windows.
+
 2008-10-30  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
         * scripts/SetupProject.py: Fixed the hack in set_build_env for old style

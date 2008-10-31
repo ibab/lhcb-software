@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+""" Main script to setup the basic LHCb environment """
 
 from imp import find_module
 from SetupProject import SetupProject
@@ -23,7 +23,7 @@ import sys, os, logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.14 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.15 $")
 
 
 def getLbLoginEnv(debug=False, 
@@ -70,7 +70,7 @@ def _check_output_options_cb(option, opt_str, value, parser):
 
 class LbLoginScript(Script):
     _version = __version__
-    
+    _description = __doc__
     def __init__(self, usage=None, version=None):
         Script.__init__(self, usage, version, help_output=sys.stderr)
         self._env = Environment()
