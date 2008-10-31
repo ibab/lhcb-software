@@ -1,16 +1,15 @@
-// $Id: AlgorithmCorrelationsAlg.cpp,v 1.2 2008-10-31 10:19:20 pkoppenb Exp $
+// $Id: AlgorithmCorrelationsAlg.cpp,v 1.3 2008-10-31 18:41:39 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
-#include "Event/SelResult.h"
+#include "Kernel/ICheckSelResults.h"
 
 #include "Kernel/IAlgorithmCorrelations.h"            // Interface
 #include "LoKi/AlgFunctors.h"
 // local
 #include "AlgorithmCorrelationsAlg.h"
 
-using namespace LHCb;
 //-----------------------------------------------------------------------------
 // Implementation file for class : AlgorithmCorrelationsAlg
 //
@@ -27,16 +26,18 @@ DECLARE_ALGORITHM_FACTORY( AlgorithmCorrelationsAlg );
 AlgorithmCorrelationsAlg::AlgorithmCorrelationsAlg( const std::string& name,
                                                 ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
-    , m_selResults      (SelResultLocation::Default)
     , m_algorithmsRow ()
     , m_algorithmsColumn ()
     , m_algoCorr()
 {
-  declareProperty( "UseSelResults", m_useSelResults = true );
-  declareProperty( "Algorithms", m_algorithmsColumn );
-  declareProperty( "AlgorithmsRow", m_algorithmsRow );
-  declareProperty( "PrintTable", m_printTable = true );
-  declareProperty( "PrintList", m_printList = false );
+  declareProperty( "Algorithms", m_algorithmsColumn,
+                   "List of algorithms to check for efficiency.");
+  declareProperty( "AlgorithmsRow", m_algorithmsRow,
+                   "List of algorithms for conditional efficiencies. If not set, use ``Algorithms''" );
+  declareProperty( "PrintTable", m_printTable = true,
+                   "Print Correlation table");
+  declareProperty( "PrintList", m_printList = false,
+                   "Print Correlation List (for debugging or grep-ing)" );
 }
 //=============================================================================
 // Destructor
@@ -52,10 +53,7 @@ StatusCode AlgorithmCorrelationsAlg::initialize() {
 
   debug() << "==> Initialize" << endmsg;
   m_algoCorr = tool<IAlgorithmCorrelations>("AlgorithmCorrelations",this);
-  if (!m_algoCorr){
-    err() << "Could not retrieve AlgorithmCorrelations tool" << endmsg ;
-    return StatusCode::FAILURE;
-  }
+  m_selTool = tool<ICheckSelResults>("CheckSelResultsTool",this);
 
   if (m_algorithmsColumn.empty()){
     err() << "No algorithms defined. Use Algorithms option." << endmsg;
@@ -73,7 +71,8 @@ StatusCode AlgorithmCorrelationsAlg::initialize() {
     if (msgLevel(MSG::DEBUG)) debug() << "No algorithms row defined. -> square matrix." 
                                       << endmsg;
   } else {
-    if (msgLevel(MSG::DEBUG)) debug() << "Algorithms to check correlations against:" << m_algorithmsRow << endmsg ;
+    if (msgLevel(MSG::DEBUG)) debug() << "Algorithms to check correlations against:" 
+                                      << m_algorithmsRow << endmsg ;
     sc = m_algoCorr->algorithmsRow(m_algorithmsRow); // resets stuff
     // now add algorithmsRow to algorithms for further processing
     for ( std::vector<std::string>::const_iterator r = m_algorithmsRow.begin() ; 
@@ -105,52 +104,18 @@ StatusCode AlgorithmCorrelationsAlg::execute() {
 
   debug() << "==> Execute" << endmsg;
 
-  SelResults* SelResCtr = 0 ;
-  if (m_useSelResults){
-    if (!exist<SelResults>(m_selResults)){
-      setFilterPassed(false);
-      Warning("SelResult container not found at "+m_selResults) ;
-      return StatusCode::SUCCESS;   
-    }
-    SelResCtr = get<SelResults>(m_selResults);
-  }
-  
   for ( std::vector<std::string>::const_iterator a = m_algorithms.begin() ; 
         a!= m_algorithms.end() ; a++){
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Looking at " << *a << endmsg ;
-    LoKi::Algorithms::Passed pass(*a) ;
-    if ( pass()) {
-      if (msgLevel(MSG::DEBUG)) debug() << *a << " passed during this processing " 
-                                        << endmsg ;
-      m_algoCorr->fillResult(*a,true) ;
-    } else if ( m_useSelResults ){
-      if (msgLevel(MSG::VERBOSE)){
-        verbose() << *a << " not passed during this processing. Looking for SelResult." 
-                  << endmsg ;
-      }
-      m_algoCorr->fillResult(*a,selResultPassed(*a,SelResCtr)) ;
-    }
+    bool pass = m_selTool->isSelected(*a);
+    if (msgLevel(MSG::DEBUG)) debug() << *a << " gets result "  
+                                      << pass << endmsg ;
+    m_algoCorr->fillResult(*a,pass) ;
   }
   
+  counter("Events")++ ;
   return m_algoCorr->endEvent();
 };
 
-//=========================================================================
-// method to test if algorithm passed selresult
-//=========================================================================
-bool AlgorithmCorrelationsAlg::selResultPassed( std::string algo, 
-                                                const LHCb::SelResults* SelResCtr) {
-  for ( SelResults::const_iterator iselRes  = SelResCtr->begin() ; 
-        iselRes != SelResCtr->end(); ++iselRes ) { 
-    if ("/Event/Phys/"+algo == (*iselRes)->location()){
-      if (msgLevel(MSG::DEBUG)) debug() << "Found SelResult for " << algo << " with result " 
-                                        << (*iselRes)->found() << endmsg ;
-      return (*iselRes)->found() ;
-    }
-  }
-  if (msgLevel(MSG::DEBUG)) debug() << "Did not find SelResult for " << algo << endmsg ;
-  return false ;
-}
 //=============================================================================
 //  Finalize
 //=============================================================================
