@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.375 2008-10-31 10:19:20 pkoppenb Exp $
+! $Id: release.notes,v 1.376 2008-10-31 14:30:32 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-10-31 - Juan PALACIOS
+ - src/PhysDekstop.cpp
+  . Use IOnOffline::trunkOnTES() to set output locations.
 
 ! 2008-10-31 - Patrick Koppenburg
  - AlgorithmCorrelationsAlg : bug fix, more debug rpintout, better doxygen.
