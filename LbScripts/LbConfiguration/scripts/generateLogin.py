@@ -53,12 +53,12 @@ source %s/scripts/SetupProject.csh --disable-CASTOR LbScripts %s --runtime LCGCM
         wintargetlocation = targetlocation
         if sys.platform != "win32" :
             if targetlocation.startswith("/afs") :
-                wintargetlocation = "Z:" + targetlocation.replace("/afs","").replace("/","\\")
+                wintargetlocation = "%AFSROOT%" + targetlocation.replace("/afs","").replace("/","\\")
         content = """ @echo off
         
 set LbLogin_tmpfile="%%TEMP%%\LbLogin_tmpsetup.bat"
 
-python %s\LbLogin.py --shell=bat --output=%%LbLogin_tmpfile%% %%1 %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9
+python %s\scripts\LbLogin.py --shell=bat --output=%%LbLogin_tmpfile%% %%1 %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9
 
 set LbLoginStatus=%%ERRORLEVEL%%
 
@@ -68,7 +68,7 @@ if %%LbLoginStatus%% EQU 0 (
 
 if exist %%LbLogin_tmpfile%% del %%LbLogin_tmpfile%%
 set LbLogin_tmpfile=
-call %s\SetupProject.bat --disable-CASTOR LbScripts %s --runtime LCGCMT Python -v 2.5""" % (wintargetlocation, wintargetlocation, version)
+call %s\scripts\SetupProject.bat --disable-CASTOR LbScripts %s --runtime LCGCMT Python -v 2.5""" % (wintargetlocation, wintargetlocation, version)
     
     f.write(content)
     f.close()

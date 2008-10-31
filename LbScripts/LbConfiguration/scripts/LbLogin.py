@@ -23,7 +23,7 @@ import sys, os, logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.15 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.16 $")
 
 
 def getLbLoginEnv(debug=False, 
@@ -199,7 +199,10 @@ class LbLoginScript(Script):
                 else : 
                     afsroot = "Z:"
             cernbase = "cern.ch"
-            cernroot = os.path.join(afsroot, cernbase)
+            if sys.platform != "win32" :
+                cernroot = os.path.join(afsroot, cernbase)
+            else :
+                cernroot = os.path.join(afsroot+os.sep, cernbase)
             if opts.cmtsite == "LOCAL" :
                 opts.mysiteroot = os.getcwd()
                 self.setSite()
