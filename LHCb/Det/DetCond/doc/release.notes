@@ -1,9 +1,12 @@
-# $Id: release.notes,v 1.151 2008-10-10 08:24:27 marcocle Exp $
+# $Id: release.notes,v 1.152 2008-10-31 09:19:12 cattanem Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+! 2008-10-31 - Marco Cattaneo
+ - Fix for gcc 4.3
 
                            NEEDS: LCGCMT > 55a
                            

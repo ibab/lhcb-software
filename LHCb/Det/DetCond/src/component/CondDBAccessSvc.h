@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.h,v 1.36 2008-06-26 14:22:45 marcocle Exp $
+// $Id: CondDBAccessSvc.h,v 1.37 2008-10-31 09:19:12 cattanem Exp $
 #ifndef COMPONENT_CONDDBACCESSSVC_H 
 #define COMPONENT_CONDDBACCESSSVC_H 1
 
@@ -253,19 +253,19 @@ private:
   StatusCode i_openConnection();
 
   /// Internal method to retrieve an object.
-  StatusCode CondDBAccessSvc::i_getObject(const std::string &path, const Gaudi::Time &when,
-                                          DataPtr &data,
-                                          std::string &descr, Gaudi::Time &since, Gaudi::Time &until,
-                                          bool use_numeric_chid,
-                                          cool::ChannelId channel, const std::string &channelstr);
+  StatusCode i_getObject(const std::string &path, const Gaudi::Time &when,
+                         DataPtr &data,
+                         std::string &descr, Gaudi::Time &since, Gaudi::Time &until,
+                         bool use_numeric_chid,
+                         cool::ChannelId channel, const std::string &channelstr);
 
   /// Internal method to retrieve an object from the database.
   /// If the cache is activated, the result is copied there.
-  StatusCode CondDBAccessSvc::i_getObjectFromDB(const std::string &path, const cool::ValidityKey &when,
-                                                DataPtr &data,
-                                                std::string &descr, cool::ValidityKey &since, cool::ValidityKey &until,
-                                                bool use_numeric_chid,
-                                                cool::ChannelId channel, const std::string &channelstr);
+  StatusCode i_getObjectFromDB(const std::string &path, const cool::ValidityKey &when,
+                               DataPtr &data,
+                               std::string &descr, cool::ValidityKey &since, cool::ValidityKey &until,
+                               bool use_numeric_chid,
+                               cool::ChannelId channel, const std::string &channelstr);
   
   void i_generateXMLCatalogFromFolderset(const std::string &path);
   
