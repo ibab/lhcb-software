@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.251 2008-10-29 13:50:58 pkoppenb Exp $
+! $Id: release.notes,v 1.252 2008-10-31 14:05:12 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,14 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2008-10-31 - Juan PALACIOS
+ - tests/qmtest/davinci.qms/preselections.qms/test_bd2dstarpi.qmt
+ - tests/qmtest/davinci.qms/preselections.qms/test_bu2eek.qmt
+  . Update correlations table. Correlations for actual pre-selections now are high.
+    Not completely sure why!
+ - tests/options/DVTestB2DiMuon.opts
+  . Replace SelResultCorreclations with AlgorithmCorrelationsAlg
 
 ! 2008-10-29 - Patrick Koppenburg
  - Rename SelresultCorreclations to AlgorithmCorrelationsAlg
