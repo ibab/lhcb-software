@@ -1,5 +1,9 @@
 2008-10-31  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* cmt/requirements: release of version v1r9
+
+2008-10-31  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* scripts/generateLogin.py:
 	* scripts/LbLogin.py: fixed the generated LbLogin.bat for windows.
 
