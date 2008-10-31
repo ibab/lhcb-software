@@ -1,39 +1,31 @@
 #!/usr/bin/env gaudirun.py
+
+# this option file is for a qmtest
+# uses the standard option file "options/Moore.py" 
+# but makes sure:
+#          EventSelector().PrintFreq = 100
+#          Moore().EvtMax = 2000
 #
-# Minimal file for running Moore from python prompt
-# Syntax is:
-#   gaudirun.py ../options/Moore.py
-# or just
-#   ../options/Moore.py
-#
-from Gaudi.Configuration import *
-from Moore.Configuration import *
+# Author: Stephan Nies    
 
-#//---------------------------------------------------------------------------
-#// Histogram output
-#//---------------------------------------------------------------------------
-ApplicationMgr().HistogramPersistency = 'ROOT'
-HistogramPersistencySvc().OutputFile = 'Moore_minbias.root'
+import os, re
 
-#---------------------------------------------------------------------------
-# Number of events to process, optionally skipping some events
-#---------------------------------------------------------------------------
+# load the Moore.py executable option script
+main_moore_option_file = os.environ['MOOREROOT'] + '/options/Moore.py'
+f = file(main_moore_option_file)
+main_moore_content = f.read()
 
-Moore().hltType = 'PA+VE+LU+MU+HA+EL+PH'
-Moore().oldStyle = False
+# execute all the configuration steps in Moore.py
+# but remove the lines that would start Moore 
+my_moore = re.sub('Moore\(\)\.applyConf\(\)','', main_moore_content)
+my_moore = re.sub('print Moore\(\)','', my_moore)
+exec my_moore 
 
-files = [ 'castor:/castor/cern.ch/user/s/snies/mdf/DC06_L0_v1_lumi2_MuonHadron_40000ev_1.mdf',
-          'castor:/castor/cern.ch/user/s/snies/mdf/DC06_L0_v1_lumi2_MuonHadron_40000ev_2.mdf' ]
-
-filetype = files[0][-3:].upper()
-Moore().inputType = filetype
-extensions = { 'RAW' : "' SVC='LHCb::MDFSelector'",
-               'MDF' : "' SVC='LHCb::MDFSelector'",
-               'DST' : "' TYP='POOL_ROOTTREE' OPT='READ'" }
-EventSelector().Input = [ "DATAFILE='PFN:"+ f + extensions[ filetype ] for f in files ]
+# now reconfigure as needed
 EventSelector().PrintFreq = 100
+Moore().EvtMax = 2000 
 
-Moore().EvtMax = 2000
+# finally run Moore
 Moore().applyConf()
-
 print Moore()
+
