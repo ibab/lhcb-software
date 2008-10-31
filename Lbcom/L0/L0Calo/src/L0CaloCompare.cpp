@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloCompare.cpp,v 1.6 2008-07-16 20:21:20 robbep Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloCompare.cpp,v 1.7 2008-10-31 13:20:12 robbep Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -72,11 +72,32 @@ StatusCode L0CaloCompare::initialize() {
   bookCalo2D("EcalMapPigCompare","Pi0Global Ecal map" ,"Ecal") ; 
   bookCalo2D("HcalMapHadCompare","Hadron Hcal map" ,"Hcal") ; 
 
+  bookCalo2D("EcalMapEleAll","Electron Ecal map all" ,"Ecal") ; 
+  bookCalo2D("EcalMapPhoAll","Photon Ecal map all" ,"Ecal") ; 
+  bookCalo2D("EcalMapPilAll","Pi0Local Ecal map all" ,"Ecal") ; 
+  bookCalo2D("EcalMapPigAll","Pi0Global Ecal map all" ,"Ecal") ; 
+  bookCalo2D("HcalMapHadAll","Hadron Hcal map all" ,"Hcal") ; 
 
-  m_histSpdMult_Comp  = GaudiHistoAlg::book( "SpdMult_Comp", "SpdMult comparison " ,
+
+  m_histSpdMult_Comp  = GaudiHistoAlg::book( "SpdMult_Comp", 
+					     "SpdMult comparison " ,
                                              -100.,100., 200 );
-  m_histSumEt_Comp  = GaudiHistoAlg::book( "SumEt_Comp", "SumEt comparison " , 
+  m_histSumEt_Comp  = GaudiHistoAlg::book( "SumEt_Comp", 
+					   "SumEt comparison " , 
                                            -100.,100., 200 );
+
+  m_bcIdErrorsEle = GaudiHistoAlg::book( "BCIdEle" , "BCId errors electron" ,
+					 0., 4000., 4000 ) ;
+  m_bcIdErrorsPho = GaudiHistoAlg::book( "BCIdPho" , "BCId errors photon" ,
+					 0., 4000., 4000 ) ;
+  m_bcIdErrorsPil = GaudiHistoAlg::book( "BCIdPil" , "BCId errors pi0local" ,
+					 0., 4000., 4000 ) ;
+  m_bcIdErrorsPig = GaudiHistoAlg::book( "BCIdPig" , "BCId errors pi0global" ,
+					 0., 4000., 4000 ) ;
+  m_bcIdErrorsHad = GaudiHistoAlg::book( "BCIdHad" , "BCId errors hadron" ,
+					 0., 4000., 4000 ) ;
+  m_bcIdErrorsSpd = GaudiHistoAlg::book( "BCIdSpd" , "BCId errors spd" ,
+					 0., 4000., 4000 ) ;
 
   return StatusCode::SUCCESS; 
 }
@@ -242,12 +263,13 @@ StatusCode L0CaloCompare::execute() {
               << " Ele : cellID to check = " << (*candCheck)->id()
               << " etCode = " << (*candCheck)->etCode() 
               << " rawId= " << rawId << endreq ;
+      fillCalo2D("EcalMapEleAll",caloCell,1.,"Electron Ecal map all"); 
       iterMap = mapEleRef.find(rawId) ; 
-      if (iterMap == mapEleRef.end()) 
+      if (iterMap == mapEleRef.end()) {
         debug() << "          Ele L0cand not found ! " << endreq ; 
-      if (iterMap == mapEleRef.end()) 
         fillCalo2D("EcalMapEleCompare",caloCell,1.,"Electron Ecal map") ; 
-      else {
+	m_bcIdErrorsEle -> fill( BCId ) ;
+      } else {
         LHCb::L0CaloCandidate* theCand = (*iterMap).second ; 
         int etCodeRef = theCand->etCode() ;
         if ( etCodeCheck != etCodeRef) 
@@ -263,12 +285,13 @@ StatusCode L0CaloCompare::execute() {
               << " Pho : cellID to check = " << (*candCheck)->id()
               << " etCode = " << (*candCheck)->etCode()
               << " rawId= " << rawId << endreq ;
+      fillCalo2D("EcalMapPhoAll",caloCell,1.,"Photon Ecal map all"); 
       iterMap = mapPhoRef.find(rawId) ; 
-      if (iterMap == mapPhoRef.end()) 
+      if (iterMap == mapPhoRef.end()) {
         debug() << "          Pho L0cand not found ! " << endreq ; 
-      if (iterMap == mapPhoRef.end()) 
+	m_bcIdErrorsPho -> fill( BCId ) ;
         fillCalo2D("EcalMapPhoCompare",caloCell,1.,"Photon Ecal map") ; 
-      else{
+      } else {
         LHCb::L0CaloCandidate* theCand = (*iterMap).second ; 
         int etCodeRef = theCand->etCode() ;
         if ( etCodeCheck != etCodeRef) 
@@ -284,12 +307,13 @@ StatusCode L0CaloCompare::execute() {
               << " Pil : cellID to check = " << (*candCheck)->id()
               << " etCode = " << (*candCheck)->etCode()
               << " rawId= " << rawId << endreq ; 
+      fillCalo2D("EcalMapPilAll",caloCell,1.,"Pi0Local Ecal map all"); 
       iterMap = mapPilRef.find(rawId) ; 
-      if (iterMap == mapPilRef.end()) 
+      if (iterMap == mapPilRef.end()) {
         debug()<<"          Pil L0cand not found ! "<<endreq; 
-      if (iterMap == mapPilRef.end()) 
+	m_bcIdErrorsPil -> fill( BCId ) ;
         fillCalo2D("EcalMapPilCompare",caloCell,1.,"Pi0Local Ecal map") ; 
-      else{
+      } else {
         LHCb::L0CaloCandidate* theCand = (*iterMap).second ; 
         int etCodeRef = theCand->etCode() ;
         if ( etCodeCheck != etCodeRef) 
@@ -305,12 +329,13 @@ StatusCode L0CaloCompare::execute() {
               << " Pig : cellID to check = " << (*candCheck)->id()
               << " etCode = " << (*candCheck)->etCode()
               << " rawId= " << rawId << endreq ;
+      fillCalo2D("EcalMapPigAll",caloCell,1.,"Pi0Global Ecal map all"); 
       iterMap = mapPigRef.find(rawId) ; 
-      if (iterMap == mapPigRef.end()) 
+      if (iterMap == mapPigRef.end()) {
         debug()<<"          Pig L0cand not found ! "<<endreq; 
-      if (iterMap == mapPigRef.end()) 
+	m_bcIdErrorsPig -> fill( BCId ) ;
         fillCalo2D("EcalMapPigCompare",caloCell,1.,"Pi0Global Ecal map") ; 
-      else{
+      } else {
         LHCb::L0CaloCandidate* theCand = (*iterMap).second ; 
         int etCodeRef = theCand->etCode() ;
         if ( etCodeCheck != etCodeRef) 
@@ -326,12 +351,13 @@ StatusCode L0CaloCompare::execute() {
               << " Had : cellID to check = " << (*candCheck)->id()
               << "etCode = " << (*candCheck)->etCode()
               << " rawId= " << rawId << endreq ;
+      fillCalo2D("HcalMapHadAll",caloCell,1.,"Hadron Hcal map all") ; 
       iterMap = mapHadRef.find(rawId) ; 
-      if (iterMap == mapHadRef.end()) 
+      if (iterMap == mapHadRef.end()) {
         debug()<<"          Had L0cand not found ! "<<endreq; 
-      if (iterMap == mapHadRef.end()) 
+	m_bcIdErrorsHad -> fill( BCId ) ;
         fillCalo2D("HcalMapHadCompare",caloCell,1.,"Hadron Hcal map") ; 
-      else{
+      } else {
         LHCb::L0CaloCandidate* theCand = (*iterMap).second ; 
         int etCodeRef = theCand->etCode() ;
         if ( etCodeCheck != etCodeRef) 
@@ -372,8 +398,10 @@ StatusCode L0CaloCompare::execute() {
         if (diff_SpdMult > 100.) diff_SpdMult = 100 ; 
         if (diff_SpdMult < -100.) diff_SpdMult = -100 ; 
         m_histSpdMult_Comp -> fill(diff_SpdMult) ; 
-        if ( (*candCheck)->etCode() != spdRef ) 
+        if ( (*candCheck)->etCode() != spdRef ) {
+	  m_bcIdErrorsHad -> fill( BCId ) ;
           debug()<<" SpdMult ... Pb " <<endreq; 
+	}
       }
       break ; 
     }

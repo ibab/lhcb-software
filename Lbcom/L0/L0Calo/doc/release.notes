@@ -1,7 +1,15 @@
-! $Id: release.notes,v 1.125 2008-10-03 11:02:50 cattanem Exp $
+! $Id: release.notes,v 1.126 2008-10-31 13:20:25 robbep Exp $
 ! Package	        : L0/L0Calo
 ! Package Manager : Patrick Robbe & M-H. Schune
 !--------------------------------------------------------------------------
+
+! 2008-10-31 - Patrick Robbe
+ - src/L0CaloAlg.cpp: in the trigger emulation, do not add ECAL 
+   to HCAL 0 energies when the default HCAL address is not 
+   physical (to reflect electronics behaviour)
+ - src/L0CaloCompare: add an histogram to plot the position 
+   of all candidates (not only errors) and the BCId where the
+   errors occur.
 
 !========================= L0Calo v9r18 2008-10-03 ========================
 ! 2008-10-03 - Patrick Robbe

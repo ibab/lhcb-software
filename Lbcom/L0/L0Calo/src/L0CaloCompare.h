@@ -1,4 +1,4 @@
-// $Id: L0CaloCompare.h,v 1.2 2008-07-10 20:36:14 robbep Exp $
+// $Id: L0CaloCompare.h,v 1.3 2008-10-31 13:20:12 robbep Exp $
 #ifndef L0CALOCOMPARE_H 
 #define L0CALOCOMPARE_H 1
 // Include files
@@ -41,7 +41,10 @@ private:
 
   IHistogram1D*            m_histSpdMult_Comp ; 
   IHistogram1D*            m_histSumEt_Comp ; 
-
+  
+  IHistogram1D * m_bcIdErrorsEle , * m_bcIdErrorsPho , 
+    * m_bcIdErrorsPil , * m_bcIdErrorsPig , 
+    * m_bcIdErrorsHad , * m_bcIdErrorsSpd ;
   std::string              m_referenceDataSuffix ;
   std::string              m_checkDataSuffix ;
 
