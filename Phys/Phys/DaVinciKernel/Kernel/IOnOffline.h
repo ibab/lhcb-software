@@ -1,4 +1,4 @@
-// $Id: IOnOffline.h,v 1.10 2008-09-29 16:50:06 jpalac Exp $
+// $Id: IOnOffline.h,v 1.11 2008-10-31 06:53:50 jpalac Exp $
 #ifndef DAVINCIKERNEL_IONOFFLINE_H 
 #define DAVINCIKERNEL_IONOFFLINE_H 1
 
@@ -43,5 +43,12 @@ public:
   /// Return location of default primary vertices
   virtual const std::string& primaryVertexLocation() const = 0 ;
 
+  /// Return root of a TES location.
+  /// Typical values could be "Phys" or "Hlt"
+  /// Parent code would then append to "/Event/" to create
+  /// absolute TES trunk location for data under control
+  /// of the parent.
+  virtual const std::string& trunkOnTES() const = 0;
+  
 };
 #endif // DAVINCIKERNEL_IONOFFLINE_H
