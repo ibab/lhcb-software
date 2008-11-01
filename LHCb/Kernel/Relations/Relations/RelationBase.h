@@ -1,8 +1,11 @@
-// $Id: RelationBase.h,v 1.10 2008-10-31 19:34:59 ibelyaev Exp $
+// $Id: RelationBase.h,v 1.11 2008-11-01 15:53:08 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.10 $ 
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.11 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2008/10/31 19:34:59  ibelyaev
+//  fixes for gcc4.3
+//
 // Revision 1.9  2007/08/27 23:18:20  odescham
 // fix untested StatusCode
 //
@@ -170,19 +173,22 @@ namespace Relations
      */ 
     inline void i_sort() 
     { std::stable_sort( m_entries.begin() , m_entries.end() , Less() ) ; }
+    // ========================================================================
+  public:
+    // ========================================================================
     /** standard/default constructor
      *  @param reserve size of preallocated reserved space
      */ 
     RelationBase
     ( const size_type reserve = 0 ) 
       : BaseTable () 
-      , m_entries () 
-    { if ( 0 < reserve ) { i_reserve( reserve ).ignore() ; } ; }
+        , m_entries () 
+    { if ( 0 < reserve ) { i_reserve ( reserve ).ignore() ; } ; }
     /// constructor from any "direct" interface 
     RelationBase
     ( const IDirect& copy ) 
       : BaseTable () 
-      , m_entries () 
+        , m_entries () 
     {
       typename IDirect::Range r = copy.relations() ;
       m_entries.insert ( m_entries.end() , r.begin() , r.end() ) ;
@@ -217,29 +223,57 @@ namespace Relations
     {} 
     // ========================================================================
   public:
-//     // ========================================================================
-//     /** add *SORTED* range into the relation table 
-//      *  @see std::merge 
-//      *  @param range the range to be added 
-//      *  @return self reference 
-//      */
-//     RelationBase& merge ( const Range& range ) 
-//     {
-//       if ( range.empty() ) { return *this ; }
-//       Entries tmp ( m_entries.size() + range.size() ) ;
-//       std::merge 
-//         ( m_entries . begin () , m_entries . end () , 
-//           range     . begin () , range     . end () , Less() ) ;
-//       m_entries = tmp ;
-//       return *this ;              
-//     }
-//     /** add *SORTED* range into the relation table 
-//      *  @see std::merge 
-//      *  @param range the range to be added 
-//      *  @return self reference 
-//      */
-//     RelationBase& operator+=( const Range& range ) { return merge ( range ) ; }
-//     // ========================================================================
+    // ========================================================================
+    /** add *SORTED* range into the relation table 
+     *  the table 
+     *  @see std::merge 
+     *  @param range the range to be added 
+     *  @return self reference 
+     */
+    RelationBase& merge ( const Range& range ) 
+    {
+      if ( range.empty() ) { return *this ; }
+      Entries tmp ( m_entries.size() + range.size() ) ;
+      std::merge 
+        ( m_entries . begin () , 
+          m_entries . end   () , 
+          range     . begin () , 
+          range     . end   () , 
+          tmp       . begin () , Less() ) ;
+      m_entries = tmp ;
+      return *this ;              
+    }
+    // ========================================================================
+    /** add 'inverse' range into the relation table 
+     *  @param range the range to be added 
+     *  @return self reference 
+     */
+    RelationBase& merge ( const typename IInverse::Range& range ) 
+    {
+      if ( range.empty() ) { return *this ; }                       // RETURN 
+      // invert all relations    
+      i_reserve ( m_entries.size() + range.size()  ) .ignore () ;
+      for ( typename IInverse::iterator entry = range.begin() ; 
+            range.end() != entry ; ++entry ) 
+      { i_push ( entry->to() , entry->from() ) ;  }
+      /// final sorting of the container
+      i_sort () ;
+      return *this ;                                                 // RETURN 
+    }
+    /** add *SORTED* range into the relation table 
+     *  @see std::merge 
+     *  @param range the range to be added 
+     *  @return self reference 
+     */
+    RelationBase& operator+=( const Range& range ) 
+    { return merge ( range ) ; }
+    /** add *SORTED* range into the relation table 
+     *  @param range the range to be added 
+     *  @return self reference 
+     */
+    RelationBase& operator+=( const typename IInverse::Range& range ) 
+    { return merge ( range ) ; }
+    // 
   private:
     // ========================================================================
     /// the actual storage of relation links  

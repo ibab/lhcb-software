@@ -1,4 +1,4 @@
-// $Id: Relation.h,v 1.13 2008-10-31 19:34:59 ibelyaev Exp $
+// $Id: Relation.h,v 1.14 2008-11-01 15:53:08 ibelyaev Exp $
 // =============================================================================
 #ifndef RELATIONS_Relation_H
 #define RELATIONS_Relation_H 1
@@ -213,6 +213,47 @@ namespace Relations
       m_direct.i_sort() ; 
       if ( 0 != m_inverse_aux ) { m_inverse_aux -> i_sort() ; } 
     }
+    // ========================================================================
+  public: // merge 
+    // ========================================================================
+    /** merge with the sorted range of relations 
+     *  @attention the raneg is assumed to be sorted! 
+     *  @param range the range to be added 
+     *  @return self-reference 
+     */
+    Relation& merge ( const Range& range ) 
+    {
+      if ( range.empty() ) { return *this ; }
+      m_direct.merge ( range ) ;
+      if ( 0 != m_inverse_aux ) { m_inverse_aux -> merge ( range ) ; }
+      return *this ;
+    }
+    /** merge with the sorted range of relations 
+     *  @attention the raneg is assumed to be sorted! 
+     *  @param range the range to be added 
+     *  @return self-reference 
+     */
+    Relation& merge ( const typename IInverse::Range& range ) 
+    {
+      if ( range.empty() ) { return *this ; }
+      m_direct.merge ( range ) ;
+      if ( 0 != m_inverse_aux ) { m_inverse_aux -> merge ( range ) ; }
+      return *this ;
+    }
+    /** merge with the sorted range of relations 
+     *  @attention the raneg is assumed to be sorted! 
+     *  @param range the range to be added 
+     *  @return self-reference 
+     */    
+    Relation& operator+= ( const Range& range ) 
+    { return merge ( range ) ; }
+    /** merge with the sorted range of relations 
+     *  @attention the raneg is assumed to be sorted! 
+     *  @param range the range to be added 
+     *  @return self-reference 
+     */    
+    Relation& operator+= ( const typename IInverse::Range& range ) 
+    { return merge ( range ) ; }    
     // ========================================================================
   public:  // abstract methods from interface
     // ========================================================================

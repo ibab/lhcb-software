@@ -1,9 +1,24 @@
-! $Id: release.notes,v 1.55 2008-10-31 19:34:59 ibelyaev Exp $ 
+! $Id: release.notes,v 1.56 2008-11-01 15:53:09 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
 ! Responsible : Vanya BELYAEV   ibelyaev@physics.syr.edu
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
+
+! 2008-11-01 - Vanya BELYAEV
+
+ - for each concrete type add the method "merge" to merge 
+   with the sorted range and the corresponidng shortcut: 'operator+='
+   Using this methods it is easy to add some valid range of 
+   relations into the table without explicit loop  
+   Important prerequisitye: the range *MUST* be valid range, 
+   which in particualr implies that it must 
+   be *SORTED* range, or the raneg extracted form the VALID 
+   relatiion table. [ Note that "i_push" invalidate the table, 
+   the table is validated again with "i_sort"].
+
+      
+
 
 ! 2008-10-31 - Vanya BELYAEV
 

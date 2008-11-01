@@ -1,8 +1,11 @@
-// $Id: Relation2D.h,v 1.10 2008-10-31 19:34:59 ibelyaev Exp $
+// $Id: Relation2D.h,v 1.11 2008-11-01 15:53:08 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.10 $ 
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.11 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2008/10/31 19:34:59  ibelyaev
+//  fixes for gcc4.3
+//
 // Revision 1.9  2006/11/25 18:50:40  ibelyaev
 //  fix a problem with Rlation2D.h
 //
@@ -31,7 +34,6 @@
 #include "Relations/IRelation2D.h"
 #include "Relations/Relation2.h"
 // ============================================================================
-
 namespace LHCb
 {  
   /** @class Relation2D Relations/Relation2D.h
@@ -190,6 +192,37 @@ namespace LHCb
      *   mandatory to use after i_push
      */
     inline  void i_sort() { m_base.i_sort() ; }
+    // ========================================================================
+  public: // merge 
+    // ========================================================================
+    /** merge with the sorted range of relations 
+     *  @attention the range is assumed to be sorted! 
+     *  @param range the range to be added 
+     *  @return self-reference 
+     */
+    Relation2D& merge ( const Range& range ) 
+    { m_base.merge ( range ) ; return *this ; }
+    /** merge with the sorted range of relations 
+     *  @attention the range is assumed to be sorted! 
+     *  @param range the range to be added 
+     *  @return self-reference 
+     */
+    Relation2D& merge ( const typename IInverse::Range& range ) 
+    { m_base.merge ( range ) ; return *this ; }
+    /** merge with the sorted range of relations 
+     *  @attention the range is assumed to be sorted! 
+     *  @param range the range to be added 
+     *  @return self-reference 
+     */
+    Relation2D& operator+=( const Range& range ) 
+    { return merge ( range ) ; }
+    /** merge with the sorted range of relations 
+     *  @attention the range is assumed to be sorted! 
+     *  @param range the range to be added 
+     *  @return self-reference 
+     */
+    Relation2D& operator+=( const typename IInverse::Range& range ) 
+    { return merge ( range ) ; }    
     // ========================================================================
   public: // abstract methods from interface
     // ========================================================================

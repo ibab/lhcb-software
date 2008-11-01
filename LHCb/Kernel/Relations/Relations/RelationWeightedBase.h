@@ -1,8 +1,11 @@
-// $Id: RelationWeightedBase.h,v 1.12 2008-10-31 19:34:59 ibelyaev Exp $
+// $Id: RelationWeightedBase.h,v 1.13 2008-11-01 15:53:09 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.12 $
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.13 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.12  2008/10/31 19:34:59  ibelyaev
+//  fixes for gcc4.3
+//
 // Revision 1.11  2007/08/27 23:18:20  odescham
 // fix untested StatusCode
 //
@@ -355,30 +358,56 @@ namespace Relations
     {}
     // ========================================================================
   public:
-//     // ========================================================================
-//     /** add *SORTED* range into the relation table 
-//      *  @see std::merge 
-//      *  @param range the range to be added 
-//      *  @return self reference 
-//      */
-//     RelationWeightedBase& merge ( const Range& range ) 
-//     {
-//       if ( range.empty() ) { return *this ; }
-//       Entries tmp ( m_entries.size() + range.size() ) ;
-//       std::merge 
-//         ( m_entries . begin () , m_entries . end () , 
-//           range     . begin () , range     . end () , Less() ) ;
-//       m_entries = tmp ;
-//       return *this ;              
-//     }
-//     /** add *SORTED* range into the relation table 
-//      *  @see std::merge 
-//      *  @param range the range to be added 
-//      *  @return self reference 
-//      */
-//     RelationWeightedBase& operator+=( const Range& range ) 
-//     { return merge ( range ) ; }
-//     // ========================================================================
+    // ========================================================================
+    /** add *SORTED* range into the relation table 
+     *  @see std::merge 
+     *  @param range the range to be added 
+     *  @return self reference 
+     */
+    RelationWeightedBase& merge ( const Range& range ) 
+    {
+      if ( range.empty() ) { return *this ; }
+      Entries tmp ( m_entries.size() + range.size() ) ;
+      std::merge 
+        ( m_entries . begin () , 
+          m_entries . end   () , 
+          range     . begin () , 
+          range     . end   () , 
+          tmp       . begin () , Less() ) ;
+      m_entries = tmp ;
+      return *this ;              
+    }
+    // ========================================================================
+    /** add 'inverse' range into the relation table 
+     *  @param range the range to be added 
+     *  @return self reference 
+     */
+    RelationWeightedBase& merge ( const typename IInverse::Range& range ) 
+    {
+      if ( range.empty() ) { return *this ; }                       // RETURN 
+      // invert all relations    
+      i_reserve ( m_entries.size() + range.size()  ) .ignore () ;
+      for ( typename IInverse::iterator entry = range.begin() ; 
+            range.end() != entry ; ++entry ) 
+      { i_push ( entry->to() , entry->from() , entry->weight() ) ;  }
+      /// final sorting of the container
+      i_sort () ;
+      return *this ;                                                 // RETURN 
+    }
+    /** add *SORTED* range into the relation table 
+     *  @see std::merge 
+     *  @param range the range to be added 
+     *  @return self reference 
+     */
+    RelationWeightedBase& operator+=( const Range& range ) 
+    { return merge ( range ) ; }
+    /** add *SORTED* range into the relation table 
+     *  @param range the range to be added 
+     *  @return self reference 
+     */
+    RelationWeightedBase& operator+=( const typename IInverse::Range& range ) 
+    { return merge ( range ) ; }
+    // ========================================================================
   private:
     // ========================================================================
     /// the actual storage of relation links  
