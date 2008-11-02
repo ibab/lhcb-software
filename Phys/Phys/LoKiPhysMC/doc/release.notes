@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.48 2008-10-29 14:08:48 ibelyaev Exp $ 
+! $Id: release.notes,v 1.49 2008-11-02 20:22:08 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhysMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2008-11-02 - Vanya BELYAEV
+
+ - more fixes for variosu compilers 
+ - remove some methods form the dictionaries 
 
 ! 2008-10-29 - Vanya BELYAEV
 

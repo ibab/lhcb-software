@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiPhysMC.xml,v 1.2 2007-06-10 20:17:54 ibelyaev Exp $ 
+     * $Id: LoKiPhysMC.xml,v 1.3 2008-11-02 20:22:08 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries 
@@ -25,6 +25,27 @@
   <function pattern="LoKi::Dicts::MCMatchDicts::*" />
   
   <exclusion>
+
+    <class pattern="LoKi::PhysMCParticles::*">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::Dicts::*">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::Interface&lt;*&gt;">
+      <method name="=" />
+    </class>
+    
+    <class name="LoKi::MCMatch">
+      <method name="=" />
+    </class>
+    <class name="LoKi::MCMatchObj">
+      <method name="=" />
+    </class>
+    <class name="LoKi::DecayChain">
+      <method name="=" />
+    </class>
+
   </exclusion>
   
 </lcgdict>
