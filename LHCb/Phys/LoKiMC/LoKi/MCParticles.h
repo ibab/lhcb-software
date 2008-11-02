@@ -1,4 +1,4 @@
-// $Id: MCParticles.h,v 1.18 2008-10-31 17:21:37 ibelyaev Exp $
+// $Id: MCParticles.h,v 1.19 2008-11-02 18:46:30 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCPARTICLES_H 
 #define LOKI_MCPARTICLES_H 1
@@ -156,6 +156,23 @@ namespace LoKi
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     };
     // ========================================================================    
+    /** @class Theta
+     *  evaluator of the pseudorapidity of the particle 
+     *  
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2002-07-15
+     */
+    class Theta : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
+    {  
+    public:
+      /// clone method (mandatory!)
+      virtual Theta* clone() const ;
+      /// the only one essential method 
+      result_type operator() ( argument p ) const ;
+      /// "SHORT" representation, @see LoKi::AuxFunBase 
+      virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+    };
+    // ========================================================================    
     /** @class PseudoRapidity
      *  evaluator of the seudorapidity of the particle 
      *  
@@ -172,24 +189,7 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
       /// get eta 
-      double eta ( argument p ) const { return p->momentum() .Eta() ; }
-    };
-    // ========================================================================    
-    /** @class Theta
-     *  evaluator of the pseudorapidity of the particle 
-     *  
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date   2002-07-15
-     */
-    class Theta : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
-    {  
-    public:
-      /// clone method (mandatory!)
-      virtual Theta* clone() const ;
-      /// the only one essential method 
-      result_type operator() ( argument p ) const ;
-      /// "SHORT" representation, @see LoKi::AuxFunBase 
-      virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+      result_type eta ( argument p ) const { return p->momentum() .Eta() ; }
     };
     // ========================================================================    
     /** @class Phi
@@ -208,7 +208,21 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
       /// get phi 
-      double phi ( argument p ) const { return p->momentum(). Phi () ; }
+      result_type phi ( argument p ) const 
+      { return p->momentum(). Phi () ; }
+      // ======================================================================
+      /// adjust phi into the range of [-180:180]degrees
+      result_type adjust ( double angle ) const 
+      {  
+        static const double s_180 = 180 * Gaudi::Units::degree ;
+        static const double s_360 = 360 * Gaudi::Units::degree ;
+        //
+        while ( angle >      s_180 ) { angle -= s_360 ; }
+        while ( angle < -1 * s_180 ) { angle += s_360 ; }
+        //
+        return angle ;
+      }
+      // ======================================================================
     };
     // ========================================================================    
     /** @class Mass
@@ -867,10 +881,14 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
     private:
+      // ======================================================================
       /// default constructor is private
       TransverseMomentumRel() ;
+      // ======================================================================
     private:
+      // ======================================================================
       LoKi::ThreeVector m_vct ;
+      // ======================================================================
     };
     // ========================================================================    
     /** @class DeltaPhi
@@ -886,31 +904,31 @@ namespace LoKi
     public:
       // ======================================================================
       /// constructor from the angle
-      DeltaPhi ( const double phi ) : Phi () , m_phi ( phi ) {}
+      DeltaPhi ( const double phi ) ;
       /// constructor from the vector 
-      DeltaPhi ( const LoKi::ThreeVector& v ) : Phi () , m_phi ( v.Phi () ){}
+      DeltaPhi ( const LoKi::ThreeVector&   v ) ;
       /// constructor from the vector 
-      DeltaPhi ( const LoKi::LorentzVector& v ) : Phi () , m_phi ( v.Phi () ) {}
-      /// templated constructor from vector 
-      template <class VECTOR> 
-      DeltaPhi ( const VECTOR& v ) 
-        : LoKi::MCParticles::Phi () 
-        , m_phi  ( v.phi() )
-      { 
-        m_phi = adjust ( m_phi ) ;
-      } 
+      DeltaPhi ( const LoKi::LorentzVector& v ) ;
       /// constructor from the particle
       DeltaPhi ( const LHCb::MCParticle* p ) ;
-      /// templated constructor from particle
-      template <class PARTICLE> 
-      DeltaPhi ( const PARTICLE* p ) 
-        : LoKi::MCParticles::Phi () 
-        , m_phi  (  )
-      { 
-        if ( 0 == p ) { Exception("Invalid PARTICLE*") ;}
-        m_phi = p->momentum().Phi() ;
-        m_phi = adjust ( m_phi ) ;
-      } 
+      // /// templated constructor from vector 
+      //       template <class VECTOR> 
+      //       DeltaPhi ( const VECTOR& v ) 
+      //         : LoKi::MCParticles::Phi () 
+      //         , m_phi  ( v.Phi() )
+      //       { 
+      //         m_phi = adjust ( m_phi ) ;
+      //       } ;
+      // /// templated constructor from particle
+      //       template <class PARTICLE> 
+      //       DeltaPhi ( const PARTICLE* p ) 
+      //         : LoKi::MCParticles::Phi () 
+      //         , m_phi  (  )
+      //       { 
+      //         if ( 0 == p ) { Exception("Invalid PARTICLE*") ;}
+      //         m_phi = p->momentum().Phi() ;
+      //         m_phi = adjust ( m_phi ) ;
+      //       } ;
       /// MANDATORY: virtual destructor 
       virtual ~DeltaPhi() {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -923,21 +941,16 @@ namespace LoKi
       // ======================================================================
     public:
       // ======================================================================
-      /// adjust delta phi into the raneg of [-180:180]degrees 
-      double adjust ( double phi ) const ;
-      // ======================================================================
-    public:
-      // ======================================================================
       /// accessor to phi0
-      double phi0() const { return m_phi ; }      
-      double dphi ( argument p ) const 
+      result_type phi0 () const { return m_phi ; }      
+      /// get delta phi 
+      result_type dphi ( argument p ) const
       { return adjust ( phi ( p ) - phi0 () ) ; }
       // ======================================================================
     private:
       // ======================================================================
       // the default constructor is disabled 
       DeltaPhi ();
-      DeltaPhi& operator=( const DeltaPhi& ) ;
       // ======================================================================
     private:
       // ======================================================================
@@ -954,35 +967,32 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-03
      */
-    class DeltaEta : public LoKi::MCParticles::PseudoRapidity
+    class DeltaEta : public PseudoRapidity
     {
     public:
       /// constructor from the eta
-      DeltaEta ( const double eta ) 
-        : PseudoRapidity () , m_eta  ( eta ) {}
+      DeltaEta ( const double eta ) ;
       /// constructor from the vector 
-      DeltaEta ( const LoKi::ThreeVector&   v ) 
-        : PseudoRapidity () , m_eta  ( v.Eta () ) {}
+      DeltaEta ( const LoKi::ThreeVector&   v ) ;
       /// constructor from the vector 
-      DeltaEta ( const LoKi::LorentzVector& v ) 
-        : PseudoRapidity () , m_eta  ( v.Eta () ) {}
-      /// templated constructor from vector 
-      template <class VECTOR> 
-      DeltaEta ( const VECTOR& v ) 
-        : LoKi::MCParticles::PseudoRapidity () 
-        , m_eta  ( v.Eta() )
-      {} 
+      DeltaEta ( const LoKi::LorentzVector& v ) ;
       /// constructor from the particle
       DeltaEta ( const LHCb::MCParticle* p ) ;
-      /// templated constructor from particle
-      template <class PARTICLE> 
-      DeltaEta ( const PARTICLE* p ) 
-        : LoKi::MCParticles::PseudoRapidity () 
-        , m_eta  (  )
-      { 
-        if ( 0 == p ) { Exception("Invalid PARTICLE*") ;}
-        m_eta = p->momentum().Eta() ;
-      } 
+      //       /// templated constructor from vector 
+      //       template <class VECTOR> 
+      //       DeltaEta ( const VECTOR& v ) 
+      //         : PseudoRapidity () 
+      //         , m_eta  ( v.Eta() )
+      //       {} ;
+      //       /// templated constructor from particle
+      //       template <class PARTICLE> 
+      //       DeltaEta ( const PARTICLE* p ) 
+      //         : PseudoRapidity () 
+      //         , m_eta  (  )
+      //       { 
+      //         if ( 0 == p ) { Exception("Invalid PARTICLE*") ;}
+      //         m_eta = p->momentum().Eta() ;
+      //       } ;
       /// MANDATORY: virtual destructor 
       virtual ~DeltaEta() {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -996,15 +1006,13 @@ namespace LoKi
     public:
       // ======================================================================
       // accessor to eta0
-      double eta0() const { return m_eta ; }
-      double deta ( argument p ) const 
-      { return eta ( p ) - eta0() ; }
+      result_type eta0 () const { return m_eta ; }
+      result_type deta ( argument p ) const { return eta ( p ) - eta0() ; }
       // ======================================================================
     private:
       // ======================================================================
       // the default constructor is disabled 
       DeltaEta ();
-      DeltaEta& operator=( const DeltaEta& ) ;
       // ======================================================================
     private:
       // ======================================================================
@@ -1028,7 +1036,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-03
      */
-    class DeltaR2 : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
+    class DeltaR2 : public DeltaPhi 
     {
     public:
       // ======================================================================
@@ -1038,24 +1046,22 @@ namespace LoKi
       DeltaR2 ( const LoKi::ThreeVector&   v ) ;
       /// constructor from the vector 
       DeltaR2 ( const LoKi::LorentzVector& v ) ;
-      /// templated constructor from vector 
-      template <class VECTOR> 
-      DeltaR2 ( const VECTOR& v ) 
-        : LoKi::BasicFunctors<const LHCb::MCParticle*>::Function () 
-        , m_dphi ( v )
-        , m_deta ( v )
-      {} 
       /// constructor from the particle
       DeltaR2 ( const LHCb::MCParticle* p ) ;
-      /// templated constructor from particle
-      template <class PARTICLE> 
-      DeltaR2 ( const PARTICLE* p ) 
-        : LoKi::BasicFunctors<const LHCb::MCParticle*>::Function () 
-        , m_dphi ( p )
-        , m_deta ( p )
-      {} 
+      //       /// templated constructor from vector 
+      //       template <class VECTOR> 
+      //       DeltaR2 ( const VECTOR& v ) 
+      //         : DeltaPhi () 
+      //         , m_deta ( v )
+      //       {} ;
+      //       /// templated constructor from particle
+      //       template <class PARTICLE> 
+      //       DeltaR2 ( const PARTICLE* p ) 
+      //         : DeltaPhi () 
+      //         , m_deta ( p )
+      //       {} ;
       /// MANDATORY: virtual destructor 
-      virtual ~DeltaR2() {}
+      virtual ~DeltaR2() {} ;
       /// MANDATORY: clone method ("virtual constructor")
       virtual  DeltaR2* clone() const 
       { return new DeltaR2(*this) ; }
@@ -1066,14 +1072,21 @@ namespace LoKi
       // ======================================================================
     private:
       // ======================================================================
-      // the default constructor is disabled 
-      DeltaR2 ();
-      DeltaR2& operator= ( const DeltaR2& ) ;
+      /// accessor to eta0
+      result_type eta0 () const { return m_deta.eta0()  ; }
+      /// evaluate delta eta 
+      result_type deta ( argument p )  const 
+      { return eta ( p ) - eta0 ()  ; }
+      /// get the eta 
+      result_type eta  ( argument p ) const { return m_deta.eta( p ) ; }
       // ======================================================================
     private:
       // ======================================================================
-      /// the actual evaluator of delta phi
-      LoKi::MCParticles::DeltaPhi m_dphi ; // the actual evaluator of delta phi
+      // the default constructor is disabled 
+      DeltaR2 ();
+      // ======================================================================
+    private:
+      // ======================================================================
       /// the actual evaluator of delta eta
       LoKi::MCParticles::DeltaEta m_deta ; // the actual evaluator of delta eta
       // ======================================================================
@@ -1159,6 +1172,7 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate
     {
     public:
+      // ======================================================================
       /** constructor 
        *  @param decay  decay descriptor 
        *  @param finder decay finder tool 
@@ -1188,12 +1202,17 @@ namespace LoKi
       virtual result_type operator() ( argument p ) const ; 
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+      // ======================================================================
     private:
-      // default constructor is disabled 
+      // ======================================================================
+      /// default constructor is disabled 
       MCDecayPattern() ;
+      // ======================================================================
     private:
+      // ======================================================================
       LoKi::Interface<IMCDecayFinder> m_finder ;
       std::string                     m_decay  ;
+      // ======================================================================
     };
     // ========================================================================    
     /** @class MCFilter
@@ -1206,6 +1225,7 @@ namespace LoKi
     class MCFilter : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate
     {
     public:
+      // ======================================================================
       /// constructor from selector 
       MCFilter ( const IMCParticleSelector*                  selector ) ;
       /// constructor from selector 
@@ -1220,12 +1240,17 @@ namespace LoKi
       virtual result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+      // ======================================================================
     private:
-      // default constructor is disabled 
+      // ======================================================================
+      /// default constructor is disabled 
       MCFilter() ;
+      // ======================================================================
     private:
+      // ======================================================================
       // the selector itself
       LoKi::Interface<IMCParticleSelector> m_selector ; ///< the selector itself
+      // ======================================================================
     };
     // ========================================================================    
     /** @class MCReconstructuble
@@ -1258,11 +1283,15 @@ namespace LoKi
       operator const LoKi::Interface<IMCReconstructible>& () const
       { return m_eval ; }
     private:
-      // default constructor is disabled 
-      MCReconstructible () ; ///< default constructor is disabled
+      // ======================================================================
+      /// default constructor is disabled 
+      MCReconstructible () ; // default constructor is disabled
+      // ======================================================================
     private:
+      // ======================================================================
       // the underlying tool
       LoKi::Interface<IMCReconstructible> m_eval ; ///< the underlying tool
+      // ======================================================================
     } ;
     // ========================================================================    
     /** @class MCReconstructubleAs
@@ -1277,6 +1306,7 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate
     {
     public:
+      // ======================================================================
       /// constructor from the tool and category 
       MCReconstructibleAs 
       ( const IMCReconstructible*             tool , 
@@ -1303,17 +1333,24 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: "short representation"
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       /// cast operator to the underlying tool 
       operator const LoKi::Interface<IMCReconstructible>& () const { return m_eval ; }
+      // ======================================================================
     private:
-      // default constructor is disabled 
-      MCReconstructibleAs () ; ///< default constructor is disabled
+      // ======================================================================
+      /// default constructor is disabled 
+      MCReconstructibleAs () ;               // default constructor is disabled
+      // ======================================================================
     private:
-      // the underlying tool
-      LoKi::Interface<IMCReconstructible> m_eval ; ///< the underlying tool
-      // the recontruction category 
-      IMCReconstructible::RecCategory     m_cat  ; ///< the recontruction category
+      // ======================================================================
+      /// the underlying tool
+      LoKi::Interface<IMCReconstructible> m_eval ;       // the underlying tool
+      /// the recontruction category 
+      IMCReconstructible::RecCategory     m_cat  ; // the recontruction category
+      // ======================================================================
     } ;    
     // ========================================================================    
     /** @class ChildFunction
@@ -1340,6 +1377,7 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     {
     public:
+      // ======================================================================
       /** constructor from the function and daughter index 
        *  @param fun    the function to be used 
        *  @param index  the index of daughter particle
@@ -1368,16 +1406,21 @@ namespace LoKi
       virtual result_type operator() ( argument p ) const ;
       /// OPTIONAL:  specific printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
     private:
-      // no default constructor 
-      ChildFunction(); ///< no default constructor
+      // ======================================================================
+      /// no default constructor 
+      ChildFunction();  // no default constructor
+      // ======================================================================
     private:
-      // the function itself 
-      LoKi::MCTypes::MCFun m_fun   ; ///< the function itself 
-      // index of daughter particle 
-      size_t               m_index ; ///< index of daughter particle 
-      // return value for invalid particle 
-      double               m_bad   ; ///< return value for invalid particle 
+      // ======================================================================
+      /// the function itself 
+      LoKi::MCTypes::MCFun m_fun   ;                     // the function itself 
+      /// index of daughter particle 
+      size_t               m_index ;              // index of daughter particle 
+      /// return value for invalid particle 
+      double               m_bad   ;       // return value for invalid particle 
+      // ======================================================================
     } ;
     // ========================================================================    
     /** @class ChildPredicate
@@ -1433,15 +1476,19 @@ namespace LoKi
       /// OPTIONAL:  specific printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
     private:
-      // no default constructor 
-      ChildPredicate(); ///< no default constructor
+      // ======================================================================
+      /// no default constructor 
+      ChildPredicate();                               // no default constructor
+      // ======================================================================
     private:
-      // the function itself 
-      LoKi::MCTypes::MCCut m_cut   ; ///< the function itself 
-      // index of daughter particle 
-      size_t               m_index ; ///< index of daughter particle 
-      // bad value to be returned for invalid particle 
-      bool                 m_bad   ;  ///< bad value
+      // ======================================================================
+      /// the function itself 
+      LoKi::MCTypes::MCCut m_cut   ;                     // the function itself 
+      /// index of daughter particle 
+      size_t               m_index ;              // index of daughter particle 
+      /// bad value to be returned for invalid particle 
+      bool                 m_bad   ;                               // bad value
+      // ======================================================================
     };
     // ========================================================================    
     /** @class InTree
@@ -1462,6 +1509,7 @@ namespace LoKi
     class InTree : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate 
     {
     public:
+      // ======================================================================
       /** standard constructor 
        *  @param cut cut to be checked 
        *  @param decayOnly flag to indicat the search through decay products only
@@ -1478,12 +1526,17 @@ namespace LoKi
       virtual  result_type   operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
     private:
-      // default constructor is disabled 
-      InTree () ; ///< default constructor is disabled 
+      // ======================================================================
+      /// default constructor is disabled 
+      InTree () ;                            // default constructor is disabled 
+      // ======================================================================
     private:
+      // ======================================================================
       LoKi::MCTypes::MCCut m_cut       ;
       bool                 m_decayOnly ;
+      // ======================================================================
     } ;
     // ========================================================================    
     /** @class NinTree

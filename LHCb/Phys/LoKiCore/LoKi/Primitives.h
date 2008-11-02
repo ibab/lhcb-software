@@ -1,4 +1,4 @@
-// $Id: Primitives.h,v 1.14 2008-10-31 17:24:08 ibelyaev Exp $
+// $Id: Primitives.h,v 1.15 2008-11-02 18:47:07 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PRIMITIVES_H 
 #define LOKI_PRIMITIVES_H 1
@@ -1757,10 +1757,6 @@ namespace LoKi
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << "(Valid?)"; }
     // ========================================================================
-  private:
-    // ========================================================================
-    Valid& operator=( const Valid& ) ;
-    // ========================================================================
   };
   // ==========================================================================
   /** @class TheSame 
@@ -1808,7 +1804,6 @@ namespace LoKi
     // ========================================================================
     // the default contructor is disabled
     TheSame();
-    TheSame& operator=( const TheSame& ) ;
     // ========================================================================
   private:
     // ========================================================================
@@ -2373,8 +2368,6 @@ namespace LoKi
     /// MANDATORY": the only one essential method 
     virtual  typename LoKi::Functor<TYPE,TYPE2>::result_type operator () 
       ( typename LoKi::Functor<TYPE,TYPE2>::argument a ) const { return a ; }    
-  private:
-    Identity& operator=( const Identity& ) ;
   } ;
   // ==========================================================================
   /** @class PrintOut

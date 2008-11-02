@@ -1,7 +1,7 @@
 <!-- 
-     * $Id: LoKiCore.xml,v 1.10 2008-10-27 14:37:35 cattanem Exp $ 
+     * $Id: LoKiCore.xml,v 1.11 2008-11-02 18:47:07 ibelyaev Exp $ 
      * ========================================================================
-     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.10 $ 
+     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.11 $ 
      * ======================================================================== 
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiCore package
@@ -52,6 +52,23 @@
     <class    name    = "std::unary_function<const void*,bool>" /> 
     <function name    = "LoKi::tokenize" /> 
     <function name    = "LoKi::Range_Local::rangeException" /> 
+    
+    <class pattern="LoKi::Interface&lt;*&gt;">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::I*">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::Hybrid::*">
+      <method name="=" />
+    </class>
+    <class pattern="std::unary_function&lt;*&gt;">
+      <method name="=" />
+    </class>
+    <class pattern="std::binary_function&lt;*&gt;">
+      <method name="=" />
+    </class>
+    
   </exclusion>
   
 </lcgdict>

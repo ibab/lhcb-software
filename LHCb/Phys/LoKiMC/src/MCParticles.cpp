@@ -1,4 +1,4 @@
-// $Id: MCParticles.cpp,v 1.17 2008-10-31 17:21:37 ibelyaev Exp $
+// $Id: MCParticles.cpp,v 1.18 2008-11-02 18:46:32 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -200,7 +200,7 @@ LoKi::MCParticles::Phi::result_type
 LoKi::MCParticles::Phi::operator() 
   ( LoKi::MCParticles::Phi::argument p ) const
 {
-  if ( 0 != p ) { return phi ( p ) ; }    // RETURN 
+  if ( 0 != p ) { return adjust ( phi ( p ) ) ; }    // RETURN 
   Error(" Invalid Particle, return 'InvalidMomenum'");
   return LoKi::Constants::InvalidMomentum;                   // RETURN 
 }
@@ -1250,6 +1250,27 @@ LoKi::MCParticles::MCFilter::fillStream
   return s << "')" ;
 }
 // ============================================================================
+//  constructor from the phi 
+// ============================================================================
+LoKi::MCParticles::DeltaPhi::DeltaPhi ( const double phi )
+  : LoKi::MCParticles::Phi ()  
+  , m_phi  ( phi )
+{ m_phi = adjust ( m_phi ) ; }
+// ============================================================================
+//  constructor from the vector 
+// ============================================================================
+LoKi::MCParticles::DeltaPhi::DeltaPhi ( const LoKi::ThreeVector& v ) 
+  : LoKi::MCParticles::Phi ()  
+  , m_phi  ( v.Phi() )
+{ m_phi = adjust ( m_phi ) ; }
+// ============================================================================
+//  constructor from the vector 
+// ============================================================================
+LoKi::MCParticles::DeltaPhi::DeltaPhi ( const LoKi::LorentzVector& v ) 
+  : LoKi::MCParticles::Phi ()  
+  , m_phi  ( v.Phi() )
+{ m_phi = adjust ( m_phi ) ; }
+// ============================================================================
 //  constructor from the particle
 // ============================================================================
 LoKi::MCParticles::DeltaPhi::DeltaPhi ( const LHCb::MCParticle* p )
@@ -1280,18 +1301,26 @@ LoKi::MCParticles::DeltaPhi::operator()
 std::ostream& LoKi::MCParticles::DeltaPhi::fillStream ( std::ostream& s ) const 
 { return s << "MCDPHI(" << m_phi << ")" ; }
 // ============================================================================
-//  adjust delta phi into the range of [-180:180]degrees 
+//  constructor from the eta 
 // ============================================================================
-double LoKi::MCParticles::DeltaPhi::adjust ( double phi ) const 
-{
-  static const double s_180 = 180 * Gaudi::Units::degree ;
-  static const double s_360 = 360 * Gaudi::Units::degree ;
-  //
-  while ( phi >      s_180 ) { phi -= s_360 ; }
-  while ( phi < -1 * s_180 ) { phi += s_360 ; }
-  //
-  return phi ; 
-} 
+LoKi::MCParticles::DeltaEta::DeltaEta ( const double eta  ) 
+  : LoKi::MCParticles::PseudoRapidity ()  
+  , m_eta  ( eta )
+{}
+// ============================================================================
+//  constructor from the vector
+// ============================================================================
+LoKi::MCParticles::DeltaEta::DeltaEta ( const LoKi::ThreeVector& v ) 
+  : LoKi::MCParticles::PseudoRapidity ()  
+  , m_eta  ( v.Eta () )
+{}
+// ============================================================================
+//  constructor from the lorentz vector
+// ============================================================================
+LoKi::MCParticles::DeltaEta::DeltaEta ( const LoKi::LorentzVector& v ) 
+  : LoKi::MCParticles::PseudoRapidity ()  
+  , m_eta  ( v.Eta () )
+{}
 // ============================================================================
 //  constructor from the particle
 // ============================================================================
@@ -1327,32 +1356,28 @@ std::ostream& LoKi::MCParticles::DeltaEta::fillStream ( std::ostream& s ) const
 LoKi::MCParticles::DeltaR2::DeltaR2 
 ( const double eta , 
   const double phi ) 
-  : LoKi::BasicFunctors<const LHCb::MCParticle*>::Function () 
-  , m_dphi ( phi ) 
+  : LoKi::MCParticles::DeltaPhi ( phi ) 
   , m_deta ( eta ) 
 {}
 // ============================================================================
 //  constructor from the vector 
 // ============================================================================
 LoKi::MCParticles::DeltaR2::DeltaR2 ( const LoKi::ThreeVector& v ) 
-  : LoKi::BasicFunctors<const LHCb::MCParticle*>::Function () 
-  , m_dphi ( v ) 
+  : LoKi::MCParticles::DeltaPhi ( v ) 
   , m_deta ( v ) 
 {}
 // ============================================================================
 //  constructor from the vector 
 // ============================================================================
 LoKi::MCParticles::DeltaR2::DeltaR2 ( const LoKi::LorentzVector& v ) 
-  : LoKi::BasicFunctors<const LHCb::MCParticle*>::Function () 
-  , m_dphi ( v ) 
+  : LoKi::MCParticles::DeltaPhi ( v ) 
   , m_deta ( v ) 
 {}
 // ============================================================================
 //  constructor from the particle
 // ============================================================================
 LoKi::MCParticles::DeltaR2::DeltaR2 ( const LHCb::MCParticle* v ) 
-  : LoKi::BasicFunctors<const LHCb::MCParticle*>::Function () 
-  , m_dphi ( v ) 
+  : LoKi::MCParticles::DeltaPhi ( v ) 
   , m_deta ( v ) 
 {}
 // ============================================================================
@@ -1362,16 +1387,21 @@ LoKi::MCParticles::DeltaR2::result_type
 LoKi::MCParticles::DeltaR2::operator() 
   ( LoKi::MCParticles::DeltaR2::argument p ) const 
 {
-  const double dphi = m_dphi.dphi ( p ) ;
-  const double deta = m_deta.deta ( p ) ;
+  if ( 0 == p ) 
+  {
+    Error ("LHCb::MCParticle* points to NULL, return 'InvalidDistance'") ;
+    return LoKi::Constants::InvalidDistance;
+  }
+  const double dphi_ = dphi ( p ) ;
+  const double deta_ = deta ( p ) ;
   //
-  return dphi*dphi + deta*deta ;
+  return dphi_*dphi_ + deta_*deta_ ;
 } 
 // ============================================================================
 //  OPTIONAL: "SHORT" representation
 // ============================================================================
 std::ostream& LoKi::MCParticles::DeltaR2::fillStream ( std::ostream& s ) const 
-{ return s << "MCDR2(" << m_deta.eta0() << "," << m_dphi.phi0() << ")" ; }
+{ return s << "MCDR2(" << eta0() << "," << phi0() << ")" ; }
 // ============================================================================
 // constructor form the tool 
 // ============================================================================
