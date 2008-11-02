@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.14 2008-11-02 20:36:36 ibelyaev Exp $ 
+# $Id: requirements,v 1.15 2008-11-02 20:37:57 ibelyaev Exp $ 
 # ============================================================================
 # Created    : 2007-06-08
 # Maintainer : Vanya BELYAEV
@@ -30,7 +30,7 @@ library           LoKiArrayFunctors    ../src/Components/*.cpp
 
 # =============== patterns ===================================================
 apply_pattern     linker_library    library=LoKiArrayFunctorsLib
-## apply_pattern     component_library library=LoKiArrayFunctors
+apply_pattern     component_library library=LoKiArrayFunctors
 
 # ============================================================================
 # The END 
