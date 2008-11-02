@@ -1,4 +1,4 @@
-// $Id: AParticles.h,v 1.9 2008-10-31 17:58:35 ibelyaev Exp $
+// $Id: AParticles.h,v 1.10 2008-11-02 20:36:36 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_APARTICLES_H 
 #define LOKI_APARTICLES_H 1
@@ -192,10 +192,6 @@ namespace LoKi
       // ======================================================================
     private:
       // ======================================================================
-      FourMomentum& operator=( const FourMomentum& ) ;
-      // ======================================================================
-    private:
-      // ======================================================================
       /// the actual list of indices 
       Indices m_indices ; // the actual list of indices 
       // ======================================================================
@@ -255,10 +251,6 @@ namespace LoKi
       virtual std::ostream& fillStream( std::ostream& s ) const 
       { return print_ ( s , "AMASS(" ) ; }
       // ======================================================================
-    private:
-      // ======================================================================
-      InvariantMass& operator=( const InvariantMass& ) ;
-      // ======================================================================
     public:
       // ======================================================================
       /// evaluate the mass 
@@ -309,10 +301,6 @@ namespace LoKi
       virtual std::ostream& fillStream( std::ostream& s ) const 
       { return print_ ( s , "AMOM(" ) ; }
       // ======================================================================
-    private:
-      // ======================================================================
-      Momentum& operator=( const Momentum& ) ;
-      // ======================================================================
     public:
       // ======================================================================
       /// evaluate the momentum 
@@ -361,10 +349,6 @@ namespace LoKi
       /// OPTIONAL: the nice printout  
       virtual std::ostream& fillStream( std::ostream& s ) const 
       { return print_ ( s , "AMOMT(" ) ; }
-      // ======================================================================
-    private:
-      // ======================================================================
-      TransverseMomentum& operator=( const TransverseMomentum& ) ;
       // ======================================================================
     public:
       // ======================================================================
@@ -415,9 +399,6 @@ namespace LoKi
       /// OPTIONAL: the nice printout  
       virtual std::ostream& fillStream( std::ostream& s ) const 
       { return print_ ( s , "AETAP(" ) ; }
-    private:
-      // ======================================================================
-      Eta& operator=( const Eta& ) ;
       // ======================================================================
     public:
       // ======================================================================
@@ -438,6 +419,7 @@ namespace LoKi
       : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function 
     {
     public:
+      // ======================================================================
       /// Constructor from the function 
       MinChild ( const LoKi::PhysTypes::Func& fun  ) ;
       /// Contructor from the function and minval 
@@ -467,15 +449,20 @@ namespace LoKi
       virtual  result_type  operator() ( argument v ) const ;
       /// OPTIONALLY: the nice printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       /// the default constructor is disabled 
       MinChild () ; // the default constructor is disabled 
+      // ======================================================================
     private:
+      // ======================================================================
       /// the function to be evaluated 
       LoKi::PhysTypes::Fun m_fun    ; // the function to be evaluated 
       /// the predicate to be applied
       LoKi::PhysTypes::Cut m_cut    ; // the predicate to be applied
       double               m_minval ;
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class MaxChild
@@ -490,6 +477,7 @@ namespace LoKi
       : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function 
     {
     public:
+      // ======================================================================
       /// Constructor from the function 
       MaxChild ( const LoKi::PhysTypes::Func& fun  ) ;
       /// Contructor from the function and minval 
@@ -519,15 +507,20 @@ namespace LoKi
       virtual  result_type  operator() ( argument v ) const ;
       /// OPTIONALLY: the nice printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
     private:
-      // the default constructor is disabled 
-      MaxChild () ; ///< the default constructor is disabled 
+      // ======================================================================
+      /// the default constructor is disabled 
+      MaxChild () ;                      // the default constructor is disabled 
+      // ======================================================================
     private:
-      // the function to be evaluated 
-      LoKi::PhysTypes::Fun m_fun    ; ///< the function to be evaluated 
-      // the predicate to be applied
-      LoKi::PhysTypes::Cut m_cut    ; ///< the predicate to be applied
+      // ======================================================================
+      /// the function to be evaluated 
+      LoKi::PhysTypes::Fun m_fun    ;           // the function to be evaluated 
+      /// the predicate to be applied
+      LoKi::PhysTypes::Cut m_cut    ;            // the predicate to be applied
       double               m_maxval ;
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class HasChild
@@ -541,6 +534,7 @@ namespace LoKi
       : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate
     {
     public:
+      // ======================================================================
       /// Constructor from the critearia:
       HasChild ( const LoKi::PhysTypes::Cuts& cut ) ;
       /// copy constructor 
@@ -553,12 +547,17 @@ namespace LoKi
       virtual  result_type  operator() ( argument v ) const ;
       /// OPTIONALLY: the nice printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
     private:
-      // the default constructor is disabled 
-      HasChild() ; ///< the default constructor is disabled 
+      // ======================================================================
+      /// the default constructor is disabled 
+      HasChild() ;                       // the default constructor is disabled 
+      // ======================================================================
     private:
-      // the predicate to be evaluated 
-      LoKi::PhysTypes::Cut m_cut ; ///< the predicate to be evaluated 
+      // ======================================================================
+      /// the predicate to be evaluated 
+      LoKi::PhysTypes::Cut m_cut ;            // the predicate to be evaluated 
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class ChildFun
@@ -572,6 +571,7 @@ namespace LoKi
       : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function
     {
     public:
+      // ======================================================================
       /// Constructor from the fuction and index 
       ChildFun ( const LoKi::PhysTypes::Func& fun   , 
               const int                    index ) ;
@@ -588,14 +588,19 @@ namespace LoKi
       virtual  result_type  operator() ( argument v ) const ;
       /// OPTIONALLY: the nice printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
     private:
-      // the default constructor is disabled 
-      ChildFun() ; ///< the default constructor is disabled 
+      // ======================================================================
+      /// the default constructor is disabled 
+      ChildFun() ;                       // the default constructor is disabled 
+      // ======================================================================
     private:
-      // the function to be applied 
-      LoKi::PhysTypes::Fun m_fun   ; ///< the function to be applied 
-      // the index of daughter particle
-      int                  m_index ; ///< the index of daughter particle
+      // ======================================================================
+      /// the function to be applied 
+      LoKi::PhysTypes::Fun m_fun   ;              // the function to be applied 
+      /// the index of daughter particle
+      int                  m_index ;          // the index of daughter particle
+      // ======================================================================
     } ;    
     // ========================================================================
     /** @class ChildCut
@@ -608,6 +613,7 @@ namespace LoKi
       : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate
     {
     public:
+      // ======================================================================
       /// Constructor from the fuction and index 
       ChildCut ( const LoKi::PhysTypes::Cuts& cut   , 
                  const int                    index ) ;
@@ -624,14 +630,19 @@ namespace LoKi
       virtual  result_type  operator() ( argument v ) const ;
       /// OPTIONALLY: the nice printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
     private:
-      // the default constructor is disabled 
-      ChildCut() ; ///< the default constructor is disabled 
+      // ======================================================================
+      /// the default constructor is disabled 
+      ChildCut() ;                       // the default constructor is disabled 
+      // ======================================================================
     private:
-      // the predicate to be evaluated 
-      LoKi::PhysTypes::Cut m_cut ; ///< the predicate to be evaluated 
-      // the index of daughter particle
-      int                  m_index ; ///< the index of daughter particle
+      // ======================================================================
+      /// the predicate to be evaluated 
+      LoKi::PhysTypes::Cut m_cut ;             // the predicate to be evaluated 
+      /// the index of daughter particle
+      int                  m_index ;          // the index of daughter particle
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class VertexChi2 
@@ -648,6 +659,7 @@ namespace LoKi
       : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function
     {
     public:
+      // ======================================================================
       /// constructor from the tool:
       VertexChi2 (                       IVertexFit*  fitter  ) ;
       /// constructor from the tool:
@@ -662,17 +674,24 @@ namespace LoKi
       virtual  result_type  operator() ( argument v ) const ;
       /// OPTIONALLY: the nice printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
     private:
-      // the default constructor is disabled
-      VertexChi2() ; /// the default constructor is disabled
+      // ======================================================================
+      /// the default constructor is disabled
+      VertexChi2() ;                     // the default constructor is disabled
+      // ======================================================================
     public:
+      // ======================================================================
       /// get the tool 
       const LoKi::Interface<IVertexFit>& tool     () const { return m_fit   ; }
       /// cast to the tool:
       operator const LoKi::Interface<IVertexFit>& () const { return tool () ; }
+      // ======================================================================
     private:
-      // the tool used for evaluation 
+      // ======================================================================
+      /// the tool used for evaluation 
       LoKi::Interface<IVertexFit> m_fit ;
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class DOCA 
@@ -743,7 +762,6 @@ namespace LoKi
       // ======================================================================
       /// the default constructor is disabled 
       DOCA() ; //                                        no default constructor
-      DOCA& operator=( const DOCA& ) ;
       // ======================================================================
     private:
       // ======================================================================
@@ -824,7 +842,6 @@ namespace LoKi
       // ======================================================================
       /// the default constructor is disabled 
       DOCAChi2() ; //                                    no default constructor
-      DOCAChi2& operator=( const DOCAChi2& ) ;
       // ======================================================================
     private:
       // ======================================================================
@@ -850,6 +867,7 @@ namespace LoKi
     class MaxDOCA : public DOCA 
     {
     public:
+      // ======================================================================
       /// constructor from the tool:
       MaxDOCA ( const                 IDistanceCalculator*  doca ) ;
       /// constructor from the tool:
@@ -864,11 +882,11 @@ namespace LoKi
       virtual  result_type  operator() ( argument v ) const ;
       /// OPTIONALLY: the nice printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
     private:
       // ======================================================================
       /// the default constructor is disabled
       MaxDOCA() ; // the default constructor is disabled
-      MaxDOCA& operator=( const MaxDOCA& ) ;
       // ======================================================================
     } ;
     // ========================================================================    
@@ -884,6 +902,7 @@ namespace LoKi
     class MaxDOCAChi2 : public DOCAChi2 
     {
     public:
+      // ======================================================================
       /// constructor from the tool:
       MaxDOCAChi2 ( const                 IDistanceCalculator*  doca ) ;
       /// constructor from the tool:
@@ -898,6 +917,7 @@ namespace LoKi
       virtual  result_type  operator() ( argument v ) const ;
       /// OPTIONALLY: the nice printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
     private:
       // ======================================================================
       /// the default constructor is disabled
@@ -920,6 +940,7 @@ namespace LoKi
       : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate
     {
     public:
+      // ======================================================================
       /// constructor from the tool and threshold 
       MaxDOCACut ( const double                threshold ,
                    const IDistanceCalculator*  doca      ) ;
@@ -937,11 +958,11 @@ namespace LoKi
       virtual  result_type  operator() ( argument v ) const ;
       /// OPTIONALLY: the nice printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
     private:
       // ======================================================================
       /// the default constructor is disabled
       MaxDOCACut() ; // the default constructor is disabled
-      MaxDOCAChi2& operator=( const MaxDOCAChi2& ) ;
       // ======================================================================
     public:
       // ======================================================================
@@ -978,6 +999,7 @@ namespace LoKi
       : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate
     {
     public:
+      // ======================================================================
       /// constructor from the tool and threshold 
       MaxDOCAChi2Cut ( const double          threshold ,
                        const IDistanceCalculator*  doca      ) ;
@@ -995,17 +1017,21 @@ namespace LoKi
       virtual  result_type  operator() ( argument v ) const ;
       /// OPTIONALLY: the nice printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       // the default constructor is disabled
       MaxDOCAChi2Cut() ; /// the default constructor is disabled
-      MaxDOCAChi2Cut& operator=( const MaxDOCAChi2Cut& ) ;
+      // ======================================================================
     public:
+      // ======================================================================
       // get the tool 
       const LoKi::Interface<IDistanceCalculator>& tool     () const 
       { return m_doca  ; }
       // cast to the tool:
       operator const LoKi::Interface<IDistanceCalculator>& () const 
       { return tool()  ; }
+      // ======================================================================
     private:
       // ======================================================================
       /// the actual tool used for evaluation 
@@ -1041,6 +1067,7 @@ namespace LoKi
       : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function
     {
     public:
+      // ======================================================================
       /** constructor with daughter index (starts from 1).
        *  E.g. for 2-body decays it could be 1 or 2 
        *  @param child of daughter particles
@@ -1056,12 +1083,17 @@ namespace LoKi
       result_type operator() ( argument p ) const ;
       /// OPTIONAL: specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     private:
-      // the default constructor is disabled 
+      // ======================================================================
+      /// the default constructor is disabled 
       DecayAngle();
+      // ======================================================================
     private:
+      // ======================================================================
       // index of the daughter particle
       std::size_t m_child ;
+      // ======================================================================
     };
     // ========================================================================
     /** @class WrongMass
@@ -1077,6 +1109,7 @@ namespace LoKi
       : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function
     {
     public:
+      // ======================================================================
       /// constructor from two masses 
       WrongMass  ( const double m1 , const double m2 ) ;
       /// constructor from three masses 
@@ -1171,12 +1204,17 @@ namespace LoKi
       result_type operator() ( argument p ) const ; 
       /// OPTIONAL: specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;      
+      // ======================================================================
    public:
+      // ======================================================================
       /// get all masses:
       const std::vector<double>& masses() const { return m_masses ; }
+      // ======================================================================
     private:
-      // the list of masses to be used 
+      // ======================================================================
+      /// the list of masses to be used 
       std::vector<double> m_masses ; ///< the list of masses to be used 
+      // ======================================================================
     };
     // ========================================================================    
     /** @class DeltaMass 
@@ -1347,7 +1385,6 @@ namespace LoKi
     private:
       // ======================================================================      
       DeltaMass () ;
-      DeltaMass& operator=( const DeltaMass& ) ;
       // ======================================================================      
     private:
       // ======================================================================      
@@ -1507,7 +1544,6 @@ namespace LoKi
     private:
       // ======================================================================      
       AbsDeltaMass () ;
-      AbsDeltaMass& operator=( const AbsDeltaMass& ) ;
       // ======================================================================      
     public:
       // ======================================================================
