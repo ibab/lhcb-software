@@ -1,4 +1,4 @@
-// $Id: GenParticles.cpp,v 1.18 2008-07-09 16:19:16 ibelyaev Exp $
+// $Id: GenParticles.cpp,v 1.19 2008-11-02 19:25:25 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -372,9 +372,12 @@ LoKi::GenParticles::Phi::result_type
 LoKi::GenParticles::Phi::operator() 
   ( LoKi::GenParticles::Phi::argument p ) const
 {
-  if( 0 != p ) { return p -> momentum () . phi() ; }    // RETURN 
+  if( 0 == p )
+  {
   Error("Invalid HepMC::GenParticle, return 'InvalidMomenum'");
   return LoKi::Constants::InvalidMomentum;                   // RETURN 
+  }
+  return adjust ( phi ( p ) ) ;
 }
 // ============================================================================
 //  "SHORT" representation, @see LoKi::AuxFunBase 
@@ -1236,8 +1239,7 @@ LoKi::GenParticles::ThreeCharge::fillStream
 //  constructor from the angle
 // ============================================================================
 LoKi::GenParticles::DeltaPhi::DeltaPhi ( const double phi ) 
-  : LoKi::GenTypes::GFunc () 
-  , m_eval (     )
+  : LoKi::GenParticles::Phi () 
   , m_phi  ( phi )
 { 
   m_phi = adjust ( m_phi ) ; 
@@ -1246,8 +1248,7 @@ LoKi::GenParticles::DeltaPhi::DeltaPhi ( const double phi )
 //  constructor from the vector 
 // ============================================================================
 LoKi::GenParticles::DeltaPhi::DeltaPhi ( const LoKi::ThreeVector& v ) 
-  : LoKi::GenTypes::GFunc () 
-  , m_eval (         )
+  : LoKi::GenParticles::Phi () 
   , m_phi  ( v.Phi() )
 { 
   m_phi = adjust ( m_phi ) ; 
@@ -1256,8 +1257,7 @@ LoKi::GenParticles::DeltaPhi::DeltaPhi ( const LoKi::ThreeVector& v )
 //  constructor from the vector 
 // ============================================================================
 LoKi::GenParticles::DeltaPhi::DeltaPhi ( const LoKi::LorentzVector& v ) 
-  : LoKi::GenTypes::GFunc () 
-  , m_eval (         )
+  : LoKi::GenParticles::Phi () 
   , m_phi  ( v.Phi() )
 { 
   m_phi = adjust ( m_phi ) ; 
@@ -1266,24 +1266,11 @@ LoKi::GenParticles::DeltaPhi::DeltaPhi ( const LoKi::LorentzVector& v )
 //  constructor from the particle
 // ============================================================================
 LoKi::GenParticles::DeltaPhi::DeltaPhi ( const HepMC::GenParticle* p )
-  : LoKi::GenTypes::GFunc () 
-  , m_eval ( )
+  : LoKi::GenParticles::Phi () 
   , m_phi  ( )
 { 
   if ( 0 == p ) { Exception("Invalid HepMC::GenParticle*") ;}
   m_phi = p->momentum().phi() ;
-  m_phi = adjust ( m_phi ) ; 
-}  
-// ============================================================================
-//  copy constructor
-// ============================================================================
-LoKi::GenParticles::DeltaPhi::DeltaPhi 
-( const LoKi::GenParticles::DeltaPhi& right ) 
-  : LoKi::AuxFunBase                          ( right ) 
-  , LoKi::GenTypes::GFunc ( right ) 
-  , m_eval ( right.m_eval )
-  , m_phi  ( right.m_phi  )
-{ 
   m_phi = adjust ( m_phi ) ; 
 }  
 // ============================================================================
@@ -1304,71 +1291,44 @@ LoKi::GenParticles::DeltaPhi::operator()
     Error ( "HepMC::GenParticle* points to NULL, return 'InvalidAngle'") ;
     return LoKi::Constants::InvalidAngle ;
   }
-  return adjust ( m_eval( p ) - m_phi ) ;
+  return dphi ( p )  ;
 } 
 // ============================================================================
 //  OPTIONAL: "SHORT" representation
 // ============================================================================
 std::ostream& LoKi::GenParticles::DeltaPhi::fillStream ( std::ostream& s ) const 
-{ return s << "GDPHI(" << m_phi << ")" ; }
-// ============================================================================
-//  adjust delta phi into the range of [-180:180]degrees 
-// ============================================================================
-const double LoKi::GenParticles::DeltaPhi::adjust ( double phi ) const 
-{
-  static const double s_180 = 180 * Gaudi::Units::degree ;
-  static const double s_360 = 360 * Gaudi::Units::degree ;
-  //
-  while ( phi >      s_180 ) { phi -= s_360 ; }
-  while ( phi < -1 * s_180 ) { phi += s_360 ; }
-  //
-  return phi ; 
-} 
+{ return s << "GDPHI(" << phi0() << ")" ; }
 // ============================================================================
 //  constructor from the angle
 // ============================================================================
 LoKi::GenParticles::DeltaEta::DeltaEta ( const double eta ) 
-  : LoKi::GenTypes::GFunc () 
-  , m_eval (     )
+  : LoKi::GenParticles::PseudoRapidity () 
   , m_eta  ( eta )
 {}
 // ============================================================================
 //  constructor from the vector 
 // ============================================================================
 LoKi::GenParticles::DeltaEta::DeltaEta ( const LoKi::ThreeVector& v ) 
-  : LoKi::GenTypes::GFunc () 
-  , m_eval (         )
+  : LoKi::GenParticles::PseudoRapidity () 
   , m_eta  ( v.Eta() )
 {}
 // ============================================================================
 //  constructor from the vector 
 // ============================================================================
 LoKi::GenParticles::DeltaEta::DeltaEta ( const LoKi::LorentzVector& v ) 
-  : LoKi::GenTypes::GFunc () 
-  , m_eval (         )
+  : LoKi::GenParticles::PseudoRapidity () 
   , m_eta  ( v.Eta() )
 {}
 // ============================================================================
 //  constructor from the particle
 // ============================================================================
 LoKi::GenParticles::DeltaEta::DeltaEta ( const HepMC::GenParticle* p ) 
-  : LoKi::GenTypes::GFunc () 
-  , m_eval ( )
+  : LoKi::GenParticles::PseudoRapidity () 
   , m_eta  ( )
 {
   if ( 0 == p ) { Exception("Invalid HepMC::GenParticle*") ;}
   m_eta = p->momentum().pseudoRapidity() ;
 } 
-// ============================================================================
-//  copy constructor
-// ============================================================================
-LoKi::GenParticles::DeltaEta::DeltaEta 
-( const LoKi::GenParticles::DeltaEta& right ) 
-  : LoKi::AuxFunBase                          ( right ) 
-  , LoKi::GenTypes::GFunc ( right ) 
-  , m_eval ( right.m_eval )
-  , m_eta  ( right.m_eta  )
-{}  
 // ============================================================================
 //  MANDATORY: clone method ("virtual constructor")
 // ============================================================================
@@ -1387,7 +1347,7 @@ LoKi::GenParticles::DeltaEta::operator()
     Error ("HepMC::GenParticle* points to NULL, return 'InvalidAngle'") ;
     return LoKi::Constants::InvalidAngle ;
   }
-  return m_eval( p ) - m_eta ;
+  return deta ( p ) ;
 } 
 // ============================================================================
 //  OPTIONAL: "SHORT" representation
@@ -1398,44 +1358,30 @@ std::ostream& LoKi::GenParticles::DeltaEta::fillStream ( std::ostream& s ) const
 //  constructor from eta and phi
 // ============================================================================
 LoKi::GenParticles::DeltaR2::DeltaR2 ( const double eta , const double phi ) 
-  : LoKi::GenTypes::GFunc () 
-  , m_dphi ( phi ) 
+  : LoKi::GenParticles::DeltaPhi ( phi ) 
   , m_deta ( eta ) 
 {}
 // ============================================================================
 //  constructor from the vector 
 // ============================================================================
 LoKi::GenParticles::DeltaR2::DeltaR2 ( const LoKi::ThreeVector& v ) 
-  : LoKi::GenTypes::GFunc () 
-  , m_dphi ( v ) 
+  : LoKi::GenParticles::DeltaPhi ( v ) 
   , m_deta ( v ) 
 {}
 // ============================================================================
 //  constructor from the vector 
 // ============================================================================
 LoKi::GenParticles::DeltaR2::DeltaR2 ( const LoKi::LorentzVector& v ) 
-  : LoKi::GenTypes::GFunc () 
-  , m_dphi ( v ) 
+  : LoKi::GenParticles::DeltaPhi ( v ) 
   , m_deta ( v ) 
 {}
 // ============================================================================
 //  constructor from the particle
 // ============================================================================
 LoKi::GenParticles::DeltaR2::DeltaR2 ( const HepMC::GenParticle* v ) 
-  : LoKi::GenTypes::GFunc () 
-  , m_dphi ( v ) 
+  : LoKi::GenParticles::DeltaPhi ( v ) 
   , m_deta ( v ) 
 {}
-// ============================================================================
-//  copy constructor
-// ============================================================================
-LoKi::GenParticles::DeltaR2::DeltaR2 
-( const LoKi::GenParticles::DeltaR2& right ) 
-  : LoKi::AuxFunBase                          ( right ) 
-  , LoKi::GenTypes::GFunc ( right ) 
-  , m_dphi ( right.m_dphi )
-  , m_deta ( right.m_deta )
-{} 
 // ============================================================================
 //  MANDATORY: clone method ("virtual constructor")
 // ============================================================================
@@ -1449,16 +1395,22 @@ LoKi::GenParticles::DeltaR2::result_type
 LoKi::GenParticles::DeltaR2::operator() 
   ( LoKi::GenParticles::DeltaR2::argument p ) const 
 {
-  const double dphi = m_dphi ( p ) ;
-  const double deta = m_deta ( p ) ;
+  if ( 0 == p ) 
+  {
+    Error ("HepMC::GenParticle* points to NULL, return 'InvalidDustance'") ;
+    return LoKi::Constants::InvalidDistance ;
+  }
   //
-  return dphi*dphi + deta*deta ;
+  const double dphi_ = dphi ( p ) ;
+  const double deta_ = deta ( p ) ;
+  //
+  return dphi_*dphi_ + deta_*deta_ ;
 } 
 // ============================================================================
 //  OPTIONAL: "SHORT" representation
 // ============================================================================
 std::ostream& LoKi::GenParticles::DeltaR2::fillStream ( std::ostream& s ) const 
-{ return s << "GDR2( " << m_deta.eta() << "," << m_dphi.phi() << ")" ; }
+{ return s << "GDR2( " << eta0() << "," << phi0() << ")" ; }
 // ============================================================================
 /*  constructor 
  *  @param cut    predicate to be used for counting
