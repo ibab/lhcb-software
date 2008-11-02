@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiAlgo.xml,v 1.7 2008-06-12 08:28:54 ibelyaev Exp $ 
+     * $Id: LoKiAlgo.xml,v 1.8 2008-11-02 21:13:24 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiAlgo package
@@ -39,6 +39,69 @@
   <class name="LoKi::Interface<IParticleReFitter>" />
   
   <exclusion>
+    
+    <class pattern="LoKi::Dicts::*">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::Interface&lt;*&gt;">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::I*">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::Hybrid::*">
+      <method name="=" />
+    </class>
+    
+    <class pattern="LoKi::Functor&lt;*&gt;">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::Constant&lt;*&gt;">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::Valid&lt;*&gt;">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::TheSame&lt;*&gt;">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::Identity&lt;*&gt;">
+      <method name="=" />
+    </class>
+    
+    <class pattern="LoKi::Range_&lt;*&gt;">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::NamedRange_&lt;*&gt;">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::RangeList_&lt;*&gt;">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::Keeper&lt;*&gt;">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::UniqueKeeper&lt;*&gt;">
+      <method name="=" />
+    </class>
+    <class pattern="std::unary_function&lt;*&gt;">
+      <method name="=" />
+    </class>
+    <class pattern="std::binary_function&lt;*&gt;">
+      <method name="=" />
+    </class>
+
+    
+    <class name="LoKi::Algo">
+      <method name="=" />
+    </class>
+    <class name="LoKi::Loop">
+      <method name="=" />
+    </class>
+    <class name="LoKi::LoopObj">
+      <method name="=" />
+    </class>
+
   </exclusion>
   
 </lcgdict>
