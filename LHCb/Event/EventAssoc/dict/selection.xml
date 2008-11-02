@@ -1,6 +1,6 @@
-<!-- * $Id: selection.xml,v 1.13 2008-02-19 15:51:57 ibelyaev Exp $ 
+<!-- * $Id: selection.xml,v 1.14 2008-11-02 16:48:38 ibelyaev Exp $ 
      * ========================================================================
-     * $CVS tag:$, version $Revision: 1.13 $ 
+     * $CVS tag:$, version $Revision: 1.14 $ 
      * ========================================================================
 -->
 
@@ -8,7 +8,7 @@
      *
      * The basic selection file to build the Reflex dictionaries
      * @author ibelyaev 
-     * @date  2008-02-19 16:37:13.196160 
+     * @date  2008-11-02 17:30:54.193984 
      * ========================================================================
 --> 
 
@@ -477,6 +477,42 @@
 
  <class pattern="Relations::Pointer<*>"   /> 
  <class pattern="Relations::Reference<*>" /> 
+
+ <!-- * EXCLUSIONS                       * -->
+ <!-- *  1) Not needed for interactivity * -->
+ <!-- *  2) Not needed for persistency   * -->
+
+ <exclusion>
+
+ <class pattern="IRelation*">
+    <method name="="/>
+ </class>
+ <class pattern="LHCb::Relation*">
+    <method name="="/>
+ </class>
+ <class pattern="Relations::Relation*">
+    <method name="="/>
+ </class>
+ <class pattern="Relations::Entry_*">
+    <method name="="/>
+ </class>
+ <class pattern="Relations::WEntry_*">
+    <method name="="/>
+ </class>
+ <class pattern="Relations::Range_*">
+    <method name="="/>
+ </class>
+ <class pattern="Relations::Pointer*">
+    <method name="="/>
+ </class>
+ <class pattern="Relations::Reference*">
+    <method name="="/>
+ </class>
+ <class pattern="std::vector&lt;Relations::*&gt;">
+    <method name="="/>
+ </class>
+
+ </exclusion>
 
 </lcgdict>
 
