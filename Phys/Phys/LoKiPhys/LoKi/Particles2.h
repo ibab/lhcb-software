@@ -1,4 +1,4 @@
-// $Id: Particles2.h,v 1.9 2008-10-31 17:27:45 ibelyaev Exp $
+// $Id: Particles2.h,v 1.10 2008-11-02 20:13:32 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES2_H 
 #define LOKI_PARTICLES2_H 1
@@ -77,8 +77,6 @@ namespace LoKi
       // ======================================================================
       /// default constructor is private 
       TimeDistance();
-      /// no assignement 
-      TimeDistance& operator= ( const TimeDistance& ) ; // no assignement 
       // ======================================================================
     };
     // ========================================================================
@@ -131,8 +129,6 @@ namespace LoKi
       // ======================================================================
       /// default constructor is private 
       TimeSignedDistance();
-      /// no assignement 
-      TimeSignedDistance& operator= ( const TimeSignedDistance& ) ; 
       // ======================================================================
     };
     // ========================================================================
@@ -185,8 +181,6 @@ namespace LoKi
       // ======================================================================
       /// default constructor is private
       TimeDotDistance();
-      /// no assignement 
-      TimeDotDistance& operator= ( const TimeDotDistance& ) ; 
       // ======================================================================
     };
     // ========================================================================
@@ -235,8 +229,6 @@ namespace LoKi
       // ======================================================================
       /// The default constructor is disabled
       LifetimeDistance() ; // No default constrtuctor
-      /// no assignement 
-      LifetimeDistance& operator= ( const LifetimeDistance& ) ; 
       // ======================================================================
     } ;
     // ========================================================================

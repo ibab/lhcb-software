@@ -1,4 +1,4 @@
-// $Id: Particles4.h,v 1.11 2008-10-31 17:27:46 ibelyaev Exp $
+// $Id: Particles4.h,v 1.12 2008-11-02 20:13:32 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES4_H 
 #define LOKI_PARTICLES4_H 1
@@ -105,8 +105,6 @@ namespace LoKi
       // ======================================================================
       /// default constructor is private 
       ImpPar(); // default constructor is private 
-      /// no assigenement 
-      ImpPar& operator=(const ImpPar&) ; // no assigenement
       // ======================================================================
     };
     // ========================================================================    
@@ -178,8 +176,6 @@ namespace LoKi
       // ======================================================================
       // default constructor is private 
       ImpParChi2() ; // default constructor is private 
-      /// no assigenement 
-      ImpParChi2& operator=(const ImpParChi2&) ; // no assigenement
       // ======================================================================
     };
     // ========================================================================    
@@ -392,8 +388,6 @@ namespace LoKi
       /// ===================================================================== 
       // default constructor is private 
       MinImpPar();
-      /// no assigenement 
-      MinImpPar& operator=(const MinImpPar&) ; // no assigenement
       /// ===================================================================== 
     public:
       // ======================================================================
@@ -609,8 +603,6 @@ namespace LoKi
       // ======================================================================
       // default constructor is private 
       MinImpParChi2();
-      /// no assigenement 
-      MinImpParChi2& operator=(const MinImpParChi2&) ; // no assigenement
       // ======================================================================
     public:
       // ======================================================================

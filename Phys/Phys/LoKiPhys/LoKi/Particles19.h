@@ -1,4 +1,4 @@
-// $Id: Particles19.h,v 1.2 2008-10-31 17:27:45 ibelyaev Exp $
+// $Id: Particles19.h,v 1.3 2008-11-02 20:13:32 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES19_H 
 #define LOKI_PARTICLES19_H 1
@@ -103,8 +103,6 @@ namespace LoKi
       // ======================================================================
       /// the default constructor is disabled 
       LifeTime () ; // the default constructor is disabled
-      /// no assignement 
-      LifeTime& operator=( const LifeTime& ) ;                // no assignement 
       // ======================================================================
     private:
       // ======================================================================
@@ -165,8 +163,6 @@ namespace LoKi
       // ======================================================================
       /// the default constructor is disabled 
       LifeTimeChi2 () ; // the default constructor is disabled
-      /// no assignement 
-      LifeTimeChi2& operator=( const LifeTimeChi2& ) ;       // no assignement 
       // ======================================================================
     };
     // ========================================================================
@@ -227,8 +223,6 @@ namespace LoKi
       // ======================================================================
       /// the default constructor is disabled 
       LifeTimeSignedChi2 () ; // the default constructor is disabled
-      /// no assignement 
-      LifeTimeSignedChi2& operator=( const LifeTimeSignedChi2& ) ;
       // ======================================================================
     };
     // ========================================================================
@@ -290,8 +284,6 @@ namespace LoKi
       // ======================================================================
       // the default constructor is disabled 
       LifeTimeFitChi2 () ; ///< the default constructor is disabled
-      /// no assignement 
-      LifeTimeFitChi2& operator=( const LifeTimeFitChi2& ) ;
       // ======================================================================
     };
    // ========================================================================

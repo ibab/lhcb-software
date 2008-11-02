@@ -1,4 +1,4 @@
-// $Id: Particles16.h,v 1.5 2008-10-31 17:27:45 ibelyaev Exp $
+// $Id: Particles16.h,v 1.6 2008-11-02 20:13:32 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES16_H 
 #define LOKI_PARTICLES16_H 1
@@ -70,7 +70,6 @@ namespace LoKi
       // ======================================================================
       /// default constructor is private 
       CosineDirectionAngle();
-      CosineDirectionAngle& operator=( const CosineDirectionAngle& ) ;
       // ======================================================================
     } ;
     // ========================================================================

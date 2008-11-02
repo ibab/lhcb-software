@@ -1,4 +1,4 @@
-// $Id: Particles7.h,v 1.7 2008-02-19 16:11:25 ibelyaev Exp $
+// $Id: Particles7.h,v 1.8 2008-11-02 20:13:32 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES7_H 
 #define LOKI_PARTICLES7_H 1
@@ -92,8 +92,6 @@ namespace LoKi
     private:
       // default constructor is private 
       VFunAsPFun() ;
-      // assigenement operator 
-      VFunAsPFun& operator=( const VFunAsPFun&  fun );
     private:
       LoKi::Types::VFun m_vfun ;
       double            m_bad  ;

@@ -1,4 +1,4 @@
-// $Id: Vertices1.h,v 1.12 2008-10-31 17:27:46 ibelyaev Exp $
+// $Id: Vertices1.h,v 1.13 2008-11-02 20:13:32 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_VERTICES1_H 
 #define LOKI_VERTICES1_H 1
@@ -83,7 +83,6 @@ namespace LoKi
       // ======================================================================
       /// default constructor is private 
       VertexDistance();
-      VertexDistance& operator=( const VertexDistance& ) ;
       // ======================================================================
     };
     // ========================================================================
@@ -141,7 +140,6 @@ namespace LoKi
       // =====================================================================
       /// default constructor is private 
       VertexSignedDistance();
-      VertexSignedDistance& operator=( const VertexSignedDistance& ) ;
       // =====================================================================
     };
     // ========================================================================    
@@ -192,7 +190,6 @@ namespace LoKi
       // ======================================================================
       /// default constructor is private 
       VertexChi2Distance();
-      VertexChi2Distance& operator=( const VertexChi2Distance& ) ;
       // ======================================================================
     };
     // ========================================================================    
@@ -337,7 +334,6 @@ namespace LoKi
       // ======================================================================
       /// default constructor is disabled 
       MinVertexDistance () ;
-      MinVertexDistance& operator=( const MinVertexDistance& ) ;
       // ======================================================================
     private:
       // ======================================================================
@@ -490,7 +486,6 @@ namespace LoKi
       // ======================================================================
       /// default constructor is disabled 
       MinVertexChi2Distance () ;
-      MinVertexChi2Distance& operator=( const MinVertexChi2Distance& ) ;
       // ======================================================================
     private:
       // ======================================================================

@@ -1,4 +1,4 @@
-// $Id: Particles0.h,v 1.16 2008-10-31 17:27:45 ibelyaev Exp $
+// $Id: Particles0.h,v 1.17 2008-11-02 20:13:32 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES0_H 
 #define LOKI_PARTICLES0_H 1
@@ -61,10 +61,6 @@ namespace LoKi
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;      
       // ======================================================================
-    private:
-      // ======================================================================
-      HasKey& operator=( const HasKey& ) ;
-      // ======================================================================
     } ;
     // ========================================================================
     /** @class Key 
@@ -105,10 +101,6 @@ namespace LoKi
       result_type operator() ( argument p ) const ;
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;      
-      // ======================================================================
-    private:
-      // ======================================================================
-      Key& operator=( const Key& ) ;
       // ======================================================================
     private :
       // ======================================================================
@@ -168,7 +160,6 @@ namespace LoKi
       // ======================================================================
       // the default constructor is disabled 
       InTES() ;
-      InTES& operator=( const InTES& ) ;
       // ======================================================================
     private:
       // ======================================================================
@@ -198,10 +189,6 @@ namespace LoKi
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
       // ======================================================================
-    private:
-      // ======================================================================
-      Identifier& operator=( const Identifier& ) ;
-      // ======================================================================
     } ;
     // ========================================================================
     /** @class AbsIdentifier
@@ -224,10 +211,6 @@ namespace LoKi
       result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
-      // ======================================================================
-    private:
-      // ======================================================================
-      AbsIdentifier& operator=( const AbsIdentifier& ) ;
       // ======================================================================
     } ;
     // ========================================================================    
@@ -253,10 +236,6 @@ namespace LoKi
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
       /// get the actual charge 
       double charge ( const LHCb::Particle* p ) const { return p->charge() ; }
-      // ======================================================================
-    private:
-      // ======================================================================
-      Charge& operator=( const Charge& ) ;
       // ======================================================================
     } ;
     // ========================================================================
@@ -284,10 +263,6 @@ namespace LoKi
       /// the actual evaluator 
       result_type sumCharge( argument p ) const ;
       // ======================================================================
-    private:
-      // ======================================================================
-      SumCharge& operator=( const SumCharge& ) ;
-      // ======================================================================
     } ;
     // ========================================================================    
     /** @class Momentum 
@@ -306,10 +281,6 @@ namespace LoKi
       result_type operator() ( argument p ) const ;
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      Momentum& operator=( const Momentum& ) ;
       // ======================================================================
     };
     // ========================================================================    
@@ -330,10 +301,6 @@ namespace LoKi
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
       // ======================================================================
-    private:
-      // ======================================================================
-      Momentum2& operator=( const Momentum2& ) ;
-      // ======================================================================
     };
     // ========================================================================    
     /** @class Energy 
@@ -352,10 +319,6 @@ namespace LoKi
       result_type operator() ( argument p ) const ;
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      Energy& operator=( const Energy& ) ;
       // ======================================================================
     };
     // ========================================================================    
@@ -377,10 +340,6 @@ namespace LoKi
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
       // ======================================================================
-    private:
-      // ======================================================================
-      TransverseMomentum& operator=( const TransverseMomentum& ) ;
-      // ======================================================================
     };
     // ========================================================================
     /** @class MomentumX
@@ -393,15 +352,13 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {    
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual MomentumX* clone() const ;
       /// the only one essential method 
       result_type operator() ( argument p ) const ;
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
-    private:
-      // ======================================================================
-      MomentumX& operator=( const MomentumX& ) ;
       // ======================================================================
     };
     // ========================================================================    
@@ -415,15 +372,13 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {     
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual MomentumY* clone() const ;
       /// the only one essential method 
       result_type operator() ( argument p ) const ;
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
-    private:
-      // ======================================================================
-      MomentumY& operator=( const MomentumY& ) ;
       // ======================================================================
     };
     // ========================================================================    
@@ -437,15 +392,13 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {     
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual MomentumZ* clone() const ;
       /// the only one essential method 
       result_type operator() ( argument p ) const ;
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
-    private:
-      // ======================================================================
-      MomentumZ& operator=( const MomentumZ& ) ;
       // ======================================================================
     };
     // ========================================================================
@@ -473,10 +426,6 @@ namespace LoKi
       result_type eta ( argument p ) const 
       { return p -> momentum() . Eta () ; }
       // ======================================================================
-    private:
-      // ======================================================================
-      PseudoRapidity& operator=( const PseudoRapidity& ) ;
-      // ======================================================================
    };
     // ========================================================================    
     /** @class Phi
@@ -498,14 +447,23 @@ namespace LoKi
       virtual std::ostream& fillStream( std::ostream& s ) const 
       { return s << "PHI" ; }
       // ======================================================================
+    public:
+      // ======================================================================
       /// get phi 
       result_type phi ( argument p ) const 
       { return p -> momentum() . Phi () ; }
-      // ======================================================================
-    private:
-      // ======================================================================
-      Phi& operator=( const Phi& ) ;
-      // ======================================================================
+      /// adjust phi into the raneg of [-180:180]degrees 
+      double adjust ( double angle ) const 
+      {
+        static const double s_180 = 180 * Gaudi::Units::degree ;
+        static const double s_360 = 360 * Gaudi::Units::degree ;
+        //
+        while ( angle >      s_180 ) { angle -= s_360 ; }
+        while ( angle < -1 * s_180 ) { angle += s_360 ; }
+        //
+        return angle ; 
+      }
+    // ======================================================================
     };
     // ========================================================================    
     /** @class Theta
@@ -518,16 +476,13 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {    
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual Theta* clone() const ;
       /// the only one essential method 
       result_type operator() ( argument p ) const ;
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      Theta& operator=( const Theta& ) ;
       // ======================================================================
     };
     // ========================================================================    
@@ -552,10 +507,6 @@ namespace LoKi
       // evaluate the mass  
       double mass ( argument p ) const { return p->momentum().M() ; }  
       // ======================================================================
-    private:
-      // ======================================================================
-      Mass& operator=( const Mass& ) ;
-      // ======================================================================
     };
     // ========================================================================    
     /** @class MeasuredMass
@@ -577,10 +528,6 @@ namespace LoKi
       virtual std::ostream& fillStream( std::ostream& s ) const ;
       // evaluate the mass  
       double measuredMass ( argument p ) const { return p->measuredMass() ; }  
-      // ======================================================================
-    private:
-      // ======================================================================
-      MeasuredMass& operator=( const MeasuredMass& ) ;
       // ======================================================================
     };
     // ========================================================================
@@ -641,10 +588,8 @@ namespace LoKi
       // ======================================================================
     private:
       // ======================================================================
-      InvariantMass& operator=( const InvariantMass& ) ;
-      // ======================================================================
-    private:
       Indices                     m_indices ;
+      // ======================================================================
     };
     // ========================================================================    
     /** @class DeltaMass
@@ -701,8 +646,6 @@ namespace LoKi
       // ======================================================================
       /// default constructor is disabled 
       DeltaMass();                           // default constructor is disabled 
-      // ======================================================================
-      DeltaMass& operator=( const DeltaMass& ) ;
       // ======================================================================      
     private:
       // ======================================================================      
@@ -763,7 +706,6 @@ namespace LoKi
       // ======================================================================      
       /// default constructor 
       AbsDeltaMass();
-      AbsDeltaMass& operator=( const AbsDeltaMass& ) ;
       // ======================================================================      
     };
     // ========================================================================
@@ -819,7 +761,6 @@ namespace LoKi
       // ======================================================================
       /// default constructor 
       DeltaMeasuredMass();
-      DeltaMeasuredMass& operator=( const DeltaMeasuredMass& ) ;
       // ======================================================================
     };
     // ========================================================================
@@ -875,7 +816,6 @@ namespace LoKi
     private:
       // ======================================================================
       AbsDeltaMeasuredMass() ;
-      AbsDeltaMeasuredMass& operator=( const AbsDeltaMeasuredMass& ) ;
       // ======================================================================
     };
     // ========================================================================    
@@ -931,7 +871,6 @@ namespace LoKi
       // ======================================================================
       /// default constructor is disabled 
       DeltaMeasuredMassChi2();
-      DeltaMeasuredMassChi2& operator=( const DeltaMeasuredMassChi2& ) ;
       // ======================================================================
     };
     // ========================================================================    
@@ -985,7 +924,6 @@ namespace LoKi
       // ======================================================================
       /// default constructor 
       DeltaMassChi2();
-      DeltaMassChi2& operator=( const DeltaMassChi2& ) ;
       // ======================================================================
     };
     // ========================================================================    
@@ -1011,9 +949,6 @@ namespace LoKi
       result_type operator() ( argument p ) const ;
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
-    private:
-      // ======================================================================
-      ConfidenceLevel& operator=( const ConfidenceLevel& ) ;
       // ======================================================================
     };
     // ========================================================================
@@ -1033,15 +968,13 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual Weight* clone() const ;
       /// the only one essential method 
       result_type operator() ( argument p ) const ;
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
-    private:
-      // ======================================================================
-      Weight& operator=( const Weight& ) ;
       // ======================================================================
     };
     // ========================================================================    
@@ -1061,15 +994,13 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual IsBasic* clone() const ;
       /// the only one essential method 
       result_type operator() ( argument p ) const ;
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
-    private:
-      // ======================================================================
-      IsBasic& operator=( const IsBasic& ) ;
       // ======================================================================
     };
     // ========================================================================    
@@ -1089,12 +1020,14 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual NumberOfDaughters* clone() const ;
       /// the only one essential method 
       result_type operator() ( argument p ) const ;
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     };
     // ========================================================================
     /** @class HasProto
@@ -1113,12 +1046,14 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual HasProto* clone() const ;
       /// the only one essential method 
       result_type operator() ( argument p ) const ;
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     };
     // ========================================================================    
     /** @class HasVertex
@@ -1137,12 +1072,14 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual HasVertex* clone() const ;
       /// the only one essential method 
       result_type operator() ( argument p ) const ;
       /// the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     };
     // ========================================================================    
     /** @class TransverseMomentumRel 
@@ -1160,6 +1097,7 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
+      // ======================================================================
       /// constructor from theta phi
       TransverseMomentumRel ( const double theta , 
                               const double phi   ) ;      
@@ -1179,15 +1117,21 @@ namespace LoKi
       result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       /// default constructor is disabled 
       TransverseMomentumRel ( ) ;
+      // ======================================================================
     public:
+      // ======================================================================
       /// get the momentum 
       const LoKi::ThreeVector& momentum  () const { return m_momentum   ; }
       /// get the momentum (alias)
       const LoKi::ThreeVector& direction () const { return   momentum() ; }      
+      // ======================================================================
     public:
+      // ======================================================================
       /// set new momentum 
       void setMomentum  ( const LoKi::ThreeVector&   vct ) 
       { m_momentum = vct ; }
@@ -1213,9 +1157,12 @@ namespace LoKi
         { Exception ( "Invalid PARTICLE* for setMomentum(..)" ) ; }
         setMomentum ( p -> momentum() ) ;
       } 
+      // ======================================================================
     private:
-      // the direction 
-      LoKi::ThreeVector m_momentum ; ///< the direction 
+      // ======================================================================
+      /// the direction 
+      LoKi::ThreeVector m_momentum ;                           // the direction 
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class TransverseMomentumQ 
@@ -1275,10 +1222,6 @@ namespace LoKi
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const 
       { return s << "NMASS" ; }
-      // ======================================================================
-    private:
-      // ======================================================================
-      NominalMass& operator=( const NominalMass& ) ;
       // ======================================================================
     };    
     // ========================================================================

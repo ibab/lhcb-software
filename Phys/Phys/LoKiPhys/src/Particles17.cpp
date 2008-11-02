@@ -1,4 +1,4 @@
-// $Id: Particles17.cpp,v 1.7 2008-10-31 17:27:46 ibelyaev Exp $
+// $Id: Particles17.cpp,v 1.8 2008-11-02 20:13:32 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -63,7 +63,7 @@ LoKi::Particles::DeltaPhi::DeltaPhi ( const LHCb::Particle* p )
 // MANDATORY: the only essential method 
 // ============================================================================
 LoKi::Particles::DeltaPhi::result_type
-LoKi::Particles::DeltaPhi::dphi 
+LoKi::Particles::DeltaPhi::operator() 
 ( LoKi::Particles::DeltaPhi::argument p ) const 
 {
   if ( 0 == p ) 
@@ -71,26 +71,13 @@ LoKi::Particles::DeltaPhi::dphi
     Error ("LHCb::Particle* points to NULL, return 'InvalidAngle'") ;
     return LoKi::Constants::InvalidAngle ;
   }
-  return adjust ( phi ( p ) - phi0 ()  ) ;
+  return dphi ( p ) ;
 } 
 // ============================================================================
 // OPTIONAL: "SHORT" representation
 // ============================================================================
 std::ostream& LoKi::Particles::DeltaPhi::fillStream ( std::ostream& s ) const 
 { return s << "DPHI(" << m_phi << ")" ; }
-// ============================================================================
-// adjust delta phi into the range of [-180:180]degrees 
-// ============================================================================
-double LoKi::Particles::DeltaPhi::adjust ( double phi ) const 
-{
-  static const double s_180 = 180 * Gaudi::Units::degree ;
-  static const double s_360 = 360 * Gaudi::Units::degree ;
-  //
-  while ( phi >      s_180 ) { phi -= s_360 ; }
-  while ( phi < -1 * s_180 ) { phi += s_360 ; }
-  //
-  return phi ; 
-} 
 // ============================================================================
 // constructor from the angle
 // ============================================================================
@@ -126,15 +113,15 @@ LoKi::Particles::DeltaEta::DeltaEta ( const LHCb::Particle* p )
 // MANDATORY: the only essential method 
 // ============================================================================
 LoKi::Particles::DeltaEta::result_type
-LoKi::Particles::DeltaEta::deta
-( LoKi::Particles::DeltaEta::argument p ) const 
+LoKi::Particles::DeltaEta::operator() 
+  ( LoKi::Particles::DeltaEta::argument p ) const 
 {
   if ( 0 == p ) 
   {
     Error ("LHCb::Particle* points to NULL, return 'InvalidAngle'") ;
     return LoKi::Constants::InvalidAngle ;
   }
-  return eta ( p ) - eta0 ()  ;
+  return deta ( p ) ;
 } 
 // ============================================================================
 // OPTIONAL: "SHORT" representation
@@ -146,44 +133,30 @@ std::ostream& LoKi::Particles::DeltaEta::fillStream ( std::ostream& s ) const
 // constructor from the eta, phi
 // ============================================================================
 LoKi::Particles::DeltaR2::DeltaR2 ( double eta , double phi ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_dphi ( phi )
+  : LoKi::Particles::DeltaPhi ( phi )  
   , m_deta ( eta )
 {} 
 // ============================================================================
 // constructor from the vector 
 // ============================================================================
 LoKi::Particles::DeltaR2::DeltaR2 ( const LoKi::ThreeVector& v ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_dphi ( v ) 
+  : LoKi::Particles::DeltaPhi ( v )  
   , m_deta ( v ) 
 {}
 // ============================================================================
 // constructor from the vector 
 // ============================================================================
 LoKi::Particles::DeltaR2::DeltaR2 ( const LoKi::LorentzVector& v ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_dphi ( v ) 
+  : LoKi::Particles::DeltaPhi ( v )  
   , m_deta ( v ) 
 {}
 // ============================================================================
 // constructor from the particle
 // ============================================================================
 LoKi::Particles::DeltaR2::DeltaR2 ( const LHCb::Particle* v ) 
-  : LoKi::BasicFunctors<const LHCb::Particle*>::Function () 
-  , m_dphi ( v ) 
+  : LoKi::Particles::DeltaPhi ( v )  
   , m_deta ( v ) 
 {}
-// ============================================================================
-// copy constructor
-// ============================================================================
-LoKi::Particles::DeltaR2::DeltaR2 
-( const LoKi::Particles::DeltaR2& right ) 
-  : LoKi::AuxFunBase                          ( right ) 
-  , LoKi::BasicFunctors<const LHCb::Particle*>::Function ( right ) 
-  , m_dphi ( right.m_dphi )
-  , m_deta ( right.m_deta )
-{}  
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")
 // ============================================================================
@@ -197,16 +170,22 @@ LoKi::Particles::DeltaR2::result_type
 LoKi::Particles::DeltaR2::operator() 
   ( LoKi::Particles::DeltaR2::argument p ) const 
 {
-  const double dphi = m_dphi.dphi ( p ) ;
-  const double deta = m_deta.deta ( p ) ;
+  if ( 0 == p ) 
+  {
+    Error ("LHCb::Particle* points to NULL, return 'InvalidAngle'") ;
+    return LoKi::Constants::InvalidAngle ;
+  }
   //
-  return dphi*dphi + deta*deta ;
+  const double dphi_ = dphi ( p ) ;
+  const double deta_ = deta ( p ) ;
+  //
+  return dphi_*dphi_ + deta_*deta_ ;
 } ;
 // ============================================================================
 // OPTIONAL: "SHORT" representation
 // ============================================================================
 std::ostream& LoKi::Particles::DeltaR2::fillStream ( std::ostream& s ) const 
-{ return s << "DR2(" << m_deta.eta0() << "," << m_dphi.phi0() << ")" ; }
+{ return s << "DR2(" << eta0() << "," << phi0() << ")" ; }
 // ============================================================================
 
 

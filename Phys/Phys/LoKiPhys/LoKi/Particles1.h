@@ -1,4 +1,4 @@
-// $Id: Particles1.h,v 1.10 2008-10-31 17:27:45 ibelyaev Exp $
+// $Id: Particles1.h,v 1.11 2008-11-02 20:13:32 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES1_H 
 #define LOKI_PARTICLES1_H 1
@@ -94,8 +94,6 @@ namespace LoKi
       // ======================================================================
       /// default constructor is private
       VertexDistance();
-      /// no assigenement 
-      VertexDistance& operator=( const VertexDistance& ) ;
       // ======================================================================
     private:
       // ======================================================================
@@ -170,8 +168,6 @@ namespace LoKi
       // ======================================================================
       /// default constructor is private
       VertexSignedDistance();
-      /// no assigenement 
-      VertexSignedDistance& operator=( const VertexSignedDistance& ) ;
       // ======================================================================
     private:
       // ======================================================================
@@ -228,8 +224,6 @@ namespace LoKi
       // ======================================================================
       /// default constructor is private
       VertexDotDistance(); // default constructor is private
-      /// no assigenement 
-      VertexDotDistance& operator=( const VertexDotDistance& ) ;
       // ======================================================================
     } ;
     // ========================================================================    
@@ -294,8 +288,6 @@ namespace LoKi
       // ======================================================================
       /// default constructor is private
       VertexChi2Distance();
-      /// no assignement 
-      VertexChi2Distance& operator= ( const VertexChi2Distance& ) ;
       // ======================================================================
     private:
       // ======================================================================
@@ -435,8 +427,6 @@ namespace LoKi
       // ======================================================================
       // default constructor is disabled 
       MinVertexDistance () ;
-      /// no assigenement 
-      MinVertexDistance& operator=( const MinVertexDistance& ) ;
       // ======================================================================
     private:
       // ======================================================================
@@ -570,8 +560,6 @@ namespace LoKi
       // ======================================================================
       /// default constructor is disabled 
       MinVertexChi2Distance () ;
-      /// no assigenement 
-      MinVertexChi2Distance& operator=( const MinVertexChi2Distance& ) ;
       // ======================================================================
     private:
       // ======================================================================

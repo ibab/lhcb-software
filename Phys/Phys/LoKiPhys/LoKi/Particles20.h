@@ -1,4 +1,4 @@
-// $Id: Particles20.h,v 1.7 2008-10-31 17:27:45 ibelyaev Exp $
+// $Id: Particles20.h,v 1.8 2008-11-02 20:13:32 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES20_H 
 #define LOKI_PARTICLES20_H 1
@@ -72,11 +72,6 @@ namespace LoKi
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;
       // ======================================================================
-    private:
-      // ======================================================================
-      CosineDirectionAngleWithTheBestPV& 
-      operator= ( const CosineDirectionAngleWithTheBestPV& ) ;
-      // ======================================================================
     } ;
     // ======================================================================== 
     /** @class ImpParWithTheBestPV
@@ -116,10 +111,6 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      ImpParWithTheBestPV& operator=( const ImpParWithTheBestPV& ) ;
       // ======================================================================
     private:
       // ======================================================================
@@ -166,10 +157,6 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      ImpParChi2WithTheBestPV& operator=( const ImpParChi2WithTheBestPV& ) ;
       // ======================================================================
     private:
       // ======================================================================
@@ -244,7 +231,6 @@ namespace LoKi
       // ======================================================================
       // no default constructor 
       MinImpParWithSource () ; ///< no default constructor
-      MinImpParWithSource& operator=( const MinImpParWithSource& ) ;
       // ======================================================================
     private:
       // ======================================================================
@@ -306,10 +292,6 @@ namespace LoKi
       virtual  MinImpParDV* clone () const ;
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
-      // ======================================================================
-    private:
-      // ======================================================================
-      MinImpParDV& operator=( const MinImpParDV & ) ;
       // ======================================================================
     } ;
     // ========================================================================
@@ -430,10 +412,6 @@ namespace LoKi
       // ======================================================================
     private:
       // ======================================================================
-      MinImpParTES& operator=( const MinImpParTES & ) ;
-      // ======================================================================
-    private:
-      // ======================================================================
       // the list of TES locations 
       std::vector<std::string> m_path ;
       // ======================================================================
@@ -495,8 +473,6 @@ namespace LoKi
       // ======================================================================
       /// no default constructor 
       MinImpParChi2WithSource () ; // no default constructor
-      MinImpParChi2WithSource& 
-      operator=( const MinImpParChi2WithSource& ) ; // no asignement 
       // ======================================================================
     private:
       // ======================================================================
@@ -561,10 +537,6 @@ namespace LoKi
       virtual  MinImpParChi2DV* clone () const ;
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
-      // ======================================================================
-    private:
-      // ======================================================================
-      MinImpParChi2DV& operator=( const MinImpParChi2DV& ) ; // no asignement 
       // ======================================================================
     } ;
     // ========================================================================
@@ -686,10 +658,6 @@ namespace LoKi
       // ======================================================================
     private:
       // ======================================================================
-      MinImpParChi2TES& operator=( const MinImpParChi2TES& ) ; // no asignement 
-      // ======================================================================
-    private:
-      // ======================================================================
       /// the list of TES locations 
       std::vector<std::string> m_path ; // the list of TES locations 
       // ======================================================================
@@ -729,10 +697,6 @@ namespace LoKi
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
       // ======================================================================
-    private:
-      // =====================================================================
-      VertexDistanceDV& operator=(const VertexDistanceDV&) ;
-      // ======================================================================
     } ;
     // ========================================================================
     /** @class VertexSignedDistanceDV 
@@ -768,10 +732,6 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
-      // ======================================================================
-    private:
-      // =====================================================================
-      VertexSignedDistanceDV& operator=( const VertexSignedDistanceDV&) ;
       // ======================================================================
     } ;
     // ========================================================================
@@ -809,10 +769,6 @@ namespace LoKi
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
       // ======================================================================
-    private:
-      // =====================================================================
-      VertexDotDistanceDV& operator=( const VertexDotDistanceDV&) ;
-      // ======================================================================
     } ;
     // ========================================================================
     /** @class VertexChi2DistanceDV 
@@ -848,10 +804,6 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
-      // ======================================================================
-    private:
-      // =====================================================================
-      VertexChi2DistanceDV& operator=( const VertexChi2DistanceDV&) ;
       // ======================================================================
     } ;
     // ========================================================================
@@ -891,10 +843,6 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
-      // ======================================================================
-    private:
-      // =====================================================================
-      LifeTimeDV& operator=( const LifeTimeDV&) ;
       // ======================================================================
     private:
       /// the tool type/name 
@@ -940,10 +888,6 @@ namespace LoKi
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
       // ======================================================================
     private:
-      // =====================================================================
-      LifeTimeChi2DV& operator=( const LifeTimeChi2DV&) ;
-      // ======================================================================
-    private:
       /// the tool type/name 
       std::string                   m_fit ;  // the tool type/name 
       // ======================================================================
@@ -985,11 +929,6 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// no assignement
-      LifeTimeSignedChi2DV& operator=( const LifeTimeSignedChi2DV& ) ;
       // ======================================================================
     private:
       /// the tool type/name 
@@ -1036,11 +975,6 @@ namespace LoKi
       // ======================================================================
     private:
       // ======================================================================
-      /// no assignement
-      LifeTimeFitChi2DV& operator=( const LifeTimeFitChi2DV& ) ;
-      // ======================================================================
-    private:
-      // ======================================================================
       /// the tool type/name 
       std::string                      m_fit ; // the tool type/name 
       // ======================================================================
@@ -1082,11 +1016,6 @@ namespace LoKi
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
       // ======================================================================
-    private:
-      // =====================================================================
-      VertexZDistanceWithTheBestPV&
-      operator=( const VertexZDistanceWithTheBestPV& ) ;
-      // ======================================================================
     } ;
     // ========================================================================
     /** @class VertexRhoDistanceWithTheBestPV
@@ -1125,11 +1054,6 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
-      // ======================================================================
-    private:
-      // =====================================================================
-      VertexRhoDistanceWithTheBestPV&
-      operator=( const VertexRhoDistanceWithTheBestPV& ) ;
       // ======================================================================
     } ;
     // ========================================================================
@@ -1170,8 +1094,6 @@ namespace LoKi
       // ======================================================================
       /// the default constructor is disabled 
       MinVertexDistanceWithSource() ; // the default constructor is disabled 
-      /// no assigenement 
-      MinVertexDistanceWithSource& operator=( const MinVertexDistanceWithSource& ) ;
       // ======================================================================
     private:
       // ======================================================================
@@ -1211,11 +1133,6 @@ namespace LoKi
       virtual  result_type operator() ( argument v ) const ; 
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// no assigenement 
-      MinVertexDistanceDV& operator=( const MinVertexDistanceDV& ) ;
       // ======================================================================
     private:
       // ======================================================================
@@ -1276,8 +1193,6 @@ namespace LoKi
       // ======================================================================
       /// the default constructor is disabled 
       MinVertexDistanceTES() ; // the default constructor is disabled 
-      /// no assigenement 
-      MinVertexDistanceTES& operator=( const MinVertexDistanceTES& ) ;
       // ======================================================================
     private:
       // ======================================================================
@@ -1323,9 +1238,6 @@ namespace LoKi
       // ======================================================================
       /// the default constructor is disabled 
       MinVertexChi2DistanceWithSource() ; // the default constructor is disabled 
-      /// no assigenement 
-      MinVertexChi2DistanceWithSource& operator=
-      ( const MinVertexChi2DistanceWithSource& ) ;
       // ======================================================================
     private:
       // ======================================================================
@@ -1365,11 +1277,6 @@ namespace LoKi
       virtual  result_type operator() ( argument v ) const ; 
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// no assigenement 
-      MinVertexChi2DistanceDV& operator= ( const MinVertexChi2DistanceDV& ) ;
       // ======================================================================
     private:
       // ======================================================================
@@ -1430,10 +1337,6 @@ namespace LoKi
       // ======================================================================
       /// the default constructor is disabled 
       MinVertexChi2DistanceTES() ; // the default constructor is disabled 
-    private:
-      // ======================================================================
-      /// no assigenement 
-      MinVertexChi2DistanceTES& operator= ( const MinVertexChi2DistanceTES& ) ;
       // ======================================================================
     private:
       // ======================================================================

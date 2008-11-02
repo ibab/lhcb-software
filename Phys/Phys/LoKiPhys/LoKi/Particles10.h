@@ -1,4 +1,4 @@
-// $Id: Particles10.h,v 1.9 2008-10-31 17:27:45 ibelyaev Exp $
+// $Id: Particles10.h,v 1.10 2008-11-02 20:13:32 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES10_H 
 #define LOKI_PARTICLES10_H 1
@@ -52,6 +52,7 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
+      // ======================================================================
       /// constructor from one primary vertex 
       HasTracksFromPV ( const LHCb::RecVertex*               pv  ) ;
       /// constructor from vector of primary vertices 
@@ -122,16 +123,18 @@ namespace LoKi
         for ( ; first != last ; ++first ) { addVertex ( *first ) ; } 
         return size() ;
       } ;
+      // ======================================================================
     public:
+      // ======================================================================
       /// empty vector of tracks?
       bool   empty () const { return m_cut.empty () ; }
       /// the actual size of the vector of tracks 
       size_t size  () const { return m_cut.size  () ; }      
+      // ======================================================================
     private:
       // ======================================================================
       // The defualt costructor is disabled 
       HasTracksFromPV();
-      HasTracksFromPV& operator=( const HasTracksFromPV& ) ;
       // ======================================================================
     private:
       // ======================================================================
@@ -161,6 +164,7 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
     {
     public:
+      // ======================================================================
       /// constructor from one primary vertex 
       HasTracksInTreeFromPV 
       ( const LHCb::RecVertex*               pv  ) ;
@@ -219,7 +223,9 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     public:
+      // ======================================================================
       /** add the vertex 
        *  @param vertex vertex to be added 
        *  @return the actual number of tracks 
@@ -242,16 +248,20 @@ namespace LoKi
       ( VERTEX first , 
         VERTEX last  ) 
       { return m_cut.addVertices( first , last ) ; } ;
+      // ======================================================================
     public:
+      // ======================================================================
       bool   empty () const { return m_cut.empty () ; }
       size_t size  () const { return m_cut.size  () ; }      
+      // ======================================================================
     private:
       // The defualt costructor is disabled 
       HasTracksInTreeFromPV();
-      HasTracksInTreeFromPV& operator=( const HasTracksInTreeFromPV& ) ;
       // ======================================================================
     private:
+      // ======================================================================
       LoKi::Particles::HasTracksFromPV m_cut ;
+      // ======================================================================
     } ;
     // ========================================================================    
   } // end of namespace Particles

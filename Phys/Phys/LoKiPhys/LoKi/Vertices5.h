@@ -1,4 +1,4 @@
-// $Id: Vertices5.h,v 1.2 2008-10-31 17:27:46 ibelyaev Exp $
+// $Id: Vertices5.h,v 1.3 2008-11-02 20:13:32 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_VERTICES5_H 
 #define LOKI_VERTICES5_H 1
@@ -75,11 +75,6 @@ namespace LoKi
       /// the default constructo is disabled 
       MinVertexDistanceWithSource() ; // the default constructo is disabled 
       // ======================================================================
-    private:
-      // ======================================================================
-      MinVertexDistanceWithSource&
-      operator=( const MinVertexDistanceWithSource& ) ;
-      // ======================================================================
     public:
       // ======================================================================
       /// make the actual evaluation
@@ -126,11 +121,6 @@ namespace LoKi
       // ======================================================================
       /// get the access to the cut:
       const LoKi::PhysTypes::VCuts& cut() const { return m_cut ; }  
-      // ======================================================================
-    private:
-      // ======================================================================
-      MinVertexDistanceDV&
-      operator=( const MinVertexDistanceDV& ) ;
       // ======================================================================
     private:
       // ======================================================================
@@ -189,8 +179,6 @@ namespace LoKi
       // ======================================================================
       /// the default constructor is disabled 
       MinVertexDistanceTES() ; // the default constructor is disabled 
-      MinVertexDistanceTES&
-      operator=( const MinVertexDistanceTES& ) ;
       // ======================================================================
     public:
       // ======================================================================
@@ -247,8 +235,6 @@ namespace LoKi
       // ======================================================================
       /// the default constructor is disabled 
       MinVertexChi2DistanceWithSource() ; // the default constructo is disabled 
-      MinVertexChi2DistanceWithSource&
-      operator=( const MinVertexChi2DistanceWithSource& ) ;
       // ======================================================================
     public:
       // ======================================================================
@@ -296,11 +282,6 @@ namespace LoKi
       // ======================================================================
       /// get the access to the cut:
       const LoKi::PhysTypes::VCuts& cut() const { return m_cut ; }
-      // ======================================================================
-    private:
-      // ======================================================================
-      MinVertexChi2DistanceDV&
-      operator=( const MinVertexChi2DistanceDV& ) ;
       // ======================================================================
     private:
       // ======================================================================
@@ -366,11 +347,6 @@ namespace LoKi
       const LoKi::PhysTypes::VCuts&   cut  () const { return m_cut ; }
       /// get the access to the path
       const std::vector<std::string>& path () const { return m_path; }
-      // ======================================================================
-    private:
-      // ======================================================================
-      MinVertexChi2DistanceTES&
-      operator=( const MinVertexChi2DistanceTES& ) ;
       // ======================================================================
     private:
       // ======================================================================
