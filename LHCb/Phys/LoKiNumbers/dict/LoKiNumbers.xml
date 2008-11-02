@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiNumbers.xml,v 1.5 2008-10-19 16:20:25 ibelyaev Exp $ 
+     * $Id: LoKiNumbers.xml,v 1.6 2008-11-02 21:01:58 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The XML seleciton file to build Reflex 
@@ -23,7 +23,7 @@
   <class pattern   = "LoKi::FunctorFromFunctor<std::vector<double>,bool>"            />
   <class pattern   = "LoKi::FunctorFromFunctor<std::vector<double>,std::vector<double> >"       />
 
-
+  
   <class pattern   = "LoKi::Functor<void,double>"  />
   <class pattern   = "LoKi::Functor<void,bool>"    />
   <class pattern   = "LoKi::FunctorFromFunctor<void,double>" />
@@ -37,7 +37,8 @@
   <class pattern   = "LoKi::Dicts::*Ops_<*>"       />
   <class pattern   = "LoKi::Dicts::*Calls*>"       />
   
-  <class pattern   = "LoKi::Random::*"      />
+  <class pattern   = "LoKi::Random::*"       />
+  <class pattern   = "LoKi::Algorithms::*"   />
   
   <class name = "std::unary_function<const double,bool>"                              />
   <class name = "std::unary_function<const double,double>"                            />
@@ -50,5 +51,66 @@
 
   <class name = "std::vector<double>" />
   <class name = "std::vector<bool>"   />
+
+
+  <exclusion>
+    
+    <class pattern="LoKi::Random::*">
+      <method name="=" />
+    </class>
+    
+    <class pattern="LoKi::Dicts::*">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::Interface&lt;*&gt;">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::I*">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::Hybrid::*">
+      <method name="=" />
+    </class>
+    
+    <class pattern="LoKi::Functor&lt;*&gt;">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::Constant&lt;*&gt;">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::Valid&lt;*&gt;">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::TheSame&lt;*&gt;">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::Identity&lt;*&gt;">
+      <method name="=" />
+    </class>
+    
+    <class pattern="LoKi::Range_&lt;*&gt;">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::NamedRange_&lt;*&gt;">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::RangeList_&lt;*&gt;">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::Keeper&lt;*&gt;">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::UniqueKeeper&lt;*&gt;">
+      <method name="=" />
+    </class>
+    <class pattern="std::unary_function&lt;*&gt;">
+      <method name="=" />
+    </class>
+    <class pattern="std::binary_function&lt;*&gt;">
+      <method name="=" />
+    </class>
+    
+  </exclusion>
+
 
 </lcgdict>

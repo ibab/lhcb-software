@@ -4,6 +4,10 @@
 ! Purpose     : Set of dictionaries for LoKi functions 
 ! -----------------------------------------------------------------------------
 
+! 2008-11-02 - Vanya BELYAEV
+
+ - more fixes for various compilers 
+
 ! 2008-10-29 - Vanya BELYAEV
  - fixes for gcc43 compilation 
 
@@ -15,7 +19,7 @@
 
  - cmt/requirements 
 
-    version incremen tto v8r0 
+    version increment to v8r0 
 
 ! =========================== LoKiNumbers v7r3p1 2008-06-30 ===================
 ! 2008-06-11 - Vanya  BELYAEV
