@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.29 2008-07-27 16:03:24 cattanem Exp $ 
+! $Id: release.notes,v 1.30 2008-11-02 19:33:47 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGenMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,14 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2008-11-02 - Vanya BELYAEV
+	
+ - tiny fixes fo variosu compilers 
+ - remove extra methods fomr dictionaries 
+	
+ - cmt/requirements 
+    version incrmeent to v8r0 
 
 !========================== LoKiGenMC v7r1p1 2008-07-27 =======================
 ! 2008-07-22 - Marco Cattaneo
@@ -404,6 +412,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.29  2008/07/27 16:03:24  cattanem
+! v7r1p1
+!
 ! Revision 1.28  2008/07/22 13:14:43  cattanem
 ! use Gaudi::Units, not CLHEP::
 !

@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiGenMC.xml,v 1.3 2007-12-02 11:57:06 ibelyaev Exp $ 
+     * $Id: LoKiGenMC.xml,v 1.4 2008-11-02 19:33:47 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiGen package
@@ -24,8 +24,18 @@
   <class pattern ="LoKi::GenMCParticles::*"    />
   
   <exclusion>
+    
     <class name="LoKi::GenMCParticles::IsFromHepMC::GPs"     />
     <class name="LoKi::GenMCParticles::IsAMotherForMC::MCPs" /> 
+    
+    <class pattern="LoKi::GenMCParticles::*">
+      <method name="=" />
+    </class>
+    
+    <class pattern="LoKi::Interface&lt;*&gt;">
+      <method name="=" />
+    </class>
+    
   </exclusion>
   
 </lcgdict>
