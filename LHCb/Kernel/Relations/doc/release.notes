@@ -1,9 +1,21 @@
-! $Id: release.notes,v 1.56 2008-11-01 15:53:09 ibelyaev Exp $ 
+! $Id: release.notes,v 1.57 2008-11-02 16:44:38 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
 ! Responsible : Vanya BELYAEV   ibelyaev@physics.syr.edu
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
+
+! 2008-11-02 - Vanya BELYAEV
+
+ - python/Relations/Rels.py
+
+    Remove unnesessary "operator=" from many objects 
+
+ - Relations/*.h
+
+    fix the compiler ambiguity for "merge" family inthe case 
+    of FROM==TO by introduction of "imerge" function.
+
 
 ! 2008-11-01 - Vanya BELYAEV
 

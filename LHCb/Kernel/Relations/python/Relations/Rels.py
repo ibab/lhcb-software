@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Rels.py,v 1.1 2007-11-27 13:38:28 ibelyaev Exp $
+# $Id: Rels.py,v 1.2 2008-11-02 16:44:38 ibelyaev Exp $
 # =============================================================================
 """
 Simple module for 'decorations' of various relation tables
@@ -213,9 +213,9 @@ class RelW2D ( Rel ) :
 
 def _write_xml_( lines , lst ) :
     
-    lines += ['<!-- * $Id: Rels.py,v 1.1 2007-11-27 13:38:28 ibelyaev Exp $ '] 
+    lines += ['<!-- * $Id: Rels.py,v 1.2 2008-11-02 16:44:38 ibelyaev Exp $ '] 
     lines += ['     * ========================================================================']
-    lines += ['     * $CVS tag:$, version $Revision: 1.1 $ ']
+    lines += ['     * $CVS tag:$, version $Revision: 1.2 $ ']
     lines += ['     * ========================================================================']
     lines += ['-->']
     lines += ['']
@@ -260,6 +260,42 @@ def _write_xml_( lines , lst ) :
     lines += [' <class pattern="Relations::Pointer<*>"   /> ']
     lines += [' <class pattern="Relations::Reference<*>" /> ']
     lines += ['']
+    lines += [' <!-- * EXCLUSIONS                       * -->'] 
+    lines += [' <!-- *  1) Not needed for interactivity * -->'] 
+    lines += [' <!-- *  2) Not needed for persistency   * -->'] 
+    lines += ['']
+    lines += [' <exclusion>']    
+    lines += ['']
+    lines += [' <class pattern="IRelation*">']
+    lines += ['    <method name="="/>']    
+    lines += [' </class>']        
+    lines += [' <class pattern="LHCb::Relation*">']
+    lines += ['    <method name="="/>']    
+    lines += [' </class>']        
+    lines += [' <class pattern="Relations::Relation*">']
+    lines += ['    <method name="="/>']    
+    lines += [' </class>']        
+    lines += [' <class pattern="Relations::Entry_*">']
+    lines += ['    <method name="="/>']    
+    lines += [' </class>']        
+    lines += [' <class pattern="Relations::WEntry_*">']
+    lines += ['    <method name="="/>']    
+    lines += [' </class>']        
+    lines += [' <class pattern="Relations::Range_*">']
+    lines += ['    <method name="="/>']    
+    lines += [' </class>']        
+    lines += [' <class pattern="Relations::Pointer*">']
+    lines += ['    <method name="="/>']    
+    lines += [' </class>']        
+    lines += [' <class pattern="Relations::Reference*">']
+    lines += ['    <method name="="/>']    
+    lines += [' </class>']        
+    lines += [' <class pattern="std::vector&lt;Relations::*&gt;">']
+    lines += ['    <method name="="/>']    
+    lines += [' </class>']        
+    lines += ['']
+    lines += [' </exclusion>']    
+    lines += ['']    
     lines += ['</lcgdict>']    
     lines += ['']
     lines += ['<!-- * ===================================================================== -->']
@@ -271,9 +307,9 @@ def _write_xml_( lines , lst ) :
 
 
 def _write_cpp_ ( lines , lst , includes = [] ) :
-    lines += ['// $Id: Rels.py,v 1.1 2007-11-27 13:38:28 ibelyaev Exp $' ] 
+    lines += ['// $Id: Rels.py,v 1.2 2008-11-02 16:44:38 ibelyaev Exp $' ] 
     lines += ['// ====================================================================']
-    lines += ['// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ ']
+    lines += ['// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ ']
     lines += ['// ====================================================================']
     lines += ['// Incldue files']
     lines += ['// ====================================================================']
@@ -322,9 +358,9 @@ def _write_cpp_ ( lines , lst , includes = [] ) :
     _i = 0 
     for o in lst :
         _i+=1 
-        lines += ['%s\t_%s ;' %( o.Dict() , _i ) ]
+        lines += ['        %s\t_%s ;' %( o.Dict() , _i ) ]
     lines += ['  };']
-    lines += ['};']    
+    lines += ['} // end of namespace Dict ']    
     lines += ['']    
     lines += ['// ====================================================================']
     lines += ['// The END ============================================================']

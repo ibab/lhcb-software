@@ -1,8 +1,11 @@
-// $Id: RelationWeightedBase.h,v 1.13 2008-11-01 15:53:09 ibelyaev Exp $
+// $Id: RelationWeightedBase.h,v 1.14 2008-11-02 16:44:38 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.13 $
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.14 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.13  2008/11/01 15:53:09  ibelyaev
+//  add the method 'merge' and its shortcut '+=' for each concrete class
+//
 // Revision 1.12  2008/10/31 19:34:59  ibelyaev
 //  fixes for gcc4.3
 //
@@ -382,7 +385,7 @@ namespace Relations
      *  @param range the range to be added 
      *  @return self reference 
      */
-    RelationWeightedBase& merge ( const typename IInverse::Range& range ) 
+    RelationWeightedBase& imerge ( const typename IInverse::Range& range ) 
     {
       if ( range.empty() ) { return *this ; }                       // RETURN 
       // invert all relations    
@@ -400,12 +403,6 @@ namespace Relations
      *  @return self reference 
      */
     RelationWeightedBase& operator+=( const Range& range ) 
-    { return merge ( range ) ; }
-    /** add *SORTED* range into the relation table 
-     *  @param range the range to be added 
-     *  @return self reference 
-     */
-    RelationWeightedBase& operator+=( const typename IInverse::Range& range ) 
     { return merge ( range ) ; }
     // ========================================================================
   private:

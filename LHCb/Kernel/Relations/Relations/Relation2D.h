@@ -1,8 +1,11 @@
-// $Id: Relation2D.h,v 1.11 2008-11-01 15:53:08 ibelyaev Exp $
+// $Id: Relation2D.h,v 1.12 2008-11-02 16:44:38 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.11 $ 
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.12 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2008/11/01 15:53:08  ibelyaev
+//  add the method 'merge' and its shortcut '+=' for each concrete class
+//
 // Revision 1.10  2008/10/31 19:34:59  ibelyaev
 //  fixes for gcc4.3
 //
@@ -207,8 +210,8 @@ namespace LHCb
      *  @param range the range to be added 
      *  @return self-reference 
      */
-    Relation2D& merge ( const typename IInverse::Range& range ) 
-    { m_base.merge ( range ) ; return *this ; }
+    Relation2D& imerge ( const typename IInverse::Range& range ) 
+    { m_base.imerge ( range ) ; return *this ; }
     /** merge with the sorted range of relations 
      *  @attention the range is assumed to be sorted! 
      *  @param range the range to be added 
@@ -216,13 +219,6 @@ namespace LHCb
      */
     Relation2D& operator+=( const Range& range ) 
     { return merge ( range ) ; }
-    /** merge with the sorted range of relations 
-     *  @attention the range is assumed to be sorted! 
-     *  @param range the range to be added 
-     *  @return self-reference 
-     */
-    Relation2D& operator+=( const typename IInverse::Range& range ) 
-    { return merge ( range ) ; }    
     // ========================================================================
   public: // abstract methods from interface
     // ========================================================================

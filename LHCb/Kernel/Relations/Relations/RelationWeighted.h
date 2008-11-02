@@ -1,8 +1,11 @@
-// $Id: RelationWeighted.h,v 1.14 2008-11-01 15:53:08 ibelyaev Exp $
+// $Id: RelationWeighted.h,v 1.15 2008-11-02 16:44:38 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.14 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.15 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.14  2008/11/01 15:53:08  ibelyaev
+//  add the method 'merge' and its shortcut '+=' for each concrete class
+//
 // Revision 1.13  2008/10/31 19:34:59  ibelyaev
 //  fixes for gcc4.3
 //
@@ -259,7 +262,7 @@ namespace Relations
     {
       if ( range.empty() ) { return *this ; }
       m_direct.merge ( range ) ;
-      if ( 0 != m_inverse_aux ) { m_inverse_aux -> merge ( range ) ; }
+      if ( 0 != m_inverse_aux ) { m_inverse_aux -> imerge ( range ) ; }
       return *this ;
     }
     /** merge with the sorted range of relations 
@@ -267,10 +270,10 @@ namespace Relations
      *  @param range the range to be added 
      *  @return self-reference 
      */
-    RelationWeighted& merge ( const typename IInverse::Range& range ) 
+    RelationWeighted& imerge ( const typename IInverse::Range& range ) 
     {
       if ( range.empty() ) { return *this ; }
-      m_direct.merge ( range ) ;
+      m_direct.imerge ( range ) ;
       if ( 0 != m_inverse_aux ) { m_inverse_aux -> merge ( range ) ; }
       return *this ;
     }
@@ -281,13 +284,6 @@ namespace Relations
      */    
     RelationWeighted& operator+= ( const Range& range ) 
     { return merge ( range ) ; }
-    /** merge with the sorted range of relations 
-     *  @attention the range is assumed to be sorted! 
-     *  @param range the range to be added 
-     *  @return self-reference 
-     */    
-    RelationWeighted& operator+= ( const typename IInverse::Range& range ) 
-    { return merge ( range ) ; }    
     // ========================================================================
   public:  // abstract methods from interface
     // ========================================================================

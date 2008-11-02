@@ -1,8 +1,11 @@
-// $Id: Relation2.h,v 1.12 2008-11-01 15:53:08 ibelyaev Exp $
+// $Id: Relation2.h,v 1.13 2008-11-02 16:44:38 ibelyaev Exp $
 // =============================================================================
-// CV Stag $Name: not supported by cvs2svn $ ; version $Revision: 1.12 $
+// CV Stag $Name: not supported by cvs2svn $ ; version $Revision: 1.13 $
 // =============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.12  2008/11/01 15:53:08  ibelyaev
+//  add the method 'merge' and its shortcut '+=' for each concrete class
+//
 // Revision 1.11  2008/10/31 19:34:59  ibelyaev
 //  fixes for gcc4.3
 //
@@ -205,8 +208,8 @@ namespace Relations
      *  @param range the range to be added 
      *  @return self-reference 
      */
-    Relation2& merge ( const typename InvType::Range& range ) 
-    { m_direct.merge ( range ) ; return *this ; }
+    Relation2& imerge ( const typename InvType::Range& range ) 
+    { m_direct.imerge ( range ) ; return *this ; }
     /** merge with the sorted range of relations 
      *  @attention the range is assumed to be sorted! 
      *  @param range the range to be added 
@@ -214,13 +217,6 @@ namespace Relations
      */
     Relation2& operator+=( const Range& range ) 
     { return merge ( range ) ; }
-    /** merge with the sorted range of relations 
-     *  @attention the range is assumed to be sorted! 
-     *  @param range the range to be added 
-     *  @return self-reference 
-     */
-    Relation2& operator+=( const typename InvType::Range& range ) 
-    { return merge ( range ) ; }    
     // ========================================================================
   public:  // abstract methods from interface
     // ========================================================================
