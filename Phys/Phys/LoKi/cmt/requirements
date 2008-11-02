@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.20 2008-06-12 08:30:38 ibelyaev Exp $ 
+# $Id: requirements,v 1.21 2008-11-02 21:21:50 ibelyaev Exp $ 
 # =============================================================================
 # Created    : 2006-04-09
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
 package           LoKi
-version           v7r1
+version           v8r0
 
 # =============== structure ===================================================
 branches          LoKi cmt doc src
@@ -23,10 +23,10 @@ use               LoKiArrayFunctors v*   Phys
 apply_pattern install_more_includes more=LoKi
 
 # ================ constituents ===============================================
-library           LoKi    ../src/*.cpp
+#library           LoKi    ../src/*.cpp
 
 # ================ patterns ===================================================
-apply_pattern     linker_library    library=LoKi
+#apply_pattern     linker_library    library=LoKi
 
 #apply_pattern  application_path 
 
