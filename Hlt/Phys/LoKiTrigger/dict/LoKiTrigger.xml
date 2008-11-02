@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiTrigger.xml,v 1.11 2008-10-19 17:54:10 ibelyaev Exp $ 
+     * $Id: LoKiTrigger.xml,v 1.12 2008-11-02 20:44:03 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiGen package
@@ -81,6 +81,69 @@
     <class name = "std::unary_function<const char*,bool>"         /> 
     <class name = "std::unary_function<const void*,bool>"         /> 
     <class name = "std::vector<const ContainedObject*>"           /> 
+
+    
+    <class pattern="LoKi::Tracks::*">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::RecVertices::*">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::Trigger::*">
+      <method name="=" />
+    </class>
+    
+    <class pattern="LoKi::Dicts::*">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::Interface&lt;*&gt;">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::I*">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::Hybrid::*">
+      <method name="=" />
+    </class>
+    
+    <class pattern="LoKi::Functor&lt;*&gt;">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::Constant&lt;*&gt;">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::Valid&lt;*&gt;">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::TheSame&lt;*&gt;">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::Identity&lt;*&gt;">
+      <method name="=" />
+    </class>
+    
+    <class pattern="LoKi::Range_&lt;*&gt;">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::NamedRange_&lt;*&gt;">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::RangeList_&lt;*&gt;">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::Keeper&lt;*&gt;">
+      <method name="=" />
+    </class>
+    <class pattern="LoKi::UniqueKeeper&lt;*&gt;">
+      <method name="=" />
+    </class>
+    <class pattern="std::unary_function&lt;*&gt;">
+      <method name="=" />
+    </class>
+    <class pattern="std::binary_function&lt;*&gt;">
+      <method name="=" />
+    </class>
+
  </exclusion>
   
 </lcgdict>
