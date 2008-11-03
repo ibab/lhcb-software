@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.252 2008-10-31 14:05:12 jpalac Exp $
+! $Id: release.notes,v 1.253 2008-11-03 12:46:54 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,12 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2008-11-03 - Juan PALACIOS
+ - tests/qmtest/davinci.qms/preselections.qms/test_bd2dstarpi.qmt
+ - tests/qmtest/davinci.qms/preselections.qms/test_bu2eek.qmt
+  . Revert to previous versions. Changes were due to problems in new algorithm
+    correlation calculation algorithm.
 
 ! 2008-10-31 - Juan PALACIOS
  - tests/qmtest/davinci.qms/preselections.qms/test_bd2dstarpi.qmt
