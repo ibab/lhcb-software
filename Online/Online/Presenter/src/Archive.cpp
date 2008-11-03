@@ -64,16 +64,14 @@ void Archive::setReferencePath(const std::string & referencePath)
     std::cout << "Archive m_referencePath " << m_referencePath << std::endl;
   }  
 }
-void Archive::refreshDirectory(const DirectoryType & directoryType)
+void Archive::refreshDirectory(const DirectoryType & directoryType, const std::string & endTimeIsoString, const std::string & taskName)
 {
   switch (directoryType) {
     case Savesets:
-      // std::cout << "m_savesetPath " << m_savesetPath <<std::endl;
-      m_foundSavesets = listDirectory(m_savesetPath);
+      m_foundSavesets = listRootFilesDirectory(m_archiveRoot/m_savesetPath/path(endTimeIsoString.substr(0, 4))/path(m_mainFrame->currentPartition())/path(taskName));
       break;
     case References:
-      // std::cout << "m_referencePath " << m_referencePath <<std::endl;    
-      m_foundReferences = listDirectory(m_referencePath);
+      m_foundReferences = listRootFilesDirectory(m_archiveRoot/m_referencePath);
       break;
     default:
       break;
@@ -83,7 +81,7 @@ void Archive::fillHistogram(DbRootHist* histogram,
                             const std::string & timePoint,
                             const std::string & pastDuration)
 {
-  if (m_verbosity >= Debug) {
+  if (m_verbosity >= Verbose) {
     std::cout << "Histogram to seek: " << histogram->identifier()
               << " timePoint " << timePoint
               << " pastDuration " << pastDuration << std::endl;
@@ -96,11 +94,12 @@ void Archive::fillHistogram(DbRootHist* histogram,
       if (s_rootFileExtension == extension(filePath) ) {
         if (exists(filePath)){
           foundRootFiles.push_back(filePath);
-        } else if (exists(m_savesetPath/filePath)){
-          foundRootFiles.push_back(m_savesetPath/filePath);
+        } else if (exists(m_archiveRoot/m_savesetPath/filePath)){
+          foundRootFiles.push_back(m_archiveRoot/m_savesetPath/filePath);
         } 
       }
     } else {
+      
       foundRootFiles = findSavesets((histogram->onlineHistogram())->task(),
                                     timePoint,
                                     pastDuration);
@@ -134,6 +133,7 @@ void Archive::fillHistogram(DbRootHist* histogram,
         }
         ++foundRootFilesIt;
       }
+      rootFile.Close();
       TList* list = new TList;
       while (foundRootFilesIt != foundRootFiles.end()) {
         TFile rootFile((*foundRootFilesIt).file_string().c_str());
@@ -215,9 +215,10 @@ void Archive::fillHistogram(DbRootHist* histogram,
   }
   histogram->setTH1FromDB();
 }
-std::vector<path> Archive::listDirectory(const path & dirPath)
+std::vector<path> Archive::listRootFilesDirectory(const path & dirPath)
 {
   std::vector<path> foundRootFiles;
+  
   if (exists(dirPath)) {
     directory_iterator end_itr;
     for (directory_iterator itr(dirPath); itr != end_itr; ++itr) {
@@ -237,6 +238,31 @@ std::vector<path> Archive::listDirectory(const path & dirPath)
     }
   }
   return foundRootFiles;
+}
+std::vector<std::string> Archive::listPartitions() {
+  std::vector<std::string> foundPartitionDirectories;
+  if (exists(m_archiveRoot/m_savesetPath)) {
+    directory_iterator year_end_itr;
+    for (directory_iterator year_itr(m_archiveRoot/m_savesetPath); year_itr != year_end_itr; ++year_itr) {
+      if (is_directory(year_itr->path())) {
+        directory_iterator partition_end_itr;
+        for (directory_iterator partition_itr(year_itr->path()); partition_itr != partition_end_itr; ++partition_itr) {
+          if (is_directory(partition_itr->path())) {
+            foundPartitionDirectories.push_back(partition_itr->path().leaf());
+          }
+        }
+      }
+    }
+  }
+  sort(foundPartitionDirectories.begin(), foundPartitionDirectories.end());
+  if (m_verbosity >= Debug &&
+      !foundPartitionDirectories.empty()) {
+    m_foundPartitionsIt = foundPartitionDirectories.begin();
+    while (m_foundPartitionsIt != foundPartitionDirectories.end()) {
+      ++m_foundPartitionsIt;
+    }
+  }
+  return foundPartitionDirectories;  
 }
 path Archive::findFile(const path & dirPath, const string & fileName)
 {
@@ -278,6 +304,7 @@ std::string Archive::createIsoTimeString(const tm &pt_tm)
   sec = pt_tm.tm_sec;
   return createIsoTimeString(year, month, day, hour, min, sec); 
 }
+
 std::string Archive::timeDiff(const std::string & startTimeIsoString,
                               const std::string & endTimeIsoString)
 {
@@ -310,11 +337,6 @@ std::vector<path> Archive::findSavesets(const std::string & taskname,
                                         const std::string & endTimeIsoString,
                                         const std::string & durationTimeString)
 {
-  if (m_verbosity >= Verbose) {
-    std::cout << "Archive::findSavesets: " << taskname
-              << " timePoint " << endTimeIsoString
-              << " pastDuration " << durationTimeString << std::endl;
-  }
   std::vector<path> foundRootFiles;
   ptime endTime;
   if ("Now" == endTimeIsoString) {
@@ -322,6 +344,13 @@ std::vector<path> Archive::findSavesets(const std::string & taskname,
   } else {
     endTime = ptime(from_iso_string(endTimeIsoString));
   }
+
+  if (m_verbosity >= Verbose) {
+    std::cout << "Archive::findSavesets: " << taskname
+              << " timePoint " << to_iso_string(endTime)
+              << " pastDuration " << durationTimeString << std::endl;
+  }
+  refreshDirectory(Archive::Savesets, to_iso_string(endTime), taskname);
   time_duration timeDuration(duration_from_string(durationTimeString));
   ptime startTime = endTime - timeDuration;
 
@@ -369,7 +398,7 @@ TH1* Archive::referenceHistogram(const string & /*referenceDbEntry*/)
 }
 void Archive::saveAsReferenceHistogram(DbRootHist* histogram)
 {
-  path referenceFilePath(m_referencePath/histogram->taskName());
+  path referenceFilePath(m_archiveRoot/m_referencePath/histogram->taskName());
     bool out(false);
     try {
       create_directories(referenceFilePath);
@@ -386,7 +415,7 @@ void Archive::saveAsReferenceHistogram(DbRootHist* histogram)
             << histogram->startRun() << s_rootFileExtension;
 
     TH1* m_reference = (TH1*) (histogram->rootHistogram)->Clone(histogram->onlineHistogram()->hname().c_str());
-    TFile* f = new TFile(refFile.str().c_str(),"UPDATE");
+    TFile* f = new TFile(refFile.str().c_str(), "UPDATE");
     if (f) {
       if (false == f->IsZombie() ) {
         // keeps old versions.. use Write("",TObject::kOverwrite) to

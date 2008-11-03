@@ -36,7 +36,7 @@ ReferencePicker::ReferencePicker(PresenterMainFrame* gui, DbRootHist* histogram)
     path referenecePath(m_archive->referencePath() + s_slash +
                         m_histogram->taskName());
     if (exists(referenecePath)) {
-      std::vector<path> foundRootFiles = m_archive->listDirectory(referenecePath);
+      std::vector<path> foundRootFiles = m_archive->listRootFilesDirectory(referenecePath);
       if (!foundRootFiles.empty()) {
         if (m_verbosity >= Verbose) {
           std::cout << "Found " << foundRootFiles.size() <<

@@ -115,7 +115,8 @@ namespace pres
   static TPRegexp s_histogramUrlRegexp("^(MonP1|MonH1F|MonH1D|MonH2F|MonH2D|H1D|H2D|P1D|HPD|P2D)?/?([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");
 //  static TPRegexp s_histogramUTGIDRegexp("^([^/_]+)?_?([^/_]+)_([^/]+)_([^/]+)$");
   static TPRegexp s_histogramUTGIDRegexp("^(([^/_]+)_)?([^/_]+)_([^/]+)_([^/]+)$");
-  static TPRegexp s_fileDateRegexp("(.*)-(\\d{8}T\\d{6})(?:-EOR)\\.root$");
+//  static TPRegexp s_fileDateRegexp("(.*)-(\\d{8}T\\d{6})(?:-EOR)\\.root$");
+ static TPRegexp s_fileDateRegexp("^(.*)-(\\d{8}T\\d{6})(-EOR)?\\.root$");
 
   // Tunables:
   static const int s_estimatedDimServiceCount = 1000;

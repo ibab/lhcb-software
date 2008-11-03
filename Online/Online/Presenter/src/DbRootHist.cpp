@@ -1298,7 +1298,7 @@ void DbRootHist::referenceHistogram(ReferenceVisibility visibility)
       Show == visibility) {
     // standard plot style
     m_reference->SetLineStyle(2);
-    m_reference->SetLineColor(16);
+    m_reference->SetLineColor(2); // red
     // normalization
     normalizeReference();
     TVirtualPad *padsav = gPad;
