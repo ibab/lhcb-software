@@ -84,6 +84,8 @@ namespace pres
   static const std::string s_setSwitch("_$");
   static const std::string s_underscrore("_"); // also for DB folders...
   static const std::string s_slash("/"); // also for DB folders...
+  
+  static const std::string s_adder("Adder");
   // boost::filesystem::slash
 
 // ^(H1D|H2D|P1D|HPD|P2D|CNT)?/?([^/_]+_)?([^/_]*)(_[^/]*)?/([^/]*)/(([^_]*)(_\\$)?(.*))$
@@ -112,9 +114,11 @@ namespace pres
 //  static TPRegexp s_histogramUrlRegexp("^(H1D|H2D|P1D|HPD|P2D)?/?([^/_]+)_([^/_]+)_([^/]+)_([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");
 // so let's process the UTGID separately:
 // TODO: make this lazier...
+  static TPRegexp s_histogramUrlRegexpEFF("^(MonP1|MonH1F|MonH1D|MonH2F|MonH2D|H1D|H2D|P1D|HPD|P2D)?/?([^/]+)/([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");
   static TPRegexp s_histogramUrlRegexp("^(MonP1|MonH1F|MonH1D|MonH2F|MonH2D|H1D|H2D|P1D|HPD|P2D)?/?([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");
 //  static TPRegexp s_histogramUTGIDRegexp("^([^/_]+)?_?([^/_]+)_([^/]+)_([^/]+)$");
-  static TPRegexp s_histogramUTGIDRegexp("^(([^/_]+)_)?([^/_]+)_([^/]+)_([^/]+)$");
+  static TPRegexp s_histogramUTGIDRegexp("^(([^/_]+)_)([^/_]+)_([^/]+)_([^/]+)$");
+  static TPRegexp s_histogramUTGIDRegexpEFF("^([^/_]+)_([^/]+)_([^/]+)$");
 //  static TPRegexp s_fileDateRegexp("(.*)-(\\d{8}T\\d{6})(?:-EOR)\\.root$");
  static TPRegexp s_fileDateRegexp("^(.*)-(\\d{8}T\\d{6})(-EOR)?\\.root$");
 

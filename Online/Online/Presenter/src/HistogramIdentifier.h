@@ -41,6 +41,7 @@ class HistogramIdentifier
     std::string m_histogramUTGID;
     std::string m_algorithmName;
     bool m_isFromHistogramSet;
+    bool m_isEFF;
     std::string m_setName;
     std::string m_histogramName;
     bool m_isPlausible;

@@ -1328,7 +1328,7 @@ std::string DbRootHist::findDimServiceName(const std::string & dimServiceType) {
   std::string dimServiceName("");
   std::string dimServiceNameQueryBegining("");
 
-  if (m_partition != "") {
+  if (!m_partition.empty()) {
     dimServiceNameQueryBegining = dimServiceType + s_slash +
                                   m_partition +
                                   s_underscrore + "*";
