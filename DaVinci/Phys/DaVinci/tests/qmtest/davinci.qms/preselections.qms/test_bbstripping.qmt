@@ -55,7 +55,7 @@ filterResults = ["PrintPreselB2DiMuon                                  INFO Filt
                  "PrintPreselBd2KPiPi0                                 INFO Filtered 1 events",
                  "PrintPreselBd2PiPiPi0                                INFO Filtered 6 events",
                  "PrintPreselBd2Rho0Rho0                               INFO Filtered 0 events",
-                 "GlobalOR                                             INFO Filtered 183 from 5000 events"]
+                 "GlobalOR                                             INFO Filtered 183 out of 5000 events"]
 for expected in filterResults:
     if not expected in stdout:
 	causes.append("\nMissing "+expected+"\n")
