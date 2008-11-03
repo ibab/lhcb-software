@@ -1,4 +1,4 @@
-// $Id: CheckSelResult.cpp,v 1.9 2008-11-03 17:01:00 jpalac Exp $
+// $Id: CheckSelResult.cpp,v 1.10 2008-11-03 18:38:45 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -73,7 +73,6 @@ StatusCode CheckSelResult::execute() {
 
   if (msgLevel(MSG::VERBOSE)) verbose() << "==> Execute" << endmsg;
   StatusCode sc = StatusCode::SUCCESS ;
-  counter("All") +=1;
   const bool pass = m_readTool->isSelected(m_algorithms, m_ANDmode) ;
   if (msgLevel(MSG::DEBUG)) debug() << "Result is " << pass << endmsg ;
   if ( !m_avoidSelResult ) sc = m_writeTool->write(name(),pass) ; // write out
@@ -81,7 +80,7 @@ StatusCode CheckSelResult::execute() {
   
   setFilterPassed(pass);
   
-  if (pass) ++counter("Passed");
+  counter("Passed") += pass;
 
   return StatusCode::SUCCESS;
 };
@@ -89,8 +88,13 @@ StatusCode CheckSelResult::execute() {
 //  Finalize
 //=============================================================================
 StatusCode CheckSelResult::finalize() {
-  info() << "Filtered " << counter("Passed").nEntries() 
-         << " out of " << counter("All").nEntries() << " events" << endmsg;
+
+  const StatEntity& stat = counter("Passed");
+  
+  info() << "Filtered "  << stat.flag() << "/" << stat.nEntries() << " events "
+         << " (Eff = " << stat.flagMean() 
+         << " +/- " << stat.flagRMS() << " )" << endmsg;
+
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
