@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.107 2008-07-27 15:38:45 cattanem Exp $
+! $Id: release.notes,v 1.108 2008-11-03 16:12:01 marcocle Exp $
 ! =============================================================================
 ! package Ex/DetCondExample
 ! package manager : Marco Clemencic
 ! =============================================================================
+
+! 2008-11-03 - Marco Clemencic
+ - Updated to compile with COOL 2.6.0 (some obsolete methods removed from the
+   API)
 
 !============ Ex/DetCondExample v11r4 2008-07-27 ==============================
 ! 2008-07-22 - Marco Clemencic

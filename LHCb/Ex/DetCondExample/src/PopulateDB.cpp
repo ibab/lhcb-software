@@ -1,4 +1,4 @@
-// $Id: PopulateDB.cpp,v 1.36 2007-02-14 16:32:14 marcocle Exp $
+// $Id: PopulateDB.cpp,v 1.37 2008-11-03 16:12:01 marcocle Exp $
 // Include files
 #include <iostream>
 #include <fstream>
@@ -679,15 +679,12 @@ StatusCode PopulateDB::i_dumpFolder( const std::string& folderName,
   
   info() << "    | " << objs->size() << " objects in folder" << endmsg;
 
-  objs->goToStart();
-  //  info() << "    | " << objs->size() << " objects in folder" << endmsg;
-
-  while (objs->hasNext()){
-    cool::IObjectPtr objp = objs->next();
+  while (objs->goToNext()){
+    const cool::IObject & obj = objs->currentRef();
     
-    info() << "    | " << objp->since() << " -> " << objp->until() << endmsg;
-    info() << "      size = " << objp->payload().size() << endmsg;
-    info() << "      " << objp->payload() << endmsg;
+    info() << "    | " << obj.since() << " -> " << obj.until() << endmsg;
+    info() << "      size = " << obj.payload().size() << endmsg;
+    info() << "      " << obj.payload() << endmsg;
   }
 
   return StatusCode::SUCCESS;
