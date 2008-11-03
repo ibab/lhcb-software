@@ -1,11 +1,21 @@
-! $Id: release.notes,v 1.43 2008-10-10 12:37:55 ibelyaev Exp $ 
+! $Id: release.notes,v 1.44 2008-11-03 18:43:30 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.43 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.44 $
 ! -----------------------------------------------------------------------------
 ! Package     :  LoKiExamples
 ! Responsible :  Vanya BELYAEV  ibelyaev@physics.syr.edu
 ! Purpose     :  Collection of examples for LoKi package 
 ! -----------------------------------------------------------------------------
+
+! 2008-11-03 - Vanya BELYAEV
+
+ - add the examples tfor resurrected IPV2MC stuff 
+
+   - src/LoKi_PV2MCEx.cpp
+   - python/LoKiExample/LoKi_PC2MCEx.py 
+
+    version increment to v8r1 
+ 
 
 ! 2008-10-10 - Vanya BELYAEV
 
