@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.63 2008-09-10 13:07:39 jpalac Exp $
+!$Id: release.notes,v 1.64 2008-11-03 08:43:38 albrecht Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+
+! 2008-11-03 - Johannes Albrecht
+ - HltTrackUpgradeTool: Add new reco tool to fit tracks: HltTrackFit
 
 !========================== HltTracking v3r6 2008-09-10 ===================
 
