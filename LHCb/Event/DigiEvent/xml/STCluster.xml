@@ -16,7 +16,7 @@
      id="9004"
      author="Matthew Needham"
      desc="A cluster as produced by the TELL1 with full ADC information."
-     serializers="FALSE">
+     serializers="TRUE">
 
      <import name="vector"  std="TRUE"/> 
      <import name="utility" std="TRUE"/> 
@@ -204,7 +204,7 @@
    <arg type = "std::ostream"
     name = "s" />
      <code >
-       s &lt;&lt; "{ SCluster with key: " &lt;&lt; (int) key() &lt;&lt; " channel: " &lt;&lt; sectorName() &lt;&lt; " strip " &lt;&lt; strip()     
+       s &lt;&lt; "{ STCluster with key: " &lt;&lt; (int) key() &lt;&lt; " channel: " &lt;&lt; sectorName() &lt;&lt; " strip " &lt;&lt; strip()     
          &lt;&lt; "Size " &lt;&lt; size() &lt;&lt; " charge :" &lt;&lt; totalCharge() &lt;&lt; " source ID " &lt;&lt; sourceID()  &lt;&lt;  
         " tell1 channel " &lt;&lt; tell1Channel()  &lt;&lt; " Spill "  &lt;&lt; spill() &lt;&lt;  std::endl &lt;&lt; " }";
       return s;

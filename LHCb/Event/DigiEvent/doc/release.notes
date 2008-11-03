@@ -4,6 +4,9 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+! 2008-3-11 M Needham
+ - Clean up fillStream methods in ST classes
+
 ! 2008-10-11 M Needham
  - Add STChannelID ent to STDigit
  - Add XXXname() functions to STChannelID.ent
