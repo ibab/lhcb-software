@@ -1287,7 +1287,8 @@ void DbRootHist::normalizeReference()
 void DbRootHist::referenceHistogram(ReferenceVisibility visibility)
 {
   if (0 == m_reference &&
-      s_NoReference != m_refOption) {
+      s_NoReference != m_refOption &&
+      false == m_isAnaHist) {
     TH1* ref = (TH1*)m_analysisLib->getReference(m_onlineHistogram);
     if (ref) {
       if (m_reference) { delete m_reference; m_reference = 0; }
