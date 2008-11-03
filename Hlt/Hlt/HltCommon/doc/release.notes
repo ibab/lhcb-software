@@ -3,6 +3,11 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+	
+
+! 2008-11-03 - Johannes Albrecht
+ - Change HltFunctionFactories.cpp and HltFunctions.h to include a cut
+	 on track chi2
 
 ! 2008-10-22 - Jose A. Hernando
  - HltSummaryTool addmit now * to retrieve selections
