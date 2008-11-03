@@ -1,8 +1,20 @@
-! $Id: release.notes,v 1.379 2008-10-31 18:43:32 pkoppenb Exp $
+! $Id: release.notes,v 1.380 2008-11-03 17:01:23 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-11-03 - Juan PALACIOS
+ - CheckSelResult.cpp
+  . Add counter for all events.
+  . Fix increment for passed events counter:
+      const bool pass = ...;
+      counter("Passed") += pass; // always increments, even in pass == fale
+      if (pass) ++counter("Passed"); // works nicely!
+  . Add info printout in finalize() with #passed/total
+ -  src/CheckSelResultsTool.h
+  . Remove doxygen for methods. This is in the interface, avoid duplication
+  . Add doxygen for the properties.
 
 ! 2008-10-31 - Patrick Koppenburg
  - CheckSelResultsTool : the implementation of ICheckSelResults by Vanya.
