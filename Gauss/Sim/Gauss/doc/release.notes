@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2008-10-30 - Gloria CORTI
+ - Adapt options to renaming of algorithms from "DumpMC" and "DumpMCDecay" to
+   "DumpHepMC" and "DumpHepMCDecay"
+
 !======================== Gauss v35r1 2008-10-10 =============================
 ! 2008-10-10 - Gloria CORTI
  - Adapt visualization options to run not as steering but as modifier in 

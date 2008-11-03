@@ -3,13 +3,13 @@
 # Maintainer : Gloria Corti, Florence Ranjard
 #============================================================================
 package Gauss
-version v35r1
+version v35r2
 
 #============================================================================
 #-- Structure
 branches src doc options cmt job python
 
-#-- tags: Vis, GDML, Herwig, Hijing, BcVegPy, HidValley
+#-- tags: Vis, GDML
 
 #============================================================================
 

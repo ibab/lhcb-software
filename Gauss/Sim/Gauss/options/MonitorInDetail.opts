@@ -1,4 +1,4 @@
-// $Id: MonitorInDetail.opts,v 1.6 2007-03-13 18:48:17 gcorti Exp $ 
+// $Id: MonitorInDetail.opts,v 1.7 2008-11-03 12:20:18 gcorti Exp $ 
 
 /** @file 
  * 
@@ -36,8 +36,8 @@ MuonHitChecker.DetailedMonitor = true;
 //------------------------------------------------------------------------
 
 // Dump on screen content of generator full info
-//GenMonitor.Members += {"DumpMC"};
-//GenMonitor.Members += {"DumpMCDecay"};
+//GenMonitor.Members += {"DumpHepMC"};
+//GenMonitor.Members += {"DumpHepMCDecay"};
 
 // Dump on screen content of MCParticles/MCVertices information
 //SimMonitor.Members += {"PrintEventAlg"};
