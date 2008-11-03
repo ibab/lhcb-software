@@ -62,7 +62,8 @@ make_fragment python_alias -header=python_alias_header -dependencies
 action ShowPythonAlias "echo $(PYTHONALIASDEF) | tr ' ' '\n' " \
             WIN32           "echo $(PYTHONALIASDEF)"
 
-
+macro_remove cmt_actions_constituents "ShowPythonAlias "
+macro_remove cmt_actions_constituentsclean "ShowPythonAliasclean "
 
 
 pattern source_shell_alias \
@@ -75,6 +76,8 @@ cmtpath_pattern \
 action ShowSourceShellAlias "echo $(SOURCESHELLALIASDEF) | tr ' ' '\n' " \
             WIN32           "echo $(SOURCESHELLALIASDEF)"
 
+macro_remove cmt_actions_constituents "ShowSourceShellAlias "
+macro_remove cmt_actions_constituentsclean "ShowSourceShellAliasclean "
 
 
 pattern shell_alias \
@@ -88,8 +91,16 @@ cmtpath_pattern \
 action ShowShellAlias "echo $(SHELLALIASDEF) | tr ' ' '\n' " \
             WIN32     "echo $(SHELLALIASDEF)"
 
+macro_remove cmt_actions_constituents "ShowShellAlias "
+macro_remove cmt_actions_constituentsclean "ShowShellAliasclean "
+
+
 action ShowAlias "echo $(PYTHONALIASDEF) $(SHELLALIASDEF) $(SOURCESHELLALIASDEF) | tr ' ' '\n' " \
            WIN32 "echo $(PYTHONALIASDEF) $(SHELLALIASDEF) $(SOURCESHELLALIASDEF)"
+
+macro_remove cmt_actions_constituents "ShowAlias "
+macro_remove cmt_actions_constituentsclean "ShowAliasclean "
+
 
 apply_pattern source_shell_alias script=ShellAlias
 apply_pattern source_shell_alias script=SourceShellAlias
