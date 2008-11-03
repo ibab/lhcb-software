@@ -962,6 +962,8 @@ void DbRootHist::setTH1FromDB()
 // TODO: should rather use hostingPad
 void DbRootHist::setDrawOptionsFromDB(TPad* &pad)
 {
+  int curStat = gStyle->GetOptStat();
+  gStyle->SetOptStat(0);
   pad->Draw();
   if (m_onlineHistogram && rootHistogram) {
     int iopt = 0;
@@ -1054,6 +1056,7 @@ void DbRootHist::setDrawOptionsFromDB(TPad* &pad)
       }
     }
   }
+  gStyle->SetOptStat(curStat);
 }
 bool DbRootHist::updateDBOption(std::string opt, void* value, bool isDefault)
 {
@@ -1254,7 +1257,11 @@ void DbRootHist::Draw(TPad* &pad)
 //         gStyle->SetOptStat("emrou"); // seems to be hardcoded in root
 //       }
 //     }
+    int curStat = gStyle->GetOptStat();
+    gStyle->SetOptStat(0);
     rootHistogram->Draw();
+    gStyle->SetOptStat(curStat);
+    
     setDrawOptionsFromDB(pad);
     if (m_historyTrendPlotMode) { rootHistogram->SetDrawOption("E1"); }
 
