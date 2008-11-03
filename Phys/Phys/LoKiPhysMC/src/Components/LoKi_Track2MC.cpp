@@ -1,8 +1,11 @@
-// $Id: LoKi_Track2MC.cpp,v 1.2 2007-04-16 16:16:48 pkoppenb Exp $
+// $Id: LoKi_Track2MC.cpp,v 1.3 2008-11-03 18:35:49 ibelyaev Exp $
 // ===========================================================================
-// CVS tag $Name: not supported by cvs2svn $, Version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, Version $Revision: 1.3 $
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2007/04/16 16:16:48  pkoppenb
+// removed polemic comment
+//
 // Revision 1.1  2006/08/29 11:40:48  ibelyaev
 //  many fixed to simplify MC-match
 // 
@@ -55,60 +58,89 @@
  *  @date 2006-08-17 
  */
 // ============================================================================
-/** @class LoKi_Track2MC
- *
- *  Simple algorithm for conversion of Track->MC links from 
- *  "linker" form into usable form of relation table 
- *
- *  Many thanks to Edwin Bos for kind help!
- *
- *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
- *  @date 2006-08-17 
- */
-class LoKi_Track2MC : public GaudiAlgorithm 
+namespace LoKi 
 {
-  friend class AlgFactory<LoKi_Track2MC> ;
-public:
-  /// execution of the algorithm 
-  virtual StatusCode execute() ;
-protected:
-  /// standard constructor 
-  LoKi_Track2MC
-  ( const std::string& name , 
-    ISvcLocator*       pSvc ) 
-    : GaudiAlgorithm ( name , pSvc ) 
-    , m_tracks ( 1 , LHCb::TrackLocation::Default ) 
-    , m_output (  LHCb::Track2MCLocation::Default ) 
+  /** @class Track2MC
+   *
+   *  Simple algorithm for conversion of Track->MC links from 
+   *  "linker" form into usable form of relation table 
+   *
+   *  Many thanks to Edwin Bos for kind help!
+   *
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date 2006-08-17 
+   */
+  class Track2MC : public GaudiAlgorithm 
   {
-    declareProperty ( "Tracks" , m_tracks ) ;
-    declareProperty ( "Output" , m_output ) ;
-  }
-  /// virtual protected destructor 
-  virtual ~LoKi_Track2MC() {} ;
-private:
-  // default constructor is disabled 
-  LoKi_Track2MC () ;
-  // copy  constructor is disabled 
-  LoKi_Track2MC ( const LoKi_Track2MC& );
-  // assignement operator is disabled 
-  LoKi_Track2MC& operator=( const LoKi_Track2MC& );
-private:
-  typedef std::vector<std::string> Addresses ;
-  Addresses   m_tracks ;
-  std::string m_output ;
-} ;
+    // ========================================================================
+    friend class AlgFactory<LoKi::Track2MC> ;
+    // ========================================================================
+  public:
+    // ========================================================================
+    /// execution of the algorithm 
+    virtual StatusCode execute() ;
+    // ========================================================================
+  protected:
+    // ========================================================================
+    /// standard constructor 
+    Track2MC
+    ( const std::string& name , 
+      ISvcLocator*       pSvc ) 
+      : GaudiAlgorithm ( name , pSvc ) 
+      , m_tracks () 
+      , m_output (  LHCb::Track2MCLocation::Default ) 
+    {
+      //
+      m_tracks.push_back ( LHCb::TrackLocation::Default ) ;
+      m_tracks.push_back ( LHCb::TrackLocation::Velo    ) ;
+      //
+      declareProperty 
+        ( "Tracks" ,
+          m_tracks , 
+          "The list of TES locations of Track->MC contariners/linkers") ;
+      declareProperty 
+        ( "Output" , 
+          m_output ,
+          "The TES locations of Track->MC realtiontable (LHcb::Track2MC)");
+      //
+      setProperty     ( "StatPrint"    , true ) ;
+      //
+    }
+    /// virtual protected destructor 
+    virtual ~Track2MC() {} ;
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// default constructor is disabled 
+    Track2MC () ;                            // default constructor is disabled 
+    /// copy  constructor is disabled 
+    Track2MC ( const Track2MC& );              // copy  constructor is disabled 
+    /// assignement operator is disabled 
+    Track2MC& operator=( const Track2MC& ); // assignement operator is disabled 
+    // ========================================================================
+  private:
+    // ========================================================================
+    typedef std::vector<std::string> Addresses ;
+    /// addresses for the tracks 
+    Addresses   m_tracks ;                          // addresses for the tracks 
+    /// the address of the output table 
+    std::string m_output ;                   // the address of the output table 
+    // ========================================================================
+  } ;
+  // ==========================================================================
+} // end of namespace LoKi
 // ============================================================================
 /// Declaration of the Algorithm Factory
 // ============================================================================
-DECLARE_ALGORITHM_FACTORY( LoKi_Track2MC );
+DECLARE_NAMESPACE_ALGORITHM_FACTORY( LoKi, Track2MC );
 // ============================================================================
 #define INHERITS(T1,T2) \
      (Relations::IsConvertible<const T1*,const T2*>::value && \
      !Relations::IsConvertible<const T1*,const void*>::same)
 // ============================================================================
-/// execution of the algorithm 
+// execution of the algorithm 
 // ============================================================================
-StatusCode LoKi_Track2MC::execute() 
+StatusCode LoKi::Track2MC::execute() 
 {
   // avoid long names 
   typedef LHCb::RelationWeighted2D<LHCb::Track,LHCb::MCParticle,double> Table ;
@@ -125,13 +157,18 @@ StatusCode LoKi_Track2MC::execute()
   for ( Addresses::const_iterator iaddr = 
           m_tracks.begin() ; m_tracks.end() != iaddr ; ++iaddr )
   {
+    if ( !exist<LHCb::Tracks> ( *iaddr ) ) 
+    {
+      Warning ( " No tracks at location '"+ (*iaddr) + "' are found!") ;
+      continue ;
+    }
     const LHCb::Tracks* tracks = get<LHCb::Tracks>( *iaddr ) ;
     if ( 0 == tracks ) { continue ; }                                 // CONTINUE 
     nTracks += tracks->size() ;// Retrieve the Linker table made by the TrackAssociator
     LinkedTo<LHCb::MCParticle,LHCb::Track> linker ( evtSvc() , msgSvc(), *iaddr );
     if ( linker.notFound() ) 
     {
-      Error ( "The linker table '" + (*iaddr) + "' is not found!" ) ;
+      Warning ( "The linker table '" + (*iaddr) + "' is not found!" ) ;
       continue ;                                                       // CONTINUE 
     }
     // loop over the tracks:
@@ -150,7 +187,7 @@ StatusCode LoKi_Track2MC::execute()
       //
     } // end of the loop over tracks in the container    
   } // end of loop over containers
-
+  
   /// MANDATORY usage of i_sort after i_push 
   table->i_sort() ;                                        // ATTENTION! 
   
@@ -165,8 +202,7 @@ StatusCode LoKi_Track2MC::execute()
   }
   //
   return StatusCode::SUCCESS;
-} ;
-
+} 
 // ============================================================================
 /// The END 
 // ============================================================================

@@ -1,4 +1,4 @@
-// $Id: PV2MCAlg.cpp,v 1.1 2008-06-25 17:27:39 ibelyaev Exp $
+// $Id: PV2MCAlg.cpp,v 1.2 2008-11-03 18:35:49 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -28,16 +28,19 @@
 // Kernel? 
 // ============================================================================
 #include "Kernel/PV2MC.h"
+#include "Kernel/IPV2MC.h"
 #include "Kernel/MC2Collision.h"
+#include "Kernel/IMC2Collision.h"
+#include "Kernel/Track2MC.h"
 // ============================================================================
 // LoKi & LoKiMC
 // ============================================================================
 #include "LoKi/ILoKiSvc.h"
-#include "LoKi/Geometry.h"
-#include "LoKi/select.h"
-#include "LoKi/PhysTypes.h"
-#include "LoKi/Vertices1.h"
-#include "LoKi/MCVertexCuts.h"
+#include "LoKi/Inherits.h"
+// ============================================================================
+// Boost 
+// ============================================================================
+#include "boost/static_assert.hpp"
 // ============================================================================
 /** @file
  *
@@ -57,6 +60,7 @@
 // ============================================================================
 namespace LoKi 
 {
+  // ==========================================================================
   /** @class PV2MCAlg
    *
    *  helper algorthm to build LHCb::PrimVertex <---> LHCb::MCVertex relations 
@@ -84,16 +88,43 @@ namespace LoKi
   public:
     // ========================================================================
     /// initialization of the algorithm
-    virtual StatusCode intialize () 
+    virtual StatusCode initialize () 
     {
       StatusCode sc = GaudiAlgorithm::initialize() ;
       if ( sc.isFailure() ) { return sc ; }
       // load LoKi service 
       svc<LoKi::ILoKiSvc>( "LoKiSvc" ) ;
+      // 
+      // get the tool 
+      m_pv2mc = tool<IPV2MC> ( m_pv2mcName , this ) ;
+      /// private tool?
+      if ( this != m_pv2mc->parent() ) 
+      { return Error ( "The tool must be private tool!" ) ; }
+      /// set the properties of the private tool 
+      sc = Gaudi::Utils::setProperty 
+        ( m_pv2mc , "Primaries"    , m_primaries ) ;
+      if ( sc.isFailure() ) 
+      { return Error ( "Unable to (re)set property 'Primaries' ", sc )  ; }
+      /// set the properties of the private tool 
+      sc = Gaudi::Utils::setProperty 
+        ( m_pv2mc , "MCVertices"    , m_vertices ) ;
+      if ( sc.isFailure() ) 
+      { return Error ( "Unable to (re)set property 'MCVertices' ", sc )  ; }
+      /// set the properties of the private tool 
+      sc = Gaudi::Utils::setProperty 
+        ( m_pv2mc , "Track2MC"       , m_track2MC ) ;
+      if ( sc.isFailure() ) 
+      { return Error ( "Unable to (re)set property 'Track2MC' "  , sc )  ; }
+      /// set the properties of the private tool 
+      sc = Gaudi::Utils::setProperty 
+        ( m_pv2mc , "MC2Collision"   , m_mc2collision ) ;
+      if ( sc.isFailure() ) 
+      { return Error ( "Unable to (re)set property 'MC2Collision'", sc )  ; }
+      //
       return StatusCode::SUCCESS ;
     } 
     /// execution of the algorithm
-    virtual StatusCode execute() ;
+    virtual StatusCode execute  () ;
     // ========================================================================
   protected:
     // ========================================================================
@@ -107,19 +138,45 @@ namespace LoKi
       : GaudiAlgorithm ( name , pSvc )
       , m_primaries    ( LHCb::RecVertexLocation::      Primary )
       , m_vertices     ( LHCb::MCVertexLocation::       Default )
-      , m_collision    ( LHCb::MC2CollisionLocation::   Default )
-      , m_track2MC     ( "Relations/" + LHCb::TrackLocation::Default )
-      , m_output1      ( LHCb::PV2MCLocation::          Default ) 
-      , m_output2      ( LHCb::PV2CollisionLocation::   Default ) 
-    {
-      declareProperty ( "Primaries"           , m_primaries ) ;
-      declareProperty ( "MCVertices"          , m_vertices  ) ;
-      declareProperty ( "MC2Collision"        , m_collision ) ;
-      declareProperty ( "Track2MC"            , m_track2MC  ) ;
-      declareProperty ( "OutputPV2MC"         , m_output1   ) ;
-      declareProperty ( "OutputPV2Collision"  , m_output2   ) ;
+      , m_track2MC     ( LHCb::Track2MCLocation::       Default ) 
+      // 
+      , m_mc2collision ( "LoKi::MC2GenCollision/MC2GenCollision" )
+      , m_pv2mcName    ( "LoKi::PV2MC/PV2MC" ) 
+      , m_pv2mc        ( 0 )
       //
-      setProperty     ( "StatPrint"    , "true"      ) ;
+      , m_output1      ( LHCb::PV2MCLocation::          Default ) 
+      , m_output2      ( LHCb::PV2CollisionLocation::   Default )
+    {
+      declareProperty 
+        ( "Primaries"  , 
+          m_primaries  ,
+          "The TES location of Primary Vertices     (LHCb::RecVertex)") ;
+      declareProperty 
+        ( "MCVertices" , 
+          m_vertices   , 
+          "The TES location of Monte Carlo Vertices (LHCb::MCVertex)") ;
+      declareProperty 
+        ( "Track2MC"   , 
+          m_track2MC   , 
+          "The TES location of Track->MC table      (LHCb::Track2MC)") ;
+      declareProperty 
+        ( "MC2Collision" , 
+          m_mc2collision ,
+          "Type/nemae of IMC2Collision tool" ) ;
+      declareProperty 
+        ( "PV2MC"      , 
+          m_pv2mcName  , 
+          "The type/name of IPVMC tool ") ;
+      declareProperty 
+        ( "OutputPV2MC" , 
+          m_output1     , 
+          "The TES location of (output) RecVertex->MCVertex table ") ;
+      declareProperty 
+        ( "OutputPV2Collision" , 
+          m_output2   ,
+          "The TES location of (output) RecVertex->GenCollision table ") ;
+      //
+      setProperty     ( "StatPrint"    , true ) ;
       //
     }
     // destructor, virtual and protected 
@@ -136,169 +193,77 @@ namespace LoKi
     // ========================================================================
   private:
     // ========================================================================
-    // TES address of primary vertices
-    std::string  m_primaries ; ///< TES address of primary vertices
-    // TES address of MC  vertices
-    std::string  m_vertices  ; ///< TES address of MC vertices
-    // TES address of MC->Collision links
-    std::string  m_collision ; ///< TES address of MC->Collision links
-    // TES address of Track->MC links
-    std::string  m_track2MC  ; ///< TES address of Track->MC links
-    // TES location of output relation table 
-    std::string  m_output1   ; ///< TES location of output relation table 
-    // TES location of output relation table 
-    std::string  m_output2   ; ///< TES location of output relation table 
+    /// TES address of primary vertices
+    std::string  m_primaries   ; // TES address of primary vertices
+    /// TES address of MC  vertices
+    std::string  m_vertices    ; // TES address of MC vertices
+    /// TES address of MC->Collision links
+    std::string  m_collision   ; // TES address of MC->Collision links
+    /// TES address of Track->MC links
+    std::string  m_track2MC    ; // TES address of Track->MC links
+    /// name of MCVertex->GenCollision tool
+    std::string m_mc2collision ; // name of MCVeretx->GenCollision tool
+    // ========================================================================
+  private:
+    // ========================================================================    
+    /// name of PV->MC tool 
+    std::string  m_pv2mcName ;                           // name of PV->MC tool 
+    /// the tool itself 
+    IPV2MC*      m_pv2mc     ;                               // the tool itself 
+    // ========================================================================
+  private:
+    // ========================================================================    
+    /// TES location of output relation table 
+    std::string  m_output1   ; // TES location of output relation table 
+    /// TES location of output relation table 
+    std::string  m_output2   ; // TES location of output relation table 
     // ========================================================================
   };
+  // ==========================================================================
 } // end of namespace LoKi
 // ============================================================================
 namespace 
 {
+  // ==========================================================================
   /// the actual type of relation table in TES
   typedef LHCb::RelationWeighted2D
   <LHCb::RecVertex,LHCb::MCVertex,LHCb::PV2MCWeight>     Table1 ;
   /// the actual type of relation table in TES
   typedef LHCb::RelationWeighted2D
   <LHCb::RecVertex,LHCb::GenCollision,LHCb::PV2MCWeight> Table2 ;
+  // ==========================================================================
+  /// check the types 
+  BOOST_STATIC_ASSERT(INHERITS(Table1,LHCb::PV2MC2D)) ;
+  BOOST_STATIC_ASSERT(INHERITS(Table2,LHCb::PV2Collision2D)) ;    
+  // ========================================================================== 
 }
 // ============================================================================
 // execution of the algorithm
 // ============================================================================
 StatusCode LoKi::PV2MCAlg::execute() 
 { 
-  using namespace LoKi::Types ;
-  using namespace LoKi::Cuts  ;
   
-  // type of container for primary MC-vertices 
-  typedef std::vector<const LHCb::MCVertex*>   PRIMARIES ;
+  // get the tool 
+  Assert ( 0 != m_pv2mc , "IPV2MC* points to NULL!" ) ;
   
-  // create the relation tables and register them into TES 
-  Table1* table1 = new Table1() ;
-  Table2* table2 = new Table2() ;
+  const IPV2MC::PV2MC*        t1 = m_pv2mc-> pv2MC         () ;
+  Assert ( 0 != t1 , "IPV2MC::PV2MC* pooint to NULL" ) ;
+  Table1* table1 = new Table1 ( *t1 ) ;
   put ( table1 , m_output1 ) ;
+
+  
+  const IPV2MC::PV2Collision* t2 = m_pv2mc-> pv2Collision  () ;
+  Assert ( 0 != t2 , "IPV2MC::PV2Collision* pooint to NULL" ) ;
+  Table2* table2 = new Table2 ( *t2 ) ;
   put ( table2 , m_output2 ) ;
   
-  // get the primary vertices from TES
-  const LHCb::RecVertices* primaries = get<LHCb::RecVertices>( m_primaries ) ;
-  if ( 0 == primaries ) { return StatusCode::FAILURE ; }         // RETURN 
-  
-  // get MC-vertices from TES
-  const LHCb::MCVertices*   vertices = get<LHCb::MCVertices>   ( m_vertices  ) ;
-  if ( 0 == vertices  ) { return StatusCode::FAILURE ; }         // RETURN 
-
-  // get Vertex -> Collision links
-  const LHCb::MCVertex2Collision* collision =  
-    get<LHCb::MCVertex2Collision> ( m_collision ) ;
-  if ( 0 == collision ) { return StatusCode::FAILURE ; }         // RETURN 
-  
-  // get Track  -> MC links 
-  typedef const IRelationWeighted<LHCb::Track,LHCb::MCParticle,double> TrackTable ;
-  //typedef const IRelation<LHCb::Track,LHCb::MCParticle> TrackTable ;
-  typedef TrackTable::Range                             TrackRange ;
-  const TrackTable* trackMC = get<TrackTable> ( m_track2MC ) ;
-  if ( 0 == trackMC ) { return StatusCode::FAILURE ; }           // RETURN 
-  
-  // from all MC-vertices select only the primaries
-  PRIMARIES prims0 ;
-  LoKi::select 
-    ( vertices->begin () , 
-      vertices->end   () , 
-      std::back_inserter ( prims0 ) , 
-      MCPRIMARY ) ;
-  if ( prims0.empty()  )
-  { Warning ( " Empty container of primary MC-vertices! " ) ; }
-  
-  // select only "good" primary vertices, associated with pp-collisions 
-  PRIMARIES prims ;
-  prims.reserve ( prims0.size() ) ;
-  for ( PRIMARIES::const_iterator ip = prims0.begin() ; prims0.end() != ip ; ++ip ) 
-  {
-    const LHCb::MCVertex* p = *ip ;
-    if ( 0 == p    ) { continue ; }                                 // CONTINUE 
-    LHCb::MCVertex2Collision::Range r = collision->relations( p ) ;
-    if ( r.empty() ) { continue ; }                                 // CONTINUE 
-    const LHCb::GenCollision* c = r.front().to() ;
-    if ( 0 == c    ) { continue ; }                                 // CONTINUE 
-    prims.push_back ( p ) ;
+  // make a statistics 
+  if ( statPrint() || msgLevel ( MSG::DEBUG ) ) 
+  { 
+    counter ( "#PV->MC" )           += table1->relations().size() ;
+    counter ( "#PV->GenCollision" ) += table2->relations().size() ;
   }
-  if ( prims.size() != prims0.size() ) 
-  { Warning ( " Some primary MC-vertices are not good "         ) ; }
-  if ( prims.empty() ) 
-  { Warning ( " Empty container of valid primary MC-vertices! " ) ; }
-  
-  typedef std::map<const LHCb::MCVertex*,size_t> MAP    ;
-  typedef const SmartRefVector<LHCb::Track>      TRACKS ;
-  
-  // double loop 
-  for ( LHCb::RecVertices::const_iterator ipv = primaries->begin() ;
-        primaries->end() != ipv ; ++ipv ) 
-  {
-    const LHCb::RecVertex* pv = *ipv ;
-    if ( 0 == pv ) { continue ; }                                  // CONTINUE 
-    MAP _map ;
-    const TRACKS& trs = pv->tracks() ;
-    for ( TRACKS::const_iterator itr = trs.begin() ; trs.end() != itr ; ++itr )
-    {
-      const LHCb::Track* track = *itr ;
-      if ( 0 == track ) { continue ; }                             // CONTINUE 
-      // get MC-truth for the given track 
-      TrackRange r = trackMC->relations( track ) ;
-      // ghost ? 
-      if ( r.empty()  ) { continue ; }                             // CONTINUE 
-      const LHCb::MCParticle* mcp = r.front().to() ;
-      if ( 0 == mcp   ) { continue ; }                             // CONTINUE
-      // get the primary vertex!!!
-      const LHCb::MCVertex* mcpv = mcp -> primaryVertex() ;
-      if ( 0 == mcpv ) { continue ; }                              // CONTINUE 
-      // fill the temporary map (count number of tracks from MC-vertices)
-      _map[mcpv] += 1 ;
-    } 
-    
-    for ( PRIMARIES::const_iterator imc = prims.begin() ; prims.end() != imc ; ++imc )
-    {
-      const LHCb::MCVertex* mc = *imc ;
-      if ( 0 == mc ) { continue ; }                                // CONTINUE 
-      
-      // chi2 distance from the given point 
-      VFun vd = LoKi::Vertices::VertexChi2Distance ( mc->position () ) ;
-      
-      // find the chi2  of distance 
-      const double chi2 = vd ( pv ) ;
-      MAP::const_iterator ic = _map.find( mc ) ;
-      const size_t nTrack = _map.end() == ic ? 0 : _map[mc] ;
-      
-      LHCb::PV2MCWeight weight ( nTrack , chi2 ) ;
-      
-      // Fill the relation table LHCb::RecVertes <--> LHCb::MCParticle
-      table1 -> relate ( pv , mc , weight ) ;
-      
-      // it has been checked already that it is OK!!!
-      const LHCb::GenCollision* c = 
-        collision->relations( mc ).front().to() ;
-      
-      // Fill the relation table LHCb::PrimVertes <--> LHCb::GenCollision
-      table2->relate ( pv , c , weight ) ;
-      
-    } // end of loop over Monte Carlo primary vertices    
-  }  // end of loop over reconstructed primary vertices
-  // DECORATIONS:
-  {
-    // total number of established links 
-    const size_t links = table1->relations().size() ;
-    // make a statistics 
-    counter ( "#PV->MC" ) += links ;
-    if ( msgLevel ( MSG::DEBUG ) ) 
-    { debug() << " Number of 'PV->MC' links : " << links  << endreq ; }
-  }
-  {
-    // total number of established links 
-    const size_t links = table2->relations().size() ;
-    // make a statistics 
-    counter ( "#PV->Collision" ) += links ;
-    if ( msgLevel ( MSG::DEBUG ) ) 
-    { debug() << " Number of 'PV->Colllsion' links : " << links  << endreq ; }
-  }
-  
+  //
   return StatusCode::SUCCESS ;
 } 
 // ============================================================================
