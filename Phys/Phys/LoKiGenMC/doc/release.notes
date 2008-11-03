@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.30 2008-11-02 19:33:47 ibelyaev Exp $ 
+! $Id: release.notes,v 1.31 2008-11-03 18:34:47 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGenMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,11 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2008-11-03 - Vanya BELYAEV
+
+ - resurrent & redesign MC -> GenCollision stuff 
+
 
 ! 2008-11-02 - Vanya BELYAEV
 	
@@ -412,6 +417,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.30  2008/11/02 19:33:47  ibelyaev
+!  v8r0 : fixes for various compilers
+!
 ! Revision 1.29  2008/07/27 16:03:24  cattanem
 ! v7r1p1
 !

@@ -1,4 +1,4 @@
-// $Id: LoKi_MC2CollisionAlg.cpp,v 1.8 2008-07-22 13:14:43 cattanem Exp $
+// $Id: LoKi_MC2CollisionAlg.cpp,v 1.9 2008-11-03 18:34:47 ibelyaev Exp $
 // ============================================================================
 // Include file
 // ============================================================================
@@ -20,26 +20,24 @@
 // LoKiCore
 // ============================================================================
 #include "LoKi/ILoKiSvc.h"
-#include "LoKi/Math.h"
-#include "LoKi/Print.h"
-#include "LoKi/Geometry.h"
-// ============================================================================
-// LoKiMC
-// ============================================================================
-#include "LoKi/MCTypes.h"
-#include "LoKi/MCVertexCuts.h"
+#include "LoKi/Inherits.h"
 // ============================================================================
 // Relations
 // ============================================================================
 #include "Relations/Relation1D.h"
 // ============================================================================
-// Kernel(???)
+// DaVinciMCKernel
 // ============================================================================
 #include "Kernel/MC2Collision.h"
+#include "Kernel/IMC2Collision.h"
+// ============================================================================
+// Boost 
+// ============================================================================
+#include "boost/static_assert.hpp"
 // ============================================================================
 /** @file
  *
- * Implementation file for class : LoKi_MC2CollisionAlg
+ * Implementation file for class : LoKi::MC2GenCollisionAlg
  *
  *  This file is a part of LoKi project - 
  *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
@@ -53,156 +51,168 @@
  *  @date 2006-03-18 
  */
 // ============================================================================
-/** @class LoKi_MC2CollisionAlg
- *
- *  helper algorthm to build MCVertex  <---> LHCb::GenCollision relations 
- *  
- *  It associates the primary MCVertex "v" to "nearest" GenCollision "c"
- *
- *  @see LHCb::MCVertex
- *  @see LHCb::GenCollision
- *
- *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
- *  @date 2005-07-13
- */
-// ============================================================================
-class LoKi_MC2CollisionAlg : public GaudiAlgorithm 
+namespace LoKi 
 {
-  friend class AlgFactory<LoKi_MC2CollisionAlg> ;
-public:
-  // ==========================================================================
-  /// initialization of the algorithm
-  virtual StatusCode intialize () 
-  {
-    StatusCode sc = GaudiAlgorithm::initialize() ;
-    if ( sc.isFailure() ) { return sc ; }
-    // load LoKi service 
-    svc<LoKi::ILoKiSvc>( "LoKiSvc" ) ;
-    return StatusCode::SUCCESS ;
-  } ;
-  // ==========================================================================
-  /// execution of the algorithm
-  virtual StatusCode execute() ;
-  // ==========================================================================
-protected:
-  // ==========================================================================
-  /**standard constructor 
-   * @param name algorithm instance name 
-   * @param pSvc pointer to Service Locator 
+  /** @class MC2GenCollisionAlg
+   *
+   *  helper algorthm to build MCVertex  <---> LHCb::GenCollision relations 
+   *  
+   *  It associates the primary MCVertex "v" to "nearest" GenCollision "c"
+   *
+   *  @see LHCb::MCVertex
+   *  @see LHCb::GenCollision
+   *
+   *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
+   *  @date 2005-07-13
    */
-  LoKi_MC2CollisionAlg 
-  ( const std::string& name , 
-    ISvcLocator*       pSvc )
-    : GaudiAlgorithm ( name , pSvc ) 
-    , m_vertices     ( LHCb::MCVertexLocation     ::Default ) 
-    , m_collisions   ( LHCb::GenCollisionLocation ::Default ) 
-    , m_output       ( LHCb::MC2CollisionLocation ::Default )
-    , m_threshold    ( 0.1 * Gaudi::Units::micrometer ) 
+  // ============================================================================
+  class MC2GenCollisionAlg : public GaudiAlgorithm 
   {
-    declareProperty ( "MCVertices"    , m_vertices   ) ;
-    declareProperty ( "GenCollisions" , m_collisions ) ;
-    declareProperty ( "OutputTable"   , m_output     ) ;
-    
-    setProperty     ( "StatPrint"     , "true"       )  ;
-  } ;
+    // ==========================================================================
+    // friend factory for instantiation 
+    friend class AlgFactory<LoKi::MC2GenCollisionAlg> ;
+    // ==========================================================================
+  public:
+    // ==========================================================================
+    /// initialization of the algorithm
+    virtual StatusCode initialize () 
+    {
+      StatusCode sc = GaudiAlgorithm::initialize() ;
+      if ( sc.isFailure() ) { return sc ; }
+      // load LoKi service 
+      svc<LoKi::ILoKiSvc>( "LoKiSvc" ) ;
+      // get the tool 
+      m_mc2col = tool<IMC2Collision> 
+        ( "LoKi::MC2GenCollision/MC2GenCollision" , this ) ;
+      /// private tool?
+      if ( this != m_mc2col->parent() ) 
+      { return Error ( "The tool must be private tool!" ) ; }
+      // set the properties of the provate tool 
+      sc = Gaudi::Utils::setProperty 
+        ( m_mc2col , "MCVertices"    , m_vertices   ) ;
+      if ( sc.isFailure() ) 
+      { return Error ( "Unable to (re)set property 'MCVertices' ", sc )  ; }
+      sc = Gaudi::Utils::setProperty 
+        ( m_mc2col , "GenCollisions" , m_collisions ) ;
+      if ( sc.isFailure() ) 
+      { return Error ( "Unable to (re)set property 'GenCollisions' ", sc )  ; }
+      sc = Gaudi::Utils::setProperty 
+        ( m_mc2col , "Threshold"     , m_threshold  ) ;
+      if ( sc.isFailure() ) 
+      { return Error ( "Unable to (re)set property 'Threshold' ", sc )  ; }
+      //
+      return StatusCode::SUCCESS ;
+    } 
+    /// execution of the algorithm
+    virtual StatusCode execute  () ;
+    /// finaliza the algorithm
+    virtual StatusCode finalize () 
+    {
+      m_mc2col = 0 ;
+      return GaudiAlgorithm::finalize () ;
+    }
+    // ========================================================================
+  protected:
+    // ========================================================================
+    /** standard constructor 
+     *  @param name algorithm instance name 
+     *  @param pSvc pointer to Service Locator 
+     */
+    MC2GenCollisionAlg 
+    ( const std::string& name , 
+      ISvcLocator*       pSvc )
+      : GaudiAlgorithm ( name , pSvc ) 
+      , m_vertices     ( LHCb::MCVertexLocation     ::Default ) 
+      , m_collisions   ( LHCb::GenCollisionLocation ::Default ) 
+      , m_threshold    ( 0.1 * Gaudi::Units::micrometer ) 
+      , m_output       ( LHCb::MC2CollisionLocation ::Default )
+      //
+      , m_mc2colName ( "LoKi::MC3GenCollision/MC2GenCollision" )
+      , m_mc2col ( 0 )
+    {
+      //
+      declareProperty 
+        ( "MCVertices"    , 
+          m_vertices      , 
+          "The TES location of Monte Carlo Vertices  (LHCb::MCVertex)"    ) ;
+      declareProperty 
+        ( "GenCollisions" , 
+          m_collisions    , 
+          "The TES location of Generator Collisions (LHCb::GenCollision)") ;
+      declareProperty 
+        ( "Threshold"     , 
+          m_threshold     ,
+          "The threshold for LHCb::MCVertex ---> LHCb::GenCollision links") ;
+      declareProperty 
+        ( "OutputTable"   , 
+          m_output        , 
+          "The TES location of MCVertex->GenCollision relation table") ;
+      declareProperty 
+        ( "MC2Collision"  , 
+          m_mc2colName    , 
+          "The type/name of IMCCollision tool ") ;
+      declareProperty 
+        ( "OutputTable"   , 
+          m_output        , 
+          "The TES location of MCVeretx->GenCollision relation table") ;
+      //
+      setProperty     ( "StatPrint"     , "true"       )  ;
+    } 
+    // ========================================================================
+    // destructor: protected and virtual 
+    virtual ~MC2GenCollisionAlg(){} ;
+    // ========================================================================
+  private:
+    // ========================================================================
+    // default constructor is disabled 
+    MC2GenCollisionAlg () ;
+    // copy constructor is disabled 
+    MC2GenCollisionAlg           ( const MC2GenCollisionAlg& ) ;
+    // assignement is disabled 
+    MC2GenCollisionAlg& operator=( const MC2GenCollisionAlg& ) ;
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// location of MC-vertices
+    std::string m_vertices   ;                       // location of MC-vertices
+    /// location of collisions 
+    std::string m_collisions ;                        // location of collisions 
+    /// threshold  
+    double      m_threshold  ;                                     // threshold
+    /// location of output relation table 
+    std::string m_output     ;             // location of output relation table 
+    /// the tool 
+    std::string m_mc2colName ;                                      // the tool 
+    /// the tool 
+    IMC2Collision* m_mc2col  ;                                      // the tool 
+    // ========================================================================
+  };
   // ==========================================================================
-  // destructor: protected and virtual 
-  virtual ~LoKi_MC2CollisionAlg(){} ;
-  // ==========================================================================
-private:
-  // default constructor is disabled 
-  LoKi_MC2CollisionAlg () ;
-  // copy constructor is disabled 
-  LoKi_MC2CollisionAlg           ( const LoKi_MC2CollisionAlg& ) ;
-  // assignement is disabled 
-  LoKi_MC2CollisionAlg& operator=( const LoKi_MC2CollisionAlg& ) ;
-private:
-  // location of MC-vertices
-  std::string m_vertices   ; ///< location of MC-vertices
-  // location of collisions 
-  std::string m_collisions ; ///< location of collisions 
-  // location of output relation table 
-  std::string m_output     ; ///< location of output relation table 
-  // threshold  
-  double      m_threshold  ; ///< threshold
-};
-// ============================================================================
-DECLARE_ALGORITHM_FACTORY(LoKi_MC2CollisionAlg)
+} // end of namespace LoKi
 // ============================================================================
 namespace 
 {
   // the actual type of relation table 
   typedef LHCb::Relation1D<LHCb::MCVertex,LHCb::GenCollision> Table  ;
+  // make the useful check 
+  BOOST_STATIC_ASSERT(INHERITS(Table,LHCb::MCVertex2Collision)); 
 } 
 // ============================================================================
-StatusCode LoKi_MC2CollisionAlg::execute() 
+StatusCode LoKi::MC2GenCollisionAlg::execute() 
 {
-  using namespace LoKi::Cuts  ;
-  using namespace LoKi::Types ;
+  // check the tool 
+  Assert ( 0 != m_mc2col , "IMC2Collision* points to NULL!" ) ;
   
-  // the internal storage of primary vertices 
-  typedef std::vector<const LHCb::MCVertex*> PRIMARIES ;
+  // get the links from the tool  
+  const IMC2Collision::MCVertex2Collision* links = 
+    m_mc2col -> vertex2collision() ;
   
-  // get vertices form the TES
-  const LHCb::MCVertices*    vertices   = get<LHCb::MCVertices>   ( m_vertices  ) ;
-  if ( 0 == vertices   ) { return StatusCode::FAILURE ; }
-  
-  // get collisions from the TES
-  const LHCb::GenCollisions* collisions = get<LHCb::GenCollisions>( m_collisions ) ;
-  if ( 0 == collisions ) { return StatusCode::FAILURE ; }
+  if ( 0 == links ) 
+  { return Error ( "MCVertex2Collision* points to NULL!" ) ; }
   
   // register the ouput table in TES 
-  Table* table = new Table( collisions->size() ) ;
+  Table* table = new Table( *links ) ;
   put ( table , m_output ) ;
-  
-  // select all primary vertices 
-  PRIMARIES prims ;
-  LoKi::select ( vertices->begin()            , 
-                 vertices->end  ()            , 
-                 std::back_inserter ( prims ) ,
-                 MCPRIMARY                    ) ;
-
-  if ( prims.empty() ) 
-  { Warning ( "Empty container of primary vertices!" ) ; }
-  
-  // try to make relations
-  
-  // loop over all collisions 
-  for ( LHCb::GenCollisions::const_iterator ic = collisions->begin() ; 
-        collisions->end() != ic ; ++ic ) 
-  {
-    const LHCb::GenCollision* c = *ic ;
-    if ( 0 ==   c )  { continue ; }                               // CONTINUE
-    
-    const LHCb::HepMCEvent* e = c->event() ;
-    if ( 0 ==   e )  
-    { Warning ( "LHCb::GenCollision::event() points to NULL!" ) ; continue ; }
-    const HepMC::GenEvent* evt = e->pGenEvt() ;
-    if ( 0 == evt ) 
-    { Warning ( "LHCb::HepMCEvent::pGenEvt() points to NULL!"  ) ; continue ; }
-    const HepMC::GenVertex* vx = evt->barcode_to_vertex(-1) ;
-    if ( 0 == vx  ) 
-    { 
-      Warning ( "HepMC::GenEvent::barcode_to_vertex(-1) points to NULL!"  ) ; 
-      continue ;                                                   // CONTINUE 
-    }
-    // find the primary vertex with minimal distance 
-    MCVFun fun = MCVDIST( LoKi::Point3D( vx->point3d() ) ) ;
-    //
-    PRIMARIES::const_iterator imin = 
-      LoKi::select_min ( prims.begin() , prims.end  () , fun ) ;
-    if ( prims.end() == imin ) 
-    { Warning ( "The minimum value is not found! (empty?)"); continue ; }
-    if ( fun( *imin ) > m_threshold )
-    {
-      Warning ( "The minmum value is above the threshold "
-                + Gaudi::Utils::toString( m_threshold / Gaudi::Units::micrometer ) 
-                + "[um]") ;
-      continue ;                                                   // CONTINUE 
-    }
-    // fill the table!!!
-    table->i_relate( *imin , c ) ;
-  } ;
   
   // Final check:
   if ( table->relations().empty() ) { Warning ( "Empty relation table!") ; }
@@ -213,6 +223,9 @@ StatusCode LoKi_MC2CollisionAlg::execute()
   //
   return StatusCode::SUCCESS ;
 }
+// ============================================================================
+/// the factory 
+DECLARE_NAMESPACE_ALGORITHM_FACTORY(LoKi,MC2GenCollisionAlg)
 // ============================================================================
 // The END
 // ============================================================================
