@@ -1,4 +1,4 @@
-// $Id: CheckSelResult.cpp,v 1.8 2008-10-31 18:41:39 pkoppenb Exp $
+// $Id: CheckSelResult.cpp,v 1.9 2008-11-03 17:01:00 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -73,15 +73,15 @@ StatusCode CheckSelResult::execute() {
 
   if (msgLevel(MSG::VERBOSE)) verbose() << "==> Execute" << endmsg;
   StatusCode sc = StatusCode::SUCCESS ;
-
-  bool pass = m_readTool->isSelected(m_algorithms, m_ANDmode) ;
+  counter("All") +=1;
+  const bool pass = m_readTool->isSelected(m_algorithms, m_ANDmode) ;
   if (msgLevel(MSG::DEBUG)) debug() << "Result is " << pass << endmsg ;
   if ( !m_avoidSelResult ) sc = m_writeTool->write(name(),pass) ; // write out
   if (!sc) return sc;
   
   setFilterPassed(pass);
   
-  counter("Passed")+= pass ;
+  if (pass) ++counter("Passed");
 
   return StatusCode::SUCCESS;
 };
@@ -89,6 +89,8 @@ StatusCode CheckSelResult::execute() {
 //  Finalize
 //=============================================================================
 StatusCode CheckSelResult::finalize() {
+  info() << "Filtered " << counter("Passed").nEntries() 
+         << " out of " << counter("All").nEntries() << " events" << endmsg;
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
