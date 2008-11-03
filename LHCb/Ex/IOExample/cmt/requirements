@@ -1,12 +1,16 @@
-# $Id: requirements,v 1.34 2008-10-31 16:45:20 cattanem Exp $
+# $Id: requirements,v 1.35 2008-11-03 11:07:52 cattanem Exp $
 package IOExample
 version v2r6
 
-branches doc options cmt
+branches doc options cmt src
+include_path none
+
+use GaudiKernel      v*
+use GaudiAlg         v*
+use TrackEvent       v* Event
 
 # Uses only needed to set up run time environment
 private
-  use GaudiKernel         v*
   use GaudiSvc            v*              -no_auto_imports
   use GaudiPoolDb         v*              -no_auto_imports
   use GaudiConf           v*              -no_auto_imports
@@ -14,3 +18,6 @@ private
   apply_pattern QMTest
 end_private
 
+
+library IOExample     *.cpp
+apply_pattern component_library library=IOExample

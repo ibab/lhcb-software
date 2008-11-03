@@ -5,6 +5,10 @@ ApplicationMgr.HistogramPersistency = "NONE";
 ApplicationMgr.EvtMax = 5;
 EventSelector.PrintFreq = 1;
 
+// Check that tracks can be properly read (tests also SMatrix persistency)
+ApplicationMgr.TopAlg = { "DumpTracks" };
+DumpTracks.OutputLevel = 2;
+
 // Set up the OutputStream that copies an event data file
 ApplicationMgr.OutStream += {"InputCopyStream/InputCopyStream"};
 
