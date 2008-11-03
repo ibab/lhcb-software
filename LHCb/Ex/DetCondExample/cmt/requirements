@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.67 2008-07-22 17:09:21 marcocle Exp $
+# $Id: requirements,v 1.68 2008-11-03 16:11:43 marcocle Exp $
 package DetCondExample
-version v11r4
+version v11r5
 
 branches doc src job options cmt XMLDDDB python logs
 ignore_pattern package_stamps 
