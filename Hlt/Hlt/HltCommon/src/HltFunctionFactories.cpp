@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactories.cpp,v 1.14 2008-10-01 09:49:00 leandrop Exp $
+// $Id: HltFunctionFactories.cpp,v 1.15 2008-11-03 08:37:12 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -50,6 +50,9 @@ StatusCode HltTrackFunctionFactory::initialize() {
   declare<Hlt::MatchIDsFraction,zen::abs_max,Hlt::TrackSelection>("MatchIDsFraction");
   declare<Hlt::DoShareM3,zen::abs_max,Hlt::TrackSelection>("DoShareM3");
 
+  //FIXME zen::abs_min ??
+  declare<Hlt::FitChi2OverNdf>("FitChi2OverNdf");
+  
   declare<ITrackBiFunctionTool,zen::abs_min,Hlt::TrackSelection>
     ("Calo2DChi2","HltRZVeloTCaloMatch");
 

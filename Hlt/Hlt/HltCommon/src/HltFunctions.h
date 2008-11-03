@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.7 2008-08-25 22:44:35 mjohn Exp $
+// $Id: HltFunctions.h,v 1.8 2008-11-03 08:34:43 albrecht Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -461,6 +461,16 @@ namespace Hlt {
     }
     Hlt::TrackBiFunction* clone() const {return new DeltaAngle();}
   };  
+  
+  /* FitChi2OverNdf:    
+   *   returns the Chi2OverNdf of a fitted track
+   */
+  class FitChi2OverNdf : public Hlt::TrackFunction {
+  public:
+    explicit FitChi2OverNdf() {}
+    double operator() (const LHCb::Track& t) const {return t.chi2PerDoF();}
+    zen::function<LHCb::Track>* clone() const {return new FitChi2OverNdf();}
+  };
 
   //---------- extra utilities -----------------------------
   
