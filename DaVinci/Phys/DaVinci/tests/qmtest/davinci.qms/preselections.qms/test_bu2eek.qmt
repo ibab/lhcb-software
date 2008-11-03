@@ -10,12 +10,12 @@ findReferenceBlock("""
 ========================================================================
                  TestCorrelations.AlgorithmCorrelations
 ========================================================================
-    Algorithm                  Eff.      1      2      3      4
+    Algorithm                  Eff.      1      2      3      4  
 ------------------------------------------------------------------------
   1 AllTrueNoPIDsDecay         0.0% |  #####   0.0%   0.0%   0.0%
-  2 AllTrueLooseDecay          4.0% |  *****  #####  11.5%   2.6%
-  3 DiLeptonForPreselBu2LLK   26.0% |  *****  75.0%  #####   3.9%
-  4 PreselBu2LLK              77.0% |  *****  50.0%  11.5%  #####
+  2 AllTrueLooseDecay          4.0% |  *****  #####  11.5%  33.3%
+  3 DiLeptonForPreselBu2LLK   26.0% |  *****  75.0%  ##### 100.0%
+  4 PreselBu2LLK               3.0% |  *****  25.0%  11.5%  #####
 ========================================================================
 """, stdout, result, causes, signature_offset = 1)
 </text></argument>
