@@ -4,6 +4,11 @@
 ! Purpose     : L0-T-track Confirmation algorithms
 !-----------------------------------------------------------------------------
 
+! 2008-11-03 - Johannes Albrecht
+ - HltTrackFit: add tool to fit tracks inside the HLT. Can be used as tool for 
+	 HltTrackUpgrade, with RecoName = "FitTrack". Has to be configured via options	
+	 that it really is the fast fit we want for the trigger!
+
 !========================== HltL0Conf v2r6 2008-10-13 ===================
 ! 2008-10-13 - Johannes Albrecht
  - HadronSeedTool: in case hadron candidate is not valid (region cannot be determined
