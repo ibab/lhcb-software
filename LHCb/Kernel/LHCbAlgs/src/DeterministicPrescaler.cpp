@@ -97,7 +97,7 @@ DeterministicPrescaler::initialize()
   m_passed  = 0;
   m_initial = mixString( name().size(), name() );
 
-  debug() << " generated initial value " << m_initial << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << " generated initial value " << m_initial << endmsg;
   
   // scan m_prescaleSpec and fill m_prescale accordingly
   // add support for 'repeats' at a later point...
@@ -135,11 +135,11 @@ DeterministicPrescaler::accept(const LHCb::ODIN& odin)  const
   x = mix32( x, odin.runNumber() );
   x = mix64( x, odin.eventNumber() );
 
-  debug() << "  gpsTime: " << odin.gpsTime() 
-          << "  run#: "    << odin.runNumber()
-          << "  evt#: "    << odin.eventNumber()
-          << "  -->  "     << x 
-          << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "  gpsTime: " << odin.gpsTime() 
+                                    << "  run#: "    << odin.runNumber()
+                                    << "  evt#: "    << odin.eventNumber()
+                                    << "  -->  "     << x 
+                                    << endmsg;
 
   // at this point, we assume 'x' to be uniformly distributed in [0,0xffffffff]
   // (and yes, this was verified to be sufficiently true on a sample of 10K MC events ;-)
@@ -173,8 +173,9 @@ DeterministicPrescaler::execute()
   bool acc = ( m_accFrac >= 0 ? accept(*odin)
                               : accept(odin->eventNumber()) );
   setFilterPassed(acc);
-  debug() << " run # "   << odin->runNumber() 
-          << " event # " << odin->eventNumber() << " : " << (acc?"Accepted":"Rejected") << endmsg ;
+  if (msgLevel(MSG::DEBUG)) debug() << " run # "   << odin->runNumber() 
+                                    << " event # " << odin->eventNumber() 
+                                    << " : " << (acc?"Accepted":"Rejected") << endmsg ;
 
   ++m_seen; if (acc) ++m_passed;
   return StatusCode::SUCCESS;

@@ -4,6 +4,9 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2008-11-04 - Patrick Koppenburg
+ - Protect debug() in DeterministicPrescaler
+
 ! 2008-10-30 - Marco Cattaneo
  - More fixes gcc 4.3 compilation, and fix an uninitialised property
 
