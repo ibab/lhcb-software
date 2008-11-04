@@ -1,4 +1,4 @@
-// $Id: DetDescDict.h,v 1.6 2008-07-21 15:34:40 cattanem Exp $
+// $Id: DetDescDict.h,v 1.7 2008-11-04 16:09:20 cattanem Exp $
 // ============================================================================
 #ifndef DETSYS_DETDICT_H 
 #define DETSYS_DETDICT_H 1
@@ -77,7 +77,7 @@
 
 namespace DetDescPython
 {
-  //--- Templace instantiations
+  //--- Template instantiations
   struct __Instantiations 
   {
     ILVolume::PVolumes      i1 ;
@@ -89,6 +89,8 @@ namespace DetDescPython
     ISolid::Ticks           i7 ;
     
     SmartRef<Condition> sref_inst1;
+    std::pair<double,SmartRef<Element> > sref_inst2;
+    std::pair<double,SmartRef<Isotope> > sref_inst3;
   };
   
 };
