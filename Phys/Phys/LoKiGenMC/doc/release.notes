@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.31 2008-11-03 18:34:47 ibelyaev Exp $ 
+! $Id: release.notes,v 1.32 2008-11-04 12:43:47 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGenMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,21 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2008-11-04 - Vanya BELYAEV
+
+ - remove .opts-files (and the whole options directory)
+ - provide "configurables" 
+ 
+     python/LoKiGenMC/MC2Collision_Configuration.py
+     python/LoKiGenMC/HepMC2MC_Configuration.py
+
+for Data-On-Demand configuration of 
+
+     LCHb::MCVertex       --> LHCb::GenCollision and 
+     HepMC::GenParticle <---> LHCb::MCParticle   relation tables 
+ 
+
 
 ! 2008-11-03 - Vanya BELYAEV
 
@@ -417,6 +432,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.31  2008/11/03 18:34:47  ibelyaev
+!  resurrent & redesign MC -> GenCollision stuff
+!
 ! Revision 1.30  2008/11/02 19:33:47  ibelyaev
 !  v8r0 : fixes for various compilers
 !

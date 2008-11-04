@@ -1,4 +1,4 @@
-// $Id: LoKi_MC2Collision.cpp,v 1.6 2008-11-03 18:34:47 ibelyaev Exp $
+// $Id: LoKi_MC2Collision.cpp,v 1.7 2008-11-04 12:43:47 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -167,8 +167,6 @@ namespace LoKi
       declareProperty ( "MCVertices"    , m_vertices   ) ;
       declareProperty ( "GenCollisions" , m_collisions ) ;
       declareProperty ( "Threshold"     , m_threshold  ) ;
-      //
-      setProperty     ( "StatPrint"    , true ) ;
       //
     }            
     // ========================================================================

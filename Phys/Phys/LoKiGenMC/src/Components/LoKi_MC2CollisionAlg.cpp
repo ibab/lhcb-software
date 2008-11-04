@@ -1,4 +1,4 @@
-// $Id: LoKi_MC2CollisionAlg.cpp,v 1.9 2008-11-03 18:34:47 ibelyaev Exp $
+// $Id: LoKi_MC2CollisionAlg.cpp,v 1.10 2008-11-04 12:43:47 ibelyaev Exp $
 // ============================================================================
 // Include file
 // ============================================================================
@@ -156,8 +156,7 @@ namespace LoKi
           m_output        , 
           "The TES location of MCVeretx->GenCollision relation table") ;
       //
-      setProperty     ( "StatPrint"     , "true"       )  ;
-    } 
+     } 
     // ========================================================================
     // destructor: protected and virtual 
     virtual ~MC2GenCollisionAlg(){} ;
