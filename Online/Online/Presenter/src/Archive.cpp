@@ -363,11 +363,11 @@ std::vector<path> Archive::findSavesets(const std::string & taskname,
   string taskNameFound;
   string fileTimeFound;
   ptime fileTime;
-  TObjArray* fileDateMatchGroup;
 
   if (!m_foundSavesets.empty()) {
     m_foundSavesetsIt = m_foundSavesets.end(); --m_foundSavesetsIt;
     while (m_foundSavesetsIt >= m_foundSavesets.begin()) {
+      TObjArray* fileDateMatchGroup = 0;
       fileDateMatchGroup = s_fileDateRegexp.MatchS((*m_foundSavesetsIt).leaf());
       if (!fileDateMatchGroup->IsEmpty()) {
         taskNameFound = (((TObjString *)fileDateMatchGroup->At(1))->GetString()).Data();
@@ -381,12 +381,20 @@ std::vector<path> Archive::findSavesets(const std::string & taskname,
             }
             foundRootFiles.push_back(*m_foundSavesetsIt);
           } else if (fileTime < startTime) {
+            if (fileDateMatchGroup) {
+              fileDateMatchGroup->Delete();
+              delete fileDateMatchGroup;
+              fileDateMatchGroup = 0;
+            }
             break;
           }
         }
       }
-      fileDateMatchGroup->Delete();
-      delete fileDateMatchGroup;
+      if (fileDateMatchGroup) {
+        fileDateMatchGroup->Delete();
+        delete fileDateMatchGroup;
+        fileDateMatchGroup = 0;
+      }
       --m_foundSavesetsIt;
     }
   }
