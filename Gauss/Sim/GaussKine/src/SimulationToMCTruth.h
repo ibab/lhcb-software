@@ -1,4 +1,4 @@
-// $Id: SimulationToMCTruth.h,v 1.3 2008-10-29 18:27:25 robbep Exp $
+// $Id: SimulationToMCTruth.h,v 1.4 2008-11-04 21:09:54 robbep Exp $
 #ifndef SIMULATIONTOMCTRUTH_H 
 #define SIMULATIONTOMCTRUTH_H 1
  
@@ -76,6 +76,9 @@ private:
 
   /// Set to hold keys of treated MCParticles when rebuilding decay tree
   std::set< LHCb::MCParticle::key_type >  m_treatedParticles ;
+  
+  /// PDG Id of the intermediate particles
+  int m_intermediatePDG ;
 };
 
 #endif  // SIMULATIONTOMCTRUTH_H

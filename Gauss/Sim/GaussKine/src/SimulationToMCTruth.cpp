@@ -1,4 +1,4 @@
-// $Id: SimulationToMCTruth.cpp,v 1.5 2008-10-29 18:27:17 robbep Exp $
+// $Id: SimulationToMCTruth.cpp,v 1.6 2008-11-04 21:09:54 robbep Exp $
 // Include files 
 
 // local 
@@ -54,6 +54,7 @@ SimulationToMCTruth::SimulationToMCTruth(const std::string& name,
   , m_particleContainer( 0 )
   , m_vertexContainer  ( 0 )
   , m_mcHeader         ( 0 )  
+  , m_intermediatePDG  ( 0 )
 { 
   declareProperty( "Particles", 
                    m_particles = LHCb::MCParticleLocation::Default ); 
@@ -78,6 +79,9 @@ StatusCode SimulationToMCTruth::initialize() {
   
   debug() << "==> Initialize" << endmsg;
   m_ppSvc = svc<IParticlePropertySvc> ( "ParticlePropertySvc", true );
+  
+  ParticleProperty * interm = m_ppSvc -> find( "Intermediate" ) ;
+  if ( 0 != interm ) m_intermediatePDG = interm -> pdgID() ;
 
   m_gigaSvc = svc<IGiGaSvc>( m_gigaSvcName ); // GiGa has to already exist!
 
@@ -236,6 +240,12 @@ void SimulationToMCTruth::convert( const HepMC::GenParticle * part ,
   LHCb::MCParticle * mcpart = 0;
   int barcode = part -> barcode() ;
   
+  // Intermediate particles can have undefined vertex types: correct here
+  if ( LHCb::MCVertex::Unknown == prodvertex -> type() ) {
+    if ( m_intermediatePDG == part -> pdg_id() ) 
+      prodvertex -> setType( LHCb::MCVertex::GenericInteraction ) ;
+  }
+  
   if ( barcode < MCTruthManager::SplitBarCode ) { 
     // normal case
     mcpart = new LHCb::MCParticle();
@@ -269,6 +279,9 @@ void SimulationToMCTruth::convert( const HepMC::GenParticle * part ,
       // if the particle is a primary particle, then the tree has already been
       // attached to the primary vertex in GenerationToSimulation
       if ( ! isPrimary ) {
+	// update vertex position because the root particle may be a long lived
+	// charged particle traveling in the magnetic field
+	linkedVertex -> setPosition ( Gaudi::XYZPoint( part -> production_vertex() ->point3d()) ) ;
 	// and link this mother to the prodvertex of the root particle of the linkedMother
 	// decay tree, except if this MCParticle has already been treated.
 	bool treatTree = ! std::binary_search( m_treatedParticles.begin() , 
@@ -280,7 +293,12 @@ void SimulationToMCTruth::convert( const HepMC::GenParticle * part ,
 	  treatTree = ! std::binary_search( m_treatedParticles.begin() , 
 					    m_treatedParticles.end() ,
 	                                    linkedMother -> key() ) ;
-	  if ( treatTree ) m_treatedParticles.insert( linkedMother -> key() ) ;
+	  if ( treatTree ) {
+	    m_treatedParticles.insert( linkedMother -> key() ) ;
+	    linkedVertex = 
+	      const_cast< LHCb::MCVertex *>(linkedMother -> endVertices().front().data()) ;
+	    linkedVertex -> setPosition ( Gaudi::XYZPoint( part -> production_vertex() ->point3d()) ) ;
+	  }
 	}
 	if ( treatTree ) { 
 	  linkedMother -> setOriginVertex( prodvertex ) ;
@@ -316,22 +334,17 @@ void SimulationToMCTruth::convert( const HepMC::GenParticle * part ,
     mcendvtx -> setMother   ( mcpart );
     
     if ( 0 != genendvtx -> particles_out_size() ) {
-      // take the first daughter and get its creator ID to assign it to this vertex
-      HepMC::GenParticle * daughter = *(genendvtx -> particles_out_const_begin()) ;
-      int typeID = 
-	MCTruthManager::GetInstance() -> GetCreatorID( -daughter -> barcode() );
+      int typeID = MCTruthManager::GetInstance() -> GetCreatorID( genendvtx -> barcode() );
       LHCb::MCVertex::MCVertexType vType = vertexType( typeID ) ;
       mcendvtx -> setType( vType ) ;
     } else {
-      // review this: perhaps add new vertex type for particle stoppping (in ECAL, ...)
-      // for the moment, give its own creation process
       mcendvtx -> 
-	setType( vertexType( MCTruthManager::GetInstance() -> GetCreatorID( -barcode ) ) ) ;
+	setType( vertexType( LHCb::MCVertex::KinematicLimit ) ) ;
     }
     
     mcpart -> addToEndVertices( mcendvtx ) ;
     
-      // now process the daughters
+    // now process the daughters
     for ( HepMC::GenVertex::particles_out_const_iterator 
 	  daughter=genendvtx->particles_out_const_begin();
 	  daughter!=genendvtx->particles_out_const_end(); ++daughter ) {
