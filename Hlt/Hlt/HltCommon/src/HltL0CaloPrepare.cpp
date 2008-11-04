@@ -1,4 +1,4 @@
-// $Id: HltL0CaloPrepare.cpp,v 1.13 2008-10-22 14:38:20 hernando Exp $
+// $Id: HltL0CaloPrepare.cpp,v 1.14 2008-11-04 08:41:29 witekma Exp $
 // Include files 
 
 // from Gaudi
@@ -108,7 +108,7 @@ StatusCode HltL0CaloPrepare::initialize() {
 
   m_caloMaker = (m_caloMakerName.empty() 
                     ? (ICaloSeedTool*)0
-                    :tool<ICaloSeedTool>("HadronSeedTool"));
+                    :tool<ICaloSeedTool>(m_caloMakerName));
 
   saveConfiguration();  
   
