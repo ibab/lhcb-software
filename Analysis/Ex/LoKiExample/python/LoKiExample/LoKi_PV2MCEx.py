@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: LoKi_PV2MCEx.py,v 1.1 2008-11-03 18:43:30 ibelyaev Exp $ 
+# $Id: LoKi_PV2MCEx.py,v 1.2 2008-11-04 13:53:53 ibelyaev Exp $ 
 # =============================================================================
 ## @file
 #  The configuration file to run LoKi_PV2MCEx example
@@ -38,31 +38,26 @@ with the campain of Dr.O.Callot et al.:
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ "
 # =============================================================================
 import os 
 from  Gaudi.Configuration import * 
-from  Configurables import PhysDesktop
+from  Configurables import DataOnDemandSvc 
 from  Configurables import LoKi__Example__PV2MCEx as PV2MCEx
 
-from  Configurables import LoKi__Track2MC as Track2MC 
-
 importOptions( "$DAVINCIROOT/options/DaVinciCommon.opts" )
+
+import LoKiPhysMC.PV2MC_Configuration 
 
 ## configure our own algorithm: 
 alg = PV2MCEx('PV2MCEx')
 alg.PP2MCs = [ 'Relations/Rec/ProtoP/Charged']
 
 ## confgure the application itself:
-appMgr = ApplicationMgr( EvtMax = 50 , Dlls = [ 'HepMCBack'] )
+appMgr = ApplicationMgr( EvtMax = 20 , Dlls = [ 'HepMCBack'] )
 
-appMgr.TopAlg += [ Track2MC () ]
 appMgr.TopAlg += [ alg ]
-
-## input data:
-from LoKiExample.Bs2Jpsiphi_mm_data import Inputs
-EventSelector ( Input     = Inputs ,
-                PrintFreq = 10     ) 
+appMgr.ExtSvc += [ DataOnDemandSvc ( OutputLevel = 2 ) ] 
 
 importOptions("$DAVINCIROOT/options/DaVinciTestData.opts") 
 
