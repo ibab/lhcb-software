@@ -279,7 +279,7 @@ void DbRootHist::initHistogram()
   if (m_reference) { delete  m_reference; m_reference = NULL; }
 
   // If not AnaLib hist:
-  if (!m_isAnaHist && (m_retryInit > 0) ) {
+  if (!m_isAnaHist && (m_retryInit > 0) && m_dimBrowser) {
     
     // sed partition   
     if (m_onlineHistogram && (m_retryInit > 1)) {
