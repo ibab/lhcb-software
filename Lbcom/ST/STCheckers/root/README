@@ -1,0 +1,15 @@
+The ROOT macros in this directory are meant as examples only. However, all 
+macros will need to be tailored to the use at hand and should not be 
+considered finished products. They're more like a starting point so 
+that users can obtain the tool they need more quickly.
+
+landauAna.C
+
+   fit of pulse shape based on the famous testbeam one
+
+
+beetleFitFunc.C
+
+   fit of the beetle pulse shape in a scan
+
+

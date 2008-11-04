@@ -1,7 +1,7 @@
 package STCheckers
 version v2r8
 
-branches cmt doc src options
+branches cmt doc src options root
 include_path none
 
 use STKernel     v*   ST
