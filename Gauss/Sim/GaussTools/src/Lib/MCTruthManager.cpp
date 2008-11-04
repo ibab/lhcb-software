@@ -1,4 +1,4 @@
-// $Id: MCTruthManager.cpp,v 1.9 2008-10-23 12:11:57 robbep Exp $
+// $Id: MCTruthManager.cpp,v 1.10 2008-11-04 21:14:15 robbep Exp $
 // Include files 
 
 // local
@@ -126,7 +126,7 @@ void MCTruthManager::AddParticle(HepMC::FourVector& momentum,
   
   // barcode of the endvertex = - barcode of the track
   endvertex->suggest_barcode(-partID);  
-  creators[-partID] = creatorID; 
+//  creators[-partID] = creatorID; 
   endvertex->add_particle_in(particle);
   event->add_vertex(endvertex);
   
@@ -207,8 +207,10 @@ void MCTruthManager::AddParticle(HepMC::FourVector& momentum,
           // the barcode of the new particle is split barcode  + the original barcode 
           HepMC::GenParticle* mothertwo = new HepMC::GenParticle(*mother);
           mothertwo->suggest_barcode(SplitBarCode + mother->barcode());
-          // we also reset the barcodes of the vertices
+          // we also reset the barcodes of the vertices but save previous creatorID
+          int saveCID = GetCreatorID( motherendvtx -> barcode() ) ;
           motherendvtx->suggest_barcode(-SplitBarCode - mother->barcode());
+          creators[ motherendvtx -> barcode() ] = saveCID ;
           childvtx->suggest_barcode(-mother->barcode());
           creators[-mother->barcode()] = creatorID;
           // we attach it to the new vertex where interaction took place
@@ -238,6 +240,13 @@ void MCTruthManager::AddParticle(HepMC::FourVector& momentum,
     primarybarcodes.push_back(partID);
     
   } 
+  // Sets now the creator process using the barcode of the production vertex:
+  int vbarcode = particle -> production_vertex() -> barcode() ;
+  int creatorCode = GetCreatorID( vbarcode ) ;
+  if ( 0 == creatorCode ) creators[ vbarcode ] = creatorID ;
+  else if ( creatorCode != creatorID ) 
+    std::cerr << "barcode : " << vbarcode << " has two different creator types " 
+              << creatorCode << " and " << creatorID << std::endl ;
 }
 
 //-----------------------------------------------------------------------------

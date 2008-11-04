@@ -13,23 +13,15 @@ SpecialCuts::SpecialCuts(const G4String& aName)
   }
 }
 
-SpecialCuts::~SpecialCuts() 
-{                                     
-}                                     
+SpecialCuts::~SpecialCuts()  { }
 
-#include "G4ParticleDefinition.hh"
-G4VParticleChange* SpecialCuts::PostStepDoIt(
-			     const G4Track& aTrack,
-			     const G4Step& 
-			    )
-//
-// Stop the current particle, if requested by G4UserLimits 
-// 			    			    			    
-{
+G4VParticleChange* SpecialCuts::PostStepDoIt( const G4Track& aTrack,
+					      const G4Step& ) {
    aParticleChange.Initialize(aTrack);
    aParticleChange.ProposeEnergy(0.) ;
    aParticleChange.ProposeLocalEnergyDeposit(aTrack.GetKineticEnergy()) ;
-   aParticleChange.ProposeTrackStatus(fStopButAlive);
+   // By default kill the particle to prevent it from decaying
+   aParticleChange.ProposeTrackStatus(fStopAndKill);
    return &aParticleChange;
 }
 

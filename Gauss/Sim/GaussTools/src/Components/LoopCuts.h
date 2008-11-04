@@ -24,6 +24,10 @@ class LoopCuts : public SpecialCuts
 			     G4ForceCondition* condition
 			    );
             
+     virtual G4VParticleChange* PostStepDoIt(
+			     const G4Track& ,
+			     const G4Step& 
+			    );            
 			    
   private:
 

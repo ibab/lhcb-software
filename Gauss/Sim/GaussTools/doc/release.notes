@@ -4,6 +4,10 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+! 2008-11-04 - Patrick Robbe
+ - MCTruthManager: saves creator process before resetting the vertex barcode
+ - SpecialCuts.cpp: now sets step to StopAndKill except for LoopCuts
+
 ! 2008-10-23 - Patrick Robbe
  - GaussPostTrackAction: Simplify code
  - MCTruthManager.cpp: bug fix (clear map of links to MCParticles 

@@ -54,3 +54,16 @@ PostStepGetPhysicalInteractionLength(const G4Track& track,
   return proposedStep;    
 }
   
+  
+// Overrides default behaviour of SpecialCuts to be able to leave
+// the particle alive for subsequent decays
+G4VParticleChange* LoopCuts::PostStepDoIt(
+			     const G4Track& aTrack,
+			     const G4Step& ) {
+   aParticleChange.Initialize(aTrack);
+   aParticleChange.ProposeEnergy(0.) ;
+   aParticleChange.ProposeLocalEnergyDeposit(aTrack.GetKineticEnergy()) ;
+   // leave the possibility of decay
+   aParticleChange.ProposeTrackStatus(fStopButAlive);
+   return &aParticleChange;
+}
