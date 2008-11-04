@@ -21,7 +21,7 @@
        <enum
         desc="Describe the physics process related to the vertex"
         name="MCVertexType"
-        value="Unknown=0, ppCollision, DecayVertex, OscillatedAndDecay, HadronicInteraction=100, Bremsstrahlung, PairProduction, Compton, DeltaRay, PhotoElectric, Annihilation, RICHPhotoElectric, Cerenkov, RichHpdBackScat, LHCHalo=200, MuonBackground=300, MuonBackgroundFlat, MuonBackgroundSpillover"
+        value="Unknown=0, ppCollision, DecayVertex, OscillatedAndDecay, HadronicInteraction=100, Bremsstrahlung, PairProduction, Compton, DeltaRay, PhotoElectric, Annihilation, RICHPhotoElectric, Cerenkov, RichHpdBackScat, GenericInteraction, LHCHalo=200, MuonBackground=300, MuonBackgroundFlat, MuonBackgroundSpillover, WorldLimit=400, KinematicLimit"
         access="PUBLIC"
        />
        <base name="KeyedObject&lt;int&gt;"/>
