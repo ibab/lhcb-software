@@ -1,4 +1,4 @@
-// $Id: GiGa.cpp,v 1.15 2008-10-20 10:17:21 robbep Exp $ 
+// $Id: GiGa.cpp,v 1.16 2008-11-04 21:16:18 robbep Exp $ 
 #define GIGA_GIGASVC_CPP 1 
 
 // Include files 
@@ -356,6 +356,7 @@ StatusCode GiGa::initialize()
       if ( 0 != pp ) {
         G4ParticlePropertyData * PPData = PPT -> GetParticleProperty( PDef ) ;
         PPData -> SetPDGMass( pp -> mass() ) ;
+        PPData -> SetPDGLifeTime( pp -> lifetime() ) ;
         PPT -> SetParticleProperty( *PPData ) ;
       }
     }

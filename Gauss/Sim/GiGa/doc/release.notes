@@ -1,10 +1,13 @@
-! $Id: release.notes,v 1.125 2008-10-20 12:21:45 robbep Exp $
+! $Id: release.notes,v 1.126 2008-11-04 21:16:18 robbep Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Sim/GiGa
 ! Responsible : Gloria CORTI, Vanya BELYAEV
 ! Purpose     : Holds interfaces and base classes plus generic implementation
 !               for G4 <-> Gaudi applications 
 !-----------------------------------------------------------------------------
+
+! 2008-11-04 - Patrick Robbe
+ - GiGa.cpp: update also particle lifetime from ParticlePropertySvc
 
 ! 2008-10-20 - Patrick Robbe
  - GiGa.h/cpp: add possibility via job options to update particle 
