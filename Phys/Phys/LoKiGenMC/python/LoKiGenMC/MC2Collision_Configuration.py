@@ -1,4 +1,4 @@
-# $Id: MC2Collision_Configuration.py,v 1.1 2008-11-04 12:43:47 ibelyaev Exp $
+# $Id: MC2Collision_Configuration.py,v 1.2 2008-11-04 13:53:02 ibelyaev Exp $
 # =============================================================================
 ## @file
 #  The configuration file to run MC -> GenCollision stuff "on-demand"
@@ -39,19 +39,19 @@ with the campain of Dr.O.Callot et al.:
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ "
 # =============================================================================
 
 from  Gaudi.Configuration import * 
 from  Configurables       import DataOnDemandSvc
 from  Configurables       import LoKi__MC2GenCollisionAlg
 
-svc = DataOnDemandSvc ()
 
-svc.AlgMap.update (
-    { 'Relations/MC/Vertices2Collision' :
-      'LoKi::MC2GenCollisionAlg/MC2GenCollisionAlg' }
-    )
+alg = LoKi__MC2GenCollisionAlg() 
+ 
+dod = DataOnDemandSvc ()
+dod.AlgMap['Relations/MC/Vertices2Collision'] = alg.getFullName() 
+
 
 # =============================================================================
 # The END

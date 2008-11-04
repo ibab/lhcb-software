@@ -1,4 +1,4 @@
-# $Id: HepMC2MC_Configuration.py,v 1.1 2008-11-04 12:43:47 ibelyaev Exp $
+# $Id: HepMC2MC_Configuration.py,v 1.2 2008-11-04 13:53:02 ibelyaev Exp $
 # =============================================================================
 ## @file
 #  The configuration file to run HepMC <--> MC stuff "on-demand"
@@ -15,9 +15,8 @@
 #  with the campain of Dr.O.Callot et al.: 
 #  "No Vanya's lines are allowed in LHCb/Gaudi software."
 #
-#  @see IMC2Collision
-#  @see  MC2Collision
-#  @see LoKi::MC2GenCollision
+#  @see Kernel/HepMC2MC.h
+#  @see LoKi::HepMC2MCAlg
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date   2008-11-04
 # =============================================================================
@@ -39,18 +38,17 @@ with the campain of Dr.O.Callot et al.:
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ "
 # =============================================================================
 
 from  Gaudi.Configuration import * 
 from  Configurables       import DataOnDemandSvc
 from  Configurables       import LoKi__HepMC2MCAlg
 
-svc = DataOnDemandSvc ()
+alg = LoKi__HepMC2MCAlg()
 
-svc.AlgMap.update (
-    { 'Relations/Gen/HepMCEvents' : 'LoKi::HepMC2MCAlg/HepMC2MCalg' }
-    )
+dod = DataOnDemandSvc ( OutputLevel = 2 )
+dod.AlgMap[ 'Relations/Gen/HepMCEvents' ] = alg.getFullName() 
 
 # =============================================================================
 # The END
