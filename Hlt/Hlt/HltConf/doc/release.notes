@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.50 2008-10-31 11:12:01 graven Exp $ 
+! $Id: release.notes,v 1.51 2008-11-04 08:53:23 witekma Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : 
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2008-11-04 - Mariusz Witek
+ - New options for Ecal Alley (.opts)
 
 ! 2008-10-31 - Gerhard Raven
  - follow updates in GaudiKernel 
@@ -50,6 +53,7 @@
 ! 2008-10-13 - Patrick Koppenburg for Yasmine Amhis
  - Resolved pi0 mass cut changed to 30 MeV
 
+>>>>>>> 1.50
 !========================== HltConf v1r4 2008-10-03 ===================
 ! 2008-10-07 - Gerhard Raven
  - Switch to use HltLine (the C++ algorithm) inside HltLine (the python setup code)

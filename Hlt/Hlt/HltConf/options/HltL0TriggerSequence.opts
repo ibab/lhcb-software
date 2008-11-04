@@ -94,6 +94,8 @@ PrepareL0MuonNoGlobDecisionSeq.Members = {
 L0HadronDecision.CaloMakerTool="HadronSeedTool";
 ToolSvc.HadronSeedTool.decodeCalos=  false;
 
+L0ElectronDecision.CaloMakerTool="EcalSeedForVeloMatch";
+
 Hlt1L0Electron.L0Channels = {"Electron"};
 Hlt1L0Photon.L0Channels = {"Photon"};
 Hlt1L0LocalPi0.L0Channels = {"LocalPi0"};
