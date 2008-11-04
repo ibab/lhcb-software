@@ -61,14 +61,14 @@ EventSelector().FirstEvent = 1
 EventSelector().PrintFreq = 500 
 
 # ApplicationMgr().TopAlg += [ "PrintTree", "PrintMCTree" ]
-# PrintTree.PhysDesktop.InputLocations = [ "Phys/Hlt2SharedDiMuon" ]
+# PrintTree.PhysDesktop.InputLocations = [ "Hlt2SharedDiMuon" ]
 # PrintMCTree.ParticleNames = [ "B0", "B~0" ]
 ###
  # Tuple
 ###
 importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
 DecayTreeTuple("Hlt2DecayTreeTuple").addTool(PhysDesktop())
-DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Phys/Hlt2SelBd2JpsiMuMuKsDDBiased"]
+DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Hlt2SelBd2JpsiMuMuKsDDBiased"]
 DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[B0 -> (^KS0 => ^pi+ ^pi-) (^J/psi(1S) => ^mu+ ^mu-)]cc"
 # special for head
 DecayTreeTuple("Hlt2DecayTreeTuple").Branches = {

@@ -29,6 +29,6 @@ RichPixelCreatorConfig().findClusters = False
 
 #PhotonCreator().nSigma = [ 3.5, 2.8, 3.0 ]
 
-richConf.applyConf(seq)
+# richConf.applyConf(seq)
 
 del richConf

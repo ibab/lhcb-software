@@ -29,7 +29,7 @@ HltConf().applyConf()
 #
 # Plots
 #
-importOptions( "$HLTSELECTIONSROOT/options/Hlt2MonitorPlots.py")
+# importOptions( "$HLTSELECTIONSROOT/options/Hlt2MonitorPlots.py")
 #
 # True filter criterion
 #
@@ -50,7 +50,7 @@ GaudiSequencer("SeqHlt2TruthFilter").IgnoreFilterPassed = TRUE
 ###
 importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
 DecayTreeTuple("Hlt2DecayTreeTuple").addTool(PhysDesktop())
-DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Phys/Hlt2SelBu2LLKSignal"]
+DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Hlt2SelBu2LLKSignal"]
 DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[B+ -> (^J/psi(1S) => ^e+ ^e-) ^K+]cc"#
 # Options
 #

@@ -47,7 +47,7 @@ GaudiSequencer("SeqHlt2TruthFilter").IgnoreFilterPassed = TRUE
 ###
 importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
 DecayTreeTuple("Hlt2DecayTreeTuple").addTool(PhysDesktop())
-DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Phys/Hlt2SelB2HH"]
+DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Hlt2SelB2HH"]
 DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "B0 -> ^pi+ ^pi-"
 #
 # Options
@@ -66,5 +66,5 @@ EventSelector().FirstEvent = 1
 EventSelector().PrintFreq = 10 
 
 # ApplicationMgr().TopAlg += [ "PrintTree" ]
-# PrintTree().PhysDesktop.InputLocations = [ "Phys/Hlt2SelB2HH" ]
+# PrintTree().PhysDesktop.InputLocations = [ "Hlt2SelB2HH" ]
 

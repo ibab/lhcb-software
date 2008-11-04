@@ -44,7 +44,7 @@ GaudiSequencer("SeqHlt2TruthFilter").IgnoreFilterPassed = TRUE
 ###
 importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
 DecayTreeTuple("Hlt2DecayTreeTuple").addTool(PhysDesktop())
-DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Phys/Hlt2SelB2DstarMu"]
+DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Hlt2SelB2DstarMu"]
 DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[B0 -> ^mu+ (^D*(2010)- -> ^pi-  (^D~0 -> ^K+ ^pi-))]cc"
 #
 # Options

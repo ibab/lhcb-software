@@ -1,9 +1,18 @@
-! $Id: release.notes,v 1.51 2008-11-04 08:53:23 witekma Exp $ 
+	! $Id: release.notes,v 1.52 2008-11-04 18:21:13 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
-! Responsible : 
+! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2008-11-04 - Patrick Koppenburg
+  - Renamed all PhysDesktop.InputLocations not to request Phys as TES location. 
+    It is actually HLT/, but the PhysDesktop will take care of finding that.
+  #
+  # WARNING : This requires versions of DaVinciKernel from 31 Oct otr more recent
+  #           and the corresponding DaVinciTools. This is not compatible
+  #           with DaVinci v20r3.
+  #     
 
 ! 2008-11-04 - Mariusz Witek
  - New options for Ecal Alley (.opts)
@@ -12,7 +21,6 @@
  - follow updates in GaudiKernel 
  - enable writing of SelReports
  - phase out the use of 'Dummy'
-
 
 ! 2008-10-30 - Jose A. Hernando
  - updating HltHadronLines.py to do velo+calo guided forward reconstruction

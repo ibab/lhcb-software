@@ -64,7 +64,7 @@ EventSelector().PrintFreq = 1
 #ApplicationMgr().TopAlg += [ PrintTree("PrintHlt2"), PrintTree("PrintPresel"), PrintMCTree() ]
 #
 PrintTree("PrintHlt2").addTool(PhysDesktop())
-PrintTree("PrintHlt2").PhysDesktop.InputLocations = [ "Phys/Hlt2SelBd2MuMuKstar" ]
+PrintTree("PrintHlt2").PhysDesktop.InputLocations = [ "Hlt2SelBd2MuMuKstar" ]
 PrintTree("PrintPresel").addTool(PhysDesktop())
 PrintTree("PrintPresel").PhysDesktop.InputLocations = [ "Phys/PreselBd2KstarMuMu"  ]
 PrintMCTree().ParticleNames = [ "B0", "B~0" ]
@@ -73,7 +73,7 @@ PrintMCTree().ParticleNames = [ "B0", "B~0" ]
 ###
 importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
 DecayTreeTuple("Hlt2DecayTreeTuple").addTool(PhysDesktop())
-DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Phys/Hlt2SelBd2MuMuKstar"]
+DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Hlt2SelBd2MuMuKstar"]
 DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[B0 -> (^J/psi(1S) => ^mu+ ^mu-) (^K*(892)0 -> ^K+ ^pi-)]cc"
 # special for head
 DecayTreeTuple("Hlt2DecayTreeTuple").Branches = {
@@ -94,7 +94,7 @@ DecayTreeTuple("Hlt2DecayTreeTuple").ToolList += [ "TupleToolTISTOS" ]
 
 #ApplicationMgr().TopAlg += [ FilterDesktop() ]
 #FilterDesktop().addTool(PhysDesktop())
-#FilterDesktop().PhysDesktop.InputLocations = ["Phys/Hlt2SelBd2MuMuKstar"]
+#FilterDesktop().PhysDesktop.InputLocations = ["Hlt2SelBd2MuMuKstar"]
 #FilterDesktop().OutputLevel = 1
 #FilterDesktop().Code = "ALL"
 

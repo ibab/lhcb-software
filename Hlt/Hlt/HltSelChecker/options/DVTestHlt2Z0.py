@@ -26,9 +26,9 @@ Z0Checker("OffNoIDZ0Checker").Locations = [ "/Event/Phys/StdNoPIDsMuons/Particle
 Z0.Members += [ Z0Checker("OffMuZ0Checker") ]  
 Z0Checker("OffMuZ0Checker").Locations = [ "/Event/Phys/StdLooseMuons/Particles" ]
 Z0.Members += [ Z0Checker("HltPiZ0Checker") ]  
-Z0Checker("HltPiZ0Checker").Locations = [ "/Event/Phys/Hlt2Pions/Particles" ]
+Z0Checker("HltPiZ0Checker").Locations = [ "/Event/HLT/Hlt2Pions/Particles" ]
 Z0.Members += [ Z0Checker("HltMuZ0Checker") ]  
-Z0Checker("HltMuZ0Checker").Locations = [ "/Event/Phys/Hlt2Muons/Particles" ]
+Z0Checker("HltMuZ0Checker").Locations = [ "/Event/HLT/Hlt2Muons/Particles" ]
 
 MessageSvc().Format = "% F%50W%S%7W%R%T %0W%M"
 

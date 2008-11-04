@@ -9,6 +9,15 @@
 ! end
 !-----------------------------------------------------------------------------
 
+! 2008-11-04 - Patrick Koppenburg
+ - Renamed all PhysDesktop.InputLocations not to request Phys as TES location. 
+   It is actually HLT/, but the PhysDesktop will take care of finding that.
+  #
+  # WARNING : This requires versions of DaVinciKernel from 31 Oct otr more recent
+  #           and the corresponding DaVinciTools. This is not compatible
+  #           with DaVinci v20r3.
+  #	
+
 ! 2008-10-31 - Patrick Koppenburg
  - Renamed SelResults checking algorithms
 

@@ -197,7 +197,7 @@ Hlt2Muons.DecayDescriptor = "Muon" ;
 * /// Now merge muons    @todo : kill clones
 * //---------------------------------------------------------------------
 * SeqHlt2Muons.Members += { "FilterDesktop/HltMuons"};
-* HltMuons.PhysDesktop.InputLocations = { "Phys/HltAlleyMuons", "Phys/HltForwardMuons" };
+* HltMuons.PhysDesktop.InputLocations = { "HltAlleyMuons", "HltForwardMuons" };
 */
 
 //---------------------------------------------------------------------
@@ -264,15 +264,15 @@ SeqMakeHlt2KsLL.IgnoreFilterPassed = true ;
 Hlt2KsLLParticles.V0Location = "Hlt/Vertex/KsLL" ;
 Hlt2KsLLParticles.MakeKs = true ;
 Hlt2KsLLParticles.MakeLambda = false ;
-Hlt2KsLLParticles.PhysDesktop.InputLocations = { "Phys/Hlt2Pions" };
+Hlt2KsLLParticles.PhysDesktop.InputLocations = { "Hlt2Pions" };
 
 SeqMakeHlt2LambdaLL.Members += { "HltV0ParticleMakerAlg/Hlt2LambdaLLParticles" };
 SeqMakeHlt2LambdaLL.IgnoreFilterPassed = true ;
 Hlt2LambdaLLParticles.V0Location = "Hlt/Vertex/KsLL" ;
 Hlt2LambdaLLParticles.MakeKs = false ;
 Hlt2LambdaLLParticles.MakeLambda = true ;
-Hlt2LambdaLLParticles.PhysDesktop.InputLocations = { "Phys/Hlt2Pions",
-                                                    "Phys/Hlt2Protons"};
+Hlt2LambdaLLParticles.PhysDesktop.InputLocations = { "Hlt2Pions",
+                                                    "Hlt2Protons"};
 
 
 Hlt2KsLLParticles.RefitVertex = true ; /// @todo Remove when covariance is fixed
