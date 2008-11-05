@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE gdd SYSTEM 'gdd.dtd'>
+<gdd>
+  <package name='TrackFitEvent'>
+
+<!-- ================ STLiteMeasurement class definition ================ -->
+
+    <class
+      name        = 'STLiteMeasurement'
+      author      = 'M Needham'
+      desc        = 'STLiteMeasurement is a measurement made from a STLite cluster (of TT or IT).'
+      serializers = 'FALSE'>
+
+      <base name='LHCb::Measurement' />
+      <import name='Event/Measurement' />
+      <import name='Event/STLiteCluster' />
+      <import name='StateVector' soft='FORWARDONLY'/>
+      <import name='DeSTDetector'       namespace='::' soft='FORWARDONLY'/>
+      <import name='ISTClusterPosition' namespace='::' soft='FORWARDONLY'/>
+
+      <constructor
+        desc = 'Constructor from an STLiteCluster'>
+        <arg type='LHCb::STLiteCluster' name='stCluster' const='TRUE' />
+        <arg type='DeSTDetector' name='det' const='TRUE' />
+        <arg type='ISTClusterPosition' name='stClusPosTool' const='TRUE' />
+        <arg type='LHCb::StateVector' name='refVector' const='TRUE'/>
+      </constructor>
+
+      <constructor
+        desc = 'Constructor from an STLiteCluster'>
+        <arg type='LHCb::STLiteCluster' name='stCluster' const='TRUE' />
+        <arg type='DeSTDetector' name='det' const='TRUE' />
+        <arg type='ISTClusterPosition' name='stClusPosTool' const='TRUE' />
+      </constructor>
+
+      <attribute
+        type = 'LHCb::STLiteCluster'
+        name = 'cluster'
+        desc = 'Access to the STLiteCluster'
+        getMeth = 'FALSE' />
+
+      <method
+        name   = 'init'
+        desc   = 'Initialize the data members'
+        access = 'PUBLIC'>
+        <arg type='DeSTDetector' name='det' const='TRUE' />
+        <arg type='ISTClusterPosition' name='stClusPosTool' const='TRUE' />
+      </method>
+
+      <method
+        type    = 'LHCb::STLiteMeasurement*'
+        name    = 'clone'
+        desc    = 'Clone the STMeasurement'
+        virtual = 'TRUE'
+        const   = 'TRUE'>
+        <code>
+          return new LHCb::STLiteMeasurement(*this);
+        </code>
+      </method>
+
+    </class>
+
+  </package>
+</gdd>
+
