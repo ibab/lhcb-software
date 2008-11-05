@@ -1,10 +1,17 @@
-!$Id: release.notes,v 1.148 2008-10-28 12:43:08 cattanem Exp $
+!$Id: release.notes,v 1.149 2008-11-05 09:43:33 mneedham Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
+
+! 2008-11-04 M Needham
+ - make findSector method const in DeSTDetector
+ - add middleSensor method to DeSTSector
+
+
 ! 2008-10-28 - Marco Cattaneo
  - Fix compilation errors with gcc 4.3
+
 
 ! 2008-10-26 M Needham
  - Improve print methods

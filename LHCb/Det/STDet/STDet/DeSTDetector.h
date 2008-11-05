@@ -1,4 +1,4 @@
-// $Id: DeSTDetector.h,v 1.25 2008-10-28 12:43:08 cattanem Exp $
+// $Id: DeSTDetector.h,v 1.26 2008-11-05 09:43:33 mneedham Exp $
 #ifndef _DeSTDetector_H_
 #define _DeSTDetector_H_
 
@@ -134,7 +134,7 @@ public:
   * @param  aChannel channel 
   * @return sector 
   */
-  DeSTSector* findSector(const LHCb::STChannelID aChannel); 
+  DeSTSector* findSector(const LHCb::STChannelID aChannel) const; 
 
   /** get the next channel left */
   LHCb::STChannelID nextLeft(const LHCb::STChannelID testChan);
@@ -194,7 +194,7 @@ protected:
   Layers m_layers;
 
   typedef GaudiUtils::VectorMap<unsigned int,DeSTSector*> SectorMap;
-  SectorMap m_sMap;
+  mutable SectorMap m_sMap;
 
 private:
 
@@ -273,7 +273,7 @@ inline bool DeSTDetector::isValid(const LHCb::STChannelID aChannel){
   return (aSector != 0 ? aSector->isStrip(aChannel.strip()) : false); 
 }
 
-inline DeSTSector* DeSTDetector::findSector(const LHCb::STChannelID aChannel){
+inline DeSTSector* DeSTDetector::findSector(const LHCb::STChannelID aChannel) const{
  SectorMap::iterator iter = m_sMap.find(aChannel.uniqueSector());
  return (iter != m_sMap.end() ? iter->second : 0);
 }
