@@ -1,4 +1,4 @@
-// $Id: GenerationToSimulation.cpp,v 1.2 2008-10-29 18:26:37 robbep Exp $
+// $Id: GenerationToSimulation.cpp,v 1.3 2008-11-05 17:25:15 robbep Exp $
 // Include files 
 // local
 #include "GenerationToSimulation.h"
@@ -164,14 +164,14 @@ StatusCode GenerationToSimulation::execute() {
 bool GenerationToSimulation::keep( const HepMC::GenParticle * particle ) const {
   LHCb::ParticleID pid( particle -> pdg_id() ) ;  
   switch ( particle -> status() ) {
-    case   1: return true ;
-    case 777: return true ;
-    case 888: return true ;
-    case 889: return true ;
-    case 999: return true ;
-    case   3: return false ;
-    case   0: return false ;
-    case   2: 
+    case LHCb::HepMCEvent::StableInProdGen: return true ;
+    case LHCb::HepMCEvent::DecayedByDecayGen: return true ;
+    case LHCb::HepMCEvent::DecayedByDecayGenAndProducedByProdGen: return true ;
+    case LHCb::HepMCEvent::SignalInLabFrame: return true ;
+    case LHCb::HepMCEvent::StableInDecayGen: return true ;
+    case LHCb::HepMCEvent::DocumentationParticle: return false ;
+    case LHCb::HepMCEvent::Unknown: return false ;
+    case LHCb::HepMCEvent::DecayedByProdGen: 
       if ( pid.isHadron() ) return true ;
       if ( pid.isLepton() ) return true ;
       if ( pid.isNucleus() ) return true ;
@@ -207,9 +207,9 @@ bool GenerationToSimulation::keep( const HepMC::GenParticle * particle ) const {
         default: return true ;
       }
       return true ;
-    default: return true ;
+    default: return false ;
   }
-  return true ;
+  return false ;
 }
 
 //==================================================================================

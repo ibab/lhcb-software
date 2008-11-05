@@ -4,6 +4,10 @@
 ! Purpose     : Code to exchange kinematic information with Geant4
 !-----------------------------------------------------------------------------
 
+! 2008-11-05 - Patrick Robbe
+ - SimulationToMCTruth: removes extra status from the list of particles
+   to convert.
+
 ! 2008-11-04 - Patrick Robbe
  - SimulationToMCTruth: gives correct vertex type to MCVertex
 
