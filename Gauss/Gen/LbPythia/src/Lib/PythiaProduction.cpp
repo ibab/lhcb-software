@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.cpp,v 1.15 2008-10-23 16:07:09 robbep Exp $
+// $Id: PythiaProduction.cpp,v 1.16 2008-11-05 10:49:33 robbep Exp $
 
 // Include files
 // STD * STL 
@@ -225,13 +225,13 @@ StatusCode PythiaProduction::initialize( ) {
     if ( "UNKNOWN" != System::getEnv( "DECFILESROOT" ) ) {
       std::string temp = m_slhaDecayFile ;
       m_slhaDecayFile = System::getEnv( "DECFILESROOT" ) +
-	"/LHA/" + temp ;
+	"/lha/" + temp ;
     }
     // Check if file exists
     boost::filesystem::path slhaDecayFile( m_slhaDecayFile ) ;
-    if ( ! boost::filesystem::exists( slhaDecayFile ) ) 
-      return Error( "The SLHA decay file does not exist" ) ;
-
+    if ( ! boost::filesystem::exists( slhaDecayFile ) ){ 
+      return Error("The SLHA decay file does not exist : " +  m_slhaDecayFile);
+    }
   }
 
   // Name of PYSLHA mass spectrum file to read
@@ -246,7 +246,8 @@ StatusCode PythiaProduction::initialize( ) {
     // Check if file exists
     boost::filesystem::path shlaSpectrumFile( m_slhaSpectrumFile ) ;
     if ( ! boost::filesystem::exists( shlaSpectrumFile ) ) 
-      return Error( "The SLHA mass spectrum file does not exist" ) ;
+      return Error( "The SLHA mass spectrum file does not exist : " + 
+		    m_slhaSpectrumFile ) ;
   }
 
   // Set size of common blocks in HEPEVT: note these correspond to stdhep
@@ -384,13 +385,16 @@ StatusCode PythiaProduction::initializeGenerator( ) {
 
     Pythia::pymssm().imss(22) = lunUnit2 ;
     int status = 0 ;
-    for( std::vector<int>::const_iterator i = m_pdecaylist.begin();
-         i != m_pdecaylist.end(); i++ ){
-      Pythia::PySlha( 2 , *i , status ) ;
-      debug() << "Status " << status << endreq ;
-      if(status != 0){
-	return Error( "Could not update particle " ) ;
+    if( m_pdecaylist.size() != 0 ){
+      for( std::vector<int>::const_iterator i = m_pdecaylist.begin();
+	   i != m_pdecaylist.end(); i++ ){
+	Pythia::PySlha( 2 , *i , status ) ;
+	debug() << "Updating Particle "<< *i <<", Status " << status <<endreq;
+	if(status != 0) return Error( "Could not update particle " ) ;
       }
+      sc = F77Utils::close( lunUnit2 , msgLevel( MSG::INFO ) ) ;
+      if ( sc.isFailure() )
+	return Error( "Cannot close SLHA decay file" ) ;
     }
   }
   
@@ -403,14 +407,13 @@ StatusCode PythiaProduction::initializeGenerator( ) {
       return Error( "Cannot close SLHA mass spectrum file" ) ;
   }
 
+ 
   //Close decay file
-  if ( "empty" != m_slhaDecayFile ) {
-    sc = F77Utils::close( lunUnit2 , msgLevel( MSG::INFO ) ) ;
-    if ( sc.isFailure() )
-      return Error( "Cannot close SLHA decay file" ) ;
-  }
-  
-  Pythia::PyInit( m_frame, m_beam, m_target, m_win ) ;  
+   if ( "empty" != m_slhaDecayFile && 0 == m_pdecaylist.size() ) {  
+     sc = F77Utils::close( lunUnit2 , msgLevel( MSG::INFO ) ) ;
+     if ( sc.isFailure() )
+       return Error( "Cannot close SLHA decay file" ) ;
+   }
 
   // Reset forced fragmentation flag
   Pythia::pydat1().mstu( 150 ) = 0 ;
