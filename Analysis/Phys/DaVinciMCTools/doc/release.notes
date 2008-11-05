@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.235 2008-10-10 14:53:59 jpalac Exp $
+! $Id: release.notes,v 1.236 2008-11-05 18:17:06 gligorov Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2008-11-05 - V. Gligorov
+ - src/BackgroundCategory.{cpp}
+   Fixed bug when ProtoParticle of a Particle is NULL 
 
 ! 2008-10-10 - Juan PALACIOS
  - cmt/requirements
