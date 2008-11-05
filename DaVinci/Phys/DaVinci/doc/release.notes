@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.255 2008-11-04 10:27:14 jpalac Exp $
+! $Id: release.notes,v 1.256 2008-11-05 14:55:39 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,18 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2008-11-05 - Juan PALACIOS
+ - python/DaVinci/Configuration.py
+  . Add some more funcitonality.
+  . Configurable named DaVinciApp, since DaVinci was causing some problems.
+  . Add Input list to __slots__, allows to set input as configurable property.
+  . Fix various typos and bugs.
+ - Add: 
+  . options/DaVinci-Default.py: example python script to run a DaVinci job with configurables.
+  . tests/options/DVTestB2DiMuon.py: example python script with configurables for B->MuMu QM test.
+ - options/DaVinci-2008.py
+  . Change to use some DaVinci.Configuration functionality
 
 ! 2008-11-04 - Juan PALACIOS
  - python/DaVinci/Configuration.py
