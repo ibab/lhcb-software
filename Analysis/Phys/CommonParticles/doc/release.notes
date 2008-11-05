@@ -1,9 +1,11 @@
-!$Id: release.notes,v 1.106 2008-10-29 13:52:22 pkoppenb Exp $
+!$Id: release.notes,v 1.107 2008-11-05 09:21:17 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
+
+!========================== CommonParticles v4r1p2 2008-11-05 =================
 
 ! 2008-10-29 - Patrick Koppenburg
  - Rename SelresultCorrelations
