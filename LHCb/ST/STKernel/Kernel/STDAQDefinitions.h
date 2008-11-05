@@ -1,4 +1,4 @@
-// $Id: STDAQDefinitions.h,v 1.4 2008-06-25 06:55:46 mneedham Exp $
+// $Id: STDAQDefinitions.h,v 1.5 2008-11-05 15:31:43 mneedham Exp $
 #ifndef _STDAQDefinitions_H
 #define _STDAQDefinitions_H
 
@@ -28,7 +28,7 @@ namespace STDAQ{
   const unsigned int adcMask = 0xff;
 
   /// version of the decoding software
-  enum version { v1 = 0, v2 = 1 , v3 = 2 , v4 = 3};
+  enum version { inValidVersion = -1, v1 = 0, v2 = 1 , v3 = 2 , v4 = 3};
 
   /// n strips per ppx
   const unsigned int nStripPerPPx = 768u;

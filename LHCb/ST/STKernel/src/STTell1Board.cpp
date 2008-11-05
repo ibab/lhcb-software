@@ -1,4 +1,4 @@
-// $Id: STTell1Board.cpp,v 1.9 2008-09-05 14:11:49 mneedham Exp $
+// $Id: STTell1Board.cpp,v 1.10 2008-11-05 15:31:43 mneedham Exp $
 #include "Kernel/STTell1Board.h"
 #include "Kernel/STDAQDefinitions.h"
 #include "Kernel/LHCbConstants.h"
@@ -48,11 +48,11 @@ bool STTell1Board::isInside(const STChannelID aOfflineChan,
 
 
 STTell1Board::chanPair STTell1Board::DAQToOffline(const unsigned int fracStrip,
-                                                  const int version, const unsigned int aDAQChan) const{
+                                                  const STDAQ::version& version, const STDAQ::StripRepresentation aDAQChan) const{
 
   // convert a DAQ channel to offline !
-  const unsigned int index = aDAQChan/m_nStripsPerHybrid;
-  unsigned int strip =  aDAQChan - (index*m_nStripsPerHybrid);
+  const unsigned int index = aDAQChan.value()/m_nStripsPerHybrid;
+  unsigned int strip =  aDAQChan.value() - (index*m_nStripsPerHybrid);
 
   int interstrip = fracStrip;
 
@@ -129,21 +129,13 @@ unsigned int STTell1Board::offlineToDAQ(const STChannelID aOfflineChan,
   return (waferIndex*m_nStripsPerHybrid) + strip;
 }
 
-std::string STTell1Board::BeetleRepServiceBox(const unsigned int beetle) const{
 
-  const unsigned int  tell1Chan = beetle*LHCbConstants::nStripsInBeetle; 
-  const unsigned int index = tell1Chan/m_nStripsPerHybrid;
+std::string STTell1Board::serviceBox(const STDAQ::StripRepresentation& tell1Chan) const{
+
+  const unsigned int index = tell1Chan.value()/m_nStripsPerHybrid;
   return serviceBox(index);
 }
 
-std::string STTell1Board::PPRepServiceBox(const unsigned int pp, const unsigned int beetle) const{
-
-  const unsigned int  tell1Chan = 
-                              STDAQ::nStripPerPPx *pp
-                              + (beetle*LHCbConstants::nStripsInBeetle); 
-  const unsigned int index = tell1Chan/m_nStripsPerHybrid;
-  return serviceBox(index);
-}
 
 std::ostream& STTell1Board::fillStream( std::ostream& os ) const{
 

@@ -1,4 +1,4 @@
-// $Id: STKernelDict.h,v 1.6 2008-08-23 08:22:46 mneedham Exp $
+// $Id: STKernelDict.h,v 1.7 2008-11-05 15:31:43 mneedham Exp $
 #ifndef DICT_STKERNELDICT_H 
 #define DICT_STKERNELDICT_H 1
 
@@ -11,6 +11,7 @@
 #include "Kernel/BeetleRepresentation.h"
 #include "Kernel/PPRepresentation.h"
 #include "Kernel/StripRepresentation.h"
+#include "Kernel/STDAQDefinitions.h"
 
 struct _Instantiations{
 

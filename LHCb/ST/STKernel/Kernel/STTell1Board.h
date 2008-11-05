@@ -1,9 +1,11 @@
-// $Id: STTell1Board.h,v 1.11 2008-09-05 14:11:49 mneedham Exp $
+// $Id: STTell1Board.h,v 1.12 2008-11-05 15:31:43 mneedham Exp $
 #ifndef _STTell1Board_H
 #define _STTell1Board_H 1
 
 #include "Kernel/STTell1ID.h"
 #include "Kernel/STChannelID.h"
+#include "Kernel/STDAQDefinitions.h"
+#include "Kernel/StripRepresentation.h"
 #include <vector>
 #include <iostream>
 
@@ -47,8 +49,8 @@ public:
 
   /// construct LHCb::STChannelID from DAQ Channel
   chanPair DAQToOffline(const unsigned int fracStrip,
-			const int version,
-                        const unsigned int aDAQChan) const;
+			const STDAQ::version& version,
+                        const STDAQ::StripRepresentation aDAQChan) const;
 
   /// fill adc values offline 
   void ADCToOffline(const unsigned int aDAQChan,
@@ -79,10 +81,7 @@ public:
   std::string serviceBox(const LHCb::STChannelID& chan) const; 
 
   /// service box
-  std::string BeetleRepServiceBox(const unsigned int beetle) const;
-
-  /// service box
-  std::string PPRepServiceBox(const unsigned int pp, const unsigned int beetle) const;
+  std::string serviceBox(const STDAQ::StripRepresentation& tell1Chan) const;
 
   /// number of readout sectors
   unsigned int nSectors() const;
