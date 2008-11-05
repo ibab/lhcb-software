@@ -4,7 +4,10 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
-! 2008-1-24 M Needham
+! 2008-11-05 M Needham
+ - add lite measurement types to enum
+
+! 2008-10-24 M Needham
   - enable string to enum conversion in State, Node and Measurement
   - Add constructors to track
 
