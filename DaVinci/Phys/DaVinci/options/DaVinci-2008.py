@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DaVinci-2008.py,v 1.1 2008-10-24 15:58:58 pkoppenb Exp $
+# $Id: DaVinci-2008.py,v 1.2 2008-11-05 14:55:10 jpalac Exp $
 #
 # Options for a typical DaVinci job - this is to please Dirac
 #
@@ -9,4 +9,18 @@
 #
 ########################################################################
 from Gaudi.Configuration import *
-importOptions( "$DAVINCIOPTS/DaVinci.py" )
+from Davinci.Configuration import DavinciApp
+##############################################################################
+#
+#
+##############################################################################
+DaVinciApp().EvtMax = 500
+# DaVinciApp().skipEvents = 0
+# DaVinciApp().DDDBtag      = "DC06-default"
+# DaVinciApp().condDBtag    = "DC06-default"
+# DaVinciApp().useOracleCondDB = False
+# DaVinciApp().Input = []
+# DaVinciApp().mainOptions  = "$DAVINCIROOT/options/DaVinci.opts"
+DaVinciApp().mainOptions  = "$DAVINCIROOT/opitons/DaVinci.py"
+DaVinciApp().applyConf()
+##############################################################################
