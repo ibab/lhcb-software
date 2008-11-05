@@ -3,35 +3,43 @@ High level configuration tools for DaVinci
 At the moment this doesn't do anything. Waiting for re-structuring of
 configuratables.
 """
-__version__ = "$Id: Configuration.py,v 1.2 2008-11-04 11:21:36 jpalac Exp $"
-__author__ == "Juan Palacios <juan.palacios@nikhef.nl>"
+__version__ = "$Id: Configuration.py,v 1.3 2008-11-05 14:49:20 jpalac Exp $"
+__author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
+import GaudiKernel.ProcessJobOptions
 
-class DaVinci(LHCbConfigurableUser) :
+class DaVinciApp(LHCbConfigurableUser) :
     __slots__ = {
         "EvtMax"          :  -1, # Maximum number of events to process
         "skipEvents"      :   0,     # events to skip
-        "mainOpts"        : '$DAVINCIROOT/options/DaVinci.py',
+        "mainOptions"        : '$DAVINCIROOT/options/DaVinci.py',
         "DDDBtag"         : 'DC06-default', #
-        "CondDBtag"       : 'DC06-default',
-        "useOracleCondDB" : False
+        "condDBtag"       : 'DC06-default',
+        "useOracleCondDB" : False,
+        "OutputLevel"     : 1,
+        "Input"           : []
         }
 
     def defineEvents(self):
         evtMax = self.getProp("EvtMax")
-        if hasattr(LHCbApp(),"EvtMax"):
-            print "# LHCbApp().EvtMax already defined, ignoring Boole().EvtMax"
-        else:
-            LHCbApp().EvtMax = evtMax
-
+        print "Re-defining EvtMax to ", evtMax
+        ApplicationMgr().EvtMax = evtMax
         skipEvents = self.getProp("skipEvents")
         if skipEvents > 0 :
-            if hasattr(LHCbApp(),"skipEvents"):
-                print "# LHCbApp().skipEvents already defined, ignoring Boole().skipEvents"
-            else:
-                LHCbApp().skipEvents = skipEvents
+            ApplicationMgr().skipEvents = skipEvents
+
+    def defineInput(self):
+        input = self.getProp("Input")
+        print "Re-defining input to\n", input
+        EventSelector().Input = input
+
+    def evtMax(self):
+        if hasattr(ApplicationMgr(),"EvtMax"):
+            return getattr(ApplicationMgr(),"EvtMax")
+        else:
+            return ApplicationMgr().getDefaultProperties()["EvtMax"]
 
     def defineDB(self):
         # Prefer DaVinci default over LHCbApp default if not set explicitly
@@ -40,14 +48,16 @@ class DaVinci(LHCbConfigurableUser) :
         # Delegate handling to LHCbApp configurable
         self.setOtherProps(LHCbApp(),["condDBtag","DDDBtag","useOracleCondDB"]) 
 
-    def hepMCBackComp(self)
+    def hepMCBackComp(self) :
         # Special options for DC06 data processing
         if LHCbApp().getProp("DDDBtag").find("DC06") != -1 :
             ApplicationMgr().Dlls += [ "HepMCBack" ]
 
     def applyConf(self):
-        GaudiKernel.ProcessJobOptions.PrintOff()
+#        GaudiKernel.ProcessJobOptions.PrintOff()
         importOptions( self.getProp( "mainOptions" ) )
         self.defineEvents()
-        self.hepMCBack()
+        self.defineInput()
+        self.defineDB()
+        self.hepMCBackComp()
         LHCbApp().applyConf()
