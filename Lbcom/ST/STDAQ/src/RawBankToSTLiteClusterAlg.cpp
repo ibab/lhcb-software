@@ -1,4 +1,4 @@
-// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.33 2008-10-24 13:39:01 mneedham Exp $
+// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.34 2008-11-05 15:31:15 mneedham Exp $
 
 
 #include <algorithm>
@@ -24,6 +24,7 @@
 #include "Kernel/STDecoder.h"
 #include "Kernel/STDetSwitch.h"
 #include "Kernel/STDataFunctor.h"
+#include "Kernel/StripRepresentation.h"
 
 #include "Kernel/FastClusterContainer.h"
 
@@ -158,10 +159,10 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt,STLiteCluster
       continue; 
     }
 
-    const int version = forceVersion() ? m_forcedVersion: (*iterBank)->version();
+    const STDAQ::version bankVersion = forceVersion() ? STDAQ::version(m_forcedVersion): STDAQ::version((*iterBank)->version());
 
     // check the integrity of the bank --> always skip if not ok
-    if (!m_skipErrors && checkDataIntegrity(decoder, aBoard , (*iterBank)->size() , version) == false) continue;
+    if (!m_skipErrors && checkDataIntegrity(decoder, aBoard , (*iterBank)->size() , bankVersion) == false) continue;
 
     // read in the first half of the bank
     STDecoder::pos_iterator iterDecoder = decoder.posBegin();
@@ -170,7 +171,7 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt,STLiteCluster
       STClusterWord aWord = *iterDecoder;
       unsigned int fracStrip = aWord.fracStripBits();
       
-      STTell1Board::chanPair chan = aBoard->DAQToOffline(fracStrip, version, aWord.channelID());
+      STTell1Board::chanPair chan = aBoard->DAQToOffline(fracStrip, bankVersion, STDAQ::StripRepresentation(aWord.channelID()));
 
       STLiteCluster liteCluster(chan.second,
                                 aWord.pseudoSizeBits(),

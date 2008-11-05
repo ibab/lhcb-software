@@ -1,4 +1,4 @@
-// $Id: STDecodingBaseAlg.cpp,v 1.22 2008-10-17 14:10:22 mneedham Exp $
+// $Id: STDecodingBaseAlg.cpp,v 1.23 2008-11-05 15:31:15 mneedham Exp $
 
 #include <algorithm>
 
@@ -54,7 +54,7 @@ m_bankTypeString(""){
  declareProperty("recoverMode", m_recoverMode = true);
  
  declareProperty("rawEventLocation",m_rawEventLocation = RawEventLocation::Default);
- declareProperty("forcedVersion", m_forcedVersion = -1);
+ declareProperty("forcedVersion", m_forcedVersion = STDAQ::inValidVersion);
 
  setForcedInit();
 }
@@ -128,7 +128,7 @@ unsigned int STDecodingBaseAlg::pcnVote(const std::vector<RawBank* >& banks) con
 }
 
 bool STDecodingBaseAlg::checkDataIntegrity(STDecoder& decoder, const STTell1Board* aBoard, 
-                                           const unsigned int bankSize, const int version) const{
+                                           const unsigned int bankSize, const STDAQ::version& bankVersion) const{
 
   // check the consistancy of the data
 
@@ -144,7 +144,7 @@ bool STDecodingBaseAlg::checkDataIntegrity(STDecoder& decoder, const STTell1Boar
       unsigned int fracStrip = aWord.fracStripBits();
       debug() << "adc values do not match ! " << iterDecoder->second.size()-1u << " "
               << aWord.pseudoSize() << " offline chan "
-              << aBoard->DAQToOffline(fracStrip,version,aWord.channelID()) 
+              << aBoard->DAQToOffline(fracStrip,bankVersion,STDAQ::StripRepresentation(aWord.channelID())) 
               << " source ID  " << aBoard->boardID()  <<  " chan "  << aWord.channelID()   
               << endmsg ;
       Warning("ADC values do not match", StatusCode::SUCCESS,2);

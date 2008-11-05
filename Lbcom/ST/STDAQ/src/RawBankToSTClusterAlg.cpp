@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.50 2008-10-17 14:10:22 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.51 2008-11-05 15:31:15 mneedham Exp $
 
 #include <algorithm>
 
@@ -23,7 +23,7 @@
 #include "Kernel/STFun.h"
 #include "SiDAQ/SiADCWord.h"
 #include "Kernel/STDecoder.h"
-
+#include "Kernel/StripRepresentation.h"
 
 #include "boost/lexical_cast.hpp"
 
@@ -73,6 +73,9 @@ StatusCode RawBankToSTClusterAlg::execute() {
   }
 
    // Retrieve the RawEvent:
+  if (!exist<RawEvent>(m_rawEventLocation)){
+    return Warning("Failed to find raw data", StatusCode::SUCCESS,1);
+  }
   RawEvent* rawEvt = get<RawEvent>(m_rawEventLocation );
 
 
@@ -152,9 +155,9 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
     // make a decoder
     STDecoder decoder((*iterBank)->data());    
     // get verion of the bank
-    const int version = forceVersion() ? m_forcedVersion: (*iterBank)->version();
+    const STDAQ::version bankVersion = forceVersion() ? STDAQ::version(m_forcedVersion): STDAQ::version((*iterBank)->version());
 
-    debug() << "decoding bank version " << version << endmsg;
+    debug() << "decoding bank version " << bankVersion << endmsg;
 
     bool recover = false;
     if (decoder.hasError() == true && !m_skipErrors){
@@ -186,7 +189,7 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
     }
 
     // check the integrity of the bank --> always skip if not ok
-    if (!m_skipErrors && checkDataIntegrity(decoder, aBoard , (*iterBank)->size() , version) == false) {
+    if (!m_skipErrors && checkDataIntegrity(decoder, aBoard , (*iterBank)->size() , bankVersion) == false) {
       bankList.push_back((*iterBank)->sourceID());
       continue;
     }
@@ -204,13 +207,13 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
     for ( ;iterDecoder != decoder.posAdcEnd(); ++iterDecoder){
       if (recover == false){
        createCluster(iterDecoder->first,aBoard,
-                     iterDecoder->second,version, clusCont);
+                     iterDecoder->second,bankVersion, clusCont);
       }
       else {
 	// check that this cluster is ok to be recovered
         if (errorBank != 0 && canBeRecovered(errorBank,iterDecoder->first, pcn) == true){
          createCluster(iterDecoder->first,aBoard,
-                        iterDecoder->second,version, clusCont); 
+                        iterDecoder->second,bankVersion, clusCont); 
 	} 
       }
     } // iterDecoder
@@ -228,7 +231,7 @@ void RawBankToSTClusterAlg::createCluster( const STClusterWord& aWord,
                                            const STTell1Board* aBoard,
                                            const std::vector<SiADCWord>& 
                                            adcValues,
-                                           const unsigned int version,
+                                           const STDAQ::version& bankVersion,
                                            STClusters* clusCont) const{
   // stream the neighbour sum
   std::vector<SiADCWord>::const_iterator iterADC = adcValues.begin();
@@ -253,9 +256,9 @@ void RawBankToSTClusterAlg::createCluster( const STClusterWord& aWord,
     adcs.push_back(std::make_pair(i-offset,(int)tWords[i].adc()));
   } // iDigit
 
-  STTell1Board::chanPair nearestChan = aBoard->DAQToOffline(fracStrip,version,aWord.channelID());
+  STTell1Board::chanPair nearestChan = aBoard->DAQToOffline(fracStrip,bankVersion,STDAQ::StripRepresentation(aWord.channelID()));
 
-  aBoard->ADCToOffline(aWord.channelID(),adcs,version,offset,interStripPos);
+  aBoard->ADCToOffline(aWord.channelID(),adcs,bankVersion,offset,interStripPos);
 
   // make cluster +set things
   STCluster* newCluster = new STCluster(this->word2LiteCluster(aWord, 

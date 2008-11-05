@@ -1,4 +1,4 @@
-// $Id: STDecodingBaseAlg.h,v 1.16 2008-10-17 14:10:22 mneedham Exp $
+// $Id: STDecodingBaseAlg.h,v 1.17 2008-11-05 15:31:15 mneedham Exp $
 #ifndef STDECODINGBASEALG_H 
 #define STDECODINGBASEALG_H 1
 
@@ -58,7 +58,7 @@ protected:
  unsigned int pcnVote(const std::vector<LHCb::RawBank* >& banks) const;
 
  bool checkDataIntegrity(STDecoder& decoder, const STTell1Board* aBoard, 
-                         const unsigned int bankSize, const int version) const;
+                         const unsigned int bankSize, const STDAQ::version& bankVersion) const;
 
  /** list of boards missing in action */
  std::vector<unsigned int> missingInAction(const std::vector<LHCb::RawBank*>& banks) const; 
@@ -120,6 +120,7 @@ inline LHCb::RawBank::BankType STDecodingBaseAlg::bankType() const {
 inline bool STDecodingBaseAlg::forceVersion() const{
   return m_forcedVersion >= 0;
 }
+
 
 inline bool STDecodingBaseAlg::recoverMode() const{
   return m_recoverMode;

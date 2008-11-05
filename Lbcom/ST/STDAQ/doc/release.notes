@@ -4,6 +4,9 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2008-11-05 M Needham 
+ - Follow changes in STKernel
+
 ! 2008-10-24 M Needham 
  - Bug fix in RawBankToSTLiteCluster decoding [handle duplicates correctly]
 

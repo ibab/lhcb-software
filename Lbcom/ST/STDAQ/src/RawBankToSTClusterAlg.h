@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.h,v 1.11 2008-09-12 07:30:06 cattanem Exp $
+// $Id: RawBankToSTClusterAlg.h,v 1.12 2008-11-05 15:31:15 mneedham Exp $
 #ifndef RAWBANKTOSTCLUSTERALG_H 
 #define RAWBANKTOSTCLUSTERALG_H 1
 
@@ -52,7 +52,7 @@ private:
   void createCluster(const STClusterWord& aWord,
                      const STTell1Board* aBoard,
                      const std::vector<SiADCWord>& adcValues,
-                     const unsigned int version,
+                     const STDAQ::version& bankVersion,
                      LHCb::STClusters* clusCont) const;
  
   double mean(const std::vector<SiADCWord>& adcValues) const;
