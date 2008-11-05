@@ -3,7 +3,7 @@ High level configuration tools for DaVinci
 At the moment this doesn't do anything. Waiting for re-structuring of
 configuratables.
 """
-__version__ = "$Id: Configuration.py,v 1.3 2008-11-05 14:49:20 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.4 2008-11-05 15:01:31 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -32,8 +32,9 @@ class DaVinciApp(LHCbConfigurableUser) :
 
     def defineInput(self):
         input = self.getProp("Input")
-        print "Re-defining input to\n", input
-        EventSelector().Input = input
+        if ( len(input) > 0) :
+            print "Re-defining input to\n", input
+            EventSelector().Input = input
 
     def evtMax(self):
         if hasattr(ApplicationMgr(),"EvtMax"):
