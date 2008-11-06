@@ -1,6 +1,6 @@
-// $Id: DVTestBu2eeK.opts,v 1.7 2008-10-29 13:50:58 pkoppenb Exp $
+// $Id: DVTestBu2eeK.opts,v 1.8 2008-11-06 16:25:06 jpalac Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
 // ============================================================================
 /** @file DVTestBu2eeK.opts
  *
@@ -68,7 +68,9 @@ PrintDiLeptonForPreselBu2LLK.OutputLevel=4;
 //
 ApplicationMgr.TopAlg += { "AlgorithmCorrelationsAlg/TestCorrelations" };
 TestCorrelations.AlgorithmCorrelations.OnlyNonZero = false;
-TestCorrelations.Algorithms = { "AllTrueNoPIDsDecay", 
+TestCorrelations.Algorithms = { "SelectTrueNoPIDsDecay",
+                                "AllTrueNoPIDsDecay", 
+                                "SelectTrueLooseDecay",
                                 "AllTrueLooseDecay",
                                 "DiLeptonForPreselBu2LLK",
                                 "PreselBu2LLK" };
