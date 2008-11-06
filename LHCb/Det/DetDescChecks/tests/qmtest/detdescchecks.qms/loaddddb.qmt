@@ -2,22 +2,13 @@
 /en.dtd'>
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>gaudirun.py</text></argument>
-  <argument name="args"><set><text>-v</text><text>../../options/LoadDDDB.py</text><text>$DDDBROOT/options/DC06.py</text></set></argument>
+  <argument name="args"><set>
+    <text>-v</text>
+    <text>../../options/LoadDDDB.py</text>
+    <text>--option</text>
+    <text>from DDDB.Configuration import DDDBConf; DDDBConf(DataType="DC06")</text>
+  </set></argument>
 <argument name="validator"><text>
-linecount = 0
-errors = {'ERROR':[],'FATAL':[]}
-outlines = stdout.splitlines()
-from math import log10
-fmt = "%%%dd - %%s" % (int(log10(100))+1)
-for l in outlines:
-    linecount += 1
-    words = l.split()
-    if len(words) >= 2 and words[1] in errors:
-        errors[words[1]].append(fmt%(linecount,l.rstrip()))
-
-for e in errors:
-    if errors[e]:
-        causes.append('%s(%d)'%(e,len(errors[e])))
-        result["GaudiTest.lines.%s"%e] = result.Quote('\n'.join(errors[e]))
+countErrorLines()
 </text></argument>
 </extension>
