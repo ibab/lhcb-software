@@ -155,7 +155,7 @@
      </method>
 
     <method 
-        type = 'const double'
+        type = 'double'
         name = 'mass'
         desc = 'fitted mass of two-prong given mass hypothesis for 2 daughters'
         const   = 'TRUE'>
@@ -241,7 +241,7 @@
         
  
       <method
-	type ="const LHCb::Track::Types"
+	type ="LHCb::Track::Types"
 	name = "TrackType"
 	desc = "return the track type of the track at trackIndex"
 	const = "TRUE">
