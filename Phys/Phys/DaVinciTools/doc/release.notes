@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.381 2008-11-03 18:38:57 jpalac Exp $
+! $Id: release.notes,v 1.382 2008-11-06 11:52:36 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-11-06 - Patrick Koppenburg
+ - CombineParticles : do not set path of histograms if it's "".
 
 ! 2008-11-03 - Juan PALACIOS
  - CheckSelResult.cpp

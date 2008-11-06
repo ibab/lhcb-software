@@ -1,4 +1,4 @@
-// $Id: CombineParticles.cpp,v 1.22 2008-10-01 13:23:38 ibelyaev Exp $
+// $Id: CombineParticles.cpp,v 1.23 2008-11-06 11:52:36 pkoppenb Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -172,6 +172,8 @@ private:
   StatusCode updateMajor  () ;
   /// perform the update of histogram properties 
   StatusCode updateHistos () ;
+  /// helper to get histo tools
+  StatusCode getHistoTool( IPlotTool*& histoTool, std::string name, std::string path);
   // ==========================================================================  
 public:
   // ==========================================================================
@@ -799,6 +801,21 @@ StatusCode CombineParticles::updateMajor  ()
 // ============================================================================
 // perform the update of the histogram properties 
 // ============================================================================
+StatusCode CombineParticles::getHistoTool( IPlotTool*& histoTool, std::string name, std::string path)
+{
+  if ( validPlots( name )){
+    histoTool = tool<IPlotTool>( name, this ) ;
+    if ("" != path ){
+      StatusCode sc = m_daughtersPlots -> setPath ( path ) ;
+      if ( sc.isFailure() ) 
+      { return Error ( "Unable to set Plots Path "+path+" for tool "+name , sc ) ; }
+    }
+  }
+  return StatusCode::SUCCESS ;
+}
+// ============================================================================
+// perform the update of the histogram properties 
+// ============================================================================
 StatusCode CombineParticles::updateHistos () 
 {
   // ==========================================================================
@@ -811,30 +828,12 @@ StatusCode CombineParticles::updateHistos ()
   // ==========================================================================  
   if ( produceHistos () ) 
   {
-    // ========================================================================
-    if ( validPlots ( m_daughtersPlotsName ) ) 
-    { 
-      m_daughtersPlots = tool<IPlotTool>   ( m_daughtersPlotsName   , this ) ; 
-      StatusCode sc = m_daughtersPlots -> setPath ( m_daughtersPlotsPath ) ;
-      if ( sc.isFailure() ) 
-      { return Error ( "Unable to set Daughters Plots Path" , sc ) ; }
-    }
-    if ( validPlots ( m_combinationPlotsName ) ) 
-    { 
-      m_combinationPlots = tool<IPlotTool> ( m_combinationPlotsName , this ) ; 
-      StatusCode sc = m_combinationPlots -> setPath ( m_combinationPlotsPath ) ;
-      if ( sc.isFailure () ) 
-      { return Error ( "Unable to set Combination Plots Path" , sc ) ; }
-    }
-    if ( validPlots ( m_motherPlotsName ) ) 
-    { 
-      m_motherPlots = tool<IPlotTool>      ( m_motherPlotsName      , this ) ; 
-      StatusCode sc = m_motherPlots -> setPath ( m_motherPlotsPath ) ;
-      if ( sc.isFailure () ) 
-      { return Error ( "Unable to set Mother Plots Path" , sc ) ; }
-    }
-    // ========================================================================
+    StatusCode sc = getHistoTool( m_daughtersPlots, m_daughtersPlotsName, m_daughtersPlotsPath );
+    if (sc) sc = getHistoTool( m_combinationPlots, m_combinationPlotsName, m_combinationPlotsPath );
+    if (sc) sc = getHistoTool( m_motherPlots, m_motherPlotsName, m_motherPlotsPath );
+    if (!sc) return sc ;
   }
+  // ========================================================================
   // 
   m_to_be_updated2 = false ;
   //
