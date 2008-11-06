@@ -1,4 +1,4 @@
-// $Id: PatSeedingTool.cpp,v 1.26 2008-10-22 08:44:26 mschille Exp $
+// $Id: PatSeedingTool.cpp,v 1.27 2008-11-06 16:38:14 cattanem Exp $
 // Include files
 
 #include <cmath>
@@ -656,7 +656,7 @@ void PatSeedingTool::collectPerRegion(
 	  if ( isRegionOT(reg) ) {
 	    double y = y0 + m_zForYMatch * sl;
 	    if ( m_centralYOT < fabs(y) ) {
-	      boost::array<int, 3> nInStation = { 0, 0, 0 };
+	      boost::array<int, 3> nInStation = { {0, 0, 0} };
 	      BOOST_FOREACH( const PatFwdHit* hit, stereo)
 		if ( !hit->isIgnored() )
 		  nInStation[ hit->hit()->station() ]++;
@@ -1094,7 +1094,7 @@ void PatSeedingTool::collectLowQualTracks(
     // refit in yz
     double y0, sl;
     bool ok = fitLineInY( stereo, y0, sl );
-    if (!ok) continue;
+    if (!ok) {continue;}
     track.setYParams(y0, sl);
 
     // check that pointing constraint still holds
@@ -1118,7 +1118,7 @@ void PatSeedingTool::collectLowQualTracks(
 	// know exactly how large the array needs to be, and we do not
 	// want to buy the additional cost of dynamically allocating
 	// memory for std::vector's storage
-	boost::array<int, 3> nInStation = { 0, 0, 0 };
+	boost::array<int, 3> nInStation = { {0, 0, 0} };
 	BOOST_FOREACH(const PatFwdHit* hit, track.coords()) {
 	  if ( hit->hit()->isX() ) continue;
 	  if ( hit->isIgnored() ) continue;
@@ -1194,10 +1194,11 @@ void PatSeedingTool::storeTrack ( const PatSeedTrack& track,
     hit->hit()->setStatus(Tf::HitBase::UsedByPatSeeding);
     hit->setIsUsed(true);
   }
-  if ( msgLevel( MSG::DEBUG ) )
+  if ( msgLevel( MSG::DEBUG ) ) {
     BOOST_FOREACH( const PatFwdHit* hit, track.coords() )
       debugFwdHit( hit, debug() );
-
+  }
+  
   // get momentum estimate from track using the momentum estimation tool
   LHCb::State temp(
       Gaudi::TrackVector(track.xAtZ(m_zReference), track.yAtZ(m_zReference),
@@ -1930,7 +1931,7 @@ bool PatSeedingTool::fitLineInY ( PatFwdHits& stereo, double& y0, double& sl ) c
   // we use builtin arrays here because we know how big they need to be,
   // and we do not want the additional cost of allocating memory dynamically
   // for std::vector
-  boost::array<double, 3> largestDrift = { 0., 0., 0. };
+  boost::array<double, 3> largestDrift = { {0., 0., 0.} };
   boost::array<PatFwdHit*, 3> seeds;
   double slopeguess = 0.;
   int npoints = 0;

@@ -1,4 +1,4 @@
-// $Id: PatMakeV0.h,v 1.1 2008-01-10 15:37:30 ocallot Exp $
+// $Id: PatMakeV0.h,v 1.2 2008-11-06 16:38:14 cattanem Exp $
 #ifndef PATMAKEKSHORT_H
 #define PATMAKEKSHORT_H 1
 
@@ -280,7 +280,7 @@ private:
   std::vector<LocalV0Track> m_neg;
 
   //-------------------------------------------------------------------------------
-  bool PatMakeV0::checkPhaseSpaceAtOrigin(){
+  bool checkPhaseSpaceAtOrigin(){
     double xPhSp=xCoordFast(0.);
     if(fabs(xPhSp ) > m_impactParTrkX) return true;
     double yPhSp=yCoordFast(0.);
@@ -293,7 +293,7 @@ private:
   }
 
   //-------------------------------------------------------------------------------
-  StatusCode  PatMakeV0::copyV0ParamsForTES(PatV0Candidate& cand){
+  StatusCode copyV0ParamsForTES(PatV0Candidate& cand){
  
  // list of tranfered variables can be easily extended
   
@@ -343,7 +343,7 @@ private:
   //-------------------------------------------------------------------------------
  virtual StatusCode MakeV0(const LHCb::Track *  posTrack,const LHCb::Track *  negTrack, int IDsFlag);
  //-------------------------------------------------------------------------------
-  StatusCode  PatMakeV0::intersection( LocalV0Track& pos, LocalV0Track& neg ) {
+  StatusCode intersection( LocalV0Track& pos, LocalV0Track& neg ) {
     double a = pos.cx[2] - neg.cx[2];
     double b = pos.cx[1] - neg.cx[1];
     double c = pos.cx[0] - neg.cx[0];
@@ -384,7 +384,7 @@ private:
     return StatusCode::SUCCESS;
   }
 //-------------------------------------------------------------------------------
-  StatusCode  PatMakeV0::improveVTX( LocalV0Track& pos, LocalV0Track& neg ) {
+  StatusCode improveVTX( LocalV0Track& pos, LocalV0Track& neg ) {
 
     double a = pos.cx[2] - neg.cx[2];
     double b = pos.cx[1] - neg.cx[1];
@@ -428,7 +428,7 @@ private:
     return StatusCode::SUCCESS;
   }
 //-------------------------------------------------------------------------------
-  StatusCode PatMakeV0::reco4Momentum(LocalV0Track& pos, LocalV0Track& neg ) {
+  StatusCode reco4Momentum(LocalV0Track& pos, LocalV0Track& neg ) {
   
   reco3Momentum( pos , neg ) ;
   StatusCode  sc= recoInvariantMasses (); 
@@ -437,7 +437,7 @@ private:
 }   
   
 //-------------------------------------------------------------------------------
-  void PatMakeV0::reco3Momentum( LocalV0Track& pos, LocalV0Track& neg ) {
+  void reco3Momentum( LocalV0Track& pos, LocalV0Track& neg ) {
 
     double zV=m_zV0Vtx;
     double derXPos = pos.slx( zV );
@@ -484,7 +484,7 @@ private:
     m_yImpact=m_yV0Vtx-m_unitVector[2]/m_unitVector[0]*m_zV0Vtx;
   }
 //-------------------------------------------------------------------------------
-  StatusCode PatMakeV0::recoInvariantMasses () {
+  StatusCode recoInvariantMasses () {
 // double m_invariantKsMass;
 //  double m_invariantLambdaMass;
 //  double m_invariantLambdaBarMass;
@@ -548,8 +548,7 @@ double u_m=m_momTrackMinus[0];
 }     
 //-------------------------------------------------------------------------------
 
-  void PatMakeV0::RecoPhSp
-  (double cx[],double cy[],double slpx[],double slpy[],
+  void RecoPhSp( double cx[],double cy[],double slpx[],double slpy[],
    double & xOrigin, double & txOrigin,double & yOrigin, double & tyOrigin ){
     // coordinates and slopes (LHCb definitions) at zOrigin=0
 
@@ -565,7 +564,7 @@ double u_m=m_momTrackMinus[0];
   }
 
   //-------------------------------------------------------------------------------
-  double PatMakeV0::CheckPrimaryVtx( LocalV0Track& pos, LocalV0Track& neg ) { 
+  double CheckPrimaryVtx( LocalV0Track& pos, LocalV0Track& neg ) { 
   
     double distRef = 1.e10;
     
@@ -585,10 +584,10 @@ double u_m=m_momTrackMinus[0];
 
   }
  //-------------------------------------------------------------------------------
-double PatMakeV0::vtxMomAngle(LHCb::RecVertices* primaryVertices)   {
-double distRef = 1.e10;
-int VtxLoc=-1;
-for( std::vector<double>::iterator itZ = m_zPrimVtx.begin();
+double vtxMomAngle(LHCb::RecVertices* primaryVertices)   {
+  double distRef = 1.e10;
+  int VtxLoc=-1;
+  for( std::vector<double>::iterator itZ = m_zPrimVtx.begin();
      m_zPrimVtx.end() != itZ; ++itZ ) {
      double zPrimVtx= (*itZ);
      double xAtPrimVtx=m_xV0Vtx+m_unitVector[1]/m_unitVector[0]*(zPrimVtx-m_zV0Vtx);
@@ -622,9 +621,9 @@ for( std::vector<double>::iterator itZ = m_zPrimVtx.begin();
    	return dang ;
 }
 //-------------------------------------------------------------------------------
-double PatMakeV0::NormedSmallestImpactParameter()   {
-double distRef = 1.e10;
-for( std::vector<double>::iterator itZ = m_zPrimVtx.begin();
+double NormedSmallestImpactParameter()   {
+  double distRef = 1.e10;
+  for( std::vector<double>::iterator itZ = m_zPrimVtx.begin();
      m_zPrimVtx.end() != itZ; ++itZ ) {
      double zPrimVtx= (*itZ);
      double xAtPrimVtx=m_xV0Vtx+m_unitVector[1]/m_unitVector[0]*(zPrimVtx-m_zV0Vtx);

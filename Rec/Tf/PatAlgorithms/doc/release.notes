@@ -3,6 +3,10 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+
+! 2008-11-06 - Marco Cattaneo
+ - Fixes for gcc 4.3 compilation
+
 ! 2008-10-23 - Stephanie Hansmann-Menzemer
  - modify PatFwdTool::qOverP for zero magnetic field scale factor to be
    consistent with FastMomentumTool
