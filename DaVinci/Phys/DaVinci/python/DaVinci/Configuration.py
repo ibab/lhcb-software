@@ -3,7 +3,7 @@ High level configuration tools for DaVinci
 At the moment this doesn't do anything. Waiting for re-structuring of
 configuratables.
 """
-__version__ = "$Id: Configuration.py,v 1.4 2008-11-05 15:01:31 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.5 2008-11-06 14:25:48 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -14,11 +14,10 @@ class DaVinciApp(LHCbConfigurableUser) :
     __slots__ = {
         "EvtMax"          :  -1, # Maximum number of events to process
         "skipEvents"      :   0,     # events to skip
-        "mainOptions"        : '$DAVINCIROOT/options/DaVinci.py',
+        "mainOptions"     : '$DAVINCIROOT/options/DaVinci.py',
         "DDDBtag"         : 'DC06-default', #
         "condDBtag"       : 'DC06-default',
         "useOracleCondDB" : False,
-        "OutputLevel"     : 1,
         "Input"           : []
         }
 
@@ -32,9 +31,12 @@ class DaVinciApp(LHCbConfigurableUser) :
 
     def defineInput(self):
         input = self.getProp("Input")
+        print "DaVinciApp input is ", input
         if ( len(input) > 0) :
             print "Re-defining input to\n", input
             EventSelector().Input = input
+        else :
+            print "Input is\n", getattr(EventSelector(),"Input")
 
     def evtMax(self):
         if hasattr(ApplicationMgr(),"EvtMax"):
