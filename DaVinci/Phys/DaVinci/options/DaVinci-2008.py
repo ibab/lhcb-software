@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DaVinci-2008.py,v 1.3 2008-11-05 14:57:32 jpalac Exp $
+# $Id: DaVinci-2008.py,v 1.4 2008-11-06 14:20:02 jpalac Exp $
 #
 # Options for a typical DaVinci job - this is to please Dirac
 #
@@ -20,7 +20,6 @@ DaVinciApp().EvtMax = 500
 # DaVinciApp().condDBtag    = "DC06-default"
 # DaVinciApp().useOracleCondDB = False
 # DaVinciApp().Input = []
-# DaVinciApp().mainOptions  = "$DAVINCIROOT/options/DaVinci.opts"
 DaVinciApp().mainOptions  = "$DAVINCIROOT/options/DaVinci.py"
 DaVinciApp().applyConf()
 ##############################################################################

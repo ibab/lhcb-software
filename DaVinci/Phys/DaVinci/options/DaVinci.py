@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DaVinci.py,v 1.17 2008-10-24 14:36:59 pkoppenb Exp $
+# $Id: DaVinci.py,v 1.18 2008-11-06 14:20:02 jpalac Exp $
 #
 # Options for a typical DaVinci job
 #
@@ -84,5 +84,7 @@ EventSelector().PrintFreq  = 100
 ########################################################################
 #
 # Test data : add it as a separate option file.
+#
+# see $DAVINCIROOT/options/DC06_stripped_bbincl_lumi2.py
 #
 ########################################################################
