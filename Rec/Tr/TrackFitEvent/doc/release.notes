@@ -4,6 +4,10 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2008-11-05 M Needham
+ - Unify STLiteMeasurement and STMeasurement classes
+ - Add functionality to STMeasurement classes
+
 ! 2008-11-04 M Needham
  - Add first implemention of STLiteMeasurement
  - clean up init of STMeasurement
