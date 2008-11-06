@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-11-06 - Marco Cattaneo
+ - Fix for gcc 4.3
+
 ! 2008-10-22 - Chris Jones
  - Adapt to changes in TrackSys python configurable
 

@@ -1,4 +1,4 @@
-// $Id: PatVeloTTTool.h,v 1.5 2007-10-10 18:42:24 smenzeme Exp $
+// $Id: PatVeloTTTool.h,v 1.6 2008-11-06 14:47:51 cattanem Exp $
 #ifndef PATVELOTTTOOL_H
 #define PATVELOTTTOOL_H 1
 
@@ -40,7 +40,7 @@ static const InterfaceID IID_PatVeloTTTool ( "PatVeloTTTool", 1, 0 );
 
     virtual ~PatVeloTTTool( ); ///< Destructor
 
-    StatusCode PatVeloTTTool::initialize ( );
+    StatusCode initialize ( );
 
 
     void recoVeloTT(LHCb::Track & velotrack, std::vector<LHCb::Track*>& outtracks );
