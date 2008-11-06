@@ -57,7 +57,7 @@ j.name = 'MyBrunel'
 #-------------------------------------------------------------------------------
 # Define the configuration file(s) to use
 myOptsPath = ( j.application.user_release_area + '/Brunel_' +
-               j.application.version + '/Rec/Brunel/options/' +
+               j.application.version + '/Rec/Brunel/options/' )
 j.application.optsfile = [ File ( myOptsPath + 'Brunel-Default.py' ),
                            File ( myOptsPath + '2008-Files.py'     ) ]
 # Extra options
