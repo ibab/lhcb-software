@@ -1,13 +1,13 @@
-// $Id: DVTestB2DiMuon.opts,v 1.2 2008-10-31 12:44:38 jpalac Exp $
+// $Id: DVTestB2DiMuon.opts,v 1.3 2008-11-06 16:12:57 jpalac Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
-/** @file DVTestBd2KstarMuMu.opts
+/** @file DVTestB2Dimuon.opts
  *
  *  Test file for HLT Bd->MuMuK* selection
  *
- *  @author P. Koppenburg
- *  @date 2007-07-20
+ *  @author J. Palacios
+ *  @date 2008-10-20
  */
 //--------------------------------------------------------------
 //
@@ -22,9 +22,6 @@ FindTrueDecay.IgnoreFilterPassed = true ;
 //-----------------------------------------------------------------------------
 PreselB2DiMuon.PhysDesktop.RelatedPVFinder.OutputLevel=1;
 //-----------------------------------------------------------------------------
-//
-// Truth filter for Bd -> MuMuK*  No PID
-//
 FindTrueDecay.Members += { "OldFilterDesktop/SelectTrueNoPIDsDecay"};
 SelectTrueNoPIDsDecay.FilterCriterion = "ByPIDFilterCriterion";
 SelectTrueNoPIDsDecay.PhysDesktop.InputLocations = {"Phys/StdDC06NoPIDsMuons" } ;
@@ -32,7 +29,7 @@ SelectTrueNoPIDsDecay.Filter.Selections =  {"mu+ : TrueMCFilterCriterion/Decay"}
 //
 // The decay descriptor is the only part that requires some thinking...
 //
-SelectTrueNoPIDsDecay.Filter.Decay.MCDecayFinder.Decay = "J/psi(1S) => ^mu+ ^mu- {,gamma}{,gamma}{,gamma}{,gamma}, J/psi(1S) => ^mu+ ^mu- {,gamma}{,gamma}{,gamma}{,gamma}" ;
+SelectTrueNoPIDsDecay.Filter.Decay.MCDecayFinder.Decay = "J/psi(1S) => ^mu+ ^mu- {,gamma}{,gamma}{,gamma}{,gamma}" ;
 //
 // Dummy MakeResonances to check that all tracks are there
 //
@@ -50,7 +47,7 @@ SelectTrueLooseDecay.Filter.Selections =  { "mu+ : TrueMCFilterCriterion/Decay"}
 //
 // The decay descriptor is the only part that requires some thinking...
 //
-//SelectTrueLooseDecay.Filter.Decay.MCDecayFinder.Decay ="J/psi(1S) => ^mu+ ^mu- {,gamma}{,gamma}{,gamma}{,gamma}, J/psi(1S) => ^mu+ ^mu- {,gamma}{,gamma}{,gamma}{,gamma}" ;
+SelectTrueLooseDecay.Filter.Decay.MCDecayFinder.Decay ="J/psi(1S) => ^mu+ ^mu- {,gamma}{,gamma}{,gamma}{,gamma}" ;
 //
 // Dummy MakeResonances to check that all tracks are there
 //
@@ -62,20 +59,37 @@ AllTrueLooseDecay.DecayDescriptor = "J/psi(1S) -> mu- mu+" ; // all particles ne
 //
 ApplicationMgr.TopAlg += { "AlgorithmCorrelationsAlg/TestCorrelations" };
 TestCorrelations.AlgorithmCorrelations.OnlyNonZero = false;
-TestCorrelations.Algorithms = { "AllTrueNoPIDsDecay", "AllTrueLooseDecay",
+TestCorrelations.Algorithms = { "SelectTrueNoPIDsDecay",
+                                "AllTrueNoPIDsDecay",
+                                "SelectTrueLooseDecay", 
+                                "AllTrueLooseDecay",
                                 "PreselB2DiMuon"};
-//
-// Options
-//
-//-- GAUDI data cards generated on 11/8/07 5:37 PM
-//-- For Event Type = 11114001 / Data type = DST 1
 
+//-- GAUDI data cards generated on 11/6/08 4:52 PM
+//-- For Event Type = 11144103 / Data type = DST 1
+//--     Configuration = DC06 - phys-v2-lumi2
+//--     DST 1 datasets output 
+//--     From DIGI 1 datasets produced by Boole - v12r10
+//--     From SIM 1 datasets produced by ANY
+//--     Database version = v30r14
+//--     Cards content = physical-physical
+//--     
+//-- Datasets replicated at CERN
+//-- 200 dataset(s) - NbEvents = 99391
+//-- 
 EventSelector.Input   = {
-"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001586/DST/0000/00001586_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001586/DST/0000/00001586_00000002_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001586/DST/0000/00001586_00000003_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001586/DST/0000/00001586_00000004_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001586/DST/0000/00001586_00000005_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"};
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001668/DST/0000/00001668_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001668/DST/0000/00001668_00000002_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001668/DST/0000/00001668_00000003_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001668/DST/0000/00001668_00000004_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001668/DST/0000/00001668_00000005_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001668/DST/0000/00001668_00000006_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001668/DST/0000/00001668_00000007_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001668/DST/0000/00001668_00000008_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001668/DST/0000/00001668_00000009_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001668/DST/0000/00001668_00000010_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+};
+
 
 MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
 
