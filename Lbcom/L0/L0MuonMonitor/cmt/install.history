@@ -20,4 +20,8 @@ ssS'..\\..\\..\\..\\..\\..\\software\\releases\\lhcb\\GAUDI\\GAUDI_v20r2\\GaudiP
 p10
 S'..\\..\\..\\..\\InstallArea\\python\\L0MuonMonitor\\__init__.py'
 p11
+sS'../../../L0/L0MuonMonitor/slc4_amd64_gcc43_dbg/libL0MuonMonitor.so'
+p12
+S'../../../InstallArea/slc4_amd64_gcc43_dbg/lib/libL0MuonMonitor.so'
+p13
 ssb.

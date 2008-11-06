@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.15 2008-10-01 15:55:45 cattanem Exp $
+! $Id: release.notes,v 1.16 2008-11-06 13:53:01 cattanem Exp $
 ! Package     : L0MuonMonitor
 ! Responsible : Julien Cogan
 ! Purpose     : Monitoring of the L0Muon
 !--------------------------------------------------------------------------
+
+! 2008-11-06 - Marco Cattaneo
+ - Replace dependency on L0Muon component package with L0Event dependency
+ - Fixes for gcc 4.3
 
 !========================== L0MuonMonitor v1r2 2008-10-01 =================
 ! 2008-10-01 - Marco Cattaneo

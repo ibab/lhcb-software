@@ -1,4 +1,4 @@
-// $Id: L0MuonAlgComparison.h,v 1.3 2008-09-15 07:46:40 jucogan Exp $
+// $Id: L0MuonAlgComparison.h,v 1.4 2008-11-06 13:53:01 cattanem Exp $
 #ifndef COMPONENT_L0MUONALGCOMPARISON_H 
 #define COMPONENT_L0MUONALGCOMPARISON_H 1
 
@@ -48,7 +48,7 @@ private:
   std::string m_extension_1;
   
   void filterCand(LHCb::L0MuonCandidates* originals, LHCb::L0MuonCandidates* filtered);
-  void L0MuonAlgComparison::printMuonTile(LHCb::MuonTileID mid);
+  void printMuonTile(LHCb::MuonTileID mid);
 
   L0MuonCandHistos*     m_candHistosPU0;
   L0MuonCandHistos*     m_candHistosPU1;
