@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinker.h,v 1.5 2008-09-25 12:04:52 odescham Exp $
+// $Id: Particle2MCLinker.h,v 1.6 2008-11-06 17:15:50 cattanem Exp $
 #ifndef DAVINCIASSOCIATORS_PARTICLE2MCLINKER_H
 #define DAVINCIASSOCIATORS_PARTICLE2MCLINKER_H 1
 
@@ -545,7 +545,8 @@ public:
     int n = 0;
     for( OBJ2MCP* part = firstP(obj);
          NULL != part;
-         part = nextP(), n++);
+         part = nextP(), n++) { }
+    
     return n;
   }
 

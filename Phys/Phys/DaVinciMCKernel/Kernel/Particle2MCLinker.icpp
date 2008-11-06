@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinker.icpp,v 1.5 2008-09-25 12:04:52 odescham Exp $
+// $Id: Particle2MCLinker.icpp,v 1.6 2008-11-06 17:11:28 cattanem Exp $
 // Include files 
 
 
@@ -300,7 +300,8 @@ Object2MCLinker<SOURCE>::associatedMCP( const SOURCE* obj)
   int n = 0;
   for( const LHCb::MCParticle* mcPart = firstMCP(obj); 
        NULL != mcPart; 
-       mcPart = nextMCP(), n++);
+       mcPart = nextMCP(), n++) { }
+  
   return n;
 }
 template <class SOURCE>
