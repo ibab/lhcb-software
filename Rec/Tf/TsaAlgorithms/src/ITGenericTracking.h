@@ -1,4 +1,4 @@
-// $Id: ITGenericTracking.h,v 1.4 2008-10-24 13:33:34 mneedham Exp $
+// $Id: ITGenericTracking.h,v 1.5 2008-11-06 15:35:06 mneedham Exp $
 #ifndef ITGenericTracking_H
 #define ITGenericTracking_H 1
 
@@ -79,6 +79,8 @@ private:
   unsigned int countHigh(const std::vector<Tf::STHit*>& xhits, const std::vector<Tf::STHit*>& yhits, 
                          const LHCb::STClusters* clusterCont) const;
 
+  unsigned int countSectors(const std::vector<Tf::STHit*>& xhits) const;
+
   IHitExpectation* m_hitExpectation;
  
   DeSTDetector* m_tracker;
@@ -113,7 +115,7 @@ private:
   bool m_requireSameBox; 
   unsigned int m_maxClusterSize;
   double m_minCharge;
-  bool m_confirmY2;
+  bool m_confirm2;
   bool m_selectBestY;
 
 };

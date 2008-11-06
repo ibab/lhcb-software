@@ -4,6 +4,8 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2008-11-06 M Needham
+ - Improvements in ITGenericTracking
 
 ! 2008-10-24 M Needham
  - Use new constructors in TsaSeedTrackCnvTool

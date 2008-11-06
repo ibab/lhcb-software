@@ -1,4 +1,4 @@
-// $Id: ITGenericTracking.cpp,v 1.4 2008-10-24 13:33:34 mneedham Exp $
+// $Id: ITGenericTracking.cpp,v 1.5 2008-11-06 15:35:06 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -31,6 +31,8 @@
 #include "Event/State.h"
 #include "Event/StateParameters.h"
 
+#include <boost/foreach.hpp>
+
 using namespace LHCb;
 
 // Boost
@@ -57,7 +59,7 @@ ITGenericTracking::ITGenericTracking( const std::string& name,
 {
   // constructer
   declareProperty("InputData", m_clusterLocation = STClusterLocation::ITClusters);
-  declareProperty("maxHits",m_maxHits = 4500  );
+  declareProperty("maxHits",m_maxHits = 1000  );
   declareProperty("xWindow1", m_xWindow1 = 1.0);
   declareProperty("xWindow2", m_xWindow2 = 1.0);
   declareProperty("yWindow", m_yWindow =  10.0);
@@ -80,7 +82,7 @@ ITGenericTracking::ITGenericTracking( const std::string& name,
   declareProperty("maxFaults", m_maxFaults = 100);
   declareProperty("maxClusterSize", m_maxClusterSize = 4);
   declareProperty("minCharge", m_minCharge = 10);
-  declareProperty("confirmY2", m_confirmY2 = false);
+  declareProperty("confirm2", m_confirm2 = false);
   declareProperty("selectBestY",m_selectBestY = true);
 }
 
@@ -149,12 +151,12 @@ StatusCode ITGenericTracking::execute()
     std::vector<Tf::STHit*>::iterator iterX2 = iterX1; ++iterX2;
     for (; iterX2 != xHits.end(); ++iterX2){
       if (!allowedLastStation(*iterX2) || allowedBox(*iterX2) == false) continue;
-      if (!sameBox(*iterX1,*iterX2)) continue;
-      
-    if (m_requireFirstAndLast && (*iterX2)->cluster().channelID().layer() != 4) continue;
+      if (!sameBox(*iterX1,*iterX2)) continue;    
+      if (m_requireFirstAndLast && (*iterX2)->cluster().channelID().layer() != 4) continue;
 
-
-      // make a line and constrain the parameters 
+      // make a line and constrain the parameters
+      //      if ((*iterX1)->cluster().station() == (*iterX2)->cluster().station()) continue;
+      if (fabs((*iterX1)->z()- (*iterX2)->z()) < 1.0 ) continue; 
       Tf::Tsa::Line xLine = Tf::Tsa::Line((*iterX1)->x(), (*iterX2)->x(), (*iterX1)->z(), (*iterX2)->z());
       plot(xLine.m(),"tx", -0.5, 0.5, 100); 
       const double xRef = xLine.value(m_zRef);  
@@ -167,7 +169,10 @@ StatusCode ITGenericTracking::execute()
       std::vector<Tf::STHit*> selectedX; selectedX.reserve(8);
       if (!collectXHits13(xLine, *iterX1, *iterX2, xHits,  selectedX)) continue;
       if ((*iterX1)->cluster().station() == 1 && (*iterX2)->cluster().station() == 3){
-        if (!collectXHits2(xLine, *iterX1, xHits, selectedX)) continue;
+	bool collect2 = collectXHits2(xLine, *iterX1, xHits, selectedX);
+        if (m_confirm2 == true){ 
+          if (collect2 == false) continue;
+	}
       }
       // how many hits did we find ?
       plot(selectedX.size(), "# selected x", -0.5, 10.5, 11);
@@ -189,11 +194,13 @@ StatusCode ITGenericTracking::execute()
   
 	std::vector<Tf::STHit*> selectedY2 = hits[iCan];
 	Tf::Tsa::Line yLine = lines[iCan];
+	plot(selectedY2.size() - countSectors(selectedY2) , "y outliers", -0.5, 20.5, 21);
 
 	//        if (selectedY2.size() < m_minYHits) continue;
 
         plot(xRef, "xRef 3", -20000, 20000. , 100);
         plot(yLine.value(m_zRef), "yRef", -50000, 50000. , 100);
+
   
         // confirm x hits are consistant with y
         std::vector<Tf::STHit*> selectedX2; 
@@ -203,11 +210,15 @@ StatusCode ITGenericTracking::execute()
 
         // make a track !!
         std::vector<LHCb::LHCbID> ids; ids.reserve(12);
+	//std::cout << "new track " << ids.size() << std::endl;
         collectIDs(selectedX2, ids);
         collectIDs(selectedY2, ids);
+	//std::cout << " ----- " << std::endl; 
 
         plot(ids.size(), "nhits", -0.5, 20.5, 21);
-        if (ids.size() < m_minHits) continue;
+        unsigned int nUnique = countSectors(selectedX2) + countSectors(selectedY2);
+        plot(nUnique, "nUnique" , -0.5, 50.5, 51);
+        if (nUnique < m_minHits) continue;
 
         // count the number above the high threshold
         unsigned int nHigh = countHigh(selectedX2, selectedY2, clusterCont);
@@ -254,6 +265,7 @@ void ITGenericTracking::collectIDs( std::vector<Tf::STHit*> hits , std::vector<L
    // convert LHCbIDs to hits
    for (std::vector<Tf::STHit*>::const_iterator iterHit = hits.begin(); iterHit != hits.end(); ++iterHit ){
      ids.push_back((*iterHit)->lhcbID());
+     //std::cout << "collecting " << **iterHit << std::endl;
      (*iterHit)->setUsed(true);
    }
 }
@@ -288,19 +300,19 @@ void ITGenericTracking::selectY(const std::vector<yInfo>& hits, CandidateHits& c
 
       std::vector<unsigned int> nLayers; nLayers.reserve(12); 
       bool hasT2 = false;
-      nLayers.push_back(iter1->first->cluster().channelID().uniqueSector());
-      nLayers.push_back(iter2->first->cluster().channelID().uniqueSector());
+      nLayers.push_back(iter1->first->channelID().uniqueSector());
+      nLayers.push_back(iter2->first->channelID().uniqueSector());
       for (std::vector<yInfo>::const_iterator iter3 = hits.begin(); iter3 != hits.end(); ++iter3){
 
 	// should not be in the same module 
         const Gaudi::XYZPoint point3 = iter3->second;
 	if (fabs(point1.z() - point3.z()) < 1.0 ) continue; // not at same z
         if (fabs(point2.z() - point3.z()) < 1.0 ) continue; // not at same z
-        if (iter3->first->cluster().station() == ITNames::IT2) hasT2 = true;
+        if (iter3->first->station() == ITNames::IT2) hasT2 = true;
 
 	const double yDiff = yline.value(point3.z()) - point3.y();
         if (fabs(yDiff) < m_yWindow) {
-          nLayers.push_back(iter3->first->cluster().channelID().uniqueSector());
+          nLayers.push_back(iter3->first->channelID().uniqueSector());
           plot(yDiff, 161, "yLine", -20., 20., 200);
 	}		    			    
       } //iter3
@@ -311,7 +323,7 @@ void ITGenericTracking::selectY(const std::vector<yInfo>& hits, CandidateHits& c
       plot(nWindow,"nWindow y", -0.5, 50.5,51);
    
       bool confirmed;
-      m_confirmY2 == false ? confirmed = true : confirmed = hasT2; 
+      m_confirm2 == false ? confirmed = true : confirmed = hasT2; 
       if (nWindow > m_minYHits && confirmed ){
         ++nCand;
 	std::vector<Tf::STHit*> selected;
@@ -408,9 +420,9 @@ bool ITGenericTracking::collectXHits13(const Tf::Tsa::Line& line,
         fabs((*iterX1)->z() - hit2->z() ) < 1.0)  continue;
 
     const double xDiff = (*iterX1)->x() - line.value((*iterX1)->z());
-    plot(xDiff, "xDiff_13_"+ITNames().BoxToString((*iterX1)->cluster().channelID()), -10., 10., 400);
-    if (hit1->cluster().layer() == 1 && hit2->cluster().layer() == 4){
-      plot(xDiff, "xDiff_13_" + ITNames().UniqueLayerToString((*iterX1)->cluster().channelID()), -10.,10., 400);
+    plot(xDiff, "xDiff_13_"+ITNames().BoxToString((*iterX1)->channelID()), -10., 10., 400);
+    if (hit1->layer() == 1 && hit2->layer() == 4){
+      plot(xDiff, "xDiff_13_" + ITNames().UniqueLayerToString((*iterX1)->channelID()), -10.,10., 400);
     }
     if (fabs(xDiff) < m_xWindow1) selected.push_back(*iterX1);
 
@@ -431,10 +443,11 @@ bool ITGenericTracking::collectXHits2(const Tf::Tsa::Line& line,
   unsigned int collected = 0u;
   for (std::vector<Tf::STHit*>::const_iterator iterX1 = xhits.begin(); iterX1 != xhits.end(); ++iterX1){
 
-    if ((*iterX1)->cluster().station() == 2 && sameBox(hit, *iterX1)){
+    if ((*iterX1)->station() == 2 && sameBox(hit, *iterX1)){
       const double xDiff = (*iterX1)->x() - line.value((*iterX1)->z());
-      plot(xDiff,"xDiff_2_"+ITNames().UniqueLayerToString((*iterX1)->cluster().channelID()), -10., 10., 400);
-      plot(xDiff,"xDiff_2_"+ITNames().UniqueBoxToString((*iterX1)->cluster().channelID()), -10., 10., 400);
+      plot(xDiff,"xDiff_2_"+ITNames().UniqueLayerToString((*iterX1)->channelID()), -10., 10., 400);
+      plot(line.value((*iterX1)->z()),"x_2_"+ITNames().UniqueLayerToString((*iterX1)->channelID()), -10., 10., 400);
+      plot(xDiff,"xDiff_2_"+ITNames().UniqueBoxToString((*iterX1)->channelID()), -10., 10., 400);
       ///plot(xDiff,ITNames().BoxToString((*iterX1)->cluster().channelID())+"xDiff_2_"+ITNames().UniqueSectorToString((*iterX1)->cluster().channelID()), -10., 10., 400);
   
       if (fabs(xDiff) < m_xWindow2){
@@ -455,9 +468,9 @@ unsigned int ITGenericTracking::countHigh( const std::vector<Tf::STHit*>& xhits,
     if ((*iterX)->cluster().highThreshold() == true) ++nhits;
     const double charge = clusterCont->object((*iterX)->cluster().channelID())->totalCharge();
     plot(charge,"chargeHigh", 0., 100., 100);
-    plot((*iterX)->cluster().strip(),"strip", -0.5, 400.5, 401);
-    plot((*iterX)->cluster().strip()%32,"strip % 32", -0.5, 400.5, 401);
-    plot((*iterX)->cluster().strip(),"strip % 128", -0.5, 400.5, 401);
+    plot((*iterX)->channelID().strip(),"strip", -0.5, 400.5, 401);
+    plot((*iterX)->channelID().strip()%32,"strip % 32", -0.5, 400.5, 401);
+    plot((*iterX)->channelID().strip(),"strip % 128", -0.5, 400.5, 401);
     totalCharge += charge;
   }
   for (std::vector<Tf::STHit*>::const_iterator iterY = yhits.begin(); iterY != yhits.end(); ++iterY){
@@ -474,4 +487,13 @@ unsigned int ITGenericTracking::countHigh( const std::vector<Tf::STHit*>& xhits,
   return nhits;
 }
 
-
+unsigned int ITGenericTracking::countSectors(const std::vector<Tf::STHit*>& xhits) const{
+  std::vector<unsigned int> nLayers; nLayers.reserve(12);
+  BOOST_FOREACH(Tf::STHit* hit, xhits){
+    nLayers.push_back(hit->channelID().uniqueSector());
+  }
+  std::sort(nLayers.begin(), nLayers.end());
+  nLayers.erase(std::unique(nLayers.begin(), nLayers.end()), nLayers.end());
+  return nLayers.size();
+}
+ 
