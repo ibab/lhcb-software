@@ -19,7 +19,7 @@ Can be launched in one of the following ways:
 
 import sys
 from os import linesep
-from LbRelease.Nightlies.functions import *
+from LbRelease.Nightlies.functions import config, get, install, test, clean, cleanAFSSpace, run, runparallel
 from LbUtils.Script import Script
 
 def usage():
