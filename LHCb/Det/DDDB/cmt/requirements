@@ -9,7 +9,7 @@ package           DDDB
 # not with the version of the software being used).          #
 # The version of the geometry is in the database tag.        #
 ##############################################################
-version           v1r12
+version           v1r13
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -33,3 +33,5 @@ use   oracle                v*    LCG_Interfaces -no_auto_imports
 use   lfc                   v*    LCG_Interfaces -no_auto_imports
 
 include_path      none
+
+apply_pattern install_python_modules
