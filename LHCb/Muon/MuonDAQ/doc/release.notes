@@ -3,14 +3,21 @@
 ! Responsible : Alessia Satta
 ! Purpose     : Muon System Raw Buffer coding and decoding algorithms
 !-----------------------------------------------------------------------------
+
+! 2008-11-06 - Marco Cattaneo
+ - Fix gcc 4.3 warnings
+
 ! 2008-10-27 - Alessia Satta
  - change the default of muon raw data format from DC06 to Real data. 
    To get DC06 use   MuonDigitToRawBuffer.VType=1
+
 ! 2008-10-23 - Alessia Satta
  - add readoutbankerror to flag corrupted events avoiding the stop of process 
    phase
+
 ! 2008-10-20 - Alessia Satta
  - fix for unchecked StatusCode in MuonDigitToRawBuffer
+
 !========================== MuonDAQ v4r4 2008-09-04 ==========================
 ! 2008-08-28 - Alessia Satta
  - fix for empty raw bank during check of tell1 headers ( version and source id) 

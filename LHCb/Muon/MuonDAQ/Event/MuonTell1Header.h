@@ -1,4 +1,4 @@
-// $Id: MuonTell1Header.h,v 1.1 2008-06-30 11:43:46 asatta Exp $
+// $Id: MuonTell1Header.h,v 1.2 2008-11-06 13:08:44 cattanem Exp $
 #ifndef EVENT_MUONTELL1HEADER_H 
 #define EVENT_MUONTELL1HEADER_H 1
 
@@ -27,52 +27,50 @@ public:
     m_data=word;
     
   };
-  const unsigned int getBCN() const 
+  unsigned int getBCN() const 
   {
     //first 8 bits
     return m_data&0x00FF;
     
   };
-  
 
-
-
-   const unsigned int getError() const 
+  unsigned int getError() const 
   {
     //secodn 8 bits
     return (m_data&0xFF00)>>8;
     
   }
 
-    const unsigned int getEventError() const 
+  unsigned int getEventError() const 
   {
     //PP_ODE_err bit 0 provided by synch link
 
     return ((m_data>>8)&(unsigned int)1);
     
   }
-     const unsigned int getSYNCHDataErrorInODE() const 
+
+  unsigned int getSYNCHDataErrorInODE() const 
   {
     //PP_ODE_err bit 5
     return (m_data>>13)&((unsigned int)1);
     
   }
-  
-     const unsigned int getSYNCHEventCntErrorInODE() const 
+
+  unsigned int getSYNCHEventCntErrorInODE() const 
   {
     //PP_ODE_err bit 7
     return (m_data>>15)&((unsigned int)1);
     
   }
-  
-     const unsigned int getSYNCHBCNCntErrorInODE() const 
+
+  unsigned int getSYNCHBCNCntErrorInODE() const 
   {
     //PP_ODE_err bit 6
     return (m_data>>14)&((unsigned int)1);
     
   }
   
-  const unsigned int getOROfODEErrors() const 
+  unsigned int getOROfODEErrors() const 
   {
     //PP_ODE_err bits 1-4 
     return ((m_data>>9)&0x000F);

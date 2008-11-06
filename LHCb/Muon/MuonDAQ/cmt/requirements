@@ -2,7 +2,7 @@ package MuonDAQ
 version v4r5
 
 # ================ structure ===========================================
-branches src MuonDAQ cmt doc
+branches src Event MuonDAQ cmt doc
 
 # ================ used packages ========================================= 
 use MuonKernel  v*    Muon
