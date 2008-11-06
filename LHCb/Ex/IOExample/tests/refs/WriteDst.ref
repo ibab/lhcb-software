@@ -5,7 +5,7 @@
 # ApplicationMgr.TopAlg = { "DumpTracks" };
 # DumpTracks.OutputLevel = 2;
 # ApplicationMgr.OutStream += {"InputCopyStream/InputCopyStream"};
-# --> Including file '/afs/cern.ch/sw/lcg/app/nightlies/dev1/Sun/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# --> Including file '/afs/cern.ch/sw/lcg/app/nightlies/dev1/Thu/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
 # ApplicationMgr.ExtSvc    += { "Gaudi::MultiFileCatalog/FileCatalog",                              "Gaudi::IODataManager/IODataManager",                              "PoolDbCacheSvc/PoolDbCacheSvc",                              "PoolDbCnvSvc/PoolRootEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootKeyEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootTreeEvtCnvSvc"                            };
 # EventPersistencySvc.CnvServices += { "PoolRootEvtCnvSvc" };
 # EventPersistencySvc.CnvServices += { "PoolRootTreeEvtCnvSvc" };
@@ -16,7 +16,7 @@
 # PoolDbCacheSvc.Dlls              = {"lcg_RootStorageSvc", "GaudiKernelDict" };
 # PoolDbCacheSvc.OutputLevel       = 4;
 # PoolDbCacheSvc.DomainOpts        = { "Domain[ROOT_All].TREE_MAX_SIZE=500000000000 TYP=longlong" };
-# <-- End of file '/afs/cern.ch/sw/lcg/app/nightlies/dev1/Sun/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# <-- End of file '/afs/cern.ch/sw/lcg/app/nightlies/dev1/Thu/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
 # --> Including file '/afs/cern.ch/user/c/cattanem/w0/cmtuser/LHCb_HEAD/Ex/IOExample/options/PoolDst.opts'
 # EventSelector.Input   = {  "DATAFILE='PFN:rfio:/castor/cern.ch/user/c/cattanem/Brunel/v32r1/00001820_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"};
 # InputCopyStream.Output = "DATAFILE='PFN:PoolDst.root' TYP='POOL_ROOTTREE' OPT='REC'";
@@ -25,17 +25,19 @@
 # <-- End of file '/afs/cern.ch/user/c/cattanem/w0/cmtuser/LHCb_HEAD/Ex/IOExample/tests/options/WriteDst.opts'
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr $Revision: 1.4 $
-                                          running on lxbuild120.cern.ch on Mon Nov  3 11:58:32 2008
+                                                   Welcome to ApplicationMgr $Revision: 1.5 $
+                                          running on lxbuild120.cern.ch on Thu Nov  6 13:18:41 2008
 ====================================================================================================================================
 ApplicationMgr       INFO Successfully loaded modules : HepMCBack
 ApplicationMgr       INFO Application Manager Configured successfully
 DumpTracks          DEBUG Property update for OutputLevel : new value = 2
 DumpTracks          DEBUG Property update for OutputLevel : new value = 2
 DumpTracks          DEBUG Initialize base class GaudiCommon<Algorithm>
-DumpTracks          DEBUG List of ALL properties of DumpTracks/DumpTracks  #properties = 31
+DumpTracks          DEBUG List of ALL properties of DumpTracks/DumpTracks  #properties = 33
 DumpTracks          DEBUG Property ['Name': Value] =  'TracksLocation':Rec/Track/Best
 DumpTracks          DEBUG Property ['Name': Value] =  'NumberOfObjectsToPrint':5
+DumpTracks          DEBUG Property ['Name': Value] =  'RequireObjects':[  ]
+DumpTracks          DEBUG Property ['Name': Value] =  'VetoObjects':[  ]
 DumpTracks          DEBUG Property ['Name': Value] =  'RegisterForContextService':True
 DumpTracks          DEBUG Property ['Name': Value] =  'ContextService':AlgContextSvc
 DumpTracks          DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
@@ -265,7 +267,7 @@ DumpTracks          DEBUG *** Track ***
    1.93804e-06-1.76318e-06-5.40157e-10-1.63494e-09 4.09036e-09 ]
 
 
-IODataManager        INFO Referring to dataset PoolDst.root by its file ID:AC03E672-96A9-DD11-BB46-0030487C5E0E
+IODataManager        INFO Referring to dataset PoolDst.root by its file ID:827F9210-FDAB-DD11-9AA0-0030487C5E0E
 PoolDst.root      SUCCESS Root file version:51800
 EventSelector     SUCCESS Reading Event record 2. Record number within stream 1: 2
 DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address 'Rec/Track/Best'
@@ -1028,7 +1030,7 @@ DumpTracks          DEBUG Releasing service 'AlgContextSvc'
 InputCopyStream      INFO Events output: 5
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
-PoolRootTreeEvt...   INFO Disconnected data IO:AC03E672-96A9-DD11-BB46-0030487C5E0E[PoolDst.root]
+PoolRootTreeEvt...   INFO Disconnected data IO:827F9210-FDAB-DD11-9AA0-0030487C5E0E[PoolDst.root]
 PoolRootTreeEvt...   INFO Disconnected data IO:CAA89D27-E42D-DC11-B844-003048836626[rfio:/castor/cern.ch/user/c/cattanem/Brunel/v32r1/00001820_00000001_5.dst]
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

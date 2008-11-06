@@ -10,7 +10,7 @@
 # ExampleSeq.Members     += { "DumpMCEventAlg" };
 # DumpMCEventAlg.OutputLevel = 3;
 # ApplicationMgr.EvtMax      = 5;
-# --> Including file '/afs/cern.ch/sw/lcg/app/nightlies/dev1/Sun/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# --> Including file '/afs/cern.ch/sw/lcg/app/nightlies/dev1/Wed/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
 # ApplicationMgr.ExtSvc    += { "Gaudi::MultiFileCatalog/FileCatalog",                              "Gaudi::IODataManager/IODataManager",                              "PoolDbCacheSvc/PoolDbCacheSvc",                              "PoolDbCnvSvc/PoolRootEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootKeyEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootTreeEvtCnvSvc"                            };
 # EventPersistencySvc.CnvServices += { "PoolRootEvtCnvSvc" };
 # EventPersistencySvc.CnvServices += { "PoolRootTreeEvtCnvSvc" };
@@ -21,13 +21,13 @@
 # PoolDbCacheSvc.Dlls              = {"lcg_RootStorageSvc", "GaudiKernelDict" };
 # PoolDbCacheSvc.OutputLevel       = 4;
 # PoolDbCacheSvc.DomainOpts        = { "Domain[ROOT_All].TREE_MAX_SIZE=500000000000 TYP=longlong" };
-# <-- End of file '/afs/cern.ch/sw/lcg/app/nightlies/dev1/Sun/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# <-- End of file '/afs/cern.ch/sw/lcg/app/nightlies/dev1/Wed/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
 # FileCatalog.Catalogs = {"xmlcatalog_file:MyCatalog.xml"};
 # ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
 # EventDataSvc.EnableFaultHandler = true;
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb2/Mon/LHCB/LHCB_HEAD/GaudiConf/options/UnpackDigi.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb2/Thu/LHCB/LHCB_HEAD/GaudiConf/options/UnpackDigi.opts'
 # DataOnDemandSvc.AlgMap += { "MC/Particles" : "UnpackMCParticle"                          , "MC/Vertices"  : "UnpackMCVertex"                          };
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb2/Mon/LHCB/LHCB_HEAD/GaudiConf/options/UnpackDigi.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb2/Thu/LHCB/LHCB_HEAD/GaudiConf/options/UnpackDigi.opts'
 # EventSelector.Input = {"DATAFILE='PFN:PoolDst.root' TYP='POOL_ROOTTREE' OPT='READ'"};
 # <-- End of file '/afs/cern.ch/user/c/cattanem/w0/cmtuser/LHCb_HEAD/Ex/IOExample/options/ReadMin.opts'
 # ApplicationMgr.TopAlg += { "DumpTracks" };
@@ -37,8 +37,8 @@
 # <-- End of file '/afs/cern.ch/user/c/cattanem/w0/cmtuser/LHCb_HEAD/Ex/IOExample/tests/options/ReadDst.opts'
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr $Revision: 1.4 $
-                                          running on lxbuild120.cern.ch on Mon Nov  3 12:02:16 2008
+                                                   Welcome to ApplicationMgr $Revision: 1.5 $
+                                          running on lxbuild120.cern.ch on Thu Nov  6 13:41:09 2008
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 EventPersistenc...   INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' ]
@@ -50,9 +50,11 @@ ToolSvc.Sequenc...   INFO This machine has a speed about   2.11 times the speed 
 DumpTracks          DEBUG Property update for OutputLevel : new value = 2
 DumpTracks          DEBUG Property update for OutputLevel : new value = 2
 DumpTracks          DEBUG Initialize base class GaudiCommon<Algorithm>
-DumpTracks          DEBUG List of ALL properties of DumpTracks/DumpTracks  #properties = 31
+DumpTracks          DEBUG List of ALL properties of DumpTracks/DumpTracks  #properties = 33
 DumpTracks          DEBUG Property ['Name': Value] =  'TracksLocation':Rec/Track/Best
 DumpTracks          DEBUG Property ['Name': Value] =  'NumberOfObjectsToPrint':5
+DumpTracks          DEBUG Property ['Name': Value] =  'RequireObjects':[  ]
+DumpTracks          DEBUG Property ['Name': Value] =  'VetoObjects':[  ]
 DumpTracks          DEBUG Property ['Name': Value] =  'RegisterForContextService':True
 DumpTracks          DEBUG Property ['Name': Value] =  'ContextService':AlgContextSvc
 DumpTracks          DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
@@ -94,7 +96,7 @@ PoolDst.root      SUCCESS Root file version:51800
 PoolDst.root      SUCCESS Root file version:51800
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 PrintHeader          INFO Run 182001, Event 1
-StoreExplorerAlg     INFO ========= /Event[0x34a3990@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x34a4b50@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x202]  LHCb::GenHeader
@@ -359,7 +361,7 @@ DumpTracks          DEBUG *** Track ***
 
 
 PrintHeader          INFO Run 182001, Event 2
-StoreExplorerAlg     INFO ========= /Event[0x3b6a680@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x4ed1490@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x202]  LHCb::GenHeader
@@ -626,7 +628,7 @@ DumpTracks          DEBUG *** Track ***
 
 
 PrintHeader          INFO Run 182001, Event 3
-StoreExplorerAlg     INFO ========= /Event[0x39f89b0@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x3b7c820@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x202]  LHCb::GenHeader
@@ -893,7 +895,7 @@ DumpTracks          DEBUG *** Track ***
 
 
 PrintHeader          INFO Run 182001, Event 4
-StoreExplorerAlg     INFO ========= /Event[0x407c1f0@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x40d9090@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x202]  LHCb::GenHeader
@@ -1158,7 +1160,7 @@ DumpTracks          DEBUG *** Track ***
 
 
 PrintHeader          INFO Run 182001, Event 5
-StoreExplorerAlg     INFO ========= /Event[0x4d9e8b0@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x4db0b00@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x202]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x202]  LHCb::GenHeader
@@ -1433,6 +1435,6 @@ ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> 
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
 ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
 DataOnDemandSvc      INFO Handled "DataFault" incidents: 10/0/10(Alg/Node/Total).
-PoolRootTreeEvt...   INFO Disconnected data IO:AC03E672-96A9-DD11-BB46-0030487C5E0E[PoolDst.root]
+PoolRootTreeEvt...   INFO Disconnected data IO:827F9210-FDAB-DD11-9AA0-0030487C5E0E[PoolDst.root]
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully
