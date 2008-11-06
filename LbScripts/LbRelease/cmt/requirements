@@ -6,6 +6,7 @@ use LbUtils v*
 apply_pattern python_alias script=showProjects
 apply_pattern python_alias script=usedProjects
 apply_pattern python_alias script=Benchmark
+apply_pattern python_alias script=startNightlies
 
 apply_pattern source_shell_alias script=GaussBench
 apply_pattern source_shell_alias script=BrunelBench

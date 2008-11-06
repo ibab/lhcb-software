@@ -1,3 +1,13 @@
+2008-11-06  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
+
+	* python/LbRelease/Nightlies: New directory.
+	* python/LbRelease/Nightlies/__init__.py: New file.
+	* python/LbRelease/Nightlies/actionLauncher.py: New file.
+	* python/LbRelease/Nightlies/functions.py: New file.
+	* python/LbRelease/Nightlies/setup.py: New file.
+	* scripts/startNightlies.py: New file. Script to start the LHCb Nightly Builds
+	* cmt/requirements: added python alias for startNightlies.py script
+
 2008-10-31  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v1r3
