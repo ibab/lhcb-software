@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-11-06 - Marco Cattaneo
+ - Fix for gcc 4.3
+
 !===================== VeloSimulation v3r6 2008-10-01 ========================
 ! 2008-09-10 - David Hutchcroft
  - Removed finalize printout of nan when no events processed 

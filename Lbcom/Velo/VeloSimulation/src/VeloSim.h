@@ -1,4 +1,4 @@
-#// $Id: VeloSim.h,v 1.16 2008-07-24 17:36:43 cattanem Exp $
+#// $Id: VeloSim.h,v 1.17 2008-11-06 14:02:18 cattanem Exp $
 #ifndef VELOSIM_H
 #define VELOSIM_H 1
 
@@ -121,7 +121,7 @@ private:
   /// Noise to add to an otherwise empty strip from strip capacitance
   double noiseValueTail(double noiseSigma);
   void CMSim(); ///< Common mode simulation
-  void VeloSim::deadStrips(); ///< Simulate random dead strips
+  void deadStrips(); ///< Simulate random dead strips
   void finalProcess(); ///<remove any MCFEs with charge below abs(threshold)
   StatusCode storeOutputData(); ///< put the data on the TES
   LHCb::MCVeloFE* findOrInsertFE(LHCb::VeloChannelID& stripKey);

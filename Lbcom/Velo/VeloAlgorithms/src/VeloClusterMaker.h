@@ -40,7 +40,7 @@ class VeloClusterMaker : public GaudiAlgorithm {
   /// make Clusters from VeloDigits
   void    makeClusters();
   /// after making all clusters for the event store them on TDS 
-  StatusCode VeloClusterMaker::storeClusters();
+  StatusCode storeClusters();
   /// Try to make a cluster using currentDigit as the central hit
   LHCb::InternalVeloCluster* makeClusterFromDigit(
            LHCb::VeloDigit* currentDigit, double& currentClusterSTN);
