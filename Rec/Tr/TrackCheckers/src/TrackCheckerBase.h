@@ -1,4 +1,4 @@
-// $Id: TrackCheckerBase.h,v 1.5 2008-10-23 13:42:50 smenzeme Exp $
+// $Id: TrackCheckerBase.h,v 1.6 2008-11-06 16:58:06 cattanem Exp $
 #ifndef TRACKCHECKERBASE_H
 #define TRACKCHECKERBASE_H 1
  
@@ -125,7 +125,7 @@ class TrackCheckerBase : public GaudiHistoAlg {
   * @param particle
   * @return rec tracks 
   */
-  TrackCheckerBase::InverseRange TrackCheckerBase::reconstructedTracks(const LHCb::MCParticle* particle) const;
+  TrackCheckerBase::InverseRange reconstructedTracks(const LHCb::MCParticle* particle) const;
 
   /** Selected as type
   *

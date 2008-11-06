@@ -1,4 +1,4 @@
-// $Id: TrackCheckerNT.h,v 1.4 2007-10-22 09:45:51 mschille Exp $
+// $Id: TrackCheckerNT.h,v 1.5 2008-11-06 16:58:06 cattanem Exp $
 #ifndef TRACKCHECKERNT_H 
 #define TRACKCHECKERNT_H 1
 
@@ -131,7 +131,7 @@ private:
       std::map<LHCb::MCParticle*, int>& mcPartIdx,
       LHCb::MCParticles* particles,
       LinkedFrom<LHCb::Track,LHCb::MCParticle>& revLink);
-  StatusCode TrackCheckerNT::fillMCHitStatistics(
+  StatusCode fillMCHitStatistics(
       Tuples::Tuple& tuple,
       LHCb::MCParticles* particles);
  
