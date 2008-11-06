@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.113 2008-09-30 12:38:43 cattanem Exp $
+! $Id: release.notes,v 1.114 2008-11-06 13:47:06 cattanem Exp $
 ! Package : L0Event
 ! Package manager : Olivier Deschamps, Julien Cogan
 !-----------------------------------------------------------------------------
+
+! 2008-11-06 - Marco Cattaneo
+ - Fix a wrong comparison in L0DUReport::triggerDecision()
+ - Change type of first argument of L0DUReport::triggerDecision() to unsigned
+ - Fix gcc 4.3 warnings
 
 !======================== L0Event v17r2 2008-09-30 ===========================
 ! 2008-09-30 - Marco Cattaneo for Thomas Ruf
