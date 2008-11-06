@@ -1,4 +1,4 @@
-// $Id: PatCalibV0.h,v 1.1 2008-01-10 15:36:43 ocallot Exp $
+// $Id: PatCalibV0.h,v 1.2 2008-11-06 14:14:04 cattanem Exp $
 #ifndef PATCALIBKSHORT_H
 #define PATCALIBKSHORT_H 1
 
@@ -317,7 +317,7 @@ double m_cutPt;
   std::vector<LocalV0Track> m_neg;
 
   //-------------------------------------------------------------------------------
-  bool PatCalibV0::checkPhaseSpaceAtOrigin(){
+  bool checkPhaseSpaceAtOrigin(){
     double xPhSp=xCoordFast(0.);
     if(fabs(xPhSp ) > m_impactParTrkX) return true;
     double yPhSp=yCoordFast(0.);
@@ -329,14 +329,14 @@ double m_cutPt;
     return false;
   }
   //-------------------------------------------------------------------------------
-  void PatCalibV0::storePhaseSpaceAtOrigin(){
+  void storePhaseSpaceAtOrigin(){
     m_xPhSpOrg=xCoordFast(0.);
     m_yPhSpOrg=yCoordFast(0.);
     m_slpxPhSpOrg=xSlopeFast(0.);
     m_slpyPhSpOrg=ySlopeFast(0.);
   }
   //-------------------------------------------------------------------------------
-  void PatCalibV0::testLambda_b(LHCb::MCParticle* mcP){		//unused (ceck of filiation
+  void testLambda_b(LHCb::MCParticle* mcP){		//unused (ceck of filiation
   if(!mcP) return;
  const LHCb::MCParticle* parent=0;
  
@@ -390,7 +390,7 @@ double m_cutPt;
 std::cout <<std::endl;}
  }
   //-------------------------------------------------------------------------------
- StatusCode  PatCalibV0::intersection( LocalV0Track& pos, LocalV0Track& neg ) {
+ StatusCode intersection( LocalV0Track& pos, LocalV0Track& neg ) {
     double a = pos.cx[2] - neg.cx[2];
     double b = pos.cx[1] - neg.cx[1];
     double c = pos.cx[0] - neg.cx[0];
@@ -431,7 +431,7 @@ std::cout <<std::endl;}
     return StatusCode::SUCCESS;
   }
   //-------------------------------------------------------------------------------
-  StatusCode  PatCalibV0::improveVTX( LocalV0Track& pos, LocalV0Track& neg ) {
+  StatusCode improveVTX( LocalV0Track& pos, LocalV0Track& neg ) {
 
     double a = pos.cx[2] - neg.cx[2];
     double b = pos.cx[1] - neg.cx[1];
@@ -475,7 +475,7 @@ std::cout <<std::endl;}
     return StatusCode::SUCCESS;
   }
   //-------------------------------------------------------------------------------
-     StatusCode  PatCalibV0::improveVTX_new( LocalV0Track& pos, LocalV0Track& neg ) {
+  StatusCode improveVTX_new( LocalV0Track& pos, LocalV0Track& neg ) {
     double aX[6];
     aX[5]=(pos.slpx[4]-neg.slpx[4])/5;
     aX[4]=(pos.slpx[3]-neg.slpx[3])/4;
@@ -563,7 +563,7 @@ std::cout <<std::endl;}
     
     }
   //-------------------------------------------------------------------------------
-  StatusCode PatCalibV0::reco4MomentumOld( LocalV0Track& pos, LocalV0Track& neg ) { //unused
+  StatusCode reco4MomentumOld( LocalV0Track& pos, LocalV0Track& neg ) { //unused
 
     double zV=m_zV0Vtx;
     double derXPos = pos.slx( zV );
@@ -620,7 +620,7 @@ std::cout <<std::endl;}
   }
   
   //-------------------------------------------------------------------------------
-  void PatCalibV0::reco3Momentum( LocalV0Track& pos, LocalV0Track& neg ) {
+  void reco3Momentum( LocalV0Track& pos, LocalV0Track& neg ) {
 
     double zV=m_zV0Vtx;
     double derXPos = pos.slx( zV );
@@ -691,7 +691,7 @@ std::cout <<std::endl;}
     
 }
   //-------------------------------------------------------------------------------
-  StatusCode PatCalibV0::recoInvariantMasses () {
+  StatusCode recoInvariantMasses () {
 // double m_invariantKsMass;
 //  double m_invariantLambdaMass;
 //  double m_invariantLambdaBarMass;
@@ -754,7 +754,7 @@ double u_m=m_momTrackMinus[0];
      
 }     
     //-------------------------------------------------------------------------------
-  StatusCode PatCalibV0::reco4Momentum(LocalV0Track& pos, LocalV0Track& neg ) {
+  StatusCode reco4Momentum(LocalV0Track& pos, LocalV0Track& neg ) {
   
   reco3Momentum( pos , neg ) ;
   StatusCode  sc= recoInvariantMasses (); 
@@ -764,9 +764,9 @@ double u_m=m_momTrackMinus[0];
 }   
   
   //-------------------------------------------------------------------------------
-  void PatCalibV0::RecoPhSp
-  (double cx[],double cy[],double slpx[],double slpy[],
-   double & xOrigin, double & txOrigin,double & yOrigin, double & tyOrigin ){
+  void RecoPhSp( double cx[],double cy[],double slpx[],double slpy[],
+                 double & xOrigin, double & txOrigin,double & yOrigin,
+                 double & tyOrigin ){
     // coordinates and slopes (LHCb definitions) at zOrigin=0
 
     xOrigin=cx[0];
@@ -781,7 +781,7 @@ double u_m=m_momTrackMinus[0];
   }
 
   //-------------------------------------------------------------------------------
-  double PatCalibV0::CheckPrimaryVtx( LocalV0Track& pos, LocalV0Track& neg ) {
+  double CheckPrimaryVtx( LocalV0Track& pos, LocalV0Track& neg ) {
     double distRef = 1.e10;
     for( std::vector<double>::iterator itZ = m_zPrimVtx.begin();
          m_zPrimVtx.end() != itZ; ++itZ ) {
@@ -799,9 +799,9 @@ double u_m=m_momTrackMinus[0];
 
   }
  //-------------------------------------------------------------------------------
-double PatCalibV0::SmallestImpactParameter()   {
-double distRef = 1.e10;
-for( std::vector<double>::iterator itZ = m_zPrimVtx.begin();
+  double SmallestImpactParameter()   {
+    double distRef = 1.e10;
+    for( std::vector<double>::iterator itZ = m_zPrimVtx.begin();
      m_zPrimVtx.end() != itZ; ++itZ ) {
      double zPrimVtx= (*itZ);
      double xAtPrimVtx=m_xV0Vtx+m_unitVector[1]/m_unitVector[0]*(zPrimVtx-m_zV0Vtx);
@@ -813,10 +813,10 @@ for( std::vector<double>::iterator itZ = m_zPrimVtx.begin();
    return distRef ;
 }
  //-------------------------------------------------------------------------------
-double PatCalibV0::vtxMomAngle(LHCb::RecVertices* primaryVertices)   {
-double distRef = 1.e10;
-int VtxLoc=-1;
-for( std::vector<double>::iterator itZ = m_zPrimVtx.begin();
+  double vtxMomAngle(LHCb::RecVertices* primaryVertices)   {
+    double distRef = 1.e10;
+    int VtxLoc=-1;
+    for( std::vector<double>::iterator itZ = m_zPrimVtx.begin();
      m_zPrimVtx.end() != itZ; ++itZ ) {
      double zPrimVtx= (*itZ);
      double xAtPrimVtx=m_xV0Vtx+m_unitVector[1]/m_unitVector[0]*(zPrimVtx-m_zV0Vtx);
@@ -850,9 +850,9 @@ for( std::vector<double>::iterator itZ = m_zPrimVtx.begin();
    	return dang ;
 }
  //-------------------------------------------------------------------------------
-double PatCalibV0::NormedSmallestImpactParameter()   {
-double distRef = 1.e10;
-for( std::vector<double>::iterator itZ = m_zPrimVtx.begin();
+  double NormedSmallestImpactParameter()   {
+    double distRef = 1.e10;
+    for( std::vector<double>::iterator itZ = m_zPrimVtx.begin();
      m_zPrimVtx.end() != itZ; ++itZ ) {
      double zPrimVtx= (*itZ);
      double xAtPrimVtx=m_xV0Vtx+m_unitVector[1]/m_unitVector[0]*(zPrimVtx-m_zV0Vtx);

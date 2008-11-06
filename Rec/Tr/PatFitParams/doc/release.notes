@@ -4,6 +4,9 @@
 ! Purpose     : Fit MC tracks to compute the PatForward parameters
 !-----------------------------------------------------------------------------
 
+! 2008-11-06 - Marco Cattaneo
+ - Fixes for gcc 4.3
+
 !======================== PatFitParams v3r2 2008-07-02 =======================
 ! 2008-06-29 - Manuel Tobias Schiller
  - update to bring SeedFitParams back in sync with the parameters actually
