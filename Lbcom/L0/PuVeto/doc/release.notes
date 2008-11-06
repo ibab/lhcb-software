@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.51 2008-01-11 15:23:15 cattanem Exp $
+! $Id: release.notes,v 1.52 2008-11-06 14:04:45 cattanem Exp $
 ! Package     : L0/PuVeto
 ! Responsible : Marko Zupan
 !-------------------------------------------------------------------------
+
+! 2008-11-06 - Marco Cattaneo
+ - Fix for gcc 4.3
 
 !======================== PuVeto v7r3 2008-01-11 =========================
 ! 2008-01-11 - Marco Cattaneo

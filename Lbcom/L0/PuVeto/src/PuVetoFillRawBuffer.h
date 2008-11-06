@@ -1,4 +1,4 @@
-// $Id: PuVetoFillRawBuffer.h,v 1.1 2006-09-19 14:44:25 ocallot Exp $
+// $Id: PuVetoFillRawBuffer.h,v 1.2 2008-11-06 14:04:45 cattanem Exp $
 #ifndef PUVETOFILLRAWBUFFER_H 
 #define PUVETOFILLRAWBUFFER_H 1
 
@@ -40,8 +40,8 @@ protected:
     return (unsigned short int) (tgt >> bt) & 1;
   }
 
-  void PuVetoFillRawBuffer::rawVec ( std::vector<unsigned short int> *vecin,
-                                     std::vector<unsigned int> *vecout);
+  void rawVec ( std::vector<unsigned short int> *vecin,
+                std::vector<unsigned int> *vecout);
 
 private:
   // job option parameters
