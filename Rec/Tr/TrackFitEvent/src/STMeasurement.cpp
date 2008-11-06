@@ -1,4 +1,4 @@
-// $Id: STMeasurement.cpp,v 1.14 2008-11-05 09:45:42 mneedham Exp $
+// $Id: STMeasurement.cpp,v 1.15 2008-11-06 12:41:26 mneedham Exp $
 // Include files 
 
 // from STDet
@@ -29,21 +29,11 @@ using namespace LHCb;
 STMeasurement::STMeasurement( const STCluster& stCluster,
                               const DeSTDetector& geom,
                               const ISTClusterPosition& stClusPosTool,
-                              const LHCb::StateVector& /*refVector*/)
+                             const LHCb::StateVector& /*refVector*/)
   : Measurement( Measurement::IT, LHCbID(stCluster.channelID()), 0), m_cluster(&stCluster)
 {
-  this->init( geom, stClusPosTool );
+ this->init( geom, stClusPosTool );
 }
-
-/// Standard constructor, without the reference vector
-STMeasurement::STMeasurement( const STCluster& stCluster,
-                              const DeSTDetector& geom,
-                              const ISTClusterPosition& stClusPosTool )
-  : Measurement( Measurement::IT, LHCbID(stCluster.channelID()), 0), m_cluster(&stCluster)
-{
-  this->init( geom, stClusPosTool );
-}
-
 
 void STMeasurement::init( const DeSTDetector& geom,
                           const ISTClusterPosition& stClusPosTool) 

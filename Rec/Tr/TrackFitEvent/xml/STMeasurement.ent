@@ -1,0 +1,75 @@
+
+     <constructor
+        desc = 'Constructor from an &INTYPE;'>
+        <arg type='LHCb::&INTYPE;' name='stCluster' const='TRUE' />
+        <arg type='DeSTDetector' name='det' const='TRUE' />
+        <arg type='ISTClusterPosition' name='stClusPosTool' const='TRUE' />
+        <arg type='LHCb::StateVector' name='refVector' const='TRUE'/>
+      </constructor>
+
+
+      <constructor
+        desc = 'Constructor from an &INTYPE;'
+        argList = 'LHCb::&INTYPE; stCluster, DeSTDetector det, ISTClusterPosition stClusPosTool '
+        initList = ' Measurement( Measurement::IT, LHCbID(stCluster.channelID()), 0), m_cluster(&POINTER;stCluster)'>
+       <code>
+          this->init( det, stClusPosTool );
+       </code>
+      </constructor>
+  
+
+
+<method
+  type    = 'LHCb::&OUTTYPE;*'
+  name    = 'clone'
+  desc    = 'Clone the STMeasurement'
+  virtual = 'TRUE'
+  const   = 'TRUE'>
+  <code>
+     return new LHCb::&OUTTYPE;(*this);
+  </code>
+</method>
+
+<method
+   name   = 'init'
+   desc   = 'Initialize the data members'
+   access = 'PUBLIC'>
+   <arg type='DeSTDetector' name='det' const='TRUE' />
+   <arg type='ISTClusterPosition' name='stClusPosTool' const='TRUE' />
+</method>
+
+
+<method
+type = 'const DeSTSector&amp;'
+name = 'sector'
+desc = 'Retrieve const the sector of the measurement'
+const = 'TRUE'>
+<code>
+   return *static_cast&lt;const DeSTSector*&gt;(detectorElement());
+</code>
+ </method>
+
+<method
+  type    = 'LHCb::STChannelID'
+  name    = 'channelID'
+  desc    = 'channel identifier'
+  const   = 'TRUE'>
+  <code>
+     return m_cluster &ACCESSOR; channelID() ;
+  </code>
+</method>
+
+<method
+  type    = 'bool'
+  name    = 'highThreshold'
+  desc    = 'has high Threshold'
+  const   = 'TRUE'>
+  <code>
+     return m_cluster &ACCESSOR; highThreshold() ;
+  </code>
+</method>
+
+ 
+
+
+

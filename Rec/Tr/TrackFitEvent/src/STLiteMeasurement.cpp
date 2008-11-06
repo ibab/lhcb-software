@@ -1,4 +1,4 @@
-// $Id: STLiteMeasurement.cpp,v 1.1 2008-11-05 09:45:42 mneedham Exp $
+// $Id: STLiteMeasurement.cpp,v 1.2 2008-11-06 12:41:26 mneedham Exp $
 // Include files 
 
 // from STDet
@@ -34,16 +34,6 @@ STLiteMeasurement::STLiteMeasurement( const STLiteCluster& stCluster,
 {
   this->init( geom, stClusPosTool );
 }
-
-/// Standard constructor, without the reference vector
-STLiteMeasurement::STLiteMeasurement( const STLiteCluster& stCluster,
-                              const DeSTDetector& geom,
-                              const ISTClusterPosition& stClusPosTool )
-  : Measurement( Measurement::ITLite, LHCbID(stCluster.channelID()), 0), m_cluster(stCluster)
-{
-  this->init( geom, stClusPosTool );
-}
-
 
 void STLiteMeasurement::init( const DeSTDetector& geom,
                           const ISTClusterPosition& stClusPosTool) 

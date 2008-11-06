@@ -1,51 +1,39 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE gdd SYSTEM 'gdd.dtd'>
+<!DOCTYPE gdd SYSTEM 'gdd.dtd' [
+<!ENTITY OUTTYPE "STMeasurement">
+<!ENTITY INTYPE "STCluster">
+<!ENTITY ACCESSOR "->">
+<!ENTITY POINTER "&amp;">
+<!ENTITY STCommon SYSTEM "STMeasurement.ent">
+]>
 <gdd>
   <package name='TrackFitEvent'>
 
 <!-- ================ STMeasurement class definition ================ -->
 
     <class
-      name        = 'STMeasurement'
+      name        = '&OUTTYPE;'
       author      = 'Jose Hernando, Eduardo Rodrigues'
       desc        = 'STMeasurement is a measurement made from a ST cluster (of TT or IT).'
       serializers = 'FALSE'>
 
       <base name='LHCb::Measurement' />
       <import name='Event/Measurement' />
-      <import name='STCluster'   soft='FORWARDONLY'/>
-      <import name='StateVector' soft='FORWARDONLY'/>
-      <import name='DeSTDetector'       namespace='::' soft='FORWARDONLY'/>
-      <import name='ISTClusterPosition' namespace='::' soft='FORWARDONLY'/>
+      <import name='Event/STCluster'  />
+      <import name='StateVector' soft = 'FORWARDONLY'/>
+      <import name='STDet/DeSTDetector'  />
+      <import name='STDet/DeSTSector' />
+      <import name='Kernel/ISTClusterPosition' />
 
-      <constructor
-        desc = 'Constructor from an STCluster'>
-        <arg type='LHCb::STCluster' name='stCluster' const='TRUE' />
-        <arg type='DeSTDetector' name='det' const='TRUE' />
-        <arg type='ISTClusterPosition' name='stClusPosTool' const='TRUE' />
-        <arg type='LHCb::StateVector' name='refVector' const='TRUE'/>
-      </constructor>
-
-      <constructor
-        desc = 'Constructor from an STCluster'>
-        <arg type='LHCb::STCluster' name='stCluster' const='TRUE' />
-        <arg type='DeSTDetector' name='det' const='TRUE' />
-        <arg type='ISTClusterPosition' name='stClusPosTool' const='TRUE' />
-      </constructor>
-
+  
       <attribute
         type = 'const LHCb::STCluster*'
         name = 'cluster'
         desc = 'Pointer to the STCluster'
-        getMeth = 'FALSE' />
+        getMeth = 'FALSE' 
+        setMeth = 'FALSE' />
 
-      <method
-        name   = 'init'
-        desc   = 'Initialize the data members'
-        access = 'PUBLIC'>
-        <arg type='DeSTDetector' name='det' const='TRUE' />
-        <arg type='ISTClusterPosition' name='stClusPosTool' const='TRUE' />
-      </method>
+ 
 
       <method
         type  = 'const LHCb::STCluster*'
@@ -55,18 +43,31 @@
         <code>
   return m_cluster;
         </code>
-      </method>
+	</method>
 
       <method
-        type    = 'LHCb::STMeasurement*'
-        name    = 'clone'
-        desc    = 'Clone the STMeasurement'
-        virtual = 'TRUE'
-        const   = 'TRUE'>
+        type  = 'double'
+        name  = 'totalCharge'
+        desc  = 'Retrieve the cluster charge'
+        const = 'TRUE'>
         <code>
-          return new LHCb::STMeasurement(*this);
+  return m_cluster-&gt;totalCharge();
         </code>
-      </method>
+	</method>
+
+
+<method
+  type    = 'unsigned int'
+  name    = 'size'
+  desc    = 'cluster size'
+  const   = 'TRUE'>
+  <code>
+     return m_cluster->size();
+  </code>
+</method>
+     
+
+     &STCommon;
 
     </class>
 
