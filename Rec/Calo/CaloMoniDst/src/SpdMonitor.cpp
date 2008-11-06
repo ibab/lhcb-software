@@ -72,7 +72,7 @@ public:
 	
 protected:
 	
-	SpdMonitor::SpdMonitor	( const std::string& name ,   ISvcLocator*       pSvc )
+	SpdMonitor ( const std::string& name, ISvcLocator* pSvc )
     : CaloMoniAlg ( name , pSvc )
       , m_nEvents   ( 0 )
 	{
