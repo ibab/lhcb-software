@@ -1,4 +1,4 @@
-// $Id: CaloDataFunctor.h,v 1.7 2008-02-27 12:32:44 jonrob Exp $
+// $Id: CaloDataFunctor.h,v 1.8 2008-11-06 17:05:13 cattanem Exp $
 // ============================================================================
 #ifndef EVENT_CALODATAFUNCTOR_H 
 #define EVENT_CALODATAFUNCTOR_H 1
@@ -16,18 +16,16 @@
 // ============================================================================
 // Event 
 // ============================================================================
-#include "Event/CaloDigit.h"
-#include "Event/CaloCluster.h"
-#include "Event/CaloClusterEntry.h"
 #include "Kernel/CaloCellID.h"
-// ============================================================================
 #include "Event/CaloDigitStatus.h"
 // ============================================================================
 // forward declaration 
 // ============================================================================
-class LHCb::CaloDigit        ;   // RecEvent/Event
-class LHCb::CaloCluster      ;   // RecEvent/Event 
-class LHCb::CaloClusterEntry ;   // RecEvent/Event 
+namespace LHCb {
+  class CaloDigit        ;   // Event/DigiEvent
+  class CaloCluster      ;   // Event/RecEvent
+  class CaloClusterEntry ;   // Event/RecEvent
+}
 
 template <class TYPE> 
 class SmartRef  ;     // GaudiKernel
