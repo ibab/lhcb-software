@@ -24,8 +24,8 @@ namespace Rich
 
       public:
 
-        RichShape::RichShape ( const double tpeak,
-                               const double alpha )
+        RichShape ( const double tpeak,
+                    const double alpha )
           : m_alpha   ( alpha ),
             m_tpeak   ( tpeak ),
             m_maxTime ( 200   ),
@@ -44,7 +44,7 @@ namespace Rich
 
         }
 
-        RichShape::~RichShape()
+        ~RichShape()
         {
           if ( m_tabFunc ) { delete m_tabFunc; m_tabFunc = 0; }
         }

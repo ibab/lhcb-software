@@ -48,7 +48,7 @@ namespace Rich
           return TimeFrame[i];
         }
 
-        inline const double operator[](const unsigned int i) const
+        inline double operator[](const unsigned int i) const
         {
           return TimeFrame[i];
         }
