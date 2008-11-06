@@ -1,4 +1,4 @@
-// $Id: STReadoutTool.h,v 1.7 2008-08-15 08:21:44 mneedham Exp $
+// $Id: STReadoutTool.h,v 1.8 2008-11-06 12:57:20 cattanem Exp $
 #ifndef _STReadoutTool_H
 #define _STReadoutTool_H
 
@@ -56,9 +56,9 @@ public:
                                  const STTell1ID aBoardID,
                                  const double isf) const;
 
-  bool STReadoutTool::ADCOfflineToDAQ(const LHCb::STChannelID aOfflineChan,
-				      const STTell1ID aBoardID,
-				      LHCb::STCluster::ADCVector& adcs) const;
+  bool ADCOfflineToDAQ(const LHCb::STChannelID aOfflineChan,
+                       const STTell1ID aBoardID,
+                       LHCb::STCluster::ADCVector& adcs) const;
 
 
   /// find the Tell1 board given a board ID
