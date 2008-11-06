@@ -1,9 +1,15 @@
-# $Id: release.notes,v 1.152 2008-10-31 09:19:12 cattanem Exp $
+# $Id: release.notes,v 1.153 2008-11-06 10:58:37 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+! 2008-11-06 - Marco Clemencic
+ - Added the ConfigurableUser CondDB for the high level configuration of the
+   conditions database. The old configuration function (addCondDBLayer etc.) are
+   still available for backward compatibility, but implemented using the new
+   configurable which allows to specify local tags too. 
 
 ! 2008-10-31 - Marco Cattaneo
  - Fix for gcc 4.3

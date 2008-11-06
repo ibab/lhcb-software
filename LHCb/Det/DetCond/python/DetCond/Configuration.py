@@ -1,17 +1,199 @@
 """
 High level configuration tools for Conditions Database.
 """
-__version__ = "$Id: Configuration.py,v 1.8 2008-07-30 12:08:10 marcocle Exp $"
+__version__ = "$Id: Configuration.py,v 1.9 2008-11-06 10:58:37 marcocle Exp $"
 __author__  = "Marco Clemencic <Marco.Clemencic@cern.ch>"
 
-from Gaudi.Configuration import allConfigurables
+from Gaudi.Configuration import allConfigurables, ConfigurableUser, importOptions, getConfigurable, log
 from Configurables import ( CondDBAccessSvc, 
                             CondDBDispatcherSvc, 
                             CondDBLayeringSvc, 
                             CondDBTimeSwitchSvc, 
                             CondDBCnvSvc,
                             CondDBSQLiteCopyAccSvc,
-                            CondDBLogger )
+                            CondDBLogger,
+                            MessageSvc )
+
+class CondDB(ConfigurableUser):
+    """
+    Configurable user to allow high-level configuration of the access to the
+    conditions database.
+    """
+    __slots__ = { "Tags"        : {},
+                  "Simulation"  : False,
+                  "UseOracle"   : False,
+                  "LocalTags"   : {},
+                  "LogFile"     : "",
+                  "Overrides"   : [], 
+                  "PartitionConnectionString": {},  }
+    _propertyDocDct = { 
+                       'Tags' : """ Dictionary of tags (partition:tag) to use for the COOL databases """,
+                       'Simulation' : """ Boolean flag to select the simulation or real-data configuration """,
+                       'UseOracle' : """ Boolean flag to enable the usage of the CondDB from Oracle servers """,
+                       'LocalTags' : """ Dictionary with local tags to use to override the global ones (partition: list of local tags) """,
+                       'LogFile' : """ Record the requests to the database the specified file """,
+                       'Overrides' : """ Internal property used to add layers or alternatives """,
+                       'PartitionConnectionString' : """ Dictionary with alternative connection strings for the CondDB partitions """,
+                       }
+    LAYER = 0
+    ALTERNATIVE = 1
+    # List of known implementations of ICondDBReader (str is used for backward compatibility)
+    __CondDBReaders__ = [ CondDBAccessSvc,
+                          CondDBDispatcherSvc,
+                          CondDBLayeringSvc,
+                          CondDBTimeSwitchSvc,
+                          CondDBSQLiteCopyAccSvc,
+                          str ]
+
+    def addLayer(self, accessSvc):
+        """
+        Add the given CondDBReader as a layer on top of the existing configuration.
+    
+        Example:
+        CondDB().addLayer(myDB)
+        """
+        # Check for supported types
+        if type(accessSvc) not in __CondDBReaders__:
+            raise TypeError("CondDB.addLayer does not support '%s'"%accessSvc.__class__.__name__)
+        self.Overrides.append((self.LAYER, accessSvc))
+    
+    def _addLayer(self, accessSvc):
+        cnvSvc = allConfigurables["CondDBCnvSvc"]
+        
+        originalReader = cnvSvc.CondDBReader
+        if type(originalReader) == CondDBLayeringSvc:
+            # If the original reader is already a layering svc, we can extend the
+            # configuration.
+            originalReader.Layers.insert(0,accessSvc)
+        else:
+            # We have to create a new layering svc.
+            name = "CondDBLayeringSvc"
+            i = 0
+            while name in allConfigurables:
+                i += 1
+                name = "CondDBLayeringSvc_%d"%i
+            cnvSvc.CondDBReader = CondDBLayeringSvc(name,
+                                                    Layers = [accessSvc,
+                                                              originalReader])
+
+    def addAlternative(self, accessSvc, path):
+        """
+        Add the given CondDBReader as an alternative to the existing configuration
+        for the specified path.
+        
+        Example:
+        CondDB().addAlternative(myDB,"/Conditions/MyDetector/Alignment")
+        """
+        # Check for supported types
+        if type(accessSvc) not in __CondDBReaders__:
+            raise TypeError("CondDB.addAlternative does not support '%s'"%accessSvc.__class__.__name__)
+        self.Overrides.append((self.ALTERNATIVE, accessSvc, path))
+        
+    def _addAlternative(self, accessSvc, path):
+        cnvSvc = allConfigurables["CondDBCnvSvc"]
+        
+        originalReader = cnvSvc.CondDBReader
+        if type(originalReader) == CondDBDispatcherSvc:
+            # If the original reader is already a dispatcher, we can extend the
+            # configuration:
+            originalReader.Alternatives[path] = accessSvc
+        else:
+            # We have to create a new dispatcher
+            name = "CondDBDispatcherSvc"
+            i = 0
+            while name in allConfigurables:
+                i += 1
+                name = "CondDBDispatcherSvc_%d"%i
+            cnvSvc.CondDBReader = CondDBDispatcherSvc(name,
+                                                      MainAccessSvc = originalReader,
+                                                      Alternatives = { path: accessSvc }
+                                                      )
+    
+    def __apply_configuration__(self):
+        """
+        Converts the high-level information passed as properties into low-level configuration.
+        """
+        if self.getProp("UseOracle"):
+            importOptions("$SQLDDDBROOT/options/SQLDDDB-Oracle.py")
+        else:   
+            importOptions("$SQLDDDBROOT/options/SQLDDDB.py")
+        
+        #########################################################################
+        # Access to ConditionsDB
+        ##########################################################################
+        conns = self.getProp("PartitionConnectionString")
+        tags = self.getProp("Tags")
+        # DB partitions
+        partition = {}
+        for p, t in [ ("DDDB",     CondDBAccessSvc),
+                      ("LHCBCOND", CondDBAccessSvc),
+                      ("ONLINE",   CondDBTimeSwitchSvc),
+                      ("SIMCOND",  CondDBAccessSvc) ]:
+            partition[p] = getConfigurable(p, t)
+            # Override connection strings:
+            if p in conns and type(partition[p]) is CondDBAccessSvc:
+                partition[p].ConnectionString = conns[p]
+                del conns[p]
+            # Override tags
+            if p in tags and p != "ONLINE":
+                partition[p].DefaultTAG = tags[p]
+                del tags[p]
+            
+        if conns:
+            log.warning("Cannot override the connection strings of the partitions %r", conns.keys()) 
+        if tags:
+            log.warning("Cannot set the tag for partitions %r", tags.keys()) 
+            
+        if not self.getProp("Simulation"):
+            # Standard configurations
+            #  - Reconstruction / analysis
+            disp = CondDBDispatcherSvc("MainCondDBReader",
+                                       MainAccessSvc = partition["DDDB"],
+                                       Alternatives = {
+                                         "/Conditions": partition["LHCBCOND"],
+                                         "/Conditions/Online": partition["ONLINE"]
+                                       })
+        else:
+            #  - Simulation
+            disp = CondDBDispatcherSvc("SimulationCondDBReader",
+                                       MainAccessSvc = partition["DDDB"],
+                                       Alternatives = {
+                                         "/Conditions": partition["SIMCOND"]
+                                       })
+        CondDBCnvSvc( CondDBReader = disp )
+        
+        localTags = self.getProp("LocalTags")
+        not_applied = []
+        for p in localTags:
+            if p in partition:
+                taglist = list(localTags[p])
+                taglist.reverse() # we need to stack the in reverse order to use the first as on top of the others
+                i = 0 # counter
+                for t in taglist:
+                    self._addLayer(partition[p].clone("%s_%d" % (p, i),
+                                                      DefaultTAG = t))
+                    i += 1
+            else:
+                not_applied.append(p)
+        if not_applied:
+            log.warning("Cannot set the local tags for partitions %r", not_applied) 
+        
+        # Add layers and alternatives
+        call = { self.LAYER : self._addLayer,
+                 self.ALTERNATIVE : self._addAlternative }
+        for override in self.getProp("Overrides"):
+            apply(call[override[0]], override[1:])
+        
+        # Add the logger
+        filename = self.getProp("LogFile")
+        if filename:
+            cnvSvc = allConfigurables["CondDBCnvSvc"]
+            cnvSvc.CondDBReader = CondDBLogger(LoggedReader = cnvSvc.CondDBReader,
+                                               LogFile = filename)
+        
+        # Suppress pointless warning from COOL_2_5_0
+        MessageSvc().setError.append("RelationalDatabase")
+
 
 # Exported symbols
 __all__ = [ "addCondDBLayer", "addCondDBAlternative", "useCondDBLogger",
@@ -20,7 +202,8 @@ __all__ = [ "addCondDBLayer", "addCondDBAlternative", "useCondDBLogger",
 __all__ += [ "CondDBAccessSvc",
              "CondDBDispatcherSvc", "CondDBLayeringSvc", "CondDBTimeSwitchSvc", 
              "CondDBSQLiteCopyAccSvc", "CondDBLogger",
-             "CondDBCnvSvc" ]
+             "CondDBCnvSvc",
+             "CondDB" ]
 
 # List of known implementations of ICondDBReader (str is used for backward compatibility)
 __CondDBReaders__ = [ CondDBAccessSvc,
@@ -44,31 +227,9 @@ def addCondDBLayer(accessSvc):
     Example:
     addCondDBLayer(myDB)
     """
-    # Check for supported types
-    if type(accessSvc) not in __CondDBReaders__:
-        raise TypeError("addCondDBLayer does not support '%s'"%accessSvc.__class__.__name__)
-    
-    # Check for basic configuration 
-    _assertConfig('addCondDBLayer')
-    cnvSvc = allConfigurables["CondDBCnvSvc"]
-    
-    originalReader = cnvSvc.CondDBReader
-    if type(originalReader) == CondDBLayeringSvc:
-        # If the original reader is already a layering svc, we can extend the
-        # configuration.
-        originalReader.Layers.insert(0,accessSvc)
-    else:
-        # We have to create a new layering svc.
-        name = "CondDBLayeringSvc"
-        i = 0
-        while name in allConfigurables:
-            i += 1
-            name = "CondDBLayeringSvc_%d"%i
-        cnvSvc.CondDBReader = CondDBLayeringSvc(name,
-                                                Layers = [accessSvc,
-                                                          originalReader])
+    DetCond().addLayer(accessSvc)
 
-def addCondDBAlternative(accessSvc,path):
+def addCondDBAlternative(accessSvc, path):
     """
     Add the given CondDBReader as an alternative to the existing configuration
     for the specified path.
@@ -76,35 +237,7 @@ def addCondDBAlternative(accessSvc,path):
     Example:
     addCondDBAlternative(myDB,"/Conditions/MyDetector/Alignment")
     """
-    # Check for supported types
-    if type(accessSvc) not in __CondDBReaders__:
-        raise TypeError("addCondDBAlternative does not support '%s'"%accessSvc.__class__.__name__)
-    
-    if type(accessSvc) is str:
-        accessSvcName = accessSvc
-    else:
-        accessSvcName = accessSvc.getFullName()
-    
-    # Check for basic configuration
-    _assertConfig('addCondDBAlternative')
-    cnvSvc = allConfigurables["CondDBCnvSvc"]
-    
-    originalReader = cnvSvc.CondDBReader
-    if type(originalReader) == CondDBDispatcherSvc:
-        # If the original reader is already a dispatcher, we can extend the
-        # configuration:
-        originalReader.Alternatives[path] = accessSvcName
-    else:
-        # We have to create a new dispatcher
-        name = "CondDBDispatcherSvc"
-        i = 0
-        while name in allConfigurables:
-            i += 1
-            name = "CondDBDispatcherSvc_%d"%i
-        cnvSvc.CondDBReader = CondDBDispatcherSvc(name,
-                                                  MainAccessSvc = originalReader,
-                                                  Alternatives = { path: accessSvcName }
-                                                  )
+    DetCond().addAlternative(accessSvc, path)
 
 def useCondDBLogger(filename = None, logger = None):
     """
