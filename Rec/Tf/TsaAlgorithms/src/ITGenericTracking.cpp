@@ -1,4 +1,4 @@
-// $Id: ITGenericTracking.cpp,v 1.5 2008-11-06 15:35:06 mneedham Exp $
+// $Id: ITGenericTracking.cpp,v 1.6 2008-11-07 15:29:28 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -443,7 +443,7 @@ bool ITGenericTracking::collectXHits2(const Tf::Tsa::Line& line,
   unsigned int collected = 0u;
   for (std::vector<Tf::STHit*>::const_iterator iterX1 = xhits.begin(); iterX1 != xhits.end(); ++iterX1){
 
-    if ((*iterX1)->station() == 2 && sameBox(hit, *iterX1)){
+    if ((*iterX1)->cluster().station() == 2 && sameBox(hit, *iterX1)){
       const double xDiff = (*iterX1)->x() - line.value((*iterX1)->z());
       plot(xDiff,"xDiff_2_"+ITNames().UniqueLayerToString((*iterX1)->channelID()), -10., 10., 400);
       plot(line.value((*iterX1)->z()),"x_2_"+ITNames().UniqueLayerToString((*iterX1)->channelID()), -10., 10., 400);
