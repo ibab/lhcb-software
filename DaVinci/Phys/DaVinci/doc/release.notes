@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.256 2008-11-05 14:55:39 jpalac Exp $
+! $Id: release.notes,v 1.257 2008-11-07 17:05:17 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,25 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2008-11-07 - Juan PALACIOS
+ - tests/options/DVTestB2DiMuon.py
+  . Completely re-written in python. Only .opts used is preselection file itself.
+ - tests/qmtest/davinci.qms/preselections.qms/test_b2dimuon.qmt
+  . Use tests/options/DVTestB2DiMuon.py instead of .opts.
+ - options/DVTestB2DiMuon.opts
+  . Simplyfy MC filtering.
+
+! 2008-11-06 - Juan PALACIOS
+ - tests/options/DVTestB2DiMuon.opts
+  . Add B-> J/psi KS data sample, fix MC decay descriptors, add MC selections 
+    to correlations table
+ - tests/qmtest/davinci.qms/preselections.qms/test_b2dimuon.qmt
+  . Change correlation table: changes in tests/options/DVTestB2DiMuon.opts
+ - tests/options/DVTestBu2eeK.opts
+  . Add MC selections to correlations table
+ - tests/qmtest/davinci.qms/preselections.qms/test_bu2eek.qmt
+  . Change correlation table: changes in tests/options/DVTestBu2eeK.opts
 
 ! 2008-11-05 - Juan PALACIOS
  - python/DaVinci/Configuration.py
