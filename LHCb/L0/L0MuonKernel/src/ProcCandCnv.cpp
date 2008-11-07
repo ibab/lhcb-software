@@ -3,6 +3,7 @@
 #include "ProcessorKernel/Register.h"
 #include "L0MuonKernel/BankUtilities.h"
 
+#define _DEBUG_PROCCAND_  0
 /**
    Constructor.
 */
@@ -231,13 +232,15 @@ int L0Muon::ProcCandCnv::decodeBank_v2(const std::vector<unsigned int> &raw)
   // Clear the registers first
   release();
 
-  //   std::cout.setf(std::ios::uppercase) ;
-  //   std::cout<<"\t=> L0Muon::ProcCandCnv::decodeBank -- dump raw bank of size: "<<raw.size()<<std::hex<<std::endl;
-  //   for (std::vector<unsigned int>::const_iterator itraw = raw.begin(); itraw<raw.end(); ++itraw){
-  //     std::cout <<"\t0x"<<std::setw(8)<<(*itraw)<<std::endl;
-  //   }
-  //   std::cout<<std::dec;
-  //   std::cout.unsetf(std::ios::uppercase);
+#if _DEBUG_PROCCAND_ >0
+  std::cout.setf(std::ios::uppercase) ;
+  std::cout<<"\t=> L0Muon::ProcCandCnv::decodeBank v2-- dump raw bank of size: "<<raw.size()<<std::hex<<std::endl;
+  for (std::vector<unsigned int>::const_iterator itraw = raw.begin(); itraw<raw.end(); ++itraw){
+    std::cout <<"\t0x"<<std::setw(8)<<(*itraw)<<std::endl;
+  }
+  std::cout<<std::dec;
+  std::cout.unsetf(std::ios::uppercase);
+#endif
   
 
   unsigned int iwd = 0; 
@@ -292,6 +295,13 @@ int L0Muon::ProcCandCnv::decodeBank_v2(const std::vector<unsigned int> &raw)
       ncandBCSU = ncandBCSU>2 ? 2 : ncandBCSU;
       for (int icand =0;icand<ncandBCSU;++icand){
         if ((iwd+icand)>=raw.size()) return 0;
+#if _DEBUG_PROCCAND_ >0
+        std::cout.setf(std::ios::uppercase) ;
+        std::cout<<"\t=> L0Muon::ProcCandCnv::decodeBank v2-- \tBCSU cand: "<<std::hex<<std::endl;
+        std::cout <<"\t0x"<<std::setw(8)<<raw[iwd+icand]<<std::endl;
+        std::cout<<std::dec;
+        std::cout.unsetf(std::ios::uppercase);
+#endif
         L0Muon::writeCandInRegister(&m_candRegHandlerBCSU[ib],raw[iwd+icand],icand,bankVersion);  
         m_candRegHandlerBCSU[ib].setCandQuarter(m_quarter,icand); 
         empty|=((raw[iwd])& 0xC0008000);
@@ -304,6 +314,13 @@ int L0Muon::ProcCandCnv::decodeBank_v2(const std::vector<unsigned int> &raw)
         ncandPU = ncandPU>2 ? 2 : ncandPU;
         for (int icand =0;icand<ncandPU;++icand){
           if ((iwd+icand)>=raw.size()) return 0;
+#if _DEBUG_PROCCAND_ >0
+        std::cout.setf(std::ios::uppercase) ;
+        std::cout<<"\t=> L0Muon::ProcCandCnv::decodeBank v2-- \tPU cand: "<<std::hex<<std::endl;
+        std::cout <<"\t0x"<<std::setw(8)<<raw[iwd+icand]<<std::endl;
+        std::cout<<std::dec;
+        std::cout.unsetf(std::ios::uppercase);
+#endif
           L0Muon::writeCandInRegister(&m_candRegHandlerPU[ib][ipu],raw[iwd+icand],icand,bankVersion);
           m_candRegHandlerPU[ib][ipu].setCandQuarter(m_quarter,icand); 
           empty|=((raw[iwd])& 0xC0008000);

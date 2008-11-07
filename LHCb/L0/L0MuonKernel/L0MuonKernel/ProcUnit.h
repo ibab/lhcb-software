@@ -1,19 +1,33 @@
-// $Id: ProcUnit.h,v 1.6 2006-01-18 16:49:53 jucogan Exp $
+// $Id: ProcUnit.h,v 1.7 2008-11-07 16:23:39 jucogan Exp $
 
 #ifndef L0MUONKERNEL_PROCUNIT_H
 #define L0MUONKERNEL_PROCUNIT_H     1
 
-/* @class ProcUnit ProcUnit.h L0MuonKernel/ProcUnit.h
-
-Class representing a processing unit 
-of the level-0 muon trigger 
-   
-*/
 
 #include "L0MuonKernel/L0MUnit.h"
 
 namespace L0Muon {
 
+  /** @class ProcUnit ProcUnit.h L0MuonKernel/ProcUnit.h
+
+  Class representing a processing unit L0Muon processor.
+
+  It inherits from L0MUnit.
+
+  There is one such unit per PU (i.e. 4 by processing board). Its parent is a BoardUnit.
+
+  It contains :
+  - 1 FormattingUnit (performs data exchange between Processing Units)
+  - 1 CoreUnit (candidate search)
+  - 1 FormattingOutUnit (formats the data for output) 
+  
+  This unit is essentialy a container. It does not have any input nor output registers.
+  It triggers the initialize, execute, ... methods of its daughters.
+
+  @author  Luisanna Tocco, Julien Cogan
+  @date  24 September 2003
+
+  */
   class ProcUnit : public L0MUnit {
 
   public:

@@ -1,4 +1,4 @@
-// $Id: ProcRawErrors.h,v 1.1 2008-04-02 12:45:50 jucogan Exp $
+// $Id: ProcRawErrors.h,v 1.2 2008-11-07 16:23:39 jucogan Exp $
 #ifndef PROCRAWERROR_H 
 #define PROCRAWERROR_H 1
 
@@ -6,18 +6,29 @@
 
 namespace L0Muon {
 
+  /** @class ProcRawErrors ProcRawErrors.h L0MuonKernel/ProcRawErrors.h
+
+      Class holding the error related to the L0MuonRaw bank (written by the controller boards).
+
+      The error handlers of this class are filled in ProcRawCnv::decodeBank.
+
+      @author Julien Cogan
+      @date 2008 June the 5th
+  */
   class ProcRawErrors
   {
   
   public:
   
-  
+    /// Constructor.
     ProcRawErrors();
+    
+    /// Destructor.
     virtual ~ProcRawErrors();  
     
     bool inError();
     bool decodingError() const {return decoding.inError();};
-    std::string counters(std::string tab="");
+    //std::string counters(std::string tab="");
 
     static std::string header(std::string tab=""){
       std::string h=tab;

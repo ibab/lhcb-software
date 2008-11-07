@@ -26,11 +26,6 @@ L0Muon::FormattingOutUnit::FormattingOutUnit(DOMNode* pNode):L0MUnit(pNode){
 L0Muon::FormattingOutUnit::~FormattingOutUnit(){
 }
 
-void L0Muon::FormattingOutUnit::initialize()
-{
-  L0MUnit::initialize();
-}
-
 
 void L0Muon::FormattingOutUnit::execute() {  
 

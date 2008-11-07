@@ -1,14 +1,6 @@
 #ifndef L0MUONKERNEL_MUONTRIGGERUNIT_H
 #define L0MUONKERNEL_MUONTRIGGERUNIT_H     1
 
-/* class MuonTriggerUnit L0MuonKernel/MuonTriggerUnit.h
-
-Class representing a board 
-of the level-o muon trigger processor 
-   
-author  Luisanna Tocco
-date  24 September 2003
-*/ 
 
 
 #include <vector>
@@ -16,6 +8,22 @@ date  24 September 2003
 
 namespace L0Muon {
 
+  /** @class MuonTriggerUnit L0MuonKernel/MuonTriggerUnit.h
+
+  Class representing the L0Muon Trigger.
+
+  It inherits from L0MUnit.
+
+  It is the 'Top Unit' containing the 4 CrateUnit of the L0muon processor (if fully configured).
+
+  Contains also methods to get the trigger parameters. They are propagated to the Tower via the CoreUnit.
+ 
+  Otherwise, this unit is essentialy a container. It does not have any input nor output registers.
+  It triggers the initialize, execute, ... methods of its daughters.
+  
+  @author  Luisanna Tocco, Julien Cogan
+  @date  24 September 2003
+  */ 
   class MuonTriggerUnit : public L0MUnit {
      
   public:
@@ -54,21 +62,15 @@ namespace L0Muon {
 
     /// Return the emulator version
     int procVersion(){ return m_procVersion;}
-    
-
-    /// Return the flag to zero supress or not the rawbuffer
-    bool zip(){return m_zip;}
      
   private:
      
-    /// Fois (one vector element per station)
-    std::vector<int> m_xfoi;
-    std::vector<int> m_yfoi;    
-    bool m_ignoreM1;
-    bool m_ignoreM2;
-    std::vector<double> m_ptparameters;
-    int m_procVersion;
-    bool m_zip;
+    std::vector<int> m_xfoi; ///< Vector of FOI in X (5 elements, 1 per station)
+    std::vector<int> m_yfoi; ///< Vector of FOI in Y (5 elements, 1 per station)   
+    bool m_ignoreM1;         ///< Flag to ignore M1
+    bool m_ignoreM2;         ///< Flag to ignore M2
+    std::vector<double> m_ptparameters; ///< parameters for PT encoding
+    int m_procVersion;                  ///< processor version 
 
   };
 

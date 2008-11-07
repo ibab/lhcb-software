@@ -1,15 +1,8 @@
-// $Id: UnitFactory.h,v 1.2 2007-08-27 09:32:24 jucogan Exp $
+// $Id: UnitFactory.h,v 1.3 2008-11-07 16:23:39 jucogan Exp $
 
 #ifndef L0MUONKERNEL_UNITFACTORY_H
 #define L0MUONKERNEL_UNITFACTORY_H     1
 
-/** @class UnitFactory UnitFactory.h L0MuonKernel/UnitFactory.h
-
-   Class representing a factory for creating and 
-   owning registers
-   
-   
-*/ 
 
 #include <string>
 #include <map>
@@ -25,44 +18,66 @@ XERCES_CPP_NAMESPACE_USE
 
 namespace L0Muon {
 
-class UnitFactory {
+  /** @class UnitFactory UnitFactory.h L0MuonKernel/UnitFactory.h
 
-protected:
+  Class representing a factory for creating Units. 
 
-  /// Constructor
-  UnitFactory();
-public:
-
-  /// Destructor
-  virtual ~UnitFactory();
+  The factory only holds only the pointer to the top Unit. The pointers to the 
+  other units are stored by their parent in the hierarchy. 
   
-  /// single instance for the factory
-  static UnitFactory* instance();
+  This class contains a method to instanciate the top unit 
+  from the xml description of the L0Muon processor
 
-  /// Fill the factory from the XML file describing the registers
-  Unit* createUnit(DOMNode* pNode, std::string type);
-//   Unit* fromXML(DOMNode* pNode);
-  void fromXML(DOMNode* pNode);
+  */ 
+  class UnitFactory {
+    
+  protected:
+    
+    /// Constructor
+    UnitFactory();
+
+  public:
+    
+    /// Destructor
+    virtual ~UnitFactory();
+    
+    /// single instance for the factory
+    static UnitFactory* instance();
+    
+    /** From the given xml node, creates a Unit of the given type
+        and returns a pointer to it
+    */
+    Unit* createUnit(DOMNode* pNode, std::string type);
+
+    /// Fill the factory from the top unit node in the XML file describing the L0Muon processor
+    void fromXML(DOMNode* pNode);
+    
+    /// Empty the factory
+    void reset();
+
+    /// Returns a pointer to the top unit in the hierarchy of Units in the factory
+    Unit * topUnit(){return m_topUnit;}
+    
+    
+  private:
+    
+    /** Utility for XML decoding: get the attribute key in the list di
+        and convert it into an integer
+    */
+    int getAttributeInt(DOMNamedNodeMap* di, const char* key);
+    /** Utility for XML decoding: get the attribute key in the list di
+        and convert it into a string
+    */
+    std::string getAttributeStr(DOMNamedNodeMap* di, const char* key);
+    
+  private:
+    
+    static UnitFactory* m_instance;  ///< pointer to the factory instance (unique)
+    
+    Unit * m_topUnit;                ///< pointer to the top unit in the hierarchy of Units in the factory
+    
+  };
   
-  /// Empty the factory
-  void reset();
-
-  Unit * topUnit(){return m_topUnit;}
-  
-
-private:
-
-  int getAttributeInt(DOMNamedNodeMap* di, const char* key);
-  std::string getAttributeStr(DOMNamedNodeMap* di, const char* key);
-
-private:
-
-  static UnitFactory* m_instance;
-  
-  Unit * m_topUnit;
-
-};
-
 };  // namespace L0Muon
 
 #endif      // L0MUONKERNEL_UNITFACTORY_H  

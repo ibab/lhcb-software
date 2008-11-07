@@ -1,4 +1,4 @@
-// $Id: CtrlRawErrors.h,v 1.1 2008-04-02 12:45:49 jucogan Exp $
+// $Id: CtrlRawErrors.h,v 1.2 2008-11-07 16:23:38 jucogan Exp $
 #ifndef INCLUDE_CTRLRAWERROR_H 
 #define INCLUDE_CTRLRAWERROR_H 1
 
@@ -6,19 +6,30 @@
 
 namespace L0Muon {
 
+  /** @class CtrlRawErrors CtrlRawErrors.h L0MuonKernel/CtrlRawErrors.h
+
+      Class holding the error related to the L0MuonRaw bank (written by the controller boards).
+
+      The error handlers of this class are filled in CtrlRawCnv::decodeBank.
+
+      @author Julien Cogan
+      @date 2008 June the 5th
+  */
   class CtrlRawErrors
   {
   
   public:
   
-  
+    /// Constructor.
     CtrlRawErrors();
+    
+    /// Destructor.
     virtual ~CtrlRawErrors();  
     
     bool inError();
     bool decodingError() const {return decoding.inError();};
     
-    std::string counters(std::string tab="");
+    //std::string counters(std::string tab="");
 
     static std::string header(std::string tab=""){
       std::string h=tab;

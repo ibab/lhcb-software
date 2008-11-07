@@ -128,20 +128,20 @@ std::vector<L0Muon::PMuonCandidate>  L0Muon::CtrlCandCnv::muonCandidatesBCSU(int
 int L0Muon::CtrlCandCnv::decodeBank(const std::vector<unsigned int> &raw, int bankVersion, int mode)
 {
 
-  // Decode the L0MuonCtrlCand bank version 2 
-  //
-  // This banks contains 2 parts :
-  // o 1st part : final candidates selected by the controller boards of 1 side (2 quarters)
-  // o 2nd part : input candidates received by the controller boards of 1 side (candidates sent by the processing boards)
-  //
-  // The 2nd part of the bank (if present) will be decoded only if the given input mode is >0.
-  //
-  // Return values :
-  //  o  0 : incomplete bank
-  //  o -1 : bad format
-  //  o -2 : bad format
-  //  o  1 : only 1st first part was decoded
-  //  o  2 : the two parts were decoded
+  /// Decode the L0MuonCtrlCand bank version 2 
+  ///
+  /// This banks contains 2 parts :
+  /// - 1st part : final candidates selected by the controller boards of 1 side (2 quarters)
+  /// - 2nd part : input candidates received by the controller boards of 1 side (candidates sent by the processing boards)
+  ///
+  /// The 2nd part of the bank (if present) will be decoded only if the given input mode is >0.
+  ///
+  /// Return values :
+  ///  -  0 : incomplete bank
+  ///  - -1 : bad format
+  ///  - -2 : bad format
+  ///  -  1 : only 1st first part was decoded
+  ///  -  2 : the two parts were decoded
 
   if (bankVersion<2) return 0;
 

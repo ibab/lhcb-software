@@ -1,4 +1,4 @@
-// $Id: ProcUtilities.cpp,v 1.5 2008-07-15 12:48:53 jucogan Exp $
+// $Id: ProcUtilities.cpp,v 1.6 2008-11-07 16:23:39 jucogan Exp $
 
 #include "L0MuonKernel/ProcUtilities.h"
 
@@ -402,4 +402,30 @@ std::vector<double> L0Muon::kineV0(LHCb::MuonTileID p1, LHCb::MuonTileID p2, boo
   kine.push_back(phi);
   return kine;
 
+}
+
+int L0Muon::encodePT(double pT,int procVersion, bool debug) {
+  
+  int ipt=0;
+
+  if (procVersion==-1) std::cout<<"L0Muon::ptEncoding wrong procVersion= "<<procVersion<<std::endl;
+  
+  // Encoding parameters
+  static int nbits=7;
+  static int ptMax = (1<<nbits)-1;
+  static double dpT=40.;
+  
+  if (debug) std::cout<<"L0Muon::ptEncoding parameters are: nbits= "<<nbits<<" ptMax= "<<ptMax<<" dpT= "<<dpT<<std::endl;
+  
+  // Encode absolute value
+  ipt= int(0.5+fabs(pT)/dpT);
+  ipt = pT>ptMax ? ptMax:ipt;
+  
+  // Encode charge
+  if (pT>0) ipt|=(1<<8);
+
+  if (debug) std::cout<<"L0Muon::ptEncoding pT= "<<pT<<" => "<<ipt<<std::endl;
+
+  return ipt;
+  
 }

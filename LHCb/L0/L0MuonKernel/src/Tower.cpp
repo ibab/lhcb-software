@@ -377,10 +377,6 @@ std::vector<L0Muon::PMuonCandidate> L0Muon::Tower::processTower(LHCb::MuonTileID
         
         // In version 0, the offset in M1 is given  as it is, i.e. in the granularity of M3.
         // In next version, it is given in the granularity of M1.
-// //         if (m_procVersion!=0) {
-// //           if (offM1>=0) offM1++;
-// //           offM1 = (offM1>>1);// expressed with M1 granularity (le hard est 'homogène') 
-// //         }
         offM1 = L0Muon::offsetM1(offM1,m_procVersion);
         
         if (m_debug) std::cout <<"--- Tower::processTower: CANDIDATE FOUND"<< std::endl;
@@ -392,6 +388,8 @@ std::vector<L0Muon::PMuonCandidate> L0Muon::Tower::processTower(LHCb::MuonTileID
         if (m_debug) std::cout <<"--- Tower::processTower: padM1= "<<padM1.toString()<< std::endl;
         if (m_debug) std::cout <<"--- Tower::processTower: padM2= "<<padM2.toString()<< std::endl;
         double pt = L0Muon::kine(padM1,padM2,m_procVersion,m_debug)[0];
+        int ipt=L0Muon::encodePT(pt,m_procVersion,m_debug);
+        
         if (m_debug) std::cout <<"--- Tower::processTower: pt= "<<pt<< std::endl;
 
         // Create MuonCandidate (without the pu and board info)
@@ -400,8 +398,8 @@ std::vector<L0Muon::PMuonCandidate> L0Muon::Tower::processTower(LHCb::MuonTileID
         muoncand->setRowM3(rowseed);
         muoncand->setOffM2(offM2);
         muoncand->setOffM1(offM1);
-        muoncand->setPT(pt,m_dpt,m_nbits);
-        muoncand->setCharge(pt);
+        muoncand->setPT(ipt);
+        muoncand->setCharge((ipt>>8)&1);
         puCandidates.push_back(muoncand);
         if (m_debug) std::cout <<"--- Tower::processTower: candidate pushed in vector"<< std::endl;
 

@@ -1,21 +1,24 @@
-// $Id: L0BufferCnvContainer.h,v 1.1 2007-08-27 09:32:23 jucogan Exp $
+// $Id: L0BufferCnvContainer.h,v 1.2 2008-11-07 16:23:38 jucogan Exp $
 #ifndef L0MUONKERNEL_L0BUFFERCNVCONTAINER_H 
 #define L0MUONKERNEL_L0BUFFERCNVCONTAINER_H 1
 
 // Include files
 
-/** @class L0BufferCnvContainer L0BufferCnvContainer.h L0MuonKernel/L0BufferCnvContainer.h
- *  
- *
- *  @author Julien Cogan
- *  @date   2007-08-22
- */
 
 #include "L0MuonKernel/L0BufferCnv.h"
 #include "Kernel/MuonTileID.h"
 
 namespace L0Muon {
 
+  /** @class L0BufferCnvContainer L0BufferCnvContainer.h L0MuonKernel/L0BufferCnvContainer.h
+     
+  Class to hold a set of pointers to L0BufferCnv. 
+
+  Used to binds the various L0Buffer converters in python (see L0MuonPyTools/L0MuonKernelWrapper).
+
+  @author Julien Cogan
+  @date   2007-08-22
+  */
   class L0BufferCnvContainer {
 
   public: 

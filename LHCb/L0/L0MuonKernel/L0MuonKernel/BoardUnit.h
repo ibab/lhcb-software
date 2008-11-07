@@ -1,16 +1,6 @@
 #ifndef L0MUONKERNEL_BOARDUNIT_H
 #define L0MUONKERNEL_BOARDUNIT_H     1
 
-/* class BoardUnit L0MuonKernel/BoardUnit.h
-
-   Class representing a board 
-   of the level-o muon trigger processor 
-   
-   author  Luisanna Tocco
-   date  24 September 2003
-*/ 
-
-
 #include <boost/dynamic_bitset.hpp>
 #include <vector>
 #include "L0MuonKernel/ProcUnit.h"
@@ -19,17 +9,35 @@
 
 namespace L0Muon {
 
-   class BoardUnit : public L0MUnit {
+  /** @class BoardUnit L0MuonKernel/BoardUnit.h
      
-  public:
+  Class representing a processing board of the L0Muon processor.
+  
+  It inherits from L0MUnit.
 
-    /// Constructor 
+  There is one such unit per processing board. Its parent is a CrateUnit.
+
+  If fully configured, it contains:
+  - 4 ProcUnit, 
+  - 1 BCSUnit.
+
+  This unit is essentialy a container. It does not have any input nor output registers.
+  It triggers the initialize, execute, ... methods of its daughters.
+  
+  @author  Luisanna Tocco, Julien Cogan
+  @date  24 September 2003
+  */ 
+  class BoardUnit : public L0MUnit {
+    
+  public:
+    
+    /// Default Constructor 
     BoardUnit();
 
-    /// Constructor 
+    /// Constructor with a MuonTileID
     BoardUnit(LHCb::MuonTileID id);
 
-    /// Constructor 
+    /// Constructor from a xml node
     BoardUnit(DOMNode* pNode);
 
     /// Destructor

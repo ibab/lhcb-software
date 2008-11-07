@@ -1,4 +1,4 @@
-// $Id: ProcCandErrors.h,v 1.2 2008-07-11 15:30:48 jucogan Exp $
+// $Id: ProcCandErrors.h,v 1.3 2008-11-07 16:23:39 jucogan Exp $
 #ifndef PROCCANDERRORS_H 
 #define PROCCANDERRORS_H 1
 
@@ -6,6 +6,22 @@
 
 namespace L0Muon {
 
+  /** @class ProcCandErrors ProcCandErrors.h L0MuonKernel/ProcCandErrors.h
+
+      Class holding the error related to the L0MuonProcCand bank.
+
+      It deals with the error encountered in one processing board, i.e. :
+      - discrepancies observed while removing the redundant information in the BCSU 
+      (see the processing board specifications; EDMS 339143)
+      - discrepancies observed while removing the redundant information in the TELL1
+      (see the L0Muon TELL1 board specifications ; EDMS 818559)
+      The error handlers of this class are filled in ProcCandCnv::decodeBank. 
+      - status bits reported by the PUs and the BCSU of the board
+      - inconsistent bcid reported by the PUs and the BCSU of the board
+
+      @author Julien Cogan
+      @date 2008 June the 5th
+  */
   class ProcCandErrors
   {
   
@@ -15,7 +31,7 @@ namespace L0Muon {
     ProcCandErrors();
     virtual ~ProcCandErrors();  
     
-    std::string counters(std::string tab="");
+    //std::string counters(std::string tab="");
 
     static std::string header(std::string tab=""){
       std::string h=tab;

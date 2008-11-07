@@ -13,9 +13,8 @@ L0Muon::ProcDataCnv::ProcDataCnv(){
 /**
    Constructor.
 */
-L0Muon::ProcDataCnv::ProcDataCnv(int quarter, int compressionParameter){
+L0Muon::ProcDataCnv::ProcDataCnv(int quarter){
   m_quarter=quarter;
-  m_compressionParameter = compressionParameter;
 
   char buf[4096];
   char* format ;
@@ -278,7 +277,8 @@ int L0Muon::ProcDataCnv::decodeBank_v2(const std::vector<unsigned int> & raw)
   //  o 2nd part (not always present) : PU neighbour data 
   //
   // Return values :
-  //  o -1 : in case of error
+  //  o -1 : in case of error in the 1st part
+  //  o -2 : in case of error in the 1st part
   //  o  1 : only 1st first part was decoded
   //  o  2 : the two parts were decoded 
 
@@ -350,7 +350,7 @@ int L0Muon::ProcDataCnv::decodeBank_v2(const std::vector<unsigned int> & raw)
                <<" last_bit  ="<<ibit
                <<std::endl;
 #endif
-      for (int ib=0; ib<12; ++ib)  m_errors[ib].decoding.set(decoding_error[ib]);
+      for (int jb=0; jb<12; ++jb)  m_errors[jb].decoding.set(decoding_error[jb]);
       return -1;
     }
 #if _DEBUG_PROCDATA_ >0
@@ -415,13 +415,13 @@ int L0Muon::ProcDataCnv::decodeBank_v2(const std::vector<unsigned int> & raw)
              <<") doesn't match 1st part size ("<<(nOLwords+nheader)<<")"
              <<std::endl;
 #endif
-    for (int ib=0; ib<12; ++ib)  m_errors[ib].decoding.set(decoding_error[ib]);
+    for (int jb=0; jb<12; ++jb)  m_errors[jb].decoding.set(decoding_error[jb]);
     return -1;
   }
 
   if (iwd==raw.size()) {
     // the 2nd part was not activated : stop here
-    for (int ib=0; ib<12; ++ib)  m_errors[ib].decoding.set(decoding_error[ib]);
+    for (int jb=0; jb<12; ++jb)  m_errors[jb].decoding.set(decoding_error[jb]);
     return 1;
   }
   
@@ -455,8 +455,8 @@ int L0Muon::ProcDataCnv::decodeBank_v2(const std::vector<unsigned int> & raw)
                <<" last_bit  ="<<ibit
                <<std::endl;
 #endif
-      for (int ib=0; ib<12; ++ib)  m_errors[ib].decoding.set(decoding_error[ib]);
-      return -1;
+      for (int jb=0; jb<12; ++jb)  m_errors[jb].decoding.set(decoding_error[jb]);
+      return -2;
     }
 #if _DEBUG_PROCDATA_ >0
     std::cout<<"L0Muon::ProcDataCnv::decodeBank Neigh board# "<<ib
@@ -476,8 +476,8 @@ int L0Muon::ProcDataCnv::decodeBank_v2(const std::vector<unsigned int> & raw)
                <<" OLs board# "<<ib
                <<std::endl;
 #endif
-      for (int ib=0; ib<12; ++ib)  m_errors[ib].decoding.set(decoding_error[ib]);
-      return -1;
+      for (int jb=0; jb<12; ++jb)  m_errors[jb].decoding.set(decoding_error[jb]);
+      return -2;
     }
 
     // The decoding is now complete for this board.
@@ -522,11 +522,11 @@ int L0Muon::ProcDataCnv::decodeBank_v2(const std::vector<unsigned int> & raw)
              <<") does'nt match raw bank size ("<<raw.size()<<")"
              <<std::endl;
 #endif
-    for (int ib=0; ib<12; ++ib)  m_errors[ib].decoding.set(decoding_error[ib]);
-    return -1;
+    for (int jb=0; jb<12; ++jb)  m_errors[jb].decoding.set(decoding_error[jb]);
+    return -2;
   }
 
-  for (int ib=0; ib<12; ++ib)  m_errors[ib].decoding.set(decoding_error[ib]);
+  for (int jb=0; jb<12; ++jb)  m_errors[jb].decoding.set(decoding_error[jb]);
   return 2;
 
 }
@@ -679,7 +679,7 @@ int L0Muon::ProcDataCnv::rawBank_v1(std::vector<unsigned int> &raw, int mode)
 boost::dynamic_bitset<> L0Muon::ProcDataCnv::applyCompression(boost::dynamic_bitset<> bitset_to_compress){
   // Compress the bit set in input
   
-  int nbitsPrefix  = m_compressionParameter;
+  int nbitsPrefix  = 5;
   int nbitsSequence= nbitsPrefix+1;
   int maximumLength = int(pow(2,nbitsPrefix));
 
@@ -763,7 +763,7 @@ boost::dynamic_bitset<> L0Muon::ProcDataCnv::unapplyCompression(boost::dynamic_b
     return uncompressed;    
   }
   
-  int nbitsPrefix  = m_compressionParameter;
+  int nbitsPrefix  = 5;
   int nbitsSequence= nbitsPrefix+1;
   int maximumLength = int(pow(2,nbitsPrefix));
 
@@ -883,7 +883,7 @@ int L0Muon::ProcDataCnv::compressedPBWords_to_bitset(const std::vector<unsigned 
   boost::dynamic_bitset<> bitset_of_16_ones(16); bitset_of_16_ones.flip();
 
   for (int iw=0; iw<size_in_word; ++iw) { // Loop over the number of original words
-#if _DEBUG_PROCDATA_ >0
+#if _DEBUG_PROCDATA_ >1
     std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset iwd= "<<iwd
              <<" word: 0x"<<std::hex<<raw[iwd]<<std::dec
              <<" ibit= "<<ibit<<std::endl;
@@ -896,10 +896,10 @@ int L0Muon::ProcDataCnv::compressedPBWords_to_bitset(const std::vector<unsigned 
       key|=(bit<<i);
     }
     
-#if _DEBUG_PROCDATA_ >0
+#if _DEBUG_PROCDATA_ >1
     std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset key= "<<key<<std::endl;
 #endif
-#if _DEBUG_PROCDATA_ >0
+#if _DEBUG_PROCDATA_ >1
     std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset bitset size= "<<bitset.size()
              <<" bitset_index= "<<bitset_index<<std::endl;
 #endif
@@ -907,11 +907,11 @@ int L0Muon::ProcDataCnv::compressedPBWords_to_bitset(const std::vector<unsigned 
     // According to the key, decode the following sequence of bits
     if (key==0) // '00' -> add 32 '0'
     {
-#if _DEBUG_PROCDATA_ >0
+#if _DEBUG_PROCDATA_ >1
       std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset case 00"<<std::endl;
 #endif
       bitset_index-=32;
-#if _DEBUG_PROCDATA_ >0
+#if _DEBUG_PROCDATA_ >1
       std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset bitset size= "<<bitset.size()
                <<" bitset_index= "<<bitset_index<<std::endl;
 #endif
@@ -922,7 +922,7 @@ int L0Muon::ProcDataCnv::compressedPBWords_to_bitset(const std::vector<unsigned 
       int bit = next_bit(raw,iwd,ibit);
       if (bit==1) // '011' -> add 32 '1'
       {
-#if _DEBUG_PROCDATA_ >0
+#if _DEBUG_PROCDATA_ >1
         std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset case 011"<<std::endl;
 #endif
         bitset_index-=32;
@@ -930,14 +930,14 @@ int L0Muon::ProcDataCnv::compressedPBWords_to_bitset(const std::vector<unsigned 
         b32ones.resize(bitset_size);
         b32ones<<=(bitset_index);
         bitset|=b32ones;
-#if _DEBUG_PROCDATA_ >0
+#if _DEBUG_PROCDATA_ >1
         std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset bitset size= "<<bitset.size()
                  <<" bitset_index= "<<bitset_index<<std::endl;
 #endif
       }
       else // '010' -> add 16 '1' and the 16 next bits
       {
-#if _DEBUG_PROCDATA_ >0
+#if _DEBUG_PROCDATA_ >1
         std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset case 010"<<std::endl;
 #endif
         bitset_index-=16;
@@ -945,21 +945,21 @@ int L0Muon::ProcDataCnv::compressedPBWords_to_bitset(const std::vector<unsigned 
         b16ones.resize(bitset_size);
         b16ones<<=(bitset_index);
         bitset|=b16ones;
-#if _DEBUG_PROCDATA_ >0
+#if _DEBUG_PROCDATA_ >1
         unsigned int debug_word=0;
 #endif
         for (int i=0; i<16; ++i){
           int bit = next_bit(raw,iwd,ibit);
           --bitset_index;
           if (bit==1) bitset.set(bitset_index);
-#if _DEBUG_PROCDATA_ >0
+#if _DEBUG_PROCDATA_ >1
           debug_word|=(bit<<(15-i));
 #endif
         }
-#if _DEBUG_PROCDATA_ >0
+#if _DEBUG_PROCDATA_ >1
         std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset     0x"<<std::hex<<debug_word<<std::dec<<std::endl;
 #endif
-#if _DEBUG_PROCDATA_ >0
+#if _DEBUG_PROCDATA_ >1
         std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset bitset size= "<<bitset.size()
                  <<" bitset_index= "<<bitset_index<<std::endl;
 #endif
@@ -969,7 +969,7 @@ int L0Muon::ProcDataCnv::compressedPBWords_to_bitset(const std::vector<unsigned 
 
     else if (key==2) // '10' -> decode the position of the ones in the word
     {
-#if _DEBUG_PROCDATA_ >0
+#if _DEBUG_PROCDATA_ >1
       std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset case 10"<<std::endl;
 #endif
       // The number of '1' in the 32 bits original word is encoded on 3 bits 
@@ -978,7 +978,7 @@ int L0Muon::ProcDataCnv::compressedPBWords_to_bitset(const std::vector<unsigned 
         int bit = next_bit(raw,iwd,ibit);
         n_ones|=(bit<<i);
       }
-#if _DEBUG_PROCDATA_ >0
+#if _DEBUG_PROCDATA_ >1
       std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset nb ones : "<<n_ones<<std::endl;
 #endif
       if (n_ones==0) return -2;
@@ -994,7 +994,7 @@ int L0Muon::ProcDataCnv::compressedPBWords_to_bitset(const std::vector<unsigned 
         bitset.set(bitset_index-pos-1);
       }
       bitset_index-=32;
-#if _DEBUG_PROCDATA_ >0
+#if _DEBUG_PROCDATA_ >1
       std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset bitset size= "<<bitset.size()
                <<" bitset_index= "<<bitset_index<<std::endl;
 #endif
@@ -1002,7 +1002,7 @@ int L0Muon::ProcDataCnv::compressedPBWords_to_bitset(const std::vector<unsigned 
 
     else if (key==3) // '11' -> the next 32 bits are uncompressed
     {
-#if _DEBUG_PROCDATA_ >0
+#if _DEBUG_PROCDATA_ >1
       std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset case 11"<<std::endl;
 #endif
       for (int i=0; i<32; ++i){
@@ -1010,13 +1010,13 @@ int L0Muon::ProcDataCnv::compressedPBWords_to_bitset(const std::vector<unsigned 
         --bitset_index;
         if (bit==1) bitset.set(bitset_index);
       }
-#if _DEBUG_PROCDATA_ >0
+#if _DEBUG_PROCDATA_ >1
       std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset bitset size= "<<bitset.size()
                <<" bitset_index= "<<bitset_index<<std::endl;
 #endif
 
     } 
-#if _DEBUG_PROCDATA_ >0
+#if _DEBUG_PROCDATA_ >1
     boost::dynamic_bitset<> debug_bitset =bitset;
     debug_bitset>>=(bitset_index);
     debug_bitset.resize(32);
@@ -1237,7 +1237,7 @@ int L0Muon::ProcDataCnv::setRegisters_for_PB_OpticalLinks(int iboard, boost::dyn
 {
     int current_size;
     
-#if _DEBUG_PROCDATA_ >0
+#if _DEBUG_PROCDATA_ >2
     unsigned int x=0xFFFF0000;
     boost::dynamic_bitset<> bitset1(32,x);
     unsigned int y=0x0000FFFF;
@@ -1257,7 +1257,7 @@ int L0Muon::ProcDataCnv::setRegisters_for_PB_OpticalLinks(int iboard, boost::dyn
       boost::dynamic_bitset<> bitset = (errorbitset>>((3-ipu)*32));
       bitset.resize(32);
       unsigned int word = bitset.to_ulong();
-#if _DEBUG_PROCDATA_ >0
+#if _DEBUG_PROCDATA_ >2
       std::cout << "L0Muon::ProcDataCnv::decodeBank error word ipu= "<<ipu
                 <<" 0x"<<std::hex<<word<<std::dec<<std::endl;
 #endif
@@ -1285,67 +1285,67 @@ int L0Muon::ProcDataCnv::setRegisters_for_PB_OpticalLinks(int iboard, boost::dyn
       if (m_ols[iboard][ipu]!=0) 
         m_ols[iboard][ipu]->set(pubitset);
 
-#if _DEBUG_PROCDATA_ >0
-       std::cout << "L0Muon::ProcDataCnv::decodeBank OLs   cross check"<<std::endl;
-       if (m_ols[iboard][ipu]!=0) {
-         std::vector<LHCb::MuonTileID> mids = m_ols[iboard][ipu]->getTileVector();
-         std::cout << "L0Muon::ProcDataCnv::decodeBank OLs   model"<<std::endl;
-         for (int ii=10-1;ii>-1;--ii){
-           for (int iii=16-1;iii>-1;--iii){
-             if (mids[ii*16+iii].isValid())
-               std::cout<<(mids[ii*16+iii].station()+1);
-             else if (mids[ii*16+iii].layout().xGrid()!=0 && mids[ii*16+iii].layout().xGrid()!=0)
-               std::cout<<"?";
-             else
-               std::cout<<"x";
-           }
-           std::cout<<std::endl;
-         }
-         std::cout << "L0Muon::ProcDataCnv::decodeBank OLs   observed"<<std::endl;
-         for (int ii=10-1;ii>-1;--ii){
-           for (int iii=16-1;iii>-1;--iii){
-             if (m_ols[iboard][ipu]->test(ii*16+iii))
-               std::cout<<"1";
-             else
-               std::cout<<"0";
-           }
-           std::cout<<std::endl;
-         }
-         unsigned int nexpected=0;
-         for (int ii=10-1;ii>-1;--ii){
-           for (int iii=16-1;iii>-1;--iii){
-             if (mids[ii*16+iii].isValid()) ++nexpected;
-           }
-         }        
-         for (int ii=10-1;ii>-1;--ii){
-           for (int iii=16-1;iii>-1;--iii){
-             if (mids[ii*16+iii].isValid()) {
-               if (!m_ols[iboard][ipu]->test(ii*16+iii)){
-                 std::cout << "L0Muon::ProcDataCnv::decodeBank OLs   missing : "<<mids[ii*16+iii].toString()
-                           <<" @ "<<ii*16+iii<<std::endl;
-               }
-             } 
-           }
-         }        
-         std::vector<LHCb::MuonTileID> pads = m_ols[iboard][ipu]->firedTiles();
-         for (std::vector<LHCb::MuonTileID>::iterator it=pads.begin(); it<pads.end();++it){
-           if (!it->isValid())
-             std::cout << "L0Muon::ProcDataCnv::decodeBank OLs    OL data :"
-                       <<" tiles "<<it->toString()<<" valid ? "<<it->isValid()<<std::endl;
-         }
-         std::cout << "L0Muon::ProcDataCnv::decodeBank OLs   bits found in"
-                   <<" buffer= "<<pubitset.count()
-                   <<" register= "<<pads.size()
-                   <<" model= "<<nexpected;
-         if ( (pubitset.count()!=pads.size()) || (pubitset.count()!=nexpected) ) 
-           std::cout << "!!!!!!!!!!!!!!!!!!!!!!!!";
-         std::cout<<std::endl;
-       }
+#if _DEBUG_PROCDATA_ >3
+      std::cout << "L0Muon::ProcDataCnv::decodeBank OLs   cross check"<<std::endl;
+      if (m_ols[iboard][ipu]!=0) {
+        std::vector<LHCb::MuonTileID> mids = m_ols[iboard][ipu]->getTileVector();
+        std::cout << "L0Muon::ProcDataCnv::decodeBank OLs   model"<<std::endl;
+        for (int ii=10-1;ii>-1;--ii){
+          for (int iii=16-1;iii>-1;--iii){
+            if (mids[ii*16+iii].isValid())
+              std::cout<<(mids[ii*16+iii].station()+1);
+            else if (mids[ii*16+iii].layout().xGrid()!=0 && mids[ii*16+iii].layout().xGrid()!=0)
+              std::cout<<"?";
+            else
+              std::cout<<"x";
+          }
+          std::cout<<std::endl;
+        }
+        std::cout << "L0Muon::ProcDataCnv::decodeBank OLs   observed"<<std::endl;
+        for (int ii=10-1;ii>-1;--ii){
+          for (int iii=16-1;iii>-1;--iii){
+            if (m_ols[iboard][ipu]->test(ii*16+iii))
+              std::cout<<"1";
+            else
+              std::cout<<"0";
+          }
+          std::cout<<std::endl;
+        }
+        unsigned int nexpected=0;
+        for (int ii=10-1;ii>-1;--ii){
+          for (int iii=16-1;iii>-1;--iii){
+            if (mids[ii*16+iii].isValid()) ++nexpected;
+          }
+        }        
+        for (int ii=10-1;ii>-1;--ii){
+          for (int iii=16-1;iii>-1;--iii){
+            if (mids[ii*16+iii].isValid()) {
+              if (!m_ols[iboard][ipu]->test(ii*16+iii)){
+                std::cout << "L0Muon::ProcDataCnv::decodeBank OLs   missing : "<<mids[ii*16+iii].toString()
+                          <<" @ "<<ii*16+iii<<std::endl;
+              }
+            } 
+          }
+        }        
+        std::vector<LHCb::MuonTileID> pads = m_ols[iboard][ipu]->firedTiles();
+        for (std::vector<LHCb::MuonTileID>::iterator it=pads.begin(); it<pads.end();++it){
+          if (!it->isValid())
+            std::cout << "L0Muon::ProcDataCnv::decodeBank OLs    OL data :"
+                      <<" tiles "<<it->toString()<<" valid ? "<<it->isValid()<<std::endl;
+        }
+        std::cout << "L0Muon::ProcDataCnv::decodeBank OLs   bits found in"
+                  <<" buffer= "<<pubitset.count()
+                  <<" register= "<<pads.size()
+                  <<" model= "<<nexpected;
+        if ( (pubitset.count()!=pads.size()) || (pubitset.count()!=nexpected) ) 
+          std::cout << "!!!!!!!!!!!!!!!!!!!!!!!!";
+        std::cout<<std::endl;
+      }
 #endif      
     } // End of Loop over PUs
-
+    
     return 1;
-
+    
 }
 int L0Muon::ProcDataCnv::setRegisters_for_PB_Neighbours(int iboard, boost::dynamic_bitset<> & neighbitset )
 {

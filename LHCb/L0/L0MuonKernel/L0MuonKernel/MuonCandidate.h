@@ -1,13 +1,8 @@
-// $Id: MuonCandidate.h,v 1.7 2007-08-27 09:32:24 jucogan Exp $
+// $Id: MuonCandidate.h,v 1.8 2008-11-07 16:23:38 jucogan Exp $
 
 #ifndef L0MUONKERNEL_MUONCANDIDATE_H
 #define L0MUONKERNEL_MUONCANDIDATE_H     1
 
-/** @class MuonCandidate MuonCandidate.h L0MuonKernel/MuonCandidate.h
-
-Class defining an internal representation of a Muon trigger candidate
-
-*/
 
 #include "boost/shared_ptr.hpp"
 #include "Kernel/MuonTileID.h"
@@ -17,19 +12,18 @@ Class defining an internal representation of a Muon trigger candidate
 namespace L0Muon {
 
 
+  /** @class MuonCandidate MuonCandidate.h L0MuonKernel/MuonCandidate.h
+
+      Class defining an internal representation of a Muon trigger candidate.
+      
+      @author Julien Cogan
+      @date 2005 December the 15th
+
+  */
   class MuonCandidate  {
   
   public:
     
-// //     static const int extrapolationM1(int i,int procVersion=-1){
-// //       if (version ==0) {
-// //         const int ExtrapolationM1[6]={0,+4,+7,+11,+14,+18};
-// //         return ExtrapolationM1[i];
-// //       } else {
-// //         const int ExtrapolationM1[6]={0,+4,+7,+11,+15,+18};
-// //         return ExtrapolationM1[i];
-// //       }
-// //     }
 
     /// Default Constructor 
     MuonCandidate();
@@ -37,11 +31,13 @@ namespace L0Muon {
     /// Copy Constructor 
     MuonCandidate(const MuonCandidate& cand);
 
-    /// Get the address in M3
+    /// Get the address in M3 (column)
     const int colM3() const
     {
       return m_colM3 ;
     }
+
+    /// Get the address in M3 (row)
     const int rowM3() const
     {
       return m_rowM3 ;
@@ -89,11 +85,13 @@ namespace L0Muon {
       return m_charge ;
     }
     
-    /// Set the address in M3
+    /// Set the address in M3 (column)
     void setColM3(int colM3) 
     {
       m_colM3 = colM3 ;
     }
+    
+    /// Set the address in M3 (row)
     void setRowM3(int rowM3) 
     {
       m_rowM3 = rowM3 ;
@@ -135,21 +133,6 @@ namespace L0Muon {
       m_pT = pT;
     }
     
-    /// Set the PT
-    void setPT(double pT, double dpT, double pTmax)
-    {
-      pT = fabs(pT)>pTmax ? pTmax:fabs(pT);
-      m_pT = int(0.5+pT/dpT);
-    }
-    
-    /// Set the PT
-    void setPT(double pT, double dpT, int nbits)
-    { 
-      m_pT = int(0.5+fabs(pT)/dpT);
-      int ptMax = (1<<nbits)-1;
-      m_pT = m_pT>ptMax ? ptMax:m_pT ;
-    }
-    
     /// Set the charge
     void setCharge(int charge)
     {
@@ -162,6 +145,7 @@ namespace L0Muon {
       m_charge =  pT>0. ? +1:0;      
     }
 
+    /// Return a string with the candidate informations
     std::string dump(std::string tab="");
  
     /// comparison operator using key.
@@ -173,37 +157,21 @@ namespace L0Muon {
     /// non-equality operator using key.
     bool operator!=(const MuonCandidate& cand) const;
     
-//     /// Return the MuonTileId of the board 
-//     LHCb::MuonTileID boardID(bool debug) const;
-//     /// Return the MuonTileId of the PU 
-//     LHCb::MuonTileID puID(bool debug) const;
-    
-//     /// Pads in M1, M2 and M3 used by the candidate 
-//     std::vector<LHCb::MuonTileID> pads(int procVersion=-1, bool debug=false) const;
-    
   private:
-    int m_colM3 ;
-    int m_rowM3 ;
-    int m_offM2 ;
-    int m_offM1 ;
-    int m_pT ;
-    int m_charge ;
-    int m_pu;
-    int m_board;
-    int m_quarter;
+    int m_colM3 ; ///< column index of the candidate in M3.
+    int m_rowM3 ; ///< row index of the candidate in M3.
+    int m_offM2 ; ///< offset of the candidate in M2.
+    int m_offM1 ; ///< offset of the candidate in M1.
+    int m_pT ;    ///< encoded pt of the candidate.
+    int m_charge ;///< charge of the candidate (=0: negative, =1: positiove).
+    int m_pu;     ///< index of the PU where the candidate was found (0 to 3).
+    int m_board;  ///< index of the board where the candidate was found (0 to 11).
+    int m_quarter;///< index of the quarter where the candidate was found (0 to 3).
     
   };
 
-//   /// Candidate kinematics (PT, theta and Phi)
-//   std::vector<double> kine(LHCb::MuonTileID p1, LHCb::MuonTileID p2,
-//                            std::vector<double> ptparam, bool debug=false);
-//   void xyFromPad(LHCb::MuonTileID pad, double& x, double& y,
-//                  std::vector<double> ptparam);
-// //   /// Candidate kinematics (PT, theta and Phi)
-// //   std::vector<double> kine(LHCb::MuonTileID p1, LHCb::MuonTileID p2,int procVersion=-1, bool debug=false);
-// //   std::vector<double> kineV0(LHCb::MuonTileID p1, LHCb::MuonTileID p2, bool debug=false);
-// //   void xyFromPad(LHCb::MuonTileID pad, double& x, double& y);
 
+  /// A share pointer to a MuonCandidate 
   typedef boost::shared_ptr<MuonCandidate> PMuonCandidate;
 
 }; // namespace L0Muon

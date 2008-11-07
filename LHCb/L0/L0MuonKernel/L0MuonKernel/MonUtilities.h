@@ -1,4 +1,4 @@
-// $Id: MonUtilities.h,v 1.4 2008-09-21 21:36:58 jucogan Exp $
+// $Id: MonUtilities.h,v 1.5 2008-11-07 16:23:38 jucogan Exp $
 #ifndef COMPONENT_MONUTILITIES_H 
 #define COMPONENT_MONUTILITIES_H 1
 
@@ -9,6 +9,17 @@
 namespace L0Muon
 {
   
+  /** @namespace MonUtilities
+
+      Set of functions used in the monitoring to define name for histograms. 
+      
+      These names are used to book the histograms in the L0MuonMonitor package.
+      They are also used in the L0MuonPresenter package to access this histograms in order to prepare
+      the pages for the online presenter.
+
+      @author Julien Cogan
+      @date 2008-07-12
+  */
   namespace MonUtilities
   {
     enum Channel_type {Pad, StripH, StripV , nb_channel_types};

@@ -338,9 +338,6 @@ void L0Muon::CoreUnit::initialize() {
     m_tower.setFoi(ista,pmuontrigger->xFoi(ista),pmuontrigger->yFoi(ista));
   }
   
-  // Set the pt parameters
-  m_tower.setPtparam(pmuontrigger->ptParameters());
-
   // Set the emulator version
   m_tower.setProcVersion(pmuontrigger->procVersion());
 
