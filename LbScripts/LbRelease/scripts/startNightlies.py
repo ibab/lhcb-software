@@ -26,7 +26,7 @@ def usage():
     ret  = 'usage: startNightlies run slotName [j_value [platform1 [platform2 [...]]]]'
     ret += linesep + '       startNightlies runparallel slotName [-j_value]'
     ret += linesep + '       clean slotName'
-    ret += linesep + '       cleanAFS --delete-from-today slotName'
+    ret += linesep + '       cleanAFS slotName (be careful!)'
     ret += linesep + __doc__
     return ret
 
@@ -43,8 +43,8 @@ class StartNightliesScript(Script):
                     }
         if self.args[0] == 'clean':
             clean(self.args[1])
-        elif self.args[0] == 'cleanAFS' and self.args[1] == '--delete-from-today':
-            cleanAFSSpace(self.args[2])
+        elif self.args[0] == 'cleanAFS':
+            cleanAFSSpace(self.args[1])
         elif self.args[0] == 'run':
             if len(self.args) >= 4:
                 platforms = " ".join([sys.argv[x] for x in range(3,len(self.args))])
