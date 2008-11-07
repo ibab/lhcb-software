@@ -5,7 +5,7 @@
  *  Header file for track finding class Tf::STHit
  *
  *  CVS Log :-
- *  $Id: STHit.h,v 1.6 2008-10-22 11:22:28 cattanem Exp $
+ *  $Id: STHit.h,v 1.7 2008-11-07 07:52:12 mneedham Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -20,6 +20,10 @@
 
 // LoKi
 #include "LoKi/Range.h"
+
+#include "Event/STLiteCluster.h"
+
+#include <iostream>
 
 namespace Tf
 {
@@ -53,21 +57,37 @@ namespace Tf
     /** Access the cluster size */
     inline int                  size() const { return m_cluster.pseudoSize() ; }
 
-    /** XXX???XXX Not sure what this is ?? */
-    inline double               frac() const { return m_cluster.interStripFraction() ; }
+    /** Interstrip fraction [2 bit precision] */
+    inline double frac() const { return m_cluster.interStripFraction() ; }
+
+    /** cluster has the high threshold */
+    inline bool highThreshold() const {return m_cluster.highThreshold();}
 
     /** Access the raw STLiteCluster cluster for this hit */
     inline const LHCb::STLiteCluster& cluster() const { return m_cluster; }
 
+    /** accessor to the channelID of this hit */
+    inline LHCb::STChannelID channelID() const {return cluster().channelID();}
+
+    /** accessor to the unique readout sector identifier */
+    inline unsigned int uniqueSector() const {return cluster().channelID().uniqueSector();}
+
     /** Access the associated DeSTSector for this hit */
     inline const DeSTSector&    sector() const { return *m_sector; }
-
+  
+    /// printOut method to Gaudi message stream
+    std::ostream& fillStream(std::ostream& os) const;
+  
   private:
 
     const DeSTSector*     m_sector;   ///< Pointer to the associated DeSTSector
     LHCb::STLiteCluster   m_cluster;  ///< The raw STLiteCluster for this hit
 
   };
+
+  inline std::ostream& operator<< (std::ostream& str, const STHit& obj){
+    return obj.fillStream(str);
+  }
 
   /// Type for container for OTHit
   typedef std::vector<const STHit* > STHits;
@@ -90,6 +110,15 @@ namespace Tf
   {
     return ( type()==RegionID::IT || type()==RegionID::TT ? static_cast<const STHit*>(this) : NULL ) ;
   }
+
+  inline std::ostream& STHit::fillStream(std::ostream& s) const {
+
+   s << "STHit { " << m_sector->nickname() << " strip " << m_cluster.channelID().strip() 
+     << " cluster size: " << m_cluster.pseudoSize()  << std::endl     
+     << " Coordinates xMid " << xMid()  << " yMid " << yMid() << " zMid " << zMid() << "} "  <<  std::endl;  
+   return s;
+     
+}
 
 } // Tf namespace
 
