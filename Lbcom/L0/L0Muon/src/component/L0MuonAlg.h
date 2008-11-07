@@ -14,10 +14,29 @@
 #include "L0MuonKernel/MuonCandidate.h"
 
 /** @class L0MuonAlg L0MuonAlg.h component/L0MuonAlg.h
- *  
- *
- *  @author Julien Cogan
- *  @date   2008-01-10
+
+ Algorithm to run the L0Muon emulator.
+
+ Algorithm main properties :
+  - StoreInBuffer   : write the raw banks (default is true)
+  - WriteOnTES      : write on TES the L0MuonCandidates (default is false)
+  - WriteL0ProcData : write on TES the L0ProcessorData to be used by the L0DU emulator (default is true)
+  - InputSource     : 0 => use MuonDigits in input / 1 => use L0MuonData in input (default is 0)
+  - DAQMode         : 0 =>  
+
+ Additional properties :
+  - ConfigFile : path of the xml configuration file
+  - IgnoreM1 : run without M1 
+  - IgnoreM2 : run without M2 
+  - ForceM3  : force input M3 optical links content to 1
+
+  - Version  : version of the processor to emulate 
+  - FoiXSize : vectors of integer specifying the size of the fields of interest in X. 
+  - FoiXSize : vectors of integer specifying the size of the fields of interest in Y. 
+      
+   @author Julien Cogan
+   @date   2008-01-10
+
  */
 
 class L0MuonAlg : public GaudiAlgorithm {
@@ -34,49 +53,47 @@ public:
     
 private:
 
-  void setLayouts(); // Set the layouts to be used in fillOLsfromCoords
-  std::map<std::string,L0Muon::Property>  l0MuonProperties(); // Build the properties of L0MuonKernel Units
+  void setLayouts(); ///< Set the layouts to be used in fillOLsfromCoords
+  std::map<std::string,L0Muon::Property>  l0MuonProperties(); ///< Build the properties of L0MuonKernel Units
 
-  StatusCode fillOLsfromDigits(); // Fill the Optical Links before processing
+  StatusCode fillOLsfromDigits(); ///< Fill the Optical Links before processing
 
   // Emulator running modes
-  int m_version;                      // Emulator version 
-  int m_mode;                         // Banks output mode (0=light, 1=standard, 2=full)
-  bool m_compression;                 // Apply compression when writing banks
+  int m_version;                      ///< Emulator version 
+  int m_mode;                         ///< Banks output mode (0=light, 1=standard, 2=full)
+  bool m_compression;                 ///< Apply compression when writing banks
+
   // Emulator properties
-  std::vector<int> m_foiXSize;        // values of FoI's in X
-  std::vector<int> m_foiYSize;        // values of FoI's in Y
-  std::vector<double> m_ptParameters; // Pt calculation parameters
-  std::string  m_configfile;          // Config file name
-  bool m_ignoreM1;                    // Flag to use M1 or not (not tested)
-  bool m_ignoreM2;                    // Flag to use M2 or not (not tested)
-  bool m_forceM3;                     // Flag to force M3 optical link content to 1
-  bool m_debug;                       // Flag to turn on debug mode for L0MuonKernel
+  std::vector<int> m_foiXSize;        ///< values of FoI's in X
+  std::vector<int> m_foiYSize;        ///< values of FoI's in Y
+  std::string  m_configfile;          ///< Config file name
+  bool m_ignoreM1;                    ///< Flag to use M1 or not (not tested)
+  bool m_ignoreM2;                    ///< Flag to use M2 or not (not tested)
+  bool m_forceM3;                     ///< Flag to force M3 optical link content to 1
+  bool m_debug;                       ///< Flag to turn on debug mode for L0MuonKernel
   
   // Algorithm's properties
-  bool m_writeL0ProcData;             // Flag to activate the writing of the L0ProcessorData for the L0DU
-  bool m_writeOnTES;                  // Flag to activate the writing of the L0MuonCandidates 
-  bool m_storeBank;                   // Flag to enable/disable event storage in raw banks
-  int  m_inputSource;                 // Specify where to take the input data for the processing
-                                      //  - 0: from Muon output
-                                      //  - 1: from the input of the processor (extracted form L0Muon itself) 
+  bool m_writeL0ProcData;             ///< Flag to activate the writing of the L0ProcessorData for the L0DU
+  bool m_writeOnTES;                  ///< Flag to activate the writing of the L0MuonCandidates 
+  bool m_storeBank;                   ///< Flag to enable/disable event storage in raw banks
+  int  m_inputSource;                 ///< Specify where to take the input data for the processing
+                                      ///<  - 0: from Muon output
+                                      ///<  - 1: from the input of the processor (extracted form L0Muon itself) 
 
   // For trigger emulation
-  L0Muon::Unit*  m_muontriggerunit; // Top Unit of the L0Muon emulator
+  L0Muon::Unit*  m_muontriggerunit; ///< Top Unit of the L0Muon emulator
 
-  // For output to RAwEvent, TES ot L0ProcessorDatas
-  L0MuonOutputs* m_outputTool;
+  L0MuonOutputs* m_outputTool; ///< For output to RAwEvent, TES ot L0ProcessorDatas
 
-  MuonSystemLayout m_layout;   // pad layout for the whole MuonSystem
-  MuonSystemLayout m_lulayout; // logical unit layout for the whole MuonSystem 
-  MuonSystemLayout m_ollayout; // optical link layout for the whole MuonSystem
-  MuonSystemLayout m_stripH;   // vertical strip layout for the whole MuonSystem
-  MuonSystemLayout m_stripV;   // horizontal strip layout for the whole MuonSystem
+  MuonSystemLayout m_layout;   ///< pad layout for the whole MuonSystem
+  MuonSystemLayout m_lulayout; ///< logical unit layout for the whole MuonSystem 
+  MuonSystemLayout m_ollayout; ///< optical link layout for the whole MuonSystem
+  MuonSystemLayout m_stripH;   ///< vertical strip layout for the whole MuonSystem
+  MuonSystemLayout m_stripV;   ///< horizontal strip layout for the whole MuonSystem
 
-  int m_totEvent;
-  
- // Interface to muon raw buffer 
-  IMuonRawBuffer* m_muonBuffer; 
+  int m_totEvent; ///< Event counter
+
+  IMuonRawBuffer* m_muonBuffer;  ///< Interface to muon raw buffer 
 
   static inline std::string timeSlot(int bx)  {
     std::string ts;

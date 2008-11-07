@@ -1,4 +1,4 @@
-// $Id: L0MuonOutputs.cpp,v 1.23 2008-09-21 21:42:22 jucogan Exp $
+// $Id: L0MuonOutputs.cpp,v 1.24 2008-11-07 16:25:31 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -196,11 +196,6 @@ StatusCode L0MuonOutputs::decodeRawBanks(){
     }
   }
   L0MuonBanksStatus->insert(ctrlCandStatus);
-
-  // Check that the version number is there
-  if (m_version==-1)  
-    return Warning("L0MuonCtrlCand bank not decoded - abort L0Muon decoding"
-                   ,StatusCode::FAILURE,50);
 
   // ======================
   //

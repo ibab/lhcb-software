@@ -1,4 +1,4 @@
-// $Id: L0MuonCandidatesFromRaw.cpp,v 1.15 2008-09-21 21:42:22 jucogan Exp $
+// $Id: L0MuonCandidatesFromRaw.cpp,v 1.16 2008-11-07 16:25:31 jucogan Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
@@ -35,11 +35,7 @@ L0MuonCandidatesFromRaw::L0MuonCandidatesFromRaw(const std::string& name,
     m_configfile += "/data/L0MuonKernel.xml"  ;
   }
 
-  m_ptParameters.push_back(40.);   // Precision on PT (MeV)
-  m_ptParameters.push_back(7.);    // Number of bins in PT
-  
   declareProperty( "ConfigFile"     , m_configfile      );
-  declareProperty( "PtParameters"   , m_ptParameters    ); 
 
   // Default for HLT :
   declareProperty( "WriteOnTES"     , m_writeOnTES       = true);  

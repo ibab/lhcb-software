@@ -1,4 +1,4 @@
-// $Id: L0MuonOutputs.h,v 1.9 2008-07-23 07:56:59 jucogan Exp $
+// $Id: L0MuonOutputs.h,v 1.10 2008-11-07 16:25:31 jucogan Exp $
 #ifndef COMPONENT_L0MUONOUTPUTS_H 
 #define COMPONENT_L0MUONOUTPUTS_H 1
 
@@ -48,31 +48,40 @@ public:
 
   void setDecodingMode(){for (int i=0; i<4; ++i) m_procCand[i].setDecodingMode();}
   
-  /// Configure the emulator version
+  /// Configure the emulator version in one go
   void setVersion(int version, int mode, bool compression){
     m_version=version; 
     m_mode=mode; 
     m_compression=compression; 
   }
+
+  /// Set the emulator version
   void setVersion(int version)  { m_version=version;}
+
+  /// Activate/desactivate the data compression for output raw banks for emulator
   void setCompression(bool compression)  { m_compression=compression;}
+
+  /// Set the bank output mode for emulator 
   void setMode(int mode)  { m_mode=mode;}
 
   /// Output event error 
   void errors(MsgStream & msg) const;
+
   /// Display stat
   void statTot(MsgStream & os) const;
+
   /// Output error counters
   void errorSummary(MsgStream & msg) const;
+
   /// Monitor the L0Muon Banks
   void monitorBanks(MsgStream & msg);
 
 
 private:
 
-  int  m_version;      // L0Muon version to be emulated
-  bool m_compression; // Apply compression on raw banks
-  int  m_mode;         // Raw banks output mode 
+  int  m_version;      /// L0Muon version to be emulated
+  bool m_compression;  /// Apply compression on raw banks
+  int  m_mode;         /// Raw banks output mode 
   
   enum Quarters {Q1=0,Q2,Q3,Q4,NQuarters};
   enum Sides {A=0,C,NSides};
@@ -147,16 +156,16 @@ private:
     return 0;
   }
 
-  std::vector<unsigned int> DC06RawBanks();
+  std::vector<unsigned int> DC06RawBanks(); /// Encode the DC06 raw bank
   LHCb::L0MuonCandidate* l0muoncandidate(L0Muon::PMuonCandidate cand);
   
   /// Converters for the L0Muon banks
-  L0Muon::CtrlCandCnv  m_ctrlCand[2];
-  L0Muon::ProcCandCnv  m_procCand[4];
-  L0Muon::ProcDataCnv  m_procData[4];
+  L0Muon::CtrlCandCnv  m_ctrlCand[2]; /// Converters for the L0MuonCtrlCand Banks
+  L0Muon::ProcCandCnv  m_procCand[4]; /// Converters for the L0MuonProcCand Banks
+  L0Muon::ProcDataCnv  m_procData[4]; /// Converters for the L0MuonProcData Banks
 
-  int m_l0EventNumber;
-  int m_l0_B_Id;
+  int m_l0EventNumber;  /// Current event number (12 bits) 
+  int m_l0_B_Id;        /// Current l0_B_Id (12 bits)
 
   bool m_ctrlCandFlag;
   bool m_ctrlCandFlagBCSU;

@@ -13,5 +13,3 @@
 //L0MuonFromRaw.OutputLevel=  3;
 //L0MuonFromRaw.OutputTool.OutputLevel=  2;
 
-// pT parameters (needed to decode the pT)
-//L0MuonFromRaw.PtParameters = {40.,7.};

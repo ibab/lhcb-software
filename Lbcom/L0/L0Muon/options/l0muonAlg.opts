@@ -19,7 +19,6 @@
 // Overwrite default FOI: should be relaxed for optimization:
 //L0Muon.FoiXSize = {4,5,0,2,4};
 //L0Muon.FoiYSize = {0,0,0,1,1};
-//L0Muon.PtParameters = {40.,7.};
 //===========================================
 //For trigger studies: 
 //candidate search without M1
