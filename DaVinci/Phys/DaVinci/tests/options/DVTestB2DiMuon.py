@@ -1,5 +1,5 @@
 ##############################################################################
-#$Id: DVTestB2DiMuon.py,v 1.2 2008-11-07 17:04:20 jpalac Exp $
+#$Id: DVTestB2DiMuon.py,v 1.3 2008-11-07 17:06:28 jpalac Exp $
 #
 # Example Qm test option using configurables.
 #
@@ -13,7 +13,6 @@ DaVinciApp().EvtMax = 1000
 # DaVinciApp().DDDBtag      = "DC06-default"
 # DaVinciApp().condDBtag    = "DC06-default"
 # DaVinciApp().useOracleCondDB = False
-#DaVinciApp().mainOptions  = "$DAVINCIROOT/tests/options/DVTestB2DiMuon.opts"
 DaVinciApp().mainOptions  = "$B2DILEPTONROOT/options/DVPreselB2DiMuon.opts"
 ##############################################################################
 """
@@ -98,4 +97,3 @@ ApplicationMgr().TopAlg += [ testCorrelations ]
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 EventSelector().PrintFreq = 100
 ##############################################################################
-print "How do I run this???"
