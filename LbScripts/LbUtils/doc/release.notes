@@ -1,27 +1,32 @@
+2008-11-07  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
+
+	* python/LbUtils/Lock.py: added optional parameter to the Lock class constructor
+	to pass the dictionary of env. variables to set before the script execution
+
 2008-10-31  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v1r6
 
 2008-10-30  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbUtils/fixDoxygenLinks.py: added script to fix broken links in the 
+	* python/LbUtils/fixDoxygenLinks.py: added script to fix broken links in the
 	doxygen documentation
-	 
+
 2008-10-30  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/Scripts.py: added support for the description of the script in
 	the help message. It is intended that the __doc__ string of the created script is
-	used for this information 
-	
+	used for this information
+
 2008-10-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* added __version__ to various script. This version is extracted from the Name 
-	or the Revision CVS keywords. 
+	* added __version__ to various script. This version is extracted from the Name
+	or the Revision CVS keywords.
 
 2008-10-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/CVS.py: added the function to extract the version from
-	the CVS keywords. First tries the tag name and falls back on the RCS 
+	the CVS keywords. First tries the tag name and falls back on the RCS
 	revision number if the tag doesn't exist.
 	* scripts/showCMTProjects.py : example of the usage of the above mentioned
 	feature.

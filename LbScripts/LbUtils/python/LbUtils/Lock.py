@@ -17,11 +17,12 @@ class Lock(object):
         Constructor of the class has 2 obligatory parameters:
         - <command> to run
         - <uniqId> of the launcher
-        and one optional parameter:
+        and two optional parameters:
         - <commonId> which is a key to make other processes with the same <commonId> parameter wait until the first one finishes.
         If <commonId> is not given, it is created on the base of <command>
+        - <environment> is a dictionary with a values to set into working environment before <command> launch
     """
-    def __init__(self, command, uniqId, commonId=None):
+    def __init__(self, command, uniqId, commonId=None, environment=None):
         """ object constructor. Parameters described in more details in the __class__.__doc__. """
         if commonId == None: self._hashCmd = _hash(command) # check if it's None - '' is different than None so '== None' is necessary
         else: self._hashCmd = _hash(commonId)
@@ -29,10 +30,20 @@ class Lock(object):
         self._uniqId = uniqId
         self._hashUniqId = _hash(uniqId)
         self._lockFileName = '.lock_' + self._hashCmd
+        self._env = environment
         while True:
             c = self._checkLock()
             if c == self._hashUniqId:
-                os.system(self._command)
+                if environment is not None:
+                    self._prevEnv = os.environ.copy()
+                    for x in self._env.keys():
+                        os.environ[x] = self._env[x]
+                    os.system(self._command)
+                    for x in self._env.keys():
+                        if x in self._prevEnv: os.environ[x] = self._prevEnv[x]
+                        else: del os.environ[x]
+                else:
+                    os.system(self._command)
                 self._removeLock()
                 break
             elif c == None:
