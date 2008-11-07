@@ -1,4 +1,4 @@
-// $Id: L0MuonOnlineMonitor.cpp,v 1.13 2008-09-21 21:45:51 jucogan Exp $
+// $Id: L0MuonOnlineMonitor.cpp,v 1.14 2008-11-07 16:31:53 jucogan Exp $
 // Include files 
 
 #include "boost/format.hpp"
@@ -7,7 +7,6 @@
 #include "GaudiKernel/AlgFactory.h" 
 
 // from Event
-#include "Event/ODIN.h"
 #include "Event/RawEvent.h"
 #include "Event/L0MuonData.h"
 #include "Event/L0MuonCandidate.h"
@@ -115,7 +114,7 @@ StatusCode L0MuonOnlineMonitor::initialize() {
   m_candHistosFinal->bookHistos(8,m_shortnames);
   //   if (m_shortnames) m_candHistosPU->setHistoDir(""); else m_candHistosPU->setHistoDir("L0Muon/Online/PU");
   if (!m_shortnames) m_candHistosPU->setHistoDir("L0Muon/Online/PU");
-  m_candHistosPU->bookHistos(16,m_shortnames);
+  m_candHistosPU->bookHistos(100,m_shortnames);
   debug() << "==>   -- Candidates done" << endmsg;
 
   
@@ -152,7 +151,8 @@ StatusCode L0MuonOnlineMonitor::execute() {
     //Run info
     sc = m_info->setProperty( "RootInTES", rootInTES() );
     if ( sc.isFailure() ) continue;// error printed already by GaudiAlgorithm
-    m_info->getInfo();
+    sc = m_info->getInfo();
+    if ( sc.isFailure() ) continue;// error printed already by Tool
     m_info->fillHistos();
     if (0==(*it_ts)) bid_ts0=m_info->bunchId();
     

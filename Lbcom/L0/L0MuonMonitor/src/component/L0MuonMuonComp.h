@@ -1,4 +1,4 @@
-// $Id: L0MuonMuonComp.h,v 1.1 2008-09-21 21:45:17 jucogan Exp $
+// $Id: L0MuonMuonComp.h,v 1.2 2008-11-07 16:31:53 jucogan Exp $
 #ifndef COMPONENT_L0MUONMUONCOMP_H 
 #define COMPONENT_L0MUONMUONCOMP_H 1
 
@@ -8,7 +8,7 @@
 #include "MuonDAQ/IMuonRawBuffer.h"
 
 #include "L0MuonMonitorBase.h"
-//#include "L0MuonPadsHistos.h"
+#include "L0MuonPadsHistos.h"
 #include "L0MuonChannelsHistos.h"
 #include "L0MuonOptLinksHistos.h"
 
@@ -37,10 +37,15 @@ protected:
 private:
 
   StatusCode getMuonTilesTAE(std::vector<std::pair<LHCb::MuonTileID, std::pair<int,int> > > & muontiles);
+  StatusCode getMuonPadsTAE(std::vector<std::pair<LHCb::MuonTileID, int > > & muonpads);
+  StatusCode getCandPadsTAE(std::vector<std::pair<LHCb::MuonTileID, int > > & candpads);
+
+  void diffCandAndData(std::vector<std::pair<LHCb::MuonTileID,int > > & candpads,
+                       std::vector<std::pair<LHCb::MuonTileID,int > > & datapads);
 
   void diffL0MuonAndMuon(std::vector<std::pair<LHCb::MuonTileID,int > > & l0muontiles,
                          std::vector<std::pair<LHCb::MuonTileID,std::pair<int,int> > > & muontiles,
-                         std::vector<std::pair<LHCb::MuonTileID,int > > & diff) ;
+                         std::vector<std::pair<LHCb::MuonTileID,int > > & diff);
   
   void tilesMismatchSummary(MsgStream & msg) const;
 
@@ -57,6 +62,8 @@ private:
   L0MuonChannelsHistos* m_channelHist_mismatch;
   L0MuonOptLinksHistos* m_optlinkHist_mismatch;
   L0MuonOptLinksHistos* m_optlinkHist_error;  
+  L0MuonPadsHistos*     m_padHist_addCand;
+  L0MuonOptLinksHistos* m_optlinkHist_addCand;
   
   IMuonRawBuffer* m_muonBuffer;
 

@@ -1,4 +1,4 @@
-// $Id: L0MuonAlgComparison.h,v 1.4 2008-11-06 13:53:01 cattanem Exp $
+// $Id: L0MuonAlgComparison.h,v 1.5 2008-11-07 16:31:53 jucogan Exp $
 #ifndef COMPONENT_L0MUONALGCOMPARISON_H 
 #define COMPONENT_L0MUONALGCOMPARISON_H 1
 
@@ -30,7 +30,7 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-  enum Counter {FOUND, NOT_FOUND, ADDITIONAL, PROCESSED, TOTAL, NCounters};
+  enum Counter {FOUND, NOT_FOUND, ADDITIONAL, PROCESSED, TOTAL, BUNCHES, NCounters};
   
 
 protected:
@@ -42,7 +42,7 @@ private:
   void printCand(std::string location);
   void printCand(LHCb::L0MuonCandidates* cand, std::string tab="");
   
-  StatusCode compare(std::string loc, bool histo=false);
+  StatusCode compare(std::string loc, bool histo=false, int ts=0);
 
   std::string m_extension_0;
   std::string m_extension_1;

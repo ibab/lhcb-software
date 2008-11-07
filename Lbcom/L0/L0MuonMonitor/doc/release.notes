@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.16 2008-11-06 13:53:01 cattanem Exp $
+! $Id: release.notes,v 1.17 2008-11-07 16:31:53 jucogan Exp $
 ! Package     : L0MuonMonitor
 ! Responsible : Julien Cogan
 ! Purpose     : Monitoring of the L0Muon
 !--------------------------------------------------------------------------
+
+! 2008-11-07 - Julien Cogan
+ - Upgrade comparison with emulator
+ - Upgrade comparison with Muon
 
 ! 2008-11-06 - Marco Cattaneo
  - Replace dependency on L0Muon component package with L0Event dependency

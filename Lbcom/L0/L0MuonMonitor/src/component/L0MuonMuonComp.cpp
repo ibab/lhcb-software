@@ -1,4 +1,4 @@
-// $Id: L0MuonMuonComp.cpp,v 1.2 2008-10-01 15:55:45 cattanem Exp $
+// $Id: L0MuonMuonComp.cpp,v 1.3 2008-11-07 16:31:53 jucogan Exp $
 // Include files 
 
 #include <math.h>
@@ -10,6 +10,8 @@
 
 #include "Event/RawEvent.h"
 #include "Event/RecHeader.h"
+
+#include "Event/L0MuonCandidate.h"
 
 #include "L0MuonKernel/MonUtilities.h"
 
@@ -58,6 +60,9 @@ StatusCode L0MuonMuonComp::initialize() {
   m_optlinkHist_mismatch   = tool<L0MuonOptLinksHistos>( "L0MuonOptLinksHistos", "ol_mismatch", this);
   m_optlinkHist_error      = tool<L0MuonOptLinksHistos>( "L0MuonOptLinksHistos", "ol_error", this);
 
+  m_padHist_addCand   = tool<L0MuonPadsHistos>( "L0MuonPadsHistos", "addCand", this);
+  m_optlinkHist_addCand   = tool<L0MuonOptLinksHistos>( "L0MuonOptLinksHistos", "ol_addCand", this);
+
   m_muonBuffer=tool<IMuonRawBuffer>("MuonRawBuffer","MuonRawTool", this);
 
   // Physical channels & Opt. links
@@ -68,9 +73,17 @@ StatusCode L0MuonMuonComp::initialize() {
   m_channelHist_mismatch->setHistoDir("L0Muon/MuonComp");
   m_optlinkHist_mismatch->setHistoDir("L0Muon/MuonComp");
   m_optlinkHist_error->setHistoDir("L0Muon/MuonComp");
+  m_padHist_addCand->setHistoDir("L0Muon/MuonComp");
+  m_optlinkHist_addCand->setHistoDir("L0Muon/MuonComp");
 
   m_optlinkHist_mismatch->bookMultiHistos(m_shortnames);
   m_optlinkHist_error->bookMultiHistos(m_shortnames);
+  for (std::vector<int>::iterator its=m_stations.begin(); its<m_stations.end(); ++its){
+    int sta = (*its);
+    if (sta>2) continue;
+    m_padHist_addCand->bookHistos(sta,m_shortnames);
+  }
+  
   for (std::vector<int>::iterator itq=m_quarters.begin(); itq<m_quarters.end(); ++itq){
     int iq = (*itq);
     for (std::vector<int>::iterator itr=m_regions.begin(); itr<m_regions.end(); ++itr){
@@ -84,6 +97,7 @@ StatusCode L0MuonMuonComp::initialize() {
         m_channelHist_mismatch->bookHistos(iq,reg,sta,m_shortnames);
         m_optlinkHist_mismatch->bookHistos(iq,reg,sta,m_shortnames);
         m_optlinkHist_error->bookHistos(iq,reg,sta,m_shortnames);
+        m_optlinkHist_addCand->bookHistos(iq,reg,sta,m_shortnames);
       }
     }
   }
@@ -116,17 +130,51 @@ StatusCode L0MuonMuonComp::execute() {
   if (!exclusiveBx()) return StatusCode::SUCCESS;
   if (!selectedTrigger()) return StatusCode::SUCCESS;
 
+  // Get optical links in error
   sc=storeOlsInError();
   if (sc==StatusCode::FAILURE){
     return Error("can not get olsin error",StatusCode::SUCCESS,100);
   }
 
+  // Compare pads in data and pads from candidates
+  std::vector<std::pair<LHCb::MuonTileID,int > >  candpads;
+  sc=getCandPadsTAE(candpads);
+  if (sc==StatusCode::FAILURE){
+    return Error("can not get cand pads",StatusCode::SUCCESS,100);
+  }
+
+  std::vector<std::pair<LHCb::MuonTileID,int > >  datapads;
+  sc=getL0MuonPadsTAE(datapads);
+  //sc=getMuonPadsTAE(datapads);
+  if (sc==StatusCode::FAILURE){
+    return Error("can not get l0muon pads",StatusCode::SUCCESS,100);
+  }
+
+  diffCandAndData(candpads,datapads);
+
+  // Compare tiles from L0Muon and muon
   std::vector<std::pair<LHCb::MuonTileID,int > >  l0muontiles;
   sc=getL0MuonTilesTAE(l0muontiles);
   if (sc==StatusCode::FAILURE){
     return Error("can not get l0muon tiles",StatusCode::SUCCESS,100);
   }
   m_channelHist_l0muon->fillHistos(l0muontiles);
+  if (msgLevel( MSG::VERBOSE ) ){
+    std::vector<std::pair<LHCb::MuonTileID,int > >::iterator it;
+    for (it=l0muontiles.begin(); it<l0muontiles.end(); ++it){
+      LHCb::MuonTileID tile=it->first;
+      int dt=it->second;
+      LHCb::MuonTileID ol=m_opt_link_layout.contains(tile);
+      LHCb::MuonTileID mid_board=MuonLayout(1,1).contains(ol);
+      int ipb=mid_board.region()*3+mid_board.nY()*2+mid_board.nX()-1;
+      LHCb::MuonTileID mid_pu=ol.containerID(MuonLayout(2,2));
+      int ipu=(mid_pu.nY()%2)*2+(mid_pu.nX()%2);
+      verbose()<<"--l0muon- "<<"Q"<<(ol.quarter()+1)<<" M"<<(ol.station()+1)<<" R"<<(ol.region()+1)
+               <<" PB"<<ipb<<" PU"<<ipu
+               <<"\t ol= "<<ol.toString()
+               <<"\t tile= "<<tile.toString()<<" in "<<dt<<endmsg;
+    }
+  }
   
   std::vector<std::pair<LHCb::MuonTileID,std::pair<int,int> > >  muontiles;
   sc=getMuonTilesTAE(muontiles);
@@ -134,10 +182,27 @@ StatusCode L0MuonMuonComp::execute() {
     return Error("can not get muon tiles",StatusCode::SUCCESS,100);
   }
   m_channelHist_muon->fillHistos(muontiles);
+  if (msgLevel( MSG::VERBOSE ) ){
+    std::vector<std::pair<LHCb::MuonTileID,std::pair<int,int> > >::iterator it;
+    for (it=muontiles.begin(); it<muontiles.end(); ++it){
+      LHCb::MuonTileID tile=it->first;
+      int dt=(it->second).first;
+      LHCb::MuonTileID ol=m_opt_link_layout.contains(tile);
+      LHCb::MuonTileID mid_board=MuonLayout(1,1).contains(ol);
+      int ipb=mid_board.region()*3+mid_board.nY()*2+mid_board.nX()-1;
+      LHCb::MuonTileID mid_pu=ol.containerID(MuonLayout(2,2));
+      int ipu=(mid_pu.nY()%2)*2+(mid_pu.nX()%2);
+      verbose()<<"--muon--- "<<"Q"<<(ol.quarter()+1)<<" M"<<(ol.station()+1)<<" R"<<(ol.region()+1)
+               <<" PB"<<ipb<<" PU"<<ipu
+               <<"\t ol= "<<ol.toString()
+               <<"\t tile= "<<tile.toString()<<" in "<<dt<<endmsg;
+    }
+  }
 
   std::vector<std::pair<LHCb::MuonTileID,int > >  diff;
   diffL0MuonAndMuon(l0muontiles,muontiles,diff);
   m_channelHist_l0muon->fillHistosDT(diff);
+
   
   return StatusCode::SUCCESS;
 }
@@ -153,6 +218,45 @@ StatusCode L0MuonMuonComp::finalize() {
   tilesMismatchSummary(info());
   
   return L0MuonMonitorBase::finalize();  // must be called after all other actions
+}
+
+StatusCode L0MuonMuonComp::getCandPadsTAE(std::vector<std::pair<LHCb::MuonTileID, int > > & candtiles)
+{
+
+  // Loop over time slots
+  for (std::vector<int>::iterator it_ts=m_time_slots.begin(); it_ts<m_time_slots.end(); ++it_ts){
+
+    setProperty("RootInTes",L0Muon::MonUtilities::timeSlot(*it_ts));
+    if (!exist<LHCb::RawEvent>( LHCb::RawEventLocation::Default )) continue;
+    
+    std::string cand_location = LHCb::L0MuonCandidateLocation::PU;
+    if (!exist<LHCb::L0MuonCandidates>( cand_location )) 
+      return Error("L0MuonCandidates not found at "+cand_location,StatusCode::FAILURE,100);  
+    LHCb::L0MuonCandidates* cands = get<LHCb::L0MuonCandidates>( cand_location );
+
+    if (msgLevel( MSG::VERBOSE ) ) {
+      verbose()<<"Nb of candidates= "<<cands->size()<<" @"<<(*it_ts)<<endmsg;
+    }
+    
+    LHCb::L0MuonCandidates::const_iterator itcands;
+    for ( itcands= cands->begin(); itcands<cands->end();++itcands) {
+      for (int sta=0; sta<3; ++sta) {
+        if (!stationInUse(sta)) continue;
+        std::vector<LHCb::MuonTileID> mids = (*itcands)->muonTileIDs(sta);
+        if (mids.size()>1) continue;
+        LHCb::MuonTileID mid=mids[0];
+        int qua=mid.quarter();
+        if (!quarterInUse(qua)) continue;
+        int reg=mid.region();
+        if (!regionInUse(reg)) continue;
+        std::pair<LHCb::MuonTileID, int > tile_and_time= std::pair<LHCb::MuonTileID, int >(mid,*it_ts);
+        candtiles.push_back(tile_and_time);
+      }
+    }
+  } // End of loop over time slots
+  
+  return StatusCode::SUCCESS;
+  
 }
 
 StatusCode L0MuonMuonComp::getMuonTilesTAE(std::vector<std::pair<LHCb::MuonTileID, std::pair<int,int> > > & muontiles)
@@ -199,18 +303,125 @@ StatusCode L0MuonMuonComp::getMuonTilesTAE(std::vector<std::pair<LHCb::MuonTileI
   return StatusCode::SUCCESS;
 }
 
+
+StatusCode L0MuonMuonComp::getMuonPadsTAE(std::vector<std::pair<LHCb::MuonTileID, int > > & muonpads)
+{
+
+  // Loop over time slots
+  for (std::vector<int>::iterator it_ts=m_time_slots.begin(); it_ts<m_time_slots.end(); ++it_ts){
+
+    setProperty("RootInTes",L0Muon::MonUtilities::timeSlot(*it_ts));
+    if (!exist<LHCb::RawEvent>( LHCb::RawEventLocation::Default )) continue;
+
+    // Get Muon Hits
+    std::vector<std::pair<LHCb::MuonTileID,unsigned int> > tiles_and_tdc;
+    if (m_muonBuffer) { // If muon raw buffer tool
+      IProperty* prop = dynamic_cast<IProperty*>( m_muonBuffer );
+      if( prop ) {
+        StatusCode sc = prop->setProperty( "RootInTES", rootInTES() );
+        if( sc.isFailure() )
+          return Error( "Unable to set RootInTES property of MuonRawBuffer", sc );
+      } else return Error( "Unable to locate IProperty interface of MuonRawBuffer" );
+      if (m_muonZS) { // Look at ZS supressed bank
+        m_muonBuffer->getTileAndTDC(tiles_and_tdc);
+      } else {// Look at NonZS supressed bank
+        m_muonBuffer->getNZSupp(tiles_and_tdc);
+        //         debug()<<"Nb of muon hits : "<<muonpads.size()<<endmsg;
+      } // End NonZS supressed bank
+      m_muonBuffer->forceReset();
+    }// End if muon raw buffer tool
+
+    std::vector<LHCb::MuonTileID>  tiles;
+    std::vector<std::pair<LHCb::MuonTileID,unsigned int> >::iterator it;
+    for(it=tiles_and_tdc.begin();it<tiles_and_tdc.end();++it){
+      LHCb::MuonTileID mid=it->first;
+      if (!quarterInUse(mid.quarter())) continue;
+      if (!stationInUse(mid.station())) continue;
+      if (!regionInUse(mid.region())  ) continue;
+      tiles.push_back(mid);
+    }
+    
+    // Build logical channels
+    std::vector<LHCb::MuonTileID> pads;
+    L0Muon::MonUtilities::makePads(tiles,pads);
+    
+    std::vector<LHCb::MuonTileID >::iterator itpad;
+    for(itpad=pads.begin();itpad<pads.end();++itpad){
+      LHCb::MuonTileID mid=*itpad;
+      std::pair<LHCb::MuonTileID,int> tdt = std::pair<LHCb::MuonTileID,int > (mid,*it_ts);
+      muonpads.push_back(tdt);
+    }
+    
+  } // End of loop over time slots
+
+  return StatusCode::SUCCESS;
+}
+
+
+
+void L0MuonMuonComp::diffCandAndData(std::vector<std::pair<LHCb::MuonTileID,int > > & candtiles,
+                                     std::vector<std::pair<LHCb::MuonTileID,int > > & datatiles) {
+  
+  std::vector<LHCb::MuonTileID > diff;
+
+  std::vector<std::pair<LHCb::MuonTileID,int > >::iterator itcand;
+  for (itcand=candtiles.begin(); itcand<candtiles.end(); ++itcand){
+    bool found=false;
+    int match_time=15;
+    std::vector<std::pair<LHCb::MuonTileID,int > >::iterator itdata;
+    for (itdata=datatiles.begin(); itdata<datatiles.end(); ++itdata){
+      if (*itdata==*itcand) {
+        found=true;
+        match_time=itdata->second;
+        break;
+      }
+    }
+    if (!found){
+      diff.push_back(itcand->first);
+    }
+    if (msgLevel( MSG::VERBOSE ) || msgLevel( MSG::DEBUG )) {
+      LHCb::MuonTileID tile=itcand->first;
+      LHCb::MuonTileID ol=m_opt_link_layout.contains(tile);
+      LHCb::MuonTileID mid_board=MuonLayout(1,1).contains(ol);
+      int ipb=mid_board.region()*3+mid_board.nY()*2+mid_board.nX()-1;
+      LHCb::MuonTileID mid_pu=tile.containerID(MuonLayout(2,2));
+      int ipu=(mid_pu.nY()%2)*2+(mid_pu.nX()%2);
+      if (!found){
+        debug()<<"!  "<<"Q"<<(ol.quarter()+1)<<" M"<<(ol.station()+1)<<" R"<<(ol.region()+1)
+               <<" PB"<<ipb<<" PU"<<ipu
+               <<"\t ol= "<<ol.toString()
+               <<"\t pad= "<<tile.toString()
+               <<" use to make a candidate @ "<<itcand->second<<" but not in data"<<endmsg;
+      } else {
+        verbose()<<"   "<<"Q"<<(ol.quarter()+1)<<" M"<<(ol.station()+1)<<" R"<<(ol.region()+1)
+                 <<" PB"<<ipb<<" PU"<<ipu
+                 <<"\t ol= "<<ol.toString()
+                 <<"\t pad= "<<tile.toString()
+                 <<" use to make a candidate @ "<<itcand->second<<" was found in data @ "<<match_time<<endmsg;
+      }
+    }
+  }
+
+  m_padHist_addCand->fillHistos(diff);
+  m_optlinkHist_addCand->fillHistos(diff);
+  
+}
+
 void L0MuonMuonComp::diffL0MuonAndMuon(std::vector<std::pair<LHCb::MuonTileID,int > > & l0muontiles,
-                                       std::vector<std::pair<LHCb::MuonTileID,std::pair<int,int> > > & muontiles,
+                                       std::vector<std::pair<LHCb::MuonTileID,std::pair<int,int> > > & muontiles_original,
                                        std::vector<std::pair<LHCb::MuonTileID,int > > & diff) {
   bool mismatch_found=false;
 
-  std::vector<std::pair<LHCb::MuonTileID,std::pair<int,int> > >::iterator itmuon;
   std::vector<std::pair<LHCb::MuonTileID,int > >::iterator itl0muon;
+  std::vector<std::pair<LHCb::MuonTileID,std::pair<int,int> > >::iterator itmuon;
+
+  std::vector<std::pair<LHCb::MuonTileID,std::pair<int,int> > > muontiles = muontiles_original;
   
   // Loop over the l0muon hits
   for (itl0muon=l0muontiles.begin();itl0muon<l0muontiles.end();++itl0muon){
 
     int deltaT=-15;
+    std::vector<std::pair<LHCb::MuonTileID,std::pair<int,int> > >::iterator muon_pos=muontiles.end();
     // Loop over the muon hits
     for (itmuon=muontiles.begin();itmuon<muontiles.end();++itmuon){
 
@@ -218,10 +429,14 @@ void L0MuonMuonComp::diffL0MuonAndMuon(std::vector<std::pair<LHCb::MuonTileID,in
         std::pair<int,int> time=itmuon->second;
         int ts=time.first;
         int dT=ts-itl0muon->second;
-        deltaT = abs(deltaT)<abs(dT) ? deltaT : dT;
+        if (abs(deltaT)>abs(dT)){
+          deltaT=dT;
+          muon_pos=itmuon;
+        }
       }
 
     } // End of loop over the muon hits
+    if (muon_pos<muontiles.end()) muontiles.erase(muon_pos);
 
     LHCb::MuonTileID mid=itl0muon->first;
     std::pair<LHCb::MuonTileID,int> tdt = std::pair<LHCb::MuonTileID,int> (mid,deltaT);
@@ -242,25 +457,48 @@ void L0MuonMuonComp::diffL0MuonAndMuon(std::vector<std::pair<LHCb::MuonTileID,in
     LHCb::MuonTileID ol = m_opt_link_layout.contains((*itmuon).first);
     std::pair<int,int> time=itmuon->second;
     std::pair<LHCb::MuonTileID,int> ol_ts=std::pair<LHCb::MuonTileID,int> (ol,time.first);
-    if (m_err_ols.find(ol_ts)!=m_err_ols.end()) continue;
-
-    bool found=false;
-    for (itl0muon=l0muontiles.begin();itl0muon<l0muontiles.end();++itl0muon){
-      if (itmuon->first==itl0muon->first) {
-        found=true;
-        break;
+    if (m_err_ols.find(ol_ts)!=m_err_ols.end()) {
+      if (msgLevel( MSG::VERBOSE )) {
+        LHCb::MuonTileID mid_board=MuonLayout(1,1).contains(ol);
+        int ipb=mid_board.region()*3+mid_board.nY()*2+mid_board.nX()-1;
+        LHCb::MuonTileID mid_pu=ol.containerID(MuonLayout(2,2));
+        int ipu=(mid_pu.nY()%2)*2+(mid_pu.nX()%2);
+        verbose()<<"+ "<<"Q"<<(ol.quarter()+1)<<" M"<<(ol.station()+1)<<" R"<<(ol.region()+1)
+                 <<" PB"<<ipb<<" PU"<<ipu
+                 <<"\t ol= "<<ol.toString()
+                 <<"\t tile= "<<((*itmuon).first).toString()
+                 <<" => muon tile discarded from comparison"<<endmsg;
       }
+      continue;
     }
-    if (!found) {
-      int deltaT=+15;
-      LHCb::MuonTileID mid=itmuon->first;
-      std::pair<LHCb::MuonTileID,int> tdt = std::pair<LHCb::MuonTileID,int> (mid,deltaT);
-      diff.push_back(tdt);
-      mismatch_found=true;
-      std::map<LHCb::MuonTileID,int>::iterator itile_mismatch=m_tiles_mismatch.find(mid);
-      if (itile_mismatch==m_tiles_mismatch.end()) m_tiles_mismatch[mid]=0;
-      m_tiles_mismatch[mid]+=1;
-    }
+    
+
+    //     bool found=false;
+    //     for (itl0muon=l0muontiles.begin();itl0muon<l0muontiles.end();++itl0muon){
+    //       if (itmuon->first==itl0muon->first) {
+    //         found=true;
+    //         break;
+    //       }
+    //     }
+    //     if (!found) {
+    //       int deltaT=+15;
+    //       LHCb::MuonTileID mid=itmuon->first;
+    //       std::pair<LHCb::MuonTileID,int> tdt = std::pair<LHCb::MuonTileID,int> (mid,deltaT);
+    //       diff.push_back(tdt);
+    //       mismatch_found=true;
+    //       std::map<LHCb::MuonTileID,int>::iterator itile_mismatch=m_tiles_mismatch.find(mid);
+    //       if (itile_mismatch==m_tiles_mismatch.end()) m_tiles_mismatch[mid]=0;
+    //       m_tiles_mismatch[mid]+=1;
+    //     }
+    int deltaT=+15;
+    LHCb::MuonTileID mid=itmuon->first;
+    std::pair<LHCb::MuonTileID,int> tdt = std::pair<LHCb::MuonTileID,int> (mid,deltaT);
+    diff.push_back(tdt);
+    mismatch_found=true;
+    std::map<LHCb::MuonTileID,int>::iterator itile_mismatch=m_tiles_mismatch.find(mid);
+    if (itile_mismatch==m_tiles_mismatch.end()) m_tiles_mismatch[mid]=0;
+    m_tiles_mismatch[mid]+=1;
+
   }
   
   if (mismatch_found) {
@@ -287,6 +525,40 @@ void L0MuonMuonComp::diffL0MuonAndMuon(std::vector<std::pair<LHCb::MuonTileID,in
     m_optlinkHist_error->fillHistos(m_err_ols);
   }
 
+  if (msgLevel( MSG::VERBOSE ) || msgLevel( MSG::DEBUG )){
+    std::vector<std::pair<LHCb::MuonTileID,int > >::iterator it_diff;
+    for (it_diff=diff.begin(); it_diff<diff.end(); ++it_diff){
+      LHCb::MuonTileID tile=it_diff->first;
+      int dt=it_diff->second;
+      LHCb::MuonTileID ol=m_opt_link_layout.contains(tile);
+      LHCb::MuonTileID mid_board=MuonLayout(1,1).contains(ol);
+      int ipb=mid_board.region()*3+mid_board.nY()*2+mid_board.nX()-1;
+      LHCb::MuonTileID mid_pu=ol.containerID(MuonLayout(2,2));
+      int ipu=(mid_pu.nY()%2)*2+(mid_pu.nX()%2);
+      if (dt==0) {
+        verbose()<<"-  "<<"Q"<<(ol.quarter()+1)<<" M"<<(ol.station()+1)<<" R"<<(ol.region()+1)
+                  <<" PB"<<ipb<<" PU"<<ipu
+                  <<"\t ol= "<<ol.toString()
+                  <<"\t tile= "<<tile.toString()<<endmsg;
+      } else if (dt==-15) {
+        debug()<<"-  "<<"Q"<<(ol.quarter()+1)<<" M"<<(ol.station()+1)<<" R"<<(ol.region()+1)
+               <<" PB"<<ipb<<" PU"<<ipu
+               <<"\t ol= "<<ol.toString()
+               <<"\t tile= "<<tile.toString()<<" missing in MUON"<<endmsg;
+      } else if (dt== 15) {
+        debug()<<"-  "<<"Q"<<(ol.quarter()+1)<<" M"<<(ol.station()+1)<<" R"<<(ol.region()+1)
+               <<" PB"<<ipb<<" PU"<<ipu
+               <<"\t ol= "<<ol.toString()
+               <<"\t tile= "<<tile.toString()<<" missing in L0MUON"<<endmsg;
+      } else {
+        debug()<<"-  "<<"Q"<<(ol.quarter()+1)<<" M"<<(ol.station()+1)<<" R"<<(ol.region()+1)
+               <<" PB"<<ipb<<" PU"<<ipu
+               <<"\t ol= "<<ol.toString()
+               <<"\t tile= "<<tile.toString()<<" not in time: "<<dt<<endmsg;
+      }
+    }
+  }
+  
 }
 
 

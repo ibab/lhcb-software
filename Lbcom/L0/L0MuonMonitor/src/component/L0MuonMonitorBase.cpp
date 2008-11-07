@@ -1,4 +1,4 @@
-// $Id: L0MuonMonitorBase.cpp,v 1.6 2008-09-21 21:53:42 jucogan Exp $
+// $Id: L0MuonMonitorBase.cpp,v 1.7 2008-11-07 16:31:53 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -264,6 +264,37 @@ StatusCode L0MuonMonitorBase::getL0MuonTiles(std::vector<LHCb::MuonTileID> & l0m
   return sc;
 }
 
+StatusCode L0MuonMonitorBase::getL0MuonPadsTAE(std::vector<std::pair<LHCb::MuonTileID,int > > & l0muontiles_and_time)
+{
+  StatusCode sc=StatusCode::SUCCESS;
+  // Loop over time slots (for l0muon hits)
+  for (std::vector<int>::iterator it_ts=m_time_slots.begin(); it_ts<m_time_slots.end(); ++it_ts){
+    
+    setProperty("RootInTes",L0Muon::MonUtilities::timeSlot(*it_ts));
+    if (!exist<LHCb::RawEvent>( LHCb::RawEventLocation::Default )) continue;
+    
+    // Get L0Muon Hits
+    std::vector<LHCb::MuonTileID> l0muontiles;
+    sc = getL0MuonTiles(l0muontiles);
+    if ( sc==StatusCode::FAILURE ) {
+      return Error("L0muon tiles not found",StatusCode::SUCCESS,50);
+    }
+    
+    // Build logical channels 
+    std::vector<LHCb::MuonTileID> l0muonpads;
+    L0Muon::MonUtilities::makePads(l0muontiles,l0muonpads);
+    
+    std::vector<LHCb::MuonTileID >::iterator itl0muon;
+    for(itl0muon=l0muonpads.begin();itl0muon<l0muonpads.end();++itl0muon){
+      LHCb::MuonTileID mid=*itl0muon;
+      std::pair<LHCb::MuonTileID,int> tdt = std::pair<LHCb::MuonTileID,int > (mid,*it_ts);
+      l0muontiles_and_time.push_back(tdt);
+    }
+    
+  } // End of loop over time slots (for l0muon hits)
+  
+  return sc;
+}
 
 StatusCode L0MuonMonitorBase::getL0MuonTilesTAE(std::vector<std::pair<LHCb::MuonTileID,int > > & l0muontiles_and_time)
 {

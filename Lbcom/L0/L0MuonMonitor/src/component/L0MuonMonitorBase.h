@@ -1,4 +1,4 @@
-// $Id: L0MuonMonitorBase.h,v 1.5 2008-09-21 21:53:42 jucogan Exp $
+// $Id: L0MuonMonitorBase.h,v 1.6 2008-11-07 16:31:53 jucogan Exp $
 #ifndef COMPONENT_L0MUONMONITORBASE_H 
 #define COMPONENT_L0MUONMONITORBASE_H 1
 
@@ -33,6 +33,7 @@ protected:
   
   StatusCode getL0MuonTiles(std::vector<LHCb::MuonTileID> & l0muontiles);
   StatusCode getL0MuonTilesTAE(std::vector<std::pair<LHCb::MuonTileID,int > > & l0muontiles);
+  StatusCode getL0MuonPadsTAE(std::vector<std::pair<LHCb::MuonTileID,int > > & l0muonpads);
 
   StatusCode getOlsInError(std::vector<LHCb::MuonTileID> & ols);
 
