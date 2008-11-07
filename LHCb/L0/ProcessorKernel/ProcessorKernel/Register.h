@@ -1,16 +1,8 @@
-// $Id: Register.h,v 1.6 2006-03-03 14:09:45 jucogan Exp $
+// $Id: Register.h,v 1.7 2008-11-07 16:19:57 jucogan Exp $
 
 #ifndef PROCESSORKERNEL_REGISTER_H
 #define PROCESSORKERNEL_REGISTER_H     1
 
-/** @class Register Register.h L0MuonKernel/Register.h
-
-Class representing a level-0 muon  trigger 
-abstract unit of data
-   
-@author  Andrei Tsaregorodtsev
-@date  12 January 2002
-*/ 
 
 #include <boost/dynamic_bitset.hpp>
 
@@ -27,6 +19,15 @@ namespace L0Muon {
   static const std::string XMLTile              = "Tile";
 
   class Link;
+
+  /** @class Register Register.h L0MuonKernel/Register.h
+
+  Class representing a level-0 muon  trigger 
+  abstract unit of data
+  
+  @author  Andrei Tsaregorodtsev
+  @date  12 January 2002
+  */ 
   class Register  {
 
   public:

@@ -1,14 +1,8 @@
-// $Id: Unit.h,v 1.8 2006-03-29 15:21:08 jucogan Exp $
+// $Id: Unit.h,v 1.9 2008-11-07 16:19:57 jucogan Exp $
 
 #ifndef PROCESSORKERNEL_UNIT_H
 #define PROCESSORKERNEL_UNIT_H     1
 
-/** @class Unit Unit.h L0MuonKernel/Unit.h
-
-Class representing a unit of data processing logic 
-of the level-0 muon trigger for hardware simulations
-   
-*/ 
 
 #include <string>
 #include <map>
@@ -17,6 +11,14 @@ of the level-0 muon trigger for hardware simulations
 
 namespace L0Muon {
 
+  /** @class Unit Unit.h L0MuonKernel/Unit.h
+      
+  Class representing a unit of data processing logic 
+  of the level-0 muon trigger for hardware simulations
+  
+  @author  Andrei Tsaregorodtsev, Julien Cogan
+  @date  12 January 2002
+  */ 
   class Unit {
 
   public:
@@ -51,8 +53,8 @@ namespace L0Muon {
     /// Return subunits
     std::vector<L0Muon::Unit*> units(){return m_units;}
 
-//     /// Search for subunit 
-//     Unit * subUnit(std::string type);
+    //     /// Search for subunit 
+    //     Unit * subUnit(std::string type);
   
     /// Add input register  
     virtual void addInputRegister(L0Muon::Register* in);

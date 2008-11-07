@@ -1,14 +1,8 @@
-// $Id: RegisterFactory.h,v 1.10 2007-10-09 09:23:08 jucogan Exp $
+// $Id: RegisterFactory.h,v 1.11 2008-11-07 16:19:57 jucogan Exp $
 
 #ifndef PROCESSORKERNEL_REGISTERFACTORY_H
 #define PROCESSORKERNEL_REGISTERFACTORY_H     1
 
-/** @class RegisterFactory RegisterFactory.h L0MuonKernel/RegisterFactory.h
-
-Class representing a factory for creating and owning registers
-   
-   
-*/ 
 
 #include <string>
 #include <map>
@@ -24,6 +18,13 @@ XERCES_CPP_NAMESPACE_USE
 
 namespace L0Muon {
 
+  /** @class RegisterFactory RegisterFactory.h L0MuonKernel/RegisterFactory.h
+      
+  Class representing a factory for creating and owning registers
+  
+  @author  Andrei Tsaregorodtsev, Julien Cogan
+  @date  12 January 2002
+  */ 
   class RegisterFactory {
 
   protected:

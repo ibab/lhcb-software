@@ -4,6 +4,9 @@
 ! Purpose     : Base classes for a generic processor simulation
 !-----------------------------------------------------------------------------
 
+! 2008-11-04 - Julien Cogan
+ - Add documentation for doxygen
+
 ! 2008-10-28 - Marco Cattaneo
  - Fixes for compilation with gcc 4.3
 
