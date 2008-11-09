@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2008-11-09 M Needham
+ - Add totalCharge member to velo measurement classes  
+
 ! 2008-11-05 M Needham
  - Improvements to STMeasurement and STLiteMeasurement classes
 

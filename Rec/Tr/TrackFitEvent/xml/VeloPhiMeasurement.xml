@@ -15,7 +15,7 @@
       <import name='Event/Measurement' />
       <import name='TrackInterfaces/IVeloClusterPosition'/>
       <import name='StateVector' soft='FORWARDONLY'/>
-      <import name='VeloCluster' soft='FORWARDONLY'/>
+      <import name='Event/VeloCluster' />
       <import name='DeVelo' namespace='::' soft='FORWARDONLY'/>
 
       <constructor
@@ -91,6 +91,19 @@
           return new LHCb::VeloPhiMeasurement(*this);
         </code>
       </method>
+
+
+
+      <method
+        type  = 'double'
+        name  = 'totalCharge'
+        desc  = 'Retrieve the cluster charge'
+        const = 'TRUE'>
+        <code>
+  return m_cluster-&gt;totalCharge();
+        </code>
+	</method>
+
 
     </class>
 
