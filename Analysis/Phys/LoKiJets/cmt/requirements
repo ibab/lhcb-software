@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.10 2008-06-26 13:21:57 ibelyaev Exp $ 
+# $Id: requirements,v 1.11 2008-11-09 14:31:03 ibelyaev Exp $ 
 # =============================================================================
 # Created    : 2006-09-06
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -7,7 +7,7 @@ package           LoKiJets
 version           v4r1
 
 # =============== structure ===================================================
-branches          cmt doc options src
+branches          cmt doc python src
 
 # =============== dependencies ================================================
 use               LoKiAlgo v* Phys 
@@ -16,6 +16,8 @@ use               fastjet  v* LCG_Interfaces
 
 # =============== exported include directories ================================
 include_path      none
+
+#apply_pattern 
 
 # =============== constituents ================================================
 library           LoKiJets    ../src/*.cpp 

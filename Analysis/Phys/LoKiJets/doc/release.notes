@@ -1,12 +1,29 @@
-! $Id: release.notes,v 1.14 2008-06-26 13:21:57 ibelyaev Exp $ 
+! $Id: release.notes,v 1.15 2008-11-09 14:31:03 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.14 $ 
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.15 $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Tools/LoKiJets
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : Jet finding algorithm (KtJet) embedded into LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2008-11-09 - Vanya BELYAEV
+ - remove options directory with all opts-files 
+ - add python directory with corresponding on-demand configuration of 
+   standard Kt-Jets on-demand.
+
+   to enable on-demand cratino of jets:
+
+      import LoKiJets.StdKtJets_Configuration 
+
+      The location is defined to be "Phys/StdKtJets"
+
+      The jets are made from:
+
+        "Phys/Std/NoPIDPions" 
+         and 
+        "Phys/StdLooseAllPhotons"
+   
 ! 2008-06-26 - Vanya BELYAEV
 
  - LoKi::JetMaker
@@ -185,6 +202,9 @@ Please credit this data as "generated using 'SLOCCount' by David A. Wheeler."
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.14  2008/06/26 13:21:57  ibelyaev
+!  KtJet is declared to be obsolete, to be remoeved soon
+!
 ! Revision 1.13  2007/12/18 10:23:23  pkoppenb
 ! retag as v4r0
 !
