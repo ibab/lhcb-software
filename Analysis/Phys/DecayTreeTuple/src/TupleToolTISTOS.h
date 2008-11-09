@@ -15,14 +15,11 @@
  *  It saves the trigger TIS/TOS decisions for each 
  *  particle for the L0, and each HLT Alley and HltSelection
  *
- *  Saved values: (once for TIS and once for TOS) 
+ *  Saved values for each trigger:  
  *
- *  -99 : trigger decision not present
- *   -1 : the event did not pass the trigger
- *    0 : the event passed the trigger and was not TIS (TOS)
- *        with respect to the particle being tested
- *    1 : the event passed the trigger and was TIS (TOS)
- *        with respect to the particle being tested
+ *  Decision : the trigger decision, 1 is pass, 0 is fail
+ *  TIS      : was the event tis? 1 is yes, 0 is no.  
+ *  TOS      : was the event tos? 1 is yes, 0 is no.
  *
  *  @author V. Gligorov
  *  @date   2008-04-09
@@ -49,43 +46,6 @@ protected:
   
 private:
 
-  void dumpvs( const std::vector< std::string > & vs )
-  {
-    for( std::vector< std::string >::const_iterator s=vs.begin();s != vs.end(); ++s)
-    {
-      info() << " " << *s;
-    }
-  }
-
-  void setBadTriggerDecision( bool& test, 
-                              const std::string& head, 
-                              Tuples::Tuple& tuple
-                            )
-  {
-
-   test &= tuple->column( head+"_L0TIS", -99 );
-   test &= tuple->column( head+"_L0TOS", -99 );
-   test &= tuple->column( head+"_HLTALLEYSTIS", -99 );
-   test &= tuple->column( head+"_HLTALLEYSTOS", -99 );
-   test &= tuple->column( head+"_HLTSELTIS", -99 );
-   test &= tuple->column( head+"_HLTSELTOS", -99); 
-
-  }
-
-  void saveTriggers( const std::vector< std::string > & vs, 
-                     bool& test, 
-                     std::string TISORTOS, 
-                     int value, 
-                     const std::string& head,
-                     Tuples::Tuple& tuple 
-                   )
-  {
-    for( std::vector< std::string >::const_iterator s=vs.begin();s != vs.end(); ++s)
-    {
-      test &= tuple->column( head+"_" + *s + TISORTOS, value );
-    }
-  }
- 
   ITriggerTisTos* m_TriggerTisTosTool;
   IParticleDescendants* m_particleDescendants;
 

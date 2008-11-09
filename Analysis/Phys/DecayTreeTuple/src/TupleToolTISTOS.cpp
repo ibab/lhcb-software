@@ -34,7 +34,6 @@ TupleToolTISTOS::TupleToolTISTOS( const std::string& type,
                               const IInterface* parent )
   : GaudiTool ( type, name , parent )
 , m_TriggerTisTosTool()
-, m_particleDescendants(0)
 {
   declareInterface<IParticleTupleTool>(this);
 
@@ -53,7 +52,6 @@ StatusCode TupleToolTISTOS::initialize( ) {
   StatusCode sc = GaudiTool::initialize();
   if (!sc) return sc;
   m_TriggerTisTosTool = tool<ITriggerTisTos>( "TriggerTisTos",this);
-  m_particleDescendants = tool<IParticleDescendants>("ParticleDescendants",this);
   return sc;
 }
 
@@ -65,261 +63,64 @@ StatusCode TupleToolTISTOS::fill( const LHCb::Particle*
 				   , const std::string& head
 				   , Tuples::Tuple& tuple ){
   bool test = true;
+  bool decision = false;
+  bool tis = 0;
+  bool tos = 0;
   
   if( P ){
     
     if (P->isBasicParticle()) return StatusCode::SUCCESS;
 
-    if( !exist<L0DUReport>( L0DUReportLocation::Default ) || 
-        !exist<HltSummary>( LHCb::HltSummaryLocation::Default)
-      ){ //Require both trigger decisions to have saved a valid summary
-      setBadTriggerDecision(test,head,tuple);
-      return StatusCode(test); 
-    } 
-    const L0DUReport* pL0DUReport = get<L0DUReport>( L0DUReportLocation::Default );
-    verbose() << " L0 decision= " << pL0DUReport->decision() << endmsg;
+    m_TriggerTisTosTool->setOfflineInput(*P);
 
-    std::vector<std::string> l0NamesInHlt = m_TriggerTisTosTool->triggerSelectionNames("L0*Decision", 
-                                                                                     ITriggerTisTos::kAllTriggerSelections);
-    verbose() << " Names of L0 triggers in Hlt="; dumpvs( l0NamesInHlt );  verbose() << endmsg;
-
-    //  Hlt overall
-    const HltSummary* pHltSummary = get<HltSummary>(LHCb::HltSummaryLocation::Default);
-    verbose() << " Hlt final decision= " << pHltSummary->decision() << endmsg;
-
-    //  Hlt Alleys
-    bool hltAlleysDecision,dummyTis,dummyTos;
-    m_TriggerTisTosTool->setOfflineInput();  
-    m_TriggerTisTosTool->triggerTisTos("*",hltAlleysDecision,dummyTis,dummyTos);
-    verbose() << " Hlt Alleys decision= " << hltAlleysDecision;
-    verbose() << " from OR between "; dumpvs( m_TriggerTisTosTool->triggerSelectionNames() ); verbose() << endmsg;
-
-    //  Hlt2 Selections 
-    bool hltSelDecision;
-    //done m_TriggerTisTosTool->setOfflineInput();   
-    m_TriggerTisTosTool->triggerTisTos("Hlt2*Decision",hltSelDecision,dummyTis,dummyTos, ITriggerTisTos::kAllTriggerSelections);
-    verbose() << " HltSelections (B and D) decision= " << hltSelDecision;
-    verbose() << " from OR between "; dumpvs( m_TriggerTisTosTool->triggerSelectionNames() ); verbose() << endmsg;
-
-    //     see which Alley triggers were on
-    //done m_TriggerTisTosTool->setOfflineInput();   
-    std::vector<std::string> alleysPass = m_TriggerTisTosTool->triggerSelectionNames(
-    "*",ITriggerTisTos::kAlleyExitsOnly,
-    ITriggerTisTos::kTrueRequired, ITriggerTisTos::kAnything, ITriggerTisTos::kAnything);
-    verbose() << " Hlt Alley triggers that fired="; dumpvs( alleysPass );  verbose() << endmsg;
-
-    //     see which Hlt Selections were on
-    //done m_TriggerTisTosTool->setOfflineInput();   
-    std::vector<std::string> selPass = m_TriggerTisTosTool->triggerSelectionNames(
-    "Hlt2*Decision",ITriggerTisTos::kAllTriggerSelections,
-    ITriggerTisTos::kTrueRequired, ITriggerTisTos::kAnything, ITriggerTisTos::kAnything);
-    verbose() << " Hlt Selections that succedded="; dumpvs( selPass );  verbose() << endmsg;
-
-    // Particle Info ---------------------------------------------------------------------------
-    const std::vector<const Particle*> finals = m_particleDescendants->finalStates(P);
-    verbose() << "    Particle " << (P)->particleID().pid() << " Pt " << (P)->pt()
-           << " #-of-daughters " << ((P)->daughtersVector()).size()
-           << " #-of-final-state-part " << finals.size();
-    for( std::vector<const Particle*>::const_iterator pf=finals.begin();pf!=finals.end();++pf){
-      verbose() << " " << (*pf)->particleID().pid() << " Pt " << (*pf)->pt();
-    }
-    verbose() << endmsg;
-
-    // L0 Info ---------------------------------------------------------------------------
-    bool decisionL0,tisL0,tosL0;
-    m_TriggerTisTosTool->triggerTisTos(*P,"L0*Decision",decisionL0,tisL0,tosL0, ITriggerTisTos::kAllTriggerSelections);
-    if( !decisionL0 ) {
-      test &= tuple->column( head+"_L0TIS", -1 );
-      test &= tuple->column( head+"_L0TOS", -1 );
-      saveTriggers(m_TriggerTisTosTool->triggerSelectionNames(), test,"TIS",-1,head,tuple);
-      saveTriggers(m_TriggerTisTosTool->triggerSelectionNames(), test,"TOS",-1,head,tuple);
-      //return StatusCode(test);    
-    } else {
-
-      if( tisL0 ){
-        verbose() << "          L0 TIS selections= ";
-        dumpvs( m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kAnything, 
-                                                     ITriggerTisTos::kTrueRequired,
-                                                     ITriggerTisTos::kAnything ) );
-        verbose() << endmsg;
-
-        test &= tuple->column( head+"_L0TIS", 1 );
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kTrueRequired,
-                                                   ITriggerTisTos::kTrueRequired,
-                                                   ITriggerTisTos::kAnything ), test,"TIS",1,head,tuple);
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kTrueRequired,
-                                                   ITriggerTisTos::kFalseRequired,
-                                                   ITriggerTisTos::kAnything ), test,"TIS",0,head,tuple);
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kFalseRequired,
-                                                   ITriggerTisTos::kAnything,
-                                                   ITriggerTisTos::kAnything ), test,"TIS",-1,head,tuple);
-      } else {
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kTrueRequired,
-                                                   ITriggerTisTos::kAnything,
-                                                   ITriggerTisTos::kAnything ), test,"TIS",0,head,tuple);
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kFalseRequired,
-                                                   ITriggerTisTos::kAnything,
-                                                   ITriggerTisTos::kAnything ), test,"TIS",-1,head,tuple);
-        test &= tuple->column( head+"_L0TIS", 0 );
-      }
-      if( tosL0 ){
-        verbose() << "          L0 TOS selections= ";
-        dumpvs( m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kAnything, 
-                                                   ITriggerTisTos::kAnything,
-                                                   ITriggerTisTos::kTrueRequired ) );
-        verbose() << endmsg;
-
-        test &= tuple->column( head+"_L0TOS", 1 );
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kTrueRequired,
-                                                   ITriggerTisTos::kAnything,
-                                                   ITriggerTisTos::kTrueRequired ), test,"TOS",1,head,tuple);
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kTrueRequired,
-                                                   ITriggerTisTos::kAnything,
-                                                   ITriggerTisTos::kFalseRequired ), test,"TOS",0,head,tuple);
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kFalseRequired,
-                                                   ITriggerTisTos::kAnything,
-                                                   ITriggerTisTos::kAnything ), test,"TOS",-1,head,tuple);
-      } else {
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kTrueRequired,
-                                                   ITriggerTisTos::kAnything,
-                                                   ITriggerTisTos::kAnything ), test,"TOS",0,head,tuple);
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kFalseRequired,
-                                                   ITriggerTisTos::kAnything,
-                                                   ITriggerTisTos::kAnything ), test,"TOS",-1,head,tuple);
-        test &= tuple->column( head+"_L0TOS", 0 );
-      }
+    //Do the L0
+    m_TriggerTisTosTool->setTriggerInput("L0*Decision", ITriggerTisTos::kAllTriggerSelections);
+    //Fill the decision, tis and tos parametres for the L0 as a whole
+    m_TriggerTisTosTool->triggerTisTos(decision,tis,tos);
+    tuple->column( head+"L0Global"+"_Dec", decision);
+    tuple->column( head+"L0Global"+"_TIS", tis);
+    tuple->column( head+"L0Global"+"_TOS", tos);
+    //Now loop over all the subtriggers
+    std::vector<std::string> vs = m_TriggerTisTosTool->triggerSelectionNames();
+    for( std::vector< std::string >::const_iterator s=vs.begin();s != vs.end();++s){
+      m_TriggerTisTosTool->triggerTisTos(*s,decision,tis,tos,ITriggerTisTos::kAllTriggerSelections);
+      tuple->column( head+*s+"_Dec", decision);
+      tuple->column( head+*s+"_TIS", tis);
+      tuple->column( head+*s+"_TOS", tos);
     }
 
-    // Hlt Alley Info ----------------------------------------------------------------------
-    bool decisionAlleys,tisAlleys,tosAlleys;
-    m_TriggerTisTosTool->triggerTisTos("*",decisionAlleys,tisAlleys,tosAlleys);
-    if( !decisionAlleys ) {
-      test &= tuple->column( head+"_HLTALLEYSTIS", -1 );
-      test &= tuple->column( head+"_HLTALLEYSTOS", -1 );
-      saveTriggers(m_TriggerTisTosTool->triggerSelectionNames(), test,"TIS",-1,head,tuple);
-      saveTriggers(m_TriggerTisTosTool->triggerSelectionNames(), test,"TOS",-1,head,tuple);
-      //return StatusCode(test);    
-    } else {
-    
-      if( tisAlleys ){
-        verbose() << "          Hlt Alleys TIS selections= ";
-        dumpvs( m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kAnything, 
-                                                     ITriggerTisTos::kTrueRequired,
-                                                     ITriggerTisTos::kAnything ) );
-        verbose() << endmsg;
-
-        test &= tuple->column( head+"_HLTALLEYSTIS", 1 );
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kTrueRequired,
-                                                   ITriggerTisTos::kTrueRequired,
-                                                   ITriggerTisTos::kAnything ), test,"TIS",1,head,tuple);
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kTrueRequired,
-                                                   ITriggerTisTos::kFalseRequired,
-                                                   ITriggerTisTos::kAnything ), test,"TIS",0,head,tuple);
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kFalseRequired,
-                                                   ITriggerTisTos::kAnything,
-                                                   ITriggerTisTos::kAnything ), test,"TIS",-1,head,tuple);
-      } else {
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kTrueRequired,
-                                                   ITriggerTisTos::kAnything,
-                                                   ITriggerTisTos::kAnything ), test,"TIS",0,head,tuple);
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kFalseRequired,
-                                                   ITriggerTisTos::kAnything,
-                                                   ITriggerTisTos::kAnything ), test,"TIS",-1,head,tuple);
-        test &= tuple->column( head+"_HLTALLEYSTIS", 0 );
-      }
-      if( tosAlleys ){
-        verbose() << "          Hlt Alleys TOS selections= ";
-        dumpvs( m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kAnything, 
-                                                     ITriggerTisTos::kAnything,
-                                                     ITriggerTisTos::kTrueRequired ) );
-        verbose() << endmsg;
-
-        test &= tuple->column( head+"_HLTALLEYSTOS", 1 );
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kTrueRequired,
-                                                   ITriggerTisTos::kAnything,
-                                                   ITriggerTisTos::kTrueRequired ), test,"TOS",1,head,tuple);
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kTrueRequired,
-                                                   ITriggerTisTos::kAnything,
-                                                   ITriggerTisTos::kFalseRequired ), test,"TOS",0,head,tuple);
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kFalseRequired,
-                                                   ITriggerTisTos::kAnything,
-                                                   ITriggerTisTos::kAnything ), test,"TOS",-1,head,tuple);
-      } else {
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kTrueRequired,
-                                                   ITriggerTisTos::kAnything,
-                                                   ITriggerTisTos::kAnything ), test,"TOS",0,head,tuple);
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kFalseRequired,
-                                                   ITriggerTisTos::kAnything,
-                                                   ITriggerTisTos::kAnything ), test,"TOS",-1,head,tuple);
-        test &= tuple->column( head+"_HLTALLEYSTOS", 0 );
-      }
+    //Do the Hlt1
+    m_TriggerTisTosTool->setTriggerInput("Hlt1*Decision", ITriggerTisTos::kAllTriggerSelections);
+    //Fill the decision, tis and tos parametres for the Hlt1 as a whole   
+    m_TriggerTisTosTool->triggerTisTos(decision,tis,tos);
+    tuple->column( head+"Hlt1Global"+"_Dec", decision);
+    tuple->column( head+"Hlt1Global"+"_TIS", tis);
+    tuple->column( head+"Hlt1Global"+"_TOS", tos);
+    //Now loop over all the subtriggers
+    vs = m_TriggerTisTosTool->triggerSelectionNames();
+    for( std::vector< std::string >::const_iterator s=vs.begin();s != vs.end();++s){
+      m_TriggerTisTosTool->triggerTisTos(*s,decision,tis,tos,ITriggerTisTos::kAllTriggerSelections);
+      tuple->column( head+*s+"_Dec", decision);
+      tuple->column( head+*s+"_TIS", tis);
+      tuple->column( head+*s+"_TOS", tos);
     }
 
-    // Hlt SelB Info --------------------------------------------------------------------
-    bool decisionSelB,tisSelB,tosSelB;
-    m_TriggerTisTosTool->triggerTisTos("Hlt2*Decision",decisionSelB,tisSelB,tosSelB, ITriggerTisTos::kAllTriggerSelections);
-    if( !decisionSelB ) {
-      test &= tuple->column( head+"_HLTSELTIS", -1 );
-      test &= tuple->column( head+"_HLTSELTOS", -1 );
-      saveTriggers(m_TriggerTisTosTool->triggerSelectionNames(), test,"TIS",-1,head,tuple);
-      saveTriggers(m_TriggerTisTosTool->triggerSelectionNames(), test,"TOS",-1,head,tuple);
-      //return StatusCode(test);    
-    } else {
-    
-      if( tisSelB ){
-        verbose() << "          Hlt2 Sel TIS selections= ";
-        dumpvs( m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kAnything, 
-                                                     ITriggerTisTos::kTrueRequired,
-                                                     ITriggerTisTos::kAnything ) );
-        verbose() << endmsg;
-
-        test &= tuple->column( head+"_HLTSELTIS", 1 );
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kTrueRequired,
-                                                   ITriggerTisTos::kTrueRequired,
-                                                   ITriggerTisTos::kAnything ), test,"TIS",1,head,tuple);
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kTrueRequired,
-                                                   ITriggerTisTos::kFalseRequired,
-                                                   ITriggerTisTos::kAnything ), test,"TIS",0,head,tuple);
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kFalseRequired,
-                                                   ITriggerTisTos::kAnything,
-                                                   ITriggerTisTos::kAnything ), test,"TIS",-1,head,tuple);
-      } else {
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kTrueRequired,
-                                                   ITriggerTisTos::kAnything,
-                                                   ITriggerTisTos::kAnything ), test,"TIS",0,head,tuple);
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kFalseRequired,
-                                                   ITriggerTisTos::kAnything,
-                                                   ITriggerTisTos::kAnything ), test,"TIS",-1,head,tuple);
-        test &= tuple->column( head+"_HLTSELTIS", 0 );
-      }
-      if( tosSelB ){
-        verbose() << "          Hlt2 Sel TOS selections= ";
-        dumpvs( m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kAnything, 
-                                                     ITriggerTisTos::kAnything,
-                                                     ITriggerTisTos::kTrueRequired ) );
-        verbose() << endmsg;
-
-        test &= tuple->column( head+"_HLTSELTOS", 1 );
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kTrueRequired,
-                                                   ITriggerTisTos::kAnything,
-                                                   ITriggerTisTos::kTrueRequired ), test,"TOS",1,head,tuple);
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kTrueRequired,
-                                                   ITriggerTisTos::kAnything,
-                                                   ITriggerTisTos::kFalseRequired ), test,"TOS",0,head,tuple);
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kFalseRequired,
-                                                   ITriggerTisTos::kAnything,
-                                                   ITriggerTisTos::kAnything ), test,"TOS",-1,head,tuple);
-      } else {
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kTrueRequired,
-                                                   ITriggerTisTos::kAnything,
-                                                   ITriggerTisTos::kAnything ), test,"TOS",0,head,tuple);
-        saveTriggers(m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kFalseRequired,
-                                                   ITriggerTisTos::kAnything,
-                                                   ITriggerTisTos::kAnything ), test,"TOS",-1,head,tuple);
-        test &= tuple->column( head+"_HLTSELTOS", 0 );
-      }
+    //Do the Hl2
+    m_TriggerTisTosTool->setTriggerInput("Hlt2*Decision", ITriggerTisTos::kAllTriggerSelections);
+    //Fill the decision, tis and tos parametres for the Hlt2 as a whole
+    m_TriggerTisTosTool->triggerTisTos(decision,tis,tos);
+    tuple->column( head+"Hlt2Global"+"_Dec", decision);
+    tuple->column( head+"Hlt2Global"+"_TIS", tis);
+    tuple->column( head+"Hlt2Global"+"_TOS", tos);
+    //Now loop over all the subtriggers
+    vs = m_TriggerTisTosTool->triggerSelectionNames();
+    for( std::vector< std::string >::const_iterator s=vs.begin();s != vs.end();++s){
+      m_TriggerTisTosTool->triggerTisTos(*s,decision,tis,tos,ITriggerTisTos::kAllTriggerSelections);
+      tuple->column( head+*s+"_Dec", decision);
+      tuple->column( head+*s+"_TIS", tis);
+      tuple->column( head+*s+"_TOS", tos);
     }
-   
+
   } else {
     return StatusCode::FAILURE;
   }
