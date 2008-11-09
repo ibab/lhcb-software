@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.45 2008-11-05 18:16:35 gligorov Exp $
+// $Id: BackgroundCategory.cpp,v 1.46 2008-11-09 17:40:32 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -1063,7 +1063,7 @@ MCParticleVector BackgroundCategory::associate_particles_in_decay(ParticleVector
       //verbose() << "Associating step 4a - loop step " << verboses << endmsg;
       verbose() << "Protoparticle of " << (*iP)->particleID().pid() << " is at " << protoTemp << endmsg;
       const LHCb::MCParticle* mcTemp;
-      if (protoTemp = NULL) {
+      if (protoTemp == NULL) {
         associated_mcparts.push_back(NULL);
         continue;
       }
