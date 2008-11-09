@@ -1,4 +1,4 @@
-// $Id: iTree.h,v 1.2 2008-10-27 15:03:40 cattanem Exp $
+// $Id: iTree.h,v 1.3 2008-11-09 17:10:06 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ITREE_H 
 #define LOKI_ITREE_H 1
@@ -199,14 +199,15 @@ LoKi::Decays::Tree_<PARTICLE>::operator=
 ( const LoKi::Decays::iTree_<PARTICLE>& right ) // assignement 
 {
   if ( &right == this ) { return *this ; } 
-  LoKi::Decays::Tree_<PARTICLE>* tree = 0 ;
+  LoKi::Decays::iTree_<PARTICLE>* tree = 0 ;
+  typedef LoKi::Decays::Tree_<PARTICLE> Self ;
   //
-  if ( typeid ( LoKi::Decays::Tree_<PARTICLE> ) == typeid ( right ) ) 
-  {
-    const Tree_& _tree = dynamic_cast<const Tree_&>( right ) ;
-    tree = _tree.m_tree->clone() ;
+  if ( typeid ( Self ) == typeid ( right ) ) 
+  { 
+    const Self* self = dynamic_cast<const Self*>( &right ) ;  
+    tree = self->m_tree->clone() ; 
   }
-  else { tree = right.clone() ; }
+  else { tree = right.clone()         ; }
   //
   delete m_tree ; 
   m_tree = tree ;
