@@ -1,3 +1,8 @@
+2008-11-10  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/LbLogin.py: added option --no-userarea to remove it from the overall 
+	configuration
+
 2008-10-31  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v1r9

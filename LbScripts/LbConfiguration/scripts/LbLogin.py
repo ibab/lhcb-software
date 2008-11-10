@@ -23,12 +23,12 @@ import sys, os, logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.16 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.17 $")
 
 
 def getLbLoginEnv(debug=False, 
                   targetshell="csh", mysiteroot=None,
-                  cmtconfig=None, userarea=None,
+                  cmtconfig=None, userarea=None, remove_userarea=False,
                   cmtvers="v1r20p20070208", sharedarea=None,
                   cmtsite=None):
     s = LbLoginScript()
@@ -37,6 +37,7 @@ def getLbLoginEnv(debug=False,
     s.options.mysiteroot = mysiteroot
     s.options.cmtconfig = cmtconfig
     s.options.userarea = userarea
+    s.options.remove_userarea = remove_userarea
     s.options.cmtvers = cmtvers
     s.options.sharedarea = sharedarea
     s.options.cmtsite = cmtsite
@@ -129,11 +130,6 @@ class LbLoginScript(Script):
                           dest="mysiteroot",
                           help="set MYSITEROOT", 
                           fallback_env="MYSITEROOT")
-#        parser.add_option("-m", "--mysiteroot",
-#                          dest="mysiteroot",
-#                          help="set MYSITEROOT", 
-#                          fallback_env="MYSITEROOT" ,
-#                          fallback_conf=os.getcwd())
         parser.set_defaults(cmtconfig=None)
         parser.add_option("-c", "--cmtconfig",
                           dest="cmtconfig",
@@ -144,6 +140,11 @@ class LbLoginScript(Script):
                           dest="userarea",
                           help="set User_release_area", 
                           fallback_env="User_release_area")
+        parser.set_defaults(remove_userarea=False)
+        parser.add_option("--no-userarea",
+                          dest="remove_userarea",
+                          action="store_true",
+                          help="prevent the addition of a user area [default: %default]")
         parser.set_defaults(cmtvers="v1r20p20070208")
         parser.add_option("--cmtvers",
                           dest="cmtvers",
@@ -397,39 +398,40 @@ class LbLoginScript(Script):
     def setUserArea(self):
         log = logging.getLogger()
         opts = self.options
-        ev = self._env
-        al = self._aliases
-        newdir = False
-        if not opts.userarea :
-            opts.userarea = os.path.join(ev["HOME"], "cmtuser") # @todo: use something different for window
-        ev["User_release_area"] = opts.userarea
-
-        if os.path.exists(opts.userarea) :
-            if not os.path.isdir(opts.userarea) :
-                os.rename(opts.userarea, opts.userarea + "_bak")
-                log.warning("Renamed file %s into %s" % (opts.userarea, opts.userarea + "_bak"))
+        if not opts.remove_userarea :
+            ev = self._env
+            al = self._aliases
+            newdir = False
+            if not opts.userarea :
+                opts.userarea = os.path.join(ev["HOME"], "cmtuser") # @todo: use something different for window
+            ev["User_release_area"] = opts.userarea
+    
+            if os.path.exists(opts.userarea) :
+                if not os.path.isdir(opts.userarea) :
+                    os.rename(opts.userarea, opts.userarea + "_bak")
+                    log.warning("Renamed file %s into %s" % (opts.userarea, opts.userarea + "_bak"))
+                    os.mkdir(opts.userarea)
+                    newdir = True
+                    self._add_echo(" --- a new cmtuser directory has been created in your HOME directory")
+            else :
                 os.mkdir(opts.userarea)
                 newdir = True
-                self._add_echo(" --- a new cmtuser directory has been created in your HOME directory")
-        else :
-            os.mkdir(opts.userarea)
-            newdir = True
-
-        if opts.cmtsite == "CERN" :
-            if newdir :
-                os.system("fs setacl %s system:anyuser rl" % opts.userarea )
-                self._add_echo( " --- with public access (readonly)" )
-                self._add_echo( " --- use mkprivate to remove public access to the current directory" )
-                self._add_echo( " --- use mkpublic to give public access to the current directory" )
-            al["mkprivate"] = "find . -type d -print -exec fs setacl {} system:anyuser l \\;"
-            al["mkpublic"] = "find . -type d -print -exec fs setacl {} system:anyuser rl \\;"
-
-        dirm = os.path.join(opts.userarea, "cmt")
-        if os.path.exists(dirm) :
-            if os.path.isdir(dirm):
-                os.rmdir(dirm)
-            else:
-                os.remove(dirm)
+    
+            if opts.cmtsite == "CERN" :
+                if newdir :
+                    os.system("fs setacl %s system:anyuser rl" % opts.userarea )
+                    self._add_echo( " --- with public access (readonly)" )
+                    self._add_echo( " --- use mkprivate to remove public access to the current directory" )
+                    self._add_echo( " --- use mkpublic to give public access to the current directory" )
+                al["mkprivate"] = "find . -type d -print -exec fs setacl {} system:anyuser l \\;"
+                al["mkpublic"] = "find . -type d -print -exec fs setacl {} system:anyuser rl \\;"
+    
+            dirm = os.path.join(opts.userarea, "cmt")
+            if os.path.exists(dirm) :
+                if os.path.isdir(dirm):
+                    os.rmdir(dirm)
+                else:
+                    os.remove(dirm)
             
     def setSharedArea(self):
         log = logging.getLogger()
@@ -560,14 +562,17 @@ class LbLoginScript(Script):
                 del ev["CMTPATH"]
         else :    
             if opts.cmtvers.find("v1r20") == -1 :
-                ev["CMTPATH"] = ev["User_release_area"]
+                if not opts.remove_userarea:
+                    ev["CMTPATH"] = ev["User_release_area"]
                 if ev.has_key("CMTPROJECTPATH") :
                     del ev["CMTPROJECTPATH"]
             else :
                 if ev.has_key("CMTPATH") :
                     del ev["CMTPATH"]
-                ev["CMTPROJECTPATH"] = os.pathsep.join([ev["User_release_area"], ev["LHCBPROJECTPATH"]])
-
+                if not opts.remove_userarea :
+                    ev["CMTPROJECTPATH"] = os.pathsep.join([ev["User_release_area"], ev["LHCBPROJECTPATH"]])
+                else :
+                    ev["CMTPROJECTPATH"] = ev["LHCBPROJECTPATH"]
     
     def setupLbScripts(self):
         ev = self._env
