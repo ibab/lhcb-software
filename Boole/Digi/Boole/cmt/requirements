@@ -1,5 +1,5 @@
 package Boole
-version v16r4
+version v17r0
 
 branches doc cmt job options
 
@@ -50,16 +50,13 @@ use RichMCAssociators  v*    Rich   -no_auto_imports
 use RichDigiSys        v*    Rich   -no_auto_imports
 use STDigiAlgorithms   v*    ST     -no_auto_imports
 
-#===== build Boole =========================
-application Boole $(GAUDICONFROOT)/src/GaudiMain.cpp
-# ========================= set macros ============================
-
-macro Boole_linkopts    "${application_linkopts}"
-
-apply_pattern application_path
+# ========================= Install configurable ============================
 apply_pattern install_python_modules
+
+# ==========  Export application name and version to gaudirun.py ============
 apply_pattern GaudiApp
 
+# Run the tests
 private
   apply_pattern QMTest
 end_private
