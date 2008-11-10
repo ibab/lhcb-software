@@ -1,9 +1,21 @@
-! $Id: release.notes,v 1.13 2008-11-02 20:44:03 ibelyaev Exp $
+! $Id: release.notes,v 1.14 2008-11-10 17:31:53 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiTrigger
 ! Responsible : Vanya BELYAEV
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
+
+! 2008-11-10 - Vanya BELYAEV
+
+ - LoKi/IHltUnit.h
+   src/IHltUnit.cpp
+
+    new abstract interface for implementation of "HltUnit"
+
+ - src/component/HltUnit.h
+   src/Components
+
+   the simplest implementation of "HltUnit"
 
 ! 2008-11-02 - Vanya BELYAEV
 
