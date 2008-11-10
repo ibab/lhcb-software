@@ -9,12 +9,10 @@ ConditionPaths =  ["/dd/Conditions/Online/Velo/MotionSystem",
                    "/dd/Conditions/Alignment/Velo/VeloRight"]
 
 def configure():
-    from Gaudi.Configuration import (importOptions,
-                                     ApplicationMgr,
-                                     MessageSvc,
-                                     DetectorDataSvc)
-    importOptions("$DDDBROOT/options/DDDB.py")
-    DetectorDataSvc().DetDbLocation = "../data/lhcb.xml"
+    from Gaudi.Configuration import (ApplicationMgr,
+                                     MessageSvc)
+    from Configurables import DDDBConf
+    DDDBConf(DbRoot = "../data/lhcb.xml")
     
     # This is needed to trigger the instantiation of the update manager service 
     from Configurables import DetCondTest__TestConditionAlg
@@ -47,13 +45,13 @@ def main():
     
     from Gaudi.Configuration import configurationDict
     from pprint import pprint
-    pprint(configurationDict())
     
     import ROOT
     ROOT.gSystem.Load("libMathCore")
     
     import GaudiPython
     app = GaudiPython.AppMgr()
+    pprint(configurationDict())
     app.initialize()
     
     dds = app.detsvc()
