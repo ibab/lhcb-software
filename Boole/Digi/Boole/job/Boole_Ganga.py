@@ -43,7 +43,7 @@
 #-------------------------------------------------------------------------------
 # Make a new job object for Boole
 #-------------------------------------------------------------------------------
-j = Job( application = Boole( version = 'v16r4' ) )
+j = Job( application = Boole( version = 'v17r0' ) )
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
@@ -57,7 +57,7 @@ j.name = 'MyBoole'
 #-------------------------------------------------------------------------------
 # Define the configuration file(s) to use
 myOptsPath = ( j.application.user_release_area + '/Boole_' +
-               j.application.version + '/Digi/Boole/options/' +
+               j.application.version + '/Digi/Boole/options/' )
 j.application.optsfile = [ File ( myOptsPath + 'Boole-Default.py' ),
                            File ( myOptsPath + 'DC06-Files.py'    ) ]
 # Extra options
