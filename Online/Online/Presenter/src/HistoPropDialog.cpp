@@ -55,6 +55,11 @@ void HistoPropDialog::ok()
   m_mainFrame->bulkHistoOptions.m_genericRootDrawOption =
     dynamic_cast<TGTextLBEntry*>(m_genericRootDrawOptionComboBox->
     GetSelectedEntry())->GetText()->GetString();
+  
+  m_mainFrame->bulkHistoOptions.m_description =  
+    dynamic_cast<TGText*>(m_histogramDescriptionField->GetText())->AsString();  
+
+std::cout << "desc: " << m_mainFrame->bulkHistoOptions.m_description << std::endl;
 
     if (1 == m_statOptionComboBox->GetSelected()) {
       m_mainFrame->bulkHistoOptions.m_statsOption = 11111110;
@@ -368,9 +373,9 @@ void HistoPropDialog::build()
   // "Description" group frame
   TGGroupFrame *fGroupFrame761 = new TGGroupFrame(fCompositeFrame649,
                                                   "Description");
-  TGTextEdit *fTextEdit762 = new TGTextEdit(fGroupFrame761, 592, 104);
-  //   fTextEdit762->LoadFile("TxtEdit1101");
-  fGroupFrame761->AddFrame(fTextEdit762,
+  m_histogramDescriptionField = new TGTextEdit(fGroupFrame761, 592, 104);
+  m_histogramDescriptionField->EnableMenu(true);
+  fGroupFrame761->AddFrame(m_histogramDescriptionField,
                            new TGLayoutHints(kLHintsLeft | kLHintsTop,
                                              2, 2, 2, 2));
 

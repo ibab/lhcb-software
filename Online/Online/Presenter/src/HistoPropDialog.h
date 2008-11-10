@@ -9,6 +9,7 @@ class TGComboBox;
 class TGTextButton;
 class TGTextBuffer;
 class TGTextEntry;
+class TGTextEdit;
 class TGedPatternSelect;
 class TGLineWidthComboBox;
 class TGColorSelect;
@@ -39,6 +40,7 @@ class HistoPropDialog : public TGTransientFrame
 
     TGTextEntry        *m_xAxisLabelTextEntry;
     TGTextEntry        *m_yAxisLabelTextEntry;
+    TGTextEdit         *m_histogramDescriptionField;
 
     TGLineWidthComboBox*  m_lineWidthComboBox;
     TGedPatternSelect*  m_fillStylePatternSelector;

@@ -75,7 +75,7 @@ PresenterMainFrame::PresenterMainFrame(const char* name,
                                        const int & height) :
   TGMainFrame(gClient->GetRoot(), width, height, kLHintsExpandX | kLHintsExpandY),
   currentTime(NULL),
-  global_timePoint("20071126T160921"),
+  global_timePoint("20081126T160921"),
   global_pastDuration("00:05:00"),
   global_stepSize("00:15:00"),
   m_verbosity(Silent),
@@ -95,6 +95,7 @@ PresenterMainFrame::PresenterMainFrame(const char* name,
   m_pageRefreshTimer(NULL),
   m_clockTimer(NULL),
   m_clearedHistos(false),
+  m_historyTrendPlots(false),
   m_referencesOverlayed(false),
   m_refreshingPage(false),
   m_histogramDB(NULL),
@@ -151,7 +152,8 @@ PresenterMainFrame::PresenterMainFrame(const char* name,
   m_histogramTypes.reserve(s_estimatedDimServiceCount);
   dbHistosOnPage.reserve(s_estimatedHistosOnPage);
 
-  m_knownPartitionList = new TList();
+  m_knownOnlinePartitionList = new TList();
+  m_knownHistoryPartitionList = new TList();
 
   buildGUI();
   
@@ -172,12 +174,13 @@ PresenterMainFrame::PresenterMainFrame(const char* name,
                  kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
   } else {
     refreshDimSvcList(s_withoutTree);
+    refreshPartitionSelectorPopupMenu();
     m_mainStatusBar->SetText("Ok.");
   }
 
   m_archive = new Archive(this, m_archiveRoot, m_savesetPath, m_referencePath);
   if (0 != m_archive) { m_archive->setVerbosity(m_verbosity); }
-  m_intervalPicker = new IntervalPicker(this);  
+  m_intervalPicker = new IntervalPicker(this);
 }
 PresenterMainFrame::~PresenterMainFrame()
 {
@@ -204,16 +207,21 @@ PresenterMainFrame::~PresenterMainFrame()
     m_intervalPicker->UnmapWindow();
     m_intervalPicker->CloseWindow();
     delete m_intervalPicker; m_intervalPicker = NULL;
-  }  
+  }
   if (0 != m_clockTimer) { delete m_clockTimer; m_clockTimer = NULL; }
   if (0 != m_pageRefreshTimer) {
     delete m_pageRefreshTimer;
     m_pageRefreshTimer = NULL;
   }
-  if (0 != m_knownPartitionList) {
-    m_knownPartitionList->Delete();
-    delete m_knownPartitionList;
-    m_knownPartitionList = NULL;
+  if (0 != m_knownOnlinePartitionList) {
+    m_knownOnlinePartitionList->Delete();
+    delete m_knownOnlinePartitionList;
+    m_knownOnlinePartitionList = NULL;
+  }
+  if (0 != m_knownHistoryPartitionList) {
+    m_knownHistoryPartitionList->Delete();
+    delete m_knownHistoryPartitionList;
+    m_knownHistoryPartitionList = NULL;
   }
   if (gPresenter == this) { gPresenter = 0; }
 }
@@ -242,8 +250,9 @@ void PresenterMainFrame::buildGUI()
   m_viewText = new TGHotString("&View");
     m_viewStartRefreshText = new TGHotString("Start Page &Refresh");
     m_viewStopRefreshText = new TGHotString("&Stop Page Refresh");
+    m_viewToggleHistoryPlotsText = new TGHotString("&History plots");
     m_viewToggleReferenceOverlayText = new TGHotString("&Overlay Reference");
-    m_viewInspectHistoText = new TGHotString("Inspect &Histogram");
+    m_viewInspectHistoText = new TGHotString("&Inspect &istogram");
     m_viewInspectPageText  = new TGHotString("Inspect &Page");
     m_viewClearHistosText = new TGHotString("&Clear Histograms");
     m_viewUnDockPageText = new TGHotString("&Undock Page");
@@ -283,6 +292,8 @@ void PresenterMainFrame::buildGUI()
   //m_iconSet = gClient->GetPicture("pack-empty.xpm");
   m_iconSet = gClient->GetPicture("pack-empty_t.xpm");
   m_iconLevel = gClient->GetPicture("bld_vbox.png");
+  
+  m_stockNewFormula =  picpool->GetPicture("stock_new_formula_xpm", stock_new_formula_xpm);
 
   // File menu
   m_fileMenu = new TGPopupMenu(fClient->GetRoot());
@@ -324,6 +335,9 @@ m_editMenu->DisableEntry(EDIT_PAGE_PROPERTIES_COMMAND);
   m_viewMenu->AddEntry(m_viewStartRefreshText, START_COMMAND);
   m_viewMenu->AddEntry(m_viewStopRefreshText, STOP_COMMAND);
   m_viewMenu->DisableEntry(STOP_COMMAND);
+  m_viewMenu->AddEntry(m_viewToggleHistoryPlotsText,
+                       HISTORY_PLOTS_COMMAND);
+  m_viewMenu->UnCheckEntry(HISTORY_PLOTS_COMMAND);
   m_viewMenu->AddEntry(m_viewToggleReferenceOverlayText,
                        OVERLAY_REFERENCE_HISTO_COMMAND);
   m_viewMenu->UnCheckEntry(OVERLAY_REFERENCE_HISTO_COMMAND);                     
@@ -334,6 +348,7 @@ m_editMenu->DisableEntry(EDIT_PAGE_PROPERTIES_COMMAND);
   m_viewMenu->AddEntry(m_viewDockAllText, DOCK_ALL_COMMAND);
   m_viewMenu->Connect("Activated(Int_t)", "PresenterMainFrame",
                       this, "handleCommand(Command)");
+m_viewMenu->DisableEntry(HISTORY_PLOTS_COMMAND);
 m_viewMenu->DisableEntry(OVERLAY_REFERENCE_HISTO_COMMAND);
 
   // Mode menu
@@ -479,16 +494,17 @@ m_viewMenu->DisableEntry(OVERLAY_REFERENCE_HISTO_COMMAND);
   m_toolBar->AddButton(this, m_clearHistoButton, 0);
   m_clearHistoButton->Connect("Clicked()", "PresenterMainFrame", this,
                               "clearHistos()");
+  // SetToggleButton(Bool_t)                              
 
   //UTGID selector (partition)
-  m_utgidSelectorPopupMenu = new TGPopupMenu(gClient->GetRoot());
-  m_utgidSelectorPopupMenu->AddEntry("refresh partitions", M_RefreshKnownUTGIDs);
+  m_partitionSelectorPopupMenu = new TGPopupMenu(gClient->GetRoot());
+  m_partitionSelectorPopupMenu->AddEntry("refresh partitions", M_RefreshKnownPartitions);
   // Create a split button, the menu is adopted.
-  m_utgidSelectorQuickButton = new TGSplitButton(m_toolBar,
+  m_partitionSelectorQuickButton = new TGSplitButton(m_toolBar,
                                                 new TGHotString("lhcb"),
-                                                m_utgidSelectorPopupMenu);
-  m_toolBar->AddButton(this, (TGPictureButton*)m_utgidSelectorQuickButton, 8);
-  m_utgidSelectorQuickButton->Connect("ItemClicked(Int_t)", "PresenterMainFrame",
+                                                m_partitionSelectorPopupMenu);
+  m_toolBar->AddButton(this, (TGPictureButton*)m_partitionSelectorQuickButton, 8);
+  m_partitionSelectorQuickButton->Connect("ItemClicked(Int_t)", "PresenterMainFrame",
                                      this, "handleCommand(Command)");
 
   //History mode
@@ -528,6 +544,17 @@ m_viewMenu->DisableEntry(OVERLAY_REFERENCE_HISTO_COMMAND);
                                         this, "handleCommand(Command)");
   m_historyIntervalQuickButton->SetState(kButtonDisabled);
 
+  // History plots
+  m_historyPlotsButton= new TGPictureButton(m_toolBar, m_stockNewFormula,
+                                             HISTORY_PLOTS_COMMAND);
+  m_historyPlotsButton->SetToolTipText("Toggle history plot merge or trend mode");
+  m_historyPlotsButton->AllowStayDown(true);
+  m_toolBar->AddButton(this, m_historyPlotsButton, 8);
+  m_historyPlotsButton->Connect("Clicked()", "PresenterMainFrame",
+                                this, "toggleHistoryPlots()");
+  m_historyPlotsButton->SetState(kButtonDisabled);
+  // SetToggleButton(Bool_t)
+
   // Reference
   const TGPicture* f2_tpic = picpool->GetPicture("f2_t.xpm");
   m_overlayReferenceHistoButton = new TGPictureButton(m_toolBar, f2_tpic,
@@ -538,6 +565,7 @@ m_viewMenu->DisableEntry(OVERLAY_REFERENCE_HISTO_COMMAND);
   m_overlayReferenceHistoButton->Connect("Clicked()", "PresenterMainFrame",
                                          this, "toggleReferenceOverlay()");
   m_overlayReferenceHistoButton->SetState(kButtonDisabled);
+  // SetToggleButton(Bool_t) 
 
   // Set reference
   const TGPicture* f1_tpic = picpool->GetPicture("f1_t.xpm");
@@ -847,7 +875,7 @@ m_viewMenu->DisableEntry(OVERLAY_REFERENCE_HISTO_COMMAND);
                                                            kLHintsExpandX |
                                                            kLHintsExpandY,
                                                            0, 0, 0, 0));
-        // Datbase histogram filter box
+        // Database histogram filter box
         m_histoDBFilterComboBox = new TGComboBox(databaseHistogramGroupFrame, -1,
                                                  kHorizontalFrame | kDoubleBorder |
                                                  kSunkenFrame | kOwnBackground);
@@ -1071,9 +1099,10 @@ void PresenterMainFrame::handleCommand(Command cmd)
       break;
     case M_RefreshHistoDIMListTree_COMMAND:
       refreshDimSvcList(s_withTree);
+      refreshPartitionSelectorPopupMenu();
       break;
-    case M_RefreshKnownUTGIDs:
-      refreshDimSvcList(s_withoutTree);
+    case M_RefreshKnownPartitions:
+      refreshPartitionSelectorPopupMenu();
       break;
     case M_AddDBHistoToPage_COMMAND:
         addDbHistoToPage();
@@ -1155,9 +1184,12 @@ void PresenterMainFrame::handleCommand(Command cmd)
     case PICK_REFERENCE_HISTO_COMMAND:
       pickReferenceHistogram();
       break;
+    case HISTORY_PLOTS_COMMAND:
+      toggleHistoryPlots();
+      break;
     case OVERLAY_REFERENCE_HISTO_COMMAND:      
       toggleReferenceOverlay();
-      break;      
+      break;          
     case SAVE_AS_REFERENCE_HISTO_COMMAND:      
       saveSelectedHistogramAsReference();
       break;
@@ -1212,27 +1244,27 @@ void PresenterMainFrame::setArchiveRoot(const std::string & archiveRoot) {
   if (!m_archiveRoot.empty() && m_archive) {
     m_archive->setArchiveRoot(m_archiveRoot);
     
-    m_referencePath = m_archiveRoot + m_referencePath;
-    m_savesetPath = m_archiveRoot + m_savesetPath;
+//    m_referencePath = m_archiveRoot + m_referencePath;
+//    m_savesetPath = m_archiveRoot + m_savesetPath;
         
-    m_archive->setReferencePath(m_referencePath);
-    m_archive->setSavesetPath(m_savesetPath);
+//    m_archive->setReferencePath(m_referencePath);
+//    m_archive->setSavesetPath(m_savesetPath);
   }
 }
 void PresenterMainFrame::setReferencePath(const std::string & referencePath) {
-  m_referencePath = m_archiveRoot + referencePath;
+  m_referencePath = referencePath;
   if (m_analysisLib) m_analysisLib->setRefRoot(m_referencePath);
   if (!m_referencePath.empty()) {
     if (0 != m_archive) {
-      m_archive->setReferencePath(m_archiveRoot + m_referencePath);
+      m_archive->setReferencePath(m_referencePath);
     }
   }
 }
 void PresenterMainFrame::setSavesetPath(const std::string & savesetPath) {
-  m_savesetPath = m_archiveRoot + savesetPath;
+  m_savesetPath = savesetPath;
   if (!m_savesetPath.empty()) {
     if (0 != m_archive) {
-      m_archive->setSavesetPath(m_archiveRoot + m_savesetPath);
+      m_archive->setSavesetPath(m_savesetPath);
     }
   }
 }
@@ -1260,7 +1292,7 @@ void PresenterMainFrame::setPresenterMode(const PresenterMode & presenterMode)
 }
 void PresenterMainFrame::enableAutoCanvasLayoutBtn()
 {
-  m_autoCanvasLayoutButton->SetState(kButtonEngaged);
+//  m_autoCanvasLayoutButton->SetState(kButtonEngaged);
   m_autoCanvasLayoutButton->SetState(kButtonUp);
 }
 void PresenterMainFrame::disableAutoCanvasLayoutBtn()
@@ -1336,7 +1368,7 @@ void PresenterMainFrame::setStartupHistograms(const std::vector<std::string> & h
         paintHist(dbRootHist);
       }
     }
-    ++histogramListIt;
+    histogramListIt++;
   }
   autoCanvasLayout();
 }
@@ -1975,6 +2007,8 @@ void PresenterMainFrame::reconfigureGUI()
   }
 
   if (Online == m_presenterMode) {
+    if (m_historyTrendPlots) { toggleHistoryPlots(); }
+    
     m_toolMenu->CheckEntry(ONLINE_MODE_COMMAND);
     m_toolMenu->UnCheckEntry(PAGE_EDITOR_MODE_COMMAND);
     m_toolMenu->UnCheckEntry(OFFLINE_MODE_COMMAND);
@@ -1991,6 +2025,9 @@ void PresenterMainFrame::reconfigureGUI()
     m_previousIntervalButton->SetState(kButtonDisabled);
     m_nextIntervalButton->SetState(kButtonDisabled);
     
+    m_historyPlotsButton->SetState(kButtonDisabled);
+    m_viewMenu->DisableEntry(HISTORY_PLOTS_COMMAND);
+
     m_overlayReferenceHistoButton->SetState(kButtonEngaged);
     m_overlayReferenceHistoButton->SetState(kButtonUp);
     m_viewMenu->EnableEntry(OVERLAY_REFERENCE_HISTO_COMMAND);
@@ -2001,8 +2038,8 @@ void PresenterMainFrame::reconfigureGUI()
     m_viewMenu->DisableEntry(SAVE_AS_REFERENCE_HISTO_COMMAND);
 
     m_historyIntervalQuickButton->SetState(kButtonDisabled);
-    m_utgidSelectorQuickButton->SetState(kButtonEngaged);    
-    m_utgidSelectorQuickButton->SetState(kButtonUp);
+//    m_partitionSelectorQuickButton->SetState(kButtonEngaged);    
+//    m_partitionSelectorQuickButton->SetState(kButtonUp);
 
     // hide refreshHistoDBListTree
 //    if (!isConnectedToHistogramDB()) { refreshDimSvcList(); }
@@ -2030,9 +2067,13 @@ void PresenterMainFrame::reconfigureGUI()
 
     m_historyIntervalQuickButton->SetState(kButtonEngaged);
     m_historyIntervalQuickButton->SetState(kButtonUp);
-    m_utgidSelectorQuickButton->SetState(kButtonDisabled);
+//    m_partitionSelectorQuickButton->SetState(kButtonDisabled);
 
-    m_overlayReferenceHistoButton->SetState(kButtonEngaged);
+//    m_historyPlotsButton->SetState(kButtonEngaged);
+    m_historyPlotsButton->SetState(kButtonUp);
+    m_viewMenu->EnableEntry(HISTORY_PLOTS_COMMAND);
+
+//    m_overlayReferenceHistoButton->SetState(kButtonEngaged);
     m_overlayReferenceHistoButton->SetState(kButtonUp);
     m_viewMenu->EnableEntry(OVERLAY_REFERENCE_HISTO_COMMAND);
     
@@ -2046,6 +2087,7 @@ void PresenterMainFrame::reconfigureGUI()
     stopPageRefresh();
     if (m_clearedHistos) { clearHistos(); }
     if (m_referencesOverlayed) { toggleReferenceOverlay(); }
+    if (m_historyTrendPlots) { toggleHistoryPlots(); }
     // enable play/stop/reset!
     m_toolMenu->CheckEntry(PAGE_EDITOR_MODE_COMMAND);
     m_toolMenu->UnCheckEntry(ONLINE_MODE_COMMAND);
@@ -2081,18 +2123,22 @@ void PresenterMainFrame::reconfigureGUI()
 
     m_historyIntervalQuickButton->SetState(kButtonEngaged);
     m_historyIntervalQuickButton->SetState(kButtonUp);
-    m_utgidSelectorQuickButton->SetState(kButtonEngaged);
-    m_utgidSelectorQuickButton->SetState(kButtonUp);
+//    m_partitionSelectorQuickButton->SetState(kButtonEngaged);
+//    m_partitionSelectorQuickButton->SetState(kButtonUp);
+
+    m_historyPlotsButton->SetState(kButtonDisabled);
+    m_viewMenu->DisableEntry(HISTORY_PLOTS_COMMAND);
     
 //    m_overlayReferenceHistoButton->SetState(kButtonDisabled);
 //    m_viewMenu->DisableEntry(OVERLAY_REFERENCE_HISTO_COMMAND);
-    m_overlayReferenceHistoButton->SetState(kButtonEngaged);
+//    m_overlayReferenceHistoButton->SetState(kButtonEngaged);
     m_overlayReferenceHistoButton->SetState(kButtonUp);
     m_viewMenu->EnableEntry(OVERLAY_REFERENCE_HISTO_COMMAND);
     
     // show refreshHistoDBListTree
   }
 
+//  refreshPartitionSelectorPopupMenu();
   fClient->NeedRedraw(this);
   Resize();DoRedraw(); // wtf would trigger a redraw???
 //  DoRedraw();
@@ -2134,9 +2180,9 @@ void PresenterMainFrame::showDBTools(DatabaseMode databasePermissions)
 
   if (ReadWrite == databasePermissions) {
     m_dimContextMenu->EnableEntry(M_AddDimToDB_COMMAND);
-    m_savePageToDatabaseButton->SetState(kButtonEngaged);
+//    m_savePageToDatabaseButton->SetState(kButtonEngaged);
     m_savePageToDatabaseButton->SetState(kButtonUp);
-    m_pickReferenceHistoButton->SetState(kButtonEngaged);
+//    m_pickReferenceHistoButton->SetState(kButtonEngaged);
     m_pickReferenceHistoButton->SetState(kButtonUp);
     m_fileMenu->EnableEntry(SAVE_PAGE_TO_DB_COMMAND);
     m_pagesContextMenu->EnableEntry(M_DeletePage_COMMAND);
@@ -2144,7 +2190,7 @@ void PresenterMainFrame::showDBTools(DatabaseMode databasePermissions)
     m_histoDBContextMenu->EnableEntry(M_SetHistoPropertiesInDB_COMMAND);
     m_histoDBContextMenu->EnableEntry(M_DeleteDBHisto_COMMAND);
     
-    m_pickReferenceHistoButton->SetState(kButtonEngaged);
+//    m_pickReferenceHistoButton->SetState(kButtonEngaged);
     m_pickReferenceHistoButton->SetState(kButtonUp);
     m_editMenu->EnableEntry(PICK_REFERENCE_HISTO_COMMAND);
     m_editMenu->EnableEntry(SAVE_AS_REFERENCE_HISTO_COMMAND);
@@ -2177,183 +2223,220 @@ void PresenterMainFrame::refreshPagesDBListTree() {
   listFromHistogramDB(m_pagesFromHistoDBListTree, FoldersAndPages,
                       s_withoutHistograms);
 }
+
 void PresenterMainFrame::refreshDimSvcList(bool tree) {
 gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
 
-  m_candidateDimServices.clear();
-  m_knownDimServices.clear();
-  m_histogramTypes.clear();
-  m_knownPartitionList->Delete();
+  if (Online == m_presenterMode || Editor == m_presenterMode) {
+    m_candidateDimServices.clear();
+    m_knownDimServices.clear();
+    m_histogramTypes.clear();
+    m_knownOnlinePartitionList->Delete();
+    
+    char *dimService; 
+    char *dimFormat;
+    int dimType;
   
-  char *dimService; 
-  char *dimFormat;
-  int dimType;
-
-
-//TODO: put known Mon prefixes into a list and cycle through...
-  // s_pfixMonH1F
-  std::string serviceType(s_pfixMonH1F);
-  (serviceType.append(s_slash)).append("*");
-  m_dimBrowser->getServices(serviceType.c_str());
-  while(dimType = m_dimBrowser->getNextService(dimService, dimFormat)) {            
-    m_candidateDimServices.push_back(std::string(dimService));
-  }
-  // s_pfixMonH1D
-  serviceType = s_pfixMonH1D;
-  (serviceType.append(s_slash)).append("*");
-  m_dimBrowser->getServices(serviceType.c_str());
-  while(dimType = m_dimBrowser->getNextService(dimService, dimFormat)) {            
-    m_candidateDimServices.push_back(std::string(dimService));
-  }
-  // s_pfixMonH2F
-  serviceType = s_pfixMonH2F;
-  (serviceType.append(s_slash)).append("*");
-  m_dimBrowser->getServices(serviceType.c_str());
-  while(dimType = m_dimBrowser->getNextService(dimService, dimFormat)) {            
-    m_candidateDimServices.push_back(std::string(dimService));
-  }
-  // s_pfixMonH2D
-  serviceType = s_pfixMonH2D;
-  (serviceType.append(s_slash)).append("*");
-  m_dimBrowser->getServices(serviceType.c_str());
-  while(dimType = m_dimBrowser->getNextService(dimService, dimFormat)) {            
-    m_candidateDimServices.push_back(std::string(dimService));
-  }
-  // s_pfixMonProfile
-  serviceType = s_pfixMonProfile;
-  (serviceType.append(s_slash)).append("*");
-  m_dimBrowser->getServices(serviceType.c_str());
-  while(dimType = m_dimBrowser->getNextService(dimService, dimFormat)) {            
-    m_candidateDimServices.push_back(std::string(dimService));
-  }
-  // "H1D", "H2D", "P1D", "P2D", "CNT", "SAM" -- is this uncle SAM?
-  for (int it = 0; it < OnlineHistDBEnv_constants::NHTYPES; ++it) {
-    std::string serviceType(OnlineHistDBEnv_constants::HistTypeName[it]);
+  
+  //TODO: put known Mon prefixes into a list and cycle through...
+    // s_pfixMonH1F
+    std::string serviceType(s_pfixMonH1F);
     (serviceType.append(s_slash)).append("*");
     m_dimBrowser->getServices(serviceType.c_str());
     while(dimType = m_dimBrowser->getNextService(dimService, dimFormat)) {            
       m_candidateDimServices.push_back(std::string(dimService));
-    }        
-  }
-  // HPD
-  serviceType = s_HPD;
-  (serviceType.append(s_slash)).append("*");
-  m_dimBrowser->getServices(serviceType.c_str());
-  while(dimType = m_dimBrowser->getNextService(dimService, dimFormat)) {            
-    m_candidateDimServices.push_back(std::string(dimService));
-  }
-      
-  if (0 != m_dimSvcListTree && 0 != m_dimBrowser) {
-    const int nDimServers = m_dimBrowser->getServers();
-    
-    if (m_verbosity >= Verbose) {
-      std::cout << "nDimServers:\t" << nDimServers << std::endl;
     }
-
-    TString dimServerName;
-    TString dimServerNodeName;
-    TString dimServiceName;
-    TString statusMessage;
-
-    // If some servers found, discover what services are available
-    if (nDimServers > 0) {
-      const char* dimDnsServerNode = DimClient::getDnsNode();
-
-      if (m_verbosity >= Verbose) {
-        std::cout << std::endl << "DNS: " << dimDnsServerNode << std::endl;
-      }
-
-      setStatusBarText(dimDnsServerNode, 2);
-      if (s_withTree == tree) {
-        TGListTreeItem* node = m_dimSvcListTree->GetFirstItem();
-        m_dimSvcListTree->RenameItem(node, dimDnsServerNode);
-        deleteTreeChildrenItemsUserData(node);
-        m_dimSvcListTree->DeleteChildren(node);          
-      }
-
-      m_candidateDimServicesIt = m_candidateDimServices.begin();
-      while (m_candidateDimServicesIt != m_candidateDimServices.end()) {
-        TString dimServiceTS = TString(*m_candidateDimServicesIt);
-        if (!dimServiceTS.EndsWith(s_gauchocomment.c_str())) { // Beg&End not sym.
-            HistogramIdentifier histogramService = HistogramIdentifier(*m_candidateDimServicesIt);
-            if (histogramService.isDimFormat()) {
-              if (s_withTree == tree) {
-                m_knownDimServices.push_back(*m_candidateDimServicesIt);
-                m_histogramTypes.push_back(histogramService.histogramType());                
-              }
-              if (!m_knownPartitionList->FindObject(histogramService.partitionName().c_str())) {
-                TObjString* partitionName = new TObjString(histogramService.partitionName().c_str());
-                m_knownPartitionList->Add(partitionName);
-              }
-            if (m_verbosity >= Verbose) {
-              std::cout << "\t\t\t|_ " << *m_candidateDimServicesIt << std::endl;
-            }
-          } else {
-            new TGMsgBox(fClient->GetRoot(), this, "DIM Service name error",
-              Form("The DIM servicename\n%s\n does not appear to follow the" \
-                "convention\nPlease use the following format:\n" \
-                "TYP/UTGID/Algorithmname/Histogramname\n where the UTGID " \
-                "normally has the following format:\n" \
-                "partition_node_taskname_instance", dimService),
-              kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
-          }
-        }
-        ++m_candidateDimServicesIt;
-      }
-      refreshUtgidSelectorPopupMenu();
-      if (s_withTree == tree) {
-        fillTreeNodeWithHistograms(m_dimSvcListTree,
-                                   m_dimSvcListTree->GetFirstItem(),
-                                   &m_knownDimServices,
-                                   &m_histogramTypes);                  
+    // s_pfixMonH1D
+    serviceType = s_pfixMonH1D;
+    (serviceType.append(s_slash)).append("*");
+    m_dimBrowser->getServices(serviceType.c_str());
+    while(dimType = m_dimBrowser->getNextService(dimService, dimFormat)) {            
+      m_candidateDimServices.push_back(std::string(dimService));
+    }
+    // s_pfixMonH2F
+    serviceType = s_pfixMonH2F;
+    (serviceType.append(s_slash)).append("*");
+    m_dimBrowser->getServices(serviceType.c_str());
+    while(dimType = m_dimBrowser->getNextService(dimService, dimFormat)) {            
+      m_candidateDimServices.push_back(std::string(dimService));
+    }
+    // s_pfixMonH2D
+    serviceType = s_pfixMonH2D;
+    (serviceType.append(s_slash)).append("*");
+    m_dimBrowser->getServices(serviceType.c_str());
+    while(dimType = m_dimBrowser->getNextService(dimService, dimFormat)) {            
+      m_candidateDimServices.push_back(std::string(dimService));
+    }
+    // s_pfixMonProfile
+    serviceType = s_pfixMonProfile;
+    (serviceType.append(s_slash)).append("*");
+    m_dimBrowser->getServices(serviceType.c_str());
+    while(dimType = m_dimBrowser->getNextService(dimService, dimFormat)) {            
+      m_candidateDimServices.push_back(std::string(dimService));
+    }
+    // "H1D", "H2D", "P1D", "P2D", "CNT", "SAM" -- is this uncle SAM?
+    for (int it = 0; it < OnlineHistDBEnv_constants::NHTYPES; ++it) {
+      std::string serviceType(OnlineHistDBEnv_constants::HistTypeName[it]);
+      (serviceType.append(s_slash)).append("*");
+      m_dimBrowser->getServices(serviceType.c_str());
+      while(dimType = m_dimBrowser->getNextService(dimService, dimFormat)) {            
+        m_candidateDimServices.push_back(std::string(dimService));
       }        
     }
-  } else {
-    if (s_withTree == tree) {
-      m_dimSvcListTree->RenameItem(m_dimSvcListTree->GetFirstItem(), "No DIM");
+    // HPD
+    serviceType = s_HPD;
+    (serviceType.append(s_slash)).append("*");
+    m_dimBrowser->getServices(serviceType.c_str());
+    while(dimType = m_dimBrowser->getNextService(dimService, dimFormat)) {            
+      m_candidateDimServices.push_back(std::string(dimService));
     }
-    if (m_verbosity >= Verbose) {
-      std::cout << "Sorry, no DIM server found." << std::endl;
+        
+    if (0 != m_dimSvcListTree && 0 != m_dimBrowser) {
+      const int nDimServers = m_dimBrowser->getServers();
+      
+      if (m_verbosity >= Verbose) {
+        std::cout << "nDimServers:\t" << nDimServers << std::endl;
+      }
+  
+      TString dimServerName;
+      TString dimServerNodeName;
+      TString dimServiceName;
+      TString statusMessage;
+  
+      // If some servers found, discover what services are available
+      if (nDimServers > 0) {
+        const char* dimDnsServerNode = DimClient::getDnsNode();
+  
+        if (m_verbosity >= Verbose) {
+          std::cout << std::endl << "DNS: " << dimDnsServerNode << std::endl;
+        }
+  
+        setStatusBarText(dimDnsServerNode, 2);
+        if (s_withTree == tree) {
+          TGListTreeItem* node = m_dimSvcListTree->GetFirstItem();
+          m_dimSvcListTree->RenameItem(node, dimDnsServerNode);
+          deleteTreeChildrenItemsUserData(node);
+          m_dimSvcListTree->DeleteChildren(node);          
+        }
+  
+        m_candidateDimServicesIt = m_candidateDimServices.begin();
+        while (m_candidateDimServicesIt != m_candidateDimServices.end()) {
+          TString dimServiceTS = TString(*m_candidateDimServicesIt);
+          if (!dimServiceTS.EndsWith(s_gauchocomment.c_str())) { // Beg&End not sym.
+              HistogramIdentifier histogramService = HistogramIdentifier(*m_candidateDimServicesIt);
+              if (histogramService.isDimFormat()) {
+                if (s_withTree == tree) {
+                  m_knownDimServices.push_back(*m_candidateDimServicesIt);
+                  m_histogramTypes.push_back(histogramService.histogramType());                
+                }
+                if (!m_knownOnlinePartitionList->FindObject(histogramService.partitionName().c_str())) {
+                  TObjString* partitionName = new TObjString(histogramService.partitionName().c_str());
+                  m_knownOnlinePartitionList->Add(partitionName);
+                }
+              if (m_verbosity >= Verbose) {
+                std::cout << "\t\t\t|_ " << *m_candidateDimServicesIt << std::endl;
+              }
+            } else {
+              new TGMsgBox(fClient->GetRoot(), this, "DIM Service name error",
+                Form("The DIM servicename\n%s\n does not appear to follow the" \
+                  "convention\nPlease use the following format:\n" \
+                  "TYP/UTGID/Algorithmname/Histogramname\n where the UTGID " \
+                  "normally has the following format:\n" \
+                  "partition_node_taskname_instance", dimService),
+                kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
+            }
+          }
+          ++m_candidateDimServicesIt;
+        }
+//        refreshPartitionSelectorPopupMenu();
+        if (s_withTree == tree) {
+          fillTreeNodeWithHistograms(m_dimSvcListTree,
+                                     m_dimSvcListTree->GetFirstItem(),
+                                     &m_knownDimServices,
+                                     &m_histogramTypes);                  
+        }        
+      }
+    } else {
+      if (s_withTree == tree) {
+        m_dimSvcListTree->RenameItem(m_dimSvcListTree->GetFirstItem(), "No DIM");
+      }
+      if (m_verbosity >= Verbose) {
+        std::cout << "Sorry, no DIM server found." << std::endl;
+      }
+      new TGMsgBox(fClient->GetRoot(), this, "DIM Error",
+                   "Sorry, no DIM server found", kMBIconExclamation,
+                   kMBOk, &m_msgBoxReturnCode);
     }
-    new TGMsgBox(fClient->GetRoot(), this, "DIM Error",
-                 "Sorry, no DIM server found", kMBIconExclamation,
-                 kMBOk, &m_msgBoxReturnCode);
+    if (s_withTree == tree) {    
+      sortTreeChildrenItems(m_dimSvcListTree, m_dimSvcListTree->GetFirstItem());
+      fClient->NeedRedraw(m_dimSvcListTree);      
+    }
+    Resize();DoRedraw(); // wtf would trigger a redraw???
   }
-  if (s_withTree == tree) {    
-    sortTreeChildrenItems(m_dimSvcListTree, m_dimSvcListTree->GetFirstItem());
-    fClient->NeedRedraw(m_dimSvcListTree);      
-  }
-  Resize();DoRedraw(); // wtf would trigger a redraw???
 gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetDefaultCursor());
 }
 
-void PresenterMainFrame::refreshUtgidSelectorPopupMenu()
+void PresenterMainFrame::refreshPartitionSelectorPopupMenu()
 {
-  TObject *obj;  
-  TIter nextUTGID(m_utgidSelectorPopupMenu->GetListOfEntries());
+  bool updateList(false);
+  TObject *obj = 0;  
+  TIter nextUTGID(m_partitionSelectorPopupMenu->GetListOfEntries());
   while (obj = nextUTGID()) {
-    m_utgidSelectorPopupMenu->DeleteEntry(dynamic_cast<TGMenuEntry*>(obj));
+    if (obj) {
+      m_partitionSelectorPopupMenu->DeleteEntry(dynamic_cast<TGMenuEntry*>(obj));
+    }
   }
-  m_utgidSelectorPopupMenu->AddEntry("refresh partitions", M_RefreshKnownUTGIDs);
+  m_partitionSelectorPopupMenu->AddEntry("refresh partitions", M_RefreshKnownPartitions);
+  TIterator* partitionIt = 0;
   
-  TIter nextPartition(m_knownPartitionList->MakeIterator());
-  int id = 500;
-  while (obj = nextPartition()) {
-    m_utgidSelectorPopupMenu->AddEntry(obj->GetName(),
-                                       id);
-    if (id < 550) { id++; }
-    if (0 == s_lhcbPartionName.CompareTo(obj->GetName(),
-                                         TString::kIgnoreCase)) {
-      m_currentPartition = obj->GetName();
-      int entryId( m_utgidSelectorPopupMenu->GetEntry(m_currentPartition.c_str())->GetEntryId());
-      m_utgidSelectorPopupMenu->DefaultEntry(entryId);
-      m_utgidSelectorPopupMenu->Activate(entryId);
-      if (m_verbosity >= Verbose) {
-         std::cout << "Found default LHCb partition: " <<
-                       m_currentPartition << std::endl;
+  if (History == m_presenterMode && 0 != m_archive) {
+    updateList = true;
+    std::vector<std::string> m_historyPartitionList;
+    std::vector<std::string>::const_iterator m_historyPartitionListIt;
+    m_knownHistoryPartitionList->Delete();
+    
+    m_historyPartitionList = m_archive->listPartitions();
+
+    m_historyPartitionListIt = m_historyPartitionList.begin();
+    while (m_historyPartitionListIt != m_historyPartitionList.end()) {
+      if (!m_knownHistoryPartitionList->FindObject((*m_historyPartitionListIt).c_str())) {
+        TObjString* partitionName = new TObjString((*m_historyPartitionListIt).c_str());
+        m_knownHistoryPartitionList->Add(partitionName);
+      }
+      m_historyPartitionListIt++;
+    }
+    partitionIt = m_knownHistoryPartitionList->MakeIterator();
+    
+  } else if (Online == m_presenterMode ||
+             Editor == m_presenterMode) {
+    updateList = true;              
+    refreshDimSvcList(s_withoutTree);
+    partitionIt = m_knownOnlinePartitionList->MakeIterator();
+  }
+  if (updateList) {
+    int id(500);        // just a 50 limit for reading partitions from
+    int idLimit(550);   // directories to avoid deep nesting troubles
+    while (obj = partitionIt->Next()) {
+      if (obj) { 
+        m_partitionSelectorPopupMenu->AddEntry(obj->GetName(), id);
+        if (id < idLimit) {
+          id++;
+          if (0 == s_lhcbPartionName.CompareTo(obj->GetName(),
+                                               TString::kIgnoreCase)) {
+            m_currentPartition = obj->GetName();
+            int entryId( m_partitionSelectorPopupMenu->GetEntry(m_currentPartition.c_str())->GetEntryId());
+            m_partitionSelectorPopupMenu->DefaultEntry(entryId);
+            m_partitionSelectorPopupMenu->Activate(entryId);
+            if (m_verbosity >= Verbose) {
+               std::cout << "Found default LHCb partition: " <<
+                             m_currentPartition << std::endl;
+            }
+          }
+        }
       }
     }
   }
+  if (partitionIt) { delete partitionIt; partitionIt = 0; }
 
   if (m_verbosity >= Verbose) {
      std::cout << "Defaulting to partition: " << m_currentPartition <<
@@ -2614,7 +2697,7 @@ void PresenterMainFrame::setHistogramDimSource(bool tree)
   if (m_clearedHistos) { clearHistos(); }
   
   if (tree == s_withoutTree) {
-    m_currentPartition = m_utgidSelectorQuickButton->GetString();
+    m_currentPartition = m_partitionSelectorQuickButton->GetString();
     if (m_currentPartition == "refresh partitions") {
       m_currentPartition = s_lhcbPartionName.Data();      
     }    
@@ -2627,7 +2710,7 @@ void PresenterMainFrame::setHistogramDimSource(bool tree)
     while (0 != currentNode) {
       std::string nodeHist = std::string(*static_cast<TString*>(currentNode->GetUserData()));
       dbHistosOnPageIt = dbHistosOnPage.begin();      
-      while (dbHistosOnPageIt != dbHistosOnPage.end()) {        
+      while (dbHistosOnPageIt != dbHistosOnPage.end()) {
         if (HistogramIdentifier(nodeHist).histogramIdentifier() == (*dbHistosOnPageIt)->histogramIdentifier() &&
             HistogramIdentifier(nodeHist).histogramSetName() == (*dbHistosOnPageIt)->histogramSetName() &&
             HistogramIdentifier(nodeHist).histogramType() == (*dbHistosOnPageIt)->histogramType()) {
@@ -2685,6 +2768,21 @@ std::string PresenterMainFrame::convDimToHistoID(const std::string & dimSvcName)
     return 0;
   }
 }
+
+void PresenterMainFrame::toggleHistoryPlots()
+{
+  if(m_historyTrendPlots) {
+    m_historyPlotsButton->SetState(kButtonUp);
+    m_viewMenu->UnCheckEntry(HISTORY_PLOTS_COMMAND);
+    m_historyTrendPlots = false;
+  } else {
+    m_historyPlotsButton->SetState(kButtonDown);
+    m_historyTrendPlots = true;
+    m_viewMenu->CheckEntry(HISTORY_PLOTS_COMMAND);
+  }
+
+}
+
 void PresenterMainFrame::toggleReferenceOverlay()
 {
   if (m_referencesOverlayed) {
@@ -2744,6 +2842,8 @@ void PresenterMainFrame::setHistogramPropertiesInDB()
           getHistogram(std::string(*static_cast<TString*>(
                        currentNode->GetUserData())));
 
+        std::string descriptionField = bulkHistoOptions.m_description.Data();
+
         std::string paintDrawXLabel = bulkHistoOptions.
           m_xLabel.Data();
         std::string paintDrawYLabel = bulkHistoOptions.
@@ -2770,6 +2870,8 @@ void PresenterMainFrame::setHistogramPropertiesInDB()
         std::string paintDrawOption = TString(
           m_drawOption + TString(" ") +
           bulkHistoOptions.m_genericRootDrawOption).Data();
+
+        onlineHistogramToSet->setDescr(descriptionField);
 
         onlineHistogramToSet->setDisplayOption("LABEL_X",
                                                &paintDrawXLabel);
@@ -2886,7 +2988,6 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
 
     if (0 != m_archive &&
         ((History == m_presenterMode) || (Editor == m_presenterMode))) {
-      m_archive->refreshDirectory(Archive::Savesets);
       if ("last 8 hours" == m_historyIntervalQuickButton->GetString()) {
         rw_timePoint = s_Now;
         rw_pastDuration = std::string("08:00:00");
@@ -3027,9 +3128,15 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
                      kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
       }
     }
+    
     if (resumeRefreshAfterLoading) { startPageRefresh(); }
 gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetDefaultCursor());
 
+  }
+  if (m_referencesOverlayed) {
+    enableReferenceOverlay();
+  } else {
+    disableReferenceOverlay();
   }
   editorCanvas->Update();
   if (Editor == m_presenterMode) {
@@ -3433,6 +3540,7 @@ void PresenterMainFrame::about()
             std::string("Connected to Histogram Database: ") << (isConnectedToHistogramDB()? std::string("yes") : std::string("no")) << std::endl;
   if (0 != m_histogramDB) {
      config << std::string("Write access to Histogram Database: ") << (canWriteToHistogramDB()? std::string("yes") : std::string("no")) << std::endl <<
+               std::string("Histograms root directory: ") << m_archiveRoot << std::endl <<
                std::string("Reference histograms directory: ") << m_referencePath << std::endl <<
                std::string("Savesets directory: ") << m_savesetPath << std::endl;
   }

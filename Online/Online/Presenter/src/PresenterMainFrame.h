@@ -78,6 +78,7 @@ class PresenterMainFrame : public TGMainFrame
       START_COMMAND,
       STOP_COMMAND,
       AUTO_LAYOUT_COMMAND,
+      HISTORY_PLOTS_COMMAND,
       OVERLAY_REFERENCE_HISTO_COMMAND,
       PICK_REFERENCE_HISTO_COMMAND,
       SAVE_AS_REFERENCE_HISTO_COMMAND,
@@ -110,12 +111,13 @@ class PresenterMainFrame : public TGMainFrame
       M_Last_Interval,
       M_IntervalPicker,
       M_UtgidPicker,
-      M_RefreshKnownUTGIDs,
+      M_RefreshKnownPartitions,
       M_Previous_Interval,
       M_Next_Interval
     };
 
     struct obsolete_BulkHistoOptions {
+      TString m_description;
       TString m_genericRootDrawOption;
       TString m_1DRootDrawOption;
       TString m_2DRootDrawOption;
@@ -138,6 +140,7 @@ class PresenterMainFrame : public TGMainFrame
     void setDatabaseMode(const pres::DatabaseMode & databaseMode);
     void setHistoryMode(bool mode) { m_historyMode = mode; }
     pres::DatabaseMode databaseMode() { return m_databaseMode; }
+    std::string currentPartition() { return m_currentPartition; }
     void setVerbosity(const pres::MsgLevel & verbosity);
     void setTitleFontSize(int fontSize);
     pres::MsgLevel verbosity() const { return m_verbosity; }
@@ -217,7 +220,7 @@ class PresenterMainFrame : public TGMainFrame
     void refreshHistoDBListTree();
     void refreshPagesDBListTree();
     void refreshDimSvcList(bool withTree);
-    void refreshUtgidSelectorPopupMenu();
+    void refreshPartitionSelectorPopupMenu();
     void hideDBTools();
     void showDBTools(pres::DatabaseMode databasePermissions);
     void reconfigureGUI();
@@ -268,6 +271,7 @@ class PresenterMainFrame : public TGMainFrame
     void pickReferenceHistogram();
     void saveSelectedHistogramAsReference();
     void toggleReferenceOverlay();
+    void toggleHistoryPlots();
     void paintHist(DbRootHist* histogram);
 
 
@@ -276,7 +280,7 @@ class PresenterMainFrame : public TGMainFrame
 
     bool isConnectedToHistogramDB();
     bool canWriteToHistogramDB();
-
+    bool isHistoryTrendPlotMode() { return m_historyTrendPlots; }
     TCanvas* editorCanvas;
     TRootEmbeddedCanvas* editorEmbCanvas;
     
@@ -306,6 +310,7 @@ class PresenterMainFrame : public TGMainFrame
     TTimer*           m_pageRefreshTimer;
     TTimer*           m_clockTimer;
     bool              m_clearedHistos;
+    bool              m_historyTrendPlots;
     bool              m_referencesOverlayed;
     bool              m_refreshingPage;
     OnlineHistDB*     m_histogramDB;
@@ -351,6 +356,7 @@ class PresenterMainFrame : public TGMainFrame
     TGHotString*  m_viewText;
       TGHotString*  m_viewStartRefreshText;
       TGHotString*  m_viewStopRefreshText;
+      TGHotString*  m_viewToggleHistoryPlotsText;
       TGHotString*  m_viewToggleReferenceOverlayText;
       TGHotString*  m_viewInspectHistoText;
       TGHotString*  m_viewInspectPageText;
@@ -388,11 +394,12 @@ class PresenterMainFrame : public TGMainFrame
     TGPictureButton*  m_autoCanvasLayoutButton;
     TGPictureButton*  m_deleteHistoFromCanvasButton;
     TGPictureButton*  m_overlayReferenceHistoButton;
+    TGPictureButton*  m_historyPlotsButton;
     TGPictureButton*  m_pickReferenceHistoButton;
     TGSplitButton*    m_historyIntervalQuickButton;
     TGPopupMenu*      m_presetTimePopupMenu;
-    TGSplitButton*    m_utgidSelectorQuickButton;
-    TGPopupMenu*      m_utgidSelectorPopupMenu;
+    TGSplitButton*    m_partitionSelectorQuickButton;
+    TGPopupMenu*      m_partitionSelectorPopupMenu;
 
 
     //  TGButton*         m_quitButton;
@@ -412,6 +419,7 @@ class PresenterMainFrame : public TGMainFrame
     const TGPicture*  m_iconAlgorithm;
     const TGPicture*  m_iconSet;
     const TGPicture*  m_iconLevel;
+    const TGPicture*  m_stockNewFormula;
 
     TGVerticalFrame* m_rightMiscFrame;
     TGHorizontalFrame* m_mainHorizontalFrame;
@@ -481,7 +489,8 @@ class PresenterMainFrame : public TGMainFrame
     std::vector<OnlineHistogram*>      m_onlineHistosOnPage;
     std::vector<OnlineHistogram*>::const_iterator m_onlineHistosOnPageIt;
 
-    TList*  m_knownPartitionList;
+    TList*  m_knownOnlinePartitionList;
+    TList*  m_knownHistoryPartitionList;
     TList*  m_knownMonitoringNodeList;
     TList*  m_knownInstanceNumberList;
 
