@@ -6,29 +6,26 @@
 </set></argument>
 <argument name="options"><text>
 from Gaudi.Configuration import *
-from Configurables import (EventClockSvc, FakeEventTime)
+from Configurables import (DDDBConf, CondDB, EventClockSvc, FakeEventTime,
+                           CondDBAccessSvc, CondDBTimeSwitchSvc)
 
-importOptions("$DDDBROOT/options/DDDB.py")
+DDDBConf()
+
 ecs = EventClockSvc()
 ecs.addTool(FakeEventTime,"EventTimeDecoder")
 ecs.EventTimeDecoder.StartTime = 5
 ecs.EventTimeDecoder.TimeStep = 10
 
-from DetCond.Configuration import (CondDBAccessSvc,CondDBCnvSvc,
-                                   CondDBTimeSwitchSvc,
-                                   addCondDBLayer)
-
 DBs = []
 for i in [0,3]:
     data = { "name": "TESTDB%d"%i }
     DBs.append(CondDBAccessSvc(data["name"],
-                               ConnectionString="sqlite_file:../data/%(name)s.db/%(name)s"%data,
-                               EnableXMLDirectMapping = True))
+                               ConnectionString="sqlite_file:../data/%(name)s.db/%(name)s"%data))
 readers = []
 for i in range(len(DBs)):
     readers.append("'%s':(%d,%d)"%(DBs[i].getFullName(),i*10,(i+1)*10))
-CondDBTimeSwitchSvc(Readers = readers)
-CondDBCnvSvc(CondDBReader = CondDBTimeSwitchSvc(Readers = readers, OutputLevel = DEBUG))
+
+CondDB().addLayer(CondDBTimeSwitchSvc(Readers = readers, OutputLevel = DEBUG))
 
 from Configurables import DetCondTest__TestConditionAlg
 alg = DetCondTest__TestConditionAlg()
@@ -44,7 +41,7 @@ CondDBTimeSwitc...  DEBUG Configured CondDBReaders:
 CondDBTimeSwitc...  DEBUG  0.0 - 0.00000001: CondDBAccessSvc/TESTDB0
 CondDBTimeSwitc...  DEBUG  0.00000001 - 0.00000002: CondDBAccessSvc/TESTDB3
 """
-findReferenceBlock(reference_block, stdout, result, causes)
+findReferenceBlock(reference_block)
 
 ## 2nd check: find data
 expected = [

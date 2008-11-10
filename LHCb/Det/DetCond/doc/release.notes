@@ -1,9 +1,12 @@
-# $Id: release.notes,v 1.153 2008-11-06 10:58:37 marcocle Exp $
+# $Id: release.notes,v 1.154 2008-11-10 10:54:36 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+! 2008-11-11 - Marco Clemencic
+ - Fixed configuration problems in the test after the changes in DDDB.
 
 ! 2008-11-06 - Marco Clemencic
  - Added the ConfigurableUser CondDB for the high level configuration of the

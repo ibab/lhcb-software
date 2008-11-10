@@ -15,29 +15,27 @@ def configure(version):
     from Gaudi.Configuration import (importOptions,
                                      ApplicationMgr,
                                      MessageSvc)
-    importOptions("$DDDBROOT/options/DDDB.py")
-    
-    from DetCond.Configuration import (CondDBAccessSvc,CondDBCnvSvc,
-                                       addCondDBAlternative,
-                                       addCondDBLayer)
+    from Configurables import DDDBConf, CondDB, CondDBAccessSvc
+    dddbConf = DDDBConf()
+    cdb = CondDB()
     
     DBs = []
     for i in range(3):
         data = { "name": "TESTDB%d"%i }
         DBs.append(CondDBAccessSvc(data["name"],
-                                   ConnectionString="sqlite_file:../data/%(name)s.db/%(name)s"%data,
-                                   EnableXMLDirectMapping = True))
-    
-    CondDBCnvSvc(CondDBReader = DBs[0])
+                                   ConnectionString="sqlite_file:../data/%(name)s.db/%(name)s"%data))
+
+    cdb.PartitionConnectionString["DDDB"] = DBs[0].ConnectionString
+    cdb.Tags["DDDB"] = ""
     if version == 1:
-        addCondDBAlternative(DBs[1],'/AutoMap/FolderSet2')
+        cdb.addAlternative(DBs[1],'/AutoMap/FolderSet2')
     elif version == 2:
-        addCondDBAlternative(DBs[2],'/AutoMap/FolderSet3')
+        cdb.addAlternative(DBs[2],'/AutoMap/FolderSet3')
     elif version == 3:
-        addCondDBAlternative(DBs[1],'/AutoMap/FolderSet2/ObjectA.xml')
+        cdb.addAlternative(DBs[1],'/AutoMap/FolderSet2/ObjectA.xml')
     elif version == 4:
-        addCondDBLayer(DBs[1])
-        addCondDBLayer(DBs[2])
+        cdb.addLayer(DBs[1])
+        cdb.addLayer(DBs[2])
     elif version != 0:
         raise RuntimeError("Invalid version number")
 
@@ -63,10 +61,9 @@ def main(conf):
     
     from Gaudi.Configuration import configurationDict
     from pprint import pprint
-    pprint(configurationDict())
-    
     import GaudiPython
     app = GaudiPython.AppMgr()
+    pprint(configurationDict())
     app.initialize()
     
     dds = app.detsvc()
