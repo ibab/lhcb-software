@@ -6,8 +6,7 @@ __author__ = "Marco Clemencic <Marco.Clemencic@cern.ch>"
 from Gaudi.Configuration import *
 from Configurables import ( CondDBEntityResolver,
                             XmlCnvSvc,
-                            XmlParserSvc,
-                            MagneticFieldSvc )
+                            XmlParserSvc )
 from DetCond.Configuration import CondDB
 
 __all__ = ["DDDBConf"]
@@ -124,6 +123,8 @@ class DDDBConf(ConfigurableUser):
         # the configuration of the database for DC06 is like the one for real data
         # (no SIMCOND) 
         CondDB().Simulation = False
+        
+        from Configurables import MagneticFieldSvc
         # Force negative polarity (i.e. don't take it from ONLINE)
         MagneticFieldSvc(Polarity = -1,
                          OutputLevel = ERROR)
