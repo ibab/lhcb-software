@@ -6,5 +6,4 @@
     <text>$BOOLEOPTS/DC06-Files.py</text>
   </set></argument>
   <argument name="reference"><text>../refs/testBoole-DC06.ref</text></argument>
-  <argument name="error_reference"><text>../refs/OldHepMC.ref</text></argument>
 </extension>

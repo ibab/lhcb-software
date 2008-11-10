@@ -1,2 +1,0 @@
-Warning in <TStreamerInfo::BuildOld>: Cannot convert HepMC::GenVertex::m_position from type:CLHEP::HepLorentzVector to type:HepMC::FourVector, skip element
-Warning in <TStreamerInfo::BuildOld>: Cannot convert HepMC::GenParticle::m_momentum from type:CLHEP::HepLorentzVector to type:HepMC::FourVector, skip element
