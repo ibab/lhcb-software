@@ -4,6 +4,11 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
 ! 2008-11-10 - Marco Cattaneo
+ - Change version to v17r0
+ - Remove Boole.exe
+ - Fix typo in Boole_Ganga.py
+
+! 2008-11-10 - Marco Cattaneo
  - Remove HepMCBack warnings from QMTest reference
 
 ! 2008-10-31 - Marco Cattaneo
