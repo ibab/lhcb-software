@@ -1,4 +1,4 @@
-// $Id: Pythia.h,v 1.6 2008-01-27 15:01:16 robbep Exp $
+// $Id: Pythia.h,v 1.7 2008-11-11 11:29:00 robbep Exp $
 #ifndef LBPYTHIA_PYTHIA_H 
 #define LBPYTHIA_PYTHIA_H 1
 // =====================================================================
@@ -29,13 +29,21 @@
  */
 class Pythia {
 public:
+  /// Access PYSUBS common block
   static Pysubs & pysubs() { return s_pysubs ; }
+  /// Access PYDAT1 common block
   static Pydat1 & pydat1() { return s_pydat1 ; }
+  /// Access PYPARS common block
   static Pypars & pypars() { return s_pypars ; }
+  /// Access PYDAT2 common block
   static Pydat2 & pydat2() { return s_pydat2 ; }
+  /// Access PYDAT3 common block
   static Pydat3 & pydat3() { return s_pydat3 ; }
+  /// Access PYDATR common block
   static Pydatr & pydatr() { return s_pydatr ; }
+  /// Access PYINT2 common block
   static Pyint2 & pyint2() { return s_pyint2 ; }
+  /// Access PYMSSM common block
   static Pymssm & pymssm() { return s_pymssm ; }
 
   static void SetUserProcess( int val ) ;
