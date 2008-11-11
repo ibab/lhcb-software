@@ -1,4 +1,4 @@
-// $Id: BiFunctions.h,v 1.5 2007-12-03 12:03:22 ibelyaev Exp $
+// $Id: BiFunctions.h,v 1.6 2008-11-11 16:29:57 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_BIFUNCTIONS_H 
 #define LOKI_BIFUNCTIONS_H 1
@@ -22,11 +22,14 @@ namespace LoKi
     , virtual   public LoKi::AuxFunBase
   {
   public:
-    // parameters: argument
-    typedef LoKi::Holder<TYPE1,TYPE2>  Type1 ; ///< parameters: argument
-    // parameters: return value 
-    typedef TYPE3                      Type2 ; ///< parameters: return value
+    // ========================================================================
+    /// parameters: argument
+    typedef LoKi::Holder<TYPE1,TYPE2>  Type1 ; // parameters: argument
+    /// parameters: return value 
+    typedef TYPE3                      Type2 ; // parameters: return value
+    // ========================================================================
   public:
+    // ========================================================================
     /// the type of the argument
     typedef LoKi::Holder<TYPE1,TYPE2> TYPE ;
     typedef LoKi::Holder<TYPE1,TYPE2> Type ;
@@ -47,7 +50,9 @@ namespace LoKi
     typedef typename boost::call_traits<const TYPE2>::param_type second_argument     ;
     /// type for the second argument 
     typedef typename boost::call_traits<const TYPE2>::param_type second_argument_type ;
+    // ========================================================================
   public:
+    // ========================================================================
     /// the native interface with 1 argument: 
     virtual result_type  operator () ( argument a ) const = 0 ;
     /// the only one essential method ("function")
@@ -72,17 +77,127 @@ namespace LoKi
     virtual  Functor* clone    ()              const = 0 ;
     /// virtual destructor 
     virtual ~Functor(){} 
+    // ========================================================================
   public:
-    // protected default constructor 
-    Functor ()                       ///< protected default constructor 
-      : AuxFunBase (     ) {}
-    // protected copy constructor
-    Functor ( const Functor& fun )   ///< protected copy constructor
-      : AuxFunBase ( fun ) {}
+    // ========================================================================
+    /// protected default constructor 
+    Functor () : AuxFunBase ( ) {}
+    /// protected copy constructor
+    Functor ( const Functor& fun ) : AuxFunBase ( fun ) {}
+    // ========================================================================
   private:
-    // assignement         is private 
-    Functor& operator=( const Functor& ); ///< assignement         is private 
+    // ========================================================================
+    /// assignement is private 
+    Functor& operator=( const Functor& );            // assignement is private 
+    // ========================================================================
   } ;
+  // ==========================================================================
+  template <class TYPE1,class TYPE2, class TYPE3>
+  class FunctorFromFunctor<LoKi::Holder<TYPE1,TYPE2>,TYPE3>
+    : public LoKi::Functor<LoKi::Holder<TYPE1,TYPE2>,TYPE3>
+  {
+  public:
+    // ========================================================================
+    /// the underlying type of functor 
+    typedef LoKi::Functor<LoKi::Holder<TYPE1,TYPE2>,TYPE3> functor ; 
+    typedef LoKi::Functor<LoKi::Holder<TYPE1,TYPE2>,TYPE3> Base    ; 
+    // ========================================================================
+  protected:
+    // ========================================================================
+    /// own type 
+    typedef FunctorFromFunctor<LoKi::Holder<TYPE1,TYPE2>,TYPE3> Self ;
+    // ========================================================================
+  public:
+    // ========================================================================
+    /// constructor 
+    FunctorFromFunctor ( const functor& right ) 
+      : Base ()  
+      , m_fun ( right.clone() ) 
+    {}
+    /// copy constructor (deep copy)
+    FunctorFromFunctor ( const Self& right ) 
+      : LoKi::AuxFunBase ( right ) 
+      , Base             ( right ) 
+      , m_fun ( 0 ) 
+    {
+      m_fun = typeid ( Self ) == typeid ( right ) ? 
+        right.m_fun -> clone () : right.clone() ;
+    }
+    /// MANDATORY: virtual destructor 
+    virtual ~FunctorFromFunctor() { delete m_fun ; }
+    /// MANDATORY: clone method ("virtual constructor") 
+    virtual  FunctorFromFunctor* clone() const 
+    { return new FunctorFromFunctor ( *this ) ; }
+    /// MANDATORY: the only one essential method 
+    virtual typename functor::result_type operator() 
+      ( typename functor::argument a ) const { return fun ( a ) ; }    
+    /// the only one essential method ("function")
+    virtual typename functor::result_type operator () 
+      ( typename functor::first_argument  a , 
+        typename functor::second_argument b ) const { return fun ( a , b ) ; }
+    /// OPTIONAL: the basic printout method, delegate to the underlying object
+    virtual std::ostream& fillStream( std::ostream& s ) const 
+    { return  m_fun->fillStream( s ) ; };
+    /// OPTIONAL: unique function ID, delegate to the underlying objects 
+    virtual std::size_t   id () const { return m_fun->id() ; }
+    /// OPTIONAL: delegate the object type
+    virtual std::string   objType () const { return m_fun -> objType() ; }
+  public:
+    /// the assignement operator is enabled 
+    FunctorFromFunctor& operator= ( const FunctorFromFunctor& right )
+    {
+      if ( this == &right ) { return *this ; }                   // RETURN 
+      // set new pointer 
+      functor* newf = 0 ;
+      if ( typeid ( Self ) != typeid ( right ) ) 
+      { newf = right.         clone() ; }
+      else
+      { newf = right.m_fun -> clone() ; }
+      // delete own pointer 
+      delete m_fun ; 
+      // assign the new pointer 
+      m_fun = newf ;
+      return *this ;                                             // RETURN 
+    }
+    /// the assignement operator is enabled 
+    FunctorFromFunctor& operator= ( const Base& right )
+    {
+      if ( this == &right ) { return *this ; }                   // RETURN  
+      // set new pointer 
+      functor* newf = right.clone() ;
+      // delete own pointer 
+      delete m_fun ;
+      // assign the new pointer 
+      m_fun = newf ;
+      return *this ;                                             // RETURN 
+    } 
+    // ========================================================================
+  public:   
+    // ========================================================================
+    /// evaluate the function
+    inline typename functor::result_type fun 
+    ( typename functor::argument a ) const { return (*m_fun) ( a ) ; }
+    inline typename functor::result_type fun 
+    ( typename functor::first_argument  a , 
+      typename functor::second_argument b ) const 
+    { return (*m_fun) ( a , b ) ; }
+    /// accessor to the function 
+    inline const functor& fun  () const { return *m_fun ; }
+    /// accessor to the function 
+    inline const functor& func () const { return *m_fun ; }
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// default constructor is private 
+    FunctorFromFunctor();                 // the default constructor is private 
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// the underlaying function 
+    const functor* m_fun ;                           // the underlaying functor
+    // ========================================================================
+  } ;
+  // ==========================================================================
 } // end of namespace LoKi 
 // ============================================================================
 #endif // LOKI_BIFUNCTIONS_H
