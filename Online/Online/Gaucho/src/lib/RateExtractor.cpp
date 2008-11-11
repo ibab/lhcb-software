@@ -84,7 +84,9 @@ double RateExtractor::getCounterFromMonRate()
   double numberOfProcesses = profile->GetBinEntries(4);  
   //double counterMean = profile->GetBinContent(8 + m_counterId);
   double counterMean = m_pMonRate->binCont[8 + m_counterId];
- return numberOfProcesses * counterMean;
+  //the 8th is the gps time
+  if (m_counterId==0) return counterMean;
+  else return numberOfProcesses * counterMean;
 }
 
 longlong RateExtractor::getCycleLengthFromMonRate()

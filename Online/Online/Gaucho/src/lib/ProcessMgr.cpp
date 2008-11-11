@@ -12,6 +12,7 @@ ProcessMgr::ProcessMgr(std::string serviceOwner, IMessageSvc* msgSvc, Interactor
 {
   m_monitoringFarm = false;
   m_nbCounterInMonRate = 30;
+  m_publishRates = false;
   m_fileName = "Waiting for command to save histograms............."; 
 }
 
@@ -108,9 +109,9 @@ void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> 
     bool includeService = true;
     if (oper.compare("-") == 0) includeService = false;
     
-    msg << MSG::DEBUG << "Verifying service = " << serviceName << ". This is an" << m_serviceOwner <<   endreq;
+    msg << MSG::DEBUG << "Verifying service = " << serviceName << ". This is an " << m_serviceOwner <<   endreq;
     if (m_serviceOwner.compare(s_Adder)==0){
-      msg << MSG::DEBUG << "Trying to decode Service List in Adder whit " << m_subfarmName.size() << " subfarms in joboptions" << endreq;
+      msg << MSG::DEBUG << "Trying to decode Service List in Adder with " << m_subfarmName.size() << " subfarms in joboptions" << endreq;
       std::vector<std::string>::const_iterator it;
       for(it=m_subfarmName.begin(); it!=m_subfarmName.end(); ++it){
         msg << MSG::DEBUG << "subfarmName "<< (*it) << endreq;
@@ -118,10 +119,11 @@ void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> 
       
       if (m_subfarmName.size() != 0) {
         bool chooseIt=false;
-        std::vector<std::string>::const_iterator it;
-        for(it=m_subfarmName.begin(); it!=m_subfarmName.end(); ++it){
+        std::vector<std::string>::const_iterator it1;
+        for(it1=m_subfarmName.begin(); it1!=m_subfarmName.end(); ++it1){
           msg << MSG::DEBUG << "verifying subfarmName in serviceName "<< serviceName << endreq;
-          if (serviceName.find("/" + (*it)) == std::string::npos){
+	  //need to append underscore for 3rd level adder, and it should be not equal when it's found
+          if (serviceName.find("/" + (*it1) + "_") != std::string::npos){
            chooseIt=true;
            break;
           }
@@ -319,29 +321,23 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
     std::string partName;
     std::string nodeName;
     std::string taskName;
-    
+
     if (m_serviceOwner.compare(s_Adder)==0){
       msg << MSG::DEBUG << " We are inside an ADDER " << endreq;
-      
+
       nodeName = (*serverListTotIt).substr(0, first_us);
       taskName = (*serverListTotIt).substr(first_us + 1, second_us - first_us - 1);
-      
-      if (nodeName.compare("Bridge")!=0) {
-        if ((taskName.compare("Saver")==0)||(taskName.compare("SAVER")==0)) {
-          msg << MSG::DEBUG << "refused because we don't add nor save SAVERS. "<< endreq;    
-          continue; // we don't do nothing with Savers
-        }
-        if ((taskName.compare("Adder")==0)||(taskName.compare("ADDER")==0)){
-          if (nodeName.size() ==  m_nodeName.size()) {
-            msg << MSG::DEBUG << "REFUSED because it is an adder with the same node name size. "<< endreq;
-            continue; // The nodeName have to be smaller size if the Adder is adding Adders
-          }
-        }
-        if (nodeName.size() !=  m_nodeName.size()) { // If nodeName have smaller size 
-          nodeName = nodeName.substr(0, m_nodeName.size()); // we resize the nodename to do the match.
-          msg << MSG::DEBUG << "nodeName="<< nodeName << endreq;
-        }
 
+      if ((taskName.compare("Saver")==0)||(taskName.compare("SAVER")==0)) {
+        msg << MSG::DEBUG << "refused because we don't add SAVERS. "<< endreq;    
+        continue; // we don't do nothing with Savers
+      }
+      // First level Adder => m_nodeName=HLTA0101. It must Add Gaucho Jobs: nodeNames=HLTA0101 and TaskNames != Adders
+      // Second level Adder => m_nodeName=HLTA01 . It must Add 1st level Adders: nodeNames=HLTA0101 and TaskNames == Adder
+      // Third level Adder (Top level Adders) => m_nodeName=PARTxx. 
+      // It must Add 2nd level Adders: nodeNames=HLTXn (X=A,B,C...; n=01,02...) And check the Subfarm names
+
+      if (m_nodeName.size() == 8) { //1st level Adder
         // checking the nodeName
         msg << MSG::DEBUG << "comparing nodeName="<< nodeName << " with "<< m_nodeName << endreq;    
         if (Misc::findCaseIns(m_nodeName, nodeName) == std::string::npos){
@@ -349,9 +345,39 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
           continue;
         }
         else msg << MSG::DEBUG << "nodeName OK" << endreq;
-
+       // This is a 1st level Adder, then we can check the task name here.
+        if (Misc::findCaseIns(m_taskName, taskName) == std::string::npos) {
+          msg << MSG::DEBUG << "REFUSED because taskName NOT OK" << endreq;
+          continue; 
+        }
+        else msg << MSG::DEBUG << "taskName OK" << endreq;
       }
-      else {
+      else if ((m_nodeName.size() == 6)&&(m_nodeName.substr(0,4)!="PART")) { //2nd level Adder
+        if ((taskName.compare("Adder")!=0)&&(taskName.compare("ADDER")!=0)){
+          msg << MSG::DEBUG << "REFUSED because 2nd level adders add only adders. "<< endreq;
+          continue;
+        }
+        if (nodeName.size() <=  m_nodeName.size()) {
+          msg << MSG::DEBUG << "REFUSED because 2nd level adders add only 1rst level adders (nodename must be longer)"<< endreq;
+          continue;
+        }
+        nodeName = nodeName.substr(0, m_nodeName.size()); // we resize the nodename to do the match.
+        msg << MSG::DEBUG << "nodeName="<< nodeName << endreq;
+        // checking the nodeName
+        msg << MSG::DEBUG << "comparing nodeName="<< nodeName << " with "<< m_nodeName << endreq;    
+        if (Misc::findCaseIns(m_nodeName, nodeName) == std::string::npos){
+          msg << MSG::DEBUG << "REFUSED because nodeName NOT OK" << endreq;
+          continue;
+        }
+        else msg << MSG::DEBUG << "nodeName OK" << endreq;
+      }
+      else if  ((m_nodeName.size() == 6)&&(m_nodeName.substr(0,4)=="PART")) { //3rd level Adder (Top Level Adder)
+        if (nodeName.compare("Bridge")!=0) {
+          msg << MSG::DEBUG << "REFUSED because it is a Top Level Adder and it must add only Bridges. "<< endreq;
+          continue;
+        }
+        // checking the nodename is not necessary because the bridges are already selected.
+        // Then we only filter by subfarmName 
         std::string subfarmName = taskName;
         bool chooseIt=true;
         if (m_subfarmName.size()) chooseIt=false;
@@ -364,22 +390,9 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
         }
         if (!chooseIt) {
           msg << MSG::DEBUG << "REFUSED because subfarmName NOT OK" << endreq;
+          continue;
         }
-        else {
-          msg << MSG::DEBUG << "subfarmName OK" << endreq;
-          std::string serverName = (*serverListTotIt).substr(0, (*serverListTotIt).find("@"));
-          msg << MSG::DEBUG << "We will consider -----------> Server = "<<serverName << endreq;
-          serverList.insert(serverName);
-        }
-        continue;
-      }
-      // when the Server is not an Adder we can check the task name here.
-      if ((taskName.compare("Adder")!=0)&&(taskName.compare("ADDER")!=0)) {
-        if (Misc::findCaseIns(m_taskName, taskName) == std::string::npos) {
-          msg << MSG::DEBUG << "REFUSED because taskName NOT OK" << endreq;
-          continue; 
-        }
-        else msg << MSG::DEBUG << "taskName OK" << endreq;
+        else msg << MSG::DEBUG << "subfarmName OK" << endreq;
       }
     }
     else if (m_serviceOwner.compare(s_Saver)==0){
@@ -463,6 +476,7 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
     std::string serverName = (*serverListTotIt).substr(0, (*serverListTotIt).find("@"));
     msg << MSG::DEBUG << "We will consider -----------> Server = "<<serverName << endreq;
     serverList.insert(serverName);
+
   }  
     
   return serverList;

@@ -14,8 +14,8 @@
 #include "Gaucho/Misc.h"
 #include "Gaucho/DimInfoMonRate.h"
 #include "Gaucho/RatePublisher.h"
+#include "Gaucho/MonRateDecoder.h"
 #include "TFile.h"
-
 
 BaseServiceMap::BaseServiceMap(ProcessMgr *processMgr): 
   m_name("BaseServiceMap"),
@@ -268,23 +268,25 @@ void BaseServiceMap::loadDimInfo(const std::string &serviceName, const std::stri
   }
   
   msg << MSG::DEBUG << "after creating MonObject in DimInfoMonObject " << endreq;
-  if (m_processMgr->serviceOwner() == s_Saver) {// If it's a Saver we also create the object
+  if (m_processMgr->serviceOwner() == s_Saver)
+  {// If it's a Saver we also create the object
     if (0 != m_dimInfo[groupName][elementName]->monObject()){ 
       
       std::vector<std::string> serviceParts = Misc::splitString(termSvcName, "/");
       std::string newName="";
       int n = serviceParts.size();
-      
+
       newName = serviceParts[2];
       for (int i=3; i < n; i++) {
         newName = newName + "/" + serviceParts[i];
       }
-   
+
       std::string svctype = serviceParts[0];
+
       if (svctype.compare(s_pfixMonH1F) == 0){
        // newName = ((MonH1F*) (m_dimInfo[groupName][elementName]->monObject()))->histName();
-       // newName = m_processMgr->taskName() + "/"+ newName;
-        ((MonH1F*) (m_dimInfo[groupName][elementName]->monObject()))->createObject(newName);
+        // newName = m_processMgr->taskName() + "/"+ newName;
+          ((MonH1F*) (m_dimInfo[groupName][elementName]->monObject()))->createObject(newName);
       } else if (svctype.compare(s_pfixMonH1D) == 0){
        // newName = ((MonH1D*) (m_dimInfo[groupName][elementName]->monObject()))->histName();
        // newName = m_processMgr->taskName() + "/"+ newName;
@@ -292,13 +294,13 @@ void BaseServiceMap::loadDimInfo(const std::string &serviceName, const std::stri
       } else if (svctype.compare(s_pfixMonH2F) == 0){
        // newName = ((MonH2F*) (m_dimInfo[groupName][elementName]->monObject()))->histName();
        // newName = m_processMgr->taskName() + "/"+ newName;
-        ((MonH2F*) (m_dimInfo[groupName][elementName]->monObject()))->createObject(newName);
+       ((MonH2F*) (m_dimInfo[groupName][elementName]->monObject()))->createObject(newName);
       } else if (svctype.compare(s_pfixMonH2D) == 0){
        // newName = ((MonH2D*) (m_dimInfo[groupName][elementName]->monObject()))->histName();
        // newName = m_processMgr->taskName() + "/"+ newName;
         ((MonH2D*) (m_dimInfo[groupName][elementName]->monObject()))->createObject(newName);
       } else if (svctype.compare(s_pfixMonProfile) == 0){
-       // newName = ((MonProfile*) (m_dimInfo[groupName][elementName]->monObject()))->profileName();
+      // newName = ((MonProfile*) (m_dimInfo[groupName][elementName]->monObject()))->profileName();
        // newName = m_processMgr->taskName() + "/"+ newName;
        ((MonProfile*) (m_dimInfo[groupName][elementName]->monObject()))->createObject(newName);
       } else {
@@ -396,8 +398,14 @@ void BaseServiceMap::insertDimService(const std::string &serviceName, const std:
   //monObjectAdder->print();
   msg << MSG::DEBUG << "creating DimServiceMonObject for Adder : " << groupName << endreq;
   DimServiceMonObject *dimServiceMonObjectAdder = new DimServiceMonObject(groupName, monObjectAdder);
-      
+
   m_dimSrv[groupName] = std::pair<DimServiceMonObject*, MonObject*> (dimServiceMonObjectAdder, monObjectAdder);
+
+  if (monObjectTmp->typeName().compare (s_monRate) == 0) {
+    if (m_processMgr->publishRates())  {
+      m_monRateDecoder = new MonRateDecoder(m_processMgr->msgSvc(), m_processMgr->utgid(), groupName);
+    }
+  }
 }
 
 void BaseServiceMap::deleteDimService(const std::string &serviceName){
@@ -412,7 +420,15 @@ void BaseServiceMap::deleteDimService(const std::string &serviceName){
     return;  
   }
   
-  msg << MSG::DEBUG << " erasing published MonObject from map" <<endreq;  
+  if (m_dimSrv[groupName].second->typeName().compare (s_monRate) == 0) {
+    if (m_processMgr->publishRates())  {
+      msg << MSG::DEBUG << " erasing MonRateDecoder" <<endreq;
+      if (m_monRateDecoder != 0) {
+        delete m_monRateDecoder; m_monRateDecoder = 0;
+      }
+    }
+  }
+  msg << MSG::DEBUG << " erasing published MonObject from map" <<endreq;
   delete m_dimSrv[groupName].second; 
   m_dimSrv[groupName].second = 0;
   msg << MSG::DEBUG << " erasing DimService " << groupName << " from map" <<endreq;  
@@ -637,17 +653,17 @@ void BaseServiceMap::add() {
   for (m_dimInfoIt=m_dimInfo.begin(); m_dimInfoIt!=m_dimInfo.end(); ++m_dimInfoIt) 
   {
     msg << MSG::DEBUG << " Adder : " << m_dimInfoIt->first << endreq;
-    
+
     if (m_dimSrv.find(m_dimInfoIt->first) == m_dimSrv.end()) { 
       msg << MSG::DEBUG << "No Adder Found " << m_dimInfoIt->first << endreq;
       continue;
     }
-    
+
     m_dimSrv[m_dimInfoIt->first].second->reset();
     //msg << MSG::DEBUG << "Adder EndOfRun Flag=  " << m_dimSrv[m_dimInfoIt->first].second->endOfRun() << endreq;
     for (it=m_dimInfoIt->second.begin(); it!=m_dimInfoIt->second.end(); ++it) {
       if (!m_processMgr->dimInfoServers()->isActive(it->first)) continue;
-            
+
       if(0 == it->second->monObject()) continue;
       msg << MSG::DEBUG << "Loading term : " << it->first << endreq;
       bool isLoaded = it->second->loadMonObject();
@@ -656,20 +672,24 @@ void BaseServiceMap::add() {
         continue;
       }
       msg << MSG::DEBUG << "Term : " << it->second->dimInfo()->getName() << " ok" << endreq;
-      
-      if (s_monRate == m_dimSrv[m_dimInfoIt->first].second->typeName()){
+
+      if (m_dimSrv[m_dimInfoIt->first].second->typeName().compare(s_monRate) == 0){
         int countersAdder = ((MonRate*) (m_dimSrv[m_dimInfoIt->first].second))->numCounters();
-	int countersTerm = ((MonRate*) it->second->monObject())->numCounters();
-	if ( countersAdder < countersTerm) {
-	  ((MonProfile*) (m_dimSrv[m_dimInfoIt->first].second))->synchronizeLabelNames(it->second->monObject());
-	  ((MonRate*) (m_dimSrv[m_dimInfoIt->first].second))->setNumCounters(((MonRate*)it->second->monObject())->numCounters());
-	}
+        int countersTerm = ((MonRate*) it->second->monObject())->numCounters();
+        if ( countersAdder < countersTerm) {
+          ((MonProfile*) (m_dimSrv[m_dimInfoIt->first].second))->synchronizeLabelNames(it->second->monObject());
+          ((MonRate*) (m_dimSrv[m_dimInfoIt->first].second))->setNumCounters(((MonRate*)it->second->monObject())->numCounters());
+        }
       }
       //msg << MSG::DEBUG << "Combining Service : " << endreq;
       m_dimSrv[m_dimInfoIt->first].second->combine(it->second->monObject());
     }
     //msg << MSG::DEBUG << "Updating Service : " << endreq;
     m_dimSrv[m_dimInfoIt->first].first->updateService(m_dimSrv[m_dimInfoIt->first].second->endOfRun());
+
+    if (m_dimSrv[m_dimInfoIt->first].second->typeName().compare(s_monRate) == 0){
+      if (m_processMgr->publishRates()) m_monRateDecoder->update((MonRate*)(m_dimSrv[m_dimInfoIt->first].second));
+    }
   }
 }
 
