@@ -4,6 +4,12 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2008-11-11 - Marco Cattaneo
+ - Changes in Configurable, require Gaudi v20r3: 
+   . remove setProp and getProp functions (now in ConfigurableUser base class)
+   . Reverse logic of setOtherProp(s): now if both self and other class have
+     the same property set, self property takes precedence
+
 ! 2008-10-27 - Marco Cattaneo
  - Add a missing include to CaloCellCode.h, for gcc 4.3
  - Fix some gcc 4.3 compilation warnings

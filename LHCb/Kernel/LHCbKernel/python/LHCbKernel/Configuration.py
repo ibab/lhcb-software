@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.4 2008-10-22 16:53:37 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.5 2008-11-11 14:29:18 cattanem Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -34,32 +34,16 @@ class LHCbConfigurableUser(ConfigurableUser):
     #  initialisation tasks they wish
     def initialise(self): None
 
-    ## @brief Returns the value of the given property
-    #  @param name The property name
-    #  @return The value of property 'name'
-    def getProp(self,name):
-        if hasattr(self,name):
-            return getattr(self,name)
-        else:
-            return self.getDefaultProperties()[name]
-
-    ## @brief Set the value of a given property
-    #  @param name  The name of the property
-    #  @param value The value of the property
-    def setProp(self,name,value):
-        return setattr(self,name,value)
-
     ## @brief Set the given property in another configurable object
     #  @param other The other configurable to set the property for
     #  @param name  The property name
     def setOtherProp(self,other,name):
         # Function to propagate properties to other component, if not already set
-        if hasattr(self,name):
-            if hasattr(other,name) and len(other.getProp(name)) > 0 :
-                print "# %s().%s already defined, ignoring %s().%s"%(other.name(),name,
-                                                                     self.name(), name )
-            else:
-                other.setProp(name,self.getProp(name))
+        if hasattr(self,name) or not hasattr(other,name):
+            if hasattr(other,name) :
+                log.warning("Both %s().%s and  %s().%s are defined, using %s().%s"%
+                            (other.name(),name, self.name(), name, self.name(), name)  )
+            other.setProp(name,self.getProp(name))
 
     ## @brief Set the given properties in another configurable object
     #  @param other The other configurable to set the property for
