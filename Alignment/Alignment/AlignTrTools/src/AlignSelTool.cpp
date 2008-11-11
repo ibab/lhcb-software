@@ -1,4 +1,4 @@
-// $Id: AlignSelTool.cpp,v 1.16 2008-05-21 10:59:26 lnicolas Exp $
+// $Id: AlignSelTool.cpp,v 1.17 2008-11-11 15:23:15 lnicolas Exp $
 // Include files 
 
 // local
@@ -48,6 +48,7 @@ AlignSelTool::AlignSelTool ( const std::string& type,
   m_trChi2Prob     ( abs(defValue) ),
   m_nHoles         ( defValue      ),
   m_nSharedHits    ( defValue      ),
+  m_nSharedTHits   ( defValue      ),
   m_nCloseHits     ( defValue      ) {
   
   // Reserving space for some vectors
@@ -81,6 +82,7 @@ AlignSelTool::AlignSelTool ( const std::string& type,
   declareProperty ( "Chi2ProbMinCut",      c_minChi2Prob      = defValue      );
   declareProperty ( "NHolesMaxCut",        c_maxNHoles        = abs(defValue) );
   declareProperty ( "NSharedHitsMaxCut",   c_maxNSharedHits   = abs(defValue) );
+  declareProperty ( "NSharedTHitsMaxCut",  c_maxNSharedTHits  = abs(defValue) );
   declareProperty ( "NCloseHitsMaxCut",    c_maxNCloseHits    = abs(defValue) );
 }
 //=============================================================================
@@ -186,7 +188,7 @@ void AlignSelTool::initEvent ( ) const {
     getCloseHits();
   }
   // Get the hits shared by more than one track
-  if ( c_maxNSharedHits < abs(defValue) ) {
+  if ( (c_maxNSharedHits < abs(defValue)) || (c_maxNSharedTHits < abs(defValue)) ) {
     m_sharedHits.clear();
     getSharedHits();
   }
@@ -212,7 +214,7 @@ bool AlignSelTool::accept ( const LHCb::Track& aTrack ) const {
   // Cut on some variables
   if ( cutMultiplicity( ) || cutNITClusters( ) || cutNVeloClusters( ) ||
        cutTrackEta( ) || cutTrackP( ) || cutTrackPt( ) ||
-       cutNHoles( ) || cutNSharedHits( ) || cutNCloseHits( ) ||
+       cutNHoles( ) || cutNSharedHits( ) || cutNSharedTHits( ) || cutNCloseHits( ) ||
        cutTrackFitMatchChi2( ) || cutTrackChi2PerDoF( ) || cutTrackChi2Prob( ) ) return false;
 
   // Cut tracks "randomly" to get "constant" occupancy of detector
@@ -234,6 +236,7 @@ int AlignSelTool::getAllVariables ( const LHCb::Track& aTrack ) const {
   int nOTHits = 0;
   m_nCloseHits = 0;
   m_nSharedHits = 0;
+  m_nSharedTHits = 0;
 
   // Do we want to fill the nodes vector even if we don't cut on anything?
   if ( (c_maxNHoles < abs(defValue)) ||
@@ -295,15 +298,19 @@ int AlignSelTool::getAllVariables ( const LHCb::Track& aTrack ) const {
   if ( c_minChi2Prob > defValue )
     m_trChi2Prob = aTrack.probChi2();
 
-  if ( (c_maxNSharedHits < abs(defValue)) || (c_maxNCloseHits < abs(defValue)) ) {
+  if ( (c_maxNSharedHits < abs(defValue)) || (c_maxNSharedTHits < abs(defValue)) || 
+       (c_maxNCloseHits < abs(defValue)) ) {
     std::vector<LHCb::LHCbID>::const_iterator iIDs = aTrack.lhcbIDs().begin();
     for ( ; iIDs != aTrack.lhcbIDs().end(); ++iIDs ) {
       const LHCb::LHCbID& aID = *iIDs;
       // Shared Hits
-      if ( c_maxNSharedHits < abs(defValue) )
+      if ( (c_maxNSharedHits < abs(defValue)) || (c_maxNSharedTHits < abs(defValue)) )
         if ( std::binary_search( m_sharedHits.begin(),
-                                 m_sharedHits.end(), aID, lessByID() ) )
+                                 m_sharedHits.end(), aID, lessByID() ) ) {
           ++m_nSharedHits;
+	  if ( aID.isIT() || aID.isOT() )
+	    ++m_nSharedTHits;
+	}
       // Close Hits
       if ( c_maxNCloseHits < abs(defValue) )
         if ( std::binary_search( m_closeHits.begin(),
@@ -454,6 +461,16 @@ bool AlignSelTool::cutNSharedHits ( ) const {
 
 
 //=============================================================================
+// Cutting on the number of shared hits in T-stations
+//=============================================================================
+bool AlignSelTool::cutNSharedTHits ( ) const {
+  if ( m_nSharedTHits > c_maxNSharedTHits ) return true;
+  return false;
+}
+//=============================================================================
+
+
+//=============================================================================
 // Cutting on the number of neighbouring hits
 //=============================================================================
 bool AlignSelTool::cutNCloseHits ( ) const {
@@ -481,7 +498,7 @@ void AlignSelTool::getSharedHits ( ) const {
 
   // sorting and stripping out duplicates
   std::sort( m_sharedHits.begin(), m_sharedHits.end(), lessByID() );
-  std::unique( m_sharedHits.begin(), m_sharedHits.end() );
+  m_sharedHits.erase( std::unique( m_sharedHits.begin(), m_sharedHits.end() ), m_sharedHits.end() );
 }
 //===========================================================================
 
@@ -535,7 +552,7 @@ void AlignSelTool::getCloseHits ( ) const {
 
   // sorting and stripping out duplicates
   std::sort( m_closeHits.begin(), m_closeHits.end(), lessByID() );
-  std::unique( m_closeHits.begin(), m_closeHits.end() );
+  m_closeHits.erase( std::unique( m_closeHits.begin(), m_closeHits.end() ), m_closeHits.end() );
 }
 //===========================================================================
 
@@ -830,6 +847,8 @@ void AlignSelTool::printCutValues( ) const {
     info() << "          Max # holes cut = " << c_maxNHoles << endmsg;
   if ( c_maxNSharedHits < abs(defValue) )
     info() << "          Max # shared hits cut = " << c_maxNSharedHits << endmsg;
+  if ( c_maxNSharedTHits < abs(defValue) )
+    info() << "          Max # shared T-hits cut = " << c_maxNSharedTHits << endmsg;
   if ( c_maxNCloseHits < abs(defValue) )
     info() << "          Max # neighbouring hits cut = " << c_maxNCloseHits << endmsg;
 

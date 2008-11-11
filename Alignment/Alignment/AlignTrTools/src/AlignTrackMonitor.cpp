@@ -1,4 +1,4 @@
-// $Id: AlignTrackMonitor.cpp,v 1.14 2008-07-17 13:54:39 lnicolas Exp $
+// $Id: AlignTrackMonitor.cpp,v 1.15 2008-11-11 15:23:15 lnicolas Exp $
 //
 
 //-----------------------------------------------------------------------------
@@ -144,7 +144,7 @@ StatusCode AlignTrackMonitor::execute ( ) {
   // Get the hits shared by more than one track
   m_sharedHits.clear( );
   getSharedHits ( );
-  
+
   //**********************************************************************
   // Global Variables
   //**********************************************************************
@@ -457,7 +457,8 @@ void AlignTrackMonitor::getCloseHits ( ) {
 
   // sorting and stripping out duplicates
   std::sort( m_closeHits.begin(), m_closeHits.end(), lessByID() );
-  std::unique( m_closeHits.begin(), m_closeHits.end() );
+  m_closeHits.erase( std::unique( m_closeHits.begin(), m_closeHits.end() ), m_closeHits.end() );
+
 }
 //===========================================================================
 
@@ -520,7 +521,8 @@ void AlignTrackMonitor::getSharedHits ( ) {
 
   // sorting and stripping out duplicates
   std::sort( m_sharedHits.begin(), m_sharedHits.end(), lessByID() );
-  std::unique( m_sharedHits.begin(), m_sharedHits.end() );
+  m_sharedHits.erase( std::unique( m_sharedHits.begin(), m_sharedHits.end() ), m_sharedHits.end() );
+
 }
 //===========================================================================
 

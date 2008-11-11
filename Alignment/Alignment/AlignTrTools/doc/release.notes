@@ -4,6 +4,11 @@ Package Coordinator : Johan Blouw
 Responsibles : J. Amoraal, J. Blouw, A. Hicheur, L. Nicolas
 Purpose: LHCb Alignment Tools
 
+! 2008-11-11 - Louis Nicolas
+- Bug fix in "unique" in AlignSelTool, AlignSaveTuple and AlignTrackMonitor
+- Re-add HitX/Y/Z in AlignSaveTuple
+- Add cut on number of shared hits in T stations (AlignSelTool)
+
 </PRE><H1><A NAME=v3r7>2008-09-12 AlignTrTools v3r7 </A></H1><PRE>
 
 - J. Blouw: tagged package for alignment project release v3r2

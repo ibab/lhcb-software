@@ -1,4 +1,4 @@
-// $Id: AlignSaveTuple.h,v 1.6 2008-07-17 13:54:39 lnicolas Exp $
+// $Id: AlignSaveTuple.h,v 1.7 2008-11-11 15:23:15 lnicolas Exp $
 #ifndef _AlignSaveTuple_H_
 #define _AlignSaveTuple_H_
 
@@ -187,6 +187,10 @@ private:
   // Hits Variables
   Array m_res;
   Array m_errRes;
+
+  Array m_hitX;  	 
+  Array m_hitY; 	 
+  Array m_hitZ; 
 
   int m_nLadOverlaps;
   Array m_ladOvlapRes;

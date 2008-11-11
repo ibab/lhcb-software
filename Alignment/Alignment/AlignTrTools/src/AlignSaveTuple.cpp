@@ -1,4 +1,4 @@
-// $Id: AlignSaveTuple.cpp,v 1.7 2008-07-17 13:54:39 lnicolas Exp $
+// $Id: AlignSaveTuple.cpp,v 1.8 2008-11-11 15:23:15 lnicolas Exp $
 //
 
 //-----------------------------------------------------------------------------
@@ -173,7 +173,7 @@ StatusCode AlignSaveTuple::execute ( ) {
   getSharedHits();
   
   // Creating the tuple in memory
-  Tuples::Tuple trackSelTuple = nTuple( "TrackSelNTuple" );
+  Tuples::Tuple trackSelTuple = nTuple( "AllVariables" );
   
   // Get the association table 
   AsctTool associator( evtSvc(), m_tracksPath );
@@ -329,6 +329,10 @@ AlignSaveTuple::fillVariables ( const LHCb::Track* aTrack,
   m_res.clear();
   m_errRes.clear();
 
+  m_hitX.clear();  	 
+  m_hitY.clear(); 	 
+  m_hitZ.clear();
+
   m_nLadOverlaps = 0;
   m_ladOvlapRes.clear();
   m_ladOvlapLay.clear();
@@ -358,6 +362,26 @@ AlignSaveTuple::fillVariables ( const LHCb::Track* aTrack,
     delete mcPart;
     //**********************************************************************
   }
+  
+  std::vector<LHCb::LHCbID>::const_iterator iIDs = aTrack->lhcbIDs().begin();
+  for ( ; iIDs != aTrack->lhcbIDs().end(); ++iIDs ) {
+    const LHCb::LHCbID& aID = *iIDs;
+    //**********************************************************************
+    // Number of shared hits in the track
+    //**********************************************************************
+    if ( std::binary_search( m_sharedHits.begin(),
+			     m_sharedHits.end(), aID, lessByID() ) )
+      ++m_nSharedHits;
+    //**********************************************************************
+    
+    //**********************************************************************
+    // Number of hits close to the track
+    //**********************************************************************
+    if ( std::binary_search( m_closeHits.begin(),
+			     m_closeHits.end(), aID, lessByID() ) )
+      ++m_nCloseHits;
+    //**********************************************************************
+  }
 
   // For Box Overlap
   unsigned int overlapStation = abs(defValue);
@@ -366,13 +390,13 @@ AlignSaveTuple::fillVariables ( const LHCb::Track* aTrack,
   std::vector<LHCb::Node*>::const_iterator iNodes = aTrack->nodes().begin();
   for ( ; iNodes != aTrack->nodes().end(); ++iNodes ) {
 
-    // Only loop on hits with measurement
-    if ( !(**iNodes).hasMeasurement() ) continue;
-
     const LHCb::Node& aNode = **iNodes;
-    LHCb::LHCbID nodeID = aNode.measurement().lhcbID();
     LHCb::FitNode* fNode = dynamic_cast<LHCb::FitNode*>(*iNodes);
 
+    // Only loop on hits with measurement
+    if ( !aNode.hasMeasurement() ) continue;
+
+    LHCb::LHCbID nodeID = aNode.measurement().lhcbID();
     LHCb::STChannelID theSTID;
     LHCb::OTChannelID theOTID;
     
@@ -398,28 +422,21 @@ AlignSaveTuple::fillVariables ( const LHCb::Track* aTrack,
     }
 
     //**********************************************************************
-    // Number of shared hits in the track
-    //**********************************************************************
-    if ( std::binary_search( m_sharedHits.begin(),
-                             m_sharedHits.end(), nodeID, lessByID() ) )
-      ++m_nSharedHits;
-    //**********************************************************************
-
-    //**********************************************************************
-    // Number of hits close to the track
-    //**********************************************************************
-    if ( std::binary_search( m_closeHits.begin(),
-                             m_closeHits.end(), nodeID, lessByID() ) )
-      ++m_nCloseHits;
-    //**********************************************************************
-
-    //**********************************************************************
     // Residuals and Residual Errors
     //**********************************************************************
 //     m_res.push_back(aNode.residual());
 //     m_errRes.push_back(aNode.errResidual());
     m_res.push_back(fNode->unbiasedResidual());
     m_errRes.push_back(fNode->errUnbiasedResidual());
+    //**********************************************************************
+
+    //**********************************************************************
+    // Hit Position
+    //**********************************************************************
+     Gaudi::XYZPoint hitPos = aNode.state().position();
+     m_hitX.push_back(hitPos.X());
+     m_hitY.push_back(hitPos.Y());
+     m_hitZ.push_back(hitPos.Z());
     //**********************************************************************
 
     //**********************************************************************
@@ -579,7 +596,7 @@ void AlignSaveTuple::getCloseHits ( ) {
 
   // sorting and stripping out duplicates
   std::sort( m_closeHits.begin(), m_closeHits.end(), lessByID() );
-  std::unique( m_closeHits.begin(), m_closeHits.end() );
+  m_closeHits.erase( std::unique( m_closeHits.begin(), m_closeHits.end() ), m_closeHits.end() );
 }
 //===========================================================================
 
@@ -642,7 +659,7 @@ void AlignSaveTuple::getSharedHits ( ) {
 
   // sorting and stripping out duplicates
   std::sort( m_sharedHits.begin(), m_sharedHits.end(), lessByID() );
-  std::unique( m_sharedHits.begin(), m_sharedHits.end() );
+  m_sharedHits.erase( std::unique( m_sharedHits.begin(), m_sharedHits.end() ), m_sharedHits.end() );
 }
 //===========================================================================
 
@@ -920,6 +937,13 @@ StatusCode AlignSaveTuple::writeNTuple ( Tuples::Tuple trackSelTuple ) {
                             m_res.end(), "NResiduals", m_maxNHits );
   trackSelTuple -> farray ( "ErrResiduals", m_errRes.begin(),
                             m_errRes.end(), "NResiduals", m_maxNHits );
+
+  trackSelTuple -> farray ( "HitX", m_hitX.begin(),  	 
+			    m_hitX.end(), "NResiduals", m_maxNHits ); 	 
+  trackSelTuple -> farray ( "HitY", m_hitY.begin(), 	 
+			    m_hitY.end(), "NResiduals", m_maxNHits ); 	 
+  trackSelTuple -> farray ( "HitZ", m_hitZ.begin(), 	 
+			    m_hitZ.end(), "NResiduals", m_maxNHits );
   //**********************************************************************
   
   return trackSelTuple->write();  

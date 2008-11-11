@@ -1,4 +1,4 @@
-// $Id: AlignSelTool.h,v 1.11 2008-05-21 10:59:26 lnicolas Exp $
+// $Id: AlignSelTool.h,v 1.12 2008-11-11 15:23:15 lnicolas Exp $
 #ifndef ALIGNTRTOOLS_ALIGNSELTOOL_H 
 #define ALIGNTRTOOLS_ALIGNSELTOOL_H 1
 
@@ -117,6 +117,7 @@ private:
   double c_minChi2Prob;
   int c_maxNHoles;
   int c_maxNSharedHits;
+  int c_maxNSharedTHits;
   int c_maxNCloseHits;
   //=============================================================================
 
@@ -147,6 +148,7 @@ private:
   mutable double m_trChi2Prob;
   mutable int m_nHoles;
   mutable int m_nSharedHits;
+  mutable int m_nSharedTHits;
   mutable int m_nCloseHits;
   //===========================================================================
 
@@ -183,6 +185,7 @@ private:
   bool cutTrackChi2Prob ( ) const;
   bool cutNHoles ( ) const;
   bool cutNSharedHits ( ) const;
+  bool cutNSharedTHits ( ) const;
   bool cutNCloseHits ( ) const;
   //=============================================================================
 
