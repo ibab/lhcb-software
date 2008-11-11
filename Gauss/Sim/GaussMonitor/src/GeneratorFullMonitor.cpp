@@ -1,10 +1,11 @@
-// $Id: GeneratorFullMonitor.cpp,v 1.7 2008-07-14 20:34:20 robbep Exp $
+// $Id: GeneratorFullMonitor.cpp,v 1.8 2008-11-11 19:15:56 robbep Exp $
 // Include files 
+
+// local
+#include "GeneratorFullMonitor.h"
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
-#include "GaudiKernel/IHistogramSvc.h"
-#include "GaudiKernel/NTuple.h"
 
 // from Event
 #include "Event/HepMCEvent.h"
@@ -18,9 +19,6 @@
 #include "HepMC/GenVertex.h"
 #include "HepMC/GenParticle.h"
 
-// local
-#include "GeneratorFullMonitor.h"
-
 //-----------------------------------------------------------------------------
 // Implementation file for class : GeneratorFullMonitor
 //
@@ -32,50 +30,15 @@
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( GeneratorFullMonitor );
 
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 GeneratorFullMonitor::GeneratorFullMonitor( const std::string& name,
                           ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
-    , m_nTuple ( 0 ) 
-    , m_nPart ( ) 
-    , m_e ( ) 
-    , m_px ( ) 
-    , m_py ( ) 
-    , m_pz ( ) 
-    , m_vxProd ( ) 
-    , m_vyProd ( ) 
-    , m_vzProd ( ) 
-    , m_vxDecay( )
-    , m_vyDecay( ) 
-    , m_vzDecay( ) 
-    , m_pdgId  ( ) 
-    , m_nDau   ( )
-    , m_pdgIdMother( ) 
-    , m_pdgIdDau1( ) 
-    , m_pdgIdDau2( ) 
-    , m_pdgIdDau3( ) 
-    , m_pdgIdDau4( ) 
-    , m_pdgIdDau5( ) 
-    , m_pdgIdDau6( ) 
-    , m_indexMother( )
-    , m_indexInter( )
-    , m_nInter( ) 
-    , m_isBB( ) 
-    , m_event ( )
-    , m_shat ( )
-    , m_that ( )
-    , m_uhat ( )
-    , m_pthat( )
-    , m_x1 ( )
-    , m_x2 ( )
-    , m_procId ( )
+  : GaudiTupleAlg ( name , pSvcLocator )
     , m_nPartMax( 2000 ) 
     , m_nInterMax( 20 ) 
-    , m_event_max( 5 )
-{
+    , m_event_max( 5 ) {
   declareProperty( "HepMCEvents", 
                    m_inputHepMC = LHCb::HepMCEventLocation::Default);
   declareProperty( "Collisions", 
@@ -88,167 +51,22 @@ GeneratorFullMonitor::GeneratorFullMonitor( const std::string& name,
 GeneratorFullMonitor::~GeneratorFullMonitor() {}; 
 
 //=============================================================================
-// Initialisation. Check parameters
-//=============================================================================
-StatusCode GeneratorFullMonitor::initialize() {
-
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-
-  debug() << "==> Initialize" << endmsg;
-  
-  // Ntuple initialization
-
-  if ( 0 == ntupleSvc() ) {
-    fatal() << "NtupleSvc is not available !" << endmsg;
-    return StatusCode::FAILURE ;
-  }
-
-  NTupleFilePtr file ( ntupleSvc() , "/NTUPLES/FILE1" ) ;
-  
-  if ( !file ) {
-    fatal() << "Could not access /NTUPLES/FILE1" << endmsg;
-    return StatusCode::FAILURE ;
-  }
-  
-  NTuplePtr nt ( ntupleSvc() , "/NTUPLES/FILE1/MCTruth/1" ) ;
-  if ( !nt ) {
-    nt = ntupleSvc() -> book ( "/NTUPLES/FILE1/MCTruth/1" ,
-                               CLID_ColumnWiseTuple ,
-                               "MCTruth" ) ;
-  }
-  if ( ! nt ) {
-    fatal() << "Could not create Ntuple (1)" << endmsg;
-    return StatusCode::FAILURE ;
-  }
-  
-  m_nTuple = nt ;
-  
-  // PART block
-
-  sc = nt -> addItem ( "NPart" , m_nPart , 0 , m_nPartMax ) ;
-  if ( sc.isSuccess() ) {
-    sc = nt -> addIndexedItem( "e" , m_nPart , m_e ) ;
-  }
-  if ( sc.isSuccess() ) {
-    sc = nt -> addIndexedItem( "px" , m_nPart , m_px ) ;
-  }
-  if ( sc.isSuccess() ) {
-    sc = nt -> addIndexedItem( "py" , m_nPart , m_py ) ;
-  }
-  if ( sc.isSuccess() ) {
-    sc = nt -> addIndexedItem( "pz" , m_nPart , m_pz ) ;
-  }
-  if ( sc.isSuccess() ) {
-    sc = nt -> addIndexedItem( "vxProd" , m_nPart , m_vxProd ) ;
-  }
-  if ( sc.isSuccess() ) {
-    sc = nt -> addIndexedItem( "vyProd" , m_nPart , m_vyProd ) ;
-  }
-  if ( sc.isSuccess() ) {
-    sc = nt -> addIndexedItem( "vzProd" , m_nPart , m_vzProd ) ;
-  }
-  if ( sc.isSuccess() ) {
-    sc = nt -> addIndexedItem( "vtProd" , m_nPart , m_vtProd ) ;
-  }
-  if ( sc.isSuccess() ) {
-    sc = nt -> addIndexedItem( "vxDecay" , m_nPart , m_vxDecay ) ;
-  }
-  if ( sc.isSuccess() ) {
-    sc = nt -> addIndexedItem( "vyDecay" , m_nPart , m_vyDecay ) ;
-  }
-  if ( sc.isSuccess() ) {
-    sc = nt -> addIndexedItem( "vzDecay" , m_nPart , m_vzDecay ) ;
-  }
-  if ( sc.isSuccess() ) {
-    sc = nt -> addIndexedItem( "vtDecay" , m_nPart , m_vtDecay ) ;
-  }
-  if ( sc.isSuccess() ) {
-    sc = nt -> addIndexedItem( "pdgId" , m_nPart , m_pdgId ) ;
-  }
-  if ( sc.isSuccess() ) {
-    sc = nt -> addIndexedItem( "nDau" , m_nPart , m_nDau ) ;
-  }
-  if ( sc.isSuccess() ) {
-    sc = nt -> addIndexedItem( "pdgIdMother" , m_nPart , m_pdgIdMother ) ;
-  }
-  if ( sc.isSuccess() ) {
-    sc = nt -> addIndexedItem( "pdgIdDau1" , m_nPart , m_pdgIdDau1 ) ;
-  }
-  if ( sc.isSuccess() ) {
-    sc = nt -> addIndexedItem( "pdgIdDau2" , m_nPart , m_pdgIdDau2 ) ;
-  }
-  if ( sc.isSuccess() ) {
-    sc = nt -> addIndexedItem( "pdgIdDau3" , m_nPart , m_pdgIdDau3 ) ;
-  }
-  if ( sc.isSuccess() ) {
-    sc = nt -> addIndexedItem( "pdgIdDau4" , m_nPart , m_pdgIdDau4 ) ;
-  }
-  if ( sc.isSuccess() ) {
-    sc = nt -> addIndexedItem( "pdgIdDau5" , m_nPart , m_pdgIdDau5 ) ;
-  }
-  if ( sc.isSuccess() ) {
-    sc = nt -> addIndexedItem( "pdgIdDau6" , m_nPart , m_pdgIdDau6 ) ;
-  }
-  if ( sc.isSuccess() ) {
-    sc = nt -> addIndexedItem( "indexMother" , m_nPart , m_indexMother ) ;
-  }
-  if ( sc.isSuccess() ) {
-    sc = nt -> addIndexedItem( "indexInter" , m_nPart, m_indexInter ) ;
-  }
-
-  // Inter Block  
-  if ( sc.isSuccess() ) {
-    sc = nt -> addItem ( "NInter" , m_nInter , 0 , m_nInterMax ) ;
-  }
-  if ( sc.isSuccess() ) {
-    sc = nt -> addIndexedItem ( "isBB" , m_nInter , m_isBB ) ;
-  }
-
-  // Event Variables  
-  if ( sc.isSuccess() ) {
-    sc = nt -> addItem ( "Mandelstam" , m_event , 0 , m_event_max ) ;
-  }
-  if ( sc.isSuccess() ) {
-    sc = nt -> addIndexedItem ( "s_hat" , m_event , m_shat ) ;
-  }
-  if ( sc.isSuccess() ) {
-    sc = nt -> addIndexedItem ( "t_hat" , m_event , m_that ) ;
-  }
-  if ( sc.isSuccess() ) {
-    sc = nt -> addIndexedItem ( "u_hat" , m_event , m_uhat ) ;
-  }
-  if ( sc.isSuccess() ) {
-    sc = nt -> addIndexedItem ( "pt_hat" , m_event , m_pthat ) ;
-  }
-  if ( sc.isSuccess() ) {
-    sc = nt -> addIndexedItem ( "x1_Bjork" , m_event , m_x1 ) ;
-    }
-  if ( sc.isSuccess() ) {
-    sc = nt -> addIndexedItem ( "x2_Bjork" , m_event , m_x2 ) ;
-  }
-  if ( sc.isSuccess() ) {
-    sc = nt -> addIndexedItem ( "m_procId" , m_event , m_procId ) ;
-  }
-
-  if ( ! sc.isSuccess() ) {
-    error() << "Error declaring NTuple" << endmsg ;
-  }
-
-  return sc ;
-};
-
-//=============================================================================
 // Main execution
 //=============================================================================
 StatusCode GeneratorFullMonitor::execute() {
-
   debug() << "==> Execute" << endmsg;
 
-  m_event = 0;
+  Tuple ntp = nTuple( 1 , "MCTruth" , CLID_ColumnWiseTuple ) ;
+
+  int nEvent = 0;
+  
   LHCb::GenCollisions* collisions = get<LHCb::GenCollisions>( m_inputColl );
+  
+  std::vector< int > procId ;
+  std::vector< double > shat , that , uhat , pthat , x1 , x2 ;
+  
   for( LHCb::GenCollisions::iterator itC = collisions->begin(); 
-         collisions->end() != itC; ++itC ) {
+         collisions->end() != itC ; ++itC ) {
     debug() << "GenCollision ::: " << endmsg;
     debug() << (*itC) << " ," 
             << (*itC)->event()->pGenEvt()->signal_process_id() << " "
@@ -258,20 +76,27 @@ StatusCode GeneratorFullMonitor::execute() {
             << " x1 = " << (*itC)->x1Bjorken() << " "
             << " x2 = " << (*itC)->x2Bjorken() << " "
             << endmsg;
-    m_procId [ m_event ] = (*itC)->event()->pGenEvt()->signal_process_id();
-    m_shat   [ m_event ] = (*itC)->sHat();
-    m_that   [ m_event ] = (*itC)->tHat();
-    m_uhat   [ m_event ] = (*itC)->uHat();
-    m_pthat  [ m_event ] = (*itC)->ptHat() ;
-    m_x1     [ m_event ] = (*itC)->x1Bjorken();
-    m_x2     [ m_event ] = (*itC)->x2Bjorken();
-    m_event++;
-    if(m_event >= m_event_max){
+    procId.push_back( (*itC)->event()->pGenEvt()->signal_process_id() ) ;
+    shat.push_back( (*itC)->sHat() ) ;
+    that.push_back( (*itC)->tHat() ) ;
+    uhat.push_back( (*itC)->uHat() ) ;
+    pthat.push_back( (*itC)->ptHat() ) ;
+    x1.push_back( (*itC)->x1Bjorken() ) ;
+    x2.push_back( (*itC)->x2Bjorken() ) ; 
+    nEvent++;
+    if( nEvent >= m_event_max ) {
       warning() << "Not all Hard Process info recorded." << endmsg;
       break;
-    }    
+    }
   }
-
+  ntp -> farray( "procId"   , procId , "NInter" , m_event_max ) ;
+  ntp -> farray( "s_hat"    , shat   , "NInter" , m_event_max ) ;
+  ntp -> farray( "t_hat"    , that   , "NInter" , m_event_max ) ;
+  ntp -> farray( "u_hat"    , uhat   , "NInter" , m_event_max ) ;
+  ntp -> farray( "pt_hat"   , pthat  , "NInter" , m_event_max ) ;
+  ntp -> farray( "x1_Bjork" , x1     , "NInter" , m_event_max ) ;
+  ntp -> farray( "x2_Bjork" , x2     , "NInter" , m_event_max ) ; 
+  
   // Get HepMCEvents
   LHCb::HepMCEvents* hepVect = get<LHCb::HepMCEvents>( m_inputHepMC );
 
@@ -279,9 +104,36 @@ StatusCode GeneratorFullMonitor::execute() {
   LHCb::HepMCEvents::iterator it ;
   // Initialize counters
   m_nPart = 0 ;
-  m_nInter = 0 ;    
+  m_nInter = 0 ;
+  
+  m_e.clear() ;
+  m_px.clear() ;
+  m_py.clear() ;
+  m_pz.clear() ;
+  m_vxProd.clear() ;
+  m_vyProd.clear() ;
+  m_vzProd.clear() ;
+  m_vtProd.clear() ;
+  m_vxDecay.clear() ;
+  m_vyDecay.clear() ;
+  m_vzDecay.clear() ;
+  m_vtDecay.clear() ;
+  m_pdgId.clear() ;
+  m_nDau.clear() ;
+  m_pdgIdMother.clear() ;
+  m_pdgIdDau1.clear()  ;
+  m_pdgIdDau2.clear() ;
+  m_pdgIdDau3.clear() ;
+  m_pdgIdDau4.clear() ;
+  m_pdgIdDau5.clear() ;
+  m_pdgIdDau6.clear() ;
+  m_indexMother.clear() ;
+  m_indexInter.clear() ;
+  
+  std::vector< int > isBB ;
+  
   for( it  = hepVect->begin(); it != hepVect->end(); it++ ) {
-    m_isBB[ m_nInter ] = 0 ;
+    isBB.push_back( 0 ) ;
     debug() << "Generator process = " 
             << (*it)->pGenEvt()->signal_process_id()
             << endmsg;
@@ -337,125 +189,138 @@ StatusCode GeneratorFullMonitor::execute() {
     m_nInter ++ ;
     if( m_nInter >= m_nInterMax ) break;
   }
+  
+  ntp -> farray( "e" , m_e     , "NPart" , m_nPartMax ) ; 
+  ntp -> farray( "px", m_px    , "NPart" , m_nPartMax ) ; 
+  ntp -> farray( "py", m_py    , "NPart" , m_nPartMax ) ; 
+  ntp -> farray( "pz", m_pz    , "NPart" , m_nPartMax ) ; 
+  ntp -> farray( "vxProd", m_vxProd , "NPart" , m_nPartMax ) ; 
+  ntp -> farray( "vyProd", m_vyProd , "NPart" , m_nPartMax ) ; 
+  ntp -> farray( "vzProd", m_vzProd , "NPart" , m_nPartMax ) ; 
+  ntp -> farray( "vtProd", m_vtProd , "NPart" , m_nPartMax ) ; 
+  ntp -> farray( "vxDecay", m_vxDecay , "NPart" , m_nPartMax ) ; 
+  ntp -> farray( "vyDecay", m_vyDecay , "NPart" , m_nPartMax ) ; 
+  ntp -> farray( "vzDecay", m_vzDecay , "NPart" , m_nPartMax ) ; 
+  ntp -> farray( "vtDecay", m_vtDecay , "NPart" , m_nPartMax ) ; 
+  ntp -> farray( "pdgId", m_pdgId , "NPart" , m_nPartMax ) ; 
+  ntp -> farray( "nDau", m_nDau , "NPart" , m_nPartMax ) ; 
+  ntp -> farray( "pdgIdMother", m_pdgIdMother , "NPart" , m_nPartMax ) ; 
+  ntp -> farray( "pdgIdDau1", m_pdgIdDau1 , "NPart" , m_nPartMax ) ; 
+  ntp -> farray( "pdgIdDau2", m_pdgIdDau2 , "NPart" , m_nPartMax ) ; 
+  ntp -> farray( "pdgIdDau3", m_pdgIdDau3 , "NPart" , m_nPartMax ) ; 
+  ntp -> farray( "pdgIdDau4", m_pdgIdDau4 , "NPart" , m_nPartMax ) ; 
+  ntp -> farray( "pdgIdDau5", m_pdgIdDau5 , "NPart" , m_nPartMax ) ; 
+  ntp -> farray( "pdgIdDau6", m_pdgIdDau6 , "NPart" , m_nPartMax ) ; 
+  ntp -> farray( "indexMother", m_indexMother , "NPart" , m_nPartMax ) ; 
+  ntp -> farray( "indexInter", m_indexInter , "NPart" , m_nPartMax ) ;
 
-  m_nTuple->write( );
+  ntp -> write( );
   return StatusCode::SUCCESS;
-};
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode GeneratorFullMonitor::finalize() {
-
-  debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
 //=============================================================================
 // Fill Ntuple
 //=============================================================================
 void GeneratorFullMonitor::FillNtuple( HepMC::GenParticle * thePart ,
-                                  int pdgMotherId ,
-                                  int motherIndex ) 
-{
+				       int pdgMotherId ,
+                                       int motherIndex ) {
   if ( m_nPart >= m_nPartMax ) return ;
   
   // Fill PART Block
-  m_e [ m_nPart ] = thePart -> momentum() . e() ;
-  m_px[ m_nPart ] = thePart -> momentum() . px() ;
-  m_py[ m_nPart ] = thePart -> momentum() . py() ;
-  m_pz[ m_nPart ] = thePart -> momentum() . pz() ;
+  m_e.push_back( thePart -> momentum() . e() ) ;
+  m_px.push_back( thePart -> momentum() . px() ) ;
+  m_py.push_back( thePart -> momentum() . py() ) ;
+  m_pz.push_back( thePart -> momentum() . pz() ) ;
   //
   if ( thePart -> production_vertex ( ) ) {
-    m_vxProd [ m_nPart ] = thePart -> production_vertex() -> position() . x() ;
-    m_vyProd [ m_nPart ] = thePart -> production_vertex() -> position() . y() ;
-    m_vzProd [ m_nPart ] = thePart -> production_vertex() -> position() . z() ;
-    m_vtProd [ m_nPart ] = thePart -> production_vertex() -> position() . t() ;
+    m_vxProd.push_back( thePart -> production_vertex() -> position() . x() ) ;
+    m_vyProd.push_back( thePart -> production_vertex() -> position() . y() ) ;
+    m_vzProd.push_back( thePart -> production_vertex() -> position() . z() ) ;
+    m_vtProd.push_back( thePart -> production_vertex() -> position() . t() ) ;
   } else {
-    m_vxProd [ m_nPart ] = -10000000. ;
-    m_vyProd [ m_nPart ] = -10000000. ;
-    m_vzProd [ m_nPart ] = -10000000. ;
-    m_vtProd [ m_nPart ] = -10000000. ;
+    m_vxProd.push_back( -10000000. ) ;
+    m_vyProd.push_back( -10000000. ) ;
+    m_vzProd.push_back( -10000000. ) ;
+    m_vtProd.push_back( -10000000. ) ;
   }
   // Decay Vertex
   if ( thePart -> end_vertex ( ) ) {
-    m_vxDecay [ m_nPart ] = thePart -> end_vertex() -> position() . x() ;
-    m_vyDecay [ m_nPart ] = thePart -> end_vertex() -> position() . y() ;
-    m_vzDecay [ m_nPart ] = thePart -> end_vertex() -> position() . z() ;
-    m_vtDecay [ m_nPart ] = thePart -> end_vertex() -> position() . t() ;
-    m_nDau[ m_nPart ] = thePart -> end_vertex() -> particles_out_size() ;
+    m_vxDecay.push_back( thePart -> end_vertex() -> position() . x() ) ;
+    m_vyDecay.push_back( thePart -> end_vertex() -> position() . y() ) ;
+    m_vzDecay.push_back( thePart -> end_vertex() -> position() . z() ) ;
+    m_vtDecay.push_back( thePart -> end_vertex() -> position() . t() ) ;
+    m_nDau.push_back( thePart -> end_vertex() -> particles_out_size() ) ;
     HepMC::GenVertex::particles_out_const_iterator theIt =
       thePart -> end_vertex() -> particles_out_const_begin( ) ;
     //
     if ( thePart -> end_vertex() -> particles_out_size() == 1 ) {
-      m_pdgIdDau1 [ m_nPart ] = ( * theIt ) -> pdg_id () ;
-      m_pdgIdDau2 [ m_nPart ] = 0 ;
-      m_pdgIdDau3 [ m_nPart ] = 0 ;
-      m_pdgIdDau4 [ m_nPart ] = 0 ;
-      m_pdgIdDau5 [ m_nPart ] = 0 ;
-      m_pdgIdDau6 [ m_nPart ] = 0 ;    
+      m_pdgIdDau1.push_back( ( * theIt ) -> pdg_id () ) ;
+      m_pdgIdDau2.push_back( 0 ) ;
+      m_pdgIdDau3.push_back( 0 ) ;
+      m_pdgIdDau4.push_back( 0 ) ;
+      m_pdgIdDau5.push_back( 0 ) ;
+      m_pdgIdDau6.push_back( 0 ) ; 
     } else if ( thePart -> end_vertex() -> particles_out_size() == 2 ) {
-      m_pdgIdDau1 [ m_nPart ] = ( * theIt ) -> pdg_id () ;
-      m_pdgIdDau2 [ m_nPart ] = ( * ++theIt ) -> pdg_id () ;
-      m_pdgIdDau3 [ m_nPart ] = 0 ;
-      m_pdgIdDau4 [ m_nPart ] = 0 ;
-      m_pdgIdDau5 [ m_nPart ] = 0 ;
-      m_pdgIdDau6 [ m_nPart ] = 0 ;    
+      m_pdgIdDau1.push_back( ( * theIt ) -> pdg_id () ) ;
+      m_pdgIdDau2.push_back( ( * ++theIt ) -> pdg_id () ) ;
+      m_pdgIdDau3.push_back( 0 ) ;
+      m_pdgIdDau4.push_back( 0 ) ;
+      m_pdgIdDau5.push_back( 0 ) ;
+      m_pdgIdDau6.push_back( 0 ) ; 
     } else if ( thePart -> end_vertex() -> particles_out_size() == 3 ) {
-      m_pdgIdDau1 [ m_nPart ] = ( * theIt ) -> pdg_id () ;
-      m_pdgIdDau2 [ m_nPart ] = ( * ++theIt ) -> pdg_id () ;
-      m_pdgIdDau3 [ m_nPart ] = ( * ++theIt ) -> pdg_id () ;
-      m_pdgIdDau4 [ m_nPart ] = 0 ;
-      m_pdgIdDau5 [ m_nPart ] = 0 ;
-      m_pdgIdDau6 [ m_nPart ] = 0 ;    
+      m_pdgIdDau1.push_back( ( * theIt ) -> pdg_id () ) ;
+      m_pdgIdDau2.push_back( ( * ++theIt ) -> pdg_id () ) ;
+      m_pdgIdDau3.push_back( ( * ++theIt ) -> pdg_id () ) ;
+      m_pdgIdDau4.push_back( 0 ) ;
+      m_pdgIdDau5.push_back( 0 ) ;
+      m_pdgIdDau6.push_back( 0 ) ;
     } else if ( thePart -> end_vertex() -> particles_out_size() == 4 ) {
-      m_pdgIdDau1 [ m_nPart ] = ( * theIt ) -> pdg_id () ;
-      m_pdgIdDau2 [ m_nPart ] = ( * ++theIt ) -> pdg_id () ;
-      m_pdgIdDau3 [ m_nPart ] = ( * ++theIt ) -> pdg_id () ;
-      m_pdgIdDau4 [ m_nPart ] = ( * ++theIt ) -> pdg_id () ;
-      m_pdgIdDau5 [ m_nPart ] = 0 ;
-      m_pdgIdDau6 [ m_nPart ] = 0 ;    
+      m_pdgIdDau1.push_back( ( * theIt ) -> pdg_id () ) ;
+      m_pdgIdDau2.push_back( ( * ++theIt ) -> pdg_id () ) ;
+      m_pdgIdDau3.push_back( ( * ++theIt ) -> pdg_id () ) ;
+      m_pdgIdDau4.push_back( ( * ++theIt ) -> pdg_id () ) ;
+      m_pdgIdDau5.push_back( 0 ) ;
+      m_pdgIdDau6.push_back( 0 ) ; 
     } else if ( thePart -> end_vertex() -> particles_out_size() == 5 ) {
-      m_pdgIdDau1 [ m_nPart ] = ( * theIt ) -> pdg_id () ;
-      m_pdgIdDau2 [ m_nPart ] = ( * ++theIt ) -> pdg_id () ;
-      m_pdgIdDau3 [ m_nPart ] = ( * ++theIt ) -> pdg_id () ;
-      m_pdgIdDau4 [ m_nPart ] = ( * ++theIt ) -> pdg_id () ;
-      m_pdgIdDau5 [ m_nPart ] = ( * ++theIt ) -> pdg_id () ;
-      m_pdgIdDau6 [ m_nPart ] = 0 ;    
+      m_pdgIdDau1.push_back( ( * theIt ) -> pdg_id () ) ;
+      m_pdgIdDau2.push_back( ( * ++theIt ) -> pdg_id () ) ;
+      m_pdgIdDau3.push_back( ( * ++theIt ) -> pdg_id () ) ;
+      m_pdgIdDau4.push_back( ( * ++theIt ) -> pdg_id () ) ;
+      m_pdgIdDau5.push_back( ( * ++theIt ) -> pdg_id () ) ;
+      m_pdgIdDau6.push_back( 0 ) ; 
     } else if ( thePart -> end_vertex() -> particles_out_size() == 6 ) {
-      m_pdgIdDau1 [ m_nPart ] = ( * theIt ) -> pdg_id () ;
-      m_pdgIdDau2 [ m_nPart ] = ( * ++theIt ) -> pdg_id () ;
-      m_pdgIdDau3 [ m_nPart ] = ( * ++theIt ) -> pdg_id () ;
-      m_pdgIdDau4 [ m_nPart ] = ( * ++theIt ) -> pdg_id () ;
-      m_pdgIdDau5 [ m_nPart ] = ( * ++theIt ) -> pdg_id () ;
-      m_pdgIdDau6 [ m_nPart ] = ( * ++theIt ) -> pdg_id () ;    
+      m_pdgIdDau1.push_back( ( * theIt ) -> pdg_id () ) ;
+      m_pdgIdDau2.push_back( ( * ++theIt ) -> pdg_id () ) ;
+      m_pdgIdDau3.push_back( ( * ++theIt ) -> pdg_id () ) ;
+      m_pdgIdDau4.push_back( ( * ++theIt ) -> pdg_id () ) ;
+      m_pdgIdDau5.push_back( ( * ++theIt ) -> pdg_id () ) ;
+      m_pdgIdDau6.push_back( ( * ++theIt ) -> pdg_id () ) ; 
     } else {
-      m_pdgIdDau1 [ m_nPart ] = 0 ;
-      m_pdgIdDau2 [ m_nPart ] = 0 ;
-      m_pdgIdDau3 [ m_nPart ] = 0 ;
-      m_pdgIdDau4 [ m_nPart ] = 0 ;
-      m_pdgIdDau5 [ m_nPart ] = 0 ;
-      m_pdgIdDau6 [ m_nPart ] = 0 ;    
+      m_pdgIdDau1.push_back( 0 ) ;
+      m_pdgIdDau2.push_back( 0 ) ;
+      m_pdgIdDau3.push_back( 0 ) ;
+      m_pdgIdDau4.push_back( 0 ) ;
+      m_pdgIdDau5.push_back( 0 ) ;
+      m_pdgIdDau6.push_back( 0 ) ; 
     }
   } else {
-    m_vxDecay [ m_nPart ] = 10000000. ;
-    m_vyDecay [ m_nPart ] = 10000000. ;
-    m_vzDecay [ m_nPart ] = 10000000. ;
-    m_vtDecay [ m_nPart ] = 10000000. ;
-    m_nDau [ m_nPart ] = 0 ;
-    m_pdgIdDau1 [ m_nPart ] = 0 ;
-    m_pdgIdDau2 [ m_nPart ] = 0 ;
-    m_pdgIdDau3 [ m_nPart ] = 0 ;
-    m_pdgIdDau4 [ m_nPart ] = 0 ;
-    m_pdgIdDau5 [ m_nPart ] = 0 ;
-    m_pdgIdDau6 [ m_nPart ] = 0 ;    
+    m_vxDecay.push_back( 10000000. ) ;
+    m_vyDecay.push_back( 10000000. ) ;
+    m_vzDecay.push_back( 10000000. ) ;
+    m_vtDecay.push_back( 10000000. ) ;
+    m_nDau.push_back( 0 ) ;
+    m_pdgIdDau1.push_back( 0 ) ;
+    m_pdgIdDau2.push_back( 0 ) ;
+    m_pdgIdDau3.push_back( 0 ) ;
+    m_pdgIdDau4.push_back( 0 ) ;
+    m_pdgIdDau5.push_back( 0 ) ;
+    m_pdgIdDau6.push_back( 0 ) ; 
   }
-  m_pdgId [ m_nPart ] = thePart -> pdg_id ( ) ;
-  m_pdgIdMother [ m_nPart ] = pdgMotherId ;
-  m_indexMother [ m_nPart ] = motherIndex ;
+  m_pdgId.push_back( thePart -> pdg_id ( ) ) ;
+  m_pdgIdMother.push_back( pdgMotherId ) ;
+  m_indexMother.push_back( motherIndex ) ;
             
-  m_indexInter [ m_nPart ] = m_nInter ;
+  m_indexInter.push_back( m_nInter ) ;
 
   int index = m_nPart ;
   
