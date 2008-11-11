@@ -1,4 +1,4 @@
-// $Id: CombineParticles.cpp,v 1.23 2008-11-06 11:52:36 pkoppenb Exp $
+// $Id: CombineParticles.cpp,v 1.24 2008-11-11 17:00:57 jpalac Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -61,20 +61,56 @@ namespace
  *    - <c>"Factory"</c>:   the type/name of hybrid (LoKi/Bender) C++/Python factory
  *    - <c>"Preambulo"</c>: the preambulo to be used for Bender/Python script
  *    - <c>"DecayDescriptors"</c>: the list of decay descriptors 
- *    - <c>"DaughtesCuts"</c>:     the map of cuts for daughters particles
+ *    - <c>"DaughtesCuts"</c>:     the map of cuts for daughter particles
  *    - <c>"CombinationCut"</c>:   the cut applied for combination of particles 
  *    - <c>"MotherCut"</c>:        the cut applied for mother particle 
- *    - <c>"DaughtersPlots"<c>:    the type/name of Plot-Tool for daughter particles 
- *    - <c>"CombinationPlots"<c>:  the type/name of Plot-Tool for combination  
- *    - <c>"MotherPlots"<c>:       the type/name of Plot-Tool for mother particles 
- *    - <c>"DaughtersPlotsPath"<c>:    the path for Daughters Plots 
- *    - <c>"CombinationPlotsPath"<c>:  the path for Combination Plots 
- *    - <c>"MotherPlotsPath"<c>:       the path for Mother Plots 
+ *    - <c>"DaughtersPlots"</c>:    the type/name of Plot-Tool for daughter particles 
+ *    - <c>"CombinationPlots"</c>:  the type/name of Plot-Tool for combination  
+ *    - <c>"MotherPlots"</c>:       the type/name of Plot-Tool for mother particles 
+ *    - <c>"DaughtersPlotsPath"</c>:    the path for Daughters Plots 
+ *    - <c>"CombinationPlotsPath"</c>:  the path for Combination Plots 
+ *    - <c>"MotherPlotsPath"</c>:       the path for Mother Plots 
  *  
  *  Few counters are produced:
- *    - "# <PID>" for each daughter 'PID': bumber of correspobding daugter particles 
+ *    - "# <PID>" for each daughter 'PID': number of corresponding daugter particles 
  *    - "# <DECAY>" for each <decay>: number of selected decay candidates 
  *    - "# selected": total number of selected candidates 
+ *
+ *  The cuts, as well as the quantities plotted, are 
+ *  <a href="https://twiki.cern.ch/twiki/bin/view/LHCb/MicroDST?topic=LoKiHybridFilters">LoKi::Hybrid functors</a>, more functors can be found in the 
+ *  <a href="https://twiki.cern.ch/twiki/bin/view/LHCb/LoKiRefman?topic=LoKiRefMan">LoKi reference manual</a>, specifically the <a href="https://twiki.cern.ch/twiki/bin/view/LHCb/LoKiRefMan#LoKi_Particle_Functions">particle</a> section.
+ *
+ *
+ *  Example python configuration fragment (from DaVinci tutorial):
+ *  <code>
+ *   # make a CombioneParticles instance
+ *   bs2jpsiphi = CombineParticles("Bs2JpsiPhi")
+ *   # give it some input particles (leading "Phys/" no longer needed)
+ *   # Assuming selections "Jpsi2MuMuSel" and "Phi2KKSel" have been run.
+ *   bs2jpsiphiPhysDesktop.InputLocations  = ["Jpsi2MuMuSel",
+ *                                            "Phi2KKSel"]
+ *   # Give it a (mandatory) decay descriptor
+ *   bs2jpsiphi.DecayDescriptor = "B_s0 -> phi(1020) J/psi(1S)"
+ *   # Cut on the input particles
+ *   bs2jpsiphi.DaughtersCuts = {"phi(1020)" : "(MAXTREE(ABSID=='mu+',TRCHI2DOF)<10) & (ADMASS('phi(1020)')<30*MeV) & (PT>1000*MeV)",
+ *                                "J/psi(1S)" : " (ADMASS('J/psi(1S)')<100*MeV)"}
+ *   # Cut on combinations of particles (in this case, J/Psi and Phi)
+ *   bs2jpsiphi.CombinationCut = "ADAMASS('B_s0')<2*GeV"
+ *   # Cut on the actual fitted Bs candidate
+ *   bs2jpsiphi.MotherCut = "(VFASPF(VCHI2/VDOF)<10) & (BPVIPCHI2()<100)"
+ *   #
+ *   # Add some plots
+ *   bs2jpsiphi.HistoProduce = True
+ *   bs2jpsiphi.addTool( PlotTool("DaughtersPlots") )
+ *   bs2jpsiphi.DaughtersPlots.Histos = { "P/1000"  : ('momentum',0,100) ,
+ *                                        "PT/1000" : ('pt_%1%',0,5,500) ,
+ *                                        "M"       : ('mass in MeV_%1%_%2%_%3%',0.8*Units.GeV,4*Units.GeV) }
+ *   bs2jpsiphi.addTool( PlotTool("MotherPlots") )
+ *   bs2jpsiphi.MotherPlots.Histos = { "P/1000"  : ('momentum',0,100) ,
+ *                                     "PT/1000" : ('pt_%1%',0,5,500) ,
+ *                                      "M"       : ('mass in MeV_%1%_%2%_%3%',4*Units.GeV,6*Units.GeV) }
+ *
+ *  </code>
  *
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2008-04-01
@@ -85,7 +121,7 @@ class CombineParticles
   , public virtual IIncidentListener 
 {
   // ==========================================================================
-  // the friend factory, needed fo rinstantiation
+  // the friend factory, needed for instantiation
   friend class AlgFactory<CombineParticles> ;
   // ==========================================================================
 public:
