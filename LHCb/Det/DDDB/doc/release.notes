@@ -4,6 +4,9 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+! 2008-11-11 - Marco Cattaneo
+ - Improve warning printout when not using default database tags
+
 ! 2008-11-06 - Marco Clemencic
  - Added the ConfigurableUser DDDBConf to replace all the option files for the
    configuration of the detector description.
