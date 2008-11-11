@@ -1,4 +1,4 @@
-// $Id: AnalysisTask.cpp,v 1.5 2008-09-25 13:58:15 ggiacomo Exp $
+// $Id: AnalysisTask.cpp,v 1.6 2008-11-11 13:39:08 ggiacomo Exp $
 
 
 // from Gaudi
@@ -31,6 +31,7 @@ AnalysisTask::AnalysisTask( const std::string& name,
   declareProperty ( "InputFiles"   , m_inputFiles);
   declareProperty ( "InputTasks"   , m_inputTasks);
   declareProperty ( "MessageTool"  , m_MessageTool = "OMAMsgStdOut" );
+  declareProperty ( "Partition"    , m_partition = "LHCb" );
 }
 
 AnalysisTask::~AnalysisTask() {
@@ -67,7 +68,7 @@ StatusCode AnalysisTask::initialize() {
   else {
     std::vector<std::string>::iterator iF;
     for(iF =  m_inputTasks.begin() ; iF != m_inputTasks.end() ; iF++) {
-      m_saveset.push_back( new SavesetFinder(this, *iF) );
+      m_saveset.push_back( new SavesetFinder(this, *iF, m_partition) );
     }
   }
   
