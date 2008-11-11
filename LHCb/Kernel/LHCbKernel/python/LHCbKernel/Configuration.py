@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.5 2008-11-11 14:29:18 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.6 2008-11-11 16:26:11 cattanem Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -38,12 +38,19 @@ class LHCbConfigurableUser(ConfigurableUser):
     #  @param other The other configurable to set the property for
     #  @param name  The property name
     def setOtherProp(self,other,name):
-        # Function to propagate properties to other component, if not already set
-        if hasattr(self,name) or not hasattr(other,name):
+        # If self property is set, use it
+        if hasattr(self,name):
             if hasattr(other,name) :
                 log.warning("Both %s().%s and  %s().%s are defined, using %s().%s"%
                             (other.name(),name, self.name(), name, self.name(), name)  )
             other.setProp(name,self.getProp(name))
+        # If not, and other property also not set, propagate the default
+        elif not hasattr(other,name) :
+            if isinstance(other,ConfigurableUser):
+                other._properties[name].setDefault(self.getProp(name))
+            else:
+                other.setProp(name,self.getProp(name))
+    
 
     ## @brief Set the given properties in another configurable object
     #  @param other The other configurable to set the property for
