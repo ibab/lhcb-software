@@ -1,4 +1,4 @@
-// $Id: Collections.h,v 1.4 2008-10-21 13:53:52 frankb Exp $
+// $Id: Collections.h,v 1.5 2008-11-11 15:09:25 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/Collections.h,v 1.4 2008-10-21 13:53:52 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/Collections.h,v 1.5 2008-11-11 15:09:25 frankb Exp $
 #ifndef ROMON_COLLECTIONS_H
 #define ROMON_COLLECTIONS_H 1
 
@@ -68,6 +68,9 @@ namespace ROMon {
     /// Iterator implementation: end of object iteration
     const_iterator end() const 
       {  return begin()+size();                        }
+    /// Iterator implementation: Next element of iteration
+    iterator next(iterator prev) const
+      {  return ++prev;                                }
     /// Iterator implementation: Next element of iteration
     const_iterator next(const_iterator prev) const
       {  return ++prev;                                }

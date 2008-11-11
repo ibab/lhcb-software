@@ -27,6 +27,7 @@ extern "C" {
 #endif
 using namespace ROMon;
 using namespace SCR;
+using namespace std;
 
 #include "ROMon/TaskSupervisor.h"
 #include "TaskSupervisorParser.h"
@@ -50,7 +51,7 @@ namespace ROMon {
     /// Set timeout error
     void setTimeoutError();
     /// Initializing constructor
-    CtrlFarmSubDisplay(FarmDisplay* parent, const std::string& title, bool bad=false);
+    CtrlFarmSubDisplay(FarmDisplay* parent, const string& title, bool bad=false);
     /// Standard destructor
     virtual ~CtrlFarmSubDisplay();
     /// Initialize default display text
@@ -68,7 +69,7 @@ namespace ROMon {
     /// Interactor overload: Display callback handler
     virtual void handle(const Event& ev);
   };
-  InternalDisplay* createCtrlFarmSubDisplay(FarmDisplay* parent, const std::string& title) {
+  InternalDisplay* createCtrlFarmSubDisplay(FarmDisplay* parent, const string& title) {
     return new CtrlFarmSubDisplay(parent,title);
   }
 }
@@ -81,13 +82,13 @@ namespace ROMon {
 #define COL_ALARM           (RED|BOLD|INVERSE)
 
 /// Initializing constructor
-CtrlFarmSubDisplay::CtrlFarmSubDisplay(FarmDisplay* parent, const std::string& title, bool bad) 
+CtrlFarmSubDisplay::CtrlFarmSubDisplay(FarmDisplay* parent, const string& title, bool bad) 
 : InternalDisplay(parent, title)
 {
   m_lastUpdate = time(0);
   ::scrc_create_display(&m_display,4,DISP_WIDTH,NORMAL,ON,m_title.c_str());
   init(bad);
-  std::string svc = "/";
+  string svc = "/";
   for(size_t i=0; i<title.length();++i) svc += ::toupper(title[i]);
   svc += "/TaskSupervisor/Status";
   m_svc = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,dataHandler,(long)this,0,0);
@@ -114,7 +115,7 @@ void CtrlFarmSubDisplay::update(const void* address) {
   const char* data = (const char*)address;
   try {
     //scrc_resetANSI();
-    //std::cout << data << std::endl;
+    //cout << data << endl;
     m_lastUpdate = time(0);
     XML::TaskSupervisorParser ts;
     if ( ts.parseBuffer(m_name, data,::strlen(data)+1) ) {
@@ -133,7 +134,7 @@ void CtrlFarmSubDisplay::update(const void* address) {
 /// DIM command service callback
 void CtrlFarmSubDisplay::updateContent(XML::TaskSupervisorParser& ts) {
   char txt[128];
-  std::string val;
+  string val;
   Cluster& c = m_cluster;
   Cluster::Nodes::const_iterator i;
   int col = NORMAL, pos = 0, line=3;

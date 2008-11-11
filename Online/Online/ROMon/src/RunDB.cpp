@@ -5,39 +5,40 @@
 #include "ROMon/ROMonGblBuffer.h"
 
 using namespace ROMon;
+using namespace std;
 
-std::ostream& operator<<(std::ostream& os, const File& f) {
+ostream& operator<<(ostream& os, const File& f) {
   os << "   File:"  << f.id
-     << " Name:"      << f.location << "/" << f.name << std::endl
-     << " Created: "  << std::setw(8)  << f.created
-     << " Events:  "  << std::setw(8)  << f.events
-     << " Bytes:   "  << std::setw(12) << f.bytes
-     << " Adler32: "  << std::setw(8)  << f.adler32 << std::endl
+     << " Name:"      << f.location << "/" << f.name << endl
+     << " Created: "  << setw(8)  << f.created
+     << " Events:  "  << setw(8)  << f.events
+     << " Bytes:   "  << setw(12) << f.bytes
+     << " Adler32: "  << setw(8)  << f.adler32 << endl
      << " MD5:";
   for(size_t i=0; i<16; ++i) os << f.md5[i];
   os << " State:" << int(f.state);
-  os << std::endl;
+  os << endl;
   return os;
 }
 
-std::ostream& operator<<(std::ostream& os, const Run& r) {
+ostream& operator<<(ostream& os, const Run& r) {
   os << "   Run:"  << r.number
-     << " PartID:" << std::setw(8) << r.partitionID
+     << " PartID:" << setw(8) << r.partitionID
      << " [" << r.partition << "] :" << r.runType
-     << " From:   " << r.startTime << " -> " << r.endTime << std::endl
-     << " Lumi:   " << std::setw(8)  << r.startLumi << " " << r.endLumi
-     << " Fill:   " << std::setw(8)  << r.fill 
-     << " State:  " << std::setw(12) << int(r.state) << std::endl
-     << "Files:   " << std::endl
-     << r.files << std::endl;
+     << " From:   " << r.startTime << " -> " << r.endTime << endl
+     << " Lumi:   " << setw(8)  << r.startLumi << " " << r.endLumi
+     << " Fill:   " << setw(8)  << r.fill 
+     << " State:  " << setw(12) << int(r.state) << endl
+     << "Files:   " << endl
+     << r.files << endl;
   return os;
 }
 
-std::ostream& operator<<(std::ostream& os, const RunDB& db) {
+ostream& operator<<(ostream& os, const RunDB& db) {
   os << " RunDB:"  << db.readTime << " " << db.totalSize
-     << " Runs: "  << std::endl
+     << " Runs: "  << endl
      << db.runs
-     << std::endl;
+     << endl;
   return os;
 }
 
@@ -77,7 +78,7 @@ void RunDB::fixup() {
 }
 
 void RunDB::dump() {
-  std::cout << *this;
+  cout << *this;
 }
 
 

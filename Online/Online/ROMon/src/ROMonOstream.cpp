@@ -1,4 +1,4 @@
-// $Id: ROMonOstream.cpp,v 1.2 2008-06-05 18:40:00 frankb Exp $
+// $Id: ROMonOstream.cpp,v 1.3 2008-11-11 15:09:26 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,59 +11,60 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonOstream.cpp,v 1.2 2008-06-05 18:40:00 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonOstream.cpp,v 1.3 2008-11-11 15:09:26 frankb Exp $
 
 #include <iomanip>
 #include <sys/timeb.h>
 #define MBM_IMPLEMENTATION
 #include "ROMon/ROMonOstream.h"
+using namespace std;
 using namespace ROMon;
 
-std::ostream& operator<<(std::ostream& os, const CONTROL& c) {
-  os << "Events: Prod:" << std::setw(8) << c.tot_produced
-     << " Pend:" << std::setw(3) << c.i_events
-     << " Max:"  << std::setw(4) << c.p_emax
-     << " Space[kB]: Tot:" << std::setw(5) << (c.bm_size*c.bytes_p_Bit)/1024
+ostream& operator<<(ostream& os, const CONTROL& c) {
+  os << "Events: Prod:" << setw(8) << c.tot_produced
+     << " Pend:" << setw(3) << c.i_events
+     << " Max:"  << setw(4) << c.p_emax
+     << " Space[kB]: Tot:" << setw(5) << (c.bm_size*c.bytes_p_Bit)/1024
      << " Free:" << (c.i_space*c.bytes_p_Bit)/1024
-     << " Users:Tot:" << std::setw(3) << c.i_users
+     << " Users:Tot:" << setw(3) << c.i_users
      << " Max:" << c.p_umax
-     << std::endl;
+     << endl;
   return os;
 }
 
-std::ostream& operator<<(std::ostream& os, const MBMClient& c) {
+ostream& operator<<(ostream& os, const MBMClient& c) {
   os << " MBMClient@"  << (void*)&c
-     << " Name:"      << std::setw(24) << std::left << c.name 
-     << " PID:"       << std::setw(6)  << c.processID
-     << " Partition:" << std::setw(6)  << std::hex << c.partitionID << std::dec
-     << " State:"     << std::setw(2)  << std::right << (int)c.state
+     << " Name:"      << setw(24) << left << c.name 
+     << " PID:"       << setw(6)  << c.processID
+     << " Partition:" << setw(6)  << hex << c.partitionID << dec
+     << " State:"     << setw(2)  << right << (int)c.state
      << " Type:"      << c.type
-     << " Events:"    << std::setw(6) << c.events;
+     << " Events:"    << setw(6) << c.events;
   if ( c.type == 'C' ) os << " Reqs:" << c.reqs[0] << c.reqs[1] << c.reqs[2] << c.reqs[3];   
-  os << std::endl;
+  os << endl;
   return os;
 }
 
-std::ostream& operator<<(std::ostream& os, const MBMBuffer& b) {
+ostream& operator<<(ostream& os, const MBMBuffer& b) {
   os << "MBM@"     << (void*)&b
-     << " Name:"   << std::setw(16) << std::left << b.name
-     << " Len:"    << b.length() << std::endl;
-  os << "Control:" << b.ctrl     << std::endl;
-  os << "Clients:" << b.clients  << std::endl;
+     << " Name:"   << setw(16) << left << b.name
+     << " Len:"    << b.length() << endl;
+  os << "Control:" << b.ctrl     << endl;
+  os << "Clients:" << b.clients  << endl;
   return os;
 }
 
-std::ostream& operator<<(std::ostream& os, const FSMTask& t) {
+ostream& operator<<(ostream& os, const FSMTask& t) {
   os << "Task@"    << (void*)&t
-     << " UTGID:"  << std::setw(32) << std::left << t.name
-     << " PID:"    << std::setw(6)  << t.processID
+     << " UTGID:"  << setw(32) << left << t.name
+     << " PID:"    << setw(6)  << t.processID
      << " State:"  << t.state << " -> " << t.targetState << " [" << t.metaState << "]"
      << " Stamps:" << t.lastCmd << " " << t.doneCmd
-     << std::endl;
+     << endl;
   return os;
 }
 
-std::ostream& operator<<(std::ostream& os, const Node& n) {
+ostream& operator<<(ostream& os, const Node& n) {
   char buff[64];
   time_t tim = n.time;
   ::strftime(buff,sizeof(buff),"%Y-%m-%d %H:%M:%S",::localtime(&tim));
@@ -72,9 +73,9 @@ std::ostream& operator<<(std::ostream& os, const Node& n) {
   os << "Node@"       << (void*)&n
      << " Name:"      << n.name
      << " Time:"      << buff << "." << n.millitm
-     << std::endl;
-  os << "Buffers:"    << *b << std::endl;
-  os << "Tasks:  "    << *t << std::endl;
+     << endl;
+  os << "Buffers:"    << *b << endl;
+  os << "Tasks:  "    << *t << endl;
   os << "Node@"       << (void*)&n
      << " BuffLen:"   << b->length()
      << " "           << b->data_length()
@@ -85,14 +86,14 @@ std::ostream& operator<<(std::ostream& os, const Node& n) {
      << " Clients:"   << t->size()*sizeof(MBMClient)
      << " taskSize:"  << n.taskSize
      << " Total:"     << n.totalSize
-     << std::endl;
+     << endl;
   return os;
 }
 
-std::ostream& operator<<(std::ostream& os, const Nodeset& n) {
+ostream& operator<<(ostream& os, const Nodeset& n) {
   os << "Nodeset@"       << (void*)&n
      << " Name:"      << n.name
-     << std::endl;
-  os << "Nodes:"    << n.nodes << std::endl;
+     << endl;
+  os << "Nodes:"    << n.nodes << endl;
   return os;
 }

@@ -1,4 +1,4 @@
-// $Id: MonitoringDisplay.cpp,v 1.10 2008-07-04 07:40:21 frankb Exp $
+// $Id: MonitoringDisplay.cpp,v 1.11 2008-11-11 15:09:26 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/MonitoringDisplay.cpp,v 1.10 2008-07-04 07:40:21 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/MonitoringDisplay.cpp,v 1.11 2008-11-11 15:09:26 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -26,11 +26,13 @@
 #include "dic.hxx"
 
 using namespace ROMon;
+using namespace std;
+
 static const char *sstat[17] = {" nl", "   ", "*SL","*EV","*SP","WSL","WEV","WSP","wsl","wev","wsp"," ps"," ac", "SPR", "WER", "   "};
 
 namespace {
   struct Stream {
-    typedef std::map<std::string,int> Targets;
+    typedef map<string,int> Targets;
     int received;
     Targets to;
     const MBMBuffer* buffer;
@@ -44,7 +46,7 @@ typedef Nodeset::Nodes               Nodes;
 typedef Node::Buffers                Buffers;
 typedef MBMBuffer::Clients           Clients;
 typedef Node::Tasks                  Tasks;
-typedef std::map<std::string,Stream> Streams;
+typedef map<string,Stream> Streams;
 
 static char* nullchr(char* src,char match) {
   char* p = strchr(src,match);
@@ -58,16 +60,15 @@ static char* nullstr(char* src,const char* match) {
 }
 
 static void help() {
-  std::cout <<"  romon_storage -option [-option]" << std::endl
-	    <<"       -h[eaderheight]=<number>     Height of the header        display.                      " << std::endl
-	    <<"       -r[elayheight]=<number>      Height of the Relay         display.                      " << std::endl
-	    <<"       -n[odeheight]=<number>       Height of the Node          display.                      " << std::endl
-	    <<"       -d[elay]=<number>            Time delay in millisecond between 2 updates.              " << std::endl
-	    <<"       -n[oderelay]=<name>          Name of the relay node.                                   " << std::endl
-	    <<"       -s[ervicename]=<name>        Name of the DIM service  providing monitoring information." << std::endl
-	    <<"       -p[partition]=<name>         Name of the partition to be displayed.                    " << std::endl
-	    << std::endl;
-
+  cout <<"  romon_storage -option [-option]" << endl
+       <<"       -h[eaderheight]=<number>     Height of the header        display.                      " << endl
+       <<"       -r[elayheight]=<number>      Height of the Relay         display.                      " << endl
+       <<"       -n[odeheight]=<number>       Height of the Node          display.                      " << endl
+       <<"       -d[elay]=<number>            Time delay in millisecond between 2 updates.              " << endl
+       <<"       -n[oderelay]=<name>          Name of the relay node.                                   " << endl
+       <<"       -s[ervicename]=<name>        Name of the DIM service  providing monitoring information." << endl
+       <<"       -p[partition]=<name>         Name of the partition to be displayed.                    " << endl
+       << endl;
 }
 
 /// Standard constructor
@@ -100,8 +101,8 @@ MonitoringDisplay::~MonitoringDisplay()   {
 void MonitoringDisplay::showTasks(const Nodeset& ns) {
   int nTsk;
   char txt[2][256];
-  std::string part = m_partName + "_";
-  std::string part2 = "_" + m_partName;
+  string part = m_partName + "_";
+  string part2 = "_" + m_partName;
   MonitorDisplay* disp = m_tasks;
   const char* fmt = " %-24s%4s %c%c%c%c%11d %3.0f ";
   sprintf(txt[0],   " %-23s%5s %c%c%c%c%11s %3s ","Monitoring Task","State",'R','e','q','s',"Seen","[%]");
@@ -111,9 +112,9 @@ void MonitoringDisplay::showTasks(const Nodeset& ns) {
     if ( ::strncasecmp((*n).name,m_relayNode.c_str(),m_relayNode.length()) != 0 ) {
       const Buffers& buffs = *(*n).buffers();
       for (Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
-	std::string buff_nam = (*ib).name;
+	string buff_nam = (*ib).name;
 	const Clients& clients = (*ib).clients;
-	if ( buff_nam.find(part2) == std::string::npos ) continue;
+	if ( buff_nam.find(part2) == string::npos ) continue;
 	for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
 	  const MBMClient& c = *ic;
 	  if (strncmp(c.name,part.c_str(),part.length())==0) {
@@ -143,8 +144,8 @@ void MonitoringDisplay::showNodes(const Nodeset& ns) {
   long seen=0;
   MBMBuffer::Control total;
   MonitorDisplay* disp = m_nodes;
-  std::string part = m_partName + "_";
-  std::string part2 = "_" + m_partName;
+  string part = m_partName + "_";
+  string part2 = "_" + m_partName;
   const char* fmt = " %-10s %-12s %12d%12d%12d%12d%12d%12d";
 
   ::memset(&total,0,sizeof(total));
@@ -157,8 +158,8 @@ void MonitoringDisplay::showNodes(const Nodeset& ns) {
       for (Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
 	const MBMBuffer::Control& ctrl = (*ib).ctrl;
 	const Clients& clients = (*ib).clients;
-	std::string buff_nam = (*ib).name;
-	if ( buff_nam.find(part2) == std::string::npos ) continue;
+	string buff_nam = (*ib).name;
+	if ( buff_nam.find(part2) == string::npos ) continue;
 	for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
 	  const MBMClient& c = *ic;
 	  if (strncmp(c.name,part.c_str(),part.length())==0) {
@@ -194,8 +195,8 @@ void MonitoringDisplay::showRelay(const Nodeset& ns) {
   Stream all;
   Streams streams;
   MonitorDisplay* disp = m_relay;
-  std::string part = m_partName + "_";
-  std::string part2 = "_" + m_partName;
+  string part = m_partName + "_";
+  string part2 = "_" + m_partName;
 
   disp->draw_line_reverse(" %-10s %-12s %11s%12s%11s%11s%10s%6s%6s",
 			  "Node","Buffer","Received","Produced","Pending",
@@ -204,8 +205,8 @@ void MonitoringDisplay::showRelay(const Nodeset& ns) {
     if ( ::strncasecmp((*n).name,m_relayNode.c_str(),m_relayNode.length()) == 0 ) {
       const Buffers& buffs = *(*n).buffers();
       for (Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
-	std::string buff_nam = (*ib).name;
-	if ( buff_nam.find(part2.c_str()) != std::string::npos )  {
+	string buff_nam = (*ib).name;
+	if ( buff_nam.find(part2.c_str()) != string::npos )  {
 	  const MBMBuffer::Control& c = (*ib).ctrl;
 	  const Clients& clients = (*ib).clients;
 	  for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {

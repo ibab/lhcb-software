@@ -56,17 +56,18 @@ extern "C" {
 }
 using namespace ROMon;
 using namespace SCR;
+using namespace std;
 typedef MBMBuffer::Clients           Clients;
 typedef Node::Buffers                Buffers;
 typedef Nodeset::Nodes               Nodes;
-static const int   INT_max = std::numeric_limits<int>::max();
-static const float FLT_max = std::numeric_limits<float>::max();
+static const int   INT_max = numeric_limits<int>::max();
+static const float FLT_max = numeric_limits<float>::max();
 
 // Max. 15 seconds without update allowed
 #define UPDATE_TIME_MAX 15
 
 /// Initializing constructor
-RecFarmSubDisplay::RecFarmSubDisplay(FarmDisplay* parent, const std::string& title, bool bad) 
+RecFarmSubDisplay::RecFarmSubDisplay(FarmDisplay* parent, const string& title, bool bad) 
 : InternalDisplay(parent, title)
 {
   m_evtSent = m_totSent = 0;
@@ -75,7 +76,7 @@ RecFarmSubDisplay::RecFarmSubDisplay(FarmDisplay* parent, const std::string& tit
   m_lastUpdate = time(0);
   ::scrc_create_display(&m_display,4,48,NORMAL,ON,m_title.c_str());
   init(bad);
-  std::string svc = "/";
+  string svc = "/";
   for(size_t i=0; i<title.length();++i) svc += ::tolower(title[i]);
   svc += "/ROpublish";
   m_svc = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,dataHandler,(long)this,0,0);
@@ -169,7 +170,7 @@ void RecFarmSubDisplay::updateContent(const Nodeset& ns) {
   int numNodes       = 0;
   int numBuffs       = 0;
   int numClients     = 0;
-  std::set<std::string> bad_nodes;
+  set<string> bad_nodes;
 
   for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
     const Buffers& buffs = *(*n).buffers();
@@ -189,11 +190,11 @@ void RecFarmSubDisplay::updateContent(const Nodeset& ns) {
       default:
 	continue;
       }
-      fspace[idx]       = std::min(fspace[idx],float(ctrl.i_space)/float(ctrl.bm_size)); 
-      fslots[idx]       = std::min(fslots[idx],float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax));
-      min_space[idx]    = std::min(min_space[idx],(ctrl.i_space*ctrl.bytes_p_Bit)/1024/1024);
-      min_slots[idx]    = std::min(min_slots[idx],ctrl.p_emax-ctrl.i_events);
-      min_prod[idx]     = std::min(min_prod[idx],ctrl.tot_produced);
+      fspace[idx]       = min(fspace[idx],float(ctrl.i_space)/float(ctrl.bm_size)); 
+      fslots[idx]       = min(fslots[idx],float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax));
+      min_space[idx]    = min(min_space[idx],(ctrl.i_space*ctrl.bytes_p_Bit)/1024/1024);
+      min_slots[idx]    = min(min_slots[idx],ctrl.p_emax-ctrl.i_events);
+      min_prod[idx]     = min(min_prod[idx],ctrl.tot_produced);
       evt_prod[idx]    += ctrl.tot_produced;
       free_space[idx]  += (ctrl.i_space*ctrl.bytes_p_Bit)/1024/1024;
       used_slots[idx]  += (ctrl.p_emax-ctrl.i_events);
@@ -208,20 +209,20 @@ void RecFarmSubDisplay::updateContent(const Nodeset& ns) {
 	if ( p ) p = ::strchr(++p,'_');
 	if ( p ) {
 	  if ( b==INPUT_BUFFER && p[4] == REC_TASK )  {
-	    node_evt_reco = std::min(node_evt_reco,(*ic).events);
+	    node_evt_reco = min(node_evt_reco,(*ic).events);
 	  }
 	  else if ( b==INPUT_BUFFER && p[8] == REC_RECEIVER_TASK )  {
 	    node_evt_recv += (*ic).events;
 	  }
 	  else if ( b==OUTPUT_BUFFER && p[8] == REC_SENDER_TASK )  {
-	    node_evt_sent = std::min(node_evt_sent,(*ic).events);
+	    node_evt_sent = min(node_evt_sent,(*ic).events);
 	  }
 	}
       }
     }
-    evt_reco = std::min(evt_reco,node_evt_reco);
-    evt_recv = std::min(evt_recv,node_evt_recv);
-    evt_sent = std::min(evt_sent,node_evt_sent);
+    evt_reco = min(evt_reco,node_evt_reco);
+    evt_recv = min(evt_recv,node_evt_recv);
+    evt_sent = min(evt_sent,node_evt_sent);
   }
   char b1[64];
   Nodeset::TimeStamp frst=ns.firstUpdate();

@@ -1,4 +1,4 @@
-// $Id: StorageDisplay.cpp,v 1.9 2008-07-04 07:40:21 frankb Exp $
+// $Id: StorageDisplay.cpp,v 1.10 2008-11-11 15:09:26 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/StorageDisplay.cpp,v 1.9 2008-07-04 07:40:21 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/StorageDisplay.cpp,v 1.10 2008-11-11 15:09:26 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -25,6 +25,7 @@
 #include "dic.hxx"
 
 using namespace ROMon;
+using namespace std;
 static const char *sstat[17] = {" nl", "   ", "*SL","*EV","*SP","WSL","WEV","WSP","wsl","wev","wsp"," ps"," ac", "SPR", "WER", "   "};
 
 
@@ -40,7 +41,7 @@ struct DataWriterInfo {
 
 namespace {
   struct Stream {
-    std::string node, source;
+    string node, source;
     int sent, written, received;
     Stream() : sent(0), written(0), received(0) {}
     Stream(const Stream& s) : node(s.node), source(s.source), sent(s.sent), written(s.written), received(s.received) {}
@@ -52,7 +53,7 @@ typedef Nodeset::Nodes               Nodes;
 typedef Node::Buffers                Buffers;
 typedef MBMBuffer::Clients           Clients;
 typedef Node::Tasks                  Tasks;
-typedef std::map<std::string,Stream> Streams;
+typedef map<string,Stream> Streams;
 
 static char* nullchr(char* src,char match) {
   char* p = strchr(src,match);
@@ -66,17 +67,17 @@ static char* nullstr(char* src,const char* match) {
 }
 
 static void help() {
-  std::cout <<"  romon_storage -option [-option]" << std::endl
-	    <<"       -h[eaderheight]=<number>     Height of the header        display.                      " << std::endl
-	    <<"       -s[treamheight]=<number>     Height of the Streams       display.                      " << std::endl
-	    <<"       -b[ufferheight]=<number>     Height of the Buffers       display.                      " << std::endl
-	    <<"       -l[oggerheight]=<number>     Height of the Logger        display.                      " << std::endl
-	    <<"       -f[ilesheight]=<number>      Height of the Files         display.                      " << std::endl
-	    <<"       -w[idthhltrec]=<number>      Height of the HLT receivers display.                      " << std::endl
-	    <<"       -d[elay]=<number>            Time delay in millisecond between 2 updates.              " << std::endl
-	    <<"       -s[ervicename]=<name>        Name of the DIM service  providing monitoring information." << std::endl
-	    <<"       -p[partition]=<name>         Name of the partition to be displayed.                    " << std::endl
-	    << std::endl;
+  cout <<"  romon_storage -option [-option]" << endl
+       <<"       -h[eaderheight]=<number>     Height of the header        display.                      " << endl
+       <<"       -s[treamheight]=<number>     Height of the Streams       display.                      " << endl
+       <<"       -b[ufferheight]=<number>     Height of the Buffers       display.                      " << endl
+       <<"       -l[oggerheight]=<number>     Height of the Logger        display.                      " << endl
+       <<"       -f[ilesheight]=<number>      Height of the Files         display.                      " << endl
+       <<"       -w[idthhltrec]=<number>      Height of the HLT receivers display.                      " << endl
+       <<"       -d[elay]=<number>            Time delay in millisecond between 2 updates.              " << endl
+       <<"       -s[ervicename]=<name>        Name of the DIM service  providing monitoring information." << endl
+       <<"       -p[partition]=<name>         Name of the partition to be displayed.                    " << endl
+       << endl;
 
 }
 
@@ -139,7 +140,7 @@ void StorageDisplay::showFiles() {
 void StorageDisplay::showStreams(const Nodeset& ns) {
   Streams streams;
   MonitorDisplay* disp = m_streams;
-  std::string part = m_partName + "_";
+  string part = m_partName + "_";
   disp->draw_line_reverse("Stream         Source       Target              Sent    Received     Written   ");
 
   for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
@@ -176,7 +177,7 @@ void StorageDisplay::showStreams(const Nodeset& ns) {
     }
   }
   Stream total;
-  for(std::map<std::string,Stream>::const_iterator i=streams.begin();i!=streams.end();++i) {
+  for(map<string,Stream>::const_iterator i=streams.begin();i!=streams.end();++i) {
     const Stream& s = (*i).second;
     if ( s.node != "Monitoring" ) {
       disp->draw_line_normal("%-13s %12s->%-12s %11d %11d %11d",
@@ -191,7 +192,7 @@ void StorageDisplay::showStreams(const Nodeset& ns) {
   disp->draw_line_bold("%-13s %12s->%-12s %11d %11d %11d","Total","Recv Layer","Stream Layer",
 		       total.sent,total.received,total.written);
   disp->draw_line_normal("");
-  for(std::map<std::string,Stream>::const_iterator i=streams.begin();i!=streams.end();++i) {
+  for(map<string,Stream>::const_iterator i=streams.begin();i!=streams.end();++i) {
     const Stream& s = (*i).second;
     if ( s.node == "Monitoring" ) {
       disp->draw_line_normal("%-13s %12s->%-12s %11d",(*i).first.c_str(),s.source.c_str(),s.node.c_str(),s.sent);
@@ -202,7 +203,7 @@ void StorageDisplay::showStreams(const Nodeset& ns) {
 /// Show the information about the HLT receiver tasks
 void StorageDisplay::showHLT(const Nodeset& ns) {
   MonitorDisplay* disp = m_hltRec;
-  std::string part = m_partName + "_";
+  string part = m_partName + "_";
   const Nodes& nodes = ns.nodes;
   long total_evts = 0;
   disp->draw_line_reverse("%-11s%8s MBM  ST","Source","Received");
@@ -238,7 +239,7 @@ void StorageDisplay::showHLT(const Nodeset& ns) {
 /// Show the information about MBM buffers on the storage nodes
 void StorageDisplay::showBuffers(const Nodeset& ns) {
   MonitorDisplay* disp = m_buffers;
-  std::string part = m_partName + "_";
+  string part = m_partName + "_";
   disp->draw_line_reverse("Buffer                        Produced Pending Size[kB] Free[kB] Slots Users ");
   for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
     const Buffers& buffs = *(*n).buffers();

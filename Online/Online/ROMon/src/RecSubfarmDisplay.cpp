@@ -1,4 +1,4 @@
-// $Id: RecSubfarmDisplay.cpp,v 1.2 2008-08-27 19:15:20 frankb Exp $
+// $Id: RecSubfarmDisplay.cpp,v 1.3 2008-11-11 15:09:26 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/RecSubfarmDisplay.cpp,v 1.2 2008-08-27 19:15:20 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/RecSubfarmDisplay.cpp,v 1.3 2008-11-11 15:09:26 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -25,6 +25,8 @@
 #include "dic.hxx"
 
 using namespace ROMon;
+using namespace std;
+
 static const char *sstat[17] = {" nl", "   ", "*SL","*EV","*SP","WSL","WEV","WSP","wsl","wev","wsp"," ps"," ac", "SPR", "WER", "   "};
 namespace {
   struct TaskIO {
@@ -54,13 +56,13 @@ static void getBuffInfo(const MBMBuffer::Control& c, int info[3], int tot[3]) {
 }
 
 static void help() {
-  std::cout <<"  romon_storage -option [-option]" << std::endl
-	    <<"       -h[eaderheight]=<number>     Height of the header        display.                      " << std::endl
-	    <<"       -n[odesheight]=<number>      Height of the Nodes         display.                      " << std::endl
-	    <<"       -m[ooresheight]=<number>     Height of the MOORE tasks   display.                      " << std::endl
-	    <<"       -d[elay]=<number>            Time delay in millisecond between 2 updates.              " << std::endl
-	    <<"       -s[ervicename]=<name>        Name of the DIM service  providing monitoring information." << std::endl
-	    << std::endl;
+  cout <<"  romon_storage -option [-option]" << endl
+       <<"       -h[eaderheight]=<number>     Height of the header        display.                      " << endl
+       <<"       -n[odesheight]=<number>      Height of the Nodes         display.                      " << endl
+       <<"       -m[ooresheight]=<number>     Height of the MOORE tasks   display.                      " << endl
+       <<"       -d[elay]=<number>            Time delay in millisecond between 2 updates.              " << endl
+       <<"       -s[ervicename]=<name>        Name of the DIM service  providing monitoring information." << endl
+       << endl;
 
 }
 
@@ -159,8 +161,8 @@ void RecSubfarmDisplay::showNodes(const Nodeset& ns)  {
 
 /// Show the event builder information
 void RecSubfarmDisplay::showTasks(const Nodeset& ns) {
-  std::map<std::string,TaskIO> moores;
-  std::string nam;
+  map<string,TaskIO> moores;
+  string nam;
   char txt[1024];
   int nTsk = 0;
   int eb_width = m_area.width/2;
@@ -178,7 +180,7 @@ void RecSubfarmDisplay::showTasks(const Nodeset& ns) {
 
   for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
     const Buffers& buffs = *(*n).buffers();
-    std::string prod_name;
+    string prod_name;
     TaskIO prod;
     for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
       const Buffers::value_type::Control& c = (*ib).ctrl;
@@ -217,7 +219,7 @@ void RecSubfarmDisplay::showTasks(const Nodeset& ns) {
   }
   ::memset(txt,' ',sizeof(txt));
   txt[m_area.width] = 0;
-  for(std::map<std::string,TaskIO>::const_iterator i=moores.begin(); i!=moores.end();++i) {
+  for(map<string,TaskIO>::const_iterator i=moores.begin(); i!=moores.end();++i) {
     const TaskIO& m = (*i).second;
     ::sprintf(txt+eb_width*nTsk," %-18s%11d%14d %5s %6s   ",(*i).first.c_str(),m.in,m.out,sstat[m.st_in],sstat[m.st_out]);
     if ( ++nTsk == 2 ) {
@@ -265,7 +267,7 @@ size_t RecSubfarmDisplay::numNodes()  {
 }
 
 /// Retrieve node name from cluster display by offset
-std::string RecSubfarmDisplay::nodeName(size_t offset) {
+string RecSubfarmDisplay::nodeName(size_t offset) {
   const Nodeset* ns = (const Nodeset*)data().pointer;
   if ( ns ) {
     size_t cnt;

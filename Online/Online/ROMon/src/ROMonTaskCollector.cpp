@@ -1,4 +1,4 @@
-// $Id: ROMonTaskCollector.cpp,v 1.3 2008-06-25 22:51:50 frankb Exp $
+// $Id: ROMonTaskCollector.cpp,v 1.4 2008-11-11 15:09:26 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonTaskCollector.cpp,v 1.3 2008-06-25 22:51:50 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonTaskCollector.cpp,v 1.4 2008-11-11 15:09:26 frankb Exp $
 
 // Framework includes
 #include "dic.hxx"
@@ -24,7 +24,7 @@
 #include "ROMon/ROMonTaskCollector.h"
 
 using namespace ROMon;
-
+using namespace std;
 
 /// Standard constructor
 ROMonTaskCollector::ROMonTaskCollector(int argc, char** argv) 
@@ -56,7 +56,7 @@ int ROMonTaskCollector::monitor() {
 	const Clients& cl = m_fsmInfo.clients();
 	gbl.node->type = Node::TYPE;
 	if ( ((char*)it) > gbl.str+m_section_size ) {
-	  log() << "Global section memory too small.....exiting" << std::endl;
+	  log() << "Global section memory too small.....exiting" << endl;
 	  break;
 	}
 	else {
@@ -64,7 +64,7 @@ int ROMonTaskCollector::monitor() {
 	  for(Clients::const_iterator ic = cl.begin(); ic != cl.end(); ++ic) {
 	    const FSMTask* t = (*ic).second->data<FSMTask>();
 	    if ( ((char*)it) > gbl.str+m_section_size ) {
-	      log() << "Global section memory too small.....exiting" << std::endl;
+	      log() << "Global section memory too small.....exiting" << endl;
 	      ::dim_unlock();
 	      break;
 	    }
@@ -79,14 +79,14 @@ int ROMonTaskCollector::monitor() {
       }
       if ( m_print ) {
 	log() << "========================" << ::lib_rtl_timestr() 
-	      << "========================" << std::endl
-	      << *gbl.node << std::endl;
+	      << "========================" << endl
+	      << *gbl.node << endl;
       }
       ::lib_rtl_sleep(m_delay);
     }
     return 1;
   }
-  log() << "ROMon gbl invalid....exiting." << std::endl;
+  log() << "ROMon gbl invalid....exiting." << endl;
   return 0;
 }
 

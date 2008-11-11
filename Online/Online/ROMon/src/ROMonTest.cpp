@@ -1,4 +1,4 @@
-// $Id: ROMonTest.cpp,v 1.1 2008-02-01 17:41:46 frankm Exp $
+// $Id: ROMonTest.cpp,v 1.2 2008-11-11 15:09:26 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonTest.cpp,v 1.1 2008-02-01 17:41:46 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonTest.cpp,v 1.2 2008-11-11 15:09:26 frankb Exp $
 
 // Framework includes
 #define MBM_IMPLEMENTATION
@@ -20,6 +20,7 @@
 #include "ROMon/ROMonOstream.h"
 
 using namespace ROMon;
+using namespace std;
 
 static FSMTask& fill(FSMTask* t, const MBMClient& c) {
   ::strcpy(t->name,c.name);
@@ -78,14 +79,14 @@ extern "C" int romon_test_structs(int, char**) {
   typedef FixItems<int> IntItems;
   IntItems* i_items = (IntItems*)buff;
   i_items->reset();
-  log() << *i_items << std::endl;
+  log() << *i_items << endl;
   for(int i=0, *i_it=i_items->begin(); i<10; ++i) {
     *i_it = i;
     i_it=i_items->add(i_it);
   }
-  log() << *i_items << std::endl;
-  log() << fill((MBMBuffer*)buff, 0x14d, "Events") << std::endl;
-  log() << fill((Node*)buff, "storectl01") << std::endl;
+  log() << *i_items << endl;
+  log() << fill((MBMBuffer*)buff, 0x14d, "Events") << endl;
+  log() << fill((Node*)buff, "storectl01") << endl;
   delete [] buff;
   return 1;
 }

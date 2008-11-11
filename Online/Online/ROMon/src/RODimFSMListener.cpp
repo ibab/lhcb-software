@@ -1,4 +1,4 @@
-// $Id: RODimFSMListener.cpp,v 1.2 2008-02-13 06:40:26 frankb Exp $
+// $Id: RODimFSMListener.cpp,v 1.3 2008-11-11 15:09:26 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/RODimFSMListener.cpp,v 1.2 2008-02-13 06:40:26 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/RODimFSMListener.cpp,v 1.3 2008-11-11 15:09:26 frankb Exp $
 
 // Framework includes
 #include "dic.hxx"
@@ -31,6 +31,7 @@ namespace {
   };
 }
 using namespace ROMon;
+using namespace std;
 
 
 /// Standard destructor
@@ -46,13 +47,13 @@ RODimFSMListener::~RODimFSMListener() {
 }
 
 /// Add handler for a given message source
-void RODimFSMListener::addHandler(const std::string& node,const std::string& svc)    {
-  static std::string myNode = RTL::nodeNameShort();
-  static std::string myUtgid = RTL::processName();
+void RODimFSMListener::addHandler(const string& node,const string& svc)    {
+  static string myNode = RTL::nodeNameShort();
+  static string myUtgid = RTL::processName();
   if ( ::strncasecmp(node.c_str(),myNode.c_str(),myNode.length()) == 0 ) {
     if ( ::strncasecmp(svc.c_str(),myUtgid.c_str(),myUtgid.length()) != 0 ) {
       if ( ::strncasecmp(svc.c_str(),"DIS_DNS",7) != 0 ) {
-	std::string nam = svc+"/fsm_status";
+	string nam = svc+"/fsm_status";
 	dim_lock();
 	Clients::iterator i=m_clients.find(nam);
 	if ( i == m_clients.end() )  {
@@ -64,7 +65,7 @@ void RODimFSMListener::addHandler(const std::string& node,const std::string& svc
 	  m_clients[nam] = itm;
 	  itm->id = ::dic_info_service((char*)nam.c_str(),MONITORED,0,0,0,infoHandler,(long)itm,0,0);
 	  if ( m_verbose ) {
-	    log() << "Create DimInfo:" << nam << " id:" << itm->id << std::endl;
+	    log() << "Create DimInfo:" << nam << " id:" << itm->id << endl;
 	  }
 	}
 	dim_unlock();
@@ -74,15 +75,15 @@ void RODimFSMListener::addHandler(const std::string& node,const std::string& svc
 }
 
 /// Remove handler for a given message source
-void RODimFSMListener::removeHandler(const std::string& /* node */, const std::string& svc)   {
-  std::string nam = svc+"/fsm_status";
+void RODimFSMListener::removeHandler(const string& /* node */, const string& svc)   {
+  string nam = svc+"/fsm_status";
   dim_lock();
   Clients::iterator i=m_clients.find(nam);
   if ( i != m_clients.end() ) {
     Item* it = (Item*)(*i).second;
     ::dic_release_service(it->id);
     if ( m_verbose )  {
-      log() << "Delete DimInfo:" << nam << " id:" << it->id << std::endl;
+      log() << "Delete DimInfo:" << nam << " id:" << it->id << endl;
     }
     it->release();
     m_clients.erase(i);
@@ -109,7 +110,7 @@ void RODimFSMListener::infoHandler(void* tag, void* address, int* size) {
 
 extern "C" int romon_test_fsm_listener(int, char**) {
   RODimFSMListener listener;
-  log() << "Going asleep" << std::endl;
+  log() << "Going asleep" << endl;
   while(1) ::lib_rtl_sleep(1000);
   return 1;
 }

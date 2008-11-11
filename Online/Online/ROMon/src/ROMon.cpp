@@ -4,14 +4,22 @@
 #include "ROMonDefs.h"
 #include "ROMon/ROMon.h"
 #include "MBM/bmstruct.h"
+#include "RTL/time.h"
 
 using namespace ROMon;
 
 void ROMon::ro_get_node_name(char* name, size_t len) {
   ::strncpy(name,RTL::nodeNameShort().c_str(),len);
+  name[len-1] = 0;
   char* p = ::strchr(name,'.');
   if ( p ) *p = 0;
-  name[len] = 0;
+}
+
+void ROMon::ro_gettime(int* time, unsigned int* millitm) {
+  timeval tv={0,0};
+  ::gettimeofday(&tv,0);
+  *time = tv.tv_sec;
+  *millitm = tv.tv_usec/1000;
 }
 
 MBMBuffer* MBMBuffer::reset() {
@@ -29,21 +37,25 @@ FSMTask* FSMTask::reset() {
   return this;
 }
 
+/// Reset node structure to allow re-filling
 Node* Node::reset() {
   ::memset(this,0,sizeof(Node)+sizeof(Node::Buffers)+sizeof(Node::Tasks));
   type = TYPE;
   return this;
 }
 
+/// Access to the buffer part of the node structure
 Node::Buffers* Node::buffers()  const {
   return (Buffers*)(name + sizeof(name));
 }
 
+/// Access to the tasks part of the node structure
 Node::Tasks* Node::tasks()  const {
   Buffers* b = buffers();
   return (Tasks*)(((char*)b) + b->length());
 }
 
+/// Fix the lengths before sending. This is the last statement after filling
 void Node::fixup() {
   type = TYPE;
   bmSize = buffers()->length();

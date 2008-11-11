@@ -103,20 +103,20 @@ XMLDocument::XMLDocument() : m_doc(0),m_parser(0),m_errHdlr(0),m_update(false)
 {
 }
 
-int XMLDocument::parseFile(const std::string& fname)   {
+int XMLDocument::parseFile(const string& fname)   {
   string xmlFile = getfile(fname,false);
-  std::auto_ptr<LocalFileInputSource> input(new LocalFileInputSource(XMLStr(xmlFile)));
+  auto_ptr<LocalFileInputSource> input(new LocalFileInputSource(XMLStr(xmlFile)));
   return parse(xmlFile,*input.get());
 }
 
 /// Parse a memory buffer containing the XML information
-int XMLDocument::parseBuffer(const std::string& tag, const void* address, size_t len)  {
+int XMLDocument::parseBuffer(const string& tag, const void* address, size_t len)  {
   XMLStr theTag(tag);
-  std::auto_ptr<MemBufInputSource> input(new MemBufInputSource((XMLByte*)address,len,theTag));
+  auto_ptr<MemBufInputSource> input(new MemBufInputSource((XMLByte*)address,len,theTag));
   return parse(tag,*input.get());
 }
 
-int XMLDocument::parse(const std::string& tag,InputSource& input)   {
+int XMLDocument::parse(const string& tag,InputSource& input)   {
   try{
     if ( m_parser ) delete m_parser;
     m_parser = new XercesDOMParser;     
@@ -132,7 +132,7 @@ int XMLDocument::parse(const std::string& tag,InputSource& input)   {
       //m_parser->parse(tag.c_str());
     }
     else  {
-      const std::string& s = EmptyCatalog;
+      const string& s = EmptyCatalog;
       MemBufInputSource src((const XMLByte*)s.c_str(),s.length(),"MemCatalog");
       m_parser->parse(src);
     }
@@ -189,7 +189,7 @@ DOMNode* XMLDocument::child(DOMNode* par,CSTR tag,CSTR attr,CSTR val) const {
   return 0;
 }
 // ----------------------------------------------------------------------------
-void XMLDocument::commit(const std::string& fname)    {  
+void XMLDocument::commit(const string& fname)    {  
   try {
     if ( dirty() && !readOnly() )  {
       string xmlfile = getfile(fname,true);
@@ -211,7 +211,7 @@ void XMLDocument::commit(const std::string& fname)    {
   }
 }
 // ----------------------------------------------------------------------------
-string XMLDocument::getfile(const std::string& fname, bool create)   {  
+string XMLDocument::getfile(const string& fname, bool create)   {  
   string protocol, path;
   XMLURL xerurl;
   try{

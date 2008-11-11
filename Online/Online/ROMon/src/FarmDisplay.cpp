@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.cpp,v 1.27 2008-10-21 13:53:52 frankb Exp $
+// $Id: FarmDisplay.cpp,v 1.28 2008-11-11 15:09:26 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.27 2008-10-21 13:53:52 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.28 2008-11-11 15:09:26 frankb Exp $
 
 #include "ROMon/CtrlSubfarmDisplay.h"
 #include "ROMon/RecSubfarmDisplay.h"
@@ -46,6 +46,7 @@ extern "C" {
 #endif
 using namespace ROMon;
 using namespace SCR;
+using namespace std;
 
 typedef Nodeset::Nodes               Nodes;
 typedef Node::Buffers                Buffers;
@@ -81,34 +82,34 @@ typedef Node::Tasks                  Tasks;
 // Max. 15 seconds without update allowed
 #define UPDATE_TIME_MAX 15
 
-typedef std::vector<std::string> StringV;
+typedef vector<string> StringV;
 
 static FarmDisplay* s_fd = 0;
 static lib_rtl_lock_t    s_lock;
 static const char *sstat[17] = {" nl", "   ", "*SL","*EV","*SP","WSL","WEV","WSP","wsl","wev","wsp"," ps"," ac", "SPR", "WER", "   "};
-//static const int   INT_min = std::numeric_limits<int>::min();
-static const int   INT_max = std::numeric_limits<int>::max();
-static const float FLT_max = std::numeric_limits<float>::max();
+//static const int   INT_min = numeric_limits<int>::min();
+static const int   INT_max = numeric_limits<int>::max();
+static const float FLT_max = numeric_limits<float>::max();
 
 
 static void help() {
-  std::cout << "  romon_farm -option [-option]" << std::endl
-	    << "       -all                         Show all subfarms." << std::endl
-	    << "       -p[artition]=<name>          Partition name providing monitoring information." << std::endl
-	    << "       -an[chor]=+<x-pos>+<ypos>    Set anchor for sub displays" << std::endl
-	    << std::endl;
+  cout << "  romon_farm -option [-option]" << endl
+	    << "       -all                         Show all subfarms." << endl
+	    << "       -p[artition]=<name>          Partition name providing monitoring information." << endl
+	    << "       -an[chor]=+<x-pos>+<ypos>    Set anchor for sub displays" << endl
+	    << endl;
 }
 
-static std::string strUpper(const std::string& src) {
-  std::string r=src;
+static string strUpper(const string& src) {
+  string r=src;
   for(size_t i=0;i<r.length();++i)r[i]=::toupper(r[i]);
   return r;
 }
 
 namespace ROMon {
-  InternalDisplay* createFarmSubDisplay(FarmDisplay* parent, const std::string& title);
-  InternalDisplay* createRecFarmSubDisplay(FarmDisplay* parent, const std::string& title);
-  InternalDisplay* createCtrlFarmSubDisplay(FarmDisplay* parent, const std::string& title);
+  InternalDisplay* createFarmSubDisplay(FarmDisplay* parent, const string& title);
+  InternalDisplay* createRecFarmSubDisplay(FarmDisplay* parent, const string& title);
+  InternalDisplay* createCtrlFarmSubDisplay(FarmDisplay* parent, const string& title);
 }
 namespace {
   struct DisplayUpdate {
@@ -123,7 +124,7 @@ namespace {
     }
   };
   /// Extract node/service name from DNS info
-  void getServiceNode(char* s, std::string& svc, std::string& node) {
+  void getServiceNode(char* s, string& svc, string& node) {
     char* at = strchr(s,'@');
     *at = 0;
     svc = s;
@@ -131,7 +132,7 @@ namespace {
   }
 }
 
-InternalDisplay::InternalDisplay(FarmDisplay* parent, const std::string& title) 
+InternalDisplay::InternalDisplay(FarmDisplay* parent, const string& title) 
 : m_pasteboard(0), m_display(0), m_parent(parent), m_name(title), m_title(title), m_svc(0)
 {
   m_pasteboard = m_parent ? m_parent->pasteboard() : 0;
@@ -223,26 +224,26 @@ void InternalDisplay::handle(const Event& ev)    {
   }
 }
 
-HelpDisplay::HelpDisplay(FarmDisplay* parent, const std::string& title, const std::string& tag) 
+HelpDisplay::HelpDisplay(FarmDisplay* parent, const string& title, const string& tag) 
 : InternalDisplay(parent,title)
 {
   bool use = false, isHeader=false;
-  std::string s, input = ::getenv("ROMONROOT") != 0 ? ::getenv("ROMONROOT") : "..";
-  std::string start="<"+tag+">", stop = "</"+tag+">";
-  std::string fin = input+"/doc/farmMon.hlp";
-  std::string head = m_title + ": " + fin;
-  std::ifstream in(fin.c_str());
+  string s, input = ::getenv("ROMONROOT") != 0 ? ::getenv("ROMONROOT") : "..";
+  string start="<"+tag+">", stop = "</"+tag+">";
+  string fin = input+"/doc/farmMon.hlp";
+  string head = m_title + ": " + fin;
+  ifstream in(fin.c_str());
 
   ::scrc_create_display(&m_display,55,132,NORMAL,ON,head.c_str());
   ::scrc_put_chars(m_display,"Hit CTRL-H to hide the display",BOLD,2,2,1);
   for(int line=3; in.good(); ) {
-    std::getline(in,s);
-    if ( !use && (s.find(start) != std::string::npos || s.find("<common>") != std::string::npos) ) {
+    getline(in,s);
+    if ( !use && (s.find(start) != string::npos || s.find("<common>") != string::npos) ) {
       isHeader = true;
       use = true;
       continue;
     }
-    if ( use && (s.find(stop) != std::string::npos || s.find("</common>") != std::string::npos) ) {
+    if ( use && (s.find(stop) != string::npos || s.find("</common>") != string::npos) ) {
       use = false;
     }
     if ( use ) {
@@ -254,7 +255,7 @@ HelpDisplay::HelpDisplay(FarmDisplay* parent, const std::string& title, const st
 }
 
 
-BufferDisplay::BufferDisplay(FarmDisplay* parent, const std::string& title) 
+BufferDisplay::BufferDisplay(FarmDisplay* parent, const string& title) 
   : InternalDisplay(parent,title), m_node(0)
 {
   ::scrc_create_display(&m_display,55,130,MAGENTA,ON,"MBM Monitor display for node:");
@@ -263,10 +264,10 @@ BufferDisplay::BufferDisplay(FarmDisplay* parent, const std::string& title)
 void BufferDisplay::update(const void* data) {
   const Nodeset* ns = (const Nodeset*)data;
   if ( 0 != ns ) {
-    std::string key;
-    std::map<std::string,std::string> entries;
+    string key;
+    map<string,string> entries;
     StringV lines;
-    std::string nam;
+    string nam;
     int line = 0, node = 0;
     char txt[1024], name[128];
     char *p, *bnam, *cnam;
@@ -349,7 +350,7 @@ void BufferDisplay::update(const void* data) {
       }
     }
     lines.clear();
-    for(std::map<std::string,std::string>::const_iterator m=entries.begin();m!=entries.end();++m) {
+    for(map<string,string>::const_iterator m=entries.begin();m!=entries.end();++m) {
       lines.push_back((*m).second);
     }
     
@@ -371,7 +372,7 @@ void BufferDisplay::update(const void* data) {
   }
 }
 
-CtrlDisplay::CtrlDisplay(FarmDisplay* parent, const std::string& title) 
+CtrlDisplay::CtrlDisplay(FarmDisplay* parent, const string& title) 
   : InternalDisplay(parent,title), m_node(0)
 {
   ::scrc_create_display(&m_display,55,130,MAGENTA,ON,"Node Control display for node:");
@@ -425,7 +426,7 @@ void CtrlDisplay::update(const void* data) {
 	  ::scrc_put_chars(m_display,"",INVERSE|RED|BOLD,++line,1,1);
 	}
 	else {
-	  typedef std::map<std::string,bool> _O;
+	  typedef map<string,bool> _O;
 	  int l, x;
 	  _O ord;
 	  _O::iterator k;
@@ -502,10 +503,10 @@ void CtrlDisplay::update(const void* data) {
     ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
 }
 
-ProcessDisplay::ProcessDisplay(FarmDisplay* parent, const std::string& title, int height, int width)
+ProcessDisplay::ProcessDisplay(FarmDisplay* parent, const string& title, int height, int width)
 : InternalDisplay(parent, title)
 {
-  std::string svc = "/";
+  string svc = "/";
   m_name = "";
   for(size_t i=0; i<title.length() && title[i]!='.';++i) {
     m_name += ::tolower(title[i]);
@@ -570,10 +571,10 @@ void ProcessDisplay::updateContent(const ProcFarm& pf) {
   ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED|BOLD);
 }
 
-CPUDisplay::CPUDisplay(FarmDisplay* parent, const std::string& title, int height, int width)
+CPUDisplay::CPUDisplay(FarmDisplay* parent, const string& title, int height, int width)
 : InternalDisplay(parent, title)
 {
-  std::string svc = "/";
+  string svc = "/";
   for(size_t i=0; i<title.length() && title[i]!='.';++i) svc += ::tolower(title[i]);
   svc += "/CPUmon";
   m_title = "CPU monitor on "+m_title+" Service:"+svc;
@@ -636,9 +637,9 @@ void CPUDisplay::updateContent(const CPUfarm& f) {
 }
 
 /// Standard constructor with object setup through parameters
-PartitionListener::PartitionListener(Interactor* parent,const std::string& nam) : m_parent(parent), m_name(nam)
+PartitionListener::PartitionListener(Interactor* parent,const string& nam) : m_parent(parent), m_name(nam)
 {
-  std::string name = "RunInfo/" + m_name + "/HLTsubFarms";
+  string name = "RunInfo/" + m_name + "/HLTsubFarms";
   m_subFarmDP = ::dic_info_service((char*)name.c_str(),MONITORED,0,0,0,subFarmHandler,(long)this,0,0);
 }
 
@@ -649,14 +650,14 @@ PartitionListener::~PartitionListener() {
 
 /// DIM command service callback
 void PartitionListener::subFarmHandler(void* tag, void* address, int* size) {
-  std::string svc;
-  std::auto_ptr<StringV > f(new StringV());
+  string svc;
+  auto_ptr<StringV > f(new StringV());
   PartitionListener* h = *(PartitionListener**)tag;
   for(const char* data = (char*)address, *end=data+*size;data<end;data += strlen(data)+1)
     f->push_back(data);
   if ( h->m_name == "LHCb" ) f->push_back("CALD07");
   for(StringV::iterator i=f->begin(); i != f->end(); ++i) {
-    std::string& s = *i;
+    string& s = *i;
     for(size_t j=0; j<s.length(); ++j) {
       s[j] = ::tolower(s[j]);
     }
@@ -671,7 +672,7 @@ FarmDisplay::FarmDisplay(int argc, char** argv)
 {
   bool all = false;
   char txt[128];
-  std::string anchor;
+  string anchor;
   RTL::CLI cli(argc,argv,help);
   cli.getopt("partition",   2, m_name = "LHCb");
   cli.getopt("match",       2, m_match = "*");
@@ -733,7 +734,7 @@ FarmDisplay::FarmDisplay(int argc, char** argv)
     m_svc = ::dic_info_service((char*)"DIS_DNS/SERVER_LIST",MONITORED,0,0,0,dnsDataHandler,(long)this,0,0);
   }
   else {
-    m_listener = std::auto_ptr<PartitionListener>(new PartitionListener(this,m_name));
+    m_listener = auto_ptr<PartitionListener>(new PartitionListener(this,m_name));
   }
 }
 
@@ -742,10 +743,10 @@ FarmDisplay::~FarmDisplay()  {
   MouseSensor::instance().stop();
   ::wtc_remove(WT_FACILITY_SCR);
   disconnect();
-  m_listener = std::auto_ptr<PartitionListener>(0);
+  m_listener = auto_ptr<PartitionListener>(0);
   ::scrc_begin_pasteboard_update(m_pasteboard);
-  m_ctrlDisplay = std::auto_ptr<CtrlDisplay>(0);
-  m_mbmDisplay = std::auto_ptr<BufferDisplay>(0);
+  m_ctrlDisplay = auto_ptr<CtrlDisplay>(0);
+  m_mbmDisplay = auto_ptr<BufferDisplay>(0);
   if ( m_subfarmDisplay ) {
     MouseSensor::instance().remove(m_subfarmDisplay->display());
     if ( m_nodeSelector ) {
@@ -822,27 +823,27 @@ int FarmDisplay::showSubfarm()    {
     m_subfarmDisplay->finalize();
     delete m_subfarmDisplay;
     m_subfarmDisplay = 0;
-    m_cpuDisplay = std::auto_ptr<CPUDisplay>(0);
-    m_mbmDisplay = std::auto_ptr<BufferDisplay>(0);
-    m_ctrlDisplay = std::auto_ptr<CtrlDisplay>(0);
-    m_procDisplay = std::auto_ptr<ProcessDisplay>(0);
+    m_cpuDisplay = auto_ptr<CPUDisplay>(0);
+    m_mbmDisplay = auto_ptr<BufferDisplay>(0);
+    m_ctrlDisplay = auto_ptr<CtrlDisplay>(0);
+    m_procDisplay = auto_ptr<ProcessDisplay>(0);
     m_subPosCursor = 8;
     m_nodeSelector = 0;
   }
   else if ( (d=currentDisplay()) != 0 ) {
-    std::string title = "Sub farm info:" + d->name();
+    string title = "Sub farm info:" + d->name();
     if ( m_mode == CTRL_MODE ) {
-      std::string svc = "-servicename=/"+strUpper(d->name())+"/TaskSupervisor/Status";
+      string svc = "-servicename=/"+strUpper(d->name())+"/TaskSupervisor/Status";
       const char* argv[] = {"",svc.c_str(), "-delay=300"};
       m_subfarmDisplay = new CtrlSubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
     }
     else if ( m_mode == RECO_MODE ) {
-      std::string svc = "-servicename=/"+d->name()+"/ROpublish";
+      string svc = "-servicename=/"+d->name()+"/ROpublish";
       const char* argv[] = {"",svc.c_str(), "-delay=300"};
       m_subfarmDisplay = new RecSubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
     }
     else if ( m_mode == HLT_MODE ) {
-      std::string svc = "-servicename=/"+d->name()+"/ROpublish";
+      string svc = "-servicename=/"+d->name()+"/ROpublish";
       const char* argv[] = {"",svc.c_str(), "-delay=300"};
       m_subfarmDisplay = new SubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
     }
@@ -869,24 +870,24 @@ int FarmDisplay::showHelpWindow() {
   DisplayUpdate update(this,true);
   if ( m_helpDisplay.get() ) {
     MouseSensor::instance().remove(this,m_helpDisplay->display());
-    m_helpDisplay = std::auto_ptr<HelpDisplay>(0);
+    m_helpDisplay = auto_ptr<HelpDisplay>(0);
   }
   else if ( m_mbmDisplay.get() ) 
-    m_helpDisplay = std::auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","mbm"));
+    m_helpDisplay = auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","mbm"));
   else if ( m_ctrlDisplay.get() ) 
-    m_helpDisplay = std::auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","ctrl"));
+    m_helpDisplay = auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","ctrl"));
   else if ( m_procDisplay.get() ) 
-    m_helpDisplay = std::auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","procs"));
+    m_helpDisplay = auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","procs"));
   else if ( m_cpuDisplay.get() ) 
-    m_helpDisplay = std::auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","cpu"));
+    m_helpDisplay = auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","cpu"));
   else if ( m_subfarmDisplay && m_mode == CTRL_MODE )
-    m_helpDisplay = std::auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","subfarm_ctrl"));
+    m_helpDisplay = auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","subfarm_ctrl"));
   else if ( m_subfarmDisplay && m_mode == RECO_MODE )
-    m_helpDisplay = std::auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","subfarm_reco"));
+    m_helpDisplay = auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","subfarm_reco"));
   else if ( m_subfarmDisplay )
-    m_helpDisplay = std::auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","subfarm"));
+    m_helpDisplay = auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","subfarm"));
   else
-    m_helpDisplay = std::auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","farm"));
+    m_helpDisplay = auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","farm"));
   if ( m_helpDisplay.get() ) {
     m_helpDisplay->show(m_anchorY,m_anchorX);
     MouseSensor::instance().add(this,m_helpDisplay->display());
@@ -899,12 +900,12 @@ int FarmDisplay::showProcessWindow() {
   if ( m_procDisplay.get() ) {
     if ( m_helpDisplay.get() ) showHelpWindow();
     MouseSensor::instance().remove(this,m_procDisplay->display());
-    m_procDisplay = std::auto_ptr<ProcessDisplay>(0);
+    m_procDisplay = auto_ptr<ProcessDisplay>(0);
   }
   else if ( m_subfarmDisplay ) {
-    std::string node_name = m_subfarmDisplay->nodeName(m_subPosCursor-SUBFARM_NODE_OFFSET);
+    string node_name = m_subfarmDisplay->nodeName(m_subPosCursor-SUBFARM_NODE_OFFSET);
     if ( !node_name.empty() ) {
-      m_procDisplay = std::auto_ptr<ProcessDisplay>(new ProcessDisplay(this,node_name));
+      m_procDisplay = auto_ptr<ProcessDisplay>(new ProcessDisplay(this,node_name));
       m_procDisplay->show(m_anchorY+5,m_anchorX+12);
       MouseSensor::instance().add(this,m_procDisplay->display());
       return WT_SUCCESS;
@@ -919,10 +920,10 @@ int FarmDisplay::showMbmWindow() {
   if ( m_mbmDisplay.get() ) {
     if ( m_helpDisplay.get() ) showHelpWindow();
     MouseSensor::instance().remove(this,m_mbmDisplay->display());
-    m_mbmDisplay = std::auto_ptr<BufferDisplay>(0);
+    m_mbmDisplay = auto_ptr<BufferDisplay>(0);
   }
   else if ( m_subfarmDisplay ) {
-    m_mbmDisplay = std::auto_ptr<BufferDisplay>(new BufferDisplay(this,"MBM Monitor display"));
+    m_mbmDisplay = auto_ptr<BufferDisplay>(new BufferDisplay(this,"MBM Monitor display"));
     m_mbmDisplay->setNode(m_subPosCursor-SUBFARM_NODE_OFFSET);
     m_mbmDisplay->update(m_subfarmDisplay->data().pointer);
     m_mbmDisplay->show(m_anchorY+5,m_anchorX+12);
@@ -937,10 +938,10 @@ int FarmDisplay::showCtrlWindow() {
   if ( m_ctrlDisplay.get() ) {
     if ( m_helpDisplay.get() ) showHelpWindow();
     MouseSensor::instance().remove(this,m_ctrlDisplay->display());
-    m_ctrlDisplay = std::auto_ptr<CtrlDisplay>(0);
+    m_ctrlDisplay = auto_ptr<CtrlDisplay>(0);
   }
   else if ( m_subfarmDisplay ) {
-    m_ctrlDisplay = std::auto_ptr<CtrlDisplay>(new CtrlDisplay(this,"CTRL Monitor display"));
+    m_ctrlDisplay = auto_ptr<CtrlDisplay>(new CtrlDisplay(this,"CTRL Monitor display"));
     m_ctrlDisplay->setNode(m_subPosCursor-SUBFARM_NODE_OFFSET);
     m_ctrlDisplay->update(m_subfarmDisplay->data().pointer);
     m_ctrlDisplay->show(m_anchorY+5,m_anchorX+12);
@@ -955,12 +956,12 @@ int FarmDisplay::showCpuWindow() {
   if ( m_cpuDisplay.get() ) {
     if ( m_helpDisplay.get() ) showHelpWindow();
     MouseSensor::instance().remove(this,m_cpuDisplay->display());
-    m_cpuDisplay = std::auto_ptr<CPUDisplay>(0);
+    m_cpuDisplay = auto_ptr<CPUDisplay>(0);
   }
   else if ( m_subfarmDisplay ) {
     const Nodeset* ns = (const Nodeset*)m_subfarmDisplay->data().pointer;
     if ( ns ) {
-      m_cpuDisplay = std::auto_ptr<CPUDisplay>(new CPUDisplay(this,ns->name));
+      m_cpuDisplay = auto_ptr<CPUDisplay>(new CPUDisplay(this,ns->name));
       m_cpuDisplay->show(m_anchorY+5,m_anchorX+12);
       MouseSensor::instance().add(this,m_cpuDisplay->display());
       return WT_SUCCESS;
@@ -972,19 +973,19 @@ int FarmDisplay::showCpuWindow() {
 /// DIM command service callback
 void FarmDisplay::update(const void* address) {
   char c, *msg = (char*)address;
-  std::string svc, node;
+  string svc, node;
   size_t idx, idq;
   switch(c=msg[0]) {
   case '+':
     getServiceNode(++msg,svc,node);
     idx = svc.find("/ROpublish");
     idq = svc.find("/hlt");
-    if ( idq == std::string::npos ) idq = svc.find("/mona");
-    if ( idq == std::string::npos ) idq = svc.find("/store");
-    if ( idx != std::string::npos && idq == 0 ) {
-      std::string f = svc.substr(1,idx-1);
+    if ( idq == string::npos ) idq = svc.find("/mona");
+    if ( idq == string::npos ) idq = svc.find("/store");
+    if ( idx != string::npos && idq == 0 ) {
+      string f = svc.substr(1,idx-1);
       if ( ::strcase_match_wild(f.c_str(),m_match.c_str()) ) {
-	IocSensor::instance().send(this,CMD_ADD,new std::string(f));
+	IocSensor::instance().send(this,CMD_ADD,new string(f));
       }
     }
     break;
@@ -992,22 +993,22 @@ void FarmDisplay::update(const void* address) {
     break;
   case '!':
     //getServiceNode(++msg,svc,node);
-    //log() << "Service " << msg << " in ERROR." << std::endl;
+    //log() << "Service " << msg << " in ERROR." << endl;
     break;
   default:
     if ( *(int*)msg != *(int*)"DEAD" )  {
       char *at, *p = msg, *last = msg;
-      std::auto_ptr<Farms> farms(new Farms);
+      auto_ptr<Farms> farms(new Farms);
       while ( last != 0 && (at=strchr(p,'@')) != 0 )  {
 	last = strchr(at,'|');
 	if ( last ) *last = 0;
 	getServiceNode(p,svc,node);
 	idx = svc.find("/ROpublish");
 	idq = svc.find("/hlt");
-	if ( idq == std::string::npos ) idq = svc.find("/mona");
-	if ( idq == std::string::npos ) idq = svc.find("/store");
-	if ( idx != std::string::npos && idq == 0 ) {
-	  std::string f = svc.substr(1,idx-1);
+	if ( idq == string::npos ) idq = svc.find("/mona");
+	if ( idq == string::npos ) idq = svc.find("/store");
+	if ( idx != string::npos && idq == 0 ) {
+	  string f = svc.substr(1,idx-1);
 	  if ( ::strcase_match_wild(f.c_str(),m_match.c_str()) ) {
 	    farms->push_back(f);
 	  }
@@ -1117,7 +1118,7 @@ int FarmDisplay::handleKeyboard(int key)    {
 	for(k=sd.rbegin(), cnt=sd.size(); k != sd.rend(); ++k, --cnt) {
 	  d1 = (*k).second->display();
 	  if ( d1->col == col ) {
-	    if ( d1->row == std::min(d1->row,row) ) {
+	    if ( d1->row == min(d1->row,row) ) {
 	      row = d1->row;
 	      m_posCursor = cnt;
 	    }
@@ -1133,7 +1134,7 @@ int FarmDisplay::handleKeyboard(int key)    {
 	for(k=sd.begin(), cnt=0; k != sd.end(); ++k, ++cnt) {
 	  d1 = (*k).second->display();
 	  if ( d1->col == col ) {
-	    if ( d1->row == std::max(d1->row,row) ) {
+	    if ( d1->row == max(d1->row,row) ) {
 	      row = d1->row;
 	      m_posCursor = cnt;
 	    }
@@ -1263,12 +1264,12 @@ void FarmDisplay::handle(const Event& ev) {
       TimeSensor::instance().add(this,1,m_subfarmDisplay);
       break;
     case CMD_ADD:
-      i = std::find(m_farms.begin(),m_farms.end(),*(std::string*)ev.data);
+      i = find(m_farms.begin(),m_farms.end(),*(string*)ev.data);
       if ( i == m_farms.end() ) {
-	m_farms.push_back(*(std::string*)ev.data);
+	m_farms.push_back(*(string*)ev.data);
 	connect(m_farms);
       }
-      delete (std::string*)ev.data;
+      delete (string*)ev.data;
       return;
     case CMD_CONNECT: {
       DisplayUpdate update(this,false);
@@ -1299,7 +1300,7 @@ void FarmDisplay::handle(const Event& ev) {
   }
 }
 
-void FarmDisplay::connect(const std::vector<std::string>& farms) {
+void FarmDisplay::connect(const vector<string>& farms) {
   SubDisplays::iterator k;
   SubDisplays copy;
   char txt[128];
@@ -1313,11 +1314,11 @@ void FarmDisplay::connect(const std::vector<std::string>& farms) {
     k = m_farmDisplays.find(*i);
     if ( k == m_farmDisplays.end() ) {
       if ( m_mode == RECO_MODE )
-	copy.insert(std::make_pair(*i,createRecFarmSubDisplay(this,*i)));
+	copy.insert(make_pair(*i,createRecFarmSubDisplay(this,*i)));
       else if ( m_mode == CTRL_MODE )
-	copy.insert(std::make_pair(*i,createCtrlFarmSubDisplay(this,*i)));
+	copy.insert(make_pair(*i,createCtrlFarmSubDisplay(this,*i)));
       else
-	copy.insert(std::make_pair(*i,createFarmSubDisplay(this,*i)));
+	copy.insert(make_pair(*i,createFarmSubDisplay(this,*i)));
     }
     else {
       copy.insert(*k);

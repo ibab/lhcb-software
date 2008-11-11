@@ -60,11 +60,12 @@ extern "C" {
 
 using namespace ROMon;
 using namespace SCR;
+using namespace std;
 typedef MBMBuffer::Clients           Clients;
 typedef Node::Buffers                Buffers;
 typedef Nodeset::Nodes               Nodes;
-static const int   INT_max = std::numeric_limits<int>::max();
-static const float FLT_max = std::numeric_limits<float>::max();
+static const int   INT_max = numeric_limits<int>::max();
+static const float FLT_max = numeric_limits<float>::max();
 // Max. 15 seconds without update allowed
 #define UPDATE_TIME_MAX 15
 
@@ -80,7 +81,7 @@ namespace {
 }
 
 /// Initializing constructor
-FarmSubDisplay::FarmSubDisplay(FarmDisplay* parent, const std::string& title, bool bad) 
+FarmSubDisplay::FarmSubDisplay(FarmDisplay* parent, const string& title, bool bad) 
 : InternalDisplay(parent, title)
 {
   m_numUpdate = 0;
@@ -90,7 +91,7 @@ FarmSubDisplay::FarmSubDisplay(FarmDisplay* parent, const std::string& title, bo
   m_lastUpdate = time(0);
   ::scrc_create_display(&m_display,4,48,NORMAL,ON,m_title.c_str());
   init(bad);
-  std::string svc = "/";
+  string svc = "/";
   for(size_t i=0; i<title.length();++i) svc += ::tolower(title[i]);
   svc += "/ROpublish";
   m_svc = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,dataHandler,(long)this,0,0);
@@ -190,7 +191,7 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
   int numNodes       = 0;
   int numBuffs       = 0;
   int numClients     = 0;
-  std::set<std::string> bad_nodes;
+  set<string> bad_nodes;
 
   for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
     const Buffers& buffs = *(*n).buffers();
@@ -211,11 +212,11 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
       default:                   continue;
       }
       inuse = true;
-      fspace[idx]       = std::min(fspace[idx],float(ctrl.i_space)/float(ctrl.bm_size)); 
-      fslots[idx]       = std::min(fslots[idx],float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax));
-      min_space[idx]    = std::min(min_space[idx],(ctrl.i_space*ctrl.bytes_p_Bit)/1024/1024);
-      min_slots[idx]    = std::min(min_slots[idx],ctrl.p_emax-ctrl.i_events);
-      min_prod[idx]     = std::min(min_prod[idx],ctrl.tot_produced);
+      fspace[idx]       = min(fspace[idx],float(ctrl.i_space)/float(ctrl.bm_size)); 
+      fslots[idx]       = min(fslots[idx],float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax));
+      min_space[idx]    = min(min_space[idx],(ctrl.i_space*ctrl.bytes_p_Bit)/1024/1024);
+      min_slots[idx]    = min(min_slots[idx],ctrl.p_emax-ctrl.i_events);
+      min_prod[idx]     = min(min_prod[idx],ctrl.tot_produced);
       evt_prod[idx]    += ctrl.tot_produced;
       free_space[idx]  += (ctrl.i_space*ctrl.bytes_p_Bit)/1024/1024;
       used_slots[idx]  += (ctrl.p_emax-ctrl.i_events);
@@ -235,13 +236,13 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
 	  break;
 	case SENDER_TASK:
 	  if( b == RES_BUFFER || b == SND_BUFFER )  {
-	    node_evt_sent = std::min(node_evt_sent,(*ic).events);
+	    node_evt_sent = min(node_evt_sent,(*ic).events);
 	  }
 	  break;
 	case MOORE_TASK:
 	  //  Normal  and        TAE event processing
 	  if( b == EVT_BUFFER || b == MEP_BUFFER )  {
-	    node_evt_moore = std::min(node_evt_moore,(*ic).events);
+	    node_evt_moore = min(node_evt_moore,(*ic).events);
 	  }
 	  break;
 	default:
@@ -249,9 +250,9 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
 	}
       }
     }
-    evt_moore = std::min(evt_moore,node_evt_moore);
-    evt_built = std::min(evt_built,node_evt_mep);
-    evt_sent  = std::min(evt_sent,node_evt_sent);
+    evt_moore = min(evt_moore,node_evt_moore);
+    evt_built = min(evt_built,node_evt_mep);
+    evt_sent  = min(evt_sent,node_evt_sent);
   }
   char b1[64];
   Nodeset::TimeStamp frst=ns.firstUpdate();

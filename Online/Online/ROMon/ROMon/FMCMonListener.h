@@ -1,4 +1,4 @@
-// $Id: FMCMonListener.h,v 1.3 2008-07-02 14:55:09 frankb Exp $
+// $Id: FMCMonListener.h,v 1.4 2008-11-11 15:09:25 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FMCMonListener.h,v 1.3 2008-07-02 14:55:09 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FMCMonListener.h,v 1.4 2008-11-11 15:09:25 frankb Exp $
 #ifndef ROMON_FMCMONLISTENER_H
 #define ROMON_FMCMONLISTENER_H 1
 
@@ -39,6 +39,7 @@ namespace ROMon {
       char*  data;
       Descriptor() : len(0), actual(0), time(0), millitm(0), data(0) {}
       void release() { if ( data ) ::free(data); data = 0; }
+      void copy(const void* data, size_t len);
     };
   protected:
     /// String matching of services

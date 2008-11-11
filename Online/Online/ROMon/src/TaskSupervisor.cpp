@@ -52,12 +52,12 @@ namespace {
     bool operator()(NodeTaskMon* mon);
     int check(bool throw_if_error=true);
   };
-  string strupper(const std::string& n) {
+  string strupper(const string& n) {
     string r=n;
     for(size_t i=0; i<r.length();++i) r[i]=::toupper(r[i]);
     return r;
   }
-  string strlower(const std::string& n) {
+  string strlower(const string& n) {
     string r=n;
     for(size_t i=0; i<r.length();++i) r[i]=::tolower(r[i]);
     return r;
@@ -68,7 +68,7 @@ string ManipTaskMon::error() const {
   stringstream err;
   for(Monitors::const_iterator i=m_errors.begin(); i != m_errors.end(); ++i)
     err << m_tag+" for " << (*i)->name() << " of type " << (*i)->type() 
-	<< " Error:" << (*i)->error() << std::endl;
+	<< " Error:" << (*i)->error() << endl;
   return err.str();
 }
 
@@ -78,7 +78,7 @@ bool ManipTaskMon::operator()(NodeTaskMon* mon) {
     if ( 1 != res ) m_errors.push_back(mon); 
     return res == 1;
   }
-  catch(const std::exception& e) {
+  catch(const exception& e) {
     mon->setError(e.what());
   }
   catch(...) {
@@ -131,7 +131,7 @@ ostream& operator<<(ostream& os, const Cluster& c) {
 }
 
 ostream& operator<<(ostream& os, const list<Cluster>& c) {
-  for(std::list<Cluster>::const_iterator i=c.begin(); i!=c.end();++i)
+  for(list<Cluster>::const_iterator i=c.begin(); i!=c.end();++i)
     os << "-------------------------------------------------------------" << endl << *i;
   return os;
 }
@@ -172,7 +172,7 @@ ostream& Inventory::print(ostream& os)   const  {
     os << "     -->Task: " << (*i).first << endl;
 
   os << "-->List of all tasks lists:" << endl;
-  for(std::map<std::string,TaskList>::const_iterator i=connlists.begin();i!=connlists.end();++i) {
+  for(map<string,TaskList>::const_iterator i=connlists.begin();i!=connlists.end();++i) {
     os << "     -->TaskList: " << (*i).first << endl;
     for(TaskList::const_iterator j=(*i).second.begin();j!=(*i).second.end();++j)
       os << "       -->Task: " << (*j) << endl;
@@ -205,7 +205,7 @@ void NodeTaskMon::infoHandler(void* tag, void* address, int* size) {
       NodeTaskMon* it = *(NodeTaskMon**)tag;
       it->updateTaskInfo((char*)address,*size);
     }
-    catch(const std::exception& e) {
+    catch(const exception& e) {
       cout << "Exception in DIM callback processing:" << e.what() << endl;
     }
     catch(...) {
@@ -349,8 +349,8 @@ int NodeTaskMon::start()   {
   Inventory::NodeTypeMap::iterator i = inv->nodetypes.find(type());
   if ( i != inv->nodetypes.end() ) {
     size_t idx;
-    std::string nam, nodU = strupper(m_name), nodL=strlower(m_name);
-    nam = "/"+nodU+"/ps/data";
+    string nam, nodU = strupper(m_name), nodL=strlower(m_name);
+    nam = "/FMC/"+nodU+"/ps/data";
     m_nodeType = (*i).second;
     for(TaskList::iterator t=m_nodeType.tasks.begin(); t!=m_nodeType.tasks.end();++t) {
       string& utgid = *t;
@@ -569,7 +569,7 @@ void SubfarmTaskMon::handle(const Event& ev) {
       break;
     }
   }
-  catch(const std::exception& e) {
+  catch(const exception& e) {
     cout << "Exception in callback processing:" << e.what() << endl;
   }
   catch(...) {

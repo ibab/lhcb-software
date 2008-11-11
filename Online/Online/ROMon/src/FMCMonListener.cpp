@@ -1,4 +1,4 @@
-// $Id: FMCMonListener.cpp,v 1.3 2008-07-02 14:55:09 frankb Exp $
+// $Id: FMCMonListener.cpp,v 1.4 2008-11-11 15:09:26 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FMCMonListener.cpp,v 1.3 2008-07-02 14:55:09 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FMCMonListener.cpp,v 1.4 2008-11-11 15:09:26 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -25,6 +25,20 @@
 #include "ROMonDefs.h"
 
 using namespace ROMon;
+
+/// Copy data to descriptor
+void FMCMonListener::Descriptor::copy(const void* address, size_t siz) {
+  if ( size_t(len) < siz ) {
+    len = siz;
+    ::free(data);
+    data = (char*)::malloc(len);
+  }
+  actual = siz;
+  int tm=0;
+  ro_gettime(&tm,(unsigned int*)&millitm);
+  time = tm;
+  ::memcpy(data,address,actual);
+}
 
 /// Standard constructor
 FMCMonListener::FMCMonListener(bool verbose) 
@@ -53,7 +67,8 @@ void FMCMonListener::addHandler(const std::string& node,const std::string& svc) 
   if ( i == m_clients.end() )  {
     if ( ::str_match_wild(svc.c_str(),m_match.c_str()) )  {
       Item* itm = Item::create<Descriptor>(this);
-      std::string nam = svc + "/" + m_item;
+      std::string nam = svc;
+      if ( !m_item.empty() ) nam += "/" + m_item;
       m_clients[node] = itm;
       itm->id = ::dic_info_service((char*)nam.c_str(),MONITORED,0,0,0,infoHandler,(long)itm,0,0);
       if ( m_verbose ) log() << "[FMCMonListener] Create DimInfo:" 
@@ -84,21 +99,10 @@ void FMCMonListener::removeHandler(const std::string& node, const std::string& s
 /// DimInfo overload to process messages
 void FMCMonListener::infoHandler(void* tag, void* address, int* size) {
   if ( address && tag && size && *size>0 ) {
-    timeb tm;
-    int len = *size;
     Item* it = *(Item**)tag;
     Descriptor* d = it->data<Descriptor>();
     RODimListener* l = (RODimListener*)it->object;
-    if ( d->len < len ) {
-      d->len = len;
-      ::free(d->data);
-      d->data = (char*)::malloc(d->len);
-    }
-    d->actual = len;
-    ::ftime(&tm);
-    d->time = tm.time;
-    d->millitm = tm.millitm;
-    ::memcpy(d->data,address,d->actual);
+    d->copy(address,*size);
     if ( l && l->updateHandler() ) l->updateHandler()->update();
   }
 }
