@@ -59,8 +59,6 @@ void HistoPropDialog::ok()
   m_mainFrame->bulkHistoOptions.m_description =  
     dynamic_cast<TGText*>(m_histogramDescriptionField->GetText())->AsString();  
 
-std::cout << "desc: " << m_mainFrame->bulkHistoOptions.m_description << std::endl;
-
     if (1 == m_statOptionComboBox->GetSelected()) {
       m_mainFrame->bulkHistoOptions.m_statsOption = 11111110;
     } else if (0 == m_statOptionComboBox->GetSelected()) {
