@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.cpp,v 1.28 2008-11-11 15:09:26 frankb Exp $
+// $Id: FarmDisplay.cpp,v 1.29 2008-11-11 18:31:09 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.28 2008-11-11 15:09:26 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.29 2008-11-11 18:31:09 frankb Exp $
 
 #include "ROMon/CtrlSubfarmDisplay.h"
 #include "ROMon/RecSubfarmDisplay.h"
@@ -513,7 +513,7 @@ ProcessDisplay::ProcessDisplay(FarmDisplay* parent, const string& title, int hei
     svc += ::tolower(title[i]);
   }
   svc = svc.substr(0,svc.length()-2);
-  svc += "/PROCmon";
+  svc += "/ROpublish/ROTasks";
   m_title = "Process monitor on "+m_title+" Service:"+svc;
   ::scrc_create_display(&m_display,height,width,NORMAL,ON,m_title.c_str());
   m_svc = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,dataHandler,(long)this,0,0);
@@ -576,7 +576,7 @@ CPUDisplay::CPUDisplay(FarmDisplay* parent, const string& title, int height, int
 {
   string svc = "/";
   for(size_t i=0; i<title.length() && title[i]!='.';++i) svc += ::tolower(title[i]);
-  svc += "/CPUmon";
+  svc += "/ROpublish/CPU";
   m_title = "CPU monitor on "+m_title+" Service:"+svc;
   ::scrc_create_display(&m_display,height,width,NORMAL,ON,m_title.c_str());
   m_svc = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,dataHandler,(long)this,0,0);

@@ -217,29 +217,35 @@ void NodeTaskMon::infoHandler(void* tag, void* address, int* size) {
 /// Update task information
 void NodeTaskMon::updateTaskInfo(const char* ptr, size_t len) {
   typedef Cluster::PVSSProject _P;
-  long rss = 0, vsize = 0, data = 0, stack = 0, tmpl = 0, bad = 0, good = 0;
-  double tmpd, mem = 0.0, cpu = 0.0;
-  const char *addr = ptr;
+  double rss = 0, vsize = 0, data = 0, stack = 0, mem = 0.0, cpu = 0.0;
+  long bad = 0, good = 0;
   Items& t = m_tasks;
   Items& p = m_projects;
   Items::iterator i;
   stringstream xml;
   string pnam;
+  size_t idx;
   map<string,_P> pvss;
 
-  // cout << "DIM: Got update information:" << len << " bytes." << endl;
+  cout << "DIM: Got update information:" << len << " bytes." << endl;
   for(i=t.begin(); i!=t.end();++i) (*i).second=false;
   for(i=p.begin(); i!=p.end();++i) (*i).second=false;
 
-  while(ptr<(addr+len-1)) {
-    vector<string> res = psItems(ptr);
-    string& utgid = res[UTGID];
-    string& cmd   = res[CMD];
+  NodeStats* ns = (NodeStats*)ptr;
+  Procset::Processes& ps = ns->procs()->processes;
+  for(Procset::Processes::iterator pi=ps.begin();pi!=ps.end();pi=ps.next(pi)) {
+    //vector<string> res = psItems(ptr);
+    Process& p = (*pi);
+    string utgid = p.utgid;
+    string cmd   = p.cmd;
+    string command = p.cmd;
+    if ( (idx=cmd.find(' ')) != string::npos ) cmd[idx]=0;
+
     if ( cmd == "init" ) {
-      xml << "\t\t<Boot time=\"" << res[START_TIME] << "\"/>" << endl;
+      xml << "\t\t<Boot time=\"" << p.start << "\"/>" << endl;
     }
     if ( cmd.substr(0,6)=="PVSS00" )  {
-      pnam = _P::projectName(res[CMDLINE]);
+      pnam = _P::projectName(command);
       if ( !pnam.empty() ) {
 	pvss[pnam].name=pnam;
 	if ( cmd == "PVSS00event" ) 
@@ -249,30 +255,21 @@ void NodeTaskMon::updateTaskInfo(const char* ptr, size_t len) {
 	else if ( cmd == "PVSS00dist" )
 	  pvss[pnam].distMgr = true;
 	else if ( cmd == "PVSS00ctrl" ) {
-	  if ( res[CMDLINE].find("fwFsmSrvr") != string::npos ) pvss[pnam].fsmSrv = true;
-	  else if ( res[CMDLINE].find("fwFsmDeviceHandler") != string::npos ) pvss[pnam].devHdlr = true;
+	  if ( command.find("fwFsmSrvr") != string::npos ) pvss[pnam].fsmSrv = true;
+	  else if ( command.find("fwFsmDeviceHandler") != string::npos ) pvss[pnam].devHdlr = true;
 	}
       }
     }
 
     i=t.find(utgid);
-    if ( !utgid.empty() && utgid.substr(0,3)!="N/A" && res[TID]==res[TGID] && i != t.end() ) {
-      char *endp;
-      errno = 0;
-      tmpd = ::strtod(res[PERCENT_MEMORY].c_str(),&endp);
-      if ( errno != ERANGE && errno != EINVAL ) mem += tmpd;
-      tmpd = ::strtod(res[PERCENT_CPU].c_str(),&endp);
-      if ( errno != ERANGE && errno != EINVAL ) rss += tmpl;
-      tmpl = ::strtol(res[VIRTUAL_SIZE].c_str(),&endp,10);
-      if ( errno != ERANGE && errno != EINVAL ) cpu += tmpd;
-      tmpl = ::strtol(res[RESIDENT_MEMORY].c_str(),&endp,10);
-      if ( errno != ERANGE && errno != EINVAL ) vsize += tmpl;
-      tmpl = ::strtol(res[DATA_MEMORY].c_str(),&endp,10);
-      if ( errno != ERANGE && errno != EINVAL ) data += tmpl;
-      tmpl = ::strtol(res[STACK_MEMORY].c_str(),&endp,10);
-      if ( errno != ERANGE && errno != EINVAL ) stack += tmpl;
+    if ( !utgid.empty() && utgid.substr(0,3)!="N/A" && i != t.end() ) {
+      mem += p.mem;
+      rss += p.rss;
+      cpu += p.cpu;
+      vsize += p.vsize;
+      stack += p.stack;
       if ( s_debug ) {
-	cout << "Check task: '" << utgid << "' " << res[TGID] << " " << res[TID] << " " << (void*)ptr << endl;
+	cout << "Check task: '" << utgid << "' " << p.pid << " " << (void*)&p << endl;
       }
       if ( !(*i).second ) ++good;
       (*i).second = true;
@@ -350,7 +347,7 @@ int NodeTaskMon::start()   {
   if ( i != inv->nodetypes.end() ) {
     size_t idx;
     string nam, nodU = strupper(m_name), nodL=strlower(m_name);
-    nam = "/FMC/"+nodU+"/ps/data";
+    nam = "/"+nodL+"/ROpublish/Statistics";
     m_nodeType = (*i).second;
     for(TaskList::iterator t=m_nodeType.tasks.begin(); t!=m_nodeType.tasks.end();++t) {
       string& utgid = *t;

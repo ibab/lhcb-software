@@ -1,4 +1,4 @@
-// $Id: CPUMon.h,v 1.8 2008-11-11 15:09:25 frankb Exp $
+// $Id: CPUMon.h,v 1.9 2008-11-11 18:31:09 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/CPUMon.h,v 1.8 2008-11-11 15:09:25 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/CPUMon.h,v 1.9 2008-11-11 18:31:09 frankb Exp $
 #ifndef ROMON_CPUMON_H
 #define ROMON_CPUMON_H 1
 
@@ -203,6 +203,8 @@ namespace ROMon {
     float          rss;
     /// Stack size of the process
     float          stack;
+    /// Startup time in seconds since epoch
+    int            start;
     /// Process ID
     unsigned short pid;
     /// Parent ID
