@@ -115,8 +115,10 @@
 \item    bool {\bf declareCheckAlgorithm}(std::string Name,\\\mbox{}~~~~~~~~~ 
                              int NoutPars,\\\mbox{}~~~~~~~~~ 
                              std::vector$<$std::string$>$ *outPars = NULL,\\\mbox{}~~~~~~~~~
+			     std::vector$<$float$>$ *outDefv = NULL,\\\mbox{}~~~~~~~~~
                              int NinPars = 0,\\\mbox{}~~~~~~~~~ 
                              std::vector$<$std::string$>$ *inPars =NULL ,\\\mbox{}~~~~~~~~~
+			     std::vector$<$float$>$ *inDefv = NULL,\\\mbox{}~~~~~~~~~
                              std::string doc="NONE");
 
  declares to the DB an Analysis algorithm implemented in the Analysis
@@ -128,10 +130,11 @@
 
 \item    bool {\bf declareCreatorAlgorithm}(std::string Name,\\\mbox{}~~~~~~~~~ 
 			       int Ninput,\\\mbox{}~~~~~~~~~
-             bool SetAsInput=false,\\\mbox{}~~~~~~~~~
+			       bool SetAsInput=false,\\\mbox{}~~~~~~~~~
 			       HistType OutputType = H1D,\\\mbox{}~~~~~~~~~
 			       int Npars=0,\\\mbox{}~~~~~~~~~ 
 			       std::vector$<$std::string$>$ *pars=NULL,\\\mbox{}~~~~~~~~~
+			       std::vector$<$float$>$ *defv = NULL,\\\mbox{}~~~~~~~~~
 			       std::string doc="NONE");
 
  declares to the DB an available algorithm to produce histograms at

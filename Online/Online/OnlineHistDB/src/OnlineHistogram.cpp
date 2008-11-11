@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.35 2008-10-17 09:07:12 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.36 2008-11-11 11:10:26 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -207,7 +207,7 @@ void OnlineHistogram::load() {
   OCIStmt *stmt=NULL;
   m_StmtMethod = "OnlineHistogram::load";
   std::string command = 
-    "BEGIN :out := ONLINEHISTDB.GETHISTOGRAMDATA(:nm,:pg,:in,:hid,:hsd,:ihs,:nhs,:ty,:hst,:sub,:tk,:alg,:na,:des,:doc,:isa,:cre,:obs,:dis,:hdi,:shd, :dsn,:lbl); END;";
+    "BEGIN :out := ONLINEHISTDB.GETHISTOGRAMDATA(:nm,:pg,:in,:hid,:hsd,:ihs,:nhs,:ty,:hst,:sub,:tk,:alg,:na,:des,:doc,:isa,:cre,:obs,:dis,:hdi,:shd, :dsn,:lbl,:nxlb,:nylb); END;";
   if (OCI_SUCCESS == prepareOCITaggedStatement(stmt, command.c_str(), "HLOAD") ) {
     
     text  hid[VSIZE_HID]="";
@@ -248,8 +248,8 @@ void OnlineHistogram::load() {
     myOCIBindInt   (stmt,":shd", m_shdisp, &m_shdisp_null);
     myOCIBindString(stmt,":dsn", dsn, VSIZE_SN, &m_dimServiceName_null);
     myOCIBindObject(stmt,":lbl", (void **) &parameters, OCIparameters );
-    
-    
+    myOCIBindInt   (stmt,":nxlb",m_xbinlab, &m_xbinlab_null );
+    myOCIBindInt   (stmt,":nylb",m_ybinlab, &m_ybinlab_null );    
 
     sword status=myOCIStmtExecute(stmt);
     
@@ -273,10 +273,12 @@ void OnlineHistogram::load() {
         if (m_obsoleteness_null) m_obsoleteness=0;
         if (m_hdisp_null) m_hdisp = 0;
         if (m_hsdisp_null) m_hsdisp = 0;
-        if (m_shdisp_null) m_shdisp = 0;
+        if (m_shdisp_null) m_shdisp = 0;         
         m_dimServiceName = m_dimServiceName_null ? "" : std::string((const char *) dsn);
         m_isAnaHist = (isAnaHist>0);
-	stringVarrayToVector(parameters, m_binlabels);
+        stringVarrayToVector(parameters, m_binlabels);
+        if (m_xbinlab_null) m_xbinlab = 0; 
+        if (m_ybinlab_null) m_ybinlab = 0; 
       }
       
     }

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.26 2008-10-17 09:07:12 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.27 2008-11-11 11:10:25 ggiacomo Exp $
 #ifndef ONLINEHISTOGRAM_H
 #define ONLINEHISTOGRAM_H 1
 /** @class  OnlineHistogram OnlineHistogram.h OnlineHistDB/OnlineHistogram.h
@@ -164,9 +164,16 @@ class  OnlineHistogram : public OnlineHistDBEnv
   /// success.
   bool initHistoPageDisplayOptionsFromHist(std::string FullPathPageName = "_DEFAULT_",
 					   int Instance=-1); 
+  /// number of custom bin labels
   inline unsigned int nbinlabels() {return m_binlabels.size();}
-  inline std::string binlabel(unsigned int i) { 
-    if(i<m_binlabels.size()) return m_binlabels[i];
+  /// number of custom bin labels for X axis
+  inline unsigned int nXbinlabels() {return m_xbinlab;}
+  /// number of custom bin labels for Y axis
+  inline unsigned int nYbinlabels() {return m_ybinlab;}
+
+  inline std::string binlabel(unsigned int i, int axis=0) { 
+    unsigned int j = (0 == axis) ? i : i+m_xbinlab;
+    if(j<m_binlabels.size()) return m_binlabels[j];
     else return "";
   }
   // ANALYSIS OPTIONS
@@ -315,7 +322,11 @@ class  OnlineHistogram : public OnlineHistDBEnv
   dispoptInd *m_dispopt_null;
   std::vector<OnlineDisplayOption*> m_do;
   std::vector<std::string> m_binlabels;
-
+  int m_xbinlab;
+  sb2 m_xbinlab_null;
+  int m_ybinlab;
+  sb2 m_ybinlab_null;
+  
   bool verifyPage(std::string &Page, int Instance);
   bool checkHSDisplayFromDB();
   bool checkHDisplayFromDB();

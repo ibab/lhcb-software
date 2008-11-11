@@ -326,9 +326,10 @@ function histo_display($id,$htype,$mode)
   }
 }
 
-function get_labels($hid,$nl) {
+function get_labels($hid,$nlx,$nly) {
  global $conn;
  global $debug;
+ $nl=$nlx+$nly;
  $query=" SELECT ";
  for ($i=1 ; $i<=$nl; $i++) {
    $query .= "parcomponent(BINLABELS,${i}) LAB${i}";
@@ -342,7 +343,13 @@ function get_labels($hid,$nl) {
  OCIExecute($stid);
  OCIFetchInto($stid, $hlabels, OCI_ASSOC );
  for ($i=1 ; $i<=$nl; $i++) {
-   $_POST["LAB${i}"]=$hlabels["LAB${i}"];
+   if ($i <= $nlx) {
+     $_POST["LABX${i}"]=$hlabels["LAB${i}"];
+   }
+   else {
+     $j=$i-$nlx;
+     $_POST["LABY${j}"]=$hlabels["LAB${i}"];
+   }
  }
  ocifreestatement($stid);
 }
@@ -359,20 +366,24 @@ function histo_labels($id,$htype,$mode)
   $setlist=0;
   if($mode == "display") {
     $script='write/histo_labels.php';
-    foreach (array("NHS","NLABELS") 
+    foreach (array("NHS","NBINLABX","NBINLABY") 
 	     as $field)  
       $_POST[$field]=$histo[$field];
     if($htype == 'HSID'){
       if ($histo["NHS"]>1) 
 	echo "<B> labels for the the first histogram in set</B><br>";
     }
-    get_labels(SingleHist($id),$histo['NLABELS']);
-    $nlab = $_POST["NLABELS"];
+    get_labels(SingleHist($id),$histo['NBINLABX'],$histo['NBINLABY']);
+    $nlabx = $_POST["NBINLABX"];
+    $nlaby = $_POST["NBINLABY"];
   } 
   else {
-    $nlab = 20;
-    if($_POST["nlab"] > $nlab) {
-      $nlab = $_POST["nlab"];
+    $nlabx = $nlaby = 20;
+    if($_POST["nlabx"]  > $nlabx) {
+      $nlabx = $_POST["nlabx"];
+    }
+    if($_POST["nlaby"]  > $nlaby) {
+      $nlaby = $_POST["nlaby"];
     }
   }
   echo "<form action='${script}' method='POST'>\n"; 
@@ -389,16 +400,22 @@ function histo_labels($id,$htype,$mode)
            To change bin labels for a single histogram, select it from the 
            <a href='../Histogram.php?hsid=${id}&fulllist=1#LIST'> histogram list </a> </B><br>\n";
   }
-  foreach (array("NHS","NLABELS") as $field)
+  foreach (array("NHS","NBINLABX","NBINLABY") as $field)
     echo "<input type='hidden' name='${field}' value='".$_POST[$field]."'>\n";
   echo "<input type='hidden' name='id' value='${id}'>\n";
   echo "<input type='hidden' name='htype' value='${htype}'>\n";
-  echo "<input type='hidden' name='nlab' value='${nlab}'>\n";
-  for ($i=1 ; $i<=$nlab; $i++) {
-    echo "Label for Bin ${i}  <input type='text' name='LAB${i}' size=15 value='".$_POST["LAB${i}"]."'><br>\n";
+  echo "<input type='hidden' name='nlabx' value='${nlabx}'>\n";
+  echo "<input type='hidden' name='nlaby' value='${nlaby}'>\n";
+  echo "<table> <tr><td>\n";
+  for ($i=1 ; $i<=$nlabx; $i++) {
+    echo "Label for X Bin ${i}  <input type='text' name='LABX${i}' size=15 value='".$_POST["LABX${i}"]."'><br>\n";
   }
-
-
+  echo "</td><td>\n";
+  for ($i=1 ; $i<=$nlaby; $i++) {
+    echo "Label for Y Bin ${i}  <input type='text' name='LABY${i}' size=15 value='".$_POST["LABY${i}"]."'><br>\n";
+  }
+  echo "</td></tr></table>";
+  
   if( $canwrite) {
     $action= ($mode == "display") ? "Update Bin Labels" : "Confirm";
     echo "<table align=right><tr><td> <input align=right type='submit' name='Update_labels' value='${action}'></tr></table>";
@@ -406,16 +423,21 @@ function histo_labels($id,$htype,$mode)
   echo "</form>";
   
   if ($mode != "display") {
-    $nlab += 20;
+    $nlabx += 20;
+    $nlaby += 20;
     echo "<form action=${script} method='POST'>\n";
-    foreach (array("NHS","NLABELS") as $field)
+    foreach (array("NHS","NBINLABX","NBINLABY") as $field)
       echo "<input type='hidden' name='${field}' value='".$_POST[$field]."'>\n";
     echo "<input type='hidden' name='id' value='${id}'>\n";
     echo "<input type='hidden' name='htype' value='${htype}'>\n";
-    echo "<input type='hidden' name='nlab' value='${nlab}'>\n";
-    for ($i=1 ; $i<=$nlab; $i++) {
-      echo "<input type='hidden' name='LAB${i}' value='".$_POST["LAB${i}"]."'>\n";
-  }
+    echo "<input type='hidden' name='nlabx' value='${nlabx}'>\n";
+    echo "<input type='hidden' name='nlaby' value='${nlaby}'>\n";
+    for ($i=1 ; $i<=$nlabx; $i++) {
+      echo "<input type='hidden' name='LABX${i}' value='".$_POST["LABX${i}"]."'>\n";
+    }
+    for ($i=1 ; $i<=$nlaby; $i++) {
+      echo "<input type='hidden' name='LABY${i}' value='".$_POST["LABY${i}"]."'>\n";
+    }
     echo "<center> <input type='submit' value='Need More Labels' name='moreLabels'></center>\n";
     echo "</form>";
   }

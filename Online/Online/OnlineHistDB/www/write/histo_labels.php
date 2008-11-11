@@ -19,18 +19,30 @@ $id=$_POST["id"];
 <?php
 
 if ($_POST["Update_labels"] == 'Confirm') {
+  $nlabx=$_POST["nlabx"];
+  $nlaby=$_POST["nlaby"];
   $hsid = HistoSet($id);
   $inset = ($htype == "HID") ? "'${id}'" : "NULL";
   $command="begin OnlineHistDB.DeclareBinLabels($hsid,$inset,PARAMETERS(";
   $first=1;
-  for ($i=1 ; $i<=$nlab; $i++) {
-    if(strlen($_POST["LAB${i}"])>0) {
+  $nlx=$nly=0;
+  for ($i=1 ; $i<=$nlabx; $i++) {
+    if(strlen($_POST["LABX${i}"])>0) {
       if ($first == 0) $command .= ",";
-      $command .= "'".$_POST["LAB${i}"]."'";
+      $command .= "'".$_POST["LABX${i}"]."'";
+      $nlx++;
       $first=0;
     }
   }
-  $command .= ")); end;";
+  for ($i=1 ; $i<=$nlaby; $i++) {
+    if(strlen($_POST["LABY${i}"])>0) {
+      if ($first == 0) $command .= ",";
+      $command .= "'".$_POST["LABY${i}"]."'";
+      $nly++;
+      $first=0;
+    }
+  }
+  $command .= "),$nlx); end;";
   if($debug) echo "command is $command<br>\n";
   $stid = OCIParse($conn,$command);
   $r=OCIExecute($stid,OCI_DEFAULT);

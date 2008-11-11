@@ -203,6 +203,12 @@
  unsets a display option (in the current display mode)
 
 
+\item    void {\bf unsetAllDisplayOptions}();
+
+
+ unsets all display options (in the current display mode)
+
+
 \item    virtual bool {\bf changedDisplayOption}(std::string ParameterName,\\\mbox{}~~~~~~~~~ 
 				    void* option);
 
@@ -260,6 +266,21 @@
  FullPathPageName (default is {\it page()}) with the
  options defined for the histogram (if available). Returns true on
  success.
+
+
+\item    inline unsigned int {\bf nbinlabels}() ;
+
+ number of custom bin labels
+
+
+\item    inline unsigned int {\bf nXbinlabels}() ;
+
+ number of custom bin labels for X axis
+
+
+\item    inline unsigned int {\bf nYbinlabels}() ;
+
+ number of custom bin labels for Y axis
 
 
 \item    bool {\bf getCreationDirections}(std::string\& Algorithm,\\\mbox{}~~~~~~~~~

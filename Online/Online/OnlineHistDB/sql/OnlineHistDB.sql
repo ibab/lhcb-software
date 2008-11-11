@@ -74,9 +74,9 @@ create or replace package OnlineHistDB AUTHID CURRENT_USER as
 	theTask OUT varchar2, theAlgo OUT varchar2, theNanalysis OUT int,
 	theDescr OUT varchar2, theDoc OUT varchar2, theIsanalysishist OUT int, theCreation OUT int,
         theObsolete OUT int, theDisplay out int, theHSDisplay out int, theSHDisplay out int,
-	theDIMServiceName OUT varchar2, theLabels OUT parameters)
+	theDIMServiceName OUT varchar2, theLabels OUT parameters, NlabX OUT int, NlabY OUT int)
 	return number;
- procedure DeclareBinLabels(theSet IN HISTOGRAMSET.HSID%TYPE, theHID IN HISTOGRAM.HID%TYPE, labels parameters);
+ procedure DeclareBinLabels(theSet IN HISTOGRAMSET.HSID%TYPE, theHID IN HISTOGRAM.HID%TYPE, labels parameters, Nx IN int);
  function DeleteHistogramSet(theSet IN HISTOGRAMSET.HSID%TYPE) return number;
  function DeleteHistogram(theHID IN HISTOGRAM.HID%TYPE) return number;
  procedure TaskCleanup;
@@ -1435,14 +1435,15 @@ function GetHistogramData(theName IN varchar2, thePage IN varchar2, theInstance 
 	theTask OUT varchar2, theAlgo OUT varchar2, theNanalysis OUT int,
 	theDescr OUT varchar2, theDoc OUT varchar2, theIsanalysishist OUT int, theCreation OUT int,
         theObsolete OUT int, theDisplay OUT int, theHSDisplay OUT int, theSHDisplay OUT int,
-	theDIMServiceName OUT varchar2, theLabels OUT parameters) 
+	theDIMServiceName OUT varchar2, theLabels OUT parameters, NlabX OUT int, NlabY OUT int) 
 	return number is
 cursor myh(XName HISTOGRAM.NAME%TYPE) is SELECT HS.HSID,HS.NHS,HS.HSTYPE,HS.HSTITLE,HS.HSALGO,HS.HSTASK,
         HS.NANALYSIS,HS.DESCR,HS.DOC,HS.HSDISPLAY,
         H.HID,H.IHS,H.SUBTITLE,H.ISANALYSISHIST,
 	(NEW_TIME(H.CREATION,'EST','GMT')-TO_DATE('01-JAN-1970','DD-MON-YYYY'))*(86400),
 	(NEW_TIME(H.OBSOLETENESS,'EST','GMT')-TO_DATE('01-JAN-1970','DD-MON-YYYY'))*(86400),
-	H.DISPLAY,H.BINLABELS FROM HISTOGRAMSET HS,HISTOGRAM H WHERE H.NAME=XName AND H.HSET=HS.HSID;
+	H.DISPLAY,H.BINLABELS,H.NBINLABX,H.NBINLABY FROM HISTOGRAMSET HS,HISTOGRAM H 
+           WHERE H.NAME=XName AND H.HSET=HS.HSID;
 cursor mysh(Xhid HISTOGRAM.HID%TYPE) is SELECT SDISPLAY FROM SHOWHISTO 
 	WHERE PAGE=thePage AND HISTO=Xhid AND INSTANCE=theInstance;
 cursor mysn(Xhid HISTOGRAM.HID%TYPE) is SELECT SN from DIMSERVICENAME where PUBHISTO=Xhid;
@@ -1451,7 +1452,7 @@ begin
  open myh(theName);
  fetch myh into theHsid,theNhs,theHstype,theHstitle,theAlgo,theTask,theNanalysis,theDescr,
    theDoc,theHSDisplay,theHid,theIhs,theSubtitle,theIsanalysishist,theCreation,theObsolete,theDisplay,
-   theLabels;
+   theLabels,NlabX,NlabY;
  if (myh%NOTFOUND) then
   close myh;
   raise_application_error(-20050,'Histogram '||theName||' not found');
@@ -1473,13 +1474,15 @@ begin
  return out;
 end GetHistogramData;
 -----------------------
-procedure DeclareBinLabels(theSet IN HISTOGRAMSET.HSID%TYPE, theHID IN HISTOGRAM.HID%TYPE, labels parameters) is
+procedure DeclareBinLabels(theSet IN HISTOGRAMSET.HSID%TYPE, theHID IN HISTOGRAM.HID%TYPE, labels parameters, Nx IN int) is
+Ny int;
 begin
-if (labels.COUNT >0) then
+if (labels.COUNT > 0 ) then
+ Ny := labels.COUNT-Nx;
  if (theHID is not NULL) then
-  UPDATE HISTOGRAM SET BINLABELS=labels where HID=theHID;
+  UPDATE HISTOGRAM SET BINLABELS=labels,NBINLABX=Nx,NBINLABY=Ny where HID=theHID;
  else
-  UPDATE HISTOGRAM SET BINLABELS=labels where HSET=theSet;
+  UPDATE HISTOGRAM SET BINLABELS=labels,NBINLABX=Nx,NBINLABY=Ny where HSET=theSet;
  end if;
 
 end if;
