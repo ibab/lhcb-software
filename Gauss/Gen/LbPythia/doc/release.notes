@@ -4,6 +4,11 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-11-11 - Patrick Robbe
+ - PythiaProduction: add definition of new charmonium processes (color 
+   singlet psi(2S), Upsilon(1S), Upsilon(2S), Upsilon(3S), Upsilon(4S)
+   Upsilon(5S)
+
 ! 2008-11-05 - Patrick Robbe for Neal Gueissaz
   - Re-introduce PyInit
 
