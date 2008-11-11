@@ -28,6 +28,8 @@ AdderSvc::AdderSvc(const std::string& name, ISvcLocator* ploc) : Service(name, p
   declareProperty("objectname",m_objectName);
   declareProperty("refreshTime",  m_refreshTime=10);
   declareProperty("dimclientdns",m_dimClientDns);
+  declareProperty("publishRates",m_publishRates=0);
+
   //declareProperty("savedir", m_saveDir);
   m_enablePostEvents = true;
 }
@@ -47,6 +49,19 @@ StatusCode AdderSvc::initialize() {
   std::size_t first_us = m_utgid.find("_");
   std::size_t second_us = m_utgid.find("_", first_us + 1);
   m_nodeName = m_utgid.substr(0, first_us);
+
+  std::string adderType;
+  if (m_nodeName.size() == 8) adderType = "First Level"; 
+  else if ((m_nodeName.size() == 6)&&(m_nodeName.substr(0,4)!="PART")) adderType = "Second Level"; 
+  else if ((m_nodeName.size() == 6)&&(m_nodeName.substr(0,4)=="PART")) adderType = "Third Level"; 
+  else {
+    msg << MSG::ERROR << "This is not an Adder because the nodeName do not correspond at any case" << endreq;
+    msg << MSG::ERROR << "1rst level ==> HLTA0101" << endreq;
+    msg << MSG::ERROR << "2nd  level ==> HLTA01" << endreq;
+    msg << MSG::ERROR << "3rd  level ==> PARTxx" << endreq;
+    return StatusCode::FAILURE;
+  }
+
   std::string taskName = m_utgid.substr(first_us + 1, second_us - first_us - 1);
 
   if ((taskName != "Adder")&&(taskName != "ADDER")) {
@@ -63,7 +78,7 @@ StatusCode AdderSvc::initialize() {
 
   msg << MSG::DEBUG << "***************************************************** " << endreq;
 
-  msg << MSG::DEBUG << "****************** Welcome to Adder Test************* " << endreq;
+  msg << MSG::DEBUG << "****************** Welcome to "<<adderType<<" Adder********* " << endreq;
   msg << MSG::DEBUG << "***************************************************** " << endreq;
   msg << MSG::DEBUG << "This Adder will add data published in : " << m_dimClientDns << endreq;
 
@@ -96,6 +111,7 @@ StatusCode AdderSvc::initialize() {
   m_processMgr->setAlgorithmVector(m_algorithmName);
   m_processMgr->setObjectVector(m_objectName);
   m_processMgr->setUtgid(m_utgid);
+  if (m_publishRates == 1) m_processMgr->setPublishRates(true);
 
   m_processMgr->createInfoServers();
 
