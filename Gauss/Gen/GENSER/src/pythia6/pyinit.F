@@ -1,4 +1,4 @@
-C $Id: pyinit.F,v 1.1 2008-03-16 20:20:15 robbep Exp $ 
+C $Id: pyinit.F,v 1.2 2008-11-11 13:16:26 robbep Exp $ 
 C*********************************************************************
  
 C...PYINIT
@@ -22,6 +22,8 @@ C...Commonblocks.
       COMMON/PYINT1/MINT(400),VINT(400)
       COMMON/PYINT2/ISET(500),KFPR(500,2),COEF(500,20),ICOL(40,4,2)
       COMMON/PYINT5/NGENPD,NGEN(0:500,3),XSEC(0:500,3)
+      COMMON/PYINT6/PROC(0:500)
+      CHARACTER PROC*28
       SAVE /PYDAT1/,/PYDAT2/,/PYDAT3/,/PYDAT4/,/PYSUBS/,/PYPARS/,
      &/PYINT1/,/PYINT2/,/PYINT5/
 C...Local arrays and character variables.
@@ -45,6 +47,13 @@ C...Data:Lambda and n_f values for parton distributions..
 
 C...Check that BLOCK DATA PYDATA has been loaded.
       CALL PYCKBD
+ 
+C...PR LHCb, add extra processes
+      PROC(480)='g + g  -> Psi(2S) + g'
+      PROC(481)='g + g  -> Upsilon(2S) + g'
+      PROC(482)='g + g  -> Upsilon(3S) + g'
+      PROC(483)='g + g  -> Upsilon(4S) + g'
+      PROC(484)='g + g  -> Upsilon(5S) + g'
  
 C...Reset MINT and VINT arrays. Write headers.
       MSTI(53)=0
