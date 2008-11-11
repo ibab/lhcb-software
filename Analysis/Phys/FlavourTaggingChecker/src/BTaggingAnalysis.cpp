@@ -60,11 +60,11 @@ StatusCode BTaggingAnalysis::initialize() {
       err() << " Unable to retrieve HltSummaryTool" << endreq;
       return StatusCode::FAILURE;
     }
-    m_TriggerTisTosTool = tool<ITriggerTisTos>( "TriggerTisTos", this); 
-    if ( !m_TriggerTisTosTool ) {   
-      fatal() << "TriggerTisTosTool could not be found" << endreq;
-      return StatusCode::FAILURE;
-    }
+//     m_TriggerTisTosTool = tool<ITriggerTisTos>( "TriggerTisTos", this); 
+//     if ( !m_TriggerTisTosTool ) {   
+//       fatal() << "TriggerTisTosTool could not be found" << endreq;
+//       return StatusCode::FAILURE;
+//     }
   }
   m_Geom = tool<IGeomDispCalculator> ("GeomDispCalculator", this);
   if ( ! m_Geom ) {   
@@ -345,40 +345,29 @@ StatusCode BTaggingAnalysis::execute() {
 	  << "  daughters, B-Mass=" << BSmass 
 	  << "  pT="<<AXBS->pt()/Gaudi::Units::GeV<< endreq;
 
-//   int numfigli=axdaugh.size();
-//   if(numfigli>0) info()<<"figli "<< axdaugh.at(0)->particleID().pid();
-//   if(numfigli>1) info()<<" , "<< axdaugh.at(1)->particleID().pid();
-//   if(numfigli>2) info()<<" , "<< axdaugh.at(2)->particleID().pid();
-//   if(numfigli>3) info()<<" , "<< axdaugh.at(3)->particleID().pid();
-//   if(numfigli>4) info()<<" , "<< axdaugh.at(4)->particleID().pid();
-//   if(numfigli>5) info()<<" , "<< axdaugh.at(5)->particleID().pid();
-//   if(numfigli>6) info()<<" , "<< axdaugh.at(6)->particleID().pid();
-//   info()<<endreq;
-
-
   //TIS TOS ----------------------------------------
   m_L0TisTos  = 0;
   m_HltTisTos = 0;
-  if(m_requireTrigger) {
-    m_TriggerTisTosTool->setOfflineInput( *AXBS );
-    // L0 
-    bool decisionL0, L0Tis, L0Tos;
-    m_TriggerTisTosTool->triggerTisTos( "L0Trigger*" , decisionL0, L0Tis,L0Tos, 
-					ITriggerTisTos::kAllTriggerSelections );
-    // Hlt Alleys
-    bool decisionHltAlleys, alleysTis, alleysTos;
-    m_TriggerTisTosTool->triggerTisTos("*",decisionHltAlleys, alleysTis, alleysTos);
-    // Hlt B Selections 
-    bool decisionHltSelB, selBTis, selBTos;
-    m_TriggerTisTosTool->triggerTisTos("HltSelB*",decisionHltSelB, selBTis, selBTos,
-				       ITriggerTisTos::kAllTriggerSelections );
-    if(L0Tis) m_L0TisTos += 10;
-    if(L0Tos) m_L0TisTos +=  1;
-    if(alleysTis) m_HltTisTos +=  1000;
-    if(alleysTos) m_HltTisTos +=   100;
-    if(selBTis)   m_HltTisTos +=    10;
-    if(selBTos)   m_HltTisTos +=     1;
-  }
+//   if(m_requireTrigger) {
+//     m_TriggerTisTosTool->setOfflineInput( *AXBS );
+//     // L0 
+//     bool decisionL0, L0Tis, L0Tos;
+//     m_TriggerTisTosTool->triggerTisTos( "L0Trigger*" , decisionL0, L0Tis,L0Tos, 
+// 					ITriggerTisTos::kAllTriggerSelections );
+//     // Hlt Alleys
+//     bool decisionHltAlleys, alleysTis, alleysTos;
+//     m_TriggerTisTosTool->triggerTisTos("*",decisionHltAlleys, alleysTis, alleysTos);
+//     // Hlt B Selections 
+//     bool decisionHltSelB, selBTis, selBTos;
+//     m_TriggerTisTosTool->triggerTisTos("HltSelB*",decisionHltSelB, selBTis, selBTos,
+// 				       ITriggerTisTos::kAllTriggerSelections );
+//     if(L0Tis) m_L0TisTos += 10;
+//     if(L0Tos) m_L0TisTos +=  1;
+//     if(alleysTis) m_HltTisTos +=  1000;
+//     if(alleysTos) m_HltTisTos +=   100;
+//     if(selBTis)   m_HltTisTos +=    10;
+//     if(selBTos)   m_HltTisTos +=     1;
+//   }
 
   //fill signal particle block:
   m_M=0;
@@ -555,7 +544,7 @@ StatusCode BTaggingAnalysis::execute() {
     if( (*ip)->p()  > 200000 ) continue;
     if( (*ip)->pt() >  10000 ) continue;
     if( m_util->isinTree(*ip, axdaugh, distphi) ) continue ; 
-    //if( distphi < m_distphi_cut ) continue;
+    if( distphi < m_distphi_cut ) continue;
 
     //calculate the min IP wrt all pileup vtxs
     double ippu, ippuerr;
@@ -574,7 +563,8 @@ StatusCode BTaggingAnalysis::execute() {
   Vertex Vfit;
   std::vector<Vertex> vv;
   if(m_vtxtool) {
-    vv = m_vtxtool->buildVertex(*RecVert, vtags);
+    debug() <<"--- BTANALYSIS calling buildVertex: "<<endreq;
+     vv = m_vtxtool->buildVertex(*RecVert, vtags);
     if(!vv.empty()) Vfit = vv.at(0); //take first vertex built
   } else debug() << "No secondary vtx available."<<endreq;
 
@@ -585,7 +575,7 @@ StatusCode BTaggingAnalysis::execute() {
     for(kp = Pfit.begin(); kp != Pfit.end(); kp++) {
       Vch += (*kp)->charge();
       debug() << m_SVtype <<" particle p=" 
-              << (*kp)->p()/Gaudi::Units::GeV << endreq;
+              << (*kp)->pt()/Gaudi::Units::GeV << endreq;
     }
     debug() << "  Vertex charge: " << Vch << endreq;
   }
@@ -697,9 +687,12 @@ StatusCode BTaggingAnalysis::execute() {
     m_vFlag[m_N] = 0;
     Particle::ConstVector::iterator kp;
     for(kp = Pfit.begin(); kp != Pfit.end(); kp++) {
-      if( axp == *kp ) {m_vFlag[m_N] = 1; break;}
+      if( axp->pt() == (*kp)->pt() ) {
+        m_vFlag[m_N] = 1; 
+        break;
+      }
     }
- 
+
     //-------------------------------------------------------
     debug() << " --- trtyp="<<trtyp<<" ID="<<ID<<" P="<<P<<" Pt="<<Pt <<endreq;
     debug() << " deta="<<deta << " dphi="<<dphi << " dQ="<<dQ <<endreq;

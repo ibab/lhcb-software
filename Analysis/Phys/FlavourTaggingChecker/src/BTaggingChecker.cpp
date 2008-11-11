@@ -1,4 +1,4 @@
-// $Id: BTaggingChecker.cpp,v 1.11 2008-07-24 08:21:09 cattanem Exp $
+// $Id: BTaggingChecker.cpp,v 1.12 2008-11-11 20:59:05 musy Exp $
 
 // local
 #include "BTaggingChecker.h"
@@ -17,13 +17,13 @@ DECLARE_ALGORITHM_FACTORY( BTaggingChecker );
 
 //==========================================================================
 BTaggingChecker::BTaggingChecker( const std::string& name,
-				  ISvcLocator* pSvcLocator )
+                                  ISvcLocator* pSvcLocator )
   : DVAlgorithm ( name , pSvcLocator ),
     m_debug2(0)
-    , m_forcedBtool(0) 
+  , m_forcedBtool(0) 
 {
   declareProperty("TagsLocation", 
-		  m_tags_location = FlavourTagLocation::Default );
+                  m_tags_location = FlavourTagLocation::Default );
 }
 
 //==========================================================================
@@ -73,10 +73,11 @@ StatusCode BTaggingChecker::execute() {
     ix = (*ti)->category();
 
     info() << "BTAGGING MON "
-	   << std::setw(3) << truetag
-	   << std::setw(3) << tagdecision
-	   << std::setw(3) << ix
-	   << endreq;
+      //<< std::setw(3) << trig
+           << std::setw(3) << truetag
+           << std::setw(3) << tagdecision
+           << std::setw(3) << ix
+           << endreq;
 
     if( ! tagdecision ) continue;
 
@@ -108,7 +109,7 @@ StatusCode BTaggingChecker::finalize(){
   info()<< std::setw(40)<< "Summary: EXCLUSIVE BTAGGING PERFORMANCE " <<endmsg; 
   info()<< "Summary : " <<endreq;
   info()<< " Category            EFF.          Etag         Wrong TF"
-	<< "      r       w       "<<endreq;
+        << "      r       w       "<<endreq;
 
   for( int it=1; it < 13; it++ ) {
 
@@ -140,14 +141,14 @@ StatusCode BTaggingChecker::finalize(){
 
     req.setf(std::ios::fixed);
     info()<<std::setw(2)<< "  " << it << "     "
-	  <<std::setprecision(2)<<std::setw(8)
-	  << epsil*100 << "+-" << epsilerr*100
-	  <<" "<<std::setw(8)<< eftag*100 << "+-" <<eftag_err*100
-	  <<" "<<std::setprecision(1)<<std::setw(8)
-	  << omtag*100 << "+-" <<omtag_err*100
-	  <<" "<<std::setw(7)<< (int) rtag
-	  <<" "<<std::setw(7)<< (int) wtag
-	  << endreq;
+          <<std::setprecision(2)<<std::setw(8)
+          << epsil*100 << "+-" << epsilerr*100
+          <<" "<<std::setw(8)<< eftag*100 << "+-" <<eftag_err*100
+          <<" "<<std::setprecision(1)<<std::setw(8)
+          << omtag*100 << "+-" <<omtag_err*100
+          <<" "<<std::setw(7)<< (int) rtag
+          <<" "<<std::setw(7)<< (int) wtag
+          << endreq;
   }
 
   //calculate global tagging performances -------------------------------
@@ -162,14 +163,14 @@ StatusCode BTaggingChecker::finalize(){
   info()<<"---------------------------------------------------------"<<endreq;
   info()<< "Total nr of events =  "<<std::setw(5) << nsele << endreq;
   info()<< "Tagging efficiency =  "
-	<<std::setprecision(2)<<std::setw(5)
-	<< ef_tot*100 << " +/- "<<eftot_err*100<< " %"<< endreq;
+        <<std::setprecision(2)<<std::setw(5)
+        << ef_tot*100 << " +/- "<<eftot_err*100<< " %"<< endreq;
   info()<< "Wrong Tag fraction =  "
-	<<std::setprecision(2)<<std::setw(5)
-	<< avw_invert*100 << " +/- " <<avw_invert_err*100 << " %"<< endreq;
+        <<std::setprecision(2)<<std::setw(5)
+        << avw_invert*100 << " +/- " <<avw_invert_err*100 << " %"<< endreq;
   info()<< "EFFECTIVE COMB. TE =  "
-	<<std::setprecision(2)<<std::setw(5)
-	<< effe_tot*100 << " +/- "<<epsilerrtot*100<< " %"<< endreq;
+        <<std::setprecision(2)<<std::setw(5)
+        << effe_tot*100 << " +/- "<<epsilerrtot*100<< " %"<< endreq;
   info()<<"==========END OF EXCLUSIVE BTAGGING PERFORMANCE ======="<<endmsg;
   info()<<"========================================================="<<endreq;
 
@@ -188,9 +189,9 @@ MCParticle* BTaggingChecker::associatedofHEP(HepMC::GenParticle* hepmcp) {
   for ( imc = mcpart->begin(); imc != mcpart->end(); ++imc ) {
     if( mid == (*imc)->particleID().pid() ) {
       if( fabs(mothmom - (*imc)->momentum().P())< 1.0){
-	if( fabs(moththeta -(*imc)->momentum().Theta())< 0.0001){
-	  return (*imc);
-	}
+        if( fabs(moththeta -(*imc)->momentum().Theta())< 0.0001){
+          return (*imc);
+        }
       }
     }
   }

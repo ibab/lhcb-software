@@ -35,9 +35,9 @@ StatusCode CheatedSelection::initialize() {
   debug() << "CheatedSelection initialize"<< endreq;
 
   m_linker = new Particle2MCLinker( this,
-				    Particle2MCMethod::Chi2,
-				    //Particle2MCMethod::Links,
-				    m_setInputData );
+                                    Particle2MCMethod::Chi2,
+                                    //Particle2MCMethod::Links,
+                                    m_setInputData );
   if( !m_linker ) {
     fatal()<< "Unable to retrieve Link Associator tool"<<endreq;
     return StatusCode::FAILURE;
@@ -85,7 +85,7 @@ StatusCode CheatedSelection::execute() {
     ptotmc += (*imcpart)->momentum();
   debug() << "Calculated signal MCmass= " <<ptotmc.M()<<endreq;
   if( fabs(ptotmc.M() - mcSignal->momentum().M()) < m_BMassWindow) {
-    m_debug -> printTree(mcSignal);
+    //m_debug -> printTree(mcSignal);
   } else return StatusCode::SUCCESS;
 
   //----------------------------------------------------------------------
@@ -151,11 +151,10 @@ void CheatedSelection::SignalTree(const MCParticle* B0,
     if( originof(*imc) == B0 ) {
       Particle* axp = m_linker->firstP( *imc );
       if( axp ) {
-        m_debug -> printAncestor(*imc);
+        //m_debug -> printAncestor(*imc);
         debug() << "ID=" << axp->particleID().pid()
                 << " mcp=" << (*imc)->p()/Gaudi::Units::GeV
-                << " axp=" << axp->p()/Gaudi::Units::GeV
-                <<endreq;
+                << " axp=" << axp->p()/Gaudi::Units::GeV<<endreq;
         if((*imc)->particleID().abspid() != axp->particleID().abspid()) {
           debug() << "Mis-ID true " << (*imc)->particleID().pid()
                   << " reconst as " << axp->particleID().pid() << endreq;
@@ -191,9 +190,9 @@ MCParticle* CheatedSelection::associatedofHEP(HepMC::GenParticle* hepmcp) {
   for ( imc = mcpart->begin(); imc != mcpart->end(); ++imc ) {
     if( mid == (*imc)->particleID().pid() ) {
       if( fabs(mothmom - (*imc)->momentum().P())< 1.0){
-	if( fabs(moththeta -(*imc)->momentum().Theta())< 0.0001){
-	  return (*imc);
-	}
+        if( fabs(moththeta -(*imc)->momentum().Theta())< 0.0001){
+          return (*imc);
+        }
       }
     }
   }

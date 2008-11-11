@@ -49,9 +49,3 @@ EventSelector.FirstEvent = 1;
 EventSelector.PrintFreq  = 1;
 
 //---------------------------------------------------------------
-// Example input data BRUNEL v31
-//---------------------------------------------------------------
-EventSelector.Input = {
-"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1r0/00002042/DST/0000/00002042_00000001_2.dst' TYP='POOL_ROOTTREE' OPT='READ'"
-}; //bsjpsiphi v31
-//---------------------------------------------------------------
