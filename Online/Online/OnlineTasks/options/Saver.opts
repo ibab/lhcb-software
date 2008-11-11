@@ -1,29 +1,17 @@
-// Job options file. Simple Online Saver example
-//==============================================================
+#include "$INFOOPTIONS"
+ApplicationMgr.ExtSvc               += { "LHCb::SaverSvc/SaverSvc" };
+ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+Runable.Wait                         = 3;  // 1 of running as daemon
 
-ApplicationMgr.ExtSvc = { "MonitorSvc" };
+SaverSvc.OutputLevel = 1;
+MessageSvc.OutputLevel = 1;
 
-ApplicationMgr.DLLs = {"GaudiAlg", "GaudiAud","Gaucho","GaudiOnline"};
-ApplicationMgr.DLLs += {"Saver"};
+SaverSvc.partname=@OnlineEnv.PartitionName;
+SaverSvc.taskname={"GauchoJob"};
+SaverSvc.refreshTime=900;
+SaverSvc.dimclientdns="HLT01";
+SaverSvc.savedir="/hist/Savesets";
 
-AuditorSvc.Auditors = { "ChronoAuditor" };
-
-ApplicationMgr.TopAlg  = { "Saver" };
-
-
-Saver.OutputLevel = 1;
-
-ApplicationMgr.EvtMax    = -1;   // events to be processed (default is 10)
-ApplicationMgr.EvtSel   = "NONE"; // do not use any event input
-
-//Saver.nodename="$PARENT";
-Saver.nodename="HLT01_Adder";
-//Saver.histogramname={"1Da*","2D*","1Db*","Prof*"};
-//Saver.algorithmname={"GaudiExample","GaudiExample","GaudiExample","GaudiExample"};
-//Saver.histogramname={"banktype*","eventsize*"};
-//Saver.algorithmname={"OnlineDummyReader","OnlineDummyReader"};
-//Saver.histogramname={"EcalCalib/Summary/Pedestal/2","EcalCalib/Summary/Pedestal/1","EcalCalib/Summary/Pedestal/3"};
-//Saver.algorithmname={"EcalCalib","EcalCalib","EcalCalib"};
-Saver.dimclientdns="HLT01";
-Saver.taskname="GauchoJob";
-Saver.savedir="/group/online/Histograms/Savesets";
