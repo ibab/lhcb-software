@@ -4,6 +4,12 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2008-11-11 - Patrick Robbe
+ - Add new routines to overwrite in Pythia, to generate extra charmonium states:
+   pyscat.F, pysghf.F pysigh.F
+ - pyevwt.F: add new process numbers for extra charmonium states
+ - pyinit.F: add description of the extra charmonium processes
+
 !========================== GENSER v4r3 2008-10-10 ===========================
 ! 2008-09-23 - Patrick Robbe
  - pyevwt.F: reweight events only if quarkonium
