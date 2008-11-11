@@ -1,4 +1,4 @@
-// $Id: L0MuonAlg.cpp,v 1.18 2008-11-07 16:25:30 jucogan Exp $
+// $Id: L0MuonAlg.cpp,v 1.19 2008-11-11 12:13:56 cattanem Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
@@ -165,8 +165,7 @@ StatusCode L0MuonAlg::execute()
     //debug() << "Read data from digits ..." << endreq; 
     sc = fillOLsfromDigits();
     if( sc.isFailure() ) {
-      error() << "Failed to load OLs" << endreq;
-      return sc;
+      return Error( "Failed to load OLs", sc);
     }  
 
     // Preexecution phase: data exchange between PUs
@@ -368,7 +367,6 @@ std::map<std::string,L0Muon::Property>  L0MuonAlg::l0MuonProperties()
 
 StatusCode L0MuonAlg::fillOLsfromDigits()
 {
-  StatusCode sc;
   //  debug() << "fillOLsfromDigits:  IN "<<endmsg;
 
   L0Muon::RegisterFactory* rfactory = L0Muon::RegisterFactory::instance();
@@ -423,6 +421,8 @@ StatusCode L0MuonAlg::fillOLsfromDigits()
         return StatusCode::FAILURE;
       }
     }
+
+    StatusCode sc;
     IProperty* prop = dynamic_cast<IProperty*>( m_muonBuffer );
     if( prop ) {
       sc = prop->setProperty( "RootInTES", rootInTES() );

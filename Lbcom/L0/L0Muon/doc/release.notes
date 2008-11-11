@@ -1,7 +1,10 @@
-!  $Id: release.notes,v 1.70 2008-11-07 16:25:30 jucogan Exp $
+!  $Id: release.notes,v 1.71 2008-11-11 12:13:56 cattanem Exp $
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !---------------------------------------------------------------------------
+
+! 2008-11-11 - Marco Cattaneo
+ - Trivial fix for untested StatusCode
 
 ! 2008-11-04 - Julien Cogan
  - Remove pt encdong paramter from algorihtm properties
