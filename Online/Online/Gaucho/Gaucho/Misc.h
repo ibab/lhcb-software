@@ -16,6 +16,7 @@ public:
   static size_t findCaseIns(const std::string& str1, const std::string& str2);
   static bool compareCharsCaseIns(char ch1, char ch2);
   static std::string stringToUpper(std::string strToConvert);
+  static int min(int a, int b) {if (a < b) return a; return b;}
 };
 
 #endif    // Misc_H

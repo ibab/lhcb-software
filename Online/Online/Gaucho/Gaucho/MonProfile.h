@@ -52,7 +52,14 @@ public:
   virtual void write();
   virtual void reset();
   void synchronizeLabelNames(MonObject * H);
-  
+
+  double binContent(int i) {return binCont[i];}
+  double binError(int i) {return binErr[i];}
+  double binEntry(int i) {return binEntries[i];}
+  std::string binLabX(int i) {return binLabelX[i];}
+  int numbinx() {return nbinsx;}
+
+
   void printLabels();
   /**********/
   // data   

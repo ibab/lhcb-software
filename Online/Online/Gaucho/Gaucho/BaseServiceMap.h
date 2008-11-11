@@ -17,6 +17,7 @@ class DimInfoMonObject;
 class DimServiceMonObject;
 class DimInfoMonRate;
 class RatePublisher;
+class MonRateDecoder;
 class BaseServiceMap {
 public:
   BaseServiceMap(ProcessMgr *processMgr); 
@@ -75,6 +76,8 @@ protected:
   std::map<std::string, DimInfoMonRate*, std::less<std::string> > m_dimInfoMR;
   RatePublisher * m_numberOfMonRatesPublisher;
   int m_nbCounterInMonRate;
+  MonRateDecoder *m_monRateDecoder;
+
 };
 
 #endif    // SaverSvc_BaseServiceMap_H

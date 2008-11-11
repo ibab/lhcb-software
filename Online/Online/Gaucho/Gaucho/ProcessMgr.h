@@ -64,10 +64,12 @@ public:
   void setObjectVector(const std::vector<std::string> &objectName) {m_objectName = objectName;}
   void setUtgid(const std::string &utgid);
   void setNodeName(const std::string &nodeName){m_nodeName=nodeName;}
+  void setPublishRates(bool publishRates){m_publishRates = publishRates;}
 
   void setSaveDir(const std::string &saveDir){m_saveDir = saveDir;}
   void setSaveDiff(const int &saveDiff){m_saveDiff = saveDiff;}
   bool saveDiff () {if (0 == m_saveDiff) return false; else return true;}
+  bool publishRates(){return m_publishRates;}
   void timerHandler();
   void write();
   std::string taskName() {return m_taskName;}
@@ -108,6 +110,7 @@ protected:
   std::vector<std::string> m_objectName;
   std::string m_saveDir;
   int m_saveDiff;
+  bool m_publishRates;
   int m_nbCounterInMonRate;
   
   DimInfoServers*  m_dimInfoServers;
