@@ -951,10 +951,16 @@ void DbRootHist::setTH1FromDB()
       rootHistogram->GetZaxis()->SetLabelOffset(fopt);
     }
     // custom bin labels
-    if (m_onlineHistogram->nbinlabels() > 0) {
-      for (unsigned int il = 0; il < m_onlineHistogram->nbinlabels(); il++) {
-      	sopt = m_onlineHistogram->binlabel(il);
+    if (m_onlineHistogram->nXbinlabels() > 0) {
+      for (unsigned int il = 0; il < m_onlineHistogram->nXbinlabels(); il++) {
+      	sopt = m_onlineHistogram->binlabel(il,0);
       	rootHistogram->GetXaxis()->SetBinLabel(il+1, sopt.c_str());
+      }
+    }
+    if (m_onlineHistogram->nYbinlabels() > 0) {
+      for (unsigned int il = 0; il < m_onlineHistogram->nYbinlabels(); il++) {
+      	sopt = m_onlineHistogram->binlabel(il,1);
+      	rootHistogram->GetYaxis()->SetBinLabel(il+1, sopt.c_str());
       }
     }
   }
