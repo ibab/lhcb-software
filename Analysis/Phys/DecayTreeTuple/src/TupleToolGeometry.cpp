@@ -1,4 +1,4 @@
-// $Id: TupleToolGeometry.cpp,v 1.5 2008-10-28 11:00:47 jpalac Exp $
+// $Id: TupleToolGeometry.cpp,v 1.6 2008-11-11 07:47:58 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -40,6 +40,8 @@ TupleToolGeometry::TupleToolGeometry( const std::string& type,
   : GaudiTool ( type, name , parent )
   , m_context(0)
   , m_dist(0)
+  ,m_photonID(22)
+  ,m_pi0ID(111)
 {
   declareInterface<IParticleTupleTool>(this);
 }
@@ -74,7 +76,7 @@ StatusCode TupleToolGeometry::fill( const Particle* mother
 	  , "This should not happen, you are inside TupleToolGeometry.cpp :(" );
 
   bool test=true;
-  
+  if( P->particleID().pid() != m_photonID ||  P->particleID().pid()  != m_pi0ID  ){//skip the neutrals  
   const VertexBase* primVtx = m_context->desktop()->relatedVertex ( mother );
   if( primVtx ){}
   else { 
@@ -167,7 +169,7 @@ StatusCode TupleToolGeometry::fill( const Particle* mother
   test &= tuple->column( head + "_FDPV", dist );
   //test &= tuple->column( head + "_FDPVS", dist/edist );
   test &= tuple->column( head + "_FDPVCHI2", chi2 );
-
+  }
   return StatusCode(test);
 }
 

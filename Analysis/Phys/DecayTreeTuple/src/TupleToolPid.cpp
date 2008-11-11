@@ -1,4 +1,4 @@
-// $Id: TupleToolPid.cpp,v 1.1.1.1 2007-12-12 17:46:43 pkoppenb Exp $
+// $Id: TupleToolPid.cpp,v 1.2 2008-11-11 07:47:58 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -29,6 +29,8 @@ TupleToolPid::TupleToolPid( const std::string& type,
 				      const std::string& name,
 				      const IInterface* parent )
   : GaudiTool ( type, name , parent )
+  ,m_photonID(22)
+  ,m_pi0ID(22)
 {
   declareInterface<IParticleTupleTool>(this);
 }
@@ -45,7 +47,8 @@ StatusCode TupleToolPid::fill( const Particle*
     test &= tuple->column( head+"_ID", P->particleID().pid() );
 
     if( !P->isBasicParticle() ) return StatusCode(test); // no rich info for composite!
-
+    if( P->particleID().pid() == m_photonID  || P->particleID().pid() == m_pi0ID ) return StatusCode(test); // no rich infrmation for neutrals
+ 
     const ProtoParticle* proto = P->proto();
     if( proto ){
       test &= tuple->column( head+"_PIDe"

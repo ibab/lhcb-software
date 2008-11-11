@@ -1,4 +1,4 @@
-// $Id: TupleToolPid.h,v 1.1.1.1 2007-12-12 17:46:43 pkoppenb Exp $
+// $Id: TupleToolPid.h,v 1.2 2008-11-11 07:47:58 pkoppenb Exp $
 #ifndef JBOREL_TUPLETOOLPID_H
 #define JBOREL_TUPLETOOLPID_H 1
 
@@ -36,6 +36,9 @@ public:
 
   virtual StatusCode fill( const LHCb::Particle*, const LHCb::Particle*
 			   , const std::string&, Tuples::Tuple& );
-};
 
+private: 
+int m_photonID; 
+int m_pi0ID; 
+};
 #endif // JBOREL_TUPLETOOLPID_H

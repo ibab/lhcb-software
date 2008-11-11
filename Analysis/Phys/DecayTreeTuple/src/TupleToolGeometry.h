@@ -1,4 +1,4 @@
-// $Id: TupleToolGeometry.h,v 1.3 2008-10-06 17:47:18 pkoppenb Exp $
+// $Id: TupleToolGeometry.h,v 1.4 2008-11-11 07:47:58 pkoppenb Exp $
 #ifndef JBOREL_TUPLETOOLGEOMETRY_H
 #define JBOREL_TUPLETOOLGEOMETRY_H 1
 
@@ -63,5 +63,9 @@ private:
 
   IContextTool* m_context;
   const IDistanceCalculator* m_dist;
+  
+  int m_photonID; 
+  int m_pi0ID;
+
 };
 #endif // JBOREL_TUPLETOOLGEOMETRY_H
