@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.cpp,v 1.16 2008-11-05 10:49:33 robbep Exp $
+// $Id: PythiaProduction.cpp,v 1.17 2008-11-11 11:38:18 robbep Exp $
 
 // Include files
 // STD * STL 
@@ -240,7 +240,7 @@ StatusCode PythiaProduction::initialize( ) {
     if ( "UNKNOWN" != System::getEnv( "DECFILESROOT" ) ) {
       std::string temp = m_slhaSpectrumFile ;
       m_slhaSpectrumFile = System::getEnv( "DECFILESROOT" ) +
-	"/LHA/" + temp ;
+	"/lha/" + temp ;
     }
 
     // Check if file exists
@@ -277,6 +277,28 @@ StatusCode PythiaProduction::initializeGenerator( ) {
     Pythia::pypars().mstp( 122 ) = 0 ;
     m_initializationListingLevel = -1 ;
   }
+  
+  // Add extra processes for LHCb pythia
+  // Process 480: g + g -> Psi(2S) + g Color Singlet
+  Pythia::pyint2().iset(480) = 2 ;
+  Pythia::pyint2().kfpr(480,1) = 100443 ;
+  Pythia::pyint2().kfpr(480,2) = 21 ;
+  // Process 481: g + g -> Upsilon(2S) + g Color Singlet
+  Pythia::pyint2().iset(481) = 2 ;
+  Pythia::pyint2().kfpr(481,1) = 100553 ;
+  Pythia::pyint2().kfpr(481,2) = 21 ;
+  // Process 482: g + g -> Upsilon(3S) + g Color Singlet
+  Pythia::pyint2().iset(482) = 2 ;
+  Pythia::pyint2().kfpr(482,1) = 200553 ;
+  Pythia::pyint2().kfpr(482,2) = 21 ;
+  // Process 483: g + g -> Upsilon(4S) + g Color Singlet
+  Pythia::pyint2().iset(483) = 2 ;
+  Pythia::pyint2().kfpr(483,1) = 300553 ;
+  Pythia::pyint2().kfpr(483,2) = 21 ;
+  // Process 484: g + g -> Upsilon(5S) + g Color Singlet
+  Pythia::pyint2().iset(484) = 2 ;
+  Pythia::pyint2().kfpr(484,1) = 9000553 ;
+  Pythia::pyint2().kfpr(484,2) = 21 ;
 
   // Set User process to 0 for normal Pythia to be overriden for
   // specific generation
