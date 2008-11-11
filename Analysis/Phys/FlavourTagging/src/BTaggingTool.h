@@ -1,4 +1,4 @@
-// $Id: BTaggingTool.h,v 1.15 2008-01-15 18:59:52 pkoppenb Exp $
+// $Id: BTaggingTool.h,v 1.16 2008-11-11 20:47:12 musy Exp $
 #ifndef USER_BTAGGINGTOOL_H 
 #define USER_BTAGGINGTOOL_H 1
 
@@ -13,8 +13,7 @@
 #include "GaudiKernel/ToolFactory.h"
 // from Event 
 #include "Event/FlavourTag.h" 
-/* #include "Event/TrgDecision.h" */
-/* #include "Event/HltScore.h" */
+#include "Event/RecHeader.h"
 #include "Kernel/IPhysDesktop.h"
 
 #include "ICombineTaggersTool.h" 
@@ -40,21 +39,21 @@ public:
 
   /// Standard constructor
   BTaggingTool( const std::string& type,
-		const std::string& name,
-		const IInterface* parent );
+                const std::string& name,
+                const IInterface* parent );
   virtual ~BTaggingTool( ); ///< Destructor
   StatusCode initialize();    ///<  initialization
   StatusCode finalize  ();    ///<  finalization
 
   //-------------------------------------------------------------
-   StatusCode tag( LHCb::FlavourTag& theTag, const LHCb::Particle* );
+  StatusCode tag( LHCb::FlavourTag& theTag, const LHCb::Particle* );
 
-   StatusCode tag( LHCb::FlavourTag& theTag, 
-		   const LHCb::Particle*, const LHCb::RecVertex* );
+  StatusCode tag( LHCb::FlavourTag& theTag, 
+                  const LHCb::Particle*, const LHCb::RecVertex* );
 
-   StatusCode tag( LHCb::FlavourTag& theTag, 
-		   const LHCb::Particle*, const LHCb::RecVertex*, 
-		   LHCb::Particle::ConstVector& ); 
+  StatusCode tag( LHCb::FlavourTag& theTag, 
+                  const LHCb::Particle*, const LHCb::RecVertex*, 
+                  LHCb::Particle::ConstVector& ); 
   //-------------------------------------------------------------
   virtual void handle(const Incident&); ///< clean desktop
 

@@ -21,10 +21,11 @@ TaggerKaonOppositeTool::TaggerKaonOppositeTool( const std::string& type,
   declareInterface<ITagger>(this);
 
   declareProperty( "CombTech",  m_CombinationTechnique = "NNet" );
-  declareProperty( "NeuralNetName",  m_NeuralNetName   = "NNetTool_v1" );
+  declareProperty( "NeuralNetName",  m_NeuralNetName   = "NNetTool_MLP" );
   declareProperty( "Kaon_Pt_cut",   m_Pt_cut_kaon        = 0.6 *GeV );
   declareProperty( "Kaon_P_cut",    m_P_cut_kaon         = 4.0 *GeV );
-  declareProperty( "Kaon_IP_cut",   m_IP_cut_kaon        = 3.5 );
+  declareProperty( "Kaon_IPs_cut",  m_IPs_cut_kaon       = 3.5 );
+  declareProperty( "Kaon_IP_cut",   m_IP_cut_kaon        = 2.0 );
 
   declareProperty( "Kaon_LongTrack_LCS_cut",    m_lcs_kl = 2.5 );
   declareProperty( "Kaon_upstreamTrack_LCS_cut",m_lcs_ku = 2.0 );
@@ -77,7 +78,7 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
 
     if((*ipart)->proto()->info( ProtoParticle::CombDLLk, -1000.0 )
        - (*ipart)->proto()->info( ProtoParticle::CombDLLp, -1000.0 ) 
-	< m_PIDkp_extracut ) continue;
+       < m_PIDkp_extracut ) continue;
 
     double tsa= (*ipart)->proto()->track()->info(Track::Likelihood, 9999.);
     if(tsa < m_ghost_cut) continue;
@@ -95,7 +96,7 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
     debug() << " Kaon P="<< P <<" Pt="<< Pt << " IPsig=" << IPsig 
             << " IP=" << IP <<endreq;
 
-    if(IPsig > m_IP_cut_kaon ) {
+    if(IPsig > m_IPs_cut_kaon ) if(fabs(IP)< m_IP_cut_kaon)  {
       const Track* track = (*ipart)->proto()->track();
       double lcs = track->chi2PerDoF();
 
@@ -135,14 +136,14 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
 
   }
 
-  if(pn<0.5){
-    pn = 1-pn;
-    tkaon.setOmega( 1-pn );
-    tkaon.setDecision(ikaon->charge()>0 ? 1: -1);
-  } else {
+//   if(pn<0.5){
+//     pn = 1-pn;
+//     tkaon.setOmega( 1-pn );
+//     tkaon.setDecision(ikaon->charge()>0 ? 1: -1);
+//   } else {
     tkaon.setOmega( 1-pn );
     tkaon.setDecision(ikaon->charge()>0 ? -1: 1);
-  }
+//   }
   tkaon.setType( Tagger::OS_Kaon ); 
   tkaon.addTaggerPart(*ikaon);
 

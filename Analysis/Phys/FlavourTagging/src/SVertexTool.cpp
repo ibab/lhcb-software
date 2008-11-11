@@ -1,4 +1,4 @@
-// $Id: SVertexTool.cpp,v 1.9 2007-06-21 10:03:17 musy Exp $
+// $Id: SVertexTool.cpp,v 1.10 2008-11-11 20:47:12 musy Exp $
 #include "SVertexTool.h"
 
 //-----------------------------------------------------------------------------
@@ -69,6 +69,12 @@ SVertexTool::~SVertexTool(){}
 std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert, 
                                              const Particle::ConstVector& vtags){
   debug()<<"=======SVertex Tool========"<<endreq;
+//  for(Particle::ConstVector::const_iterator ip = vtags.begin(); 
+//       ip != vtags.end(); ip++) {
+//     info() <<"B vtag part= "<< (*ip)->pt()<<"  "<<(*ip)->proto()<<" id="<<
+//            (*ip)->particleID().pid()<<endreq;
+//   }
+
   double RVz = RecVert.position().z()/mm;
 
   //Build Up 2 Seed Particles For Vertexing ------------------------
@@ -267,7 +273,10 @@ std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert,
   }
   debug() << "================ Fit Results: " << Pfit.size() <<endreq;
   Vfit.clearOutgoingParticles();
-  for( jp=Pfit.begin(); jp!=Pfit.end(); jp++ ) Vfit.addToOutgoingParticles(*jp);
+  for( jp=Pfit.begin(); jp!=Pfit.end(); jp++ ) {
+    Vfit.addToOutgoingParticles(*jp);
+    debug() << "================  pt=" << (*jp)->pt() <<endreq;
+  }
 
   vtxvect.push_back(Vfit);
   return vtxvect;

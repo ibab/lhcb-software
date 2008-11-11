@@ -1,9 +1,17 @@
-! $Id: release.notes,v 1.119 2008-10-28 11:06:24 jpalac Exp $
+! $Id: release.notes,v 1.120 2008-11-11 20:47:12 musy Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+
+! 2008-11-11 - Marco Musy
+ - Changed NNet to make them more gaussian
+ - Erased NNet_v1 which has become _MLP
+ - introduced TMVA machinery selectable by option 
+ - introduced new CombinedPID for taggers
+  . Increase version to v8r1
 
 ! 2008-10-28 - Juan PALACIOS
  - src/BTaggingTool.cpp, src/ITaggingUtils.h

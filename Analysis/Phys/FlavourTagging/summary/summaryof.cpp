@@ -37,7 +37,7 @@ int main(int argc, char **argv) {
   int nrt_k=0, nwt_k=0;
   int nrt_s=0, nwt_s=0;
   int nrt_v=0, nwt_v=0;
-  int tag,truetag,categ,Trig=-1,L0,HLT,nsele=0;
+  int run, event, tag,truetag,categ,Trig=-1,L0,HLT,nsele=0;
   int bid,fe,fm,fk,fS,fV;
   string flagstring;
   bool MCBpass=false, MONpass=false, TAGpass=false;
@@ -71,7 +71,7 @@ int main(int argc, char **argv) {
       MONpass=true;
     }
     else if(flagstring == "TAG") { //reads in tagging info from BTagging
-      in >> tag >> categ;
+      in >> run >> event >> tag >> categ;
       in >> fm >> fe >> fk >> fS >> fV; //taggers
       TAGpass=true;
     } 

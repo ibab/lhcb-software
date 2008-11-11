@@ -1,4 +1,4 @@
-// $Id: TaggerKaonOppositeTool.h,v 1.8 2008-06-10 19:01:00 musy Exp $
+// $Id: TaggerKaonOppositeTool.h,v 1.9 2008-11-11 20:47:12 musy Exp $
 #ifndef USER_TAGGERKAONOPPOSITETOOL_H 
 #define USER_TAGGERKAONOPPOSITETOOL_H 1
 
@@ -22,7 +22,7 @@
  */
 
 class TaggerKaonOppositeTool : public GaudiTool, 
-	virtual public ITagger {
+                               virtual public ITagger {
 
 public: 
   /// Standard constructor
@@ -35,8 +35,8 @@ public:
 
   //-------------------------------------------------------------
   virtual LHCb::Tagger tag( const LHCb::Particle*, const LHCb::RecVertex*,
-			    std::vector<const LHCb::Vertex*>&, 
-			    LHCb::Particle::ConstVector&);
+                            std::vector<const LHCb::Vertex*>&, 
+                            LHCb::Particle::ConstVector&);
   //-------------------------------------------------------------
 
 private:
@@ -49,6 +49,7 @@ private:
   double m_Pt_cut_kaon;
   double m_P_cut_kaon ;
   double m_IP_cut_kaon ;
+  double m_IPs_cut_kaon ;
   double m_lcs_kl, m_lcs_ku;
   double m_IP_kl, m_IP_ku;
   double m_AverageOmega;

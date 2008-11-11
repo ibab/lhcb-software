@@ -21,7 +21,7 @@ TaggerKaonSameTool::TaggerKaonSameTool( const std::string& type,
   declareInterface<ITagger>(this);
 
   declareProperty( "CombTech",  m_CombinationTechnique = "NNet" );
-  declareProperty( "NeuralNetName",  m_NeuralNetName   = "NNetTool_v1" );
+  declareProperty( "NeuralNetName",  m_NeuralNetName   = "NNetTool_MLP" );
   declareProperty( "KaonSame_Pt_cut", m_Pt_cut_kaonS = 0.4 *GeV );
   declareProperty( "KaonSame_P_cut",  m_P_cut_kaonS  = 4.0 *GeV );
   declareProperty( "KaonSame_IP_cut", m_IP_cut_kaonS = 3.0 );
@@ -140,14 +140,14 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
 
   }
 
-  if(pn<0.5){
-    pn = 1-pn;
-    tkaonS.setOmega( 1-pn );
-    tkaonS.setDecision(ikaonS->charge()>0 ? -1: 1);
-  } else {
+//   if(pn<0.5){
+//     pn = 1-pn;
+//     tkaonS.setOmega( 1-pn );
+//     tkaonS.setDecision(ikaonS->charge()>0 ? -1: 1);
+//   } else {
     tkaonS.setOmega( 1-pn );
     tkaonS.setDecision(ikaonS->charge()>0 ? 1: -1);
-  }
+//   }
   tkaonS.setType( Tagger::SS_Kaon ); 
   tkaonS.addTaggerPart(*ikaonS);
 

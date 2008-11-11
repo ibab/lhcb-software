@@ -5,9 +5,8 @@
 #pragma print off
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
 
-#include "$HLTSYSROOT/options/L0.opts"
-#include "$HLTSYSROOT/options/Hlt.opts"
-//#include "$HLTSYSROOT/options/HltSelections.opts"
+#include "$L0DUROOT/options/ReplaceL0DUBankWithEmulated.opts"
+#include "$HLTCONFROOT/options/Hlt1.opts"
 
 #include "$DAVINCIROOT/options/DaVinciMainSeqFixes.opts"
 
@@ -15,26 +14,17 @@
 //--------
 
 ////-------------------------------------------------------------- SELECTION
-///example Bd Channel Selection 
-//#include "$B2HHROOT/options/DoTDRselBd2PiPi.opts"
-//BTagging.PhysDesktop.InputLocations = { "Phys/TDRselBd2PiPi" };
+//Real Selection example ------------------------------------------------
+// #include "$CCBARROOT/options/DoDC06SelBs2Jpsi2MuMuPhi2KK_lifetime_unbiased.opts"
+// BTaggingAnalysis.PhysDesktop.InputLocations={"Phys/DC06selBs2JpsiPhi_unbiased"};
+// EventSelector.Input   = {"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1r0/00002042/DST/0000/00002042_00000001_2.dst' TYP='POOL_ROOTTREE' OPT='READ'"};
 
-///example Bs Channel Selection -----------------
-//#include "$B2HHROOT/options/DoTDRselBs2KK.opts"
-//BTagging.PhysDesktop.InputLocations = { "Phys/TDRselBs2KK" };
-
-//#include "$BS2DSHROOT/options/DoTDRselBs2DsK.opts"
-//BTagging.PhysDesktop.InputLocations = { "Phys/TDRselBs2DsK" };
-
-//#include "$BS2DSHROOT/options/DoTDRselBs2DsPi.opts"
-//BTagging.PhysDesktop.InputLocations = { "Phys/TDRselBs2DsPi" };
-
-//#include "$BS2JPSIPHIROOT/options/DoTDRselBs2Jpsi2MuMu_Phi2KK.opts"
-//BTagging.PhysDesktop.InputLocations = { "Phys/TDRselBs2Jpsi2MuMu_Phi2KK" };
-
-///or Cheated Selection -----------------
+//or Cheated Selection example ------------------------------------------
 #include "$FLAVOURTAGGINGCHECKEROPTS/CheatedSelection.opts"
-BTagging.PhysDesktop.InputLocations = { "Phys/CheatedSelection" };
+BTaggingAnalysis.PhysDesktop.InputLocations = { "Phys/CheatedSelection" };
+EventSelector.Input   = {"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1r0/00002042/DST/0000/00002042_00000001_2.dst' TYP='POOL_ROOTTREE' OPT='READ'"}; //bsjpsiphi v31
+//EventSelector.Input   = {"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1r0/00002037/DST/0000/00002037_00000001_2.dst' TYP='POOL_ROOTTREE' OPT='READ'"}; //bdpipi v31
+
 
 ///--------------------------------------------------------------- TAGGING
 #include "$FLAVOURTAGGINGOPTS/BTagging.opts"

@@ -21,7 +21,7 @@ CombineTaggersProbability::CombineTaggersProbability( const std::string& type,
 
   declareProperty( "OmegaMaxBin", m_omegamaxbin = 0.36 );
   declareProperty( "OmegaScale",  m_omegascale  = 0.06 );
-  declareProperty( "ProbMin",     m_ProbMin = 0.52 );
+  declareProperty( "ProbMin",     m_ProbMin     = 0.55 );
 
 }
 CombineTaggersProbability::~CombineTaggersProbability(){}

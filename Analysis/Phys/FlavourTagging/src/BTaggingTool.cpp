@@ -294,7 +294,8 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
   debug()<<"tagger mu   1-w = "<< 1-muon.omega() <<endreq;
   debug()<<"tagger ele  1-w = "<< 1-elec.omega() <<endreq;
   debug()<<"tagger kO   1-w = "<< 1-kaon.omega() <<endreq;
-  debug()<<"tagger k/pS 1-w = "<< 1-kaonS.omega()<<endreq;
+  if( isBs ) debug()<<"tagger kS   1-w = "<< 1-kaonS.omega()<<endreq;
+  if( isBu || isBd ) debug()<<"tagger pS   1-w = "<< 1-pionS.omega()<<endreq;
   debug()<<"tagger vtx  1-w = "<< 1-vtxCh.omega()<<endreq;
 
     
@@ -312,8 +313,12 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
   int sameside = kaonS.decision();
   if(!sameside) sameside = pionS.decision();
 
+  RecHeader* evt = get<RecHeader> (RecHeaderLocation::Default);
+
   info() << "BTAGGING TAG   " 
-         << std::setw(5) << theTag.decision()
+         << std::setw(9) << evt->runNumber()
+         << std::setw(9) << evt->evtNumber()
+         << std::setw(7) << theTag.decision()
          << std::setw(3) << category
          << std::setw(5) << muon.decision()
          << std::setw(3) << elec.decision()
@@ -326,6 +331,7 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
 }
 //=========================================================================
 StatusCode BTaggingTool::finalize() { return StatusCode::SUCCESS; }
+
 
 //============================================================================
 bool BTaggingTool::isinTree(const Particle* axp, Particle::ConstVector& sons, 

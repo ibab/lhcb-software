@@ -15,8 +15,8 @@ DECLARE_TOOL_FACTORY( TaggingUtils );
 
 //====================================================================
 TaggingUtils::TaggingUtils( const std::string& type,
-                                        const std::string& name,
-                                        const IInterface* parent ) :
+                            const std::string& name,
+                            const IInterface* parent ) :
   GaudiTool ( type, name, parent ), m_Geom(0) {
 
   declareInterface<ITaggingUtils>(this);
@@ -38,8 +38,8 @@ StatusCode TaggingUtils::initialize() {
 
 //==========================================================================
 StatusCode TaggingUtils::calcIP( const Particle* axp, 
-				 const Vertex* RecVert, 
-				 double& ip, double& iperr) {
+                                 const Vertex* RecVert, 
+                                 double& ip, double& iperr) {
   ip   =-100.0;
   iperr= 0.0;
   Gaudi::XYZVector ipVec;
@@ -54,8 +54,8 @@ StatusCode TaggingUtils::calcIP( const Particle* axp,
 }
 //==========================================================================
 StatusCode TaggingUtils::calcIP( const Particle* axp, 
-				 const RecVertex* RecVert, 
-				 double& ip, double& iperr) {
+                                 const RecVertex* RecVert, 
+                                 double& ip, double& iperr) {
   ip   =-100.0;
   iperr= 0.0;
   Gaudi::XYZVector ipVec;
@@ -98,8 +98,8 @@ int TaggingUtils::countTracks( Particle::ConstVector& vtags ) {
     bool duplic=false;
     for( jpart = ipart+1; jpart != vtags.end(); jpart++ ) {
       if((*jpart)->proto()==(*ipart)->proto()) { 
-	duplic=true; 
-	break; 
+        duplic=true; 
+        break; 
       }
     }
     if(!duplic) ++nr;

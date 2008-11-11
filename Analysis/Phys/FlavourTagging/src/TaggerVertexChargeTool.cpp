@@ -67,6 +67,7 @@ Tagger TaggerVertexChargeTool::tag( const Particle* /*AXB0*/,
   ///--- Inclusive Secondary Vertex ---
   //look for a secondary Vtx due to opposite B
   std::vector<Vertex> vvec(0);
+  debug() <<"--- SVTOOL calling buildVertex: "<<endreq;
   if(m_svtool) vvec = m_svtool -> buildVertex( *RecVert, vtags );
   if(vvec.empty()) return tVch;
   allVtx.push_back(&vvec.at(0));
@@ -79,7 +80,7 @@ Tagger TaggerVertexChargeTool::tag( const Particle* /*AXB0*/,
 
   //if a particle appears twice in vtags and the same was used
   //for the inclusive vertexing than skip
-  Particle::ConstVector::const_iterator ip, jp, kp;
+  Particle::ConstVector::const_iterator ip;
 //   for( ip = vtags.begin(); ip != vtags.end(); ip++) {
 //     const ProtoParticle* proto = (*ip)->proto();
 //     for( jp=ip+1; jp!=vtags.end(); jp++) {
@@ -97,9 +98,10 @@ Tagger TaggerVertexChargeTool::tag( const Particle* /*AXB0*/,
 
   //calculate vertex charge
   for(ip=Pfit.begin(); ip!=Pfit.end(); ip++) { 
-    double a = pow((*ip)->pt(), m_PowerK);
+    double a = pow((*ip)->pt()/GeV, m_PowerK);
     Vch += (*ip)->charge() * a;
     norm+= a;
+    debug() <<"SVTOOL  VtxCh, adding track pt= "<<(*ip)->pt()<<endreq;
   }
   if(norm) Vch = Vch / norm;
   if(fabs(Vch) < m_MinimumCharge ) return tVch;
@@ -121,14 +123,14 @@ Tagger TaggerVertexChargeTool::tag( const Particle* /*AXB0*/,
   if( 1-omega < m_ProbMin ) return tVch;
   if(   omega > m_ProbMin ) return tVch;
 
-  if(omega>0.5){
-    omega = 1-omega;
-    tVch.setDecision( Vch>0 ? 1 : -1 );
-    tVch.setOmega( omega );
-  }else{
+//   if(omega>0.5){
+//     omega = 1-omega;
+//     tVch.setDecision( Vch>0 ? 1 : -1 );
+//     tVch.setOmega( omega );
+//   }else{
     tVch.setDecision( Vch>0 ? -1 : 1 );
     tVch.setOmega( omega );
-  }
+//   }
   tVch.setType( Tagger::VtxCharge ); 
   for(ip=Pfit.begin(); ip!=Pfit.end(); ip++) tVch.addTaggerPart(**ip);
 

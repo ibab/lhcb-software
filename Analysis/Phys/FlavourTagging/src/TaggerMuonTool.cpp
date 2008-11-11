@@ -22,7 +22,7 @@ TaggerMuonTool::TaggerMuonTool( const std::string& type,
   declareInterface<ITagger>(this);
 
   declareProperty( "CombTech",    m_CombinationTechnique = "NNet" );
-  declareProperty( "NeuralNetName",  m_NeuralNetName     = "NNetTool_v1" );
+  declareProperty( "NeuralNetName",  m_NeuralNetName     = "NNetTool_MLP" );
   declareProperty( "Muon_Pt_cut", m_Pt_cut_muon   = 1.1 *GeV );
   declareProperty( "Muon_P_cut",  m_P_cut_muon    = 0.0 *GeV );
   declareProperty( "Muon_lcs_cut",m_lcs_cut_muon  = 4.0 );
@@ -115,14 +115,14 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
 
   }
 
-  if(pn<0.5){
-    pn = 1-pn;
-    tmu.setOmega( 1-pn );
-    tmu.setDecision(imuon->charge()>0 ? 1: -1);
-  } else {
+//   if(pn<0.5){
+//     pn = 1-pn;
+//     tmu.setOmega( 1-pn );
+//     tmu.setDecision(imuon->charge()>0 ? 1: -1);
+//   } else {
     tmu.setOmega( 1-pn );
     tmu.setDecision(imuon->charge()>0 ? -1: 1);
-  }
+//   }
   tmu.setType( Tagger::OS_Muon ); 
   tmu.addTaggerPart(*imuon);
 

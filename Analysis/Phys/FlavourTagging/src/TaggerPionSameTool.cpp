@@ -21,7 +21,7 @@ TaggerPionSameTool::TaggerPionSameTool( const std::string& type,
   declareInterface<ITagger>(this);
 
   declareProperty( "CombTech", m_CombinationTechnique = "NNet" );
-  declareProperty( "NeuralNetName",  m_NeuralNetName  = "NNetTool_v1" );
+  declareProperty( "NeuralNetName",  m_NeuralNetName  = "NNetTool_MLP" );
   declareProperty( "ProbMin", m_ProbMin               = 0.55);
   declareProperty( "PionSame_Pt_cut", m_Pt_cut_pionS  = 0.2 *GeV );
   declareProperty( "PionSame_P_cut",  m_P_cut_pionS   = 2.0 *GeV );
@@ -77,18 +77,38 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) {
 
     if( (*ipart)->particleID().abspid() != 211 ) continue;
-    bool pidpass=false;
-    double PIDk= (*ipart)->proto()->info( ProtoParticle::CombDLLk, -1000.0 );
-    double PIDp=( *ipart)->proto()->info( ProtoParticle::CombDLLp, -1000.0 );
-    if( PIDk==0 ) pidpass=true;
-    if( PIDk!=0 ) if(PIDk < m_PionSame_PIDNoK_cut &&
-		     PIDp < m_PionSame_PIDNoP_cut) pidpass=true;
-    if(!pidpass) continue;
 
     double Pt = (*ipart)->pt();
-    double P  = (*ipart)->p();
+    if( Pt <= ptmaxpS ) continue;//equal sign in "<=" is used to kill duplicates
+    
     if( Pt < m_Pt_cut_pionS )  continue;
+    double P  = (*ipart)->p();
     if( P  < m_P_cut_pionS )  continue;
+
+    const ProtoParticle* proto = (*ipart)->proto();
+
+    int myID=211;
+    double PIDm= proto->info( ProtoParticle::CombDLLmu, -1000.0 );
+    double PIDe= proto->info( ProtoParticle::CombDLLe,  -1000.0 );
+    double PIDk= proto->info( ProtoParticle::CombDLLk,  -1000.0 );
+    double PIDp= proto->info( ProtoParticle::CombDLLp,  -1000.0 );
+    int iflag_m = false;
+    if( proto->muonPID() ) if(proto->muonPID()->IsMuon()) iflag_m=true;
+    bool iflag_e = proto->info(ProtoParticle::InAccEcal, false);
+    bool iflag_k = proto->info(ProtoParticle::RichPIDStatus, false);
+    float PID_m_cut  = 0.0;
+    float PID_e_cut  = 5.0;
+    float PID_k_cut  = 8.0, PID_kp_cut = -1.0;
+    if( iflag_e && PIDe>PID_e_cut ) myID = 11;
+	  if( iflag_k && PIDk>PID_k_cut &&  PIDk-PIDp>PID_kp_cut) myID = 321;
+	  if( iflag_m && PIDm>PID_m_cut ) myID = 13 ;
+    if(myID != 211 ) continue;
+
+    bool pidpass=false;
+    if( PIDk==0 ) pidpass=true;
+    if( PIDk!=0 ) if(PIDk < m_PionSame_PIDNoK_cut &&
+                     PIDp < m_PionSame_PIDNoP_cut) pidpass=true;
+    if(!pidpass) continue;
 
     //calculate signed IP wrt RecVert
     double IP, IPerr;
@@ -100,7 +120,6 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     double dQ = (ptotB+(*ipart)->momentum()).M() - B0mass;
     if(dQ > m_dQcut_pionS ) continue;
 
-    const ProtoParticle* proto = (*ipart)->proto();
     const Track* track = proto->track();
     double lcs = track->chi2PerDoF();
     if( lcs > m_lcs_cut ) continue;
@@ -108,14 +127,6 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
 
     double tsa = track->info(Track::Likelihood, 9999.);
     if(tsa < m_ghost_cut) continue;
-
-    if( Pt < ptmaxpS ) continue;
-
-    bool dupli=false;
-    for( jpart = vtags.begin(); jpart != vtags.end(); jpart++ ) {
-      if((*jpart)->proto() == proto) if(ipart!=jpart) { dupli=true; break; }
-    }
-    if( dupli ) continue;
 
     //accept candidate
     ipionS = (*ipart);
@@ -165,14 +176,14 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   int tagdecision = ipionS->charge()>0 ? 1: -1;
   if( AXB0->particleID().hasUp() ) tagdecision = -tagdecision; //is Bu
 
-  if(pn<0.5){
-    pn = 1-pn;
-    tpionS.setDecision( -tagdecision );
-    tpionS.setOmega( 1-pn );
-  } else {
+//   if(pn<0.5){
+//     pn = 1-pn;
+//     tpionS.setDecision( -tagdecision );
+//     tpionS.setOmega( 1-pn );
+//   } else {
     tpionS.setDecision( tagdecision );
     tpionS.setOmega( 1-pn );
-  }
+//   }
   tpionS.setType( Tagger::SS_Pion ); 
   tpionS.addTaggerPart(*ipionS);
 
