@@ -117,7 +117,7 @@ StatusCode UpdateAndReset::initialize() {
   
   m_infoFileStatus = "SAVESETLOCATION/......................................................";
   infoName = partName+"/"+taskName+"/SAVESETLOCATION";
-  m_dimSvcSaveSetLoc = new DimService(infoName.c_str(),(char*)m_infoFileStatus.c_str());
+  if (m_saveHistograms) m_dimSvcSaveSetLoc = new DimService(infoName.c_str(),(char*)m_infoFileStatus.c_str());
 
 
   sc = serviceLocator()->service("HistogramDataSvc", m_histogramSvc, true); 
