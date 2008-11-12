@@ -115,9 +115,6 @@ StatusCode UpdateAndReset::initialize() {
     taskName = serviceParts[2];
   }
   
-  
-  
-
   m_infoFileStatus = "SAVESETLOCATION/......................................................";
   std::string infoName = partName+"/"+taskName+"/SAVESETLOCATION";
   m_dimSvcSaveSetLoc = new DimService(infoName.c_str(),(char*)m_infoFileStatus.c_str());
@@ -345,7 +342,7 @@ ulonglong UpdateAndReset::gpsTime() {
   // this is only for test when Odin doesn't work
   ulonglong currentTime = GauchoTimer::currentTime();
 
-  int cycleNumber = currentTime/(m_desiredDeltaTCycle*1000000);
+  int cycleNumber = (int)currentTime/(m_desiredDeltaTCycle*1000000);
 
   ulonglong gpsTime = ((ulonglong)cycleNumber)*((ulonglong) m_desiredDeltaTCycle*1000000);
 
