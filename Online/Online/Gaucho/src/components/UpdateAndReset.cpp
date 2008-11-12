@@ -67,7 +67,7 @@ UpdateAndReset::UpdateAndReset(const std::string& name, ISvcLocator* ploc)
   declareProperty("disableResetHistos", m_disableResetHistos = 0);
   
   declareProperty("saveHistograms", m_saveHistograms = 0);
-  declareProperty("saveSetDir", m_saveSetDir = "/hist");
+  declareProperty("saveSetDir", m_saveSetDir = "/hist/Savesets");
   declareProperty("saverCycle", m_saverCycle = 100);
   declareProperty("resetHistosAfterSave", m_resetHistosAfterSave = 0);
   
@@ -117,15 +117,11 @@ StatusCode UpdateAndReset::initialize() {
   
   
   
-  
-  ///*******************Remove this part****************************/
+
   m_infoFileStatus = "SAVESETLOCATION/......................................................";
-  std::string infoName = name() + "/SAVESETLOCATION/"+taskName;
+  std::string infoName = partName+"/"+taskName+"/SAVESETLOCATION";
   m_dimSvcSaveSetLoc = new DimService(infoName.c_str(),(char*)m_infoFileStatus.c_str());
-  ///*******************Remove this part****************************/
-//  m_pGauchoMonitorSvc->enableMonObjectsForString();
-//  declareInfo(infoName, m_infoFileStatus, "Filename of latest saveset");
-  ///*******************Remove this part****************************/
+
 
   sc = serviceLocator()->service("HistogramDataSvc", m_histogramSvc, true); 
   
