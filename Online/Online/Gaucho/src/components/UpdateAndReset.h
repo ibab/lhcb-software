@@ -81,6 +81,10 @@ private:
   bool m_firstExecute;
   
   std::string m_utgid;
+  std::vector<std::string> serviceParts;
+  std::string taskName;
+  std::string partName;
+  
   std::string m_cycleStatus;
   std::string m_runStatus;
   std::string m_infoFileStatus;

@@ -102,10 +102,10 @@ StatusCode UpdateAndReset::initialize() {
     return StatusCode::FAILURE;
   }
   
-  std::vector<std::string> serviceParts = Misc::splitString(m_utgid, "_");
+  serviceParts = Misc::splitString(m_utgid, "_");
   
-  std::string taskName = "unknownTask";
-  std::string partName = "unknownPartition";
+  taskName = "unknownTask";
+  partName = "unknownPartition";
   
   if (3 == serviceParts.size()) {
     taskName = serviceParts[1];
@@ -351,7 +351,7 @@ ulonglong UpdateAndReset::gpsTime() {
 
 std::pair<int, bool> UpdateAndReset::currentCycleNumber(ulonglong currentTime) {
   bool changed = false;
-  int cycleNumber = currentTime/(m_desiredDeltaTCycle*1000000);
+  int cycleNumber = (int)currentTime/(m_desiredDeltaTCycle*1000000);
   if (m_cycleNumber != cycleNumber ) changed = true;
   return std::pair<int, bool>(cycleNumber,changed);
 }
@@ -454,19 +454,7 @@ void UpdateAndReset::manageTESHistos (bool list, bool reset, bool save, bool isF
   ::strftime(timestr, sizeof(timestr),"%Y%m%dT%H%M%S", timeInfo);
   ::strftime(year, sizeof(year),"%Y", timeInfo);
 
-  std::vector<std::string> serviceParts = Misc::splitString(m_utgid, "_");
-  
-  std::string taskName = "unknownTask";
-  std::string partName = "unknownPartition";
-  
-  if (3 == serviceParts.size()) {
-    taskName = serviceParts[1];
-  }
-  else if (4 == serviceParts.size()) {
-    partName = serviceParts[0];
-    taskName = serviceParts[2];
-  }
-  
+
   if (save)  {
      std::string dirName = m_saveSetDir + "/" + year + "/" + partName + "/" + taskName;  
      void *dir = gSystem->OpenDirectory(dirName.c_str());
