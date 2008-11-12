@@ -116,7 +116,7 @@ StatusCode UpdateAndReset::initialize() {
   }
   
   m_infoFileStatus = "SAVESETLOCATION/......................................................";
-  std::string infoName = partName+"/"+taskName+"/SAVESETLOCATION";
+  infoName = partName+"/"+taskName+"/SAVESETLOCATION";
   m_dimSvcSaveSetLoc = new DimService(infoName.c_str(),(char*)m_infoFileStatus.c_str());
 
 
@@ -172,18 +172,15 @@ void UpdateAndReset::timerHandler()
 {
   MsgStream msg(msgSvc(), name());
   if (0 != m_disableChekInTimer) {
-    msg << MSG::DEBUG << "===============> Checking changes inside timer handler is disable." << endreq;
+    msg << MSG::DEBUG << "===============> Checking changes inside timer handler is disabled." << endreq;
     return;
   }
-//  msg << MSG::DEBUG << "**********************************************************************" << endreq;
-  msg << MSG::DEBUG << "********************Inside timerHandler*******************************" << endreq;
+
 
   //verifyAndProcessRunChange("timer");
   verifyAndProcessCycleChange(true);
 
   DimTimer::start(m_timerCycle); // we verify the cycle status every 9 seconds
-//  msg << MSG::DEBUG << "***********************End timerHandler*******************************" << endreq;
-  msg << MSG::DEBUG << "**********************************************************************" << endreq;
 }
 
 StatusCode UpdateAndReset::testeExecute() {
@@ -384,7 +381,7 @@ void UpdateAndReset::updateData(bool isRunNumberChanged, bool isFromTimerHandler
   msg << MSG::DEBUG << "m_cycleNumber      = " << m_cycleNumber << endreq;
   msg << MSG::DEBUG << "m_timeFirstEvInRun      = " << m_timeFirstEvInRun << endreq;
   msg << MSG::DEBUG << "m_offsetTimeFirstEvInRun      = " << m_offsetTimeFirstEvInRun << endreq;
-  m_deltaTCycle = currentTime - m_timeLastEvInCycle;
+  m_deltaTCycle = (double)currentTime - (double)m_timeLastEvInCycle;
   msg << MSG::DEBUG << "m_deltaTCycle = " << m_deltaTCycle << " microseconds" << endreq;
   m_timeLastEvInCycle = currentTime;
   m_offsetTimeLastEvInCycle = offsetToBoundary(m_cycleNumber, m_timeLastEvInCycle, false);
@@ -407,8 +404,6 @@ void UpdateAndReset::updateData(bool isRunNumberChanged, bool isFromTimerHandler
     if (0 == m_disableResetHistos) {
       if ( 1 == m_saveHistograms ) {
          msg << MSG::DEBUG << "==============> SAVING HISTOS BECAUSE FAST RUN CHANGE<=======================" << endreq;
-         msg << MSG::DEBUG << "==============> SAVING HISTOS BECAUSE FAST RUN CHANGE<=======================" << endreq;
-         msg << MSG::DEBUG << "==============> SAVING HISTOS BECAUSE FAST RUN CHANGE<=======================" << endreq;
          manageTESHistos(false, true, true, true);
       }
       else manageTESHistos(false, true, false, true);
@@ -421,8 +416,6 @@ void UpdateAndReset::updateData(bool isRunNumberChanged, bool isFromTimerHandler
       bool resetHistos = false;
       if(1 == m_resetHistosAfterSave) resetHistos = true;
       if (isSaveCycle(m_cycleNumber)) {
-        msg << MSG::DEBUG << "==============> SAVING HISTOS BECAUSE CYCLE SAVER <=======================" << endreq;
-        msg << MSG::DEBUG << "==============> SAVING HISTOS BECAUSE CYCLE SAVER <=======================" << endreq;
         msg << MSG::DEBUG << "==============> SAVING HISTOS BECAUSE CYCLE SAVER <=======================" << endreq;
         manageTESHistos(false, resetHistos, true, false);
       }

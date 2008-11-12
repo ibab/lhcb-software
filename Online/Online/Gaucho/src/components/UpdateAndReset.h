@@ -84,6 +84,7 @@ private:
   std::vector<std::string> serviceParts;
   std::string taskName;
   std::string partName;
+  std::string infoName;
   
   std::string m_cycleStatus;
   std::string m_runStatus;
