@@ -67,7 +67,7 @@ UpdateAndReset::UpdateAndReset(const std::string& name, ISvcLocator* ploc)
   declareProperty("disableResetHistos", m_disableResetHistos = 0);
   
   declareProperty("saveHistograms", m_saveHistograms = 0);
-  declareProperty("saveSetDir", m_saveSetDir = "~/");
+  declareProperty("saveSetDir", m_saveSetDir = "/hist");
   declareProperty("saverCycle", m_saverCycle = 100);
   declareProperty("resetHistosAfterSave", m_resetHistosAfterSave = 0);
   
@@ -75,6 +75,7 @@ UpdateAndReset::UpdateAndReset(const std::string& name, ISvcLocator* ploc)
   
   m_timerCycle = 9;
   m_firstExecute = true;
+  m_dimSvcSaveSetLoc = 0;
   
 }
 
@@ -100,13 +101,32 @@ StatusCode UpdateAndReset::initialize() {
     msg << MSG::FATAL << "Unable to locate the IGauchoMonitorSvc interface." << endreq;
     return StatusCode::FAILURE;
   }
-
-  m_pGauchoMonitorSvc->enableMonObjectsForString();
   
+  std::vector<std::string> serviceParts = Misc::splitString(m_utgid, "_");
+  
+  std::string taskName = "unknownTask";
+  std::string partName = "unknownPartition";
+  
+  if (3 == serviceParts.size()) {
+    taskName = serviceParts[1];
+  }
+  else if (4 == serviceParts.size()) {
+    partName = serviceParts[0];
+    taskName = serviceParts[2];
+  }
+  
+  
+  
+  
+  ///*******************Remove this part****************************/
   m_infoFileStatus = "SAVESETLOCATION/......................................................";
-  std::string infoName = "SAVESETLOCATION";
-  declareInfo(infoName, m_infoFileStatus, "Filename of latest saveset");
-  
+  std::string infoName = name() + "/SAVESETLOCATION/"+taskName;
+  m_dimSvcSaveSetLoc = new DimService(infoName.c_str(),(char*)m_infoFileStatus.c_str());
+  ///*******************Remove this part****************************/
+//  m_pGauchoMonitorSvc->enableMonObjectsForString();
+//  declareInfo(infoName, m_infoFileStatus, "Filename of latest saveset");
+  ///*******************Remove this part****************************/
+
   sc = serviceLocator()->service("HistogramDataSvc", m_histogramSvc, true); 
   
   if (sc.isFailure()) msg << MSG::FATAL << "Unable to locate the HistogramDataService" << endreq;
@@ -256,6 +276,9 @@ StatusCode UpdateAndReset::finalize() {
      manageTESHistos(false, false, true, true);
   }
   DimTimer::stop();
+
+  if (m_dimSvcSaveSetLoc !=0 ) {delete m_dimSvcSaveSetLoc; m_dimSvcSaveSetLoc=0;}
+
   return StatusCode::SUCCESS;
 }
 
@@ -483,13 +506,17 @@ void UpdateAndReset::manageTESHistos (bool list, bool reset, bool save, bool isF
       }
     }
     else {
+      std::string errorTmpfile = "Error Saving Data => Zombie File..!!!!!"; 
+      m_infoFileStatus.replace(0, m_infoFileStatus.length(), errorTmpfile);
       msg << MSG::ERROR << "error opening file "<< m_infoFileStatus << endreq;
     }
+    m_dimSvcSaveSetLoc->updateService((char*)m_infoFileStatus.c_str());
   }
   else {
      //f=0 because should also be able to reset without saving
      histogramIdentifier(object, idList, reset, save, level, (TDirectory*) f);     
-  }  
+  }
+  
 }
 
 void UpdateAndReset::histogramIdentifier(IRegistry* object, std::vector<std::string> &idList, bool reset, bool save, int &level,

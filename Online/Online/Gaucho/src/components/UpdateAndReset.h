@@ -97,6 +97,8 @@ private:
   int m_timerCycle;
   int m_numCyclesToSave;
   int m_resetHistosAfterSave;
+
+  DimService* m_dimSvcSaveSetLoc;
   
 };
 
