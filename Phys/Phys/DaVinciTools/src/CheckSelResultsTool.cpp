@@ -1,4 +1,4 @@
-// $Id: CheckSelResultsTool.cpp,v 1.1 2008-10-31 18:41:41 pkoppenb Exp $
+// $Id: CheckSelResultsTool.cpp,v 1.2 2008-11-12 08:03:13 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -58,7 +58,7 @@ bool CheckSelResultsTool::isSelected ( const Selection  & selection) const {
           iselRes != SelResCtr->end(); ++iselRes ) {
       if (msgLevel(MSG::VERBOSE)) verbose() << "Looping on " << (*iselRes)->location() 
                                             << " " << (*iselRes)->found() << endmsg ;
-      int pos = (*iselRes)->location().find_last_of('/');
+      unsigned int pos = (*iselRes)->location().find_last_of('/');
       if (pos==(*iselRes)->location().size()) Exception("No / in "+(*iselRes)->location());
       if (  (*iselRes)->location().substr(pos+1, (*iselRes)->location().size())==selection ){
         if (msgLevel(MSG::DEBUG)) debug() << selection << " ran during a previous processing. SelResult is " 

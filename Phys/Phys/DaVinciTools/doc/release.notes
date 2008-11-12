@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.383 2008-11-11 17:01:08 jpalac Exp $
+! $Id: release.notes,v 1.384 2008-11-12 08:03:12 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-11-12 - Patrick Koppenburg
+ - CheckSelResultTool : fix compilation warning
 
 ! 2008-11-11 - Juan PALACIOS
  - src.CombineParticles.cpp
