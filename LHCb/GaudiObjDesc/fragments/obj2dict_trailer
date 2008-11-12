@@ -1,6 +1,3 @@
-$(dest):
-	@if !(test -d $(dest)); then mkdir -p $(dest); fi 
-
 ${CONSTITUENT}_cleanuplist += $(${CONSTITUENT}_obj2dict_list)
 
 ifdef CMTINSTALLAREA
