@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.cpp,v 1.17 2008-11-11 11:38:18 robbep Exp $
+// $Id: PythiaProduction.cpp,v 1.18 2008-11-12 11:47:01 robbep Exp $
 
 // Include files
 // STD * STL 
@@ -166,6 +166,11 @@ PythiaProduction::PythiaProduction( const std::string& type,
   m_defaultSettings.push_back( "pysubs msub 477 1" ) ;
   m_defaultSettings.push_back( "pysubs msub 478 1" ) ;
   m_defaultSettings.push_back( "pysubs msub 479 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 480 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 481 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 482 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 483 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 484 1" ) ;
   m_defaultSettings.push_back( "pypars mstp 2 2" ) ;
   m_defaultSettings.push_back( "pypars mstp 33 3" ) ;
   m_defaultSettings.push_back( "pypars mstp 128 2" ) ;
