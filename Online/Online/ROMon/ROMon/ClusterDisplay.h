@@ -1,4 +1,4 @@
-// $Id: ClusterDisplay.h,v 1.1 2008-08-27 19:15:55 frankb Exp $
+// $Id: ClusterDisplay.h,v 1.2 2008-11-12 19:22:11 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ClusterDisplay.h,v 1.1 2008-08-27 19:15:55 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ClusterDisplay.h,v 1.2 2008-11-12 19:22:11 frankb Exp $
 #ifndef ROMON_CLUSTERDISPLAY_H
 #define ROMON_CLUSTERDISPLAY_H 1
 
@@ -59,6 +59,9 @@ namespace ROMon {
 
     /// Number of nodes in the dataset
     virtual size_t numNodes() = 0;
+
+    /// Retrieve cluster name from cluster display
+    virtual std::string clusterName() const = 0;
 
     /// Retrieve node name from cluster display by offset
     virtual std::string nodeName(size_t offset) = 0;
