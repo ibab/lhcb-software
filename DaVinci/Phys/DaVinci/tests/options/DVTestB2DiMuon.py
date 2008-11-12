@@ -1,5 +1,5 @@
 ##############################################################################
-#$Id: DVTestB2DiMuon.py,v 1.3 2008-11-07 17:06:28 jpalac Exp $
+#$Id: DVTestB2DiMuon.py,v 1.4 2008-11-12 14:57:22 jpalac Exp $
 #
 # Example Qm test option using configurables.
 #
@@ -7,50 +7,14 @@
 #
 ##############################################################################
 from GaudiConf.Configuration import *
-from DaVinci.Configuration import DaVinciApp
-##############################################################################
-DaVinciApp().EvtMax = 1000
-# DaVinciApp().DDDBtag      = "DC06-default"
-# DaVinciApp().condDBtag    = "DC06-default"
-# DaVinciApp().useOracleCondDB = False
-DaVinciApp().mainOptions  = "$B2DILEPTONROOT/options/DVPreselB2DiMuon.opts"
-##############################################################################
-"""
- GAUDI data cards generated on 11/6/08 4:52 PM
- For Event Type = 11144103 / Data type = DST 1
-     Configuration = DC06 - phys-v2-lumi2
-     DST 1 datasets output 
-     From DIGI 1 datasets produced by Boole - v12r10
-     From SIM 1 datasets produced by ANY
-     Database version = v30r14
-     Cards content = physical-physical
-     
- Datasets replicated at CERN
- 200 dataset(s) - NbEvents = 99391
-"""
-DaVinciApp().Input = [
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001668/DST/0000/00001668_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001668/DST/0000/00001668_00000002_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001668/DST/0000/00001668_00000003_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001668/DST/0000/00001668_00000004_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001668/DST/0000/00001668_00000005_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001668/DST/0000/00001668_00000006_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001668/DST/0000/00001668_00000007_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001668/DST/0000/00001668_00000008_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001668/DST/0000/00001668_00000009_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001668/DST/0000/00001668_00000010_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"
-]
-##############################################################################
-DaVinciApp().applyConf()
-##############################################################################
-from Configurables import GaudiSequencer, PhysDesktop, MakeResonances, OldFilterDesktop, TrueMCFilterCriterion, MCDecayFinder, AlgorithmCorrelationsAlg, AlgorithmCorrelations
+from Configurables import GaudiSequencer,PhysDesktop, MakeResonances, OldFilterDesktop, TrueMCFilterCriterion, MCDecayFinder, AlgorithmCorrelationsAlg, AlgorithmCorrelations
 
 decayDescriptor = "J/psi(1S) -> mu- mu+"
 mcDecayDescriptor = "J/psi(1S) => ^mu+ ^mu- {,gamma}{,gamma}{,gamma}{,gamma}"
 trueNoPIDsName = "SelectTrueNoPIDsDecay"
 trueLooseName = "SelectTrueLooseDecay"
+
 # Truth checking for Bd -> MuMuX
-ApplicationMgr().TopAlg += [ GaudiSequencer("FindTrueDecay") ]
 findTrueDecay = GaudiSequencer("FindTrueDecay")
 findTrueDecay.IgnoreFilterPassed = True
 findTrueDecay.Members += [ OldFilterDesktop("SelectTrueNoPIDsDecay") ]
@@ -92,8 +56,44 @@ testCorrelations.Algorithms = [ trueNoPIDsName,
                                 trueLooseName,
                                 "AllTrueLooseDecay",
                                 "PreselB2DiMuon"]
-ApplicationMgr().TopAlg += [ testCorrelations ]
 ##############################################################################
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 EventSelector().PrintFreq = 100
+##############################################################################
+from DaVinci.Configuration import DaVinciApp
+##############################################################################
+DaVinciApp().EvtMax = 1000
+# DaVinciApp().DDDBtag      = "DC06-default"
+# DaVinciApp().condDBtag    = "DC06-default"
+# DaVinciApp().useOracleCondDB = False
+DaVinciApp().mainOptions  = "$B2DILEPTONROOT/options/DVPreselB2DiMuon.opts"
+DaVinciApp().userAlgorithms = [findTrueDecay, testCorrelations]
+##############################################################################
+"""
+ GAUDI data cards generated on 11/6/08 4:52 PM
+ For Event Type = 11144103 / Data type = DST 1
+     Configuration = DC06 - phys-v2-lumi2
+     DST 1 datasets output 
+     From DIGI 1 datasets produced by Boole - v12r10
+     From SIM 1 datasets produced by ANY
+     Database version = v30r14
+     Cards content = physical-physical
+     
+ Datasets replicated at CERN
+ 200 dataset(s) - NbEvents = 99391
+"""
+DaVinciApp().Input = [
+    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001668/DST/0000/00001668_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001668/DST/0000/00001668_00000002_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001668/DST/0000/00001668_00000003_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001668/DST/0000/00001668_00000004_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001668/DST/0000/00001668_00000005_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001668/DST/0000/00001668_00000006_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001668/DST/0000/00001668_00000007_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001668/DST/0000/00001668_00000008_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001668/DST/0000/00001668_00000009_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001668/DST/0000/00001668_00000010_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+]
+##############################################################################
+DaVinciApp().applyConf()
 ##############################################################################
