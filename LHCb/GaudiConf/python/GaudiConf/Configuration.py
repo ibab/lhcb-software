@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: Configuration.py,v 1.12 2008-11-11 16:28:21 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.13 2008-11-12 17:23:09 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from os import environ
@@ -12,7 +12,7 @@ from Configurables import ( DDDBConf )
 class LHCbApp(LHCbConfigurableUser):
     __slots__ = {
         "EvtMax"     : -1
-       ,"skipEvents" : 0
+       ,"SkipEvents" : 0
        ,"DDDBtag"    : "2008-default"
        ,"condDBtag"  : "2008-default"
        ,"UseOracle"  : False
@@ -22,7 +22,7 @@ class LHCbApp(LHCbConfigurableUser):
 
     _propertyDocDct = { 
         'EvtMax'     : """ Maximum number of events to process """
-       ,'skipEvents' : """ Number of events to skip """
+       ,'SkipEvents' : """ Number of events to skip """
        ,'DDDBtag'    : """ Tag to use for DDDB. Default '2008-default' """
        ,'condDBtag'  : """ Tag to use for CondDB. Default '2008-default' """
        ,'UseOracle'  : """ Flag to enable Oracle CondDB. Default False (use SQLDDDB) """
@@ -66,14 +66,21 @@ class LHCbApp(LHCbConfigurableUser):
                       RootCLID           =    1,
                       EnableFaultHandler = True )
 
-        skipEvents = self.getProp("skipEvents")
-        if skipEvents > 0 :
+        SkipEvents = self.getProp("SkipEvents")
+        if SkipEvents > 0 :
             if hasattr(EventSelector(),"FirstEvent"):
-                log.warning( "EventSelector().FirstEvent and LHCBApp().skipEvents both defined, using LHCbApp().skipEvents")
-            EventSelector().FirstEvent = skipEvents + 1
+                log.warning( "EventSelector().FirstEvent and LHCBApp().SkipEvents both defined, using LHCbApp().SkipEvents")
+            EventSelector().FirstEvent = SkipEvents + 1
 
         # Delegate handling to ApplicationMgr configurable
         self.setOtherProps(ApplicationMgr(),["EvtMax"])
+
+    def evtMax(self):
+        return self.getProp("EvtMax")
+#        return ApplicationMgr().getProp("EvtMax")
+
+    def skipEvents(self):
+        return EventSelector().getProp("FirstEvent") - 1
 
     def defineMonitors(self):
         for prop in self.getProp("monitors"):
@@ -84,7 +91,7 @@ class LHCbApp(LHCbConfigurableUser):
         if "FPE" in self.getProp("monitors"):
             importOptions( "$STDOPTS/FPEAudit.opts" )
 
-    def applyConf(self):
+    def __apply_configuration__(self):
         self.defineDB()
         self.defineEvents()
         self.defineMonitors()
