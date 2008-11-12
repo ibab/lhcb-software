@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.258 2008-11-10 13:52:21 jpalac Exp $
+! $Id: release.notes,v 1.259 2008-11-12 15:00:14 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -9,9 +9,16 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2008-11-12 - Juan PALACIOS
+ - python/DaVinci/Configuration.py
+  . Add userAlgorithms [] to slots.
+ - options/DVTestB2DiMuon.py
+  . Use DaVinciApp().userAlgorithms
+
 ! 2008-11-10 - Juan PALACIOS
  - Remove python/DaVinci/__init__.py
   . Seems to cause some clash. And is probably generated autimatically in the InstallArea anyway.
+
 ! 2008-11-07 - Juan PALACIOS
  - tests/options/DVTestB2DiMuon.py
   . Completely re-written in python. Only .opts used is preselection file itself.
