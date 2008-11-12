@@ -1,4 +1,4 @@
-// $Id: HltSelection.h,v 1.8 2008-10-02 08:00:12 graven Exp $
+// $Id: HltSelection.h,v 1.9 2008-11-12 09:36:36 ibelyaev Exp $
 #ifndef HLTBASE_HLTSELECTION_H 
 #define HLTBASE_HLTSELECTION_H 1
 
@@ -46,7 +46,13 @@ namespace Hlt
                                    ?  dynamic_cast<TSelection<T>*>(this)
                                    : (TSelection<T>*)0 ; }
 
+  public:
+    
+    virtual size_t size  () const { return    0 ; }
+    virtual bool   empty () const { return true ; }
+
   private:
+
     std::vector<stringKey> m_inputSelectionsIDs;
     stringKey m_id;
     bool m_decision;  // accept / reject

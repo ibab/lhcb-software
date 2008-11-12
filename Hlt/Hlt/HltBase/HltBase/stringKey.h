@@ -62,6 +62,15 @@ inline bool stringKey::operator<(const stringKey& rhs) const
 
 inline std::ostream& stringKey::print(std::ostream & o ) const 
 { assert(valid()); 
-  return  o << "stringKey(" << str() << ")";
+ return  o << "stringKey(" << str() << ")";
 }
+/// add string and the key value 
+inline std::string operator+
+( const std::string& s , 
+  const stringKey&   k ) { return s + k.str() ; }
+/// add string and the key value 
+inline std::string operator+
+( const stringKey&   k , 
+  const std::string& s ) { return s + k ; }
+
 #endif
