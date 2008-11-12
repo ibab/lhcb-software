@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.22 2008-11-12 17:20:47 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.23 2008-11-12 17:43:51 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -120,7 +120,8 @@ class Boole(LHCbConfigurableUser):
             raise RuntimeError("Unknown Histograms option '%s'"%histOpt)
 
         if histOpt == "None":
-            ApplicationMgr().HistogramPersistency = "NONE"
+            # HistogramPersistency still needed to read in Muon background.
+            # so do not set ApplicationMgr().HistogramPersistency = "NONE"
             return
 
         if histOpt == "Expert":
