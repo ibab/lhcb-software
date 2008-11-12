@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.h,v 1.12 2008-09-09 11:28:08 graven Exp $
+// $Id: HltTrackUpgradeTool.h,v 1.13 2008-11-12 14:25:52 ibelyaev Exp $
 #ifndef HLTTRACKING_HLTTRACKUPGRADETOOL_H 
 #define HLTTRACKING_HLTTRACKUPGRADETOOL_H 1
 
@@ -54,9 +54,10 @@ public:
   void beginExecute();
 
   // this method is save, it takes care of the memory
-  StatusCode upgrade(std::vector<LHCb::Track*>& itracks,
-                     std::vector<LHCb::Track*>& otracks);
-
+  StatusCode upgrade
+  ( const std::vector<LHCb::Track*>& itracks ,
+    std::vector<LHCb::Track*>&       otracks );
+  
   // this method is save, it takes care of the memory
   StatusCode upgrade(LHCb::Track& seed,
                      std::vector<LHCb::Track*>& track);
