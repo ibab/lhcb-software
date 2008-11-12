@@ -44,7 +44,7 @@ void BaseServiceMap::removeMap() {
   std::map<std::string, bool, std::less<std::string> >::iterator svrMapIt;
   for (svrMapIt=m_serverMap.begin() ; svrMapIt != m_serverMap.end(); ++svrMapIt){
     if (!svrMapIt->second) continue; // is already inactive in local dimInfo
-    msg << MSG::INFO << "   Removing Server : " << svrMapIt->first << "." << endreq;
+    msg << MSG::DEBUG << "   Removing Server : " << svrMapIt->first << "." << endreq;
     excludeServerInMaps(svrMapIt->first);
   }
 }
@@ -510,10 +510,10 @@ std::string BaseServiceMap::createSaverName (const std::string &serviceName){
 void BaseServiceMap::write(std::string saveDir, std::string &fileName)
 {
   MsgStream msg(msgSvc(), name());
-  msg << MSG::INFO << " We will try to Write " << endreq;
+  msg << MSG::DEBUG << " We will try to Write " << endreq;
 
   if ((0 == m_serverMap.size())||(0 == m_serviceSet.size())||(0 == m_dimInfo.size())) {
-    msg << MSG::INFO << " Writer can't write because ServerMap, ServiceMap or DimInfoMap is empty " << endreq;
+    msg << MSG::DEBUG << " Writer can't write because ServerMap, ServiceMap or DimInfoMap is empty " << endreq;
     return;
   }
 
@@ -556,7 +556,7 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName)
       msg << MSG::DEBUG << "Term : " << it->second->dimInfo()->getName() << endreq;
 
       std::string type = it->second->monObject()->typeName();
-      msg << MSG::INFO << " Service " << it->first << " is a " << type <<endreq;
+      msg << MSG::DEBUG << " Service " << it->first << " is a " << type <<endreq;
       if ((s_monH1F == type)||(s_monH1D == type)||(s_monH2F == type)||(s_monH2D == type)||(s_monProfile == type)) {
 //        if (!m_processMgr->saveDiff()) {
           it->second->loadMonObject();
@@ -646,7 +646,7 @@ void BaseServiceMap::add() {
   std::map<std::string, DimInfoMonObject*>::iterator it;
 
   if ((0 == m_serverMap.size())||(0 == m_serviceSet.size())||(0 == m_dimInfo.size())){
-    msg << MSG::INFO << " Adder can't add because the ServerMap, ServiceMap or DimInfoMap is empty " << endreq;
+    msg << MSG::DEBUG << " Adder can't add because the ServerMap, ServiceMap or DimInfoMap is empty " << endreq;
     return;
   }
 
