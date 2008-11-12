@@ -1,4 +1,4 @@
-// $Id: BTaggingAnalysis.h,v 1.14 2008-06-10 19:06:57 musy Exp $
+// $Id: BTaggingAnalysis.h,v 1.15 2008-11-12 11:42:50 musy Exp $
 #ifndef USER_BTAGGINGANALYSIS_H 
 #define USER_BTAGGINGANALYSIS_H 1
 
@@ -152,24 +152,15 @@ class BTaggingAnalysis : public DVAlgorithm {
   NTuple::Array<int>      m_ancID;
   NTuple::Array<int>      m_bFlag;
   NTuple::Array<int>      m_xFlag;
-  NTuple::Array<float>     m_IPT;
  
   NTuple::Item<float>      m_RVx;
   NTuple::Item<float>      m_RVy;
   NTuple::Item<float>      m_RVz;
 
-  NTuple::Item<float>      m_SVx;
-  NTuple::Item<float>      m_SVy;
-  NTuple::Item<float>      m_SVz;
-  NTuple::Item<float>      m_Schi;
-  NTuple::Item<long>       m_SVch;
-
   NTuple::Item<long>       m_T;
   NTuple::Array<int>      m_TaggerDecision;
   NTuple::Array<int>      m_TaggerType;
-  NTuple::Array<float>     m_TaggerOmega;
-  NTuple::Array<int>      m_TaggerUsedInSV;
-  NTuple::Array<int>      m_TaggerRef;
+  NTuple::Array<float>    m_TaggerOmega;
 
 };
 

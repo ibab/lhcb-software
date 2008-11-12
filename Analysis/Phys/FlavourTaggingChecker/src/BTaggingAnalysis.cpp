@@ -205,7 +205,6 @@ StatusCode BTaggingAnalysis::initialize() {
     nt->addItem ("PIDp",   m_N, m_PIDp);
     nt->addItem ("PIDfl",  m_N, m_PIDfl);
     nt->addItem ("RichPID",m_N, m_RichPID);
-    nt->addItem ("IPT"    ,m_N, m_IPT);
     nt->addItem ("MCID",   m_N, m_MCID);
     nt->addItem ("MCP",    m_N, m_MCP);
     nt->addItem ("MCPt",   m_N, m_MCPt);
@@ -217,20 +216,11 @@ StatusCode BTaggingAnalysis::initialize() {
     nt->addItem ("xFlag"  ,m_N, m_xFlag);
     nt->addItem ("vFlag",  m_N, m_vFlag);
 
-    //Particles FITTED
-    nt->addItem ("SVx",      m_SVx);
-    nt->addItem ("SVy",      m_SVy);
-    nt->addItem ("SVz",      m_SVz);
-    nt->addItem ("Schi",     m_Schi);
-    nt->addItem ("SVch",     m_SVch);
-
     ///Added by SPOSS to have the tagger info
     nt->addItem ("T",               m_T, 0 , 10); //limit
     nt->addItem ("TaggerType",      m_T, m_TaggerType);
     nt->addItem ("TaggerDecision",  m_T, m_TaggerDecision);
     nt->addItem ("TaggerOmega",     m_T, m_TaggerOmega);
-    nt->addItem ("TaggerUsedInSV",  m_T, m_TaggerUsedInSV);
-    nt->addItem ("TaggerRef",       m_T, m_TaggerRef);
 
   } else {
     fatal() << "The ntuple was already booked" << endreq;
@@ -379,7 +369,6 @@ StatusCode BTaggingAnalysis::execute() {
     m_sPt[m_M]  = (*ip)->pt()/Gaudi::Units::GeV;
     m_sPhi[m_M] = (*ip)->momentum().Phi();
     m_sMass[m_M]= (*ip)->momentum().M() /Gaudi::Units::GeV;
-    //info()<<m_M<< ".  Daughter ID="<< m_sID[m_M] <<"  Mass="<<m_sMass[m_M]<<endreq;
 
     const Vertex* endv = (*ip)->endVertex();
     if(endv){
@@ -448,6 +437,71 @@ StatusCode BTaggingAnalysis::execute() {
   ////////////////////////////////////////////////////
   //debug()<<"SIGNAL B:"<<endreq; m_debug -> printTree(BS);
   //debug()<<"OPPOSITE B (TAGGING B):"<<endreq; m_debug -> printTree(BO);
+
+
+  //-------------------- OFFICIAL TAG of the Event --------------------
+  bool foundb = false;
+  //const std::vector< ProtoParticle* > partsInSV(0);
+  ProtoParticle::ConstVector partsInSV;
+  FlavourTags*  tags = new FlavourTags;
+  FlavourTag* theTag = new FlavourTag;
+  if (exist<FlavourTags>(m_TagLocation)){//there is already something in TES
+    tags = get<FlavourTags>(m_TagLocation);
+    if(tags->size()>1) 
+      info()<<"FlavourTag objects in TES:"<<tags->size()
+	    <<"  Search for the highest pT B.."<<endreq;
+    FlavourTags::const_iterator ti;
+    for( ti=tags->begin(); ti!=tags->end(); ti++ ) {
+      if((*ti)->taggedB() == AXBS) {
+	theTag = (*ti);
+	foundb = true;
+	debug()<<"Will use candidate with pT="<<AXBS->pt()<<endreq;
+      }
+    }
+    if(!foundb) warning()<<"B Signal mismatch! Redo tagging..."<<endreq;
+  } 
+
+  if(!foundb ){
+    StatusCode sc = flavourTagging()->tag( *theTag, AXBS );
+    if (!sc) {
+      err() <<"Tagging Tool returned error."<< endreq;
+      delete theTag;
+      return StatusCode::SUCCESS;
+    } 
+    if(!exist<FlavourTags>(m_TagLocation)){
+      tags->insert(theTag);
+      put(tags, m_TagLocation);
+      debug()<<"Inserted tags into "<<m_TagLocation<<endreq;
+    }
+  }
+
+  m_Tag    = theTag->decision();
+  m_omega  = theTag->omega();
+  m_TagCat = theTag->category();
+
+  m_TrueTag = 0;
+  if(BS) m_TrueTag = BS->particleID().pid()>0 ? 1 : -1; 
+  if(!m_UseMCTrueFlavour) m_TrueTag = AXBS->particleID().pid()>0 ? 1 : -1; 
+
+  std::vector<Tagger> taggers = theTag->taggers();
+  for(size_t i=0; i<taggers.size(); ++i) {
+    Tagger itagger = taggers.at(i);
+    if( itagger.decision() ) {
+      debug()<<"Tagger "<<itagger.type()
+             <<" decision= "<<itagger.decision()<<endreq;
+      m_TaggerType[m_T]     = itagger.type();
+      m_TaggerDecision[m_T] = itagger.decision();
+      m_TaggerOmega[m_T]    = itagger.omega();
+      Particle::ConstVector::iterator kp;
+      if(itagger.type()==Tagger::VtxCharge) {
+        for( unsigned int i=0; i!=itagger.taggerParts().size(); i++){
+          partsInSV.push_back( itagger.taggerParts().at(i).proto() );
+        }
+      }
+      
+      if(m_T<9) m_T++;
+    }      
+  }
 
   //Background category
   IBackgroundCategory::categories cat = m_bkgCategory->category(AXBS);
@@ -558,35 +612,6 @@ StatusCode BTaggingAnalysis::execute() {
 
   }
 
-  ///------------------------------------------------------ Vertex charge info
-  //look for a secondary Vtx due to opposite B
-  Vertex Vfit;
-  std::vector<Vertex> vv;
-  if(m_vtxtool) {
-    debug() <<"--- BTANALYSIS calling buildVertex: "<<endreq;
-     vv = m_vtxtool->buildVertex(*RecVert, vtags);
-    if(!vv.empty()) Vfit = vv.at(0); //take first vertex built
-  } else debug() << "No secondary vtx available."<<endreq;
-
-  double Vch = 0;  
-  Particle::ConstVector Pfit = Vfit.outgoingParticlesVector();
-  if( Pfit.size() ) {
-    Particle::ConstVector::iterator kp;
-    for(kp = Pfit.begin(); kp != Pfit.end(); kp++) {
-      Vch += (*kp)->charge();
-      debug() << m_SVtype <<" particle p=" 
-              << (*kp)->pt()/Gaudi::Units::GeV << endreq;
-    }
-    debug() << "  Vertex charge: " << Vch << endreq;
-  }
-  if(!vv.empty()) { 
-    m_SVch= (int) Vch;
-    m_SVx = Vfit.position().x()/Gaudi::Units::mm;
-    m_SVy = Vfit.position().y()/Gaudi::Units::mm;
-    m_SVz = Vfit.position().z()/Gaudi::Units::mm;
-    m_Schi= Vfit.chi2()/Vfit.nDoF();
-  } else { m_SVch=0; m_SVx=0; m_SVy=0; m_SVz=0; m_Schi=0; }
-
   ///------------------------------------------------------- Fill Tagger info
   m_N = 0;
   debug() << "-------- Tagging Candidates: " << vtags.size() <<endreq;
@@ -618,13 +643,9 @@ StatusCode BTaggingAnalysis::execute() {
     if(!IPerr) continue;                                      //preselection cut
     double IPsig = fabs(IP/IPerr);
     //calculate signed IP wrt SecondaryVertex
-    double IPT = -1000, ip, iperr;
-    if(Pfit.size()){
-      m_util->calcIP(axp, &Vfit, ip, iperr);
-      if(iperr) IPT = ip/iperr;
-    }
     //calculate min IP wrt all pileup vtxs 
     double IPPU = 10000;
+    double ip, iperr;
     m_util->calcIP( axp, PileUpVtx, ip, iperr );
     if(iperr) IPPU=ip/iperr;
 
@@ -637,7 +658,7 @@ StatusCode BTaggingAnalysis::execute() {
     m_ch[m_N]    = (int) axp->charge();
     m_IP[m_N]    = IP;
     m_IPerr[m_N] = IPerr;
-    m_IPT[m_N]   = IPT;
+    //    m_IPT[m_N]   = IPT;
     m_IPPU[m_N]  = IPPU;
     m_lcs[m_N]   = lcs;
     m_distphi[m_N]= distphi;
@@ -685,9 +706,9 @@ StatusCode BTaggingAnalysis::execute() {
 
     // secondary vertex flag
     m_vFlag[m_N] = 0;
-    Particle::ConstVector::iterator kp;
-    for(kp = Pfit.begin(); kp != Pfit.end(); kp++) {
-      if( axp->pt() == (*kp)->pt() ) {
+    ProtoParticle::ConstVector::iterator prkp;
+    for(prkp = partsInSV.begin(); prkp != partsInSV.end(); prkp++) {
+      if( axp->proto() == (*prkp) ) {
         m_vFlag[m_N] = 1; 
         break;
       }
@@ -696,7 +717,7 @@ StatusCode BTaggingAnalysis::execute() {
     //-------------------------------------------------------
     debug() << " --- trtyp="<<trtyp<<" ID="<<ID<<" P="<<P<<" Pt="<<Pt <<endreq;
     debug() << " deta="<<deta << " dphi="<<dphi << " dQ="<<dQ <<endreq;
-    debug() << " IPsig="<<IPsig << " IPPU="<<IPPU << " IPT="<<IPT<<endreq;
+    debug() << " IPsig="<<IPsig << " IPPU="<<IPPU <<endreq;
     debug() << " sigPhi="<<m_distphi[m_N]<< " lcs " << lcs << endreq;
     debug() << " DLLe,m,k "<<m_PIDe[m_N]<<" "<<m_PIDm[m_N]<<" "<<m_PIDk[m_N]
             << " mNSH="<<muonNSH<< " vFlag="<<m_vFlag[m_N]<<endreq;
@@ -746,80 +767,11 @@ StatusCode BTaggingAnalysis::execute() {
       if(m_xFlag[m_N]) debug()<<" comes_from_excitedB="<< m_xFlag[m_N] << endreq;
 
     }//if( mcp )
-    // info()<<m_N<< ".  ID="<< m_ID[m_N] <<"  MCID="<<m_MCID[m_M]<<endreq;
-    //info()<<m_N<< ")  ID="<< ID <<"  MCID="<<MCID<<endreq;
 
     //---------------
     if(m_N<199) m_N++;
   }
 
-  //-------------------- OFFICIAL TAG of the Event --------------------
-  bool foundb = false;
-  FlavourTags*  tags = new FlavourTags;
-  FlavourTag* theTag = new FlavourTag;
-  if (exist<FlavourTags>(m_TagLocation)){//there is already something in TES
-    tags = get<FlavourTags>(m_TagLocation);
-    if(tags->size()>1) 
-      info()<<"FlavourTag objects in TES:"<<tags->size()
-	    <<"  Search for the highest pT B.."<<endreq;
-    FlavourTags::const_iterator ti;
-    for( ti=tags->begin(); ti!=tags->end(); ti++ ) {
-      if((*ti)->taggedB() == AXBS) {
-	theTag = (*ti);
-	foundb = true;
-	debug()<<"Will use candidate with pT="<<AXBS->pt()<<endreq;
-      }
-    }
-    if(!foundb) warning()<<"B Signal mismatch! Redo tagging..."<<endreq;
-  } 
-
-  if(!foundb ){
-    StatusCode sc = flavourTagging()->tag( *theTag, AXBS );
-    if (!sc) {
-      err() <<"Tagging Tool returned error."<< endreq;
-      delete theTag;
-      return StatusCode::SUCCESS;
-    } 
-    if(!exist<FlavourTags>(m_TagLocation)){
-      tags->insert(theTag);
-      put(tags, m_TagLocation);
-      debug()<<"Inserted tags into "<<m_TagLocation<<endreq;
-    }
-  }
-
-  m_Tag    = theTag->decision();
-  m_omega  = theTag->omega();
-  m_TagCat = theTag->category();
-
-  m_TrueTag = 0;
-  if(BS) m_TrueTag = BS->particleID().pid()>0 ? 1 : -1; 
-  if(!m_UseMCTrueFlavour) m_TrueTag = AXBS->particleID().pid()>0 ? 1 : -1; 
-
-  std::vector<Tagger> taggers = theTag->taggers();
-  for(size_t i=0; i<taggers.size(); ++i) {
-    Tagger itagger = taggers.at(i);
-    if( itagger.decision() ) {
-      debug()<<"Tagger "<<itagger.type()
-             <<" decision= "<<itagger.decision()<<endreq;
-      m_TaggerType[m_T]     = itagger.type();
-      m_TaggerDecision[m_T] = itagger.decision();
-      m_TaggerOmega[m_T]    = itagger.omega();
-      m_TaggerUsedInSV[m_T] = 0;
-      Particle::ConstVector::iterator kp;
-      const ProtoParticle* iproto = itagger.taggerParts().at(0).proto();
-      for(kp = Pfit.begin(); kp != Pfit.end(); kp++) {
-        if( (*kp)->proto() == iproto ) m_TaggerUsedInSV[m_T]=1;
-      }
-      int ref=0;
-      m_TaggerRef[m_T] = -1;
-      for( kp = vtags.begin(); kp != vtags.end(); kp++ ) {
-        if( (*kp)->proto() == iproto ) m_TaggerRef[m_T] = ref;
-        ref++;
-      }
-      if(m_T<9) m_T++;
-    }      
-  }
-  
   ///----------------------------------------------------------------------
   if( !(nt->write()) ) err() << "Cannot fill tagging Ntuple" << endreq;
   else if(m_Tag) info() << "Wrote tagged event to Ntuple." << endreq;
