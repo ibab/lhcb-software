@@ -3,7 +3,7 @@ High level configuration tools for DaVinci
 At the moment this doesn't do anything. Waiting for re-structuring of
 configuratables.
 """
-__version__ = "$Id: Configuration.py,v 1.5 2008-11-06 14:25:48 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.6 2008-11-12 14:56:20 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -18,7 +18,8 @@ class DaVinciApp(LHCbConfigurableUser) :
         "DDDBtag"         : 'DC06-default', #
         "condDBtag"       : 'DC06-default',
         "useOracleCondDB" : False,
-        "Input"           : []
+        "Input"           : [],
+        "userAlgorithms"  : []
         }
 
     def defineEvents(self):
@@ -63,4 +64,6 @@ class DaVinciApp(LHCbConfigurableUser) :
         self.defineInput()
         self.defineDB()
         self.hepMCBackComp()
+        for alg in self.getProp("userAlgorithms"):
+            ApplicationMgr().TopAlg += [ alg ]
         LHCbApp().applyConf()
