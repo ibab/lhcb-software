@@ -3,6 +3,11 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+! 2008-11-12 - Marco Cattaneo
+ - Many changes to configurable, including changes to option names
+ - Add Boole-DC06.py
+ - Change default to 2008.
+
 ! 2008-11-10 - Marco Cattaneo
  - Change version to v17r0
  - Remove Boole.exe

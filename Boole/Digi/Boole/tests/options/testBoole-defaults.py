@@ -2,9 +2,9 @@
 from Boole.Configuration import *
 from Configurables import CondDBAccessSvc
 
-Boole().EvtMax       = 10
-Boole().writeL0ETC   = True   # Write also ETC of L0 selected events
-Boole().monitors    += ["SC"] # Add StatusCode check
+Boole().EvtMax   = 10
+Boole().Outputs  = ["DIGI","MDF","L0ETC"] # Test all output types
+Boole().monitors = ["SC","FPE"]           # Add StatusCode and FPE checks
 
 # Do not compare times....
 TimingAuditor().OutputLevel = WARNING 

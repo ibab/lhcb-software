@@ -3,6 +3,7 @@
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="args"><set>
     <text>$BOOLEROOT/tests/options/testBoole-defaults.py</text>
+    <text>$BOOLEOPTS/Boole-DC06.py</text>
     <text>$BOOLEOPTS/DC06-Files.py</text>
   </set></argument>
   <argument name="reference"><text>../refs/testBoole-DC06.ref</text></argument>

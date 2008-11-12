@@ -1,74 +1,80 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.21 2008-10-24 13:09:49 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.22 2008-11-12 17:20:47 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
-from Configurables import ( CondDBCnvSvc, MagneticFieldSvc,
-                            MCSTDepositCreator, MuonDigitToRawBuffer ) 
 import GaudiKernel.ProcessJobOptions
 
 class Boole(LHCbConfigurableUser):
     __slots__ = {
-        "EvtMax":          -1 # Maximum number of events to process
-       ,"skipEvents":   0     # events to skip
-       ,"skipSpill":    0     # spillover events to skip
-       ,"useSpillover": True  # set to False to disable spillover
-       ,"generateTAE":  False # set to True to simulate time alignment events
-       ,"writeRawMDF":  False # set to True to simulate Raw data.
-       ,"writeDigi":    True  # set to False to remove POOL .digi output
-       ,"writeL0ETC":   False # set to True to write ETC of L0 selected events
-       ,"writeL0Only":  False # set to True to write only L0 selected events
-       ,"extendedDigi": False # set to True to add MCHits to .digi output file
-       ,"expertHistos": False # set to True to write out expert histos
-       ,"mainOptions" : '$BOOLEOPTS/Boole.opts' # top level options to import
-       ,"noWarnings":   False # suppress all messages with MSG::WARNING or below 
-       ,"datasetName":  '00001820_00000001' # string used to build file names
-       ,"DDDBtag":      "DC06-default"    # geometry database tag
-       ,"condDBtag":    "DC06-default"    # conditions database tag
-       ,"useOracleCondDB": False  # if False, use SQLDDDB instead
-       ,"monitors": []        # list of monitors to execute
+        "EvtMax"         : -1
+       ,"SkipEvents"     : 0
+       ,"SkipSpill"      : 0
+       ,"useSpillover"   : False
+       ,"generateTAE"    : False
+       ,"Outputs"        : [ "DIGI" ]
+       ,"writeL0Only"    : False
+       ,"extendedDigi"   : False
+       ,"Histograms"     : "Default"
+       ,"mainOptions"    : '$BOOLEOPTS/Boole.opts'
+       ,"noWarnings"     : False
+       ,"DatasetName"    : ''
+       ,"DDDBtag"        : "2008-default"
+       ,"condDBtag"      : "2008-default"
+       ,"UseOracle"      : False
+       ,"monitors"       : []
         }
 
+    _propertyDocDct = { 
+        'EvtMax'       : """ Maximum number of events to process """
+       ,'SkipEvents'   : """ Number of events to skip """
+       ,'SkipSpill'    : """ Number of spillover events to skip """
+       ,'useSpillover' : """ Flag to enable spillover (default True) """
+       ,'generateTAE'  : """ Flag to simulate time alignment events (default False) """
+       ,'Outputs'      : """ List of outputs: ['MDF','DIGI','L0ETC'] (default 'DIGI') """
+       ,'writeDigi'    : """ Flag to enable POOL .digi output format (default True) """
+       ,'writeL0ETC'   : """ Flag to enable writing ETC of L0 selected events (default False) """
+       ,'writeL0Only'  : """ Flag to write only L0 selected events (default False) """
+       ,'extendedDigi' : """ Flag to add MCHits to .digi output file (default False) """
+       ,'Histograms'   : """ Type of histograms: ['None','Default','Expert'] """
+       ,'mainOptions'  : """ Top level options to import. Default: $BOOLEOPTS/Boole.opts """
+       ,'noWarnings'   : """ Flag to suppress all MSG::WARNING or below (default False) """ 
+       ,'DatasetName'  : """ String used to build output file names """
+       ,'DDDBtag'      : """ Tag to use for DDDB. Default 'DC06-default' """
+       ,'condDBtag'    : """ Tag to use for CondDB. Default 'DC06-default' """
+       ,'UseOracle'    : """ Flag to enable Oracle CondDB. Default False (use SQLDDDB) """
+       ,'monitors'     : """ List of monitors to execute """
+       }
+    
+    __used_configurables__ = [ LHCbApp ]
+
     def defineDB(self):
-        # Prefer Boole default over LHCbApp default if not set explicitly
-        self.setProp( "condDBtag", self.getProp("condDBtag") )
-        self.setProp( "DDDBtag", self.getProp("DDDBtag") )
         # Delegate handling to LHCbApp configurable
-        self.setOtherProps(LHCbApp(),["condDBtag","DDDBtag","useOracleCondDB"]) 
+        self.setOtherProps(LHCbApp(),["condDBtag","DDDBtag","UseOracle"])
+        LHCbApp().Simulation = True
 
         # Special options for DC06 data processing
         if LHCbApp().getProp("DDDBtag").find("DC06") != -1 :
+            from Configurables import (MCSTDepositCreator, MuonDigitToRawBuffer)
+
             ApplicationMgr().Dlls += [ "HepMCBack" ]
             MCSTDepositCreator("MCITDepositCreator").DepChargeTool = "SiDepositedCharge"
             MCSTDepositCreator("MCTTDepositCreator").DepChargeTool = "SiDepositedCharge"
+            MuonDigitToRawBuffer().VType = 1 # DC06 RawBank type
 
-        # Special options for 2008 data processing
-        if LHCbApp().getProp("DDDBtag").find("-2008") != -1 :
-            MuonDigitToRawBuffer().VType = 2 # New RawBank type
-          
     def defineEvents(self):
-        evtMax = self.getProp("EvtMax")
-        if hasattr(LHCbApp(),"EvtMax"):
-            print "# LHCbApp().EvtMax already defined, ignoring Boole().EvtMax"
-        else:
-            LHCbApp().EvtMax = evtMax
+        # Delegate handling to LHCbApp configurable
+        self.setOtherProps(LHCbApp(),["EvtMax","SkipEvents"])
 
-        skipEvents = self.getProp("skipEvents")
-        if skipEvents > 0 :
-            if hasattr(LHCbApp(),"skipEvents"):
-                print "# LHCbApp().skipEvents already defined, ignoring Boole().skipEvents"
-            else:
-                LHCbApp().skipEvents = skipEvents
-
-        skipSpill  = self.getProp("skipSpill")
+        skipSpill  = self.getProp("SkipSpill")
         if skipSpill  > 0 :
             if hasattr(EventSelector("SpilloverSelector"),"FirstEvent"):
-                print "# EventSelector('SpilloverSelector').FirstEvent already defined, ignoring Boole().skipSpill"
-            else:
-                EventSelector("SpilloverSelector").FirstEvent = skipSpill + 1
+                log.warning( "EventSelector('SpilloverSelector').FirstEvent and Boole().SkipSpill both defined, using Boole().SkipSpill")
+            EventSelector("SpilloverSelector").FirstEvent = skipSpill + 1
+
         # POOL Persistency
         importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
 
@@ -106,48 +112,73 @@ class Boole(LHCbConfigurableUser):
 
     def defineHistos(self):
         """
-        Save histograms. If expert, fill and save also the expert histograms
+        Define histograms to save according to Boole.Histograms option
         """
-        expertHistos = self.getProp("expertHistos")
-        if expertHistos: importOptions( "$BOOLEOPTS/ExpertCheck.opts" )
+        knownOptions = ["None","Default","Expert"]
+        histOpt = self.getProp("Histograms").capitalize()
+        if histOpt not in knownOptions:
+            raise RuntimeError("Unknown Histograms option '%s'"%histOpt)
 
-    def histosName(self):
-        histosName   = self.getProp("datasetName")
-        if ( self.evtMax() > 0 ): histosName += '-' + str(self.evtMax()) + 'ev'
-        generateTAE  = self.getProp("generateTAE")
-        if ( generateTAE )  : histosName += '-TAE'
-        expertHistos = self.getProp("expertHistos")
-        if expertHistos     : histosName += '-expert'
-        histosName += '-histos.root'
-        return histosName
+        if histOpt == "None":
+            ApplicationMgr().HistogramPersistency = "NONE"
+            return
+
+        if histOpt == "Expert":
+            importOptions( "$BOOLEOPTS/ExpertCheck.opts" )
+
+        # Use a default histogram file name if not already set
+        if not hasattr( HistogramPersistencySvc(), "OutputFile" ):
+            histosName   = self.getProp("DatasetName")
+            if (self.evtMax() > 0): histosName += '-' + str(self.evtMax()) + 'ev'
+            generateTAE  = self.getProp("generateTAE")
+            if ( generateTAE )  : histosName += '-TAE'
+            if histOpt == "Expert": histosName += '-expert'
+            histosName += '-histos.root'
+            HistogramPersistencySvc().OutputFile = histosName
     
     def defineOutput(self):
         """
         Set up output stream according to output data type
         """
+
+        knownOptions = ["MDF","DIGI","L0ETC"]
+        outputs = []
+        for option in self.getProp("Outputs"):
+            if option.upper() not in knownOptions:
+                raise RuntimeError("Unknown Boole().Outputs value '%s'"%option)
+            outputs.append( option.upper() )
+
         l0yes = self.getProp( "writeL0Only" )
 
-        digi = self.getProp( "writeDigi" )
-        if digi:
+        if "DIGI" in outputs:
             # Objects to be written to output file
-            OutputStream("DigiWriter").Preload = False
             importOptions("$STDOPTS/DigiContent.opts")
             extended = self.getProp("extendedDigi")
             if ( extended ): importOptions( "$STDOPTS/ExtendedDigi.opts" )
+
             MyWriter = OutputStream( "DigiWriter" )
+            MyWriter.Preload = False
+            if not hasattr( MyWriter, "Output" ):
+                MyWriter.Output  = "DATAFILE='PFN:" + self.outputName() + ".digi' TYP='POOL_ROOTTREE' OPT='REC'"
             if l0yes : MyWriter.RequireAlgs.append( "L0Filter" )
             ApplicationMgr().OutStream.append( "DigiWriter" )
 
-        mdf   = self.getProp( "writeRawMDF" )
-        # mdf case must be after digi case, because RawWriter.opts adds EventNodeKiller to OutStream list
-        if mdf:
+        if "L0ETC" in outputs:
+            ApplicationMgr().OutStream.append( "Sequencer/SeqWriteTag" )
+            MyWriter = TagCollectionStream( "WR" )
+            if not hasattr( MyWriter, "Output" ):
+                MyWriter.Output = "Collection='EVTTAGS/TagCreator/1' ADDRESS='/Event' DATAFILE='" + self.getProp("DatasetName") + "-L0ETC.root' TYP='POOL_ROOTTREE' OPT='RECREATE'"
+            else: print MyWriter.getProp("Output")
+
+        if "MDF" in outputs:
+            # must be after digi and etc cases, because RawWriter.opts adds EventNodeKiller to OutStream list
             importOptions( "$BOOLEOPTS/RawWriter.opts" )
             MyWriter = OutputStream( "RawWriter" )
+            if not hasattr( MyWriter, "Output" ):
+                MyWriter.Output = "DATAFILE='PFN:" + self.outputName() + ".mdf' SVC='LHCb::RawDataCnvSvc' OPT='REC'"
             if l0yes : MyWriter.RequireAlgs.append( "L0Filter" )
             # ApplicationMgr().OutStream.append( "RawWriter" ) # Already in RawWriter.opts
 
-        l0etc = self.getProp( "writeL0ETC" )
-        if l0etc : ApplicationMgr().OutStream.append( "Sequencer/SeqWriteTag" )
         nowarn = self.getProp( "noWarnings" )
         if nowarn: importOptions( "$BOOLEOPTS/SuppressWarnings.opts" )
 
@@ -155,7 +186,7 @@ class Boole(LHCbConfigurableUser):
         """
         Build a name for the output file, based in input options
         """
-        outputName = self.getProp("datasetName")
+        outputName = self.getProp("DatasetName")
         if ( self.evtMax() > 0 ): outputName += '-' + str(self.evtMax()) + 'ev'
         generateTAE  = self.getProp("generateTAE")
         if ( generateTAE )  : outputName += '-TAE'
@@ -166,12 +197,10 @@ class Boole(LHCbConfigurableUser):
         return outputName
 
     def evtMax(self):
-        if hasattr(ApplicationMgr(),"EvtMax"):
-            return getattr(ApplicationMgr(),"EvtMax")
-        else:
-            return ApplicationMgr().getDefaultProperties()["EvtMax"]
+        return LHCbApp().evtMax()
 
-    def applyConf(self):
+    def __apply_configuration__(self):
+        log.info( self )
         GaudiKernel.ProcessJobOptions.PrintOff()
         importOptions( self.getProp( "mainOptions" ) )
         
@@ -186,7 +215,3 @@ class Boole(LHCbConfigurableUser):
         self.defineHistos()
         self.defineOutput()
         self.defineMonitors()
-        LHCbApp().applyConf()
-        # Use SIMCOND if not DC06
-        if LHCbApp().getProp("condDBtag").find("DC06") == -1:
-            CondDBCnvSvc( CondDBReader = allConfigurables["SimulationCondDBReader"] )

@@ -7,5 +7,4 @@
     <text>$BOOLEOPTS/2008-Files.py</text>
   </set></argument>
   <argument name="reference"><text>../refs/testBoole-2008.ref</text></argument>
-  <argument name="unsupported_platforms"><set><text>slc4_ia32_gcc34_dbg</text></set></argument>
 </extension>

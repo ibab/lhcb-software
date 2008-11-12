@@ -19,17 +19,19 @@ EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/g/gcorti/Gau
 
 #-- Spillover events not used in 2008 configuration
 
-# Set the property used to build other file names
-Boole().setProp( "datasetName", datasetName )
 
-#-- Save the monitoring histograms
-HistogramPersistencySvc().OutputFile = Boole().histosName()
+# Default output files names are set up using value Boole().DatasetName property
+Boole().DatasetName = datasetName
+# Redefine defaults by uncommenting one or more of options below 
 
-#-- Possible output streams. Enabled by setting the corresponding Boole() property
-outputName = Boole().outputName()
+# Monitoring histograms
+#HistogramPersistencySvc().OutputFile = "SomeFile.root"
+
 # writeRawMDF = true:  Simulated raw data, in MDF format, without MC truth. 
-OutputStream("RawWriter").Output = "DATAFILE='PFN:" + outputName + ".mdf' SVC='LHCb::RawDataCnvSvc' OPT='REC'"
-# writeDigi = true: Standard .digi in POOL format. If extendedDigi = true includes also MCHits 
-OutputStream("DigiWriter").Output = "DATAFILE='PFN:" + outputName + ".digi' TYP='POOL_ROOTTREE' OPT='REC'"
+#OutputStream("RawWriter").Output = "DATAFILE='PFN:SomeFile.mdf' SVC='LHCb::RawDataCnvSvc' OPT='REC'"
+
+# writeRawMDF = false: Standard .digi in POOL format. If extendedDigi = true includes also MCHits 
+#OutputStream("DigiWriter").Output = "DATAFILE='PFN:SomeFile.digi' TYP='POOL_ROOTTREE' OPT='REC'"
+
 # write L0ETC = true: ETC with L0 result
-TagCollectionStream( "WR" ).Output = "Collection='EVTTAGS/TagCreator/1' ADDRESS='/Event' DATAFILE='" + datasetName + "-L0ETC.root' TYP='POOL_ROOTTREE' OPT='RECREATE'"
+#TagCollectionStream( "WR" ).Output = "Collection='EVTTAGS/TagCreator/1' ADDRESS='/Event' DATAFILE='SomeETC.root' TYP='POOL_ROOTTREE' OPT='RECREATE'"
