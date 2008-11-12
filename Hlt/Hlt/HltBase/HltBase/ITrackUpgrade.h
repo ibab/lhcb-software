@@ -1,4 +1,4 @@
-// $Id: ITrackUpgrade.h,v 1.5 2008-07-09 08:28:35 hernando Exp $
+// $Id: ITrackUpgrade.h,v 1.6 2008-11-12 14:24:08 ibelyaev Exp $
 #ifndef HLTBASE_ITRACKUPGRADE_H 
 #define HLTBASE_ITRACKUPGRADE_H 1
 
@@ -18,7 +18,7 @@ namespace LHCb {
 };
 
 
-static const InterfaceID IID_ITrackUpgrade ( "ITrackUpgrade", 1, 0 );
+static const InterfaceID IID_ITrackUpgrade ( "ITrackUpgrade" , 1 , 1 );
 
 /** @class ITrackUpgrade ITrackUpgrade.h HltBase/ITrackUpgrade.h
  *
@@ -42,8 +42,9 @@ public:
   virtual StatusCode setReco(const std::string& name) = 0;
   
   /// upgrade a list of input tracks
-  virtual StatusCode upgrade( std::vector<LHCb::Track*>& itracks,
-                              std::vector<LHCb::Track*>& otracks) = 0;
+  virtual StatusCode upgrade
+  ( const std::vector<LHCb::Track*>& itracks ,
+    std::vector<LHCb::Track*>&       otracks ) = 0;
   
   /// upgrade an input track
   virtual StatusCode upgrade( LHCb::Track&, 

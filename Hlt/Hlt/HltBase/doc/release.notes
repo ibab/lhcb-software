@@ -5,6 +5,13 @@
 !----------------------------------------------------------------------------
 
 ! 2008-11-12 - Vanya BELYAEV
+ - HltBase/ITrackUpgrade.h
+
+    1) add "const"-qualifier for input tracks in "upgrade" method 
+    2) increment the minor version of InterfaceID 
+ 
+
+! 2008-11-12 - Vanya BELYAEV
 
  - minor modifications for stringKey and Hlt::Selection 
 
