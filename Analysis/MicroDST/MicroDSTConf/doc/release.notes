@@ -1,0 +1,12 @@
+!$Id: release.notes,v 1.1.1.1 2008-11-12 12:33:48 jpalac Exp $
+!-----------------------------------------------------------------------------
+! Package     : MicroDST/MicroDSTConf
+! Responsible : Juan PALACIOS
+! Purpose     : Configuration and options files for MicroDST making.
+!-----------------------------------------------------------------------------
+
+! 2008-11-12 - Juan PALACIOS
+ - First import with 
+  . python/MicroDST/MicroDSTAlgorithm taken from DaVinci/python/DaVinci
+  . options/MicroDSTStream.py taken from DaVinci/options
+
