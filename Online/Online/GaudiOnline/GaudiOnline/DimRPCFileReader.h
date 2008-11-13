@@ -1,4 +1,4 @@
-// $Id: DimRPCFileReader.h,v 1.7 2008-10-21 13:53:50 frankb Exp $
+// $Id: DimRPCFileReader.h,v 1.8 2008-11-13 09:25:23 frankb Exp $
 #ifndef GAUDIONLINE_DIMRPCFILEREADER_H
 #define GAUDIONLINE_DIMRPCFILEREADER_H
 
@@ -83,8 +83,10 @@ namespace LHCb  {
     virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvInterface);
     /// IService implementation: initialize the service
     virtual StatusCode initialize();
+    virtual StatusCode sysStart();
     /// IService implementation: finalize the service
     virtual StatusCode finalize();
+    virtual StatusCode sysStop();
     /// Incident handler implemenentation: Inform that a new incident has occured
     void handle(const Incident& inc);
     /// IRunable implementation : Run the class implementation

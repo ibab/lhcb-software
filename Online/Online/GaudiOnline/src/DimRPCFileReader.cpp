@@ -1,4 +1,4 @@
-// $Id: DimRPCFileReader.cpp,v 1.13 2008-10-21 16:15:16 frankb Exp $
+// $Id: DimRPCFileReader.cpp,v 1.14 2008-11-13 09:25:23 frankb Exp $
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IAppMgrUI.h"
@@ -33,6 +33,7 @@ DimRPCFileReader::DimRPCFileReader(const std::string& nam, ISvcLocator* svcLoc)
   m_receiveEvts(false), m_evtCount(0), m_rpc(0,0)
 {
   ::lib_rtl_create_lock(0,&m_lock);
+  m_reply = "ds6:statusi1es6:paramsdes7:commands4:idlee";
 }
 
 /// Standard Destructor
@@ -52,36 +53,54 @@ StatusCode DimRPCFileReader::queryInterface(const InterfaceID& riid, void** ppIf
 
 /// IService implementation: initialize the service
 StatusCode DimRPCFileReader::initialize()   {
-  StatusCode sc = OnlineService::initialize();
-
-  if ( !sc.isSuccess() )     {
+  StatusCode sc;
+  if ( !(sc=OnlineService::initialize()).isSuccess() )
     return error("Failed to initialize service base class.");
-  }
-  if ( !(sc=service("MEPManager/MEPManager",m_mepMgr)).isSuccess() )  {
+  else if ( !(sc=service("MEPManager/MEPManager",m_mepMgr)).isSuccess() )
     return error("Failed to access MEP manager service.");
-  }
-  if( !(sc=service("EventDataSvc",m_dataSvc,true)).isSuccess() )  {
+  else if( !(sc=service("EventDataSvc",m_dataSvc,true)).isSuccess() )
     return error("Error retrieving EventDataSvc interface IDataProviderSvc.");
-  }
-  if( !(sc=service("EventSelector",m_evtSelector,true)).isSuccess() )  {
+  else if( !(sc=service("EventSelector",m_evtSelector,true)).isSuccess() )
     return error("Error retrieving EventSelector interface IEvtSelector.");
-  }
-  if( !(sc=service("EventLoopMgr",m_evtLoopMgr,true)).isSuccess() )  {
+  else if( !(sc=service("EventLoopMgr",m_evtLoopMgr,true)).isSuccess() )
     return error("Error retrieving EventLoopManager interface IEvtProcessor.");
-  }
+
   incidentSvc()->addListener(this,"DAQ_CANCEL");
   declareInfo("EvtCount",m_evtCount=0,"Number of events processed");
 
   m_command = new Command();
   // m_reply = "ds6:statusi1es6:paramsdes7:commands4:idlee";
-  
+
   // Init the extra Services
-  std::string svcName=RTL::processName()+"/RpcOut";
-  std::string cmdName=RTL::processName()+"/RpcIn";
-  m_rpc.first  = ::dis_add_service((char*) svcName.c_str(),(char*)"C",0,0,publishEvents,(long) this);
-  m_rpc.second = ::dis_add_cmnd((char*) cmdName.c_str(),(char*)"C",cmndCallback,(long) this);
+  std::string svcName=RTL::processName()+"/RpcFileDBOut";
+  std::string cmdName=RTL::processName()+"/RpcFileDBIn";
+  m_rpc.first  = ::dis_add_service((char*)svcName.c_str(),(char*)"C",0,0,publishEvents,(long)this);
+  m_rpc.second = ::dis_add_cmnd((char*)cmdName.c_str(),(char*)"C",cmndCallback,(long)this);
   ::lib_rtl_lock(m_lock);
   return sc;
+}
+
+StatusCode DimRPCFileReader::sysStart()   {
+  std::string svcName=RTL::processName()+"/RpcFileDBOut";
+  std::string cmdName=RTL::processName()+"/RpcFileDBIn";
+  if ( 0 == m_rpc.first )
+    m_rpc.first  = ::dis_add_service((char*)svcName.c_str(),(char*)"C",0,0,publishEvents,(long)this);
+  if ( 0 == m_rpc.second )
+    m_rpc.second = ::dis_add_cmnd((char*)cmdName.c_str(),(char*)"C",cmndCallback,(long)this);
+  return StatusCode::SUCCESS;
+}
+
+/// IService implementation: finalize the service
+StatusCode DimRPCFileReader::sysStop()     {
+  if ( m_rpc.first ) {
+    ::dis_remove_service(m_rpc.first);
+    m_rpc.first = 0;
+  }
+  if ( m_rpc.second ) {
+    ::dis_remove_service(m_rpc.second);
+    m_rpc.second = 0;
+  }
+  return StatusCode::SUCCESS;
 }
 
 /// IService implementation: finalize the service
@@ -105,8 +124,9 @@ void DimRPCFileReader::publishEvents(void* tag, void** buf, int* size, int* firs
   DimRPCFileReader* self=*(DimRPCFileReader**) tag;
   std::string result=self->m_reply;
   if (*first) {
-    result="ds6:statusi1es6:paramsdes7:commands4:idlee";
+    //result="ds6:statusi1es6:paramsdes7:commands4:idlee";
   }
+  self->info("Publishing work information:%s",result.c_str());
   self->info(result);
   *size = result.length()+1;
   *buf = (void*)result.c_str();
@@ -114,24 +134,33 @@ void DimRPCFileReader::publishEvents(void* tag, void** buf, int* size, int* firs
 }
 
 void DimRPCFileReader::handleCommand(const char* address, int /* size */){
-  time(&m_timerStartPrep);
+  ::time(&m_timerStartPrep);
   std::string in = address;
-  int sc=m_command->decodeCommand(in);
-  if (!sc){
+  int sc = m_command->decodeCommand(in);
+  if (!sc) {
     info("Error decoding "+in);
     return;
   }
   char infostring[200];
-  sprintf(infostring,"%s command: parameters: Filename: %s FID: %i", (m_command->data).name.c_str(), (m_command->data).file.c_str(), (m_command->data).fileID);
+  const Command::Data& c = m_command->data;
+  ::sprintf(infostring,"%s command: parameters: Filename: %s FID: %i", 
+	    c.name.c_str(), c.file.c_str(), c.fileID);
   info(infostring);
   SmartIF<IProperty> prp(m_evtSelector);
   if ( prp ) {
-    prp->setProperty("Input","[ \"DATA='file://"+m_command->data.file+"' SVC='LHCb::MDFSelector'\" ]");
-    prp->setProperty("PrintFreq","1");
     time(&m_timerStopPrep);
-    time(&m_timerStartProc);    
-    m_evtSelector->reinitialize();
+    time(&m_timerStartProc);
+    Service* es = dynamic_cast<Service*>(m_evtSelector);
+    es->sysStop();
+    es->sysFinalize();
+    //m_evtLoopMgr->stop();
+    es->sysInitialize();
+    prp->setProperty("Input","FILE=file://"+m_command->data.file);
+    //prp->setProperty("Input","[\"DATA='file://"+m_command->data.file+"' SVC='LHCb::MDFSelector'\"]");
+    //prp->setProperty("PrintFreq","500");
+    es->sysStart();
     m_evtLoopMgr->reinitialize();
+    //m_evtLoopMgr->start();
     m_fileID=m_command->data.fileID;
     ::lib_rtl_unlock(m_lock);
     return;
@@ -184,8 +213,8 @@ StatusCode DimRPCFileReader::run()   {
       ::dis_update_service(m_rpc.first);      
       m_reply = "ds6:statusi1es6:paramsdes7:commands4:idlee";
       m_evtCount = 0;
-      std::cout << "Prep took " << difftime (m_timerStopPrep,m_timerStartPrep) << " seconds" << std::endl;
-      std::cout << "Proc took " << difftime (m_timerStopProc,m_timerStartProc) << " seconds" << std::endl;
+      info("Preparation took %5.2f seconds",difftime(m_timerStopPrep,m_timerStartPrep));
+      info("Processing  took %5.2f seconds",difftime(m_timerStopProc,m_timerStartProc));
       ::dis_update_service(m_rpc.first);
     }
     return StatusCode::SUCCESS;
