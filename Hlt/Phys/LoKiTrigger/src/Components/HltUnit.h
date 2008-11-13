@@ -1,4 +1,4 @@
-// $Id: HltUnit.h,v 1.1 2008-11-10 17:31:53 ibelyaev Exp $
+// $Id: HltUnit.h,v 1.2 2008-11-13 13:14:42 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_HLTUNIT_H 
 #define LOKI_HLTUNIT_H 1
@@ -13,6 +13,7 @@
 // HltBase 
 // ============================================================================
 #include "HltBase/IHltDataSvc.h"
+#include "Kernel/IANNSvc.h"
 // ============================================================================
 // LoKi 
 // ============================================================================
@@ -83,8 +84,16 @@ namespace LoKi
     /// get access to Hlt data service 
     inline IHltDataSvc* hltSvc() const 
     {
-      if ( 0 == m_hltSvc ) { m_hltSvc = svc<IHltDataSvc>( "HtlDataSvc" ) ; }
+      if ( 0 == m_hltSvc ) 
+      { m_hltSvc = svc<IHltDataSvc>( "HtlDataSvc" , true ) ; }
       return m_hltSvc ;
+    }
+    /// get access to Hlt data service 
+    inline IANNSvc* annSvc() const 
+    {
+      if ( 0 == m_annSvc ) 
+      { m_annSvc = svc<IANNSvc>( "HtlANNSvc" , true ) ; }
+      return m_annSvc ;
     }
     // ========================================================================
     /// monitor the selections? 
@@ -122,6 +131,9 @@ namespace LoKi
     // ========================================================================
   private:
     // ========================================================================
+    /// ANN-service 
+    mutable IANNSvc*     m_annSvc  ;                             // ANN-service 
+    // ========================================================================
     /// the pointer to HLT data service 
     mutable IHltDataSvc* m_hltSvc  ;         // the pointer to HLT data service 
     /// the flag to switch on-of monitoring 
@@ -130,11 +142,12 @@ namespace LoKi
   private:
     // ========================================================================
     /// container of keys 
-    typedef GaudiUtils::VectorMap<stringKey,const Hlt::Selection*> Map;
+    typedef GaudiUtils::VectorMap<stringKey,      Hlt::Selection*>  Map;
+    typedef GaudiUtils::VectorMap<stringKey,const Hlt::Selection*> CMap;
     /// keys for all selections 
-    mutable Map  m_all ;
+    mutable CMap  m_all ;
     /// keys for all "output" selections 
-    mutable Map  m_out ;
+    mutable  Map  m_out ;
     /// the functor itself
     LoKi::Types::FCut    m_cut ;                        // the functor itself
     // ======================================================================== 

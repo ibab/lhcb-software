@@ -1,4 +1,4 @@
-// $Id: HltUnit.cpp,v 1.1 2008-11-10 17:31:53 ibelyaev Exp $
+// $Id: HltUnit.cpp,v 1.2 2008-11-13 13:14:42 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -73,7 +73,7 @@ StatusCode LoKi::HltUnit::registerSelection ( Hlt::Selection* selection )
   { return Error( "Unable to register selection " + selection->id().str() ) ; }
   //
   // register as "output" selection 
-  if ( monitor() ) { m_out.insert ( selection->id () , selection ) ; }
+  m_out.insert ( selection->id () , selection ) ; 
   //
   return StatusCode::SUCCESS ;
 }
@@ -128,6 +128,11 @@ StatusCode LoKi::HltUnit::queryInterface
     IHltDataSvc* hlt = hltSvc() ;
     return hlt -> queryInterface ( iid , ppvi ) ;                  // RETUTRN
   }
+  else if ( IANNSvc::interfaceID() == iid ) 
+  {
+    IANNSvc* ann = annSvc() ;
+    return ann -> queryInterface ( iid , ppvi ) ;                  // RETURN
+  }
   else if ( LoKi::ILoKiSvc::interfaceID() == iid ) 
   {
     LoKi::ILoKiSvc* loki = svc<LoKi::ILoKiSvc>( "LoKiSvc" , true ) ;
@@ -148,18 +153,19 @@ StatusCode LoKi::HltUnit::execute ()
     Assert ( sc.isSuccess() , "Unable to decode the functor!" ) ;
   } 
   
+  // MANDATORY: clear all "out" seelctions
+  for ( Map::iterator iout = m_out.begin() ; m_out.end() != iout ; ++iout ) 
+  { iout->second->clean() ; }
+  
+  
+  // OPTIONAL: Some decorative monitoring 
   typedef std::map<stringKey,size_t> Sizes  ;
   Sizes map ;
-  
   // get the status of all selections 
   if ( monitor() ) 
   {
-    for ( Map::const_iterator ikey = m_all.begin() ; 
-          m_all.end() != ikey ; ++ikey ) 
-    {
-      const Hlt::Selection* s = ikey->second ;
-      map[ ikey->first ] = s->ncandidates() ; 
-    }  
+    for ( CMap::const_iterator ikey = m_all.begin() ; m_all.end() != ikey ; ++ikey ) 
+    { map[ ikey->first ] = ikey->second->size() ; }  
   }
   // use the functor 
   const bool result = m_cut () ;
@@ -170,21 +176,26 @@ StatusCode LoKi::HltUnit::execute ()
   // set the filter:
   setFilterPassed ( result ) ;
   //
-  // monitoring
-  if ( monitor() ) 
+  
+  /// Monitor output selections  (*ALWAYS*)
+  for ( Map::const_iterator iout = m_out.begin() ; m_out.end() != iout ; ++iout ) 
+  { counter ( "#" + iout->first ) += iout->second->size() ; }
+  
+  // DECORATION? monitoring
+  if ( monitor() ) // the output selections are *ALWAYS* monitored   
   {
     for ( Sizes::const_iterator ikey = map.begin() ; map.end() != ikey ; ++ikey )
     {
       // get the selection 
       const Hlt::Selection* s = m_all [ ikey->first ] ;
       // count the changes in the number of candidates  
-      counter ( "delta " + ikey->first.str() ) 
-        += ( s->ncandidates() - ikey->second ) ;
+      if ( m_out.end() == m_out.find ( ikey->first ) ) 
+      { counter ( "delta " + ikey->first ) += ( s->size() - ikey->second ) ; }
+      // ======================================================================
     } 
   }
   //
   return StatusCode::SUCCESS ;
-  
 }
 // ============================================================================
 /// the factory (needed for instantiations):

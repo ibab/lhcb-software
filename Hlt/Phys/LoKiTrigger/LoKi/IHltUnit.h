@@ -1,4 +1,4 @@
-// $Id: IHltUnit.h,v 1.1 2008-11-10 17:31:53 ibelyaev Exp $
+// $Id: IHltUnit.h,v 1.2 2008-11-13 13:14:41 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_IHLTUNIT_H 
 #define LOKI_IHLTUNIT_H 1
@@ -35,7 +35,7 @@ namespace LoKi
      *  @return pointer to the registered seelction (or NULL)
      */
     template <class T>
-    Hlt::Selection* declareSelection ( const stringKey& key ) 
+    Hlt::TSelection<T>* declareSelection ( const stringKey& key ) 
     {
       Hlt::TSelection<T>* selection = new Hlt::TSelection<T>( key ) ;
       StatusCode sc = this->registerSelection ( selection ) ;
