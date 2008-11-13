@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: Configuration.py,v 1.13 2008-11-12 17:23:09 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.14 2008-11-13 07:29:08 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from os import environ
@@ -76,11 +76,16 @@ class LHCbApp(LHCbConfigurableUser):
         self.setOtherProps(ApplicationMgr(),["EvtMax"])
 
     def evtMax(self):
-        return self.getProp("EvtMax")
-#        return ApplicationMgr().getProp("EvtMax")
+        if hasattr(ApplicationMgr(),"EvtMax") and not hasattr(self,"EvtMax"):
+            return ApplicationMgr().getProp("EvtMax")
+        else:
+            return self.getProp("EvtMax")
 
     def skipEvents(self):
-        return EventSelector().getProp("FirstEvent") - 1
+        if hasattr(EventSelector(),"FirstEvent") and not hasattr(self,"SkipEvents"):
+            return EventSelector().getProp("FirstEvent") - 1
+        else:
+            return self.getProp("SkipEvents")
 
     def defineMonitors(self):
         for prop in self.getProp("monitors"):
