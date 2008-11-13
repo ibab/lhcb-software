@@ -1,10 +1,10 @@
 project MOORE
 
-use HLT		HLT_v4r2
-use PHYS        PHYS_v7r1
-use LBCOM	LBCOM_v6r22
-use REC		REC_v5r11
-use ONLINE      ONLINE_v4r15
+use HLT		HLT_v4r3
+use PHYS    PHYS_v7r2
+use LBCOM	LBCOM_v6r23
+use REC		REC_v5r12
+use ONLINE  ONLINE_v4r16
 
 build_strategy	with_installarea
 setup_strategy	root
