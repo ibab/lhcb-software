@@ -28,3 +28,7 @@ export BIGTERM='xterm  -ls -132 -geometry 132x55 -title '
 export WIDETERM='xterm  -ls -132 -geometry 160x50 -title '
 #export MINITERM=echo
 #
+start_py_task()
+{
+  $MINITERM ${1}@${HOST}   -e "export UTGID=${NODENAME}/${1};   exec -a \${UTGID} $Class1_task -opt=command=\"${2}\""&
+}

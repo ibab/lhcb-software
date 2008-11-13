@@ -301,8 +301,9 @@ def mdf2mbmApp(partID, partName, buffers, input, partitionBuffers=True, routing=
 def dimFileReaderApp(partID, partName, buffer, partitionBuffers=True, routing=0x1):
   mepMgr               = mepManager(partID,partName,[buffer],partitionBuffers=partitionBuffers)
   runable              = dimFileReaderRunable()
-  evtSel               = CFG.EventSelector()
-  evtSel.PrintFreq     = 1
+  #evtSel               = CFG.EventSelector()
+  evtSel               = Configs.LHCb__MDFSelector('EventSelector')
+  evtSel.PrintFreq     = 1000
   evtdata              = evtDataSvc()  
   evtPers              = rawPersistencySvc()
   algs                 = [evtMerger(buffer=buffer,name='Writer',location='DAQ/RawEvent',routing=routing)]

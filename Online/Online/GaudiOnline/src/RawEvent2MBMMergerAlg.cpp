@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/RawEvent2MBMMergerAlg.cpp,v 1.3 2008-10-06 11:49:19 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/RawEvent2MBMMergerAlg.cpp,v 1.4 2008-11-13 09:25:48 frankb Exp $
 //  ====================================================================
 //  DecisionSetterAlg.cpp
 //  --------------------------------------------------------------------
@@ -57,8 +57,6 @@ namespace LHCb  {
 	return error("Failed to access MEPManager service.");
       }
       m_prod = m_mepMgr->createProducer(m_bufferName,RTL::processName());
-      //MEPID mepID = m_mepMgr->mepID();
-      //m_prod = new Producer(mepID->resBuffer,mepID->processName,mepID->partitionID);
       if ( 0 == m_prod ) {
 	return error("Failed to create event producer for buffer:"+m_bufferName);
       }
@@ -72,6 +70,7 @@ namespace LHCb  {
 
     /// Finalize
     virtual StatusCode finalize()     {    
+      if ( monitorSvc() ) monitorSvc()->undeclareAll(this);
       if ( m_mepMgr )  {
         m_mepMgr->release();
         m_mepMgr = 0;
@@ -82,7 +81,9 @@ namespace LHCb  {
       }
       return StatusCode::SUCCESS;
     }
-
+    virtual StatusCode sysReinitialize()   {
+      return StatusCode::SUCCESS;
+    }
     /// Issue error condition
     StatusCode error(const std::string& msg) const {
       MsgStream log(msgSvc(),name());
