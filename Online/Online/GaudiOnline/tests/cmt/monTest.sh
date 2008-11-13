@@ -15,6 +15,7 @@ sleep 6
 #  Monitors:
 #
 $BIGTERM MBMMon@${HOST}     -e "export UTGID=${NODENAME}/MBMMon;    exec -a \${UTGID} $gaudi_run libOnlineKernel.so mbm_mon"&
+start_py_task Monitor "import GaudiOnlineTests;GaudiOnlineTests.runBufferCons('Events',True,False)"
 #
 tail -n 3 ${0}
 # start_py_task Mdf2Mbm "import GaudiOnlineTests;GaudiOnlineTests.runMDF2MBMFile(['Events'],fname='root:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/32484/032484_0000081651.raw')"

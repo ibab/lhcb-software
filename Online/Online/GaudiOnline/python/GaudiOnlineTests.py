@@ -44,6 +44,9 @@ def runRecBuffer():
 def runDiskWR(buffer, partitionBuffers, decode, output):
   _run(diskWRApp(pid,pnam,buffer,partitionBuffers,decode,output))
 #------------------------------------------------------------------------------------------------
+def runBufferCons(buffer, partitionBuffers, decode):
+  _run(bufferCons(pid,pnam,buffer,partitionBuffers,decode))
+#------------------------------------------------------------------------------------------------
 def runNetCons(source,load=1,print_freq=0.0005):
   algs = [storeExplorer(load=load,freq=print_freq)]
   _run(netConsumerApp(pid,pnam,source,algs))

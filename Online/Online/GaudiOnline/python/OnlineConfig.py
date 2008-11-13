@@ -277,6 +277,15 @@ def defaultFilterApp(partID, partName, percent, print_freq):
   return _application('NONE',extsvc=[Configs.MonitorSvc(),mepMgr,evtSel],runable=runable,algs=algs)
 
 #------------------------------------------------------------------------------------------------
+def bufferCons(partID, partName, buffer, partitionBuffers, decode):
+  "Simple disk writer dumping events from file to disk."
+  mepMgr               = mepManager(partID,partName,[buffer],partitionBuffers=partitionBuffers)
+  evtSel               = mbmSelector(input=buffer,decode=decode,type='ALL')
+  evtPers              = rawPersistencySvc()
+  algs                 = [storeExplorer(load=1,freq=0.001)]
+  return _application('NONE',extsvc=[Configs.MonitorSvc(),mepMgr,evtSel],runable=evtRunable(mepMgr),algs=algs)
+
+#------------------------------------------------------------------------------------------------
 def diskWRApp(partID, partName, buffer, partitionBuffers, decode, output):
   "Simple disk writer dumping events from file to disk."
   mepMgr               = mepManager(partID,partName,[buffer],partitionBuffers=partitionBuffers)
