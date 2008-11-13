@@ -4,7 +4,7 @@
  * Implmentation file for Particle maker CombinedParticleMaker
  *
  * CVS Log :-
- * $Id: CombinedParticleMaker.cpp,v 1.29 2008-07-08 16:40:00 pkoppenb Exp $
+ * $Id: CombinedParticleMaker.cpp,v 1.30 2008-11-13 08:56:16 pkoppenb Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -62,7 +62,8 @@ CombinedParticleMaker::CombinedParticleMaker( const std::string& type,
   declareProperty( "KaonFilter",     m_kaProtoFilter = "ProtoParticleCALOFilter" );
   declareProperty( "ProtonFilter",   m_prProtoFilter = "ProtoParticleCALOFilter" );
   declareProperty( "AddBremPhoton",  m_addBremPhoton = true );
-  declareProperty( "ExclusiveSelection", m_exclusive = false );
+  declareProperty( "ExclusiveSelection", m_exclusive = false, 
+    "Make only on Particle per ProtoParticle. This is very dangerous. Do not use except for testing." );
   declareProperty( "MinPercentForPrint", m_minPercForPrint = 0.01 );
 
   // Test PID info consistency
@@ -99,8 +100,11 @@ StatusCode CombinedParticleMaker::initialize()
   m_brem = tool<IBremAdder>("BremAdder","BremAdder", this);
 
   if (msgLevel(MSG::DEBUG)) debug() << "Will produce : " << m_particleList << endmsg;
-  if ( m_exclusive ) info() << "Using exclusive selection policy" << endmsg;
-
+  if ( m_exclusive ) {
+    warning() << "Using exclusive selection policy. This is very dangerous. Avoid if you are unsure of wht you are doing." 
+              << endmsg;
+  }
+  
   // loop over selection and load ProtoParticle selectors
   m_protoMap.clear();
   for ( std::vector<std::string>::const_iterator iPart = m_particleList.begin();

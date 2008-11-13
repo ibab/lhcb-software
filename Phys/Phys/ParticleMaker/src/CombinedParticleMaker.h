@@ -5,7 +5,7 @@
  * Header file for Particle maker CombinedParticleMaker
  *
  * CVS Log :-
- * $Id: CombinedParticleMaker.h,v 1.15 2007-03-06 12:29:28 jonrob Exp $
+ * $Id: CombinedParticleMaker.h,v 1.16 2008-11-13 08:56:16 pkoppenb Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -108,7 +108,22 @@ private:
   std::string m_prProtoFilter; ///< The tool type to use for proton selection
   // Activate the BremStrahlung correction for electrons
   bool m_addBremPhoton;  
- /// Job option for exclusive selection of particle types
+  /// Job option for exclusive selection of particle types
+ /// PIDs are checked in some order and all tracks that
+ /// are compatible with being a muon are made a muon, then an electron,
+ /// proton, kaon and pion. What you get will depends on
+ /// this order, which is already a good enough reason not to want that.
+ /// If you do B->pipi and one pi decays to a muon, it will never be a pi
+ /// candidate. Even worse, if you or someone relaxes the mu ID cuts  
+ /// between two jobs or two DaVinci versions, then suddenly what used to be a nice
+ /// pion in one version of DV might now becomes a muon candidate. Your
+ /// efficiency decreases although nothing affecting pion or kaon ID  
+ /// changed.
+ /// That makes it very hard to estimate signal efficiencies as all
+ /// efficiencies depend on everything.
+ /// If you want to cut hard on PID, use PID cuts. If you don't want to use
+ /// the same track several times (which is a valid point for tagging),  
+ /// then use the Overlap Tool and re-weight the track accordingly if needed.
   bool m_exclusive;
 
   /// Map type that takes a particle type to a ProtoParticle filter
