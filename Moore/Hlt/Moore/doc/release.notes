@@ -6,6 +6,7 @@ Purpose     : LHCb HLT application
  - update DEFAULT.opts, eg. createDecReportsHack is no longer needed
  - remove obsolete makePath
  - update Moore.py to something that works out-of-the-box at CERN
+ - when creating TCK, preload every known L0 TCK
 
 ! 2008-10-21 - Gerhard Raven
  - properly generate runMooreOnline_EFF.sh and corresponding

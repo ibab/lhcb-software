@@ -1,7 +1,7 @@
 """
 High level configuration tools for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.31 2008-10-15 11:37:10 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.32 2008-11-13 14:29:39 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -9,6 +9,7 @@ from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
 from Configurables import ConfigFileAccessSvc, ConfigDBAccessSvc, HltConfigSvc, HltGenConfig
 from Configurables import EventClockSvc
+from Configurables import L0DUMultiConfigProvider
 from HltConf.Configuration import *
 
 import GaudiKernel.ProcessJobOptions
@@ -61,7 +62,6 @@ class Moore(LHCbConfigurableUser):
         AuditorSvc().Auditors.append( x.name() )
         x.Enable = True
 
-
     def applyConf(self):
         GaudiKernel.ProcessJobOptions.printing_level += 1
         importOptions('$STDOPTS/DstDicts.opts')
@@ -71,8 +71,9 @@ class Moore(LHCbConfigurableUser):
         if inputType != 'DST' : 
             EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
         importOptions('$STDOPTS/DecodeRawEvent.opts')
-        ApplicationMgr().ExtSvc.append(  "DataOnDemandSvc"   ); # needed for DecodeRawEvent...
-        ApplicationMgr().ExtSvc.append(  "LoKiSvc"   );         # needed for LoKiTrigger
+
+        # needed for DecodeRawEvent and LoKiTrigger
+        for i in [ 'ToolSvc' , 'AuditorSvc',  'DataOnDemandSvc' , 'LoKiSvc' ] : ApplicationMgr().ExtSvc.append( i ) 
 
         # forward some other settings... TODO: make a dictionary..
         # self.setOtherProp( LHCbApp(), 'useOracleCondDB' )
@@ -97,7 +98,6 @@ class Moore(LHCbConfigurableUser):
         # Print algorithm name with 40 characters
         MessageSvc().Format = '% F%40W%S%7W%R%T %0W%M'
         # Profiling
-        for i in [ 'ToolSvc' , 'AuditorSvc' ] : ApplicationMgr().ExtSvc.append( i ) 
         ApplicationMgr().AuditAlgorithms = 1
         AuditorSvc().Auditors.append( 'TimingAuditor/TIMER' )
         for i in self.getProp('enableAuditor') : self.addAuditor( i )
@@ -115,10 +115,12 @@ class Moore(LHCbConfigurableUser):
 
             
         if self.getProp("generateConfig") :
+            # make sure we load as many L0 TCKs as possible...
+            importOptions('$L0TCKROOT/options/L0DUConfig.opts')
+            L0DUMultiConfigProvider('L0DUConfig').Preload = True
             # TODO: add properties for ConfigTop and ConfigSvc...
-            
             gen = HltGenConfig( ConfigTop = [ i.rsplit('/')[-1] if type(i) is str else i.getName() for i in ApplicationMgr().TopAlg ]
-                              , ConfigSvc = [ 'ToolSvc','HltDataSvc','HltANNSvc' ]
+                              , ConfigSvc = [ 'ToolSvc','HltDataSvc','HltANNSvc','LumiANNSvc' ]
                               , ConfigAccessSvc = self.getConfigAccessSvc().getName()
                               , hltType = self.getProp('hltType')
                               , mooreRelease = self.getRelease()
