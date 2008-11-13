@@ -148,7 +148,7 @@ ConfigFileAccessSvc::writePropertyConfig(const PropertyConfig& config) {
    if (!fs::exists(fnam)) {
             fs::ofstream s( fnam );
             s << config;
-            info() << " created " << fnam.string() << " for " << config.name() << endmsg;
+            debug() << " created " << fnam.string() << " for " << config.name() << endmsg;
             return digest;
    } else {
             PropertyConfig x; 
