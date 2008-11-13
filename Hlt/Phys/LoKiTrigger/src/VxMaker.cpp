@@ -1,10 +1,14 @@
-// $Id: VxMaker.cpp,v 1.1 2008-11-13 13:14:42 ibelyaev Exp $
+// $Id: VxMaker.cpp,v 1.2 2008-11-13 22:11:03 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
 // STD & STL 
 // ============================================================================
 #include <memory>
+// ============================================================================
+// GaudiAlg
+// ============================================================================
+#include "GaudiAlg/GaudiAlgorithm.h"
 // ============================================================================
 // HltBase 
 // ============================================================================
@@ -14,6 +18,10 @@
 // ============================================================================
 #include "LoKi/Combiner.h"
 #include "LoKi/VxMaker.h"
+// ============================================================================
+// local 
+// ============================================================================
+#include "LTTools.h"
 // ============================================================================
 /** @file 
  *  Implementation file for class LoKi::Hlt1::VxMaker
@@ -26,97 +34,6 @@
 LoKi::Hlt1::VxMaker::VxMaker
 ( const LoKi::Hlt1::VxMaker::TrSource& tr1     , 
   const LoKi::Hlt1::VxMaker::TrSource& tr2     , 
-  const stringKey&                     key     ) 
-  : LoKi::BasicFunctors<LHCb::RecVertex*>::Source () 
-  , m_track1 ( tr1 ) 
-  , m_track2 ( tr2 ) 
-  , m_same   ( &tr1 == &tr2 ) 
-  , m_cut2tr ( LoKi::Constant<LoKi::TrackTypes::TrackPair,bool>( true ) ) 
-  , m_cut2tr_trivial ( true ) 
-  , m_cut4rv ( LoKi::Constant<LHCb::RecVertex,bool>( true ) ) 
-  , m_cut4rv_trivial ( true )
-  , m_sink   ( key )
-{}
-// ============================================================================
-// constructor from two track sources & key 
-// ============================================================================
-LoKi::Hlt1::VxMaker::VxMaker
-( const LoKi::Hlt1::VxMaker::TrSource& tr1     , 
-  const LoKi::Hlt1::VxMaker::TrSource& tr2     , 
-  const stringKey&                     key     ,
-  const LoKi::Types::RVCuts&           cuts4rv ) 
-  : LoKi::BasicFunctors<LHCb::RecVertex*>::Source () 
-  , m_track1 ( tr1 ) 
-  , m_track2 ( tr2 ) 
-  , m_same   ( &tr1 == &tr2 ) 
-  , m_cut2tr ( LoKi::Constant<LoKi::TrackTypes::TrackPair,bool>( true ) ) 
-  , m_cut2tr_trivial ( true  ) 
-  , m_cut4rv ( cuts4rv ) 
-  , m_cut4rv_trivial ( false )
-  , m_sink   ( key )
-{}
-// ============================================================================
-// constructor from two track sources & key 
-// ============================================================================
-LoKi::Hlt1::VxMaker::VxMaker
-( const LoKi::Hlt1::VxMaker::TrSource& tr1     , 
-  const LoKi::Hlt1::VxMaker::TrSource& tr2     , 
-  const stringKey&                     key     ,
-  const LoKi::Types::TTrCuts&          cuts2tr ) 
-  : LoKi::BasicFunctors<LHCb::RecVertex*>::Source () 
-  , m_track1 ( tr1 ) 
-  , m_track2 ( tr2 ) 
-  , m_same   ( &tr1 == &tr2 ) 
-  , m_cut2tr ( cuts2tr ) 
-  , m_cut2tr_trivial ( false ) 
-  , m_cut4rv ( LoKi::Constant<LHCb::RecVertex,bool>( true ) ) 
-  , m_cut4rv_trivial ( true  )
-  , m_sink   ( key )
-{}
-// ============================================================================
-// constructor from two track sources & key 
-// ============================================================================
-LoKi::Hlt1::VxMaker::VxMaker
-( const LoKi::Hlt1::VxMaker::TrSource& tr1     , 
-  const LoKi::Hlt1::VxMaker::TrSource& tr2     , 
-  const stringKey&                     key     ,
-  const LoKi::Types::TTrCuts&          cuts2tr ,
-  const LoKi::Types::RVCuts&           cuts4rv ) 
-  : LoKi::BasicFunctors<LHCb::RecVertex*>::Source () 
-  , m_track1 ( tr1 ) 
-  , m_track2 ( tr2 ) 
-  , m_same   ( &tr1 == &tr2 ) 
-  , m_cut2tr ( cuts2tr ) 
-  , m_cut2tr_trivial ( false ) 
-  , m_cut4rv ( cuts4rv ) 
-  , m_cut4rv_trivial ( false )
-  , m_sink   ( key )
-{}
-// ============================================================================
-// constructor from two track sources & key 
-// ============================================================================
-LoKi::Hlt1::VxMaker::VxMaker
-( const LoKi::Hlt1::VxMaker::TrSource& tr1     , 
-  const LoKi::Hlt1::VxMaker::TrSource& tr2     , 
-  const stringKey&                     key     ,
-  const LoKi::Types::RVCuts&           cuts4rv ,
-  const LoKi::Types::TTrCuts&          cuts2tr )
-  : LoKi::BasicFunctors<LHCb::RecVertex*>::Source () 
-  , m_track1 ( tr1 ) 
-  , m_track2 ( tr2 ) 
-  , m_same   ( &tr1 == &tr2 ) 
-  , m_cut2tr ( cuts2tr ) 
-  , m_cut2tr_trivial ( false ) 
-  , m_cut4rv ( cuts4rv ) 
-  , m_cut4rv_trivial ( false )
-  , m_sink   ( key )
-{}
-// ============================================================================
-// constructor from two track sources & key 
-// ============================================================================
-LoKi::Hlt1::VxMaker::VxMaker
-( const LoKi::Hlt1::VxMaker::TrSource& tr1     , 
-  const LoKi::Hlt1::VxMaker::TrSource& tr2     , 
   const std::string&                   key     ) 
   : LoKi::BasicFunctors<LHCb::RecVertex*>::Source () 
   , m_track1 ( tr1 ) 
@@ -127,7 +44,10 @@ LoKi::Hlt1::VxMaker::VxMaker
   , m_cut4rv ( LoKi::Constant<LHCb::RecVertex,bool>( true ) ) 
   , m_cut4rv_trivial ( true )
   , m_sink   ( key )
-{}
+  , m_alg    ( 0 ) 
+{
+  init() ;
+}
 // ============================================================================
 // constructor from two track sources & key 
 // ============================================================================
@@ -145,7 +65,10 @@ LoKi::Hlt1::VxMaker::VxMaker
   , m_cut4rv ( cuts4rv ) 
   , m_cut4rv_trivial ( false )
   , m_sink   ( key )
-{}
+  , m_alg    ( 0 ) 
+{
+  init() ;
+}
 // ============================================================================
 // constructor from two track sources & key 
 // ============================================================================
@@ -163,7 +86,10 @@ LoKi::Hlt1::VxMaker::VxMaker
   , m_cut4rv ( LoKi::Constant<LHCb::RecVertex,bool>( true ) ) 
   , m_cut4rv_trivial ( true  )
   , m_sink   ( key )
-{}
+  , m_alg    ( 0 ) 
+{
+  init() ;
+}
 // ============================================================================
 // constructor from two track sources & key 
 // ============================================================================
@@ -182,7 +108,10 @@ LoKi::Hlt1::VxMaker::VxMaker
   , m_cut4rv ( cuts4rv ) 
   , m_cut4rv_trivial ( false )
   , m_sink   ( key )
-{}
+  , m_alg    ( 0 ) 
+{
+  init() ;
+}
 // ============================================================================
 // constructor from two track sources & key 
 // ============================================================================
@@ -201,7 +130,10 @@ LoKi::Hlt1::VxMaker::VxMaker
   , m_cut4rv ( cuts4rv ) 
   , m_cut4rv_trivial ( false )
   , m_sink   ( key )
-{}
+  , m_alg    ( 0 ) 
+{
+  init() ;
+}
 // ============================================================================
 // constructor from one track source & key 
 // ============================================================================
@@ -217,7 +149,10 @@ LoKi::Hlt1::VxMaker::VxMaker
   , m_cut4rv ( LoKi::Constant<LHCb::RecVertex,bool>( true ) ) 
   , m_cut4rv_trivial ( true )
   , m_sink   ( key )
-{}
+  , m_alg    ( 0 ) 
+{
+  init() ;
+}
 // ============================================================================
 // constructor from one track source & key 
 // ============================================================================
@@ -234,7 +169,10 @@ LoKi::Hlt1::VxMaker::VxMaker
   , m_cut4rv ( cuts4rv ) 
   , m_cut4rv_trivial ( false )
   , m_sink   ( key )
-{}
+  , m_alg    ( 0 ) 
+{
+  init() ;
+}
 // ============================================================================
 // constructor from one track source & key 
 // ============================================================================
@@ -251,7 +189,10 @@ LoKi::Hlt1::VxMaker::VxMaker
   , m_cut4rv ( LoKi::Constant<LHCb::RecVertex,bool>( true ) ) 
   , m_cut4rv_trivial ( true  )
   , m_sink   ( key )
-{}
+  , m_alg    ( 0 ) 
+{
+  init() ;
+}
 // ============================================================================
 // constructor from one track source & key 
 // ============================================================================
@@ -269,7 +210,10 @@ LoKi::Hlt1::VxMaker::VxMaker
   , m_cut4rv ( cuts4rv ) 
   , m_cut4rv_trivial ( false )
   , m_sink   ( key )
-{}
+  , m_alg    ( 0 ) 
+{
+  init() ;
+}
 // ============================================================================
 // constructor from one track source & key 
 // ============================================================================
@@ -287,7 +231,10 @@ LoKi::Hlt1::VxMaker::VxMaker
   , m_cut4rv ( cuts4rv ) 
   , m_cut4rv_trivial ( false )
   , m_sink   ( key )
-{}
+  , m_alg    ( 0 ) 
+{
+  init() ;
+}
 // ============================================================================
 // constructor from one track source & key 
 // ============================================================================
@@ -303,7 +250,10 @@ LoKi::Hlt1::VxMaker::VxMaker
   , m_cut4rv ( LoKi::Constant<LHCb::RecVertex,bool>( true ) ) 
   , m_cut4rv_trivial ( true )
   , m_sink   ( key )
-{}
+  , m_alg    ( 0 ) 
+{ 
+  init() ;
+}
 // ============================================================================
 // constructor from one track source & key 
 // ============================================================================
@@ -320,7 +270,10 @@ LoKi::Hlt1::VxMaker::VxMaker
   , m_cut4rv ( cuts4rv ) 
   , m_cut4rv_trivial ( false )
   , m_sink   ( key )
-{}
+  , m_alg    ( 0 ) 
+{
+  init() ;
+}
 // ============================================================================
 // constructor from one track source & key 
 // ============================================================================
@@ -337,7 +290,10 @@ LoKi::Hlt1::VxMaker::VxMaker
   , m_cut4rv ( LoKi::Constant<LHCb::RecVertex,bool>( true ) ) 
   , m_cut4rv_trivial ( true  )
   , m_sink   ( key )
-{}
+  , m_alg    ( 0 ) 
+{
+  init() ; 
+}
 // ============================================================================
 // constructor from one track source & key 
 // ============================================================================
@@ -355,7 +311,10 @@ LoKi::Hlt1::VxMaker::VxMaker
   , m_cut4rv ( cuts4rv ) 
   , m_cut4rv_trivial ( false )
   , m_sink   ( key )
-{}
+  , m_alg    ( 0 ) 
+{
+  init() ; 
+}
 // ============================================================================
 // constructor from one track source & key 
 // ============================================================================
@@ -373,7 +332,18 @@ LoKi::Hlt1::VxMaker::VxMaker
   , m_cut4rv ( cuts4rv ) 
   , m_cut4rv_trivial ( false )
   , m_sink   ( key )
-{}
+  , m_alg    ( 0 ) 
+{ 
+  init() ; 
+}
+// ============================================================================
+// initialize the object 
+// ============================================================================
+void LoKi::Hlt1::VxMaker::init() const 
+{
+  m_alg = LoKi::Hlt1::Utils::getGaudiAlg (*this) ;
+  Assert ( 0 != m_alg , "GaudiAlgorithm* points to NULL!" ) ;
+}
 // ============================================================================
 // OPTIONAL: the nice printout
 // ============================================================================
@@ -381,7 +351,7 @@ std::ostream& LoKi::Hlt1::VxMaker::fillStream ( std::ostream& s ) const
 {
   s << "VxMAKER("           << m_track1 ;
   if ( !m_same ) { s << "," << m_track2 ; }
-  s << ",'" << m_sink.selName().str() << "'" ;
+  s << ",'" << m_sink.selName() << "'" ;
   if ( !m_cut2tr_trivial ) { s << "," << m_cut2tr ; }
   if ( !m_cut4rv_trivial ) { s << "," << m_cut4rv ; }  
   return s << ")";
@@ -391,12 +361,20 @@ std::ostream& LoKi::Hlt1::VxMaker::fillStream ( std::ostream& s ) const
 LoKi::Hlt1::VxMaker::result_type 
 LoKi::Hlt1::VxMaker::operator() () const 
 {
-  typedef TrSource::result_type   Tracks   ;
-  typedef LoKi::Combiner_<Tracks> Combiner ;
-  typedef Combiner::Range         TRange   ;
+  typedef TrSource::result_type      Tracks   ;
+  typedef LoKi::Combiner_<Tracks>    Combiner ;
+  typedef Combiner::Range            TRange   ;
+  typedef LHCb::RecVertex::Container Vertices ;
+  typedef result_type                Output   ;
   
-  result_type output ;
+  Output output ;
   output.reserve ( 50 ) ;
+  
+  if ( 0 == m_alg ) { init() ;} 
+  Assert ( 0 != m_alg , "GaudiAlgorithm* points to NULL!" ) ;
+  
+  Vertices* overtices = new Vertices() ;
+  m_alg->put ( overtices , "Hlt/Vertex/" + m_sink.selName() ) ;
   
   
   // get the first set of tracks
@@ -410,7 +388,6 @@ LoKi::Hlt1::VxMaker::operator() () const
   
   const TRange range1 ( track1 ) ;
   const TRange range2 ( same ? track1 : track2 ) ;
-  
   
   const Hlt::VertexCreator creator ;
   
@@ -455,6 +432,10 @@ LoKi::Hlt1::VxMaker::operator() () const
     output.push_back ( vertex.release() ) ; // "vertex is not valid anymore
     
   }
+
+  // send the vertices into TES 
+  for ( Output::const_iterator iout = output.begin() ; output.end()  != iout ; ++iout ) 
+  { overtices->insert ( *iout ) ; }
   
   // use "sink": register object for Hlt Data Service 
   return m_sink ( output )  ; // RETURN 

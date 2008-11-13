@@ -1,4 +1,4 @@
-// $Id: VxMaker.h,v 1.1 2008-11-13 13:14:41 ibelyaev Exp $
+// $Id: VxMaker.h,v 1.2 2008-11-13 22:11:03 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_VXMAKER_H 
 #define LOKI_VXMAKER_H 1
@@ -16,6 +16,10 @@
 #include "LoKi/BasicFunctors.h"
 #include "LoKi/TrackTypes.h"
 #include "LoKi/Hlt1.h"
+// ============================================================================
+// forward declaration
+// ============================================================================
+class GaudiAlgorithm ;
 // ============================================================================
 namespace LoKi 
 {
@@ -37,35 +41,6 @@ namespace LoKi
       typedef LoKi::BasicFunctors<LHCb::Track*>::Source TrSource ;
       // ======================================================================
     public:
-      // ======================================================================
-      // constructor from two sources and the key 
-      // ======================================================================
-      /// constructor from two track sources 
-      VxMaker ( const TrSource&             tr1     , 
-                const TrSource&             tr2     , 
-                const stringKey&            key     ) ;
-      /// constructor from two track sources 
-      VxMaker ( const TrSource&             tr1     , 
-                const TrSource&             tr2     , 
-                const stringKey&            key     ,
-                const LoKi::Types::RVCuts&  cuts4rv ) ;
-      /// constructor from two track sources 
-      VxMaker ( const TrSource&             tr1     , 
-                const TrSource&             tr2     , 
-                const stringKey&            key     ,
-                const LoKi::Types::TTrCuts& cuts2tr ) ;
-      /// constructor from two track sources 
-      VxMaker ( const TrSource&             tr1     , 
-                const TrSource&             tr2     , 
-                const stringKey&            key     , 
-                const LoKi::Types::RVCuts&  cuts4rv ,
-                const LoKi::Types::TTrCuts& cuts2tr ) ;
-      /// constructor from two track sources 
-      VxMaker ( const TrSource&             tr1     , 
-                const TrSource&             tr2     , 
-                const stringKey&            key     , 
-                const LoKi::Types::TTrCuts& cuts2tr ,
-                const LoKi::Types::RVCuts&  cuts4rv ) ;
       // ======================================================================
       // constructor from two sources and the key(string) 
       // ======================================================================
@@ -155,6 +130,11 @@ namespace LoKi
       // ======================================================================
     private:
       /// =====================================================================
+      /// initialize the object 
+      void init() const ;                              // initialize the object 
+      // ======================================================================
+    private:
+      /// =====================================================================
       /// the first  source of tracks   
       LoKi::Assignable<TrSource>::Type m_track1  ;          // the first source   
       /// the second source of tracks   
@@ -171,6 +151,11 @@ namespace LoKi
       // ======================================================================
       /// 'sink': the functor which register the selection in Hlt Data Svc
       LoKi::Hlt1::RvRegister           m_sink    ;                     // 'sink'
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the algorithm 
+      mutable GaudiAlgorithm* m_alg ;                         // the algorithm 
       // ======================================================================
     };
     // ========================================================================

@@ -1,9 +1,7 @@
-// $Id: TrUpgrade.h,v 1.1 2008-11-13 13:14:41 ibelyaev Exp $
+// $Id: TrUpgrade.h,v 1.2 2008-11-13 22:11:03 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_TRUPGRADE_H 
 #define LOKI_TRUPGRADE_H 1
-// ============================================================================
-// Include files
 // ============================================================================
 // Include files
 // ============================================================================
@@ -13,23 +11,11 @@
 // ============================================================================
 #include "Event/Track.h"
 // ============================================================================
-// HltBase 
-// ============================================================================
-#include "HltBase/ITrackUpgrade.h"
-// ============================================================================
-// TrackInterfaces 
-// ============================================================================
-#include "TrackInterfaces/ITracksFromTrack.h"
-// ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/BasicFunctors.h"
-#include "LoKi/Interface.h"
-#include "LoKi/TrackTypes.h"
 #include "LoKi/Hlt1.h"
-#include "LoKi/UpgradeConf.h"
-// ============================================================================
-class GaudiAlgorithm ;
+#include "LoKi/UpgradeTool.h"
 // ============================================================================
 namespace LoKi
 {
@@ -40,11 +26,16 @@ namespace LoKi
     /** @class TrUpgrade LoKi/TrUpgrade.h
      *  Simple functor which "upgrades" the set of tracks.
      *  Th eupgraded tracks are registeres in Hlt Data Service 
-     *  @see ITrackUpgrade
+     *  @see ITracksFromnTrack
+     *  @see LoKi::Hlt1::UpgradeTool
+     *  @see LoKi::Hlt1::UpgradeConf
+     *  @see LoKi::Cuts::TrUPGRADE 
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date   2008-11-11
      */
-    class TrUpgrade :  public LoKi::BasicFunctors<LHCb::Track*>::Pipe 
+    class TrUpgrade 
+      : public LoKi::BasicFunctors<LHCb::Track*>::Pipe 
+      , public LoKi::Hlt1::UpgradeTool 
     {
     public:
       // ======================================================================
@@ -55,6 +46,15 @@ namespace LoKi
       TrUpgrade 
       ( const std::string&             output  ,   // output selection name/key 
         const LoKi::Hlt1::UpgradeConf& config  ) ; //             configuration 
+      // ======================================================================
+      /** constructor from all configuration parameters 
+       *  @param output  the output selection name 
+       *  @param config  the tool configuration 
+       */
+      TrUpgrade 
+      ( const std::string&             output  ,   // output selection name/key 
+        const LoKi::Hlt1::UpgradeTool& config  ) ; //             configuration 
+      // ======================================================================
       /** constructor from all configuration parameters 
        *  @param output    the output selection name 
        *  @param trTool    the name of ITracksFromTrack tool 
@@ -91,81 +91,14 @@ namespace LoKi
       // ======================================================================
     public:
       // ======================================================================
-      /// access the tool 
-      const LoKi::Interface<ITracksFromTrack>& upgrade() const 
-      { return m_upgrade ; }
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// ITracksFromTrack tool name 
-      const std::string& trTool   () const { return m_config.trTool   () ; }
-      /// TES  location of upgraded tracks 
-      const std::string& address  () const { return m_config.address  () ; }
-      /// track type 
-      LHCb::Track::Types trType   () const { return m_config.trType   () ; }
-      /// owner ? 
-      bool               owner    () const { return m_config.owner    () ; }
-      /// transfer IDs ?
-      bool               moveIDs  () const { return m_config.moveIDs  () ; }
-      /// transfer Ancestors 
-      bool               moveAncs () const { return m_config.moveAncs () ; }
-      // transfer extra info? 
-      bool               moveInfo () const { return m_config.moveInfo () ; }
-      // pt-ordering ?
-      bool               ptOrder  () const { return m_config.ptOrder  () ; }
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// recoID 
-      int recoID    () const { return m_recoID ; }
       /// output selection 
-      const stringKey& output () const { return m_sink.output () ; }
-      // configuration 
-      const LoKi::Hlt1::UpgradeConf& config () const { return m_config ; }      
+      const stringKey&   output  () const { return m_sink.output  () ; }
+      const std::string& selName () const { return m_sink.selName () ; }
       // ======================================================================      
     private:
-      // ======================================================================
-      /// perform proper initialization
-      void init () const;                                        // initialize
-      // ======================================================================
-      /** upgrade/recontruct one track 
-       *  @param seed   the seed to be upgraded 
-       *  @param tracks container of output tracks 
-       *  @param otracks TES-container 
-       *  @return status code 
-       */
-      StatusCode reco 
-      ( const LHCb::Track*         seed    , 
-        std::vector<LHCb::Track*>& tracks  , 
-        LHCb::Track::Container*    otracks ) const ;
-      /** find upgraded tracks in the TES container 
-       *  @param seed   the seed to be upgraded 
-       *  @param tracks container of output tracks 
-       *  @param otracks TES-container 
-       *  @return number of tracks 
-       */
-      size_t find
-      ( const LHCb::Track*         seed    , 
-        std::vector<LHCb::Track*>& tracks  , 
-        LHCb::Track::Container*    otracks ) const ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the configuration 
-      LoKi::Hlt1::UpgradeConf m_config ;                  // the coinfiguration 
       // ======================================================================
       /// "sink":  register the selection for Hlt Data Service 
       LoKi::Hlt1::TrRegister m_sink ;                               // the sink
-      // ID of the reconstruction/upgrade tool 
-      mutable int m_recoID ;                    // ID of the recontruction tool 
-      // ======================================================================      
-    private:
-      // ======================================================================      
-      /// the recontruction/upgrade tool itself 
-      mutable LoKi::Interface<ITracksFromTrack> m_upgrade ; // the upgrade tool
-      // ======================================================================      
-      // the algorithm 
-      mutable GaudiAlgorithm* m_alg ;
       // ======================================================================      
     };
     // ========================================================================

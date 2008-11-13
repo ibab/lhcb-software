@@ -1,4 +1,4 @@
-// $Id: Hlt1.h,v 1.1 2008-11-13 13:14:41 ibelyaev Exp $
+// $Id: Hlt1.h,v 1.2 2008-11-13 22:11:03 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_HLT1_H 
 #define LOKI_HLT1_H 1
@@ -46,8 +46,6 @@ namespace LoKi
       /// constructor from the selection 
       TrSelection ( const std::string&  selection ) ;
       /// constructor from the selection 
-      TrSelection ( const stringKey&    selection ) ;
-      /// constructor from the selection 
       TrSelection ( const Hlt::Selection* selection ) ;
       /// MANDATORY: virtual destructor 
       virtual ~TrSelection() {}
@@ -64,7 +62,7 @@ namespace LoKi
       const Hlt::TSelection<LHCb::Track>* selection () const 
       { return m_selection ; }
       /// get the selection name 
-      const stringKey& selName () const { return m_selName ; }
+      const std::string& selName   () const { return m_selName.str() ; }
       // ======================================================================
     private:
       // ======================================================================
@@ -95,8 +93,6 @@ namespace LoKi
       // ======================================================================
       /// constructor from the selection 
       TrRegister ( const std::string&  selection ) ;
-      /// constructor from the selection 
-      TrRegister ( const stringKey&    selection ) ;
       /// MANDATORY: virtual destructor 
       virtual ~TrRegister() {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -112,8 +108,8 @@ namespace LoKi
       const Hlt::TSelection<LHCb::Track>* selection () const 
       { return m_selection ; }
       /// get the selection name 
-      const stringKey& selName () const { return m_selName ; }
-      const stringKey& output  () const { return selName (); }
+      const std::string& selName () const { return m_selName.str() ; }
+      const stringKey& output    () const { return m_selName       ; }
       // ======================================================================
     private:
       // ======================================================================
@@ -147,8 +143,6 @@ namespace LoKi
       /// constructor from the selection 
       RvSelection ( const std::string&  selection ) ;
       /// constructor from the selection 
-      RvSelection ( const stringKey&    selection ) ;
-      /// constructor from the selection 
       RvSelection ( const Hlt::Selection* selection ) ;
       /// MANDATORY: virtual destructor 
       virtual ~RvSelection() {}
@@ -165,7 +159,7 @@ namespace LoKi
       const Hlt::TSelection<LHCb::RecVertex>* selection () const 
       { return m_selection ; }
       /// get the selection name 
-      const stringKey& selName () const { return m_selName ; }
+      const std::string& selName   () const { return m_selName.str() ; }
       // ======================================================================
     private:
       // ======================================================================
@@ -196,8 +190,6 @@ namespace LoKi
       // ======================================================================
       /// constructor from the selection 
       RvRegister ( const std::string&  selection ) ;
-      /// constructor from the selection 
-      RvRegister ( const stringKey&    selection ) ;
       /// MANDATORY: virtual destructor 
       virtual ~RvRegister() {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -213,8 +205,8 @@ namespace LoKi
       const Hlt::TSelection<LHCb::RecVertex>* selection () const 
       { return m_selection ; }
       /// get the selection name 
-      const stringKey& selName () const { return m_selName ; }
-      const stringKey& output  () const { return selName (); }
+      const std::string& selName   () const { return m_selName.str(); }
+      const stringKey&   output    () const { return m_selName      ; }
       // ======================================================================
     private:
       // ======================================================================

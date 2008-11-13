@@ -1,4 +1,4 @@
-// $Id: Hlt1.cpp,v 1.1 2008-11-13 13:14:42 ibelyaev Exp $
+// $Id: Hlt1.cpp,v 1.2 2008-11-13 22:11:03 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -43,19 +43,6 @@ LoKi::Hlt1::TrSelection::TrSelection
 // constructor from the selection 
 // ============================================================================
 LoKi::Hlt1::TrSelection::TrSelection 
-( const stringKey&    selection ) 
-  : LoKi::BasicFunctors<LHCb::Track*>::Source () 
-  , m_selection ( 0 )
-  , m_selName ( selection ) 
-{
-  m_selection = 
-    LoKi::Hlt1::Utils::getTSelection<LHCb::Track> ( selName() , *this ) ;
-  Assert ( 0 != m_selection , "Hlt::TSelection<LHCb::Track>* points to NULL!" ) ;  
-}
-// ============================================================================
-// constructor from the selection 
-// ============================================================================
-LoKi::Hlt1::TrSelection::TrSelection 
 ( const std::string&    selection ) 
   : LoKi::BasicFunctors<LHCb::Track*>::Source () 
   , m_selection ( 0 )
@@ -78,26 +65,11 @@ LoKi::Hlt1::TrSelection::operator() () const
 // OPTIONAL: the nice printout
 // ============================================================================
 std::ostream& LoKi::Hlt1::TrSelection::fillStream ( std::ostream& s ) const 
-{ return s << "TrSELECTION('" << selName().str() << "')" ; }
+{ return s << "TrSELECTION('" << selName() << "')" ; }
 // ============================================================================
 
 
 
-// ============================================================================
-// constructor from the selection 
-// ============================================================================
-LoKi::Hlt1::TrRegister::TrRegister 
-( const stringKey&    selection ) 
-  : LoKi::BasicFunctors<LHCb::Track*>::Pipe () 
-  , m_selection ( 0 )
-  , m_selName ( selection ) 
-{
-  SmartIF<LoKi::IHltUnit> unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
-  Assert ( !(!unit) , "LoKi::IHltUnit* point to NULL" ) ;
-  // delcare selection  
-  m_selection = unit->declareSelection<LHCb::Track> ( selName() ) ;
-  Assert ( 0 != m_selection , "Hlt::TSelection<LHCb::Track>* points to NULL!" ) ;  
-}
 // ============================================================================
 // constructor from the selection 
 // ============================================================================
@@ -130,7 +102,7 @@ LoKi::Hlt1::TrRegister::operator()
 // OPTIONAL: the nice printout
 // ============================================================================
 std::ostream& LoKi::Hlt1::TrRegister::fillStream ( std::ostream& s ) const 
-{ return s << "TrREGISTER('" << selName().str() << "')" ; }
+{ return s << "TrREGISTER('" << selName() << "')" ; }
 // ============================================================================
 
 
@@ -163,18 +135,6 @@ LoKi::Hlt1::RvSelection::RvSelection
 // constructor from the selection 
 // ============================================================================
 LoKi::Hlt1::RvSelection::RvSelection 
-( const stringKey&    selection ) 
-  : LoKi::BasicFunctors<LHCb::RecVertex*>::Source () 
-  , m_selection ( 0 )
-  , m_selName ( selection ) 
-{
-  m_selection = LoKi::Hlt1::Utils::getTSelection<LHCb::RecVertex> ( selName() , *this ) ;
-  Assert ( 0 != m_selection , "Hlt::TSelection<LHCb::Track>* points to NULL!" ) ;  
-}
-// ============================================================================
-// constructor from the selection 
-// ============================================================================
-LoKi::Hlt1::RvSelection::RvSelection 
 ( const std::string&    selection ) 
   : LoKi::BasicFunctors<LHCb::RecVertex*>::Source () 
   , m_selection ( 0 )
@@ -196,25 +156,10 @@ LoKi::Hlt1::RvSelection::operator() () const
 // OPTIONAL: the nice printout
 // ============================================================================
 std::ostream& LoKi::Hlt1::RvSelection::fillStream ( std::ostream& s ) const 
-{ return s << "RvSELECTION('" << selName().str() << "')" ; }
+{ return s << "RvSELECTION('" << selName() << "')" ; }
 // ============================================================================
 
 
-// ============================================================================
-// constructor from the selection 
-// ============================================================================
-LoKi::Hlt1::RvRegister::RvRegister 
-( const stringKey&    selection ) 
-  : LoKi::BasicFunctors<LHCb::RecVertex*>::Pipe () 
-  , m_selection ( 0 )
-  , m_selName ( selection ) 
-{
-  SmartIF<LoKi::IHltUnit> unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
-  Assert ( !(!unit) , "LoKi::IHltUnit* point to NULL" ) ;
-  // delcare selection  
-  m_selection = unit->declareSelection<LHCb::RecVertex> ( selName() ) ;
-  Assert ( 0 != m_selection , "Hlt::TSelection<LHCb::RecVertex>* points to NULL!" ) ;  
-}
 // ============================================================================
 // constructor from the selection 
 // ============================================================================
@@ -247,7 +192,7 @@ LoKi::Hlt1::RvRegister::operator()
 // OPTIONAL: the nice printout
 // ============================================================================
 std::ostream& LoKi::Hlt1::RvRegister::fillStream ( std::ostream& s ) const 
-{ return s << "RvREGISTER('" << selName().str() << "')" ; }
+{ return s << "RvREGISTER('" << selName() << "')" ; }
 // ============================================================================
 
 
