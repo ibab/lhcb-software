@@ -1,15 +1,9 @@
-	! $Id: release.notes,v 1.54 2008-11-13 12:52:54 graven Exp $ 
+	! $Id: release.notes,v 1.55 2008-11-13 13:30:48 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
-
-
-! 2008-11-13 - Gerhard Raven
-  - move a few items around to make it possible to run Hlt2 properly in Moore,
-    hopefully both in 'old' and 'new' style configuration...
-  - add some printout to 'verbose' mode for Hlt2
 
 ! 2008-11-04 - Patrick Koppenburg
   - Renamed all PhysDesktop.InputLocations not to request Phys as TES location. 
@@ -19,6 +13,14 @@
   #           and the corresponding DaVinciTools. This is not compatible
   #           with DaVinci v20r3.
   #     
+
+!========================== HltConf v1r5 2008-11-13 ===================
+
+! 2008-11-13 - Gerhard Raven
+  - move a few items around to make it possible to run Hlt2 properly in Moore,
+    hopefully both in 'old' and 'new' style configuration...
+  - add some printout to 'verbose' mode for Hlt2
+
 
 ! 2008-11-04 - Mariusz Witek
  - New options for Ecal Alley (.opts)
