@@ -4,6 +4,8 @@
 ! Purpose     : Ecal alley specific algorithms and tools
 !----------------------------------------------------------------------------
 
+!========================== HltEcalAlley v1r3 2008-11-13 ===================
+
 ! 2008-11-04 - Mariusz Witek
  - improve electron line, Electron seeding and Calo Velo matching tools.
 
