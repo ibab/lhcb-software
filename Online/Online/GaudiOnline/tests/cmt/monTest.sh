@@ -16,5 +16,5 @@ sleep 6
 #
 $BIGTERM MBMMon@${HOST}     -e "export UTGID=${NODENAME}/MBMMon;    exec -a \${UTGID} $gaudi_run libOnlineKernel.so mbm_mon"&
 #
-#start_py_task Moore_0   "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead()"# export UTGID=${NODENAME}/prod_0; $gaudi_run libGaudiOnline.so mep_producer -n=prod_0 -p=333 -s=500 -r=2
 tail -n 3 ${0}
+# start_py_task Mdf2Mbm "import GaudiOnlineTests;GaudiOnlineTests.runMDF2MBMFile(['Events'],fname='root:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/32484/032484_0000081651.raw')"
