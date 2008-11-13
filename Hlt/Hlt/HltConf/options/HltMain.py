@@ -29,7 +29,11 @@ importOptions('$HLTCONFROOT/options/HltRecoSequence.py')
 #/**
 # * main HLT sequencer
 # */
-Hlt = GaudiSequencer('Hlt', ModeOR= True, ShortCircuit = False) 
+Hlt = GaudiSequencer('Hlt', ModeOR= True, ShortCircuit = False
+                    , Members = [ GaudiSequencer('Hlt1') 
+                                , GaudiSequencer('Hlt2') # NOTE: Hlt2 checks itself whether Hlt1 passed or not
+                                , GaudiSequencer('HltEndSequence') 
+                                ] )
 
 
 ApplicationMgr().TopAlg.append( Hlt )

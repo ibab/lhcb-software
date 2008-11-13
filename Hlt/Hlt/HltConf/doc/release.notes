@@ -1,9 +1,14 @@
-	! $Id: release.notes,v 1.52 2008-11-04 18:21:13 pkoppenb Exp $ 
+	! $Id: release.notes,v 1.53 2008-11-13 12:40:34 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+
+! 2008-11-13 - Gerhard Raven
+  - move a few items around to make it possible to run Hlt2 properly in Moore,
+    hopefully both in 'old' and 'new' style configuration...
 
 ! 2008-11-04 - Patrick Koppenburg
   - Renamed all PhysDesktop.InputLocations not to request Phys as TES location. 
@@ -61,7 +66,6 @@
 ! 2008-10-13 - Patrick Koppenburg for Yasmine Amhis
  - Resolved pi0 mass cut changed to 30 MeV
 
->>>>>>> 1.50
 !========================== HltConf v1r4 2008-10-03 ===================
 ! 2008-10-07 - Gerhard Raven
  - Switch to use HltLine (the C++ algorithm) inside HltLine (the python setup code)

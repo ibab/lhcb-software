@@ -7,6 +7,7 @@
 ###
 from Gaudi.Configuration import *
 from Configurables import GaudiSequencer
+from Configurables import LoKi__HDRFilter   as HltFilter
 # ---------------------------------------------------------------------
 # Common stuff. Probably already included in Hlt1.
 # ---------------------------------------------------------------------
@@ -18,17 +19,17 @@ importOptions( "$HLTCONFROOT/options/Hlt2Init.opts" )
 # ---------------------------------------------------------------------
 #  HLT exclusive Selections
 # ---------------------------------------------------------------------
-Hlt2 = GaudiSequencer("Hlt2")
-GaudiSequencer("Hlt").Members += [ Hlt2 ]
-Hlt2.Context = "HLT" 
+Hlt2 = GaudiSequencer("Hlt2", Context = 'HLT' )
 #  just in case
+if Hlt2 not in GaudiSequencer("Hlt").Members : GaudiSequencer("Hlt").Members += [ Hlt2 ]
 from Configurables import HltSummaryWriter
 Hlt2.Members += [ HltSummaryWriter() ]
 # ---------------------------------------------------------------------
 #  Make sure Hlt1 is passed
+#  NOTE: in order to deal with new vs. old style, the configuration
+#  of Hlt2CheckHlt1Passed can be found in HltConf/python/HltConf/Configuration.py...
 # ---------------------------------------------------------------------
 Hlt2.Members += [ GaudiSequencer("Hlt2CheckHlt1Passed") ]
-GaudiSequencer("Hlt2CheckHlt1Passed").Members = [ GaudiSequencer("PassedAlleys") ]
 # ---------------------------------------------------------------------
 #  Full reconstruction of all tracks 
 # ---------------------------------------------------------------------
