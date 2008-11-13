@@ -1,4 +1,4 @@
-	! $Id: release.notes,v 1.53 2008-11-13 12:40:34 graven Exp $ 
+	! $Id: release.notes,v 1.54 2008-11-13 12:52:54 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -9,6 +9,7 @@
 ! 2008-11-13 - Gerhard Raven
   - move a few items around to make it possible to run Hlt2 properly in Moore,
     hopefully both in 'old' and 'new' style configuration...
+  - add some printout to 'verbose' mode for Hlt2
 
 ! 2008-11-04 - Patrick Koppenburg
   - Renamed all PhysDesktop.InputLocations not to request Phys as TES location. 

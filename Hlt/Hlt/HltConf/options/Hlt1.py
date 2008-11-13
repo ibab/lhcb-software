@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1.py,v 1.19 2008-11-13 12:40:34 graven Exp $
+# $Id: Hlt1.py,v 1.20 2008-11-13 12:52:55 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of HLT1
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.19 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.20 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -37,7 +37,10 @@ from HltConf.HltLine     import addHlt1Prop
 from HltConf.HltLine     import Hlt1Line   as Line
 
 # add a few thing to our printout
-addHlt1Prop([ 'routingBitDefinitions', 'Accept', 'FilterDescriptor', 'Code', 'OutputSelection','Context' ])
+addHlt1Prop([ 'routingBitDefinitions', 'Accept', 'FilterDescriptor'
+            , 'Code'
+            , 'DaughtersCuts', 'CombinationCut', 'MotherCut', 'DecayDescriptor'
+            , 'OutputSelection','Context' ])
 
 importOptions('$HLTCONFROOT/options/HltInit.opts')
 importOptions('$HLTCONFROOT/options/HltLumiInit.opts')
