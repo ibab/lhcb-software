@@ -218,7 +218,12 @@ send_msg_arb_source(int raw_socket, u_int8_t proto, u_int32_t srcAddr, u_int32_t
 
 //Also socket need some special treatment.
 int
-  open_sock_arb_source(int /* ipproto */, int rxbufsiz, std::string &errmsg) {
+#ifdef _WIN32
+  open_sock_arb_source(int ipproto, int rxbufsiz, std::string &errmsg)
+#else
+  open_sock_arb_source(int /* ipproto */, int rxbufsiz, std::string &errmsg)
+#endif
+{
   int raw_socket;
 #ifndef _WIN32
   int fd;
