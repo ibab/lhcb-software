@@ -1,4 +1,4 @@
-// $Id: NodeStatsCollector.cpp,v 1.1 2008-11-11 18:31:09 frankb Exp $
+// $Id: NodeStatsCollector.cpp,v 1.2 2008-11-13 08:29:41 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/NodeStatsCollector.cpp,v 1.1 2008-11-11 18:31:09 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/NodeStatsCollector.cpp,v 1.2 2008-11-13 08:29:41 frankb Exp $
 #define MBM_IMPLEMENTATION
 #include "ROMon/NodeStatsCollector.h"
 #include "ROMon/CPUMonOstream.h"
@@ -163,7 +163,7 @@ int NodeStatsCollector::monitorTasks() {
 int NodeStatsCollector::monitor() {
   std::string node = RTL::nodeNameShort();
   std::string dns = ::getenv("DIM_DNS_NODE") ? ::getenv("DIM_DNS_NODE") : "None";
-  bool has_mbm = node == dns;
+  bool has_mbm = node != dns;
   CPUMonData buf(m_statBuffer);
   bool exec = true;
   SysInfo sys(buf.node,m_statSize,2);

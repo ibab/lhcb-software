@@ -1,4 +1,4 @@
-// $Id: Sys.h,v 1.1 2008-11-11 18:31:09 frankb Exp $
+// $Id: Sys.h,v 1.2 2008-11-13 08:29:41 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -9,7 +9,7 @@
 //  Created    : 29/10/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/Sys.h,v 1.1 2008-11-11 18:31:09 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/Sys.h,v 1.2 2008-11-13 08:29:41 frankb Exp $
 #ifndef ONLINE_ROMON_SYS_H
 #define ONLINE_ROMON_SYS_H
 
@@ -17,6 +17,7 @@
 #include "ROMon/CPUMon.h"
 
 // C++ include files
+#include <vector>
 #include <string>
 #include <cstdlib>
 #include <sys/param.h>
@@ -31,6 +32,74 @@ namespace ROMon {
     SysFile(const char* name) : m_name(name) {}
     ~SysFile() {}
     int read(char* buffer, size_t len) const;
+  };
+
+  struct SystemUptime {
+    float uptime;
+    float idletime;
+    /// Default constructor
+    SystemUptime() {}
+    /// Read system data from proc file system
+    int read();
+    /// Print system data from proc file system
+    void print() const;
+  };
+
+  struct EnvironProcess {
+    typedef std::pair<std::string,std::string> Variable;
+    typedef std::vector<Variable> Environ;
+    Environ env;
+    /// Default constructor
+    EnvironProcess() {}
+    /// Read system data from proc file system
+    int read(int proc_id);
+    /// Print system data from proc file system
+    void print() const;
+  };
+  struct UtgidProcess {
+    std::string utgid;
+    /// Default constructor
+    UtgidProcess() {}
+    /// Read system data from proc file system
+    int read(int proc_id);
+    /// Print system data from proc file system
+    void print() const;
+  };
+  struct StatusProcess {
+    char   comm[400];
+    char   state;
+    int    sleepAvg;
+    int    tgid;
+    int    pid;
+    int    ppid;
+    int    uid;
+    int    gid;
+    int    fdSize;
+    int    vmSize;
+    int    vmLock;
+    int    vmRSS;
+    int    vmData;
+    int    vmStack;
+    int    vmExe;
+    int    vmLib;
+    long   staBrk;
+    long   brk;
+    long   staStk;
+    int    nThreads;
+    long   sigPend;
+    long   shdPend;
+    long   sigBlk;
+    long   sigIgn;
+    long   sigCgt;
+    long   capInh;
+    long   capPrm;
+    long   capEff;
+    /// Default constructor
+    StatusProcess() {}
+    /// Read process data from proc file system
+    int read(int proc_id);
+    /// Print process data from proc file system
+    void print() const;
   };
 
   struct SysProcess {
@@ -69,7 +138,12 @@ namespace ROMon {
     unsigned long sigignore; // %d
     unsigned long sigcatch; // %d
     unsigned long wchan; // %u
+    /// Default constructor
+    SysProcess() {}
+    /// Read process data from proc file system
     int read(int pid);
+    /// Print process data from proc file system
+    void print() const;
   };
   
   /// Read current CPU information prom proc file system

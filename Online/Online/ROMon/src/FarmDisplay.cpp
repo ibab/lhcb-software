@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.cpp,v 1.29 2008-11-11 18:31:09 frankb Exp $
+// $Id: FarmDisplay.cpp,v 1.30 2008-11-13 08:29:41 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.29 2008-11-11 18:31:09 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.30 2008-11-13 08:29:41 frankb Exp $
 
 #include "ROMon/CtrlSubfarmDisplay.h"
 #include "ROMon/RecSubfarmDisplay.h"
@@ -42,7 +42,9 @@ extern "C" {
 #include <algorithm>
 
 #ifdef _WIN32
-#define vsnprintf _vsnprintf
+#define strcasecmp _stricmp
+#define strncasecmp _strnicmp
+#define vsnprintf   _vsnprintf
 #endif
 using namespace ROMon;
 using namespace SCR;
@@ -411,7 +413,7 @@ void CtrlDisplay::update(const void* data) {
 		  n.name.c_str(),n.status.c_str(),
 		  n.taskCount,n.missTaskCount,n.connCount,n.missConnCount,
 		  int(n.rss/1024),int(n.stack/1024),int(n.data/1024),int(n.vsize/1024),
-		  n.perc_cpu, n.perc_mem, n.boot.substr(4,12).c_str());
+		  n.perc_cpu, n.perc_mem, n.boot.c_str());
 	::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
 
 	//::sprintf(txt,"  %-24s %12s %17s / Missing   %17s / Missing    %s","Node","Status","Tasks found","Connections found","Timestamp");
@@ -503,17 +505,16 @@ void CtrlDisplay::update(const void* data) {
     ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
 }
 
-ProcessDisplay::ProcessDisplay(FarmDisplay* parent, const string& title, int height, int width)
-: InternalDisplay(parent, title)
+ProcessDisplay::ProcessDisplay(FarmDisplay* parent, const string& title, const string& cluster, int full, int height, int width)
+  : InternalDisplay(parent, title)
 {
   string svc = "/";
   m_name = "";
-  for(size_t i=0; i<title.length() && title[i]!='.';++i) {
-    m_name += ::tolower(title[i]);
-    svc += ::tolower(title[i]);
+  for(size_t i=0; i<cluster.length() && cluster[i]!='.';++i) {
+    m_name += ::tolower(cluster[i]);
+    svc += ::tolower(cluster[i]);
   }
-  svc = svc.substr(0,svc.length()-2);
-  svc += "/ROpublish/ROTasks";
+  svc += (full ? "/ROpublish/Tasks" : "/ROpublish/ROTasks");
   m_title = "Process monitor on "+m_title+" Service:"+svc;
   ::scrc_create_display(&m_display,height,width,NORMAL,ON,m_title.c_str());
   m_svc = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,dataHandler,(long)this,0,0);
@@ -549,13 +550,22 @@ void ProcessDisplay::updateContent(const ProcFarm& pf) {
       ::sprintf(txt,"      Node:%s last update:%s [%d processes]",ps.name,text,procs.size());
       ::scrc_put_chars(m_display,txt,BOLD,++line,3,1);
       ::scrc_put_chars(m_display,"",NORMAL,++line,3,1);
-      ::sprintf(txt,"        %-32s %5s %5s %9s %9s %9s %6s %8s",
-		"UTGID","PID","PPID","Memory[%]","VSize[kB]","RSS[kB]","CPU[%]","Threads");
+      ::sprintf(txt,"        %-32s %-10s %5s %5s %9s %9s %9s %6s %8s",
+		"UTGID","Owner","PID","PPID","Memory[%]","VSize[kB]","RSS[kB]","CPU[%]","Threads");
       ::scrc_put_chars(m_display,txt,INVERSE,++line,1,1);
       for(_P::const_iterator ip=procs.begin(); ip!=procs.end(); ip=procs.next(ip)) {
 	const Process& p = *ip;
-	::sprintf(txt,"%3d:  %-32s %5d %5d %9.3f %9.0f %9.0f %6.2f %7d",
-		  ++cnt, p.utgid,p.pid,p.ppid,p.mem,p.vsize,p.rss,p.cpu,p.threads);
+	if ( strncmp(p.utgid,"N/A",3)==0 ) {
+	  ::strncpy(text,p.cmd,sizeof(text));
+	  text[27] = 0;
+	  text[26]=text[25]=text[24]='.';
+	  ::sprintf(txt,"%3d:  %3s:%-28s %-10s %5d %5d %9.3f %9.0f %9.0f %6.2f %7d",
+		    ++cnt, p.utgid,text,p.owner,p.pid,p.ppid,p.mem,p.vsize,p.rss,p.cpu,p.threads);
+	}
+	else {
+	  ::sprintf(txt,"%3d:  %-32s %-10s %5d %5d %9.3f %9.0f %9.0f %6.2f %7d",
+		    ++cnt, p.utgid,p.owner,p.pid,p.ppid,p.mem,p.vsize,p.rss,p.cpu,p.threads);
+	}
 	::scrc_put_chars(m_display,txt,NORMAL,++line,3,1);
       }
       return;
@@ -571,8 +581,8 @@ void ProcessDisplay::updateContent(const ProcFarm& pf) {
   ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED|BOLD);
 }
 
-CPUDisplay::CPUDisplay(FarmDisplay* parent, const string& title, int height, int width)
-: InternalDisplay(parent, title)
+CPUDisplay::CPUDisplay(FarmDisplay* parent, const string& title, const string& node, int height, int width)
+  : InternalDisplay(parent, title), m_node(node)
 {
   string svc = "/";
   for(size_t i=0; i<title.length() && title[i]!='.';++i) svc += ::tolower(title[i]);
@@ -608,23 +618,28 @@ void CPUDisplay::updateContent(const CPUfarm& f) {
   for(_N::const_iterator i=f.nodes.begin(); i!=f.nodes.end(); i=f.nodes.next(i)) {
     const CPUset& cs = (*i);
     const _C& cores = cs.cores;
+    const CPU::Stat& avg = cs.averages;
     t1 = cs.time;
     ::scrc_set_border(m_display,m_title.c_str(),INVERSE|BLUE);
     ::strftime(text,sizeof(text),"%H:%M:%S",::localtime(&t1));
-    ::sprintf(txt,"      Node:%s  Family: %s last update:%s [%d cores] Context switch rate:%9.0f Hz",
+    ::sprintf(txt,"      Node:%-8s  Family: %s last update:%s [%d cores] Context switch rate:%9.0f Hz",
 	      cs.name,cs.family,text,cores.size(),cs.ctxtRate);
-    ::scrc_put_chars(m_display,txt,BOLD,++line,3,1);
-    ::scrc_put_chars(m_display,"",NORMAL,++line,3,1);
+    ::scrc_put_chars(m_display,txt,INVERSE,++line,3,1);
+    ::sprintf(txt,"      Average values: %9s %9.3f %9.3f %9.3f %10.3f %9.3f %9.3f %9.0f",
+	      "",avg.user,avg.system,avg.idle,avg.iowait,avg.IRQ,avg.softIRQ,avg.nice);
+    ::scrc_put_chars(m_display,txt,NORMAL,++line,3,1);
+    if ( strcasecmp(m_node.c_str(),cs.name) != 0 ) continue;
     ::sprintf(txt,"        %9s %5s %9s %9s %9s %9s %10s %9s %9s %9s",
 	      "Clock","Cache","Mips","User[%]","System[%]","Idle[%]","IO wait[%]","IRQ","SoftIRQ","Nice");
-    ::scrc_put_chars(m_display,txt,INVERSE,++line,1,1);
+    ::scrc_put_chars(m_display,txt,BOLD,++line,1,1);
     for(_C::const_iterator ic=cores.begin(); ic!=cores.end(); ic=cores.next(ic)) {
       const CPU& c = *ic;
-      ::sprintf(txt,"%3d:  %9.0f %5d %9.0f %9.3f %9.3f %9.3f %10.3f %9.3f %9.3f %9.0f",
+      ::sprintf(txt,"Core %3d:%6.0f %5d %9.0f %9.3f %9.3f %9.3f %10.3f %9.3f %9.3f %9.0f",
 		++cnt, c.clock,c.cache,c.bogomips,c.stats.user,c.stats.system,c.stats.idle,
 		c.stats.iowait,c.stats.IRQ,c.stats.softIRQ,c.stats.nice);
       ::scrc_put_chars(m_display,txt,NORMAL,++line,3,1);
     }
+    ::scrc_put_chars(m_display,"",NORMAL,++line,3,1);
   }
   if ( 0 == f.nodes.size() ) {
     t1 = ::time(0);
@@ -896,16 +911,17 @@ int FarmDisplay::showHelpWindow() {
 }
 
 /// Show window with processes on a given node
-int FarmDisplay::showProcessWindow() {
+int FarmDisplay::showProcessWindow(int full) {
   if ( m_procDisplay.get() ) {
     if ( m_helpDisplay.get() ) showHelpWindow();
     MouseSensor::instance().remove(this,m_procDisplay->display());
     m_procDisplay = auto_ptr<ProcessDisplay>(0);
   }
   else if ( m_subfarmDisplay ) {
-    string node_name = m_subfarmDisplay->nodeName(m_subPosCursor-SUBFARM_NODE_OFFSET);
-    if ( !node_name.empty() ) {
-      m_procDisplay = auto_ptr<ProcessDisplay>(new ProcessDisplay(this,node_name));
+    string cluster = m_subfarmDisplay->clusterName();
+    string node = m_subfarmDisplay->nodeName(m_subPosCursor-SUBFARM_NODE_OFFSET);
+    if ( !node.empty() ) {
+      m_procDisplay = auto_ptr<ProcessDisplay>(new ProcessDisplay(this,node,cluster,full));
       m_procDisplay->show(m_anchorY+5,m_anchorX+12);
       MouseSensor::instance().add(this,m_procDisplay->display());
       return WT_SUCCESS;
@@ -959,9 +975,10 @@ int FarmDisplay::showCpuWindow() {
     m_cpuDisplay = auto_ptr<CPUDisplay>(0);
   }
   else if ( m_subfarmDisplay ) {
-    const Nodeset* ns = (const Nodeset*)m_subfarmDisplay->data().pointer;
-    if ( ns ) {
-      m_cpuDisplay = auto_ptr<CPUDisplay>(new CPUDisplay(this,ns->name));
+    string cluster_name = m_subfarmDisplay->clusterName();
+    string node_name = m_subfarmDisplay->nodeName(m_subPosCursor-SUBFARM_NODE_OFFSET);
+    if ( !node_name.empty() ) {
+      m_cpuDisplay = auto_ptr<CPUDisplay>(new CPUDisplay(this,cluster_name,node_name));
       m_cpuDisplay->show(m_anchorY+5,m_anchorX+12);
       MouseSensor::instance().add(this,m_cpuDisplay->display());
       return WT_SUCCESS;
@@ -1058,8 +1075,9 @@ int FarmDisplay::handleKeyboard(int key)    {
       return WT_SUCCESS;
     case 'p':
     case 'P':
+      return showProcessWindow(0);
     case CTRL_P:
-      return showProcessWindow();
+      return showProcessWindow(1);
     case RETURN_KEY:
     case ENTER:
       IocSensor::instance().send(this,CMD_SHOWSUBFARM,this);
@@ -1220,7 +1238,7 @@ void FarmDisplay::handle(const Event& ev) {
       else showMbmWindow();
       return;
     case CMD_SHOWPROCS:
-      showProcessWindow();
+      showProcessWindow(0);
       return;
     case CMD_SHOWHELP:
       showHelpWindow();

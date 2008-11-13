@@ -1,4 +1,4 @@
-// $Id: CtrlSubfarmDisplay.cpp,v 1.3 2008-09-12 18:56:50 frankb Exp $
+// $Id: CtrlSubfarmDisplay.cpp,v 1.4 2008-11-13 08:29:41 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CtrlSubfarmDisplay.cpp,v 1.3 2008-09-12 18:56:50 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CtrlSubfarmDisplay.cpp,v 1.4 2008-11-13 08:29:41 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -78,27 +78,28 @@ void CtrlSubfarmDisplay::showNodes()  {
   MonitorDisplay* disp = m_nodes;
   size_t taskCount=0, missTaskCount=0;
   size_t connCount=0, missConnCount=0;
-  const char* fmt = " %-12s %8s %5zd/%-7zd %5zd/%-7zd %6d %6d %6d %6d %3.0f %3.0f %-12s %s";
+  const char* fmt = " %-12s %8s %5zd/%-7zd %5zd/%-7zd %6d %6d %6d %3.0f %3.0f %-19s %s";
 
   //disp->draw_line_reverse(" ----------------------------------   Cluster information   ----------------------------------");
-  disp->draw_line_bold(   " %-12s %8s    Tasks       Connections  %6s %6s %6s %6s %3s %3s %-12s %s",
-			  "","","RSS","Stack","Data","VSize","CPU","MEM","","");
-  disp->draw_line_bold(   " %-12s %8s found/missing found/missing %6s %6s %6s %6s %3s %3s %-12s %s",
-			  "Node","Status","[MB]","[MB]","[MB]","[MB]","[%]","[%]","Boot time","Timestamp");
+  disp->draw_line_bold(   " %-12s %8s    Tasks       Connections  %6s %6s %6s %3s %3s %-19s %s",
+			  "","","RSS","Stack","VSize","CPU","MEM","","");
+  disp->draw_line_bold(   " %-12s %8s found/missing found/missing %6s %6s %6s %3s %3s %-19s %s",
+			  "Node","Status","[MB]","[MB]","[MB]","[%]","[%]","Boot time","Timestamp");
   for(Cluster::Nodes::const_iterator i=c.nodes.begin(); i!=c.nodes.end();++i) {
     const Cluster::Node& n = (*i).second;
     if ( n.status == "DEAD" ) {
-      disp->draw_line_normal(" %-12s %8s %64s",n.name.c_str(),n.status.c_str(),n.time.c_str());
+      disp->draw_line_normal(" %-12s %8s %76s",n.name.c_str(),n.status.c_str(),n.time.c_str());
     }
     else {
-      taskCount += n.taskCount;
+      taskCount     += n.taskCount;
       missTaskCount += n.missTaskCount;
-      connCount += n.connCount;
+      connCount     += n.connCount;
       missConnCount += n.missConnCount;
       disp->draw_line_normal(fmt,n.name.c_str(),n.status.c_str(),
 			     n.taskCount,n.missTaskCount,n.connCount,n.missConnCount,
-			     int(n.rss/1024),int(n.stack/1024),int(n.data/1024),int(n.vsize/1024),
-			     n.perc_cpu, n.perc_mem, n.boot.substr(4,12).c_str(),n.time.c_str());
+			     int(n.rss/1024),int(n.stack/1024),int(n.vsize/1024),
+			     n.perc_cpu, n.perc_mem, n.boot.c_str(),n.time.c_str());
+      //			     n.perc_cpu, n.perc_mem, n.boot.substr(4,12).c_str(),n.time.c_str());
     }
   }
   disp->draw_line_normal("");
@@ -126,6 +127,8 @@ void CtrlSubfarmDisplay::update()   {
     if ( m_data.actual>0 ) {
       const char* ptr = m_data.data<const char>();
       result = ts.parseBuffer(m_svcName, ptr,::strlen(ptr)+1) ? 1 : 2;
+      //printf("XML:%d\n%s\n\n",result,ptr);
+      //::exit(0);
     }
     dim_unlock();
     showHeader();
@@ -149,18 +152,33 @@ void CtrlSubfarmDisplay::update()   {
       break;
     }
   }
+  catch(const std::exception& e) {
+    m_nodes->draw_line_normal ("");
+    m_nodes->draw_line_bold("   ..... Exception during data parsing: %s",e.what());
+    m_nodes->draw_line_normal ("");
+  }
   catch(...) {
+    m_nodes->draw_line_normal ("");
+    m_nodes->draw_line_bold("   ..... Exception during data parsing .....");
+    m_nodes->draw_line_normal ("");
   }
   m_nodes->end_update();
   end_update();
+}
+
+/// Retrieve cluster name from cluster display
+std::string CtrlSubfarmDisplay::clusterName() const {
+  return m_cluster.name;
 }
 
 /// Retrieve node name from cluster display by offset
 std::string CtrlSubfarmDisplay::nodeName(size_t offset) {
   size_t cnt = 0;
   const Cluster::Nodes& nodes = m_cluster.nodes;
+  //::printf("\n\nSubfarm display:%ld %ld %ld\n\n",offset,nodes.size(),cnt);
   for (Cluster::Nodes::const_iterator n=nodes.begin(); n!=nodes.end(); ++n, ++cnt)  {
-    if ( cnt == offset ) return (*n).first;
+    //::printf("-->%s %s\n",(*n).first.c_str(),(*n).second.name.c_str());
+    if ( cnt == offset ) return std::string((*n).first);
   }
   return "";
 }

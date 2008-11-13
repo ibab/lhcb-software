@@ -1,4 +1,4 @@
-// $Id: SubfarmDisplay.cpp,v 1.9 2008-11-11 15:09:26 frankb Exp $
+// $Id: SubfarmDisplay.cpp,v 1.10 2008-11-13 08:29:41 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/SubfarmDisplay.cpp,v 1.9 2008-11-11 15:09:26 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/SubfarmDisplay.cpp,v 1.10 2008-11-13 08:29:41 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -306,6 +306,12 @@ size_t SubfarmDisplay::numNodes()  {
     ::dim_unlock();
   }
   return n;
+}
+
+/// Retrieve cluster name from cluster display
+std::string SubfarmDisplay::clusterName() const {
+  const Nodeset* ns = (const Nodeset*)data().pointer;
+  return ns ? ns->name : "";
 }
 
 /// Retrieve node name from cluster display by offset

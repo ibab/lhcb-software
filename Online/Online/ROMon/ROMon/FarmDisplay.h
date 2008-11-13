@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.h,v 1.12 2008-09-10 09:45:20 frankb Exp $
+// $Id: FarmDisplay.h,v 1.13 2008-11-13 08:29:41 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmDisplay.h,v 1.12 2008-09-10 09:45:20 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmDisplay.h,v 1.13 2008-11-13 08:29:41 frankb Exp $
 #ifndef ROMON_FARMDISPLAY_H
 #define ROMON_FARMDISPLAY_H 1
 
@@ -146,7 +146,7 @@ namespace ROMon {
   class ProcessDisplay : public InternalDisplay {
   public:
     /// Initializing constructor
-    ProcessDisplay(FarmDisplay* parent, const std::string& title, int height=55,int width=120);
+    ProcessDisplay(FarmDisplay* parent, const std::string& title, const std::string& cluster, int full=0, int height=55,int width=120);
     /// Standard destructor
     virtual ~ProcessDisplay();
     /// Update display content
@@ -162,9 +162,11 @@ namespace ROMon {
    *   @author M.Frank
    */
   class CPUDisplay : public InternalDisplay {
+    /// Node name
+    std::string  m_node;
   public:
     /// Initializing constructor
-    CPUDisplay(FarmDisplay* parent, const std::string& title, int height=55,int width=120);
+    CPUDisplay(FarmDisplay* parent, const std::string& title, const std::string& node, int height=55,int width=120);
     /// Standard destructor
     virtual ~CPUDisplay();
     /// Update display content
@@ -297,7 +299,7 @@ public:
     /// Show context dependent help window
     int showHelpWindow();
     /// Show window with processes on a given node
-    int showProcessWindow();
+    int showProcessWindow(int full=0);
     /// Show window with CPU information of a given subfarm
     int showCpuWindow();
     /// Show window with buffer information of a given node

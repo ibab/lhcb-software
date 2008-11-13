@@ -1,6 +1,7 @@
 #include "TaskSupervisorParser.h"
 #include <iostream>
 #include <iomanip>
+#include <ctime>
 
 using namespace xercesc;
 using namespace std;
@@ -75,7 +76,11 @@ void TaskSupervisorParser::getNodes(DOMNode* fde, Cluster& cluster) const {
     node.rss = node.vsize = node.data = node.stack = 0;
     node.perc_cpu = node.perc_mem = 0.;
     if ( b ) {
-      node.boot = b.attr(Attr_time);
+      char buff[64];
+      ::memset(buff,0,sizeof(buff));
+      time_t boot_time = ::atoi(b.attr(Attr_time).c_str());
+      ::strftime(buff,sizeof(buff),"%Y-%m-%d %H:%M:%S",::localtime(&boot_time));
+      node.boot = buff;
     }
     if ( s ) {
       node.rss = ::atoi(s.attr(Attr_rss).c_str());

@@ -1,4 +1,4 @@
-// $Id: ROMonInfo.h,v 1.2 2008-07-02 14:55:09 frankb Exp $
+// $Id: ROMonInfo.h,v 1.3 2008-11-13 08:29:41 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ROMonInfo.h,v 1.2 2008-07-02 14:55:09 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ROMonInfo.h,v 1.3 2008-11-13 08:29:41 frankb Exp $
 #ifndef ROMON_ROMONINFO_H
 #define ROMON_ROMONINFO_H 1
 
@@ -58,6 +58,8 @@ namespace ROMon {
     ROMonInfo(const Servers& s);
     /// Standard destructor
     virtual ~ROMonInfo();
+    /// Access to server list
+    Servers& servers() {  return m_servers; }
   };
 }      // End namespace ROMon
 #endif /* ROMON_ROMONINFO_H */

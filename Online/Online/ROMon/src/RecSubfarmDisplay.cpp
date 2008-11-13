@@ -1,4 +1,4 @@
-// $Id: RecSubfarmDisplay.cpp,v 1.3 2008-11-11 15:09:26 frankb Exp $
+// $Id: RecSubfarmDisplay.cpp,v 1.4 2008-11-13 08:29:41 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/RecSubfarmDisplay.cpp,v 1.3 2008-11-11 15:09:26 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/RecSubfarmDisplay.cpp,v 1.4 2008-11-13 08:29:41 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -247,6 +247,12 @@ void RecSubfarmDisplay::showHeader(const Nodeset& ns)   {
   draw_line_normal ("");
   draw_line_reverse("         RECONSTRUCTION monitoring on %s   [%s]", ns.name, ::lib_rtl_timestr());    
   draw_line_bold   ("         Information updates date between: %s.%03d and %s.%03d",b1,frst.second,b2,last.second);
+}
+
+/// Retrieve cluster name from cluster display
+std::string RecSubfarmDisplay::clusterName() const {
+  const Nodeset* ns = (const Nodeset*)data().pointer;
+  return ns ? ns->name : "";
 }
 
 /// Number of nodes in the dataset

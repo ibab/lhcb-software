@@ -1,4 +1,4 @@
-// $Id: SysInfo.h,v 1.1 2008-11-11 18:31:09 frankb Exp $
+// $Id: SysInfo.h,v 1.2 2008-11-13 08:29:41 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/SysInfo.h,v 1.1 2008-11-11 18:31:09 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/SysInfo.h,v 1.2 2008-11-13 08:29:41 frankb Exp $
 #ifndef ROMON_SYSINFO_H
 #define ROMON_SYSINFO_H
 
@@ -57,7 +57,7 @@ namespace ROMon  {
     int             m_numCores;
 
     ROMonInfo*      m_dns;
-    FMCMonListener  m_utgid;
+    FMCMonListener* m_utgid;
     TmProcs         m_procs;
     Memory          m_mem;
 

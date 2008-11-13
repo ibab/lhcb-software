@@ -215,7 +215,7 @@ void NodeTaskMon::infoHandler(void* tag, void* address, int* size) {
 }
 
 /// Update task information
-void NodeTaskMon::updateTaskInfo(const char* ptr, size_t len) {
+void NodeTaskMon::updateTaskInfo(const char* ptr, size_t /* len */) {
   typedef Cluster::PVSSProject _P;
   double rss = 0, vsize = 0, data = 0, stack = 0, mem = 0.0, cpu = 0.0;
   long bad = 0, good = 0;
@@ -227,7 +227,7 @@ void NodeTaskMon::updateTaskInfo(const char* ptr, size_t len) {
   size_t idx;
   map<string,_P> pvss;
 
-  cout << "DIM: Got update information:" << len << " bytes." << endl;
+  //cout << "DIM: Got update information:" << len << " bytes." << endl;
   for(i=t.begin(); i!=t.end();++i) (*i).second=false;
   for(i=p.begin(); i!=p.end();++i) (*i).second=false;
 
@@ -240,27 +240,25 @@ void NodeTaskMon::updateTaskInfo(const char* ptr, size_t len) {
     string cmd   = p.cmd;
     string command = p.cmd;
     if ( (idx=cmd.find(' ')) != string::npos ) cmd[idx]=0;
-
-    if ( cmd == "init" ) {
+    if ( ::strcmp(cmd.c_str(),"init")==0 ) {
       xml << "\t\t<Boot time=\"" << p.start << "\"/>" << endl;
     }
     if ( cmd.substr(0,6)=="PVSS00" )  {
-      pnam = _P::projectName(command);
+      pnam = _P::projectName(p.cmd);
       if ( !pnam.empty() ) {
 	pvss[pnam].name=pnam;
-	if ( cmd == "PVSS00event" ) 
+	if ( ::strcmp(cmd.c_str(),"PVSS00event")==0 ) 
 	  pvss[pnam].eventMgr = true;
-	else if ( cmd == "PVSS00data" )
+	else if (::strcmp(cmd.c_str(),"PVSS00data")==0 )
 	  pvss[pnam].dataMgr = true;
-	else if ( cmd == "PVSS00dist" )
+	else if (::strcmp(cmd.c_str(),"PVSS00dist")==0 )
 	  pvss[pnam].distMgr = true;
-	else if ( cmd == "PVSS00ctrl" ) {
+	else if (::strcmp(cmd.c_str(),"PVSS00ctrl")==0 ) {
 	  if ( command.find("fwFsmSrvr") != string::npos ) pvss[pnam].fsmSrv = true;
 	  else if ( command.find("fwFsmDeviceHandler") != string::npos ) pvss[pnam].devHdlr = true;
 	}
       }
     }
-
     i=t.find(utgid);
     if ( !utgid.empty() && utgid.substr(0,3)!="N/A" && i != t.end() ) {
       mem += p.mem;
@@ -347,7 +345,7 @@ int NodeTaskMon::start()   {
   if ( i != inv->nodetypes.end() ) {
     size_t idx;
     string nam, nodU = strupper(m_name), nodL=strlower(m_name);
-    nam = "/"+nodL+"/ROpublish/Statistics";
+    nam = "/"+nodL+"/ROcollect/Statistics";
     m_nodeType = (*i).second;
     for(TaskList::iterator t=m_nodeType.tasks.begin(); t!=m_nodeType.tasks.end();++t) {
       string& utgid = *t;
@@ -465,6 +463,7 @@ SubfarmTaskMon::SubfarmTaskMon(const string& nam, Inventory* inv)
 /// Start the monitoring object
 int SubfarmTaskMon::start() {
   string svc = "/"+strupper(name())+"/TaskSupervisor/Status";
+  ::dic_set_dns_node((char*)name().c_str());
   for(NodeList::const_iterator j=m_nodeList.begin(); j != m_nodeList.end(); ++j)
     m_nodes.insert(make_pair((*j).first,new NodeTaskMon(this,(*j).first,(*j).second,inventory())));
   ManipTaskMon m("Failed to start node monitor",&NodeTaskMon::start);

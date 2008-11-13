@@ -27,6 +27,11 @@ using namespace ROMon;
 
 
 namespace {
+static const char* fn_process_dir(int pid) {
+  static char txt[32];
+  ::sprintf(txt,"/proc/%d",pid);
+  return txt;
+}
 #define _PROCESSFILE(len,name)   \
 static const char* fn_process_##name (int pid) {\
   static char txt[len]; \
@@ -34,11 +39,197 @@ static const char* fn_process_##name (int pid) {\
   return txt; \
 }
   _PROCESSFILE(64,stat);
+  _PROCESSFILE(64,status);
   _PROCESSFILE(64,cmdline);
+  _PROCESSFILE(64,environ);
 };
 
+int SysFile::read(char* buf, size_t siz) const  {
+  int fd;
+  if((fd = ::open(m_name.c_str(),O_RDONLY))<0)  {
+    string err = "Failed to open "+m_name+" ";
+    throw runtime_error(err+::strerror(errno));
+  }
+  size_t tmp = 0;
+  while ( tmp < siz )  {
+    int sc = ::read(fd,buf+tmp,siz-tmp);
+    if ( sc >  0 ) {
+      tmp += sc;
+    }
+    else if ( sc == 0 )  {
+      buf[tmp] = 0;
+      ::close(fd);
+      return tmp;
+    }
+    else if ( errno == EINTR )  {
+      printf("EINTR~!!!!\n");
+      continue;
+    }
+    else  {
+      break;
+    }
+  }
+  string err = "Read of Proc file "+m_name+" failed:";
+  err += ::strerror(errno);
+  ::close(fd);
+  throw runtime_error(err);
+}
 
-/// read process data from proc file system
+int SystemUptime::read() {
+  char buff[256];
+  int cnt = SysFile("/proc/uptime").read(buff,sizeof(buff));
+  if ( cnt>0 ) {
+    ::sscanf(buff,"%f %f",&uptime,&idletime);
+    return 1;
+  }
+  return 0;
+}
+
+void SystemUptime::print() const {
+  ::printf("System uptime:%f   idle time:%f\n",uptime,idletime);
+}
+
+/// Read system data from proc file system
+int EnvironProcess::read(int proc_id) {
+  size_t len = 1024*100;
+  char* buff = new char[len], *ptr=buff;
+  int cnt = SysFile(fn_process_environ(proc_id)).read(buff,len);
+  env.clear();
+  if ( cnt > 0 ) {
+    while(ptr<buff+cnt) {
+      char* tag = ptr;
+      char* val = tag+1;
+      while(*val!='=')++val;
+      *val = 0;
+      env.push_back(make_pair(tag,++val));
+      ptr = val + ::strlen(val) + 1;
+    }
+    delete [] buff;
+    return 1;
+  }
+  return 0;
+}
+
+/// Print system data from proc file system
+void EnvironProcess::print() const {
+  for(Environ::const_iterator i=env.begin(); i!=env.end();++i)
+    ::printf("%s=%s\n",(*i).first.c_str(),(*i).second.c_str());
+}
+
+/// Read system data from proc file system
+int UtgidProcess::read(int proc_id) {
+  size_t len = 1024*100;
+  char* buff = new char[len], *ptr=buff;
+  utgid = "";
+  int cnt = SysFile(fn_process_environ(proc_id)).read(buff,len);
+  if ( cnt > 0 ) {
+    while(ptr<buff+cnt) {
+      char* tag = ptr;
+      char* val = tag+1;
+      while(*val!='=')++val;
+      *val = 0;
+      ++val;
+      if ( ::strcmp(tag,"UTGID")==0 ) {
+	utgid = ++val;
+	break;
+      }
+      ptr = val + ::strlen(val) + 1;
+    }
+    delete [] buff;
+    return 1;
+  }
+  return 0;
+}
+
+/// Print system data from proc file system
+void UtgidProcess::print() const {
+  ::printf("%s=%s\n","UTGID",utgid.c_str());
+}
+
+int StatusProcess::read(int proc_id) {
+  char buff[2048], *ptr=buff;
+  int nitem=0, cnt=SysFile(fn_process_status(proc_id)).read(buff,sizeof(buff));
+  if(cnt>0)  {
+    while(ptr && ptr<(buff+cnt)) {
+      char* p   = ::strchr(ptr,'\t');
+      char* end = ::strchr(ptr,'\n');
+      ptr = (end) ? end+1 : 0;
+      if ( 0 == p ) continue;
+      ++p;
+      switch(++nitem) {
+      case 1:	::sscanf(p,"%s",comm);          break;
+      case 2:   ::sscanf(p,"%c",&state);        break;
+      case 3:   ::sscanf(p,"%d%%",&sleepAvg);   break;
+      case 4:   ::sscanf(p,"%d",&tgid);         break;
+      case 5:   ::sscanf(p,"%d",&pid);          break;
+      case 6:   ::sscanf(p,"%d",&ppid);         break;
+      case 8:   ::sscanf(p,"%d",&uid);          break;
+      case 9:   ::sscanf(p,"%d",&gid);          break;
+      case 10:  ::sscanf(p,"%d",&fdSize);       break;
+      case 12:  ::sscanf(p,"%d",&vmSize);       break;
+      case 13:  ::sscanf(p,"%d",&vmLock);       break;
+      case 14:  ::sscanf(p,"%d",&vmRSS);        break;
+      case 15:  ::sscanf(p,"%d",&vmData);       break;
+      case 16:  ::sscanf(p,"%d",&vmStack);      break;
+      case 17:  ::sscanf(p,"%d",&vmExe);        break;
+      case 18:  ::sscanf(p,"%d",&vmLib);        break;
+      case 19:  ::sscanf(p,"%08lx",&staBrk);    break;
+      case 20:  ::sscanf(p,"%08lx",&brk);       break;
+      case 21:  ::sscanf(p,"%08lx",&staStk);    break;
+      case 22:  ::sscanf(p,"%d",&nThreads);     break;
+      case 23:  ::sscanf(p,"%016lx",&sigPend);  break;
+      case 24:  ::sscanf(p,"%016lx",&shdPend);  break;
+      case 25:  ::sscanf(p,"%016lx",&sigBlk);   break;
+      case 26:  ::sscanf(p,"%016lx",&sigIgn);   break;
+      case 27:  ::sscanf(p,"%016lx",&sigCgt);   break;
+      case 28:  ::sscanf(p,"%016lx",&capInh);   break;
+      case 29:  ::sscanf(p,"%016lx",&capPrm);   break;
+      case 30:  ::sscanf(p,"%016lx",&capEff);   break;
+      default:                                  break;
+      }
+    }
+    return 1;
+  }
+  return 0;
+}
+
+void StatusProcess::print() const {
+  ::printf("\
+	   Name:     \t%s\n\
+	   State:    \t%c\n\
+	   SleepAVG: \t%8d%%\n\
+	   Tgid:     \t%8d\n\
+	   Pid:      \t%8d\n\
+	   PPid:     \t%8d\n\
+	   Uid:      \t%8d\n\
+	   Gid:      \t%8d\n\
+	   FDSize:   \t%8d\n\
+	   VmSize:   \t%8d kB\n\
+	   VmLck:    \t%8d kB\n\
+	   VmRSS:    \t%8d kB\n\
+	   VmData:   \t%8d kB\n\
+	   VmStk:    \t%8d kB\n\
+	   VmExe:    \t%8d kB\n\
+	   VmLib:    \t%8d kB\n\
+	   StaBrk:   \t%08lx kB\n\
+	   Brk:      \t%08lx kB\n\
+	   StaStk:   \t%08lx kB\n\
+	   Threads:  \t%8d\n\
+	   SigPnd:   \t%016lx\n\
+	   ShdPnd:   \t%016lx\n\
+	   SigBlk:   \t%016lx\n\
+	   SigIgn:   \t%016lx\n\
+	   SigCgt:   \t%016lx\n\
+	   CapInh:   \t%016lx\n\
+	   CapPrm:   \t%016lx\n\
+	   CapEff:   \t%016lx\n",
+	   comm, state, sleepAvg, tgid, pid, ppid, uid, gid,
+	   fdSize, vmSize, vmLock, vmRSS, vmData, vmStack,
+	   vmExe, vmLib, staBrk, brk, staStk, nThreads, sigPend,
+	   shdPend, sigBlk, sigIgn, sigCgt, capInh, capPrm, capEff);
+}
+
+/// Read process data from proc file system
 int SysProcess::read(int proc_id) {
   char buff[1024];
   int cnt = SysFile(fn_process_stat(proc_id)).read(buff,sizeof(buff));
@@ -89,30 +280,44 @@ int SysProcess::read(int proc_id) {
   return 1;
 }
 
-int SysFile::read(char* buf, size_t siz) const  {
-  int fd;
-  if((fd = ::open(m_name.c_str(),O_RDONLY))<0)  {
-    string err = "Failed to open "+m_name+" ";
-    throw runtime_error(err+::strerror(errno));
-  }
-  size_t tmp = 0;
-  while ( tmp < siz )  {
-    int sc = ::read(fd,buf+tmp,siz-tmp);
-    if ( sc >  0 ) {
-      tmp += sc;
-    }
-    else if ( sc == 0 )  {
-      buf[tmp] = 0;
-      ::close(fd);
-      return tmp;
-    }
-    else  {
-      break;
-    }
-  }
-  ::close(fd);
-  string err = "Read of Proc file "+m_name+" failed:";
-  throw runtime_error(err+::strerror(errno));
+/// Print process data from proc file system
+void SysProcess::print() const {
+#define _PRT(x)  cout << setw(16) << left << #x << ":" << right << setw(32) << x << endl
+_PRT(pid);      // 1
+_PRT(comm);      // 2
+_PRT(state);    // 3
+_PRT(ppid);     // 4
+_PRT(pgrp);     // 5
+_PRT(session);  // 6
+_PRT(tty);      // 7
+_PRT(tpgid);    // 8
+_PRT(flags);    // 9
+_PRT(minflt);   // 10
+_PRT(cminflt);  // 1
+_PRT(majflt);   // 2
+_PRT(cmajflt);  // 3
+_PRT(utime);    // 4
+_PRT(stime);    // 5
+_PRT(cutime);   // 6
+_PRT(cstime);   // 7
+_PRT(priority); // 8
+_PRT(nice);     // 9
+_PRT(num_threads); // 20
+_PRT(itrealvalue); // 1
+_PRT(starttime);   // 2
+_PRT(vsize);       // 3
+_PRT(rss);         // 4
+_PRT(rlim);        // 5
+_PRT(startcode);   // 6
+_PRT(endcode);     // 7
+_PRT(startstack);  // 8
+_PRT(kstkesp);     // 9
+_PRT(kstkeip);     // 30
+_PRT(signal);      // 1
+_PRT(blocked);     // 2
+_PRT(sigignore);   // 3
+_PRT(sigcatch);    // 4
+_PRT(wchan);      // 5
 }
 
 /// Read memory information block
@@ -266,21 +471,22 @@ int ROMon::read(CPUset& data, size_t max_len) {
 }
 
 int ROMon::read(Procset& procset, size_t max_len) {
-  static int pgSize = sysconf(_SC_PAGESIZE);
+  //static int pgSize = sysconf(_SC_PAGESIZE);
   int jiffy2second = sysconf(_SC_CLK_TCK);
-  int pid, nthread, retry = 5;
-  char buff[1024], txt[64], *ptr;
-  struct dirent* dp, *dp2;
-  struct tms buf;
-  int sys_start = ::time(0) - ::times(&buf)/jiffy2second;
+  int pid, retry = 5, cnt;
+  char buff[1024], *ptr;
+  time_t now = ::time(0);
+  struct dirent* dp;
+  DIR *dir = 0;
+  SystemUptime sys;
 
-  DIR *dir = 0, *dir2;
  Again:
   dir=::opendir("/proc");
   Procset::Processes::iterator pr = procset.reset()->processes.begin();
   Procset::Processes::iterator start = pr;
-  if ( dir )    {
+  if ( dir && sys.read() )    {
     SysProcess proc;
+    StatusProcess status;
     ro_gettime(&procset.time,&procset.millitm);
     ro_get_node_name(procset.name,sizeof(procset.name));
     do {
@@ -288,50 +494,37 @@ int ROMon::read(Procset& procset, size_t max_len) {
 	const char* n = dp->d_name;
 	if ( *n && ::isdigit(*n) ) {
 	  struct stat st_buf;
-	  ::sprintf(txt,"/proc/%s",n);
-	  if ( ::stat(txt,&st_buf)==0 ) {
-	    pid = ::atoi(n);
+	  pid = ::atoi(n);
+	  if ( ::stat(fn_process_dir(pid),&st_buf)==0 ) {
 	    try {
-	      ::strcat(txt,"/task");
 	      struct passwd *pw = ::getpwuid(st_buf.st_uid);
-	      if ( proc.read(pid) ) {
+	      if ( proc.read(pid) && status.read(pid) ) {
 		Process& p = (*pr);
-		dir2 = 0;
-		nthread = 0;
-		dir2 = ::opendir(txt);
-		if ( dir2 ) {
-		  do {
-		    if ((dp2 = ::readdir(dir2)) != 0) {
-		      const char* thn = dp2->d_name;
-		      if ( *thn && ::isdigit(*thn) ) ++nthread;
-		    }
-		  } while (dp2 != NULL);
+		if((cnt=SysFile(fn_process_cmdline(pid)).read(buff,sizeof(buff))) > 0) {
+		  for(ptr = buff+strlen(buff); ptr>buff && *ptr!='/';) --ptr;
+		  if ( *ptr=='/' ) ++ptr;
+		  while( (int)::strlen(buff) < (cnt-1) ) buff[strlen(buff)] = ' ';
+		  ::strncpy(p.cmd,ptr,sizeof(p.cmd));
+		  p.cmd[sizeof(p.cmd)-1] = 0;
 		}
-		if ( dir2 ) {
-		  ::closedir(dir2);
-		  dir2 = 0;
-		}
-		//::sprintf(txt,"/proc/%s/cmdline",n);
-		if(SysFile(fn_process_cmdline(pid)).read(buff,sizeof(buff)) > 0)
-		  ::strncpy(p.cmd,buff,sizeof(p.cmd));
-		else
+		else {
 		  ::strncpy(p.cmd,proc.comm+1,sizeof(p.cmd));
-		p.cmd[sizeof(p.cmd)-1] = 0;
-		if ( (ptr=strchr(p.cmd,')')) ) *ptr = 0;
-		if ( (ptr=::strchr(p.cmd,' ')) ) *ptr = 0;
+		  p.cmd[sizeof(p.cmd)-1] = 0;
+		  if ( (ptr=::strchr(p.cmd,')')) ) *ptr = 0;
+		}
 		::strncpy(p.owner,pw->pw_name,sizeof(p.owner));
 		p.owner[sizeof(p.owner)-1] = 0;
 		// Note: seconds!!!
 		p.cpu     = double(proc.stime+proc.utime)/double(jiffy2second);
-		p.start   = sys_start - (proc.starttime/jiffy2second);
+		p.start   = now - int(sys.uptime) + (proc.starttime/jiffy2second);
 		p.mem     = 0.0;
-		p.stack   = (float)(proc.kstkesp-proc.startstack);
-		p.vsize   = (float)(proc.vsize);
-		p.rss     = (float)(proc.rss*pgSize);
-		p.state   = proc.state;
-		p.pid     = proc.pid;
-		p.ppid    = proc.ppid;
-		p.threads = nthread;
+		p.stack   = status.vmStack;
+		p.vsize   = status.vmSize;
+		p.rss     = status.vmRSS;
+		p.state   = status.state;
+		p.pid     = status.pid;
+		p.ppid    = status.ppid;
+		p.threads = status.nThreads;
 #if 0
 		log() << "ReadProc:" << (void*)pr << " PID:" << p.pid 
 		      << " PPID:" << p.ppid 
@@ -348,15 +541,11 @@ int ROMon::read(Procset& procset, size_t max_len) {
 	    }
 	    catch(exception& e) {
 	      log() << "Exception reading task information:" << e.what() << endl;
-	      if ( dir2 ) ::closedir(dir2);
-	      dir2 = 0;
 	      if ( --retry>0 ) goto Again;
 	      dp = 0;
 	    }
 	    catch(...) {
 	      log() << "Unknown exception reading task information" << endl;
-	      if ( dir2 ) ::closedir(dir2);
-	      dir2 = 0;
 	      if ( --retry>0 ) goto Again;
 	      dp = 0;
 	    }
@@ -364,10 +553,52 @@ int ROMon::read(Procset& procset, size_t max_len) {
 	}
       }
     } while (dp != NULL);
-    if ( dir2 ) ::closedir(dir2);
-    dir2 = 0;
     ::closedir(dir);
     return 1;
   }
   return 0;
+}
+
+
+extern "C" int test_statusProc(int,char**) {
+  char txt[32];
+  StatusProcess p;
+  int pid = ::lib_rtl_pid();
+  ::sprintf(txt,"cat %s",fn_process_status(pid));
+  if ( 0 != p.read(pid) )
+    p.print();
+  else
+    cout << "Failed to read status info:" << fn_process_status(pid) << endl;
+  ::system(txt);
+  return 1;
+}
+extern "C" int test_statProc(int,char**) {
+  char txt[32];
+  SysProcess p;
+  int pid = ::lib_rtl_pid();
+  ::sprintf(txt,"cat %s",fn_process_stat(pid));
+  if ( 0 != p.read(pid) )
+    p.print();
+  else
+    cout << "Failed to read " << fn_process_stat(pid)  << "." << endl;
+  ::system(txt);
+  return 1;
+}
+extern "C" int test_envProc(int,char**) {
+  char txt[32];
+  EnvironProcess p;
+  int pid = ::lib_rtl_pid();
+  ::sprintf(txt,"cat %s",fn_process_environ(pid));
+  if ( 0 != p.read(pid) )
+    p.print();
+  else
+    cout << "Failed to read " << fn_process_environ(pid)  << "." << endl;
+  ::system(txt);
+  return 1;
+}
+extern "C" int test_systemUptime(int,char**) {
+  SystemUptime p;
+  if ( 0 != p.read() ) p.print();
+  ::system("cat /proc/uptime");
+  return 1;
 }

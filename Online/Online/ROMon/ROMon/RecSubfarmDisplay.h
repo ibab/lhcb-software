@@ -1,4 +1,4 @@
-// $Id: RecSubfarmDisplay.h,v 1.4 2008-08-27 19:15:20 frankb Exp $
+// $Id: RecSubfarmDisplay.h,v 1.5 2008-11-13 08:29:41 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/RecSubfarmDisplay.h,v 1.4 2008-08-27 19:15:20 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/RecSubfarmDisplay.h,v 1.5 2008-11-13 08:29:41 frankb Exp $
 #ifndef ROMON_RECSUBFARMDISPLAY_H
 #define ROMON_RECSUBFARMDISPLAY_H 1
 
@@ -59,6 +59,9 @@ namespace ROMon {
 
     /// Number of nodes in the dataset
     size_t numNodes();
+
+    /// Retrieve cluster name from cluster display
+    std::string clusterName() const;
 
     /// Retrieve node name from cluster display by offset
     virtual std::string nodeName(size_t offset);

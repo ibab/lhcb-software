@@ -1,4 +1,4 @@
-// $Id: SysInfo.cpp,v 1.1 2008-11-11 18:31:09 frankb Exp $
+// $Id: SysInfo.cpp,v 1.2 2008-11-13 08:29:41 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/SysInfo.cpp,v 1.1 2008-11-11 18:31:09 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/SysInfo.cpp,v 1.2 2008-11-13 08:29:41 frankb Exp $
 #include "ROMon/SysInfo.h"
 #include "ROMon/CPUMonOstream.h"
 #include "ROMon/ROMonInfo.h"
@@ -51,9 +51,10 @@ SysInfo::SysInfo(NodeStats* buff, size_t len, int nbuffs)
 
   // Setup the object
   read(m_mem);
-  m_utgid.setMatch(match);
-  m_utgid.setItem("longList");
-  servers.push_back(&m_utgid);
+  m_utgid = new FMCMonListener();
+  m_utgid->setMatch(match);
+  m_utgid->setItem("longList");
+  servers.push_back(m_utgid);
   m_dns = new ROMonInfo(servers);
   statistics()->reset();
 }
@@ -61,6 +62,7 @@ SysInfo::SysInfo(NodeStats* buff, size_t len, int nbuffs)
 SysInfo::~SysInfo()  {
   int i;
   delete m_dns;
+  delete m_utgid;
   for(i=0; i<m_nBuffs; ++i) delete [] m_procInfo[i];
   for(i=0; i<m_nBuffs; ++i) delete [] m_cpuInfo[i];
   delete [] m_cpuInfo;
@@ -72,8 +74,8 @@ int SysInfo::readTmProcs(DSC& info, TmProcs& procs) {
   char* p;
   int it;
   dim_lock();
-  if ( m_utgid.clients().begin() != m_utgid.clients().end() ) {
-    RODimListener::Clients::const_iterator ic=m_utgid.clients().begin();
+  if ( m_utgid->clients().begin() != m_utgid->clients().end() ) {
+    RODimListener::Clients::const_iterator ic=m_utgid->clients().begin();
     DSC* data = (*ic).second->data<DSC>();
     info.copy(data->data,data->actual);
     info.time    = data->time;
@@ -160,16 +162,16 @@ int SysInfo::combineProcessInfo() {
   const Procset::Processes& now = pn.processes;
   const Procset::Processes& last = pl.processes;
   
-  Procset::Processes& res = pr.processes;
+  Procset::Processes& res = pr.reset()->processes;
   Procset::Processes::const_iterator i, j, k;
   Procset::Processes::iterator m = res.reset();
   double diff = ((1e3*double(pn.time-pl.time))+double(pn.millitm)-double(pl.millitm))/1e3; // seconds!
-  pr.reset();
   pr.time = pn.time;
   pr.millitm = pn.millitm;
   ::strcpy(pr.name,pn.name);
   for(i=now.begin(), j=last.begin(); i != now.end(); i=now.next(i) ) {
-    int pid = (*i).pid;
+    const Process& q = *i;
+    int pid = q.pid;
     for(k=j; j != last.end(); j=last.next(j) )
       if ( (*j).pid == pid ) break;
     if ( j == last.end() ) {
@@ -178,23 +180,25 @@ int SysInfo::combineProcessInfo() {
     }
     if ( j != last.end() && (*j).pid == pid ) {
       TmProcs::const_iterator tmi=m_procs.find(pid);
+      Process& p = *m;
       if ( tmi != m_procs.end() )
-	::strncpy((*m).utgid,(*tmi).second.utgid,sizeof((*m).utgid));
+	::strncpy(p.utgid,(*tmi).second.utgid,sizeof(p.utgid));
       else
-	::strcpy((*m).utgid,"N/A");
-      (*m).utgid[sizeof((*m).utgid)-1] = 0;
-      ::strncpy((*m).owner,(*i).owner,sizeof((*m).owner));
-      (*m).owner[sizeof((*m).owner)-1] = 0;
-      ::strncpy((*m).cmd,(*i).cmd,sizeof((*m).cmd));
-      (*m).cmd[sizeof((*m).cmd)-1] = 0;
-      (*m).cpu     = ((*i).cpu-(*j).cpu)*100./diff;
-      (*m).mem     = (*i).vsize * 100. / float(m_mem.memTotal*1024.);
-      (*m).vsize   = (*i).vsize/1024;
-      (*m).rss     = (*i).rss/1024;
-      (*m).stack   = (*i).stack/1024;
-      (*m).pid     = pid;
-      (*m).ppid    = (*i).ppid;
-      (*m).threads = (*i).threads;
+	::strcpy(p.utgid,"N/A");
+      p.utgid[sizeof(p.utgid)-1] = 0;
+      ::strncpy(p.owner,q.owner,sizeof(p.owner));
+      p.owner[sizeof(p.owner)-1] = 0;
+      ::strncpy(p.cmd,q.cmd,sizeof(p.cmd));
+      p.cmd[sizeof(p.cmd)-1] = 0;
+      p.cpu     = (q.cpu-(*j).cpu)*100./diff;
+      p.mem     = q.vsize * 100. / float(m_mem.memTotal);
+      p.vsize   = q.vsize;
+      p.rss     = q.rss;
+      p.stack   = q.stack;
+      p.pid     = q.pid;
+      p.ppid    = q.ppid;
+      p.threads = q.threads;
+      p.start   = q.start;
       m = res.add(m);
       if ( ((char*)m)-((char*)m_buffer) > (int)m_buffLen ) {
 	log() << "Global section memory too small.....exiting" << endl;
@@ -219,7 +223,7 @@ int SysInfo::init() {
 
 /// Update changing object data items
 int SysInfo::update() {
-  const RODimListener::Clients& cl = m_utgid.clients();
+  const RODimListener::Clients& cl = m_utgid->clients();
   if ( cl.size() == 1 ) {
     newReading();
     read(statistics()->memory);
@@ -233,6 +237,15 @@ int SysInfo::update() {
   }
   else {
     log() << "SysInfo: Bad number of information clients:" << cl.size() << " .... stop." << endl;
+    string match, n = RTL::nodeNameShort();
+    for(size_t i=0; i<n.length();++i) n[i]=::toupper(n[i]);
+    match = "/FMC/"+n+"/task_manager";
+    m_dns->servers().clear();
+    delete m_utgid;
+    m_utgid = new FMCMonListener();
+    m_utgid->setMatch(match);
+    m_utgid->setItem("longList");
+    m_dns->servers().push_back(m_utgid);
     return 0;
   }
   return 1;

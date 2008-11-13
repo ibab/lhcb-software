@@ -1,4 +1,4 @@
-// $Id: NodeStatsPublisher.cpp,v 1.1 2008-11-11 18:31:09 frankb Exp $
+// $Id: NodeStatsPublisher.cpp,v 1.2 2008-11-13 08:29:41 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,13 +11,15 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/NodeStatsPublisher.cpp,v 1.1 2008-11-11 18:31:09 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/NodeStatsPublisher.cpp,v 1.2 2008-11-13 08:29:41 frankb Exp $
 
 // C++ include files
 #include <iostream>
+#include <stdexcept>
 
 // Framework includes
 #include "dic.hxx"
+#include "dis.hxx"
 #include "RTL/rtl.h"
 #include "RTL/Lock.h"
 #define MBM_IMPLEMENTATION
@@ -26,10 +28,8 @@
 #include "ROMon/CPUMon.h"
 #include "ROMon/CPUMonOstream.h"
 #include "ROMon/NodeStatsPublisher.h"
-#include "dis.hxx"
-#include <stdexcept>
-
 #include "ROMonDefs.h"
+
 using namespace ROMon;
 using namespace std;
 typedef FMCMonListener::Descriptor DSC;
@@ -183,7 +183,8 @@ NodeStatsPublisher::NodeStatsPublisher(int argc, char** argv)
   cli.getopt("statDelay", 5, m_statDelay);
   cli.getopt("mbmDelay",  4, m_mbmDelay);
 
-  m_verbose = true;
+  ::dic_set_dns_node((char*)RTL::nodeNameShort().c_str());
+  ::dis_set_dns_node((char*)PUBLISHING_NODE.c_str());
   m_service[0] = new _Svc<Nodeset> (m_mbm,  64,svc);
   m_service[1] = new _Svc<CPUfarm> (m_stat, 10,svc + "/CPU");
   m_service[2] = new _Svc<ProcFarm>(m_stat,512,svc + "/Tasks");
@@ -194,10 +195,6 @@ NodeStatsPublisher::NodeStatsPublisher(int argc, char** argv)
     throw std::runtime_error("Unknown data type and unknwon service name -- cannot be published.");
   }
 
-  ::dis_set_dns_node((char*)PUBLISHING_NODE.c_str());
-  for(size_t i=0; i<sizeof(m_service)/sizeof(m_service[0]); ++i)
-    m_service[i]->start();
-  ::dis_set_dns_node((char*)RTL::nodeNameShort().c_str());
   m_stat.setMatch(match);
   m_stat.setItem("Statistics");
   m_stat.setVerbose(m_verbose);
@@ -208,6 +205,8 @@ NodeStatsPublisher::NodeStatsPublisher(int argc, char** argv)
   m_mbm.setUpdateHandler(this);
   m_mbm.start();
   m_stat.start();
+  for(size_t i=0; i<sizeof(m_service)/sizeof(m_service[0]); ++i)
+    m_service[i]->start();
   DimServer::start(svc.c_str());
 }
 

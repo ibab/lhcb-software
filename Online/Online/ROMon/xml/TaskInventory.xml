@@ -86,7 +86,9 @@
 <TaskList name="StandardHLT">
  <Task name="TANServ"/>
  <Task name="ROcollect"/>
+ <!-- 
  <Task name="ROpublish"/>
+ -->
  <Task name="LogGaudiSrv"/>
 </TaskList>
 
@@ -258,10 +260,12 @@
 <NodeType name="HLTControl">
   <!-- TaskList name="FMC"/-->
   <TaskList name="StandardHLT"/>
+<!--
   <Task name="CPUmon"/>
   <Task name="CPUcollect"/>
   <Task name="PROCmon"/>
   <Task name="PROCcollect"/>
+-->
   <Task name="LogGaudi"/>
   <Task name="LogGaudiSumSrv"/>
   <ConnectionList name="ControlsPC"/>
