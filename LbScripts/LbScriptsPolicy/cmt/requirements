@@ -1,5 +1,5 @@
 package LbScriptsPolicy
-version v1r3
+version v1r4
 
 macro install_command 'python $(LbScriptsPolicy_root)/cmt/fragments/install.py -xCVS --log=./install.history '
 macro uninstall_command 'python $(LbScriptsPolicy_root)/cmt/fragments/install.py -u --log=./install.history '

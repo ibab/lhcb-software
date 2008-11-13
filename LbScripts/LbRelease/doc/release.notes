@@ -1,3 +1,17 @@
+2008-11-13  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v1r4
+
+2008-11-13  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: added the shell alias for startNightlies and removed the
+	python alias.
+	* scripts/startNightlies.bat: New file.
+	* scripts/startNightlies.csh: New file.
+	* scripts/startNightlies.sh: New file. Added wrapper for the script startNightlies.py.
+	It retrieve first the environment for the LCG Nightlies python scripts and then
+	calls the script.
+
 2008-11-06  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
 	* python/LbRelease/Nightlies: New directory.
