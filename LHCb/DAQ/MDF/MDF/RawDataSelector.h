@@ -1,4 +1,4 @@
-// $Id: RawDataSelector.h,v 1.17 2008-05-26 06:16:46 cattanem Exp $
+// $Id: RawDataSelector.h,v 1.18 2008-11-13 09:08:06 frankb Exp $
 //====================================================================
 #ifndef MDF_RAWDATASELECTOR_H
 #define MDF_RAWDATASELECTOR_H 1
@@ -172,10 +172,16 @@ namespace LHCb  {
     std::string         m_rootName;
     /// Property: name of the file manager service
     std::string         m_ioMgrName;
+    /// Property: input dataset name
+    std::string         m_input;
     /// Pointer to file manager service
     Gaudi::IIODataManager* m_ioMgr;
     /// Property: First event to process
     int                 m_skipEvents;
+    /// Property: printout frequency
+    int                 m_printFreq;
+    /// Event record count
+    mutable int         m_evtCount;
   };
 }
 #endif  // MDF_RAWDATASELECTOR_H

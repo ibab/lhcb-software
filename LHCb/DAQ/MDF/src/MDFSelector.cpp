@@ -1,4 +1,4 @@
-// $Id: MDFSelector.cpp,v 1.16 2008-02-05 16:44:18 frankb Exp $
+// $Id: MDFSelector.cpp,v 1.17 2008-11-13 09:08:06 frankb Exp $
 //====================================================================
 //  MDFSelector.cpp
 //--------------------------------------------------------------------
@@ -96,6 +96,14 @@ namespace LHCb  {
     virtual StatusCode createContext(Context*& refpCtxt) const {
       char c = ::toupper(m_ignoreChecksum[0]);
       refpCtxt = new MDFContext(this,c=='Y'||c=='T'); // YES or TRUE
+      if ( !m_input.empty() )  {
+	StatusCode sc = resetCriteria(m_input,*refpCtxt);
+	if ( !sc.isSuccess() ) {
+	  delete refpCtxt;
+	  refpCtxt = 0;
+	}
+	return sc;
+      }
       return StatusCode::SUCCESS;
     }
     /// Service Constructor

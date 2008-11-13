@@ -1,4 +1,4 @@
-// $Id: RawDataSelector.cpp,v 1.19 2008-03-03 20:05:04 frankb Exp $
+// $Id: RawDataSelector.cpp,v 1.20 2008-11-13 09:08:06 frankb Exp $
 //====================================================================
 //  OnlineMDFEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -55,10 +55,12 @@ void RawDataSelector::LoopContext::close()    {
 }
 
 RawDataSelector::RawDataSelector(const std::string& nam, ISvcLocator* svcloc)
-: Service( nam, svcloc), m_rootCLID(CLID_NULL)
+  : Service( nam, svcloc), m_rootCLID(CLID_NULL), m_evtCount(0)
 {
   declareProperty("DataManager", m_ioMgrName="Gaudi::IODataManager/IODataManager");
-  declareProperty("NSkip", m_skipEvents=0);
+  declareProperty("NSkip",     m_skipEvents=0);
+  declareProperty("PrintFreq", m_printFreq=-1);
+  declareProperty("Input",     m_input="");
 }
 
 // IInterface::queryInterface
@@ -98,6 +100,7 @@ StatusCode RawDataSelector::initialize()  {
   m_rootCLID = eds->rootCLID();
   eds->release();
   log << MSG::DEBUG << "Selection CLID:" << m_rootCLID << endmsg;
+  m_evtCount = 0;
   return status;
 }
 
@@ -107,12 +110,19 @@ StatusCode RawDataSelector::finalize()  {
     m_ioMgr->release();
     m_ioMgr = 0;
   }
+  m_evtCount = 0;
   return Service::finalize();
 }
 
 StatusCode RawDataSelector::next(Context& ctxt) const  {
   LoopContext* pCtxt = dynamic_cast<LoopContext*>(&ctxt);
   if ( pCtxt != 0 )   {
+    ++m_evtCount;
+    if ( m_printFreq>0 && (m_evtCount%m_printFreq)==0 ) {
+      MsgStream log(messageService(), name());
+      log << MSG::ALWAYS << "Reading Event record " << (m_evtCount-m_skipEvents)
+          << ". Record number within stream " << m_evtCount << endreq;
+    }
     return pCtxt->receiveData(msgSvc());
   }
   return S_ERROR;
