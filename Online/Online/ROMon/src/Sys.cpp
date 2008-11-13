@@ -10,8 +10,13 @@
 #include <fcntl.h>
 
 #ifdef _WIN32
-#include <process.h>
 #include <io.h>
+#include <process.h>
+#include <sys/stat.h>
+namespace {
+  struct passwd {char pw_name[16];};
+  passwd* getpwuid(int) { return 0; }
+}
 #define O_RDONLY _O_RDONLY
 #define _SC_PAGESIZE 1
 #define _SC_CLK_TCK 0
@@ -20,6 +25,7 @@
 #include <unistd.h>
 #include <pwd.h>
 #include <sys/times.h>
+#include <sys/param.h>
 #endif
 
 using namespace std;
@@ -130,8 +136,8 @@ int UtgidProcess::read(int proc_id) {
       *val = 0;
       ++val;
       if ( ::strcmp(tag,"UTGID")==0 ) {
-	utgid = ++val;
-	break;
+        utgid = ++val;
+        break;
       }
       ptr = val + ::strlen(val) + 1;
     }
@@ -157,7 +163,7 @@ int StatusProcess::read(int proc_id) {
       if ( 0 == p ) continue;
       ++p;
       switch(++nitem) {
-      case 1:	::sscanf(p,"%s",comm);          break;
+      case 1:        ::sscanf(p,"%s",comm);          break;
       case 2:   ::sscanf(p,"%c",&state);        break;
       case 3:   ::sscanf(p,"%d%%",&sleepAvg);   break;
       case 4:   ::sscanf(p,"%d",&tgid);         break;
@@ -195,38 +201,38 @@ int StatusProcess::read(int proc_id) {
 
 void StatusProcess::print() const {
   ::printf("\
-	   Name:     \t%s\n\
-	   State:    \t%c\n\
-	   SleepAVG: \t%8d%%\n\
-	   Tgid:     \t%8d\n\
-	   Pid:      \t%8d\n\
-	   PPid:     \t%8d\n\
-	   Uid:      \t%8d\n\
-	   Gid:      \t%8d\n\
-	   FDSize:   \t%8d\n\
-	   VmSize:   \t%8d kB\n\
-	   VmLck:    \t%8d kB\n\
-	   VmRSS:    \t%8d kB\n\
-	   VmData:   \t%8d kB\n\
-	   VmStk:    \t%8d kB\n\
-	   VmExe:    \t%8d kB\n\
-	   VmLib:    \t%8d kB\n\
-	   StaBrk:   \t%08lx kB\n\
-	   Brk:      \t%08lx kB\n\
-	   StaStk:   \t%08lx kB\n\
-	   Threads:  \t%8d\n\
-	   SigPnd:   \t%016lx\n\
-	   ShdPnd:   \t%016lx\n\
-	   SigBlk:   \t%016lx\n\
-	   SigIgn:   \t%016lx\n\
-	   SigCgt:   \t%016lx\n\
-	   CapInh:   \t%016lx\n\
-	   CapPrm:   \t%016lx\n\
-	   CapEff:   \t%016lx\n",
-	   comm, state, sleepAvg, tgid, pid, ppid, uid, gid,
-	   fdSize, vmSize, vmLock, vmRSS, vmData, vmStack,
-	   vmExe, vmLib, staBrk, brk, staStk, nThreads, sigPend,
-	   shdPend, sigBlk, sigIgn, sigCgt, capInh, capPrm, capEff);
+           Name:     \t%s\n\
+           State:    \t%c\n\
+           SleepAVG: \t%8d%%\n\
+           Tgid:     \t%8d\n\
+           Pid:      \t%8d\n\
+           PPid:     \t%8d\n\
+           Uid:      \t%8d\n\
+           Gid:      \t%8d\n\
+           FDSize:   \t%8d\n\
+           VmSize:   \t%8d kB\n\
+           VmLck:    \t%8d kB\n\
+           VmRSS:    \t%8d kB\n\
+           VmData:   \t%8d kB\n\
+           VmStk:    \t%8d kB\n\
+           VmExe:    \t%8d kB\n\
+           VmLib:    \t%8d kB\n\
+           StaBrk:   \t%08lx kB\n\
+           Brk:      \t%08lx kB\n\
+           StaStk:   \t%08lx kB\n\
+           Threads:  \t%8d\n\
+           SigPnd:   \t%016lx\n\
+           ShdPnd:   \t%016lx\n\
+           SigBlk:   \t%016lx\n\
+           SigIgn:   \t%016lx\n\
+           SigCgt:   \t%016lx\n\
+           CapInh:   \t%016lx\n\
+           CapPrm:   \t%016lx\n\
+           CapEff:   \t%016lx\n",
+           comm, state, sleepAvg, tgid, pid, ppid, uid, gid,
+           fdSize, vmSize, vmLock, vmRSS, vmData, vmStack,
+           vmExe, vmLib, staBrk, brk, staStk, nThreads, sigPend,
+           shdPend, sigBlk, sigIgn, sigCgt, capInh, capPrm, capEff);
 }
 
 /// Read process data from proc file system
@@ -236,42 +242,42 @@ int SysProcess::read(int proc_id) {
   if(cnt>0)  {
     //                       1  2  3  4  5  6  7  8  9   10  1   2   3   4   5   6   7   8   9   20  1   2   3   4   5   6   7   8   9   30  1   2   3   4   5
     int ret = ::sscanf(buff,"%d %s %c %d %d %d %d %d %lu %lu %lu %lu %lu %lu %lu %lu %lu %ld %ld %ld %lu %lu %lu %lu %ld %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu",
-	     &pid,      // 1
-	     comm,      // 2
-	     &state,    // 3
-	     &ppid,     // 4
-	     &pgrp,     // 5
-	     &session,  // 6
-	     &tty,      // 7
-	     &tpgid,    // 8
-	     &flags,    // 9
-	     &minflt,   // 10
-	     &cminflt,  // 1
-	     &majflt,   // 2
-	     &cmajflt,  // 3
-	     &utime,    // 4
-	     &stime,    // 5
-	     &cutime,   // 6
-	     &cstime,   // 7
-	     &priority, // 8
-	     &nice,     // 9
-	     &num_threads, // 20
-	     &itrealvalue, // 1
-	     &starttime,   // 2
-	     &vsize,       // 3
-	     &rss,         // 4
-	     &rlim,        // 5
-	     &startcode,   // 6
-	     &endcode,     // 7
-	     &startstack,  // 8
-	     &kstkesp,     // 9
-	     &kstkeip,     // 30
-	     &signal,      // 1
-	     &blocked,     // 2
-	     &sigignore,   // 3
-	     &sigcatch,    // 4
-	     &wchan        // 5
-	     );
+             &pid,      // 1
+             comm,      // 2
+             &state,    // 3
+             &ppid,     // 4
+             &pgrp,     // 5
+             &session,  // 6
+             &tty,      // 7
+             &tpgid,    // 8
+             &flags,    // 9
+             &minflt,   // 10
+             &cminflt,  // 1
+             &majflt,   // 2
+             &cmajflt,  // 3
+             &utime,    // 4
+             &stime,    // 5
+             &cutime,   // 6
+             &cstime,   // 7
+             &priority, // 8
+             &nice,     // 9
+             &num_threads, // 20
+             &itrealvalue, // 1
+             &starttime,   // 2
+             &vsize,       // 3
+             &rss,         // 4
+             &rlim,        // 5
+             &startcode,   // 6
+             &endcode,     // 7
+             &startstack,  // 8
+             &kstkesp,     // 9
+             &kstkeip,     // 30
+             &signal,      // 1
+             &blocked,     // 2
+             &sigignore,   // 3
+             &sigcatch,    // 4
+             &wchan        // 5
+             );
     if ( ret != 35 ) {
       log() << "Failed to convert process information for PID:" << proc_id << endl;
     }
@@ -329,8 +335,8 @@ int ROMon::read(Memory& memory) {
     for(char* p=buff, *item; p>0 && p<buff+cnt && is < ie; ++is, p=::strchr(item,'\n')) {
       while(*p=='\n')++p;
       if ( (item=::strchr(p,':')) )  {
-	for(++item;::isspace(*item);)++item;
-	::sscanf(item,"%d",is);
+        for(++item;::isspace(*item);)++item;
+        ::sscanf(item,"%d",is);
       }
     }
     return 1;
@@ -356,15 +362,15 @@ int ROMon::readInfo(CPUset& info, size_t max_len) {
         if ( ::strncmp(desc,"power management",16)==0 )  {
           /// This is the last item. get the next bugger
           corIt = info.cores.add(corIt)->reset();
-	  if ( ((char*)corIt)-((char*)begin) > (int)max_len ) {
-	    log() << "CPU Buffer memory too small.....exiting" << endl;
-	    break;
-	  }
-	  ++ncores;
-	  continue;
+          if ( ((char*)corIt)-((char*)begin) > (int)max_len ) {
+            log() << "CPU Buffer memory too small.....exiting" << endl;
+            break;
+          }
+          ++ncores;
+          continue;
         }
         *item = 0;
-	item += 2;
+        item += 2;
         if ( ::strncmp(desc,"cache size",sizeof("cache size"))==0 )  {
           (*corIt).cache = (int)::atoi(item);
         }
@@ -378,12 +384,12 @@ int ROMon::readInfo(CPUset& info, size_t max_len) {
           ::strncpy(info.family,item,sizeof(info.family));
           info.family[sizeof(info.family)-1] = 0;
         }
-	else if ( ::strncmp(desc,"core id",sizeof("core id"))==0 ) {
-	  core_id = item;
-	}
+        else if ( ::strncmp(desc,"core id",sizeof("core id"))==0 ) {
+          core_id = item;
+        }
         /*
-	  else if ( ::strncmp(desc,"model name",sizeof("model"))==0 ) ;
-	  else if ( ::strncmp(desc,"physical id",sizeof("physical id"))==0 ) ;
+          else if ( ::strncmp(desc,"model name",sizeof("model"))==0 ) ;
+          else if ( ::strncmp(desc,"physical id",sizeof("physical id"))==0 ) ;
         */
       }
     }
@@ -411,47 +417,47 @@ int ROMon::readStat(CPUset& info, size_t max_len, size_t num_cores) {
       if ( (p=::strchr(desc,'\n')) ) *p = 0;
       switch(desc[0]) {
       case 'b':     // BOOT TIME
-	sscanf(desc,"%d",&info.boot);
-	break;
+        sscanf(desc,"%d",&info.boot);
+        break;
       case 'c':
         switch(desc[1]) {
         case 'p':   // CPUn
-	  st = desc[3]==' ' ? &info.averages : &((*ci).stats);
-	  // log() << "Core data:" << desc << endl;
+          st = desc[3]==' ' ? &info.averages : &((*ci).stats);
+          // log() << "Core data:" << desc << endl;
           sscanf(desc+5,"%ld %ld %ld %ld %ld %ld %ld",&li[0],&li[1],&li[2],&li[3],&li[4],&li[5],&li[6]);
-	  st->user    = (float)(li[0]*1000.)/jiffy2second;
-	  st->nice    = (float)(li[1]*1000.)/jiffy2second;
-	  st->system  = (float)(li[2]*1000.)/jiffy2second;
-	  st->idle    = (float)(li[3]*1000.)/jiffy2second;
-	  st->iowait  = (float)(li[4]*1000.)/jiffy2second;
-	  st->IRQ     = (float)(li[5]*1000.)/jiffy2second;
-	  st->softIRQ = (float)(li[6]*1000.)/jiffy2second;
-	  if ( desc[3] != ' ' ) {
-	    if ( ++ncore > num_cores ) return 1;
-	    ci = need_alloc ? info.cores.add(ci) : info.cores.next(ci);
-	    if ( ((char*)st)-((char*)begin) > (int)max_len ) {
-	      log() << "CPU Buffer memory too small.....exiting" << endl;
-	      break;
-	    }
-	  }
-	break;
+          st->user    = (float)(li[0]*1000.)/jiffy2second;
+          st->nice    = (float)(li[1]*1000.)/jiffy2second;
+          st->system  = (float)(li[2]*1000.)/jiffy2second;
+          st->idle    = (float)(li[3]*1000.)/jiffy2second;
+          st->iowait  = (float)(li[4]*1000.)/jiffy2second;
+          st->IRQ     = (float)(li[5]*1000.)/jiffy2second;
+          st->softIRQ = (float)(li[6]*1000.)/jiffy2second;
+          if ( desc[3] != ' ' ) {
+            if ( ++ncore > num_cores ) return 1;
+            ci = need_alloc ? info.cores.add(ci) : info.cores.next(ci);
+            if ( ((char*)st)-((char*)begin) > (int)max_len ) {
+              log() << "CPU Buffer memory too small.....exiting" << endl;
+              break;
+            }
+          }
+        break;
         case 't':   // CTXT
           sscanf(desc+5,"%ld",&li[0]);
-	  info.ctxtRate = (float)li[0];
-	  break;
+          info.ctxtRate = (float)li[0];
+          break;
         default:
           break;
         }
       case 'i':     // INTR: first is total interrupt rate
-	//::sscanf(desc+5,"%ld",&li[0]);
-	break;
+        //::sscanf(desc+5,"%ld",&li[0]);
+        break;
       case 'p':     // PROC
-	//if ( ::strcmp(desc,"processes")==0 ) {}
-	//else if ( ::strcmp(desc,"procs_running")==0 ) {}
-	//else if ( ::strcmp(desc,"procs_blocked")==0 ) {}
-	break;
+        //if ( ::strcmp(desc,"processes")==0 ) {}
+        //else if ( ::strcmp(desc,"procs_running")==0 ) {}
+        //else if ( ::strcmp(desc,"procs_blocked")==0 ) {}
+        break;
       default:
-	break;
+        break;
       }
     }
     ci = need_alloc ? info.cores.add(ci) : info.cores.next(ci);
@@ -491,66 +497,66 @@ int ROMon::read(Procset& procset, size_t max_len) {
     ro_get_node_name(procset.name,sizeof(procset.name));
     do {
       if ((dp = readdir(dir)) != 0) {
-	const char* n = dp->d_name;
-	if ( *n && ::isdigit(*n) ) {
-	  struct stat st_buf;
-	  pid = ::atoi(n);
-	  if ( ::stat(fn_process_dir(pid),&st_buf)==0 ) {
-	    try {
-	      struct passwd *pw = ::getpwuid(st_buf.st_uid);
-	      if ( proc.read(pid) && status.read(pid) ) {
-		Process& p = (*pr);
-		if((cnt=SysFile(fn_process_cmdline(pid)).read(buff,sizeof(buff))) > 0) {
-		  for(ptr = buff+strlen(buff); ptr>buff && *ptr!='/';) --ptr;
-		  if ( *ptr=='/' ) ++ptr;
-		  while( (int)::strlen(buff) < (cnt-1) ) buff[strlen(buff)] = ' ';
-		  ::strncpy(p.cmd,ptr,sizeof(p.cmd));
-		  p.cmd[sizeof(p.cmd)-1] = 0;
-		}
-		else {
-		  ::strncpy(p.cmd,proc.comm+1,sizeof(p.cmd));
-		  p.cmd[sizeof(p.cmd)-1] = 0;
-		  if ( (ptr=::strchr(p.cmd,')')) ) *ptr = 0;
-		}
-		::strncpy(p.owner,pw->pw_name,sizeof(p.owner));
-		p.owner[sizeof(p.owner)-1] = 0;
-		// Note: seconds!!!
-		p.cpu     = double(proc.stime+proc.utime)/double(jiffy2second);
-		p.start   = now - int(sys.uptime) + (proc.starttime/jiffy2second);
-		p.mem     = 0.0;
-		p.stack   = status.vmStack;
-		p.vsize   = status.vmSize;
-		p.rss     = status.vmRSS;
-		p.state   = status.state;
-		p.pid     = status.pid;
-		p.ppid    = status.ppid;
-		p.threads = status.nThreads;
+        const char* n = dp->d_name;
+        if ( *n && ::isdigit(*n) ) {
+          struct stat st_buf;
+          pid = ::atoi(n);
+          if ( ::stat(fn_process_dir(pid),&st_buf)==0 ) {
+            try {
+              struct passwd *pw = ::getpwuid(st_buf.st_uid);
+              if ( proc.read(pid) && status.read(pid) ) {
+                Process& p = (*pr);
+                if((cnt=SysFile(fn_process_cmdline(pid)).read(buff,sizeof(buff))) > 0) {
+                  for(ptr = buff+strlen(buff); ptr>buff && *ptr!='/';) --ptr;
+                  if ( *ptr=='/' ) ++ptr;
+                  while( (int)::strlen(buff) < (cnt-1) ) buff[strlen(buff)] = ' ';
+                  ::strncpy(p.cmd,ptr,sizeof(p.cmd));
+                  p.cmd[sizeof(p.cmd)-1] = 0;
+                }
+                else {
+                  ::strncpy(p.cmd,proc.comm+1,sizeof(p.cmd));
+                  p.cmd[sizeof(p.cmd)-1] = 0;
+                  if ( (ptr=::strchr(p.cmd,')')) ) *ptr = 0;
+                }
+                ::strncpy(p.owner,pw->pw_name,sizeof(p.owner));
+                p.owner[sizeof(p.owner)-1] = 0;
+                // Note: seconds!!!
+                p.cpu     = float(proc.stime+proc.utime)/float(jiffy2second);
+                p.start   = now - int(sys.uptime) + (proc.starttime/jiffy2second);
+                p.mem     = 0.0;
+                p.stack   = (float)status.vmStack;
+                p.vsize   = (float)status.vmSize;
+                p.rss     = (float)status.vmRSS;
+                p.state   = status.state;
+                p.pid     = status.pid;
+                p.ppid    = status.ppid;
+                p.threads = status.nThreads;
 #if 0
-		log() << "ReadProc:" << (void*)pr << " PID:" << p.pid 
-		      << " PPID:" << p.ppid 
-		      << " CPU:" << p.cpu
-		      << " cmd:" << proc.comm 
-		      << endl;
+                log() << "ReadProc:" << (void*)pr << " PID:" << p.pid 
+                      << " PPID:" << p.ppid 
+                      << " CPU:" << p.cpu
+                      << " cmd:" << proc.comm 
+                      << endl;
 #endif
-		pr = procset.processes.add(pr);
-		if ( ((char*)pr)-((char*)start) > (int)max_len ) {
-		  log() << "PROC Buffer memory too small.....exiting" << endl;
-		  break;
-		}
-	      }
-	    }
-	    catch(exception& e) {
-	      log() << "Exception reading task information:" << e.what() << endl;
-	      if ( --retry>0 ) goto Again;
-	      dp = 0;
-	    }
-	    catch(...) {
-	      log() << "Unknown exception reading task information" << endl;
-	      if ( --retry>0 ) goto Again;
-	      dp = 0;
-	    }
-	  }
-	}
+                pr = procset.processes.add(pr);
+                if ( ((char*)pr)-((char*)start) > (int)max_len ) {
+                  log() << "PROC Buffer memory too small.....exiting" << endl;
+                  break;
+                }
+              }
+            }
+            catch(exception& e) {
+              log() << "Exception reading task information:" << e.what() << endl;
+              if ( --retry>0 ) goto Again;
+              dp = 0;
+            }
+            catch(...) {
+              log() << "Unknown exception reading task information" << endl;
+              if ( --retry>0 ) goto Again;
+              dp = 0;
+            }
+          }
+        }
       }
     } while (dp != NULL);
     ::closedir(dir);

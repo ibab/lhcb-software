@@ -109,7 +109,7 @@ void FarmSubDisplay::init(bool bad) {
   int col = bad ? INVERSE|RED : NORMAL;
   char txt[128];
   ::sprintf(txt,"%-4s%9s %3s%9s %2s%4s%9s%4s",
-	    "","MEP","Sl","EVENT","Cl","Sl","SEND","Sl");
+            "","MEP","Sl","EVENT","Cl","Sl","SEND","Sl");
   ::scrc_put_chars(m_display,txt,col|INVERSE,1,1,1);
   //::scrc_put_chars(m_display,txt,col|BOLD,1,1,1);
   ::scrc_put_chars(m_display," ",col,2,1,1);
@@ -205,10 +205,10 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
       const MBMBuffer::Control& ctrl = (*ib).ctrl;
       ++numBuffs;
       switch(b) {
-      case MEP_BUFFER:	idx = 0; break;
-      case EVT_BUFFER:	idx = 1; break;
+      case MEP_BUFFER:        idx = 0; break;
+      case EVT_BUFFER:        idx = 1; break;
       case RES_BUFFER:
-      case SND_BUFFER:	idx = 2; break;
+      case SND_BUFFER:        idx = 2; break;
       default:                   continue;
       }
       inuse = true;
@@ -222,32 +222,32 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
       used_slots[idx]  += (ctrl.p_emax-ctrl.i_events);
       buf_clients[idx] += ctrl.i_users;
       if ( fslots[idx] < SLOTS_MIN || fspace[idx] < SPACE_MIN ) {
-	bad_nodes.insert((*n).name);
+        bad_nodes.insert((*n).name);
       }
       const Clients& clients = (*ib).clients;
       for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
-	++numClients;
-	const char* p = _procNam((*ic).name);
-	switch(*p) {
-	case BUILDER_TASK:
-	  if( b == MEP_BUFFER ) {
-	    node_evt_mep += (*ic).events;
-	  }
-	  break;
-	case SENDER_TASK:
-	  if( b == RES_BUFFER || b == SND_BUFFER )  {
-	    node_evt_sent = min(node_evt_sent,(*ic).events);
-	  }
-	  break;
-	case MOORE_TASK:
-	  //  Normal  and        TAE event processing
-	  if( b == EVT_BUFFER || b == MEP_BUFFER )  {
-	    node_evt_moore = min(node_evt_moore,(*ic).events);
-	  }
-	  break;
-	default:
-	  break;
-	}
+        ++numClients;
+        const char* p = _procNam((*ic).name);
+        switch(*p) {
+        case BUILDER_TASK:
+          if( b == MEP_BUFFER ) {
+            node_evt_mep += (*ic).events;
+          }
+          break;
+        case SENDER_TASK:
+          if( b == RES_BUFFER || b == SND_BUFFER )  {
+            node_evt_sent = min(node_evt_sent,(*ic).events);
+          }
+          break;
+        case MOORE_TASK:
+          //  Normal  and        TAE event processing
+          if( b == EVT_BUFFER || b == MEP_BUFFER )  {
+            node_evt_moore = min(node_evt_moore,(*ic).events);
+          }
+          break;
+        default:
+          break;
+        }
       }
     }
     evt_moore = min(evt_moore,node_evt_moore);
@@ -259,7 +259,7 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
   time_t t1 = numNodes == 0 ? time(0) : frst.first, now = time(0);
   ::strftime(b1,sizeof(b1),"%H:%M:%S",::localtime(&t1));
   ::sprintf(text," %s %s [%d nodes %d buffers %d clients] ",
-	    m_name.c_str(),b1,numNodes,numBuffs,numClients);
+            m_name.c_str(),b1,numNodes,numBuffs,numClients);
   m_title = text;
   m_inUse = inuse;
 
@@ -337,17 +337,17 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
 
   if ( evt_prod[0] != 0 )
     ::sprintf(txt,"%9d%4d%9d%3d%4d%9d%4d",
-	      evt_prod[0],used_slots[0],
-	      evt_prod[1],buf_clients[1],used_slots[1],
-	      evt_prod[2],used_slots[2]);
+              evt_prod[0],used_slots[0],
+              evt_prod[1],buf_clients[1],used_slots[1],
+              evt_prod[2],used_slots[2]);
   else
     ::sprintf(txt,"%9s%4s%9s%7s%9s%4s","--","--","--","--","--","--");
   ::scrc_put_chars(m_display,txt,NORMAL,2,5,1);
   if ( min_prod[0] != INT_max )
     ::sprintf(txt,"%9d%4d%9d%7d%9d%4d",
-	      min_prod[0],min_slots[0],
-	      min_prod[1],min_slots[1],
-	      min_prod[2],min_slots[2]);
+              min_prod[0],min_slots[0],
+              min_prod[1],min_slots[1],
+              min_prod[2],min_slots[2]);
   else
     ::sprintf(txt,"%9s%4s%9s  %5s%9s%4s","--","--","--","--","--","--");
   ::scrc_put_chars(m_display,txt,NORMAL,3,5,1);

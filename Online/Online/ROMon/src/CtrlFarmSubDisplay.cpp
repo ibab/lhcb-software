@@ -168,10 +168,10 @@ void CtrlFarmSubDisplay::updateContent(XML::TaskSupervisorParser& ts) {
   ::sprintf(txt,"%-40s",c.time.c_str());
   ::scrc_put_chars(m_display,txt,NORMAL,1,1,0);
   ::sprintf(txt,"%-19s  %-18s %s",pvss_status>0 ? pvss_status==1 ? "PVSS Ok" : "PVSS Errors" : "",
-	    c.status.c_str(),c.time.c_str()+11);
+            c.status.c_str(),c.time.c_str()+11);
   ::scrc_put_chars(m_display,txt,col,1,1,1);
   ::sprintf(txt,"%2zd Nodes %3zd Tasks/%2zd bad %2zd Connections/%2zd bad",
-	    c.nodes.size(),taskCount,missTaskCount,connCount,missConnCount);
+            c.nodes.size(),taskCount,missTaskCount,connCount,missConnCount);
   ::scrc_put_chars(m_display,txt,col&~BOLD,2,1,1);
   col = NORMAL|BOLD;
   if ( pvss_status>1 ) {

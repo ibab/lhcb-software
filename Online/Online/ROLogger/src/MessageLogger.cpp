@@ -1,4 +1,4 @@
-// $Id: MessageLogger.cpp,v 1.16 2008-10-21 13:53:52 frankb Exp $
+// $Id: MessageLogger.cpp,v 1.17 2008-11-13 12:15:00 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/MessageLogger.cpp,v 1.16 2008-10-21 13:53:52 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/MessageLogger.cpp,v 1.17 2008-11-13 12:15:00 frankb Exp $
 // Framework include files
 #include <cerrno>
 #include <cstring>
@@ -277,8 +277,8 @@ void MessageLogger::printHistory(const string& pattern) {
   for(size_t n=messages.size(), j=n>numMsg ? n-numMsg : 0; j<n; ++j, ++displayed)  
     printMessage(messages[j], false);
   ::sprintf(text,"History>    [ALWAYS]  %d %s%s [%s]. %d %s %d messages replayed.",
-	    match,"messages matched the request:",node_pattern.c_str(),
-	    msg_pattern.c_str(),(int)numMsg,"messages requested.",displayed);
+            match,"messages matched the request:",node_pattern.c_str(),
+            msg_pattern.c_str(),(int)numMsg,"messages requested.",displayed);
   printMessage(text,true);
 }
 
@@ -613,9 +613,9 @@ void MessageLogger::handleMessage(const char* msg) {
   if ( m_display )  {
     if ( checkFilters(msg) ) {
       if ( m_alarm )
-	printAlarm(msg,false);
+        printAlarm(msg,false);
       else
-	printMessage(msg,false);
+        printMessage(msg,false);
     }
     else if ( m_debug ) {
       printMessage(" ---------------------------- IGNORED:",false);

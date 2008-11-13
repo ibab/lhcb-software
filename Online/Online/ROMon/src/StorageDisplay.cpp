@@ -1,4 +1,4 @@
-// $Id: StorageDisplay.cpp,v 1.10 2008-11-11 15:09:26 frankb Exp $
+// $Id: StorageDisplay.cpp,v 1.11 2008-11-13 12:13:33 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/StorageDisplay.cpp,v 1.10 2008-11-11 15:09:26 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/StorageDisplay.cpp,v 1.11 2008-11-13 12:13:33 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -100,13 +100,13 @@ StorageDisplay::StorageDisplay(int argc, char** argv) : ROMonDisplay(), m_partNa
   int right = m_hltRec->right();
   int width = m_area.width-right;
   m_buffers = createSubDisplay(Position(right,hdr_height), Area(width,buff_height),
-			       "Buffer Monitor");
+                               "Buffer Monitor");
   m_streams = createSubDisplay(Position(right,m_buffers->bottom()-1),Area(width,strm_height),
-			       "Stream Information");
+                               "Stream Information");
   m_logging = createSubDisplay(Position(right,m_streams->bottom()-1),Area(width,logg_height),
-			       "Logger Summary");
+                               "Logger Summary");
   m_files   = createSubDisplay(Position(right,m_logging->bottom()-1),Area(width,m_area.height-m_logging->bottom()+1),
-			       "File Information");
+                               "File Information");
   end_update();
 }
 
@@ -123,10 +123,10 @@ void StorageDisplay::showLogging() {
 
   disp->draw_line_reverse("File Information for Run %-10                                         ",0);
   disp->draw_line_normal("Space:%9d MB [%4d TB] Free Space: %9d MB [%4d TB]", 
-			 wi.space,wi.space/1024/1024,wi.free_space,wi.free_space/1024/1024);
+                         wi.space,wi.space/1024/1024,wi.free_space,wi.free_space/1024/1024);
   disp->draw_line_normal("Open:%5d  Closed:%5d Transferring:%5d Deleted:%5d Total:%5d     ",
-			 wi.open_files,wi.closed_files,wi.transferred_files,wi.deleted_files,
-			 wi.open_files+wi.closed_files+wi.transferred_files+wi.deleted_files);
+                         wi.open_files,wi.closed_files,wi.transferred_files,wi.deleted_files,
+                         wi.open_files+wi.closed_files+wi.transferred_files+wi.deleted_files);
   disp->draw_line_normal("Directory:%s", wi.data_dir);
 }
 
@@ -148,31 +148,31 @@ void StorageDisplay::showStreams(const Nodeset& ns) {
     for (Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
       const Clients& clients = (*ib).clients;
       for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
-	const MBMClient& c = *ic;
-	if (strncmp(c.name,part.c_str(),part.length())==0) {
-	  char nam[BM_USER_NAME_LEN], *typ, *str, *node, *ptr;
-	  ::strcpy(nam,c.name);
-	  node = nam+part.length();
-	  if ( (typ=nullstr(nam,"_SND")) ){
-	    *(typ+3) = 0;
-	    ptr = nullchr(str=typ+4,'_');
-	    if ( !ptr ) streams[str].node = "Monitoring";
-	    streams[str].sent += c.events;
-	    streams[str].source  = node;
-	  }
-	  else if ( (typ=nullstr(nam,"_RCV")) ) {
-	    *(typ+3) = 0;
-	    nullchr(str=typ+4,'_');
-	    streams[str].received+=c.events;
-	    streams[str].node = node;
-	  }
-	  else if ( (typ=nullstr(nam,"_WRT")) ) {
-	    *(typ+3) = 0;
-	    nullchr(str=typ+4,'_');
-	    streams[str].written+=c.events;
-	    streams[str].node = node;
-	  }
-	}
+        const MBMClient& c = *ic;
+        if (strncmp(c.name,part.c_str(),part.length())==0) {
+          char nam[BM_USER_NAME_LEN], *typ, *str, *node, *ptr;
+          ::strcpy(nam,c.name);
+          node = nam+part.length();
+          if ( (typ=nullstr(nam,"_SND")) ){
+            *(typ+3) = 0;
+            ptr = nullchr(str=typ+4,'_');
+            if ( !ptr ) streams[str].node = "Monitoring";
+            streams[str].sent += c.events;
+            streams[str].source  = node;
+          }
+          else if ( (typ=nullstr(nam,"_RCV")) ) {
+            *(typ+3) = 0;
+            nullchr(str=typ+4,'_');
+            streams[str].received+=c.events;
+            streams[str].node = node;
+          }
+          else if ( (typ=nullstr(nam,"_WRT")) ) {
+            *(typ+3) = 0;
+            nullchr(str=typ+4,'_');
+            streams[str].written+=c.events;
+            streams[str].node = node;
+          }
+        }
       }
     }
   }
@@ -181,8 +181,8 @@ void StorageDisplay::showStreams(const Nodeset& ns) {
     const Stream& s = (*i).second;
     if ( s.node != "Monitoring" ) {
       disp->draw_line_normal("%-13s %12s->%-12s %11d %11d %11d",
-			     (*i).first.c_str(),s.source.c_str(),s.node.c_str(),
-			     s.sent,s.received,s.written);
+                             (*i).first.c_str(),s.source.c_str(),s.node.c_str(),
+                             s.sent,s.received,s.written);
       total.sent += s.sent;
       total.written += s.written;
       total.received += s.received;
@@ -190,7 +190,7 @@ void StorageDisplay::showStreams(const Nodeset& ns) {
   }
   disp->draw_line_normal("");
   disp->draw_line_bold("%-13s %12s->%-12s %11d %11d %11d","Total","Recv Layer","Stream Layer",
-		       total.sent,total.received,total.written);
+                       total.sent,total.received,total.written);
   disp->draw_line_normal("");
   for(map<string,Stream>::const_iterator i=streams.begin();i!=streams.end();++i) {
     const Stream& s = (*i).second;
@@ -214,21 +214,21 @@ void StorageDisplay::showHLT(const Nodeset& ns) {
       const FSMTask& t = *i;
       size_t len = strlen(t.name);
       if ( strcmp(t.name+len-4,"_HLT")==0 && strncmp(t.name,part.c_str(),part.length())==0) {
-	for (Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
-	  const Clients& clients = (*ib).clients;
-	  for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
-	    if ( (*ic).processID == t.processID ) {
-	      total_evts += (*ic).events;
-	      disp->draw_line_normal("%s%11d %s %c%c%c",t.name+len-8,
-				     (*ic).events,sstat[size_t((*ic).state)],
-				     t.state,t.targetState,t.metaState);
-	      goto Next;
-	    }
-	  }
-	}
-	disp->draw_line_normal("%s",t.name+len-8);
+        for (Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
+          const Clients& clients = (*ib).clients;
+          for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
+            if ( (*ic).processID == t.processID ) {
+              total_evts += (*ic).events;
+              disp->draw_line_normal("%s%11d %s %c%c%c",t.name+len-8,
+                                     (*ic).events,sstat[size_t((*ic).state)],
+                                     t.state,t.targetState,t.metaState);
+              goto Next;
+            }
+          }
+        }
+        disp->draw_line_normal("%s",t.name+len-8);
       Next:
-	continue;
+        continue;
       }
     }
   }
@@ -246,15 +246,15 @@ void StorageDisplay::showBuffers(const Nodeset& ns) {
     for (Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
       const Clients& clients = (*ib).clients;
       for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
-	if (strncmp((*ic).name,part.c_str(),part.length())==0) {
-	  const MBMBuffer& b = *ib;
-	  const CONTROL& c = b.ctrl;
-	  disp->draw_line_normal("%10s/%-13s %12d %7d %8d %8d %5d %5d ",
-				 n->name,b.name,c.tot_produced,c.i_events,
-				 (c.bm_size*c.bytes_p_Bit)/1024,(c.i_space*c.bytes_p_Bit)/1024,
-				 c.p_emax-c.i_events,c.i_users);
-	  break;
-	}
+        if (strncmp((*ic).name,part.c_str(),part.length())==0) {
+          const MBMBuffer& b = *ib;
+          const CONTROL& c = b.ctrl;
+          disp->draw_line_normal("%10s/%-13s %12d %7d %8d %8d %5d %5d ",
+                                 n->name,b.name,c.tot_produced,c.i_events,
+                                 (c.bm_size*c.bytes_p_Bit)/1024,(c.i_space*c.bytes_p_Bit)/1024,
+                                 c.p_emax-c.i_events,c.i_users);
+          break;
+        }
       }
     }
   }
@@ -269,7 +269,7 @@ void StorageDisplay::showHeader(const Nodeset& ns)   {
   ::strftime(b2,sizeof(b1),"%H:%M:%S",::localtime(&t2));
   draw_line_normal ("");
   draw_line_reverse("         Stream Monitor for partition %s on %s   [%s]",
-		    m_partName.c_str(), RTL::nodeNameShort().c_str(), ::lib_rtl_timestr());    
+                    m_partName.c_str(), RTL::nodeNameShort().c_str(), ::lib_rtl_timestr());    
   draw_line_bold   ("         Information updates date between: %s.%03d and %s.%03d",b1,frst.second,b2,last.second);
   for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
     char* c = ::strchr((*n).name,'.');

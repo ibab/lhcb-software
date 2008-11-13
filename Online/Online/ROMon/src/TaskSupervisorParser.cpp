@@ -87,33 +87,33 @@ void TaskSupervisorParser::getNodes(DOMNode* fde, Cluster& cluster) const {
       node.data = ::atoi(s.attr(Attr_data).c_str());
       node.stack = ::atoi(s.attr(Attr_stack).c_str());
       node.vsize = ::atoi(s.attr(Attr_vsize).c_str());
-      node.perc_cpu = ::atof(s.attr(Attr_perc_cpu).c_str());
-      node.perc_mem = ::atof(s.attr(Attr_perc_mem).c_str());
+      node.perc_cpu = (float)::atof(s.attr(Attr_perc_cpu).c_str());
+      node.perc_mem = (float)::atof(s.attr(Attr_perc_mem).c_str());
     }
     if ( e ) {
       node.taskCount      = ::atoi(e.attr(Attr_ok).c_str());
       node.totalTaskCount = ::atoi(e.attr(Attr_count).c_str());
       node.missTaskCount  = ::atoi(e.attr(Attr_missing).c_str());
       for(XMLCollection t(child(e,TASKNODE), false); t; ++t)
-	node.tasks.push_back(make_pair(t.attr(Attr_name),t.attr(Attr_status)==Status_OK));
+        node.tasks.push_back(make_pair(t.attr(Attr_name),t.attr(Attr_status)==Status_OK));
     }
     if ( g ) {
       node.connCount      = ::atoi(g.attr(Attr_ok).c_str());
       node.totalConnCount = ::atoi(g.attr(Attr_count).c_str());
       node.missConnCount  = ::atoi(g.attr(Attr_missing).c_str());
       for(XMLCollection t(child(g,CONNECTIONNODE), false); t; ++t)
-	node.conns.push_back(make_pair(t.attr(Attr_name),t.attr(Attr_status)==Status_OK));
+        node.conns.push_back(make_pair(t.attr(Attr_name),t.attr(Attr_status)==Status_OK));
     }
     if ( p ) {
       for(XMLCollection t(child(p,PROJECTNODE), false); t; ++t) {
-	node.projects.push_back(Cluster::PVSSProject());
-	Cluster::PVSSProject& p = node.projects.back();
-	p.name     = t.attr(Attr_name);
-	p.eventMgr = t.attr(Attr_eventMgr)=="RUNNING";
-	p.dataMgr  = t.attr(Attr_dataMgr)=="RUNNING";
-	p.distMgr  = t.attr(Attr_distMgr)=="RUNNING";
-	p.devHdlr  = t.attr(Attr_devHdlr)=="RUNNING";
-	p.fsmSrv   = t.attr(Attr_fsmSrv)=="RUNNING";
+        node.projects.push_back(Cluster::PVSSProject());
+        Cluster::PVSSProject& p = node.projects.back();
+        p.name     = t.attr(Attr_name);
+        p.eventMgr = t.attr(Attr_eventMgr)=="RUNNING";
+        p.dataMgr  = t.attr(Attr_dataMgr)=="RUNNING";
+        p.distMgr  = t.attr(Attr_distMgr)=="RUNNING";
+        p.devHdlr  = t.attr(Attr_devHdlr)=="RUNNING";
+        p.fsmSrv   = t.attr(Attr_fsmSrv)=="RUNNING";
       }
     }
   }
@@ -192,7 +192,7 @@ void TaskSupervisorParser::getInventory(Inventory& inv) const {
     if ( nam.empty() ) {
       XMLElement item;
       for(XMLCollection n(child(c,"Name"), false); n; ++n)
-	nam = n.value();
+        nam = n.value();
       cout << "---->:" << nam << endl;
     }
     _NC& nc = inv.nodecollections[nam];

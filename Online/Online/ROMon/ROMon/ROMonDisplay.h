@@ -1,4 +1,4 @@
-// $Id: ROMonDisplay.h,v 1.5 2008-08-27 19:15:20 frankb Exp $
+// $Id: ROMonDisplay.h,v 1.6 2008-11-13 12:13:32 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ROMonDisplay.h,v 1.5 2008-08-27 19:15:20 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ROMonDisplay.h,v 1.6 2008-11-13 12:13:32 frankb Exp $
 #ifndef ROMON_ROMONDISPLAY_H
 #define ROMON_ROMONDISPLAY_H 1
 
@@ -51,7 +51,7 @@ namespace ROMon {
       char*  pointer;
       Descriptor() : length(0), actual(0), pointer(0) {                                    }
       void   release()              { if(pointer) ::free(pointer); pointer=0; length=0; actual=0;}
-      template<class T> T* data()   {	return (T*)pointer;                                }
+      template<class T> T* data()   {        return (T*)pointer;                                }
       char*  reserve(size_t len);
     };
 

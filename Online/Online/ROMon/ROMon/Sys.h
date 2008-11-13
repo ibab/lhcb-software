@@ -1,4 +1,4 @@
-// $Id: Sys.h,v 1.2 2008-11-13 08:29:41 frankb Exp $
+// $Id: Sys.h,v 1.3 2008-11-13 12:13:32 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -9,7 +9,7 @@
 //  Created    : 29/10/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/Sys.h,v 1.2 2008-11-13 08:29:41 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/Sys.h,v 1.3 2008-11-13 12:13:32 frankb Exp $
 #ifndef ONLINE_ROMON_SYS_H
 #define ONLINE_ROMON_SYS_H
 
@@ -20,7 +20,6 @@
 #include <vector>
 #include <string>
 #include <cstdlib>
-#include <sys/param.h>
 
 /*
  *   ROMon namespace declaration

@@ -33,7 +33,7 @@ namespace ROMon {
       bool   devHdlr;
       PVSSProject() : eventMgr(false), dataMgr(false), distMgr(false), fsmSrv(false), devHdlr(false) {}
       PVSSProject(const PVSSProject& c) : name(c.name), eventMgr(c.eventMgr), 
-	   dataMgr(c.dataMgr), distMgr(c.distMgr), fsmSrv(c.fsmSrv), devHdlr(c.devHdlr) {}
+           dataMgr(c.dataMgr), distMgr(c.distMgr), fsmSrv(c.fsmSrv), devHdlr(c.devHdlr) {}
       PVSSProject& operator=(const PVSSProject& c) 
       { name=c.name; eventMgr=c.eventMgr; dataMgr=c.dataMgr; distMgr=c.distMgr; fsmSrv=c.fsmSrv; devHdlr=c.devHdlr;return *this;}
       bool operator==(const PVSSProject& c) const
@@ -59,27 +59,27 @@ namespace ROMon {
       size_t       connCount, missConnCount, totalConnCount;
 
       void _cpy(const Node& n) {
-	name = n.name;
-	time = n.time;
-	status = n.status;
-	tasks = n.tasks;
-	boot = n.boot;
-	totalTaskCount = n.totalTaskCount;
-	missTaskCount = n.missTaskCount;
-	taskCount = n.taskCount;
-	vsize = n.vsize;
-	rss = n.rss;
-	data = n.data;
-	stack = n.stack;
+        name = n.name;
+        time = n.time;
+        status = n.status;
+        tasks = n.tasks;
+        boot = n.boot;
+        totalTaskCount = n.totalTaskCount;
+        missTaskCount = n.missTaskCount;
+        taskCount = n.taskCount;
+        vsize = n.vsize;
+        rss = n.rss;
+        data = n.data;
+        stack = n.stack;
 
-	conns = n.conns;
-	totalConnCount = n.totalConnCount;
-	missConnCount = n.missConnCount;
-	connCount = n.connCount;
+        conns = n.conns;
+        totalConnCount = n.totalConnCount;
+        missConnCount = n.missConnCount;
+        connCount = n.connCount;
       }
       Node() : perc_cpu(0.), perc_mem(0.), vsize(0), rss(0), data(0), stack(0),
-	   taskCount(0), missTaskCount(0), totalTaskCount(0), 
-	   connCount(0), missConnCount(0), totalConnCount(0)
+           taskCount(0), missTaskCount(0), totalTaskCount(0), 
+           connCount(0), missConnCount(0), totalConnCount(0)
       {}
       Node(const std::string& n,const std::string&s) : name(n), status(s) {}
       Node(const Node& n)  { _cpy(n); }
@@ -110,17 +110,17 @@ namespace ROMon {
       std::string user;
       std::string responsible;
       Task() {}
-      Task(const Task& c) {	(*this) = c;      }
+      Task(const Task& c) {        (*this) = c;      }
       Task(const std::string& n,const std::string& t) : name(n), type(t) {}
       Task& operator=(const Task& c)       {
-	name=c.name;
-	type=c.type;
-	path=c.path;
-	dimDns=c.dimDns;
-	dimSvc=c.dimSvc;
-	user=c.user;
-	responsible=c.responsible;
-	return *this;
+        name=c.name;
+        type=c.type;
+        path=c.path;
+        dimDns=c.dimDns;
+        dimSvc=c.dimSvc;
+        user=c.user;
+        responsible=c.responsible;
+        return *this;
       }
     };
     typedef std::string Connection;
@@ -139,9 +139,9 @@ namespace ROMon {
       ProjectList    projects;
       ConnectionList connections;
       void _cpy(const NodeType& c) {
-	tasks = c.tasks;
-	projects = c.projects;
-	connections = c.connections;
+        tasks = c.tasks;
+        projects = c.projects;
+        connections = c.connections;
       }
 
       NodeType()                             {                        }

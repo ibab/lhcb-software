@@ -1,4 +1,4 @@
-// $Id: RODimListener.h,v 1.4 2008-10-21 13:53:52 frankb Exp $
+// $Id: RODimListener.h,v 1.5 2008-11-13 12:13:32 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/RODimListener.h,v 1.4 2008-10-21 13:53:52 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/RODimListener.h,v 1.5 2008-11-13 12:13:32 frankb Exp $
 #ifndef ROMON_ROMONDIMLISTENER_H
 #define ROMON_ROMONDIMLISTENER_H 1
 
@@ -49,22 +49,22 @@ namespace ROMon {
       Item(void* obj, void(*d)(void*)) : id(0), object(obj), destruct(d) {
       }
       void release() {
-	destruct(this);
-	this->~Item();
-	::free(this);
+        destruct(this);
+        this->~Item();
+        ::free(this);
       }
       template<class T> T* data() {
-	return (T*)(((char*)this)+sizeof(Item)); 
+        return (T*)(((char*)this)+sizeof(Item)); 
       }
       template <class T> static void del(void* p) {
-	T* o = (T*)(((char*)p)+sizeof(Item));
-	o->~T();
+        T* o = (T*)(((char*)p)+sizeof(Item));
+        o->~T();
       }
       template <typename T> static Item* create(void* obj) {
-	char* p = (char*)malloc(sizeof(Item)+sizeof(T));
-	Item* it = new(p) Item(obj, Item::del<T>);
-	new(it->data<T>()) T();
-	return it;
+        char* p = (char*)malloc(sizeof(Item)+sizeof(T));
+        Item* it = new(p) Item(obj, Item::del<T>);
+        new(it->data<T>()) T();
+        return it;
       }
     };
     typedef std::map<std::string,Item*>   Clients;

@@ -1,4 +1,4 @@
-// $Id: SysInfo.h,v 1.2 2008-11-13 08:29:41 frankb Exp $
+// $Id: SysInfo.h,v 1.3 2008-11-13 12:13:32 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/SysInfo.h,v 1.2 2008-11-13 08:29:41 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/SysInfo.h,v 1.3 2008-11-13 12:13:32 frankb Exp $
 #ifndef ROMON_SYSINFO_H
 #define ROMON_SYSINFO_H
 
@@ -39,9 +39,9 @@ namespace ROMon  {
       const char *cmd, *utgid, *date, *state;
       TmProc() : ptr(0), pid(0), cmd(0), utgid(0), date(0), state(0) {}
       TmProc(const char* q, int p, const char* c, const char* u, const char* d, const char* s)
-	: ptr(q), pid(p), cmd(c), utgid(u), date(d), state(s) {}
+        : ptr(q), pid(p), cmd(c), utgid(u), date(d), state(s) {}
       TmProc(const TmProc& c)
-	: ptr(c.ptr), pid(c.pid), cmd(c.cmd), utgid(c.utgid), date(c.date), state(c.state) {}
+        : ptr(c.ptr), pid(c.pid), cmd(c.cmd), utgid(c.utgid), date(c.date), state(c.state) {}
     };
 
     typedef std::map<int,TmProc> TmProcs;

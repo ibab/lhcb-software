@@ -1,4 +1,4 @@
-// $Id: FMCMonListener.cpp,v 1.4 2008-11-11 15:09:26 frankb Exp $
+// $Id: FMCMonListener.cpp,v 1.5 2008-11-13 12:13:32 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FMCMonListener.cpp,v 1.4 2008-11-11 15:09:26 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FMCMonListener.cpp,v 1.5 2008-11-13 12:13:32 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -72,7 +72,7 @@ void FMCMonListener::addHandler(const std::string& node,const std::string& svc) 
       m_clients[node] = itm;
       itm->id = ::dic_info_service((char*)nam.c_str(),MONITORED,0,0,0,infoHandler,(long)itm,0,0);
       if ( m_verbose ) log() << "[FMCMonListener] Create DimInfo:" 
-			     << nam << "@" << node << " id=" << itm->id << std::endl;
+                             << nam << "@" << node << " id=" << itm->id << std::endl;
     }
   }
   dim_unlock();
@@ -88,7 +88,7 @@ void FMCMonListener::removeHandler(const std::string& node, const std::string& s
     ::dic_release_service(it->id);
     if ( m_verbose )   {
       log() << "[FMCMonListener] Delete DimInfo:" 
-	    << svc << "@" << node << " " << it->id << std::endl;
+            << svc << "@" << node << " " << it->id << std::endl;
     }
     it->release();
     m_clients.erase(i);

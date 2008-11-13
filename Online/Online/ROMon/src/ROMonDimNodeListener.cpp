@@ -1,4 +1,4 @@
-// $Id: ROMonDimNodeListener.cpp,v 1.1 2008-02-01 17:41:45 frankm Exp $
+// $Id: ROMonDimNodeListener.cpp,v 1.2 2008-11-13 12:13:33 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonDimNodeListener.cpp,v 1.1 2008-02-01 17:41:45 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonDimNodeListener.cpp,v 1.2 2008-11-13 12:13:33 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -51,7 +51,7 @@ void RODimNodeListener::addHandler(const std::string& node,const std::string& sv
       m_clients[svc] = itm;
       itm->id = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,infoHandler,(long)itm,0,0);
       if ( m_verbose ) log() << "[RODimNodeListener] Create DimInfo:" 
-			     << svc << "@" << node << " id=" << itm->id << std::endl;
+                             << svc << "@" << node << " id=" << itm->id << std::endl;
     }
   }
   dim_unlock();
@@ -67,7 +67,7 @@ void RODimNodeListener::removeHandler(const std::string& node, const std::string
     ::dic_release_service(it->id);
     if ( m_verbose )   {
       log() << "[RODimNodeListener] Delete DimInfo:" 
-	    << svc << "@" << node << " " << it->id << std::endl;
+            << svc << "@" << node << " " << it->id << std::endl;
     }
     it->release();
     m_clients.erase(i);

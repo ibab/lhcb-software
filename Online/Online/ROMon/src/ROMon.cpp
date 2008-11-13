@@ -5,7 +5,9 @@
 #include "ROMon/ROMon.h"
 #include "MBM/bmstruct.h"
 #include "RTL/time.h"
-
+#ifdef _WIN32
+#include <winsock2.h>
+#endif
 using namespace ROMon;
 
 void ROMon::ro_get_node_name(char* name, size_t len) {
@@ -108,6 +110,6 @@ std::ostream& ROMon::log() {
 
 void ROMon::print_startup(const char* msg) {
   log() << ::lib_rtl_timestr() << "> Readout monitor " << msg << " started on " 
-	<< RTL::nodeNameShort() << " as " << RTL::processName() << std::endl;
+        << RTL::nodeNameShort() << " as " << RTL::processName() << std::endl;
 }
 

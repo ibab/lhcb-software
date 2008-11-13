@@ -1,4 +1,4 @@
-// $Id: SysInfo.cpp,v 1.2 2008-11-13 08:29:41 frankb Exp $
+// $Id: SysInfo.cpp,v 1.3 2008-11-13 12:13:33 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/SysInfo.cpp,v 1.2 2008-11-13 08:29:41 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/SysInfo.cpp,v 1.3 2008-11-13 12:13:33 frankb Exp $
 #include "ROMon/SysInfo.h"
 #include "ROMon/CPUMonOstream.h"
 #include "ROMon/ROMonInfo.h"
@@ -38,16 +38,16 @@ using namespace ROMon;
 /// Default constructor
 SysInfo::SysInfo(NodeStats* buff, size_t len, int nbuffs)
 : m_buffer(buff), m_buffLen(len), m_idx(1), m_readings(0), m_nBuffs(nbuffs)  {
-  int i;
+  int j;
   vector<RODimListener*> servers;
   string match, n = RTL::nodeNameShort();
   for(size_t i=0; i<n.length();++i) n[i]=::toupper(n[i]);
   match = "/FMC/"+n+"/task_manager";
   log() << "SysInfo: Listening to service:" << match << endl;
   m_cpuInfo = new char*[m_nBuffs];
-  for(i=0; i<m_nBuffs; ++i) m_cpuInfo[i] = new char[CPUINFO_SIZE];
+  for(j=0; j<m_nBuffs; ++j) m_cpuInfo[j] = new char[CPUINFO_SIZE];
   m_procInfo = new char*[m_nBuffs];
-  for(i=0; i<m_nBuffs; ++i) m_procInfo[i] = new char[PROCINFO_SIZE];
+  for(j=0; j<m_nBuffs; ++j) m_procInfo[j] = new char[PROCINFO_SIZE];
 
   // Setup the object
   read(m_mem);
@@ -90,14 +90,14 @@ int SysInfo::readTmProcs(DSC& info, TmProcs& procs) {
       const char *state = date  + strlen(date)+1;
       const char *end   = state + strlen(state)+1;
       if ( strcmp(state,"running")==0 ) {
-	int proc_id = ::atoi(pid);
-	procs[proc_id] = TmProc(p,proc_id,cmd,utgid,date,state);
+        int proc_id = ::atoi(pid);
+        procs[proc_id] = TmProc(p,proc_id,cmd,utgid,date,state);
 #if 0
-	log() << "PID:"    << proc_id 
-	      << " utgid:" << utgid
-	      << " cmd:"   << cmd
-	      << " date:"  << date
-	      << " state:" << state << endl;
+        log() << "PID:"    << proc_id 
+              << " utgid:" << utgid
+              << " cmd:"   << cmd
+              << " date:"  << date
+              << " state:" << state << endl;
 #endif
       }
       p = (char*)end;
@@ -123,7 +123,7 @@ int SysInfo::combineCPUInfo() {
   d_IRQ     = cn.averages.IRQ     - cl.averages.IRQ;
   d_softIRQ = cn.averages.softIRQ - cl.averages.softIRQ;
   d_tot     = d_user+d_system+d_nice+d_idle+d_IRQ+d_softIRQ+d_iowait;
-  d_percent = d_tot/100.;
+  d_percent = (float)(d_tot/1e2);
   //cout << d_user << " " << d_system << " " << d_nice << " " << d_idle << " " << d_iowait << " " << d_IRQ << " " << d_softIRQ << " " << d_tot << " " << d_percent << endl;
   cr.averages.user     = d_user/d_percent;
   cr.averages.system   = d_system/d_percent;
@@ -132,7 +132,7 @@ int SysInfo::combineCPUInfo() {
   cr.averages.iowait   = d_iowait/d_percent;
   cr.averages.IRQ      = d_IRQ/d_percent;
   cr.averages.softIRQ  = d_softIRQ/d_percent;
-  cr.ctxtRate          = (cn.ctxtRate-cl.ctxtRate)*1000./d_tot;
+  cr.ctxtRate          = (float)((cn.ctxtRate-cl.ctxtRate)*1e3/d_tot);
   cr.memory            = m_mem.memTotal;
   cr.memfree           = m_mem.memFree;
   for( ; i != cn.cores.end(); i=cn.cores.next(i), j=cl.cores.next(j), m=cr.cores.next(m) ) {
@@ -143,7 +143,7 @@ int SysInfo::combineCPUInfo() {
     d_iowait  = (*i).stats.iowait  - (*j).stats.iowait;
     d_IRQ     = (*i).stats.IRQ     - (*j).stats.IRQ;
     d_softIRQ = (*i).stats.softIRQ - (*j).stats.softIRQ;
-    d_percent = (d_user+d_system+d_nice+d_idle+d_IRQ+d_softIRQ+d_iowait)/100.;
+    d_percent = (float)((d_user+d_system+d_nice+d_idle+d_IRQ+d_softIRQ+d_iowait)/1e2);
     (*m).stats.user     = d_user    / d_percent;
     (*m).stats.system   = d_system  / d_percent;
     (*m).stats.nice     = d_nice    / d_percent;
@@ -176,22 +176,22 @@ int SysInfo::combineProcessInfo() {
       if ( (*j).pid == pid ) break;
     if ( j == last.end() ) {
       for(j=last.begin(); j != k; j=last.next(j))
-	if ( (*j).pid == pid ) break;
+        if ( (*j).pid == pid ) break;
     }
     if ( j != last.end() && (*j).pid == pid ) {
       TmProcs::const_iterator tmi=m_procs.find(pid);
       Process& p = *m;
       if ( tmi != m_procs.end() )
-	::strncpy(p.utgid,(*tmi).second.utgid,sizeof(p.utgid));
+        ::strncpy(p.utgid,(*tmi).second.utgid,sizeof(p.utgid));
       else
-	::strcpy(p.utgid,"N/A");
+        ::strcpy(p.utgid,"N/A");
       p.utgid[sizeof(p.utgid)-1] = 0;
       ::strncpy(p.owner,q.owner,sizeof(p.owner));
       p.owner[sizeof(p.owner)-1] = 0;
       ::strncpy(p.cmd,q.cmd,sizeof(p.cmd));
       p.cmd[sizeof(p.cmd)-1] = 0;
-      p.cpu     = (q.cpu-(*j).cpu)*100./diff;
-      p.mem     = q.vsize * 100. / float(m_mem.memTotal);
+      p.cpu     = (q.cpu-(*j).cpu)*1e2/diff;
+      p.mem     = (float)(q.vsize * 1e2 / float(m_mem.memTotal));
       p.vsize   = q.vsize;
       p.rss     = q.rss;
       p.stack   = q.stack;
@@ -201,8 +201,8 @@ int SysInfo::combineProcessInfo() {
       p.start   = q.start;
       m = res.add(m);
       if ( ((char*)m)-((char*)m_buffer) > (int)m_buffLen ) {
-	log() << "Global section memory too small.....exiting" << endl;
-	return 0;
+        log() << "Global section memory too small.....exiting" << endl;
+        return 0;
       }
     }
   }

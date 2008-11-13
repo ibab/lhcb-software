@@ -1,4 +1,4 @@
-// $Id: CtrlSubfarmDisplay.cpp,v 1.4 2008-11-13 08:29:41 frankb Exp $
+// $Id: CtrlSubfarmDisplay.cpp,v 1.5 2008-11-13 12:13:32 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CtrlSubfarmDisplay.cpp,v 1.4 2008-11-13 08:29:41 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CtrlSubfarmDisplay.cpp,v 1.5 2008-11-13 12:13:32 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -27,10 +27,10 @@
 using namespace ROMon;
 static void help() {
   std::cout <<"  romon_storage -option [-option]" << std::endl
-	    <<"       -h[eaderheight]=<number>     Height of the header        display.                      " << std::endl
-	    <<"       -d[elay]=<number>            Time delay in millisecond between 2 updates.              " << std::endl
-	    <<"       -s[ervicename]=<name>        Name of the DIM service  providing monitoring information." << std::endl
-	    << std::endl;
+            <<"       -h[eaderheight]=<number>     Height of the header        display.                      " << std::endl
+            <<"       -d[elay]=<number>            Time delay in millisecond between 2 updates.              " << std::endl
+            <<"       -s[ervicename]=<name>        Name of the DIM service  providing monitoring information." << std::endl
+            << std::endl;
 }
 
 /// Standard constructor
@@ -82,9 +82,9 @@ void CtrlSubfarmDisplay::showNodes()  {
 
   //disp->draw_line_reverse(" ----------------------------------   Cluster information   ----------------------------------");
   disp->draw_line_bold(   " %-12s %8s    Tasks       Connections  %6s %6s %6s %3s %3s %-19s %s",
-			  "","","RSS","Stack","VSize","CPU","MEM","","");
+                          "","","RSS","Stack","VSize","CPU","MEM","","");
   disp->draw_line_bold(   " %-12s %8s found/missing found/missing %6s %6s %6s %3s %3s %-19s %s",
-			  "Node","Status","[MB]","[MB]","[MB]","[%]","[%]","Boot time","Timestamp");
+                          "Node","Status","[MB]","[MB]","[MB]","[%]","[%]","Boot time","Timestamp");
   for(Cluster::Nodes::const_iterator i=c.nodes.begin(); i!=c.nodes.end();++i) {
     const Cluster::Node& n = (*i).second;
     if ( n.status == "DEAD" ) {
@@ -96,15 +96,15 @@ void CtrlSubfarmDisplay::showNodes()  {
       connCount     += n.connCount;
       missConnCount += n.missConnCount;
       disp->draw_line_normal(fmt,n.name.c_str(),n.status.c_str(),
-			     n.taskCount,n.missTaskCount,n.connCount,n.missConnCount,
-			     int(n.rss/1024),int(n.stack/1024),int(n.vsize/1024),
-			     n.perc_cpu, n.perc_mem, n.boot.c_str(),n.time.c_str());
-      //			     n.perc_cpu, n.perc_mem, n.boot.substr(4,12).c_str(),n.time.c_str());
+                             n.taskCount,n.missTaskCount,n.connCount,n.missConnCount,
+                             int(n.rss/1024),int(n.stack/1024),int(n.vsize/1024),
+                             n.perc_cpu, n.perc_mem, n.boot.c_str(),n.time.c_str());
+      //                             n.perc_cpu, n.perc_mem, n.boot.substr(4,12).c_str(),n.time.c_str());
     }
   }
   disp->draw_line_normal("");
   disp->draw_line_bold(" %-12s %8s %5zd/%-7zd %5zd/%-7zd", "Total:", 
-		       c.status.c_str(), taskCount, missTaskCount, connCount, missConnCount);
+                       c.status.c_str(), taskCount, missTaskCount, connCount, missConnCount);
 }
 
 /// Update header information

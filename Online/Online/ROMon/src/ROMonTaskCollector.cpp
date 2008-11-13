@@ -1,4 +1,4 @@
-// $Id: ROMonTaskCollector.cpp,v 1.4 2008-11-11 15:09:26 frankb Exp $
+// $Id: ROMonTaskCollector.cpp,v 1.5 2008-11-13 12:13:33 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonTaskCollector.cpp,v 1.4 2008-11-11 15:09:26 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonTaskCollector.cpp,v 1.5 2008-11-13 12:13:33 frankb Exp $
 
 // Framework includes
 #include "dic.hxx"
@@ -49,38 +49,38 @@ int ROMonTaskCollector::monitor() {
     bool exec = true;
     while(exec)    {
       if ( gbl.node ) {  // Take GBL lock while updating
-	RTL::Lock lock(m_lock);
-	m_mbmInfo.handle(gbl.node, m_section_size);
-	Node::Tasks* tasks = gbl.node->tasks();
-	Node::Tasks::iterator it = tasks->reset();
-	const Clients& cl = m_fsmInfo.clients();
-	gbl.node->type = Node::TYPE;
-	if ( ((char*)it) > gbl.str+m_section_size ) {
-	  log() << "Global section memory too small.....exiting" << endl;
-	  break;
-	}
-	else {
-	  ::dim_lock();
-	  for(Clients::const_iterator ic = cl.begin(); ic != cl.end(); ++ic) {
-	    const FSMTask* t = (*ic).second->data<FSMTask>();
-	    if ( ((char*)it) > gbl.str+m_section_size ) {
-	      log() << "Global section memory too small.....exiting" << endl;
-	      ::dim_unlock();
-	      break;
-	    }
-	    if ( t->processID != -1 ) {
-	      ::memcpy(it,t,sizeof(FSMTask));
-	      it = tasks->add(it);
-	    }
-	  }
-	  ::dim_unlock();
-	  gbl.node->fixup();
-	}
+        RTL::Lock lock(m_lock);
+        m_mbmInfo.handle(gbl.node, m_section_size);
+        Node::Tasks* tasks = gbl.node->tasks();
+        Node::Tasks::iterator it = tasks->reset();
+        const Clients& cl = m_fsmInfo.clients();
+        gbl.node->type = Node::TYPE;
+        if ( ((char*)it) > gbl.str+m_section_size ) {
+          log() << "Global section memory too small.....exiting" << endl;
+          break;
+        }
+        else {
+          ::dim_lock();
+          for(Clients::const_iterator ic = cl.begin(); ic != cl.end(); ++ic) {
+            const FSMTask* t = (*ic).second->data<FSMTask>();
+            if ( ((char*)it) > gbl.str+m_section_size ) {
+              log() << "Global section memory too small.....exiting" << endl;
+              ::dim_unlock();
+              break;
+            }
+            if ( t->processID != -1 ) {
+              ::memcpy(it,t,sizeof(FSMTask));
+              it = tasks->add(it);
+            }
+          }
+          ::dim_unlock();
+          gbl.node->fixup();
+        }
       }
       if ( m_print ) {
-	log() << "========================" << ::lib_rtl_timestr() 
-	      << "========================" << endl
-	      << *gbl.node << endl;
+        log() << "========================" << ::lib_rtl_timestr() 
+              << "========================" << endl
+              << *gbl.node << endl;
       }
       ::lib_rtl_sleep(m_delay);
     }

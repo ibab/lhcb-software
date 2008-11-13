@@ -1,4 +1,4 @@
-// $Id: NodeStatsCollector.cpp,v 1.2 2008-11-13 08:29:41 frankb Exp $
+// $Id: NodeStatsCollector.cpp,v 1.3 2008-11-13 12:13:32 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/NodeStatsCollector.cpp,v 1.2 2008-11-13 08:29:41 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/NodeStatsCollector.cpp,v 1.3 2008-11-13 12:13:32 frankb Exp $
 #define MBM_IMPLEMENTATION
 #include "ROMon/NodeStatsCollector.h"
 #include "ROMon/CPUMonOstream.h"
@@ -89,7 +89,7 @@ void NodeStatsCollector::feedStats(void* tag, void** buf, int* size, int* first)
     *size  = cpu.node->length();
     if ( h->m_verbose ) {
       log() << "[NodeStatsCollector] Published " << *size 
-	    << " Bytes of Stat data @" << *buf << std::endl;
+            << " Bytes of Stat data @" << *buf << std::endl;
     }
     return;
   }
@@ -107,7 +107,7 @@ void NodeStatsCollector::feedMBM(void* tag, void** buf, int* size, int* first) {
     *size  = ro.node->length();
     if ( h->m_verbose ) {
       log() << "[NodeStatsCollector] Published " << *size 
-	    << " Bytes of data MBM @" << *buf << std::endl;
+            << " Bytes of data MBM @" << *buf << std::endl;
     }
     return;
   }
@@ -122,9 +122,9 @@ int NodeStatsCollector::monitorStats() {
   m_sys->update();
   if ( m_print ) {
     log() << "SysInfo: ========================" 
-	  << ::lib_rtl_timestr() 
-	  << "========================" << endl
-	  << *buf.node << endl;
+          << ::lib_rtl_timestr() 
+          << "========================" << endl
+          << *buf.node << endl;
     log() << "------ Data size:" << m_sys->statistics()->length() << endl;
   }
   return 1;
@@ -153,8 +153,8 @@ int NodeStatsCollector::monitorTasks() {
   task_data.node->fixup();
   if ( m_print ) {
     log() << "========================" << ::lib_rtl_timestr() 
-	  << "========================" << endl
-	  << *task_data.node << endl;
+          << "========================" << endl
+          << *task_data.node << endl;
   }
   return 1;
 }
@@ -176,7 +176,7 @@ int NodeStatsCollector::monitor() {
     try {
       if ( has_mbm ) monitorTasks();
       if ( stat_delay<=0 ) {
-	monitorStats();
+        monitorStats();
       }
     }
     catch(const std::exception& e) {

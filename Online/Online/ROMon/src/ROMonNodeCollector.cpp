@@ -1,4 +1,4 @@
-// $Id: ROMonNodeCollector.cpp,v 1.4 2008-07-02 14:55:09 frankb Exp $
+// $Id: ROMonNodeCollector.cpp,v 1.5 2008-11-13 12:13:33 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonNodeCollector.cpp,v 1.4 2008-07-02 14:55:09 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonNodeCollector.cpp,v 1.5 2008-11-13 12:13:33 frankb Exp $
 
 // C++ include files
 #include <iostream>
@@ -55,36 +55,36 @@ int ROMonNodeCollector::monitor() {
     while(exec)    {
       Nodeset* n = gbl.nodeset;
       if ( n ) {  // Take GBL lock while updating
-	RTL::Lock lock(m_lock);
-	Nodeset::Nodes& nodes = n->reset()->nodes;
-	Nodeset::Nodes::iterator it = nodes.reset();
-	const Clients& cl = m_info.clients();
-	ro_get_node_name(n->name,sizeof(n->name));
-	n->type = Nodeset::TYPE;
-	if ( ((char*)it) > gbl.str+m_section_size ) {
-	  log() << "Global section memory too small.....exiting" << std::endl;
-	  break;
-	}
-	else {
-	  dim_lock();
-	  for(Clients::const_iterator ic = cl.begin(); ic != cl.end(); ++ic) {
-	    typedef RODimNodeListener::Descriptor DSC;
-	    DSC* d = (*ic).second->data<DSC>();
-	    if ( ((char*)it) > gbl.str+m_section_size ) {
-	      log() << "Global section memory too small.....exiting" << std::endl;
-	      dim_unlock();
-	      break;
-	    }
-	    ::memcpy(it,d->data,d->actual);
-	    it = nodes.add(it);
-	  }
-	  dim_unlock();
-	}
+        RTL::Lock lock(m_lock);
+        Nodeset::Nodes& nodes = n->reset()->nodes;
+        Nodeset::Nodes::iterator it = nodes.reset();
+        const Clients& cl = m_info.clients();
+        ro_get_node_name(n->name,sizeof(n->name));
+        n->type = Nodeset::TYPE;
+        if ( ((char*)it) > gbl.str+m_section_size ) {
+          log() << "Global section memory too small.....exiting" << std::endl;
+          break;
+        }
+        else {
+          dim_lock();
+          for(Clients::const_iterator ic = cl.begin(); ic != cl.end(); ++ic) {
+            typedef RODimNodeListener::Descriptor DSC;
+            DSC* d = (*ic).second->data<DSC>();
+            if ( ((char*)it) > gbl.str+m_section_size ) {
+              log() << "Global section memory too small.....exiting" << std::endl;
+              dim_unlock();
+              break;
+            }
+            ::memcpy(it,d->data,d->actual);
+            it = nodes.add(it);
+          }
+          dim_unlock();
+        }
       }
       if ( m_print ) {
-	log() << "========================" << ::lib_rtl_timestr() 
-	      << "========================" << std::endl
-	      << *n << std::endl;
+        log() << "========================" << ::lib_rtl_timestr() 
+              << "========================" << std::endl
+              << *n << std::endl;
       }
       ::lib_rtl_sleep(m_delay);
     }

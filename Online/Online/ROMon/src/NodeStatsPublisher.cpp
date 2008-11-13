@@ -1,4 +1,4 @@
-// $Id: NodeStatsPublisher.cpp,v 1.2 2008-11-13 08:29:41 frankb Exp $
+// $Id: NodeStatsPublisher.cpp,v 1.3 2008-11-13 12:13:32 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/NodeStatsPublisher.cpp,v 1.2 2008-11-13 08:29:41 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/NodeStatsPublisher.cpp,v 1.3 2008-11-13 12:13:32 frankb Exp $
 
 // C++ include files
 #include <iostream>
@@ -61,27 +61,27 @@ namespace {
     }
     virtual void print() const {
       log() << "========================" << ::lib_rtl_timestr() 
-	    << "========================" << endl
-	    << *(T*)buff << endl;
+            << "========================" << endl
+            << *(T*)buff << endl;
     }
     virtual void update() {
       ::dis_update_service(id);
     }
     virtual void load() {
       for(int res=get_data(); res==2; ) {
-	::free(buff);
-	buffLen += buffLen/2;
-	buff = (char*)::malloc(buffLen);
-	res = get_data();
+        ::free(buff);
+        buffLen += buffLen/2;
+        buff = (char*)::malloc(buffLen);
+        res = get_data();
       }
     }
     /// Feed data to DIS when updating data
     static void feed(void* tag, void** buf, int* size, int* first) {
       _Svc<T>* h = *(_Svc<T>**)tag;
       if ( !(*first) ) {
-	*buf = h->buff;
-	*size  = ((T*)h->buff)->length();
-	return;
+        *buf = h->buff;
+        *size  = ((T*)h->buff)->length();
+        return;
       }
       *size = 0;
       *buf = (void*)s_empty;
@@ -99,9 +99,9 @@ namespace {
     for(Clients::const_iterator ic=info.clients().begin(); ic != info.clients().end(); ++ic) {
       NodeStats* ni = (NodeStats*)(*ic).second->data<DSC>()->data;
       if ( ni ) {
-	if ( ((char*)set_out+ni->cpu()->length()) > buff+buffLen ) return 2;
-	::memcpy(set_out,ni->cpu(),ni->cpu()->length());
-	set_out = nodes.add(set_out);
+        if ( ((char*)set_out+ni->cpu()->length()) > buff+buffLen ) return 2;
+        ::memcpy(set_out,ni->cpu(),ni->cpu()->length());
+        set_out = nodes.add(set_out);
       }
     }
     f.fixup();
@@ -120,29 +120,29 @@ namespace {
     for(Clients::const_iterator ic = cl_info.begin(); ic != cl_info.end(); ++ic) {
       NodeStats* ni = (NodeStats*)(*ic).second->data<DSC>()->data;
       if ( ni ) {
-	Procset*   set_in = ni->procs();
-	if ( flag ) {
-	  Procset::Processes::iterator p_in=(*set_in).processes.begin();
-	  Procset::Processes::iterator p_out=(*set_out).processes.reset();
-	
-	  if ( ((char*)set_out + sizeof(Procset)) > buff+buffLen ) return 2;
-	  ::strncpy((*set_out).name,(*set_in).name,sizeof((*set_out).name));
-	  (*set_out).name[sizeof((*set_out).name)-1] = 0;
-	  (*set_out).time    = (*set_in).time;
-	  (*set_out).millitm = (*set_in).millitm;
-	  for( ; p_in != (*set_in).processes.end(); p_in=(*set_in).processes.next(p_in)) {
-	    if ( ((char*)p_out +sizeof(Process)) > (buff+buffLen) ) return 2;
-	    if ( ::strncmp((*p_in).utgid,"N/A",3)!=0 ) {
-	      ::memcpy(&(*p_out),&(*p_in),sizeof(Process));
-	      p_out = (*set_out).processes.add(p_out);
-	    }
-	  }
-	}
-	else {  // Copy all processes in one big block....
-	  if ( ((char*)set_out + set_in->length()) > buff+buffLen ) return 2;
-	  ::memcpy(&(*set_out),&(*set_in),set_in->length());
-	}
-	set_out = nodes.add(set_out);
+        Procset*   set_in = ni->procs();
+        if ( flag ) {
+          Procset::Processes::iterator p_in=(*set_in).processes.begin();
+          Procset::Processes::iterator p_out=(*set_out).processes.reset();
+        
+          if ( ((char*)set_out + sizeof(Procset)) > buff+buffLen ) return 2;
+          ::strncpy((*set_out).name,(*set_in).name,sizeof((*set_out).name));
+          (*set_out).name[sizeof((*set_out).name)-1] = 0;
+          (*set_out).time    = (*set_in).time;
+          (*set_out).millitm = (*set_in).millitm;
+          for( ; p_in != (*set_in).processes.end(); p_in=(*set_in).processes.next(p_in)) {
+            if ( ((char*)p_out +sizeof(Process)) > (buff+buffLen) ) return 2;
+            if ( ::strncmp((*p_in).utgid,"N/A",3)!=0 ) {
+              ::memcpy(&(*p_out),&(*p_in),sizeof(Process));
+              p_out = (*set_out).processes.add(p_out);
+            }
+          }
+        }
+        else {  // Copy all processes in one big block....
+          if ( ((char*)set_out + set_in->length()) > buff+buffLen ) return 2;
+          ::memcpy(&(*set_out),&(*set_in),set_in->length());
+        }
+        set_out = nodes.add(set_out);
       }
     }
     f.fixup();
@@ -160,9 +160,9 @@ namespace {
     for(Clients::const_iterator ic = cl.begin(); ic != cl.end(); ++ic) {
       DSC* d = (*ic).second->data<DSC>();
       if ( d->data ) {
-	if ( ((char*)it) > buff+buffLen ) return 2;
-	::memcpy(it,d->data,d->actual);
-	it = nodes.add(it);
+        if ( ((char*)it) > buff+buffLen ) return 2;
+        ::memcpy(it,d->data,d->actual);
+        it = nodes.add(it);
       }
     }
     return 1;

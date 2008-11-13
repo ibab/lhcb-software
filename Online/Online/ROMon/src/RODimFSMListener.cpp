@@ -1,4 +1,4 @@
-// $Id: RODimFSMListener.cpp,v 1.3 2008-11-11 15:09:26 frankb Exp $
+// $Id: RODimFSMListener.cpp,v 1.4 2008-11-13 12:13:32 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/RODimFSMListener.cpp,v 1.3 2008-11-11 15:09:26 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/RODimFSMListener.cpp,v 1.4 2008-11-13 12:13:32 frankb Exp $
 
 // Framework includes
 #include "dic.hxx"
@@ -53,22 +53,22 @@ void RODimFSMListener::addHandler(const string& node,const string& svc)    {
   if ( ::strncasecmp(node.c_str(),myNode.c_str(),myNode.length()) == 0 ) {
     if ( ::strncasecmp(svc.c_str(),myUtgid.c_str(),myUtgid.length()) != 0 ) {
       if ( ::strncasecmp(svc.c_str(),"DIS_DNS",7) != 0 ) {
-	string nam = svc+"/fsm_status";
-	dim_lock();
-	Clients::iterator i=m_clients.find(nam);
-	if ( i == m_clients.end() )  {
-	  Item*    itm = Item::create<FSMTask>(this);
-	  FSMTask* t   = itm->data<FSMTask>();
-	  ::strncpy(t->name,svc.substr(0,svc.find("/")).c_str(),sizeof(t->name));
-	  t->name[sizeof(t->name)-1] = 0;
-	  t->processID = -1;
-	  m_clients[nam] = itm;
-	  itm->id = ::dic_info_service((char*)nam.c_str(),MONITORED,0,0,0,infoHandler,(long)itm,0,0);
-	  if ( m_verbose ) {
-	    log() << "Create DimInfo:" << nam << " id:" << itm->id << endl;
-	  }
-	}
-	dim_unlock();
+        string nam = svc+"/fsm_status";
+        dim_lock();
+        Clients::iterator i=m_clients.find(nam);
+        if ( i == m_clients.end() )  {
+          Item*    itm = Item::create<FSMTask>(this);
+          FSMTask* t   = itm->data<FSMTask>();
+          ::strncpy(t->name,svc.substr(0,svc.find("/")).c_str(),sizeof(t->name));
+          t->name[sizeof(t->name)-1] = 0;
+          t->processID = -1;
+          m_clients[nam] = itm;
+          itm->id = ::dic_info_service((char*)nam.c_str(),MONITORED,0,0,0,infoHandler,(long)itm,0,0);
+          if ( m_verbose ) {
+            log() << "Create DimInfo:" << nam << " id:" << itm->id << endl;
+          }
+        }
+        dim_unlock();
       }
     }
   }

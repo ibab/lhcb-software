@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.cpp,v 1.30 2008-11-13 08:29:41 frankb Exp $
+// $Id: FarmDisplay.cpp,v 1.31 2008-11-13 12:13:32 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.30 2008-11-13 08:29:41 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.31 2008-11-13 12:13:32 frankb Exp $
 
 #include "ROMon/CtrlSubfarmDisplay.h"
 #include "ROMon/RecSubfarmDisplay.h"
@@ -96,10 +96,10 @@ static const float FLT_max = numeric_limits<float>::max();
 
 static void help() {
   cout << "  romon_farm -option [-option]" << endl
-	    << "       -all                         Show all subfarms." << endl
-	    << "       -p[artition]=<name>          Partition name providing monitoring information." << endl
-	    << "       -an[chor]=+<x-pos>+<ypos>    Set anchor for sub displays" << endl
-	    << endl;
+            << "       -all                         Show all subfarms." << endl
+            << "       -p[artition]=<name>          Partition name providing monitoring information." << endl
+            << "       -an[chor]=+<x-pos>+<ypos>    Set anchor for sub displays" << endl
+            << endl;
 }
 
 static string strUpper(const string& src) {
@@ -277,33 +277,33 @@ void BufferDisplay::update(const void* data) {
 
     for (n=ns->nodes.begin(), line=1; n!=ns->nodes.end(); n=ns->nodes.next(n), ++node)  {
       if ( node == m_node ) {
-	time_t tim = (*n).time;
-	const Buffers& buffs = *(*n).buffers();
-	::strftime(name,sizeof(name),"%H:%M:%S",::localtime(&tim));
-	::sprintf(txt,"MBM Monitor display for node:%s  [%s]",(*n).name,name);
-	::scrc_set_border(m_display,txt,BLUE|INVERSE);
-	for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
-	  const Buffers::value_type::Control& c = (*ib).ctrl;
-	  bnam = (char*)(*ib).name;
-	  if ( ::strlen(bnam)>10 ) {
-	    p = strchr(bnam,'_');
-	    if ( p ) *p = 0;
-	  }
-	  ::sprintf(name," Buffer \"%s\"",(*ib).name);
-	  ::sprintf(txt,"%-26s  Events: Produced:%d Actual:%d Seen:%d Pending:%d Max:%d",
-		    name, c.tot_produced, c.tot_actual, c.tot_seen, c.i_events, c.p_emax);
-	  ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
-	  ::sprintf(txt,"%-26s  Space(kB):[Tot:%d Free:%d] Users:[Tot:%d Max:%d]",
-		    "",(c.bm_size*c.bytes_p_Bit)/1024, (c.i_space*c.bytes_p_Bit)/1024, 
-		    c.i_users, c.p_umax);
-	  ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
-	  ::scrc_put_chars(m_display,"  Occupancy [Events]:",NORMAL,++line,1,1);
-	  draw_bar(29,line,float(c.i_events)/float(c.p_emax),95);
-	  ::scrc_put_chars(m_display,"            [Space]: ",NORMAL,++line,1,1);
-	  draw_bar(29,line,float(c.bm_size-c.i_space)/float(c.bm_size),95);
-	  ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
-	}
-	break;
+        time_t tim = (*n).time;
+        const Buffers& buffs = *(*n).buffers();
+        ::strftime(name,sizeof(name),"%H:%M:%S",::localtime(&tim));
+        ::sprintf(txt,"MBM Monitor display for node:%s  [%s]",(*n).name,name);
+        ::scrc_set_border(m_display,txt,BLUE|INVERSE);
+        for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
+          const Buffers::value_type::Control& c = (*ib).ctrl;
+          bnam = (char*)(*ib).name;
+          if ( ::strlen(bnam)>10 ) {
+            p = strchr(bnam,'_');
+            if ( p ) *p = 0;
+          }
+          ::sprintf(name," Buffer \"%s\"",(*ib).name);
+          ::sprintf(txt,"%-26s  Events: Produced:%d Actual:%d Seen:%d Pending:%d Max:%d",
+                    name, c.tot_produced, c.tot_actual, c.tot_seen, c.i_events, c.p_emax);
+          ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
+          ::sprintf(txt,"%-26s  Space(kB):[Tot:%d Free:%d] Users:[Tot:%d Max:%d]",
+                    "",(c.bm_size*c.bytes_p_Bit)/1024, (c.i_space*c.bytes_p_Bit)/1024, 
+                    c.i_users, c.p_umax);
+          ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
+          ::scrc_put_chars(m_display,"  Occupancy [Events]:",NORMAL,++line,1,1);
+          draw_bar(29,line,float(c.i_events)/float(c.p_emax),95);
+          ::scrc_put_chars(m_display,"            [Space]: ",NORMAL,++line,1,1);
+          draw_bar(29,line,float(c.bm_size-c.i_space)/float(c.bm_size),95);
+          ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
+        }
+        break;
       }
     }
     if ( line > 1 ) {
@@ -320,35 +320,35 @@ void BufferDisplay::update(const void* data) {
     }
     for (n=ns->nodes.begin(), node=0; n!=ns->nodes.end(); n=ns->nodes.next(n), ++node)  {
       if ( node == m_node ) {
-	const Buffers& buffs = *(*n).buffers();
-	for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
-	  const Clients& clients = (*ib).clients;
-	  char* bnam = (char*)(*ib).name;
-	  for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
-	    Clients::const_reference c = (*ic);
-	    cnam = (char*)c.name;
-	    if ( ::strlen(cnam)>19 ) {
-	      p = ::strchr(cnam,'_');
-	      if ( p ) cnam = ++p;
-	      if ( ::strlen(cnam)>19 ) {
-		p = ::strchr(cnam,'_');
-		if ( p ) cnam = ++p;
-	      }
-	    }
-	    if ( c.type == 'C' )
-	      ::sprintf(txt,"%-20s%5X%6d C%6s%12d %c%c%c%c %s",cnam,c.partitionID,c.processID,
-			sstat[(size_t)c.state],c.events,c.reqs[0],c.reqs[1],c.reqs[2],c.reqs[3],bnam);
-	    else if ( c.type == 'P' )
-	      ::sprintf(txt,"%-20s%5X%6d P%6s%12d %4s %s",cnam,c.partitionID,c.processID,
-			sstat[(size_t)c.state],c.events,"",bnam);
-	    else
-	      ::sprintf(txt,"%-20s%5X%6d ?%6s%12s %4s %s",cnam,c.partitionID,c.processID,"","","",bnam);
-	    key = bnam;
-	    key += cnam;
-	    entries[key] = txt;
-	  }
-	}
-	break;
+        const Buffers& buffs = *(*n).buffers();
+        for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
+          const Clients& clients = (*ib).clients;
+          char* bnam = (char*)(*ib).name;
+          for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
+            Clients::const_reference c = (*ic);
+            cnam = (char*)c.name;
+            if ( ::strlen(cnam)>19 ) {
+              p = ::strchr(cnam,'_');
+              if ( p ) cnam = ++p;
+              if ( ::strlen(cnam)>19 ) {
+                p = ::strchr(cnam,'_');
+                if ( p ) cnam = ++p;
+              }
+            }
+            if ( c.type == 'C' )
+              ::sprintf(txt,"%-20s%5X%6d C%6s%12d %c%c%c%c %s",cnam,c.partitionID,c.processID,
+                        sstat[(size_t)c.state],c.events,c.reqs[0],c.reqs[1],c.reqs[2],c.reqs[3],bnam);
+            else if ( c.type == 'P' )
+              ::sprintf(txt,"%-20s%5X%6d P%6s%12d %4s %s",cnam,c.partitionID,c.processID,
+                        sstat[(size_t)c.state],c.events,"",bnam);
+            else
+              ::sprintf(txt,"%-20s%5X%6d ?%6s%12s %4s %s",cnam,c.partitionID,c.processID,"","","",bnam);
+            key = bnam;
+            key += cnam;
+            entries[key] = txt;
+          }
+        }
+        break;
       }
     }
     lines.clear();
@@ -358,12 +358,12 @@ void BufferDisplay::update(const void* data) {
     
     for(size_t i=0,len=lines.size(),cnt=len/2+(len%2),j=cnt; i<cnt; ++i, ++j)  {
       if ( j<len ) {
-	::sprintf(name,"%%-%ds  %%-%ds",m_display->cols/2,m_display->cols/2);
-	::sprintf(txt,name,lines[i].c_str(),lines[j].c_str());
+        ::sprintf(name,"%%-%ds  %%-%ds",m_display->cols/2,m_display->cols/2);
+        ::sprintf(txt,name,lines[i].c_str(),lines[j].c_str());
       }
       else {
-	::sprintf(name,"%%-%ds",m_display->cols);
-	::sprintf(txt,name,lines[i].c_str());
+        ::sprintf(name,"%%-%ds",m_display->cols);
+        ::sprintf(txt,name,lines[i].c_str());
       }
       ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
     }
@@ -394,102 +394,102 @@ void CtrlDisplay::update(const void* data) {
     ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
     for(Cluster::Nodes::const_iterator i=n.begin(); i!=n.end();++i, ++node) {
       if ( node == m_node ) {
-	const Cluster::Node& n = (*i).second;
-	Cluster::Node::Tasks::const_iterator j;
-	::strftime(name,sizeof(name),"%H:%M:%S",::localtime(&tim));
-	::sprintf(txt,"Task Control display for node:%s  [%s]",n.name.c_str(),name);
-	::scrc_set_border(m_display,txt,BLUE|INVERSE);
+        const Cluster::Node& n = (*i).second;
+        Cluster::Node::Tasks::const_iterator j;
+        ::strftime(name,sizeof(name),"%H:%M:%S",::localtime(&tim));
+        ::sprintf(txt,"Task Control display for node:%s  [%s]",n.name.c_str(),name);
+        ::scrc_set_border(m_display,txt,BLUE|INVERSE);
 
-	::sprintf(txt, "  Node:%s  last update:%s",n.name.c_str(),n.time.c_str());
-	::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
+        ::sprintf(txt, "  Node:%s  last update:%s",n.name.c_str(),n.time.c_str());
+        ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
 
-	::sprintf(txt," %-12s %8s    Tasks       Connections  %6s %6s %6s %6s %3s %3s",
-		  "","","RSS","Stack","Data","VSize","CPU","MEM");
-	::scrc_put_chars(m_display,txt,INVERSE,++line,1,1);
-	::sprintf(txt," %-12s %8s found/missing found/missing %6s %6s %6s %6s %3s %3s %s",
-		  "Node","Status","[MB]","[MB]","[MB]","[MB]","[%]","[%]","Boot time");
-	::scrc_put_chars(m_display,txt,INVERSE,++line,1,1);
-	::sprintf(txt," %-12s %8s %5zd/%-7zd %5zd/%-7zd %6d %6d %6d %6d %3.0f %3.0f %s",
-		  n.name.c_str(),n.status.c_str(),
-		  n.taskCount,n.missTaskCount,n.connCount,n.missConnCount,
-		  int(n.rss/1024),int(n.stack/1024),int(n.data/1024),int(n.vsize/1024),
-		  n.perc_cpu, n.perc_mem, n.boot.c_str());
-	::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
+        ::sprintf(txt," %-12s %8s    Tasks       Connections  %6s %6s %6s %6s %3s %3s",
+                  "","","RSS","Stack","Data","VSize","CPU","MEM");
+        ::scrc_put_chars(m_display,txt,INVERSE,++line,1,1);
+        ::sprintf(txt," %-12s %8s found/missing found/missing %6s %6s %6s %6s %3s %3s %s",
+                  "Node","Status","[MB]","[MB]","[MB]","[MB]","[%]","[%]","Boot time");
+        ::scrc_put_chars(m_display,txt,INVERSE,++line,1,1);
+        ::sprintf(txt," %-12s %8s %5zd/%-7zd %5zd/%-7zd %6d %6d %6d %6d %3.0f %3.0f %s",
+                  n.name.c_str(),n.status.c_str(),
+                  n.taskCount,n.missTaskCount,n.connCount,n.missConnCount,
+                  int(n.rss/1024),int(n.stack/1024),int(n.data/1024),int(n.vsize/1024),
+                  n.perc_cpu, n.perc_mem, n.boot.c_str());
+        ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
 
-	//::sprintf(txt,"  %-24s %12s %17s / Missing   %17s / Missing    %s","Node","Status","Tasks found","Connections found","Timestamp");
-	//::scrc_put_chars(m_display,txt,INVERSE,++line,1,1);
-	//::sprintf(txt,fmt,n.name.c_str(),n.status.c_str(),n.taskCount,n.missTaskCount,n.connCount,n.missConnCount,n.time.c_str());
-	//::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
-	if ( n.status == "DEAD" ) {
-	  ::scrc_put_chars(m_display,"",INVERSE|RED|BOLD,++line,1,1);
-	  ::scrc_put_chars(m_display,"                        -------------------------------------",INVERSE|RED|BOLD,++line,1,1);
-	  ::scrc_put_chars(m_display,"                        Node is DEAD. Severe problem present.",INVERSE|RED|BOLD,++line,1,1);
-	  ::scrc_put_chars(m_display,"                        -------------------------------------",INVERSE|RED|BOLD,++line,1,1);
-	  ::scrc_put_chars(m_display,"",INVERSE|RED|BOLD,++line,1,1);
-	}
-	else {
-	  typedef map<string,bool> _O;
-	  int l, x;
-	  _O ord;
-	  _O::iterator k;
-	  ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
-	  if ( n.taskCount > 0 ) {
-	    ::scrc_put_chars(m_display,"  Task Summary:",n.missTaskCount > 0 ? INVERSE|BOLD|RED : INVERSE|GREEN,++line,1,1);
-	    for(j=n.tasks.begin(); j != n.tasks.end(); ++j) ord[(*j).first]=(*j).second;
-	    for(k=ord.begin(),cnt=0,l=line,x=1; k !=ord.end(); ++k,++cnt) {
-	      bool ok = (*k).second;
-	      if ( cnt==int((ord.size()+1)/2) ) l = line, x=61;
-	      ::sprintf(txt,"   [%03d]  %-32s %-10s",cnt,(*k).first.c_str(),ok ? "OK" : "MISSING");
-	      ::scrc_put_chars(m_display,txt,ok ? NORMAL : INVERSE|RED,++l,x,1);
-	    }
-	    line += (ord.size()+3)/2;
-	    ord.clear();
-	  }
-	  else {
-	    ::scrc_put_chars(m_display,"  No tasks found",INVERSE|BOLD|RED,++line,1,1);
-	  }
-	  if ( n.projects.size() > 0 ) {
-	    cnt=0;
-	    ::sprintf(txt,"%-15s %-16s %-10s %-10s %-10s %-10s %-10s",
-		      "PVSS Summary:","Project name","Event Mgr","Data Mgr","Dist Mgr","FSM Server","Dev Handler");
-	    ::scrc_put_chars(m_display,txt,INVERSE|GREEN,++line,1,1);
-	    for(Cluster::Projects::const_iterator q=n.projects.begin(); q != n.projects.end(); ++q,++cnt)  {
-	      const Cluster::PVSSProject& p = *q;
-	      bool ok = p.eventMgr && p.dataMgr && p.distMgr;
-	      ::sprintf(txt,"   [%03d]        %-16s %-10s %-10s %-10s %-10s %-10s",cnt,p.name.c_str(), 
-			p.eventMgr ? "RUNNING" : "DEAD",
-			p.dataMgr  ? "RUNNING" : "DEAD",
-			p.distMgr  ? "RUNNING" : "DEAD",
-			p.fsmSrv   ? "RUNNING" : "DEAD",
-			p.devHdlr  ? "RUNNING" : "DEAD");
-	      ::scrc_put_chars(m_display,txt,ok ? NORMAL : INVERSE|RED,++line,1,1);
-	    }
-	    ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
-	  }
-	  if ( n.connCount > 0 ) {
-	    ::scrc_put_chars(m_display,"  Connection Summary:",n.missConnCount > 0 ? INVERSE|BOLD|RED : INVERSE|GREEN,++line,1,1);
-	    for(j=n.conns.begin(); j != n.conns.end(); ++j) ord[(*j).first]=(*j).second;
-	    for(k=ord.begin(),cnt=0,l=line,x=1; k !=ord.end(); ++k,++cnt) {
-	      bool ok = (*k).second;
-	      if ( cnt==int((ord.size()+1)/2) ) l = line, x=61;
-	      ::sprintf(txt,"   [%03d]  %-32s %-10s",cnt,(*k).first.c_str(),ok ? "OK" : "MISSING");
-	      ::scrc_put_chars(m_display,txt,ok ? NORMAL : INVERSE|RED,++l,x,1);
-	    }
-	    line += (ord.size()+3)/2;
-	    ord.clear();
-	  }
-	  else {
-	    ::scrc_put_chars(m_display,"  No connections found",INVERSE|BOLD|RED,++line,1,1);
-	  }
-	  ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
-	  if ( n.missTaskCount == 0 && n.missConnCount == 0 )
-	    ::scrc_put_chars(m_display,"  Node looks fine. No missing tasks/network connections found.",INVERSE|GREEN,++line,1,1);
-	  else if ( n.missTaskCount == 0 )
-	    ::scrc_put_chars(m_display,"  No missing tasks found, but missing network connections .....",INVERSE|RED,++line,1,1);
-	  else if ( n.missConnCount == 0 )
-	    ::scrc_put_chars(m_display,"  No missing network connections found, but missing tasks .....",INVERSE|RED,++line,1,1);
-	  ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
-	}
+        //::sprintf(txt,"  %-24s %12s %17s / Missing   %17s / Missing    %s","Node","Status","Tasks found","Connections found","Timestamp");
+        //::scrc_put_chars(m_display,txt,INVERSE,++line,1,1);
+        //::sprintf(txt,fmt,n.name.c_str(),n.status.c_str(),n.taskCount,n.missTaskCount,n.connCount,n.missConnCount,n.time.c_str());
+        //::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
+        if ( n.status == "DEAD" ) {
+          ::scrc_put_chars(m_display,"",INVERSE|RED|BOLD,++line,1,1);
+          ::scrc_put_chars(m_display,"                        -------------------------------------",INVERSE|RED|BOLD,++line,1,1);
+          ::scrc_put_chars(m_display,"                        Node is DEAD. Severe problem present.",INVERSE|RED|BOLD,++line,1,1);
+          ::scrc_put_chars(m_display,"                        -------------------------------------",INVERSE|RED|BOLD,++line,1,1);
+          ::scrc_put_chars(m_display,"",INVERSE|RED|BOLD,++line,1,1);
+        }
+        else {
+          typedef map<string,bool> _O;
+          int l, x;
+          _O ord;
+          _O::iterator k;
+          ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
+          if ( n.taskCount > 0 ) {
+            ::scrc_put_chars(m_display,"  Task Summary:",n.missTaskCount > 0 ? INVERSE|BOLD|RED : INVERSE|GREEN,++line,1,1);
+            for(j=n.tasks.begin(); j != n.tasks.end(); ++j) ord[(*j).first]=(*j).second;
+            for(k=ord.begin(),cnt=0,l=line,x=1; k !=ord.end(); ++k,++cnt) {
+              bool ok = (*k).second;
+              if ( cnt==int((ord.size()+1)/2) ) l = line, x=61;
+              ::sprintf(txt,"   [%03d]  %-32s %-10s",cnt,(*k).first.c_str(),ok ? "OK" : "MISSING");
+              ::scrc_put_chars(m_display,txt,ok ? NORMAL : INVERSE|RED,++l,x,1);
+            }
+            line += (ord.size()+3)/2;
+            ord.clear();
+          }
+          else {
+            ::scrc_put_chars(m_display,"  No tasks found",INVERSE|BOLD|RED,++line,1,1);
+          }
+          if ( n.projects.size() > 0 ) {
+            cnt=0;
+            ::sprintf(txt,"%-15s %-16s %-10s %-10s %-10s %-10s %-10s",
+                      "PVSS Summary:","Project name","Event Mgr","Data Mgr","Dist Mgr","FSM Server","Dev Handler");
+            ::scrc_put_chars(m_display,txt,INVERSE|GREEN,++line,1,1);
+            for(Cluster::Projects::const_iterator q=n.projects.begin(); q != n.projects.end(); ++q,++cnt)  {
+              const Cluster::PVSSProject& p = *q;
+              bool ok = p.eventMgr && p.dataMgr && p.distMgr;
+              ::sprintf(txt,"   [%03d]        %-16s %-10s %-10s %-10s %-10s %-10s",cnt,p.name.c_str(), 
+                        p.eventMgr ? "RUNNING" : "DEAD",
+                        p.dataMgr  ? "RUNNING" : "DEAD",
+                        p.distMgr  ? "RUNNING" : "DEAD",
+                        p.fsmSrv   ? "RUNNING" : "DEAD",
+                        p.devHdlr  ? "RUNNING" : "DEAD");
+              ::scrc_put_chars(m_display,txt,ok ? NORMAL : INVERSE|RED,++line,1,1);
+            }
+            ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
+          }
+          if ( n.connCount > 0 ) {
+            ::scrc_put_chars(m_display,"  Connection Summary:",n.missConnCount > 0 ? INVERSE|BOLD|RED : INVERSE|GREEN,++line,1,1);
+            for(j=n.conns.begin(); j != n.conns.end(); ++j) ord[(*j).first]=(*j).second;
+            for(k=ord.begin(),cnt=0,l=line,x=1; k !=ord.end(); ++k,++cnt) {
+              bool ok = (*k).second;
+              if ( cnt==int((ord.size()+1)/2) ) l = line, x=61;
+              ::sprintf(txt,"   [%03d]  %-32s %-10s",cnt,(*k).first.c_str(),ok ? "OK" : "MISSING");
+              ::scrc_put_chars(m_display,txt,ok ? NORMAL : INVERSE|RED,++l,x,1);
+            }
+            line += (ord.size()+3)/2;
+            ord.clear();
+          }
+          else {
+            ::scrc_put_chars(m_display,"  No connections found",INVERSE|BOLD|RED,++line,1,1);
+          }
+          ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
+          if ( n.missTaskCount == 0 && n.missConnCount == 0 )
+            ::scrc_put_chars(m_display,"  Node looks fine. No missing tasks/network connections found.",INVERSE|GREEN,++line,1,1);
+          else if ( n.missTaskCount == 0 )
+            ::scrc_put_chars(m_display,"  No missing tasks found, but missing network connections .....",INVERSE|RED,++line,1,1);
+          else if ( n.missConnCount == 0 )
+            ::scrc_put_chars(m_display,"  No missing network connections found, but missing tasks .....",INVERSE|RED,++line,1,1);
+          ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
+        }
       }
     }
   }
@@ -551,22 +551,22 @@ void ProcessDisplay::updateContent(const ProcFarm& pf) {
       ::scrc_put_chars(m_display,txt,BOLD,++line,3,1);
       ::scrc_put_chars(m_display,"",NORMAL,++line,3,1);
       ::sprintf(txt,"        %-32s %-10s %5s %5s %9s %9s %9s %6s %8s",
-		"UTGID","Owner","PID","PPID","Memory[%]","VSize[kB]","RSS[kB]","CPU[%]","Threads");
+                "UTGID","Owner","PID","PPID","Memory[%]","VSize[kB]","RSS[kB]","CPU[%]","Threads");
       ::scrc_put_chars(m_display,txt,INVERSE,++line,1,1);
       for(_P::const_iterator ip=procs.begin(); ip!=procs.end(); ip=procs.next(ip)) {
-	const Process& p = *ip;
-	if ( strncmp(p.utgid,"N/A",3)==0 ) {
-	  ::strncpy(text,p.cmd,sizeof(text));
-	  text[27] = 0;
-	  text[26]=text[25]=text[24]='.';
-	  ::sprintf(txt,"%3d:  %3s:%-28s %-10s %5d %5d %9.3f %9.0f %9.0f %6.2f %7d",
-		    ++cnt, p.utgid,text,p.owner,p.pid,p.ppid,p.mem,p.vsize,p.rss,p.cpu,p.threads);
-	}
-	else {
-	  ::sprintf(txt,"%3d:  %-32s %-10s %5d %5d %9.3f %9.0f %9.0f %6.2f %7d",
-		    ++cnt, p.utgid,p.owner,p.pid,p.ppid,p.mem,p.vsize,p.rss,p.cpu,p.threads);
-	}
-	::scrc_put_chars(m_display,txt,NORMAL,++line,3,1);
+        const Process& p = *ip;
+        if ( strncmp(p.utgid,"N/A",3)==0 ) {
+          ::strncpy(text,p.cmd,sizeof(text));
+          text[27] = 0;
+          text[26]=text[25]=text[24]='.';
+          ::sprintf(txt,"%3d:  %3s:%-28s %-10s %5d %5d %9.3f %9.0f %9.0f %6.2f %7d",
+                    ++cnt, p.utgid,text,p.owner,p.pid,p.ppid,p.mem,p.vsize,p.rss,p.cpu,p.threads);
+        }
+        else {
+          ::sprintf(txt,"%3d:  %-32s %-10s %5d %5d %9.3f %9.0f %9.0f %6.2f %7d",
+                    ++cnt, p.utgid,p.owner,p.pid,p.ppid,p.mem,p.vsize,p.rss,p.cpu,p.threads);
+        }
+        ::scrc_put_chars(m_display,txt,NORMAL,++line,3,1);
       }
       return;
     }
@@ -623,20 +623,20 @@ void CPUDisplay::updateContent(const CPUfarm& f) {
     ::scrc_set_border(m_display,m_title.c_str(),INVERSE|BLUE);
     ::strftime(text,sizeof(text),"%H:%M:%S",::localtime(&t1));
     ::sprintf(txt,"      Node:%-8s  Family: %s last update:%s [%d cores] Context switch rate:%9.0f Hz",
-	      cs.name,cs.family,text,cores.size(),cs.ctxtRate);
+              cs.name,cs.family,text,cores.size(),cs.ctxtRate);
     ::scrc_put_chars(m_display,txt,INVERSE,++line,3,1);
     ::sprintf(txt,"      Average values: %9s %9.3f %9.3f %9.3f %10.3f %9.3f %9.3f %9.0f",
-	      "",avg.user,avg.system,avg.idle,avg.iowait,avg.IRQ,avg.softIRQ,avg.nice);
+              "",avg.user,avg.system,avg.idle,avg.iowait,avg.IRQ,avg.softIRQ,avg.nice);
     ::scrc_put_chars(m_display,txt,NORMAL,++line,3,1);
     if ( strcasecmp(m_node.c_str(),cs.name) != 0 ) continue;
     ::sprintf(txt,"        %9s %5s %9s %9s %9s %9s %10s %9s %9s %9s",
-	      "Clock","Cache","Mips","User[%]","System[%]","Idle[%]","IO wait[%]","IRQ","SoftIRQ","Nice");
+              "Clock","Cache","Mips","User[%]","System[%]","Idle[%]","IO wait[%]","IRQ","SoftIRQ","Nice");
     ::scrc_put_chars(m_display,txt,BOLD,++line,1,1);
     for(_C::const_iterator ic=cores.begin(); ic!=cores.end(); ic=cores.next(ic)) {
       const CPU& c = *ic;
       ::sprintf(txt,"Core %3d:%6.0f %5d %9.0f %9.3f %9.3f %9.3f %10.3f %9.3f %9.3f %9.0f",
-		++cnt, c.clock,c.cache,c.bogomips,c.stats.user,c.stats.system,c.stats.idle,
-		c.stats.iowait,c.stats.IRQ,c.stats.softIRQ,c.stats.nice);
+                ++cnt, c.clock,c.cache,c.bogomips,c.stats.user,c.stats.system,c.stats.idle,
+                c.stats.iowait,c.stats.IRQ,c.stats.softIRQ,c.stats.nice);
       ::scrc_put_chars(m_display,txt,NORMAL,++line,3,1);
     }
     ::scrc_put_chars(m_display,"",NORMAL,++line,3,1);
@@ -1002,7 +1002,7 @@ void FarmDisplay::update(const void* address) {
     if ( idx != string::npos && idq == 0 ) {
       string f = svc.substr(1,idx-1);
       if ( ::strcase_match_wild(f.c_str(),m_match.c_str()) ) {
-	IocSensor::instance().send(this,CMD_ADD,new string(f));
+        IocSensor::instance().send(this,CMD_ADD,new string(f));
       }
     }
     break;
@@ -1017,23 +1017,23 @@ void FarmDisplay::update(const void* address) {
       char *at, *p = msg, *last = msg;
       auto_ptr<Farms> farms(new Farms);
       while ( last != 0 && (at=strchr(p,'@')) != 0 )  {
-	last = strchr(at,'|');
-	if ( last ) *last = 0;
-	getServiceNode(p,svc,node);
-	idx = svc.find("/ROpublish");
-	idq = svc.find("/hlt");
-	if ( idq == string::npos ) idq = svc.find("/mona");
-	if ( idq == string::npos ) idq = svc.find("/store");
-	if ( idx != string::npos && idq == 0 ) {
-	  string f = svc.substr(1,idx-1);
-	  if ( ::strcase_match_wild(f.c_str(),m_match.c_str()) ) {
-	    farms->push_back(f);
-	  }
-	}
-	p = last+1;
+        last = strchr(at,'|');
+        if ( last ) *last = 0;
+        getServiceNode(p,svc,node);
+        idx = svc.find("/ROpublish");
+        idq = svc.find("/hlt");
+        if ( idq == string::npos ) idq = svc.find("/mona");
+        if ( idq == string::npos ) idq = svc.find("/store");
+        if ( idx != string::npos && idq == 0 ) {
+          string f = svc.substr(1,idx-1);
+          if ( ::strcase_match_wild(f.c_str(),m_match.c_str()) ) {
+            farms->push_back(f);
+          }
+        }
+        p = last+1;
       }
       if ( !farms->empty() )
-	IocSensor::instance().send(this,CMD_CONNECT,farms.release());
+        IocSensor::instance().send(this,CMD_CONNECT,farms.release());
     }
     break;
   }
@@ -1084,80 +1084,80 @@ int FarmDisplay::handleKeyboard(int key)    {
       return WT_SUCCESS;
     case MOVE_LEFT:
       if ( 0 == m_subfarmDisplay && (d=currentDisplay()) ) {
-	SubDisplays::reverse_iterator k;
-	col = d ? d->display()->col : 2;
-	row = d ? d->display()->row : 2;
-	for(k=sd.rbegin(), cnt=sd.size(); k != sd.rend(); ++k, --cnt) {
-	  d1 = (*k).second->display();
-	  if ( d1->col < col ) {
-	    if ( d1->row == row ) {
-	      m_posCursor = --cnt;
-	      set_cursor();
-	      return WT_SUCCESS;
-	    }
-	  }
-	}
+        SubDisplays::reverse_iterator k;
+        col = d ? d->display()->col : 2;
+        row = d ? d->display()->row : 2;
+        for(k=sd.rbegin(), cnt=sd.size(); k != sd.rend(); ++k, --cnt) {
+          d1 = (*k).second->display();
+          if ( d1->col < col ) {
+            if ( d1->row == row ) {
+              m_posCursor = --cnt;
+              set_cursor();
+              return WT_SUCCESS;
+            }
+          }
+        }
       }
       break;
     case MOVE_RIGHT:
       if ( 0 == m_subfarmDisplay && (d=currentDisplay()) ) {
-	SubDisplays::iterator k;
-	col = d ? d->display()->col : 2;
-	row = d ? d->display()->row : 2;
-	for(k=sd.begin(), cnt=0; k != sd.end(); ++k, ++cnt) {
-	  d1 = (*k).second->display();
-	  if ( d1->col > col ) {
-	    if ( d1->row == row ) {
-	      m_posCursor = cnt;
-	      set_cursor();
-	      return WT_SUCCESS;
-	    }
-	  }
-	}
+        SubDisplays::iterator k;
+        col = d ? d->display()->col : 2;
+        row = d ? d->display()->row : 2;
+        for(k=sd.begin(), cnt=0; k != sd.end(); ++k, ++cnt) {
+          d1 = (*k).second->display();
+          if ( d1->col > col ) {
+            if ( d1->row == row ) {
+              m_posCursor = cnt;
+              set_cursor();
+              return WT_SUCCESS;
+            }
+          }
+        }
       }
       break;
     case MOVE_UP:
       if ( 0 == m_subfarmDisplay && m_posCursor > 0 )
-	--m_posCursor;
+        --m_posCursor;
       else if ( 0 != m_subfarmDisplay && m_subPosCursor > SUBFARM_NODE_OFFSET )
-	--m_subPosCursor;
+        --m_subPosCursor;
       break;
     case MOVE_DOWN:
       if ( 0 == m_subfarmDisplay && m_posCursor < subDisplays().size()-1 )
-	++m_posCursor;
+        ++m_posCursor;
       else if ( 0 != m_subfarmDisplay && m_subfarmDisplay->numNodes()>(m_subPosCursor-SUBFARM_NODE_OFFSET) )
-	++m_subPosCursor;
+        ++m_subPosCursor;
       break;
     case PAGE_UP:
       if ( 0 == m_subfarmDisplay && (d=currentDisplay()) ) {
-	SubDisplays::reverse_iterator k;
-	col = d ? d->display()->col : 2;
-	row = d ? d->display()->row : 2;
-	for(k=sd.rbegin(), cnt=sd.size(); k != sd.rend(); ++k, --cnt) {
-	  d1 = (*k).second->display();
-	  if ( d1->col == col ) {
-	    if ( d1->row == min(d1->row,row) ) {
-	      row = d1->row;
-	      m_posCursor = cnt;
-	    }
-	  }
-	}
+        SubDisplays::reverse_iterator k;
+        col = d ? d->display()->col : 2;
+        row = d ? d->display()->row : 2;
+        for(k=sd.rbegin(), cnt=sd.size(); k != sd.rend(); ++k, --cnt) {
+          d1 = (*k).second->display();
+          if ( d1->col == col ) {
+            if ( d1->row == min(d1->row,row) ) {
+              row = d1->row;
+              m_posCursor = cnt;
+            }
+          }
+        }
       }
       break;
     case PAGE_DOWN:
       if ( 0 == m_subfarmDisplay && (d=currentDisplay()) ) {
-	SubDisplays::iterator k;
-	col = d ? d->display()->col : 2;
-	row = d ? d->display()->row : 0;
-	for(k=sd.begin(), cnt=0; k != sd.end(); ++k, ++cnt) {
-	  d1 = (*k).second->display();
-	  if ( d1->col == col ) {
-	    if ( d1->row == max(d1->row,row) ) {
-	      row = d1->row;
-	      m_posCursor = cnt;
-	    }
-	  }
-	}
+        SubDisplays::iterator k;
+        col = d ? d->display()->col : 2;
+        row = d ? d->display()->row : 0;
+        for(k=sd.begin(), cnt=0; k != sd.end(); ++k, ++cnt) {
+          d1 = (*k).second->display();
+          if ( d1->col == col ) {
+            if ( d1->row == max(d1->row,row) ) {
+              row = d1->row;
+              m_posCursor = cnt;
+            }
+          }
+        }
       }
       break;
     default:
@@ -1187,27 +1187,27 @@ void FarmDisplay::handle(const Event& ev) {
     }
     else if ( m->msec != (unsigned int)-1 ) {
       if ( m_helpDisplay.get() )//&& m_helpDisplay->display() == m->display )
-	IocSensor::instance().send(this,CMD_SHOWHELP,this);
+        IocSensor::instance().send(this,CMD_SHOWHELP,this);
       else if ( m_ctrlDisplay.get() )//&& m_ctrlDisplay->display() == m->display )
-	IocSensor::instance().send(this,CMD_SHOWCTRL,this);
+        IocSensor::instance().send(this,CMD_SHOWCTRL,this);
       else if ( m_mbmDisplay.get() )//&& m_mbmDisplay->display() == m->display )
-	IocSensor::instance().send(this,CMD_SHOWMBM,this);
+        IocSensor::instance().send(this,CMD_SHOWMBM,this);
       else if ( m_procDisplay.get() )//&& m_procDisplay->display() == m->display )
-	IocSensor::instance().send(this,CMD_SHOWPROCS,this);
+        IocSensor::instance().send(this,CMD_SHOWPROCS,this);
       else if ( m_cpuDisplay.get() )//&& m_cpuDisplay->display() == m->display )
-	IocSensor::instance().send(this,CMD_SHOWCPU,this);
+        IocSensor::instance().send(this,CMD_SHOWCPU,this);
       else
-	IocSensor::instance().send(this,CMD_SHOWSUBFARM,this);
+        IocSensor::instance().send(this,CMD_SHOWSUBFARM,this);
     }
     else if ( m_subfarmDisplay && m->msec == (unsigned int)-1 ) {
       Display* disp = m_nodeSelector->display();
       if ( m->display == disp ) {
-	size_t pos = m->y - disp->row - 2;
-	if ( m_subfarmDisplay->numNodes()>pos ) {
-	  RTL::Lock unlock(s_lock,true);
-	  m_subPosCursor = pos + SUBFARM_NODE_OFFSET;
-	  handleKeyboard(m->button == 0 ? KPD_PERIOD : CTRL_P);
-	}
+        size_t pos = m->y - disp->row - 2;
+        if ( m_subfarmDisplay->numNodes()>pos ) {
+          RTL::Lock unlock(s_lock,true);
+          m_subPosCursor = pos + SUBFARM_NODE_OFFSET;
+          handleKeyboard(m->button == 0 ? KPD_PERIOD : CTRL_P);
+        }
       }
     }
     return;
@@ -1245,47 +1245,47 @@ void FarmDisplay::handle(const Event& ev) {
       return;
     case CMD_SHOW:
       for(k=m_farmDisplays.begin(); k != m_farmDisplays.end(); ++k, ++cnt) {
-	InternalDisplay* d = (*k).second;
-	if ( d == ev.data )  {
-	  RTL::Lock unlock(s_lock,true);
-	  m_posCursor = cnt;
-	  showSubfarm();
-	  return;
-	}
+        InternalDisplay* d = (*k).second;
+        if ( d == ev.data )  {
+          RTL::Lock unlock(s_lock,true);
+          m_posCursor = cnt;
+          showSubfarm();
+          return;
+        }
       }
       break;
     case CMD_POSCURSOR:
       for(k=m_farmDisplays.begin(); k != m_farmDisplays.end(); ++k, ++cnt) {
-	InternalDisplay* d = (*k).second;
-	if ( d == ev.data )  {
-	  m_posCursor = cnt;
-	  set_cursor();
-	  return;
-	}
+        InternalDisplay* d = (*k).second;
+        if ( d == ev.data )  {
+          m_posCursor = cnt;
+          set_cursor();
+          return;
+        }
       }
       break;
     case CMD_UPDATE:
       if ( m_subfarmDisplay )   {
-	//m_subfarmDisplay->update();
-	IocSensor::instance().send(m_subfarmDisplay,ROMonDisplay::CMD_UPDATEDISPLAY,this);
+        //m_subfarmDisplay->update();
+        IocSensor::instance().send(m_subfarmDisplay,ROMonDisplay::CMD_UPDATEDISPLAY,this);
       }
       if ( m_mbmDisplay.get() )  {
-	const void* data = m_subfarmDisplay->data().pointer;
-	m_mbmDisplay->setNode(m_subPosCursor-SUBFARM_NODE_OFFSET);
-	m_mbmDisplay->update(data);
+        const void* data = m_subfarmDisplay->data().pointer;
+        m_mbmDisplay->setNode(m_subPosCursor-SUBFARM_NODE_OFFSET);
+        m_mbmDisplay->update(data);
       }
       else if ( m_ctrlDisplay.get() ) {
-	const void* data = m_subfarmDisplay->data().pointer;
-	m_ctrlDisplay->setNode(m_subPosCursor-SUBFARM_NODE_OFFSET);
-	m_ctrlDisplay->update(data);
+        const void* data = m_subfarmDisplay->data().pointer;
+        m_ctrlDisplay->setNode(m_subPosCursor-SUBFARM_NODE_OFFSET);
+        m_ctrlDisplay->update(data);
       }
       TimeSensor::instance().add(this,1,m_subfarmDisplay);
       break;
     case CMD_ADD:
       i = find(m_farms.begin(),m_farms.end(),*(string*)ev.data);
       if ( i == m_farms.end() ) {
-	m_farms.push_back(*(string*)ev.data);
-	connect(m_farms);
+        m_farms.push_back(*(string*)ev.data);
+        connect(m_farms);
       }
       delete (string*)ev.data;
       return;
@@ -1299,8 +1299,8 @@ void FarmDisplay::handle(const Event& ev) {
     case CMD_CHECK: {
       DisplayUpdate update(this,true);
       for(k=m_farmDisplays.begin(); k != m_farmDisplays.end(); ++k) {
-	InternalDisplay* d = (*k).second;
-	if ( d != ev.data ) d->check(now);
+        InternalDisplay* d = (*k).second;
+        if ( d != ev.data ) d->check(now);
       }
       break;
     }
@@ -1332,11 +1332,11 @@ void FarmDisplay::connect(const vector<string>& farms) {
     k = m_farmDisplays.find(*i);
     if ( k == m_farmDisplays.end() ) {
       if ( m_mode == RECO_MODE )
-	copy.insert(make_pair(*i,createRecFarmSubDisplay(this,*i)));
+        copy.insert(make_pair(*i,createRecFarmSubDisplay(this,*i)));
       else if ( m_mode == CTRL_MODE )
-	copy.insert(make_pair(*i,createCtrlFarmSubDisplay(this,*i)));
+        copy.insert(make_pair(*i,createCtrlFarmSubDisplay(this,*i)));
       else
-	copy.insert(make_pair(*i,createFarmSubDisplay(this,*i)));
+        copy.insert(make_pair(*i,createFarmSubDisplay(this,*i)));
     }
     else {
       copy.insert(*k);

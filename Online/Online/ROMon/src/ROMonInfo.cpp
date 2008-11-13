@@ -1,4 +1,4 @@
-// $Id: ROMonInfo.cpp,v 1.4 2008-10-21 13:53:52 frankb Exp $
+// $Id: ROMonInfo.cpp,v 1.5 2008-11-13 12:13:33 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonInfo.cpp,v 1.4 2008-10-21 13:53:52 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonInfo.cpp,v 1.5 2008-11-13 12:13:33 frankb Exp $
 
 // Framework include files
 #include "dic.hxx"
@@ -84,17 +84,17 @@ void ROMonInfo::infoHandler(void* tag, void* address, int* size)  {
       break;
     default:
       if ( *(int*)msg != *(int*)"DEAD" )  {
-	char *at, *p = msg, *last = msg;
-	while ( last != 0 && (at=strchr(p,'@')) != 0 )  {
-	  last = strchr(at,'|');
-	  if ( last ) *last = 0;
-	  h->getServiceNode(p,svc,node);
-	  h->addHandler(node,svc);
-	  p = last+1;
-	}
+        char *at, *p = msg, *last = msg;
+        while ( last != 0 && (at=strchr(p,'@')) != 0 )  {
+          last = strchr(at,'|');
+          if ( last ) *last = 0;
+          h->getServiceNode(p,svc,node);
+          h->addHandler(node,svc);
+          p = last+1;
+        }
       }
       else  {
-	log() << "DIM nameserver died...." << std::endl;
+        log() << "DIM nameserver died...." << std::endl;
       }
       break;
     }

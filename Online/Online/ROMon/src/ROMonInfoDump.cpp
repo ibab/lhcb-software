@@ -1,4 +1,4 @@
-// $Id: ROMonInfoDump.cpp,v 1.2 2008-03-05 07:40:20 frankb Exp $
+// $Id: ROMonInfoDump.cpp,v 1.3 2008-11-13 12:13:33 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonInfoDump.cpp,v 1.2 2008-03-05 07:40:20 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonInfoDump.cpp,v 1.3 2008-11-13 12:13:33 frankb Exp $
 // C++ include files
 #include <iostream>
 #include <iomanip>
@@ -37,7 +37,7 @@ ROMonInfoDump::ROMonInfoDump(int argc, char** argv) : m_info(0)  {
   ::memset(def,0xFF,sizeof(def));
   m_info = new DimInfo(svc.c_str(),(void*)def,sizeof(def),this);
 }
-	 
+         
 /// Default destructor
 ROMonInfoDump::~ROMonInfoDump() {
   if ( m_info ) delete m_info;
@@ -58,14 +58,14 @@ void ROMonInfoDump::infoHandler() {
       log() << "========================" << lib_rtl_timestr() << "========================" << std::endl;
       switch(data.type())  {
       case Node::TYPE:
-	log() << *data.node << std::endl;
-	break;
+        log() << *data.node << std::endl;
+        break;
       case Nodeset::TYPE:
-	log() << *data.nodeset << std::endl;
-	break;
+        log() << *data.nodeset << std::endl;
+        break;
       default:
-	log() << "Unknown data type -- cannot be published." << std::endl;
-	break;
+        log() << "Unknown data type -- cannot be published." << std::endl;
+        break;
       }
     }
   }

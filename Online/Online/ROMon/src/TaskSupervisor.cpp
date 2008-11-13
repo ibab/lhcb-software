@@ -68,7 +68,7 @@ string ManipTaskMon::error() const {
   stringstream err;
   for(Monitors::const_iterator i=m_errors.begin(); i != m_errors.end(); ++i)
     err << m_tag+" for " << (*i)->name() << " of type " << (*i)->type() 
-	<< " Error:" << (*i)->error() << endl;
+        << " Error:" << (*i)->error() << endl;
   return err.str();
 }
 
@@ -246,17 +246,17 @@ void NodeTaskMon::updateTaskInfo(const char* ptr, size_t /* len */) {
     if ( cmd.substr(0,6)=="PVSS00" )  {
       pnam = _P::projectName(p.cmd);
       if ( !pnam.empty() ) {
-	pvss[pnam].name=pnam;
-	if ( ::strcmp(cmd.c_str(),"PVSS00event")==0 ) 
-	  pvss[pnam].eventMgr = true;
-	else if (::strcmp(cmd.c_str(),"PVSS00data")==0 )
-	  pvss[pnam].dataMgr = true;
-	else if (::strcmp(cmd.c_str(),"PVSS00dist")==0 )
-	  pvss[pnam].distMgr = true;
-	else if (::strcmp(cmd.c_str(),"PVSS00ctrl")==0 ) {
-	  if ( command.find("fwFsmSrvr") != string::npos ) pvss[pnam].fsmSrv = true;
-	  else if ( command.find("fwFsmDeviceHandler") != string::npos ) pvss[pnam].devHdlr = true;
-	}
+        pvss[pnam].name=pnam;
+        if ( ::strcmp(cmd.c_str(),"PVSS00event")==0 ) 
+          pvss[pnam].eventMgr = true;
+        else if (::strcmp(cmd.c_str(),"PVSS00data")==0 )
+          pvss[pnam].dataMgr = true;
+        else if (::strcmp(cmd.c_str(),"PVSS00dist")==0 )
+          pvss[pnam].distMgr = true;
+        else if (::strcmp(cmd.c_str(),"PVSS00ctrl")==0 ) {
+          if ( command.find("fwFsmSrvr") != string::npos ) pvss[pnam].fsmSrv = true;
+          else if ( command.find("fwFsmDeviceHandler") != string::npos ) pvss[pnam].devHdlr = true;
+        }
       }
     }
     i=t.find(utgid);
@@ -267,7 +267,7 @@ void NodeTaskMon::updateTaskInfo(const char* ptr, size_t /* len */) {
       vsize += p.vsize;
       stack += p.stack;
       if ( s_debug ) {
-	cout << "Check task: '" << utgid << "' " << p.pid << " " << (void*)&p << endl;
+        cout << "Check task: '" << utgid << "' " << p.pid << " " << (void*)&p << endl;
       }
       if ( !(*i).second ) ++good;
       (*i).second = true;
@@ -287,7 +287,7 @@ void NodeTaskMon::updateTaskInfo(const char* ptr, size_t /* len */) {
       << "\">" << endl;
   for(i=t.begin(); i!=t.end();++i) {
     xml << "\t\t\t<Task name=\"" << (*i).first 
-	<< "\" status=\"" << ((*i).second ? "OK" : "Not OK") << "\"/>" << endl;
+        << "\" status=\"" << ((*i).second ? "OK" : "Not OK") << "\"/>" << endl;
   }
   xml << "\t\t</Tasks>";
 
@@ -297,38 +297,38 @@ void NodeTaskMon::updateTaskInfo(const char* ptr, size_t /* len */) {
       const string& n = (*i).first;
       map<string,_P>::const_iterator q=pvss.find(n);
       if ( q != pvss.end() ) {
-	const _P& pro = (*q).second;
-	(*i).second = pro.eventMgr && pro.dataMgr && pro.distMgr;
+        const _P& pro = (*q).second;
+        (*i).second = pro.eventMgr && pro.dataMgr && pro.distMgr;
       }
       (*i).second ? ++good : ++bad;
     }
     xml << endl
-	<< "\t\t<Projects count=\"" << p.size() 
-	<< "\" ok=\"" << good 
-	<< "\" missing=\"" << bad 
-	<< "\">" << endl;
+        << "\t\t<Projects count=\"" << p.size() 
+        << "\" ok=\"" << good 
+        << "\" missing=\"" << bad 
+        << "\">" << endl;
     for(i=p.begin(); i!=p.end();++i) {
       const string& n = (*i).first;
       map<string,_P>::const_iterator q=pvss.find(n);
       if ( q == pvss.end() ) {
-	xml << "\t\t\t<Project name=\"" << n
-	    << "\" status=\"" << "Not OK"
-	    << "\" event=\""  << "DEAD"
-	    << "\" data=\""   << "DEAD"
-	    << "\" dist=\""   << "DEAD"
-	    << "\"/>" << endl;
-	continue;
+        xml << "\t\t\t<Project name=\"" << n
+            << "\" status=\"" << "Not OK"
+            << "\" event=\""  << "DEAD"
+            << "\" data=\""   << "DEAD"
+            << "\" dist=\""   << "DEAD"
+            << "\"/>" << endl;
+        continue;
       }
       const _P& pro = (*q).second;
       bool ok = pro.eventMgr && pro.dataMgr && pro.distMgr;
       xml << "\t\t\t<Project name=\"" << n
-	  << "\" status=\""      << (ok ? "OK" : "Not OK")
-	  << "\" event=\""       << (pro.eventMgr ? "RUNNING" : "DEAD")
-	  << "\" data=\""        << (pro.dataMgr  ? "RUNNING" : "DEAD")
-	  << "\" dist=\""        << (pro.distMgr  ? "RUNNING" : "DEAD")
-	  << "\" fsmSrv=\""      << (pro.fsmSrv   ? "RUNNING" : "DEAD")
-	  << "\" devHandler=\""  << (pro.devHdlr  ? "RUNNING" : "DEAD")
-	  << "\"/>" << endl;
+          << "\" status=\""      << (ok ? "OK" : "Not OK")
+          << "\" event=\""       << (pro.eventMgr ? "RUNNING" : "DEAD")
+          << "\" data=\""        << (pro.dataMgr  ? "RUNNING" : "DEAD")
+          << "\" dist=\""        << (pro.distMgr  ? "RUNNING" : "DEAD")
+          << "\" fsmSrv=\""      << (pro.fsmSrv   ? "RUNNING" : "DEAD")
+          << "\" devHandler=\""  << (pro.devHdlr  ? "RUNNING" : "DEAD")
+          << "\"/>" << endl;
     }
     xml << "\t\t</Projects>";
   }
@@ -397,25 +397,25 @@ const string& NodeTaskMon::updateConnections() {
       //r.print();
       (*j).second = false;
       if ( !r.hasError() ) {
-	list<Arg>* l = (list<Arg>*)r.result().data;
-	if ( l->size() == 1 ) {
-	  l = (list<Arg>*)(*l->begin()).data.tuple->data;
-	  for(list<Arg>::const_iterator i=l->begin(); i != l->end(); ++i) {
-	    if ( (*i).type==Arg::STRING && ::strstr((*i).data.str," 1 received")==0) 
-	      (*j).second = true;
-	  }
-	}
+        list<Arg>* l = (list<Arg>*)r.result().data;
+        if ( l->size() == 1 ) {
+          l = (list<Arg>*)(*l->begin()).data.tuple->data;
+          for(list<Arg>::const_iterator i=l->begin(); i != l->end(); ++i) {
+            if ( (*i).type==Arg::STRING && ::strstr((*i).data.str," 1 received")==0) 
+              (*j).second = true;
+          }
+        }
       }
     }
     for(i=m_connections.begin(); i != m_connections.end(); ++i) 
       (*i).second ? ++good : ++bad;
     xml << "\t\t<Connections count=\"" << good
-	<< "\" ok=\"" << good
-	<< "\" missing=\"" << bad
-	<< "\">" << endl;
+        << "\" ok=\"" << good
+        << "\" missing=\"" << bad
+        << "\">" << endl;
     for(i=m_connections.begin(); i != m_connections.end(); ++i) {
       xml << "\t\t\t<Connection name=\"" << (*i).first << "\" status=\""
-	  << ( (*i).second ? "OK" : "Not OK") << "\"/>" << endl;
+          << ( (*i).second ? "OK" : "Not OK") << "\"/>" << endl;
     }
     xml << "\t\t</Connections>";
     m_connUpdate = now;
@@ -502,10 +502,10 @@ int SubfarmTaskMon::publish() {
     else if ( bad>0 && good>0               ) status = "MIXED";
     else if ( bad == m_nodes.size()         ) status = "DEAD";
     xml << "<Cluster name=\"" << name() 
-	<< "\" status=\"" << status
-	<< "\" time=\"" << txt.c_str()+11
-	<< "\" nodes=\"" << m_nodes.size()
-	<< "\">" << endl;
+        << "\" status=\"" << status
+        << "\" time=\"" << txt.c_str()+11
+        << "\" nodes=\"" << m_nodes.size()
+        << "\">" << endl;
 
     ::dim_lock();
     for(i=m_nodes.begin(); i!=m_nodes.end(); ++i) {
@@ -513,12 +513,12 @@ int SubfarmTaskMon::publish() {
       n->publish();
       ::strftime(time_buf,sizeof(time_buf),TIME_FORMAT,::localtime(&n->taskUpdate())) ;
       xml << "\t<Node name=\"" << n->name() 
-	  << "\" status=\"" << (char*)(n->state()==NodeTaskMon::ALIVE ? "ALIVE" : "DEAD")
-	  << "\" time=\"" << time_buf
-	  << "\">" << endl;
+          << "\" status=\"" << (char*)(n->state()==NodeTaskMon::ALIVE ? "ALIVE" : "DEAD")
+          << "\" time=\"" << time_buf
+          << "\">" << endl;
       if ( n->state() == NodeTaskMon::ALIVE ) {
-	xml << n->taskStatus() << endl
-	    << n->connectionStatus() << endl;
+        xml << n->taskStatus() << endl
+            << n->connectionStatus() << endl;
       }
       xml << "\t</Node>\n";
     }
@@ -527,7 +527,7 @@ int SubfarmTaskMon::publish() {
     ::dim_unlock();
     if ( s_debug ) {
       cout << txt << "> Publish monitoring information for cluster " << name() << endl
-	   << "'" << endl << m_data  << endl << "'" << endl;
+           << "'" << endl << m_data  << endl << "'" << endl;
     }
     ::dis_update_service(m_serviceID);
   }
@@ -548,17 +548,17 @@ void SubfarmTaskMon::handle(const Event& ev) {
     switch(ev.eventtype) {
     case TimeEvent:
       if (ev.timer_data == (void*)CMD_DATA ) {
-	publish();
-	TimeSensor::instance().add(this,PUBLISH_TIMEDIFF,(void*)CMD_DATA);
+        publish();
+        TimeSensor::instance().add(this,PUBLISH_TIMEDIFF,(void*)CMD_DATA);
       }
       break;
     case IocEvent:
       switch(ev.type) {
       case CMD_DATA:
-	//publish();
-	break;
+        //publish();
+        break;
       default:
-	break;
+        break;
       }
       break;
     default:

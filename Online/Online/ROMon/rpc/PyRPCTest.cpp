@@ -24,29 +24,29 @@ static void check_method(const MethodCall& c) {
 extern "C" int test_pyrpc(int, char**)  {
   /// result = self.createRun(RunNumber=12345,FillNumber=1000,StartLumi=9999,StartDate="2006-12-12 10:12:13",ToCastor="YES")
   MethodCall c1("createRun",Args(Q("RunNumber",12345),
-				 Q("FillNumber",1000),
-				 Q("PartitionID",103),
-				 Q("StartLumi",9999),
-				 Q("StartDate","2006-12-12 10:12:13"),
-				 Q("BeamEnergy",0.0),
-				 Q("ToCastor","YES")));
+                                 Q("FillNumber",1000),
+                                 Q("PartitionID",103),
+                                 Q("StartLumi",9999),
+                                 Q("StartDate","2006-12-12 10:12:13"),
+                                 Q("BeamEnergy",0.0),
+                                 Q("ToCastor","YES")));
   /// result = self.addFile(12,"Some_junk_file.dat","Other crap",Q("Type","MDF"),Status='Transferred',Q("ToCastor","YES"),Reconstruct='YES')
   MethodCall c2("addFile",Args(12, "Some_junk_file.dat","Other crap",
-			       Q("Type","MDF"),
-			       Q("Status","Transferred"),
-			       Q("ToCastor","YES"),
-			       Q("Reconstruct","YES")));
+                               Q("Type","MDF"),
+                               Q("Status","Transferred"),
+                               Q("ToCastor","YES"),
+                               Q("Reconstruct","YES")));
   /// pars = self.fileParams(File={'RunNumber':RunNumber,'Name':Name},Param={'Name':('LIKE',"'%'")})
   MethodCall c3("fileParams",Args(Q("File",Dict(P("RunNumber",32),
-						P("Name","/castor/cern.ch/lhcb/Run.32/raw.mdf"))),
+                                                P("Name","/castor/cern.ch/lhcb/Run.32/raw.mdf"))),
                                   Q("Param",Dict(P("Name",Tuple("LIKE","'%'"))))));
   Tuple tup(1,2.5,"Hello",5.9,"Bla",Tuple('a','b',1,4,5.8));
   cout << "Tuple:" << tup << endl;
   cout << "List: " << List(1,2.5,"Hello",5.9,tup) << endl;
   cout << "Dict: " << Dict(P(1,tup),
-			   P(2,'a'),
-			   P(99,Tuple(3.6,'a',"hrkfhd",List(1,2,3,4,5,6,7))),
-			   P(9,"Hello"))
+                           P(2,'a'),
+                           P(99,Tuple(3.6,'a',"hrkfhd",List(1,2,3,4,5,6,7))),
+                           P(9,"Hello"))
        << endl;
   check_method(c1);
   check_method(c2);
@@ -64,10 +64,10 @@ extern "C" int test_pyrpc2(int, char**)  {
 }
 void help_ping() {
   cout << "usage: test_ping -opt [-opt] " << endl
-	    << "      -server=<server-name>       Name of the server of origine." << endl
-	    << "      -node=<node-name>           Name of the node to ping." << endl
-	    << "      -count=<number>             Number of packtes to send." << endl
-	    << "      -length=<number>            Packet size in bytes." << endl;
+            << "      -server=<server-name>       Name of the server of origine." << endl
+            << "      -node=<node-name>           Name of the node to ping." << endl
+            << "      -count=<number>             Number of packtes to send." << endl
+            << "      -length=<number>            Packet size in bytes." << endl;
 }
 
 extern "C" int test_pyping(int argc, char** argv)  {

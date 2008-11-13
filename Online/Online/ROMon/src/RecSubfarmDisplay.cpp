@@ -1,4 +1,4 @@
-// $Id: RecSubfarmDisplay.cpp,v 1.4 2008-11-13 08:29:41 frankb Exp $
+// $Id: RecSubfarmDisplay.cpp,v 1.5 2008-11-13 12:13:33 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/RecSubfarmDisplay.cpp,v 1.4 2008-11-13 08:29:41 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/RecSubfarmDisplay.cpp,v 1.5 2008-11-13 12:13:33 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -132,31 +132,31 @@ void RecSubfarmDisplay::showNodes(const Nodeset& ns)  {
       default:                                                      break;
       }
       for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
-	++ntsk;
-	p = ::strchr((*ic).name,'_');
-	if ( p ) p = ::strchr(++p,'_');
-	if ( p ) {
-	  if ( b==INPUT_BUFF && p[4] == RECO_TASK )  {
-	    consumed += (*ic).events;
-	    cons_tot += (*ic).events;
-	  }
-	  else if ( b==INPUT_BUFF && p[8] == RECEIVER_TASK )  {
-	    received += (*ic).events;
-	    rcv_tot += (*ic).events;
-	  }
-	  else if ( b==OUTPUT_BUFF && p[8] == SENDER_TASK )  {
-	    out   += (*ic).events;
-	    accept_tot += (*ic).events;
-	  }
-	}
+        ++ntsk;
+        p = ::strchr((*ic).name,'_');
+        if ( p ) p = ::strchr(++p,'_');
+        if ( p ) {
+          if ( b==INPUT_BUFF && p[4] == RECO_TASK )  {
+            consumed += (*ic).events;
+            cons_tot += (*ic).events;
+          }
+          else if ( b==INPUT_BUFF && p[8] == RECEIVER_TASK )  {
+            received += (*ic).events;
+            rcv_tot += (*ic).events;
+          }
+          else if ( b==OUTPUT_BUFF && p[8] == SENDER_TASK )  {
+            out   += (*ic).events;
+            accept_tot += (*ic).events;
+          }
+        }
       }
     }
     disp->draw_line_normal(fmt, (*n).name, ntsk, evt_info[0], consumed, evt_info[1], evt_info[2],
-			   res_info[0], res_info[1], res_info[2], out);
+                           res_info[0], res_info[1], res_info[2], out);
   }
   disp->draw_line_normal("");
   disp->draw_line_bold(fmt, "Total:", ntsk_tot, evt_tot[0], cons_tot, evt_tot[1], evt_tot[2],
-		       res_tot[0], res_tot[1], res_tot[2], accept_tot);
+                       res_tot[0], res_tot[1], res_tot[2], accept_tot);
 }
 
 /// Show the event builder information
@@ -187,33 +187,33 @@ void RecSubfarmDisplay::showTasks(const Nodeset& ns) {
       const Clients& clients = (*ib).clients;
       char b = (*ib).name[0];
       for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
-	Clients::const_reference cl = (*ic);
-	char* p = ::strchr(cl.name,'_');
-	if ( p ) p = ::strchr(++p,'_');
-	if ( p ) {
-	  nam = (*n).name;
-	  nam += '_';
-	  if(b==INPUT_BUFF && p[4] == RECO_TASK)  {
-	    nam += p+4;
-	    moores[nam].in += cl.events;
-	    moores[nam].st_in = cl.state;
-	  }
-	  else if(b==OUTPUT_BUFF && p[4] == RECO_TASK)  {
-	    nam += p+4;
-	    moores[nam].out += cl.events;
-	    moores[nam].st_out = cl.state;
-	  }
-	  else if(b==INPUT_BUFF && p[8] == RECEIVER_TASK) {
-	    nam += p+8;
-	    float perc = c.tot_produced>0 ? 100*float(cl.events)/float(c.tot_produced) : 0;
-	    m_receivers->draw_line_normal(" %-18s %12d %3.0f %5s",nam.c_str(),cl.events,perc,sstat[size_t(cl.state)]);
-	    continue;
-	  }
-	  else if(b==OUTPUT_BUFF && p[8] == SENDER_TASK)  {
-	    nam += p+8;
-	    m_senders->draw_line_normal( " %-18s %9d%5d %6s        ",nam.c_str(),cl.events,c.i_events,sstat[size_t(cl.state)]);
-	  }
-	}
+        Clients::const_reference cl = (*ic);
+        char* p = ::strchr(cl.name,'_');
+        if ( p ) p = ::strchr(++p,'_');
+        if ( p ) {
+          nam = (*n).name;
+          nam += '_';
+          if(b==INPUT_BUFF && p[4] == RECO_TASK)  {
+            nam += p+4;
+            moores[nam].in += cl.events;
+            moores[nam].st_in = cl.state;
+          }
+          else if(b==OUTPUT_BUFF && p[4] == RECO_TASK)  {
+            nam += p+4;
+            moores[nam].out += cl.events;
+            moores[nam].st_out = cl.state;
+          }
+          else if(b==INPUT_BUFF && p[8] == RECEIVER_TASK) {
+            nam += p+8;
+            float perc = c.tot_produced>0 ? 100*float(cl.events)/float(c.tot_produced) : 0;
+            m_receivers->draw_line_normal(" %-18s %12d %3.0f %5s",nam.c_str(),cl.events,perc,sstat[size_t(cl.state)]);
+            continue;
+          }
+          else if(b==OUTPUT_BUFF && p[8] == SENDER_TASK)  {
+            nam += p+8;
+            m_senders->draw_line_normal( " %-18s %9d%5d %6s        ",nam.c_str(),cl.events,c.i_events,sstat[size_t(cl.state)]);
+          }
+        }
       }
     }
   }
@@ -281,7 +281,7 @@ string RecSubfarmDisplay::nodeName(size_t offset) {
     const Nodes& nodes = ns->nodes;
     for (n=nodes.begin(), cnt=0; n!=nodes.end(); n=nodes.next(n), ++cnt)  {
       if ( cnt == offset ) {
-	return (*n).name;
+        return (*n).name;
       }
     }
   }

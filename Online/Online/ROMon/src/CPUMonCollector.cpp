@@ -1,4 +1,4 @@
-// $Id: CPUMonCollector.cpp,v 1.4 2008-07-02 14:55:09 frankb Exp $
+// $Id: CPUMonCollector.cpp,v 1.5 2008-11-13 12:13:32 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CPUMonCollector.cpp,v 1.4 2008-07-02 14:55:09 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CPUMonCollector.cpp,v 1.5 2008-11-13 12:13:32 frankb Exp $
 
 // C++ include files
 #include <iostream>
@@ -70,81 +70,81 @@ int CPUMonCollector::monitor() {
     while(exec)    {
       CPUfarm* f = gbl.farm;
       if ( f && m_needUpdate ) {  // Take GBL lock while updating
-	RTL::Lock lock(m_lock);
-	CPUfarm::Nodes& nodes = f->reset()->nodes;
-	const Clients& cl_ncpu = m_ncpu.clients();
-	const Clients& cl_stat = m_stat.clients();
-	//const Clients& cl_info = m_info.clients();
-	ro_get_node_name(f->name,sizeof(f->name));
-	f->type = CPUfarm::TYPE;
-	f->time = ::time(0);
-	dim_lock();
-	m_needUpdate = false;
-	CPUfarm::Nodes::iterator it = nodes.reset();
-	for(Clients::const_iterator ic = cl_ncpu.begin(); ic != cl_ncpu.end(); ++ic) {
-	  const std::string& node = (*ic).first;
-	  Clients::const_iterator is = cl_stat.find(node);
-	  //  Clients::const_iterator ii = cl_info.find(node);
-	  //  if ( is != cl_stat.end() && ii != cl_info.end() ) {
-	  if ( is != cl_stat.end() ) {
-	  {
-	    typedef FMCMonListener::Descriptor DSC;
-	    //DSC* dsc_info = (*ii).second->data<DSC>();
-	    DSC* dsc_stat = (*is).second->data<DSC>();
-	    const float* ds = (float*)dsc_stat->data;
-	    //const char*  di = dsc_info->data;
-	    if ( ((char*)it) > gbl.str+m_section_size ) {
-	      log() << "Global section memory too small.....exiting" << std::endl;
-	      break;
-	    }
-	    ::strncpy((*it).name,node.c_str(),sizeof((*it).name));
-	    (*it).name[sizeof((*it).name)-1] = 0;
-	    ::strncpy((*it).family,"",sizeof((*it).family));
-	    //::strncpy((*it).family,di,sizeof((*it).family));
-	    (*it).family[sizeof((*it).family)-1] = 0;
-	    (*it).ctxtRate = ds[0];
-	    (*it).time     = dsc_stat->time;
-	    (*it).millitm  = 0; //dsc_info->millitm;
-	    /*
-	    if ( (*ic).second->data<DSC>()->data ) {
-	      int ncpu = *(int*)(*ic).second->data<DSC>()->data;
-	      if ( ncpu < 64 ) { // Must be reasonable
-		CPUset::Cores::iterator corIt = (*it).cores.reset();
-		for (int icpu=0; icpu<ncpu; ++icpu) {
-		  if ( ((char*)corIt) > gbl.str+m_section_size ) {
-		    log() << "Global section memory too small.....exiting" << std::endl;
-		    break;
-		  }
-		  ::memcpy(&(*corIt).stats,ds+1,sizeof(CPU::Stat));
-		  const char* vendor_id = di;
-		  const char* family    = vendor_id + ::strlen(vendor_id)+1;
-		  const char* model     = family    + ::strlen(family)+1;
-		  const char* mod_name  = model     + ::strlen(model)+1;
-		  const char* stepping  = mod_name  + ::strlen(mod_name)+1;
-		  const char* clock     = stepping  + ::strlen(stepping)+1;
-		  const char* cache     = clock     + ::strlen(clock)+1;
-		  const char* physId    = cache     + ::strlen(cache)+1;
-		  const char* sibblings = physId    + ::strlen(physId)+1;
-		  const char* bogo      = sibblings + ::strlen(sibblings)+1;
-		  di = bogo + ::strlen(bogo)+1;
-		  (*corIt).clock        = ::atof(clock);
-		  (*corIt).cache        = ::atoi(cache);
-		  (*corIt).bogomips     = ::atof(bogo);
-		  corIt = (*it).cores.add(corIt);
-		}
-	      }
-	    */
-	    }
-	    it = nodes.add(it);
-	  }
-	}
-	dim_unlock();
-	f->fixup();
-	if ( m_print ) {
-	  log() << "========================" << ::lib_rtl_timestr() 
-		<< "========================" << std::endl
-		<< *f << std::endl;
-	}
+        RTL::Lock lock(m_lock);
+        CPUfarm::Nodes& nodes = f->reset()->nodes;
+        const Clients& cl_ncpu = m_ncpu.clients();
+        const Clients& cl_stat = m_stat.clients();
+        //const Clients& cl_info = m_info.clients();
+        ro_get_node_name(f->name,sizeof(f->name));
+        f->type = CPUfarm::TYPE;
+        f->time = ::time(0);
+        dim_lock();
+        m_needUpdate = false;
+        CPUfarm::Nodes::iterator it = nodes.reset();
+        for(Clients::const_iterator ic = cl_ncpu.begin(); ic != cl_ncpu.end(); ++ic) {
+          const std::string& node = (*ic).first;
+          Clients::const_iterator is = cl_stat.find(node);
+          //  Clients::const_iterator ii = cl_info.find(node);
+          //  if ( is != cl_stat.end() && ii != cl_info.end() ) {
+          if ( is != cl_stat.end() ) {
+          {
+            typedef FMCMonListener::Descriptor DSC;
+            //DSC* dsc_info = (*ii).second->data<DSC>();
+            DSC* dsc_stat = (*is).second->data<DSC>();
+            const float* ds = (float*)dsc_stat->data;
+            //const char*  di = dsc_info->data;
+            if ( ((char*)it) > gbl.str+m_section_size ) {
+              log() << "Global section memory too small.....exiting" << std::endl;
+              break;
+            }
+            ::strncpy((*it).name,node.c_str(),sizeof((*it).name));
+            (*it).name[sizeof((*it).name)-1] = 0;
+            ::strncpy((*it).family,"",sizeof((*it).family));
+            //::strncpy((*it).family,di,sizeof((*it).family));
+            (*it).family[sizeof((*it).family)-1] = 0;
+            (*it).ctxtRate = ds[0];
+            (*it).time     = dsc_stat->time;
+            (*it).millitm  = 0; //dsc_info->millitm;
+            /*
+            if ( (*ic).second->data<DSC>()->data ) {
+              int ncpu = *(int*)(*ic).second->data<DSC>()->data;
+              if ( ncpu < 64 ) { // Must be reasonable
+                CPUset::Cores::iterator corIt = (*it).cores.reset();
+                for (int icpu=0; icpu<ncpu; ++icpu) {
+                  if ( ((char*)corIt) > gbl.str+m_section_size ) {
+                    log() << "Global section memory too small.....exiting" << std::endl;
+                    break;
+                  }
+                  ::memcpy(&(*corIt).stats,ds+1,sizeof(CPU::Stat));
+                  const char* vendor_id = di;
+                  const char* family    = vendor_id + ::strlen(vendor_id)+1;
+                  const char* model     = family    + ::strlen(family)+1;
+                  const char* mod_name  = model     + ::strlen(model)+1;
+                  const char* stepping  = mod_name  + ::strlen(mod_name)+1;
+                  const char* clock     = stepping  + ::strlen(stepping)+1;
+                  const char* cache     = clock     + ::strlen(clock)+1;
+                  const char* physId    = cache     + ::strlen(cache)+1;
+                  const char* sibblings = physId    + ::strlen(physId)+1;
+                  const char* bogo      = sibblings + ::strlen(sibblings)+1;
+                  di = bogo + ::strlen(bogo)+1;
+                  (*corIt).clock        = ::atof(clock);
+                  (*corIt).cache        = ::atoi(cache);
+                  (*corIt).bogomips     = ::atof(bogo);
+                  corIt = (*it).cores.add(corIt);
+                }
+              }
+            */
+            }
+            it = nodes.add(it);
+          }
+        }
+        dim_unlock();
+        f->fixup();
+        if ( m_print ) {
+          log() << "========================" << ::lib_rtl_timestr() 
+                << "========================" << std::endl
+                << *f << std::endl;
+        }
       }
       ::lib_rtl_sleep(m_delay);
     }

@@ -1,4 +1,4 @@
-// $Id: SubfarmDisplay.cpp,v 1.10 2008-11-13 08:29:41 frankb Exp $
+// $Id: SubfarmDisplay.cpp,v 1.11 2008-11-13 12:13:33 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/SubfarmDisplay.cpp,v 1.10 2008-11-13 08:29:41 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/SubfarmDisplay.cpp,v 1.11 2008-11-13 12:13:33 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -136,37 +136,37 @@ void SubfarmDisplay::showNodes(const Nodeset& ns)  {
       default:                                                     break;
       }
       for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
-	++ntsk;
-	p = strchr((*ic).name,'_');
-	if ( p ) {
-	  switch(*(++p)) {
-	  case SENDER_TASK:
-	    if(b==RES_BUFFER||b==SND_BUFFER)  {
-	      out   += (*ic).events;
-	      accept_tot += (*ic).events;
-	    }
-	    break;
-	  case MOORE_TASK:
-	    //  Normal  and        TAE event processing
-	    if(b==EVT_BUFFER || b==MEP_BUFFER)  {
-	      consumed += (*ic).events;
-	      cons_tot += (*ic).events;
-	    }
-	    break;
-	  default:
-	    break;
-	  }
-	}
+        ++ntsk;
+        p = strchr((*ic).name,'_');
+        if ( p ) {
+          switch(*(++p)) {
+          case SENDER_TASK:
+            if(b==RES_BUFFER||b==SND_BUFFER)  {
+              out   += (*ic).events;
+              accept_tot += (*ic).events;
+            }
+            break;
+          case MOORE_TASK:
+            //  Normal  and        TAE event processing
+            if(b==EVT_BUFFER || b==MEP_BUFFER)  {
+              consumed += (*ic).events;
+              cons_tot += (*ic).events;
+            }
+            break;
+          default:
+            break;
+          }
+        }
       }
     }
     disp->draw_line_normal(fmt, (*n).name, ntsk, mep_info[0], mep_info[1], mep_info[2],
-			   evt_info[0], consumed, evt_info[1], evt_info[2],
-			   res_info[0], res_info[1], res_info[2], out);
+                           evt_info[0], consumed, evt_info[1], evt_info[2],
+                           res_info[0], res_info[1], res_info[2], out);
   }
   disp->draw_line_normal("");
   disp->draw_line_bold(fmt, "Total:", ntsk_tot, mep_tot[0], mep_tot[1], mep_tot[2],
-		       evt_tot[0], cons_tot, evt_tot[1], evt_tot[2],
-		       res_tot[0], res_tot[1], res_tot[2], accept_tot);
+                       evt_tot[0], cons_tot, evt_tot[1], evt_tot[2],
+                       res_tot[0], res_tot[1], res_tot[2], accept_tot);
 }
 
 /// Show the event builder information
@@ -199,63 +199,63 @@ void SubfarmDisplay::showTasks(const Nodeset& ns) {
       const Clients& clients = (*ib).clients;
       char b = (*ib).name[0];
       for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
-	Clients::const_reference cl = (*ic);
-	if(strncmp(cl.name,"MEPRx",5)==0 && b == MEP_BUFFER ) {
-	  string nn = (*n).name;
-	  nn += '_';
-	  nn += cl.name+5;
-	  float perc = c.tot_produced>0 ? 100*float(cl.events)/float(c.tot_produced) : 0;
-	  m_builders->draw_line_normal(" %-12s %12d %3.0f %3s",nn.c_str(),cl.events,perc,sstat[size_t(cl.state)]);
-	  continue;
-	}
-	char* p = strchr(cl.name,'_');
-	if ( p ) {
-	  nam = string(cl.name).substr(0,p-cl.name);
-	  nam += '_';
-	  char* q = strchr(p+1,'_');
-	  if ( q ) nam += q+1;
-	  ++p;
-	  switch(*p) {
-	  case SENDER_TASK:
-	    if ( b==RES_BUFFER || b==SND_BUFFER ) {
-	      m_senders->draw_line_normal( " %-12s %9d%5d %3s        ",nam.c_str(),cl.events,c.i_events,sstat[size_t(cl.state)]);
-	    }
-	    break;
-	  case 'E':
-	    if ( b==MEP_BUFFER && strncmp(p,"EvtHolder",9)==0) {
-	      // m_holders->draw_line_normal( " %-12s %9d        ",nam.c_str(),cl.events);
-	    }
-	    else if ( b==MEP_BUFFER && strncmp(p,"EvtProd",7)==0) {
-	      prod_name = nam;
-	      prod.in += cl.events;
-	      prod.st_in = cl.state;
-	    }
-	    else if ( b==EVT_BUFFER && strncmp(p,"EvtProd",7)==0) {
-	      prod_name = nam;
-	      prod.out += cl.events;
-	      prod.st_out = cl.state;
-	    }
-	    break;
-	  case MOORE_TASK:
-	    //  Normal  and        TAE event processing
-	    if ( b==EVT_BUFFER || b==MEP_BUFFER )  {
-	      moores[nam].in += cl.events;
-	      moores[nam].st_in = cl.state;
-	    }
-	    else if ( b==RES_BUFFER || b==SND_BUFFER ) {
-	      moores[nam].out += cl.events;
-	      moores[nam].st_out = cl.state;
-	    }
-	    break;
-	  default:
-	    break;
-	  }
-	}
+        Clients::const_reference cl = (*ic);
+        if(strncmp(cl.name,"MEPRx",5)==0 && b == MEP_BUFFER ) {
+          string nn = (*n).name;
+          nn += '_';
+          nn += cl.name+5;
+          float perc = c.tot_produced>0 ? 100*float(cl.events)/float(c.tot_produced) : 0;
+          m_builders->draw_line_normal(" %-12s %12d %3.0f %3s",nn.c_str(),cl.events,perc,sstat[size_t(cl.state)]);
+          continue;
+        }
+        char* p = strchr(cl.name,'_');
+        if ( p ) {
+          nam = string(cl.name).substr(0,p-cl.name);
+          nam += '_';
+          char* q = strchr(p+1,'_');
+          if ( q ) nam += q+1;
+          ++p;
+          switch(*p) {
+          case SENDER_TASK:
+            if ( b==RES_BUFFER || b==SND_BUFFER ) {
+              m_senders->draw_line_normal( " %-12s %9d%5d %3s        ",nam.c_str(),cl.events,c.i_events,sstat[size_t(cl.state)]);
+            }
+            break;
+          case 'E':
+            if ( b==MEP_BUFFER && strncmp(p,"EvtHolder",9)==0) {
+              // m_holders->draw_line_normal( " %-12s %9d        ",nam.c_str(),cl.events);
+            }
+            else if ( b==MEP_BUFFER && strncmp(p,"EvtProd",7)==0) {
+              prod_name = nam;
+              prod.in += cl.events;
+              prod.st_in = cl.state;
+            }
+            else if ( b==EVT_BUFFER && strncmp(p,"EvtProd",7)==0) {
+              prod_name = nam;
+              prod.out += cl.events;
+              prod.st_out = cl.state;
+            }
+            break;
+          case MOORE_TASK:
+            //  Normal  and        TAE event processing
+            if ( b==EVT_BUFFER || b==MEP_BUFFER )  {
+              moores[nam].in += cl.events;
+              moores[nam].st_in = cl.state;
+            }
+            else if ( b==RES_BUFFER || b==SND_BUFFER ) {
+              moores[nam].out += cl.events;
+              moores[nam].st_out = cl.state;
+            }
+            break;
+          default:
+            break;
+          }
+        }
       }
     }
     if ( !prod_name.empty() ) {
       m_holders->draw_line_normal(" %-12s%9d%11d %3s %3s  ",prod_name.c_str(),prod.in,prod.out,
-				  sstat[prod.st_in],sstat[prod.st_out]);
+                                  sstat[prod.st_in],sstat[prod.st_out]);
     }
   }
   ::memset(txt,' ',sizeof(txt));
@@ -323,7 +323,7 @@ string SubfarmDisplay::nodeName(size_t offset) {
     const Nodes& nodes = ns->nodes;
     for (n=nodes.begin(), cnt=0; n!=nodes.end(); n=nodes.next(n), ++cnt)  {
       if ( cnt == offset ) {
-	return (*n).name;
+        return (*n).name;
       }
     }
   }

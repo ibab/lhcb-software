@@ -1,4 +1,4 @@
-// $Id: ClusterDisplay.cpp,v 1.7 2008-10-21 13:53:51 frankb Exp $
+// $Id: ClusterDisplay.cpp,v 1.8 2008-11-13 12:15:00 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ClusterDisplay.cpp,v 1.7 2008-10-21 13:53:51 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ClusterDisplay.cpp,v 1.8 2008-11-13 12:15:00 frankb Exp $
 
 #include "ROLogger/ClusterDisplay.h"
 #include "UPI/UpiSensor.h"
@@ -43,7 +43,7 @@ ClusterDisplay::ClusterDisplay(Interactor* parent, Interactor* logger, const str
     ::upic_add_comment(CMD_COM1,("Known nodes for cluster "+m_name).c_str(),"");
     for(Nodes::const_iterator n=m_nodes.begin(); n!=m_nodes.end(); ++n, ++cnt) {
       if ( (*n).find(name) != string::npos ) {
-	::upic_add_command(cnt+1, (*n).c_str(),"");
+        ::upic_add_command(cnt+1, (*n).c_str(),"");
       }
     }
     ::upic_add_comment(CMD_COM2,        "-----------------------------------------------","");
@@ -100,16 +100,16 @@ void ClusterDisplay::handle(const Event& ev) {
     if ( ev.menu_id == m_id ) {
       IocSensor& ioc = IocSensor::instance();
       if ( ev.command_id == CMD_CLOSE || ev.command_id == CMD_BACKSPACE )
-      	ioc.send(m_parent,CMD_DELETE,this);
+              ioc.send(m_parent,CMD_DELETE,this);
       else if ( ev.command_id == CMD_FARM_HISTORY )
-	      for(Nodes::const_iterator i=m_nodes.begin();i!=m_nodes.end();++i)
-	        showHistory((*i).c_str(),"*");
+              for(Nodes::const_iterator i=m_nodes.begin();i!=m_nodes.end();++i)
+                showHistory((*i).c_str(),"*");
       else if ( ev.command_id == CMD_WILD_NODE )
-	      showHistory(m_wildNode,"*");
+              showHistory(m_wildNode,"*");
       else if ( ev.command_id == CMD_WILD_MESSAGE )
-	      showHistory(m_wildNode,m_wildMessage);
+              showHistory(m_wildNode,m_wildMessage);
       else if ( ev.command_id > 0 && ev.command_id <= (int)m_nodes.size() )
-	      showHistory(m_nodes[ev.command_id-1].c_str(),"*");
+              showHistory(m_nodes[ev.command_id-1].c_str(),"*");
     }
     break;
   default:

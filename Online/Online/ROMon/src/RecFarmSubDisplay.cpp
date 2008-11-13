@@ -185,10 +185,10 @@ void RecFarmSubDisplay::updateContent(const Nodeset& ns) {
       inuse = true;
       numBuffs++;
       switch(b) {
-      case INPUT_BUFFER:	idx = 0; break;
-      case OUTPUT_BUFFER:	idx = 1; break;
+      case INPUT_BUFFER:        idx = 0; break;
+      case OUTPUT_BUFFER:        idx = 1; break;
       default:
-	continue;
+        continue;
       }
       fspace[idx]       = min(fspace[idx],float(ctrl.i_space)/float(ctrl.bm_size)); 
       fslots[idx]       = min(fslots[idx],float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax));
@@ -200,24 +200,24 @@ void RecFarmSubDisplay::updateContent(const Nodeset& ns) {
       used_slots[idx]  += (ctrl.p_emax-ctrl.i_events);
       buf_clients[idx] += ctrl.i_users;
       if ( fslots[idx] < SLOTS_MIN || fspace[idx] < SPACE_MIN ) {
-	bad_nodes.insert((*n).name);
+        bad_nodes.insert((*n).name);
       }
       const Clients& clients = (*ib).clients;
       for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
-	++numClients;
-	char* p = ::strchr((*ic).name,'_');
-	if ( p ) p = ::strchr(++p,'_');
-	if ( p ) {
-	  if ( b==INPUT_BUFFER && p[4] == REC_TASK )  {
-	    node_evt_reco = min(node_evt_reco,(*ic).events);
-	  }
-	  else if ( b==INPUT_BUFFER && p[8] == REC_RECEIVER_TASK )  {
-	    node_evt_recv += (*ic).events;
-	  }
-	  else if ( b==OUTPUT_BUFFER && p[8] == REC_SENDER_TASK )  {
-	    node_evt_sent = min(node_evt_sent,(*ic).events);
-	  }
-	}
+        ++numClients;
+        char* p = ::strchr((*ic).name,'_');
+        if ( p ) p = ::strchr(++p,'_');
+        if ( p ) {
+          if ( b==INPUT_BUFFER && p[4] == REC_TASK )  {
+            node_evt_reco = min(node_evt_reco,(*ic).events);
+          }
+          else if ( b==INPUT_BUFFER && p[8] == REC_RECEIVER_TASK )  {
+            node_evt_recv += (*ic).events;
+          }
+          else if ( b==OUTPUT_BUFFER && p[8] == REC_SENDER_TASK )  {
+            node_evt_sent = min(node_evt_sent,(*ic).events);
+          }
+        }
       }
     }
     evt_reco = min(evt_reco,node_evt_reco);
@@ -229,7 +229,7 @@ void RecFarmSubDisplay::updateContent(const Nodeset& ns) {
   time_t t1 = numNodes == 0 ? time(0) : frst.first, now = time(0);
   ::strftime(b1,sizeof(b1),"%H:%M:%S",::localtime(&t1));
   ::sprintf(text," %s %s [%d nodes %d buffers %d clients] ",
-	    m_name.c_str(),b1,numNodes,numBuffs,numClients);
+            m_name.c_str(),b1,numNodes,numBuffs,numClients);
   m_title = text;
   if ( numNodes != 0 ) {
     m_lastUpdate = t1;
@@ -298,8 +298,8 @@ void RecFarmSubDisplay::updateContent(const Nodeset& ns) {
   m_totSent = evt_prod[1];
   if ( buf_clients[0] != 0 )
     ::sprintf(txt,"%9d%4d%6d   %9d%4d%6d",
-	      evt_prod[0],buf_clients[0],used_slots[0],
-	      evt_prod[1],buf_clients[1],used_slots[1]);
+              evt_prod[0],buf_clients[0],used_slots[0],
+              evt_prod[1],buf_clients[1],used_slots[1]);
   else
     ::sprintf(txt,"%9s%4s%6s   %9s%4s%6s","--","","--","--","","--");
   ::scrc_put_chars(m_display,txt,NORMAL,2,5,1);

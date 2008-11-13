@@ -1,4 +1,4 @@
-// $Id: ROMonDimPublish.cpp,v 1.5 2008-11-11 15:09:26 frankb Exp $
+// $Id: ROMonDimPublish.cpp,v 1.6 2008-11-13 12:13:33 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonDimPublish.cpp,v 1.5 2008-11-11 15:09:26 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonDimPublish.cpp,v 1.6 2008-11-13 12:13:33 frankb Exp $
 // C++ include files
 #include <stdexcept>
 
@@ -77,7 +77,7 @@ void ROMonDimPublish::feedData(void* tag, void** buf, int* size, int* first) {
     }
     if ( h->m_verbose ) {
       log() << "[ROMonDimPublish] Published " << *size 
-	    << " Bytes of data @" << *buf << std::endl;
+            << " Bytes of data @" << *buf << std::endl;
     }
     return;
   }

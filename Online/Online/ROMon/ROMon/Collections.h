@@ -1,4 +1,4 @@
-// $Id: Collections.h,v 1.5 2008-11-11 15:09:25 frankb Exp $
+// $Id: Collections.h,v 1.6 2008-11-13 12:13:32 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/Collections.h,v 1.5 2008-11-11 15:09:25 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/Collections.h,v 1.6 2008-11-13 12:13:32 frankb Exp $
 #ifndef ROMON_COLLECTIONS_H
 #define ROMON_COLLECTIONS_H 1
 
@@ -151,11 +151,11 @@ namespace ROMon {
     for(typename T::const_iterator n=nodes.begin(); n!=nodes.end(); n=nodes.next(n))  {
       has_nodes = true;
       if ( (*n).time < t.first ) {
-	t.first = (*n).time;
-	t.second = (*n).millitm;
+        t.first = (*n).time;
+        t.second = (*n).millitm;
       }
       else if ( (*n).time == t.first && (*n).millitm < t.second ) {
-	t.second = (*n).millitm;
+        t.second = (*n).millitm;
       }
     }
     return has_nodes ? t : TimeStamp(0,0);
@@ -167,11 +167,11 @@ namespace ROMon {
     for(typename T::const_iterator n=nodes.begin(); n!=nodes.end(); n=nodes.next(n))  {
       has_nodes = true;
       if ( (*n).time > t.first ) {
-	t.first = (*n).time;
-	t.second = (*n).millitm;
+        t.first = (*n).time;
+        t.second = (*n).millitm;
       }
       else if ( (*n).time == t.first && (*n).millitm > t.second ) {
-	t.second = (*n).millitm;
+        t.second = (*n).millitm;
       }
     }
     return has_nodes ? t : TimeStamp(0,0);

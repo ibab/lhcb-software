@@ -1,4 +1,4 @@
-// $Id: ROMonGblBuffer.cpp,v 1.5 2008-08-21 14:04:17 frankb Exp $
+// $Id: ROMonGblBuffer.cpp,v 1.6 2008-11-13 12:13:33 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonGblBuffer.cpp,v 1.5 2008-08-21 14:04:17 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonGblBuffer.cpp,v 1.6 2008-11-13 12:13:33 frankb Exp $
 
 // Framework includes
 #include "ROMonDefs.h"
@@ -57,7 +57,7 @@ int ROMonGblBuffer::initialize() {
   }
   if ( m_verbose )    {
     log() << "Global section " << m_section_name << ((const char*)m_mapOnly ? " mapped" : " created")
-	  << " successfully:" << m_gbl << std::endl;
+          << " successfully:" << m_gbl << std::endl;
   }
 #ifdef _WIN32
   sc = ::lib_rtl_create_lock(m_section_name.c_str(),&m_lock);

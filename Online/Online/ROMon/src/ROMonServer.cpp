@@ -1,4 +1,4 @@
-// $Id: ROMonServer.cpp,v 1.5 2008-10-21 13:53:52 frankb Exp $
+// $Id: ROMonServer.cpp,v 1.6 2008-11-13 12:13:33 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonServer.cpp,v 1.5 2008-10-21 13:53:52 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonServer.cpp,v 1.6 2008-11-13 12:13:33 frankb Exp $
 
 // C++ include files
 #include "sys/timeb.h"
@@ -55,19 +55,19 @@ int ROMonServer::handle(void* buff, size_t /* len */)  {
     try {
       BUFFERS* buffers = (BUFFERS*)bm_all->address;
       for (int i = 0; i < buffers->p_bmax; ++i)  {
-	if ( buffers->buffers[i].used == 1 )  {
-	  const char* bm_name = buffers->buffers[i].name;
-	  BMID dsc = ::mbm_map_mon_memory(bm_name);
-	  if ( dsc ) {
-	    try {
-	      dumpBufferInfo(bm_name,dsc,mbm);
-	    }
-	    catch(...)    {
-	    }
-	    ::mbm_unmap_memory(dsc);
-	    mbm = b->add(mbm);
-	  }
-	}
+        if ( buffers->buffers[i].used == 1 )  {
+          const char* bm_name = buffers->buffers[i].name;
+          BMID dsc = ::mbm_map_mon_memory(bm_name);
+          if ( dsc ) {
+            try {
+              dumpBufferInfo(bm_name,dsc,mbm);
+            }
+            catch(...)    {
+            }
+            ::mbm_unmap_memory(dsc);
+            mbm = b->add(mbm);
+          }
+        }
       }
     }
     catch(...) {

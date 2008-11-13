@@ -82,13 +82,13 @@ namespace {
       return;
     string sys(_toString(e.getSystemId()));
     ::lib_rtl_output(LIB_RTL_WARNING,"Error at file \"%s\", line %d, column %d Message:%s",
-		   sys.c_str(),e.getLineNumber(),e.getColumnNumber(),m.c_str());
+                   sys.c_str(),e.getLineNumber(),e.getColumnNumber(),m.c_str());
   }
   void ErrHandler::fatalError(const SAXParseException& e)  {
     string m(_toString(e.getMessage()));
     string sys(_toString(e.getSystemId()));
     ::lib_rtl_output(LIB_RTL_WARNING,"Fatal Error at file \"%s\", line %d, column %d Message:%s",
-		     sys.c_str(),e.getLineNumber(),e.getColumnNumber(),m.c_str());
+                     sys.c_str(),e.getLineNumber(),e.getColumnNumber(),m.c_str());
     throw runtime_error( "Standard pool exception : Fatal Error on the DOM Parser" );
   }
 
@@ -241,7 +241,7 @@ string XMLDocument::getfile(const string& fname, bool create)   {
       else     {
         printError("Problem creating file "+path);
       }    
-      out.close();	
+      out.close();        
     }
     else if ( exist )  {
       return path;

@@ -10,7 +10,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionDisplay.cpp,v 1.15 2008-10-21 13:53:52 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionDisplay.cpp,v 1.16 2008-11-13 12:15:00 frankb Exp $
 
 // Framework include files
 #include "ROLogger/PartitionDisplay.h"
@@ -159,14 +159,14 @@ void PartitionDisplay::handle(const Event& ev) {
       return;
     case CMD_UPDATE: 
       {
-	_SV f = m_farms;
-	f.push_back(m_monitoring);
-	if ( !m_storage.empty() ) f.push_back(m_storage);
-	if ( !m_monitoring.empty() ) f.push_back(m_monitoring);
-	::upic_write_message2("Updating farm content of %s [%ld nodes]",m_name.c_str(),f.size());
-	ioc.send(this,CMD_UPDATE_CLUSTERS,this);
-	ioc.send(m_msg,CMD_UPDATE_FARMS,new _SV(f));
-	ioc.send(m_history,CMD_UPDATE_FARMS,new _SV(f));
+        _SV f = m_farms;
+        f.push_back(m_monitoring);
+        if ( !m_storage.empty() ) f.push_back(m_storage);
+        if ( !m_monitoring.empty() ) f.push_back(m_monitoring);
+        ::upic_write_message2("Updating farm content of %s [%ld nodes]",m_name.c_str(),f.size());
+        ioc.send(this,CMD_UPDATE_CLUSTERS,this);
+        ioc.send(m_msg,CMD_UPDATE_FARMS,new _SV(f));
+        ioc.send(m_history,CMD_UPDATE_FARMS,new _SV(f));
       }
       return;
     case CMD_UPDATE_NODES:
@@ -239,35 +239,35 @@ void PartitionDisplay::handle(const Event& ev) {
     case CMD_SEVERITY:
       switch(ev.param_id) {
       case 1:
-	ioc.send(m_msg,ev.command_id,new string(m_msgSeverity));
-	return;
+        ioc.send(m_msg,ev.command_id,new string(m_msgSeverity));
+        return;
       case 2:
-	ioc.send(m_history,ev.command_id,new string(m_histSeverity));
-	return;
+        ioc.send(m_history,ev.command_id,new string(m_histSeverity));
+        return;
       default:
-	break;
+        break;
       }
       break;
     default:
       if ( ev.command_id > 0 && ev.command_id <= (int)m_items.size() ) {
-	int val, cmd = ev.command_id;
-	switch(ev.param_id) {
-	case 1:
-	  showCluster(cmd);
-	  break;
-	case 2:
-	  upic_write_message2("Replace cmd %d",cmd);
-	  val = m_items[cmd].first = ::strcmp(s_enableDisableResult,s_enable[0])==0;
-	  ::upic_replace_param_line(m_id,cmd,setupParams(m_items[cmd].second,val).c_str(),"");
-	  ::upic_set_cursor(ev.menu_id,cmd,ev.param_id);
-	  ioc.send(m_msg,val ? CMD_DISCONNECT_CLUSTER : CMD_CONNECT_CLUSTER,new string(m_items[cmd].second));
-	  break;
-	case 3:
-	  ::upic_write_message("Configuration by menu not implemented...","");
-	break;
-	default:
-	  break;
-	}
+        int val, cmd = ev.command_id;
+        switch(ev.param_id) {
+        case 1:
+          showCluster(cmd);
+          break;
+        case 2:
+          upic_write_message2("Replace cmd %d",cmd);
+          val = m_items[cmd].first = ::strcmp(s_enableDisableResult,s_enable[0])==0;
+          ::upic_replace_param_line(m_id,cmd,setupParams(m_items[cmd].second,val).c_str(),"");
+          ::upic_set_cursor(ev.menu_id,cmd,ev.param_id);
+          ioc.send(m_msg,val ? CMD_DISCONNECT_CLUSTER : CMD_CONNECT_CLUSTER,new string(m_items[cmd].second));
+          break;
+        case 3:
+          ::upic_write_message("Configuration by menu not implemented...","");
+        break;
+        default:
+          break;
+        }
       }
     }
     break;
