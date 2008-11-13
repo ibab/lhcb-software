@@ -34,6 +34,8 @@ extern "C" {
   int gettimeofday(struct timeval *time_Info, struct timezone *timezone_Info);
   int getfilesystemtime(struct timeval *time_Info);
 
+#else
+  #include <sys/time.h>
 #endif  /* WIN32                          */
 
 #ifdef __cplusplus

@@ -1,4 +1,4 @@
-// $Id: AlarmListener.cpp,v 1.2 2008-10-21 13:53:51 frankb Exp $
+// $Id: AlarmListener.cpp,v 1.3 2008-11-13 09:02:30 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/AlarmListener.cpp,v 1.2 2008-10-21 13:53:51 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/AlarmListener.cpp,v 1.3 2008-11-13 09:02:30 frankb Exp $
 
 // Framework include files
 #include "ROLogger/AlarmListener.h"
@@ -37,6 +37,7 @@ extern "C" {
 using namespace ROLogger;
 using namespace std;
 typedef vector<string> _SV;
+static std::string facility = "alarms";
 
 /// Standard constructor with object setup through parameters
 AlarmListener::AlarmListener(Interactor* parent,const string& n) : m_parent(parent), m_name(n)
@@ -45,9 +46,9 @@ AlarmListener::AlarmListener(Interactor* parent,const string& n) : m_parent(pare
   string nam = "RunInfo/" + m_name + "/HLTsubFarms";
   m_subFarmDP = ::dic_info_service((char*)nam.c_str(),MONITORED,0,0,0,subFarmHandler,(long)this,0,0);
   ::upic_write_message2("Subfarm content for %s_RunInfo from:%s",m_name.c_str(),nam.c_str());
-  f->push_back("/STORECTL01/logger/alarms/log");
-  f->push_back("/MONA08/logger/alarms/log");
-  if ( name() == "LHCb" ) f->push_back("/CALD07/logger/alarms/log");
+  f->push_back(fmcLogger("STORECTL01",facility));
+  f->push_back(fmcLogger("MONA08",facility));
+  if ( name() == "LHCb" ) f->push_back(fmcLogger("CALD07",facility));
   IocSensor::instance().send(m_parent,CMD_UPDATE_FARMS,f.release());
 }
 
@@ -58,17 +59,12 @@ AlarmListener::~AlarmListener() {
 
 /// DIM command service callback
 void AlarmListener::subFarmHandler(void* tag, void* address, int* size) {
-  string svc;
   auto_ptr<_SV> f(new _SV());
   AlarmListener* h = *(AlarmListener**)tag;
-  for(const char* data = (char*)address, *end=data+*size;data<end;data += strlen(data)+1) {
-    svc = "/";
-    svc += data;
-    svc += "/logger/alarms/log";
-    f->push_back(svc);
-  }
-  f->push_back("/STORECTL01/logger/alarms/log");
-  f->push_back("/MONA08/logger/alarms/log");
-  if ( h->name() == "LHCb" ) f->push_back("/CALD07/logger/alarms/log");
+  for(const char* data = (char*)address, *end=data+*size;data<end;data += strlen(data)+1)
+    f->push_back(fmcLogger(data,facility));
+  f->push_back(fmcLogger("STORECTL01",facility));
+  f->push_back(fmcLogger("MONA08",facility));
+  if ( h->name() == "LHCb" ) f->push_back(fmcLogger("CALD07",facility));
   IocSensor::instance().send(h->m_parent,CMD_UPDATE_FARMS,f.release());
 }

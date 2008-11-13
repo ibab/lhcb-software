@@ -5,6 +5,9 @@
 #include <string>
 
 namespace ROLogger {
+
+  std::string fmcLogger(const std::string& host,const std::string& facility);
+
   enum { 
     CMD_BACKSPACE = -1,
     CMD_1000    =  1000,

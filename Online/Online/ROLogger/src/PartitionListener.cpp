@@ -1,4 +1,4 @@
-// $Id: PartitionListener.cpp,v 1.14 2008-10-21 13:53:52 frankb Exp $
+// $Id: PartitionListener.cpp,v 1.15 2008-11-13 09:02:30 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionListener.cpp,v 1.14 2008-10-21 13:53:52 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionListener.cpp,v 1.15 2008-11-13 09:02:30 frankb Exp $
 
 // Framework include files
 #include "ROLogger/PartitionListener.h"
@@ -37,6 +37,7 @@ extern "C" {
 using namespace ROLogger;
 using namespace std;
 typedef vector<string> _SV;
+static std::string facility = "gaudi";
 
 /// Standard constructor with object setup through parameters
 PartitionListener::PartitionListener(Interactor* parent,const string& nam) : m_parent(parent), m_name(nam)
@@ -77,10 +78,8 @@ void PartitionListener::storSliceHandler(void* tag, void* address, int* size) {
       IocSensor::instance().send(h->m_parent,CMD_DISCONNECT_STORAGE,(void*)0);
     }
     else {
-      string svc = "/STORECTL01/logger/";
-      svc += (char*)address;
-      svc += "/log";
-      IocSensor::instance().send(h->m_parent,CMD_CONNECT_STORAGE,new string(svc));
+      string *s = new string(fmcLogger("STORECTL01",(char*)address));
+      IocSensor::instance().send(h->m_parent,CMD_CONNECT_STORAGE,s);
     }
   }
 }
@@ -94,10 +93,8 @@ void PartitionListener::monSliceHandler(void* tag, void* address, int* size) {
       IocSensor::instance().send(h->m_parent,CMD_DISCONNECT_MONITORING,(void*)0);
     }
     else {
-      string svc = "/MONA08/logger/";
-      svc += (char*)address;
-      svc += "/log";
-      IocSensor::instance().send(h->m_parent,CMD_CONNECT_MONITORING,new string(svc));
+      string *s = new string(fmcLogger("MONA08",(char*)address));
+      IocSensor::instance().send(h->m_parent,CMD_CONNECT_MONITORING,s);
     }
   }
 }
@@ -107,13 +104,9 @@ void PartitionListener::subFarmHandler(void* tag, void* address, int* size) {
   string svc;
   auto_ptr<_SV> f(new _SV());
   PartitionListener* h = *(PartitionListener**)tag;
-  for(const char* data = (char*)address, *end=data+*size;data<end;data += strlen(data)+1) {
-    svc = "/";
-    svc += data;
-    svc += "/logger/gaudi/log";
-    f->push_back(svc);
-  }
-  if ( h->name() == "LHCb" ) f->push_back("/CALD07/logger/gaudi/log");
+  for(const char* data = (char*)address, *end=data+*size;data<end;data += strlen(data)+1)
+    f->push_back(fmcLogger(data,facility));
+  if ( h->name() == "LHCb" ) f->push_back(fmcLogger("CALD07",facility));
   IocSensor::instance().send(h->m_parent,CMD_UPDATE_FARMS,f.release());
 }
 
