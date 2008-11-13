@@ -127,6 +127,7 @@ void HistogramIdentifier::setIdentifiersFromDim(std::string newDimServiceName)
   }
   
   if (m_isEFF) {
+    m_partitionName = "";
     m_taskName = (((TObjString *)histogramUrlMatchGroup->At(3))->GetString()).Data();
   }
   

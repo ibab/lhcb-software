@@ -86,8 +86,9 @@ DbRootHist::DbRootHist(const std::string & identifier,
   TH1::AddDirectory(kFALSE);
 
   // if dimBrowser is specified, retrieve dim service name from partition name
-  if(m_dimBrowser) {
-    m_partition = dimServiceName;
+  if(m_dimBrowser && (!histogramDB)) {
+//    m_partition = dimServiceName;
+    m_partition = partitionName();
   }
   
   if (histogramDB) {
@@ -152,7 +153,7 @@ void DbRootHist::loadAnaSources()
       for (unsigned int i=0; i< m_sourcenames.size(); ++i) {
         OnlineHistogram* histo = dbSession()->getHistogram(m_sourcenames[i]);
         m_anaSources.push_back(new DbRootHist(m_sourcenames[i],
-                                              m_partition,
+                                              m_dimServiceName,
                                               m_refreshTime,
                                               999,
                                               dbSession(),
@@ -282,7 +283,7 @@ void DbRootHist::initHistogram()
   if (!m_isAnaHist && (m_retryInit > 0) && m_dimBrowser) {
     
     // sed partition   
-    if (m_onlineHistogram && (m_retryInit > 1)) {
+    if (m_onlineHistogram && m_session && (m_retryInit > 1)) {
       m_dimServiceName = m_onlineHistogram->dimServiceName();
       if (m_verbosity >= Verbose) {
         std::cout << "dimServiceName from DB: " << m_dimServiceName << std::endl;
