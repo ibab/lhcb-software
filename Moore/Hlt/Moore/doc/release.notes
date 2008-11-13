@@ -1,6 +1,8 @@
 Package     : Hlt/Moore
-Package Coordinator : Patrick Koppenburg and Marco Cattaneo
+Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
+
+!========================== Moore v5r4 2008-11-13 ===================
 
 ! 2008-11-13 - Gerhard Raven
  - update DEFAULT.opts, eg. createDecReportsHack is no longer needed
