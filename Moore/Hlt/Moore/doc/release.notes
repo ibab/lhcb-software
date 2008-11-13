@@ -2,6 +2,9 @@ Package     : Hlt/Moore
 Package Coordinator : Patrick Koppenburg and Marco Cattaneo
 Purpose     : LHCb HLT application
 
+! 2008-11-13 - Gerhard Raven
+ - update DEFAULT.opts, eg. createDecReportsHack is no longer needed
+
 ! 2008-10-21 - Gerhard Raven
  - properly generate runMooreOnline_EFF.sh and corresponding
    evironment, driven by the CMT tag ONLINE_OVERRULE_MOORE_SETUP

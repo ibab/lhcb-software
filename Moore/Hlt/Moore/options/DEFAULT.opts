@@ -35,18 +35,18 @@ ApplicationMgr.ExtSvc += {  "DataOnDemandSvc" } ;
 
 #include "$DDDBROOT/options/DDDB.opts"
 
+///@TODO: this is not maintainable -- need either a single tag, or it comes from @OnlineEnv...
+///
 DDDB.DefaultTAG = "head-20080908";
 LHCBCOND.DefaultTAG = "head-20080908";
 
 EventClockSvc.EventTimeDecoder = "OdinTimeDecoder";
 MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
-HltConfigSvc.prefetchTCK = { "0x80060000" };
-HltConfigSvc.initialTCK = "0x80060000";
-// HltConfigSvc.initialTCK = @OnlineEnv.InitialTCK;
+HltConfigSvc.prefetchTCK = { @OnlineEnv.InitialTCK };
+HltConfigSvc.initialTCK =    @OnlineEnv.InitialTCK;
 HltConfigSvc.checkOdin = false;
 HltConfigSvc.maskL0TCK = true;
-ApplicationMgr.ExtSvc += { "HltConfigSvc", "LumiANNSvc" };
-ApplicationMgr.TopAlg += { "CreateDecReportsHack" };
+ApplicationMgr.ExtSvc += { "HltConfigSvc", "HltANNSvc", "LumiANNSvc" };
 ApplicationMgr.TopAlg += { "GaudiSequencer/Hlt" };
 /////////////////////////////////////
 
