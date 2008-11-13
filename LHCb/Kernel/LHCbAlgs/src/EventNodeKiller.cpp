@@ -1,4 +1,4 @@
-// $Id: EventNodeKiller.cpp,v 1.3 2006-11-30 15:57:28 cattanem Exp $
+// $Id: EventNodeKiller.cpp,v 1.4 2008-11-13 07:37:33 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -41,7 +41,7 @@ StatusCode EventNodeKiller::execute() {
   std::vector<std::string>::iterator itS;
   for( itS=m_nodes.begin(); itS != m_nodes.end(); itS++ ) {
     debug() << "Killing node " << *itS << endmsg;
-    eventSvc()->unlinkObject( *itS );
+    eventSvc()->unlinkObject( *itS ).ignore();
   }
   
   return StatusCode::SUCCESS;
