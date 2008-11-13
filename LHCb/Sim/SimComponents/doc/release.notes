@@ -5,6 +5,9 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+! 2008-11-13 - Marco Cattaneo
+ - Improve underflow protection for MCVertex times, to work also on ia32
+
 ! 2008-10-28 - Marco Cattaneo
  - Fixes for gcc 4.3 compilation
 

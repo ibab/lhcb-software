@@ -1,8 +1,8 @@
-// $Id: CompareMCVertex.cpp,v 1.5 2008-09-08 15:46:18 cattanem Exp $
+// $Id: CompareMCVertex.cpp,v 1.6 2008-11-13 17:34:12 cattanem Exp $
 // Include files 
 
-// from STD
-#include <limits>
+// from Boost
+#include "boost/numeric/conversion/bounds.hpp"
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
@@ -53,6 +53,9 @@ StatusCode CompareMCVertex::execute() {
   LHCb::MCVertices::const_iterator itOld  = old->begin();
   LHCb::MCVertices::const_iterator itTest = test->begin();
 
+  static const double smallest = boost::numeric::bounds<float>::smallest();
+  static const double tiny = boost::numeric::bounds<double>::smallest();
+
   while ( old->end() != itOld ) {
     LHCb::MCVertex* oVert = (*itOld++);
     LHCb::MCVertex* tVert = (*itTest++);
@@ -66,9 +69,16 @@ StatusCode CompareMCVertex::execute() {
     if ( 5.e-5 < fabs( oVert->position().z() - tVert->position().z() ) ) isOK = false;
     // Protect crazy vertex times in DC06 data. Test times should be OK after unpacking
     double oldTime;
-    if( oVert->time() > 0. && oVert->time() < std::numeric_limits<float>::min() ) {
-      debug() << "time set to zero for vertex "
+    if( oVert->time() > 0. && oVert->time() < smallest ) {
+      if( msgLevel(MSG::DEBUG) ) {
+        if( oVert->time() < tiny )
+          debug() << "time smaller than " << tiny;
+        else
+          debug() << "time " << oVert->time();
+          
+        debug() << " set to zero for vertex "
                 << oVert->key() << " of type " << oVert->type() << endmsg;
+      }
       oldTime = 0;
     }
     else {
