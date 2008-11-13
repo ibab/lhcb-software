@@ -12,54 +12,68 @@ from Configurables import ( TrackEventFitter, TrackMasterFitter, TrackKalmanFilt
                             SimplifiedMaterialLocator, DetailedMaterialLocator,
                             MeasurementProvider)
 
-def ConfiguredFitter( Name = "DefaultEventFitter",
-                      TracksInContainer = "Rec/Tracks/Best",
-                      FieldOff = TrackSys().fieldOff(),
-                      SimplifiedGeometry = TrackSys().simplifiedGeometry(),
-                      NoDriftTimes = TrackSys().noDrifttimes(),
-                      KalmanSmoother = TrackSys().kalmanSmoother() ):
-
-    # start with the event fitter
-    eventfitter = TrackEventFitter(Name)
-    eventfitter.TracksInContainer = TracksInContainer
+def ConfiguredMasterFitter( Name,
+                            FieldOff = TrackSys().getProp( "fieldOff" ),
+                            SimplifiedGeometry = "simplifiedGeometry" in TrackSys().getProp("expertTracking"),
+                            NoDriftTimes =  "noDrifttimes" in TrackSys().getProp("expertTracking"),
+                            KalmanSmoother = "kalmanSmoother" in TrackSys().getProp("expertTracking") ):
 
     # add the tools that need to be modified
-    eventfitter.addTool(TrackMasterFitter(),name = "Fitter")
-
-    eventfitter.Fitter.addTool( TrackMasterExtrapolator(), name = "Extrapolator" )
-    eventfitter.Fitter.addTool( TrackKalmanFilter(), name = "NodeFitter" )
+    fitter = TrackMasterFitter(Name)
+    fitter.addTool( TrackMasterExtrapolator(), name = "Extrapolator" )
+    fitter.addTool( TrackKalmanFilter(), name = "NodeFitter" )
 
     # set up the material locator
     if SimplifiedGeometry:
-        eventfitter.Fitter.MaterialLocator = "SimplifiedMaterialLocator"
-        eventfitter.Fitter.Extrapolator.MaterialLocator = "SimplifiedMaterialLocator"
+        fitter.MaterialLocator = "SimplifiedMaterialLocator"
+        fitter.Extrapolator.MaterialLocator = "SimplifiedMaterialLocator"
 
     # special settings for field-off
     if FieldOff:
-        eventfitter.Fitter.Extrapolator.addTool(TrackSimpleExtraSelector(), name="ExtraSelector")
-        eventfitter.Fitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator"
-        eventfitter.Fitter.Extrapolator.ApplyEnergyLossCorr = False
-        eventfitter.Fitter.ApplyEnergyLossCorr = False
+        fitter.Extrapolator.addTool(TrackSimpleExtraSelector(), name="ExtraSelector")
+        fitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator"
+        fitter.Extrapolator.ApplyEnergyLossCorr = False
+        fitter.ApplyEnergyLossCorr = False
 
     # change the smoother
     if KalmanSmoother:
-        eventfitter.Fitter.NodeFitter.BiDirectionalFit = False
+        fitter.NodeFitter.BiDirectionalFit = False
 
     # don't use drift times
     if NoDriftTimes:
         # set up the NoDriftTimeProjector in the toolsvc
         defaultOTNoDriftTimeProjector = TrajOTProjector("OTNoDrifttimesProjector")
         defaultOTNoDriftTimeProjector.UseDrift = False
-        eventfitter.Fitter.NodeFitter.addTool( TrackProjectorSelector(), "Projector" )
-        eventfitter.Fitter.NodeFitter.Projector.OT = defaultOTNoDriftTimeProjector
+        fitter.NodeFitter.addTool( TrackProjectorSelector(), "Projector" )
+        fitter.NodeFitter.Projector.OT = defaultOTNoDriftTimeProjector
 
+    return fitter
+
+
+def ConfiguredEventFitter( Name,
+                           TracksInContainer,
+                           FieldOff = TrackSys().getProp( "fieldOff" ),
+                           SimplifiedGeometry = "simplifiedGeometry" in TrackSys().getProp("expertTracking"),
+                           NoDriftTimes =  "noDrifttimes" in TrackSys().getProp("expertTracking"),
+                           KalmanSmoother = "kalmanSmoother" in TrackSys().getProp("expertTracking") ):
+    
+    # start with the event fitter
+    eventfitter = TrackEventFitter(Name)
+    eventfitter.TracksInContainer = TracksInContainer
+    # add the tools that need to be modified
+    fittername = Name + ".Fitter"
+    eventfitter.addTool( ConfiguredMasterFitter( fittername,
+                                                 FieldOff,
+                                                 SimplifiedGeometry,
+                                                 NoDriftTimes,
+                                                 KalmanSmoother ), name = "Fitter")
     return eventfitter
 
 def ConfiguredPrefitter( Name = "DefaultEventFitter",
                          TracksInContainer = "Rec/Tracks/Best",
-                         FieldOff = TrackSys().fieldOff(),
-                         SimplifiedGeometry = TrackSys().simplifiedGeometry() ):
-    eventfitter = ConfiguredFitter(Name,TracksInContainer,FieldOff,SimplifiedGeometry,NoDriftTimes=True)
+                         FieldOff = TrackSys().getProp( "fieldOff" ),
+                         SimplifiedGeometry = "simplifiedGeometry" in TrackSys().getProp("expertTracking")):
+    eventfitter = ConfiguredEventFitter(Name,TracksInContainer,FieldOff,SimplifiedGeometry,NoDriftTimes=True)
     eventfitter.Fitter.NumberFitIterations = 2
     eventfitter.Fitter.MaxNumberOutliers = 0
     eventfitter.Fitter.ErrorY2 = 10000
@@ -70,7 +84,7 @@ def ConfiguredFitVelo( Name = "FitVelo",
                        FieldOff = True):
     # note that we ignore curvatue in velo. in the end that seems the
     # most sensible thing to do.
-    eventfitter = ConfiguredFitter(Name,TracksInContainer)
+    eventfitter = ConfiguredEventFitter(Name,TracksInContainer)
     eventfitter.Fitter.NumberFitIterations = 2
     eventfitter.Fitter.ZPositions = []
     #eventfitter.Fitter.ErrorP= [0.01, 5e-08]
@@ -82,7 +96,7 @@ def ConfiguredFitVelo( Name = "FitVelo",
 
 def ConfiguredFitVeloTT( Name = "FitVeloTT",
                          TracksInContainer = "Rec/Track/VeloTT" ):
-    eventfitter = ConfiguredFitter(Name,TracksInContainer)
+    eventfitter = ConfiguredEventFitter(Name,TracksInContainer)
     eventfitter.Fitter.NumberFitIterations = 2
     eventfitter.Fitter.ZPositions = [ 990., 2165. ]
     eventfitter.Fitter.ErrorP = [1.2, 5e-07]
@@ -92,7 +106,7 @@ def ConfiguredFitVeloTT( Name = "FitVeloTT",
 
 def ConfiguredFitSeed( Name = "FitSeed",
                        TracksInContainer = "Rec/Track/Seed" ):
-    eventfitter = ConfiguredFitter(Name,TracksInContainer)
+    eventfitter = ConfiguredEventFitter(Name,TracksInContainer)
     eventfitter.Fitter.NumberFitIterations = 2
     eventfitter.Fitter.StateAtBeamLine = False
     eventfitter.Fitter.ZPositions = [ 7500., 9450., 11900. ]
@@ -102,19 +116,19 @@ def ConfiguredFitSeed( Name = "FitSeed",
 
 def ConfiguredFitForward( Name = "FitForward",
                          TracksInContainer = "Rec/Track/Forward" ):
-    eventfitter = ConfiguredFitter(Name,TracksInContainer)
+    eventfitter = ConfiguredEventFitter(Name,TracksInContainer)
     eventfitter.Fitter.NumberFitIterations = 2
     return eventfitter
 
 def ConfiguredFitMatch( Name = "FitMatch",
                         TracksInContainer = "Rec/Track/Match" ):
-    eventfitter = ConfiguredFitter(Name,TracksInContainer)
+    eventfitter = ConfiguredEventFitter(Name,TracksInContainer)
     eventfitter.Fitter.NumberFitIterations = 2
     return eventfitter
  
 def ConfiguredFitDownstream( Name = "FitDownstream",
                              TracksInContainer = "Rec/Track/Downstream" ):
-    eventfitter = ConfiguredFitter(Name,TracksInContainer)
+    eventfitter = ConfiguredEventFitter(Name,TracksInContainer)
     eventfitter.Fitter.ZPositions = [ 990., 2165., 9450. ]
     eventfitter.Fitter.NumberFitIterations = 2
     return eventfitter
@@ -133,20 +147,27 @@ def ConfiguredPreFitDownstream( Name = "PreFitDownstream",
     eventfitter.Fitter.ZPositions = [ 990., 2165., 9450. ]
     return eventfitter
 
-def ConfiguredFastFit( Name, TracksInContainer ):
-    FieldOff = TrackSys().getProp( "fieldOff" )
-    eventfitter = ConfiguredFitter(Name,TracksInContainer,
-                                   FieldOff,
-                                   SimplifiedGeometry = True)
-    eventfitter.Fitter.NumberFitIterations = 1
-    eventfitter.Fitter.MaxNumberOutliers = 0
-    eventfitter.Fitter.NodeFitter.BiDirectionalFit = False
-    eventfitter.Fitter.NodeFitter.Smooth = False
+def ConfiguredFastFitter( Name ):
+    
+    fitter = ConfiguredMasterFitter(Name, SimplifiedGeometry = True)
+    fitter.NumberFitIterations = 1
+    fitter.MaxNumberOutliers = 0
+    fitter.NodeFitter.BiDirectionalFit = False
+    fitter.NodeFitter.Smooth = False
     # at some point, need to switch to analytic evaluation
     # TrackHerabExtrapolator().extrapolatorID = 4
+    return fitter
+
+
+def ConfiguredFastEventFitter( Name, TracksInContainer ):
+    eventfitter = TrackEventFitter(Name)
+    eventfitter.TracksInContainer = TracksInContainer
+    fittername = Name + ".Fitter"
+    eventfitter.addTool( ConfiguredFastMasterFitter( Name = fittername ), name = "Fitter")
     return eventfitter
 
-def ConfiguredFastVeloOnlyFit( Name, TracksInContainer ):
+
+def ConfiguredFastVeloOnlyEventFitter( Name, TracksInContainer ):
     eventfitter = ConfiguredFastFit( Name, TracksInContainer )
     eventfitter.Fitter.ZPositions = []
     eventfitter.Fitter.ErrorP = [0,1e-8] # choose something very small such that momentum not changed
@@ -161,7 +182,7 @@ def ConfiguredFastVeloOnlyFit( Name, TracksInContainer ):
     return eventfitter
 
 def ConfiguredStraightLineFit( Name, TracksInContainer ):
-    eventfitter = ConfiguredFitter(Name,TracksInContainer,FieldOff=True)
+    eventfitter = ConfiguredEventFitter(Name,TracksInContainer,FieldOff=True)
     eventfitter.Fitter.ApplyMaterialCorrections = False
     eventfitter.Fitter.Extrapolator.ApplyMultScattCorr = False
     eventfitter.Fitter.Extrapolator.ApplyEnergyLossCorr = False
