@@ -10,9 +10,11 @@ use  Moore    v5r4    Hlt
 use  TCKData  v1r4    Hlt
 
 ### TMP
-use DaVinciTools v17r3 Phys
-use HltConf      v1r3 Hlt
-use HltGlobalMonitor v1r4 Hlt
+use HltCommon    v4r5 Hlt
+use HltConf      v1r5 Hlt
+use HltEcalAlley v1r3 Hlt
+use HltGlobalMonitor v1r5 Hlt
+use HltRawData   v1r5 Hlt
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize

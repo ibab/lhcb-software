@@ -1,10 +1,11 @@
 <PRE>
 Package     : MooreSys
-Package Coordinator : P. Koppenburg, M. Cattaneo
+Package Coordinator : G.Raven
 Purpose     : LHCb HLT application
 
 
-Based on Phys v7r2, Rec v5r12, HLT v4r3, Lbcom v6r23, LHCb v25r2, Gaudi v20r2, LCGCMT 55a, Online v4r16
+</PRE><H1><A NAME=v5r4>2008-11-13 Moore v5r4</A></H1><PRE>
+Based on Phys v7r2, Rec v5r12, HLT v4r3, Lbcom v6r23, Online v4r16
  add ONLINE_OVERRULE_MOORE_SETUP as tag to the requirements.
  This tag is used to change the setup for runMooreOnline_EFF.sh: default is to
  take the environment from $LHCBSCRIPTS/SetupMoore_vxxx.sh, which runs the
