@@ -6,7 +6,7 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "Kernel/IParticleTupleTool.h"            // Interface
 #include "Kernel/IVertexFit.h"
-
+#include "Kernel/IGeomDispCalculator.h"
 class IContextTool;
 class IDistanceCalculator;
 
@@ -57,7 +57,7 @@ private:
   IContextTool* m_context;
   const IDistanceCalculator* m_dist;
   const IVertexFit* m_pVertexFit;
-  
+  //const IGeomDispCalculator* m_ipTool;
   double m_IP; 
   //  double m_IPS; 
   double m_deltaChi2; 
