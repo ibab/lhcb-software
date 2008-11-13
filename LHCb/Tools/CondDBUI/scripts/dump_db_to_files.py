@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: dump_db_to_files.py,v 1.3 2008-04-17 17:23:27 marcocle Exp $
+# $Id: dump_db_to_files.py,v 1.4 2008-11-13 17:17:59 marcocle Exp $
 
 # @todo: Add support for channel IDs
 
@@ -47,7 +47,10 @@ class _relativize_url:
         subs = src[s:e]
         self.log.debug("matched '%s' -> '%s'",src,subs)
         if subs.startswith("conddb:"):
-            newsubs = _make_relative(self.base,subs[7:])
+            path = subs[7:]
+            if path[0] != "/": # Work-around for cases like "conddb:DTD/structure.dtd"
+                path = "/" + path
+            newsubs = _make_relative(self.base,path)
             self.log.debug("replacing '%s' -> '%s'",subs,newsubs)
             # replace the conddb url with a relative path
             return src[:s] + newsubs + src[e:]
