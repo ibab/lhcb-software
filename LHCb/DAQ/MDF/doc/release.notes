@@ -7,8 +7,9 @@
 !-----------------------------------------------------------------------------
 
 !========================= MDF v3r13 2008-09-30 ===============================
-! 2008-09-23- Markus Frank
+! 2008-10-13- Markus Frank
  - Add standard (dummy) properties to event selector
+ - Add missing status code checks in MDFIO.cpp
 
 ! 2008-10-28 - Marco Cattaneo
  - Add missing includes for gcc 4.3

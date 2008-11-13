@@ -1,4 +1,4 @@
-// $Id: MDFIO.cpp,v 1.33 2008-10-28 12:34:36 cattanem Exp $
+// $Id: MDFIO.cpp,v 1.34 2008-11-13 09:24:26 frankb Exp $
 //  ====================================================================
 //  MDFIO.cpp
 //  --------------------------------------------------------------------
@@ -87,15 +87,20 @@ StatusCode LHCb::MDFIO::commitRawBanks(RawEvent*         raw,
     MDFDescriptor space = getDataSpace(ioDesc, len);
     if ( space.first )  {
       m_spaceActions++;
-      encodeRawBanks(raw, space.first+hdrSize, len, true);
-      StatusCode sc = 
-	writeDataSpace(compTyp, chksumTyp, ioDesc, hdr_bank, space.first, len);
+      StatusCode sc = encodeRawBanks(raw, space.first+hdrSize, len, true);
       if ( sc.isSuccess() ) {
-	m_writeActions++;
+	sc = writeDataSpace(compTyp, chksumTyp, ioDesc, hdr_bank, space.first, len);
+	if ( sc.isSuccess() ) {
+	  m_writeActions++;
+	  return sc;
+	}
+	MsgStream err(m_msgSvc, m_parent);
+	err << MSG::ERROR << "Failed write data to output device." << endmsg;
+	m_writeErrors++;
 	return sc;
       }
       MsgStream err(m_msgSvc, m_parent);
-      err << MSG::ERROR << "Failed write data to output device." << endmsg;
+      err << MSG::ERROR << "Failed to encode output banks." << endmsg;
       m_writeErrors++;
       return sc;
     }
@@ -208,7 +213,14 @@ LHCb::MDFIO::commitRawBanks(int compTyp, int chksumTyp, void* const ioDesc, cons
       }
       for(unsigned int kk=0; theRawEvents.size() != kk; ++kk ) {
         size_t myLength = ctrlData[3*kk + 2];  // 2 words header, third element for each buffer
-        encodeRawBanks( theRawEvents[kk], dest, myLength, true);
+	StatusCode sc = encodeRawBanks(theRawEvents[kk], dest, myLength, true);
+        if ( !sc.isSuccess() ) {
+	  msg << MSG::ERROR << "Failed to encode output raw data banks." << endmsg;
+	  m_spaceErrors++;
+	  privateBank.removeBank( ctrlBank );
+	  privateBank.removeBank( hdrBank );
+	  return sc;
+	}
         dest  += myLength;
         len   -= myLength;
       }
