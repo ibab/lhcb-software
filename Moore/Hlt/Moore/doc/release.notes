@@ -7,6 +7,7 @@ Purpose     : LHCb HLT application
  - remove obsolete makePath
  - update Moore.py to something that works out-of-the-box at CERN
  - when creating TCK, preload every known L0 TCK
+ - improve setting of which database tags to use...
 
 ! 2008-10-21 - Gerhard Raven
  - properly generate runMooreOnline_EFF.sh and corresponding

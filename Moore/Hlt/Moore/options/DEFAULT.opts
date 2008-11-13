@@ -34,11 +34,10 @@ UpdateAndReset.disableReadOdin=1;
 ApplicationMgr.ExtSvc += {  "DataOnDemandSvc" } ; 
 
 #include "$DDDBROOT/options/DDDB.opts"
-
 ///@TODO: this is not maintainable -- need either a single tag, or it comes from @OnlineEnv...
-///
-DDDB.DefaultTAG = "head-20080908";
-LHCBCOND.DefaultTAG = "head-20080908";
+/// Note: the value is taken (by hand!) from $DDDBROOT/options/LHCb-2008.py
+DDDB.DefaultTAG     = "head-20081002";
+LHCBCOND.DefaultTAG = "head-20081002";
 
 EventClockSvc.EventTimeDecoder = "OdinTimeDecoder";
 MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";

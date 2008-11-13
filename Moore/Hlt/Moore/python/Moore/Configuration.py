@@ -1,7 +1,7 @@
 """
 High level configuration tools for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.32 2008-11-13 14:29:39 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.33 2008-11-13 15:13:39 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -20,11 +20,10 @@ class Moore(LHCbConfigurableUser):
           "EvtMax":            -1    # Maximum number of events to process
         , "skipEvents":        0
         , "DAQStudies":        False # use DAQ study version of options
-        , "DDDBtag" :          '2008-default'
-        , "condDBtag" :        '2008-default'
-        , "inputType":         'dst' # must either 'mdf' or 'dst'
-        , "DC06" :             False # use DC06 setup
-        , "hltType" :          'PA+LU+VE'
+        , "DDDBtag" :          '2008-default' # default for data, for DC06 use DC06-default
+        , "condDBtag" :        '2008-default' # default for data, for DC06 use DC06-default
+        , "useOracleCondDB":    False  # if False, use SQLDDDB instead
+        , "hltType" :          'Hlt1'
         , "runTiming"  :       False # include additional timing information
         , "useTCK"     :       False # use TCK instead of options...
         , "prefetchTCK" :      [ ] # which TCKs to prefetch. Initial TCK used is first one...
@@ -65,25 +64,14 @@ class Moore(LHCbConfigurableUser):
     def applyConf(self):
         GaudiKernel.ProcessJobOptions.printing_level += 1
         importOptions('$STDOPTS/DstDicts.opts')
-
-        inputType = self.getProp('inputType').upper()
-        if inputType not in [ 'MDF','DST','RAW' ] : raise TypeError("Invalid input type '%s'"%inputType)
-        if inputType != 'DST' : 
-            EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
+        EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
         importOptions('$STDOPTS/DecodeRawEvent.opts')
 
         # needed for DecodeRawEvent and LoKiTrigger
         for i in [ 'ToolSvc' , 'AuditorSvc',  'DataOnDemandSvc' , 'LoKiSvc' ] : ApplicationMgr().ExtSvc.append( i ) 
 
-        # forward some other settings... TODO: make a dictionary..
-        # self.setOtherProp( LHCbApp(), 'useOracleCondDB' )
-        importOptions( "$DDDBROOT/options/DDDB.py" )
-        if self.getProp('DC06') :
-            importOptions( '$DDDBROOT/options/DC06.opts' )
-        else : 
-            # the next is for 2008 data & MC, i.e. NOT for DC'06
-            importOptions( '$DDDBROOT/options/LHCb-2008.py' )
-        self.setOtherProps( LHCbApp(), [ 'DDDBtag' , 'condDBtag', 'EvtMax','skipEvents' ] )
+        # forward some settings... 
+        self.setOtherProps( LHCbApp(), ['EvtMax','skipEvents','DDDBtag','condDBtag','useOracleCondDB' ] )
         # Get the event time (for CondDb) from ODIN 
         EventClockSvc().EventTimeDecoder = 'OdinTimeDecoder'
         # make sure we don't pick up small variations of the read current
@@ -129,4 +117,5 @@ class Moore(LHCbConfigurableUser):
             ApplicationMgr().TopAlg = [ gen.getFullName() ] + ApplicationMgr().TopAlg
 
             
+        # Note: LHCbApp is defined in GaudiConf/python/GaudiConf/Configuration.py
         LHCbApp().applyConf()
