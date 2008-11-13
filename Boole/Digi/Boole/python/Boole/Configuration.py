@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.23 2008-11-12 17:43:51 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.24 2008-11-13 17:41:35 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -35,8 +35,6 @@ class Boole(LHCbConfigurableUser):
        ,'useSpillover' : """ Flag to enable spillover (default True) """
        ,'generateTAE'  : """ Flag to simulate time alignment events (default False) """
        ,'Outputs'      : """ List of outputs: ['MDF','DIGI','L0ETC'] (default 'DIGI') """
-       ,'writeDigi'    : """ Flag to enable POOL .digi output format (default True) """
-       ,'writeL0ETC'   : """ Flag to enable writing ETC of L0 selected events (default False) """
        ,'writeL0Only'  : """ Flag to write only L0 selected events (default False) """
        ,'extendedDigi' : """ Flag to add MCHits to .digi output file (default False) """
        ,'Histograms'   : """ Type of histograms: ['None','Default','Expert'] """
