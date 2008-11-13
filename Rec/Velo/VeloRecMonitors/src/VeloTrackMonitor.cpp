@@ -1,4 +1,4 @@
-// $Id: VeloTrackMonitor.cpp,v 1.2 2008-11-03 11:01:55 erodrigu Exp $
+// $Id: VeloTrackMonitor.cpp,v 1.3 2008-11-13 15:13:16 gersabec Exp $
 // Include files 
 
 // from Gaudi
@@ -24,6 +24,7 @@
 
 // AIDA
 #include "AIDA/IProfile1D.h"
+#include "AIDA/IHistogram1D.h"
 
 // local
 #include "VeloTrackMonitor.h"
@@ -61,6 +62,7 @@ Velo::VeloTrackMonitor::VeloTrackMonitor( const std::string& name,
   declareProperty( "ProfileResetEvent", m_resetProfile);
   declareProperty( "ExtraPlots", m_xPlots = true);
   declareProperty( "EventClusterInfo", m_EventClusterInfo = true);
+  declareProperty( "AlignMoniBasic", m_alignMoniBasic = false);
   declareProperty( "ACDCGeometry", m_ACDC = false);
 }
 //=============================================================================
@@ -81,6 +83,25 @@ StatusCode Velo::VeloTrackMonitor::initialize() {
   m_clusterTool = tool<IVeloClusterPosition>( "VeloClusterPosition" );
   m_expectTool = tool<IVeloExpectation>( "VeloExpectation");
  
+  if ( m_alignMoniBasic ) {
+    const GaudiAlg::HistoID aliMonM_R_A_ID = "ResidualMean_R_A" ; 
+    const GaudiAlg::HistoID aliMonM_R_C_ID = "ResidualMean_R_C" ; 
+    const GaudiAlg::HistoID aliMonM_P_A_ID = "ResidualMean_P_A" ; 
+    const GaudiAlg::HistoID aliMonM_P_C_ID = "ResidualMean_P_C" ; 
+    m_h_aliMon_Mean_R_A = book1D( aliMonM_R_A_ID, "Residual mean R sensors A side", -100, 100, 200 ); 
+    m_h_aliMon_Mean_R_C = book1D( aliMonM_R_C_ID, "Residual mean R sensors C side", -100, 100, 200 ); 
+    m_h_aliMon_Mean_P_A = book1D( aliMonM_P_A_ID, "Residual mean Phi sensors A side", -100, 100, 200 ); 
+    m_h_aliMon_Mean_P_C = book1D( aliMonM_P_C_ID, "Residual mean Phi sensors C side", -100, 100, 200 ); 
+    const GaudiAlg::HistoID aliMonS_R_A_ID = "ResidualSigma_R_A" ; 
+    const GaudiAlg::HistoID aliMonS_R_C_ID = "ResidualSigma_R_C" ; 
+    const GaudiAlg::HistoID aliMonS_P_A_ID = "ResidualSigma_P_A" ; 
+    const GaudiAlg::HistoID aliMonS_P_C_ID = "ResidualSigma_P_C" ; 
+    m_h_aliMon_Sigma_R_A = book1D( aliMonS_R_A_ID, "Residual sigma R sensors A side", -100, 100, 200 ); 
+    m_h_aliMon_Sigma_R_C = book1D( aliMonS_R_C_ID, "Residual sigma R sensors C side", -100, 100, 200 ); 
+    m_h_aliMon_Sigma_P_A = book1D( aliMonS_P_A_ID, "Residual sigma Phi sensors A side", -100, 100, 200 ); 
+    m_h_aliMon_Sigma_P_C = book1D( aliMonS_P_C_ID, "Residual sigma Phi sensors C side", -100, 100, 200 ); 
+  }
+
   return StatusCode::SUCCESS;
 }
 //=============================================================================
@@ -422,6 +443,32 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
     
   }
   
+  if( m_alignMoniBasic ){
+    // reset histograms
+    m_h_aliMon_Mean_R_A->reset();
+    m_h_aliMon_Mean_R_C->reset();
+    m_h_aliMon_Mean_P_A->reset();
+    m_h_aliMon_Mean_P_C->reset();
+    m_h_aliMon_Sigma_R_A->reset();
+    m_h_aliMon_Sigma_R_C->reset();
+    m_h_aliMon_Sigma_P_A->reset();
+    m_h_aliMon_Sigma_P_C->reset();
+    for ( int bin = 1; bin <= 42; bin++ ) {
+      // fill histograms
+      if ( 0 == (bin % 2) ) {
+        m_h_aliMon_Mean_R_A->fill( prof_sensors->binMean( bin ) );
+        m_h_aliMon_Sigma_R_A->fill( prof_sensors->binError( bin ) );
+        m_h_aliMon_Mean_P_A->fill( prof_sensors->binMean( bin + 64 ) );
+        m_h_aliMon_Sigma_P_A->fill( prof_sensors->binError( bin + 64 ) );
+      }
+      else {
+        m_h_aliMon_Mean_R_C->fill( prof_sensors->binMean( bin ) );
+        m_h_aliMon_Sigma_R_C->fill( prof_sensors->binError( bin ) );
+        m_h_aliMon_Mean_P_C->fill( prof_sensors->binMean( bin + 64 ) );
+        m_h_aliMon_Sigma_P_C->fill( prof_sensors->binError( bin + 64 ) );
+      }
+    }
+  }
   //PrintInfo:InEvent
   //-----------------
   

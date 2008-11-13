@@ -1,4 +1,4 @@
-// $Id: VeloTrackMonitor.h,v 1.2 2008-11-03 11:01:55 erodrigu Exp $
+// $Id: VeloTrackMonitor.h,v 1.3 2008-11-13 15:13:16 gersabec Exp $
 #ifndef VELORECMONITORS_VELOTRACKMONITOR_H 
 #define VELORECMONITORS_VELOTRACKMONITOR_H 1
 
@@ -19,6 +19,9 @@
 #include "TrackInterfaces/IVeloClusterPosition.h"
 #include "TrackInterfaces/IVeloExpectation.h"
 #include "TrackInterfaces/IMeasurementProvider.h"
+
+//from Gaudi
+#include "GaudiAlg/IHistoTool.h"
 
 // local
 #include "VeloMonitorBase.h"
@@ -65,6 +68,15 @@ namespace Velo
     IMeasurementProvider* m_measurementprovider;
     IVeloClusterPosition* m_clusterTool;
     IVeloExpectation* m_expectTool;
+
+    AIDA::IHistogram1D *m_h_aliMon_Mean_R_A;
+    AIDA::IHistogram1D *m_h_aliMon_Mean_R_C;
+    AIDA::IHistogram1D *m_h_aliMon_Mean_P_A;
+    AIDA::IHistogram1D *m_h_aliMon_Mean_P_C;
+    AIDA::IHistogram1D *m_h_aliMon_Sigma_R_A;
+    AIDA::IHistogram1D *m_h_aliMon_Sigma_R_C;
+    AIDA::IHistogram1D *m_h_aliMon_Sigma_P_A;
+    AIDA::IHistogram1D *m_h_aliMon_Sigma_P_C;
     
     // Job options
     unsigned long m_event;
@@ -77,6 +89,7 @@ namespace Velo
     bool m_ACDC;
     bool m_xPlots;
     bool m_EventClusterInfo;
+    bool m_alignMoniBasic;
   };
 }
 

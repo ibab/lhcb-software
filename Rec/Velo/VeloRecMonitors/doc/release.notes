@@ -4,6 +4,10 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2008-11-13 - Marco Gersabeck
+- added extra plots for alignment online monitoring
+  to be switched on by setting AlignMoniBasic to true
+
 ! 2008-11-03 - Sadia Khalil
 - extra plots (momentum, clusters per event, angle) have been added in
   VeloTrackMonitor as an offline option
