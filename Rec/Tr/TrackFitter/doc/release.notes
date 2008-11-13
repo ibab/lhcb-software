@@ -3,6 +3,10 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+! 2008-11-13 - Wouter Hulsbergen
+ - Added ConfiguredMasterFitter and ConfiguredFastFitter which are
+ tools. (Before we only had configured algs)
+
 ! 2008-10-27 - Marco Clemencic
  - Fixed a configuration problem in TrackFitter/ConfiguredFitters.py: the
    property for a public tool should be set from the tool configurable
