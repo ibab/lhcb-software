@@ -32,6 +32,11 @@ public:
     { m_str.declareUpdateHandler( &stringKey::updateHandler,this); }
     bool empty() const { return str().empty(); }
 
+public:
+  
+  /// implicit cast to std::string (const!)
+  operator const std::string& () const { return str() ; }
+  
 private:
     bool valid() const { return m_hash!=0 && !str().empty() && hash(str())==m_hash; }
     static size_t hash(const std::string& s);
