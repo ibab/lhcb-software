@@ -1,4 +1,4 @@
-// $Id: L0MuonOutputs.cpp,v 1.24 2008-11-07 16:25:31 jucogan Exp $
+// $Id: L0MuonOutputs.cpp,v 1.25 2008-11-13 08:29:56 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -192,7 +192,8 @@ StatusCode L0MuonOutputs::decodeRawBanks(){
       } // End V2 and greater
       if( msgLevel(MSG::VERBOSE) ) verbose() << "decodeRawBanks: L0Muon bank (version "<< bankVersion <<" ) found"
                                              <<", sourceID is "<< srcID <<", size is "<<size
-                                             <<" decoding status= "<<decoding_status<<endreq;
+                                             <<" Q"<<(ctrlSourceID(srcID)+1)
+                                             <<", decoding status= "<<decoding_status<<endreq;
     }
   }
   L0MuonBanksStatus->insert(ctrlCandStatus);
@@ -225,6 +226,7 @@ StatusCode L0MuonOutputs::decodeRawBanks(){
         }
         int decoding_status=0;
         int bankVersion  = (*itBnk)->version();
+        m_version = bankVersion;
         std::vector<unsigned int> data;
         unsigned int* body = (*itBnk)->data();
         rawBankSize+=size;
@@ -235,7 +237,7 @@ StatusCode L0MuonOutputs::decodeRawBanks(){
         procCand->clearRef();
         procCand->submitL0EventNumber(m_l0EventNumber);
         procCand->submitL0_B_Id(m_l0_B_Id);        
-        decoding_status=m_procCand[procSourceID(srcID)].decodeBank(data,bankVersion);
+        decoding_status=procCand->decodeBank(data,bankVersion);
         //m_l0EventNumber=procCand->ref_l0EventNumber();
         //m_l0_B_Id=procCand->ref_l0_B_Id();
         if (decoding_status>0) {
@@ -247,7 +249,8 @@ StatusCode L0MuonOutputs::decodeRawBanks(){
         }
         if( msgLevel(MSG::VERBOSE) ) verbose() << "decodeRawBanks: L0MuonProcCand bank (version "<< bankVersion <<" ) found"
                                                <<", sourceID is "<< srcID <<", size is "<< size
-                                               <<" decoding status= "<<decoding_status<<endreq;
+                                               <<", Q"<<(procSourceID(srcID)+1)
+                                               <<", decoding status= "<<decoding_status<<endreq;
       }    
     }
     L0MuonBanksStatus->insert(procCandStatus);
@@ -281,6 +284,7 @@ StatusCode L0MuonOutputs::decodeRawBanks(){
         }
         int decoding_status=0;
         int bankVersion  = (*itBnk)->version();
+        m_version = bankVersion;
         std::vector<unsigned int> data;
         unsigned int* body = (*itBnk)->data();
         rawBankSize+=size;
@@ -295,7 +299,8 @@ StatusCode L0MuonOutputs::decodeRawBanks(){
         }
         if( msgLevel(MSG::VERBOSE) ) verbose() << "decodeRawBanks: L0MuonProcData bank (version "<< bankVersion <<" ) found"
                                                <<", sourceID is "<< srcID <<", size is "<< size
-                                               <<" decoding status= "<<decoding_status<< endreq;
+                                               <<", Q"<<(procSourceID(srcID)+1)
+                                               <<", decoding status= "<<decoding_status<< endreq;
       }    
     }
     L0MuonBanksStatus->insert(procDataStatus);
