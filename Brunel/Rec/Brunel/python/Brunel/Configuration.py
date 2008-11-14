@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.32 2008-11-14 17:10:25 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.33 2008-11-14 17:12:05 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -275,6 +275,6 @@ class Brunel(LHCbConfigurableUser):
         from Configurables import RecInit
         RecInit("BrunelInit").PrintFreq = self.getProp("PrintFreq")
         # Use SIMCOND for Simulation, if not DC06
-        #if self.getProp("UseSimCond") and LHCbApp().getProp("CondDBtag").find("DC06") == -1:
-        #    from Configurables import CondDBCnvSvc
-        #    CondDBCnvSvc( CondDBReader = allConfigurables["SimulationCondDBReader"] )
+        if self.getProp("UseSimCond") and LHCbApp().getProp("CondDBtag").find("DC06") == -1:
+            from Configurables import CondDBCnvSvc
+            CondDBCnvSvc( CondDBReader = allConfigurables["SimulationCondDBReader"] )
