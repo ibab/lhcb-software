@@ -1,4 +1,4 @@
-// $Id: TrUpgrade.h,v 1.2 2008-11-13 22:11:03 ibelyaev Exp $
+// $Id: TrUpgrade.h,v 1.3 2008-11-14 12:56:03 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_TRUPGRADE_H 
 #define LOKI_TRUPGRADE_H 1
@@ -55,26 +55,6 @@ namespace LoKi
       ( const std::string&             output  ,   // output selection name/key 
         const LoKi::Hlt1::UpgradeTool& config  ) ; //             configuration 
       // ======================================================================
-      /** constructor from all configuration parameters 
-       *  @param output    the output selection name 
-       *  @param trTool    the name of ITracksFromTrack tool 
-       *  @param trType    the track type for upgrade 
-       *  @param owner     owner ? 
-       *  @param moveIDs   transfer IDs ?
-       *  @param moveAncs  transfer anscendents ?
-       *  @param moveInfo  transfer Extra Info ?
-       *  @param ptOrder   order in pt ?
-       */
-      TrUpgrade 
-      ( const std::string&        output   ,    //    output selection name/key 
-        const std::string&        trTool   ,    //   ITrackFromTrack  tool name
-        const std::string&        address  ,    //   TES location of the tracks 
-        const LHCb::Track::Types  trType   ,    //                   track type 
-        const bool                owner    ,    //                      owner ?
-        const bool                moveIDs  ,    //               transfer IDs ? 
-        const bool                moveAncs ,    //       transfer anscendents ? 
-        const bool                moveInfo ,    //        transfer extra info ?
-        const bool                ptOrder  ) ;  //                   order pt ?
       /// MANDATORY: virtual destructor 
       virtual ~TrUpgrade() {}
       /// MANDATORY: clone method ("virtual constructor")

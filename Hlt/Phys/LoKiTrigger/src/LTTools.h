@@ -1,4 +1,4 @@
-// $Id: LTTools.h,v 1.1 2008-11-13 13:14:42 ibelyaev Exp $
+// $Id: LTTools.h,v 1.2 2008-11-14 12:56:03 ibelyaev Exp $
 // ============================================================================
 #ifndef LTTOOLS_H 
 #define LTTOOLS_H 1
@@ -99,6 +99,35 @@ namespace LoKi
         base.Assert ( 0 != tsel , "Hlt::TSelection points to NULL!" ) ;    
         return tsel ;
       }
+      // ======================================================================
+      /** @struct CmpTrack
+       *  comparison criteria to eliminate double count 
+       *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+       *  @date 2008-11-14
+       */
+      struct CmpTrack 
+        : public std::binary_function<const LHCb::Track*,const LHCb::Track*,bool>
+      {
+        // ====================================================================
+        /// compare tracks 
+        inline bool operator() 
+          ( const LHCb::Track* trk1 , 
+            const LHCb::Track* trk2 ) const 
+        {
+          return 
+            trk1 == trk2 ? false :
+            0    == trk1 ? true  :
+            0    == trk2 ? false : compare ( trk1 , trk2 ) ;
+        }
+        // ====================================================================
+      private:
+        // ====================================================================
+        /// compare valid pointers 
+        bool compare
+        ( const LHCb::Track* trk1 , 
+          const LHCb::Track* trk2 ) const ;
+        // ====================================================================
+      };
       // ======================================================================
     } // end of namespace LoKi::Hlt1::Utils
     // ========================================================================

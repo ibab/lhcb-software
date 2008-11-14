@@ -1,4 +1,4 @@
-// $Id: UpgradeTool.cpp,v 1.1 2008-11-13 22:11:03 ibelyaev Exp $
+// $Id: UpgradeTool.cpp,v 1.2 2008-11-14 12:56:03 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -195,7 +195,7 @@ StatusCode LoKi::Hlt1::UpgradeTool::upgrade
   
   // get or create the output
   TRACKS* otracks = 0 ;
-  if ( owner() ) { otracks = m_alg->getOrCreate<TRACKS,TRACKS> ( address() ) ; }
+  if ( owner() ) { otracks = alg()->getOrCreate<TRACKS,TRACKS> ( address() ) ; }
   
   // ==========================================================================
   // loop over input tracks, upgrade track-by-track 
@@ -236,7 +236,7 @@ StatusCode LoKi::Hlt1::UpgradeTool::upgrade
   typedef std::vector<LHCb::Track*> OUTPUT ;
   // get or create the output
   TRACKS* otracks = 0 ;
-  if ( owner() ) { otracks = m_alg->getOrCreate<TRACKS,TRACKS> ( address() ) ; }
+  if ( owner() ) { otracks = alg()->getOrCreate<TRACKS,TRACKS> ( address() ) ; }
   
   StatusCode sc = iupgrade ( itrack , output , otracks ) ;
   if ( sc.isFailure() ) { return Error ( "upgrade: error from iupgrade" , sc ) ; }
