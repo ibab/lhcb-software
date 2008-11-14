@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   24/10/2008
 
-__version__ = "$Id: Configuration.py,v 1.1.1.1 2008-10-24 13:03:32 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.2 2008-11-14 16:29:24 cattanem Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -25,12 +25,12 @@ class RichDigiSysConf(LHCbConfigurableUser):
 
     ## Steering options
     __slots__ = {
-        "useSpillover"         : True
-       ,"useLHCBackground"     : False
-       ,"chargeShareFraction"  : 0.025
-       ,"hpdResponseModel"     : "Detailed"
-       ,"chargeShareModel"     : "Simple"
-       ,"rawDataFormatVersion" : 129
+        "UseSpillover"         : True
+       ,"UseLHCBackground"     : False
+       ,"ChargeShareFraction"  : 0.025
+       ,"HpdResponseModel"     : "Detailed"
+       ,"ChargeShareModel"     : "Simple"
+       ,"RawDataFormatVersion" : 129
         }
 
     ## @brief Apply the configuration to the given GaudiSequencer
@@ -39,15 +39,15 @@ class RichDigiSysConf(LHCbConfigurableUser):
 
         # Process the raw hit signals.
         pdSignals = Rich__MC__Digi__Signal("RichPDSignal")
-        pdSignals.UseSpillover     = self.getProp("useSpillover")
-        pdSignals.UseLHCBackground = self.getProp("useLHCBackground")
+        pdSignals.UseSpillover     = self.getProp("UseSpillover")
+        pdSignals.UseLHCBackground = self.getProp("UseLHCBackground")
         sequence.Members += [pdSignals]
 
         # Charge Sharing
-        chargeShareModel = self.getProp("chargeShareModel")
+        chargeShareModel = self.getProp("ChargeShareModel")
         if chargeShareModel == "Simple" :
             chargeShare = Rich__MC__Digi__SimpleChargeSharing("RichChargeShare")
-            chargeShare.ChargeShareFraction = self.getProp("chargeShareFraction")
+            chargeShare.ChargeShareFraction = self.getProp("ChargeShareFraction")
         else :
             raise RuntimeError("ERROR : Unknown HPD charge sharing model '%s'"%chargeShareModel)
         sequence.Members += [chargeShare]
@@ -56,7 +56,7 @@ class RichDigiSysConf(LHCbConfigurableUser):
         sequence.Members += [ Rich__MC__Digi__SummedDeposits("RichSummedDeposits") ]
 
         # HPD response
-        hpdModel = self.getProp("hpdResponseModel")
+        hpdModel = self.getProp("HpdResponseModel")
         if hpdModel == "Detailed" :
             response = Rich__MC__Digi__DetailedFrontEndResponse("RichPDResponse")
             response.TimeCalib = [ 10, 6 ]
@@ -68,6 +68,6 @@ class RichDigiSysConf(LHCbConfigurableUser):
 
         # Fill the Raw Event
         rawEvtFill = Rich__MC__Digi__MCRichDigitsToRawBufferAlg("RichFillRawBuffer")
-        rawEvtFill.DataVersion = self.getProp("rawDataFormatVersion")
+        rawEvtFill.DataVersion = self.getProp("RawDataFormatVersion")
         sequence.Members += [rawEvtFill]
 

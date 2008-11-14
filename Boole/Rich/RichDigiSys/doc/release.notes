@@ -1,8 +1,11 @@
 !-----------------------------------------------------------------------------
-! Package     : Boole_v16r3/Rich
+! Package     : Rich/RichDigiSys
 ! Responsible : Chris Jones
 ! Purpose     : Configure the RICH digitisation simulation
 !-----------------------------------------------------------------------------
+
+! 2008-11-14 - Marco Cattaneo
+ - Capitalize names of all RichDigiSys() options
 
 ! 2008-10-24 - Chris Jones
  - First version. RICH digitisation configuration, ported from job options
