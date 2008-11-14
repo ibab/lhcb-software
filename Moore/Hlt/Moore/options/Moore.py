@@ -10,15 +10,6 @@ from Gaudi.Configuration import *
 from Moore.Configuration import *
 
 
-#//---------------------------------------------------------------------------
-#// Histogram output
-#//---------------------------------------------------------------------------
-ApplicationMgr().HistogramPersistency = 'ROOT'
-#HistogramPersistencySvc().OutputFile = 'Moore_minbias.root'
-#---------------------------------------------------------------------------
-# Number of events to process, optionally skipping some events
-#---------------------------------------------------------------------------
-
 # if you want to generate a configuration, uncomment the following lines:
 #Moore().generateConfig = True
 #Moore().configLabel = 'NO prescale'
@@ -47,16 +38,13 @@ files = [ 'castor:/castor/cern.ch/user/s/snies/mdf/DC06_L0_v1_lumi2_MuonHadron_4
           'castor:/castor/cern.ch/user/s/snies/mdf/DC06_L0_v1_lumi2_MuonHadron_40000ev_2.mdf' ]
 
 
-
-extensions = { 'RAW' : "' SVC='LHCb::MDFSelector'",
-               'MDF' : "' SVC='LHCb::MDFSelector'",
-               'DST' : "' TYP='POOL_ROOTTREE' OPT='READ'" }
-EventSelector().Input = [ "DATAFILE='PFN:"+ f + extensions[ files[0][-3:].upper() ] for f in files ]
 EventSelector().PrintFreq = 100
 
+Moore().EvtMax = 10000
 Moore().DDDBtag   = tag
 Moore().condDBtag = tag
-Moore().EvtMax = 10000
+Moore().inputFiles = files
+# Moore().outputFile = '/tmp/foo.raw'
 
 # optionally, we can enable some auditors...
 # Moore().enableAuditor = [ NameAuditor() ]

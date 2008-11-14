@@ -1,7 +1,7 @@
 """
 High level configuration tools for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.34 2008-11-14 07:39:28 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.35 2008-11-14 11:00:41 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -10,21 +10,32 @@ from GaudiConf.Configuration import *
 from Configurables import ConfigFileAccessSvc, ConfigDBAccessSvc, HltConfigSvc, HltGenConfig
 from Configurables import EventClockSvc
 from Configurables import L0DUMultiConfigProvider
+from Configurables import LHCb__MDFWriter as MDFWriter
 from HltConf.Configuration import *
 
 import GaudiKernel.ProcessJobOptions
 from  ctypes import c_uint
 
+
+## HistogramPersistencySvc().OutputFile = 'Moore_minbias.root'
+##
+## ApplicationMgr.OutStream += { "LHCb::MDFWriter/Writer_2" };
+## Writer_2.Connection       = "file:///local_home/snies/DC06_L0_v1_lumi2.mdf";     // the mdf we want to create
+## Writer_2.Compress         = 0;
+## Writer_2.ChecksumType     = 1;
+## Writer_2.GenerateMD5      = true;
+
+
 class Moore(LHCbConfigurableUser):
     __slots__ = {
           "EvtMax":            -1    # Maximum number of events to process
         , "skipEvents":        0
-        , "DAQStudies":        False # use DAQ study version of options
         , "DDDBtag" :          '2008-default' # default for data, for DC06 use DC06-default
         , "condDBtag" :        '2008-default' # default for data, for DC06 use DC06-default
         , "useOracleCondDB":    False  # if False, use SQLDDDB instead
+        , "outputFile" :       '' # output filename
+        , "inputFiles" :       [ ] # input
         , "hltType" :          'Hlt1'
-        , "runTiming"  :       False # include additional timing information
         , "useTCK"     :       False # use TCK instead of options...
         , "prefetchTCK" :      [ ] # which TCKs to prefetch. Initial TCK used is first one...
         , "generateConfig" :   False # whether or not to generate a configuration
@@ -37,6 +48,26 @@ class Moore(LHCbConfigurableUser):
         , "verbose" :          True # whether or not to print Hlt sequence
         }   
                 
+
+    def configureInput(self):
+        files = self.getProp('inputFiles')
+        extensions = { 'RAW' : "' SVC='LHCb::MDFSelector'",
+                       'MDF' : "' SVC='LHCb::MDFSelector'",
+                       'DST' : "' TYP='POOL_ROOTTREE' OPT='READ'" }
+        EventSelector().Input = [ "DATAFILE='PFN:"+ f + extensions[ files[0][-3:].upper() ] for f in files ]
+
+    def configureOutput(self):
+        fname = self.getProp('outputFile')
+        if not fname  : return
+        if not fname.endswith('.raw') and not fname.endswith('.mdf') :
+            raise NameError('unsupported filetype "%s"'%fname)
+        writer = MDFWriter( 'MDFWriter'
+                          , Compress = 0
+                          , ChecksumType = 1
+                          , GenerateMD5 = True
+                          , Connection = 'file://' + self.getProp('outputFile')
+                          )
+        ApplicationMgr().OutStream.append( writer )
 
     def getRelease(self):
         import re,fileinput
@@ -83,6 +114,8 @@ class Moore(LHCbConfigurableUser):
         SequencerTimerTool().OutputLevel          = WARNING
         # Print algorithm name with 40 characters
         MessageSvc().Format = '% F%40W%S%7W%R%T %0W%M'
+        # Need a defined HistogramPersistency to read some calibration inputs!!!
+        ApplicationMgr().HistogramPersistency = 'ROOT'
         # Profiling
         ApplicationMgr().AuditAlgorithms = 1
         AuditorSvc().Auditors.append( 'TimingAuditor/TIMER' )
@@ -115,5 +148,7 @@ class Moore(LHCbConfigurableUser):
             ApplicationMgr().TopAlg = [ gen.getFullName() ] + ApplicationMgr().TopAlg
 
             
+        self.configureInput()
+        self.configureOutput()
         # Note: LHCbApp is defined in GaudiConf/python/GaudiConf/Configuration.py
         LHCbApp().applyConf()
