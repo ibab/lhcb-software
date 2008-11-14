@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: Configuration.py,v 1.14 2008-11-13 07:29:08 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.15 2008-11-14 16:30:01 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from os import environ
@@ -14,20 +14,20 @@ class LHCbApp(LHCbConfigurableUser):
         "EvtMax"     : -1
        ,"SkipEvents" : 0
        ,"DDDBtag"    : "2008-default"
-       ,"condDBtag"  : "2008-default"
+       ,"CondDBtag"  : "2008-default"
        ,"UseOracle"  : False
        ,"Simulation" : False
-       ,"monitors"   : []
+       ,"Monitors"   : []
         }
 
     _propertyDocDct = { 
         'EvtMax'     : """ Maximum number of events to process """
        ,'SkipEvents' : """ Number of events to skip """
        ,'DDDBtag'    : """ Tag to use for DDDB. Default '2008-default' """
-       ,'condDBtag'  : """ Tag to use for CondDB. Default '2008-default' """
+       ,'CondDBtag'  : """ Tag to use for CondDB. Default '2008-default' """
        ,'UseOracle'  : """ Flag to enable Oracle CondDB. Default False (use SQLDDDB) """
        ,'Simulation' : """ Flag to indicate usage of simulation conditions """
-       ,'monitors'   : """ List of monitors to execute """
+       ,'Monitors'   : """ List of monitors to execute """
        }
 
     __used_configurables__ = [ DDDBConf ]
@@ -39,7 +39,7 @@ class LHCbApp(LHCbConfigurableUser):
         DDDBConf().Simulation = self.getProp("Simulation")
         DDDBConf().UseOracle  = self.getProp("UseOracle")
 
-        condDBtag = self.getProp("condDBtag")
+        condDBtag = self.getProp("CondDBtag")
         DDDBtag   = self.getProp("DDDBtag")
 
         # If a default is requested, use it
@@ -88,12 +88,12 @@ class LHCbApp(LHCbConfigurableUser):
             return self.getProp("SkipEvents")
 
     def defineMonitors(self):
-        for prop in self.getProp("monitors"):
+        for prop in self.getProp("Monitors"):
             if prop not in self.knownMonitors():
                 raise RuntimeError("Unknown monitor '%s'"%prop)
-        if "SC" in self.getProp("monitors"):
+        if "SC" in self.getProp("Monitors"):
             ApplicationMgr().StatusCodeCheck = True
-        if "FPE" in self.getProp("monitors"):
+        if "FPE" in self.getProp("Monitors"):
             importOptions( "$STDOPTS/FPEAudit.opts" )
 
     def __apply_configuration__(self):
