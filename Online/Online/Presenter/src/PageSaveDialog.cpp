@@ -1,6 +1,7 @@
 #include <TSystem.h>
 #include <TGButton.h>
 #include <TGTextEntry.h>
+#include <TGTextEdit.h>
 #include <TGTextBuffer.h>
 #include <TGLabel.h>
 #include <TObject.h>
@@ -50,7 +51,7 @@ void PageSaveDialog::build()
   TGLabel *fLabel530 = new TGLabel(this,"Enter (new) or select the parent folder(s):");
   fLabel530->SetTextJustify(36);
   AddFrame(fLabel530, new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2, 2, 2));
-  fLabel530->MoveResize(16, 8, 192, 18);
+  fLabel530->MoveResize(16, 8, 250, 18);
 
   m_folderNameTextEntry = new TGTextEntry(this, new TGTextBuffer(15),-1,
                               kSunkenFrame | kDoubleBorder | kOwnBackground);
@@ -105,13 +106,34 @@ void PageSaveDialog::build()
   m_pageNameTextEntry->Connect("ReturnPressed()", "PageSaveDialog",
                                this, "setOkButton()");
 
+
+                               
+  TGLabel *pageDescriptionLabel = new TGLabel(this,"Page Description:");
+  pageDescriptionLabel->SetTextJustify(36);
+  AddFrame(pageDescriptionLabel,
+           new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2, 2, 2));
+  pageDescriptionLabel->MoveResize(16, 286, 100, 18);
+
+  m_pageDescriptionTextEditor = new TGTextEdit(this, 200, 100);
+//  m_pageDescriptionTextEditor->SetMaxLength(255);
+//  m_pageDescriptionTextEditor->SetAlignment(kTextLeft);
+//  m_pageDescriptionTextEditor->Resize(376, m_pageDescriptionTextEditor->GetDefaultHeight());
+  AddFrame(m_pageDescriptionTextEditor,
+           new TGLayoutHints(kLHintsLeft | kLHintsTop |
+                             kLHintsExpandX | kLHintsExpandY,
+                             2, 2, 2, 2));
+  m_pageDescriptionTextEditor->MoveResize(16, 310, 450, 130);
+                               
+                               
+                                                              
+
   m_okButton = new TGTextButton(this,"OK");
   m_okButton->SetTextJustify(36);
   m_okButton->Resize(80, 24);
   m_okButton->SetState(kButtonDisabled);
   AddFrame(m_okButton,
            new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2, 2, 2));
-  m_okButton->MoveResize(280, 288, 80, 24);
+  m_okButton->MoveResize(280, 488, 80, 24);
   m_okButton->Connect("Clicked()", "PageSaveDialog", this, "ok()");
 
   m_cancelButton = new TGTextButton(this,"Cancel");
@@ -119,14 +141,14 @@ void PageSaveDialog::build()
   m_cancelButton->Resize(80, 24);
   AddFrame(m_cancelButton,
            new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2, 2, 2));
-  m_cancelButton->MoveResize(376, 288, 80, 24);
+  m_cancelButton->MoveResize(376, 488, 80, 24);
   m_cancelButton->Connect("Clicked()", "PageSaveDialog",
                           this, "CloseWindow()");
 
   MapSubwindows();
   Resize(GetDefaultSize());
   MapWindow();
-  Resize(493, 339);
+  Resize(493, 539);
 }
 void PageSaveDialog::ok()
 {
@@ -138,6 +160,7 @@ void PageSaveDialog::ok()
     OnlineHistDB* m_histogramDB = m_mainFrame->histogramDB();
     std::string folderName = m_folderNameTextEntry->GetText();
     std::string pageName = m_pageNameTextEntry->GetText();
+    std::string pageDescription = ((dynamic_cast<TGTextView*>(m_pageDescriptionTextEditor)->GetText())->AsString()).Data();
 
     try {
       OnlineHistPage* page = m_histogramDB->getPage(s_slash+folderName+s_slash+pageName);
@@ -170,6 +193,7 @@ void PageSaveDialog::ok()
           m_DbHistosOnPageIt++;
         }
       }
+      page->setDoc(pageDescription);
       m_histogramDB->commit();
     } catch (std::string sqlException) {
       // TODO: add error logging backend - MsgStream?

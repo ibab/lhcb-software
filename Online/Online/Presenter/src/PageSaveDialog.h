@@ -11,6 +11,7 @@ class OnlineHistDB;
 class DbRootHist;
 class TGTextBuffer;
 class TGTextEntry;
+class TGTextEdit;
 
 class PageSaveDialog : public TGTransientFrame
 {
@@ -31,6 +32,7 @@ class PageSaveDialog : public TGTransientFrame
     TGTextButton*   m_cancelButton;
     TGTextEntry*    m_folderNameTextEntry;
     TGTextEntry*    m_pageNameTextEntry;
+    TGTextEdit*     m_pageDescriptionTextEditor;
     pres::MsgLevel  m_verbosity;
     int             m_msgBoxReturnCode;
 
