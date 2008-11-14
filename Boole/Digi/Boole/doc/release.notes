@@ -3,6 +3,10 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+! 2008-11-14 - Marco Cattaneo
+ - Capitalize all options names in Configurable
+ - Remove v200601.opts
+
 ! 2008-11-12 - Marco Cattaneo
  - Many changes to configurable, including changes to option names
  - Add Boole-DC06.py

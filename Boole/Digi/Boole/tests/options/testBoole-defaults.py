@@ -4,7 +4,7 @@ from Configurables import CondDBAccessSvc
 
 Boole().EvtMax   = 10
 Boole().Outputs  = ["DIGI","MDF","L0ETC"] # Test all output types
-Boole().monitors = ["SC","FPE"]           # Add StatusCode and FPE checks
+Boole().Monitors = ["SC","FPE"]           # Add StatusCode and FPE checks
 
 # Do not compare times....
 TimingAuditor().OutputLevel = WARNING 

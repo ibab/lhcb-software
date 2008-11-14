@@ -7,9 +7,9 @@
 
 from Boole.Configuration import *
 
-Boole().useSpillover = True
+Boole().UseSpillover = True
 Boole().DDDBtag      = "DC06-default"
-Boole().condDBtag    = "DC06-default"
+Boole().CondDBtag    = "DC06-default"
 
 ##############################################################################
 # I/O datasets are defined in a separate file, see examples in 2008-Files.py

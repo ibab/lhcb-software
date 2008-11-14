@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.24 2008-11-13 17:41:35 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.25 2008-11-14 16:28:33 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -13,52 +13,51 @@ class Boole(LHCbConfigurableUser):
         "EvtMax"         : -1
        ,"SkipEvents"     : 0
        ,"SkipSpill"      : 0
-       ,"useSpillover"   : False
-       ,"generateTAE"    : False
+       ,"UseSpillover"   : False
+       ,"GenerateTAE"    : False
        ,"Outputs"        : [ "DIGI" ]
-       ,"writeL0Only"    : False
-       ,"extendedDigi"   : False
+       ,"WriteL0Only"    : False
+       ,"ExtendedDigi"   : False
        ,"Histograms"     : "Default"
-       ,"mainOptions"    : '$BOOLEOPTS/Boole.opts'
-       ,"noWarnings"     : False
+       ,"MainOptions"    : '$BOOLEOPTS/Boole.opts'
+       ,"NoWarnings"     : False
        ,"DatasetName"    : ''
        ,"DDDBtag"        : "2008-default"
-       ,"condDBtag"      : "2008-default"
+       ,"CondDBtag"      : "2008-default"
        ,"UseOracle"      : False
-       ,"monitors"       : []
+       ,"Monitors"       : []
         }
 
     _propertyDocDct = { 
         'EvtMax'       : """ Maximum number of events to process """
        ,'SkipEvents'   : """ Number of events to skip """
        ,'SkipSpill'    : """ Number of spillover events to skip """
-       ,'useSpillover' : """ Flag to enable spillover (default True) """
-       ,'generateTAE'  : """ Flag to simulate time alignment events (default False) """
+       ,'UseSpillover' : """ Flag to enable spillover (default True) """
+       ,'GenerateTAE'  : """ Flag to simulate time alignment events (default False) """
        ,'Outputs'      : """ List of outputs: ['MDF','DIGI','L0ETC'] (default 'DIGI') """
-       ,'writeL0Only'  : """ Flag to write only L0 selected events (default False) """
-       ,'extendedDigi' : """ Flag to add MCHits to .digi output file (default False) """
+       ,'WriteL0Only'  : """ Flag to write only L0 selected events (default False) """
+       ,'ExtendedDigi' : """ Flag to add MCHits to .digi output file (default False) """
        ,'Histograms'   : """ Type of histograms: ['None','Default','Expert'] """
-       ,'mainOptions'  : """ Top level options to import. Default: $BOOLEOPTS/Boole.opts """
-       ,'noWarnings'   : """ Flag to suppress all MSG::WARNING or below (default False) """ 
+       ,'MainOptions'  : """ Top level options to import. Default: $BOOLEOPTS/Boole.opts """
+       ,'NoWarnings'   : """ Flag to suppress all MSG::WARNING or below (default False) """ 
        ,'DatasetName'  : """ String used to build output file names """
        ,'DDDBtag'      : """ Tag to use for DDDB. Default 'DC06-default' """
-       ,'condDBtag'    : """ Tag to use for CondDB. Default 'DC06-default' """
+       ,'CondDBtag'    : """ Tag to use for CondDB. Default 'DC06-default' """
        ,'UseOracle'    : """ Flag to enable Oracle CondDB. Default False (use SQLDDDB) """
-       ,'monitors'     : """ List of monitors to execute """
+       ,'Monitors'     : """ List of monitors to execute """
        }
     
     __used_configurables__ = [ LHCbApp ]
 
     def defineDB(self):
         # Delegate handling to LHCbApp configurable
-        self.setOtherProps(LHCbApp(),["condDBtag","DDDBtag","UseOracle"])
+        self.setOtherProps(LHCbApp(),["CondDBtag","DDDBtag","UseOracle"])
         LHCbApp().Simulation = True
 
         # Special options for DC06 data processing
         if LHCbApp().getProp("DDDBtag").find("DC06") != -1 :
             from Configurables import (MCSTDepositCreator, MuonDigitToRawBuffer)
 
-            ApplicationMgr().Dlls += [ "HepMCBack" ]
             MCSTDepositCreator("MCITDepositCreator").DepChargeTool = "SiDepositedCharge"
             MCSTDepositCreator("MCTTDepositCreator").DepChargeTool = "SiDepositedCharge"
             MuonDigitToRawBuffer().VType = 1 # DC06 RawBank type
@@ -77,8 +76,8 @@ class Boole(LHCbConfigurableUser):
         importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
 
     def defineOptions(self):
-        tae   = self.getProp("generateTAE")
-        spill = self.getProp("useSpillover")
+        tae   = self.getProp("GenerateTAE")
+        spill = self.getProp("UseSpillover")
         if tae       : self.enableTAE()
         if not spill : self.disableSpillover()
 
@@ -93,9 +92,8 @@ class Boole(LHCbConfigurableUser):
 
     def disableSpillover(self):
         """
-        Switch to disable spillover. Spillover is on by default
+        Switch to disable spillover.
         """
-        print "# WARNING: Spillover is disabled"
         initDataSeq = GaudiSequencer( "InitDataSeq" )
         initDataSeq.Members.remove( "MergeEventAlg/SpilloverAlg" )
         from Configurables import ( MuonBackground, MuonDigitization )
@@ -104,20 +102,20 @@ class Boole(LHCbConfigurableUser):
 
     def defineMonitors(self):
         # get all defined monitors
-        monitors = self.getProp("monitors") + LHCbApp().getProp("monitors")
-        # pass to LHCbApp any monitors not dealt with here
-        LHCbApp().setProp("monitors", monitors)
+        monitors = self.getProp("Monitors") + LHCbApp().getProp("Monitors")
+        # Currently no Boole specific monitors, so pass them all to LHCbApp
+        LHCbApp().setProp("Monitors", monitors)
 
     def defineHistos(self):
         """
         Define histograms to save according to Boole.Histograms option
         """
-        knownOptions = ["None","Default","Expert"]
+        knownOptions = ["","None","Default","Expert"]
         histOpt = self.getProp("Histograms").capitalize()
         if histOpt not in knownOptions:
             raise RuntimeError("Unknown Histograms option '%s'"%histOpt)
 
-        if histOpt == "None":
+        if histOpt == "None" or histOpt == "":
             # HistogramPersistency still needed to read in Muon background.
             # so do not set ApplicationMgr().HistogramPersistency = "NONE"
             return
@@ -129,7 +127,7 @@ class Boole(LHCbConfigurableUser):
         if not hasattr( HistogramPersistencySvc(), "OutputFile" ):
             histosName   = self.getProp("DatasetName")
             if (self.evtMax() > 0): histosName += '-' + str(self.evtMax()) + 'ev'
-            generateTAE  = self.getProp("generateTAE")
+            generateTAE  = self.getProp("GenerateTAE")
             if ( generateTAE )  : histosName += '-TAE'
             if histOpt == "Expert": histosName += '-expert'
             histosName += '-histos.root'
@@ -147,12 +145,12 @@ class Boole(LHCbConfigurableUser):
                 raise RuntimeError("Unknown Boole().Outputs value '%s'"%option)
             outputs.append( option.upper() )
 
-        l0yes = self.getProp( "writeL0Only" )
+        l0yes = self.getProp( "WriteL0Only" )
 
         if "DIGI" in outputs:
             # Objects to be written to output file
             importOptions("$STDOPTS/DigiContent.opts")
-            extended = self.getProp("extendedDigi")
+            extended = self.getProp("ExtendedDigi")
             if ( extended ): importOptions( "$STDOPTS/ExtendedDigi.opts" )
 
             MyWriter = OutputStream( "DigiWriter" )
@@ -178,7 +176,7 @@ class Boole(LHCbConfigurableUser):
             if l0yes : MyWriter.RequireAlgs.append( "L0Filter" )
             # ApplicationMgr().OutStream.append( "RawWriter" ) # Already in RawWriter.opts
 
-        nowarn = self.getProp( "noWarnings" )
+        nowarn = self.getProp( "NoWarnings" )
         if nowarn: importOptions( "$BOOLEOPTS/SuppressWarnings.opts" )
 
     def outputName(self):
@@ -187,11 +185,11 @@ class Boole(LHCbConfigurableUser):
         """
         outputName = self.getProp("DatasetName")
         if ( self.evtMax() > 0 ): outputName += '-' + str(self.evtMax()) + 'ev'
-        generateTAE  = self.getProp("generateTAE")
+        generateTAE  = self.getProp("GenerateTAE")
         if ( generateTAE )  : outputName += '-TAE'
-        l0yes = self.getProp( "writeL0Only" )
+        l0yes = self.getProp( "WriteL0Only" )
         if ( l0yes ) : outputName += '-L0Yes'
-        extended = self.getProp("extendedDigi")
+        extended = self.getProp("ExtendedDigi")
         if ( extended ): outputName += '-extended'
         return outputName
 
@@ -201,11 +199,11 @@ class Boole(LHCbConfigurableUser):
     def __apply_configuration__(self):
         log.info( self )
         GaudiKernel.ProcessJobOptions.PrintOff()
-        importOptions( self.getProp( "mainOptions" ) )
+        importOptions( self.getProp( "MainOptions" ) )
         
         # CRJ : Rich Digitisation now in python configurables
         from RichDigiSys.Configuration import RichDigiSysConf
-        self.setOtherProp(RichDigiSysConf(),"useSpillover")
+        self.setOtherProp(RichDigiSysConf(),"UseSpillover")
         RichDigiSysConf().applyConf(GaudiSequencer("DigiRICHSeq"))
         
         self.defineDB()

@@ -7,12 +7,8 @@
 
 from Boole.Configuration import *
 
-Boole().useSpillover = False
-Boole().writeRawMDF  = True
-Boole().writeDigi    = False
-Boole().noWarnings   = True
-Boole().DDDBtag      = "2008-default"
-Boole().condDBtag    = "2008-default"
+Boole().Outputs    = ["MDF"]
+Boole().NoWarnings = True
 
 ##############################################################################
 # I/O datasets are defined in a separate file, see examples in 2008-Files.py
