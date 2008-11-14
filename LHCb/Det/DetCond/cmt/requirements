@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.94 2008-10-31 09:19:12 cattanem Exp $
+# $Id: requirements,v 1.95 2008-11-14 13:33:41 cattanem Exp $
 # =============================================================================
 package       DetCond
 version       v12r4
@@ -43,6 +43,8 @@ library       DetCond           component/*.cpp ../tests/src/*.cpp
 apply_pattern component_library library=DetCond 
 apply_pattern linker_library    library=DetCondLib 
 
+# DetCond Configurable uses the generated configurables 
+macro_append DetCondGenConfUser_dependencies DetCondConf
 apply_pattern install_python_modules
 
 # ==============================================================================

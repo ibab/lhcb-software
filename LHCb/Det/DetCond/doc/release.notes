@@ -1,9 +1,13 @@
-# $Id: release.notes,v 1.154 2008-11-10 10:54:36 marcocle Exp $
+# $Id: release.notes,v 1.155 2008-11-14 13:33:41 cattanem Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+! 2008-11-14 - Marco Cattaneo
+ - In Configurable, set up VFSSvc, e.g. for use by ParticlePropertySvc
+ - Fix dependencies to avoid warnings when making configurables database 
 
 ! 2008-11-11 - Marco Clemencic
  - Fixed configuration problems in the test after the changes in DDDB.
