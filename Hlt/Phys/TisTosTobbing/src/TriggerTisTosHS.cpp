@@ -1,4 +1,4 @@
-// $Id: TriggerTisTos.cpp,v 1.9 2008-11-14 06:55:39 tskwarni Exp $
+// $Id: TriggerTisTosHS.cpp,v 1.1 2008-11-14 06:55:39 tskwarni Exp $
 // Include files 
 #include <algorithm>
 
@@ -6,32 +6,33 @@
 #include "GaudiKernel/ToolFactory.h" 
 
 // local
-#include "TriggerTisTos.h"
+#include "TriggerTisTosHS.h"
 
 #include "HltBase/HltUtils.h"
+#include "Event/HltSummary.h"
 #include "Event/Particle.h"
 
 
 using namespace LHCb;
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : TriggerTisTos
+// Implementation file for class : TriggerTisTosHS
 //
 // 2007-08-20 : Tomasz Skwarnicki
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TriggerTisTos );
+DECLARE_TOOL_FACTORY( TriggerTisTosHS );
 
-const std::vector< std::string > TriggerTisTos::m_empty_selections = std::vector< std::string >();
+const std::vector< std::string > TriggerTisTosHS::m_empty_selections = std::vector< std::string >();
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TriggerTisTos::TriggerTisTos( const std::string& type,
+TriggerTisTosHS::TriggerTisTosHS( const std::string& type,
                               const std::string& name,
                               const IInterface* parent )
-  : TriggerSelectionTisTos ( type, name , parent )
+  : TriggerSelectionTisTosHS ( type, name , parent )
 {
   declareInterface<ITriggerTisTos>(this);
 
@@ -40,13 +41,13 @@ TriggerTisTos::TriggerTisTos( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-TriggerTisTos::~TriggerTisTos() {} 
+TriggerTisTosHS::~TriggerTisTosHS() {} 
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode TriggerTisTos::initialize() {
-  StatusCode sc = TriggerSelectionTisTos::initialize(); // must be executed first
+StatusCode TriggerTisTosHS::initialize() {
+  StatusCode sc = TriggerSelectionTisTosHS::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   debug() << "==> Initialize" << endmsg;
@@ -55,21 +56,15 @@ StatusCode TriggerTisTos::initialize() {
 
   setOfflineInput();
   setTriggerInput();
-  
+ 
   return StatusCode::SUCCESS;
 }
 
 //=============================================================================
 
 
-void TriggerTisTos::getTriggerNames()
+void TriggerTisTosHS::getTriggerNames()
 {
-  // this needs to be implemented better, in particular we need to check if TCK has changed
-  if( m_newEvent ){
-    m_triggerNames.clear(); 
-    m_newEvent = false;
-  }
-
   // done before ?
   if( m_triggerNames.size() !=0 ){ return; }
 
@@ -98,13 +93,17 @@ void TriggerTisTos::getTriggerNames()
   }
   
 }
+void TriggerTisTosHS::refreshTriggerStructure()
+{
+  m_triggerNames.clear();  
+}
 
-void TriggerTisTos::setTriggerInput()
+void TriggerTisTosHS::setTriggerInput()
 {
   m_triggerInput_Selections.clear();
 }
 
-void TriggerTisTos::addToTriggerInput( const std::string & selectionNameWithWildChar)
+void TriggerTisTosHS::addToTriggerInput( const std::string & selectionNameWithWildChar)
 {
   unsigned int sizeAtEntrance( m_triggerInput_Selections.size() );
   getTriggerNames();
@@ -124,9 +123,9 @@ void TriggerTisTos::addToTriggerInput( const std::string & selectionNameWithWild
   }
 }
  
-std::vector< std::string > TriggerTisTos::triggerSelectionNames(unsigned int decisionRequirement,
-                                                                  unsigned int tisRequirement,
-                                                                  unsigned int tosRequirement )
+std::vector< std::string > TriggerTisTosHS::triggerSelectionNames(unsigned int decisionRequirement,
+                                                                unsigned int tisRequirement,
+                                                                unsigned int tosRequirement )
 { 
   if( (decisionRequirement>=kAnything) && ( tisRequirement>=kAnything) && ( tosRequirement>=kAnything) )
   {
@@ -146,8 +145,7 @@ std::vector< std::string > TriggerTisTos::triggerSelectionNames(unsigned int dec
   return selections;  
 }
 
-
-void TriggerTisTos::triggerTisTos( bool & decision, bool & tis, bool & tos)
+void TriggerTisTosHS::triggerTisTos( bool & decision, bool & tis, bool & tos)
 {
   decision = false; tis=false; tos=false;
   if( m_triggerInput_Selections.size()==0 ){
@@ -165,8 +163,8 @@ void TriggerTisTos::triggerTisTos( bool & decision, bool & tis, bool & tos)
   }
 }
 
-std::vector<const LHCb::HltObjectSummary*> TriggerTisTos::hltObjectSummaries( unsigned int tisRequirement,
-                                                                              unsigned int tosRequirement)
+std::vector<const LHCb::HltObjectSummary*> TriggerTisTosHS::hltObjectSummaries( unsigned int tisRequirement,
+                                                                                unsigned int tosRequirement)
 {
   std::vector<const LHCb::HltObjectSummary*> hosVec;  
   if( m_triggerInput_Selections.size()==0 ){
@@ -181,5 +179,3 @@ std::vector<const LHCb::HltObjectSummary*> TriggerTisTos::hltObjectSummaries( un
   }
   return hosVec;
 }
-
-  

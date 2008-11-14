@@ -1,6 +1,6 @@
-// $Id: TriggerSelectionTisTos.h,v 1.10 2008-11-14 06:55:39 tskwarni Exp $
-#ifndef TRIGGERSELECTIONTISTOS_H 
-#define TRIGGERSELECTIONTISTOS_H 1
+// $Id: TriggerSelectionTisTosHS.h,v 1.1 2008-11-14 06:55:39 tskwarni Exp $
+#ifndef TRIGGERSELECTIONTISTOSHS_H 
+#define TRIGGERSELECTIONTISTOSHS_H 1
 
 // Include files
 // from Gaudi
@@ -10,17 +10,12 @@
 #include "CaloInterfaces/ITrack2Calo.h"
 #include "HltBase/IHltDataSvc.h"
 #include "Event/Track.h"
-#include "Event/HltObjectSummary.h"
-
-#include "GaudiKernel/IIncidentListener.h"
-
 
 namespace LHCb {
-  class HltDecReports;
-  class HltSelReports;
+  class HltSummary;
 };
   
-/** @class TriggerSelectionTisTos TriggerSelectionTisTos.h
+/** @class TriggerSelectionTisTosHS TriggerSelectionTisTosHS.h
  *  
  *  @author Tomasz Skwarnicki
  *  @date   2007-08-06
@@ -29,9 +24,7 @@ namespace LHCb {
  *  @sa  ITriggerSelectionTisTos docs for more explanation.
  *  This interface also defines inlined shortcuts to set Offline Input and get an output in one call. 
  */
-class TriggerSelectionTisTos : public GaudiTool, 
-                               virtual public IIncidentListener, 
-                               virtual public ITriggerSelectionTisTos {
+class TriggerSelectionTisTosHS : public GaudiTool, virtual public ITriggerSelectionTisTos {
 public: 
 
   /// hits are split into @c HitType categories for matching in each category 
@@ -42,15 +35,14 @@ public:
 
 
   /// Standard constructor
-  TriggerSelectionTisTos( const std::string& type, 
-                          const std::string& name,
-                          const IInterface* parent);
+  TriggerSelectionTisTosHS( const std::string& type, 
+                            const std::string& name,
+                            const IInterface* parent);
 
-  virtual ~TriggerSelectionTisTos( ); ///< Destructor
+  virtual ~TriggerSelectionTisTosHS( ); ///< Destructor
 
 
   virtual StatusCode         initialize();
-  virtual void handle(const Incident&);
   
   // ------------  various ways to define off-line input -------------------------
 
@@ -99,11 +91,19 @@ public:
   /// list of LHCbIDs corresponding to present Offline Input (only hits used in matching are returned)
   std::vector<LHCb::LHCbID> offlineLHCbIDs(); 
 
-
-  /// list of HltObjectSummaries from Selection Summary satisfying TOS,TIS requirements (define Offline Input before calling)
+   /// list of HltObjectSummaries from Selection Summary satisfying TOS,TIS requirements (define Offline Input before calling)
   std::vector<const LHCb::HltObjectSummary*> hltSelectionObjectSummaries( const std::string & selectionName,
                                                                           unsigned int tisRequirement      = kAnything,
                                                                           unsigned int tosRequirement      = kAnything );
+  
+
+ /// list of tracks from Selection Summary (none if mismatch) satisfying TOS (define Offline Input before calling)
+  std::vector<const LHCb::Track*>     matchedTOSTracks( const std::string & selectionName );
+  /// list of vertices from Selection Summary (none if mismatch) satisfying TOS (define Offline Input before calling)
+  std::vector<const LHCb::RecVertex*> matchedTOSVertices( const std::string & selectionName );
+  /// list of particles from Selection Summary (none if mismatch) satisfying TOS (define Offline Input before calling)
+  std::vector<const LHCb::Particle*>  matchedTOSParticles( const std::string & selectionName );
+
 
   // --------------------- utilities ------------------------
 
@@ -118,28 +118,37 @@ public:
    */ 
 
   /// calculate hit overlap between the (trigger) @c Track and set of @c ClasssifiedHits (Offline Input) for each @c HitType
-  static void matchIDs(const std::vector< LHCb::LHCbID > & ids,
+  static void matchIDs(const LHCb::Track & track, 
                        const ClassifiedHits offidlist[],
                        double overlap[] );
     
+  /// return TIS,TOS for a vector of (trigger) Tracks with respect to a set of @c ClasssifiedHits (here from Offline Input)
+  void trackListTISTOS(const std::vector<LHCb::Track*> & ontracks,
+                       const ClassifiedHits offidlist[],
+                       bool& TIS,bool& TOS) const;
 
- /// return TIS,TOS for a HltObjectSummary with respect to a set of @c ClasssifiedHits (here from Offline Input)
-  void hosTISTOS(const LHCb::HltObjectSummary & hos,
-                 const ClassifiedHits offidlist[],
-                 bool& TIS,bool& TOS) const;
+  /// return TIS,TOS for a vector of (trigger) Vertices with respect to a set of @c ClasssifiedHits (here from Offline Input)
+  void vertexListTISTOS(const std::vector<LHCb::RecVertex*> & onvertices,
+                        const ClassifiedHits offidlist[],
+                        bool& TIS,bool& TOS) const;
 
+  /// return TIS,TOS for a vector of (trigger) Particles with respect to a set of @c ClasssifiedHits (here from Offline Input)
+  void particleListTISTOS(const SmartRefVector<LHCb::Particle> & onparticles,
+                          const ClassifiedHits offidlist[],
+                          bool& TIS,bool& TOS);
+
+  /// for given particle returns descendent daughters (of any generation) which have no daughters themselves 
+  static std::vector<const LHCb::Particle*> finalStateParticles(const LHCb::Particle* particle);
 
 protected:
 
   /// get Hlt Summary and configuration
   void getHltSummary();
   
-  /// Hlt summary reports
-  LHCb::HltDecReports* m_hltDecReports;
-  LHCb::HltSelReports* m_hltSelReports;
-  
-  
-  bool m_newEvent;
+  /// Hlt summary 
+  LHCb::HltSummary* m_summary;
+  /// Hlt configuration
+  Hlt::Configuration* m_hltconf;
 
 private:
 
@@ -191,17 +200,17 @@ private:
   DeCalorimeter* m_ecalDeCal;
 
   /// Location of Muon Tracks holding muon hits for protoparticles
-  StringProperty m_MuonTracksLocation;
+  std::string m_MuonTracksLocation;
+  std::string m_HltMuonTracksLocation;
   /// Extracted muon track container 
   LHCb::Tracks* m_muonTracks;
+  LHCb::Tracks* m_HLTmuonTracks;
   /// flag to disable muon hits if muon tracks cannot be found
   bool m_muonsOff;  
   
   /// Location of Hlt Summary
-  StringProperty m_HltSelReportsLocation;
-  StringProperty m_HltDecReportsLocation;
+  std::string m_HltSummaryLocation;
 
-  
   // Cache of results for the same Offline Input
   std::vector< std::string > m_cached_SelectionNames;
   std::vector< bool >        m_cached_decision;
@@ -210,4 +219,4 @@ private:
   
 
 };
-#endif // TRIGGERSELECTIONTISTOS_H
+#endif // TRIGGERSELECTIONTISTOSHS_H

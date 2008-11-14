@@ -1,8 +1,15 @@
-! $Id: release.notes,v 1.30 2008-10-30 21:53:16 tskwarni Exp $
+! $Id: release.notes,v 1.31 2008-11-14 06:55:39 tskwarni Exp $
 ! Package     : TisTosTobbing
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
+
+! 2008-11-13 - Tomasz Skwarnicki
+ - Major change: switch code to use HltSelReports instead of HltSummary
+   old HltSummary-based tool renamed to TriggerTisTosHS
+ - Major change: adopt to new tool interface (changes in user code required)
+ - new functionality via hltObjectSummaries method
+ - use BeginEvent lisener 	
 
 !========================== TisTosTobbing v2r8 2008-10-30 ===================
 
