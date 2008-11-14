@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.7 2008-10-29 13:55:04 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.8 2008-11-14 17:12:44 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -27,7 +27,7 @@ class RichConfigurableUser(LHCbConfigurableUser):
     ## @brief Returns the Rich Tool registry configuration object for the current context
     #  @return The tool registry configuration object
     def toolRegistry(self):
-        context = self.getProp("context")
+        context = self.getProp("Context")
         reg = Rich__ToolRegistry(context+"_RichToolRegistry")
         reg.Context = context
         return reg
@@ -63,7 +63,7 @@ class RichConfigurableUser(LHCbConfigurableUser):
             value = getattr(self,option)
             foundValue = value != None
         if False == foundValue:
-            key = LHCbConfigurableUser.getProp(self,"context")+":"+option
+            key = LHCbConfigurableUser.getProp(self,"Context")+":"+option
             if self._context_defaults_.has_key(key) :
                 value = self._context_defaults_[key]
             else:
@@ -84,32 +84,32 @@ class RichTools(RichConfigurableUser):
 
     ## The default settings
     __slots__ = {
-        "context"              : "Offline",
-        "pixelCreatorType"     : None,  
-        "photonCreatorType"    : None,
-        "photonRecoType"       : None,
-        "photonPredictorType"  : None,
-        "trackCreatorType"     : None,
-        "trackSelectorType"    : None,
-        "trSegMakerType"       : None,
-        "geomEffType"          : None,
-        "ckResType"            : None,
-        "signalDetEffType"     : None
+        "Context"              : "Offline",
+        "PixelCreatorType"     : None,  
+        "PhotonCreatorType"    : None,
+        "PhotonRecoType"       : None,
+        "PhotonPredictorType"  : None,
+        "TrackCreatorType"     : None,
+        "TrackSelectorType"    : None,
+        "TrSegMakerType"       : None,
+        "GeomEffType"          : None,
+        "CkResType"            : None,
+        "SignalDetEffType"     : None
         }
 
-    ## Initialise 
-    def initialise(self):
+    ## Initialize 
+    def initialize(self):
         # default values
-        self.setRichDefaults( "pixelCreatorType",    { "Offline" : "RawBuffer",    "HLT" : "RawBuffer"   } )
-        self.setRichDefaults( "photonCreatorType",   { "Offline" : "RecoPhotons",  "HLT" : "RecoPhotons" } )
-        self.setRichDefaults( "photonRecoType",      { "Offline" : "Quartic",      "HLT" : "EstiFromRadius" } )
-        self.setRichDefaults( "photonPredictorType", { "Offline" : "CKthetaBands", "HLT" : "CKthetaBands" } )
-        self.setRichDefaults( "trackCreatorType",    { "Offline" : "RecoTracks",   "HLT" : "RecoTracks" } )
-        self.setRichDefaults( "trackSelectorType",   { "Offline" : "Reco",         "HLT" : "Reco" } )
-        self.setRichDefaults( "trSegMakerType",      { "Offline" : "Detailed",     "HLT" : "Detailed" } )
-        self.setRichDefaults( "geomEffType",         { "Offline" : "CKMassRing",   "HLT" : "CKMassRing" } )
-        self.setRichDefaults( "ckResType",           { "Offline" : "Binned",       "HLT" : "Binned" } )
-        self.setRichDefaults( "signalDetEffType",    { "Offline" : "Tabulated",    "HLT" : "NominalTabulated" } )
+        self.setRichDefaults( "PixelCreatorType",    { "Offline" : "RawBuffer",    "HLT" : "RawBuffer"   } )
+        self.setRichDefaults( "PhotonCreatorType",   { "Offline" : "RecoPhotons",  "HLT" : "RecoPhotons" } )
+        self.setRichDefaults( "PhotonRecoType",      { "Offline" : "Quartic",      "HLT" : "EstiFromRadius" } )
+        self.setRichDefaults( "PhotonPredictorType", { "Offline" : "CKthetaBands", "HLT" : "CKthetaBands" } )
+        self.setRichDefaults( "TrackCreatorType",    { "Offline" : "RecoTracks",   "HLT" : "RecoTracks" } )
+        self.setRichDefaults( "TrackSelectorType",   { "Offline" : "Reco",         "HLT" : "Reco" } )
+        self.setRichDefaults( "TrSegMakerType",      { "Offline" : "Detailed",     "HLT" : "Detailed" } )
+        self.setRichDefaults( "GeomEffType",         { "Offline" : "CKMassRing",   "HLT" : "CKMassRing" } )
+        self.setRichDefaults( "CkResType",           { "Offline" : "Binned",       "HLT" : "Binned" } )
+        self.setRichDefaults( "SignalDetEffType",    { "Offline" : "Tabulated",    "HLT" : "NominalTabulated" } )
 
     ## @brief Make an instance of the given configurable and configure this
     #         tool in the RichToolRegistry
@@ -121,7 +121,7 @@ class RichTools(RichConfigurableUser):
         if private:
             tool = tooltype(nickname)
         else:
-            context = self.getProp("context")
+            context = self.getProp("Context")
             tool = tooltype("ToolSvc."+context+"_"+nickname)
         self.toolRegistry().Tools += [tool.getType()+"/"+nickname]
         #print "RICH tool", tool.getType(), tool.name()
@@ -131,7 +131,7 @@ class RichTools(RichConfigurableUser):
     #  @param nickname The tool nickname
     #  @return The tool configurable
     def sigDetEff(self,nickname="RichSignalDetectionEff",private=False):
-        type = self.getProp("signalDetEffType")
+        type = self.getProp("SignalDetEffType")
         if type == "Tabulated" :
             from Configurables import Rich__Rec__TabulatedSignalDetectionEff
             tool = self.__makeRichTool( Rich__Rec__TabulatedSignalDetectionEff, nickname, private )
@@ -146,7 +146,7 @@ class RichTools(RichConfigurableUser):
     #  @param nickname The tool nickname
     #  @return The tool configurable
     def ckResolution(self,nickname="RichCherenkovResolution",private=False):
-        type = self.getProp("ckResType")
+        type = self.getProp("CkResType")
         if type == "Binned" :
             from Configurables import Rich__Rec__BinnedCKResVthetaForRecoTracks
             tool = self.__makeRichTool( Rich__Rec__BinnedCKResVthetaForRecoTracks, nickname, private )
@@ -164,7 +164,7 @@ class RichTools(RichConfigurableUser):
     #  @param nickname The tool nickname
     #  @return The tool configurable      
     def geomEff(self,nickname="RichGeomEff",private=False):
-        type = self.getProp("geomEffType")
+        type = self.getProp("GeomEffType")
         if type == "CKMassRing":
             from Configurables import Rich__Rec__GeomEffCKMassRing
             tool = self.__makeRichTool( Rich__Rec__GeomEffCKMassRing, nickname, private )
@@ -182,7 +182,7 @@ class RichTools(RichConfigurableUser):
     #  @param nickname The tool nickname
     #  @return The tool configurable
     def trSegMaker(self,nickname="TrSegMaker",private=True):
-        type = self.getProp("trSegMakerType")
+        type = self.getProp("TrSegMakerType")
         if type == "Detailed":
             from Configurables import Rich__Rec__DetailedTrSegMakerFromRecoTracks
             tool = self.__makeRichTool( Rich__Rec__DetailedTrSegMakerFromRecoTracks, nickname, private )
@@ -200,7 +200,7 @@ class RichTools(RichConfigurableUser):
     #  @param nickname The tool nickname
     #  @return The tool configurable  
     def trackSelector(self,nickname="TrackSelector",private=False):
-        selType = self.getProp("trackSelectorType")
+        selType = self.getProp("TrackSelectorType")
         if selType == "Reco":
             from Configurables import Rich__Rec__TrackSelector
             tool = self.__makeRichTool( Rich__Rec__TrackSelector, nickname, private )
@@ -215,7 +215,7 @@ class RichTools(RichConfigurableUser):
     #  @param nickname The tool nickname
     #  @return The tool configurable
     def trackCreator(self,nickname="RichTrackCreator",private=False):
-        trackType = self.getProp("trackCreatorType")
+        trackType = self.getProp("TrackCreatorType")
         if trackType == "RecoTracks" :
             from Configurables import Rich__Rec__TrackCreatorFromRecoTracks
             tool = self.__makeRichTool( Rich__Rec__TrackCreatorFromRecoTracks, nickname, private )
@@ -232,7 +232,7 @@ class RichTools(RichConfigurableUser):
     #  @param nickname The tool nickname
     #  @return The tool configurable
     def photonPredictor(self,nickname="RichPhotonPredictor",private=False):
-        predType = self.getProp("photonPredictorType")
+        predType = self.getProp("PhotonPredictorType")
         if predType == "CKthetaBands" :
             from Configurables import Rich__Rec__CKthetaBandsPhotonPredictor
             tool = self.__makeRichTool( Rich__Rec__CKthetaBandsPhotonPredictor, nickname, private )
@@ -252,7 +252,7 @@ class RichTools(RichConfigurableUser):
     #  @param nickname The tool nickname
     #  @return The tool configurable
     def pixelCreator(self,nickname="RichPixelCreator",private=False):
-        pixtype = self.getProp("pixelCreatorType")
+        pixtype = self.getProp("PixelCreatorType")
         if pixtype == "RawBuffer":
             from Configurables import Rich__Rec__PixelCreatorFromRawBuffer
             tool = self.__makeRichTool( Rich__Rec__PixelCreatorFromRawBuffer, nickname, private )
@@ -273,7 +273,7 @@ class RichTools(RichConfigurableUser):
     #  @param nickname The tool nickname
     #  @return The tool configurable
     def photonCreator(self,nickname="RichPhotonCreator",private=False):
-        phottype = self.getProp("photonCreatorType")
+        phottype = self.getProp("PhotonCreatorType")
         if phottype == "RecoPhotons" :
             from Configurables import Rich__Rec__PhotonCreator 
             tool = self.__makeRichTool( Rich__Rec__PhotonCreator, nickname, private )
@@ -285,7 +285,7 @@ class RichTools(RichConfigurableUser):
     #  @param nickname The tool nickname
     #  @return The tool configurable
     def photonReco(self,nickname="PhotonParams",private=True):
-        recoType = self.getProp("photonRecoType")
+        recoType = self.getProp("PhotonRecoType")
         if recoType == "Quartic" :
             from Configurables import Rich__Rec__PhotonRecoUsingQuarticSoln
             tool = self.__makeRichTool( Rich__Rec__PhotonRecoUsingQuarticSoln, nickname, private )
