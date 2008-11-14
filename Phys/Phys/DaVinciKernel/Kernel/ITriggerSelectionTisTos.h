@@ -1,4 +1,4 @@
-// $Id: ITriggerSelectionTisTos.h,v 1.3 2008-11-14 06:52:14 tskwarni Exp $
+// $Id: ITriggerSelectionTisTos.h,v 1.4 2008-11-14 07:20:07 tskwarni Exp $
 #ifndef ITRIGGERSELECTIONTISTOS_H 
 #define ITRIGGERSELECTIONTISTOS_H 1
 
@@ -13,13 +13,16 @@
 #include "Kernel/LHCbID.h"
 #include "Event/HltObjectSummary.h"  
 
+#include "Event/Particle.h"
+#include "Event/RecVertex.h"
+#include "Event/Track.h"
 
 //forward declarations
 namespace LHCb {
-  class Particle;
+  //  class Particle;
   class ProtoParticle;
-  class Track;
-  class RecVertex;
+  // class Track;
+  // class RecVertex;
 };
 
 
