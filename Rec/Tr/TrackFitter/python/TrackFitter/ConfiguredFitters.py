@@ -13,10 +13,10 @@ from Configurables import ( TrackEventFitter, TrackMasterFitter, TrackKalmanFilt
                             MeasurementProvider)
 
 def ConfiguredMasterFitter( Name,
-                            FieldOff = TrackSys().getProp( "fieldOff" ),
-                            SimplifiedGeometry = "simplifiedGeometry" in TrackSys().getProp("expertTracking"),
-                            NoDriftTimes =  "noDrifttimes" in TrackSys().getProp("expertTracking"),
-                            KalmanSmoother = "kalmanSmoother" in TrackSys().getProp("expertTracking") ):
+                            FieldOff = TrackSys().fieldOff(),
+                            SimplifiedGeometry = TrackSys().simplifiedGeometry(),
+                            NoDriftTimes       = TrackSys().noDrifttimes(),
+                            KalmanSmoother     = TrackSys().kalmanSmoother() ):
 
     # add the tools that need to be modified
     fitter = TrackMasterFitter(Name)
@@ -52,10 +52,10 @@ def ConfiguredMasterFitter( Name,
 
 def ConfiguredEventFitter( Name,
                            TracksInContainer,
-                           FieldOff = TrackSys().getProp( "fieldOff" ),
-                           SimplifiedGeometry = "simplifiedGeometry" in TrackSys().getProp("expertTracking"),
-                           NoDriftTimes =  "noDrifttimes" in TrackSys().getProp("expertTracking"),
-                           KalmanSmoother = "kalmanSmoother" in TrackSys().getProp("expertTracking") ):
+                           FieldOff = TrackSys().fieldOff(),
+                           SimplifiedGeometry = TrackSys().simplifiedGeometry(),
+                           NoDriftTimes       = TrackSys().noDrifttimes(),
+                           KalmanSmoother     = TrackSys().kalmanSmoother() ):
     
     # start with the event fitter
     eventfitter = TrackEventFitter(Name)
@@ -71,8 +71,8 @@ def ConfiguredEventFitter( Name,
 
 def ConfiguredPrefitter( Name = "DefaultEventFitter",
                          TracksInContainer = "Rec/Tracks/Best",
-                         FieldOff = TrackSys().getProp( "fieldOff" ),
-                         SimplifiedGeometry = "simplifiedGeometry" in TrackSys().getProp("expertTracking")):
+                         FieldOff = TrackSys().fieldOff(),
+                         SimplifiedGeometry = TrackSys().simplifiedGeometry()):
     eventfitter = ConfiguredEventFitter(Name,TracksInContainer,FieldOff,SimplifiedGeometry,NoDriftTimes=True)
     eventfitter.Fitter.NumberFitIterations = 2
     eventfitter.Fitter.MaxNumberOutliers = 0

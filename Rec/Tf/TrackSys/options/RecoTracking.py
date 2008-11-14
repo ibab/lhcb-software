@@ -30,7 +30,7 @@ ApplicationMgr().ExtSvc.append("TransportSvc")
 ## --------------------------------------------------------------------
 
 # Which algs to run ?
-trackAlgs = TrackSys().getProp("trackPatRecAlgorithms")
+trackAlgs = TrackSys().getProp("TrackPatRecAlgorithms")
 
 ## Velo tracking
 if "Velo" in trackAlgs :
@@ -80,7 +80,7 @@ from TrackFitter.ConfiguredFitters import *
 ##get parameters for fast momentum estimate
 importOptions ("$TRACKTOOLSROOT/options/FastMomentumEstimate.opts")
 
-if "noDrifttimes" in TrackSys().getProp("expertTracking"):
+if "noDrifttimes" in TrackSys().getProp("ExpertTracking"):
    Tf__OTHitCreator("OTHitCreator").NoDriftTimes = True
 
 # Clone killer
@@ -169,7 +169,7 @@ if "Velo" in trackAlgs :
    GaudiSequencer("TrackVeloFitSeq").Members += [ copyVelo ]
 
 ## Extra track information sequence
-extraInfos = TrackSys().getProp("trackExtraInfoAlgorithms")
+extraInfos = TrackSys().getProp("TrackExtraInfoAlgorithms")
 if len(extraInfos) > 0 :
 
    track.DetectorList += ["AddExtraInfo"]
