@@ -1,9 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.95 2008-11-13 17:17:59 marcocle Exp $
+! $Id: release.notes,v 1.96 2008-11-14 16:56:38 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
 ! =============================================================================
+
+! 2008-11-14 - Marco Clemencic
+ - Fixed some python code that was using obsolete functions.
 
 ! 2008-11-13 - Marco Clemencic
  - Added a work-around to dump_db_to_files.py to support system entities like

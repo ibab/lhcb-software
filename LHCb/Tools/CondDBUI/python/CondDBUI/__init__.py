@@ -494,8 +494,7 @@ class CondDB:
                 raise Exception, details
 
             # Fill the object list
-            for i in range(objIter.size()):
-                obj = objIter.next()
+            for obj in objIter:
                 payload = dict(obj.payload())
                 since = obj.since()
                 until = obj.until()
@@ -658,8 +657,7 @@ class CondDB:
                     except Exception, details:
                         raise Exception, details
                 # Fill the md5 checksum
-                for i in range(objIter.size()):
-                    obj = objIter.next()
+                for obj in objIter:
                     for k in payload.keys():
                         md5Sum.update(obj.payload()[k])
         return md5Sum
