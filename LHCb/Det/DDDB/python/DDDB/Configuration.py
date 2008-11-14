@@ -128,6 +128,9 @@ class DDDBConf(ConfigurableUser):
         # Force negative polarity (i.e. don't take it from ONLINE)
         MagneticFieldSvc(Polarity = -1,
                          OutputLevel = ERROR)
+
+        # Backward compatibility Dll to read HepMC 1 record
+        ApplicationMgr().Dlls += [ "HepMCBack" ]
     
     __data_types_handlers__ =  { "2008": __2008_conf__,
                                  "DC06": __DC06_conf__ }
