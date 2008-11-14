@@ -1,10 +1,11 @@
-// $Id: MuonMeasurement.cpp,v 1.4 2008-04-22 15:05:36 wouter Exp $
+// $Id: MuonMeasurement.cpp,v 1.5 2008-11-14 10:33:37 mneedham Exp $
 // Include files 
 
 // local
 #include "Event/MuonMeasurement.h"
 #include "MuonDet/DeMuonDetector.h"
 #include "Kernel/LineTraj.h"
+#include "LHCbMath/LHCbMath.h"
 
 using namespace LHCb;
 
@@ -32,14 +33,14 @@ MuonMeasurement::MuonMeasurement( const LHCbID& lhcbID,
   setZ(position.z());
   if(m_muonProjection == Y){
     setMeasure(position.x());
-    setErrMeasure(2.*dy/sqrt(12.));
+    setErrMeasure(2.*dy*LHCb::Math::inv_sqrt_12);
     Gaudi::XYZVector x_dir(1,0,0); 
     std::pair<double,double> x_range(-dx,dx);
     m_trajectory = std::auto_ptr<Trajectory>(new LineTraj(position, x_dir, x_range, true));
 
   }else{
     setMeasure(position.y());
-    setErrMeasure(2.*dx/sqrt(12.));
+    setErrMeasure(2.*dx*LHCb::Math::inv_sqrt_12);
     Gaudi::XYZVector y_dir(0,1,0); 
     std::pair<double,double> y_range(-dy,dy);
     m_trajectory = std::auto_ptr<Trajectory>(new LineTraj(position, y_dir, y_range, true));  

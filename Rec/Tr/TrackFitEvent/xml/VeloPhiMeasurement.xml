@@ -11,16 +11,17 @@
       desc        = 'VeloPhiMeasurement is a measurement made from a VeloPhiCluster.'
       serializers = 'FALSE'>
 
-      <base name='LHCb::Measurement' />
-      <import name='Event/Measurement' />
+      <base name='LHCb::VeloMeasurement' />
+      <import name='Event/VeloMeasurement' />
       <import name='TrackInterfaces/IVeloClusterPosition'/>
       <import name='StateVector' soft='FORWARDONLY'/>
       <import name='Event/VeloCluster' />
       <import name='DeVelo' namespace='::' soft='FORWARDONLY'/>
+      <import name = "DeVeloPhiType" namespace = "::" soft= "FORWARDONLY"/>
 
       <constructor
         desc = 'Constructor from an VeloPhiCluster and a refVector'>
-        <arg type = 'VeloCluster' name = 'cluster' const='TRUE' />
+        <arg type = 'VeloCluster' name = 'aCluster' const='TRUE' />
         <arg type = 'DeVelo' name = 'det' const='TRUE' />
         <arg type = 'IVeloClusterPosition' name = 'clusPosTool' const='TRUE' />
         <arg type = 'LHCb::StateVector' name='refVector' const='TRUE'/>
@@ -28,17 +29,12 @@
 
       <constructor
         desc = 'Constructor from an VeloPhiCluster without a refVector'>
-        <arg type = 'VeloCluster' name = 'cluster' const='TRUE' />
-        <arg type = 'DeVelo' name = 'det' const='TRUE' />
+        <arg type = 'VeloCluster' name = 'aCluster' const='TRUE' />
+        <arg type = 'DeVelo' name = 'det' const='TRUE' /> 
         <arg type = 'IVeloClusterPosition' name = 'clusPosTool' const='TRUE' />
       </constructor>
 
-      <attribute
-        type = 'const LHCb::VeloCluster*'
-        name = 'cluster'
-        desc = 'Pointer to the VeloPhiCluster'
-	getMeth = 'FALSE' />
-
+ 
       <attribute
         type = 'Gaudi::XYZPoint'
         name = 'origin'
@@ -54,16 +50,6 @@
         <arg type = 'DeVelo' name = 'det' const='TRUE' />
         <arg type = 'IVeloClusterPosition::toolInfo' name = 'clusinfo'
 	  const='TRUE' />
-      </method>
-
-      <method
-        type  = 'const LHCb::VeloCluster*'
-        name  = 'cluster'
-        desc  = 'Retrieve const  Pointer to the VeloPhiCluster'
-        const = 'TRUE'>
-        <code>
-  return m_cluster;
-        </code>
       </method>
 
       <method
@@ -92,17 +78,12 @@
         </code>
       </method>
 
-
-
-      <method
-        type  = 'double'
-        name  = 'totalCharge'
-        desc  = 'Retrieve the cluster charge'
-        const = 'TRUE'>
-        <code>
-  return m_cluster-&gt;totalCharge();
-        </code>
-	</method>
+<method
+type = 'const DeVeloPhiType&amp;'
+name = 'sensor'
+desc = 'Retrieve const the sector of the measurement'
+const = 'TRUE'>
+</method>
 
 
     </class>

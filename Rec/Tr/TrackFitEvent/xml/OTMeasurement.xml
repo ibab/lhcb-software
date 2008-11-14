@@ -39,12 +39,6 @@
         desc = 'channel and calibrated time' 
         setMeth = 'FALSE' />
 
-      <attribute
-        type = 'const DeOTModule*'
-        name = 'module'
-        desc = 'module in the OT'
-        setMeth = 'FALSE' getMeth = 'FALSE' />
-      
        <attribute
         type = 'float'
         name = 'deltaTimeOfFlight'

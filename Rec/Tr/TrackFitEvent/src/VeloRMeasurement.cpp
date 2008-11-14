@@ -1,4 +1,4 @@
-// $Id: VeloRMeasurement.cpp,v 1.18 2008-02-07 16:13:26 cattanem Exp $
+// $Id: VeloRMeasurement.cpp,v 1.19 2008-11-14 10:33:37 mneedham Exp $
 // Include files
 
 // From VeloDet
@@ -21,33 +21,33 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 /// Standard constructor, initializes variables
-VeloRMeasurement::VeloRMeasurement( const VeloCluster& cluster,
+VeloRMeasurement::VeloRMeasurement( const VeloCluster& aCluster,
                                     const DeVelo& det,
                                     const IVeloClusterPosition& clusPosTool,
                                     const LHCb::StateVector& refVector )
-  : Measurement(Measurement::VeloR,cluster.channelID()),m_cluster(&cluster)
+  : VeloMeasurement(Measurement::VeloR,aCluster)
 
 {
   IVeloClusterPosition::toolInfo clusInfo = 
-    clusPosTool.position(m_cluster,refVector.position(),
+    clusPosTool.position(this->cluster(),refVector.position(),
                          std::pair<double,double>(refVector.tx(),refVector.ty())) ;
   this->init( det, clusInfo ) ;
 }
 
 /// Standard constructor, initializes variables
-VeloRMeasurement::VeloRMeasurement( const VeloCluster& cluster,
+VeloRMeasurement::VeloRMeasurement( const VeloCluster& aCluster,
                                     const DeVelo& det, 
                                     const IVeloClusterPosition& clusPosTool) 
-  : Measurement(Measurement::VeloR,cluster.channelID()),m_cluster(&cluster)
+  : VeloMeasurement(Measurement::VeloR,aCluster)
 {
-  IVeloClusterPosition::toolInfo clusInfo = clusPosTool.position(m_cluster);
+  IVeloClusterPosition::toolInfo clusInfo = clusPosTool.position(this->cluster());
   this->init( det, clusInfo ) ;
 }
 
 void VeloRMeasurement::init( const DeVelo& det, const IVeloClusterPosition::toolInfo& clusInfo)
 {
   // Fill the data members
-  const DeVeloRType* rDet=det.rSensor( m_cluster->channelID().sensor() );
+  const DeVeloRType* rDet=det.rSensor( channelID().sensor() );
   m_detectorElement = rDet ;
   m_z = rDet -> z();
   
@@ -58,3 +58,8 @@ void VeloRMeasurement::init( const DeVelo& det, const IVeloClusterPosition::tool
 
   m_trajectory = rDet -> trajectory( clusInfo.strip, clusInfo.fractionalPosition );
 }
+
+
+const DeVeloRType& VeloRMeasurement::sensor() const{                                                return *static_cast<const DeVeloRType *>(detectorElement());
+}
+

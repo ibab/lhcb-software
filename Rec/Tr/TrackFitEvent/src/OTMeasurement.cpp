@@ -1,4 +1,4 @@
-// $Id: OTMeasurement.cpp,v 1.19 2008-10-06 14:45:52 wouter Exp $
+// $Id: OTMeasurement.cpp,v 1.20 2008-11-14 10:33:37 mneedham Exp $
 // Include files
 
 // OTDet
@@ -26,7 +26,6 @@ OTMeasurement::OTMeasurement( const LHCb::OTLiteTime& time,
                               const LHCb::StateVector& /*refVector*/)
   : Measurement( Measurement::OT, LHCb::LHCbID(time.channel())),
     m_ottime(time),
-    m_module(&module), 
     m_deltaTimeOfFlight(0),
     m_ambiguity(ambiguity)
 {
