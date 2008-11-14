@@ -6,6 +6,7 @@ Purpose: LHCb Digitization program
 ! 2008-11-14 - Marco Cattaneo
  - Capitalize all options names in Configurable
  - Remove v200601.opts
+ - Use ParamFiles v8r0
 
 ! 2008-11-12 - Marco Cattaneo
  - Many changes to configurable, including changes to option names
