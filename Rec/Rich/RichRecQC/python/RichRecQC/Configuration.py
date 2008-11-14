@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.5 2008-10-21 19:23:41 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.6 2008-11-14 17:13:40 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -20,25 +20,30 @@ class RichRecQCConf(RichConfigurableUser):
 
     ## Steering options
     __slots__ = {
-        "context": "Offline"  # The context within which to run
-       ,"rawMonitoring": True
-       ,"pidMonitoring": True
-       ,"pixelMonitoring": True
-       ,"photonMonitoring": True
-       ,"tracklessRingMonitoring": False
-       ,"mirrorAlignmentMonitoring": False
-       ,"pidMomentumRanges": [ [2,100], [2,10], [10,70], [70,100] ]
-       ,"pidTrackTypes":  [ ["All"] ]
-       ,"recoTrackTypes": [ ["All"],
+        "Context": "Offline"  # The context within which to run
+       ,"RawMonitoring": True
+       ,"PidMonitoring": True
+       ,"PixelMonitoring": True
+       ,"PhotonMonitoring": True
+       ,"TracklessRingMonitoring": False
+       ,"MirrorAlignmentMonitoring": False
+       ,"PidMomentumRanges": [ [2,100], [2,10], [10,70], [70,100] ]
+       ,"PidTrackTypes":  [ ["All"] ]
+       ,"RecoTrackTypes": [ ["All"],
                             ["Forward","Match"],
                             ["Forward"],["Match"],["KsTrack"],["VeloTT"],["Seed"] ]
+       ,"MoniSequencer" : None     # The sequencer to add the RICH monitoringalgorithms to
+       ,"ExpertHistos": False # set to True to write out expert histos
         }
 
     ## Apply the configuration to the given sequence
-    def applyConf(self,sequence):
+    def applyConf(self):
+
+        sequence = self.getProp("MoniSequencer")
+        if sequence == None : raise RuntimeError("ERROR : Monitor Sequencer not set")
 
         # Set context
-        sequence.Context = self.getProp("context")
+        sequence.Context = self.getProp("Context")
 
         # Suppress errors from Linker
         MessageSvc().setFatal += [ "LinkedTo::MC/Rich/Hits2MCRichOpticalPhotons",
@@ -46,7 +51,7 @@ class RichRecQCConf(RichConfigurableUser):
                                    "LinkedTo::MC/Rich/MCRichHitsToOpPhotons" ]
 
         # Some monitoring of raw information
-        if self.getProp("rawMonitoring") :
+        if self.getProp("RawMonitoring") :
             pixSeq = GaudiSequencer("RichRawMoni")
             pixSeq.MeasureTime = True
             sequence.Members += [pixSeq]
@@ -55,44 +60,45 @@ class RichRecQCConf(RichConfigurableUser):
             pixSeq.Members += [dbCheck]
 
         # RICH data monitoring
-        if self.getProp("pixelMonitoring") :
+        if self.getProp("PixelMonitoring") :
             pixSeq = GaudiSequencer("RichPixelMoni")
             pixSeq.MeasureTime = True
             sequence.Members += [pixSeq]
             self.pixelPerf(pixSeq)
          
         # Reconstruction monitoring
-        if self.getProp("photonMonitoring") :
+        if self.getProp("PhotonMonitoring") :
             recSeq = GaudiSequencer("RichRecoMoni")
             recSeq.MeasureTime = True
             sequence.Members += [recSeq]
             self.recPerf(recSeq)
 
         # PID Performance
-        if self.getProp("pidMonitoring") :
+        if self.getProp("PidMonitoring") :
             pidPerf = GaudiSequencer("RichPIDMoni")
             pidPerf.MeasureTime = True
             sequence.Members += [pidPerf]
             self.pidPerf(pidPerf)
 
         # Trackless rings
-        if self.getProp("tracklessRingMonitoring") :
+        if self.getProp("TracklessRingMonitoring") :
             ringsMoni = GaudiSequencer("RichTracklessRingsMoni")
             ringsMoni.MeasureTime = True
             sequence.Members += [ringsMoni]
             self.ringsMoni(ringsMoni)
 
         # Alignment monitor
-        if self.getProp("mirrorAlignmentMonitoring"):
+        if self.getProp("MirrorAlignmentMonitoring"):
             alignSeq = GaudiSequencer("RichMirrAlignMoni")
             alignSeq.MeasureTime = True
             sequence.Members += [alignSeq]
             from RichRecQC.Alignment import RichAlignmentConf
             self.setOtherProp(RichAlignmentConf(),"context")
-            RichAlignmentConf().applyConf(alignSeq)
+            RichAlignmentConf().alignmentSequncer = alignSeq
 
     ## standalone ring finder monitors
     def ringsMoni(self,sequence):
+ 
         from RichMarkovRingFinder.Configuration import RichMarkovRingFinderConf
         from Configurables import Rich__Rec__MarkovRingFinder__MC__Moni
         
@@ -127,10 +133,10 @@ class RichRecQCConf(RichConfigurableUser):
         from Configurables import ( Rich__Rec__MC__PIDQC )
 
         # Track Types
-        for trackType in self.getProp("pidTrackTypes") :
+        for trackType in self.getProp("PidTrackTypes") :
 
             # Momentum ranges
-            for pRange in self.getProp("pidMomentumRanges") :
+            for pRange in self.getProp("PidMomentumRanges") :
 
                 # Construct the name for this monitor out of the track types
                 # and momentum range
@@ -157,7 +163,7 @@ class RichRecQCConf(RichConfigurableUser):
         from Configurables import ( Rich__Rec__MC__RecoQC )
                 
         # Track Types
-        for trackType in self.getProp("recoTrackTypes") : 
+        for trackType in self.getProp("RecoTrackTypes") : 
 
             # Construct the name for this monitor
             name = "RiCKRes"

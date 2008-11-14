@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: TrackCreator.py,v 1.4 2008-10-21 19:26:23 jonrob Exp $"
+__version__ = "$Id: TrackCreator.py,v 1.5 2008-11-14 17:14:05 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration  import *
@@ -21,10 +21,10 @@ class RichTrackCreatorConfig(RichConfigurableUser):
 
     # Steering options
     __slots__ = {
-        "context":       "Offline"  # The context within which to run
-       ,"radiators": [True,True,True] # The radiators to use (Aerogel/Rich1Gas/Rich2Gas)
-       ,"useCaloMomentumTracks" : False # Use Tracks cloned from originals with P updated using the CALO
-       ,"specialData"  : []      # Various special data processing options. See KnownSpecialData in RecSys for all options
+        "Context":       "Offline"  # The context within which to run
+       ,"Radiators": [True,True,True] # The radiators to use (Aerogel/Rich1Gas/Rich2Gas)
+       ,"UseCaloMomentumTracks" : False # Use Tracks cloned from originals with P updated using the CALO
+       ,"SpecialData"  : []      # Various special data processing options. See KnownSpecialData in RecSys for all options
         }
 
     ## @brief Apply the configuration
@@ -33,7 +33,7 @@ class RichTrackCreatorConfig(RichConfigurableUser):
 
         # segments
         segConf = RichSegmentCreatorConf()
-        self.setOtherProps(segConf,["context"])
+        self.setOtherProps(segConf,["Context"])
         segConf.applyConf()
         del segConf
 
@@ -43,7 +43,7 @@ class RichTrackCreatorConfig(RichConfigurableUser):
         # Track creator
         trackCr = RichTools().trackCreator(nickname)
 
-        if self.getProp("useCaloMomentumTracks") :
+        if self.getProp("UseCaloMomentumTracks") :
             trackCr.TracksLocation = "Rec/Track/BestWithCALOInfo"
             
         # Track selector
@@ -55,7 +55,7 @@ class RichTrackCreatorConfig(RichConfigurableUser):
             trSegNickName = "TrSegMaker"
             trackCr.TrackSegmentTool = trSegNickName
             trSeg = RichTools().trSegMaker()
-            trSeg.UseRadiators = self.getProp("radiators")
+            trSeg.UseRadiators = self.getProp("Radiators")
             trackCr.addTool( trSeg, trSegNickName )
 
 # ----------------------------------------------------------------------------------
@@ -67,8 +67,8 @@ class RichTrackCreatorConfig(RichConfigurableUser):
 class TrackCreatorFromCheatedRecoTracks(RichConfigurableUser):
     
     __slots__ = {
-        "context" : "Offline",
-        "toolsByTrackType" : [ "Forward/RichTrackCreatorMC",
+        "Context" : "Offline",
+        "ToolsByTrackType" : [ "Forward/RichTrackCreatorMC",
                                "Match/RichTrackCreatorMC",
                                "VeloTT/RichTrackCreatorMC",
                                "Seed/RichTrackCreatorMC",
@@ -80,13 +80,13 @@ class TrackCreatorFromCheatedRecoTracks(RichConfigurableUser):
 
         from Configurables import Rich__Rec__DelegatedTrackCreatorFromRecoTracks
         
-        context = parent.getProp("context")
-        self.setProp("context",context)
+        context = parent.getProp("Context")
+        self.setProp("Context",context)
         
         type    = "Rich::Rec::DelegatedTrackCreatorFromRecoTracks"
         self.toolRegistry().Tools += [ type+"/"+nickname ]
         trackCr = Rich__Rec__DelegatedTrackCreatorFromRecoTracks("ToolSvc."+context+"_"+nickname)
-        trackCr.ToolsByTrackType = self.getProp("toolsByTrackType")
+        trackCr.ToolsByTrackType = self.getProp("ToolsByTrackType")
 
         recomakername = "RichTrackCreatorReco"
         trSegNickName = "RichDetTrSegMakerReco"

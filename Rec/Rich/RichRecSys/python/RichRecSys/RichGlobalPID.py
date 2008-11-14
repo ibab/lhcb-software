@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: RichGlobalPID.py,v 1.6 2008-08-26 19:50:32 jonrob Exp $"
+__version__ = "$Id: RichGlobalPID.py,v 1.7 2008-11-14 17:14:05 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -28,54 +28,59 @@ class RichGlobalPIDConfig(RichConfigurableUser):
 
     ## The default options
     __slots__ = {
-        "context":  "Offline",
-        "mode": "Full",
-        "initAlgorithms": True,
-        "initTools": True,
-        "nIterations": 0,
-        "maxUsedPixels": 8000,
-        "finalDLLCheck": [ False, True, True, True ],
-        "trackFreezeOutDLL":    None,
-        "trackForceChangeDLL":  None,
-        "likelihoodThreshold":  None,
-        "maxTrackChangesPerIt": None,
-        "minSignalForNoLLCalc": None
+        "Context":  "Offline",
+        "Mode": "Full",
+        "InitAlgorithms": True,
+        "InitTools": True,
+        "NIterations": 0,
+        "MaxUsedPixels": 8000,
+        "FinalDLLCheck": [ False, True, True, True ],
+        "TrackFreezeOutDLL":    None,
+        "TrackForceChangeDLL":  None,
+        "LikelihoodThreshold":  None,
+        "MaxTrackChangesPerIt": None,
+        "MinSignalForNoLLCalc": None
+       ,"PidSequencer" : None     # The sequencer to add the RICH reconstruction algorithms to
         }
 
-    ## Initialise 
-    def initialise(self):
+    ## Initialize 
+    def initialize(self):
         # default values
-        self.setRichDefaults("nIterations",{"Offline":2,"HLT":2})
-        self.setRichDefaults("trackFreezeOutDLL",
+        self.setRichDefaults("NIterations",{"Offline":2,"HLT":2})
+        self.setRichDefaults("TrackFreezeOutDLL",
                              { "Offline" : [ 2, 4, 5, 6 ],
                                "HLT"     : [ 2, 4, 5, 6 ] } )
-        self.setRichDefaults("trackForceChangeDLL",
+        self.setRichDefaults("TrackForceChangeDLL",
                              { "Offline" : [ -1, -2, -3, -4 ],
                                "HLT"     : [ -1, -2, -3, -4 ] } )
-        self.setRichDefaults("likelihoodThreshold",
+        self.setRichDefaults("LikelihoodThreshold",
                              { "Offline" : [ -1e-2, -1e-3, -1e-4, -1e-5 ],
                                "HLT"     : [ -1e-2, -1e-3, -1e-4, -1e-5 ] } )
-        self.setRichDefaults("maxTrackChangesPerIt",
+        self.setRichDefaults("MaxTrackChangesPerIt",
                              { "Offline" : [ 5, 5, 4, 3 ],
                                "HLT"     : [ 5, 5, 5, 5 ] } )
-        self.setRichDefaults("minSignalForNoLLCalc",
+        self.setRichDefaults("MinSignalForNoLLCalc",
                              { "Offline" : [ 1e-3, 1e-3, 1e-3, 1e-3 ],
                                "HLT"     : [ 1e-3, 1e-3, 1e-3, 1e-3 ] } )
-
+    
     ## @brief Apply the configuration
     #  @param sequence The sequencer to add the PID algorithms to
-    def applyConf(self,sequence):
+    def applyConf(self):
 
+        # Are we properly configured
+        sequence = self.getProp("PidSequencer")
+        if sequence == None : raise RuntimeError("ERROR : Reconstruction Sequence not set")
+        
         # Setup the tools and algs
-        if self.getProp("initAlgorithms") : self.applyConfAlgs(sequence)
-        if self.getProp("initTools")      : self.applyConfTools()
+        if self.getProp("InitAlgorithms") : self.applyConfAlgs(sequence)
+        if self.getProp("InitTools")      : self.applyConfTools()
 
     ## @brief Configure the algorithms, adding them to the supplied sequencer
     #  @param sequence The sequencer to add the PID algorithms to
     def applyConfAlgs(self,sequence):
         
         # Context
-        cont = self.getProp("context")
+        cont = self.getProp("Context")
 
         # Initialisation
         initSeq = GaudiSequencer("Rich"+cont+"GPIDInitSeq")
@@ -83,7 +88,7 @@ class RichGlobalPIDConfig(RichConfigurableUser):
         sequence.Members += [ initSeq ]
         gInit   = Rich__Rec__GlobalPID__Initialize("Rich"+cont+"GPIDInit")
         gPixSel = Rich__Rec__GlobalPID__DigitSel("Rich"+cont+"GPIDDigSel")
-        gPixSel.MaxUsedPixels = self.getProp("maxUsedPixels")
+        gPixSel.MaxUsedPixels = self.getProp("MaxUsedPixels")
         gTrkSel = Rich__Rec__GlobalPID__TrackSel("Rich"+cont+"GPIDTrSel")
         initSeq.Members += [ gInit, gPixSel, gTrkSel ]
 
@@ -91,7 +96,7 @@ class RichGlobalPIDConfig(RichConfigurableUser):
         likSeq = GaudiSequencer("Rich"+cont+"GPIDLLSeq")
         likSeq.MeasureTime = True
         sequence.Members += [ likSeq ]
-        for it in range(0,self.getProp("nIterations")):
+        for it in range(0,self.getProp("NIterations")):
 
             # background estimation
             bckEsti = Rich__Rec__PixelBackgroundAlg( "Rich"+cont+"BckEstIt" + `it` )
@@ -101,12 +106,12 @@ class RichGlobalPIDConfig(RichConfigurableUser):
 
             # configure the likelihood minimisation
             pidTool = Rich__Rec__GlobalPID__LikelihoodTool("GPIDLikelihoodTool")
-            pidTool.TrackFreezeOutDLL    = self.getProp("trackFreezeOutDLL")[it]
-            pidTool.FinalDLLCheck        = self.getProp("finalDLLCheck")[it]
-            pidTool.TrackForceChangeDLL  = self.getProp("trackForceChangeDLL")[it]
-            pidTool.LikelihoodThreshold  = self.getProp("likelihoodThreshold")[it]
-            pidTool.MaxTrackChangesPerIt = self.getProp("maxTrackChangesPerIt")[it]
-            pidTool.MinSignalForNoLLCalc = self.getProp("minSignalForNoLLCalc")[it]
+            pidTool.TrackFreezeOutDLL    = self.getProp("TrackFreezeOutDLL")[it]
+            pidTool.FinalDLLCheck        = self.getProp("FinalDLLCheck")[it]
+            pidTool.TrackForceChangeDLL  = self.getProp("TrackForceChangeDLL")[it]
+            pidTool.LikelihoodThreshold  = self.getProp("LikelihoodThreshold")[it]
+            pidTool.MaxTrackChangesPerIt = self.getProp("MaxTrackChangesPerIt")[it]
+            pidTool.MinSignalForNoLLCalc = self.getProp("MinSignalForNoLLCalc")[it]
 
             # Add to alg
             lik.addTool( pidTool )
@@ -122,24 +127,24 @@ class RichGlobalPIDConfig(RichConfigurableUser):
     def applyConfTools(self):
 
         # Context
-        cont = self.getProp("context")
+        cont = self.getProp("Context")
 
         # PID tool
         tool = Rich__Rec__GlobalPID__MultiStepTool("ToolSvc.Rich"+cont+"PIDTool")
         tool.Context = cont
-        tool.NSteps  = self.getProp("nIterations")
+        tool.NSteps  = self.getProp("NIterations")
 
         # Configure each iteration
         for it in range(0,tool.NSteps):
 
             # configure the likelihood minimisation
             pidTool = Rich__Rec__GlobalPID__LikelihoodTool( "Likelihood" + `it` )
-            pidTool.TrackFreezeOutDLL    = self.getProp("trackFreezeOutDLL")[it]
-            pidTool.FinalDLLCheck        = self.getProp("finalDLLCheck")[it]
-            pidTool.TrackForceChangeDLL  = self.getProp("trackForceChangeDLL")[it]
-            pidTool.LikelihoodThreshold  = self.getProp("likelihoodThreshold")[it]
-            pidTool.MaxTrackChangesPerIt = self.getProp("maxTrackChangesPerIt")[it]
-            pidTool.MinSignalForNoLLCalc = self.getProp("minSignalForNoLLCalc")[it]
+            pidTool.TrackFreezeOutDLL    = self.getProp("TrackFreezeOutDLL")[it]
+            pidTool.FinalDLLCheck        = self.getProp("FinalDLLCheck")[it]
+            pidTool.TrackForceChangeDLL  = self.getProp("TrackForceChangeDLL")[it]
+            pidTool.LikelihoodThreshold  = self.getProp("LikelihoodThreshold")[it]
+            pidTool.MaxTrackChangesPerIt = self.getProp("MaxTrackChangesPerIt")[it]
+            pidTool.MinSignalForNoLLCalc = self.getProp("MinSignalForNoLLCalc")[it]
 
             # add to main tool
             tool.addTool(pidTool)

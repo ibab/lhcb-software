@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.9 2008-10-21 19:26:23 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.10 2008-11-14 17:14:05 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -13,6 +13,8 @@ from RichRecSys.PixelCreator  import *
 from RichRecSys.PhotonCreator import *
 from RichRecSys.CKThetaResolution import *
 from RichMarkovRingFinder.Configuration import *
+from RichRecSys.RichGlobalPID import RichGlobalPIDConfig
+from RichRecSys.RichHLTLocalPID import RichHLTLocalPIDConfig
 from Configurables import ( GaudiSequencer,
                             Rich__DAQ__HPDPixelClusteringTool,
                             Rich__ParticleProperties )
@@ -25,53 +27,64 @@ from Configurables import ( GaudiSequencer,
 #  @date   15/08/2008
 class RichRecSysConf(RichConfigurableUser):
 
+    ## Possible used Configurables
+    __used_configurables__ = [ RichHLTLocalPIDConfig,
+                               RichMarkovRingFinderConf,
+                               RichGlobalPIDConfig,
+                               RichTrackCreatorConfig,
+                               RichPixelCreatorConfig,
+                               RichPhotonCreatorConfig,
+                               CKThetaResolutionConfig
+                               ]
+    
     ## Known contexts
     KnownContexts      = [ "Offline", "HLT" ]
     
     ## Steering options
     __slots__ = {
-        "useCaloMomentumTracks" : False # Use Tracks cloned from originals with P updated using the CALO
-       ,"context":    "Offline"   # The context within which to run
-       ,"radiators": None         # The radiators to use
-       ,"particles": None         # The particle species to consider. Default is (el,mu,pi,ka,pr)
-       ,"configureTools":  True   # Configure the general RICH reconstruction tools
-       ,"configureAlgs":   True   # Configure the reconstruction algorithms
-       ,"preloadRawEvent": False  # Preload the RawEvent prior to the RICH algorithms
-       ,"preloadTracks":   False  # Preload the input tracks prior to the RICH algorithms
-       ,"initPixels":      True   # Run an initialisation algorithm to create the pixels
-       ,"initTracks":      True   # Run an initialisation algorithm to create the tracks
-       ,"initPhotons":     True   # Run an initialisation algorithm to create the photons
-       ,"tracklessRings":  False  # Run the trackless ring finding algorithms
-       ,"checkProcStatus": True   # Check the status of the ProcStatus object
-       ,"pidConfig": "FullGlobal" # The PID algorithm configuration
-       ,"makeSummaryObjects": False # Make the reconstruction summary TES data objects
-       ,"hpdRandomBackgroundProb" : -1.0 # If positive, will add additional random background to the data at the given pixel percentage
-       ,"specialData"  : []      # Various special data processing options. See KnownSpecialData in RecSys for all options
+        "UseCaloMomentumTracks" : False # Use Tracks cloned from originals with P updated using the CALO
+       ,"Context":    "Offline"   # The context within which to run
+       ,"Radiators": None         # The radiators to use
+       ,"Particles": None         # The particle species to consider. Default is (el,mu,pi,ka,pr)
+       ,"ConfigureTools":  True   # Configure the general RICH reconstruction tools
+       ,"ConfigureAlgs":   True   # Configure the reconstruction algorithms
+       ,"PreloadRawEvent": False  # Preload the RawEvent prior to the RICH algorithms
+       ,"PreloadTracks":   False  # Preload the input tracks prior to the RICH algorithms
+       ,"InitPixels":      True   # Run an initialisation algorithm to create the pixels
+       ,"InitTracks":      True   # Run an initialisation algorithm to create the tracks
+       ,"InitPhotons":     True   # Run an initialisation algorithm to create the photons
+       ,"TracklessRings":  False  # Run the trackless ring finding algorithms
+       ,"CheckProcStatus": True   # Check the status of the ProcStatus object
+       ,"PidConfig": "FullGlobal" # The PID algorithm configuration
+       ,"MakeSummaryObjects": False # Make the reconstruction summary TES data objects
+       ,"HpdRandomBackgroundProb" : -1.0 # If positive, will add additional random background to the data at the given pixel percentage
+       ,"SpecialData"  : []       # Various special data processing options. See KnownSpecialData in RecSys for all options
+       ,"RecoSequencer" : None    # The sequencer to add the RICH reconstruction algorithms to
         }
 
-    ## Initialise 
-    def initialise(self):
+    ## Initialize 
+    def initialize(self):
         # default values
-        self.setRichDefault("particles","Offline",["electron","muon","pion","kaon","proton"])
-        self.setRichDefault("particles","HLT",    ["pion","kaon"])
-        self.setRichDefault("radiators","Offline",[ "Aerogel", "Rich1Gas", "Rich2Gas" ])
-        self.setRichDefault("radiators","HLT",    [ "Aerogel", "Rich1Gas", "Rich2Gas" ])
+        self.setRichDefault("Particles","Offline",["electron","muon","pion","kaon","proton"])
+        self.setRichDefault("Particles","HLT",    ["pion","kaon"])
+        self.setRichDefault("Radiators","Offline",[ "Aerogel", "Rich1Gas", "Rich2Gas" ])
+        self.setRichDefault("Radiators","HLT",    [ "Aerogel", "Rich1Gas", "Rich2Gas" ])
 
     ## @brief Check the configuration is sensible
     #
     def checkConfiguration(self):
-        context = self.getProp("context")
+        context = self.getProp("Context")
         if context not in self.KnownContexts:
             raise RuntimeError("ERROR : Unknown RichRecSys context '%s'"%context)
 
     ## Shortcut to the cosmics option
-    def cosmics(self) : return "cosmics" in self.getProp("specialData")
+    def cosmics(self) : return "cosmics" in self.getProp("SpecialData")
 
     ## @brief The RICH radiators to use
     #  @return a vector of bools indicating if (Aerogel,Rich1Gas,Rich2Gas) should be used
     def usedRadiators(self):
         usedRads = [ False, False, False ]
-        for rad in self.getProp("radiators"):
+        for rad in self.getProp("Radiators"):
             if rad == "Aerogel"  : usedRads[0] = True
             if rad == "Rich1Gas" : usedRads[1] = True
             if rad == "Rich2Gas" : usedRads[2] = True
@@ -87,20 +100,21 @@ class RichRecSysConf(RichConfigurableUser):
         if usedRads[2] : usedDets[1] = True
         return usedDets
 
-    ## @brief Apply the configuration to the given GaudiSequencer
-    #  @param sequence The GaudiSequencer to add the RICH reconstruction to
-    def applyConf(self,sequence=None):
+    ## @brief Apply the configuration to the configured GaudiSequencer
+    def applyConf(self) :
+
+        # Are we properly configured
+        recoSequencer = self.getProp("RecoSequencer")
+        if recoSequencer == None : raise RuntimeError("ERROR : Reconstruction Sequence not set")
         
         # Check configuration is sane
         self.checkConfiguration()
 
         # Tool mapping
-        self.setOtherProp(RichTools(),"context")
+        self.setOtherProp(RichTools(),"Context")
 
-        if self.getProp("configureTools") :
-            self.configTools()
-        if sequence != None and self.getProp("configureAlgs") :
-            self.configAlgorithms(sequence)
+        if self.getProp("ConfigureTools") : self.configTools()
+        if self.getProp("ConfigureAlgs")  : self.configAlgorithms(recoSequencer)
         
     ## @brief Configure the RICH algorithms
     #  @param sequence The GaudiSequencer to add the RICH reconstruction to      
@@ -110,17 +124,17 @@ class RichRecSysConf(RichConfigurableUser):
                                     Rich__Rec__Initialise )
 
         # Set the context
-        cont = self.getProp("context")
+        cont = self.getProp("Context")
         sequence.Context = cont
 
         #-----------------------------------------------------------------------------
         # Enable these to make sure data (tracks and raw event) are in memory
         # Useful for timing studies
         #-----------------------------------------------------------------------------
-        if self.getProp("preloadRawEvent"):
+        if self.getProp("PreloadRawEvent"):
             from Configurables import Rich__DAQ__LoadRawEvent
             sequence.Members += [ Rich__DAQ__LoadRawEvent("LoadRawRichEvent"+cont) ]
-        if self.getProp("preloadTracks"):
+        if self.getProp("PreloadTracks"):
             sequence.Members += [ Rich__Rec__Initialise("LoadRawTracks"+cont) ]
 
         #-----------------------------------------------------------------------------
@@ -130,10 +144,10 @@ class RichRecSysConf(RichConfigurableUser):
         initSeq.MeasureTime = True
         sequence.Members += [ initSeq ]
 
-        if self.getProp("checkProcStatus") :
+        if self.getProp("CheckProcStatus") :
             initSeq.Members += [ Rich__Rec__Initialise("CheckProc"+cont+"Status") ]
 
-        if self.getProp("initPixels") :
+        if self.getProp("InitPixels") :
             # Make a pixel sequence
             pixelSeq = GaudiSequencer("Rich"+cont+"PixelsSeq")
             pixelSeq.MeasureTime = True
@@ -143,7 +157,7 @@ class RichRecSysConf(RichConfigurableUser):
             decodeRich.DecodeBufferOnly = True
             pixelSeq.Members += [ decodeRich ]
             # Add random background ?
-            pixBackPercent = self.getProp("hpdRandomBackgroundProb")
+            pixBackPercent = self.getProp("HpdRandomBackgroundProb")
             if pixBackPercent > 0 :
                 from Configurables import ( Rich__AddBackground,
                                             Rich__RandomPixelBackgroundTool )
@@ -159,14 +173,14 @@ class RichRecSysConf(RichConfigurableUser):
             # Add algs to sequence
             pixelSeq.Members += [ recoPixs ]
 
-        if self.getProp("initTracks") :
+        if self.getProp("InitTracks") :
             # Make a track sequence
             trackSeq = GaudiSequencer("Rich"+cont+"TracksSeq")
             trackSeq.MeasureTime = True
             initSeq.Members += [ trackSeq ]
             
             # Calo tracks
-            if self.getProp("useCaloMomentumTracks") :
+            if self.getProp("UseCaloMomentumTracks") :
                 from Configurables import TrackUseCaloMomentumAlg
                 caloTrackAlg = TrackUseCaloMomentumAlg(cont+"TracksWithCALOP")
                 caloTrackAlg.OutputTracks = "Rec/Track/BestWithCALOInfo"
@@ -178,7 +192,7 @@ class RichRecSysConf(RichConfigurableUser):
             recoTracks.CreateTracks      = True
             trackSeq.Members += [ recoTracks ]
 
-        if self.getProp("initPhotons") :
+        if self.getProp("InitPhotons") :
             # Make a photon sequence
             photonSeq = GaudiSequencer("Rich"+cont+"PhotonsSeq")
             photonSeq.MeasureTime = True
@@ -190,21 +204,21 @@ class RichRecSysConf(RichConfigurableUser):
             recoPhotons.CreatePhotons     = True
             photonSeq.Members += [ recoPhotons ]
 
-
         #-----------------------------------------------------------------------------
         # Trackless rings
         #-----------------------------------------------------------------------------
-        if self.getProp("tracklessRings"):
+        if self.getProp("TracklessRings"):
+            print "Using RichMarkovRingFinderConf 1"
             finderSeq = GaudiSequencer("Rich"+cont+"RingFinderSeq")
             finderSeq.MeasureTime = True
             sequence.Members += [ finderSeq ]
             self.setOtherProp(RichMarkovRingFinderConf(),"context")
-            RichMarkovRingFinderConf().applyConf(finderSeq)
-            
+            RichMarkovRingFinderConf().setProp("Sequencer",finderSeq)
+           
         #-----------------------------------------------------------------------------
         # PID
         #-----------------------------------------------------------------------------
-        pidMode = self.getProp("pidConfig")
+        pidMode = self.getProp("PidConfig")
         if pidMode != "None" :
 
             pidSeq = GaudiSequencer("Rich"+cont+"PIDSeq")
@@ -212,18 +226,16 @@ class RichRecSysConf(RichConfigurableUser):
             sequence.Members += [ pidSeq ]
             
             if pidMode == "FullGlobal" or pidMode == "FastGlobal":
-                from RichRecSys.RichGlobalPID import RichGlobalPIDConfig
                 pidConf = RichGlobalPIDConfig()
                 if pidMode == "FastGlobal": pidConf.mode = "Fast"
             elif pidMode == "FastLocal" :
-                from RichRecSys.RichHLTLocalPID import RichHLTLocalPIDConfig
                 pidConf = RichHLTLocalPIDConfig()
             else:
                 raise RuntimeError("ERROR : Unknown PID config '%s'"%pidConf)
 
-            self.setOtherProps(pidConf,["context"])
-            pidConf.applyConf(pidSeq)
-            del pidConf
+            self.setOtherProp(pidConf,"Context")
+            pidConf.PidSequencer = pidSeq
+            pidConf.applyConf()
 
             #-------------------------------------------------------------------------
             # Finalise (merge results from various algorithms)
@@ -235,7 +247,7 @@ class RichRecSysConf(RichConfigurableUser):
         #-----------------------------------------------------------------------------
         # Summary objects
         #-----------------------------------------------------------------------------
-        if self.getProp("makeSummaryObjects"):
+        if self.getProp("MakeSummaryObjects"):
             from Configurables import Rich__Rec__SummaryAlg
             sequence.Members += [Rich__Rec__SummaryAlg("RichRec"+cont+"Summary")]
         
@@ -244,7 +256,7 @@ class RichRecSysConf(RichConfigurableUser):
     def configTools(self):
 
         # The context
-        context = self.getProp("context")
+        context = self.getProp("Context")
 
         # Special options for cosmics
         #if self.cosmics() :
@@ -256,24 +268,18 @@ class RichRecSysConf(RichConfigurableUser):
                 
         # Tracks and segments
         tkConf = RichTrackCreatorConfig()
-        tkConf.setProp("radiators",self.usedRadiators())
-        self.setOtherProps(tkConf,["context","specialData","useCaloMomentumTracks"])
-        tkConf.applyConf()
-        del tkConf
+        tkConf.setProp("Radiators",self.usedRadiators())
+        self.setOtherProps(tkConf,["Context","SpecialData","UseCaloMomentumTracks"])
 
         # Pixels
         pixConf = RichPixelCreatorConfig()
-        pixConf.setProp("detectors",self.usedDetectors())
-        self.setOtherProps(pixConf,["context"])
-        pixConf.applyConf()
-        del pixConf
+        pixConf.setProp("Detectors",self.usedDetectors())
+        self.setOtherProps(pixConf,["Context"])
 
         # Photons
         photConf = RichPhotonCreatorConfig()
-        photConf.setProp("radiators",self.usedRadiators())
-        self.setOtherProps(photConf,["context"])
-        photConf.applyConf()
-        del photConf
+        photConf.setProp("Radiators",self.usedRadiators())
+        self.setOtherProps(photConf,["Context"])
 
         #--------------------------------------------------------------------
 
@@ -284,13 +290,11 @@ class RichRecSysConf(RichConfigurableUser):
 
         # CK theta resolution
         ckResConf = CKThetaResolutionConfig()
-        self.setOtherProp(ckResConf,"context")
-        ckResConf.applyConf()
-        del ckResConf
+        self.setOtherProp(ckResConf,"Context")
 
         # Particle Types
         partProps = Rich__ParticleProperties("ToolSvc."+context+"_RichParticleProperties")
-        partProps.ParticleTypes = self.getProp("particles")
+        partProps.ParticleTypes = self.getProp("Particles")
 
         # clustering
         self.toolRegistry().Tools += [Rich__DAQ__HPDPixelClusteringTool("BackgroundClustering")]

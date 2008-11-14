@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: SegmentCreator.py,v 1.3 2008-08-26 19:50:32 jonrob Exp $"
+__version__ = "$Id: SegmentCreator.py,v 1.4 2008-11-14 17:14:05 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -20,24 +20,24 @@ class RichSegmentCreatorConf(RichConfigurableUser):
 
     ## Steering options
     __slots__ = {
-        "context": "Offline"  # The context within which to run
-       ,"energyBins": None
+        "Context": "Offline"  # The context within which to run
+       ,"EnergyBins": None
         }
 
-    ## Initialise 
-    def initialise(self):
+    ## Initialize 
+    def initialize(self):
         ## Default number of energy bins for each radiator
-        self.setRichDefaults( "energyBins", { "Offline" : [ 5, 5, 5 ],
+        self.setRichDefaults( "EnergyBins", { "Offline" : [ 5, 5, 5 ],
                                               "HLT"     : [ 2, 2, 2 ] } )
 
     ## @brief Apply the configuration
     #
     def applyConf(self):
         
-        context = self.getProp("context")
+        context = self.getProp("Context")
 
         nickname = "RichSegmentCreator"
         
         segCreator = Rich__Rec__SegmentCreator( "ToolSvc."+context+"_"+nickname )
 
-        segCreator.EnergyBins = self.getProp("energyBins")
+        segCreator.EnergyBins = self.getProp("EnergyBins")

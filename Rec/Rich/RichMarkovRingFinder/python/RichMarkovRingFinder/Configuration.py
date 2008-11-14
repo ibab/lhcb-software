@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.2 2008-08-27 11:26:02 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.3 2008-11-14 17:13:17 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -25,6 +25,7 @@ class RichMarkovRingFinderConf(RichConfigurableUser):
        ,"panels": ["Rich1Top","Rich1Bottom","Rich2Left","Rich2Right"]
        ,"maxHitsInPanel": 300
        ,"associateToSegments": True
+       ,"sequencer" : None     # The sequencer to add the RICH MCMC algorithms to
         }
 
     ## Access the finder for RICH1 top panel
@@ -52,50 +53,56 @@ class RichMarkovRingFinderConf(RichConfigurableUser):
         return Rich__Rec__MarkovRingFinder__Rich2RightPanel(cont+"MFinderR2Right")
 
     ## @brief Apply the configuration to the given GaudiSequencer
-    #  @param sequence The GaudiSequencer to add the RICH ring finding to
-    def applyConf(self,sequence):
+    def applyConf(self):
 
-        panels = self.getProp("panels")
+        sequence = self.getProp("sequencer")
+        if sequence == None :
 
-        if len(panels) == 0 :
+            print "RichMarkovRingFinderConf sequencer not set"
 
-            print "Warning : No Panels configured for ring finding"
+        else :
 
-        else:
+            panels = self.getProp("panels")
 
-            # maximum hits in each panel for finding
-            maxhits = self.getProp("maxHitsInPanel")
+            if len(panels) == 0 :
+                
+                print "Warning : No Panels configured for ring finding"
 
-            # context
-            cont = self.getProp("context")
+            else:
 
-            # The finders, for each HPD panel
-            if "Rich1Top" in panels :
-                alg = self.rich1TopFinder()
-                alg.MaxHitsInEvent = maxhits
-                sequence.Members += [alg]
-            if "Rich1Bottom" in panels :
-                alg = self.rich1BottomFinder()
-                alg.MaxHitsInEvent = maxhits
-                sequence.Members += [alg]
-            if "Rich2Left" in panels :
-                alg = self.rich2LeftFinder()
-                alg.MaxHitsInEvent = maxhits
-                sequence.Members += [alg]
-            if "Rich2Right" in panels :
-                alg = self.rich2RightFinder()
-                alg.MaxHitsInEvent = maxhits
-                sequence.Members += [alg]
+                # maximum hits in each panel for finding
+                maxhits = self.getProp("maxHitsInPanel")
 
-            # Attempt to associated rings to segments
-            if self.getProp("associateToSegments"):
-                from Configurables import Rich__Rec__TracklessRingSegmentAssociationAlg
-                alg = Rich__Rec__TracklessRingSegmentAssociationAlg(cont+"MRingsSegAssoc")
-                sequence.Members += [alg]
+                # context
+                cont = self.getProp("context")
 
-            # Post finding cleaning and ring selection
-            filter = Rich__Rec__TracklessRingFilterAlg(cont+"BestMRings")
-            iso    = Rich__Rec__TracklessRingIsolationAlg(cont+"IsolatedMRings")
-            iso.InputRings = "Rec/Rich/Markov/RingsBest"
-            sequence.Members += [filter,iso]
+                # The finders, for each HPD panel
+                if "Rich1Top" in panels :
+                    alg = self.rich1TopFinder()
+                    alg.MaxHitsInEvent = maxhits
+                    sequence.Members += [alg]
+                    if "Rich1Bottom" in panels :
+                        alg = self.rich1BottomFinder()
+                        alg.MaxHitsInEvent = maxhits
+                        sequence.Members += [alg]
+                    if "Rich2Left" in panels :
+                        alg = self.rich2LeftFinder()
+                        alg.MaxHitsInEvent = maxhits
+                        sequence.Members += [alg]
+                    if "Rich2Right" in panels :
+                        alg = self.rich2RightFinder()
+                        alg.MaxHitsInEvent = maxhits
+                        sequence.Members += [alg]
+
+                # Attempt to associated rings to segments
+                if self.getProp("associateToSegments"):
+                    from Configurables import Rich__Rec__TracklessRingSegmentAssociationAlg
+                    alg = Rich__Rec__TracklessRingSegmentAssociationAlg(cont+"MRingsSegAssoc")
+                    sequence.Members += [alg]
+
+                # Post finding cleaning and ring selection
+                filter = Rich__Rec__TracklessRingFilterAlg(cont+"BestMRings")
+                iso    = Rich__Rec__TracklessRingIsolationAlg(cont+"IsolatedMRings")
+                iso.InputRings = "Rec/Rich/Markov/RingsBest"
+                sequence.Members += [filter,iso]
             

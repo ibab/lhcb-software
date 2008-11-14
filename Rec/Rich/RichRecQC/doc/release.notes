@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2008-11-14 - Chris Jones
+ - Fixes to python Configurable for latest Gaudi changes
+
 ! 2008-10-21 - Chris Jones
  - Remove all evidence of obsolete Job Options !
  - Reduce min beta to 0 in All track CK theta monitor

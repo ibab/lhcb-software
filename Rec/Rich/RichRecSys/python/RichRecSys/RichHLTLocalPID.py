@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: RichHLTLocalPID.py,v 1.1 2008-08-18 19:33:00 jonrob Exp $"
+__version__ = "$Id: RichHLTLocalPID.py,v 1.2 2008-11-14 17:14:05 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -21,13 +21,18 @@ class RichHLTLocalPIDConfig(RichConfigurableUser):
 
     ## The default options
     __slots__ = {
-        "context":  "Offline"
+        "context" : "Offline"
+       ,"pidSequencer" : None     # The sequencer to add the RICH PID algorithms to
         }
     
     ## @brief Configure the algorithms, adding them to the supplied sequencer
     #  @param sequence The sequencer to add the PID algorithms to
-    def applyConf(self,sequence):
+    def applyConf(self):
 
+        # Are we properly configured
+        recoSequencer = self.getProp("pidSequencer")
+        if recoSequencer == None : raise RuntimeError("ERROR : Reconstruction Sequencer not set")
+        
         # context
         context = self.getProp("context")
 
@@ -42,4 +47,4 @@ class RichHLTLocalPIDConfig(RichConfigurableUser):
         self.toolRegistry().Tools += [pidTool.getType()+"/"+pidAlg.PIDToolName]
 
         # Add alg to the sequence
-        sequence.Members += [pidAlg]
+        recoSequencer.Members += [pidAlg]

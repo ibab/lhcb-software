@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: CKThetaResolution.py,v 1.2 2008-08-15 14:41:23 jonrob Exp $"
+__version__ = "$Id: CKThetaResolution.py,v 1.3 2008-11-14 17:14:05 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -17,7 +17,7 @@ from RichKernel.Configuration import *
 #  @date   15/08/2008
 class CKThetaResolutionConfig(RichConfigurableUser):
 
-    __slots__ = { "context":  "Offline" }
+    __slots__ = { "Context" : "Offline" }
 
     ## @brief Apply the configuration
     #

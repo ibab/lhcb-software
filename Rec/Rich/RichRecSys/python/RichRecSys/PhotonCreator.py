@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: PhotonCreator.py,v 1.4 2008-10-21 19:26:23 jonrob Exp $"
+__version__ = "$Id: PhotonCreator.py,v 1.5 2008-11-14 17:14:05 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -19,24 +19,24 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
 
     ## Default options
     __slots__ = {
-        "context": "Offline" # The context within which to run
-       ,"radiators":  [] # The radiators to use (Aerogel/Rich1Gas/Rich2Gas)
-       ,"selectionMode" : ""
+        "Context": "Offline" # The context within which to run
+       ,"Radiators":  [] # The radiators to use (Aerogel/Rich1Gas/Rich2Gas)
+       ,"SelectionMode" : ""
         }
 
     ## Known selection modes
     KnowwnSelectionModes =  [ "Tight", "Loose", "All" ]
 
-        ## Initialise 
-    def initialise(self):
+    ## Initialize 
+    def initialize(self):
         # default values
-        self.setRichDefault("radiators","Offline",[True,True,True])
-        self.setRichDefault("radiators","HLT",    [True,True,True])
+        self.setRichDefault("Radiators","Offline",[True,True,True])
+        self.setRichDefault("Radiators","HLT",    [True,True,True])
 
     ## Apply configurations
     def applyConf(self):
 
-        context = self.getProp("context")
+        context = self.getProp("Context")
       
         # -----------------------------------------------------------------------
         # Photon maker
@@ -63,17 +63,18 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
         # -----------------------------------------------------------------------
 
         # Photon selection criteria
-        if self.getProp("selectionMode") == "" : self.setProp("selectionMode","Tight")
-        if self.getProp("selectionMode") == "Tight" :
+        if self.getProp("SelectionMode") == "" : self.setProp("SelectionMode","Tight")
+        selMode = self.getProp("SelectionMode")
+        if selMode == "Tight" :
             # DO nothing as yet
-            None
-        elif self.getProp("selectionMode") == "Loose" :
+            pass
+        elif selMode == "Loose" :
             # Options to be defined ...
             raise RuntimeError("Photon selection mode Loose not yet defined. Bug CRJ")
-        elif self.getProp("selectionMode") == "All" :
+        elif selMode == "All" :
             creator.MaxAllowedCherenkovTheta = [ 99999, 99999, 99999 ]
             creator.MinAllowedCherenkovTheta = [ 0,     0,     0     ]
             creator.NSigma                   = [ 99999, 99999, 99999 ]
             creator.MinPhotonProbability     = [ 0,     0,     0     ]
         else:
-            raise RuntimeError("ERROR : Unknown selection mode '%s'"%self.getProp("selectionMode"))
+            raise RuntimeError("ERROR : Unknown selection mode '%s'"%selMode)
