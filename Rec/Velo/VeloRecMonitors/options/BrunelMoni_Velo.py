@@ -23,6 +23,7 @@ GaudiSequencer( 'MoniVELOSeq' ).Members +=\
 #TrackUser.BiasedResiduals   = True
 #TrackUser.ExtraPlots        = True
 #TrackUser.EventClusterInfo  = True
+#TrackUser.AlignMoniBasic    = True
 #TrackUser.ACDCGeometry      = True
 #To get unbiased residuals only, change the TrackLocation to "Rec/Track/Best"
 

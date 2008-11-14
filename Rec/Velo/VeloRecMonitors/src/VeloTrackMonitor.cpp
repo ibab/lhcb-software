@@ -1,4 +1,4 @@
-// $Id: VeloTrackMonitor.cpp,v 1.3 2008-11-13 15:13:16 gersabec Exp $
+// $Id: VeloTrackMonitor.cpp,v 1.4 2008-11-14 11:14:26 gersabec Exp $
 // Include files 
 
 // from Gaudi
@@ -88,19 +88,21 @@ StatusCode Velo::VeloTrackMonitor::initialize() {
     const GaudiAlg::HistoID aliMonM_R_C_ID = "ResidualMean_R_C" ; 
     const GaudiAlg::HistoID aliMonM_P_A_ID = "ResidualMean_P_A" ; 
     const GaudiAlg::HistoID aliMonM_P_C_ID = "ResidualMean_P_C" ; 
-    m_h_aliMon_Mean_R_A = book1D( aliMonM_R_A_ID, "Residual mean R sensors A side", -100, 100, 200 ); 
-    m_h_aliMon_Mean_R_C = book1D( aliMonM_R_C_ID, "Residual mean R sensors C side", -100, 100, 200 ); 
-    m_h_aliMon_Mean_P_A = book1D( aliMonM_P_A_ID, "Residual mean Phi sensors A side", -100, 100, 200 ); 
-    m_h_aliMon_Mean_P_C = book1D( aliMonM_P_C_ID, "Residual mean Phi sensors C side", -100, 100, 200 ); 
+    m_h_aliMon_Mean_R_A = book1D( aliMonM_R_A_ID, "Residual mean R sensors A side", -5, 5, 100 ); 
+    m_h_aliMon_Mean_R_C = book1D( aliMonM_R_C_ID, "Residual mean R sensors C side", -5, 5, 100 ); 
+    m_h_aliMon_Mean_P_A = book1D( aliMonM_P_A_ID, "Residual mean Phi sensors A side", -5, 5, 100 ); 
+    m_h_aliMon_Mean_P_C = book1D( aliMonM_P_C_ID, "Residual mean Phi sensors C side", -5, 5, 100 ); 
     const GaudiAlg::HistoID aliMonS_R_A_ID = "ResidualSigma_R_A" ; 
     const GaudiAlg::HistoID aliMonS_R_C_ID = "ResidualSigma_R_C" ; 
     const GaudiAlg::HistoID aliMonS_P_A_ID = "ResidualSigma_P_A" ; 
     const GaudiAlg::HistoID aliMonS_P_C_ID = "ResidualSigma_P_C" ; 
-    m_h_aliMon_Sigma_R_A = book1D( aliMonS_R_A_ID, "Residual sigma R sensors A side", -100, 100, 200 ); 
-    m_h_aliMon_Sigma_R_C = book1D( aliMonS_R_C_ID, "Residual sigma R sensors C side", -100, 100, 200 ); 
-    m_h_aliMon_Sigma_P_A = book1D( aliMonS_P_A_ID, "Residual sigma Phi sensors A side", -100, 100, 200 ); 
-    m_h_aliMon_Sigma_P_C = book1D( aliMonS_P_C_ID, "Residual sigma Phi sensors C side", -100, 100, 200 ); 
+    m_h_aliMon_Sigma_R_A = book1D( aliMonS_R_A_ID, "Residual sigma R sensors A side", 0, 5, 50 ); 
+    m_h_aliMon_Sigma_R_C = book1D( aliMonS_R_C_ID, "Residual sigma R sensors C side", 0, 5, 50 ); 
+    m_h_aliMon_Sigma_P_A = book1D( aliMonS_P_A_ID, "Residual sigma Phi sensors A side", 0, 5, 50 ); 
+    m_h_aliMon_Sigma_P_C = book1D( aliMonS_P_C_ID, "Residual sigma Phi sensors C side", 0, 5, 50 ); 
   }
+
+  m_binary = sqrt( 12. );
 
   return StatusCode::SUCCESS;
 }
@@ -335,11 +337,18 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
       double biasedResid;
       double chi2;
       sensor->residual(trackInterceptGlobal, vcID, interStripFr, biasedResid, chi2);
+      double pitch;
+      if ( sensor->isR() ) {
+        pitch = sensor->rType()->rPitch( interceptRadius );
+      }
+      else {
+        pitch = sensor->phiType()->phiPitch( interceptRadius );
+      }
       
       //Sensors vs Biased Residuals profile only for Velo
       //------------------------------------------------- 
       if(m_biasedResidualProfile){
-        prof_sensors -> fill (sensor->sensorNumber(), biasedResid/um); 
+        prof_sensors -> fill (sensor->sensorNumber(), m_binary * biasedResid / pitch ); 
       }
       else{
         if (m_debugLevel){
@@ -456,15 +465,15 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
     for ( int bin = 1; bin <= 42; bin++ ) {
       // fill histograms
       if ( 0 == (bin % 2) ) {
-        m_h_aliMon_Mean_R_A->fill( prof_sensors->binMean( bin ) );
+        m_h_aliMon_Mean_R_A->fill( prof_sensors->binHeight( bin ) );
         m_h_aliMon_Sigma_R_A->fill( prof_sensors->binError( bin ) );
-        m_h_aliMon_Mean_P_A->fill( prof_sensors->binMean( bin + 64 ) );
+        m_h_aliMon_Mean_P_A->fill( prof_sensors->binHeight( bin + 64 ) );
         m_h_aliMon_Sigma_P_A->fill( prof_sensors->binError( bin + 64 ) );
       }
       else {
-        m_h_aliMon_Mean_R_C->fill( prof_sensors->binMean( bin ) );
+        m_h_aliMon_Mean_R_C->fill( prof_sensors->binHeight( bin ) );
         m_h_aliMon_Sigma_R_C->fill( prof_sensors->binError( bin ) );
-        m_h_aliMon_Mean_P_C->fill( prof_sensors->binMean( bin + 64 ) );
+        m_h_aliMon_Mean_P_C->fill( prof_sensors->binHeight( bin + 64 ) );
         m_h_aliMon_Sigma_P_C->fill( prof_sensors->binError( bin + 64 ) );
       }
     }
