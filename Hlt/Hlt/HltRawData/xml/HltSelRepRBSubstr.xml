@@ -270,7 +270,7 @@ Never write into into the bank with iterator not at its end-of-the bank position
 
       <method
         name ='push_back'
-        type ='void'
+        type ='bool'
         argList='Substr sub'
         desc ='Add substructure copying its content to current iterator position. The later is advanced.'
         >
@@ -282,6 +282,7 @@ Never write into into the bank with iterator not at its end-of-the bank position
           if( !m_location ){
             unsigned int len = kDefaultAllocation;
 	    len = (nL&lt;(len-2))?len:(len+kDefaultAllocation);
+            if( len &gt; 0xFFFFL )return false;
 	    initialize( len );
           }
 
@@ -291,6 +292,7 @@ Never write into into the bank with iterator not at its end-of-the bank position
           if( nSize &gt; aSize ){
             unsigned int len = aSize + kDefaultAllocation;
             len= ( nSize&lt;len ) ? len : (nSize+kDefaultAllocation) ;
+            if( len &gt; 0xFFFFL )return false;
             unsigned int* newLocation = new unsigned int[len];
             for(unsigned int i=0;i!=aSize;++i){ newLocation[i]=m_location[i]; }
             delete[] m_location;            
@@ -329,6 +331,7 @@ Never write into into the bank with iterator not at its end-of-the bank position
     	        m_location[iWord]= ( 0L | n );
              }
           }
+          return true;
            
         </code>
       </method>

@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.19 2008-11-13 13:32:16 graven Exp $
+!$Id: release.notes,v 1.20 2008-11-14 06:44:40 tskwarni Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltRawData
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Writers and Readers, Makers of persisted TES info
 !-----------------------------------------------------------------------------
+
+! 2008-11-13 - Tomasz Skwarnicki
+ - HltSelReportsWriter, HltSelRepRBSubstr protect against events exceeding storage limit
 
 !========================== HltRawData v1r5 2008-11-13 ===================
 ! 2008-10-31 - Gerhard Raven

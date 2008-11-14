@@ -1,4 +1,4 @@
-// $Id: HltSelReportsWriter.cpp,v 1.2 2008-09-17 16:14:56 tskwarni Exp $
+// $Id: HltSelReportsWriter.cpp,v 1.3 2008-11-14 06:44:40 tskwarni Exp $
 // Include files 
 
 // from Gaudi
@@ -94,6 +94,14 @@ StatusCode HltSelReportsWriter::execute() {
   }
   const HltObjectSummary::Container* objectSummaries = get<HltObjectSummary::Container>( objectsLocation );
 
+  // protection against too many objectSummaries to store
+  if( objectSummaries->size() > 0xFFFFL ){
+    std::ostringstream mess;
+    mess << "Too many HltObjectSummaries to store " << objectSummaries->size() 
+         << " HltSelReports RawBank cannot be created ";    
+    return Error( mess.str(), StatusCode::SUCCESS, 50 );
+  }
+
   // get output
   if( !exist<RawEvent>(m_outputRawEventLocation) ){    
     return Error(" No RawEvent at " + m_outputRawEventLocation.value(), StatusCode::SUCCESS, 20 );
@@ -119,11 +127,22 @@ StatusCode HltSelReportsWriter::execute() {
     addToLhcbidSequences( thisIDset, lhcbidSequences );
   }
 
-
   unsigned int nHits(0);
   for( LhcbidSequences::const_iterator iSeq=lhcbidSequences.begin();
        iSeq != lhcbidSequences.end(); ++iSeq ){
     nHits += (*iSeq)->size();
+  }
+
+  if( lhcbidSequences.size()/2 + 1 + nHits >  0xFFFFL  ){
+    // don't forget to clean lhcbidSequences; they own sets they are pointing to
+    for( LhcbidSequences::const_iterator iSeq=lhcbidSequences.begin();
+         iSeq != lhcbidSequences.end(); ++iSeq ){
+      delete *iSeq;
+    }
+    std::ostringstream mess;
+    mess << "Too many hits or hit-sequences to store hits=" << nHits << " seq=" << lhcbidSequences.size()
+         << " HltSelReports RawBank cannot be created ";    
+    return Error( mess.str(), StatusCode::SUCCESS, 50 );
   }
 
   HltSelRepRBHits hitsSubBank;
@@ -265,9 +284,23 @@ StatusCode HltSelReportsWriter::execute() {
     }
 
     HltSelRepRBSubstr::Substr aS( sHitType, svect );
-    substrSubBank.push_back( aS );
-
-  }
+    if( !substrSubBank.push_back( aS ) ){
+      // don't forget to clean lhcbidSequences; they own sets they are pointing to
+      for( LhcbidSequences::const_iterator iSeq=lhcbidSequences.begin();
+           iSeq != lhcbidSequences.end(); ++iSeq ){
+        delete *iSeq;
+      }
+      hitsSubBank.deleteBank();    
+      objTypSubBank.deleteBank();
+      substrSubBank.deleteBank();
+      stdInfoSubBank.deleteBank();
+      extraInfoSubBank.deleteBank();
+      return Error("Exceeded maximal size of substructure-subbank. HltSelReports RawBank cannot be created"
+                   , StatusCode::SUCCESS, 50 );
+    } 
+      
+  } 
+     
   
   // don't forget to clean lhcbidSequences; they own sets they are pointing to
   for( LhcbidSequences::const_iterator iSeq=lhcbidSequences.begin();
@@ -305,10 +338,17 @@ StatusCode HltSelReportsWriter::execute() {
 
   // insert the bank into the RawEvent
   hltSelReportsBank.saveSize();
-  std::vector< unsigned int > bankBody( &(hltSelReportsBank.location()[0]), 
-                                        &(hltSelReportsBank.location()[hltSelReportsBank.size()]) );  
-  rawEvent->addBank(  kSourceID, RawBank::HltSelReports, kVersionNumber, bankBody );
-
+  // RawBank is limited in size to 65535 bytes i.e. 16383 words; be conservative cut it off at smaller limit
+  if( hltSelReportsBank.size() < 16300 ){    
+    std::vector< unsigned int > bankBody( &(hltSelReportsBank.location()[0]), 
+                                          &(hltSelReportsBank.location()[hltSelReportsBank.size()]) );
+    rawEvent->addBank(  kSourceID, RawBank::HltSelReports, kVersionNumber, bankBody );
+  } else {
+    std::ostringstream mess;
+    mess << "Raw Bank too long - cannot be saved in RawEvent size=" << hltSelReportsBank.size();
+    Error( mess.str(), StatusCode::SUCCESS );
+  }
+    
   if ( msgLevel(MSG::VERBOSE) ){
 
     // print created bank and subbanks inside
@@ -321,7 +361,8 @@ StatusCode HltSelReportsWriter::execute() {
     verbose() << HltSelRepRBExtraInfo( hltSelReportsBank.subBankFromID( HltSelRepRBEnums::kExtraInfoID ) ) << endmsg;
 
   } 
-
+  
+    
   // delete the main bank
   hltSelReportsBank.deleteBank();
 
