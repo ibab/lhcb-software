@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.16 2008-11-13 12:40:34 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.17 2008-11-14 17:27:45 tskwarni Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -49,6 +49,7 @@ class HltConf(LHCbConfigurableUser):
             if hlttype == 'writeLumi'     :   importOptions('$HLTCONFROOT/options/HltJob_onlyLumi.opts')
             if hlttype.find('Lumi') != -1 :   importOptions('$HLTCONFROOT/options/Lumi.opts')
             if hlttype.find('Velo') != -1 :   importOptions('$HLTCONFROOT/options/HltVeloAlleySequence.opts')
+            importOptions( '$HLTCONFROOT/options/HltPersistentOutput.py' )
         else :
             trans = { 'Hlt1'   : 'PA+LU+VE+MU+HA+PH+EL'
                     , 'DEFAULT': 'PA+LU+VE'
