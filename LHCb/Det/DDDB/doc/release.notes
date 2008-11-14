@@ -6,6 +6,7 @@
 
 ! 2008-11-14 - Marco Cattaneo
  - Add loading of HepMCBack Dll for DC06 case
+ - Tell ParticlePropertySvc to get ParticleTable.txt from CondDB
 
 ! 2008-11-11 - Marco Cattaneo
  - Improve warning printout when not using default database tags

@@ -91,7 +91,10 @@ class DDDBConf(ConfigurableUser):
                                                 self.__data_types_handlers__.keys()))
         # calls the specific configuration function for the requested data type
         self.__data_types_handlers__[dataType](self)
-    
+
+        # Get particle properties table from condDB
+        ParticlePropertySvc().ParticlePropertiesFile = 'conddb:///param/ParticleTable.txt'
+            
     def __set_tag__(self, partitions, tag):
         cdb = CondDB()
         for p in partitions:
