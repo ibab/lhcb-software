@@ -74,7 +74,7 @@ StatusCode TupleToolTISTOS::fill( const LHCb::Particle*
     m_TriggerTisTosTool->setOfflineInput(*P);
 
     //Do the L0
-    m_TriggerTisTosTool->setTriggerInput("L0*Decision", ITriggerTisTos::kAllTriggerSelections);
+    m_TriggerTisTosTool->setTriggerInput("L0*Decision");
     //Fill the decision, tis and tos parametres for the L0 as a whole
     m_TriggerTisTosTool->triggerTisTos(decision,tis,tos);
     tuple->column( head+"L0Global"+"_Dec", decision);
@@ -83,14 +83,14 @@ StatusCode TupleToolTISTOS::fill( const LHCb::Particle*
     //Now loop over all the subtriggers
     std::vector<std::string> vs = m_TriggerTisTosTool->triggerSelectionNames();
     for( std::vector< std::string >::const_iterator s=vs.begin();s != vs.end();++s){
-      m_TriggerTisTosTool->triggerTisTos(*s,decision,tis,tos,ITriggerTisTos::kAllTriggerSelections);
+      m_TriggerTisTosTool->triggerTisTos(*s,decision,tis,tos);
       tuple->column( head+*s+"_Dec", decision);
       tuple->column( head+*s+"_TIS", tis);
       tuple->column( head+*s+"_TOS", tos);
     }
 
     //Do the Hlt1
-    m_TriggerTisTosTool->setTriggerInput("Hlt1*Decision", ITriggerTisTos::kAllTriggerSelections);
+    m_TriggerTisTosTool->setTriggerInput("Hlt1*Decision");
     //Fill the decision, tis and tos parametres for the Hlt1 as a whole   
     m_TriggerTisTosTool->triggerTisTos(decision,tis,tos);
     tuple->column( head+"Hlt1Global"+"_Dec", decision);
@@ -99,14 +99,14 @@ StatusCode TupleToolTISTOS::fill( const LHCb::Particle*
     //Now loop over all the subtriggers
     vs = m_TriggerTisTosTool->triggerSelectionNames();
     for( std::vector< std::string >::const_iterator s=vs.begin();s != vs.end();++s){
-      m_TriggerTisTosTool->triggerTisTos(*s,decision,tis,tos,ITriggerTisTos::kAllTriggerSelections);
+      m_TriggerTisTosTool->triggerTisTos(*s,decision,tis,tos);
       tuple->column( head+*s+"_Dec", decision);
       tuple->column( head+*s+"_TIS", tis);
       tuple->column( head+*s+"_TOS", tos);
     }
 
     //Do the Hl2
-    m_TriggerTisTosTool->setTriggerInput("Hlt2*Decision", ITriggerTisTos::kAllTriggerSelections);
+    m_TriggerTisTosTool->setTriggerInput("Hlt2*Decision");
     //Fill the decision, tis and tos parametres for the Hlt2 as a whole
     m_TriggerTisTosTool->triggerTisTos(decision,tis,tos);
     tuple->column( head+"Hlt2Global"+"_Dec", decision);
@@ -115,7 +115,7 @@ StatusCode TupleToolTISTOS::fill( const LHCb::Particle*
     //Now loop over all the subtriggers
     vs = m_TriggerTisTosTool->triggerSelectionNames();
     for( std::vector< std::string >::const_iterator s=vs.begin();s != vs.end();++s){
-      m_TriggerTisTosTool->triggerTisTos(*s,decision,tis,tos,ITriggerTisTos::kAllTriggerSelections);
+      m_TriggerTisTosTool->triggerTisTos(*s,decision,tis,tos);
       tuple->column( head+*s+"_Dec", decision);
       tuple->column( head+*s+"_TIS", tis);
       tuple->column( head+*s+"_TOS", tos);
