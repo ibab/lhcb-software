@@ -1,8 +1,13 @@
-!$Id: release.notes,v 1.270 2008-10-31 06:54:29 jpalac Exp $
+!$Id: release.notes,v 1.271 2008-11-14 06:52:14 tskwarni Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2008-11-14 - Tomasz Skwarnicki
+ - Kernel/ITriggerTisTos.h ITriggerSelectionTisTos.h
+   Remove obsolete input parameters and methods.
+   Add new functionality with hltObjectSummaries() method.
 
 ! 2008-10-31 - Juan PALACIOS
  - src/OnOffline.h
