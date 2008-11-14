@@ -342,15 +342,13 @@ StatusCode BTaggingAnalysis::execute() {
 //     m_TriggerTisTosTool->setOfflineInput( *AXBS );
 //     // L0 
 //     bool decisionL0, L0Tis, L0Tos;
-//     m_TriggerTisTosTool->triggerTisTos( "L0Trigger*" , decisionL0, L0Tis,L0Tos, 
-// 					ITriggerTisTos::kAllTriggerSelections );
+//     m_TriggerTisTosTool->triggerTisTos( "L0*Decision" , decisionL0, L0Tis,L0Tos );
 //     // Hlt Alleys
 //     bool decisionHltAlleys, alleysTis, alleysTos;
-//     m_TriggerTisTosTool->triggerTisTos("*",decisionHltAlleys, alleysTis, alleysTos);
+//     m_TriggerTisTosTool->triggerTisTos("Hlt1*Decision",decisionHltAlleys, alleysTis, alleysTos);
 //     // Hlt B Selections 
 //     bool decisionHltSelB, selBTis, selBTos;
-//     m_TriggerTisTosTool->triggerTisTos("HltSelB*",decisionHltSelB, selBTis, selBTos,
-// 				       ITriggerTisTos::kAllTriggerSelections );
+//     m_TriggerTisTosTool->triggerTisTos("Hlt2*Decision",decisionHltSelB, selBTis, selBTos );
 //     if(L0Tis) m_L0TisTos += 10;
 //     if(L0Tos) m_L0TisTos +=  1;
 //     if(alleysTis) m_HltTisTos +=  1000;
