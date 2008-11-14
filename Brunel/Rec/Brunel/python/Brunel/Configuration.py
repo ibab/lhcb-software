@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.31 2008-10-24 07:10:49 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.32 2008-11-14 17:10:25 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -18,80 +18,82 @@ from Configurables import ( ProcessPhase, GaudiSequencer )
 #  @date   15/08/2008
 class Brunel(LHCbConfigurableUser):
 
+    ## Possible used Configurables
+    __used_configurables__ = [ LHCbApp, TrackSys, RecSysConf ]
+    
     # Steering options
     __slots__ = {
         "EvtMax":          -1 # Maximum number of events to process
-       ,"skipEvents":   0     # events to skip
-       ,"printFreq":    1     # The frequency at which to print event numbers
-       ,"withMC":       False # set to True to use MC truth
-       ,"useSimCond":   False # set to True to use SimCond
-       ,"recL0Only":    False # set to True to reconstruct only L0-yes events
-       ,"inputType":    "MDF" # or "DIGI" or "ETC" or "RDST" or "DST"
-       ,"outputType":   "DST" # or "RDST" or "NONE"
-       ,"expertHistos": False # set to True to write out expert histos
-       ,"noWarnings":   False # suppress all messages with MSG::WARNING or below 
-       ,"datasetName":  ""    # string used to build file names
+       ,"SkipEvents":   0     # events to skip
+       ,"PrintFreq":    1     # The frequency at which to print event numbers
+       ,"WithMC":       False # set to True to use MC truth
+       ,"UseSimCond":   False # set to True to use SimCond
+       ,"RecL0Only":    False # set to True to reconstruct only L0-yes events
+       ,"InputType":    "MDF" # or "DIGI" or "ETC" or "RDST" or "DST"
+       ,"OutputType":   "DST" # or "RDST" or "NONE"
+       ,"ExpertHistos": False # set to True to write out expert histos
+       ,"NoWarnings":   False # suppress all messages with MSG::WARNING or below 
+       ,"DatasetName":  ""    # string used to build file names
        ,"DDDBtag":      "2008-default" # geometry database tag
-       ,"condDBtag":    "2008-default" # conditions database tag
-       ,"useOracleCondDB": False  # if False, use SQLDDDB instead
-       ,"mainSequence": [ "ProcessPhase/Init",
+       ,"CondDBtag":    "2008-default" # conditions database tag
+       ,"UseOracle": False  # if False, use SQLDDDB instead
+       ,"MainSequence": [ "ProcessPhase/Init",
                           "ProcessPhase/Reco",
                           "ProcessPhase/Moni",
                           "ProcessPhase/MCLinks",
                           "ProcessPhase/Check",
                           "ProcessPhase/Output" ]
-       ,"mcCheckSequence": ["Pat","RICH","MUON"] # The default MC Check sequence
-       ,"mcLinksSequence": [ "L0", "Unpack", "Tr" ] # The default MC Link sequence
-       ,"initSequence": ["Reproc", "Brunel", "Calo"] # The default init sequence
-       ,"moniSequence": ["CALO","RICH","MUON","VELO","Track","ST"]    # The default Moni sequence
-       ,"monitors": []        # list of monitors to execute, see KnownMonitors
+       ,"McCheckSequence": ["Pat","RICH","MUON"] # The default MC Check sequence
+       ,"McLinksSequence": [ "L0", "Unpack", "Tr" ] # The default MC Link sequence
+       ,"InitSequence": ["Reproc", "Brunel", "Calo"] # The default init sequence
+       ,"MoniSequence": ["CALO","RICH","MUON","VELO","Track","ST"]    # The default Moni sequence
+       ,"Monitors": []        # list of monitors to execute, see KnownMonitors
         # Following are options forwarded to RecSys
-       ,"recoSequence"   : [] # The Sub-detector reconstruction sequencing. See RecSys for default
-       ,"specialData"    : [] # Various special data processing options. See KnownSpecialData for all options
+       ,"RecoSequence"   : [] # The Sub-detector reconstruction sequencing. See RecSys for default
+       ,"SpecialData"    : [] # Various special data processing options. See KnownSpecialData for all options
         # Following are options forwarded to TrackSys
-       ,"expertTracking": []  # list of expert Tracking options, see KnownExpertTracking
+       ,"ExpertTracking": []  # list of expert Tracking options, see KnownExpertTracking
+       ,"Context":     "Offline" # The context within which to run
         }
 
     def defineGeometry(self):
-        # Prefer Brunel default over LHCbApp default if not set explicitly
-        self.setProp( "condDBtag", self.getProp("condDBtag") )
-        self.setProp( "DDDBtag", self.getProp("DDDBtag") )
         # Delegate handling to LHCbApp configurable
-        self.setOtherProps(LHCbApp(),["condDBtag","DDDBtag","useOracleCondDB"]) 
+        self.setOtherProps(LHCbApp(),["CondDBtag","DDDBtag","UseOracle"]) 
         if LHCbApp().getProp("DDDBtag").find("DC06") != -1 :
             ApplicationMgr().Dlls += [ "HepMCBack" ]
 
     def defineEvents(self):
+        
         evtMax = self.getProp("EvtMax")
         if hasattr(LHCbApp(),"EvtMax"):
             print "# LHCbApp().EvtMax already defined, ignoring Brunel().EvtMax"
         else:
             LHCbApp().EvtMax = evtMax
 
-        skipEvents = self.getProp("skipEvents")
+        skipEvents = self.getProp("SkipEvents")
         if skipEvents > 0 :
-            if hasattr(LHCbApp(),"skipEvents"):
+            if hasattr(LHCbApp(),"SkipEvents"):
                 print "# LHCbApp().skipEvents already defined, ignoring Brunel().skipEvents"
             else:
                 LHCbApp().skipEvents = skipEvents
 
     def defineOptions(self):
 
-        inputType = self.getProp( "inputType" ).upper()
+        inputType = self.getProp( "InputType" ).upper()
         if inputType not in [ "MDF", "DST", "DIGI", "ETC", "RDST" ]:
             raise TypeError( "Invalid inputType '%s'"%inputType )
 
-        outputType = self.getProp( "outputType" ).upper()
+        outputType = self.getProp( "OutputType" ).upper()
         if outputType not in [ "NONE", "DST", "RDST" ]:
             raise TypeError( "Invalid outputType '%s'"%outputType )
 
-        withMC = self.getProp("withMC")
+        withMC = self.getProp("WithMC")
         if inputType in [ "MDF", "RDST" ]:
             withMC = False # Force it, MDF and RDST never contain MC truth
         if outputType == "RDST":
             withMC = False # Force it, RDST never contains MC truth
 
-        useSimCond = self.getProp("useSimCond")
+        useSimCond = self.getProp("UseSimCond")
         if outputType == "DIGI":
             useSimCond = True # Force it, DIGI always from MC
 
@@ -100,28 +102,27 @@ class Brunel(LHCbConfigurableUser):
         self.configureOutput( outputType, withMC )
 
         # Set up monitoring (i.e. not using MC truth)
-        ProcessPhase("Moni").DetectorList += self.getProp("moniSequence")
+        ProcessPhase("Moni").DetectorList += self.getProp("MoniSequence")
         importOptions("$BRUNELOPTS/BrunelMoni.py") # Filled in all cases
         if not withMC:
             # Add here histograms to be filled only with real data 
             from RichRecQC.Configuration import RichRecQCConf
-            RichRecQCConf().context = "Offline"
-            RichRecQCConf().applyConf(GaudiSequencer("MoniRICHSeq"))
-
+            self.setOtherProps(RichRecQCConf(),["ExpertHistos","Context"])
+            RichRecQCConf().MoniSequencer = GaudiSequencer("MoniRICHSeq")
 
         # Setup up MC truth processing and checking
         if withMC:
-            ProcessPhase("MCLinks").DetectorList += self.getProp("mcLinksSequence")
+            ProcessPhase("MCLinks").DetectorList += self.getProp("McLinksSequence")
             # Unpack Sim data
             GaudiSequencer("MCLinksUnpackSeq").Members += [ "UnpackMCParticle",
                                                             "UnpackMCVertex" ]
             GaudiSequencer("MCLinksTrSeq").Members += [ "TrackAssociator" ]
 
             # "Check" histograms filled only with simulated data 
-            ProcessPhase("Check").DetectorList += self.getProp("mcCheckSequence")
+            ProcessPhase("Check").DetectorList += self.getProp("McCheckSequence")
             # Tracking
             importOptions("$TRACKSYSROOT/options/PatChecking.opts")
-            if "veloOpen" in self.getProp( "specialData" ) :
+            if "veloOpen" in self.getProp( "SpecialData" ) :
                 GaudiSequencer("CheckPatSeq").Members.remove("TrackAssociator/AssocVeloRZ")
                 GaudiSequencer("CheckPatSeq").Members.remove("TrackAssociator/AssocDownstream")
                 GaudiSequencer("CheckPatSeq").Members.remove("TrackEffChecker/VeloRZ")
@@ -130,11 +131,11 @@ class Brunel(LHCbConfigurableUser):
             importOptions("$MUONPIDCHECKERROOT/options/MuonPIDChecker.opts")
             # RICH
             from RichRecQC.Configuration import RichRecQCConf
-            RichRecQCConf().context = "Offline"
-            RichRecQCConf().applyConf(GaudiSequencer("CheckRICHSeq"))
+            self.setOtherProps(RichRecQCConf(),["ExpertHistos","Context"])
+            RichRecQCConf().MoniSequencer = GaudiSequencer("CheckRICHSeq")
 
         # Setup L0 filtering if requested, runs L0 before Reco
-        if self.getProp("recL0Only"):
+        if self.getProp("RecL0Only"):
             ProcessPhase("Init").DetectorList.append("L0")
             importOptions( "$L0DUROOT/options/L0Sequence.opts" )
             GaudiSequencer("InitL0Seq").Members += [ "GaudiSequencer/L0FilterFromRawSeq" ]
@@ -143,17 +144,18 @@ class Brunel(LHCbConfigurableUser):
         """
         Save histograms. If expert, fill and save also the expert histograms
         """
-        expertHistos = self.getProp("expertHistos")
-        if expertHistos:
-            RecSysConf().setProp( "expertHistos", expertHistos )
+        ExpertHistos = self.getProp("ExpertHistos")
+        if ExpertHistos:
+            RecSysConf().setProp( "ExpertHistos", ExpertHistos )
             importOptions( "$BRUNELOPTS/ExpertCheck.opts" )
             IODataManager().AgeLimit += 1
 
     def defineMonitors(self):
+        
         # get all defined monitors
-        monitors = self.getProp("monitors") + LHCbApp().getProp("monitors")
+        monitors = self.getProp("Monitors") + LHCbApp().getProp("Monitors")
         # pass to LHCbApp any monitors not dealt with here
-        LHCbApp().setProp("monitors", monitors)
+        LHCbApp().setProp("Monitors", monitors)
 
     def configureInput(self, inputType):
         """
@@ -217,36 +219,38 @@ class Brunel(LHCbConfigurableUser):
             importOptions("$STDOPTS/MCDstContent.opts")
             
         # Always write an ETC if ETC input
-        if self.getProp( "inputType" ).upper() == "ETC":
+        if self.getProp( "InputType" ).upper() == "ETC":
             ApplicationMgr().ExtSvc.append("TagCollectionSvc/EvtTupleSvc")
             ApplicationMgr().OutStream.append("GaudiSequencer/SeqTagWriter")
             importOptions( "$BRUNELOPTS/DefineETC.opts" )
 
         # Modify printout defaults
         importOptions("$BRUNELOPTS/BrunelMessage.opts")
-        if self.getProp( "noWarnings" ):
+        if self.getProp( "NoWarnings" ):
             importOptions( "$BRUNELOPTS/SuppressWarnings.opts" )
 
     def outputName(self):
         """
         Build a name for the output file, based in input options
         """
-        outputName = self.getProp("datasetName")
-        if self.getProp( "recL0Only" ): outputName += '-L0Yes'
+        outputName = self.getProp("DatasetName")
+        if self.getProp( "RecL0Only" ): outputName += '-L0Yes'
         if ( self.evtMax() > 0 ): outputName += '-' + str(self.evtMax()) + 'ev'
-        outputType = self.getProp("outputType").lower()
+        outputType = self.getProp("OutputType").lower()
         return outputName + '.' + outputType
 
     def histosName(self):
-        histosName   = self.getProp("datasetName")
-        if self.getProp( "recL0Only" ): histosName += '-L0Yes'
+        
+        histosName   = self.getProp("DatasetName")
+        if self.getProp( "RecL0Only" ): histosName += '-L0Yes'
         if ( self.evtMax() > 0 ): histosName += '-' + str(self.evtMax()) + 'ev'
-        expertHistos = self.getProp("expertHistos")
-        if expertHistos     : histosName += '-expert'
+        ExpertHistos = self.getProp("ExpertHistos")
+        if ExpertHistos     : histosName += '-expert'
         histosName += '-histos.root'
         return histosName
     
     def evtMax(self):
+        
         if hasattr(ApplicationMgr(),"EvtMax"):
             return getattr(ApplicationMgr(),"EvtMax")
         else:
@@ -254,24 +258,23 @@ class Brunel(LHCbConfigurableUser):
 
     ## Apply the configuration
     def applyConf(self):
+        
         GaudiKernel.ProcessJobOptions.PrintOff()
-        self.setOtherProp(TrackSys(),"expertTracking")
-        self.setOtherProps(RecSysConf(),["specialData","recoSequence"])
+        self.setOtherProp(TrackSys(),"ExpertTracking")
+        self.setOtherProps(RecSysConf(),["SpecialData","RecoSequence"])
         brunelSeq = GaudiSequencer("BrunelSequencer")
         ApplicationMgr().TopAlg = [ brunelSeq ]
-        brunelSeq.Members += self.getProp("mainSequence")
-        ProcessPhase("Init").DetectorList += self.getProp("initSequence")
+        brunelSeq.Members += self.getProp("MainSequence")
+        ProcessPhase("Init").DetectorList += self.getProp("InitSequence")
         GaudiSequencer("InitBrunelSeq").Members += [ "RecInit/BrunelInit" ]
         self.defineGeometry()
         self.defineEvents()
         self.defineOptions()
         self.defineHistos()
         self.defineMonitors()
-        RecSysConf().applyConf()
-        LHCbApp().applyConf()
         from Configurables import RecInit
-        RecInit("BrunelInit").PrintFreq = self.getProp("printFreq")
+        RecInit("BrunelInit").PrintFreq = self.getProp("PrintFreq")
         # Use SIMCOND for Simulation, if not DC06
-        if self.getProp("useSimCond") and LHCbApp().getProp("condDBtag").find("DC06") == -1:
-            from Configurables import CondDBCnvSvc
-            CondDBCnvSvc( CondDBReader = allConfigurables["SimulationCondDBReader"] )
+        #if self.getProp("UseSimCond") and LHCbApp().getProp("CondDBtag").find("DC06") == -1:
+        #    from Configurables import CondDBCnvSvc
+        #    CondDBCnvSvc( CondDBReader = allConfigurables["SimulationCondDBReader"] )
