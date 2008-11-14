@@ -1,4 +1,4 @@
-// $Id: MCParticleSelector.cpp,v 1.10 2007-11-02 14:03:58 cattanem Exp $
+// $Id: MCParticleSelector.cpp,v 1.11 2008-11-14 12:03:43 cattanem Exp $
 
 #include "Event/MCParticle.h"
 
@@ -60,6 +60,9 @@ bool MCParticleSelector::accept(const LHCb::MCParticle* aParticle) const
 
   // Check for NULL pointers
   if ( !aParticle ) return false;
+
+  // Sanity check, protects FPEs later
+  if( 0. > aParticle->gamma() ) return false;
 
   // charge selection
   const int charge = aParticle->particleID().threeCharge();
