@@ -334,7 +334,7 @@ void DbRootHist::initHistogram()
         }
         // use ROOT cycle notion ";" for tracking instances
         m_histoRootName = TString(Form("%s;%i",
-                                       histogramName().c_str(),
+                                       m_identifier.c_str(),
                                        m_instance));
         m_histoRootTitle = TString(Form("%s",
                                         m_gauchocommentDimInfo->getString()));
@@ -416,6 +416,7 @@ void DbRootHist::initHistogram()
         delete m_dimInfoMonObject;
         m_dimInfoMonObject = NULL;
       }
+                                             
       m_dimInfoMonObject = new DimInfoMonObject(m_dimServiceName.c_str(),
                                                 m_refreshTime, "Presenter");
         if (m_dimInfoMonObject && m_dimInfoMonObject->createMonObject()) {
@@ -499,7 +500,12 @@ void DbRootHist::initHistogram()
                          m_histogramType << std::endl;
             rootHistogram =  0;
           }
-          if (rootHistogram) { rootHistogram->AddDirectory(kFALSE); }
+          if (rootHistogram) {
+            m_histoRootName = TString(Form("%s;%i",
+                          m_identifier.c_str(),
+                          m_instance));
+            rootHistogram->AddDirectory(kFALSE); }
+            rootHistogram->SetName(m_histoRootName);
         } else {
           if (m_retryInit == 1) {beEmptyHisto(); }
         }
@@ -1270,6 +1276,7 @@ void DbRootHist::Draw(TPad* &pad)
     gStyle->SetOptStat(curStat);
     
     setDrawOptionsFromDB(pad);
+    pad->SetName(m_histoRootName);
     if (m_historyTrendPlotMode) { rootHistogram->SetDrawOption("E1"); }
 
 //    if (s_NoReference != m_refOption) {
