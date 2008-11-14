@@ -209,8 +209,8 @@ void Archive::fillHistogram(DbRootHist* histogram,
         histogram->beEmptyHisto(); 
       }
     }
-    if (! (histogram->rootHistogram) ) { 
-      histogram->beEmptyHisto(); 
+    if (! (histogram->rootHistogram) ) {
+      histogram->beEmptyHisto();
     }
   }
   histogram->setTH1FromDB();
