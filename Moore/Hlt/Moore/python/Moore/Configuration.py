@@ -1,7 +1,7 @@
 """
 High level configuration tools for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.36 2008-11-15 22:05:15 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.37 2008-11-15 22:07:44 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -29,10 +29,10 @@ from  ctypes import c_uint
 class Moore(LHCbConfigurableUser):
     __slots__ = {
           "EvtMax":            -1    # Maximum number of events to process
-        , "skipEvents":        0
+        , "SkipEvents":        0
         , "DDDBtag" :          '2008-default' # default for data, for DC06 use DC06-default
-        , "condDBtag" :        '2008-default' # default for data, for DC06 use DC06-default
-        , "useOracleCondDB":    False  # if False, use SQLDDDB instead
+        , "CondDBtag" :        '2008-default' # default for data, for DC06 use DC06-default
+        , "UseOracleCondDB":    False  # if False, use SQLDDDB instead
         , "outputFile" :       '' # output filename
         , "inputFiles" :       [ ] # input
         , "hltType" :          'Hlt1'
@@ -100,7 +100,7 @@ class Moore(LHCbConfigurableUser):
         # needed for DecodeRawEvent and LoKiTrigger
         for i in [ 'ToolSvc' , 'AuditorSvc',  'DataOnDemandSvc' , 'LoKiSvc' ] : ApplicationMgr().ExtSvc.append( i ) 
         # forward some settings... 
-        self.setOtherProps( LHCbApp(), ['EvtMax','skipEvents','DDDBtag','condDBtag','useOracleCondDB' ] )
+        self.setOtherProps( LHCbApp(), ['EvtMax','SkipEvents','DDDBtag','CondDBtag','UseOracleCondDB' ] )
         # Get the event time (for CondDb) from ODIN 
         EventClockSvc().EventTimeDecoder = 'OdinTimeDecoder'
         # make sure we don't pick up small variations of the read current
