@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2008-11-17 M Needham
+  - Fix warning in OTMeasurement constructor [module should be passed to base class]
+
 ! 2008-11-14 M Needham
  - Add common base class to the VeloMeasurement classes
    * Lots of new functionality
