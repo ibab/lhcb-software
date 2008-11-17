@@ -1,9 +1,21 @@
-!$Id: release.notes,v 1.7 2008-10-01 11:36:47 jpalac Exp $
+!$Id: release.notes,v 1.8 2008-11-17 15:21:02 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Ex/MicroDSTExample
 ! Responsible : Juan PALACIOS
 ! Purpose     : MicroDST making and reading examples.
 !-----------------------------------------------------------------------------
+
+! 2008-11-17 - Juan PALACIOS
+ - options/TestMicroDSTMake.py
+  . Add BTagging
+
+! 2008-11-12 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v1r2
+  . Use new package MicroDST/MicroDSTConf
+ - options/TestMicroDSTMake.py
+  . Tidy up program flow. Get MicroDSTSTream.py from new MicroDST/MicroDSTConf
+    package.
 
 !======================= Ex/MicroDSTExample v1r1 2008-10-01 ==================
 
