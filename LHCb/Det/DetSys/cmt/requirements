@@ -1,20 +1,20 @@
 package DetSys
-version v16r0
+version v16r1
 
 branches cmt doc dict
 
-use BcmDet              v1r1    Det
+use BcmDet              v1r2    Det
 use CaloDet             v10r0   Det
 use CaloDetXmlCnv       v3r2    Det
-use DDDB                v1r12   Det
-use DetCond             v12r3   Det
-use DetDesc             v18r9   Det
-use DetDescCnv          v4r7    Det
-use DetDescSvc          v2r1    Det
-use Magnet              v5r1p1  Det
-use MuonDet             v8r3    Det
-use OTDet               v8r1    Det
-use RichDet             v11r2   Det
-use STDet               v4r5    Det
-use VeloDet             v13r3   Det
-use XmlTools            v6r1    Tools
+use DDDB                v1r13   Det
+use DetCond             v12r4   Det
+use DetDesc             v18r10  Det
+use DetDescCnv          v4r7p1  Det
+use DetDescSvc          v2r1p1  Det
+use Magnet              v5r1p2  Det
+use MuonDet             v8r4    Det
+use OTDet               v8r2    Det
+use RichDet             v11r3   Det
+use STDet               v4r6    Det
+use VeloDet             v13r4   Det
+use XmlTools            v6r2    Tools
