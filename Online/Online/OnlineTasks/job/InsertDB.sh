@@ -1,24 +1,37 @@
 #!/bin/bash
-#need to cd incase script is launched outside the taskmanager
-#get online version
+#this script should allow running of generic gaudi jobs in the eff farm
+# evh 15/01/2008
+#parent is the name of the subfarm - for storage options
+#partname is the partition name
+#runtype is the activity (empty: use DummyRead.opts)
+printenv
 
-pathofthisfile=`which $0`
-first=${pathofthisfile#*_}
-export onlineversion=${first%%/*}
-second=${first#*/*/*/}
-export onlinetasksversion=${second%%/*}
-
-cd /home/online/Online_${onlineversion}/Online/OnlineTasks/${onlinetasksversion}/job
+cd /home/online/Online_v4r16/Online/OnlineTasks/v1r14/job
 export DEBUGGING=YES
 
-export $1="NOTAN"$1 
+test -n "$1" ; export PARENT=$( echo $1 | tr "[:lower:]" "[:upper:]" )
 
-
-. ./setupOnline.sh $*
-
-if test -n "$PARTNAME" 
-   then export DIM_DNS_NODE=hlt01;
+if test -n "$2" ; then
+   export UTGID=$2
 fi
 
+export OPTIONS=/group/online/dataflow/options/${PARTNAME}/${PARTNAME}_Info.opts
+# remove the args because they interfere with the cmt scripts
+while [ $# -ne 0 ]; do
+  shift 
+done
 
-${gaudi_exe3} -options=../options/InsertDB.opts -loop &
+. ./setupOnline.sh 
+
+
+# if test -f /group/online/dataflow/options/${PARTNAME}/${PARTNAME}_${RUNTYPE}${IS_TAE_RUN}.opts;
+#     then 
+#     export USEROPTS=/group/online/dataflow/options/${PARTNAME}/${PARTNAME}_${RUNTYPE}${IS_TAE_RUN}.opts;
+# fi
+
+echo exec -a ${UTGID} ${gaudi_exe3} -options=../options/GaudiExample.opts -loop &
+
+
+export DIM_DNS_NODE=hlt01
+
+exec -a ${UTGID} ${gaudi_exe3} -options=../options/InsertDB.opts -loop &

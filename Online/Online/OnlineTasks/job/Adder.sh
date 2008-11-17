@@ -22,7 +22,7 @@ if test -n "$4" ; then
 fi
 echo UTGID ${UTGID} PARENT ${PARENT} PARTNAME ${PARTNAME}
 
-cd /home/online/Online_v4r10/Online/OnlineTasks/v1r12/job
+cd /home/online/Online_v4r16/Online/OnlineTasks/v1r14/job
 export DEBUGGING=YES
 
 # remove the args because they interfere with the cmt scripts
@@ -41,11 +41,11 @@ echo "options "${OPTIONS}
 if test -n "${TOP}" ; then 
   #top level adder for this partition
   export DIM_DNS_NODE=hlt01
-  ${gaudi_exe3} -options=../options/Adder.opts -loop &  
+  exec -a ${UTGID} ${gaudi_exe3} -options=../options/Adder.opts -loop &  
 fi
 
-if [[ ${PARENT} == "hlta08" ]] ; then 
-   export DIM_DNS_NODE=hlta08.lbdaq.cern.ch
+if [[ ${PARENT} == "cald07" ]] ; then 
+   export DIM_DNS_NODE=cald07.lbdaq.cern.ch
 fi
 
 echo DIM_DNS_NODE ${DIM_DNS_NODE}
@@ -55,12 +55,13 @@ if test -z "${TOP}" ; then
   #if test -f ${SUBFARM} ; 
   #  then rm ${SUBFARM} ;
   #fi  
-  if [[ ${PARENT} == "hlta08" ]]
+  if [[ ${PARENT} == "cald07" ]]
     then ${gaudi_exe3} -options=../options/AdderCalibrationfarm.opts -loop &
     else 
        if [[ ${PARENT} == "mona08" ]]
          then ${gaudi_exe3} -options=../options/AdderMonitorfarm.opts -loop &
-         else ${gaudi_exe3} -options=../options/AdderSubfarm.opts -loop &
+       else ${gaudi_exe3} -options=../options/AdderSubfarm.opts -loop &
+#        else /usr/bin/valgrind --tool=callgrind ${gaudi_exe3} -options=../options/AdderSubfarm.opts -loop &
        fi
   fi
 fi

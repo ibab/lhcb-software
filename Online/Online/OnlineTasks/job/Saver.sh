@@ -16,7 +16,7 @@ if test -n "$4" ; then
 fi
 echo UTGID ${UTGID} PARENT ${PARENT} PARTNAME ${PARTNAME}
 
-cd /home/online/Online_v4r10/Online/OnlineTasks/v1r12/job
+cd /home/online/Online_v4r16/Online/OnlineTasks/v1r14/job
 export DEBUGGING=YES
 
 # remove the args because they interfere with the cmt scripts
@@ -24,17 +24,24 @@ while [ $# -ne 0 ]; do
   shift 
 done
 
-. ./setupOnline.sh 
+export OPTIONS=/group/online/dataflow/options/${PARTNAME}/${PARTNAME}_Info.opts
+export INFOOPTIONS=/group/online/dataflow/options/${PARTNAME}/${PARTNAME}_Info.opts;
+echo "options "${OPTIONS}
+
 
 if test -n "${TOP}" 
    then export DIM_DNS_NODE=hlt01;
 fi
+
+
+. ./setupOnline.sh 
 
 if [[ ${PARENT} == "cald07" ]]
   then ${gaudi_exe3} -options=../options/SaverCalibrationfarm.opts -loop &
   else 
      if [[ ${PARENT} == "mona08" ]]
        then ${gaudi_exe4} -options=../options/SaverMonitorfarm.opts -loop &
-       else ${gaudi_exe3} -options=../options/Saver.opts -loop &
+       else exec -a ${UTGID} ${gaudi_exe3} -options=../options/Saver.opts -loop &
+
      fi 
 fi  
