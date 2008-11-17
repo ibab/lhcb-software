@@ -147,7 +147,7 @@
         name="extraInfo"
         const="TRUE"
         desc="ExtraInformation. Don't use directly, use hasInfo, info, addInfo..."
-        type="const ExtraInfo"
+        type="const ExtraInfo&amp;"
 	> 
 	<code>
 	  return m_extraInfo ;
