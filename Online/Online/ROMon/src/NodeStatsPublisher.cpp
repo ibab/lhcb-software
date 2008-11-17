@@ -1,4 +1,4 @@
-// $Id: NodeStatsPublisher.cpp,v 1.3 2008-11-13 12:13:32 frankb Exp $
+// $Id: NodeStatsPublisher.cpp,v 1.4 2008-11-17 07:40:40 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/NodeStatsPublisher.cpp,v 1.3 2008-11-13 12:13:32 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/NodeStatsPublisher.cpp,v 1.4 2008-11-17 07:40:40 frankb Exp $
 
 // C++ include files
 #include <iostream>
@@ -120,29 +120,30 @@ namespace {
     for(Clients::const_iterator ic = cl_info.begin(); ic != cl_info.end(); ++ic) {
       NodeStats* ni = (NodeStats*)(*ic).second->data<DSC>()->data;
       if ( ni ) {
-        Procset*   set_in = ni->procs();
-        if ( flag ) {
-          Procset::Processes::iterator p_in=(*set_in).processes.begin();
-          Procset::Processes::iterator p_out=(*set_out).processes.reset();
-        
-          if ( ((char*)set_out + sizeof(Procset)) > buff+buffLen ) return 2;
-          ::strncpy((*set_out).name,(*set_in).name,sizeof((*set_out).name));
-          (*set_out).name[sizeof((*set_out).name)-1] = 0;
-          (*set_out).time    = (*set_in).time;
-          (*set_out).millitm = (*set_in).millitm;
-          for( ; p_in != (*set_in).processes.end(); p_in=(*set_in).processes.next(p_in)) {
-            if ( ((char*)p_out +sizeof(Process)) > (buff+buffLen) ) return 2;
-            if ( ::strncmp((*p_in).utgid,"N/A",3)!=0 ) {
-              ::memcpy(&(*p_out),&(*p_in),sizeof(Process));
-              p_out = (*set_out).processes.add(p_out);
-            }
-          }
-        }
-        else {  // Copy all processes in one big block....
-          if ( ((char*)set_out + set_in->length()) > buff+buffLen ) return 2;
-          ::memcpy(&(*set_out),&(*set_in),set_in->length());
-        }
-        set_out = nodes.add(set_out);
+	Procset*   set_in = ni->procs();
+	if ( flag ) {
+	  Procset::Processes::iterator p_in=(*set_in).processes.begin();
+	  Procset::Processes::iterator p_out=(*set_out).processes.reset();
+	
+	  if ( ((char*)set_out + sizeof(Procset)) > buff+buffLen ) return 2;
+	  ::strncpy((*set_out).name,(*set_in).name,sizeof((*set_out).name));
+	  (*set_out).name[sizeof((*set_out).name)-1] = 0;
+	  (*set_out).time    = (*set_in).time;
+	  (*set_out).millitm = (*set_in).millitm;
+	  for( ; p_in != (*set_in).processes.end(); p_in=(*set_in).processes.next(p_in)) {
+	    if ( ((char*)p_out +sizeof(Process)) > (buff+buffLen) ) return 2;
+	    //if ( ::strncmp((*p_in).utgid,"N/A",3)!=0 || ::strncmp((*p_in).cmd,"PVSS00",6)==0 ) {
+	    if ( ::strncmp((*p_in).utgid,"N/A",3)!=0 ) {
+	      ::memcpy(&(*p_out),&(*p_in),sizeof(Process));
+	      p_out = (*set_out).processes.add(p_out);
+	    }
+	  }
+	}
+	else {  // Copy all processes in one big block....
+	  if ( ((char*)set_out + set_in->length()) > buff+buffLen ) return 2;
+	  ::memcpy(&(*set_out),&(*set_in),set_in->length());
+	}
+	set_out = nodes.add(set_out);
       }
     }
     f.fixup();

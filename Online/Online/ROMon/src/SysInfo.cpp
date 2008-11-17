@@ -1,4 +1,4 @@
-// $Id: SysInfo.cpp,v 1.3 2008-11-13 12:13:33 frankb Exp $
+// $Id: SysInfo.cpp,v 1.4 2008-11-17 07:40:40 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/SysInfo.cpp,v 1.3 2008-11-13 12:13:33 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/SysInfo.cpp,v 1.4 2008-11-17 07:40:40 frankb Exp $
 #include "ROMon/SysInfo.h"
 #include "ROMon/CPUMonOstream.h"
 #include "ROMon/ROMonInfo.h"
@@ -199,6 +199,7 @@ int SysInfo::combineProcessInfo() {
       p.ppid    = q.ppid;
       p.threads = q.threads;
       p.start   = q.start;
+      p.state   = q.state;
       m = res.add(m);
       if ( ((char*)m)-((char*)m_buffer) > (int)m_buffLen ) {
         log() << "Global section memory too small.....exiting" << endl;

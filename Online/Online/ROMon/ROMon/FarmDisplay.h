@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.h,v 1.13 2008-11-13 08:29:41 frankb Exp $
+// $Id: FarmDisplay.h,v 1.14 2008-11-17 07:40:40 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmDisplay.h,v 1.13 2008-11-13 08:29:41 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmDisplay.h,v 1.14 2008-11-17 07:40:40 frankb Exp $
 #ifndef ROMON_FARMDISPLAY_H
 #define ROMON_FARMDISPLAY_H 1
 
@@ -144,6 +144,8 @@ namespace ROMon {
    *   @author M.Frank
    */
   class ProcessDisplay : public InternalDisplay {
+    /// Flag for various operation modes
+    int m_flag;
   public:
     /// Initializing constructor
     ProcessDisplay(FarmDisplay* parent, const std::string& title, const std::string& cluster, int full=0, int height=55,int width=120);

@@ -1,4 +1,4 @@
-// $Id: CtrlSubfarmDisplay.cpp,v 1.5 2008-11-13 12:13:32 frankb Exp $
+// $Id: CtrlSubfarmDisplay.cpp,v 1.6 2008-11-17 07:40:40 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CtrlSubfarmDisplay.cpp,v 1.5 2008-11-13 12:13:32 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CtrlSubfarmDisplay.cpp,v 1.6 2008-11-17 07:40:40 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -117,9 +117,6 @@ void CtrlSubfarmDisplay::showHeader()   {
 
 /// Update all displays
 void CtrlSubfarmDisplay::update()   {
-  RTL::Lock lock(m_lock);
-  begin_update();
-  m_nodes->begin_update();
   try {
     int result = 0;
     XML::TaskSupervisorParser ts;
@@ -131,6 +128,9 @@ void CtrlSubfarmDisplay::update()   {
       //::exit(0);
     }
     dim_unlock();
+    RTL::Lock lock(m_lock);
+    begin_update();
+    m_nodes->begin_update();
     showHeader();
     switch(result) {
     case 0:
