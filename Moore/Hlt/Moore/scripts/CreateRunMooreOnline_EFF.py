@@ -34,3 +34,7 @@ export USEROPTS=%(moore)s/options/DEFAULT${IS_TAE_RUN}.opts
 echo exec -a ${UTGID} ${CLASS1_TASK} -opt=${USEROPTS}
 exec -a ${UTGID} ${CLASS1_TASK} -opt=${USEROPTS}
       """%({'setup': setup,'moore':moore}) )
+
+from stat import *
+rwxrwxrx = S_IRUSR | S_IRGRP | S_IROTH | S_IWUSR | S_IWGRP | S_IXUSR | S_IXGRP | S_IXOTH 
+os.chmod(sys.argv[1],rwxrwxrx )

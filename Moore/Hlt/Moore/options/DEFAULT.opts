@@ -25,10 +25,6 @@ EventPersistencySvc.CnvServices += {"LHCb::RawDataCnvSvc"};
 
 ApplicationMgr.TopAlg += { "UpdateAndReset" };
 // UpdateAndReset.disableReadOdin=0;
-UpdateAndReset.saveHistograms=1;
-UpdateAndReset.saverCycle=600; //seconds between savesets
-UpdateAndReset.resetHistosAfterSave=1;
-UpdateAndReset.saveSetDir="/hist/Savesets"
 
 
 /////////////////////////////////////
@@ -50,7 +46,7 @@ HltConfigSvc.prefetchTCK = { @OnlineEnv.InitialTCK };
 HltConfigSvc.initialTCK =    @OnlineEnv.InitialTCK;
 HltConfigSvc.checkOdin = false;
 HltConfigSvc.maskL0TCK = true;
-ApplicationMgr.ExtSvc += { "HltConfigSvc", "HltANNSvc", "LumiANNSvc" };
+ApplicationMgr.ExtSvc += { "HltConfigSvc", "HltANNSvc", "LumiANNSvc", "LoKiSvc" };
 ApplicationMgr.TopAlg += { "GaudiSequencer/Hlt" };
 /////////////////////////////////////
 
