@@ -1,4 +1,4 @@
-// $Id: UpgradeConf.h,v 1.1 2008-11-13 13:14:41 ibelyaev Exp $
+// $Id: UpgradeConf.h,v 1.2 2008-11-17 13:51:27 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_UPGRADECONF_H 
 #define LOKI_UPGRADECONF_H 1
@@ -71,9 +71,9 @@ namespace LoKi
       bool               moveIDs  () const { return m_moveIDs   ; }
       /// transfer Ancestors 
       bool               moveAncs () const { return m_moveAncs  ; }
-      // transfer extra info? 
+      /// transfer extra info? 
       bool               moveInfo () const { return m_moveInfo  ; }
-      // pt-ordering ?
+      /// pt-ordering ?
       bool               ptOrder  () const { return m_ptOrder   ; }
       // ======================================================================
     private:

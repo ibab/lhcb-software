@@ -1,4 +1,4 @@
-// $Id: UpgradeTool.cpp,v 1.2 2008-11-14 12:56:03 ibelyaev Exp $
+// $Id: UpgradeTool.cpp,v 1.3 2008-11-17 13:51:27 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -59,7 +59,7 @@ void LoKi::Hlt1::UpgradeTool::init () const
   SmartIF<IANNSvc> ann = LoKi::Hlt1::Utils::annSvc( *this ) ;
   //
   boost::optional<IANNSvc::minor_value_type> info = ann->value("InfoID" , trTool()  );
-  Assert( info , " request for unknown Info ID");
+  Assert( info , " request for unknown Info ID : " + trTool() );
   //
   m_recoID = info->second ;
 }
