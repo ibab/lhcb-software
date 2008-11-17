@@ -1,3 +1,10 @@
 // Options for PV offline reconstruction
 ApplicationMgr.TopAlg += { "PatPVOffline" };
+// set seeding
+PatPVOffline.PVOfflineTool.PVSeedingName = "PVSeedTool";
+PatPVOffline.PVOfflineTool.PVSeedTool.maxChi2Merge =  9.;
+PatPVOffline.PVOfflineTool.PVSeedTool.ratioSig2HighMult = 1.;
+PatPVOffline.PVOfflineTool.PVSeedTool.ratioSig2LowMult = 1.;
+PatPVOffline.PVOfflineTool.PVSeedTool.minClusterMult = 5;
+PatPVOffline.PVOfflineTool.PVSeedTool.OutputLevel = 3;
 //

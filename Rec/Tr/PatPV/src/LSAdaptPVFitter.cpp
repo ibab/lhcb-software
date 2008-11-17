@@ -1,4 +1,4 @@
-// $Id: LSAdaptPVFitter.cpp,v 1.6 2008-06-11 19:28:24 witekma Exp $
+// $Id: LSAdaptPVFitter.cpp,v 1.7 2008-11-17 15:17:25 witekma Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
@@ -90,18 +90,24 @@ StatusCode LSAdaptPVFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
       itrack++;
     }
   }
+
   // Check the number of tracks for PV candidate
   if((int)pvVertex.pvTracks.size() < m_minTr) {
     if(msgLevel(MSG::DEBUG)) {
       verbose() << "Too few tracks to fit PV" << endmsg;
     }
-    return StatusCode::FAILURE;
-  }
-  StatusCode scvfit = fit(pvVertex.primVtx,pvVertex.pvTracks);
-  if(scvfit == StatusCode::SUCCESS) {
     vtx = pvVertex.primVtx;
     vtx.setTechnique(LHCb::RecVertex::Primary);
+    return StatusCode::FAILURE;
   }
+
+  StatusCode scvfit = fit(pvVertex.primVtx,pvVertex.pvTracks);
+  if (!scvfit.isSuccess() ) {
+    debug() << "PV fit failed" << endmsg;  
+  }
+  
+  vtx = pvVertex.primVtx;
+  vtx.setTechnique(LHCb::RecVertex::Primary);
   return scvfit;
 }
 
@@ -267,7 +273,7 @@ void LSAdaptPVFitter::prepareVertex(LHCb::RecVertex& vtx,
       hess(i,j) = 0.0;
     }
   }
-  if(msgLevel(MSG::DEBUG)) {
+  if(msgLevel(MSG::VERBOSE)) {
     verbose() << "Extrapolate tracks to the vertex at z = " 
               << vtx.position().z()
               << endmsg;
@@ -279,7 +285,7 @@ void LSAdaptPVFitter::prepareVertex(LHCb::RecVertex& vtx,
     // Extrapolate tracks
     StatusCode sc = trackExtrapolate(pvTrack,vtx);
     if(!sc.isSuccess()) {
-      if(msgLevel(MSG::DEBUG)) {
+      if(msgLevel(MSG::VERBOSE)) {
         verbose() << "Track " << pvTrack->refTrack->key()
                   << " could not be extrapolated to the vertex" << endmsg;
       }      
@@ -430,7 +436,9 @@ StatusCode LSAdaptPVFitter::outVertex(LHCb::RecVertex& vtx,
   vtx.clearTracks();
   for (PVTrackPtrs::iterator itrack = pvTracks.begin(); 
                              itrack != pvTracks.end(); itrack++) {
-    vtx.addToTracks((*itrack)->refTrack);
+    if((*itrack)->weight > m_acceptTrack) {
+      vtx.addToTracks((*itrack)->refTrack);
+    }
   }
   return StatusCode::SUCCESS;
 }
@@ -445,8 +453,10 @@ void LSAdaptPVFitter::setChi2(LHCb::RecVertex& vtx,
   double chi2 = 0.0;
   for(PVTrackPtrs::iterator itrack = pvTracks.begin(); 
       itrack != pvTracks.end(); itrack++) {  
-    chi2 += (*itrack)->chi2;
-    nDoF += 2;
+    if((*itrack)->weight > m_acceptTrack) {
+      chi2 += (*itrack)->chi2;
+      nDoF += 2;
+    }
   }
   if( msgLevel(MSG::DEBUG) ) {
     verbose() << "Compute chi2 of this vertex: " << chi2 

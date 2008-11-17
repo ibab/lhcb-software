@@ -4,6 +4,10 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+! 2008-11-17 - Mariusz Witek
+  - improvements for reconstruction of close primary vertices in multi PV events
+  See http://indico.cern.ch/conferenceDisplay.py?confId=33059 
+
 !============================= PatPV v3r6 2008-09-05 =========================
 ! 2008-08-28 - Mariusz Witek
   - improvements for reconstruction of low multiplicity PVs and bad quality

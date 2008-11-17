@@ -1,4 +1,4 @@
-// $Id: PVOfflineTool.h,v 1.4 2008-06-11 19:28:24 witekma Exp $
+// $Id: PVOfflineTool.h,v 1.5 2008-11-17 15:17:26 witekma Exp $
 #ifndef PVOFFLINETOOL_H 
 #define PVOFFLINETOOL_H 1
 // Include files:
@@ -88,5 +88,7 @@ private:
 			  std::vector<LHCb::RecVertex>& outvtx);
 
   double zCloseBeam(const LHCb::Track* track);
+  bool separatedVertex( LHCb::RecVertex& rvtx, std::vector<LHCb::RecVertex>& outvtxvec);
+
 };
 #endif // PVOFFLINETOOL_H

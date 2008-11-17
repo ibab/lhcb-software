@@ -1,4 +1,4 @@
-// $Id: PVOfflineTool.cpp,v 1.4 2008-08-28 17:38:45 witekma Exp $
+// $Id: PVOfflineTool.cpp,v 1.5 2008-11-17 15:17:26 witekma Exp $
 // Include files:
 // from Gaudi
 #include "GaudiKernel/SystemOfUnits.h"
@@ -102,9 +102,6 @@ StatusCode PVOfflineTool::reDoSinglePV(const Gaudi::XYZPoint xyzseed,
 }
 
 
-
-
-
 //=============================================================================
 // multi vtx search and fit. Return new vtx after track removal
 //=============================================================================
@@ -152,29 +149,68 @@ StatusCode PVOfflineTool::reconstructMultiPVFromTracks(
   std::vector<const LHCb::Track*> rtracks;
   rtracks = tracks2use;
 
-  std::vector<Gaudi::XYZPoint> seeds;
-  m_pvSeedTool->getSeeds(tracks2use, seeds);  
+  outvtxvec.clear();
 
   // monitor quality of zseeds. Save them as fake PVs.
-  if(m_saveSeedsAsPV) {
-    storeDummyVertices(seeds, rtracks, outvtxvec);
-    return StatusCode::SUCCESS;
+//-//  if(m_saveSeedsAsPV) {
+//-//    storeDummyVertices(seeds, rtracks, outvtxvec);
+//-//    return StatusCode::SUCCESS;
+//-//  }
+
+
+  int nvtx_before = -1;
+  int nvtx_after  =  0;
+  while ( nvtx_after > nvtx_before ) {
+    nvtx_before = outvtxvec.size();
+    // reconstruct vertices
+    std::vector<Gaudi::XYZPoint>::iterator is;
+
+    std::vector<Gaudi::XYZPoint> seeds;
+    m_pvSeedTool->getSeeds(rtracks, seeds);  
+
+    for (is = seeds.begin(); is != seeds.end(); is++) {
+      LHCb::RecVertex recvtx;
+      //    Gaudi::XYZPoint *pxyz = &is;
+      StatusCode scvfit = m_pvfit->fitVertex( *is, rtracks, recvtx );
+      removeTracksUsedByVertex(rtracks, recvtx);
+      if(scvfit == StatusCode::SUCCESS) {
+        bool isSepar = separatedVertex(recvtx,outvtxvec);
+        if ( isSepar ) {
+          outvtxvec.push_back(recvtx);
+        }
+      }
+    }
+    nvtx_after = outvtxvec.size();   
   }
 
-  // reconstruct vertices
-  std::vector<Gaudi::XYZPoint>::iterator is;
-  for (is = seeds.begin(); is != seeds.end(); is++) {
-    LHCb::RecVertex recvtx;
-    //    Gaudi::XYZPoint *pxyz = &is;
-    StatusCode scvfit = m_pvfit->fitVertex( *is, rtracks, recvtx );
-    if(scvfit == StatusCode::SUCCESS) {
-      outvtxvec.push_back(recvtx);
-      removeTracksUsedByVertex(rtracks, recvtx);
-    }
-  }
   return StatusCode::SUCCESS;
+
 }
 
+
+bool PVOfflineTool::separatedVertex( LHCb::RecVertex& rvtx, std::vector<LHCb::RecVertex>& outvtxvec) {
+
+  if(outvtxvec.size() < 1 ) return true;
+
+  bool vsepar = true;
+  double sig2min = 1e10;
+  std::vector<LHCb::RecVertex>::iterator itv, itvclosest;
+  for (itv = outvtxvec.begin(); itv != outvtxvec.end(); itv++) {
+    double dist2v = (rvtx.position() - (*itv).position()).Mag2();
+    double sigma2z_1 =   rvtx.covMatrix()(2,2); 
+    double sigma2z_2 = (*itv).covMatrix()(2,2); 
+    double sig2 = dist2v/(sigma2z_1+sigma2z_2);
+    if ( sig2 < sig2min ) {
+      itvclosest = itv;  
+      sig2min = sig2;
+    }
+  }
+
+  if ( sig2min < 9. ) vsepar = false;
+  if ( sig2min < 81. && rvtx.tracks().size() < 9 ) vsepar = false;
+  return vsepar;
+
+}
 
 //=============================================================================
 // Read tracks
@@ -219,7 +255,8 @@ void PVOfflineTool::removeTracks(std::vector<const LHCb::Track*>& tracks,
   }
 
   if(msgLevel(MSG::DEBUG)) {
-    debug() << "removeTracks. Input number of tracks: " << tracks.size() << endmsg;
+    debug() << "removeTracks. Input number of tracks: " << tracks.size() 
+            << "  To remove:" << tracks2remove.size() << endmsg;
   }
 
   std::vector<const LHCb::Track*>::iterator itr;
