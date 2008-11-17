@@ -40,9 +40,9 @@ files = [ 'castor:/castor/cern.ch/user/s/snies/mdf/DC06_L0_v1_lumi2_MuonHadron_4
 
 EventSelector().PrintFreq = 100
 
-Moore().EvtMax = 10000
+#Moore().EvtMax = 10000
 Moore().DDDBtag   = tag
-Moore().condDBtag = tag
+Moore().CondDBtag = tag
 Moore().inputFiles = files
 # Moore().outputFile = '/tmp/foo.raw'
 
