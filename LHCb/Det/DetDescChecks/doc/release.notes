@@ -1,11 +1,15 @@
 ! ------------------------------------------------------------------------------
-! $Id: release.notes,v 1.41 2008-11-06 11:18:45 marcocle Exp $ 
+! $Id: release.notes,v 1.42 2008-11-17 11:18:23 cattanem Exp $ 
 ! ------------------------------------------------------------------------------
 ! Package     : Det/DetDescChecks
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! Purpose     : Collection of useful components for checking of 
 !               Detector Description, Material Budget etc 
 ! ------------------------------------------------------------------------------
+
+! 2008-11-17 - Marco Cattaneo
+ - Move LoadDDDB algorithm to Det/DetCond
+ - Add missing dependency on HepMCBack for QMTest
 
 ! 2008-11-06 - Marco Clemencic
  - Modified the option file LoadDDDB.py to use the configurable DDDBConf and
