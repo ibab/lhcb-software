@@ -24,7 +24,12 @@ EventPersistencySvc.CnvServices += {"LHCb::RawDataCnvSvc"};
 #include "$ONLINETASKSROOT/hltopts/OnlineEnvironment.opts"
 
 ApplicationMgr.TopAlg += { "UpdateAndReset" };
-UpdateAndReset.disableReadOdin=1;
+// UpdateAndReset.disableReadOdin=0;
+UpdateAndReset.saveHistograms=1;
+UpdateAndReset.saverCycle=600; //seconds between savesets
+UpdateAndReset.resetHistosAfterSave=1;
+UpdateAndReset.saveSetDir="/hist/Savesets"
+
 
 /////////////////////////////////////
 #include "$STDOPTS/DstDicts.opts"
