@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.205 2008-11-10 09:45:08 marcocle Exp $
+! $Id: release.notes,v 1.206 2008-11-17 15:03:01 cattanem Exp $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
 
+!======================== VeloDet v13r4 2008-11-17 ===========================
 ! 2008-11-10 - Marco Clemencic
  - Fixed configuration problem in the test after the changes in DDDB.
 
