@@ -1,4 +1,4 @@
-// $Id: CaloDigitAlg.cpp,v 1.24 2008-09-10 13:20:19 cattanem Exp $
+// $Id: CaloDigitAlg.cpp,v 1.25 2008-11-17 16:59:03 odescham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -129,9 +129,9 @@ CaloDigitAlg::CaloDigitAlg( const std::string& name,
     m_coherentNoise    = 0.0;
     m_incoherentNoise  = 1.0;
     m_triggerName      = LHCb::L0PrsSpdHitLocation::Prs;
-    m_triggerThreshold = 10. * Gaudi::Units::MeV;
+    m_triggerThreshold = 23.5 * Gaudi::Units::MeV;
     m_triggerIsBit     = true;
-    m_zSupThreshold    = 15;
+    m_zSupThreshold    = 5;
   } else if ( "EcalDigi" == begName ) {
     m_detectorName     = DeCalorimeterLocation::Ecal;
     m_inputData        = LHCb::MCCaloDigitLocation::Ecal;
@@ -145,7 +145,7 @@ CaloDigitAlg::CaloDigitAlg( const std::string& name,
     m_corrArea.push_back( 1.08 );
     
     m_monitorNoise = true;
-    m_useAdvancedNoise = true;
+    m_useAdvancedNoise = false;
 
     m_advancedNoise[0] +=
       list_of( 0.618503 )(   0.2671 )( 1.30606 ),
