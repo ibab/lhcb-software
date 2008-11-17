@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2008-11-17 - Marco Cattaneo
+ - Remove RichToolRegistry, moved to RichKernel
+
 ! 2008-10-15 - Chris Jones
  - New tool for adding random pixel backgrounds to the decoded data.
  - Import some components from Rich/RichDAQ
