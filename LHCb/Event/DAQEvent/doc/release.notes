@@ -4,6 +4,7 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+!================ DAQEvent v7r16 2008-11-17 ===========================
 ! 2008-10-28 - Marco Cattaneo
  - Add missing include for gcc 4.3
 
