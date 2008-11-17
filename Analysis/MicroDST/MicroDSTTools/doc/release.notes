@@ -3,8 +3,14 @@
 ! Responsible : Juan Palacios juan.palacios@nikhef.nl
 ! Purpose     : Implementation of cloner MicroDSTTools
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.20 2008-09-10 07:12:54 jpalac Exp $
+! $Id: release.notes,v 1.21 2008-11-17 08:57:04 jpalac Exp $
 !-----------------------------------------------------------------------------
+
+! 2008-11-17 - Juan PALACIOS
+ - src/CopyFlavourTag{.cpp, .h}
+  . Bug fix: FlavoutTag clones were not being stored on TES.
+ - cmt/requirements
+  . Increase version to v1r3p1
 
 !======================= MicroDSTTools v1r3 2008-09-10 =======================
 
