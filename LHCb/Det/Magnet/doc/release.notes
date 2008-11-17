@@ -4,6 +4,7 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
+!====================== Magnet v5r1p2 2008-11-17 =============================
 ! 2008-10-28 - Marco Cattaneo
  - Add missing includes for gcc 4.3 compilation
 
