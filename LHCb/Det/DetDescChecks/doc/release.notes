@@ -1,5 +1,5 @@
 ! ------------------------------------------------------------------------------
-! $Id: release.notes,v 1.42 2008-11-17 11:18:23 cattanem Exp $ 
+! $Id: release.notes,v 1.43 2008-11-17 14:34:28 cattanem Exp $ 
 ! ------------------------------------------------------------------------------
 ! Package     : Det/DetDescChecks
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -7,6 +7,7 @@
 !               Detector Description, Material Budget etc 
 ! ------------------------------------------------------------------------------
 
+!======================= DetDescChecks v4r10 2008-11-17 ========================
 ! 2008-11-17 - Marco Cattaneo
  - Move LoadDDDB algorithm to Det/DetCond
  - Add missing dependency on HepMCBack for QMTest
