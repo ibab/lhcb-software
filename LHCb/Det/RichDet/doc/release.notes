@@ -4,6 +4,7 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+!======================== RichDet v11r3 2008-11-17 ===========================
 ! 2008-10-28 - Marco Cattaneo
  - Fixes for gcc 4.3 compilation
 
