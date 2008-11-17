@@ -4,15 +4,14 @@
 ! Purpose     : Define and build the POOL dictionaries for the relations
 !-----------------------------------------------------------------------------
 
+!======================= EventAssoc v4r5 2008-11-17 ==========================
 ! 2008-11-02 - Vanya BELYAEV
-
  - dict/selection.h
-   sict/selection.xml
-    regenerate the files using the updated Kernel/Relaitons package
+   dict/selection.xml
+    regenerate the files using the updated Kernel/Relations package
 
  - cmt/requirement 
-    version incrment to v4r5 
-
+    version increment to v4r5 
 
 !======================= EventAssoc v4r4 2008-02-19 ==========================
 ! 2008-02-19 - Vanya BELYAEV
