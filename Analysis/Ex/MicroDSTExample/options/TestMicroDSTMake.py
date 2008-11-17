@@ -1,6 +1,6 @@
-#$Id: TestMicroDSTMake.py,v 1.6 2008-11-12 14:24:03 jpalac Exp $
+#$Id: TestMicroDSTMake.py,v 1.7 2008-11-17 15:20:38 jpalac Exp $
 from Gaudi.Configuration import *
-from DaVinci.MicroDSTAlgorithm import *
+from MicroDST.MicroDSTAlgorithm import *
 from Configurables import CopyRelatedMCParticles
 from Configurables import CopyParticle2PVLink
 from Configurables import MCParticleArrayFilterAlg
@@ -12,21 +12,26 @@ from Configurables import VertexCloner
 from Configurables import ProtoParticleCloner
 from Configurables import PrintHeader
 from Configurables import OutputStream
+from Configurables import BTagging, BTaggingTool
+from Configurables import PhysDesktop
 #==============================================================================
 # Some steering options
 #
 # number of events to process
-nEvents = 1500
+nEvents = 1000
 # Copy information for events not passing the selection?
 allEventInfo = False
 # Copy MC particles when signal MC decay is found?
 keepTrueDecays = False
 # Copy related MCParticles and decay tree for selected candidates?
 storeMCInfo = True
+# B tagging?
+BTaggingInfo = True
 #==============================================================================
 importOptions( "$DAVINCIROOT/options/DaVinciCommon.opts" )
 importOptions( "$MICRODSTEXAMPLEROOT/options/JpsiPhiData.opts")
 importOptions( "$CCBARROOT/options/DoDC06SelBs2Jpsi2MuMuPhi2KK_lifetime_unbiased.opts"  )
+mainLocation = "Phys/DC06selBs2JpsiPhi_unbiased"
 # get rid of some spam
 printSel=PrintHeader('PrintDC06selBs2JpsiPhi')
 printSel.OutputLevel=4
@@ -80,7 +85,7 @@ if (keepTrueDecays) :
 #==============================================================================
 # Copy selected particles, daughters, and decay vertices
 copyParticles = CopyParticles('CopyParticles')
-copyParticles.InputLocation = "Phys/DC06selBs2JpsiPhi_unbiased/Particles"
+copyParticles.InputLocation = mainLocation+"/Particles"
 copyParticles.addTool(VertexCloner(), name='VertexCloner')
 copyParticles.addTool(ProtoParticleCloner(), name='ProtoParticleCloner')
 copyParticles.OutputLevel=4
@@ -93,18 +98,32 @@ MySelection.Members += [copyPV]
 #==============================================================================
 # copy PV->Particle link
 copyP2PVLink = CopyParticle2PVLink()
-copyP2PVLink.InputLocation = "Phys/DC06selBs2JpsiPhi_unbiased/Particle2VertexRelations"
+copyP2PVLink.InputLocation = mainLocation+"/Particle2VertexRelations"
 copyP2PVLink.OutputLevel=4;
 MySelection.Members += [copyP2PVLink]
 #==============================================================================
 # copy related MC particles of candidates plus daughters
 if (storeMCInfo) :
     copyMC = CopyRelatedMCParticles()
-    copyMC.InputLocation = 'Phys/DC06selBs2JpsiPhi_unbiased/Particles'
+    copyMC.InputLocation = mainLocation+'/Particles'
     copyMC.addTool(MCParticleCloner(), name= 'MCParticleCloner')
     copyMC.MCParticleCloner.addTool(MCVertexCloner(), name = 'MCVertexCloner')
     copyMC.OutputLevel=4;
     MySelection.Members += [copyMC]
+#==============================================================================
+# B tagging
+if (BTaggingInfo) :
+    importOptions('$FLAVOURTAGGINGOPTS/BTaggingTool.opts')
+    BTagAlgo = BTagging('BTagging')
+    BTagAlgo.addTool(PhysDesktop())
+    BTaggingTool("BTaggingTool").OutputLevel=4
+    BTagAlgo.PhysDesktop.InputLocations=[mainLocation]
+    BTagLocation = mainLocation+"/Tagging"
+    BTagAlgo.TagOutputLocation = BTagLocation
+    MySelection.Members += [BTagAlgo]
+    copyFlavTag = CopyFlavourTag()
+    copyFlavTag.InputLocation = BTagLocation
+    MySelection.Members += [copyFlavTag]
 #==============================================================================
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 ApplicationMgr().EvtMax = nEvents
