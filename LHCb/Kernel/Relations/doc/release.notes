@@ -1,24 +1,19 @@
-! $Id: release.notes,v 1.57 2008-11-02 16:44:38 ibelyaev Exp $ 
+! $Id: release.notes,v 1.58 2008-11-17 15:45:03 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
 ! Responsible : Vanya BELYAEV   ibelyaev@physics.syr.edu
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
 
+!====================== Relations v5r5 2008-11-17 ============================
 ! 2008-11-02 - Vanya BELYAEV
-
  - python/Relations/Rels.py
-
     Remove unnesessary "operator=" from many objects 
-
  - Relations/*.h
-
     fix the compiler ambiguity for "merge" family inthe case 
     of FROM==TO by introduction of "imerge" function.
 
-
 ! 2008-11-01 - Vanya BELYAEV
-
  - for each concrete type add the method "merge" to merge 
    with the sorted range and the corresponidng shortcut: 'operator+='
    Using this methods it is easy to add some valid range of 
@@ -29,15 +24,9 @@
    relatiion table. [ Note that "i_push" invalidate the table, 
    the table is validated again with "i_sort"].
 
-      
-
-
 ! 2008-10-31 - Vanya BELYAEV
-
  - fix for gcc43 compilations 
-
  - cmt/requirements 
-
    version increment to v5r5 
 
 !====================== Relations v5r4 2008-02-29 ============================
