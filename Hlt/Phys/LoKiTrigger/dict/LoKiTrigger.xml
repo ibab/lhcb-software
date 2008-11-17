@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiTrigger.xml,v 1.12 2008-11-02 20:44:03 ibelyaev Exp $ 
+     * $Id: LoKiTrigger.xml,v 1.13 2008-11-17 17:38:49 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiGen package
@@ -73,6 +73,8 @@
   
   <class pattern   = "LoKi::ITrHybrid**" />
   <class pattern   = "LoKi::Hybrid::*"   />
+
+  <class pattern   = "LoKi::Hlt1::*" />
   
   <exclusion>
     <class pattern="LoKi::HltBinders::HltBinder*::Container" />

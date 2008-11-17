@@ -1,9 +1,18 @@
-! $Id: release.notes,v 1.15 2008-11-13 13:14:41 ibelyaev Exp $
+! $Id: release.notes,v 1.16 2008-11-17 17:38:49 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiTrigger
 ! Responsible : Vanya BELYAEV
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
+
+! 2008-11-17 - Vanya Belyaev
+
+ - add various Hlt1-related "binders" 
+
+   Looks like we have now all components for Htl1 implementation through
+    "units"....
+
+  
 
 ! 2008-11-13 - Vanya BELYAEV
 

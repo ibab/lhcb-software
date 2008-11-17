@@ -257,6 +257,19 @@ TrSOURCEDIRECT = LoKi.Tracks.SourceDirect
 RVSOURCE       = LoKi.RecVertices.SourceTES 
 RVSOURCEDIRECT = LoKi.RecVertices.SourceDirect 
 
+
+## Hlt1 stuff 
+TrSELECTION = LoKi.Hlt1.TrSelection 
+TrREGISTER  = LoKi.Hlt1.TrRegister
+RvSELECTION = LoKi.Hlt1.RvSelection 
+RvREGISTER  = LoKi.Hlt1.RvRegister
+TrUPGRADE   = LoKi.Hlt1.TrUpgrade
+TrMATCH     = LoKi.Hlt1.TrMatch
+VxMAKER     = LoKi.Hlt1.VxMaker 
+VxUPGRADE   = LoKi.Hlt1.VxUpgrade
+
+
+
 # ## Simple way to create the 'smart' function from the regular function.
 def info ( key , fun , update = False ) :
     """

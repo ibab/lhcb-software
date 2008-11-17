@@ -1,4 +1,4 @@
-// $Id: HltBindersDicts.h,v 1.1 2007-08-19 13:42:58 ibelyaev Exp $
+// $Id: HltBindersDicts.h,v 1.2 2008-11-17 17:38:48 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_HLTBINDERSDICTS_H 
 #define LOKI_HLTBINDERSDICTS_H 1
@@ -15,8 +15,10 @@
 // ============================================================================
 namespace LoKi 
 {
+  // ==========================================================================
   namespace Dicts
   {
+    // ========================================================================
     class HltBind
     {
     public:
@@ -28,8 +30,7 @@ namespace LoKi
       bindMin  
       ( const LoKi::Types::TTrFunc&      fun                    , 
         const std::vector<LHCb::Track*>* vct                    ,
-        const std::string&               nam1 = "bindMin("      ,
-        const std::string&               nam2 = ",_HLT_tracks)" ) ;
+        const std::string&               nam2 = ",_HLT_tracks"  ) ;
       // ======================================================================
       static 
       LoKi::Types::TrFun 
@@ -37,16 +38,14 @@ namespace LoKi
       ( const LoKi::Types::TTrFunc&      fun                    , 
         const LoKi::Types::TrFunc&       fun2                   , 
         const std::vector<LHCb::Track*>* vct                    ,
-        const std::string&               nam1 = "bindMin("      ,
-        const std::string&               nam2 = ",_HLT_tracks)" ) ;
+        const std::string&               nam2 = ",_HLT_tracks"  ) ;
       // ======================================================================
       static 
       LoKi::Types::TrFun 
       bindAbsMin  
       ( const LoKi::Types::TTrFunc&      fun                    , 
         const std::vector<LHCb::Track*>* vct                    ,
-        const std::string&               nam1 = "bindAbsMin("   ,
-        const std::string&               nam2 = ",_HLT_tracks)" ) ;
+        const std::string&               nam2 = ",_HLT_tracks"  ) ;
       // ======================================================================
       static 
       LoKi::Types::TrFun 
@@ -54,8 +53,61 @@ namespace LoKi
       ( const LoKi::Types::TTrFunc&      fun                    , 
         const LoKi::Types::TrFunc&       fun2                   , 
         const std::vector<LHCb::Track*>* vct                    ,
-        const std::string&               nam1 = "bindAbsMin("   ,
-        const std::string&               nam2 = ",_HLT_tracks)" ) ;
+        const std::string&               nam2 = ",_HLT_tracks"  ) ;
+      // ======================================================================
+      // bindMin Track-Track with source 
+      static 
+      LoKi::Types::TrFun 
+      bindMin 
+      ( const LoKi::Types::TTrFunc&   fun , 
+        const LoKi::Types::TrSources& src ) ;
+      // bindMin Track-Track with source 
+      static 
+      LoKi::Types::TrFun 
+      bindMin 
+      ( const LoKi::Types::TTrFunc&   fun  , 
+        const LoKi::Types::TrSources& src  , 
+        const LoKi::Types::TrFunc&    fun2 ) ;
+      // bindMax Track-Track with source 
+      static 
+      LoKi::Types::TrFun 
+      bindMax 
+      ( const LoKi::Types::TTrFunc&   fun , 
+        const LoKi::Types::TrSources& src ) ;
+      // bindMax Track-Track with source 
+      static 
+      LoKi::Types::TrFun 
+      bindMax
+      ( const LoKi::Types::TTrFunc&   fun  , 
+        const LoKi::Types::TrSources& src  , 
+        const LoKi::Types::TrFunc&    fun2 ) ;
+      // ======================================================================
+      // bindMin Track-Track with source 
+      static 
+      LoKi::Types::TrFun 
+      bindAbsMin 
+      ( const LoKi::Types::TTrFunc&   fun , 
+        const LoKi::Types::TrSources& src ) ;
+      // bindMin Track-Track with source 
+      static 
+      LoKi::Types::TrFun 
+      bindAbsMin 
+      ( const LoKi::Types::TTrFunc&   fun  , 
+        const LoKi::Types::TrSources& src  , 
+        const LoKi::Types::TrFunc&    fun2 ) ;
+      // bindMax Track-Track with source 
+      static 
+      LoKi::Types::TrFun 
+      bindAbsMax 
+      ( const LoKi::Types::TTrFunc&   fun , 
+        const LoKi::Types::TrSources& src ) ;
+      // bindMax Track-Track with source 
+      static 
+      LoKi::Types::TrFun 
+      bindAbsMax
+      ( const LoKi::Types::TTrFunc&   fun  , 
+        const LoKi::Types::TrSources& src  , 
+        const LoKi::Types::TrFunc&    fun2 ) ;
       // ======================================================================
       // bindMax : Track-Track
       // ======================================================================
@@ -64,8 +116,7 @@ namespace LoKi
       bindMax  
       ( const LoKi::Types::TTrFunc&      fun                    , 
         const std::vector<LHCb::Track*>* vct                    ,
-        const std::string&               nam1 = "bindMax("      ,
-        const std::string&               nam2 = ",_HLT_tracks)" ) ;
+        const std::string&               nam2 = ",_HLT_tracks"  ) ;
       // ======================================================================
       static 
       LoKi::Types::TrFun 
@@ -73,16 +124,14 @@ namespace LoKi
       ( const LoKi::Types::TTrFunc&      fun                    , 
         const LoKi::Types::TrFunc&       fun2                   , 
         const std::vector<LHCb::Track*>* vct                    ,
-        const std::string&               nam1 = "bindMax("      ,
-        const std::string&               nam2 = ",_HLT_tracks)" ) ;
+        const std::string&               nam2 = ",_HLT_tracks"  ) ;
       // ======================================================================
       static 
       LoKi::Types::TrFun 
       bindAbsMax  
       ( const LoKi::Types::TTrFunc&      fun                    , 
         const std::vector<LHCb::Track*>* vct                    ,
-        const std::string&               nam1 = "bindAbsMax("   ,
-        const std::string&               nam2 = ",_HLT_tracks)" ) ;
+        const std::string&               nam2 = ",_HLT_tracks"  ) ;
       // ======================================================================
       static 
       LoKi::Types::TrFun 
@@ -90,8 +139,7 @@ namespace LoKi
       ( const LoKi::Types::TTrFunc&      fun                    , 
         const LoKi::Types::TrFunc&       fun2                   , 
         const std::vector<LHCb::Track*>* vct                    ,
-        const std::string&               nam1 = "bindAbsMax("   ,
-        const std::string&               nam2 = ",_HLT_tracks)" ) ;
+        const std::string&               nam2 = ",_HLT_tracks"  ) ;
       // ======================================================================
       // bindMin:  Track-Vertex
       // ======================================================================
@@ -100,8 +148,7 @@ namespace LoKi
       bindMin  
       ( const LoKi::Types::TrVFunc&          fun                      , 
         const std::vector<LHCb::RecVertex*>* vct                      ,
-        const std::string&                   nam1 = "bindMin("        ,
-        const std::string&                   nam2 = ",_HLT_vertices)" ) ;
+        const std::string&                   nam2 = ",_HLT_vertices"  ) ;
       // ======================================================================
       static 
       LoKi::Types::TrFun 
@@ -109,16 +156,14 @@ namespace LoKi
       ( const LoKi::Types::TrVFunc&          fun                      , 
         const LoKi::Types::RVFunc&           fun2                     , 
         const std::vector<LHCb::RecVertex*>* vct                      ,
-        const std::string&                   nam1 = "bindMin("        ,
-        const std::string&                   nam2 = ",_HLT_vertices)" ) ;
+        const std::string&                   nam2 = ",_HLT_vertices"  ) ;
       // ======================================================================
       static 
       LoKi::Types::TrFun 
       bindAbsMin  
       ( const LoKi::Types::TrVFunc&          fun                      , 
         const std::vector<LHCb::RecVertex*>* vct                      ,
-        const std::string&                   nam1 = "bindAbsMin("     ,
-        const std::string&                   nam2 = ",_HLT_vertices)" ) ;
+        const std::string&                   nam2 = ",_HLT_vertices"  ) ;
       // ======================================================================
       static 
       LoKi::Types::TrFun 
@@ -126,8 +171,7 @@ namespace LoKi
       ( const LoKi::Types::TrVFunc&          fun                      , 
         const LoKi::Types::RVFunc&           fun2                     , 
         const std::vector<LHCb::RecVertex*>* vct                      ,
-        const std::string&                   nam1 = "bindAbsMin("     ,
-        const std::string&                   nam2 = ",_HLT_vertices)" ) ;
+        const std::string&                   nam2 = ",_HLT_vertices"  ) ;
       // ======================================================================
       // bindMax:  Track-Vertex
       // ======================================================================
@@ -136,8 +180,7 @@ namespace LoKi
       bindMax  
       ( const LoKi::Types::TrVFunc&          fun                      , 
         const std::vector<LHCb::RecVertex*>* vct                      ,
-        const std::string&                   nam1 = "bindMax("        ,
-        const std::string&                   nam2 = ",_HLT_vertices)" ) ;
+        const std::string&                   nam2 = ",_HLT_vertices"  ) ;
       // ======================================================================
       static 
       LoKi::Types::TrFun 
@@ -145,16 +188,14 @@ namespace LoKi
       ( const LoKi::Types::TrVFunc&          fun                      , 
         const LoKi::Types::RVFunc&           fun2                     , 
         const std::vector<LHCb::RecVertex*>* vct                      ,
-        const std::string&                   nam1 = "bindMax("        ,
-        const std::string&                   nam2 = ",_HLT_vertices)" ) ;
+        const std::string&                   nam2 = ",_HLT_vertices"  ) ;
       // ======================================================================
       static 
       LoKi::Types::TrFun 
       bindAbsMax  
       ( const LoKi::Types::TrVFunc&          fun                      , 
         const std::vector<LHCb::RecVertex*>* vct                      ,
-        const std::string&                   nam1 = "bindAbsMax("     ,
-        const std::string&                   nam2 = ",_HLT_vertices)" ) ;
+        const std::string&                   nam2 = ",_HLT_vertices"  ) ;
       // ======================================================================
       static 
       LoKi::Types::TrFun 
@@ -162,8 +203,7 @@ namespace LoKi
       ( const LoKi::Types::TrVFunc&          fun                      , 
         const LoKi::Types::RVFunc&           fun2                     , 
         const std::vector<LHCb::RecVertex*>* vct                      ,
-        const std::string&                   nam1 = "bindAbsMax("     ,
-        const std::string&                   nam2 = ",_HLT_vertices)" ) ;
+        const std::string&                   nam2 = ",_HLT_vertices"  ) ;
       // ======================================================================
       // bindMin:  Vertex-Vertex
       // ======================================================================
@@ -172,8 +212,7 @@ namespace LoKi
       bindMin  
       ( const LoKi::Types::RVVFunc&          fun                      , 
         const std::vector<LHCb::RecVertex*>* vct                      ,
-        const std::string&                   nam1 = "bindMin("        ,
-        const std::string&                   nam2 = ",_HLT_vertices)" ) ;
+        const std::string&                   nam2 = ",_HLT_vertices"  ) ;
       // ======================================================================
       static 
       LoKi::Types::RVFun 
@@ -181,16 +220,14 @@ namespace LoKi
       ( const LoKi::Types::RVVFunc&          fun                      , 
         const LoKi::Types::RVFunc&           fun2                     , 
         const std::vector<LHCb::RecVertex*>* vct                      ,
-        const std::string&                   nam1 = "bindMin("        ,
-        const std::string&                   nam2 = ",_HLT_vertices)" ) ;
+        const std::string&                   nam2 = ",_HLT_vertices"  ) ;
       // ======================================================================
       static 
       LoKi::Types::RVFun 
       bindAbsMin  
       ( const LoKi::Types::RVVFunc&          fun                      , 
         const std::vector<LHCb::RecVertex*>* vct                      ,
-        const std::string&                   nam1 = "bindAbsMin("     ,
-        const std::string&                   nam2 = ",_HLT_vertices)" ) ;
+        const std::string&                   nam2 = ",_HLT_vertices"  ) ;
       // ======================================================================
       static 
       LoKi::Types::RVFun 
@@ -198,8 +235,7 @@ namespace LoKi
       ( const LoKi::Types::RVVFunc&          fun                      , 
         const LoKi::Types::RVFunc&           fun2                     , 
         const std::vector<LHCb::RecVertex*>* vct                      ,
-        const std::string&                   nam1 = "bindAbsMin("     ,
-        const std::string&                   nam2 = ",_HLT_vertices)" ) ;
+        const std::string&                   nam2 = ",_HLT_vertices"  ) ;
       // ======================================================================
       // bindMax:  Vertex-Vertex
       // ======================================================================
@@ -208,8 +244,7 @@ namespace LoKi
       bindMax  
       ( const LoKi::Types::RVVFunc&          fun                      , 
         const std::vector<LHCb::RecVertex*>* vct                      ,
-        const std::string&                   nam1 = "bindMax("        ,
-        const std::string&                   nam2 = ",_HLT_vertices)" ) ;
+        const std::string&                   nam2 = ",_HLT_vertices"  ) ;
       // ======================================================================
       static 
       LoKi::Types::RVFun 
@@ -217,16 +252,14 @@ namespace LoKi
       ( const LoKi::Types::RVVFunc&          fun                      , 
         const LoKi::Types::RVFunc&           fun2                     , 
         const std::vector<LHCb::RecVertex*>* vct                      ,
-        const std::string&                   nam1 = "bindMax("        ,
-        const std::string&                   nam2 = ",_HLT_vertices)" ) ;
+        const std::string&                   nam2 = ",_HLT_vertices"  ) ;
       // ======================================================================
       static 
       LoKi::Types::RVFun 
       bindAbsMax  
       ( const LoKi::Types::RVVFunc&          fun                      , 
         const std::vector<LHCb::RecVertex*>* vct                      ,
-        const std::string&                   nam1 = "bindAbsMax("     ,
-        const std::string&                   nam2 = ",_HLT_vertices)" ) ;
+        const std::string&                   nam2 = ",_HLT_vertices"  ) ;
       // ======================================================================
       static 
       LoKi::Types::RVFun 
@@ -234,11 +267,12 @@ namespace LoKi
       ( const LoKi::Types::RVVFunc&          fun                      , 
         const LoKi::Types::RVFunc&           fun2                     , 
         const std::vector<LHCb::RecVertex*>* vct                      ,
-        const std::string&                   nam1 = "bindAbsMax("     ,
-        const std::string&                   nam2 = ",_HLT_vertices)" ) ;
+        const std::string&                   nam2 = ",_HLT_vertices"  ) ;
       // ======================================================================
     } ;
+    // ========================================================================
   } // end of namespace LoKi::Dicts 
+  // ==========================================================================
 } // end of namespace LoKi 
 // ============================================================================
 // The END 
