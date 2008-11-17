@@ -11,4 +11,23 @@
   <class name="std::vector<LHCb::PackedMCVertex>"/>
   <class name="LHCb::PackedMCVertices" id="000005E7-0000-0000-0000-000000000000"/>
 
+  <class name="LHCb::PackedTrack" />
+  <class name="std::vector<LHCb::PackedTrack>" />
+  <class name="LHCb::PackedTracks" id="0000060E-0000-0000-0000-000000000000" />
+
+  <class name="LHCb::PackedState" />
+  <class name="std::vector<LHCb::PackedState>" />
+
+  <class name="LHCb::PackedCaloHypo" />
+  <class name="std::vector<LHCb::PackedCaloHypo>" />
+  <class name="LHCb::PackedCaloHypos" id="0000060F-0000-0000-0000-000000000000" />
+
+  <class name="LHCb::PackedProtoParticle" />
+  <class name="std::vector<LHCb::PackedProtoParticle>" />
+  <class name="LHCb::PackedProtoParticles" id="00000610-0000-0000-0000-000000000000" />
+
+  <class name="LHCb::PackedRecVertex" />
+  <class name="std::vector<LHCb::PackedRecVertex>" />
+  <class name="LHCb::PackedRecVertices" id="00000611-0000-0000-0000-000000000000" />
+
 </lcgdict>
