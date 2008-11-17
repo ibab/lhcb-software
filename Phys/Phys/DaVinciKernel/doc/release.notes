@@ -1,8 +1,11 @@
-!$Id: release.notes,v 1.271 2008-11-14 06:52:14 tskwarni Exp $
+!$Id: release.notes,v 1.272 2008-11-17 16:21:23 tskwarni Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2008-11-17 - Tomasz Skwarnicki
+ - fix problem with unwanted dependencies in ITriggerTisTos
 
 ! 2008-11-14 - Tomasz Skwarnicki
  - Kernel/ITriggerTisTos.h ITriggerSelectionTisTos.h

@@ -1,4 +1,4 @@
-// $Id: ITriggerTisTos.h,v 1.4 2008-11-14 06:52:14 tskwarni Exp $
+// $Id: ITriggerTisTos.h,v 1.5 2008-11-17 16:21:23 tskwarni Exp $
 #ifndef ITRIGGERTISTOS_H 
 #define ITRIGGERTISTOS_H 1
 
@@ -19,6 +19,7 @@ namespace LHCb {
   class ProtoParticle;
   class Track;
   class RecVertex;
+  class HltObjectSummary;  
 };
 
 
