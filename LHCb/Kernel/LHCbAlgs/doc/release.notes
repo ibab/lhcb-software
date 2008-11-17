@@ -4,6 +4,7 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!======================== LHCbAlgs v2r22 2008-11-17 ==========================
 ! 2008-11-13 - Marco Cattaneo
  - Fix untested StatusCode in EventNodeKiller
 
