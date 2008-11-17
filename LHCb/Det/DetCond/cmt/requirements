@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.95 2008-11-14 13:33:41 cattanem Exp $
+# $Id: requirements,v 1.96 2008-11-17 08:02:31 cattanem Exp $
 # =============================================================================
 package       DetCond
 version       v12r4
@@ -44,12 +44,14 @@ apply_pattern component_library library=DetCond
 apply_pattern linker_library    library=DetCondLib 
 
 # DetCond Configurable uses the generated configurables 
+private
 macro_append DetCondGenConfUser_dependencies DetCondConf
+path_prepend PYTHONPATH ${DETCONDROOT}/genConf
+end_private
 apply_pattern install_python_modules
 
 # ==============================================================================
 private
-
 macro_append DetCond_use_linkopts " $(Boost_linkopts_thread) $(Boost_linkopts_filesystem_mt) "
 
 macro_append DetCond_use_linkopts " -lboost_date_time-$(Boost_compiler_version)-mt " \
