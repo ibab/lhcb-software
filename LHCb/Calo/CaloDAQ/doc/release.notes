@@ -4,6 +4,7 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+!========================== CaloDAQ v4r8 2008-11-17 ==========================
 ! 2008-10-28 - Marco Cattaneo
  - Fixes for gcc 4.3 compilation
 
