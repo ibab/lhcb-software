@@ -1,9 +1,12 @@
-	! $Id: release.notes,v 1.56 2008-11-14 17:27:45 tskwarni Exp $ 
+	! $Id: release.notes,v 1.57 2008-11-17 13:17:25 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2008-11-17 - Patrick Koppenburg
+ - Comment out RICH
 
 ! 2008-11-14 - Tomasz Skwarnicki
  - added HltPersistentOutput sequence to "oldStyle" in HltConf()

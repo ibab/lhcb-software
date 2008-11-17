@@ -93,7 +93,7 @@ HltMuonID.MuonTrackLocation = "Hlt/Track/Muon";
 // C.Jones : RICH options
 // Disabled by default. To enable uncomment the lines below
 //---------------------------------------------------------------------
-#include "$HLTCONFROOT/options/Hlt2Rich.py"
+// #include "$HLTCONFROOT/options/Hlt2Rich.py"
 //CreateHLTTracks.OutputLevel = 1;
 //ToolSvc.HLT_RichTrackCreator.OutputLevel  = 1;
 //---------------------------------------------------------------------
