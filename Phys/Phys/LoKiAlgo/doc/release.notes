@@ -1,22 +1,20 @@
-! $Id: release.notes,v 1.46 2008-11-02 21:13:24 ibelyaev Exp $ 
+! $Id: release.notes,v 1.47 2008-11-17 15:55:05 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgo
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : LoKi-algorithm related stuff 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiAlgo v8r0 2008-11-17 ==========================
 ! 2008-11-02 - Vanya BELYAEV
-
- - more fixes for variosu compilers 
+ - more fixes for various compilers 
  - remove extra methods from the dictionaries 
-
  - cmt/requirements 
-
    version increment to v8r0 
 
 ! 2008-10-28 - Juan PALACIOS
  - src/Algo.cpp
-  . Adapt to new IPhysDesktop::primaryVerticse() method
+  . Adapt to new IPhysDesktop::primaryVertices() method
 
 !========================== LoKiAlgo v7r6 2008-09-30 ==========================
 ! 2008-09-16 - Vanya BELYAEV
