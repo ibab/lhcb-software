@@ -1,5 +1,5 @@
 package LHCbSys
-version v25r2
+version v26r0
 
 branches doc cmt
 
@@ -7,106 +7,106 @@ branches doc cmt
 # LHCb packages visible to all applications
 #===============================================================
 
-use GaudiConf             v10r13
+use GaudiConf             v11r0
 use GaudiObjDesc          v11r5
 
 #                                         Maintainer
 # Kernel packages
 use KernelSys             v9r2    Kernel  # Marco Cattaneo
-use LHCbKernel            v9r2    Kernel  # Marco Cattaneo
-use LHCbMath              v3r3    Kernel  # Juan Palacios
-use CaloKernel            v5r1    Calo    # Olivier Deschamps
+use LHCbKernel            v9r3    Kernel  # Marco Cattaneo
+use LHCbMath              v3r4    Kernel  # Juan Palacios
+use CaloKernel            v5r2    Calo    # Olivier Deschamps
 use MuonKernel            v4r0    Muon    # Andrei Tsaregorodtsev
-use L0MuonKernel          v8r3    L0      # Andrei Tsaregorodtsev, Julien Cogan
-use ProcessorKernel       v5r2    L0      # Andrei Tsaregorodtsev, Julien Cogan
-use Relations             v5r4    Kernel  # Ivan Belyaev
-use RichKernel            v7r17   Rich    # Chris Jones
+use L0MuonKernel          v8r4    L0      # Andrei Tsaregorodtsev, Julien Cogan
+use ProcessorKernel       v5r3    L0      # Andrei Tsaregorodtsev, Julien Cogan
+use Relations             v5r5    Kernel  # Ivan Belyaev
+use RichKernel            v7r18   Rich    # Chris Jones
 
 # Detector description
 use DetSys                v16r0   Det     # Marco Cattaneo
-use BcmDet                v1r1    Det     # Magnus Lieng
+use BcmDet                v1r2    Det     # Magnus Lieng
 use CaloDet               v10r0   Det     # Olivier Deschamps
 use CaloDetXmlCnv         v3r2    Det     # Olivier Deschamps
-use DDDB                  v1r12   Det     # Marco Cattaneo
-use DetCond               v12r3   Det     # Marco Clemencic
-use DetDesc               v18r9   Det     # Marco Clemencic, Juan Palacios
-use DetDescCnv            v4r7    Det     # Marco Clemencic, Juan Palacios
-use DetDescSvc            v2r1    Det     # Marco Clemencic, Matt Needham
-use Magnet                v5r1p1  Det     # Adlene Hicheur
-use MuonDet               v8r3    Det     # Alessia Satta, Alessio Sarti
-use OTDet                 v8r1    Det     # Jan Amoraal
-use RichDet               v11r2   Det     # Chris Jones
-use STDet                 v4r5    Det     # Jeroen van Tilburg, Matt Needham
-use VeloDet               v13r3   Det     # Mark Tobin, Kurt Rinnert
-use XmlTools              v6r1    Tools   # Marco Clemencic
+use DDDB                  v1r13   Det     # Marco Cattaneo
+use DetCond               v12r4   Det     # Marco Clemencic
+use DetDesc               v18r10  Det     # Marco Clemencic, Juan Palacios
+use DetDescCnv            v4r7p1  Det     # Marco Clemencic, Juan Palacios
+use DetDescSvc            v2r1p1  Det     # Marco Clemencic, Matt Needham
+use Magnet                v5r1p2  Det     # Adlene Hicheur
+use MuonDet               v8r4    Det     # Alessia Satta, Alessio Sarti
+use OTDet                 v8r2    Det     # Jan Amoraal
+use RichDet               v11r3   Det     # Chris Jones
+use STDet                 v4r6    Det     # Jeroen van Tilburg, Matt Needham
+use VeloDet               v13r4   Det     # Mark Tobin, Kurt Rinnert
+use XmlTools              v6r2    Tools   # Marco Clemencic
 
 # Event data model
 use EventSys              v24r9   Event   # Marco Cattaneo
-use DAQEvent              v7r15   Event   # Marco Cattaneo, Markus Frank
-use DigiEvent             v2r9    Event   # Marco Cattaneo and sub-det experts
-use EventAssoc            v4r4    Event   # Ivan Belyaev
+use DAQEvent              v7r16   Event   # Marco Cattaneo, Markus Frank
+use DigiEvent             v2r10   Event   # Marco Cattaneo and sub-det experts
+use EventAssoc            v4r5    Event   # Ivan Belyaev
 use EventBase             v2r5    Event   # Marco Cattaneo, Gloria Corti
 use GenEvent              v5r3    Event   # Gloria Corti
 use HltEvent              v8r13   Event   # Jose Angel Hernando-Morata
 use LinkerEvent           v3r5    Event   # Olivier Callot
-use L0Event               v17r2   Event   # Olivier Deschamps, Julien Cogan
-use MCEvent               v2r9p1  Event   # Gloria Corti and sub-det experts
+use L0Event               v17r3   Event   # Olivier Deschamps, Julien Cogan
+use MCEvent               v2r10   Event   # Gloria Corti and sub-det experts
 use PackedEvent           v3r3    Event   # Marco Cattaneo, Olivier Callot
 use PhysEvent             v11r6   Event   # Patrick Koppenburg, Juan Palacios
-use RecEvent              v2r16   Event   # Marco Cattaneo and sub-det experts
-use TrackEvent            v4r15   Event   # Matt Needham
+use RecEvent              v2r17   Event   # Marco Cattaneo and sub-det experts
+use TrackEvent            v4r16   Event   # Matt Needham
 use VeloEvent             v16r6   Event   # Tomasz Szumlak, Chris Parkes
 use STTELL1Event          v1r6    ST      # Matt Needham
 
 # L1/Raw buffer encoding and decoding
 use DAQSys                v5r2    DAQ     # Marco Cattaneo
-use MuonDAQ               v4r4    Muon    # Alessia Satta
-use OTDAQ                 v7r2    OT      # Jan Amoraal
-use CaloDAQ               v4r7    Calo    # Olivier Deschamps
+use MuonDAQ               v4r5    Muon    # Alessia Satta
+use OTDAQ                 v7r3    OT      # Jan Amoraal
+use CaloDAQ               v4r8    Calo    # Olivier Deschamps
 use SiDAQ                 v2r1    Si      # Matt Needham
 
 # Other stuff
 use CaloInterfaces        v7r8   Calo    # Olivier Deschamps
-use CaloUtils             v8r2   Calo    # Olivier Deschamps
+use CaloUtils             v8r3   Calo    # Olivier Deschamps
 use CondDBEntityResolver  v5r1   Tools   # Marco Clemencic
-use CondDBUI              v2r13  Tools   # Marco Clemencic
-use DaVinciKernel         v7r0   Phys    # Juan Palacios
-use DaVinciMCKernel       v2r11  Phys    # Juan Palacios
-use HepMCBack             v1r0   Gen     # Gloria Corti, Patrick Robbe
+use CondDBUI              v2r14  Tools   # Marco Clemencic
+use DaVinciKernel         v7r1   Phys    # Juan Palacios
+use DaVinciMCKernel      v2r11p1 Phys    # Juan Palacios
+use HepMCBack             v1r1   Gen     # Gloria Corti, Patrick Robbe
 use HltInterfaces         v1r0   Kernel  # Patrick Koppenburg
-use LHCbAlgs              v2r21  Kernel  # Marco Cattaneo
+use LHCbAlgs              v2r22  Kernel  # Marco Cattaneo
 use LinkerInstances       v3r4   Event   # Thomas Ruf
-use LoKi                  v7r1   Phys    # Ivan Belyaev
-use LoKiAlgo              v7r6   Phys    # Ivan Belyaev
-use LoKiAlgoMC            v7r2   Phys    # Ivan Belyaev
-use LoKiArrayFunctors     v7r4   Phys    # Ivan Belyaev
-use LoKiCore              v7r8   Phys    # Ivan Belyaev
-use LoKiGen               v7r6   Phys    # Ivan Belyaev
-use LoKiGenMC             v7r1p1 Phys    # Ivan Belyaev
+use LoKi                  v8r0   Phys    # Ivan Belyaev
+use LoKiAlgo              v8r0   Phys    # Ivan Belyaev
+use LoKiAlgoMC            v8r0   Phys    # Ivan Belyaev
+use LoKiArrayFunctors     v8r0   Phys    # Ivan Belyaev
+use LoKiCore              v8r0   Phys    # Ivan Belyaev
+use LoKiGen               v8r0   Phys    # Ivan Belyaev
+use LoKiGenMC             v8r0   Phys    # Ivan Belyaev
 use LoKiHlt               v1r0   Phys    # Ivan Belyaev
-use LoKiMC                v7r6   Phys    # Ivan Belyaev
-use LoKiNumbers           v7r3p1 Phys    # Ivan Belyaev
-use LoKiPhys              v7r8   Phys    # Ivan Belyaev
-use LoKiPhysMC            v7r4   Phys    # Ivan Belyaev
+use LoKiMC                v8r0   Phys    # Ivan Belyaev
+use LoKiNumbers           v8r0   Phys    # Ivan Belyaev
+use LoKiPhys              v8r0   Phys    # Ivan Belyaev
+use LoKiPhysMC            v8r0   Phys    # Ivan Belyaev
 use L0Interfaces          v1r2   L0      # Olivier Deschamps
 use MCInterfaces          v1r5   Kernel  # Marco Cattaneo et al.
-use MDF                   v3r13  DAQ     # Markus Frank
+use MDF                   v3r14  DAQ     # Markus Frank
 use MDF_ROOT              v1r2   DAQ     # Markus Frank
 use PatKernel             v2r1   Tf      # Stephanie Hansmann-Menzemer
 use RecInterfaces         v1r0   Kernel  # Marco Cattaneo et al.
-use RichRecBase           v3r17  Rich    # Chris Jones
-use SimComponents        v2r12p1 Sim     # Gloria Corti, Marco Cattaneo
-use STKernel              v1r8   ST      # Matt Needham
-use Tell1Kernel           v1r5   DAQ     # Tomasz Szumlak
-use TfKernel              v2r8   Tf      # Stephanie Hansmann-Menzemer
+use RichRecBase           v3r18  Rich    # Chris Jones
+use SimComponents         v2r14  Sim     # Gloria Corti, Marco Cattaneo
+use STKernel              v1r9   ST      # Matt Needham
+use Tell1Kernel           v1r6   DAQ     # Tomasz Szumlak
+use TfKernel              v2r9   Tf      # Stephanie Hansmann-Menzemer
 use TrackInterfaces       v3r17  Tr      # Matt Needham
 use TsaKernel             v3r4   Tf      # Matt Needham
 
 # LHCb  Examples
-use DetCondExample        v11r4  Ex      # Marco Clemencic
-use DetDescChecks         v4r9   Det     # Ivan Belyaev
-use DetDescExample        v7r7   Ex      # Marco Clemencic
-use IOExample             v2r5   Ex      # Marco Cattaneo
+use DetCondExample        v11r5  Ex      # Marco Clemencic
+use DetDescChecks         v4r10  Det     # Ivan Belyaev
+use DetDescExample        v7r7p1 Ex      # Marco Clemencic
+use IOExample             v2r6   Ex      # Marco Cattaneo
 
 
 # Allow the generation of QMTest summary 
