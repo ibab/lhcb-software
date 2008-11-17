@@ -1,19 +1,17 @@
-! $Id: release.notes,v 1.79 2008-11-02 20:13:32 ibelyaev Exp $ 
+! $Id: release.notes,v 1.80 2008-11-17 16:10:00 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiPhys v8r0 2008-11-17 ==========================
 ! 2008-11-02 - Vanya BELYAEV
-
- - more fixes for variosu compilers 
+ - more fixes for various compilers 
  - remove unnesessary assignements form dictionaries 
    (and from the code)
 
-
 ! 2008-10-31 - Vanya BELYAEV
-
  - dirty fixes for the starnge behavour of reflex in LCG-preview 
 
 
@@ -26,15 +24,12 @@
   . Adapt to change to new IPhysDesktop::primaryVertices() method.
 
 ! 2008-10-19 - Vanya BELYAEV
-
   - adaptation to new Phys/LoKiCore v8r0
 
      new structure of decorators 
 
  - cmt/requirements 
-
    version incrmeent to v8r0 
-
 
 ! 2008-10-13 - Vanya BELYAEV
  - LoKi/Particles23.h

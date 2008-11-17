@@ -1,12 +1,13 @@
-! $Id: release.notes,v 1.51 2008-11-04 13:52:50 ibelyaev Exp $ 
+! $Id: release.notes,v 1.52 2008-11-17 16:11:18 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhysMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiPhysMC v8r0 2008-11-17 ========================
 ! 2008-11-04 - Vanya BELYAEV
- - remove all opts fiels ( and the directory)
+ - remove all opts files ( and the directory)
 
    add the configurations to tun 'on-demand'
     Track -> MC relation tables 
@@ -18,20 +19,16 @@
 
 
 ! 2008-11-03 - Vanya BELYAEV
-
- - resurrent & redesign all PV -> MCV stuff
+ - resurrect & redesign all PV -> MCV stuff
 
 ! 2008-11-02 - Vanya BELYAEV
-
  - more fixes for variosu compilers 
  - remove some methods form the dictionaries 
 
 ! 2008-10-29 - Vanya BELYAEV
-
  - few fixes to please gcc43 compilation 
  - cmt/requirements 
     versiom increment to v8r0 
-
 
 !========================== LoKiPhysMC v7r4 2008-07-27 ========================
 ! 2008-07-22 - Vanya BELYAEV
