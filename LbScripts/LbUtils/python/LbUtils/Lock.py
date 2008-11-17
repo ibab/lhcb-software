@@ -72,7 +72,7 @@ class Lock(object):
         - launcher unique id
         - result of hash function on the launcher unique id
         """
-        lock = file(ps.path.join(self._dir, self._lockFileName), 'w')
+        lock = file(os.path.join(self._dir, self._lockFileName), 'w')
         lock.writelines([self._command, '\n', self._uniqId, '\n', _hash(self._uniqId)])
         lock.close()
     def _removeLock(self):
