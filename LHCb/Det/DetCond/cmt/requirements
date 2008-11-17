@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.96 2008-11-17 08:02:31 cattanem Exp $
+# $Id: requirements,v 1.97 2008-11-17 11:09:40 cattanem Exp $
 # =============================================================================
 package       DetCond
 version       v12r4
@@ -43,9 +43,10 @@ library       DetCond           component/*.cpp ../tests/src/*.cpp
 apply_pattern component_library library=DetCond 
 apply_pattern linker_library    library=DetCondLib 
 
-# DetCond Configurable uses the generated configurables 
 private
-macro_append DetCondGenConfUser_dependencies DetCondConf
+# DetCond Configurable uses the generated configurables 
+macro_append DetCondGenConfUser_dependencies DetCondConfDbMerge
+# Have to look in local DetCondConf.py, install_python has to come later 
 path_prepend PYTHONPATH ${DETCONDROOT}/genConf
 end_private
 apply_pattern install_python_modules
@@ -66,6 +67,12 @@ use $(DetCond_use_CondDBUI)
 
 macro DetCond_use_DDDB "" QMTest "DDDB v* Det"
 use $(DetCond_use_DDDB)
+
+macro DetCond_use_DetDescSvc "" QMTest "DetDescSvc v* Det"
+use $(DetCond_use_DetDescSvc)
+
+macro DetCond_use_DetDescCnv "" QMTest "DetDescCnv v* Det"
+use $(DetCond_use_DetDescCnv)
 # =====================================
 
 end_private

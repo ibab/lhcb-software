@@ -1,4 +1,4 @@
-# $Id: release.notes,v 1.156 2008-11-17 08:02:31 cattanem Exp $
+# $Id: release.notes,v 1.157 2008-11-17 11:09:40 cattanem Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
@@ -6,7 +6,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2008-11-17 - Marco Cattaneo
- - Fix to PYTHONPATH to avoid warnings when making configurables database 
+ - Fix to requirements avoid warnings when making configurables database 
+ - Add LoadDDDB algorithm, moved from DetDescChecks to avoid tests dependency
+   on DetDescChecks package
+ - Add missing dependencies for QMTest
 
 ! 2008-11-14 - Marco Cattaneo
  - In Configurable, set up VFSSvc, e.g. for use by ParticlePropertySvc
