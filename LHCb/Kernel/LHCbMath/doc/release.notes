@@ -6,26 +6,25 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+!========================= LHCbMath v3r4 2008-11-17 ==========================
 ! 2008-11-08 - Vanya BELYAEV
  - LHCbMath/Lomont.h
    src/Lomont.cpp
- 
     add an equality functions for float&doubles using very efficient
     implementation of Bruce Dawson's algorithm by Chris Lomont
 
     @see www.lomont.org "Taming the floating point beast"
     @see http://www.cygnus-software.com/papers/comparingfloats/comparingfloats.htm
 
-    The files deifned two major functions in namespace LHCb::Math
-
-      lomont_compare_float    (float  A,  float  B, unsigned short maxULPs = 100 )  
-      lomont_compare_double   (double A,  double B, unisgned int   maxULPs )
+    The files define two major functions in namespace LHCb::Math
+      lomont_compare_float  (float  A,  float  B, unsigned short maxULPs = 100 )
+      lomont_compare_double (double A,  double B, unisgned int   maxULPs )
 
    and two helper functions: 
       next_float 
       next_double    
 
-   The helper functions can be used to adjust properly the parameters maxULPS for 
+   The helper functions can be used to adjust properly the parameters maxULPS for
    the "major" fucntions.
 
    For each maxULPs one can evaluate the corresponding 
