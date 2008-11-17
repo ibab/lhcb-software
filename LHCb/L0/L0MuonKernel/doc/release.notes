@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!============================ L0MuonKernel v8r4 2009-11-17 ==================== 
 ! 2008-11-04 - Julien Cogan
  - Add documentation for doxygen
  - Remove pt encoding parameters : they are fixed by the version number
