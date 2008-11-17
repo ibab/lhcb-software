@@ -1,4 +1,4 @@
-// $Id: FlavourTagCloner.h,v 1.1 2008-08-11 15:19:05 jpalac Exp $
+// $Id: FlavourTagCloner.h,v 1.2 2008-11-17 08:55:41 jpalac Exp $
 #ifndef FLAVOURTAGCLONER_H 
 #define FLAVOURTAGCLONER_H 1
 
@@ -31,6 +31,8 @@ public:
   virtual LHCb::FlavourTag* operator() (const LHCb::FlavourTag* tag);
 
 private:
+
+  typedef MicroDST::BasicCopy<LHCb::FlavourTag> BasicFTCopy;
 
   LHCb::FlavourTag* clone(const LHCb::FlavourTag* tag);
 
