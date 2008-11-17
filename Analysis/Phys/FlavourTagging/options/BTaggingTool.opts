@@ -6,33 +6,32 @@ ApplicationMgr.DLLs += { "FlavourTagging" };
 //----------------------------------------------------------------------
 
 //inclusive secondary vtx type
-ToolSvc.BTaggingTool.TaggerVertexChargeTool.SecondaryVertexName= "SVertexTool"; 
+//ToolSvc.BTaggingTool.TaggerVertexChargeTool.SecondaryVertexName= "SVertexTool"; 
 //ToolSvc.BTaggingTool.TaggerVertexChargeTool.SecondaryVertexName= "SVertexNNTool"; //higher effic.
 //ToolSvc.BTaggingTool.TaggerVertexChargeTool.SecondaryVertexName= "SVertexABTool"; //two output vtxs
 
 //combination method of taggers based on probabilities from NNet
-ToolSvc.BTaggingTool.CombineTaggersName = "CombineTaggersProbability";
-// or with old TDR id-type categories
-//ToolSvc.BTaggingTool.CombineTaggersName = "CombineTaggersTDR";
+//ToolSvc.BTaggingTool.CombineTaggersName = "CombineTaggersProbability";
+// or with PID-type categories
+//ToolSvc.BTaggingTool.CombineTaggersName = "CombineTaggersPID";
 
 //force average estimates for omega of taggers
 //ToolSvc.BTaggingTool.TaggerMuonTool.CombTech = "none"; 
 //ToolSvc.BTaggingTool.TaggerMuonTool.AverageOmega = 0.33;
 
 //Choose neural net (comment these for new one). 
-// ToolSvc.BTaggingTool.TaggerMuonTool.NeuralNetName         = "NNetTool_v1";
-// ToolSvc.BTaggingTool.TaggerElectronTool.NeuralNetName     = "NNetTool_v1";
-// ToolSvc.BTaggingTool.TaggerKaonOppositeTool.NeuralNetName = "NNetTool_v1";
-// ToolSvc.BTaggingTool.TaggerKaonSameTool.NeuralNetName     = "NNetTool_v1";
-// ToolSvc.BTaggingTool.TaggerPionSameTool.NeuralNetName     = "NNetTool_v1";
+//ToolSvc.BTaggingTool.TaggerMuonTool.NeuralNetName          = "NNetTool_MLP";
+// ToolSvc.BTaggingTool.TaggerElectronTool.NeuralNetName     = "NNetTool_MLP";
+// ToolSvc.BTaggingTool.TaggerKaonOppositeTool.NeuralNetName = "NNetTool_MLP";
+// ToolSvc.BTaggingTool.TaggerKaonSameTool.NeuralNetName     = "NNetTool_MLP";
+// ToolSvc.BTaggingTool.TaggerPionSameTool.NeuralNetName     = "NNetTool_MLP";
 
 //Other options
 //ToolSvc.BTaggingTool.RequireTrigger = true; //need to run trigger
-//ToolSvc.BTaggingTool.OutputLocation = "/Event/Phys/BTaggingTool"; //default
+//ToolSvc.BTaggingTool.OutputLocation = "/Event/Phys/BTaggingTool";
 
 //--------------
 //PID definition
-
 ToolSvc.BTaggingTool.PhysDesktop.ParticleMakerType = "CombinedParticleMaker";
 ToolSvc.BTaggingTool.PhysDesktop.CombinedParticleMaker.ExclusiveSelection=false;
 ToolSvc.BTaggingTool.PhysDesktop.CombinedParticleMaker.Muon.Selection = {
@@ -50,5 +49,4 @@ ToolSvc.BTaggingTool.TaggerKaonOppositeTool.GeomDispCalculator.OutputLevel=4;
 ToolSvc.BTaggingTool.TaggerKaonSameTool.GeomDispCalculator.OutputLevel=4;
 ToolSvc.BTaggingTool.TaggerPionSameTool.GeomDispCalculator.OutputLevel=4;
 ToolSvc.BTaggingTool.GeomDispCalculator.OutputLevel=4;
-
 //-----------------------------------------------------------------------
