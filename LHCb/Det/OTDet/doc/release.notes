@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.123 2008-10-28 12:53:40 cattanem Exp $
+! $Id: release.notes,v 1.124 2008-11-17 14:45:51 cattanem Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 !--------------------------------------------------------------------------
 
+!========================== OTDet v8r2 2008-11-17 =========================
 ! 2008-10-28 - Marco Cattaneo
  - Follow changes in DetDesc for gcc 4.3 compilation
 
