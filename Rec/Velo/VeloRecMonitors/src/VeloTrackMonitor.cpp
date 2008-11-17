@@ -1,4 +1,4 @@
-// $Id: VeloTrackMonitor.cpp,v 1.4 2008-11-14 11:14:26 gersabec Exp $
+// $Id: VeloTrackMonitor.cpp,v 1.5 2008-11-17 18:56:54 gersabec Exp $
 // Include files 
 
 // from Gaudi
@@ -315,7 +315,7 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
 
       LHCb::VeloChannelID vcID = id.veloID();
       int sensorID = vcID.sensor();
-      int stripID = vcID.strip();
+      unsigned int stripID = vcID.strip();
 
       //UsedSensor plot
       //---------------
@@ -339,7 +339,7 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
       sensor->residual(trackInterceptGlobal, vcID, interStripFr, biasedResid, chi2);
       double pitch;
       if ( sensor->isR() ) {
-        pitch = sensor->rType()->rPitch( interceptRadius );
+        pitch = sensor->rType()->rPitch( stripID );
       }
       else {
         pitch = sensor->phiType()->phiPitch( interceptRadius );
@@ -538,6 +538,9 @@ StatusCode Velo::VeloTrackMonitor::unbiasedResiduals (LHCb::Track *track )
       // get Unbiased State
       const State state = fitnode.unbiasedState();
       Gaudi::XYZPoint trackInterceptGlobal(state.x(),state.y(),state.z());
+      Gaudi::XYZPoint trackInterceptLocal(0,0,0) ;      
+      trackInterceptLocal = sensor->globalToLocal(trackInterceptGlobal);
+      double interceptRadius = trackInterceptLocal.Rho();
       
       SiPositionInfo<LHCb::VeloChannelID> toolInfo;
       toolInfo=m_clusterTool->position(cluster);
@@ -547,8 +550,16 @@ StatusCode Velo::VeloTrackMonitor::unbiasedResiduals (LHCb::Track *track )
       
       //Sensors vs Unbiased Residuals profile
       sensor->residual(trackInterceptGlobal, vcID, interStripFr, UnbiasedResid, chi2);
+      double pitch;
+      if ( sensor->isR() ) {
+        unsigned int stripID = vcID.strip();
+        pitch = sensor->rType()->rPitch( stripID );
+      }
+      else {
+        pitch = sensor->phiType()->phiPitch( interceptRadius );
+      }
       
-      prof_sensors -> fill (sensor->sensorNumber(), UnbiasedResid/um);   
+      prof_sensors -> fill (sensor->sensorNumber(), m_binary * UnbiasedResid / pitch );   
         
     }//end of fit node
   }//if fit is BiKalman

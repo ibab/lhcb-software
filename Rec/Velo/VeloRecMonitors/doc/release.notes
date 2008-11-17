@@ -4,6 +4,9 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2008-11-17 - Marco Gersabeck
+- normalised also unbiased residual plots
+
 ! 2008-11-14 - Marco Gersabeck
 - changed residual plots to normalised residuals w.r.t. binary resolution
   adapted alignment monitoring accordingly
