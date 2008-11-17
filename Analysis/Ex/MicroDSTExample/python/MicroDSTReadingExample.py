@@ -51,17 +51,18 @@ def makeMassResPlots(particle,mcParticle,plots):
     result = plots[offset+pid].Fill(particle.momentum().mass()-mcParticle.momentum().mass())    
 #==============================================================================
 def makeProperTimePlots(particle, vertex, fitter, plots):
-    pid = particle.particleID().pid()
-    if ( particle.particleID().hasBottom() ):
-        if plots.has_key(pid) == False :
-            plots[pid] = initProperTimePlots(pid, -0.02, 0.04)
-        time =Double(-100000.)
-        error = Double(0.)
-        chi2=Double(0.)
-        fitter.fit(vertex, particle, time, error, chi2)
-        result = plots[pid].Fill(time)    
+    if (vertex != None) :
+        pid = particle.particleID().pid()
+        if ( particle.particleID().hasBottom() ):
+            if plots.has_key(pid) == False :
+                plots[pid] = initProperTimePlots(pid, -0.02, 0.04)
+            time =Double(-100000.)
+            error = Double(0.)
+            chi2=Double(0.)
+            fitter.fit(vertex, particle, time, error, chi2)
+            result = plots[pid].Fill(time)    
 #==============================================================================
-def particleLoop(particles, plots):
+def particleTreeLoop(particles, plots):
     for p in particles:
         p = deSmartRef(p)
         makeMassPlots(p, plots)
@@ -72,8 +73,44 @@ def particleLoop(particles, plots):
                 assocMCParticle = assocRange[0].to()
                 makeMassResPlots(p, assocMCParticle, plots)
         daughters = p.daughters()
-        particleLoop(daughters, plots)
+        particleTreeLoop(daughters, plots)
 
+#==============================================================================
+def testFlavourTags(location, onegaPlot, catPlot) :
+    tags = evt[location]
+    if (tags!=None):
+        for t in tags :
+            print "Found B-tag\n", t
+            print "For particle\n", t.taggedB()
+            omegaPlot.Fill(t.omega())
+            catPlot.Fill(t.category())
+#==============================================================================
+def countPVs(location, plot) :
+    vertices = evt[location]
+    nVerts=0
+    if (vertices !=None) :
+        print "Found ", vertices.size(), " PVs"
+        nVerts = vertices.size()
+    else :
+        print "Found no PVs"
+
+    plot.Fill(vertices.size())
+    return nVerts
+#==============================================================================
+def trueDecayMassPlots(location, plots) :
+    decays = evt['/Event/microDST/MC/Decays']
+    if (decays != None):
+        for mcp in decays: makeMassPlots(mcp, mcMassPlots)
+        return 1
+    else :
+        return 0
+#==============================================================================
+def bestVertex(particle, table) :
+    if (table !=None) :
+        PVRange = bestVertexAssoc.relations(particle)
+        if ( not PVRange.empty()) : return PVRange.back().to()
+    else :
+        return
 #==============================================================================
 def printHelp():
     print "Usage: python -i MicroDSTReadingExample [options]"
@@ -135,36 +172,32 @@ particlePath = selectionPath + '/Particles'
 particle2mcPath = selectionPath + '/Particles/RelatedMCParticles'
 vertexAssociationPath = selectionPath + '/Particle2VertexRelations'
 mcParticlePath = '/Event/microDST/MC/Particles'
+flavTagPath = selectionPath + "/Tagging"
+pvLocation = "/Event/microDST/Rec/Vertex/Primary"
+nPVPlot = TH1D( "# of PVs", "# of primary vertices", 5, -0.5, 4.5 )
+omegaPlot = TH1D("Mis-tag fratcion", "Mis-tag fraction", 100, 0,1.0)
+flavCatPlot = TH1D("Tagging category", "Tagging category", 11, -0.5,10.5)
 while (nextEvent(appMgr)) :
-    print "HELLO!!!!!"
-    evt.dump()
+#    evt.dump()
     nEvents+=1
-    vertices = evt['/Event/microDST/Rec/Vertex/Primary']
-    if (vertices !=None) :
-        nPrimaryVertices += 1
-    decays = evt['/Event/microDST/MC/Decays']
-    if (decays != None):
-        for mcp in decays: makeMassPlots(mcp, mcMassPlots)
-        nMCEvents += 1
+    nPrimaryVertices += countPVs(pvLocation, nPVPlot)
+    nMCEvents += trueDecayMassPlots('/Event/microDST/MC/Decays', mcMassPlots)
     particles = evt[particlePath]
     if (particles!=None):
         nRecEvents+=1
         nParticles += particles.size()
         bestVertexAssoc = evt[vertexAssociationPath]
-        particleLoop(particles, massPlots)
+        particleTreeLoop(particles, massPlots)
         for p in particles:
-            if (bestVertexAssoc !=None) :
-                PVRange = bestVertexAssoc.relations(p)
-                if ( not PVRange.empty()) :
-                    vertex = PVRange.back().to()
-                    makeProperTimePlots(p,
-                                        vertex,
-                                        properTimeFitter,
-                                        propTimePlots)
-            else :
-                print "Found no particle->PV associations at ", vertexAssociationPath
-
-            
+            vertex = bestVertex(p, bestVertexAssoc)
+            makeProperTimePlots(p,
+                                vertex,
+                                properTimeFitter,
+                                propTimePlots)
+        else :
+            print "Found no particle->PV associations at ", vertexAssociationPath
+    testFlavourTags(flavTagPath, omegaPlot, flavCatPlot)
+    
 print "Found MC info in ", nMCEvents, "/", nEvents, " events"
 print "Found Reco info in ", nRecEvents, "/", nEvents, "events"
 print "Found ", nPrimaryVertices, " PVs in ", nEvents, "events"
