@@ -4,6 +4,7 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!===================== RichRecBase v3r18 2008-11-17 ==========================
 ! 2008-10-29 - Chris Jones
  - Small change to ITrackCreator interface for gcc 4.3
 
