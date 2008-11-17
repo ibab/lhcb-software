@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.52 2008-11-02 18:46:31 ibelyaev Exp $ 
+! $Id: release.notes,v 1.53 2008-11-17 16:06:10 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,10 +15,10 @@
 !
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiMC v8r0 2008-11-17 ============================
 ! 2008-11-02 - Vanya BELYAEV
-
- - remove artificial assigenemt operators 
- - disable geenrationo fassignement operators for reflex-dictionaries
+ - remove artificial assignment operators 
+ - disable generation of assignement operators for reflex-dictionaries
  - fixes for very strange messages about "unknown type z" ???
 
 ! 2008-10-31 - Vanya BELYAEV
@@ -34,7 +34,6 @@
  - fixes for gcc43 compilation 
 
 ! 2008-10-19 - Vanya BELYAEV
-
  - change the structure of decorators in LoKiCore v8r0 
 
  - cmt/requirements
