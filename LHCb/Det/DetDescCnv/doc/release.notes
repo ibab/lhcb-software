@@ -4,6 +4,7 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !------------------------------------------------------------------------------
 
+!================ DetDescCnv v4r7p1 2008-11-17 ================================
 ! 2008-10-27 - Marco Cattaneo
  - Add a missing header for gcc 4.3 compilation
 
