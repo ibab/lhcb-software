@@ -4,6 +4,7 @@
 ! Purpose     : BCM DetectorElement
 !----------------------------------------------------------------------------
 
+!========================= BcmDet v1r2 2008-11-17 ==========================
 ! 2008-10-28 - Marco Cattaneo
  - Follow DetDesc changes for gcc 4.3 compilation
 
