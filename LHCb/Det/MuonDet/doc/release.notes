@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.124 2008-10-28 15:06:04 cattanem Exp $
+! $Id: release.notes,v 1.125 2008-11-17 14:44:37 cattanem Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
+!========================= MuonDet v8r4 2008-11-17 ==========================
 ! 2008-10-28 - Marco Cattaneo
  - Fixes for gcc 4.3
 
