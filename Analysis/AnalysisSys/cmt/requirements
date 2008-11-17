@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.75 2008-11-12 12:39:26 jpalac Exp $
+# $Id: requirements,v 1.76 2008-11-17 08:58:29 jpalac Exp $
 package AnalysisSys
 version v2r3
 
@@ -48,7 +48,7 @@ use  Stripping          	v6r6p1  Tools   # Patrick Koppenburg
 ####################################################################
 use  MicroDSTBase        	v1r2    MicroDST          # Juan Palacios
 use  MicroDSTInterfaces  	v1r1    MicroDST          # Juan Palacios
-use  MicroDSTTools      	v1r3    MicroDST          # Juan Palacios
+use  MicroDSTTools      	v1r3p1  MicroDST          # Juan Palacios
 use  MicroDSTAlgorithm   	v3r3p2  MicroDST          # Juan Palacios
 use  MicroDSTConf               v1r0    MicroDST          # Juan Palacios
 
