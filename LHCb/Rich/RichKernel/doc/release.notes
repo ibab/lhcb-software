@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.206 2008-11-17 12:55:52 cattanem Exp $
+! $Id: release.notes,v 1.207 2008-11-17 16:14:47 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
+!====================== RichKernel v7r17 2008-11-17 ====================
 ! 2008-11-17 - Marco Cattaneo
  - Add a component library containing the ToolRegistry (moved from RichTools)
 
