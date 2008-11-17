@@ -4,15 +4,13 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
-
+!============================ TfKernel v2r9 2008-11-17 =======================
 ! 2008-11-03 M Needham
  - Add fill stream method to STHit
  - Add some useful shortcuts to STHit 
 
-
 ! 2008-10-22 - Marco Cattaneo
  - Remove extra qualifier in STHit.h, to please latest genreflex
-
 
 !============================ TfKernel v2r8 2008-09-30 =======================
 ! 2008-09-30 - Stephanie Hansmann-Menzemer
