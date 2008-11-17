@@ -4,6 +4,7 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+!========================== DDDB v1r13 2008-11-17 ============================
 ! 2008-11-14 - Marco Cattaneo
  - Add loading of HepMCBack Dll for DC06 case
  - Tell ParticlePropertySvc to get ParticleTable.txt from CondDB
