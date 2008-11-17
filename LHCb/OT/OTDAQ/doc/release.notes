@@ -2,6 +2,7 @@ Package         : OTDAQ
 Package manager : J.Amoraal
 !---------------------------------------------------------------------
 
+!======================= OTDAQ v7r3 2008-11-17 =======================
 ! 2008-10-28 - Marco Cattaneo
  - Fixes for gcc 4.3 compilation
 
