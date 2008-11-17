@@ -4,7 +4,7 @@ MessageSvc.LoggerOnly                = true;
 ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.ExtSvc                = { "LHCb::MEPManager/MEPManager", "LHCb::OnlineEvtSelector/EventSelector" };
 ApplicationMgr.DLLs                  = { "OnlineDummyReader" };
-ApplicationMgr.TopAlg                = { "LHCb::OnlineDummyReader/OnlineDummyReader" };
+ApplicationMgr.TopAlg                = { "UpdateAndReset", "LHCb::OnlineDummyReader/OnlineDummyReader" };
 ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
 
 EventDataSvc.RootCLID                = 1;
