@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.61 2008-11-02 19:25:25 ibelyaev Exp $ 
+! $Id: release.notes,v 1.62 2008-11-17 15:59:48 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGen
 ! Responsible : Vanya BELYAEV
@@ -14,22 +14,20 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!============================ LoKiGen v8r0 2008-11-17 =========================
 ! 2008-11-02 - Vanya BELYAEV
-
  - fixes for various compilers 
 
 ! 2008-10-30 - Vanya BELYAEV
-
  - fix for LCG-preview 
 
 ! 2008-10-29 - Vanya BELYAEV
  - fixes for gcc43 compilation 
 
 ! 2008-10-19 - Vanya BELYAEV
-
  - adaptation for new LoKiCore 
 
-     new structure od decorators 
+     new structure of decorators 
 
  - cmt/requirements
 

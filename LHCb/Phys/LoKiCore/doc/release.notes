@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.120 2008-11-11 16:29:57 ibelyaev Exp $ 
+! $Id: release.notes,v 1.121 2008-11-17 15:57:28 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,23 +15,18 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+! =========================== LoKiCore v8r0 2008-11-17 ========================
 ! 2008-11-11 - Vanya BELYAEV
-
  - bug fix in LoKi/BiFunctions.h
 
 ! 2008-11-09 - Vanya BELYAEV
-
  - bug fix in LoKi/iTree.h 
 
-
 ! 2008-10-31 - Vanya BELYAEV
-
  - fixes for stange behavour of Reflex in LCG-preview 
 
-
 ! 2008-10-29 - Vanya BELYAEV
-
- - few fixes to pelase gcc43 
+ - few fixes to please gcc43 
 
 ! 2008-10-27 - Marco Cattaneo
  - Add a missing include in iNode.cpp and iTree.h to please gcc43
@@ -40,7 +35,6 @@
  - Fix function signature in VoidPrimitives.h to please new version of genreflex
 
 ! 2008-10-19 - Vanya BELYAEV
-
  - 1) MANY improvements in the area of functors which gets 'void' ( "sources")
    2) redesign of python decorators 
    3) "algorithm"-functors 
@@ -61,17 +55,13 @@
 
 
 ! 2008-10-12 - Vanya BELYAEV
-
  - src/HybridBase.cpp
-
    add some treatment for the python  code strings, namely 
    the trings are trimmed and the paired quotes are removed.
    This is appears to be rather important for HLT
  
-
 ! 2008-10-03 - Vanya BELYAEV
  - LoKi/FuncOps.h
-
    add possibility to create "binary"-switches in python, 
 
     condition ? condidition1 : condition2
