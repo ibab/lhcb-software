@@ -1,9 +1,10 @@
-!$Id: release.notes,v 1.272 2008-11-17 16:21:23 tskwarni Exp $
+!$Id: release.notes,v 1.273 2008-11-17 16:47:27 cattanem Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!======================== DaVinciKernel v7r1 2008-11-17 =====================
 ! 2008-11-17 - Tomasz Skwarnicki
  - fix problem with unwanted dependencies in ITriggerTisTos
 
