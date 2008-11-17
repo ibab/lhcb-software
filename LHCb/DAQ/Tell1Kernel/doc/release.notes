@@ -2,6 +2,7 @@
 ! package manager: C.Parkes, T.Szumlak
 !-------------------------------------------------------------------------
 
+!====================== Tell1Kernel v1r6 2008-11-17 ======================
 ! 2008-10-17 - Tomasz Szumlak
  - add new part of the pedestal update engine interface compatible
    with the latest tell1lib firmware release
