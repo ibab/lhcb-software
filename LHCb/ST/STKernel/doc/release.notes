@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.42 2008-11-05 15:31:43 mneedham Exp $
+! $Id: release.notes,v 1.43 2008-11-17 16:18:57 cattanem Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
 
+!====================== STKernel v1r9 2008-11-17 ============================
 ! 2008-11-05 M Needham 
  - Add bank version to dictionary
  - Make DAQToOffline method safer in STTell1Board
@@ -11,10 +12,8 @@
 ! 2008-10-29 M Needhm
  - fix for gcc 4.3 in STCommonConstructors
 
-
 ! 2008-10-23 - Marco Cattaneo
  - Add explicit dependencies on GaudiAlg and Boost
-
 
 ! 2008-10-16 M Needham
   - fix in new base class
