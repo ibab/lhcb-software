@@ -23,6 +23,8 @@ use TrackEvent          v*    Event
 use HltBase             v*    Hlt
 use HltInterfaces       v*    Kernel
 
+use HltRawData        v*    Hlt
+
 use CaloDet          v*      Det 
 
 use DaVinciKernel    v* Phys

@@ -1,4 +1,4 @@
-// $Id: TriggerSelectionTisTos.cpp,v 1.11 2008-11-14 06:55:39 tskwarni Exp $
+// $Id: TriggerSelectionTisTos.cpp,v 1.12 2008-11-17 16:26:34 tskwarni Exp $
 // Include files 
 #include <algorithm>
 
@@ -14,10 +14,8 @@
 
 #include "Event/HltDecReports.h"
 #include "Event/HltSelReports.h"
-#include "Event/Particle.h"
 
 #include "Kernel/CaloCellCode.h"
-
 
 
 using namespace LHCb;

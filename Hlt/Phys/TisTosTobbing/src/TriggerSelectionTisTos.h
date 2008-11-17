@@ -1,4 +1,4 @@
-// $Id: TriggerSelectionTisTos.h,v 1.10 2008-11-14 06:55:39 tskwarni Exp $
+// $Id: TriggerSelectionTisTos.h,v 1.11 2008-11-17 16:26:35 tskwarni Exp $
 #ifndef TRIGGERSELECTIONTISTOS_H 
 #define TRIGGERSELECTIONTISTOS_H 1
 
@@ -9,8 +9,11 @@
 
 #include "CaloInterfaces/ITrack2Calo.h"
 #include "HltBase/IHltDataSvc.h"
-#include "Event/Track.h"
+
 #include "Event/HltObjectSummary.h"
+#include "Event/Particle.h"
+#include "Event/RecVertex.h"
+#include "Event/Track.h"
 
 #include "GaudiKernel/IIncidentListener.h"
 
@@ -105,7 +108,41 @@ public:
                                                                           unsigned int tisRequirement      = kAnything,
                                                                           unsigned int tosRequirement      = kAnything );
 
-  // --------------------- utilities ------------------------
+
+  /// templated method to convert object summaries to objects themselves
+  template <class T>
+  std::vector<const T*> hltObjects(const std::vector<const LHCb::HltObjectSummary*> & hosVec )
+  {
+    std::vector<const T*> hoVec;
+    for( std::vector<const LHCb::HltObjectSummary*>::const_iterator phos=hosVec.begin();
+         phos!=hosVec.end();++phos){
+      const LHCb::HltObjectSummary & hos = **phos;
+      if( !hos.summarizedObject() )break; // means pointers are not available    
+      if( hos.summarizedObjectCLID() != T::classID()  )break; // means selection has different objects than requested
+      hoVec.push_back( dynamic_cast<const T*>( hos.summarizedObject() ) );
+    }
+    return hoVec;
+  }
+
+  /// list of tracks from Selection Summary (none if mismatch) satisfying TOS (define Offline Input before calling)
+  std::vector<const LHCb::Track*>     matchedTOSTracks( const std::string & selectionName )  
+  {
+    return hltObjects<LHCb::Track>( hltSelectionObjectSummaries(selectionName,kAnything,kTrueRequired) );
+  }
+
+  /// list of vertices from Selection Summary (none if mismatch) satisfying TOS (define Offline Input before calling)
+  std::vector<const LHCb::RecVertex*> matchedTOSVertices( const std::string & selectionName )
+  {
+    return hltObjects<LHCb::RecVertex>( hltSelectionObjectSummaries(selectionName,kAnything,kTrueRequired) );
+  }
+
+  /// list of particles from Selection Summary (none if mismatch) satisfying TOS (define Offline Input before calling)
+  std::vector<const LHCb::Particle*>  matchedTOSParticles( const std::string & selectionName ) 
+  {
+    return hltObjects<LHCb::Particle>( hltSelectionObjectSummaries(selectionName,kAnything,kTrueRequired) );
+  }
+
+// --------------------- utilities ------------------------
 
   /// classify hit into @c HitType
   static int hitMatchType(const LHCb::LHCbID & id);
