@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.111 2008-10-29 10:47:44 cattanem Exp $
+! $Id: release.notes,v 1.112 2008-11-17 14:09:14 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
+!========================== CaloUtils v8r3 2008-11-17 =========================
 ! 2008-10-29 - Marco Cattaneo
  - Fixes for gcc 4.3 compilation
 
