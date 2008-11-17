@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.103 2008-11-04 21:05:14 robbep Exp $
+! $Id: release.notes,v 1.104 2008-11-17 15:09:38 cattanem Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
 !-----------------------------------------------------------------------------
 
+!======================== MCEvent v2r10 2009-11-17 ===========================
 ! 2008-11-04 - Patrick Robbe
  - Add 3 new vertex types in MCVertex.xml:
    . GenericInteraction to assign to intermediate particles

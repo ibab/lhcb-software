@@ -4,7 +4,8 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
-! 2008-3-11 M Needham
+!========================== DigiEvent v2r10 2008-11-17 =======================
+! 2008-03-11 M Needham
  - Clean up fillStream methods in ST classes
 
 ! 2008-10-11 M Needham
