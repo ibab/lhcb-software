@@ -8,12 +8,9 @@
 from Brunel.Configuration import *
 
 Brunel().DDDBtag      = "DC06-default"
-Brunel().condDBtag    = "DC06-default"
-Brunel().inputType    = "DIGI"
-Brunel().withMC       = True
-
-Brunel().applyConf()
-
+Brunel().CondDBtag    = "DC06-default"
+Brunel().InputType    = "DIGI"
+Brunel().WithMC       = True
 
 ##############################################################################
 # I/O datasets are defined in a separate file, see examples in 2008-Files.py

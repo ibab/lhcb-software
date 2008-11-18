@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.33 2008-11-14 17:12:05 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.34 2008-11-18 16:40:17 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -27,7 +27,7 @@ class Brunel(LHCbConfigurableUser):
        ,"SkipEvents":   0     # events to skip
        ,"PrintFreq":    1     # The frequency at which to print event numbers
        ,"WithMC":       False # set to True to use MC truth
-       ,"UseSimCond":   False # set to True to use SimCond
+       ,"Simulation":   False # set to True to use SimCond
        ,"RecL0Only":    False # set to True to reconstruct only L0-yes events
        ,"InputType":    "MDF" # or "DIGI" or "ETC" or "RDST" or "DST"
        ,"OutputType":   "DST" # or "RDST" or "NONE"
@@ -43,8 +43,8 @@ class Brunel(LHCbConfigurableUser):
                           "ProcessPhase/MCLinks",
                           "ProcessPhase/Check",
                           "ProcessPhase/Output" ]
-       ,"McCheckSequence": ["Pat","RICH","MUON"] # The default MC Check sequence
-       ,"McLinksSequence": [ "L0", "Unpack", "Tr" ] # The default MC Link sequence
+       ,"MCCheckSequence": ["Pat","RICH","MUON"] # The default MC Check sequence
+       ,"MCLinksSequence": [ "L0", "Unpack", "Tr" ] # The default MC Link sequence
        ,"InitSequence": ["Reproc", "Brunel", "Calo"] # The default init sequence
        ,"MoniSequence": ["CALO","RICH","MUON","VELO","Track","ST"]    # The default Moni sequence
        ,"Monitors": []        # list of monitors to execute, see KnownMonitors
@@ -57,10 +57,12 @@ class Brunel(LHCbConfigurableUser):
         }
 
     def defineGeometry(self):
+        # DIGI is always simulation, as is usage of MC truth!
+        if self.getProp( "WithMC" ) or self.getProp( "InputType" ).upper() == 'DIGI':
+            self.setProp( "Simulation", True )
+
         # Delegate handling to LHCbApp configurable
-        self.setOtherProps(LHCbApp(),["CondDBtag","DDDBtag","UseOracle"]) 
-        if LHCbApp().getProp("DDDBtag").find("DC06") != -1 :
-            ApplicationMgr().Dlls += [ "HepMCBack" ]
+        self.setOtherProps(LHCbApp(),["CondDBtag","DDDBtag","UseOracle","Simulation"]) 
 
     def defineEvents(self):
         
@@ -93,10 +95,6 @@ class Brunel(LHCbConfigurableUser):
         if outputType == "RDST":
             withMC = False # Force it, RDST never contains MC truth
 
-        useSimCond = self.getProp("UseSimCond")
-        if outputType == "DIGI":
-            useSimCond = True # Force it, DIGI always from MC
-
         self.configureInput( inputType )
 
         self.configureOutput( outputType, withMC )
@@ -112,14 +110,14 @@ class Brunel(LHCbConfigurableUser):
 
         # Setup up MC truth processing and checking
         if withMC:
-            ProcessPhase("MCLinks").DetectorList += self.getProp("McLinksSequence")
+            ProcessPhase("MCLinks").DetectorList += self.getProp("MCLinksSequence")
             # Unpack Sim data
             GaudiSequencer("MCLinksUnpackSeq").Members += [ "UnpackMCParticle",
                                                             "UnpackMCVertex" ]
             GaudiSequencer("MCLinksTrSeq").Members += [ "TrackAssociator" ]
 
             # "Check" histograms filled only with simulated data 
-            ProcessPhase("Check").DetectorList += self.getProp("McCheckSequence")
+            ProcessPhase("Check").DetectorList += self.getProp("MCCheckSequence")
             # Tracking
             importOptions("$TRACKSYSROOT/options/PatChecking.opts")
             if "veloOpen" in self.getProp( "SpecialData" ) :
@@ -250,15 +248,12 @@ class Brunel(LHCbConfigurableUser):
         return histosName
     
     def evtMax(self):
-        
-        if hasattr(ApplicationMgr(),"EvtMax"):
-            return getattr(ApplicationMgr(),"EvtMax")
-        else:
-            return ApplicationMgr().getDefaultProperties()["EvtMax"]
+        return LHCbApp().evtMax()
 
     ## Apply the configuration
-    def applyConf(self):
+    def __apply_configuration__(self):
         
+        log.info( self )
         GaudiKernel.ProcessJobOptions.PrintOff()
         self.setOtherProp(TrackSys(),"ExpertTracking")
         self.setOtherProps(RecSysConf(),["SpecialData","RecoSequence"])
@@ -274,7 +269,3 @@ class Brunel(LHCbConfigurableUser):
         self.defineMonitors()
         from Configurables import RecInit
         RecInit("BrunelInit").PrintFreq = self.getProp("PrintFreq")
-        # Use SIMCOND for Simulation, if not DC06
-        if self.getProp("UseSimCond") and LHCbApp().getProp("CondDBtag").find("DC06") == -1:
-            from Configurables import CondDBCnvSvc
-            CondDBCnvSvc( CondDBReader = allConfigurables["SimulationCondDBReader"] )

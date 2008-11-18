@@ -7,12 +7,8 @@
 
 from Brunel.Configuration import *
 
-Brunel().inputType    = "DIGI"
-Brunel().withMC       = True   
-Brunel().useSimCond   = True  
-
-Brunel().applyConf()
-
+Brunel().InputType    = "DIGI" # implies also Brunel().Simulation = True
+Brunel().WithMC       = True   # implies also Brunel().Simulation = True
 
 ##############################################################################
 # I/O datasets are defined in a separate file, see examples in 2008-Files.py

@@ -13,7 +13,7 @@ FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml",
                            "xmlcatalog_file:$BRUNELROOT/job/NewCatalog.xml" ]
 
 #-- Main ('signal') event input
-inputType   = Brunel().getProp("inputType").upper()
+inputType   = Brunel().getProp("InputType").upper()
 
 if inputType == "MDF":
     import sys
@@ -41,7 +41,7 @@ else:
     EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v16r3/" + datasetName + ".digi' TYP='POOL_ROOTTREE' OPT='READ'"]
 
 # Set the property, used to build other file names
-Brunel().setProp( "datasetName", datasetName )
+Brunel().setProp( "DatasetName", datasetName )
 
 #-- Save the monitoring histograms
 HistogramPersistencySvc().OutputFile = Brunel().histosName()

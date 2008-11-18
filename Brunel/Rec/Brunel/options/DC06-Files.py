@@ -13,7 +13,7 @@ FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml",
                            "xmlcatalog_file:$BRUNELROOT/job/NewCatalog.xml" ]
 
 #-- Main ('signal') event input
-inputType   = Brunel().getProp("inputType").upper()
+inputType   = Brunel().getProp("InputType").upper()
 
 if inputType == "MDF":
     # Example MDF file. File MUST be described in the FileCatalog, with an FID
@@ -43,8 +43,8 @@ else:
     EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001820/DIGI/0000/" + datasetName + "_4.digi' TYP='POOL_ROOTTREE' OPT='READ'"]
 
 #-- Example field off and velo open files
-if "fieldOff" in Brunel().getProp("specialData") :
-    if "veloOpen" in Brunel().getProp("specialData") :
+if "fieldOff" in Brunel().getProp("SpecialData") :
+    if "veloOpen" in Brunel().getProp("SpecialData") :
         # 450 GeV on 450 GeV pp collisions, single interactions, no beam crossing angle, beam sigma(X) = sigma(Y) = 280 microns, magnetic field OFF, Velo Open
         datasetName = "B_OFF.VeloOpen"
         EventSelector().Input = ["DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/background/Pilot_2007/30000000.5k." + datasetName + ".digi' TYP='POOL_ROOT' OPT='READ'"]
@@ -54,7 +54,7 @@ if "fieldOff" in Brunel().getProp("specialData") :
         EventSelector().Input = ["DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/background/Pilot_2007/30000000.5k." + datasetName + ".digi' TYP='POOL_ROOT' OPT='READ'"]
 
 # Set the property, used to build other file names
-Brunel().setProp( "datasetName", datasetName )
+Brunel().setProp( "DatasetName", datasetName )
 
 #-- Save the monitoring histograms
 HistogramPersistencySvc().OutputFile = Brunel().histosName()
