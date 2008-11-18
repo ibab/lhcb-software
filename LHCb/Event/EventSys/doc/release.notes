@@ -5,7 +5,7 @@
 !======================== EventSys v24r10 2008-11-17 =====================
 ! 2008-11-17 - Marco Cattaneo
  - Use DAQEvent v7r16, DigiEvent v2r10, EventAssoc v4r5, L0Event v17r3,
-       MCEvent v2r10, RecEvent v2r17, TrackEvent v4r16
+       MCEvent v2r10, PackedEvent v3r4, RecEvent v2r17, TrackEvent v4r16
 
 !======================== EventSys v24r9 2008-09-30 ======================
 ! 2008-09-30 - Marco Cattaneo

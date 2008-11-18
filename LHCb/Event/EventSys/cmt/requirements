@@ -14,7 +14,7 @@ use HltEvent    v8r13   Event
 use LinkerEvent v3r5    Event
 use L0Event     v17r3   Event
 use MCEvent     v2r10   Event
-use PackedEvent v3r3    Event
+use PackedEvent v3r4    Event
 use PhysEvent   v11r6   Event
 use RecEvent    v2r17   Event
 use TrackEvent  v4r16   Event
