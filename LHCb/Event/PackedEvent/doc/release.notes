@@ -4,6 +4,7 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+!======================= PackedEvent v3r4 2008-11-17 =========================
 ! 2008-11-17 - Olivier Callot
  - Add classes for PAckedProtoParticle and PackedRecVertex
 

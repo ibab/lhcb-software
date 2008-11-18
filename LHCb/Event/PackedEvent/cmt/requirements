@@ -3,7 +3,7 @@
 # Maintainer : Olivier Callot
 #============================================================================
 package           PackedEvent
-version           v3r3
+version           v3r4
 
 #============================================================================
 # Structure, i.e. directories to process. 
