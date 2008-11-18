@@ -102,6 +102,9 @@ def ConfiguredFitVeloTT( Name = "FitVeloTT",
     eventfitter.Fitter.ErrorP = [1.2, 5e-07]
     eventfitter.Fitter.MaxNumberOutliers = 1
     eventfitter.Fitter.Extrapolator.ApplyEnergyLossCorr = False
+    # Make the nodes even though this is a refit, to add StateAtBeamLine
+    # (PatVeloTT also fits but does not make nodes)
+    eventfitter.Fitter.MakeNodes = True
     return eventfitter
 
 def ConfiguredFitSeed( Name = "FitSeed",
