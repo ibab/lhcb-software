@@ -1,4 +1,4 @@
-// $Id: PVReFitterAlg.h,v 1.8 2008-09-09 13:24:52 jpalac Exp $
+// $Id: PVReFitterAlg.h,v 1.9 2008-11-18 17:56:18 jpalac Exp $
 #ifndef PVREFITTERALG_H 
 #define PVREFITTERALG_H 1
 
@@ -82,11 +82,9 @@ private:
 
   IPVOfflineTool* m_pvOfflineTool;
   IPVReFitter* m_pvReFitter;
-  ILifetimeFitter* m_lifetimeFitter;
 
   std::string m_pvOfflinetoolType;
   std::string m_pvReFitterType;
-  std::string m_lifetimeFitterType;
   std::string m_relatedPVFinderType;
   std::string m_particleInputLocation;
   std::string m_PVInputLocation;

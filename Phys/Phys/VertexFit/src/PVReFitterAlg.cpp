@@ -1,4 +1,4 @@
-// $Id: PVReFitterAlg.cpp,v 1.9 2008-09-09 16:41:33 jpalac Exp $
+// $Id: PVReFitterAlg.cpp,v 1.10 2008-11-18 17:56:18 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -34,10 +34,8 @@ PVReFitterAlg::PVReFitterAlg( const std::string& name,
   GaudiAlgorithm ( name , pSvcLocator ),
   m_pvOfflineTool(0),
   m_pvReFitter(0),
-  m_lifetimeFitter(0),
   m_pvOfflinetoolType("PVOfflineTool"),
   m_pvReFitterType("AdaptivePVReFitter"),
-  m_lifetimeFitterType("PropertimeFitter"),
   m_particleInputLocation(""),
   m_PVInputLocation(LHCb::RecVertexLocation::Primary),
   m_particle2VertexRelationsOutputLocation(""),
@@ -47,7 +45,6 @@ PVReFitterAlg::PVReFitterAlg( const std::string& name,
 
   declareProperty("IPVOfflineTool", m_pvOfflinetoolType);
   declareProperty("IPVReFitter",    m_pvReFitterType);
-  declareProperty("ILifetimeFitter",    m_lifetimeFitterType);
   declareProperty("ParticleInputLocation",  m_particleInputLocation);
   declareProperty("PrimaryVertexInputLocation",  m_PVInputLocation);
   declareProperty("P2VRelationsOutputLocation",  
@@ -75,12 +72,8 @@ StatusCode PVReFitterAlg::initialize() {
 
   m_pvReFitter = tool<IPVReFitter>(m_pvReFitterType, this);
 
-  m_lifetimeFitter = tool<ILifetimeFitter>(m_lifetimeFitterType, this);
-
-
-  return ( m_pvOfflineTool   && 
-           m_pvReFitter      && 
-           m_lifetimeFitter    )
+  return ( m_pvOfflineTool && 
+           m_pvReFitter       )
     ? StatusCode::SUCCESS
     : StatusCode::FAILURE;
 }
@@ -202,19 +195,16 @@ LHCb::RecVertex* PVReFitterAlg::refitVertex(const LHCb::RecVertex* v,
                                                 tracks, 
                                                 *reFittedVertex );
 
-  const double max_double = std::numeric_limits<double>::max();
+//   const double max_double = std::numeric_limits<double>::max();
 
-  double tau(max_double); 
-  double tauErr(max_double); 
-  double tauChi2(max_double); 
+//   double tau(max_double); 
+//   double tauErr(max_double); 
+//   double tauChi2(max_double); 
 
   if (sc==StatusCode::SUCCESS) {
     sc = m_pvReFitter->remove(p, reFittedVertex);
   }
-  if (sc==StatusCode::SUCCESS) {
-    sc = m_lifetimeFitter->fit(*reFittedVertex, *p, tau, tauErr, tauChi2);;  
-  }
-
+  
   return (sc==StatusCode::SUCCESS) ? reFittedVertex : 0;
 }
 //=============================================================================
