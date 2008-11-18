@@ -1,4 +1,4 @@
-// $Id: HybridBase.cpp,v 1.8 2008-10-12 12:19:18 ibelyaev Exp $
+// $Id: HybridBase.cpp,v 1.9 2008-11-18 15:58:07 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -155,7 +155,7 @@ StatusCode LoKi::Hybrid::Base::executeCode ( const std::string& pycode ) const
   PyObject* locals  = PyEval_GetLocals  () ;
   if ( 0 == locals ) 
   {
-    Warning ( "PyEval_GetLocals:  'locals'  points to NULL" , StatusCode::SUCCESS ).ignore() ; 
+    info() << "PyEval_GetLocals:  'locals'  points to NULL" << endreq ;
     if ( PyErr_Occurred() ) { PyErr_Print() ; }
   }
   // global scope 
@@ -163,7 +163,7 @@ StatusCode LoKi::Hybrid::Base::executeCode ( const std::string& pycode ) const
   bool globnew = false ;
   if ( 0 == globals ) 
   { 
-    Warning ( "PyEval_GetGlobals: 'globals' points to NULL" , StatusCode::SUCCESS ).ignore() ; 
+    info() << "PyEval_GetGlobals: 'globals' points to NULL" << endreq ;
     if ( PyErr_Occurred() ) { PyErr_Print() ; }
     globals  = PyDict_New() ;
     if ( PyErr_Occurred() ) { PyErr_Print() ; }

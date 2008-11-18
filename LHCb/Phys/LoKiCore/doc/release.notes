@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.121 2008-11-17 15:57:28 cattanem Exp $ 
+! $Id: release.notes,v 1.122 2008-11-18 15:58:07 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,15 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+  
+! 2008-11-18 - Vanya Belyaev
+
+ - src/HybridBase.cpp
+   substitute WARNING-messages for PyLocals/PyGlobals with INFO-messages
+
+ - cmt/requirements 
+   version increment to v8r0p1 
+ 
 
 ! =========================== LoKiCore v8r0 2008-11-17 ========================
 ! 2008-11-11 - Vanya BELYAEV
