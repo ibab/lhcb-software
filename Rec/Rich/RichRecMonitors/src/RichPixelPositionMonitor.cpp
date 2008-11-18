@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichPixelPositionMonitor
  *
- *  $Id: RichPixelPositionMonitor.cpp,v 1.17 2008-11-18 17:51:12 jonrob Exp $
+ *  $Id: RichPixelPositionMonitor.cpp,v 1.18 2008-11-18 18:02:21 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -287,12 +287,20 @@ StatusCode PixelPositionMonitor::execute()
                   "dR V R local on HPD entry window : CK signal only", 0, 40, -10, 10 );
           // MC to rec position on HPD anode
           const Gaudi::XYZPoint & mcPointOnAnode = (*iHit)->entry();
+          // position on anode in local coords
+          const Gaudi::XYZPoint mcPointOnAnodeLoc = m_idTool->globalToPDPanel(mcPointOnAnode);
           plot1D( anodeGlobal.x() - mcPointOnAnode.x(), hid(rich,side,"anodeXDiffGlobal"), 
                   "dX on HPD Anode : Global LHCb Coords", -1, 1 );
           plot1D( anodeGlobal.y() - mcPointOnAnode.y(), hid(rich,side,"anodeYDiffGlobal"), 
                   "dY on HPD Anode : Global LHCb Coords", -1, 1 );
           plot1D( anodeGlobal.z() - mcPointOnAnode.z(), hid(rich,side,"anodeZDiffGlobal"), 
                   "dZ on HPD Anode : Global LHCb Coords", -1, 1 );
+          plot1D( anodeLocal.x() - mcPointOnAnodeLoc.x(), hid(rich,side,"anodeXDiffLocal"), 
+                  "dX on HPD Anode : HPD Panel local Coords", -1, 1 );
+          plot1D( anodeLocal.y() - mcPointOnAnodeLoc.y(), hid(rich,side,"anodeYDiffLocal"), 
+                  "dY on HPD Anode : HPD Panel local Coords", -1, 1 );
+          plot1D( anodeLocal.z() - mcPointOnAnodeLoc.z(), hid(rich,side,"anodeZDiffLocal"), 
+                  "dZ on HPD Anode : HPD Panel local Coords", -1, 1 );
           if ( msgLevel(MSG::VERBOSE) )
           {
             verbose() << "Global : Pixel = " << (*iHit)->entry()
