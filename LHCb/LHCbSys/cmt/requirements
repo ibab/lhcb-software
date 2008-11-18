@@ -99,7 +99,7 @@ use SimComponents         v2r14  Sim     # Gloria Corti, Marco Cattaneo
 use STKernel              v1r9   ST      # Matt Needham
 use Tell1Kernel           v1r6   DAQ     # Tomasz Szumlak
 use TfKernel              v2r9   Tf      # Stephanie Hansmann-Menzemer
-use TrackInterfaces       v3r17  Tr      # Matt Needham
+use TrackInterfaces       v3r18  Tr      # Matt Needham
 use TsaKernel             v3r5   Tf      # Matt Needham
 
 # LHCb  Examples
