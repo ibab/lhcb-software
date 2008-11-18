@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichPixelPositionMonitor
  *
- *  $Id: RichPixelPositionMonitor.cpp,v 1.15 2008-05-08 13:18:27 jonrob Exp $
+ *  $Id: RichPixelPositionMonitor.cpp,v 1.16 2008-11-18 17:33:12 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -285,6 +285,14 @@ StatusCode PixelPositionMonitor::execute()
                                    gsl_pow_2(mcPointLoc.Y()-hpdLoc.Y()) );
           plot2D( R, R-McR, hid(rich,"pdImpRlocVR"),
                   "dR V R local on HPD entry window : CK signal only", 0, 40, -10, 10 );
+          // MC to rec position on HPD anode
+          const Gaudi::XYZPoint & mcPointOnAnode = (*iHit)->entry();
+          plot1D( anodeGlobal.x() - mcPointOnAnode.x(), hid(rich,"anodeXDiffGlobal"), 
+                  "dX on HPD Anode : Global LHCb Coords", -20, 20 );
+          plot1D( anodeGlobal.y() - mcPointOnAnode.y(), hid(rich,"anodeYDiffGlobal"), 
+                  "dY on HPD Anode : Global LHCb Coords", -20, 20 );
+          plot1D( anodeGlobal.z() - mcPointOnAnode.z(), hid(rich,"anodeZDiffGlobal"), 
+                  "dZ on HPD Anode : Global LHCb Coords", -20, 20 );
           if ( msgLevel(MSG::VERBOSE) )
           {
             verbose() << "Global : Pixel = " << (*iHit)->entry()
