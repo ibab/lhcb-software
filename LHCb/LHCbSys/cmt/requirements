@@ -8,7 +8,7 @@ branches doc cmt
 #===============================================================
 
 use GaudiConf             v11r0
-use GaudiObjDesc          v11r5
+use GaudiObjDesc          v11r6
 
 #                                         Maintainer
 # Kernel packages
@@ -100,7 +100,7 @@ use STKernel              v1r9   ST      # Matt Needham
 use Tell1Kernel           v1r6   DAQ     # Tomasz Szumlak
 use TfKernel              v2r9   Tf      # Stephanie Hansmann-Menzemer
 use TrackInterfaces       v3r17  Tr      # Matt Needham
-use TsaKernel             v3r4   Tf      # Matt Needham
+use TsaKernel             v3r5   Tf      # Matt Needham
 
 # LHCb  Examples
 use DetCondExample        v11r5  Ex      # Marco Clemencic
