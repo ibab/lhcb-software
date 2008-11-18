@@ -13,7 +13,7 @@ use GaudiObjDesc          v11r5
 #                                         Maintainer
 # Kernel packages
 use KernelSys             v10r0   Kernel  # Marco Cattaneo
-use LHCbKernel            v9r3    Kernel  # Marco Cattaneo
+use LHCbKernel            v10r0   Kernel  # Marco Cattaneo
 use LHCbMath              v3r4    Kernel  # Juan Palacios
 use CaloKernel            v5r2    Calo    # Olivier Deschamps
 use MuonKernel            v4r0    Muon    # Andrei Tsaregorodtsev
@@ -51,7 +51,7 @@ use HltEvent              v8r13   Event   # Jose Angel Hernando-Morata
 use LinkerEvent           v3r5    Event   # Olivier Callot
 use L0Event               v17r3   Event   # Olivier Deschamps, Julien Cogan
 use MCEvent               v2r10   Event   # Gloria Corti and sub-det experts
-use PackedEvent           v3r3    Event   # Marco Cattaneo, Olivier Callot
+use PackedEvent           v3r4    Event   # Marco Cattaneo, Olivier Callot
 use PhysEvent             v11r6   Event   # Patrick Koppenburg, Juan Palacios
 use RecEvent              v2r17   Event   # Marco Cattaneo and sub-det experts
 use TrackEvent            v4r16   Event   # Matt Needham
