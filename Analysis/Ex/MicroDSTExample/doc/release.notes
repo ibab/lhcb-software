@@ -1,9 +1,17 @@
-!$Id: release.notes,v 1.9 2008-11-17 17:18:04 jpalac Exp $
+!$Id: release.notes,v 1.10 2008-11-18 16:43:08 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Ex/MicroDSTExample
 ! Responsible : Juan PALACIOS
 ! Purpose     : MicroDST making and reading examples.
 !-----------------------------------------------------------------------------
+
+! 2008-11-18 - Juan PALACIOS
+ - options/TestMicroDSTMake.py
+  . Add PV re-fitting and copy re-fitted PVs.
+  . Fix python configuration problem with MCParticle cloner's MCVertex cloner.
+ - python/MicroDSTReadingExample.py
+  . Add MC proper time plotting, plus proper time resolution.
+  . More tidying up.
 
 ! 2008-11-17 - Juan PALACIOS
  - python/MicroDSTReadingExample.py
