@@ -1,17 +1,17 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.110 2008-11-17 15:13:36 ocallot Exp $
+! $Id: release.notes,v 1.111 2008-11-18 06:24:20 cattanem Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
 !========================= RecEvent v2r17 2008-11-17 =========================
+! 2008-11-17 - Olivier Callot
+ - In VertexBase, the 'extraInfo()' method returns a reference, not a copy of the extraInfo.
+
 ! 2008-11-06 - Marco Cattaneo
  - Fix gcc 4.3 warning
  - Remove unneccessary includes from CaloDataFunctor.h
-
-! 2008-11-17 - Olivier Callot
- - In VertexBase, the 'extraInfo()' method returns a reference, not a copy of the extraInfo.
 
 !========================= RecEvent v2r16 2008-09-30 =========================
 ! 2008-09-21 O Deschamps
