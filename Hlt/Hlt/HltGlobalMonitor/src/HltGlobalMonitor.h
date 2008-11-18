@@ -41,8 +41,6 @@ protected:
 
   LHCb::L0DUReport* m_l0;
 
-  IHistogramSvc* m_histosvc;
-
   // metodos
   
   void monitorL0();
