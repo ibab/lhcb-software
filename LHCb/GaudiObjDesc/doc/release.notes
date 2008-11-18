@@ -4,6 +4,7 @@
 ! Package manager: Stefan Roiser
 !-----------------------------------------------------------------------------
 
+!======================== GaudiObjDesc v11r6 2008-11-17 ======================
 ! 2008-11-12 - Marco Clemencic
  - Modified the way destination directories are created.
 
