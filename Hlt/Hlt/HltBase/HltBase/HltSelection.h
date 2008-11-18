@@ -1,4 +1,4 @@
-// $Id: HltSelection.h,v 1.9 2008-11-12 09:36:36 ibelyaev Exp $
+// $Id: HltSelection.h,v 1.10 2008-11-18 09:54:03 ibelyaev Exp $
 #ifndef HLTBASE_HLTSELECTION_H 
 #define HLTBASE_HLTSELECTION_H 1
 
@@ -91,6 +91,14 @@ namespace Hlt
     void push_back(T* t) { m_candidates.push_back(t); }
     template <typename ITER> void insert(iterator i, ITER begin, ITER end) { m_candidates.insert(i,begin,end); }
     iterator erase(iterator begin, iterator end)  { return m_candidates.erase(begin,end); }
+    // ========================================================================
+  public:
+    // ========================================================================    
+    /// expose the internal container 
+    const container_type& vct() const { return m_candidates ; }
+    /// impliict cast to the underlying container 
+    operator const container_type&() const { return vct() ; }
+    // ========================================================================
   private:
     container_type m_candidates; // we do NOT own these...
   };
