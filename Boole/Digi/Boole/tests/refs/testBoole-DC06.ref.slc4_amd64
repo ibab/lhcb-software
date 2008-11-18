@@ -27,7 +27,7 @@ Collection='EVTTAGS/TagCreator/1' ADDRESS='/Event' DATAFILE='L0ETC.root' TYP='PO
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Boole version v16r4
-                                          running on lxbuild120.cern.ch on Fri Nov 14 17:02:50 2008
+                                          running on lxbuild120.cern.ch on Tue Nov 18 11:04:08 2008
 ====================================================================================================================================
 ApplicationMgr       INFO Successfully loaded modules : HepMCBack
 ApplicationMgr       INFO Application Manager Configured successfully
@@ -93,7 +93,7 @@ SpdDigit             INFO ZSupThreshold 10
 PrsDigit             INFO Noise:  1.0 +  0.0 (coherent) counts.
 PrsDigit             INFO Gain error  1.0%
 PrsDigit             INFO Subtract 0.2000 of previous BX
-PrsDigit             INFO ZSupThreshold 15
+PrsDigit             INFO ZSupThreshold 5
 EcalDigit            INFO Noise:  1.2 +  0.3 (coherent) counts.
 EcalDigit            INFO Gain error  1.0%
 EcalDigit            INFO Pedestal shift  0.60
@@ -122,7 +122,7 @@ L0Muon               INFO  foiYSize = 0,0,0,1,1
 L0Muon               INFO  ignoreM1 = 0
 L0Muon               INFO  ignoreM2 = 0
 L0Muon               INFO  procVersion = 2
-L0MuonTrigger I...   INFO Time User   : Tot= 1.62  [s]                                             #=  1
+L0MuonTrigger I...   INFO Time User   : Tot= 1.78  [s]                                             #=  1
 ToolSvc.L0DUCon...   INFO **** L0DU Configs loading : TCK = 0xFFFF
 ToolSvc.L0DUCon...   INFO Short description ::  TCK = 0xFFFF : Algorithm[1] Setting[0] lumi[2] - 2007 tuning - gain:Calo[20] : Muon[40]
 L0DU                 INFO The L0DUConfig (TCK=0xFFFF) have been succesfully loaded
@@ -191,7 +191,7 @@ MCITDepositCreatorWARNING MCSTDepositCreator:: The WARNING message is suppressed
 00001820_000000...SUCCESS Root file version:51800
 L0ETC.root        SUCCESS Root file version:51800
 PoolDbDatabaseCnv    INFO Recreate Database file:L0ETC.root as /EVTTAGS
-LHCb::RawDataCn...   INFO Opened(NEW)  MDF stream:PFN:00001820_00000001-10ev.mdf ID:0x10e9d6e0
+LHCb::RawDataCn...   INFO Opened(NEW)  MDF stream:PFN:00001820_00000001-10ev.mdf ID:0x10ea8f00
 LHCb::RawDataCn...   INFO Adding dummy MDF/DAQ[DAQ_STATUS_BANK] information.
 BooleInit            INFO Evt 2,  Run 182001,  Nr. in job = 2
 SpilloverAlg         INFO +--> Evt 3,  Run 182002 [Nr. in job = 3] at /Event/Prev
@@ -240,34 +240,11 @@ RichPDSignal      SUCCESS Number of counters : 4
  | "Found MCRichHits at Next/MC/Rich/Hits"         |         3 |          3 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
  | "Found MCRichHits at Prev/MC/Rich/Hits"         |         3 |          3 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
  | "Found MCRichHits at PrevPrev/MC/Rich/Hits"     |         6 |          6 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
-EcalDigit            INFO noise fit (outer area):
-EcalDigit            INFO   chisquare = 34.2875/64
-EcalDigit            INFO   amplitude for gaus #1 = 5157.23 +- 69.6056 ( 5078.3 )
-EcalDigit            INFO   amplitude for gaus #2 = 1149.31 +- 38.0639 ( 1210.43 )
-EcalDigit            INFO   amplitude for gaus #3 = 163.177 +- 6.60571 ( 155.004 )
-EcalDigit            INFO   amplitude for gaus #4 = 8.49686 +- 0.971826 ( 9.48236 )
-EcalDigit            INFO   amplitude for gaus #5 = 8.43936 +- 1.11311 ( 8.81896 )
-EcalDigit            INFO   amplitude for gaus #6 = 2.93975 +- 0.561138 ( 2.13122 )
-EcalDigit            INFO noise fit (middle area):
-EcalDigit            INFO   chisquare = 38.0748/62
-EcalDigit            INFO   amplitude for gaus #1 = 3188.89 +- 57.0243 ( 3160.7 )
-EcalDigit            INFO   amplitude for gaus #2 = 839.086 +- 33.1303 ( 855.171 )
-EcalDigit            INFO   amplitude for gaus #3 = 128.407 +- 6.15104 ( 127.08 )
-EcalDigit            INFO   amplitude for gaus #4 = 4.54135 +- 0.658124 ( 6.09546 )
-EcalDigit            INFO   amplitude for gaus #5 = 6.15889 +- 1.20177 ( 6.91032 )
-EcalDigit            INFO   amplitude for gaus #6 = 1.37566 +- 0.399909 ( 1.27092 )
-EcalDigit            INFO noise fit (inner area):
-EcalDigit            INFO   chisquare = 62.9913/86
-EcalDigit            INFO   amplitude for gaus #1 = 2480.62 +- 46.4305 ( 2500.14 )
-EcalDigit            INFO   amplitude for gaus #2 = 677.414 +- 24.7584 ( 669.365 )
-EcalDigit            INFO   amplitude for gaus #3 = 100.579 +- 4.30973 ( 102.658 )
-EcalDigit            INFO   amplitude for gaus #4 = 3.78991 +- 0.458352 ( 4.20413 )
-EcalDigit            INFO   amplitude for gaus #5 = 1.44304 +- 0.294403 ( 0.756397 )
 EcalDigit         SUCCESS Booked 3 Histogram(s) : 1D=3
-CaloFillPrsSpdR...   INFO Average event size :   294.2 words,    87.8 for trigger  Mean bank size    36.8, maximum size    55.2
-EcalFillRawBuffer    INFO Average event size :  1882.3 words,  2160.0 for trigger  Mean bank size    72.4, maximum size    88.5
-HcalFillRawBuffer    INFO Average event size :   472.0 words,   508.4 for trigger  Mean bank size    59.0, maximum size    76.9
-L0Calo               INFO Average bank size :   175.1 words RAW.
+CaloFillPrsSpdR...   INFO Average event size :   360.7 words,    79.4 for trigger  Mean bank size    45.1, maximum size    70.7
+EcalFillRawBuffer    INFO Average event size :  1635.7 words,  1511.6 for trigger  Mean bank size    62.9, maximum size    78.7
+HcalFillRawBuffer    INFO Average event size :   466.6 words,   488.0 for trigger  Mean bank size    58.3, maximum size    77.3
+L0Calo               INFO Average bank size :   162.3 words RAW.
 L0Muon               INFO - ------------------------------------------------------------------
 L0Muon               INFO - ========> Final summary of the L0Muon trigger (emulator) <========
 L0Muon               INFO - Total number of events processed           :       10
@@ -275,10 +252,10 @@ L0Muon               INFO - Average raw banks size                     :       7
 L0Muon               INFO - ------------------------------------------------------------------
 EcalDigitMCTruth  SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "#Digit->MC links"                              |        10 |      72824 |     7282.4 |     2748.9 |      3524.0 |      12830. |
+ | "#Digit->MC links"                              |        10 |      78755 |     7875.5 |     2500.9 |      3948.0 |      12709. |
 HcalDigitMCTruth  SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "#Digit->MC links"                              |        10 |       8500 |     850.00 |     250.59 |      515.00 |      1382.0 |
+ | "#Digit->MC links"                              |        10 |       8454 |     845.40 |     240.34 |      499.00 |      1336.0 |
 VeloSimMoni          INFO ------------------------------------------------------
 VeloSimMoni          INFO                 - VeloSimMoni table -
 VeloSimMoni          INFO ------------------------------------------------------
@@ -428,26 +405,26 @@ MuonDigitChecker     INFO ------------------------------------------------------
 MuonDigitChecker     INFO -----   Container: Geant------------------------
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO    M1     M2     M3     M4     M5
-MuonDigitChecker     INFO 51.400  39.600  4.600  0.600  1.800   R1
-MuonDigitChecker     INFO 46.700  18.700  5.500  1.300  1.700   R2
-MuonDigitChecker     INFO 46.600  5.800  1.400  1.200  1.200   R3
-MuonDigitChecker     INFO 47.400  4.500  1.600  1.300  1.400   R4
+MuonDigitChecker     INFO 51.600  38.900  4.900  0.600  2.100   R1
+MuonDigitChecker     INFO 45.300  19.400  5.200  1.100  1.600   R2
+MuonDigitChecker     INFO 46.300  5.800  1.300  1.200  1.100   R3
+MuonDigitChecker     INFO 46.800  4.600  1.800  1.300  1.400   R4
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO -----   Container: FlastSpillOver------------------------
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO    M1     M2     M3     M4     M5
-MuonDigitChecker     INFO 0.100  0.000  0.000  0.100  0.100   R1
-MuonDigitChecker     INFO 0.300  0.700  0.700  0.400  0.900   R2
-MuonDigitChecker     INFO 0.200  0.700  1.600  0.000  0.200   R3
-MuonDigitChecker     INFO 0.500  1.000  0.200  0.000  1.900   R4
+MuonDigitChecker     INFO 0.100  0.000  0.200  0.100  0.000   R1
+MuonDigitChecker     INFO 0.500  0.400  0.500  0.400  0.600   R2
+MuonDigitChecker     INFO 0.300  1.600  1.500  0.000  0.600   R3
+MuonDigitChecker     INFO 0.400  1.200  0.000  0.000  2.200   R4
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO -----   Container: Low Energy Background------------------------
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO    M1     M2     M3     M4     M5
-MuonDigitChecker     INFO 0.000  4.300  1.900  0.400  0.400   R1
-MuonDigitChecker     INFO 0.000  5.000  1.300  0.000  0.200   R2
-MuonDigitChecker     INFO 0.000  3.900  0.600  0.500  0.200   R3
-MuonDigitChecker     INFO 0.000  1.900  0.600  0.000  1.900   R4
+MuonDigitChecker     INFO 0.000  3.800  2.500  0.500  0.400   R1
+MuonDigitChecker     INFO 0.000  4.700  1.200  0.200  0.400   R2
+MuonDigitChecker     INFO 0.000  3.500  0.200  0.300  0.200   R3
+MuonDigitChecker     INFO 0.000  1.800  0.600  0.000  2.100   R4
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO -----   Container: Chamber Noise------------------------
 MuonDigitChecker     INFO -----------------------------------------------------------------
@@ -460,18 +437,18 @@ MuonDigitChecker     INFO ------------------------------------------------------
 MuonDigitChecker     INFO -----   Container: Crosstalk------------------------
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO    M1     M2     M3     M4     M5
-MuonDigitChecker     INFO 3.600  3.800  1.100  0.200  0.500   R1
-MuonDigitChecker     INFO 14.300  1.900  0.300  0.000  0.200   R2
-MuonDigitChecker     INFO 9.500  2.000  0.600  0.000  0.000   R3
-MuonDigitChecker     INFO 1.400  0.300  0.200  0.000  0.000   R4
+MuonDigitChecker     INFO 3.400  5.100  0.800  0.500  0.500   R1
+MuonDigitChecker     INFO 17.100  1.800  0.900  0.000  0.300   R2
+MuonDigitChecker     INFO 9.700  1.500  0.600  0.300  0.200   R3
+MuonDigitChecker     INFO 1.700  0.300  0.000  0.000  0.000   R4
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO -----   Container: Electronic Noise------------------------
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO    M1     M2     M3     M4     M5
-MuonDigitChecker     INFO 0.100  0.000  0.000  0.000  0.000   R1
+MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.000   R1
 MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.000   R2
-MuonDigitChecker     INFO 0.000  0.000  0.200  0.000  0.000   R3
-MuonDigitChecker     INFO 0.200  0.000  0.200  0.000  0.000   R4
+MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.000   R3
+MuonDigitChecker     INFO 0.000  0.000  0.200  0.000  0.200   R4
 MuonDigitChecker  SUCCESS Booked 1 N-Tuples and 0 Event Tag Collections
 L0CaloMonit          INFO Number of events 10
 L0CaloMonit          INFO Number of useful events (Odin bank decoded) 10
@@ -489,31 +466,31 @@ L0DUReportMonitor    INFO
 L0DUReportMonitor    INFO    -------------------------------------------------------------------
 L0DUReportMonitor    INFO    -- L0 Performance on 10 events
 L0DUReportMonitor    INFO    -------------------------------------------------------------------
-L0DUReportMonitor    INFO               *  Accepted L0          :        10 events :  rate = ( 100.00 +-  31.62) %
+L0DUReportMonitor    INFO               *  Accepted L0          :         9 events :  rate = (  90.00 +-  30.00) %
 L0DUReportMonitor    INFO    ------------------------ TRIGGERS ---------------------------------
-L0DUReportMonitor    INFO    * Trigger set :               L0Ecal :         1 events : rate =  10.00  %  (rel. rate =   10.00 % )
-L0DUReportMonitor    INFO    * Trigger set :               L0Hcal :         3 events : rate =  30.00  %  (rel. rate =   30.00 % )
-L0DUReportMonitor    INFO    * Trigger set :               L0Muon :         9 events : rate =  90.00  %  (rel. rate =   90.00 % )
+L0DUReportMonitor    INFO    * Trigger set :               L0Ecal :         1 events : rate =  10.00  %  (rel. rate =   11.11 % )
+L0DUReportMonitor    INFO    * Trigger set :               L0Hcal :         3 events : rate =  30.00  %  (rel. rate =   33.33 % )
+L0DUReportMonitor    INFO    * Trigger set :               L0Muon :         7 events : rate =  70.00  %  (rel. rate =   77.78 % )
 L0DUReportMonitor    INFO    ------------------------ CHANNELS ---------------------------------
-L0DUReportMonitor    INFO    *    ENABLED     channel :               DiMuon :         5 events : rate =  50.00  %  (rel. rate =   50.00 % )
+L0DUReportMonitor    INFO    *    ENABLED     channel :               DiMuon :         4 events : rate =  40.00  %  (rel. rate =   44.44 % )
 L0DUReportMonitor    INFO    *    ENABLED     channel :          DiMuon,down :         0 events : rate =   0.00  %  (rel. rate =    0.00 % )
 L0DUReportMonitor    INFO    *    ENABLED     channel :             Electron :         0 events : rate =   0.00  %  (rel. rate =    0.00 % )
 L0DUReportMonitor    INFO    *    ENABLED     channel :        Electron,down :         0 events : rate =   0.00  %  (rel. rate =    0.00 % )
 L0DUReportMonitor    INFO    * ** DISABLED ** channel :                  GEC :         8 events : rate =  80.00  %
-L0DUReportMonitor    INFO    *    ENABLED     channel :            GlobalPi0 :         1 events : rate =  10.00  %  (rel. rate =   10.00 % )
+L0DUReportMonitor    INFO    *    ENABLED     channel :            GlobalPi0 :         1 events : rate =  10.00  %  (rel. rate =   11.11 % )
 L0DUReportMonitor    INFO    *    ENABLED     channel :       GlobalPi0,down :         0 events : rate =   0.00  %  (rel. rate =    0.00 % )
-L0DUReportMonitor    INFO    *    ENABLED     channel :               Hadron :         3 events : rate =  30.00  %  (rel. rate =   30.00 % )
+L0DUReportMonitor    INFO    *    ENABLED     channel :               Hadron :         3 events : rate =  30.00  %  (rel. rate =   33.33 % )
 L0DUReportMonitor    INFO    *    ENABLED     channel :          Hadron,down :         0 events : rate =   0.00  %  (rel. rate =    0.00 % )
 L0DUReportMonitor    INFO    *    ENABLED     channel :             LocalPi0 :         0 events : rate =   0.00  %  (rel. rate =    0.00 % )
 L0DUReportMonitor    INFO    *    ENABLED     channel :        LocalPi0,down :         0 events : rate =   0.00  %  (rel. rate =    0.00 % )
-L0DUReportMonitor    INFO    *    ENABLED     channel :                 Muon :         7 events : rate =  70.00  %  (rel. rate =   70.00 % )
+L0DUReportMonitor    INFO    *    ENABLED     channel :                 Muon :         6 events : rate =  60.00  %  (rel. rate =   66.67 % )
 L0DUReportMonitor    INFO    *    ENABLED     channel :            Muon,down :         0 events : rate =   0.00  %  (rel. rate =    0.00 % )
-L0DUReportMonitor    INFO    *    ENABLED     channel :           MuonNoGlob :         9 events : rate =  90.00  %  (rel. rate =   90.00 % )
+L0DUReportMonitor    INFO    *    ENABLED     channel :           MuonNoGlob :         7 events : rate =  70.00  %  (rel. rate =   77.78 % )
 L0DUReportMonitor    INFO    *    ENABLED     channel :      MuonNoGlob,down :         0 events : rate =   0.00  %  (rel. rate =    0.00 % )
 L0DUReportMonitor    INFO    *    ENABLED     channel :               Photon :         0 events : rate =   0.00  %  (rel. rate =    0.00 % )
 L0DUReportMonitor    INFO    *    ENABLED     channel :          Photon,down :         0 events : rate =   0.00  %  (rel. rate =    0.00 % )
 L0DUReportMonitor    INFO    ------------------------ CONDITIONS ------------------------------
-L0DUReportMonitor    INFO    *  Elementary Condition         DiMuon,HighPt :         9 events : rate =  90.00  %
+L0DUReportMonitor    INFO    *  Elementary Condition         DiMuon,HighPt :         7 events : rate =  70.00  %
 L0DUReportMonitor    INFO    *  Elementary Condition          DiMuon,LowPt :         9 events : rate =  90.00  %
 L0DUReportMonitor    INFO    *  Elementary Condition       Electron,HighEt :         0 events : rate =   0.00  %
 L0DUReportMonitor    INFO    *  Elementary Condition        Electron,LowEt :        10 events : rate = 100.00  %
@@ -523,11 +500,11 @@ L0DUReportMonitor    INFO    *  Elementary Condition         Hadron,HighEt :    
 L0DUReportMonitor    INFO    *  Elementary Condition          Hadron,LowEt :        10 events : rate = 100.00  %
 L0DUReportMonitor    INFO    *  Elementary Condition       LocalPi0,HighEt :         0 events : rate =   0.00  %
 L0DUReportMonitor    INFO    *  Elementary Condition        LocalPi0,LowEt :        10 events : rate = 100.00  %
-L0DUReportMonitor    INFO    *  Elementary Condition           Muon,HighPt :         9 events : rate =  90.00  %
-L0DUReportMonitor    INFO    *  Elementary Condition          Muon,HighPt2 :         9 events : rate =  90.00  %
+L0DUReportMonitor    INFO    *  Elementary Condition           Muon,HighPt :         7 events : rate =  70.00  %
+L0DUReportMonitor    INFO    *  Elementary Condition          Muon,HighPt2 :         7 events : rate =  70.00  %
 L0DUReportMonitor    INFO    *  Elementary Condition            Muon,LowPt :         9 events : rate =  90.00  %
 L0DUReportMonitor    INFO    *  Elementary Condition           Muon,LowPt2 :         9 events : rate =  90.00  %
-L0DUReportMonitor    INFO    *  Elementary Condition               Muon2Pt :         5 events : rate =  50.00  %
+L0DUReportMonitor    INFO    *  Elementary Condition               Muon2Pt :         4 events : rate =  40.00  %
 L0DUReportMonitor    INFO    *  Elementary Condition         Photon,HighEt :         0 events : rate =   0.00  %
 L0DUReportMonitor    INFO    *  Elementary Condition          Photon,LowEt :        10 events : rate = 100.00  %
 L0DUReportMonitor    INFO    *  Elementary Condition                PuMult :         9 events : rate =  90.00  %
@@ -544,7 +521,7 @@ TagCreator        SUCCESS Booked 0 N-Tuples and 1 Event Tag Collections
 WR                   INFO Events output: 10
 RawWriter            INFO Events output: 10
 EventLoopMgr         INFO Histograms converted successfully according to request.
-LHCb::RawDataCn...   INFO Closed MDF stream:PFN:00001820_00000001-10ev.mdf ID:0x10e9d6e0
+LHCb::RawDataCn...   INFO Closed MDF stream:PFN:00001820_00000001-10ev.mdf ID:0x10ea8f00
 PoolRootTreeEvt...   INFO Disconnected data IO:3698D204-1EB2-DD11-865B-0030487C5E0E[00001820_00000001-10ev.digi]
 PoolRootTreeEvt...   INFO Disconnected data IO:70737DCB-49D9-DB11-A9D4-0002B3B0DEA0[castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001820/SIM/0000/00001820_00000001_1.sim]
 PoolRootTreeEvt...   INFO Disconnected data IO:969FF8CE-CDD9-DB11-823E-0002B3B0DEA0[castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001820/SIM/0000/00001820_00000001_2.sim]
@@ -582,9 +559,9 @@ DataOnDemandSvc      INFO Handled "DataFault" incidents: 20/10/954(Alg/Node/Tota
 *****Chrono*****     INFO ****************************************************************************************************
 *****Chrono*****     INFO  The Final CPU consumption ( Chrono ) Table (ordered)
 *****Chrono*****     INFO ****************************************************************************************************
-L0MuonTrigger E...   INFO Time User   : Tot=  131 [ms] Ave/Min/Max= 13.1(+- 1.76)/   10/   16 [ms] #= 10
-L0MuonTrigger I...   INFO Time User   : Tot= 1.62  [s]                                             #=  1
-ChronoStatSvc        INFO Time User   : Tot= 23.7  [s]                                             #=  1
+L0MuonTrigger E...   INFO Time User   : Tot=  137 [ms] Ave/Min/Max= 13.7(+- 2.33)/    9/   17 [ms] #= 10
+L0MuonTrigger I...   INFO Time User   : Tot= 1.78  [s]                                             #=  1
+ChronoStatSvc        INFO Time User   : Tot= 24.2  [s]                                             #=  1
 *****Chrono*****     INFO ****************************************************************************************************
 ChronoStatSvc.f...   INFO  Service finalized succesfully
 StatusCodeSvc        INFO listing all unchecked return codes:

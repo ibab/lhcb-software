@@ -27,7 +27,7 @@ Collection='EVTTAGS/TagCreator/1' ADDRESS='/Event' DATAFILE='L0ETC.root' TYP='PO
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Boole version v16r4
-                                          running on lxbuild120.cern.ch on Fri Nov 14 16:55:43 2008
+                                          running on lxbuild120.cern.ch on Tue Nov 18 11:02:09 2008
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -91,7 +91,7 @@ SpdDigit             INFO ZSupThreshold 10
 PrsDigit             INFO Noise:  1.0 +  0.0 (coherent) counts.
 PrsDigit             INFO Gain error  1.0%
 PrsDigit             INFO Subtract 0.2000 of previous BX
-PrsDigit             INFO ZSupThreshold 15
+PrsDigit             INFO ZSupThreshold 5
 EcalDigit            INFO Noise:  1.2 +  0.3 (coherent) counts.
 EcalDigit            INFO Gain error  1.0%
 EcalDigit            INFO Pedestal shift  0.60
@@ -119,7 +119,7 @@ L0Muon               INFO  foiYSize = 0,0,0,1,1
 L0Muon               INFO  ignoreM1 = 0
 L0Muon               INFO  ignoreM2 = 0
 L0Muon               INFO  procVersion = 2
-L0MuonTrigger I...   INFO Time User   : Tot=  1.6  [s]                                             #=  1
+L0MuonTrigger I...   INFO Time User   : Tot= 1.85  [s]                                             #=  1
 ToolSvc.L0DUCon...   INFO **** L0DU Configs loading : TCK = 0xFFFF
 ToolSvc.L0DUCon...   INFO Short description ::  TCK = 0xFFFF : Algorithm[1] Setting[0] lumi[2] - 2007 tuning - gain:Calo[20] : Muon[40]
 L0DU                 INFO The L0DUConfig (TCK=0xFFFF) have been succesfully loaded
@@ -181,7 +181,7 @@ BooleInit            INFO Evt 2,  Run 1,  Nr. in job = 1
 11144101-100ev-...SUCCESS Root file version:51800
 L0ETC.root        SUCCESS Root file version:51800
 PoolDbDatabaseCnv    INFO Recreate Database file:L0ETC.root as /EVTTAGS
-LHCb::RawDataCn...   INFO Opened(NEW)  MDF stream:PFN:11144101-100ev-20081006-10ev.mdf ID:0x1241d750
+LHCb::RawDataCn...   INFO Opened(NEW)  MDF stream:PFN:11144101-100ev-20081006-10ev.mdf ID:0x1234d760
 LHCb::RawDataCn...   INFO Adding dummy MDF/DAQ[DAQ_STATUS_BANK] information.
 BooleInit            INFO Evt 3,  Run 1,  Nr. in job = 2
 LHCb::RawDataCn...   INFO Adding dummy MDF/DAQ[DAQ_STATUS_BANK] information.
@@ -213,34 +213,11 @@ VeloPUSim            INFO Removed  0.00% MCVeloFEs due to bad strips and  1.04% 
 RichPDSignal      SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "Found MCRichHits at MC/Rich/Hits"              |        10 |         10 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
-EcalDigit            INFO noise fit (outer area):
-EcalDigit            INFO   chisquare = 58.8092/63
-EcalDigit            INFO   amplitude for gaus #1 = 5131.65 +- 69.4079 ( 5078.3 )
-EcalDigit            INFO   amplitude for gaus #2 = 1186.75 +- 38.023 ( 1210.43 )
-EcalDigit            INFO   amplitude for gaus #3 = 153.124 +- 6.52121 ( 155.004 )
-EcalDigit            INFO   amplitude for gaus #4 = 8.0677 +- 0.954818 ( 9.48236 )
-EcalDigit            INFO   amplitude for gaus #5 = 7.11714 +- 1.06826 ( 8.81896 )
-EcalDigit            INFO   amplitude for gaus #6 = 1.83894 +- 0.447544 ( 2.13122 )
-EcalDigit            INFO noise fit (middle area):
-EcalDigit            INFO   chisquare = 44.0909/63
-EcalDigit            INFO   amplitude for gaus #1 = 3269.26 +- 56.8999 ( 3160.7 )
-EcalDigit            INFO   amplitude for gaus #2 = 799.267 +- 32.4476 ( 855.171 )
-EcalDigit            INFO   amplitude for gaus #3 = 128.459 +- 5.9375 ( 127.08 )
-EcalDigit            INFO   amplitude for gaus #4 = 3.50969 +- 0.550558 ( 6.09546 )
-EcalDigit            INFO   amplitude for gaus #5 = 6.04974 +- 1.17129 ( 6.91032 )
-EcalDigit            INFO   amplitude for gaus #6 = 1.45715 +- 0.443749 ( 1.27092 )
-EcalDigit            INFO noise fit (inner area):
-EcalDigit            INFO   chisquare = 54.4249/81
-EcalDigit            INFO   amplitude for gaus #1 = 2570.51 +- 46.5098 ( 2500.14 )
-EcalDigit            INFO   amplitude for gaus #2 = 644.602 +- 24.4759 ( 669.365 )
-EcalDigit            INFO   amplitude for gaus #3 = 96.692 +- 4.24632 ( 102.658 )
-EcalDigit            INFO   amplitude for gaus #4 = 4.29793 +- 0.505749 ( 4.20413 )
-EcalDigit            INFO   amplitude for gaus #5 = 1.40407 +- 0.321704 ( 0.756397 )
 EcalDigit         SUCCESS Booked 3 Histogram(s) : 1D=3
-CaloFillPrsSpdR...   INFO Average event size :   283.8 words,    80.6 for trigger  Mean bank size    35.5, maximum size    56.0
-EcalFillRawBuffer    INFO Average event size :  1866.6 words,  2123.6 for trigger  Mean bank size    71.8, maximum size    88.2
-HcalFillRawBuffer    INFO Average event size :   478.1 words,   525.6 for trigger  Mean bank size    59.8, maximum size    80.4
-L0Calo               INFO Average bank size :   175.2 words RAW.
+CaloFillPrsSpdR...   INFO Average event size :   330.8 words,    73.2 for trigger  Mean bank size    41.3, maximum size    68.4
+EcalFillRawBuffer    INFO Average event size :  1594.7 words,  1387.2 for trigger  Mean bank size    61.3, maximum size    76.3
+HcalFillRawBuffer    INFO Average event size :   471.2 words,   501.2 for trigger  Mean bank size    58.9, maximum size    79.3
+L0Calo               INFO Average bank size :   161.9 words RAW.
 L0Muon               INFO - ------------------------------------------------------------------
 L0Muon               INFO - ========> Final summary of the L0Muon trigger (emulator) <========
 L0Muon               INFO - Total number of events processed           :       10
@@ -248,10 +225,10 @@ L0Muon               INFO - Average raw banks size                     :       7
 L0Muon               INFO - ------------------------------------------------------------------
 EcalDigitMCTruth  SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "#Digit->MC links"                              |        10 |      60698 |     6069.8 |     2930.8 |      1946.0 |      11417. |
+ | "#Digit->MC links"                              |        10 |      64702 |     6470.2 |     3081.1 |      2251.0 |      12323. |
 HcalDigitMCTruth  SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "#Digit->MC links"                              |        10 |       8485 |     848.50 |     391.39 |      177.00 |      1588.0 |
+ | "#Digit->MC links"                              |        10 |       8460 |     846.00 |     393.01 |      176.00 |      1581.0 |
 VeloSimMoni          INFO ------------------------------------------------------
 VeloSimMoni          INFO                 - VeloSimMoni table -
 VeloSimMoni          INFO ------------------------------------------------------
@@ -399,26 +376,26 @@ MuonDigitChecker     INFO ------------------------------------------------------
 MuonDigitChecker     INFO -----   Container: Geant------------------------
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO    M1     M2     M3     M4     M5
-MuonDigitChecker     INFO 43.500  25.900  2.300  1.900  1.100   R1
-MuonDigitChecker     INFO 37.900  17.100  5.500  2.700  2.100   R2
-MuonDigitChecker     INFO 41.100  6.900  1.400  1.700  1.700   R3
-MuonDigitChecker     INFO 39.800  5.400  4.100  2.400  2.400   R4
+MuonDigitChecker     INFO 44.300  26.500  2.400  1.600  1.200   R1
+MuonDigitChecker     INFO 38.200  17.200  5.200  2.100  1.700   R2
+MuonDigitChecker     INFO 40.100  7.000  2.100  1.700  2.000   R3
+MuonDigitChecker     INFO 40.000  5.500  4.200  2.400  2.500   R4
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO -----   Container: FlastSpillOver------------------------
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO    M1     M2     M3     M4     M5
-MuonDigitChecker     INFO 0.200  1.100  0.400  0.000  0.200   R1
-MuonDigitChecker     INFO 0.200  1.300  1.200  0.200  0.800   R2
-MuonDigitChecker     INFO 0.600  1.900  0.200  0.700  1.200   R3
-MuonDigitChecker     INFO 0.600  0.900  0.000  0.200  2.300   R4
+MuonDigitChecker     INFO 0.200  0.900  0.800  0.000  0.200   R1
+MuonDigitChecker     INFO 0.500  1.500  1.400  0.200  0.900   R2
+MuonDigitChecker     INFO 0.600  1.900  0.200  0.600  1.000   R3
+MuonDigitChecker     INFO 0.500  0.800  0.000  0.200  3.000   R4
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO -----   Container: Low Energy Background------------------------
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO    M1     M2     M3     M4     M5
-MuonDigitChecker     INFO 0.000  5.400  1.200  1.300  0.900   R1
-MuonDigitChecker     INFO 0.000  3.400  1.200  0.500  0.500   R2
-MuonDigitChecker     INFO 0.000  1.500  0.200  0.000  0.100   R3
-MuonDigitChecker     INFO 0.000  1.800  0.000  0.200  0.200   R4
+MuonDigitChecker     INFO 0.000  5.300  1.500  1.600  0.700   R1
+MuonDigitChecker     INFO 0.000  3.900  1.000  0.400  0.600   R2
+MuonDigitChecker     INFO 0.000  1.200  0.200  0.000  0.100   R3
+MuonDigitChecker     INFO 0.000  1.900  0.000  0.200  0.000   R4
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO -----   Container: Chamber Noise------------------------
 MuonDigitChecker     INFO -----------------------------------------------------------------
@@ -431,18 +408,18 @@ MuonDigitChecker     INFO ------------------------------------------------------
 MuonDigitChecker     INFO -----   Container: Crosstalk------------------------
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO    M1     M2     M3     M4     M5
-MuonDigitChecker     INFO 2.900  2.600  0.600  0.700  0.100   R1
-MuonDigitChecker     INFO 13.700  1.800  0.500  0.300  0.100   R2
-MuonDigitChecker     INFO 6.100  1.600  1.200  0.400  0.600   R3
-MuonDigitChecker     INFO 0.800  0.400  0.200  0.200  0.000   R4
+MuonDigitChecker     INFO 1.900  2.800  0.200  0.600  0.200   R1
+MuonDigitChecker     INFO 13.100  1.200  0.300  1.100  0.400   R2
+MuonDigitChecker     INFO 7.300  2.200  0.400  0.200  0.900   R3
+MuonDigitChecker     INFO 1.200  0.800  0.000  0.200  0.000   R4
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO -----   Container: Electronic Noise------------------------
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO    M1     M2     M3     M4     M5
 MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.000   R1
 MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.000   R2
-MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.200   R3
-MuonDigitChecker     INFO 0.000  0.000  0.200  0.000  0.200   R4
+MuonDigitChecker     INFO 0.100  0.000  0.400  0.000  0.000   R3
+MuonDigitChecker     INFO 0.100  0.000  0.000  0.000  0.000   R4
 MuonDigitChecker  SUCCESS Booked 1 N-Tuples and 0 Event Tag Collections
 L0CaloMonit          INFO Number of events 10
 L0CaloMonit          INFO Number of useful events (Odin bank decoded) 10
@@ -466,7 +443,7 @@ L0DUReportMonitor    INFO    * Trigger set :               L0Ecal :         2 ev
 L0DUReportMonitor    INFO    * Trigger set :               L0Hcal :         2 events : rate =  20.00  %  (rel. rate =   22.22 % )
 L0DUReportMonitor    INFO    * Trigger set :               L0Muon :         9 events : rate =  90.00  %  (rel. rate =  100.00 % )
 L0DUReportMonitor    INFO    ------------------------ CHANNELS ---------------------------------
-L0DUReportMonitor    INFO    *    ENABLED     channel :               DiMuon :         2 events : rate =  20.00  %  (rel. rate =   22.22 % )
+L0DUReportMonitor    INFO    *    ENABLED     channel :               DiMuon :         3 events : rate =  30.00  %  (rel. rate =   33.33 % )
 L0DUReportMonitor    INFO    *    ENABLED     channel :          DiMuon,down :         0 events : rate =   0.00  %  (rel. rate =    0.00 % )
 L0DUReportMonitor    INFO    *    ENABLED     channel :             Electron :         0 events : rate =   0.00  %  (rel. rate =    0.00 % )
 L0DUReportMonitor    INFO    *    ENABLED     channel :        Electron,down :         0 events : rate =   0.00  %  (rel. rate =    0.00 % )
@@ -498,7 +475,7 @@ L0DUReportMonitor    INFO    *  Elementary Condition           Muon,HighPt :    
 L0DUReportMonitor    INFO    *  Elementary Condition          Muon,HighPt2 :         9 events : rate =  90.00  %
 L0DUReportMonitor    INFO    *  Elementary Condition            Muon,LowPt :         9 events : rate =  90.00  %
 L0DUReportMonitor    INFO    *  Elementary Condition           Muon,LowPt2 :         9 events : rate =  90.00  %
-L0DUReportMonitor    INFO    *  Elementary Condition               Muon2Pt :         2 events : rate =  20.00  %
+L0DUReportMonitor    INFO    *  Elementary Condition               Muon2Pt :         3 events : rate =  30.00  %
 L0DUReportMonitor    INFO    *  Elementary Condition         Photon,HighEt :         2 events : rate =  20.00  %
 L0DUReportMonitor    INFO    *  Elementary Condition          Photon,LowEt :         9 events : rate =  90.00  %
 L0DUReportMonitor    INFO    *  Elementary Condition                PuMult :         9 events : rate =  90.00  %
@@ -515,7 +492,7 @@ TagCreator        SUCCESS Booked 0 N-Tuples and 1 Event Tag Collections
 WR                   INFO Events output: 10
 RawWriter            INFO Events output: 10
 EventLoopMgr         INFO Histograms converted successfully according to request.
-LHCb::RawDataCn...   INFO Closed MDF stream:PFN:11144101-100ev-20081006-10ev.mdf ID:0x1241d750
+LHCb::RawDataCn...   INFO Closed MDF stream:PFN:11144101-100ev-20081006-10ev.mdf ID:0x1234d760
 PoolRootTreeEvt...   INFO Disconnected data IO:C8BF8A5C-A093-DD11-89E2-000CF1F44509[castor:/castor/cern.ch/user/g/gcorti/Gauss/2008/v35r1/11144101-100ev-20081006.sim]
 PoolRootTreeEvt...   INFO Disconnected data IO:DA506BAB-1DB2-DD11-BDF0-0030487C5E0E[11144101-100ev-20081006-10ev.digi]
 EvtTupleSvc          INFO NTuples saved successfully
@@ -551,9 +528,9 @@ DataOnDemandSvc      INFO Handled "DataFault" incidents: 20/10/910(Alg/Node/Tota
 *****Chrono*****     INFO ****************************************************************************************************
 *****Chrono*****     INFO  The Final CPU consumption ( Chrono ) Table (ordered)
 *****Chrono*****     INFO ****************************************************************************************************
-L0MuonTrigger E...   INFO Time User   : Tot=  127 [ms] Ave/Min/Max= 12.7(+- 3.23)/    9/   20 [ms] #= 10
-L0MuonTrigger I...   INFO Time User   : Tot=  1.6  [s]                                             #=  1
-ChronoStatSvc        INFO Time User   : Tot= 21.6  [s]                                             #=  1
+L0MuonTrigger E...   INFO Time User   : Tot=  128 [ms] Ave/Min/Max= 12.8(+- 2.79)/    9/   19 [ms] #= 10
+L0MuonTrigger I...   INFO Time User   : Tot= 1.85  [s]                                             #=  1
+ChronoStatSvc        INFO Time User   : Tot= 20.8  [s]                                             #=  1
 *****Chrono*****     INFO ****************************************************************************************************
 ChronoStatSvc.f...   INFO  Service finalized succesfully
 StatusCodeSvc        INFO listing all unchecked return codes:
