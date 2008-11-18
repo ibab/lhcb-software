@@ -1,8 +1,15 @@
-! $Id: release.notes,v 1.154 2008-10-06 10:18:03 jpalac Exp $
+! $Id: release.notes,v 1.155 2008-11-18 17:57:11 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+! 2008-11-18 - Juan PALACIOS
+ - src/PVReFitterAlg{.cpp, .h}
+  . Remove all the ILifeTimeFitter/ProperTimeFitter stuff. It wasn't actually
+    used for anything.
+ - cmt/requirements
+  . Increase version to v5r4p2
 
 !========================== VertexFit v5r4p1 2008-10-06 =================
 
