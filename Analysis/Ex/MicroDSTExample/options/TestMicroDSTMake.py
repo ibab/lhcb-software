@@ -1,4 +1,4 @@
-#$Id: TestMicroDSTMake.py,v 1.7 2008-11-17 15:20:38 jpalac Exp $
+#$Id: TestMicroDSTMake.py,v 1.8 2008-11-18 16:37:29 jpalac Exp $
 from Gaudi.Configuration import *
 from MicroDST.MicroDSTAlgorithm import *
 from Configurables import CopyRelatedMCParticles
@@ -14,11 +14,12 @@ from Configurables import PrintHeader
 from Configurables import OutputStream
 from Configurables import BTagging, BTaggingTool
 from Configurables import PhysDesktop
+from Configurables import PVReFitterAlg
 #==============================================================================
 # Some steering options
 #
 # number of events to process
-nEvents = 1000
+nEvents = 5000
 # Copy information for events not passing the selection?
 allEventInfo = False
 # Copy MC particles when signal MC decay is found?
@@ -27,6 +28,8 @@ keepTrueDecays = False
 storeMCInfo = True
 # B tagging?
 BTaggingInfo = True
+# re-fit PV?
+PVRefit = True
 #==============================================================================
 importOptions( "$DAVINCIROOT/options/DaVinciCommon.opts" )
 importOptions( "$MICRODSTEXAMPLEROOT/options/JpsiPhiData.opts")
@@ -73,7 +76,7 @@ if (keepTrueDecays) :
 
     CopyMCParticles().InputLocation = "MC/Decays"
     CopyMCParticles().addTool( MCParticleCloner(), name = 'MCParticleCloner' )
-    CopyMCParticles().MCParticleCloner.addTool( MCVertexCloner(), name = 'MCVertexCloner' )
+    CopyMCParticles().MCParticleCloner.addTool( MCVertexCloner(), name = 'ICloneMCVertex' )
     CopyMCParticles().OutputLevel=4
 
     if (allEventInfo) :
@@ -107,7 +110,7 @@ if (storeMCInfo) :
     copyMC = CopyRelatedMCParticles()
     copyMC.InputLocation = mainLocation+'/Particles'
     copyMC.addTool(MCParticleCloner(), name= 'MCParticleCloner')
-    copyMC.MCParticleCloner.addTool(MCVertexCloner(), name = 'MCVertexCloner')
+    copyMC.MCParticleCloner.addTool(MCVertexCloner(), name = 'ICloneMCVertex')
     copyMC.OutputLevel=4;
     MySelection.Members += [copyMC]
 #==============================================================================
@@ -124,6 +127,25 @@ if (BTaggingInfo) :
     copyFlavTag = CopyFlavourTag()
     copyFlavTag.InputLocation = BTagLocation
     MySelection.Members += [copyFlavTag]
+#==============================================================================
+# PV re-fit
+if (PVRefit) :
+    PVReFitter = PVReFitterAlg("PVReFitterAlg")
+    PVReFitter.ParticleInputLocation = mainLocation+"/Particles"
+    refittedPVLocation = mainLocation+"/RefittedVertices"
+    PVReFitter.VertexOutputLocation = refittedPVLocation
+    p2ReFitPVRelationsLoc = mainLocation+"/Particle2ReFittedVertexRelations"
+    PVReFitter.P2VRelationsOutputLocation = p2ReFitPVRelationsLoc
+    MySelection.Members += [PVReFitter]
+    # put the re-fitted vertices on the MicroDST
+    copyReFittedPVs = CopyPrimaryVertices('CopyReFittedPVs')
+    copyReFittedPVs.InputLocation = refittedPVLocation
+    MySelection.Members += [copyReFittedPVs]
+    # copy the Particle->PV relations table
+    copyP2RefitPVLink = CopyParticle2PVLink("CopyP2RefitPVLink")
+    copyP2RefitPVLink.InputLocation = p2ReFitPVRelationsLoc
+#    copyP2RefitPVLink.OutputLevel=1
+    MySelection.Members += [copyP2RefitPVLink]
 #==============================================================================
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 ApplicationMgr().EvtMax = nEvents
