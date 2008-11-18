@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichPixelPositionMonitor
  *
- *  $Id: RichPixelPositionMonitor.cpp,v 1.16 2008-11-18 17:33:12 jonrob Exp $
+ *  $Id: RichPixelPositionMonitor.cpp,v 1.17 2008-11-18 17:51:12 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -287,12 +287,12 @@ StatusCode PixelPositionMonitor::execute()
                   "dR V R local on HPD entry window : CK signal only", 0, 40, -10, 10 );
           // MC to rec position on HPD anode
           const Gaudi::XYZPoint & mcPointOnAnode = (*iHit)->entry();
-          plot1D( anodeGlobal.x() - mcPointOnAnode.x(), hid(rich,"anodeXDiffGlobal"), 
-                  "dX on HPD Anode : Global LHCb Coords", -20, 20 );
-          plot1D( anodeGlobal.y() - mcPointOnAnode.y(), hid(rich,"anodeYDiffGlobal"), 
-                  "dY on HPD Anode : Global LHCb Coords", -20, 20 );
-          plot1D( anodeGlobal.z() - mcPointOnAnode.z(), hid(rich,"anodeZDiffGlobal"), 
-                  "dZ on HPD Anode : Global LHCb Coords", -20, 20 );
+          plot1D( anodeGlobal.x() - mcPointOnAnode.x(), hid(rich,side,"anodeXDiffGlobal"), 
+                  "dX on HPD Anode : Global LHCb Coords", -1, 1 );
+          plot1D( anodeGlobal.y() - mcPointOnAnode.y(), hid(rich,side,"anodeYDiffGlobal"), 
+                  "dY on HPD Anode : Global LHCb Coords", -1, 1 );
+          plot1D( anodeGlobal.z() - mcPointOnAnode.z(), hid(rich,side,"anodeZDiffGlobal"), 
+                  "dZ on HPD Anode : Global LHCb Coords", -1, 1 );
           if ( msgLevel(MSG::VERBOSE) )
           {
             verbose() << "Global : Pixel = " << (*iHit)->entry()
