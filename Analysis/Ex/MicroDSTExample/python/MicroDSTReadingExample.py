@@ -3,6 +3,8 @@ import sys, getopt
 from ROOT import TCanvas, TH1D, Double
 from GaudiPython import gbl, AppMgr
 from math import sqrt, fabs
+from GaudiKernel import SystemOfUnits, PhysicalConstants
+from LHCbMath import XYZVector, XYZPoint
 #==============================================================================
 def nextEvent(am):
     am.run(1)
@@ -11,6 +13,38 @@ def nextEvent(am):
 def deSmartRef(T) :
     if hasattr(T, 'target'): T = T.target()
     return T
+#==============================================================================
+def decayVertex(particle) :
+    vertices = particle.endVertices()
+    iCount=0
+    for v in vertices :
+        return deSmartRef(v)
+#==============================================================================
+def properTime(particle, vertex, fitter) :
+    tau =Double(-100000.)
+    if (vertex != None) :
+        pid = particle.particleID().pid()
+        error = Double(0.)
+        chi2=Double(0.)
+        fitter.fit(vertex, particle, tau, error, chi2)
+    return tau/SystemOfUnits.picosecond
+#==============================================================================
+def properTimeMC(particle) :
+    tau = -99999.
+    if (particle.particleID().pid() == -99000000 ) : return tau
+    originVertex = particle.originVertex()
+    decayVtx = decayVertex(particle)
+    if (decayVtx !=None) :
+        decayPos = decayVtx.position()
+        originPos = originVertex.position()
+        flightVector = XYZVector( decayPos.x()-originPos.x(),
+                                  decayPos.y()-originPos.y(),
+                                  decayPos.z()-originPos.z() )
+        p = particle.momentum()
+        m = p.mass()
+        tau = ( (m/(SystemOfUnits.picosecond)) * (p.Vect().Dot(flightVector)) ) / p.Vect().mag2()
+        tau /= PhysicalConstants.c_light
+    return tau
 #==============================================================================
 def initMassPlots(pid, window):
     partProp=partSvc.findByStdHepID( pid )
@@ -40,7 +74,15 @@ def makeMassPlots(particle,plots):
     pid = particle.particleID().pid()
     if plots.has_key(pid) == False :
         plots[pid] = initMassPlots(pid, 500.)
-    result = plots[pid].Fill(particle.momentum().mass())    
+    result = plots[pid].Fill(particle.momentum().mass())
+#==============================================================================
+def makeMCProperTimePlots(particle,plots):
+    pid = particle.particleID().pid()
+    if ( particle.particleID().hasBottom() ):
+        if plots.has_key(pid) == False :
+            plots[pid] = initProperTimePlots(pid, -2., 5.0)
+        tau = properTimeMC(particle)
+        result = plots[pid].Fill(tau)
 #==============================================================================
 def makeMassResPlots(particle,mcParticle,plots):
     pid = particle.particleID().pid()
@@ -50,38 +92,38 @@ def makeMassResPlots(particle,mcParticle,plots):
         plots[offset+pid] = initMassResPlots(pid, 500.)
     result = plots[offset+pid].Fill(particle.momentum().mass()-mcParticle.momentum().mass())    
 #==============================================================================
-def makeProperTimePlots(particle, vertex, fitter, plots):
-    if (vertex != None) :
-        pid = particle.particleID().pid()
-        if ( particle.particleID().hasBottom() ):
-            if plots.has_key(pid) == False :
-                plots[pid] = initProperTimePlots(pid, -0.02, 0.04)
-            time =Double(-100000.)
-            error = Double(0.)
-            chi2=Double(0.)
-            fitter.fit(vertex, particle, time, error, chi2)
-            result = plots[pid].Fill(time)    
+def makeProperTimePlots(particle, tau, plots):
+    pid = particle.particleID().pid()
+    if ( particle.particleID().hasBottom() ):
+        if plots.has_key(pid) == False :
+            plots[pid] = initProperTimePlots(pid, -2., 5.0)
+        result = plots[pid].Fill(tau)
 #==============================================================================
-def particleTreeLoop(particles, plots):
+def assocMCP(particle, table) :
+    if (table != None) :
+        assocRange = table.relations(particle)
+        if (assocRange.size() > 0) :
+            return assocRange[0].to()
+    else :
+        print "No table found!"
+#==============================================================================
+def particleTreeLoop(particles, plots, table):
     for p in particles:
         p = deSmartRef(p)
         makeMassPlots(p, plots)
-        table = evt[particle2mcPath]
-        if (table != None) :
-            assocRange = table.relations(p)
-            if (assocRange.size() > 0) :
-                assocMCParticle = assocRange[0].to()
-                makeMassResPlots(p, assocMCParticle, plots)
+        assocMCParticle = assocMCP(p, table)
+        if (assocMCParticle !=None) :
+            makeMassResPlots(p, assocMCParticle, plots)
         daughters = p.daughters()
-        particleTreeLoop(daughters, plots)
+        particleTreeLoop(daughters, plots, table)
 
 #==============================================================================
 def testFlavourTags(location, onegaPlot, catPlot) :
     tags = evt[location]
     if (tags!=None):
         for t in tags :
-            print "Found B-tag\n", t
-            print "For particle\n", t.taggedB()
+#            print "Found B-tag\n", t
+#            print "For particle\n", t.taggedB()
             omegaPlot.Fill(t.omega())
             catPlot.Fill(t.category())
 #==============================================================================
@@ -89,28 +131,36 @@ def countPVs(location, plot) :
     vertices = evt[location]
     nVerts=0
     if (vertices !=None) :
-        print "Found ", vertices.size(), " PVs"
         nVerts = vertices.size()
     else :
         print "Found no PVs"
 
-    plot.Fill(vertices.size())
+    plot.Fill(nVerts)
     return nVerts
 #==============================================================================
-def trueDecayMassPlots(location, plots) :
-    decays = evt['/Event/microDST/MC/Decays']
+def MCDecayPlots(location, massPlots, propTimePlots) :
+    decays = evt[location]
     if (decays != None):
-        for mcp in decays: makeMassPlots(mcp, mcMassPlots)
+        for mcp in decays:
+            makeMassPlots(mcp, massPlots)
+            makeMCProperTimePlots(mcp, propTimePlots)
         return 1
     else :
         return 0
 #==============================================================================
 def bestVertex(particle, table) :
     if (table !=None) :
-        PVRange = bestVertexAssoc.relations(particle)
+        PVRange = table.relations(particle)
         if ( not PVRange.empty()) : return PVRange.back().to()
     else :
+        print "Found no particle->PV associations"
         return
+#==============================================================================
+def getEvtStuff(location) :
+    stuff = evt[location]
+    if (stuff ==None):
+        print "Found no stuff in ", location
+    return stuff
 #==============================================================================
 def printHelp():
     print "Usage: python -i MicroDSTReadingExample [options]"
@@ -156,11 +206,18 @@ partSvc = appMgr.partSvc()
 properTimeFitter = tools.create('PropertimeFitter',
                                 interface='ILifetimeFitter')
 
+'''
+Gaudi::XYZVector TMP2 = (*ivert)->position() - MC->originVertex()->position();
+double m_mctau = ((1/(picosecond*c_light))  * (MC->momentum().mass())*
+                  (MC->momentum().Vect()).Dot(TMP2))/ MC->momentum().Vect().mag2();
+'''
 sel.open(microDSTFile)
 
 mcMassPlots = {}
+mcPropTimePlots = {}
 massPlots = {}
 propTimePlots = {}
+refitPropTimePlots = {}
 nEvents=0
 nMCEvents=0
 nRecEvents=0
@@ -170,32 +227,48 @@ nPrimaryVertices = 0
 selectionPath = locationRoot +  '/Phys/' + selection
 particlePath = selectionPath + '/Particles'
 particle2mcPath = selectionPath + '/Particles/RelatedMCParticles'
-vertexAssociationPath = selectionPath + '/Particle2VertexRelations'
+stdVertexAssocPath = selectionPath + '/Particle2VertexRelations'
+refitVertexAssocPath = selectionPath + '/Particle2ReFittedVertexRelations'
 mcParticlePath = '/Event/microDST/MC/Particles'
 flavTagPath = selectionPath + "/Tagging"
 pvLocation = "/Event/microDST/Rec/Vertex/Primary"
 nPVPlot = TH1D( "# of PVs", "# of primary vertices", 5, -0.5, 4.5 )
 omegaPlot = TH1D("Mis-tag fratcion", "Mis-tag fraction", 100, 0,1.0)
 flavCatPlot = TH1D("Tagging category", "Tagging category", 11, -0.5,10.5)
+stdPropTimeResPlot = TH1D("tau-tau_MC", "tau-tau_MC", 100, -0.2,0.5)
+refitPropTimeResPlot = TH1D("tau-tau_MC", "tau-tau_MC", 100, -0.2,0.5)
 while (nextEvent(appMgr)) :
 #    evt.dump()
     nEvents+=1
     nPrimaryVertices += countPVs(pvLocation, nPVPlot)
-    nMCEvents += trueDecayMassPlots('/Event/microDST/MC/Decays', mcMassPlots)
+#    nMCEvents += MCDecayPlots('/Event/microDST/MC/Decays', mcMassPlots)
+    nMCEvents += MCDecayPlots(mcParticlePath, mcMassPlots, mcPropTimePlots)
     particles = evt[particlePath]
     if (particles!=None):
         nRecEvents+=1
         nParticles += particles.size()
-        bestVertexAssoc = evt[vertexAssociationPath]
-        particleTreeLoop(particles, massPlots)
+        stdBestVertexAssoc = getEvtStuff(stdVertexAssocPath)
+        refitBestVertexAssoc = getEvtStuff(refitVertexAssocPath)
+        p2MCPTable = evt[particle2mcPath]
+        particleTreeLoop(particles, massPlots, p2MCPTable)
         for p in particles:
-            vertex = bestVertex(p, bestVertexAssoc)
+            stdVertex = bestVertex(p, stdBestVertexAssoc)
+            stdPropTime = properTime(p, stdVertex, properTimeFitter)
             makeProperTimePlots(p,
-                                vertex,
-                                properTimeFitter,
+                                stdPropTime,
                                 propTimePlots)
-        else :
-            print "Found no particle->PV associations at ", vertexAssociationPath
+            refitVertex = bestVertex(p, refitBestVertexAssoc)
+            refitPropTime = properTime(p, refitVertex, properTimeFitter)
+            makeProperTimePlots(p,
+                                refitPropTime,
+                                refitPropTimePlots)
+            assocMCPart = (assocMCP(p, p2MCPTable))
+            if (assocMCPart != None) :
+                MCPropTime = properTimeMC(assocMCP(p, p2MCPTable))
+                stdPropTimeRes = stdPropTime-MCPropTime
+                stdPropTimeResPlot.Fill(stdPropTimeRes)
+                refitProtTimeRes = refitPropTime-MCPropTime
+                refitPropTimeResPlot.Fill(refitProtTimeRes)
     testFlavourTags(flavTagPath, omegaPlot, flavCatPlot)
     
 print "Found MC info in ", nMCEvents, "/", nEvents, " events"
