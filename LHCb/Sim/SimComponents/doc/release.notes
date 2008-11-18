@@ -6,6 +6,10 @@
 !-----------------------------------------------------------------------------
 
 !====================== SimComponents v2r14 2008-11-17 =======================
+! 2008-11-17 - Olivier Callot
+ - Remove the Pack, Unpack and Compare for MC particles and vertices
+   and movethem to a new package Event/EventPacker with reconstruction packers
+
 ! 2008-11-14 - Marco Cattaneo
  - Add sanity check in MCParticleSelector.cpp, to avoid FPE on ia32
 
