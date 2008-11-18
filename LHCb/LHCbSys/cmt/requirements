@@ -83,7 +83,7 @@ use LoKiArrayFunctors     v8r0   Phys    # Ivan Belyaev
 use LoKiCore              v8r0   Phys    # Ivan Belyaev
 use LoKiGen               v8r0   Phys    # Ivan Belyaev
 use LoKiGenMC             v8r0   Phys    # Ivan Belyaev
-use LoKiHlt               v1r0   Phys    # Ivan Belyaev
+use LoKiHlt               v2r0   Phys    # Ivan Belyaev
 use LoKiMC                v8r0   Phys    # Ivan Belyaev
 use LoKiNumbers           v8r0   Phys    # Ivan Belyaev
 use LoKiPhys              v8r0   Phys    # Ivan Belyaev
