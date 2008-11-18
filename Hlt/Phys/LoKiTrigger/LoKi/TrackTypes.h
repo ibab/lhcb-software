@@ -1,4 +1,4 @@
-// $Id: TrackTypes.h,v 1.4 2008-03-30 13:48:13 ibelyaev Exp $
+// $Id: TrackTypes.h,v 1.5 2008-11-18 09:07:29 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_TRACKTYPES_H 
 #define LOKI_TRACKTYPES_H 1
@@ -78,7 +78,35 @@ namespace LoKi
     typedef LoKi::BasicFunctors<LHCb::RecVertex>::PredicateFromPredicate RVCut  ;
     /// type of 'functions' for recontructed vertices (assignable)
     typedef LoKi::BasicFunctors<LHCb::RecVertex>::FunctionFromFunction   RVFun  ;
+
+
+    /// type of 'map'       for Vertices    (interface)
+    typedef LoKi::BasicFunctors<LHCb::RecVertex*>::Map               RVMaps ;
+    /// type of 'map'       for Vertices    (assignable)
+    typedef LoKi::Assignable<RVMaps>::Type                           RVMap  ;
     
+    /// type of 'pipe'      for Vertices (interface)
+    typedef LoKi::BasicFunctors<LHCb::RecVertex*>::Pipe              RVPipes ;
+    /// type of 'pipe'      for Vertices (assignable)
+    typedef LoKi::Assignable<RVPipes>::Type                          RVPipe  ;
+    
+    /// type of 'fun-val'   for Vertices (interface)
+    typedef LoKi::BasicFunctors<LHCb::RecVertex*>::FunVal            RVFunVals ;
+    /// type of 'fun-val'   for Vertices (assignable)
+    typedef LoKi::Assignable<RVFunVals>::Type                        RVFunVal  ;
+    
+    /// type of 'element'   for Vertices (interface)
+    typedef LoKi::BasicFunctors<LHCb::RecVertex*>::Element           RVElements ;
+    /// type of 'element'   for Vertices (assignable)
+    typedef LoKi::Assignable<RVElements>::Type                       RVElement  ;
+    
+    /// type of 'source'   for Vertices (interface)
+    typedef LoKi::BasicFunctors<LHCb::RecVertex*>::Source            RVSources  ;
+    /// type of 'source'   for Vertices (assignable)
+    typedef LoKi::Assignable<RVSources>::Type                        RVSource   ;
+    
+
+
     /// The *fictive* argument for  "Track Track bi-functions"
     typedef LoKi::Holder<LHCb::Track,LHCb::Track>                 TrackPair ;
     
@@ -212,6 +240,33 @@ namespace LoKi
     typedef LoKi::TrackTypes::TrSources TrSources   ;
     /// type for "sources" for Track  (assignable)
     typedef LoKi::TrackTypes::TrSource  TrSource    ;
+
+    // functional part for Vertices
+    
+    /// type for "maps" for Vertex  (interface)
+    typedef LoKi::TrackTypes::RVMaps     RVMaps    ;
+    /// type for "maps" for Vertex  (assignable)
+    typedef LoKi::TrackTypes::RVMap      RVMap     ;
+    
+    /// type for "pipes" for Vertex  (interface)
+    typedef LoKi::TrackTypes::RVPipes    RVPipes   ;
+    /// type for "pipes" for Vertex  (assignable)
+    typedef LoKi::TrackTypes::RVPipe     RVPipe    ;
+    
+    /// type for "fun-vals" for Vertex  (interface)
+    typedef LoKi::TrackTypes::RVFunVals  RVFunVals ;
+    /// type for "fun-vals" for Vertex  (assignable)
+    typedef LoKi::TrackTypes::RVFunVal   RVFunVal  ;
+    
+    /// type for "elements" for Vertex  (interface)
+    typedef LoKi::TrackTypes::RVElements RVElements ;
+    /// type for "elements" for Vertex  (assignable)
+    typedef LoKi::TrackTypes::RVElement  RVElement  ;
+    
+    /// type for "sources" for Vertex  (interface)
+    typedef LoKi::TrackTypes::RVSources RVSources   ;
+    /// type for "sources" for Vertex  (assignable)
+    typedef LoKi::TrackTypes::RVSource  RVSource    ;
 
   } // end of namespace LoKi::Types 
   // ==========================================================================
