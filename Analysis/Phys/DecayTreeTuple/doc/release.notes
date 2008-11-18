@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+! 2008-11-18 - Patrick Koppenburg
+ - TupleToolTrigger : fill all selections in first. Else the Tuple writing
+   tends to crash.
+
 ! 2008-11-14 - Tomasz Skwarnicki
  - TupleTollTISTOS.cpp  adopt to the new ITriggerTisTos tool interface
 

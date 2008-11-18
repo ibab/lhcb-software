@@ -1,4 +1,4 @@
-// $Id: TupleToolTrigger.cpp,v 1.11 2008-10-16 13:26:47 pkoppenb Exp $
+// $Id: TupleToolTrigger.cpp,v 1.12 2008-11-18 15:48:40 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -9,6 +9,7 @@
 
 #include "Event/L0DUReport.h"
 #include "Event/HltDecReports.h"
+#include "Kernel/IANNSvc.h"
 
 #include "GaudiAlg/Tuple.h"
 #include "GaudiAlg/TupleObj.h"
@@ -95,21 +96,26 @@ StatusCode TupleToolTrigger::fillHlt( Tuples::Tuple& tuple, const std::string & 
                         (decReports->decReport(level+"Global")->decision()):0 )) return StatusCode::FAILURE;
     if ( individual) {
       unsigned int nsel = 0 ;
-      // individual Hlt trigger lines
-      for(LHCb::HltDecReports::Container::const_iterator it=decReports->begin();
-          it!=decReports->end();++it){
-        if( ( it->first.find(level) == 0 ) && 
-            ( it->first.find("Decision") != std::string::npos ) ){
-          if (msgLevel(MSG::DEBUG))  debug() << " Hlt trigger name= " << it->first  
-                                             << " decision= " << it->second.decision() << endmsg;
-          if ( ! tuple->column(it->first  , it->second.decision() ) ) 
-            return StatusCode::FAILURE;
-          nsel += it->second.decision();
-          if (msgLevel(MSG::VERBOSE) && (it->second.decision())) verbose() << "Added " << it->first << " to " << nsel << endmsg ;
+      std::vector<std::string> names = svc<IANNSvc>("HltANNSvc")->keys(level+"SelectionID");
+      for ( std::vector<std::string>::const_iterator n = names.begin() ; n!= names.end() ; ++n){
+        bool found = false ;
+        // individual Hlt trigger lines
+        for(LHCb::HltDecReports::Container::const_iterator it=decReports->begin();
+            it!=decReports->end();++it){
+          if ( ( it->first == *n ) ){
+            if (msgLevel(MSG::DEBUG))  debug() << " Hlt trigger name= " << it->first  
+                                               << " decision= " << it->second.decision() << endmsg;
+            found = it->second.decision() ;
+          }
         }
-      } 
+        if (msgLevel(MSG::VERBOSE)) verbose() << "Added " << *n << " " << found 
+                                              << " to " << nsel << endmsg ;
+        if ( ! tuple->column(*n, found ) ) return StatusCode::FAILURE;
+        if (found) nsel++ ;
+      }
       if ( ! tuple->column(level+"nSelections" , nsel ) ) return StatusCode::FAILURE;
     }
   } else Warning("No HltDecReports at "+LHCb::HltDecReportsLocation::Default,StatusCode::FAILURE,1);
+  if (msgLevel(MSG::DEBUG)) debug() << "Done " << level << endmsg ;
   return StatusCode::SUCCESS ;
 }
