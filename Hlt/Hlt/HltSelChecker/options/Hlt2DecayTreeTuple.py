@@ -17,6 +17,8 @@
  #
  #  See DecayTreeTuple documentation
  #
+ #  For some unknown reason one can't have it at the same time as the EventTuple...
+ #
  #  @author P. Koppenburg
  #  @date 2008-03-07
  #/
@@ -24,7 +26,7 @@ from Gaudi.Configuration import *
 from Configurables import DecayTreeTuple
 #
 Hlt2DecayTreeTuple = DecayTreeTuple("Hlt2DecayTreeTuple")
-ApplicationMgr().TopAlg += [ Hlt2DecayTreeTuple ]
+#ApplicationMgr().TopAlg += [ Hlt2DecayTreeTuple ]
 Hlt2DecayTreeTuple.Context = "HLT"
 
 Hlt2DecayTreeTuple.ToolList += [
@@ -37,8 +39,3 @@ Hlt2DecayTreeTuple.ToolList += [
     , "TupleToolPrimaries"
     , "TupleToolEventInfo"
     , "LoKi::Hybrid::TupleTool/LoKiTool" ]
-
-#
-# event tuple
-#
-importOptions( "$HLTSELCHECKERROOT/options/Hlt2EventTuple.py" )
