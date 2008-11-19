@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.10 2008-11-14 17:14:05 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.11 2008-11-19 18:00:08 cattanem Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -15,9 +15,7 @@ from RichRecSys.CKThetaResolution import *
 from RichMarkovRingFinder.Configuration import *
 from RichRecSys.RichGlobalPID import RichGlobalPIDConfig
 from RichRecSys.RichHLTLocalPID import RichHLTLocalPIDConfig
-from Configurables import ( GaudiSequencer,
-                            Rich__DAQ__HPDPixelClusteringTool,
-                            Rich__ParticleProperties )
+from Configurables import GaudiSequencer
 
 # ----------------------------------------------------------------------------------
 
@@ -293,10 +291,12 @@ class RichRecSysConf(RichConfigurableUser):
         self.setOtherProp(ckResConf,"Context")
 
         # Particle Types
+        from Configurables import Rich__ParticleProperties
         partProps = Rich__ParticleProperties("ToolSvc."+context+"_RichParticleProperties")
         partProps.ParticleTypes = self.getProp("Particles")
 
         # clustering
+        from Configurables import Rich__DAQ__HPDPixelClusteringTool
         self.toolRegistry().Tools += [Rich__DAQ__HPDPixelClusteringTool("BackgroundClustering")]
 
         # Signal detection eff.

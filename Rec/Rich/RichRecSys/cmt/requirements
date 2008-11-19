@@ -2,7 +2,7 @@
 # Created    : 2003-07-01
 # Maintainer : Chris Jones   Christopher.Rob.Jones@cern.ch
 #============================================================================
-# $Id: requirements,v 1.81 2008-11-14 17:39:22 jonrob Exp $
+# $Id: requirements,v 1.82 2008-11-19 18:00:08 cattanem Exp $
 #============================================================================
 
 package           RichRecSys
@@ -17,29 +17,29 @@ set RICHRECSYSOPTS $(RICHRECSYSROOT)/options
 # ================ dependencies =============================================
 
 # Common RICH reconstruction packages
-use RichRecBase         v3r*   Rich
-use RichRecTools        v4r*   Rich
-use RichRecTrackTools   v1r*   Rich
-use RichRecPhotonTools  v1r*   Rich
-use RichRecAlgorithms   v2r*   Rich
-use RichRecStereoTools  v1r*   Rich
+use RichRecBase         v*   Rich
+use RichRecTools        v*   Rich
+use RichRecTrackTools   v*   Rich
+use RichRecPhotonTools  v*   Rich
+use RichRecAlgorithms   v*   Rich
+use RichRecStereoTools  v*   Rich
 
 # PID packages
-use RichGlobalPID       v3r*   Rich
-use RichLocalPID        v3r*   Rich
-use RichHLTLocalPID     v1r*   Rich
+use RichGlobalPID       v*   Rich
+use RichLocalPID        v*   Rich
+use RichHLTLocalPID     v*   Rich
 
 # Result merging algorithms
-use RichPIDMerge        v2r*    Rich
+use RichPIDMerge        v*    Rich
 
 # Expert common monitor algorithms
-use RichRecMonitors     v2r*    Rich
+use RichRecMonitors     v*    Rich
 
 # MC packages
-use RichRecMCTools      v2r*   Rich
+use RichRecMCTools      v*   Rich
 
 # Ring finder
-use RichMarkovRingFinder  v2r*   Rich
+use RichMarkovRingFinder  v*   Rich
 
 # Setup Python Configurables
 apply_pattern install_python_modules

@@ -4,12 +4,10 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: PixelCreator.py,v 1.4 2008-11-14 17:14:05 jonrob Exp $"
+__version__ = "$Id: PixelCreator.py,v 1.5 2008-11-19 18:00:09 cattanem Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
-from Configurables import ( Rich__DAQ__HPDPixelClusterSuppressionTool,
-                            Rich__DAQ__HPDPixelClusteringTool )
 
 # ----------------------------------------------------------------------------------
 
@@ -53,10 +51,12 @@ class RichPixelCreatorConfig(RichConfigurableUser):
 
         # pixel cleaning
         # -------------------------------------------------------------------------------------------
+        from Configurables import Rich__DAQ__HPDPixelClusteringTool
         self.toolRegistry().Tools += ["Rich::DAQ::HPDPixelClusteringTool/ClusteringTool"]
         pixmaker.ApplyPixelSuppression = True
         pixCleanMode = self.getProp("PixelCleaning")
         if pixCleanMode == "HotClusters" :
+            from Configurables import Rich__DAQ__HPDPixelClusterSuppressionTool
  
             # RICH1 cleaning
             r1Cleaner = Rich__DAQ__HPDPixelClusterSuppressionTool("PixelSuppressRich1")
