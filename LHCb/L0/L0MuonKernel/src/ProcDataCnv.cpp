@@ -5,6 +5,7 @@
 
 #define _DET_SPEC_HEADER_ 1
 #define _DEBUG_PROCDATA_  0
+
 /**
    Constructor.
 */
@@ -519,7 +520,7 @@ int L0Muon::ProcDataCnv::decodeBank_v2(const std::vector<unsigned int> & raw)
     //ERROR
 #if _DEBUG_PROCDATA_ >0
     std::cout<<"L0Muon::ProcDataCnv::decodeBank ERROR  end of 2nd part current word ("<<iwd
-             <<") does'nt match raw bank size ("<<raw.size()<<")"
+             <<") doesn't match raw bank size ("<<raw.size()<<")"
              <<std::endl;
 #endif
     for (int jb=0; jb<12; ++jb)  m_errors[jb].decoding.set(decoding_error[jb]);
@@ -675,6 +676,183 @@ int L0Muon::ProcDataCnv::rawBank_v1(std::vector<unsigned int> &raw, int mode)
   return 1;
 }
 
+int L0Muon::ProcDataCnv::rawBank_v2(std::vector<unsigned int> &raw, int mode, bool compression)
+{
+  raw.clear();
+  
+  //
+  //--- 1st part 
+  //
+
+  if (!compression) { // If compression is disabled
+    for (int ipp=0; ipp<4; ++ipp) { // Loop over PP FPGAs
+      for (int ich=0; ich<3; ++ich) { // Loop over processing boards in PP FPGA
+        int ib=ipp*3+ich;
+
+        // Empty error words (1 word per PU)
+        for (int ipu=0; ipu<4; ++ipu) raw.push_back(0);
+        
+        // OL data
+        for (int ipu=0; ipu<4; ++ipu) {
+          for (unsigned int iwd=0; iwd<PU_OpticalLinks_size_16/2; ++iwd) {
+            unsigned int word=m_ols[ib][ipu]->getulong(32,(PU_OpticalLinks_size_16/2-iwd-1)*32 );
+            raw.push_back(word);
+          }
+        }
+      } // End of loop over processing boards in PP FPGA
+      
+    } // End of loop over PP FPGAs
+  } // End if compression is disabled 
+  
+  if (compression) { // If compression is enabled
+    boost::dynamic_bitset<> pp_bitset;
+    for (int ipp=0; ipp<4; ++ipp) { // Loop over PP FPGAs
+      for (int ich=0; ich<3; ++ich) { // Loop over processing boards in PP FPGA
+        int ib=ipp*3+ich;
+        
+        // Empty error words (1 word per PU, each compressed to '00'): 
+        int pp_size=pp_bitset.size();
+        pp_bitset.resize(pp_size+4*2);
+
+        for (int ipu=0; ipu<4; ++ipu) { // Loop over PUs OL data 
+//           std::cout<<"L0Muon::ProcDataCnv::rawBank_v2 Q"<<(m_quarter+1)
+//                    <<" ib "<<ib<<" ipu "<<ipu
+//                    <<" OL bitset size "<<m_ols[ib][ipu]->size()
+//                    <<" nb of bits set "<<(m_ols[ib][ipu]->firedTiles()).size()<<std::endl;
+          for (unsigned int iwd=0; iwd<PU_OpticalLinks_size_16/2; ++iwd) { // Loop over PU OL words
+            
+            unsigned int word=m_ols[ib][ipu]->getulong(32,(PU_OpticalLinks_size_16/2-iwd-1)*32 );
+            //std::cout<<"L0Muon::ProcDataCnv::rawBank_v2 iwd: "<<iwd<<" word = 0x"<<std::hex<<word<<std::dec<<std::endl;
+            
+            
+            word_to_compressedBitset(word,pp_bitset);
+          
+          } // End of loop over PU OL words  
+        } // End of loop over PUs OL data
+      } // End of loop over processing boards in PP FPGA
+      
+      // 16 bits padding between PP-banks
+      unsigned int pp_size=pp_bitset.size();
+      pp_bitset.resize(int((pp_size+15)/16)*16);
+
+    } // End of loop over PP FPGA
+    
+    // 32 bits padding after 1st part
+    unsigned int pp_size=pp_bitset.size();
+    pp_bitset.resize(int((pp_size+31)/32)*32);
+      
+    // Fill the raw vector
+    if (pp_bitset.size()==0) return -1;
+    unsigned int nwords=((pp_bitset.size()+31)/32);
+//     std::cout<<"L0Muon::ProcDataCnv::rawBank_v2 Q"<<(m_quarter+1)
+//              <<" size: "<<pp_bitset.size()<<" bits; nwords: "<<nwords<<std::endl;
+    for (unsigned int iwd=0; iwd<nwords;++iwd) {
+      boost::dynamic_bitset<> word_bitset=pp_bitset;
+      word_bitset.resize(32);
+
+      unsigned int word=word_bitset.to_ulong()&0xFFFFFFFF;
+      raw.push_back(word);
+//       std::cout<<"L0Muon::ProcDataCnv::rawBank_v2 iwd "<<iwd<<" word 0x"<<std::hex<<word<<std::dec<<std::endl;
+      pp_bitset>>=32;
+    }
+    
+  } // End if compression is enabled
+  
+  unsigned int header=raw.size()*4; // size of 1st part in bytes
+  if (compression) {
+    header|=0x80000000;
+  }
+
+//   std::cout<<"L0Muon::ProcDataCnv::rawBank_v2 Q"<<(m_quarter+1)<<" 1st part size : "<<raw.size()<<" words"<<std::endl;
+
+  raw.insert(raw.begin(),header);
+
+//   std::cout<<"L0Muon::ProcDataCnv::rawBank_v2 Q"<<(m_quarter+1)<<" including header : "<<raw.size()<<" words"<<std::endl;
+
+  if (mode<2) return 1;
+  
+  //
+  //--- 2nd part 
+  //
+  if (!compression) { // If compression is disabled
+    for (int ipp=0; ipp<4; ++ipp) { // Loop over PP FPGAs
+      for (int ich=0; ich<3; ++ich) { // Loop over processing boards in PP FPGA
+        int ib=ipp*3+ich;
+
+        // Neighbour data
+        for (int ipu=0; ipu<4; ++ipu) {
+          for (unsigned int iwd=0; iwd<PU_Neighbours_size_16/2; ++iwd) {
+            unsigned int word=m_neighs[ib][ipu]->getulong(32,iwd*32);
+            raw.push_back(word);
+          }
+        }
+      } // End of loop over processing boards in PP FPGA
+      
+    } // End of loop over PP FPGAs
+  } // End if compression is disabled 
+  
+  if (compression) { // If compression is enabled
+    boost::dynamic_bitset<> pp_bitset;
+    for (int ipp=0; ipp<4; ++ipp) { // Loop over PP FPGAs
+      for (int ich=0; ich<3; ++ich) { // Loop over processing boards in PP FPGA
+        int ib=ipp*3+ich;
+        
+        for (int ipu=0; ipu<4; ++ipu) { // Loop over PUs Neighbour data 
+          unsigned int word;
+          unsigned int word_msb=0;
+          unsigned int word_lsb=0;
+          
+          if ((ipu%2)==0) { // If even PU
+            
+            for (unsigned int iwd=0; iwd<PU_Neighbours_size_16/2; ++iwd) { // Loop over PU Neighbour words
+              
+              word=m_neighs[ib][ipu]->getulong(32,16+(PU_Neighbours_size_16/2-iwd-1)*32);
+              word_to_compressedBitset(word,pp_bitset);
+            }  // End of loop over PU Neighbours words  
+            word_msb=m_neighs[ib][ipu]->getulong(16,0);
+            
+          } // End if even PU
+          else {// If odd PU
+            word_lsb==m_neighs[ib][ipu]->getulong(16,PU_Neighbours_size_16-16);
+            word=((word_msb<<16)&0xFFFF0000)+(word_lsb&0xFFFF);
+            word_to_compressedBitset(word,pp_bitset);
+            for (unsigned int iwd=0; iwd<PU_Neighbours_size_16/2; ++iwd) { // Loop over PU Neighbour words
+              
+              word=m_neighs[ib][ipu]->getulong(32,(PU_Neighbours_size_16/2-iwd-1)*32);
+              word_to_compressedBitset(word,pp_bitset);
+            }  // End of loop over PU Neighbours words  
+            
+          } // End if odd PU
+          
+        } // End of loop over PUs Neighbours data
+      } // End of loop over processing boards in PP FPGA
+      
+      // 32 bits padding between PP-banks
+      unsigned int pp_size=pp_bitset.size();
+      pp_bitset.resize(int((pp_size+31)/32)*32);
+
+    } // End of loop over PP FPGA
+    
+    if (pp_bitset.size()==0) return -2;
+
+    // Fill the raw vector
+    unsigned int nwords=((pp_bitset.size()+31)/32);
+    for (unsigned int iwd=0; iwd<nwords;++iwd) {
+      boost::dynamic_bitset<> word_bitset=pp_bitset;
+      word_bitset.resize(32);
+      
+      unsigned int word=word_bitset.to_ulong()&0xFFFFFFFF;
+      raw.push_back(word);
+
+      pp_bitset>>=32;
+    }
+    
+  } // End if compression is enabled
+
+//   std::cout<<"L0Muon::ProcDataCnv::rawBank_v2 Q"<<(m_quarter+1)<<"tot. size : "<<raw.size()<<" words"<<std::endl;
+
+  return 2;
+}
 
 boost::dynamic_bitset<> L0Muon::ProcDataCnv::applyCompression(boost::dynamic_bitset<> bitset_to_compress){
   // Compress the bit set in input
@@ -1035,203 +1213,63 @@ int L0Muon::ProcDataCnv::compressedPBWords_to_bitset(const std::vector<unsigned 
 
   return 1;
 }
-// int L0Muon::ProcDataCnv::compressedPBWords_to_bitset(const std::vector<unsigned int> & raw,const int size_in_word,
-//                                                      unsigned int &iwd,int &ibit,
-//                                                      boost::dynamic_bitset<> & bitset)
-// {
 
-//   //int size_max=size_in_word*32;
-//   int size=0;
-  
-//   boost::dynamic_bitset<> bitset_of_32_ones(32); bitset_of_32_ones.flip();
-//   boost::dynamic_bitset<> bitset_of_16_ones(16); bitset_of_16_ones.flip();
-
-//   for (int iw=0; iw<size_in_word; ++iw) { // Loop over the number of original words
-// #if _DEBUG_PROCDATA_ >0
-//     std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset iwd= "<<iwd
-//              <<" word: 0x"<<std::hex<<raw[iwd]<<std::dec<<std::endl;
-// #endif
-    
-//     // Get the key
-//     int key=0; 
-//     for(int i=1;i>-1;--i){
-//       int bit = next_bit(raw,iwd,ibit);
-//       key|=(bit<<i);
-//     }
-    
-// #if _DEBUG_PROCDATA_ >0
-//     std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset key= "<<key<<std::endl;
-// #endif
-   
-//     // According to the key, decode the following sequence of bits
-//     if (key==0) // '00' -> add 32 '0'
-//     {
-// #if _DEBUG_PROCDATA_ >0
-//       std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset case 00"<<std::endl;
-// #endif
-//       size+=32;
-//       bitset.resize(size);
-//     }
-
-//     else if (key==1) // '01' -> key is not yet complete, seek the next bit 
-//     {
-//       int bit = next_bit(raw,iwd,ibit);
-//       if (bit==1) // '011' -> add 32 '1'
-//       {
-// #if _DEBUG_PROCDATA_ >0
-//         std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset case 011"<<std::endl;
-// #endif
-//         size+=32;
-//         bitset.resize(size);
-//         boost::dynamic_bitset<> b32ones=bitset_of_32_ones;
-//         b32ones.resize(size);
-//         b32ones<<=(size-32);
-//         bitset|=b32ones;
-//       }
-//       else // '010' -> add 16 '1' and the 16 next bits
-//       {
-// #if _DEBUG_PROCDATA_ >0
-//         std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset case 010"<<std::endl;
-// #endif
-//         size+=32;
-//         bitset.resize(size);
-//         boost::dynamic_bitset<> b16ones=bitset_of_16_ones;
-//         b16ones.resize(size);
-//         b16ones<<=(size-16);
-//         bitset|=b16ones;
-//         for (int i=0; i<16; ++i){
-//           int bit = next_bit(raw,iwd,ibit);
-//           if (bit==1) bitset.set(size-i);
-//         }
-//       }
-//     }
-
-//     else if (key==2) // '10' -> decode the position of the ones in the word
-//     {
-// #if _DEBUG_PROCDATA_ >0
-//       std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset case 10"<<std::endl;
-// #endif
-//       // The number of '1' in the 32 bits original word is encoded on 3 bits 
-//       int n_ones=0; 
-//       for (int i=2; i>-1; --i){
-//         int bit = next_bit(raw,iwd,ibit);
-//         n_ones|=(bit<<i);
-//       }
-//       if (n_ones==0) return -2;
-//       if (n_ones>5) return -3;
-
-//       size+=32;
-//       bitset.resize(size);
-
-//       // The position of each '1' is encoded on 5 bits
-//       for (int k=0; k<n_ones; ++k){
-//         int pos=0;
-//         for (int i=4; i>-1; --i){
-//           int bit = next_bit(raw,iwd,ibit);
-//           pos|=(bit<<i);
-//         }
-//         bitset.set(size-pos);
-//       }
-//     }
-
-//     else if (key==3) // '11' -> the next 32 bits are uncompressed
-//     {
-// #if _DEBUG_PROCDATA_ >0
-//       std::cout<<"L0Muon::ProcDataCnv::compressedPBWords_to_bitset case 11"<<std::endl;
-// #endif
-//       size+=32;
-//       bitset.resize(size);
-//       for (int i=0; i<32; ++i){
-//         int bit = next_bit(raw,iwd,ibit);
-//         if (bit==1) bitset.push_back(size-i);
-//       }
-//     } 
-
-//   } // End of loop over the number of original words
-  
-//   // If the end of the word was reach, point to the next 
-//   if (ibit==31) {
-//     ++iwd;
-//     ibit=-1;
-//   }
-
-//   return 1;
-// }
-  
-
-int L0Muon::ProcDataCnv::rawBank_v2(std::vector<unsigned int> &raw, int mode, bool compression)
+void L0Muon::ProcDataCnv::word_to_compressedBitset(unsigned int word, boost::dynamic_bitset<> & bitset)
 {
-  raw.clear();
-  if (compression) {
-    //
-    // TO BE IMPLEMENTED
-    //
-    raw.push_back(0x80000000);
-    return 0;
-  }
-  
-  
-  //
-  //--- 1st part 
-  //
-
-  for (int ib =0; ib<12; ++ib) 
-  { // Loop over processing boards
-    for (int ipu=0; ipu<4; ++ipu) raw.push_back(0);
-    for (int ipu=0; ipu<4; ++ipu) {
-      for (unsigned int iwd=0; iwd<PU_OpticalLinks_size_16/2; ++iwd) {
-        unsigned int word=m_ols[ib][ipu]->getulong(32,iwd*32);
-        raw.push_back(word);
-      }
-    }
-    //     boost::dynamic_bitset<> olbitset(PB_OpticalLinks_size*32);
-    //     for (int ipu=0; ipu<4; ++ipu) {
-    //       boost::dynamic_bitset<> pubitset = m_ols[ib][ipu]->getBitset();
-    //       pubitset.resize(PB_OpticalLinks_size);
-    //       olbitset|=( pubitset << ( (4*32) + (PU_OpticalLinks_size_16*16*ipu) ) );
-    //     }
-    //     if (compression) {
-    //       // compress olbitset
-    //     }
-    //     unsigned int nwords=olbitset.size()/32;
-    //     for (unsigned int iwd=0; iwd<nwords;++iwd) {
-    //       unsigned int word=olbitset.to_ulong()&0xFFFFFFFF;
-    //       raw.push_back(word);
-    //       olbitset>>=32;
-    //     }
-    //     unsigned int remainder=olbitset.size()%32;
-  }
-
-  unsigned int header=raw.size()*2;
-  raw.insert(raw.begin(),header);
-
-  if (mode<2) return 1;
-  
-  //
-  //--- 2nd part 
-
-  //
-  //
-  // TO BE IMPLEMENTED
-  //
-
-  //   for (int ib =0; ib<12; ++ib) 
-  //   { // Loop over processing boards
-  //     unsigned int word=0;
-  //     for (int ipu=0; ipu<4; ++ipu) {
-  //       int shift=0;
-  //       int msb=1;
-  //       for (int iwd=0; iwd<PU_OpticalLinks_size_16){
-  //         unsigned int word16 = m_neighs[ib][ipu]->getulong(16, shift);
-  //         shift+=16;
-  //         word|=(word16<<(msb*16));
-  //         if (!msb) raw.push_back(0);
-  //         msb=!msb;
-  //       }
-  //     }
-  //   }
-  return -2;
+   if (word==0) {
+     bitset.push_back(0);
+     bitset.push_back(0);
+   } else if (word==0xFFFFFFFF) {
+     bitset.push_back(0);
+     bitset.push_back(1);
+     bitset.push_back(1);
+   } else if ((word&0xFFFF0000)==0xFFFF0000) {
+     bitset.push_back(0);
+     bitset.push_back(1);
+     bitset.push_back(0);
+     for (int i=0; i<16; ++i){
+       bitset.push_back((word>>(16-1-i))&1);
+     }
+   } else {
+     int nones=0;
+     int npos[5];
+     bool more_than_five=false;
+     for (int i=0; i<32; ++i){
+       bool b=(word>>(31-i))&1;
+       if (b) {
+         if (nones==5) {
+           more_than_five=true;
+           break;
+         }
+         npos[nones]=i;
+         nones+=1;
+       }
+     }
+     if (more_than_five) {
+       bitset.push_back(1);
+       bitset.push_back(1);
+       for (int i=0; i<32; ++i){
+         bitset.push_back((word>>(32-1-i))&1);
+       }
+     } else {
+       //std::cout <<"L0Muon::ProcDataCnv::word_to_compressedBitset word="<<word<<" = 0x"<<std::hex<<word<<std::dec
+       //          <<" ; nones "<<nones<<std::endl;
+       bitset.push_back(1);
+       bitset.push_back(0);
+       for (int i=0; i<3; ++i){
+         bitset.push_back((nones>>(3-1-i))&1);
+       }
+       for (int iones=0; iones<nones; ++iones){
+         for (int i=0; i<5; ++i){
+           bitset.push_back((npos[iones]>>(5-1-i))&1);
+         }
+       }
+     }
+   }
+   //std::cout <<"L0Muon::ProcDataCnv::word_to_compressedBitset word=0x"<<std::hex<<word<<std::dec<<" bitset "<<bitset<<std::endl;
+   
 }
+
 
 int L0Muon::ProcDataCnv::setRegisters_for_PB_OpticalLinks(int iboard, boost::dynamic_bitset<> & bitset )
 {
@@ -1361,7 +1399,7 @@ int L0Muon::ProcDataCnv::setRegisters_for_PB_Neighbours(int iboard, boost::dynam
       if (m_neighs[iboard][ipu]!=0)
         m_neighs[iboard][ipu]->set(pubitset);
 
-#if _DEBUG_PROCDATA_ >0
+#if _DEBUG_PROCDATA_ >1
       if (m_neighs[iboard][ipu]!=0) {
         std::cout<<"-- PB"<<iboard<<" PU"<<ipu<<std::endl; 
         // Cross check (only when all inputs forced to 1)
@@ -1400,7 +1438,7 @@ int L0Muon::ProcDataCnv::setRegisters_for_PB_Neighbours(int iboard, boost::dynam
         link2.resize(17*16);
         link2=model>>244;
         link2.resize(28);
-#if _DEBUG_PROCDATA_ >1
+#if _DEBUG_PROCDATA_ >2
         std::cout <<"BP SER 1 : "<<link<<std::endl;
         std::cout <<"BP SER 1 - "<<link2<<std::endl;
 #endif
@@ -1419,7 +1457,7 @@ int L0Muon::ProcDataCnv::setRegisters_for_PB_Neighbours(int iboard, boost::dynam
         link2.resize(17*16);
         link2=model>>216;
         link2.resize(28);
-#if _DEBUG_PROCDATA_ >1
+#if _DEBUG_PROCDATA_ >2
         std::cout <<"BP SER 2 : "<<link<<std::endl;
         std::cout <<"BP SER 2 - "<<link2<<std::endl;
 #endif
@@ -1438,7 +1476,7 @@ int L0Muon::ProcDataCnv::setRegisters_for_PB_Neighbours(int iboard, boost::dynam
         link2.resize(17*16);
         link2=model>>188;
         link2.resize(28);
-#if _DEBUG_PROCDATA_ >1
+#if _DEBUG_PROCDATA_ >2
         std::cout <<"BP SER 3 : "<<link<<std::endl;
         std::cout <<"BP SER 3 - "<<link2<<std::endl;
 #endif
@@ -1458,7 +1496,7 @@ int L0Muon::ProcDataCnv::setRegisters_for_PB_Neighbours(int iboard, boost::dynam
         link2.resize(17*16);
         link2=model>>176;
         link2.resize(12);
-#if _DEBUG_PROCDATA_ >1
+#if _DEBUG_PROCDATA_ >2
         std::cout <<"BP SER 4 : "<<link<<std::endl;
         std::cout <<"BP SER 4 - "<<link2<<std::endl;
 #endif
@@ -1477,7 +1515,7 @@ int L0Muon::ProcDataCnv::setRegisters_for_PB_Neighbours(int iboard, boost::dynam
         link2.resize(17*16);
         link2=model>>164;
         link2.resize(12);
-#if _DEBUG_PROCDATA_ >1
+#if _DEBUG_PROCDATA_ >2
         std::cout <<"BP SER 5 : "<<link<<std::endl;
         std::cout <<"BP SER 5 - "<<link2<<std::endl;
 #endif
@@ -1496,7 +1534,7 @@ int L0Muon::ProcDataCnv::setRegisters_for_PB_Neighbours(int iboard, boost::dynam
         link2.resize(17*16);
         link2=model>>152;
         link2.resize(12);
-#if _DEBUG_PROCDATA_ >1
+#if _DEBUG_PROCDATA_ >2
         std::cout <<"BP SER 6 : "<<link<<std::endl;
         std::cout <<"BP SER 6 - "<<link2<<std::endl;
 #endif
@@ -1515,7 +1553,7 @@ int L0Muon::ProcDataCnv::setRegisters_for_PB_Neighbours(int iboard, boost::dynam
         link2.resize(17*16);
         link2=model>>150;
         link2.resize(2);
-#if _DEBUG_PROCDATA_ >1
+#if _DEBUG_PROCDATA_ >2
         std::cout <<"BP PAR 5 : "<<link<<std::endl;
         std::cout <<"BP PAR 5 - "<<link2<<std::endl;
 #endif
@@ -1534,7 +1572,7 @@ int L0Muon::ProcDataCnv::setRegisters_for_PB_Neighbours(int iboard, boost::dynam
         link2.resize(17*16);
         link2=model>>148;
         link2.resize(2);
-#if _DEBUG_PROCDATA_ >1
+#if _DEBUG_PROCDATA_ >2
         std::cout <<"BP PAR 4 : "<<link<<std::endl;
         std::cout <<"BP PAR 4 - "<<link2<<std::endl;
 #endif
@@ -1553,7 +1591,7 @@ int L0Muon::ProcDataCnv::setRegisters_for_PB_Neighbours(int iboard, boost::dynam
         link2.resize(17*16);
         link2=model>>146;
         link2.resize(2);
-#if _DEBUG_PROCDATA_ >1
+#if _DEBUG_PROCDATA_ >2
         std::cout <<"BP PAR 3 : "<<link<<std::endl;
         std::cout <<"BP PAR 3 - "<<link2<<std::endl;
 #endif
@@ -1572,7 +1610,7 @@ int L0Muon::ProcDataCnv::setRegisters_for_PB_Neighbours(int iboard, boost::dynam
         link2.resize(17*16);
         link2=model>>144;
         link2.resize(2);
-#if _DEBUG_PROCDATA_ >1
+#if _DEBUG_PROCDATA_ >2
         std::cout <<"BP PAR 2 : "<<link<<std::endl;
         std::cout <<"BP PAR 2 - "<<link2<<std::endl;
 #endif
@@ -1591,7 +1629,7 @@ int L0Muon::ProcDataCnv::setRegisters_for_PB_Neighbours(int iboard, boost::dynam
         link2.resize(17*16);
         link2=model>>142;
         link2.resize(2);
-#if _DEBUG_PROCDATA_ >1
+#if _DEBUG_PROCDATA_ >2
         std::cout <<"BP PAR 1 : "<<link<<std::endl;
         std::cout <<"BP PAR 1 - "<<link2<<std::endl;
 #endif
@@ -1610,7 +1648,7 @@ int L0Muon::ProcDataCnv::setRegisters_for_PB_Neighbours(int iboard, boost::dynam
         link2.resize(17*16);
         link2=model>>130;
         link2.resize(12); 
-#if _DEBUG_PROCDATA_ >1
+#if _DEBUG_PROCDATA_ >2
         std::cout <<"CROS     : "<<link<<std::endl;
         std::cout <<"CROS     - "<<link2<<std::endl;
 #endif
@@ -1621,7 +1659,7 @@ int L0Muon::ProcDataCnv::setRegisters_for_PB_Neighbours(int iboard, boost::dynam
         link2.resize(17*16);
         link2=model>>48;
         link2.resize(81);
-#if _DEBUG_PROCDATA_ >1
+#if _DEBUG_PROCDATA_ >2
         std::cout <<"HORI     : "<<link<<std::endl;
         std::cout <<"HORI     - "<<link2<<std::endl;
 #endif
@@ -1632,7 +1670,7 @@ int L0Muon::ProcDataCnv::setRegisters_for_PB_Neighbours(int iboard, boost::dynam
         link2.resize(17*16);
         link2=model>>6;
         link2.resize(42);
-#if _DEBUG_PROCDATA_ >1
+#if _DEBUG_PROCDATA_ >2
         std::cout <<"VERT     : "<<link<<std::endl;
         std::cout <<"VERT     - "<<link2<<std::endl;
 #endif
@@ -1643,7 +1681,7 @@ int L0Muon::ProcDataCnv::setRegisters_for_PB_Neighbours(int iboard, boost::dynam
         link2.resize(17*16);
         link2=model>>0;
         link2.resize(6);
-#if _DEBUG_PROCDATA_ >1
+#if _DEBUG_PROCDATA_ >2
         std::cout <<"EMPTY    : "<<link<<std::endl;
         std::cout <<"EMPTY    - "<<link2<<std::endl;
 #endif

@@ -183,6 +183,13 @@ namespace L0Muon {
     */ 
     int rawBank_v2(std::vector<unsigned int> &raw, int mode, bool compression);
 
+    /** Apply the compression algorithm on the given word and fill the given bitset
+
+    @param word : word to be compressed
+    @param bitset : bitset updated with the compressed sequence
+    */
+    void word_to_compressedBitset(unsigned int word, boost::dynamic_bitset<> & bitset);
+    
     /** Fill the TileRegister containing the optical link data of the given processing board with the given bitset.
         
     @param iboard : index of the board in the quarter (0 to 11)
