@@ -1,4 +1,4 @@
-// $Id: PackMCParticle.cpp,v 1.1.1.1 2008-11-18 17:12:59 ocallot Exp $
+// $Id: PackMCParticle.cpp,v 1.2 2008-11-19 13:00:55 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -58,7 +58,7 @@ StatusCode PackMCParticle::execute() {
     newPart.px   = pack.energy( part->momentum().px() );
     newPart.py   = pack.energy( part->momentum().py() );
     newPart.pz   = pack.energy( part->momentum().pz() );
-    newPart.mass = part->virtualMass();
+    newPart.mass = (float)part->virtualMass();
     newPart.PID  = part->particleID().pid();
     newPart.originVertex = pack.reference( out, 
                                            part->originVertex()->parent(), 

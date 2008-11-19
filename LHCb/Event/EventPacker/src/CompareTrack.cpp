@@ -1,4 +1,4 @@
-// $Id: CompareTrack.cpp,v 1.2 2008-11-19 10:08:54 ocallot Exp $
+// $Id: CompareTrack.cpp,v 1.3 2008-11-19 13:00:55 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -59,7 +59,7 @@ StatusCode CompareTrack::execute() {
     }
     bool isOK = true;
     if ( 1.e-7 < fabs( (oTrack->chi2PerDoF()-tTrack->chi2PerDoF())/tTrack->chi2PerDoF() ) ) isOK = false;
-    if ( 0.5   < fabs( oTrack->nDoF() - tTrack->nDoF() ) ) isOK = false;
+    if ( 0   < abs( oTrack->nDoF() - tTrack->nDoF() ) ) isOK = false;
     if ( oTrack->flags() != tTrack->flags() )              isOK = false;
     if ( oTrack->lhcbIDs().size() != tTrack->lhcbIDs().size() ) isOK = false;
      unsigned int kk;

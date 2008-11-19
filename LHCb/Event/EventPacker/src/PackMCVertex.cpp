@@ -1,4 +1,4 @@
-// $Id: PackMCVertex.cpp,v 1.1.1.1 2008-11-18 17:12:59 ocallot Exp $
+// $Id: PackMCVertex.cpp,v 1.2 2008-11-19 13:00:55 cattanem Exp $
 // Include files 
 
 // from Boost
@@ -85,10 +85,10 @@ StatusCode PackMCVertex::execute() {
         debug() << "time " << vert->time() << " set to "
                 << largest << " for vertex "
                 << vert->key() << " of type " << vert->type() << endmsg;
-      newVert.tof = largest ;
+      newVert.tof = (float)largest ;
     }
     else
-      newVert.tof  = vert->time();   // What scale ?
+      newVert.tof  = (float)vert->time();   // What scale ?
     newVert.type = vert->type();
 
     newVert.mother = -1;
