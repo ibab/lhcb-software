@@ -1,4 +1,4 @@
-// $Id: FileLogger.cpp,v 1.9 2008-10-21 13:53:51 frankb Exp $
+// $Id: FileLogger.cpp,v 1.10 2008-11-19 11:09:38 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/FileLogger.cpp,v 1.9 2008-10-21 13:53:51 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/FileLogger.cpp,v 1.10 2008-11-19 11:09:38 frankb Exp $
 
 #include "ROLogger/FileLogger.h"
 
@@ -185,6 +185,7 @@ void FileLogger::handle(const Event& ev) {
     stringstream s;
     if ( !m_storage.empty() ) v.push_back(m_storage);
     if ( !m_monitoring.empty() ) v.push_back(m_monitoring);
+    if ( !m_reconstruction.empty() ) v.push_back(m_reconstruction);
     tmp = "Farm content:";
     for(_SV::const_iterator i=v.begin();i!=v.end();++i) {
       const string& n = *i;
@@ -197,8 +198,8 @@ void FileLogger::handle(const Event& ev) {
     tmp = s.str();
     removeAllServices();
     handleMessages(tmp.c_str(),tmp.c_str()+tmp.length());
-                   }
-                   return;
+    return;
+  }
   case CMD_SEVERITY:
     setMessageSeverity(m_msgSeverity);
     delete data.str;
@@ -216,12 +217,21 @@ void FileLogger::handle(const Event& ev) {
     delete data.str;
     ioc.send(this,CMD_UPDATE,this);
     return;
+  case CMD_CONNECT_RECONSTRUCTION:
+    m_reconstruction = *data.str;
+    delete data.str;
+    ioc.send(this,CMD_UPDATE,this);
+    return;
   case CMD_DISCONNECT_STORAGE:
     m_storage = "";
     ioc.send(this,CMD_UPDATE,this);
     return;
   case CMD_DISCONNECT_MONITORING:
     m_monitoring = "";
+    ioc.send(this,CMD_UPDATE,this);
+    return;
+  case CMD_DISCONNECT_RECONSTRUCTION:
+    m_reconstruction = "";
     ioc.send(this,CMD_UPDATE,this);
     return;
   case CMD_UPDATE_FARMS:

@@ -1,4 +1,4 @@
-// $Id: ErrorLog.cpp,v 1.10 2008-10-20 08:05:35 frankb Exp $
+// $Id: ErrorLog.cpp,v 1.11 2008-11-19 11:09:38 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrorLog.cpp,v 1.10 2008-10-20 08:05:35 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrorLog.cpp,v 1.11 2008-11-19 11:09:38 frankb Exp $
 
 // Framework include files
 #include <sstream>
@@ -87,24 +87,26 @@ void ErrorLog::handle(const Event& ev) {
   switch(ev.eventtype) {
   case IocEvent:
     switch(ev.type) {
-  case CMD_DISCONNECT_MONITORING: // From PartitionListener
-  case CMD_CONNECT_MONITORING:    // From PartitionListener
-  case CMD_DISCONNECT_STORAGE:    // From PartitionListener
-  case CMD_CONNECT_STORAGE:       // From PartitionListener
-  case CMD_UPDATE_NODES:          // From PartitionListener
-  case CMD_UPDATE_FARMS:          // From PartitionListener
-    ioc.send(m_partDisplay,ev.type,ev.data);
-    return;
-  case CMD_DELETE:
-    delete this;
-    ::lib_rtl_sleep(200);
-    ::exit(0);
-    return;
-  case CMD_CLOSE:
-    ::lib_rtl_sleep(5000);
+    case CMD_DISCONNECT_RECONSTRUCTION: // From PartitionListener
+    case CMD_CONNECT_RECONSTRUCTION:    // From PartitionListener
+    case CMD_DISCONNECT_MONITORING:     // From PartitionListener
+    case CMD_CONNECT_MONITORING:        // From PartitionListener
+    case CMD_DISCONNECT_STORAGE:        // From PartitionListener
+    case CMD_CONNECT_STORAGE:           // From PartitionListener
+    case CMD_UPDATE_NODES:              // From PartitionListener
+    case CMD_UPDATE_FARMS:              // From PartitionListener
+      ioc.send(m_partDisplay,ev.type,ev.data);
+      return;
+    case CMD_DELETE:
+      delete this;
+      ::lib_rtl_sleep(200);
+      ::exit(0);
+      return;
+    case CMD_CLOSE:
+      ::lib_rtl_sleep(5000);
     ::exit(2);
-  default:
-    break;
+    default:
+      break;
     }
     break;
   default:

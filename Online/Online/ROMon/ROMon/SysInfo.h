@@ -1,4 +1,4 @@
-// $Id: SysInfo.h,v 1.3 2008-11-13 12:13:32 frankb Exp $
+// $Id: SysInfo.h,v 1.4 2008-11-19 11:07:57 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,13 +11,12 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/SysInfo.h,v 1.3 2008-11-13 12:13:32 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/SysInfo.h,v 1.4 2008-11-19 11:07:57 frankb Exp $
 #ifndef ROMON_SYSINFO_H
 #define ROMON_SYSINFO_H
 
 // Framework include files
 #include "ROMon/CPUMon.h"
-#include "ROMon/FMCMonListener.h"
 
 /*
  *   ROMon namespace declaration
@@ -27,25 +26,9 @@ namespace ROMon  {
   // Forward declarations
   class CPUset;
   class NodeStats;
-  class ROMonInfo;
-  class FMCMonListener;
 
   class SysInfo  {
   protected:
-    typedef FMCMonListener::Descriptor DSC;
-    struct TmProc {
-      const char* ptr;
-      int pid;
-      const char *cmd, *utgid, *date, *state;
-      TmProc() : ptr(0), pid(0), cmd(0), utgid(0), date(0), state(0) {}
-      TmProc(const char* q, int p, const char* c, const char* u, const char* d, const char* s)
-        : ptr(q), pid(p), cmd(c), utgid(u), date(d), state(s) {}
-      TmProc(const TmProc& c)
-        : ptr(c.ptr), pid(c.pid), cmd(c.cmd), utgid(c.utgid), date(c.date), state(c.state) {}
-    };
-
-    typedef std::map<int,TmProc> TmProcs;
-    DSC             m_taskInfo;
 
     char**          m_cpuInfo;
     char**          m_procInfo;
@@ -55,14 +38,8 @@ namespace ROMon  {
     int             m_readings;
     int             m_nBuffs;
     int             m_numCores;
-
-    ROMonInfo*      m_dns;
-    FMCMonListener* m_utgid;
-    TmProcs         m_procs;
     Memory          m_mem;
 
-    /// Read the processes with UTGID info from the DIM service
-    int readTmProcs(DSC& info, TmProcs& procs);
     /// Combine the CPU readings from 2 iterations
     int combineCPUInfo();
     /// Combine the process readings from 2 iterations

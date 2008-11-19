@@ -1,4 +1,4 @@
-// $Id: PartitionDisplay.h,v 1.4 2008-05-22 06:32:29 frankm Exp $
+// $Id: PartitionDisplay.h,v 1.5 2008-11-19 11:09:38 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/PartitionDisplay.h,v 1.4 2008-05-22 06:32:29 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/PartitionDisplay.h,v 1.5 2008-11-19 11:09:38 frankb Exp $
 #ifndef ROLOGGER_PARTITIONDISPLAY_H
 #define ROLOGGER_PARTITIONDISPLAY_H
 
@@ -55,8 +55,12 @@ namespace ROLogger {
     Items       m_items;
     Nodes       m_nodes;
     Farms       m_farms;
+    /// Storage slice used
     std::string m_storage;
+    /// Monitoring slice in use
     std::string m_monitoring;
+    /// Reconstruction slice in use
+    std::string m_reconstruction;
     /// Parent object interactor
     Interactor* m_parent;
     /// Message logger interactor

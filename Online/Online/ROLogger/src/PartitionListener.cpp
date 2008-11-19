@@ -1,4 +1,4 @@
-// $Id: PartitionListener.cpp,v 1.15 2008-11-13 09:02:30 frankb Exp $
+// $Id: PartitionListener.cpp,v 1.16 2008-11-19 11:09:39 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionListener.cpp,v 1.15 2008-11-13 09:02:30 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionListener.cpp,v 1.16 2008-11-19 11:09:39 frankb Exp $
 
 // Framework include files
 #include "ROLogger/PartitionListener.h"
@@ -57,7 +57,13 @@ PartitionListener::PartitionListener(Interactor* parent,const string& nam) : m_p
   ::upic_write_message2("Monitoring slice info for %s_RunInfo from:%s",m_name.c_str(),name.c_str());
   name = "RunInfo/" + m_name + "/StorageSlice";
   m_storSliceDP    = ::dic_info_service((char*)name.c_str(),MONITORED,0,0,0,storSliceHandler,(long)this,0,0);
+  m_recSliceDP = 0;
   ::upic_write_message2("Storage slice info for %s_RunInfo from:%s",m_name.c_str(),name.c_str());
+  if ( m_name == "LHCb" ) {
+    name = "RunInfo/" + m_name + "/ReconstructionSlice";
+    m_recSliceDP     = ::dic_info_service((char*)name.c_str(),MONITORED,0,0,0,recSliceHandler,(long)this,0,0);
+    ::upic_write_message2("Reconstruction slice info for %s_RunInfo from:%s",m_name.c_str(),name.c_str());
+  }
 }
 
 /// Standard destructor
@@ -67,6 +73,7 @@ PartitionListener::~PartitionListener() {
   ::dic_release_service(m_nodesDP);
   ::dic_release_service(m_storSliceDP);
   ::dic_release_service(m_monSliceDP);
+  if ( m_recSliceDP != 0 ) ::dic_release_service(m_recSliceDP);
 }
 
 /// DIM command service callback
@@ -95,6 +102,21 @@ void PartitionListener::monSliceHandler(void* tag, void* address, int* size) {
     else {
       string *s = new string(fmcLogger("MONA08",(char*)address));
       IocSensor::instance().send(h->m_parent,CMD_CONNECT_MONITORING,s);
+    }
+  }
+}
+
+/// DIM command service callback
+void PartitionListener::recSliceHandler(void* tag, void* address, int* size) {
+  PartitionListener* h = *(PartitionListener**)tag;
+  if(*size > 0)  {
+    string slice = (char*)address;
+    if ( slice.empty() ) {
+      IocSensor::instance().send(h->m_parent,CMD_DISCONNECT_RECONSTRUCTION,(void*)0);
+    }
+    else {
+      string *s = new string(fmcLogger("MONA09",(char*)address));
+      IocSensor::instance().send(h->m_parent,CMD_CONNECT_RECONSTRUCTION,s);
     }
   }
 }
@@ -136,6 +158,7 @@ static void get_nodes(void* address, int* size, _SV* n) {
 
 /// DIM command service callback
 void PartitionListener::nodeHandler(void* tag, void* address, int* size) {
+  char txt[132];
   auto_ptr<_SV> n(new _SV());
   PartitionListener* h = *(PartitionListener**)tag;
   get_nodes(address,size,n.get());
@@ -145,17 +168,18 @@ void PartitionListener::nodeHandler(void* tag, void* address, int* size) {
   n->push_back("STORESTRM01");
   n->push_back("STORESTRM02");
   n->push_back("MONA08");
-  n->push_back("MONA0801");
-  n->push_back("MONA0802");
-  n->push_back("MONA0803");
-  n->push_back("MONA0804");
-  n->push_back("MONA0805");
-  n->push_back("MONA0806");
-  n->push_back("MONA0807");
-  n->push_back("MONA0808");
-  n->push_back("MONA0809");
-  n->push_back("MONA0810");
-  if ( h->name() == "LHCb" ) n->push_back("CALD0701");
+  for(size_t j=1; j<=10; ++j) {
+    ::sprintf(txt,"MONA08%02d",int(j));
+    n->push_back(txt);
+  }
+  if ( h->name() == "LHCb" ) {
+    n->push_back("MONA09");
+    n->push_back("CALD0701");
+    for(size_t j=1; j<=20; ++j) {
+      ::sprintf(txt,"MONA09%02d",int(j));
+      n->push_back(txt);
+    }
+  }
   IocSensor::instance().send(h->m_parent,CMD_UPDATE_NODES,n.release());
 }
 

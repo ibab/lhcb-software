@@ -10,7 +10,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionDisplay.cpp,v 1.16 2008-11-13 12:15:00 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionDisplay.cpp,v 1.17 2008-11-19 11:09:39 frankb Exp $
 
 // Framework include files
 #include "ROLogger/PartitionDisplay.h"
@@ -41,8 +41,8 @@ static char  s_enableDisableResult[80];
 static char  s_param_buff[80];
 
 static string item_name(const string& svc_name) {
-  size_t idx = svc_name.find("/",1);
-  string name = svc_name.substr(1,idx-1);
+  size_t idx = svc_name.find("/",5);
+  string name = svc_name.substr(5,idx-5);
   if ( name=="STORECTL01" ) name = "STORE";
   return name;
 }
@@ -138,6 +138,10 @@ void PartitionDisplay::updateFarms() {
     ::upic_insert_param_line(m_id, CMD_COM2, ++nf, setupParams(m_monitoring,true).c_str(), "");
     m_items[nf] = make_pair(true,m_monitoring);
   }
+  if ( !m_reconstruction.empty() ) {
+    ::upic_insert_param_line(m_id, CMD_COM2, ++nf, setupParams(m_reconstruction,true).c_str(), "");
+    m_items[nf] = make_pair(true,m_reconstruction);
+  }
   //  IocSensor::instance().send(this,CMD_COMLAST,this);
   ::upic_set_cursor(m_id,m_menuCursor=CMD_WILD_NODE,0);
 }
@@ -163,6 +167,7 @@ void PartitionDisplay::handle(const Event& ev) {
         f.push_back(m_monitoring);
         if ( !m_storage.empty() ) f.push_back(m_storage);
         if ( !m_monitoring.empty() ) f.push_back(m_monitoring);
+        if ( !m_reconstruction.empty() ) f.push_back(m_reconstruction);
         ::upic_write_message2("Updating farm content of %s [%ld nodes]",m_name.c_str(),f.size());
         ioc.send(this,CMD_UPDATE_CLUSTERS,this);
         ioc.send(m_msg,CMD_UPDATE_FARMS,new _SV(f));
@@ -176,6 +181,15 @@ void PartitionDisplay::handle(const Event& ev) {
       return;
     case CMD_UPDATE_FARMS:
       m_farms = *(Farms*)ev.data;
+      ioc.send(this,CMD_UPDATE,this);
+      return;
+    case CMD_CONNECT_RECONSTRUCTION:
+      m_reconstruction = *data.str;
+      delete data.str;
+      ioc.send(this,CMD_UPDATE,this);
+      return;
+    case CMD_DISCONNECT_RECONSTRUCTION:
+      m_reconstruction = "";
       ioc.send(this,CMD_UPDATE,this);
       return;
     case CMD_CONNECT_MONITORING:

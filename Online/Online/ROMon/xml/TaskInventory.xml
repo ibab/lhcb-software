@@ -64,13 +64,12 @@
 <Task name="Monitoring_Slice0FSrv" type="logViewer"/>
 
 
-<!--
- <Task name="fmcLog"/>
- <Task name="fsSrv_u"/>
--->
-
 <TaskList name="FMC">
  <Task name="tmSrv_u"/>
+ <Task name="fmcLog"/>
+ <Task name="pingSrv_u"/>
+<!--
+ <Task name="fsSrv_u"/>
  <Task name="smartSrv_u"/>
  <Task name="tcpipSrv_u"/>
  <Task name="psSrv_u"/>
@@ -79,17 +78,19 @@
  <Task name="irqSrv_u"/>
  <Task name="cpustatSrv_u"/>
  <Task name="coalSrv_u"/>
-
- <Task name="pingSrv_u"/>
+-->
 </TaskList>
 
 <TaskList name="StandardHLT">
  <Task name="TANServ"/>
  <Task name="ROcollect"/>
- <!-- 
- <Task name="ROpublish"/>
- -->
  <Task name="LogGaudiSrv"/>
+ <Task name="LogRecoSrv"/>
+</TaskList>
+
+<TaskList name="ControlsPC">
+ <Task name="ROpublish"/>
+ <Task name="TaskSupervisor"/>
 </TaskList>
 
 <TaskList name="StandardReconstruction">
@@ -224,9 +225,6 @@
  <Task name="Monitoring_Slice0FCollect"/>
 </TaskList>
 
-<TaskList name="ControlsPC">
-</TaskList>
-
 <ConnectionList name="Standard">
   <Connection name="&lt;DIM_DNS_NODE&gt;"/>
 </ConnectionList>
@@ -258,18 +256,17 @@
 </ConnectionList>
 
 <NodeType name="HLTControl">
-  <!-- TaskList name="FMC"/-->
+  <TaskList name="FMC"/>
   <TaskList name="StandardHLT"/>
-<!--
-  <Task name="CPUmon"/>
-  <Task name="CPUcollect"/>
-  <Task name="PROCmon"/>
-  <Task name="PROCcollect"/>
--->
+  <TaskList name="ControlsPC"/>
   <Task name="LogGaudi"/>
   <Task name="LogGaudiSumSrv"/>
+  <Task name="LogRecoSumSrv"/>
+  <Task name="LogPVSS"/>
+  <Task name="LogPVSSSrv"/>
   <ConnectionList name="ControlsPC"/>
   <Project name="&lt;NODE&gt;"/>
+  <Project name="REC&lt;NODE&gt;"/>
 </NodeType>
 
 <NodeType name="HLTWorker">
@@ -282,6 +279,7 @@
 
 <NodeType name="MonitoringControl">
   <TaskList name="FMC"/>
+  <TaskList name="ControlsPC"/>
   <TaskList name="StandardMonitoring"/>
   <TaskList name="MonitoringControl"/>
   <ConnectionList name="ControlsPC"/>
@@ -298,6 +296,7 @@
 
 <NodeType name="ReconstructionControl">
   <TaskList name="FMC"/>
+  <TaskList name="ControlsPC"/>
   <TaskList name="StandardReconstruction"/>
   <TaskList name="ReconstructionControl"/>
   <ConnectionList name="ControlsPC"/>
@@ -315,6 +314,7 @@
 
 <NodeType name="StorageControl">
   <TaskList name="FMC"/>
+  <TaskList name="ControlsPC"/>
   <TaskList name="StandardStorage"/>
   <TaskList name="StorageControl"/>
   <ConnectionList name="ControlsPC"/>

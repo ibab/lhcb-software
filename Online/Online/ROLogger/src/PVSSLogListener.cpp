@@ -1,4 +1,4 @@
-// $Id: PVSSLogListener.cpp,v 1.5 2008-11-13 09:02:30 frankb Exp $
+// $Id: PVSSLogListener.cpp,v 1.6 2008-11-19 11:09:39 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PVSSLogListener.cpp,v 1.5 2008-11-13 09:02:30 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PVSSLogListener.cpp,v 1.6 2008-11-19 11:09:39 frankb Exp $
 
 // Framework include files
 #include "ROLogger/PVSSLogListener.h"
@@ -49,7 +49,10 @@ PVSSLogListener::PVSSLogListener(Interactor* parent,const string& n) : m_parent(
   f->push_back(fmcLogger("HLT01",facility));
   f->push_back(fmcLogger("STORECTL01",facility));
   f->push_back(fmcLogger("MONA08",facility));
-  if ( name() == "LHCb" ) f->push_back(fmcLogger("CALD07",facility));
+  if ( name() == "LHCb" ) {
+    f->push_back(fmcLogger("MONA09",facility));
+    f->push_back(fmcLogger("CALD07",facility));
+  }
   IocSensor::instance().send(m_parent,CMD_UPDATE_FARMS,f.release());
 }
 
@@ -68,6 +71,9 @@ void PVSSLogListener::subFarmHandler(void* tag, void* address, int* size) {
   f->push_back(fmcLogger("HLT01",facility));
   f->push_back(fmcLogger("STORECTL01",facility));
   f->push_back(fmcLogger("MONA08",facility));
-  if ( h->name() == "LHCb" ) f->push_back(fmcLogger("CALD07",facility));
+  if ( h->name() == "LHCb" ) {
+    f->push_back(fmcLogger("MONA09",facility));
+    f->push_back(fmcLogger("CALD07",facility));
+  }
   IocSensor::instance().send(h->m_parent,CMD_UPDATE_FARMS,f.release());
 }

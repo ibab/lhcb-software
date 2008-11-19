@@ -1,4 +1,4 @@
-// $Id: SysInfo.cpp,v 1.4 2008-11-17 07:40:40 frankb Exp $
+// $Id: SysInfo.cpp,v 1.5 2008-11-19 11:07:57 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,10 +11,9 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/SysInfo.cpp,v 1.4 2008-11-17 07:40:40 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/SysInfo.cpp,v 1.5 2008-11-19 11:07:57 frankb Exp $
 #include "ROMon/SysInfo.h"
 #include "ROMon/CPUMonOstream.h"
-#include "ROMon/ROMonInfo.h"
 #include "ROMon/Sys.h"
 #include "ROMonDefs.h"
 #include "RTL/Lock.h"
@@ -37,9 +36,9 @@ using namespace ROMon;
 
 /// Default constructor
 SysInfo::SysInfo(NodeStats* buff, size_t len, int nbuffs)
-: m_buffer(buff), m_buffLen(len), m_idx(1), m_readings(0), m_nBuffs(nbuffs)  {
+: m_buffer(buff), m_buffLen(len), m_idx(1), m_readings(0), m_nBuffs(nbuffs)
+{
   int j;
-  vector<RODimListener*> servers;
   string match, n = RTL::nodeNameShort();
   for(size_t i=0; i<n.length();++i) n[i]=::toupper(n[i]);
   match = "/FMC/"+n+"/task_manager";
@@ -48,62 +47,17 @@ SysInfo::SysInfo(NodeStats* buff, size_t len, int nbuffs)
   for(j=0; j<m_nBuffs; ++j) m_cpuInfo[j] = new char[CPUINFO_SIZE];
   m_procInfo = new char*[m_nBuffs];
   for(j=0; j<m_nBuffs; ++j) m_procInfo[j] = new char[PROCINFO_SIZE];
-
   // Setup the object
   read(m_mem);
-  m_utgid = new FMCMonListener();
-  m_utgid->setMatch(match);
-  m_utgid->setItem("longList");
-  servers.push_back(m_utgid);
-  m_dns = new ROMonInfo(servers);
   statistics()->reset();
 }
 
 SysInfo::~SysInfo()  {
   int i;
-  delete m_dns;
-  delete m_utgid;
   for(i=0; i<m_nBuffs; ++i) delete [] m_procInfo[i];
   for(i=0; i<m_nBuffs; ++i) delete [] m_cpuInfo[i];
   delete [] m_cpuInfo;
   delete [] m_procInfo;
-}
-
-/// Convert task manager information into something useful to extract the UTGID
-int SysInfo::readTmProcs(DSC& info, TmProcs& procs) {
-  char* p;
-  int it;
-  dim_lock();
-  if ( m_utgid->clients().begin() != m_utgid->clients().end() ) {
-    RODimListener::Clients::const_iterator ic=m_utgid->clients().begin();
-    DSC* data = (*ic).second->data<DSC>();
-    info.copy(data->data,data->actual);
-    info.time    = data->time;
-    info.millitm = data->millitm;
-    dim_unlock();
-    procs.clear();
-    for(p=info.data, it=0; p<info.data+info.actual; ++it) {
-      const char *pid   = p;
-      const char *cmd   = pid   + strlen(pid)+1;
-      const char *utgid = cmd   + strlen(cmd)+1;
-      const char *date  = utgid + strlen(utgid)+1;
-      const char *state = date  + strlen(date)+1;
-      const char *end   = state + strlen(state)+1;
-      if ( strcmp(state,"running")==0 ) {
-        int proc_id = ::atoi(pid);
-        procs[proc_id] = TmProc(p,proc_id,cmd,utgid,date,state);
-#if 0
-        log() << "PID:"    << proc_id 
-              << " utgid:" << utgid
-              << " cmd:"   << cmd
-              << " date:"  << date
-              << " state:" << state << endl;
-#endif
-      }
-      p = (char*)end;
-    }
-  }
-  return 1;
 }
 
 int SysInfo::combineCPUInfo() {
@@ -179,12 +133,8 @@ int SysInfo::combineProcessInfo() {
         if ( (*j).pid == pid ) break;
     }
     if ( j != last.end() && (*j).pid == pid ) {
-      TmProcs::const_iterator tmi=m_procs.find(pid);
       Process& p = *m;
-      if ( tmi != m_procs.end() )
-        ::strncpy(p.utgid,(*tmi).second.utgid,sizeof(p.utgid));
-      else
-        ::strcpy(p.utgid,"N/A");
+      ::strncpy(p.utgid,q.utgid,sizeof(p.utgid));
       p.utgid[sizeof(p.utgid)-1] = 0;
       ::strncpy(p.owner,q.owner,sizeof(p.owner));
       p.owner[sizeof(p.owner)-1] = 0;
@@ -224,31 +174,14 @@ int SysInfo::init() {
 
 /// Update changing object data items
 int SysInfo::update() {
-  const RODimListener::Clients& cl = m_utgid->clients();
-  if ( cl.size() == 1 ) {
-    newReading();
-    read(statistics()->memory);
-    read(*cpuNow()->reset(),CPUINFO_SIZE);
-    //readStat(*cpuNow(), CPUINFO_SIZE, m_numCores);
-    read(*procsNow()->reset(), PROCINFO_SIZE);
-    combineCPUInfo();
-    readTmProcs(m_taskInfo,m_procs);
-    combineProcessInfo();
-    statistics()->fixup();
-  }
-  else {
-    log() << "SysInfo: Bad number of information clients:" << cl.size() << " .... stop." << endl;
-    string match, n = RTL::nodeNameShort();
-    for(size_t i=0; i<n.length();++i) n[i]=::toupper(n[i]);
-    match = "/FMC/"+n+"/task_manager";
-    m_dns->servers().clear();
-    delete m_utgid;
-    m_utgid = new FMCMonListener();
-    m_utgid->setMatch(match);
-    m_utgid->setItem("longList");
-    m_dns->servers().push_back(m_utgid);
-    return 0;
-  }
+  newReading();
+  read(statistics()->memory);
+  read(*cpuNow()->reset(),CPUINFO_SIZE);
+  //readStat(*cpuNow(), CPUINFO_SIZE, m_numCores);
+  read(*procsNow()->reset(), PROCINFO_SIZE);
+  combineCPUInfo();
+  combineProcessInfo();
+  statistics()->fixup();
   return 1;
 }
 

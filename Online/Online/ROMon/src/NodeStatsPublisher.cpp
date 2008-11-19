@@ -1,4 +1,4 @@
-// $Id: NodeStatsPublisher.cpp,v 1.4 2008-11-17 07:40:40 frankb Exp $
+// $Id: NodeStatsPublisher.cpp,v 1.5 2008-11-19 11:07:57 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/NodeStatsPublisher.cpp,v 1.4 2008-11-17 07:40:40 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/NodeStatsPublisher.cpp,v 1.5 2008-11-19 11:07:57 frankb Exp $
 
 // C++ include files
 #include <iostream>
@@ -54,7 +54,7 @@ namespace {
       ::free(buff);
       buff = 0;
     }
-    int get_data() {  return 0; }
+    virtual int get_data() {  return 0; }
     virtual void start() {
       ((T*)buff)->reset();
       id = ::dis_add_service((char*)name.c_str(),(char*)"C",0,0,feed,(long)this);
@@ -69,7 +69,7 @@ namespace {
     }
     virtual void load() {
       for(int res=get_data(); res==2; ) {
-        ::free(buff);
+        if ( buff ) ::free(buff);
         buffLen += buffLen/2;
         buff = (char*)::malloc(buffLen);
         res = get_data();
@@ -189,7 +189,7 @@ NodeStatsPublisher::NodeStatsPublisher(int argc, char** argv)
   m_service[0] = new _Svc<Nodeset> (m_mbm,  64,svc);
   m_service[1] = new _Svc<CPUfarm> (m_stat, 10,svc + "/CPU");
   m_service[2] = new _Svc<ProcFarm>(m_stat,512,svc + "/Tasks");
-  m_service[3] = new _Svc<ProcFarm>(m_stat, 20,svc + "/ROTasks",1);
+  m_service[3] = new _Svc<ProcFarm>(m_stat, 64,svc + "/ROTasks",1);
 
   if ( svc.empty() )  {
     log() << "Unknown data type -- cannot be published." << std::endl;

@@ -1,4 +1,4 @@
-// $Id: AlarmListener.cpp,v 1.3 2008-11-13 09:02:30 frankb Exp $
+// $Id: AlarmListener.cpp,v 1.4 2008-11-19 11:09:38 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/AlarmListener.cpp,v 1.3 2008-11-13 09:02:30 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/AlarmListener.cpp,v 1.4 2008-11-19 11:09:38 frankb Exp $
 
 // Framework include files
 #include "ROLogger/AlarmListener.h"
@@ -48,6 +48,7 @@ AlarmListener::AlarmListener(Interactor* parent,const string& n) : m_parent(pare
   ::upic_write_message2("Subfarm content for %s_RunInfo from:%s",m_name.c_str(),nam.c_str());
   f->push_back(fmcLogger("STORECTL01",facility));
   f->push_back(fmcLogger("MONA08",facility));
+  f->push_back(fmcLogger("MONA09",facility));
   if ( name() == "LHCb" ) f->push_back(fmcLogger("CALD07",facility));
   IocSensor::instance().send(m_parent,CMD_UPDATE_FARMS,f.release());
 }
@@ -65,6 +66,7 @@ void AlarmListener::subFarmHandler(void* tag, void* address, int* size) {
     f->push_back(fmcLogger(data,facility));
   f->push_back(fmcLogger("STORECTL01",facility));
   f->push_back(fmcLogger("MONA08",facility));
+  f->push_back(fmcLogger("MONA09",facility));
   if ( h->name() == "LHCb" ) f->push_back(fmcLogger("CALD07",facility));
   IocSensor::instance().send(h->m_parent,CMD_UPDATE_FARMS,f.release());
 }

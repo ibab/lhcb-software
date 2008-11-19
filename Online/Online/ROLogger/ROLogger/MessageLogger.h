@@ -1,4 +1,4 @@
-// $Id: MessageLogger.h,v 1.10 2008-10-20 08:05:35 frankb Exp $
+// $Id: MessageLogger.h,v 1.11 2008-11-19 11:09:38 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/MessageLogger.h,v 1.10 2008-10-20 08:05:35 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/MessageLogger.h,v 1.11 2008-11-19 11:09:38 frankb Exp $
 #ifndef ROLOGGER_MESSAGELOGGER_H
 #define ROLOGGER_MESSAGELOGGER_H
 
@@ -79,10 +79,12 @@ namespace ROLogger {
     bool              m_debug;
     /// Flag to indicate if alarm messages should be processed rather than standard output
     bool              m_alarm;
-    /// Monitoring slice name
-    std::string       m_monitoring;
     /// Storage slice name
     std::string       m_storage;
+    /// Monitoring slice name
+    std::string       m_monitoring;
+    /// Reconstruction slice name
+    std::string       m_reconstruction;
     /// Message counter by type
     std::vector<int>  m_numMsg;
 

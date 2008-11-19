@@ -98,18 +98,25 @@ void SystemUptime::print() const {
 /// Read system data from proc file system
 int EnvironProcess::read(int proc_id) {
   size_t len = 1024*100;
-  char* buff = new char[len], *ptr=buff;
+  char* buff = new char[len], *ptr=buff, *end;
   int cnt = SysFile(fn_process_environ(proc_id)).read(buff,len);
   env.clear();
   if ( cnt > 0 ) {
-    while(ptr<buff+cnt) {
+    end = buff+cnt;
+    while(ptr<end) {
       char* tag = ptr;
       char* val = tag+1;
-      while(*val!='=')++val;
-      *val = 0;
-      env.push_back(make_pair(tag,++val));
+      while(*val != '=')  {
+	++val;
+	if (val >= end) goto Done;
+      }
+      if ( *val == '=' ) {
+	*val = 0;
+	env.push_back(make_pair(tag,++val));
+      }
       ptr = val + ::strlen(val) + 1;
     }
+  Done:
     delete [] buff;
     return 1;
   }
@@ -125,25 +132,41 @@ void EnvironProcess::print() const {
 /// Read system data from proc file system
 int UtgidProcess::read(int proc_id) {
   size_t len = 1024*100;
-  char* buff = new char[len], *ptr=buff;
+  char* buff = new char[len], *ptr=buff, *end;
   utgid = "";
-  int cnt = SysFile(fn_process_environ(proc_id)).read(buff,len);
-  if ( cnt > 0 ) {
-    while(ptr<buff+cnt) {
-      char* tag = ptr;
-      char* val = tag+1;
-      while(*val!='=')++val;
-      *val = 0;
-      ++val;
-      if ( ::strcmp(tag,"UTGID")==0 ) {
-        utgid = ++val;
-        break;
+  try {
+    int cnt = SysFile(fn_process_environ(proc_id)).read(buff,len);
+    if ( cnt > 0 ) {
+      end = buff+cnt;
+      while(ptr<end) {
+	char* tag = ptr;
+	char* val = tag+1;
+	while(*val != '=')  {
+	  ++val;
+	  if (val >= end) goto Done;
+	}
+	if ( *val == '=' ) {
+	  *val = 0;
+	  ++val;
+	  if ( ::strcmp(tag,"UTGID")==0 ) {
+	    utgid = val;
+	    break;
+	  }
+	}
+	ptr = val + ::strlen(val) + 1;
       }
-      ptr = val + ::strlen(val) + 1;
+    Done:
+      delete [] buff;
+      return 1;
     }
-    delete [] buff;
-    return 1;
   }
+  catch(const std::exception& e) {
+    delete [] buff;
+    throw e;
+  }
+  catch(...) {
+  }
+  if ( buff ) delete [] buff;
   return 0;
 }
 
@@ -492,6 +515,7 @@ int ROMon::read(Procset& procset, size_t max_len) {
   Procset::Processes::iterator start = pr;
   if ( dir && sys.read() )    {
     SysProcess proc;
+    UtgidProcess utgid;
     StatusProcess status;
     ro_gettime(&procset.time,&procset.millitm);
     ro_get_node_name(procset.name,sizeof(procset.name));
@@ -506,6 +530,13 @@ int ROMon::read(Procset& procset, size_t max_len) {
               struct passwd *pw = ::getpwuid(st_buf.st_uid);
               if ( proc.read(pid) && status.read(pid) ) {
                 Process& p = (*pr);
+		utgid.utgid = "";
+		try {
+		  utgid.read(pid);
+ 		}
+		catch(...) {
+		  utgid.utgid = "";
+		}
                 if((cnt=SysFile(fn_process_cmdline(pid)).read(buff,sizeof(buff))) > 0) {
                   for(ptr = buff+strlen(buff); ptr>buff && *ptr!='/';) --ptr;
                   if ( *ptr=='/' ) ++ptr;
@@ -520,6 +551,9 @@ int ROMon::read(Procset& procset, size_t max_len) {
                 }
                 ::strncpy(p.owner,pw->pw_name,sizeof(p.owner));
                 p.owner[sizeof(p.owner)-1] = 0;
+                ::strncpy(p.utgid,utgid.utgid.empty() ? "N/A" : utgid.utgid.c_str(),sizeof(p.utgid));
+                p.utgid[sizeof(p.utgid)-1] = 0;
+
                 // Note: seconds!!!
                 p.cpu     = float(proc.stime+proc.utime)/float(jiffy2second);
                 p.start   = now - int(sys.uptime) + (proc.starttime/jiffy2second);
@@ -606,5 +640,10 @@ extern "C" int test_systemUptime(int,char**) {
   SystemUptime p;
   if ( 0 != p.read() ) p.print();
   ::system("cat /proc/uptime");
+  return 1;
+}
+extern "C" int test_systemUtgid(int,char**) {
+  UtgidProcess p;
+  if ( 0 != p.read(::lib_rtl_pid()) ) p.print();
   return 1;
 }

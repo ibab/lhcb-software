@@ -1,4 +1,4 @@
-// $Id: MessageLogger.cpp,v 1.17 2008-11-13 12:15:00 frankb Exp $
+// $Id: MessageLogger.cpp,v 1.18 2008-11-19 11:09:39 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/MessageLogger.cpp,v 1.17 2008-11-13 12:15:00 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/MessageLogger.cpp,v 1.18 2008-11-19 11:09:39 frankb Exp $
 // Framework include files
 #include <cerrno>
 #include <cstring>
@@ -484,6 +484,11 @@ void MessageLogger::requestHandler(void* tag, void* address, int* size) {
       h->cleanupServices(h->m_storage);
       h->m_storage = nam;
       h->handleMessages(p+idx,p + (*size));
+      return;
+    case 'Z': // Connect reconstruction slice
+      h->cleanupServices(h->m_reconstruction);
+      h->m_reconstruction = nam;
+      h->handleMessages(p+idx,p + (*size));      
       return;
     default:
       break;

@@ -1,4 +1,4 @@
-// $Id: NodeStatsCollector.cpp,v 1.3 2008-11-13 12:13:32 frankb Exp $
+// $Id: NodeStatsCollector.cpp,v 1.4 2008-11-19 11:07:57 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/NodeStatsCollector.cpp,v 1.3 2008-11-13 12:13:32 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/NodeStatsCollector.cpp,v 1.4 2008-11-19 11:07:57 frankb Exp $
 #define MBM_IMPLEMENTATION
 #include "ROMon/NodeStatsCollector.h"
 #include "ROMon/CPUMonOstream.h"
@@ -25,6 +25,14 @@
 using namespace std;
 using namespace ROMon;
 
+static void check_dbg(RTL::CLI& cli) {
+  bool dbg = cli.getopt("debug",3) != 0;
+  while(dbg) {
+    ::lib_rtl_sleep(100);
+    if ( !dbg ) break;
+  }
+}
+
 /// Standard constructor
 NodeStatsCollector::NodeStatsCollector(int argc, char** argv)
   : m_sys(0), m_print(0), m_verbose(false),
@@ -34,6 +42,7 @@ NodeStatsCollector::NodeStatsCollector(int argc, char** argv)
 {
   RTL::CLI cli(argc, argv, NodeStatsCollector::help);
   std::string svc, nam;
+  check_dbg(cli);
   cli.getopt("publish",   2, svc);
   cli.getopt("statSize",  5, m_statSize);
   cli.getopt("mbmSize",   4, m_mbmSize);
@@ -43,30 +52,34 @@ NodeStatsCollector::NodeStatsCollector(int argc, char** argv)
   m_verbose = cli.getopt("verbose",1) != 0;
   m_statSize   *= 1024;
   m_statBuffer  = new char[m_statSize];
-  m_mbmSize   *= 1024;
-  m_mbmBuffer  = new char[m_mbmSize];
+  m_mbmSize    *= 1024;
+  m_mbmBuffer   = new char[m_mbmSize];
+  CPUMonData cpu(m_statBuffer);
+  cpu.node->reset();
+  ROMonData mbm(m_mbmBuffer);
+  mbm.node->reset();
   nam = svc;
   if ( !svc.empty() )  {
+    std::string dns = ::getenv("DIM_DNS_NODE") ? ::getenv("DIM_DNS_NODE") : "None";
+    bool has_mbm = RTL::nodeNameShort() != dns;
     nam = svc + "/Statistics";
     m_statSvc = ::dis_add_service((char*)nam.c_str(),(char*)"C",0,0,feedStats,(long)this);
     nam = svc + "/Readout";
-    m_mbmSvc = ::dis_add_service((char*)nam.c_str(),(char*)"C",0,0,feedMBM,(long)this);
+    if ( has_mbm ) m_mbmSvc = ::dis_add_service((char*)nam.c_str(),(char*)"C",0,0,feedMBM,(long)this);
   }
   else  {
     log() << "Unknown data type -- cannot be published." << std::endl;
     throw std::runtime_error("Unknown data type and unknwon service name -- cannot be published.");
   }
-  CPUMonData cpu(m_statBuffer);
-  cpu.node->reset();
-  ROMonData mbm(m_mbmBuffer);
-  mbm.node->reset();
+  m_fsm.setVerbose(m_verbose);
+  m_fsm.start();
   DimServer::start(svc.c_str());
 }
 
 /// Default destructor
 NodeStatsCollector::~NodeStatsCollector() {
   ::dis_remove_service(m_statSvc);
-  ::dis_remove_service(m_mbmSvc);
+  if ( 0 != m_mbmSvc ) ::dis_remove_service(m_mbmSvc);
 }
 
 /// Help printout in case of -h /? or wrong arguments
@@ -162,8 +175,6 @@ int NodeStatsCollector::monitorTasks() {
 /// Start monitoring activity
 int NodeStatsCollector::monitor() {
   std::string node = RTL::nodeNameShort();
-  std::string dns = ::getenv("DIM_DNS_NODE") ? ::getenv("DIM_DNS_NODE") : "None";
-  bool has_mbm = node != dns;
   CPUMonData buf(m_statBuffer);
   bool exec = true;
   SysInfo sys(buf.node,m_statSize,2);
@@ -174,7 +185,7 @@ int NodeStatsCollector::monitor() {
     stat_delay -= m_mbmDelay;
     ::dim_lock();
     try {
-      if ( has_mbm ) monitorTasks();
+      if ( 0 != m_mbmSvc ) monitorTasks();
       if ( stat_delay<=0 ) {
         monitorStats();
       }
@@ -186,7 +197,7 @@ int NodeStatsCollector::monitor() {
       log() << "Unknown exception while task information:" << endl;
     }
     ::dim_unlock();
-    if ( has_mbm ) ::dis_update_service(m_mbmSvc);
+    if ( 0 != m_mbmSvc ) ::dis_update_service(m_mbmSvc);
     if ( stat_delay<=0 ) {
       ::dis_update_service(m_statSvc);
       stat_delay = m_statDelay;
