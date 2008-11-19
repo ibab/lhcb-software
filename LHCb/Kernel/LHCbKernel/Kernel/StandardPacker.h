@@ -1,8 +1,10 @@
-// $Id: StandardPacker.h,v 1.1 2005-06-02 13:47:12 cattanem Exp $
+// $Id: StandardPacker.h,v 1.2 2008-11-19 07:18:27 ocallot Exp $
 #ifndef KERNEL_STANDARDPACKER_H 
 #define KERNEL_STANDARDPACKER_H 1
 
 // Include files
+#include "math.h"   // get the log
+#include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/IRegistry.h"
 
@@ -18,6 +20,7 @@ namespace Packer {
   const double POSITION_SCALE   = 1.e4;  ///< 0.1 micron steps
   const double SLOPE_SCALE      = 1.e8;  ///< full scale +- 20 radians
   const double FRACTION_SCALE   = 3.e4;  ///< store in short int.
+  const double SMALL_SCALE      = 1.e7;  ///< store the log with this accuracy
 }
 
 class StandardPacker {
@@ -45,6 +48,20 @@ public:
   /** returns an short int for a double fraction, for covariance matrix */
   short int fraction( double f ) { 
     return shortPackDouble( f * Packer::FRACTION_SCALE );  
+  }
+
+  /** returns an int from a value with a log between -100 and 100 ! */
+  int logPacked( double x  ) { 
+    double tmp = 0.;
+    if ( 0 == x ) return 0;
+    if ( 0 < x ) {
+      tmp = log( x ) + 100.;
+      if ( 0 > tmp ) tmp = 0.;
+    } else {
+      tmp = - ( log( -x ) + 100. );
+      if ( 0 < tmp ) tmp = 0.;
+    }
+    return packDouble( tmp * Packer::SMALL_SCALE ); 
   }
 
   /** returns an int for a Smart Ref.
@@ -82,6 +99,13 @@ public:
   
   /** returns the fraction as double from the short int value */
   double fraction( short int k ) { return double(k) / Packer::FRACTION_SCALE; }  
+
+  /** returns an double from a log packed value */
+  double logPacked( int k  ) {
+    if ( 0 == k ) return 0.;
+    if ( 0 < k ) return exp( double( k )/ Packer::SMALL_SCALE - 100. );
+    return -exp( double( -k ) / Packer::SMALL_SCALE -100. );
+  }
 
 protected:
   int packDouble ( double val ) {

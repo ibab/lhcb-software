@@ -5,6 +5,10 @@
 !--------------------------------------------------------------------------
 
 !===================== LHCbKernel v10r0 2008-11-17 ========================
+! 2008-11-19 - Olivier Callot
+ - New methods logPacked in StandardPacker to put the log of a value and
+   keep a 10-7 accuracy for double of unknown range.
+
 ! 2008-11-14 - Chris Jones
  - Fixes to python Configurable for latest Gaudi changes
 
