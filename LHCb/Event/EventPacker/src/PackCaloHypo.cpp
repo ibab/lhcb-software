@@ -1,4 +1,4 @@
-// $Id: PackCaloHypo.cpp,v 1.1.1.1 2008-11-18 17:12:59 ocallot Exp $
+// $Id: PackCaloHypo.cpp,v 1.2 2008-11-19 10:08:54 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -45,6 +45,7 @@ StatusCode PackCaloHypo::execute() {
   
   LHCb::PackedCaloHypos* out = new LHCb::PackedCaloHypos();
   put( out, m_outputName );
+  out->setVersion( 1 );
 
   StandardPacker pack;
   

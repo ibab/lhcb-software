@@ -1,4 +1,4 @@
-// $Id: PackRecVertex.cpp,v 1.1.1.1 2008-11-18 17:12:59 ocallot Exp $
+// $Id: PackRecVertex.cpp,v 1.2 2008-11-19 10:08:54 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -45,6 +45,7 @@ StatusCode PackRecVertex::execute() {
   
   LHCb::PackedRecVertices* out = new LHCb::PackedRecVertices();
   put( out, m_outputName );
+  out->setVersion( 1 );
 
   StandardPacker pack;
 

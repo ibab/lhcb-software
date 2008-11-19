@@ -1,4 +1,4 @@
-// $Id: PackTrack.cpp,v 1.1.1.1 2008-11-18 17:12:59 ocallot Exp $
+// $Id: PackTrack.cpp,v 1.2 2008-11-19 10:08:54 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -43,6 +43,7 @@ StatusCode PackTrack::execute() {
   LHCb::Tracks* tracks = get<LHCb::Tracks>( m_inputName );
   LHCb::PackedTracks* out = new LHCb::PackedTracks();
   put( out, m_outputName );
+  out->setVersion( 1 );
 
   StandardPacker pack;
   
@@ -107,6 +108,8 @@ void PackTrack::convertState ( const LHCb::State* state, LHCb::PackedTracks* out
   if ( 0 != state->qOverP() ) p = 1./ state->qOverP();
   newState.p    = pack.energy  ( p );
   
+  if ( 1.e5 < fabs(p) ) p = 1.e5;  // to avoid overflow in packing error
+
   // convariance Matrix
   std::vector<double> err;
   err.push_back( sqrt( state->errX2() ) );

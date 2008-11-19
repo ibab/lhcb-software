@@ -1,4 +1,4 @@
-// $Id: UnpackTrack.cpp,v 1.1.1.1 2008-11-18 17:12:59 ocallot Exp $
+// $Id: UnpackTrack.cpp,v 1.2 2008-11-19 10:08:54 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -91,6 +91,8 @@ void UnpackTrack::convertState ( const LHCb::PackedState& src, LHCb::Track* tra 
   double pInv = 0.;
   if ( 0 != src.p )  pInv =  1./pack.energy( src.p );
   stateVector.setQOverP( pInv );
+
+  if ( 1.e-5 > fabs( pInv ) ) pInv = 1.e-5; // Saturated scale for covariance matrix
   
   //== Fill covariance matrix
   double err0 = pack.position( src.cov_00  );

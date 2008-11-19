@@ -1,0 +1,11 @@
+!-----------------------------------------------------------------------------
+! Package     : Brunel_v33r3p1/Event
+! Responsible : Olivier Callot
+! Purpose     : Pack and unpack events classes for smaller events
+!-----------------------------------------------------------------------------
+
+! 2008-11-19 - Olivier Callot
+ - Import the PAck/Uncpack/Compare algorithms for MCVertex and MCParticle
+   that were in Sim/SimComponents
+ - New packer for DST content, i.e. Track, CaloHypo, ProtoParticle and 
+   RecVertex

@@ -22,7 +22,7 @@ use   GaudiAlg     v*
 use   GenEvent     v*    Event
 use   MCEvent      v*    Event
 use   RecEvent     v*    Event
-
+use   PackedEvent  v*    Event
 #============================================================================
 # Component library building rule
 #============================================================================

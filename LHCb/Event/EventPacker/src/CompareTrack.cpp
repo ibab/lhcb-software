@@ -1,4 +1,4 @@
-// $Id: CompareTrack.cpp,v 1.1.1.1 2008-11-18 17:12:59 ocallot Exp $
+// $Id: CompareTrack.cpp,v 1.2 2008-11-19 10:08:54 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -127,6 +127,9 @@ void CompareTrack::compareStates ( const LHCb::State* oSta, const LHCb::State* t
     double tP = 1./tSta->qOverP();
     if ( 5.e-3 < fabs( oP - tP ) ) isOK = false;
 
+    if ( 1.e5 < fabs( oP ) ) oP = 1.e5;
+    if ( 1.e5 < fabs( tP ) ) tP = 1.e5;
+
     std::vector<double> oDiag;
     oDiag.push_back( sqrt(oSta->errX2()) );
     oDiag.push_back( sqrt(oSta->errY2()) );
@@ -182,12 +185,12 @@ void CompareTrack::compareStates ( const LHCb::State* oSta, const LHCb::State* t
       info() << "     old " 
              << format( " %12.5f %12.5f %12.5f %12.9f %12.9f %12.3f",
                         oSta->z(), oSta->x(), oSta->y(), 
-                        oSta->tx(), oSta->ty(), oP )
+                        oSta->tx(), oSta->ty(), 1./oSta->qOverP() )
              << endreq;
       info() << "    test " 
              << format( " %12.5f %12.5f %12.5f %12.9f %12.9f %12.3f",
                         tSta->z(), tSta->x(), tSta->y(), 
-                        tSta->tx(), tSta->ty(), tP )
+                        tSta->tx(), tSta->ty(), 1./tSta->qOverP() )
              << endreq;
       info() << format( " old Diag %10.5f %10.5f %12.9f %12.9f %12.3f", 
                         oDiag[0], oDiag[1], oDiag[2], oDiag[3], oDiag[4]*oP*oP )
