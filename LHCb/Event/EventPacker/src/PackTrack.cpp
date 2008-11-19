@@ -1,4 +1,4 @@
-// $Id: PackTrack.cpp,v 1.2 2008-11-19 10:08:54 ocallot Exp $
+// $Id: PackTrack.cpp,v 1.3 2008-11-19 13:37:18 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -107,8 +107,6 @@ void PackTrack::convertState ( const LHCb::State* state, LHCb::PackedTracks* out
   double p = 0.;
   if ( 0 != state->qOverP() ) p = 1./ state->qOverP();
   newState.p    = pack.energy  ( p );
-  
-  if ( 1.e5 < fabs(p) ) p = 1.e5;  // to avoid overflow in packing error
 
   // convariance Matrix
   std::vector<double> err;
@@ -122,7 +120,7 @@ void PackTrack::convertState ( const LHCb::State* state, LHCb::PackedTracks* out
   newState.cov_11 = pack.position( err[1] );
   newState.cov_22 = pack.slope   ( err[2] );
   newState.cov_33 = pack.slope   ( err[3] );
-  newState.cov_44 = pack.energy  ( p * p * err[4] );  // d(1/p) = dp/p2
+  newState.cov_44 = pack.energy  ( .001 * p * p * err[4] );
   
   newState.cov_10 = pack.fraction( state->covariance()(1,0)/err[1]/err[0] );
   newState.cov_20 = pack.fraction( state->covariance()(2,0)/err[2]/err[0] );

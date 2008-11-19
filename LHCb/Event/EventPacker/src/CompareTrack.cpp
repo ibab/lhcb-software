@@ -1,4 +1,4 @@
-// $Id: CompareTrack.cpp,v 1.3 2008-11-19 13:00:55 cattanem Exp $
+// $Id: CompareTrack.cpp,v 1.4 2008-11-19 13:37:18 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -127,9 +127,6 @@ void CompareTrack::compareStates ( const LHCb::State* oSta, const LHCb::State* t
     double tP = 1./tSta->qOverP();
     if ( 5.e-3 < fabs( oP - tP ) ) isOK = false;
 
-    if ( 1.e5 < fabs( oP ) ) oP = 1.e5;
-    if ( 1.e5 < fabs( tP ) ) tP = 1.e5;
-
     std::vector<double> oDiag;
     oDiag.push_back( sqrt(oSta->errX2()) );
     oDiag.push_back( sqrt(oSta->errY2()) );
@@ -148,7 +145,7 @@ void CompareTrack::compareStates ( const LHCb::State* oSta, const LHCb::State* t
     if ( 5.e-5  < fabs( oDiag[1] - tDiag[1] ) ) isOK = false;
     if ( 5.e-8  < fabs( oDiag[2] - tDiag[2] ) ) isOK = false;
     if ( 5.e-8  < fabs( oDiag[3] - tDiag[3] ) ) isOK = false;
-    if ( 5.e-3  < fabs( oDiag[4]*oP*oP - tDiag[4]*tP*tP ) ) isOK = false;
+    if ( 5.     < fabs( oDiag[4]*oP*oP - tDiag[4]*tP*tP ) ) isOK = false;
 
     std::vector<double> oFrac;
     oFrac.push_back(  oSta->covariance()(1,0) / oDiag[1] / oDiag[0] );
