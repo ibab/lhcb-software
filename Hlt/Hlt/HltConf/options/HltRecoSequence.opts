@@ -76,7 +76,7 @@ HltDecodeT.MeasureTime = true;
 HltDecodeT.Members += { 
   "RawBankToSTLiteClusterAlg/createITLiteClusters"
 };
-createITLiteClusters.detType = "IT";
+createITLiteClusters.DetType = "IT";
 
 HltPrepareVelo.InputSelection = "TES:Hlt/Track/Velo";
 HltPrepareVelo.OutputSelection = "Velo1";
