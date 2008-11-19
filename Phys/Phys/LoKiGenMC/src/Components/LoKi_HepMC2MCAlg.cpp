@@ -1,8 +1,11 @@
-// $Id: LoKi_HepMC2MCAlg.cpp,v 1.16 2008-11-04 12:43:47 ibelyaev Exp $
+// $Id: LoKi_HepMC2MCAlg.cpp,v 1.17 2008-11-19 16:54:32 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.16 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.17 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.16  2008/11/04 12:43:47  ibelyaev
+//  remove opts-files & provide python configurables
+//
 // ============================================================================
 // Include files  
 // ============================================================================
@@ -105,19 +108,19 @@ namespace LoKi
       if ( m_tool->parent() != this ) 
       { return Error ("HepMC2MC tool must be private here!")  ; }
       // (re)set properties of private tool: 
-      sc = Gaudi::Utils::setProperty ( m_tool , "HepMCEvents"    , m_hepmcs ) ;
+	  sc = Gaudi::Utils::setProperty ( m_tool , "HepMCEvents"    , m_hepmcs, "" ) ;
       if ( sc.isFailure() ) 
       { return Error ( "Unable to (re)set property 'HepMCEvents' ", sc )  ; }
-      sc = Gaudi::Utils::setProperty ( m_tool , "MCParticles"    , m_mcps   ) ;
+      sc = Gaudi::Utils::setProperty ( m_tool , "MCParticles"    , m_mcps, ""   ) ;
       if ( sc.isFailure() ) 
       { return Error ( "Unable to (re)set property 'MCParticles' ", sc )  ; }
-      sc = Gaudi::Utils::setProperty ( m_tool , "Cut1"           , m_cut1   ) ;
+      sc = Gaudi::Utils::setProperty ( m_tool , "Cut1"           , m_cut1, ""   ) ;
       if ( sc.isFailure() ) 
       { return Error ( "Unable to (re)set property 'Cut1' "      , sc )  ; }
-      sc = Gaudi::Utils::setProperty ( m_tool , "Cut2"           , m_cut2   ) ;
+      sc = Gaudi::Utils::setProperty ( m_tool , "Cut2"           , m_cut2, ""   ) ;
       if ( sc.isFailure() ) 
       { return Error ( "Unable to (re)set property 'Cut2' "      , sc )  ; }
-      sc = Gaudi::Utils::setProperty ( m_tool , "VertexCut"      , m_vcut   ) ;
+      sc = Gaudi::Utils::setProperty ( m_tool , "VertexCut"      , m_vcut, ""   ) ;
       if ( sc.isFailure() ) 
       { return Error ( "Unable to (re)set property 'VertexCut' " , sc )  ; }
       //

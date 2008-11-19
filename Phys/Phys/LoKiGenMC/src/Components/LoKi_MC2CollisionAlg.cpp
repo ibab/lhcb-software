@@ -1,4 +1,4 @@
-// $Id: LoKi_MC2CollisionAlg.cpp,v 1.10 2008-11-04 12:43:47 ibelyaev Exp $
+// $Id: LoKi_MC2CollisionAlg.cpp,v 1.11 2008-11-19 16:54:32 cattanem Exp $
 // ============================================================================
 // Include file
 // ============================================================================
@@ -97,7 +97,7 @@ namespace LoKi
       if ( sc.isFailure() ) 
       { return Error ( "Unable to (re)set property 'GenCollisions' ", sc )  ; }
       sc = Gaudi::Utils::setProperty 
-        ( m_mc2col , "Threshold"     , m_threshold  ) ;
+        ( m_mc2col , "Threshold"     , m_threshold, ""  ) ;
       if ( sc.isFailure() ) 
       { return Error ( "Unable to (re)set property 'Threshold' ", sc )  ; }
       //

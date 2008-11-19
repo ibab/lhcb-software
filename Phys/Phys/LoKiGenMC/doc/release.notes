@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.33 2008-11-17 16:06:36 cattanem Exp $ 
+! $Id: release.notes,v 1.34 2008-11-19 16:54:32 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGenMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,7 +15,10 @@
 ! 
 ! -----------------------------------------------------------------------------
 
-!========================== LoKiGenMC v8r0 2008-11-17 =========================
+!========================== LoKiGenMC v8r0 2008-11-19 =========================
+! 2008-11-19 - Marco Cattaneo
+ - Workaround for ambiguous setProperty specialisations on Windows 
+
 ! 2008-11-04 - Vanya BELYAEV
  - remove .opts-files (and the whole options directory)
  - provide "configurables" 
@@ -428,6 +431,9 @@ for Data-On-Demand configuration of
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.33  2008/11/17 16:06:36  cattanem
+! v8r0
+!
 ! Revision 1.32  2008/11/04 12:43:47  ibelyaev
 !  remove opts-files & provide python configurables
 !
