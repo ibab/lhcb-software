@@ -25,7 +25,7 @@ use RichKernel            v7r18   Rich    # Chris Jones
 # Detector description
 use DetSys                v16r1   Det     # Marco Cattaneo
 use BcmDet                v1r2    Det     # Magnus Lieng
-use CaloDet               v10r0   Det     # Olivier Deschamps
+use CaloDet               v10r0p1 Det     # Olivier Deschamps
 use CaloDetXmlCnv         v3r2    Det     # Olivier Deschamps
 use DDDB                  v1r13   Det     # Marco Cattaneo
 use DetCond               v12r4   Det     # Marco Clemencic
@@ -57,6 +57,7 @@ use RecEvent              v2r17   Event   # Marco Cattaneo and sub-det experts
 use TrackEvent            v4r16   Event   # Matt Needham
 use VeloEvent             v16r6   Event   # Tomasz Szumlak, Chris Parkes
 use STTELL1Event          v1r6    ST      # Matt Needham
+use EventPacker           v1r0    Event   # Olivier Callot
 
 # L1/Raw buffer encoding and decoding
 use DAQSys                v5r3    DAQ     # Marco Cattaneo
