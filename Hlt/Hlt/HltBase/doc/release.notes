@@ -5,6 +5,10 @@
 !----------------------------------------------------------------------------
 
 ! 2008-11-18 - Vanya Belyaev
+ - change stringKey string representation from "stringKey(name)"
+   to "stringKey('name')" for better python interoperability
+
+! 2008-11-18 - Vanya Belyaev
  - Hlt/HltSelection.h
   
   Hlt::TSelection<TYPE>
