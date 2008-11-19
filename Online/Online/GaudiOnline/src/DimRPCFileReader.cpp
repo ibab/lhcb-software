@@ -1,4 +1,4 @@
-// $Id: DimRPCFileReader.cpp,v 1.14 2008-11-13 09:25:23 frankb Exp $
+// $Id: DimRPCFileReader.cpp,v 1.15 2008-11-19 10:34:29 apuignav Exp $
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IAppMgrUI.h"
@@ -175,6 +175,7 @@ void DimRPCFileReader::handle(const Incident& inc)    {
     if ( m_mepMgr ) {
       m_mepMgr->cancel();
     }
+    ::lib_rtl_unlock(m_lock);
   }
   else if ( inc.type() == "DAQ_ENABLE" )  {
     m_receiveEvts = true;
@@ -191,6 +192,12 @@ StatusCode DimRPCFileReader::run()   {
       // ::dis_update_service(m_rpc.first);
       info("Locking event loop. Waiting for work....");
       ::lib_rtl_lock(m_lock);
+      if ( !m_receiveEvts ) {
+        info("Quitting...");
+        // m_reply = "ds7:commands4:quits6:paramsdee"
+        // ::dis_update_service(m_rpc.first);
+        break;
+      }      
       m_evtCount = 0;
       m_reply=m_command->encodeResponse(1);
       ::dis_update_service(m_rpc.first);
