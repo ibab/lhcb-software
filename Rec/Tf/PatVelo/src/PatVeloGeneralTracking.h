@@ -1,4 +1,4 @@
-// $Id: PatVeloGeneralTracking.h,v 1.7 2008-06-03 13:02:07 dhcroft Exp $
+// $Id: PatVeloGeneralTracking.h,v 1.8 2008-11-19 13:23:00 cattanem Exp $
 #ifndef TF_PATVELOGENERALTRACKING_H 
 #define TF_PATVELOGENERALTRACKING_H 1
 
@@ -224,8 +224,8 @@ namespace Tf {
       /// when XZ and YZ extrapolating only consider this many prior points
       unsigned int m_maxExtrapStat;
 
-      double m_Num3DCreated;   ///< Number of 3D points created
-      double m_NumEvt;         ///< Number of Events Processed
+      unsigned int m_Num3DCreated;   ///< Number of 3D points created
+      unsigned int m_NumEvt;         ///< Number of Events Processed
 
       CircularRangeUtils<double> m_angleUtils; ///< compare phi ranges
 

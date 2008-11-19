@@ -1,4 +1,4 @@
-// $Id: PatVeloGeneralTracking.cpp,v 1.14 2008-10-24 12:46:43 dhcroft Exp $
+// $Id: PatVeloGeneralTracking.cpp,v 1.15 2008-11-19 13:23:00 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -23,7 +23,7 @@ namespace Tf {
 
 Tf::PatVeloGeneralTracking::PatVeloGeneralTracking( const std::string& name,
     ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator ), m_Num3DCreated(0.), m_NumEvt(0.)
+  : GaudiAlgorithm ( name , pSvcLocator ), m_Num3DCreated(0), m_NumEvt(0)
 , m_angleUtils(-Gaudi::Units::pi,Gaudi::Units::pi)
 {
 
@@ -288,19 +288,23 @@ makeAllGoodTriplets(std::vector<PatVeloLocalPoint> &one,
         upper_bound(iTwoBegin,two.end(), predX+dPredX, 
             PatVeloLocalPoint::lessX() );
       while( iTwoEnd - iTwoBegin > 20 ) {
-	Warning("Very hot VELO triplet, reducing search windows");
-	if (m_isVerbose) 
-	  verbose() << "Number of middle sensor compatible hits was " 
-		    << iTwoEnd - iTwoBegin 
-		    << " dPredX " << dPredX << " dPredY " << dPredY << endreq;
-	dPredX /= 2.;
-	dPredY /= 2.;
-	iTwoBegin = 
-	  lower_bound(two.begin(),two.end(), predX-dPredX, 
-		      PatVeloLocalPoint::lessX() );
-	iTwoEnd = 
-	  upper_bound(iTwoBegin,two.end(), predX+dPredX,  
-		      PatVeloLocalPoint::lessX() );
+        Warning( "Very hot VELO triplet, reducing search windows",
+                 StatusCode::SUCCESS, 0 ).ignore();
+        if (m_isVerbose) {
+          verbose() << "Very hot VELO triplet, reducing search windows" <<endmsg;
+          verbose() << "Number of middle sensor compatible hits was " 
+                    << iTwoEnd - iTwoBegin 
+                    << " dPredX " << dPredX << " dPredY " << dPredY << endreq;
+        }
+  
+        dPredX /= 2.;
+        dPredY /= 2.;
+        iTwoBegin = 
+          lower_bound(two.begin(),two.end(), predX-dPredX, 
+                      PatVeloLocalPoint::lessX() );
+        iTwoEnd = 
+          upper_bound(iTwoBegin,two.end(), predX+dPredX,  
+                      PatVeloLocalPoint::lessX() );
       }
 
       for( iTwo = iTwoBegin; iTwo != iTwoEnd ; ++iTwo ){
@@ -659,7 +663,7 @@ storeTracks(std::vector<PatVeloSpaceTrack*> & tracks){
       m_PatVeloTrackTool->makeTrackFromPatVeloSpace((*iTr),newTrack,
           m_forwardStepError);
     if (!sc) {
-      Warning("Failed to convert to LHCb::Track");
+      Warning("Failed to convert to LHCb::Track",sc,0).ignore();
       delete newTrack;
       continue;
     }
@@ -675,8 +679,8 @@ storeTracks(std::vector<PatVeloSpaceTrack*> & tracks){
 
 StatusCode Tf::PatVeloGeneralTracking::finalize() {
   if( m_isDebug ) debug() << "==> Finalize" << endmsg;
-  if( m_NumEvt > 1e-5 ){
-    info() << "Created an average of " << m_Num3DCreated / m_NumEvt 
+  if( 0 < m_NumEvt ){
+    info() << "Created an average of " << (double)m_Num3DCreated / (double)m_NumEvt 
 	   << " 3D Velo Points per event" << endreq;
   }else{
     info() << "No events processed" << endreq;

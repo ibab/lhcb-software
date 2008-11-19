@@ -4,6 +4,9 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2008-11-19 - Marco Cattaneo
+ - Fix untested StatusCode on Warning message, print Warnings only in finalize
+
 ! 2008-10-24 - David Hutchcroft
  - Added very hot sensor triplet trap to PatVeloGeneralTracking to reduce
    total number of combinations of clusters considered in a triplet
