@@ -22,8 +22,9 @@ from Boole.Configuration import *
 # Boole().Histograms   = "Default" # Histogram output ['None','Default','Expert']
 # Boole().NoWarnings   = False # set to True to suppress MSG::WARNING or below 
 # Boole().DatasetName  = ""    # string used to build output file names
-# Boole().DDDBtag      = "2008-default"          # geometry database tag
-# Boole().CondDBtag    = "2008-default"          # conditions database tag
+# Boole().DataType     = "2008"# Data type, can be ['DC06','2008']
+# Boole().DDDBtag      = ""    # Tag for DDDB. Default as set in DDDBConf
+# Boole().CondDBtag    = ""    # Tag for CondDB. Default as set in DDDBConf
 # Boole().UseOracle    = False # if False, use SQLDDDB, if True use Oracle
 # Boole().MainOptions  = "$BOOLEOPTS/Boole.opts" # top level options to import
 # Boole().Monitors     = []    # Possible monitors: ['SC','FPE']

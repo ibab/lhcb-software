@@ -8,6 +8,7 @@
 # /***** User Boole/Boole ****************************************************************************
 |-DatasetName  = '11144101-100ev-20081006'  (default: '')
 |-SkipSpill    = 0
+|-DataType     = '2008'
 |-Outputs      = ['DIGI', 'MDF', 'L0ETC']  (default: ['DIGI'])
 |-Histograms   = 'Default'
 |-SkipEvents   = 0
@@ -16,10 +17,10 @@
 |-UseSpillover = False
 |-NoWarnings   = False
 |-Monitors     = ['SC', 'FPE']  (default: [])
-|-DDDBtag      = '2008-default'
+|-DDDBtag      = ''
 |-MainOptions  = '$BOOLEOPTS/Boole.opts'
 |-ExtendedDigi = False
-|-CondDBtag    = '2008-default'
+|-CondDBtag    = ''
 |-WriteL0Only  = False
 |-UseOracle    = False
 \----- (End of User Boole/Boole) -------------------------------------------------------------------
@@ -27,7 +28,7 @@ Collection='EVTTAGS/TagCreator/1' ADDRESS='/Event' DATAFILE='L0ETC.root' TYP='PO
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Boole version v16r4
-                                          running on lxbuild120.cern.ch on Tue Nov 18 15:46:45 2008
+                                          running on lxbuild120.cern.ch on Wed Nov 19 19:53:47 2008
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -119,7 +120,7 @@ L0Muon               INFO  foiYSize = 0,0,0,1,1
 L0Muon               INFO  ignoreM1 = 0
 L0Muon               INFO  ignoreM2 = 0
 L0Muon               INFO  procVersion = 2
-L0MuonTrigger I...   INFO Time User   : Tot= 2.65  [s]                                             #=  1
+L0MuonTrigger I...   INFO Time User   : Tot=    2  [s]                                             #=  1
 ToolSvc.L0DUCon...   INFO **** L0DU Configs loading : TCK = 0xFFFF
 ToolSvc.L0DUCon...   INFO Short description ::  TCK = 0xFFFF : Algorithm[1] Setting[0] lumi[2] - 2007 tuning - gain:Calo[20] : Muon[40]
 L0DU                 INFO The L0DUConfig (TCK=0xFFFF) have been succesfully loaded
@@ -181,7 +182,7 @@ BooleInit            INFO Evt 2,  Run 1,  Nr. in job = 1
 11144101-100ev-...SUCCESS Root file version:51800
 L0ETC.root        SUCCESS Root file version:51800
 PoolDbDatabaseCnv    INFO Recreate Database file:L0ETC.root as /EVTTAGS
-LHCb::RawDataCn...   INFO Opened(NEW)  MDF stream:PFN:11144101-100ev-20081006-10ev.mdf ID:0x15758468
+LHCb::RawDataCn...   INFO Opened(NEW)  MDF stream:PFN:11144101-100ev-20081006-10ev.mdf ID:0x162f5bd8
 LHCb::RawDataCn...   INFO Adding dummy MDF/DAQ[DAQ_STATUS_BANK] information.
 BooleInit            INFO Evt 3,  Run 1,  Nr. in job = 2
 LHCb::RawDataCn...   INFO Adding dummy MDF/DAQ[DAQ_STATUS_BANK] information.
@@ -214,10 +215,10 @@ RichPDSignal      SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "Found MCRichHits at MC/Rich/Hits"              |        10 |         10 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
 EcalDigit         SUCCESS Booked 3 Histogram(s) : 1D=3
-CaloFillPrsSpdR...   INFO Average event size :   330.1 words,    72.7 for trigger  Mean bank size    41.3, maximum size    68.0
-EcalFillRawBuffer    INFO Average event size :  1618.6 words,  1474.0 for trigger  Mean bank size    62.3, maximum size    77.9
-HcalFillRawBuffer    INFO Average event size :   473.0 words,   509.6 for trigger  Mean bank size    59.1, maximum size    79.6
-L0Calo               INFO Average bank size :   161.9 words RAW.
+CaloFillPrsSpdR...   INFO Average event size :   329.7 words,    72.9 for trigger  Mean bank size    41.2, maximum size    68.0
+EcalFillRawBuffer    INFO Average event size :  1599.3 words,  1400.0 for trigger  Mean bank size    61.5, maximum size    76.8
+HcalFillRawBuffer    INFO Average event size :   470.4 words,   498.8 for trigger  Mean bank size    58.8, maximum size    79.0
+L0Calo               INFO Average bank size :   161.4 words RAW.
 L0Muon               INFO - ------------------------------------------------------------------
 L0Muon               INFO - ========> Final summary of the L0Muon trigger (emulator) <========
 L0Muon               INFO - Total number of events processed           :       10
@@ -225,10 +226,10 @@ L0Muon               INFO - Average raw banks size                     :       7
 L0Muon               INFO - ------------------------------------------------------------------
 EcalDigitMCTruth  SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "#Digit->MC links"                              |        10 |      66102 |     6610.2 |     3201.8 |      2251.0 |      12855. |
+ | "#Digit->MC links"                              |        10 |      65198 |     6519.8 |     3091.0 |      2251.0 |      12323. |
 HcalDigitMCTruth  SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "#Digit->MC links"                              |        10 |       8460 |     846.00 |     395.66 |      176.00 |      1595.0 |
+ | "#Digit->MC links"                              |        10 |       8437 |     843.70 |     392.61 |      176.00 |      1581.0 |
 VeloSimMoni          INFO ------------------------------------------------------
 VeloSimMoni          INFO                 - VeloSimMoni table -
 VeloSimMoni          INFO ------------------------------------------------------
@@ -328,38 +329,38 @@ RiDigitQC            INFO ======================================================
 RiDigitQC            INFO                             RICH Digitisation Simulation Summary
 RiDigitQC            INFO -----------------------------------------------------------------------------------------------
 RiDigitQC            INFO  Rich1 : Av. total  hit occupancy      1670.20 +-12.92 hits/event
-RiDigitQC            INFO        : Av. signal hit occupancy      1125.20 +-10.61 hits/event
+RiDigitQC            INFO        : Av. signal hit occupancy      1125.50 +-10.61 hits/event
 RiDigitQC            INFO        :   /Event/MC/Rich/Hits          100.00 +- 0.00 % of total, 100.00 +- 0.00 % signal eff.
 RiDigitQC            INFO        : Av. HPD hit occupancy            8.52 +- 0.07 hits/event
 RiDigitQC            INFO        :   Min Av. HPD occ. hID=642021    0.10 +- 0.10 hits/event
-RiDigitQC            INFO        :   Max Av. HPD occ. hID=648005   53.20 +- 2.31 hits/event
-RiDigitQC            INFO        : % overall background hits       32.63 +- 0.36 %
+RiDigitQC            INFO        :   Max Av. HPD occ. hID=648005   53.50 +- 2.31 hits/event
+RiDigitQC            INFO        : % overall background hits       32.61 +- 0.36 %
 RiDigitQC            INFO        :   % rayleigh scattered hits      0.00 +- 0.00 %
-RiDigitQC            INFO        :   % charged track on HPD hits    0.02 +- 0.01 %
-RiDigitQC            INFO        :   % gas quartz window CK hits    3.68 +- 0.15 %
+RiDigitQC            INFO        :   % charged track on HPD hits    0.01 +- 0.01 %
+RiDigitQC            INFO        :   % gas quartz window CK hits    3.67 +- 0.15 %
 RiDigitQC            INFO        :   % hpd quartz window CK hits   21.16 +- 0.32 %
 RiDigitQC            INFO        :   % nitrogen CK hits             0.04 +- 0.01 %
 RiDigitQC            INFO        :   % aerogel filter CK hits       0.05 +- 0.02 %
-RiDigitQC            INFO        :   % silicon back-scatter hits    0.50 +- 0.05 %
-RiDigitQC            INFO        :   % internal reflection hits    17.46 +- 0.29 %
-RiDigitQC            INFO        :   % silicon charge share hits    1.25 +- 0.09 %
+RiDigitQC            INFO        :   % silicon back-scatter hits    0.49 +- 0.05 %
+RiDigitQC            INFO        :   % internal reflection hits    17.48 +- 0.29 %
+RiDigitQC            INFO        :   % silicon charge share hits    1.24 +- 0.09 %
 RiDigitQC            INFO -----------------------------------------------------------------------------------------------
-RiDigitQC            INFO  Rich2 : Av. total  hit occupancy       949.10 +- 9.74 hits/event
-RiDigitQC            INFO        : Av. signal hit occupancy       591.90 +- 7.69 hits/event
+RiDigitQC            INFO  Rich2 : Av. total  hit occupancy       949.90 +- 9.75 hits/event
+RiDigitQC            INFO        : Av. signal hit occupancy       592.40 +- 7.70 hits/event
 RiDigitQC            INFO        :   /Event/MC/Rich/Hits          100.00 +- 0.00 % of total, 100.00 +- 0.00 % signal eff.
-RiDigitQC            INFO        : Av. HPD hit occupancy            4.02 +- 0.04 hits/event
+RiDigitQC            INFO        : Av. HPD hit occupancy            4.03 +- 0.04 hits/event
 RiDigitQC            INFO        :   Min Av. HPD occ. hID=610017    0.10 +- 0.10 hits/event
-RiDigitQC            INFO        :   Max Av. HPD occ. hID=623004   15.20 +- 1.23 hits/event
+RiDigitQC            INFO        :   Max Av. HPD occ. hID=623004   15.50 +- 1.24 hits/event
 RiDigitQC            INFO        : % overall background hits       37.64 +- 0.50 %
 RiDigitQC            INFO        :   % rayleigh scattered hits      0.00 +- 0.00 %
 RiDigitQC            INFO        :   % charged track on HPD hits    0.01 +- 0.01 %
-RiDigitQC            INFO        :   % gas quartz window CK hits    4.29 +- 0.21 %
-RiDigitQC            INFO        :   % hpd quartz window CK hits   26.56 +- 0.45 %
+RiDigitQC            INFO        :   % gas quartz window CK hits    4.28 +- 0.21 %
+RiDigitQC            INFO        :   % hpd quartz window CK hits   26.62 +- 0.45 %
 RiDigitQC            INFO        :   % nitrogen CK hits             0.03 +- 0.02 %
 RiDigitQC            INFO        :   % aerogel filter CK hits       0.00 +- 0.00 %
 RiDigitQC            INFO        :   % silicon back-scatter hits    0.71 +- 0.09 %
-RiDigitQC            INFO        :   % internal reflection hits    19.53 +- 0.41 %
-RiDigitQC            INFO        :   % silicon charge share hits    1.48 +- 0.12 %
+RiDigitQC            INFO        :   % internal reflection hits    19.52 +- 0.41 %
+RiDigitQC            INFO        :   % silicon charge share hits    1.46 +- 0.12 %
 RiDigitQC            INFO ===============================================================================================
 RiDigitQC         SUCCESS Booked 6 Histogram(s) : 1D=6
 SpdCheck          SUCCESS Booked 4 Histogram(s) : 1D=4
@@ -376,26 +377,26 @@ MuonDigitChecker     INFO ------------------------------------------------------
 MuonDigitChecker     INFO -----   Container: Geant------------------------
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO    M1     M2     M3     M4     M5
-MuonDigitChecker     INFO 44.100  26.400  2.400  1.800  1.200   R1
-MuonDigitChecker     INFO 38.200  17.100  5.300  2.400  1.900   R2
-MuonDigitChecker     INFO 40.300  6.700  1.600  1.600  1.800   R3
-MuonDigitChecker     INFO 40.000  5.700  4.100  2.600  2.600   R4
+MuonDigitChecker     INFO 44.500  26.200  2.400  1.700  1.200   R1
+MuonDigitChecker     INFO 38.400  17.100  5.300  2.200  1.700   R2
+MuonDigitChecker     INFO 39.400  6.300  1.900  1.700  1.900   R3
+MuonDigitChecker     INFO 40.100  5.800  4.200  2.400  2.600   R4
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO -----   Container: FlastSpillOver------------------------
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO    M1     M2     M3     M4     M5
-MuonDigitChecker     INFO 0.200  0.900  0.800  0.000  0.200   R1
-MuonDigitChecker     INFO 0.500  1.400  1.400  0.200  0.700   R2
-MuonDigitChecker     INFO 0.800  2.200  0.000  0.800  1.400   R3
-MuonDigitChecker     INFO 0.600  0.600  0.000  0.200  2.500   R4
+MuonDigitChecker     INFO 0.200  1.000  0.800  0.000  0.200   R1
+MuonDigitChecker     INFO 0.500  1.500  1.300  0.200  0.700   R2
+MuonDigitChecker     INFO 0.600  2.200  0.200  0.400  1.200   R3
+MuonDigitChecker     INFO 0.600  0.800  0.000  0.200  2.900   R4
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO -----   Container: Low Energy Background------------------------
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO    M1     M2     M3     M4     M5
-MuonDigitChecker     INFO 0.000  5.600  1.500  1.500  0.700   R1
-MuonDigitChecker     INFO 0.000  3.700  1.200  0.400  0.600   R2
-MuonDigitChecker     INFO 0.000  1.100  0.200  0.000  0.100   R3
-MuonDigitChecker     INFO 0.000  1.500  0.000  0.200  0.000   R4
+MuonDigitChecker     INFO 0.000  5.400  1.500  1.500  0.700   R1
+MuonDigitChecker     INFO 0.000  3.800  1.000  0.400  0.600   R2
+MuonDigitChecker     INFO 0.000  1.300  0.100  0.000  0.100   R3
+MuonDigitChecker     INFO 0.000  1.900  0.000  0.200  0.000   R4
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO -----   Container: Chamber Noise------------------------
 MuonDigitChecker     INFO -----------------------------------------------------------------
@@ -408,10 +409,10 @@ MuonDigitChecker     INFO ------------------------------------------------------
 MuonDigitChecker     INFO -----   Container: Crosstalk------------------------
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO    M1     M2     M3     M4     M5
-MuonDigitChecker     INFO 2.200  2.700  0.100  0.800  0.200   R1
-MuonDigitChecker     INFO 12.100  1.400  0.300  0.600  0.100   R2
-MuonDigitChecker     INFO 7.500  1.800  1.000  0.400  0.800   R3
-MuonDigitChecker     INFO 0.800  0.400  0.000  0.000  0.000   R4
+MuonDigitChecker     INFO 1.800  2.900  0.200  0.700  0.400   R1
+MuonDigitChecker     INFO 12.700  1.400  0.300  0.900  0.500   R2
+MuonDigitChecker     INFO 7.800  2.300  1.000  0.200  1.000   R3
+MuonDigitChecker     INFO 1.000  0.600  0.000  0.200  0.000   R4
 MuonDigitChecker     INFO -----------------------------------------------------------------
 MuonDigitChecker     INFO -----   Container: Electronic Noise------------------------
 MuonDigitChecker     INFO -----------------------------------------------------------------
@@ -492,7 +493,7 @@ TagCreator        SUCCESS Booked 0 N-Tuples and 1 Event Tag Collections
 WR                   INFO Events output: 10
 RawWriter            INFO Events output: 10
 EventLoopMgr         INFO Histograms converted successfully according to request.
-LHCb::RawDataCn...   INFO Closed MDF stream:PFN:11144101-100ev-20081006-10ev.mdf ID:0x15758468
+LHCb::RawDataCn...   INFO Closed MDF stream:PFN:11144101-100ev-20081006-10ev.mdf ID:0x162f5bd8
 PoolRootTreeEvt...   INFO Disconnected data IO:C8BF8A5C-A093-DD11-89E2-000CF1F44509[castor:/castor/cern.ch/user/g/gcorti/Gauss/2008/v35r1/11144101-100ev-20081006.sim]
 PoolRootTreeEvt...   INFO Disconnected data IO:DA506BAB-1DB2-DD11-BDF0-0030487C5E0E[11144101-100ev-20081006-10ev.digi]
 EvtTupleSvc          INFO NTuples saved successfully
@@ -501,36 +502,36 @@ ToolSvc              INFO Removing all tools created by ToolSvc
 ToolSvc.RichRaw...   INFO ========================================================================================================================
 ToolSvc.RichRaw...   INFO                              RICH Level 1 : Encoding Summary : 10 events
 ToolSvc.RichRaw...   INFO ------------------------------------------------------------------------------------------------------------------------
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log)  1/ 8 V129 | L1 size =  13.10 +- 1.14 hpds :   61.40 +- 2.48 words :  101.80 +- 3.19 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log)  1/ 8 V129 | L1 size =  13.10 +- 1.14 hpds :   61.80 +- 2.49 words :  102.30 +- 3.20 hits / event
 ToolSvc.RichRaw...   INFO ------------------------------------------------------------------------------------------------------------------------
 ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log)  3/ 1 V129 | L1 size =  24.60 +- 1.57 hpds :  137.00 +- 3.70 words :  269.80 +- 5.19 hits / event
 ToolSvc.RichRaw...   INFO ------------------------------------------------------------------------------------------------------------------------
 ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log)  4/ 6 V129 | L1 size =  15.00 +- 1.22 hpds :   84.30 +- 2.90 words :  143.00 +- 3.78 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log)  5/ 7 V129 | L1 size =  13.90 +- 1.18 hpds :   77.20 +- 2.78 words :  128.00 +- 3.58 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log)  6/ 3 V129 | L1 size =  13.20 +- 1.15 hpds :   64.00 +- 2.53 words :   98.40 +- 3.14 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log)  8/ 2 V129 | L1 size =  14.60 +- 1.21 hpds :   85.30 +- 2.92 words :  162.70 +- 4.03 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log)  9/ 1 V129 | L1 size =  17.90 +- 1.34 hpds :   80.40 +- 2.84 words :  128.90 +- 3.59 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 11/ 4 V129 | L1 size =   8.40 +- 0.92 hpds :   44.30 +- 2.10 words :   79.50 +- 2.82 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 12/ 5 V129 | L1 size =  14.90 +- 1.22 hpds :   66.20 +- 2.57 words :  106.80 +- 3.27 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log)  5/ 7 V129 | L1 size =  13.90 +- 1.18 hpds :   76.90 +- 2.77 words :  127.60 +- 3.57 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log)  6/ 3 V129 | L1 size =  13.20 +- 1.15 hpds :   64.00 +- 2.53 words :   98.90 +- 3.14 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log)  8/ 2 V129 | L1 size =  14.60 +- 1.21 hpds :   85.10 +- 2.92 words :  162.20 +- 4.03 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log)  9/ 1 V129 | L1 size =  17.90 +- 1.34 hpds :   80.50 +- 2.84 words :  129.20 +- 3.59 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 11/ 4 V129 | L1 size =   8.40 +- 0.92 hpds :   44.40 +- 2.11 words :   79.50 +- 2.82 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(hard/log) 12/ 5 V129 | L1 size =  14.90 +- 1.22 hpds :   66.40 +- 2.58 words :  107.20 +- 3.27 hits / event
 ToolSvc.RichRaw...   INFO ------------------------------------------------------------------------------------------------------------------------
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 13/ 2 V129 | L1 size =  22.00 +- 1.48 hpds :  124.90 +- 3.53 words :  249.10 +- 4.99 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 14/ 3 V129 | L1 size =  17.50 +- 1.32 hpds :  124.00 +- 3.52 words :  285.30 +- 5.34 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 16/ 4 V129 | L1 size =   9.50 +- 0.97 hpds :   43.10 +- 2.08 words :   68.20 +- 2.61 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 17/ 5 V129 | L1 size =  12.40 +- 1.11 hpds :   94.40 +- 3.07 words :  204.90 +- 4.53 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 18/ 6 V129 | L1 size =  29.30 +- 1.71 hpds :  197.50 +- 4.44 words :  413.30 +- 6.43 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 20/ 7 V129 | L1 size =  23.40 +- 1.53 hpds :  105.40 +- 3.25 words :  179.60 +- 4.24 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 13/ 2 V129 | L1 size =  22.00 +- 1.48 hpds :  125.00 +- 3.54 words :  249.40 +- 4.99 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 14/ 3 V129 | L1 size =  17.50 +- 1.32 hpds :  123.90 +- 3.52 words :  285.70 +- 5.35 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 16/ 4 V129 | L1 size =   9.50 +- 0.97 hpds :   43.10 +- 2.08 words :   68.10 +- 2.61 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 17/ 5 V129 | L1 size =  12.40 +- 1.11 hpds :   94.40 +- 3.07 words :  204.10 +- 4.52 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 18/ 6 V129 | L1 size =  29.40 +- 1.71 hpds :  198.00 +- 4.45 words :  413.70 +- 6.43 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(hard/log) 20/ 7 V129 | L1 size =  23.40 +- 1.53 hpds :  105.10 +- 3.24 words :  179.40 +- 4.24 hits / event
 ToolSvc.RichRaw...   INFO ------------------------------------------------------------------------------------------------------------------------
-ToolSvc.RichRaw...   INFO  Rich1 Average                   | L1 size = 138.70 +- 3.72 hpds :  826.30 +- 9.09 words : 1670.20 +-12.92 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 Average                   | L1 size = 111.00 +- 3.33 hpds :  563.10 +- 7.50 words :  949.10 +- 9.74 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 Average                   | L1 size = 138.80 +- 3.73 hpds :  826.50 +- 9.09 words : 1670.20 +-12.92 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 Average                   | L1 size = 111.00 +- 3.33 hpds :  563.40 +- 7.51 words :  949.90 +- 9.75 hits / event
 ToolSvc.RichRaw...   INFO ========================================================================================================================
 BooleInit.Boole...SUCCESS Booked 2 Histogram(s) : 1D=2
 DataOnDemandSvc      INFO Handled "DataFault" incidents: 20/10/910(Alg/Node/Total).
 *****Chrono*****     INFO ****************************************************************************************************
 *****Chrono*****     INFO  The Final CPU consumption ( Chrono ) Table (ordered)
 *****Chrono*****     INFO ****************************************************************************************************
-L0MuonTrigger E...   INFO Time User   : Tot=0.662  [s] Ave/Min/Max= 66.2(+- 17.7)/   42/  103 [ms] #= 10
-L0MuonTrigger I...   INFO Time User   : Tot= 2.65  [s]                                             #=  1
-ChronoStatSvc        INFO Time User   : Tot= 80.5  [s]                                             #=  1
+L0MuonTrigger E...   INFO Time User   : Tot=  128 [ms] Ave/Min/Max= 12.8(+- 3.22)/    8/   18 [ms] #= 10
+L0MuonTrigger I...   INFO Time User   : Tot=    2  [s]                                             #=  1
+ChronoStatSvc        INFO Time User   : Tot=   22  [s]                                             #=  1
 *****Chrono*****     INFO ****************************************************************************************************
 ChronoStatSvc.f...   INFO  Service finalized succesfully
 StatusCodeSvc        INFO listing all unchecked return codes:

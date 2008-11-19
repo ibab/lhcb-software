@@ -3,6 +3,10 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+! 2008-11-19 - Marco Cattaneo
+ - Adapt to new LHCbConf().DataType option
+ - Update reference files accordingly
+
 ! 2008-11-14 - Marco Cattaneo
  - Capitalize all options names in Configurable
  - Remove v200601.opts

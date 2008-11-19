@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.25 2008-11-14 16:28:33 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.26 2008-11-19 18:59:18 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -22,8 +22,9 @@ class Boole(LHCbConfigurableUser):
        ,"MainOptions"    : '$BOOLEOPTS/Boole.opts'
        ,"NoWarnings"     : False
        ,"DatasetName"    : ''
-       ,"DDDBtag"        : "2008-default"
-       ,"CondDBtag"      : "2008-default"
+       ,"DataType"       : "2008"
+       ,"DDDBtag"        : ""
+       ,"CondDBtag"      : ""
        ,"UseOracle"      : False
        ,"Monitors"       : []
         }
@@ -41,8 +42,9 @@ class Boole(LHCbConfigurableUser):
        ,'MainOptions'  : """ Top level options to import. Default: $BOOLEOPTS/Boole.opts """
        ,'NoWarnings'   : """ Flag to suppress all MSG::WARNING or below (default False) """ 
        ,'DatasetName'  : """ String used to build output file names """
-       ,'DDDBtag'      : """ Tag to use for DDDB. Default 'DC06-default' """
-       ,'CondDBtag'    : """ Tag to use for CondDB. Default 'DC06-default' """
+       ,'DataType'     : """ Data type, can be ['DC06','2008']. Default '2008' """
+       ,'DDDBtag'      : """ Tag for DDDB. Default as set in DDDBConf for DataType """
+       ,'CondDBtag'    : """ Tag for CondDB. Default as set in DDDBConf for DataType """
        ,'UseOracle'    : """ Flag to enable Oracle CondDB. Default False (use SQLDDDB) """
        ,'Monitors'     : """ List of monitors to execute """
        }
@@ -51,11 +53,11 @@ class Boole(LHCbConfigurableUser):
 
     def defineDB(self):
         # Delegate handling to LHCbApp configurable
-        self.setOtherProps(LHCbApp(),["CondDBtag","DDDBtag","UseOracle"])
+        self.setOtherProps(LHCbApp(),["CondDBtag","DDDBtag","UseOracle","DataType"])
         LHCbApp().Simulation = True
 
         # Special options for DC06 data processing
-        if LHCbApp().getProp("DDDBtag").find("DC06") != -1 :
+        if self.getProp("DataType") == "DC06" :
             from Configurables import (MCSTDepositCreator, MuonDigitToRawBuffer)
 
             MCSTDepositCreator("MCITDepositCreator").DepChargeTool = "SiDepositedCharge"
