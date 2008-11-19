@@ -24,6 +24,7 @@ class TGMenuBar;
 class TGToolBar;
 //struct ToolBarData_t;
 class TGStatusBar;
+class TGTextView;
 class TGPicture;
 class TGTab;
 class TGComboBox;
@@ -47,6 +48,10 @@ class OMAlib;
 class Archive;
 class IntervalPicker;
 class TDatime;
+
+class stringstream;
+
+class TBenchmark;
 
 class PresenterMainFrame : public TGMainFrame
 {
@@ -74,6 +79,7 @@ class PresenterMainFrame : public TGMainFrame
       EDIT_HISTO_COMMAND,
       EDIT_PAGE_PROPERTIES_COMMAND,
       INSPECT_HISTO_COMMAND,
+      HISTOGRAM_DESCRIPTION_COMMAND,
       INSPECT_PAGE_COMMAND,
       START_COMMAND,
       STOP_COMMAND,
@@ -132,6 +138,11 @@ class PresenterMainFrame : public TGMainFrame
     };
     
     //slots
+    
+    void PresenterMainFrame::startBenchmark(const std::string &timer);
+    void PresenterMainFrame::stopBenchmark(const std::string &timer);
+    void PresenterMainFrame::printBenchmark(const std::string &timer);
+
     void about();
     void buildGUI();
     void CloseWindow();
@@ -188,6 +199,7 @@ class PresenterMainFrame : public TGMainFrame
     void setStatusBarText(const char* text, int slice);
     void editHistogramProperties();
     void inspectHistogram();
+    void histogramDescription();
     void inspectPage();
     TH1* selectedHistogram();
 
@@ -331,6 +343,10 @@ class PresenterMainFrame : public TGMainFrame
     TGStatusBar*      m_statusBarTop;
     TGHorizontalFrame* m_intervalPickerFrame;
 
+    std::string  m_currentPageHistogramHelp;
+    TGTextView*  m_pageDescriptionView;
+    std::string  m_pageDescription;
+
     // File menu
     TGToolBar*    m_toolBar;
     TGMenuBar*    m_menuBar;
@@ -359,6 +375,7 @@ class PresenterMainFrame : public TGMainFrame
       TGHotString*  m_viewToggleHistoryPlotsText;
       TGHotString*  m_viewToggleReferenceOverlayText;
       TGHotString*  m_viewInspectHistoText;
+      TGHotString*  m_viewHistogramDescriptionText;
       TGHotString*  m_viewInspectPageText;
       TGHotString*  m_viewClearHistosText;
       TGHotString*  m_viewUnDockPageText;
@@ -390,6 +407,7 @@ class PresenterMainFrame : public TGMainFrame
     TGPictureButton*  m_previousIntervalButton;
     TGPictureButton*  m_nextIntervalButton;
     TGPictureButton*  m_inspectHistoButton;
+    TGPictureButton*  m_histogramDescriptionButton;
     TGPictureButton*  m_editHistoButton;
     TGPictureButton*  m_autoCanvasLayoutButton;
     TGPictureButton*  m_deleteHistoFromCanvasButton;
@@ -440,6 +458,9 @@ class PresenterMainFrame : public TGMainFrame
     std::vector<std::string>      m_histogramTypes;
     std::vector<std::string>::const_iterator m_histogramType;
 
+    std::vector<std::string>      m_tasksNotRunning;
+    std::vector<std::string>::const_iterator m_tasksNotRunningIt;
+
     TGListTreeItem* m_treeNode;
     TGListTreeItem* m_taskNode;
     TGListTreeItem* m_algorithmNode;
@@ -455,6 +476,8 @@ class PresenterMainFrame : public TGMainFrame
     TObjArray* m_histogramIdItems;
     TIterator* m_histogramIdItemsIt;
     TObject*   m_histogramIdItem;
+
+    TBenchmark* m_benchmark;
 
     std::string convDimToHistoID(const std::string & dimSvcName);
 

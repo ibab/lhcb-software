@@ -24,6 +24,7 @@
 #include <TGTab.h>
 #include <TGTextEdit.h>
 #include <TGTextView.h>
+//#include <TGText.h>
 #include <TGToolBar.h>
 #include <TDatime.h>
 #include <TH1.h>
@@ -43,6 +44,9 @@
 #include <TThread.h>
 #include <TTimer.h>
 #include <TGFileDialog.h>
+#include <TRootHelpDialog.h>
+#include <TBenchmark.h>
+
 
 #include "dim/dic.hxx"
 #include "OnlineHistDB/OnlineHistDB.h"
@@ -116,8 +120,11 @@ PresenterMainFrame::PresenterMainFrame(const char* name,
   m_pageNode(NULL),
   m_folderItems(NULL),
   m_folderItemsIt(NULL),
-  m_folderItem(NULL)
+  m_folderItem(NULL),
+  m_benchmark(NULL)
 {
+
+  m_benchmark = new TBenchmark();
   SetCleanup(kDeepCleanup);
   
   // Thermo palette for hitmaps
@@ -182,6 +189,7 @@ PresenterMainFrame::PresenterMainFrame(const char* name,
   if (0 != m_archive) { m_archive->setVerbosity(m_verbosity); }
   m_intervalPicker = new IntervalPicker(this);
 }
+
 PresenterMainFrame::~PresenterMainFrame()
 {
   TGListTreeItem* node = m_dimSvcListTree->GetFirstItem();
@@ -223,6 +231,8 @@ PresenterMainFrame::~PresenterMainFrame()
     delete m_knownHistoryPartitionList;
     m_knownHistoryPartitionList = NULL;
   }
+  if (0 != m_benchmark) { delete m_benchmark; m_benchmark = NULL; }  
+  
   if (gPresenter == this) { gPresenter = 0; }
 }
 void PresenterMainFrame::buildGUI()
@@ -252,7 +262,8 @@ void PresenterMainFrame::buildGUI()
     m_viewStopRefreshText = new TGHotString("&Stop Page Refresh");
     m_viewToggleHistoryPlotsText = new TGHotString("&History plots");
     m_viewToggleReferenceOverlayText = new TGHotString("&Overlay Reference");
-    m_viewInspectHistoText = new TGHotString("&Inspect &istogram");
+    m_viewInspectHistoText = new TGHotString("&Inspect Histogram");
+    m_viewHistogramDescriptionText = new TGHotString("Histogram &Description");
     m_viewInspectPageText  = new TGHotString("Inspect &Page");
     m_viewClearHistosText = new TGHotString("&Clear Histograms");
     m_viewUnDockPageText = new TGHotString("&Undock Page");
@@ -331,6 +342,7 @@ m_editMenu->DisableEntry(EDIT_PAGE_PROPERTIES_COMMAND);
   // View menu
   m_viewMenu = new TGPopupMenu(fClient->GetRoot());
   m_viewMenu->AddEntry(m_viewInspectHistoText, INSPECT_HISTO_COMMAND);
+  m_viewMenu->AddEntry(m_viewHistogramDescriptionText, HISTOGRAM_DESCRIPTION_COMMAND);
   m_viewMenu->AddEntry(m_viewInspectPageText, INSPECT_PAGE_COMMAND);
   m_viewMenu->AddEntry(m_viewStartRefreshText, START_COMMAND);
   m_viewMenu->AddEntry(m_viewStopRefreshText, STOP_COMMAND);
@@ -590,6 +602,17 @@ m_viewMenu->DisableEntry(OVERLAY_REFERENCE_HISTO_COMMAND);
   m_inspectHistoButton->Connect("Clicked()", "PresenterMainFrame",
                                 this, "inspectHistogram()");
 
+  // Histo Description
+  const TGPicture* histogramDescription16pic = picpool->GetPicture("about.xpm");
+  m_histogramDescriptionButton = new TGPictureButton(m_toolBar, histogramDescription16pic,
+                                             HISTOGRAM_DESCRIPTION_COMMAND);
+  m_histogramDescriptionButton->SetToolTipText("Histogram description");
+  m_histogramDescriptionButton->AllowStayDown(false);
+  m_toolBar->AddButton(this, m_histogramDescriptionButton, 0);
+  m_histogramDescriptionButton->Connect("Clicked()", "PresenterMainFrame",
+                                this, "histogramDescription()");
+                                                                
+
   // Edit Histogram properties
   const TGPicture* editProperties16pic = picpool->GetPicture("editProperties16",
                                                              editProperties16);
@@ -723,49 +746,77 @@ m_viewMenu->DisableEntry(OVERLAY_REFERENCE_HISTO_COMMAND);
                                                                 kLHintsExpandY,
                                                                 0, 0, 0, 0));
 // Info dock
-  m_mainCanvasInfoDock = new TGDockableFrame(m_mainHorizontalFrame);
-  m_pageDock->SetWindowName("LHCb Presenter Page");
+  m_mainCanvasInfoDock = new TGDockableFrame(centralPageFrame);
+//  m_pageDock->SetWindowName("LHCb Presenter Page");
+  m_mainCanvasInfoDock->SetWindowName("LHCb Presenter Information");
 
   m_mainCanvasInfoDock->EnableUndock(true);
   m_mainCanvasInfoDock->EnableHide(true);
-
-//  editorMainHorizontalFrame->AddFrame(m_mainCanvasInfoDock,
-//    new TGLayoutHints(kLHintsLeft | kLHintsBottom | kLHintsExpandX |
-//                      kLHintsExpandY, 0, 0, 0, 0));
+  m_mainCanvasInfoDock->Resize(600, 90);
 
 
-    TGTab* fTab515 = new TGTab(m_mainCanvasInfoDock, 400, 100);
+  TGGroupFrame* mainCanvasInfoGroupFrame = new TGGroupFrame(m_mainCanvasInfoDock,
+                                                           TGString("Page Description"),
+                                                           kVerticalFrame |
+                                                           kFixedHeight);
+  m_mainCanvasInfoDock->AddFrame(mainCanvasInfoGroupFrame,
+                             new TGLayoutHints(kLHintsTop |
+                                               kLHintsExpandX|
+                                               kLHintsExpandY,
+                                               0, 0, 0, 0));
+
+//  TGCanvas* fCanvas652 = new TGCanvas(mainCanvasInfoGroupFrame, 220, 243);
+  
+
+  centralPageFrame->AddFrame(m_mainCanvasInfoDock,
+                             new TGLayoutHints(kLHintsRight |
+                                               kLHintsTop |
+                                               kLHintsExpandX,
+                                               0, 0, 0, 0));
+
+
+
+
+
+//    TGTab* fTab515 = new TGTab(m_mainCanvasInfoDock, 600, 90);
     // container of "Page Description"
-    TGCompositeFrame* fCompositeFrame518;
-    fCompositeFrame518 = fTab515->AddTab("Page Description");
-    //fCompositeFrame518->SetLayoutManager(new TGVerticalLayout(fCompositeFrame518));
-    fCompositeFrame518->SetLayoutBroken(true);
-    TGTextEdit* fTextEdit523 = new TGTextEdit(fCompositeFrame518, 400, 95);
+//    TGCompositeFrame* fCompositeFrame518;
+//    fCompositeFrame518 = fTab515->AddTab("Page Description");
+//    fCompositeFrame518->SetLayoutManager(new TGVerticalLayout(fCompositeFrame518));
+//    fCompositeFrame518->SetLayoutBroken(true);
+//    TGTextEdit* fTextEdit523 = new TGTextEdit(fCompositeFrame518, 600, 80);
+
+//   TGTextEdit *fTextEdit515 = new TGTextEdit(fMainFrame648,486,62);
+//   fTextEdit515->LoadFile("TxtEdit515");
+//   fMainFrame648->AddFrame(fTextEdit515, new TGLayoutHints(kLHintsLeft | kLHintsTop | kLHintsExpandX,2,2,2,2));
+//   fTextEdit515->MoveResize(2,2,486,62);
+
+
+    m_pageDescriptionView = new TGTextView(mainCanvasInfoGroupFrame, 600, 80);
     //fTextEdit523->LoadFile("TxtEdit523");
-    fCompositeFrame518->AddFrame(fTextEdit523, new TGLayoutHints(kLHintsLeft |
-                                                                 kLHintsBottom |
-                                                                 kLHintsExpandX,
-                                                                 2, 2, 2, 2));
-    //fTextEdit523->MoveResize(2, 2, 288, 75);
+    mainCanvasInfoGroupFrame->AddFrame(m_pageDescriptionView, new TGLayoutHints(kLHintsLeft | kLHintsTop | kLHintsExpandX | kLHintsExpandY,2,2,2,2));
+//    fTextEdit523->Layout();
+                                                                 
+//    fTextEdit523->MoveResize(2, 2, 600, 80);
     // container of "Tab2"
-    TGCompositeFrame* fCompositeFrame520;
-    fCompositeFrame520 = fTab515->AddTab("Message Log");
-    //fCompositeFrame520->SetLayoutManager(new TGVerticalLayout(fCompositeFrame520));
-    fCompositeFrame520->SetLayoutBroken(true);
-    TGTextEdit* fTextEdit542 = new TGTextEdit(fCompositeFrame520, 400, 95);
-    //fTextEdit542->LoadFile("TxtEdit542");
-    fCompositeFrame520->AddFrame(fTextEdit542,
-                                 new TGLayoutHints(kLHintsLeft |
-                                                   kLHintsBottom |
-                                                   kLHintsExpandX,
-                                                   2, 2, 2, 2));
-    //fTextEdit542->MoveResize(0, 0, 290, 77);
-    fTab515->SetTab(1);
-    fTab515->Resize(fTab515->GetDefaultSize());
-    m_mainCanvasInfoDock->AddFrame(fTab515, new TGLayoutHints(kLHintsLeft |
-                                                              kLHintsTop |
-                                                              kLHintsExpandX,
-                                                              2, 2, 2, 2));
+//    TGCompositeFrame* fCompositeFrame520;
+//    fCompositeFrame520 = fTab515->AddTab("Message Log");
+//    //fCompositeFrame520->SetLayoutManager(new TGVerticalLayout(fCompositeFrame520));
+//    fCompositeFrame520->SetLayoutBroken(true);
+//    TGTextEdit* fTextEdit542 = new TGTextEdit(fCompositeFrame520, 400, 95);
+//    //fTextEdit542->LoadFile("TxtEdit542");
+//    fCompositeFrame520->AddFrame(fTextEdit542,
+//                                 new TGLayoutHints(kLHintsLeft |
+//                                                   kLHintsBottom |
+//                                                   kLHintsExpandX,
+//                                                   2, 2, 2, 2));
+//    //fTextEdit542->MoveResize(0, 0, 290, 77);
+//    fTab515->SetTab(1);
+//    fTab515->Resize(fTab515->GetDefaultSize());
+//    m_mainCanvasInfoDock->AddFrame(fTab515, new TGLayoutHints(kLHintsRight |
+//                                                              kLHintsTop |
+//                                                              kLHintsExpandX,
+//                                                              2, 2, 2, 2));
     //fTab515->MoveResize(64, 40, 296, 104);
 
   m_rightMiscFrame = new TGVerticalFrame(m_mainHorizontalFrame, 220, 494,
@@ -1055,6 +1106,9 @@ void PresenterMainFrame::handleCommand(Command cmd)
     case INSPECT_HISTO_COMMAND:
       inspectHistogram();
       break;
+    case HISTOGRAM_DESCRIPTION_COMMAND:
+      histogramDescription();
+      break;      
     case INSPECT_PAGE_COMMAND:
       inspectPage();
       break;
@@ -1253,11 +1307,11 @@ void PresenterMainFrame::setArchiveRoot(const std::string & archiveRoot) {
 }
 void PresenterMainFrame::setReferencePath(const std::string & referencePath) {
   m_referencePath = referencePath;
-  if (m_analysisLib) m_analysisLib->setRefRoot(m_referencePath);
+  if (m_analysisLib) m_analysisLib->setRefRoot(m_archiveRoot+m_referencePath);
   if (!m_referencePath.empty()) {
     if (0 != m_archive) {
       m_archive->setReferencePath(m_referencePath);
-    }
+    }    
   }
 }
 void PresenterMainFrame::setSavesetPath(const std::string & savesetPath) {
@@ -1800,6 +1854,18 @@ std::string PresenterMainFrame::histogramDBName()
 }
 // TODO: move all below to an eventual static helper class
 // TODO: void PresenterMainFrame::WaitCursor()
+
+void PresenterMainFrame::startBenchmark(const std::string &timer)
+  { m_benchmark->Start(timer.c_str()) ; }
+ 
+void PresenterMainFrame::stopBenchmark(const std::string &timer)
+  { m_benchmark->Stop(timer.c_str()) ; }
+ 
+void PresenterMainFrame::printBenchmark(const std::string &timer)
+{
+  std::cout << timer <<" benchmark : "<< (m_benchmark->GetRealTime(timer.c_str())) << std::endl ;
+}
+
 void PresenterMainFrame::setTreeNodeIcon(TGListTreeItem* node,
                                          const std::string & type)
 {
@@ -1978,6 +2044,27 @@ void PresenterMainFrame::inspectHistogram()
     zoomCanvas->ToggleToolBar();
     zoomCanvas->ToggleEditor();
   }
+}
+void PresenterMainFrame::histogramDescription()
+{
+
+ if (isConnectedToHistogramDB()) {
+  TRootHelpDialog *hd = new TRootHelpDialog(this, "Histogram Description", 600, 400);
+  hd->SetText(Form("%s", m_currentPageHistogramHelp.c_str()));
+  hd->Popup();
+ } else {
+  new TGMsgBox(fClient->GetRoot(), this, "Description Unavailable",
+                "Description Unavailable, not logged in!",
+                kMBIconExclamation, kMBClose, &m_msgBoxReturnCode);
+ }
+
+
+//  DbRootHist* histogram = selectedDbRootHistogram();
+//    if (histogram && m_histogramDB) {
+//      new TGMsgBox(fClient->GetRoot(), this, ((histogram->onlineHistogram())->htitle()).c_str(),
+//               ((histogram->onlineHistogram())->descr()).c_str(),
+//               kMBIconAsterisk, kMBClose, &m_msgBoxReturnCode);
+//      }  
 }
 void PresenterMainFrame::inspectPage()
 {
@@ -2561,11 +2648,12 @@ void PresenterMainFrame::addDimSvcToPage()
     if (newHistoInstance > 998) { newHistoInstance = 0; }
     newHistoInstance++;
     //  Identifier, dimServiceName, refreshrate, instance, histogramDB
+    
     DbRootHist* dbRootHist = new DbRootHist(
       convDimToHistoID(
         std::string(*static_cast<TString*>(currentNode->GetUserData()))),
         std::string(*static_cast<TString*>(currentNode->GetUserData())),
-      2, newHistoInstance, NULL, analysisLib(), NULL, m_verbosity, NULL);
+      2, newHistoInstance, NULL, analysisLib(), NULL, m_verbosity, m_dimBrowser);
 
     dbHistosOnPage.push_back(dbRootHist);
 
@@ -2970,6 +3058,7 @@ void PresenterMainFrame::enablePageLoading() {
 void PresenterMainFrame::loadSelectedPageFromDB(const std::string & timePoint,
                                                 const std::string & pastDuration)
 {
+startBenchmark("PresenterMainFrame::loadSelectedPageFromDB");
   if (isConnectedToHistogramDB()) {
 gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
 
@@ -3025,6 +3114,7 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
         if (m_verbosity >= Verbose) {
           std::cout << "Loading page: "  << path << std::endl;
         }
+        m_currentPageHistogramHelp = path;
         if (m_verbosity >= Debug) {
           page->dump();
         }
@@ -3032,7 +3122,19 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
         if (0 != page) {
           page->getHistogramList(&m_onlineHistosOnPage);
           m_onlineHistosOnPageIt = m_onlineHistosOnPage.begin();
+
+          m_tasksNotRunning.clear();
+          
+          m_currentPageHistogramHelp.clear();
+          std::stringstream currentPageHistogramHelp;          
+          
           while (m_onlineHistosOnPageIt != m_onlineHistosOnPage.end()) {
+            currentPageHistogramHelp << (*m_onlineHistosOnPageIt)->htitle()
+                                     << ":" << std::endl 
+                                     << (*m_onlineHistosOnPageIt)->descr()
+                                     << std::endl
+                                     << std::endl;
+                                       
             DbRootHist* dbRootHist;
             if(History == m_presenterMode) { // no need for DIM
               dbRootHist = new DbRootHist((*m_onlineHistosOnPageIt)->identifier(),
@@ -3042,15 +3144,34 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
                                           *m_onlineHistosOnPageIt,
                                           m_verbosity,
                                           NULL);
-            }
-            else {
+            } else {
+              bool taskNotRunning(false);             
+              for (m_tasksNotRunningIt = m_tasksNotRunning.begin();
+                   m_tasksNotRunningIt != m_tasksNotRunning.end(); m_tasksNotRunningIt++) {
+                if (0 == ((*m_tasksNotRunningIt).compare((*m_onlineHistosOnPageIt)->task()))) {
+                  taskNotRunning = true;            
+                }                          
+              }
+              DimBrowser* dimBrowser = NULL;
+              std::string currentPartition("");
+              if (taskNotRunning) {
+                dimBrowser = NULL;
+                currentPartition = "";       
+              } else {
+                dimBrowser = m_dimBrowser;
+                currentPartition = m_currentPartition;
+              } 
               dbRootHist = new DbRootHist((*m_onlineHistosOnPageIt)->identifier(),
                                           m_currentPartition,
                                           2, (*m_onlineHistosOnPageIt)->instance(),
                                           m_histogramDB, analysisLib(),
                                           *m_onlineHistosOnPageIt,
                                           m_verbosity,
-                                          m_dimBrowser);
+                                          dimBrowser);
+                                      
+              if (dbRootHist->isEmptyHisto()) {
+                m_tasksNotRunning.push_back((*m_onlineHistosOnPageIt)->task());
+              } 
             }
 
             if (0 != m_archive &&
@@ -3063,22 +3184,23 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
                 resumeRefreshAfterLoading = false;
               }                                       
             }
-            if (dbRootHist && dbRootHist->isEmptyHisto() &&
-               (History != m_presenterMode)) {             
-              if (m_verbosity >= Verbose) {
-                std::cout << "Histogram "<<(*m_onlineHistosOnPageIt)->identifier() <<
-                  " is empty!"<<endl;
-              }
-              delete dbRootHist;
-              dbRootHist = new DbRootHist(
-                                  (*m_onlineHistosOnPageIt)->identifier(),
-                                  m_currentPartition,
-                                  2, (*m_onlineHistosOnPageIt)->instance(),
-                                  m_histogramDB, analysisLib(),
-                                  *m_onlineHistosOnPageIt,
-                                  m_verbosity,
-                                  m_dimBrowser);                                  
-            }
+// TODO: this could be removed ...to give up sooner.            
+//            if (dbRootHist && dbRootHist->isEmptyHisto() &&
+//               (History != m_presenterMode)) {             
+//              if (m_verbosity >= Verbose) {
+//                std::cout << "Histogram "<<(*m_onlineHistosOnPageIt)->identifier() <<
+//                  " is empty!"<<endl;
+//              }
+//              delete dbRootHist;
+//              dbRootHist = new DbRootHist(
+//                                  (*m_onlineHistosOnPageIt)->identifier(),
+//                                  m_currentPartition,
+//                                  2, (*m_onlineHistosOnPageIt)->instance(),
+//                                  m_histogramDB, analysisLib(),
+//                                  *m_onlineHistosOnPageIt,
+//                                  m_verbosity,
+//                                  m_dimBrowser);                                  
+//            }
             
             dbHistosOnPage.push_back(dbRootHist);
             
@@ -3115,6 +3237,12 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
             }
             m_onlineHistosOnPageIt++;
           }
+          
+          m_currentPageHistogramHelp =  currentPageHistogramHelp.str().c_str();          
+          m_pageDescriptionView->Clear();
+          m_pageDescription = page->doc();
+          m_pageDescriptionView->LoadBuffer(m_pageDescription.c_str());
+          m_pageDescriptionView->DataChanged();          
         }
 
       } catch (std::string sqlException) {
@@ -3142,6 +3270,8 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetDefaultCursor());
   if (Editor == m_presenterMode) {
     enableAutoCanvasLayoutBtn();
   }
+stopBenchmark("PresenterMainFrame::loadSelectedPageFromDB");
+printBenchmark("PresenterMainFrame::loadSelectedPageFromDB");  
 }
 void PresenterMainFrame::deleteSelectedPageFromDB()
 {
@@ -3348,27 +3478,22 @@ void PresenterMainFrame::deleteSelectedHistoFromCanvas()
 }
 DbRootHist* PresenterMainFrame::selectedDbRootHistogram()
 {
-  bool foundSelectedHisto(false);
+
   if (0 != gPad) {
-    dbHistosOnPageIt = dbHistosOnPage.begin();
-    while (dbHistosOnPageIt != dbHistosOnPage.end()) {
+    for (dbHistosOnPageIt = dbHistosOnPage.begin();
+        dbHistosOnPageIt != dbHistosOnPage.end();
+        ++dbHistosOnPageIt) {
       if (0 == ((*dbHistosOnPageIt)->histoRootName()).
-                compare(gPad->GetName())) {
-        foundSelectedHisto = true;
-        break;
+                compare(selectedHistogram()->GetName())) {
+        return *dbHistosOnPageIt;
       }
-      if (false == foundSelectedHisto) { ++dbHistosOnPageIt; }
     }
-    if (foundSelectedHisto) {
-      return *dbHistosOnPageIt;
-    } else {
-      new TGMsgBox(fClient->GetRoot(), this, "Histogram Selection",
-                   "Please select a histogram with the middle mouse button",
-                   kMBIconStop, kMBOk, &m_msgBoxReturnCode);
-      return NULL;
-    }
-  } else {
+    new TGMsgBox(fClient->GetRoot(), this, "Histogram Selection",
+                 "Please select a histogram with the middle mouse button",
+                 kMBIconStop, kMBOk, &m_msgBoxReturnCode);
     return NULL;
+  } else {
+    return NULL;    
   }
 }
 void PresenterMainFrame::refreshClock()
