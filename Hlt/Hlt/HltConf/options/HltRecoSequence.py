@@ -35,7 +35,7 @@ decodeTT = GaudiSequencer( 'HltDecodeTT', MeasureTime = True
 
 decodeT = GaudiSequencer( 'HltDecodeT', MeasureTime = True
                         , Members = 
-                        [ RawBankToSTLiteClusterAlg('createITLiteClusters', detType = 'IT') ] )
+                        [ RawBankToSTLiteClusterAlg('createITLiteClusters', DetType = 'IT') ] )
 
 recoVelo = Tf__PatVeloSpaceTracking('HltRecoVelo'
                                    , InputTracksName = patVeloR.OutputTracksName
