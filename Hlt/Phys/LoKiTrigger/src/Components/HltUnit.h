@@ -1,4 +1,4 @@
-// $Id: HltUnit.h,v 1.2 2008-11-13 13:14:42 ibelyaev Exp $
+// $Id: HltUnit.h,v 1.3 2008-11-19 14:07:06 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_HLTUNIT_H 
 #define LOKI_HLTUNIT_H 1
@@ -85,14 +85,14 @@ namespace LoKi
     inline IHltDataSvc* hltSvc() const 
     {
       if ( 0 == m_hltSvc ) 
-      { m_hltSvc = svc<IHltDataSvc>( "HtlDataSvc" , true ) ; }
+      { m_hltSvc = svc<IHltDataSvc>( "HltDataSvc" , true ) ; }
       return m_hltSvc ;
     }
     /// get access to Hlt data service 
     inline IANNSvc* annSvc() const 
     {
       if ( 0 == m_annSvc ) 
-      { m_annSvc = svc<IANNSvc>( "HtlANNSvc" , true ) ; }
+      { m_annSvc = svc<IANNSvc>( "HltANNSvc" , true ) ; }
       return m_annSvc ;
     }
     // ========================================================================
