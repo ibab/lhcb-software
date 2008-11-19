@@ -1,4 +1,4 @@
-// $Id: PVReFitterAlg.h,v 1.9 2008-11-18 17:56:18 jpalac Exp $
+// $Id: PVReFitterAlg.h,v 1.10 2008-11-19 12:21:13 jpalac Exp $
 #ifndef PVREFITTERALG_H 
 #define PVREFITTERALG_H 1
 
@@ -26,8 +26,6 @@ class ILifetimeFitter;
  *
  * <b>IPVReFitter</b>     : Implemenmtation of IPVRefitter. Default: AdaptivePVReFitter
  *
- * <b>ILifetimeFitter</b> : Implemenmtation of ILifetimeFitter. Default: PropertimeFitter
- *
  * <b>ParticleInputLocation</b>: TES location of the particles who's related primary vertices will be re-fitted.
  *
  * <b>PrimaryVertexInputLocation</b>: TES location of the LHCb::RecVertices to be
@@ -49,12 +47,11 @@ class ILifetimeFitter;
  * which is placed in VertexOutputLocation. The relations table is placed in 
  * P2VRelationsOutputLocation. The re-fitting itself is a sequence of
  * IPVOfflineTool::reDoSinglePV, IPVReFitter::remove.
- * <b>Beware</b>: If there is more than one candidate per event, there can me 
- * more than one refitted PV for each original one. Hence users are encouraged
+ * <b>Beware</b>: If there is more than one candidate per event, there can be 
+ * more than one refitted PV for each original one. Hence users are required
  * to access the re-fitted vertices on a particle by particle basis, using
  * the relations table, and not the full container of re-fitted vertices.
  *
- * @todo Test!
  *
  *  @author Juan PALACIOS
  *  @date   2008-06-25
