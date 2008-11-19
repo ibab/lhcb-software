@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.98 2008-09-30 12:24:40 cattanem Exp $ 
+! $Id: release.notes,v 1.99 2008-11-19 06:33:23 cattanem Exp $ 
 ! =============================================================================
 ! Package         : CaloDet   
 ! Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+!======================== CaloDet v10r0p1 2008-11-19 ==========================
+! 2008-11-19 Marco Cattaneo
+  - Add a missing include
 
 !======================== CaloDet v10r0 2008-09-30 ============================
 ! 2008-09-28 Olivier Deschamps

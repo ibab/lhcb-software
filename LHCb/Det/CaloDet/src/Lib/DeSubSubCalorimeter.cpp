@@ -1,11 +1,4 @@
-// $Id: DeSubSubCalorimeter.cpp,v 1.1 2008-06-30 16:46:04 odescham Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.12  2006/06/15 14:39:46  ibelyaev
-//  remove own Assert and add subCalos
-//
+// $Id: DeSubSubCalorimeter.cpp,v 1.2 2008-11-19 06:33:23 cattanem Exp $ 
 // ============================================================================
 #define CALODET_DESUBSUBCALORIMETER_CPP 1
 // ============================================================================
@@ -13,6 +6,8 @@
 // CaloDet
 #include "CaloDet/DeSubSubCalorimeter.h"
 #include "CaloKernel/CaloException.h"
+
+#include <algorithm> // for std::find
 
 /** @file DeSubSubCalorimeter.cpp
  *
