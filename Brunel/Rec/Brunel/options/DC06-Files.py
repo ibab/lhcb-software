@@ -53,11 +53,13 @@ if "fieldOff" in Brunel().getProp("SpecialData") :
         datasetName = "B_OFF.VeloClose"
         EventSelector().Input = ["DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/background/Pilot_2007/30000000.5k." + datasetName + ".digi' TYP='POOL_ROOT' OPT='READ'"]
 
-# Set the property, used to build other file names
-Brunel().setProp( "DatasetName", datasetName )
+# Default output files names are set up using value Brunel().DatasetName property
+Brunel().DatasetName = datasetName
 
-#-- Save the monitoring histograms
-HistogramPersistencySvc().OutputFile = Brunel().histosName()
+# Redefine defaults by uncommenting one or more of options below 
+
+# Monitoring histograms
+#HistogramPersistencySvc().OutputFile = "SomeFile.root"
 
 #-- Possible output streams. Enabled by setting the corresponding Brunel() property
 outputName = Brunel().outputName()

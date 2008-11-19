@@ -6,13 +6,10 @@
 
 from Brunel.Configuration import *
 
-Brunel().DDDBtag    = "DC06-default"
-Brunel().condDBtag  = "DC06-default"
-Brunel().inputType  = "ETC"
-Brunel().withMC     = True
-Brunel().noWarnings = True
-
-Brunel().applyConf()
+Brunel().DataType   = "DC06"
+Brunel().InputType  = "ETC"
+Brunel().WithMC     = True
+Brunel().NoWarnings = True
 
 ##############################################################################
 # I/O datasets are defined in a separate file, see examples in DC06-Files.py

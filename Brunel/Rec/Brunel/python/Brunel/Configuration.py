@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.34 2008-11-18 16:40:17 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.35 2008-11-19 18:15:33 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -11,6 +11,7 @@ from GaudiConf.Configuration  import *
 from RecSys.Configuration     import *
 import GaudiKernel.ProcessJobOptions
 from Configurables import ( ProcessPhase, GaudiSequencer )
+from RichRecQC.Configuration import RichRecQCConf
 
 ## @class Brunel
 #  Configurable for Brunel application
@@ -19,23 +20,24 @@ from Configurables import ( ProcessPhase, GaudiSequencer )
 class Brunel(LHCbConfigurableUser):
 
     ## Possible used Configurables
-    __used_configurables__ = [ LHCbApp, TrackSys, RecSysConf ]
+    __used_configurables__ = [ TrackSys, RecSysConf, RichRecQCConf, LHCbApp ]
     
     # Steering options
     __slots__ = {
         "EvtMax":          -1 # Maximum number of events to process
        ,"SkipEvents":   0     # events to skip
        ,"PrintFreq":    1     # The frequency at which to print event numbers
+       ,"DataType"   : "2008" # Data type, can be ['DC06','2008']
        ,"WithMC":       False # set to True to use MC truth
        ,"Simulation":   False # set to True to use SimCond
        ,"RecL0Only":    False # set to True to reconstruct only L0-yes events
        ,"InputType":    "MDF" # or "DIGI" or "ETC" or "RDST" or "DST"
        ,"OutputType":   "DST" # or "RDST" or "NONE"
-       ,"ExpertHistos": False # set to True to write out expert histos
+       ,"Histograms": "Default" # Type of histograms: ['None','Default','Expert']
        ,"NoWarnings":   False # suppress all messages with MSG::WARNING or below 
        ,"DatasetName":  ""    # string used to build file names
-       ,"DDDBtag":      "2008-default" # geometry database tag
-       ,"CondDBtag":    "2008-default" # conditions database tag
+       ,"DDDBtag":      "" # Tag for DDDB. Default as set in DDDBConf for DataType
+       ,"CondDBtag":    "" # Tag for CondDB. Default as set in DDDBConf for DataType
        ,"UseOracle": False  # if False, use SQLDDDB instead
        ,"MainSequence": [ "ProcessPhase/Init",
                           "ProcessPhase/Reco",
@@ -62,22 +64,11 @@ class Brunel(LHCbConfigurableUser):
             self.setProp( "Simulation", True )
 
         # Delegate handling to LHCbApp configurable
-        self.setOtherProps(LHCbApp(),["CondDBtag","DDDBtag","UseOracle","Simulation"]) 
+        self.setOtherProps(LHCbApp(),["DataType","CondDBtag","DDDBtag","UseOracle","Simulation"]) 
 
     def defineEvents(self):
-        
-        evtMax = self.getProp("EvtMax")
-        if hasattr(LHCbApp(),"EvtMax"):
-            print "# LHCbApp().EvtMax already defined, ignoring Brunel().EvtMax"
-        else:
-            LHCbApp().EvtMax = evtMax
-
-        skipEvents = self.getProp("SkipEvents")
-        if skipEvents > 0 :
-            if hasattr(LHCbApp(),"SkipEvents"):
-                print "# LHCbApp().skipEvents already defined, ignoring Brunel().skipEvents"
-            else:
-                LHCbApp().skipEvents = skipEvents
+        # Delegate handling to LHCbApp configurable
+        self.setOtherProps(LHCbApp(),["EvtMax","SkipEvents"])
 
     def defineOptions(self):
 
@@ -102,10 +93,10 @@ class Brunel(LHCbConfigurableUser):
         # Set up monitoring (i.e. not using MC truth)
         ProcessPhase("Moni").DetectorList += self.getProp("MoniSequence")
         importOptions("$BRUNELOPTS/BrunelMoni.py") # Filled in all cases
+        self.setOtherProps(RichRecQCConf(),["Context","DataType"])
+
         if not withMC:
             # Add here histograms to be filled only with real data 
-            from RichRecQC.Configuration import RichRecQCConf
-            self.setOtherProps(RichRecQCConf(),["ExpertHistos","Context"])
             RichRecQCConf().MoniSequencer = GaudiSequencer("MoniRICHSeq")
 
         # Setup up MC truth processing and checking
@@ -128,8 +119,6 @@ class Brunel(LHCbConfigurableUser):
             # Muon
             importOptions("$MUONPIDCHECKERROOT/options/MuonPIDChecker.opts")
             # RICH
-            from RichRecQC.Configuration import RichRecQCConf
-            self.setOtherProps(RichRecQCConf(),["ExpertHistos","Context"])
             RichRecQCConf().MoniSequencer = GaudiSequencer("CheckRICHSeq")
 
         # Setup L0 filtering if requested, runs L0 before Reco
@@ -140,19 +129,39 @@ class Brunel(LHCbConfigurableUser):
 
     def defineHistos(self):
         """
-        Save histograms. If expert, fill and save also the expert histograms
+        Define histograms to save according to Brunel().Histograms option
         """
-        ExpertHistos = self.getProp("ExpertHistos")
-        if ExpertHistos:
-            RecSysConf().setProp( "ExpertHistos", ExpertHistos )
+        knownOptions = ["","None","Default","Expert"]
+        histOpt = self.getProp("Histograms").capitalize()
+        if histOpt not in knownOptions:
+            raise RuntimeError("Unknown Histograms option '%s'"%histOpt)
+
+        if histOpt == "None" or histOpt == "":
+            # HistogramPersistency still needed to read in CaloPID DLLs.
+            # so do not set ApplicationMgr().HistogramPersistency = "NONE"
+            return
+
+        if histOpt == "Expert":
+            from RichRecQC.Configuration import RichRecQCConf
+            RichRecQCConf().setProp( "ExpertHistos", True )
+            RecSysConf().setProp( "ExpertHistos", True )
             importOptions( "$BRUNELOPTS/ExpertCheck.opts" )
             IODataManager().AgeLimit += 1
+
+        # Use a default histogram file name if not already set
+        if not hasattr( HistogramPersistencySvc(), "OutputFile" ):
+            histosName   = self.getProp("DatasetName")
+            if self.getProp( "RecL0Only" ): histosName += '-L0Yes'
+            if (self.evtMax() > 0): histosName += '-' + str(self.evtMax()) + 'ev'
+            if histOpt == "Expert": histosName += '-expert'
+            histosName += '-histos.root'
+            HistogramPersistencySvc().OutputFile = histosName
 
     def defineMonitors(self):
         
         # get all defined monitors
         monitors = self.getProp("Monitors") + LHCbApp().getProp("Monitors")
-        # pass to LHCbApp any monitors not dealt with here
+        # Currently no Brunel specific monitors, so pass them all to LHCbApp
         LHCbApp().setProp("Monitors", monitors)
 
     def configureInput(self, inputType):
@@ -237,16 +246,6 @@ class Brunel(LHCbConfigurableUser):
         outputType = self.getProp("OutputType").lower()
         return outputName + '.' + outputType
 
-    def histosName(self):
-        
-        histosName   = self.getProp("DatasetName")
-        if self.getProp( "RecL0Only" ): histosName += '-L0Yes'
-        if ( self.evtMax() > 0 ): histosName += '-' + str(self.evtMax()) + 'ev'
-        ExpertHistos = self.getProp("ExpertHistos")
-        if ExpertHistos     : histosName += '-expert'
-        histosName += '-histos.root'
-        return histosName
-    
     def evtMax(self):
         return LHCbApp().evtMax()
 

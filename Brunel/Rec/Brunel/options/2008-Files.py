@@ -40,11 +40,13 @@ else:
     # B->J/Psi(mumu)Ks events with Boole v16r3, Gauss v35r1, DB tag head-20081002
     EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v16r3/" + datasetName + ".digi' TYP='POOL_ROOTTREE' OPT='READ'"]
 
-# Set the property, used to build other file names
-Brunel().setProp( "DatasetName", datasetName )
+# Default output files names are set up using value Brunel().DatasetName property
+Brunel().DatasetName = datasetName
 
-#-- Save the monitoring histograms
-HistogramPersistencySvc().OutputFile = Brunel().histosName()
+# Redefine defaults by uncommenting one or more of options below 
+
+# Monitoring histograms
+#HistogramPersistencySvc().OutputFile = "SomeFile.root"
 
 #-- Possible output streams. Enabled by setting the corresponding Brunel() property
 outputName = Brunel().outputName()

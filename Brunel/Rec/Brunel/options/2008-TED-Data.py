@@ -49,11 +49,13 @@ else:
     import sys
     sys.exit()
 
-# Set the property, used to build other file names
-Brunel().setProp( "datasetName", datasetName )
+# Default output files names are set up using value Brunel().DatasetName property
+Brunel().DatasetName = datasetName
 
-#-- Save the monitoring histograms
-HistogramPersistencySvc().OutputFile = Brunel().histosName()
+# Redefine defaults by uncommenting one or more of options below 
+
+# Monitoring histograms
+#HistogramPersistencySvc().OutputFile = "SomeFile.root"
 
 #-- Possible output streams. Enabled by setting the corresponding Brunel() property
 outputName = Brunel().outputName()

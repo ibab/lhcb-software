@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2008-11-18 - Marco Cattaneo
+ - More (partial) fixes to Configurable and options, more to come
+
 ! 2008-11-14 - Chris Jones
  - Fixes to python Configurable for latest Gaudi changes
 

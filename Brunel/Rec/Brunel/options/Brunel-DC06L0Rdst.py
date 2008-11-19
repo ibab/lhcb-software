@@ -6,14 +6,11 @@
 
 from Brunel.Configuration import *
 
-Brunel().DDDBtag    = "DC06-default"
-Brunel().condDBtag  = "DC06-default"
-Brunel().inputType  = "DIGI"
-Brunel().outputType = "RDST"
-Brunel().recL0Only  = True
-Brunel().noWarnings = True
-
-Brunel().applyConf()
+Brunel().DataType   = "DC06"
+Brunel().InputType  = "DIGI"
+Brunel().OutputType = "RDST"
+Brunel().RecL0Only  = True
+Brunel().NoWarnings = True
 
 ##############################################################################
 # I/O datasets are defined in a separate file, see examples in DC06-Files.py
