@@ -1,8 +1,8 @@
-// $Id: PrintMCDecayTreeTool.cpp,v 1.3 2007-10-09 16:26:23 jpalac Exp $
+// $Id: PrintMCDecayTreeTool.cpp,v 1.4 2008-11-19 06:52:50 cattanem Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/GaudiException.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
