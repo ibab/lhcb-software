@@ -1,9 +1,10 @@
 !-----------------------------------------------------------------------------
-! Package     : Brunel_v33r3p1/Event
+! Package     : Event/EventPacker
 ! Responsible : Olivier Callot
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+!============================ EventPacker v1r0 2008-11-19 ====================
 ! 2008-11-19 - Olivier Callot
  - Import the PAck/Uncpack/Compare algorithms for MCVertex and MCParticle
    that were in Sim/SimComponents
