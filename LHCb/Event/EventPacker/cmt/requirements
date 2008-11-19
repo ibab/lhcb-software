@@ -18,11 +18,15 @@ include_path      none
 #============================================================================
 # Used packages. 
 #============================================================================
+use   GaudiKernel  v*
 use   GaudiAlg     v*
-use   GenEvent     v*    Event
-use   MCEvent      v*    Event
-use   RecEvent     v*    Event
+use   LHCbKernel   v*    Kernel
 use   PackedEvent  v*    Event
+use   MCEvent      v*    Event
+use   TrackEvent   v*    Event
+use   RecEvent     v*    Event
+use   Boost        v*    LCG_Interfaces
+
 #============================================================================
 # Component library building rule
 #============================================================================
