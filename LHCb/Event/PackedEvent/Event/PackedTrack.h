@@ -1,4 +1,4 @@
-// $Id: PackedTrack.h,v 1.3 2008-11-17 17:07:11 ocallot Exp $
+// $Id: PackedTrack.h,v 1.4 2008-11-19 10:10:49 ocallot Exp $
 #ifndef EVENT_PACKEDTRACK_H 
 #define EVENT_PACHEDTRACK_H 1
 
@@ -30,12 +30,12 @@ namespace LHCb {
     int chi2PerDoF;
     int nDoF;
     unsigned int flags;
-    int firstId;
-    int lastId;
-    int firstState;
-    int lastState;
-    int firstExtra;
-    int lastExtra;
+    unsigned short int firstId;
+    unsigned short int lastId;
+    unsigned short int firstState;
+    unsigned short int lastState;
+    unsigned short int firstExtra;
+    unsigned short int lastExtra;
 
     //== Note that Nodes and Measurements on Track are transient only, an thus never stored.
   };
@@ -98,8 +98,11 @@ namespace LHCb {
     }; 
 
     virtual ~PackedTracks( ) {}; ///< Destructor
-    virtual const CLID& clID() const { return PackedTracks::classID(); }
-    static  const CLID& classID()    { return CLID_PackedTracks;       }
+    virtual const CLID& clID()  const { return PackedTracks::classID(); }
+    static  const CLID& classID()     { return CLID_PackedTracks;       }
+
+    void setVersion( int vers )       { m_version = vers; }
+    int version()               const { return m_version; }
 
     void addEntry( PackedTrack& obj ) { m_vect.push_back( obj ); }
     std::vector<PackedTrack>::const_iterator begin() const { return m_vect.begin(); }
@@ -120,6 +123,7 @@ namespace LHCb {
   protected:
 
   private:
+    int m_version;
     std::vector<PackedTrack> m_vect;
     std::vector<PackedState> m_state;
     std::vector<int>    m_ids;

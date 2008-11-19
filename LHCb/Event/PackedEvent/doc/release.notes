@@ -5,8 +5,11 @@
 !-----------------------------------------------------------------------------
 
 !======================= PackedEvent v3r4 2008-11-17 =========================
+! 2008-11-19 - Olivier Callot
+ - Add a version field in the Packed events (Track, CaloHypo, ProtoParticle, RecVertex).
+
 ! 2008-11-17 - Olivier Callot
- - Add classes for PAckedProtoParticle and PackedRecVertex
+ - Add classes for PackedProtoParticle and PackedRecVertex
 
 ! 2008-11-12 - Olivier Callot
  - add classes for PackedTrack and PackedCaloHypo
