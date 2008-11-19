@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: Configuration.py,v 1.15 2008-11-14 16:30:01 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.16 2008-11-19 17:56:16 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from os import environ
@@ -13,8 +13,9 @@ class LHCbApp(LHCbConfigurableUser):
     __slots__ = {
         "EvtMax"     : -1
        ,"SkipEvents" : 0
-       ,"DDDBtag"    : "2008-default"
-       ,"CondDBtag"  : "2008-default"
+       ,"DataType"   : "2008"
+       ,"DDDBtag"    : ""
+       ,"CondDBtag"  : ""
        ,"UseOracle"  : False
        ,"Simulation" : False
        ,"Monitors"   : []
@@ -23,8 +24,9 @@ class LHCbApp(LHCbConfigurableUser):
     _propertyDocDct = { 
         'EvtMax'     : """ Maximum number of events to process """
        ,'SkipEvents' : """ Number of events to skip """
-       ,'DDDBtag'    : """ Tag to use for DDDB. Default '2008-default' """
-       ,'CondDBtag'  : """ Tag to use for CondDB. Default '2008-default' """
+       ,'DataType'   : """ Data type, can be ['DC06','2008']. Default '2008' """
+       ,'DDDBtag'    : """ Tag for DDDB. Default as set in DDDBConf for DataType """
+       ,'CondDBtag'  : """ Tag for CondDB. Default as set in DDDBConf for DataType """
        ,'UseOracle'  : """ Flag to enable Oracle CondDB. Default False (use SQLDDDB) """
        ,'Simulation' : """ Flag to indicate usage of simulation conditions """
        ,'Monitors'   : """ List of monitors to execute """
@@ -36,29 +38,15 @@ class LHCbApp(LHCbConfigurableUser):
         return ["SC", "FPE"]
 
     def defineDB(self):
-        DDDBConf().Simulation = self.getProp("Simulation")
-        DDDBConf().UseOracle  = self.getProp("UseOracle")
-
-        condDBtag = self.getProp("CondDBtag")
-        DDDBtag   = self.getProp("DDDBtag")
-
-        # If a default is requested, use it
-        if DDDBtag.find("-default") != -1 or condDBtag.find("-default") != -1:
-            if condDBtag.find("DC06") != -1 and DDDBtag.find("DC06") != -1 :
-                DDDBConf().DataType = "DC06"
-            elif condDBtag.find("2008") != -1 and DDDBtag.find("2008") != -1 :
-                DDDBConf().DataType = "2008"
-            else :
-                raise RuntimeError("Invalid combination of default tags. CondDB: '%s' DDDB: '%s'"%
-                                   (condDBtag,DDDBtag) )
-
-        # Otherwise, take the tag supplied
+        # Delegate handling of properties to DDDBConf
+        self.setOtherProps( DDDBConf(), ["Simulation", "UseOracle", "DataType" ] )
+        # Set the CondDB tags if not using defaults
         from Configurables import CondDB
-        if DDDBtag.find("-default") == -1:
-            CondDB().Tags [ "DDDB" ] = DDDBtag
-        if condDBtag.find("-default") == -1:
-            CondDB().Tags [ "LHCBCOND" ] = condDBtag
-            CondDB().Tags [ "SIMCOND"  ] = condDBtag
+        if hasattr( self, "DDDBtag" ):
+            CondDB().Tags [ "DDDB" ] = self.getProp("DDDBtag")
+        if hasattr( self, "CondDBtag" ):
+            CondDB().Tags [ "LHCBCOND" ] = self.getProp("CondDBtag")
+            CondDB().Tags [ "SIMCOND"  ] = self.getProp("CondDBtag")
             
     def defineEvents(self):
         # Set up transient store and data on demand service

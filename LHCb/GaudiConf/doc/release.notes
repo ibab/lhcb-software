@@ -2,7 +2,10 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
-!======================== GaudiConf v11r0 2008-11-17 ========================
+!======================== GaudiConf v11r0 2008-11-19 ========================
+! 2008-11-19 - Marco Cattaneo
+ - Add LHCbApp().DataType option, improve propagation of CondDB+DDDBConf settings
+
 ! 2008-11-14 - Marco Cattaneo
  - Capitalize name of all LHCbApp() options
 
