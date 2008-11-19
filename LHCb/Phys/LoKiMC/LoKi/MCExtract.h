@@ -1,4 +1,4 @@
-// $Id: MCExtract.h,v 1.10 2008-10-29 13:41:15 ibelyaev Exp $
+// $Id: MCExtract.h,v 1.11 2008-11-19 12:29:44 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_EXTRACT_H 
 #define LOKI_EXTRACT_H 1
@@ -153,7 +153,7 @@ namespace LoKi
       MCPARTICLE        end               , 
       OUTPUT            output            , 
       const PREDICATE&  cut               ,
-      const bool        decayOnly = false )
+      const bool        decayOnly         )
     {
       for ( ; begin != end ; ++begin ) 
       { output = getMCParticles ( *begin , output , cut , decayOnly ) ; }

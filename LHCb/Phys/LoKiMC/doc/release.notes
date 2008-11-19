@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.53 2008-11-17 16:06:10 cattanem Exp $ 
+! $Id: release.notes,v 1.54 2008-11-19 12:29:44 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,7 +15,10 @@
 !
 ! -----------------------------------------------------------------------------
 
-!========================== LoKiMC v8r0 2008-11-17 ============================
+!========================== LoKiMC v8r0 2008-11-19 ============================
+! 2008-11-19 - Marco Cattaneo
+ - Fix for Windows compilation
+
 ! 2008-11-02 - Vanya BELYAEV
  - remove artificial assignment operators 
  - disable generation of assignement operators for reflex-dictionaries
