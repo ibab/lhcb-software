@@ -1,4 +1,4 @@
-// $Id: PVReFitterAlg.cpp,v 1.10 2008-11-18 17:56:18 jpalac Exp $
+// $Id: PVReFitterAlg.cpp,v 1.11 2008-11-19 12:20:47 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -195,12 +195,6 @@ LHCb::RecVertex* PVReFitterAlg::refitVertex(const LHCb::RecVertex* v,
                                                 tracks, 
                                                 *reFittedVertex );
 
-//   const double max_double = std::numeric_limits<double>::max();
-
-//   double tau(max_double); 
-//   double tauErr(max_double); 
-//   double tauChi2(max_double); 
-
   if (sc==StatusCode::SUCCESS) {
     sc = m_pvReFitter->remove(p, reFittedVertex);
   }
@@ -218,19 +212,16 @@ void PVReFitterAlg::getTracks(const LHCb::Particle* p,
     const LHCb::Track* track = proto->track();
     if(track) tracks.push_back(track);
 
-  } else {
- 
-    const SmartRefVector< LHCb::Particle >& Prods = p->daughters();
-    SmartRefVector< LHCb::Particle >::const_iterator iProd;
-
-    for (iProd=Prods.begin(); iProd !=Prods.end(); ++iProd){
-
-      const LHCb::Particle* daughter = *iProd;
-      getTracks(daughter, tracks);
-      
-    }
-
   }
+ 
+  const SmartRefVector< LHCb::Particle >& Prods = p->daughters();
+  SmartRefVector< LHCb::Particle >::const_iterator iProd;
+
+  for (iProd=Prods.begin(); iProd !=Prods.end(); ++iProd){
+    const LHCb::Particle* daughter = *iProd;
+    getTracks(daughter, tracks);      
+  }
+
 }
 //=============================================================================
 //  Finalize
