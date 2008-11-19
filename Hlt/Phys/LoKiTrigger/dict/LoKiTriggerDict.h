@@ -1,4 +1,4 @@
-// $Id: LoKiTriggerDict.h,v 1.10 2008-11-17 17:38:49 ibelyaev Exp $
+// $Id: LoKiTriggerDict.h,v 1.11 2008-11-19 17:01:37 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKICOREDICT_H 
 #define LOKI_LOKICOREDICT_H 1
@@ -85,6 +85,15 @@ namespace LoKi
       }
       // __rrshift__
       static std::vector<Fun::result_type> __rrshift__ 
+      ( const Fun& fun  , const Hlt::TSelection<LHCb::Track>&  o ) 
+      {
+        std::vector<Fun::result_type> res  ;
+        res.reserve ( o.size () ) ;
+        LoKi::apply ( o.begin() , o.end() , fun , std::back_inserter ( res ) ) ;
+        return res ;
+      }
+     // __rrshift__
+      static std::vector<Fun::result_type> __rrshift__ 
       ( const Fun& fun  , const SmartRefVector<LHCb::Track>&  o ) 
       {
         std::vector<Fun::result_type> res  ;
@@ -165,6 +174,15 @@ namespace LoKi
         return res ;
       }      
       // __rrshift__
+      static std::vector<Fun::result_type> __rrshift__ 
+      ( const Fun& fun  , const Hlt::TSelection<LHCb::RecVertex>&  o ) 
+      {
+        std::vector<Fun::result_type> res  ;
+        res.reserve ( o.size () ) ;
+        LoKi::apply ( o.begin() , o.end() , fun , std::back_inserter ( res ) ) ;
+        return res ;
+      }      
+      // __rrshift__
       static Fun::result_type __rrshift__ 
       ( const Fun& fun  , const Type&           o ) 
       { return fun ( o           ) ; }
@@ -172,6 +190,7 @@ namespace LoKi
       static Fun::result_type __rrshift__ 
       ( const Fun& fun  , const SmartRef<Type>& o ) 
       { return fun ( *o.target() ) ; }
+      // ======================================================================
     public:
       // ======================================================================
       // __rshift__
@@ -218,17 +237,23 @@ namespace LoKi
     class FunCalls<LoKi::TrackTypes::TrackVertexPair>
     {
     private:
+      // ======================================================================
       typedef LoKi::TrackTypes::TrackVertexPair   Type ;
       typedef LoKi::BasicFunctors<Type>::Function Fun  ;
+      // ======================================================================
     public:
+      // ======================================================================
       static Fun::result_type __call__ 
       ( const Fun& fun          , 
         Fun::first_argument  a1 , 
         Fun::second_argument a2 ) { return fun ( a1 , a2 ) ; }
+      // ======================================================================
     public:
+      // ======================================================================
       // __rrshift__ 
       static Fun::result_type __rrshift__ 
       ( const Fun& fun , Fun::argument  o ) { return fun ( o ) ; }
+      // ======================================================================
     public:
       // ======================================================================
       // __rshift__
@@ -246,13 +271,17 @@ namespace LoKi
     class FunCalls<LoKi::TrackTypes::VertexPair>
     {
     private:
+      // ======================================================================
       typedef LoKi::TrackTypes::VertexPair Type ;
       typedef LoKi::BasicFunctors<Type>::Function Fun  ;
+      // ======================================================================
     public:
+      // ======================================================================
       static Fun::result_type __call__ 
       ( const Fun& fun          , 
         Fun::first_argument  a1 , 
         Fun::second_argument a2 ) { return fun ( a1 , a2 ) ; }
+      // ======================================================================
     public:
       // ======================================================================
       // __rrshift__ 
@@ -276,9 +305,12 @@ namespace LoKi
     class CutCalls<LHCb::Track>
     {
     private:
+      // ======================================================================
       typedef LHCb::Track           Type ;
       typedef LoKi::BasicFunctors<Type>::Predicate Fun  ;
+      // ======================================================================
     public:
+      // ======================================================================
       // __call__
       static Fun::result_type __call__ 
       ( const Fun& fun  , 
@@ -291,6 +323,7 @@ namespace LoKi
       static Fun::result_type __call__ 
       ( const Fun& fun  , 
         const SmartRef<Type>& o ) { return fun ( *o.target()  ) ; }
+      // ======================================================================
     public:
       // ======================================================================
       // __rrshift__
@@ -327,16 +360,26 @@ namespace LoKi
         return res ; 
       }   
       // __rrshift__
-      static Type::ConstVector __rrshift__ 
+      static Type::Vector __rrshift__ 
       ( const Fun& fun  , const SmartRefVector<Type>&       o ) 
       { 
         SmartRefVector<Type>& _o = const_cast<SmartRefVector<Type>&>( o ) ;
-        Type::ConstVector res  ;
+        Type::Vector res  ;
         res.reserve ( o.size () ) ;
         LoKi::apply_filter 
           ( _o.begin() , _o.end() , fun , std::back_inserter ( res ) ) ;
         return res ; 
-      }      
+      } 
+      // __rrshift__
+      static Type::Vector __rrshift__ 
+      ( const Fun& fun  , const Hlt::TSelection<Type>&       o ) 
+      { 
+        Type::Vector res  ;
+        res.reserve ( o.size () ) ;
+        LoKi::apply_filter 
+          ( o.begin() , o.end() , fun , std::back_inserter ( res ) ) ;
+        return res ; 
+      }
       // __rrshift__
       static Fun::result_type  __rrshift__ 
       ( const Fun& fun  , const Type&           o ) 
@@ -408,11 +451,21 @@ namespace LoKi
         return res ; 
       }   
       // __rrshift__
-      static Type::ConstVector __rrshift__ 
+      static Type::Vector __rrshift__ 
+      ( const Fun& fun  , const Hlt::TSelection<Type>&       o ) 
+      { 
+        Type::Vector res  ;
+        res.reserve ( o.size () ) ;
+        LoKi::apply_filter 
+          ( o.begin() , o.end() , fun , std::back_inserter ( res ) ) ;
+        return res ; 
+      }
+      // __rrshift__
+      static Type::Vector __rrshift__ 
       ( const Fun& fun  , const SmartRefVector<Type>&       o ) 
       { 
         SmartRefVector<Type>& _o = const_cast<SmartRefVector<Type>&>( o ) ;
-        Type::ConstVector res  ;
+        Type::Vector res  ;
         res.reserve ( o.size () ) ;
         LoKi::apply_filter 
           ( _o.begin() , _o.end() , fun , std::back_inserter ( res ) ) ;
@@ -433,52 +486,69 @@ namespace LoKi
       static LoKi::FunctorFromFunctor<Type,bool> __rshift__            
       ( const Fun& fun  , const Fun&                        o ) 
       { return fun >> o  ; }
+      // ======================================================================
     } ;
     // ========================================================================
     template <>
     class CutCalls<LoKi::TrackTypes::TrackPair>
     {
     private:
+      // ======================================================================
       typedef LoKi::TrackTypes::TrackPair Type ;
       typedef LoKi::BasicFunctors<Type>::Predicate Fun  ;
+      // ======================================================================
     public:
+      // ======================================================================
       // __call__
       static Fun::result_type __call__ 
       ( const Fun& fun  , 
         Fun::first_argument  a1 , 
         Fun::second_argument a2 ) { return fun ( a1 , a2 ) ; }
+      // ======================================================================
     public:
+      // ======================================================================
       // __rrshift__
       static Fun::result_type __rrshift__ 
       ( const Fun& fun  , Fun::argument a ) { return fun ( a ) ; }
+      // ======================================================================
     public:
+      // ======================================================================
       // __rshift__
       static LoKi::FunctorFromFunctor<Type,bool> __rshift__            
       ( const Fun& fun  , const Fun&                        o ) 
       { return fun >> o  ; }      
+      // ======================================================================
     } ;
     // ========================================================================
     template <>
     class CutCalls<LoKi::TrackTypes::TrackVertexPair>
     {
     private:
+      // ======================================================================
       typedef LoKi::TrackTypes::TrackVertexPair Type ;
       typedef LoKi::BasicFunctors<Type>::Predicate Fun  ;
+      // ======================================================================
     public:
+      // ======================================================================
       // __call__
       static Fun::result_type __call__ 
       ( const Fun& fun  , 
         Fun::first_argument  a1 , 
         Fun::second_argument a2 ) { return fun ( a1 , a2 ) ; }
+      // ======================================================================
     public:
+      // ======================================================================
       // __rrshift__
       static Fun::result_type __rrshift__ 
       ( const Fun& fun  , Fun::argument a ) { return fun ( a ) ; }
+      // ======================================================================
     public:
+      // ======================================================================
       // __rshift__
       static LoKi::FunctorFromFunctor<Type,bool> __rshift__            
       ( const Fun& fun  , const Fun&                        o ) 
       { return fun >> o  ; }      
+      // ======================================================================
     } ;
     // ========================================================================
     template <>
