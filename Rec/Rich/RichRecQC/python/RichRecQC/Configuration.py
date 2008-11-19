@@ -4,11 +4,12 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.6 2008-11-14 17:13:40 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.7 2008-11-19 17:50:10 cattanem Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
 from Configurables import ( GaudiSequencer, MessageSvc )
+from DDDB.Configuration import DDDBConf
     
 # ----------------------------------------------------------------------------------
 
@@ -21,6 +22,7 @@ class RichRecQCConf(RichConfigurableUser):
     ## Steering options
     __slots__ = {
         "Context": "Offline"  # The context within which to run
+       ,"DataType"   : "2008" # Data type, can be ['DC06','2008']
        ,"RawMonitoring": True
        ,"PidMonitoring": True
        ,"PixelMonitoring": True
@@ -55,9 +57,10 @@ class RichRecQCConf(RichConfigurableUser):
             pixSeq = GaudiSequencer("RichRawMoni")
             pixSeq.MeasureTime = True
             sequence.Members += [pixSeq]
-            from Configurables import Rich__DAQ__DataDBCheck
-            dbCheck = Rich__DAQ__DataDBCheck("RichRawDataDBCheck")
-            pixSeq.Members += [dbCheck]
+            if self.getProp("DataType") not in ["DC06"]:
+                from Configurables import Rich__DAQ__DataDBCheck
+                dbCheck = Rich__DAQ__DataDBCheck("RichRawDataDBCheck")
+                pixSeq.Members += [dbCheck]
 
         # RICH data monitoring
         if self.getProp("PixelMonitoring") :
