@@ -28,6 +28,7 @@ CondDBCnvSvc( CondDBReader = allConfigurables["SimulationCondDBReader"] )
 giGaGeo = GiGaGeo()
 giGaGeo.UseAlignment      = True
 giGaGeo.AlignAllDetectors = True
+importOptions('$GAUSSOPTS/SimVeloGeometry.opts')  # -- To misalign VELO
 
 #--Ensure DetectorDataSvc is instantiated BEFORE GiGaGeo
 l = ApplicationMgr().ExtSvc
