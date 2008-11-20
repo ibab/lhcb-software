@@ -35,12 +35,6 @@ void DimServiceMonObject::setDataFromMonObject() {
   boost::archive::binary_oarchive oa(m_ss);
   m_monObject->save(oa, m_monObject->version());
   
-//   std::cout << "==============================================================" << std::endl;
-//   std::cout << "========================MONOBJECT=============================" << std::endl;
-//   std::cout << "==============================================================" << std::endl;
-//   m_monObject->print();
-//   std::cout << "==============================================================" << std::endl;
-
   m_data = const_cast<void *>((const void*)m_ss.str().data());
   setData(m_data, m_ss.str().length());
   DimService::updateService();

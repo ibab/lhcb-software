@@ -59,6 +59,7 @@ DECLARE_ALGORITHM_FACTORY(UpdateAndReset)
 UpdateAndReset::UpdateAndReset(const std::string& name, ISvcLocator* ploc)
   : GaudiAlgorithm(name, ploc)
 {
+  declareProperty("disableMonRate", m_disableMonRate = 0);
   declareProperty("desiredDeltaTCycle", m_desiredDeltaTCycle = 10);
   declareProperty("disableReadOdin", m_disableReadOdin = 0);
   declareProperty("disableChekInTimer", m_disableChekInTimer = 0);
@@ -108,7 +109,12 @@ StatusCode UpdateAndReset::initialize() {
   partName = "unknownPartition";
   
   if (3 == serviceParts.size()) {
+    partName = serviceParts[0];
     taskName = serviceParts[1];
+    if (partName=="CALD0701") {
+       partName="LHCb";
+       taskName = "Calib"+taskName;
+    }   
   }
   else if (4 == serviceParts.size()) {
     partName = serviceParts[0];
@@ -164,7 +170,6 @@ StatusCode UpdateAndReset::initialize() {
   m_cycleStatus = s_statusNoUpdated;
 
   if (0==m_disableMonRate) m_pGauchoMonitorSvc->declareMonRateComplement(m_runNumber, m_cycleNumber, m_deltaTCycle, m_offsetTimeFirstEvInRun, m_offsetTimeLastEvInCycle, m_offsetGpsTimeLastEvInCycle);
-
   return StatusCode::SUCCESS;
 }
 
@@ -172,7 +177,6 @@ void UpdateAndReset::timerHandler()
 {
   MsgStream msg(msgSvc(), name());
   if (0 != m_disableChekInTimer) {
-    msg << MSG::DEBUG << "===============> Checking changes inside timer handler is disabled." << endreq;
     return;
   }
 
@@ -204,15 +208,11 @@ StatusCode UpdateAndReset::execute() {
   MsgStream msg( msgSvc(), name() );
 
   m_countExecutes++;
-//  msg << MSG::DEBUG << "*****************************************************************************" << endreq;
-  //msg << MSG::DEBUG << "Execute method # " << m_countExecutes << endreq;
-//  msg << MSG::DEBUG << "********************************************************************" << endreq;
 
   if (0 == m_disableChekInExecute){
     verifyAndProcessRunChange();
     verifyAndProcessCycleChange(false);
   }
-  else msg << MSG::DEBUG << "===============> Checking changes inside execute method is disable." << endreq;
 
   // Because the plot method we start the timer after the first execute...
   // This is because of plot method declareinfo in the execute method...
@@ -221,8 +221,6 @@ StatusCode UpdateAndReset::execute() {
     DimTimer::start(m_timerCycle);
     m_firstCycleNumber = currentCycleNumber(GauchoTimer::currentTime()).first;
   }
-  //msg << MSG::DEBUG << "End of Execute method # " << m_countExecutes << endreq;
-//  msg << MSG::DEBUG << "*****************************************************************************" << endreq;
   return StatusCode::SUCCESS;
 }
 
@@ -234,7 +232,7 @@ void UpdateAndReset::verifyAndProcessCycleChange(bool isFromTimerHandler) {
   MsgStream msg(msgSvc(), name());
   std::string method = "execute";
   if (isFromTimerHandler) method = "timerHandler";
-  msg << MSG::DEBUG << " Process Triggered by the "<< method <<"() method." << endreq;
+//  msg << MSG::DEBUG << " Process Triggered by the "<< method <<"() method." << endreq;
   m_cycleStatus = s_statusProcessingUpdate;
   updateData(false, isFromTimerHandler); //1er param false means that the update wasn't called when runNumber changed
   m_cycleStatus = s_statusUpdated;
@@ -260,7 +258,7 @@ void UpdateAndReset::verifyAndProcessRunChange() { // this method can not be cal
 StatusCode UpdateAndReset::finalize() {
 //------------------------------------------------------------------------------
   MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "finalizing...." << endreq;
+//  msg << MSG::DEBUG << "finalizing...." << endreq;
   if ( 1 == m_saveHistograms ) {
      //calling finalize - don't need to reset, they probably don't exist anymore
      manageTESHistos(false, false, true, true);
@@ -294,12 +292,12 @@ std::pair<std::pair<int, ulonglong>, bool> UpdateAndReset::currentRunNumber() {
 
   if (0 == m_disableReadOdin) {
     if (exist<LHCb::ODIN> ( LHCb::ODINLocation::Default)) {
-      msg << MSG::DEBUG<< "ODIN Bank exist. " <<endreq;
+//      msg << MSG::DEBUG<< "ODIN Bank exist. " <<endreq;
       LHCb::ODIN* odin = get<LHCb::ODIN> (LHCb::ODINLocation::Default);
-      msg << MSG::DEBUG<< "Getting RunNumber. " <<endreq;
+//      msg << MSG::DEBUG<< "Getting RunNumber. " <<endreq;
       runNumber = odin->runNumber();
       gpsTime = odin->gpsTime();
-      msg << MSG::DEBUG<< "runNumber from ODIN is. " <<endreq;
+ //     msg << MSG::DEBUG<< "runNumber from ODIN is. " <<endreq;
     }
     else
     {
@@ -329,12 +327,12 @@ ulonglong UpdateAndReset::gpsTime() {
 
   if (0 == m_disableReadOdin) {
     if (exist<LHCb::ODIN> ( LHCb::ODINLocation::Default)) {
-      msg << MSG::DEBUG<< " Congratulations, you can read the ODIN Bank. " << endreq;
+ //     msg << MSG::DEBUG<< " Congratulations, you can read the ODIN Bank. " << endreq;
       LHCb::ODIN* odin = get<LHCb::ODIN> (LHCb::ODINLocation::Default);
       return odin->gpsTime();
     }
   }
-  else msg << MSG::DEBUG<< "===============> Reading Odin bank is disabled. " <<endreq;
+//  else msg << MSG::DEBUG<< "===============> Reading Odin bank is disabled. " <<endreq;
 
   // this is only for test when Odin doesn't work
   ulonglong currentTime = GauchoTimer::currentTime();
@@ -400,7 +398,7 @@ void UpdateAndReset::updateData(bool isRunNumberChanged, bool isFromTimerHandler
  
   if (isRunNumberChanged) {
     if (0 == m_disableUpdateData) m_pGauchoMonitorSvc->updateAll(true); //the first parameter is the endOfRun flag
-    else msg << MSG::DEBUG << "===============> Data was not updated because the UpdateData process is disabled." << endreq;
+ //   else msg << MSG::DEBUG << "===============> Data was not updated because the UpdateData process is disabled." << endreq;
     if (0 == m_disableResetHistos) {
       if ( 1 == m_saveHistograms ) {
          msg << MSG::DEBUG << "==============> SAVING HISTOS BECAUSE FAST RUN CHANGE<=======================" << endreq;
@@ -408,7 +406,7 @@ void UpdateAndReset::updateData(bool isRunNumberChanged, bool isFromTimerHandler
       }
       else manageTESHistos(false, true, false, true);
     }
-    else msg << MSG::DEBUG << "===============> resetHistos disabled." << endreq;
+ //   else msg << MSG::DEBUG << "===============> resetHistos disabled." << endreq;
   }
   else{
     if (0 == m_disableUpdateData) m_pGauchoMonitorSvc->updateAll(false);
@@ -416,13 +414,13 @@ void UpdateAndReset::updateData(bool isRunNumberChanged, bool isFromTimerHandler
       bool resetHistos = false;
       if(1 == m_resetHistosAfterSave) resetHistos = true;
       if (isSaveCycle(m_cycleNumber)) {
-        msg << MSG::DEBUG << "==============> SAVING HISTOS BECAUSE CYCLE SAVER <=======================" << endreq;
+ //       msg << MSG::DEBUG << "==============> SAVING HISTOS BECAUSE CYCLE SAVER <=======================" << endreq;
         manageTESHistos(false, resetHistos, true, false);
       }
     }
   }
-  msg << MSG::DEBUG << "***************************  End updateData  *************************" << endreq;
-  msg << MSG::DEBUG << "**********************************************************************" << endreq;
+//  msg << MSG::DEBUG << "***************************  End updateData  *************************" << endreq;
+//  msg << MSG::DEBUG << "**********************************************************************" << endreq;
 }
 
 bool UpdateAndReset::isSaveCycle(int m_cycleNumber) {
@@ -437,7 +435,7 @@ void UpdateAndReset::manageTESHistos (bool list, bool reset, bool save, bool isF
   IRegistry* object = rootObject();
   int level = 0;
   std::vector<std::string> idList;
-  msg << MSG::DEBUG << "managing histos list " << list << " reset " << reset << " save " << save << " endofrun " << isFromEndOfRun << endreq;
+ // msg << MSG::DEBUG << "managing histos list " << list << " reset " << reset << " save " << save << " endofrun " << isFromEndOfRun << endreq;
   TFile *f=0;
   m_infoFileStatus = "......this is the file name were we will save histograms...........";
   char timestr[64];
@@ -457,7 +455,7 @@ void UpdateAndReset::manageTESHistos (bool list, bool reset, bool save, bool isF
   
     std::string tmpfile = dirName + "/" + taskName + "-" + timestr + ".root"; 
     if (isFromEndOfRun) tmpfile = dirName + "/" + taskName + "-" + timestr + "-EOR.root"; 
-    msg << MSG::DEBUG << "updating infofile status" << endreq;
+      msg << MSG::DEBUG << "updating infofile status" << endreq;
     m_infoFileStatus.replace(0, m_infoFileStatus.length(), tmpfile);
    
 
@@ -499,7 +497,7 @@ void UpdateAndReset::histogramIdentifier(IRegistry* object, std::vector<std::str
   std::vector<IRegistry*> leaves;
   std::vector<IRegistry*>::const_iterator  it;
   
-  msg << MSG::DEBUG << "Looking for histos in object " << object->identifier() << ", level  " << level << endreq;
+ // msg << MSG::DEBUG << "Looking for histos in object " << object->identifier() << ", level  " << level << endreq;
   SmartIF<IDataManagerSvc> dataManagerSvc(m_histogramSvc);
   if (!dataManagerSvc) {
     msg << MSG::WARNING << "    Unable to go to the transient store. " << endreq;
@@ -512,7 +510,7 @@ void UpdateAndReset::histogramIdentifier(IRegistry* object, std::vector<std::str
   for ( it=leaves.begin(); it != leaves.end(); it++ ) {
     const std::string& id = (*it)->identifier();
     if (rootdir !=0) rootdir->cd();
-    msg << MSG::DEBUG << "    Object found: " << id << endreq;
+      msg << MSG::DEBUG << "    Object found: " << id << endreq;
     
     DataObject* dataObject;
     sc = m_histogramSvc->retrieveObject(id, dataObject);
@@ -547,8 +545,8 @@ void UpdateAndReset::histogramIdentifier(IRegistry* object, std::vector<std::str
         TProfile* hRoot = (TProfile*) Gaudi::Utils::Aida2ROOT::aida2root(profile);
         std::vector<std::string> HistoFullName = Misc::splitString(hRoot->GetName(), "/");
 	hRoot->Write( HistoFullName[HistoFullName.size()-1].c_str() );
-        msg << MSG::DEBUG << ", saving name=" << hRoot->GetName() << " directory="
-            << (hRoot->GetDirectory() ? hRoot->GetDirectory()->GetName() : "none") <<endreq;
+  //      msg << MSG::DEBUG << ", saving name=" << hRoot->GetName() << " directory="
+   //         << (hRoot->GetDirectory() ? hRoot->GetDirectory()->GetName() : "none") <<endreq;
       }
       if (reset) profile->reset();
 //      if (reset) hProf->Reset();

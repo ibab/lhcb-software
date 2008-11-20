@@ -96,7 +96,7 @@ StatusCode MonitorSvc::initialize() {
 
   MsgStream msg(msgSvc(),"MonitorSvc");
 
-  msg << MSG::DEBUG << "Initialize=====>m_disableDeclareInfoHistos : " << m_disableDeclareInfoHistos << endreq;
+ // msg << MSG::DEBUG << "Initialize=====>m_disableDeclareInfoHistos : " << m_disableDeclareInfoHistos << endreq;
 
 
   //const std::string& utgid = RTL::processName();
@@ -261,20 +261,20 @@ void MonitorSvc::declareInfo(const std::string& name, const long&  var,
     std::string newName = extract("COUNTER_TO_RATE", name);
     if ( 0 == m_disableMonRate) {
       if (!m_monRateDeclared) {
-        msg << MSG::DEBUG << "Declaring MonRate " << endreq; 
+     //   msg << MSG::DEBUG << "Declaring MonRate " << endreq; 
         if (!registerName("monRate", this)) return;
-        msg << MSG::DEBUG << "Setting comments in MonRate " << endreq; 
+     //   msg << MSG::DEBUG << "Setting comments in MonRate " << endreq; 
         m_monRate->setComments("MonRate... !!");
-        msg << MSG::DEBUG << "Registering MonRate " << endreq; 
+     //   msg << MSG::DEBUG << "Registering MonRate " << endreq; 
         std::pair<std::string, std::string> dimSvcName = registerDimSvc("monRate", "MonR/", this, false);
         if (dimSvcName.second.compare("") == 0) return;
-        msg << MSG::DEBUG << "Printing MonRate " << endreq;
-        m_monRate->print();
-        msg << MSG::DEBUG << "Creating DimServiceMonObject for MonRate " << endreq;
+    //    msg << MSG::DEBUG << "Printing MonRate " << endreq;
+    //    m_monRate->print();
+    //    msg << MSG::DEBUG << "Creating DimServiceMonObject for MonRate " << endreq;
         m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, m_monRate);
         m_monRateDeclared = true;
       }
-      msg << MSG::DEBUG << "Adding Counter to MonRate"<< newName << ", with description: " << desc << endreq; 
+  //    msg << MSG::DEBUG << "Adding Counter to MonRate"<< newName << ", with description: " << desc << endreq; 
       
       m_monRate->addCounter(newName, desc, (double&) var);
     }
@@ -316,20 +316,20 @@ void MonitorSvc::declareInfo(const std::string& name, const double& var,
     std::string newName = extract("COUNTER_TO_RATE", name);
     if ( 0 == m_disableMonRate) {
       if (!m_monRateDeclared) {
-        msg << MSG::DEBUG << "Declaring MonRate " << endreq; 
+    //    msg << MSG::DEBUG << "Declaring MonRate " << endreq; 
         if (!registerName("monRate", this)) return;
-        msg << MSG::DEBUG << "Setting comments in MonRate " << endreq; 
+    //    msg << MSG::DEBUG << "Setting comments in MonRate " << endreq; 
         m_monRate->setComments("MonRate !!");
-        msg << MSG::DEBUG << "Registering MonRate " << endreq; 
+    //    msg << MSG::DEBUG << "Registering MonRate " << endreq; 
         std::pair<std::string, std::string> dimSvcName = registerDimSvc("monRate", "MonR/", this, false);
         if (dimSvcName.second.compare("") == 0) return;
-        msg << MSG::DEBUG << "Printing MonRate " << endreq;
+    //    msg << MSG::DEBUG << "Printing MonRate " << endreq;
         m_monRate->print();
-        msg << MSG::DEBUG << "Creating DimServiceMonObject for MonRate " << endreq;
+    //    msg << MSG::DEBUG << "Creating DimServiceMonObject for MonRate " << endreq;
         m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, m_monRate);
         m_monRateDeclared = true;
       }
-      msg << MSG::DEBUG << "Adding Counter to MonRate"<< newName << ", with description: " << desc << endreq; 
+     // msg << MSG::DEBUG << "Adding Counter to MonRate"<< newName << ", with description: " << desc << endreq; 
       m_monRate->addCounter(newName, desc, var);
     }
     else msg << MSG::INFO << "Counter "<< newName << " can not be declared because MonRate process is disabled." << endreq; 
@@ -617,6 +617,7 @@ void MonitorSvc::updateSvc( const std::string& name, bool endOfRun, const IInter
 {
   MsgStream msg(msgSvc(),"MonitorSvc");
   std::set<std::string> * infoNamesSet = getInfos( owner );
+  msg << MSG::DEBUG << "updateSvc  " << name << endreq; 
   if( 0 == infoNamesSet ) {
     msg << MSG::DEBUG << "update: Info  " << name << ": Nothing to update for " << infoOwnerName(owner) << ". Empty set" << endreq;
     return;
@@ -692,7 +693,7 @@ void MonitorSvc::updateAll( bool endOfRun, const IInterface* owner)
       std::string dimName = (*infoNamesIt);
       if (dimName.find(ownerName) == std::string::npos) dimName = ownerName + "/" + dimName;
       updateService( dimName, endOfRun ) ;
-      //msg << MSG::DEBUG << "updateAll: Updated info " << (*infoNamesIt) << " from owner " << ownerName << endreq;
+      msg << MSG::DEBUG << "updateAll: Updated info " << (*infoNamesIt) << " from owner " << ownerName << endreq;
     }
   } else { // Null pointer. Update for all owners
     for(m_InfoNamesMapIt = m_InfoNamesMap.begin();
@@ -776,9 +777,9 @@ void MonitorSvc::updateService(std::string infoName, bool endOfRun)
       //msg << MSG::DEBUG << "updateSvc: Service " + infoName + " updated" << endreq;
     }
     else {
-       msg << MSG::DEBUG << "updateSvc:service "<< infoName << "is been processed." << endreq;      
+      // msg << MSG::DEBUG << "updateSvc:service "<< infoName << "is been processed." << endreq;      
     }
   }
-  else  msg << MSG::DEBUG << "updateSvc:service "<< infoName << " was not processed yet." << endreq;      
+  //else  msg << MSG::DEBUG << "updateSvc:service "<< infoName << " was not processed yet." << endreq;      
 }
 

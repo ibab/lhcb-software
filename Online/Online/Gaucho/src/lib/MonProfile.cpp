@@ -156,7 +156,6 @@ void MonProfile::save3(boost::archive::binary_oarchive  & ar) {
   }
   if (bBinLabelX){
     for (int i = 0; i < (int)binLabelX.size() ; ++i){
-//      std::cout << "save ===>label["<< i << "]=" << binLabelX[i] << std::endl;
       std::string labelX = binLabelX[i];
       ar & labelX;
     }
@@ -425,7 +424,6 @@ void MonProfile::printLabels(){
   MsgStream msg = createMsgStream();
   if (bBinLabelX){
     std::vector<std::string>::iterator it;
-    std::cout << "size:" << binLabelX.size() << std::endl;
     for ( it=binLabelX.begin() ; it < binLabelX.end(); it++ ) {
       msg <<MSG::INFO<< *it << endreq;
     }

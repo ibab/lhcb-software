@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/lib/MonObject.cpp,v 1.13 2008-08-29 08:41:44 frankb Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/lib/MonObject.cpp,v 1.14 2008-11-20 15:35:02 evh Exp $
 
 // Include files
 #include "Gaucho/MonObject.h"
@@ -37,7 +37,6 @@ void MonObject::load(boost::archive::binary_iarchive & ar, const unsigned int ve
 }
 
 void MonObject::combine(MonObject* monObject) {
-  //std::cout <<"MonObject::combine"<<std::endl;
   if (monObject==NULL) return; // to hide warning
 }
 

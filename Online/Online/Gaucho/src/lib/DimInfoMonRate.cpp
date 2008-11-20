@@ -28,23 +28,23 @@ void printChar(char * c, int size)
 {
   int i=0;
   
-  cout << "content (" << size << " bytes):" << endl;
+ // cout << "content (" << size << " bytes):" << endl;
   
   while(i < size && c != 0)
   {
     if( c[i] >= 33 && c[i] <= 126)
     {
-      cout << c[i];
+   //   cout << c[i];
     }
     else
     {
-      cout << ".";
+   //   cout << ".";
     }
     
     i++;
   }
   
-  cout << endl << "/content" << endl;
+ // cout << endl << "/content" << endl;
 }
 
 //--------------------------------------------------------------------
@@ -107,13 +107,13 @@ void DimInfoMonRate::createMonRate()
       //gSystem->Sleep(m_waitTime);
       usleep(10000);
       tmpStringSize = getSize()/sizeof(char);
-      std::cout << "size for service "<< m_monRateServiceName << " " << tmpStringSize << std::endl;
+    //  std::cout << "size for service "<< m_monRateServiceName << " " << tmpStringSize << std::endl;
     }
 
     c = const_cast<char *>((const char *)getString());
   
     if ( 0 == s_noValidMonRate.compare(c)) {
-      std::cout << MSG::WARNING << s_noValidMonRate << ", for service "<< m_monRateServiceName << std::endl; 
+     // std::cout << MSG::WARNING << s_noValidMonRate << ", for service "<< m_monRateServiceName << std::endl; 
       tmpStringSize = -1;
       usleep(10000);
       continue;
@@ -139,8 +139,8 @@ void DimInfoMonRate::createMonRate()
   try{
     monObjectBaseTEST->load(*iaTEST, 0);
   }catch(const std::exception & e){
-    COUT_DEBUG("first load raised exception");
-    COUT_DEBUG(e.what());
+  //  COUT_DEBUG("first load raised exception");
+  //  COUT_DEBUG(e.what());
     printChar(c, m_stringSize);
     
     delete iaTEST;
@@ -156,14 +156,14 @@ void DimInfoMonRate::createMonRate()
   
   if(monObjectTypeNameTEST != s_monRate)
   {
-    COUT_DEBUG("error: type = " << monObjectTypeNameTEST);
+   // COUT_DEBUG("error: type = " << monObjectTypeNameTEST);
     m_monRateCreated = false;
     return;
   }
   
   if(m_monRate)
   {
-    COUT_DEBUG("deleting previous object");
+   // COUT_DEBUG("deleting previous object");
     delete m_monRate;
     m_monRate = 0;
   }
@@ -179,7 +179,7 @@ void DimInfoMonRate::createMonRate()
   is.rdbuf()->pubsetbuf(c, m_stringSize);
   boost::archive::binary_iarchive * ia = new boost::archive::binary_iarchive(is);
   
-  COUT_DEBUG("load");
+  //COUT_DEBUG("load");
   m_monRateCreated = true;
   
   try{
@@ -188,8 +188,8 @@ void DimInfoMonRate::createMonRate()
   }catch(const std::exception & e)
   {
     m_monRateCreated = false;
-    COUT_DEBUG("exception in createMonRate");
-    COUT_DEBUG(e.what());
+  //  COUT_DEBUG("exception in createMonRate");
+  //  COUT_DEBUG(e.what());
     
     delete m_monRate;
     m_monRate = 0;
@@ -218,13 +218,13 @@ void DimInfoMonRate::loadMonRate()
       //gSystem->Sleep(m_waitTime);
       usleep(10000);
       tmpStringSize = getSize()/sizeof(char);
-      std::cout << "size for service "<< m_monRateServiceName << " " << tmpStringSize << std::endl;
+      //std::cout << "size for service "<< m_monRateServiceName << " " << tmpStringSize << std::endl;
     }
 
     c = const_cast<char *>((const char *)getString());
   
     if ( 0 == s_noValidMonRate.compare(c)) {
-      std::cout << MSG::WARNING << s_noValidMonRate << ", for service "<< m_monRateServiceName << std::endl; 
+     // std::cout << MSG::WARNING << s_noValidMonRate << ", for service "<< m_monRateServiceName << std::endl; 
       tmpStringSize = -1;
       usleep(10000);
       continue;
@@ -261,26 +261,22 @@ DimInfoMonRate::~DimInfoMonRate()
       it != m_extractorMap.end();
       it++)
   {
-    COUT_DEBUG("deleting extractor for counter " << it->first);
+  //  COUT_DEBUG("deleting extractor for counter " << it->first);
     if(it->second) delete it->second;
   }
     
-  COUT_DEBUG("deleting MonRate");
+ // COUT_DEBUG("deleting MonRate");
   if(m_monRate)
   {
     m_monRate->deleteProfile();
     delete m_monRate;  
-    COUT_DEBUG("MonRate deleted");
-  }else{
-    COUT_DEBUG("MonRate not initialized");
+  //  COUT_DEBUG("MonRate deleted");
   }
   
   if (m_pNOPExtractor)
   {
     delete m_pNOPExtractor;  
-    COUT_DEBUG("NOPExtractor deleted");
-  }else{
-    COUT_DEBUG("NOPExtractor not initialized");
+  //  COUT_DEBUG("NOPExtractor deleted");
   }
   
 }
@@ -315,10 +311,10 @@ void DimInfoMonRate::infoHandler()
       
       if(!m_pNOPExtractor)
       {
-        COUT_DEBUG("infoHandler   NOP extractor not created yet");
+      //  COUT_DEBUG("infoHandler   NOP extractor not created yet");
         m_pNOPExtractor = new NOPExtractor(m_monRate);
 	m_pNOPExtractor->publishService(serviceNameHeader);
-        COUT_DEBUG("infoHandler   NOP has been created");
+      //  COUT_DEBUG("infoHandler   NOP has been created");
       }
 
       
@@ -333,8 +329,8 @@ void DimInfoMonRate::infoHandler()
   catch(const std::exception & e/*boost::archive::archive_exception exception*/)
   {
     /*std::cout << exception.what() << endl;*/
-    COUT_DEBUG(e.what());
-    COUT_DEBUG("exception in infoHandler : " << m_monRateServiceName);
+   // COUT_DEBUG(e.what());
+   // COUT_DEBUG("exception in infoHandler : " << m_monRateServiceName);
   }
   
  // COUT_DEBUG("infoHandler DONE");
@@ -363,8 +359,8 @@ void DimInfoMonRate::extractData()
     //COUT_DEBUG("extractData    <=================");
     int newRates = lookForNewRates();
     
-    if(newRates != 0)
-      COUT_DEBUG("extractData    new = " << newRates << "<=================");
+    //if(newRates != 0)
+    //  COUT_DEBUG("extractData    new = " << newRates << "<=================");
     
     //COUT_DEBUG("extractData   new counters search done");
     
@@ -379,7 +375,7 @@ void DimInfoMonRate::extractData()
     {
       m_currentCycleNumber = gotCycleNumber;
       
-      COUT_DEBUG("extractData   ---------- >>> NEW CYCLE " << m_currentCycleNumber);
+   //   COUT_DEBUG("extractData   ---------- >>> NEW CYCLE " << m_currentCycleNumber);
       
       /* get the time reference
        */
@@ -388,7 +384,7 @@ void DimInfoMonRate::extractData()
       //COUT_DEBUG("extractData   got last evt in cycle ===> " << time);
 
 
-      COUT_DEBUG("Rates calculated after counters:");
+     // COUT_DEBUG("Rates calculated after counters:");
       /* try to extract the rate value for each counter
        */
       for(ExtractorMap::iterator it = m_extractorMap.begin();
@@ -398,10 +394,10 @@ void DimInfoMonRate::extractData()
         try{
 	  RateExtractor * extractor = it->second;
 	  extractor->extractData(time, nbElapsedCycles);
-	  double value = extractor->getValue();
-	  COUT_DEBUG("counter #" << extractor->getCounterId() << " ===> " << value << "Hz");
+	 // double value = extractor->getValue();
+	 // COUT_DEBUG("counter #" << extractor->getCounterId() << " ===> " << value << "Hz");
 	}catch(const std::exception & e){
-	  COUT_DEBUG(e.what());
+	 // COUT_DEBUG(e.what());
 	  /* unable to process this counter
 	   */
 	}
@@ -411,12 +407,12 @@ void DimInfoMonRate::extractData()
       
     }else
     {
-      COUT_DEBUG("extractData   SAME CYCLE " << gotCycleNumber);
+     // COUT_DEBUG("extractData   SAME CYCLE " << gotCycleNumber);
     }
   }
   else
   {
-    COUT_DEBUG("extractData   NO MON RATE");  
+    //COUT_DEBUG("extractData   NO MON RATE");  
   }
   
  // COUT_DEBUG("extractData DONE");
@@ -495,7 +491,7 @@ int DimInfoMonRate::lookForNewRates()
 
 std::string DimInfoMonRate::makeServiceNameHeader()
 { 
-  COUT_DEBUG("makeServiceNameHeader");
+ // COUT_DEBUG("makeServiceNameHeader");
   
   int len = m_monRateServiceName.length();
   std::string header;
@@ -511,7 +507,7 @@ std::string DimInfoMonRate::makeServiceNameHeader()
   
   serviceNameHeader = header;
   
-  COUT_DEBUG("makeServiceNameHeader => " << serviceNameHeader);
+ // COUT_DEBUG("makeServiceNameHeader => " << serviceNameHeader);
   
   return header;
 }

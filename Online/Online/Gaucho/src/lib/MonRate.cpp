@@ -3,7 +3,6 @@
 MonRate::MonRate(IMessageSvc* msgSvc, const std::string& source, int version):
   MonProfile(msgSvc, source, version)
 {
-  //std::cout << "MonRate constructor" << std::endl;
   m_typeName=s_monRate;
   m_dimPrefix="MonR";
   m_runNumber = new int(0);
@@ -39,13 +38,13 @@ void MonRate::save(boost::archive::binary_oarchive & ar, const unsigned int vers
     m_profile->Fill(5.60, (double) (*m_cycleNumber), 1.00);
     m_profile->Fill(6.50, (double) (*m_deltaT), 1.00);
     
- /*   msg <<MSG::INFO<<"bin[1]=" << (*m_offsetTimeFirstEvInRun) << ", OffsetTimeFirstEvInRun" << endreq;    
-    msg <<MSG::INFO<<"bin[2]=" << (*m_offsetTimeLastEvInCycle) << ", OffsetTimeLastEvInCycle" << endreq;
-    msg <<MSG::INFO<<"bin[3]=" << (*m_offsetGpsTimeLastEvInCycle) << ", OffsetGpsTimeLastEvInCycle" << endreq;
-    msg <<MSG::INFO<<"bin[4]=" << 1 << ", one" << endreq;
-    msg <<MSG::INFO<<"bin[5]=" << (*m_runNumber) << ", RunNumber" << endreq;
-    msg <<MSG::INFO<<"bin[6]=" << (*m_cycleNumber) << ", CycleNumber" << endreq;
-    msg <<MSG::INFO<<"bin[7]=" << (*m_deltaT) << ", deltaT" << endreq; */
+    msg <<MSG::DEBUG<<"bin[1]=" << (*m_offsetTimeFirstEvInRun) << ", OffsetTimeFirstEvInRun" << endreq;    
+    msg <<MSG::DEBUG<<"bin[2]=" << (*m_offsetTimeLastEvInCycle) << ", OffsetTimeLastEvInCycle" << endreq;
+    msg <<MSG::DEBUG<<"bin[3]=" << (*m_offsetGpsTimeLastEvInCycle) << ", OffsetGpsTimeLastEvInCycle" << endreq;
+    msg <<MSG::DEBUG<<"bin[4]=" << 1 << ", one" << endreq;
+    msg <<MSG::DEBUG<<"bin[5]=" << (*m_runNumber) << ", RunNumber" << endreq;
+    msg <<MSG::DEBUG<<"bin[6]=" << (*m_cycleNumber) << ", CycleNumber" << endreq;
+    msg <<MSG::DEBUG<<"bin[7]=" << (*m_deltaT) << ", deltaT" << endreq; 
     int i = 8;
     for (m_counterMapIt = m_counterMap.begin(); m_counterMapIt != m_counterMap.end(); m_counterMapIt++) {
         
