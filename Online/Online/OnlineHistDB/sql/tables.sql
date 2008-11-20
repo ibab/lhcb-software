@@ -278,7 +278,7 @@ create table PAGE (
        USING INDEX (create index PG_pk_ix on PAGE(PageName) ),
  Folder varchar2(300) NOT NULL CONSTRAINT PG_FD references PAGEFOLDER(PageFolderName),
  NHisto integer,
- PageDoc  varchar2(100)
+ PageDoc  varchar2(2000)
 );
 CREATE INDEX PG_FD_IX on PAGE(Folder) ; 
 

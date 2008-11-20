@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.32 2008-11-11 11:10:25 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistDBEnv.h,v 1.33 2008-11-20 09:27:51 ggiacomo Exp $
 #ifndef ONLINEHISTDBENV_H
 #define ONLINEHISTDBENV_H 1
 /** @class  OnlineHistDBEnv OnlineHistDBEnv.h OnlineHistDB/OnlineHistDBEnv.h
@@ -41,13 +41,13 @@ namespace OnlineHistDBEnv_constants {
   static const unsigned int VSIZE_SUBTITLE    =  51;
   static const unsigned int VSIZE_HSTASK      =  65;
   static const unsigned int VSIZE_HSALG       =  65;
-  static const unsigned int VSIZE_DESCR       =2001;
+  static const unsigned int VSIZE_DESCR       =4001;
   static const unsigned int VSIZE_DOC         = 201;
   static const unsigned int VSIZE_ALGNAME     =  31; 
   static const unsigned int VSIZE_NAME        = 131;
   static const unsigned int VSIZE_FOLDER      = 301;
   static const unsigned int VSIZE_PAGENAME    = 351;
-  static const unsigned int VSIZE_PAGEDOC     = 101;
+  static const unsigned int VSIZE_PAGEDOC     =2001;
   static const unsigned int VSIZE_SSNAME      =  11;
   static const unsigned int VSIZE_REFERENCE   = 101;
   static const unsigned int VSIZE_PARAMETERS  =  16;

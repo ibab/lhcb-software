@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.27 2008-11-11 11:10:25 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.28 2008-11-20 09:27:52 ggiacomo Exp $
 #ifndef ONLINEHISTOGRAM_H
 #define ONLINEHISTOGRAM_H 1
 /** @class  OnlineHistogram OnlineHistogram.h OnlineHistDB/OnlineHistogram.h
@@ -73,9 +73,9 @@ class  OnlineHistogram : public OnlineHistDBEnv
   /// algorithm name
   inline std::string& algorithm() {return m_algorithm;}  
   /// short description of the histogram
-  std::string& descr() {return m_Descr;}
-  /// link to a more extensive documentation
   std::string& doc() {return m_Doc;}
+  /// link to a more extensive documentation
+  std::string& descr() {return m_Descr;}
   /// creation date, as a unix timestamp
   int creation() const {return m_creation;}
   /// if the histogram is no more in use, returns the end--of--validity date
