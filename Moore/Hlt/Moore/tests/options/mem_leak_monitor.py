@@ -52,10 +52,12 @@ while p.poll() == None:
   time.sleep(0.05)
 
 result = None
-
+# find the first record
+# with an event number > 20000
+# and compare it to the last 
 for (event, vmsize) in data_log:
   if event > 20000:
-    result = [ (event, vmsize), data_log[:-1] ]
+    result = [ (event, vmsize), data_log[-1] ]
     break  
 
 print '=== end of mem_leak test'
