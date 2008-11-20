@@ -1,4 +1,4 @@
-// $Id: Filters.h,v 1.4 2008-10-19 16:11:40 ibelyaev Exp $
+// $Id: Filters.h,v 1.5 2008-11-20 12:59:48 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FILTERS_H 
 #define LOKI_FILTERS_H 1
@@ -762,8 +762,10 @@ namespace LoKi
     class Has : public LoKi::Functor<std::vector<TYPE>,bool> 
     {
     public:
-      // the base 
-      typedef LoKi::Functor<std::vector<TYPE>,bool>  uBase    ; ///< the base 
+      // ======================================================================
+      /// the base 
+      typedef LoKi::Functor<std::vector<TYPE>,bool>  uBase    ;     // the base 
+      // ======================================================================
     public:
       // ======================================================================
       /// constructor from the predicate 
@@ -800,6 +802,60 @@ namespace LoKi
       // ======================================================================
       /// the predicate 
       LoKi::FunctorFromFunctor<TYPE1,TYPE2> m_cut ;            // the predicate 
+      // ======================================================================
+    };
+    // ========================================================================
+    /** @class Empty 
+     *  Simple functor to check the emptiness of the container 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2008-11-19
+     */
+    template <class TYPE> 
+    class Empty: public LoKi::Functor< std::vector<TYPE>, bool> 
+    {
+    private:
+      // ======================================================================
+      /// the base 
+      typedef LoKi::Functor<std::vector<TYPE>,bool>  uBase    ;     // the base 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// MANDATORY: virtual destructor 
+      virtual ~Empty() {}
+      /// MANDATORY: clone method ("virtual constructor") 
+      virtual  Empty* clone() const { return new Empty(*this) ; }
+      /// MANDATORY: the only one essential method:
+      virtual typename uBase::result_type operator() 
+        ( typename uBase::argument a ) const { return a.empty() ; }
+      /// OPTIONAL: the basic printout method 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    };
+    // ========================================================================
+    /** @class Size
+     *  Simple functor to check the size of the container 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2008-11-19
+     */
+    template <class TYPE> 
+    class Size: public LoKi::Functor< std::vector<TYPE>,double> 
+    {
+    private:
+      // ======================================================================
+      /// the base 
+      typedef LoKi::Functor<std::vector<TYPE>,double>  uBase    ;   // the base 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// MANDATORY: virtual destructor 
+      virtual ~Size() {}
+      /// MANDATORY: clone method ("virtual constructor") 
+      virtual  Size* clone() const { return new Size(*this) ; }
+      /// MANDATORY: the only one essential method:
+      virtual typename uBase::result_type operator() 
+        ( typename uBase::argument a ) const { return a.size() ; }
+      /// OPTIONAL: the basic printout method 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
       // ======================================================================
     };
     // ========================================================================
@@ -1245,7 +1301,28 @@ namespace LoKi
   }
   // ==========================================================================
 } // end of namespace LoKi 
-// ============================================================================     
+// ============================================================================
+/// the default implementation of printout 
+template <class TYPE>
+std::ostream& LoKi::Functors::Empty<TYPE>::fillStream 
+( std::ostream& s ) const { return s << "empty_" ; }
+/// the default implementation of printout 
+template <class TYPE>
+std::ostream& LoKi::Functors::Size<TYPE>::fillStream 
+( std::ostream& s ) const { return s << "size_"  ; }
+// ============================================================================
+/// the default implementation of printout 
+template <>
+std::ostream& LoKi::Functors::Empty<double>::fillStream 
+( std::ostream& s ) const { return s << "XEMPTY" ; }
+/// the default implementation of printout 
+template <>
+std::ostream& LoKi::Functors::Size<double>::fillStream 
+( std::ostream& s ) const { return s << "XSIZE"  ; }
+// ============================================================================
+
+                                                      
+// ============================================================================
 // The END 
 // ============================================================================     
 #endif // LOKI_FILTERS_H

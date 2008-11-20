@@ -1,4 +1,4 @@
-// $Id: BasicFunctors.h,v 1.4 2008-10-19 16:11:40 ibelyaev Exp $
+// $Id: BasicFunctors.h,v 1.5 2008-11-20 12:59:48 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_BASICFUNCTORS_H 
 #define LOKI_BASICFUNCTORS_H 1
@@ -79,6 +79,8 @@ namespace LoKi
     typedef LoKi::Functor<std::vector<TYPE>,TYPE>                 Element    ;
     // Source
     typedef LoKi::Functor<void,std::vector<TYPE> >                Source     ;
+    // ?
+    typedef LoKi::Functor<std::vector<TYPE>,bool>                 CutVal     ;
     //
   } ;
   // ==========================================================================
