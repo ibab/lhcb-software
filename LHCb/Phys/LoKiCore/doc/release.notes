@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.124 2008-11-20 12:59:48 ibelyaev Exp $ 
+! $Id: release.notes,v 1.125 2008-11-20 13:01:52 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -21,6 +21,9 @@
 
    add Empty&Size functors 
 
+ - cmt/requirmeents 
+
+   version increment to v8r1 
 
 ! 2008-11-19 - Vanya Belyaev
 

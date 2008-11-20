@@ -568,7 +568,7 @@ def decorateFunctions ( funcs , calls , opers ) :
             Uses:\n
             """
             return opers.__asin__ (s)
-    _asin_ . __doc__  += opers.__asin__ . __doc__
+        _asin_ . __doc__  += opers.__asin__ . __doc__
     
     # math: 'acos'
     if hasattr ( opers , '__acos__' ) :
