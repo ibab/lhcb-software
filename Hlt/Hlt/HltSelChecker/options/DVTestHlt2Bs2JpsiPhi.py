@@ -45,7 +45,7 @@ GaudiSequencer("SeqHlt2TruthFilter").IgnoreFilterPassed = TRUE
 ###
 importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
 DecayTreeTuple("Hlt2DecayTreeTuple").addTool(PhysDesktop())
-DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Hlt2SelBs2JpsiPhi"]
+DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Hlt2SelBs2JpsiPhiSignal"]
 DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[B_s0 -> (^J/psi(1S) => ^mu+ ^mu-) (^phi(1020) -> ^K+ ^K-)]cc"
 #
 # Overwrite input - uncomment to run HLT on TRUE signal only
@@ -60,8 +60,8 @@ EventSelector().Input   = [
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
 ApplicationMgr().ExtSvc +=  [ "NTupleSvc" ]                             
-NTupleSvc().Output =  [ "FILE1 DATAFILE='HLT-B2DiMuon.root' TYP='ROOT' OPT='NEW'" ] 
-HistogramPersistencySvc().OutputFile = "DVHlt2-B2DiMuon.root"
+NTupleSvc().Output =  [ "FILE1 DATAFILE='HLT-Bs2JpsiPhi' TYP='ROOT' OPT='NEW'" ] 
+HistogramPersistencySvc().OutputFile = "DVHlt2-Bs2JpsiPhi.root"
 
 ApplicationMgr().EvtMax = -1 
 EventSelector().FirstEvent = 1 

@@ -9,6 +9,9 @@
 ! end
 !-----------------------------------------------------------------------------
 
+! 2008-11-20 - Patrick Koppenburg
+ - J/psiPhi : Use correct selection
+
 ! 2008-11-18 - Patrick Koppenburg
  - Do not include EventTuple from DecayTuple
 
