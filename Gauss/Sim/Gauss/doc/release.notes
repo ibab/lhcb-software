@@ -4,6 +4,17 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2008-11-20 - Gloria CORTI
+ - Remove SimVeloGeometry.opts where one line is wrong dure to change in name
+   of a volume and replace it with SimVeloGeometry.py (by Thomas RUF).
+   This is now importeb by default in Gauss-2008.py because otherwise the
+   misalignment is not taken into account correctly for the r-sensors since
+   the modules, as assembly, are skipped into the conversion to G4 and the
+   sensores are put directly in the module's mother volume.
+   . SimVeloGeometry.opts - REMOVED
+   . SimVeloGeometry.py   - NEW
+   . Gauss-2008.py
+
 ! 2008-10-30 - Gloria CORTI
  - Adapt options to renaming of algorithms from "DumpMC" and "DumpMCDecay" to
    "DumpHepMC" and "DumpHepMCDecay"
