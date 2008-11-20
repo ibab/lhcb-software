@@ -4,6 +4,9 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+! 2008-11-20 - Jaap Panman
+ -LumiAnalyser: prepare for online implementation
+
 ! 2008-10-10 - Jaap Panman
  -LumiAnalyser: update code to accumulate rates and some histos for monitoring
 

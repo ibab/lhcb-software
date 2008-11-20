@@ -1,4 +1,4 @@
-// $Id: LumiAnalyser.cpp,v 1.2 2008-10-10 15:21:25 panmanj Exp $
+// $Id: LumiAnalyser.cpp,v 1.3 2008-11-20 10:08:32 panmanj Exp $
 // Include files 
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -96,6 +96,7 @@ StatusCode LumiAnalyser::initialize() {
   m_annSvc = svc<IANNSvc>("LumiANNSvc");
 
   initCounters();
+  m_call_counter = 0;
 
   if (m_Variables.size()!=m_Thresholds.size() && !m_Thresholds.empty()) {
     error() << "wrong numer of threshold values" << endmsg;
@@ -136,6 +137,7 @@ StatusCode LumiAnalyser::initialize() {
     if (m_publishToDIM ) {
       declareInfo("COUNTER_TO_RATE["+name+"_mean]", m_means[k], "mean of "+name);
       declareInfo("COUNTER_TO_RATE["+name+"_threshold]", m_thresholds[k], "fraction over threshold of "+name);
+      declareInfo(name+"_mean", m_means[k], "mean of "+name);
       info() << "counter " << name << " declared at " << k << endmsg;
     }
   }
@@ -162,12 +164,14 @@ StatusCode LumiAnalyser::execute() {
   StatusCode sc = StatusCode::SUCCESS;  
   increaseCounter(m_counterEntries,1);
   increaseCounter(m_counterHistoInputs,1);
+  m_call_counter++;
 
   // accumulate the counters with their normalization
   accumulate();
 
   // analyse at fixed time intervals
   if ( gpsTimeInterval() ) analyse();
+  //if (  m_call_counter%10 == 0 ) analyse();
 
   setDecision(true);
   return sc;
@@ -296,6 +300,10 @@ StatusCode LumiAnalyser::accumulate() {
         ((*theMap)[var+"_threshold"])->first += 1;
         if ( ivalue > m_Thresholds[i] ) {
           ((*theMap)[var+"_threshold"])->second += 1;
+	  /*
+          warning() << "LumiAnalyser::accumulate()" << bxType << " " << var << " " 
+                    << counter << " " << ivalue << endmsg;
+	  */
         }
       }
     }
@@ -306,7 +314,6 @@ StatusCode LumiAnalyser::accumulate() {
 //---------------------------------------------------------
 StatusCode LumiAnalyser::analyse() {
   debug() << "LumiAnalyser::analyse()" << endmsg;
-
 
   // take delta from all counters
   for (std::vector<std::string>::iterator iVar = m_Averages.begin(); iVar != m_Averages.end(); ++iVar) {
@@ -348,7 +355,14 @@ StatusCode LumiAnalyser::analyse() {
       prevPair->first = thePair->first;
       prevPair->second = thePair->second;
       // fill the rawR histos
-      (*(m_histoStore[bx]))[var]->fill(R);
+      if ( m_rawHistos ) {
+        (*(m_histoStore[bx]))[var]->fill(R);
+	/*
+	  double entries = (*(m_histoStore[bx]))[var]->entries();
+	  warning() << "Raw Histos: " << bx << " " << var << " " << R << " entries "<< entries << endmsg;
+	*/
+      }
+      
     }
     // R-calculation
     m_resultMap[var] = meanR;
@@ -364,7 +378,7 @@ StatusCode LumiAnalyser::analyse() {
       ivar!= m_Variables.end() ; ++ivar, ++k ){  
     m_means[k] = m_resultMap[*ivar];
     m_thresholds[k] = m_resultMap[(*ivar)+"_threshold"];
-    debug() << "DIM data: " << m_means[k] << " and " << m_thresholds[k] << endmsg;
+    debug() << "DIM data: " << *ivar << " " << m_means[k] << " and " << m_thresholds[k] << endmsg;
   }
   return StatusCode::SUCCESS;
   

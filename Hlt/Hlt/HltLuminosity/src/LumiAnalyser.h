@@ -1,4 +1,4 @@
-// $Id: LumiAnalyser.h,v 1.2 2008-10-10 15:21:25 panmanj Exp $
+// $Id: LumiAnalyser.h,v 1.3 2008-11-20 10:08:32 panmanj Exp $
 #ifndef LUMIANALYSER_H 
 #define LUMIANALYSER_H 1
 
@@ -66,6 +66,7 @@ private:
 protected:
   IHistogramSvc* m_histogramSvc;
 
+  long m_call_counter;
   // counter with all the entries of the algorithm
   Hlt::Counter m_counterEntries;
 
