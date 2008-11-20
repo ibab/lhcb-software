@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.156 2008-11-19 12:21:32 jpalac Exp $
+! $Id: release.notes,v 1.157 2008-11-20 15:26:58 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+! 2008-11-20 - Juan PALACIOS
+ - src/PVReFitterAlg.cpp
+  . Add incremental weight to relations to keep same ordering as in input
+    PV container. Otherwise it goes a bit random upon writing to DST or muDST.
 
 ! 2008-11-19 - Juan PALACIOS
  - src/PVReFitterAlg.cpp
