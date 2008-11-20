@@ -1,9 +1,13 @@
-	! $Id: release.notes,v 1.58 2008-11-19 07:43:34 graven Exp $ 
+	! $Id: release.notes,v 1.59 2008-11-20 10:19:29 panmanj Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2008-11-20 - Jaap Panman
+ - Add options for monitoring task (HltLumiReadBuffer.py, 
+   HltJob_readBufferPy.opts)
 
 ! 2008-11-19 - Gerhard Raven
  - Property detType of RawBankToSTLiteClusterAlg is now called DetType. 
