@@ -2,6 +2,9 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+! 2008-11-20 - Jaap Panman
+ - options/lumiMon.py added to prepare for online monitor
+
 ! 2008-11-18 - Gerhard Raven
  - 'useOracleCondDb' is now 'UseOracle' in next release of GaudiConf...
 
