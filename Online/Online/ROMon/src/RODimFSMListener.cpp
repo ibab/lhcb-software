@@ -1,4 +1,4 @@
-// $Id: RODimFSMListener.cpp,v 1.4 2008-11-13 12:13:32 frankb Exp $
+// $Id: RODimFSMListener.cpp,v 1.5 2008-11-20 15:43:59 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/RODimFSMListener.cpp,v 1.4 2008-11-13 12:13:32 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/RODimFSMListener.cpp,v 1.5 2008-11-20 15:43:59 frankb Exp $
 
 // Framework includes
 #include "dic.hxx"
@@ -94,7 +94,9 @@ void RODimFSMListener::removeHandler(const string& /* node */, const string& svc
 /// DimInfo overload to process messages
 void RODimFSMListener::infoHandler(void* tag, void* address, int* size) {
   if ( address && tag && size && *size>0 ) {
+    static int count = 0;
     FSMMonitoring* mon = (FSMMonitoring*)address;
+    ++count;
     if ( mon && mon->pid != -1 )   {
       Item* itm      = *(Item**)tag;
       FSMTask* t     = itm->data<FSMTask>();
@@ -104,6 +106,10 @@ void RODimFSMListener::infoHandler(void* tag, void* address, int* size) {
       t->metaState   = mon->metaState;
       t->lastCmd     = mon->lastCmd;
       t->doneCmd     = mon->lastCmd;
+      //RODimFSMListener* l = (RODimFSMListener*)itm->object;
+      //if ( l->m_verbose && ((++count)%1000)==0 ) {
+      //log() << "Processed " << count << " FSM task updates." << endl;
+      //}
     }
   }
 }

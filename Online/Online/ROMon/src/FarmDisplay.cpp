@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.cpp,v 1.32 2008-11-17 07:40:40 frankb Exp $
+// $Id: FarmDisplay.cpp,v 1.33 2008-11-20 15:43:59 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.32 2008-11-17 07:40:40 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.33 2008-11-20 15:43:59 frankb Exp $
 
 #include "ROMon/CtrlSubfarmDisplay.h"
 #include "ROMon/RecSubfarmDisplay.h"
@@ -744,35 +744,6 @@ void CPUDisplay::updateContent(const CPUfarm& f) {
     ::scrc_put_chars(m_display,"",NORMAL,++line,1,1);
     ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED|BOLD);
   }
-}
-
-/// Standard constructor with object setup through parameters
-PartitionListener::PartitionListener(Interactor* parent,const string& nam) : m_parent(parent), m_name(nam)
-{
-  string name = "RunInfo/" + m_name + "/HLTsubFarms";
-  m_subFarmDP = ::dic_info_service((char*)name.c_str(),MONITORED,0,0,0,subFarmHandler,(long)this,0,0);
-}
-
-/// Standard destructor
-PartitionListener::~PartitionListener() {
-  ::dic_release_service(m_subFarmDP);
-}
-
-/// DIM command service callback
-void PartitionListener::subFarmHandler(void* tag, void* address, int* size) {
-  string svc;
-  auto_ptr<StringV > f(new StringV());
-  PartitionListener* h = *(PartitionListener**)tag;
-  for(const char* data = (char*)address, *end=data+*size;data<end;data += strlen(data)+1)
-    f->push_back(data);
-  if ( h->m_name == "LHCb" ) f->push_back("CALD07");
-  for(StringV::iterator i=f->begin(); i != f->end(); ++i) {
-    string& s = *i;
-    for(size_t j=0; j<s.length(); ++j) {
-      s[j] = ::tolower(s[j]);
-    }
-  }
-  IocSensor::instance().send(h->m_parent,CMD_CONNECT,f.release());
 }
 
 /// Standard constructor

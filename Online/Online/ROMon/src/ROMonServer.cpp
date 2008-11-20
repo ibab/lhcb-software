@@ -1,4 +1,4 @@
-// $Id: ROMonServer.cpp,v 1.6 2008-11-13 12:13:33 frankb Exp $
+// $Id: ROMonServer.cpp,v 1.7 2008-11-20 15:43:59 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonServer.cpp,v 1.6 2008-11-13 12:13:33 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonServer.cpp,v 1.7 2008-11-20 15:43:59 frankb Exp $
 
 // C++ include files
 #include "sys/timeb.h"
@@ -38,9 +38,8 @@ int ROMonServer::monitor(void* buff, size_t len) {
 }
 
 /// Handle update
-int ROMonServer::handle(void* buff, size_t /* len */)  {
+int ROMonServer::handle(void* buff, size_t /* len */)   {
   Node* n = (Node*)buff;
-  lib_rtl_gbl_t bm_all = 0;
   timeb tm;
   ::ftime(&tm);
   n->reset();
@@ -50,29 +49,29 @@ int ROMonServer::handle(void* buff, size_t /* len */)  {
   Node::Buffers* b = n->buffers();
   Node::Buffers::iterator mbm = b->reset();
 
-  int status = ::mbm_map_global_buffer_info(&bm_all,false);
+  int status = ::mbm_map_global_buffer_info(&m_bm_all,false);
   if( lib_rtl_is_success(status) )   {   
     try {
-      BUFFERS* buffers = (BUFFERS*)bm_all->address;
+      BUFFERS* buffers = (BUFFERS*)m_bm_all->address;
       for (int i = 0; i < buffers->p_bmax; ++i)  {
         if ( buffers->buffers[i].used == 1 )  {
           const char* bm_name = buffers->buffers[i].name;
-          BMID dsc = ::mbm_map_mon_memory(bm_name);
+	  BMID dsc = ::mbm_map_mon_memory(bm_name);
           if ( dsc ) {
             try {
               dumpBufferInfo(bm_name,dsc,mbm);
             }
             catch(...)    {
             }
-            ::mbm_unmap_memory(dsc);
             mbm = b->add(mbm);
+	    ::mbm_unmap_memory(dsc);
           }
         }
       }
     }
     catch(...) {
     }
-    ::mbm_unmap_global_buffer_info(bm_all,false);
+    ::mbm_unmap_global_buffer_info(m_bm_all,false);
     return 1;
   }
   ::lib_rtl_output(LIB_RTL_ALWAYS,"Cannot map global MBM buffer information....\n");

@@ -1,4 +1,4 @@
-// $Id: ROMonServer.h,v 1.1 2008-02-01 17:41:45 frankm Exp $
+// $Id: ROMonServer.h,v 1.2 2008-11-20 15:43:59 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ROMonServer.h,v 1.1 2008-02-01 17:41:45 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ROMonServer.h,v 1.2 2008-11-20 15:43:59 frankb Exp $
 #ifndef ROMON_ROMONSERVER_H
 #define ROMON_ROMONSERVER_H 1
 
@@ -36,10 +36,11 @@ namespace ROMon {
   protected:
     /// Time sleep in milliseconds between updates
     int m_delay;
-
+    /// Handle to global buffer info GBL
+    lib_rtl_gbl_t m_bm_all;
   public:
     /// Standard constructor
-    ROMonServer(int sleep_delay) : m_delay(sleep_delay) {}
+    ROMonServer(int sleep_delay) : m_delay(sleep_delay), m_bm_all(0) {}
     /// Default destructor
     virtual ~ROMonServer() {}
     /// Dump buffer information to memory

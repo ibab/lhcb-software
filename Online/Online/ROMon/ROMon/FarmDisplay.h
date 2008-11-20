@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.h,v 1.14 2008-11-17 07:40:40 frankb Exp $
+// $Id: FarmDisplay.h,v 1.15 2008-11-20 15:43:59 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,11 +12,12 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmDisplay.h,v 1.14 2008-11-17 07:40:40 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmDisplay.h,v 1.15 2008-11-20 15:43:59 frankb Exp $
 #ifndef ROMON_FARMDISPLAY_H
 #define ROMON_FARMDISPLAY_H 1
 
 // Framework includes
+#include "ROMon/PartitionListener.h"
 #include "ROMon/ClusterDisplay.h"
 #include "CPP/Interactor.h"
 
@@ -44,8 +45,8 @@ namespace ROMon {
 
   enum { 
     CMD_ADD = 100,
-    CMD_CONNECT,
-    CMD_CHECK,
+    CMD_CONNECT = PartitionListener::CMD_CONNECT,
+    CMD_CHECK = 102,
     CMD_DELETE,
     CMD_UPDATE,
     CMD_SETCURSOR,
@@ -90,6 +91,8 @@ namespace ROMon {
     const std::string& title() const    { return m_title;      }
     /// Access to last update time
     time_t lastUpdate() const           { return m_lastUpdate; }
+
+  public:
     /// Initializing constructor
     InternalDisplay(FarmDisplay* parent, const std::string& title);
     /// Standard destructor
@@ -218,27 +221,6 @@ namespace ROMon {
     /// Update display content
     virtual void update(const void* data);
   };
-
-  /**@class PartitionListener ROMon.h GaudiOnline/FarmDisplay.h
-   *
-   *   Listen to RunInfo datapoints published by DIM
-   *
-   *   @author M.Frank
-   */
-  class PartitionListener {
-  protected:
-    Interactor* m_parent;
-    std::string m_name;
-    int         m_subFarmDP;
-  public:
-    /// Standard constructor with object setup through parameters
-    PartitionListener(Interactor* parent,const std::string& name);
-    /// Standard destructor
-    virtual ~PartitionListener();
-    /// DIM command service callback
-    static void subFarmHandler(void* tag, void* address, int* size);
-  };
-
 
   /**@class FarmDisplay ROMon.h GaudiOnline/FarmDisplay.h
    *

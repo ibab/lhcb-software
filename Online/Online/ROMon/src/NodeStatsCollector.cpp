@@ -1,4 +1,4 @@
-// $Id: NodeStatsCollector.cpp,v 1.4 2008-11-19 11:07:57 frankb Exp $
+// $Id: NodeStatsCollector.cpp,v 1.5 2008-11-20 15:43:59 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/NodeStatsCollector.cpp,v 1.4 2008-11-19 11:07:57 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/NodeStatsCollector.cpp,v 1.5 2008-11-20 15:43:59 frankb Exp $
 #define MBM_IMPLEMENTATION
 #include "ROMon/NodeStatsCollector.h"
 #include "ROMon/CPUMonOstream.h"
@@ -185,7 +185,9 @@ int NodeStatsCollector::monitor() {
     stat_delay -= m_mbmDelay;
     ::dim_lock();
     try {
-      if ( 0 != m_mbmSvc ) monitorTasks();
+      if ( 0 != m_mbmSvc )  {
+	monitorTasks();
+      }
       if ( stat_delay<=0 ) {
         monitorStats();
       }
