@@ -1,4 +1,4 @@
-// $Id: PVReFitterAlg.cpp,v 1.11 2008-11-19 12:20:47 jpalac Exp $
+// $Id: PVReFitterAlg.cpp,v 1.12 2008-11-20 15:26:25 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -134,11 +134,15 @@ StatusCode PVReFitterAlg::execute() {
   for ( LHCb::Particle::Container::const_iterator itP = particles->begin();
         itP != particles->end(); 
         ++itP) {
+    // need to add an incremental weight to keep the ordering as
+    // in the standard PV TES
+    double weight(1.);
+    
     for (LHCb::RecVertex::Container::const_iterator itPV = vertices->begin();
          itPV != vertices->end();
          ++itPV) {
       
-      verbose() << "Found related vertex for particle\n" 
+      verbose() << "Re-fitting vertex for particle\n" 
                 << *(*itP) << endmsg;
       LHCb::RecVertex* refittedVertex = refitVertex(*itPV, *itP);
       if (0!=refittedVertex) {
@@ -146,7 +150,10 @@ StatusCode PVReFitterAlg::execute() {
                   << " into container slot with key " << (*itPV)->key() 
                   << endmsg;
         vertexContainer->insert(refittedVertex);
-        newTable->relate(*itP, refittedVertex, 1.);
+        newTable->relate(*itP, refittedVertex, weight);
+        weight += 0.1;
+        verbose() << "Re-fitted vertex " << *(*itPV) << "\n as\n"
+                  << *refittedVertex << endmsg;
       }
     }
   }
