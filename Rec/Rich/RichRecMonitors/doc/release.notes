@@ -4,6 +4,10 @@
 ! Purpose     : MC based detailed monitor algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!====================== RichRecMonitors v2r20 2008-11-21 =====================
+! 2008-11-21 - Marco Cattaneo for Chris Jones
+ - Add histograms for MC to rec position on HPD anode
+
 !====================== RichRecMonitors v2r19 2008-07-02 =====================
 ! 2008-06-11 - Chris Jones
  - Add protection against invalid HPD IDs in the decoded data.
