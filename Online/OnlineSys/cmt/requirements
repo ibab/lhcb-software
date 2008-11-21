@@ -12,18 +12,19 @@ use MDF               v3r14    DAQ
 # LHCb Online packages
 #=======================================================
 use Adder             v5r4     Online
-use confDB            v1r6     Online
-use confDBpython      v1r7     Online
+#use confDB            v1r6     Online
+#use confDBpython      v1r7     Online
 use $(CCPCHist_use)
 macro CCPCHist_use "CCPCHist v2r6 Online" slc4-amd64 ""
 use DIM               v17r12   Online
 use ExampleGaucho     v3r0     Online
 # Does not work on WIN32
 # use FarmMonitor     v1r0     Online
-use Gaucho            v6r5     Online
-use GaudiOnline       v2r23    Online
+use Gaucho            v6r6     Online
+use GaudiOnline       v2r24    Online
 use GaudiUPI          v1r10    Online
 use GaudiSerialize    v0r2     Online
+#use Hugin             v1r6     Online
 use HPDMonitor        v1r5     Online
 use InsertDB          v1r2     Online
 use MBMDump           v1r10    Online
@@ -32,19 +33,18 @@ use OnlineDummyReader v1r4     Online
 use OnlineHistDB      v4r14    Online
 use OnlineKernel      v1r21    Online
 use OnlineTools       v1r1     Online
-use OnlineTasks       v1r16    Online
+use OnlineTasks       v1r17    Online
 use Presenter         v0r12    Online
 use PyDIM             v2r7     Online
 ###Obsolete:use RateService       v2r4     Online
 use RawBankSizes      v1r4     Online
-use ROMon             v1r10    Online
-use ROLogger          v0r8     Online
+use ROMon             v1r11    Online
+use ROLogger          v0r9     Online
 use Saver             v2r4     Online
 use UPI               v1r14    Online
 use UPIR              v1r1     Online
 use Viewer            v1r5     Online
 use Writer            v1r10    Online
-use Hugin             v1r6     Online
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
