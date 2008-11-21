@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiNumbers.xml,v 1.6 2008-11-02 21:01:58 ibelyaev Exp $ 
+     * $Id: LoKiNumbers.xml,v 1.7 2008-11-21 09:06:42 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The XML seleciton file to build Reflex 
@@ -11,23 +11,26 @@
 
 <lcgdict>
   
-  <class pattern   = "LoKi::Functor<double,double>"            />
-  <class pattern   = "LoKi::Functor<double,bool>"            />
-  <class pattern   = "LoKi::Functor<std::vector<double>,double>"            />
-  <class pattern   = "LoKi::Functor<std::vector<double>,bool>"            />
-  <class pattern   = "LoKi::Functor<std::vector<double>,std::vector<double> >"       />
+  <class name = "LoKi::Functor<double,double>"            />
+  <class name = "LoKi::Functor<double,bool>"            />
+  <class name = "LoKi::Functor<std::vector<double>,double>"            />
+  <class name = "LoKi::Functor<std::vector<double>,bool>"            />
+  <class name = "LoKi::Functor<std::vector<double>,std::vector<double> >"       />
 
-  <class pattern   = "LoKi::FunctorFromFunctor<double,double>"            />
-  <class pattern   = "LoKi::FunctorFromFunctor<double,bool>"            />
-  <class pattern   = "LoKi::FunctorFromFunctor<std::vector<double>,double>"            />
-  <class pattern   = "LoKi::FunctorFromFunctor<std::vector<double>,bool>"            />
-  <class pattern   = "LoKi::FunctorFromFunctor<std::vector<double>,std::vector<double> >"       />
+  <class name = "LoKi::FunctorFromFunctor<double,double>"            />
+  <class name = "LoKi::FunctorFromFunctor<double,bool>"            />
+  <class name = "LoKi::FunctorFromFunctor<std::vector<double>,double>"            />
+  <class name = "LoKi::FunctorFromFunctor<std::vector<double>,bool>"            />
+  <class name = "LoKi::FunctorFromFunctor<std::vector<double>,std::vector<double> >"       />
 
   
-  <class pattern   = "LoKi::Functor<void,double>"  />
-  <class pattern   = "LoKi::Functor<void,bool>"    />
-  <class pattern   = "LoKi::FunctorFromFunctor<void,double>" />
-  <class pattern   = "LoKi::FunctorFromFunctor<void,bool>"   />
+  <class name = "LoKi::Functor<void,double>"  />
+  <class name = "LoKi::Functor<void,bool>"    />
+  <class name = "LoKi::FunctorFromFunctor<void,double>" />
+  <class name = "LoKi::FunctorFromFunctor<void,bool>"   />
+
+  <class name = "LoKi::Functors::Empty<double>"   />
+  <class name = "LoKi::Functors::Size<double>"    />
 
 
   <class pattern   = "LoKi::Constant<*>"           />

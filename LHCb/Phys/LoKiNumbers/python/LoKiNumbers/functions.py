@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: functions.py,v 1.5 2008-10-19 16:20:25 ibelyaev Exp $ 
+# $Id: functions.py,v 1.6 2008-11-21 09:06:42 ibelyaev Exp $ 
 # =============================================================================
 ## @file LoKiNumbers/functions.py
 #  The full set of useful objects from LoKiNumbers library 
@@ -11,7 +11,7 @@
 Few useful objects from LoKiNumbers library
 """
 __author__  = "Vanya BELYAEV ibelyaev@physics.syr.edu"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ " 
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ " 
 # =============================================================================
 
 import LoKiCore.decorators as _LoKiCore 
@@ -42,6 +42,8 @@ XElement  = XFunVal
 
 XVCuts    = LoKi.Functor            ( _v , bool )
 XVCut     = LoKi.FunctorFromFunctor ( _v , bool )
+XCutVals  = XVCuts
+XCutVal   = XVCut
 
 XTRUE     = LoKi.Constant ( _d , bool ) (True)
 XALL      = LoKi.Constant ( _d , bool ) (True)
@@ -77,6 +79,11 @@ XGAUS     = LoKi.Random.Gaussian
 XGAUSS    = XGAUS ( 0 , 1 ) 
 XRAND_    = LoKi.Random.Rand
 XRAND     = LoKi.Random.Rand ( )
+
+## trivia 
+XEMPTY    = LoKi.Functors.Empty ( 'double' ) ()
+XSIZE     = LoKi.Functors.Size  ( 'double' ) ()
+
 
 # =============================================================================
 ## The iterator function for the vector of something

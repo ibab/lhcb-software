@@ -1,4 +1,4 @@
-// $Id: LoKiNumbersDict.h,v 1.6 2008-10-19 16:20:25 ibelyaev Exp $
+// $Id: LoKiNumbersDict.h,v 1.7 2008-11-21 09:06:42 ibelyaev Exp $
 // ============================================================================
 #ifndef DICT_LOKINUMBERSDICT_H 
 #define DICT_LOKINUMBERSDICT_H 1
@@ -16,6 +16,7 @@
 #include "LoKi/BasicFunctors.h"
 #include "LoKi/CoreTypes.h"
 #include "LoKi/Random.h"
+#include "LoKi/Filters.h"
 // ============================================================================
 /** @file
  *  Simpe file to build the dictionaries for LoKi's functors, which 
@@ -23,6 +24,18 @@
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date   2007-12-01
  */
+// ============================================================================
+// the specific printout
+// ===========================================================================     
+template <>
+std::ostream& LoKi::Functors::Empty<double>::fillStream
+( std::ostream& s ) const { return s << "XEMPTY" ; }
+// ============================================================================     
+// the specific printpout
+// ============================================================================     
+template <>
+std::ostream& LoKi::Functors::Size<double>::fillStream
+( std::ostream& s ) const { return s << "XSIZE" ; }
 // ============================================================================
 namespace LoKi
 {
@@ -177,13 +190,17 @@ namespace LoKi
     class  PipeOps<double,double>
     {
     private:
+      // ======================================================================
       typedef double TYPE  ;
       typedef double TYPE2 ;
       typedef LoKi::BasicFunctors<TYPE>::Pipe          Pipe    ;
       typedef LoKi::BasicFunctors<TYPE>::Element       Element ;
+      typedef LoKi::BasicFunctors<TYPE>::CutVal        CutVal  ;
       typedef LoKi::BasicFunctors<TYPE2>::Function     Func    ;
       typedef LoKi::BasicFunctors<TYPE2>::Predicate    Cuts    ;      
+      // ======================================================================
     public:
+      // ======================================================================
       // __rshift__ 
       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
       __rshift__ 
@@ -195,6 +212,11 @@ namespace LoKi
       ( const Pipe& fun , const Element&   fun2 ) 
       { return fun >>                      fun2 ; }
       // __rshift__ 
+      static LoKi::FunctorFromFunctor<std::vector<TYPE>,bool>
+      __rshift__ 
+      ( const Pipe& fun , const CutVal&    fun2 ) 
+      { return fun >>                      fun2 ; }
+      // __rshift__ 
       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
       __rshift__ 
       ( const Pipe& fun , const Cuts&      fun2 ) 
@@ -204,7 +226,9 @@ namespace LoKi
       __rshift__ 
       ( const Pipe& fun , const Func&      fun2 ) 
       { return fun >> LoKi::yields<TYPE> ( fun2 ) ; }
+      // ======================================================================
     public:
+      // ======================================================================
       // __rrshift__ 
       static std::vector<TYPE>
       __rrshift__ ( const Pipe& fun , const std::vector<TYPE>& val ) 
@@ -213,11 +237,14 @@ namespace LoKi
       static std::vector<TYPE>
       __rrshift__ ( const Pipe& fun , const double val ) 
       { return fun ( std::vector<double>( 1 , val ) ) ; }
+      // ======================================================================
     public:
+      // ======================================================================
       // __tee__ 
       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> > 
       __tee__     ( const Pipe& fun ) 
       { return LoKi::tee<TYPE>( fun ) ; }        
+      // ======================================================================
     };
     // ========================================================================
     /** the explicit full template specialization of  LoKi::Dicts::FunValOps
@@ -230,10 +257,12 @@ namespace LoKi
     class  FunValOps<double> 
     {
     private:
+      // ======================================================================
       typedef double TYPE ;
       typedef LoKi::BasicFunctors<TYPE>::FunVal         FunVal  ;
       typedef LoKi::BasicFunctors<TYPE>::Function       Func    ;
       typedef LoKi::BasicFunctors<TYPE>::Predicate      Cuts    ;      
+      // ======================================================================
     public:
       // ======================================================================
       // __rshift__ 
@@ -268,7 +297,72 @@ namespace LoKi
       // ======================================================================
     };
     // ========================================================================
-    
+    /** @class SourceOps
+     *  Wrapper class for operations with 'source'-functors
+     *  @see LoKi::BasicFunctors 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2007-11-30
+     */
+    template <>
+    class SourceOps<double,double> 
+    {
+    private:      
+      // ======================================================================
+      typedef double TYPE  ;
+      typedef double TYPE2 ;
+      typedef LoKi::BasicFunctors<TYPE>::Source        Source ;
+      typedef LoKi::BasicFunctors<TYPE>::Pipe          Pipe    ;
+      typedef LoKi::BasicFunctors<TYPE>::Map           Map     ;
+      typedef LoKi::BasicFunctors<TYPE>::Element       Element ;
+      typedef LoKi::BasicFunctors<TYPE>::FunVal        FunVal  ;
+      typedef LoKi::BasicFunctors<TYPE>::CutVal        CutVal  ;
+      typedef LoKi::BasicFunctors<TYPE2>::Function     Func    ;
+      typedef LoKi::BasicFunctors<TYPE2>::Predicate    Cuts    ;      
+      // ======================================================================
+    public:
+      // ======================================================================
+      // __call__
+      static Source::result_type __call__ 
+      ( const Source& fun ) { return fun() ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      // __rshift__
+      static Source::result_type __rshift__ 
+      ( const Source& fun , std::vector<TYPE>& res ) 
+      { res = fun() ; return res ; }
+      // __rshift__
+      static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
+      __rshift__ 
+      ( const Source& fun , const Pipe&    fun2 ) 
+      { return fun >>                      fun2 ; }
+      // degenerated: __rshift__
+      // static LoKi::FunctorFromFunctor<void,std::vector<double> >
+      //__rshift__ 
+      //( const Source& fun , const Map&     fun2 ) 
+      //{ return fun >>                      fun2 ; }
+      // __rshift__
+      static LoKi::FunctorFromFunctor<void,double>
+      __rshift__ 
+      ( const Source& fun , const FunVal&  fun2 ) 
+      { return fun >>                      fun2 ; }
+      // __rshift__
+      static LoKi::FunctorFromFunctor<void,bool>
+      __rshift__ 
+      ( const Source& fun , const CutVal&  fun2 ) 
+      { return fun >>                      fun2 ; }
+      // __rshift__
+      static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
+      __rshift__ 
+      ( const Source& fun , const Cuts&    fun2 ) 
+      { return fun >> LoKi::filter<TYPE> ( fun2 ) ; }
+      // __rshift__
+      static LoKi::FunctorFromFunctor<void,std::vector<double> >
+      __rshift__ 
+      ( const Source& fun , const Func&    fun2 ) 
+      { return fun >> LoKi::yields<TYPE> ( fun2 ) ; }
+      // ======================================================================
+    };    
     // ========================================================================
     /** the explicit full template specialzation of  LoKi::Dicts::FunCalls
      *  for the case of "void" argument
@@ -337,15 +431,20 @@ namespace LoKi
     class CutCalls<void> 
     {
     private:
+      // ======================================================================
       typedef LoKi::BasicFunctors<void>::Predicate Fun  ;
+      // ======================================================================
     public:
-      //
+      // ======================================================================
+      // __call__
       static Fun::result_type __call__ ( const Fun& fun  ) { return fun () ; }
+      // ======================================================================
+    public:
+      // ======================================================================
       // __rshift__
       static LoKi::FunctorFromFunctor<void,bool> __rshift__            
       ( const Fun&                          fun  , 
         const LoKi::Functor<void,bool>&     o    ) { return fun >> o  ; }
-      // ======================================================================
       // __rshift__
       static std::vector<bool>& __rshift__            
       ( const Fun&         fun    , 
@@ -406,6 +505,8 @@ namespace
     ///
     LoKi::Dicts::PipeOps<double,double>                                m_ex01 ;
     LoKi::Dicts::FunValOps<double>                                     m_ex02 ;
+    LoKi::Dicts::CutValOps<double>                                     m_ex03 ;
+    LoKi::Dicts::SourceOps<double,double>                              m_ex04 ;
     ///
     LoKi::Dicts::FunCalls<double>                                      m_cs01 ;
     LoKi::Dicts::CutCalls<double>                                      m_cs02 ;
@@ -419,6 +520,9 @@ namespace
     /// 
     LoKi::Identity<double>                                             m_id01 ;
     LoKi::Identity<std::vector<double> >                               m_id02 ;
+    // trivia 
+    LoKi::Functors::Empty<double>                                      m_e    ;
+    LoKi::Functors::Size<double>                                       m_s    ;
     // ========================================================================
     // function& predicate  
     LoKi::FunctorFromFunctor<void,double>                              m_101  ;

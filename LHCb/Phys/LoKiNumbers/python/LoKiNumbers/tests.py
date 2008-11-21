@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: tests.py,v 1.4 2008-10-19 16:20:25 ibelyaev Exp $
+# $Id: tests.py,v 1.5 2008-11-21 09:06:42 ibelyaev Exp $
 # =============================================================================
 ## @file
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -29,6 +29,10 @@ print 'inp >>   sin(X) >> abs(X) >> min_value(X*X)   >> pow(X,20) :%s' % ( inp >
 print 'inp >>   sin(X) >> abs(X) >> min_element(X*X) >> pow(X,20) :%s' % ( inp >>    sin(X) >> abs(X) >> min_element(X*X) >> pow(X,2) )
 print 'inp >> process( sin(X) ) >> pow2(X)    :%s' % ( inp >> process( sin(X) ) >> pow2(X)  )
 print 'inp >> process( sin(X) ) >> pow(X,3)   :%s' % ( inp >> process( sin(X) ) >> pow(X,3) )
+print 'inp >> count ( X < 5 )                 :%s' % ( inp >> count ( X < 5 ) )
+print 'inp >> has   ( X > 5 )                 :%s' % ( inp >> has   ( X > 5 ) )
+print 'inp >> XEMPTY                          :%s' % ( inp >> XEMPTY  )
+print 'inp >> XSIZE                           :%s' % ( inp >> XSIZE   )
 
 # =============================================================================
 # The END 

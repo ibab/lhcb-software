@@ -4,6 +4,13 @@
 ! Purpose     : Set of dictionaries for LoKi functions 
 ! -----------------------------------------------------------------------------
 
+! 2008-11-21 - Vanya Belyaev
+
+ - add more improvements fo  vector->bool functors 
+ - cmt/requirements
+   version incrmeent to v8r1 
+
+
 ! =========================== LoKiNumbers v8r0 2008-11-17 =====================
 ! 2008-11-02 - Vanya BELYAEV
  - more fixes for various compilers 
