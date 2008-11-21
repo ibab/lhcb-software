@@ -4,6 +4,7 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+!========================== RichDAQ v3r23 2008-11-21 =========================
 ! 2008-10-24 - Chris Jones
  - Remove all job options files
 
