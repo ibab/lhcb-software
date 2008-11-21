@@ -4,6 +4,7 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!======================= RichRecQC v2r24 2008-11-21 ==========================
 ! 2008-11-19 - Marco Cattaneo
  - Add a new option DataType, default '2008' as in LHCbApp etc.
  - Do not run RichRawDataDBCheck for DC06 DataType
