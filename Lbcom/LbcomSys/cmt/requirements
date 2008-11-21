@@ -16,7 +16,7 @@ use CaloTools         v5r5    Calo      # Olivier Deschamps
 
 # L0 trigger simulation
 use L0Calo            v9r19   L0        # Olivier Deschamps, Patrick Robbe
-use L0DU              v8r10   L0        # Olivier Deschamps   
+use L0DU              v8r11   L0        # Olivier Deschamps   
 use L0Muon            v8r3    L0        # Andrei Tsarogorodtsev, Julien Cogan
 use L0MuonMonitor     v1r3    L0        # Julien Cogan
 use PuVeto            v7r3p1  L0        # Marko Zupan
