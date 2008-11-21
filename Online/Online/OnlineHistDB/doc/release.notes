@@ -1,10 +1,14 @@
-! $Id: release.notes,v 1.36 2008-11-11 11:10:25 ggiacomo Exp $
+! $Id: release.notes,v 1.37 2008-11-21 17:31:23 ggiacomo Exp $
 ! Package     : OnlineHistDB
 ! Responsible : Giacomo Graziani
 !
 ! user manual in pdf format is available at /afs/cern.ch/user/g/ggrazian/www/lhcb/histdbdoc.pdf
 ! or using makedoc script in this folder
 !
+
+! 20081121 OnlineHistDB v4r14
+  - add OnlineHistogram::rootName()
+  - increade Pagedoc field max length to 2000
 
 ! 20081111 OnlineHistDB v4r13
   - new conventions for reference/saveset path (use env variables if available)
