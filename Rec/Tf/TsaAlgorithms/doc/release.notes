@@ -4,6 +4,7 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+!======================= TsaAlgorithms v3r7 2008-11-17 ======================
 ! 2008-11-07 M Needham
  - Bug fix in ITGenericTracking
 
@@ -25,7 +26,6 @@
  - Improve generic tracking algorithm
 
 !======================= TsaAlgorithms v3r6 2008-10-02 ======================
-
 ! 2008-09-19 M Needham
  - bug fixes in generic tracking code 
 
