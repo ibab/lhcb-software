@@ -2,6 +2,8 @@
 ! Package     : VeloDAQ
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
+
+!=========================  VeloDAQ v4r4 2008-11-21 =======================
 ! 2008-10-28 - Tomasz Szumlak
  - Degrading some message level from info() to debug() - related with
    new data that can contain errors only for one ppfpga processor
