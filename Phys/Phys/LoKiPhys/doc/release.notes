@@ -1,11 +1,14 @@
-! $Id: release.notes,v 1.80 2008-11-17 16:10:00 cattanem Exp $ 
+! $Id: release.notes,v 1.81 2008-11-21 15:11:29 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
-!========================== LoKiPhys v8r0 2008-11-17 ==========================
+!========================== LoKiPhys v8r0 2008-11-21 ==========================
+! 2008-11-21 - Marco Cattaneo
+ - Fix frustrating typos in Latex comments that break doxygen generation
+
 ! 2008-11-02 - Vanya BELYAEV
  - more fixes for various compilers 
  - remove unnesessary assignements form dictionaries 

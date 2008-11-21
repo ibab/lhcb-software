@@ -1,4 +1,4 @@
-// $Id: Particles22.h,v 1.1 2008-09-29 16:50:40 ibelyaev Exp $
+// $Id: Particles22.h,v 1.2 2008-11-21 15:11:29 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES22_H 
 #define LOKI_PARTICLES22_H 1
@@ -222,8 +222,8 @@ namespace LoKi
     /** @class DaughterVertexDistanceSignedChi2 
      *  Simple functor wich evalautes "the signed \f$\chi^2\f$-distance" between 
      *  the 'daughetrs' vertices for the given cascade decays.
-     *  The sign is evaluated from the sign of the expresion:
-     *   \f$ \left( \vect{v}_1-\vetc{v}_2\right)\cdot \vect{p}_1 \f$ 
+     *  The sign is evaluated from the sign of the expression:
+     *   \f$ \left( \vect{v}_1-\vect{v}_2\right)\cdot \vect{p}_1 \f$ 
      *
      *  @see LoKi::Cuts::D2DVVDCHI2SIGN
      *
