@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.17 2008-10-23 06:26:46 cattanem Exp $
+! $Id: release.notes,v 1.18 2008-11-21 13:13:21 cattanem Exp $
 ! Package     : MuonTrackAlign
 ! Responsible : Alessia Satta
 ! Purpose     : Track reconstruction for Muon Alignment purposes
 !---------------------------------------------------------------------
 
+!=================== MuonTrackAlign v1r7p1 2008-11-21 ================
 ! 2008-10-23 - Marco Cattaneo
  - Add explicit use AIDA
 
