@@ -13,9 +13,9 @@ use RecCheckers         v1r0p1  Rec   # Marco Cattaneo
 use RecUtils            v1r5    Rec   # Juan Palacios, Patrick Koppenburg
 
 # Calorimeter                         # Maintainer
-use CaloMoniDst         v3r3    Calo  # Olivier Deschamps
-use CaloPIDs            v4r13   Calo  # Victor Egorychev, Vanya Belyaev
-use CaloReco            v4r16   Calo  # Olivier Deschamps
+use CaloMoniDst          v3r3    Calo # Olivier Deschamps
+use CaloPIDs             v4r14   Calo # Victor Egorychev, Vanya Belyaev
+use CaloReco             v4r16   Calo # Olivier Deschamps
 
 # Tr packages: Track Fit & Pattern Reco Validation with MonteCarlo
 use PatChecker           v3r3p1  Tr   # Olivier Callot, David Hutchcroft
@@ -30,7 +30,7 @@ use TrackMCTools         v2r19   Tr   # Eduardo Rodrigues
 use TrackMonitors        v1r5    Tr   # Wouter Hulsbergen, Stephanie Menzemer
 use TrackProjectors      v2r19   Tr   # Eduardo Rodrigues, Edwin Bos
 use TrackTools           v3r13   Tr   # Eduardo Rodrigues
-use TrackUtils           v1r21   Tr   # Eduardo Rodrigues
+use TrackUtils           v1r22   Tr   # Eduardo Rodrigues
 
 # Tf packages: Track Pattern Recognition
 use TrackSys             v4r19   Tf   # Stephanie Hansmann-Menzemer 
