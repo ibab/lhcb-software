@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/RawEvent2MBMMergerAlg.cpp,v 1.5 2008-11-21 17:20:14 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/RawEvent2MBMMergerAlg.cpp,v 1.6 2008-11-21 18:17:29 frankb Exp $
 //  ====================================================================
 //  DecisionSetterAlg.cpp
 //  --------------------------------------------------------------------
@@ -16,6 +16,7 @@
 #include "RTL/rtl.h"
 
 using namespace MBM;
+using namespace std;
 static const unsigned int NO_ROUTING = (unsigned int)~0x0;
 
 /*
@@ -35,7 +36,7 @@ namespace LHCb  {
     /// Reference to BM producer
     Producer*     m_prod;
     /// Property: output buffer name
-    std::string   m_bufferName;
+    string        m_bufferName;
     /// Property: Word 4 of trigger mask (Routing bits)
     unsigned int  m_routingBits;
     /// Monitoring quantity: Counter of number of bytes sent
@@ -43,7 +44,7 @@ namespace LHCb  {
 
   public:
     /// Standard algorithm constructor
-    RawEvent2MBMMergerAlg(const std::string& nam, ISvcLocator* pSvc)
+    RawEvent2MBMMergerAlg(const string& nam, ISvcLocator* pSvc)
     :  MDFWriter(MDFIO::MDF_NONE, nam, pSvc), m_mepMgr(0), m_prod(0)
     {
       declareProperty("Buffer",      m_bufferName="RESULT");
@@ -86,13 +87,14 @@ namespace LHCb  {
       return StatusCode::SUCCESS;
     }
 
-    std::pair<MDFHeader*,const RawBank*> getHeader(bool with_hltbits) {
-      std::pair<const char*,int> data;
-      std::pair<MDFHeader*,const RawBank*> res(0,0);
+    pair<MDFHeader*,const RawBank*> getHeader(bool with_hltbits) {
+      typedef const vector<RawBank*> _V;
+      pair<const char*,int> data;
+      pair<MDFHeader*,const RawBank*> res(0,0);
       switch(m_inputType)   {
       case MDFIO::MDF_NONE: {
-	RawEvent *org = 0;
-	StatusCode sc = eventSvc()->retrieveObject(m_bankLocation,(DataObject*&)org);
+	RawEvent *raw = 0;
+	StatusCode sc = eventSvc()->retrieveObject(m_bankLocation,(DataObject*&)raw);
 	if ( sc.isSuccess() ) {
 	  const _V& bnks = raw->banks(RawBank::DAQ);
 	  for(_V::const_iterator i=bnks.begin(); i != bnks.end(); ++i)  {
@@ -119,12 +121,12 @@ namespace LHCb  {
 	  const char *s = data.first;
 	  const char *e = ((char*)res.first)+res.first->recordSize();
 	  while (s < e)  {
-	    RawBank* bank = (RawBank*)s;
+	    RawBank* b = (RawBank*)s;
 	    if ( b->type() == RawBank::HltRoutingBits ) {
 	      res.second = b;
 	      break;
 	    }
-	    s += bank->totalSize();
+	    s += b->totalSize();
 	  }
 	}
 	return res;
@@ -136,12 +138,12 @@ namespace LHCb  {
 	  const char *s   = ((char*)res.first)+MDFHeader::sizeOf(res.first->headerVersion());
 	  const char *e = ((char*)res.first)+res.first->recordSize();
 	  while (s < e)  {
-	    RawBank* bank = (RawBank*)s;
+	    RawBank* b = (RawBank*)s;
 	    if ( b->type() == RawBank::HltRoutingBits ) {
 	      res.second = b;
 	      break;
 	    }
-	    s += bank->totalSize();
+	    s += b->totalSize();
 	  }
 	}
 	return res;
@@ -152,11 +154,11 @@ namespace LHCb  {
     }
 
     virtual StatusCode execute() {
-      std::pair<MDFHeader*,const RawBank*> h = getHeader(true);
+      pair<MDFHeader*,const RawBank*> h = getHeader(true);
       if ( h.first ) {
 	const unsigned int* hmask = h.first->subHeader().H1->triggerMask();
-	const unsigned int* mask = h.second ? h.second->begin<int>() : hmask;
-	unsigned int m[] = { mask[0], mask[1], mask[2], m_routingBits != NO_ROUTING ? m_routingBits : hmask[3]};
+	const unsigned int* tmask = h.second ? h.second->begin<unsigned int>() : hmask;
+	unsigned int m[] = { tmask[0], tmask[1], tmask[2], m_routingBits != NO_ROUTING ? m_routingBits : hmask[3]};
 	h.first->subHeader().H1->setTriggerMask(m);
       }
       switch(m_inputType)   {
@@ -173,7 +175,7 @@ namespace LHCb  {
     }
 
     /// Issue error condition
-    StatusCode error(const std::string& msg) const {
+    StatusCode error(const string& msg) const {
       MsgStream log(msgSvc(),name());
       log << MSG::ERROR << msg << endmsg;
       return StatusCode::FAILURE;
@@ -189,8 +191,8 @@ namespace LHCb  {
 	  return MDFDescriptor((char*)e.data,len);
 	}
       }
-      catch(std::exception& e)  {
-	error("Got exception when asking for BM space:"+std::string(e.what()));
+      catch(exception& e)  {
+	error("Got exception when asking for BM space:"+string(e.what()));
       }
       catch(...)  {
 	error("Got unknown exception when asking for BM space");
@@ -218,7 +220,6 @@ namespace LHCb  {
 	  MDFHeader* h = (MDFHeader*)b->data();
 	  e.type       = EVENT_TYPE_EVENT;
 	  e.len        = len;
-	  const unsigned int* mask = h->subHeader().H1->triggerMask();
 	  ::memcpy(e.mask,h->subHeader().H1->triggerMask(),sizeof(e.mask));
 	  int ret = m_prod->sendEvent();
 	  if ( MBM_NORMAL == ret )   {
@@ -235,8 +236,8 @@ namespace LHCb  {
 	}
 	return error("Failed to declare event - no data present!");
       }
-      catch(std::exception& e)  {
-	return error("Got exception when declaring event:"+m_bufferName+" "+std::string(e.what()));
+      catch(exception& e)  {
+	return error("Got exception when declaring event:"+m_bufferName+" "+string(e.what()));
       }
       catch(...)  {
 	return error("Got unknown exception when declaring event:"+m_bufferName);
