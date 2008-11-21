@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.68 2008-08-29 14:39:36 niko Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.69 2008-11-21 18:31:20 niko Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -36,6 +36,8 @@
 #include "MDF/MEPEvent.h" 
 #include "Event/RawBank.h"
 
+
+typedef unsigned int uint;
 
 #define MAX_R_PACKET (0x10000 + 20)
 #define MEP_SENT  MBM_NORMAL
@@ -79,8 +81,9 @@ template <typename T> static void resetCounters(T& cnt,size_t len) {
   cnt.resize(len,0);
   std::for_each(cnt.begin(),cnt.end(),resetCounter<typename T::value_type>);
 }
+using std::string;
 
-namespace LHCb  { 
+namespace LHCb  {
   struct MEPRx  : public MEP::Producer {
     MEPRxSvc*       m_parent;
     // parameters
@@ -102,8 +105,8 @@ namespace LHCb  {
     bool            m_wasIncomplete;
     MsgStream       m_log;
     DAQErrorEntry   m_eEntry[MAX_SRC];
-    RawBank *m_rawBufHdr, *m_MDFBankHdr;  
-      u_int8_t        *m_odinMEP;
+    RawBank *m_rawBufHdr, *m_MDFBankHdr, *m_DAQBankHdr;  
+    u_int8_t        *m_odinMEP;
   public:
     MEPRx(const std::string &nam, MEPRxSvc *parent);
     virtual ~MEPRx();
@@ -117,7 +120,23 @@ namespace LHCb  {
     }
 #define FULLNAME(id) m_parent->m_srcName[id] + " (" + m_parent->m_srcDottedAddr[id] + ")"
 #define HOSTNAME(id) m_parent->m_srcName[id]
-    
+// If any source is missing, which has already been missing last time,  no MEP request is send
+// If *all* the sources which have been missing on the last event are there now, then the MEP request for the previous event is re-armed
+// If no source has been missing we do not re-send
+    bool rearmMEPReq() {
+      bool hasShownAgain = false;
+      for (int i = 0; i < m_nSrc; ++i)
+	if (m_parent->m_noShow[i]) 
+	  if (!m_seen[i]) return false;
+	  else hasShownAgain = true;
+      return hasShownAgain;
+    }
+
+    void updateNoshow() {
+      for (int i = 0; i < m_nSrc; ++i)
+	m_parent->m_noShow[i] = m_seen[i];
+    }
+
     int spaceRearm(int) {
       m_eventType = EVENT_TYPE_MEP;
       m_brx = m_nrx = 0; 
@@ -161,14 +180,14 @@ namespace LHCb  {
     /// We create a MEP fragment with the required error bank
     int createDAQErrorBankEntries();
     int setupDAQErrorBankHdr();
-    int createDAQErrorMEP(u_int8_t *buf, int nEvt);
+    int createDAQErrorMEP(u_int8_t *buf, uint nEvt);
     void addODINInfo(int);
     void setupMDFBank(u_int32_t, u_int32_t, u_int32_t);
     int createMDFMEP(u_int8_t *buf, int nEvt);
     void incompleteEvent();
     int spaceAction();
     int addMEP(int sockfd, const MEPHdr *hdr, int srcid);
-    int analyzeMEP(MEPHdr *mep, int &nfrag);  
+    int analyzeMEP(MEPHdr *mep, uint &nfrag);  
   };
 
 }
@@ -199,6 +218,13 @@ MEPRx::MEPRx(const std::string &nam, MEPRxSvc *parent)
   m_MDFBankHdr->setVersion(DAQ_STATUS_BANK);
   m_MDFBankHdr->setSourceID(1024);
   m_MDFBankHdr->setMagic();
+  m_MDFBankHdr = (class RawBank*) new u_int8_t[len];
+  m_MDFBankHdr->setType(RawBank::DAQ);
+  m_MDFBankHdr->setSize(MDFHeader::sizeOf(1));
+  m_MDFBankHdr->setVersion(DAQ_STATUS_BANK);
+  m_MDFBankHdr->setSourceID(1025);
+  m_MDFBankHdr->setMagic();
+  
   m_wasIncomplete = false;
 }
 
@@ -236,10 +262,10 @@ int MEPRx::setupDAQErrorBankHdr() {
 // 1 syntactically corrupted (pointers don't work out)
 // 2 low word of l0_id's wrong
 // assumes that length in MEP header has been verified 
-int MEPRx::analyzeMEP(MEPHdr *mep, int &nfrag){
-  unsigned int len = mep->m_totLen;
+int MEPRx::analyzeMEP(MEPHdr *mep, uint &nfrag){
+  uint len = mep->m_totLen;
   u_int32_t l0id = mep->m_l0ID;
-  unsigned int n = sizeof(MEPHdr);
+  uint n = sizeof(MEPHdr);
   const u_int8_t *buf = (u_int8_t *) mep;
   int err = 0;
   
@@ -258,13 +284,12 @@ int MEPRx::analyzeMEP(MEPHdr *mep, int &nfrag){
  return err;
 }
 
-
 void MEPRx::incompleteEvent() {
   int i, nmiss = 0;
   MEPEVENT* e = (MEPEVENT*)event().data;
   m_parent->addIncompleteEvent();
   for (i = 0; i < m_nSrc; ++i) nmiss += (m_seen[i] ? 0 : 1); 
-  if (nmiss <= 15) {
+  if (nmiss <= m_nSrc/2) {
     m_log << MSG::ERROR << "Incomplete Event #" << e->evID 
 	  << "  No packet from: ";
     for (int i = 0; i < m_nSrc; ++i) 
@@ -281,23 +306,20 @@ void MEPRx::incompleteEvent() {
 	m_parent->m_misPkt[i]++;
       }
   } 
-//else {
-//    m_log << MSG::ERROR << "Incomplete Event #" << e->evID 
-//	  << " More than 5 sources missing";
-//  }
   m_log << endmsg;
   if (m_parent->m_dropIncompleteEvents) { // added on Kazu's demand
     m_eventType = EVENT_TYPE_ERROR;
   }  
   m_wasIncomplete = true;
-  return; // ????? Niko what's this ?
-  u_int8_t *buf = (u_int8_t *)e->data + m_brx + 4 + IP_HEADER_LEN; 
-  m_brx += createDAQErrorMEP(buf, m_pf) + IP_HEADER_LEN;
+  if (m_parent->m_createDAQErrorMEP) {
+    u_int8_t *buf = (u_int8_t *) e->data + m_brx + 4 + IP_HEADER_LEN; 
+    m_brx += createDAQErrorMEP(buf, m_pf) + IP_HEADER_LEN;
+  }
   return;
 }
 
 void MEPRx::setupMDFBank(u_int32_t run, u_int32_t orbit, u_int32_t bunchID) {
-  unsigned int mask[] = {~0,~0,~0,~0};
+  uint mask[] = {~0,~0,~0,~0};
   MDFHeader* hdr = (MDFHeader *) m_MDFBankHdr->data();
   hdr->setHdr(0);
   hdr->setSize(0);
@@ -347,27 +369,24 @@ int MEPRx::createMDFMEP(u_int8_t *buf, int nEvt) {
   return meph->m_totLen;
 } 
 
-int MEPRx::createDAQErrorMEP(u_int8_t* /* buf */, int /* nEvt */) {
-  return 0;
-  /*
+int MEPRx::createDAQErrorMEP(u_int8_t *buf , uint  nEvt) {
   struct MEPHdr *meph = (struct MEPHdr *) buf;
   int banksize = setupDAQErrorBankHdr();
   meph->m_l0ID = m_l0ID;
   meph->m_totLen = MEPHDRSIZ +  nEvt * (MEPFHDRSIZ + banksize);
   meph->m_nEvt = nEvt;
   buf += MEPHDRSIZ;
-  for (int i = 0; i < nEvt; ++i) {
-  struct MEPFrgHdr *frgh = (struct MEPFrgHdr *) buf;
-  frgh->m_l0IDlow = 0xFFFF & (m_l0ID + i);
-  frgh->m_len = banksize;
-  buf += MEPFHDRSIZ;
-  memcpy(buf, m_rawBufHdr, RAWBHDRSIZ);
-  buf += RAWBHDRSIZ;
-  memcpy(buf, m_eEntry, banksize - RAWBHDRSIZ);
-  buf += (banksize - RAWBHDRSIZ);
+  for (uint i = 0; i < nEvt; ++i) {
+    struct MEPFrgHdr *frgh = (struct MEPFrgHdr *) buf;
+    frgh->m_l0IDlow = 0xFFFF & (m_l0ID + i);
+    frgh->m_len = banksize;
+    buf += MEPFHDRSIZ;
+    memcpy(buf, m_rawBufHdr, RAWBHDRSIZ);
+    buf += RAWBHDRSIZ;
+    memcpy(buf, m_eEntry, banksize - RAWBHDRSIZ);
+    buf += (banksize - RAWBHDRSIZ);
   }
   return meph->m_totLen;
-  */
 } 
 
 int MEPRx::spaceAction() { 
@@ -377,7 +396,7 @@ int MEPRx::spaceAction() {
   MEPEvent* m = (MEPEvent*)e->data;
   if (m_nrx != m_nSrc) incompleteEvent();
   /// Add MDF bank
-  u_int8_t *buf = (u_int8_t*)e->data + m_brx + 4 + IP_HEADER_LEN; 
+  u_int8_t *buf = (u_int8_t *) e->data + m_brx + 4 + IP_HEADER_LEN; 
   m_brx += createMDFMEP(buf, m_pf) + IP_HEADER_LEN;
 
   e->evID     = ++id;
@@ -472,6 +491,7 @@ MEPRxSvc::MEPRxSvc(const std::string& nam, ISvcLocator* svc)
   declareProperty("nErrorSamples", m_nErrorSamples = 10);
   declareProperty("errorCheckInterval", m_errorCheckInterval = -1); // ms
   declareProperty("RTTCCompat", m_RTTCCompat = false);
+  declareProperty("createDAQErrorMEP", m_createDAQErrorMEP = false);
   m_trashCan  = new u_int8_t[MAX_R_PACKET];
   m_expectOdin = false;
   m_mepRQCommand = new MEPRQCommand(this, msgSvc(), RTL::processName());
@@ -613,11 +633,15 @@ void MEPRxSvc::freeRx() {
     int rc = rx->spaceRearm(0);  
     if (rc == MBM_NORMAL) {
       RTL::Lock lock2(m_freeDscLock);
-      m_freeDsc.push_back(rx);
-      if (rx->m_wasIncomplete)
+      if (rx->rearmMEPReq()) sendMEPReq(m_MEPsPerMEPReq);
+      if (rx->m_wasIncomplete) {
+	rx->updateNoshow();
 	rx->m_wasIncomplete = false;
-      else
+      } else { 
+	resetCounters(m_noShow, m_nSrc);
 	sendMEPReq(m_MEPsPerMEPReq);
+      }
+      m_freeDsc.push_back(rx);
     }
     else if (rc != MBM_REQ_CANCEL) {
       error("timeout on getting space.");
@@ -694,9 +718,9 @@ StatusCode MEPRxSvc::run() {
 	log << endmsg;
 	ncrh = m_nCrh;
       }
-
       continue;
     }
+    ageEvents();
     int len = MEPRxSys::recv_msg(m_dataSock, hdr, HDR_LEN, MEPRX_PEEK);
     if (len < 0) {
       if (!MEPRxSys::rx_would_block()) 
@@ -786,6 +810,63 @@ StatusCode MEPRxSvc::error(const std::string& msg) {
   return StatusCode::FAILURE;
 }
 
+void MEPRxSvc::srcSwap(int i, int j) {
+  string name, addr; int flags;
+  name = m_srcName[i]; m_srcName[i] = m_srcName[j]; m_srcName[j] = name;
+  addr = m_srcDottedAddr[i]; m_srcDottedAddr[i] = m_srcDottedAddr[j]; m_srcDottedAddr[j] = addr;
+  flags = m_srcFlags[i]; m_srcFlags[i] = m_srcFlags[j]; m_srcFlags[j] = flags;
+}
+
+
+int MEPRxSvc::srcFindMedianIndex(int left, int right, int shift) {
+  int i, groups = (right - left)/shift + 1, k = left + groups/2*shift;
+  for (i = left; i <= k; i+= shift) {
+    int minIndex = i; string minValue = m_srcName[minIndex]; int j;
+    for (j = i; j <= right; j += shift) 
+      if (m_srcName[j] < minValue) {
+	minIndex = j;
+	minValue = m_srcName[minIndex];
+      }
+    srcSwap(i, minIndex);
+  }
+  return k;
+}
+
+int MEPRxSvc::srcFindMedianOfMedians(int left, int right) {
+  
+  if (left == right) return left;
+  int i, shift = 1;
+  while (shift <= (right - left)) {
+    for (i = left; i <= left; i += shift * 5) {
+      int endIndex = (i + shift * 5 - 1 < right) ? i + shift * 5 - 1 : right;
+      int medianIndex = srcFindMedianIndex(i, endIndex, shift);
+      srcSwap(i, medianIndex);
+    }
+    shift *= 5;
+  }
+  return left;
+}
+  
+int MEPRxSvc::srcPart(int left, int right) {
+  srcFindMedianOfMedians(left, right);
+  int pivotIndex = left, index = left;
+  string pivVal = m_srcName[pivotIndex];
+  srcSwap(pivotIndex, right);
+  for (int i = left; i < right; ++i) {
+    if (m_srcName[i] <= pivVal) 
+      srcSwap(i, index++);
+  }
+  srcSwap(right, index);
+  return index;
+}
+
+void MEPRxSvc::srcSort(int left, int right) {
+  if (m_srcName[left] >= m_srcName[right]) return;
+  int index = srcPart(left, right);
+  srcSort(left, index - 1);
+  srcSort(index + 1, right);
+}
+   
 StatusCode MEPRxSvc::checkProperties() {
   std::ostringstream log;
   if (m_ethInterface < 0)
@@ -811,7 +892,7 @@ StatusCode MEPRxSvc::checkProperties() {
   else if ( !setupMEPReq(m_IPNameOdin).isSuccess() ) {
     return error("Bad address IPNameOdin "+m_IPNameOdin);
   }
-  for (unsigned int i = 0; i < m_IPSrc.size(); i += 3) {
+  for (uint i = 0; i < m_IPSrc.size(); i += 3) {
     std::string nam, msg;
     u_int32_t addr; 
     if (MEPRxSys::parse_addr(m_IPSrc[i], addr)) {
@@ -839,12 +920,15 @@ StatusCode MEPRxSvc::checkProperties() {
       m_srcFlags[i/3] |= ODIN;	
       m_expectOdin = true;
     }
-    m_srcAddr[addr] = i / 3; 
     m_srcDottedAddr.push_back(MEPRxSys::dotted_addr(addr));
     m_srcName.push_back(nam);
-  
   }
-  m_nSrc = m_IPSrc.size() / 3; 
+  m_nSrc = m_IPSrc.size() / 3;
+  // sort sources alphabetically
+  //c0, m_nSrc - 1);
+  // create hash-map for finding addresses
+  for (int i = 0; i < m_nSrc; ++i) 
+    m_srcAddr[MEPRxSys::cinet_addr(m_srcDottedAddr[i])] = i;
   return StatusCode::SUCCESS;
 }
 
@@ -946,6 +1030,7 @@ void MEPRxSvc::clearCounters() {
   resetCounters(m_misPkt, m_nSrc);
   resetCounters(m_truncPkt, m_nSrc);
   resetCounters(m_multipleEvt, m_nSrc);
+  resetCounters(m_noShow, m_nSrc);
   m_totMEPReq          = 0;
   m_totMEPReqPkt       = 0;
   m_numMEPRecvTimeouts = 0;
@@ -974,7 +1059,6 @@ int MEPRxSvc::setupCounters() {
   
   m_monSvc->declareInfo("srcName", "C:", m_allNames, sizeof(m_srcName), "Source IP names", this);
   log << MSG::INFO << all_names << all_names.size() << endmsg;
-  //clearCounters();
   return 0;
 }
 
@@ -1031,12 +1115,6 @@ StatusCode MEPRxSvc::initialize()  {
   }
   if (setupTimer()) 
     return error("Failed to initialize timer.");
-//    MsgStream log(msgSvc(),"MEPRx");
-//    /*Send some MEP requests to start with.*/
-///    if(!sendMEPReq(m_initialMEPReq).isSuccess()) {
-//      log << MSG::WARNING << "Could not send " << m_initialMEPReq
-//        << " initial MEP requests." << endmsg;
-//    }
   m_ebState = READY;
   return StatusCode::SUCCESS;
 }
@@ -1061,3 +1139,8 @@ StatusCode MEPRxSvc::finalize()  {
   m_ebState = NOT_READY;
   return Service::finalize();
 }
+#if 0
+;;; Local Variables: ***
+;;; c-basic-offset:2 ***
+;;; End: ***
+#endif

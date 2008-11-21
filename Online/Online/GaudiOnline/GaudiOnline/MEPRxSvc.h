@@ -101,6 +101,7 @@ namespace LHCb  {
     bool                        m_dropIncompleteEvents;	
     bool                        m_checkPartitionID;
     bool                        m_expectOdin;
+    bool                        m_createDAQErrorMEP;
     int                         m_MEPBuffers; 
     int                         m_maxMsForGetSpace;
     int                         m_pktSamplingCount; 
@@ -147,7 +148,7 @@ namespace LHCb  {
     std::vector<int>            m_rxOct;
     std::vector<int>            m_rxPkt;
     std::vector<int>            m_rxEvt;
-
+    std::vector<int>            m_noShow; 
     /* Global counters */
     int m_numMEPRecvTimeouts, m_numMEPReq, m_totMEPReq, m_totMEPReqPkt;
 
@@ -220,6 +221,12 @@ namespace LHCb  {
     int checkPartitionID(u_int32_t addr, struct MEPHdr *);
     void cryError(void);
     void truncatedPkt(struct RTL::IPHeader *);
+  private:
+    void srcSwap(int, int);
+    int srcFindMedianOfMedians(int, int);
+    int srcFindMedianIndex(int, int, int);
+    int srcPart(int, int);
+    void srcSort(int, int);
   };
 
   /**
@@ -248,3 +255,4 @@ namespace LHCb  {
 
 #endif //  GAUDIONLINE_MEPRXSVC_H
 
+ 

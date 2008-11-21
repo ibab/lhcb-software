@@ -333,7 +333,7 @@ unsigned long ms2k(void)
     return ms++; // Windows has neither future nor past...
 #else
     struct timeval tv;
-    const unsigned long sec2000 = 365 * 24 * 3600;
+    const time_t sec2000 = 30 * 365 * 24 * 3600;
     gettimeofday(&tv, NULL);
     return ((tv.tv_sec - sec2000) * 1000 + tv.tv_usec / 1000);
 #endif
@@ -367,6 +367,8 @@ int rx_would_block()
 #endif
   return 0;
 }
-
+int cinet_addr(const std::string &addr) {
+    return inet_addr(addr.c_str());
+}
 
 } // namespace MEPRxSys
