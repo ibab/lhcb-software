@@ -21,4 +21,4 @@ if __name__ == '__main__':
         sys.exit()
     if len(sys.argv) > 3: commonId = sys.argv[3]
     else: commonId = None
-    Lock(sys.argv[1], sys.argv[2], commonId)
+    sys.exit(Lock(sys.argv[1], sys.argv[2], commonId).exitCode)

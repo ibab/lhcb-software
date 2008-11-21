@@ -41,12 +41,12 @@ class Lock(object):
                     self._prevEnv = os.environ.copy()
                     for x in self._env.keys():
                         os.environ[x] = self._env[x]
-                    os.system(self._command)
+                    self.exitCode = os.system(self._command)
                     for x in self._env.keys():
                         if x in self._prevEnv: os.environ[x] = self._prevEnv[x]
                         else: del os.environ[x]
                 else:
-                    os.system(self._command)
+                    self.exitCode = os.system(self._command)
                 self._removeLock()
                 break
             elif c == None:
