@@ -4,7 +4,7 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
-!========================== PatAlgorithms v3r13 2008-11-21 ===================
+!========================== PatAlgorithms v3r12 2008-11-21 ===================
 ! 2008-11-06 - Marco Cattaneo
  - Fixes for gcc 4.3 compilation
 
@@ -19,7 +19,6 @@
  - fix PatSeedingTool: track history is now set to PatSeeding instead of
    PatForward
 
-!========================== PatAlgorithms v3r12 2008-10-15 ===================
 ! 2008-10-15 - Wouter Hulsbergen
  - fix PatFwdTool::qOverP for zero magnetic field scale factor
 
