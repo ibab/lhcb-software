@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.126 2008-10-31 13:20:25 robbep Exp $
+! $Id: release.notes,v 1.127 2008-11-21 08:10:14 cattanem Exp $
 ! Package	        : L0/L0Calo
 ! Package Manager : Patrick Robbe & M-H. Schune
 !--------------------------------------------------------------------------
 
+!========================= L0Calo v9r19 2008-11-21 ========================
 ! 2008-10-31 - Patrick Robbe
  - src/L0CaloAlg.cpp: in the trigger emulation, do not add ECAL 
    to HCAL 0 energies when the default HCAL address is not 
