@@ -4,6 +4,7 @@
 ! Purpose     : Package for the Seeding Pattern Recognition algorithm
 !-----------------------------------------------------------------------------
 
+!========================= TrackSeeding v1r4p1 2008-11-21 ====================
 ! 2008-10-16 - Marco Cattaneo
  - Fix trivial compilation warnings introduced by Gaudi v20r3
 
