@@ -162,9 +162,9 @@ void Archive::fillHistogram(DbRootHist* histogram,
             TH1* newh = new TH1F(histogramTitle.c_str(), histogramTitle.c_str(),
                                  list->GetSize(), 0.5,  list->GetSize() +0.5);
             newh->Sumw2();
-            for (int i=list->GetSize()-1 ; i>=0 ; i--) {
-              newh->SetBinContent(i+1, ((TH1*)list->At(i))->GetMean() );
-              newh->SetBinError(i+1, ((TH1*)list->At(i))->GetMeanError() );
+            for (int i=0 ; i<list->GetSize(); i++) {
+              newh->SetBinContent(list->GetSize()-i, ((TH1*)list->At(i))->GetMean() );
+              newh->SetBinError(list->GetSize()-i, ((TH1*)list->At(i))->GetMeanError() );
             }
             if (histogram->rootHistogram) { delete histogram->rootHistogram; }
             histogram->rootHistogram = newh;
