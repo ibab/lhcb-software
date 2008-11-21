@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================= RichAlgorithms v1r0 2008-11-21 ====================
 ! 2008-10-10 - Chris Jones
  - First version. Import some conponents from RichDAQ
  - New algorithm for adding backgrounds to the raw decoded data
