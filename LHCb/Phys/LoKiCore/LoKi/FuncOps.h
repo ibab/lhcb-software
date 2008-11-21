@@ -1,4 +1,4 @@
-// $Id: FuncOps.h,v 1.17 2008-11-20 12:59:48 ibelyaev Exp $
+// $Id: FuncOps.h,v 1.18 2008-11-21 08:52:18 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FUNCOPS_H 
 #define LOKI_FUNCOPS_H 1
@@ -212,7 +212,6 @@ namespace LoKi
       { return LoKi::EqualToValue<TYPE> ( fun , val ) ; }
       static Cut __equal_to__ ( const Func&   fun  , 
                                 const Func&   fun1 ) { return fun == fun1 ; }
-      // ======================================================================
     } ;
     // ========================================================================
     /** @class FuncOps
@@ -459,14 +458,14 @@ namespace LoKi
       ( const Pipe& fun , const FunVal&    fun2 ) 
       { return fun >>                      fun2 ; }
       // __rshift__ 
-      static LoKi::FunctorFromFunctor<std::vector<TYPE>,TYPE>
-      __rshift__ 
-      ( const Pipe& fun , const Element&   fun2 ) 
-      { return fun >>                      fun2 ; }
-      // __rshift__ 
       static LoKi::FunctorFromFunctor<std::vector<TYPE>,bool>
       __rshift__ 
       ( const Pipe& fun , const CutVal&    fun2 ) 
+      { return fun >>                      fun2 ; }
+      // __rshift__ 
+      static LoKi::FunctorFromFunctor<std::vector<TYPE>,TYPE>
+      __rshift__ 
+      ( const Pipe& fun , const Element&   fun2 ) 
       { return fun >>                      fun2 ; }
       // __rshift__ 
       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >
@@ -646,8 +645,8 @@ namespace LoKi
       // __rshift__
       static LoKi::FunctorFromFunctor<void,bool>
       __rshift__ 
-      ( const Source& fun , const CutVal&    fun2 ) 
-      { return fun >> fun2 ; }
+      ( const Source& fun , const CutVal&  fun2 ) 
+      { return fun >>                      fun2 ; }
       // __rshift__
       static LoKi::FunctorFromFunctor<void,std::vector<TYPE> >
       __rshift__ 
@@ -660,6 +659,46 @@ namespace LoKi
       { return fun >> LoKi::yields<TYPE> ( fun2 ) ; }
       // ======================================================================
     };
+    // ========================================================================
+    /** @class CutValOps
+     *  Wrapper class for operations with 'source'-functors
+     *  @see LoKi::BasicFunctors 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2007-11-30
+     */
+    template <class TYPE>
+    class CutValOps 
+    {
+    public:
+      // ======================================================================
+      typedef typename LoKi::BasicFunctors<TYPE>::CutVal        CutVal ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      // __call__
+      static typename CutVal::result_type __call__ 
+      ( const CutVal& fun , typename CutVal::argument a ) { return fun ( a ) ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      // __rrshift__ 
+      static bool 
+      __rrshift__ ( const CutVal& fun , const std::vector<TYPE>& val ) 
+      { return fun ( val ) ; }
+      // __rrshift__ 
+      static bool 
+      __rrshift__ ( const CutVal& fun , 
+                    const typename std::vector<TYPE>::value_type& val ) 
+      { return fun ( std::vector<TYPE>( 1 , val ) ) ; }
+      // ======================================================================
+     public:
+      // ======================================================================
+      // __tee__ 
+      static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> > 
+      __tee__     ( const CutVal& fun ) 
+      { return LoKi::tee<TYPE>( fun ) ; }        
+      // ======================================================================
+    } ;
     // ========================================================================
     template <class TYPE>
     class InfoOps
