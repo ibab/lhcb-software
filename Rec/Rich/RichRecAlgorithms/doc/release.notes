@@ -4,6 +4,7 @@
 ! Purpose     : Common reconstruction algorithms for the RICH
 !-----------------------------------------------------------------------------
 
+!===================== RichRecAlgorithms v2r14p1 2008-11-21 ==================
 ! 2008-10-16 - Marco Cattaneo
  - Fix trivial compilation warning introduced by Gaudi v20r3
 
