@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.26 2008-11-06 17:17:49 cattanem Exp $ 
+! $Id: release.notes,v 1.27 2008-11-21 13:05:29 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
 
+!========================== CaloMoniDst v3r3 2008-11-21 =======================
 ! 2008-11-06 - Marco Cattaneo
  - Fix for gcc 4.3
 
