@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/RawEvent2MBMMergerAlg.cpp,v 1.4 2008-11-13 09:25:48 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/RawEvent2MBMMergerAlg.cpp,v 1.5 2008-11-21 17:20:14 frankb Exp $
 //  ====================================================================
 //  DecisionSetterAlg.cpp
 //  --------------------------------------------------------------------
@@ -8,6 +8,7 @@
 //  ====================================================================
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiOnline/MEPManager.h"
+#include "Event/RawEvent.h"
 #include "Event/RawBank.h"
 #include "MDF/MDFWriter.h"
 #include "MDF/MDFHeader.h"
@@ -84,6 +85,93 @@ namespace LHCb  {
     virtual StatusCode sysReinitialize()   {
       return StatusCode::SUCCESS;
     }
+
+    std::pair<MDFHeader*,const RawBank*> getHeader(bool with_hltbits) {
+      std::pair<const char*,int> data;
+      std::pair<MDFHeader*,const RawBank*> res(0,0);
+      switch(m_inputType)   {
+      case MDFIO::MDF_NONE: {
+	RawEvent *org = 0;
+	StatusCode sc = eventSvc()->retrieveObject(m_bankLocation,(DataObject*&)org);
+	if ( sc.isSuccess() ) {
+	  const _V& bnks = raw->banks(RawBank::DAQ);
+	  for(_V::const_iterator i=bnks.begin(); i != bnks.end(); ++i)  {
+	    RawBank* b = *i;
+	    if ( b->version() == DAQ_STATUS_BANK )  {
+	      res.first = b->begin<MDFHeader>();
+	      break;
+	    }
+	  }
+	  if ( with_hltbits ) {
+	    const _V& bits = raw->banks(RawBank::HltRoutingBits);
+	    for(_V::const_iterator i=bits.begin(); i != bits.end(); ++i)  {
+	      res.second = *i;
+	      break;
+	    }
+	  }
+	}
+	return res;
+      }
+      case MDFIO::MDF_BANKS: {
+	data = getDataFromAddress();
+	res.first = data.first ? ((RawBank*)data.first)->begin<MDFHeader>() : 0;
+	if ( with_hltbits ) {
+	  const char *s = data.first;
+	  const char *e = ((char*)res.first)+res.first->recordSize();
+	  while (s < e)  {
+	    RawBank* bank = (RawBank*)s;
+	    if ( b->type() == RawBank::HltRoutingBits ) {
+	      res.second = b;
+	      break;
+	    }
+	    s += bank->totalSize();
+	  }
+	}
+	return res;
+      }
+      case MDFIO::MDF_RECORDS:
+	data = getDataFromAddress();
+	res.first = (MDFHeader*)data.first;
+	if ( with_hltbits ) {
+	  const char *s   = ((char*)res.first)+MDFHeader::sizeOf(res.first->headerVersion());
+	  const char *e = ((char*)res.first)+res.first->recordSize();
+	  while (s < e)  {
+	    RawBank* bank = (RawBank*)s;
+	    if ( b->type() == RawBank::HltRoutingBits ) {
+	      res.second = b;
+	      break;
+	    }
+	    s += bank->totalSize();
+	  }
+	}
+	return res;
+      default:
+	return res;
+      }
+      return res;
+    }
+
+    virtual StatusCode execute() {
+      std::pair<MDFHeader*,const RawBank*> h = getHeader(true);
+      if ( h.first ) {
+	const unsigned int* hmask = h.first->subHeader().H1->triggerMask();
+	const unsigned int* mask = h.second ? h.second->begin<int>() : hmask;
+	unsigned int m[] = { mask[0], mask[1], mask[2], m_routingBits != NO_ROUTING ? m_routingBits : hmask[3]};
+	h.first->subHeader().H1->setTriggerMask(m);
+      }
+      switch(m_inputType)   {
+      case MDFIO::MDF_NONE:
+	break;   // Nothing to do...the checksum will anyhow be calculated
+      case MDFIO::MDF_BANKS:
+	break;
+      case MDFIO::MDF_RECORDS:
+	break;
+      default:
+	break;
+      }
+      return MDFWriter::execute();
+    }
+
     /// Issue error condition
     StatusCode error(const std::string& msg) const {
       MsgStream log(msgSvc(),name());
@@ -131,10 +219,6 @@ namespace LHCb  {
 	  e.type       = EVENT_TYPE_EVENT;
 	  e.len        = len;
 	  const unsigned int* mask = h->subHeader().H1->triggerMask();
-	  if ( m_routingBits != NO_ROUTING ) {
-	    unsigned int m[] = { mask[0], mask[1], mask[2], m_routingBits };
-	    h->subHeader().H1->setTriggerMask(m);
-	  }
 	  ::memcpy(e.mask,h->subHeader().H1->triggerMask(),sizeof(e.mask));
 	  int ret = m_prod->sendEvent();
 	  if ( MBM_NORMAL == ret )   {

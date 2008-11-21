@@ -61,11 +61,6 @@ extern "C" {
 using namespace ROMon;
 using namespace SCR;
 using namespace std;
-typedef MBMBuffer::Clients           Clients;
-typedef Node::Buffers                Buffers;
-typedef Nodeset::Nodes               Nodes;
-static const int   INT_max = numeric_limits<int>::max();
-static const float FLT_max = numeric_limits<float>::max();
 // Max. 15 seconds without update allowed
 #define UPDATE_TIME_MAX 15
 
@@ -177,6 +172,12 @@ void FarmSubDisplay::handle(const Event& ev) {
 
 /// Update display content
 void FarmSubDisplay::updateContent(const Nodeset& ns) {
+  typedef MBMBuffer::Clients           Clients;
+  typedef Node::Buffers                Buffers;
+  typedef Nodeset::Nodes               Nodes;
+  static const int   INT_max = numeric_limits<int>::max();
+  static const float FLT_max = numeric_limits<float>::max();
+
   char txt[128], text[128];
   int evt_prod[3]    = {0,0,0}, min_prod[3]  = {INT_max,INT_max,INT_max};
   int free_space[3]  = {0,0,0}, min_space[3] = {INT_max,INT_max,INT_max};

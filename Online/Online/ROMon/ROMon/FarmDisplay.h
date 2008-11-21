@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.h,v 1.15 2008-11-20 15:43:59 frankb Exp $
+// $Id: FarmDisplay.h,v 1.16 2008-11-21 17:20:14 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,13 +12,14 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmDisplay.h,v 1.15 2008-11-20 15:43:59 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmDisplay.h,v 1.16 2008-11-21 17:20:14 frankb Exp $
 #ifndef ROMON_FARMDISPLAY_H
 #define ROMON_FARMDISPLAY_H 1
 
 // Framework includes
 #include "ROMon/PartitionListener.h"
 #include "ROMon/ClusterDisplay.h"
+#include "ROMon/Constants.h"
 #include "CPP/Interactor.h"
 
 // C++ include files
@@ -42,25 +43,6 @@ namespace ROMon {
   class FarmDisplay;
   class ProcFarm;
   class CPUfarm;
-
-  enum { 
-    CMD_ADD = 100,
-    CMD_CONNECT = PartitionListener::CMD_CONNECT,
-    CMD_CHECK = 102,
-    CMD_DELETE,
-    CMD_UPDATE,
-    CMD_SETCURSOR,
-    CMD_POSCURSOR,
-    CMD_SHOW,
-    CMD_SHOWSUBFARM,
-    CMD_SHOWCTRL,
-    CMD_SHOWMBM,
-    CMD_SHOWCPU,
-    CMD_SHOWPROCS,
-    CMD_SHOWHELP,
-    CMD_HANDLE_KEY,
-    CMD_LAST
-  };
 
 
   /**@class InternalDisplay ROMon.h GaudiOnline/FarmDisplay.h
@@ -295,35 +277,4 @@ public:
 
   };
 }      // End namespace ROMon
-
-
-
-#define BUILDER_TASK                 'M'
-#define SENDER_TASK                  'D'
-#define MOORE_TASK                   'G'
-
-#define REC_RECEIVER_TASK            'R'
-#define REC_SENDER_TASK              'S'
-#define REC_TASK                     'B'
-
-#define MEP_BUFFER                   'M'
-#define RES_BUFFER                   'R'
-#define EVT_BUFFER                   'E'
-#define SND_BUFFER                   'S'
-#define INPUT_BUFFER                 'I'
-#define OUTPUT_BUFFER                'O'
-
-#define SUBFARM_HEIGHT               65
-#define SUBFARM_WIDTH               132
-#define SUBFARM_NODE_OFFSET           8
-#define SUBFARM_DISP_WIDTH           48
-#define SUBFARM_DISP_HEIGHT_NORMAL    5
-#define SUBFARM_DISP_HEIGHT_DENSE     4
-#define SUBFARM_DISP_TOP              4
-#define SUBFARM_DISP_LEFT             3
-#define NUM_UPDATE_DIFF               5
-
-#define SLOTS_MIN                     .1
-#define SPACE_MIN                     .1
-
 #endif /* ROMON_FARMDISPLAY_H */
