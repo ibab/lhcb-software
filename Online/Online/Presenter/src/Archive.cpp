@@ -120,9 +120,7 @@ void Archive::fillHistogram(DbRootHist* histogram,
           histogram->rootHistogram = NULL;
         }
         TH1* archiveHisto;
-        std::string rootHistoName = histogram->onlineHistogram()->algorithm()+
-          "/"+histogram->onlineHistogram()->hname();
-        rootFile.GetObject(rootHistoName.c_str(),
+        rootFile.GetObject((histogram->onlineHistogram()->rootName()).c_str(),
                            archiveHisto);
         if (!archiveHisto) { // try w/o algorithm name (to be bkwd compat.)
           rootFile.GetObject((histogram->onlineHistogram()->hname()).c_str(),
@@ -142,8 +140,12 @@ void Archive::fillHistogram(DbRootHist* histogram,
             (*foundRootFilesIt).file_string() << endl;
         } else {
           TH1* archiveHisto;
-          rootFile.GetObject((histogram->onlineHistogram()->hname()).c_str(),
+          rootFile.GetObject((histogram->onlineHistogram()->rootName()).c_str(),
                              archiveHisto);
+          if (!archiveHisto) { // try w/o algorithm name (to be bkwd compat.)
+            rootFile.GetObject((histogram->onlineHistogram()->hname()).c_str(),
+                               archiveHisto);
+          }
           if (archiveHisto) {
             list->Add(archiveHisto);
           }
@@ -160,9 +162,9 @@ void Archive::fillHistogram(DbRootHist* histogram,
             TH1* newh = new TH1F(histogramTitle.c_str(), histogramTitle.c_str(),
                                  list->GetSize(), 0.5,  list->GetSize() +0.5);
             newh->Sumw2();
-            for (int i=0; i<list->GetSize(); i++) {
+            for (int i=list->GetSize()-1 ; i>=0 ; i--) {
               newh->SetBinContent(i+1, ((TH1*)list->At(i))->GetMean() );
-              newh->SetBinError(i+1, ((TH1*)list->At(i))->GetRMS() );
+              newh->SetBinError(i+1, ((TH1*)list->At(i))->GetMeanError() );
             }
             if (histogram->rootHistogram) { delete histogram->rootHistogram; }
             histogram->rootHistogram = newh;
