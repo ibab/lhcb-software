@@ -4,6 +4,7 @@
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
 
+!======================= TrackCheckers v4r4 2008-11-21 =======================
 ! 2008-11-06 - Marco Cattaneo
  - Fixes for gcc 4.3
 
@@ -17,12 +18,12 @@
 ! 2008-10-11 - Marco Cattaneo
 - In TrackChecherNT.cpp adapt to new return type of KeyedContainer::size()
 
-!======================= TrackCheckers v4r3 2009-10-02 =======================
+!======================= TrackCheckers v4r3 2008-10-02 =======================
 ! 2008-09-25 - Stephanie Hansmann-Menzemer
 - fix warning when filling histograms with nan
 - fix output for event weighted ghost rate
 
-!======================= TrackCheckers v4r2 2009-09-05 =======================
+!======================= TrackCheckers v4r2 2008-09-05 =======================
 ! 2008-09-05 - Marco Cattaneo
  - Fix a compilation warning
 
