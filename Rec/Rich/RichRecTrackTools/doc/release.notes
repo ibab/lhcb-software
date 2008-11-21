@@ -4,6 +4,7 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!======================== RichRecTrackTools v1r7 2008-11-21 ==================
 ! 2008-10-29 - Chris Jones
  - Adapt to change in ITrackCreator interface (for gcc 4.3)
 
