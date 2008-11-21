@@ -4,6 +4,7 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!====================== RichRecMCTools v2r20 2008-11-21 =======================
 ! 2008-10-29 - Chris Jones
  - Adapt to change in ITrackCreator interface (for gcc 4.3)
 
