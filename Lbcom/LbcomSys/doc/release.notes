@@ -6,8 +6,90 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
-! 2008-10-16 - Chris Jones
- - Add Rich/RichAlgorithms
+</PRE><H1><A NAME=v6r24>2008-11-21 LbcomSys v6r24</A></H1><PRE>
+This version uses Gaudi v20r3 and LHCb v26r0
+
+- Packages added:    Rich/RichAlgorithms v1r0
+- Packages modified: L0Calo v9r19, L0DU v8r11, L0Muon v8r3, L0MuonMonitor v1r3,
+    PuVeto v7r3p1, RichDAQ v3r23, RichTools v2r23, STAlgorithms v3r2,
+    STCheckers v2r8, STDAQ v3r13, STTools v3r6, VeloAlgorithms v4r7p2,
+    VeloDAQ v4r4, VeloSimulation v3r6p1
+
+- In L0Calo v9r19
+  . src/L0CaloAlg.cpp: in the trigger emulation, do not add ECAL to HCAL 0
+    energies when the default HCAL address is not physical (to reflect
+    electronics behaviour)
+  . src/L0CaloCompare: add a histogram to plot the position of all candidates
+    (not only errors) and the BCId where the errors occur.
+
+- In L0DU v8r11
+  . L0DUReportMonitor : fix problem with 2D correlation histo -> symmetrical 2D
+                        correlation histo instead of (wrong) triangular
+
+- In L0Muon v8r3
+  . Minor fix to handle case where the L0Muon bank is not there
+  . Remove pt encdong paramter from algorihtm properties
+  . Add possibily to emulate TAE events
+
+- In L0MuonMonitor v1r3
+  . Upgrade comparison with emulator
+  . Upgrade comparison with Muon
+  . Replace dependency on L0Muon component package with L0Event dependency
+
+- In RichDAQ v3r23
+  . Remove all job options files
+  . Update RawBufferToSmartIDsTool to create on demand missing raw data entries
+  . Move some components to RichTools and RichAlgorithms packages
+
+- In RichTools v2r23
+  . Remove RichToolRegistry, moved to RichKernel
+  . New tool for adding random pixel backgrounds to the decoded data.
+  . Import some components from Rich/RichDAQ
+
+- In STAlgorithms v3r2
+  . Make merge algorithm default to TT type
+  . Add trivial converter from clusters to lite clusters
+  . Changes in event merging code
+
+- In STCheckers v2r8
+  . Add root macro directory and two example macros
+  . Tidy up the code
+  . Add templated occupancy algorithms for IT and TT clusters and digits
+  . Add some histograms to STClusterMonitor
+
+- In STDAQ v3r13
+  . Follow changes in STKernel
+  . Bug fix in RawBankToSTLiteCluster decoding [handle duplicates correctly]
+  . Change option detType to DetType in stDAQ.opts
+  . Move some algorithms from STOnline
+  . Follow changes in STCluster class [add spill]
+
+- In STAlgorithms v3r2, STCheckers v2r8, STDAQ v3r13, STTools v3r6
+  . Move to new ST algorithm/tool base classes 
+
+- In VeloDAQ v4r4
+  . Degrading some message level from info() to debug() - related with
+    new data that can contain errors only for one ppfpga processor
+  . Add property for PrepareVeloFullRawBuffer - used when consecutive
+    events are analysed  
+  . Modified SmartErrorBankDecoder - if there are no error banks detected, it
+    continues processing and skips to the next event (plus minor improvement to
+    make the code compatible with new RawEvent object)
+  . The decoding of full VELO clusters for bank version 3 now checks whether a
+    key already exists in the container before insertion.  This is a change in
+    policy, not a bug fix.  We will no longer crash in the case of duplicate
+    keys.  Instead an error message containing the problematic source ID is 
+    issued and all clusters from this source are removed.  
+  . Added DefaultVeloRawBufferDecoders.py, a new Python helper module
+    containing default configurations of the DecodeVeloRawBuffer algorithm
+    for decoding into VeloLiteClusters or VeloClusters.
+
+- In L0Muon v8r3, VeloAlgorithms v4r7p2
+  . Fix untested StatusCodes
+
+- In L0MuonMonitor v1r3, PuVeto v7r3p1, STDAQ v3r13, VeloAlgorithms v4r7p2,
+     VeloSimulation v3r6p1
+  . Fixes for gcc 4.3
 
 </PRE><H1><A NAME=v6r23>2008-10-07 LbcomSys v6r23</A></H1><PRE>
 This version uses Gaudi v20r2 and LHCb v25r2
