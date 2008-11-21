@@ -1,8 +1,9 @@
-!  $Id: release.notes,v 1.72 2008-11-13 08:29:55 jucogan Exp $
+!  $Id: release.notes,v 1.73 2008-11-21 08:11:23 cattanem Exp $
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !---------------------------------------------------------------------------
 
+!========================= L0Muon v8r3 2008-11-21 ==========================
 ! 2008-11-13 - Julien Cogan
  - Minor fix to handle case where the L0Muon bank is not there
 
