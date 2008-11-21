@@ -1,4 +1,4 @@
-// $Id: DBDrivenAnalysisTask.cpp,v 1.5 2008-08-19 22:45:32 ggiacomo Exp $
+// $Id: DBDrivenAnalysisTask.cpp,v 1.6 2008-11-21 09:58:24 ggiacomo Exp $
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "OMAlib/DBDrivenAnalysisTask.h"
 #include "OnlineHistDB/OnlineHistDB.h"
@@ -42,14 +42,17 @@ StatusCode DBDrivenAnalysisTask::analyze(std::string& SaveSet,
     for(ih = hlist.begin(); ih != hlist.end(); ih++) {
       if( Task != "any" &&
           Task != (*ih)->task() ) continue;
-      debug() << "histogram with analysis found in DB: "<<(*ih)->identifier() <<endmsg;
+      debug() << "histogram with analysis found in DB: "<<(*ih)->identifier() <<
+        "  virtual="<<  (*ih)->isAnaHist() <<endmsg;
       TH1* rooth = NULL;
       if ( (*ih)->isAnaHist() ) { //load sources and produce ROOT histograms
         rooth = onTheFlyHistogram( (*ih), f);
       }
       else {
-        rooth = (TH1*) f->Get(((*ih)->hname()).c_str());
-	if(rooth) rooth->SetName(((*ih)->hname()).c_str()); // avoid cutting of histogram name
+        std::string rootHname = (*ih)->algorithm()+"/"+(*ih)->hname();
+        debug() << "looking for histogram object "<<rootHname<<" in source file"<<endmsg;
+        rooth = (TH1*) f->Get(rootHname.c_str());
+        if(rooth) rooth->SetName(((*ih)->hname()).c_str()); // avoid cutting of histogram name
        }
       if (rooth) {
         debug() <<"   histogram found in source"<<endmsg;
@@ -130,7 +133,7 @@ TH1* DBDrivenAnalysisTask::onTheFlyHistogram(OnlineHistogram* h,
       if( dbhh->isAnaHist() )
         hh = onTheFlyHistogram(m_histDB->getHistogram(is->c_str()), f);
       else
-        hh =(TH1*) f->Get(is->c_str());
+        hh =(TH1*) f->Get((dbhh->algorithm()+"/"+dbhh->hname()).c_str());
     }
     if (hh) {
       verbose() <<"OK: histogram "<<(*is)<<" loaded"<<endmsg;
