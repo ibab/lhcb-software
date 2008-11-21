@@ -5,14 +5,188 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-! 2008-11-14 - Chris Jones
- - Fixes to python Configurable for latest Gaudi changes
+</PRE><H1><A NAME=v6r0>2008-11-21 RecSys v6r0</A></H1><PRE>
+This version uses Gaudi v20r3 and LHCb v26r0.
 
-! 2008-10-21 - Chris Jones
- - Improvements to Python configuration
+- Packages removed:  TrackPython (obsolete)
+- Packages modified: CaloMoniDst v3r3, CaloPIDs v4r14, PatFitParams v3r2p1,
+    TrackCheckers v4r4, TrackFitEvent v3r19, TrackFitter v2r29,
+    TrackMonitors v1r5, TrackTools v3r13, TrackUtils v1r22, TrackSys v4r19,
+    PatAlgorithms v3r13, PatVelo v3r10, TfTools v1r6, TrackMatching v2r20,
+    TrackSeeding v1r4p1, TsaAlgorithms v3r7, PatPV v3r7, MuonPIDChecker v2r5,
+    MuonTrackAlign v1r7p1, RichGlobalPID v3r10p1, RichHLTLocalPID v1r3p1,
+    RichLocalPID v3r6p1, RichMarkovRingFinder v2r3, RichRecAlgorithms v2r14p1,
+    RichRecMCTools v2r20, RichRecMonitors v2r20, RichRecQC v2r24,
+    RichRecStereoTools v1r4, RichRecSys v3r14, RichRecTrackTools v1r7,
+    VeloRecMonitors v1r2
 
-! 2008-10-15 - Marco Cattaneo
- - Remove obsolete TrackPython package
+- In RecSys v6r0:
+  . Fixes and improvements to python Configurable following latest Gaudi changes
+
+- In CaloMoniDst v3r3
+  . Fix a memory leak
+
+- In CaloPIDs v4r14
+  . Fix unitialized variable in CaloID2DLL.cpp
+
+- In TrackCheckers v4r4
+  . Remove dependency on MCDecayFinder from TrackBaseChecker
+  . Add option to TrackResChecker to split histos by track type
+  . Added momentum reso to output of TrackChecker
+  . In TrackChecherNT.cpp adapt to new return type of KeyedContainer::size()
+
+- In TrackFitEvent v3r19
+  . Fix warning in OTMeasurement constructor
+    [module should be passed to base class]
+  . Add common base class to the VeloMeasurement classes
+    o Lots of new functionality
+  . Replace sqrt(12) in MuonMeasurement with constant from LHCbMath
+  . Remove un-needed module member from OT class
+  . Add totalCharge member to velo measurement classes  
+  . Unify and improve to STMeasurement and STLiteMeasurement classes
+  . Add first implemention of STLiteMeasurement
+  . Clean up init of STMeasurement
+
+- In TrackFitter v2r29
+  . Fix to VeloTT configured fitter to put back StateAtBeamLine
+  . Fixes to python Configurable for latest Gaudi and TrackSys changes
+  . Added ConfiguredMasterFitter and ConfiguredFastFitter which are
+    tools. (Before we only had configured algs)
+  . Fixed a configuration problem in TrackFitter/ConfiguredFitters.py: the
+    property for a public tool should be set from the tool configurable
+    instance (or from the its method .getFullName()).
+  . Flag outliers, rather than remove them 
+  . Change strategy for FitVelo: don't use curvature
+  . Add configurable for ConfiguredFastVeloOnlyFit for use in trigger
+  . Added flag to force making measurements
+  . Create node for state at beamline before fitting track
+  . Protection for tracks with insufficient active measurements
+
+- In TrackMonitors v1r5
+  . Fix histo IDs in TrackMonitor
+  . Fix histoTopDir in TrackVertexMonitor
+
+- In TrackTools v3r13
+  . Tidy up TrackCaloMatch algorithm
+  . Add selector [ITTrackConfirmation]
+  . Use centre of sector to get nominal z [MeasurementProviderT.cpp]
+  . Bug fix in TrackUsedLHCbID [duplicates handled correctly]
+  . Changes in likelihood tool [allow detector to be missing in init
+  . Changes in expected hit tools [allow choice of extrapolator ]
+  . Made MeasurementProvider even less verbose
+
+- In TrackUtils v1r22
+  . Make TrackEventCloneKiller less verbose at initialisation.
+  . Added TrackListFilter
+
+- In TrackSys v4r19
+  . In Configurable:
+    o Fixes for latest Gaudi changes
+    o Add a new method to allow user to more easily set the special data options
+    o Improvements to allow easier re-configuration for cosmics reconstruction
+  . Fix an option in Fitting.py for using a public tool (to please Gaudi v20r3)
+  . Translate PatChecking.opts in PatChecking.py
+  . Keep only one instance of TrackResChecker
+  . Change detType IT decoding option name to DetType 
+  . Removed TELL1->Velo sensor mapping from VeloTEDOne.py as it is now in CondDB
+  . Remove version numbers from uses in requirements
+
+- In PatAlgorithms v3r13, TrackMatching v2r20, TsaAlgorithms v3r7
+  . Adapt to changes in TrackSys python configurable
+
+- In PatAlgorithms v3r12, v3r13
+  . Modify PatFwdTool::qOverP for zero magnetic field scale factor to be
+    consistent with FastMomentumTool
+  . PatSeedingTool:
+    o Track history is now set to PatSeeding instead of PatForward
+    o Set a flag in ProcStatus when skipping events due to high occupancy
+    o Add option to skip events above a certain maximum occupancy
+     (currently maximum is set to 20 percent)
+
+- In PatVelo v3r10
+  . Fix untested StatusCode on Warning message, print Warnings only in finalize
+  . Added very hot sensor triplet trap to PatVeloGeneralTracking to reduce
+    total number of combinations of clusters considered in a triplet
+  . Added a tool to "promote" VeloLiteClusters to faked VeloClusters 
+    the ADC values are not right, may be used by HLT to refit VELO quickly
+  . Added a configurable threshold for the gap between the two VELO halfs to
+    PatVeloGeneric.  The onverlap search is only performed when the distance
+    between the two halfs in x is smaller than the threshold.  Default is 10 um.
+  . Changed default for full alignment in PatVeloGeneric to true
+
+- In TfTools v1r6
+  . Add function to STHitCreator, OTHitCreator to remove all used flags from hits
+  . Add new algorithm to remove all used flags from hits
+
+- In TrackMatching v2r20
+  . Add job option to make it explicit that seed outliers are not copied to new
+    track (needed after change in TrackMasterFitter)
+
+- In TsaAlgorithms v3r7
+  . Use new constructors in TsaSeedTrackCnvTool
+  . Major upgrade of ITGenericTracking algorithm
+    o bugs fixes
+    o new functionality
+    o use new constructors
+
+- In PatPV v3r7
+  . improvements for reconstruction of close primary vertices in multi PV events
+    See http://indico.cern.ch/conferenceDisplay.py?confId=33059 
+
+- In MuonPIDChecker v2r5, v2r4p1
+  . Protect when MC particle does not have a mother
+  . Protect divide by zero when magnetic field is off
+
+- In MuonTrackAlign v1r7p1
+  . Add explicit use AIDA
+
+- In RichMarkovRingFinder v2r3
+  . Fixes to python Configurable for latest Gaudi changes
+
+- In RichRecMonitors v2r20
+  . Add histograms for MC to rec position on HPD anode
+
+- In RichRecQC v2r24
+  . In python Configurable:
+    o Add a new option DataType, default '2008' as in LHCbApp etc.
+    o Do not run RichRawDataDBCheck for DC06 DataType
+    o Adapt latest Gaudi changes
+  . Remove all evidence of obsolete Job Options !
+  . Reduce min beta to 0 in All track CK theta monitor
+  . Add protection against exceptions from DB lookup in new DataDBCheck monitor
+  . Add new monitor to compare numbering information in the decoded data to that
+    in the database, to find inconsistencies.
+
+- In RichRecSys v3r14
+  . In configurables:
+    o Change scope of some imports, to fix genConf warnings
+    o Adapt latest Gaudi changes
+    o Improvements for cosmic reconstruction 
+    o Add explicit option "useCaloMomentumTracks"
+  . Remove explicit versions from requirements
+  . Remove all evidence of obsolete Job Options !
+
+- In RichGlobalPID v3r10p1, RichRecStereoTools v1r4, RichRecTrackTools v1r7
+  . Downgrade some Warning messages to counters
+
+- In VeloRecMonitors v1r2
+  . Changed residual plots to normalised residuals w.r.t. binary resolution
+    adapted alignment monitoring accordingly
+  . Added extra plots for alignment online monitoring, switched on by setting
+    AlignMoniBasic to true
+  . Extra plots (momentum, clusters per event, angle) have been added in
+    VeloTrackMonitor as an offline option
+  . Put the "Clusters per Event for R sensors and R+Phi" as an offline option
+  . Fixed bugs while running on "Best" tracks
+
+- In RichGlobalPID v3r10p1, RichLocalPID v3r6p1, RichRecAlgorithms v2r14p1,
+     RichRecQC v2r24
+  . Fix trivial compilation warnings introduced by Gaudi v20r3
+
+- In CaloMoniDst v3r3, PatFitParams v3r2p1, TrackCheckers v4r4, 
+     PatAlgorithms v3r13, TrackSeeding v1r4p1, RichGlobalPID v3r10p1,
+     RichHLTLocalPID v1r3p1, RichRecMCTools v2r20, RichRecTrackTools v1r7
+  . Fixes for gcc 4.3
 
 </PRE><H1><A NAME=v5r12>2008-10-08 RecSys v5r12</A></H1><PRE>
 This version uses Gaudi v20r2 and LHCb v25r2.
