@@ -5,6 +5,367 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v26r0>2008-11-20 LHCbSys v26r0</A></H1><PRE>
+This version uses Gaudi v20r3 and LCG_55b
+
+- Packages added: EventPacker v1r0 - Algorithms to pack/unpack persistent classes
+- Packages modified: GaudiConf v10r13, GaudiObjDesc v11r6, KernelSys v10r0,
+    LHCbKernel v10r0, LHCbMath v3r4, CaloKernel v5r2, L0MuonKernel v8r4,
+    ProcessorKernel v5r3, Relations v5r5, RichKernel v7r18, DetSys v16r1,
+    BcmDet v1r2, CaloDet v10r0p1, DDDB v1r13, DetCond v12r4, DetDesc v18r10,
+    DetDescCnv v4r7p1, DetDescSvc v2r1p1, Magnet v5r1p2, MuonDet v8r4,
+    OTDet v8r2, RichDet v11r3, STDet v4r6, VeloDet v13r4, XmlTools v6r2,
+    EventSys v24r10, DAQEvent v7r16, DigiEvent v2r10, EventAssoc v4r5,
+    L0Event v17r3, MCEvent v2r10, PackedEvent v3r4, RecEvent v2r17,
+    TrackEvent v4r16, DAQSys v5r3, MuonDAQ v4r5, OTDAQ v7r3, CaloDAQ v4r8,
+    CaloUtils v8r3, CondDBUI v2r14, DaVinciKernel v7r1, DaVinciMCKernel v2r11p1,
+    HepMCBack v1r1, LHCbAlgs v2r22, LoKi v8r0, LoKiAlgo v8r0, LoKiAlgoMC v8r0,
+    LoKiArrayFunctors v8r0, LoKiCore v8r0, LoKiGen v8r0, LoKiGenMC v8r0,
+    LoKiHlt v2r0, LoKiMC v8r0, LoKiNumbers v8r0, LoKiPhys v8r0, LoKiPhysMC v8r0,
+    MDF v3r14, RichRecBase v3r18, SimComponents v2r14, STKernel v1r9,
+    Tell1Kernel v1r6, TfKernel v2r9, TrackInterfaces v3r18, TsaKernel v3r5,
+    DetCondExample v11r5, DetDescChecks v4r10, DetDescExample v7r7p1,
+    IOExample v2r6
+
+- In GaudiConf v10r13
+  . Changes to LHCbApp() configurable:
+    o Add LHCbApp().DataType option
+    o Delegate handling of database tags to CondDB and DDDBConf configurables
+    o Capitalize name of all options
+    o Adapt to changes in Gaudi v20r3
+  . Remove DecodeRawEvent.opts - replace with DecodeRawEvent.py
+  . Remove gaudirun.py script, to take fixed version from Gaudi v20r3
+
+- In GaudiObjDesc v11r6
+  . Modified the way destination directories are created.
+
+- In LHCbKernel v10r0
+  . New methods logPacked in StandardPacker to put the log of a value and
+    keep a 10-7 accuracy for double of unknown range.
+  . Fixes to python Configurable for latest Gaudi changes
+    o Remove setProp and getProp functions (now in ConfigurableUser base class)
+    o Reverse logic of setOtherProp(s): now if both self and other class have
+      the same property set, self property takes precedence
+  . Fix for python bug https://savannah.cern.ch/bugs/index.php?43179
+  . Switch off custom vector allocators in FastAllocVector when the flag 
+    GOD_NOALLOC is set.
+
+- In LHCbMath v3r4
+  . LHCbMath/Lomont.h, src/Lomont.cpp: new equality functions for float&doubles
+    using very efficient implementation of Bruce Dawson's algorithm by Chris
+    Lomont. See documentation and usage details in release notes.
+  . In requirements: Add -no_auto_imports to GaudiPython use
+  . In LHCb::Math::equal_to_int : fix an error "integral constant overflow"
+
+- In L0MuonKernel v8r4
+  . Remove pt encoding parameters : they are fixed by the version number
+
+- In Relations v5r5
+  . python/Relations/Rels.py: Remove unnecessary "operator=" from many objects 
+  . Relations/*.h: Fix compiler ambiguity for "merge" family in the case 
+                   of FROM==TO by introduction of "imerge" function.
+  . For each concrete type add the method "merge" to merge with the sorted range
+    and the corresponding shortcut: 'operator+='. Usage details in release notes
+
+- In RichKernel v7r18
+  . Add a component library containing the ToolRegistry (moved from RichTools)
+  . Fixes to python Configurable for latest Gaudi changes
+  . Update tools configuration in python configurable
+  . Update requirements to properly use GOD_NOALLOC flag with genreflex
+  . Add new tool interface for adding background to the raw decoded data
+  . Update IRichRawBufferToSmartIDsTool.h with flag to create missing HPD
+    data blocks on demand.
+
+- In DDDB v1r13
+  . Added the ConfigurableUser DDDBConf to replace all the option files for the
+    configuration of the detector description.
+    o Re-implementeed the old option files in terms of the new ConfigurableUser.
+    o Add automatic loading of HepMCBack Dll for DC06 case
+    o Tell ParticlePropertySvc to get ParticleTable.txt from CondDB
+
+- In DetCond v12r4
+  . Add LoadDDDB algorithm, moved from DetDescChecks to avoid tests dependency
+    on DetDescChecks package
+  . Added the ConfigurableUser CondDB for the high level configuration of the
+    conditions database. The old configuration function (addCondDBLayer etc.) are
+    still available for backward compatibility, but implemented using the new
+    configurable which allows to specify local tags too. 
+  . In Configurable, set up VFSSvc, e.g. for use by ParticlePropertySvc
+  . In requirements: 
+    o Follow the changes in the CORAL interface package (LCGCMT 55b)
+    o Fix to avoid warnigs when making configurables database
+    o Add missing dependencies for QMTest
+
+- In DetCond v12r4, VeloDet v13r4
+  . Fixed configuration problems in the test after the changes in DDDB.
+
+- In DetDesc v18r10
+  . Fix a missing dictionary instantiation
+  . Clean up includes in DetectorElement.h
+
+- In MuonDet v8r4
+  . Fix compilation warnings
+
+- In OTDet v8r2
+  . Truncated distance at rmax in RtRelation::driftTime( distance )
+  . Fixed bug in RtRelation::initRTable
+  . Fix inefficient region around y = 0 in F-modules in odd layers see 
+    http://www.nikhef.nl/pub/experiments/bfys/lhcb/outerTracker/NamingConventions/Modules/index.html
+  . Added accessor for vector of T0s from conditions
+
+- In STDet v4r6
+  . Make findSector method const in DeSTDetector
+  . Add middleSensor method to DeSTSector
+  . Improve print methods
+  . Bug fix in findSectors method
+  . Add missing entries to StatusMap
+
+- In XmlTools v6r2
+  . Fixed a problem in the evaluator on windows: Linux strtod understands hex
+    constants, while windows' one not. Added a work-around using strtol.
+
+- In DAQEvent v7r16
+  . new component algorithm 'OdinBCIDFilter' : allow to filter on BCID 
+    o default : filter odd-parity BCID (can be inverted to even-parity setting
+                the 'Revert' property to 'true')
+  . Add L0PUFull and L0PUError bank types
+  . Update test.ref reference file for Gaudi v20r3
+  . Add missing dependency of dictionary generation on header file generation
+
+- In DigiEvent v2r10
+  . Add STChannelID ent to STDigit
+  . Add XXXname() functions to STChannelID.ent
+  . Add functionality to STCluster class [overlap, contains, ...]
+  . Add spill to STCluster class
+  . Make streamers for ST classes more friendly   
+
+- In EventAssoc v4r5
+  . Regenerate the files using the updated Kernel/Relations package
+
+- In L0Event v17r3
+  . Fix a wrong comparison in L0DUReport::triggerDecision()
+  . Change type of first argument of L0DUReport::triggerDecision() to unsigned
+
+- In MCEvent v2r10
+  . Add 3 new vertex types in MCVertex.xml:
+    o GenericInteraction to assign to intermediate particles
+    o KinematicLimit for particles stopped in detector
+    o WorldLimit for particles stopped at the "world" geant4 volume
+
+- In PackedEvent v3r4
+  . Add PackedProtoParticle, PackedRecVertex, PackedTrack, PackedCaloHypo
+
+- In RecEvent v2r17
+  . In VertexBase, the 'extraInfo()' method returns a reference, not a copy
+    of the extraInfo.
+  . Remove unneccessary includes from CaloDataFunctor.h
+
+- In TrackEvent v4r16
+  . Add lite measurement types to enum
+  . Anable string to enum conversion in State, Node and Measurement
+  . Add constructors to track
+  . fix method that computes number of outliers
+  . protect Track::probchi2 against ndof=0
+
+- In MuonDAQ v4r5
+  . Change the default of muon raw data format from DC06 to Real data. 
+    To get DC06 use   MuonDigitToRawBuffer.VType=1
+  . Add readoutbankerror to flag corrupted events to avoid execute() failure
+  . Fix for unchecked StatusCode in MuonDigitToRawBuffer
+
+- In OTDAQ v7r3
+  . Use Warning(..) method to suppress OTSpecificHeader error bit message
+
+- In CaloDAQ v4r8
+  . New tool : CaloDataProviderFromTES produce CaloDigits/CaloAdcs from the TES
+               (using the same interface than CaloDataProvider)
+  . Adjust verbosity in CaloZsupAlg and CaloDigitsFromRawAlg.
+  . Make the string 'outputType' property case-independant in CaloZsupAlg
+    and CaloDigitsFromRawAlg.
+  . CaloDigitsFromRawAlg : allow to write pin-diode ADC in the same container
+                           as PMT ADC
+  . New algorithm : CaloMergeTAE produce CaloDigits/CaloAdcs as the sum over a
+                    given TAE sequence
+
+- In CondDBUI v2r14
+  . Fixed some python code that was using obsolete functions.
+  . Added a work-around to dump_db_to_files.py to support system entities like
+    "conddb:DTD/structure.dtd".
+
+- In DaVinciKernel v7r1
+  . Fix problem with unwanted dependencies in ITriggerTisTos
+  . Kernel/ITriggerTisTos.h ITriggerSelectionTisTos.h
+    o Remove obsolete input parameters and methods.
+    o Add new functionality with hltObjectSummaries() method.
+  . src/OnOffline.h: Add const std::string& trunkOnTES() const method
+  . Kernel/IPhysDesktop.h
+    o getOutputLocation() is now const, and returns a const std::string&
+    o primaryVertices() in now const, and returns const RecVertex::Container*
+    o Remove Particle2Vertex::Table Table() method
+  . Kernel/IContextTool.h
+    o primaryVertices() in now const, and returns const RecVertex::Container*
+  . Kernel/Particle2Vertex.h: Add some useful typedefs
+  . Kernel/IRelatedPVFinder.h
+    o Backwards-incompatible changes, interface now contains three simple methods
+      taking a particle, some primary vertices, and an empty range of 
+      weighted Particle->VertexBase relations, to be filled according to some
+      "bestness" logic.
+    o Interface methods no longer take IDistanceCalculator* as argument. 
+      Implementation should now take care of getting its own IDistanceCalculator.
+    o Make all methods const.
+  . src/Lib/DVAlgorithm.cpp: Adapt to changes in IOnOffline interface.
+  . Kernel/IOnOfflineTool.h
+    o Clean up interface. Now it only gives the names of some tool
+      implementations and PV location to be used by the parent algorithm or tool.
+
+- In LoKiAlgo v8r0, LoKiPhys v8r0
+  . src/Algo.cpp : Adapt to new IPhysDesktop::primaryVertices() method
+
+- In HepMCBack v1r1
+  . Fix to remove "Warning in <TStreamerInfo::BuildOld>" message in case when the
+    Dll has been properly loaded. Now this message appears only when there is a
+    real problem (i.e. reading HepMC 1 data without HepMCBack loaded)
+
+- In LHCbAlgs v2r22
+  . Fix untested StatusCode in EventNodeKiller
+  . Protect debug() in DeterministicPrescaler
+  . AlgorithmCorrelations : Remove all references to SelResult
+
+- In LoKi v8r0
+  . suppress the library (add more tests later)
+
+- In LoKiCore v8r0
+  . Bug fixes in LoKi/BiFunctions.h, LoKi/iTree.h 
+  . MANY improvements in the area of functors which gets 'void' ( "sources")
+  . Redesign of python decorators 
+  . "algorithm"-functors 
+  . "CoreFactory" for following functors:
+       void -> bool 
+       void -> double 
+       double -> bool 
+       double -> double 
+       std::vector<double> -> std::vector<double>
+       std::vector<double> -> double
+       void -> std::vector<double>
+  . Generic "LoKi::VoidFilter" algorithm, based on "CoreFactory" 
+  . src/HybridBase.cpp: add some treatment for python  code strings, namely the
+                        strings are trimmed and the paired quotes are removed.
+  . LoKi/FuncOps.h:  add possibility to create "binary"-switches in python, 
+                     condition ? condidition1 : condition2
+
+- In LoKiArrayFunctors v8r0, LoKiGen v8r0, LoKiMC v8r0, LoKiPhys v8r0
+  . Adapt to changes in LoKiCore v8r0
+
+- In LoKiGenMC v8r0
+  . Workaround for ambiguous setProperty specialisations on Windows 
+  . Remove .opts-files (and the whole options directory)
+  . Provide "configurables" for Data-On-Demand configuration of 
+      LCHb::MCVertex       --> LHCb::GenCollision and 
+      HepMC::GenParticle <---> LHCb::MCParticle   relation tables 
+      (python/LoKiGenMC/MC2Collision_Configuration.py
+       python/LoKiGenMC/HepMC2MC_Configuration.py)
+  . Resurrect & redesign MC -> GenCollision stuff 
+
+- In LoKiHlt v2r0
+  . add dictionaries for 'algorithm'-related functors 
+  . functors and helper functions are defiend in the separate module:
+    python/LoKiHlt/algorithms.py
+
+- In LoKiMC v8r0
+  . Fixes for very strange messages about "unknown type z" ???
+
+- In LoKiNumbers v8r0
+  . New module python/LoKiNumbers/sources.py with basic "void"-functors 
+
+- In LoKiPhys v8r0
+  . LoKi/Particles23.h, src/Particle23.cpp, python/LoKiPhys/functions.py :
+    New functor  WM & WMASS  LoKi::Particles::WrongMass 
+       evaluate the mass of mother particles taking the alternative 
+       'wrong'-mass hypotheses for daughter particles
+
+- In LoKiPhysMC v8r0
+  . Remove all opts files ( and the directory)
+  . Add the configurations to tun 'on-demand'
+      Track -> MC relation tables 
+      Primary Vertices ---> Monte Carlo Vertices 
+      Primary Vertices ---> Generator Collisions  relation tables
+      (python/LoKiPhysMC/Track2MC_Configuration.py 
+       python/LoKiPhysMC/PV2MC_Configuration.py )
+  . Resurrect & redesign all PV -> MCV stuff
+
+- In MDF v3r14
+  . Add standard (dummy) properties to event selector
+  . Add missing status code checks in MDFIO.cpp
+
+- In SimComponents v2r14
+  . Remove the Pack, Unpack and Compare for MC particles and vertices
+    and move them to a new package Event/EventPacker with reconstruction packers
+  . Add sanity check in MCParticleSelector.cpp, to avoid FPE on ia32
+  . Improve underflow protection for MCVertex times, to work also on ia32
+
+- In STKernel v1r9
+  . Add bank version to dictionary
+  . Make DAQToOffline method safer in STTell1Board
+  . Tidy getting service box name 
+  . Add method to return list of all flippables in CommonBase
+  . Add method to return sector corresponding to channel in CommonBase
+  . Remove toString method from CommonBase class
+  . Add toString and fromString templates in STLexicalCaster.h
+  . Add setDetType
+  . Bug fix in retrieval of readout tool 
+  . Add new STAlgorithm base classes   
+  . Add explicit dependencies on GaudiAlg and Boost
+
+- In Tell1Kernel v1r6
+  . Add new part of the pedestal update engine interface compatible
+    with the latest tell1lib firmware release
+
+- In TfKernel v2r9
+  . Add fill stream method to STHit
+  . Add some useful shortcuts to STHit 
+
+- In TrackInterfaces v3r18
+  . Added IPromoteClusters to allow the "promotion" of Lite clusters to 
+    full clusters
+
+- In DetCondExample v11r5
+  . Updated to compile with COOL 2.6.0
+
+- In DetDescChecks v4r10
+  . Move LoadDDDB algorithm to Det/DetCond
+  . Add missing dependency on HepMCBack for QMTest
+  . Modified the option file LoadDDDB.py to use the configurable DDDBConf and
+    updated the tests.
+
+- In IOExample v2r6
+  . Add a library of tests for reading/writing event model objects. Currently
+    contains an algorithm to dump Tracks
+  . Update QMTest reference files for Gaudi v20r3
+
+- In LoKiAlgo v8r0, LoKiAlgoMC v8r0, LoKiArrayFunctors v8r0, LoKiCore v8r0,
+     LoKiGen v8r0, LoKiGenMC v8r0, LoKiHlt v2r0, LoKiMC v8r0, LoKiPhys v8r0,
+     LoKiPhysMC v8r0
+  . Fixes for Reflex in LCG-55b
+
+- In LHCbMath v3r4, DetDesc v18r0
+  . In requirements, add link to libGenVector when using ROOT_GE_5_19
+
+- In LHCbKernel v10r0, CaloKernel v5r2, ProcessorKernel v5r3, Relations v5r5,
+     RichKernel v7r18, BcmDet v1r2, CaloDet v10r0p1, DetCond v12r4, 
+     DetDesc v18r0, DetDescCnv v4r7p1, DetDescSvc v2r1p1, Magnet v5r1p2,
+     MuonDet v8r4, OTDet v8r2, RichDet v11r3, STDet v4r6, VeloDet v13r4,
+     XmlTools v6r2, DAQEvent v7r16, L0Event v17r3, RecEvent v2r17, MuonDAQ v4r5,
+     OTDAQ v7r3, CaloDAQ v4r8, CaloUtils v8r3, DaVinciMCKernel v2r11p1,
+     LHCbAlgs v2r22, LoKiAlgo v8r0, LoKiAlgoMC v8r0, LoKiCore v8r0, LoKiGen v8r0,
+     LoKiGenMC v8r0, LoKiHlt v2r0, LoKiMC v8r0, LoKiNumbers v8r0, LoKiPhys v8r0,
+     LoKiPhysMC v8r0, MDF v3r14, RichRecBase v3r18, SimComponents v2r14,
+     STKernel v1r9, TfKernel v2r9, TsaKernel v3r5, DetDescExample v7r7p1
+  . Fixes for gcc 4.3
+
+- In L0MuonKernel v8r4, ProcessorKernel v5r3
+  . Add doxygen documentation
+
+
 </PRE><H1><A NAME=v25r2>2008-10-07 LHCbSys v25r2</A></H1><PRE>
 This version uses Gaudi v20r2 and LCG_55a
 
