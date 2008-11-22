@@ -1,4 +1,4 @@
-// $Id: Welcome.cpp,v 1.10 2008-06-12 08:14:31 ibelyaev Exp $
+// $Id: Welcome.cpp,v 1.11 2008-11-22 16:19:58 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -52,6 +52,8 @@ LoKi::Welcome::Welcome ()
 {} 
 // ============================================================================
 LoKi::Welcome::~Welcome() { goodbye () ; };
+// ============================================================================
+void LoKi::Welcome::welcome() const { welcome ( std::cout ) ; }
 // ============================================================================
 void LoKi::Welcome::welcome( std::ostream& stream ) const
 {
@@ -130,6 +132,8 @@ void LoKi::Welcome::welcome( std::ostream& stream ) const
   stream << std::endl << std::endl ;
   
 }
+// ============================================================================
+void LoKi::Welcome::goodbye () const { goodbye ( std::cout ) ; }
 // ============================================================================
 void LoKi::Welcome::goodbye ( std::ostream& stream ) const 
 {
@@ -236,6 +240,8 @@ Bender::Welcome::~Welcome() { goodbye () ; }
 // ============================================================================
 // print welcome message 
 // ============================================================================
+void Bender::Welcome::welcome() const { return welcome ( std::cout ) ; }
+// ============================================================================
 void Bender::Welcome::welcome( std::ostream& stream ) const
 {
   // LoKi welcome 
@@ -307,7 +313,8 @@ void Bender::Welcome::welcome( std::ostream& stream ) const
 // ============================================================================
 // print good bye message 
 // ============================================================================
-
+void Bender::Welcome::goodbye () const { return goodbye ( std::cout ) ; }
+// ============================================================================
 void Bender::Welcome::goodbye ( std::ostream& stream ) const 
 {
   if ( !m_wel_printed ) { return ; }

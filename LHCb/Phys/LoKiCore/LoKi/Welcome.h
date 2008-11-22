@@ -1,4 +1,4 @@
-// $Id: Welcome.h,v 1.8 2007-08-15 13:44:02 ibelyaev Exp $
+// $Id: Welcome.h,v 1.9 2008-11-22 16:19:57 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_WELCOME_H 
 #define LOKI_WELCOME_H 1
@@ -35,20 +35,34 @@ namespace LoKi
   class Welcome : protected std::vector<int>
   {
   public:
+    // ========================================================================
     /// get the static instance of class LoKi::Welcome 
     static const Welcome& instance() ;
+    // ========================================================================
   public:
-    // destructor 
+    // ========================================================================
+    /// destructor 
     ~Welcome () ;
+    // ========================================================================
   public:
-    void welcome  ( std::ostream& stream = std::cout ) const ;
-    void goodbye  ( std::ostream& stream = std::cout ) const ;    
+    // ========================================================================
+    void welcome  ( ) const ;
+    void goodbye  ( ) const ;    
+    void welcome  ( std::ostream& stream ) const ;
+    void goodbye  ( std::ostream& stream ) const ;    
+    // ========================================================================
   protected:
-    // Standard constructor
+    // ========================================================================
+    /// Standard constructor
     Welcome ();
+    // ========================================================================
   private:
-    Welcome ( const Welcome& );
+    // ========================================================================
+    /// copy constructor is disabled 
+    Welcome ( const Welcome& );                // copy constructor is disabled 
+    // ========================================================================
   private:
+    // ========================================================================
     size_t                   m_len1        ;
     std::string              m_str1        ;    
     std::string              m_fmt1        ;    
@@ -56,7 +70,9 @@ namespace LoKi
     std::string              m_fmt3        ;    
     mutable bool             m_wel_printed ;
     mutable bool             m_bye_printed ;    
+    // ========================================================================
   };
+  // ==========================================================================
 } // end of namespace LoKi
 // ============================================================================
 namespace Bender 
@@ -70,20 +86,34 @@ namespace Bender
   class Welcome 
   {
   public:
+    // ========================================================================
     /// get the static instance of class Bender::Welcome 
     static const Welcome& instance() ;
+    // ========================================================================
   public:
-    // destructor 
+    // ========================================================================
+    /// destructor 
     ~Welcome () ;
+    // ========================================================================
   public:
-    void welcome ( std::ostream& s = std::cout ) const ;
-    void goodbye ( std::ostream& s = std::cout ) const ;    
+    // ========================================================================
+    void welcome ( ) const ;
+    void goodbye ( ) const ;    
+    void welcome ( std::ostream& s ) const ;
+    void goodbye ( std::ostream& s ) const ;    
+    // ========================================================================
   protected:
-    // Standard constructor
+    // ========================================================================
+    /// Standard constructor
     Welcome ();
+    // ========================================================================
   private:
-    Welcome ( const Welcome& );
+    // ========================================================================
+    /// copy constructor is disabled 
+    Welcome ( const Welcome& );                // copy constructor is disabled 
+    // ========================================================================
   private: 
+    // ========================================================================
     size_t       m_len1        ;
     std::string  m_str1        ;    
     std::string  m_fmt1        ;    
@@ -91,7 +121,9 @@ namespace Bender
     std::string  m_fmt3        ;
     mutable bool m_wel_printed ;
     mutable bool m_bye_printed ;    
+    // ========================================================================
   } ;
+  // ==========================================================================
 } // end of namespace Bender 
 // ============================================================================
 // The END 

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.46 2008-11-20 13:01:52 ibelyaev Exp $ 
+# $Id: requirements,v 1.47 2008-11-22 16:19:58 ibelyaev Exp $ 
 # =============================================================================
 # Created    : 2006-01-16
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
@@ -39,6 +39,7 @@ apply_pattern    reflex_dictionary                                     \
 # ================ patterns ===================================================
 apply_pattern      linker_library    library=LoKiCoreLib
 apply_pattern      component_library library=LoKiCore
+apply_pattern      QMTest
 
 # =============================================================================
 # The END 
