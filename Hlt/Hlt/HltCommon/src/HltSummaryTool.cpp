@@ -37,6 +37,9 @@ HltSummaryTool::HltSummaryTool( const std::string& type,
   declareProperty("HltSummaryLocation",
                   m_hltSummaryLocation = LHCb::HltSummaryLocation::Default);
   
+  declareProperty("HltDecReportsLocation",
+                  m_hltDecReportsLocation = LHCb::HltDecReportsLocation::Default);
+  
 }
 //=============================================================================
 // Destructor
@@ -59,10 +62,27 @@ StatusCode HltSummaryTool::initialize() {
 
 void HltSummaryTool::handle(const Incident& /*incident*/) {
     m_summary=0;
+    m_decReports=0;    
+}
+
+void  HltSummaryTool::getDecReports()
+{
+  if( !m_decReports ){
+    if( exist<HltDecReports>(m_hltDecReportsLocation) ){
+      m_decReports = get<HltDecReports>(m_hltDecReportsLocation);
+    }
+  }
 }
 
 const LHCb::HltSummary& HltSummaryTool::getSummary() {
-  if (m_summary==0) m_summary = get<LHCb::HltSummary >(m_hltSummaryLocation);
+  if( !m_summary ){
+    if( exist<LHCb::HltSummary >(m_hltSummaryLocation) ){
+      m_summary = get<LHCb::HltSummary >(m_hltSummaryLocation);
+    } else {
+      m_summary = new HltSummary();
+      put(m_summary,m_hltSummaryLocation);
+    }
+  }  
   Assert( 0 != m_summary, " getSummary() no summary in TES");
   return *m_summary;
 }
@@ -81,10 +101,19 @@ bool HltSummaryTool::decisionType(const std::string& name) {
 }
 
 bool HltSummaryTool::hasSelection(const std::string& name) {
+  if( dataSvc().hasSelection(stringKey(name)) )return true;  
+  getDecReports();  
+  if( m_decReports )return m_decReports->hasSelectionName(name);
   return getSummary().hasSelectionSummary(name);
 }
 
 bool HltSummaryTool::selectionDecision(const std::string& name) {
+  if( dataSvc().hasSelection(stringKey(name)) )return dataSvc().selection(stringKey(name),&m_fakeAlgorithm).decision();  
+  getDecReports();  
+  if( m_decReports ){return m_decReports->hasSelectionName(name)
+                       ?m_decReports->decReport(name)->decision()
+                       :false;
+  }
   return checkSelection(name) 
     ? getSummary().selectionSummary(name).decision()
     : false;
@@ -123,13 +152,39 @@ bool HltSummaryTool::selectionDecisionType(const std::string& name,
 
 
 std::vector<std::string> HltSummaryTool::selections() {
-  return getSummary().selectionSummaryIDs();
+  std::vector<std::string> allsel;  
+  std::vector<stringKey> selectionIDs = dataSvc().selectionKeys(); 
+  for( std::vector<stringKey>::const_iterator isk=selectionIDs.begin();isk!=selectionIDs.end();++isk){
+    allsel.push_back( isk->str() );
+  }
+  getDecReports();
+  if( m_decReports ){    
+    std::vector<std::string> sels = m_decReports->selectionNames();
+    for( std::vector<std::string>::const_iterator is=sels.begin();is!=sels.end();++is){
+      if( find( allsel.begin(),allsel.end(),*is) == allsel.end() ){
+        allsel.push_back(*is);
+      }
+    }  
+  }
+  std::vector<std::string> selIDs = getSummary().selectionSummaryIDs();
+  for( std::vector<std::string>::const_iterator is=selIDs.begin();is!=selIDs.end();++is){
+    if( find( allsel.begin(),allsel.end(),*is) == allsel.end() ){
+      allsel.push_back(*is);
+    }
+  }  
+  return allsel;
 }
 
 size_t HltSummaryTool::selectionNCandidates(const std::string& name) {
-  return checkSelection(name)
-            ? getSummary().selectionSummary(name).data().size()
-            : size_t(0);
+  if( dataSvc().hasSelection(stringKey(name)) )return dataSvc().selection(stringKey(name),&m_fakeAlgorithm).size();
+  getDecReports();
+  if( m_decReports ){    
+    if( m_decReports->hasSelectionName(name) )return m_decReports->decReport(name)->numberOfCandidates();
+  }  
+  if( !checkSelection(name) )return 0;
+  size_t s=getSummary().selectionSummary(name).data().size();
+  if( s )return s;
+  return selectionParticles(name).size();
 }
 
 std::vector<std::string> 
@@ -159,6 +214,17 @@ HltSummaryTool::selectionType(const std::string& name) {
 
 std::vector<Track*> 
 HltSummaryTool::selectionTracks(const std::string& name) {
+  if( !selectionDecision(name) )return std::vector<Track*>();
+  if( dataSvc().hasSelection(stringKey(name)) ){
+    Hlt::Selection& sel = dataSvc().selection(stringKey(name),&m_fakeAlgorithm);
+    if( sel.classID() == LHCb::Track::classID() ) {
+      Hlt::TrackSelection& tsel = dynamic_cast<Hlt::TrackSelection&>(sel); 
+      std::vector<Track*> out;
+      out.insert(out.end(),tsel.begin(),tsel.end());
+      return out;
+    }
+    return std::vector<Track*>();
+  }  
   getSummary();
   return checkSelection(name)
          ? Hlt::SummaryHelper::retrieve<Track>(summary(),name)
@@ -168,6 +234,17 @@ HltSummaryTool::selectionTracks(const std::string& name) {
 
 std::vector<RecVertex*> 
 HltSummaryTool::selectionVertices(const std::string& name) {
+  if( !selectionDecision(name) )return std::vector<RecVertex*>();
+  if( dataSvc().hasSelection(stringKey(name)) ){
+    Hlt::Selection& sel = dataSvc().selection(stringKey(name),&m_fakeAlgorithm);
+    if( sel.classID() == LHCb::RecVertex::classID() ) {
+      Hlt::VertexSelection& tsel = dynamic_cast<Hlt::VertexSelection&>(sel); 
+      std::vector<RecVertex*> out;
+      out.insert(out.end(),tsel.begin(),tsel.end());
+      return out;
+    }
+    return std::vector<RecVertex*>();
+  }  
   return checkSelection(name)
          ? Hlt::SummaryHelper::retrieve<RecVertex>(summary(),name)
          : std::vector<RecVertex*>();
@@ -200,6 +277,7 @@ bool HltSummaryTool::isInSelection(const std::string& name,
 }
 
 bool HltSummaryTool::checkSelection(const std::string& name) {
+  //  if( dataSvc().hasSelection(stringKey(name)) )return true;  
   bool ok =  getSummary().hasSelectionSummary(name);
   if (!ok && msgLevel(MSG::DEBUG)) debug() << " no selection in summary " << name << endreq;
   return ok;

@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 	
+! 2008-11-22 - Tomasz Skwarnicki
+ - modify HltSummaryTool to work without HltSummary
+
 !========================== HltCommon v4r5 2008-11-13 ===================
 
 ! 2008-11-03 - Johannes Albrecht

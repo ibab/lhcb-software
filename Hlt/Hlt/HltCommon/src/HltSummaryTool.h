@@ -1,4 +1,4 @@
-// $Id: HltSummaryTool.h,v 1.14 2008-10-22 15:53:01 hernando Exp $
+// $Id: HltSummaryTool.h,v 1.15 2008-11-22 23:00:19 tskwarni Exp $
 #ifndef HLTCOMMON_HLTSUMMARYTOOL_H 
 #define HLTCOMMON_HLTSUMMARYTOOL_H 1
 
@@ -8,7 +8,9 @@
 #include "HltBase/IHltConfSummaryTool.h"
 #include "Kernel/IHltSummaryTool.h"
 #include "Event/HltSummary.h"
+#include "Event/HltDecReports.h"
 #include "GaudiKernel/IIncidentListener.h"
+
 
 /** @class HltSummaryTool HltSummaryTool.h
  *  
@@ -105,14 +107,66 @@ public:
   // returns a list of strings asociated to a HLT configuration key
   std::vector<std::string> confStringVector(const std::string& name);  
 
+  class FakeAlgorithm:virtual public IAlgorithm
+  {    
+  public:
+    FakeAlgorithm(){};
+    ~FakeAlgorithm(){};
+    const std::string& version() const {return m_dummy;};
+    StatusCode execute() {return StatusCode::SUCCESS;};
+    bool isInitialized() const {return true;};
+    bool isFinalized() const {return true;};
+    bool isExecuted() const {return true;};
+    StatusCode configure() {return StatusCode::SUCCESS;};
+    StatusCode initialize() {return StatusCode::SUCCESS;};
+    StatusCode start() {return StatusCode::SUCCESS;};
+    StatusCode stop() {return StatusCode::SUCCESS;};
+    StatusCode finalize() {return StatusCode::SUCCESS;};
+    StatusCode terminate() {return StatusCode::SUCCESS;};
+    StatusCode reinitialize() {return StatusCode::SUCCESS;};
+    StatusCode restart() {return StatusCode::SUCCESS;};
+    Gaudi::StateMachine::State FSMState() const {return Gaudi::StateMachine::State();};
+    StatusCode sysInitialize() {return StatusCode::SUCCESS;};
+    StatusCode sysStart() {return StatusCode::SUCCESS;};
+    StatusCode sysReinitialize() {return StatusCode::SUCCESS;};
+    StatusCode sysRestart() {return StatusCode::SUCCESS;};
+    StatusCode sysExecute() {return StatusCode::SUCCESS;};
+    StatusCode sysStop() {return StatusCode::SUCCESS;};
+    StatusCode sysFinalize() {return StatusCode::SUCCESS;};
+    StatusCode sysBeginRun( ) {return StatusCode::SUCCESS;};
+    StatusCode sysEndRun( ) {return StatusCode::SUCCESS;};
+    void resetExecuted( ) {};
+    StatusCode beginRun() {return StatusCode::SUCCESS;};
+    StatusCode endRun() {return StatusCode::SUCCESS;};
+    void setExecuted(bool)    {};
+    bool isEnabled() const    {return true;};
+    bool filterPassed() const {return true;    };
+    void setFilterPassed(bool){};    
+    StatusCode queryInterface(const InterfaceID&, void**){return StatusCode::SUCCESS;};
+    long unsigned int addRef(){return 0;};
+    long unsigned int release(){return 0;};
+    const std::string& name() const {return m_dummy;};
+    
+      
+    std::string m_dummy;
+  };
+  
+  
+
+
 private:
 
   const LHCb::HltSummary& getSummary();
+
+  void getDecReports();
 
   bool checkSelection(const std::string& name);
   
   std::string m_hltSummaryLocation;
   LHCb::HltSummary* m_summary;
+  std::string m_hltDecReportsLocation;
+  LHCb::HltDecReports* m_decReports;
 
+  FakeAlgorithm m_fakeAlgorithm;
 };
 #endif // HLTCOMMON_HLTSUMMARYTOOL_H
