@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.7 2008-11-21 09:06:42 ibelyaev Exp $ 
+# $Id: requirements,v 1.8 2008-11-22 15:46:59 ibelyaev Exp $ 
 # =============================================================================
 # Created    : 2007-12-01
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
@@ -26,6 +26,8 @@ apply_pattern    reflex_dictionary                                       \
 # ================ patterns ===================================================
 
 macro LoKiNumbersDict_use_linkopts $(use_linkopts)
+
+apply_pattern QMTest 
 
 # =============================================================================
 # The END 

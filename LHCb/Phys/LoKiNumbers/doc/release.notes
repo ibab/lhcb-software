@@ -4,6 +4,10 @@
 ! Purpose     : Set of dictionaries for LoKi functions 
 ! -----------------------------------------------------------------------------
 
+! 2008-11-22 - Vanya BELYAEV
+
+ - first attempt to provide the integrated QMtests
+
 ! 2008-11-21 - Vanya Belyaev
 
  - add more improvements fo  vector->bool functors 
