@@ -1,9 +1,12 @@
-	! $Id: release.notes,v 1.59 2008-11-20 10:19:29 panmanj Exp $ 
+! $Id: release.notes,v 1.60 2008-11-22 23:02:25 tskwarni Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2008-11-22 - Tomasz Skwarnicki
+ - Add HltDecReportsMaker to HltEndSequence in Hlt1.py to add Hlt2 decisions in new config.
 
 ! 2008-11-20 - Jaap Panman
  - Add options for monitoring task (HltLumiReadBuffer.py, 
