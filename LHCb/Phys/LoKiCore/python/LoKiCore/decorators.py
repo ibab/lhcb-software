@@ -1291,10 +1291,26 @@ def decorateMaps ( funcs , opers ) :
     Decorate all mapping functions
     """
 
+    _call_    = None
     _rshift_  = None
     _rrshift_ = None
     _tee_     = None
     
+    ## Use the vector function 
+    if hasattr ( opers , '__call__' ) : 
+        def _call_ ( s ,*a ) :
+            """
+            Use the vector function as streamer
+            
+            >>> object =
+            >>> result = functor ( object ) 
+            
+            Uses:\n
+            """
+            return opers.__call__ ( s , *a )
+        # documentation
+        _call_.__doc__     += opers . __call__ . __doc__ 
+
     ## Use the vector function as streamer
     if hasattr ( opers , '__rrshift__' ) : 
         def _rrshift_ ( s ,*a ) :
@@ -1309,7 +1325,7 @@ def decorateMaps ( funcs , opers ) :
             return opers.__rrshift__ ( s , *a )
         # documentation
         _rrshift_.__doc__     += opers . __rrshift__ . __doc__ 
-        
+
     ## Use the vector function as streamer
     if hasattr ( opers , '__rshift__' ) : 
         def _rshift_ ( s ,*a ) :
@@ -1342,9 +1358,9 @@ def decorateMaps ( funcs , opers ) :
         # documentation        
         _tee_ .__doc__  += opers . __tee__     . __doc__
                 
-
     # finally redefine the functions:
     for fun in funcs :
+        if _call_    : fun . __call__    =  _call_ 
         if _rrshift_ : fun . __rrshift__ =  _rrshift_ 
         if _rshift_  : fun . __rshift__  =  _rshift_ 
         if _tee_     : fun . __tee__     =  _tee_ 

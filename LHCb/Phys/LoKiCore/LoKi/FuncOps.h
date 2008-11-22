@@ -1,4 +1,4 @@
-// $Id: FuncOps.h,v 1.18 2008-11-21 08:52:18 ibelyaev Exp $
+// $Id: FuncOps.h,v 1.19 2008-11-22 17:20:51 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FUNCOPS_H 
 #define LOKI_FUNCOPS_H 1
@@ -385,6 +385,11 @@ namespace LoKi
       // ======================================================================
     public:
       // ======================================================================
+      static typename Map::result_type __call__ 
+      ( const Map& fun , typename Map::argument a ) { return fun ( a )  ; }
+      // ======================================================================
+    public:
+      // ======================================================================
       // __rshift__ 
       static LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<double> >
       __rshift__ 
@@ -439,6 +444,11 @@ namespace LoKi
       typedef typename LoKi::BasicFunctors<TYPE>::CutVal        CutVal  ;
       typedef typename LoKi::BasicFunctors<TYPE2>::Function     Func    ;
       typedef typename LoKi::BasicFunctors<TYPE2>::Predicate    Cuts    ;      
+      // ======================================================================
+    public:
+      // ======================================================================
+      static typename Pipe::result_type __call__ 
+      ( const Pipe& fun , typename Pipe::argument a ) { return fun ( a )  ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -515,6 +525,11 @@ namespace LoKi
       // ======================================================================
     public:
       // ======================================================================
+      static typename FunVal::result_type __call__ 
+      ( const FunVal& fun , typename FunVal::argument a ) { return fun ( a )  ; }
+      // ======================================================================
+    public:
+      // ======================================================================
       // __rshift__ 
       static LoKi::FunctorFromFunctor<std::vector<TYPE>,double>
       __rshift__ 
@@ -560,6 +575,12 @@ namespace LoKi
       typedef typename LoKi::BasicFunctors<TYPE>::Element       Element ;
       typedef typename LoKi::BasicFunctors<TYPE2>::Function     Func    ;
       typedef typename LoKi::BasicFunctors<TYPE2>::Predicate    Cuts    ;      
+      // ======================================================================
+    public:
+      // ======================================================================
+      static typename Element::result_type __call__ 
+      ( const Element& fun , typename Element::argument a ) 
+      { return fun ( a )  ; }
       // ======================================================================
     public:
       // ======================================================================

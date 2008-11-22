@@ -1,5 +1,5 @@
 
-// $Id: Funcs.h,v 1.8 2007-12-09 17:56:42 ibelyaev Exp $
+// $Id: Funcs.h,v 1.9 2008-11-22 17:20:51 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FUNCS_H 
 #define LOKI_FUNCS_H 1
@@ -32,15 +32,16 @@ namespace LoKi
     template <class TYPE>
     struct Funcs
     {
-      //
+      // ======================================================================
       typename LoKi::BasicFunctors<TYPE>::Constant               m_101 ;
       typename LoKi::BasicFunctors<TYPE>::BooleanConstant        m_102 ;
       typename LoKi::BasicFunctors<TYPE>::PredicateFromPredicate m_103 ;
       typename LoKi::BasicFunctors<TYPE>::FunctionFromFunction   m_104 ;
-      
+      // ======================================================================      
       LoKi::Valid<TYPE>                  m_301  ;      
-      
+      // ======================================================================      
       Funcs () ; // undefined constructor 
+      // ======================================================================
     } ;
     // ========================================================================
     /** @struct VFuncs 
@@ -52,15 +53,27 @@ namespace LoKi
     template <class TYPE>
     struct VFuncs
     {
+      // ======================================================================
+      // "pipe"
       LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<TYPE> >   m_100 ;
+      // "map"
       LoKi::FunctorFromFunctor<std::vector<TYPE>,std::vector<double> > m_101 ;
+      // "element"
       LoKi::FunctorFromFunctor<std::vector<TYPE>,TYPE>                 m_102 ;
+      // "funval"
       LoKi::FunctorFromFunctor<std::vector<TYPE>,double>               m_103 ;
-      LoKi::FunctorFromFunctor<void,std::vector<TYPE> >                m_104 ;
-      //
+      // "cutval" 
+      LoKi::FunctorFromFunctor<std::vector<TYPE>,bool>                 m_104 ;
+      // "source"
+      LoKi::FunctorFromFunctor<void,std::vector<TYPE> >                m_105 ;
+      // ======================================================================
+      /// undefined constructor 
       VFuncs () ; // undefined constructor 
+      // ======================================================================
     } ;
+    // ========================================================================
   } // end of namespace LoKi::Dicts 
+  // ==========================================================================
 } // end of namespace LoKi
 // ============================================================================
 // The END 
