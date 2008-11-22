@@ -1,4 +1,4 @@
-// $Id: TrackTypes.h,v 1.5 2008-11-18 09:07:29 ibelyaev Exp $
+// $Id: TrackTypes.h,v 1.6 2008-11-22 17:21:57 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_TRACKTYPES_H 
 #define LOKI_TRACKTYPES_H 1
@@ -55,6 +55,11 @@ namespace LoKi
     typedef LoKi::BasicFunctors<LHCb::Track*>::FunVal                TrFunVals ;
     /// type of 'fun-val'   for Tracks    (assignable)
     typedef LoKi::Assignable<TrFunVals>::Type                        TrFunVal  ;
+
+    /// type of 'fun-val'   for Tracks    (interface)
+    typedef LoKi::BasicFunctors<LHCb::Track*>::CutVal                TrCutVals ;
+    /// type of 'fun-val'   for Tracks    (assignable)
+    typedef LoKi::Assignable<TrCutVals>::Type                        TrCutVal  ;
     
     /// type of 'element'   for Tracks    (interface)
     typedef LoKi::BasicFunctors<LHCb::Track*>::Element               TrElements ;
@@ -79,7 +84,6 @@ namespace LoKi
     /// type of 'functions' for recontructed vertices (assignable)
     typedef LoKi::BasicFunctors<LHCb::RecVertex>::FunctionFromFunction   RVFun  ;
 
-
     /// type of 'map'       for Vertices    (interface)
     typedef LoKi::BasicFunctors<LHCb::RecVertex*>::Map               RVMaps ;
     /// type of 'map'       for Vertices    (assignable)
@@ -94,6 +98,11 @@ namespace LoKi
     typedef LoKi::BasicFunctors<LHCb::RecVertex*>::FunVal            RVFunVals ;
     /// type of 'fun-val'   for Vertices (assignable)
     typedef LoKi::Assignable<RVFunVals>::Type                        RVFunVal  ;
+
+    /// type of 'fun-val'   for Vertices (interface)
+    typedef LoKi::BasicFunctors<LHCb::RecVertex*>::CutVal            RVCutVals ;
+    /// type of 'fun-val'   for Vertices (assignable)
+    typedef LoKi::Assignable<RVCutVals>::Type                        RVCutVal  ;
     
     /// type of 'element'   for Vertices (interface)
     typedef LoKi::BasicFunctors<LHCb::RecVertex*>::Element           RVElements ;
@@ -231,6 +240,12 @@ namespace LoKi
     /// type for "fun-vals" for Track  (assignable)
     typedef LoKi::TrackTypes::TrFunVal   TrFunVal  ;
     
+    /// type for "fun-vals" for Track  (interface)
+    typedef LoKi::TrackTypes::TrCutVals  TrCutVals ;
+    /// type for "fun-vals" for Track  (assignable)
+    typedef LoKi::TrackTypes::TrCutVal   TrCutVal  ;
+    
+
     /// type for "elements" for Track  (interface)
     typedef LoKi::TrackTypes::TrElements TrElements ;
     /// type for "elements" for Track  (assignable)
@@ -257,6 +272,11 @@ namespace LoKi
     typedef LoKi::TrackTypes::RVFunVals  RVFunVals ;
     /// type for "fun-vals" for Vertex  (assignable)
     typedef LoKi::TrackTypes::RVFunVal   RVFunVal  ;
+
+    /// type for "fun-vals" for Vertex  (interface)
+    typedef LoKi::TrackTypes::RVCutVals  RVCutVals ;
+    /// type for "fun-vals" for Vertex  (assignable)
+    typedef LoKi::TrackTypes::RVCutVal   RVCutVal  ;
     
     /// type for "elements" for Vertex  (interface)
     typedef LoKi::TrackTypes::RVElements RVElements ;

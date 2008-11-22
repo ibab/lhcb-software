@@ -85,7 +85,8 @@ def _decorate ( name = _name  ) :
     ## functional stuff
     _vt = 'std::vector<LHCb::Track*>'     ## std.vector ( _pt      )
     _vv = 'std::vector<LHCb::RecVertex*>' ## std.vector ( _pv      )
-    _vd = 'std::vector<double>'           ## std.vector ( 'double' ) 
+    _vd = 'std::vector<double>'           ## std.vector ( 'double' )
+    # vector<T> -> vector<double>
     _decorated |= _LoKiCore.getAndDecorateMaps       (
         name                                            , ## module name
         LoKi.Functor( _vt , _vd )                       , ## the base
@@ -94,6 +95,7 @@ def _decorate ( name = _name  ) :
         name                                            , ## module name
         LoKi.Functor( _vv , _vd )                       , ## the base
         LoKi.Dicts.MapsOps( _pv )                       ) ## streamers    
+    # vector<T> -> vector<T>
     _decorated |= _LoKiCore.getAndDecorateMaps       (
         name                                            , ## module name
         LoKi.Functor( _vt , _vt )                       , ## the base
@@ -102,6 +104,7 @@ def _decorate ( name = _name  ) :
         name                                            , ## module name
         LoKi.Functor( _vv , _vv )                       , ## the base
         LoKi.Dicts.PipeOps (_pv,_v)                     ) ## streamers
+    # vector<T> -> double 
     _decorated |= _LoKiCore.getAndDecorateMaps       (
         name                                            , ## module name
         LoKi.Functor         ( _vt , 'double' )         , ## the base
@@ -110,6 +113,16 @@ def _decorate ( name = _name  ) :
         name                                            , ## module name
         LoKi.Functor         ( _vv , 'double' )         , ## the base
         LoKi.Dicts.FunValOps ( _pv )                    ) ## streamers    
+    # vector<T> -> bool 
+    _decorated |= _LoKiCore.getAndDecorateMaps       (
+        name                                            , ## module name
+        LoKi.Functor         ( _vt , bool     )         , ## the base
+        LoKi.Dicts.CutValOps ( _pt )                    ) ## streamers
+    _decorated |= _LoKiCore.getAndDecorateMaps       (
+        name                                            , ## module name
+        LoKi.Functor         ( _vv , bool     )         , ## the base
+        LoKi.Dicts.CutValOps ( _pv )                    ) ## streamers    
+    # vector<T> -> T
     _decorated |= _LoKiCore.getAndDecorateMaps       (
         name                                            , ## module name
         LoKi.Functor          ( _vt , _pt )             , ## the base
@@ -118,6 +131,7 @@ def _decorate ( name = _name  ) :
         name                                            , ## module name
         LoKi.Functor          ( _vv , _pv )             , ## the base
         LoKi.Dicts.ElementOps ( _pv , _v  )             ) ## streamers
+    # void -> vector<T> 
     _decorated |= _LoKiCore.getAndDecorateMaps       (
         name                                            , ## module name
         LoKi.Functor         ( 'void' , _vt )           , ## the base

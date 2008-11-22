@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 # =============================================================================
+# $Id: tests.py,v 1.4 2008-11-22 17:21:57 ibelyaev Exp $
+# =============================================================================
 ## @file   LoKiTrigger/tests.py
-#  The simple tets script for Phys/LoKiTrigger package
+#  The simple test script for Phys/LoKiTrigger package
 #
 #        This file is a part of LoKi project - 
 #    "C++ ToolKit  for Smart and Friendly Physics Analysis"
@@ -15,12 +17,12 @@
 #  @date 2007-05-29
 # =============================================================================
 """
-The basic tests for LoKiPhys package
+The basic tests for LoKiTrigger package
 """
 # =============================================================================
-__author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
+__author__   = "Vanya BELYAEV  Ivan.Belyaev@nikhef.nl"
+__version__  = "CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.4 $ "
 # =============================================================================
-
 
 ## needed since there is no autoloading of Tracking dictionaries:
 import sys,PyCintex
@@ -105,10 +107,11 @@ def test1() :
     print ' v>>process(TrP)>>min_value(TrP)   : %s'%(v>>process(TrP)>>min_value(TrP))
     print ' v>>(process(TrP)>>min_value(TrP)) : %s'%(v>>(process(TrP)>>min_value(TrP)))
     print ' v>>min_value(TrPT)                : %s'%(v>>min_value(TrPT))
-    print '(v>>(TrP<10)).size()               : %s'%(v>>(TrP<10)).size()
-    print '(v>>(TrP>10)).size()               : %s'%(v>>(TrP>10)).size()
-    print '(v>>select(TrP>10)).size()         : %s'%(v>>select(TrP>10)).size()
-    print '(v>>select(TrP<10)).size()         : %s'%(v>>select(TrP<10)).size()
+    print ' v>>(select(TrP>10)>>TrSIZE)       : %s'%(v>>(select(TrP>10)>>TrSIZE))  
+    print ' v>>select(TrP>10)>>TrSIZE         : %s'%(v>>select(TrP>10)>>TrSIZE)  
+    print ' v>>(select(TrP>10)>>TrEMPTY)      : %s'%(v>>(select(TrP>10)>>TrEMPTY))  
+    print ' v>>select(TrP>10)>>TrEPMTY        : %s'%(v>>select(TrP>10)>>TrEMPTY)  
+
     print ' v>>min_element(TrP)               : %s'%(v>>min_element(TrP))
     print ' v>>max_element(TrP)               : %s'%(v>>max_element(TrP))
 

@@ -1,4 +1,4 @@
-// $Id: LoKiTriggerDict.h,v 1.11 2008-11-19 17:01:37 ibelyaev Exp $
+// $Id: LoKiTriggerDict.h,v 1.12 2008-11-22 17:21:57 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKICOREDICT_H 
 #define LOKI_LOKICOREDICT_H 1
@@ -125,9 +125,12 @@ namespace LoKi
     class FunCalls<LHCb::RecVertex>
     {
     private:
+      // ======================================================================
       typedef LHCb::RecVertex                      Type ;
       typedef LoKi::BasicFunctors <Type>::Function Fun  ;
+      // ======================================================================
     public:
+      // ======================================================================
       // __call__
       static Fun::result_type __call__ 
       ( const Fun& fun  , const Type&           o ) 
@@ -136,7 +139,9 @@ namespace LoKi
       static Fun::result_type __call__ 
       ( const Fun& fun  , const SmartRef<Type>& o ) 
       { return fun ( *o.target() ) ; }
+      // ======================================================================
     public:
+      // ======================================================================
       // __rrshift__
       static std::vector<Fun::result_type> __rrshift__ 
       ( const Fun& fun  , const LHCb::RecVertex::Vector&          o ) 
@@ -208,18 +213,24 @@ namespace LoKi
     class FunCalls<LoKi::TrackTypes::TrackPair>
     {
     private:
+      // ======================================================================
       typedef LoKi::TrackTypes::TrackPair         Type ;
       typedef LoKi::BasicFunctors<Type>::Function Fun  ;
+      // ======================================================================
     public:
+      // ======================================================================
       // __call__ 
       static Fun::result_type __call__ 
       ( const Fun& fun          , 
         Fun::first_argument  a1 , 
         Fun::second_argument a2 ) { return fun ( a1 , a2 ) ; }
+      // ======================================================================
     public:
+      // ======================================================================
       // __rrshift__ 
       static Fun::result_type __rrshift__ 
       ( const Fun& fun , Fun::argument  o ) { return fun ( o ) ; }
+      // ======================================================================
     public:
       // ======================================================================
       // __rshift__
@@ -400,9 +411,12 @@ namespace LoKi
     class CutCalls<LHCb::RecVertex>
     {
     private:
+      // ======================================================================
       typedef LHCb::RecVertex       Type ;
       typedef LoKi::BasicFunctors<Type>::Predicate Fun  ;
+      // ======================================================================
     public:
+      // ======================================================================
       // __call__
       static Fun::result_type __call__ 
       ( const Fun& fun , const Type&           o ) 
@@ -415,6 +429,7 @@ namespace LoKi
       static Fun::result_type __call__ 
       ( const Fun& fun , const SmartRef<Type>& o ) 
       { return fun ( *o.target() ) ; }
+      // ======================================================================
     public:      
       // ======================================================================
       // __rrshift__
@@ -555,30 +570,39 @@ namespace LoKi
     class CutCalls<LoKi::TrackTypes::VertexPair>
     {
     private:
+      // =====================================================================
       typedef LoKi::TrackTypes::VertexPair Type ;
       typedef LoKi::BasicFunctors<Type>::Predicate Fun  ;
+      // =====================================================================
     public:
+      // =====================================================================
       static Fun::result_type __call__ 
       ( const Fun& fun  , 
         Fun::first_argument  a1 , 
         Fun::second_argument a2 ) { return fun ( a1 , a2 ) ; }
+      // =====================================================================
     public:
+      // =====================================================================
       // __rrshift__
       static Fun::result_type __rrshift__ 
       ( const Fun& fun  , Fun::argument a ) { return fun ( a ) ; }
+      // =====================================================================
     public:
+      // =====================================================================
       // __rshift__
       static LoKi::FunctorFromFunctor<Type,bool> __rshift__            
       ( const Fun& fun  , const Fun&                        o ) 
       { return fun >> o  ; }      
+      // =====================================================================
     } ;
     // ========================================================================
   } // end of namespace LoKi::Dicts
   // ==========================================================================
-} //end oif namespace LoKi
+} //end of namespace LoKi
 // ============================================================================
 namespace
 {
+  // ==========================================================================
   struct _Instantiations 
   {
     // the basic functions 
@@ -613,6 +637,8 @@ namespace
     LoKi::Dicts::ElementOps<LHCb::RecVertex*,LHCb::RecVertex> m_fo8  ;    
     LoKi::Dicts::SourceOps<LHCb::Track*,LHCb::Track>          m_fo9  ;
     LoKi::Dicts::SourceOps<LHCb::RecVertex*,LHCb::RecVertex>  m_fo10 ;    
+    LoKi::Dicts::CutValOps<LHCb::Track*>                      m_fo11 ;
+    LoKi::Dicts::CutValOps<LHCb::RecVertex*>                  m_fo12 ;    
     // infor 
     LoKi::Dicts::InfoOps<LHCb::Track>                         m_i1 ;
     LoKi::Dicts::InfoOps<LHCb::RecVertex>                     m_i2 ;
@@ -628,10 +654,17 @@ namespace
     LoKi::Dicts::CutCalls<LoKi::TrackTypes::TrackPair>        m_cc3 ;
     LoKi::Dicts::CutCalls<LoKi::TrackTypes::TrackVertexPair>  m_cc4 ;
     LoKi::Dicts::CutCalls<LoKi::TrackTypes::VertexPair>       m_cc5 ;
+    /// trivia:
+    LoKi::Functors::Empty<LHCb::Track*>     m_e1 ;
+    LoKi::Functors::Empty<LHCb::RecVertex*> m_e2 ;    
+    LoKi::Functors::Size<LHCb::Track*>      m_s1 ;
+    LoKi::Functors::Size<LHCb::RecVertex*>  m_s2 ;    
     /// fictive constructor 
     _Instantiations () ;
+    // ========================================================================
   } ;  
-} // end of anonymout namespace 
+  // ==========================================================================
+} // end of anonymous namespace 
 // ============================================================================
 // The END 
 // ============================================================================

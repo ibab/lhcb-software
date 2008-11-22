@@ -236,8 +236,10 @@ TrFunVals   = LoKi.Functor             ( _vt  , 'double'  )
 TrFunVal    = LoKi.FunctorFromFunctor  ( _vt  , 'double'  )
 TrElements  = LoKi.Functor             ( _vt  , 'LHCb::Track*' ) 
 TrElement   = LoKi.FunctorFromFunctor  ( _vt  , 'LHCb::Track*' )
-TrSources   = LoKi.Functor             ('void', _vt      )
-TrSource    = LoKi.FunctorFromFunctor  ('void', _vt      )
+TrSources   = LoKi.Functor             ('void', _vt  )
+TrSource    = LoKi.FunctorFromFunctor  ('void', _vt  )
+TrCutVals   = LoKi.Functor             ( _vt  , bool )
+TrCutVal    = LoKi.FunctorFromFunctor  ( _vt  , bool )
 
 RVMaps      = LoKi.Functor             ( _vv  , _vd       )
 RVMap       = LoKi.FunctorFromFunctor  ( _vv  , _vd       )
@@ -249,13 +251,21 @@ RVElements  = LoKi.Functor             ( _vv  , 'LHCb::RecVertex*' )
 RVElement   = LoKi.FunctorFromFunctor  ( _vv  , 'LHCb::RecVertex*' )
 RVSources   = LoKi.Functor             ('void', _vv      )
 RVSource    = LoKi.FunctorFromFunctor  ('void', _vv      )
+RVFunVals   = LoKi.Functor             ( _vv  , bool )
+RVFunVal    = LoKi.FunctorFromFunctor  ( _vv  , bool )
 
 
 TrSOURCE       = LoKi.Tracks.SourceTES 
 TrSOURCEDIRECT = LoKi.Tracks.SourceDirect 
 
+TrEMPTY        = LoKi.Functors.Empty ('LHCb::Track*') ()
+TrSIZE         = LoKi.Functors.Size  ('LHCb::Track*') ()
+
 RVSOURCE       = LoKi.RecVertices.SourceTES 
 RVSOURCEDIRECT = LoKi.RecVertices.SourceDirect 
+
+RVEMPTY        = LoKi.Functors.Empty ('LHCb::RecVertex*') ()
+RVSIZE         = LoKi.Functors.Size  ('LHCb::RecVertex*') ()
 
 
 ## Hlt1 stuff 

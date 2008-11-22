@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiTrigger.xml,v 1.13 2008-11-17 17:38:49 ibelyaev Exp $ 
+     * $Id: LoKiTrigger.xml,v 1.14 2008-11-22 17:21:57 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiGen package
@@ -28,7 +28,12 @@
   <class pattern   = "LoKi::HltBinders::BinderValue*" />
   <class name      = "LoKi::Dicts::HltBind" />
   
-  
+  <class name = "LoKi::Functors::Empty<LHCb::Track*>"     /> 
+  <class name = "LoKi::Functors::Empty<LHCb::RecVertex*>" /> 
+  <class name = "LoKi::Functors::Size<LHCb::Track*>"      /> 
+  <class name = "LoKi::Functors::Size<LHCb::RecVertex*>"  /> 
+
+
   <class pattern   = "LoKi::Tracks::*"                        />
   <class pattern   = "LoKi::RecVertices::*"                   />
   <class pattern   = "LoKi::Trigger::*"                       />
@@ -54,6 +59,8 @@
   <class pattern   = "LoKi::Dicts::PipeOps<*LHCb::R*>"    />
   <class pattern   = "LoKi::Dicts::FunValOps<*LHCb::T*>"  />
   <class pattern   = "LoKi::Dicts::FunValOps<*LHCb::R*>"  />
+  <class pattern   = "LoKi::Dicts::CutValOps<*LHCb::T*>"  />
+  <class pattern   = "LoKi::Dicts::CutValOps<*LHCb::R*>"  />
   <class pattern   = "LoKi::Dicts::ElementOps<*LHCb::T*>" />
   <class pattern   = "LoKi::Dicts::ElementOps<*LHCb::R*>" />
   <class pattern   = "LoKi::Dicts::SourceOps<*LHCb::T*>" />
