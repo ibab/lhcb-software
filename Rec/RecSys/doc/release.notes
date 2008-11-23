@@ -5,7 +5,7 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v6r0>2008-11-21 RecSys v6r0</A></H1><PRE>
+</PRE><H1><A NAME=v6r0>2008-11-23 RecSys v6r0</A></H1><PRE>
 This version uses Gaudi v20r3 and LHCb v26r0.
 
 - Packages removed:  TrackPython (obsolete)
@@ -18,7 +18,7 @@ This version uses Gaudi v20r3 and LHCb v26r0.
     RichLocalPID v3r6p1, RichMarkovRingFinder v2r3, RichRecAlgorithms v2r14p1,
     RichRecMCTools v2r20, RichRecMonitors v2r20, RichRecQC v2r24,
     RichRecStereoTools v1r4, RichRecSys v3r14, RichRecTrackTools v1r7,
-    VeloRecMonitors v1r2
+    VeloRecMonitors v1r2, TrackProjectors v2r20
 
 - In RecSys v6r0:
   . Fixes and improvements to python Configurable following latest Gaudi changes
@@ -65,6 +65,9 @@ This version uses Gaudi v20r3 and LHCb v26r0.
 - In TrackMonitors v1r5
   . Fix histo IDs in TrackMonitor
   . Fix histoTopDir in TrackVertexMonitor
+
+- In TrackProjectors v2r20
+  . Changes for fitting OT tracks with drift times in cosmics data
 
 - In TrackTools v3r13
   . Tidy up TrackCaloMatch algorithm
