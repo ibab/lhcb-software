@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+!====================== TrackProjectors v2r20 2008-11-23 =====================
+! 2008-10-03 Wouter Hulsbergen
+ - Changes for fitting OT tracks with drift times in cosmics data
+
 !====================== TrackProjectors v2r19 2008-10-02 =====================
 ! 2008-09-15 Wouter Hulsbergen
  - added project method for FitNode
