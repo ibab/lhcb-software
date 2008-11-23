@@ -1,4 +1,4 @@
-// $Id: GenParticleCuts.h,v 1.17 2008-07-31 09:56:40 hmdegaud Exp $
+// $Id: GenParticleCuts.h,v 1.18 2008-11-23 19:36:04 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GENPARTICLECUTS_H 
 #define LOKI_GENPARTICLECUTS_H 1
@@ -855,6 +855,28 @@ namespace LoKi
      *  @author 2008-07-03
      */
     const LoKi::GenParticles::Oscillated                          GOSCILLATED ;
+    // ========================================================================    
+    /** @var GOSCILLATED1 
+     *  Check if the particle oscillated.
+     *
+     *  @see LoKi::GenParticles::Oscillated1
+     *  @see LoKi::GenParticles::oscillated1 
+     *
+     *  @author Vanay BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @author 2008-07-03
+     */
+    const LoKi::GenParticles::Oscillated1                        GOSCILLATED1 ;
+    // ========================================================================    
+    /** @var GOSCILLATED2
+     *  Check if the particle oscillated.
+     *
+     *  @see LoKi::GenParticles::Oscillated2 
+     *  @see LoKi::GenParticles::oscillated2 
+     *
+     *  @author Vanay BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @author 2008-07-03
+     */
+    const LoKi::GenParticles::Oscillated2                        GOSCILLATED2 ;
     // ========================================================================    
     /** @var GP 
      *  evaluator of particle momentum (in HepMC units)

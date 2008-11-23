@@ -69,6 +69,7 @@ def _decorate ( name = _name  ) :
         LoKi.Dicts.CutCalls(HepMC.GenVertex)             , ## call-traits 
         LoKi.Dicts.CutsOps(_gv,_gv)                      ) ## the operators
     ## functional:
+    # vector<T> -> vector<double>
     _decorated |= _LoKiCore.getAndDecorateMaps       (
         name                                             , ## module name
         LoKi.Functor( _vgp , _vd )                       , ## the base
@@ -77,6 +78,7 @@ def _decorate ( name = _name  ) :
         name                                             , ## module name
         LoKi.Functor( _vgv , _vd )                       , ## the base
         LoKi.Dicts.MapsOps(_gv)                          ) ## stremers    
+    # vector<T> -> vector<T>
     _decorated |= _LoKiCore.getAndDecorateMaps       (
         name                                             , ## module name
         LoKi.Functor( _vgp , _vgp )                      , ## the base
@@ -85,6 +87,7 @@ def _decorate ( name = _name  ) :
         name                                             , ## module name
         LoKi.Functor( _vgv , _vgv )                      , ## the base
         LoKi.Dicts.PipeOps(_gv,_gv)                      ) ## stremers    
+    # vector<T> -> double 
     _decorated |= _LoKiCore.getAndDecorateMaps       (
         name                                             , ## module name
         LoKi.Functor( _vgp , 'double' )                  , ## the base
@@ -93,6 +96,16 @@ def _decorate ( name = _name  ) :
         name                                             , ## module name
         LoKi.Functor( _vgv , 'double' )                  , ## the base
         LoKi.Dicts.FunValOps(_gv)                        ) ## stremers    
+    # vector<T> -> bool
+    _decorated |= _LoKiCore.getAndDecorateMaps       (
+        name                                             , ## module name
+        LoKi.Functor( _vgp , bool )                      , ## the base
+        LoKi.Dicts.CutValOps(_gp)                        ) ## stremers
+    _decorated |= _LoKiCore.getAndDecorateMaps       (
+        name                                             , ## module name
+        LoKi.Functor( _vgv , bool )                  , ## the base
+        LoKi.Dicts.CutValOps(_gv)                        ) ## stremers    
+    # vector<T> -> T
     _decorated |= _LoKiCore.getAndDecorateMaps       (
         name                                             , ## module name
         LoKi.Functor( _vgp , _gp )                       , ## the base
@@ -101,7 +114,7 @@ def _decorate ( name = _name  ) :
         name                                             , ## module name
         LoKi.Functor( _vgv , _gv )                       , ## the base
         LoKi.Dicts.ElementOps(_gv,_gv)                   ) ## stremers
-    #sources
+    #sources: void -> vector<T> 
     _decorated |= _LoKiCore.getAndDecorateMaps       (
         name                                             , ## module name
         LoKi.Functor( 'void' , _vgp )                    , ## the base

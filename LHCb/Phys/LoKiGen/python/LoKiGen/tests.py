@@ -1,6 +1,6 @@
 #!/usr/bin/env python 
 # =============================================================================
-# $Id: tests.py,v 1.5 2008-02-11 10:05:34 ibelyaev Exp $
+# $Id: tests.py,v 1.6 2008-11-23 19:36:05 ibelyaev Exp $
 # =============================================================================
 ## @file   LoKiGen/tests.py
 #
@@ -65,8 +65,8 @@ def test1() :
     print ' v>>process(GID)>>min_value(GP)   : %s'%(v>>process(GID)>>min_value(GP))
     print '(v>>min_element(GID)).name()      : %s'%(v>>min_element(GID)).name()
     print ' v>>min_value(GID)                : %s'%(v>>min_value(GID))
-    print '(v>>("e+"!=GABSID)).size()        : %s'%(v>>('e+'!=GABSID)).size()
-    print '(v>>select("mu+"!=GABSID)).size() : %s'%(v>>select('mu+'!=GABSID)).size()
+    print ' v>>("e+"!=GABSID)>>GSIZE         : %s'%(v>>('e+'!=GABSID)>>GSIZE)
+    print ' v>>select("mu+"!=GABSID)>>GEMPTY : %s'%(v>>select('mu+'!=GABSID)>>GEMPTY)
 
 # =============================================================================
 def testAll() :

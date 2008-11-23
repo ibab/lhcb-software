@@ -1,4 +1,4 @@
-// $Id: GenParticles.cpp,v 1.19 2008-11-02 19:25:25 ibelyaev Exp $
+// $Id: GenParticles.cpp,v 1.20 2008-11-23 19:36:05 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -1560,6 +1560,52 @@ LoKi::GenParticles::Oscillated::operator()
 std::ostream& 
 LoKi::GenParticles::Oscillated::fillStream ( std::ostream& o ) const 
 { return o << "GOSCILLATED" ; }
+// ============================================================================
+
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::GenParticles::Oscillated1* 
+LoKi::GenParticles::Oscillated1::clone() const 
+{ return new LoKi::GenParticles::Oscillated1(*this); }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::GenParticles::Oscillated1::result_type 
+LoKi::GenParticles::Oscillated1::operator() 
+  ( LoKi::GenParticles::Oscillated::argument p ) const 
+{
+  return 0 != LoKi::GenParticles::oscillated1 ( p );  
+}
+// ============================================================================
+// OPTIONAL: the specific printout 
+// ============================================================================
+std::ostream& 
+LoKi::GenParticles::Oscillated1::fillStream ( std::ostream& o ) const 
+{ return o << "GOSCILLATED1" ; }
+// ============================================================================
+
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::GenParticles::Oscillated2* 
+LoKi::GenParticles::Oscillated2::clone() const 
+{ return new LoKi::GenParticles::Oscillated2(*this); }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::GenParticles::Oscillated2::result_type 
+LoKi::GenParticles::Oscillated2::operator() 
+  ( LoKi::GenParticles::Oscillated2::argument p ) const 
+{
+  return 0 != LoKi::GenParticles::oscillated2 ( p );  
+}
+// ============================================================================
+// OPTIONAL: the specific printout 
+// ============================================================================
+std::ostream& 
+LoKi::GenParticles::Oscillated2::fillStream ( std::ostream& o ) const 
+{ return o << "GOSCILLATED2" ; }
 // ============================================================================
 
 

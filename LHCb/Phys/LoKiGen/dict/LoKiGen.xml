@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiGen.xml,v 1.15 2008-11-02 19:25:25 ibelyaev Exp $ 
+     * $Id: LoKiGen.xml,v 1.16 2008-11-23 19:36:05 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiGen package
@@ -39,6 +39,9 @@
   <class pattern   = "LoKi::Functor<*HepMC::*>"            />
   <class pattern   = "LoKi::FunctorFromFunctor<*HepMC::*>" />
   <class pattern   = "LoKi::Constant<*HepMC::*>"           />
+
+  <class pattern   = "LoKi::Functors::Empty<*HepMC::*>"   />
+  <class pattern   = "LoKi::Functors::Size<*HepMC::*>"   />
   
   <class pattern   = "LoKi::Valid<*HepMC::*>"         />
   <class pattern   = "LoKi::TheSame<*HepMC::*>"       />
@@ -60,6 +63,7 @@
   <class pattern   = "LoKi::Dicts::MapsOps<*HepMC::*>"    />
   <class pattern   = "LoKi::Dicts::PipeOps<*HepMC::*>"    />
   <class pattern   = "LoKi::Dicts::FunValOps<*HepMC::*>"  />
+  <class pattern   = "LoKi::Dicts::CutValOps<*HepMC::*>"  />
   <class pattern   = "LoKi::Dicts::ElementOps<*HepMC::*>" />
   <class pattern   = "LoKi::Dicts::SourceOps<*HepMC::*>"  />
 

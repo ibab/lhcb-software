@@ -1,4 +1,4 @@
-// $Id: GenTypes.h,v 1.11 2008-03-30 13:36:01 ibelyaev Exp $
+// $Id: GenTypes.h,v 1.12 2008-11-23 19:36:05 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GENTYPES_H 
 #define LOKI_GENTYPES_H 1
@@ -87,6 +87,10 @@ namespace LoKi
     typedef LoKi::BasicFunctors<const HepMC::GenParticle*>::FunVal  GFunVals   ;
     // type of "fun-val" for HepMC::GenParticle   (assignable)
     typedef LoKi::Assignable<GFunVals>::Type                        GFunVal    ;
+    // type of "cut-val" for HepMC::GenParticle   (interface)
+    typedef LoKi::BasicFunctors<const HepMC::GenParticle*>::CutVal  GCutVals   ;
+    // type of "cut-val" for HepMC::GenParticle   (assignable)
+    typedef LoKi::Assignable<GCutVals>::Type                        GCutVal    ;
     // type of "element" for HepMC::GenParticle   (interface)
     typedef LoKi::BasicFunctors<const HepMC::GenParticle*>::Element GElements  ;
     // type of "element" for HepMC::GenParticle   (assignable)
@@ -110,6 +114,10 @@ namespace LoKi
     typedef LoKi::BasicFunctors<const HepMC::GenVertex*>::FunVal    GVFunVals  ;
     // type of "fun-val" for HepMCGenVertex   (assignable)
     typedef LoKi::Assignable<GVFunVals>::Type                       GVFunVal   ;
+    // type of "cut-val" for HepMCGenVertex   (interface)
+    typedef LoKi::BasicFunctors<const HepMC::GenVertex*>::CutVal    GVCutVals  ;
+    // type of "cut-val" for HepMCGenVertex   (assignable)
+    typedef LoKi::Assignable<GVCutVals>::Type                       GVCutVal   ;
     // type of "element" for HepMCGenVertex   (interface)
     typedef LoKi::BasicFunctors<const HepMC::GenVertex*>::Element   GVElements ;
     // type of "element" for HepMCGenVertex   (assignable)
@@ -165,6 +173,10 @@ namespace LoKi
     typedef LoKi::GenTypes::GFunVals      GFunVals  ;
     // type of "fun-val" for HepMC::GenParticle  (assignable)
     typedef LoKi::GenTypes::GFunVal       GFunVal   ;
+    // type of "cut-val" for HepMC::GenParticle  (interface)
+    typedef LoKi::GenTypes::GCutVals      GCutVals  ;
+    // type of "cut-val" for HepMC::GenParticle  (assignable)
+    typedef LoKi::GenTypes::GCutVal       GCutVal   ;
     // type of "element" for HepMC::GenParticle  (interface)
     typedef LoKi::GenTypes::GElements     GElements ;
     // type of "element" for HepMC::GenParticle  (assignable)
@@ -188,6 +200,10 @@ namespace LoKi
     typedef LoKi::GenTypes::GVFunVals     GVFunVals  ;
     // type of "fun-val" for HepMC::GenVertex  (assignable)
     typedef LoKi::GenTypes::GVFunVal      GVFunVal   ;
+    // type of "cut-val" for HepMC::GenVertex  (interface)
+    typedef LoKi::GenTypes::GVCutVals     GVCutVals  ;
+    // type of "cut-val" for HepMC::GenVertex  (assignable)
+    typedef LoKi::GenTypes::GVCutVal      GVCutVal   ;
     // type of "element" for HepMC::GenVertex  (interface)
     typedef LoKi::GenTypes::GVElements    GVElements ;
     // type of "element" for HepMC::GenVertex  (assignable)

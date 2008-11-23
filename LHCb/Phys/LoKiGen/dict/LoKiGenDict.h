@@ -1,4 +1,4 @@
-// $Id: LoKiGenDict.h,v 1.8 2008-03-30 13:36:01 ibelyaev Exp $
+// $Id: LoKiGenDict.h,v 1.9 2008-11-23 19:36:05 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKICOREDICT_H 
 #define LOKI_LOKICOREDICT_H 1
@@ -41,16 +41,52 @@
  *  @date 2007-12-01
  */
 // ============================================================================
+// the specialized printout 
+// ============================================================================
+template <>
+inline std::ostream& 
+LoKi::Functors::Empty<const HepMC::GenVertex*>::fillStream  
+( std::ostream& s ) const 
+{ return s << "GVEMPTY" ; }
+// ============================================================================
+// the specialized printout 
+// ============================================================================
+template <>
+inline std::ostream& 
+LoKi::Functors::Empty<const HepMC::GenParticle*>::fillStream
+( std::ostream& s ) const 
+{ return s << "GEMPTY " ; }
+// ============================================================================
+// the specialized printout 
+// ============================================================================
+template <>
+inline std::ostream& 
+LoKi::Functors::Size<const HepMC::GenVertex*>::fillStream  
+( std::ostream& s ) const 
+{ return s << "GVSIZE" ; }
+// ============================================================================
+// the specialized printout 
+// ============================================================================
+template <>
+inline std::ostream& 
+LoKi::Functors::Size<const HepMC::GenParticle*>::fillStream 
+( std::ostream& s ) const 
+{ return s << "GSIZE " ; }
+// ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   namespace Dicts 
   {
+    // ========================================================================
     template <>
     class FunCalls<HepMC::GenParticle> 
     {
     private:
+      // ======================================================================
       typedef HepMC::GenParticle          Type ;
       typedef LoKi::BasicFunctors<const Type*>::Function Fun  ;
+      // ======================================================================
     public:
       // ======================================================================
       // __call__ 
@@ -86,8 +122,10 @@ namespace LoKi
     class CutCalls<HepMC::GenParticle> 
     {
     private:
+      // ======================================================================
       typedef HepMC::GenParticle           Type ;
       typedef LoKi::BasicFunctors<const Type*>::Predicate Fun  ;
+      // ======================================================================
     public:
       // ======================================================================
       // __call__
@@ -119,12 +157,16 @@ namespace LoKi
     class FunCalls<HepMC::GenVertex> 
     {
     private:
+      // ======================================================================
       typedef HepMC::GenVertex            Type ;
       typedef LoKi::BasicFunctors<const Type*>::Function Fun  ;
+      // ======================================================================
     public:
+      // ======================================================================
       // __call__
       static Fun::result_type __call__ 
       ( const Fun& fun  , const Type*           o ) { return fun ( o ) ; }
+      // ======================================================================
     public:
       // ======================================================================
       // __rrshift__ 
@@ -153,8 +195,10 @@ namespace LoKi
     class CutCalls<HepMC::GenVertex> 
     {
     private:
+      // ======================================================================
       typedef HepMC::GenVertex             Type ;
       typedef LoKi::BasicFunctors<const Type*>::Predicate Fun  ;
+      // ======================================================================
     public:
       // ======================================================================
       // __call__
@@ -183,6 +227,7 @@ namespace LoKi
     } ;
     // ========================================================================
   } 
+  // ========================================================================
 }
 // ============================================================================
 namespace
@@ -215,10 +260,12 @@ namespace
     LoKi::Dicts::MapsOps<const HepMC::GenParticle*>        m_fo1  ;
     LoKi::Dicts::PipeOps<const HepMC::GenParticle*>        m_fo2  ;
     LoKi::Dicts::FunValOps<const HepMC::GenParticle*>      m_fo3  ;
+    LoKi::Dicts::CutValOps<const HepMC::GenParticle*>      m_fo31 ;
     LoKi::Dicts::ElementOps<const HepMC::GenParticle*>     m_fo4  ;
     LoKi::Dicts::MapsOps<const HepMC::GenVertex*>          m_fo5  ;
     LoKi::Dicts::PipeOps<const HepMC::GenVertex*>          m_fo6  ;
     LoKi::Dicts::FunValOps<const HepMC::GenVertex*>        m_fo7  ;
+    LoKi::Dicts::CutValOps<const HepMC::GenVertex*>        m_fo71 ;
     LoKi::Dicts::ElementOps<const HepMC::GenVertex*>       m_fo8  ;
     LoKi::Dicts::SourceOps<const HepMC::GenVertex*>        m_fo9  ;
     LoKi::Dicts::SourceOps<const HepMC::GenParticle*>      m_fo10 ;
@@ -230,9 +277,14 @@ namespace
     /// the special operators for identifiers 
     LoKi::Dicts::PIDOps<LoKi::GenParticles::Identifier>    m_i1 ;
     LoKi::Dicts::PIDOps<LoKi::GenParticles::AbsIdentifier> m_i2 ;    
-    ///
+    /// same ? 
     LoKi::TheSame<const HepMC::GenParticle*> m_s1 ;
     LoKi::TheSame<const HepMC::GenVertex*>   m_s2 ;    
+    /// trivia
+    LoKi::Functors::Empty<const HepMC::GenParticle*> m_e1  ;
+    LoKi::Functors::Size<const HepMC::GenParticle*>  m_si1 ;
+    LoKi::Functors::Empty<const HepMC::GenVertex*>   m_e2  ;
+    LoKi::Functors::Size<const HepMC::GenVertex*>    m_si2 ;    
     /// fictive constructor 
     _Instantiations () ;
   } ;  

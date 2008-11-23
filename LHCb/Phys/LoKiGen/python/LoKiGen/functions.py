@@ -158,6 +158,10 @@ GNUCLEUS = LoKi.GenParticles.IsNucleus ()
 GONE      = LoKi.Constant ( _GP + ',double' )( 1.0 )
 ## @see LoKi::Cust::GOSCILLATED
 GOSCILLATED = LoKi.GenParticles.Oscillated() 
+## @see LoKi::Cust::GOSCILLATED1
+GOSCILLATED1 = LoKi.GenParticles.Oscillated1() 
+## @see LoKi::Cust::GOSCILLATED2
+GOSCILLATED2 = LoKi.GenParticles.Oscillated2() 
 ## @see LoKi::Cuts::GP
 GP       = LoKi.GenParticles.Momentum () 
 ## @see LoKi::Cuts::GPHI
@@ -246,6 +250,8 @@ GPipes     = LoKi.Functor             ( _vgp , _vgp      )
 GPipe      = LoKi.FunctorFromFunctor  ( _vgp , _vgp      )
 GFunVals   = LoKi.Functor             ( _vgp , 'double'  )
 GFunVal    = LoKi.FunctorFromFunctor  ( _vgp , 'double'  )
+GCutVals   = LoKi.Functor             ( _vgp , bool      )
+GCutVal    = LoKi.FunctorFromFunctor  ( _vgp , bool      )
 GElements  = LoKi.Functor             ( _vgp , _GP       ) 
 GElement   = LoKi.FunctorFromFunctor  ( _vgp , _GP       )
 GSources   = LoKi.Functor             ('void', _vgp      )
@@ -258,11 +264,18 @@ GVPipes    = LoKi.Functor             ( _vgv , _vgv      )
 GVPipe     = LoKi.FunctorFromFunctor  ( _vgv , _vgv      )
 GVFunVals  = LoKi.Functor             ( _vgv , 'double'  )
 GVFunVal   = LoKi.FunctorFromFunctor  ( _vgv , 'double'  )
+GVCutVals  = LoKi.Functor             ( _vgv , bool      )
+GVcutVal   = LoKi.FunctorFromFunctor  ( _vgv , bool      )
 GVElements = LoKi.Functor             ( _vgv , _GV       ) 
 GVElement  = LoKi.FunctorFromFunctor  ( _vgv , _GV       ) 
 
 
 GSOURCE    = LoKi.GenParticles.SourceTES
+
+GEMPTY      = LoKi.Functors.Empty ( _GP ) ()
+GVEMPTY     = LoKi.Functors.Empty ( _GV ) ()
+GSIZE       = LoKi.Functors.Size  ( _GP ) ()
+GVSIZE      = LoKi.Functors.Size  ( _GV ) () 
 
 # =============================================================================
 if '__main__' == __name__ :

@@ -1,4 +1,4 @@
-// $Id: GenParticles.h,v 1.21 2008-11-02 19:25:25 ibelyaev Exp $
+// $Id: GenParticles.h,v 1.22 2008-11-23 19:36:04 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GENPARTICLES_H 
 #define LOKI_GENPARTICLES_H 1
@@ -1297,7 +1297,53 @@ namespace LoKi
       virtual std::ostream& fillStream ( std::ostream& s ) const ;      
       // ======================================================================
     } ;
+    // ========================================================================
+    /** @class Oscillated1 
+     *  Simple class to check the oscillation of the particle 
+     *  @see LoKi::GenParticles::oscillated1 
+     *  @see LoKi::Cuts::GOSCILLATED1 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nkhef.nl
+     *  @date 2008-07-03
+     */
+    class Oscillated1 : public LoKi::GenTypes::GCuts 
+    {
+    public:
+      // ======================================================================
+      /// MANDATORY: virtual desctructor 
+      virtual ~Oscillated1() {} ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual Oscillated1* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual  result_type   operator() ( argument p ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;      
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class Oscillated2
+     *  Simple class to check the oscillation of the particle 
+     *  @see LoKi::GenParticles::oscillated2 
+     *  @see LoKi::Cuts::GOSCILLATED2 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nkhef.nl
+     *  @date 2008-07-03
+     */
+    class Oscillated2 : public LoKi::GenTypes::GCuts 
+    {
+    public:
+      // ======================================================================
+      /// MANDATORY: virtual desctructor 
+      virtual ~Oscillated2() {} ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual Oscillated2* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual  result_type   operator() ( argument p ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;      
+      // ======================================================================
+    } ;
+    // ========================================================================
   } // end of namespace GenParticles  
+  // ==========================================================================
 } // end of namespace LoKi
 // ============================================================================
 // The END 
