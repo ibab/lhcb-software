@@ -10,7 +10,7 @@
  #define WIN32_LEAN_AND_MEAN
 #endif
 
-static const std::string s_presenterVersion("v0r13");
+static const std::string s_presenterVersion("v0r14");
 // environment variable for archive mount point (i.e. prefix to paths)
 static const std::string s_histdir("HISTDIR");
 static const std::string s_referencePath("HISTREFPATH");
