@@ -5,6 +5,12 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+! 2008-11-24 - Marco Cattaneo
+ -  Fix DoxyFile.cfg for use directly with CMT (without makedoc.py).
+    N.B. Undo this change if makedoc not updated to use CMT. makedoc.py still
+         needed to set LHCBVERS, GAUDIVERS set for the tag file URLs, and to
+         use /tmp or /build for the temporary doxygen database files
+
 </PRE><H1><A NAME=v6r0>2008-11-24 RecSys v6r0</A></H1><PRE>
 This version uses Gaudi v20r3 and LHCb v26r0.
 
@@ -22,8 +28,6 @@ This version uses Gaudi v20r3 and LHCb v26r0.
 
 - In RecSys v6r0:
   . Fixes and improvements to python Configurable following latest Gaudi changes
-  . Fix DoxyFile.cfg for use directly with CMT (without makedoc.py).
-    N.B. still needs LHCBVERS, GAUDIVERS set externally for the tag file URLs
 
 - In CaloMoniDst v3r3
   . Fix a memory leak
