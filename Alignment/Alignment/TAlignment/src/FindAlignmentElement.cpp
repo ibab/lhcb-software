@@ -1,4 +1,4 @@
-// $Id: FindAlignmentElement.cpp,v 1.8 2008-01-29 15:01:04 janos Exp $
+// $Id: FindAlignmentElement.cpp,v 1.9 2008-11-24 09:58:01 janos Exp $
 // Include files
 // from GaudiKernel
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -84,8 +84,8 @@ Alignment::FunctorMap createFunctorMap() {
   FindSTStation findSTStation  = &DeSTDetector::findStation;
   typedef DeSTLayer*   (DeSTDetector::*FindSTLayer) (const STChannelID);
   FindSTLayer findSTLayer      = &DeSTDetector::findLayer;
-  typedef DeSTSector* (DeSTDetector::*FindSTSector) (const STChannelID);
-  FindSTSector findSTSector    = &DeSTDetector::findSector;
+  typedef DeSTSector* (DeSTDetector::*FindSector) (const STChannelID) const;
+  FindSector findSTSector    = &DeSTDetector::findSector;
 
   /// TT specific
   typedef boost::function<const DetectorElement* (const DeSTSector*)> STParentOfSector;
@@ -212,11 +212,11 @@ Alignment::FunctorMap createFunctorMap() {
 			                        ("VeloModules"     , veloModule  )
 			                        ("TTStations"      , ttStation   )
 			                        ("TTLayers"        , ttLayer     )
-                              ("TTHalfModules"   , ttHalfModule)
+                   //                              ("TTHalfModules"   , ttHalfModule)
 			                        ("ITStations"      , itStation   )
 			                        ("ITBoxes"         , itBox       )
 			                        ("ITLayers"        , itLayer     )
-			                        ("ITLadders"       , itLadder    )
+                   //                        ("ITLadders"       , itLadder    )
 			                        ("OTDetector"      , otDetector  )
 			                        ("OTStations"      , otStation   )
 			                        ("OTLayers"        , otLayer     )
