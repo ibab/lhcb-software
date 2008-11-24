@@ -6,7 +6,7 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v6r24>2008-11-21 LbcomSys v6r24</A></H1><PRE>
+</PRE><H1><A NAME=v6r24>2008-11-24 LbcomSys v6r24</A></H1><PRE>
 This version uses Gaudi v20r3 and LHCb v26r0
 
 - Packages added:    Rich/RichAlgorithms v1r0
@@ -14,6 +14,10 @@ This version uses Gaudi v20r3 and LHCb v26r0
     PuVeto v7r3p1, RichDAQ v3r23, RichTools v2r23, STAlgorithms v3r2,
     STCheckers v2r8, STDAQ v3r13, STTools v3r6, VeloAlgorithms v4r7p2,
     VeloDAQ v4r4, VeloSimulation v3r6p1
+
+- In LbcomSys v6r24
+  . Fix DoxyFile.cfg for use directly with CMT (without makedoc.py).
+    N.B. still needs LHCBVERS, GAUDIVERS set externally for the tag file URLs
 
 - In L0Calo v9r19
   . src/L0CaloAlg.cpp: in the trigger emulation, do not add ECAL to HCAL 0
