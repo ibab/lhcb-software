@@ -3,63 +3,37 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-! 2008-11-24 - Marco Cattaneo
- - Update valgrind.job for latest gaudirun.py options
- - Remove BooleMessage.opts, put only active line in Boole.opts
-
-! 2008-11-24 - Marco Clemencic
- - Modified the test to avoid failures when the database changes.
-
-! 2008-11-19 - Marco Cattaneo
- - Adapt to new LHCbConf().DataType option
- - Update reference files accordingly
-
-! 2008-11-14 - Marco Cattaneo
- - Capitalize all options names in Configurable
- - Remove v200601.opts
+</PRE><H1><A NAME=v17r0>2008-11-24 Boole v17r0</A></H1><PRE>
+ - Many backward incompatible changes to Configurable:
+   . Adapt to configuration changes in Gaudi v20r3. Incompatible with Gaudi v20r2
+   . Most option names are changed. In particular:
+     + All option names are Capitalized
+     + New DataType option, removes need to set CondDBTag and DDDBtag if using
+       default tags
+   . Adapt to changes in RICH digitisation (new python configurable + removal of
+     a few minimal options files)
+   . applyConf() renamed __apply_configuration__ and called automatically
+   . Default setting is now 2008; Spillover is disabled by default
+ - Changes to options files
+	 . Adapt to changes in configurable, in particular:
+     + Adapt to option name changes
+     + Remove Boole.applyConf() everywhere
+     + Default names for output files now set inside confugurable
+   . Add Boole-DC06.py since DC06 is no longer default
+   . Add Boole-2008-VeloOpen.py to digitize velo open geometry
+   . Rename Boole-FST09.py to Boole-FEST09.py
+   . Remove v200601.opts, BooleMessage.opts
+   . Update SuppressWarnings.opts
+   . Do not suppress INFO from RawWriter (finalize message needed by DIRAC)
+ - Fixes to valgrind.job
+   . use latest gaudirun.py options to extract .opts file
+   . fixes for use in interactive lsf, and to remove version directory
+ - Changes to QMTests
+   . Modified the test to avoid failures when the database changes.
+   . Update reference files for this release
  - Use ParamFiles v8r0
- - Update SuppressWarnings.opts
-
-! 2008-11-12 - Marco Cattaneo
- - Many changes to configurable, including changes to option names
- - Add Boole-DC06.py
- - Change default to 2008.
-
-! 2008-11-10 - Marco Cattaneo
- - Change version to v17r0
  - Remove Boole.exe
  - Fix typo in Boole_Ganga.py
-
-! 2008-11-10 - Marco Cattaneo
- - Remove HepMCBack warnings from QMTest reference
-
-! 2008-10-31 - Marco Cattaneo
- - Remove Boole.applyConf() from all options files, as this is automatic
-   in Gaudi v20r3
-   TODO: Adapt Boole configurable to this change, since now functions to be
-         called after applyConf are no longer working correctly
- - Rename Boole-FST09.py to Boole-FEST09.py
- - Cleanup options files for tests
-
-! 2008-10-30 - Marco Cattaneo
- - Update QMTest reference files also for Boole v16r3 changes
-
-! 2008-10-24 - Chris Jones
- - Adapt to changes in RICH digitisation. New python configurable +
-   removeal of a few minimal options files.
-
-! 2008-10-22 - Marco Cattaneo
- - Do not suppress INFO from RawWriter (finalize message needed by DIRAC)
-
-! 2008-10-21 - Marco Clemencic
- - Updated the fix for of Configurable for Gaudi v20r3. 
-
-! 2008-10-16 - Marco Cattaneo
- - Fix Configurable for Gaudi v20r3. Not compatible with Gaudi v20r2
-
-! 2008-10-14 - Marco Cattaneo
- - Fix valgrind.job for use in interactive lsf, and to remove version directory
- - Add Boole-2008-VeloOpen.py to digitize velo open geometry
 
 </PRE><H1><A NAME=v16r3>2008-10-10 Boole v16r3</A></H1><PRE>
  - Add options/Boole/FST09.py, default options for full scale test production
