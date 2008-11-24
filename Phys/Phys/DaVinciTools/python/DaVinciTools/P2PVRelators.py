@@ -1,0 +1,5 @@
+from Gaudi.Configuration import *
+from Configurables import GenericParticle2PVRelator__p2PVWithIP_OfflineDistanceCalculatorName_     as P2PVWithIP
+from Configurables import GenericParticle2PVRelator__p2PVWithIPChi2_OfflineDistanceCalculatorName_ as P2PVWithIPChi2
+from Configurables import GenericParticle2PVRelator__p2PVWithIP_OnlineDistanceCalculatorName_      as OnlineP2PVWithIP
+from Configurables import GenericParticle2PVRelator__p2PVWithIPChi2_OnlineDistanceCalculatorName_  as OnlineP2PVWithIPChi2
