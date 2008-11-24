@@ -22,6 +22,7 @@ apply_pattern install_python_modules
 library  GaudiOnline  *.cpp -import=DIM -import=DAQEvent -import=MDF -import=AIDA -import=Python
 apply_pattern linker_library   library=GaudiOnline
 apply_pattern generate_rootmap library=GaudiOnline
+apply_pattern genconfig_add_preload library=$(library_prefix)MDF.$(shlibsuffix)
 apply_pattern generate_configurables library=GaudiOnline
 
 macro_append GaudiOnline_shlibflags ' $(MDFlib_linkopts) '
