@@ -1,4 +1,4 @@
-// $Id: OnlineP2PVWithIP.cpp,v 1.1 2008-10-24 12:01:20 jpalac Exp $
+// $Id: OnlineP2PVWithIP.cpp,v 1.2 2008-11-24 13:52:11 jpalac Exp $
 /** @class OnlineP2PVWithIPChi2 OnlineP2PVWithIPChi2.cpp
  *  
  *
@@ -20,6 +20,6 @@
  *  @author Juan PALACIOS
  *  @date   2008-10-16
  */
-typedef GenericParticle2PVRelator<_p2PVWithIP, OnlineDistanceCalculatorName>  OnlineP2PVWithIPChi2;
+typedef GenericParticle2PVRelator<_p2PVWithIP, OnlineDistanceCalculatorName>  OnlineP2PVWithIP;
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( OnlineP2PVWithIPChi2 )
