@@ -4,6 +4,7 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+!========================== HltLuminosity v2r3 2008-11-24 ===================
 ! 2008-11-20 - Jaap Panman
  -LumiAnalyser: prepare for online implementation
 
