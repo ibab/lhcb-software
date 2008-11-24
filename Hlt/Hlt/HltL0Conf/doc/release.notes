@@ -4,6 +4,7 @@
 ! Purpose     : L0-T-track Confirmation algorithms
 !-----------------------------------------------------------------------------
 
+!========================== HltL0Conf v2r7 2008-11-24 ===================
 ! 2008-11-03 - Johannes Albrecht
  - HltTrackFit: add tool to fit tracks inside the HLT. Can be used as tool for 
 	 HltTrackUpgrade, with RecoName = "FitTrack". Has to be configured via options	
