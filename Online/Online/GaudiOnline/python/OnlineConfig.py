@@ -286,6 +286,16 @@ def bufferCons(partID, partName, buffer, partitionBuffers, decode):
   return _application('NONE',extsvc=[Configs.MonitorSvc(),mepMgr,evtSel],runable=evtRunable(mepMgr),algs=algs)
 
 #------------------------------------------------------------------------------------------------
+def bufferReformatter(partID, partName, input, output, partitionBuffers, decode, routing=0x1):
+  "Simple disk writer dumping events from file to disk."
+  mepMgr               = mepManager(partID,partName,[input,output],partitionBuffers=partitionBuffers)
+  evtSel               = mbmSelector(input=input,decode=decode,type='ALL')
+  evtPers              = rawPersistencySvc()
+  algs                 = [storeExplorer(load=1,freq=0.001)]
+  algs                 = [evtMerger(buffer=output,name='In2Out',location='DAQ/RawEvent',routing=routing)]
+  return _application('NONE',extsvc=[Configs.MonitorSvc(),mepMgr,evtSel],runable=evtRunable(mepMgr),algs=algs)
+
+#------------------------------------------------------------------------------------------------
 def diskWRApp(partID, partName, buffer, partitionBuffers, decode, output):
   "Simple disk writer dumping events from file to disk."
   mepMgr               = mepManager(partID,partName,[buffer],partitionBuffers=partitionBuffers)

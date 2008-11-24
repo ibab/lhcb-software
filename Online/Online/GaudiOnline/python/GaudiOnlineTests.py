@@ -47,6 +47,9 @@ def runDiskWR(buffer, partitionBuffers, decode, output):
 def runBufferCons(buffer, partitionBuffers, decode):
   _run(bufferCons(pid,pnam,buffer,partitionBuffers,decode))
 #------------------------------------------------------------------------------------------------
+def runReformatter(routing=0x1):
+  _run(bufferReformatter(pid,pnam,input='RESULT',output='OUT',partitionBuffers=True,decode=True,routing=routing))
+#------------------------------------------------------------------------------------------------
 def runNetCons(source,load=1,print_freq=0.0005):
   algs = [storeExplorer(load=load,freq=print_freq)]
   _run(netConsumerApp(pid,pnam,source,algs))
