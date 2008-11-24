@@ -4,8 +4,10 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
+!======================== CaloDigit v2r10 2008-11-24 =========================
 ! 2008-11-17 - Olivier Deschamps
- - CaloDigitAlg :  - default noise for Ecal is 'gaussian' (CW noise description set to UseAdvancedNoise = false)
+ - CaloDigitAlg :  - default noise for Ecal is 'gaussian' 
+                     (CW noise description set to UseAdvancedNoise = false)
                    - 0-suppression threshold for Prs set to 5 ADC (was 15)
                    - trigger threshold for Prs set to 23.5 MeV = 10 MIP (was 10 MeV ~ 5 Mip)
 
