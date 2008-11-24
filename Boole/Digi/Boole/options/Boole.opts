@@ -140,8 +140,9 @@ DigiVELOSeq.Members += { "VeloDataProcessor" };
 DigiVELOSeq.Members += { "VeloClusterMaker" };
 DigiVELOSeq.Members += { "PrepareVeloRawBuffer" };
 
-// Modify printout defaults
-#include "$BOOLEOPTS/BooleMessage.opts"
+// Do not print event number at every event (done already by Boole)
+MessageSvc.OutputLevel = 3;
+EventSelector.PrintFreq = -1;
 
 // Run the L0Filter always, may be used for selective output
 TriggerL0Seq.Members += { "L0Filter" };

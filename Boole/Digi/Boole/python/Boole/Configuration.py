@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.26 2008-11-19 18:59:18 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.27 2008-11-24 14:26:42 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -81,8 +81,14 @@ class Boole(LHCbConfigurableUser):
         tae   = self.getProp("GenerateTAE")
         spill = self.getProp("UseSpillover")
         if tae       : self.enableTAE()
-        if not spill : self.disableSpillover()
-
+        if not spill :
+            self.disableSpillover()
+            if self.getProp("DataType") == "DC06" :
+                log.warning("Spillover is disabled. Should normally be enabled for DC06!")
+        else:
+            if self.getProp("DataType") != "DC06" :
+                log.warning("Spillover is enabled. Should normally be enabled only for DC06!")
+            
     def enableTAE(self):
         """
         switch to generate Time Alignment events.

@@ -78,7 +78,7 @@ endif
 set SuppFile = "$MYJOBROOT/job/Boole.supp"
 
 # Flatten the options and force 5 events only
-gaudirun.py -n -v --old-opts $options >! ./valgrind.opts
+gaudirun.py -n -v -o ./valgrind.opts $options
 echo "ApplicationMgr.EvtMax = 5;" >> valgrind.opts
 
 # == run the excutable ================================
