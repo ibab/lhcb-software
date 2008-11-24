@@ -1,0 +1,41 @@
+#!/bin/bash
+#. /group/online/dataflow/scripts/preamble.sh
+. ${GAUDIONLINEROOT}/tests/cmt/setup.sh
+
+runit()
+{
+cat >/tmp/${USER}/ReadMDF.opts <<END-OF-OPTS
+ApplicationMgr.TopAlg                = {"StoreExplorerAlg","LHCb::RawEventTestDump/Dump"};
+ApplicationMgr.EvtMax                = 100000;
+ApplicationMgr.HistogramPersistency  = "NONE";
+Dump.CheckData                       = 1;
+Dump.CheckData                       = 0;
+Dump.DumpData                        = 1;
+Dump.FullDump                        = 1;
+Dump.OutputLevel                     = 1;
+StoreExplorerAlg.Load                = 1;
+StoreExplorerAlg.PrintFreq           = 100;
+EventDataSvc.RootCLID                = 1;
+EventDataSvc.EnableFaultHandler      = true;
+EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc"};
+EventSelector.PrintFreq              = 100;
+EventSelector.Input                  = {"DATA='PFN:file://${1}' SVC='LHCb::MDFSelector'"};
+StoreExplorerAlg.OutputLevel         = 1;
+END-OF-OPTS
+#
+echo $LD_LIBRARY_PATH
+cat /tmp/${USER}/ReadMDF.opts;
+$ONLINEKERNELROOT/$CMTCONFIG/gentest.exe libGaudiKernel.so GaudiMain /tmp/${USER}/ReadMDF.opts | more;
+rm /tmp/${USER}/ReadMDF.opts;
+}
+
+if test -f /tmp/${USER}/ReadMDF.opts;
+    then
+    rm -f /tmp/${USER}/ReadMDF.opts;
+fi;
+if test -z "${1}";
+    then
+    echo "Usage: `basename $0` <filename>";
+else
+    runit $*
+fi;

@@ -27,6 +27,12 @@ export MINITERM='xterm  -ls -132 -geometry 132x12 -title '
 export BIGTERM='xterm  -ls -132 -geometry 132x55 -title '
 export WIDETERM='xterm  -ls -132 -geometry 160x50 -title '
 #export MINITERM=echo
+export NODENAME=`python -c "print '$HOST'.split('.')[0]"`
+if test -z "${PYOPTS}";
+  then
+    export PYOPTS=${GAUDIONLINEROOT}/python
+    export PYTHONPATH=${PYOPTS}:${PYTHONPATH}
+fi;
 #
 start_py_task()
 {

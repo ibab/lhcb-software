@@ -1,12 +1,6 @@
 #!/bin/bash
 . `dirname ${0}`/preamble.sh
 #rm /dev/shm/bm_* /dev/shm/sem.bm_* /dev/shm/TAN* /dev/shm/sem.TAN*
-export NODENAME=`python -c "print '$HOST'.split('.')[0]"`
-if test -z "${PYOPTS}";
-  then
-    export PYOPTS=${GAUDIONLINEROOT}/python
-    export PYTHONPATH=${PYOPTS}:${PYTHONPATH}
-fi;
 #
 start_py_task MepInit   "import GaudiOnlineTests;GaudiOnlineTests.runMepBuffer()"
 start_py_task MbmOutput "import GaudiOnlineTests;GaudiOnlineTests.runOutBuffer()"
