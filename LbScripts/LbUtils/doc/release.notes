@@ -1,3 +1,8 @@
+2008-11-24  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbUtils/rcs.py: module to allow technology transparent access
+	to revision control systems.
+
 2008-11-21  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
 	* python/LbUtils/Lock.py: exit code returned by command is now stored in exitCode field

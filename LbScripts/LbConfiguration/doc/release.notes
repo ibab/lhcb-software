@@ -1,3 +1,10 @@
+2008-11-24  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbConfiguration/GetPack.py: rewiting of the scripts getpack.py
+	with support to SVN (via LbUtils.rcs)
+	* scripts/getpack.py: wrapper for the script logic in LbConfiguration.GetPack
+	* cmt/requirements: added alias for getpack.py
+
 2008-11-13  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v1r10
