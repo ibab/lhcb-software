@@ -1,8 +1,17 @@
-! $Id: release.notes,v 1.384 2008-11-12 08:03:12 pkoppenb Exp $
+! $Id: release.notes,v 1.385 2008-11-24 13:57:05 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-11-24 - Juan PALACIOS
+ - src/OnlineP2PVWithIP.cpp
+  . Fix typo in typedef: OnlineP2PVWithIPChi2 -> OnlineP2PVWithIP
+ - cmt/requirements 
+  . Add python directory to branches.
+  . apply_pattern install_python_modules
+ - Add python/DaVinciTools/P2PVRelators.py
+  . Contains short names (C++ typedefs) for GenericParticle2PVRelator specialisations P2PVWithIP, P2PVWithIP, OnlineP2PVWithIP, OnlineP2PVWithIP
 
 ! 2008-11-12 - Patrick Koppenburg
  - CheckSelResultTool : fix compilation warning
