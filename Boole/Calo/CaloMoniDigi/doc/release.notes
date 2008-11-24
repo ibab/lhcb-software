@@ -1,14 +1,14 @@
-! $Id: release.notes,v 1.13 2008-10-30 15:32:02 odescham Exp $
+! $Id: release.notes,v 1.14 2008-11-24 15:04:04 cattanem Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDigi
 ! Responsible : Vanya BELYAEV belyaev@lapp.in2p3.fr
 ! Purpose     : monitoring of Calo content for Digi tape 
 ! -----------------------------------------------------------------------------
 
+!======================== CaloMoniDigi v2r4 2008-11-24 ========================
 ! 2008-10-30 - Olivier Deschamps for Yasmine Amhis
  - add new algorithm : CaloDigitChannel (moved from CaloCalib)
  - requirements : add dependency to CaloDet
-
 
 !======================== CaloMoniDigi v2r3 2007-11-01 ========================
 ! 2007-10-30 - Olivier Deschamps
