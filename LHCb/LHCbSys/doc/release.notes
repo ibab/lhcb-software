@@ -5,6 +5,13 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+! 2008-11-24 - Marco Cattaneo
+  . Fix DoxyLHCbCommon.cfg and DoxyFile.cfg for use directly with CMT
+    (without makedoc.py).
+    N.B. Undo this change if makedoc not updated to use CMT. makedoc.py still
+         needed to set LHCBVERS, GAUDIVERS set for the tag file URLs, and to
+         use /tmp or /build for the temporary doxygen database files
+
 </PRE><H1><A NAME=v26r0>2008-11-20 LHCbSys v26r0</A></H1><PRE>
 This version uses Gaudi v20r3 and LCG_55b
 
@@ -27,7 +34,6 @@ This version uses Gaudi v20r3 and LCG_55b
     DetCondExample v11r5, DetDescChecks v4r10, DetDescExample v7r7p1,
     IOExample v2r6
 
-- In LHCbSys v26r0
   . Fix DoxyLHCbCommon.cfg and DoxyFile.cfg for use directly with CMT
     (without makedoc.py).
     N.B. still needs LHCBVERS, GAUDIVERS set externally for the tag file URLs
