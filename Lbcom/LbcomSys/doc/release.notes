@@ -6,6 +6,12 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+! 2008-11-24 - Marco Cattaneo
+ -  Fix DoxyFile.cfg for use directly with CMT (without makedoc.py).
+    N.B. Undo this change if makedoc not updated to use CMT. makedoc.py still
+         needed to set LHCBVERS, GAUDIVERS set for the tag file URLs, and to
+         use /tmp or /build for the temporary doxygen database files
+
 </PRE><H1><A NAME=v6r24>2008-11-24 LbcomSys v6r24</A></H1><PRE>
 This version uses Gaudi v20r3 and LHCb v26r0
 
@@ -14,10 +20,6 @@ This version uses Gaudi v20r3 and LHCb v26r0
     PuVeto v7r3p1, RichDAQ v3r23, RichTools v2r23, STAlgorithms v3r2,
     STCheckers v2r8, STDAQ v3r13, STTools v3r6, VeloAlgorithms v4r7p2,
     VeloDAQ v4r4, VeloSimulation v3r6p1
-
-- In LbcomSys v6r24
-  . Fix DoxyFile.cfg for use directly with CMT (without makedoc.py).
-    N.B. still needs LHCBVERS, GAUDIVERS set externally for the tag file URLs
 
 - In L0Calo v9r19
   . src/L0CaloAlg.cpp: in the trigger emulation, do not add ECAL to HCAL 0
