@@ -1,4 +1,4 @@
-// $Id: PVReFitterAlg.h,v 1.10 2008-11-19 12:21:13 jpalac Exp $
+// $Id: PVReFitterAlg.h,v 1.11 2008-11-24 13:26:24 jpalac Exp $
 #ifndef PVREFITTERALG_H 
 #define PVREFITTERALG_H 1
 
@@ -25,6 +25,9 @@ class ILifetimeFitter;
  * <b>IPVOfflineTool</b>  : Implemenmtation of IPVOfflineTool. Default: PVOfflineTool
  *
  * <b>IPVReFitter</b>     : Implemenmtation of IPVRefitter. Default: AdaptivePVReFitter
+ * <b>UseIPVOfflineTool</b> : bool, apply IPVOfflineTool::reDoSinglePV method.
+ *
+ * <b>UseIPVReFitter</b> : bool, apply IPVReFitter::remove method.
  *
  * <b>ParticleInputLocation</b>: TES location of the particles who's related primary vertices will be re-fitted.
  *
@@ -46,7 +49,8 @@ class ILifetimeFitter;
  * are stored  in a KeyedContainer<LHCb::RecVertex>,
  * which is placed in VertexOutputLocation. The relations table is placed in 
  * P2VRelationsOutputLocation. The re-fitting itself is a sequence of
- * IPVOfflineTool::reDoSinglePV, IPVReFitter::remove.
+ * IPVOfflineTool::reDoSinglePV (if UseIPVOfflineTool==true), 
+ * and IPVReFitter::remove (if UseIPVReFitter == true).
  * <b>Beware</b>: If there is more than one candidate per event, there can be 
  * more than one refitted PV for each original one. Hence users are required
  * to access the re-fitted vertices on a particle by particle basis, using
@@ -82,7 +86,8 @@ private:
 
   std::string m_pvOfflinetoolType;
   std::string m_pvReFitterType;
-  std::string m_relatedPVFinderType;
+  bool m_useIPVOfflineTool;
+  bool m_useIPVReFitter;
   std::string m_particleInputLocation;
   std::string m_PVInputLocation;
   std::string m_particle2VertexRelationsOutputLocation;

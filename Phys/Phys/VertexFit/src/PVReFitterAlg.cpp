@@ -1,4 +1,4 @@
-// $Id: PVReFitterAlg.cpp,v 1.12 2008-11-20 15:26:25 jpalac Exp $
+// $Id: PVReFitterAlg.cpp,v 1.13 2008-11-24 13:26:24 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -36,6 +36,8 @@ PVReFitterAlg::PVReFitterAlg( const std::string& name,
   m_pvReFitter(0),
   m_pvOfflinetoolType("PVOfflineTool"),
   m_pvReFitterType("AdaptivePVReFitter"),
+  m_useIPVOfflineTool(false),
+  m_useIPVReFitter(true),
   m_particleInputLocation(""),
   m_PVInputLocation(LHCb::RecVertexLocation::Primary),
   m_particle2VertexRelationsOutputLocation(""),
@@ -45,6 +47,8 @@ PVReFitterAlg::PVReFitterAlg( const std::string& name,
 
   declareProperty("IPVOfflineTool", m_pvOfflinetoolType);
   declareProperty("IPVReFitter",    m_pvReFitterType);
+  declareProperty("UseIPVOfflineTool", m_useIPVOfflineTool);
+  declareProperty("UseIPVReFitter",    m_useIPVReFitter);
   declareProperty("ParticleInputLocation",  m_particleInputLocation);
   declareProperty("PrimaryVertexInputLocation",  m_PVInputLocation);
   declareProperty("P2VRelationsOutputLocation",  
@@ -68,14 +72,22 @@ StatusCode PVReFitterAlg::initialize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
-  m_pvOfflineTool = tool<IPVOfflineTool> (m_pvOfflinetoolType, this);
+  if (m_useIPVOfflineTool) {    
+    m_pvOfflineTool = tool<IPVOfflineTool> (m_pvOfflinetoolType, this);
+    if (0==m_pvOfflineTool) return StatusCode::FAILURE;
+  }
 
-  m_pvReFitter = tool<IPVReFitter>(m_pvReFitterType, this);
+  if (m_useIPVReFitter) {
+    m_pvReFitter = tool<IPVReFitter>(m_pvReFitterType, this);
+    if (0==m_pvReFitter) return StatusCode::FAILURE;
+  }
 
-  return ( m_pvOfflineTool && 
-           m_pvReFitter       )
-    ? StatusCode::SUCCESS
-    : StatusCode::FAILURE;
+  if (!m_useIPVOfflineTool && ! m_useIPVReFitter) {
+    return Error("At least one of UseIPVOfflineTool and UseIPVReFitter must be true!", StatusCode::FAILURE);
+  }
+
+  return sc;
+  
 }
 
 //=============================================================================
@@ -192,17 +204,19 @@ LHCb::RecVertex* PVReFitterAlg::refitVertex(const LHCb::RecVertex* v,
                                             const LHCb::Particle* p  ) const
 {
 
-  LHCb::RecVertex* reFittedVertex = new LHCb::RecVertex();  
+  LHCb::RecVertex* reFittedVertex = 
+    m_useIPVOfflineTool ? new LHCb::RecVertex() : new LHCb::RecVertex(*v) ;
+  StatusCode sc(StatusCode::SUCCESS);
 
-  LHCb::Track::ConstVector tracks;
-  
-  getTracks(p, tracks);
+  if (m_useIPVOfflineTool) {
+    LHCb::Track::ConstVector tracks;
+    getTracks(p, tracks);
+    sc = m_pvOfflineTool->reDoSinglePV(v->position(), 
+                                       tracks, 
+                                       *reFittedVertex );
+  }
 
-  StatusCode sc = m_pvOfflineTool->reDoSinglePV(v->position(), 
-                                                tracks, 
-                                                *reFittedVertex );
-
-  if (sc==StatusCode::SUCCESS) {
+  if (m_useIPVReFitter && sc==StatusCode::SUCCESS) {
     sc = m_pvReFitter->remove(p, reFittedVertex);
   }
   
@@ -219,16 +233,17 @@ void PVReFitterAlg::getTracks(const LHCb::Particle* p,
     const LHCb::Track* track = proto->track();
     if(track) tracks.push_back(track);
 
-  }
+  } else {
  
-  const SmartRefVector< LHCb::Particle >& Prods = p->daughters();
-  SmartRefVector< LHCb::Particle >::const_iterator iProd;
+    const SmartRefVector< LHCb::Particle >& Prods = p->daughters();
+    SmartRefVector< LHCb::Particle >::const_iterator iProd;
 
-  for (iProd=Prods.begin(); iProd !=Prods.end(); ++iProd){
-    const LHCb::Particle* daughter = *iProd;
-    getTracks(daughter, tracks);      
+    for (iProd=Prods.begin(); iProd !=Prods.end(); ++iProd){
+      const LHCb::Particle* daughter = *iProd;
+      getTracks(daughter, tracks);      
+    }
   }
-
+  
 }
 //=============================================================================
 //  Finalize
