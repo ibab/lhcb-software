@@ -4,6 +4,7 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+!========================== HltBase v5r4 2008-11-24 ===================
 ! 2008-11-18 - Vanya Belyaev
  - change stringKey string representation from "stringKey(name)"
    to "stringKey('name')" for better python interoperability
@@ -15,15 +16,12 @@
   expose the underlying container via the explicit method "vct" and 
   impliict cast. (const only!)
 
-  
-
 ! 2008-11-12 - Vanya BELYAEV
  - HltBase/ITrackUpgrade.h
 
     1) add "const"-qualifier for input tracks in "upgrade" method 
     2) increment the minor version of InterfaceID 
  
-
 ! 2008-11-12 - Vanya BELYAEV
 
  - minor modifications for stringKey and Hlt::Selection 
