@@ -65,7 +65,7 @@ class AlConfigurable( ConfigurableUser ) :
         from Configurables import ( DataOnDemandSvc )
         ApplicationMgr().ExtSvc.append( DataOnDemandSvc() )
         ## Import default decoding options 
-        importOptions( "$STDOPTS/DecodeRawEvent.opts" )
+        #importOptions( "$STDOPTS/DecodeRawEvent.opts" )
 
         from Configurables import ( TransportSvc )
         # TransportSvc needed by tracking
@@ -266,7 +266,7 @@ class AlConfigurable( ConfigurableUser ) :
             alignAlg.UseCorrelations              = self.getProp( "UseCorrelations"     )
             alignAlg.Chi2Outlier                  = self.getProp( "Chi2Outlier"         )
             alignAlg.HistoPrint                   = False
-
+            #print alignAlg
             # and also the update tool is in the toolsvc
             updatetool = Al__AlignUpdateTool("Al::AlignUpdateTool")
             updatetool.MinNumberOfHits              = self.getProp( "MinNumberOfHits"              )
@@ -354,9 +354,9 @@ class AlConfigurable( ConfigurableUser ) :
             PrettyPrinter().pprint(allConfigurables)
             print "\n ****************************************************************************** \n"
         
-    def applyConf( self ) :
-        if self.getProp( "SimplifiedGeom" ) : TrackSys().expertTracking += "simplifiedGeometry"
-        TrackSys().expertTracking += "kalmanSmoother"
-        self.defineApp()
-        self.defineDB()
+    def __apply_configuration__( self ) :
+    #    if self.getProp( "SimplifiedGeom" ) : TrackSys().expertTracking += "simplifiedGeometry"
+    #    TrackSys().expertTracking += "kalmanSmoother"
+    #    self.defineApp()
+    #    self.defineDB()
         self.sequencers( )

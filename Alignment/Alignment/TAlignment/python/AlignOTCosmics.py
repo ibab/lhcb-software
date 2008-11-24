@@ -1,13 +1,15 @@
 from Gaudi.Configuration import *
 
-nIter               = 1# 5
-nEvents             = 1000000
+nIter               = 1 #5
+nEvents             = -1 #80000
 minNumHits          = 10
 eigenvalueThreshold = 50
 useDriftTime        = False
-granularity         = 'halflayers'
+muonMatching        = True
+#granularity         = 'halflayers'
 preloadalignment    = False
-#granularity         = 'modules'
+simplifiedGeometry  = False
+granularity         = 'modules'
 
 # configure for half-layers
 from Alignables import *
@@ -38,18 +40,60 @@ else :
       "T3UA  : /.*?/OT/T3/Vlayer/Quarter(1|3)/.*?  : Tx",
       ]
 
-#elements.ITBoxes("TxTy")
-
 # configure some tracking opts
 from TrackSys.Configuration import *
 #TrackSys().fieldOff = True
-TrackSys().specialData += [ 'fieldOff' ]
-#TrackSys().expertTracking.append('simplifiedGeometry')
-TrackSys().expertTracking += ['noDrifttimes' ]
+TrackSys().SpecialData += [ 'fieldOff' ]
+TrackSys().ExpertTracking += ['noDrifttimes' ]
+if simplifiedGeometry : TrackSys().ExpertTracking += [ 'simplifiedGeometry' ]
+
+EventDataSvc().ForceLeaves        = True
+EventDataSvc().EnableFaultHandler = True
+EventDataSvc().RootCLID           =    1
+
+#from DDDB.Configuration import *
+from Configurables import DDDBConf
+DDDBConf().DataType = '2008'
 
 from Configurables import MagneticFieldSvc
 MagneticFieldSvc().UseConstantField = True
 MagneticFieldSvc().UseConditions    = False
+
+from Configurables import ( DataOnDemandSvc )
+ApplicationMgr().ExtSvc.append( DataOnDemandSvc() )
+
+ApplicationMgr().HistogramPersistency = 'ROOT'
+HistogramPersistencySvc().OutputFile = 'TMuonMatchingHistos.root'
+#HistogramPersistencySvc().OutputFile = "ModuleAlignment.root"
+
+#from Gaudi.Configuration import NTupleSvc
+NTupleSvc().Output = [ "FILE1 DATAFILE='TMuonMatching.root' TYPE='ROOT' OPT='NEW' " ]
+
+## Need this to read raw data
+importOptions('DecodeRawEvent.opts')
+
+## Open Files; Also initialises Application Manager
+## Specify the data
+data = [
+   'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/34120/034120_0000085567.raw',
+   'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/34120/034120_0000085568.raw',
+   'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/34120/034120_0000085569.raw',
+   'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/34120/034120_0000085570.raw',
+   'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/34120/034120_0000085572.raw',
+   'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/34120/034120_0000085574.raw',
+   'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/34117/034117_0000085559.raw',
+   'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/34117/034117_0000085560.raw',
+   'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/34117/034117_0000085561.raw',
+   'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/34117/034117_0000085562.raw',
+   'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/34117/034117_0000085563.raw',
+   'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/34117/034117_0000085564.raw'
+   ]
+
+# data = [
+#    #'PFN:castor:/castor/cern.ch/user/w/wouter/otcosmics/run34083.dst'
+#    'PFN:castor:/castor/cern.ch/user/w/wouter/otcosmics/run34117new.dst',
+#    #'PFN:castor:/castor/cern.ch/user/w/wouter/otcosmics/run34120.dst'
+#    ]
 
 
 # Go past this line only when you know what you are doing
@@ -57,41 +101,36 @@ MagneticFieldSvc().UseConditions    = False
 ## File to setup Alignment
 
 import GaudiKernel.ProcessJobOptions
-GaudiKernel.ProcessJobOptions.printing_level += 1
+GaudiKernel.ProcessJobOptions.PrintOff()
 
 from AlConfigurable import *
 
+alignment = AlConfigurable()
 ## AlternativeDB
-#AlConfigurable().AlternativeCondDB           = "/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v4r3/db/LHCBCOND.db/LHCBCOND"
-#AlConfigurable().AlternativeCondDBTag        = "DC06-20080407"
-#AlConfigurable().AlternativeCondDBTag       = "MisA-OTL-1"
-#AlConfigurable().AlternativeCondDBOverlays   = [ "/Conditions/IT", "/Conditions/OT", "Conditions/Velo" ]
+#alignment.AlternativeCondDB           = "/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v4r3/db/LHCBCOND.db/LHCBCOND"
+#alignment.AlternativeCondDBTag        = "DC06-20080407"
+#alignment.AlternativeCondDBTag       = "MisA-OTL-1"
+#alignment.AlternativeCondDBOverlays   = [ "/Conditions/IT", "/Conditions/OT", "Conditions/Velo" ]
 
 ## Patttern Recognition?
-#AlConfigurable().CondDBTag                    = "2008-default"
-AlConfigurable().Pat                          = True
-AlConfigurable().OutputLevel                  = INFO
-AlConfigurable().ElementsToAlign              = list(elements)
-AlConfigurable().NumIterations                = nIter
-AlConfigurable().AlignInputTrackCont           = "Alignment/AlignmentTracks"
-AlConfigurable().UseCorrelations              = True
-AlConfigurable().Constraints                  = constraints
-AlConfigurable().UseWeightedAverageConstraint = False
-AlConfigurable().MinNumberOfHits              = minNumHits
-AlConfigurable().UsePreconditioning           = True
-#AlConfigurable().SolvTool                     = "gslSolver"
-AlConfigurable().SolvTool                     = "DiagSolvTool"
-AlConfigurable().WriteCondToXML               = True
-AlConfigurable().CondFileName                 = "Elements.xml"
-AlConfigurable().CondDepths                   = [0,1,2,3,4,5,6]
-AlConfigurable().SimplifiedGeom               = True
-AlConfigurable().WriteCondSubDetList          = [ "OT","IT" ]
-AlConfigurable().Chi2Outlier = 10000
-
-## Call after all options are set
-AlConfigurable().applyConf()
-
-importOptions("$DDDBROOT/options/LHCb-2008.py")
+#alignment.CondDBTag                    = "2008-default"
+alignment.Pat                          = True
+alignment.OutputLevel                  = INFO
+alignment.ElementsToAlign              = list(elements)
+alignment.NumIterations                = nIter
+alignment.AlignInputTrackCont          = "Alignment/AlignmentTracks"
+alignment.UseCorrelations              = True
+alignment.Constraints                  = constraints
+alignment.UseWeightedAverageConstraint = False
+alignment.MinNumberOfHits              = minNumHits
+alignment.UsePreconditioning           = True
+alignment.SolvTool                     = "DiagSolvTool"
+alignment.WriteCondToXML               = True
+alignment.CondFileName                 = "Elements.xml"
+alignment.CondDepths                   = [0,1,2,3,4,5,6]
+alignment.SimplifiedGeom               = True
+alignment.WriteCondSubDetList          = [ "OT","IT" ]
+alignment.Chi2Outlier = 10000
 
 if preloadalignment:
    from Configurables import ( CondDBAccessSvc )
@@ -110,28 +149,30 @@ if TrackSys().getProp("fieldOff"):
    PatSeeding.PatSeedingTool.zMagnet = 0.
    PatSeeding.PatSeedingTool.FieldOff = True
 importOptions('$PATALGORITHMSROOT/options/PatSeedingTool-Cosmics.opts')
-PatSeeding.PatSeedingTool.MaxOTOccupancy = 0.01
-PatSeeding.PatSeedingTool.MaxITOccupancy = 0.01
+PatSeeding.PatSeedingTool.MaxOTOccupancy         = 0.01
+PatSeeding.PatSeedingTool.MaxITOccupancy         = 0.01
 PatSeeding.PatSeedingTool.CommonXFraction        = 0.
 PatSeeding.PatSeedingTool.MaxUsedFractPerRegion  = 0.
 PatSeeding.PatSeedingTool.MaxUsedFractITOT       = 0.
 PatSeeding.PatSeedingTool.MaxUsedFractLowQual    = 0.
 
 patseq.Members += [PatSeeding,
-                   TrackMonitor(name = "PatMonitor",
+                   TrackMonitor(name = 'PatMonitor',
                                 TracksInContainer = 'Rec/Track/Seed',FullDetail = True)]
 
 # fit the track with straight line fit
 from TrackFitter.ConfiguredFitters import (ConfiguredStraightLineFit)
-from Configurables import (TrajOTCosmicsProjector,TrajOTProjector,TrackProjectorSelector,
+from Configurables import (TrackKalmanFilter, TrajOTCosmicsProjector,TrajOTProjector,TrackProjectorSelector,
                            MeasurementProvider)
-trackprefit = ConfiguredStraightLineFit('SeedPreFit',
-                                        TracksInContainer = 'Rec/Track/Seed')
 
-defaultOTNoDriftTimeProjector = TrajOTProjector("OTNoDrifttimesProjector")
+defaultOTNoDriftTimeProjector = TrajOTProjector( 'OTNoDrifttimesProjector' )
 defaultOTNoDriftTimeProjector.UseDrift = False
-trackprefit.Fitter.NodeFitter.addTool( TrackProjectorSelector(), "Projector" )
-trackprefit.Fitter.NodeFitter.Projector.OT = "TrajOTProjector/" + defaultOTNoDriftTimeProjector.name()
+
+trackprefit = ConfiguredStraightLineFit('SeedPreFit', TracksInContainer = 'Rec/Track/Seed')
+#trackprefit.OutputLevel = DEBUG
+trackprefit.Fitter.addTool( TrackKalmanFilter , 'NodeFitter' )
+trackprefit.Fitter.NodeFitter.addTool( TrackProjectorSelector, "Projector" )
+trackprefit.Fitter.NodeFitter.Projector.OT = defaultOTNoDriftTimeProjector
 trackprefit.Fitter.NodeFitter.BiDirectionalFit = False
 trackprefit.Fitter.ErrorX2 = 10000
 trackprefit.Fitter.ErrorY2 = 10000
@@ -139,7 +180,7 @@ trackprefit.Fitter.ErrorTx2 = 0.01
 trackprefit.Fitter.ErrorTy2 = 0.01
 trackprefit.Fitter.NumberFitIterations = 4
 trackprefit.Fitter.MaxNumberOutliers = 2
-trackprefit.Fitter.addTool( MeasurementProvider(), name = 'MeasProvider')
+trackprefit.Fitter.addTool( MeasurementProvider, name = 'MeasProvider')
 trackprefit.Fitter.MeasProvider.IgnoreIT = True ;
 patseq.Members.append( trackprefit )
 
@@ -155,7 +196,7 @@ seedselectoralg.Selector.MaxChi2Cut = 5
 if useDriftTime:
    # load a calibration
    from Configurables import (OTCalibrationIO)
-   patseq.Members += [ OTCalibrationIO() ]
+   patseq.Members += [ OTCalibrationIO ]
    
     # initialize event t0
    from Configurables import (TrackSeedT0Alg)
@@ -168,8 +209,8 @@ if useDriftTime:
    cosmicsOTProjector.UseDrift = True
    cosmicsOTProjector.FitEventT0 = True
    cosmicsOTProjector.UseConstantDriftVelocity = True
-   trackfit.Fitter.NodeFitter.addTool( TrackProjectorSelector(), "Projector" )
-   trackfit.Fitter.NodeFitter.Projector.OT = "TrajOTCosmicsProjector/" + cosmicsOTProjector.name()
+   trackfit.Fitter.NodeFitter.addTool( TrackProjectorSelector, "Projector" )
+   trackfit.Fitter.NodeFitter.Projector.OT = cosmicsOTProjector
    trackfit.Fitter.ErrorX2 = 10000
    trackfit.Fitter.ErrorY2 = 10000
    trackfit.Fitter.ErrorTx2 = 0.01
@@ -185,16 +226,87 @@ from Configurables import TrackMonitor
 
 patseq.Members += [ seedselectoralg ]
 
-
+if muonMatching:
+   from TrackFitter.ConfiguredFitters import ( ConfiguredStraightLineFit )
+   from  Configurables import ( MuonID, MuonNNetRec,  CopyMuonNNetTracks, MeasurementProvider,  
+                                TrackMasterExtrapolator, TrackKalmanFilter, 
+                                TrackChi2Calculator, OTMuonCosmicsMatching )
+   # Copy MuonNNet tracks to LHCb tracks
+   copy = CopyMuonNNetTracks( 'CopyMuonNNetTracks' )
+   #copy.OutputLevel = DEBUG
+   copy.addTool( MuonNNetRec, name = 'MuonRecTool' )
+   copy.MuonRecTool.TrackSpanCut     = 2.0 ## cut on span for selected tracks
+   copy.MuonRecTool.StationFiringCut = 2.0 ## cut on # of stations firing in the track
+   copy.MuonRecTool.AllowHoles       = False ## allow holes in tracks
+   copy.MuonRecTool.MaxNeurons       = 400 ## (def. 3000) max number of possible track segments
+   copy.MuonRecTool.MaxIterations    = 30 ## (def. 100) max number of NN iterations
+   copy.MuonRecTool.UsePosTool       = False
+   copy.MuonRecTool.AssumeCosmics    = True
+   copy.MuonRecTool.PhysicsTiming    = False
+   copy.MuonRecTool.AssumePhysics    = False ## assume that tracks come from IP (only forward)
+   # Refit
+   muonTrackFit =  ConfiguredStraightLineFit( 'MuonTrackFit' , TracksInContainer = 'Rec/Track/Muon' )
+   #muonTrackFit.OutputLevel = DEBUG
+   muonTrackFit.Fitter.addTool( TrackKalmanFilter , 'NodeFitter' )
+   muonTrackFit.Fitter.addTool( MeasurementProvider, name = 'MeasProvider')
+   muonTrackFit.Fitter.MeasProvider.IgnoreVelo = True 
+   muonTrackFit.Fitter.MeasProvider.IgnoreTT   = True 
+   muonTrackFit.Fitter.MeasProvider.IgnoreIT   = True 
+   muonTrackFit.Fitter.MeasProvider.IgnoreOT   = True 
+   muonTrackFit.Fitter.MeasProvider.IgnoreMuon = False 
+   muonTrackFit.Fitter.NodeFitter.BiDirectionalFit = False
+   muonTrackFit.Fitter.ErrorX2  = 10000
+   muonTrackFit.Fitter.ErrorY2  = 10000
+   muonTrackFit.Fitter.ErrorTx2 = 0.5
+   muonTrackFit.Fitter.ErrorTy2 = 0.5
+   muonTrackFit.Fitter.NumberFitIterations = 4
+   muonTrackFit.Fitter.MaxNumberOutliers   = 2
+   # Matching
+   matching = OTMuonCosmicsMatching( 'OTMuonCosmicsMatching' )
+   matching.FullDetail = True
+   #matching.OutputLevel = DEBUG
+   matching.TTracksLocation    = 'Rec/Track/Seed'
+   matching.MuonTracksLocation = 'Rec/Track/Muon'
+   matching.addTool( TrackMasterExtrapolator, name = 'Extrapolator' )
+   matching.Extrapolator.ApplyMultScattCorr          = False
+   matching.Extrapolator.ApplyEnergyLossCorr         = False
+   matching.Extrapolator.ApplyElectronEnergyLossCorr = False
+   matching.addTool( TrackChi2Calculator, name = 'Chi2Calculator' )
+   matching.MatchChi2Cut = 10000.0 #
+   
+   # Fit TMuon tracks
+   tmuonfit = ConfiguredStraightLineFit( 'TMuonFit', TracksInContainer = 'Rec/Track/Best/TMuon')
+   #tmuonfit.OutputLevel = DEBUG
+   tmuonfit.Fitter.MakeNodes = True
+   tmuonfit.Fitter.addTool( TrackKalmanFilter , 'NodeFitter' )
+   tmuonfit.Fitter.NodeFitter.addTool( TrackProjectorSelector, "Projector" )
+   tmuonfit.Fitter.NodeFitter.Projector.OT = defaultOTNoDriftTimeProjector
+   tmuonfit.Fitter.NodeFitter.BiDirectionalFit = False
+   tmuonfit.Fitter.ErrorX2 = 10000
+   tmuonfit.Fitter.ErrorY2 = 10000
+   tmuonfit.Fitter.ErrorTx2 = 0.5
+   tmuonfit.Fitter.ErrorTy2 = 0.5
+   tmuonfit.Fitter.NumberFitIterations = 4
+   tmuonfit.Fitter.MaxNumberOutliers = 2
+   tmuonfit.Fitter.addTool( MeasurementProvider(), name = 'MeasProvider')
+   tmuonfit.Fitter.MeasProvider.IgnoreIT   = True ;
+   tmuonfit.Fitter.MeasProvider.IgnoreVelo = True ;
+   
+   patseq.Members.append( copy )
+   patseq.Members.append( muonTrackFit )
+   patseq.Members.append( matching )
+   patseq.Members.append( tmuonfit )
+   
 # add the alignment. this is a bit tricky, but for now I just want the histograms
 from Configurables import (AlignAlgorithm, GetElementsToBeAligned,Al__AlignConstraintTool,
                           Al__AlignUpdateTool,gslSVDsolver,DiagSolvTool,AlRobustAlignAlg )
 
-alignAlg = AlignAlgorithm("Alignment")
+# First apply everything that was set before
+alignment.alignmentSeq()
+alignAlg = AlignAlgorithm( 'Alignment' )
 alignAlg.TracksLocation  = 'Rec/Track/SelectedSeed'
 alignAlg.UseCorrelations = True
 #alignAlg.UpdateInFinalize = True
-
 updatetool = Al__AlignUpdateTool("Al::AlignUpdateTool")
 #solver = gslSVDsolver("MatrixSolverTool")
 #solver.EigenValueThreshold = 100
@@ -215,6 +327,15 @@ patseq.Members += [preMonitorSeq,postMonitorSeq]
 preMonitorSeq.Members.append(TrackMonitor(name = "SeedPreMonitor",
                                           TracksInContainer = 'Rec/Track/Seed',
                                           FullDetail = True))
+if muonMatching :
+  muonMonitor = TrackMonitor( "MuonMonitor" )
+  muonMonitor.TracksInContainer = 'Rec/Track/Muon'
+  muonMonitor.FullDetail = True
+  tmuonMonitor = TrackMonitor( "TMuonMonitor" )
+  tmuonMonitor.TracksInContainer = 'Rec/Track/Best/TMuon'
+  tmuonMonitor.FullDetail = True
+  preMonitorSeq.Members.append( muonMonitor )
+  preMonitorSeq.Members.append( tmuonMonitor )
 
 preMonitorSeq.Members.append(TrackMonitor(name = "SelectedSeedPreMonitor",
                                           TracksInContainer = 'Rec/Track/SelectedSeed',
@@ -227,9 +348,6 @@ postMonitorSeq.Members.append(TrackMonitor(name = "SeedPostMonitor",
 ## Now lets run it
 from GaudiPython import *
 from GaudiPython import gbl
-
-## Need this to read raw data
-importOptions('$STDOPTS/DecodeRawEvent.opts')
 
 EventPersistencySvc().CnvServices.append( "LHCb::RawDataCnvSvc" )
 
@@ -257,46 +375,19 @@ def update(algorithm, appMgr) :
    updateConstants = gbl.Incident( algorithm, 'UpdateConstants' )
    incSvc.fireIncident( updateConstants )
 
-HistogramPersistencySvc().OutputFile = "alignhistos.root"
-#from Gaudi.Configuration import NTupleSvc
-#NTupleSvc().Output = [ "FILE1 DATAFILE='aligntuples.root' TYPE='ROOT' OPT='NEW' " ]
-
 ## Instantiate application manager
 appMgr = AppMgr()
 mainSeq = appMgr.algorithm( 'AlignmentMainSeq' )
 
 ## Print flow of application
-AlConfigurable().printFlow(appMgr)
+alignment.printFlow(appMgr)
 
 evtSel           = appMgr.evtSel()
 evtSel.printfreq = 1000
 ##evtSel.FirstEvent = 604
-
-## Open Files; Also initialises Application Manager
-## Specify the data
-data = [
-   'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/34120/034120_0000085567.raw',
-   'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/34120/034120_0000085568.raw',
-   'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/34120/034120_0000085569.raw',
-   'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/34120/034120_0000085570.raw',
-   'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/34120/034120_0000085572.raw',
-   'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/34120/034120_0000085574.raw',
-   'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/34117/034117_0000085559.raw',
-   'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/34117/034117_0000085560.raw',
-   'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/34117/034117_0000085561.raw',
-   'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/34117/034117_0000085562.raw',
-   'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/34117/034117_0000085563.raw',
-   'PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/34117/034117_0000085564.raw'
-   ]
-
-data = [
-   #'PFN:castor:/castor/cern.ch/user/w/wouter/otcosmics/run34083.dst'
-   'PFN:castor:/castor/cern.ch/user/w/wouter/otcosmics/run34117.dst',
-   'PFN:castor:/castor/cern.ch/user/w/wouter/otcosmics/run34120.dst'
-   ]
    
-#evtSel.open( data, typ = "MDF")
-evtSel.open( data )
+evtSel.open( data, typ = "MDF")
+#evtSel.open( data )
 
 print evtSel.Input
 
@@ -311,6 +402,6 @@ for i in range( nIter ) :
     update( "Alignment", appMgr )
 
 appMgr.algorithm('PreMonitorSeq').Enable = True
-#appMgr.finalize()
+
 
 
