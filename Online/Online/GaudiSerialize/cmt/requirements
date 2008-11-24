@@ -16,5 +16,7 @@ apply_pattern reflex_dictionary dictionary=GaudiSerialize \
 		selectionfile=$(GAUDISERIALIZEROOT)/dict/Serialize_dict.xml
 #===========================================================================
 library     GaudiSerialize ../src/*.cpp ../$(tag)/dict/GaudiSerialize/*.cpp
+macro_append  GaudiSerialize_dependencies GaudiSerializeGen
 apply_pattern component_library library=GaudiSerialize
-macro_append GaudiSerialize_dependencies GaudiSerializeGen
+apply_pattern genconfig_add_preload library=$(library_prefix)MDF.$(shlibsuffix)
+
