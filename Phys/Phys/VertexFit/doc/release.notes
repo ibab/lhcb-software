@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.157 2008-11-20 15:26:58 jpalac Exp $
+! $Id: release.notes,v 1.158 2008-11-24 13:26:40 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+! 2008-11-24 - Juan PALACIOS
+ - src/PVReFitterAlg.cpp
+  . Simplify getTracks loop.
+  . Add bool properties UseIPVOfflineTool(false) and UseIPVReFitter(true) 
+    determining if the PV re-fitting tools should be used.
 
 ! 2008-11-20 - Juan PALACIOS
  - src/PVReFitterAlg.cpp
