@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.18 2008-11-19 17:01:37 ibelyaev Exp $
+! $Id: release.notes,v 1.19 2008-11-24 11:28:03 pkoppenb Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiTrigger
 ! Responsible : Vanya BELYAEV
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiTrigger v8r0 2008-11-24 ===================
 ! 2008-11-19 - Vanya Belyaev
  - dict/LoKiTriggerDict.h
 
