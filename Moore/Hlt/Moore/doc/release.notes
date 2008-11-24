@@ -2,6 +2,9 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+! 2008-11-24 - Gerhard Raven
+ - update FieldMap, ParamFiles versions in requirements
+
 ! 2008-11-20 - Gerhard Raven
  - add RoutingBits property to Output in DEFAULT.opts as requested by Markus
 
