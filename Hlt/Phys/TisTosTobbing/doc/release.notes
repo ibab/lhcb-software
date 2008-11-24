@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.32 2008-11-17 16:26:34 tskwarni Exp $
+! $Id: release.notes,v 1.33 2008-11-24 12:06:59 pkoppenb Exp $
 ! Package     : TisTosTobbing
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
 
+!========================== TisTosTobbing v3r0 2008-11-24 ===================
 ! 2008-11-17 - Tomasz Skwarnicki
  - move hltObjects template from ITriggerSelectionTisTos.h to TriggerSelectionTisTos.h
 
