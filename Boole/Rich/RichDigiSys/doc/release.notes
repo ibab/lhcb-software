@@ -4,6 +4,7 @@
 ! Purpose     : Configure the RICH digitisation simulation
 !-----------------------------------------------------------------------------
 
+!======================== RichDigiSys v1r0 2008-11-24 ========================
 ! 2008-11-14 - Marco Cattaneo
  - Capitalize names of all RichDigiSys() options
 
