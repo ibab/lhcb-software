@@ -1,15 +1,14 @@
-!$Id: release.notes,v 1.65 2008-11-12 14:25:52 ibelyaev Exp $
+!$Id: release.notes,v 1.66 2008-11-24 12:04:23 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+!========================== HltTracking v3r7 2008-11-24 ===================
 ! 2008-11-12 - Vanya BELYAEV
-
  - HltTrackUpgradeTool::update 
    add "const'-qualifier for container of input tracks 
-
 
 ! 2008-11-03 - Johannes Albrecht
  - HltTrackUpgradeTool: Add new reco tool to fit tracks: HltTrackFit
