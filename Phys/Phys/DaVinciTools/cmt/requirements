@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.115 2008-09-30 15:13:32 jpalac Exp $
+# $Id: requirements,v 1.116 2008-11-24 13:56:26 jpalac Exp $
 # Created    : 05/02/2002
 # Maintainer : P. Koppenburg, J. Palacios
 #
@@ -10,7 +10,7 @@ version           v17r4
 
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src
+branches          cmt doc src python
 
 # Used packages. 
 #============================================================================
@@ -48,3 +48,6 @@ macro_append Boost_linkopts " $(Boost_linkopts_regex)"
 # standard patterns (order is essential!)
 #============================================================================
 apply_pattern component_library library=DaVinciTools
+#============================================================================
+apply_pattern install_python_modules
+#============================================================================
