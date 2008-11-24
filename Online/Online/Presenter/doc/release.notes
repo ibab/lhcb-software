@@ -4,6 +4,12 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+!============ Presenter v0r14 2008-11-24 =============
+! 2008-11-24
++ page comments and histogram descriptions
++ ignore histos from dead tasks on a page
++ trend plot of savesets
+
 !============ Presenter v0r13 2008-11-04 =============
 ! 2008-11-04
 + save histogram description to DB
