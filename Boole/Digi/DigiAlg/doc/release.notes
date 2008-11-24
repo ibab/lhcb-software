@@ -4,6 +4,7 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+!========================== DigiAlg v4r12 2008-11-24 =========================
 ! 2008-10-17 - Marco Cattaneo
  - Fix BooleInit::modifyODIN to work in TAE mode
 
