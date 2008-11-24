@@ -1,21 +1,21 @@
-// $Id: OTMuonCosmicsMatching.cpp,v 1.1 2008-10-31 20:57:53 janos Exp $
+// $Id: OTMuonCosmicsMatching.cpp,v 1.2 2008-11-24 10:01:30 janos Exp $
 // Include files 
+
+// from STD
+#include <functional>
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
-#include "GaudiKernel/Point3DTypes.h"
-
-// from LHCbMath
-#include "LHCbMath/MatrixTransforms.h"
 
 // from TrackEvent
 #include "Event/TrackParameters.h"
 #include "Event/Track.h"
 #include "Event/State.h"
 
-// from MuonNNet
-#include "MuonNNet/MuonTrack.h"
+// BOOST
+#include "boost/foreach.hpp"
+#include "boost/lambda/bind.hpp"
 
 // local
 #include "OTMuonCosmicsMatching.h"
@@ -27,148 +27,193 @@
 //-----------------------------------------------------------------------------
 
 using namespace LHCb;
+using namespace boost::lambda;
 
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( OTMuonCosmicsMatching );
 
 OTMuonCosmicsMatching::OTMuonCosmicsMatching( const std::string& name,
                                               ISvcLocator* pSvcLocator)
-  : GaudiHistoAlg ( name , pSvcLocator )
+  : GaudiTupleAlg ( name , pSvcLocator )
 {
-  declareProperty( "TracksToMatchLocation" , m_tracksToMatchLoc = TrackLocation::Default    );
-  declareProperty( "Extrapolator"          , m_nameExtrapolator = "TrackMasterExtrapolator" );
-  declareProperty( "MatchAtZ"              , m_matchAtZ         = 15000*Gaudi::Units::mm    );
+  declareProperty( "TTracksLocation"     , m_tTracksLocation      = TrackLocation::Default     );
+  declareProperty( "MuonTracksLocation"  , m_mTracksLocation      = TrackLocation::Muon        );
+  declareProperty( "TracksOutputLocation", m_tracksOutputLocation = m_tTracksLocation+"/TMuon" );
+  declareProperty( "Extrapolator"        , m_nExtrapolator        = "TrackLinearExtrapolator"  );
+  declareProperty( "Chi2Calculator"      , m_nChi2Calculator      = "TrackChi2Calculator"      );
+  declareProperty( "MatchAtZ"            , m_matchAtZ             = 12500*Gaudi::Units::mm     );
+  declareProperty( "MatchChi2Cut"        , m_matchChi2Cut         = 20.0                       );
+  declareProperty( "AllCombinations"     , m_allCombinations      = true                       );
 }
 
 OTMuonCosmicsMatching::~OTMuonCosmicsMatching() {} 
 
 StatusCode OTMuonCosmicsMatching::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  StatusCode sc = GaudiTupleAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
-  m_muonRecTool  = tool<IMuonNNetRec>( "MuonNNetRec" );
-  m_extrapolator = tool<ITrackExtrapolator>( m_nameExtrapolator, "Extrapolator",  this );
-   
+  m_extrapolator   = tool<ITrackExtrapolator>(   m_nExtrapolator  , "Extrapolator"  , this );
+  m_chi2Calculator = tool<ITrackChi2Calculator>( m_nChi2Calculator, "Chi2Calculator", this );
+
   return StatusCode::SUCCESS;
 }
 
 StatusCode OTMuonCosmicsMatching::execute() {
-
+  
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
-  typedef std::vector<MuonTrack*>  MuonTracks;
+  m_matchTStates.clear();
+  m_matchMuonStates.clear();
 
-  const MuonTracks* muonTracks    = m_muonRecTool->tracks();
-  const Tracks*     tracksToMatch = get<Tracks>( m_tracksToMatchLoc );
-  
-  if ( fullDetail() ) {
-    plot1D( muonTracks->size()   , 100, "Number of Muon Tracks"    , -0.5, 10.5, 11 );
-    plot1D( tracksToMatch->size(), 101, "Number of Tracks to Match", -0.5, 10.5, 11 );
-  }
-  
-  unsigned goodMatches = 0;
+  const Tracks*       tTracks = get<Tracks>( m_tTracksLocation );
+  const Tracks*       mTracks = get<Tracks>( m_mTracksLocation );
+  Tracks*       matchedTracks = new Tracks();
+  put( matchedTracks, m_tracksOutputLocation );
 
-  for ( Tracks::const_iterator t = tracksToMatch->begin(), tEnd = tracksToMatch->end(); t != tEnd; ++t ) {
-    for ( MuonTracks::const_iterator m = muonTracks->begin(), mEnd = muonTracks->end(); m != mEnd; ++m ) {
-      double chi2 = matchChi2( *(*t), *(*m), m_matchAtZ );
-      if ( fullDetail() ) {
-        plot( chi2, 102, "Match chi2", 0, 100, 100 );
-        if ( chi2 < 20.0 ) ++goodMatches;
-      }
+  //  if ( fullDetail() ) {
+  //     plot1D( mTracks->size(), 100, "Number of Muon Tracks to Match" , -0.5, 10.5, 11 );
+  //     plot1D( tTracks->size(), 101, "Number of TTracks to Match"     , -0.5, 10.5, 11 );
+  //   }
+    
+  std::vector< double > matchChi2s   ;
+  unsigned              nMatches = 0u;
+
+  for ( Tracks::const_iterator t = tTracks->begin(), tEnd = tTracks->end(); t != tEnd; ++t ) {
+    double      matchedChi2 = -9998.0;
+    Track* matchedMuonTrack =       0;
+    for ( Tracks::const_iterator m = mTracks->begin(), mEnd = mTracks->end(); m != mEnd; ++m ) {
+      double     chi2 = -9999.0;
+      StatusCode   sc = matchChi2( *(*t), *(*m), m_matchAtZ, chi2 );
+      if ( sc.isSuccess() ) 
+        /// Select one with the best match chi2
+        if ( chi2 > 0.0 && ( chi2 < matchedChi2 || m_allCombinations ) ) {
+          matchedChi2      = chi2;
+          matchedMuonTrack = (*m);
+        }
+    }
+    /// Apply match chi2 selection cut
+    if ( matchedChi2 > 0.0 && matchedChi2 < m_matchChi2Cut ) {
+      ++nMatches;
+      //plot( matchedChi2, 102, "Match chi2", 0, 100, 100 );
+      matchChi2s.push_back( matchedChi2 );
+      Track* matchedTrack = new Track();
+      /// Copy T track
+      matchedTrack->copy( *(*t) );
+      /// Add muon ids to copied T track
+      BOOST_FOREACH( LHCbID id, matchedMuonTrack->lhcbIDs() ) matchedTrack->addToLhcbIDs( id );
+      matchedTracks->insert( matchedTrack );
     }
   }
- 
-  if ( fullDetail() ) plot( goodMatches, 103, "Number of good mathces", -0.5, 10.5, 11 );
-    
+  
+  Tuple tuple = nTuple( 100, "OT-Muon Matching N-Tuple" );
+  tuple->column( "nTTracks"   , tTracks->size() );
+  tuple->column( "nMuonTracks", mTracks->size() );
+  tuple->column( "nMatches"   , nMatches        );
+      
+  tuple->farray( "matchChi2s", matchChi2s, "num", 100 );
+
+  tuple->farray( "matchTx"    ,  bind<double>(&State::x    , _1),
+                 "matchTxErr2",  bind<double>(&State::errX2, _1),
+                 "matchTy"    ,  bind<double>(&State::y    , _1),
+                 "matchTyErr2",  bind<double>(&State::errY2, _1),
+                 m_matchTStates.begin(), m_matchTStates.end(),
+                 "num",
+                 100 );
+  tuple->farray( "matchTtx"    , bind<double>(&State::tx    , _1),
+                 "matchTtxErr2", bind<double>(&State::errTx2, _1),
+                 "matchTty"    , bind<double>(&State::ty    , _1),
+                 "matchTtyErr2", bind<double>(&State::errTy2, _1),
+                 m_matchTStates.begin(), m_matchTStates.end(),
+                 "num",
+                 100 );
+  tuple->farray( "matchMx"    ,  bind<double>(&State::x    , _1),
+                 "matchMxErr2",  bind<double>(&State::errX2, _1),
+                 "matchMy"    ,  bind<double>(&State::y    , _1),
+                 "matchMyErr2",  bind<double>(&State::errY2, _1),
+                 m_matchMuonStates.begin(), m_matchMuonStates.end(),
+                 "num",
+                 100 );
+  tuple->farray( "matchMtx"    , bind<double>(&State::tx    , _1),
+                 "matchMtxErr2", bind<double>(&State::errTx2, _1),
+                 "matchMty"    , bind<double>(&State::ty,     _1),
+                 "matchMtyErr2", bind<double>(&State::errTy2, _1),
+                 m_matchMuonStates.begin(), m_matchMuonStates.end(),
+                 "num",
+                 100 );
+  tuple->write();
+  
+  //if ( fullDetail() ) plot( goodMatches, 103, "Number of good mathces", -0.5, 10.5, 11 );
+
   return StatusCode::SUCCESS;
 }
 
-StatusCode OTMuonCosmicsMatching::finalize() {
+StatusCode OTMuonCosmicsMatching::matchChi2( const LHCb::Track& tTrack, const Track& mTrack, 
+                                             const double& atZ,
+                                             double& chi2 ) {
+  StatusCode sc = StatusCode::SUCCESS;
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
-}
-
-StatusCode OTMuonCosmicsMatching::extrapolate( MyState& state, double oldZ, double newZ ) const {
-  
-  double dZ = newZ - oldZ;
-  if ( std::abs( dZ ) < TrackParameters::propagationTolerance ) {
-    if ( msgLevel( MSG::DEBUG  ) ) debug() << "Already at required z position" << endmsg;
-    return StatusCode::SUCCESS;
-  }
-  
-  /// x' = T*x
-  Gaudi::Matrix4x4 jack = jacobian( dZ );
-  state.first = jack*state.first;
-  /// C' = JCJ^T. Cov is symmetric
-  state.second  = ROOT::Math::Similarity( jack, state.second );
-  
-  return StatusCode::SUCCESS;
-}
-
-double OTMuonCosmicsMatching::matchChi2( const LHCb::Track& match, const MuonTrack& to, double atZ ) const {
-  /// First the "LHCb" track
-  /// Get the state we want to extrapolate from
-  State lhcbState = match.closestState( atZ );
-  if ( msgLevel( MSG::DEBUG  ) ) debug() << "Closest state is " << lhcbState << endmsg;
-  
-  MyState   state = std::make_pair( lhcbState.stateVector().Sub<Gaudi::Vector4>( 0 ),
-                                    lhcbState.covariance().Sub<Gaudi::SymMatrix4x4>( 0, 0 ) );
-  /// Now let's extrapolate to atZ
+  /// Get the T state closest to this z
+  State tState = tTrack.closestState( atZ );
+  /// Get the Muon state closest to this z
+  State mState = mTrack.closestState( atZ );
   if ( msgLevel( MSG::DEBUG  ) ) {
-    debug() << "My T state is " << state.first << endmsg
-            << " with covatiance " << state.second << endmsg
-            << "Going to extrapolate from " << state.first << " to " << atZ << endmsg;
-  }
-  //StatusCode sc = m_extrapolator->propagate( lhcbState, atZ );
-  StatusCode   sc = extrapolate( state, lhcbState.z(), atZ );
-  if ( msgLevel( MSG::DEBUG  ) ) {
-    debug() << "My New T state is " << state.first << endmsg
-            << " with covariance " << state.second << endmsg;
+    debug() << "Closest T state to z = "    << atZ << " is " << tState << endmsg
+            << "Closest Muon state to z = " << atZ << " is " << mState << endmsg;
   }
 
-  /// Now the "Muon" track
-  /// Get the point we want to extrapolate to
-  /// I assume this is in global coordinates. Looks like it.
-  /// Need to cast away constness. No const getHits method.
-  MuonTrack&       mTrack = const_cast<MuonTrack&>(to);
-  /// Get the last muon hit that the track was fitted with
-  Gaudi::XYZPoint   point = *(mTrack.getHits().back());
-  //Gaudi::Vector4   mState( mTrack.bx(), mTrack.by(), mTrack.sx(), mTrack.sy() );
-  Gaudi::SymMatrix4x4 mCov; // Symmetric. At "z = 0"
-  mCov( 0, 0 ) = mTrack.errbx()*mTrack.errbx();
-  mCov( 0, 2 ) = mTrack.covbsx();
-  mCov( 1, 1 ) = mTrack.errby()*mTrack.errby();
-  mCov( 1, 3 ) = mTrack.covbsy();
-  mCov( 2, 2 ) = mTrack.errsx()*mTrack.errsx();
-  mCov( 3, 3 ) = mTrack.errsy()*mTrack.errsy();
-  MyState mState = std::make_pair( Gaudi::Vector4( point.z()*mTrack.sx() + mTrack.bx(),
-                                                   point.z()*mTrack.sy() + mTrack.by(), 
-                                                   mTrack.sx(), 
-                                                   mTrack.sy() ),
-                                   ROOT::Math::Similarity( jacobian( point.z() ),  mCov ) );
+  /// Now extrapolate these states
+  sc = m_extrapolator->propagate( tState, atZ );
+  if ( !sc.isSuccess() ) Warning( "Could not propagate T state"   , StatusCode::FAILURE, 5 );
+  sc = m_extrapolator->propagate( mState, atZ );
+  if ( !sc.isSuccess() ) Warning( "Could not propagate Muon state", StatusCode::FAILURE, 5 );
+  
   if ( msgLevel( MSG::DEBUG  ) ) {
-    debug() << "Muon hit (x,y,z) : " << point.x() << ", " << point.y() << ", " << point.z() << endmsg
-            << "My muon track state is " << mState.first << endmsg
-            << " with covariance " << mState.second << endmsg
-            << "Going to extrapolate from " << mState.first << " to " << atZ << endmsg;
-  }
-  /// Now extrapolate muon track
-  sc = extrapolate( mState, point.z(), atZ );
-  if ( msgLevel( MSG::DEBUG  ) ) {
-    debug() << "My New Muon state is " << mState.first << endmsg
-            << " with covariance " << mState.second << endmsg;
+    debug() << "Extrapolated T state to z = "    << atZ << " is " << tState << endmsg
+            << "Extrapolated Muon state to z = " << atZ << " is " << mState << endmsg;
   }
 
-  /// X^2 = ( x_OT - x_Muon )( C_OT + C_Muon )^-1( x_OT - x_Muon )^T
-  int iFail = 0; 
-  const Gaudi::Vector4      dif  = mState.first - state.first;
-  const Gaudi::SymMatrix4x4 sumC = mState.second + state.second;
-  const double chi2 = ROOT::Math::Similarity( dif, sumC.Inverse( iFail ) );
-  /// Shouldn't fail
-  if ( 0 != iFail ) std::cout << "Oops something went wrong" << std::endl;
-  if ( msgLevel( MSG::DEBUG  ) ) debug() << "Match chi2 is " << chi2 << endmsg;
-  return chi2;
+  /// Now calculate the match chi2
+  sc = m_chi2Calculator->calculateChi2( tState.stateVector(), tState.covariance(), 
+                                        mState.stateVector(), mState.covariance(),
+                                        chi2 );
+  if ( !sc.isSuccess() ) Error( "Could not invert matrices", StatusCode::FAILURE );
+
+  if ( chi2 > 0.0 && chi2 < m_matchChi2Cut ) {
+    m_matchTStates.push_back( tState );
+    m_matchMuonStates.push_back( mState );
+  }
+  
+  //   m_matchTx.push_back(     tState.x()                   );
+  //   m_matchTxErr.push_back(  std::sqrt( tState.errX2    ) );
+  //   m_matchTtx.push_back(    tState.tx()                  );
+  //   m_matchTtxErr.push_back( std::sqrt( tState.errTx2() ) );
+  //   m_matchTy.push_back(     tState.y()                   );
+  //   m_matchTyErr.push_back(  std::sqrt( tState.errY2    ) );
+  //   m_matchTty.push_back(    tState.ty()                  );
+  //   m_matchTtyErr.push_back( std::sqrt( tState.errTy2() ) );
+
+  //   m_matchMx.push_back(     mState.x()                   );
+  //   m_matchMxErr.push_back(  std::sqrt( mState.errX2() )  );
+  //   m_matchMtx.push_back(    mState.tx()                  );
+  //   m_matchMtxErr.push_back( std::sqrt( mState.errTx2() ) );
+  //   m_matchMy.push_back(     mState.y()                   );
+  //   m_matchMyErr.push_back(  std::sqrt( mState.errY2() )  );
+  //   m_matchMty.push_back(    mState.ty()                  );
+  //   m_matchMtyErr.push_back( std::sqrt( mState.errTy2() ) );
+
+  // if ( fullDetail() && chi2 < m_matchChi2Cut ) {
+  //     plot( tState.x()  - mState.x() , 200, "Match Delta x" , -400, 400, 200  );
+  //     plot( tState.tx() - mState.tx(), 201, "Match Delta tx", -0.3, 0.3, 100  );
+  //     if ( tState.tx() < 0.0 )  plot( tState.x()  - mState.x() , 202, "Match Delta x for tx < 0" , -400, 400, 200  );
+  //     if ( tState.tx() > 0.0 )  plot( tState.x()  - mState.x() , 203, "Match Delta x for tx > 0" , -400, 400, 200  );
+  
+  //     plot( tState.y()  - mState.y() , 300, "Match Delta y" , -800, 800, 200 );
+  //     plot( tState.ty() - mState.ty(), 301, "Match Delta ty", -0.3, 0.3, 100  );
+  //     if ( tState.ty() < 0.0 )  plot( tState.y()  - mState.y() , 302, "Match Delta y for ty < 0" , -800, 800, 200 );
+  //     if ( tState.ty() > 0.0 )  plot( tState.y()  - mState.y() , 303, "Match Delta y for ty > 0" , -800, 800, 200 );
+  //   }
+
+  return sc;
 }
