@@ -10,9 +10,11 @@
  * \htmlinclude new_release.notes
 
  * <b>Top level options files</b>
- * \li v200601.opts: DC06 geometry
- * \li PilotRun.opts: DC06 geometry, field off, no spillover
- * \li TAE.opts: Time alignment events with DC06 geometry
+ * \li Boole-Default.py: Default settings (2008 geometry, no spillover)
+ * \li Boole-2008.py:    Default settings (2008 geometry, no spillover)
+ * \li Boole-2008-VeloOpen.py: As Boole-2008.py, but with Velo open
+ * \li Boole-FEST09.py:  For FEST09 production (MDF output, minimal messages)
+ * \li Boole-DC06.py:    DC06 geometry, with spillover
  * \li Copy.opts: To make a copy of .digi files
 
  *

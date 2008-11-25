@@ -3,19 +3,78 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-! 2008-11-24 - Marco Clemencic
- - Modified the test to avoid failures when the database changes.
+</PRE><H1><A NAME=v17r0>2008-11-25 Boole v17r0</A></H1><PRE>
+This version uses projects Gaudi v20r3, LHCb v26r0, Lbcom v6r24
+ and SQLDDDB v5r0, ParamFiles v8r0, FieldMap v5r2, L0TCK v1r0
 
-! 2008-10-30 - Marco Cattaneo
- - Update QMTest reference for Gaudi v20r2 changes to GaudiHistoAlg printout
+Functionally this version is similar to Boole v16r3, but uses a new version of
+Gaudi and major new version of LHCb, with many backward incompatible changes in
+the configuration and in option names 
 
-! 2008-10-25 - Chris Jones
- - Add Rich/RichDigiSys usage.
+Output requires Brunel v33r3 or later. 
 
-! 2008-10-21 - Marco Cattaneo
- - Update QMTest reference for change in STEffChecker printout
+- New tuning
+  . Default setting is now 2008; Spillover is disabled by default
+  . Do not suppress INFO from RawWriter (finalize message needed by DIRAC)
+  . Default noise for Ecal is now 'gaussian' (CW noise description set to
+    UseAdvancedNoise = false) (CaloDigit v2r10)
+  . Zero-suppression threshold for Prs set to 5 ADC (was 15), trigger threshold
+    for Prs set to 23.5 MeV = 10 MIP (was 10 MeV ~ 5 Mip) (CaloDigit v2r10)
+  . In L0 trigger emulation, do not add ECAL to HCAL 0 energies when default HCAL
+    address is not physical (to reflect electronics behaviour) (L0Calo v9r19)
+  . Remove pt encoding parameter from options (L0Muon v8r3, L0MuonKernel v8r4)
+  . Fix inefficient region around y=0 in OT F-modules in odd layers (OTDet v8r2,
+    see http://www.nikhef.nl/pub/experiments/bfys/lhcb/outerTracker/NamingConventions/Modules/index.html)
+  . Improve printout of ST module names (STDet v4r6, STKernel v1r9)
+  . Change the default of muon raw data format from DC06 to Real data
+    (MuonDAQ v4r5)
+  . Do not print histogram statistics by default (GaudiAlg v11r12)
+    
+- New packaging
+  . Many backward incompatible changes to Configurables:
+    + Adapt to configuration changes in Gaudi v20r3, GaudiConf v10r13, 
+                                        DDDB v1r13, DetCond v12r4
+    + Most option names are changed. In particular:
+      > All option names are Capitalized
+      > New DataType option, removes need to set CondDBTag and DDDBtag if using
+        default tags
+    + applyConf() renamed __apply_configuration__ and called automatically
+    + New python configurable used for Rich configuration (RichDigiSys v1r0)
+    + When a property with the same meaning is set in both Boole and in an
+      underlying configurable, Boole property takes precedence. If neither is 
+      set, Boole default takes precedence
+  . Changes to options files to adapt to changes in configurable, in particular:
+    + Adapt to option name changes
+    + Remove Boole.applyConf() everywhere
+    + Default names for output files now set inside configurable
+  . Add Boole-DC06.py since DC06 is no longer default
+  . Add Boole-2008-VeloOpen.py to digitize velo open geometry
+  . Rename Boole-FST09.py to Boole-FEST09.py
+  . Remove v200601.opts, BooleMessage.opts, TAE.opts
+  . Remove all Rich .opts files
+    (RichDigiQC v3r11, RichMCAssociators v2r6, RichReadout v2r11)
+  . In valgrind.job, use latest gaudirun.py options to extract .opts file
+  . Remove Boole.exe
+  . Move to new ST algorithm/tool base classes (STDigiAlgorithms v1r4)
+  . Particle properties table now taken from CondDB (DDDB v1r13)
 
-</PRE><H1><A NAME=v16r3>2008-09-10 Boole v16r3</A></H1><PRE>
+- New features
+  . Add possibility to emulate TAE events in L0Muon (L0Muon v8r3)   
+
+- Bug fixes and protections
+  . Fix typo in Boole_Ganga.py
+  . Fix valgrind.job for use in interactive lsf, and to remove version directory
+  . Modified the QMTests to avoid failures when the database changes.
+  . Fix BooleInit::modifyODIN to work in TAE mode (DigiAlg v4r12)
+  . Fix in description of L0Muon input in L0MuonKernel.xml (ParamFiles v8r0)
+  . Fixes for compilation with gcc 4.3 (RichReadout v2r11)
+  . Fix untested StatusCodes (L0Muon v8r3, VeloAlgorithms v4r7p2, MuonDAQ v4r5)
+  . Fix to remove "Warning in <TStreamerInfo::BuildOld>" message in case when Dll
+    has been properly loaded. Now this message appears only if there is a real
+    problem (i.e. reading HepMC 1 data without HepMCBack loaded) (HepMCBack vr1)
+  . Fix FPEs also on ia32 (SimCompoments v2r14)
+
+</PRE><H1><A NAME=v16r3>2008-10-10 Boole v16r3</A></H1><PRE>
 This version uses projects Gaudi v20r2, LHCb v25r2, Lbcom v6r23
  and SQLDDDB v5r0, ParamFiles v7r3, FieldMap v5r1, L0TCK v1r0
 
