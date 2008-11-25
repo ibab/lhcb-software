@@ -10,7 +10,7 @@ FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml",
                            "xmlcatalog_file:$BRUNELROOT/job/NewCatalog.xml" ]
 
 #-- Main ('signal') event input
-inputType   = Brunel().getProp("inputType").upper()
+inputType   = Brunel().getProp("InputType").upper()
 
 if inputType == "MDF":
     datasetName = "SeptTEDData"
@@ -57,6 +57,6 @@ Brunel().DatasetName = datasetName
 # Monitoring histograms
 #HistogramPersistencySvc().OutputFile = "SomeFile.root"
 
-#-- Possible output streams. Enabled by setting the corresponding Brunel() property
-outputName = Brunel().outputName()
-OutputStream("DstWriter").Output = "DATAFILE='PFN:" + outputName + "' TYP='POOL_ROOTTREE' OPT='REC'"
+#-- Dst or rDst file
+#OutputStream("DstWriter").Output = "DATAFILE='PFN:someFile.dst' TYP='POOL_ROOTTREE' OPT='REC'"
+#OutputStream("DstWriter").Output = "DATAFILE='PFN:someFile.rdst' TYP='POOL_ROOTTREE' OPT='REC'"

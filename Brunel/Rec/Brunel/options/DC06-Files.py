@@ -61,9 +61,9 @@ Brunel().DatasetName = datasetName
 # Monitoring histograms
 #HistogramPersistencySvc().OutputFile = "SomeFile.root"
 
-#-- Possible output streams. Enabled by setting the corresponding Brunel() property
-outputName = Brunel().outputName()
-OutputStream("DstWriter").Output = "DATAFILE='PFN:" + outputName + "' TYP='POOL_ROOTTREE' OPT='REC'"
+#-- Dst or rDst file
+#OutputStream("DstWriter").Output = "DATAFILE='PFN:someFile.dst' TYP='POOL_ROOTTREE' OPT='REC'"
+#OutputStream("DstWriter").Output = "DATAFILE='PFN:someFile.rdst' TYP='POOL_ROOTTREE' OPT='REC'"
 
-if( inputType == "ETC" ):
-    TagCollectionSvc("EvtTupleSvc").Output = [ "EVTTAGS2 DATAFILE='etc-output-test.root' TYP='POOL_ROOTTREE' OPT='RECREATE' " ]
+#-- ETC output in case of ETC input
+#TagCollectionSvc("EvtTupleSvc").Output = [ "EVTTAGS2 DATAFILE='some-etc.root' TYP='POOL_ROOTTREE' OPT='RECREATE' " ]

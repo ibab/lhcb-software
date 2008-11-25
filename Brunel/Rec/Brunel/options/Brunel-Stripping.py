@@ -7,11 +7,9 @@
 
 from Brunel.Configuration import *
 
-Brunel().inputType  = "ETC"
-Brunel().noWarnings = True
-
-Brunel().applyConf()
+Brunel().InputType  = "ETC"
+Brunel().NoWarnings = True
 
 ##############################################################################
-# I/O datasets are defined in a separate file, see examples in DC06-Files.py
+# I/O datasets are defined in a separate file, see examples in 2008-Files.py
 ##############################################################################

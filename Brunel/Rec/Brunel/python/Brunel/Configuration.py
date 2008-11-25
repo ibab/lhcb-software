@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.35 2008-11-19 18:15:33 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.36 2008-11-25 16:37:35 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -220,6 +220,8 @@ class Brunel(LHCbConfigurableUser):
             ApplicationMgr().OutStream.append( dstWriter )
             dstWriter.Preload = False
             dstWriter.RequireAlgs += ["Reco"] # Write only if Rec phase completed
+            if not hasattr( dstWriter, "Output" ):
+                dstWriter.Output  = "DATAFILE='PFN:" + self.outputName() + "' TYP='POOL_ROOTTREE' OPT='REC'"
 
         # Add MC truth to DST
         if withMC and dstType == "DST":
@@ -227,9 +229,12 @@ class Brunel(LHCbConfigurableUser):
             
         # Always write an ETC if ETC input
         if self.getProp( "InputType" ).upper() == "ETC":
-            ApplicationMgr().ExtSvc.append("TagCollectionSvc/EvtTupleSvc")
+            etcWriter = TagCollectionSvc("EvtTupleSvc")
+            ApplicationMgr().ExtSvc.append(etcWriter)
             ApplicationMgr().OutStream.append("GaudiSequencer/SeqTagWriter")
             importOptions( "$BRUNELOPTS/DefineETC.opts" )
+            if not hasattr( etcWriter, "Output" ):
+               etcWriter.Output = [ "EVTTAGS2 DATAFILE='" + self.getProp("DatasetName") + "-etc.root' TYP='POOL_ROOTTREE' OPT='RECREATE' " ]
 
         # Modify printout defaults
         importOptions("$BRUNELOPTS/BrunelMessage.opts")

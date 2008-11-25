@@ -16,12 +16,17 @@ datasetName = "035537_0000088110"
 EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/COSMICS/35537/" + datasetName + ".raw'  SVC='LHCb::MDFSelector'"]
 #EventSelector().Input = ["DATAFILE='PFN:/usera/jonesc/NFS/data/LHCb/COSMICS/35537/" + datasetName + ".raw'  SVC='LHCb::MDFSelector'"]
 
-# Set the property, used to build other file names
-Brunel().setProp( "datasetName", datasetName )
+# Default output files names are set up using value Brunel().DatasetName property
+Brunel().DatasetName = datasetName
 
-#-- Save the monitoring histograms
-HistogramPersistencySvc().OutputFile = Brunel().histosName()
+# Redefine defaults by uncommenting one or more of options below 
 
-#-- Possible output streams. Enabled by setting the corresponding Brunel() property
-outputName = Brunel().outputName()
-OutputStream("DstWriter").Output = "DATAFILE='PFN:/usera/jonesc/NFS/data/2008-Sim/" + outputName + "' TYP='POOL_ROOTTREE' OPT='REC'"
+# Monitoring histograms
+#HistogramPersistencySvc().OutputFile = "SomeFile.root"
+
+#-- Dst or rDst file
+#OutputStream("DstWriter").Output = "DATAFILE='PFN:someFile.dst' TYP='POOL_ROOTTREE' OPT='REC'"
+#OutputStream("DstWriter").Output = "DATAFILE='PFN:someFile.rdst' TYP='POOL_ROOTTREE' OPT='REC'"
+
+#-- ETC output in case of ETC input
+#TagCollectionSvc("EvtTupleSvc").Output = [ "EVTTAGS2 DATAFILE='some-etc.root' TYP='POOL_ROOTTREE' OPT='RECREATE' " ]

@@ -1,5 +1,5 @@
 package Brunel
-version v33r4
+version v34r0
 
 branches doc cmt job options
 
@@ -16,7 +16,7 @@ use HepMC              v*    LCG_Interfaces -no_auto_imports
 
 # Databases
 use DDDB               v*    Det            -no_auto_imports
-use ParamFiles         v7r3                 -no_auto_imports
+use ParamFiles         v8r0                 -no_auto_imports
 use FieldMap           v5r*                 -no_auto_imports
 
 # The rest are needed only to set up environment variables for job options
@@ -40,12 +40,8 @@ use LbcomSys           v*                   -no_auto_imports
 # The whole REC project
 use RecSys             v*                   -no_auto_imports
 
-# set up the application
-apply_pattern application_path
+# ========================= Install configurable ============================
 apply_pattern install_python_modules
-apply_pattern GaudiApp
 
-##### Build also the .exe, for Ganga usage only #####
-application Brunel $(GAUDICONFROOT)/src/GaudiMain.cpp
-macro Brunel_linkopts    "$(application_linkopts)"
-#####################################################
+# ==========  Export application name and version to gaudirun.py ============
+apply_pattern GaudiApp

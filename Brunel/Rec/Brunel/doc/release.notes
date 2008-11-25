@@ -3,28 +3,31 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-! 2008-11-18 - Marco Cattaneo
- - More (partial) fixes to Configurable and options, more to come
-
-! 2008-11-14 - Chris Jones
- - Fixes to python Configurable for latest Gaudi changes
-
-! 2008-10-24 - Patrick Koppenburg
- - Added ST monitoring
-
-! 2008-10-21 - Chris Jones
- - Improvements to the python Configurable for easier cosmic reconstruction.
- - Add Brunel-Cosmic.py and 2008-Cosmic-Data.py files.
-
-! 2008-10-21 - Marco Clemencic
- - Updated the fix for of Configurable for Gaudi v20r3.
-
-! 2008-10-20 - Patrick Koppenburg
- - New option useSimCond that allows to use withMC = False on 
-   digi files while still using SimCond.
-
-! 2008-10-16 - Marco Cattaneo
- - Fix Configurable for Gaudi v20r3. Not compatible with Gaudi v20r2
+</PRE><H1><A NAME=v34r0>2008-11-26 Brunel v34r0</A></H1><PRE>
+ - Many backward incompatible changes to Configurable:
+   . Adapt to configuration changes in Gaudi v20r3. Incompatible with Gaudi v20r2
+   . Most option names are changed. In particular:
+     + All option names are Capitalized
+     + New DataType option, removes need to set CondDBtag and DDDBtag if using
+       default tags
+     + New option UseSimCond that allows to use WithMC = False on digi files,
+       while still using SimCond
+   . applyConf() renamed __apply_configuration__ and called automatically
+ - New functionality in Configueable:
+   . New option UseSimCond that allows to use WithMC = False on digi files,
+     while still using SimCond
+   . Added ST monitoring
+   . Improvements for easier cosmic reconstruction
+ - Changes to options files
+	 . Adapt to changes in configurable, in particular:
+     + Adapt to option name changes
+     + Remove Brunel.applyConf() everywhere
+     + Default names for output files now set inside configurable
+   . Add Brunel-Cosmic.py and 2008-Cosmic-Data.py files.
+   . Update SuppressWarnings.opts
+ - In valgrind.job, use latest gaudirun.py options to extract .opts file
+ - Use ParamFiles v8r0
+ - Remove Brunel.exe
 
 </PRE><H1><A NAME=v33r3p1>2008-10-15 Brunel v33r3p1</A></H1><PRE>
  - Adapt valgrind.job for use on interactive LSF.

@@ -40,7 +40,7 @@ while ($i < $nar)
   echo ${options}  
 end
 
-set Bversion = "v33r4"
+set Bversion = "v34r0"
 echo "Executing valgrind for Brunel $Bversion using options $options"
 
 # If not set (interactive and CAF), set WORKDIR to submission directory
@@ -76,7 +76,7 @@ endif
 set SuppFile = "$MYJOBROOT/job/Brunel.supp"
 
 # Flatten the options and force 5 events only
-gaudirun.py -n -v --old-opts $options >! ./valgrind.opts
+gaudirun.py -n -v -o ./valgrind.opts $options
 echo "ApplicationMgr.EvtMax = 5;" >> valgrind.opts
 
 # == run the excutable ================================
