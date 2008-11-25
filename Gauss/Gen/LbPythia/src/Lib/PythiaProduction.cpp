@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.cpp,v 1.18 2008-11-12 11:47:01 robbep Exp $
+// $Id: PythiaProduction.cpp,v 1.19 2008-11-25 15:00:42 robbep Exp $
 
 // Include files
 // STD * STL 
@@ -171,6 +171,9 @@ PythiaProduction::PythiaProduction( const std::string& type,
   m_defaultSettings.push_back( "pysubs msub 482 1" ) ;
   m_defaultSettings.push_back( "pysubs msub 483 1" ) ;
   m_defaultSettings.push_back( "pysubs msub 484 1" ) ;
+  m_defaultSettings.push_back( "pysubs msub 485 1" ) ;
+  // Allows generation of resonances (psi(3770) for example) in 2 -> 2 processes
+  m_defaultSettings.push_back( "pysubs ckin 41 3.0" ) ;
   m_defaultSettings.push_back( "pypars mstp 2 2" ) ;
   m_defaultSettings.push_back( "pypars mstp 33 3" ) ;
   m_defaultSettings.push_back( "pypars mstp 128 2" ) ;
@@ -304,6 +307,10 @@ StatusCode PythiaProduction::initializeGenerator( ) {
   Pythia::pyint2().iset(484) = 2 ;
   Pythia::pyint2().kfpr(484,1) = 9000553 ;
   Pythia::pyint2().kfpr(484,2) = 21 ;
+  // Process 485: g + g -> psi(3770) + g Color Singlet
+  Pythia::pyint2().iset(485) = 2 ;
+  Pythia::pyint2().kfpr(485,1) = 30443 ;
+  Pythia::pyint2().kfpr(485,2) = 21 ;
 
   // Set User process to 0 for normal Pythia to be overriden for
   // specific generation
@@ -1126,7 +1133,6 @@ StatusCode PythiaProduction::toHepMC
   
   // Retrieve hard process information
   hardProcessInfo( theCollision ) ;
-  
   return StatusCode::SUCCESS ;
 } ;
 // ============================================================================
