@@ -1,5 +1,5 @@
 #!/bin/bash
-cd job
+#cd job
 export DEBUGGING=YES
 
 . ./setupOnline.sh $*

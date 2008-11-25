@@ -22,7 +22,7 @@ if test -n "$4" ; then
 fi
 echo UTGID ${UTGID} PARENT ${PARENT} PARTNAME ${PARTNAME}
 
-cd /home/online/Online_v4r16/Online/OnlineTasks/v1r14/job
+cd /home/online/Online_v4r17/Online/OnlineTasks/job
 export DEBUGGING=YES
 
 # remove the args because they interfere with the cmt scripts
@@ -41,7 +41,7 @@ echo "options "${OPTIONS}
 if test -n "${TOP}" ; then 
   #top level adder for this partition
   export DIM_DNS_NODE=hlt01
-  exec -a ${UTGID} ${gaudi_exe3} -options=../options/Adder.opts -loop &  
+  exec -a ${UTGID} ${gaudi_exe3} -options=../options/Adder.opts &  
 fi
 
 if [[ ${PARENT} == "cald07" ]] ; then 
@@ -60,7 +60,7 @@ if test -z "${TOP}" ; then
     else 
        if [[ ${PARENT} == "mona08" ]]
          then ${gaudi_exe3} -options=../options/AdderMonitorfarm.opts -loop &
-       else ${gaudi_exe3} -options=../options/AdderSubfarm.opts -loop &
+       else exec -a ${UTGID} ${gaudi_exe3} -options=../options/AdderSubfarm.opts &
 #        else /usr/bin/valgrind --tool=callgrind ${gaudi_exe3} -options=../options/AdderSubfarm.opts -loop &
        fi
   fi

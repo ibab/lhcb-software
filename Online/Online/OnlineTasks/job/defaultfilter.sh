@@ -1,22 +1,12 @@
-#!/bin/bash
-#this script should allow running of generic gaudi jobs in the eff farm
-# evh 15/01/2008
-#parent is the name of the subfarm - for storage options
-#partname is the partition name
-#runtype is the activity (empty: use DummyRead.opts)
-
+#!/bin/sh
+# pick up the online setup...
 cd job
-export DEBUGGING=YES
-
-. ./setupOnline.sh $*
-
-export USEROPTS=${HLTOPTS}/DummyRead${IS_TAE_RUN}.opts
-
-# if test -f /group/online/dataflow/options/${PARTNAME}/${PARTNAME}_${RUNTYPE}${IS_TAE_RUN}.opts;
-#     then 
-#     export USEROPTS=/group/online/dataflow/options/${PARTNAME}/${PARTNAME}_${RUNTYPE}${IS_TAE_RUN}.opts;
-# fi
-
-#echo "${UTGID} Script:  INFO  Useropts "$USEROPTS
-
-exec -a ${UTGID} ${CLASS1_TASK} -opt=$USEROPTS
+source ./setupOnline.sh $*
+# pick up 'our' setup... (which defines $MOOREROOT!)
+source /group/hlt/prod-Moore_v5r4/Moore_v5r4/Hlt/Moore/job/SetupMoore_v5r4.sh
+# and the options to be used
+export USEROPTS=/group/hlt/prod-Moore_v5r4/Moore_v5r4/Hlt/Moore/options/DEFAULT${IS_TAE_RUN}.opts
+# and run them!
+echo exec -a ${UTGID} ${CLASS1_TASK} -opt=${USEROPTS}
+exec -a ${UTGID} ${CLASS1_TASK} -opt=${USEROPTS}
+      
