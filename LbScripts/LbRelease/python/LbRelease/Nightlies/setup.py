@@ -11,3 +11,9 @@ os.environ['LCG_XMLCONFIGDIR'] = os.path.join('/afs', 'cern.ch', 'lhcb', 'softwa
 configurationHistoryPath = os.path.join('/afs', 'cern.ch', 'lhcb', 'software', 'nightlies', 'conf', 'history')
 getpackCommand = 'python /afs/cern.ch/lhcb/scripts/python/getpack.py'
 nightliesAFSPath = os.path.join('/afs', 'cern.ch', 'lhcb', 'software', 'nightlies')
+
+pathLbLogin = '/afs/cern.ch/lhcb/software/releases/LBSCRIPTS/LBSCRIPTS_v1r10/InstallArea/scripts/LbLogin.sh'
+#cmtVersion = 'v1r20p20080222' # or None if default
+cmtVersion = 'v1r20p20070208' # or None if default
+#pathCmtSetup = '/afs/cern.ch/sw/contrib/CMT/v1r20p20080222/mgr/setup.sh' #because --cmtvers== seems not to work
+pathCmtSetup = '/afs/cern.ch/sw/contrib/CMT/v1r20p20070208/mgr/setup.sh'

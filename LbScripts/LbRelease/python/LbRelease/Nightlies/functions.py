@@ -100,11 +100,17 @@ def runparallel(slotName, minusj=None):
 
 def cleanAFSSpace(slotName):
     """ removes everything from today from AFS for the <slotName> """
+    slot = configuration.findSlot(slotName)
     pathToRemoveFiles = nightliesAFSPath + '/' + slotName + '/' + configuration.TODAY
     if os.path.exists(pathToRemoveFiles):
         for x in os.listdir(pathToRemoveFiles):
             if os.path.isdir(os.path.join(pathToRemoveFiles, x)): shutil.rmtree(os.path.join(pathToRemoveFiles, x), ignore_errors=True)
             else: os.remove(os.path.join(pathToRemoveFiles, x))
+    #clear logs from web
+    if slot is not None:
+        webDir = os.path.join(slot.wwwDir())
+        for f in os.listdir(webDir):
+            if re.match(slotName + '.' + configuration.TODAY, f): os.remove(os.path.join(webDir, f))
 
 
 def getProjectObject(slotObject, projectName):
@@ -211,7 +217,7 @@ def changeRequirementsFile(filename, changesDict, addons=None, removes=None):
     """ changeRequirementsFile(filename, changesDict[, addons[,removes]])
 
         Function changes the given file, by replacing "use" lines with the ones generated from <changesDict> (result of readReaquirementsFile function).
-        Additional parameters: <addons> and <removes> - TODO: need to be checked and probably fixed (after some other changes may not work propertly now).
+        Additional parameters: <addons> and <removes> - TODO: need to be checked and probably fixed (after some other changes may not work properly now).
     """
     readerfile = file(filename,'r')
     reader = readerfile.readlines()
@@ -260,12 +266,16 @@ def generateBuilders(destPath, projectNames, minusj):
     """
     actionsFileAbsPath = os.path.dirname(os.path.abspath(__file__))
     actionsFileAbsPath = os.path.join(actionsFileAbsPath, 'actionLauncher.py')
-    settingEnv = 'source /afs/cern.ch/lhcb/software/releases/LBSCRIPTS/LBSCRIPTS_v1r8/InstallArea/scripts/LbLogin.sh -q'
+    settingEnv = 'export CMTCONFIGcopy=$CMTCONFIG ; export LD_LIBRARY_PATHcopy=$LD_LIBRARY_PATH ; '
+    settingEnv+= 'source ' + pathLbLogin + ' -q'
+    if cmtVersion != None: settingEnv += ' -cmtvers=' + cmtVersion
     #settingEnv += ' --cmtsite=$CMTSITE' #+os.environ.get('CMTSITE','""')
     #settingEnv += ' --cmtconfig=$CMTCONFIG' #+os.environ.get('CMTCONFIG','""')
     #settingEnv += ' --userarea=$User_release_area' #+os.environ.get('User_release_area','""')
     #settingEnv += ' --cmtvers='
     settingEnv += ' > /dev/null'
+    settingEnv += ' ; source ' + pathCmtSetup
+    settingEnv += ' ; export CMTCONFIG=$CMTCONFIGcopy ; export LD_LIBRARY_PATH=$LD_LIBRARY_PATHcopy'
     lines = """
 action pkg_get "mkdir -p logs ; """ + settingEnv + """ ; python """ + actionsFileAbsPath + """ get $(packageName) 2>&1 | tee -a logs/$(package)_$(CMTCONFIG)_get.log"
 action pkg_config " """ + settingEnv + """ ; python """ + actionsFileAbsPath + """ config $(packageName) 2>&1"
@@ -341,10 +351,6 @@ def clean(slotName):
     os.makedirs(slot.buildDir())
     #remove contents of builders directory:
     shutil.rmtree(slot.buildersDir(), ignore_errors=True)
-    #clear logs from web
-    webDir = os.path.join(slot.wwwDir())
-    for f in os.listdir(webDir):
-        if re.match(slotName + '.' + configuration.TODAY, f): os.remove(os.path.join(webDir, f))
 
 def install(slotName, projectName):
     """ install(slotName, projectName)
@@ -374,7 +380,7 @@ def install(slotName, projectName):
         #configuration.system('mkdir -p ' + os.path.join(releasePath, projectName.upper(), project.getTag()))
         #configuration.system('cd ' + os.path.join(slot.buildDir(), projectName.upper(), project.getTag()) +' && tar cf - * | ( cd ' + os.path.join(releasePath, projectName.upper(), project.getTag(), '.') + ' ; tar xf - )')
         copyLocal(os.path.join(slot.buildDir(), projectName.upper(), project.getTag()), os.path.join(releasePath, projectName.upper(), project.getTag()))
-        shutil.copy2(os.path.join(os.environ['LCG_XMLCONFIGDIR'], 'configuration.xml'), releasePath)
+        if not os.path.exists(os.path.join(releasePath, 'configuration.xml')):  shutil.copy2(os.path.join(os.environ['LCG_XMLCONFIGDIR'], 'configuration.xml'), releasePath)
 
 def make(slotName, projectName, minusj):
     """ make(slotName, projectName, minusj)

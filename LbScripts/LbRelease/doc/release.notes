@@ -1,3 +1,13 @@
+2008-11-25  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
+
+	* scripts/startNightlies.py: bugfix (sys.argv changed to self.args)
+	* python/LbRelease/Nightlies/setup.py: added variables for paths to LbLogin
+	and CMT setup script + cmt version tag
+	* python/LbRelease/Nightlies/functions.py: changed: copying of configuration.xml to
+	the release dir, now only once; added export of CMTCONFIG and LD_LIBRARY_PATH in
+	"builders" before setting up the env., and restore the ones provided by Nightlies
+	after the env. is set; cleaning log files moved from "clean" action to "cleanAFS" one.
+
 2008-11-13  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v1r4
@@ -28,8 +38,8 @@
 
 2008-10-29  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* added __version__ to various script. This version is extracted from the Name 
-	or the Revision CVS keywords. 
+	* added __version__ to various script. This version is extracted from the Name
+	or the Revision CVS keywords.
 
 2008-09-25  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 

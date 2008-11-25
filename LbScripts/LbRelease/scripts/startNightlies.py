@@ -47,7 +47,7 @@ class StartNightliesScript(Script):
             cleanAFSSpace(self.args[1])
         elif self.args[0] == 'run':
             if len(self.args) >= 4:
-                platforms = " ".join([sys.argv[x] for x in range(3,len(self.args))])
+                platforms = " ".join([self.args[x] for x in range(3,len(self.args))])
                 run(self.args[1], self.args[2], platforms)
             elif len(self.args) == 3: run(self.args[1], self.args[2])
             elif len(self.args) == 2: run(self.args[1])
