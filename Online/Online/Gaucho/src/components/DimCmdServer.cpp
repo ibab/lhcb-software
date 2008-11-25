@@ -1,4 +1,4 @@
-// $Id: DimCmdServer.cpp,v 1.14 2008-08-25 08:04:49 evh Exp $
+// $Id: DimCmdServer.cpp,v 1.15 2008-11-25 15:53:23 evh Exp $
 
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/MsgStream.h"
@@ -24,7 +24,7 @@
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IIncidentSvc.h"
-#include "OnlineHistDB/OnlineHistDB.h"
+//#include "OnlineHistDB/OnlineHistDB.h"
 
   //HDS =HistogramDataService but used as generic name for anything on store
   static IHistogramSvc* m_histogramSvc; 

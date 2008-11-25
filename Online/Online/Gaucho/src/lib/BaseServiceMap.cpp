@@ -389,19 +389,27 @@ void BaseServiceMap::insertDimService(const std::string &serviceName, const std:
   //monObjectTest->print();
   msg << MSG::DEBUG << "creating MonObject for Adder" << groupName << endreq;
   
-  MonObject *monObjectAdder = MonObjectCreator::createMonObject(monObjectTmp->typeName(), msgSvc(), name());
+  std::vector<std::string> serviceParts = Misc::splitString(serviceName, "/");
+  std::string svctype = serviceParts[0];
+  
+  MonObject *monObjectAdder = MonObjectCreator::createMonObjectWithPrefix(svctype, msgSvc(), name());
   
   msg << MSG::DEBUG << "copy MonObject for Adder" << groupName << endreq;
   
-  monObjectAdder->copyFrom(monObjectTmp);
-  
+  bool isCopied = false;
+  if (monObjectTmp !=0) {
+    monObjectAdder->copyFrom(monObjectTmp);
+    isCopied = true;
+  }
+
   //monObjectAdder->print();
   msg << MSG::DEBUG << "creating DimServiceMonObject for Adder : " << groupName << endreq;
   DimServiceMonObject *dimServiceMonObjectAdder = new DimServiceMonObject(groupName, monObjectAdder);
 
   m_dimSrv[groupName] = std::pair<DimServiceMonObject*, MonObject*> (dimServiceMonObjectAdder, monObjectAdder);
+  m_dimSrvStatus[groupName] = std::pair<bool, std::string> (isCopied, elementName);
 
-  if (monObjectTmp->typeName().compare (s_monRate) == 0) {
+  if (svctype.compare (s_pfixMonRate) == 0) {
     if (m_processMgr->publishRates())  {
       m_monRateDecoder = new MonRateDecoder(m_processMgr->msgSvc(), m_processMgr->utgid(), groupName);
     }
@@ -657,6 +665,18 @@ void BaseServiceMap::add() {
     if (m_dimSrv.find(m_dimInfoIt->first) == m_dimSrv.end()) { 
       msg << MSG::DEBUG << "No Adder Found " << m_dimInfoIt->first << endreq;
       continue;
+    }
+
+    if (m_dimSrvStatus[m_dimInfoIt->first].first){
+      MonObject *monObjectTmp = m_dimInfo[m_dimInfoIt->first][m_dimSrvStatus[m_dimInfoIt->first].second]->monObject();
+      if (monObjectTmp !=0) {
+        m_dimSrv[m_dimInfoIt->first].second->copyFrom(monObjectTmp);
+        m_dimSrvStatus[m_dimInfoIt->first].first = true;
+      }
+      else {
+        msg << MSG::DEBUG << "Adder MonObject still unloaded for " << m_dimInfoIt->first << endreq;
+        continue;
+      }
     }
 
     m_dimSrv[m_dimInfoIt->first].second->reset();

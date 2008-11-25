@@ -14,6 +14,7 @@ public:
   MonObjectCreator();
   virtual ~MonObjectCreator();
   static MonObject* createMonObject(const std::string &monObjectTypeName, IMessageSvc*  msgSvc, const std::string &source);
+  static MonObject* createMonObjectWithPrefix(const std::string &monObjectPrefix, IMessageSvc*  msgSvc, const std::string &source);
   static int monObjectSize(MonObject* monObject);
 };
 

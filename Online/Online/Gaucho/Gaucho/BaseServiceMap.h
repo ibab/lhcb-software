@@ -69,6 +69,9 @@ protected:
   std::map<std::string, std::pair<DimServiceMonObject*, MonObject*>, std::less<std::string> > m_dimSrv;
   std::map<std::string, std::pair<DimServiceMonObject*, MonObject*>, std::less<std::string> >::iterator m_dimSrvIt;
   
+  std::map<std::string, std::pair<bool, std::string>, std::less<std::string> > m_dimSrvStatus;
+  std::map<std::string, std::pair<bool, std::string>, std::less<std::string> >::iterator m_dimSrvStatusIt;
+
   std::map<std::string, std::map<std::string, DimInfoMonObject*>, std::less<std::string> > m_dimInfo;
   std::map<std::string, std::map<std::string, DimInfoMonObject*>, std::less<std::string> >::iterator m_dimInfoIt;
   

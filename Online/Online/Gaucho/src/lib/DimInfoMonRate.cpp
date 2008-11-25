@@ -359,8 +359,8 @@ void DimInfoMonRate::extractData()
     //COUT_DEBUG("extractData    <=================");
     int newRates = lookForNewRates();
     
-    //if(newRates != 0)
-    //  COUT_DEBUG("extractData    new = " << newRates << "<=================");
+    if(newRates != 0)
+       COUT_DEBUG("extractData    new = " << newRates << "<=================");
     
     //COUT_DEBUG("extractData   new counters search done");
     
