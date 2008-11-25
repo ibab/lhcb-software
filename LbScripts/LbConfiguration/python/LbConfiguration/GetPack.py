@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: GetPack.py,v 1.2 2008-11-25 16:53:25 marcocle Exp $
+# $Id: GetPack.py,v 1.3 2008-11-25 17:31:24 marcocle Exp $
 
 from LbUtils.Script import Script
 from LbUtils import rcs
@@ -78,7 +78,7 @@ class Quit:
 ## @class GetPack
 # Main script class for getpack.
 class GetPack(Script):
-    _version = "$Id: GetPack.py,v 1.2 2008-11-25 16:53:25 marcocle Exp $".replace("$","").replace("Id:","").strip()
+    _version = "$Id: GetPack.py,v 1.3 2008-11-25 17:31:24 marcocle Exp $".replace("$","").replace("Id:","").strip()
     def __init__(self):
         Script.__init__(self, usage = "\n\t%prog [options] package [ [version] ['tag'|'head'] ]"
                                       "\n\t%prog [options] -i [repository [hat]]",
@@ -118,9 +118,14 @@ class GetPack(Script):
                                dest = "version_dirs",
                                help = "use versioned subdirectories for the packages")
         self.parser.add_option("--user",
-                               help = "username to use to connect to the repositories")
+                               help = "username to use to connect to the repositories. "
+                                      "By default, the user is not explicitely used "
+                                      "unless a user name is specified with the "
+                                      "environment variable GETPACK_USER.")
         self.parser.set_defaults(protocol = "default",
                                  version_dirs = False)
+        if "GETPACK_USER" in os.environ:
+            self.parser.set_defaults(user = os.environ["GETPACK_USER"])
     
     def _listChoice(self, message, lst):
         page_size = 30
