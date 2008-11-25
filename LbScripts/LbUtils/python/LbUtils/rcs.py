@@ -5,6 +5,7 @@ import os, re
 from subprocess import Popen, PIPE, STDOUT
 import logging
 
+_call_command_log = logging.getLogger("_call_command")
 def _call_command(cmd, *args, **kwargs):
     """
     Simple wrapper to execute a command and return standard output and standard error.
@@ -12,7 +13,7 @@ def _call_command(cmd, *args, **kwargs):
     d = {"stdout": PIPE, "stderr": PIPE}
     d.update(kwargs)
     cmd = [cmd] + list(args)
-    logging.debug("Execute command: %r %r", " ".join(cmd), kwargs)
+    _call_command_log.debug("Execute command: %r %r", " ".join(cmd), kwargs)
     proc = apply(Popen, (cmd,), d)
     return proc.communicate()
 
@@ -227,7 +228,7 @@ class SubversionCmd(RevisionControlSystem):
     """
     CVS implementation of RevisionControlSystem.
     """
-    __repository_rexp__ = re.compile(r"(svn(?:\+ssh)?|https|file)://(?:([\w.]+)@)?([\w.]+)(/[\w./]+)*")
+    __repository_rexp__ = re.compile(r"(svn(?:\+ssh)?|https|file)://(?:([\w.]+)@)?([\w.]*)(/[\w./]+)*")
     SVN_PROTOCOL = 1
     SVN_USER     = 2
     SVN_HOST     = 3
@@ -244,7 +245,6 @@ class SubversionCmd(RevisionControlSystem):
             self.__repository_rexp__.match(repository).groups()
         # cache of module names and versions
         self._modules = {}
-        
     
     @classmethod
     def canHandle(cls, repository):
@@ -253,9 +253,14 @@ class SubversionCmd(RevisionControlSystem):
         specified.
         A back-end specific implementation should implement this method to allow
         an automatic discovery of the correct implementation for a given RCS
-        repository.  
+        repository.
         """
-        return cls.__repository_rexp__.match(repository)
+        m = cls.__repository_rexp__.match(repository)
+        # if protocol is "file" we do not want the host and vice versa
+        valid = m and \
+                ( m.group(cls.SVN_PROTOCOL) == "file" and not m.group(cls.SVN_HOST) ) or \
+                ( m.group(cls.SVN_PROTOCOL) != "file" and m.group(cls.SVN_HOST) ) 
+        return valid
 
     def _clearModuleCache(self):
         """
@@ -270,27 +275,39 @@ class SubversionCmd(RevisionControlSystem):
         out, err = _svn("ls", "/".join([self.repository, path]))
         # @TODO add error-checking
         return out.splitlines()
-    
-    def listModules(self, path = None):
+
+    def _getModulesFromProp(self):
+        """
+        Return the content of the modules property of the pacakges directory as a list.
+        """
+        out, err = _svn("propget", "modules", "/".join([self.repository, "packages"]))
+        return [ m for m in out.splitlines() if m ]
+        
+    def listModules(self, path = None, forceScan = False):
         """
         Return a list of strings identifying the modules below the specified
         path (or the root of the repository if not specified).
         """
         if not self._modules:
             # Get the list of modules
-            # @FIXME: extremely inefficient, but needed for the hats
-            #         probably can be optimized by adding a list of known packages
-            #         or known hats (more or less as it is done in CVS)
-            dirs = [ l for l in self._ls("packages") if l.endswith("/") ]
-            modules = []
-            while dirs:
-                d = dirs.pop(0)
-                subdirs = [ l for l in self._ls("packages/" + d) if l.endswith("/") ]
-                if "trunk/" in subdirs:
-                    modules.append(d[:-1])
-                else:
-                    for sd in subdirs:
-                        dirs.append(d+sd)
+            if not forceScan:
+                # try using the metadata of the directory "pacakges"                
+                modules = self._getModulesFromProp()
+            else:
+                # initialize to empty
+                modules = []
+            if not modules:
+                # if we do not have modules yet (not found or not using metadata)
+                # full scan of the repository (inefficient)
+                dirs = [ l for l in self._ls("packages") if l.endswith("/") ]
+                while dirs:
+                    d = dirs.pop(0)
+                    subdirs = [ l for l in self._ls("packages/" + d) if l.endswith("/") ]
+                    if "trunk/" in subdirs:
+                        modules.append(d[:-1])
+                    else:
+                        for sd in subdirs:
+                            dirs.append(d+sd)
             for m in modules:
                 self._modules[m] = None
         if path:

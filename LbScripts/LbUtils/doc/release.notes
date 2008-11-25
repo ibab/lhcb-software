@@ -1,3 +1,8 @@
+2008-11-25  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbUtils/rcs.py: extended to get the list of modules in (SVN)
+	from the metadata of the directory "packages".
+
 2008-11-24  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbUtils/rcs.py: module to allow technology transparent access
