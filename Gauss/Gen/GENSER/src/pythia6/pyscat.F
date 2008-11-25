@@ -1,4 +1,4 @@
- 
+C $Id: pyscat.F,v 1.2 2008-11-25 14:57:56 robbep Exp $   
 C*********************************************************************
  
 C...PYSCAT
@@ -61,12 +61,11 @@ C...and UED particle code (5 000 000 + id)
      & 6100011,6100013,6100015,                         
      & 5100012,5100011,5100014,5100013,5100016,5100015, 
      & 5100021,5100022,5100023,5100024/                 
-      SAVE VINTSV
- 
+      SAVE VINTSV 
 C...Read out process
       ISUB=MINT(1)
       ISUBSV=ISUB
- 
+
 C...Restore information for low-pT processes
       IF(ISUB.EQ.95.AND.MINT(57).GE.1) THEN
         DO 100 J=41,66
@@ -101,7 +100,9 @@ C...Convert bottomonium process into equivalent charmonium ones.
       IF(ISUB.GE.461.AND.ISUB.LE.479) ISUB=ISUB-40
       IF(ISUB.EQ.480) ISUB=421
       IF((ISUB.GE.481).AND.(ISUB.LE.484)) ISUB=421
- 
+C.. psi(3770) production
+      IF(ISUB.EQ.485) ISUB=87  
+      
 C...Choice of subprocess, number of documentation lines
       IDOC=6+ISET(ISUB)
       IF(ISUB.EQ.95) IDOC=8
@@ -978,8 +979,8 @@ C...gamma + gamma -> F + Fbar; th arbitary
  
         ELSEIF(ISUB.GE.86.AND.ISUB.LE.89) THEN
 C...g + g -> (J/Psi, chi_0c, chi_1c or chi_2c) + g
-          MINT(21)=KFPR(ISUB,1)
-          MINT(22)=KFPR(ISUB,2)
+          MINT(21)=KFPR(ISUBSV,1)
+          MINT(22)=KFPR(ISUBSV,2)
           KCC=24
           KCS=(-1)**INT(1.5D0+PYR(0))
         ENDIF

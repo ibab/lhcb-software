@@ -1,4 +1,4 @@
- 
+C $Id: pysigh.F,v 1.2 2008-11-25 14:59:03 robbep Exp $   
 C***********************************************************************
  
 C...PYSIGH
@@ -105,7 +105,7 @@ C...8 = Universal Extra Dimensions
      4     20*0,
      6    2,  2,  2,  2,  2,  2,  2,  2,  2,  2,
      7    2,  2,  2,  2,  2,  2,  2,  2,  2,  2,
-     8    2,  2,  2,  2, 16*0/
+     8    2,  2,  2,  2,  2, 15*0/
  
 C...Reset number of channels and cross-section
       NCHN=0
@@ -296,7 +296,7 @@ C...Identify to which class(es) subprocess belongs
      &     (ISUBSV.GE.188.AND.ISUBSV.LE.190).OR.ISUBSV.EQ.161.OR.
      &     ISUBSV.EQ.167.OR.ISUBSV.EQ.168.OR.(ISUBSV.GE.393.AND.
      &     ISUBSV.LE.395).OR.(ISUBSV.GE.421.AND.ISUBSV.LE.439).OR.
-     &     (ISUBSV.GE.461.AND.ISUBSV.LE.484)) ISJETS=1
+     &     (ISUBSV.GE.461.AND.ISUBSV.LE.485)) ISJETS=1
 C...WBF is special case of ISJETS
       IF (ISUBSV.EQ.5.OR.ISUBSV.EQ.8.OR.
      &    (ISUBSV.GE.71.AND.ISUBSV.LE.73).OR.

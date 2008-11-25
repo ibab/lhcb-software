@@ -4,6 +4,11 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2008-25-11 - Patrick Robbe
+ - Add xsection.F (Nick Brook) which computes cross section for psi(3770)
+   production.
+ - Add production of psi(3770) (Colo singlet, Nick Brook)
+
 ! 2008-11-11 - Patrick Robbe
  - Add new routines to overwrite in Pythia, to generate extra charmonium states:
    pyscat.F, pysghf.F pysigh.F

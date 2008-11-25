@@ -1,4 +1,4 @@
- 
+C $Id: pysghf.F,v 1.2 2008-11-25 14:58:24 robbep Exp $   
 C*********************************************************************
  
 C...PYSGHF
@@ -31,7 +31,6 @@ C...Commonblocks
      &/PYINT4/,/PYSGCM/
 C...Local arrays
       DIMENSION WDTP(0:400),WDTE(0:400,0:5)
- 
 C...Determine where are charmonium/bottomonium wave function parameters.
       IONIUM=140
       IF(ISUB.GE.461.AND.ISUB.LE.479) IONIUM=145
@@ -369,7 +368,19 @@ C...gamma + gamma -> J/Psi + gamma.
             SIGH(NCHN)=FACQQG
           ENDIF
         ENDIF
- 
+      ELSE IF (ISUB.EQ.485) THEN
+C...PR/Nick Brook/LHCb ... Hack for Psi(3770)
+	PGTW=(SH*TH+TH*UH+UH*SH)/SH2
+	QGTW=(SH*TH*UH)/SH**3
+	RGTW=SQM3/SH
+	FACQQG = COMFAC * XSECTION(AS,SQM3,SH,TH)
+	IF(KFAC(1,21)*KFAC(2,21).NE.0) THEN
+	  NCHN=NCHN+1
+	  ISIG(NCHN,1)=21
+	  ISIG(NCHN,2)=21
+	  ISIG(NCHN,3)=1
+	  SIGH(NCHN)=FACQQG
+	ENDIF
 C...QUARKONIA+++
 C...Additional code by Stefan Wolf
       ELSE
