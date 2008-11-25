@@ -1,4 +1,4 @@
-C $Id: pyinit.F,v 1.2 2008-11-11 13:16:26 robbep Exp $ 
+C $Id: pyinit.F,v 1.3 2008-11-25 14:36:09 robbep Exp $ 
 C*********************************************************************
  
 C...PYINIT
@@ -24,13 +24,14 @@ C...Commonblocks.
       COMMON/PYINT5/NGENPD,NGEN(0:500,3),XSEC(0:500,3)
       COMMON/PYINT6/PROC(0:500)
       CHARACTER PROC*28
+      COMMON/PYPUED/IUED(0:99),RUED(0:99)      
       SAVE /PYDAT1/,/PYDAT2/,/PYDAT3/,/PYDAT4/,/PYSUBS/,/PYPARS/,
-     &/PYINT1/,/PYINT2/,/PYINT5/
+     &/PYINT1/,/PYINT2/,/PYINT5/,/PYPUED/
 C...Local arrays and character variables.
       DIMENSION ALAMIN(20),NFIN(20)
       CHARACTER*(*) FRAME,BEAM,TARGET
       CHARACTER CHFRAM*12,CHBEAM*12,CHTARG*12,CHLH(2)*6
-  
+ 
 C...Interface to PDFLIB.
       COMMON/W50511/NPTYPE,NGROUP,NSET,MODE,NFL,LO,TMAS
       COMMON/W50512/QCDL4,QCDL5
@@ -44,7 +45,7 @@ C...Data:Lambda and n_f values for parton distributions..
      &0.192D0,0.326D0,2*0.2D0,0.2D0,0.2D0,0.29D0,0.2D0,0.4D0,5*0.2D0/,
      &NFIN/20*4/
       DATA CHLH/'lepton','hadron'/
-
+ 
 C...Check that BLOCK DATA PYDATA has been loaded.
       CALL PYCKBD
  
@@ -54,6 +55,7 @@ C...PR LHCb, add extra processes
       PROC(482)='g + g  -> Upsilon(3S) + g'
       PROC(483)='g + g  -> Upsilon(4S) + g'
       PROC(484)='g + g  -> Upsilon(5S) + g'
+      PROC(485)='g + g  -> psi(3770) + g'
  
 C...Reset MINT and VINT arrays. Write headers.
       MSTI(53)=0
@@ -73,6 +75,13 @@ C...Reset processes that should not be on.
       MSUB(96)=0
       MSUB(97)=0
  
+C...Select global FSR/ISR/UE parameter set = 'tune' 
+C...See routine PYTUNE for details
+      IF (MSTP(5).NE.0) THEN
+        MSTP5=MSTP(5)
+        CALL PYTUNE(MSTP5)
+      ENDIF
+
 C...Call user process initialization routine.
       IF(FRAME(1:1).EQ.'u'.OR.FRAME(1:1).EQ.'U') THEN
         MSEL=0
@@ -143,6 +152,9 @@ C...Choose Lambda value to use in alpha-strong.
         IF(MSTP(3).EQ.3) PARJ(81)=ALAM
       ENDIF
  
+C...Initialize the UED masses and widths
+      IF (IUED(1).EQ.1) CALL PYXDIN
+
 C...Initialize the SUSY generation: couplings, masses,
 C...decay modes, branching ratios, and so on.
       CALL PYMSIN
@@ -242,13 +254,13 @@ C...Count number of subprocesses on.
           ELSEIF(MINT(50).EQ.0.AND.ISUB.GE.91.AND.ISUB.LE.96.AND.
      &    MSUB(ISUB).EQ.1) THEN
             WRITE(MSTU(11),5200) ISUB,CHLH(MINT(41)),CHLH(MINT(42))
-            STOP
+            CALL PYSTOP(1)
           ELSEIF(MSUB(ISUB).EQ.1.AND.ISET(ISUB).EQ.-1) THEN
             WRITE(MSTU(11),5300) ISUB
-            STOP
+            CALL PYSTOP(1)
           ELSEIF(MSUB(ISUB).EQ.1.AND.ISET(ISUB).LE.-2) THEN
             WRITE(MSTU(11),5400) ISUB
-            STOP
+            CALL PYSTOP(1)
           ELSEIF(MSUB(ISUB).EQ.1) THEN
             MINT(48)=MINT(48)+1
           ENDIF
@@ -258,7 +270,7 @@ C...Stop or raise warning flag if no subprocesses on.
         IF(MINT(121).EQ.1.AND.MINT(48).EQ.0) THEN
           IF(MSTP(127).NE.1) THEN
             WRITE(MSTU(11),5500)
-            STOP
+            CALL PYSTOP(1)
           ELSE
             WRITE(MSTU(11),5700)
             MSTI(53)=1
@@ -307,7 +319,7 @@ C...Initialization finished.
       IF(MSAV48.EQ.0) THEN
         IF(MSTP(127).NE.1) THEN
           WRITE(MSTU(11),5500)
-          STOP
+          CALL PYSTOP(1)
         ELSE
           WRITE(MSTU(11),5700)
           MSTI(53)=1
