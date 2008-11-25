@@ -3,6 +3,9 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
+! 2008-11-25 - Patrick Koppenburg
+ - Adapt doxygen to no version directories.
+
 ! 2008-10-29 - Patrick Koppenburg
  - DecodeRawEvents.opts -> .py
 
