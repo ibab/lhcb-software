@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-11-25 - Patrick Robbe
+ - PythiaProduction: add and activate in minimum bias psi(3770) 
+   production
+
 ! 2008-11-12 - Patrick Robbe
  - PythiaProduction: activate extra charmonium states production by
    default.
