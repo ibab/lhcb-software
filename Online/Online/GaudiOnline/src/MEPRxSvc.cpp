@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.69 2008-11-21 18:31:20 niko Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.70 2008-11-25 15:51:31 niko Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -89,7 +89,7 @@ namespace LHCb  {
     // parameters
     int             m_refCount;
     int             m_spaceSize;
-    int             m_age;
+    unsigned long   m_age;
     int             m_tick;
     int             m_nSrc;
     int             m_nrx;
