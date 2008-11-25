@@ -22,7 +22,7 @@ Purpose: LHCb Digitization program
    . Add Boole-DC06.py since DC06 is no longer default
    . Add Boole-2008-VeloOpen.py to digitize velo open geometry
    . Rename Boole-FST09.py to Boole-FEST09.py
-   . Remove v200601.opts, BooleMessage.opts
+   . Remove v200601.opts, BooleMessage.opts, TAE.opts
    . Update SuppressWarnings.opts
    . Do not suppress INFO from RawWriter (finalize message needed by DIRAC)
  - Fixes to valgrind.job

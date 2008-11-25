@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.27 2008-11-24 14:26:42 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.28 2008-11-25 07:29:31 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -91,13 +91,17 @@ class Boole(LHCbConfigurableUser):
             
     def enableTAE(self):
         """
-        switch to generate Time Alignment events.
+        switch to generate Time Alignment events (only Prev1 for now).
         """
         self.disableSpillover()
         initMUONSeq = GaudiSequencer( "InitMUONSeq" )
         initMUONSeq.Members.remove( "MuonBackground/MuonFlatSpillover" )
         importOptions( "$BOOLEOPTS/TAE-Prev1.opts" ) # add misaligned RawEvent
-
+        if self.getProp("DataType") == "DC06" :
+            from Configurables import MCSTDepositCreator
+            MCSTDepositCreator("MCITDepositCreatorPrev1").DepChargeTool = "SiDepositedCharge"
+            MCSTDepositCreator("MCTTDepositCreatorPrev1").DepChargeTool = "SiDepositedCharge"
+            
     def disableSpillover(self):
         """
         Switch to disable spillover.
