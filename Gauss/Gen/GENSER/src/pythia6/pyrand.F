@@ -1,4 +1,4 @@
-C $Id: pyrand.F,v 1.2 2008-09-23 16:07:27 robbep Exp $ 
+C $Id: pyrand.F,v 1.3 2008-11-25 14:57:28 robbep Exp $ 
 C*********************************************************************
  
 C...PYRAND
@@ -47,8 +47,11 @@ C...Commonblocks.
       COMMON/PYINT5/NGENPD,NGEN(0:500,3),XSEC(0:500,3)
       COMMON/PYINT7/SIGT(0:6,0:6,0:5)
       COMMON/PYMSSM/IMSS(0:99),RMSS(0:99)
+      COMMON/PYTCCO/COEFX(194:380,2)
+      COMMON/TCPARA/IRES,JRES,XMAS(3),XWID(3),YMAS(2),YWID(2)
       SAVE /PYDAT1/,/PYDAT2/,/PYDAT3/,/PYSUBS/,/PYPARS/,/PYINT1/,
-     &/PYINT2/,/PYINT3/,/PYINT4/,/PYINT5/,/PYINT7/,/PYMSSM/
+     &/PYINT2/,/PYINT3/,/PYINT4/,/PYINT5/,/PYINT7/,/PYMSSM/,/PYTCCO/,
+     &/TCPARA/
 C...Local arrays.
       DIMENSION XPQ(-25:25),PMM(2),PDIF(4),BHAD(4),PMMN(2)
  
@@ -263,6 +266,59 @@ C...~q1 ~q2; ~q = ~d, ~u, ~s, or ~c.
         ENDIF
       ENDIF
  
+C...Random choice of flavours for some UED processes
+c...The production processes can generate a doublet pair,
+c...a singlet pair, or a doublet + singlet.
+      IF(ISUB.EQ.313)THEN
+C...q + q -> q*_Di + q*_Dj, q*_Si + q*_Sj
+         IF(PYR(0).LE.0.1)THEN
+            KFPR(ISUB,1)=5100001
+         ELSE
+            KFPR(ISUB,1)=5100002
+         ENDIF
+         KFPR(ISUB,2)=KFPR(ISUB,1)
+      ELSEIF(ISUB.EQ.314.OR.ISUB.EQ.315)THEN
+C...g + g -> q*_D + q*_Dbar, q*_S + q*_Sbar
+C...q + qbar -> q*_D + q*_Dbar, q*_S + q*_Sbar
+         IF(PYR(0).LE.0.1)THEN
+            KFPR(ISUB,1)=5100001
+         ELSE
+            KFPR(ISUB,1)=5100002
+         ENDIF
+         KFPR(ISUB,2)=-KFPR(ISUB,1)
+      ELSEIF(ISUB.EQ.316)THEN
+C...qi + qbarj -> q*_Di + q*_Sbarj
+         IF(PYR(0).LE.0.5)THEN
+            KFPR(ISUB,1)=5100001
+c Changed from private pythia6410_ued code
+c            KFPR(ISUB,2)=-5010001
+            KFPR(ISUB,2)=-6100002
+         ELSE
+            KFPR(ISUB,1)=5100002
+c Changed from private pythia6410_ued code
+c            KFPR(ISUB,2)=-5010002
+            KFPR(ISUB,2)=-6100001
+         ENDIF
+      ELSEIF(ISUB.EQ.317)THEN
+C...qi + qbarj -> q*_Di + q*_Dbarj, q*_Si + q*_Dbarj
+         IF(PYR(0).LE.0.5)THEN
+            KFPR(ISUB,1)=5100001
+            KFPR(ISUB,2)=-5100002
+         ELSE
+            KFPR(ISUB,1)=5100002
+            KFPR(ISUB,2)=-5100001
+         ENDIF
+      ELSEIF(ISUB.EQ.318)THEN
+C...qi + qj -> q*_Di + q*_Sj
+         IF(PYR(0).LE.0.5)THEN
+            KFPR(ISUB,1)=5100001
+            KFPR(ISUB,2)=6100002
+         ELSE
+            KFPR(ISUB,1)=5100002
+            KFPR(ISUB,2)=6100001
+         ENDIF
+      ENDIF
+
 C...Find resonances (explicit or implicit in cross-section).
       MINT(72)=0
       KFR1=0
@@ -281,14 +337,6 @@ C...Find resonances (explicit or implicit in cross-section).
           PMAS(89,1)=PARP(45)
           PMAS(89,2)=PARP(45)**3/(96D0*PARU(1)*PARP(47)**2)
         ENDIF
-      ELSEIF(ISUB.EQ.194) THEN
-        KFR1=KTECHN+113
-      ELSEIF(ISUB.EQ.195) THEN
-        KFR1=KTECHN+213
-      ELSEIF(ISUB.GE.361.AND.ISUB.LE.368) THEN
-        KFR1=KTECHN+113
-      ELSEIF(ISUB.GE.370.AND.ISUB.LE.377) THEN
-        KFR1=KTECHN+213
       ENDIF
       CKMX=CKIN(2)
       IF(CKMX.LE.0D0) CKMX=VINT(1)
@@ -299,46 +347,123 @@ C...Find resonances (explicit or implicit in cross-section).
       ENDIF
       IF(KFR1.NE.0) THEN
         TAUR1=PMAS(KCR1,1)**2/VINT(2)
-        IF(KFR1.EQ.KTECHN+113) THEN
-          CALL PYTECM(S1,S2)
-          TAUR1=S1/VINT(2)
-        ENDIF
         GAMR1=PMAS(KCR1,1)*PMAS(KCR1,2)/VINT(2)
         MINT(72)=1
         MINT(73)=KFR1
         VINT(73)=TAUR1
         VINT(74)=GAMR1
       ENDIF
-      IF(ISUB.EQ.141.OR.ISUB.EQ.194.OR.(ISUB.GE.364.AND.ISUB.LE.368))
+      KFR2=0
+      KFR3=0
+      IF(ISUB.EQ.141.OR.ISUB.EQ.194.OR.ISUB.EQ.195.OR.
+     $(ISUB.GE.361.AND.ISUB.LE.380))
      $THEN
         KFR2=23
-        IF(ISUB.EQ.194) THEN
-          KFR2=KTECHN+223
-        ELSEIF(ISUB.GE.364.AND.ISUB.LE.368) THEN
-          KFR2=KTECHN+223
+        IF(ISUB.EQ.141) THEN
+          KCR2=PYCOMP(KFR2)
+          IF(CKIN(1).GT.PMAS(KCR2,1)+20D0*PMAS(KCR2,2).OR.
+     &     CKMX.LT.PMAS(KCR2,1)-20D0*PMAS(KCR2,2)) THEN
+            KFR2=0
+          ELSE
+            TAUR2=PMAS(KCR2,1)**2/VINT(2)            
+            GAMR2=PMAS(KCR2,1)*PMAS(KCR2,2)/VINT(2)
+            MINT(72)=2
+            MINT(74)=KFR2
+            VINT(75)=TAUR2
+            VINT(76)=GAMR2
+          ENDIF
+C...3 resonances at work:   rho, omega, a
+        ELSEIF(ISUB.EQ.194.OR.(ISUB.GE.361.AND.ISUB.LE.368)
+     &     .OR.ISUB.EQ.379.OR.ISUB.EQ.380) THEN
+          MINT(72)=IRES
+          IF(IRES.GE.1) THEN
+            VINT(73)=XMAS(1)**2/VINT(2)
+            VINT(74)=XMAS(1)*XWID(1)/VINT(2)
+            TAUR1=VINT(73)
+            GAMR1=VINT(74)
+            KFR1=1
+          ENDIF
+          IF(IRES.GE.2) THEN
+            VINT(75)=XMAS(2)**2/VINT(2)
+            VINT(76)=XMAS(2)*XWID(2)/VINT(2)
+            TAUR2=VINT(75)
+            GAMR2=VINT(76)
+            KFR2=2
+          ENDIF
+          IF(IRES.EQ.3) THEN
+            VINT(77)=XMAS(3)**2/VINT(2)
+            VINT(78)=XMAS(3)*XWID(3)/VINT(2)
+            TAUR3=VINT(77)
+            GAMR3=VINT(78)
+            KFR3=3
+          ENDIF
+C...Charged current:  rho+- and a+-
+        ELSEIF(ISUB.EQ.195.OR.ISUB.GE.370.AND.ISUB.LE.378) THEN
+          MINT(72)=IRES
+          IF(JRES.GE.1) THEN
+            VINT(73)=YMAS(1)**2/VINT(2)
+            VINT(74)=YMAS(1)*YWID(1)/VINT(2)
+            KFR1=1
+            TAUR1=VINT(73)
+            GAMR1=VINT(74)
+          ENDIF
+          IF(JRES.GE.2) THEN
+            VINT(75)=YMAS(2)**2/VINT(2)
+            VINT(76)=YMAS(2)*YWID(2)/VINT(2)
+            KFR2=2
+            TAUR2=VINT(73)
+            GAMR2=VINT(74)
+          ENDIF
+          KFR3=0
         ENDIF
-        KCR2=PYCOMP(KFR2)
-        TAUR2=PMAS(KCR2,1)**2/VINT(2)
-        IF(KFR2.EQ.KTECHN+223) THEN
-          CALL PYTECM(S1,S2)
-          TAUR2=S2/VINT(2)
-        ENDIF
-        GAMR2=PMAS(KCR2,1)*PMAS(KCR2,2)/VINT(2)
-        IF(CKIN(1).GT.PMAS(KCR2,1)+20D0*PMAS(KCR2,2).OR.
-     &  CKMX.LT.PMAS(KCR2,1)-20D0*PMAS(KCR2,2)) KFR2=0
-        IF(KFR2.NE.0.AND.KFR1.NE.0) THEN
-          MINT(72)=2
-          MINT(74)=KFR2
-          VINT(75)=TAUR2
-          VINT(76)=GAMR2
-        ELSEIF(KFR2.NE.0) THEN
-          KFR1=KFR2
-          TAUR1=TAUR2
-          GAMR1=GAMR2
-          MINT(72)=1
-          MINT(73)=KFR1
-          VINT(73)=TAUR1
-          VINT(74)=GAMR1
+        IF(ISUB.NE.141) THEN
+          IF(KFR3.NE.0.AND.KFR2.NE.0.AND.KFR1.NE.0) THEN
+
+          ELSEIF(KFR1.NE.0.AND.KFR2.NE.0) THEN
+            MINT(72)=2
+          ELSEIF(KFR1.NE.0.AND.KFR3.NE.0) THEN
+            MINT(72)=2
+            MINT(74)=KFR3
+            VINT(75)=TAUR3
+            VINT(76)=GAMR3
+          ELSEIF(KFR2.NE.0.AND.KFR3.NE.0) THEN
+            MINT(72)=2
+            MINT(73)=KFR2
+            VINT(73)=TAUR2
+            VINT(74)=GAMR2
+            MINT(74)=KFR3
+            VINT(75)=TAUR3
+            VINT(76)=GAMR3
+          ELSEIF(KFR1.NE.0) THEN
+            MINT(72)=1
+          ELSEIF(KFR2.NE.0) THEN
+            MINT(72)=1
+            MINT(73)=KFR2
+            VINT(73)=TAUR2
+            VINT(74)=GAMR2
+          ELSEIF(KFR3.NE.0) THEN
+            MINT(72)=1
+            MINT(73)=KFR3
+            VINT(73)=TAUR3
+            VINT(74)=GAMR3
+          ELSE
+            MINT(72)=0
+          ENDIF
+        ELSE
+          IF(KFR2.NE.0.AND.KFR1.NE.0) THEN
+
+          ELSEIF(KFR2.NE.0) THEN
+            KFR1=KFR2
+            TAUR1=TAUR2
+            GAMR1=GAMR2
+            MINT(72)=1
+            MINT(73)=KFR1
+            VINT(73)=TAUR1
+            VINT(74)=GAMR1
+            KFR2=0
+          ELSE
+            MINT(72)=0
+          ENDIF
         ENDIF
       ENDIF
  
@@ -409,7 +534,8 @@ C...Prepare for additional variable choices in 2 -> 3.
         VINT(206)=VINT(201)
         IF(ISUB.EQ.401.OR.ISUB.EQ.402) VINT(206)=PMAS(5,1)
         VINT(204)=PMAS(23,1)
-        IF(ISUB.EQ.124.OR.ISUB.EQ.351) VINT(204)=PMAS(24,1)
+        IF(ISUB.EQ.124.OR.ISUB.EQ.174.OR.ISUB.EQ.179.OR.ISUB.EQ.351)
+     &   VINT(204)=PMAS(24,1) 
         IF(ISUB.EQ.352) VINT(204)=PMAS(PYCOMP(9900024),1)
         IF(ISUB.EQ.121.OR.ISUB.EQ.122.OR.ISUB.EQ.181.OR.ISUB.EQ.182.OR.
      &    ISUB.EQ.186.OR.ISUB.EQ.187.OR.ISUB.EQ.401.OR.ISUB.EQ.402)
@@ -628,7 +754,6 @@ C...Information to output.
         VINT(64)=PDIF(4)**2
         VINT(283)=PMM(1)**2/4D0
         VINT(284)=PMM(2)**2/4D0
- 
 C...Note: in the following, by In is meant the integral over the
 C...quantity multiplying coefficient cn.
 C...Choose tau according to h1(tau)/tau, where
@@ -659,6 +784,16 @@ C...c1 + c2 + c3 + c4 + c5 + c6 + c7 = 1.
      &  COEF(ISUB,5)) MTAU=6
         IF(RTAU.GT.COEF(ISUB,1)+COEF(ISUB,2)+COEF(ISUB,3)+COEF(ISUB,4)+
      &  COEF(ISUB,5)+COEF(ISUB,6)) MTAU=7
+C...Additional check to handle techni-processes with extra resonance
+C....Only modify tau treatment
+        IF(ISUB.EQ.194.OR.ISUB.EQ.195.OR.(ISUB.GE.361.AND.ISUB.LE.380))
+     &   THEN
+          IF(RTAU.GT.COEF(ISUB,1)+COEF(ISUB,2)+COEF(ISUB,3)
+     &     +COEF(ISUB,4)+COEF(ISUB,5)+COEF(ISUB,6)+COEF(ISUB,7)) MTAU=8
+          IF(RTAU.GT.COEF(ISUB,1)+COEF(ISUB,2)+COEF(ISUB,3)
+     &     +COEF(ISUB,4)+COEF(ISUB,5)+COEF(ISUB,6)+COEF(ISUB,7)
+     &     +COEFX(ISUB,1)) MTAU=9
+        ENDIF
         CALL PYKMAP(1,MTAU,PYR(0))
  
 C...2 -> 3, 4 processes:
@@ -791,6 +926,11 @@ C...Construct 'trivial' kinematical variables needed.
         KFL2=IDUP(2)
         VINT(41)=PUP(4,1)/EBMUP(1)
         VINT(42)=PUP(4,2)/EBMUP(2)
+        IF (VINT(41).GT.1.000001.OR.VINT(42).GT.1.000001) THEN
+          CALL PYERRM(9,'(PYRAND:) x > 1 in external event '//
+     &        '(listing follows):') 
+          CALL PYLIST(7)
+        ENDIF
         VINT(21)=VINT(41)*VINT(42)
         VINT(22)=0.5D0*LOG(VINT(41)/VINT(42))
         VINT(44)=VINT(21)*VINT(2)
@@ -930,7 +1070,7 @@ C...Check that weight not negative.
           WRITE(MSTU(11),5000) VIOL,NGEN(0,3)+1
           IF(MSTP(122).GE.1) WRITE(MSTU(11),5100) ISUB,VINT(21),
      &    VINT(22),VINT(23),VINT(26)
-          STOP
+          CALL PYSTOP(2)
         ENDIF
       ELSE
         IF(VIOL.LT.MIN(-1D-3,VINT(109))) THEN
@@ -989,7 +1129,7 @@ C...cross-section used in weighting.
           WRITE(MSTU(11),5300) VIOL,NGEN(0,3)+1
           IF(MSTP(122).GE.2) WRITE(MSTU(11),5100) ISUB,VINT(21),
      &    VINT(22),VINT(23),VINT(26)
-          STOP
+          CALL PYSTOP(2)
         ENDIF
       ELSEIF(MSTP(123).EQ.1) THEN
         IF(VIOL.GT.VINT(108)) THEN
