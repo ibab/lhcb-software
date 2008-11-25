@@ -1,3 +1,8 @@
+2008-11-25  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbConfiguration/GetPack.py: improved backward compatibility
+	(support options -rr and -rh), and added a short description in the help.
+
 2008-11-24  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbConfiguration/GetPack.py: rewiting of the scripts getpack.py

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: GetPack.py,v 1.1 2008-11-24 21:31:54 marcocle Exp $
+# $Id: GetPack.py,v 1.2 2008-11-25 16:53:25 marcocle Exp $
 
 from LbUtils.Script import Script
 from LbUtils import rcs
@@ -78,11 +78,12 @@ class Quit:
 ## @class GetPack
 # Main script class for getpack.
 class GetPack(Script):
-    _version = "$Id: GetPack.py,v 1.1 2008-11-24 21:31:54 marcocle Exp $".replace("$","").replace("Id:","").strip()
+    _version = "$Id: GetPack.py,v 1.2 2008-11-25 16:53:25 marcocle Exp $".replace("$","").replace("Id:","").strip()
     def __init__(self):
         Script.__init__(self, usage = "\n\t%prog [options] package [ [version] ['tag'|'head'] ]"
                                       "\n\t%prog [options] -i [repository [hat]]",
-                              description = "")
+                              description = "script to checkout/update and cmt-configure packages"
+                                            " from LHCb CVS or Subversion repositories")
         self._packages = None
         self._repositories = None
         
@@ -299,6 +300,10 @@ class GetPack(Script):
     packages = property(getPackages)
     
     def parseOpts(self, args):
+        # Replace old options '-rr' and '-rh' into the new equivalents
+        for old, new in [ ('-rr', '-R'), ('-rh', '-H') ]:
+            while old in args:
+                args[args.index(old)] = new
         Script.parseOpts(self, args)
         # Validate and parse positional arguments
         if self.options.interactive:
@@ -336,8 +341,6 @@ class GetPack(Script):
 Select the package
 --------------------------------------------------------------------------------"""
         idx = self._listChoice(message, keys)
-        if idx < 0:
-            raise Quit
         return keys[idx]
     
     def _getNeededPackages(self, pkgdir):
