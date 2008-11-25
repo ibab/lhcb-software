@@ -3,7 +3,7 @@ High level configuration tools for DaVinci
 At the moment this doesn't do anything. Waiting for re-structuring of
 configuratables.
 """
-__version__ = "$Id: Configuration.py,v 1.6 2008-11-12 14:56:20 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.7 2008-11-25 14:44:13 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -13,11 +13,12 @@ import GaudiKernel.ProcessJobOptions
 class DaVinciApp(LHCbConfigurableUser) :
     __slots__ = {
         "EvtMax"          :  -1, # Maximum number of events to process
-        "skipEvents"      :   0,     # events to skip
+        "SkipEvents"      :   0,     # events to skip
         "mainOptions"     : '$DAVINCIROOT/options/DaVinci.py',
-        "DDDBtag"         : 'DC06-default', #
-        "condDBtag"       : 'DC06-default',
-        "useOracleCondDB" : False,
+        "DDDBtag"         : '', #
+        "CondDBtag"         : '', #
+        "DataType"       : 'DC06',
+        "UseOracle"       : False,
         "Input"           : [],
         "userAlgorithms"  : []
         }
@@ -26,9 +27,9 @@ class DaVinciApp(LHCbConfigurableUser) :
         evtMax = self.getProp("EvtMax")
         print "Re-defining EvtMax to ", evtMax
         ApplicationMgr().EvtMax = evtMax
-        skipEvents = self.getProp("skipEvents")
+        skipEvents = self.getProp("SkipEvents")
         if skipEvents > 0 :
-            ApplicationMgr().skipEvents = skipEvents
+            ApplicationMgr().SkipEvents = skipEvents
 
     def defineInput(self):
         input = self.getProp("Input")
@@ -46,11 +47,7 @@ class DaVinciApp(LHCbConfigurableUser) :
             return ApplicationMgr().getDefaultProperties()["EvtMax"]
 
     def defineDB(self):
-        # Prefer DaVinci default over LHCbApp default if not set explicitly
-        self.setProp( "condDBtag", self.getProp("condDBtag") )
-        self.setProp( "DDDBtag", self.getProp("DDDBtag") )
-        # Delegate handling to LHCbApp configurable
-        self.setOtherProps(LHCbApp(),["condDBtag","DDDBtag","useOracleCondDB"]) 
+        self.setOtherProps(LHCbApp(),["DataType","CondDBtag","DDDBtag","UseOracle"]) 
 
     def hepMCBackComp(self) :
         # Special options for DC06 data processing
