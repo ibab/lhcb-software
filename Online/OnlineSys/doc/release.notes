@@ -9,6 +9,7 @@
      New version v4r18 built against LHCb v26r0.
      - Updates to Gaucho, GaudiOnline, OnlineTasks, ROMon, ROLogger.
      - confDB, confDBpython and Hugin are removed from the release cycle.
+     - Packages Adder and Saver have moved into Gaucho
 
 </PRE><H1><A NAME=v4r17>2008-10-14 OnlineSys v4r17</A></H1><PRE>
      New version v4r17 built against LHCb v25r2.
