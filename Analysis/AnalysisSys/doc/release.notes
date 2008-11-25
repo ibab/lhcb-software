@@ -3,6 +3,9 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+! 2008-11-25 - Patrick Koppenburg
+ - Adapt doxygen to no version directories.
+
 </PRE><H1><A NAME=v2r2>2008-10-06 Analysis v2r2 </A></H1><PRE>
 
  - Based on LHCb v25r2 and Gaudi v20r2
