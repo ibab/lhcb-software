@@ -1,5 +1,5 @@
 ##############################################################################
-#$Id: DVTestB2DiMuon.py,v 1.4 2008-11-12 14:57:22 jpalac Exp $
+#$Id: DVTestB2DiMuon.py,v 1.5 2008-11-25 14:42:48 jpalac Exp $
 #
 # Example Qm test option using configurables.
 #
@@ -7,17 +7,18 @@
 #
 ##############################################################################
 from GaudiConf.Configuration import *
-from Configurables import GaudiSequencer,PhysDesktop, MakeResonances, OldFilterDesktop, TrueMCFilterCriterion, MCDecayFinder, AlgorithmCorrelationsAlg, AlgorithmCorrelations
+from Configurables import GaudiSequencer,PhysDesktop, MakeResonances, OldFilterDesktop, TrueMCFilterCriterion, MCDecayFinder, AlgorithmCorrelationsAlg, AlgorithmCorrelations, FilterDesktop
 
 decayDescriptor = "J/psi(1S) -> mu- mu+"
 mcDecayDescriptor = "J/psi(1S) => ^mu+ ^mu- {,gamma}{,gamma}{,gamma}{,gamma}"
+particles = "Muons"
 trueNoPIDsName = "SelectTrueNoPIDsDecay"
 trueLooseName = "SelectTrueLooseDecay"
 
 # Truth checking for Bd -> MuMuX
 findTrueDecay = GaudiSequencer("FindTrueDecay")
 findTrueDecay.IgnoreFilterPassed = True
-findTrueDecay.Members += [ OldFilterDesktop("SelectTrueNoPIDsDecay") ]
+findTrueDecay.Members += [ OldFilterDesktop(trueNoPIDsName) ]
 
 # Truth filter for Bd -> MuMuK* Loose PID : copy of above with NoPIDs -> Loose
 MCTruthFilter = TrueMCFilterCriterion("Filter")
@@ -26,7 +27,7 @@ MCTruthFilter.MCDecayFinder.Decay = mcDecayDescriptor
 
 selectTrueNoPIDsDecay = OldFilterDesktop(trueNoPIDsName)
 selectTrueNoPIDsDecay.addTool( PhysDesktop() )
-selectTrueNoPIDsDecay.PhysDesktop.InputLocations = [ "Phys/StdDC06NoPIDsMuons" ]
+selectTrueNoPIDsDecay.PhysDesktop.InputLocations = ["StdDC06NoPIDs"+particles]
 selectTrueNoPIDsDecay.addTool( MCTruthFilter, name="FilterCriterion" )
 
 allTrueNoPIDsDecay = MakeResonances("AllTrueNoPIDsDecay")
@@ -37,7 +38,7 @@ findTrueDecay.Members += [ allTrueNoPIDsDecay ]
 
 selectTrueLooseDecay = OldFilterDesktop(trueLooseName)
 selectTrueLooseDecay.addTool( PhysDesktop() )
-selectTrueLooseDecay.PhysDesktop.InputLocations = [ "Phys/StdDC06LooseMuons" ]
+selectTrueLooseDecay.PhysDesktop.InputLocations = [ "StdDC06Loose"+particles ]
 selectTrueLooseDecay.addTool( MCTruthFilter, name = "FilterCriterion" )
 findTrueDecay.Members += [ selectTrueLooseDecay ]
 
@@ -56,6 +57,7 @@ testCorrelations.Algorithms = [ trueNoPIDsName,
                                 trueLooseName,
                                 "AllTrueLooseDecay",
                                 "PreselB2DiMuon"]
+
 ##############################################################################
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 EventSelector().PrintFreq = 100
