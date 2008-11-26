@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.386 2008-11-26 07:03:42 jpalac Exp $
+! $Id: release.notes,v 1.387 2008-11-26 07:39:44 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+!========================== DaVinciTools v18r0 2008-11-26 ===================
 
 ! 2008-11-24 - Juan PALACIOS
  - src/OnlineP2PVWithIP.cpp
@@ -145,7 +147,7 @@
    of the new GenericParticle2PVRelator template class. The template parameters
    control the "bestness logic" in calculating the best PVs for a given
    particle, plus the name of the IDistanceCalculator tool implementation
-   to be used internally. The classes are actually simplt typedefs.
+   to be used internally. The classes are actually simple typedefs.
 
  - New IRelatedPVFinder implementations.
   . src/P2PVWithIP.cpp
@@ -211,7 +213,7 @@
    few coherent changes
 
    1) add the new property "Preambulo", which is a the list of 
-   python strings to beinserted into the effective Python/Bender script
+   python strings to be inserted into the effective Python/Bender script
    just before the actual creation of LoKi-functors.
  
    2) the major "structural" properties 
