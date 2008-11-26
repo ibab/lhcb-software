@@ -3,8 +3,10 @@
 ! Responsible : Juan Palacios juan.palacios@nikhef.nl
 ! Purpose     : Implementation of cloner MicroDSTTools
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.21 2008-11-17 08:57:04 jpalac Exp $
+! $Id: release.notes,v 1.22 2008-11-26 08:43:01 jpalac Exp $
 !-----------------------------------------------------------------------------
+
+!======================= MicroDSTTools v1r3p1 2008-11-26 =====================
 
 ! 2008-11-17 - Juan PALACIOS
  - src/CopyFlavourTag{.cpp, .h}
