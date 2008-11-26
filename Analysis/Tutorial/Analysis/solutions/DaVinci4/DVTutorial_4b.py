@@ -11,7 +11,6 @@ import GaudiKernel.SystemOfUnits as Units
 from Gaudi.Configuration import *
 from Configurables import CombineParticles, TutorialAlgorithm, PhysDesktop, FilterDesktop
 from Configurables import LoKi__Hybrid__PlotTool as PlotTool 
-from Configurables import LoKi__Hybrid__FilterCriterion as LoKiFilterCriterion
 
 importOptions( "$DAVINCIROOT/options/DaVinciCommon.opts" )
 #
@@ -36,8 +35,6 @@ GaudiSequencer("TutorialSeq").Members.append(jpsi2mumu)
 PsiFilter = FilterDesktop("PsiFilter")
 PsiFilter.addTool( PhysDesktop() )
 PsiFilter.PhysDesktop.InputLocations = [ "Phys/Jpsi2MuMu" ]
-PsiFilter.FilterCriterion = "LoKi::Hybrid::FilterCriterion"
-PsiFilter.addTool( LoKiFilterCriterion("Filter") )
 PsiFilter.Code = "(PT>1*GeV) & (P>3*GeV)"
 
 GaudiSequencer("TutorialSeq").Members.append(PsiFilter)

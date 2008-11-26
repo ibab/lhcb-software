@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.cpp,v 1.10 2008-08-07 16:22:34 pkoppenb Exp $
+// $Id: TutorialAlgorithm.cpp,v 1.11 2008-11-26 11:54:34 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -150,10 +150,10 @@ StatusCode TutorialAlgorithm::plotMuon(const LHCb::Particle* mu, const std::stri
   plot(mu->pt(), head+"MuPt", head+" Muon Pt", 0., 5.*GeV );  // Pt
   debug() << mu->momentum() << endmsg ;
 
-  const LHCb::RecVertex::ConstVector& prims = desktop()->primaryVertices() ;
+  const LHCb::RecVertex::Container* prims = desktop()->primaryVertices() ;
   
-  for ( LHCb::RecVertex::ConstVector::const_iterator ipv = prims.begin() ; 
-        ipv != prims.end() ; ++ipv )
+  for ( LHCb::RecVertex::Container::const_iterator ipv = prims->begin() ; 
+        ipv != prims->end() ; ++ipv )
   {
     double IP, IPE;
     debug() << (*ipv)->position() << endmsg ;

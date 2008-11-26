@@ -8,6 +8,14 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================== Analysis v7r7 2008-11-26 =================
+
+! 2008-11-26 - Patrick Koppenburg
+ - Adapt cpp to new PhysDesktop interface
+ - Adapt options to HltConf()
+ - Do not use data internally in options.
+ - Needs DaVinci v21r0
+
 !========================== Analysis v7r6p1 2008-11-26 =================
 
 ! 2008-09-23 - Juan PALACIOS

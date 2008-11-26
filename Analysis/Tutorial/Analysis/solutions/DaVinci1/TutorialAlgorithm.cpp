@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.cpp,v 1.6 2008-08-12 13:07:16 pkoppenb Exp $
+// $Id: TutorialAlgorithm.cpp,v 1.7 2008-11-26 11:54:34 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -68,15 +68,15 @@ StatusCode TutorialAlgorithm::loopOnMuons(const LHCb::Particle::ConstVector& muo
   StatusCode sc = StatusCode::SUCCESS ;
 
   // code goes here  
-  LHCb::RecVertex::ConstVector pvs = desktop()->primaryVertices(); // get PVs
+  const LHCb::RecVertex::Container* pvs = desktop()->primaryVertices(); // get PVs
 
   for ( LHCb::Particle::ConstVector::const_iterator im =  muons.begin() ;
         im != muons.end() ; ++im ){
     plot((*im)->p(),  "P", "Muon P",  0., 50.*Gaudi::Units::GeV);  // momentum
     plot((*im)->pt(), "Pt", "Muon Pt", 0., 5.*Gaudi::Units::GeV );  // Pt
     debug() << "Mu Momentum: " << (*im)->momentum() << endmsg ;
-    for ( LHCb::RecVertex::ConstVector::const_iterator ipv = pvs.begin() ;
-          ipv != pvs.end() ; ++ipv ){
+    for ( LHCb::RecVertex::Container::const_iterator ipv = pvs->begin() ;
+          ipv != pvs->end() ; ++ipv ){
       double IP, IPchi2;
       debug() << (*ipv)->position() << endmsg ;
       sc = distanceCalculator()->distance((*im), (*ipv), IP, IPchi2);

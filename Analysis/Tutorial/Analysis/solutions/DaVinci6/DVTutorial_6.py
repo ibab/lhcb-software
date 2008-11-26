@@ -9,16 +9,22 @@
 from os import environ
 import GaudiKernel.SystemOfUnits as Units 
 from Gaudi.Configuration import *
-from Configurables import CombineParticles, PhysDesktop
-from Configurables import LoKi__Hybrid__PlotTool as PlotTool 
+from Configurables import PhysDesktop
 from Configurables import TutorialChecker
-
-importOptions( "$L0DUROOT/options/ReplaceL0DUBankWithEmulated.opts" )
 #
-importOptions( "$HLTCONFROOT/options/Hlt1.opts" )
-importOptions( "$HLTCONFROOT/options/Hlt2.opts" )
+# Standard configuration
+#
 importOptions( "$ANALYSISROOT/solutions/DaVinci4/DVTutorial_4b.py" )
+#
+# Standard Trigger configuration (not deafult)
+#
+from HltConf.Configuration import *
+HltConf().replaceL0BanksWithEmulated = True         ## enable if you want to rerun L0  
+HltConf().Hlt2IgnoreHlt1Decision = True             ## enable if you want Hlt2 irrespective of Hlt1
+HltConf().hltType = 'Hlt1+Hlt2'                     ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
+#
 # B tagging options
+#
 importOptions( "$FLAVOURTAGGINGROOT/options/BTaggingTool.opts" )
 #
 # Print Reconstructed Bs
