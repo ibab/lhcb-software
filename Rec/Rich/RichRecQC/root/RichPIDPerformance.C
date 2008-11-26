@@ -199,7 +199,7 @@ namespace Rich
       top->SetLineColor(kRed);
       top->SetMarkerColor(kRed);
       top->SetTitle( ("Light ID | "+titleEx).c_str() );
-      top->GetXaxis()->SetTitle("Momentum / GeV/c");
+      top->GetXaxis()->SetTitle("Momentum / GeVc^{-1}" /*"Momentum / GeV/c"*/ );
       top->GetYaxis()->SetTitle("Efficiency / %");
       top->DrawCopy();
 
@@ -290,7 +290,7 @@ namespace Rich
       top->SetLineColor(kRed);
       top->SetMarkerColor(kRed);
       top->SetTitle( ("Heavy ID | "+titleEx).c_str() );
-      top->GetXaxis()->SetTitle("Momentum / GeV/c");
+      top->GetXaxis()->SetTitle("Momentum / GeVc^{-1}");
       top->GetYaxis()->SetTitle("Efficiency / %");
       top->SetMarkerStyle(markType);
       if (superImpose)
@@ -726,9 +726,9 @@ namespace Rich
     {
       heavyIDPerf  ( file, prodTag, location, titleEx, imageName, imageType );
       lightIDPerf  ( file, prodTag, location, titleEx, imageName, imageType );
-      kaonIDPerf   ( file, prodTag, location, titleEx, imageName, imageType );
-      pionIDPerf   ( file, prodTag, location, titleEx, imageName, imageType );
-      protonIDPerf ( file, prodTag, location, titleEx, imageName, imageType );
+      //kaonIDPerf   ( file, prodTag, location, titleEx, imageName, imageType );
+      //pionIDPerf   ( file, prodTag, location, titleEx, imageName, imageType );
+      //protonIDPerf ( file, prodTag, location, titleEx, imageName, imageType );
     }
 
     void posNegHeavyIDCompare( TFile * file,
@@ -797,72 +797,7 @@ namespace Rich
     {
 
       // 2 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL1/2TO100", "Long Tracks"+titletag, "long_dll1_2to100GeV", imageType );
-      // 2 - 10 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL1/2TO10", "Long Tracks"+titletag,  "long_dll1_2to10GeV",  imageType );
-      // 10 - 70 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL1/10TO70", "Long Tracks"+titletag, "long_dll1_10to70GeV", imageType );
-      // 70 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL1/70TO100", "Long Tracks"+titletag, "long_dll1_70to100GeV", imageType );
-
-      // 2 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL1PT05/2TO100", "Long Tracks"+titletag, "long_dll1pt05_2to100GeV", imageType );
-      // 2 - 10 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL1PT05/2TO10", "Long Tracks"+titletag,  "long_dll1pt05_2to10GeV",  imageType );
-      // 10 - 70 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL1PT05/10TO70", "Long Tracks"+titletag, "long_dll1pt05_10to70GeV", imageType );
-      // 70 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL1PT05/70TO100", "Long Tracks"+titletag, "long_dll1pt05_70to100GeV", imageType );
-
-      // 2 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL2/2TO100", "Long Tracks"+titletag, "long_dll2_2to100GeV", imageType );
-      // 2 - 10 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL2/2TO10", "Long Tracks"+titletag,  "long_dll2_2to10GeV",  imageType );
-      // 10 - 70 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL2/10TO70", "Long Tracks"+titletag, "long_dll2_10to70GeV", imageType );
-      // 70 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL2/70TO100", "Long Tracks"+titletag, "long_dll2_70to100GeV", imageType );
-
-      // 2 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL2PT05/2TO100", "Long Tracks"+titletag, "long_dll2pt05_2to100GeV", imageType );
-      // 2 - 10 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL2PT05/2TO10", "Long Tracks"+titletag,  "long_dll2pt05_2to10GeV",  imageType );
-      // 10 - 70 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL2PT05/10TO70", "Long Tracks"+titletag, "long_dll2pt05_10to70GeV", imageType );
-      // 70 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL2PT05/70TO100", "Long Tracks"+titletag, "long_dll2pt05_70to100GeV", imageType );
-
-      // 2 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL5/2TO100", "Long Tracks"+titletag, "long_dll5_2to100GeV", imageType );
-      // 2 - 10 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL5/2TO10", "Long Tracks"+titletag,  "long_dll5_2to10GeV",  imageType );
-      // 10 - 70 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL5/10TO70", "Long Tracks"+titletag, "long_dll5_10to70GeV", imageType );
-      // 70 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGDLL5/70TO100", "Long Tracks"+titletag, "long_dll5_70to100GeV", imageType );
-
-      // 2 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONG/2TO100", "Long Tracks"+titletag, "long_2to100GeV", imageType );
-      // 3 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONG/3TO100", "Long Tracks"+titletag, "long_3to100GeV", imageType );
-      // 2 - 10 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONG/2TO10", "Long Tracks"+titletag,  "long_2to10GeV",  imageType );
-      // 10 - 70 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONG/10TO70", "Long Tracks"+titletag, "long_10to70GeV", imageType );
-      // 70 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONG/70TO100", "Long Tracks"+titletag, "long_70to100GeV", imageType );
-
-      // 2 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGPT05/2TO100", "Long Tracks"+titletag, "long_pt05_2to100GeV", imageType );
-      // 3 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGPT05/3TO100", "Long Tracks"+titletag, "long_pt05_3to100GeV", imageType );
-      // 2 - 10 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGPT05/2TO10", "Long Tracks"+titletag,  "long_pt05_2to10GeV",  imageType );
-      // 10 - 70 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGPT05/10TO70", "Long Tracks"+titletag, "long_pt05_10to70GeV", imageType );
-      // 70 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGPT05/70TO100", "Long Tracks"+titletag, "long_pt05_70to100GeV", imageType );
-
+      allPIDMeasures( pFile, prodTag, "RICH/RiPIDMonForwardMatch2To100", "Long Tracks"+titletag, "long_2to100GeV", imageType );
 
     }
 
@@ -918,8 +853,8 @@ namespace Rich
     {
       gSystem->Exec( ("mkdir -p "+filetag).c_str() );
       // make the plots
-      allTracks     ( pFile, filetag, titletag, imageType );
-      //longTracks    ( pFile, filetag, titletag, imageType );
+      //allTracks     ( pFile, filetag, titletag, imageType );
+      longTracks    ( pFile, filetag, titletag, imageType );
       //forwardTracks ( pFile, filetag, titletag, imageType );
       //matchTracks   ( pFile, filetag, titletag, imageType );
       //seedTracks    ( pFile, filetag, titletag, imageType );
