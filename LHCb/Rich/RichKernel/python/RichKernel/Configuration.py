@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.8 2008-11-14 17:12:44 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.9 2008-11-26 13:34:02 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -277,6 +277,11 @@ class RichTools(RichConfigurableUser):
         if phottype == "RecoPhotons" :
             from Configurables import Rich__Rec__PhotonCreator 
             tool = self.__makeRichTool( Rich__Rec__PhotonCreator, nickname, private )
+        elif phottype == "CheatedTrackDir" :
+            from Configurables import ( Rich__Rec__PhotonCreator,
+                                        Rich__Rec__MC__PhotonCreatorCheatedTrackDir )
+            tool = self.__makeRichTool( Rich__Rec__MC__PhotonCreatorCheatedTrackDir, nickname, private )
+            self.__makeRichTool( Rich__Rec__PhotonCreator, "RichDelPhotonCreator", False )
         else:
             raise RuntimeError("Unknown Photon Creator '%s'"%phottype)
         return tool

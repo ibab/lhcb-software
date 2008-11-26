@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.207 2008-11-17 16:14:47 cattanem Exp $
+! $Id: release.notes,v 1.208 2008-11-26 13:34:02 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
+
+! 2008-11-26 - Chris Jones
+ - Add new MC photon creator options that cheats the track direction at
+   the emission point.
 
 !====================== RichKernel v7r17 2008-11-17 ====================
 ! 2008-11-17 - Marco Cattaneo
