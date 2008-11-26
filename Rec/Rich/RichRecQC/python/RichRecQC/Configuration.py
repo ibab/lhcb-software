@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.7 2008-11-19 17:50:10 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.8 2008-11-26 13:46:12 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -98,6 +98,11 @@ class RichRecQCConf(RichConfigurableUser):
             from RichRecQC.Alignment import RichAlignmentConf
             self.setOtherProp(RichAlignmentConf(),"context")
             RichAlignmentConf().alignmentSequncer = alignSeq
+
+        # Expert Monitoring
+        #if self.getProp("ExpertHistos") :
+            # Need to convert this to python ...
+        #    importOptions( 
 
     ## standalone ring finder monitors
     def ringsMoni(self,sequence):
