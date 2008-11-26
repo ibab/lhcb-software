@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.259 2008-11-12 15:00:14 jpalac Exp $
+! $Id: release.notes,v 1.260 2008-11-26 15:03:59 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,13 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2008-11-12 - Juan PALACIOS
+ - python/DaVinci/Configuration.py
+  . Changes to adapt to new LHCbApp configurable
+ - tests/qmtest/davinci.qms/preselections.qms/test_b2dimuon.qmt
+  . Adapt correlation table: more sig. figures in output.
+ - tests/options/DVTestB2DiMuon.py
 
 ! 2008-11-12 - Juan PALACIOS
  - python/DaVinci/Configuration.py
