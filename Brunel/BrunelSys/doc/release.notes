@@ -3,11 +3,100 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-! 2008-11-25 - Marco Cattaneo
- - Update DoxyFile.cfg for new xxx_HOME environment variables
+</PRE><H1><A NAME=v34r0>2008-11-26 Brunel v34r0</A></H1><PRE>
+This version uses projects Gaudi v20r3, LHCb v26r0, Lbcom v6r24
+ and SQLDDDB v5r0, ParamFiles v8r0, FieldMap v5r2
 
-! 2008-10-21 - Marco Cattaneo
- - Update QMTest reference for new RichRawMoni sequence
+Functionally this version is similar to Brunel v33r3p1, but uses a new version of
+Gaudi and major new version of LHCb, with many backward incompatible changes in
+the configuration and in option names 
+
+- New packaging
+  . Many backward incompatible changes to Configurables:
+    + Adapt to configuration changes in Gaudi v20r3, GaudiConf v10r13, 
+                                        DDDB v1r13, DetCond v12r4
+    + Most option names are changed. In particular:
+      > All option names are Capitalized
+      > New DataType option, removes need to set CondDBTag and DDDBtag if using
+        default tags
+    + applyConf() renamed __apply_configuration__ and called automatically
+    + When a property with the same meaning is set in both Brunel and in an
+      underlying configurable, Brunel property takes precedence. If neither is 
+      set, Brunel default takes precedence
+  . Changes to options files to adapt to changes in configurable, in particular:
+    + Adapt to option name changes
+    + Remove Brunel().applyConf() everywhere
+    + Default names for output files now set inside configurable
+  . Various updates to tracking configurables (TrackSys v4r19, PatAlgorithms v3r13,
+    TrackMatching v2r20, TsaAlgorithms v3r7, TrackFitter v2r29)
+  . Updates to Rich configurables, and removal of all Rich .opts files
+    (RichMarkovRingFinder v2r3, RichMCAssociators v2r6, RichRecQC v2r24,
+     RichRecSys v3r14)
+  . In valgrind.job, use latest gaudirun.py options to extract .opts file
+  . Remove Brunel.exe
+  . Move to new ST algorithm/tool base classes
+  . Particle properties table now taken from CondDB (DDDB v1r13)
+  . Update DoxyFile.cfg for new xxx_HOME environment variables
+  . Update SuppressWarnings.opts
+
+- New features
+  . New option UseSimCond that allows to use WithMC = False on digi files,
+    while still using SimCond
+  . Added support for cosmics (Brunel-Cosmic.py and 2008-Cosmic-Data.py,
+    TrackProjectors v2r20, TrackTools v3r13, RichRecSys v3r14) 
+
+- New tuning
+  . Fix inefficient region around y=0 in OT F-modules in odd layers (OTDet v8r2,
+    see http://www.nikhef.nl/pub/experiments/bfys/lhcb/outerTracker/NamingConventions/Modules/index.html)
+  . Flag outliers, rather than remove them (TrackFitter v2r29)
+  . Change strategy for FitVelo: don't use curvature (TrackFitter v2r29)
+  . Create node for state at beamline before fitting track (TrackFitter v2r29)
+  . In MeasurementProviderT, use centre of sector to get nominal z (TrackUtils v1r22)
+  . Add option to PatSeeding to skip events above a certain maximum occupancy
+    (currently maximum is set to 20 percent) (PatAlgorithms v3r13)
+  . Added very hot sensor triplet trap to PatVeloGeneralTracking to reduce total
+    number of combinations of clusters considered in a triplet (PatVelo v3r10)
+  . Improvements for reconstruction of close primary vertices in multi PV events
+    See http://indico.cern.ch/conferenceDisplay.py?confId=33059 (PatPV v3r7)
+
+- Persistency changes
+  . PatSeeding track history is now set to PatSeeding instead of PatForward
+    (PatAlgorithms v3r13)
+  . Set a flag in ProcStatus when PatSeeding skips events due to high occupancy
+    (PatAlgorithms v3r13)
+    
+- Monitoring changes
+  . Added ST monitoring
+  . Added option to TrackResChecker to split histos by track type 
+    (TrackCheckers v4r4)
+  . Added momentum resolution to output of TrackChecker (TrackCheckers v4r4)
+  . Fix histo IDs in TrackMonitor (TrackMonitors v1r5)
+  . Fix histoTopDir in TrackVertexMonitor (TrackMonitors v1r5)
+  . Do not print histogram statistics by default (GaudiAlg v11r12)
+  . Make TrackEventCloneKiller less verbose at initialisation (TrackUtils v1r22)
+  . Reduce min beta to 0 in All track CK theta monitor (RichRecQC v2r24)
+  . Add new monitor to compare numbering information in the decoded data to that
+    in the database, to find inconsistencies (not for DC06) (RichRecQC v2r24)
+
+- Bug fixes and protections
+  . Modified the QMTests to avoid failures when the database changes.
+  . Fix untested StatusCodes (MuonDAQ v4r5)
+  . Fix to remove "Warning in <TStreamerInfo::BuildOld>" message in case when Dll
+    has been properly loaded. Now this message appears only if there is a real
+    problem (i.e. reading HepMC 1 data without HepMCBack loaded) (HepMCBack vr1)
+  . Fix FPEs also on ia32 (SimComponents v2r14)
+  . Fix memory leak in SpdMonitor (CaloMoniDst v3r3)
+  . Fix uninitialized variable in CaloID2DLL (CaloPID v4r14)
+  . Protection for tracks with insufficient active measurements (TrackFitter v2r29)
+  . Bug fix in TrackUsedLHCbID [duplicates handled correctly] (TrackTools v3r13)
+  . Protect when MC particle does not have a mother (MuonPIDChecker v2r5)
+  . Fix in RawBankToSTLiteCluster decoding [handle duplicates correctly] (STDAQ v3r13)
+  . Protect against Velo Clusters with duplicate key in bank version 3 decoding
+    (VeloDAQ v4r4)
+  . Fix method that computes number of outliers (TrackEvent v4r16)
+  . Protect Track::probchi2 against ndof=0 (TrackEvent v4r16)
+  . Add readoutbankerror to flag corrupted events to avoid execute() failure
+    (MuonDAQ v4r5)
 
 </PRE><H1><A NAME=v33r3p1>2008-10-15 Brunel v33r3p1</A></H1><PRE>
 This version uses projects Gaudi v20r2, LHCb v25r2, Lbcom v6r23
