@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.76 2008-11-17 08:58:29 jpalac Exp $
+# $Id: requirements,v 1.77 2008-11-26 09:06:55 jpalac Exp $
 package AnalysisSys
 version v2r3
 
@@ -9,29 +9,29 @@ branches doc cmt
 
 #===================================================================
 use  CommonParticles            v4r1p2   Phys   # Juan Palacios, WGs
-use  FlavourTagging             v8r0p1   Phys   # Marco Musy
+use  FlavourTagging             v8r1     Phys   # Marco Musy
 use  DaVinciFilter              v6r10p2  Phys   # Patrick Koppenburg - deprecated
 
 ####################################################################
 use  DaVinciMCTools     	v9r17p1  Phys   # Juan Palacios
-use  DaVinciAssociators         v9r3     Phys   # Philippe Charpentier
+use  DaVinciAssociators         v9r3p1   Phys   # Philippe Charpentier
 use  VertexFitCheck             v1r3p1   Phys   # Yuehong Xie
 use  MCStandardParticles        v1r2     Phys   # Juan Palacios
-use  FlavourTaggingChecker      v3r1p2   Phys   # Marco Musy
+use  FlavourTaggingChecker      v3r2     Phys   # Marco Musy
 use  DaVinciUser      	        v8r5p1   Phys   # Juan Palacios
-use  ParticleMakerChecker       v1r2     Phys   # Chris Jones
+use  ParticleMakerChecker       v1r2p1   Phys   # Chris Jones
 use  LoKiUser                   v6r1     Phys   # Vanya Belyaev
-use  DecayTreeTuple             v1r8p1   Phys   # Jeremie Borel
+use  DecayTreeTuple             v1r9     Phys   # Jeremie Borel
 ####################################################################
 use  PhysSelSys          	v10r11  PhysSel
 #===================================================================
-use Ccbar	                v1r8p1  PhysSel # Jan Amoraal, Miriam Calvo
-use B2Dilepton			v1r7p2	PhysSel # Rare Decays Working Group
+use Ccbar	                v1r9    PhysSel # Jan Amoraal, Miriam Calvo
+use B2Dilepton			v1r8  	PhysSel # Rare Decays Working Group
 use B2D0X			v1r14p2	PhysSel # WGs
 use B2DplusX			v1r2p2	PhysSel # WGs
 use B2DsX			v1r6p2	PhysSel # WGs
 use B2DstarX			v1r7p2	PhysSel # WGs
-use B2uds	   		v2r6p4  PhysSel # Juan Palacios, Gabriel Guerrer, Eric Conte
+use B2uds	   		v2r7    PhysSel # Juan Palacios, Gabriel Guerrer, Eric Conte
 # use JetsSel	    	    	v1r4p2  PhysSel # Jets WG
 use Radiative       	    	v2r4p5  PhysSel # Vanya BELYAEV
 
@@ -54,7 +54,7 @@ use  MicroDSTConf               v1r0    MicroDST          # Juan Palacios
 
 ####################################################################
 use Analysis            	v7r6p1  Tutorial          # P. Koppenburg
-use LoKiExample         	v8r0    Ex                # Vanya Belyaev
+use LoKiExample         	v8r1    Ex                # Vanya Belyaev
 use MicroDSTExample             v1r1    Ex                # Juan Palacios
 
 # Allow the generation of QMTest summary 
