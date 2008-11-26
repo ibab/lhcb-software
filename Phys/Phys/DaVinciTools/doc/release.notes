@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.385 2008-11-24 13:57:05 jpalac Exp $
+! $Id: release.notes,v 1.386 2008-11-26 07:03:42 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
@@ -10,8 +10,12 @@
  - cmt/requirements 
   . Add python directory to branches.
   . apply_pattern install_python_modules
- - Add python/DaVinciTools/P2PVRelators.py
-  . Contains short names (C++ typedefs) for GenericParticle2PVRelator specialisations P2PVWithIP, P2PVWithIP, OnlineP2PVWithIP, OnlineP2PVWithIP
+ - Add python/DaVinciTools/Conf.py
+  . Contains short names (C++ typedefs) for GenericParticle2PVRelator specialisations configurables P2PVWithIP, P2PVWithIP, OnlineP2PVWithIP, OnlineP2PVWithIP
+ - Add python/DaVinciTools/Tools.py
+  . Short names for tool typename strings needed to retrieve instances of 
+    P2PVWithIP, P2PVWithIP, OnlineP2PVWithIP, and OnlineP2PVWithIP from
+    python AppMge().toolsvc(). 
 
 ! 2008-11-12 - Patrick Koppenburg
  - CheckSelResultTool : fix compilation warning
