@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::MC::CherenkovAngleMonitor
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngleMonitor.h,v 1.12 2008-03-25 16:48:55 jonrob Exp $
+ *  $Id: RichCherenkovAngleMonitor.h,v 1.13 2008-11-26 13:42:38 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -53,7 +53,7 @@ namespace Rich
       //---------------------------------------------------------------------------
       /** @class CherenkovAngleMonitor RichCherenkovAngleMonitor.h
        *
-       *  Template for monitor algorithms. For cut 'n' paste ...
+       *  Monitor the photon angles
        *
        *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
        *  @date   05/04/2002

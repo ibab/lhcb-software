@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichTrackResolutionMoni
  *
  *  CVS Log :-
- *  $Id: RichTrackResolutionMoni.cpp,v 1.13 2007-02-02 10:07:13 jonrob Exp $
+ *  $Id: RichTrackResolutionMoni.cpp,v 1.14 2008-11-26 13:42:38 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -174,16 +174,16 @@ StatusCode TrackResolutionMoni::execute()
       const double zmcEnt    = mcEntV.z();
       const double txmcEnt   = ( fabs(zmcEnt)>0 ? mcEntV.x()/zmcEnt : 0 );
       const double tymcEnt   = ( fabs(zmcEnt)>0 ? mcEntV.y()/zmcEnt : 0 );
-      plot1D( txrecoEnt-txmcEnt, hid(rad,"txRexEnt"), "Rec-MC tx entry", -0.01,0.01 );
-      plot1D( tyrecoEnt-tymcEnt, hid(rad,"tyRexEnt"), "Rec-MC ty entry", -0.01,0.01 );
+      plot1D( txrecoEnt-txmcEnt, hid(rad,"txResEnt"), "Rec-MC tx entry", -0.01,0.01 );
+      plot1D( tyrecoEnt-tymcEnt, hid(rad,"tyResEnt"), "Rec-MC ty entry", -0.01,0.01 );
       const double zrecoEx  = extV.z();
       const double txrecoEx = ( fabs(zrecoEx)>0 ? extV.x()/zrecoEx : 0 );
       const double tyrecoEx = ( fabs(zrecoEx)>0 ? extV.y()/zrecoEx : 0 );
       const double zmcEx    = mcExtV.z();
       const double txmcEx   = ( fabs(zmcEx)>0 ? mcExtV.x()/zmcEx : 0 );
       const double tymcEx   = ( fabs(zmcEx)>0 ? mcExtV.y()/zmcEx : 0 );
-      plot1D( txrecoEx-txmcEx, hid(rad,"txRexExt"), "Rec-MC tx exit", -0.01,0.01 );
-      plot1D( tyrecoEx-tymcEx, hid(rad,"tyRexExt"), "Rec-MC ty exit", -0.01,0.01 );
+      plot1D( txrecoEx-txmcEx, hid(rad,"txResExt"), "Rec-MC tx exit", -0.01,0.01 );
+      plot1D( tyrecoEx-tymcEx, hid(rad,"tyResExt"), "Rec-MC ty exit", -0.01,0.01 );
 
       // x and y pull distributions
       const double pullXEnt = ( tkSeg.entryErrors().errX()>0 ?
@@ -212,14 +212,10 @@ StatusCode TrackResolutionMoni::execute()
         ( tkSeg.exitErrors().errTX()>0 ? (txrecoEx-txmcEx)/tkSeg.exitErrors().errTX() : -999 );
       const double pullTYExt =
         ( tkSeg.exitErrors().errTY()>0 ? (tyrecoEx-tymcEx)/tkSeg.exitErrors().errTY() : -999 );
-      plot1D   ( txrecoEnt-txmcEnt, hid(rad,"dTrEntTX"), "Rec-MC Entry tx", -0.1, 0.1 );
-      plot1D   ( tyrecoEnt-tymcEnt, hid(rad,"dTrEntTY"), "Rec-MC Entry ty", -0.1, 0.1 );
       plot1D   ( pullTXEnt, hid(rad,"pullTXEnt"), "Entry tx pull", -5,5 );
       profile1D( sqrt(entV.Mag2()), pullTXEnt, hid(rad,"pullTXEntVP"), "Entry tx pull versus momentum", minP, maxP, 50 );
       plot1D   ( pullTYEnt, hid(rad,"pullTYEnt"), "Entry ty pull", -5,5 );
       profile1D( sqrt(entV.Mag2()), pullTYEnt, hid(rad,"pullTYEntVP"), "Entry ty pull versus momentum", minP, maxP, 50 );
-      plot1D   ( txrecoEx-txmcEx, hid(rad,"dTrExtTX"), "Rec-MC Exit tx", -0.1, 0.1 );
-      plot1D   ( tyrecoEx-tymcEx, hid(rad,"dTrExtTY"), "Rec-MC Exit ty", -0.1, 0.1 );
       plot1D   ( pullTXExt, hid(rad,"pullTXExt"), "Exit tx pull", -5,5 );
       profile1D( sqrt(extV.Mag2()), pullTXExt, hid(rad,"pullTXExtVP"), "Exit tx pull versus momentum", minP, maxP, 50 );
       plot1D   ( pullTYExt, hid(rad,"pullTYExt"), "Exit ty pull", -5,5 );

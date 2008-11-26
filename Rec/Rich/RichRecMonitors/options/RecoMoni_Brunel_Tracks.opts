@@ -204,5 +204,25 @@ RiRecPhotEffVTTTkMoni.TrackSelector.TrackAlgs = { "VeloTT" };
 RichPhotEff.Members += { "Rich::Rec::MC::PhotonRecoEffMonitor/RiRecPhotEffKsTkMoni" };
 RiRecPhotEffKsTkMoni.TrackSelector.TrackAlgs = { "KsTrack" };
 
+// photon trajectory
+// long tracks
+RichPhotTraj.Members += { "Rich::Rec::MC::PhotonTrajectoryMonitor/RiRecPhotTrajLongTkMoni" };
+RiRecPhotTrajLongTkMoni.TrackSelector.TrackAlgs = { "Forward","Match" };
+// forward tracks
+RichPhotTraj.Members += { "Rich::Rec::MC::PhotonTrajectoryMonitor/RiRecPhotTrajFrwdTkMoni" };
+RiRecPhotTrajFrwdTkMoni.TrackSelector.TrackAlgs = { "Forward" };
+// match tracks
+RichPhotTraj.Members += { "Rich::Rec::MC::PhotonTrajectoryMonitor/RiRecPhotTrajMatchTkMoni" };
+RiRecPhotTrajMatchTkMoni.TrackSelector.TrackAlgs = { "Match" };
+// seed tracks
+RichPhotTraj.Members += { "Rich::Rec::MC::PhotonTrajectoryMonitor/RiRecPhotTrajSeedTkMoni" };
+RiRecPhotTrajSeedTkMoni.TrackSelector.TrackAlgs = { "Seed" };
+// velott tracks
+RichPhotTraj.Members += { "Rich::Rec::MC::PhotonTrajectoryMonitor/RiRecPhotTrajVTTTkMoni" };
+RiRecPhotTrajVTTTkMoni.TrackSelector.TrackAlgs = { "VeloTT" };
+// Ks tracks
+RichPhotTraj.Members += { "Rich::Rec::MC::PhotonTrajectoryMonitor/RiRecPhotTrajKsTkMoni" };
+RiRecPhotTrajKsTkMoni.TrackSelector.TrackAlgs = { "KsTrack" };
+
 // ghost tracks
 RichGhostTks.Members += { "Rich::Rec::MC::GhostTrackMoni/RichGhostTracks" };

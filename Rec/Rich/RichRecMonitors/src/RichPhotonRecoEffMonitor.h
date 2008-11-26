@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::MC::PhotonRecoEffMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoEffMonitor.h,v 1.5 2007-06-01 09:03:05 cattanem Exp $
+ *  $Id: RichPhotonRecoEffMonitor.h,v 1.6 2008-11-26 13:42:38 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -43,7 +43,7 @@ namespace Rich
       //---------------------------------------------------------------------------
       /** @class PhotonRecoEffMonitor RichPhotonRecoEffMonitor.h
        *
-       *  Template for monitor algorithms. For cut 'n' paste ...
+       *  Monitor the photon reconstruction efficiency
        *
        *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
        *  @date   05/04/2002

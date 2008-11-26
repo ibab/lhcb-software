@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichPhotonGeomMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonGeomMonitor.cpp,v 1.15 2008-05-08 13:18:27 jonrob Exp $
+ *  $Id: RichPhotonGeomMonitor.cpp,v 1.16 2008-11-26 13:42:38 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -120,7 +120,6 @@ StatusCode PhotonGeomMonitor::execute()
 
       // Cherenkov angles
       const double thetaRec = photon->geomPhoton().CherenkovTheta();
-      //const double phiRec   = photon->geomPhoton().CherenkovPhi();
       const Gaudi::XYZPoint& locPos = pixel->radCorrLocalPositions().position(rad);
       const double sepAngle =
         ( atan2( locPos.x() - segment->pdPanelHitPointLocal().x(),

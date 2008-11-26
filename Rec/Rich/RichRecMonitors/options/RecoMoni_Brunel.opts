@@ -14,9 +14,10 @@ CheckRICHSeq.Members += {
   ,"GaudiSequencer/RichPhotSig" // photon signal number plots
   ,"GaudiSequencer/RichPhotAng" // photon angle plots
   ,"GaudiSequencer/RichPhotGeom" // photon geometry plots
+  ,"GaudiSequencer/RichPhotTraj" // photon geometry plots
    //,"GaudiSequencer/RichPhotEff"  // photon reco efficiency plots
   ,"GaudiSequencer/RichPixelMoni" // pixel plots
-  //,"GaudiSequencer/RichRayTraceTests" // ray tracing plots
+  ,"GaudiSequencer/RichRayTraceTests" // ray tracing plots
   ,"GaudiSequencer/RichStereoFitterTests" // stereographic refitting plots
 };
 RichPhotEff.MeasureTime  = true;
@@ -72,7 +73,7 @@ RichPixelMoni.Members += {
 };
 
 // Ray tracing tests
-//RichRayTraceTests.Members += { "Rich::Rec::TrackRayTraceTest/TrackRayTraceTest" };
+RichRayTraceTests.Members += { "Rich::Rec::TrackRayTraceTest/TrackRayTraceTest" };
 RichRayTraceTests.Members += { 
   "Rich::Rec::MC::PhotonRecoRayTraceTest/PhotRayTraceTestSimple"
  ,"Rich::Rec::MC::PhotonRecoRayTraceTest/PhotRayTraceTestFull" 
