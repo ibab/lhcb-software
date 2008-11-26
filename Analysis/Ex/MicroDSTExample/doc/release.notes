@@ -1,9 +1,19 @@
-!$Id: release.notes,v 1.10 2008-11-18 16:43:08 jpalac Exp $
+!$Id: release.notes,v 1.11 2008-11-26 14:59:52 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Ex/MicroDSTExample
 ! Responsible : Juan PALACIOS
 ! Purpose     : MicroDST making and reading examples.
 !-----------------------------------------------------------------------------
+
+
+
+! 2008-11-26 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v2r0
+ - Add python/MicroDSTExample module. 
+  . python/MicroDSTExample/Functors.py, Helpers.py
+    All sorts of nice stuff to aid retrieving data and plotting.
+  . Fix python/MicroDSTReadingExample accordingly.
 
 ! 2008-11-18 - Juan PALACIOS
  - options/TestMicroDSTMake.py
