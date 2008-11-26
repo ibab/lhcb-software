@@ -32,8 +32,3 @@ GaudiSequencer("TutorialSeq").Members.append(jpsi2mumu)
 HistogramPersistencySvc().OutputFile = "DVHistos_2.root";
 
 ApplicationMgr().EvtMax = 1000 ;
-
-# load input data
-daVinciTutorialData = environ["DAVINCITUTORIALDATA"]
-importOptions( daVinciTutorialData )
-########################################################################

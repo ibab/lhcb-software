@@ -74,8 +74,3 @@ GaudiSequencer("TutorialSeq").IgnoreFilterPassed = False
 HistogramPersistencySvc().OutputFile = "DVHistos_4b.root";
 
 ApplicationMgr().EvtMax = 1000 ;
-
-# load input data
-daVinciTutorialData = environ["DAVINCITUTORIALDATA"]
-importOptions( daVinciTutorialData )
-########################################################################
