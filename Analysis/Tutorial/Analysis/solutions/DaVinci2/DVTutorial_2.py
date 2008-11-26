@@ -23,7 +23,7 @@ ApplicationMgr().TopAlg += [ "GaudiSequencer/TutorialSeq" ]
 jpsi2mumu = TutorialAlgorithm("Jpsi2MuMu");
 
 jpsi2mumu.addTool( PhysDesktop() )
-jpsi2mumu.PhysDesktop.InputLocations = [ "Phys/StdLooseMuons" ]
+jpsi2mumu.PhysDesktop.InputLocations = [ "StdLooseMuons" ]
 jpsi2mumu.MassWindow = 30*Units.MeV 
 jpsi2mumu.OutputLevel = 3 ;
 

@@ -23,7 +23,7 @@ ApplicationMgr().TopAlg += [ "GaudiSequencer/TutorialSeq" ]
 jpsi2mumu = TutorialAlgorithm("Jpsi2MuMu");
 
 jpsi2mumu.addTool( PhysDesktop() )
-jpsi2mumu.PhysDesktop.InputLocations = [ "Phys/StdLooseMuons" ]
+jpsi2mumu.PhysDesktop.InputLocations = [ "StdLooseMuons" ]
 jpsi2mumu.MassWindow = 30*Units.MeV 
 jpsi2mumu.OutputLevel = 3 ;
 jpsi2mumu.MaxChi2 = 100 ;
@@ -36,7 +36,7 @@ GaudiSequencer("TutorialSeq").Members.append(jpsi2mumu)
 phi2kk = TutorialAlgorithm("Phi2KK");
 
 phi2kk.addTool( PhysDesktop() )
-phi2kk.PhysDesktop.InputLocations = [ "Phys/StdLooseKaons" ]
+phi2kk.PhysDesktop.InputLocations = [ "StdLooseKaons" ]
 phi2kk.MassWindow = 50*Units.MeV 
 phi2kk.Particle =  "phi(1020)" ;
 phi2kk.MaxChi2 = 20 ;

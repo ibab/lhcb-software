@@ -21,7 +21,7 @@ ApplicationMgr().TopAlg += [ "GaudiSequencer/TutorialSeq" ]
 #
 GaudiSequencer("TutorialSeq").Members += [ "TutorialAlgorithm" ]
 TutorialAlgorithm().addTool( PhysDesktop() )
-TutorialAlgorithm().PhysDesktop.InputLocations = [ "Phys/StdLooseMuons" ]
+TutorialAlgorithm().PhysDesktop.InputLocations = [ "StdLooseMuons" ]
 
 HistogramPersistencySvc().OutputFile = "DVHistos_1.root"
 

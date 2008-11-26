@@ -20,7 +20,7 @@ importOptions( "$ANALYSISROOT/solutions/DaVinci4/DVTutorial_4b.py" )
 #
 tree = PrintTree("PrintFoundBs")
 tree.addTool( PhysDesktop() )
-tree.PhysDesktop.InputLocations = [ "Phys/Bs2JpsiPhi" ]
+tree.PhysDesktop.InputLocations = [ "Bs2JpsiPhi" ]
 tree.addTool( PrintDecayTreeTool() )
 tree.PrintDecayTreeTool.Information = "Name M P Px Py Pz Pt chi2" 
 tree.PrintTruth = True 
