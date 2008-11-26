@@ -1,10 +1,10 @@
-#$Id: requirements,v 1.3 2008-11-12 14:22:50 jpalac Exp $
+#$Id: requirements,v 1.4 2008-11-26 15:00:03 jpalac Exp $
 #============================================================================
 # Created    : 2008-09-23
 # Maintainer : Juan PALACIOS
 #============================================================================
 package           MicroDSTExample
-version           v1r2
+version           v2r0
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -18,3 +18,7 @@ use   MicroDSTConf           v*    MicroDST
 use   MicroDSTAlgorithm      v*    MicroDST
 
 include_path      none
+
+#============================================================================
+apply_pattern install_python_modules
+#============================================================================
