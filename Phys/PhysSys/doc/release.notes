@@ -3,12 +3,53 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v7r3>2008-11-26 Phys v7r3 </A></H1><PRE>
+
+###############################################################################
+#                                  PHYS v7r3                                  #
+###############################################################################
+
+ - Based on LHCb v26r0 and Gaudi v20r3
+
 ! 2008-11-25 - Patrick Koppenburg
  - Adapt doxygen to no version directories.
 
 ! 2008-10-29 - Patrick Koppenburg
  - DecodeRawEvents.opts -> .py
 
+ * Phys/VertexFit
+  - PVReFitterAlg: Bug fixes. Add bool properties UseIPVOfflineTool(false) and UseIPVReFitter(true) determining if the PV re-fitting tools should be used.
+  
+ * Phys/DaVinciTools
+   - OnOfflineTool
+    . Conform to changes in IOnOffline interface. Interface now only returns
+      strings with names of PV location or some tools, depenting on context.
+      It no longer holds any tools of its own.
+
+   - Related or "best"PV finding overhaul
+   . Conform to new IRelatedPVFinder interface
+   . No configuration beyond that of GaudiTool. All configuration at compile-time
+   . RelatedPVFinder replaced by template GenericParticle2PVRelator with implementations (typedefs) for on and off-line, IP and IP Chi2
+
+   - PhysDesktop
+    . Desktop now uses new IOnOfflineTool and it's own IRelatedPVFinder.
+      Defaults for IRelatedPVFinder and IDistanceCalculator are now "".
+      In this case, IOnOfflineTool is in charge of getting the type name
+      of the implementation of these two. A similar logic applies to the 
+      location of primary vertices.
+    . Add property P2PVInputLocations, vector of strings with TES locations of
+      Particle* -> VertexBase* relations. The PhysDesktop now can take 
+      user-defined P->PV relations tables. These over-write relations loaded
+      from the default location InputLocations + "/Particle2Vertices".
+    . When dealing with Particles and PVs, users should now use the relations
+      and not the primaryVertices() method directly.
+    . Output location no longer fixed to "Phys/AlgName". Now taken from IOnOffline::trunkOnTES() method. Default" "Hlt/AlgName" and "Phys/AlgName" for on and off-line respectively.
+    . Input locations now deduced from context if AlgName not preceded by a "/":
+      "MyBsSelection" becomes "Phys/MyBsSelection" or "Hlt/MyBsSelection" in off/online context
+      "Phys/MyBsSelection" stays the same regardless of context.
+
+   - Python
+    Add modules /DaVinciTools/Conf.py and DaVinciTools/Tools.py with configurables and short-cuts for templates GenericParticle2PVRelator specialisations. Allosw for easy configuration and instantiation in GaudiPython.
 
 </PRE><H1><A NAME=v7r2>2008-10-06 Phys v7r2 </A></H1><PRE>
 
