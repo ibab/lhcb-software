@@ -1,4 +1,4 @@
-#$Id: TestMicroDSTMake.py,v 1.8 2008-11-18 16:37:29 jpalac Exp $
+#$Id: TestMicroDSTMake.py,v 1.9 2008-11-26 15:01:00 jpalac Exp $
 from Gaudi.Configuration import *
 from MicroDST.MicroDSTAlgorithm import *
 from Configurables import CopyRelatedMCParticles
@@ -136,6 +136,7 @@ if (PVRefit) :
     PVReFitter.VertexOutputLocation = refittedPVLocation
     p2ReFitPVRelationsLoc = mainLocation+"/Particle2ReFittedVertexRelations"
     PVReFitter.P2VRelationsOutputLocation = p2ReFitPVRelationsLoc
+    PVReFitter.OutputLevel=4
     MySelection.Members += [PVReFitter]
     # put the re-fitted vertices on the MicroDST
     copyReFittedPVs = CopyPrimaryVertices('CopyReFittedPVs')
@@ -144,7 +145,7 @@ if (PVRefit) :
     # copy the Particle->PV relations table
     copyP2RefitPVLink = CopyParticle2PVLink("CopyP2RefitPVLink")
     copyP2RefitPVLink.InputLocation = p2ReFitPVRelationsLoc
-#    copyP2RefitPVLink.OutputLevel=1
+    copyP2RefitPVLink.OutputLevel=4
     MySelection.Members += [copyP2RefitPVLink]
 #==============================================================================
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
