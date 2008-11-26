@@ -1,8 +1,7 @@
-# Example 2008 MC files for Brunel. For real data use 2008-TED-Data.py
-# This file must be given as last argument to gaudirun.py, after Brunel<conf>.py
+# Example 2008 Cosmics files for Brunel.
 
 # Syntax is:
-#   gaudirun.py Brunel<conf>.py 2008-Files.py
+#   gaudirun.py Brunel-Cosmics.py 2008-Cosmic-Data.py
 #
 from Gaudi.Configuration import *
 from GaudiConf.Configuration import *
@@ -11,10 +10,9 @@ from Brunel.Configuration import *
 #-- File catalogs. First one is read-write
 FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml" ]
 
-# Latest cosmic run, with CALO, OT and (!!) RICH2
+# Latest cosmic run, with CALO, OT and (!!) RICH2 (35569 events)
 datasetName = "035537_0000088110"
 EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/COSMICS/35537/" + datasetName + ".raw'  SVC='LHCb::MDFSelector'"]
-#EventSelector().Input = ["DATAFILE='PFN:/usera/jonesc/NFS/data/LHCb/COSMICS/35537/" + datasetName + ".raw'  SVC='LHCb::MDFSelector'"]
 
 # Default output files names are set up using value Brunel().DatasetName property
 Brunel().DatasetName = datasetName
