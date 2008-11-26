@@ -3,6 +3,40 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v2r3>2008-11-26 Analysis v2r3 </A></H1><PRE>
+
+ - Based on LHCb v26r0 and Gaudi v20r3
+
+ - Highlights:
+
+ * Phys/FlavourTagging
+  - Changed NNet to make them more gaussian
+  - introduced TMVA machinery selectable by option 
+  - introduced new CombinedPID for taggers
+
+ * Various bug-fixes.
+
+ * Changes to DVAlgorithm and PhysDesktop behaviour. Extract from Phys v7r3 release notes:
+   - PhysDesktop
+    . Desktop now uses new IOnOfflineTool and it's own IRelatedPVFinder.
+      Defaults for IRelatedPVFinder and IDistanceCalculator are now "".
+      In this case, IOnOfflineTool is in charge of getting the type name
+      of the implementation of these two. A similar logic applies to the 
+      location of primary vertices.
+    . Add property P2PVInputLocations, vector of strings with TES locations of
+      Particle* -> VertexBase* relations. The PhysDesktop now can take 
+      user-defined P->PV relations tables. These over-write relations loaded
+      from the default location InputLocations + "/Particle2Vertices".
+    . When dealing with Particles and PVs, users should now use the relations
+      and not the primaryVertices() method directly.
+    . Output location no longer fixed to "Phys/AlgName". Now taken from IOnOffline::trunkOnTES() method. Default" "Hlt/AlgName" and "Phys/AlgName" for on and off-line respectively.
+    . Input locations now deduced from context if AlgName not preceded by a "/":
+      "MyBsSelection" becomes "Phys/MyBsSelection" or "Hlt/MyBsSelection" in off/online context
+      "Phys/MyBsSelection" stays the same regardless of context.
+
+ * Ex/MicroDSTExample:
+   - Improvements to MicroDST making python script, addition of python helper modules to aid in reading of DST and MicroDST, improvement to MicroDST reading script.
+
 ! 2008-11-25 - Patrick Koppenburg
  - Adapt doxygen to no version directories.
 
