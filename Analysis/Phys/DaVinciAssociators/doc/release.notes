@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.126 2008-11-17 11:25:57 pkoppenb Exp $
+! $Id: release.notes,v 1.127 2008-11-26 08:08:05 jpalac Exp $
 !==============================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Vladimir Gligorov
 !==============================================================================
+
+!========================== DaVinciAssociators v9r3p1 2008-11-26 ==============
 
 ! 2008-11-17 - Patrick Koppenburg
  - Renamed DVTestAssociators.opts to .py. Fixed a few obsolete things.
