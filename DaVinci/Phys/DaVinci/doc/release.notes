@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.262 2008-11-27 15:16:18 jpalac Exp $
+! $Id: release.notes,v 1.263 2008-11-27 15:20:51 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -10,6 +10,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2008-11-27 - Juan PALACIOS
+ - Added options/DC06_stripped_bbincl_lumi2.py
+  . Example .py file defining data.
  - python/DaVinci/MicroDSTAlgorithm.py
   . Removed. Now in MicroDSTConf, module MicroDST.
  - python/DaVinci/Configuration.py
