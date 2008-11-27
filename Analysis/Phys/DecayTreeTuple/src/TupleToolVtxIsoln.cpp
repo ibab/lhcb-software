@@ -258,7 +258,7 @@ StatusCode TupleToolVtxIsoln::fill( const Particle* mother
      
     if(m_IP>0.0 ) {
       
-      double ip = -1.0 ,chi2 = -1.0, ;//ipe = -1.0;
+      double ip = -1.0, chi2 = -1.0;//ipe = -1.0;
       
     
       //     StatusCode sc = m_ipTool->calcImpactPar(**iparts, *vtx, ip, ipe);

@@ -4,7 +4,9 @@
 ! Purpose     : Option-steered tuples. Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
-!======================== DecayTreeTuple v1r9 2008-11-26 ===================
+!======================== DecayTreeTuple v1r9 2008-11-27 ===================
+! 2008-11-27 - Marco Cattaneo
+ - Fix compilation on Windows
 
 ! 2008-11-18 - Patrick Koppenburg
  - TupleToolTrigger : fill all selections in first. Else the Tuple writing
