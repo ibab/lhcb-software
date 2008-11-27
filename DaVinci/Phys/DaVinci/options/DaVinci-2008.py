@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DaVinci-2008.py,v 1.5 2008-11-27 14:42:37 jpalac Exp $
+# $Id: DaVinci-2008.py,v 1.6 2008-11-27 15:35:53 jpalac Exp $
 #
 # Options for a typical DaVinci job - this is to please Dirac
 #
@@ -9,19 +9,19 @@
 #
 ########################################################################
 from Gaudi.Configuration import *
-from DaVinci.Configuration import DaVinciApp
+from DaVinci.Configuration import DaVinci
 ##############################################################################
 #
 #
 ##############################################################################
-DaVinciApp().EvtMax = 500
-# DaVinciApp().SkipEvents = 0
-DaVinciApp().DataType = "2008" # Default is "DC06"
-# DaVinciApp().DDDBtag      = ""
-# DaVinciApp().CondDBtag    = "" 
-# DaVinciApp().UseOracle = False
-# DaVinciApp().Simulation   = False
-# DaVinciApp().Input = []
-# DaVinciApp().UserAlgorithms = []
-DaVinciApp().MainOptions  = "$DAVINCIROOT/options/DaVinci.py"
+DaVinci().EvtMax = 500
+# DaVinci().SkipEvents = 0
+DaVinci().DataType = "2008" # Default is "DC06"
+# DaVinci().DDDBtag      = ""
+# DaVinci().CondDBtag    = "" 
+# DaVinci().UseOracle = False
+# DaVinci().Simulation   = False
+# DaVinci().Input = []
+# DaVinci().UserAlgorithms = []
+DaVinci().MainOptions  = "$DAVINCIROOT/options/DaVinci.py"
 ##############################################################################

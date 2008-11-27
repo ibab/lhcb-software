@@ -1,5 +1,5 @@
 ##############################################################################
-#$Id: DVTestB2DiMuon.py,v 1.6 2008-11-27 14:42:48 jpalac Exp $
+#$Id: DVTestB2DiMuon.py,v 1.7 2008-11-27 15:35:53 jpalac Exp $
 #
 # Example Qm test option using configurables.
 #
@@ -62,16 +62,16 @@ testCorrelations.Algorithms = [ trueNoPIDsName,
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 EventSelector().PrintFreq = 100
 ##############################################################################
-from DaVinci.Configuration import DaVinciApp
+from DaVinci.Configuration import DaVinci
 ##############################################################################
-DaVinciApp().EvtMax = 1000
-# DaVinciApp().SkipEvents = 0
-# DaVinciApp().DataType = "DC06"
-# DaVinciApp().DDDBtag      = ""
-# DaVinciApp().CondDBtag    = ""
-# DaVinciApp().UseOracle = False
-DaVinciApp().MainOptions  = "$B2DILEPTONROOT/options/DVPreselB2DiMuon.opts"
-DaVinciApp().UserAlgorithms = [findTrueDecay, testCorrelations]
+DaVinci().EvtMax = 1000
+# DaVinci().SkipEvents = 0
+# DaVinci().DataType = "DC06"
+# DaVinci().DDDBtag      = ""
+# DaVinci().CondDBtag    = ""
+# DaVinci().UseOracle = False
+DaVinci().MainOptions  = "$B2DILEPTONROOT/options/DVPreselB2DiMuon.opts"
+DaVinci().UserAlgorithms = [findTrueDecay, testCorrelations]
 ##############################################################################
 """
  GAUDI data cards generated on 11/6/08 4:52 PM
@@ -86,7 +86,7 @@ DaVinciApp().UserAlgorithms = [findTrueDecay, testCorrelations]
  Datasets replicated at CERN
  200 dataset(s) - NbEvents = 99391
 """
-DaVinciApp().Input = [
+DaVinci().Input = [
     "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001668/DST/0000/00001668_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
     "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001668/DST/0000/00001668_00000002_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
     "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001668/DST/0000/00001668_00000003_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
