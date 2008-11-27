@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: decorators.py,v 1.12 2008-09-16 15:02:20 ibelyaev Exp $ 
+# $Id: decorators.py,v 1.13 2008-11-27 16:47:27 ibelyaev Exp $ 
 # =============================================================================
 ## @file decorators.py LoKiAlgo/decorators.py
 #  The set of basic decorator for objects from LoKiAlgo library
@@ -429,28 +429,57 @@ def _decorate( name = _name ) :
     Make a decoration fo functions and predicates
     """
     import LoKiCore.decorators   as     _LoKiCore
-    _p='const LHCb::Particle*'
-    _v='const LHCb::VertexBase*'
-    _decorated   = _LoKiCore.getAndDecorateFunctions (
-        name                                          , ## module name 
-        LoKi.Functor          (_p,'double')           , ## the base 
-        LoKi.Dicts.ExtFunCalls(LHCb.Particle)         , ## call-traits 
-        LoKi.Dicts.FuncOps    (_p,_p)                 ) ## operators 
-    _decorated |= _LoKiCore.getAndDecorateFunctions  (
-        name                                          , ## module name 
-        LoKi.Functor          (_v,'double'), ## the base 
-        LoKi.Dicts.ExtFunCalls(LHCb.VertexBase)       , ## call-traits 
-        LoKi.Dicts.FuncOps    (_v,_v)                 ) ## operators
-    _decorated |=  _LoKiCore.getAndDecoratePredicates (
-        name                                          , ## module name 
-        LoKi.Functor          (_p,bool)               , ## the base 
-        LoKi.Dicts.ExtCutCalls(LHCb.Particle)         , ## call-traits 
-        LoKi.Dicts.CutsOps    (_p,_p)                 ) ## operators 
-    _decorated |= _LoKiCore.getAndDecoratePredicates (
-        name                                          , ## module name 
-        LoKi.Functor          (_v,bool)               , ## the base 
-        LoKi.Dicts.ExtCutCalls(LHCb.VertexBase)       , ## call-traits 
-        LoKi.Dicts.CutsOps    (_v,_v)                 ) ## the operators
+    p='const LHCb::Particle*'
+    v='const LHCb::VertexBase*'
+
+     # "function" : Particle -> double 
+    
+    _functions = _LoKiCore.getInherited (
+        name                                   , ## moduel name  
+        LoKi.Functor   (p,'double')            ) ## the base
+    _decorated  = _LoKiCore.decorateCalls       (
+        _functions                             , ## list of functor types
+        LoKi.Dicts.ExtFunCalls (LHCb.Particle) ) ## call-traits
+    _decorated |= _LoKiCore.decorateFunctionOps (
+        _functions                             , ## list of functor types
+        LoKi.Dicts.FuncOps  (p,p)              ) ## operators&operations
+    
+    # "function" : Vertex -> double
+
+    _functions = _LoKiCore.getInherited (
+        name                                   , ## moduel name  
+        LoKi.Functor   (v,'double')            ) ## the base
+    _decorated  = _LoKiCore.decorateCalls       (
+        _functions                             , ## list of functor types
+        LoKi.Dicts.ExtFunCalls (LHCb.VertexBase)) ## call-traits
+    _decorated |= _LoKiCore.decorateFunctionOps (
+        _functions                             , ## list of functor types
+        LoKi.Dicts.FuncOps  (v,v)              ) ## operators&operations
+  
+    # "predicate/cut" :  Particle -> bool
+
+    _functions = _LoKiCore.getInherited (
+        name                                   , ## moduel name  
+        LoKi.Functor   (p,bool)                ) ## the base
+    _decorated |= _LoKiCore.decorateCalls       (
+        _functions                             , ## list of functor types
+        LoKi.Dicts.ExtCutCalls (LHCb.Particle) ) ## call-traits
+    _decorated |= _LoKiCore.decoratePredicateOps (
+        _functions                             , ## list of functor types
+        LoKi.Dicts.CutsOps  (p,p)              ) ## operators&operations
+    
+    # "predicate/cut" :  Vertex -> bool
+    
+    _functions = _LoKiCore.getInherited (
+        name                                   , ## moduel name  
+        LoKi.Functor   (v,bool)                ) ## the base
+    _decorated |= _LoKiCore.decorateCalls       (
+        _functions                             , ## list of functor types
+        LoKi.Dicts.ExtCutCalls (LHCb.VertexBase)) ## call-traits
+    _decorated |= _LoKiCore.decoratePredicateOps (
+        _functions                             , ## list of functor types
+        LoKi.Dicts.CutsOps  (v,v)              ) ## operators&operations
+
     # (re)decorate pids (Comparison with strings, integers and ParticleID objects:
     for t in ( _LoKiPhys.ID , _LoKiPhys.ABSID ) :
         t = type ( t ) 
