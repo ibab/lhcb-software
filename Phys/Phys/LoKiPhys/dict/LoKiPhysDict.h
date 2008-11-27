@@ -1,4 +1,4 @@
-// $Id: LoKiPhysDict.h,v 1.13 2008-06-03 14:07:02 ibelyaev Exp $
+// $Id: LoKiPhysDict.h,v 1.14 2008-11-27 15:48:43 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKIPHYSDICT_H 
 #define LOKI_LOKIPHYSDICT_H 1
@@ -55,10 +55,12 @@ namespace LoKi
     class FunCalls<LHCb::VertexBase> 
     {
     private:
+      // ======================================================================
       typedef LHCb::VertexBase            Type ;
       typedef LoKi::BasicFunctors<const Type*>::Function Fun  ;
+      // ======================================================================
     public:
-      //
+      // ======================================================================
       static Fun::result_type __call__ 
       ( const Fun& fun  , const LHCb::VertexBase*           o ) { return fun ( o ) ; }
       static Fun::result_type __call__ 
@@ -102,10 +104,12 @@ namespace LoKi
     class CutCalls<LHCb::VertexBase> 
     {
     private:
+      // ======================================================================
       typedef LHCb::VertexBase                            Type ;
       typedef LoKi::BasicFunctors<const Type*>::Predicate Fun  ;
+      // ======================================================================
     public:
-      //
+      // ======================================================================
       static Fun::result_type __call__ 
       ( const Fun& fun  , const LHCb::VertexBase*           o ) { return fun ( o ) ; }
       static Fun::result_type __call__ 
@@ -131,14 +135,16 @@ namespace LoKi
       // ======================================================================
       static LoKi::FunctorFromFunctor<const Type*,bool> __rshift__            
       ( const Fun& fun  , const Fun&                         o ) { return fun >> o  ; }
+      // ======================================================================
     } ;
     // ========================================================================
   }
+  // ==========================================================================
 }
 // ============================================================================
 namespace
 {
-  // ============================================================================
+  // ==========================================================================
   struct _Instantiations 
   {
     // fictive constructor 
@@ -171,6 +177,8 @@ namespace
     LoKi::Dicts::PipeOps<const LHCb::VertexBase*>    m_fo4 ;
     LoKi::Dicts::FunValOps<const LHCb::Particle*>    m_fo5 ;
     LoKi::Dicts::FunValOps<const LHCb::VertexBase*>  m_fo6 ;
+    LoKi::Dicts::CutValOps<const LHCb::Particle*>    m_fo51;
+    LoKi::Dicts::CutValOps<const LHCb::VertexBase*>  m_fo61;
     LoKi::Dicts::ElementOps<const LHCb::Particle*>   m_fo7 ;
     LoKi::Dicts::ElementOps<const LHCb::VertexBase*> m_fo8 ;
     LoKi::Dicts::SourceOps<const LHCb::Particle*>    m_fo9 ;
@@ -206,8 +214,13 @@ namespace
     // additional 
     LoKi::TheSame<const LHCb::Particle*>                m_71 ;
     LoKi::TheSame<const LHCb::VertexBase*>              m_72 ;
+    LoKi::Functors::Empty<const LHCb::Particle*>        m_ee1 ;
+    LoKi::Functors::Empty<const LHCb::VertexBase*>      m_ee2 ;
+    LoKi::Functors::Size<const LHCb::Particle*>         m_es1 ;
+    LoKi::Functors::Size<const LHCb::VertexBase*>       m_es2 ;
     // functional stuff:
   } ;  
+  // ==========================================================================
 }
 // ============================================================================
 // The END 

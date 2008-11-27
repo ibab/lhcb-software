@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.35 2008-10-19 17:13:26 ibelyaev Exp $ 
+# $Id: requirements,v 1.36 2008-11-27 15:48:43 ibelyaev Exp $ 
 # ============================================================================
 # Created    : 2006-02-06
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # ============================================================================
 package           LoKiPhys
-version           v8r0
+version           v8r1
 	
 # =============== structure ==================================================
 branches          cmt doc src dict python LoKi 
@@ -30,9 +30,8 @@ apply_pattern    reflex_dictionary                                   \
                  options=" -U__MINGW32__ "
 
 # =============== patterns ===================================================
-apply_pattern     linker_library library=LoKiPhys
-
-apply_pattern application_path 
+apply_pattern    linker_library library=LoKiPhys
+apply_pattern    QMTest  
 
 # ============================================================================
 # The END 

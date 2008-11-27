@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiPhys.xml,v 1.18 2008-11-02 20:13:32 ibelyaev Exp $ 
+     * $Id: LoKiPhys.xml,v 1.19 2008-11-27 15:48:43 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiPhys package
@@ -59,6 +59,8 @@
   
   <class pattern   = "LoKi::Valid<*LHCb::*>"   />
   <class pattern   = "LoKi::TheSame<*LHCb::*>" />
+  <class pattern   = "LoKi::Functors::Empty<*LHCb::*>" />
+  <class pattern   = "LoKi::Functors::Size<*LHCb::*>"  />
   
   <class pattern   = "LoKi::Particles::*"                />
   <class pattern   = "LoKi::Vertices::*"                 />
@@ -77,6 +79,7 @@
   <class pattern   = "LoKi::Dicts::MapsOps<*LHCb::*>"     />
   <class pattern   = "LoKi::Dicts::PipeOps<*LHCb::*>"     />
   <class pattern   = "LoKi::Dicts::FunValOps<*LHCb::*>"   />
+  <class pattern   = "LoKi::Dicts::CutValOps<*LHCb::*>"   />
   <class pattern   = "LoKi::Dicts::ElementOps<*LHCb::*>"  />
   <class pattern   = "LoKi::Dicts::SourceOps<*LHCb::*>"   />
   <class pattern   = "LoKi::Dicts::InfoOps<*LHCb::*>"     />

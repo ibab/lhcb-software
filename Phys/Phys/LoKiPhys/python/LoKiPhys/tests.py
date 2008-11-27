@@ -62,8 +62,8 @@ def test1() :
     print ' v>>(process(ID)>>min_value(P))  : %s'%(v>>(process(ID)>>min_value(P)))
     print '(v>>min_element(ID)).name()      : %s'%(v>>min_element(ID)).name()
     print ' v>>min_value(ID)                : %s'%(v>>min_value(ID))
-    print '(v>>("e+"!=ABSID)).size()        : %s'%(v>>('e+'!=ABSID)).size()
-    print '(v>>select("mu+"!=ABSID)).size() : %s'%(v>>select('mu+'!=ABSID)).size()
+    print ' v>>("e+"!=ABSID)>>SIZE          : %s'%(v>>('e+'!=ABSID)>>SIZE)
+    print ' v>>select("mu+"!=ABSID)>>EPMTY  : %s'%(v>>select('mu+'!=ABSID)>>EMPTY)
 
 # =============================================================================
 ## Perform all known tests
