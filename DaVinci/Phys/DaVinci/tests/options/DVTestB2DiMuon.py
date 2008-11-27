@@ -1,5 +1,5 @@
 ##############################################################################
-#$Id: DVTestB2DiMuon.py,v 1.5 2008-11-25 14:42:48 jpalac Exp $
+#$Id: DVTestB2DiMuon.py,v 1.6 2008-11-27 14:42:48 jpalac Exp $
 #
 # Example Qm test option using configurables.
 #
@@ -65,11 +65,13 @@ EventSelector().PrintFreq = 100
 from DaVinci.Configuration import DaVinciApp
 ##############################################################################
 DaVinciApp().EvtMax = 1000
-# DaVinciApp().DDDBtag      = "DC06-default"
-# DaVinciApp().condDBtag    = "DC06-default"
-# DaVinciApp().useOracleCondDB = False
-DaVinciApp().mainOptions  = "$B2DILEPTONROOT/options/DVPreselB2DiMuon.opts"
-DaVinciApp().userAlgorithms = [findTrueDecay, testCorrelations]
+# DaVinciApp().SkipEvents = 0
+# DaVinciApp().DataType = "DC06"
+# DaVinciApp().DDDBtag      = ""
+# DaVinciApp().CondDBtag    = ""
+# DaVinciApp().UseOracle = False
+DaVinciApp().MainOptions  = "$B2DILEPTONROOT/options/DVPreselB2DiMuon.opts"
+DaVinciApp().UserAlgorithms = [findTrueDecay, testCorrelations]
 ##############################################################################
 """
  GAUDI data cards generated on 11/6/08 4:52 PM
@@ -96,6 +98,4 @@ DaVinciApp().Input = [
     "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001668/DST/0000/00001668_00000009_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
     "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001668/DST/0000/00001668_00000010_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"
 ]
-##############################################################################
-DaVinciApp().applyConf()
 ##############################################################################

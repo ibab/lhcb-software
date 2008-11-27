@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DaVinci-2008.py,v 1.4 2008-11-06 14:20:02 jpalac Exp $
+# $Id: DaVinci-2008.py,v 1.5 2008-11-27 14:42:37 jpalac Exp $
 #
 # Options for a typical DaVinci job - this is to please Dirac
 #
@@ -15,11 +15,13 @@ from DaVinci.Configuration import DaVinciApp
 #
 ##############################################################################
 DaVinciApp().EvtMax = 500
-# DaVinciApp().skipEvents = 0
-# DaVinciApp().DDDBtag      = "DC06-default"
-# DaVinciApp().condDBtag    = "DC06-default"
-# DaVinciApp().useOracleCondDB = False
+# DaVinciApp().SkipEvents = 0
+DaVinciApp().DataType = "2008" # Default is "DC06"
+# DaVinciApp().DDDBtag      = ""
+# DaVinciApp().CondDBtag    = "" 
+# DaVinciApp().UseOracle = False
+# DaVinciApp().Simulation   = False
 # DaVinciApp().Input = []
-DaVinciApp().mainOptions  = "$DAVINCIROOT/options/DaVinci.py"
-DaVinciApp().applyConf()
+# DaVinciApp().UserAlgorithms = []
+DaVinciApp().MainOptions  = "$DAVINCIROOT/options/DaVinci.py"
 ##############################################################################

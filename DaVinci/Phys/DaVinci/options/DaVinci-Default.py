@@ -1,5 +1,5 @@
 ##############################################################################
-#$Id: DaVinci-Default.py,v 1.2 2008-11-12 14:59:14 jpalac Exp $
+#$Id: DaVinci-Default.py,v 1.3 2008-11-27 14:42:37 jpalac Exp $
 #
 # syntax: gaudirun.py DaVinci-Default.py
 #
@@ -12,11 +12,14 @@ from DaVinci.Configuration import *
 #
 ##############################################################################
 DaVinciApp().EvtMax = 500
-# DaVinciApp().skipEvents = 0
-# DaVinciApp().DDDBtag      = "DC06-default"
-# DaVinciApp().condDBtag    = "DC06-default"
-# DaVinciApp().useOracleCondDB = False
-# DaVinciApp().mainOptions  = "$DAVINCIROOT/options/DaVinci.opts"
-DaVinciApp().mainOptions  = "$DAVINCIROOT/tests/options/DVTestB2DiMuon.opts"
-DaVinciApp().applyConf()
+# DaVinciApp().SkipEvents = 0
+# DaVinciApp().DataType = "DC06"
+# DaVinciApp().DDDBtag      = ""
+# DaVinciApp().CondDBtag    = ""
+# DaVinciApp().UseOracle    = False
+# DaVinciApp().Simulation   = False
+# DaVinciApp().MainOptions  = "$DAVINCIROOT/options/DaVinci.opts"
+DaVinciApp().MainOptions  = "$DAVINCIROOT/tests/options/DVTestB2DiMuon.opts"
+# DaVinciApp().Input = []
+# DaVinciApp().UserAlgorithms = []
 ##############################################################################
