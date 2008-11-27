@@ -9,6 +9,10 @@
    Remove obsolete options for particle gun. They are no longer valid since
    ParticleGun v6r0. Example options are now available as 
    $PARTICLEGUNSROOT/options/ParticleGun.opts as taken in Gauss.opts
+ - Remove obsolete files for doxygen documentation: this is handled since a
+   long time in GaussSys
+   . DoxyFile.cfg, Doxyfooter.html, Doxyheader.html, MainPage.doc, makedoc
+     are all removed from doc subdirectory
 
 ! 2008-11-20 - Gloria CORTI
  - Remove SimVeloGeometry.opts where one line is wrong dure to change in name
