@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.260 2008-11-26 15:03:59 jpalac Exp $
+! $Id: release.notes,v 1.261 2008-11-27 14:46:47 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,27 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2008-11-27 - Juan PALACIOS
+ - python/DaVinci/Configuration.py
+  . Follow changes in LHCbApp() and ConfigurableUser. Options are now
+        "EvtMax"          :  -1,
+        "SkipEvents"      :   0,
+        "DataType"        : 'DC06', # Data type, can be ['DC06','2008']
+        "DDDBtag"         : '',     # Tag for DDDB. Default as set in DDDBConf for DataType
+        "CondDBtag"       : '',     # Tag for CondDB. Default as set in DDDBConf for DataType
+        "UseOracle"       : False,
+        "Simulation"      : False,  # set to True to use SimCond
+        "MainOptions"     : '$DAVINCIROOT/options/DaVinci.py',
+        "Input"           : [],
+        "UserAlgorithms"  : []
+ - options/DaVinci-2008.py
+ - options/DaVinci-Default.py
+ - tests/options/DVTestB2DiMuon.py
+  . Adapt to new DaVinciApp() configurable
+ - qmtest/davinci.qms/preselections.qms/test_b2dimuon.qmt
+  . Revert previous changes. Decimal point difference was likely due to
+    some lack or configuration in python.
 
 ! 2008-11-12 - Juan PALACIOS
  - python/DaVinci/Configuration.py
