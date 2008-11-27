@@ -4,6 +4,12 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2008-11-27 - Gloria CORTI
+ - #BUG 44666
+   Remove obsolete options for particle gun. They are no longer valid since
+   ParticleGun v6r0. Example options are now available as 
+   $PARTICLEGUNSROOT/options/ParticleGun.opts as taken in Gauss.opts
+
 ! 2008-11-20 - Gloria CORTI
  - Remove SimVeloGeometry.opts where one line is wrong dure to change in name
    of a volume and replace it with SimVeloGeometry.py (by Thomas RUF).
