@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.263 2008-11-27 15:20:51 jpalac Exp $
+! $Id: release.notes,v 1.264 2008-11-27 15:36:48 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -10,6 +10,14 @@
 !-----------------------------------------------------------------------------
 
 ! 2008-11-27 - Juan PALACIOS
+ - python/DaVinci/Configuration.py
+  . Change name of configurable from DaVinciApp to DaVinci
+ - options/DaVinci-2008.py
+ - options/DaVinci-Default.py
+ - tests/options/DVTestB2DiMuon.py
+  . DaVinciApp() -> DaVinci()
+ - options/DaVinciMainSeq.opts
+  . Change name of LbAppInit instance from DaVinci to DaVinciAppInit
  - Added options/DC06_stripped_bbincl_lumi2.py
   . Example .py file defining data.
  - python/DaVinci/MicroDSTAlgorithm.py
