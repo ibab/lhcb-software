@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.261 2008-11-27 14:46:47 jpalac Exp $
+! $Id: release.notes,v 1.262 2008-11-27 15:16:18 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -10,6 +10,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2008-11-27 - Juan PALACIOS
+ - python/DaVinci/MicroDSTAlgorithm.py
+  . Removed. Now in MicroDSTConf, module MicroDST.
  - python/DaVinci/Configuration.py
   . Follow changes in LHCbApp() and ConfigurableUser. Options are now
         "EvtMax"          :  -1,
