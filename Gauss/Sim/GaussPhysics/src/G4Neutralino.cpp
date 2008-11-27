@@ -1,4 +1,4 @@
-// $Id: G4Neutralino.cpp,v 1.3 2008-06-10 17:07:49 gcorti Exp $
+// $Id: G4Neutralino.cpp,v 1.4 2008-11-27 20:18:13 robbep Exp $
 
 #include <fstream>
 #include <iomanip>
@@ -37,7 +37,7 @@ G4Neutralino * G4Neutralino::Definition()
                                 0,              0,             0,
                                 "supersymmetric", 0,  0,  1000022,
                                 false,     2.12e-3*ns,      NULL,
-                                true, "Neutralino" );
+                                false, "Neutralino" );
   }
   theInstance = reinterpret_cast<G4Neutralino*>(anInstance);
   return theInstance;

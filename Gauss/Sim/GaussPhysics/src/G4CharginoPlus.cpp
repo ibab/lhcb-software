@@ -1,4 +1,4 @@
-// $Id: G4CharginoPlus.cpp,v 1.1 2008-11-27 16:02:08 robbep Exp $
+// $Id: G4CharginoPlus.cpp,v 1.2 2008-11-27 20:18:13 robbep Exp $
 
 #include <fstream>
 #include <iomanip>
@@ -37,7 +37,7 @@ G4CharginoPlus * G4CharginoPlus::Definition()
                                 0,              0,             0,
                                 "supersymmetric", 0,  0,  1000024,
                                 false,     6.68e-1*ns,      NULL,
-                                true, "CharginoPlus" );
+                                false, "CharginoPlus" );
   }
   theInstance = reinterpret_cast<G4CharginoPlus*>(anInstance);
   return theInstance;
