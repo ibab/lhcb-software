@@ -1,4 +1,4 @@
-// $Id: FuncOps.h,v 1.19 2008-11-22 17:20:51 ibelyaev Exp $
+// $Id: FuncOps.h,v 1.20 2008-11-27 10:30:05 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FUNCOPS_H 
 #define LOKI_FUNCOPS_H 1
@@ -245,18 +245,34 @@ namespace LoKi
       static LoKi::FunctorFromFunctor<std::vector<TYPE2>,double>
       __min_value__       ( const Func& fun ) 
       { return LoKi::min_value<TYPE2>     ( fun ) ; }
+      // min value  
+      static LoKi::FunctorFromFunctor<std::vector<TYPE2>,double>
+      __min_value__       ( const Func& fun , const double val ) 
+      { return LoKi::min_value<TYPE2>     ( fun , val ) ; }
       // abs min value  
       static LoKi::FunctorFromFunctor<std::vector<TYPE2>,double>
       __min_abs_value__   ( const Func& fun ) 
       { return LoKi::min_abs_value<TYPE2>  ( fun ) ; }
+      // abs min value  
+      static LoKi::FunctorFromFunctor<std::vector<TYPE2>,double>
+      __min_abs_value__   ( const Func& fun , const double val ) 
+      { return LoKi::min_abs_value<TYPE2>  ( fun , val ) ; }
       // maximal value  
       static LoKi::FunctorFromFunctor<std::vector<TYPE2>,double>
       __max_value__       ( const Func& fun ) 
       { return LoKi::max_value<TYPE2>     ( fun ) ; }
+      // maximal value  
+      static LoKi::FunctorFromFunctor<std::vector<TYPE2>,double>
+      __max_value__       ( const Func& fun , const double val ) 
+      { return LoKi::max_value<TYPE2>     ( fun , val ) ; }
       // abs max value 
       static LoKi::FunctorFromFunctor<std::vector<TYPE2>,double>
       __max_abs_value__   ( const Func& fun ) 
       { return LoKi::max_abs_value<TYPE2>  ( fun ) ; }
+      // abs max value 
+      static LoKi::FunctorFromFunctor<std::vector<TYPE2>,double>
+      __max_abs_value__   ( const Func& fun , const double val ) 
+      { return LoKi::max_abs_value<TYPE2>  ( fun , val ) ; }
       // min element 
       static LoKi::FunctorFromFunctor<std::vector<TYPE2>,TYPE2>
       __min_element__     ( const Func& fun ) 
@@ -515,7 +531,7 @@ namespace LoKi
      *  @date   2007-11-30
      */
     template <class TYPE>
-    class  FunValOps 
+    class  FunValOps : public FuncOps_<std::vector<TYPE> > 
     {
     private:
       // ======================================================================
@@ -688,7 +704,7 @@ namespace LoKi
      *  @date   2007-11-30
      */
     template <class TYPE>
-    class CutValOps 
+    class CutValOps : public CutsOps_<std::vector<TYPE> > 
     {
     public:
       // ======================================================================

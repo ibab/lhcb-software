@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: tests.py,v 1.3 2008-02-11 10:06:58 ibelyaev Exp $
+# $Id: tests.py,v 1.4 2008-11-27 10:30:28 ibelyaev Exp $
 # =============================================================================
 ## @file   LoKiMC/tests.py
 #   
@@ -76,8 +76,9 @@ def test1() :
     print ' v>>(process(MCID)>>min_value(MCP)): %s'%(v>>(process(MCID)>>min_value(MCP)))
     print '(v>>min_element(MCID)).name()      : %s'%(v>>min_element(MCID)).name()
     print ' v>>min_value(MCID)                : %s'%(v>>min_value(MCID))
-    print '(v>>("e+"!=MCABSID)).size()        : %s'%(v>>('e+'!=MCABSID)).size()
-    print '(v>>select("mu+"!=MCABSID)).size() : %s'%(v>>select('mu+'!=MCABSID)).size()
+    print 'v>>("e+"!=MCABSID)>>MCSIZE         : %s'%(v>>('e+'!=MCABSID)>>MCSIZE)
+    print 'v>>("e+"!=MCABSID)>>MCSIZE         : %s'%(v>>('e+'!=MCABSID)>>MCSIZE)
+    print 'v>>select("mu+"!=MCABSID)>>MCEMPTY : %s'%(v>>select('mu+'!=MCABSID)>>~MCEMPTY)
   
 
 # =============================================================================

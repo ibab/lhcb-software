@@ -283,6 +283,8 @@ MCPipes     = LoKi.Functor             ( _vp , _vp      )
 MCPipe      = LoKi.FunctorFromFunctor  ( _vp , _vp      )
 MCFunVals   = LoKi.Functor             ( _vp , 'double' )
 MCFunVal    = LoKi.FunctorFromFunctor  ( _vp , 'double' )
+MCCutVals   = LoKi.Functor             ( _vp , bool     )
+MCCutVal    = LoKi.FunctorFromFunctor  ( _vp , bool     )
 MCElements  = LoKi.Functor             ( _vp , _MCP     ) 
 MCElement   = LoKi.FunctorFromFunctor  ( _vp , _MCP     ) 
 MCSources   = LoKi.Functor             ('void', _vp     )
@@ -294,6 +296,8 @@ MCVPipes    = LoKi.Functor             ( _vv , _vv      )
 MCVPipe     = LoKi.FunctorFromFunctor  ( _vv , _vv      )
 MCVFunVals  = LoKi.Functor             ( _vv , 'double' )
 MCVFunVal   = LoKi.FunctorFromFunctor  ( _vv , 'double' )
+MCVCutVals  = LoKi.Functor             ( _vv , bool     )
+MCVCutVal   = LoKi.FunctorFromFunctor  ( _vv , bool     )
 MCVElements = LoKi.Functor             ( _vv , _MCV     ) 
 MCVElement  = LoKi.FunctorFromFunctor  ( _vv , _MCV     ) 
 MCVSources  = LoKi.Functor             ('void', _vv     )
@@ -301,6 +305,11 @@ MCVSource   = LoKi.FunctorFromFunctor  ('void', _vv     )
 
 
 MCSOURCE    = LoKi.MCParticles.SourceTES
+
+MCEMPTY     = LoKi.Functors.Empty ( _MCP ) ()
+MCVEMPTY    = LoKi.Functors.Empty ( _MCV ) ()
+MCSIZE      = LoKi.Functors.Size  ( _MCP ) ()
+MCVSIZE     = LoKi.Functors.Size  ( _MCV ) ()
 
 # =============================================================================
 if '__main__' == __name__ :

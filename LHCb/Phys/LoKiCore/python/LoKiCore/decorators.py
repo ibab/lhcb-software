@@ -108,66 +108,14 @@ def getInherited ( name , base ) :
     return result                                           ## RETURN
 # =============================================================================
 ## Decorate the functions using the proper adapters 
-def decorateFunctions ( funcs , calls , opers ) :
+def decorateCalls ( funcs , calls ) :
     """
-    Decorate the functions using the proper adapters
+    Decorate the functions calls 
     """
-
+    
     _call_      = None
-    _lt_        = None 
-    _le_        = None 
-    _gt_        = None 
-    _ge_        = None 
-    _eq_        = None 
-    _ne_        = None 
-    _add_       = None 
-    _sub_       = None 
-    _mul_       = None 
-    _div_       = None 
-    _radd_      = None 
-    _rsub_      = None 
-    _rmul_      = None 
-    _rdiv_      = None 
-    _rshift_    = None 
-    _rrshift_   = None 
-    _neg_       = None 
-    _abs_       = None 
-    _pow_       = None 
-    _rpow_      = None 
-
-    _sin_       = None 
-    _cos_       = None 
-    _tah_       = None 
-    _sinh_      = None 
-    _cosh_      = None 
-    _tanh_      = None 
-    _asin_      = None 
-    _acos_      = None 
-    _atah_      = None 
-    _atah2_     = None 
-    _exp_       = None 
-    _log_       = None 
-    _log10_     = None 
-    _sqrt_      = None 
-    _cbrt_      = None 
-    _pow2_      = None 
-    _pow3_      = None 
-    _pow4_      = None 
-    _min_       = None 
-    _max_       = None 
-    _monitor_   = None 
-    _equal_to_  = None 
-
-    _yields_          = None
-    _process_         = None
-    _min_value_       = None
-    _max_value_       = None
-    _min_abs_value_   = None
-    _max_abs_value_   = None
-    _min_element_     = None
-    _max_element_     = None
-    _min_abs_element_ = None
-    _max_abs_element_ = None
+    _rshift_    = None
+    _rrshift_   = None
     
     # operator():
     if hasattr ( calls , '__call__' ) :
@@ -213,7 +161,80 @@ def decorateFunctions ( funcs , calls , opers ) :
             """
             return calls.__rrshift__ ( s , a )
         _rrshift_ . __doc__  += calls.__rrshift__ . __doc__
-            
+                    
+    # decorate the functions 
+    for fun in funcs :
+        
+        # finally redefine the methods:
+        if _call_            : fun . __call__    = _call_      # operator() 
+        if _rrshift_         : fun . __rrshift__ = _rrshift_   # (right) operator>> 
+        if _rshift_          : fun . __rshift__  = _rshift_    #         operator>> 
+        
+        for attr in ( '__or__' , '__and__' ) :
+            if hasattr ( fun , attr ) : setattr ( fun , attr , None )
+
+    return funcs
+
+# ================================================================================
+## Decorate the function operations  using the proper adapters 
+def decorateFunctionOps ( funcs , opers ) :
+    """
+    Decorate the functions using the proper adapters
+    """
+
+    _lt_        = None 
+    _le_        = None 
+    _gt_        = None 
+    _ge_        = None 
+    _eq_        = None 
+    _ne_        = None 
+    _add_       = None 
+    _sub_       = None 
+    _mul_       = None 
+    _div_       = None 
+    _radd_      = None 
+    _rsub_      = None 
+    _rmul_      = None 
+    _rdiv_      = None 
+    _neg_       = None 
+    _abs_       = None 
+    _pow_       = None 
+    _rpow_      = None 
+
+    _sin_       = None 
+    _cos_       = None 
+    _tan_       = None 
+    _sinh_      = None 
+    _cosh_      = None 
+    _tanh_      = None 
+    _asin_      = None 
+    _acos_      = None 
+    _atan_      = None 
+    _atan2_     = None 
+    _exp_       = None 
+    _log_       = None 
+    _log10_     = None 
+    _sqrt_      = None 
+    _cbrt_      = None 
+    _pow2_      = None 
+    _pow3_      = None 
+    _pow4_      = None 
+    _min_       = None 
+    _max_       = None 
+    _monitor_   = None 
+    _equal_to_  = None 
+
+    _yields_          = None
+    _process_         = None
+    _min_value_       = None
+    _max_value_       = None
+    _min_abs_value_   = None
+    _max_abs_value_   = None
+    _min_element_     = None
+    _max_element_     = None
+    _min_abs_element_ = None
+    _max_abs_element_ = None
+    
         
     # comparisons: operator <
     if hasattr ( opers , '__lt__' ) :
@@ -950,7 +971,6 @@ def decorateFunctions ( funcs , calls , opers ) :
     for fun in funcs :
         
         # finally redefine the methods:
-        if _call_            : fun . __call__    = _call_      # operator() 
         if _lt_              : fun . __lt__      = _lt_        # operator<
         if _le_              : fun . __le__      = _le_        # operator<=
         if _gt_              : fun . __gt__      = _gt_        # operator>
@@ -965,8 +985,6 @@ def decorateFunctions ( funcs , calls , opers ) :
         if _rsub_            : fun . __rsub__    = _rsub_      # right-operator-
         if _rmul_            : fun . __rmul__    = _rmul_      # right-operator*
         if _rdiv_            : fun . __rdiv__    = _rdiv_      # right-operator/
-        if _rrshift_         : fun . __rrshift__ = _rrshift_   # (right) operator>> 
-        if _rshift_          : fun . __rshift__  = _rshift_    #         operator>> 
         if _neg_             : fun . __neg__     = _neg_       #  
         if _abs_             : fun . __abs__     = _abs_       # 
         if _pow_             : fun . __pow__     = _pow_       # 
@@ -1006,21 +1024,29 @@ def decorateFunctions ( funcs , calls , opers ) :
         if _min_abs_element_ : fun . __min_abs_element__ = _min_abs_element_  #
         if _max_abs_element_ : fun . __max_abs_element__ = _max_abs_element_  #
         
-        for attr in ( '__or__' , '__and__' ) :
+        for attr in ( '__or__'     ,
+                      '__and__'    ,
+                      '__invert__' ) :
             if hasattr ( fun , attr ) : setattr ( fun , attr , None )
             
     return funcs                                          ## RETURN 
 # =============================================================================        
+## Decorate the function operations  using the proper adapters 
+def decorateFunctions ( funcs , calls , opers ) :
+    """
+    decorate the functions  (everything whiich evaluated to double)
+    """
+    funcs = decorateCalls ( funcs , calls )
+    return decorateFunctionOps ( funcs , opers ) 
+
+# =============================================================================
 ## Decorate the predicates using the proper adapters 
-def decoratePredicates ( cuts , calls , opers ) :
+def decoratePredicateOps ( cuts , opers ) :
     """ Decorate the predicates using the proper adapters """
 
-    _call_    = None
     _or_      = None
     _and_     = None
     _invert_  = None
-    _rshift_  = None
-    _rrshift_ = None
     _monitor_ = None
     _switch_  = None
     _select_  = None
@@ -1028,49 +1054,6 @@ def decoratePredicates ( cuts , calls , opers ) :
     _count_   = None
     _has_     = None
     
-    # operator()
-    if hasattr ( calls , '__call__' ) :
-        def _call_ (s,a) :
-            """
-            Invoke the functional operator: cut(arg)
-            
-            >>> arg = ...
-            >>> result = cut(arg)
-            
-            Uses:\n
-            """
-            result = calls.__call__ (s,a)
-            if result : return True
-            return False 
-        _call_    . __doc__  += calls.__call__     . __doc__
-
-    # streamers: right right shift 
-    if hasattr ( calls , '__rrshift__' ) :
-        def _rrshift_ ( s , a ) :
-            """
-            Streamer (filter here)
-            
-            >>> a = ...
-            >>> predicate  = ...
-            >>> result = a >> predicate
-            
-            """
-            return calls.__rrshift__ ( s , a )
-        _rrshift_ . __doc__  += calls.__rrshift__  . __doc__ 
-
-    # streamers: right shift 
-    if hasattr ( calls , '__rshift__' ) :
-        def _rshift_ (s, *a) :
-            """
-            
-            NO DOCS YET
-            
-            Uses:\n
-            """
-            return calls.__rshift__(s,*a)
-        _rshift_  . __doc__  += calls.__rshift__   . __doc__
-        
-
     # boolean operations: OR 
     if hasattr ( opers , '__or__' ) :
         def _or_  (s,a) :
@@ -1210,12 +1193,9 @@ def decoratePredicates ( cuts , calls , opers ) :
     # perform the actual decoration 
     for cut in cuts : 
 
-        if _call_    : cut .__call__     = _call_      # operator() 
         if _or_      : cut .__or__       = _or_        # operator||
         if _and_     : cut .__and__      = _and_       # operator&&
         if _invert_  : cut .__invert__   = _invert_    # operator!
-        if _rshift_  : cut . __rshift__  = _rshift_    #         operator>>
-        if _rrshift_ : cut .__rrshift__  = _rrshift_   # (right) operator>>
         if _monitor_ : cut . __monitor__ = _monitor_   # monitoring 
         if _switch_  : cut . __switch__  = _switch_    # switch 
         if _select_  : cut . __select__  = _select_    # select
@@ -1229,6 +1209,17 @@ def decoratePredicates ( cuts , calls , opers ) :
             if hasattr ( cut , attr ) : setattr ( cut , attr , None )
            
     return cuts                                          ## RETURN 
+
+
+# =============================================================================        
+## Decorate the function operations  using the proper adapters 
+def decoratePredicates ( funcs , calls , opers ) :
+    """
+    decorate the functions  (everything whiich evaluated to double)
+    """
+    funcs = decorateCalls ( funcs , calls )
+    return decoratePredicateOps ( funcs , opers ) 
+
 # =============================================================================
 ## get all functors and decorate them 
 def getAndDecorateFunctions  ( name , base , calls , opers ) :
@@ -1290,11 +1281,12 @@ def decorateMaps ( funcs , opers ) :
     """
     Decorate all mapping functions
     """
-
+    
     _call_    = None
     _rshift_  = None
     _rrshift_ = None
     _tee_     = None
+
     
     ## Use the vector function 
     if hasattr ( opers , '__call__' ) : 
@@ -1357,14 +1349,13 @@ def decorateMaps ( funcs , opers ) :
             return opers.__tee__ ( s )
         # documentation        
         _tee_ .__doc__  += opers . __tee__     . __doc__
-                
+        
     # finally redefine the functions:
     for fun in funcs :
         if _call_    : fun . __call__    =  _call_ 
         if _rrshift_ : fun . __rrshift__ =  _rrshift_ 
         if _rshift_  : fun . __rshift__  =  _rshift_ 
-        if _tee_     : fun . __tee__     =  _tee_ 
-
+        if _tee_     : fun . __tee__     =  _tee_
         
             
     return funcs                                 ## RETURN

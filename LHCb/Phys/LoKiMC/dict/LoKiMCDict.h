@@ -1,4 +1,4 @@
-// $Id: LoKiMCDict.h,v 1.9 2007-12-09 18:20:17 ibelyaev Exp $
+// $Id: LoKiMCDict.h,v 1.10 2008-11-27 10:30:27 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKIMCDICT_H 
 #define LOKI_LOKIMCDICT_H 1
@@ -37,13 +37,44 @@
  *  @date 2007-12-01
  */
 // ============================================================================
+// the specific printout
+// ===========================================================================     
+template <>
+std::ostream& 
+LoKi::Functors::Empty<const LHCb::MCParticle*>::fillStream
+( std::ostream& s ) const { return s << "MCEMPTY" ; }
+// ============================================================================     
+// the specific printpout
+// ============================================================================     
+template <>
+std::ostream& 
+LoKi::Functors::Size<const LHCb::MCParticle*>::fillStream
+( std::ostream& s ) const { return s << "MCSIZE" ; }
+// ============================================================================
+// the specific printout
+// ===========================================================================     
+template <>
+std::ostream& 
+LoKi::Functors::Empty<const LHCb::MCVertex*>::fillStream
+( std::ostream& s ) const { return s << "MCVEMPTY" ; }
+// ============================================================================     
+// the specific printpout
+// ============================================================================     
+template <>
+std::ostream& 
+LoKi::Functors::Size<const LHCb::MCVertex*>::fillStream
+( std::ostream& s ) const { return s << "MCVSIZE" ; }
+// ============================================================================
 namespace
 {
+  // ==========================================================================
   struct _Instantiations 
   {
+    // ========================================================================
     /// fictive constructor 
     _Instantiations () ;
-   // the basic types
+    // ========================================================================
+    // the basic types
     LoKi::Types::MCRange                          m_r1 ;
     LoKi::Types::MCVRange                         m_r2 ;
     // range lists
@@ -72,6 +103,8 @@ namespace
     LoKi::Dicts::PipeOps<const LHCb::MCVertex*>      m_fo4  ;
     LoKi::Dicts::FunValOps<const LHCb::MCParticle*>  m_fo5  ;
     LoKi::Dicts::FunValOps<const LHCb::MCVertex*>    m_fo6  ;
+    LoKi::Dicts::CutValOps<const LHCb::MCParticle*>  m_fo51 ;
+    LoKi::Dicts::CutValOps<const LHCb::MCVertex*>    m_fo61 ;
     LoKi::Dicts::ElementOps<const LHCb::MCParticle*> m_fo7  ;
     LoKi::Dicts::ElementOps<const LHCb::MCVertex*>   m_fo8  ;
     LoKi::Dicts::SourceOps<const LHCb::MCParticle*>  m_fo9  ;
@@ -84,7 +117,14 @@ namespace
     /// the special operators for identifiers
     LoKi::Dicts::PIDOps<LoKi::MCParticles::Identifier>    m_i1 ;
     LoKi::Dicts::PIDOps<LoKi::MCParticles::AbsIdentifier> m_i2 ;
+    // ========================================================================
+    LoKi::Functors::Empty<const LHCb::MCParticle*>  m_e1 ;
+    LoKi::Functors::Empty<const LHCb::MCVertex*>    m_e2 ;    
+    LoKi::Functors::Size<const LHCb::MCParticle*>   m_s1 ;
+    LoKi::Functors::Size<const LHCb::MCVertex*>     m_s2 ;    
+    // ========================================================================
    } ;  
+  //===========================================================================
 } // end of anonymout namespace 
 // ============================================================================
 // The END 
