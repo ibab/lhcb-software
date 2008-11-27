@@ -1,4 +1,4 @@
-// $Id: CombineTaggersPID.cpp,v 1.1 2008-11-11 20:47:12 musy Exp $
+// $Id: CombineTaggersPID.cpp,v 1.2 2008-11-27 07:21:05 cattanem Exp $
 #include "CombineTaggersPID.h"
 
 //-----------------------------------------------------------------------------
@@ -136,7 +136,7 @@ int CombineTaggersPID::combineTaggers(FlavourTag& theTag, std::vector<Tagger*>& 
   //put pionSS if Bu, and kaonSS if Bs
   bool kaonSS=false;
   bool pionSS=false;
-  if(theTag.taggedB()->particleID().hasUp() or theTag.taggedB()->particleID().hasDown()){
+  if(theTag.taggedB()->particleID().hasUp() || theTag.taggedB()->particleID().hasDown()){
     pionSS=true;
     debug() << "hasdown" << endmsg;
   }
@@ -144,7 +144,7 @@ int CombineTaggersPID::combineTaggers(FlavourTag& theTag, std::vector<Tagger*>& 
     kaonSS=true;
     debug() << "has strange" << endmsg;
   }
-  if ((kaonSS==false) and (pionSS==false)) return 0;
+  if ((kaonSS==false) && (pionSS==false)) return 0;
   
   //Fill the taggers
   for(std::vector<Tagger*>::const_iterator iter = vtg.begin(); iter != vtg.end(); ++iter){
@@ -169,7 +169,7 @@ int CombineTaggersPID::combineTaggers(FlavourTag& theTag, std::vector<Tagger*>& 
       debug() << "Kaon decision =      " << itag[2] << endmsg;
       if(itag[2] !=0 ) theTag.addTagger(**iter);
     }
-    if(((*iter)->type() == Tagger::SS_Kaon) or ((*iter)->type() == Tagger::SS_Pion)){      
+    if(((*iter)->type() == Tagger::SS_Kaon) || ((*iter)->type() == Tagger::SS_Pion)){      
       debug() << "Kaon/Pion SS tool present    " << endmsg;
       ostaggers.push_back(*iter);
       itag[3] = (*iter)->decision();
@@ -217,11 +217,11 @@ int CombineTaggersPID::combineTaggers(FlavourTag& theTag, std::vector<Tagger*>& 
       if (pionSS==true) m_index[ic]=m_pid_cats_bu[ic];
       if (m_index[ic]==index){
         debug() << "Index =    " << m_index[ic] << " = " << index << endmsg;     
-        if ((ic>=0) and (ic<=10)) catt=5;
-        if ((ic>=11) and (ic<=18)) catt=4;
-        if ((ic>=19) and (ic<=25)) catt=3;
-        if ((ic>=26) and (ic<=32)) catt=2;
-        if ((ic>=33) and (ic<=39)) catt=1;
+        if ((ic>=0) && (ic<=10)) catt=5;
+        if ((ic>=11) && (ic<=18)) catt=4;
+        if ((ic>=19) && (ic<=25)) catt=3;
+        if ((ic>=26) && (ic<=32)) catt=2;
+        if ((ic>=33) && (ic<=39)) catt=1;
         if (ic>=40) catt=0;
       }
     }
