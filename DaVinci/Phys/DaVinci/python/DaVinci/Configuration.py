@@ -1,14 +1,14 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.8 2008-11-27 14:45:51 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.9 2008-11-27 15:36:09 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
 import GaudiKernel.ProcessJobOptions
 
-class DaVinciApp(LHCbConfigurableUser) :
+class DaVinci(LHCbConfigurableUser) :
     __slots__ = {
         "EvtMax"          :  -1,
         "SkipEvents"      :   0,
