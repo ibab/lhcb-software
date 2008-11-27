@@ -1,5 +1,5 @@
 //=================================================================
-// $Id: DaVinciMainSeq.opts,v 1.4 2008-02-07 15:50:31 jpalac Exp $
+// $Id: DaVinciMainSeq.opts,v 1.5 2008-11-27 15:36:31 jpalac Exp $
 //=================================================================
 // Start DaVinci sequence
 //
@@ -14,7 +14,7 @@ DaVinciMainSeq.MeasureTime = true ;
 // and need MCParticle -> Track linking.
 //#include "$DAVINCIROOT/options/DaVinciMainSeqFixes.opts"
 //
-DaVinciMainSeq.Members += { "LbAppInit/DaVinci" };
-DaVinci.OutputLevel = 4 ;
+DaVinciMainSeq.Members += { "LbAppInit/DaVinciAppInit" };
+DaVinciAppInit.OutputLevel = 4 ;
 
 
