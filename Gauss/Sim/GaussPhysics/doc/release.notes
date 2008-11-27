@@ -4,6 +4,9 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
+! 2008-11-27 - Patrick Robbe for Neal Gueissaz
+ - Add G4Neutralino and G4Charginos definitions
+
 !====================== GaussPhysics v6r0 2008-06-27 =========================
 ! 2008-06-17 - Gloria CORTI
  - Adapt to change in name of EM physics list for non default one introduced
