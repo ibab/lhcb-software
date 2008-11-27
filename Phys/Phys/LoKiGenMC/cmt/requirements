@@ -1,38 +1,39 @@
-# $Id: requirements,v 1.20 2008-11-04 12:43:47 ibelyaev Exp $ 
+# $Id: requirements,v 1.21 2008-11-27 10:29:09 ibelyaev Exp $ 
 # =============================================================================
 # Created    : 2006-01-16
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # =============================================================================
-package            LoKiGenMC
-version            v8r0
+package           LoKiGenMC
+version           v8r1
 
 # ================ structure ==================================================
-branches           cmt doc src dict python LoKi
+branches          cmt doc src dict python LoKi
 
 # ================ dependencies ===============================================
-use                LoKiGen         v* Phys 
-use                LoKiMC          v* Phys 
-use                DaVinciMCKernel v* Phys 
-use                Relations       v* Kernel 
+use               LoKiGen         v* Phys 
+use               LoKiMC          v* Phys 
+use               DaVinciMCKernel v* Phys 
+use               Relations       v* Kernel 
 
 # ================ own includes ===============================================
 apply_pattern install_more_includes  more=LoKi
 apply_pattern install_python_modules 
 
 # ================ constituents ===============================================
-library            LoKiGenMCLib    ../src/*.cpp 
-library            LoKiGenMC       ../src/Components/*.cpp
+library           LoKiGenMCLib    ../src/*.cpp 
+library           LoKiGenMC       ../src/Components/*.cpp
 
-# ============== Produce LCG dictionary =======================================
-apply_pattern    reflex_dictionary                                   \
-                 dictionary=LoKiGenMC                                \
-                 headerfiles=$(LOKIGENMCROOT)/dict/LoKiGenMCDict.h   \
-                 selectionfile=$(LOKIGENMCROOT)/dict/LoKiGenMC.xml   \  
-                 options=" -U__MINGW32__ "
+# ================ Produce LCG dictionary =====================================
+apply_pattern     reflex_dictionary                                   \
+                  dictionary=LoKiGenMC                                \
+                  headerfiles=$(LOKIGENMCROOT)/dict/LoKiGenMCDict.h   \
+                  selectionfile=$(LOKIGENMCROOT)/dict/LoKiGenMC.xml   \  
+                  options=" -U__MINGW32__ "
 
 # ================ patterns ===================================================
-apply_pattern      linker_library    library=LoKiGenMCLib
-apply_pattern      component_library library=LoKiGenMC
+apply_pattern     linker_library    library=LoKiGenMCLib
+apply_pattern     component_library library=LoKiGenMC
+apply_pattern     QMTest 
 
 # =============================================================================
 # The END
