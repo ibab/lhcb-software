@@ -1,9 +1,7 @@
 """
 High level configuration tools for DaVinci
-At the moment this doesn't do anything. Waiting for re-structuring of
-configuratables.
 """
-__version__ = "$Id: Configuration.py,v 1.7 2008-11-25 14:44:13 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.8 2008-11-27 14:45:51 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -12,16 +10,20 @@ import GaudiKernel.ProcessJobOptions
 
 class DaVinciApp(LHCbConfigurableUser) :
     __slots__ = {
-        "EvtMax"          :  -1, # Maximum number of events to process
-        "SkipEvents"      :   0,     # events to skip
-        "mainOptions"     : '$DAVINCIROOT/options/DaVinci.py',
-        "DDDBtag"         : '', #
-        "CondDBtag"         : '', #
-        "DataType"       : 'DC06',
+        "EvtMax"          :  -1,
+        "SkipEvents"      :   0,
+        "DataType"        : 'DC06', # Data type, can be ['DC06','2008']
+        "DDDBtag"         : '',     # Tag for DDDB. Default as set in DDDBConf for DataType
+        "CondDBtag"       : '',     # Tag for CondDB. Default as set in DDDBConf for DataType
         "UseOracle"       : False,
+        "Simulation"      : False,  # set to True to use SimCond
+        "MainOptions"     : '$DAVINCIROOT/options/DaVinci.py',
         "Input"           : [],
-        "userAlgorithms"  : []
+        "UserAlgorithms"  : []
         }
+
+    __used_configurables__ = [ LHCbApp ]
+
 
     def defineEvents(self):
         evtMax = self.getProp("EvtMax")
@@ -47,20 +49,23 @@ class DaVinciApp(LHCbConfigurableUser) :
             return ApplicationMgr().getDefaultProperties()["EvtMax"]
 
     def defineDB(self):
-        self.setOtherProps(LHCbApp(),["DataType","CondDBtag","DDDBtag","UseOracle"]) 
-
+        self.setOtherProps(LHCbApp(),["DataType","CondDBtag","DDDBtag","UseOracle", "Simulation"]) 
+        # Special options for DC06 data processing
+        if self.getProp("DataType") == "DC06" :
+            LHCbApp().Simulation = True
+            
     def hepMCBackComp(self) :
         # Special options for DC06 data processing
-        if LHCbApp().getProp("DDDBtag").find("DC06") != -1 :
+        if self.getProp("DataType").find("DC06") != -1 :
             ApplicationMgr().Dlls += [ "HepMCBack" ]
 
-    def applyConf(self):
-#        GaudiKernel.ProcessJobOptions.PrintOff()
-        importOptions( self.getProp( "mainOptions" ) )
+    def __apply_configuration__(self):
+        GaudiKernel.ProcessJobOptions.PrintOff()
+        importOptions( self.getProp( "MainOptions" ) )
         self.defineEvents()
         self.defineInput()
         self.defineDB()
         self.hepMCBackComp()
-        for alg in self.getProp("userAlgorithms"):
+        for alg in self.getProp("UserAlgorithms"):
             ApplicationMgr().TopAlg += [ alg ]
         LHCbApp().applyConf()
