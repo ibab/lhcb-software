@@ -3,7 +3,7 @@ import sys, os, time, gaudiweb
 # Standard global variables
 gaudi_app       = None
 basePath        = os.environ['ONLINEKERNELROOT']
-default_users = [ ('administrator', 'admin'), ('frankm', 'hallo'), ('LHCb', 'CKM-best')
+default_users = [ ('administrator', 'admin_oder_was'), ('frankm', 'hallo_wer_bin_ich')
         ]
 servicePort = 8081
 startup = 'startAll'
