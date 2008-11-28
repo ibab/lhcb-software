@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.264 2008-11-27 15:36:48 jpalac Exp $
+! $Id: release.notes,v 1.265 2008-11-28 13:09:35 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,17 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2008-11-28 - Juan PALACIOS
+ - python/DaVinci/Configuration.py
+  . Remove obsolete slots and HepMCBack code. 
+  . LHCbApp() and DDDBConf() now take care of a lot of things.
+ - options/DaVinci-2008.py
+ - options/DaVinci-Default.py
+ - tests/options/DVTestB2DiMuon.py
+  . Remove DDDBTag, CondDBTag, UseOracle
+ - options/DaVinciCommon.opts
+  . Change include of obsolete $STDOPTS/DstDicts.opts to $GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts
 
 ! 2008-11-27 - Juan PALACIOS
  - python/DaVinci/Configuration.py
