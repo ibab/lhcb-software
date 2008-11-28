@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.h,v 1.29 2008-04-14 15:42:21 krinnert Exp $
+// $Id: DeVeloRType.h,v 1.30 2008-11-28 16:27:55 krinnert Exp $
 #ifndef VELODET_DEVELORTYPE_H 
 #define VELODET_DEVELORTYPE_H 1
 
@@ -134,7 +134,7 @@ public:
 
   /// Return the local pitch of the sensor for a given strip +/- fraction
   inline double rPitch(unsigned int strip, double fraction) const {
-    return exp(m_pitchSlope*(strip+fraction))*m_innerPitch;
+    return exp(m_pitchSlope*((strip%512)+fraction))*m_innerPitch;
   }
 
   /// Return the local pitch at a given radius 
