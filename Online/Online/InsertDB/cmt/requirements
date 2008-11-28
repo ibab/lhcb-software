@@ -12,9 +12,8 @@ use GaudiAud     v*
 use OnlineHistDB v* Online
 
 
-library InsertDB ../src/InsertDB_dll.cpp ../src/InsertDB_load.cpp ../src/InsertDB.cpp ../src/InsertDB.h  
+application InsertDB ../src/InsertDB.cpp ../src/InsertDB.h  
 
-apply_pattern component_library library=InsertDB
 
 macro_remove cpplinkflags '-Wl,--as-needed'
 macro_remove componentshr_linkopts '-Wl,--as-needed'
