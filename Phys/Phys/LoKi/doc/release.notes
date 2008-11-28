@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.20 2008-11-17 15:53:54 cattanem Exp $ 
+! $Id: release.notes,v 1.21 2008-11-28 16:55:13 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKi
 ! Responsible : Vanya BELYAEV
 ! Purpose     : The suite for the whole  LoKi project 
 ! -----------------------------------------------------------------------------
+
+! 2008-11-28 - Vanya BELYAEV
+
+ - remove the library and the code 
+ - version incremen tto v8r1
 
 !=========================== LoKi v8r0 2008-11-17 =============================
 ! 2008-11-02 - Vanya BELYAEV
@@ -98,6 +103,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.20  2008/11/17 15:53:54  cattanem
+! v8r0
+!
 ! Revision 1.19  2008/11/02 21:21:50  ibelyaev
 !  remove the library
 !
