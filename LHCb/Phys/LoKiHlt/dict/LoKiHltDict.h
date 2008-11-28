@@ -1,4 +1,4 @@
-// $Id: LoKiHltDict.h,v 1.3 2008-10-19 16:28:37 ibelyaev Exp $
+// $Id: LoKiHltDict.h,v 1.4 2008-11-28 17:11:48 ibelyaev Exp $
 // ============================================================================
 #ifndef DICT_LOKIDAQDICT_H 
 #define DICT_LOKIDAQDICT_H 1
@@ -250,7 +250,9 @@ namespace
     LoKi::Constant<const LHCb::HltDecReports*,bool>               m_co022 ;
     /// fictive non-existent constructor 
     _Instantiations() ;
+    // ========================================================================
   };  
+  // ==========================================================================
 } // end of anonymous namespace 
 // ============================================================================
 // The END 
