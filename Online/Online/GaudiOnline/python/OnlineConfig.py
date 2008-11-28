@@ -70,6 +70,22 @@ def evtMerger(buffer='Events',name='Writer',location='/Event/DAQ/RawEvent',routi
   return merger
   
 #------------------------------------------------------------------------------------------------
+def fidAdder(name='FidAdder',location='/Event/DAQ/RawEvent',routing=0x1):
+  manip                   = Configs.LHCb__FileIDManipulator(name)
+  manip.Add               = 1
+  manip.DataType          = 1
+  manip.BankLocation      = location
+  return manip
+  
+#------------------------------------------------------------------------------------------------
+def fidRemover(name='FidAdder',location='/Event/DAQ/RawEvent',routing=0x1):
+  manip                   = Configs.LHCb__FileIDManipulator(name)
+  manip.Add               = 0
+  manip.DataType          = 1
+  manip.BankLocation      = location
+  return manip
+  
+#------------------------------------------------------------------------------------------------
 def serialWriter(name='DstWriter',location='/Event/GaudiSerialize'):
   svc    = CFG.EventPersistencySvc()
   ser    = Configs.SerializeCnvSvc('SerializeCnvSvc')
