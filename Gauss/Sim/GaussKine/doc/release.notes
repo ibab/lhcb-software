@@ -4,6 +4,10 @@
 ! Purpose     : Code to exchange kinematic information with Geant4
 !-----------------------------------------------------------------------------
 
+! 2008-11-28 - Patrick Robbe
+ - GenerationToSimulation: update G4 particles from ppSvc (moved
+   from GiGa)
+
 ! 2008-11-05 - Patrick Robbe
  - SimulationToMCTruth: removes extra status from the list of particles
    to convert.

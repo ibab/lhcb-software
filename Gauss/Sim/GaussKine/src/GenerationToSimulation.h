@@ -1,4 +1,4 @@
-// $Id: GenerationToSimulation.h,v 1.1 2008-10-20 08:08:54 robbep Exp $
+// $Id: GenerationToSimulation.h,v 1.2 2008-11-28 15:06:59 robbep Exp $
 #ifndef GENERATIONTOSIMULATION_H 
 #define GENERATIONTOSIMULATION_H 1
 
@@ -81,6 +81,7 @@ private:
   double      m_travelLimit ;        ///< Max value of distance in detector for Geant4
   bool        m_lookForUnknownParticles ; ///< Check if the particles are known to G4
   bool        m_skipGeant4 ;        ///< Do not transmit anything to Geant4 (usuful for fast MC) 
+  bool        m_updateG4ParticleProperties ; ///< Update G4 properties for masses
 
   std::string m_generationLocation ; ///< Location in TES of input HepMC events
   std::string m_particlesLocation ;  ///< Location in TES of output MCParticles

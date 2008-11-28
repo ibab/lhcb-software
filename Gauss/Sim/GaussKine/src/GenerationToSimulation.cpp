@@ -1,4 +1,4 @@
-// $Id: GenerationToSimulation.cpp,v 1.3 2008-11-05 17:25:15 robbep Exp $
+// $Id: GenerationToSimulation.cpp,v 1.4 2008-11-28 15:06:59 robbep Exp $
 // Include files 
 // local
 #include "GenerationToSimulation.h"
@@ -8,6 +8,8 @@
 #include "GaudiKernel/Vector3DTypes.h"
 #include "GaudiKernel/Transform4DTypes.h"
 #include "GaudiKernel/PhysicalConstants.h"
+#include "GaudiKernel/IParticlePropertySvc.h"
+#include "GaudiKernel/ParticleProperty.h"
 
 // from GiGa
 #include "GiGa/IGiGaSvc.h" 
@@ -21,6 +23,7 @@
 #include "G4PrimaryVertex.hh"
 #include "G4PrimaryParticle.hh"
 #include "G4ParticleTable.hh"
+#include "G4ParticlePropertyTable.hh"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : GenerationToSimulation
@@ -52,6 +55,7 @@ GenerationToSimulation::GenerationToSimulation( const std::string& name,
   declareProperty( "TravelLimit" , m_travelLimit = 1e-10*m ) ;
   declareProperty( "LookForUnknownParticles" , m_lookForUnknownParticles = false ) ;
   declareProperty( "SkipGeant" , m_skipGeant4 = false ) ;
+  declareProperty( "UpdateG4ParticleProperties" , m_updateG4ParticleProperties = true ) ;
 }
 //=============================================================================
 // Destructor
@@ -67,6 +71,27 @@ StatusCode GenerationToSimulation::initialize() {
   
   debug() << "==> Initialize" << endmsg;
   m_gigaSvc = svc<IGiGaSvc>( m_gigaSvcName, true ); // Create if necessary
+  
+  // If requested by option, update Geant4 particle properties
+  // from Gaudi/LHCb ParticlePropertySvc
+  if ( m_updateG4ParticleProperties ) {
+    IParticlePropertySvc * ppSvc = 
+      svc< IParticlePropertySvc >( "ParticlePropertySvc" , true ) ;
+      
+    G4ParticlePropertyTable* PPT = G4ParticlePropertyTable::GetParticlePropertyTable();
+    G4ParticleTable * particleTable = G4ParticleTable::GetParticleTable() ;
+    for ( int i = 0 ; i < particleTable -> size() ; ++i ) {
+      G4ParticleDefinition * PDef = particleTable -> GetParticle( i ) ;
+      ParticleProperty * pp = ppSvc -> findByStdHepID( PDef -> GetPDGEncoding() ) ;
+      if ( 0 != pp ) {
+        G4ParticlePropertyData * PPData = PPT -> GetParticleProperty( PDef ) ;
+        PPData -> SetPDGMass( pp -> mass() ) ;
+        PPData -> SetPDGLifeTime( pp -> lifetime() ) ;
+        PPT -> SetParticleProperty( *PPData ) ;
+      }
+    }
+    release( ppSvc ) ;
+  }  
   
   return StatusCode::SUCCESS;
 }
