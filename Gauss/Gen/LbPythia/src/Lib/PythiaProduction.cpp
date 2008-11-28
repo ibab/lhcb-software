@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.cpp,v 1.19 2008-11-25 15:00:42 robbep Exp $
+// $Id: PythiaProduction.cpp,v 1.20 2008-11-28 15:04:17 robbep Exp $
 
 // Include files
 // STD * STL 
@@ -14,6 +14,7 @@
 // from Gaudi
 #include "GaudiKernel/System.h"
 #include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/PhysicalConstants.h"
@@ -37,7 +38,7 @@
  *  Implementation file for class PythiaProduction
  *
  *  @date 2005-08-16 
- *  @author Patrick Robbe, modified by Neal Gueissaz
+ *  @author Patrick Robbe, modified by Neal Gueissaz for supersymmetry
  */
 //-----------------------------------------------------------------------------
 
@@ -166,14 +167,6 @@ PythiaProduction::PythiaProduction( const std::string& type,
   m_defaultSettings.push_back( "pysubs msub 477 1" ) ;
   m_defaultSettings.push_back( "pysubs msub 478 1" ) ;
   m_defaultSettings.push_back( "pysubs msub 479 1" ) ;
-  m_defaultSettings.push_back( "pysubs msub 480 1" ) ;
-  m_defaultSettings.push_back( "pysubs msub 481 1" ) ;
-  m_defaultSettings.push_back( "pysubs msub 482 1" ) ;
-  m_defaultSettings.push_back( "pysubs msub 483 1" ) ;
-  m_defaultSettings.push_back( "pysubs msub 484 1" ) ;
-  m_defaultSettings.push_back( "pysubs msub 485 1" ) ;
-  // Allows generation of resonances (psi(3770) for example) in 2 -> 2 processes
-  m_defaultSettings.push_back( "pysubs ckin 41 3.0" ) ;
   m_defaultSettings.push_back( "pypars mstp 2 2" ) ;
   m_defaultSettings.push_back( "pypars mstp 33 3" ) ;
   m_defaultSettings.push_back( "pypars mstp 128 2" ) ;
@@ -263,7 +256,25 @@ StatusCode PythiaProduction::initialize( ) {
   HepMC::HEPEVT_Wrapper::set_sizeof_real( 8 ) ;
   HepMC::HEPEVT_Wrapper::set_max_number_entries( 10000 ) ;  
 
-  return initializeGenerator() ;
+  sc = initializeGenerator() ;
+  if ( ! sc.isSuccess() ) return sc ;
+  
+  // Now that Pythia is initialized, update the mass of the special particles
+  // in the particle property service (it is because Pythia may have changed
+  // these masses after computation from its internal parameters)
+  // retrieve the particle property service
+  IParticlePropertySvc * ppSvc = 
+    svc< IParticlePropertySvc >( "ParticlePropertySvc" , true ) ;
+  IParticlePropertySvc::const_iterator iter ;
+  for ( iter = ppSvc -> begin() ; iter != ppSvc -> end() ; ++iter ) {
+    if ( isSpecialParticle( *iter ) ) {
+      int pythiaId = (*iter) -> pythiaID() ;
+      int kc = Pythia::PyComp( pythiaId ) ;
+      (*iter) -> setMass( Pythia::pydat2().pmas( kc , 1 ) * Gaudi::Units::GeV ) ;
+    }
+  }
+  release( ppSvc ) ;
+  return StatusCode::SUCCESS ;
 }
 
 //=============================================================================
@@ -307,10 +318,6 @@ StatusCode PythiaProduction::initializeGenerator( ) {
   Pythia::pyint2().iset(484) = 2 ;
   Pythia::pyint2().kfpr(484,1) = 9000553 ;
   Pythia::pyint2().kfpr(484,2) = 21 ;
-  // Process 485: g + g -> psi(3770) + g Color Singlet
-  Pythia::pyint2().iset(485) = 2 ;
-  Pythia::pyint2().kfpr(485,1) = 30443 ;
-  Pythia::pyint2().kfpr(485,2) = 21 ;
 
   // Set User process to 0 for normal Pythia to be overriden for
   // specific generation
@@ -1014,6 +1021,8 @@ bool PythiaProduction::isSpecialParticle( const ParticleProperty * thePP )
   case 5403:
   case 5501:
   case 5503:
+  case 1000022:
+  case 1000024:
     return true ;
     break ;
   default:
@@ -1133,6 +1142,7 @@ StatusCode PythiaProduction::toHepMC
   
   // Retrieve hard process information
   hardProcessInfo( theCollision ) ;
+  
   return StatusCode::SUCCESS ;
 } ;
 // ============================================================================

@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-11-28 - Patrick Robbe
+ - PythiaProduction.cpp: update special particles after Pythia
+   initialization.
+
 ! 2008-11-27 - Patrick Robbe for Neal Gueissaz
  - PythiaLSP: add cut tool
 
