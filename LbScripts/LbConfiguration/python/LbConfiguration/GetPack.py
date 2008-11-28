@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: GetPack.py,v 1.5 2008-11-28 13:59:41 marcocle Exp $
+# $Id: GetPack.py,v 1.6 2008-11-28 17:17:04 marcocle Exp $
 
 from LbUtils.Script import Script
 from LbUtils import rcs
@@ -83,7 +83,7 @@ class Skip:
 ## @class GetPack
 # Main script class for getpack.
 class GetPack(Script):
-    _version = "$Id: GetPack.py,v 1.5 2008-11-28 13:59:41 marcocle Exp $".replace("$","").replace("Id:","").strip()
+    _version = "$Id: GetPack.py,v 1.6 2008-11-28 17:17:04 marcocle Exp $".replace("$","").replace("Id:","").strip()
     def __init__(self):
         Script.__init__(self, usage = "\n\t%prog [options] package [ [version] ['tag'|'head'] ]"
                                       "\n\t%prog [options] -i [repository [hat]]"
@@ -250,7 +250,7 @@ class GetPack(Script):
         else:
             idx = 0
         rep = self.repositories[reps[idx]]
-        if version != "head": # head is always valid
+        if version.lower() != "head": # head is always valid
             versions = rep.listVersions(package)
             if not versions:
                 raise RuntimeError("No version found for package '%s'" % package)
@@ -260,6 +260,8 @@ class GetPack(Script):
                 else:
                     self.log.warning("Version not specified for package '%s'" % package)
                 version = self._askVersion(versions)
+        else:
+            version = version.lower()
         self.log.info("Checking out %s %s (from '%s')" % (package, version, rep.repository))
         rep.checkout(package, version, vers_dir = self.options.version_dirs)
         # Call "cmt config"
@@ -283,7 +285,7 @@ class GetPack(Script):
         else:
             idx = 0
         rep = self.repositories[reps[idx]]
-        if version != "head": # head is always valid
+        if version.lower() != "head": # head is always valid
             versions = rep.listVersions(project, isProject = True)
             if not versions:
                 raise RuntimeError("No version found for project '%s'" % project)
@@ -293,6 +295,8 @@ class GetPack(Script):
                 else:
                     self.log.warning("Version not specified for project '%s'" % project)
                 version = self._askVersion(versions)
+        else:
+            version = version.upper()
         self.log.info("Checking out %s %s (from '%s')" % (project, version, rep.repository))
         rep.checkout(project, version, vers_dir = True, project = True)
         pkgdir =  os.path.join(project, "%s_%s" % (project, version))
