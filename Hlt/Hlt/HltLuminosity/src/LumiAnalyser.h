@@ -1,4 +1,4 @@
-// $Id: LumiAnalyser.h,v 1.3 2008-11-20 10:08:32 panmanj Exp $
+// $Id: LumiAnalyser.h,v 1.4 2008-11-28 16:05:56 panmanj Exp $
 #ifndef LUMIANALYSER_H 
 #define LUMIANALYSER_H 1
 
@@ -74,7 +74,6 @@ protected:
   IANNSvc* m_annSvc;
   Hlt::Counter m_counterHistoInputs;
   std::string m_DataName;                        // input location of summary data
-  LHCb::HltLumiSummary* m_HltLumiSummary;        // summary data
   bool m_rawHistos;                              // flag to store raw histos of R
 
   std::vector< std::string > m_Variables;        // list of variables to look at

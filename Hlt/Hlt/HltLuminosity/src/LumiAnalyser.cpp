@@ -1,4 +1,4 @@
-// $Id: LumiAnalyser.cpp,v 1.3 2008-11-20 10:08:32 panmanj Exp $
+// $Id: LumiAnalyser.cpp,v 1.4 2008-11-28 16:05:56 panmanj Exp $
 // Include files 
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -171,7 +171,7 @@ StatusCode LumiAnalyser::execute() {
 
   // analyse at fixed time intervals
   if ( gpsTimeInterval() ) analyse();
-  //if (  m_call_counter%10 == 0 ) analyse();
+  //if (  m_call_counter%100 == 0 ) analyse();
 
   setDecision(true);
   return sc;
@@ -268,16 +268,20 @@ StatusCode LumiAnalyser::accumulate() {
   debug() << "LumiAnalyser::accumulate()" << endmsg;
 
   // get data container
-  m_HltLumiSummary = get<LHCb::HltLumiSummary>(m_DataName);
+  if( !exist<LHCb::HltLumiSummary>(m_DataName) ){
+    StatusCode sc = Warning("LumiSummary cannot be loaded",StatusCode::FAILURE);
+    return sc;
+  }
+  LHCb::HltLumiSummary* HltLumiSummary = get<LHCb::HltLumiSummary>(m_DataName);
 
   // get ODIN to determine BXType
-  LHCb::ODIN* odin;
-  if( exist<LHCb::ODIN>(LHCb::ODINLocation::Default) ){
-    odin = get<LHCb::ODIN> (LHCb::ODINLocation::Default);
-  }else{
+  if( !exist<LHCb::ODIN>(LHCb::ODINLocation::Default) ){
     StatusCode sc = Error("ODIN cannot be loaded",StatusCode::FAILURE);
     return sc;
   }
+  LHCb::ODIN* odin = get<LHCb::ODIN> (LHCb::ODINLocation::Default);
+
+  // bunch crossing type
   std::stringstream sbxType("");
   sbxType << (LHCb::ODIN::BXTypes) odin->bunchCrossingType();
   std::string bxType = sbxType.str();
@@ -293,7 +297,7 @@ StatusCode LumiAnalyser::accumulate() {
       warning() << "LumiCounter not found with name: " << var <<  endmsg;
     } else {
       int counter = x->second;
-      int ivalue = m_HltLumiSummary->info(counter,-1);
+      int ivalue = HltLumiSummary->info(counter,-1);
       if (ivalue > -1) {
         ((*theMap)[var])->first += 1;
         ((*theMap)[var])->second +=(long) ivalue;

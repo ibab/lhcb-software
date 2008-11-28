@@ -1,4 +1,4 @@
-// $Id: HltLumiSummaryDecoder.cpp,v 1.3 2008-10-10 15:21:25 panmanj Exp $
+// $Id: HltLumiSummaryDecoder.cpp,v 1.4 2008-11-28 16:05:56 panmanj Exp $
 // Include files
 #include <algorithm>
 
@@ -73,6 +73,11 @@ StatusCode HltLumiSummaryDecoder::execute() {
   }
   
   // Retrieve the RawEvent:
+  // get data container
+  if( !exist<RawEvent>(m_rawEventLocation) ){
+    StatusCode sc = Warning("RawBank cannot be loaded",StatusCode::FAILURE);
+    return sc;
+  }
   RawEvent* event = get<RawEvent>(m_rawEventLocation);
   // Get the buffers associated with the HltLumiSummary
   const std::vector<RawBank*>& banks = event->banks( RawBank::HltLumiSummary );
