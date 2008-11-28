@@ -1,4 +1,4 @@
-// $Id: MuonRawBuffer.cpp,v 1.22 2008-10-23 13:42:17 asatta Exp $
+// $Id: MuonRawBuffer.cpp,v 1.23 2008-11-28 10:38:18 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -36,7 +36,7 @@ MuonRawBuffer::MuonRawBuffer( const std::string& type,
   declareInterface<IMuonRawBuffer>(this);
   m_NLink=24;
   m_ODEWord=35;
-  
+  m_TESChanged=false;  
 
 }
 //=============================================================================
