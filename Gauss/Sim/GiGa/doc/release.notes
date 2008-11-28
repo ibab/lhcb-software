@@ -1,10 +1,14 @@
-! $Id: release.notes,v 1.126 2008-11-04 21:16:18 robbep Exp $
+! $Id: release.notes,v 1.127 2008-11-28 15:09:05 robbep Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Sim/GiGa
 ! Responsible : Gloria CORTI, Vanya BELYAEV
 ! Purpose     : Holds interfaces and base classes plus generic implementation
 !               for G4 <-> Gaudi applications 
 !-----------------------------------------------------------------------------
+
+! 2008-11-28 - Patrick Robbe
+ - GiGa.cpp: remove update of G4 particles to do it in GaussKine (to be
+   sure it is done after generator initializations)
 
 ! 2008-11-04 - Patrick Robbe
  - GiGa.cpp: update also particle lifetime from ParticlePropertySvc

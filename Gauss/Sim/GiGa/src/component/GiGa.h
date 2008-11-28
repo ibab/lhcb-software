@@ -1,4 +1,4 @@
-// $Id: GiGa.h,v 1.7 2008-10-20 10:17:21 robbep Exp $ 
+// $Id: GiGa.h,v 1.8 2008-11-28 15:09:05 robbep Exp $ 
 #ifndef GIGA_GIGASVC_H
 #define GIGA_GIGASVC_H   1 
 
@@ -645,7 +645,6 @@ private:
   std::string       m_rndmSvcName         ; ///< name for random number service 
   IRndmGenSvc*      m_rndmSvc             ; ///< Gaudi random number service    
 
-  bool              m_updateG4ParticleProperties ; ///< Update G4 particles properties
   bool              m_printParticles       ; ///< control print of G4Particles 
   
   typedef std::map<std::string,unsigned int> Counter;
