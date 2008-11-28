@@ -3,6 +3,44 @@ Package             : Phys/DaVinci
 Package Coordinator : Juan Palacios
 Purpose             : LHCb analysis program 
 
+</PRE><H1><A NAME=v21r0>2008-11-28 DaVinci v21r0</A></H1><PRE>
+Based on Phys v7r3, Analysis v2r3, Rec v6r0, HLT v4r4, Lbcom v6r24, LHCb v26r0, Gaudi v20r3, LCGCMT 55b
+
+Highlights
+
+ * DaVinci
+  - New DaVinci configurable, basic examples in options/Davinci-Default.py and options/DaVinci-2008.py
+    Working QM test example tests/options/DVTestB2DiMuon.py
+
+ * Phys/DaVinciTools
+   - IOnOfflineTool/OnOfflineTool
+    . Interface now only returns strings with names of PV location or some 
+      tools, depenting on context. It no longer holds any tools of its own.
+
+   - Related or "best"PV finding overhaul
+   . New IRelatedPVFinder interface. No configuration beyond that of GaudiTool. All configuration at compile-time, through template GenericParticle2PVRelator with implementations (typedefs) for on and off-line, IP and IP Chi2
+
+   - PhysDesktop
+    . Output location no longer fixed to "Phys/AlgName". Now taken from IOnOffline::trunkOnTES() method. Default" "Hlt/AlgName" and "Phys/AlgName" for on and off-line respectively.
+    . Input locations now deduced from context if AlgName not preceded by a "/":
+      "MyBsSelection" becomes "Phys/MyBsSelection" or "Hlt/MyBsSelection" in off/online context
+      "Phys/MyBsSelection" stays the same regardless of context.
+
+    . Desktop now uses new IOnOfflineTool and it's own IRelatedPVFinder.
+      Defaults for IRelatedPVFinder and IDistanceCalculator are now "".
+      In this case, IOnOfflineTool is in charge of getting the type name
+      of the implementation of these two. A similar logic applies to the 
+      location of primary vertices.
+    . Add property P2PVInputLocations, vector of strings with TES locations of
+      Particle* -> VertexBase* relations. The PhysDesktop now can take 
+      user-defined P->PV relations tables. These over-write relations loaded
+      from the default location InputLocations + "/Particle2Vertices".
+    . When dealing with Particles and PVs, users should now use the relations
+      and not the primaryVertices() method directly.
+
+ * Ex/MicroDSTExample:
+   - Improvements to MicroDST making python script, addition of python helper modules to aid in reading of DST and MicroDST, improvement to MicroDST reading script.
+
 </PRE><H1><A NAME=v20r3>2008-10-08 DaVinci v20r3</A></H1><PRE>
 Based on Phys v7r2, Analysis v2r2, Rec v5r12, HLT v4r3, Lbcom v6r23, LHCb v25r3, Gaudi v20r2, LCGCMT 55
 
