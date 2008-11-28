@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.15 2008-11-02 20:37:57 ibelyaev Exp $ 
+# $Id: requirements,v 1.16 2008-11-28 17:08:25 ibelyaev Exp $ 
 # ============================================================================
 # Created    : 2007-06-08
 # Maintainer : Vanya BELYAEV
 # ============================================================================
 package           LoKiArrayFunctors
-version           v8r0
+version           v8r1
 
 # ============================================================================
 branches          cmt doc src dict python LoKi 
@@ -31,6 +31,8 @@ library           LoKiArrayFunctors    ../src/Components/*.cpp
 # =============== patterns ===================================================
 apply_pattern     linker_library    library=LoKiArrayFunctorsLib
 apply_pattern     component_library library=LoKiArrayFunctors
+apply_pattern     QMTest
+
 
 # ============================================================================
 # The END 

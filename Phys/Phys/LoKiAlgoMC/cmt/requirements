@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.16 2008-11-02 21:19:12 ibelyaev Exp $ 
+# $Id: requirements,v 1.17 2008-11-28 17:07:21 ibelyaev Exp $ 
 # ============================================================================
 # Created    : 2006-01-17
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # ============================================================================
 package           LoKiAlgoMC
-version           v8r0
+version           v8r1
 	
 # =============== structure ==================================================
 branches          cmt doc src dict python LoKi         
@@ -35,8 +35,9 @@ apply_pattern    reflex_dictionary                                   \
                  options=" -U__MINGW32__ "
 
 # =============== patterns ===================================================
-apply_pattern     linker_library    library=LoKiAlgoMCLib 
-apply_pattern     component_library library=LoKiAlgoMC
+apply_pattern    linker_library    library=LoKiAlgoMCLib 
+apply_pattern    component_library library=LoKiAlgoMC
+apply_pattern    QMTest 
 
 macro LoKiAlgoMCDict_use_linkopts $(use_linkopts)
 

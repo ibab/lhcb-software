@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.24 2008-11-17 15:56:03 cattanem Exp $ 
+! $Id: release.notes,v 1.25 2008-11-28 17:07:21 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgoMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : MC-analogue for the basic LoKi algorithm 
 ! -----------------------------------------------------------------------------
+
+! 2008-11-27 - Vanya BELYAEV
+ - add QMTest
+ - new decorators 
+ - version increment to v8r1 
 
 !========================== LoKiAlgoMC v8r0 2008-11-17 ========================
 ! 2008-11-02 - Vanya BELYAEV

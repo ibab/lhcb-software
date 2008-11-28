@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: functions.py,v 1.11 2008-04-16 11:33:30 ibelyaev Exp $ 
+# $Id: functions.py,v 1.12 2008-11-28 17:08:25 ibelyaev Exp $ 
 # =============================================================================
 ## @file
 #  The set of basic objects from LoKiHlt library
@@ -210,6 +210,8 @@ APipes     = LoKi.Functor             ( _va , _va       )
 APipe      = LoKi.FunctorFromFunctor  ( _va , _va       )
 AFunVals   = LoKi.Functor             ( _va , 'double'  )
 AFunVal    = LoKi.FunctorFromFunctor  ( _va , 'double'  )
+ACutVals   = LoKi.Functor             ( _va ,  bool     )
+ACutVal    = LoKi.FunctorFromFunctor  ( _va ,  bool     )
 AElements  = LoKi.Functor             ( _va , _T        ) 
 AElement   = LoKi.FunctorFromFunctor  ( _va , _T        ) 
 #

@@ -1,4 +1,4 @@
-// $Id: LoKiArrayFunctorsDict.h,v 1.8 2008-04-09 20:21:20 ibelyaev Exp $
+// $Id: LoKiArrayFunctorsDict.h,v 1.9 2008-11-28 17:08:25 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKIARRAYDICT_H 
 #define LOKI_LOKIARRAYDICT_H 1
@@ -40,6 +40,7 @@
 // ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   namespace Dicts 
   {
     // ========================================================================
@@ -47,14 +48,18 @@ namespace LoKi
     class FunCalls<LoKi::ATypes::Combination> 
     {
     private:
+      // ======================================================================
       typedef LoKi::ATypes::Combination           Type ;
       typedef LoKi::BasicFunctors<Type>::Function Fun  ;
+      // ======================================================================
     public:
+      // ======================================================================
       static Fun::result_type __call__ 
       ( const Fun& fun  , const Type&            o ) { return fun ( o ) ; }
       static Fun::result_type __call__ 
       ( const Fun& fun  , const Type::Container& o ) 
       { return fun ( Type ( o.begin() , o.end() ) ) ; }
+      // ======================================================================
     public:
       // ======================================================================
       // __rrshift__ 
@@ -88,15 +93,20 @@ namespace LoKi
     class CutCalls<LoKi::ATypes::Combination> 
     {
     private:
+      // ======================================================================
       typedef LoKi::ATypes::Combination            Type ;
       typedef LoKi::BasicFunctors<Type>::Predicate Fun  ;
+      // ======================================================================
     public:
+      // ======================================================================
       static Fun::result_type __call__ 
       ( const Fun& fun  , const Type&           o ) { return fun ( o ) ; }
       static Fun::result_type __call__ 
       ( const Fun& fun  , const Type::Container& o ) 
       { return fun ( Type ( o.begin() , o.end() ) ) ; }
+      // ======================================================================
     public:
+      // ======================================================================
       // __rrshift__ 
       static Fun::result_type              
       __rrshift__ ( const Fun& fun  , const Type&               o ) 
@@ -109,36 +119,46 @@ namespace LoKi
       static std::vector<Type>
       __rrshift__ ( const Fun& fun  , const  std::vector<Type>& o ) 
       { return o >> fun  ; }      
+      // ======================================================================
     public:
+      // ======================================================================
       // __rshift__ 
       static LoKi::FunctorFromFunctor<Type,bool>
       __rshift__ ( const Fun& fun  , const Fun& o ) 
       { return fun >> o   ; }      
+      // ======================================================================
     } ;
     // ========================================================================
   } // end of namespace Dicts 
+  // ==========================================================================
 }
 // ============================================================================
 namespace
 {
+  // ==========================================================================
   struct _Instantiations 
   {
+    // ========================================================================
     /// fictive constructor 
     _Instantiations () ;
+    // ========================================================================
     // the basic functions 
-    LoKi::Dicts::Funcs<LoKi::ATypes::Combination>          m_f1 ;
-    LoKi::Dicts::VFuncs<LoKi::ATypes::Combination>         m_f2 ;
+    LoKi::Dicts::Funcs<LoKi::ATypes::Combination>          m_f1  ;
+    LoKi::Dicts::VFuncs<LoKi::ATypes::Combination>         m_f2  ;
     // operators 
-    LoKi::Dicts::FuncOps<LoKi::ATypes::Combination>        m_o1 ;
-    LoKi::Dicts::CutsOps<LoKi::ATypes::Combination>        m_o2 ;
-    LoKi::Dicts::MapsOps<LoKi::ATypes::Combination>        m_o3 ;
-    LoKi::Dicts::PipeOps<LoKi::ATypes::Combination>        m_o4 ;
-    LoKi::Dicts::FunValOps<LoKi::ATypes::Combination>      m_o5 ;
-    LoKi::Dicts::ElementOps<LoKi::ATypes::Combination>     m_o6 ;
+    LoKi::Dicts::FuncOps<LoKi::ATypes::Combination>        m_o1  ;
+    LoKi::Dicts::CutsOps<LoKi::ATypes::Combination>        m_o2  ;
+    LoKi::Dicts::MapsOps<LoKi::ATypes::Combination>        m_o3  ;
+    LoKi::Dicts::PipeOps<LoKi::ATypes::Combination>        m_o4  ;
+    LoKi::Dicts::FunValOps<LoKi::ATypes::Combination>      m_o5  ;
+    LoKi::Dicts::CutValOps<LoKi::ATypes::Combination>      m_o51 ;
+    LoKi::Dicts::ElementOps<LoKi::ATypes::Combination>     m_o6  ;
     /// mathematics:
     LoKi::Dicts::FunCalls<LoKi::ATypes::Combination>       m_c1 ;
     LoKi::Dicts::CutCalls<LoKi::ATypes::Combination>       m_c2 ;
+    // ========================================================================
   } ;  
+  // ==========================================================================
 } // end of anonymous namespace 
 // ============================================================================
 // The END 

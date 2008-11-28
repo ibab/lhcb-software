@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiArrayFunctors.xml,v 1.10 2008-11-02 20:36:36 ibelyaev Exp $ 
+     * $Id: LoKiArrayFunctors.xml,v 1.11 2008-11-28 17:08:25 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiExHlt package
@@ -42,6 +42,7 @@
   <class pattern   = "LoKi::Dicts::MapsOps<*Range_*LHCb::Particle*>"    />
   <class pattern   = "LoKi::Dicts::PipeOps<*Range_*LHCb::Particle*>"    />
   <class pattern   = "LoKi::Dicts::FunValOps<*Range_*LHCb::Particle*>"  />
+  <class pattern   = "LoKi::Dicts::CutValOps<*Range_*LHCb::Particle*>"  />
   <class pattern   = "LoKi::Dicts::ElementOps<*Range_*LHCb::Particle*>" />
   <class pattern   = "LoKi::Dicts::FunCalls<*Range_*LHCb::Particle*>"   />
   <class pattern   = "LoKi::Dicts::CutCalls<*Range_*LHCb::Particle*>"   />
