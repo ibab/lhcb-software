@@ -10,7 +10,7 @@
 // Main initialisation
 #include "$PHYSSYSROOT/options/DaVinciInit.opts"
 // POOL Persistency
-#include "$STDOPTS/DstDicts.opts"
+#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
 //--------------------------------------------------------------
 // Physics packages and dependent packages
 #include "$PHYSSYSROOT/options/PhysCoreSys.opts"
