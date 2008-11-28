@@ -1,4 +1,4 @@
-// $Id: LHCbMathDict.h,v 1.5 2008-07-01 16:07:12 graven Exp $
+// $Id: LHCbMathDict.h,v 1.6 2008-11-28 13:50:59 graven Exp $
 #ifndef DICT_LHCBMATHDICT_H 
 #define DICT_LHCBMATHDICT_H 1
 
@@ -15,6 +15,7 @@
 #include "GaudiKernel/Plane3DTypes.h"
 #include "LHCbMath/MD5.h"
 #include <vector>
+#include <list>
 
 namespace Gaudi
 {
@@ -135,6 +136,7 @@ namespace
 
     Gaudi::Math::MD5       __mathMD5;
     std::vector<Gaudi::Math::MD5>       __stdvector_mathMD5;
+    std::list<Gaudi::Math::MD5>       __stdlist_mathMD5;
     
   };
 }
