@@ -36,11 +36,15 @@ class RCSUnknownModuleError(RCSError):
     """
     Error raised when the module is not found in the repository.
     """
-    def __init__(self, module, repository):
+    def __init__(self, module, repository, isProject = False):
         self.module = module
         self.repository = repository
+        if isProject:
+            self.module_type = "project"
+        else:
+            self.module_type = "package"
     def __str__(self):
-        return "Cannot find module '%(module)s' in repository %(repository)r" % self.__dict__
+        return "Cannot find %(module_type)s '%(module)s' in repository %(repository)r" % self.__dict__
 
 class RCSUnknownVersionError(RCSError):
     """
@@ -82,6 +86,10 @@ class RevisionControlSystem(object):
         self.repository = repository
         if not self.canHandle(repository):
             raise RCSCannotHandleError()
+        self._packages = None
+        self._projects = None
+        self._pkg_versions = {}
+        self._proj_versions = {} 
     
     @classmethod
     def canHandle(cls, repository):
@@ -93,21 +101,60 @@ class RevisionControlSystem(object):
         repository.  
         """
         return False
+
+    def _retrievePackages(self):
+        return []
     
-    def listModules(self, path = None):
+    def _retrieveProjects(self):
+        return []
+    
+    @property
+    def packages(self):
+        if self._packages is None:
+            self._packages = self._retrievePackages()
+        return self._packages
+    
+    @property
+    def projects(self):
+        if self._projects is None:
+            self._projects = self._retrieveProjects()
+        return self._projects
+
+    def listPackages(self, path = None):
         """
-        Return a list of strings identifying the modules below the specified
+        Return a list of strings identifying the packages below the specified
         path (or the root of the repository if not specified).
         """
-        return []
+        modules = self.packages
+        if path:
+            # to be sure that it is the hat and not the begin of the name
+            if path[-1] != "/":
+                path += "/"
+            modules = [ m for m in modules if m.startswith(path) ]
+        return modules
     
-    def listVersions(self, module):
+    def listProjects(self):
         """
-        Return a list of strings identifying the known versions of a module.
+        Return a list of strings identifying the projects.
+        """
+        return self.projects
+    
+    def _retrieveVersions(self, module, isProject):
+        """
+        Extract from the repository the list of symbolic names for the module.
         """
         return []
+        
+    def listVersions(self, module, isProject = False):
+        """
+        Return a list of strings identifying the known versions of a package.
+        """
+        if (isProject and module not in self.projects) or \
+           ((not isProject) and module not in self.packages):
+            raise RCSUnknownModuleError(module, self.repository, isProject)
+        return filterSortVersions(self._retrieveVersions(module, isProject))
     
-    def checkout(self, module, dest = None):
+    def checkout(self, module, dest = None, vers_dir = False, project = False):
         """
         Extract a module in the directory specified with "dest".
         If no destination is specified, the current directory is used. 
@@ -124,7 +171,8 @@ class CVS(RevisionControlSystem):
     CVS_USER     = 2
     CVS_HOST     = 3
     CVS_PATH     = 4
-    __module_version_check_file__ = "/cmt/requirements"
+    __package_version_check_file__ = "/cmt/requirements"
+    __project_version_check_file__ = "/cmt/project.cmt"
     def __init__(self, repository):
         """
         Initialize the connection to the repository.
@@ -135,6 +183,7 @@ class CVS(RevisionControlSystem):
         super(CVS, self).__init__(repository)
         self.protocol, self.user, self.host, self.path = \
             self.__repository_rexp__.match(repository).groups()
+        self._packages = None
     
     @classmethod
     def canHandle(cls, repository):
@@ -146,36 +195,57 @@ class CVS(RevisionControlSystem):
         repository.  
         """
         return cls.__repository_rexp__.match(repository)
-
-    def listModules(self, path = None):
+    
+    def _retrieveModules(self):
         """
-        Return a list of strings identifying the modules below the specified
-        path (or the root of the repository if not specified).
+        Get the list of modules in the repository and separate them in projects
+        and packages.
         """
-        # Get the list of modules
         out, err = _cvs("-d", self.repository, "checkout", "-s")
-        # split and remove the lines starting with blank
         modules = [ l.split()[0]
                     for l in out.splitlines()
                     if not l.startswith(" ") ]
-        # if path is specified, filter the modules to contain only those starting
-        # with "path"
-        if path:
-            # to be sure that it is the hat and not the begin of the name
-            if path[-1] != "/":
-                path += "/"
-            modules = [ m for m in modules if m.startswith(path) ]
-        return modules
+        packages = []
+        projects = []
+        # empiric definition:
+        # a project is a module all capital letters, with no hat
+        proj_re = re.compile("^[A-Z]*$") 
+        for m in modules:
+            if proj_re.match(m) and m != "CVSROOT":
+                projects.append(m)
+            else:
+                packages.append(m)
+        self._packages = packages
+        self._projects = projects
     
-    def listVersions(self, module):
+    def _retrievePackages(self):
         """
-        Return a list of strings identifying the known versions of a module.
+        Return a list of strings identifying the packages below the specified
+        path (or the root of the repository if not specified).
+        Note that in CVS there is not a clear distinction between packages and
+        projects, so a CVS module can be both.
         """
-        if module not in self.listModules():
-            raise RCSUnknownModuleError(module, self.repository)
+        self._retrieveModules()
+        return self._packages
+    
+    def _retrieveProjects(self):
+        """
+        Return a list of strings identifying the projects.
+        Note that in CVS there is not a clear distinction between packages and
+        projects, so a CVS module can be both.
+        """
+        self._retrieveModules()
+        return self._projects
+    
+    def _retrieveVersions(self, module, isProject):
+        """
+        Extract from the repository the list of symbolic names for the module.
+        """
         # Get the log of the requirements file
-        out, err = _cvs("-d", self.repository, "rlog",
-                        module + self.__module_version_check_file__)
+        file_to_check = self.__package_version_check_file__
+        if isProject:
+            file_to_check = self.__project_version_check_file__
+        out, err = _cvs("-d", self.repository, "rlog", module + file_to_check)
         # extract the list of tags
         tags = []
         outl = out.splitlines()
@@ -186,19 +256,22 @@ class CVS(RevisionControlSystem):
         for l in outl: # get the tag names
             if l and l[0] == '\t':
                 # the tag name looks like '\tvXrY: #.#'
-                tags.append(l.strip().split(":")[0])
+                tag = l.strip().split(":")[0]
+                if isProject and tag.startswith(module + '_'):
+                    # remove the 'PROJECT_' from the tag
+                    tag = tag[len(module)+1:]
+                tags.append(tag)
             else:
                 break
-        # Filter and sort the tags
-        return filterSortVersions(tags)
-    
-    def checkout(self, module, version = "head", dest = None, vers_dir = False):
+        return tags
+        
+    def checkout(self, module, version = "head", dest = None, vers_dir = False, project = False):
         """
         Extract a module in the directory specified with "dest".
         If no destination is specified, the current directory is used. 
         """
         # this implies a check on the existence of the module
-        versions = self.listVersions(module)
+        versions = self.listVersions(module, project)
         # check for the validity of the version
         if version.lower() != "head" and version not in versions:
             raise RCSUnknownVersionError(module, version)
@@ -212,7 +285,10 @@ class CVS(RevisionControlSystem):
         
         # prepare options for CVS checkout 
         options = ("-d", self.repository, "checkout", "-P")
-        if version.lower() != "head":
+        isHead = version.lower() == "head"
+        if project:
+            version = "%s_%s" % (module, version)
+        if not isHead:
             options += ("-r", version)
         if vers_dir:
             options += ("-d", os.path.join(module, version))
@@ -245,6 +321,7 @@ class SubversionCmd(RevisionControlSystem):
             self.__repository_rexp__.match(repository).groups()
         # cache of module names and versions
         self._modules = {}
+        self._packages = None
     
     @classmethod
     def canHandle(cls, repository):
@@ -261,12 +338,6 @@ class SubversionCmd(RevisionControlSystem):
                 ( m.group(cls.SVN_PROTOCOL) == "file" and not m.group(cls.SVN_HOST) ) or \
                 ( m.group(cls.SVN_PROTOCOL) != "file" and m.group(cls.SVN_HOST) ) 
         return valid
-
-    def _clearModuleCache(self):
-        """
-        Clear the cache of module names and versions.
-        """
-        self._modules = {}
         
     def _ls(self, path):
         """
@@ -278,65 +349,57 @@ class SubversionCmd(RevisionControlSystem):
 
     def _getModulesFromProp(self):
         """
-        Return the content of the modules property of the pacakges directory as a list.
+        Return the content of the modules property of the 'packages' directory as a list.
         """
         out, err = _svn("propget", "modules", "/".join([self.repository, "packages"]))
         return [ m for m in out.splitlines() if m ]
-        
-    def listModules(self, path = None, forceScan = False):
+    
+    def _scanModules(self):
         """
-        Return a list of strings identifying the modules below the specified
-        path (or the root of the repository if not specified).
+        Scan the directory structure under 'packages' to find modules.
         """
-        if not self._modules:
-            # Get the list of modules
-            if not forceScan:
-                # try using the metadata of the directory "pacakges"                
-                modules = self._getModulesFromProp()
+        # full scan of the repository (inefficient)
+        modules = []
+        dirs = [ l for l in self._ls("packages") if l.endswith("/") ]
+        while dirs:
+            d = dirs.pop(0)
+            subdirs = [ l for l in self._ls("packages/" + d) if l.endswith("/") ]
+            if "trunk/" in subdirs:
+                modules.append(d[:-1])
             else:
-                # initialize to empty
-                modules = []
-            if not modules:
-                # if we do not have modules yet (not found or not using metadata)
-                # full scan of the repository (inefficient)
-                dirs = [ l for l in self._ls("packages") if l.endswith("/") ]
-                while dirs:
-                    d = dirs.pop(0)
-                    subdirs = [ l for l in self._ls("packages/" + d) if l.endswith("/") ]
-                    if "trunk/" in subdirs:
-                        modules.append(d[:-1])
-                    else:
-                        for sd in subdirs:
-                            dirs.append(d+sd)
-            for m in modules:
-                self._modules[m] = None
-        if path:
-            # to be sure that it is the hat and not the begin of the name
-            if path[-1] != "/":
-                path += "/"
-            return [ m for m in self._modules if m.startswith(path) ]
-        return self._modules.keys()
+                for sd in subdirs:
+                    dirs.append(d+sd)
+        return modules
     
-    def listVersions(self, module):
-        """
-        Return a list of strings identifying the known versions of a module.
-        """
-        if module not in self.listModules():
-            raise RCSUnknownModuleError(module, self.repository)
-        if self._modules[module] is None:
-            tags = [ l[:-1]
-                     for l in self._ls("packages/%s/tags" % module)
-                     if l.endswith("/") ]
-            self._modules[module] = filterSortVersions(tags)
-        return self._modules[module]
+    def _retrievePackages(self):
+        # if _getModulesFromProp is empty, try _scanModules
+        return self._getModulesFromProp() or self._scanModules()
     
-    def checkout(self, module, version = "head", dest = None, vers_dir = False):
+    def _retrieveProjects(self):
+        # if _getModulesFromProp is empty, try _scanModules
+        return [ l[:-1] for l in self._ls("projects") if l.endswith("/") ]
+    
+    def _topLevel(self, isProject = False):
+        if isProject:
+            return "projects"
+        else:
+            return "packages"
+        
+    def _retrieveVersions(self, module, isProject):
+        """
+        Extract from the repository the list of symbolic names for the module.
+        """
+        return [ l[:-1]
+                 for l in self._ls("%s/%s/tags" % (self._topLevel(isProject), module))
+                 if l.endswith("/") ]
+    
+    def checkout(self, module, version = "head", dest = None, vers_dir = False, project = False):
         """
         Extract a module in the directory specified with "dest".
         If no destination is specified, the current directory is used. 
         """
         # this implies a check on the existence of the module
-        versions = self.listVersions(module)
+        versions = self.listVersions(module, project)
         # check for the validity of the version
         if version.lower() != "head" and version not in versions:
             raise RCSUnknownVersionError(module, version)
@@ -349,13 +412,18 @@ class SubversionCmd(RevisionControlSystem):
             dest = "." # If not specified, use local directory
         
         if version.lower() != "head":
-            src = "/".join([self.repository, "packages", module, "tags", version])
+            src = "/".join([self.repository, self._topLevel(project), module, "tags", version])
         else:
-            src = "/".join([self.repository, "packages", module, "trunk"])
+            src = "/".join([self.repository, self._topLevel(project), module, "trunk"])
+        
+        if project:
+            version = "%s_%s" % (module, version)
         
         dst = os.path.join(dest, module)
         if vers_dir:
             dst = os.path.join(dst, version)
+        if project: # projects in SVN _are_ the content of the "cmt" directory
+            dst = os.path.join(dst, "cmt")
         
         _svn("checkout", src, dst, stdout = None, stderr = None)
         

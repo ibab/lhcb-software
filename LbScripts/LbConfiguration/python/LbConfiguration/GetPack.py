@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: GetPack.py,v 1.3 2008-11-25 17:31:24 marcocle Exp $
+# $Id: GetPack.py,v 1.4 2008-11-28 10:45:22 marcocle Exp $
 
 from LbUtils.Script import Script
 from LbUtils import rcs
@@ -78,13 +78,15 @@ class Quit:
 ## @class GetPack
 # Main script class for getpack.
 class GetPack(Script):
-    _version = "$Id: GetPack.py,v 1.3 2008-11-25 17:31:24 marcocle Exp $".replace("$","").replace("Id:","").strip()
+    _version = "$Id: GetPack.py,v 1.4 2008-11-28 10:45:22 marcocle Exp $".replace("$","").replace("Id:","").strip()
     def __init__(self):
         Script.__init__(self, usage = "\n\t%prog [options] package [ [version] ['tag'|'head'] ]"
-                                      "\n\t%prog [options] -i [repository [hat]]",
+                                      "\n\t%prog [options] -i [repository [hat]]"
+                                      "\n\t%prog [options] --project project version",
                               description = "script to checkout/update and cmt-configure packages"
                                             " from LHCb CVS or Subversion repositories")
         self._packages = None
+        self._projects = None
         self._repositories = None
         
         self.selected_repository = None
@@ -122,6 +124,8 @@ class GetPack(Script):
                                       "By default, the user is not explicitely used "
                                       "unless a user name is specified with the "
                                       "environment variable GETPACK_USER.")
+        self.parser.add_option("-P", "--project", action = "store_true",
+                               help = "create a project top level directory")
         self.parser.set_defaults(protocol = "default",
                                  version_dirs = False)
         if "GETPACK_USER" in os.environ:
@@ -249,10 +253,35 @@ class GetPack(Script):
         self._doCMTConfig(cwd = pkgdir)
         # return the path to the cmt directory of the package to be able to call
         # a "cmt show uses" and get the packages needed with the recursion
-        return pkgdir
+        return (package, version, pkgdir)
+    
+    def checkoutProject(self, project, version):
+        reps = self.projects[project]
+        if len(reps) > 1:
+            lst = []
+            for k in reps:
+                lst.append('%s (%s)' % (k, self.repositories[k]))
+            idx = self._listChoice("Project '%s' in more than one repository, choose the repository." % project,
+                                   lst)
+        else:
+            idx = 0
+        rep = self.repositories[reps[idx]]
+        if version != "head": # head is always valid
+            versions = rep.listVersions(project, isProject = True)
+            if not versions:
+                raise RuntimeError("No version found for project '%s'" % project)
+            if (not version) or (version not in versions):
+                if version:
+                    self.log.warning("Version '%s' not found for project '%s'" % (version, project))
+                version = self._askVersion(versions)
+        self.log.info("Checking out %s %s (from '%s')" % (project, version, rep.repository))
+        rep.checkout(project, version, vers_dir = True, project = True)
+        pkgdir =  os.path.join(project, "%s_%s" % (project, version))
+        return (project, version, pkgdir)
         
     ## Prepare the repository access objects according to options 
-    def getRepositories(self):
+    @property
+    def repositories(self):
         if self._repositories is None:
             #--- Prepare repositories urls
             # filter the requested protocols for the know repositories
@@ -278,10 +307,10 @@ class GetPack(Script):
                 self._repositories[rep] = rcs.connect(url)
             #--- Now we are ready to talk to the repositories
         return self._repositories
-    repositories = property(getRepositories)
     
-    ## Retrieve the list of packages from the known repositories 
-    def getPackages(self):
+    ## Retrieve the list of packages from the known repositories
+    @property 
+    def packages(self):
         if self._packages is None:
             repos = self.repositories
             if self.selected_repository:
@@ -296,13 +325,36 @@ class GetPack(Script):
             self._packages = {}
             for rep in repos:
                 self.log.debug("Retrieving packages list from '%s'", rep)
-                for p in repos[rep].listModules(self.selected_hat):
+                for p in repos[rep].listPackages(self.selected_hat):
                     if p in self._packages:
                         self._packages[p].append(rep)
                     else:
                         self._packages[p] = [ rep ]
         return self._packages
-    packages = property(getPackages)
+    
+    ## Retrieve the list of packages from the known repositories
+    @property 
+    def projects(self):
+        if self._projects is None:
+            repos = self.repositories
+            if self.selected_repository:
+                rep = self.selected_repository.lower()
+                if rep not in self.repositories:
+                    self.log.error("Uknown repository alias '%s' (allowed: %r)",
+                                   self.selected_repository, self.repositories.keys())
+                    return 1
+                repos = { rep: self.repositories[rep] }
+            
+            # Collect the list of packages
+            self._projects = {}
+            for rep in repos:
+                self.log.debug("Retrieving projects list from '%s'", rep)
+                for p in repos[rep].listProjects():
+                    if p in self._projects:
+                        self._projects[p].append(rep)
+                    else:
+                        self._projects[p] = [ rep ]
+        return self._projects
     
     def parseOpts(self, args):
         # Replace old options '-rr' and '-rh' into the new equivalents
@@ -312,6 +364,8 @@ class GetPack(Script):
         Script.parseOpts(self, args)
         # Validate and parse positional arguments
         if self.options.interactive:
+            if self.options.project:
+                self.parser.error("Options '-i' and '--project' cannot be used at the same time")
             # getpack.py -i [repos [hat]]
             self.selected_repository = None
             self.selected_hat = None
@@ -323,6 +377,15 @@ class GetPack(Script):
                 self.log.info("Search for hat '%s'", self.selected_hat)
             if self.args:
                 self.parser.error("Option '-i' requires maximum 2 arguments")
+        if self.options.project:
+            if len(self.args) != 2:
+                self.parser.error("Option '--project' requires 2 arguments")
+            self.project_name, self.project_version = self.args
+            # LHCb projects have uppercase names
+            self.project_name = self.project_name.upper()
+            # I want to use the bare version number and not the conventional one
+            if self.project_version.startswith(self.project_name + "_"):
+                self.project_version = self.project_version[len(self.project_name)+1:]
         else:
             # getpack.py [-u] package [version]
             if self.args:
@@ -348,6 +411,16 @@ Select the package
         idx = self._listChoice(message, keys)
         return keys[idx]
     
+    def askProject(self):
+        # select package
+        keys = self.projects.keys()
+        keys.sort()
+        message = """--------------------------------------------------------------------------------
+Select the project
+--------------------------------------------------------------------------------"""
+        idx = self._listChoice(message, keys)
+        return keys[idx]
+        
     def _getNeededPackages(self, pkgdir):
         required = {}
         if self.options.recursive:
@@ -375,48 +448,86 @@ Select the package
             self.log.debug("Packages required: %r" % required)
         return required
     
-    def main(self):
-        try:
-            if self.requested_package is None:
-                self.requested_package = self.askPackage()
-            
-            # Dictionaries (pkg->version) of done, skipped and to-do packages
-            done_packages = {}
-            skipped_packages = {}
-            todo_packages = { self.requested_package: self.requested_package_version }
-            
-            self.log.debug("Starting processing loop")
-            # process the list of pending packages
-            while todo_packages:
-                # get an item
-                pkg, vers = todo_packages.popitem()
-                # Check if we can process it
-                if pkg in skipped_packages or pkg in done_packages:
-                    # Already processed
-                    continue
-                elif pkg not in self.packages:
-                    # Not found
-                    skipped_packages[pkg] = vers
-                    continue
-                # Check out the package
-                pkgdir = self.checkout(pkg, vers)
-                done_packages[pkg] = vers
-                # See if we need to check out something else
-                todo_packages.update(self._getNeededPackages(pkgdir))
-            
-            print "Processed packages:"
-            pkgs = done_packages.keys()
+    def getpack(self):
+        if self.requested_package and self.requested_package not in self.packages:
+            self.log.error("Unknown package '%s'!", self.requested_package)
+            self.requested_package = None
+        if self.requested_package is None or self.requested_package not in self.packages:
+            self.requested_package = self.askPackage()
+        
+        # Dictionaries (pkg->version) of done, skipped and to-do packages
+        done_packages = {}
+        skipped_packages = {}
+        todo_packages = { self.requested_package: self.requested_package_version }
+        
+        self.log.debug("Starting processing loop")
+        # process the list of pending packages
+        while todo_packages:
+            # get an item
+            pkg, vers = todo_packages.popitem()
+            # Check if we can process it
+            if pkg in skipped_packages or pkg in done_packages:
+                # Already processed
+                continue
+            elif pkg not in self.packages:
+                # Not found
+                skipped_packages[pkg] = vers
+                continue
+            # Check out the package
+            done_packages[pkg] = self.checkout(pkg, vers)
+            pkgdir = done_packages[pkg][2]
+            # See if we need to check out something else
+            todo_packages.update(self._getNeededPackages(pkgdir))
+        
+        print "Processed packages:"
+        pkgs = done_packages.keys()
+        pkgs.sort()
+        for p in pkgs:
+            print "\t%s\t%s" % done_packages[p][:2]
+        
+        if skipped_packages:
+            print "Skipped packages (not in the repositories):"
+            pkgs = skipped_packages.keys()
             pkgs.sort()
             for p in pkgs:
-                print "\t%s\t%s" % (p, done_packages[p])
-            
-            if skipped_packages:
-                print "Skipped packages (not in the repositories):"
-                pkgs = skipped_packages.keys()
-                pkgs.sort()
-                for p in pkgs:
-                    print "\t%s" % p
-            
+                print "\t%s" % p
+    
+    def getproject(self):
+        if self.project_name not in self.projects:
+            self.log.error("Unknown project '%s'!", self.project_name)
+            self.project_name = self.askProject()
+        proj = self.checkoutProject(self.project_name, self.project_version)
+        if self.options.recursive:
+            # get the conatiner package too, etc.
+            try:
+                self.requested_package = None
+                for l in open(os.path.join(proj[2],"cmt","project.cmt")):
+                    l = l.strip().split()
+                    if len(l) == 2 and l[0] == "container":
+                        self.requested_package = l[1]
+                        break
+                if not self.requested_package:
+                    # project.cmt does not have the "container" instruction, let's assume we want ProjectSys
+                    psys = proj[0].upper() + "SYS"
+                    for p in self.packages:
+                        if p.upper() == psys:
+                            self.requested_package = p
+                            break
+                self.requested_package_version = proj[1] # this is the actual version extracted
+                self.log.info("Retrieving packages in %s", proj[2])
+                os.chdir(proj[2]) # go to the project directory
+                self.log.info("Container package is %s %s", self.requested_package, self.requested_package_version)
+                self.getpack()
+            except IOError, x:
+                self.log.error("Problems opening the 'project.cmt' file. %s", x)
+        print "Checked out project %s %s in '%s'" % proj
+        
+    def main(self):
+        try:
+            if self.options.project:
+                self.getproject()
+            else:
+                self.getpack()
         except Quit:
             print "Quit!"
         

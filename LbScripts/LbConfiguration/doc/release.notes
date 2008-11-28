@@ -1,3 +1,7 @@
+2008-11-28  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbConfiguration/GetPack.py: added support for projects.
+
 2008-11-25  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbConfiguration/GetPack.py: improved backward compatibility

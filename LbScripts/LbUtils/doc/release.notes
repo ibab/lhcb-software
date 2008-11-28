@@ -1,3 +1,7 @@
+2008-11-28  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbUtils/rcs.py: variuos improvements and support for projects.
+
 2008-11-25  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbUtils/rcs.py: extended to get the list of modules in (SVN)
