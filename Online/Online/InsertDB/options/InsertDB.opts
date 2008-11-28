@@ -1,7 +1,0 @@
-// Job options file. Simple Online Saver example
-//==============================================================
-
-
-InsertDB.dimclientdns="pclhcb11.cern.ch";
-InsertDB.topleveltaskname="Adder";
-InsertDB.nodename="node00101";
