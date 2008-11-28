@@ -251,8 +251,8 @@ RVElements  = LoKi.Functor             ( _vv  , 'LHCb::RecVertex*' )
 RVElement   = LoKi.FunctorFromFunctor  ( _vv  , 'LHCb::RecVertex*' )
 RVSources   = LoKi.Functor             ('void', _vv      )
 RVSource    = LoKi.FunctorFromFunctor  ('void', _vv      )
-RVFunVals   = LoKi.Functor             ( _vv  , bool )
-RVFunVal    = LoKi.FunctorFromFunctor  ( _vv  , bool )
+RVCutVals   = LoKi.Functor             ( _vv  , bool )
+RVCutVal    = LoKi.FunctorFromFunctor  ( _vv  , bool )
 
 
 TrSOURCE       = LoKi.Tracks.SourceTES 
