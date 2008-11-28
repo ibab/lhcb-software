@@ -1,10 +1,10 @@
 """
 High level configuration tools for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.39 2008-11-24 10:20:28 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.40 2008-11-28 08:27:47 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
-from os import environ
+from os import environ, path
 from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
 from Configurables import ConfigFileAccessSvc, ConfigDBAccessSvc, HltConfigSvc, HltGenConfig
@@ -18,15 +18,15 @@ from  ctypes import c_uint
 
 
 ## HistogramPersistencySvc().OutputFile = 'Moore_minbias.root'
-##
-## ApplicationMgr.OutStream += { "LHCb::MDFWriter/Writer_2" };
-## Writer_2.Connection       = "file:///local_home/snies/DC06_L0_v1_lumi2.mdf";     // the mdf we want to create
-## Writer_2.Compress         = 0;
-## Writer_2.ChecksumType     = 1;
-## Writer_2.GenerateMD5      = true;
+
+def _ext(name) : return path.splitext(name)[-1].lstrip('.')
 
 
 class Moore(LHCbConfigurableUser):
+    ## Possible used Configurables
+    __used_configurables__ = [ HltConf, LHCbApp ]
+
+
     __slots__ = {
           "EvtMax":            -1    # Maximum number of events to process
         , "SkipEvents":        0
@@ -55,18 +55,17 @@ class Moore(LHCbConfigurableUser):
         extensions = { 'RAW' : "' SVC='LHCb::MDFSelector'",
                        'MDF' : "' SVC='LHCb::MDFSelector'",
                        'DST' : "' TYP='POOL_ROOTTREE' OPT='READ'" }
-        EventSelector().Input = [ "DATAFILE='PFN:"+ f + extensions[ files[0][-3:].upper() ] for f in files ]
+        EventSelector().Input = [ "DATAFILE='PFN:"+ f + extensions[ _ext(f).upper() ] for f in files ]
 
     def configureOutput(self):
         fname = self.getProp('outputFile')
-        if not fname  : return
-        if not fname.endswith('.raw') and not fname.endswith('.mdf') :
-            raise NameError('unsupported filetype "%s"'%fname)
+        if not fname : return
+        if _ext(fname).upper() not in [ 'MDF','RAW' ] : raise NameError('unsupported filetype for file "%s"'%fname)
         writer = MDFWriter( 'MDFWriter'
                           , Compress = 0
                           , ChecksumType = 1
                           , GenerateMD5 = True
-                          , Connection = 'file://' + self.getProp('outputFile')
+                          , Connection = 'file://' + fname
                           )
         ApplicationMgr().OutStream.append( writer )
 
@@ -93,7 +92,7 @@ class Moore(LHCbConfigurableUser):
         AuditorSvc().Auditors.append( x.name() )
         x.Enable = True
 
-    def applyConf(self):
+    def __apply_configuration__(self):
         #GaudiKernel.ProcessJobOptions.PrintOff() #TODO: waiting for next release of Gaudi
         importOptions('$STDOPTS/DstDicts.opts')
         EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
@@ -131,7 +130,6 @@ class Moore(LHCbConfigurableUser):
         else:
             for i in [ 'hltType','oldStyle','userAlgorithms','verbose' ] : self.setOtherProp( HltConf(), i )
             print HltConf()
-            HltConf().applyConf()
 
             
         if self.getProp("generateConfig") :
@@ -151,5 +149,3 @@ class Moore(LHCbConfigurableUser):
             
         self.configureInput()
         self.configureOutput()
-        # Note: LHCbApp is defined in GaudiConf/python/GaudiConf/Configuration.py
-        LHCbApp().applyConf()

@@ -47,8 +47,6 @@ Moore().inputFiles = files
 
 # optionally, we can enable some auditors...
 # Moore().enableAuditor = [ NameAuditor() ]
-# always, always applyConf!
-Moore().applyConf()
 
 #and tell the world how we are configured
 print Moore()

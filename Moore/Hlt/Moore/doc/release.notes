@@ -2,6 +2,9 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+! 2008-11-28 - Gerhard Raven
+ - make configurables consistent with Gaudi v20r3
+
 ! 2008-11-24 - Gerhard Raven
  - update FieldMap, ParamFiles versions in requirements
  - update Configuration.py (and Moore.py) to be consistent with LHCbApp in LHCb v26r0
