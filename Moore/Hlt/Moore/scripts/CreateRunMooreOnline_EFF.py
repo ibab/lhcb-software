@@ -24,7 +24,6 @@ print 'generating '+ sys.argv[1]
 file = open(sys.argv[1],'w+')
 file.write( """#!/bin/sh
 # pick up the online setup...
-cd job
 source ./setupOnline.sh $*
 # pick up 'our' setup... (which defines $MOOREROOT!)
 source %(setup)s
