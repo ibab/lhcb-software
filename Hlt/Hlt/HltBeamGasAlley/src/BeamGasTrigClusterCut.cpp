@@ -1,4 +1,4 @@
-// $Id: BeamGasTrigClusterCut.cpp,v 1.1.1.2 2008-07-27 11:35:09 phopchev Exp $
+
 #include "GaudiKernel/AlgFactory.h"
 
 #include "Event/Track.h"
@@ -9,14 +9,11 @@
 //-----------------------------------------------------------------------------
 // Implementation file for class : BeamGasTrigClusterCut
 //
-// 2008-06-16 : Plamen Hopchev <plamen.hopchev@cern.ch>
-//
-// The algorithm rejects the event if
-// We don't have enough unused clusters
+// The algorithm counts the VELO clusters unused by PatVeloRTracking algorithm
+// and rejects the event if their fraction is below a certain treshold
 //-----------------------------------------------------------------------------
 
 DECLARE_ALGORITHM_FACTORY( BeamGasTrigClusterCut );
-
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -43,7 +40,7 @@ StatusCode BeamGasTrigClusterCut::initialize()
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if (sc.isFailure()) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+  verbose() << "==> Initialize" << endmsg;
   
   m_rHitManager = tool<Tf::DefaultVeloRHitManager>( "Tf::DefaultVeloRHitManager", m_hitManagerName );
   
@@ -60,7 +57,7 @@ StatusCode BeamGasTrigClusterCut::initialize()
 //=============================================================================
 StatusCode BeamGasTrigClusterCut::execute()
 {
-  debug() << "==> Execute" << endmsg;
+  verbose() << "==> Execute" << endmsg;
   
   // Evaluate the fraction of unused clusters in a subset of the Velo Sensors and
   // set final decision of the BeamGasClusterCut algorithm
@@ -97,7 +94,7 @@ StatusCode BeamGasTrigClusterCut::execute()
 //=============================================================================
 StatusCode BeamGasTrigClusterCut::finalize()
 {
-  debug() << "==> Finalize" << endmsg;
+  verbose() << "==> Finalize" << endmsg;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }

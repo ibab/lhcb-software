@@ -1,21 +1,20 @@
-// $Id: BeamGasTrigClusterCut.h,v 1.1.1.2 2008-07-27 11:35:09 phopchev Exp $
+
 #ifndef INCLUDE_BEAMGASTRIGCLUSTERCUT_H
 #define INCLUDE_BEAMGASTRIGCLUSTERCUT_H 1
 
 #include "GaudiAlg/GaudiAlgorithm.h"
 
 namespace Tf { class DefaultVeloRHitManager; }
-  
-/** @class BeamGasTriggerClusterCut BeamGasTrigClusterCut.h
- * A simple HltAlgorithm that counts the number of unused R clusters
- * by the PatVeloRTracking. Uses a subset of the VELO Stations,
- * set by two job-options. If the fraction of unused R clusters
- * is above a given treshold (set by a job-option) it gives a positive 
- * decision. 
- *
- * @author Plamen Hopchev <plamen.hopchev@cern.ch>
- * @date   2008-06-16
- */
+
+//--------------------------------------------------------------------
+// @class BeamGasTriggerClusterCut BeamGasTrigClusterCut.h
+// A simple GaudiAlgorithm that counts the number of unused R clusters
+// by the PatVeloRTracking. Uses a subset of the VELO Stations,
+// set by two job-options. If the fraction of unused R clusters
+// is above a given treshold (set by a job-option) it gives a positive 
+// decision. 
+//--------------------------------------------------------------------
+
 class BeamGasTrigClusterCut : public GaudiAlgorithm {
 
 public:

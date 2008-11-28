@@ -1,4 +1,4 @@
-// $Id: BeamGasTrigExtractClusters.h,v 1.1.1.2 2008-07-27 11:35:09 phopchev Exp $
+
 #ifndef INCLUDE_BEAMGASTRIGEXTRACTCLUSTERS_H
 #define INCLUDE_BEAMGASTRIGEXTRACTCLUSTERS_H 1
 
@@ -7,13 +7,12 @@
 
 namespace Tf { class DefaultVeloRHitManager; }
 
-/** @class BeamGasTrigExtractClusters BeamGasTrigExtractClusters.h
- * A simple algorithm that extracts all unused R clusters from a hit manager
- * tool and puts them on a new location on the TES. 
- *
- * @author Kurt Rinnert <kurt.rinnert@cern.ch>
- * @date   2008-04-15
- */
+//---------------------------------------------------------------------------------
+// @class BeamGasTrigExtractClusters BeamGasTrigExtractClusters.h
+// A simple GaudiAlgorithm that extracts all unused R clusters, using a hit manager
+// tool and puts them on a new location on the TES. 
+//---------------------------------------------------------------------------------
+ 
 class BeamGasTrigExtractClusters : public GaudiAlgorithm {
 
 public:

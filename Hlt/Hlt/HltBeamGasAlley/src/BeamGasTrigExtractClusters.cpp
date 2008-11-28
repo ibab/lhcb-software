@@ -1,3 +1,4 @@
+
 #include "GaudiKernel/AlgFactory.h"
 
 #include "Event/VeloLiteCluster.h"
@@ -6,12 +7,10 @@
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : BeamGasTrigExtractClusters
-//
 // 2008-06-16 : Kurt Rinnert <kurt.rinnert@cern.ch>
 //-----------------------------------------------------------------------------
 
 DECLARE_ALGORITHM_FACTORY( BeamGasTrigExtractClusters );
-
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -36,7 +35,7 @@ StatusCode BeamGasTrigExtractClusters::initialize()
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if (sc.isFailure()) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+  verbose() << "==> Initialize" << endmsg;
 
   m_rHitManager = tool<Tf::DefaultVeloRHitManager>( "Tf::DefaultVeloRHitManager", m_hitManagerName );
 
@@ -48,7 +47,7 @@ StatusCode BeamGasTrigExtractClusters::initialize()
 //=============================================================================
 StatusCode BeamGasTrigExtractClusters::execute()
 {
-  debug() << "==> Execute" << endmsg;
+  verbose() << "==> Execute" << endmsg;
 
   LHCb::VeloLiteCluster::FastContainer* clusters = new LHCb::VeloLiteCluster::FastContainer();
 
@@ -84,7 +83,7 @@ StatusCode BeamGasTrigExtractClusters::execute()
 //=============================================================================
 StatusCode BeamGasTrigExtractClusters::finalize()
 {
-  debug() << "==> Finalize" << endmsg;
+  verbose() << "==> Finalize" << endmsg;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }

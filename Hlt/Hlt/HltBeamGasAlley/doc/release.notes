@@ -4,6 +4,23 @@
 ! Purpose     : Decision algorithms for the two HLT beam-gas alleys
 !-----------------------------------------------------------------------------
 
+! 2008-11-28 Plamen Hopchev
+	- v2r0
+	- runs with DaVinci v20r3 (Hlt v4r3)
+	- Option files: general reorganizing of the option files. 
+	  Now there are just 2 option files: 
+	  * DaVinci-BeamGas.py - Almost 1-to-1 copy of DaVinci.py with changes 
+	    of the input files ( 2 private (Massi) signal and 1 background files are included )
+	  * BeamGasAlleys.py   - Setting the Algorithms Sequences and configuration 
+	    of the added algorithms
+        - Algorithms:
+	  * Now we have just 1 algorithm to check the L0Decision, The existance of 
+	    RZTracks and Bunch-crossing type. I.e. BeamGasTrigCheckL0TracksBXType 
+	    insted of BeamGasTrigCheckL0AndTracks and BeamGasTrigBGOnlyL0.	    
+	    It is used by the 2 sub-alleys, BeamGasWithPP and BeamGasOnly, 
+	    with different values for the job-options.
+	  * Changes in the algorithm BeamGasTrigVertexCut in order to comply with 
+	    changes in the HLT package.
 
 ! 2008-07-27 Plamen Hopchev
 	- v1r2

@@ -1,10 +1,9 @@
 #============================================================================
-# Created    : 2008-07-14
+# Created    : 2008-11-28
 # Maintainer : Plamen Hopchev
 #============================================================================
 package           HltBeamGasAlley
-version           v1r0
-
+version           v2r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -17,7 +16,6 @@ include_path      none
 use	GaudiAlg	v*
 use	HltBase		v*	Hlt
 use	AIDA		v*	LCG_Interfaces
-
 
 # Component library building rule
 #============================================================================
