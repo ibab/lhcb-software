@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: GetPack.py,v 1.4 2008-11-28 10:45:22 marcocle Exp $
+# $Id: GetPack.py,v 1.5 2008-11-28 13:59:41 marcocle Exp $
 
 from LbUtils.Script import Script
 from LbUtils import rcs
@@ -69,16 +69,21 @@ __repositories__ = { "gaudi": { "ssh":       SVNReposInfo("svn+ssh", "svn.cern.c
 # Define default repositories
 __repositories__["gaudi"]["default"] = __repositories__["gaudi"]["ssh"]
 if sys.platform.startswith("linux"):
-     __repositories__["lhcb"]["default"] = __repositories__["lhcb"]["kserver"]
+    __repositories__["lhcb"]["default"] = __repositories__["lhcb"]["kserver"]
+else:
+    __repositories__["lhcb"]["default"] = __repositories__["lhcb"]["ssh"]
 
 ## Class used as exception to allow a "quit" in any moment
 class Quit:
+    pass
+## Class used as exception to skip a package in any moment
+class Skip:
     pass
 
 ## @class GetPack
 # Main script class for getpack.
 class GetPack(Script):
-    _version = "$Id: GetPack.py,v 1.4 2008-11-28 10:45:22 marcocle Exp $".replace("$","").replace("Id:","").strip()
+    _version = "$Id: GetPack.py,v 1.5 2008-11-28 13:59:41 marcocle Exp $".replace("$","").replace("Id:","").strip()
     def __init__(self):
         Script.__init__(self, usage = "\n\t%prog [options] package [ [version] ['tag'|'head'] ]"
                                       "\n\t%prog [options] -i [repository [hat]]"
@@ -94,11 +99,16 @@ class GetPack(Script):
         
         self.requested_package = None
         self.requested_package_version = None
+        
+        self.project_name = None
+        self.project_version = None
 
         self.show_uses_regexp = re.compile(r"# (?P<spaces> *)use (?P<package>[^ ]+) (?P<version>[^ ]+) (?P<hat>[^ ]*)")
         
     def defineOpts(self):
         """ User options -- has to be overridden """
+        self.parser.set_conflict_handler("resolve")
+
         self.parser.add_option("-i", "--interactive", action = "store_true",
                                help = "prompt for the package to get (using repository/hat to refine the list)")
         self.parser.add_option("-r", "--recursive", action = "store_true",
@@ -116,7 +126,7 @@ class GetPack(Script):
         self.parser.add_option("-u", "--unversioned", action = "store_false",
                                dest = "version_dirs",
                                help = "do not use versioned subdirectories for the packages [default]")
-        self.parser.add_option("-V", "--versioned", action = "store_true",
+        self.parser.add_option("-v", "--versioned", action = "store_true",
                                dest = "version_dirs",
                                help = "use versioned subdirectories for the packages")
         self.parser.add_option("--user",
@@ -126,6 +136,8 @@ class GetPack(Script):
                                       "environment variable GETPACK_USER.")
         self.parser.add_option("-P", "--project", action = "store_true",
                                help = "create a project top level directory")
+        self.parser.add_option("-b", "--batch", action = "store_true",
+                               help = "never ask the user if in doubt, but skip the package")
         self.parser.set_defaults(protocol = "default",
                                  version_dirs = False)
         if "GETPACK_USER" in os.environ:
@@ -193,6 +205,9 @@ class GetPack(Script):
         return idx
     
     def _askVersion(self, versions):
+        if self.options.batch:
+            # never ask for a version in batch mode
+            raise Skip
         ans = None
         default = versions[0]
         while not ans:
@@ -242,6 +257,8 @@ class GetPack(Script):
             if (not version) or (version not in versions):
                 if version:
                     self.log.warning("Version '%s' not found for package '%s'" % (version, package))
+                else:
+                    self.log.warning("Version not specified for package '%s'" % package)
                 version = self._askVersion(versions)
         self.log.info("Checking out %s %s (from '%s')" % (package, version, rep.repository))
         rep.checkout(package, version, vers_dir = self.options.version_dirs)
@@ -273,6 +290,8 @@ class GetPack(Script):
             if (not version) or (version not in versions):
                 if version:
                     self.log.warning("Version '%s' not found for project '%s'" % (version, project))
+                else:
+                    self.log.warning("Version not specified for project '%s'" % project)
                 version = self._askVersion(versions)
         self.log.info("Checking out %s %s (from '%s')" % (project, version, rep.repository))
         rep.checkout(project, version, vers_dir = True, project = True)
@@ -378,13 +397,19 @@ class GetPack(Script):
             if self.args:
                 self.parser.error("Option '-i' requires maximum 2 arguments")
         if self.options.project:
-            if len(self.args) != 2:
-                self.parser.error("Option '--project' requires 2 arguments")
-            self.project_name, self.project_version = self.args
+            # getpack.py --project project [version]
+            if self.args:
+                self.project_name = self.args.pop(0)
+                if self.args:
+                    self.project_version = self.args.pop(0)
+                if self.args:
+                    self.parser.error("requires maximum 2 arguments")
+            else:
+                self.parser.error("project name is required")
             # LHCb projects have uppercase names
             self.project_name = self.project_name.upper()
             # I want to use the bare version number and not the conventional one
-            if self.project_version.startswith(self.project_name + "_"):
+            if self.project_version and self.project_version.startswith(self.project_name + "_"):
                 self.project_version = self.project_version[len(self.project_name)+1:]
         else:
             # getpack.py [-u] package [version]
@@ -402,6 +427,9 @@ class GetPack(Script):
             self.options.recursive = True
     
     def askPackage(self):
+        if self.options.batch:
+            # never ask for a package in batch mode
+            raise Skip
         # select package
         keys = self.packages.keys()
         keys.sort()
@@ -412,6 +440,9 @@ Select the package
         return keys[idx]
     
     def askProject(self):
+        if self.options.batch:
+            # never ask for a project in batch mode
+            raise Skip
         # select package
         keys = self.projects.keys()
         keys.sort()
@@ -452,7 +483,7 @@ Select the project
         if self.requested_package and self.requested_package not in self.packages:
             self.log.error("Unknown package '%s'!", self.requested_package)
             self.requested_package = None
-        if self.requested_package is None or self.requested_package not in self.packages:
+        if self.requested_package is None:
             self.requested_package = self.askPackage()
         
         # Dictionaries (pkg->version) of done, skipped and to-do packages
@@ -473,11 +504,14 @@ Select the project
                 # Not found
                 skipped_packages[pkg] = vers
                 continue
-            # Check out the package
-            done_packages[pkg] = self.checkout(pkg, vers)
-            pkgdir = done_packages[pkg][2]
-            # See if we need to check out something else
-            todo_packages.update(self._getNeededPackages(pkgdir))
+            try:
+                # Check out the package
+                done_packages[pkg] = self.checkout(pkg, vers)
+                pkgdir = done_packages[pkg][2]
+                # See if we need to check out something else
+                todo_packages.update(self._getNeededPackages(pkgdir))
+            except Skip:
+                skipped_packages[pkg] = vers
         
         print "Processed packages:"
         pkgs = done_packages.keys()
@@ -490,12 +524,15 @@ Select the project
             pkgs = skipped_packages.keys()
             pkgs.sort()
             for p in pkgs:
-                print "\t%s" % p
+                print "\t%s\t%s" % (p, skipped_packages[p])
     
     def getproject(self):
-        if self.project_name not in self.projects:
+        if self.project_name and self.project_name not in self.projects:
             self.log.error("Unknown project '%s'!", self.project_name)
+            self.project_name = None
+        if self.project_name is None:
             self.project_name = self.askProject()
+        
         proj = self.checkoutProject(self.project_name, self.project_version)
         if self.options.recursive:
             # get the conatiner package too, etc.
@@ -515,9 +552,14 @@ Select the project
                             break
                 self.requested_package_version = proj[1] # this is the actual version extracted
                 self.log.info("Retrieving packages in %s", proj[2])
-                os.chdir(proj[2]) # go to the project directory
-                self.log.info("Container package is %s %s", self.requested_package, self.requested_package_version)
-                self.getpack()
+                old_cwd = os.getcwd()
+                try:
+                    os.chdir(proj[2]) # go to the project directory
+                    self.log.info("Container package is %s %s", self.requested_package, self.requested_package_version)
+                    self.getpack()
+                finally:
+                    # revert to initial directory (needed when using GetPack from python)
+                    os.chdir(old_cwd)
             except IOError, x:
                 self.log.error("Problems opening the 'project.cmt' file. %s", x)
         print "Checked out project %s %s in '%s'" % proj
@@ -528,6 +570,8 @@ Select the project
                 self.getproject()
             else:
                 self.getpack()
+        except Skip:
+            print "Stopped!"
         except Quit:
             print "Quit!"
         
