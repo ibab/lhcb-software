@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.25 2008-10-31 19:34:59 ibelyaev Exp $
+# $Id: requirements,v 1.26 2008-11-29 16:25:30 ibelyaev Exp $
 # =============================================================================
 package Relations
 author  Vanya.Belyaev
 manager Vanya.Belyaev
-
-version v5r5
+version v5r6
+# =============================================================================
 
 # ============= structure =====================================================
 branches      Relations doc cmt src dict python

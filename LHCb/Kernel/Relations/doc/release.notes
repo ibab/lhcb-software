@@ -1,9 +1,27 @@
-! $Id: release.notes,v 1.58 2008-11-17 15:45:03 cattanem Exp $ 
+! $Id: release.notes,v 1.59 2008-11-29 16:25:30 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
 ! Responsible : Vanya BELYAEV   ibelyaev@physics.syr.edu
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
+
+! 2008-11-29 - Vanya BELYAEV
+ - Relations/IsConvertible.h
+   Reflex fof gcc4.3 does not accept usage of 
+   boost::is_convertible 
+   (claim for the problem for boost:is_abstract)/
+   C++ code is OK, but Refelx does not like it..
+   TEMPORARY, disable the usage of boost::is_convertible
+   and use the implementation by Alezandrescu.
+
+   The same problmes happens with LoKi::Convertible..
+   Probably it is worth to report the problem to Reflex team.
+   Btw - I woudl propose to move this utility 
+   Relations::IsConvertible (or LoKi::Convertible) somewhere 
+   to Gaudi 
+   
+ - cmt/requirements 
+   version increment to v5r6 
 
 !====================== Relations v5r5 2008-11-17 ============================
 ! 2008-11-02 - Vanya BELYAEV

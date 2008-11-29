@@ -1,8 +1,11 @@
-// $Id: ObjectTypeTraits.h,v 1.4 2006-06-11 17:46:05 ibelyaev Exp $
+// $Id: ObjectTypeTraits.h,v 1.5 2008-11-29 16:25:30 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2006/06/11 17:46:05  ibelyaev
+//  fix for OLD gcc
+//
 // ============================================================================
 #ifndef RELATIONS_ObjectTypeTraits_H
 #define RELATIONS_ObjectTypeTraits_H 1
@@ -15,7 +18,6 @@
 // ============================================================================
 // Boost 
 // ============================================================================
-#include "boost/type_traits/is_convertible.hpp"
 #include "boost/call_traits.hpp"
 #include "boost/static_assert.hpp"
 // ============================================================================
@@ -31,19 +33,21 @@
 #include "Relations/Reference.h"
 #include "Relations/IsConvertible.h"
 // ============================================================================
-
 namespace Relations
 {  
-  /// forward declaration
+  // ==========================================================================
+  /// forward declarations
+  // ==========================================================================
   template <class OBJECT>      class  Pointer   ;
   template <class OBJECT>      class  Reference ;
   template <class OBJECT>      struct Types     ;
   template <class T1,class T2> struct InConvertible ;
-  
+  // ==========================================================================
   namespace detail 
   {
+    // ========================================================================
     template <class T1,class T2> struct Conversion ;
-    
+    // ========================================================================
     template <bool,class TYPE>
     struct _Types
     {
@@ -51,6 +55,7 @@ namespace Relations
       typedef const TYPE&       Output ;
       typedef       TYPE        Inner  ;
     } ;
+    // ========================================================================
     template <bool value,class TYPE>
     struct _Types<value,TYPE*>
     {
@@ -58,6 +63,7 @@ namespace Relations
       typedef       TYPE*       Output ;
       typedef Pointer<TYPE>     Inner  ;
     } ;
+    // ========================================================================
     template <bool value ,class TYPE>
     struct _Types<value,const TYPE*>
     {
@@ -65,6 +71,7 @@ namespace Relations
       typedef       TYPE*       Output ;
       typedef Pointer<TYPE>     Inner  ; 
     } ;
+    // ========================================================================
     template <bool value,class TYPE>
     struct _Types<value,TYPE&>
     {
@@ -72,6 +79,7 @@ namespace Relations
       typedef       TYPE&       Output ;
       typedef Reference<TYPE>   Inner  ;
     } ;
+    // ========================================================================
     template <bool value,class TYPE>
     struct _Types<value,const TYPE&>
     {
@@ -79,6 +87,7 @@ namespace Relations
       typedef const TYPE&       Output ;
       typedef Reference<TYPE>   Inner  ;
     } ;
+    // ========================================================================
     template <class TYPE>
     struct _Types<true,TYPE> 
     {
@@ -86,31 +95,37 @@ namespace Relations
       typedef       TYPE*       Output  ;
       typedef SmartRef<TYPE>    Inner   ;  
     } ;
+    // ========================================================================
     template <class TYPE>
     struct _Types<true,TYPE*> 
     {
       BOOST_STATIC_ASSERT( sizeof(TYPE) == 0 )  ;
     } ;
+    // ========================================================================
     template <class TYPE>
     struct _Types<true,TYPE&> 
     {
       BOOST_STATIC_ASSERT( sizeof(TYPE) == 0 )  ;
     } ;
-  } ;
-  
+    // ========================================================================
+  } // end of namespace Relations::detail
+  // ==========================================================================
   template <class TYPE>
   struct Types 
   {
+    // ========================================================================
     enum {
       value = 
       Relations::IsConvertible<const TYPE*,const DataObject*>      :: value ||
       Relations::IsConvertible<const TYPE*,const ContainedObject*> :: value  
     } ;
+    // ========================================================================
     typedef typename detail::_Types<value,TYPE>::Input  Input  ;
     typedef typename detail::_Types<value,TYPE>::Output Output ;
     typedef typename detail::_Types<value,TYPE>::Inner  Inner  ;
+    // ========================================================================
   } ;
-
+  // ==========================================================================
   /** @struct ObjectTypeTraits
    *
    *  A helper structure to define the Object Type Traits
@@ -122,6 +137,7 @@ namespace Relations
   template <class OBJECT>
   struct ObjectTypeTraits
   {
+    // ========================================================================
     /// true type ( almost never used)
     typedef OBJECT                                  Type   ;
     /// 'type'-provider, here it is own type  
@@ -134,10 +150,10 @@ namespace Relations
     typedef typename Types<Type>::Inner             Inner  ;
     /// comparison (strict ordering criteria)
     typedef std::less<Inner>                        Less   ;
+    // ========================================================================
   } ;
-  
-}; // end of namespace Relations
-
+  // ==========================================================================
+} // end of namespace Relations
 // ============================================================================
 //  The End
 // ============================================================================
