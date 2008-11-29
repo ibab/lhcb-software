@@ -1,4 +1,4 @@
-// $Id: LoKiMCDict.h,v 1.10 2008-11-27 10:30:27 ibelyaev Exp $
+// $Id: LoKiMCDict.h,v 1.11 2008-11-29 16:06:47 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKIMCDICT_H 
 #define LOKI_LOKIMCDICT_H 1
@@ -37,33 +37,42 @@
  *  @date 2007-12-01
  */
 // ============================================================================
-// the specific printout
-// ===========================================================================     
-template <>
-std::ostream& 
-LoKi::Functors::Empty<const LHCb::MCParticle*>::fillStream
-( std::ostream& s ) const { return s << "MCEMPTY" ; }
-// ============================================================================     
-// the specific printpout
-// ============================================================================     
-template <>
-std::ostream& 
-LoKi::Functors::Size<const LHCb::MCParticle*>::fillStream
-( std::ostream& s ) const { return s << "MCSIZE" ; }
-// ============================================================================
-// the specific printout
-// ===========================================================================     
-template <>
-std::ostream& 
-LoKi::Functors::Empty<const LHCb::MCVertex*>::fillStream
-( std::ostream& s ) const { return s << "MCVEMPTY" ; }
-// ============================================================================     
-// the specific printpout
-// ============================================================================     
-template <>
-std::ostream& 
-LoKi::Functors::Size<const LHCb::MCVertex*>::fillStream
-( std::ostream& s ) const { return s << "MCVSIZE" ; }
+namespace LoKi 
+{
+  // ==========================================================================
+  namespace Functors 
+  {
+    // ========================================================================
+    // the specific printout
+    // ========================================================================
+    template <>
+    std::ostream& Empty<const LHCb::MCParticle*>::fillStream
+    ( std::ostream& s ) const { return s << "MCEMPTY" ; }
+    // ========================================================================
+    // the specific printpout
+    // ========================================================================
+    template <>
+    std::ostream& 
+    Size<const LHCb::MCParticle*>::fillStream
+    ( std::ostream& s ) const { return s << "MCSIZE" ; }
+    // ========================================================================
+    // the specific printout
+    // ========================================================================
+    template <>
+    std::ostream& 
+    Empty<const LHCb::MCVertex*>::fillStream
+    ( std::ostream& s ) const { return s << "MCVEMPTY" ; }
+    // ========================================================================
+    // the specific printpout
+    // ========================================================================
+    template <>
+    std::ostream& 
+    Size<const LHCb::MCVertex*>::fillStream
+    ( std::ostream& s ) const { return s << "MCVSIZE" ; }
+    // ========================================================================
+  } // end of namespace LoKi::Functors 
+  // ==========================================================================
+} // end of namespace LoKi
 // ============================================================================
 namespace
 {

@@ -1,4 +1,4 @@
-// $Id: LoKiGenDict.h,v 1.9 2008-11-23 19:36:05 ibelyaev Exp $
+// $Id: LoKiGenDict.h,v 1.10 2008-11-29 16:06:25 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKICOREDICT_H 
 #define LOKI_LOKICOREDICT_H 1
@@ -41,37 +41,40 @@
  *  @date 2007-12-01
  */
 // ============================================================================
-// the specialized printout 
-// ============================================================================
-template <>
-inline std::ostream& 
-LoKi::Functors::Empty<const HepMC::GenVertex*>::fillStream  
-( std::ostream& s ) const 
-{ return s << "GVEMPTY" ; }
-// ============================================================================
-// the specialized printout 
-// ============================================================================
-template <>
-inline std::ostream& 
-LoKi::Functors::Empty<const HepMC::GenParticle*>::fillStream
-( std::ostream& s ) const 
-{ return s << "GEMPTY " ; }
-// ============================================================================
-// the specialized printout 
-// ============================================================================
-template <>
-inline std::ostream& 
-LoKi::Functors::Size<const HepMC::GenVertex*>::fillStream  
-( std::ostream& s ) const 
-{ return s << "GVSIZE" ; }
-// ============================================================================
-// the specialized printout 
-// ============================================================================
-template <>
-inline std::ostream& 
-LoKi::Functors::Size<const HepMC::GenParticle*>::fillStream 
-( std::ostream& s ) const 
-{ return s << "GSIZE " ; }
+namespace LoKi
+{
+  // ==========================================================================
+  namespace Functors 
+  {
+    // ========================================================================
+    // the specialized printout 
+    // ========================================================================
+    template <>
+    inline std::ostream& Empty<const HepMC::GenVertex*>::fillStream  
+    ( std::ostream& s ) const { return s << "GVEMPTY" ; }
+    // ========================================================================
+    // the specialized printout 
+    // ========================================================================
+    template <>
+    inline std::ostream& Empty<const HepMC::GenParticle*>::fillStream
+    ( std::ostream& s ) const { return s << "GEMPTY " ; }
+    // ========================================================================
+    // the specialized printout 
+    // ========================================================================
+    template <>
+    inline std::ostream& Size<const HepMC::GenVertex*>::fillStream  
+    ( std::ostream& s ) const { return s << "GVSIZE" ; }
+    // ========================================================================
+    // the specialized printout 
+    // ========================================================================
+    template <>
+    inline std::ostream& 
+    Size<const HepMC::GenParticle*>::fillStream 
+    ( std::ostream& s ) const { return s << "GSIZE " ; }
+    // ========================================================================
+  } // end of namespace LoKi::Functors 
+  // ==========================================================================
+} // end of namespace LoKi 
 // ============================================================================
 namespace LoKi
 {
