@@ -1,4 +1,4 @@
-// $Id: LoKiNumbersDict.h,v 1.7 2008-11-21 09:06:42 ibelyaev Exp $
+// $Id: LoKiNumbersDict.h,v 1.8 2008-11-29 13:41:14 ibelyaev Exp $
 // ============================================================================
 #ifndef DICT_LOKINUMBERSDICT_H 
 #define DICT_LOKINUMBERSDICT_H 1
@@ -25,17 +25,27 @@
  *  @date   2007-12-01
  */
 // ============================================================================
-// the specific printout
-// ===========================================================================     
-template <>
-std::ostream& LoKi::Functors::Empty<double>::fillStream
-( std::ostream& s ) const { return s << "XEMPTY" ; }
-// ============================================================================     
-// the specific printpout
-// ============================================================================     
-template <>
-std::ostream& LoKi::Functors::Size<double>::fillStream
-( std::ostream& s ) const { return s << "XSIZE" ; }
+namespace LoKi 
+{
+  // ==========================================================================
+  namespace Functors 
+  {
+    // ========================================================================
+    // the specific printout
+    // ========================================================================
+    template <>
+    std::ostream& Empty<double>::fillStream
+    ( std::ostream& s ) const { return s << "XEMPTY" ; }
+    // ========================================================================
+    // the specific printpout
+    // ========================================================================
+    template <>
+    std::ostream& Size<double>::fillStream
+    ( std::ostream& s ) const { return s << "XSIZE" ; }
+    // ========================================================================
+  } // end of namespace LoKi::Functors 
+  // ==========================================================================
+} // end of namespace LoKi 
 // ============================================================================
 namespace LoKi
 {

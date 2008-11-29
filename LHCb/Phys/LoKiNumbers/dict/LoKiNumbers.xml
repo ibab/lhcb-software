@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiNumbers.xml,v 1.7 2008-11-21 09:06:42 ibelyaev Exp $ 
+     * $Id: LoKiNumbers.xml,v 1.8 2008-11-29 13:41:14 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The XML seleciton file to build Reflex 
@@ -110,6 +110,10 @@
       <method name="=" />
     </class>
     <class pattern="std::binary_function&lt;*&gt;">
+      <method name="=" />
+    </class>
+    
+    <class pattern="LoKi::Functors::*">
       <method name="=" />
     </class>
     
