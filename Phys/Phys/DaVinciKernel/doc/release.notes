@@ -1,9 +1,18 @@
-!$Id: release.notes,v 1.273 2008-11-17 16:47:27 cattanem Exp $
+!$Id: release.notes,v 1.274 2008-11-29 17:18:39 ibelyaev Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2008-11-29 - Vanya BELYAEV
+
+ - Kernel/DVAlgorithm.h
+    remove "#include <boost/lexical_cast.hpp>", 
+    since it causes Reflex problems for gcc4.3 compiler 
+    (Reflex complains about boost::is_enum) 
+ - cmt/requirements 
+   version increment to v7r2  
+    
 !======================== DaVinciKernel v7r1 2008-11-17 =====================
 ! 2008-11-17 - Tomasz Skwarnicki
  - fix problem with unwanted dependencies in ITriggerTisTos

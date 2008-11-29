@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.h,v 1.28 2008-07-10 14:55:05 pkoppenb Exp $ 
+// $Id: DVAlgorithm.h,v 1.29 2008-11-29 17:18:38 ibelyaev Exp $ 
 // ============================================================================
 #ifndef DAVINCIKERNEL_DVALGORITHM_H
 #define DAVINCIKERNEL_DVALGORITHM_H 1
@@ -34,10 +34,6 @@
 #include "Kernel/IMassVertexFit.h"
 #include "Kernel/ILifetimeFitter.h"
 #include "Kernel/IDirectionFit.h"
-// ============================================================================
-// from Boost
-// ============================================================================
-#include <boost/lexical_cast.hpp>
 // ============================================================================
 /** @class DVAlgorithm DVAlgorithm.h Kernel/DVAlgorithm.h
  *  Base Class for DaVinci Selection Algorithms:
