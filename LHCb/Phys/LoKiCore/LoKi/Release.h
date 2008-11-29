@@ -1,4 +1,4 @@
-// $Id: Release.h,v 1.5 2007-07-23 17:07:40 ibelyaev Exp $
+// $Id: Release.h,v 1.6 2008-11-29 13:24:59 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_RELEASE_H 
 #define LOKI_RELEASE_H 1
@@ -46,25 +46,27 @@ namespace LoKi
    *  @date   2006-03-11
    */
   template <class TYPE,bool>
-  struct Release
-    : public std::unary_function<TYPE*,bool>
+  struct Release : public std::unary_function<TYPE*,bool>
   {
+    // ========================================================================
     bool operator() ( TYPE*       o )
     { 
       if ( 0 != o ) { o->release() ; } 
       return 0 != o ;
     }
+    // ========================================================================
   } ;
   // ==========================================================================
   template <class TYPE>
-  struct Release<TYPE,true>
-    : public std::unary_function<IInterface*,bool>
+  struct Release<TYPE,true> : public std::unary_function<IInterface*,bool>
   {
+    // ========================================================================
     bool operator() ( IInterface* o ) 
     {
       if ( 0 != o ) { o->release() ; } 
       return 0 != o ;
     }
+    // =======================================================================
   } ;
   // ==========================================================================  
   /** helper function to invoke properly TYPE::release method 
@@ -76,10 +78,13 @@ namespace LoKi
   template <class TYPE>
   inline bool release( TYPE* obj ) 
   {
+    // ========================================================================
+    typedef LoKi::Convertible<TYPE,IInterface> _Tester ;
     // create the proper actor
-    Release<TYPE,LoKi::Convertible<TYPE,IInterface>::value> actor ;
+    Release<TYPE,_Tester::value> actor ;
     // and perform the proper action!
     return actor( obj );
+    // ========================================================================
   } 
   // ==========================================================================
 } //end of namespace LoKi

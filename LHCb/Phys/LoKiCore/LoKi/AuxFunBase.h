@@ -1,4 +1,4 @@
-// $Id: AuxFunBase.h,v 1.10 2008-10-19 16:11:40 ibelyaev Exp $
+// $Id: AuxFunBase.h,v 1.11 2008-11-29 13:24:59 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_AUXFUNBASE_H 
 #define LOKI_AUXFUNBASE_H 1
@@ -18,8 +18,8 @@
 // ============================================================================
 // LoKi
 // ============================================================================
-#include "LoKi/ILoKiSvc.h"
 #include "LoKi/Interface.h"
+#include "LoKi/ILoKiSvc.h"
 // ============================================================================
 // forward declaration
 // ============================================================================
@@ -149,10 +149,10 @@ namespace LoKi
     // ========================================================================
   private:
     // ========================================================================
-    // the event ID 
-    mutable long m_event ; ///< the event ID 
-    // LoKi service
-    mutable LoKi::Interface<LoKi::ILoKiSvc> m_lokiSvc ; ///< LoKi service
+    /// the event ID 
+    mutable long m_event ;                                      // the event ID 
+    /// LoKi service
+    mutable LoKi::Interface<LoKi::ILoKiSvc> m_lokiSvc ;         // LoKi service
     // ========================================================================
   };
   // ==========================================================================

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.127 2008-11-22 16:19:58 ibelyaev Exp $ 
+! $Id: release.notes,v 1.128 2008-11-29 13:24:59 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,19 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2008-11-29 - Vanya BELYAEV
+
+ - few fixes for gcc43 fompiler,
+   essentially Reflex does not like boost::is_convertible..
+   
+   The C++ code is OK, but Reflex complains..
+   (Btw the situation is teh samew with VC71 - C++ is fine, 
+   but Reflex does nto like it)
+
+   TEMPORARY: LoKi::Convertible is using teh sam eimplementation 
+   for win323 and GCC
+
 
 ! 2008-11-22 - Vanya BELYAEV
 

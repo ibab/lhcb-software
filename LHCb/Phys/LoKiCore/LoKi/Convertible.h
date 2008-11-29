@@ -1,4 +1,4 @@
-// $Id: Convertible.h,v 1.5 2007-07-23 17:07:37 ibelyaev Exp $
+// $Id: Convertible.h,v 1.6 2008-11-29 13:24:59 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_CONVERTIBLE_H 
 #define LOKI_CONVERTIBLE_H 1
@@ -7,11 +7,11 @@
 // ============================================================================
 // Boost 
 // ============================================================================
-#ifndef WIN32 
-#include "boost/type_traits/conversion_traits.hpp" 
-#else
+//#ifndef WIN32 
+//#include "boost/type_traits/conversion_traits.hpp" 
+//#else
 #include "boost/static_assert.hpp" 
-#endif
+//#endif
 // ============================================================================
 /** @file
  *
@@ -30,31 +30,40 @@
 namespace LoKi 
 {
   // ==========================================================================
-#ifdef WIN32
+  //#ifdef WIN32
   // ==========================================================================
   namespace detail
   {
+    // ========================================================================
     struct _Small {                 } ;
     struct _Big   { char dummy[2] ; } ;
     BOOST_STATIC_ASSERT ( sizeof( _Small ) != sizeof( _Big ) ) ;
-    
+    // ========================================================================    
     template <class T,class U>
     struct Conversion
     {
+      // ======================================================================
       static _Small Test  (  U  ) ;
       static _Big   Test  ( ... ) ;
       static T      MakeT (     ) ;
+      // ======================================================================
     public:
+      // ======================================================================
       enum { value = sizeof( Test( MakeT() ) ) == sizeof( _Small ) } ;
+      // ======================================================================
     } ;
+    // ========================================================================
   }
   // ==========================================================================
-#endif 
+  //#endif 
   // ==========================================================================
   /** @struct Convertible Convertible.h LoKi/Convertible.h
    *
-   *  The trivial structure to determina at compile-time the 
+   *  The trivial structure to determine at compile-time the 
    *  convertibility between classes
+   *
+   *  @todo Re-enable the native BOOST for LoKi::Convertible. 
+   *        Currently it breaks Reflex for  Linux/GCC43 and WindowsVC7.1
    *
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2006-03-11
@@ -62,13 +71,13 @@ namespace LoKi
   template <class TYPE1,class TYPE2>
   struct Convertible 
   {
-#ifndef WIN32
-    enum { same = false , 
-           value = boost::is_convertible<TYPE1*,TYPE2*>::value } ;
-#else
+    //#ifndef WIN32
+    //enum { same = false , 
+    //       value = boost::is_convertible<TYPE1*,TYPE2*>::value } ;
+    //#else
     enum { same = false , 
            value = LoKi::detail::Conversion<TYPE1*,TYPE2*>::value } ;
-#endif  
+    //#endif  
   } ;
   // ==========================================================================
   template <class TYPE>

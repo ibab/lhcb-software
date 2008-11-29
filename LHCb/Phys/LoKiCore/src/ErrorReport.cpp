@@ -1,4 +1,4 @@
-// $Id: ErrorReport.cpp,v 1.6 2008-10-19 16:11:40 ibelyaev Exp $
+// $Id: ErrorReport.cpp,v 1.7 2008-11-29 13:25:00 ibelyaev Exp $
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -187,11 +187,15 @@ StatusCode LoKi::ErrorReport::Print
   else                            { std::cerr << "         "  ; }
   std::cerr << msg ;
   
-  if( st.isSuccess() ) { std::cerr << "\t" << "StatusCode=SUCCESS" ; } 
-  else                 { std::cerr << "\t" << "StatusCode=FAILURE" ; }
+  if      ( st.isSuccess     () ) 
+  { std::cerr << "\t" << "StatusCode=SUCCESS"     ; } 
+  else if ( st.isRecoverable () )  
+  { std::cerr << "\t" << "StatusCode=RECOVERABLE" ; }
+  else if ( StatusCode::FAILURE != st.getCode()  ) 
+  { std::cerr << "\t" << "StatusCode=FAILURE/" << st.getCode() ; }
+  else 
+  { std::cerr << "\t" << "StatusCode=FAILURE"     ; }
   
-  if( st.isFailure() ) { std::cerr << " (" << st.getCode() << ")"; }
-
   std::cerr << std::endl;
   // 
   return st ;
