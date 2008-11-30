@@ -52,15 +52,13 @@ OTTimeChecker.fullDetail = true;
 Check.DetectorList  += { "Tr" }; 
 #include "$TRACKSYSROOT/options/TrackChecking.opts"
 
-// Detailed RICH reconstruction monitors
-//To use the RICH expert monitoring options you need to enable tuples with
-//NTupleSvc.Output={"FILE1 DATAFILE='brunel.tuples.root' TYP='ROOT' OPT='NEW'"};
-//#include "$RICHRECQCOPTS/RecQC_Brunel_Detailed.opts" // PID tables for all track types
-//#include "$RICHRECMONITORSOPTS/RecoMoni_Brunel.opts" // Expert common reconstruction monitors
-//#include "$RICHGLOBALPIDOPTS/RecoMoni_Brunel.opts"   // Global PID monitor
-//#include "$RICHLOCALPIDOPTS/RecoMoni_Brunel.opts"    // Local PID monitor
-
 // Calorimeters
 Check.DetectorList += { "CALO" };
 #include "$CALOASSOCIATORSROOT/options/CaloAssociators.opts"
 #include "$CALOMONIDSTOPTS/CaloChecker.opts"
+
+// ProtoParticles
+//Check.DetectorList += { "PROTO" };
+//CheckPROTOSeq.Members += { "ChargedProtoParticleTupleAlg/ChargedProtoTuple" };
+//ChargedProtoTuple.NTupleLUN = "PROTOTUPLE";
+//NTupleSvc.Output += { "PROTOTUPLE DATAFILE='protoparticles.tuples.root' TYP='ROOT' OPT='NEW'"};

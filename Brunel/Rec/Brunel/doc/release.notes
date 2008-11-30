@@ -3,6 +3,11 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2008-11-30 - Chris Jones
+ - Remove RICH monitoring options from ExpertCheck.opts (now handled by
+   RichRecQC python configurable).
+ - Add ProtoParticle expert monitoring options (commented out by default).
+
 </PRE><H1><A NAME=v34r0>2008-11-26 Brunel v34r0</A></H1><PRE>
  - Many backward incompatible changes to Configurable:
    . Adapt to configuration changes in Gaudi v20r3. Incompatible with Gaudi v20r2
