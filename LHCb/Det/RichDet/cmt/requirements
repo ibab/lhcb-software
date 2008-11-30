@@ -2,11 +2,11 @@
 # Created    : 2003-11-06
 # Maintainer : Antonis Papanestis, Christopher Rob Jones
 #============================================================================
-# $Id: requirements,v 1.67 2008-10-22 11:17:17 cattanem Exp $
+# $Id: requirements,v 1.68 2008-11-30 10:24:35 jonrob Exp $
 #============================================================================
 
 package RichDet
-version v11r3
+version v11r4
 
 # ================ structure =================================================
 branches src RichDet dict doc cmt
