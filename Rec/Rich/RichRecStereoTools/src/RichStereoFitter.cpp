@@ -1,10 +1,11 @@
+
 //-----------------------------------------------------------------------------
 /** @file RichStereoFitter.cpp
  *
  *  Implementation file for tool : RichStereoFitter
  *
  *  CVS Log :-
- *  $Id: RichStereoFitter.cpp,v 1.13 2008-10-15 12:41:27 jonrob Exp $
+ *  $Id: RichStereoFitter.cpp,v 1.14 2008-11-30 10:55:48 jonrob Exp $
  *
  *  @author Luigi Delbuono   delbuono@in2p3.fr
  *  @date   27/06/2007
@@ -119,7 +120,7 @@ StatusCode StereoFitter::initialize()
   acquireTool( "RichParticleProperties",  m_richPartProp );
   acquireTool( "RichGeomEff",             m_geomEffic );
   acquireTool( "RichPhotonSignal",        m_photonSig );
-  acquireTool( "RichRefractiveIndex",     m_refIndex );
+  acquireTool( "RichTrackEffectiveRefIndex", m_refIndex );
 
   return sc;
 }
@@ -194,7 +195,8 @@ StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
     //bool trkOK =
     trkErrStereo(inRadiatorState,richSegment,lengthEffect,errMom,err_tx2,err_ty2,trkCharge);
 
-    double m_photonThcSigma = improvedErrorPerPhoton_index( PTrk,
+    double m_photonThcSigma = improvedErrorPerPhoton_index( richSegment,
+                                                            PTrk,
                                                             lengthEffect,
                                                             errMom,
                                                             err_tx2,
@@ -501,10 +503,9 @@ bool StereoFitter::trkErrStereo(const State *state, RichRecSegment *segment,
 }
 
 
-
-
 //----------------------------------------------------------------------------
-double StereoFitter::improvedErrorPerPhoton_index( const double PTrk,
+double StereoFitter::improvedErrorPerPhoton_index( const LHCb::RichRecSegment * segment,
+                                                   const double PTrk,
                                                    const double lengthEffect,
                                                    const double errMom,
                                                    const double err_tx2,
@@ -543,9 +544,9 @@ double StereoFitter::improvedErrorPerPhoton_index( const double PTrk,
   const double smearedTotal2 = MultScattRes2 + CurvatureRes2;
 
   // average refractive index
-  const double avgRefIndex = m_refIndex->refractiveIndex(radiator);
+  const double avgRefIndex = m_refIndex->refractiveIndex(segment);
   // refractive index RMS
-  const double rmsRefIndex = m_refIndex->refractiveIndexRMS(radiator);
+  const double rmsRefIndex = m_refIndex->refractiveIndexRMS(segment);
 
   //compute asymptotic and non asymptotic chromatic error
   const double chromaticErrCoeff      = rmsRefIndex / avgRefIndex;

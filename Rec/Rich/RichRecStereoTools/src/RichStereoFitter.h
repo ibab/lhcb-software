@@ -4,7 +4,7 @@
  *  Header file for tool : Rich::Rec::StereoFitter
  *
  *  CVS Log :-
- *  $Id: RichStereoFitter.h,v 1.10 2008-07-02 09:43:23 jonrob Exp $
+ *  $Id: RichStereoFitter.h,v 1.11 2008-11-30 10:55:48 jonrob Exp $
  *
  *  @author Luigi Delbuono  delbuono@in2p3.fr
  *  @date   27/06/2007
@@ -35,7 +35,7 @@
 #include "RichRecBase/IRichStereoProjection.h"
 #include "RichRecBase/IRichGeomEff.h"
 #include "RichKernel/IRichParticleProperties.h"
-#include "RichKernel/IRichRefractiveIndex.h"
+#include "RichRecBase/IRichTrackEffectiveRefractiveIndex.h"
 #include "RichRecBase/IRichPhotonSignal.h"
 
 // Kernel
@@ -143,7 +143,7 @@ namespace Rich
       const IParticleProperties *m_richPartProp;
       const IGeomEff *m_geomEffic;                //Pointer to RichGeomEff tool
       const IPhotonSignal *m_photonSig;
-      const IRefractiveIndex * m_refIndex;
+      const ITrackEffectiveRefractiveIndex * m_refIndex;
 
       //fitter internal variables ('mutable' because of 'const' functions and object....)
       mutable double m_err_xp;
@@ -215,7 +215,8 @@ namespace Rich
                         double &trkCharge) const;
 
 
-      double improvedErrorPerPhoton_index( const double PTrk,
+      double improvedErrorPerPhoton_index( const LHCb::RichRecSegment * segment,
+                                           const double PTrk,
                                            const double lengthEffect,
                                            const double errMom,
                                            const double err_tx2,

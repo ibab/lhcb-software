@@ -2,11 +2,11 @@
 # Created    : 04/09/2007
 # Maintainer : Luigi Delbuono delbuono@in2p3.fr
 #============================================================================
-# $Id: requirements,v 1.5 2008-11-21 14:49:51 cattanem Exp $
+# $Id: requirements,v 1.6 2008-11-30 10:55:48 jonrob Exp $
 #============================================================================
 
 package RichRecStereoTools
-version v1r4
+version v1r5
 
 # ================ structure ================================================
 branches src cmt doc
