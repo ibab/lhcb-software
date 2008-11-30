@@ -5,6 +5,9 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+! 2008-11-30 - Patrick Koppenburg
+ - LoKiHt moved to LHCb
+
 </PRE><H1><A NAME=v4r4>2008-11-24 HltSys v4r4</A></H1><PRE>
 
  This version uses LHCb v26r0 and Gaudi v20r3
