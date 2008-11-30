@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::MC::PhotonSignalMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonSignalMonitor.h,v 1.9 2008-05-02 21:36:53 jonrob Exp $
+ *  $Id: RichPhotonSignalMonitor.h,v 1.10 2008-11-30 10:48:12 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -23,7 +23,7 @@
 
 // Interfaces
 #include "RichRecBase/IRichTrackSelector.h"
-#include "RichKernel/IRichRefractiveIndex.h"
+#include "RichRecBase/IRichTrackEffectiveRefractiveIndex.h"
 #include "MCInterfaces/IRichRecMCTruthTool.h"
 #include "RichRecBase/IRichExpectedTrackSignal.h"
 #include "RichRecBase/IRichGeomEff.h"
@@ -68,7 +68,7 @@ namespace Rich
         const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth; ///< Pointer to RichRecMCTruthTool interface
         const IExpectedTrackSignal * m_tkSignal;   ///< Pointer to RichExpectedTrackSignal tool
         const IGeomEff * m_geomEffic; ///< Pointer to ray-tracing RichGeomEff tool
-        const IRefractiveIndex * m_refIndex; ///< Refractive index tool
+        const ITrackEffectiveRefractiveIndex * m_refIndex; ///< Refractive index tool
         const ITrackSelector * m_trSelector;  ///< Track selector
 
       };

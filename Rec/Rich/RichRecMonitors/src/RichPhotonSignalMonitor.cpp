@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : PhotonSignalMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonSignalMonitor.cpp,v 1.10 2008-05-02 21:36:53 jonrob Exp $
+ *  $Id: RichPhotonSignalMonitor.cpp,v 1.11 2008-11-30 10:48:12 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -52,7 +52,7 @@ StatusCode PhotonSignalMonitor::initialize()
   acquireTool( "RichRecMCTruthTool",   m_richRecMCTruth );
   acquireTool( "RichExpectedTrackSignal", m_tkSignal    );
   acquireTool( "RichGeomEff",          m_geomEffic      );
-  acquireTool( "RichRefractiveIndex",     m_refIndex    );
+  acquireTool( "RichTrackEffectiveRefIndex", m_refIndex );
   acquireTool( "TrackSelector",      m_trSelector, this );
 
   // return
@@ -117,8 +117,8 @@ StatusCode PhotonSignalMonitor::execute()
       const PhotonSpectra<LHCb::RichRecSegment::FloatType> & spectra 
         = segment->signalPhotonSpectra();
       // min and max ref index values
-      double minRefIn = m_refIndex->refractiveIndex( rad, spectra.minEnergy() );
-      double maxRefIn = m_refIndex->refractiveIndex( rad, spectra.maxEnergy() );
+      double minRefIn = m_refIndex->refractiveIndex( segment, spectra.minEnergy() );
+      double maxRefIn = m_refIndex->refractiveIndex( segment, spectra.maxEnergy() );
       if ( minRefIn>maxRefIn )
       {
         const double tmp = minRefIn;
@@ -130,7 +130,7 @@ StatusCode PhotonSignalMonitor::execute()
         // photon energy for this bin
         const double energy = spectra.binEnergy(iEnBin);
         // ref index for this energy bin
-        const double refInd = m_refIndex->refractiveIndex( rad, energy );
+        const double refInd = m_refIndex->refractiveIndex( segment, energy );
         // energy spectra
         plot1D( energy, hid(rad,*hypo,"energySpectra"), "Photon energy spectra",
                 spectra.minEnergy(), spectra.maxEnergy(), spectra.energyBins(), 
@@ -154,7 +154,7 @@ StatusCode PhotonSignalMonitor::execute()
             "Av. energy of signal photons - True type", minPhotEn[rad], maxPhotEn[rad] );
 
     // refractive index
-    const double refInd = m_refIndex->refractiveIndex( rad, avgEnEmit );
+    const double refInd = m_refIndex->refractiveIndex( segment, avgEnEmit );
     plot1D( refInd-1, hid(rad,mcType,"refIndM1"),
             "Refractive index n-1", minRefInd[rad]-1, maxRefInd[rad]-1 );
 
