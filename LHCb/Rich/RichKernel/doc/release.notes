@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.208 2008-11-26 13:34:02 jonrob Exp $
+! $Id: release.notes,v 1.209 2008-11-30 10:34:16 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
+
+! 2008-11-30 - Chris Jones
+ - Extend tool interface IRichRefractiveIndex with new methods to 
+   calculate the effective index for a set of radiator intersections.
+ - Add new tool mapping to RichToolRegistry.
+ - Set custom NTuple LUN in tupling base classes.
 
 ! 2008-11-26 - Chris Jones
  - Add new MC photon creator options that cheats the track direction at

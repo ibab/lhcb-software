@@ -5,7 +5,7 @@
  *  Implementation of templated constructors for Rich::CommonBase
  *
  *  CVS Log :-
- *  $Id: RichCommonConstructors.cpp,v 1.7 2008-10-29 12:17:56 jonrob Exp $
+ *  $Id: RichCommonConstructors.cpp,v 1.8 2008-11-30 10:34:16 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-09-18
@@ -61,7 +61,8 @@ namespace Rich
       m_regName      ( context().empty() ?
                        "RichToolRegistry" : context()+"_RichToolRegistry" )
   {
-    declareProperty( "ToolRegistryName", m_regName );
+    declareProperty ( "ToolRegistryName", m_regName );   
+    setProperty     ( "HistoTopDir",  "RICH/" );
   }
   template <>
   CommonBase<GaudiHistoAlg>::CommonBase( const std::string& /* type */,
@@ -86,7 +87,10 @@ namespace Rich
       m_regName      ( context().empty() ?
                        "RichToolRegistry" : context()+"_RichToolRegistry" )
   {
-    declareProperty( "ToolRegistryName", m_regName );
+    declareProperty ( "ToolRegistryName", m_regName ); 
+    setProperty     ( "HistoTopDir",  "RICH/" );
+    setProperty     ( "NTupleTopDir", "RICH/" ); 
+    setProperty     ( "NTupleLUN",    "RICHTUPLE1" );
   }
   template <>
   CommonBase<GaudiTupleAlg>::CommonBase( const std::string& /* type */,
@@ -137,7 +141,8 @@ namespace Rich
       m_regName      ( context().empty() ?
                        "RichToolRegistry" : context()+"_RichToolRegistry" )
   {
-    declareProperty( "ToolRegistryName", m_regName );
+    declareProperty ( "ToolRegistryName", m_regName ); 
+    setProperty     ( "HistoTopDir",  "RICH/" );
   }
   template <>
   CommonBase<GaudiHistoTool>::CommonBase( const std::string& /* name */,
@@ -162,7 +167,10 @@ namespace Rich
       m_regName      ( context().empty() ?
                        "RichToolRegistry" : context()+"_RichToolRegistry" )
   {
-    declareProperty( "ToolRegistryName", m_regName );
+    declareProperty ( "ToolRegistryName", m_regName ); 
+    setProperty     ( "HistoTopDir",  "RICH/" );
+    setProperty     ( "NTupleTopDir", "RICH/" ); 
+    setProperty     ( "NTupleLUN",    "RICHTUPLE1" );
   }
   template <>
   CommonBase<GaudiTupleTool>::CommonBase( const std::string& /* name */,

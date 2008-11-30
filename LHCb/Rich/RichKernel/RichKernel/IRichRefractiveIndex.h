@@ -5,7 +5,7 @@
  *  Header file for tool interface : Rich::IRefractiveIndex
  *
  *  CVS Log :-
- *  $Id: IRichRefractiveIndex.h,v 1.10 2007-03-09 17:58:13 jonrob Exp $
+ *  $Id: IRichRefractiveIndex.h,v 1.11 2008-11-30 10:34:16 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -20,6 +20,7 @@
 
 // LHCbKernel
 #include "Kernel/RichRadiatorType.h"
+#include "Kernel/RichRadIntersection.h"
 
 /// Static Interface Identification
 static const InterfaceID IID_IRichRefractiveIndex( "Rich::IRefractiveIndex", 1, 0 );
@@ -57,6 +58,17 @@ namespace Rich
     virtual double refractiveIndex ( const Rich::RadiatorType rad,
                                      const double energy ) const = 0;
 
+    /** Calculates the average refractive index for a given set of radiator intersections
+     *  for all visable photon energies.
+     *
+     *  @param intersectiond The radiator intersections
+     *  @param energy The photon energy at which the refractive index is to be calculated
+     *
+     *  @return The overall average refractive index
+     */
+    virtual double refractiveIndex ( const RichRadIntersection::Vector & intersections,
+                                     const double energy ) const = 0;
+
     /** Calculates the average refractive index for a given radiator type
      *  for a given range of photon energies.
      *
@@ -78,6 +90,15 @@ namespace Rich
      *  @return The overall average refractive index
      */
     virtual double refractiveIndex ( const Rich::RadiatorType rad ) const = 0;
+
+    /** Calculates the average refractive index for a given set of radiator intersections
+     *  for all visable photon energies.
+     *
+     *  @param intersectiond The radiator intersections
+     *
+     *  @return The overall average refractive index
+     */
+    virtual double refractiveIndex ( const RichRadIntersection::Vector & intersections ) const = 0;
 
     /** Calculates the refractive index R.M.S. for a given radiator type
      *  for all visable photon energies.

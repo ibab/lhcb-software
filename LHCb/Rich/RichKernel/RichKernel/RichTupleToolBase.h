@@ -5,7 +5,7 @@
  *  Header file for tool base class : RichTupleToolBase
  *
  *  CVS Log :-
- *  $Id: RichTupleToolBase.h,v 1.4 2007-03-09 17:58:13 jonrob Exp $
+ *  $Id: RichTupleToolBase.h,v 1.5 2008-11-30 10:34:16 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -50,10 +50,7 @@ namespace Rich
                    const std::string& name,
                    const IInterface* parent )
       : Rich::CommonBase<GaudiTupleTool> ( type, name, parent )
-    {
-      setHistoTopDir  ( "RICH/" );
-      //setNTupleTopDir ( "RICH/" );
-    }
+    { }
 
   };
 

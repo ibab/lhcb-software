@@ -5,7 +5,7 @@
  * Implementation file for class : RichToolRegistry
  *
  * CVS Log :-
- * $Id: RichToolRegistry.cpp,v 1.1 2008-11-17 12:55:53 cattanem Exp $
+ * $Id: RichToolRegistry.cpp,v 1.2 2008-11-30 10:34:16 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -63,7 +63,6 @@ StatusCode Rich::ToolRegistry::initialize()
   defaultTools.push_back ( "Rich::Rec::ExpectedTrackSignal/RichExpectedTrackSignal" );
   defaultTools.push_back ( "Rich::Rec::GeomEffCKMassRing/RichGeomEff" );
   defaultTools.push_back ( "Rich::Rec::PhotonSignalGaussProb/RichPhotonSignal" );
-  //defaultTools.push_back ( "Rich::Rec::PhotonSignalJeffreysErf/RichPhotonSignal" );
   defaultTools.push_back ( "Rich::Rec::CherenkovAngle/RichCherenkovAngle" );
   defaultTools.push_back ( "Rich::Rec::GeomTool/RichRecGeometry" );
   defaultTools.push_back ( "Rich::Rec::TabulatedRayleighScatter/RichRayleighScatter" );
@@ -77,6 +76,7 @@ StatusCode Rich::ToolRegistry::initialize()
   defaultTools.push_back ( "Rich::Rec::BackgroundEstiAvHPD/PixelBackgroundTool" );
   defaultTools.push_back ( "Rich::Rec::PIDPlots/RichPIDPlots" );
   defaultTools.push_back ( "Rich::Rec::IsolatedTrackTool/RichIsolatedTrack" );
+  defaultTools.push_back ( "Rich::Rec::TrackEffectiveRefractiveIndex/RichTrackEffectiveRefIndex" );
   // Global PID
   defaultTools.push_back ( "Rich::Rec::GlobalPID::TrackCreator/GPIDTrackCreator" );
   defaultTools.push_back ( "Rich::Rec::GlobalPID::LikelihoodTool/GPIDLikelihoodTool" );

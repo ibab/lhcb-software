@@ -5,7 +5,7 @@
  *  Header file for algorithm base class : RichTupleAlgBase
  *
  *  CVS Log :-
- *  $Id: RichTupleAlgBase.h,v 1.4 2007-03-09 17:58:13 jonrob Exp $
+ *  $Id: RichTupleAlgBase.h,v 1.5 2008-11-30 10:34:16 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -49,10 +49,7 @@ namespace Rich
     TupleAlgBase( const std::string& name,
                   ISvcLocator* pSvcLocator )
       : Rich::CommonBase<GaudiTupleAlg> ( name, pSvcLocator )
-    {
-      setHistoTopDir  ( "RICH/" );
-      //setNTupleTopDir ( "RICH/" );
-    }
+    { }
 
   };
 

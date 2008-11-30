@@ -5,7 +5,7 @@
  *  Header file for algorithm base class : RichHistoAlgBase
  *
  *  CVS Log :-
- *  $Id: RichHistoAlgBase.h,v 1.3 2007-03-09 17:58:13 jonrob Exp $
+ *  $Id: RichHistoAlgBase.h,v 1.4 2008-11-30 10:34:16 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -49,9 +49,7 @@ namespace Rich
     HistoAlgBase( const std::string& name,
                   ISvcLocator* pSvcLocator )
       : Rich::CommonBase<GaudiHistoAlg> ( name, pSvcLocator )
-    {
-      setHistoTopDir( "RICH/" );
-    }
+    { }
 
   };
 
