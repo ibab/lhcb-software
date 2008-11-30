@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::SnellsLawRefraction
  *
  * CVS Log :-
- * $Id: RichSnellsLawRefraction.cpp,v 1.3 2008-08-15 14:27:28 jonrob Exp $
+ * $Id: RichSnellsLawRefraction.cpp,v 1.4 2008-11-30 10:43:47 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -19,6 +19,7 @@
 #include "RichSnellsLawRefraction.h"
 
 using namespace Rich;
+
 DECLARE_TOOL_FACTORY( SnellsLawRefraction );
 
 //=============================================================================
@@ -27,8 +28,10 @@ DECLARE_TOOL_FACTORY( SnellsLawRefraction );
 SnellsLawRefraction::SnellsLawRefraction( const std::string& type,
                                           const std::string& name,
                                           const IInterface* parent )
-  : ToolBase   ( type, name, parent ),
-    m_refIndex ( NULL )
+  : ToolBase       ( type, name, parent ),
+    m_radiatorTool ( NULL ),
+    m_refIndex     ( NULL ),
+    m_radiators    ( Rich::NRadiatorTypes )
 {
   // interface
   declareInterface<ISnellsLawRefraction>(this);
@@ -50,23 +53,20 @@ StatusCode SnellsLawRefraction::initialize()
   if ( sc.isFailure() ) return sc;
 
   // get tools
+  acquireTool( "RichRadiatorTool", m_radiatorTool );
   acquireTool( "RichRefractiveIndex", m_refIndex );
-
-  // radiator tool
-  const IRadiatorTool * radTool;
-  acquireTool( "RichRadiatorTool", radTool );
 
   // get three points in exit plane
   RichRadIntersection::Vector intersections;
   Gaudi::XYZPoint p1(100,100,0), p2(100,-100,0), p3(-100,-100,0);
   const Gaudi::XYZVector v(0,0,1);
-  radTool->intersections( p1, v, Rich::Aerogel, intersections );
+  m_radiatorTool->intersections( p1, v, Rich::Aerogel, intersections );
   p1 = intersections.back().exitPoint();
   m_minZaero = p1.z();
-  radTool->intersections( p2, v, Rich::Aerogel, intersections );
+  m_radiatorTool->intersections( p2, v, Rich::Aerogel, intersections );
   p2 = intersections.back().exitPoint();
   if ( p2.z() < m_minZaero ) m_minZaero = p2.z();
-  radTool->intersections( p3, v, Rich::Aerogel, intersections );
+  m_radiatorTool->intersections( p3, v, Rich::Aerogel, intersections );
   p3 = intersections.back().exitPoint();
   if ( p3.z() < m_minZaero ) m_minZaero = p3.z();
   debug() << "Points " << p1 << " " << p2 << " " << p3 << endreq;
@@ -77,8 +77,10 @@ StatusCode SnellsLawRefraction::initialize()
   // get the normal to the plane
   m_aeroNormVect = m_aeroExitPlane.Normal();
 
-  // release tools no longer needed
-  releaseTool(radTool);
+  // Load the radiator detector elements
+  m_radiators[Rich::Aerogel]  = getDet<DeRichRadiator>( DeRichLocations::Aerogel  );
+  m_radiators[Rich::Rich1Gas] = getDet<DeRichRadiator>( DeRichLocations::Rich1Gas );
+  m_radiators[Rich::Rich2Gas] = getDet<DeRichRadiator>( DeRichLocations::Rich2Gas );
 
   return sc;
 }
@@ -91,9 +93,18 @@ void SnellsLawRefraction::aerogelToGas( Gaudi::XYZPoint & startPoint,
   {
     if ( startPoint.z() < m_minZaero )
     {
-      // get refractive indices for aerogel and rich1Gas
-      const double refAero     = m_refIndex->refractiveIndex( Rich::Aerogel,  photonEnergy );
-      const double refrich1Gas = m_refIndex->refractiveIndex( Rich::Rich1Gas, photonEnergy );
+      // get refractive indices for aerogel
+      // slower method that takes into account the tiles that are trvered
+      //RichRadIntersection::Vector intersections;
+      //m_radiatorTool->intersections( startPoint, dir, 
+      //                               Rich::Aerogel, intersections );
+      //const double refAero     = m_refIndex->refractiveIndex( intersections, photonEnergy );
+      // faster method that uses the average tile properties
+      const double refAero     = m_radiators[Rich::Aerogel]->refractiveIndex( photonEnergy );
+
+      // Rich1 gas index
+      const double refrich1Gas = m_radiators[Rich::Rich1Gas]->refractiveIndex( photonEnergy );
+
       const double Rratio      = refAero/refrich1Gas;
 
       // normalise the direction vector
@@ -121,8 +132,8 @@ void SnellsLawRefraction::gasToAerogel( Gaudi::XYZVector & dir,
   if ( photonEnergy > 0 )
   {
     // get refractive indices for aerogel and Rich1Gas
-    const double refAero     = m_refIndex->refractiveIndex( Rich::Aerogel,  photonEnergy );
-    const double refrich1Gas = m_refIndex->refractiveIndex( Rich::Rich1Gas, photonEnergy );
+    const double refAero     = m_radiators[Rich::Aerogel]->refractiveIndex( photonEnergy );
+    const double refrich1Gas = m_radiators[Rich::Rich1Gas]->refractiveIndex( photonEnergy );
     const double RratioSq    = (refAero*refAero)/(refrich1Gas*refrich1Gas);
 
     // normalise the direction vector

@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::TabulatedRefractiveIndex
  *
  *  CVS Log :-
- *  $Id: RichTabulatedRefractiveIndex.h,v 1.17 2008-05-08 12:39:50 jonrob Exp $
+ *  $Id: RichTabulatedRefractiveIndex.h,v 1.18 2008-11-30 10:43:47 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -90,6 +90,15 @@ namespace Rich
     // Calculates the refractive index R.M.S. for a given radiator type
     // for all visable photon energies.
     double refractiveIndexRMS ( const Rich::RadiatorType rad ) const;
+
+    // Calculates the average refractive index for a given set of radiator intersections
+    // for all visable photon energies.
+    double refractiveIndex ( const RichRadIntersection::Vector & intersections,
+                             const double energy ) const;
+
+    // Calculates the average refractive index for a given set of radiator intersections
+    // for all visable photon energies
+    double refractiveIndex ( const RichRadIntersection::Vector & intersections ) const;
 
   private: // methods
 

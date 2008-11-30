@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::SnellsLawRefraction
  *
  *  CVS Log :-
- *  $Id: RichSnellsLawRefraction.h,v 1.1 2008-01-11 12:04:32 jonrob Exp $
+ *  $Id: RichSnellsLawRefraction.h,v 1.2 2008-11-30 10:43:47 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   03/01/2008
@@ -27,6 +27,9 @@
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/Vector3DTypes.h"
 #include "GaudiKernel/Plane3DTypes.h"
+
+// RichDet
+#include "RichDet/DeRichRadiator.h"
 
 namespace Rich
 {
@@ -70,7 +73,10 @@ namespace Rich
 
   private:
 
-    /// Refractive index tool
+    /// Radiator tool (for intersections)
+    const IRadiatorTool * m_radiatorTool;
+
+    /// Pointer to general refractive index tool
     const IRefractiveIndex * m_refIndex;
 
     /// aerogel exit plane (for refraction correction)
@@ -81,6 +87,9 @@ namespace Rich
 
     /// z point for plane
     double m_minZaero;
+
+    /// Vector of radiators
+    std::vector<const DeRichRadiator*> m_radiators;
 
   };
 

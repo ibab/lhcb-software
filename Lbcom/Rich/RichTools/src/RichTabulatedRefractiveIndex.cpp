@@ -5,7 +5,7 @@
  * Implementation file for class : RichTabulatedRefractiveIndex
  *
  * CVS Log :-
- * $Id: RichTabulatedRefractiveIndex.cpp,v 1.15 2008-05-08 12:39:50 jonrob Exp $
+ * $Id: RichTabulatedRefractiveIndex.cpp,v 1.16 2008-11-30 10:43:47 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/03/2002
@@ -28,6 +28,7 @@ TabulatedRefractiveIndex ( const std::string& type,
                            const IInterface* parent )
   : RichToolBase ( type, name, parent ),
     m_riches     ( Rich::NRiches ),
+    m_detParams  ( NULL ),
     m_deRads     ( Rich::NRadiatorTypes    ),
     m_refRMS     ( Rich::NRadiatorTypes, 0 )
 {
@@ -45,9 +46,7 @@ StatusCode Rich::TabulatedRefractiveIndex::initialize()
   acquireTool( "RichDetParameters", m_detParams );
 
   // Get the RICH radiators
-  // for aero, get the "0" file, as the multisolid does not have any properties
-  // this whole scheme needs reworking to cope properly with different aerogel tiles.
-  m_deRads[Rich::Aerogel]  = getDet<DeRichRadiator>( DeRichLocations::Aerogel+"T0:0" );
+  m_deRads[Rich::Aerogel]  = getDet<DeRichRadiator>( DeRichLocations::Aerogel  );
   m_deRads[Rich::Rich1Gas] = getDet<DeRichRadiator>( DeRichLocations::Rich1Gas );
   m_deRads[Rich::Rich2Gas] = getDet<DeRichRadiator>( DeRichLocations::Rich2Gas );
 
@@ -97,16 +96,10 @@ StatusCode
 Rich::TabulatedRefractiveIndex::updateRefIndex( const Rich::RadiatorType rad )
 {
 
-  if ( !m_deRads[rad]->refIndex() )
-  {
-    error() << "Null refractive index for " << rad << endreq;
-    return StatusCode::FAILURE;
-  }
-
   // RMS values
-  m_refRMS[rad] = m_deRads[rad]->refIndex()->rms( m_deRads[rad]->refIndex()->minX(),
-                                                  m_deRads[rad]->refIndex()->maxX(),
-                                                  100 );
+  //m_refRMS[rad] = m_deRads[rad]->refIndex()->rms( m_deRads[rad]->refIndex()->minX(),
+  //                                                m_deRads[rad]->refIndex()->maxX(),
+  //                                                100 );
   info() << "RMS hack : " << rad << " : " << m_refRMS[rad];
   // temp hack (to be removed)
   m_refRMS[Rich::Aerogel]  = 0.488e-3;
@@ -114,18 +107,13 @@ Rich::TabulatedRefractiveIndex::updateRefIndex( const Rich::RadiatorType rad )
   m_refRMS[Rich::Rich2Gas] = 0.123e-4;
   info() << " " << m_refRMS[rad] << endreq;
 
-  // printout
-  info() << "Updated " << rad << " refractive index '"
-         << m_deRads[rad]->refIndex()->tabProperty()->name() << "' with "
-         << m_deRads[rad]->refIndex()->nDataPoints() << " data points" << endreq;
-
   return StatusCode::SUCCESS;
 }
 
 double Rich::TabulatedRefractiveIndex::refractiveIndex( const Rich::RadiatorType rad,
                                                         const double energy ) const
 {
-  return (*(m_deRads[rad]->refIndex()))[energy*Gaudi::Units::eV];
+  return m_deRads[rad]->refractiveIndex(energy);
 }
 
 double Rich::TabulatedRefractiveIndex::refractiveIndex( const Rich::RadiatorType rad,
@@ -145,8 +133,45 @@ double Rich::TabulatedRefractiveIndex::refractiveIndex( const Rich::RadiatorType
 
 }
 
-double Rich::TabulatedRefractiveIndex::refractiveIndexRMS ( const Rich::RadiatorType rad ) const
+double
+Rich::TabulatedRefractiveIndex::refractiveIndexRMS ( const Rich::RadiatorType rad ) const
 {
   // CRJ : Need to find a better way to calculate this quantity
   return m_refRMS[rad];
+}
+
+double
+Rich::TabulatedRefractiveIndex::
+refractiveIndex ( const RichRadIntersection::Vector & intersections,
+                  const double energy ) const
+{
+  // loop over all radiator intersections and calculate the weighted average
+  // according to the path length in each radiator
+  double refIndex(0), totPathL(0);
+  for ( RichRadIntersection::Vector::const_iterator iR = intersections.begin();
+        iR != intersections.end(); ++iR )
+  {
+    const double pLength = (*iR).pathLength();
+    refIndex += pLength * (*iR).radiator()->refractiveIndex(energy);
+    totPathL += pLength;
+  }
+  return ( totPathL>0 ? refIndex/totPathL : refIndex );
+}
+
+double
+Rich::TabulatedRefractiveIndex::
+refractiveIndex ( const RichRadIntersection::Vector & intersections ) const
+{
+  // loop over all radiator intersections and calculate the weighted average
+  // according to the path length in each radiator
+  double refIndex(0), totPathL(0);
+  for ( RichRadIntersection::Vector::const_iterator iR = intersections.begin();
+        iR != intersections.end(); ++iR )
+  {
+    const double energy = m_detParams->meanPhotonEnergy((*iR).radiator()->radiatorID());
+    const double pLength = (*iR).pathLength();
+    refIndex += pLength * (*iR).radiator()->refractiveIndex(energy);
+    totPathL += pLength;
+  }
+  return ( totPathL>0 ? refIndex/totPathL : refIndex );
 }
