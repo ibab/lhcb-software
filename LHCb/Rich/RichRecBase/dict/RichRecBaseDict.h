@@ -41,6 +41,7 @@
 #include "RichRecBase/IRichStereoFitter.h"
 #include "RichRecBase/IRichStereoProjection.h"
 #include "RichRecBase/IRichIsolatedTrack.h"
+#include "RichRecBase/IRichTrackEffectiveRefractiveIndex.h"
 
 // instantiate some templated classes, to get them into the dictionary
 namespace 
