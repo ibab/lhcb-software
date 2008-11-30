@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2008-11-30 - Chris Jones
+ - Add expert options to python configurable.
+
 !======================= RichRecQC v2r24 2008-11-21 ==========================
 ! 2008-11-19 - Marco Cattaneo
  - Add a new option DataType, default '2008' as in LHCbApp etc.

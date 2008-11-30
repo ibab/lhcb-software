@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.8 2008-11-26 13:46:12 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.9 2008-11-30 10:52:53 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -51,6 +51,12 @@ class RichRecQCConf(RichConfigurableUser):
         MessageSvc().setFatal += [ "LinkedTo::MC/Rich/Hits2MCRichOpticalPhotons",
                                    "LinkedTo::MC/Rich/MCPartsToMCRichTracks",
                                    "LinkedTo::MC/Rich/MCRichHitsToOpPhotons" ]
+
+        # Expert Monitoring
+        if self.getProp("ExpertHistos") :
+            # Extend PID performance monitoring types
+            self.PidTrackTypes += [ ["Forward","Match"],
+                                    ["Forward"],["Match"],["KsTrack"],["VeloTT"],["Seed"] ]
 
         # Some monitoring of raw information
         if self.getProp("RawMonitoring") :
@@ -100,9 +106,15 @@ class RichRecQCConf(RichConfigurableUser):
             RichAlignmentConf().alignmentSequncer = alignSeq
 
         # Expert Monitoring
-        #if self.getProp("ExpertHistos") :
-            # Need to convert this to python ...
-        #    importOptions( 
+        if self.getProp("ExpertHistos") :
+            
+            # Add detailed monitoring histograms from RichRecMonitor
+            # Need to convert this to python eventually ...
+            importOptions( "$RICHRECMONITORSOPTS/RecoMoni_Brunel.opts" )
+
+            # Define the RICH ntuple file
+            from Configurables import NTupleSvc
+            NTupleSvc().Output += ["RICHTUPLE1 DATAFILE='rich.tuples.root' TYP='ROOT' OPT='NEW'"]
 
     ## standalone ring finder monitors
     def ringsMoni(self,sequence):
