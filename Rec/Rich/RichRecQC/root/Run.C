@@ -11,8 +11,8 @@
 
   // make the plots
 
-  Rich::performance( "/usera/jonesc/cmtuser/Brunel_v33r3p1/Rec/Brunel/cmt/2008MC-10000ev-histos.root", "RealHPDQE", " | Real HPD QE" );
+  Rich::performance( "/usera/jonesc/cmtuser/Brunel_v34r0/Rec/Brunel/cmt/2008MC/2008MC-10000ev-expert-histos.root", "2008MC", " | 2008 MC" );
 
-  //Rich::performance( "/usera/jonesc/cmtuser/Brunel_v33r3p1/Rec/Brunel/cmt/2008MC-FixedHPDQE-10000ev-histos.root", "OldHPDQE", " | DC06 HPD QE" );
+  Rich::performance( "/usera/jonesc/cmtuser/Brunel_v34r0/Rec/Brunel/cmt/DC06/NewHPDQE_25pc-dst-10000ev-expert-histos.root", "DC06", " | DC06" );
 
 }

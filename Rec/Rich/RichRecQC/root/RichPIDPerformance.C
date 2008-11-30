@@ -199,7 +199,7 @@ namespace Rich
       top->SetLineColor(kRed);
       top->SetMarkerColor(kRed);
       top->SetTitle( ("Light ID | "+titleEx).c_str() );
-      top->GetXaxis()->SetTitle("Momentum / GeVc^{-1}" /*"Momentum / GeV/c"*/ );
+      top->GetXaxis()->SetTitle("Momentum / GeV/c" );
       top->GetYaxis()->SetTitle("Efficiency / %");
       top->DrawCopy();
 
@@ -290,7 +290,7 @@ namespace Rich
       top->SetLineColor(kRed);
       top->SetMarkerColor(kRed);
       top->SetTitle( ("Heavy ID | "+titleEx).c_str() );
-      top->GetXaxis()->SetTitle("Momentum / GeVc^{-1}");
+      top->GetXaxis()->SetTitle("Momentum / GeV/c");
       top->GetYaxis()->SetTitle("Efficiency / %");
       top->SetMarkerStyle(markType);
       if (superImpose)

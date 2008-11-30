@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.9 2008-11-30 10:52:53 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.10 2008-11-30 18:17:05 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -168,11 +168,11 @@ class RichRecQCConf(RichConfigurableUser):
                 pidMon = Rich__Rec__MC__PIDQC(name)
 
                 # Trackselector
-                tkSel = RichTools().trackSelector(private=True)
-                tkSel.MinPCut = pRange[0]
-                tkSel.MaxPCut = pRange[1]
-                if trackType != ["All"] : tkSel.TrackAlgs = trackType
+                tkSel = RichTools().trackSelector(nickname="TrackSelector",private=True)
                 pidMon.addTool( tkSel )
+                pidMon.TrackSelector.MinPCut = pRange[0]
+                pidMon.TrackSelector.MaxPCut = pRange[1]
+                if trackType != ["All"] : pidMon.TrackSelector.TrackAlgs = trackType
 
                 # Add to sequence
                 sequence.Members += [pidMon]
@@ -194,11 +194,11 @@ class RichRecQCConf(RichConfigurableUser):
             mon.HistoPrint = False
           
             # Trackselector
-            tkSel = RichTools().trackSelector(private=True)
-            if trackType != ["All"] : tkSel.TrackAlgs = trackType
-            if trackType == ["All"] : mon.MinBeta = [ 0.0, 0.0, 0.0 ]
+            tkSel = RichTools().trackSelector(nickname="TrackSelector",private=True)
             mon.addTool( tkSel )
-
+            if trackType != ["All"] : mon.TrackSelector.TrackAlgs = trackType
+            if trackType == ["All"] : mon.MinBeta = [ 0.0, 0.0, 0.0 ]
+            
             # Add to sequence
             sequence.Members += [mon]
 

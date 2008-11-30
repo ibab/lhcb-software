@@ -74,7 +74,7 @@ namespace Rich
     // file picture types
     std::vector<std::string> imageTypes;
     imageTypes.push_back( "png" );
-    imageTypes.push_back( "eps" );
+    //imageTypes.push_back( "eps" );
 
     // create figures from resolution plots
     //createAllFigures( file, tag, title );
