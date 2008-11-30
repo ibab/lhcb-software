@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichSingleSolidRadiator
  *
- *  $Id: DeRichSingleSolidRadiator.cpp,v 1.24 2008-08-18 18:30:39 jonrob Exp $
+ *  $Id: DeRichSingleSolidRadiator.cpp,v 1.25 2008-11-30 10:20:45 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -14,6 +14,7 @@
 
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // MathCore files
 #include "GaudiKernel/Transform3DTypes.h"
@@ -228,4 +229,13 @@ intersections( const Gaudi::XYZPoint& pGlobal,
     }
   }
   return (noTicks/2);
+}
+
+//=========================================================================
+// Refractive Index
+//=========================================================================
+double
+DeRichSingleSolidRadiator::refractiveIndex( const double energy ) const
+{
+  return (*(this->refIndex()))[energy*Gaudi::Units::eV];
 }

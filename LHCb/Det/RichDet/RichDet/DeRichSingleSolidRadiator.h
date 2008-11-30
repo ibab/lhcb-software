@@ -5,7 +5,7 @@
  *  Header file for detector description class : DeRichSingleSolidRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichSingleSolidRadiator.h,v 1.16 2008-08-18 18:30:39 jonrob Exp $
+ *  $Id: DeRichSingleSolidRadiator.h,v 1.17 2008-11-30 10:20:45 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -69,46 +69,32 @@ public:
    */
   virtual StatusCode initialize();
 
-  /**
-   * Finds the next intersection point with radiator.
-   * @return Status of intersection
-   * @retval StatusCode::FAILURE No intersection
-   */
+  // Finds the next intersection point with radiator.
   StatusCode nextIntersectionPoint(const Gaudi::XYZPoint& pGlobal,
                                    const Gaudi::XYZVector& vGlobal,
                                    Gaudi::XYZPoint& returnPoint) const;
 
-  /**
-   * Finds the entry and exit points of the radiator. For boolean solids
-   * this is the first and last intersection point.
-   * @return Status of intersection
-   * @retval StatusCode::FAILURE if there is no intersection
-   */
+  // Finds the entry and exit points of the radiator. For boolean solids
+  // this is the first and last intersection point.
   virtual StatusCode intersectionPoints(const Gaudi::XYZPoint& position,
                                         const Gaudi::XYZVector& direction,
                                         Gaudi::XYZPoint& entryPoint,
                                         Gaudi::XYZPoint& exitPoint ) const;
-  /**
-   * Finds the intersection points with radiator. For boolean solids there
-   * can be more than two intersection points
-   *
-   * @return The number of intersection points.
-   * @retval Zero if there is no intersction.
-   */
+
+  // Finds the intersection points with radiator. For boolean solids there
+  // can be more than two intersection points
   unsigned int intersectionPoints(const Gaudi::XYZPoint& pGlobal,
                                   const Gaudi::XYZVector& vGlobal,
                                   std::vector<Gaudi::XYZPoint>& points) const;
 
-  /**
-   * Finds the intersections (entry/exit) with radiator. For boolean solids there
-   * can be more than one intersections
-   *
-   * @return The number of intersections.
-   * @retval Zero if there is no intersction.
-   */
+  // Finds the intersections (entry/exit) with radiator. For boolean solids there
+  //  can be more than one intersections
   virtual unsigned int intersections( const Gaudi::XYZPoint& pGlobal,
                                       const Gaudi::XYZVector& vGlobal,
                                       std::vector<RichRadIntersection>& intersections ) const;
+
+  // Returns the refractive index at the given photon energy for this radiator
+  virtual double refractiveIndex( const double energy ) const;
 
   /**
    * Returns a pointer to the material of this radiator

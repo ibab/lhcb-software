@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichMultiSolidRadiator
  *
- *  $Id: DeRichMultiSolidRadiator.cpp,v 1.20 2008-10-28 10:17:22 cattanem Exp $
+ *  $Id: DeRichMultiSolidRadiator.cpp,v 1.21 2008-11-30 10:20:45 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -15,6 +15,7 @@
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // MathCore files
 #include "GaudiKernel/Vector3DTypes.h"
@@ -80,8 +81,10 @@ StatusCode DeRichMultiSolidRadiator::addVolumes (const ILVolume* lv,
   // while string volumes also store the total transformation to
   // get to/from the low level volume to the top level volume
   ILVolume::PVolumes::const_iterator pviter;
-  for (pviter=lv->pvBegin(); pviter!=lv->pvEnd(); ++pviter) {
-    if( (*pviter)->name().find(volName) != std::string::npos ) {
+  for (pviter=lv->pvBegin(); pviter!=lv->pvEnd(); ++pviter) 
+  {
+    if( (*pviter)->name().find(volName) != std::string::npos ) 
+    {
       m_pVolumes.push_back( (*pviter) );
       m_toLowLevel.push_back( toLowerLevel*(*pviter)->matrix() );
       m_toTopLevel.push_back( toLowerLevel.Inverse()*(*pviter)->matrixInv() );
@@ -90,16 +93,19 @@ StatusCode DeRichMultiSolidRadiator::addVolumes (const ILVolume* lv,
 
       // get the volume number
       const std::string::size_type numPos = (*pviter)->name().find(':');
-      if ( numPos == std::string::npos ) {
+      if ( numPos == std::string::npos ) 
+      {
         log << MSG::ERROR << "Cannot find aerogel tile number "
             << (*pviter)->name() << endmsg;
         return StatusCode::FAILURE;
       }
+
       // get a pointer to DeRichRadiator
       std::string tileNumStr = (*pviter)->name().substr(numPos+1);
       std::string radLoc = DeRichLocations::Aerogel+"T"+tileNumStr+":"+tileNumStr;
       SmartDataPtr<DeRichRadiator> deRad( dataSvc(), radLoc );
-      if ( !deRad ) {
+      if ( !deRad ) 
+      {
         log << MSG::ERROR << "Cannot find DeRichRadiator " << radLoc
             << (*pviter)->name() << endmsg;
         return StatusCode::FAILURE;
@@ -172,7 +178,8 @@ DeRichMultiSolidRadiator::intersectionPoints( const Gaudi::XYZPoint&  position,
   //Gaudi::XYZVector solidLocalVector;
   bool foundTick(false);
 
-  for (unsigned int solid=0; solid<m_solids.size(); ++solid) {
+  for (unsigned int solid=0; solid<m_solids.size(); ++solid) 
+  {
     Gaudi::XYZVector solidLocalVector( m_toLowLevel[solid]*vLocal );
     Gaudi::XYZPoint solidLocalPoint( m_toLowLevel[solid]*pLocal );
 
@@ -224,11 +231,12 @@ DeRichMultiSolidRadiator::intersectionPoints( const Gaudi::XYZPoint& pGlobal,
     noTicks = m_solids[solid]->intersectionTicks(solidLocalPoint,
                                                  solidLocalVector,
                                                  ticks);
-    if (noTicks != 0) {
+    if (noTicks != 0) 
+    {
       totalTicks += noTicks;
-      for (ISolid::Ticks::iterator tick_it = ticks.begin();
-           tick_it != ticks.end();
-           ++tick_it) {
+      for ( ISolid::Ticks::iterator tick_it = ticks.begin();
+           tick_it != ticks.end(); ++tick_it)
+      {
         //Gaudi::XYZPoint intersect(  );
         points.push_back( geometry()->toGlobal
                           (m_toTopLevel[solid]*(solidLocalPoint+solidLocalVector*(*tick_it))));
@@ -254,15 +262,18 @@ intersections( const Gaudi::XYZPoint& pGlobal,
   unsigned int noTicks;
   unsigned int totalTicks(0);
 
-  for (unsigned int solid=0; solid<m_solids.size(); ++solid) {
+  for (unsigned int solid=0; solid<m_solids.size(); ++solid) 
+  {
     Gaudi::XYZPoint solidLocalPoint( m_toLowLevel[solid]*pLocal);
     Gaudi::XYZVector solidLocalVector( m_toLowLevel[solid]*vLocal );
     noTicks = m_solids[solid]->intersectionTicks(solidLocalPoint,
                                                  solidLocalVector,
                                                  ticks);
-    if (noTicks != 0) {
+    if (noTicks != 0) 
+    {
       totalTicks += noTicks;
-      for ( unsigned int tick=0; tick<noTicks; tick += 2 ) {
+      for ( unsigned int tick = 0; tick < noTicks; tick += 2 )
+      {
         intersections.push_back(RichRadIntersection
                                 (geometry()->toGlobal(m_toTopLevel[solid]*
                                                       (solidLocalPoint+solidLocalVector*ticks[tick])),
@@ -277,5 +288,19 @@ intersections( const Gaudi::XYZPoint& pGlobal,
   return totalTicks/2;
 }
 
-
-                            
+//=========================================================================
+// Refractive Index
+//=========================================================================
+double
+DeRichMultiSolidRadiator::refractiveIndex( const double energy ) const
+{
+  double refIn(0);
+  // Loop over all tiles and form an average
+  for ( std::vector<DeRichRadiator*>::const_iterator iRad = m_radiators.begin();
+        iRad != m_radiators.end(); ++iRad )
+  {
+    // Should this be a weighted average of some form ?
+    refIn += (*((*iRad)->refIndex()))[energy*Gaudi::Units::eV];
+  }
+  return ( m_radiators.empty() ? refIn : refIn/m_radiators.size() );
+}

@@ -4,6 +4,14 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2008-11-30 - Chris Jones
+ - Add new virtual method to DeRichRadiator base class to return the
+   refractive index for a given photon energy. Implemented in both the single
+   and multi gas radiator derived classes. In the multi solid case an average
+   of all associated single solid radiators is taken. This method is needed
+   to allow the reconstruction to treat all radiator volumes in a generic
+   manor regardless of their composition.
+
 !======================== RichDet v11r3 2008-11-17 ===========================
 ! 2008-10-28 - Marco Cattaneo
  - Fixes for gcc 4.3 compilation

@@ -5,7 +5,7 @@
  *  Header file for detector description class : DeRichRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichRadiator.h,v 1.24 2008-08-18 18:30:39 jonrob Exp $
+ *  $Id: DeRichRadiator.h,v 1.25 2008-11-30 10:20:45 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -38,8 +38,9 @@
 /** @class DeRichRadiator DeRichRadiator.h
  *
  * DeRichRadiator provides information about the Rich radiators.
+ *
  * This is the common base class of the Rich Single/Multi Solid Radiator
- * detector classes
+ * detector classes.
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  */
@@ -182,13 +183,18 @@ public:
    */
   virtual unsigned int intersections( const Gaudi::XYZPoint& pGlobal,
                                       const Gaudi::XYZVector& vGlobal,
-                                      std::vector<RichRadIntersection>&
-                                      intersections ) const = 0;
+                                      std::vector<RichRadIntersection>& intersections ) const = 0;
 
   /** Returns the name of this particular radiator medium
    *  @return radiator name
    */
   inline const std::string & myName() const { return m_name; }
+
+  /** Returns the refractive index at the given photon energy for this radiator
+   *  @param energy The photon energy 
+   *  @return The refractive index at that energy
+   */
+  virtual double refractiveIndex( const double energy ) const = 0;
 
 protected:
 
