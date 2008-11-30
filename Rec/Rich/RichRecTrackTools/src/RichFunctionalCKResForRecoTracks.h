@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::FunctionalCKResForRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichFunctionalCKResForRecoTracks.h,v 1.1.1.1 2007-11-26 17:28:18 jonrob Exp $
+ *  $Id: RichFunctionalCKResForRecoTracks.h,v 1.2 2008-11-30 11:02:23 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/10/2004
@@ -21,9 +21,9 @@
 // interfaces
 #include "RichRecBase/IRichCherenkovResolution.h"
 #include "RichRecBase/IRichCherenkovAngle.h"
-#include "RichKernel/IRichRefractiveIndex.h"
 #include "RichKernel/IRichParticleProperties.h"
 #include "TrackInterfaces/ITrackExtrapolator.h"
+#include "RichRecBase/IRichTrackEffectiveRefractiveIndex.h"
 
 // DetDesc
 #include "DetDesc/ITransportSvc.h"
@@ -110,7 +110,7 @@ namespace Rich
       const ICherenkovAngle * m_ckAngle;
 
       /// Pointer to refractive index tool
-      const IRefractiveIndex * m_refIndex;
+      const ITrackEffectiveRefractiveIndex * m_refIndex;
 
       /// Pointer to RichParticleProperties interface
       const IParticleProperties * m_richPartProp;
@@ -120,8 +120,6 @@ namespace Rich
 
       /// Transport Service
       mutable ITransportSvc * m_transSvc;
-
-      std::vector<double> m_chromFact; ///< Chromatic error factor for each radiator
 
       std::vector<double> m_matThickness; ///< Material thickness infront of each radiator
 

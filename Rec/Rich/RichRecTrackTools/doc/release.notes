@@ -4,6 +4,13 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2008-11-30 - Chris Jones
+ - Add new tool to calculate the effective refractive index seen by a
+   given RichRecSegment.
+ - Adapt to changes in how the refractive index is calculated for a given 
+   track. Fixes problem with correct aerogel tile parameters not being taken
+   into account in 2008 simulations.
+
 !======================== RichRecTrackTools v1r7 2008-11-21 ==================
 ! 2008-10-29 - Chris Jones
  - Adapt to change in ITrackCreator interface (for gcc 4.3)

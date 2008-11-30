@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::CherenkovAngle
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngle.cpp,v 1.3 2008-02-15 10:31:36 jonrob Exp $
+ *  $Id: RichCherenkovAngle.cpp,v 1.4 2008-11-30 11:02:23 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -31,7 +31,8 @@ CherenkovAngle::CherenkovAngle ( const std::string& type,
     m_richPartProp  ( NULL ),
     m_refIndex      ( NULL ),
     m_smartIDTool   ( NULL ),
-    m_rayTrace      ( NULL )
+    m_rayTrace      ( NULL ),
+    m_tkIndex       ( NULL )
 {
   // interface
   declareInterface<ICherenkovAngle>(this);
@@ -49,20 +50,21 @@ StatusCode CherenkovAngle::initialize()
   acquireTool( "RichExpectedTrackSignal", m_signal       );
   acquireTool( "RichRefractiveIndex",     m_refIndex     );
   acquireTool( "RichParticleProperties",  m_richPartProp );
+  acquireTool( "RichTrackEffectiveRefIndex", m_tkIndex   );
 
   // Get the nominal refractive index for the given radiator
 
-  const double refAero      = m_refIndex->refractiveIndex( Rich::Aerogel );
-  if ( !(refAero>0) )       return Error( "Aerogel nominal refractive index < 0"  );
-  m_nomCK[Rich::Aerogel]    = acos(1.0/refAero);
+  const double refAero     = m_refIndex->refractiveIndex( Rich::Aerogel  );
+  if ( !(refAero>0) )      return Error( "Aerogel nominal refractive index < 0"  );
+  m_nomCK[Rich::Aerogel]   = acos(1.0/refAero);
 
-  const double refRich1Gas  = m_refIndex->refractiveIndex( Rich::Rich1Gas   );
-  if ( !(refRich1Gas>0) )   return Error( "Rich1Gas nominal refractive index < 0" );
-  m_nomCK[Rich::Rich1Gas]   = acos(1.0/refRich1Gas);
+  const double refRich1Gas = m_refIndex->refractiveIndex( Rich::Rich1Gas );
+  if ( !(refRich1Gas>0) )  return Error( "Rich1Gas nominal refractive index < 0" );
+  m_nomCK[Rich::Rich1Gas]  = acos(1.0/refRich1Gas);
 
-  const double refRich2Gas  = m_refIndex->refractiveIndex( Rich::Rich2Gas     );
-  if ( !(refRich2Gas>0) )   return Error( "Rich2Gas nominal refractive index < 0" );
-  m_nomCK[Rich::Rich2Gas]   = acos(1.0/refRich2Gas);
+  const double refRich2Gas = m_refIndex->refractiveIndex( Rich::Rich2Gas );
+  if ( !(refRich2Gas>0) )  return Error( "Rich2Gas nominal refractive index < 0" );
+  m_nomCK[Rich::Rich2Gas]  = acos(1.0/refRich2Gas);
 
   m_pidTypes = m_richPartProp->particleTypes();
   info() << "Particle types considered = " << m_pidTypes << endreq;
@@ -91,17 +93,13 @@ CherenkovAngle::avgCherenkovTheta( LHCb::RichRecSegment * segment,
       const double beta = m_richPartProp->beta( std::sqrt(segment->trackSegment().bestMomentum().mag2()), id);
       if ( beta > 0 )
       {
-
-        // which radiator
-        const Rich::RadiatorType rad = segment->trackSegment().radiator();
-
         // loop over energy bins
         const Rich::PhotonSpectra<LHCb::RichRecSegment::FloatType> & sigSpectra 
           = ( !useEmittedSpectrum ? segment->signalPhotonSpectra() : segment->emittedPhotonSpectra() );
         for ( unsigned int iEnBin = 0; iEnBin < sigSpectra.energyBins(); ++iEnBin )
         {
-          const double temp = beta *
-            m_refIndex->refractiveIndex( rad, sigSpectra.binEnergy(iEnBin) );
+          const double temp = 
+            beta * m_tkIndex->refractiveIndex( segment, sigSpectra.binEnergy(iEnBin) );
           angle += (sigSpectra.energyDist(id))[iEnBin] * ( temp>1 ? acos(1/temp) : 0 );
         }
 

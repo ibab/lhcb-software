@@ -4,7 +4,7 @@
  *
  *  Implementation file for tool : Rich::Rec::FunctionalCKResForRecoTracks
  *
- *  $Id: RichFunctionalCKResForRecoTracks.cpp,v 1.2 2008-08-15 14:45:28 jonrob Exp $
+ *  $Id: RichFunctionalCKResForRecoTracks.cpp,v 1.3 2008-11-30 11:02:23 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/10/2004
@@ -31,12 +31,11 @@ FunctionalCKResForRecoTracks ( const std::string& type,
                                const std::string& name,
                                const IInterface* parent )
   : RichRecHistoToolBase ( type, name, parent  ),
-    m_ckAngle       ( 0                        ),
-    m_refIndex      ( 0                        ),
-    m_trExt         ( 0                        ),
+    m_ckAngle       ( NULL                     ),
+    m_refIndex      ( NULL                     ),
+    m_trExt         ( NULL                     ),
     m_Ext           ( "TrackHerabExtrapolator" ),
-    m_transSvc      ( 0                        ),
-    m_chromFact     ( Rich::NRadiatorTypes, 0  ),
+    m_transSvc      ( NULL                     ),
     m_matThickness  ( Rich::NRadiatorTypes, 0  ),
     m_scatt         ( 13.6e-03                 ) // should be used with p in GeV
 {
@@ -85,22 +84,13 @@ StatusCode FunctionalCKResForRecoTracks::initialize()
 
   // Acquire instances of tools
   acquireTool( "RichCherenkovAngle",      m_ckAngle      );
-  acquireTool( "RichRefractiveIndex",     m_refIndex     );
+  acquireTool( "RichTrackEffectiveRefIndex", m_refIndex  );
   acquireTool( "RichParticleProperties",  m_richPartProp );
 
   m_pidTypes = m_richPartProp->particleTypes();
   info() << "Particle types considered = " << m_pidTypes << endreq;
 
   // cache values
-
-  // chromatic error factors
-  //-----------------------------------------------------------------------------------------------
-  const double aeroI = m_refIndex->refractiveIndex(Rich::Aerogel);
-  m_chromFact[Rich::Aerogel]  = ( aeroI>0     ? m_refIndex->refractiveIndexRMS(Rich::Aerogel)/aeroI : 0 );
-  const double rich1GasI = m_refIndex->refractiveIndex(Rich::Rich1Gas);
-  m_chromFact[Rich::Rich1Gas] = ( rich1GasI>0 ? m_refIndex->refractiveIndexRMS(Rich::Rich1Gas)/rich1GasI : 0 );
-  const double rich2GasI = m_refIndex->refractiveIndex(Rich::Rich2Gas);
-  m_chromFact[Rich::Rich2Gas] = ( rich2GasI>0 ? m_refIndex->refractiveIndexRMS(Rich::Rich2Gas)/rich2GasI : 0 );
 
   // scattering factors
   // ---------------------------------------------------------------------------------------------
@@ -181,7 +171,7 @@ FunctionalCKResForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segment,
       const Gaudi::XYZVector & entV = tkSeg.entryMomentum();
       const double tx = ( fabs(entV.z())>0 ? entV.x() / entV.z() : 0 );
       const double ty = ( fabs(entV.z())>0 ? entV.y() / entV.z() : 0 );
-      effectiveLength = sqrt( 1 + tx*tx + ty*ty ) * m_matThickness[rad];
+      effectiveLength = std::sqrt( 1 + tx*tx + ty*ty ) * m_matThickness[rad];
     }
     const double multScattCoeff  = m_scatt * sqrt(effectiveLength)*(1+0.038*log(effectiveLength));
     const double scattErr        = 2 * gsl_pow_2(multScattCoeff/ptot);
@@ -220,7 +210,9 @@ FunctionalCKResForRecoTracks::ckThetaResolution( LHCb::RichRecSegment * segment,
 
         // chromatic error
         //-------------------------------------------------------------------------------
-        const double chromatErr = gsl_pow_2( m_chromFact[rad] / tanCkExp );
+        const double index      = m_refIndex->refractiveIndex(segment);
+        const double chromFact  = ( index>0 ? m_refIndex->refractiveIndexRMS(segment)/index : 0 );
+        const double chromatErr = gsl_pow_2( chromFact / tanCkExp );
         hypo_res2 += chromatErr;
         //-------------------------------------------------------------------------------
 

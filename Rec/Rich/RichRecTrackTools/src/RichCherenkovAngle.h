@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::CherenkovAngle
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngle.h,v 1.2 2008-02-15 10:31:36 jonrob Exp $
+ *  $Id: RichCherenkovAngle.h,v 1.3 2008-11-30 11:02:23 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -37,6 +37,7 @@
 #include "RichRecBase/IRichExpectedTrackSignal.h"
 #include "RichKernel/IRichRefractiveIndex.h"
 #include "RichKernel/IRichParticleProperties.h"
+#include "RichRecBase/IRichTrackEffectiveRefractiveIndex.h"
 
 // GSL
 #include "gsl/gsl_math.h"
@@ -125,6 +126,9 @@ namespace Rich
 
       /// Pointer to the ray tracking tool
       const IRayTracing * m_rayTrace;
+
+      /// Track effective refractive index tool
+      const ITrackEffectiveRefractiveIndex * m_tkIndex;
 
       /// Storage for nominal saturated Cherenkov angles
       boost::array< double, Rich::NRadiatorTypes > m_nomCK;
