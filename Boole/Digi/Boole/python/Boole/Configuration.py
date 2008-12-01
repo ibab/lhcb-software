@@ -1,12 +1,12 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.28 2008-11-25 07:29:31 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.29 2008-12-01 17:01:17 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
-from LHCbKernel.Configuration import *
-from GaudiConf.Configuration import *
+from Gaudi.Configuration  import *
 import GaudiKernel.ProcessJobOptions
+from Configurables import ( LHCbConfigurableUser, LHCbApp )
 
 class Boole(LHCbConfigurableUser):
     __slots__ = {
