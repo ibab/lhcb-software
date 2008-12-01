@@ -5,7 +5,7 @@
  * Implementation file for tool TrackVelodEdxCharge
  *
  * CVS Log :-
- * $Id: TrackVelodEdxCharge.cpp,v 1.3 2008-02-08 07:37:58 cattanem Exp $
+ * $Id: TrackVelodEdxCharge.cpp,v 1.4 2008-12-01 16:43:59 mneedham Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 18/07/2006
@@ -15,6 +15,7 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "TrackVelodEdxCharge.h"
 #include "Event/VeloCluster.h"
+#include "Kernel/SiChargeFun.h"
 
 // namespaces
 using namespace LHCb;
@@ -69,60 +70,35 @@ StatusCode TrackVelodEdxCharge::nTracks( const LHCb::Track * track,
   if ( msgLevel(MSG::DEBUG) )
     debug() << " -> Found " << measurements.size() << " Measurements" << endreq;
 
-  // Fill a temp vector with the charges
-  std::vector<double> totalSignals;
+  // Fill a temp vector with the velo clusters
+  std::vector<const LHCb::VeloMeasurement*> veloMeas; veloMeas.reserve(32);
 
   // loop over measurements
   for ( TkMeas::const_iterator iM = measurements.begin();
         iM != measurements.end(); ++iM )
   {
-    // pointer to the final velo cluster
-    const VeloCluster * clus ( NULL );
-
+  
     // is this a velo phi measurement
-    if       ( const VeloPhiMeasurement * mPhi =
-               dynamic_cast<VeloPhiMeasurement*>(*iM) )
+    if       ( const VeloMeasurement* mVelo =
+               dynamic_cast<VeloMeasurement*>(*iM) )
     {
-      clus = mPhi->cluster();
+       veloMeas.push_back(mVelo);
     }
-    // or, is it a velo r measurement
-    else if ( const VeloRMeasurement * mR =
-              dynamic_cast<VeloRMeasurement*>(*iM) )
-    {
-      clus = mR->cluster();
-    }
-
-    // did we find a cluster ?
-    if ( clus )
-    {
-      // get total charge for this cluster
-      totalSignals.push_back( clus->totalCharge() );
-    }
-
   } // loop over measurements
 
   // how many charges where found
-  if ( msgLevel(MSG::DEBUG) )
-  {
-    debug() << "  -> Found " << totalSignals.size() << " charge values : "
-            << totalSignals << endreq;
+  if ( msgLevel(MSG::DEBUG) ){
+    debug() << "  -> Found " << veloMeas.size() << endreq;
   }
-  if ( !totalSignals.empty() )
-  {
-    const unsigned int reducedSize =
-      (unsigned int)ceil(m_Ratio*(double)totalSignals.size());
-    std::nth_element( totalSignals.begin(), totalSignals.begin()+reducedSize, totalSignals.end() );
-    nTks = ( std::accumulate( totalSignals.begin(), totalSignals.begin()+reducedSize, (double)0.0 )
-             / ((double)reducedSize*m_Normalisation) );
-    if ( msgLevel(MSG::DEBUG) )
-      debug() << "   -> Number of tracks deduced = " << nTks << endreq;
+
+  if ( !veloMeas.empty() ){
+    nTks = SiChargeFun::truncatedMean(veloMeas.begin(),veloMeas.end(), m_Ratio )/m_Normalisation;
   }
   else
   {
     // no velo clusters found
     if ( msgLevel(MSG::DEBUG) )
-      debug() << "   -> No VELO clusters found -> no dE/dx charge measured" << endreq;
-
+    debug() << "   -> No VELO clusters found -> no dE/dx charge measured" << endreq; 
     return StatusCode::FAILURE;
   }
 
