@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2008-12-01 Wouter Hulsbergen
+ - OTMeasurementProvider: added property to set decoder and adapted to
+   change in decoder interface
+
 ! 2008-12-02 M Needham
  - Move TrackVeloCharge algorithm to use SiChargeFun
    + profit from new functionality of the measurement classes 
