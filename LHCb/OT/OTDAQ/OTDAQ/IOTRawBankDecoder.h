@@ -1,4 +1,4 @@
-// $Id: IOTRawBankDecoder.h,v 1.5 2008-08-26 09:10:11 wouter Exp $
+// $Id: IOTRawBankDecoder.h,v 1.6 2008-12-01 21:36:20 wouter Exp $
 #ifndef OTDAQ_IOTRAWBANKDECODER_H
 #define OTDAQ_IOTRAWBANKDECODER_H 1
 
@@ -12,6 +12,10 @@
 
 // Forward declarations
 class DeOTModule ;
+
+namespace LHCb {
+  class RawEvent ;
+}
 
 /// Interface ID
 static const InterfaceID IID_OTRawBankDecoder( "IOTRawBankDecoder", 1, 0 );
@@ -42,6 +46,9 @@ public:
   /// Decode all gol headers
   virtual StatusCode decodeGolHeaders() const = 0;
   
+  /// Decode all gol headers.
+  virtual StatusCode decodeGolHeaders(const LHCb::RawEvent& rawevent) const = 0;
+  
   /// Decode all modules
   virtual StatusCode decode( LHCb::OTLiteTimeContainer& ottimes ) const = 0;
 
@@ -56,8 +63,8 @@ public:
   /// Conversion factor from tdc to ns
   virtual double nsPerTdcCount() const = 0 ;
 
-  /// Get a lite time from an OTChannelId (and its module mother)
-  virtual LHCb::OTLiteTime time( LHCb::OTChannelID id, const DeOTModule& module) const = 0 ;
+  /// Get a lite time from an OTChannelId
+  virtual LHCb::OTLiteTime time( LHCb::OTChannelID id ) const = 0 ;
 };
 
 #endif // OTDAQ_IOTRAWBANKDECODER_H

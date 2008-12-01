@@ -1,4 +1,4 @@
-// $Id: OTRawBankDecoder.h,v 1.11 2008-08-26 09:10:12 wouter Exp $
+// $Id: OTRawBankDecoder.h,v 1.12 2008-12-01 21:36:20 wouter Exp $
 #ifndef OTRAWBANKDECODER_H
 #define OTRAWBANKDECODER_H 1
 
@@ -65,6 +65,9 @@ public:
   /// Decode all gol headers
   StatusCode decodeGolHeaders() const ;
 
+  /// Decode all gol headers in a particular RawEvent
+  virtual StatusCode decodeGolHeaders(const LHCb::RawEvent& rawevent) const ;
+
   /// Decode all modules
   StatusCode decode( LHCb::OTLiteTimeContainer& ottimes ) const ;
   
@@ -79,8 +82,8 @@ public:
   /// Get the conversion factor
   double nsPerTdcCount() const { return m_nsPerTdcCount ; }
   
-  /// Create a single OTLiteTime
-  LHCb::OTLiteTime time( LHCb::OTChannelID channel, const DeOTModule& module ) const ;
+  /// Get an OTLiteTime from a channel
+  LHCb::OTLiteTime time( LHCb::OTChannelID channel ) const ;
   
 protected:
   virtual void handle ( const Incident& incident );
@@ -102,14 +105,5 @@ private:
   
   mutable OTRawBankDecoderHelpers::Detector* m_detectordata ; ///< Contains decoded data
 };
-
-//////////////////////////////////////////////////////////////////////////////////////////
-
-inline LHCb::OTLiteTime 
-OTRawBankDecoder::time( LHCb::OTChannelID channel, const DeOTModule& module ) const
-{
- 
-  return LHCb::OTLiteTime( channel, channel.tdcTime() * m_nsPerTdcCount - module.strawT0(channel.straw())) ;
-}
 
 #endif // OTRAWBANKDECODER_H
