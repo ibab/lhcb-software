@@ -226,7 +226,7 @@ namespace Tf
                              const std::string& name,
                              const IInterface* parent):
     GaudiTool(type, name, parent),
-    m_otdecoder( (IOTRawBankDecoder*)0 ),
+    m_otdecoder("OTRawBankDecoder"),
     m_rejectOutOfTime(false),
     m_tmin(-8*Gaudi::Units::ns),
     m_tmax(56*Gaudi::Units::ns),
@@ -243,6 +243,7 @@ namespace Tf
 		    m_forceDriftRadius = 0. * Gaudi::Units::mm );
     declareProperty( "ForceResolution",
 		    m_forceResolution = 5. * Gaudi::Units::mm / std::sqrt(12.) );
+    declareProperty("RawBankDecoder",m_otdecoder) ;
   }
 
   OTHitCreator::~OTHitCreator()
@@ -261,7 +262,7 @@ namespace Tf
     incSvc()->addListener(this, IncidentType::BeginEvent);
 
     // tool handle to the otlitetimedecoder
-    m_otdecoder = tool<IOTRawBankDecoder>("OTRawBankDecoder") ;
+    m_otdecoder.retrieve().ignore() ;
 
     // reset the limits if we don't cut on the time
     if(!m_rejectOutOfTime) {
@@ -323,6 +324,7 @@ namespace Tf
     m_detectordata = 0 ;
     delete m_rtrel;
     m_rtrel = 0;
+    m_otdecoder.release().ignore() ;
     return GaudiTool::finalize() ;
   }
 

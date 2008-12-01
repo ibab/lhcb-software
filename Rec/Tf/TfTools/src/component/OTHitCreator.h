@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::OTHitCreator
  *
- *  $Id: OTHitCreator.h,v 1.5 2008-08-21 18:03:18 smenzeme Exp $
+ *  $Id: OTHitCreator.h,v 1.6 2008-12-01 21:02:28 wouter Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -124,7 +124,7 @@ namespace Tf
     const OTDet::RtRelation* getRtRelation() const;
 
   private:
-    IOTRawBankDecoder* m_otdecoder ;
+    ToolHandle<IOTRawBankDecoder> m_otdecoder ;
     bool m_rejectOutOfTime ;
     double m_tmin ;
     double m_tmax ;
