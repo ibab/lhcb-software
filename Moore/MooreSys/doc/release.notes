@@ -3,6 +3,10 @@ Package     : MooreSys
 Package Coordinator : G.Raven
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v5r4>2008-12-01 Moore v5r5</A></H1><PRE>
+Based on Phys v7r4, Rec v6r0, HLT v4r4, Lbcom v6r24, Online v4r18
+  Updates for Online v4r18 and Gaudi v20r3
+
 ! 2008-11-25 - Patrick Koppenburg
  - Adapt doxygen to no version directories.
 

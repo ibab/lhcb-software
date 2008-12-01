@@ -1,24 +1,20 @@
 package MooreSys
-version v5r4
+version v5r5
 
 branches doc cmt
 
 #=======================================================
 # Don't forget the applications
 #=======================================================
-use  Moore    v5r4    Hlt
-use  TCKData  v1r4    Hlt
+use  Moore    v5r5    Hlt
+use  TCKData  v1r5    Hlt
+use  HltLuminosityMonitor  v0r1    Hlt
 
-### TMP
-use HltCommon    v4r5 Hlt
-use HltConf      v1r5 Hlt
-use HltEcalAlley v1r3 Hlt
-use HltGlobalMonitor v1r5 Hlt
-use HltRawData   v1r5 Hlt
+###TMP
+use  HltConf  v1r7    Hlt
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
-
 
 # dummy to avoid warnings...
 tag ONLINE_OVERRULE_MOORE_SETUP
