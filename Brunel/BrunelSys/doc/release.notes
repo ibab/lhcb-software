@@ -7,6 +7,7 @@ Purpose: LHCb reconstruction programs
  - Start v34r1
  - In QMTest reference, follow fixes in Rich and in LHCbConfigurableUser
  - Make DoxyFile.cfg usable wherever BrunelSys resides
+ - Update doxygen main page with current top level options files
 
 </PRE><H1><A NAME=v34r0>2008-11-26 Brunel v34r0</A></H1><PRE>
 This version uses projects Gaudi v20r3, LHCb v26r0, Lbcom v6r24
