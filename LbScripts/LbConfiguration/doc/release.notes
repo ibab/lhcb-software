@@ -1,3 +1,7 @@
+2008-12-01  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbConfiguration/rcs.py: moved from LbUtils.
+
 2008-11-28  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbConfiguration/GetPack.py: added support for projects.
