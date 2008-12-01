@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.61 2008-11-24 12:05:20 pkoppenb Exp $ 
+! $Id: release.notes,v 1.62 2008-12-01 15:48:48 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+!========================== HltConf v1r7 2008-12-01 ===================
+! 2008-12-01 - Gerhard Raven
+ - do not add PV2D to output -- in some configs, it isn't there 
 
 !========================== HltConf v1r6 2008-11-24 ===================
 ! 2008-11-22 - Tomasz Skwarnicki

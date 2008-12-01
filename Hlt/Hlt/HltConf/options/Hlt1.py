@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1.py,v 1.21 2008-11-22 23:02:25 tskwarni Exp $
+# $Id: Hlt1.py,v 1.22 2008-12-01 15:48:48 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of HLT1
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.21 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.22 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -82,7 +82,7 @@ Sequence( 'HltEndSequence', ModeOR = True, ShortCircuit = False , Members =
             , HltDecReportsWriter()
             , HltSelReportsMaker()
             , HltSelReportsWriter()
-            , HltVertexReportsMaker( VertexSelections = veloVertices + [ 'PV2D' ] )
+            , HltVertexReportsMaker( VertexSelections = veloVertices  )
             , HltVertexReportsWriter()
             , HltRoutingBitsWriter( routingBitDefinitions = routingBits )
             , HltLumiWriter()
