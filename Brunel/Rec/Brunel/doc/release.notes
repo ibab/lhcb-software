@@ -3,6 +3,11 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2008-12-01 - Chris Jones
+ - Move expert checking options from ExpertCheck.opts (obsoleted) to python
+   Configurable. Also make the expert checking respect the settings of the
+   Check and Moni sequences .
+
 ! 2008-12-01 - Marco Cattaneo
  - Remove inclusion of PatChecking sequence, now done in TrackSys(). Set instead
    "WithMC" option of TrackSys()

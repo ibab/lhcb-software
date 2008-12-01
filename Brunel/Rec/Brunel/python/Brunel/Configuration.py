@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.37 2008-12-01 16:37:00 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.38 2008-12-01 17:28:34 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -136,11 +136,8 @@ class Brunel(LHCbConfigurableUser):
             return
 
         if histOpt == "Expert":
-            from RichRecQC.Configuration import RichRecQCConf
-            RichRecQCConf().setProp( "ExpertHistos", True )
-            RecSysConf().setProp( "ExpertHistos", True )
-            importOptions( "$BRUNELOPTS/ExpertCheck.opts" )
-            IODataManager().AgeLimit += 1
+            # activate all configured expert checking
+            self.expertCheck()
 
         # Use a default histogram file name if not already set
         if not hasattr( HistogramPersistencySvc(), "OutputFile" ):
@@ -248,6 +245,82 @@ class Brunel(LHCbConfigurableUser):
     def evtMax(self):
         return LHCbApp().evtMax()
 
+    def expertCheck(self):
+
+        # Get the list of sub dets configured to run in the Check sequence
+        checkSeq = self.getProp("MCCheckSequence")
+        # Get the list of sub dets configured to run in the Moni sequence
+        moniSeq  = self.getProp("MoniSequence")
+
+        # Data on Demand for MCParticle to MCHit association, needed by ST, IT, Tr
+        ApplicationMgr().ExtSvc += [ "DataOnDemandSvc" ]
+        importOptions( "$ASSOCIATORSROOT/options/Brunel.opts" )
+
+        # TT
+        if "TT" in moniSeq :
+            from Configurables import STClusterMonitor
+            clusMoni = STClusterMonitor("TTClusterMonitor")
+            clusMoni.FullDetail = True
+            GaudiSequencer("MoniTTSeq").Members += [clusMoni]
+        if "TT" in checkSeq :
+            from Configurables import ( STEffChecker, MCParticleSelector )
+            effCheck = STEffChecker("TTEffChecker")
+            effCheck.FullDetail = True
+            effCheck.addTool(MCParticleSelector)
+            effCheck.MCParticleSelector.zOrigin = 50.0
+            effCheck.MCParticleSelector.pMin = 1.0*GeV
+            effCheck.MCParticleSelector.betaGammaMin = 1.0
+            GaudiSequencer("CheckTTSeq").Members += [effCheck]
+
+        # IT
+        if "IT" in moniSeq :
+            from Configurables import STClusterMonitor
+            clusMoni = STClusterMonitor("ITClusterMonitor")
+            clusMoni.FullDetail = True
+            clusMoni.DetType = "IT"
+            GaudiSequencer("MoniITSeq").Members += [clusMoni]
+        if "IT" in checkSeq :
+            from Configurables import ( STEffChecker, MCParticleSelector )
+            effCheck = STEffChecker("ITEffChecker")
+            effCheck.FullDetail = True
+            effCheck.addTool(MCParticleSelector)
+            effCheck.MCParticleSelector.zOrigin = 50.0
+            effCheck.MCParticleSelector.pMin = 1.0*GeV
+            effCheck.MCParticleSelector.betaGammaMin = 1.0
+            effCheck.DetType = "IT"
+            GaudiSequencer("CheckITSeq").Members += [effCheck]
+
+        # OT - These histograms should be identical to those already done in Boole.
+        if "OT" in moniSeq  : GaudiSequencer("MoniOTSeq").Members  += ["OTTimeMonitor"]
+        if "OT" in checkSeq : GaudiSequencer("CheckOTSeq").Members += ["OTTimeChecker"] # needs MCHits
+
+        # Checking on the tracks in the "best" container - needs MCHits
+        if "Tr" in  checkSeq :
+            importOptions( "$TRACKSYSROOT/options/TrackChecking.opts" )
+
+        # Calorimeters
+        if "CALO" in  checkSeq : 
+            importOptions( "$CALOASSOCIATORSROOT/options/CaloAssociators.opts" )
+            importOptions( "$CALOMONIDSTOPTS/CaloChecker.opts" )
+
+        # RICH
+        if "RICH" in checkSeq :
+            from RichRecQC.Configuration import RichRecQCConf
+            RichRecQCConf().setProp( "ExpertHistos", True )
+
+        # ProtoParticles
+        if "PROTO" in checkSeq :
+            from Configurables import ( NTupleSvc, ChargedProtoParticleTupleAlg )
+            protoChecker = ChargedProtoParticleTupleAlg("ChargedProtoTuple")
+            protoChecker.NTupleLUN = "PROTOTUPLE"
+            NTupleSvc().Output += ["PROTOTUPLE DATAFILE='protoparticles.tuples.root' TYP='ROOT' OPT='NEW'"]
+
+        # Pass expert checking option to RecSys
+        RecSysConf().setProp( "ExpertHistos", True )
+
+        # Allow multiple files open at once (SIM,DST,DIGI etc.)
+        IODataManager().AgeLimit += 1
+        
     ## Apply the configuration
     def __apply_configuration__(self):
         
