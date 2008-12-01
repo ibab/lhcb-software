@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.cpp,v 1.12 2008-10-14 08:49:57 mneedham Exp $
+// $Id: STClusterMonitor.cpp,v 1.13 2008-12-01 16:28:06 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -47,9 +47,6 @@ StatusCode STClusterMonitor::initialize()
   StatusCode sc = ST::HistoAlgBase::initialize();
   if (sc.isFailure()) return Error("Failed to initialize", sc);
     
-  // detector element     
-  m_tracker = getDet<DeSTDetector>(DeSTDetLocation::location(detType()));
-
   // sig to noise tool
   m_sigNoiseTool = tool<ISTSignalToNoiseTool>( m_sigNoiseToolName,
                                                m_sigNoiseToolName + detType());

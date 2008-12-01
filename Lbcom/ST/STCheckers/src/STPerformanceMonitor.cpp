@@ -1,4 +1,4 @@
-// $Id: STPerformanceMonitor.cpp,v 1.4 2008-10-16 13:10:34 mneedham Exp $
+// $Id: STPerformanceMonitor.cpp,v 1.5 2008-12-01 16:28:06 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -6,6 +6,7 @@
 // LHCbKernel
 #include "Kernel/STTell1ID.h"
 #include "Kernel/ISTReadoutTool.h"
+#include "Kernel/SiChargeFun.h"
 
 // STDet
 #include "STDet/DeSTDetector.h"
@@ -87,18 +88,35 @@ StatusCode STPerformanceMonitor::execute()
                                                                   deadSectors.end(),*iterS);
     testIter != deadSectors.end() ? frac += 0 : frac += (*iterS)->fractionActive() ;
   } // iterS
-
   frac /= sectors.size(); 
-  plot(frac, 1,"active fraction", 0., 1., 200);
+  plot(frac, 1,"active fraction", 0., 1., 200); //plot active fraction
 
   plot2D(m_event, frac, 11,"active fraction versus time", 0., m_expectedEvents, 0., 1., 50, 200);
 
   // get the occupancy
   const double occ = clusterCont->size()/(tracker()->nStrip()*frac); 
   plot(occ, 2,"occupancy", 0., 1., 200);
-  plot2D(m_event, occ, 12,"occ versus time", 0., m_expectedEvents, 0., 0.5e-3, 50, 200);
+  plot2D(m_event, occ, 12,"occ versus time", 0., m_expectedEvents, 0., 0.1, 50, 200);
 
 
+  // get the modal charge
+  //double shorth = SiChargeFun::shorth(clusterCont->begin(),clusterCont->end());
+  //plot(shorth, "shorth", 0., 100., 200);
+
+  // get the modal charge
+  double tm = SiChargeFun::truncatedMean(clusterCont->begin(),clusterCont->end());
+  plot(tm, "tm", 0., 100., 200);
+  plot2D(m_event,tm,13,"tms versus time", 0., m_expectedEvents, 0., 100, 200, 200);
+
+  /*
+  double lms = SiChargeFun::LMS(clusterCont->begin(), clusterCont->end());
+  plot(lms,"lms", 0., 100., 200 );
+  */
+
+  double gm = SiChargeFun::generalizedMean(clusterCont->begin(), clusterCont->end());
+  plot(gm,"gm", 0., 100., 200);
+
+ 
   return StatusCode::SUCCESS;
 }
 

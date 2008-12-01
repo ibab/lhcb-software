@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.h,v 1.4 2008-10-14 08:49:57 mneedham Exp $
+// $Id: STClusterMonitor.h,v 1.5 2008-12-01 16:28:06 mneedham Exp $
 #ifndef STClusterMonitor_H
 #define STClusterMonitor_H 1
 
@@ -8,7 +8,6 @@ namespace LHCb{
   class STCluster;
 };
 class ISTSignalToNoiseTool;
-class DeSTDetector;
 
 
 /** @class STClusterMonitor STClusterMonitor.h
@@ -42,8 +41,6 @@ private:
   virtual void fillHistograms(const LHCb::STCluster* aCluster);
 
   // histograms
-  DeSTDetector* m_tracker;
-  
   std::string m_sigNoiseToolName;
   ISTSignalToNoiseTool* m_sigNoiseTool;
 

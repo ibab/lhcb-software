@@ -1,4 +1,4 @@
-// $Id: STDigitMonitor.cpp,v 1.5 2008-10-16 13:10:34 mneedham Exp $
+// $Id: STDigitMonitor.cpp,v 1.6 2008-12-01 16:28:06 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -8,6 +8,8 @@
 
 // local
 #include "STDigitMonitor.h"
+
+#include "Kernel/STDigitFun.h"
 
 using namespace LHCb;
 
@@ -57,6 +59,9 @@ StatusCode STDigitMonitor::execute()
   for( ; iterDigit != digitsCont->end(); ++iterDigit){
     this->fillHistograms(*iterDigit);
   }
+
+  double gm = SiChargeFun::generalizedMean(digitsCont->begin(), digitsCont->end());
+  plot(gm,"gm", 0., 100., 200);
 
   return StatusCode::SUCCESS;
 }
