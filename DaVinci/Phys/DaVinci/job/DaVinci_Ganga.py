@@ -56,9 +56,8 @@ j.name = 'MyDaVinci'
 # The job configuration
 #-------------------------------------------------------------------------------
 # Define the configuration file(s) to use
-j.application.optsfile = [ File ( j.application.user_release_area +
-                                  '/DaVinci_' + j.application.version + '/Phys/DaVinci/'
-                                  + j.application.version + '/options/DaVinci.py' ) ]
+appOpts = j.application.user_release_area + '/DaVinci_' + j.application.version + '/Phys/DaVinci/options/'
+j.application.optsfile = [ File ( appOpts+'DaVinci.py' ), File(appOpts+'DC06_stripped_bbincl_lumi2.py') ]
 # Extra options
 # Appended to the end of the main options to override default settings
 #j.application.extraopts = ''
