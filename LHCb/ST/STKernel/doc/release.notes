@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.44 2008-11-18 15:49:55 cattanem Exp $
+! $Id: release.notes,v 1.45 2008-12-01 16:17:25 mneedham Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
+
+! 2008-12-02 M Needham
+ - Add specializations for STDigit charge manipulation 
 
 !====================== STKernel v1r9 2008-11-18 ============================
 ! 2008-11-18 M Cattaneo
