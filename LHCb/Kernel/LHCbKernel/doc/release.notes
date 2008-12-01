@@ -4,6 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2008-12-02 M Needham
+ - Add interface functions for robust estimation of the mode in Silicon [SiChargeFun.h]
+ - Add functors for sorting +accumulating by charge [SiDataFunctor.h]   
+
 ! 2008-12-01 - Marco Cattaneo
  - In Configurable, fix setOtherProp to work also for property types for
    which hasattr is True even if property has not been set (lists, dicts etc.)

@@ -1,4 +1,4 @@
-// $Id: SiDataFunctor.h,v 1.1 2006-03-15 09:07:03 mneedham Exp $
+// $Id: SiDataFunctor.h,v 1.2 2008-12-01 16:11:31 mneedham Exp $
 #ifndef _SiDataFunctor_H_
 #define _SiDataFunctor_H_
 
@@ -34,12 +34,39 @@ template <typename TYPE>
     inline bool operator() (const comp_type& testID, const TYPE& obj ) const{
       return ( obj.channelID() > testID);
     }
+  }; 
 
-}; 
+  /// class for accumulating energy
+  template <class TYPE> 
+    class Accumulate_Charge
+    : public std::binary_function<double,TYPE, double>{
+  public:
+    inline double  operator() ( double& charge  , TYPE obj ) const { 
+      return ( !obj ) ? charge :  charge+= obj->totalCharge() ; };
+    ///
+ };
 
+ template <class TYPE1, class TYPE2 = TYPE1 >
+  class Less_by_Charge
+    : public std::binary_function<TYPE1,TYPE2,bool> 
+  {
+  public:
 
-};
-
+    /** compare the dep charge of one object with the 
+     *  dep Charge  of another object
+     *  @param obj1   first  object 
+     *  @param obj2   second object
+     *  @return  result of the comparision
+     */
+    inline bool operator() ( TYPE1 obj1 , TYPE2 obj2 ) const 
+    { 
+      return 
+        ( !obj1 ) ? true  : 
+        ( !obj2 ) ? false : obj1->totalCharge() < obj2->totalCharge() ; 
+    }
+    ///
+  };
+}
 
 #endif // _SiDataFunctor_H_
 
