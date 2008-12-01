@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.7 2008-11-14 17:14:37 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.8 2008-12-01 16:28:28 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -22,6 +22,7 @@ class TrackSys(LHCbConfigurableUser):
        ,"ExpertTracking":  []  # list of expert Tracking options, see KnownExpertTracking
        ,"TrackPatRecAlgorithms": []  # List of track pattern recognition algorithms to run
        ,"TrackExtraInfoAlgorithms": []  # List of track 'extra info' algorithms to run
+       ,"WithMC":       False # set to True to use MC truth
         }
     
     ## Possible expert options
@@ -61,8 +62,9 @@ class TrackSys(LHCbConfigurableUser):
         elif False == value and True  == optSet : self.getProp("SpecialData").remove(option)
 
     ## @brief Apply the configuration
-    def applyConf(self):
+    def __apply_configuration__(self):
         self.defineOptions()
         importOptions( "$TRACKSYSROOT/options/RecoTracking.py" )
-
-    
+        if self.getProp( "WithMC" ):
+            importOptions("$TRACKSYSROOT/options/PatChecking.py")
+   

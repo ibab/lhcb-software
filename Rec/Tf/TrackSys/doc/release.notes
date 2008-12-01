@@ -4,6 +4,11 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2008-12-01 - Marco Cattaneo
+ - Add "WithMC" option to TrackSys Configurable, and import PatChecking.py if it
+   is set to True
+ - Fix PatChecking.py to handle correctly TrackSys().veloOpen() case
+
 !============================ TrackSys v4r19 2008-11-21 ======================
 ! 2008-11-14 - Chris Jones
  - Fixes to python Configurable for latest Gaudi changes

@@ -10,13 +10,16 @@ from Configurables import ( TrackAssociator, TrackResChecker,
                             MCParticleSelector)
                             
 
-GaudiSequencer("CheckPatSeq").Members  += [ TrackAssociator("AssocVeloRZ"),
-                                            TrackAssociator("AssocVelo"),
-                                            TrackAssociator("AssocVeloTT"),
-                                            TrackAssociator("AssocForward"),
-                                            TrackAssociator("AssocTTrack"),
-                                            TrackAssociator("AssocMatch"),
-                                            TrackAssociator("AssocDownstream")];
+if not TrackSys().veloOpen():
+   GaudiSequencer("CheckPatSeq").Members += [ TrackAssociator("AssocVeloRZ") ]
+
+GaudiSequencer("CheckPatSeq").Members    += [ TrackAssociator("AssocVelo"),
+                                              TrackAssociator("AssocVeloTT"),
+                                              TrackAssociator("AssocForward"),
+                                              TrackAssociator("AssocTTrack"),
+                                              TrackAssociator("AssocMatch") ]
+if not TrackSys().veloOpen():
+   GaudiSequencer("CheckPatSeq").Members += [ TrackAssociator("AssocDownstream")]
 
 	 
 TrackAssociator("AssocVeloRZ").TracksInContainer     = "Rec/Track/RZVelo";
@@ -41,16 +44,18 @@ TrackResChecker("TrackResChecker").FullDetail = False;
 TrackResChecker("TrackResChecker").HistoPrint = False;
 TrackResChecker("TrackResChecker").StatPrint = False;
 
-# example of how to use the
-GaudiSequencer("CheckPatSeq").Members  += [ TrackEffChecker("VeloRZ"),
-                                            TrackEffChecker("Velo"),
-                                            TrackEffChecker("VeloTT"),
-                                            TrackEffChecker("Forward"),
-                                            TrackEffChecker("TTrack"),
-                                            TrackEffChecker("Match"),
-                                            TrackEffChecker("Downstream"),
-                                            TrackEffChecker("BestTracks")];
+if not TrackSys().veloOpen():
+  GaudiSequencer("CheckPatSeq").Members += [ TrackEffChecker("VeloRZ") ]
 
+GaudiSequencer("CheckPatSeq").Members   += [ TrackEffChecker("Velo"),
+                                             TrackEffChecker("VeloTT"),
+                                             TrackEffChecker("Forward"),
+                                             TrackEffChecker("TTrack"),
+                                             TrackEffChecker("Match") ]
+if not TrackSys().veloOpen():
+  GaudiSequencer("CheckPatSeq").Members += [ TrackEffChecker("Downstream") ]
+
+GaudiSequencer("CheckPatSeq").Members   += [ TrackEffChecker("BestTracks") ]
 
 TrackEffChecker("BestTracks").FullDetail = False;
 TrackEffChecker("BestTracks").TracksInContainer = "Rec/Track/Best";
@@ -141,10 +146,3 @@ TrackEffChecker("Downstream").Selector.Selector.zInteraction = 9400.;
 TrackEffChecker("Downstream").SelectionCriteria = "ChargedLong";
 TrackEffChecker("Downstream").HistoPrint = False;
 TrackEffChecker("Downstream").StatPrint = False;
-
-if TrackSys().getProp( "veloOpen" ):
-   GaudiSequencer("CheckPatSeq").Members.remove("TrackAssociator/AssocVeloRZ")
-   GaudiSequencer("CheckPatSeq").Members.remove("TrackAssociator/AssocDownstream")
-   GaudiSequencer("CheckPatSeq").Members.remove("TrackEffChecker/VeloRZ")
-   GaudiSequencer("CheckPatSeq").Members.remove("TrackEffChecker/Downstream")
-     

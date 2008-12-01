@@ -3,7 +3,7 @@
 # Maintainer : Eduardo Rodrigues
 #============================================================================
 package           TrackSys
-version           v4r19
+version           v4r20
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -36,7 +36,6 @@ use   TrackAssociators     v*    Tr
 use   TrackCheckers        v*    Tr
 use   TrackMonitors        v*    Tr
 
-#use   STTools              v3r*    ST
 use   PatAlgorithms        v*    Tf
 use   TrackMatching        v*    Tf
 use   PatVelo              v*    Tf
