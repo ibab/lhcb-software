@@ -1,12 +1,12 @@
 #============================================================================
-# $Id: requirements,v 1.41 2008-11-24 10:15:11 graven Exp $
+# $Id: requirements,v 1.42 2008-12-01 15:52:39 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
-# Maintainer : P. Koppenburg & M. Cattaneo
+# Maintainer : G. Raven
 #============================================================================
 
 #============================================================================
 package Moore
-version v5r4
+version v5r5
 
 branches doc cmt options python
 
@@ -42,7 +42,6 @@ use GaudiPython        v*                   -no_auto_imports
 
 # From LHCbSys
 use LHCbAlgs           v*    Kernel         -no_auto_imports
-use SimComponents      v*    Sim            -no_auto_imports
 use L0Interfaces       v*    L0             -no_auto_imports
 
 #-- Lbcom packages 
