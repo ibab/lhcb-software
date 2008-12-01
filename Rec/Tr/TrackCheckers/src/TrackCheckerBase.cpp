@@ -1,4 +1,4 @@
-// $Id: TrackCheckerBase.cpp,v 1.5 2008-10-23 13:42:47 smenzeme Exp $
+// $Id: TrackCheckerBase.cpp,v 1.6 2008-12-01 10:59:36 wouter Exp $
 // Include files 
 #include "TrackCheckerBase.h"
 #include "Event/Track.h"
@@ -122,7 +122,13 @@ const LHCb::MCParticle* TrackCheckerBase::mcTruth(const LHCb::Track* aTrack) con
   else
   {
     TrackCheckerBase::DirectRange range = m_directTable->relations(aTrack);
-    if (range.empty() == false) particle = range.begin()->to();
+    if (range.empty() == false) {
+      particle = range.begin()->to();
+      if( particle && particle->particleID().threeCharge() ==0 ) {
+	Warning("Linker table for track contains pointer to particle with zero charge",StatusCode::SUCCESS,0) ;
+	particle = 0 ;
+      }
+    }
   }
   return particle;
 }
