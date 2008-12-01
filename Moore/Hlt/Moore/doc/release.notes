@@ -2,10 +2,15 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+!========================== Moore v5r5 2008-11-28 ===================
+! 2008-12-01 - Gerhard Raven
+ - automatic setting of TopAlgs when generating TCK doesn't work with
+   Gaudi v20r3; provide explicit option in configurabe instead
+ - set environment variable in runMooreOnline_EFF.sh to make Coral/SQLite
+   use in memory buffers instead of creating files in /tmp
+
 ! 2008-11-28 - Jaap Panman
  - cleanup of files which moved to HltLuminosityMonitor
-
-!========================== Moore v5r5 2008-11-28 ===================
 
 ! 2008-11-28 - Gerhard Raven
  - make configurables consistent with Gaudi v20r3

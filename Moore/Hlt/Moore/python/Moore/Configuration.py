@@ -1,7 +1,7 @@
 """
 High level configuration tools for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.40 2008-11-28 08:27:47 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.41 2008-12-01 15:10:58 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -41,6 +41,8 @@ class Moore(LHCbConfigurableUser):
         , "prefetchTCK" :      [ ] # which TCKs to prefetch. Initial TCK used is first one...
         , "generateConfig" :   False # whether or not to generate a configuration
         , "configLabel" :      ''    # label for generated configuration
+        , "configAlgorithms" : ['Hlt']    # which algorithms to configure (including their dependencies!)...
+        , "configServices" : ['ToolSvc','HltDataSvc','HltANNSvc','LumiANNSvc' ]    # which services to configure (including their dependencies!)...
         , "TCKData" :          '$TCKDATAROOT' # where do we read TCK data from?
         , "TCKpersistency" :   'file' # which method to use for TCK data? valid is 'file' and 'sqlite'
         , "enableAuditor" :    [ ]  # put here eg . [ NameAuditor(), ChronoAuditor(), MemoryAuditor() ]
@@ -130,22 +132,21 @@ class Moore(LHCbConfigurableUser):
         else:
             for i in [ 'hltType','oldStyle','userAlgorithms','verbose' ] : self.setOtherProp( HltConf(), i )
             print HltConf()
-
             
         if self.getProp("generateConfig") :
             # make sure we load as many L0 TCKs as possible...
             importOptions('$L0TCKROOT/options/L0DUConfig.opts')
             L0DUMultiConfigProvider('L0DUConfig').Preload = True
-            # TODO: add properties for ConfigTop and ConfigSvc...
-            gen = HltGenConfig( ConfigTop = [ i.rsplit('/')[-1] if type(i) is str else i.getName() for i in ApplicationMgr().TopAlg ]
-                              , ConfigSvc = [ 'ToolSvc','HltDataSvc','HltANNSvc','LumiANNSvc' ]
+            svcs = self.getProp("configServices")
+            algs = self.getProp("configAlgorithms")
+            # if not algs : algs = [ i.rsplit('/')[-1] if type(i) is str else i.getName() for i in ApplicationMgr().TopAlg ] # WARNING: this doesn't work on Gaudi v20r3 and later...
+            gen = HltGenConfig( ConfigTop = [ i.rsplit('/')[-1] for i in algs ]
+                              , ConfigSvc = [ i.rsplit('/')[-1] for i in svcs ]
                               , ConfigAccessSvc = self.getConfigAccessSvc().getName()
                               , hltType = self.getProp('hltType')
                               , mooreRelease = self.getRelease()
                               , label = self.getProp('configLabel'))
             # make sure gen is the very first Top algorithm...
             ApplicationMgr().TopAlg = [ gen.getFullName() ] + ApplicationMgr().TopAlg
-
-            
         self.configureInput()
         self.configureOutput()
