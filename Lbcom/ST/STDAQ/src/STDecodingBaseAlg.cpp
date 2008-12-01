@@ -1,4 +1,4 @@
-// $Id: STDecodingBaseAlg.cpp,v 1.23 2008-11-05 15:31:15 mneedham Exp $
+// $Id: STDecodingBaseAlg.cpp,v 1.24 2008-12-01 16:35:30 mneedham Exp $
 
 #include <algorithm>
 
@@ -55,6 +55,7 @@ m_bankTypeString(""){
  
  declareProperty("rawEventLocation",m_rawEventLocation = RawEventLocation::Default);
  declareProperty("forcedVersion", m_forcedVersion = STDAQ::inValidVersion);
+ declareProperty("checkValidity", m_checkValidSpill = true);
 
  setForcedInit();
 }
@@ -350,15 +351,12 @@ std::string STDecodingBaseAlg::toSpill(const std::string& location) const{
 LHCb::STCluster::Spill STDecodingBaseAlg::spillOffset(const std::string& spill) const{
 
   // convert spill to offset in time
-  return (spill.size() > 4u ? LHCb::STCluster::SpillToType(spill) : LHCb::STCluster::Central);
-    
-   //std::string spillNumber = spill.substr(4u,spill.size() - 4u);
-   //offset = boost::lexical_cast<unsigned int>(spillNumber);
-   //  }
-   // return offset;
+  return (spill.size() > 4u ? LHCb::STCluster::SpillToType(spill) : LHCb::STCluster::Central);    
 }
 
 bool STDecodingBaseAlg::validSpill() const{
+
+  if (m_checkValidSpill == false) return true;
 
   // check spill is actually read out using the ODIN
   const ODIN* odin = get<ODIN>(ODINLocation::Default); 

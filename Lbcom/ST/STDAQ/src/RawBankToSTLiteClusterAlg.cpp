@@ -1,4 +1,4 @@
-// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.34 2008-11-05 15:31:15 mneedham Exp $
+// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.35 2008-12-01 16:35:30 mneedham Exp $
 
 
 #include <algorithm>
@@ -61,8 +61,6 @@ StatusCode RawBankToSTLiteClusterAlg::initialize() {
   if (sc.isFailure()){
     return Error("Failed to initialize", sc);
   }
-
-  STDetSwitch::flip(detType(),m_clusterLocation); 
   
   return StatusCode::SUCCESS;
 }
@@ -139,25 +137,41 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt,STLiteCluster
  
     // make a SmartBank of shorts...
     STDecoder decoder((*iterBank)->data());
-   
-    // get number of clusters..
+    
+    bool recover = false;
     if (decoder.hasError() == true && !m_skipErrors){
-      std::string errorBank = "bank has errors, skip, sourceID"+
-	boost::lexical_cast<std::string>((*iterBank)->sourceID());
-      Warning(errorBank, StatusCode::SUCCESS,2);
-      ++counter("skipped Banks");
-      continue;
+   
+      if (!recoverMode()){
+        std::string errorBank = "bank has errors, skip sourceID " +
+          boost::lexical_cast<std::string>((*iterBank)->sourceID());
+        Warning(errorBank, StatusCode::SUCCESS, 2).ignore();
+        ++counter("skipped Banks");
+        continue;
+      }
+      else {
+	// flag that need to recover....
+        recover = true;
+        ++counter("recovered banks" +  boost::lexical_cast<std::string>((*iterBank)->sourceID()));
+      }
     }
 
-    const unsigned bankpcn = decoder.header().pcn();
-    if (pcn != bankpcn && !m_skipErrors){
-      std::string errorBank = "PCNs out of sync sourceID "+
+    // ok this is a bit ugly.....
+    STTELL1BoardErrorBank* errorBank = 0;
+    if (recover == true){
+      errorBank = findErrorBank((*iterBank)->sourceID());
+    } 
+
+    if (errorBank == 0) {
+      const unsigned bankpcn = decoder.header().pcn();
+      if (pcn != bankpcn && !m_skipErrors){
+        std::string errorBank = "PCNs out of sync sourceID "+
 	boost::lexical_cast<std::string>((*iterBank)->sourceID());
-      debug() << "Expected " << pcn << " found " << bankpcn << endmsg;
-      Warning(errorBank, StatusCode::SUCCESS,2);
-      ++counter("skipped Banks");
-      continue; 
-    }
+        debug() << "Expected " << pcn << " found " << bankpcn << endmsg;
+        Warning(errorBank, StatusCode::SUCCESS,2);
+        ++counter("skipped Banks");
+        continue; 
+      }
+    } // errorbank == 0
 
     const STDAQ::version bankVersion = forceVersion() ? STDAQ::version(m_forcedVersion): STDAQ::version((*iterBank)->version());
 
@@ -167,18 +181,16 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt,STLiteCluster
     // read in the first half of the bank
     STDecoder::pos_iterator iterDecoder = decoder.posBegin();
     for ( ;iterDecoder != decoder.posEnd(); ++iterDecoder){
-      
-      STClusterWord aWord = *iterDecoder;
-      unsigned int fracStrip = aWord.fracStripBits();
-      
-      STTell1Board::chanPair chan = aBoard->DAQToOffline(fracStrip, bankVersion, STDAQ::StripRepresentation(aWord.channelID()));
 
-      STLiteCluster liteCluster(chan.second,
-                                aWord.pseudoSizeBits(),
-                                aWord.hasHighThreshold(),
-                                chan.first);
-
-      fCont->push_back(liteCluster);
+      
+      if (recover == false){
+        createCluster(aBoard,bankVersion ,*iterDecoder, fCont);
+      }
+      else {
+        if (errorBank != 0 && canBeRecovered(errorBank,*iterDecoder, pcn) == true){
+          createCluster(aBoard, bankVersion, *iterDecoder, fCont); 
+	} // errorbanl  
+      } // recover == false
 
     } //decoder
       

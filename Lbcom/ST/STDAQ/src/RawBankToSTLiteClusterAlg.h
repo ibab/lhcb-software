@@ -1,4 +1,4 @@
-// $Id: RawBankToSTLiteClusterAlg.h,v 1.10 2008-09-20 09:53:31 mneedham Exp $
+// $Id: RawBankToSTLiteClusterAlg.h,v 1.11 2008-12-01 16:35:30 mneedham Exp $
 #ifndef RAWBANKTOSTLITECLUSTERALG_H 
 #define RAWBANKTOSTLITECLUSTERALG_H 1
 
@@ -10,6 +10,7 @@
 
 #include <vector>
 #include <string>
+#include <utility>
 
 /** @class RawBankToSTLiteClusterAlg RawBankToSTLiteClusterAlg.h
  *  
@@ -47,6 +48,10 @@ private:
 
   // create Clusters from this type
   StatusCode decodeBanks(LHCb::RawEvent* rawEvt, LHCb::STLiteCluster::STLiteClusters* fCont) const;
+
+  // add a single cluster to the output container
+  void createCluster(const STTell1Board* aBoard,  const STDAQ::version& bankVersion, 
+                     const STClusterWord& aWord, LHCb::STLiteCluster::STLiteClusters* fCont) const;
 
 
   std::string m_clusterLocation;  
@@ -87,6 +92,19 @@ private:
   
 };
 
+#include "Kernel/STTell1Board.h"
+#include "Kernel/ISTReadoutTool.h"
 
+inline void RawBankToSTLiteClusterAlg::createCluster(const STTell1Board* aBoard,  const STDAQ::version& bankVersion,
+                                                     const STClusterWord& aWord, LHCb::STLiteCluster::STLiteClusters* fCont) const{
+   
+  const unsigned int fracStrip = aWord.fracStripBits();     
+  const STTell1Board::chanPair chan = aBoard->DAQToOffline(fracStrip, bankVersion, STDAQ::StripRepresentation(aWord.channelID()));
+  LHCb::STLiteCluster liteCluster(chan.second,
+                            aWord.pseudoSizeBits(),
+                            aWord.hasHighThreshold(),
+                            chan.first);
+  fCont->push_back(liteCluster);
+}
 
 #endif //  RAWBANKTOSTLITECLUSTERALG_H 

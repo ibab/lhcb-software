@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.51 2008-11-05 15:31:15 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.52 2008-12-01 16:35:30 mneedham Exp $
 
 #include <algorithm>
 
@@ -177,23 +177,6 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
       }
     }
 
-    const unsigned bankpcn = decoder.header().pcn();
-    if (pcn != bankpcn && !m_skipErrors){
-      bankList.push_back((*iterBank)->sourceID());
-      std::string errorBank = "PCNs out of sync, sourceID " +
-        boost::lexical_cast<std::string>((*iterBank)->sourceID());
-      debug() << "Expected " << pcn << " found " << bankpcn << endmsg;
-      Warning(errorBank, StatusCode::SUCCESS, 2).ignore();
-      ++counter("skipped Banks");
-      continue; 
-    }
-
-    // check the integrity of the bank --> always skip if not ok
-    if (!m_skipErrors && checkDataIntegrity(decoder, aBoard , (*iterBank)->size() , bankVersion) == false) {
-      bankList.push_back((*iterBank)->sourceID());
-      continue;
-    }
-
     // ok this is a bit ugly.....
     STTELL1BoardErrorBank* errorBank = 0;
     if (recover == true){
@@ -201,6 +184,25 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
       // check what fraction we can recover
       if (errorBank !=0) recoveredBanks[(*iterBank)->sourceID()] += errorBank->fractionOK(pcn);
     } 
+
+    if (errorBank == 0){
+      const unsigned bankpcn = decoder.header().pcn();
+      if (pcn != bankpcn && !m_skipErrors){
+        bankList.push_back((*iterBank)->sourceID());
+        std::string errorBank = "PCNs out of sync, sourceID " +
+        boost::lexical_cast<std::string>((*iterBank)->sourceID());
+        debug() << "Expected " << pcn << " found " << bankpcn << endmsg;
+        Warning(errorBank, StatusCode::SUCCESS, 2).ignore();
+        ++counter("skipped Banks");
+        continue; 
+      }
+    }
+
+    // check the integrity of the bank --> always skip if not ok
+    if (!m_skipErrors && checkDataIntegrity(decoder, aBoard , (*iterBank)->size() , bankVersion) == false) {
+      bankList.push_back((*iterBank)->sourceID());
+      continue;
+    }
 
     // iterator over the data....
     STDecoder::posadc_iterator iterDecoder = decoder.posAdcBegin();

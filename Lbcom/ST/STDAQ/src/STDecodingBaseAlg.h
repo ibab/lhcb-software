@@ -1,4 +1,4 @@
-// $Id: STDecodingBaseAlg.h,v 1.17 2008-11-05 15:31:15 mneedham Exp $
+// $Id: STDecodingBaseAlg.h,v 1.18 2008-12-01 16:35:30 mneedham Exp $
 #ifndef STDECODINGBASEALG_H 
 #define STDECODINGBASEALG_H 1
 
@@ -87,6 +87,7 @@ protected:
  std::string m_bankTypeString;
  std::string m_rawEventLocation;
  int m_forcedVersion;
+ bool m_checkValidSpill;
  
 private:
 

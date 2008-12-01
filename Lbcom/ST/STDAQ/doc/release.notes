@@ -4,6 +4,11 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 20081202 M Needham
+ - Add checkValidity flag to allow skip of ODIN spill check
+ - Implement recoverary mode for lite cluster decoding
+ - Fix STCluster decoding for special case that 'first' Beetle PCN is wrong on Tell1
+
 !=============================== STDAQ v3r13 2008-11-21 ======================
 ! 2008-11-06 - Marco Cattaneo
  - Fix for gcc 43
