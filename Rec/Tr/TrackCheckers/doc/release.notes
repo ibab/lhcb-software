@@ -4,6 +4,9 @@
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
 
+! 2008-12-01 - Wouter Hulsbergen
+ - Added test for charge of mc particle
+
 !======================= TrackCheckers v4r4 2008-11-21 =======================
 ! 2008-11-06 - Marco Cattaneo
  - Fixes for gcc 4.3
