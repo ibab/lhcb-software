@@ -1,5 +1,5 @@
-# --> Including file '/build/cattanem/BRUNEL/BRUNEL_HEAD/BrunelSys/tests/options/testBrunel.py'
-# <-- End of file '/build/cattanem/BRUNEL/BRUNEL_HEAD/BrunelSys/tests/options/testBrunel.py'
+# --> Including file '/build/cattanem/Brunel_HEAD/BrunelSys/tests/options/testBrunel.py'
+# <-- End of file '/build/cattanem/Brunel_HEAD/BrunelSys/tests/options/testBrunel.py'
 # applying configuration of Brunel
 # /***** User Brunel/Brunel **************************************************************************
 |-DatasetName     = ''
@@ -30,16 +30,10 @@
 |-SpecialData     = []  (default: [])
 |-Monitors        = []  (default: [])
 \----- (End of User Brunel/Brunel) -----------------------------------------------------------------
-# WARNING: Both TrackSys().ExpertTracking and Brunel().ExpertTracking are defined, using Brunel().ExpertTracking
-# WARNING: Both RecSysConf().SpecialData and Brunel().SpecialData are defined, using Brunel().SpecialData
-# WARNING: Both RecSysConf().RecoSequence and Brunel().RecoSequence are defined, using Brunel().RecoSequence
-# WARNING: Both TrackSys().SpecialData and RecSysConf().SpecialData are defined, using RecSysConf().SpecialData
-# WARNING: Both RichRecSysConf().SpecialData and RecSysConf().SpecialData are defined, using RecSysConf().SpecialData
-# WARNING: Both RichTrackCreatorConfig().SpecialData and RichRecSysConf().SpecialData are defined, using RichRecSysConf().SpecialData
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v34r0
-                                          running on lxbuild120.cern.ch on Tue Nov 25 17:01:59 2008
+                                          running on lxbuild120.cern.ch on Mon Dec  1 17:40:26 2008
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
@@ -395,12 +389,9 @@ DeRichSystem         INFO Update triggered for HPD numbering maps
 DeRichSystem         INFO Built mappings for  7 L1 and 196 HPDs in Rich1
 DeRichSystem         INFO Built mappings for  8 L1 and 288 HPDs in Rich2
 DecodeRawRichOf...   INFO Will only decode Raw Buffer -> No RichDigits produced
-ToolSvc.Offline...   INFO RMS hack : Aerogel : 1.73272e-06 0.000488
-ToolSvc.Offline...   INFO Updated Aerogel refractive index '/AerogelRIndexPT_T0' with 100 data points
-ToolSvc.Offline...   INFO RMS hack : Rich1Gas : 1.74364e-06 3.93e-05
-ToolSvc.Offline...   INFO Updated Rich1Gas refractive index '/C4F10SellParamRIndexPT' with 300 data points
-ToolSvc.Offline...   INFO RMS hack : Rich2Gas : 1.74363e-06 1.23e-05
-ToolSvc.Offline...   INFO Updated Rich2Gas refractive index '/CF4RIndexPT' with 300 data points
+ToolSvc.Offline...   INFO RMS hack : Aerogel : 0 0.000488
+ToolSvc.Offline...   INFO RMS hack : Rich1Gas : 3.93e-05 3.93e-05
+ToolSvc.Offline...   INFO RMS hack : Rich2Gas : 1.23e-05 1.23e-05
 ToolSvc.Offline...   INFO # ray tracing attempts before bailout = [50, 50, 50]
 ParticlePropert...   INFO Opened particle properties file : conddb:///param/ParticleTable.txt
 ToolSvc.Offline...   INFO Particle types considered = [0, 1, 2, 3, 4]
@@ -586,14 +577,30 @@ RiCKResVeloTT.T...   INFO  VeloTT      : P = 1.00e+00->5.00e+02 GeV : Pt = 0.00e
 RiCKResSeed.Tra...   INFO Track Selection : [Seed]
 RiCKResSeed.Tra...   INFO  Seed        : P = 0.00e+00->5.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : cloneCut = -1.00e+10 : LL = -1.50e+01->1.80e+308
 RichPIDMoni          INFO Member list: Rich::Rec::MC::PIDQC/RiPIDMonAll2To100, Rich::Rec::MC::PIDQC/RiPIDMonAll2To10, Rich::Rec::MC::PIDQC/RiPIDMonAll10To70, Rich::Rec::MC::PIDQC/RiPIDMonAll70To100, with context 'Offline'
-RiPIDMonAll2To1...   INFO Track Selection : [Seed]
+RiPIDMonAll2To1...   INFO Track Selection : [Forward, Match, Seed, VeloTT, KsTrack]
+RiPIDMonAll2To1...   INFO  Forward     : P = 2.00e+00->1.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : cloneCut = -1.00e+10
+RiPIDMonAll2To1...   INFO  Match       : P = 2.00e+00->1.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : cloneCut = -1.00e+10 : MatchChi2 = 0.00e+00->2.00e+02
 RiPIDMonAll2To1...   INFO  Seed        : P = 2.00e+00->1.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : cloneCut = -1.00e+10 : LL = -1.50e+01->1.80e+308
-RiPIDMonAll2To1...   INFO Track Selection : [Seed]
+RiPIDMonAll2To1...   INFO  VeloTT      : P = 2.00e+00->1.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : cloneCut = -1.00e+10
+RiPIDMonAll2To1...   INFO  KsTrack     : P = 2.00e+00->1.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : cloneCut = -1.00e+10
+RiPIDMonAll2To1...   INFO Track Selection : [Forward, Match, Seed, VeloTT, KsTrack]
+RiPIDMonAll2To1...   INFO  Forward     : P = 2.00e+00->1.00e+01 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : cloneCut = -1.00e+10
+RiPIDMonAll2To1...   INFO  Match       : P = 2.00e+00->1.00e+01 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : cloneCut = -1.00e+10 : MatchChi2 = 0.00e+00->2.00e+02
 RiPIDMonAll2To1...   INFO  Seed        : P = 2.00e+00->1.00e+01 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : cloneCut = -1.00e+10 : LL = -1.50e+01->1.80e+308
-RiPIDMonAll10To...   INFO Track Selection : [Seed]
+RiPIDMonAll2To1...   INFO  VeloTT      : P = 2.00e+00->1.00e+01 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : cloneCut = -1.00e+10
+RiPIDMonAll2To1...   INFO  KsTrack     : P = 2.00e+00->1.00e+01 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : cloneCut = -1.00e+10
+RiPIDMonAll10To...   INFO Track Selection : [Forward, Match, Seed, VeloTT, KsTrack]
+RiPIDMonAll10To...   INFO  Forward     : P = 1.00e+01->7.00e+01 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : cloneCut = -1.00e+10
+RiPIDMonAll10To...   INFO  Match       : P = 1.00e+01->7.00e+01 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : cloneCut = -1.00e+10 : MatchChi2 = 0.00e+00->2.00e+02
 RiPIDMonAll10To...   INFO  Seed        : P = 1.00e+01->7.00e+01 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : cloneCut = -1.00e+10 : LL = -1.50e+01->1.80e+308
-RiPIDMonAll70To...   INFO Track Selection : [Seed]
+RiPIDMonAll10To...   INFO  VeloTT      : P = 1.00e+01->7.00e+01 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : cloneCut = -1.00e+10
+RiPIDMonAll10To...   INFO  KsTrack     : P = 1.00e+01->7.00e+01 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : cloneCut = -1.00e+10
+RiPIDMonAll70To...   INFO Track Selection : [Forward, Match, Seed, VeloTT, KsTrack]
+RiPIDMonAll70To...   INFO  Forward     : P = 7.00e+01->1.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : cloneCut = -1.00e+10
+RiPIDMonAll70To...   INFO  Match       : P = 7.00e+01->1.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : cloneCut = -1.00e+10 : MatchChi2 = 0.00e+00->2.00e+02
 RiPIDMonAll70To...   INFO  Seed        : P = 7.00e+01->1.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : cloneCut = -1.00e+10 : LL = -1.50e+01->1.80e+308
+RiPIDMonAll70To...   INFO  VeloTT      : P = 7.00e+01->1.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : cloneCut = -1.00e+10
+RiPIDMonAll70To...   INFO  KsTrack     : P = 7.00e+01->1.00e+02 GeV : Pt = 0.00e+00->5.00e+02 GeV : fitchi2 = 0.00e+00->1.00e+01 : cloneCut = -1.00e+10
 MoniMUONSeq          INFO Member list: MuonPIDChecker/MuonPIDMonitor, with context 'Offline'
 MoniVELOSeq          INFO Member list: Velo::VeloClusterMonitor/VeloClusterMonitor, Velo::VeloTrackMonitor/VeloTrackMonitor, with context 'Offline'
 MoniTrackSeq         INFO Member list: TrackMonitor, TrackVertexMonitor, TrackFitMatchMonitor, with context 'Offline'
