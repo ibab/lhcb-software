@@ -1,4 +1,4 @@
-// $Id: DecayTreeTuple.cpp,v 1.3 2008-03-27 11:01:36 pkoppenb Exp $
+// $Id: DecayTreeTuple.cpp,v 1.4 2008-12-01 11:00:44 ibelyaev Exp $
 // Include files
 
 // from Gaudi
@@ -19,7 +19,8 @@
 
 #include "GaudiKernel/IRegistry.h" // IOpaqueAddress
 
-#include <boost/regex.hpp> 
+#include "boost/regex.hpp" 
+#include "boost/lexical_cast.hpp" 
 
 
 //-----------------------------------------------------------------------------
