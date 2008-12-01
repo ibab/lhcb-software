@@ -5,8 +5,13 @@
 !               for geometry and matrix algebra
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
+
+! 2008-12-02 M. Needham
+  - Add robust functions to calculate mode or MPV [ModeFunctions.h]
+
 ! 2008-11-28 - Gerhard Raven
  - add list<MD5> to the dictionary
+
 
 !========================= LHCbMath v3r4 2008-11-17 ==========================
 ! 2008-11-08 - Vanya BELYAEV
