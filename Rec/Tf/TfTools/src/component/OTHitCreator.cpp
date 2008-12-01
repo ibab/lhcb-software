@@ -408,9 +408,9 @@ namespace Tf
     // we could as well use OTDet here .. we only need the element.
     const DeOTModule& thismodule = module(id)->detelement() ;
     if (0 != m_rtrel)
-      return Tf::OTHit( thismodule, m_otdecoder->time( id, thismodule ), *m_rtrel ) ;
+      return Tf::OTHit( thismodule, m_otdecoder->time( id ), *m_rtrel ) ;
     else
-      return Tf::OTHit( thismodule, m_otdecoder->time( id, thismodule )  ) ;
+      return Tf::OTHit( thismodule, m_otdecoder->time( id )  ) ;
   }
 
   // return a pointer to an rt relation for switching drift times off
