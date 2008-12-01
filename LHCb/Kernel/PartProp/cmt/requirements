@@ -1,0 +1,41 @@
+# $Id: requirements,v 1.1.1.1 2008-12-01 18:27:10 ibelyaev Exp $ 
+# =============================================================================
+# Created    : 2008-12-01
+# Maintainer : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+# =============================================================================
+package           PartProp
+version           v1r0
+
+# ================ structure ==================================================
+branches          cmt doc Kernel src python dict tests 
+
+# ================ dependencies ===============================================
+use               LHCbMath        v* Kernel
+use               GaudiKernel     v*
+use               Boost           v* LCG_Interfaces --no_auto_import
+use               Reflex          v* LCG_Interfaces --no_auto_import 
+
+# ================ own includes ===============================================
+apply_pattern     install_more_includes   more=Kernel
+apply_pattern     install_python_modules 
+ 
+# ================ constituents ===============================================
+library           PartPropLib    ../src/*.cpp
+library           PartProp       ../src/Components/*.cpp
+
+# ================ Produce LCG dictionary =====================================
+apply_pattern     reflex_dictionary                                     \
+                  dictionary=PartProp                                   \
+                  headerfiles=$(PARTPROPROOT)/dict/PartPropDict.h       \
+                  selectionfile=$(PARTPROPROOT)/dict/PartProp.xml       \
+                  options=" -U__MINGW32__ "
+
+# ================ patterns ===================================================
+apply_pattern     linker_library    library=PartPropLib
+apply_pattern     component_library library=PartProp
+apply_pattern     QMTest
+
+
+# =============================================================================
+# The END 
+# =============================================================================
