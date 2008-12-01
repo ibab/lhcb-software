@@ -1,4 +1,4 @@
-// $Id: VeloTrackMonitor.cpp,v 1.5 2008-11-17 18:56:54 gersabec Exp $
+// $Id: VeloTrackMonitor.cpp,v 1.6 2008-12-01 12:57:57 gersabec Exp $
 // Include files 
 
 // from Gaudi
@@ -125,7 +125,10 @@ StatusCode Velo::VeloTrackMonitor::execute() {
 
   //Monitor the Tracks
   //------------------
-  monitorTracks();  
+  StatusCode sc3 = monitorTracks();  
+  if ( !( sc3.isSuccess() ) ) {
+    return StatusCode::SUCCESS;
+  }
   
   return StatusCode::SUCCESS;
 }
@@ -348,7 +351,12 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
       //Sensors vs Biased Residuals profile only for Velo
       //------------------------------------------------- 
       if(m_biasedResidualProfile){
-        prof_sensors -> fill (sensor->sensorNumber(), m_binary * biasedResid / pitch ); 
+        if ( 0 != pitch ) {
+          prof_sensors -> fill (sensor->sensorNumber(), m_binary * biasedResid / pitch ); 
+        }
+        else {
+          warning()<< "Pitch is " << pitch << " for sensorID " << sensorID << endmsg;
+        }
       }
       else{
         if (m_debugLevel){
@@ -559,7 +567,12 @@ StatusCode Velo::VeloTrackMonitor::unbiasedResiduals (LHCb::Track *track )
         pitch = sensor->phiType()->phiPitch( interceptRadius );
       }
       
-      prof_sensors -> fill (sensor->sensorNumber(), m_binary * UnbiasedResid / pitch );   
+      if ( 0 != pitch ) {
+        prof_sensors -> fill (sensor->sensorNumber(), m_binary * UnbiasedResid / pitch );   
+      }
+      else {
+        warning()<< "Pitch is " << pitch << " for sensorID " << sensorID << endmsg;
+      }
         
     }//end of fit node
   }//if fit is BiKalman

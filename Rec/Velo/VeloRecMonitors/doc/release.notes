@@ -4,6 +4,9 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2008-12-01 - Marco Gersabeck
+- check for zero pitch in residual normalisation
+
 !======================= VeloRecMonitors v1r2 2008-11-21 =====================
 ! 2008-11-17 - Marco Gersabeck
 - normalised also unbiased residual plots
