@@ -3,15 +3,13 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.36 2008-11-25 16:37:35 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.37 2008-12-01 16:37:00 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
-from LHCbKernel.Configuration import *
-from GaudiConf.Configuration  import *
-from RecSys.Configuration     import *
+from Gaudi.Configuration  import *
 import GaudiKernel.ProcessJobOptions
-from Configurables import ( ProcessPhase, GaudiSequencer )
-from RichRecQC.Configuration import RichRecQCConf
+from Configurables import ( LHCbConfigurableUser, LHCbApp, RecSysConf, TrackSys,
+                            ProcessPhase, GaudiSequencer, RichRecQCConf )
 
 ## @class Brunel
 #  Configurable for Brunel application
@@ -92,15 +90,13 @@ class Brunel(LHCbConfigurableUser):
 
         # Set up monitoring (i.e. not using MC truth)
         ProcessPhase("Moni").DetectorList += self.getProp("MoniSequence")
-        importOptions("$BRUNELOPTS/BrunelMoni.py") # Filled in all cases
         self.setOtherProps(RichRecQCConf(),["Context","DataType"])
 
-        if not withMC:
-            # Add here histograms to be filled only with real data 
-            RichRecQCConf().MoniSequencer = GaudiSequencer("MoniRICHSeq")
+        # Histograms filled both in real and simulated data cases
+        importOptions("$BRUNELOPTS/BrunelMoni.py")
 
-        # Setup up MC truth processing and checking
         if withMC:
+            # Setup up MC truth processing and checking
             ProcessPhase("MCLinks").DetectorList += self.getProp("MCLinksSequence")
             # Unpack Sim data
             GaudiSequencer("MCLinksUnpackSeq").Members += [ "UnpackMCParticle",
@@ -109,17 +105,15 @@ class Brunel(LHCbConfigurableUser):
 
             # "Check" histograms filled only with simulated data 
             ProcessPhase("Check").DetectorList += self.getProp("MCCheckSequence")
-            # Tracking
-            importOptions("$TRACKSYSROOT/options/PatChecking.opts")
-            if "veloOpen" in self.getProp( "SpecialData" ) :
-                GaudiSequencer("CheckPatSeq").Members.remove("TrackAssociator/AssocVeloRZ")
-                GaudiSequencer("CheckPatSeq").Members.remove("TrackAssociator/AssocDownstream")
-                GaudiSequencer("CheckPatSeq").Members.remove("TrackEffChecker/VeloRZ")
-                GaudiSequencer("CheckPatSeq").Members.remove("TrackEffChecker/Downstream")
+            # Tracking handled inside TrackSys configurable
+            TrackSys().setProp( "WithMC", True )
             # Muon
             importOptions("$MUONPIDCHECKERROOT/options/MuonPIDChecker.opts")
             # RICH
             RichRecQCConf().MoniSequencer = GaudiSequencer("CheckRICHSeq")
+        else:
+            # Add here histograms to be filled only with real data 
+            RichRecQCConf().MoniSequencer = GaudiSequencer("MoniRICHSeq")
 
         # Setup L0 filtering if requested, runs L0 before Reco
         if self.getProp("RecL0Only"):

@@ -9,7 +9,7 @@ from Brunel.Configuration import *
 
 Brunel().InputType    = "DIGI"
 Brunel().WithMC       = True
-Brunel().UseSimCond   = True
+Brunel().Simulation   = True
 Brunel().SpecialData  = ["fieldOff","veloOpen"]
 
 #--Specify SIMCOND tag for Open VELO

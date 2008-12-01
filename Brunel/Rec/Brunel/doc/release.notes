@@ -3,6 +3,11 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2008-12-01 - Marco Cattaneo
+ - Remove inclusion of PatChecking sequence, now done in TrackSys(). Set instead
+   "WithMC" option of TrackSys()
+ - Fix obsolete option in Brunel-2008-*-VeloOpen.py
+
 ! 2008-11-30 - Chris Jones
  - Remove RICH monitoring options from ExpertCheck.opts (now handled by
    RichRecQC python configurable).
