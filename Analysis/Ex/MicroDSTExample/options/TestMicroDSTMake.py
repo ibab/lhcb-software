@@ -1,4 +1,4 @@
-#$Id: TestMicroDSTMake.py,v 1.9 2008-11-26 15:01:00 jpalac Exp $
+#$Id: TestMicroDSTMake.py,v 1.10 2008-12-02 17:17:20 jpalac Exp $
 from Gaudi.Configuration import *
 from MicroDST.MicroDSTAlgorithm import *
 from Configurables import CopyRelatedMCParticles
@@ -32,7 +32,8 @@ BTaggingInfo = True
 PVRefit = True
 #==============================================================================
 importOptions( "$DAVINCIROOT/options/DaVinciCommon.opts" )
-importOptions( "$MICRODSTEXAMPLEROOT/options/JpsiPhiData.opts")
+importOptions( "$MICRODSTEXAMPLEROOT/options/JpsiPhiDataLFN.py")
+#importOptions( "$MICRODSTEXAMPLEROOT/options/JpsiPhiDataPFN.py")
 importOptions( "$CCBARROOT/options/DoDC06SelBs2Jpsi2MuMuPhi2KK_lifetime_unbiased.opts"  )
 mainLocation = "Phys/DC06selBs2JpsiPhi_unbiased"
 # get rid of some spam
@@ -46,7 +47,11 @@ else :
     
 importOptions('$MICRODSTOPTS/MicroDSTStream.py')
 MicroDSTStream=OutputStream('MicroDSTStream')
-MicroDSTStream.Output = "DATAFILE='testBs2JpsiPhi_"+DSTMC+"_"+str(nEvents/1000.) +"_Kevt.dst' TYP='POOL_ROOTTREE' OPT='REC'";
+evtString = ""
+if not (nEvents==-1) :
+    evtString = str(nEvents/1000.)
+outputName =  "DATAFILE='testBs2JpsiPhi_"+DSTMC+"_"+ evtString +"_Kevt.dst' TYP='POOL_ROOTTREE' OPT='REC'"
+MicroDSTStream.Output = outputName
 MicroDSTStream.OutputLevel=4;
 
 # Create sequence for stuff to be copied for all events.
