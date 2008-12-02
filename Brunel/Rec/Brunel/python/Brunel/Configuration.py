@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.38 2008-12-01 17:28:34 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.39 2008-12-02 10:14:00 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -313,6 +313,7 @@ class Brunel(LHCbConfigurableUser):
             from Configurables import ( NTupleSvc, ChargedProtoParticleTupleAlg )
             protoChecker = ChargedProtoParticleTupleAlg("ChargedProtoTuple")
             protoChecker.NTupleLUN = "PROTOTUPLE"
+            GaudiSequencer("CheckPROTOSeq").Members += [protoChecker]
             NTupleSvc().Output += ["PROTOTUPLE DATAFILE='protoparticles.tuples.root' TYP='ROOT' OPT='NEW'"]
 
         # Pass expert checking option to RecSys
