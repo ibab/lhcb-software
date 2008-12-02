@@ -4,6 +4,13 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2008-12-02 - Vanya BELYAEV
+ - remove:
+    xml/ParticleID.xml
+    src/ParticleID.cpp 
+ - cmt/rerquirements
+    add dependency on Kernel/PartProp
+
 ! 2008-12-02 M Needham
   - Fix against fpe in truncated mean calc 
 
