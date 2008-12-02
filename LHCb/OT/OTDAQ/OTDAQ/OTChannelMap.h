@@ -1,20 +1,16 @@
-// $Id: OTChannelMap.h,v 1.4 2008-10-28 14:24:33 cattanem Exp $
+// $Id: OTChannelMap.h,v 1.5 2008-12-02 10:21:41 wouter Exp $
 #ifndef OTDAQ_OTCHANNELMAP_H_
 #define OTDAQ_OTCHANNELMAP_H_
 
 #include <vector>
 #include <cstring> // For memset with gcc 4.3
 #include "Kernel/OTChannelID.h"
+#include "OTDAQ/OTEnum.h"
 
 class OTChannelMapTool ;
 
 namespace OTDAQ
 {
-  enum { OffsetStations=1, OffsetLayers=0, OffsetQuadrants=0, OffsetModules=1, OffsetStraws=1 } ;
-
-  enum { NumStations=3, NumLayers=4, NumQuadrants=4, NumModules=9, NumStraws=128 } ;
-
-  enum { NumChanPerOtis=32 } ;
 
   enum EModuleLayout {OddLayerPosY=0,
 		      OddLayerNegY,
