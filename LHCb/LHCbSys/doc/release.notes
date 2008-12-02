@@ -5,6 +5,11 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+! 2008-12-02 - Vanya BELYAEV
+
+ - add the dependency on Kernel/PartProp
+
+
 ! 2008-11-24 - Marco Cattaneo
   . Fix DoxyLHCbCommon.cfg and DoxyFile.cfg for use directly with CMT
     (without makedoc.py).
