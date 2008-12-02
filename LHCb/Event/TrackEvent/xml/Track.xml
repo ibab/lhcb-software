@@ -641,13 +641,13 @@
         const   = 'TRUE' />
 
       <method
-        type    = 'LHCb::State &amp;'
+        type    = 'LHCb::State*'
         name    = 'stateAt'
         argList = 'const LHCb::State::Location&amp; location'
         desc    = 'Retrieve the state at a certain predefined location (see the Location enum in State.h)' />
 
       <method
-        type    = 'const LHCb::State &amp;'
+        type    = 'const LHCb::State*'
         name    = 'stateAt'
         argList = 'const LHCb::State::Location&amp; location'
         desc    = 'Retrieve the const state at a certain predefined location (see the Location enum in State.h)'
@@ -688,7 +688,7 @@
       <method
         name    = 'removeFromMeasurements'
         desc    = 'Remove a Measurement from the list of Measurements associated to the track'
-        argList = 'LHCb::Measurement* value'>
+        argList = 'const LHCb::Measurement* value'>
       </method>
 
       <method
@@ -913,7 +913,6 @@
         const   = 'TRUE'>
       </method>
 
-
       <method
         type    = 'bool'
         name    = 'isMeasurementOnTrack'
@@ -922,18 +921,12 @@
         const   = 'TRUE' />
 
       <method
-        type    = 'const LHCb::Measurement&amp;'
+        type    = 'const LHCb::Measurement*'
         name    = 'measurement'
         argList = 'const LHCb::LHCbID value'
         desc    = 'Return the measurement on the track corresponding to the input LHCbID. Call first the "isMeasurementOnTrack" method before calling this one, as it throws an exception if the LHCbID is not present! (ONLY for tracking code, not for general use.)'
         const   = 'TRUE' />
 
-      <method
-        type    = 'LHCb::Measurement&amp;'
-        name    = 'measurement'
-        argList = 'const LHCb::LHCbID value'
-	desc    = 'Return the measurement on the track corresponding to the input LHCbID. Call first the "isMeasurementOnTrack" method before calling this one, as it throws an exception if the LHCbID is not present! (ONLY for tracking code, not for general use.)' />
-      
       <method
 	name      = "fillStream"
 	desc      = "printOut method to Gaudi message stream"

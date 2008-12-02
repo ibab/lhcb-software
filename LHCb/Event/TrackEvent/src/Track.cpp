@@ -136,56 +136,32 @@ const State & Track::closestState( const Gaudi::Plane3D& plane ) const
 //=============================================================================
 bool Track::hasStateAt( const LHCb::State::Location& location ) const
 {
-  std::vector<State*>::const_iterator iter =
-    std::find_if( m_states.begin(),m_states.end(),
-                  TrackFunctor::HasKey<State,const LHCb::State::Location&>
-                  (&State::checkLocation,location) );
-  return ( iter != m_states.end() );
+  return stateAt(location)!=0 ;
 };
 
 //=============================================================================
 // Retrieve the pointer to the state closest to the given plane
 //=============================================================================
-State& Track::stateAt( const LHCb::State::Location& location )
+State* Track::stateAt( const LHCb::State::Location& location )
 {
-  std::vector<State*>::iterator iter =
+  StateContainer::iterator iter =
     std::find_if( m_states.begin(),m_states.end(),
                   TrackFunctor::HasKey<State,const LHCb::State::Location&>
                   (&State::checkLocation,location) );
-  if ( iter == m_states.end() ) {
-
-    std::ostringstream mess;
-    mess << "There is no state at requested location " << location
-         << " track type " << type();
-
-    throw GaudiException( mess.str(),
-                          "Track.cpp",
-                          StatusCode::FAILURE );
-  }
-  return *(*iter);
-};
+  return iter == m_states.end() ? 0 : *iter ;
+}
 
 //=============================================================================
 // Retrieve the (const) pointer to the state at a given location
 //=============================================================================
-const State& Track::stateAt( const LHCb::State::Location& location ) const
+const State* Track::stateAt( const LHCb::State::Location& location ) const
 {
-  std::vector<State*>::const_iterator iter =
+  StateContainer::const_iterator iter =
     std::find_if( m_states.begin(),m_states.end(),
                   TrackFunctor::HasKey<State,const LHCb::State::Location&>
                   (&State::checkLocation,location) );
-  if ( iter == m_states.end() ){
-
-    std::ostringstream mess;
-    mess << "There is no state at requested location " << location
-         << " track type " << type();
-
-    throw GaudiException( mess.str(),
-                          "Track.cpp",
-                          StatusCode::FAILURE );
-  }
-  return *(*iter);
-};
+  return iter == m_states.end() ? 0 : *iter ;
+}
 
 //=============================================================================
 // Add a State to the list of States associated to the Track
@@ -261,11 +237,8 @@ void Track::removeFromLhcbIDs( const LHCbID& value )
   std::vector<LHCbID>::iterator iter =
     std::remove( m_lhcbIDs.begin(), m_lhcbIDs.end(), value );
   m_lhcbIDs.erase( iter, m_lhcbIDs.end() );
-  // Also remove the corresponding Measurement if present!
-  if ( isMeasurementOnTrack( value ) ) {
-    Measurement& meas = measurement( value );
-    removeFromMeasurements( &meas );
-  }
+  const Measurement* meas = measurement( value );
+  if( meas ) removeFromMeasurements( meas );
 };
 
 //=============================================================================
@@ -279,7 +252,7 @@ void Track::removeFromStates( State* state )
 //=============================================================================
 // Remove a Measurement from the list of Measurements associated to the Track
 //=============================================================================
-void Track::removeFromMeasurements( Measurement* meas )
+void Track::removeFromMeasurements( const Measurement* meas )
 {
   TrackFunctor::deleteFromList<Measurement>( m_measurements, meas );
   // set the appropriate flag is case the last measurement was removed ;-)
@@ -330,41 +303,18 @@ bool Track::isOnTrack( const Measurement& value ) const
 //=============================================================================
 bool Track::isMeasurementOnTrack( const LHCbID& value ) const
 {
-  for ( std::vector<Measurement*>::const_iterator it = m_measurements.begin();
-        it != m_measurements.end(); ++it ) {
-    if ( (*it) -> lhcbID() == value ) return true;
-  }
-  return false;
+  return measurement(value) != 0 ;
 };
 
 //=============================================================================
 // Return the Measurement on the Track corresponding to the input LHCbID
 //=============================================================================
-const Measurement& Track::measurement( const LHCbID& value ) const
+const Measurement* Track::measurement( const LHCbID& value ) const
 {
-  for ( std::vector<Measurement*>::const_iterator it = m_measurements.begin();
-        it != m_measurements.end(); ++it ) {
-    if ( (*it) -> lhcbID() == value ) return *(*it);
-  }
-  throw GaudiException( "Measurement for LHCbID not present on Track",
-                        "Track.cpp",
-                        StatusCode::FAILURE );
-};
-
-//=============================================================================
-// Return the Measurement on the Track corresponding to the input LHCbID
-//=============================================================================
-Measurement& Track::measurement( const LHCbID& value )
-{
-  for ( std::vector<Measurement*>::const_iterator it = m_measurements.begin();
-        it != m_measurements.end(); ++it ) {
-    if ( (*it) -> lhcbID() == value ) return *(*it);
-  }
-  throw GaudiException( "Measurement for LHCbID not present on Track",
-                        "Track.cpp",
-                        StatusCode::FAILURE );
-};
-
+  MeasurementContainer::const_iterator it = m_measurements.begin() ;
+  for ( ; (it != m_measurements.end()) && !((*it)->lhcbID() == value) ; ++it ) {}
+  return it == m_measurements.end() ? 0 : *it ;
+}
 
 //=============================================================================
 // Remove all measurements from the track
