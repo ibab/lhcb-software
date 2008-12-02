@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : TrackSelector
  *
  *  CVS Log :-
- *  $Id: TrackSelector.cpp,v 1.20 2008-07-29 09:15:46 jonrob Exp $
+ *  $Id: TrackSelector.cpp,v 1.21 2008-12-02 14:52:52 wouter Exp $
  *
  *  @author M.Needham Matt.Needham@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -45,9 +45,10 @@ TrackSelector::TrackSelector( const std::string& type,
   declareProperty( "MinNDoF",    m_minNDoF     = 0 ) ;
   declareProperty( "MinNVeloRHits", m_minNVeloRHits     = 0 ) ;
   declareProperty( "MinNVeloPhiHits", m_minNVeloPhiHits = 0 ) ;
+  declareProperty( "MinNOTHits", m_minNOTHits = 0 ) ;
 
-  declareProperty( "MaxPCut",    m_maxPCut     = boost::numeric::bounds<double>::highest() ); // in GeV
-  declareProperty( "MaxPtCut",   m_maxPtCut    = boost::numeric::bounds<double>::highest() ); // in GeV
+  declareProperty( "MaxPCut",    m_maxPCut     = -1 ); // in GeV
+  declareProperty( "MaxPtCut",   m_maxPtCut    = -1 ); // in GeV
   declareProperty( "MaxChi2Cut", m_maxChi2Cut  = -1 );
   declareProperty( "MaxHitCut",  m_maxHitCut   = boost::numeric::bounds<double>::highest() );
 
@@ -138,8 +139,8 @@ bool TrackSelector::accept ( const Track& aTrack ) const
   }
   
   // cut p
-  const double p = aTrack.p();
-  if ( p < m_minPCut || p > m_maxPCut )
+  const double p = aTrack.p() ;
+  if ( p < m_minPCut || (m_maxPCut>0 && p > m_maxPCut ))
   {
     if ( msgLevel(MSG::DEBUG) )
       debug() << " -> P " << aTrack.p() << " failed cut" << endreq;
@@ -147,8 +148,8 @@ bool TrackSelector::accept ( const Track& aTrack ) const
   }
 
   // cut on pt
-  const double pt = aTrack.pt();
-  if ( pt < m_minPtCut || pt > m_maxPtCut )
+  const double pt = aTrack.pt() ;
+  if ( pt < m_minPtCut || (m_maxPtCut>0 && pt > m_maxPtCut ) )
   {
     if ( msgLevel(MSG::DEBUG) )
       debug() << " -> Pt " << aTrack.pt() << " failed cut" << endreq;
@@ -200,12 +201,16 @@ bool TrackSelector::accept ( const Track& aTrack ) const
   }
 
   // count number of velo phi and R hits
-  if( m_minNVeloPhiHits > 0 || m_minNVeloRHits > 0 ) {
-    int numVeloPhi(0), numVeloR(0) ;
+  if( m_minNVeloPhiHits > 0 || m_minNVeloRHits > 0 ||
+      m_minNOTHits > 0 ) {
+    int numVeloPhi(0), numVeloR(0), numOT(0) ;
     for( std::vector<LHCbID>::const_iterator it = aTrack.lhcbIDs().begin() ;
          it != aTrack.lhcbIDs().end(); ++it)
       if     ( it->isVeloPhi() ) ++numVeloPhi ;
       else if( it->isVeloR() ) ++numVeloR ;
+      else if( it->isOT() ) ++numOT ;
+    
+    
     if ( numVeloPhi < m_minNVeloPhiHits ) {
       if ( msgLevel(MSG::DEBUG) )
         debug() << " -> #velo phi " << numVeloPhi << " failed cut" << endreq;
@@ -214,6 +219,11 @@ bool TrackSelector::accept ( const Track& aTrack ) const
     if ( numVeloR < m_minNVeloRHits ) {
       if ( msgLevel(MSG::DEBUG) )
         debug() << " -> #velo R " << numVeloR << " failed cut" << endreq;
+      return false;
+    }
+    if ( numOT < m_minNOTHits ) {
+      if ( msgLevel(MSG::DEBUG) )
+        debug() << " -> #OT " << numOT << " failed cut" << endreq;
       return false;
     }
   }
