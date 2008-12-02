@@ -1,4 +1,4 @@
-// $Id: TrackContainerCopy.cpp,v 1.3 2007-08-27 14:50:30 mneedham Exp $
+// $Id: TrackContainerCopy.cpp,v 1.4 2008-12-02 14:46:38 wouter Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -14,13 +14,14 @@ DECLARE_ALGORITHM_FACTORY( TrackContainerCopy );
 
 TrackContainerCopy::TrackContainerCopy(const std::string& name,
                        ISvcLocator* pSvcLocator):
-  GaudiAlgorithm(name, pSvcLocator)
+  GaudiAlgorithm(name, pSvcLocator),
+  m_selector(0)
 {
   // constructor
   declareProperty( "inputLocation",  m_inputLocation  = TrackLocation::Velo );
   declareProperty( "outputLocation", m_outputLocation = TrackLocation::Default );
   declareProperty( "copyFailures",   m_copyFailures   = false );
-  declareProperty("selectorName", m_selectorName = "TrackSelector");
+  declareProperty( "selectorName", m_selectorName = "TrackSelector");
 }
 
 TrackContainerCopy::~TrackContainerCopy()
@@ -38,7 +39,8 @@ StatusCode TrackContainerCopy::initialize()
   }
 
   // da selector --- by default takes all tracks
-  m_selector = tool<ITrackSelector>(m_selectorName, "Selector", this);
+  if(  m_selectorName != "" && m_selectorName != "None" ) 
+    m_selector = tool<ITrackSelector>(m_selectorName, "Selector", this);
 
   return StatusCode::SUCCESS;
 }
@@ -49,15 +51,19 @@ StatusCode TrackContainerCopy::execute(){
   Tracks* outCont = getOrCreate<Tracks,Tracks>(m_outputLocation);
 
   // loop 
+  size_t naccepted(0) ;
   for (Tracks::const_iterator iterT = inCont->begin(); iterT != inCont->end(); ++iterT) {
-    if ( !(*iterT)->checkFlag(Track::Invalid) || m_copyFailures ) {
-      if (m_selector->accept(**iterT) == true){ 
-        Track* aTrack = (*iterT)->clone();
-        outCont->insert(aTrack); 
-      } // selected
-    }
-  } // iterT
-   
+    if ( ( !(*iterT)->checkFlag(Track::Invalid) || m_copyFailures ) &&
+	 ( !m_selector || m_selector->accept(**iterT) ) ) {
+      Track* aTrack = (*iterT)->clone();
+      outCont->insert(aTrack); 
+      ++naccepted ;
+    } // selected
+  }
+  //   counter("# tracks in")    += inCont->size() ;
+  //   counter("# tracks out")   += outCont->size() ;
+  //   counter("# tracks added") += naccepted ;
+  
   return StatusCode::SUCCESS;
 };
 
