@@ -111,7 +111,7 @@ inline double ModeFunctions::generalizedMean(TYPE start, TYPE stop, double power
   for (TYPE iter = start; iter != stop; ++iter, ++size){
     sum += pow(*iter,power);
   } // iter
-  return pow(sum/double(size),1.0/power);
+  return start != stop ?  pow(sum/double(size),1.0/power) : 0.0;
 }
 
 

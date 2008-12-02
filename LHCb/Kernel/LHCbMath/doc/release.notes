@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2008012-02 M Needham
+  - Guard against fpe in generalizedMean calc 
+
 ! 2008-12-02 M. Needham
   - Add robust functions to calculate mode or MPV [ModeFunctions.h]
 
