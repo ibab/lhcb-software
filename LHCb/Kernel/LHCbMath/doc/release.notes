@@ -6,6 +6,14 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2008-12-02 - Vanya BELYAEV
+ - LHCbMath/Kinematics.h
+    fix the bugs...
+ - tests/kinematics.cpp
+    one more test-file 
+ - cmt/requirments 
+    version increment to v3r5 
+
 ! 2008012-02 M Needham
   - Guard against fpe in generalizedMean calc 
 

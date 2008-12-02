@@ -1,4 +1,4 @@
-// $Id: Kinematics.h,v 1.1 2008-01-15 18:11:51 ibelyaev Exp $
+// $Id: Kinematics.h,v 1.2 2008-12-02 15:54:30 ibelyaev Exp $
 // ============================================================================
 #ifndef LHCBMATH_KINEMATICS_H 
 #define LHCBMATH_KINEMATICS_H 1
@@ -20,6 +20,7 @@
  */
 namespace Gaudi
 {
+  // ==========================================================================
   namespace Math 
   {   
     // ========================================================================
@@ -43,14 +44,15 @@ namespace Gaudi
     inline double
     sigma2mass2 
     ( const ROOT::Math::LorentzVector<C>&                           momentum   , 
-      const ROOT::Math::Smatrix<T,4,4,ROOT::Math::MatRepSym<T,4> >& covariance ) 
+      const ROOT::Math::SMatrix<T,4,4,ROOT::Math::MatRepSym<T,4> >& covariance ) 
     {
       // get the vector d(M2)/dp_i :
       ROOT::Math::SVector<T,4> dM2dp;
       dM2dp [0] = -2 * momentum.Px () ;
       dM2dp [1] = -2 * momentum.Py () ;
       dM2dp [2] = -2 * momentum.Pz () ;
-      dM2dP [3] =  2 * momentum.E  () ;
+      dM2dp [3] =  2 * momentum.E  () ;
+      //
       return ROOT::Math::Similarity ( covariance , dM2dp ) ;
     }
     // ========================================================================
@@ -76,7 +78,7 @@ namespace Gaudi
     inline double
     sigma2mass 
     ( const ROOT::Math::LorentzVector<C>&                           momentum   , 
-      const ROOT::Math::Smatrix<T,4,4,ROOT::Math::MatRepSym<T,4> >& covariance ) 
+      const ROOT::Math::SMatrix<T,4,4,ROOT::Math::MatRepSym<T,4> >& covariance ) 
     {
       const double s2m2 = sigma2mass2( momentum , covariance ) ;
       const double m2   = momentum.M2 () ;
@@ -106,7 +108,7 @@ namespace Gaudi
     inline double
     sigmamass 
     ( const ROOT::Math::LorentzVector<C>&                           momentum   , 
-      const ROOT::Math::Smatrix<T,4,4,ROOT::Math::MatRepSym<T,4> >& covariance ) 
+      const ROOT::Math::SMatrix<T,4,4,ROOT::Math::MatRepSym<T,4> >& covariance ) 
     {
       const double s2m = sigma2mass ( momentum , covariance ) ;
       if ( 0 < s2m ) { return ::sqrt ( s2m ) ; }
@@ -137,16 +139,18 @@ namespace Gaudi
     inline double chi2mass 
     ( const double                                                  mass       , 
       const ROOT::Math::LorentzVector<C>&                           momentum   , 
-      const ROOT::Math::Smatrix<T,4,4,ROOT::Math::MatRepSym<T,4> >& covariance ) 
+      const ROOT::Math::SMatrix<T,4,4,ROOT::Math::MatRepSym<T,4> >& covariance ) 
     {
       // sigma^2(M^2):
       const double s2 = 1.0 / Gaudi::Math::sigma2mass2 ( momentum , covariance ) ;
       // delta(M^2)
       const double dm2 = momentum.M2() - mass * mass ;
       //  (delta^2(M^2))/(sigma^2(M^2))
-      return ( dm2 * dm2 ) / vD ;
+      return ( dm2 * dm2 ) * s2 ;
     }
-  } // end of namespace Gaudi::Math} //
+    // ========================================================================
+  } // end of namespace Gaudi::Math
+  // ==========================================================================
 } // end of namespace Gaudi
 // ============================================================================
 // The END

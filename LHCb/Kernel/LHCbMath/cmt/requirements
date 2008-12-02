@@ -4,7 +4,7 @@
 #============================================================================
 
 package LHCbMath
-version v3r4
+version v3r5
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -32,14 +32,16 @@ macro_append ROOT_linkopts "" \
              ROOT_GE_5_19 " -lGenVector "
 
 # ================= constituents: linker library ============================
-library             LHCbMathLib    ../src/*.cpp
-                
-application  TestPow -group=tests   ../tests/pow.cpp     -check 
+library                     LHCbMathLib    ../src/*.cpp
+                        
+application  TestPow -group=tests   ../tests/pow.cpp         -check 
 macro_append TestPow_dependencies " LHCbMathLib "
-application  TestBit -group=tests  ../tests/bit.cpp     -check 
+application  TestBit -group=tests  ../tests/bit.cpp          -check 
 macro_append TestBit_dependencies " LHCbMathLib "
-application  TestDigit -group=tests ../tests/digit.cpp   -check 
+application  TestDigit -group=tests ../tests/digit.cpp       -check 
 macro_append TestDigit_dependencies " LHCbMathLib "
+application  TestKine -group=tests ../tests/kinematics.cpp   -check 
+macro_append TestKine_dependencies " LHCbMathLib "
 
 # ================= patterns ================================================
 apply_pattern       linker_library library=LHCbMathLib
