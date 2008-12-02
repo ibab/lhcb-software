@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.62 2008-12-01 15:48:48 graven Exp $ 
+! $Id: release.notes,v 1.63 2008-12-02 10:24:00 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2008-12-02 - Gerhard Raven
+ - add HltL0Lines: straight promotion of L0 decision, with a postscaler of 1e-6
 
 !========================== HltConf v1r7 2008-12-01 ===================
 ! 2008-12-01 - Gerhard Raven

@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1.py,v 1.22 2008-12-01 15:48:48 graven Exp $
+# $Id: Hlt1.py,v 1.23 2008-12-02 10:24:00 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of HLT1
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.22 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.23 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -73,6 +73,8 @@ routingBits = { 32 : 'Hlt1Global'
 Hlt1Global = Line('Global', HLT = 'HLT_DECISION' )
 
 ## the Hlt1sequence...
+#### TODO: add a setup where only one line is run, so that we can verify the independence
+####       of the lines!!!
 Sequence('Hlt1',  ModeOR = True, ShortCircuit = False
         , Members = [ i.sequencer() for i in  hlt1Lines() ] # note : should verify order (?) -- global should be last hlt1line! 
         )
