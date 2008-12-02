@@ -3,6 +3,9 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+! 2008-12-02 - Wouter Hulsbergen
+ - Add 'NoDriftTime' option to StraighLineFitter
+
 !=========================== TrackFitter v2r29 2008-11-21 ===================
 ! 2008-11-18 - Marco Cattaneo
  - Fix to VeloTT configured fitter to put back StateAtBeamLine

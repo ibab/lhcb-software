@@ -184,8 +184,9 @@ def ConfiguredFastVeloOnlyEventFitter( Name, TracksInContainer ):
     eventfitter.Fitter.MeasProvider.IgnoreMuon = True
     return eventfitter
 
-def ConfiguredStraightLineFit( Name, TracksInContainer ):
-    eventfitter = ConfiguredEventFitter(Name,TracksInContainer,FieldOff=True)
+def ConfiguredStraightLineFit( Name, TracksInContainer,
+                               NoDriftTimes =  TrackSys().noDrifttimes()  ):
+    eventfitter = ConfiguredEventFitter(Name,TracksInContainer,FieldOff=True,NoDriftTimes=NoDriftTimes)
     eventfitter.Fitter.ApplyMaterialCorrections = False
     eventfitter.Fitter.Extrapolator.ApplyMultScattCorr = False
     eventfitter.Fitter.Extrapolator.ApplyEnergyLossCorr = False
