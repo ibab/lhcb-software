@@ -10,7 +10,7 @@ The set of basic decorators for objects from Kernel/PartProp package
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl" 
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1.1.1 $" 
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $" 
 # =============================================================================
 
 from PartProp.decorators import *
@@ -60,6 +60,36 @@ print v2
 
 for pid in lst2 :
     print pid, pid.pid() 
+
+
+
+def checkPID( pid ) :
+    print pid
+    print ' isValid     ' , pid.isValid       ()
+    print ' isMeson     ' , pid.isMeson       ()
+    print ' isBaryon    ' , pid.isBaryon      ()
+    print ' isDiQuark   ' , pid.isDiQuark     ()
+    print ' isHadron    ' , pid.isHadron      ()
+    print ' isLepton    ' , pid.isLepton      ()
+    print ' isNucleus   ' , pid.isNucleus     ()
+    print ' hasUp       ' , pid.hasUp         ()
+    print ' hasDown     ' , pid.hasDown       ()
+    print ' hasStrange  ' , pid.hasStrange    ()
+    print ' hasCharm    ' , pid.hasCharm      ()
+    print ' hasBottom   ' , pid.hasBottom     ()
+    print ' hasTop      ' , pid.hasTop        ()
+    print ' hasQuarks   ' , pid.hasQuarks     ()
+    print ' threeCharge ' , pid.threeCharge   ()
+    print ' jSpin       ' , pid.jSpin         ()
+    print ' sSpin       ' , pid.sSpin         ()
+    print ' lSpin       ' , pid.lSpin         ()
+    print ' fundamental ' , pid.fundamentalID ()
+    print ' extra       ' , pid.extraBits     ()
+    
+lb = LHCb.ParticleID(5122)
+
+checkPID ( lb )
+
 
 # =============================================================================
 # The END 

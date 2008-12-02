@@ -1,4 +1,4 @@
-// $Id: ParticleID.h,v 1.1.1.1 2008-12-01 18:27:10 ibelyaev Exp $ 
+// $Id: ParticleID.h,v 1.2 2008-12-02 11:31:28 ibelyaev Exp $ 
 // ============================================================================
 #ifndef LHCbKernel_ParticleID_H
 #define LHCbKernel_ParticleID_H 1
@@ -145,7 +145,7 @@ namespace LHCb
      *  but 0 for mesons, baryons
      */
     int fundamentalID() const
-    { return 0 == digits_<nq2,nq1>() ? abspid()%10000 : 0 ; }
+    { return 0 == digits_<nq2,nr>() ? abspid()%10000 : 0 ; }
     /// Value of digit in specified location
     unsigned short digit ( const Location& loc) const
     { return Gaudi::Math::digit ( abspid(), loc - 1  ) ; }

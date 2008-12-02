@@ -1,4 +1,4 @@
-// $Id: PartPropAlg.cpp,v 1.1.1.1 2008-12-01 18:27:10 ibelyaev Exp $
+// $Id: PartPropAlg.cpp,v 1.2 2008-12-02 11:31:28 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -140,7 +140,60 @@ StatusCode LHCb::Example::PartPropAlg::execute()
   using namespace boost::lambda ;
   
   MsgStream log ( msgSvc () , name() ) ;
-  
+
+  // ==========================================================================
+  { // get all invalid 
+    PPs invalid ;
+    svc->get
+      (
+       // functor : lepton
+       !bind ( &LHCb::ParticleID::isValid , 
+               bind ( &LHCb::ParticleProperty::particleID , _1 ) ) , 
+       // output
+       std::back_inserter( invalid ) ) ;
+    // print as the table 
+    // header ? 
+    log << MSG::INFO << " # Invalid = " << invalid.size() << std::endl ;
+    // content 
+    LHCb::ParticleProperties::printAsTable ( invalid , log , svc ) ;
+    log << endreq ;
+  }  
+  // ==========================================================================
+  { // get all not from quarks 
+    PPs noquarks ;
+    svc->get
+      (
+       // functor : has no quarks 
+       !bind ( &LHCb::ParticleID::hasQuarks , 
+               bind ( &LHCb::ParticleProperty::particleID , _1 ) ) , 
+       // output
+       std::back_inserter( noquarks ) ) ;
+    // print as the table 
+    // header ? 
+    log << MSG::INFO << " # Has no quarks = " << noquarks.size() << std::endl ;
+    // content 
+    LHCb::ParticleProperties::printAsTable ( noquarks , log , svc ) ;
+    log << endreq ;
+  }  
+  // ==========================================================================
+  { // get all 'fundamental'
+    PPs fundamental  ;
+    svc->get
+      (
+       // functor : fundamental
+       0   < bind ( &LHCb::ParticleID::fundamentalID , 
+                    bind ( &LHCb::ParticleProperty::particleID , _1 ) ) &&
+       100 > bind ( &LHCb::ParticleID::fundamentalID , 
+                    bind ( &LHCb::ParticleProperty::particleID , _1 ) )  ,
+       // output
+       std::back_inserter( fundamental ) ) ;
+    // print as the table 
+    // header ? 
+    log << MSG::INFO << " # Fundamental (0,100) = " << fundamental.size() << std::endl ;
+    // content 
+    LHCb::ParticleProperties::printAsTable ( fundamental , log , svc ) ;
+    log << endreq ;
+  }  
   // ==========================================================================
   { // get all leptons 
     PPs leptons ;
@@ -153,7 +206,7 @@ StatusCode LHCb::Example::PartPropAlg::execute()
        std::back_inserter( leptons ) ) ;
     // print as the table 
     // header ? 
-    log << MSG::INFO << " # Leptons = " << leptons.size() ;  
+    log << MSG::INFO << " # Leptons = " << leptons.size() << std::endl ;
     // content 
     LHCb::ParticleProperties::printAsTable ( leptons , log , svc ) ;
     log << endreq ;
@@ -170,7 +223,7 @@ StatusCode LHCb::Example::PartPropAlg::execute()
        std::back_inserter( longlived ) ) ;    
     // print as the table 
     // header ? 
-    log << MSG::INFO << " # Long-lived(>1mu) = " << longlived.size() ;  
+    log << MSG::INFO << " # Long-lived(>1mu) = " << longlived.size() << std::endl ;
     // content 
     LHCb::ParticleProperties::printAsTable ( longlived , log , svc ) ;
     log << endreq ;
@@ -187,7 +240,7 @@ StatusCode LHCb::Example::PartPropAlg::execute()
        std::back_inserter( nuclea ) ) ;
     // print as the table 
     // header ? 
-    log << MSG::INFO << " # Nuclea  = " << nuclea.size() ;  
+    log << MSG::INFO << " # Nuclea  = " << nuclea.size() << std::endl ;
     // content 
     LHCb::ParticleProperties::printAsTable ( nuclea , log , svc ) ;
     log << endreq ;
@@ -206,7 +259,9 @@ StatusCode LHCb::Example::PartPropAlg::execute()
        std::back_inserter( bbaryons ) ) ;
     // print as the table 
     // header ? 
-    log << MSG::INFO << " # Beauty Baryons  = " << bbaryons.size() ;  
+    log << MSG::INFO 
+        << " # Beauty Baryons  = " << bbaryons.size() 
+        << std::endl ;
     // content 
     LHCb::ParticleProperties::printAsTable ( bbaryons , log , svc ) ;
     log << endreq ;

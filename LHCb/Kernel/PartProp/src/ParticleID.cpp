@@ -1,4 +1,4 @@
-// $Id: ParticleID.cpp,v 1.1.1.1 2008-12-01 18:27:10 ibelyaev Exp $
+// $Id: ParticleID.cpp,v 1.2 2008-12-02 11:31:28 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -115,7 +115,7 @@ bool LHCb::ParticleID::hasQuarks() const
 {
   if ( 0 < extraBits() || 100 >= abspid() ) { return false ; } ;
   const int fun = fundamentalID() ;  
-  return  0 > fun || fun > 100 ;  
+  return  0 >= fun || fun > 100 ;  
 }
 // ============================================================================
 // Quark content

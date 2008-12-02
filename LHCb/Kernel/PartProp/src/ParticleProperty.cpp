@@ -1,4 +1,4 @@
-// $Id: ParticleProperty.cpp,v 1.1.1.1 2008-12-01 18:27:10 ibelyaev Exp $
+// $Id: ParticleProperty.cpp,v 1.2 2008-12-02 11:31:28 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -70,9 +70,7 @@ LHCb::ParticleProperty::ParticleProperty
   , m_evtgen   ( evtgen   )
   , m_pythia   ( pythia   )
   , m_anti     ( 0        )
-{
-  std::cout << " particlle id " << pid << std::endl ;
-}
+{}
 // ============================================================================    
 /*  A bit simplified constructor, from all data (except the antiparticle )
  *
