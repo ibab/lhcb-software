@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltHadronLines.py,v 1.9 2008-10-31 11:12:01 graven Exp $
+# $Id: HltHadronLines.py,v 1.10 2008-12-02 12:09:56 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hadron Lines
@@ -12,7 +12,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -37,13 +37,17 @@ prepMainHadron = bindMembers( 'MainHadronPrep',
                                            , InputSelection = 'RZVelo'
                                            , FilterDescriptor = ['Calo2DChi2_L0HadronDecision,<,4']
                                            , HistogramUpdatePeriod = 1
-                                           , HistoDescriptor = { 'Calo2DChi2_L0HadronDecision':('Calo2DChi2_L0HadronDecision',0.,100.,20), 'Calo2DChi2_L0HadronDecision':('Calo2DChi2_L0HadronDecision',0.,100.,20) }
+                                           , HistoDescriptor = { 'Calo2DChi2_L0HadronDecision':('Calo2DChi2_L0HadronDecision',0.,100.,20)
+                                                               , 'Calo2DChi2_L0HadronDecision':('Calo2DChi2_L0HadronDecision',0.,100.,20) }
                                            )
                                 , Member ( 'TU', 'Velo', RecoName = 'Velo')
                                 , Member ( 'TF', 'Velo'
                                            , FilterDescriptor = [ 'IP_PV2D,||>,0.1', 'Calo3DChi2_L0HadronDecision,<,4' ]
                                            , HistogramUpdatePeriod = 1
-                                           , HistoDescriptor = { 'IP_PV2D':('IP_PV2D',-0.1,3.,100), 'IP_PV2DBest':('IP_PV2DBest',-0.1,3.,100), 'Calo3DChi2_L0HadronDecision':('Calo3DChi2_L0HadronDecision',-0.1,50.,100), 'Calo3DChi2_L0HadronDecision':('Calo3DChi2_L0HadronDecision',-0.1,50.,100) }
+                                           , HistoDescriptor = { 'IP_PV2D':('IP_PV2D',-0.1,3.,100)
+                                                               , 'IP_PV2DBest':('IP_PV2DBest',-0.1,3.,100)
+                                                               , 'Calo3DChi2_L0HadronDecision':('Calo3DChi2_L0HadronDecision',-0.1,50.,100)
+                                                               , 'Calo3DChi2_L0HadronDecision':('Calo3DChi2_L0HadronDecision',-0.1,50.,100) }
                                            )
                                 , Member ( 'TM' , 'VeloCalo'
                                            , InputSelection1 = '%TUVelo'
@@ -87,23 +91,33 @@ Line ('DiHadron'
                    , InputSelection = HltTrackUpgrade('Hlt1RecoVelo') ## TODO: is this line still needed?
                    , FilterDescriptor = [ 'IP_PV2D,||>,0.1', 'MatchIDsFraction_%TFGuidedForward,<,0.9' ]
                    , HistogramUpdatePeriod = 1
-                   , HistoDescriptor = { 'IP_PV2D':('IP_PV2D',0.,3.,100), 'IP_PV2DBest':('IP_PV2DBest',0.,3.,100) }
+                   , HistoDescriptor = { 'IP_PV2D':('IP_PV2D',0.,3.,100)
+                                       , 'IP_PV2DBest':('IP_PV2DBest',0.,3.,100) 
+                                       }
                    )
         , Member ( 'VM2', 'Velo'
                    , InputSelection1 = '%TFGuidedForward'
                    , InputSelection2 = '%TFVelo'
                    , FilterDescriptor = [ 'DOCA,<,0.2']
-                   , HistoDescriptor = { 'DOCA':('DOCA',0.,3.,100), 'DOCABest':('DOCABest',0.,3.,100) }
+                   , HistoDescriptor = { 'DOCA':('DOCA',0.,3.,100)
+                                       , 'DOCABest':('DOCABest',0.,3.,100) 
+                                       }
                    )
         , Member ( 'VF' ,'Velo'
                    , FilterDescriptor = [ 'VertexDz_PV2D,>,0.']
-                   , HistoDescriptor = { 'VertexDz_PV2D':('VertexDz_PV2D',-3.,3.,100), 'VertexDz_PV2DBest':('VertexDz_PV2D',-3.,3.,100) }
+                   , HistoDescriptor = { 'VertexDz_PV2D':('VertexDz_PV2D',-3.,3.,100)
+                                       , 'VertexDz_PV2DBest':('VertexDz_PV2D',-3.,3.,100) 
+                                       }
                    )
         , Member ( 'VU', 'Forward' , RecoName = 'Forward')
         , Member ( 'VF', 'Decision'
                    , OutputSelection = '%Decision'
                    , FilterDescriptor = [ 'VertexMinPT,>,1000.', 'VertexPointing_PV2D,<,0.4' ]
                    , HistogramUpdatePeriod = 1
-                   , HistoDescriptor = { 'VertexMinPT':('VertexMinPT',0.,6000.,100), 'VertexMinPTBest':('VertexMinPTBest',0.,6000.,100), 'VertexPointing_PV2D':('VertexPointing_PV2D',0.,1.,100), 'VertexPointing_PV2DBest':('VertexPointing_PV2DBest',0.,1.,100) }
+                   , HistoDescriptor = { 'VertexMinPT':('VertexMinPT',0.,6000.,100)
+                                       , 'VertexMinPTBest':('VertexMinPTBest',0.,6000.,100)
+                                       , 'VertexPointing_PV2D':('VertexPointing_PV2D',0.,1.,100)
+                                       , 'VertexPointing_PV2DBest':('VertexPointing_PV2DBest',0.,1.,100) 
+                                       }
                    )
         ])
