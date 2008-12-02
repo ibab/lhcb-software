@@ -21,7 +21,7 @@
 #include "OTDAQ/IOTRawBankDecoder.h"
 
 // local
-#include "IndexedModuleDataHolder.h"
+#include "OTDAQ/IndexedModuleDataHolder.h"
 
 
 // forward declarations
