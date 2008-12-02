@@ -1,17 +1,21 @@
-//-- GAUDI data cards generated on 9/22/08 2:51 PM
-//-- For Event Type = 13144002 / Data type = DST 1
-//--     Configuration = DC06 - phys-v4-lumi2
-//--     DST 1 datasets produced by Brunel - v31r12
-//--     From DIGI 1 datasets produced by Boole - v12r10
-//--     From SIM 1 datasets produced by Gauss - v25r13
-//--     Database version = v30r14
-//--     Cards content = physical-physical
-//--     
-//-- Datasets replicated at CERN
-//-- 200 dataset(s) - NbEvents = 99375
-//-- 
+'''
+ GAUDI data cards generated on 9/22/08 2:51 PM
+ For Event Type = 13144002 / Data type = DST 1
+     Configuration = DC06 - phys-v4-lumi2
+     DST 1 datasets produced by Brunel - v31r12
+     From DIGI 1 datasets produced by Boole - v12r10
+     From SIM 1 datasets produced by Gauss - v25r13
+     Database version = v30r14
+     Cards content = physical-physical
+     
+ Datasets replicated at CERN
+ 200 dataset(s) - NbEvents = 99375
+ 
+'''
 
-EventSelector.Input   = {
+from Gaudi.Configuration import EventSelector
+
+EventSelector().Input   = [
 "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v4-lumi2/00002146/DST/0000/00002146_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
 "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v4-lumi2/00002146/DST/0000/00002146_00000002_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
 "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v4-lumi2/00002146/DST/0000/00002146_00000003_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
@@ -211,5 +215,4 @@ EventSelector.Input   = {
 "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v4-lumi2/00002146/DST/0000/00002146_00000224_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
 "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v4-lumi2/00002146/DST/0000/00002146_00000225_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
 "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v4-lumi2/00002146/DST/0000/00002146_00000226_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v4-lumi2/00002146/DST/0000/00002146_00000227_5.dst' TYP='POOL_ROOTTREE' OPT='READ'" 
-};
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v4-lumi2/00002146/DST/0000/00002146_00000227_5.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
