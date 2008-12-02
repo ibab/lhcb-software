@@ -164,7 +164,7 @@ namespace TrackFunctor
 // Class to delete an element from a vector
 //=============================================================================
   template <class T>
-  void deleteFromList( std::vector<T*>& List, T* value )
+  void deleteFromList( std::vector<T*>& List, const T* value )
   {
     typename std::vector<T*>::iterator it;
     it = std::find( List.begin(), List.end(), value );
