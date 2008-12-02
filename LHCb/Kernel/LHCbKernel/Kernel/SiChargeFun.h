@@ -128,7 +128,7 @@ inline double SiChargeFun::generalizedMean(TYPE start, TYPE stop, double power){
 template <typename TYPE>
 inline double SiChargeFun::mean(TYPE start, TYPE stop){
   const unsigned int size = stop - start;
-  return std::accumulate(start,stop,0.0,SiDataFunctor::Accumulate_Charge<typename TYPE::value_type>())/size;
+  return size != 0 ? std::accumulate(start,stop,0.0,SiDataFunctor::Accumulate_Charge<typename TYPE::value_type>())/size : 0.0;
 }
 
 

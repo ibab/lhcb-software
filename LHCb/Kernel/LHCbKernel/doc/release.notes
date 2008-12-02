@@ -5,6 +5,9 @@
 !--------------------------------------------------------------------------
 
 ! 2008-12-02 M Needham
+  - Fix against fpe in truncated mean calc 
+
+! 2008-12-02 M Needham
  - Add interface functions for robust estimation of the mode in Silicon [SiChargeFun.h]
  - Add functors for sorting +accumulating by charge [SiDataFunctor.h]   
 
