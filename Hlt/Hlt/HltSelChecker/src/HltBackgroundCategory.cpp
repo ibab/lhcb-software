@@ -1,4 +1,4 @@
-// $Id: HltBackgroundCategory.cpp,v 1.17 2008-08-07 09:07:54 pkoppenb Exp $
+// $Id: HltBackgroundCategory.cpp,v 1.18 2008-12-02 17:16:07 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -101,7 +101,7 @@ StatusCode HltBackgroundCategory::execute() {
                                           << m_summaryTool->hasSelection(*is) 
                                           << " summary : " 
                                           << m_summaryTool->summary().hasSelectionSummary(*is) << endmsg ;
-    if (!m_summaryTool->selectionDecision(*is)) Exception("selectionDecision false for "+*is);
+    if (!m_summaryTool->selectionDecision(*is)) continue ; // selection is false
     if (!m_summaryTool->hasSelection(*is)) Exception("hasSelection false for "+*is);
      
     if (msgLevel(MSG::VERBOSE)) verbose() << *is << " found " 
