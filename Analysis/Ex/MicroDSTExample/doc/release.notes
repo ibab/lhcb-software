@@ -1,9 +1,19 @@
-!$Id: release.notes,v 1.12 2008-11-26 15:02:00 jpalac Exp $
+!$Id: release.notes,v 1.13 2008-12-02 17:19:37 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Ex/MicroDSTExample
 ! Responsible : Juan PALACIOS
 ! Purpose     : MicroDST making and reading examples.
 !-----------------------------------------------------------------------------
+
+! 2008-12-02 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v2r1
+  . Add job branch
+ - Add options/JpsiPhiDataLFN.py, options/JpsiPhiDataPFN.py
+ - options/TestMicroDSTMake.py
+  . Add safety to output file name for case where nEvents = -1
+ - Add job/MicroDST_Ganga.py
+  . MicroDST making ganga example
 
 !======================= Ex/MicroDSTExample v2r0 2008-11-26 ==================
 
