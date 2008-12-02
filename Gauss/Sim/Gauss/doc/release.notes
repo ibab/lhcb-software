@@ -4,6 +4,13 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2008-12-02 - Gloria CORTI
+ - Replace MCtruth mechanism from/to Geant4: only particle traveling are
+   passed to Geant4 and the resonance are made as MCParticles when passing
+   the generator info to Geant4. Replace the two algorithm passing/retrieving
+   information.
+   . Simulation.opts 
+
 ! 2008-11-27 - Gloria CORTI
  - #BUG 44666
    Remove obsolete options for particle gun. They are no longer valid since
