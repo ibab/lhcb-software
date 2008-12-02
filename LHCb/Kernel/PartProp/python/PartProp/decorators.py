@@ -10,7 +10,7 @@ The set of basic decorators for objects from Kernel/PartProp package
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl" 
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1.1.1 $" 
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $" 
 # =============================================================================
 
 import PyCintex
@@ -23,8 +23,40 @@ std  = _global.std
 LHCb = _global.LHCb
 
 
+## get all particl eproeprties form the service 
+def _get_all_ ( self , asList = False ) :
+    """
+    Get all particle properties form the service
+
+    >>> svc = ... # get the service
+    >>> all = svc.all ()  # get all properties
+    
+    """
+    _all = LHCb.ParticleProperties.allProperties ( self )
+    if not asList  : return _all
+    return _all.toList () 
+
+## decorate service
+LHCb.IParticlePropertySvc.all = _get_all_
+
+
 ## simple "get" method for the service 
-def _get_pp_ ( self , cut ) :
+def _get_pp_ ( self , cut , asList = False ) :
+    """
+    Simple 'get' method for LHCb::IParticlePropertySvc
+    service to extract the properties which satisfy some criteria
+    
+    >>> svc = ...  # get service (LHCb::IParticlePropertySvc) or vector 
+    >>> leptons   = svc.get ( lambda s : s.pid().isLepton() )  # get all leptons 
+    >>> longlived = svc.get ( lambda s : s.ctau() > 0.001   )  # get longlived
+
+    """
+    _all = self.all()
+    return _all.get ( cut , asList )
+
+
+## simple "get" method for the service 
+def _get_ppv_ ( self , cut , asList = False ) :
     """
     Simple 'get' method for LHCb::IParticlePropertySvc
     service to extract the properties which satisfy some criteria
@@ -35,20 +67,18 @@ def _get_pp_ ( self , cut ) :
 
     """
     result = []
-    first  = self.begin () # get 'begin' - iterator form the service 
-    last   = self.end   () # get 'end'   - iterator form the service 
-    # loop over the all known entries 
-    while first != last :
-        pp = first.__deref__ ()
+    for pp in self :
         if cut ( pp ) : result.append( pp )
-        first += 1 
-    return result
+    if asList : return result
+    vct = LHCb.IParticlePropertySvc.ParticleProperties()
+    vct.fromList ( result )
+    return vct 
 
 
 ## decorate service
 LHCb.IParticlePropertySvc.get = _get_pp_
 ## decorate the vector 
-LHCb.IParticlePropertySvc.ParticleProperties.get = _get_pp_
+LHCb.IParticlePropertySvc.ParticleProperties.get = _get_ppv_
 
 # =============================================================================
 ## Convert LHCb::IParticlePropertySvc::ParticleProperties into python list

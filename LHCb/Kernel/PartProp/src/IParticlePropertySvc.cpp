@@ -1,4 +1,4 @@
-// $Id: IParticlePropertySvc.cpp,v 1.1.1.1 2008-12-01 18:27:10 ibelyaev Exp $
+// $Id: IParticlePropertySvc.cpp,v 1.2 2008-12-02 14:13:46 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -242,7 +242,21 @@ LHCb::ParticleProperties::byEvtGenName
   return *found ;  
 }
 // ============================================================================
-
+/*  get all the properties at once 
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date   2008-08-03     
+ */ 
+// ============================================================================
+LHCb::IParticlePropertySvc::ParticleProperties 
+LHCb::ParticleProperties::allProperties 
+( const LHCb::IParticlePropertySvc* service ) 
+{
+  return ( 0 != service ) ?
+    LHCb::IParticlePropertySvc::ParticleProperties 
+    ( service->begin () , service->end() ) :
+    LHCb::IParticlePropertySvc::ParticleProperties () ;
+}
+// ============================================================================
 
 
 // ============================================================================

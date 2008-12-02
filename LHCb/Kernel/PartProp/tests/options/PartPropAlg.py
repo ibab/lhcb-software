@@ -10,12 +10,10 @@ The configuration file to run QMTest for the package Kernel/PartProp
 """
 # =============================================================================
 __author__  =  "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ =  "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+__version__ =  "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
 # =============================================================================
 
-from PartProp.PartPropSvc import *
-
-test() 
+import PartProp.PartPropAlg
 
 # =============================================================================
 # The END 

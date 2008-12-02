@@ -1,4 +1,4 @@
-// $Id: ParticleID.cpp,v 1.2 2008-12-02 11:31:28 ibelyaev Exp $
+// $Id: ParticleID.cpp,v 1.3 2008-12-02 14:13:46 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -202,7 +202,7 @@ int LHCb::ParticleID::jSpin( ) const
   const int fun = fundamentalID () ;
   // 
   if ( 0 < fun && fun <= 100 ) { return 0 ; }
-  if ( 0 < extraBits() > 0   ) { return 0 ; }
+  if ( 0 < extraBits()       ) { return 0 ; }
   //
   return digit_<nj> () ;
 }

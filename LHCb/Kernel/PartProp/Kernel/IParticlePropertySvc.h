@@ -1,4 +1,4 @@
-// $Id: IParticlePropertySvc.h,v 1.1.1.1 2008-12-01 18:27:10 ibelyaev Exp $
+// $Id: IParticlePropertySvc.h,v 1.2 2008-12-02 14:13:46 ibelyaev Exp $
 // ============================================================================
 #ifndef LHCBKERNEL_IPARTICLEPROPERTYSVC_H
 #define LHCBKERNEL_IPARTICLEPROPERTYSVC_H
@@ -502,7 +502,14 @@ namespace LHCb
       return service -> get ( cut , output ) ;
     }
     // ========================================================================    
-  } // end of namespace LHCb::Utils
+    /** get all the properties at once 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2008-08-03     
+     */ 
+    LHCb::IParticlePropertySvc::ParticleProperties 
+    allProperties ( const LHCb::IParticlePropertySvc* service ) ;
+    // ========================================================================
+  } // end of namespace LHCb::ParticleProperties
   // ==========================================================================
   // get the properties according to some criteria 
   // ==========================================================================
