@@ -1,4 +1,4 @@
-// $Id: PatFwdTrackCandidate.h,v 1.4 2007-12-05 10:37:21 smenzeme Exp $
+// $Id: PatFwdTrackCandidate.h,v 1.5 2008-12-02 14:43:15 wouter Exp $
 #ifndef PATFWDTRACKCANDIDATE_H
 #define PATFWDTRACKCANDIDATE_H 1
 
@@ -42,7 +42,7 @@
 
     void init( const LHCb::Track* tr ) {
       m_track   = tr;
-      const LHCb::State& state = tr->stateAt(LHCb::State::EndVelo);
+      const LHCb::State& state = *(tr->stateAt(LHCb::State::EndVelo));
       m_x0  = state.x();
       m_y0  = state.y();
       m_z0  = state.z();

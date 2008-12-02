@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.7 2008-10-23 12:27:12 wouter Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.8 2008-12-02 14:40:30 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -444,10 +444,9 @@ StatusCode TrackMatchVeloSeed::storeTracks( Tracks* matchCont )
     } // iterS
  
     // Add state at Velo
-    if (veloTrack->hasStateAt(LHCb::State::EndVelo) == false) {
-      return Warning("No State at Velo", StatusCode::FAILURE);
-    }
-    State vState = veloTrack->stateAt( LHCb::State::EndVelo );
+    const State* vStateP = veloTrack->stateAt( LHCb::State::EndVelo ) ;
+    if (!vStateP) return Warning("No State at Velo", StatusCode::FAILURE);
+    State vState = *vStateP ;
     vState.setQOverP(seedTrack->states().front()->qOverP());
     aTrack -> addToStates( vState );
 

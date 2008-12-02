@@ -1,4 +1,4 @@
-// $Id: PatForward.cpp,v 1.4 2008-08-21 18:11:27 smenzeme Exp $
+// $Id: PatForward.cpp,v 1.5 2008-12-02 14:43:15 wouter Exp $
 // Include files
 
 // from Gaudi
@@ -126,9 +126,9 @@ StatusCode PatForward::execute() {
     std::vector<LHCb::LHCbID>::const_iterator mitId0, mitId1;
     for( mitT = outputTracks->begin(); outputTracks->end() != mitT; ++mitT){
       int count_Tr = 0;
-      LHCb::State& state0 = (*mitT)->stateAt( LHCb::State::AtT );
+      const LHCb::State& state0 = *((*mitT)->stateAt( LHCb::State::AtT ));
       for( mitT1 = outputTracks->begin(); outputTracks->end()!=mitT1; ++mitT1){
-	LHCb::State& state1 = (*mitT1)->stateAt( LHCb::State::AtT );
+	const LHCb::State& state1 = *((*mitT1)->stateAt( LHCb::State::AtT ));
 	if ( 5. > fabs( state0.x() - state1.x() ) ) {
 	  int nbCommon = 0;
 	  int nb0      = 0;
@@ -185,9 +185,9 @@ StatusCode PatForward::execute() {
   std::vector<LHCb::LHCbID>::const_iterator itId0, itId1;
 
   for ( itT = outputTracks->begin(); outputTracks->end() != itT;  ++itT ) {
-    LHCb::State& state0 = (*itT)->stateAt( LHCb::State::AtT );
+    const LHCb::State& state0 = *((*itT)->stateAt( LHCb::State::AtT ));
     for ( itT1 = itT+1; outputTracks->end() > itT1;  ++itT1 ) {
-      LHCb::State& state1 = (*itT1)->stateAt( LHCb::State::AtT );
+      const LHCb::State& state1 = *((*itT1)->stateAt( LHCb::State::AtT ));
       if ( 5. > fabs( state0.x() - state1.x() ) ) {
         int nbCommon = 0;
         int nb0      = 0;

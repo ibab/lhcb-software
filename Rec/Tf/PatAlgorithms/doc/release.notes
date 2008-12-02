@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2008-12-02 - Wouter Hulsbergen
+ - adapted to change in Track::stateAt
+
 !========================== PatAlgorithms v3r13 2008-11-21 ===================
 ! 2008-11-06 - Marco Cattaneo
  - Fixes for gcc 4.3 compilation

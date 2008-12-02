@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.60 2008-10-23 12:31:06 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.61 2008-12-02 14:44:30 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -715,8 +715,8 @@ StatusCode TrackMasterFitter::initializeRefStates(LHCb::Track& track,
     // first need to make sure all states already on track have
     // reasonable momentum. still needs to check that this works for
     // velo-TT
-    const LHCb::State& refstate = 
-      track.hasStateAt(LHCb::State::AtT) ? track.stateAt(LHCb::State::AtT) :
+    const LHCb::State* stateAtT = track.stateAt(LHCb::State::AtT) ;
+    const LHCb::State& refstate = stateAtT ? *stateAtT :
       *( track.checkFlag(Track::Backward) ? track.states().front() : track.states().back()) ;
     for( LHCb::Track::StateContainer::const_iterator it = track.states().begin() ;
          it != track.states().end() ; ++it)

@@ -1,4 +1,4 @@
-// $Id: LongTrackReferenceCreator.cpp,v 1.19 2008-06-17 15:10:32 lnicolas Exp $
+// $Id: LongTrackReferenceCreator.cpp,v 1.20 2008-12-02 14:48:54 wouter Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -54,7 +54,7 @@ StatusCode LongTrackReferenceCreator::initialize()
   }
   
   // extrapolator
-  m_extrapolator = tool<ITrackExtrapolator>("TrackMasterExtrapolator");
+  m_extrapolator = tool<ITrackExtrapolator>("TrackMasterExtrapolator","Extrapolator",this);
   
   return StatusCode::SUCCESS;
 };
@@ -86,8 +86,8 @@ StatusCode LongTrackReferenceCreator::execute( LHCb::Track& track ) const
     // first need to make sure all states already on track have
     // reasonable momentum. still needs to check that this works for
     // velo-TT
-    const LHCb::State& refstate = 
-      track.hasStateAt(LHCb::State::AtT) ? track.stateAt(LHCb::State::AtT) :
+    const LHCb::State* stateAtT = track.stateAt(LHCb::State::AtT) ;
+    const LHCb::State& refstate = stateAtT ? *stateAtT :
       *( track.checkFlag(Track::Backward) ? track.states().front() : track.states().back()) ;
     for( LHCb::Track::StateContainer::const_iterator it = track.states().begin() ;
          it != track.states().end() ; ++it)

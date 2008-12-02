@@ -4,7 +4,12 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
-! 2008-11-29 M Needham
+! 2008-12-02 - Wouter Hulsbergen
+ - adapted to change in Track::stateAt
+ - allow trackcontainercopy without selector
+ - added cuts to TrackV0Finder
+
+! 2008-11-29 - M Needham
  - Add TrackCompetition algorithm
  
 !========================== TrackUtils v1r22 2008-11-21 ======================

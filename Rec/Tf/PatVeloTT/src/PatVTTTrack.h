@@ -1,4 +1,4 @@
-// $Id: PatVTTTrack.h,v 1.5 2007-10-10 18:42:24 smenzeme Exp $
+// $Id: PatVTTTrack.h,v 1.6 2008-12-02 14:38:29 wouter Exp $
 #ifndef PATVTTTRACK_H
 #define PATVTTTRACK_H 1
 
@@ -72,7 +72,7 @@
     PatVTTTrack( LHCb::Track* tr ) {
       m_track  = tr;
       m_fittrack  = 0;
-      LHCb::State & trState = tr->stateAt(LHCb::State::EndVelo);
+      const LHCb::State & trState = *(tr->stateAt(LHCb::State::EndVelo));
       m_origin = trState.position( );
       m_slope  = trState.slopes();
       m_list.reserve(100);

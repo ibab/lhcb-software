@@ -1,4 +1,4 @@
-// $Id: PatVeloTTTool.cpp,v 1.6 2007-10-12 17:58:22 witekma Exp $
+// $Id: PatVeloTTTool.cpp,v 1.7 2008-12-02 14:38:29 wouter Exp $
 // Include files
 
 // from Gaudi
@@ -148,7 +148,7 @@ void PatVeloTTTool::getCandidates( LHCb::Track& veloTrack, std::vector<PatVTTTra
 
   if( m_debug ) debug() << "Input Velo track address: " << veloTr << endmsg;
 
-  LHCb::State& state = veloTr->stateAt(LHCb::State::EndVelo);
+  const LHCb::State& state = *(veloTr->stateAt(LHCb::State::EndVelo));
 
   double slX = state.tx();
   double slY = state.ty();
@@ -398,7 +398,7 @@ void PatVeloTTTool::simpleFit(PatVTTTrack& vtttr) {
   LHCb::Track* velotr = vtttr.track();
 
   // Get End Velo state
-  LHCb::State& pStateVelo = velotr->stateAt(LHCb::State::EndVelo);
+  const LHCb::State& pStateVelo = *(velotr->stateAt(LHCb::State::EndVelo));
   // Velo track parameters
   double xVelo      = pStateVelo.x();
   double yVelo      = pStateVelo.y();
@@ -712,7 +712,7 @@ void PatVeloTTTool::prepareOutputTracks( std::vector<PatVTTTrack>& vttTracks,
     }
 
     LHCb::Track* veloTr = cand.track();
-    LHCb::State& state = veloTr->stateAt(LHCb::State::EndVelo);
+    const LHCb::State& state = *(veloTr->stateAt(LHCb::State::EndVelo));
     double tx = state.tx();
     double ty = state.ty();
     double dist = cand.Dx();
