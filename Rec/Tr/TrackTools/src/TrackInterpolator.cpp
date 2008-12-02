@@ -1,4 +1,4 @@
-// $Id: TrackInterpolator.cpp,v 1.6 2008-07-24 20:57:23 wouter Exp $
+// $Id: TrackInterpolator.cpp,v 1.7 2008-12-02 14:58:37 wouter Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -121,6 +121,13 @@ StatusCode TrackInterpolator::interpolate( const Track& track,
   const LHCb::FitNode* nodeNext   = dynamic_cast<LHCb::FitNode*>(*nextnode) ;
   const LHCb::FitNode* nodePrev = dynamic_cast<LHCb::FitNode*>(*prevnode) ;
   
+  if( (z-nodeNext->z()) * (z-nodePrev->z()) > 0 ) {
+    error() << "logic failure in locating nodes: " 
+	    << z << ", " << nodePrev->z() << "," << nodeNext->z() << endreq ;
+    return StatusCode::FAILURE ;
+  }
+  
+  
   // bail out if we have actually reached our destination
   if( fabs(nodeNext->z() - z) < TrackParameters::propagationTolerance ) {
     state = nodeNext->state() ;
@@ -163,7 +170,19 @@ StatusCode TrackInterpolator::interpolate( const Track& track,
   // Get the state by calculating the weighted mean
   TrackVector& stateX = state.stateVector();
   stateX = stateC * ((invStateDownC * stateDownX) + (invStateUpC * stateUpX)) ;
-  state.setZ( z );
+  state.setZ( z );   
+
+  if( msgLevel(MSG::DEBUG) ) 
+    debug() << "filteredstate A: "
+  	    << stateUpX << std::endl
+  	    << "filteredstate B: "
+  	    << stateDownX << std::endl
+  	    << "smoothed state A: "
+  	    << nodePrev->state()
+  	    << "smoothed state B: "
+  	    << nodeNext->state() 
+  	    << "interpolated state: "
+  	    << state << endreq ;
 
   return StatusCode::SUCCESS;
 };
@@ -177,7 +196,7 @@ StatusCode TrackInterpolator::filter(const FitNode& node, State& state)
   const Measurement& meas = node.measurement();
 
   // check z position
-  if ( fabs(meas.z() - state.z()) > 1e-6) {
+  if ( std::abs(meas.z() - state.z()) > 1e-6) {
     Warning( "Z positions of State and Measurement are not equal", 0, 1 );
     debug() << "State at z=" << state.z() 
             << ", Measurement at z=" << meas.z() << endmsg;
