@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltL0Lines.py,v 1.1 2008-12-02 10:24:00 graven Exp $
+# $Id: HltL0Lines.py,v 1.2 2008-12-02 12:12:02 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines which are plain L0 lines
@@ -12,19 +12,19 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.1 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
 # =============================================================================
 
 
 from HltConf.HltLine import Hlt1Line   as Line
 from HltConf.HltLine import Hlt1Member as Member
-from Configurables import HltL0CaloPrepare, HltL0MuonPrepare
+from Configurables import HltL0CaloPrepare, HltL0MuonPrepare, HadronSeedTool
 
 l0calolines = [ 'Electron','Photon','Hadron' ,'Pi0Local','Pi0Global','SpdMult']
 
+HadronSeedTool( decodeCalos = False )
 calomaker = {  'Hadron'   : 'HadronSeedTool' 
             ,  'Electron' : 'EcalSeedForVeloMatch' }
-#TODO: ToolSvc.HadronSeedTool.decodeCalos=  false;
 
 ##TODO: why do we have our own thresholds on these? 
 ##      why not just promote everything L0 has???
