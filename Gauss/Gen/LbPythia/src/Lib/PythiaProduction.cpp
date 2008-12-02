@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.cpp,v 1.20 2008-11-28 15:04:17 robbep Exp $
+// $Id: PythiaProduction.cpp,v 1.21 2008-12-02 17:59:47 gcorti Exp $
 
 // Include files
 // STD * STL 
@@ -226,7 +226,7 @@ StatusCode PythiaProduction::initialize( ) {
     if ( "UNKNOWN" != System::getEnv( "DECFILESROOT" ) ) {
       std::string temp = m_slhaDecayFile ;
       m_slhaDecayFile = System::getEnv( "DECFILESROOT" ) +
-	"/lha/" + temp ;
+	"/lhafiles/" + temp ;
     }
     // Check if file exists
     boost::filesystem::path slhaDecayFile( m_slhaDecayFile ) ;

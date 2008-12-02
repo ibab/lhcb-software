@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-12-02 - Gloria CORTI
+ - PythiaProduction.cpp: chnage the directory name for LHA files to
+   'lhafiles' to adapt to change in DecFiles
+
 ! 2008-11-28 - Patrick Robbe
  - PythiaProduction.cpp: update special particles after Pythia
    initialization.
