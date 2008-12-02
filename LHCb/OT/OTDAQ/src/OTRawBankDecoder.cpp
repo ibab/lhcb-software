@@ -1,4 +1,4 @@
-// $Id: OTRawBankDecoder.cpp,v 1.20 2008-12-01 21:36:20 wouter Exp $
+// $Id: OTRawBankDecoder.cpp,v 1.21 2008-12-02 10:22:28 wouter Exp $
 // Include files
 #include <algorithm>
 #include <sstream>
@@ -18,10 +18,10 @@
 
 // OTDAQ
 #include "OTDAQ/RawEvent.h"
+#include "OTDAQ/IndexedModuleDataHolder.h"
 
 // local
 #include "GolHeaderDC06.h"
-#include "IndexedModuleDataHolder.h"
 
 //#include "Event/DataWord.h"
 
