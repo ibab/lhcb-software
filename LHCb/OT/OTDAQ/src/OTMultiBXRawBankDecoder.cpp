@@ -89,6 +89,7 @@ protected:
 private:
   ToolHandle<IOTRawBankDecoder> m_decoder ;
   std::vector<std::string> m_rawEventLocations ;
+  bool m_selectEarliestHit ;
   mutable LocalHelpers::DetectorHitData* m_hitdata ;
 };
 
@@ -147,6 +148,7 @@ OTMultiBXRawBankDecoder::OTMultiBXRawBankDecoder( const std::string& type,
   declareProperty("RawEventLocations",m_rawEventLocations=
 		  boost::assign::list_of(LHCb::RawEventLocation::Default)
 		  ("Prev1/DAQ/RawEvent")("Next1/DAQ/RawEvent") );
+  declareProperty("SelectEarliestHit",m_selectEarliestHit=true) ;
 }
 
 //=============================================================================
@@ -253,32 +255,24 @@ StatusCode OTMultiBXRawBankDecoder::decodeAll() const
 	  LHCb::OTLiteTime newhit( ihit->channel(), eventoffset + ihit->calibratedTime() ) ;
 	  // find the module
 	  LocalHelpers::ModuleHitData& module = m_hitdata->module( ihit->channel() ) ;
-	  // check that this hit is not yet there
-	  bool found(false) ;
-	  for( LHCb::OTLiteTimeContainer::const_iterator jhit = module.begin() ;
-	       jhit != module.end() && !found; ++jhit) {
-	    found = newhit.channel().straw() == jhit->channel().straw() ;
-	    if(found && (msgLevel(MSG::DEBUG) || msgLevel(MSG::VERBOSE) ) )
-	      if(std::abs( newhit.calibratedTime() - jhit->calibratedTime()) > 1 ) {
-		debug() << "Incompatible time"
-			<< " station=" << ihit->channel().station() 
-			<< " layer=" << ihit->channel().layer() 
-			<< " quarter=" << ihit->channel().quarter() 
-			<< " module=" << ihit->channel().module() 
-			<< " straw=" << ihit->channel().straw() 
-			<< " tdc1=" << ihit->channel().tdcTime() 
-			<< " tdc2=" << jhit->channel().tdcTime() << endreq ;
-	      } else {
-		debug() << "Compatible time"
-			<< " station=" << ihit->channel().station() 
-			<< " layer=" << ihit->channel().layer() 
-			<< " quarter=" << ihit->channel().quarter() 
-			<< " module=" << ihit->channel().module() 
-			<< " straw=" << ihit->channel().straw() 
-			<< " dtdc=" << int(ihit->channel().tdcTime()) - int(jhit->channel().tdcTime()) << endreq ;
-	      }
+	  // check that this hit is not yet there. if 'select earliest
+	  // is set', we replace the previous hit if the new hit is
+	  // earlier. if not, we allow hits with different time to
+	  // co-exist.
+	  LHCb::OTLiteTimeContainer::iterator jhit = module.begin() ;
+	  if( m_selectEarliestHit ) {
+	    for( ; jhit != module.end() && 
+		   newhit.channel().straw() != jhit->channel().straw() ; ++jhit) {}
+	    if( jhit != module.end() &&
+		jhit->calibratedTime() > newhit.calibratedTime() )
+	      *jhit = newhit ;
+	  } else {
+	    for( ; jhit != module.end() && 
+		   !(newhit.channel().straw() == jhit->channel().straw() &&
+		     std::abs( jhit->calibratedTime() - newhit.calibratedTime() )<1) ; ++jhit){}
 	  }
-	  if(!found) module.push_back( newhit ) ;
+	  if( jhit == module.end() )
+	    module.push_back( newhit ) ;
 	}
       }
     }
