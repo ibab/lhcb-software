@@ -109,7 +109,14 @@ inline double ModeFunctions::generalizedMean(TYPE start, TYPE stop, double power
 
   double sum = 0.0; unsigned int size = 0u;
   for (TYPE iter = start; iter != stop; ++iter, ++size){
-    sum += pow(*iter,power);
+    if (power > 0.0){
+      sum += pow(*iter,power);
+    }
+    else { 
+      // we have to be careful if the data is zero
+      double value = std::max(1e-5,fabs(*iter));
+      sum +=pow(value,power);      
+    }
   } // iter
   return size != 0u ?  pow(sum/double(size),1.0/power) : 0.0;
 }

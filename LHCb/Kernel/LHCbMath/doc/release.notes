@@ -6,6 +6,11 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+
+! 200812-03 M Needham
+ - More protections against fpe in ModeFunctions
+ 
+
 ! 2008-12-02 - Vanya BELYAEV
  - LHCbMath/Kinematics.h
     fix the bugs...
@@ -14,6 +19,7 @@
  - cmt/requirments 
     version increment to v3r5 
 
+>>>>>>> 1.83
 ! 2008012-02 M Needham
   - Guard against fpe in generalizedMean calc 
 
