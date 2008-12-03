@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2008-12-03 - Gerhard Raven
+ - HltTFunctionFactory: fix a one-time memory leak
+
 ! 2008-12-03 - Johannes Albrecht
  - HltFunctions.h, HltFunctionFactories.cpp: Add filters to cut on track fit
 	 with muon hits

@@ -1,4 +1,4 @@
-// $Id: HltTFunctionFactory.h,v 1.3 2008-07-04 08:07:41 graven Exp $
+// $Id: HltTFunctionFactory.h,v 1.4 2008-12-03 12:50:21 graven Exp $
 #ifndef HLTTFUNCTIONFACTORY_H 
 #define HLTTFUNCTIONFACTORY_H 1
 
@@ -107,7 +107,7 @@ public:
                        const std::string& name,
                        const IInterface* parent);
 
-  virtual ~HltTFunctionFactory( ) {}; 
+  virtual ~HltTFunctionFactory( );
 
   virtual bool command(const std::string& command, const std::string& value = "");
 

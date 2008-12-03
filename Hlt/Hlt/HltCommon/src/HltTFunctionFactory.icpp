@@ -1,9 +1,10 @@
-// $Id: HltTFunctionFactory.icpp,v 1.7 2008-07-04 08:07:41 graven Exp $
+// $Id: HltTFunctionFactory.icpp,v 1.8 2008-12-03 12:50:21 graven Exp $
 // Include files
 
 #include "HltBase/EFunctions.h"
 #include "HltBase/EParser.h"
 #include "HltBase/ESequences.h"
+
 
 // local
 #include "HltTFunctionFactory.h"
@@ -23,6 +24,14 @@ HltTFunctionFactory<T>::HltTFunctionFactory( const std::string& type,
   declareInterface< IFunctionFactory<T> >(this);
   declareProperty("Smart", m_smart = true);
 }
+
+template <class T>
+HltTFunctionFactory<T>::~HltTFunctionFactory( ) {
+    for (typename std::map<std::string, Hlt::IFunctionCreator<T>* >::iterator i = m_creators.begin(); i!=m_creators.end(); ++i) {
+        delete i->second;
+    }
+    m_creators.clear();
+} 
 
 template <class T>
 StatusCode HltTFunctionFactory<T>::initialize() {
