@@ -1,4 +1,4 @@
-// $Id: HltL0MuonPrepare.cpp,v 1.12 2008-08-27 14:39:52 graven Exp $
+// $Id: HltL0MuonPrepare.cpp,v 1.13 2008-12-03 21:04:48 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -31,6 +31,7 @@ HltL0MuonPrepare::HltL0MuonPrepare( const std::string& name,
   , m_maker(0)
   , m_selections(*this)
 {
+  //@TODO: need to automatically pick up L0 threshold somehow instead of a property...
   declareProperty("MinPt", m_PtMin = 0.1);
   m_selections.declareProperties( boost::assign::map_list_of( 1,std::string("TES:")+L0MuonCandidateLocation::Default) );
 }

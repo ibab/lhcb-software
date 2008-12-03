@@ -1,4 +1,4 @@
-// $Id: HltL0CaloPrepare.cpp,v 1.14 2008-11-04 08:41:29 witekma Exp $
+// $Id: HltL0CaloPrepare.cpp,v 1.15 2008-12-03 21:04:48 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -76,6 +76,9 @@ HltL0CaloPrepare::HltL0CaloPrepare( const std::string& name,
   , m_histoEtBest(0)
   , m_caloType("Hadron")
 {
+  //@TODO: need to automatically pick up L0 threshold somehow instead of a property...
+  //       maybe depending on CaloType -- need to figure out what information is needed
+  //       for this...
   declareProperty("MinEt", m_minEt = 3500.);
   declareProperty("CaloType", m_caloType.property() );
   declareProperty("CaloMakerTool", m_caloMakerName = "");
