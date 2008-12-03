@@ -5,8 +5,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2008-12-02 Wouter Hulsbergen
- - OTMeasurementProvider: added property to set decoder and adapted to
-   change in otdecoder
+ - OTMeasurementProvider: added property to set otdecoder and adapted to
+   change in otdecoder interface
  - LongReferenceCreator: adapted to change in Track::stateAt
  - TrackSelector: added cut on minimum number of OT hits
 
