@@ -1,7 +1,30 @@
+# --> Including file '/build/cattanem/Boole_HEAD/Ex/IOExample/tests/options/ReadHepMC.opts'
+# ApplicationMgr.HistogramPersistency = "NONE";
+# ApplicationMgr.EvtMax   = 2;
+# EventSelector.PrintFreq = 1;
+# --> Including file '/afs/cern.ch/sw/lcg/app/nightlies/dev1/Tue/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# ApplicationMgr.ExtSvc    += { "Gaudi::MultiFileCatalog/FileCatalog",                              "Gaudi::IODataManager/IODataManager",                              "PoolDbCacheSvc/PoolDbCacheSvc",                              "PoolDbCnvSvc/PoolRootEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootKeyEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootTreeEvtCnvSvc"                            };
+# EventPersistencySvc.CnvServices += { "PoolRootEvtCnvSvc" };
+# EventPersistencySvc.CnvServices += { "PoolRootTreeEvtCnvSvc" };
+# EventPersistencySvc.CnvServices += { "PoolRootKeyEvtCnvSvc" };
+# PoolRootEvtCnvSvc.DbType         = "POOL_ROOT";
+# PoolRootKeyEvtCnvSvc.DbType      = "POOL_ROOTKEY";
+# PoolRootTreeEvtCnvSvc.DbType     = "POOL_ROOTTREE";
+# PoolDbCacheSvc.Dlls              = {"lcg_RootStorageSvc", "GaudiKernelDict" };
+# PoolDbCacheSvc.OutputLevel       = 4;
+# PoolDbCacheSvc.DomainOpts        = { "Domain[ROOT_All].TREE_MAX_SIZE=500000000000 TYP=longlong" };
+# <-- End of file '/afs/cern.ch/sw/lcg/app/nightlies/dev1/Tue/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# --> Including file '/build/cattanem/Boole_HEAD/Ex/IOExample/options/PoolDst.opts'
+# EventSelector.Input   = {  "DATAFILE='PFN:rfio:/castor/cern.ch/user/c/cattanem/Brunel/v32r1/00001820_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"};
+# InputCopyStream.Output = "DATAFILE='PFN:PoolDst.root' TYP='POOL_ROOTTREE' OPT='REC'";
+# ApplicationMgr.Dlls += { "HepMCBack" };
+# <-- End of file '/build/cattanem/Boole_HEAD/Ex/IOExample/options/PoolDst.opts'
+# ApplicationMgr.TopAlg += { "DumpHepMC" };
+# <-- End of file '/build/cattanem/Boole_HEAD/Ex/IOExample/tests/options/ReadHepMC.opts'
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr $Revision: 1.2 $
-                                          running on lxbuild120.cern.ch on Thu Oct 16 18:26:39 2008
+                                                   Welcome to ApplicationMgr $Revision: 1.3 $
+                                          running on lxbuild120.cern.ch on Wed Dec  3 07:59:12 2008
 ====================================================================================================================================
 ApplicationMgr       INFO Successfully loaded modules : HepMCBack
 ApplicationMgr       INFO Application Manager Configured successfully
@@ -13,8 +36,8 @@ HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
-rfio:/castor/ce...SUCCESS Root file version:51400
-rfio:/castor/ce...SUCCESS Root file version:51400
+RootDBase.open    SUCCESS rfio:/castor/cern.ch/user/c/cattanem/Brunel/v32r1/00001820_00000001_5.dst File version:51400
+RootDBase.open    SUCCESS rfio:/castor/cern.ch/user/c/cattanem/Brunel/v32r1/00001820_00000001_5.dst File version:51400
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 DumpHepMC            INFO  HepMC container 'Gen/HepMCEvents' 	 has 1 event(s)
 DumpHepMC            INFO   Generator 'Pythia'

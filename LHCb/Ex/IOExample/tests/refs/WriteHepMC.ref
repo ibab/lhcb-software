@@ -1,7 +1,26 @@
+# --> Including file '/build/cattanem/Boole_HEAD/Ex/IOExample/tests/options/WriteHepMC.opts'
+# ApplicationMgr.HistogramPersistency = "NONE";
+# ApplicationMgr.EvtMax   = 2;
+# EventSelector.PrintFreq = 1;
+# --> Including file '/afs/cern.ch/sw/lcg/app/nightlies/dev1/Tue/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# ApplicationMgr.ExtSvc    += { "Gaudi::MultiFileCatalog/FileCatalog",                              "Gaudi::IODataManager/IODataManager",                              "PoolDbCacheSvc/PoolDbCacheSvc",                              "PoolDbCnvSvc/PoolRootEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootKeyEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootTreeEvtCnvSvc"                            };
+# EventPersistencySvc.CnvServices += { "PoolRootEvtCnvSvc" };
+# EventPersistencySvc.CnvServices += { "PoolRootTreeEvtCnvSvc" };
+# EventPersistencySvc.CnvServices += { "PoolRootKeyEvtCnvSvc" };
+# PoolRootEvtCnvSvc.DbType         = "POOL_ROOT";
+# PoolRootKeyEvtCnvSvc.DbType      = "POOL_ROOTKEY";
+# PoolRootTreeEvtCnvSvc.DbType     = "POOL_ROOTTREE";
+# PoolDbCacheSvc.Dlls              = {"lcg_RootStorageSvc", "GaudiKernelDict" };
+# PoolDbCacheSvc.OutputLevel       = 4;
+# PoolDbCacheSvc.DomainOpts        = { "Domain[ROOT_All].TREE_MAX_SIZE=500000000000 TYP=longlong" };
+# <-- End of file '/afs/cern.ch/sw/lcg/app/nightlies/dev1/Tue/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# EventSelector.Input = {"DATAFILE='PFN:PoolDst.root' TYP='POOL_ROOTTREE' OPT='READ'"};
+# ApplicationMgr.TopAlg += { "DumpHepMC" };
+# <-- End of file '/build/cattanem/Boole_HEAD/Ex/IOExample/tests/options/WriteHepMC.opts'
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr $Revision: 1.2 $
-                                          running on lxbuild120.cern.ch on Thu Oct 16 18:23:34 2008
+                                                   Welcome to ApplicationMgr $Revision: 1.3 $
+                                          running on lxbuild120.cern.ch on Wed Dec  3 07:52:16 2008
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 EventPersistenc...   INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' ]
@@ -12,7 +31,7 @@ HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
-PoolDst.root      SUCCESS Root file version:51800
+RootDBase.open    SUCCESS PoolDst.root File version:51800
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 DumpHepMC            INFO  HepMC container 'Gen/HepMCEvents' 	 has 1 event(s)
 DumpHepMC            INFO   Generator 'Pythia'
@@ -2623,6 +2642,6 @@ ________________________________________________________________________________
 ApplicationMgr       INFO Application Manager Stopped successfully
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
-PoolRootTreeEvt...   INFO Disconnected data IO:CAD7F6C0-9E9B-DD11-8572-0030487C5E0E[PoolDst.root]
+PoolRootTreeEvt...   INFO Disconnected data IO:8C6DF6E0-06C1-DD11-A08F-0030487C5E0E[PoolDst.root]
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

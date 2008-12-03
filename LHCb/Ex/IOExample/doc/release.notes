@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.32 2008-11-17 15:28:45 cattanem Exp $
+! $Id: release.notes,v 1.33 2008-12-03 07:11:54 cattanem Exp $
 ! Package: IOExample
 ! Package Manager: M.Frank
 ! Purpose: Demonstrate how to write and read back event data using POOL I/O.
 !---------------------------------------------------------------------------
+
+! 2008-12-03 - Marco Cattaneo
+ - Update QMTest reference following fix POOL bug 38775. To be deployed in
+   LCG-56 
 
 !====================== IOExample v2r6 2008-11-17 =========================
 ! 2008-11-06 - Marco Cattaneo
