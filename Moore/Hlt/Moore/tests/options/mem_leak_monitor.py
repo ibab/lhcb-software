@@ -64,6 +64,7 @@ print '=== end of mem_leak test'
 print '=== result:', result
 print '==='  
 
+# compare event near 20000 with last event
 if result[1][1] > result[0][1]:
   print '=== Warning!!! Memory leak!! ==='
 else:    

@@ -4,7 +4,7 @@
 # uses the standard option file "options/Moore.py" 
 # but makes sure:
 #          EventSelector().PrintFreq = 200
-#          Moore().EvtMax = 50000
+#          Moore().EvtMax = 29000
 #
 # Should be used in combination
 # with mem_leak_monitor.py
@@ -26,7 +26,7 @@ exec my_moore
 
 # now reconfigure as needed
 EventSelector().PrintFreq = 200
-Moore().EvtMax = 50000 
+Moore().EvtMax = 29000 
 
 # finally run Moore
 Moore().applyConf()
