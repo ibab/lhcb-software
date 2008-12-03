@@ -1,7 +1,7 @@
 <!-- 
-     * $Id: PartProp.xml,v 1.1.1.1 2008-12-01 18:27:10 ibelyaev Exp $ 
+     * $Id: PartProp.xml,v 1.2 2008-12-03 17:35:54 ibelyaev Exp $ 
      * ========================================================================
-     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.1.1.1 $ 
+     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
      * ======================================================================== 
      * @file
      * The seleciton file to build Reflex dictionaries for 
@@ -22,10 +22,26 @@
   <class name = "std::vector<LHCb::ParticleID>"              />
   <class name = "std::vector<const LHCb::ParticleProperty*>" />
 
+
   <enum name = "LHCb::ParticleID::Quark"    />
   <enum name = "LHCb::ParticleID::Location" />
 
+
   <function pattern = "LHCb::ParticleProperties::*"   />
+
+
+  <class name = "Decays::Decay"       />
+  <class name = "Decays::Decay::Item" />
+  <class name = "std::vector<Decays::Decay>"       />
+  <class name = "std::vector<Decays::Decay::Item>" />
+  
+  <class name    = "std::unary_function<LHCb::ParticleID,bool>"  />
+  <class name    = "Decays::iNode"   />
+  <class name    = "Decays::Node"    />
+  <class pattern = "Decays::Nodes:*" />
+  <class name    = "Decays::Dict::NodeOps" />
+  <class name    = "std::vector<Decays::Nodes::_Node>" />
+  
 
   <exclusion>
     <class name = "LHCb::ParticleID">

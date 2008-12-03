@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # =============================================================================
+# $Id: Service.py,v 1.4 2008-12-03 17:35:54 ibelyaev Exp $ 
+# =============================================================================
 ## @file PartProp/Service.py
 #  Useful decorator for LHcb::(I)ParticlePropertySvc
 #  @see LHCb::IParticlePropertySvc
@@ -12,7 +14,7 @@ Useful decorator for LHCb::(I)ParticlePropertySvc
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
 # =============================================================================
 __all__ = ( 'iParticlePropertySvc', )
 # =============================================================================
@@ -128,6 +130,48 @@ class iParticlePropertySvc(iService) :
         """
         if not self._ipps : self.retrieveInterface() 
         return self._ipps.cc ( decay ) # return
+
+    ## get the C++ service itself  
+    def svc ( self ) :
+        """
+        Get C++ service
+
+        >>> svc = ...  #
+        >>> svccpp = svc.svc ()
+        
+        """
+        if not self._ipps : self.retrieveInterface() 
+        return self._ipps    # return
+    
+    ## get the C++ service itself  
+    def service  ( self ) :
+        """
+        Get C++ service
+
+        >>> svc = ...  #
+        >>> svccpp = svc.service ()
+        
+        """
+        return self.svc()
+
+    ## validate the node/decay/tree
+    def validate ( self , obj ) :
+        """
+        Validate the node/decay/tree
+
+        >>> svc  = ...  # get the service
+        >>> node = ...  # get the node
+        >>> sc = svc.validate ( node )
+        """
+        return obj.validate ( self.svc () ) 
+    
+# useful types 
+iParticlePropertySvc.ParticleIDs = LHCb.IParticlePropertySvc.ParticleIDs
+iParticlePropertySvc.Decay       = LHCb.IParticlePropertySvc.Decay
+iParticlePropertySvc.Decays      = LHCb.IParticlePropertySvc.Decays
+iParticlePropertySvc.Item        = LHCb.IParticlePropertySvc.Item
+iParticlePropertySvc.Items       = LHCb.IParticlePropertySvc.Items
+
 
 # =============================================================================
 ## accessor to the service 

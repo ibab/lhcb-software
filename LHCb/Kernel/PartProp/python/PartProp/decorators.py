@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # =============================================================================
+# $Id: decorators.py,v 1.3 2008-12-03 17:35:54 ibelyaev Exp $ 
+# =============================================================================
 ## @file PartProp/decorators.py
 #  The set of basic decorator for objects from Kernel/PartProp package 
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
@@ -10,7 +12,7 @@ The set of basic decorators for objects from Kernel/PartProp package
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl" 
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $" 
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $" 
 # =============================================================================
 
 import PyCintex
@@ -18,9 +20,10 @@ import PyCintex
 # construct the global namespace 
 _global   = PyCintex.makeNamespace('')
 # namespaces
-cpp  = _global 
-std  = _global.std
-LHCb = _global.LHCb
+cpp    = _global 
+std    = _global.std
+LHCb   = _global.LHCb
+Decays = _global.Decays
 
 
 ## get all particl eproeprties form the service 
@@ -183,7 +186,48 @@ LHCb.ParticleIDs.__str__  = lambda s : s.toList().__str__()
 LHCb.ParticleIDs.get      = _get_pid_
 
 
+Decays.Decay.Item . __str__  = lambda s : s.name()
+Decays.Decay.Item . __repr__ = lambda s : s.name()
 
+Decays.Decay. __str__  = lambda s : s.toString ()
+Decays.Decay. __repr__ = lambda s : s.toString()
+
+_items  = std.vector( Decays.Decay.Item )
+_items.toList    = lambda s : [ i for i in s ]
+_items.toLst     = lambda s : [ i for i in s ]
+_items.__str__   = lambda s : s.toList().__str__ ()
+_items.__repr__  = lambda s : s.toList().__repr__()
+_decays = std.vector( Decays.Decay )
+_decays.toList   = lambda s : [ i for i in s ]
+_decays.toLst    = lambda s : [ i for i in s ]
+_decays.__str__  = lambda s : s.toList().__str__ () 
+_decays.__repr__ = lambda s : s.toList().__repr__()
+
+
+LHCb.IParticlePropertySvc.ParticleIDs = LHCb.ParticleIDs
+LHCb.IParticlePropertySvc.Decays      = _decays
+LHCb.IParticlePropertySvc.Items       = _items 
+LHCb.IParticlePropertySvc.Decay       = Decays.Decay
+LHCb.IParticlePropertySvc.Item        = Decays.Decay.Item 
+
+def _validate_ ( self , svc ) :
+    """
+    Validate the vector of items/decays
+
+    >>> vct = ...            # get the vector of items/decays
+    >>> svc = ...            # get the service
+    >>> vcs.vaildate ( svc ) # validate
+    """
+    for o in self :
+        sc = o.validate ( svc )
+        if sc.isFailure() : return sc
+    return cpp.StatusCode( cpp.StatusCode.SUCCESS ) 
+
+_decays.validate = _validate_
+_items .validate = _validate_
+
+
+from PartProp.Nodes import *
 
 # =============================================================================
 # The END 
