@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.8 2008-11-03 08:34:43 albrecht Exp $
+// $Id: HltFunctions.h,v 1.9 2008-12-03 07:52:42 albrecht Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -16,6 +16,7 @@
 #include "HltBase/HltUtils.h"
 #include "TrackInterfaces/IFunctionTool.h"
 #include "HltBase/IBiFunctionTool.h"
+#include "Event/Node.h"
 
 namespace Hlt {  
 
@@ -471,6 +472,52 @@ namespace Hlt {
     double operator() (const LHCb::Track& t) const {return t.chi2PerDoF();}
     zen::function<LHCb::Track>* clone() const {return new FitChi2OverNdf();}
   };
+
+  /* FitMuChi2:    
+   *   returns the Chi2 contribution of the muon hits of a fitted track
+   */
+  class FitMuChi2 : public Hlt::TrackFunction {
+  public:
+    explicit FitMuChi2() {}
+    double operator() (const LHCb::Track& t) const {
+      const std::vector<LHCb::Node*> nodes = t.nodes();
+      double muChi2=0;
+      for(std::vector<LHCb::Node*>::const_iterator it = nodes.begin(); 
+          it != nodes.end(); 
+          ++it ){
+        if( (*it)->hasMeasurement()
+            && LHCb::Measurement::Muon == (*it)->measurement().type()  ) muChi2 += (*it)->chi2();
+      }
+      return muChi2;
+    }
+    zen::function<LHCb::Track>* clone() const {return new FitMuChi2();}
+  };
+  
+  /* FitCleanedChi2OverNdf:    
+   *   returns the Chi2OverNdf of a fitted track, the contribution of muon hits
+   *   is removed
+   */
+  class FitCleanedChi2OverNdf : public Hlt::TrackFunction {
+  public:
+    explicit FitCleanedChi2OverNdf() {}
+    double operator() (const LHCb::Track& t) const {
+      const std::vector<LHCb::Node*> nodes = t.nodes();
+      int nMuonHits = 0;
+      for(std::vector<LHCb::Node*>::const_iterator it = nodes.begin(); 
+          it != nodes.end(); 
+          ++it ){
+        if( (*it)->hasMeasurement()
+            && LHCb::Measurement::Muon == (*it)->measurement().type()  ) nMuonHits++;
+      }
+      double chi2=0;
+      if(0!=(t.nDoF()-nMuonHits)) {
+        chi2=t.chi2()-Hlt::FitMuChi2()(t)/double(t.nDoF()-nMuonHits);
+      }
+      return chi2;
+    }
+    zen::function<LHCb::Track>* clone() const {return new FitCleanedChi2OverNdf();}
+  };
+  
 
   //---------- extra utilities -----------------------------
   

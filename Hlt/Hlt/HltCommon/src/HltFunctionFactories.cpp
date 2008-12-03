@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactories.cpp,v 1.16 2008-11-04 08:42:13 witekma Exp $
+// $Id: HltFunctionFactories.cpp,v 1.17 2008-12-03 07:52:51 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -52,6 +52,8 @@ StatusCode HltTrackFunctionFactory::initialize() {
 
   //FIXME zen::abs_min ??
   declare<Hlt::FitChi2OverNdf>("FitChi2OverNdf");
+  declare<Hlt::FitMuChi2>("FitMuChi2");
+  declare<Hlt::FitCleanedChi2OverNdf>("FitCleanedChi2OverNdf");
   
   declare<ITrackBiFunctionTool,zen::abs_min,Hlt::TrackSelection>
     ("Calo2DChi2","HltRZVeloTCaloMatch");

@@ -3,7 +3,11 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
-	
+
+! 2008-12-03 - Johannes Albrecht
+ - HltFunctions.h, HltFunctionFactories.cpp: Add filters to cut on track fit
+	 with muon hits
+
 !========================== HltCommon v4r6 2008-11-24 ===================
 ! 2008-11-22 - Tomasz Skwarnicki
  - modify HltSummaryTool to work without HltSummary
