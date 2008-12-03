@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.45 2008-11-26 08:17:51 jpalac Exp $
+! $Id: release.notes,v 1.46 2008-12-03 09:55:27 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Checker package for Phys/FlavourTagging
 !-----------------------------------------------------------------------------
+
+! 2008-12-03 - Patrick Koppenburg
+ - Removed DVBTagging_for_Bd2JpsiKs that is incompatible with v21r1.
 
 !=====================FlavourTaggingChecker v3r2 2008-11-26 ================
 
