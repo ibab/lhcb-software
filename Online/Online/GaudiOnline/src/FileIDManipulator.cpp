@@ -1,4 +1,4 @@
-// $Id: FileIDManipulator.cpp,v 1.2 2008-12-02 13:37:40 frankb Exp $
+// $Id: FileIDManipulator.cpp,v 1.3 2008-12-03 09:38:27 frankb Exp $
 // Include files 
 //-----------------------------------------------------------------------------
 // Implementation file for class : Fileidmanipulator
@@ -109,9 +109,7 @@ pair<RawBank*,void*> FileIDManipulator::getFIDbank()  {
   string loc = m_type!=MDFIO::MDF_NONE ? "/Event" : m_rawLocation;
   SmartDataPtr<DataObject> evt(eventSvc(),loc);
   if ( evt ) {
-    RawBank* b = 0;
     RawEvent* raw = 0;
-    FileIdInfo* i=0;
     IRegistry* reg = 0;
     switch(m_type) {
       case MDFIO::MDF_NONE:

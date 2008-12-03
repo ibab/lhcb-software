@@ -1,5 +1,5 @@
 #!/bin/sh
-killall test.exe
+#killall test.exe
 killall Gaudi.exe
 #killall gentest.exe
 #rm /dev/shm/bm_* /dev/shm/sem.bm_* /dev/shm/TAN* /dev/shm/sem.TAN*
