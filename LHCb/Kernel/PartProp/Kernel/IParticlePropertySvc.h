@@ -1,4 +1,4 @@
-// $Id: IParticlePropertySvc.h,v 1.2 2008-12-02 14:13:46 ibelyaev Exp $
+// $Id: IParticlePropertySvc.h,v 1.3 2008-12-03 13:43:50 ibelyaev Exp $
 // ============================================================================
 #ifndef LHCBKERNEL_IPARTICLEPROPERTYSVC_H
 #define LHCBKERNEL_IPARTICLEPROPERTYSVC_H
@@ -124,6 +124,25 @@ namespace LHCb
     OUTPUT get 
     ( const PREDICATE& cut    , 
       OUTPUT           output ) const ;
+    // ========================================================================
+  public:
+    // ========================================================================
+    /** make the charge conjugation for the string/decay descriptor 
+     * 
+     *  @code 
+     * 
+     *   std::string decay = "B0 -> pi+ pi-" ;
+     *  
+     *   LHCb::IParticleProeprtySvc* svc = ... ;
+     *  
+     *   std::string cc = svc -> cc ( decay ) ;
+     *
+     *  @endcode 
+     *
+     *  @param decay the decay descriptor
+     *  @return the charge conjugation for the decay descriptor
+     */  
+    virtual std::string cc ( const std::string& decay ) const = 0 ;
     // ========================================================================
   public:
     // ========================================================================

@@ -1,4 +1,4 @@
-// $Id: ParticlePropertySvc.cpp,v 1.1.1.1 2008-12-01 18:27:10 ibelyaev Exp $
+// $Id: ParticlePropertySvc.cpp,v 1.2 2008-12-03 13:43:51 ibelyaev Exp $
 // ============================================================================
 //Include files
 // ============================================================================
@@ -21,8 +21,6 @@
 #include "GaudiKernel/IFileAccess.h"
 #include "GaudiKernel/VectorMap.h"
 // ============================================================================
-//#include "GaudiKernel/ToStream.h"
-// ============================================================================
 #include "Kernel/IParticlePropertySvc.h"
 #include "Kernel/ParticleProperty.h"
 #include "Kernel/ParticleID.h"
@@ -32,6 +30,10 @@
 #include "boost/lambda/lambda.hpp"
 #include "boost/lambda/bind.hpp"
 #include "boost/algorithm/string.hpp"
+// ============================================================================
+// local 
+// ============================================================================
+#include "CC.h"
 // ============================================================================
 /** @file
  *  Simple implementation of class LHCb::ParticlePropertySvc 
@@ -147,6 +149,25 @@ namespace LHCb
     virtual const LHCb::ParticleProperty* find 
     ( const LHCb::ParticleID& pid  ) const { return m_pidMap ( pid ) ; }  
     // =========================================================================
+  public:  // CC-ing
+    // =========================================================================
+    /** make the charge conjugation for the string/decay descriptor 
+     * 
+     *  @code 
+     * 
+     *   std::string decay = "B0 -> pi+ pi-" ;
+     *  
+     *   LHCb::IParticleProeprtySvc* svc = ... ;
+     *  
+     *   std::string cc = svc -> cc ( decay ) ;
+     *
+     *  @endcode 
+     *
+     *  @param decay the decay descriptor
+     *  @return the charge conjugation for the decay descriptor
+     */  
+    virtual std::string cc ( const std::string& decay ) const ;
+     // =========================================================================
   public:  // (I)Service
     // =========================================================================
     /// Initialize the service.
@@ -187,6 +208,10 @@ namespace LHCb
         /// thelist of special particle properties 
       , m_particles ()                 /// the list of special particle properties 
         //
+      //
+      , m_ccMap        ()
+      , m_ccmap_       ()
+      //
     {
       // Redefine the default name: 
       if( NULL != getenv("PARAMFILESROOT") ) 
@@ -214,6 +239,28 @@ namespace LHCb
         ( "Dump" , m_dump , 
           "Dump all properties in a table format" ) 
         -> declareUpdateHandler (&LHCb::ParticlePropertySvc::updateDump   , this ) ;
+      //
+      // CC-related part 
+      //
+      m_ccmap_ [ "X+"       ] = "X-"       ; // charged, positive
+      m_ccmap_ [ "X-"       ] = "X+"       ; // charged, negative 
+      m_ccmap_ [ "l+"       ] = "l-"       ; // charged lepton, positive 
+      m_ccmap_ [ "l-"       ] = "l+"       ; // charged lepton, negative
+      // prevent some other symbols from inproper conversions
+      m_ccmap_ [ "Meson"    ] = "Meson"    ; // the generic meson 
+      m_ccmap_ [ "Hadron"   ] = "Hadron"   ; // the generic hadron
+      m_ccmap_ [ "Baryon"   ] = "Baryon"   ; // the generic baryon
+      m_ccmap_ [ "Lepton"   ] = "Lepton"   ; // the generic lepton
+      m_ccmap_ [ "Nu"       ] = "Nu"       ; // the generic neutrino
+      m_ccmap_ [ "HasQuark" ] = "HasQuark" ; // for protection 
+      m_ccmap_ [ "JSpin"    ] = "JSpin"    ; // for protection
+      m_ccmap_ [ "cc"       ] = "cc"       ; // for protection
+      m_ccmap_ [ "os"       ] = "os"       ; // for protection
+      //
+      declareProperty 
+        ( "ChargeConjugations" , m_ccmap_ , 
+          "The map of charge-conjugation symbols" ) 
+        -> declareUpdateHandler (&LHCb::ParticlePropertySvc::updateCC   , this ) ;
     }
     /// virtual & protected destructor 
     virtual ~ParticlePropertySvc() // virtual & protected destructor 
@@ -231,7 +278,7 @@ namespace LHCb
   private: // update handler 
     // ========================================================================  
     /** the action  in the case of interactive manipulation with properties:
-     *   - no action if the internal dat ais not yet build
+     *   - no action if the internal data is not yet build
      *   - else rebuild the internal data 
      *  Such action will allow more flexible interactive configuration 
      *  of the service 
@@ -243,7 +290,12 @@ namespace LHCb
      *  of the service 
      *  @param p the updated property
      */
-    void updateDump ( Property& p ) ;
+    void updateDump    ( Property& p ) ;
+    /** the action  in the case of interactive manipulation with properties:
+     *  of the service 
+     *  @param p the updated property
+     */
+    void updateCC      ( Property& p ) ;
     /// dump the table of particle properties
     void dump () ;
     // ========================================================================
@@ -338,7 +390,14 @@ namespace LHCb
     Files m_other ;                                    // additional file names 
     /// properties to be redefined  explicitely 
     Particles m_particles ;          // properties to be redefined  explicitely 
-    // =======================================================================
+    // ========================================================================
+  private: // CC-related stuff 
+    // ========================================================================
+    /// the CC-map 
+    mutable MapCC                     m_ccMap  ;            //       the CC-map 
+    /// CC-map for properties 
+    std::map<std::string,std::string> m_ccmap_ ;            //           CC-map
+    // ========================================================================
   private: // various statistics of modifications 
     // ========================================================================
     typedef std::set<std::string>       NameSet ;
@@ -386,6 +445,8 @@ StatusCode LHCb::ParticlePropertySvc::initialize ()
   m_replaced_pids  . clear () ;
   m_no_anti        . clear () ;
   //
+  m_ccMap.clear () ;
+  //
   if ( m_dump || MSG::DEBUG >= outputLevel () ) { dump () ; }
   //
   return StatusCode::SUCCESS ;
@@ -406,6 +467,7 @@ StatusCode LHCb::ParticlePropertySvc::rebuild ()
   m_nameMap   . clear () ;
   m_pidMap    . clear () ;
   m_vector    . clear () ;
+  m_ccMap     . clear () ;
   // ==========================================================================
   // parse the main file 
   StatusCode sc = parse ( m_filename ) ;
@@ -494,7 +556,7 @@ StatusCode LHCb::ParticlePropertySvc::rebuild ()
         << " No anti particle : " 
         << Gaudi::Utils::toString ( m_no_anti ) << endreq ;
   }
-  // 
+  //
   return StatusCode::SUCCESS ;
 }
 // =============================================================================
@@ -523,11 +585,18 @@ void LHCb::ParticlePropertySvc::updateHandler ( Property& p  )
       << p << endreq ;
   // rebuild the internal data 
   StatusCode sc = rebuild () ;
-  if ( sc.isFailure() ) 
+  if ( sc.isFailure() )
   { throw GaudiException 
       ( "Can't rebuild Particle Properties Data" , 
         "*ParticlePropertySvc*" , sc ) ; } 
+  // clear CC-map 
+  m_ccMap.clear () ;  
 }
+// ============================================================================
+//  the action  in the case of redefiniiton of "ChargeConjugates"
+// ============================================================================
+void LHCb::ParticlePropertySvc::updateCC ( Property& /* p */ ) 
+{ m_ccMap.clear () ; }
 // ============================================================================
 /* the action  in the case of interactive manipulation with properties:
  *  of the service 
@@ -797,6 +866,56 @@ void LHCb::ParticlePropertySvc::dump ()
   log << MSG::ALWAYS << " The Table of Particle Properties " << std::endl ;
   LHCb::ParticleProperties::printAsTable ( m_vector , log , this ) ;
   log << endreq ;
+}
+// ============================================================================
+/* make the charge conjugation for the string/decay descriptor 
+ * 
+ *  @code 
+ * 
+ *   std::string decay = "B0 -> pi+ pi-" ;
+ *  
+ *   LHCb::IParticleProeprtySvc* svc = ... ;
+ *  
+ *   std::string cc = svc -> cc ( decay ) ;
+ *
+ *  @endcode 
+ *
+ *  @param decay the decay descriptor
+ *  @return the charge conjugation for the decay descriptor
+ */  
+// ============================================================================
+std::string LHCb::ParticlePropertySvc::cc ( const std::string& decay ) const 
+{
+  // build the map if not done yet 
+  if ( m_ccMap.empty() )  
+  {
+    // get the particles from the service 
+    for ( iterator it = m_vector.begin() ; m_vector.end() != it ; ++it ) 
+    {
+      const LHCb::ParticleProperty* pp = *it ;
+      if ( 0 == pp   ) { continue ; }
+      const LHCb::ParticleProperty* anti = pp->antiParticle() ;
+      if ( 0 == anti ) { continue ; }
+      m_ccMap [ pp   -> particle() ] = anti->particle() ;
+    }
+    // get the particles from the options 
+    for ( std::map<std::string,std::string>::const_iterator ic = 
+            m_ccmap_.begin() ; m_ccmap_.end() != ic ; ++ic ) 
+    {
+      m_ccMap [ ic -> first  ] = ic -> second ;
+      m_ccMap [ ic -> second ] = ic -> first  ;
+    }
+    MsgStream log ( msgSvc() , name() ) ;
+    log  << MSG::DEBUG ;
+    if ( log.isActive() ) 
+    {
+      log << " CC-map is " << std::endl ;
+      Gaudi::Utils::toStream ( m_ccMap , log.stream() ) ;
+      log << endreq ;
+    }
+  }
+  // use the map 
+  return cc_ ( decay , m_ccMap ) ;
 }
 // ============================================================================
 // Instantiation of a static factory class used by clients to create

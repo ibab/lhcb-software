@@ -10,7 +10,7 @@ Demo-file for interactive work with new Particle Property Service
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $" 
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $" 
 # =============================================================================
 import PartProp.PartPropAlg
 import PartProp.decorators 
@@ -54,7 +54,15 @@ def test () :
         print ' %s == 2*jSpi+1 '%j
         print lst1 
 
-
+        
+    decays = [ 'B0   -> K- pi+' ,
+               "B+   -> J/psi(1S) ( K*0 -> K+ pi- ) " , 
+               "D_s+ -> pi+ pi+ pi- " ,
+               "B_s0 -> ( J/psi(1S) -> mu+ mu- ) ( phi(1020) -> K+ K- ) " ]
+               
+    for decay in decays:  
+               print 'Decay&CC:  %s : %s ' % ( decay, pps.cc ( decay ) )
+    
     
 if '__main__' == __name__ :
 

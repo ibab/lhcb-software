@@ -12,7 +12,7 @@ Useful decorator for LHCb::(I)ParticlePropertySvc
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
 # =============================================================================
 __all__ = ( 'iParticlePropertySvc', )
 # =============================================================================
@@ -116,6 +116,18 @@ class iParticlePropertySvc(iService) :
         Dump the particle property table 
         """
         self.Dump = True 
+
+    ## CC-conjugation
+    def cc   ( self , decay ) :
+        """
+        Get CC-conjugationfor decay -descriptor
+                
+        >>> svc = ...                       # get the service
+        >>> cc = svc.cc ( 'B0 -> K- pi+' )  # get CC-conjugation
+        
+        """
+        if not self._ipps : self.retrieveInterface() 
+        return self._ipps.cc ( decay ) # return
 
 # =============================================================================
 ## accessor to the service 

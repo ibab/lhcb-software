@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.1.1.1 2008-12-01 18:27:10 ibelyaev Exp $ 
+! $Id: release.notes,v 1.2 2008-12-03 13:43:50 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/PartProp
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
+
+! 2008-12-03 - Vanya BELYAEV
+ - add the possiibilty to make "CC"-ing for the decay descriptors 
+ - update the tests and examples 
 
 ! 2008-12-01 - Vanya BELYAEV
  - the first import 
