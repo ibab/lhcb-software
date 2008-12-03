@@ -1,4 +1,4 @@
-// $Id: ParticleCuts.h,v 1.31 2008-11-21 15:11:29 cattanem Exp $
+// $Id: ParticleCuts.h,v 1.32 2008-12-03 12:37:55 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSPARTICLECUTS_H 
 #define LOKI_PHYSPARTICLECUTS_H 1
@@ -256,6 +256,64 @@ namespace LoKi
      *  @date 2008-09-23
      */
     const LoKi::Particles::AbsDeltaNominalMass                      ADPDGMASS ;
+    // ========================================================================
+    /** @typedef ADWM 
+     *  Absoluet value of delta "wrong-mass"
+     *  The mass is evaluated using "wrong" PID-hypotheses 
+     *
+     *  @code
+     *  
+     *   const LHCb::Particle* B0 = ... ;
+     * 
+     *   Cut cut =
+     *       ADWM ( "B0" , WM ( "pi+" , "pi-" ) ) < 100 * MeV || 
+     *       ADWM ( "B0" , WM ( "K+"  , "pi-" ) ) < 100 * MeV || 
+     *       ADWM ( "B0" , WM ( "pi+" , "K-"  ) ) < 100 * MeV || 
+     *       ADWM ( "B0" , WM ( "K+"  , "K-"  ) ) < 100 * MeV ;
+     *
+     *   const bool good = cut ( B0 ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::AbsDeltaWrongMass
+     *  @see LoKi::Cuts::WM
+     *  @see LoKi::Cuts::WMASS
+     *  @see LoKi::Cuts::DWMASS
+     *  @see LoKi::Cuts::DWM
+     *  @see LoKi::Cuts::ADWMASS
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-12-03
+     */
+    typedef LoKi::Particles::AbsDeltaWrongMass                           ADWM ;
+    // ========================================================================
+    /** @typedef ADWMASS 
+     *  Absoluet value of delta "wrong-mass"
+     *  The mass is evaluated using "wrong" PID-hypotheses 
+     *
+     *  @code
+     *  
+     *   const LHCb::Particle* B0 = ... ;
+     * 
+     *   Cut cut =
+     *       ADWMASS ( "B0" , WM ( "pi+" , "pi-" ) ) < 100 * MeV || 
+     *       ADWMASS ( "B0" , WM ( "K+"  , "pi-" ) ) < 100 * MeV || 
+     *       ADWMASS ( "B0" , WM ( "pi+" , "K-"  ) ) < 100 * MeV || 
+     *       ADWMASS ( "B0" , WM ( "K+"  , "K-"  ) ) < 100 * MeV ;
+     *
+     *   const bool good = cut ( B0 ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::AbsDeltaWrongMass
+     *  @see LoKi::Cuts::ADWM
+     *  @see LoKi::Cuts::WM
+     *  @see LoKi::Cuts::WMASS
+     *  @see LoKi::Cuts::DWM
+     *  @see LoKi::Cuts::DWMASS
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-12-03
+     */
+    typedef LoKi::Particles::AbsDeltaWrongMass                        ADWMASS ;
     // ========================================================================
     /** @var ALL
      *  the trivial functor which always evaluates to "true"
@@ -1729,6 +1787,64 @@ namespace LoKi
      *  @date 2007-03-03 
      */
     typedef LoKi::Particles::DeltaR2                                      DR2 ;
+    // ========================================================================
+    /** @typedef DWM
+     *  delta "wrong-mass"
+     *  The mass is evaluated using "wrong" PID-hypotheses 
+     *
+     *  @code
+     *  
+     *   const LHCb::Particle* B0 = ... ;
+     * 
+     *   Cut cut =
+     *       DWM ( "B0" , WM ( "pi+" , "pi-" ) ) < 100 * MeV || 
+     *       DWM ( "B0" , WM ( "K+"  , "pi-" ) ) < 100 * MeV || 
+     *       DWM ( "B0" , WM ( "pi+" , "K-"  ) ) < 100 * MeV || 
+     *       DWM ( "B0" , WM ( "K+"  , "K-"  ) ) < 100 * MeV ;
+     *
+     *   const bool good = cut ( B0 ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::AbsDeltaWrongMass
+     *  @see LoKi::Cuts::DWMASS
+     *  @see LoKi::Cuts::WM
+     *  @see LoKi::Cuts::WMASS
+     *  @see LoKi::Cuts::ADWM
+     *  @see LoKi::Cuts::ADWMASS
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-12-03
+     */
+    typedef LoKi::Particles::DeltaWrongMass                               DWM ;
+    // ========================================================================
+    /** @typedef DWMASS 
+     *  delta "wrong-mass"
+     *  The mass is evaluated using "wrong" PID-hypotheses 
+     *
+     *  @code
+     *  
+     *   const LHCb::Particle* B0 = ... ;
+     * 
+     *   Cut cut =
+     *       DWMASS ( "B0" , WM ( "pi+" , "pi-" ) ) < 100 * MeV || 
+     *       DWMASS ( "B0" , WM ( "K+"  , "pi-" ) ) < 100 * MeV || 
+     *       DWMASS ( "B0" , WM ( "pi+" , "K-"  ) ) < 100 * MeV || 
+     *       DWMASS ( "B0" , WM ( "K+"  , "K-"  ) ) < 100 * MeV ;
+     *
+     *   const bool good = cut ( B0 ) ;
+     *
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::AbsDeltaWrongMass
+     *  @see LoKi::Cuts::DWM
+     *  @see LoKi::Cuts::WM
+     *  @see LoKi::Cuts::WMASS
+     *  @see LoKi::Cuts::ADWM
+     *  @see LoKi::Cuts::ADWMASS
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-12-03
+     */
+    typedef LoKi::Particles::DeltaWrongMass                            DWMASS ;
     // ========================================================================
     /** @var E 
      *  Particle's energy
@@ -6036,6 +6152,33 @@ namespace LoKi
      *  @date 2006-02-15
      */
     const   LoKi::Particles::Weight                                    WEIGHT ;
+    // ========================================================================
+    /** @typedef WM
+     *  simepl functor to evaluate the mass of the mother 
+     *  particle using the alternative mass hypothesses for daughter particles:
+     * 
+     *  @code 
+     *
+     * 
+     *   const WM wmass1 ("K+", "K-") ;
+     *   const WM wmass2 ( LHCb::ParticleID(121), LHCb::ParticleID(121) ) ;
+     *   const WM wmass3 ( 137 * Gaudi::Units::MeV , 137 * Gaudi::Units::MeV ) ;
+     *
+     *   const LHCb::Particle* D0 = ... ;
+     * 
+     *   const double m1 = wmass1 ( D0 ) ;
+     *   const double m2 = wmass2 ( D0 ) ;
+     *   const double m3 = wmass3 ( D0 ) ;
+     *   
+     *  @endcode 
+     *
+     *  @see LoKi::Particles::WrongMass 
+     *  @see LoKi::Cuts::WMASS
+     *  @see LoKi::Kinematics::wrongMass
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-02-15
+     */
+    typedef LoKi::Particles::WrongMass                                     WM ;
     // ========================================================================
     /** @typedef WMASS 
      *  simepl functor to evaluate the mass of the mother 

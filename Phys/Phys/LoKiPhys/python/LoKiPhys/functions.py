@@ -399,9 +399,18 @@ INGENERATION  = LoKi.Particles.InGeneration
 NINGENERATION = LoKi.Particles.NinGeneration
 
 ## @see LoKi::Cuts::WM 
-WM    = LoKi.Particles.WrongMass
+WM      = LoKi.Particles.WrongMass
 ## @see LoKi::Cuts::WMASS 
-WMASS = LoKi.Particles.WrongMass
+WMASS   = LoKi.Particles.WrongMass
+## @see LoKi::Cuts::DWMASS 
+DWMASS  = LoKi.Particles.DeltaWrongMass 
+## @see LoKi::Cuts::DWM
+DWM     = LoKi.Particles.DeltaWrongMass 
+## @see LoKi::Cuts::ADWMASS 
+ADWMASS = LoKi.Particles.AbsDeltaWrongMass 
+## @see LoKi::Cuts::ADWM
+ADWM    = LoKi.Particles.AbsDeltaWrongMass 
+
 
 ## @see LoKi::Cuts::LIFETIME
 LIFETIME         = LoKi.Particles.LifeTime
@@ -494,6 +503,8 @@ MINVVDCHI2 = LoKi.Vertices.MinVertexChi2Distance
 VIP        = LoKi.Vertices.ImpPar
 ## @see LoKi::Vertices::ImpParChi2
 VIPCHI2    = LoKi.Vertices.ImpParChi2
+
+
 
 # =============================================================================
 # Aliases from Vava GLIGOROV
