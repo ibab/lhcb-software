@@ -3,6 +3,8 @@
 ! Responsible : Mariusz Witek
 ! Purpose     : Ecal alley specific algorithms and tools
 !----------------------------------------------------------------------------
+! 2008-12-03 - Gerhard Raven
+ - fix a small (one-time only) memory leak
 
 !========================== HltEcalAlley v1r3 2008-11-13 ===================
 

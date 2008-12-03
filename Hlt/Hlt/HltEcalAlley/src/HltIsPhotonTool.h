@@ -1,4 +1,4 @@
-// $Id: HltIsPhotonTool.h,v 1.1.1.1 2008-07-16 16:54:04 witekma Exp $
+// $Id: HltIsPhotonTool.h,v 1.2 2008-12-03 12:30:54 graven Exp $
 #ifndef HLTISPHOTONTOOL_H 
 #define HLTISPHOTONTOOL_H 1
 
@@ -13,6 +13,7 @@
 #include "TMVA_FisherArea0.C"
 #include "TMVA_FisherArea1.C"
 #include "TMVA_FisherArea2.C"
+#include <memory>
 
 /** @class HltIsPhotonTool HltIsPhotonTool.h
  *  
@@ -31,15 +32,18 @@ public:
   virtual ~HltIsPhotonTool( ); ///< Destructor
 
   StatusCode initialize();
+  StatusCode finalize();
   
   double function(const LHCb::Track& track);
 
 private:
+  HltIsPhotonTool( const HltIsPhotonTool& ) ;            // do not allow!
+  HltIsPhotonTool& operator=( const HltIsPhotonTool& ) ; // do not allow!
 
   double m_minEtCluster;
-  IClassifierReader * m_reader0;  
-  IClassifierReader * m_reader1;  
-  IClassifierReader * m_reader2;  
+  std::auto_ptr<IClassifierReader> m_reader0;  
+  std::auto_ptr<IClassifierReader> m_reader1;  
+  std::auto_ptr<IClassifierReader> m_reader2;  
 
   bool m_useFastDecoding; 
   const DeCalorimeter* m_detector;

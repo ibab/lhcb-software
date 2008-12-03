@@ -1,4 +1,4 @@
-// $Id: HltIsPhotonTool.cpp,v 1.2 2008-09-15 08:29:13 witekma Exp $
+// $Id: HltIsPhotonTool.cpp,v 1.3 2008-12-03 12:30:54 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -59,13 +59,20 @@ StatusCode HltIsPhotonTool::initialize() {
   inputVars.push_back("showertail");
   inputVars.push_back("showerenergy");
 
-  m_reader0 = new ReadFisherArea0(inputVars);
-  m_reader1 = new ReadFisherArea1(inputVars);
-  m_reader2 = new ReadFisherArea2(inputVars);
+  m_reader0.reset( new ReadFisherArea0(inputVars) );
+  m_reader1.reset( new ReadFisherArea1(inputVars) );
+  m_reader2.reset( new ReadFisherArea2(inputVars) );
 
   return StatusCode::SUCCESS;
 }
 
+StatusCode HltIsPhotonTool::finalize() {
+  StatusCode sc = GaudiTool::finalize(); // must be executed first
+  m_reader0.reset(0);
+  m_reader1.reset(0);
+  m_reader2.reset(0);
+  return sc;
+}
 //=============================================================================
 
 double HltIsPhotonTool::function(const Track& ctrack)
@@ -98,9 +105,7 @@ double HltIsPhotonTool::function(const Track& ctrack)
     } 
   }  
 
-  if ( idL0 == 0 ) {
-    return -9999999.;
-  }
+  if ( idL0 == 0 ) return -9999999.;
 
   // get input data (sequential and simultaneously direct access!)  
   LHCb::CaloDigits* digits = get<LHCb::CaloDigits>( LHCb::CaloDigitLocation::Ecal );
@@ -109,9 +114,7 @@ double HltIsPhotonTool::function(const Track& ctrack)
   unsigned int level = 3; // level 1:3x3, 2:5x5, 3:7x7
   // remember to delete cluster
   m_tool->clusterize(clusters, digits, m_detector, *idL0, level);
-  if (clusters.size() < 1 ) {
-    return -9999999.;
-  }
+  if (clusters.empty()) return -9999999.;
 
   // get cluster closest to Track ( = L0Photon )
   double dist2min = 100000000.;
