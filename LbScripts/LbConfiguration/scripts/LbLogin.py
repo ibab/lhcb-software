@@ -23,7 +23,7 @@ import sys, os, logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.17 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.18 $")
 
 
 def getLbLoginEnv(debug=False, 
@@ -575,6 +575,7 @@ class LbLoginScript(Script):
                     ev["CMTPROJECTPATH"] = ev["LHCBPROJECTPATH"]
     
     def setupLbScripts(self):
+        log = logging.getLogger()
         ev = self._env
         al = self._aliases
         opts = self.options
@@ -585,8 +586,11 @@ class LbLoginScript(Script):
         pylist.append(os.path.join(_base_dir, "python"))
         ev["PYTHONPATH"] = os.pathsep.join(pylist)
 
-        if ev.has_key("PATH"):
+        if ev.has_key("PATH") :
             plist = ev["PATH"].split(os.pathsep)
+            if "." in plist :
+                plist = [ p for p in plist if p != "."]
+                log.warning("Removed '.' from PATH. It causes problems with CMT")
         else : 
             plist = []
         plist.append(os.path.join(_base_dir, "scripts"))

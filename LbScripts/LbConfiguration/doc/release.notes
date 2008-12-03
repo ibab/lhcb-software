@@ -1,3 +1,8 @@
+2008-12-03  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/LbLogin.py: filter '.' from PATH. It creates problems with the
+	path_prepend and path_append commands of CMT.
+
 2008-12-01  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbConfiguration/rcs.py: moved from LbUtils.
