@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.cpp,v 1.21 2008-12-02 17:59:47 gcorti Exp $
+// $Id: PythiaProduction.cpp,v 1.22 2008-12-03 15:58:48 gcorti Exp $
 
 // Include files
 // STD * STL 
@@ -241,7 +241,7 @@ StatusCode PythiaProduction::initialize( ) {
     if ( "UNKNOWN" != System::getEnv( "DECFILESROOT" ) ) {
       std::string temp = m_slhaSpectrumFile ;
       m_slhaSpectrumFile = System::getEnv( "DECFILESROOT" ) +
-	"/lha/" + temp ;
+	"/lhafiles/" + temp ;
     }
 
     // Check if file exists
