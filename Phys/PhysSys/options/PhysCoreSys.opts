@@ -11,3 +11,11 @@ DataOnDemandSvc.Nodes +=  {  "DATA='/Event/Rec'             TYPE='DataObject'",
 #include "$STDOPTS/DecodeRawEvent.py"
 // Loki service
 ApplicationMgr.ExtSvc += { "LoKiSvc"} ;
+/*
+ * standard particles options
+ */
+#include "$COMMONPARTICLESROOT/options/StandardOptions.opts"
+/*
+ * tagging
+ */
+#include "$FLAVOURTAGGINGOPTS/BTaggingTool.opts"
