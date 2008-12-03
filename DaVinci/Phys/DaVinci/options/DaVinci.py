@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DaVinci.py,v 1.18 2008-11-06 14:20:02 jpalac Exp $
+# $Id: DaVinci.py,v 1.19 2008-12-03 10:22:31 pkoppenb Exp $
 #
 # Options for a typical DaVinci job
 #
@@ -10,7 +10,6 @@
 ########################################################################
 from os import environ
 from Gaudi.Configuration import *
-from Configurables import GaudiSequencer, PrintTree, PhysDesktop, BTagging, MagneticFieldSvc, MakeResonances
 ########################################################################
 #
 # Standard configuration
@@ -48,21 +47,21 @@ importOptions( "$B2DILEPTONROOT/options/DoPreselBu2LLK.opts" )
 #
 # Example of running some algorithms
 #
+from Configurables import GaudiSequencer, PrintTree, PhysDesktop
 ApplicationMgr().TopAlg += [ GaudiSequencer("ExampleSeq") ]
 tree = PrintTree("PrintBu2LLK")
 GaudiSequencer("ExampleSeq").Members += [ tree ]
 tree.addTool( PhysDesktop() )
-tree.PhysDesktop.InputLocations = [ "Phys/PreselBu2LLK" ]
+tree.PhysDesktop.InputLocations = [ "PreselBu2LLK" ]
 ########################################################################
 #
 # Flavour tagging. Don't ask why you'd be tagging a B+...
 #
-# Uncommenting this does not work. Why ?
-#
-# importOptions( "$FLAVOURTAGGINGOPTS/BTagging.opts" )
-# tag = BTagging()
-# tag.addTool( PhysDesktop() ) 
-# tag.PhysDesktop.InputLocations = [ "Phys/PreselBu2LLK" ]
+from Configurables import BTagging
+tag = BTagging("BTagging")
+tag.addTool( PhysDesktop() ) 
+tag.PhysDesktop.InputLocations = [ "PreselBu2LLK" ]
+ApplicationMgr().TopAlg += [ tag ]
 ########################################################################
 #
 # Histogram File

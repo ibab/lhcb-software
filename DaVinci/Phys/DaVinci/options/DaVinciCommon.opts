@@ -59,11 +59,8 @@ ApplicationMgr.AppName = "DaVinci" ;
 #include "$DAVINCIROOT/options/DaVinciProtoPCalibrate.opts"
 
 /*
- * standard particles options
- */
-#include "$COMMONPARTICLESROOT/options/StandardOptions.opts"
-/*
- * DC06 standard options
+ * DC06 standard options - for backward compatibilty only
+ * @todo Remove when DC06 is dead
  */
 #include "$COMMONPARTICLESROOT/options/StandardDC06Options.opts"
 

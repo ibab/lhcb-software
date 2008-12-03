@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.267 2008-12-01 17:33:47 jpalac Exp $
+! $Id: release.notes,v 1.268 2008-12-03 10:22:31 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,12 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2008-12-03 - Patrick Koppenburg
+ - DaVinci.py : restore Flavour Tagging options. Now work with 
+   pkoppenb_20081203 tags of PhysSys and Phys/FlavourTagging
+ - DaVinciCommon.opts : Move StandardParticles to PhysSys.
+ - Increment to v21r1
 
 ! 2008-12-01 - Juan PALACIOS
  - job/DaVinci_Ganga.py
