@@ -2,6 +2,9 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2008-12-03 M Needham
+  - Use the shorth for monitoring in STDigitMonitor
+
 ! 2008-12-02 M Needham
  - Add STLiteClusterMonitor
  - Use generalized mean function to fill reference histos 

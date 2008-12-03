@@ -1,4 +1,4 @@
-// $Id: STPerformanceMonitor.cpp,v 1.5 2008-12-01 16:28:06 mneedham Exp $
+// $Id: STPerformanceMonitor.cpp,v 1.6 2008-12-03 09:31:39 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -100,8 +100,8 @@ StatusCode STPerformanceMonitor::execute()
 
 
   // get the modal charge
-  //double shorth = SiChargeFun::shorth(clusterCont->begin(),clusterCont->end());
-  //plot(shorth, "shorth", 0., 100., 200);
+  double shorth = SiChargeFun::shorth(clusterCont->begin(),clusterCont->end());
+  plot(shorth, "shorth", 0., 100., 200);
 
   // get the modal charge
   double tm = SiChargeFun::truncatedMean(clusterCont->begin(),clusterCont->end());
