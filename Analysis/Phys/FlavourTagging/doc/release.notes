@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.123 2008-11-27 07:21:05 cattanem Exp $
+! $Id: release.notes,v 1.124 2008-12-03 10:26:27 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+! 2008-12-03 - Patrick Koppenburg
+ - Rename BTagging.opts to .py. 
+ - Increment to v8r2
 
 !======================= FlavourTagging v8r1 2008-11-27 ====================
 ! Marco Cattaneo

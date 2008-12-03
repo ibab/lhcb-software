@@ -27,7 +27,7 @@ EventSelector.Input   = {"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/product
 
 
 ///--------------------------------------------------------------- TAGGING
-#include "$FLAVOURTAGGINGOPTS/BTagging.opts"
+#include "$FLAVOURTAGGINGOPTS/BTagging.py"
 
 //set verbosity on:
 // CheatedSelection.OutputLevel=2; CheatedSelection.DebugTool.OutputLevel=2;
