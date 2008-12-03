@@ -116,7 +116,7 @@ inline double SiChargeFun::truncatedMean(TYPE start, TYPE stop, double trimFract
   const unsigned int reducedSize =
       (unsigned int)ceil(trimFraction*(double)values.size());
   std::nth_element( values.begin(), values.begin()+reducedSize, values.end() );
-  return( std::accumulate( values.begin(), values.begin()+reducedSize, (double)0.0 )/((double)reducedSize)); 
+  return( reducedSize != 0.0 ?  std::accumulate( values.begin(), values.begin()+reducedSize, (double)0.0 )/((double)reducedSize) : 0.0); 
 }
 
 template <typename TYPE>
