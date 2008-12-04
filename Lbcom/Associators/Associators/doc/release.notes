@@ -2,6 +2,9 @@
 ! Responsible : Matt Needham
 !---------------------------------------------------------------------------
 
+! 2008-12-04 - Marco Cattaneo
+ - Add MCParticleToMCHit.py, python options to replace Brunel.opts
+
 !====================== Associators v3r6 2007-06-12 ========================
 ! 2007-06-12 M Needham
  - Add Muon hits to the track MCHits table

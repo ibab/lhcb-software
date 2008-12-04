@@ -1,3 +1,6 @@
+#pragma print on
+// These options ($ASSOCIATORSROOT/options/Brunel.opts) are obsolete, use MCParticleToMCHit.py instead
+#pragma print off
 
 // MCParticle to Velo MCHits association
 DataOnDemandSvc.Algorithms += { "DATA = '/Event/Link/MC/Particles2MCVeloHits' TYPE = 'MCParticle2MCHitAlg/MCP2VeloMCHitAlg' " };
