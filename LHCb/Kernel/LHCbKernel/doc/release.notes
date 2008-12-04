@@ -4,12 +4,15 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2008-12-04 - Olivier Callot
+ - Upgrade the logPacked decoder, to restore int if the value was an int, 
+   this means positive and close at 10-7 of an int. 
+
 ! 2008-12-04 - Vanya BELYAEV
  - remove Kernel/Decay.h
 
 ! 2008-12-03 M Needham 
   - More protections against fpe in SiChargeFun
-
 
 ! 2008-12-02 - Vanya BELYAEV
  - remove:
@@ -17,7 +20,6 @@
     src/ParticleID.cpp 
  - cmt/rerquirements
     add dependency on Kernel/PartProp
-
 
 ! 2008-12-02 M Needham
   - Fix against fpe in truncated mean calc 

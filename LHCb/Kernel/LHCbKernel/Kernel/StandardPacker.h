@@ -1,4 +1,4 @@
-// $Id: StandardPacker.h,v 1.2 2008-11-19 07:18:27 ocallot Exp $
+// $Id: StandardPacker.h,v 1.3 2008-12-04 16:59:57 ocallot Exp $
 #ifndef KERNEL_STANDARDPACKER_H 
 #define KERNEL_STANDARDPACKER_H 1
 
@@ -103,7 +103,14 @@ public:
   /** returns an double from a log packed value */
   double logPacked( int k  ) {
     if ( 0 == k ) return 0.;
-    if ( 0 < k ) return exp( double( k )/ Packer::SMALL_SCALE - 100. );
+    if ( 0 < k ) {  // rounding for int stored as double: if at 1.e-7 of an int, put int.
+      double newVal = exp( double( k )/ Packer::SMALL_SCALE - 100. );
+      if ( .5 < newVal ) {
+        int temp = int( 1.0000001 * newVal );
+        if ( fabs( 1. - double( temp ) /newVal ) < 1.e-7 ) newVal = double( temp );
+      }
+      return newVal;
+    }
     return -exp( double( -k ) / Packer::SMALL_SCALE -100. );
   }
 
