@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/RawEvent2MBMMergerAlg.cpp,v 1.6 2008-11-21 18:17:29 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/RawEvent2MBMMergerAlg.cpp,v 1.7 2008-12-04 13:31:08 frankb Exp $
 //  ====================================================================
 //  DecisionSetterAlg.cpp
 //  --------------------------------------------------------------------
@@ -116,6 +116,9 @@ namespace LHCb  {
       }
       case MDFIO::MDF_BANKS: {
 	data = getDataFromAddress();
+	if ( !(data.first == 0 || data.second<0) ) {
+	  return res;
+	}
 	res.first = data.first ? ((RawBank*)data.first)->begin<MDFHeader>() : 0;
 	if ( with_hltbits ) {
 	  const char *s = data.first;
@@ -133,6 +136,9 @@ namespace LHCb  {
       }
       case MDFIO::MDF_RECORDS:
 	data = getDataFromAddress();
+	if ( !(data.first == 0 || data.second<0) ) {
+	  return res;
+	}
 	res.first = (MDFHeader*)data.first;
 	if ( with_hltbits ) {
 	  const char *s   = ((char*)res.first)+MDFHeader::sizeOf(res.first->headerVersion());
@@ -154,6 +160,7 @@ namespace LHCb  {
     }
 
     virtual StatusCode execute() {
+      setupMDFIO(msgSvc(),eventSvc());
       pair<MDFHeader*,const RawBank*> h = getHeader(true);
       if ( h.first ) {
 	const unsigned int* hmask = h.first->subHeader().H1->triggerMask();
@@ -184,7 +191,7 @@ namespace LHCb  {
     /// Allocate space for IO buffer
     virtual MDFIO::MDFDescriptor getDataSpace(void* const /* ioDesc */, size_t len)  {
       try {
-	int ret = m_prod->getSpace(len);
+	int ret = m_prod->getSpace(len+additionalSpace());
 	if ( ret == MBM_NORMAL ) {
 	  EventDesc& e = m_prod->event();
 	  e.len = len;

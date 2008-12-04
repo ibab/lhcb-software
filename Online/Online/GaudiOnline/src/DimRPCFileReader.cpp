@@ -1,4 +1,4 @@
-// $Id: DimRPCFileReader.cpp,v 1.15 2008-11-19 10:34:29 apuignav Exp $
+// $Id: DimRPCFileReader.cpp,v 1.16 2008-12-04 13:31:08 frankb Exp $
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IAppMgrUI.h"
@@ -155,8 +155,8 @@ void DimRPCFileReader::handleCommand(const char* address, int /* size */){
     es->sysFinalize();
     //m_evtLoopMgr->stop();
     es->sysInitialize();
-    prp->setProperty("Input","FILE=file://"+m_command->data.file);
-    //prp->setProperty("Input","[\"DATA='file://"+m_command->data.file+"' SVC='LHCb::MDFSelector'\"]");
+    prp->setProperty("Input","FILE=file://"+c.file);
+    //prp->setProperty("Input","[\"DATA='file://"+c.file+"' SVC='LHCb::MDFSelector'\"]");
     //prp->setProperty("PrintFreq","500");
     es->sysStart();
     m_evtLoopMgr->reinitialize();
@@ -216,7 +216,7 @@ StatusCode DimRPCFileReader::run()   {
         m_evtCount++;
       }
       time(&m_timerStopProc);
-      m_reply=m_command->encodeResponse(2,m_evtCount);
+      m_reply = m_command->encodeResponse(2,m_evtCount);
       ::dis_update_service(m_rpc.first);      
       m_reply = "ds6:statusi1es6:paramsdes7:commands4:idlee";
       m_evtCount = 0;

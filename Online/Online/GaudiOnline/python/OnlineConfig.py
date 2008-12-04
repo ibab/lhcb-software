@@ -1,6 +1,13 @@
 import Gaudi.Configuration as CFG
 import Configurables as Configs
 
+# Data type: banks from TES=1, 
+#            compressed records data from address = 2
+#            banks data from address (MDF bank first) = 3
+MDF_NONE    = 1
+MDF_RECORDS = 2
+MDF_BANKS   = 3
+
 mbm_requirements={}
 mbm_requirements['MEP']   = "EvType=1;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ALL;Frequency=PERC;Perc=100.0"
 mbm_requirements['EVENT'] = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0"
@@ -41,7 +48,7 @@ def prescaler(percent=25,name='Prescaler'):
   return alg
 
 #------------------------------------------------------------------------------------------------
-def diskWriter(output,input=3,compress=0,genMD5=True,datatype=2,name='Writer'):
+def diskWriter(output,input=MDF_BANKS,compress=0,genMD5=True,datatype=MDF_RECORDS,name='Writer'):
   alg                      = Configs.LHCb__MDFWriter(name)
   alg.Connection           = output
   alg.InputDataType        = input
@@ -55,36 +62,39 @@ def evtSender(target,name='Sender'):
   sender                   = Configs.LHCb__SocketDataSender(name)
   sender.DataSink          = target
   sender.Compress          = 0
-  sender.InputDataType     = 1
-  sender.DataType          = 3
+  sender.InputDataType     = MDF_NONE
+  sender.DataType          = MDF_BANKS
   return sender
   
 #------------------------------------------------------------------------------------------------
-def evtMerger(buffer='Events',name='Writer',location='/Event/DAQ/RawEvent',routing=0x1):
+def evtMerger(buffer='Events',name='Writer',location='/Event/DAQ/RawEvent',routing=0x1,datatype=MDF_NONE):
   merger                   = Configs.LHCb__RawEvent2MBMMergerAlg(name)
   merger.Buffer            = buffer
   merger.Compress          = 0
-  merger.DataType          = 1
+  #merger.DataType          = MDF_RECORDS
+  merger.InputDataType     = datatype
   merger.BankLocation      = location
   merger.RoutingBits       = routing
   return merger
   
 #------------------------------------------------------------------------------------------------
-def fidAdder(name='FidAdder',location='/Event/DAQ/RawEvent',routing=0x1):
+def fidManip(name,action,datatype,location):
   manip                   = Configs.LHCb__FileIDManipulator(name)
-  manip.Add               = 1
-  manip.DataType          = 1
+  manip.Action            = action
+  manip.DataType          = datatype
   manip.BankLocation      = location
   return manip
-  
 #------------------------------------------------------------------------------------------------
-def fidRemover(name='FidAdder',location='/Event/DAQ/RawEvent',routing=0x1):
-  manip                   = Configs.LHCb__FileIDManipulator(name)
-  manip.Add               = 0
-  manip.DataType          = 1
-  manip.BankLocation      = location
-  return manip
-  
+def fidAddAlg(name='FidAdder',location='/Event/DAQ/RawEvent',datatype=MDF_NONE):
+  return fidManip(name,1,datatype,location)
+#------------------------------------------------------------------------------------------------
+def fidRemoveAlg(name='FidRemover',location='/Event/DAQ/RawEvent',datatype=MDF_NONE):
+  return fidManip(name,2,datatype,location)
+#------------------------------------------------------------------------------------------------
+def fidPrintAlg(name='FidPrint',location='/Event/DAQ/RawEvent',datatype=MDF_NONE,freq=100):
+  prt = fidManip(name,3,datatype,location)
+  prt.PrintFreq = freq
+  return prt
 #------------------------------------------------------------------------------------------------
 def serialWriter(name='DstWriter',location='/Event/GaudiSerialize'):
   svc    = CFG.EventPersistencySvc()
@@ -333,11 +343,30 @@ def mdf2mbmApp(partID, partName, buffers, input, partitionBuffers=True, routing=
   return _application('NONE',extsvc=[Configs.MonitorSvc(),mepMgr,evtSel],runable=runable,algs=algs)
 
 #------------------------------------------------------------------------------------------------
+def mdf2mbmReproApp(partID, partName, buffers, input, partitionBuffers=True, routing=0x1):
+  mepMgr               = mepManager(partID,partName,buffers,partitionBuffers=partitionBuffers)
+  runable              = evtRunable(mepMgr)
+  evtSel               = CFG.EventSelector()
+  evtSel.PrintFreq     = 100
+  evtSel.Input         = input
+  evtdata              = evtDataSvc()  
+  evtPers              = rawPersistencySvc()
+  merger               = evtMerger(buffer=buffers[0],name='MDF2MBM',location='DAQ/RawEvent',routing=routing,datatype=MDF_BANKS)
+  # If the MDF record should be directly manipulated: Need to tweak FID algs and merger
+  merger.DataType      = MDF_BANKS
+  add                  = fidAddAlg(location='/Event',datatype=MDF_BANKS)
+  prt                  = fidPrintAlg(location='/Event',datatype=MDF_BANKS)
+  # If all starts from the rawEvent:
+  #add                  = fidAddAlg()
+  #prt                  = fidPrintAlg()  
+  algs                 = [add, prt, merger]
+  return _application('NONE',extsvc=[Configs.MonitorSvc(),mepMgr,evtSel],runable=runable,algs=algs)
+
+#------------------------------------------------------------------------------------------------
 def dimFileReaderApp(partID, partName, buffer, partitionBuffers=True, routing=0x1):
   mepMgr               = mepManager(partID,partName,[buffer],partitionBuffers=partitionBuffers)
   runable              = dimFileReaderRunable()
-  #evtSel               = CFG.EventSelector()
-  evtSel               = Configs.LHCb__MDFSelector('EventSelector')
+  evtSel               = CFG.EventSelector()
   evtSel.PrintFreq     = 1000
   evtdata              = evtDataSvc()  
   evtPers              = rawPersistencySvc()

@@ -1,14 +1,23 @@
+ApplicationMgr.TopAlg               += { "LHCb::FileIDManipulator/Fid" };
+Fid.DataType                         = 3;
+Fid.Action                           = 3;
+Fid.PrintFreq                        = 1000;
+
+ApplicationMgr.TopAlg               += { "LHCb::FileIDManipulator/FidRemove" };
+FidRemove.DataType                   = 3;
+FidRemove.Action                     = 2;
+
 #include "$GAUDIONLINEROOT/options/DiskWR.opts"
-ApplicationMgr.TopAlg               += {"removeFileID"};
-ApplicationMgr.TopAlg               += {"StoreExplorerAlg"};
 StoreExplorerAlg.Load                = 1;
-StoreExplorerAlg.PrintFreq           = 1;
+StoreExplorerAlg.PrintFreq           = 0.001;
 ApplicationMgr.HistogramPersistency  = "NONE";
 MEPManager.Buffers                   = { "RECV" };
 MEPManager.PartitionBuffers          = false;
 EventSelector.Decode                 = false;
 EventSelector.Input                  = "RECV";
 Writer.Compress                      = 0;
-Writer.InputDataType                 = 1;
+Writer.Connection                    = "file:///dev/null";
+Writer.Connection                    = "file://test.dat";
 Writer.DataType                      = 2;
-Writer.Connection                    = "file://test.dst";
+Writer.InputDataType                 = 1;
+Writer.InputDataType                 = 3;  // Directly use MDF record!

@@ -22,8 +22,12 @@ def runMBMRead(percent=1,print_freq=0.0001):
 #def runMDF2MBM(buffers,input=["DATA='file:///daqarea/lhcb/data/2008/RAW/LHCb/BEAM/32484/032484_0000081651.raw' SVC='LHCb::MDFSelector'"]):
 def runMDF2MBM(buffers,input=["DATA='file:///dev/shm/032484_0000081651.raw' SVC='LHCb::MDFSelector'"]):
   _run(mdf2mbmApp(pid,pnam,buffers=buffers,input=input,partitionBuffers=True))
-def runMDF2MBMFile(buffers,fname):
-  _run(mdf2mbmApp(pid,pnam,buffers=buffers,input=["DATA='"+fname+"' SVC='LHCb::MDFSelector'"],partitionBuffers=True))
+def runMDF2MBMFile(buffers,fname,partitionBuffers=True):
+  _run(mdf2mbmApp(pid,pnam,buffers=buffers,input=["DATA='"+fname+"' SVC='LHCb::MDFSelector'"],partitionBuffers=partitionBuffers))
+
+def runMDF2MBMRepro(buffers,fname,partitionBuffers=True):
+  _run(mdf2mbmReproApp(pid,pnam,buffers=buffers,input=["DATA='"+fname+"' SVC='LHCb::MDFSelector'"],partitionBuffers=partitionBuffers))
+
 #------------------------------------------------------------------------------------------------
 def runMDF2MBM2(buffers):
   import data;

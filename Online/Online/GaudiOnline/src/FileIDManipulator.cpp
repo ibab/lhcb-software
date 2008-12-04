@@ -1,4 +1,4 @@
-// $Id: FileIDManipulator.cpp,v 1.3 2008-12-03 09:38:27 frankb Exp $
+// $Id: FileIDManipulator.cpp,v 1.4 2008-12-04 13:31:08 frankb Exp $
 // Include files 
 //-----------------------------------------------------------------------------
 // Implementation file for class : Fileidmanipulator
@@ -20,6 +20,8 @@ namespace LHCb {
 
   /** @class FileIDManipulator FileIDManipulator.h
   *  
+  *  Note: This is a pure online algorithm and only works for MDF I/O.
+  *        Don't even try to use it with POOL etc.
   *
   *  @author Albert Puig Navarro (albert.puig@cern.ch)
   *  @author M.Frank
@@ -35,6 +37,13 @@ namespace LHCb {
     std::string  m_rawLocation;
     /// Property: input data type
     int          m_type;
+    /// Property: Debug flag
+    int          m_debug;
+    /// Property printout frequency
+    int          m_printFreq;
+    /// Print frequence counter
+    int          m_printCnt;
+
   protected:
     /// Add fileID bank
     StatusCode add();
@@ -50,6 +59,8 @@ namespace LHCb {
     FileIDManipulator(const std::string& nam, ISvcLocator* pSvc);
     /// Standard destructor
     virtual ~FileIDManipulator()  {}
+    /// Algorithm execution
+    virtual StatusCode initialize();
     /// Algorithm execution
     virtual StatusCode execute();
     /// Issue error message
@@ -80,15 +91,15 @@ using namespace LHCb;
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY(FileIDManipulator);
 
-#define DAQ_FILEID_BANK 32
-
 /// Standard constructor
 FileIDManipulator::FileIDManipulator(const string& nam, ISvcLocator* pSvc) 
-: Algorithm(nam,pSvc) 
+  : Algorithm(nam,pSvc), m_printCnt(0)
 {
   declareProperty("Action",       m_action=DUMP);
   declareProperty("BankLocation", m_rawLocation=RawEventLocation::Default);    
   declareProperty("DataType",     m_type=MDFIO::MDF_RECORDS);
+  declareProperty("PrintFreq",    m_printFreq=100);
+  declareProperty("Debug",        m_debug=0);
 }
 
 
@@ -129,9 +140,19 @@ pair<RawBank*,void*> FileIDManipulator::getFIDbank()  {
           if ( pA )    {
             pair<const char*,int> data = pA->data();
             MDFHeader* h = (MDFHeader*)data.first;
-            if (m_type!=MDFIO::MDF_BANKS) h=(MDFHeader*)((RawBank*)data.first)->data();
+            if (m_type==MDFIO::MDF_BANKS) h=(MDFHeader*)((RawBank*)data.first)->data();
             const char* start = ((char*)h)+h->sizeOf(h->headerVersion());
             const char* end   = start+h->size();
+	    if ( m_debug > 0 ) {
+	      /// Debug section
+	      MsgStream log(msgSvc(),name());
+	      while(start<end)    {
+		RawBank* b = (RawBank*)start;
+		log << MSG::INFO << RawEventPrintout::bankHeader(b) << endmsg;
+		start += b->totalSize();
+	      }
+	      start = ((char*)h)+h->sizeOf(h->headerVersion());
+	    }
             while(start<end)    {
               RawBank* b = (RawBank*)start;
               if ( b->version() == DAQ_FILEID_BANK )
@@ -181,7 +202,7 @@ StatusCode FileIDManipulator::add()   {
             if ( 0 != (pA=dynamic_cast<RawDataAddress*>(padd)) )    {
               pair<char*,int> data = pA->data();
               MDFHeader* h = (MDFHeader*)data.first;
-              if(m_type!=MDFIO::MDF_BANKS) h = (MDFHeader*)((RawBank*)data.first)->data();
+              if(m_type==MDFIO::MDF_BANKS) h = (MDFHeader*)((RawBank*)data.first)->data();
               b = (RawBank*)(((char*)h)+h->recordSize());
               b->setMagic();
               b->setType(RawBank::DAQ);
@@ -206,12 +227,9 @@ StatusCode FileIDManipulator::add()   {
         }
         if ( b ) {
           FileIdInfo* i = b->begin<FileIdInfo>();
-          i->ip0 = padd->ipar()[0];
-          i->ip1 = padd->ipar()[1];
-          i->l0  = l0;
-          i->l1  = l1;
-          ::strncpy(i->pdata,padd->par()[0].c_str(),l0);
-          ::strncpy(i->pdata+i->l0,padd->par()[1].c_str(),l1);
+	  i->setipar(padd->ipar());
+	  i->setpar(padd->par());
+	  i->setguid("");
           return StatusCode::SUCCESS;
         }
         return error("I do not understand the data type(s).");
@@ -232,10 +250,11 @@ StatusCode FileIDManipulator::remove() {
   //
   pair<RawBank*,void*> res = getFIDbank();
   if ( res.first )  {
+    RawBank* b = 0;
     RawEvent* e = 0;
     MDFHeader* h = 0;
     FileIdInfo* i=res.first->begin<FileIdInfo>();
-    size_t len = sizeof(FileIdInfo)+i->l0+i->l1;
+    size_t len = i->sizeOf();
     FileIdObject* obj = new FileIdObject(len);
     ::memcpy(obj->data.ptr,i,len);
     switch(m_type)   {
@@ -246,9 +265,28 @@ StatusCode FileIDManipulator::remove() {
       case MDFIO::MDF_BANKS:
       case MDFIO::MDF_RECORDS:
         h = (MDFHeader*)res.second;
-        h->setChecksum(0);
-        h->setSize(h->size()-len);
-        break;
+	b = (RawBank*)res.first;
+	if ( b->type() == RawBank::DAQ && b->version() == DAQ_FILEID_BANK ) {
+	  h->setChecksum(0); // Checksum is invalid if we remove data!
+	  h->setSize(h->size()-res.first->totalSize());
+	  SmartDataPtr<DataObject> evt(eventSvc(),"/Event");
+	  if ( evt )  {      // Now update raw address in /Event
+	    IRegistry* reg = evt->registry();
+	    if ( reg )  {
+	      IOpaqueAddress* padd = reg->address();
+	      RawDataAddress* pA = dynamic_cast<RawDataAddress*>(padd);
+	      if ( pA )  {
+		pair<char*,int> data=pA->data();
+		data.second -= res.first->totalSize();
+		pA->setData(data);
+		break;
+	      }
+	    }
+	    error("Failed to update Raw Address in /Event!");
+	  }
+	  break;
+	}
+	return error("No valid File ID bank found in raw buffer from /Event-address!");
     }
     if ( eventSvc()->registerObject("/Event/FileID",obj).isSuccess() )
       return StatusCode::SUCCESS;
@@ -259,18 +297,28 @@ StatusCode FileIDManipulator::remove() {
 
 /// Print FID bank content
 StatusCode FileIDManipulator::print()  {
-  pair<RawBank*,void*> res = getFIDbank();
-  if ( res.first )  {
-    const FileIdInfo* i=res.first->begin<FileIdInfo>();
-    MsgStream log(msgSvc(),name());
-    log << MSG::INFO
-      << "FID Bank: "
-      << RawEventPrintout::bankHeader(res.first) << endmsg
-      << "ipar: " << setw(8) << i->ip0  << " / " << setw(8) << i->ip1
-      << " par: "  << i->pdata << " / " << i->pdata+i->l0 << endmsg;
-    return StatusCode::SUCCESS;
+  if ( ++m_printCnt == m_printFreq ) {
+    pair<RawBank*,void*> res = getFIDbank();
+    m_printCnt = 0;
+    if ( res.first )  {
+      const FileIdInfo* i=res.first->begin<FileIdInfo>();
+      MsgStream log(msgSvc(),name());
+      log << MSG::INFO
+	  << "FID Bank: "
+	  << RawEventPrintout::bankHeader(res.first) << endmsg
+	  << "ipar: " << setw(8) << i->ip0  << " / " << setw(8) << i->ip1
+	  << " par: "  << i->par0() << "/" << i->par1() << "/" << i->guid() << endmsg;
+      return StatusCode::SUCCESS;
+    }
+    return error("No FileID bank present in raw event at "+m_rawLocation);
   }
-  return error("No FileID bank present in raw event at "+m_rawLocation);
+  return StatusCode::SUCCESS;
+}
+
+/// Algorithm initialization
+StatusCode FileIDManipulator::initialize() {
+  m_printCnt = 0;
+  return StatusCode::SUCCESS;
 }
 
 /// Algorithm execution

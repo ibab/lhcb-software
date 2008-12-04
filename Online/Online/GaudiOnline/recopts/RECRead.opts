@@ -6,6 +6,11 @@ ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
 StoreExplorerAlg.Load                = 1;
 StoreExplorerAlg.PrintFreq           = 0.001;
 
+ApplicationMgr.TopAlg               += { "LHCb::FileIDManipulator/Fid" };
+Fid.DataType                         = 3;
+Fid.Action                           = 3;
+Fid.PrintFreq                        = 1000;
+
 EventDataSvc.RootCLID                = 1;
 EventDataSvc.EnableFaultHandler      = true ;
 EventPersistencySvc.CnvServices     += { "LHCb::RawDataCnvSvc/RawDataCnvSvc" };
@@ -22,3 +27,4 @@ ApplicationMgr.TopAlg               += { "LHCb::RawEvent2MBMMergerAlg/RECOutput"
 RECOutput.Buffer                     = "SEND";
 RECOutput.DataType                   = 1;
 RECOutput.Compress                   = 0;
+

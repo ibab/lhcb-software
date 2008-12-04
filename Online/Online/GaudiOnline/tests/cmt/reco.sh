@@ -39,5 +39,5 @@ $MINITERM RECWriter@${HOST}  -e "export UTGID=${NODENAME}/RECWriter;    exec -a 
 #
 # For debugging enable this and disable any other
 # $BIGTERM MBMDump@${HOST} -e "export UTGID=${NODENAME}/MBMDump; $gaudi_run libMBMDump.so mbmdump" &
-# export UTGID=${NODENAME}/prod_0; $gaudi_run libGaudiOnline.so mep_producer -n=prod_0 -p=333 -s=500 -r=2
+# start_py_task Mdf2Mbm "import GaudiOnlineTests;GaudiOnlineTests.runMDF2MBMRepro(['READ'],fname='root:/afs/cern.ch/user/f/frankb/cmtuser/data/mdfData.dat',partitionBuffers=False)"
 tail -n 3 ${0}
