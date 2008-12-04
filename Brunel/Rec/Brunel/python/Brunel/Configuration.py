@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.40 2008-12-04 13:38:28 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.41 2008-12-04 16:36:25 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -19,6 +19,13 @@ class Brunel(LHCbConfigurableUser):
 
     ## Possible used Configurables
     __used_configurables__ = [ TrackSys, RecSysConf, RichRecQCConf, LHCbApp ]
+
+    ## Known monitoring sequences, all run by default
+    KnownMoniSubdets        = ["CALO","RICH","MUON","VELO","Tr","ST"] 
+    KnownExpertMoniSubdets  = KnownMoniSubdets+["TT","IT","OT"]
+    ## Known checking sequences, all run by default
+    KnownCheckSubdets       = ["Pat","RICH","MUON"] 
+    KnownExpertCheckSubdets = KnownCheckSubdets+["TT","IT","OT","Tr"]
     
     # Steering options
     __slots__ = {
@@ -43,10 +50,10 @@ class Brunel(LHCbConfigurableUser):
                           "ProcessPhase/MCLinks",
                           "ProcessPhase/Check",
                           "ProcessPhase/Output" ]
-       ,"MCCheckSequence": ["Pat","RICH","MUON"] # The default MC Check sequence
+       ,"MCCheckSequence": [] # The default MC Check sequence
        ,"MCLinksSequence": [ "L0", "Unpack", "Tr" ] # The default MC Link sequence
        ,"InitSequence": ["Reproc", "Brunel", "Calo"] # The default init sequence
-       ,"MoniSequence": ["CALO","RICH","MUON","VELO","Track","ST"]    # The default Moni sequence
+       ,"MoniSequence": []    # The default Moni sequence
        ,"Monitors": []        # list of monitors to execute, see KnownMonitors
         # Following are options forwarded to RecSys
        ,"RecoSequence"   : [] # The Sub-detector reconstruction sequencing. See RecSys for default
@@ -55,6 +62,8 @@ class Brunel(LHCbConfigurableUser):
        ,"ExpertTracking": []  # list of expert Tracking options, see KnownExpertTracking
        ,"Context":     "Offline" # The context within which to run
         }
+
+
 
     def defineGeometry(self):
         # DIGI is always simulation, as is usage of MC truth!
@@ -78,6 +87,10 @@ class Brunel(LHCbConfigurableUser):
         if outputType not in [ "NONE", "DST", "RDST" ]:
             raise TypeError( "Invalid outputType '%s'"%outputType )
 
+        histOpt = self.getProp("Histograms").capitalize()
+        if histOpt not in ["","None","Default","Expert"]:
+            raise RuntimeError("Unknown Histograms option '%s'"%histOpt)
+
         withMC = self.getProp("WithMC")
         if inputType in [ "MDF", "RDST" ]:
             withMC = False # Force it, MDF and RDST never contain MC truth
@@ -88,32 +101,19 @@ class Brunel(LHCbConfigurableUser):
 
         self.configureOutput( outputType, withMC )
 
-        # Set up monitoring (i.e. not using MC truth)
-        ProcessPhase("Moni").DetectorList += self.getProp("MoniSequence")
-        self.setOtherProps(RichRecQCConf(),["Context","DataType"])
-
-        # Histograms filled both in real and simulated data cases
-        importOptions("$BRUNELOPTS/BrunelMoni.py")
+        # Activate all monitoring (does not use MC truth)
+        self.configureMoni( histOpt == "Expert", withMC )
 
         if withMC:
-            # Setup up MC truth processing and checking
+            # Create associators for checking and for DST
             ProcessPhase("MCLinks").DetectorList += self.getProp("MCLinksSequence")
             # Unpack Sim data
             GaudiSequencer("MCLinksUnpackSeq").Members += [ "UnpackMCParticle",
                                                             "UnpackMCVertex" ]
             GaudiSequencer("MCLinksTrSeq").Members += [ "TrackAssociator" ]
 
-            # "Check" histograms filled only with simulated data 
-            ProcessPhase("Check").DetectorList += self.getProp("MCCheckSequence")
-            # Tracking handled inside TrackSys configurable
-            TrackSys().setProp( "WithMC", True )
-            # Muon
-            importOptions("$MUONPIDCHECKERROOT/options/MuonPIDChecker.opts")
-            # RICH
-            RichRecQCConf().MoniSequencer = GaudiSequencer("CheckRICHSeq")
-        else:
-            # Add here histograms to be filled only with real data 
-            RichRecQCConf().MoniSequencer = GaudiSequencer("MoniRICHSeq")
+            # activate all configured checking (uses MC truth)
+            self.configureCheck( histOpt == "Expert" )
 
         # Setup L0 filtering if requested, runs L0 before Reco
         if self.getProp("RecL0Only"):
@@ -121,23 +121,18 @@ class Brunel(LHCbConfigurableUser):
             importOptions( "$L0DUROOT/options/L0Sequence.opts" )
             GaudiSequencer("InitL0Seq").Members += [ "GaudiSequencer/L0FilterFromRawSeq" ]
 
-    def defineHistos(self):
-        """
-        Define histograms to save according to Brunel().Histograms option
-        """
-        knownOptions = ["","None","Default","Expert"]
-        histOpt = self.getProp("Histograms").capitalize()
-        if histOpt not in knownOptions:
-            raise RuntimeError("Unknown Histograms option '%s'"%histOpt)
+        # ROOT persistency for histograms
+        importOptions('$STDOPTS/RootHist.opts')
+        from Configurables import RootHistCnv__PersSvc
+        RootHistCnv__PersSvc('RootHistCnv').ForceAlphaIds = True
 
         if histOpt == "None" or histOpt == "":
             # HistogramPersistency still needed to read in CaloPID DLLs.
             # so do not set ApplicationMgr().HistogramPersistency = "NONE"
             return
 
-        if histOpt == "Expert":
-            # activate all configured expert checking
-            self.expertCheck()
+        # Pass expert checking option to RecSys
+        if histOpt == "Expert": RecSysConf().setProp( "ExpertHistos", True )
 
         # Use a default histogram file name if not already set
         if not hasattr( HistogramPersistencySvc(), "OutputFile" ):
@@ -155,6 +150,13 @@ class Brunel(LHCbConfigurableUser):
         # Currently no Brunel specific monitors, so pass them all to LHCbApp
         LHCbApp().setProp("Monitors", monitors)
 
+        # Use TimingAuditor for timing, suppress printout from SequencerTimerTool
+        from Configurables import (ApplicationMgr,AuditorSvc,SequencerTimerTool)
+        ApplicationMgr().ExtSvc += [ 'ToolSvc', 'AuditorSvc' ]
+        ApplicationMgr().AuditAlgorithms = True
+        AuditorSvc().Auditors += [ 'TimingAuditor' ] 
+        SequencerTimerTool().OutputLevel = 4
+        
     def configureInput(self, inputType):
         """
         Tune initialisation according to input type
@@ -246,83 +248,150 @@ class Brunel(LHCbConfigurableUser):
     def evtMax(self):
         return LHCbApp().evtMax()
 
-    def expertCheck(self):
-
-        # Get the list of sub dets configured to run in the Check sequence
-        checkSeq = self.getProp("MCCheckSequence")
-        # Get the list of sub dets configured to run in the Moni sequence
-        moniSeq  = self.getProp("MoniSequence")
-
-        # Data on Demand for MCParticle to MCHit association, needed by ST, IT, Tr
-        ApplicationMgr().ExtSvc += [ "DataOnDemandSvc" ]
-        importOptions( "$ASSOCIATORSROOT/options/MCParticleToMCHit.py" )
-
-        # TT
-        if "TT" in moniSeq :
-            from Configurables import STClusterMonitor
-            clusMoni = STClusterMonitor("TTClusterMonitor")
-            clusMoni.FullDetail = True
-            GaudiSequencer("MoniTTSeq").Members += [clusMoni]
-        if "TT" in checkSeq :
-            from Configurables import ( STEffChecker, MCParticleSelector )
-            effCheck = STEffChecker("TTEffChecker")
-            effCheck.FullDetail = True
-            effCheck.addTool(MCParticleSelector)
-            effCheck.MCParticleSelector.zOrigin = 50.0
-            effCheck.MCParticleSelector.pMin = 1.0*GeV
-            effCheck.MCParticleSelector.betaGammaMin = 1.0
-            GaudiSequencer("CheckTTSeq").Members += [effCheck]
-
-        # IT
-        if "IT" in moniSeq :
-            from Configurables import STClusterMonitor
-            clusMoni = STClusterMonitor("ITClusterMonitor")
-            clusMoni.FullDetail = True
-            clusMoni.DetType = "IT"
-            GaudiSequencer("MoniITSeq").Members += [clusMoni]
-        if "IT" in checkSeq :
-            from Configurables import ( STEffChecker, MCParticleSelector )
-            effCheck = STEffChecker("ITEffChecker")
-            effCheck.FullDetail = True
-            effCheck.addTool(MCParticleSelector)
-            effCheck.MCParticleSelector.zOrigin = 50.0
-            effCheck.MCParticleSelector.pMin = 1.0*GeV
-            effCheck.MCParticleSelector.betaGammaMin = 1.0
-            effCheck.DetType = "IT"
-            GaudiSequencer("CheckITSeq").Members += [effCheck]
-
-        # OT - These histograms should be identical to those already done in Boole.
-        if "OT" in moniSeq  : GaudiSequencer("MoniOTSeq").Members  += ["OTTimeMonitor"]
-        if "OT" in checkSeq : GaudiSequencer("CheckOTSeq").Members += ["OTTimeChecker"] # needs MCHits
-
-        # Checking on the tracks in the "best" container - needs MCHits
-        if "Tr" in  checkSeq :
-            importOptions( "$TRACKSYSROOT/options/TrackChecking.opts" )
-
-        # Calorimeters
-        if "CALO" in  checkSeq : 
-            importOptions( "$CALOASSOCIATORSROOT/options/CaloAssociators.opts" )
-            importOptions( "$CALOMONIDSTOPTS/CaloChecker.opts" )
-
-        # RICH
-        if "RICH" in checkSeq :
-            from RichRecQC.Configuration import RichRecQCConf
-            RichRecQCConf().setProp( "ExpertHistos", True )
-
-        # ProtoParticles
-        if "PROTO" in checkSeq :
-            from Configurables import ( NTupleSvc, ChargedProtoParticleTupleAlg )
-            protoChecker = ChargedProtoParticleTupleAlg("ChargedProtoTuple")
-            protoChecker.NTupleLUN = "PROTOTUPLE"
-            GaudiSequencer("CheckPROTOSeq").Members += [protoChecker]
-            NTupleSvc().Output += ["PROTOTUPLE DATAFILE='protoparticles.tuples.root' TYP='ROOT' OPT='NEW'"]
-
-        # Pass expert checking option to RecSys
-        RecSysConf().setProp( "ExpertHistos", True )
-
-        # Allow multiple files open at once (SIM,DST,DIGI etc.)
-        IODataManager().AgeLimit += 1
+    def configureMoni(self,expert,withMC):
+        # Set up monitoring (i.e. not using MC truth)
+        moniSeq = self.getProp("MoniSequence")
+        if len( moniSeq ) == 0:
+            if expert:
+                moniSeq = self.KnownExpertMoniSubdets
+            else:
+                moniSeq = self.KnownMoniSubdets
+        else:
+            for seq in moniSeq:
+                if expert:
+                    if seq not in self.KnownExpertMoniSubdets:
+                        raise RuntimeError("Unknown subdet '%s' in MoniSequence"%seq)
+                else:
+                    if seq not in self.KnownMoniSubdets:
+                        raise RuntimeError("Unknown subdet '%s' in MoniSequence"%seq)
         
+        ProcessPhase("Moni").DetectorList += moniSeq
+        ProcessPhase('Moni').Context = 'Offline'
+
+        # Histograms filled both in real and simulated data cases
+        if "CALO" in moniSeq :
+            importOptions('$CALOMONIDSTOPTS/CaloMonitor.opts')
+
+        if "VELO" in moniSeq :
+            importOptions('$VELORECMONITORSROOT/options/BrunelMoni_Velo.py')
+
+        if "Tr" in moniSeq :
+            from TrackMonitors.ConfiguredTrackMonitors import ConfiguredTrackMonitorSequence
+            ConfiguredTrackMonitorSequence(Name='MoniTrSeq')
+
+        if "MUON" in moniSeq :
+            importOptions("$MUONPIDCHECKERROOT/options/MuonPIDMonitor.opts")
+
+        if "ST" in moniSeq :
+            from Configurables import STClusterMonitor, GaudiSequencer
+            GaudiSequencer( "MoniSTSeq" ).Members += [ STClusterMonitor("TTClusterMonitor"),
+                                                       STClusterMonitor("ITClusterMonitor")]
+            STClusterMonitor("TTClusterMonitor").DetType = "TT" ## default anyway 
+            STClusterMonitor("ITClusterMonitor").DetType = "IT" 
+
+        # Histograms filled only in real data case
+        if not withMC:
+            if "RICH" in moniSeq :
+                self.setOtherProps(RichRecQCConf(),["Context","DataType"])
+                RichRecQCConf().MoniSequencer = GaudiSequencer("MoniRICHSeq")
+
+        # Expert histograms
+        if expert:
+            if "TT" in moniSeq :
+                from Configurables import STClusterMonitor
+                clusMoni = STClusterMonitor("TTClusterMonitor")
+                clusMoni.FullDetail = True
+                GaudiSequencer("MoniTTSeq").Members += [clusMoni]
+            if "IT" in moniSeq :
+                from Configurables import STClusterMonitor
+                clusMoni = STClusterMonitor("ITClusterMonitor")
+                clusMoni.FullDetail = True
+                clusMoni.DetType = "IT"
+                GaudiSequencer("MoniITSeq").Members += [clusMoni]
+            if "OT" in moniSeq :
+                # These histograms should be identical to those already done in Boole.
+                GaudiSequencer("MoniOTSeq").Members  += ["OTTimeMonitor"]
+
+    def configureCheck(self,expert):
+        # "Check" histograms filled only with simulated data
+        checkSeq = self.getProp("MCCheckSequence")
+        if len( checkSeq ) == 0:
+            if expert:
+                checkSeq = self.KnownExpertCheckSubdets
+            else:
+                checkSeq = self.KnownCheckSubdets
+        else:
+            for seq in checkSeq:
+                if expert:
+                    if seq not in self.KnownExpertCheckSubdets:
+                        raise RuntimeError("Unknown subdet '%s' in MCCheckSequence"%seq)
+                else:
+                    if seq not in self.KnownCheckSubdets:
+                        raise RuntimeError("Unknown subdet '%s' in MCCheckSequence"%seq)
+            
+        ProcessPhase("Check").DetectorList += checkSeq
+
+        # Tracking handled inside TrackSys configurable
+        TrackSys().setProp( "WithMC", True )
+
+        if "MUON" in checkSeq :
+            importOptions("$MUONPIDCHECKERROOT/options/MuonPIDChecker.opts")
+
+        if "RICH" in checkSeq :
+            RichRecQCConf().MoniSequencer = GaudiSequencer("CheckRICHSeq")
+
+        if expert:
+            # Data on Demand for MCParticle to MCHit association, needed by ST, IT, OT, Tr, Muon
+            ApplicationMgr().ExtSvc += [ "DataOnDemandSvc" ]
+            importOptions( "$ASSOCIATORSROOT/options/MCParticleToMCHit.py" )
+
+            # Allow multiple files open at once (SIM,DST,DIGI etc.)
+            IODataManager().AgeLimit += 1
+        
+            if "TT" in checkSeq :
+                from Configurables import ( STEffChecker, MCParticleSelector )
+                from GaudiKernel.SystemOfUnits import GeV
+                effCheck = STEffChecker("TTEffChecker")
+                effCheck.FullDetail = True
+                effCheck.addTool(MCParticleSelector)
+                effCheck.MCParticleSelector.zOrigin = 50.0
+                effCheck.MCParticleSelector.pMin = 1.0*GeV
+                effCheck.MCParticleSelector.betaGammaMin = 1.0
+                GaudiSequencer("CheckTTSeq").Members += [effCheck]
+
+            if "IT" in checkSeq :
+                from Configurables import ( STEffChecker, MCParticleSelector )
+                from GaudiKernel.SystemOfUnits import GeV
+                effCheck = STEffChecker("ITEffChecker")
+                effCheck.FullDetail = True
+                effCheck.addTool(MCParticleSelector)
+                effCheck.MCParticleSelector.zOrigin = 50.0
+                effCheck.MCParticleSelector.pMin = 1.0*GeV
+                effCheck.MCParticleSelector.betaGammaMin = 1.0
+                effCheck.DetType = "IT"
+                GaudiSequencer("CheckITSeq").Members += [effCheck]
+
+            if "OT" in checkSeq : GaudiSequencer("CheckOTSeq").Members += ["OTTimeChecker"] # needs MCHits
+
+            if "Tr" in  checkSeq :
+                # Checking on the tracks in the "best" container - needs MCHits
+                importOptions( "$TRACKSYSROOT/options/TrackChecking.opts" )
+
+            if "CALO" in  checkSeq : 
+                importOptions( "$CALOASSOCIATORSROOT/options/CaloAssociators.opts" )
+                importOptions( "$CALOMONIDSTOPTS/CaloChecker.opts" )
+
+            if "RICH" in checkSeq :
+                self.setOtherProps(RichRecQCConf(),["Context","DataType"])
+                RichRecQCConf().setProp( "ExpertHistos", True )
+
+            if "PROTO" in checkSeq :
+                from Configurables import ( NTupleSvc, ChargedProtoParticleTupleAlg )
+                protoChecker = ChargedProtoParticleTupleAlg("ChargedProtoTuple")
+                protoChecker.NTupleLUN = "PROTOTUPLE"
+                GaudiSequencer("CheckPROTOSeq").Members += [protoChecker]
+                NTupleSvc().Output += ["PROTOTUPLE DATAFILE='protoparticles.tuples.root' TYP='ROOT' OPT='NEW'"]
+
     ## Apply the configuration
     def __apply_configuration__(self):
         
@@ -338,7 +407,6 @@ class Brunel(LHCbConfigurableUser):
         self.defineGeometry()
         self.defineEvents()
         self.defineOptions()
-        self.defineHistos()
         self.defineMonitors()
         from Configurables import RecInit
         RecInit("BrunelInit").PrintFreq = self.getProp("PrintFreq")

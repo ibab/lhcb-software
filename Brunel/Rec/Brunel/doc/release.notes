@@ -4,7 +4,8 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
 ! 2008-12-04 - Marco Cattaneo
- - Remove BrunelMessage.opts (now done in Configurable)
+ - Remove BrunelMessage.opts, BrunelMoni.py (now done in Configurable)
+ - Cleanup handling of monitoring and checking in configurable
  - Include $ASSOCIASTORSROOT/options/MCParticleToMCHit.py instead of Brunel.opts
  - Add to NewCatalog.xml the description of the sim file used to generate the
    default 2008 .digi, needed by tracking expert checks
