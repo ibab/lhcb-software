@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.48 2008-11-29 13:24:59 ibelyaev Exp $ 
+# $Id: requirements,v 1.49 2008-12-04 16:41:41 ibelyaev Exp $ 
 # =============================================================================
 # Created    : 2006-01-16
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
@@ -13,6 +13,7 @@ branches           cmt doc src dict python LoKi
 use                GaudiAlg         v* 
 use                LHCbKernel       v* Kernel 
 use                LHCbMath         v* Kernel 
+use                PartProp         v* Kernel 
 use                Boost            v* LCG_Interfaces 
 use                ROOT             v* LCG_Interfaces 
 use                AIDA             v* LCG_Interfaces 
