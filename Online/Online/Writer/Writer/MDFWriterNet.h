@@ -269,7 +269,7 @@ namespace LHCb {
     virtual void constructNet(void);
 
     /// Returns the run number from an MDF header.
-    unsigned int getRunNumber(const void *data, size_t len);
+    virtual unsigned int getRunNumber(const void *data, size_t len);
 
     /// Returns a File object for the specified run number
 
@@ -282,7 +282,7 @@ namespace LHCb {
 
     /// Overrides Algorithm::initialize()
     virtual StatusCode initialize();
-
+    
     /// Overrides Algorith::finalize()
     virtual StatusCode finalize();
 
@@ -294,6 +294,9 @@ namespace LHCb {
 
     /// Standard Algorithm constructor (delegates to MDFWriter constructor).
     MDFWriterNet(const std::string& nam, ISvcLocator* pSvc);
+
+    /// Creates a File using a rpc object
+    virtual std::string createNewFile(unsigned int runNumber);
 
     /// Sends the command required to open a file and returns the File object.
     File *createAndOpenFile(unsigned int runNumber);

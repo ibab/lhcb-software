@@ -152,6 +152,7 @@ StatusCode MDFWriterNet::initialize(void)
   m_srvConnection = new Connection(m_serverAddr, m_serverPort,
 				   m_sndRcvSizes, m_log, this);
   m_rpcObj = new RPCComm(m_runDBURL.c_str());
+  *m_log << MSG::INFO << "rundb url: " << m_runDBURL.c_str() <<endmsg;
   try {
 
     m_srvConnection->initialize();
@@ -207,6 +208,15 @@ StatusCode MDFWriterNet::finalize(void)
   return StatusCode::SUCCESS;
 }
 
+/**
+ * Creates a new file using a RPC object
+ */
+std::string MDFWriterNet::createNewFile(unsigned int runNumber)
+{
+  // override this if the m_rpcObj looks different
+  *m_log << MSG::INFO << WHERE << runNumber << endmsg;
+  return m_rpcObj->createNewFile(runNumber);
+}
 
 /**
  * Queues a command that creates a file.
@@ -224,10 +234,12 @@ File* MDFWriterNet::createAndOpenFile(unsigned int runNumber)
      */
     *m_log << MSG::INFO << "Getting a new file name for run "
            << runNumber << " ..." << endmsg;
-    currFile = new File(m_rpcObj->createNewFile(runNumber), runNumber);
-  } catch (...) {
+    currFile = new File(this->createNewFile(runNumber), runNumber);
+  } catch (std::exception e) {
     currFile = new File(getNewFileName(runNumber), runNumber);
     *m_log << MSG::WARNING
+           << " Exception: "
+           << e
            << "Could not get new file name! Generating local filename: "
            << *(currFile->getFileName()) << endmsg ;
   }
@@ -384,7 +396,7 @@ std::string MDFWriterNet::getNewFileName(unsigned int runNumber)
   char buf[MAX_FILE_NAME];
   static unsigned long random = 0;
   random++;
-  sprintf(buf, "%s/%u/%s%09u.%02u%06lu.%s",
+  sprintf(buf, "/daqarea/lhcb/data/2008/RAW/TEST/%s/%u/%s%09u.%02u%06lu.%s",
 	  m_directory.c_str(),runNumber,
 	  m_filePrefix.c_str(),
 	  runNumber,m_streamID,// random,
