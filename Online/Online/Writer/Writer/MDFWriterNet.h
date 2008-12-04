@@ -41,6 +41,9 @@ namespace LHCb {
       /// The number of bytes written so far in the current file.
       size_t m_bytesWritten;
 
+      /// The number of events
+      unsigned int m_events;
+
       /// The sequence number of the last command that was sent for this file.
       unsigned int m_seqNum;
 
@@ -85,6 +88,18 @@ namespace LHCb {
 
     /// Returns the number of bytes written to the file so far.
     inline size_t getBytesWritten() { return m_mon->m_bytesWritten; }
+    
+    /// increases the number of events by one
+    inline void incEvents() { m_mon->m_events++; }
+    
+    /// set the value of events, used when there where events before the
+    /// file was created
+    inline void setEvents(unsigned int events) {
+        m_mon->m_events = events;
+    }
+
+    /// get the number of events
+    inline unsigned int getEvents() { return m_mon->m_events; }
 
     /// Returns the name of the file.
     inline std::string* getFileName() { return &m_fileName; }
@@ -244,6 +259,9 @@ namespace LHCb {
 
     /// Property: The stream identifier
     int m_streamID;
+
+    /// number of events, this variable is used as long there exists no file
+    int m_events_tmp;
 
     /// A map of all current open files.
     FileList m_openFiles;

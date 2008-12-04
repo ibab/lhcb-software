@@ -87,6 +87,7 @@ File::File(std::string fileName, unsigned int runNumber) {
   m_mon->m_lastUpdated = time(NULL);
   m_mon->m_fileOpen = false;
   m_mon->m_bytesWritten = 0;
+  m_mon->m_events = 0;
   m_fileName = fileName;
   m_md5 = new TMD5();
   m_prev = NULL;
@@ -118,6 +119,22 @@ MDFWriterNet::MDFWriterNet(const std::string& nam, ISvcLocator* pSvc) : MDFWrite
 /// Algorithm::execute() override, delegates to MDFWriter::execute().
 StatusCode MDFWriterNet::execute()
 {
+  // count event
+  if(m_currFile == NULL) {
+      // count into temporary variable and move this value to a file
+      // as soon as there is created one
+      m_events_tmp++;
+      *m_log << MSG::INFO
+             << "no of temporary events: "
+             << m_events_tmp
+             << endmsg;
+  } else {
+      m_currFile->incEvents();
+      *m_log << MSG::INFO
+             << "no of events: "
+             << m_currFile->getEvents()
+             << endmsg;
+  }
   return MDFWriter::execute();
 }
 
@@ -149,6 +166,7 @@ StatusCode MDFWriterNet::initialize(void)
     " Initializing." << endmsg;
 
   m_currFile = NULL;
+  m_events_tmp = 0;
   m_srvConnection = new Connection(m_serverAddr, m_serverPort,
 				   m_sndRcvSizes, m_log, this);
   m_rpcObj = new RPCComm(m_runDBURL.c_str());
@@ -214,7 +232,6 @@ StatusCode MDFWriterNet::finalize(void)
 std::string MDFWriterNet::createNewFile(unsigned int runNumber)
 {
   // override this if the m_rpcObj looks different
-  *m_log << MSG::INFO << WHERE << runNumber << endmsg;
   return m_rpcObj->createNewFile(runNumber);
 }
 
@@ -239,7 +256,7 @@ File* MDFWriterNet::createAndOpenFile(unsigned int runNumber)
     currFile = new File(getNewFileName(runNumber), runNumber);
     *m_log << MSG::WARNING
            << " Exception: "
-           << e
+           << e.what()
            << "Could not get new file name! Generating local filename: "
            << *(currFile->getFileName()) << endmsg ;
   }
@@ -249,6 +266,10 @@ File* MDFWriterNet::createAndOpenFile(unsigned int runNumber)
   m_srvConnection->sendCommand(&header);
   currFile->open();
   currFile->incSeqNum();
+  // it is likely that there have been events before the file was created
+  // so copy the actual value of events to the file monitor
+  // from now the events will be counted in the monitor
+  currFile->setEvents(m_events_tmp);
   return currFile;
 }
 
@@ -258,7 +279,6 @@ File* MDFWriterNet::createAndOpenFile(unsigned int runNumber)
 void MDFWriterNet::closeFile(File *currFile)
 {
   struct cmd_header header;
-  unsigned long events=0;
   memset(&header, 0, sizeof(struct cmd_header));
 
   INIT_CLOSE_COMMAND(&header,
@@ -267,8 +287,8 @@ void MDFWriterNet::closeFile(File *currFile)
 		     currFile->getMD5Checksum(),
 		     currFile->getSeqNum(),
 		     currFile->getRunNumber(),
-                     currFile->getBytesWritten(),
-                     events);
+             currFile->getBytesWritten(),
+             currFile->getEvents());
 //  *m_log << MSG::INFO << " Command: " << header.cmd << " "
 //         << "Filename: "   << header.file_name << " "
 //	 << "RunNumber: "  << header.run_no << " "
