@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.39 2008-12-02 10:14:00 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.40 2008-12-04 13:38:28 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -227,8 +227,9 @@ class Brunel(LHCbConfigurableUser):
             if not hasattr( etcWriter, "Output" ):
                etcWriter.Output = [ "EVTTAGS2 DATAFILE='" + self.getProp("DatasetName") + "-etc.root' TYP='POOL_ROOTTREE' OPT='RECREATE' " ]
 
+        # Do not print event number at every event (done already by Brunel)
+        EventSelector().PrintFreq = -1;
         # Modify printout defaults
-        importOptions("$BRUNELOPTS/BrunelMessage.opts")
         if self.getProp( "NoWarnings" ):
             importOptions( "$BRUNELOPTS/SuppressWarnings.opts" )
 
@@ -254,7 +255,7 @@ class Brunel(LHCbConfigurableUser):
 
         # Data on Demand for MCParticle to MCHit association, needed by ST, IT, Tr
         ApplicationMgr().ExtSvc += [ "DataOnDemandSvc" ]
-        importOptions( "$ASSOCIATORSROOT/options/Brunel.opts" )
+        importOptions( "$ASSOCIATORSROOT/options/MCParticleToMCHit.py" )
 
         # TT
         if "TT" in moniSeq :
