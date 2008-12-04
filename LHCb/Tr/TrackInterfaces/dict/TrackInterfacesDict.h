@@ -8,8 +8,6 @@
 #include "TrackInterfaces/IMaterialLocator.h"
 #include "TrackInterfaces/IMatchTool.h"
 #include "TrackInterfaces/IMeasurementProvider.h"
-#include "TrackInterfaces/IPatDebugTool.h"
-#include "TrackInterfaces/IPatDebugTTTool.h"
 #include "TrackInterfaces/IPatForwardTool.h"
 #include "TrackInterfaces/IPatSeedingTool.h"
 #include "TrackInterfaces/IPromoteClusters.h"

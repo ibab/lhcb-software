@@ -3,7 +3,7 @@
 # Maintainer : Jose Hernando, Eduardo Rodrigues
 #============================================================================
 package           TrackInterfaces
-version           v3r18
+version           v4r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -12,7 +12,6 @@ branches          cmt doc TrackInterfaces
 # =============== dependencies ==============================================
 use RecEvent         v* Event
 use TrackEvent       v* Event
-use PatKernel        v* Tf
 use LHCbKernel       v* Kernel
 use DetDesc          v* Det
 use GaudiKernel      v*
