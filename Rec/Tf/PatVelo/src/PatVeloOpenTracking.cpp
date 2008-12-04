@@ -1,8 +1,9 @@
-// $Id: PatVeloOpenTracking.cpp,v 1.5 2008-06-01 17:32:05 mjohn Exp $
+// $Id: PatVeloOpenTracking.cpp,v 1.6 2008-12-04 09:05:56 cattanem Exp $
 // Include files
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/PhysicalConstants.h"
 
 // from TrackEvent
 #include "Event/Track.h"

@@ -1,13 +1,12 @@
-// $Id: PatVeloOpenTracking.h,v 1.5 2008-06-01 17:32:05 mjohn Exp $
+// $Id: PatVeloOpenTracking.h,v 1.6 2008-12-04 09:05:56 cattanem Exp $
 #ifndef PATVELOOPENTRACKING_H
 #define PATVELOOPENTRACKING_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
-#include "GaudiKernel/PhysicalConstants.h"
 
-#include "TrackInterfaces/IPatDebugTool.h"
+#include "PatKernel/IPatDebugTool.h"
 
 #include "PatVeloRHitManager.h"
 #include "PatVeloPhiHitManager.h"

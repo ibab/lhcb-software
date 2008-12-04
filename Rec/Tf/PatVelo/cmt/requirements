@@ -3,7 +3,7 @@
 # Maintainer : David Hutchcroft
 #============================================================================
 package           PatVelo
-version           v3r10
+version           v3r10p1
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -13,6 +13,7 @@ include_path      none
 # Used packages
 #============================================================================
 use     TrackInterfaces v*      Tr
+use     PatKernel       v*      Tf
 use     VeloDet         v*      Det
 use     DigiEvent       v*      Event
 use     TrackEvent      v*      Event

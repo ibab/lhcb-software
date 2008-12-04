@@ -4,6 +4,10 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2008-12-04 - Marco Cattaneo
+ - Adapt to new location of IPatDebugTool.h in PatKernel
+ - Add explicit dependency on PatKernel (previously implicit via TrackInterfaces)
+
 !========================== PatVelo v3r10 2008-11-21 =========================
 ! 2008-11-19 - Marco Cattaneo
  - Fix untested StatusCode on Warning message, print Warnings only in finalize
