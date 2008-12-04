@@ -3,12 +3,12 @@
 # Maintainer : Stephanie Hansmann-Menzemer 
 #============================================================================
 package           PatKernel
-version           v2r1
+version           v2r2
 
 #============================================================================
 # Structure
 #============================================================================
-branches          cmt doc src PatKernel
+branches          cmt dict doc src PatKernel
 
 #============================================================================
 # Used packages.
@@ -32,3 +32,10 @@ library PatKernel ../src/*.cpp
 # define component library link options
 #============================================================================
 apply_pattern component_library    library=PatKernel
+
+# =============== LCG Dictionaries ============================================
+apply_pattern reflex_dictionary                                     \
+              dictionary=PatKernel                                  \
+              headerfiles=$(PATKERNELROOT)/dict/PatKernelDict.h     \
+              selectionfile=$(PATKERNELROOT)/dict/PatKernelDict.xml \
+              options="-U__MINGW32__"

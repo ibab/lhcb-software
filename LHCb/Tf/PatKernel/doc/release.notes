@@ -4,10 +4,14 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-12-04 - Marco Cattaneo
+ - Add IPatDebugTool and IPatDebugTTool interfaces and corresponding dictionary,
+   moved from TrackInterfaces to reduce package dependencies
+
 !============================= PatKernel v2r1 2008-04-09 =====================
 ! 2008-04-09 - Stephanie Hansmann-Menzemer
  - Move PatTStationHitManger.cpp to TfTools package, which has a 
-   component libary, to allow to build python configurables
+   component library, to allow to build python configurables
    PatTStationHitManager.h stays in this package to keep it visible from outside
 
 ! 2007-03-18 - Stephanie Hansmann-Menzemer
