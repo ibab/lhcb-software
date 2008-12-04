@@ -1,4 +1,4 @@
-// $Id: LinkedTo.h,v 1.16 2006-06-09 09:22:15 cattanem Exp $
+// $Id: LinkedTo.h,v 1.17 2008-12-04 13:41:44 ocallot Exp $
 #ifndef LINKER_LINKEDTO_H 
 #define LINKER_LINKEDTO_H 1
 
@@ -46,11 +46,17 @@ public:
       //== Check proper template, only if specified. 
       if ( links->sourceClassID() != SOURCE::classID() &&
            CLID_ContainedObject   != SOURCE::classID()  ) {
-        throw GaudiException( "Incompatible SOURCE type for location " + containerName,
+        char message[200];
+        sprintf( message, " : Template classID is %4d expected %4d",SOURCE::classID(), links->sourceClassID());
+        std::string added( message );
+        throw GaudiException( "Incompatible SOURCE type for location " + containerName + added,
                               "LinkedTo", StatusCode::FAILURE);
       }
       if ( links->targetClassID() != TARGET::classID() ) {
-        throw GaudiException( "Incompatible TARGET type for location " + containerName,
+        char message[200];
+        sprintf( message, " : Template classID is %4d expected %4d", TARGET::classID(), links->targetClassID());
+        std::string added( message );
+        throw GaudiException( "Incompatible TARGET type for location " + containerName + added,
                               "LinkedTo", StatusCode::FAILURE);
       }
     }

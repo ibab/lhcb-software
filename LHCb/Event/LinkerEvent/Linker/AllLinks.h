@@ -1,4 +1,4 @@
-// $Id: AllLinks.h,v 1.12 2006-06-15 11:50:50 cattanem Exp $
+// $Id: AllLinks.h,v 1.13 2008-12-04 13:41:44 ocallot Exp $
 #ifndef LINKER_ALLLINKS_H 
 #define LINKER_ALLLINKS_H 1
 
@@ -42,11 +42,17 @@ public:
       //== Check proper template, only if specified. 
       if ( links->sourceClassID() != SOURCE::classID() &&
            CLID_ContainedObject   != SOURCE::classID()  ) {
-        throw GaudiException( "Incompatible SOURCE type for location " + containerName,
+        char message[200];
+        sprintf( message, " : Template classID is %4d expected %4d", SOURCE::classID(), links->sourceClassID());
+        std::string added( message );
+        throw GaudiException( "Incompatible SOURCE type for location " + containerName + added,
                               "LinkedTo", StatusCode::FAILURE);
       }
       if ( links->targetClassID() != TARGET::classID() ) {
-        throw GaudiException( "Incompatible TARGET type for location " + containerName,
+        char message[200];
+        sprintf( message, " : Template classID is %4d expected %4d", TARGET::classID(), links->targetClassID());
+        std::string added( message );
+        throw GaudiException( "Incompatible TARGET type for location " + containerName + added,
                               "LinkedTo", StatusCode::FAILURE);
       }
     }

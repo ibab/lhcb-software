@@ -1,4 +1,4 @@
-// $Id: LinkedFrom.h,v 1.25 2008-03-14 10:06:19 ocallot Exp $
+// $Id: LinkedFrom.h,v 1.26 2008-12-04 13:41:44 ocallot Exp $
 #ifndef LINKER_LINKEDFROM_H 
 #define LINKER_LINKEDFROM_H 1
 
@@ -46,12 +46,18 @@ public:
       //== Check proper template, only if specified. 
       if ( links->sourceClassID() != SOURCE::classID() &&
            CLID_ContainedObject   != SOURCE::classID() ) {
-        throw GaudiException( "Incompatible SOURCE type for location " + containerName,
+        char message[200];
+        sprintf( message, " : Template classID is %4d expected %4d", SOURCE::classID(), links->sourceClassID());
+        std::string added( message );
+        throw GaudiException( "Incompatible SOURCE type for location " + containerName + added,
                               "LinkedFrom", StatusCode::FAILURE);
       }
       if ( links->targetClassID() != TARGET::classID() &&
            CLID_ContainedObject   != TARGET::classID()  ) {
-        throw GaudiException( "Incompatible TARGET type for location " + containerName,
+        char message[200];
+        sprintf( message, " : Template classID is %4d expected %4d", TARGET::classID(), links->targetClassID());
+        std::string added( message );
+        throw GaudiException( "Incompatible TARGET type for location " + containerName + added,
                               "LinkedFrom", StatusCode::FAILURE);
       }
     }

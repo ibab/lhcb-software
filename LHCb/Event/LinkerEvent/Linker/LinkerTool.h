@@ -1,4 +1,4 @@
-// $Id: LinkerTool.h,v 1.11 2006-06-14 15:21:42 cattanem Exp $
+// $Id: LinkerTool.h,v 1.12 2008-12-04 13:41:44 ocallot Exp $
 #ifndef LINKER_LINKERTOOL_H 
 #define LINKER_LINKERTOOL_H 1
 
@@ -54,11 +54,17 @@ public:
       links->resolveLinks( m_evtSvc );
 
       if ( links->sourceClassID() != SOURCE::classID() ) {
-        throw GaudiException( "Incompatible SOURCE type for location " + m_location,
+        char message[200];
+        sprintf( message, " : Template classID is %4d expected %4d", SOURCE::classID(), links->sourceClassID());
+        std::string added( message );
+        throw GaudiException( "Incompatible SOURCE type for location " + m_location + added,
                               "LinkerTool", StatusCode::FAILURE);
       }
       if ( links->targetClassID() != TARGET::classID() ) {
-        throw GaudiException( "Incompatible TARGET type for location " + m_location,
+        char message[200];
+        sprintf( message, " : Template classID is %4d expected %4d", TARGET::classID(), links->targetClassID());
+        std::string added( message );
+        throw GaudiException( "Incompatible TARGET type for location " + m_location + added,
                               "LinkerTool", StatusCode::FAILURE);
       }
     }
@@ -97,11 +103,17 @@ public:
 
     //== TARGET and SOURCE are exchanged for the inverse table
     if ( linkPtr->targetClassID() != SOURCE::classID() ) {
-     throw GaudiException( "Incompatible SOURCE type for location " + m_location,
+      char message[200];
+      sprintf( message, " : Template classID is %4d expected %4d", SOURCE::classID(), links->targetClassID());
+      std::string added( message );
+      throw GaudiException( "Incompatible SOURCE type for location " + m_location + added,
                             "LinkerTool", StatusCode::FAILURE);
     }
     if ( linkPtr->sourceClassID() != TARGET::classID() ) {
-      throw GaudiException( "Incompatible TARGET type for location " + m_location,
+      char message[200];
+      sprintf( message, " : Template classID is %4d expected %4d", TARGET::classID(), links->sourceClassID());
+      std::string added( message );
+      throw GaudiException( "Incompatible TARGET type for location " + m_location + added,
                             "LinkerTool", StatusCode::FAILURE);
     }    
     return &m_invTable;

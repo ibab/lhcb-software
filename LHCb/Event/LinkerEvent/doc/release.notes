@@ -4,6 +4,10 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+! 2008-12-04 - Olivier Callot
+ - Make the error message when template doesn't match the stored class ID more
+   explicit, i.e. the two class ID are printed.
+
 !======================= LinkerEvent v3r5 2008-07-04 =========================
 ! 2008-06-30 - Marco Cattaneo
  - Add a missing apply_pattern
