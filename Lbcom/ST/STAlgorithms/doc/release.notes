@@ -2,7 +2,10 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
-! 2008-10-29 M Needham
+! 2008-12-04 M Needham
+ - Change default to TT in STClustersToLite
+
+! 2008-11-29 M Needham
  - Add STCosmicFilter algorithm
 
 !======================= STAlgorithms v3r2 2008-11-21 ========================

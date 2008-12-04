@@ -1,4 +1,4 @@
-// $Id: STClustersToLite.cpp,v 1.2 2008-10-14 08:49:05 mneedham Exp $
+// $Id: STClustersToLite.cpp,v 1.3 2008-12-04 10:18:56 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -18,8 +18,8 @@ STClustersToLite::STClustersToLite( const std::string& name,
                                     ISvcLocator* pSvcLocator):
   ST::AlgBase(name, pSvcLocator){
  
-  declareSTConfigProperty("inputLocation", m_inputLocation, STClusterLocation::ITClusters); 
-  declareSTConfigProperty("outputLocation", m_outputLocation , STLiteClusterLocation::ITClusters);
+  declareSTConfigProperty("inputLocation", m_inputLocation, STClusterLocation::TTClusters); 
+  declareSTConfigProperty("outputLocation", m_outputLocation , STLiteClusterLocation::TTClusters);
 
 }
 
