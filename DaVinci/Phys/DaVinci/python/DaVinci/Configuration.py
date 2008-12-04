@@ -1,7 +1,7 @@
 """
-High level configuration tools for DaVinci
+High level configuration tools for DaVinciApp
 """
-__version__ = "$Id: Configuration.py,v 1.10 2008-11-28 13:05:47 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.11 2008-12-04 19:12:53 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -24,7 +24,7 @@ class DaVinci(LHCbConfigurableUser) :
 
     def defineEvents(self):
         evtMax = self.getProp("EvtMax")
-        print "Re-defining EvtMax to ", evtMax
+#        print "Re-defining EvtMax to ", evtMax
         ApplicationMgr().EvtMax = evtMax
         skipEvents = self.getProp("SkipEvents")
         if skipEvents > 0 :
@@ -32,12 +32,12 @@ class DaVinci(LHCbConfigurableUser) :
 
     def defineInput(self):
         input = self.getProp("Input")
-        print "DaVinciApp input is ", input
+#        print "DaVinci input is ", input
         if ( len(input) > 0) :
-            print "Re-defining input to\n", input
+#            print "Re-defining input to\n", input
             EventSelector().Input = input
-        else :
-            print "Input is\n", getattr(EventSelector(),"Input")
+#        else :
+#            print "Input is\n", getattr(EventSelector(),"Input")
 
     def evtMax(self):
         if hasattr(ApplicationMgr(),"EvtMax"):

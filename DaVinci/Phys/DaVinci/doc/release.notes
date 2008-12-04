@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.268 2008-12-03 10:22:31 pkoppenb Exp $
+! $Id: release.notes,v 1.269 2008-12-04 19:12:53 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,9 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2008-12-04 - Patrick Koppenburg
+ - DaVinci.py : remove non-python printouts as ganga does not like them.
 
 ! 2008-12-03 - Patrick Koppenburg
  - DaVinci.py : restore Flavour Tagging options. Now work with 
