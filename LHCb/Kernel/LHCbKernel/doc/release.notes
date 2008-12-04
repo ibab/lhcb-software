@@ -4,6 +4,8 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2008-12-04 - Vanya BELYAEV
+ - remove Kernel/Decay.h
 
 ! 2008-12-03 M Needham 
   - More protections against fpe in SiChargeFun
