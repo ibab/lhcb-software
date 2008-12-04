@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.59 2008-11-29 17:18:38 ibelyaev Exp $
+# $Id: requirements,v 1.60 2008-12-04 16:39:14 ibelyaev Exp $
 # Created    : 05/02/2002
 # Maintainer : P. Koppenburg, J. Palcios
 #============================================================================
@@ -13,6 +13,7 @@ branches          cmt doc dict src Kernel
 # Used packages. 
 #============================================================================
 use PhysEvent  v* Event
+use PartProp   v* Kernel
 use GaudiAlg   v* 
 use Relations  v* Kernel
 use RecInterfaces v* Kernel

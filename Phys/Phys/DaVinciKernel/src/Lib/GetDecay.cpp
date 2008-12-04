@@ -1,4 +1,4 @@
-// $Id: GetDecay.cpp,v 1.1 2008-05-29 13:51:45 ibelyaev Exp $
+// $Id: GetDecay.cpp,v 1.2 2008-12-04 16:39:14 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -18,17 +18,18 @@
  *  @return the constructed decay
  */
 // ============================================================================
-LHCb::Decay DaVinci::decay 
+Decays::Decay 
+Decays::decay 
 ( const std::string&        descriptor , 
   IDecodeSimpleDecayString* decoder    ) 
 { 
-  if ( 0 == decoder   ) { return LHCb::Decay () ; }                // RETURN 
+  if ( 0 == decoder   ) { return Decay () ; }                // RETURN 
   //
   StatusCode sc = decoder -> setDescriptor ( descriptor ) ;
-  if ( sc.isFailure() ) { return LHCb::Decay () ; }                // RETURN 
-  LHCb::Decay dec ;
+  if ( sc.isFailure() ) { return Decay () ; }                // RETURN 
+  Decay dec ;
   sc = decoder -> getDecay ( dec ) ;
-  if ( sc.isFailure() ) { return LHCb::Decay () ; }                // RETURN
+  if ( sc.isFailure() ) { return Decay () ; }                // RETURN
   //
   return dec ;
 }
@@ -39,25 +40,26 @@ LHCb::Decay DaVinci::decay
  *  @return the constructed decay
  */
 // ============================================================================
-LHCb::Decays DaVinci::decays
+std::vector<Decays::Decay>
+Decays::decays
 ( const std::string&        descriptor , 
   IDecodeSimpleDecayString* decoder    ) 
 {
-  if ( 0 == decoder   ) { return LHCb::Decays () ; }              // RETURN 
+  if ( 0 == decoder   ) { return std::vector<Decay> () ; } // RETURN 
   //
   StatusCode sc = decoder -> setDescriptor ( descriptor ) ;
-  if ( sc.isFailure() ) { return LHCb::Decays () ; }              // RETURN 
+  if ( sc.isFailure() ) { return std::vector<Decay> () ; } // RETURN 
   //
-  LHCb::Decay dec ;
+  Decay dec ;
   sc = decoder -> getDecay ( dec ) ;
-  if ( sc.isFailure() ) { return LHCb::Decays () ; }              // RETURN
-  LHCb::Decays result ( 1 , dec ) ;
+  if ( sc.isFailure() ) { return std::vector<Decay> () ; } // RETURN
+  std::vector<Decay> result ( 1 , dec ) ;
   
   if ( decoder->is_cc()  )
   {
-    LHCb::Decay dec_cc ; 
+    Decay dec_cc ; 
     sc = decoder -> getDecay_cc ( dec_cc ) ;
-    if ( sc.isFailure() ) { return LHCb::Decays () ; }            // RETURN 
+    if ( sc.isFailure() ) { return std::vector<Decay> () ; } // RETURN 
     result.push_back ( dec_cc ) ;
   }
   //
@@ -70,18 +72,19 @@ LHCb::Decays DaVinci::decays
  *  @return the constructed decay
  */
 // ============================================================================
-LHCb::Decays DaVinci::decays
+std::vector<Decays::Decay>
+Decays::decays
 ( const std::vector<std::string>& descriptors , 
   IDecodeSimpleDecayString*       decoder     ) 
 {  
-  if ( 0 == decoder ) { return LHCb::Decays () ; }                   // RETURN 
+  if ( 0 == decoder ) { return std::vector<Decay> () ; }           // RETURN 
   //
-  LHCb::Decays result ;
+  std::vector<Decay> result ;
   for ( std::vector<std::string>::const_iterator idesc = descriptors.begin() ;
         descriptors.end() != idesc ; ++idesc ) 
   {
-    LHCb::Decays res = decays ( *idesc , decoder ) ;
-    if ( res.empty() ) { return LHCb::Decays () ; }                  // RETURN
+    std::vector<Decay> res = decays ( *idesc , decoder ) ;
+    if ( res.empty() ) { return std::vector<Decay> () ; }          // RETURN
     result.insert ( result.end() , res.begin() , res.end() ) ;
   }
   //

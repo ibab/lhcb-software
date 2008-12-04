@@ -1,8 +1,15 @@
-!$Id: release.notes,v 1.274 2008-11-29 17:18:39 ibelyaev Exp $
+!$Id: release.notes,v 1.275 2008-12-04 16:39:14 ibelyaev Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2008-12-04 - Vanya BELYAEV
+
+ - 1) LHCb::Decay -> Decays::Decay
+   2) use PartProp v* Kernel 
+   3) remove public global typedefs for strings&ints 
+      from Kernel/IDecodeSimpleDecayString.h
 
 ! 2008-11-29 - Vanya BELYAEV
 
