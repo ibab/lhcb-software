@@ -5,7 +5,7 @@
  *  Implementation file for monitor : Rich::DAQ::DataDBCheck
  *
  *  CVS Log :-
- *  $Id: RichDataDBCheck.cpp,v 1.3 2008-10-20 15:08:43 jonrob Exp $
+ *  $Id: RichDataDBCheck.cpp,v 1.4 2008-12-04 15:22:43 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2008-10-14
@@ -83,9 +83,13 @@ StatusCode DataDBCheck::execute()
       for ( Rich::DAQ::HPDMap::const_iterator iHPDMap = hpdMap.begin();
             iHPDMap != hpdMap.end(); ++iHPDMap )
       {
-        const Rich::DAQ::Level1Input l1Input = iHPDMap->first;
-        const Rich::DAQ::HPDInfo & hpdInfo   = iHPDMap->second;
-        const LHCb::RichSmartID  & hpdID     = hpdInfo.hpdID();
+        const Rich::DAQ::Level1Input l1Input         = iHPDMap->first;
+        const Rich::DAQ::HPDInfo & hpdInfo           = iHPDMap->second;
+        const LHCb::RichSmartID  & hpdID             = hpdInfo.hpdID();
+        const Rich::DAQ::HPDInfo::Header & hpdHeader = hpdInfo.header();
+
+        // Only do the DB check on valid data
+        if ( hpdHeader.inhibit() || !hpdID.isValid() ) continue;
 
         // use a try block in case of DB lookup errors
         try

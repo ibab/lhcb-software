@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2008-12-04 - Chris Jones
+ - Suppress database checks in RichDataDBCheck when HPD information is invalid
+   or HPD is suppressed.
+
 ! 2008-11-30 - Chris Jones
  - Add expert options to python configurable.
 
