@@ -1,4 +1,4 @@
-// $Id: MCDecays.cpp,v 1.2 2008-07-09 16:42:28 ibelyaev Exp $
+// $Id: MCDecays.cpp,v 1.3 2008-12-04 16:42:16 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -25,18 +25,18 @@ namespace
    */
   inline void makeSections 
   ( const LHCb::MCParticle*        p     , 
-    const LoKi::Decays::Trees::Alg alg   , 
+    const Decays::Trees::Alg alg   , 
     const bool                     decay , 
-    LoKi::Decays::MCSections&      sect  ) 
+    Decays::MCSections&      sect  ) 
   {
     if ( 0 == p ) { return ; }
     //
-    if ( LoKi::Decays::Trees::Sections == alg ) 
-    { LoKi::Decays::sections ( p , sect , decay ) ; }
+    if ( Decays::Trees::Sections == alg ) 
+    { Decays::sections ( p , sect , decay ) ; }
     else 
     {
-      LoKi::Decays::MCSection s ;
-      LoKi::Decays::section ( p , s , decay ) ;      
+      Decays::MCSection s ;
+      Decays::section ( p , s , decay ) ;      
       sect.push_back ( s ) ;    
     }
   }
@@ -44,14 +44,14 @@ namespace
   struct NotPid : public std::unary_function<const LHCb::MCParticle*,bool>
   {
     /// constructor 
-    NotPid ( const LoKi::Decays::Nodes::Pid& pid ) : m_pid ( pid ) {}
+    NotPid ( const Decays::Nodes::Pid& pid ) : m_pid ( pid ) {}
     // the major method: find "not a pid" 
     inline bool operator () ( const LHCb::MCParticle* p ) const 
     { return 0 != p && !m_pid.check ( p->particleID() ) ; }
   private:
     // ========================================================================
     /// the pid-checker 
-    LoKi::Decays::Nodes::Pid m_pid ; //the pid-checker 
+    Decays::Nodes::Pid m_pid ; //the pid-checker 
     // ========================================================================    
   } ;
   // ==========================================================================
@@ -64,18 +64,18 @@ namespace
   inline bool onlyPid 
   (  TYPE begin , 
      TYPE end   , 
-     const LoKi::Decays::Nodes::Pid& pid ) 
+     const Decays::Nodes::Pid& pid ) 
   {
     return end == std::find_if ( begin , end , NotPid ( pid ) ) ; 
   }
   // ==========================================================================
   /// the helper object tfor comparison 
-  typedef LoKi::Decays::Trees::CheckTree<const LHCb::MCParticle*> Equal ;  
+  typedef Decays::Trees::CheckTree<const LHCb::MCParticle*> Equal ;  
   // ==========================================================================
   struct _Pid :  public std::unary_function<const LHCb::MCParticle*,bool>
   {
     /// constructor 
-    _Pid ( const LoKi::Decays::Nodes::Pid& pid ) : m_pid ( pid ) {}
+    _Pid ( const Decays::Nodes::Pid& pid ) : m_pid ( pid ) {}
     // ========================================================================
     /// the major method: find "not a pid" 
     inline bool operator () ( const LHCb::MCParticle* p ) const 
@@ -84,7 +84,7 @@ namespace
   private:
     // ========================================================================
     /// the pid-checker 
-    LoKi::Decays::Nodes::Pid m_pid ; //the pid-checker 
+    Decays::Nodes::Pid m_pid ; //the pid-checker 
     // ========================================================================    
   } ;
   // ========================================================================== 
@@ -100,13 +100,13 @@ namespace
  *  @param oscillation check the oscilaltion flag
  */
 // ============================================================================
-LoKi::Decays::Trees::MCExclusive::MCExclusive
-( const LoKi::Decays::iNode&                        mother     , 
-  const LoKi::Decays::Trees::MCExclusive::SubTrees& children   ,
-  const LoKi::Decays::Trees::Alg                    alg        , 
+Decays::Trees::MCExclusive::MCExclusive
+( const Decays::iNode&                        mother     , 
+  const Decays::Trees::MCExclusive::SubTrees& children   ,
+  const Decays::Trees::Alg                    alg        , 
   const bool                                        decayOnly  , 
-  const LoKi::Decays::Trees::Oscillation            oscillation ) 
-  : LoKi::Decays::iTree_<const LHCb::MCParticle*> () 
+  const Decays::Trees::Oscillation            oscillation ) 
+  : Decays::iTree_<const LHCb::MCParticle*> () 
   , m_mother      ( mother     )
   , m_children    ( children   ) 
   , m_alg         ( alg        )
@@ -120,12 +120,12 @@ LoKi::Decays::Trees::MCExclusive::MCExclusive
  *  @param osc require the oscillation flag for mother 
  */
 // ============================================================================
-LoKi::Decays::Trees::MCExclusive::MCExclusive
-( const LoKi::Decays::iNode&                        mother     , 
-  const LoKi::Decays::Trees::Alg                    alg        , 
+Decays::Trees::MCExclusive::MCExclusive
+( const Decays::iNode&                        mother     , 
+  const Decays::Trees::Alg                    alg        , 
   const bool                                        decayOnly  , 
-  const LoKi::Decays::Trees::Oscillation            oscillation ) 
-  : LoKi::Decays::iTree_<const LHCb::MCParticle*> () 
+  const Decays::Trees::Oscillation            oscillation ) 
+  : Decays::iTree_<const LHCb::MCParticle*> () 
   , m_mother      ( mother     )
   , m_children    (            ) 
   , m_alg         ( alg        )
@@ -141,14 +141,14 @@ LoKi::Decays::Trees::MCExclusive::MCExclusive
  *  @param oscillation check the oscilaltion flag
  */
 // ============================================================================
-LoKi::Decays::Trees::MCExclusive::MCExclusive
+Decays::Trees::MCExclusive::MCExclusive
 ( const std::string&                                mother     , 
-  const LoKi::Decays::Trees::MCExclusive::SubTrees& children   ,
-  const LoKi::Decays::Trees::Alg                    alg        , 
+  const Decays::Trees::MCExclusive::SubTrees& children   ,
+  const Decays::Trees::Alg                    alg        , 
   const bool                                        decayOnly  , 
-  const LoKi::Decays::Trees::Oscillation            oscillation ) 
-  : LoKi::Decays::iTree_<const LHCb::MCParticle*> () 
-  , m_mother      ( LoKi::Decays::Nodes::Pid ( mother ) )
+  const Decays::Trees::Oscillation            oscillation ) 
+  : Decays::iTree_<const LHCb::MCParticle*> () 
+  , m_mother      ( Decays::Nodes::Pid ( mother ) )
   , m_children    ( children   ) 
   , m_alg         ( alg        )
   , m_decayOnly   ( decayOnly  )
@@ -161,13 +161,13 @@ LoKi::Decays::Trees::MCExclusive::MCExclusive
  *  @param osc require the oscillation flag for mother 
  */
 // ============================================================================
-LoKi::Decays::Trees::MCExclusive::MCExclusive
+Decays::Trees::MCExclusive::MCExclusive
 ( const std::string&                                mother     , 
-  const LoKi::Decays::Trees::Alg                    alg        , 
+  const Decays::Trees::Alg                    alg        , 
   const bool                                        decayOnly  , 
-  const LoKi::Decays::Trees::Oscillation            oscillation ) 
-  : LoKi::Decays::iTree_<const LHCb::MCParticle*> () 
-  , m_mother      ( LoKi::Decays::Nodes::Pid ( mother ) )
+  const Decays::Trees::Oscillation            oscillation ) 
+  : Decays::iTree_<const LHCb::MCParticle*> () 
+  , m_mother      ( Decays::Nodes::Pid ( mother ) )
   , m_children    (            ) 
   , m_alg         ( alg        )
   , m_decayOnly   ( decayOnly  )
@@ -182,14 +182,14 @@ LoKi::Decays::Trees::MCExclusive::MCExclusive
  *  @param oscillation check the oscilaltion flag
  */
 // ============================================================================
-LoKi::Decays::Trees::MCExclusive::MCExclusive
+Decays::Trees::MCExclusive::MCExclusive
 ( const LHCb::ParticleID&                           mother     , 
-  const LoKi::Decays::Trees::MCExclusive::SubTrees& children   ,
-  const LoKi::Decays::Trees::Alg                    alg        , 
+  const Decays::Trees::MCExclusive::SubTrees& children   ,
+  const Decays::Trees::Alg                    alg        , 
   const bool                                        decayOnly  , 
-  const LoKi::Decays::Trees::Oscillation            oscillation ) 
-  : LoKi::Decays::iTree_<const LHCb::MCParticle*> () 
-  , m_mother      ( LoKi::Decays::Nodes::Pid ( mother ) )
+  const Decays::Trees::Oscillation            oscillation ) 
+  : Decays::iTree_<const LHCb::MCParticle*> () 
+  , m_mother      ( Decays::Nodes::Pid ( mother ) )
   , m_children    ( children   ) 
   , m_alg         ( alg        )
   , m_decayOnly   ( decayOnly  )
@@ -202,13 +202,13 @@ LoKi::Decays::Trees::MCExclusive::MCExclusive
  *  @param osc require the oscillation flag for mother 
  */
 // ============================================================================
-LoKi::Decays::Trees::MCExclusive::MCExclusive
+Decays::Trees::MCExclusive::MCExclusive
 ( const LHCb::ParticleID&                           mother     , 
-  const LoKi::Decays::Trees::Alg                    alg        , 
+  const Decays::Trees::Alg                    alg        , 
   const bool                                        decayOnly  , 
-  const LoKi::Decays::Trees::Oscillation            oscillation ) 
-  : LoKi::Decays::iTree_<const LHCb::MCParticle*> () 
-  , m_mother      ( LoKi::Decays::Nodes::Pid ( mother ) )
+  const Decays::Trees::Oscillation            oscillation ) 
+  : Decays::iTree_<const LHCb::MCParticle*> () 
+  , m_mother      ( Decays::Nodes::Pid ( mother ) )
   , m_children    (             ) 
   , m_alg         ( alg         )
   , m_decayOnly   ( decayOnly   )
@@ -221,28 +221,28 @@ LoKi::Decays::Trees::MCExclusive::MCExclusive
  *  @param osc require the oscillation flag for mother 
  */
 // ============================================================================
-LoKi::Decays::Trees::MCExclusive::MCExclusive
-( const LHCb::Decay&                                decay      , 
-  const LoKi::Decays::Trees::Alg                    alg        , 
+Decays::Trees::MCExclusive::MCExclusive
+( const Decays::Decay&                                decay      , 
+  const Decays::Trees::Alg                    alg        , 
   const bool                                        decayOnly  , 
-  const LoKi::Decays::Trees::Oscillation            oscillation ) 
-  : LoKi::Decays::iTree_<const LHCb::MCParticle*> () 
-  , m_mother      ( LoKi::Decays::Nodes::Pid ( decay.mother() ) )
+  const Decays::Trees::Oscillation            oscillation ) 
+  : Decays::iTree_<const LHCb::MCParticle*> () 
+  , m_mother      ( Decays::Nodes::Pid ( decay.mother() ) )
   , m_children    (             ) 
   , m_alg         ( alg         )
   , m_decayOnly   ( decayOnly   )
   , m_oscillation ( oscillation ) 
 {
-  const LHCb::Decay::Items& items = decay.children() ;
-  for ( LHCb::Decay::Items::const_iterator item = items.begin() ; 
+  const Decays::Decay::Items& items = decay.children() ;
+  for ( Decays::Decay::Items::const_iterator item = items.begin() ; 
         items.end() != item ; ++item ) { addDaughter ( *item ) ; } 
 }
 // ============================================================================
 // copy constructor 
 // ============================================================================
-LoKi::Decays::Trees::MCExclusive::MCExclusive
-( const LoKi::Decays::Trees::MCExclusive& right ) 
-  : LoKi::Decays::iTree_<const LHCb::MCParticle*> ( right ) 
+Decays::Trees::MCExclusive::MCExclusive
+( const Decays::Trees::MCExclusive& right ) 
+  : Decays::iTree_<const LHCb::MCParticle*> ( right ) 
   , m_mother      ( right.m_mother      )
   , m_children    ( right.m_children    ) 
   , m_alg         ( right.m_alg         )
@@ -253,29 +253,29 @@ LoKi::Decays::Trees::MCExclusive::MCExclusive
 // ============================================================================
 // MANDATORY: check the validity 
 // ============================================================================
-bool LoKi::Decays::Trees::MCExclusive::valid() const 
+bool Decays::Trees::MCExclusive::valid() const 
 {
-  return m_mother.valid() && LoKi::Decays::valid ( childBegin() , childEnd() ) ;
+  return m_mother.valid() && Decays::valid ( childBegin() , childEnd() ) ;
 }
 // ============================================================================
 // MANDATORY: validate the tree 
 // ============================================================================
-StatusCode  LoKi::Decays::Trees::MCExclusive::validate 
-( IParticlePropertySvc* svc ) const 
+StatusCode  Decays::Trees::MCExclusive::validate 
+( const LHCb::IParticlePropertySvc* svc ) const 
 {
   StatusCode sc = m_mother.validate ( svc ) ;
   if ( sc.isFailure() ) { return sc ; }
-  return LoKi::Decays::validate ( childBegin() , childEnd() , svc ) ;
+  return Decays::validate ( childBegin() , childEnd() , svc ) ;
 }
 // ============================================================================
 // reset the collection cache
 // ============================================================================
-void LoKi::Decays::Trees::MCExclusive::reset() const { i_reset () ; }
+void Decays::Trees::MCExclusive::reset() const { i_reset () ; }
 // ============================================================================
 // collect the marked elements 
 // ============================================================================
-size_t LoKi::Decays::Trees::MCExclusive::collect 
-( LoKi::Decays::iTree_<const LHCb::MCParticle*>::Collection& output ) const 
+size_t Decays::Trees::MCExclusive::collect 
+( Decays::iTree_<const LHCb::MCParticle*>::Collection& output ) const 
 {
   size_t size = 0 ;
   for ( SubTrees::const_iterator ichild = childBegin() ; 
@@ -285,8 +285,8 @@ size_t LoKi::Decays::Trees::MCExclusive::collect
 // ============================================================================
 // the only one essential method 
 // ============================================================================
-bool LoKi::Decays::Trees::MCExclusive::operator() 
-  ( LoKi::Decays::iTree_<const LHCb::MCParticle*>::argument p ) const
+bool Decays::Trees::MCExclusive::operator() 
+  ( Decays::iTree_<const LHCb::MCParticle*>::argument p ) const
 {
   // reset the cache (ALWAYS!!!)
   i_reset () ;
@@ -296,10 +296,10 @@ bool LoKi::Decays::Trees::MCExclusive::operator()
   // match children? 
   if ( 0 == nChildren()               ) { return true  ; }        // RETURN
   // (1) get the proper decay sections:
-  LoKi::Decays::MCSections sections ;
+  Decays::MCSections sections ;
   makeSections ( p , alg() , decayOnly() , sections ) ;
   // (2) loop over all sections
-  for (  LoKi::Decays::MCSections::iterator isect = sections.begin() ; 
+  for (  Decays::MCSections::iterator isect = sections.begin() ; 
          sections.end() != isect ; ++isect )
   {
     // (3) try to match the section 
@@ -322,16 +322,16 @@ bool LoKi::Decays::Trees::MCExclusive::operator()
 // MANDATORY: the specific printout 
 // ============================================================================
 std::ostream& 
-LoKi::Decays::Trees::MCExclusive::fillStream ( std::ostream& s ) const 
+Decays::Trees::MCExclusive::fillStream ( std::ostream& s ) const 
 {
   //
   s << ( ( 0 != nChildren() ) ? " (" : " " ) ;
   //
   switch ( oscillation () ) 
   {
-  case LoKi::Decays::Trees::Oscillated    : 
+  case Decays::Trees::Oscillated    : 
     s << "[" << mother () << "]os "  ; break ;  // BREAK 
-  case LoKi::Decays::Trees::NotOscillated : 
+  case Decays::Trees::NotOscillated : 
     s << "[" << mother () << "]nos " ; break ;  // BREAK 
   default:
     s <<        mother ()            ; 
@@ -353,38 +353,38 @@ LoKi::Decays::Trees::MCExclusive::fillStream ( std::ostream& s ) const
 // ============================================================================
 // add one more node to the tree 
 // ============================================================================
-void LoKi::Decays::Trees::MCExclusive::addDaughter 
-( const LoKi::Decays::iTree_<const LHCb::MCParticle*>& tree ) 
+void Decays::Trees::MCExclusive::addDaughter 
+( const Decays::iTree_<const LHCb::MCParticle*>& tree ) 
 { m_children.push_back ( tree ) ; }
 // ============================================================================
 // add one more node to the tree 
 // ============================================================================
-void LoKi::Decays::Trees::MCExclusive::addDaughter 
-( const LoKi::Decays::iNode& node ){ addDaughter ( MCExclusive ( node ) ) ; }
+void Decays::Trees::MCExclusive::addDaughter 
+( const Decays::iNode& node ){ addDaughter ( MCExclusive ( node ) ) ; }
 // ============================================================================
 // add one more node to the tree 
 // ============================================================================
-void LoKi::Decays::Trees::MCExclusive::addDaughter 
-( const LHCb::Decay::Item& node )
-{ addDaughter ( LoKi::Decays::Nodes::Pid ( node ) ) ; }
+void Decays::Trees::MCExclusive::addDaughter 
+( const Decays::Decay::Item& node )
+{ addDaughter ( Decays::Nodes::Pid ( node ) ) ; }
 // ============================================================================
 // add one more node to the tree 
 // ============================================================================
-void LoKi::Decays::Trees::MCExclusive::addDaughter 
+void Decays::Trees::MCExclusive::addDaughter 
 ( const std::string& node )
-{ addDaughter ( LoKi::Decays::Nodes::Pid ( node ) ) ; }
+{ addDaughter ( Decays::Nodes::Pid ( node ) ) ; }
 // ============================================================================
 // add one more node to the tree 
 // ============================================================================
-void LoKi::Decays::Trees::MCExclusive::addDaughter 
+void Decays::Trees::MCExclusive::addDaughter 
 ( const LHCb::ParticleID& node )
-{ addDaughter ( LoKi::Decays::Nodes::Pid ( node ) ) ; }
+{ addDaughter ( Decays::Nodes::Pid ( node ) ) ; }
 // ============================================================================
 // add one more node to the tree 
 // ============================================================================
-void LoKi::Decays::Trees::MCExclusive::addDaughter 
-( const ParticleProperty* node )
-{ addDaughter ( LoKi::Decays::Nodes::Pid ( node ) ) ; }
+void Decays::Trees::MCExclusive::addDaughter 
+( const LHCb::ParticleProperty* node )
+{ addDaughter ( Decays::Nodes::Pid ( node ) ) ; }
 // ============================================================================
 
 
@@ -402,13 +402,13 @@ void LoKi::Decays::Trees::MCExclusive::addDaughter
  *  @param oscillation check the oscilaltion flag
  */
 // ============================================================================
-LoKi::Decays::Trees::MCInclusive::MCInclusive
-( const LoKi::Decays::iNode&                        mother     , 
-  const LoKi::Decays::Trees::MCExclusive::SubTrees& children   ,
-  const LoKi::Decays::Trees::Alg                    alg        , 
+Decays::Trees::MCInclusive::MCInclusive
+( const Decays::iNode&                        mother     , 
+  const Decays::Trees::MCExclusive::SubTrees& children   ,
+  const Decays::Trees::Alg                    alg        , 
   const bool                                        decayOnly  , 
-  const LoKi::Decays::Trees::Oscillation            oscillation ) 
-  : LoKi::Decays::Trees::MCExclusive ( mother , children , 
+  const Decays::Trees::Oscillation            oscillation ) 
+  : Decays::Trees::MCExclusive ( mother , children , 
                                        alg , decayOnly , oscillation ) 
 {}
 // ============================================================================
@@ -418,12 +418,12 @@ LoKi::Decays::Trees::MCInclusive::MCInclusive
  *  @param osc require the oscillation flag for mother 
  */
 // ============================================================================
-LoKi::Decays::Trees::MCInclusive::MCInclusive
-( const LoKi::Decays::iNode&                        mother     , 
-  const LoKi::Decays::Trees::Alg                    alg        , 
+Decays::Trees::MCInclusive::MCInclusive
+( const Decays::iNode&                        mother     , 
+  const Decays::Trees::Alg                    alg        , 
   const bool                                        decayOnly  , 
-  const LoKi::Decays::Trees::Oscillation            oscillation ) 
-  : LoKi::Decays::Trees::MCExclusive( mother , alg , decayOnly , oscillation ) 
+  const Decays::Trees::Oscillation            oscillation ) 
+  : Decays::Trees::MCExclusive( mother , alg , decayOnly , oscillation ) 
 {}
 // ============================================================================
 /*  constructor from the node (mother), subtrees and "final" flag
@@ -434,13 +434,13 @@ LoKi::Decays::Trees::MCInclusive::MCInclusive
  *  @param oscillation check the oscilaltion flag
  */
 // ============================================================================
-LoKi::Decays::Trees::MCInclusive::MCInclusive
+Decays::Trees::MCInclusive::MCInclusive
 ( const std::string&                                mother     , 
-  const LoKi::Decays::Trees::MCExclusive::SubTrees& children   ,
-  const LoKi::Decays::Trees::Alg                    alg        , 
+  const Decays::Trees::MCExclusive::SubTrees& children   ,
+  const Decays::Trees::Alg                    alg        , 
   const bool                                        decayOnly  , 
-  const LoKi::Decays::Trees::Oscillation            oscillation ) 
-  : LoKi::Decays::Trees::MCExclusive ( mother , children , 
+  const Decays::Trees::Oscillation            oscillation ) 
+  : Decays::Trees::MCExclusive ( mother , children , 
                                        alg , decayOnly , oscillation ) 
 {}
 // ============================================================================
@@ -450,12 +450,12 @@ LoKi::Decays::Trees::MCInclusive::MCInclusive
  *  @param osc require the oscillation flag for mother 
  */
 // ============================================================================
-LoKi::Decays::Trees::MCInclusive::MCInclusive
+Decays::Trees::MCInclusive::MCInclusive
 ( const std::string&                                mother     , 
-  const LoKi::Decays::Trees::Alg                    alg        , 
+  const Decays::Trees::Alg                    alg        , 
   const bool                                        decayOnly  , 
-  const LoKi::Decays::Trees::Oscillation            oscillation ) 
-  : LoKi::Decays::Trees::MCExclusive( mother , alg , decayOnly , oscillation ) 
+  const Decays::Trees::Oscillation            oscillation ) 
+  : Decays::Trees::MCExclusive( mother , alg , decayOnly , oscillation ) 
 {}
 
 // ============================================================================
@@ -467,13 +467,13 @@ LoKi::Decays::Trees::MCInclusive::MCInclusive
  *  @param oscillation check the oscilaltion flag
  */
 // ============================================================================
-LoKi::Decays::Trees::MCInclusive::MCInclusive
+Decays::Trees::MCInclusive::MCInclusive
 ( const LHCb::ParticleID&                           mother     , 
-  const LoKi::Decays::Trees::MCExclusive::SubTrees& children   ,
-  const LoKi::Decays::Trees::Alg                    alg        , 
+  const Decays::Trees::MCExclusive::SubTrees& children   ,
+  const Decays::Trees::Alg                    alg        , 
   const bool                                        decayOnly  , 
-  const LoKi::Decays::Trees::Oscillation            oscillation ) 
-  : LoKi::Decays::Trees::MCExclusive ( mother , children , 
+  const Decays::Trees::Oscillation            oscillation ) 
+  : Decays::Trees::MCExclusive ( mother , children , 
                                        alg , decayOnly , oscillation ) 
 {}
 // ============================================================================
@@ -483,12 +483,12 @@ LoKi::Decays::Trees::MCInclusive::MCInclusive
  *  @param osc require the oscillation flag for mother 
  */
 // ============================================================================
-LoKi::Decays::Trees::MCInclusive::MCInclusive
+Decays::Trees::MCInclusive::MCInclusive
 ( const LHCb::ParticleID&                           mother     , 
-  const LoKi::Decays::Trees::Alg                    alg        , 
+  const Decays::Trees::Alg                    alg        , 
   const bool                                        decayOnly  , 
-  const LoKi::Decays::Trees::Oscillation            oscillation ) 
-  : LoKi::Decays::Trees::MCExclusive( mother , alg , decayOnly , oscillation ) 
+  const Decays::Trees::Oscillation            oscillation ) 
+  : Decays::Trees::MCExclusive( mother , alg , decayOnly , oscillation ) 
 {}
 // ============================================================================
 /*  constructor from the decay 
@@ -497,27 +497,27 @@ LoKi::Decays::Trees::MCInclusive::MCInclusive
  *  @param osc require the oscillation flag for mother 
  */
 // ============================================================================
-LoKi::Decays::Trees::MCInclusive::MCInclusive
-( const LHCb::Decay&                                decay      , 
-  const LoKi::Decays::Trees::Alg                    alg        , 
+Decays::Trees::MCInclusive::MCInclusive
+( const Decays::Decay&                                decay      , 
+  const Decays::Trees::Alg                    alg        , 
   const bool                                        decayOnly  , 
-  const LoKi::Decays::Trees::Oscillation            oscillation ) 
-  : LoKi::Decays::Trees::MCExclusive( decay  , alg , decayOnly , oscillation ) 
+  const Decays::Trees::Oscillation            oscillation ) 
+  : Decays::Trees::MCExclusive( decay  , alg , decayOnly , oscillation ) 
 {}
 // ============================================================================
 /*  constructor from the tree 
  */
 // ============================================================================
-LoKi::Decays::Trees::MCInclusive::MCInclusive
-( const LoKi::Decays::Trees::MCExclusive& right ) 
-  : LoKi::Decays::Trees::MCExclusive( right ) 
+Decays::Trees::MCInclusive::MCInclusive
+( const Decays::Trees::MCExclusive& right ) 
+  : Decays::Trees::MCExclusive( right ) 
 {}
 // ============================================================================
 // copy constrcutor 
 // ============================================================================
-LoKi::Decays::Trees::MCInclusive::MCInclusive
-( const LoKi::Decays::Trees::MCInclusive& right ) 
-  : LoKi::Decays::Trees::MCExclusive( right ) 
+Decays::Trees::MCInclusive::MCInclusive
+( const Decays::Trees::MCInclusive& right ) 
+  : Decays::Trees::MCExclusive( right ) 
 {}
 // ============================================================================
 
@@ -525,13 +525,13 @@ LoKi::Decays::Trees::MCInclusive::MCInclusive
 // ============================================================================
 // MANDATORY: check the validity of the tree 
 // ============================================================================
-bool LoKi::Decays::Trees::MCInclusive::valid() const 
+bool Decays::Trees::MCInclusive::valid() const 
 { return MCExclusive::valid() && 0 != nChildren() ; }
 // ============================================================================
 // the only one essential method 
 // ============================================================================
-bool LoKi::Decays::Trees::MCInclusive::operator() 
-  ( LoKi::Decays::iTree_<const LHCb::MCParticle*>::argument p ) const
+bool Decays::Trees::MCInclusive::operator() 
+  ( Decays::iTree_<const LHCb::MCParticle*>::argument p ) const
 {
   // reset the cache (ALWAYS!!!)
   i_reset () ;
@@ -547,7 +547,7 @@ bool LoKi::Decays::Trees::MCInclusive::operator()
     LHCb::MCParticle::ConstVector d ;
     LoKi::MCChild::daughters ( p , d , decayOnly () ) ;
     // in tree 
-    if ( LoKi::Decays::Trees::Sections == alg() ) 
+    if ( Decays::Trees::Sections == alg() ) 
     {
       return LoKi::MCAlgs::found 
         ( d.begin() , d.end() , *childBegin() , decayOnly() ) ;
@@ -557,11 +557,11 @@ bool LoKi::Decays::Trees::MCInclusive::operator()
   }
   
   // (1) get the proper decay sections:
-  LoKi::Decays::MCSections sections ;
+  Decays::MCSections sections ;
   makeSections ( p , alg() , decayOnly() , sections ) ;
   
   // (2) loop over all sections
-  for (  LoKi::Decays::MCSections::iterator isect = sections.begin() ; 
+  for (  Decays::MCSections::iterator isect = sections.begin() ; 
          sections.end() != isect ; ++isect )
   {
     // (3) try to match the section 
@@ -606,16 +606,16 @@ bool LoKi::Decays::Trees::MCInclusive::operator()
 // MANDATORY: the specific printout 
 // ============================================================================
 std::ostream& 
-LoKi::Decays::Trees::MCInclusive::fillStream ( std::ostream& s ) const 
+Decays::Trees::MCInclusive::fillStream ( std::ostream& s ) const 
 {
   //
   s << " (" ;
   //
   switch ( oscillation () ) 
   {
-  case LoKi::Decays::Trees::Oscillated    : 
+  case Decays::Trees::Oscillated    : 
     s << "[" << mother () << "]os "  ; break ;  // BREAK 
-  case LoKi::Decays::Trees::NotOscillated : 
+  case Decays::Trees::NotOscillated : 
     s << "[" << mother () << "]nos " ; break ;  // BREAK 
   default:
     s <<        mother ()            ; 
@@ -637,122 +637,122 @@ LoKi::Decays::Trees::MCInclusive::fillStream ( std::ostream& s ) const
 // ============================================================================
 // MCOPTIONAL
 // ============================================================================
-LoKi::Decays::Trees::MCOptional::MCOptional
-( const LoKi::Decays::iNode&                        mother     , 
-  const LoKi::Decays::Trees::MCExclusive::SubTrees& children   ,
-  const LoKi::Decays::Trees::MCExclusive::SubTrees& optional   ,
+Decays::Trees::MCOptional::MCOptional
+( const Decays::iNode&                        mother     , 
+  const Decays::Trees::MCExclusive::SubTrees& children   ,
+  const Decays::Trees::MCExclusive::SubTrees& optional   ,
   const Alg                                         alg        ,
   const bool                                        decayOnly  , 
-  const LoKi::Decays::Trees::Oscillation            oscillation ) 
-  : LoKi::Decays::Trees::MCExclusive ( mother , children , alg , 
+  const Decays::Trees::Oscillation            oscillation ) 
+  : Decays::Trees::MCExclusive ( mother , children , alg , 
                                        decayOnly , oscillation )
   , m_optional ( optional ) 
 {}
 // ============================================================================
-LoKi::Decays::Trees::MCOptional::MCOptional
-( const LoKi::Decays::iNode&                           mother     , 
-  const LoKi::Decays::Trees::MCExclusive::SubTrees&    children   ,
-  const LoKi::Decays::iTree_<const LHCb::MCParticle*>& optional   ,
+Decays::Trees::MCOptional::MCOptional
+( const Decays::iNode&                           mother     , 
+  const Decays::Trees::MCExclusive::SubTrees&    children   ,
+  const Decays::iTree_<const LHCb::MCParticle*>& optional   ,
   const Alg                                            alg        ,
   const bool                                           decayOnly  , 
-  const LoKi::Decays::Trees::Oscillation               oscillation ) 
-  : LoKi::Decays::Trees::MCExclusive ( mother , children , alg , 
+  const Decays::Trees::Oscillation               oscillation ) 
+  : Decays::Trees::MCExclusive ( mother , children , alg , 
                                        decayOnly , oscillation )
   , m_optional ( 1 , optional ) 
 {}
 // ============================================================================
-LoKi::Decays::Trees::MCOptional::MCOptional
-( const LoKi::Decays::iNode&                           mother     , 
-  const LoKi::Decays::Trees::MCExclusive::SubTrees&    children   ,
-  const LoKi::Decays::iNode&                           optional   ,
+Decays::Trees::MCOptional::MCOptional
+( const Decays::iNode&                           mother     , 
+  const Decays::Trees::MCExclusive::SubTrees&    children   ,
+  const Decays::iNode&                           optional   ,
   const Alg                                            alg        ,
   const bool                                           decayOnly  , 
-  const LoKi::Decays::Trees::Oscillation               oscillation ) 
-  : LoKi::Decays::Trees::MCExclusive ( mother , children , alg , 
+  const Decays::Trees::Oscillation               oscillation ) 
+  : Decays::Trees::MCExclusive ( mother , children , alg , 
                                        decayOnly , oscillation )
   , m_optional ( 1 , MCExclusive ( optional ) ) 
 {}
 // ============================================================================
-LoKi::Decays::Trees::MCOptional::MCOptional
+Decays::Trees::MCOptional::MCOptional
 ( const std::string&                                mother     , 
-  const LoKi::Decays::Trees::MCExclusive::SubTrees& children   ,
-  const LoKi::Decays::Trees::MCExclusive::SubTrees& optional   ,
+  const Decays::Trees::MCExclusive::SubTrees& children   ,
+  const Decays::Trees::MCExclusive::SubTrees& optional   ,
   const Alg                                         alg        ,
   const bool                                        decayOnly  , 
-  const LoKi::Decays::Trees::Oscillation            oscillation ) 
-  : LoKi::Decays::Trees::MCExclusive ( mother , children , alg , 
+  const Decays::Trees::Oscillation            oscillation ) 
+  : Decays::Trees::MCExclusive ( mother , children , alg , 
                                        decayOnly , oscillation )
   , m_optional ( optional ) 
 {}
 // ============================================================================
-LoKi::Decays::Trees::MCOptional::MCOptional
+Decays::Trees::MCOptional::MCOptional
 ( const std::string&                                   mother     , 
-  const LoKi::Decays::Trees::MCExclusive::SubTrees&    children   ,
-  const LoKi::Decays::iTree_<const LHCb::MCParticle*>& optional   ,
+  const Decays::Trees::MCExclusive::SubTrees&    children   ,
+  const Decays::iTree_<const LHCb::MCParticle*>& optional   ,
   const Alg                                            alg        ,
   const bool                                           decayOnly  , 
-  const LoKi::Decays::Trees::Oscillation               oscillation ) 
-  : LoKi::Decays::Trees::MCExclusive ( mother , children , alg , 
+  const Decays::Trees::Oscillation               oscillation ) 
+  : Decays::Trees::MCExclusive ( mother , children , alg , 
                                        decayOnly , oscillation )
   , m_optional ( 1 , optional ) 
 {}
 // ============================================================================
-LoKi::Decays::Trees::MCOptional::MCOptional
+Decays::Trees::MCOptional::MCOptional
 ( const std::string&                                   mother     , 
-  const LoKi::Decays::Trees::MCExclusive::SubTrees&    children   ,
-  const LoKi::Decays::iNode&                           optional   ,
+  const Decays::Trees::MCExclusive::SubTrees&    children   ,
+  const Decays::iNode&                           optional   ,
   const Alg                                            alg        ,
   const bool                                           decayOnly  , 
-  const LoKi::Decays::Trees::Oscillation               oscillation ) 
-  : LoKi::Decays::Trees::MCExclusive ( mother , children , alg , 
+  const Decays::Trees::Oscillation               oscillation ) 
+  : Decays::Trees::MCExclusive ( mother , children , alg , 
                                        decayOnly , oscillation )
   , m_optional ( 1 , MCExclusive ( optional ) ) 
 {}
 // ============================================================================
-LoKi::Decays::Trees::MCOptional::MCOptional
-( const LoKi::Decays::Trees::MCExclusive&           right    ,
-  const LoKi::Decays::Trees::MCExclusive::SubTrees& optional )
-  : LoKi::Decays::Trees::MCExclusive ( right ) 
+Decays::Trees::MCOptional::MCOptional
+( const Decays::Trees::MCExclusive&           right    ,
+  const Decays::Trees::MCExclusive::SubTrees& optional )
+  : Decays::Trees::MCExclusive ( right ) 
   , m_optional ( optional ) 
 {}
 // ============================================================================
-LoKi::Decays::Trees::MCOptional::MCOptional
-( const LoKi::Decays::Trees::MCExclusive& right    ,
+Decays::Trees::MCOptional::MCOptional
+( const Decays::Trees::MCExclusive& right    ,
   const std::vector<std::string>&         optional )
-  : LoKi::Decays::Trees::MCExclusive ( right ) 
+  : Decays::Trees::MCExclusive ( right ) 
   , m_optional () 
 { 
   setOptional ( optional ) ; 
 }
 // ============================================================================
-LoKi::Decays::Trees::MCOptional::MCOptional
-( const LoKi::Decays::Trees::MCExclusive& right ) 
-  : LoKi::Decays::Trees::MCExclusive ( right ) 
+Decays::Trees::MCOptional::MCOptional
+( const Decays::Trees::MCExclusive& right ) 
+  : Decays::Trees::MCExclusive ( right ) 
   , m_optional () 
 {}
 
 // ============================================================================
 // MANDATORY: check the validity of the tree 
 // ============================================================================
-bool LoKi::Decays::Trees::MCOptional::valid() const 
+bool Decays::Trees::MCOptional::valid() const 
 {
   return MCExclusive::valid() && 0 != nChildren() && 0 != nOptional() && 
-    LoKi::Decays::valid ( optBegin( ), optEnd() ) ;
+    Decays::valid ( optBegin( ), optEnd() ) ;
 }
 // ============================================================================
 // MANDATORY: the proper validation of the tree
 // ============================================================================
-StatusCode LoKi::Decays::Trees::MCOptional::validate 
-( IParticlePropertySvc* svc ) const 
+StatusCode Decays::Trees::MCOptional::validate 
+( const LHCb::IParticlePropertySvc* svc ) const 
 { 
   StatusCode sc = MCExclusive::validate ( svc ) ;
   return sc.isFailure() ? sc :
-    LoKi::Decays::validate ( optBegin() , optEnd() , svc ) ;
+    Decays::validate ( optBegin() , optEnd() , svc ) ;
 }
 // ============================================================================
 // MANDATORY: the specific printout 
 // ============================================================================
-std::ostream& LoKi::Decays::Trees::MCOptional::fillStream 
+std::ostream& Decays::Trees::MCOptional::fillStream 
 ( std::ostream& s ) const 
 {
   //
@@ -760,9 +760,9 @@ std::ostream& LoKi::Decays::Trees::MCOptional::fillStream
   //
   switch ( oscillation () ) 
   {
-  case LoKi::Decays::Trees::Oscillated    : 
+  case Decays::Trees::Oscillated    : 
     s << "[" << mother () << "]os "  ; break ;  // BREAK 
-  case LoKi::Decays::Trees::NotOscillated : 
+  case Decays::Trees::NotOscillated : 
     s << "[" << mother () << "]nos " ; break ;  // BREAK 
   default:
     s <<        mother ()            ; 
@@ -787,8 +787,8 @@ std::ostream& LoKi::Decays::Trees::MCOptional::fillStream
 // ============================================================================
 // MANDATORY: the only one essential method
 // ============================================================================
-bool LoKi::Decays::Trees::MCOptional::operator() 
-  ( LoKi::Decays::iTree_<const LHCb::MCParticle*>::argument p ) const 
+bool Decays::Trees::MCOptional::operator() 
+  ( Decays::iTree_<const LHCb::MCParticle*>::argument p ) const 
 {
   // reset the cache (ALWAYS!!!)
   i_reset () ;
@@ -796,10 +796,10 @@ bool LoKi::Decays::Trees::MCOptional::operator()
   if ( !ok ( p )                      ) { return false ; }        // RETURN 
   // perform the real matching:
   // (1) get the proper decay sections:
-  LoKi::Decays::MCSections sections ;
+  Decays::MCSections sections ;
   makeSections ( p , alg() , decayOnly() , sections ) ;
   // (2) loop over all sections
-  for (  LoKi::Decays::MCSections::iterator isect = sections.begin() ; 
+  for (  Decays::MCSections::iterator isect = sections.begin() ; 
          sections.end() != isect ; ++isect )
   {
     // (3) try to match the section 
@@ -820,7 +820,7 @@ bool LoKi::Decays::Trees::MCOptional::operator()
       if ( std::equal ( childBegin() , childEnd() , isect->begin() , Equal() ) )
       {
         // the temporary iterator 
-        LoKi::Decays::MCSection::iterator aux = isect->begin() + nChildren() ;
+        Decays::MCSection::iterator aux = isect->begin() + nChildren() ;
         // create the local container for permutations 
         SubTrees opt ( m_optional ) ;
         std::stable_sort ( opt.begin () , opt.end() ) ; // sort it!!!
@@ -841,41 +841,41 @@ bool LoKi::Decays::Trees::MCOptional::operator()
 // ============================================================================
 // add one more daughter to the decay 
 // ============================================================================
-void LoKi::Decays::Trees::MCOptional::addOptional 
-( const LoKi::Decays::iTree_<PARTICLE>& tree ) 
+void Decays::Trees::MCOptional::addOptional 
+( const Decays::iTree_<PARTICLE>& tree ) 
 { m_optional.push_back ( tree ) ; }
 // ============================================================================
 // add one more daughter to the decay 
 // ============================================================================
-void LoKi::Decays::Trees::MCOptional::addOptional 
-( const LoKi::Decays::iNode& node ) 
+void Decays::Trees::MCOptional::addOptional 
+( const Decays::iNode& node ) 
 { m_optional.push_back ( MCExclusive ( node ) ) ; }
 // ============================================================================
 // add one more daughter to the decay 
 // ============================================================================
-void LoKi::Decays::Trees::MCOptional::addOptional 
-( const LHCb::Decay::Item& node ) 
-{ addOptional ( LoKi::Decays::Nodes::Pid ( node ) ) ; }
+void Decays::Trees::MCOptional::addOptional 
+( const Decays::Decay::Item& node ) 
+{ addOptional ( Decays::Nodes::Pid ( node ) ) ; }
 // ============================================================================
 // add one more daughter to the decay 
 // ============================================================================
-void LoKi::Decays::Trees::MCOptional::addOptional 
+void Decays::Trees::MCOptional::addOptional 
 ( const std::string& node ) 
-{ addOptional ( LoKi::Decays::Nodes::Pid ( node ) ) ; }
+{ addOptional ( Decays::Nodes::Pid ( node ) ) ; }
 // ============================================================================
 // add one more daughter to the decay 
 // ============================================================================
-void LoKi::Decays::Trees::MCOptional::addOptional 
+void Decays::Trees::MCOptional::addOptional 
 ( const LHCb::ParticleID& node ) 
-{ addOptional ( LoKi::Decays::Nodes::Pid ( node ) ) ; }
+{ addOptional ( Decays::Nodes::Pid ( node ) ) ; }
 // ============================================================================
 // add one more daughter to the decay 
 // ============================================================================
-void LoKi::Decays::Trees::MCOptional::addOptional 
-( const ParticleProperty* node ) 
-{ addOptional ( LoKi::Decays::Nodes::Pid ( node ) ) ; }
+void Decays::Trees::MCOptional::addOptional 
+( const LHCb::ParticleProperty* node ) 
+{ addOptional ( Decays::Nodes::Pid ( node ) ) ; }
 // ============================================================================
-void LoKi::Decays::Trees::MCOptional::setOptional 
+void Decays::Trees::MCOptional::setOptional 
 ( const std::vector<std::string>& optional ) 
 {
   m_optional.clear() ;
@@ -883,7 +883,7 @@ void LoKi::Decays::Trees::MCOptional::setOptional
         optional.end() != item ; ++item ) { addOptional( *item ) ; }
 }
 // ============================================================================
-void LoKi::Decays::Trees::MCOptional::setOptional 
+void Decays::Trees::MCOptional::setOptional 
 ( const std::vector<LHCb::ParticleID>& optional ) 
 {
   m_optional.clear() ;
@@ -899,59 +899,59 @@ void LoKi::Decays::Trees::MCOptional::setOptional
 // ============================================================================
 // constructor from the node (mother) and subtrees 
 // ============================================================================
-LoKi::Decays::Trees::Photos::Photos
-( const LoKi::Decays::iNode&                   mother     , 
-  const LoKi::Decays::Trees::Photos::SubTrees& children   ,
-  const LoKi::Decays::Trees::Alg               alg        , 
+Decays::Trees::Photos::Photos
+( const Decays::iNode&                   mother     , 
+  const Decays::Trees::Photos::SubTrees& children   ,
+  const Decays::Trees::Alg               alg        , 
   const bool                                   decayOnly  ,
-  const LoKi::Decays::Trees::Oscillation       oscillation ) 
-  : LoKi::Decays::Trees::MCExclusive ( mother    , children , alg , 
+  const Decays::Trees::Oscillation       oscillation ) 
+  : Decays::Trees::MCExclusive ( mother    , children , alg , 
                                        decayOnly , oscillation ) 
   , m_photon    ( "gamma"   )
 {}
 // ============================================================================
 // constructor from the node (mother) and subtrees 
 // ============================================================================
-LoKi::Decays::Trees::Photos::Photos
+Decays::Trees::Photos::Photos
 ( const std::string&                           mother     , 
-  const LoKi::Decays::Trees::Photos::SubTrees& children   ,
-  const LoKi::Decays::Trees::Alg               alg        , 
+  const Decays::Trees::Photos::SubTrees& children   ,
+  const Decays::Trees::Alg               alg        , 
   const bool                                   decayOnly  ,
-  const LoKi::Decays::Trees::Oscillation       oscillation ) 
-  : LoKi::Decays::Trees::MCExclusive ( mother    , children , alg , 
+  const Decays::Trees::Oscillation       oscillation ) 
+  : Decays::Trees::MCExclusive ( mother    , children , alg , 
                                        decayOnly , oscillation ) 
   , m_photon    ( "gamma"   )
 {}
 // ============================================================================
 // constructor from the node (mother) and subtrees 
 // ============================================================================
-LoKi::Decays::Trees::Photos::Photos
+Decays::Trees::Photos::Photos
 ( const LHCb::ParticleID&                      mother     , 
-  const LoKi::Decays::Trees::Photos::SubTrees& children   ,
-  const LoKi::Decays::Trees::Alg               alg        , 
+  const Decays::Trees::Photos::SubTrees& children   ,
+  const Decays::Trees::Alg               alg        , 
   const bool                                   decayOnly  ,
-  const LoKi::Decays::Trees::Oscillation       oscillation ) 
-  : LoKi::Decays::Trees::MCExclusive ( mother    , children , alg , 
+  const Decays::Trees::Oscillation       oscillation ) 
+  : Decays::Trees::MCExclusive ( mother    , children , alg , 
                                        decayOnly , oscillation ) 
     , m_photon    ( "gamma"   )
 {}
 // ============================================================================
 // constructor from the decay
 // ============================================================================
-LoKi::Decays::Trees::Photos::Photos
-( const LHCb::Decay&                           decay      , 
-  const LoKi::Decays::Trees::Alg               alg        , 
-  const bool                                   decayOnly  ,
-  const LoKi::Decays::Trees::Oscillation       oscillation ) 
-  : LoKi::Decays::Trees::MCExclusive ( decay , alg , decayOnly , oscillation ) 
+Decays::Trees::Photos::Photos
+( const Decays::Decay&                   decay      , 
+  const Decays::Trees::Alg               alg        , 
+  const bool                             decayOnly  ,
+  const Decays::Trees::Oscillation       oscillation ) 
+  : Decays::Trees::MCExclusive ( decay , alg , decayOnly , oscillation ) 
   , m_photon    ( "gamma"   )
 {}
 // ============================================================================
 // constructor from the decay
 // ============================================================================
-LoKi::Decays::Trees::Photos::Photos
-( const  LoKi::Decays::Trees::MCExclusive& right ) 
-  : LoKi::Decays::Trees::MCExclusive  ( right ) 
+Decays::Trees::Photos::Photos
+( const  Decays::Trees::MCExclusive& right ) 
+  : Decays::Trees::MCExclusive  ( right ) 
   , m_photon    ( "gamma"   )
 {}
 
@@ -962,8 +962,8 @@ LoKi::Decays::Trees::Photos::Photos
 // ============================================================================
 // MANDATORY: the proper validation of the tree
 // ============================================================================
-StatusCode LoKi::Decays::Trees::Photos::validate 
-( IParticlePropertySvc* svc ) const 
+StatusCode Decays::Trees::Photos::validate 
+( const LHCb::IParticlePropertySvc* svc ) const 
 {
   StatusCode sc = m_photon.validate ( svc ) ;
   return sc.isFailure() ? sc : MCExclusive::validate ( svc ) ;  // RETURN 
@@ -971,16 +971,16 @@ StatusCode LoKi::Decays::Trees::Photos::validate
 // ============================================================================
 // MANDATORY: the specific printout 
 // ============================================================================
-std::ostream& LoKi::Decays::Trees::Photos::fillStream ( std::ostream& s ) const 
+std::ostream& Decays::Trees::Photos::fillStream ( std::ostream& s ) const 
 {
   //
   s << " (" ;
   //
   switch ( oscillation () ) 
   {
-  case LoKi::Decays::Trees::Oscillated    : 
+  case Decays::Trees::Oscillated    : 
     s << "[" << mother () << "]os "  ; break ;  // BREAK 
-  case LoKi::Decays::Trees::NotOscillated : 
+  case Decays::Trees::NotOscillated : 
     s << "[" << mother () << "]nos " ; break ;  // BREAK 
   default:
     s <<        mother ()            ; 
@@ -1000,8 +1000,8 @@ std::ostream& LoKi::Decays::Trees::Photos::fillStream ( std::ostream& s ) const
 // ============================================================================
 // MANDATORY: the only one essential method
 // ============================================================================
-bool LoKi::Decays::Trees::Photos::operator() 
-  ( LoKi::Decays::iTree_<const LHCb::MCParticle*>::argument p ) const 
+bool Decays::Trees::Photos::operator() 
+  ( Decays::iTree_<const LHCb::MCParticle*>::argument p ) const 
 {
   // reset the cache (ALWAYS!!!)
   i_reset () ;
@@ -1009,10 +1009,10 @@ bool LoKi::Decays::Trees::Photos::operator()
   if ( !ok ( p )                      ) { return false ; }        // RETURN 
   // perform the real matching:
   // (1) get the proper decay sections:
-  LoKi::Decays::MCSections sections ;
+  Decays::MCSections sections ;
   makeSections ( p , alg() , decayOnly() , sections ) ;
   // (2) loop over all sections
-  for (  LoKi::Decays::MCSections::iterator isect = sections.begin() ; 
+  for (  Decays::MCSections::iterator isect = sections.begin() ; 
          sections.end() != isect ; ++isect )
   {
     // (3) try to match the section 
@@ -1048,56 +1048,56 @@ bool LoKi::Decays::Trees::Photos::operator()
 // ============================================================================
 // PHOTOSOPTIONAL
 // ============================================================================
-LoKi::Decays::Trees::PhotosOptional::PhotosOptional
-( const LoKi::Decays::iNode&                        mother     , 
-  const LoKi::Decays::Trees::MCExclusive::SubTrees& children   ,
-  const LoKi::Decays::Trees::MCExclusive::SubTrees& optional   ,
-  const LoKi::Decays::Trees::Alg                    alg        ,
+Decays::Trees::PhotosOptional::PhotosOptional
+( const Decays::iNode&                        mother     , 
+  const Decays::Trees::MCExclusive::SubTrees& children   ,
+  const Decays::Trees::MCExclusive::SubTrees& optional   ,
+  const Decays::Trees::Alg                    alg        ,
   const bool                                        decayOnly  , 
-  const LoKi::Decays::Trees::Oscillation            oscillation ) 
-  : LoKi::Decays::Trees::MCOptional ( mother , children , optional , alg , decayOnly , oscillation )
+  const Decays::Trees::Oscillation            oscillation ) 
+  : Decays::Trees::MCOptional ( mother , children , optional , alg , decayOnly , oscillation )
   , m_photon ( "gamma")  
 {}
 // ============================================================================
-LoKi::Decays::Trees::PhotosOptional::PhotosOptional
-( const LoKi::Decays::iNode&                        mother     , 
-  const LoKi::Decays::Trees::MCExclusive::SubTrees& children   ,
-  const LoKi::Decays::iNode&                        optional   ,
-  const LoKi::Decays::Trees::Alg                    alg        ,
+Decays::Trees::PhotosOptional::PhotosOptional
+( const Decays::iNode&                        mother     , 
+  const Decays::Trees::MCExclusive::SubTrees& children   ,
+  const Decays::iNode&                        optional   ,
+  const Decays::Trees::Alg                    alg        ,
   const bool                                        decayOnly  , 
-  const LoKi::Decays::Trees::Oscillation            oscillation ) 
-  : LoKi::Decays::Trees::MCOptional ( mother , children , optional , alg , decayOnly , oscillation )
+  const Decays::Trees::Oscillation            oscillation ) 
+  : Decays::Trees::MCOptional ( mother , children , optional , alg , decayOnly , oscillation )
     , m_photon ( "gamma")  
 {}
 // ============================================================================
-LoKi::Decays::Trees::PhotosOptional::PhotosOptional
-( const LoKi::Decays::iNode&                           mother     , 
-  const LoKi::Decays::Trees::MCExclusive::SubTrees&    children   ,
-  const LoKi::Decays::iTree_<const LHCb::MCParticle*>& optional   ,
-  const LoKi::Decays::Trees::Alg                       alg        ,
+Decays::Trees::PhotosOptional::PhotosOptional
+( const Decays::iNode&                           mother     , 
+  const Decays::Trees::MCExclusive::SubTrees&    children   ,
+  const Decays::iTree_<const LHCb::MCParticle*>& optional   ,
+  const Decays::Trees::Alg                       alg        ,
   const bool                                           decayOnly  , 
-  const LoKi::Decays::Trees::Oscillation               oscillation ) 
-  : LoKi::Decays::Trees::MCOptional ( mother , children , optional , alg , decayOnly , oscillation )
+  const Decays::Trees::Oscillation               oscillation ) 
+  : Decays::Trees::MCOptional ( mother , children , optional , alg , decayOnly , oscillation )
   , m_photon ( "gamma")  
 {}
 // ============================================================================
-LoKi::Decays::Trees::PhotosOptional::PhotosOptional
-( const LoKi::Decays::Trees::MCOptional& right ) 
-  : LoKi::Decays::Trees::MCOptional ( right )
+Decays::Trees::PhotosOptional::PhotosOptional
+( const Decays::Trees::MCOptional& right ) 
+  : Decays::Trees::MCOptional ( right )
   , m_photon ( "gamma")  
 {}
 // ============================================================================
-LoKi::Decays::Trees::PhotosOptional::PhotosOptional
-( const LoKi::Decays::Trees::MCExclusive&           right    ,   
-  const LoKi::Decays::Trees::MCExclusive::SubTrees& optional ) 
-  : LoKi::Decays::Trees::MCOptional ( right , optional )
+Decays::Trees::PhotosOptional::PhotosOptional
+( const Decays::Trees::MCExclusive&           right    ,   
+  const Decays::Trees::MCExclusive::SubTrees& optional ) 
+  : Decays::Trees::MCOptional ( right , optional )
   , m_photon ( "gamma")  
 {}
 // ============================================================================
-LoKi::Decays::Trees::PhotosOptional::PhotosOptional
-( const LoKi::Decays::Trees::MCExclusive& right    ,   
+Decays::Trees::PhotosOptional::PhotosOptional
+( const Decays::Trees::MCExclusive& right    ,   
   const std::vector<std::string>&         optional ) 
-  : LoKi::Decays::Trees::MCOptional ( right , optional )
+  : Decays::Trees::MCOptional ( right , optional )
     , m_photon ( "gamma")  
 {}
 
@@ -1105,13 +1105,13 @@ LoKi::Decays::Trees::PhotosOptional::PhotosOptional
 // ============================================================================
 // MANDATORY: check the validity of the tree 
 // ============================================================================
-bool LoKi::Decays::Trees::PhotosOptional::valid() const 
+bool Decays::Trees::PhotosOptional::valid() const 
 { return MCOptional::valid() && m_photon.valid() ; }
 // ============================================================================
 // MANDATORY: the proper validation of the tree
 // ============================================================================
-StatusCode LoKi::Decays::Trees::PhotosOptional::validate 
-( IParticlePropertySvc* svc ) const 
+StatusCode Decays::Trees::PhotosOptional::validate 
+( const LHCb::IParticlePropertySvc* svc ) const 
 { 
   StatusCode sc = m_photon.validate ( svc ) ;
   return sc.isFailure() ? sc : MCOptional::validate ( svc ) ;
@@ -1119,7 +1119,7 @@ StatusCode LoKi::Decays::Trees::PhotosOptional::validate
 // ============================================================================
 // MANDATORY: the specific printout 
 // ============================================================================
-std::ostream& LoKi::Decays::Trees::PhotosOptional::fillStream 
+std::ostream& Decays::Trees::PhotosOptional::fillStream 
 ( std::ostream& s ) const 
 {
   //
@@ -1127,9 +1127,9 @@ std::ostream& LoKi::Decays::Trees::PhotosOptional::fillStream
   //
   switch ( oscillation () ) 
   {
-  case LoKi::Decays::Trees::Oscillated    : 
+  case Decays::Trees::Oscillated    : 
     s << "[" << mother () << "]os "  ; break ;  // BREAK 
-  case LoKi::Decays::Trees::NotOscillated : 
+  case Decays::Trees::NotOscillated : 
     s << "[" << mother () << "]nos " ; break ;  // BREAK 
   default:
     s <<        mother ()            ; 
@@ -1154,8 +1154,8 @@ std::ostream& LoKi::Decays::Trees::PhotosOptional::fillStream
 // ============================================================================
 // MANDATORY: the only one essential method
 // ============================================================================
-bool LoKi::Decays::Trees::PhotosOptional::operator() 
-  ( LoKi::Decays::iTree_<const LHCb::MCParticle*>::argument p ) const 
+bool Decays::Trees::PhotosOptional::operator() 
+  ( Decays::iTree_<const LHCb::MCParticle*>::argument p ) const 
 {
   // reset the cache (ALWAYS!!!)
   i_reset () ;
@@ -1163,10 +1163,10 @@ bool LoKi::Decays::Trees::PhotosOptional::operator()
   if ( !ok ( p )                      ) { return false ; }        // RETURN 
   // perform the real matching:
   // (1) get the proper decay sections:
-  LoKi::Decays::MCSections sections ;
+  Decays::MCSections sections ;
   makeSections ( p , alg() , decayOnly() , sections ) ;
   // (2) loop over all sections
-  for (  LoKi::Decays::MCSections::iterator isect = sections.begin() ; 
+  for (  Decays::MCSections::iterator isect = sections.begin() ; 
          sections.end() != isect ; ++isect )
   {
     // (3) try to match the section 
@@ -1186,7 +1186,7 @@ bool LoKi::Decays::Trees::PhotosOptional::operator()
       if ( std::equal ( childBegin() , childEnd() , isect->begin() , Equal() ) )
       {
         // the temporary iterator 
-        LoKi::Decays::MCSection::iterator aux = isect->begin() + nChildren() ;
+        Decays::MCSection::iterator aux = isect->begin() + nChildren() ;
         // nothing to match? 
         if ( aux == isect->end() ) { return true ; } // RETURN
         // create the local container for permutations 
@@ -1231,66 +1231,66 @@ bool LoKi::Decays::Trees::PhotosOptional::operator()
  *  @date 2008-07-07
  */
 // ============================================================================
-LoKi::Decays::Trees::And_<const LHCb::MCParticle*>
+Decays::Trees::And_<const LHCb::MCParticle*>
 operator&& 
-( const LoKi::Decays::iTree_<const LHCb::MCParticle*>& t , 
-  const LoKi::Decays::iNode&                           n ) 
-{ return t && LoKi::Decays::Trees::MCExclusive ( n ) ; }
+( const Decays::iTree_<const LHCb::MCParticle*>& t , 
+  const Decays::iNode&                           n ) 
+{ return t && Decays::Trees::MCExclusive ( n ) ; }
 // ============================================================================
 /*  operator for easy construction of trees 
  *  @author Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
  *  @date 2008-07-07
  */
 // ============================================================================
-LoKi::Decays::Trees::And_<const LHCb::MCParticle*>
+Decays::Trees::And_<const LHCb::MCParticle*>
 operator&& 
-( const LoKi::Decays::iTree_<const LHCb::MCParticle*>& t , 
+( const Decays::iTree_<const LHCb::MCParticle*>& t , 
   const std::string&                                   n ) 
-{ return t && LoKi::Decays::Trees::MCExclusive ( n ) ; }
+{ return t && Decays::Trees::MCExclusive ( n ) ; }
 // ============================================================================
 /*  operator for the easy construction of trees 
  *  @author Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
  *  @date 2008-07-07
  */
 // ============================================================================
-LoKi::Decays::Trees::And_<const LHCb::MCParticle*>
+Decays::Trees::And_<const LHCb::MCParticle*>
 operator&& 
-( const LoKi::Decays::iTree_<const LHCb::MCParticle*>& t , 
+( const Decays::iTree_<const LHCb::MCParticle*>& t , 
   const LHCb::ParticleID&                              n ) 
-{ return t && LoKi::Decays::Trees::MCExclusive ( n ) ; }
+{ return t && Decays::Trees::MCExclusive ( n ) ; }
 // ============================================================================
 /*  operator for easy construction of trees 
  *  @author Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
  *  @date 2008-07-07
  */
 // ============================================================================
-LoKi::Decays::Trees::Or_<const LHCb::MCParticle*>
+Decays::Trees::Or_<const LHCb::MCParticle*>
 operator|| 
-( const LoKi::Decays::iTree_<const LHCb::MCParticle*>& t , 
-  const LoKi::Decays::iNode&                           n ) 
-{ return t || LoKi::Decays::Trees::MCExclusive ( n ) ; }
+( const Decays::iTree_<const LHCb::MCParticle*>& t , 
+  const Decays::iNode&                           n ) 
+{ return t || Decays::Trees::MCExclusive ( n ) ; }
 // ============================================================================
 /*  operator for easy construction of trees 
  *  @author Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
  *  @date 2008-07-07
  */
 // ============================================================================
-LoKi::Decays::Trees::Or_<const LHCb::MCParticle*>
+Decays::Trees::Or_<const LHCb::MCParticle*>
 operator||
-( const LoKi::Decays::iTree_<const LHCb::MCParticle*>& t , 
+( const Decays::iTree_<const LHCb::MCParticle*>& t , 
   const std::string&                                   n ) 
-{ return t || LoKi::Decays::Trees::MCExclusive ( n ) ; }
+{ return t || Decays::Trees::MCExclusive ( n ) ; }
 // ============================================================================
 /*  operator for the easy construction of trees 
  *  @author Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
  *  @date 2008-07-07
  */
 // ============================================================================
-LoKi::Decays::Trees::Or_<const LHCb::MCParticle*>
+Decays::Trees::Or_<const LHCb::MCParticle*>
 operator||
-( const LoKi::Decays::iTree_<const LHCb::MCParticle*>& t , 
+( const Decays::iTree_<const LHCb::MCParticle*>& t , 
   const LHCb::ParticleID&                              n ) 
-{ return t || LoKi::Decays::Trees::MCExclusive ( n ) ; }
+{ return t || Decays::Trees::MCExclusive ( n ) ; }
 // ============================================================================
 
 
