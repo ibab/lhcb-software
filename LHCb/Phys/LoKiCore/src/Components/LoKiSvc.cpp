@@ -1,4 +1,4 @@
-// $Id: LoKiSvc.cpp,v 1.17 2008-08-04 10:56:46 ibelyaev Exp $
+// $Id: LoKiSvc.cpp,v 1.18 2008-12-04 14:37:31 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -11,13 +11,19 @@
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/ISvcLocator.h"
+#include "GaudiKernel/IAlgManager.h"
 #include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/IAlgContextSvc.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IIncidentSvc.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
+#include "GaudiKernel/IHistogramSvc.h"
+#include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/ServiceLocatorHelper.h"
+// ============================================================================
+// PartProp
+// ============================================================================
+#include "Kernel/IParticlePropertySvc.h"
 // ============================================================================
 // LoKiCore 
 // ============================================================================
@@ -27,7 +33,7 @@
 #include "LoKi/Welcome.h"
 #include "LoKi/Exception.h"
 #include "LoKi/Services.h"
-#include "LoKi/CC.h"
+#include "LoKi/AuxFunBase.h"
 // ============================================================================
 /** @file
  *
@@ -56,107 +62,11 @@ class LoKiSvc
   : public virtual LoKi::ILoKiSvc 
   , public                Service 
 {
+  // ==========================================================================
+  // the friend factory for instantiation 
   friend class SvcFactory<LoKiSvc> ;
+  // ==========================================================================
 public:
-  // ==========================================================================
-  /** get the pointer to service locator 
-   *  @return ponter to Service Locator 
-   *  @see LoKi::ILoKiSvc
-   *  @see IScvLocator 
-   */
-  virtual ISvcLocator*          svcLoc() const 
-  { return Service::serviceLocator() ; } 
-  // ==========================================================================  
-  /** get the pointer to Particle Property Service 
-   *  @return pointer to Particle Property Service 
-   *  @see LoKi::ILoKiSvc
-   *  @see IParticlePropertySvc 
-   */
-  virtual IParticlePropertySvc* ppSvc() const 
-  {
-    if ( 0 != m_ppSvc ) { return m_ppSvc ; }
-    // locate the service 
-    StatusCode sc = service ( "ParticlePropertySvc" , m_ppSvc , true ) ;
-    if       ( sc.isFailure() ) 
-    {
-      m_ppSvc = 0 ;
-      LOKI_EXCEPTION ( "LoKiSvc: 'PPSvc' could not be located" , sc ) ; 
-    }
-    if  ( 0 == m_ppSvc ) 
-    {
-      LOKI_EXCEPTION ( "LoKiSvc: IPPSvc* points to NULL"       , sc ) ; 
-    }
-    //
-    return m_ppSvc ;
-  } 
-  // ==========================================================================
-  /** get the pointer to Tool Service 
-   *  @return pointer to Tool Service 
-   *  @see LoKi::ILoKiSvc
-   *  @see IToolSvc 
-   */
-  virtual IToolSvc*             toolSvc () const 
-  {
-    if ( 0 != m_toolSvc ) { return m_toolSvc ; }
-    // locate the service 
-    StatusCode sc = service ( "ToolSvc" , m_toolSvc , true ) ;
-    if ( sc.isFailure() ) 
-    { 
-      m_toolSvc = 0 ;
-      LOKI_EXCEPTION( "LoKiSvc: 'ToolSvc' could nto be located" , sc ) ; 
-    }
-    if ( 0 == m_toolSvc ) 
-    { 
-      LOKI_EXCEPTION( "LoKiSvc: IToolSvc* points to NULL"       , sc ) ; 
-    }
-    //
-    return m_toolSvc ;
-  } 
-  // ==========================================================================
-  /** get the pointer to Algorithm Context Service 
-   *  @return pointer to Algorithm Context Service 
-   *  @see LoKi::ILoKiSvc
-   *  @see IToolSvc 
-   */
-  virtual IAlgContextSvc* contextSvc () const 
-  {
-    if ( 0 != m_contextSvc ) { return m_contextSvc ; }
-    // locate the service 
-    StatusCode sc = service ( "AlgContextSvc" , m_contextSvc , true ) ;
-    if ( sc.isFailure() ) 
-    { 
-      m_contextSvc = 0 ;
-      LOKI_EXCEPTION( "LoKiSvc: 'AlgContextSvc' could not be located" , sc ) ; 
-    }
-    if ( 0 == m_contextSvc ) 
-    { 
-      LOKI_EXCEPTION( "LoKiSvc: IAlgContextSvc* points to NULL"       , sc ) ; 
-    }
-    //
-    return m_contextSvc ;
-  }   
-  // ==========================================================================
-  /** get the pointer to Incident Service 
-   *  @return pointer to Incident Service 
-   *  @see IIncidentSvc
-   */
-  virtual IIncidentSvc* incidentSvc () const 
-  {
-    if ( 0 != m_incidentSvc ) { return m_incidentSvc ; }
-    // locate the service 
-    StatusCode sc = service ( "IncidentSvc" , m_incidentSvc , true ) ;
-    if ( sc.isFailure() ) 
-    { 
-      m_incidentSvc = 0 ;
-      LOKI_EXCEPTION( "LoKiSvc: 'IncidentSvc' could not be located" , sc ) ; 
-    }
-    if ( 0 == m_incidentSvc ) 
-    { 
-      LOKI_EXCEPTION( "LoKiSvc: IIncicentSvc* points to NULL"       , sc ) ; 
-    }
-    //
-    return m_incidentSvc ;
-  }   
   // ==========================================================================
   /** get "good" error reporter
    *  @return pointer to Good error reporter
@@ -185,44 +95,170 @@ public:
   // ==========================================================================
 public:
   // ==========================================================================
-  /** make a charge conjugate over the 'decay' expression 
-   *  @param decay 
-   *  @return cc-expression of the decay 
+  /** get the pointer to service locator 
+   *  @return ponter to Service Locator 
+   *  @see LoKi::ILoKiSvc
+   *  @see IScvLocator 
    */
-  virtual std::string  cc ( const std::string& decay  ) const 
+  ISvcLocator*          svcLoc() const 
+  { return Service::serviceLocator() ; } 
+  // ==========================================================================
+  /** get the pointer to Particle Property Service 
+   *  @return pointer to Particle Property Service 
+   *  @see LoKi::ILoKiSvc
+   *  @see IParticlePropertySvc 
+   */
+  LHCb::IParticlePropertySvc* ppSvc() const 
   {
-    // build the map if not done yet 
-    if ( m_ccMap.empty() )  
+    if ( 0 != m_ppSvc ) { return m_ppSvc ; }
+    // locate the service 
+    StatusCode sc = service ( "LHCb::ParticlePropertySvc" , m_ppSvc , true ) ;
+    if       ( sc.isFailure() ) 
     {
-      if ( 0 == m_ppSvc ) { ppSvc() ; }
-      // get the particles form ParticleService 
-      for ( IParticlePropertySvc::const_iterator it = m_ppSvc->begin() ; 
-            m_ppSvc->end() != it ; ++it )
-      {
-        const ParticleProperty* pp = *it ;
-        if ( 0 == pp   ) { continue ; }
-        const ParticleProperty* anti = pp->antiParticle() ;
-        if ( 0 == anti ) { continue ; }
-        m_ccMap [ pp   -> particle() ] = anti->particle() ;
-      }
-      // get the particles from the options 
-      for ( std::map<std::string,std::string>::const_iterator ic = 
-              m_ccmap_.begin() ; m_ccmap_.end() != ic ; ++ic ) 
-      {
-        m_ccMap [ ic -> first  ] = ic -> second ;
-        m_ccMap [ ic -> second ] = ic -> first  ;
-      }
-      MsgStream log ( msgSvc() , name() ) ;
-      log  << MSG::DEBUG ;
-      if ( log.isActive() ) 
-      {
-        Gaudi::Utils::toStream ( m_ccMap , log.stream() ) ;
-        log << endreq ;
-      }
+      m_ppSvc = 0 ;
+      LOKI_EXCEPTION ( "LoKiSvc: 'PPSvc' could not be located" , sc ) ; 
     }
-    // use the map 
-    return LoKi::CC::cc_ ( decay , m_ccMap ) ;
-  }
+    if  ( 0 == m_ppSvc ) 
+    {
+      LOKI_EXCEPTION ( "LoKiSvc: IPPSvc* points to NULL"       , sc ) ; 
+    }
+    //
+    return m_ppSvc ;
+  } 
+  // ==========================================================================  
+  /** get the pointer to Tool Service 
+   *  @return pointer to Tool Service 
+   *  @see LoKi::ILoKiSvc
+   *  @see IToolSvc 
+   */
+  IToolSvc*             toolSvc () const 
+  {
+    if ( 0 != m_toolSvc ) { return m_toolSvc ; }
+    // locate the service 
+    StatusCode sc = service ( "ToolSvc" , m_toolSvc , true ) ;
+    if ( sc.isFailure() ) 
+    { 
+      m_toolSvc = 0 ;
+      LOKI_EXCEPTION( "LoKiSvc: 'ToolSvc' could nto be located" , sc ) ; 
+    }
+    if ( 0 == m_toolSvc ) 
+    { 
+      LOKI_EXCEPTION( "LoKiSvc: IToolSvc* points to NULL"       , sc ) ; 
+    }
+    //
+    return m_toolSvc ;
+  } 
+  // ==========================================================================
+  /** get the pointer to Algorithm Context Service 
+   *  @return pointer to Algorithm Context Service 
+   *  @see LoKi::ILoKiSvc
+   *  @see IToolSvc 
+   */
+  IAlgContextSvc* contextSvc () const 
+  {
+    if ( 0 != m_contextSvc ) { return m_contextSvc ; }
+    // locate the service 
+    StatusCode sc = service ( "AlgContextSvc" , m_contextSvc , true ) ;
+    if ( sc.isFailure() ) 
+    { 
+      m_contextSvc = 0 ;
+      LOKI_EXCEPTION( "LoKiSvc: 'AlgContextSvc' could not be located" , sc ) ; 
+    }
+    if ( 0 == m_contextSvc ) 
+    { 
+      LOKI_EXCEPTION( "LoKiSvc: IAlgContextSvc* points to NULL"       , sc ) ; 
+    }
+    //
+    return m_contextSvc ;
+  }   
+  // ==========================================================================
+  /** get the pointer to Incident Service 
+   *  @return pointer to Incident Service 
+   *  @see IIncidentSvc
+   */
+  IIncidentSvc* incidentSvc () const 
+  {
+    if ( 0 != m_incidentSvc ) { return m_incidentSvc ; }
+    // locate the service 
+    StatusCode sc = service ( "IncidentSvc" , m_incidentSvc , true ) ;
+    if ( sc.isFailure() ) 
+    { 
+      m_incidentSvc = 0 ;
+      LOKI_EXCEPTION( "LoKiSvc: 'IncidentSvc' could not be located" , sc ) ; 
+    }
+    if ( 0 == m_incidentSvc ) 
+    { 
+      LOKI_EXCEPTION( "LoKiSvc: IIncicentSvc* points to NULL"       , sc ) ; 
+    }
+    //
+    return m_incidentSvc ;
+  }   
+  // ==========================================================================
+  /** get the pointer to Histogram Service  
+   *  @return pointer to Histogram Service 
+   *  @see IIncidentSvc
+   */
+  IHistogramSvc* histoSvc () const 
+  {
+    if ( 0 != m_histoSvc ) { return m_histoSvc ; }
+    // locate the service 
+    StatusCode sc = service ( "HistogramDataSvc" , m_histoSvc , true ) ;
+    if ( sc.isFailure() ) 
+    { 
+      m_histoSvc = 0 ;
+      LOKI_EXCEPTION( "LoKiSvc: 'HistogramDataSvc' could not be located" , sc ) ; 
+    }
+    if ( 0 == m_histoSvc ) 
+    { 
+      LOKI_EXCEPTION( "LoKiSvc: IHistogramSvc* points to NULL"       , sc ) ; 
+    }
+    //
+    return m_histoSvc ;
+  }   
+  // ==========================================================================
+  /** get the pointer to Event Data Provider 
+   *  @return pointer to Event Data Provider 
+   *  @see IDataPrioviderSvc
+   */
+  IDataProviderSvc* evtSvc () const 
+  {
+    if ( 0 != m_evtSvc ) { return m_evtSvc ; }
+    // locate the service 
+    StatusCode sc = service ( "EventDataSvc" , m_evtSvc , true ) ;
+    if ( sc.isFailure() ) 
+    { 
+      m_evtSvc = 0 ;
+      LOKI_EXCEPTION( "LoKiSvc: 'EventDataSvc' could not be located" , sc ) ; 
+    }
+    if ( 0 == m_evtSvc ) 
+    { 
+      LOKI_EXCEPTION( "LoKiSvc: IDataProviderSvc* points to NULL"       , sc ) ; 
+    }
+    //
+    return m_evtSvc ;
+  }   
+  // ==========================================================================
+  /** get the pointer to Random Numbers Service 
+   *  @return pointer to Random Numbers Service 
+   *  @see IRndmGenSvc 
+   */
+  IRndmGenSvc* rndmSvc () const 
+  {
+    if ( 0 != m_rndmSvc ) { return m_rndmSvc ; }
+    // locate the service 
+    StatusCode sc = service ( "RndmGenSvc" , m_rndmSvc , true ) ;
+    if ( sc.isFailure() ) 
+    { 
+      m_rndmSvc = 0 ;
+      LOKI_EXCEPTION( "LoKiSvc: 'RndmGenSvc' could not be located" , sc ) ; 
+    }
+    if ( 0 == m_rndmSvc ) 
+    { 
+      LOKI_EXCEPTION( "LoKiSvc: IRndmGenSvc* points to NULL"       , sc ) ; 
+    }
+    //
+    return m_rndmSvc ;
+  }   
   // ==========================================================================
 public:
   // ==========================================================================
@@ -246,6 +282,7 @@ public:
   { 
     StatusCode sc = Service::initialize () ;
     if ( sc.isFailure() ) { return sc ; }
+    //
     //
     { // welcome message 
       MsgStream log ( msgSvc() , name() ) ;
@@ -275,12 +312,14 @@ public:
     LoKi::Services& svc = LoKi::Services::instance() ;
     if ( 0 == svc.lokiSvc() ) { svc.setLoKi ( this ) ; }
     //
+    // validate AuxFunBase 
+    if ( !LoKi::AuxFunBase::lokiSvc() ) 
+    { LoKi::AuxFunBase::setLoKiSvc ( this ) ; }
+    //
     LoKi::ErrorReport& rep = LoKi::ErrorReport::instance() ;
     if ( 0 == rep.reporter() && 0 != m_reporter ) 
     { rep.setReporter ( m_reporter ) ; }
     // 
-    m_ccMap.clear() ;
-    //
     return StatusCode::SUCCESS ;
   }   
   // ==========================================================================
@@ -307,10 +346,16 @@ public:
       if ( 0 == isvc  ) { return StatusCode::FAILURE ; }     // RETURN 
       isvc -> removeListener ( this ) ;
     }
+    // Invalidate AuxFunBase 
+    if ( LoKi::AuxFunBase::lokiSvc().same( this ) ) 
+    { LoKi::AuxFunBase::setLoKiSvc ( 0 ) ; }
     //
     if ( 0 != m_toolSvc     ) { m_toolSvc     -> release() ; m_toolSvc     = 0 ; }    
     if ( 0 != m_ppSvc       ) { m_ppSvc       -> release() ; m_ppSvc       = 0 ; }    
     if ( 0 != m_contextSvc  ) { m_contextSvc  -> release() ; m_contextSvc  = 0 ; }    
+    if ( 0 != m_histoSvc    ) { m_histoSvc    -> release() ; m_histoSvc    = 0 ; }    
+    if ( 0 != m_evtSvc      ) { m_evtSvc      -> release() ; m_evtSvc      = 0 ; }    
+    if ( 0 != m_rndmSvc     ) { m_rndmSvc     -> release() ; m_rndmSvc     = 0 ; }    
     if ( 0 != m_incidentSvc ) { m_incidentSvc -> release() ; m_incidentSvc = 0 ; } 
     //
     LoKi::ErrorReport& rep = LoKi::ErrorReport::instance() ;
@@ -322,8 +367,6 @@ public:
       LoKi::Welcome::instance ().goodbye( log.stream() ) ;
       log << endreq ;
     }
-    //
-    m_ccMap.clear() ;
     //
     return Service::finalize() ;
   } 
@@ -344,9 +387,16 @@ public:
       isvc -> removeListener ( this ) ; 
     }
     //
+    // Invalidate AuxFunBase 
+    if ( LoKi::AuxFunBase::lokiSvc().same( this ) ) 
+    { LoKi::AuxFunBase::setLoKiSvc ( 0 ) ; }
+    //
     if ( 0 != m_toolSvc      ) { m_toolSvc     -> release () ; m_toolSvc     = 0 ; }    
     if ( 0 != m_ppSvc        ) { m_ppSvc       -> release () ; m_ppSvc       = 0 ; }
     if ( 0 != m_contextSvc   ) { m_contextSvc  -> release () ; m_contextSvc  = 0 ; }
+    if ( 0 != m_histoSvc     ) { m_histoSvc    -> release () ; m_histoSvc    = 0 ; }
+    if ( 0 != m_evtSvc       ) { m_evtSvc      -> release () ; m_evtSvc      = 0 ; }
+    if ( 0 != m_rndmSvc      ) { m_rndmSvc     -> release () ; m_rndmSvc     = 0 ; }
     if ( 0 != m_incidentSvc  ) { m_incidentSvc -> release () ; m_incidentSvc = 0 ; }
     //
     {
@@ -362,7 +412,9 @@ public:
       if ( 0 == svc.lokiSvc() ) { svc.setLoKi( this ) ; }
     }
     //
-    m_ccMap.clear() ;
+    // validate AuxFunBase 
+    if ( !LoKi::AuxFunBase::lokiSvc() ) 
+    { LoKi::AuxFunBase::setLoKiSvc ( this ) ; }
     //
     { // welcome message 
       MsgStream log ( msgSvc() , name() ) ;
@@ -398,7 +450,7 @@ public:
     else if ( IToolSvc::interfaceID             () == iid && 0 != toolSvc     () )
     { return toolSvc     ()     -> queryInterface ( iid , ppI ) ;}
     // Particle Property Service 
-    else if ( IParticlePropertySvc::interfaceID () == iid && 0 != ppSvc       () ) 
+    else if ( LHCb::IParticlePropertySvc::interfaceID () == iid && 0 != ppSvc () ) 
     { return ppSvc       ()     -> queryInterface ( iid , ppI ) ; }
     // Algorithm  Context Service 
     else if ( IAlgContextSvc::interfaceID       () == iid && 0 != contextSvc  () ) 
@@ -409,6 +461,18 @@ public:
     // ServiceLocator  
     else if ( ISvcLocator::interfaceID          () == iid && 0 != svcLoc      () ) 
     { return svcLoc      ()     -> queryInterface ( iid , ppI ) ; }
+    // IAlgManager 
+    else if ( IAlgManager::interfaceID          () == iid && 0 != svcLoc      () ) 
+    { return svcLoc      ()     -> queryInterface ( iid , ppI ) ; }
+    // IHistogramSvc 
+    else if ( IHistogramSvc::interfaceID        () == iid && 0 != histoSvc    () ) 
+    { return histoSvc    ()     -> queryInterface ( iid , ppI ) ; }
+    // IDataProviderSvc 
+    else if ( IDataProviderSvc::interfaceID     () == iid && 0 != evtSvc      () ) 
+    { return evtSvc      ()     -> queryInterface ( iid , ppI ) ; }
+    // IRndmGenSvc 
+    else if ( IRndmGenSvc::interfaceID          () == iid && 0 != rndmSvc     () ) 
+    { return rndmSvc     ()     -> queryInterface ( iid , ppI ) ; }
     // a bit more fun with the reporter 
     else if ( LoKi::IReporter::interfaceID      () == iid && 0 != reporter    () ) 
     { return reporter    ()     -> queryInterface ( iid , ppI ) ; }
@@ -435,32 +499,16 @@ protected:
     , m_toolSvc      (  0 ) 
     , m_contextSvc   (  0 ) 
     , m_incidentSvc  (  0 ) 
+    , m_histoSvc     (  0 ) 
+    , m_evtSvc       (  0 ) 
+    , m_rndmSvc      (  0 ) 
     , m_reporter     (  0 )
     , m_reporterName ( "LoKi::Reporter/REPORT")
     , m_event        ( -1 )
-    , m_ccMap        ()
-    , m_ccmap_       ()
     //
   {
     declareProperty 
       ( "Reporter" , m_reporterName , "The type/name of default Reporter tool") ;
-    /// @see file Nodes.cpp 
-    m_ccmap_ [ "X+"       ] = "X-"       ; // charged, positive
-    m_ccmap_ [ "X-"       ] = "X+"       ; // charged, negative 
-    m_ccmap_ [ "l+"       ] = "l-"       ; // charged lepton, positive 
-    m_ccmap_ [ "l-"       ] = "l+"       ; // charged lepton, negative
-    // prevent soem other symbols from inproper conversions
-    m_ccmap_ [ "Meson"    ] = "Meson"    ; // the generic meson 
-    m_ccmap_ [ "Hadron"   ] = "Hadron"   ; // the generic hadron
-    m_ccmap_ [ "Baryon"   ] = "Baryon"   ; // the generic baryon
-    m_ccmap_ [ "Lepton"   ] = "Lepton"   ; // the generic lepton
-    m_ccmap_ [ "Nu"       ] = "Nu"       ; // the generic neutrino
-    m_ccmap_ [ "HasQuark" ] = "HasQuark" ; // for protection 
-    m_ccmap_ [ "JSpin"    ] = "JSpin"    ; // for protection
-    //
-    declareProperty 
-      ( "ChargeConjugations" , m_ccmap_ , 
-        "The map of charge-conjugation symbols" ) ; // see Nodes.cpp 
   } 
   // ==========================================================================
   /// virtual and protected destructor
@@ -473,6 +521,9 @@ protected:
     if ( 0 != m_ppSvc       ) { m_ppSvc       -> release() ; m_ppSvc       = 0 ; } 
     if ( 0 != m_contextSvc  ) { m_contextSvc  -> release() ; m_contextSvc  = 0 ; } 
     if ( 0 != m_incidentSvc ) { m_incidentSvc -> release() ; m_incidentSvc = 0 ; } 
+    if ( 0 != m_histoSvc    ) { m_histoSvc    -> release() ; m_histoSvc    = 0 ; } 
+    if ( 0 != m_evtSvc      ) { m_evtSvc      -> release() ; m_evtSvc      = 0 ; } 
+    if ( 0 != m_rndmSvc     ) { m_rndmSvc     -> release() ; m_rndmSvc     = 0 ; } 
   }   
   // ==========================================================================
 private:
@@ -487,23 +538,25 @@ private:
 private:
   // ==========================================================================
   /// the particle property service 
-  mutable IParticlePropertySvc* m_ppSvc        ; // the particle property service 
+  mutable LHCb::IParticlePropertySvc* m_ppSvc  ; // the particle property service 
   /// the tool service 
   mutable IToolSvc*             m_toolSvc      ;            // the tool service 
   /// the context service 
   mutable IAlgContextSvc*       m_contextSvc   ;         // the context service 
   /// the incident service 
   mutable IIncidentSvc*         m_incidentSvc  ;        // the incident service 
+  /// the histogram service 
+  mutable IHistogramSvc*        m_histoSvc     ;        //    histogram service 
+  /// the event data service 
+  mutable IDataProviderSvc*     m_evtSvc       ;        //   event data service 
+  /// random numbers service 
+  mutable IRndmGenSvc*          m_rndmSvc      ;        //       random numbers 
   /// the default reporter 
   mutable LoKi::IReporter*      m_reporter     ;        // the default reporter 
   /// the name of the default reporter 
-  std::string                   m_reporterName ; // the name of the default reporter 
+  std::string                   m_reporterName ;        // the name of reporter 
   /// the event marker 
   long                          m_event        ;            // the event marker
-  /// the CC-map 
-  mutable LoKi::CC::Map         m_ccMap        ;                  // the CC-map 
-  /// CC-map for properties 
-  std::map<std::string,std::string> m_ccmap_   ;                      // CC-map
   // ==========================================================================
 };
 // ============================================================================

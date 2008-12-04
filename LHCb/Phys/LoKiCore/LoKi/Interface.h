@@ -1,4 +1,4 @@
-// $Id: Interface.h,v 1.11 2008-11-29 13:24:59 ibelyaev Exp $
+// $Id: Interface.h,v 1.12 2008-12-04 14:37:31 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_INTERFACE_H 
 #define LOKI_INTERFACE_H 1
@@ -95,6 +95,23 @@ namespace LoKi
       //
       return *this ;                                  // RETURN 
     } 
+    // ========================================================================
+  public:
+    // ========================================================================
+    /// comparison with raw pointer 
+    bool operator== ( const TYPE* other ) const 
+    { return m_object == other ; }
+    /// comparison with same type pointer 
+    bool operator== ( const Interface<TYPE>& other ) const 
+    { return m_object == other.m_object ; }
+    /// comparison with other type of pointer 
+    template <class OTHER>
+    bool operator== ( const Interface<OTHER>& other ) const 
+    { return m_object == other.m_object ; }
+    // ========================================================================
+  public:
+    // ========================================================================
+    bool same ( const TYPE* other ) const { return m_object == other ; }
     // ========================================================================
   public:
     // ========================================================================

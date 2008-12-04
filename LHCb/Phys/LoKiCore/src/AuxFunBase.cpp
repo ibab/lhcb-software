@@ -1,4 +1,4 @@
-// $Id: AuxFunBase.cpp,v 1.11 2008-10-19 16:11:40 ibelyaev Exp $
+// $Id: AuxFunBase.cpp,v 1.12 2008-12-04 14:37:31 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -47,24 +47,48 @@
  *  @date 2001-01-23 
  */
 // ============================================================================
-namespace LoKi
+namespace
 {
   // ==========================================================================
-  /** static instance counter for all functions 
-   */
+  /// static instance counter for all functions
   // ==========================================================================
 #ifdef LOKI_DEBUG
-  static InstanceCounter<AuxFunBase>  s_AuxFunBaseCounter  ;
+  static InstanceCounter<LoKi::AuxFunBase>  s_AuxFunBaseCounter  ;
 #endif 
   // ==========================================================================
+  /// LoKi service
+  // ==========================================================================
+  LoKi::Interface<LoKi::ILoKiSvc> s_lokiSvc = LoKi::Interface<LoKi::ILoKiSvc>() ;
+  // ========================================================================
+}
+// ============================================================================
+// STATIC: get LoKi service 
+// ============================================================================
+const LoKi::Interface<LoKi::ILoKiSvc>& LoKi::AuxFunBase::lokiSvc () 
+{ return s_lokiSvc ; }
+// ============================================================================
+// STATIC: set LoKi service 
+// ============================================================================
+bool  LoKi::AuxFunBase::setLoKiSvc 
+( const LoKi::ILoKiSvc*  svc ) 
+{
+  s_lokiSvc = svc ;
+  return s_lokiSvc.validPointer() ;
+}
+// ============================================================================
+// STATIC: set LoKi service 
+// ============================================================================
+bool LoKi::AuxFunBase::setLoKiSvc 
+( const LoKi::Interface<LoKi::ILoKiSvc>& svc ) 
+{
+  s_lokiSvc = svc ;
+  return s_lokiSvc.validPointer() ;
 }
 // ============================================================================
 // constructor from LoKi Service
 // ============================================================================
-LoKi::AuxFunBase::AuxFunBase  
-( const LoKi::ILoKiSvc* svc ) 
+LoKi::AuxFunBase::AuxFunBase () 
   : m_event   ( -1  )
-  , m_lokiSvc ( svc )
 {
 #ifdef LOKI_DEBUG
   // increment the instance counter
@@ -76,7 +100,6 @@ LoKi::AuxFunBase::AuxFunBase
 // ============================================================================
 LoKi::AuxFunBase::AuxFunBase( const AuxFunBase& func  ) 
   : m_event   ( func.m_event   ) 
-  , m_lokiSvc ( func.m_lokiSvc )
 {
 #ifdef LOKI_DEBUG
   // increment the instance counter
@@ -106,7 +129,7 @@ StatusCode LoKi::AuxFunBase::Error
   const StatusCode&  sc  ) const 
 {
   sc.ignore() ;
-  return LoKi::Report::Error( objType() + ": \t" + msg  , sc ) ; 
+  return LoKi::Report::Error ( objType() + ": \t" + msg  , sc ) ; 
 }
 // ============================================================================
 /*  print Warning message 
@@ -134,9 +157,9 @@ void LoKi::AuxFunBase::Exception
 {
   sc.ignore() ;
   //
-  LoKi::Report::Error( objType() + " *EXCEPTION* : \t" + msg  , sc ) ;
+  LoKi::Report::Error ( objType() + " *EXCEPTION* : \t" + msg  , sc ) ;
   //
-  throw LoKi::Exception( objType() + ": \t" + msg , sc ) ;
+  throw LoKi::Exception ( objType() + ": \t" + msg , sc ) ;
   //
 }
 // ============================================================================
@@ -170,7 +193,7 @@ std::string LoKi::AuxFunBase::objType () const
 /// unique function ID (hash); see LoKi::genericID 
 // ============================================================================
 std::size_t LoKi::AuxFunBase::id () const 
-{ return LoKi::genericID( *this ) ; }
+{ return LoKi::genericID ( *this ) ; }
 // ============================================================================
 /*  output operator of function objects to std::ostream 
  *  @param stream refeence to the stream
@@ -201,27 +224,12 @@ MsgStream&    operator<<
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  */
 // ============================================================================
-std::size_t LoKi::genericID( const AuxFunBase& o ) 
+std::size_t LoKi::genericID ( const LoKi::AuxFunBase& o ) 
 {
   // Use Boost::hash
   std::size_t _id = boost::hash_value ( o.printOut() ) ;
   // make a cyclic shift to 12 bits left 
   return LoKi::Shifts::cyclicShiftLeft ( _id , 12 ) ;
-}
-// ============================================================================
-// get LoKi service 
-// ============================================================================
-const LoKi::Interface<LoKi::ILoKiSvc>& 
-LoKi::AuxFunBase::lokiSvc () const 
-{
-  // return valid service (if available) 
-  if ( m_lokiSvc.validPointer() ) { return m_lokiSvc ;  }
-  // get pointer form Sevices
-  const LoKi::Services& svc = LoKi::Services::instance() ;
-  m_lokiSvc = svc.lokiSvc() ;
-  if ( !m_lokiSvc )
-  { Error ( "lokiSvc(): invalid pointer to LoKi::ILoKiSvc") ; } 
-  return m_lokiSvc ;
 }
 // ============================================================================
 // set the event-ID from LoKi service 

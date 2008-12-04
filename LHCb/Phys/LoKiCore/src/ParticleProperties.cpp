@@ -1,21 +1,18 @@
-// $Id: ParticleProperties.cpp,v 1.11 2008-10-29 13:35:59 ibelyaev Exp $
+// $Id: ParticleProperties.cpp,v 1.12 2008-12-04 14:37:31 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
 // GaudiKernel
 // ============================================================================
-#include "GaudiKernel/ParticleProperty.h"
-// ============================================================================
-// Gaudi Units (previously CLHEP)
-// ============================================================================
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/VectorMap.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
 // ============================================================================
 // Kernel
 // ============================================================================
 #include "Kernel/ParticleID.h"
+#include "Kernel/ParticleProperty.h"
+#include "Kernel/IParticlePropertySvc.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -44,21 +41,6 @@
  *  @date 2001-01-23 
  */
 // ============================================================================
-namespace std
-{
-  template<>
-  struct less<LHCb::ParticleID>
-    : public std::binary_function<const LHCb::ParticleID,
-                                  const LHCb::ParticleID,bool>
-  {
-    inline bool operator() ( const LHCb::ParticleID& i , 
-                             const LHCb::ParticleID& j ) const
-    { return i.pid() < j.pid() ; }
-  } ;
-  template<>
-  struct less<const LHCb::ParticleID> : public std::less<LHCb::ParticleID> {};
-}
-// ============================================================================
 /*  retrieve particle ID from Particle name 
  *  @param name particle name 
  *  @return particle ID 
@@ -67,8 +49,8 @@ namespace std
 LHCb::ParticleID LoKi::Particles::pidFromName( const std::string& name ) 
 {
   typedef GaudiUtils::VectorMap<std::string,LHCb::ParticleID> Map ;
-  // ATTENTION
-  static Map s_map ; ///< ATTENTION
+  /// ATTENTION
+  static Map s_map ; // ATTENTION
   if ( s_map.empty() ) 
   {
     s_map.insert (  "gamma" , LHCb::ParticleID(    22 )) ;
@@ -87,18 +69,18 @@ LHCb::ParticleID LoKi::Particles::pidFromName( const std::string& name )
   Map::const_iterator ifind = s_map.find( name ) ;
   if ( s_map.end() != ifind ) { return ifind->second ; }               // RETURN
   //
-  const ParticleProperty* pp = ppFromName( name ) ;
+  const LHCb::ParticleProperty* pp = ppFromName( name ) ;
   if( 0 == pp ) 
   {
     LoKi::Report::Error 
       ( std::string(" LoKi::Particles::pidFromName:") +
-        "ParticleProperty* points to NULL for '"      + 
+        "LHCb::ParticleProperty* points to NULL for '"      + 
         name + "' return ParticleID() " ) ;
     return LHCb::ParticleID();
   }
   // update the map:
-  s_map.insert ( name , LHCb::ParticleID( pp->jetsetID()) ) ;
-  return LHCb::ParticleID( pp->jetsetID() );
+  s_map.insert ( name , pp->particleID() ) ;
+  return pp -> particleID() ;
 }
 // ============================================================================
 /*  retrieve particle ID from Particle name 
@@ -106,20 +88,20 @@ LHCb::ParticleID LoKi::Particles::pidFromName( const std::string& name )
  *  @return particle ID 
  */
 // ============================================================================
-const ParticleProperty* LoKi::Particles::_ppFromName
+const LHCb::ParticleProperty* LoKi::Particles::_ppFromName
 ( const std::string& name ) 
 {
   const LoKi::Services& services = LoKi::Services::instance () ;
-  IParticlePropertySvc* ppSvc = services.ppSvc();
+  LHCb::IParticlePropertySvc* ppSvc = services.ppSvc();
   if( 0 == ppSvc ) 
   {
     LoKi::Report::Error
       ( std::string(" LoKi::Particles::pidFromName:") + 
-        "IParticlePropertySvc* points to NULL!"       + 
+        "LHCb::IParticlePropertySvc* points to NULL!"       + 
         " return NULL " ) ;
     return 0 ;
   }
-  const ParticleProperty* pp = ppSvc -> find( name ) ;
+  const LHCb::ParticleProperty* pp = ppSvc -> find( name ) ;
   return pp ;
 }
 // ============================================================================
@@ -128,10 +110,10 @@ const ParticleProperty* LoKi::Particles::_ppFromName
  *  @return particle ID 
  */
 // ============================================================================
-const ParticleProperty* LoKi::Particles::ppFromName
+const LHCb::ParticleProperty* LoKi::Particles::ppFromName
 ( const std::string& name ) 
 {
-  const ParticleProperty* pp = LoKi::Particles::_ppFromName ( name ) ;
+  const LHCb::ParticleProperty* pp = LoKi::Particles::_ppFromName ( name ) ;
   if ( 0 == pp ) 
   {
     LoKi::Report::Error
@@ -148,21 +130,21 @@ const ParticleProperty* LoKi::Particles::ppFromName
  *  @param particle property 
  */
 // ============================================================================
-const ParticleProperty* LoKi::Particles::_ppFromPID
+const LHCb::ParticleProperty* LoKi::Particles::_ppFromPID
 ( const LHCb::ParticleID& pid ) 
 {
   const LoKi::Services& services = LoKi::Services::instance () ;
-  IParticlePropertySvc* ppSvc = services.ppSvc();
+  LHCb::IParticlePropertySvc* ppSvc = services.ppSvc();
   if( 0 == ppSvc ) 
   {
     LoKi::Report::Error
       ( std::string(" LoKi::Particles::_ppFromPID(")   + 
-        boost::lexical_cast<std::string>( pid.pid() )  + 
-        "): IParticlePropertySvc* points to NULL!"     + 
+        boost::lexical_cast<std::string>( pid )  + 
+        "): LHCb::IParticlePropertySvc* points to NULL!"     + 
         " return NULL " ) ;
     return 0 ;
   }
-  const ParticleProperty* pp = ppSvc -> findByStdHepID( pid.pid() ) ;
+  const LHCb::ParticleProperty* pp = ppSvc -> find ( pid ) ;
   //
   return pp ;
 }
@@ -172,16 +154,16 @@ const ParticleProperty* LoKi::Particles::_ppFromPID
  *  @param particle property 
  */
 // ============================================================================
-const ParticleProperty* LoKi::Particles::ppFromPID
+const LHCb::ParticleProperty* LoKi::Particles::ppFromPID
 ( const LHCb::ParticleID& pid ) 
 {
-  const ParticleProperty* pp = LoKi::Particles::_ppFromPID( pid ) ;
+  const LHCb::ParticleProperty* pp = LoKi::Particles::_ppFromPID( pid ) ;
   if( 0 == pp ) 
   {
     LoKi::Report::Error
       ( std::string(" LoKi::Particles::ppFromPID(")    +
-        boost::lexical_cast<std::string>( pid.pid() )  + 
-        "): ParticleProperty* points to NULL,"         + 
+        boost::lexical_cast<std::string>( pid )  + 
+        "): LHCb::ParticleProperty* points to NULL,"         + 
         " return NULL " ) ;
     return 0 ;
   }
@@ -195,13 +177,13 @@ const ParticleProperty* LoKi::Particles::ppFromPID
 // ============================================================================
 double LoKi::Particles::massFromPID  ( const LHCb::ParticleID& pid   ) 
 {
-  const ParticleProperty* pp = LoKi::Particles::ppFromPID( pid ) ;
+  const LHCb::ParticleProperty* pp = LoKi::Particles::ppFromPID( pid ) ;
   if ( 0 == pp ) 
   {
     LoKi::Report::Error 
       ( " LoKi::Particles::massFromPID(" +
-        boost::lexical_cast<std::string>( pid.pid() ) + 
-        ") : ParticleProperty* points to NULL, return -1 * TeV " ) ;
+        boost::lexical_cast<std::string>( pid ) + 
+        ") : LHCb::ParticleProperty* points to NULL, return -1 * TeV " ) ;
     return -1.0 * Gaudi::Units::TeV  ;
   }
   return pp->mass() ;
@@ -214,13 +196,13 @@ double LoKi::Particles::massFromPID  ( const LHCb::ParticleID& pid   )
 // ============================================================================
 double LoKi::Particles::massFromName ( const std::string&  name ) 
 {
-  const ParticleProperty* pp = LoKi::Particles::ppFromName( name ) ;
+  const LHCb::ParticleProperty* pp = LoKi::Particles::ppFromName( name ) ;
   if ( 0 == pp ) 
   {
     LoKi::Report::Error
       ( std::string(" LoKi::Particles::massFromName('") + 
         name + "')" + 
-        "ParticleProperty* points to NULL, return -1 * TeV " ) ;
+        "LHCb::ParticleProperty* points to NULL, return -1 * TeV " ) ;
     return -1.0 * Gaudi::Units::TeV  ;
   }
   return pp->mass() ;
@@ -233,7 +215,7 @@ double LoKi::Particles::massFromName ( const std::string&  name )
 // ============================================================================
 std::string LoKi::Particles::antiParticle( const std::string&      name ) 
 {
-  const ParticleProperty* pp = LoKi::Particles::ppFromName( name ) ;
+  const LHCb::ParticleProperty* pp = LoKi::Particles::ppFromName( name ) ;
   if ( 0 == pp ) 
   {
     LoKi::Report::Error
@@ -243,7 +225,7 @@ std::string LoKi::Particles::antiParticle( const std::string&      name )
         s_InvalidPIDName+"'" ) ;
     return s_InvalidPIDName ;
   }
-  const ParticleProperty* antiPP = LoKi::Particles::antiParticle( pp ) ;
+  const LHCb::ParticleProperty* antiPP = LoKi::Particles::antiParticle( pp ) ;
   if ( 0 == antiPP ) 
   {
     LoKi::Report::Error
@@ -261,8 +243,8 @@ std::string LoKi::Particles::antiParticle( const std::string&      name )
  *  @return anme of antiParticle 
  */
 // ============================================================================
-const ParticleProperty* 
-LoKi::Particles::antiParticle ( const ParticleProperty* pp ) 
+const LHCb::ParticleProperty* 
+LoKi::Particles::antiParticle ( const LHCb::ParticleProperty* pp ) 
 {
   if ( 0 == pp ) 
   {
@@ -271,7 +253,7 @@ LoKi::Particles::antiParticle ( const ParticleProperty* pp )
         "ParticleProperty* points to NULL, return NULL" ) ;
     return 0 ;
   }
-  const ParticleProperty* antiPP = pp->antiParticle() ;
+  const LHCb::ParticleProperty* antiPP = pp->antiParticle() ;
   if ( 0 == antiPP ) 
   {
     LoKi::Report::Error
@@ -291,25 +273,25 @@ LoKi::Particles::antiParticle ( const ParticleProperty* pp )
 LHCb::ParticleID LoKi::Particles::antiParticle( const LHCb::ParticleID& pid  ) 
 {
   // check the validity of own pid 
-  const ParticleProperty* p1 = LoKi::Particles::_ppFromPID( pid ) ;
+  const LHCb::ParticleProperty* p1 = LoKi::Particles::_ppFromPID( pid ) ;
   //
   if ( 0 == p1 ) 
   {
     LoKi::Report::Error
       ( " LoKi::Particles::antiParticle("              + 
-        boost::lexical_cast<std::string>( pid.pid() )  + 
-        "): ParticleProperty* points to NULL "         + 
+        boost::lexical_cast<std::string> ( pid )  + 
+        "): LHCb::ParticleProperty* points to NULL "         + 
         " return LHCb::ParticleID()  "                 ) ;
     return LHCb::ParticleID()  ;
   }
   // get the anti particle 
-  const ParticleProperty* antiPP = p1->antiParticle() ;
+  const LHCb::ParticleProperty* antiPP = p1->antiParticle() ;
   if ( 0 == p1 ) 
   {
     LoKi::Report::Error
       ( " LoKi::Particles::antiParticle("              + 
-        boost::lexical_cast<std::string>( pid.pid() )  + 
-        "): ParticleProperty* points to NULL "         + 
+        boost::lexical_cast<std::string> ( pid )  + 
+        "): LHCb::ParticleProperty* points to NULL "         + 
         " return LHCb::ParticleID()  "                 ) ;
     return LHCb::ParticleID()  ;
   }
@@ -345,18 +327,18 @@ std::string  LoKi::Particles::nameFromPID ( const LHCb::ParticleID& pid )
   Map::const_iterator ifind = s_map.find( pid ) ;
   if ( s_map.end() != ifind ) { return ifind->second ; }               // RETURN 
   //
-  const ParticleProperty* pp = LoKi::Particles::_ppFromPID( pid ) ;
+  const LHCb::ParticleProperty* pp = LoKi::Particles::_ppFromPID( pid ) ;
   if ( 0 == pp ) 
   {
     LoKi::Report::Error
       ( " LoKi::Particles::nameFromPID("               + 
-        boost::lexical_cast<std::string>( pid.pid() )  + 
-        "): ParticleProperty* points to NULL "         + 
+        boost::lexical_cast<std::string>( pid )  + 
+        "): LHCb::ParticleProperty* points to NULL "         + 
         " return '" + s_InvalidPIDName + "'"           ) ;
     return s_InvalidPIDName ;
   }
   // update the map
-  s_map.insert ( LHCb::ParticleID( pid ) , pp->particle() ) ;                        // RETURN 
+  s_map.insert ( pid , pp->particle() ) ;                        // RETURN 
   return pp->particle() ;
 }
 // ============================================================================
@@ -364,10 +346,10 @@ std::string  LoKi::Particles::nameFromPID ( const LHCb::ParticleID& pid )
  *  @param name particle name 
  */
 // ============================================================================
-double LoKi::Particles::lifeTime     
+double LoKi::Particles::ctau 
 ( const std::string&      name ) 
 {
-  const ParticleProperty* pp = LoKi::Particles::_ppFromName ( name ) ;
+  const LHCb::ParticleProperty* pp = LoKi::Particles::_ppFromName ( name ) ;
   if ( 0 == pp )
   {
     LoKi::Report::Error
@@ -377,27 +359,27 @@ double LoKi::Particles::lifeTime
     return LoKi::Constants::InvalidTime ;
   }
   //
-  return pp -> lifetime() * Gaudi::Units::c_light ;
+  return pp -> ctau () ;
 } 
 // ============================================================================
 /*  retrieve the lifetime for the particle form the name 
  *  @param name particle name 
  */
 // ============================================================================
-double LoKi::Particles::lifeTime     
+double LoKi::Particles::ctau     
 ( const LHCb::ParticleID& pid ) 
 {
-  const ParticleProperty* pp = LoKi::Particles::_ppFromPID ( pid ) ;
+  const LHCb::ParticleProperty* pp = LoKi::Particles::_ppFromPID ( pid ) ;
   if ( 0 == pp )
   {
     LoKi::Report::Error
       ( "LoKi::Particles::lifeTime('" + 
-        boost::lexical_cast<std::string>( pid.pid() )  + 
-        "'): ParticleProperty* is NULL");
+        boost::lexical_cast<std::string>( pid )  + 
+        "'): LHCb::ParticleProperty* is NULL");
     return LoKi::Constants::InvalidTime ;
   }
   //
-  return pp -> lifetime() * Gaudi::Units::c_light ;
+  return pp -> ctau () ;
 } 
 // ============================================================================
 

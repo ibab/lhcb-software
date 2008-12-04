@@ -1,4 +1,4 @@
-// $Id: AuxFunBase.h,v 1.11 2008-11-29 13:24:59 ibelyaev Exp $
+// $Id: AuxFunBase.h,v 1.12 2008-12-04 14:37:30 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_AUXFUNBASE_H 
 #define LOKI_AUXFUNBASE_H 1
@@ -52,7 +52,7 @@ namespace LoKi
   public:    // to please Visual C++ compiler
     // ========================================================================
     /// constructor from LoKi Service
-    AuxFunBase  ( const LoKi::ILoKiSvc* svc = 0 ) ; 
+    AuxFunBase  () ; 
     // copy consructor 
     AuxFunBase  ( const AuxFunBase&     right ) ; //</ copy consructor 
     // destructor 
@@ -65,21 +65,21 @@ namespace LoKi
      *  @param msg  error message 
      *  @param sc   status code 
      */
-    virtual StatusCode Error
+    StatusCode Error
     ( const std::string& msg                                             , 
       const StatusCode&  sc  = StatusCode ( StatusCode::FAILURE , true ) ) const ;
     /** print warning message 
      *  @param msg  warning message 
      *  @param sc   status code 
      */
-    virtual StatusCode Warning
+    StatusCode Warning
     ( const std::string& msg                                             , 
       const StatusCode&  sc  = StatusCode ( StatusCode::FAILURE , true ) ) const ;
     /** thrown an exception 
      *  @param msg  warning message 
      *  @param sc   status code 
      */
-    virtual void Exception
+    void Exception
     ( const std::string& msg                                             , 
       const StatusCode&  sc  = StatusCode ( StatusCode::FAILURE , true ) ) const ;
     /** assert the condition 
@@ -137,26 +137,20 @@ namespace LoKi
   public:
     // ========================================================================
     /// get LoKi service 
-    const LoKi::Interface<LoKi::ILoKiSvc>& lokiSvc () const ;
-    /// get LoKi service 
-    const LoKi::ILoKiSvc*               getLokiSvc () const { return lokiSvc() ; }
+    static const LoKi::Interface<LoKi::ILoKiSvc>& lokiSvc () ;
     /// set LoKi service 
-    void setLoKiSvc 
-    (                       LoKi::ILoKiSvc*  svc ) const { m_lokiSvc = svc ; }
+    static bool  setLoKiSvc ( const LoKi::ILoKiSvc*  svc ) ;
     /// set LoKi service 
-    void setLoKiSvc 
-    ( const LoKi::Interface<LoKi::ILoKiSvc>& svc ) const { m_lokiSvc = svc ; }
+    static bool  setLoKiSvc ( const LoKi::Interface<LoKi::ILoKiSvc>& svc ) ;
     // ========================================================================
   private:
     // ========================================================================
     /// the event ID 
     mutable long m_event ;                                      // the event ID 
-    /// LoKi service
-    mutable LoKi::Interface<LoKi::ILoKiSvc> m_lokiSvc ;         // LoKi service
-    // ========================================================================
+    /// =======================================================================
   };
   // ==========================================================================
-  /** simple fuction to generate the default generic 
+  /** simple function to generate the default generic 
    *  (hopefully unique?) ID for the functor 
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    */

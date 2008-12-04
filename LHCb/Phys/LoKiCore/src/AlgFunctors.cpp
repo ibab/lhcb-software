@@ -1,4 +1,4 @@
-// $Id: AlgFunctors.cpp,v 1.1 2008-10-19 16:11:40 ibelyaev Exp $
+// $Id: AlgFunctors.cpp,v 1.2 2008-12-04 14:37:31 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -10,10 +10,10 @@
 // ============================================================================
 #include  "GaudiKernel/Bootstrap.h"
 #include  "GaudiKernel/ISvcLocator.h"
+#include  "GaudiKernel/IAlgorithm.h"
 #include  "GaudiKernel/IAlgManager.h"
 #include  "GaudiKernel/SmartIF.h"
 #include  "GaudiKernel/ToStream.h"
-#include  "GaudiKernel/Algorithm.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -35,41 +35,27 @@ namespace
   const IAlgManager* const s_ALGMANAGER = 0 ;
   const IAlgorithm*  const s_ALGORITHM  = 0 ;
   // ==========================================================================
-  // get the algorithm manager
-  SmartIF<IAlgManager> getAlgManager ( ISvcLocator* loc ) 
+  /// get the algorithm manager
+  inline SmartIF<IAlgManager> getAlgManager ( LoKi::ILoKiSvc* loki )
   {
-    SmartIF<IAlgManager> iam ( loc ) ;
-    if ( !iam  ) 
+    if ( 0 == loki ) { loki = LoKi::Services::instance().lokiSvc () ; }
+    SmartIF<IAlgManager> alg ( loki ) ;
+    if ( !alg ) 
     { LoKi::Report::Error 
-        ( "AlgFunctors::getAlgManager: Unable to locate Algorithm Manager" ) ; }
-    return iam ;
-  }
-  // ==========================================================================
-  // get the algorithm manager
-  SmartIF<IAlgManager> getAlgManager 
-  ( const LoKi::ILoKiSvc* loki )
-  {
-    if ( 0 == loki ) 
-    { loki = LoKi::Services::instance().lokiSvc () ; }
-    ISvcLocator* loc = 0  ;
-    if ( 0 != loki ) { loc = loki->svcLoc() ; }
-    if ( 0 == loc  ) { loc = Gaudi::svcLocator() ; }    
-    if ( 0 == loc  )
-    { LoKi::Report::Error 
-        ( "AlgFunctors::getAlgManager: Unable to locate Service Locator" ) ; }
-    return getAlgManager ( loc ) ;
+        ( "AlgFunctors::getAlgManager: Unable to locate IAlgManager" ) ; }
+    return alg ;
   }
   // =========================================================================
   // get the algorithm 
   // =========================================================================
-  LoKi::Interface<IAlgorithm> getAlgorithm 
+  inline LoKi::Interface<IAlgorithm> getAlgorithm 
   ( const std::string&    name , 
     SmartIF<IAlgManager>  iam  )
   {
     if ( !iam ) 
     {
       LoKi::Report::Error 
-        ( "AlgFunctors::getAlgorithm: IAlgManager points to NULL" ) ; 
+        ( "AlgFunctors::getAlgorithm: IAlgManager* points to NULL" ) ; 
       return LoKi::Interface<IAlgorithm>()  ; 
     }
     IAlgorithm* _a = 0 ;
@@ -90,9 +76,8 @@ namespace
   }
   // ===========================================================================
   // get the algorithm 
-  LoKi::Interface<IAlgorithm> getAlgorithm 
-  ( const std::string&    name , 
-    const LoKi::ILoKiSvc* loki )  
+  inline LoKi::Interface<IAlgorithm> getAlgorithm 
+  ( const std::string&    name , LoKi::ILoKiSvc* loki )  
   {
     SmartIF<IAlgManager> iam = getAlgManager  ( loki ) ;
     if ( !iam ) { return 0 ; }  
@@ -103,34 +88,21 @@ namespace
   struct FilterPassed : public std::unary_function<const IAlgorithm*,bool>
   {
     inline bool operator() ( const IAlgorithm* ia ) const
-    {
-      if ( 0 == ia ) { return false ; }  // RETURN 
-      const Algorithm* a = dynamic_cast<const Algorithm*> ( ia ) ;
-      if ( 0 == a  ) { return false ; }  // RETURN 
-      return a -> filterPassed () ;
-    }
+    { return 0 == ia ? false : ia -> filterPassed () ; }
   } ;
   // ========================================================================
   // is enabled ?
   struct IsEnabled : public std::unary_function<const IAlgorithm*,bool>
   {
     inline bool operator() ( const IAlgorithm* ia ) const
-    {
-      if ( 0 == ia ) { return false ; }  // RETURN 
-      const Algorithm* a = dynamic_cast<const Algorithm*> ( ia ) ;
-      if ( 0 == a  ) { return false ; }  // RETURN 
-      return a -> isEnabled () ;
-    }
+    { return 0 == ia ? false : ia -> isEnabled () ; }
   } ;
   // ==========================================================================
   // is executed ?
   struct IsExecuted : public std::unary_function<const IAlgorithm*,bool>
   {
     inline bool operator() ( const IAlgorithm* ia ) const
-    {
-      if ( 0 == ia ) { return false ; }  // RETURN 
-      return ia -> isExecuted () ;
-    }
+    { return 0 == ia ? false : ia -> isExecuted () ; }
   } ;
   // ==========================================================================
 }

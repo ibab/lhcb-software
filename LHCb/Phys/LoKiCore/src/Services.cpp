@@ -1,21 +1,19 @@
-// $Id: Services.cpp,v 1.8 2008-03-30 13:31:28 ibelyaev Exp $
+// $Id: Services.cpp,v 1.9 2008-12-04 14:37:31 ibelyaev Exp $
 // ===========================================================================
 // Include files 
 // ===========================================================================
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/ISvcLocator.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/IAlgContextSvc.h"
 #include "GaudiKernel/IHistogramSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IRndmGenSvc.h"
+#include "GaudiKernel/SmartIF.h"
 // ============================================================================
-// GaudiAlg
+// PartProp
 // ============================================================================
-#include "GaudiAlg/GetAlg.h"
-#include "GaudiAlg/GetAlgs.h"
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "Kernel/IParticlePropertySvc.h"
 // ============================================================================
 // LoKi
 // ===========================================================================
@@ -55,6 +53,7 @@ LoKi::Services::Services()
   , m_contextSvc ( 0 ) 
   , m_randSvc    ( 0 ) 
   , m_histoSvc   ( 0 ) 
+  , m_evtSvc     ( 0 ) 
 {
   LoKi::Welcome::instance() ;
 }
@@ -69,6 +68,8 @@ StatusCode LoKi::Services::releaseAll()
 {
   // release services 
   if ( 0 != m_histoSvc   ) { m_histoSvc   -> release () ; m_histoSvc   = 0 ; }
+  // 'release' the service 
+  if ( 0 != m_evtSvc     ) { m_evtSvc     -> release () ; m_evtSvc     = 0 ; }
   // release services 
   if ( 0 != m_ppSvc      ) { m_ppSvc      -> release () ; m_ppSvc      = 0 ; }
   // release services 
@@ -123,23 +124,26 @@ LoKi::ILoKiSvc* LoKi::Services::setLoKi( LoKi::ILoKiSvc* svc )
   releaseAll().ignore() ;
   // set new algorithm
   m_lokiSvc = svc ;
-  // get particle properties service from LoKi
-  if ( 0 != m_lokiSvc    ) { m_ppSvc      = m_lokiSvc -> ppSvc      () ; }
-  if ( 0 != m_ppSvc      ) { m_ppSvc      -> addRef                 () ; }
-  // get context service from the LoKi
-  if ( 0 != m_lokiSvc    ) { m_contextSvc = m_lokiSvc -> contextSvc () ; }
-  if ( 0 != m_contextSvc ) { m_contextSvc -> addRef                 () ; }
   //
   return lokiSvc();
 }
 // ===========================================================================
 // accessor to particle properties service
 // ===========================================================================
-IParticlePropertySvc* LoKi::Services::ppSvc     () const 
+LHCb::IParticlePropertySvc* LoKi::Services::ppSvc     () const 
 {
   if ( 0 != m_ppSvc ) { return m_ppSvc ; }
-  Error ( " IParticlePropertySvc* points to NULL, return NULL" ) ;
-  return 0 ;
+  SmartIF<LHCb::IParticlePropertySvc> svc ( m_lokiSvc ) ;
+  if ( !svc ) 
+  {
+    Error ( " LHCb::IParticlePropertySvc* points to NULL, return NULL" ) ;
+    return 0 ;
+  }
+  //
+  m_ppSvc = svc ;
+  m_ppSvc -> addRef () ;
+  //
+  return m_ppSvc ;
 }
 // ===========================================================================
 // accessor to context service
@@ -147,8 +151,17 @@ IParticlePropertySvc* LoKi::Services::ppSvc     () const
 IAlgContextSvc* LoKi::Services::contextSvc () const 
 {
   if ( 0 != m_contextSvc ) { return m_contextSvc ; }
-  Error ( " IParticlePropertySvc* points to NULL, return NULL" ) ;
-  return 0 ;
+  SmartIF<IAlgContextSvc> svc ( m_lokiSvc ) ;
+  if ( !svc ) 
+  {
+    Error ( " IAlgContextSvc* points to NULL, return NULL" ) ;
+    return 0 ;
+  }
+  //
+  m_contextSvc = svc ;
+  m_contextSvc -> addRef () ;
+  //
+  return m_contextSvc ;
 }
 // ===========================================================================
 // accessor to histogram service
@@ -156,27 +169,16 @@ IAlgContextSvc* LoKi::Services::contextSvc () const
 IHistogramSvc* LoKi::Services::histoSvc () const 
 {
   if ( 0 != m_histoSvc ) { return m_histoSvc ; }
-  if ( 0 == m_lokiSvc  ) 
+  SmartIF<IHistogramSvc> svc ( m_lokiSvc ) ;
+  if ( !svc ) 
   {
-    Error ( " histoSvc(): LoKi::ILoKiSvc* points to NULL, return NULL" ) ;
+    Error ( " IHistogramSvc* points to NULL, return NULL" ) ;
     return 0 ;
   }
-  ISvcLocator* loc = m_lokiSvc -> svcLoc () ;
-  if ( 0 == loc ) 
-  {
-    Error ( " histoSvc(): ISvcLocator* points to NULL, return NULL" ) ;
-    return 0 ;
-  }
-  StatusCode sc = loc->service( "HistogramDataSvc" , m_histoSvc ) ;
-  if ( sc.isFailure() ) 
-  {
-    Error ( " histoSvc(): Could not locate 'HistogramDataSvc', return NULL" , sc ) ;
-  }
-  if ( 0 == m_histoSvc ) 
-  {
-    Error ( " IHistogramSvc points to NULL, return NULL" , sc ) ;
-    return 0 ;
-  }
+  //
+  m_histoSvc = svc ;
+  m_histoSvc -> addRef () ;
+  //
   return m_histoSvc  ;
 }
 // ===========================================================================
@@ -185,27 +187,17 @@ IHistogramSvc* LoKi::Services::histoSvc () const
 IRndmGenSvc* LoKi::Services::randSvc () const 
 {
   if ( 0 != m_randSvc ) { return m_randSvc ; }
-  if ( 0 == m_lokiSvc  ) 
+  // get the service form LoKi 
+  SmartIF<IRndmGenSvc> svc ( m_lokiSvc ) ;
+  if ( !svc ) 
   {
-    Error ( " randSvc(): LoKi::ILoKiSvc* points to NULL, return NULL" ) ;
+    Error ( "IRndmGenSvc* points to NULL, return NULL" ) ;
     return 0 ;
   }
-  ISvcLocator* loc = m_lokiSvc -> svcLoc () ;
-  if ( 0 == loc ) 
-  {
-    Error ( " randSvc(): ISvcLocator* points to NULL, return NULL" ) ;
-    return 0 ;
-  }
-  StatusCode sc = loc->service( "RndmGenSvc" , m_randSvc ) ;
-  if ( sc.isFailure() ) 
-  {
-    Error ( " randSvc(): Could not locate 'RndmGenSvc', return NULL" , sc ) ;
-  }
-  if ( 0 == m_randSvc ) 
-  {
-    Error ( " IRndmGenSvc points to NULL, return NULL" , sc ) ;
-    return 0 ;
-  }
+  //
+  m_randSvc = svc ;
+  m_randSvc -> addRef() ;
+  //
   return m_randSvc  ;
 }
 // ===========================================================================
@@ -213,28 +205,19 @@ IRndmGenSvc* LoKi::Services::randSvc () const
 // ===========================================================================
 IDataProviderSvc* LoKi::Services::evtSvc     () const 
 {
-  // get the service for the last Algorithm:
-  IAlgContextSvc* ctx = contextSvc() ;
-  if ( 0 == ctx ) 
+  if ( 0 != m_evtSvc ) { return m_evtSvc ; }
+  // get the service form LoKi 
+  SmartIF<IDataProviderSvc> svc ( m_lokiSvc ) ;
+  if ( !svc ) 
   {
-    Warning ( "contextSvc(): no vaild context is established" ) ;
+    Error ( "IDataProviderSvc* points to NULL, return NULL" ) ;
     return 0 ;
   }
-  { /// get the last GaudiAlgorithm
-    GaudiAlgorithm* alg = Gaudi::Utils::getGaudiAlg ( ctx ) ;  
-    if ( 0 != alg )  { return alg->evtSvc() ; }                 // RETURN 
-  }
-  { /// get the last Algorithm 
-    IAlgorithm* alg = Gaudi::Utils::getAlgorithm 
-      ( ctx , Gaudi::Utils::AlgTypeSelector<Algorithm>() ) ;
-    if ( 0 != alg ) 
-    {
-      Algorithm* a = dynamic_cast<Algorithm*> ( alg ) ;
-      if ( 0 != a ) { return a -> evtSvc() ; }                   // RETURN 
-    }
-  }
-  Error ( "evtSvc(): no way to get the valid service, return NULL" ) ;  
-  return 0 ;
+  //
+  m_evtSvc = svc ;
+  m_evtSvc -> addRef() ;
+  //
+  return m_evtSvc  ;
 }
 // ===========================================================================
 // The END 

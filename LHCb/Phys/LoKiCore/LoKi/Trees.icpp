@@ -1,4 +1,4 @@
-// $Id: Trees.icpp,v 1.4 2008-08-04 15:08:49 ibelyaev Exp $
+// $Id: Trees.icpp,v 1.5 2008-12-04 14:37:31 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_DECAYTREES_ICPP 
 #define LOKI_DECAYTREES_ICPP 1
@@ -10,7 +10,6 @@
 // LoKi
 // ============================================================================
 #include "LoKi/Trees.h"
-#include "LoKi/Nodes.h"
 // ============================================================================
 /** @file
  *  The implementation fiel for the objects form the file Trees.h
@@ -23,9 +22,9 @@
 // constructor from the tree 
 // ============================================================================
 template <class PARTICLE>
-inline LoKi::Decays::Trees::Marked_<PARTICLE>::Marked_ 
-( const LoKi::Decays::iTree_<PARTICLE>& tree ) 
-  : LoKi::Decays::iTree_<PARTICLE>() 
+inline Decays::Trees::Marked_<PARTICLE>::Marked_ 
+( const Decays::iTree_<PARTICLE>& tree ) 
+  : Decays::iTree_<PARTICLE>() 
   , m_tree     ( tree ) 
   , m_particle ( 0    ) 
 {}
@@ -33,9 +32,9 @@ inline LoKi::Decays::Trees::Marked_<PARTICLE>::Marked_
 // copy constructor (ignore the marked particle)
 // ============================================================================
 template <class PARTICLE>
-inline LoKi::Decays::Trees::Marked_<PARTICLE>::Marked_ 
-( const LoKi::Decays::Trees::Marked_<PARTICLE>& right ) 
-  : LoKi::Decays::iTree_<PARTICLE> ( right ) 
+inline Decays::Trees::Marked_<PARTICLE>::Marked_ 
+( const Decays::Trees::Marked_<PARTICLE>& right ) 
+  : Decays::iTree_<PARTICLE> ( right ) 
   , m_tree ( right.m_tree ) 
   , m_particle ( 0 ) 
 {}
@@ -43,8 +42,8 @@ inline LoKi::Decays::Trees::Marked_<PARTICLE>::Marked_
 // MANDATORY: the only one essential method:
 // ============================================================================
 template <class PARTICLE>
-inline bool LoKi::Decays::Trees::Marked_<PARTICLE>::operator() 
-  ( typename LoKi::Decays::iTree_<PARTICLE>::argument p ) const 
+inline bool Decays::Trees::Marked_<PARTICLE>::operator() 
+  ( typename Decays::iTree_<PARTICLE>::argument p ) const 
 {
   /// reset the particle 
   m_particle = 0  ;
@@ -57,28 +56,29 @@ inline bool LoKi::Decays::Trees::Marked_<PARTICLE>::operator()
 // ============================================================================
 template <class PARTICLE>
 inline std::ostream& 
-LoKi::Decays::Trees::Marked_<PARTICLE>::fillStream ( std::ostream& s ) const 
-{ return s << " ^" << m_tree ; }
+Decays::Trees::Marked_<PARTICLE>::fillStream ( std::ostream& s ) const 
+{ return s << " ^(" << m_tree << ")"; }
 // ============================================================================
 // Check the validity
 // ============================================================================ 
 template <class PARTICLE>
 inline bool 
-LoKi::Decays::Trees::Marked_<PARTICLE>::valid() const 
+Decays::Trees::Marked_<PARTICLE>::valid() const 
 { return m_tree.tree().valid() ; }
 // ============================================================================
 // validate it
 // ============================================================================
 template <class PARTICLE>
 inline StatusCode
-LoKi::Decays::Trees::Marked_<PARTICLE>::validate
-( IParticlePropertySvc* svc ) const { return m_tree.tree().validate ( svc ) ; }
+Decays::Trees::Marked_<PARTICLE>::validate
+( const LHCb::IParticlePropertySvc* svc ) const 
+{ return m_tree.tree().validate ( svc ) ; }
 // ============================================================================
 // reset the collection cache 
 // ============================================================================
 template <class PARTICLE>
 inline void 
-LoKi::Decays::Trees::Marked_<PARTICLE>::reset () const 
+Decays::Trees::Marked_<PARTICLE>::reset () const 
 {
   // reset the own cache 
   m_particle = 0 ; 
@@ -90,8 +90,8 @@ LoKi::Decays::Trees::Marked_<PARTICLE>::reset () const
 // ============================================================================
 template <class PARTICLE>
 inline size_t 
-LoKi::Decays::Trees::Marked_<PARTICLE>::collect 
-( typename LoKi::Decays::iTree_<PARTICLE>::Collection& output ) const 
+Decays::Trees::Marked_<PARTICLE>::collect 
+( typename Decays::iTree_<PARTICLE>::Collection& output ) const 
 {
   if ( 0 != m_particle ) 
   {
@@ -110,7 +110,7 @@ LoKi::Decays::Trees::Marked_<PARTICLE>::collect
 // the source of IDs
 // ============================================================================
 template <class PARTICLE>
-inline size_t LoKi::Decays::Trees::_Tree_<PARTICLE>::getID() 
+inline size_t Decays::Trees::_Tree_<PARTICLE>::getID() 
 {
   static size_t s_ID = 0 ;
   // reset it if it becomes too large: 
@@ -125,22 +125,22 @@ inline size_t LoKi::Decays::Trees::_Tree_<PARTICLE>::getID()
 // constructor from two sub-trees 
 // ============================================================================
 template <class PARTICLE>
-inline LoKi::Decays::Trees::Op_<PARTICLE>::Op_ 
-( const LoKi::Decays::iTree_<PARTICLE>& n1 , 
-  const LoKi::Decays::iTree_<PARTICLE>& n2 ) 
-  : LoKi::Decays::iTree_<PARTICLE> () 
-    , m_trees ()
+inline Decays::Trees::Op_<PARTICLE>::Op_ 
+( const Decays::iTree_<PARTICLE>& n1 , 
+  const Decays::iTree_<PARTICLE>& n2 ) 
+  : Decays::iTree_<PARTICLE> () 
+  , m_trees ()
 {
-  m_trees.push_back ( LoKi::Decays::Trees::_Tree_<PARTICLE> ( n1 ) ) ;
-  m_trees.push_back ( LoKi::Decays::Trees::_Tree_<PARTICLE> ( n2 ) ) ;
+  m_trees.push_back ( Decays::Trees::_Tree_<PARTICLE> ( n1 ) ) ;
+  m_trees.push_back ( Decays::Trees::_Tree_<PARTICLE> ( n2 ) ) ;
 }   
 // ============================================================================
 // constructor from list of sub-trees 
 // ============================================================================
 template <class PARTICLE>
-inline LoKi::Decays::Trees::Op_<PARTICLE>::Op_ 
-( const typename LoKi::Decays::Trees::Op_<PARTICLE>::SubTrees& trees ) 
-  : LoKi::Decays::iTree_<PARTICLE> () 
+inline Decays::Trees::Op_<PARTICLE>::Op_ 
+( const typename Decays::Trees::Op_<PARTICLE>::SubTrees& trees ) 
+  : Decays::iTree_<PARTICLE> () 
   , m_trees ( trees )
 {}
 // ============================================================================
@@ -148,37 +148,36 @@ inline LoKi::Decays::Trees::Op_<PARTICLE>::Op_
 // ============================================================================
 template <class PARTICLE>
 inline bool 
-LoKi::Decays::Trees::Op_<PARTICLE>::valid() const 
-{ return !m_trees.empty() && 
-    LoKi::Decays::valid ( m_trees.begin() , m_trees.end() ) ; }
+Decays::Trees::Op_<PARTICLE>::valid() const 
+{ return !m_trees.empty() && Decays::valid ( m_trees.begin() , m_trees.end() ) ; }
 // ============================================================================
 // MANDATORY: the proper validation of the tree
 // ============================================================================
 template <class PARTICLE>
 inline StatusCode 
-LoKi::Decays::Trees::Op_<PARTICLE>::validate ( IParticlePropertySvc* svc ) const 
+Decays::Trees::Op_<PARTICLE>::validate 
+( const LHCb::IParticlePropertySvc* svc ) const 
 {
   if ( m_trees.empty() ) { return StatusCode::FAILURE ; }
-  return LoKi::Decays::validate 
-    ( m_trees.begin() , m_trees.end() , svc ) ;
+  return Decays::validate ( m_trees.begin() , m_trees.end() , svc ) ;
 }
 // ============================================================================
 // MANDATORY: reset method 
 // ============================================================================
 template <class PARTICLE>
-inline void LoKi::Decays::Trees::Op_<PARTICLE>::i_reset() const
+inline void Decays::Trees::Op_<PARTICLE>::i_reset() const
 {
   std::for_each 
     ( m_trees.begin () , 
       m_trees.end   () , 
-      std::mem_fun_ref(&LoKi::Decays::Trees::_Tree_<PARTICLE>::reset) );
+      std::mem_fun_ref(&Decays::Trees::_Tree_<PARTICLE>::reset) );
 }
 // ============================================================================
 // MANDATORY: collect all marked elements 
 // ============================================================================
 template <class PARTICLE>
-inline size_t LoKi::Decays::Trees::Op_<PARTICLE>::collect 
-( typename LoKi::Decays::iTree_<PARTICLE>::Collection& o ) const 
+inline size_t Decays::Trees::Op_<PARTICLE>::collect 
+( typename Decays::iTree_<PARTICLE>::Collection& o ) const 
 {
   size_t size = 0 ;
   for ( typename SubTrees::const_iterator it = m_trees.begin() ; 
@@ -194,28 +193,28 @@ inline size_t LoKi::Decays::Trees::Op_<PARTICLE>::collect
 // constructor from two sub-trees 
 // ============================================================================
 template <class PARTICLE>
-inline LoKi::Decays::Trees::Or_<PARTICLE>::Or_ 
-( const LoKi::Decays::iTree_<PARTICLE>& n1 , 
-  const LoKi::Decays::iTree_<PARTICLE>& n2 ) 
-  : LoKi::Decays::Trees::Op_<PARTICLE> ( n1 , n2 )  
+inline Decays::Trees::Or_<PARTICLE>::Or_ 
+( const Decays::iTree_<PARTICLE>& n1 , 
+  const Decays::iTree_<PARTICLE>& n2 ) 
+  : Decays::Trees::Op_<PARTICLE> ( n1 , n2 )  
 {}
 // ============================================================================
 // constructor from list of sub-trees 
 // ============================================================================
 template <class PARTICLE>
-inline LoKi::Decays::Trees::Or_<PARTICLE>::Or_ 
-( const typename LoKi::Decays::Trees::Op_<PARTICLE>::SubTrees& trees ) 
-  : LoKi::Decays::Trees::Op_<PARTICLE> ( trees )  
+inline Decays::Trees::Or_<PARTICLE>::Or_ 
+( const typename Decays::Trees::Op_<PARTICLE>::SubTrees& trees ) 
+  : Decays::Trees::Op_<PARTICLE> ( trees )  
 {}
 // ============================================================================
 // MANDATORY: the specific printout 
 // ============================================================================
 template <class PARTICLE>
 inline std::ostream& 
-LoKi::Decays::Trees::Or_<PARTICLE>::fillStream( std::ostream& s ) const 
+Decays::Trees::Or_<PARTICLE>::fillStream( std::ostream& s ) const 
 {
   s << " (";
-  for ( typename LoKi::Decays::Trees::Op_<PARTICLE>::SubTrees::const_iterator 
+  for ( typename Decays::Trees::Op_<PARTICLE>::SubTrees::const_iterator 
           tree = this->begin() ; this->end() != tree ; ++tree )
   { 
     if ( this->begin() != tree ) { s << "||" ; } 
@@ -228,9 +227,9 @@ LoKi::Decays::Trees::Or_<PARTICLE>::fillStream( std::ostream& s ) const
 // ============================================================================
 template <class PARTICLE>
 inline 
-LoKi::Decays::Trees::Or_<PARTICLE>& 
-LoKi::Decays::Trees::Or_<PARTICLE>::operator|= 
-( const LoKi::Decays::Trees::Or_<PARTICLE>& tree ) 
+Decays::Trees::Or_<PARTICLE>& 
+Decays::Trees::Or_<PARTICLE>::operator|= 
+( const Decays::Trees::Or_<PARTICLE>& tree ) 
 {
   this->trees().insert ( this->end() , tree.begin() , tree.end() ) ;
   return  *this ;
@@ -240,8 +239,8 @@ LoKi::Decays::Trees::Or_<PARTICLE>::operator|=
 // ============================================================================
 template <class PARTICLE>
 inline bool 
-LoKi::Decays::Trees::Or_<PARTICLE>::operator()
-  ( typename LoKi::Decays::iTree_<PARTICLE>::argument p ) const 
+Decays::Trees::Or_<PARTICLE>::operator()
+  ( typename Decays::iTree_<PARTICLE>::argument p ) const 
 {
   /// reset the components 
   this->i_reset () ;                                  // reset the components 
@@ -256,29 +255,29 @@ LoKi::Decays::Trees::Or_<PARTICLE>::operator()
 // constructor from two sub-trees 
 // ============================================================================
 template <class PARTICLE>
-inline LoKi::Decays::Trees::And_<PARTICLE>::And_ 
-( const LoKi::Decays::iTree_<PARTICLE>& n1 , 
-  const LoKi::Decays::iTree_<PARTICLE>& n2 ) 
-  : LoKi::Decays::Trees::Op_<PARTICLE> ( n1 , n2 )  
+inline Decays::Trees::And_<PARTICLE>::And_ 
+( const Decays::iTree_<PARTICLE>& n1 , 
+  const Decays::iTree_<PARTICLE>& n2 ) 
+  : Decays::Trees::Op_<PARTICLE> ( n1 , n2 )  
 {}
 // ============================================================================
 // constructor from list of sub-trees 
 // ============================================================================
 template <class PARTICLE>
-inline LoKi::Decays::Trees::And_<PARTICLE>::And_ 
-( const typename LoKi::Decays::Trees::Op_<PARTICLE>::SubTrees& trees ) 
-  : LoKi::Decays::Trees::Op_<PARTICLE> ( trees )  
+inline Decays::Trees::And_<PARTICLE>::And_ 
+( const typename Decays::Trees::Op_<PARTICLE>::SubTrees& trees ) 
+  : Decays::Trees::Op_<PARTICLE> ( trees )  
 {}
 // ============================================================================
 // MANDATORY: the specific printout 
 // ============================================================================
 template <class PARTICLE>
 inline std::ostream& 
-LoKi::Decays::Trees::And_<PARTICLE>::fillStream( std::ostream& s ) const 
+Decays::Trees::And_<PARTICLE>::fillStream( std::ostream& s ) const 
 {
   s << " (";
   //
-  for ( typename LoKi::Decays::Trees::Op_<PARTICLE>::SubTrees::const_iterator tree 
+  for ( typename Decays::Trees::Op_<PARTICLE>::SubTrees::const_iterator tree 
           = this->begin() ; this->end() != tree ; ++tree )
   { 
     if ( this->begin() != tree ) { s << "&&" ; } 
@@ -291,9 +290,9 @@ LoKi::Decays::Trees::And_<PARTICLE>::fillStream( std::ostream& s ) const
 // ============================================================================
 template <class PARTICLE>
 inline 
-LoKi::Decays::Trees::And_<PARTICLE>& 
-LoKi::Decays::Trees::And_<PARTICLE>::operator&= 
-( const LoKi::Decays::Trees::And_<PARTICLE>& tree ) 
+Decays::Trees::And_<PARTICLE>& 
+Decays::Trees::And_<PARTICLE>::operator&= 
+( const Decays::Trees::And_<PARTICLE>& tree ) 
 {
   this->trees().insert ( this->end() , tree.begin() , tree.end() ) ;
   return  *this ;
@@ -303,13 +302,13 @@ LoKi::Decays::Trees::And_<PARTICLE>::operator&=
 // ============================================================================
 template <class PARTICLE>
 inline bool 
-LoKi::Decays::Trees::And_<PARTICLE>::operator()
-  ( typename LoKi::Decays::iTree_<PARTICLE>::argument p ) const 
+Decays::Trees::And_<PARTICLE>::operator()
+  ( typename Decays::iTree_<PARTICLE>::argument p ) const 
 {
   /// reset the components 
   this->i_reset () ;                                   // reset the components 
   // 
-  for ( typename LoKi::Decays::Trees::Op_<PARTICLE>::SubTrees::const_iterator it 
+  for ( typename Decays::Trees::Op_<PARTICLE>::SubTrees::const_iterator it 
           = this->begin() ; this->end() != it ; ++it ) 
   { if ( (*it)!= p ) { return false ; } }                // RETURN 
   //                                                      
@@ -323,9 +322,9 @@ LoKi::Decays::Trees::And_<PARTICLE>::operator()
 // constructor from the node 
 // ============================================================================
 template <class PARTICLE>
-inline LoKi::Decays::Trees::Not_<PARTICLE>::Not_
-( const LoKi::Decays::iTree_<PARTICLE>& tree ) 
-  : LoKi::Decays::iTree_<PARTICLE> () 
+inline Decays::Trees::Not_<PARTICLE>::Not_
+( const Decays::iTree_<PARTICLE>& tree ) 
+  : Decays::iTree_<PARTICLE> () 
   , m_tree ( tree ) 
 {}
 // ============================================================================
@@ -333,36 +332,37 @@ inline LoKi::Decays::Trees::Not_<PARTICLE>::Not_
 // ============================================================================
 template <class PARTICLE>
 inline std::ostream& 
-LoKi::Decays::Trees::Not_<PARTICLE>::fillStream( std::ostream& s ) const 
+Decays::Trees::Not_<PARTICLE>::fillStream( std::ostream& s ) const 
 { 
-  return s << " !(" << m_tree << ") " ; 
+  return s << " ~(" << m_tree << ") " ; 
 }
 // ============================================================================
 // MANDATORY: check the validness 
 // ============================================================================
 template <class PARTICLE>
 inline bool 
-LoKi::Decays::Trees::Not_<PARTICLE>::valid () const { return m_tree.valid() ; } 
+Decays::Trees::Not_<PARTICLE>::valid () const { return m_tree.valid() ; } 
 // ============================================================================
 // MANDATORY: the proper validation of the tree
 // ============================================================================
 template <class PARTICLE>
 inline StatusCode 
-LoKi::Decays::Trees::Not_<PARTICLE>::validate ( IParticlePropertySvc* svc ) const 
+Decays::Trees::Not_<PARTICLE>::validate 
+( const LHCb::IParticlePropertySvc* svc ) const 
 { return m_tree.validate ( svc ) ; }
 // ============================================================================
 // reset the cache 
 // ============================================================================
 template <class PARTICLE>
 inline void 
-LoKi::Decays::Trees::Not_<PARTICLE>::reset() { m_tree.reset() ; }
+Decays::Trees::Not_<PARTICLE>::reset() { m_tree.reset() ; }
 // ============================================================================
 // MANDATORY: collect all marked elements 
 // ============================================================================
 template <class PARTICLE>
 inline size_t 
-LoKi::Decays::Trees::Not_<PARTICLE>::collect 
-( typename LoKi::Decays::iTree_<PARTICLE>::Collection& o ) const 
+Decays::Trees::Not_<PARTICLE>::collect 
+( typename Decays::iTree_<PARTICLE>::Collection& o ) const 
 { return m_tree.collect ( o )  ; }
 
 // ============================================================================

@@ -1,4 +1,4 @@
-// $Id: ILoKiSvc.h,v 1.8 2008-07-22 13:00:57 ibelyaev Exp $
+// $Id: ILoKiSvc.h,v 1.9 2008-12-04 14:37:31 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ILOKISVC_H 
 #define LOKI_ILOKISVC_H 1
@@ -17,7 +17,6 @@
 // ============================================================================
 // forward declarations 
 // ============================================================================
-class IParticlePropertySvc ;
 class ISvcLocator          ;
 class IToolSvc             ;
 class IAlgContextSvc       ;
@@ -41,7 +40,7 @@ namespace LoKi
 {  
   // ==========================================================================
   /** @class ILoKi ILoKiSvc.h LoKi/ILoKiSvc.h
-   *  
+   *  The major LOKi object
    *
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2006-01-16
@@ -52,36 +51,6 @@ namespace LoKi
     , virtual public IIncidentListener 
   {
   public:    
-    // ========================================================================
-    /** get the pointer to service locator 
-     *  @return ponter to Service Locator 
-     *  @see ISvcLocator 
-     */
-    virtual ISvcLocator*          svcLoc     () const = 0 ;    
-    // ========================================================================
-    /** get the pointer to Particle Property Service 
-     *  @return pointer to Particle Property Service 
-     *  @see IParticlePropertySvc 
-     */
-    virtual IParticlePropertySvc* ppSvc      () const = 0 ;    
-    // ========================================================================
-    /** get the pointer to Tool Service 
-     *  @return pointer to Tool Service 
-     *  @see IToolSvc 
-     */
-    virtual IToolSvc*             toolSvc    () const = 0 ;   
-    // ========================================================================
-    /** get the pointer to Algorithm Context Service 
-     *  @return pointer to Algorithm Context Service 
-     *  @see IAlgContextSvc 
-     */
-    virtual IAlgContextSvc*       contextSvc () const = 0 ;   
-    // ========================================================================
-    /** get the pointer to Incident Service 
-     *  @return pointer to Incident Service 
-     *  @see IIncidentSvc
-     */
-    virtual IIncidentSvc*         incidentSvc() const = 0 ;
     // ========================================================================
     /** get "good" error reporter
      *  @return pointer to Good error reporter
@@ -95,14 +64,6 @@ namespace LoKi
      */
     virtual long                 event       () const = 0 ;
     // ========================================================================
-  public:
-    // ========================================================================
-    /** make a charge conjugate over the 'decay' expression 
-     *  @param decay 
-     *  @return cc-expression of the decay 
-     */
-    virtual std::string  cc ( const std::string& decay  ) const = 0 ;
-    // ========================================================================    
   public:
     // ========================================================================
     /** Retrieve interface ID

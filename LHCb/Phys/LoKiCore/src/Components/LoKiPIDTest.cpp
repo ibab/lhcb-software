@@ -1,17 +1,19 @@
-// $Id: LoKiPIDTest.cpp,v 1.4 2008-05-28 13:40:29 cattanem Exp $
+// $Id: LoKiPIDTest.cpp,v 1.5 2008-12-04 14:37:31 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/AlgFactory.h" 
-#include "GaudiKernel/IParticlePropertySvc.h" 
-#include "GaudiKernel/ParticleProperty.h" 
 // ============================================================================
 // GaudiAlg
 // ============================================================================
 #include "GaudiAlg/GaudiAlgorithm.h" 
 // ============================================================================
+// PartProp
+// ============================================================================
+#include "Kernel/IParticlePropertySvc.h" 
+#include "Kernel/ParticleProperty.h" 
 // LoKiCore 
 // ============================================================================
 #include "LoKi/ILoKiSvc.h"
@@ -19,6 +21,7 @@
 // ============================================================================
 namespace LoKi 
 {
+  // ==========================================================================
   /** @class PIDTest
    *  Simple algorithm to veryfy the fast access to PID information
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -26,19 +29,23 @@ namespace LoKi
    */
   class PIDTest : public GaudiAlgorithm
   {
-    // the friend factory for instantiation
-    friend class AlgFactory<PIDTest> ;
+    // ========================================================================
+    /// the friend factory for instantiation
+    friend class AlgFactory<LoKi::PIDTest> ;
+    // ========================================================================
   public:
+    // ========================================================================
     /// standard initialzation
     virtual StatusCode initialize () 
     {
       StatusCode sc = GaudiAlgorithm::initialize() ;
       if ( sc.isFailure() ) { return sc ; }                     // RETURN 
       svc<LoKi::ILoKiSvc>("LoKiSvc",true) ;
-      m_svc = svc<IParticlePropertySvc>("ParticlePropertySvc",true) ;
+      m_svc = svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc",true) ;
       Assert ( 0 != m_svc , "Invalid pointer to  Particle Properety Service!" ) ;
       return StatusCode::SUCCESS ;                              // RETURN
     }
+    // ========================================================================
     virtual StatusCode execute () 
     {
       // avoid long names 
@@ -46,23 +53,25 @@ namespace LoKi
       // check
       Assert ( 0 != m_svc , "Invalid pointer to  Particle Properety Service!" ) ;
       // loop over properties:
-      for ( IParticlePropertySvc::const_iterator ipp = m_svc->begin() ; 
+      for ( LHCb::IParticlePropertySvc::iterator ipp = m_svc->begin() ; 
             m_svc->end() != ipp ; ++ipp ) 
       {
-        const ParticleProperty* pp = *ipp ;
+        const LHCb::ParticleProperty* pp = *ipp ;
         if ( 0 == pp ) { continue ; }                            // RETURN
         debug() << "Name/PID: "
                 << "'" << pp->particle() << "':" << pp->pdgID() << endreq ;
         // verify name -> pid map  
-        Assert ( pp->particle() == nameFromPID ( LHCb::ParticleID( pp->pdgID    () ))       , 
+        Assert ( pp->particle   () == nameFromPID ( pp->particleID() ) , 
                  "Mismatch in Name/PID map for '" + pp->particle() + "'" ) ;
         // verify pid  -> name map  
-        Assert ( pp->pdgID   () == pidFromName ( pp->particle () ).pid() , 
+        Assert ( pp->particleID () == pidFromName ( pp->particle ()  ) , 
                  "Mismatch in PID/Name map for '" + pp->particle() + "'" ) ;
       }
       return StatusCode::SUCCESS ;
     } 
+    // ========================================================================
   protected:
+    // ========================================================================
     /// standard constructor 
     PIDTest 
     ( const std::string& name ,
@@ -72,17 +81,23 @@ namespace LoKi
     {}
     /// virtual protected constructor 
     virtual ~PIDTest() {}
+    // ========================================================================
   private:
-    // default constructror is disabled 
-    PIDTest() ; ///< no default constructor 
-    // copy constructror is disabled 
-    PIDTest( const PIDTest& ) ; ///< no copy 
-    // assignement is disabled 
-    PIDTest& operator=( const PIDTest& ) ; ///< no assignement
+    // ========================================================================
+    /// default constructror is disabled 
+    PIDTest() ;                                      //  no default constructor 
+    /// copy constructror is disabled 
+    PIDTest( const PIDTest& ) ;                      //     no copy constructor 
+    /// assignement is disabled 
+    PIDTest& operator=( const PIDTest& ) ;           // no assignement operator
+    // ========================================================================
   private:
-    // The pointer to particle property sevice
-    IParticlePropertySvc* m_svc ; ///< The pointer to particle property sevice
+    // ========================================================================
+    /// The pointer to particle property sevice
+    LHCb::IParticlePropertySvc* m_svc ; // pointer to particle property sevice
+    // ========================================================================
   } ;
+  // ==========================================================================
 } // end of namespace LoKi 
 // ============================================================================
 // Declaration of the Algorithm Factory

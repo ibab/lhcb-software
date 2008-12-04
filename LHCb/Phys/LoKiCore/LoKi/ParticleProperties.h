@@ -1,4 +1,4 @@
-// $Id: ParticleProperties.h,v 1.8 2008-10-29 13:35:59 ibelyaev Exp $
+// $Id: ParticleProperties.h,v 1.9 2008-12-04 14:37:31 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLEPROPERTIES_H 
 #define LOKI_PARTICLEPROPERTIES_H 1
@@ -11,7 +11,7 @@
 // ============================================================================
 // forward declarations
 // ============================================================================
-class ParticleProperty ;
+namespace LHCb { class ParticleProperty ; }
 // ============================================================================
 /** @file
  *
@@ -58,25 +58,25 @@ namespace LoKi
      *  @param name particle name 
      *  @return particle property 
      */
-    const ParticleProperty* _ppFromName ( const std::string& name ) ;
+    const LHCb::ParticleProperty* _ppFromName ( const std::string& name ) ;
     // ========================================================================
     /** retrieve particle ID from Particle name 
      *  @param name particle name 
      *  @return particle property 
      */
-    const ParticleProperty* ppFromName ( const std::string& name ) ;
+    const LHCb::ParticleProperty* ppFromName ( const std::string& name ) ;
     // ========================================================================    
     /** retrieve ParticleProperty from ParticleID 
      *  @param pid particle ID 
      *  @return particle property 
      */
-    const ParticleProperty* _ppFromPID  ( const LHCb::ParticleID& pid   ) ;
+    const LHCb::ParticleProperty* _ppFromPID  ( const LHCb::ParticleID& pid   ) ;
     // ========================================================================    
     /** retrieve ParticleProperty from ParticleID 
      *  @param pid particle ID 
      *  @return particle property 
      */
-    const ParticleProperty* ppFromPID  ( const LHCb::ParticleID& pid   ) ;
+    const LHCb::ParticleProperty* ppFromPID  ( const LHCb::ParticleID& pid   ) ;
     // ========================================================================    
     /** retrieve ParticleProperty from ParticleID 
      *  @param pid particle ID 
@@ -94,13 +94,17 @@ namespace LoKi
      *  @param name particle name 
      *  @return particle lifetime
      */
-    double lifeTime     ( const std::string&      name ) ;
+    double ctau             ( const std::string& name ) ;
+    inline double lifeTime  ( const std::string& name ) 
+    { return ctau ( name ) ; }
     // ========================================================================    
     /** retrieve the lifetime (c*tau) for the particle form the pid 
      *  @param pid particle ID 
      *  @return particle lifetime
      */
-    double lifeTime     ( const LHCb::ParticleID& pid ) ;
+    double ctau            ( const LHCb::ParticleID& pid ) ;
+    inline double lifeTime ( const LHCb::ParticleID& pid ) 
+    { return ctau ( pid ) ; }
     // ========================================================================    
     /** get name of 'antiparticle'
      *  @param name particlre name 
@@ -112,7 +116,8 @@ namespace LoKi
      *  @param  pp ParticleProperty object for the particle 
      *  @return ParticleProperty object for antiparticle 
      */
-    const ParticleProperty* antiParticle( const ParticleProperty* pp   ) ;
+    const LHCb::ParticleProperty* antiParticle
+    ( const LHCb::ParticleProperty* pp   ) ;
     // ========================================================================    
     /** get PArticle ID for antiparticle 
      *  @param  pid particle 
@@ -121,6 +126,7 @@ namespace LoKi
     LHCb::ParticleID     antiParticle( const LHCb::ParticleID&       pid  ) ;
     // ========================================================================
   } // end of namespace LoKi::Particles 
+  // ==========================================================================
 } // end of namespace LoKi
 // ============================================================================
 // The END 
