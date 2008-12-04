@@ -1,18 +1,17 @@
-// $Id: TrackResChecker.h,v 1.5 2008-10-21 15:06:03 wouter Exp $
+// $Id: TrackResChecker.h,v 1.6 2008-12-04 09:03:55 cattanem Exp $
 #ifndef TRACKRESCHECKER_H
 #define TRACKRESCHECKER_H 1
  
 // Include files
 #include <map>
+#include <string>
 
-// from Gaudi
 #include "TrackCheckerBase.h"
 
 // linkers
 #include "Linker/LinkedTo.h"
 
 #include "Event/MCParticle.h"
-#include "Event/OTTime.h"
 
 class ITrackProjectorSelector;
 class IHistoTool ;
@@ -34,8 +33,10 @@ class TrackResChecker : public TrackCheckerBase {
                                                                              
 public:
                                                                              
-  /** Standard construtor */
-  TrackResChecker( const std::string& name, ISvcLocator* pSvcLocator );                                                                             /** Destructor */
+  /** Standard constructor */
+  TrackResChecker( const std::string& name, ISvcLocator* pSvcLocator );
+
+  /** Destructor */
   virtual ~TrackResChecker();
 
   /** Algorithm initialize */
@@ -72,7 +73,7 @@ private:
 
   bool m_plotsByMeasType;
   
-  typedef LinkedTo<LHCb::MCParticle,LHCb::OTTime> OTLinks;
+  typedef LinkedTo<LHCb::MCParticle> OTLinks;
   mutable OTLinks m_otLinker;
   unsigned int  m_minToCountAmb;
   bool m_checkAmbiguity;

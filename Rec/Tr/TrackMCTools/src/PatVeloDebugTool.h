@@ -1,11 +1,11 @@
-// $Id: PatVeloDebugTool.h,v 1.2 2007-11-09 10:44:20 cattanem Exp $
+// $Id: PatVeloDebugTool.h,v 1.3 2008-12-04 09:05:07 cattanem Exp $
 #ifndef PATVELODEBUGTOOL_H 
 #define PATVELODEBUGTOOL_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "TrackInterfaces/IPatDebugTool.h"            // Interface
+#include "PatKernel/IPatDebugTool.h"            // Interface
 
 
 /** @class PatVeloDebugTool PatVeloDebugTool.h

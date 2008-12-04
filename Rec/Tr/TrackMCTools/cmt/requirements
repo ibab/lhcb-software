@@ -3,7 +3,7 @@
 # Maintainer : Jose Hernando, Eduardo Rodrigues
 #============================================================================
 package           TrackMCTools
-version           v2r19
+version           v2r20
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -22,6 +22,7 @@ use   TrackEvent        v*   Event
 use   LinkerEvent       v*   Event
 
 use   TrackInterfaces   v*   Tr
+use   PatKernel         v*   Tf
 use   MCInterfaces      v*   Kernel
 
 use   STDet             v*   Det

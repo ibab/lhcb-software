@@ -22,7 +22,6 @@
 namespace LHCb{
   class STCluster;
   class VeloCluster;
-  class OTTime;
   class MuonCoord;
 }
 
@@ -84,7 +83,7 @@ public:
 private:
 
   typedef LinkedTo<LHCb::MCParticle,LHCb::STCluster> STLinks;
-  typedef LinkedTo<LHCb::MCParticle,LHCb::OTTime> OTLinks;
+  typedef LinkedTo<LHCb::MCParticle> OTLinks;
   typedef LinkedTo<LHCb::MCParticle,LHCb::VeloCluster> VeloLinks;
   typedef LinkedTo<LHCb::MCParticle,LHCb::MuonCoord> MuonLinks;
 

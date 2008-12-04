@@ -1,11 +1,11 @@
-// $Id: PatDebugTTTruthTool.h,v 1.3 2008-06-18 07:40:07 mneedham Exp $
+// $Id: PatDebugTTTruthTool.h,v 1.4 2008-12-04 09:05:07 cattanem Exp $
 #ifndef PATDEBUGTTTRUTHTOOL_H 
 #define PATDEBUGTTTRUTHTOOL_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "TrackInterfaces/IPatDebugTTTool.h"            // Interface
+#include "PatKernel/IPatDebugTTTool.h"            // Interface
 
 class DeSTDetector;
 
