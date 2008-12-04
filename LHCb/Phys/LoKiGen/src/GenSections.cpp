@@ -1,4 +1,4 @@
-// $Id: GenSections.cpp,v 1.2 2008-06-12 08:19:05 ibelyaev Exp $
+// $Id: GenSections.cpp,v 1.3 2008-12-04 14:37:59 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -29,9 +29,9 @@
  *  @return size of the section container 
  */
 // ============================================================================
-size_t LoKi::Decays::sections 
+size_t Decays::sections 
 ( const HepMC::GenParticle* particle , 
-  LoKi::Decays::GenSections& output  ) 
+  Decays::GenSections&      output  ) 
 {
   // trivial case 1
   if ( 0 == particle )                   { return output.size() ; } // RETURN  

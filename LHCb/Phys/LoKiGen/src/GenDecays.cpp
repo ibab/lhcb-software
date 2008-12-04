@@ -1,4 +1,4 @@
-// $Id: GenDecays.cpp,v 1.3 2008-08-04 14:06:16 ibelyaev Exp $
+// $Id: GenDecays.cpp,v 1.4 2008-12-04 14:37:59 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -26,18 +26,18 @@ namespace
    *  @date   2008-05-25
    */
   inline void makeSections 
-  ( const HepMC::GenParticle*      p     , 
-    const LoKi::Decays::Trees::Alg alg   , 
-    LoKi::Decays::GenSections&     sect  ) 
+  ( const HepMC::GenParticle* p     , 
+    const Decays::Trees::Alg  alg   , 
+    Decays::GenSections&      sect  ) 
   {
     if ( 0 == p ) { return ; }
     //
-    if ( LoKi::Decays::Trees::Sections == alg ) 
-    { LoKi::Decays::sections ( p , sect ) ; }
+    if ( Decays::Trees::Sections == alg ) 
+    { Decays::sections ( p , sect ) ; }
     else 
     {
-      LoKi::Decays::GenSection s ;
-      LoKi::Decays::section ( p , s ) ;      
+      Decays::GenSection s ;
+      Decays::section ( p , s ) ;      
       sect.push_back ( s ) ;    
     }
   }
@@ -46,7 +46,7 @@ namespace
   {
     // ========================================================================
     /// constructor 
-    NotPid ( const LoKi::Decays::Nodes::Pid& pid ) : m_pid ( pid ) {}
+    NotPid ( const Decays::Nodes::Pid& pid ) : m_pid ( pid ) {}
     // ========================================================================
     /// the major method: find "not a pid" 
     inline bool operator () ( const HepMC::GenParticle* p ) const 
@@ -55,7 +55,7 @@ namespace
   private:
     // ========================================================================
     /// the pid-checker 
-    LoKi::Decays::Nodes::Pid m_pid ; //the pid-checker 
+    Decays::Nodes::Pid m_pid ; //the pid-checker 
     // ========================================================================    
   } ;
   // ==========================================================================
@@ -68,18 +68,18 @@ namespace
   inline bool onlyPid 
   (  TYPE begin , 
      TYPE end   , 
-     const LoKi::Decays::Nodes::Pid& pid ) 
+     const Decays::Nodes::Pid& pid ) 
   {
     return end == std::find_if ( begin , end , NotPid ( pid ) ) ; 
   }
   // ==========================================================================
   /// the helper object for comparison 
-  typedef LoKi::Decays::Trees::CheckTree<const HepMC::GenParticle*> Equal ;  
+  typedef Decays::Trees::CheckTree<const HepMC::GenParticle*> Equal ;  
   // ==========================================================================
   struct _Pid :  public std::unary_function<const HepMC::GenParticle*,bool>
   {
     /// constructor 
-    _Pid ( const LoKi::Decays::Nodes::Pid& pid ) : m_pid ( pid ) {}
+    _Pid ( const Decays::Nodes::Pid& pid ) : m_pid ( pid ) {}
     // ========================================================================
     /// the major method: find "not a pid" 
     inline bool operator () ( const HepMC::GenParticle* p ) const 
@@ -88,7 +88,7 @@ namespace
   private:
     // ========================================================================
     /// the pid-checker 
-    LoKi::Decays::Nodes::Pid m_pid ; //the pid-checker 
+    Decays::Nodes::Pid m_pid ; //the pid-checker 
     // ========================================================================    
   } ;
   // ==========================================================================
@@ -102,12 +102,12 @@ namespace
  *  @param alg the matching algorithm 
  */
 // ============================================================================
-LoKi::Decays::Trees::GenExclusive::GenExclusive
-( const LoKi::Decays::iNode&                         mother      , 
-  const LoKi::Decays::Trees::GenExclusive::SubTrees& children    ,
-  const LoKi::Decays::Trees::Alg                     alg         ,
-  const LoKi::Decays::Trees::Oscillation             oscillation )
-  : LoKi::Decays::iTree_<const HepMC::GenParticle*> () 
+Decays::Trees::GenExclusive::GenExclusive
+( const Decays::iNode&                         mother      , 
+  const Decays::Trees::GenExclusive::SubTrees& children    ,
+  const Decays::Trees::Alg                     alg         ,
+  const Decays::Trees::Oscillation             oscillation )
+  : Decays::iTree_<const HepMC::GenParticle*> () 
   , m_mother      ( mother      )
   , m_children    ( children    ) 
   , m_alg         ( alg         )
@@ -120,11 +120,11 @@ LoKi::Decays::Trees::GenExclusive::GenExclusive
  *  @param osc require the oscillation flag for mother 
  */
 // ============================================================================
-LoKi::Decays::Trees::GenExclusive::GenExclusive
-( const LoKi::Decays::iNode&                        mother      , 
-  const LoKi::Decays::Trees::Alg                    alg         ,
-  const LoKi::Decays::Trees::Oscillation            oscillation )
-  : LoKi::Decays::iTree_<const HepMC::GenParticle*> () 
+Decays::Trees::GenExclusive::GenExclusive
+( const Decays::iNode&                        mother      , 
+  const Decays::Trees::Alg                    alg         ,
+  const Decays::Trees::Oscillation            oscillation )
+  : Decays::iTree_<const HepMC::GenParticle*> () 
   , m_mother      ( mother     )
   , m_children    (            ) 
   , m_alg         ( alg        )
@@ -137,13 +137,13 @@ LoKi::Decays::Trees::GenExclusive::GenExclusive
  *  @param alg the matching algorithm 
  */
 // ============================================================================
-LoKi::Decays::Trees::GenExclusive::GenExclusive
+Decays::Trees::GenExclusive::GenExclusive
 ( const std::string&                                 mother      , 
-  const LoKi::Decays::Trees::GenExclusive::SubTrees& children    ,
-  const LoKi::Decays::Trees::Alg                     alg         ,
-  const LoKi::Decays::Trees::Oscillation             oscillation )
-  : LoKi::Decays::iTree_<const HepMC::GenParticle*> () 
-  , m_mother     ( LoKi::Decays::Nodes::Pid ( mother ) )
+  const Decays::Trees::GenExclusive::SubTrees& children    ,
+  const Decays::Trees::Alg                     alg         ,
+  const Decays::Trees::Oscillation             oscillation )
+  : Decays::iTree_<const HepMC::GenParticle*> () 
+  , m_mother     ( Decays::Nodes::Pid ( mother ) )
   , m_children   ( children   ) 
   , m_alg        ( alg        )
   , m_oscillation ( oscillation )
@@ -155,12 +155,12 @@ LoKi::Decays::Trees::GenExclusive::GenExclusive
  *  @param osc require the oscillation flag for mother 
  */
 // ============================================================================
-LoKi::Decays::Trees::GenExclusive::GenExclusive
+Decays::Trees::GenExclusive::GenExclusive
 ( const std::string&                                mother      , 
-  const LoKi::Decays::Trees::Alg                    alg         ,
-  const LoKi::Decays::Trees::Oscillation            oscillation )
-  : LoKi::Decays::iTree_<const HepMC::GenParticle*> () 
-  , m_mother     ( LoKi::Decays::Nodes::Pid ( mother ) )
+  const Decays::Trees::Alg                    alg         ,
+  const Decays::Trees::Oscillation            oscillation )
+  : Decays::iTree_<const HepMC::GenParticle*> () 
+  , m_mother     ( Decays::Nodes::Pid ( mother ) )
   , m_children   (            ) 
   , m_alg        ( alg        )
   , m_oscillation ( oscillation )
@@ -172,13 +172,13 @@ LoKi::Decays::Trees::GenExclusive::GenExclusive
  *  @param alg the matching algorithm 
  */
 // ============================================================================
-LoKi::Decays::Trees::GenExclusive::GenExclusive
+Decays::Trees::GenExclusive::GenExclusive
 ( const LHCb::ParticleID&                            mother     , 
-  const LoKi::Decays::Trees::GenExclusive::SubTrees& children   ,
-  const LoKi::Decays::Trees::Alg                     alg        ,
-  const LoKi::Decays::Trees::Oscillation             oscillation )
-  : LoKi::Decays::iTree_<const HepMC::GenParticle*> () 
-  , m_mother     ( LoKi::Decays::Nodes::Pid ( mother ) )
+  const Decays::Trees::GenExclusive::SubTrees& children   ,
+  const Decays::Trees::Alg                     alg        ,
+  const Decays::Trees::Oscillation             oscillation )
+  : Decays::iTree_<const HepMC::GenParticle*> () 
+  , m_mother     ( Decays::Nodes::Pid ( mother ) )
   , m_children   ( children   ) 
   , m_alg        ( alg        )
   , m_oscillation ( oscillation )
@@ -190,12 +190,12 @@ LoKi::Decays::Trees::GenExclusive::GenExclusive
  *  @param osc require the oscillation flag for mother 
  */
 // ============================================================================
-LoKi::Decays::Trees::GenExclusive::GenExclusive
+Decays::Trees::GenExclusive::GenExclusive
 ( const LHCb::ParticleID&                           mother      , 
-  const LoKi::Decays::Trees::Alg                    alg         ,
-  const LoKi::Decays::Trees::Oscillation            oscillation )
-  : LoKi::Decays::iTree_<const HepMC::GenParticle*> () 
-  , m_mother      ( LoKi::Decays::Nodes::Pid ( mother ) )
+  const Decays::Trees::Alg                    alg         ,
+  const Decays::Trees::Oscillation            oscillation )
+  : Decays::iTree_<const HepMC::GenParticle*> () 
+  , m_mother      ( Decays::Nodes::Pid ( mother ) )
   , m_children    (            ) 
   , m_alg         ( alg        )
   , m_oscillation ( oscillation )
@@ -207,12 +207,12 @@ LoKi::Decays::Trees::GenExclusive::GenExclusive
  *  @param oscillation check the oscillation flag
  */
 // ============================================================================
-LoKi::Decays::Trees::GenExclusive::GenExclusive
-( const LHCb::Decay&                                decay       , 
-  const LoKi::Decays::Trees::Alg                    alg         ,
-  const LoKi::Decays::Trees::Oscillation            oscillation )
-  : LoKi::Decays::iTree_<const HepMC::GenParticle*> () 
-  , m_mother      ( LoKi::Decays::Nodes::Pid ( decay.mother() ) )
+Decays::Trees::GenExclusive::GenExclusive
+( const Decays::Decay&                        decay       , 
+  const Decays::Trees::Alg                    alg         ,
+  const Decays::Trees::Oscillation            oscillation )
+  : Decays::iTree_<const HepMC::GenParticle*> () 
+  , m_mother      ( Decays::Nodes::Pid ( decay.mother() ) )
   , m_children    (            ) 
   , m_alg         ( alg        )
   , m_oscillation ( oscillation )
@@ -222,29 +222,29 @@ LoKi::Decays::Trees::GenExclusive::GenExclusive
 // ============================================================================
 // MANDATORY: check the validity 
 // ============================================================================
-bool LoKi::Decays::Trees::GenExclusive::valid() const 
+bool Decays::Trees::GenExclusive::valid() const 
 {
-  return m_mother.valid() && LoKi::Decays::valid ( childBegin() , childEnd() ) ;
+  return m_mother.valid() && Decays::valid ( childBegin() , childEnd() ) ;
 }
 // ============================================================================
 // MANDATORY: validate the tree 
 // ============================================================================
-StatusCode  LoKi::Decays::Trees::GenExclusive::validate 
-( IParticlePropertySvc* svc ) const 
+StatusCode  Decays::Trees::GenExclusive::validate 
+( const LHCb::IParticlePropertySvc* svc ) const 
 {
   StatusCode sc = m_mother.validate ( svc ) ;
   if ( sc.isFailure() ) { return sc ; }
-  return LoKi::Decays::validate ( childBegin() , childEnd() , svc ) ;
+  return Decays::validate ( childBegin() , childEnd() , svc ) ;
 }
 // ============================================================================
 // reset the collection cache
 // ============================================================================
-void LoKi::Decays::Trees::GenExclusive::reset() const { i_reset () ; }
+void Decays::Trees::GenExclusive::reset() const { i_reset () ; }
 // ============================================================================
 // collect the marked elements 
 // ============================================================================
-size_t LoKi::Decays::Trees::GenExclusive::collect 
-( LoKi::Decays::iTree_<const HepMC::GenParticle*>::Collection& output ) const 
+size_t Decays::Trees::GenExclusive::collect 
+( Decays::iTree_<const HepMC::GenParticle*>::Collection& output ) const 
 {
   size_t size = 0 ;
   for ( SubTrees::const_iterator ichild = childBegin() ; 
@@ -254,8 +254,8 @@ size_t LoKi::Decays::Trees::GenExclusive::collect
 // ============================================================================
 // the only one essential method 
 // ============================================================================
-bool LoKi::Decays::Trees::GenExclusive::operator() 
-  ( LoKi::Decays::iTree_<const HepMC::GenParticle*>::argument p ) const
+bool Decays::Trees::GenExclusive::operator() 
+  ( Decays::iTree_<const HepMC::GenParticle*>::argument p ) const
 {
   // reset the cache (ALWAYS!!!)
   i_reset () ;
@@ -266,10 +266,10 @@ bool LoKi::Decays::Trees::GenExclusive::operator()
   if ( 0 == nChildren()               ) { return true  ; }        // RETURN
   // perform the real matching:
   // (1) get the proper decay sections:
-  LoKi::Decays::GenSections sections ;
+  Decays::GenSections sections ;
   makeSections ( good , alg () , sections ) ;
   // (2) loop over all sections
-  for (  LoKi::Decays::GenSections::iterator isect = sections.begin() ; 
+  for (  Decays::GenSections::iterator isect = sections.begin() ; 
          sections.end() != isect ; ++isect )
   {
     // (3) try to match the section 
@@ -292,16 +292,16 @@ bool LoKi::Decays::Trees::GenExclusive::operator()
 // MANDATORY: the specific printout 
 // ============================================================================
 std::ostream& 
-LoKi::Decays::Trees::GenExclusive::fillStream ( std::ostream& s ) const 
+Decays::Trees::GenExclusive::fillStream ( std::ostream& s ) const 
 {
   //
   s << ( ( 0 != nChildren() ) ? " (" : " " ) ;
   //
   switch ( oscillation () ) 
   {
-  case LoKi::Decays::Trees::Oscillated    : 
+  case Decays::Trees::Oscillated    : 
     s << "[" << mother () << "]os "  ; break ;  // BREAK 
-  case LoKi::Decays::Trees::NotOscillated : 
+  case Decays::Trees::NotOscillated : 
     s << "[" << mother () << "]nos " ; break ;  // BREAK 
   default:
     s <<        mother ()            ; 
@@ -323,43 +323,43 @@ LoKi::Decays::Trees::GenExclusive::fillStream ( std::ostream& s ) const
 // ============================================================================
 // add one more node to the tree 
 // ============================================================================
-void LoKi::Decays::Trees::GenExclusive::addDaughter 
-( const LoKi::Decays::iTree_<const HepMC::GenParticle*>& tree ) 
+void Decays::Trees::GenExclusive::addDaughter 
+( const Decays::iTree_<const HepMC::GenParticle*>& tree ) 
 { m_children.push_back ( tree ) ; }
 // ============================================================================
 // add one more node to the tree 
 // ============================================================================
-void LoKi::Decays::Trees::GenExclusive::addDaughter 
+void Decays::Trees::GenExclusive::addDaughter 
 ( const std::string& node )
-{ addDaughter ( LoKi::Decays::Nodes::Pid ( node ) ) ; }
+{ addDaughter ( Decays::Nodes::Pid ( node ) ) ; }
 // ============================================================================
 // add one more node to the tree 
 // ============================================================================
-void LoKi::Decays::Trees::GenExclusive::addDaughter 
+void Decays::Trees::GenExclusive::addDaughter 
 ( const LHCb::ParticleID& node )
-{ addDaughter ( LoKi::Decays::Nodes::Pid ( node ) ) ; }
+{ addDaughter ( Decays::Nodes::Pid ( node ) ) ; }
 // ============================================================================
 // add one more node to the tree 
 // ============================================================================
-void LoKi::Decays::Trees::GenExclusive::addDaughter 
-( const LHCb::Decay::Item& node )
-{ addDaughter ( LoKi::Decays::Nodes::Pid ( node ) ) ; }
+void Decays::Trees::GenExclusive::addDaughter 
+( const Decays::Decay::Item& node )
+{ addDaughter ( Decays::Nodes::Pid ( node ) ) ; }
 // ============================================================================
 // add one more node to the tree 
 // ============================================================================
-void LoKi::Decays::Trees::GenExclusive::addDaughter 
-( const ParticleProperty* node )
-{ addDaughter ( LoKi::Decays::Nodes::Pid ( node ) ) ; }
+void Decays::Trees::GenExclusive::addDaughter 
+( const LHCb::ParticleProperty* node )
+{ addDaughter ( Decays::Nodes::Pid ( node ) ) ; }
 // ============================================================================
 // add one more node to the tree 
 // ============================================================================
-void LoKi::Decays::Trees::GenExclusive::addDaughter 
-( const LoKi::Decays::iNode& node )
+void Decays::Trees::GenExclusive::addDaughter 
+( const Decays::iNode& node )
 { addDaughter ( GenExclusive ( node ) ) ; }
 // ============================================================================
 // set children 
 // ============================================================================
-void LoKi::Decays::Trees::GenExclusive::setChildren 
+void Decays::Trees::GenExclusive::setChildren 
 ( const std::vector<std::string>& children ) 
 {
   m_children.clear() ;
@@ -370,18 +370,18 @@ void LoKi::Decays::Trees::GenExclusive::setChildren
 // ============================================================================
 // set children 
 // ============================================================================
-void LoKi::Decays::Trees::GenExclusive::setChildren 
-( const std::vector<LHCb::Decay::Item>& children ) 
+void Decays::Trees::GenExclusive::setChildren 
+( const std::vector<Decays::Decay::Item>& children ) 
 {
   m_children.clear() ;
-  for ( std::vector<LHCb::Decay::Item>::const_iterator ichild = 
+  for ( std::vector<Decays::Decay::Item>::const_iterator ichild = 
           children.begin() ; children.end() != ichild ; ++ichild ) 
   { addDaughter ( *ichild ) ; }  
 }
 // ============================================================================
 // set children 
 // ============================================================================
-void LoKi::Decays::Trees::GenExclusive::setChildren 
+void Decays::Trees::GenExclusive::setChildren 
 ( const std::vector<LHCb::ParticleID>& children ) 
 {
   m_children.clear() ;
@@ -392,11 +392,11 @@ void LoKi::Decays::Trees::GenExclusive::setChildren
 // ============================================================================
 // set children 
 // ============================================================================
-void LoKi::Decays::Trees::GenExclusive::setChildren 
-( const std::vector<const ParticleProperty*>& children ) 
+void Decays::Trees::GenExclusive::setChildren 
+( const std::vector<const LHCb::ParticleProperty*>& children ) 
 {
   m_children.clear() ;
-  for ( std::vector<const ParticleProperty*>::const_iterator ichild = 
+  for ( std::vector<const LHCb::ParticleProperty*>::const_iterator ichild = 
           children.begin() ; children.end() != ichild ; ++ichild ) 
   { addDaughter ( *ichild ) ; }  
 }
@@ -407,7 +407,7 @@ void LoKi::Decays::Trees::GenExclusive::setChildren
  */
 // ============================================================================
 const HepMC::GenParticle* 
-LoKi::Decays::Trees::GenExclusive::ok ( const HepMC::GenParticle* p ) const 
+Decays::Trees::GenExclusive::ok ( const HepMC::GenParticle* p ) const 
 {
     if ( 0 == p          ) { return 0 ; }                      // RETURN 
     // check mother 
@@ -416,9 +416,9 @@ LoKi::Decays::Trees::GenExclusive::ok ( const HepMC::GenParticle* p ) const
     //
     switch ( oscillation  () ) 
     {
-    case LoKi::Decays::Trees::Oscillated    : 
+    case Decays::Trees::Oscillated    : 
       return 0 == pid.threeCharge() ?    LoKi::GenParticles::oscillated2 ( p )       : 0 ;  
-    case LoKi::Decays::Trees::NotOscillated :
+    case Decays::Trees::NotOscillated :
       return 0 == pid.threeCharge() && ( LoKi::GenParticles::oscillated1 ( p ) ||
                                          LoKi::GenParticles::oscillated2 ( p ) ) ? 0 : p ;
     default :
@@ -435,12 +435,12 @@ LoKi::Decays::Trees::GenExclusive::ok ( const HepMC::GenParticle* p ) const
  *  @param alg the matching algorithm 
  */
 // ============================================================================
-LoKi::Decays::Trees::GenInclusive::GenInclusive
-( const LoKi::Decays::iNode&                         mother   , 
-  const LoKi::Decays::Trees::GenExclusive::SubTrees& children ,
-  const LoKi::Decays::Trees::Alg                     alg      ,
-  const LoKi::Decays::Trees::Oscillation             osc      )
-  : LoKi::Decays::Trees::GenExclusive ( mother , children , alg , osc ) 
+Decays::Trees::GenInclusive::GenInclusive
+( const Decays::iNode&                         mother   , 
+  const Decays::Trees::GenExclusive::SubTrees& children ,
+  const Decays::Trees::Alg                     alg      ,
+  const Decays::Trees::Oscillation             osc      )
+  : Decays::Trees::GenExclusive ( mother , children , alg , osc ) 
 {}
 // ============================================================================
 /*  constructor from the node (mother), subtrees and "final" flag
@@ -448,11 +448,11 @@ LoKi::Decays::Trees::GenInclusive::GenInclusive
  *  @param alg the matching algorithm 
  */
 // ============================================================================
-LoKi::Decays::Trees::GenInclusive::GenInclusive
-( const LoKi::Decays::iNode&                        mother , 
-  const LoKi::Decays::Trees::Alg                    alg    ,
-  const LoKi::Decays::Trees::Oscillation            osc    )
-  : LoKi::Decays::Trees::GenExclusive( mother , alg , osc ) 
+Decays::Trees::GenInclusive::GenInclusive
+( const Decays::iNode&                        mother , 
+  const Decays::Trees::Alg                    alg    ,
+  const Decays::Trees::Oscillation            osc    )
+  : Decays::Trees::GenExclusive( mother , alg , osc ) 
 {}
 // ============================================================================
 /*  constructor from the node (mother), subtrees and "final" flag
@@ -461,12 +461,12 @@ LoKi::Decays::Trees::GenInclusive::GenInclusive
  *  @param alg the matching algorithm 
  */
 // ============================================================================
-LoKi::Decays::Trees::GenInclusive::GenInclusive
+Decays::Trees::GenInclusive::GenInclusive
 ( const std::string&                                 mother   , 
-  const LoKi::Decays::Trees::GenExclusive::SubTrees& children ,
-  const LoKi::Decays::Trees::Alg                     alg      ,  
-  const LoKi::Decays::Trees::Oscillation             osc      )
-  : LoKi::Decays::Trees::GenExclusive ( mother , children , alg , osc ) 
+  const Decays::Trees::GenExclusive::SubTrees& children ,
+  const Decays::Trees::Alg                     alg      ,  
+  const Decays::Trees::Oscillation             osc      )
+  : Decays::Trees::GenExclusive ( mother , children , alg , osc ) 
 {}
 // ============================================================================
 /*  constructor from the node (mother), subtrees and "final" flag
@@ -474,11 +474,11 @@ LoKi::Decays::Trees::GenInclusive::GenInclusive
  *  @param alg the matching algorithm 
  */
 // ============================================================================
-LoKi::Decays::Trees::GenInclusive::GenInclusive
+Decays::Trees::GenInclusive::GenInclusive
 ( const std::string&                                mother , 
-  const LoKi::Decays::Trees::Alg                    alg    , 
-  const LoKi::Decays::Trees::Oscillation            osc    )
-  : LoKi::Decays::Trees::GenExclusive( mother , alg , osc ) 
+  const Decays::Trees::Alg                    alg    , 
+  const Decays::Trees::Oscillation            osc    )
+  : Decays::Trees::GenExclusive( mother , alg , osc ) 
 {}
 // ============================================================================
 /*  constructor from the node (mother), subtrees and "final" flag
@@ -487,12 +487,12 @@ LoKi::Decays::Trees::GenInclusive::GenInclusive
  *  @param alg the matching algorithm 
  */
 // ============================================================================
-LoKi::Decays::Trees::GenInclusive::GenInclusive
+Decays::Trees::GenInclusive::GenInclusive
 ( const LHCb::ParticleID&                            mother   , 
-  const LoKi::Decays::Trees::GenExclusive::SubTrees& children ,
-  const LoKi::Decays::Trees::Alg                     alg      ,    
-  const LoKi::Decays::Trees::Oscillation             osc      )
-  : LoKi::Decays::Trees::GenExclusive ( mother , children , alg , osc ) 
+  const Decays::Trees::GenExclusive::SubTrees& children ,
+  const Decays::Trees::Alg                     alg      ,    
+  const Decays::Trees::Oscillation             osc      )
+  : Decays::Trees::GenExclusive ( mother , children , alg , osc ) 
 {}
 // ============================================================================
 /*  constructor from the node (mother), subtrees and "final" flag
@@ -500,29 +500,29 @@ LoKi::Decays::Trees::GenInclusive::GenInclusive
  *  @param alg the matching algorithm 
  */
 // ============================================================================
-LoKi::Decays::Trees::GenInclusive::GenInclusive
+Decays::Trees::GenInclusive::GenInclusive
 ( const LHCb::ParticleID&                           mother , 
-  const LoKi::Decays::Trees::Alg                    alg    ,
-  const LoKi::Decays::Trees::Oscillation            osc    )
-  : LoKi::Decays::Trees::GenExclusive( mother , alg , osc ) 
+  const Decays::Trees::Alg                    alg    ,
+  const Decays::Trees::Oscillation            osc    )
+  : Decays::Trees::GenExclusive( mother , alg , osc ) 
 {}
 // ============================================================================
 // constructor  from GenExclusive 
 // ============================================================================
-LoKi::Decays::Trees::GenInclusive::GenInclusive
-( const LoKi::Decays::Trees::GenExclusive& right ) 
-  : LoKi::Decays::Trees::GenExclusive ( right ) 
+Decays::Trees::GenInclusive::GenInclusive
+( const Decays::Trees::GenExclusive& right ) 
+  : Decays::Trees::GenExclusive ( right ) 
 {}
 // ============================================================================
 // MANDATORY: check the validity of the tree 
 // ============================================================================
-bool LoKi::Decays::Trees::GenInclusive::valid() const 
+bool Decays::Trees::GenInclusive::valid() const 
 { return GenExclusive::valid() && 0 != nChildren() ; }
 // ============================================================================
 // the only one essential method 
 // ============================================================================
-bool LoKi::Decays::Trees::GenInclusive::operator() 
-  ( LoKi::Decays::iTree_<const HepMC::GenParticle*>::argument p ) const
+bool Decays::Trees::GenInclusive::operator() 
+  ( Decays::iTree_<const HepMC::GenParticle*>::argument p ) const
 {
   // reset the cache (ALWAYS!!!)
   i_reset () ;
@@ -537,16 +537,16 @@ bool LoKi::Decays::Trees::GenInclusive::operator()
     std::vector<const HepMC::GenParticle*> d ;
     LoKi::GenChild::daughters ( good , d ) ;
     // in tree 
-    if ( LoKi::Decays::Trees::Sections == alg() ) 
+    if ( Decays::Trees::Sections == alg() ) 
     { return LoKi::GenAlgs::found ( d.begin() , d.end() , front () ) ; }
     // direct daughters :
     return d.end () != std::find_if ( d.begin() , d.end() , front () ) ;
   }
   // (1) get the proper decay sections:
-  LoKi::Decays::GenSections sections ;
+  Decays::GenSections sections ;
   makeSections ( good , alg() , sections ) ;
   // (2) loop over all sections
-  for (  LoKi::Decays::GenSections::iterator isect = sections.begin() ; 
+  for (  Decays::GenSections::iterator isect = sections.begin() ; 
          sections.end() != isect ; ++isect )
   {
     // (3) try to match the section 
@@ -590,14 +590,14 @@ bool LoKi::Decays::Trees::GenInclusive::operator()
 // MANDATORY: the specific printout 
 // ============================================================================
 std::ostream& 
-LoKi::Decays::Trees::GenInclusive::fillStream ( std::ostream& s ) const 
+Decays::Trees::GenInclusive::fillStream ( std::ostream& s ) const 
 {
   //
   switch ( oscillation () ) 
   {
-  case LoKi::Decays::Trees::Oscillated    : 
+  case Decays::Trees::Oscillated    : 
     s << " ( [" << mother () << "]os "  ; break ;  // BREAK 
-  case LoKi::Decays::Trees::NotOscillated : 
+  case Decays::Trees::NotOscillated : 
     s << " ( [" << mother () << "]nos " ; break ;  // BREAK 
   default:
     s << " ("   << mother ()            ; 
@@ -617,139 +617,139 @@ LoKi::Decays::Trees::GenInclusive::fillStream ( std::ostream& s ) const
 // ============================================================================
 // GENOPTIONAL
 // ============================================================================
-LoKi::Decays::Trees::GenOptional::GenOptional
-( const LoKi::Decays::iNode&                         mother   , 
-  const LoKi::Decays::Trees::GenExclusive::SubTrees& children ,
-  const LoKi::Decays::Trees::GenExclusive::SubTrees& optional ,
-  const LoKi::Decays::Trees::Alg                     alg      ,
-  const LoKi::Decays::Trees::Oscillation             osc      )
-  : LoKi::Decays::Trees::GenExclusive ( mother , children , alg , osc )
+Decays::Trees::GenOptional::GenOptional
+( const Decays::iNode&                         mother   , 
+  const Decays::Trees::GenExclusive::SubTrees& children ,
+  const Decays::Trees::GenExclusive::SubTrees& optional ,
+  const Decays::Trees::Alg                     alg      ,
+  const Decays::Trees::Oscillation             osc      )
+  : Decays::Trees::GenExclusive ( mother , children , alg , osc )
   , m_optional ( optional ) 
 {}
 // ============================================================================
-LoKi::Decays::Trees::GenOptional::GenOptional
-( const LoKi::Decays::iNode&                             mother   , 
-  const LoKi::Decays::Trees::GenExclusive::SubTrees&     children ,
-  const LoKi::Decays::iTree_<const HepMC::GenParticle*>& optional ,
-  const LoKi::Decays::Trees::Alg                         alg      ,
-  const LoKi::Decays::Trees::Oscillation                 osc      )
-  : LoKi::Decays::Trees::GenExclusive ( mother , children , alg , osc ) 
+Decays::Trees::GenOptional::GenOptional
+( const Decays::iNode&                             mother   , 
+  const Decays::Trees::GenExclusive::SubTrees&     children ,
+  const Decays::iTree_<const HepMC::GenParticle*>& optional ,
+  const Decays::Trees::Alg                         alg      ,
+  const Decays::Trees::Oscillation                 osc      )
+  : Decays::Trees::GenExclusive ( mother , children , alg , osc ) 
   , m_optional ( 1 , optional ) 
 {}
 // ============================================================================
-LoKi::Decays::Trees::GenOptional::GenOptional
-( const LoKi::Decays::iNode&                         mother   , 
-  const LoKi::Decays::Trees::GenExclusive::SubTrees& children ,
-  const LoKi::Decays::iNode&                         optional ,
-  const LoKi::Decays::Trees::Alg                     alg      ,
-  const LoKi::Decays::Trees::Oscillation             osc      )
-  : LoKi::Decays::Trees::GenExclusive ( mother , children , alg , osc ) 
+Decays::Trees::GenOptional::GenOptional
+( const Decays::iNode&                         mother   , 
+  const Decays::Trees::GenExclusive::SubTrees& children ,
+  const Decays::iNode&                         optional ,
+  const Decays::Trees::Alg                     alg      ,
+  const Decays::Trees::Oscillation             osc      )
+  : Decays::Trees::GenExclusive ( mother , children , alg , osc ) 
   , m_optional ( 1 , GenExclusive ( optional ) ) 
 {}
 // ============================================================================
-LoKi::Decays::Trees::GenOptional::GenOptional
+Decays::Trees::GenOptional::GenOptional
 ( const std::string&                                 mother   , 
-  const LoKi::Decays::Trees::GenExclusive::SubTrees& children ,
-  const LoKi::Decays::Trees::GenExclusive::SubTrees& optional ,
-  const LoKi::Decays::Trees::Alg                     alg      ,
-  const LoKi::Decays::Trees::Oscillation             osc      )
-  : LoKi::Decays::Trees::GenExclusive ( mother , children , alg , osc )
+  const Decays::Trees::GenExclusive::SubTrees& children ,
+  const Decays::Trees::GenExclusive::SubTrees& optional ,
+  const Decays::Trees::Alg                     alg      ,
+  const Decays::Trees::Oscillation             osc      )
+  : Decays::Trees::GenExclusive ( mother , children , alg , osc )
   , m_optional ( optional ) 
 {}
 // ============================================================================
-LoKi::Decays::Trees::GenOptional::GenOptional
+Decays::Trees::GenOptional::GenOptional
 ( const std::string&                                     mother   , 
-  const LoKi::Decays::Trees::GenExclusive::SubTrees&     children ,
-  const LoKi::Decays::iTree_<const HepMC::GenParticle*>& optional ,
-  const LoKi::Decays::Trees::Alg                         alg      ,
-  const LoKi::Decays::Trees::Oscillation                 osc      )
-  : LoKi::Decays::Trees::GenExclusive ( mother , children , alg , osc ) 
+  const Decays::Trees::GenExclusive::SubTrees&     children ,
+  const Decays::iTree_<const HepMC::GenParticle*>& optional ,
+  const Decays::Trees::Alg                         alg      ,
+  const Decays::Trees::Oscillation                 osc      )
+  : Decays::Trees::GenExclusive ( mother , children , alg , osc ) 
   , m_optional ( 1 , optional ) 
 {}
 // ============================================================================
-LoKi::Decays::Trees::GenOptional::GenOptional
+Decays::Trees::GenOptional::GenOptional
 ( const std::string&                                 mother   , 
-  const LoKi::Decays::Trees::GenExclusive::SubTrees& children ,
-  const LoKi::Decays::iNode&                         optional ,
-  const LoKi::Decays::Trees::Alg                     alg      ,
-  const LoKi::Decays::Trees::Oscillation             osc      )
-  : LoKi::Decays::Trees::GenExclusive ( mother , children , alg , osc ) 
+  const Decays::Trees::GenExclusive::SubTrees& children ,
+  const Decays::iNode&                         optional ,
+  const Decays::Trees::Alg                     alg      ,
+  const Decays::Trees::Oscillation             osc      )
+  : Decays::Trees::GenExclusive ( mother , children , alg , osc ) 
   , m_optional ( 1 , GenExclusive ( optional ) ) 
 {}
 // ============================================================================
-LoKi::Decays::Trees::GenOptional::GenOptional
+Decays::Trees::GenOptional::GenOptional
 ( const LHCb::ParticleID&                            mother   , 
-  const LoKi::Decays::Trees::GenExclusive::SubTrees& children ,
-  const LoKi::Decays::Trees::GenExclusive::SubTrees& optional ,
-  const LoKi::Decays::Trees::Alg                     alg      ,
-  const LoKi::Decays::Trees::Oscillation             osc      )
-  : LoKi::Decays::Trees::GenExclusive ( mother , children , alg , osc )
+  const Decays::Trees::GenExclusive::SubTrees& children ,
+  const Decays::Trees::GenExclusive::SubTrees& optional ,
+  const Decays::Trees::Alg                     alg      ,
+  const Decays::Trees::Oscillation             osc      )
+  : Decays::Trees::GenExclusive ( mother , children , alg , osc )
   , m_optional ( optional ) 
 {}
 // ============================================================================
-LoKi::Decays::Trees::GenOptional::GenOptional
+Decays::Trees::GenOptional::GenOptional
 ( const LHCb::ParticleID&                                mother   , 
-  const LoKi::Decays::Trees::GenExclusive::SubTrees&     children ,
-  const LoKi::Decays::iTree_<const HepMC::GenParticle*>& optional ,
-  const LoKi::Decays::Trees::Alg                         alg      ,
-  const LoKi::Decays::Trees::Oscillation                 osc      )
-  : LoKi::Decays::Trees::GenExclusive ( mother , children , alg , osc ) 
+  const Decays::Trees::GenExclusive::SubTrees&     children ,
+  const Decays::iTree_<const HepMC::GenParticle*>& optional ,
+  const Decays::Trees::Alg                         alg      ,
+  const Decays::Trees::Oscillation                 osc      )
+  : Decays::Trees::GenExclusive ( mother , children , alg , osc ) 
   , m_optional ( 1 , optional ) 
 {}
 // ============================================================================
-LoKi::Decays::Trees::GenOptional::GenOptional
+Decays::Trees::GenOptional::GenOptional
 ( const LHCb::ParticleID&                            mother   , 
-  const LoKi::Decays::Trees::GenExclusive::SubTrees& children ,
-  const LoKi::Decays::iNode&                         optional ,
-  const LoKi::Decays::Trees::Alg                     alg      ,
-  const LoKi::Decays::Trees::Oscillation             osc      )
-  : LoKi::Decays::Trees::GenExclusive ( mother , children , alg , osc ) 
+  const Decays::Trees::GenExclusive::SubTrees& children ,
+  const Decays::iNode&                         optional ,
+  const Decays::Trees::Alg                     alg      ,
+  const Decays::Trees::Oscillation             osc      )
+  : Decays::Trees::GenExclusive ( mother , children , alg , osc ) 
   , m_optional ( 1 , GenExclusive ( optional ) ) 
 {}
 // ============================================================================
-LoKi::Decays::Trees::GenOptional::GenOptional
-( const LoKi::Decays::Trees::GenOptional::GenExclusive& right    , 
-  const LoKi::Decays::Trees::GenExclusive::SubTrees&    optional ) 
-  : LoKi::Decays::Trees::GenExclusive ( right ) 
+Decays::Trees::GenOptional::GenOptional
+( const Decays::Trees::GenOptional::GenExclusive& right    , 
+  const Decays::Trees::GenExclusive::SubTrees&    optional ) 
+  : Decays::Trees::GenExclusive ( right ) 
   , m_optional ( optional ) 
 {}
 // ============================================================================
-LoKi::Decays::Trees::GenOptional::GenOptional
-( const LoKi::Decays::Trees::GenOptional::GenExclusive& right    , 
-  const LoKi::Decays::iNode&                            optional ) 
-  : LoKi::Decays::Trees::GenExclusive ( right ) 
+Decays::Trees::GenOptional::GenOptional
+( const Decays::Trees::GenOptional::GenExclusive& right    , 
+  const Decays::iNode&                            optional ) 
+  : Decays::Trees::GenExclusive ( right ) 
   , m_optional ( 1 , GenExclusive ( optional ) )  
 {}
 // ============================================================================
 // MANDATORY: check the validity of the tree 
 // ============================================================================
-bool LoKi::Decays::Trees::GenOptional::valid() const 
+bool Decays::Trees::GenOptional::valid() const 
 {
   return GenExclusive::valid() && 0 != nChildren() && 0 != nOptional() && 
-    LoKi::Decays::valid ( optBegin( ), optEnd() ) ;
+    Decays::valid ( optBegin( ), optEnd() ) ;
 }
 // ============================================================================
 // MANDATORY: the proper validation of the tree
 // ============================================================================
-StatusCode LoKi::Decays::Trees::GenOptional::validate 
-( IParticlePropertySvc* svc ) const 
+StatusCode Decays::Trees::GenOptional::validate 
+( const LHCb::IParticlePropertySvc* svc ) const 
 { 
   StatusCode sc = GenExclusive::validate ( svc ) ;
   return sc.isFailure() ? sc :
-    LoKi::Decays::validate ( optBegin() , optEnd() , svc ) ;
+    Decays::validate ( optBegin() , optEnd() , svc ) ;
 }
 // ============================================================================
 // MANDATORY: the specific printout 
 // ============================================================================
-std::ostream& LoKi::Decays::Trees::GenOptional::fillStream 
+std::ostream& Decays::Trees::GenOptional::fillStream 
 ( std::ostream& s ) const 
 {
   //
   switch ( oscillation () ) 
   {
-  case LoKi::Decays::Trees::Oscillated    : 
+  case Decays::Trees::Oscillated    : 
     s << " ( [" << mother () << "]os "  ; break ;  // BREAK 
-  case LoKi::Decays::Trees::NotOscillated : 
+  case Decays::Trees::NotOscillated : 
     s << " ( [" << mother () << "]nos " ; break ;  // BREAK 
   default:
     s << " ("   << mother ()            ; 
@@ -774,8 +774,8 @@ std::ostream& LoKi::Decays::Trees::GenOptional::fillStream
 // ============================================================================
 // MANDATORY: the only one essential method
 // ============================================================================
-bool LoKi::Decays::Trees::GenOptional::operator() 
-  ( LoKi::Decays::iTree_<const HepMC::GenParticle*>::argument p ) const 
+bool Decays::Trees::GenOptional::operator() 
+  ( Decays::iTree_<const HepMC::GenParticle*>::argument p ) const 
 {
   // reset the cache (ALWAYS!!!)
   i_reset () ;
@@ -784,10 +784,10 @@ bool LoKi::Decays::Trees::GenOptional::operator()
   if ( !good                      ) { return false ; }        // RETURN 
   // perform the real matching:
   // (1) get the proper decay sections:
-  LoKi::Decays::GenSections sections ;
+  Decays::GenSections sections ;
   makeSections ( good , alg() , sections ) ;
   // (2) loop over all sections
-  for (  LoKi::Decays::GenSections::iterator isect = sections.begin() ; 
+  for (  Decays::GenSections::iterator isect = sections.begin() ; 
          sections.end() != isect ; ++isect )
   {
     // (3) try to match the section 
@@ -808,7 +808,7 @@ bool LoKi::Decays::Trees::GenOptional::operator()
       if ( std::equal ( childBegin() , childEnd() , isect->begin() , Equal () ) )
       {
         // the temporary iterator 
-        LoKi::Decays::GenSection::iterator aux = isect->begin() + nChildren () ;
+        Decays::GenSection::iterator aux = isect->begin() + nChildren () ;
         // create the local container for permutations 
         SubTrees opt ( m_optional ) ;
         std::stable_sort ( opt.begin () , opt.end() ) ; // sort it!!!
@@ -829,65 +829,54 @@ bool LoKi::Decays::Trees::GenOptional::operator()
 // ============================================================================
 // add one more daughter to the decay 
 // ============================================================================
-void LoKi::Decays::Trees::GenOptional::addOptional 
-( const LoKi::Decays::iTree_<const HepMC::GenParticle*>& tree ) 
+void Decays::Trees::GenOptional::addOptional 
+( const Decays::iTree_<const HepMC::GenParticle*>& tree ) 
 { m_optional.push_back ( tree ) ; }
 // ============================================================================
 // add one more daughter to the decay 
 // ============================================================================
-void LoKi::Decays::Trees::GenOptional::addOptional 
-( const LoKi::Decays::iNode& node ) 
+void Decays::Trees::GenOptional::addOptional 
+( const Decays::iNode& node ) 
 { m_optional.push_back ( GenExclusive ( node ) ) ; }
 // ============================================================================
 // add one more daughter to the decay 
 // ============================================================================
-void LoKi::Decays::Trees::GenOptional::addOptional 
+void Decays::Trees::GenOptional::addOptional 
 ( const std::string& node ) 
-{ addOptional ( LoKi::Decays::Nodes::Pid ( node ) ) ; }
+{ addOptional ( Decays::Nodes::Pid ( node ) ) ; }
 // ============================================================================
 // add one more daughter to the decay 
 // ============================================================================
-void LoKi::Decays::Trees::GenOptional::addOptional 
+void Decays::Trees::GenOptional::addOptional 
 ( const LHCb::ParticleID& node ) 
-{ addOptional ( LoKi::Decays::Nodes::Pid ( node ) ) ; }
+{ addOptional ( Decays::Nodes::Pid ( node ) ) ; }
 // ============================================================================
 // add one more daughter to the decay 
 // ============================================================================
-void LoKi::Decays::Trees::GenOptional::addOptional 
-( const LHCb::Decay::Item& node ) 
-{ addOptional ( LoKi::Decays::Nodes::Pid ( node ) ) ; }
+void Decays::Trees::GenOptional::addOptional 
+( const Decays::Decay::Item& node ) 
+{ addOptional ( Decays::Nodes::Pid ( node ) ) ; }
 // ============================================================================
 // add one more daughter to the decay 
 // ============================================================================
-void LoKi::Decays::Trees::GenOptional::addOptional 
-( const ParticleProperty* node ) 
-{ addOptional ( LoKi::Decays::Nodes::Pid ( node ) ) ; }
+void Decays::Trees::GenOptional::addOptional 
+( const LHCb::ParticleProperty* node ) 
+{ addOptional ( Decays::Nodes::Pid ( node ) ) ; }
 // ============================================================================
 // set optional
 // ============================================================================
-void LoKi::Decays::Trees::GenOptional::setOptional
-( const std::vector<int>& optional ) 
+void Decays::Trees::GenOptional::setOptional
+( const std::vector<const LHCb::ParticleProperty*>& optional ) 
 {
   m_optional.clear() ;
-  for ( std::vector<int>::const_iterator iopt = 
-          optional.begin() ; optional.end() != iopt; ++iopt ) 
-  { addOptional ( LHCb::ParticleID ( *iopt ) ) ; }  
-}
-// ============================================================================
-// set optional
-// ============================================================================
-void LoKi::Decays::Trees::GenOptional::setOptional
-( const std::vector<const ParticleProperty*>& optional ) 
-{
-  m_optional.clear() ;
-  for ( std::vector<const ParticleProperty*>::const_iterator iopt = 
+  for ( std::vector<const LHCb::ParticleProperty*>::const_iterator iopt = 
           optional.begin() ; optional.end() != iopt; ++iopt ) 
   { addOptional ( *iopt ) ; }  
 }
 // ============================================================================
 // set optional
 // ============================================================================
-void LoKi::Decays::Trees::GenOptional::setOptional
+void Decays::Trees::GenOptional::setOptional
 ( const std::vector<LHCb::ParticleID>& optional ) 
 {
   m_optional.clear() ;
@@ -898,18 +887,18 @@ void LoKi::Decays::Trees::GenOptional::setOptional
 // ============================================================================
 // set optional
 // ============================================================================
-void LoKi::Decays::Trees::GenOptional::setOptional
-( const std::vector<LHCb::Decay::Item>& optional ) 
+void Decays::Trees::GenOptional::setOptional
+( const std::vector<Decays::Decay::Item>& optional ) 
 {
   m_optional.clear() ;
-  for ( std::vector<LHCb::Decay::Item>::const_iterator iopt = 
+  for ( std::vector<Decays::Decay::Item>::const_iterator iopt = 
           optional.begin() ; optional.end() != iopt; ++iopt ) 
   { addOptional ( *iopt ) ; }  
 }
 // ============================================================================
 // set optional
 // ============================================================================
-void LoKi::Decays::Trees::GenOptional::setOptional
+void Decays::Trees::GenOptional::setOptional
 ( const std::vector<std::string>& optional ) 
 {
   m_optional.clear() ;
@@ -922,47 +911,47 @@ void LoKi::Decays::Trees::GenOptional::setOptional
 // ============================================================================
 // constructor from the node (mother) and subtrees 
 // ============================================================================
-LoKi::Decays::Trees::GenPhotos::GenPhotos
-( const LoKi::Decays::iNode&                      mother   , 
-  const LoKi::Decays::Trees::GenPhotos::SubTrees& children ,
-  const LoKi::Decays::Trees::Alg                  alg      ,
-  const LoKi::Decays::Trees::Oscillation          osc      )
-  : LoKi::Decays::Trees::GenExclusive ( mother    , children , alg , osc ) 
+Decays::Trees::GenPhotos::GenPhotos
+( const Decays::iNode&                      mother   , 
+  const Decays::Trees::GenPhotos::SubTrees& children ,
+  const Decays::Trees::Alg                  alg      ,
+  const Decays::Trees::Oscillation          osc      )
+  : Decays::Trees::GenExclusive ( mother    , children , alg , osc ) 
   , m_photon    ( "gamma"   )
 {}
 // ============================================================================
 // constructor from the node (mother) and subtrees 
 // ============================================================================
-LoKi::Decays::Trees::GenPhotos::GenPhotos
+Decays::Trees::GenPhotos::GenPhotos
 ( const std::string&                              mother   , 
-  const LoKi::Decays::Trees::GenPhotos::SubTrees& children ,
-  const LoKi::Decays::Trees::Alg                  alg      ,
-  const LoKi::Decays::Trees::Oscillation          osc      )
-  : LoKi::Decays::Trees::GenExclusive ( mother    , children , alg , osc ) 
+  const Decays::Trees::GenPhotos::SubTrees& children ,
+  const Decays::Trees::Alg                  alg      ,
+  const Decays::Trees::Oscillation          osc      )
+  : Decays::Trees::GenExclusive ( mother    , children , alg , osc ) 
   , m_photon    ( "gamma"   )
 {}
 // ============================================================================
 // constructor from the node (mother) and subtrees 
 // ============================================================================
-LoKi::Decays::Trees::GenPhotos::GenPhotos
+Decays::Trees::GenPhotos::GenPhotos
 ( const LHCb::ParticleID&                         mother   , 
-  const LoKi::Decays::Trees::GenPhotos::SubTrees& children ,
-  const LoKi::Decays::Trees::Alg                  alg      ,
-  const LoKi::Decays::Trees::Oscillation          osc      )
-  : LoKi::Decays::Trees::GenExclusive ( mother    , children , alg , osc ) 
+  const Decays::Trees::GenPhotos::SubTrees& children ,
+  const Decays::Trees::Alg                  alg      ,
+  const Decays::Trees::Oscillation          osc      )
+  : Decays::Trees::GenExclusive ( mother    , children , alg , osc ) 
     , m_photon    ( "gamma"   )
 {}
 // ============================================================================
-LoKi::Decays::Trees::GenPhotos::GenPhotos
-( const LoKi::Decays::Trees::GenPhotos::GenExclusive& right ) 
-  : LoKi::Decays::Trees::GenExclusive ( right ) 
+Decays::Trees::GenPhotos::GenPhotos
+( const Decays::Trees::GenPhotos::GenExclusive& right ) 
+  : Decays::Trees::GenExclusive ( right ) 
   , m_photon    ( "gamma"   )
 {}
 // ============================================================================
 // MANDATORY: the proper validation of the tree
 // ============================================================================
-StatusCode LoKi::Decays::Trees::GenPhotos::validate 
-( IParticlePropertySvc* svc ) const 
+StatusCode Decays::Trees::GenPhotos::validate 
+( const LHCb::IParticlePropertySvc* svc ) const 
 {
   StatusCode sc = m_photon.validate ( svc ) ;
   return sc.isFailure() ? sc : GenExclusive::validate ( svc ) ;  // RETURN 
@@ -970,14 +959,14 @@ StatusCode LoKi::Decays::Trees::GenPhotos::validate
 // ============================================================================
 // MANDATORY: the specific printout 
 // ============================================================================
-std::ostream& LoKi::Decays::Trees::GenPhotos::fillStream ( std::ostream& s ) const 
+std::ostream& Decays::Trees::GenPhotos::fillStream ( std::ostream& s ) const 
 {
   //
   switch ( oscillation () ) 
   {
-  case LoKi::Decays::Trees::Oscillated    : 
+  case Decays::Trees::Oscillated    : 
     s << " ( [" << mother () << "]os "  ; break ;  // BREAK 
-  case LoKi::Decays::Trees::NotOscillated : 
+  case Decays::Trees::NotOscillated : 
     s << " ( [" << mother () << "]nos " ; break ;  // BREAK 
   default:
     s << " ("   << mother ()            ; 
@@ -997,8 +986,8 @@ std::ostream& LoKi::Decays::Trees::GenPhotos::fillStream ( std::ostream& s ) con
 // ============================================================================
 // MANDATORY: the only one essential method
 // ============================================================================
-bool LoKi::Decays::Trees::GenPhotos::operator() 
-  ( LoKi::Decays::iTree_<const HepMC::GenParticle*>::argument p ) const 
+bool Decays::Trees::GenPhotos::operator() 
+  ( Decays::iTree_<const HepMC::GenParticle*>::argument p ) const 
 {
   // reset the cache (ALWAYS!!!)
   i_reset () ;
@@ -1007,10 +996,10 @@ bool LoKi::Decays::Trees::GenPhotos::operator()
   if ( !good ) { return false ; }        // RETURN 
   // perform the real matching:
   // (1) get the proper decay sections:
-  LoKi::Decays::GenSections sections ;
+  Decays::GenSections sections ;
   makeSections ( good , alg() , sections ) ;
   // (2) loop over all sections
-  for (  LoKi::Decays::GenSections::iterator isect = sections.begin() ; 
+  for (  Decays::GenSections::iterator isect = sections.begin() ; 
          sections.end() != isect ; ++isect )
   {
     // (3) try to match the section 
@@ -1044,125 +1033,125 @@ bool LoKi::Decays::Trees::GenPhotos::operator()
 // ============================================================================
 // GENPHOTOSOPTIONAL
 // ============================================================================
-LoKi::Decays::Trees::GenPhotosOptional::GenPhotosOptional
-( const LoKi::Decays::iNode&                         mother   , 
-  const LoKi::Decays::Trees::GenExclusive::SubTrees& children ,
-  const LoKi::Decays::Trees::GenExclusive::SubTrees& optional ,
-  const LoKi::Decays::Trees::Alg                     alg      ,
-  const LoKi::Decays::Trees::Oscillation             osc      )
-  : LoKi::Decays::Trees::GenOptional ( mother , children , optional , alg , osc )
+Decays::Trees::GenPhotosOptional::GenPhotosOptional
+( const Decays::iNode&                         mother   , 
+  const Decays::Trees::GenExclusive::SubTrees& children ,
+  const Decays::Trees::GenExclusive::SubTrees& optional ,
+  const Decays::Trees::Alg                     alg      ,
+  const Decays::Trees::Oscillation             osc      )
+  : Decays::Trees::GenOptional ( mother , children , optional , alg , osc )
   , m_photon ( "gamma")  
 {}
 // ============================================================================
-LoKi::Decays::Trees::GenPhotosOptional::GenPhotosOptional
-( const LoKi::Decays::iNode&                         mother   , 
-  const LoKi::Decays::Trees::GenExclusive::SubTrees& children ,
-  const LoKi::Decays::iNode&                         optional ,
-  const LoKi::Decays::Trees::Alg                     alg      ,
-  const LoKi::Decays::Trees::Oscillation             osc      )
-  : LoKi::Decays::Trees::GenOptional ( mother , children , optional , alg , osc )
+Decays::Trees::GenPhotosOptional::GenPhotosOptional
+( const Decays::iNode&                         mother   , 
+  const Decays::Trees::GenExclusive::SubTrees& children ,
+  const Decays::iNode&                         optional ,
+  const Decays::Trees::Alg                     alg      ,
+  const Decays::Trees::Oscillation             osc      )
+  : Decays::Trees::GenOptional ( mother , children , optional , alg , osc )
   , m_photon ( "gamma")  
 {}
 // ============================================================================
-LoKi::Decays::Trees::GenPhotosOptional::GenPhotosOptional
-( const LoKi::Decays::iNode&                             mother   , 
-  const LoKi::Decays::Trees::GenExclusive::SubTrees&     children ,
-  const LoKi::Decays::iTree_<const HepMC::GenParticle*>& optional ,
-  const LoKi::Decays::Trees::Alg                         alg      ,
-  const LoKi::Decays::Trees::Oscillation                 osc      )
-  : LoKi::Decays::Trees::GenOptional ( mother , children , optional , alg , osc )
+Decays::Trees::GenPhotosOptional::GenPhotosOptional
+( const Decays::iNode&                             mother   , 
+  const Decays::Trees::GenExclusive::SubTrees&     children ,
+  const Decays::iTree_<const HepMC::GenParticle*>& optional ,
+  const Decays::Trees::Alg                         alg      ,
+  const Decays::Trees::Oscillation                 osc      )
+  : Decays::Trees::GenOptional ( mother , children , optional , alg , osc )
   , m_photon ( "gamma")  
 {}
 // ============================================================================
-LoKi::Decays::Trees::GenPhotosOptional::GenPhotosOptional
+Decays::Trees::GenPhotosOptional::GenPhotosOptional
 ( const std::string&                                 mother   , 
-  const LoKi::Decays::Trees::GenExclusive::SubTrees& children ,
-  const LoKi::Decays::Trees::GenExclusive::SubTrees& optional ,
-  const LoKi::Decays::Trees::Alg                     alg      ,
-  const LoKi::Decays::Trees::Oscillation             osc      )
-  : LoKi::Decays::Trees::GenOptional ( mother , children , optional , alg , osc )
+  const Decays::Trees::GenExclusive::SubTrees& children ,
+  const Decays::Trees::GenExclusive::SubTrees& optional ,
+  const Decays::Trees::Alg                     alg      ,
+  const Decays::Trees::Oscillation             osc      )
+  : Decays::Trees::GenOptional ( mother , children , optional , alg , osc )
   , m_photon ( "gamma")  
 {}
 // ============================================================================
-LoKi::Decays::Trees::GenPhotosOptional::GenPhotosOptional
+Decays::Trees::GenPhotosOptional::GenPhotosOptional
 ( const std::string&                                 mother   , 
-  const LoKi::Decays::Trees::GenExclusive::SubTrees& children ,
-  const LoKi::Decays::iNode&                         optional ,
-  const LoKi::Decays::Trees::Alg                     alg      ,
-  const LoKi::Decays::Trees::Oscillation             osc      )
-  : LoKi::Decays::Trees::GenOptional ( mother , children , optional , alg , osc )
+  const Decays::Trees::GenExclusive::SubTrees& children ,
+  const Decays::iNode&                         optional ,
+  const Decays::Trees::Alg                     alg      ,
+  const Decays::Trees::Oscillation             osc      )
+  : Decays::Trees::GenOptional ( mother , children , optional , alg , osc )
   , m_photon ( "gamma")  
 {}
 // ============================================================================
-LoKi::Decays::Trees::GenPhotosOptional::GenPhotosOptional
+Decays::Trees::GenPhotosOptional::GenPhotosOptional
 ( const std::string&                                     mother   , 
-  const LoKi::Decays::Trees::GenExclusive::SubTrees&     children ,
-  const LoKi::Decays::iTree_<const HepMC::GenParticle*>& optional ,
-  const LoKi::Decays::Trees::Alg                         alg      ,
-  const LoKi::Decays::Trees::Oscillation                 osc      )
-  : LoKi::Decays::Trees::GenOptional ( mother , children , optional , alg , osc )
+  const Decays::Trees::GenExclusive::SubTrees&     children ,
+  const Decays::iTree_<const HepMC::GenParticle*>& optional ,
+  const Decays::Trees::Alg                         alg      ,
+  const Decays::Trees::Oscillation                 osc      )
+  : Decays::Trees::GenOptional ( mother , children , optional , alg , osc )
   , m_photon ( "gamma")  
 {}
 // ============================================================================
-LoKi::Decays::Trees::GenPhotosOptional::GenPhotosOptional
+Decays::Trees::GenPhotosOptional::GenPhotosOptional
 ( const LHCb::ParticleID&                            mother   , 
-  const LoKi::Decays::Trees::GenExclusive::SubTrees& children ,
-  const LoKi::Decays::Trees::GenExclusive::SubTrees& optional ,
-  const LoKi::Decays::Trees::Alg                     alg      ,
-  const LoKi::Decays::Trees::Oscillation             osc      )
-  : LoKi::Decays::Trees::GenOptional ( mother , children , optional , alg , osc )
+  const Decays::Trees::GenExclusive::SubTrees& children ,
+  const Decays::Trees::GenExclusive::SubTrees& optional ,
+  const Decays::Trees::Alg                     alg      ,
+  const Decays::Trees::Oscillation             osc      )
+  : Decays::Trees::GenOptional ( mother , children , optional , alg , osc )
   , m_photon ( "gamma")  
 {}
 // ============================================================================
-LoKi::Decays::Trees::GenPhotosOptional::GenPhotosOptional
+Decays::Trees::GenPhotosOptional::GenPhotosOptional
 ( const LHCb::ParticleID&                            mother   , 
-  const LoKi::Decays::Trees::GenExclusive::SubTrees& children ,
-  const LoKi::Decays::iNode&                         optional ,
-  const LoKi::Decays::Trees::Alg                     alg      ,
-  const LoKi::Decays::Trees::Oscillation             osc      )
-  : LoKi::Decays::Trees::GenOptional ( mother , children , optional , alg , osc )
+  const Decays::Trees::GenExclusive::SubTrees& children ,
+  const Decays::iNode&                         optional ,
+  const Decays::Trees::Alg                     alg      ,
+  const Decays::Trees::Oscillation             osc      )
+  : Decays::Trees::GenOptional ( mother , children , optional , alg , osc )
   , m_photon ( "gamma")  
 {}
 // ============================================================================
-LoKi::Decays::Trees::GenPhotosOptional::GenPhotosOptional
+Decays::Trees::GenPhotosOptional::GenPhotosOptional
 ( const LHCb::ParticleID&                                mother   , 
-  const LoKi::Decays::Trees::GenExclusive::SubTrees&     children ,
-  const LoKi::Decays::iTree_<const HepMC::GenParticle*>& optional ,
-  const LoKi::Decays::Trees::Alg                         alg      ,
-  const LoKi::Decays::Trees::Oscillation                 osc      )
-  : LoKi::Decays::Trees::GenOptional ( mother , children , optional , alg , osc )
+  const Decays::Trees::GenExclusive::SubTrees&     children ,
+  const Decays::iTree_<const HepMC::GenParticle*>& optional ,
+  const Decays::Trees::Alg                         alg      ,
+  const Decays::Trees::Oscillation                 osc      )
+  : Decays::Trees::GenOptional ( mother , children , optional , alg , osc )
   , m_photon ( "gamma")  
 {}
 // ============================================================================
-LoKi::Decays::Trees::GenPhotosOptional::GenPhotosOptional
-( const LoKi::Decays::Trees::GenOptional& right ) 
-  : LoKi::Decays::Trees::GenOptional ( right )
+Decays::Trees::GenPhotosOptional::GenPhotosOptional
+( const Decays::Trees::GenOptional& right ) 
+  : Decays::Trees::GenOptional ( right )
   , m_photon ( "gamma")  
 {}
 // ============================================================================
-LoKi::Decays::Trees::GenPhotosOptional::GenPhotosOptional
-( const LoKi::Decays::Trees::GenExclusive&           right    ,
-  const LoKi::Decays::Trees::GenExclusive::SubTrees& optional )
-  : LoKi::Decays::Trees::GenOptional ( right , optional )
+Decays::Trees::GenPhotosOptional::GenPhotosOptional
+( const Decays::Trees::GenExclusive&           right    ,
+  const Decays::Trees::GenExclusive::SubTrees& optional )
+  : Decays::Trees::GenOptional ( right , optional )
   , m_photon ( "gamma")  
 {}
 // ============================================================================
-LoKi::Decays::Trees::GenPhotosOptional::GenPhotosOptional
-( const LoKi::Decays::Trees::GenExclusive& right    ,
-  const LoKi::Decays::iNode&               optional )
-  : LoKi::Decays::Trees::GenOptional ( right , optional )
+Decays::Trees::GenPhotosOptional::GenPhotosOptional
+( const Decays::Trees::GenExclusive& right    ,
+  const Decays::iNode&               optional )
+  : Decays::Trees::GenOptional ( right , optional )
   , m_photon ( "gamma")  
 {}
 // ============================================================================
 // MANDATORY: check the validity of the tree 
 // ============================================================================
-bool LoKi::Decays::Trees::GenPhotosOptional::valid() const 
+bool Decays::Trees::GenPhotosOptional::valid() const 
 { return GenOptional::valid() && m_photon.valid() ; }
 // ============================================================================
 // MANDATORY: the proper validation of the tree
 // ============================================================================
-StatusCode LoKi::Decays::Trees::GenPhotosOptional::validate 
-( IParticlePropertySvc* svc ) const 
+StatusCode Decays::Trees::GenPhotosOptional::validate 
+( const LHCb::IParticlePropertySvc* svc ) const 
 { 
   StatusCode sc = m_photon.validate ( svc ) ;
   return sc.isFailure() ? sc : GenOptional::validate ( svc ) ;
@@ -1170,15 +1159,15 @@ StatusCode LoKi::Decays::Trees::GenPhotosOptional::validate
 // ============================================================================
 // MANDATORY: the specific printout 
 // ============================================================================
-std::ostream& LoKi::Decays::Trees::GenPhotosOptional::fillStream 
+std::ostream& Decays::Trees::GenPhotosOptional::fillStream 
 ( std::ostream& s ) const 
 {
   //
   switch ( oscillation () ) 
   {
-  case LoKi::Decays::Trees::Oscillated    : 
+  case Decays::Trees::Oscillated    : 
     s << " ( [" << mother () << "]os "  ; break ;  // BREAK 
-  case LoKi::Decays::Trees::NotOscillated : 
+  case Decays::Trees::NotOscillated : 
     s << " ( [" << mother () << "]nos " ; break ;  // BREAK 
   default:
     s << " ("   << mother ()            ; 
@@ -1203,8 +1192,8 @@ std::ostream& LoKi::Decays::Trees::GenPhotosOptional::fillStream
 // ============================================================================
 // MANDATORY: the only one essential method
 // ============================================================================
-bool LoKi::Decays::Trees::GenPhotosOptional::operator() 
-  ( LoKi::Decays::iTree_<const HepMC::GenParticle*>::argument p ) const 
+bool Decays::Trees::GenPhotosOptional::operator() 
+  ( Decays::iTree_<const HepMC::GenParticle*>::argument p ) const 
 {
   // reset the cache (ALWAYS!!!)
   i_reset () ;
@@ -1213,10 +1202,10 @@ bool LoKi::Decays::Trees::GenPhotosOptional::operator()
   if ( !good ) { return false ; }        // RETURN 
   // perform the real matching:
   // (1) get the proper decay sections:
-  LoKi::Decays::GenSections sections ;
+  Decays::GenSections sections ;
   makeSections ( p , alg() , sections ) ;
   // (2) loop over all sections
-  for (  LoKi::Decays::GenSections::iterator isect = sections.begin() ; 
+  for (  Decays::GenSections::iterator isect = sections.begin() ; 
          sections.end() != isect ; ++isect )
   {
     // (3) try to match the section 
@@ -1236,7 +1225,7 @@ bool LoKi::Decays::Trees::GenPhotosOptional::operator()
       if ( std::equal ( childBegin() , childEnd() , isect->begin() , Equal() ) )
       {
         // the temporary iterator 
-        LoKi::Decays::GenSection::iterator aux = isect->begin() + nChildren() ;
+        Decays::GenSection::iterator aux = isect->begin() + nChildren() ;
         // nothing to match? 
         if ( aux == isect->end() ) { return true ; } // RETURN
         // create the local container for permutations 
@@ -1281,66 +1270,66 @@ bool LoKi::Decays::Trees::GenPhotosOptional::operator()
  *  @date 2008-07-07
  */
 // ============================================================================
-LoKi::Decays::Trees::And_<const HepMC::GenParticle*>
+Decays::Trees::And_<const HepMC::GenParticle*>
 operator&& 
-( const LoKi::Decays::iTree_<const HepMC::GenParticle*>& t , 
-  const LoKi::Decays::iNode&                             n ) 
-{ return t && LoKi::Decays::Trees::GenExclusive ( n ) ; }
+( const Decays::iTree_<const HepMC::GenParticle*>& t , 
+  const Decays::iNode&                             n ) 
+{ return t && Decays::Trees::GenExclusive ( n ) ; }
 // ============================================================================
 /*  operator for easy construction of trees 
  *  @author Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
  *  @date 2008-07-07
  */
 // ============================================================================
-LoKi::Decays::Trees::And_<const HepMC::GenParticle*>
+Decays::Trees::And_<const HepMC::GenParticle*>
 operator&& 
-( const LoKi::Decays::iTree_<const HepMC::GenParticle*>& t , 
+( const Decays::iTree_<const HepMC::GenParticle*>& t , 
   const std::string&                                     n ) 
-{ return t && LoKi::Decays::Trees::GenExclusive ( n ) ; }
+{ return t && Decays::Trees::GenExclusive ( n ) ; }
 // ============================================================================
 /*  operator for the easy construction of trees 
  *  @author Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
  *  @date 2008-07-07
  */
 // ============================================================================
-LoKi::Decays::Trees::And_<const HepMC::GenParticle*>
+Decays::Trees::And_<const HepMC::GenParticle*>
 operator&& 
-( const LoKi::Decays::iTree_<const HepMC::GenParticle*>& t , 
+( const Decays::iTree_<const HepMC::GenParticle*>& t , 
   const LHCb::ParticleID&                                n ) 
-{ return t && LoKi::Decays::Trees::GenExclusive ( n ) ; }
+{ return t && Decays::Trees::GenExclusive ( n ) ; }
 // ============================================================================
 /*  operator for easy construction of trees 
  *  @author Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
  *  @date 2008-07-07
  */
 // ============================================================================
-LoKi::Decays::Trees::Or_<const HepMC::GenParticle*>
+Decays::Trees::Or_<const HepMC::GenParticle*>
 operator|| 
-( const LoKi::Decays::iTree_<const HepMC::GenParticle*>& t , 
-  const LoKi::Decays::iNode&                             n ) 
-{ return t || LoKi::Decays::Trees::GenExclusive ( n ) ; }
+( const Decays::iTree_<const HepMC::GenParticle*>& t , 
+  const Decays::iNode&                             n ) 
+{ return t || Decays::Trees::GenExclusive ( n ) ; }
 // ============================================================================
 /*  operator for easy construction of trees 
  *  @author Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
  *  @date 2008-07-07
  */
 // ============================================================================
-LoKi::Decays::Trees::Or_<const HepMC::GenParticle*>
+Decays::Trees::Or_<const HepMC::GenParticle*>
 operator||
-( const LoKi::Decays::iTree_<const HepMC::GenParticle*>& t , 
+( const Decays::iTree_<const HepMC::GenParticle*>& t , 
   const std::string&                                     n ) 
-{ return t || LoKi::Decays::Trees::GenExclusive ( n ) ; }
+{ return t || Decays::Trees::GenExclusive ( n ) ; }
 // ============================================================================
 /*  operator for the easy construction of trees 
  *  @author Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
  *  @date 2008-07-07
  */
 // ============================================================================
-LoKi::Decays::Trees::Or_<const HepMC::GenParticle*>
+Decays::Trees::Or_<const HepMC::GenParticle*>
 operator||
-( const LoKi::Decays::iTree_<const HepMC::GenParticle*>& t , 
+( const Decays::iTree_<const HepMC::GenParticle*>& t , 
   const LHCb::ParticleID&                                n ) 
-{ return t || LoKi::Decays::Trees::GenExclusive ( n ) ; }
+{ return t || Decays::Trees::GenExclusive ( n ) ; }
 // ============================================================================
 
 
