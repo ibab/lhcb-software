@@ -1,4 +1,4 @@
-// $Id: MDFSelector.cpp,v 1.17 2008-11-13 09:08:06 frankb Exp $
+// $Id: MDFSelector.cpp,v 1.18 2008-12-04 13:38:25 frankb Exp $
 //====================================================================
 //  MDFSelector.cpp
 //--------------------------------------------------------------------
@@ -40,7 +40,7 @@ namespace LHCb  {
     virtual ~MDFContext()                                    { }
     /// Allocate buffer space for reading data
     MDFDescriptor getDataSpace(void* const /* ioDesc */, size_t len)  {
-      m_buff.reserve(len);
+      m_buff.reserve(len+m_sel->additionalSpace());
       return MDFDescriptor(m_buff.data(),m_buff.size());
     }
     /// Read raw byte buffer from input stream

@@ -1,4 +1,4 @@
-// $Id: MDFWriter.cpp,v 1.26 2008-10-28 12:34:36 cattanem Exp $
+// $Id: MDFWriter.cpp,v 1.27 2008-12-04 13:38:25 frankb Exp $
 //  ====================================================================
 //  MDFWriter.cpp
 //  --------------------------------------------------------------------
@@ -56,6 +56,7 @@ void MDFWriter::construct()   {
   declareProperty("BankLocation",   m_bankLocation=RawEventLocation::Default);  // Location of the banks in the TES
   declareProperty("DataManager",    m_ioMgrName="Gaudi::IODataManager/IODataManager");
   declareProperty("ForceTAE",       m_forceTAE = false);
+  declareProperty("AddSpace",       m_addSpace=1);
 }
 
 MDFWriter::~MDFWriter()   {
@@ -105,7 +106,7 @@ StatusCode MDFWriter::finalize() {
 
 /// Allocate space for IO buffer
 MDFIO::MDFDescriptor MDFWriter::getDataSpace(void* const /* ioDesc */, size_t len)  {
-  m_data.reserve(len);
+  m_data.reserve(len+additionalSpace());
   return MDFDescriptor(m_data.data(), m_data.size());
 }
 

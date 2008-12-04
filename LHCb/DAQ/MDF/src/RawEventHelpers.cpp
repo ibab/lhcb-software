@@ -1,4 +1,4 @@
-// $Id: RawEventHelpers.cpp,v 1.43 2008-10-29 08:59:27 cattanem Exp $
+// $Id: RawEventHelpers.cpp,v 1.44 2008-12-04 13:38:25 frankb Exp $
 //  ====================================================================
 //  RawEventHelpers.cpp
 //  --------------------------------------------------------------------
@@ -679,17 +679,20 @@ StatusCode LHCb::decodeRawBanks(const char* start, const char* end, int* offsets
 /// Copy RawEvent data from the object to sequential buffer
 StatusCode LHCb::encodeRawBanks(const RawEvent* evt, char* const data, size_t size, bool skip_hdr_bank)  {
   if ( data )  {
+    typedef std::vector<RawBank*> _BankV;
     RawEvent* raw = const_cast<RawEvent*>(evt);
-    for(size_t total=0, len=0, i=RawBank::L0Calo; i<RawBank::LastType; ++i)  {
-      typedef std::vector<RawBank*> _BankV;
-      const _BankV& b = raw->banks(RawBank::BankType(i));
-      if(encodeRawBanks(b, data+total, size-total, skip_hdr_bank, &len).isSuccess())  {
-        total += len;
-        continue;
+    size_t total, len, i;
+    for(total=0, len=0, i=RawBank::L0Calo; i<RawBank::LastType; ++i)  {
+      if ( i != RawBank::DAQ ) {
+	const _BankV& b = raw->banks(RawBank::BankType(i));
+	if(encodeRawBanks(b, data+total, size-total, skip_hdr_bank, &len).isSuccess())  {
+	  total += len;
+	  continue;
+	}
+	return StatusCode::FAILURE;
       }
-      return StatusCode::FAILURE;
     }
-    return StatusCode::SUCCESS;
+    return encodeRawBanks(raw->banks(RawBank::DAQ), data+total, size-total, skip_hdr_bank, &len);
   }
   return StatusCode::FAILURE;
 }

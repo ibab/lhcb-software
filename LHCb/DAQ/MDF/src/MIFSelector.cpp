@@ -1,4 +1,4 @@
-// $Id: MIFSelector.cpp,v 1.12 2008-02-05 16:44:18 frankb Exp $
+// $Id: MIFSelector.cpp,v 1.13 2008-12-04 13:38:25 frankb Exp $
 //====================================================================
 //  MIFSelector.cpp
 //--------------------------------------------------------------------
@@ -71,7 +71,7 @@ namespace LHCb  {
     /// Standard destructor 
     virtual ~MIFContext();
     MDFDescriptor getDataSpace(void* const /* ioDesc */, size_t len)  {
-      m_buff.reserve(len);
+      m_buff.reserve(len+m_sel->additionalSpace());
       return MDFDescriptor(m_buff.data(), m_buff.size());
     }
     virtual StatusCode connect(const std::string& spec);

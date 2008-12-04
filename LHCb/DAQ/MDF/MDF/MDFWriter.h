@@ -1,4 +1,4 @@
-// $Id: MDFWriter.h,v 1.11 2008-04-10 09:58:41 cattanem Exp $
+// $Id: MDFWriter.h,v 1.12 2008-12-04 13:38:25 frankb Exp $
 //  ====================================================================
 //  MDFWriter.h
 //  --------------------------------------------------------------------
@@ -61,6 +61,9 @@ namespace LHCb    {
     long long int m_bytesWritten;
     /// Input data type (like MDFIO::m_dataType)
     int           m_inputType;
+    /// Property: additional dataspace to be used to add data [KBYTES]. Default=0
+    int                 m_addSpace;
+
     /// Internal setup (may not be called from sub-classes!
     void construct();
 
@@ -80,6 +83,9 @@ namespace LHCb    {
       * @return  Status code indicating success or failure.
       */
     virtual StatusCode writeBuffer(void* const ioDesc, const void* data, size_t len);
+
+    /// Additional dataspace in buffer [BYTES]
+    int additionalSpace() const {   return m_addSpace*1024; }
 
   public:
 

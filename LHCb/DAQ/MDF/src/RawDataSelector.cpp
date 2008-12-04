@@ -1,4 +1,4 @@
-// $Id: RawDataSelector.cpp,v 1.20 2008-11-13 09:08:06 frankb Exp $
+// $Id: RawDataSelector.cpp,v 1.21 2008-12-04 13:38:25 frankb Exp $
 //====================================================================
 //  OnlineMDFEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -58,9 +58,10 @@ RawDataSelector::RawDataSelector(const std::string& nam, ISvcLocator* svcloc)
   : Service( nam, svcloc), m_rootCLID(CLID_NULL), m_evtCount(0)
 {
   declareProperty("DataManager", m_ioMgrName="Gaudi::IODataManager/IODataManager");
-  declareProperty("NSkip",     m_skipEvents=0);
-  declareProperty("PrintFreq", m_printFreq=-1);
-  declareProperty("Input",     m_input="");
+  declareProperty("NSkip",       m_skipEvents=0);
+  declareProperty("PrintFreq",   m_printFreq=-1);
+  declareProperty("AddSpace",    m_addSpace=0);
+  declareProperty("Input",       m_input="");
 }
 
 // IInterface::queryInterface

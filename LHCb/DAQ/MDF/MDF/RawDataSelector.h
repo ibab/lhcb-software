@@ -1,4 +1,4 @@
-// $Id: RawDataSelector.h,v 1.18 2008-11-13 09:08:06 frankb Exp $
+// $Id: RawDataSelector.h,v 1.19 2008-12-04 13:38:25 frankb Exp $
 //====================================================================
 #ifndef MDF_RAWDATASELECTOR_H
 #define MDF_RAWDATASELECTOR_H 1
@@ -157,6 +157,9 @@ namespace LHCb  {
     /// Access to the file manager
     Gaudi::IIODataManager* fileMgr()  const  {   return m_ioMgr; }
 
+    /// Additional dataspace in buffer [BYTES]
+    int additionalSpace() const {   return m_addSpace*1024; }
+
     /// Service Constructor
     RawDataSelector( const std::string& name, ISvcLocator* svcloc );
 
@@ -180,6 +183,8 @@ namespace LHCb  {
     int                 m_skipEvents;
     /// Property: printout frequency
     int                 m_printFreq;
+    /// Property: additional dataspace to be used to add data [KBYTES]. Default=0
+    int                 m_addSpace;
     /// Event record count
     mutable int         m_evtCount;
   };
