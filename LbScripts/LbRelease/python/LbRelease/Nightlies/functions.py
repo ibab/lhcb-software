@@ -92,20 +92,22 @@ def runparallel(slotName, minusj=None):
         runningPlatformList = []
         for p in slot.getPlatforms():
             current = runThread(slotName, p)
-            runningPlatformList.append(p)
+            runningPlatformList.append(current)
             current.start()
-            time.sleep(600) # wait
+            time.sleep(60) # wait
         for t in runningPlatformList: t.join()
         cleanPycPyoFiles(slot)
 
 def cleanAFSSpace(slotName):
     """ removes everything from today from AFS for the <slotName> """
     slot = configuration.findSlot(slotName)
-    pathToRemoveFiles = nightliesAFSPath + '/' + slotName + '/' + configuration.TODAY
-    if os.path.exists(pathToRemoveFiles):
-        for x in os.listdir(pathToRemoveFiles):
-            if os.path.isdir(os.path.join(pathToRemoveFiles, x)): shutil.rmtree(os.path.join(pathToRemoveFiles, x), ignore_errors=True)
-            else: os.remove(os.path.join(pathToRemoveFiles, x))
+    #pathToRemoveFiles = nightliesAFSPath + '/' + slotName + '/' + configuration.TODAY
+    if slot is not None:
+        pathToRemoveFiles = os.path.join(slot.releaseDir())
+        if os.path.exists(pathToRemoveFiles):
+            for x in os.listdir(pathToRemoveFiles):
+                if os.path.isdir(os.path.join(pathToRemoveFiles, x)): shutil.rmtree(os.path.join(pathToRemoveFiles, x), ignore_errors=True)
+                else: os.remove(os.path.join(pathToRemoveFiles, x))
     #clear logs from web
     if slot is not None:
         webDir = os.path.join(slot.wwwDir())
@@ -272,9 +274,8 @@ def generateBuilders(destPath, projectNames, minusj):
     #settingEnv += ' --cmtsite=$CMTSITE' #+os.environ.get('CMTSITE','""')
     #settingEnv += ' --cmtconfig=$CMTCONFIG' #+os.environ.get('CMTCONFIG','""')
     #settingEnv += ' --userarea=$User_release_area' #+os.environ.get('User_release_area','""')
-    #settingEnv += ' --cmtvers='
     settingEnv += ' > /dev/null'
-    settingEnv += ' ; source ' + pathCmtSetup
+    if pathCmtSetup is not None: settingEnv += ' ; source ' + pathCmtSetup
     settingEnv += ' ; export CMTCONFIG=$CMTCONFIGcopy ; export LD_LIBRARY_PATH=$LD_LIBRARY_PATHcopy'
     lines = """
 action pkg_get "mkdir -p logs ; """ + settingEnv + """ ; python """ + actionsFileAbsPath + """ get $(packageName) 2>&1 | tee -a logs/$(package)_$(CMTCONFIG)_get.log"
