@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.cpp,v 1.30 2008-06-04 09:49:51 odescham Exp $
+// $Id: CaloReadoutTool.cpp,v 1.31 2008-12-04 13:01:48 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -243,7 +243,7 @@ bool CaloReadoutTool::checkSrc(int source){
   if(read){
     std::stringstream s("");
     s<< source;
-    Warning("Another bank bank with same sourceID " + s.str() + " has already been read").ignore();
+    Warning("Another bank with same sourceID " + s.str() + " has already been read").ignore();
     m_status.addStatus(source, LHCb::RawBankReadoutStatus::NonUnique );
   }
   else{
