@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2008-12-04 - Marco Cattaneo
+ - Adapt to new location of IPatDebugTTTool.h in PatKernel
+
 ! 2008-12-02 - Wouter Hulsbergen
  - adapted to change in Track::stateAt
 

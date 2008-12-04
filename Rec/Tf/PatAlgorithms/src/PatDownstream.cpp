@@ -1,4 +1,4 @@
-// $Id: PatDownstream.cpp,v 1.5 2008-07-13 22:05:47 mschille Exp $
+// $Id: PatDownstream.cpp,v 1.6 2008-12-04 09:06:34 cattanem Exp $
 // Include files 
 
 // from boost
@@ -10,10 +10,15 @@
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/Point3DTypes.h"
 
+#include "STDet/DeSTDetector.h"
 #include "STDet/DeTTSector.h"
 
+#include "Event/Track.h"
+
+#include "PatKernel/IPatDebugTTTool.h"
 #include "TfKernel/RecoFuncs.h"
 #include "TfKernel/ITTHitCreator.h"
+
 // local
 #include "PatDownTrack.h"
 #include "PatDownstream.h"

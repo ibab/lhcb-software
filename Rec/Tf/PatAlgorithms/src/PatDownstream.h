@@ -1,19 +1,25 @@
-// $Id: PatDownstream.h,v 1.3 2007-12-19 16:02:36 ocallot Exp $
+// $Id: PatDownstream.h,v 1.4 2008-12-04 09:06:34 cattanem Exp $
 #ifndef PATDOWNSTREAM_H 
 #define PATDOWNSTREAM_H 1
 
 // Include files
 #include <string>
+#include <vector>
 
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 
-// From STDet 
-#include "STDet/DeSTDetector.h"
-
 #include "TfKernel/TTStationHitManager.h"
 #include "PatKernel/PatTTHit.h"
-#include "TrackInterfaces/IPatDebugTTTool.h"
+
+// forward declarations
+class IPatDebugTTTool;
+class DeSTDetector;
+class PatDownTrack;
+
+namespace LHCb {
+  class Track;
+}
 
 /** @class PatDownstream PatDownstream.h
  *  Algorithm to reconstruct tracks with seed and TT, for KShort use.
