@@ -1,4 +1,4 @@
-// $Id: TrackResChecker.cpp,v 1.9 2008-12-04 09:03:55 cattanem Exp $
+// $Id: TrackResChecker.cpp,v 1.10 2008-12-04 09:59:10 cattanem Exp $
 // Include files 
 #include "TrackResChecker.h"
 
@@ -283,7 +283,7 @@ void TrackResChecker::checkAmbiguity(const IHistoTool& histotool,
 	  LHCb::OTMeasurement meascopy( *otMeas ) ;
 	  StatusCode sc = proj -> project(trueState , meascopy );
 	  if ( sc.isFailure() ){
-	    Warning( "not able to project a state into a measurement" );
+	    Warning( "Unable to project a state into a measurement", sc, 0 ).ignore();
 	  } else {
 	    if( meascopy.ambiguity() == otMeas->ambiguity() )
 	      ++correctOnTrack;
@@ -332,22 +332,22 @@ void TrackResChecker::plotsByMeasType(const IHistoTool& htool, const LHCb::Track
       if (proj != 0){
         StatusCode sc = proj -> project(trueStateAtMeas , *(*it) );
         if ( sc.isFailure() ){
-	  Warning( "not able to project a state into a measurement" );
-	}
+          Warning( "Unable to project a state into a measurement", sc, 0 ).ignore();
+        }
         else {
           const double res       = proj -> residual();
           const double errorMeas = proj -> errMeasure();
           const double chi2      = proj -> chi2();
           htool.plot1D( res, dir+"/meas_res", 
-			" Measurement resolution", -0.5, 0.5, 100 );
+                        " Measurement resolution", -0.5, 0.5, 100 );
           htool.plot1D( res/errorMeas,dir+"/meas_pull", 
-			" Measurement pull", -5., 5., 100 );
+                        " Measurement pull", -5., 5., 100 );
           htool.plot1D( chi2, dir+"/meas_chi2", 
-			" Measurement chi2", 0., 10., 200 );
-	}
+                        " Measurement chi2", 0., 10., 200 );
+        }
       }
       else { 
-        Warning( "could not get projector for measurement", StatusCode::SUCCESS );
+        Warning( "could not get projector for measurement", StatusCode::SUCCESS, 0 ).ignore();
       }
     }
   } // iterate measurements

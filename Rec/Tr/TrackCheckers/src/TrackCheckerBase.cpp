@@ -1,4 +1,4 @@
-// $Id: TrackCheckerBase.cpp,v 1.6 2008-12-01 10:59:36 wouter Exp $
+// $Id: TrackCheckerBase.cpp,v 1.7 2008-12-04 09:59:10 cattanem Exp $
 // Include files 
 #include "TrackCheckerBase.h"
 #include "Event/Track.h"
@@ -117,7 +117,7 @@ const LHCb::MCParticle* TrackCheckerBase::mcTruth(const LHCb::Track* aTrack) con
   const LHCb::MCParticle * particle = NULL;
   if (!m_directTable) 
   {
-    Error( "Track MCParticle table missing. Did you call initializeEvent() ?");
+    Error( "Track MCParticle table missing. Did you call initializeEvent() ?",StatusCode::FAILURE,0).ignore();
   }
   else
   {
@@ -125,8 +125,8 @@ const LHCb::MCParticle* TrackCheckerBase::mcTruth(const LHCb::Track* aTrack) con
     if (range.empty() == false) {
       particle = range.begin()->to();
       if( particle && particle->particleID().threeCharge() ==0 ) {
-	Warning("Linker table for track contains pointer to particle with zero charge",StatusCode::SUCCESS,0) ;
-	particle = 0 ;
+        Warning("Linker table for track contains pointer to particle with zero charge",StatusCode::SUCCESS,0).ignore() ;
+        particle = 0 ;
       }
     }
   }
