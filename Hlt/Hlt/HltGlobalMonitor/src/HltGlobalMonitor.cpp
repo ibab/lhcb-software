@@ -56,11 +56,11 @@ StatusCode HltGlobalMonitor::initialize() {
   
   starthistos();
 
-  hlt1allcall=0;            // "All events"
-  randallcall=0;
-  physallcall=0;
-  _counter2=0;           // "L0 accepted evts"
-  _efficiency=0;        // "Ratio counter2/hlt1allcall"
+  m_hlt1allcall=0;            // "All events"
+  m_randallcall=0;
+  m_physallcall=0;
+  m_counter2=0;           // "L0 accepted evts"
+  m_efficiency=0;        // "Ratio counter2/hlt1allcall"
 
   for (std::vector<std::string>::const_iterator i = m_Hlt1Lines.begin(); i!=m_Hlt1Lines.end();++i) {
      m_allAcc.push_back(0);
@@ -68,7 +68,7 @@ StatusCode HltGlobalMonitor::initialize() {
      m_allCall.push_back(0);
      declareInfo("COUNTER_TO_RATE["+*i+"Call]", m_allCall.back(), "Hlt1 "+*i+" Alley Calls");
   }
-  orallacc=0;
+  m_orallacc=0;
   gpstime=0;
   gpstimesec=0;
 
@@ -88,10 +88,10 @@ StatusCode HltGlobalMonitor::initialize() {
   declareInfo("m_histoL0",m_histoL0,"Successful L0 bits");
   
 //  declareInfo("hlt1allcall",_hlt1allcall,"All events");
-  declareInfo("counter2",_counter2,"L0 accepted evts");
-  declareInfo("efficiency",_efficiency,"Ratio counter2/hlt1allcall");
-  declareInfo("COUNTER_TO_RATE[Hlt1AlleyOr]", orallacc, "Hlt1 Alleys Or Accepts");
-  declareInfo("COUNTER_TO_RATE[Hlt1Calls]",hlt1allcall,"Hlt1 Calls");
+  declareInfo("counter2",m_counter2,"L0 accepted evts");
+  declareInfo("efficiency",m_efficiency,"Ratio counter2/hlt1allcall");
+  declareInfo("COUNTER_TO_RATE[Hlt1AlleyOr]", m_orallacc, "Hlt1 Alleys Or Accepts");
+  declareInfo("COUNTER_TO_RATE[Hlt1Calls]",m_hlt1allcall,"Hlt1 Calls");
   declareInfo("COUNTER_TO_RATE[GpsTimeoflast]",gpstimesec,"Gps time of last event");
    declareInfo("m_histoL0corr",m_histoL0corr,"Correlated L0 bits");
 //   declareInfo("m_histoalleyacc",m_histoalleyacc,"Accepted by Alley");
@@ -110,7 +110,7 @@ StatusCode HltGlobalMonitor::execute() {
 //  m_l0 = get<L0DUReport>(m_L0DUReportLocation);
 //  if (!m_l0) error() << " No L0 in TES!" << endreq;
   
-  hlt1allcall++;  // count all evts
+  m_hlt1allcall++;  // count all evts
 //  monitorL0();
 
  //  LHCb::HltSummary* sum = get<LHCb::HltSummary>(LHCb::
@@ -145,9 +145,9 @@ void HltGlobalMonitor::monitorL0() {
 
   if (!m_l0->decision()) return;
   
-  _counter2++;  // count L0 accepts
+  m_counter2++;  // count L0 accepts
 
-  _efficiency= float(_counter2)/hlt1allcall;
+  m_efficiency= double(m_counter2)/m_hlt1allcall;
 //  bool first=true;
 
   for (int i = 0; i<14; i+=1){ 
@@ -180,27 +180,22 @@ void HltGlobalMonitor::monitorHLT() {
 void HltGlobalMonitor::monitorAlleysinput() {
 // Filling bins for Alley call
 //bool accep=false;
- LHCb::ODIN* odin = 0;
- if (exist<LHCb::ODIN> ( LHCb::ODINLocation::Default)){
-// try {
-   odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
-   gpstime=odin->gpsTime();
-   gpstimesec=int(gpstime/1000000-904262401);
- }
- else {
-// catch( const GaudiException& Exception ) {
-  // m_incidentSvc->fireIncident(Incident(name(),IncidentType::AbortEvent));
-   this->setFilterPassed( false );
-//   return Error( "ODIN missing, skipping event", StatusCode::SUCCESS );
-   info() << "ODIN missing, skipping event" << endreq;
-   return;
- }
-   fill(m_histoodinentry, odin->triggerType(), 1.);
-   if (odin->triggerType()==3){
-     randallcall=randallcall+1;
-   } else {
-     physallcall=physallcall+1;
-   }
+  LHCb::ODIN* odin = 0;
+  if (exist<LHCb::ODIN> ( LHCb::ODINLocation::Default)){
+    odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
+    gpstime=odin->gpsTime();
+    gpstimesec=int(gpstime/1000000-904262401);
+  } else {
+    this->setFilterPassed( false );
+    info() << "ODIN missing, skipping event" << endreq;
+    return;
+  }
+  fill(m_histoodinentry, odin->triggerType(), 1.);
+  if (odin->triggerType()==ODIN::RandomTrigger){
+    ++m_randallcall
+  } else {
+    ++m_physallcall
+  }
   if (!exist<LHCb::HltDecReports>( m_location )){
     error() << "No HltDecReport" << endreq;
     return;
@@ -220,7 +215,7 @@ void HltGlobalMonitor::monitorAlleysinput() {
      j=j+1;
   }
    if (anyAccept) { 
-      orallacc=orallacc+1;
+      ++m_orallacc;
       fill(m_histoalleycall, 0, 1.);
       fill(m_histoodintype, odin->triggerType(), 1.);
    }
@@ -237,7 +232,35 @@ StatusCode HltGlobalMonitor::finalize() {
   info() << " Doing HltGlobalMonitor::finalize() " << endreq;
   // must be called after all other actions
   return HltBaseAlg::finalize();  
-
 }
 
 //=============================================================================
+
+#if 0
+// taken from $L0DUROOT/src/L0DUReportMonitor.cpp 
+// correlations
+      if( report->channelDecision( id ) ){
+        for(LHCb::L0DUChannel::Map::iterator jt = channels.begin() ;jt!=channels.end();jt++){
+          int jd = ((*jt).second)->id() ;
+          if( report->channelDecision( jd ) ){
+            // inclusive 2D counters
+            plot2D( (double) id , (double) jd , base.str() + "/L0Channels/Counters2D/1"
+                    , "L0DU Channels Decision 2D INclusive counters (TCK = " + ttck.str() + ")"
+                    , -1. ,(double) cBin, -1. ,(double) cBin , cBin+1 , cBin+1);
+            //exclusive 2D counters
+            bool isX = true;
+            for(LHCb::L0DUChannel::Map::iterator kt = channels.begin();kt!=channels.end();kt++){
+              int kd = ((*kt).second)->id() ;
+              if( kd == id || kd == jd)continue;
+              if( report->channelDecision( kd ) ){
+                isX = false;
+                break;
+              }
+            }
+            if(isX)plot2D( (double) id , (double) jd , base.str() + "/L0Channels/Counters2D/2"
+                           , "L0DU Channels Decision 2D EXclusive counters (TCK = " + ttck.str() + ")"
+                           , -1. ,(double) cBin, -1. ,(double) cBin , cBin+1 , cBin+1);
+          }
+        }
+      }
+#endif

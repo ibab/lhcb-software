@@ -48,10 +48,6 @@ protected:
 //  void monitoracceptAlleys(LHCb::HltSummary* sum);
   void monitorHLT();
   void monitorAlleySpecific(LHCb::HltSummary* sum);
-//  void monitorMuonAlley(LHCb::HltSummary* sum);
-//  void monitorMuonHadAlley(LHCb::HltSummary* sum);
-//  void monitorHadronAlley(LHCb::HltSummary* sum);
-//  void monitorCaloAlley(LHCb::HltSummary* sum);
   void monitorGlobalEvent(){;}
 //  bool CheckDecision(LHCb::HltSummary* sum, int sumid);
 
@@ -59,36 +55,7 @@ protected:
 //L0 output histograms
 //  m_histoL0 = initializeHisto("L0 bits",0.,14.,14);
   m_histoL0corr = this->book2D("Correlated L0 bits",0.,14.,14,0.,14.,14);
-//Alley specific histograms
-//  m_histomuonalley = initializeHisto("Muon Alley fonctioning",0.,10.,10);
-//  m_histoMuonTrigCorr = this->book2D("Correlated Muon Alley Triggers", 4.,10.,6,4.,10.,6);
-//  m_histohadronalley = initializeHisto("Hadron Alley fonctioning",0.,10.,10);
-//  m_histomuonhadalley = initializeHisto("Muon+Hadron Alley fonctioning",0.,10.,10);
-//  m_histocaloalley = initializeHisto("Calo Alley fonctioning",0.,10.,10);
-//Standard Bins
-#define binL0entry 0.5  
-#define binL0conf 1.5  
-#define binTrigOr 3.5 
-//Muon Specific Bins
-#define binMuonTrigS 4.5
-#define binMuonTrigDi 5.5
-#define binMuonTrigIPDi 6.5
-//Hadron Specific Bins
-#define binHadTrig 4.5
 
-//Interalley overview
-  //m_histoalleycall = initializeHisto("Alleys Called",0.,6.,6);
-//  m_histoalleycall = initializeHisto("m_histoalleycall",0.,6.,6);
-//  m_histoalleyacc = initializeHisto("Accepted by Alley",0.,6.,6);
-//  m_hcorrallcall = this->book2D("Correlation Calls",0.,6.,6,0.,6.,6);
-//  m_hcorrallacc = this->book2D("Correlated Alleys",0.,6.,6,0.,6.,6);
-
-//Bin assigned to each Alley
-#define binAlleyOr 0.5
-#define binMuonAlley 1.5
-#define binMuonHadAlley 2.5
-#define binHadronAlley 3.5
-#define binCaloAlley 4.5
 }
 
   // hists
@@ -112,17 +79,15 @@ protected:
  private:
 
   std::string m_location;
-  int hlt1allcall;        // "All events"
-  int _counter2;       // "L0 accepted evts"
-  float _efficiency;  // "Ratio counter2/hlt1allcall"
+  int m_hlt1allcall;        // "All events"
+  int m_counter2;       // "L0 accepted evts"
+  double m_efficiency;  // "Ratio counter2/hlt1allcall"
   std::vector<double> m_allAcc;
   std::vector<double> m_allCall;
-  double physallcall;
-  double randallcall;
-  double orallacc;
+  double m_physallcall;
+  double m_randallcall;
+  double m_orallacc;
   unsigned long long gpstime;
   int gpstimesec;
-
-
 };
 #endif // HLTGLOBALMONITOR_H
