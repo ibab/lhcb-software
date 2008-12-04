@@ -163,22 +163,28 @@ int CaloDataProviderPatched::adc (LHCb::CaloCellID id){
 bool CaloDataProviderPatched::decodeCell(LHCb::CaloCellID id ){
 
   int tell1 = -1;// Decode the whole 0-suppressed bank by default (single bank)
+    bool read = false;
   if( m_packed){
     int card = m_calo->cardNumber (id)   ; // Fe-Card from cellId
     if(card<0)return false;
     tell1 = m_calo->cardToTell1(card); // Tell1 from FE-Card
     if(tell1<0)return false;
-
-    bool read = false;
     for(std::vector<int>::iterator it = m_readSources.begin() ; it != m_readSources.end() ; ++it){
       if( tell1 == *it){
         read = true;
         break;
       }    
     }
-    if(read && m_packed)return true;    
+  }else{
+    for(std::vector<int>::iterator it = m_readSources.begin() ; it != m_readSources.end() ; ++it){
+      if( 0 == *it){
+        read = true;
+        break;
+      }    
+    }
   }
   
+  if(read )return true;    
   return decodeTell1( tell1 );
 }
 //-------------------------------------------------------
