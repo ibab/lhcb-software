@@ -1,12 +1,14 @@
-// $Id: MCParticleSelector.cpp,v 1.11 2008-11-14 12:03:43 cattanem Exp $
+// $Id: MCParticleSelector.cpp,v 1.12 2008-12-04 14:38:53 mneedham Exp $
 
 #include "Event/MCParticle.h"
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
-
 #include "MCParticleSelector.h"
 #include "Event/MCFun.h"
+
+#include "boost/limits.hpp"
+#include "boost/numeric/conversion/bounds.hpp"
 
 DECLARE_TOOL_FACTORY ( MCParticleSelector );
 
@@ -16,17 +18,17 @@ MCParticleSelector::MCParticleSelector( const std::string& type,
   GaudiTool( type, name, parent )
 {
   // JOs
-  declareProperty("zOrigin",      m_zOrigin      = 9999.0*Gaudi::Units::cm );
+  declareProperty("zOrigin",      m_zOrigin      = boost::numeric::bounds<double>::highest() );
   declareProperty("pMin",         m_pMin         = 0.0*Gaudi::Units::GeV );
-  declareProperty("pMax",         m_pMax         = 999999*Gaudi::Units::GeV );
+  declareProperty("pMax",         m_pMax         = boost::numeric::bounds<double>::highest() );
   declareProperty("betaGammaMin", m_betaGammaMin = 0.0 );
-  declareProperty("etaMin",       m_etaMin       = -9999.);
-  declareProperty("etaMax",       m_etaMax       = 9999. );
+  declareProperty("etaMin",       m_etaMin       = -boost::numeric::bounds<double>::highest() );
+  declareProperty("etaMax",       m_etaMax       =  boost::numeric::bounds<double>::highest() );
   declareProperty("rejectElectrons", m_rejectElectrons  = false );
   declareProperty("SelectChargedParticles", m_selCharged = true );
   declareProperty("SelectNeutralParticles", m_selNeutral = true );
   declareProperty("rejectInteractions", m_rejectInteractions = false );
-  declareProperty("zInteraction", m_zInteraction = -9999.0*Gaudi::Units::m );
+  declareProperty("zInteraction", m_zInteraction = -boost::numeric::bounds<double>::highest() );
   declareProperty("SelectOnlyBDecayProducts", m_selBprods = false );
 
   // interface
@@ -74,6 +76,7 @@ bool MCParticleSelector::accept(const LHCb::MCParticle* aParticle) const
   if ( (NULL == origin) || 
        (origin->position().z() > m_zOrigin) ) return false;
 
+
   // momentum cuts
   const double tMomentum = aParticle->p();
   if ( tMomentum < m_pMin || tMomentum > m_pMax ) return false;
@@ -85,6 +88,7 @@ bool MCParticleSelector::accept(const LHCb::MCParticle* aParticle) const
   // eta
   const double tEta = aParticle->pseudoRapidity();
   if ( tEta < m_etaMin || tEta > m_etaMax ) return false;
+
 
   // reject electrons ?
   if ( m_rejectElectrons &&

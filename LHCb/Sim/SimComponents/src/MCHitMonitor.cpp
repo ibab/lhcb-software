@@ -1,4 +1,4 @@
-// $Id: MCHitMonitor.cpp,v 1.5 2007-05-29 08:48:16 cattanem Exp $
+// $Id: MCHitMonitor.cpp,v 1.6 2008-12-04 14:38:53 mneedham Exp $
 //
 // This File contains the implementation of the MCHitMonitor
 //
@@ -31,6 +31,8 @@
 
 #include "MCHitMonitor.h"
 
+#include "LHCbMath/ModeFunctions.h"
+
 // Needed for the creation of MCHitMonitor objects.
 #include "GaudiKernel/AlgFactory.h"
 DECLARE_ALGORITHM_FACTORY( MCHitMonitor );
@@ -53,6 +55,13 @@ MCHitMonitor::MCHitMonitor(const std::string& name,
   this->declareProperty("xMax",m_Xmax =400.0*Gaudi::Units::cm );
   this->declareProperty("yMax",m_Ymax = 400.0*Gaudi::Units::cm);
   this->declareProperty("selectorName", m_selectorName = "MCParticleSelector" );
+  this->declareProperty("tMax", m_TMax =  100.0*Gaudi::Units::ns);
+  this->declareProperty("tMin", m_TMin =  0.0*Gaudi::Units::ns);
+  this->declareProperty("eMax", m_EMax =  1.0*Gaudi::Units::MeV);
+  this->declareProperty("maxPath", m_MaxPath = 5.0*Gaudi::Units::cm);
+  this->declareProperty("minPathLength", m_minPathLength = 0.1*Gaudi::Units::mm); 
+  this->declareProperty("nToCollect", m_nToCollect = 20000);
+
 }
 
 MCHitMonitor::~MCHitMonitor()
@@ -74,6 +83,8 @@ StatusCode MCHitMonitor::initialize()
   // initialize histograms
   sc = this->initHistograms();
 
+  m_energyVec.reserve(m_nToCollect);
+
   return StatusCode::SUCCESS;  
 }
 
@@ -91,8 +102,9 @@ StatusCode MCHitMonitor::initHistograms()
 
    aHisto1D = book(100+iStation,
                    "time of Flight"+boost::lexical_cast<std::string>(100+iStation),
-                   0.0*Gaudi::Units::ns,100.0*Gaudi::Units::ns, 100);
+                   m_TMin,m_TMax, 200);
    m_timeOfFlightHistos.push_back(aHisto1D);
+
 
    // x vs y plots
    aHisto2D = histoSvc()->book(
@@ -103,19 +115,9 @@ StatusCode MCHitMonitor::initHistograms()
    m_XvsYHistos.push_back(aHisto2D);
 
    aHisto1D  = book(300+iStation,"lossHisto"+boost::lexical_cast<std::string>(300+iStation),
-                    0., 250.,250);
+                    0., m_EMax,250);
 
    m_EnergyLossHistos.push_back(aHisto1D);   
-
-   aHisto1D  = book(iStation+400,"pathHisto"+boost::lexical_cast<std::string>(iStation+400),
-                    0.,10., 10);
-
-   m_pathHistos.push_back(aHisto1D);   
-
-   aHisto1D  = book(500+iStation,"bgHisto"+boost::lexical_cast<std::string>(500+iStation),
-                    0.,10000., 1000);
-
-   m_betaGammaHistos.push_back(aHisto1D);   
 
  }//loop stations
 
@@ -126,9 +128,10 @@ StatusCode MCHitMonitor::execute()
 {
   /// Executes MCHitMonitor for one event.
  
-  LHCb::MCHits* hitsCont = get<LHCb::MCHits>(m_MCHitPath);
+  const LHCb::MCHits* hitsCont = get<LHCb::MCHits>(m_MCHitPath);
 
   plot((double)hitsCont->size(),1 ,"num hits", 0.,5000, 100);
+  counter("numberHits") += hitsCont->size();
 
   // loop over hits fill some histograms
   LHCb::MCHits::const_iterator iHit = hitsCont->begin() ;
@@ -139,8 +142,20 @@ StatusCode MCHitMonitor::execute()
   return StatusCode::SUCCESS;
 }
 
+StatusCode MCHitMonitor::finalize(){
 
-StatusCode MCHitMonitor::fillHistograms(LHCb::MCHit* aHit){
+  std::sort(m_energyVec.begin(), m_energyVec.end());
+  const double shorth = ModeFunctions::shorth(m_energyVec.begin(), m_energyVec.end());
+  info() << "*** Summary ***" << endmsg;
+  info() << "#hits per event: " << counter("numberHits").flagMean() << endmsg;
+  info() << "Mean beta * gamma: " << counter("betaGamma").flagMean() << endmsg; 
+  info() << "Most Probable deposited charge: " << shorth << endmsg;
+
+  return GaudiHistoAlg::finalize();
+}
+
+
+StatusCode MCHitMonitor::fillHistograms(const LHCb::MCHit* aHit) const{
 
   // Initialize
 
@@ -153,13 +168,13 @@ StatusCode MCHitMonitor::fillHistograms(LHCb::MCHit* aHit){
   }
 
   // p 
-  plot(aParticle->p()/Gaudi::Units::GeV, 4, "pMag", 200,0.,50);
+  plot(aParticle->p()/Gaudi::Units::GeV, 4, "pMag", 0.,100, 200);
 
 
   // average of entrance and exit...
   Gaudi::XYZPoint mcHitPoint = aHit->midPoint();
 
-  plot(aHit->pathLength(),"path length", 0., 200., 200);
+  plot(aHit->pathLength(),"path length", 0., m_MaxPath, 200);
 
   // bin in regions of z ~ stations
   const int iStation = getStationID(mcHitPoint.z());
@@ -176,19 +191,18 @@ StatusCode MCHitMonitor::fillHistograms(LHCb::MCHit* aHit){
 
     // dE/dX
     m_timeOfFlightHistos[iStation]->fill(aHit->time()/Gaudi::Units::ns,1.0);
-   
-    // path length
-    m_pathHistos[iStation]->fill(aHit->pathLength()/Gaudi::Units::micrometer);
-
-    // BetaGamm
-    m_betaGammaHistos[iStation]->fill(aParticle->beta()*aParticle->gamma());;
-
+ 
   }
 
   // scatter plot of x-y of hit
   m_XvsYHistos[iStation]->fill( mcHitPoint.x()/Gaudi::Units::cm,
                                 mcHitPoint.y()/Gaudi::Units::cm, 1.0 );
-  
+
+
+  if (aHit->pathLength() > m_minPathLength) m_energyVec.push_back(aHit->energy());
+ 
+  counter("betaGamma") += aParticle->beta()*aParticle->gamma() ;
+ 
   return StatusCode::SUCCESS;
 
 }

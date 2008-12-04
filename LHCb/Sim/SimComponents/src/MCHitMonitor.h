@@ -3,6 +3,7 @@
 #define _MCHitMonitor_H
 
 #include "GaudiAlg/GaudiHistoAlg.h"
+
 #include <string>
 #include <vector>
 
@@ -18,10 +19,11 @@ namespace AIDA {
 
 class IMCParticleSelector;
 
-/** class TrMCHitMonitor, package TrMCHitMonitor
+/** class MCHitMonitor, package MCHitMonitor
  *  Top Level Algorithm that manages MCHits digitization code
  *
  *  @author M.Needham
+ *  @date 04/12/2008 [revised] 
  *  @date   21/10/2000
 */
 
@@ -41,13 +43,16 @@ public:
   /// execute
   virtual StatusCode execute();
 
+  /// finalize
+  virtual StatusCode finalize();
+
 private:
 
   /// init histograms
   StatusCode initHistograms();
 
   /// fill histograms
-  StatusCode fillHistograms(LHCb::MCHit* aHit);
+  StatusCode fillHistograms(const LHCb::MCHit* aHit) const;
   
   /// station number for a given z
   int getStationID(const double z) const;
@@ -59,15 +64,21 @@ private:
   std::vector<IHistogram1D*> m_timeOfFlightHistos;
   std::vector<IHistogram2D*> m_XvsYHistos;
   std::vector<IHistogram1D*> m_EnergyLossHistos;
-  std::vector<IHistogram1D*> m_pathHistos;
-  std::vector<IHistogram1D*> m_betaGammaHistos;
+  
+  mutable std::vector<double> m_energyVec;
 
   // job Options
   std::string m_MCHitPath;
   std::vector<double> m_Zstations;
   double m_Xmax;
   double m_Ymax;
+  double m_TMax;
+  double m_TMin;
+  double m_EMax;
+  double m_MaxPath;
   double m_ZTolerance;
+  double m_minPathLength;
+  unsigned int m_nToCollect;
   
 };
  
