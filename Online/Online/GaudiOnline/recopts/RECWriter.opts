@@ -1,9 +1,9 @@
-ApplicationMgr.TopAlg               += { "LHCb::FileIDManipulator/Fid" };
+ApplicationMgr.TopAlg               += { "LHCb::FIDManipAlg/Fid" };
 Fid.DataType                         = 3;
 Fid.Action                           = 3;
 Fid.PrintFreq                        = 1000;
 
-ApplicationMgr.TopAlg               += { "LHCb::FileIDManipulator/FidRemove" };
+ApplicationMgr.TopAlg               += { "LHCb::FIDManipAlg/FidRemove" };
 FidRemove.DataType                   = 3;
 FidRemove.Action                     = 2;
 

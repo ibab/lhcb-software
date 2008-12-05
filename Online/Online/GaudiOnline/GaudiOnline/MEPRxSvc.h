@@ -36,11 +36,6 @@ class MsgStream;
 class ISvcLocator;
 class IIncidentSvc;
 
-// defines which should eventually go to some bank-type class 
-#ifndef DAQ_ERR_BANK_VERSION
-#define DAQ_ERR_BANK_VERSION 0
-#endif
-
 /*
  *  LHCb namespace declaration
  */

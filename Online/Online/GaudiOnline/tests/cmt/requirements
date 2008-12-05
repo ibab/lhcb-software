@@ -14,7 +14,7 @@ use  MDF_ROOT     v* DAQ
 use  MBMDump       v* Online
 #use GaudiUPI      v* Online
 #use LHCbMath      v* Kernel
-#use Writer        v*   Online
+use Writer        v*   Online
 
 # apply_pattern ld_library_path library=LHCbMath
 apply_pattern ld_library_path

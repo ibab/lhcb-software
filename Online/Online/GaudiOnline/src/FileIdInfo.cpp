@@ -1,4 +1,4 @@
-// $Id: FileIdInfo.cpp,v 1.1 2008-12-04 13:31:21 frankb Exp $
+// $Id: FileIdInfo.cpp,v 1.2 2008-12-05 19:26:30 frankb Exp $
 // Include files 
 //-----------------------------------------------------------------------------
 // Implementation file for class : FileIdInfo
@@ -25,9 +25,11 @@ void FileIdInfo::setpar(const std::string* data) {
   l1 = data[1].length()+1;
   ::strncpy(pdata,data[0].c_str(),l0);
   ::strncpy(pdata+l0,data[1].c_str(),l1);
+  pdata[l0-1] = pdata[l0+l1-1] = 0;
 }
 
 void FileIdInfo::setguid(const std::string& data) {
   l2 = data.length()+1;
-  ::strncpy(pdata+l0+l2,data.c_str(),l2);  
+  ::strncpy(pdata+l0+l1,data.c_str(),l2);
+  pdata[l0+l1+l2-1] = 0;
 }

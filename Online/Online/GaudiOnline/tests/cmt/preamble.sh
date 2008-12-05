@@ -28,6 +28,14 @@ export BIGTERM='xterm  -ls -132 -geometry 132x55 -title '
 export WIDETERM='xterm  -ls -132 -geometry 160x50 -title '
 #export MINITERM=echo
 export NODENAME=`python -c "print '$HOST'.split('.')[0]"`
+if test "$NODENAME" = "storeio01";
+then
+  ### Running on storeio01:
+  export NODENAME=`python -c "print '$HOST'.split('.')[0]"`-d1;
+  export DATAINTERFACE=$NODENAME;
+  export TAN_NODE=${DATAINTERFACE};
+  echo "DATAINTERFACE ${DATAINTERFACE}";
+fi;
 if test -z "${PYOPTS}";
   then
     export PYOPTS=${GAUDIONLINEROOT}/python

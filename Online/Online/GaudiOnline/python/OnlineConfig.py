@@ -79,7 +79,7 @@ def evtMerger(buffer='Events',name='Writer',location='/Event/DAQ/RawEvent',routi
   
 #------------------------------------------------------------------------------------------------
 def fidManip(name,action,datatype,location):
-  manip                   = Configs.LHCb__FileIDManipulator(name)
+  manip                   = Configs.LHCb__FIDManipAlg(name)
   manip.Action            = action
   manip.DataType          = datatype
   manip.BankLocation      = location

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/RawEvent2MBMMergerAlg.cpp,v 1.7 2008-12-04 13:31:08 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/RawEvent2MBMMergerAlg.cpp,v 1.8 2008-12-05 19:26:30 frankb Exp $
 //  ====================================================================
 //  DecisionSetterAlg.cpp
 //  --------------------------------------------------------------------
@@ -212,7 +212,7 @@ namespace LHCb  {
     StatusCode writeBuffer(void* const ioDesc, const void* data, size_t len)  {
       try {
 	EventDesc& e = m_prod->event();
-	if ( 0 == e.data ) {
+	if ( 0 == e.data )   {
 	  // If we end up here, the data were assembled from the raw event, but rather
 	  // taken from an already existing MDF or BANK buffer.
 	  // In this event we have to copy the data to the requested space.

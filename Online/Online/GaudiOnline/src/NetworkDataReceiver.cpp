@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataReceiver.cpp,v 1.20 2008-09-23 16:48:07 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/NetworkDataReceiver.cpp,v 1.21 2008-12-05 19:26:30 frankb Exp $
 //  ====================================================================
 //  NetworkDataReceiver.cpp
 //  --------------------------------------------------------------------
@@ -221,11 +221,14 @@ NetworkDataReceiver::handleEventData(const RecvEntry& entry,void* buf,size_t len
     return sc;
   }
   catch(std::exception& e)   {
+    ++m_recvError;
     return errorException("Exception during event receive request:",e);
   }
   catch(...)   {
+    ++m_recvError;
     return error("Unknown exception during event receive request.");
   }
+  ++m_recvError;
   return StatusCode::FAILURE;
 }
 
@@ -249,7 +252,9 @@ StatusCode NetworkDataReceiver::declareEventData(RecvEntry& entry)  {
         ::memcpy(e.mask,h->subHeader().H1->triggerMask(),sizeof(e.mask));
         ret = m_prod->sendEvent();
         if ( MBM_NORMAL == ret )   {
-          m_backlog--;
+          --m_backlog;
+	  ++m_recvReq;
+	  m_recvBytes += entry.size;
 #if 0
 	  MsgStream log(msgSvc(), name());
 	  log << MSG::ALWAYS << "Declared event of size:" << entry.size 
@@ -262,12 +267,14 @@ StatusCode NetworkDataReceiver::declareEventData(RecvEntry& entry)  {
       MsgStream log0(msgSvc(), name());
       log0 << MSG::ERROR << "Failed to retrieve network event data from:" << entry.name << endmsg;
       if ( ret != MBM_REQ_CANCEL ) rearmRequest(entry);
+      ++m_recvError;
       return StatusCode::SUCCESS;
     }
     MsgStream log1(msgSvc(), name());
     // Cannot do anything - must handle and rearm new request
     log1 << MSG::ERROR << "Failed to get space for buffer manager." << endmsg;
     if ( ret != MBM_REQ_CANCEL ) rearmRequest(entry);
+    ++m_recvError;
     return StatusCode::SUCCESS;
   }
   catch(std::exception& e)  {
@@ -279,6 +286,7 @@ StatusCode NetworkDataReceiver::declareEventData(RecvEntry& entry)  {
     MsgStream err(msgSvc(), name());
     err << MSG::ERROR << "Got unknown exception when declaring event from:" << entry.name << endmsg;
   }
+  ++m_recvError;
   return rearmRequest(entry);
 }
 

@@ -6,7 +6,7 @@ ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
 StoreExplorerAlg.Load                = 1;
 StoreExplorerAlg.PrintFreq           = 0.001;
 
-ApplicationMgr.TopAlg               += { "LHCb::FileIDManipulator/Fid" };
+ApplicationMgr.TopAlg               += { "LHCb::FIDManipAlg/Fid" };
 Fid.DataType                         = 3;
 Fid.Action                           = 3;
 Fid.PrintFreq                        = 1000;
