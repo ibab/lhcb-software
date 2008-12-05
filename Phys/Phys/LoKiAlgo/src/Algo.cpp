@@ -1,4 +1,4 @@
-// $Id: Algo.cpp,v 1.23 2008-12-05 10:42:17 ibelyaev Exp $
+// $Id: Algo.cpp,v 1.24 2008-12-05 13:29:43 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -34,16 +34,6 @@
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-03-14 
  */
-// ============================================================================
-// TEMPORARY
-// ============================================================================
-const LHCb::IParticlePropertySvc* LoKi::Algo::_ppSvc() const 
-{
-  if ( 0 != m__ppSvc ) { return m__ppSvc ; }
-  m__ppSvc = svc<LHCb::IParticlePropertySvc> 
-    ( "LHCb::ParticlePropertySvc" , true ) ;
-  return m__ppSvc ;
-}
 // ============================================================================
 namespace
 {
@@ -107,7 +97,6 @@ LoKi::Algo::Algo
   // the list of cut values 
   , m_cutValues ( ) 
   //
-  , m__ppSvc ( 0 ) 
 {
   //
   declareProperty 
@@ -229,7 +218,7 @@ LoKi::Loop LoKi::Algo::loop
   const std::string&       pid      , 
   const IParticleCombiner* combiner )
 {
-  const LHCb::ParticleProperty* _pp = _ppSvc()->find( pid ) ;
+  const LHCb::ParticleProperty* _pp = ppSvc()->find( pid ) ;
   if ( 0 == _pp ) 
   { Error ( "loop(" + formula + "): invaid particle name '"+pid+"'!" ) ; }
   return loop ( formula , _pp , combiner )  ;
@@ -240,7 +229,7 @@ LoKi::Loop LoKi::Algo::loop
   const LHCb::ParticleID&  pid      , 
   const IParticleCombiner* combiner )
 {
-  const LHCb::ParticleProperty* _pp = _ppSvc()->find ( pid ) ;
+  const LHCb::ParticleProperty* _pp = ppSvc()->find ( pid ) ;
   if ( 0 == _pp ) 
   { Error ( "loop(" + formula + "): invaid particle ID '" + 
             Gaudi::Utils::toString( pid.pid() ) + "'!" ) ; }
@@ -280,7 +269,7 @@ LoKi::Loop LoKi::Algo::loop
   const std::string&            pid      , 
   const IParticleCombiner*      combiner )
 {
-  const LHCb::ParticleProperty* _pp = _ppSvc()->find( pid ) ;
+  const LHCb::ParticleProperty* _pp = ppSvc()->find( pid ) ;
   if ( 0 == _pp ) 
   { Error ( "loop(" + _formu ( formula ) + "): invaid particle name '"+pid+"'!" ) ; }
   return loop ( formula , _pp , combiner )  ;
@@ -291,7 +280,7 @@ LoKi::Loop LoKi::Algo::loop
   const LHCb::ParticleID&       pid      , 
   const IParticleCombiner*      combiner )
 {
-  const LHCb::ParticleProperty* _pp = _ppSvc()->find ( pid ) ;
+  const LHCb::ParticleProperty* _pp = ppSvc()->find ( pid ) ;
   if ( 0 == _pp ) 
   { Error ( "loop(" + _formu ( formula ) + "): invaid particle ID '" + 
             Gaudi::Utils::toString ( pid.pid() ) + "'!" ) ; }
@@ -334,7 +323,7 @@ LoKi::Loop LoKi::Algo::loop
   const IParticleCombiner* combiner ) 
 {
   // verify the decay descriptor
-  StatusCode sc = decay.validate ( _ppSvc() ) ;
+  StatusCode sc = decay.validate ( ppSvc() ) ;
   // get the string:
   const std::string& d = decay.toString() ;
   Assert ( sc.isFailure() , "loop(" + d + "): invalid decay descriptor " ) ;

@@ -1,4 +1,4 @@
-// $Id: Algo.h,v 1.18 2008-12-05 10:42:17 ibelyaev Exp $
+// $Id: Algo.h,v 1.19 2008-12-05 13:29:43 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ALGO_H 
 #define LOKI_ALGO_H 1
@@ -976,26 +976,6 @@ namespace LoKi
     { return geo ( point , nick ) ; }
     // ========================================================================
   public:
-    /// helper method to get a proper ParticleProperty for the given name  
-    const LHCb::ParticleProperty* pid ( const std::string& name ) const 
-    {
-      const LHCb::ParticleProperty* pp = _ppSvc()->find( name ) ;
-      if ( 0 == pp ) 
-      { Error ( "pid('" + name + "') : invalid LHCb::ParticleProperty!" ) ; }
-      return pp ;
-    } 
-    // ========================================================================
-    /// helper method to get a proper ParticleProperty for the given pid
-    inline const LHCb::ParticleProperty* pid ( const LHCb::ParticleID& pid ) const 
-    {
-      const LHCb::ParticleProperty* pp = _ppSvc()->find ( pid ) ;
-      if ( 0 == pp ) 
-      { Error ( "pid('" + LoKi::Print::print( pid.pid() ) 
-                + "') : invalid ParticleProperty!" ) ; }
-      return pp ;
-    } 
-    // ========================================================================
-  public:
     // ========================================================================
     /** get the value for cut 
      *  
@@ -1152,17 +1132,9 @@ namespace LoKi
     // the static pointer to current algorithm 
     static LoKi::Algo* s_currentAlgo ;
     // ========================================================================
-  private: // temporary!!
-    // ========================================================================
-    mutable const LHCb::IParticlePropertySvc* m__ppSvc ;
-    // ========================================================================
-  public: // temporary
-    // ========================================================================
-    /// TEMPORARY
-    const LHCb::IParticlePropertySvc* _ppSvc() const ;
-    // ========================================================================    
   } ;  
-}  // end of namespace LoKi
+  // ==========================================================================
+} // end of namespace LoKi
 // ============================================================================
 /** @def LOKI_ALGORITHM_BODY 
  *
