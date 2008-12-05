@@ -7,7 +7,7 @@ from GaudiKernel.SystemOfUnits import mm
 
 from Configurables import ( TrackAssociator, TrackResChecker,
                             TrackEffChecker, TrackSelector, MCReconstructible,
-                            MCParticleSelector)
+                            MCParticleSelector, PrimaryVertexChecker)
                             
 
 if not TrackSys().veloOpen():
@@ -146,3 +146,5 @@ TrackEffChecker("Downstream").Selector.Selector.zInteraction = 9400.;
 TrackEffChecker("Downstream").SelectionCriteria = "ChargedLong";
 TrackEffChecker("Downstream").HistoPrint = False;
 TrackEffChecker("Downstream").StatPrint = False;
+
+GaudiSequencer("CheckPatSeq").Members  += [PrimaryVertexChecker("PVOfflineCheck")]
