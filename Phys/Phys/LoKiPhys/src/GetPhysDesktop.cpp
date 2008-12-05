@@ -1,4 +1,4 @@
-// $Id: GetPhysDesktop.cpp,v 1.1 2008-01-25 14:42:22 ibelyaev Exp $
+// $Id: GetPhysDesktop.cpp,v 1.2 2008-12-05 09:09:21 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -45,7 +45,7 @@ IPhysDesktop* LoKi::getPhysDesktop ( const DVAlgorithm* alg )
  *  date 2008-01-16
  */
 // ============================================================================
-IPhysDesktop* LoKi::getPhysDesktop ( const IAlgContextSvc* svc ) 
+IPhysDesktop* LoKi::getPhysDesktop ( IAlgContextSvc* svc ) 
 {
   if ( 0 == svc ) 
   {
@@ -62,14 +62,14 @@ IPhysDesktop* LoKi::getPhysDesktop ( const IAlgContextSvc* svc )
  *  date 2008-01-16
  */
 // ============================================================================
-IPhysDesktop* LoKi::getPhysDesktop ( const LoKi::ILoKiSvc* svc  ) 
+IPhysDesktop* LoKi::getPhysDesktop ( LoKi::ILoKiSvc* svc  ) 
 {
   if ( 0 == svc ) 
   {
     LoKi::Report::Error("LoKi::getPhysDesktop: LoKi::ILoKiSvc* points to NULL!") ;
     return 0 ;
   }
-  return LoKi::getPhysDesktop ( svc -> contextSvc() ) ;
+  return LoKi::getPhysDesktop ( SmartIF<IAlgContextSvc> ( svc ) ) ;
 }
 // ==========================================================================
 /** get the desktop using the chain LoKi -> Algorithm Context -> DVAlgorithm
@@ -81,7 +81,7 @@ IPhysDesktop* LoKi::getPhysDesktop ( const LoKi::ILoKiSvc* svc  )
 IPhysDesktop* LoKi::getPhysDesktop () 
 {
   const LoKi::Services& instance = LoKi::Services::instance() ;
-  const LoKi::ILoKiSvc* svc = instance.lokiSvc() ;
+  LoKi::ILoKiSvc* svc = instance.lokiSvc() ;
   if ( 0 == svc ) 
   {
     LoKi::Report::Error("LoKi::getPhysDesktop: LoKi::Services::loKiSvc() points to NULL!") ;

@@ -1,4 +1,4 @@
-// $Id: Decays.cpp,v 1.2 2008-07-09 16:56:35 ibelyaev Exp $
+// $Id: Decays.cpp,v 1.3 2008-12-05 09:09:21 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -26,17 +26,17 @@ namespace
    */
   inline void makeSections 
   ( const LHCb::Particle*          p     , 
-    const LoKi::Decays::Trees::Alg alg   , 
-    LoKi::Decays::Sections&        sect  ) 
+    const Decays::Trees::Alg alg   , 
+    Decays::Sections&        sect  ) 
   {
     if ( 0 == p ) { return ; }
     //
-    if ( LoKi::Decays::Trees::Sections == alg ) 
-    { LoKi::Decays::sections ( p , sect ) ; }
+    if ( Decays::Trees::Sections == alg ) 
+    { Decays::sections ( p , sect ) ; }
     else 
     {
-      LoKi::Decays::Section s ;
-      LoKi::Decays::section ( p , s ) ;      
+      Decays::Section s ;
+      Decays::section ( p , s ) ;      
       sect.push_back ( s ) ;    
     }
   }
@@ -44,14 +44,14 @@ namespace
   struct NotPid : public std::unary_function<const LHCb::Particle*,bool>
   {
     /// constructor 
-    NotPid ( const LoKi::Decays::Nodes::Pid& pid ) : m_pid ( pid ) {}
+    NotPid ( const Decays::Nodes::Pid& pid ) : m_pid ( pid ) {}
     // the major method: find "not a pid" 
     inline bool operator () ( const LHCb::Particle* p ) const 
     { return 0 != p && !m_pid.check ( p->particleID() ) ; }
   private:
     // ========================================================================
     /// the pid-checker 
-    LoKi::Decays::Nodes::Pid m_pid ; //the pid-checker 
+    Decays::Nodes::Pid m_pid ; //the pid-checker 
     // ========================================================================    
   } ;
   // ==========================================================================
@@ -64,13 +64,13 @@ namespace
   inline bool onlyPid 
   (  TYPE begin , 
      TYPE end   , 
-     const LoKi::Decays::Nodes::Pid& pid ) 
+     const Decays::Nodes::Pid& pid ) 
   {
     return end == std::find_if ( begin , end , NotPid ( pid ) ) ; 
   }
   // ==========================================================================
   /// the helper object tfor comparison 
-  typedef LoKi::Decays::Trees::CheckTree<const LHCb::Particle*> Equal ;  
+  typedef Decays::Trees::CheckTree<const LHCb::Particle*> Equal ;  
   // ==========================================================================
 }
 // ============================================================================
@@ -82,11 +82,11 @@ namespace
  *  @param alg the matching algorithm 
  */
 // ============================================================================
-LoKi::Decays::Trees::Exclusive::Exclusive
-( const LoKi::Decays::iNode&                      mother   , 
-  const LoKi::Decays::Trees::Exclusive::SubTrees& children ,
-  const LoKi::Decays::Trees::Alg                  alg      )
-  : LoKi::Decays::iTree_<const LHCb::Particle*> () 
+Decays::Trees::Exclusive::Exclusive
+( const Decays::iNode&                      mother   , 
+  const Decays::Trees::Exclusive::SubTrees& children ,
+  const Decays::Trees::Alg                  alg      )
+  : Decays::iTree_<const LHCb::Particle*> () 
   , m_mother     ( mother     )
   , m_children   ( children   ) 
   , m_alg        ( alg        )
@@ -97,10 +97,10 @@ LoKi::Decays::Trees::Exclusive::Exclusive
  *  @param alg the matching algorithm 
  */
 // ============================================================================
-LoKi::Decays::Trees::Exclusive::Exclusive
-( const LoKi::Decays::iNode&                        mother    , 
-  const LoKi::Decays::Trees::Alg                    alg       ) 
-  : LoKi::Decays::iTree_<const LHCb::Particle*> () 
+Decays::Trees::Exclusive::Exclusive
+( const Decays::iNode&                        mother    , 
+  const Decays::Trees::Alg                    alg       ) 
+  : Decays::iTree_<const LHCb::Particle*> () 
   , m_mother     ( mother     )
   , m_children   (            ) 
   , m_alg        ( alg        )
@@ -112,12 +112,12 @@ LoKi::Decays::Trees::Exclusive::Exclusive
  *  @param alg the matching algorithm 
  */
 // ============================================================================
-LoKi::Decays::Trees::Exclusive::Exclusive
+Decays::Trees::Exclusive::Exclusive
 ( const std::string&                              mother   , 
-  const LoKi::Decays::Trees::Exclusive::SubTrees& children ,
-  const LoKi::Decays::Trees::Alg                  alg      )
-  : LoKi::Decays::iTree_<const LHCb::Particle*> () 
-  , m_mother     ( LoKi::Decays::Nodes::Pid ( mother ) ) 
+  const Decays::Trees::Exclusive::SubTrees& children ,
+  const Decays::Trees::Alg                  alg      )
+  : Decays::iTree_<const LHCb::Particle*> () 
+  , m_mother     ( Decays::Nodes::Pid ( mother ) ) 
   , m_children   ( children   ) 
   , m_alg        ( alg        )
 {}
@@ -127,11 +127,11 @@ LoKi::Decays::Trees::Exclusive::Exclusive
  *  @param alg the matching algorithm 
  */
 // ============================================================================
-LoKi::Decays::Trees::Exclusive::Exclusive
+Decays::Trees::Exclusive::Exclusive
 ( const std::string&                                mother    , 
-  const LoKi::Decays::Trees::Alg                    alg       ) 
-  : LoKi::Decays::iTree_<const LHCb::Particle*> () 
-  , m_mother     ( LoKi::Decays::Nodes::Pid ( mother ) ) 
+  const Decays::Trees::Alg                    alg       ) 
+  : Decays::iTree_<const LHCb::Particle*> () 
+  , m_mother     ( Decays::Nodes::Pid ( mother ) ) 
   , m_children   (            ) 
   , m_alg        ( alg        )
 {}
@@ -142,12 +142,12 @@ LoKi::Decays::Trees::Exclusive::Exclusive
  *  @param alg the matching algorithm 
  */
 // ============================================================================
-LoKi::Decays::Trees::Exclusive::Exclusive
+Decays::Trees::Exclusive::Exclusive
 ( const LHCb::ParticleID&                         mother   , 
-  const LoKi::Decays::Trees::Exclusive::SubTrees& children ,
-  const LoKi::Decays::Trees::Alg                  alg      )
-  : LoKi::Decays::iTree_<const LHCb::Particle*> () 
-  , m_mother     ( LoKi::Decays::Nodes::Pid ( mother ) ) 
+  const Decays::Trees::Exclusive::SubTrees& children ,
+  const Decays::Trees::Alg                  alg      )
+  : Decays::iTree_<const LHCb::Particle*> () 
+  , m_mother     ( Decays::Nodes::Pid ( mother ) ) 
   , m_children   ( children   ) 
   , m_alg        ( alg        )
 {}
@@ -157,11 +157,11 @@ LoKi::Decays::Trees::Exclusive::Exclusive
  *  @param alg the matching algorithm 
  */
 // ============================================================================
-LoKi::Decays::Trees::Exclusive::Exclusive
+Decays::Trees::Exclusive::Exclusive
 ( const LHCb::ParticleID&                           mother    , 
-  const LoKi::Decays::Trees::Alg                    alg       ) 
-  : LoKi::Decays::iTree_<const LHCb::Particle*> () 
-  , m_mother     ( LoKi::Decays::Nodes::Pid ( mother ) ) 
+  const Decays::Trees::Alg                    alg       ) 
+  : Decays::iTree_<const LHCb::Particle*> () 
+  , m_mother     ( Decays::Nodes::Pid ( mother ) ) 
   , m_children   (            ) 
   , m_alg        ( alg        )
 {}
@@ -171,11 +171,11 @@ LoKi::Decays::Trees::Exclusive::Exclusive
  *  @param alg the matching algorithm 
  */
 // ============================================================================
-LoKi::Decays::Trees::Exclusive::Exclusive
-( const LHCb::Decay&                                decay     , 
-  const LoKi::Decays::Trees::Alg                    alg       ) 
-  : LoKi::Decays::iTree_<const LHCb::Particle*> () 
-  , m_mother     ( LoKi::Decays::Nodes::Pid ( decay.mother() ) )
+Decays::Trees::Exclusive::Exclusive
+( const Decays::Decay&                                decay     , 
+  const Decays::Trees::Alg                    alg       ) 
+  : Decays::iTree_<const LHCb::Particle*> () 
+  , m_mother     ( Decays::Nodes::Pid ( decay.mother() ) )
   , m_children   (            ) 
   , m_alg        ( alg        )
 { 
@@ -184,7 +184,7 @@ LoKi::Decays::Trees::Exclusive::Exclusive
 // ============================================================================
 // set the children 
 // ============================================================================
-void LoKi::Decays::Trees::Exclusive::setChildren 
+void Decays::Trees::Exclusive::setChildren 
 ( const std::vector<std::string>& children ) 
 {
   m_children.clear() ;
@@ -194,17 +194,17 @@ void LoKi::Decays::Trees::Exclusive::setChildren
 // ============================================================================
 // set the children 
 // ============================================================================
-void LoKi::Decays::Trees::Exclusive::setChildren 
-( const std::vector<LHCb::Decay::Item>& children ) 
+void Decays::Trees::Exclusive::setChildren 
+( const std::vector<Decays::Decay::Item>& children ) 
 {
   m_children.clear() ;
-  for ( std::vector<LHCb::Decay::Item>::const_iterator ichild = children.begin() ;
+  for ( std::vector<Decays::Decay::Item>::const_iterator ichild = children.begin() ;
         children.end() != ichild ; ++ichild ) { addDaughter ( *ichild ) ; }
 }
 // ============================================================================
 // set the children 
 // ============================================================================
-void LoKi::Decays::Trees::Exclusive::setChildren 
+void Decays::Trees::Exclusive::setChildren 
 ( const std::vector<LHCb::ParticleID>& children ) 
 {
   m_children.clear() ;
@@ -214,11 +214,11 @@ void LoKi::Decays::Trees::Exclusive::setChildren
 // ============================================================================
 // set the children 
 // ============================================================================
-void LoKi::Decays::Trees::Exclusive::setChildren 
-( const std::vector<const ParticleProperty*>& children ) 
+void Decays::Trees::Exclusive::setChildren 
+( const std::vector<const LHCb::ParticleProperty*>& children ) 
 {
   m_children.clear() ;
-  for ( std::vector<const ParticleProperty*>::const_iterator ichild = 
+  for ( std::vector<const LHCb::ParticleProperty*>::const_iterator ichild = 
           children.begin() ; children.end() != ichild ; ++ichild ) 
   { addDaughter ( *ichild ) ; }
 }
@@ -228,29 +228,29 @@ void LoKi::Decays::Trees::Exclusive::setChildren
 // ============================================================================
 // MANDATORY: check the validity 
 // ============================================================================
-bool LoKi::Decays::Trees::Exclusive::valid() const 
+bool Decays::Trees::Exclusive::valid() const 
 {
-  return m_mother.valid() && LoKi::Decays::valid ( childBegin() , childEnd() ) ;
+  return m_mother.valid() && Decays::valid ( childBegin() , childEnd() ) ;
 }
 // ============================================================================
 // MANDATORY: validate the tree 
 // ============================================================================
-StatusCode  LoKi::Decays::Trees::Exclusive::validate 
-( IParticlePropertySvc* svc ) const 
+StatusCode  Decays::Trees::Exclusive::validate 
+( const LHCb::IParticlePropertySvc* svc ) const 
 {
   StatusCode sc = m_mother.validate ( svc ) ;
   if ( sc.isFailure() ) { return sc ; }
-  return LoKi::Decays::validate ( childBegin() , childEnd() , svc ) ;
+  return Decays::validate ( childBegin() , childEnd() , svc ) ;
 }
 // ============================================================================
 // reset the collection cache
 // ============================================================================
-void LoKi::Decays::Trees::Exclusive::reset() const { i_reset () ; }
+void Decays::Trees::Exclusive::reset() const { i_reset () ; }
 // ============================================================================
 // collect the marked elements 
 // ============================================================================
-size_t LoKi::Decays::Trees::Exclusive::collect 
-( LoKi::Decays::iTree_<const LHCb::Particle*>::Collection& output ) const 
+size_t Decays::Trees::Exclusive::collect 
+( Decays::iTree_<const LHCb::Particle*>::Collection& output ) const 
 {
   size_t size = 0 ;
   for ( SubTrees::const_iterator ichild = childBegin() ; 
@@ -260,8 +260,8 @@ size_t LoKi::Decays::Trees::Exclusive::collect
 // ============================================================================
 // the only one essential method 
 // ============================================================================
-bool LoKi::Decays::Trees::Exclusive::operator() 
-  ( LoKi::Decays::iTree_<const LHCb::Particle*>::argument p ) const
+bool Decays::Trees::Exclusive::operator() 
+  ( Decays::iTree_<const LHCb::Particle*>::argument p ) const
 {
   // reset the cache (ALWAYS!!!)
   i_reset () ;
@@ -272,10 +272,10 @@ bool LoKi::Decays::Trees::Exclusive::operator()
   // perform the real matching:
   if ( 0 == nChildren ()              ) { return true  ; }        // RETURN    
   // (1) get the proper decay sections:
-  LoKi::Decays::Sections sections ;
+  Decays::Sections sections ;
   makeSections ( p , alg() , sections ) ;
   // (2) loop over all sections
-  for (  LoKi::Decays::Sections::iterator isect = sections.begin() ; 
+  for (  Decays::Sections::iterator isect = sections.begin() ; 
          sections.end() != isect ; ++isect )
   {
     // (3) try to match the section 
@@ -299,7 +299,7 @@ bool LoKi::Decays::Trees::Exclusive::operator()
 // MANDATORY: the specific printout 
 // ============================================================================
 std::ostream& 
-LoKi::Decays::Trees::Exclusive::fillStream ( std::ostream& s ) const 
+Decays::Trees::Exclusive::fillStream ( std::ostream& s ) const 
 {
   //
   if ( 0 == nChildren() ) { return s << mother() ; }
@@ -320,38 +320,38 @@ LoKi::Decays::Trees::Exclusive::fillStream ( std::ostream& s ) const
 // ============================================================================
 // add one more node to the tree 
 // ============================================================================
-void LoKi::Decays::Trees::Exclusive::addDaughter 
-( const LoKi::Decays::iTree_<const LHCb::Particle*>& tree ) 
+void Decays::Trees::Exclusive::addDaughter 
+( const Decays::iTree_<const LHCb::Particle*>& tree ) 
 { m_children.push_back ( tree ) ; }
 // ============================================================================
 // add one more node to the tree 
 // ============================================================================
-void LoKi::Decays::Trees::Exclusive::addDaughter 
-( const LoKi::Decays::iNode& node ){ addDaughter ( Exclusive ( node ) ) ; }
+void Decays::Trees::Exclusive::addDaughter 
+( const Decays::iNode& node ){ addDaughter ( Exclusive ( node ) ) ; }
 // ============================================================================
 // add one more node to the tree 
 // ============================================================================
-void LoKi::Decays::Trees::Exclusive::addDaughter 
-( const LHCb::Decay::Item& node )
-{ addDaughter ( LoKi::Decays::Nodes::Pid ( node ) ) ; }
+void Decays::Trees::Exclusive::addDaughter 
+( const Decays::Decay::Item& node )
+{ addDaughter ( Decays::Nodes::Pid ( node ) ) ; }
 // ============================================================================
 // add one more node to the tree 
 // ============================================================================
-void LoKi::Decays::Trees::Exclusive::addDaughter 
+void Decays::Trees::Exclusive::addDaughter 
 ( const std::string&       node )
-{ addDaughter ( LoKi::Decays::Nodes::Pid ( node ) ) ; }
+{ addDaughter ( Decays::Nodes::Pid ( node ) ) ; }
 // ============================================================================
 // add one more node to the tree 
 // ============================================================================
-void LoKi::Decays::Trees::Exclusive::addDaughter 
+void Decays::Trees::Exclusive::addDaughter 
 ( const LHCb::ParticleID&  node )
-{ addDaughter ( LoKi::Decays::Nodes::Pid ( node ) ) ; }
+{ addDaughter ( Decays::Nodes::Pid ( node ) ) ; }
 // ============================================================================
 // add one more node to the tree 
 // ============================================================================
-void LoKi::Decays::Trees::Exclusive::addDaughter 
-( const ParticleProperty*  node )
-{ addDaughter ( LoKi::Decays::Nodes::Pid ( node ) ) ; }
+void Decays::Trees::Exclusive::addDaughter 
+( const LHCb::ParticleProperty*  node )
+{ addDaughter ( Decays::Nodes::Pid ( node ) ) ; }
 
 
 
@@ -364,11 +364,11 @@ void LoKi::Decays::Trees::Exclusive::addDaughter
  *  @param alg the matching algorithm 
  */
 // ============================================================================
-LoKi::Decays::Trees::Inclusive::Inclusive
-( const LoKi::Decays::iNode&                      mother   , 
-  const LoKi::Decays::Trees::Exclusive::SubTrees& children ,
-  const LoKi::Decays::Trees::Alg                  alg      ) 
-  : LoKi::Decays::Trees::Exclusive ( mother , children , alg ) 
+Decays::Trees::Inclusive::Inclusive
+( const Decays::iNode&                      mother   , 
+  const Decays::Trees::Exclusive::SubTrees& children ,
+  const Decays::Trees::Alg                  alg      ) 
+  : Decays::Trees::Exclusive ( mother , children , alg ) 
 {}
 // ============================================================================
 /*  constructor from the node (mother), subtrees and "final" flag
@@ -376,10 +376,10 @@ LoKi::Decays::Trees::Inclusive::Inclusive
  *  @param alg the matching algorithm 
  */
 // ============================================================================
-LoKi::Decays::Trees::Inclusive::Inclusive
-( const LoKi::Decays::iNode&                        mother , 
-  const LoKi::Decays::Trees::Alg                    alg    ) 
-  : LoKi::Decays::Trees::Exclusive( mother , alg ) 
+Decays::Trees::Inclusive::Inclusive
+( const Decays::iNode&                        mother , 
+  const Decays::Trees::Alg                    alg    ) 
+  : Decays::Trees::Exclusive( mother , alg ) 
 {}
 // ============================================================================
 /*  constructor from the node (mother), subtrees and "final" flag
@@ -388,11 +388,11 @@ LoKi::Decays::Trees::Inclusive::Inclusive
  *  @param alg the matching algorithm 
  */
 // ============================================================================
-LoKi::Decays::Trees::Inclusive::Inclusive
+Decays::Trees::Inclusive::Inclusive
 ( const std::string&                              mother   , 
-  const LoKi::Decays::Trees::Exclusive::SubTrees& children ,
-  const LoKi::Decays::Trees::Alg                  alg      ) 
-  : LoKi::Decays::Trees::Exclusive ( mother , children , alg ) 
+  const Decays::Trees::Exclusive::SubTrees& children ,
+  const Decays::Trees::Alg                  alg      ) 
+  : Decays::Trees::Exclusive ( mother , children , alg ) 
 {}
 // ============================================================================
 /*  constructor from the node (mother), subtrees and "final" flag
@@ -400,10 +400,10 @@ LoKi::Decays::Trees::Inclusive::Inclusive
  *  @param alg the matching algorithm 
  */
 // ============================================================================
-LoKi::Decays::Trees::Inclusive::Inclusive
+Decays::Trees::Inclusive::Inclusive
 ( const std::string&                                mother , 
-  const LoKi::Decays::Trees::Alg                    alg    ) 
-  : LoKi::Decays::Trees::Exclusive( mother , alg ) 
+  const Decays::Trees::Alg                    alg    ) 
+  : Decays::Trees::Exclusive( mother , alg ) 
 {}
 // ============================================================================
 /*  constructor from the node (mother), subtrees and "final" flag
@@ -412,11 +412,11 @@ LoKi::Decays::Trees::Inclusive::Inclusive
  *  @param alg the matching algorithm 
  */
 // ============================================================================
-LoKi::Decays::Trees::Inclusive::Inclusive
+Decays::Trees::Inclusive::Inclusive
 ( const LHCb::ParticleID&                         mother   , 
-  const LoKi::Decays::Trees::Exclusive::SubTrees& children ,
-  const LoKi::Decays::Trees::Alg                  alg      ) 
-  : LoKi::Decays::Trees::Exclusive ( mother , children , alg ) 
+  const Decays::Trees::Exclusive::SubTrees& children ,
+  const Decays::Trees::Alg                  alg      ) 
+  : Decays::Trees::Exclusive ( mother , children , alg ) 
 {}
 // ============================================================================
 /*  constructor from the node (mother), subtrees and "final" flag
@@ -424,10 +424,10 @@ LoKi::Decays::Trees::Inclusive::Inclusive
  *  @param alg the matching algorithm 
  */
 // ============================================================================
-LoKi::Decays::Trees::Inclusive::Inclusive
+Decays::Trees::Inclusive::Inclusive
 ( const LHCb::ParticleID&                           mother , 
-  const LoKi::Decays::Trees::Alg                    alg    ) 
-  : LoKi::Decays::Trees::Exclusive( mother , alg ) 
+  const Decays::Trees::Alg                    alg    ) 
+  : Decays::Trees::Exclusive( mother , alg ) 
 {}
 // ============================================================================
 /*  constructor from the node (mother), subtrees and "final" flag
@@ -435,10 +435,10 @@ LoKi::Decays::Trees::Inclusive::Inclusive
  *  @param alg the matching algorithm 
  */
 // ============================================================================
-LoKi::Decays::Trees::Inclusive::Inclusive
-( const LHCb::Decay&                                decay  , 
-  const LoKi::Decays::Trees::Alg                    alg    ) 
-  : LoKi::Decays::Trees::Exclusive( decay  , alg ) 
+Decays::Trees::Inclusive::Inclusive
+( const Decays::Decay&                                decay  , 
+  const Decays::Trees::Alg                    alg    ) 
+  : Decays::Trees::Exclusive( decay  , alg ) 
 {}
 // ============================================================================
 /*  constructor from the node (mother), subtrees and "final" flag
@@ -446,9 +446,9 @@ LoKi::Decays::Trees::Inclusive::Inclusive
  *  @param alg the matching algorithm 
  */
 // ============================================================================
-LoKi::Decays::Trees::Inclusive::Inclusive
-( const LoKi::Decays::Trees::Exclusive& right ) 
-  : LoKi::Decays::Trees::Exclusive ( right ) 
+Decays::Trees::Inclusive::Inclusive
+( const Decays::Trees::Exclusive& right ) 
+  : Decays::Trees::Exclusive ( right ) 
 {}
 // ============================================================================
 
@@ -458,13 +458,13 @@ LoKi::Decays::Trees::Inclusive::Inclusive
 // ============================================================================
 // MANDATORY: check the validity of the tree 
 // ============================================================================
-bool LoKi::Decays::Trees::Inclusive::valid() const 
+bool Decays::Trees::Inclusive::valid() const 
 { return Exclusive::valid() && 0 != nChildren() ; }
 // ============================================================================
 // the only one essential method 
 // ============================================================================
-bool LoKi::Decays::Trees::Inclusive::operator() 
-  ( LoKi::Decays::iTree_<const LHCb::Particle*>::argument p ) const
+bool Decays::Trees::Inclusive::operator() 
+  ( Decays::iTree_<const LHCb::Particle*>::argument p ) const
 {
   // reset the cache (ALWAYS!!!)
   i_reset () ;
@@ -480,7 +480,7 @@ bool LoKi::Decays::Trees::Inclusive::operator()
     LHCb::Particle::ConstVector d ;
     LoKi::Child::daughters ( p , d ) ;
     // in tree 
-    if ( LoKi::Decays::Trees::Sections == alg() ) 
+    if ( Decays::Trees::Sections == alg() ) 
     {
       return LoKi::PhysAlgs::found ( d.begin() , d.end() , *childBegin() ) ;
     }
@@ -489,11 +489,11 @@ bool LoKi::Decays::Trees::Inclusive::operator()
   }
   
   // (1) get the proper decay sections:
-  LoKi::Decays::Sections sections ;
+  Decays::Sections sections ;
   makeSections ( p , alg() , sections ) ;
   
   // (2) loop over all sections
-  for (  LoKi::Decays::Sections::iterator isect = sections.begin() ; 
+  for (  Decays::Sections::iterator isect = sections.begin() ; 
          sections.end() != isect ; ++isect )
   {
     // (3) try to match the section 
@@ -539,7 +539,7 @@ bool LoKi::Decays::Trees::Inclusive::operator()
 // MANDATORY: the specific printout 
 // ============================================================================
 std::ostream& 
-LoKi::Decays::Trees::Inclusive::fillStream ( std::ostream& s ) const 
+Decays::Trees::Inclusive::fillStream ( std::ostream& s ) const 
 {
   //
   s << " (" << mother () ;
@@ -561,69 +561,69 @@ LoKi::Decays::Trees::Inclusive::fillStream ( std::ostream& s ) const
 // ============================================================================
 // OPTIONAL
 // ============================================================================
-LoKi::Decays::Trees::Optional::Optional
-( const LoKi::Decays::iNode&                      mother     , 
-  const LoKi::Decays::Trees::Exclusive::SubTrees& children   ,
-  const LoKi::Decays::Trees::Exclusive::SubTrees& optional   ,
-  const LoKi::Decays::Trees::Alg                  alg        ) 
-  : LoKi::Decays::Trees::Exclusive ( mother , children , alg )
+Decays::Trees::Optional::Optional
+( const Decays::iNode&                      mother     , 
+  const Decays::Trees::Exclusive::SubTrees& children   ,
+  const Decays::Trees::Exclusive::SubTrees& optional   ,
+  const Decays::Trees::Alg                  alg        ) 
+  : Decays::Trees::Exclusive ( mother , children , alg )
   , m_optional ( optional ) 
 {}
 // ============================================================================
-LoKi::Decays::Trees::Optional::Optional
+Decays::Trees::Optional::Optional
 ( const std::string&                              mother     , 
-  const LoKi::Decays::Trees::Exclusive::SubTrees& children   ,
-  const LoKi::Decays::Trees::Exclusive::SubTrees& optional   ,
-  const LoKi::Decays::Trees::Alg                  alg        ) 
-  : LoKi::Decays::Trees::Exclusive ( mother , children , alg )
+  const Decays::Trees::Exclusive::SubTrees& children   ,
+  const Decays::Trees::Exclusive::SubTrees& optional   ,
+  const Decays::Trees::Alg                  alg        ) 
+  : Decays::Trees::Exclusive ( mother , children , alg )
   , m_optional ( optional ) 
 {}
 // ============================================================================
-LoKi::Decays::Trees::Optional::Optional
+Decays::Trees::Optional::Optional
 ( const LHCb::ParticleID&                         mother     , 
-  const LoKi::Decays::Trees::Exclusive::SubTrees& children   ,
-  const LoKi::Decays::Trees::Exclusive::SubTrees& optional   ,
-  const LoKi::Decays::Trees::Alg                  alg        ) 
-  : LoKi::Decays::Trees::Exclusive ( mother , children , alg )
+  const Decays::Trees::Exclusive::SubTrees& children   ,
+  const Decays::Trees::Exclusive::SubTrees& optional   ,
+  const Decays::Trees::Alg                  alg        ) 
+  : Decays::Trees::Exclusive ( mother , children , alg )
   , m_optional ( optional ) 
 {}
 // ============================================================================
-LoKi::Decays::Trees::Optional::Optional
-( const LHCb::Decay&                              decay    , 
-  const LoKi::Decays::Trees::Exclusive::SubTrees& optional ,
-  const LoKi::Decays::Trees::Alg                  alg      ) 
-  : LoKi::Decays::Trees::Exclusive ( decay , alg ) 
+Decays::Trees::Optional::Optional
+( const Decays::Decay&                              decay    , 
+  const Decays::Trees::Exclusive::SubTrees& optional ,
+  const Decays::Trees::Alg                  alg      ) 
+  : Decays::Trees::Exclusive ( decay , alg ) 
   , m_optional ( optional ) 
 {}
 // ============================================================================
-LoKi::Decays::Trees::Optional::Optional
-( const LoKi::Decays::Trees::Optional::Exclusive& right    , 
-  const LoKi::Decays::Trees::Exclusive::SubTrees& optional ) 
-  : LoKi::Decays::Trees::Exclusive ( right ) 
+Decays::Trees::Optional::Optional
+( const Decays::Trees::Optional::Exclusive& right    , 
+  const Decays::Trees::Exclusive::SubTrees& optional ) 
+  : Decays::Trees::Exclusive ( right ) 
   , m_optional ( optional )  
 {}
 // ============================================================================
 // MANDATORY: check the validity of the tree 
 // ============================================================================
-bool LoKi::Decays::Trees::Optional::valid() const 
+bool Decays::Trees::Optional::valid() const 
 {
   return Exclusive::valid() && 0 != nChildren() && 0 != nOptional() && 
-    LoKi::Decays::valid ( optBegin( ), optEnd() ) ;
+    Decays::valid ( optBegin( ), optEnd() ) ;
 }
 // ============================================================================
 // MANDATORY: the proper validation of the tree
 // ============================================================================
-StatusCode LoKi::Decays::Trees::Optional::validate 
-( IParticlePropertySvc* svc ) const 
+StatusCode Decays::Trees::Optional::validate 
+( const LHCb::IParticlePropertySvc* svc ) const 
 { 
   StatusCode sc = Exclusive::validate ( svc ) ;
   return sc.isFailure() ? sc :
-    LoKi::Decays::validate ( optBegin() , optEnd() , svc ) ;
+    Decays::validate ( optBegin() , optEnd() , svc ) ;
 }
 // ============================================================================
 // MANDATORY: the specific printout 
 // ============================================================================
-std::ostream& LoKi::Decays::Trees::Optional::fillStream 
+std::ostream& Decays::Trees::Optional::fillStream 
 ( std::ostream& s ) const 
 {
   //
@@ -645,8 +645,8 @@ std::ostream& LoKi::Decays::Trees::Optional::fillStream
 // ============================================================================
 // MANDATORY: the only one essential method
 // ============================================================================
-bool LoKi::Decays::Trees::Optional::operator() 
-  ( LoKi::Decays::iTree_<const LHCb::Particle*>::argument p ) const 
+bool Decays::Trees::Optional::operator() 
+  ( Decays::iTree_<const LHCb::Particle*>::argument p ) const 
 {
   // reset the cache (ALWAYS!!!)
   i_reset () ;
@@ -654,10 +654,10 @@ bool LoKi::Decays::Trees::Optional::operator()
   if ( !ok ( p )                       ) { return false ; }        // RETURN 
   // perform the real matching:
   // (1) get the proper decay sections:
-  LoKi::Decays::Sections sections ;
+  Decays::Sections sections ;
   makeSections ( p , alg() , sections ) ;
   // (2) loop over all sections
-  for (  LoKi::Decays::Sections::iterator isect = sections.begin() ; 
+  for (  Decays::Sections::iterator isect = sections.begin() ; 
          sections.end() != isect ; ++isect )
   {
     // (3) try to match the section 
@@ -678,7 +678,7 @@ bool LoKi::Decays::Trees::Optional::operator()
       if ( std::equal ( childBegin() , childEnd() , isect->begin() , Equal () ) )
       {
         // the temporary iterator 
-        LoKi::Decays::Section::iterator aux = isect->begin() + nChildren () ;
+        Decays::Section::iterator aux = isect->begin() + nChildren () ;
         // create the local container for permutations 
         SubTrees opt ( m_optional ) ;
         std::stable_sort ( opt.begin () , opt.end() ) ; // sort it!!!
@@ -699,54 +699,54 @@ bool LoKi::Decays::Trees::Optional::operator()
 // ============================================================================
 // add one more daughter to the decay 
 // ============================================================================
-void LoKi::Decays::Trees::Optional::addOptional 
-( const LoKi::Decays::iTree_<const LHCb::Particle*>& tree ) 
+void Decays::Trees::Optional::addOptional 
+( const Decays::iTree_<const LHCb::Particle*>& tree ) 
 { m_optional.push_back ( tree ) ; }
 // ============================================================================
 // add one more daughter to the decay 
 // ============================================================================
-void LoKi::Decays::Trees::Optional::addOptional 
-( const LoKi::Decays::iNode& node ) 
+void Decays::Trees::Optional::addOptional 
+( const Decays::iNode& node ) 
 { m_optional.push_back ( Exclusive ( node ) ) ; }
 // ============================================================================
 // add one more daughter to the decay 
 // ============================================================================
-void LoKi::Decays::Trees::Optional::addOptional 
+void Decays::Trees::Optional::addOptional 
 ( const std::string& node ) 
-{ addOptional ( LoKi::Decays::Nodes::Pid ( node ) ) ; }
+{ addOptional ( Decays::Nodes::Pid ( node ) ) ; }
 // ============================================================================
 // add one more daughter to the decay 
 // ============================================================================
-void LoKi::Decays::Trees::Optional::addOptional 
+void Decays::Trees::Optional::addOptional 
 ( const LHCb::ParticleID& node ) 
-{ addOptional ( LoKi::Decays::Nodes::Pid ( node ) ) ; }
+{ addOptional ( Decays::Nodes::Pid ( node ) ) ; }
 // ============================================================================
 // add one more daughter to the decay 
 // ============================================================================
-void LoKi::Decays::Trees::Optional::addOptional 
-( const LHCb::Decay::Item& node ) 
-{ addOptional ( LoKi::Decays::Nodes::Pid ( node ) ) ; }
+void Decays::Trees::Optional::addOptional 
+( const Decays::Decay::Item& node ) 
+{ addOptional ( Decays::Nodes::Pid ( node ) ) ; }
 // ============================================================================
 // add one more daughter to the decay 
 // ============================================================================
-void LoKi::Decays::Trees::Optional::addOptional 
-( const ParticleProperty* node ) 
-{ addOptional ( LoKi::Decays::Nodes::Pid ( node ) ) ; }
+void Decays::Trees::Optional::addOptional 
+( const LHCb::ParticleProperty* node ) 
+{ addOptional ( Decays::Nodes::Pid ( node ) ) ; }
 // ============================================================================
 // set optional
 // ============================================================================
-void LoKi::Decays::Trees::Optional::setOptional
-( const std::vector<const ParticleProperty*>& optional ) 
+void Decays::Trees::Optional::setOptional
+( const std::vector<const LHCb::ParticleProperty*>& optional ) 
 {
   m_optional.clear() ;
-  for ( std::vector<const ParticleProperty*>::const_iterator iopt = 
+  for ( std::vector<const LHCb::ParticleProperty*>::const_iterator iopt = 
           optional.begin() ; optional.end() != iopt; ++iopt ) 
   { addOptional ( *iopt ) ; }  
 }
 // ============================================================================
 // set optional
 // ============================================================================
-void LoKi::Decays::Trees::Optional::setOptional
+void Decays::Trees::Optional::setOptional
 ( const std::vector<LHCb::ParticleID>& optional ) 
 {
   m_optional.clear() ;
@@ -757,18 +757,18 @@ void LoKi::Decays::Trees::Optional::setOptional
 // ============================================================================
 // set optional
 // ============================================================================
-void LoKi::Decays::Trees::Optional::setOptional
-( const std::vector<LHCb::Decay::Item>& optional ) 
+void Decays::Trees::Optional::setOptional
+( const std::vector<Decays::Decay::Item>& optional ) 
 {
   m_optional.clear() ;
-  for ( std::vector<LHCb::Decay::Item>::const_iterator iopt = 
+  for ( std::vector<Decays::Decay::Item>::const_iterator iopt = 
           optional.begin() ; optional.end() != iopt; ++iopt ) 
   { addOptional ( *iopt ) ; }  
 }
 // ============================================================================
 // set optional
 // ============================================================================
-void LoKi::Decays::Trees::Optional::setOptional
+void Decays::Trees::Optional::setOptional
 ( const std::vector<std::string>& optional ) 
 {
   m_optional.clear() ;
@@ -787,90 +787,90 @@ void LoKi::Decays::Trees::Optional::setOptional
  *  @date 2008-07-07
  */
 // ============================================================================
-LoKi::Decays::Trees::And_<const LHCb::Particle*>
+Decays::Trees::And_<const LHCb::Particle*>
 operator&& 
-( const LoKi::Decays::iTree_<const LHCb::Particle*>& t , 
-  const LoKi::Decays::iNode&                         n ) 
-{ return t && LoKi::Decays::Trees::Exclusive ( n ) ;  }
+( const Decays::iTree_<const LHCb::Particle*>& t , 
+  const Decays::iNode&                         n ) 
+{ return t && Decays::Trees::Exclusive ( n ) ;  }
 // ============================================================================
 /*  operator for easy construction of trees 
  *  @author Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
  *  @date 2008-07-07
  */
 // ============================================================================
-LoKi::Decays::Trees::And_<const LHCb::Particle*>
+Decays::Trees::And_<const LHCb::Particle*>
 operator&& 
-( const LoKi::Decays::iTree_<const LHCb::Particle*>& t , 
-  const LHCb::Decay::Item&                           n ) 
-{ return t && LoKi::Decays::Trees::Exclusive 
-    ( LoKi::Decays::Nodes::Pid ( n ) ) ;  }
+( const Decays::iTree_<const LHCb::Particle*>& t , 
+  const Decays::Decay::Item&                           n ) 
+{ return t && Decays::Trees::Exclusive 
+    ( Decays::Nodes::Pid ( n ) ) ;  }
 // ============================================================================
 /*  operator for easy construction of trees 
  *  @author Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
  *  @date 2008-07-07
  */
 // ============================================================================
-LoKi::Decays::Trees::And_<const LHCb::Particle*>
+Decays::Trees::And_<const LHCb::Particle*>
 operator&& 
-( const LoKi::Decays::iTree_<const LHCb::Particle*>& t , 
+( const Decays::iTree_<const LHCb::Particle*>& t , 
   const std::string&                                 n ) 
-{ return t && LoKi::Decays::Trees::Exclusive ( n ) ;  }
+{ return t && Decays::Trees::Exclusive ( n ) ;  }
 // ============================================================================
 /*  operator for the easy construction of trees 
  *  @author Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
  *  @date 2008-07-07
  */
 // ============================================================================
-LoKi::Decays::Trees::And_<const LHCb::Particle*>
+Decays::Trees::And_<const LHCb::Particle*>
 operator&& 
-( const LoKi::Decays::iTree_<const LHCb::Particle*>& t , 
+( const Decays::iTree_<const LHCb::Particle*>& t , 
   const LHCb::ParticleID&                            n ) 
-{ return t && LoKi::Decays::Trees::Exclusive ( n ) ;  }
+{ return t && Decays::Trees::Exclusive ( n ) ;  }
 // ============================================================================
 /*  operator for easy construction of trees 
  *  @author Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
  *  @date 2008-07-07
  */
 // ============================================================================
-LoKi::Decays::Trees::Or_<const LHCb::Particle*>
+Decays::Trees::Or_<const LHCb::Particle*>
 operator|| 
-( const LoKi::Decays::iTree_<const LHCb::Particle*>& t , 
-  const LoKi::Decays::iNode&                         n ) 
-{ return t || LoKi::Decays::Trees::Exclusive ( n ) ;  }
+( const Decays::iTree_<const LHCb::Particle*>& t , 
+  const Decays::iNode&                         n ) 
+{ return t || Decays::Trees::Exclusive ( n ) ;  }
 // ============================================================================
 /*  operator for easy construction of trees 
  *  @author Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
  *  @date 2008-07-07
  */
 // ============================================================================
-LoKi::Decays::Trees::Or_<const LHCb::Particle*>
+Decays::Trees::Or_<const LHCb::Particle*>
 operator||
-( const LoKi::Decays::iTree_<const LHCb::Particle*>& t , 
-  const LHCb::Decay::Item&                           n ) 
-{ return t || LoKi::Decays::Trees::Exclusive 
-    ( LoKi::Decays::Nodes::Pid ( n ) ) ;  }
+( const Decays::iTree_<const LHCb::Particle*>& t , 
+  const Decays::Decay::Item&                           n ) 
+{ return t || Decays::Trees::Exclusive 
+    ( Decays::Nodes::Pid ( n ) ) ;  }
 // ============================================================================
 /*  operator for easy construction of trees 
  *  @author Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
  *  @date 2008-07-07
  */
 // ============================================================================
-LoKi::Decays::Trees::Or_<const LHCb::Particle*>
+Decays::Trees::Or_<const LHCb::Particle*>
 operator||
-( const LoKi::Decays::iTree_<const LHCb::Particle*>& t , 
+( const Decays::iTree_<const LHCb::Particle*>& t , 
   const std::string&                                 n ) 
-{ return t || LoKi::Decays::Trees::Exclusive ( n ) ;  }
+{ return t || Decays::Trees::Exclusive ( n ) ;  }
 // ============================================================================
 /*  operator for the easy construction of trees 
  *  @author Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
  *  @date 2008-07-07
  */
 // ============================================================================
-LoKi::Decays::Trees::Or_<const LHCb::Particle*>
+Decays::Trees::Or_<const LHCb::Particle*>
 operator||
-( const LoKi::Decays::iTree_<const LHCb::Particle*>& t , 
+( const Decays::iTree_<const LHCb::Particle*>& t , 
   const LHCb::ParticleID&                            n ) 
-{ return t || LoKi::Decays::Trees::Exclusive ( n ) ;  }
+{ return t || Decays::Trees::Exclusive ( n ) ;  }
 // ============================================================================
 
 

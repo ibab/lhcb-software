@@ -1,4 +1,4 @@
-// $Id: Particles0.cpp,v 1.17 2008-10-31 17:27:46 ibelyaev Exp $
+// $Id: Particles0.cpp,v 1.18 2008-12-05 09:09:21 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -8,11 +8,14 @@
 // ============================================================================
 // GaudiKernel
 // ============================================================================
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/ToStream.h"
+// ============================================================================
+// PartProp
+// ============================================================================
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 // ============================================================================
 // Event 
 // ============================================================================
@@ -552,7 +555,7 @@ LoKi::Particles::InvariantMass::fillStream( std::ostream& s ) const
  */
 // ============================================================================
 LoKi::Particles::DeltaMass::DeltaMass
-( const ParticleProperty&     pp     )
+( const LHCb::ParticleProperty&     pp     )
   : LoKi::Particles::Mass ()
   , m_mass ( pp.mass() ) 
 {}
@@ -563,12 +566,12 @@ LoKi::Particles::DeltaMass::DeltaMass
  */
 // ============================================================================
 LoKi::Particles::DeltaMass::DeltaMass
-( const std::string&    name   , 
-  IParticlePropertySvc* ppsvc  )
+( const std::string&          name   , 
+  LHCb::IParticlePropertySvc* ppsvc  )
   : LoKi::Particles::Mass ()
   , m_mass ( 0 * Gaudi::Units::GeV ) 
 {
-  const ParticleProperty* pp = 0 ; 
+  const LHCb::ParticleProperty* pp = 0 ; 
   if ( 0 != ppsvc ) { pp = ppsvc->find ( name ) ; }
   else              { pp = LoKi::Particles::ppFromName ( name ) ; }
   if ( 0 == pp    ) 
@@ -582,16 +585,16 @@ LoKi::Particles::DeltaMass::DeltaMass
  */
 // ============================================================================
 LoKi::Particles::DeltaMass::DeltaMass
-( const LHCb::ParticleID& pid    , 
-  IParticlePropertySvc*   ppsvc  )
+( const LHCb::ParticleID&     pid    , 
+  LHCb::IParticlePropertySvc* ppsvc  )
   : LoKi::Particles::Mass ()
   , m_mass ( 0 * Gaudi::Units::GeV )  
 {
-  const ParticleProperty* pp = 0 ; 
-  if ( 0 != ppsvc ) { pp = ppsvc->findByStdHepID ( pid.pid() ) ; }
-  else              { pp = LoKi::Particles::ppFromPID ( pid  ) ; }
+  const LHCb::ParticleProperty* pp = 0 ; 
+  if ( 0 != ppsvc ) { pp = ppsvc->find                ( pid ) ; }
+  else              { pp = LoKi::Particles::ppFromPID ( pid ) ; }
   if ( 0 == pp    ) 
-  { Exception("DeltaMass(): Unknow ParticleID " ) ; }
+  { Exception ( "DeltaMass(): Unknow ParticleID " ) ; }
   m_mass = pp->mass();  
 }
 // ============================================================================
@@ -983,7 +986,7 @@ LoKi::Particles::NominalMass::operator()
     return LoKi::Constants::InvalidMass ;
   }
   //
-  const ParticleProperty* pp =
+  const LHCb::ParticleProperty* pp =
     LoKi::Particles::_ppFromPID ( p -> particleID() ) ;
   //
   if ( 0 == pp ) 

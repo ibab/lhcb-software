@@ -1,4 +1,4 @@
-// $Id: Particles21.cpp,v 1.1 2008-09-23 17:18:35 ibelyaev Exp $
+// $Id: Particles21.cpp,v 1.2 2008-12-05 09:09:21 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -6,9 +6,9 @@
 // ============================================================================
 #include <cmath>
 // ============================================================================
-// GaudiKernel
+// PartProp
 // ============================================================================
-#include "GaudiKernel/ParticleProperty.h"
+#include "Kernel/ParticleProperty.h"
 // ============================================================================
 // Event 
 // ============================================================================
@@ -37,7 +37,7 @@ double LoKi::Particles::DeltaNominalMass::delta
     return LoKi::Constants::InvalidMass ;
   }
   //
-  const ParticleProperty* pp =
+  const LHCb::ParticleProperty* pp =
     LoKi::Particles::_ppFromPID ( p -> particleID() ) ;
   //
   if ( 0 == pp ) 
@@ -60,7 +60,7 @@ double LoKi::Particles::AbsDeltaNominalMass::adelta
     return LoKi::Constants::InvalidMass ;
   }
   //
-  const ParticleProperty* pp =
+  const LHCb::ParticleProperty* pp =
     LoKi::Particles::_ppFromPID ( p -> particleID() ) ;
   //
   if ( 0 == pp ) 
@@ -83,7 +83,7 @@ double LoKi::Particles::DeltaNominalMassChi2::chi2
     return LoKi::Constants::InvalidChi2 ;
   }
   //
-  const ParticleProperty* pp =
+  const LHCb::ParticleProperty* pp =
     LoKi::Particles::_ppFromPID ( p -> particleID() ) ;
   //
   if ( 0 == pp ) 

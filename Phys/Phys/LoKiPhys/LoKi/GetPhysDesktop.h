@@ -1,4 +1,4 @@
-// $Id: GetPhysDesktop.h,v 1.2 2008-06-03 15:47:08 cattanem Exp $
+// $Id: GetPhysDesktop.h,v 1.3 2008-12-05 09:09:21 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GETPHYSDESKTOP_H 
 #define LOKI_GETPHYSDESKTOP_H 1
@@ -29,7 +29,7 @@ namespace LoKi
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  date 2008-01-16
    */
-  IPhysDesktop* getPhysDesktop ( const IAlgContextSvc* svc ) ;
+  IPhysDesktop* getPhysDesktop ( IAlgContextSvc* svc ) ;
   // ==========================================================================
   /** get the desktop from LoKi Service 
    *  @param  pointer to LoKi Service   
@@ -37,7 +37,7 @@ namespace LoKi
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  date 2008-01-16
    */
-  IPhysDesktop* getPhysDesktop ( const LoKi::ILoKiSvc* svc  ) ;
+  IPhysDesktop* getPhysDesktop ( LoKi::ILoKiSvc* svc  ) ;
   // ==========================================================================
   /** get the desktop using the chain LoKi -> Algorithm Context -> DVAlgorithm
    *  @return the pointer to desktop

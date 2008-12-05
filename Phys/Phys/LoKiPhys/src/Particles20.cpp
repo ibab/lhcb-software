@@ -1,10 +1,11 @@
-// $Id: Particles20.cpp,v 1.6 2008-10-31 17:27:46 ibelyaev Exp $
+// $Id: Particles20.cpp,v 1.7 2008-12-05 09:09:21 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/ToStream.h"
+#include "GaudiKernel/SmartIF.h"
 // ============================================================================
 // DaVinciKernel
 // ============================================================================
@@ -58,12 +59,13 @@ namespace
   const IDistanceCalculator* 
   loadTool 
   ( const LoKi::Vertices::ImpactParamTool& tool      ,
-    const LoKi::ILoKiSvc*                  loki      ,
+    LoKi::ILoKiSvc*                        loki      ,
     const std::string&                     name = "" ) 
   {
     if ( 0 == loki ) { return 0 ; }                            // RETURN
     // get DVAlgorithm form the context 
-    DVAlgorithm* alg = Gaudi::Utils::getDVAlgorithm ( loki -> contextSvc() ) ;
+    DVAlgorithm* alg = 
+      Gaudi::Utils::getDVAlgorithm ( SmartIF<IAlgContextSvc>( loki ) ) ;
     if ( 0 == alg  ) { return 0 ; }                            // RETURN 
     // get the tool form the algorithm
     const IDistanceCalculator* geo = alg -> distanceCalculator ( name ) ;
@@ -83,13 +85,14 @@ namespace
   inline 
   const ILifetimeFitter*
   loadFitter  
-  ( const TYPE&            func , 
-    const LoKi::ILoKiSvc*  loki ,
-    const std::string&     name )
+  ( const TYPE&        func , 
+    LoKi::ILoKiSvc*    loki ,
+    const std::string& name )
   {
     if ( 0 == loki ) { return  0 ; }                           // RETURN 
     // get DVAlgorithm form the context 
-    DVAlgorithm* alg = Gaudi::Utils::getDVAlgorithm ( loki -> contextSvc() ) ;
+    DVAlgorithm* alg = 
+      Gaudi::Utils::getDVAlgorithm ( SmartIF<IAlgContextSvc>( loki ) ) ;
     if ( 0 == alg  ) { return 0 ; }                            // RETURN 
     // get the tool from DValgorithm
     const ILifetimeFitter* fitter = alg -> lifetimeFitter ( name ) ;

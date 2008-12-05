@@ -1,11 +1,14 @@
-// $Id: Particles23.cpp,v 1.2 2008-12-03 12:37:55 ibelyaev Exp $
+// $Id: Particles23.cpp,v 1.3 2008-12-05 09:09:21 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/ToStream.h"
-#include "GaudiKernel/ParticleProperty.h"
+// ============================================================================
+// PartProp
+// ============================================================================
+#include "Kernel/ParticleProperty.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -194,7 +197,7 @@ StatusCode LoKi::Particles::WrongMass::decode () const
     for ( PIDs::const_iterator ipid = m_pids.begin() ; 
           m_pids.end () != ipid ; ++ipid )
     {
-      const ParticleProperty* pp = LoKi::Particles::_ppFromPID ( *ipid ) ;
+      const LHCb::ParticleProperty* pp = LoKi::Particles::_ppFromPID ( *ipid ) ;
       if ( 0 == pp ) 
       {
         m_masses.clear() ;
@@ -213,7 +216,7 @@ StatusCode LoKi::Particles::WrongMass::decode () const
     for ( Names::const_iterator iname = m_names.begin() ; 
           m_names.end () != iname ; ++iname )
     {
-      const ParticleProperty* pp = LoKi::Particles::_ppFromName ( *iname ) ;
+      const LHCb::ParticleProperty* pp = LoKi::Particles::_ppFromName ( *iname ) ;
       if ( 0 == pp ) 
       {
         m_masses.clear() ;

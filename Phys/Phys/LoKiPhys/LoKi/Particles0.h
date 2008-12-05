@@ -1,4 +1,4 @@
-// $Id: Particles0.h,v 1.17 2008-11-02 20:13:32 ibelyaev Exp $
+// $Id: Particles0.h,v 1.18 2008-12-05 09:09:21 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES0_H 
 #define LOKI_PARTICLES0_H 1
@@ -10,8 +10,11 @@
 #include "LoKi/PhysTypes.h"
 #include "LoKi/Kinematics.h"
 // ============================================================================
-class IParticlePropertySvc ;
-class  ParticleProperty    ;
+namespace LHCb
+{ 
+  class IParticlePropertySvc ;
+  class  ParticleProperty    ;
+}
 // ============================================================================
 /** @file
  *
@@ -613,21 +616,21 @@ namespace LoKi
       /** constructor 
        *  @param pp particle property 
        */
-      DeltaMass ( const ParticleProperty& pp ) ;
+      DeltaMass ( const LHCb::ParticleProperty& pp ) ;
       /** constructor 
        *  @param name particle name 
        *  @param ppsvc  LHCb::ParticleProperty service 
        */
       DeltaMass
-      ( const std::string&      name       , 
-        IParticlePropertySvc*   ppsvc  = 0 ) ;
+      ( const std::string&          name       , 
+        LHCb::IParticlePropertySvc* ppsvc  = 0 ) ;
       /** constructor 
        *  @param pid  particle ID 
        *  @param ppsvc LHCb::ParticleProperty service 
        */
       DeltaMass
-      ( const LHCb::ParticleID& pid       , 
-        IParticlePropertySvc*   ppsvc = 0 ) ;
+      ( const LHCb::ParticleID&     pid       , 
+        LHCb::IParticlePropertySvc* ppsvc = 0 ) ;
       /// virtual destructor 
       virtual ~DeltaMass(){};
       /// clone method (mandatory!)
@@ -674,23 +677,23 @@ namespace LoKi
       /** constructor 
        *  @param pp particle property 
        */
-      AbsDeltaMass ( const ParticleProperty& pp )
+      AbsDeltaMass ( const LHCb::ParticleProperty& pp )
         : DeltaMass ( pp ) {}
       /** constructor 
        *  @param name particle name 
        *  @param ppsvc LHCb::ParticleProperty service 
        */
       AbsDeltaMass 
-      ( const std::string&      name      , 
-        IParticlePropertySvc*   ppsvc = 0 ) 
+      ( const std::string&          name      , 
+        LHCb::IParticlePropertySvc* ppsvc = 0 ) 
         : DeltaMass ( name , ppsvc ) {}
       /** constructor 
        *  @param pid  particle ID 
        *  @param ppsvc LHCb::ParticleProperty service 
        */
       AbsDeltaMass
-      ( const LHCb::ParticleID& pid       , 
-        IParticlePropertySvc*   ppsvc = 0 )
+      ( const LHCb::ParticleID&     pid       , 
+        LHCb::IParticlePropertySvc* ppsvc = 0 )
         : DeltaMass ( pid , ppsvc ) {}
       /// virtual destructor 
       virtual ~AbsDeltaMass(){};
@@ -727,23 +730,23 @@ namespace LoKi
        *  @param pp particle property 
        */
       DeltaMeasuredMass 
-      ( const ParticleProperty& pp )
+      ( const LHCb::ParticleProperty& pp )
         : DeltaMass ( pp ) {}
       /** constructor 
        *  @param name particle name 
        *  @param ppsvc LHCb::ParticleProperty service 
        */
       DeltaMeasuredMass 
-      ( const std::string&      name      , 
-        IParticlePropertySvc*   ppsvc = 0 )
+      ( const std::string&          name      , 
+        LHCb::IParticlePropertySvc* ppsvc = 0 )
         : DeltaMass ( name , ppsvc ) {}
       /** constructor 
        *  @param pid  particle ID 
        *  @param ppsvc LHCb::ParticleProperty service 
        */
       DeltaMeasuredMass 
-      ( const LHCb::ParticleID& pid       , 
-        IParticlePropertySvc*   ppsvc = 0 ) 
+      ( const LHCb::ParticleID&     pid       , 
+        LHCb::IParticlePropertySvc* ppsvc = 0 ) 
         : DeltaMass ( pid , ppsvc ) {}
       /// virtual destructor 
       virtual ~DeltaMeasuredMass()  ;
@@ -786,23 +789,23 @@ namespace LoKi
        *  @param pp particle property 
        */
       AbsDeltaMeasuredMass 
-      ( const ParticleProperty& pp )
+      ( const LHCb::ParticleProperty& pp )
         : DeltaMeasuredMass ( pp ) {}
       /** constructor 
        *  @param name particle name 
        *  @param ppsvc  LHCb::ParticleProperty service 
        */
       AbsDeltaMeasuredMass
-      ( const std::string&      name      , 
-        IParticlePropertySvc*   ppsvc = 0 )
+      ( const std::string&          name      , 
+        LHCb::IParticlePropertySvc* ppsvc = 0 )
         : DeltaMeasuredMass ( name , ppsvc  ) {}
       /** constructor 
        *  @param pid  particle ID 
        *  @param ppsvc LHCb::ParticleProperty service 
        */
       AbsDeltaMeasuredMass 
-      ( const LHCb::ParticleID& pid       , 
-        IParticlePropertySvc*   ppsvc = 0 )       
+      ( const LHCb::ParticleID&     pid       , 
+        LHCb::IParticlePropertySvc* ppsvc = 0 )       
         : DeltaMeasuredMass ( pid  , ppsvc  ) {}
       /// destructor (virtual)
       virtual ~AbsDeltaMeasuredMass() ;
@@ -840,23 +843,23 @@ namespace LoKi
        *  @param pp particle property 
        */
       DeltaMeasuredMassChi2 
-      ( const ParticleProperty& pp ) 
+      ( const LHCb::ParticleProperty& pp ) 
         : DeltaMeasuredMass ( pp ) {}
       /** constructor 
        *  @param name particle name 
        *  @param ppsvc ParticleProperty service 
        */
       DeltaMeasuredMassChi2 
-      ( const std::string&      name      , 
-        IParticlePropertySvc*   ppsvc = 0 ) 
+      ( const std::string&          name      , 
+        LHCb::IParticlePropertySvc* ppsvc = 0 ) 
         : DeltaMeasuredMass ( name , ppsvc ) {}
       /** constructor 
        *  @param pid  particle ID 
        *  @param ppsvc ParticleProperty service 
        */
       DeltaMeasuredMassChi2 
-      ( const LHCb::ParticleID& pid       , 
-        IParticlePropertySvc*   ppsvc = 0 ) 
+      ( const LHCb::ParticleID&     pid       , 
+        LHCb::IParticlePropertySvc* ppsvc = 0 ) 
         : DeltaMeasuredMass ( pid , ppsvc ) {}
       /// virtual destructor 
       ~DeltaMeasuredMassChi2(){};
@@ -892,23 +895,23 @@ namespace LoKi
       /** constructor 
        *  @param pp particle property 
        */
-      DeltaMassChi2 ( const ParticleProperty& pp ) 
+      DeltaMassChi2 ( const LHCb::ParticleProperty& pp ) 
         : DeltaMass ( pp ) {}
       /** constructor 
        *  @param name particle name 
        *  @param ppsvc ParticleProperty service 
        */
       DeltaMassChi2 
-      ( const std::string&      name       , 
-        IParticlePropertySvc*   ppsvc  = 0 ) 
+      ( const std::string&          name       , 
+        LHCb::IParticlePropertySvc* ppsvc  = 0 ) 
         : DeltaMass ( name , ppsvc ) {}
       /** constructor 
        *  @param pid  particle ID 
        *  @param ppsvc ParticleProperty service 
        */
       DeltaMassChi2 
-      ( const LHCb::ParticleID& pid       , 
-        IParticlePropertySvc*   ppsvc = 0 ) 
+      ( const LHCb::ParticleID&     pid       , 
+        LHCb::IParticlePropertySvc* ppsvc = 0 ) 
         : DeltaMass ( pid , ppsvc ) {}
       /// virtual destructor 
       ~DeltaMassChi2(){};

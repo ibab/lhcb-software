@@ -1,4 +1,4 @@
-// $Id: Sections.cpp,v 1.2 2008-06-12 08:25:27 ibelyaev Exp $
+// $Id: Sections.cpp,v 1.3 2008-12-05 09:09:21 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -27,9 +27,9 @@
  *  @return size of the section container 
  */
 // ============================================================================
-size_t LoKi::Decays::sections 
+size_t Decays::sections 
 ( const LHCb::Particle*   particle , 
-  LoKi::Decays::Sections& output   ) 
+  Decays::Sections& output   ) 
 {
   // trivial case 1
   if ( 0 == particle ) { return output.size() ; }                   // RETURN  
