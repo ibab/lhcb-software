@@ -1,3 +1,10 @@
+2008-12-05  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbConfiguration/rcs.py: added support for CVS modules where the module
+	name is different from the path in the repository.
+	* python/LbConfiguration/GetPack.py: fixed a couple of minor bugs and added
+	the URL for DIRAC repository.
+
 2008-12-03  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/LbLogin.py: filter '.' from PATH. It creates problems with the

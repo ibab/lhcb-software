@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: GetPack.py,v 1.7 2008-12-01 11:30:52 marcocle Exp $
+# $Id: GetPack.py,v 1.8 2008-12-05 13:47:05 marcocle Exp $
 
 from LbUtils.Script import Script
 import rcs
@@ -65,13 +65,18 @@ __repositories__ = { "gaudi": { "ssh":       SVNReposInfo("svn+ssh", "svn.cern.c
                      "lhcb":  { "kserver":   CVSReposInfo("kserver", "isscvs.cern.ch", "/local/reps/lhcb"),
                                 "ssh":       CVSReposInfo("ext", "isscvs.cern.ch", "/local/reps/lhcb"),
                                 "anonymous": CVSReposInfo("pserver", "isscvs.cern.ch", "/local/reps/lhcb", "anonymous") },
+                     "dirac":  { "kserver":   CVSReposInfo("kserver", "isscvs.cern.ch", "/local/reps/dirac"),
+                                  "ssh":       CVSReposInfo("ext", "isscvs.cern.ch", "/local/reps/dirac"),
+                                  "anonymous": CVSReposInfo("pserver", "isscvs.cern.ch", "/local/reps/dirac", "anonymous") },
                      }
 # Define default repositories
 __repositories__["gaudi"]["default"] = __repositories__["gaudi"]["ssh"]
 if sys.platform.startswith("linux"):
     __repositories__["lhcb"]["default"] = __repositories__["lhcb"]["kserver"]
+    __repositories__["dirac"]["default"] = __repositories__["dirac"]["kserver"]
 else:
     __repositories__["lhcb"]["default"] = __repositories__["lhcb"]["ssh"]
+    __repositories__["dirac"]["default"] = __repositories__["dirac"]["ssh"]
 
 ## Class used as exception to allow a "quit" in any moment
 class Quit:
@@ -83,7 +88,7 @@ class Skip:
 ## @class GetPack
 # Main script class for getpack.
 class GetPack(Script):
-    _version = "$Id: GetPack.py,v 1.7 2008-12-01 11:30:52 marcocle Exp $".replace("$","").replace("Id:","").strip()
+    _version = "$Id: GetPack.py,v 1.8 2008-12-05 13:47:05 marcocle Exp $".replace("$","").replace("Id:","").strip()
     def __init__(self):
         Script.__init__(self, usage = "\n\t%prog [options] package [ [version] ['tag'|'head'] ]"
                                       "\n\t%prog [options] -i [repository [hat]]"
@@ -98,10 +103,10 @@ class GetPack(Script):
         self.selected_hat = None
         
         self.requested_package = None
-        self.requested_package_version = None
+        self.requested_package_version = ""
         
         self.project_name = None
-        self.project_version = None
+        self.project_version = ""
 
         self.show_uses_regexp = re.compile(r"# (?P<spaces> *)use (?P<package>[^ ]+) (?P<version>[^ ]+) (?P<hat>[^ ]*)")
         
@@ -400,7 +405,7 @@ class GetPack(Script):
                 self.log.info("Search for hat '%s'", self.selected_hat)
             if self.args:
                 self.parser.error("Option '-i' requires maximum 2 arguments")
-        if self.options.project:
+        elif self.options.project:
             # getpack.py --project project [version]
             if self.args:
                 self.project_name = self.args.pop(0)

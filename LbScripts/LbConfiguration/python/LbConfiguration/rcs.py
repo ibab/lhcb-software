@@ -184,6 +184,8 @@ class CVS(RevisionControlSystem):
         self.protocol, self.user, self.host, self.path = \
             self.__repository_rexp__.match(repository).groups()
         self._packages = None
+        self._projects = None
+        self._paths = None
     
     @classmethod
     def canHandle(cls, repository):
@@ -202,21 +204,30 @@ class CVS(RevisionControlSystem):
         and packages.
         """
         out, err = _cvs("-d", self.repository, "checkout", "-s")
-        modules = [ l.split()[0]
+        modules = [ l.split()
                     for l in out.splitlines()
                     if not l.startswith(" ") ]
         packages = []
         projects = []
+        paths = {}
         # empiric definition:
         # a project is a module all capital letters, with no hat
         proj_re = re.compile("^[A-Z]*$") 
         for m in modules:
+            if len(m) > 2:
+                m, path = m[0], m[2]
+            else:
+                m = path = m[0]
+            paths[m] = path
             if proj_re.match(m) and m != "CVSROOT":
                 projects.append(m)
             else:
                 packages.append(m)
         self._packages = packages
+        self._packages.sort()
         self._projects = projects
+        self._projects.sort()
+        self._paths = paths
     
     def _retrievePackages(self):
         """
@@ -242,10 +253,12 @@ class CVS(RevisionControlSystem):
         Extract from the repository the list of symbolic names for the module.
         """
         # Get the log of the requirements file
+        module_dir =  self._paths[module]
         file_to_check = self.__package_version_check_file__
         if isProject:
             file_to_check = self.__project_version_check_file__
-        out, err = _cvs("-d", self.repository, "rlog", module + file_to_check)
+            
+        out, err = _cvs("-d", self.repository, "rlog", module_dir + file_to_check)
         # extract the list of tags
         tags = []
         outl = out.splitlines()
