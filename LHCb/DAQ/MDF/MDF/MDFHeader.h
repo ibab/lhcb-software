@@ -1,11 +1,13 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MDFHeader.h,v 1.7 2006-10-23 09:19:40 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MDFHeader.h,v 1.8 2008-12-05 19:29:09 frankb Exp $
 #ifndef EVENT_MDFHEADER
 #define EVENT_MDFHEADER
 
 // Framework include files
 #include "GaudiKernel/Kernel.h"
 #include <stdexcept>
-#define DAQ_STATUS_BANK 16
+#define DAQ_ERR_BANK_VERSION 0
+#define DAQ_STATUS_BANK      16
+#define DAQ_FILEID_BANK      255
 
 #ifdef _WIN32
 #pragma pack(push, mdfheader_aligment, 1)
@@ -216,7 +218,14 @@ namespace LHCb    {
     unsigned char dataType() const         { return m_dataType;                }
     /// Update the event type
     void setDataType(unsigned char val)    { m_dataType = val;                 }
+    /// Set spare word
     void setSpare(unsigned char val)       { m_spare[0] = val;                 }
+    /// Access to data payload (Header MUST be initialized)
+    char* data() {  return ((char*)this)+sizeOf(headerVersion());              }
+    /// Access to data payload (Header MUST be initialized)
+    const char* data() const {  return ((char*)this)+sizeOf(headerVersion());  }
+    
+    /// Access to sub-headers
     SubHeader subHeader0()                 { return SubHeader(m_spare-1);      }
     SubHeader subHeader()                  { return SubHeader(m_spare+1);      }
   };

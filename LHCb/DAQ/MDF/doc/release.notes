@@ -6,6 +6,11 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+!========================= MDF v3r15 2008-12-10 ===============================
+! 2008-11-13- Markus Frank
+ - Add support for FileID bank
+ - Add DAQ Bank versions to MDFHeader
+
 !========================= MDF v3r14 2008-11-13 ===============================
 ! 2008-11-13- Markus Frank
  - Add standard (dummy) properties to event selector
