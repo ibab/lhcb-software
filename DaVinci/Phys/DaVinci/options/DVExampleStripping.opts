@@ -21,9 +21,6 @@ CheckPreselHeavyDimuon.Algorithms = { "PreselHeavyDimuon" };
 #include "$CCBARROOT/options/DoPreselHeavyDimuon.opts"
 
 ApplicationMgr.EvtMax = -1 ;
-// Sample input file
-#include "$DAVINCIROOT/options/DaVinciTestData.opts"
-MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
 EventSelector.PrintFreq = 100 ;
 
-PrintPreselHeavyDimuon.OutputLevel = 3 ;
+MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";

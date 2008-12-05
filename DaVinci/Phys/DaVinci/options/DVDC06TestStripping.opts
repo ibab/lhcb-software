@@ -42,8 +42,6 @@ ApplicationMgr.HistogramPersistency = "ROOT";
 //EvtTupleSvc.Output = {} ;
 //ApplicationMgr.OutStream = {};
 
-#include "$DAVINCIROOT/options/Phys_v4_BB_lumi2.opts"
-
 
 /// TMP
 SeqPreselXb2GammaX.Members = {

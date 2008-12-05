@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.270 2008-12-05 11:31:18 jpalac Exp $
+! $Id: release.notes,v 1.271 2008-12-05 11:39:27 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,9 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2008-12-05 - Patrick Koppenburg
+ - Added DVGangaTest.py that runs a job for ganga tests.
 
 ! 2008-12-05 - Juan PALACIOS
  - python/DaVinci/Configuration.py
