@@ -1,17 +1,17 @@
 ##############################################################################
-#$Id: DaVinci-Default.py,v 1.6 2008-12-05 11:31:02 jpalac Exp $
+#$Id: DaVinci-Default.py,v 1.7 2008-12-05 15:45:43 jpalac Exp $
 #
 # syntax: gaudirun.py DaVinci-Default.py
 #
 # Author: Juan Palacios <juan.palacios@nikhef.nl>
 #
 ##############################################################################
-from DaVinci.Configuration import *
+from Configurables import DaVinci
 ##############################################################################
 #
 #
 ##############################################################################
-DaVinci().EvtMax = 500
+DaVinci().EvtMax = 500 # Default is -1
 # DaVinci().SkipEvents = 0
 # DaVinci().DataType = "DC06"
 # DaVinci().Simulation   = False

@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DaVinci-2008.py,v 1.8 2008-12-05 11:30:35 jpalac Exp $
+# $Id: DaVinci-2008.py,v 1.9 2008-12-05 15:45:43 jpalac Exp $
 #
 # Options for a typical DaVinci job - this is to please Dirac
 #
@@ -8,8 +8,7 @@
 # @date 2008-10-24
 #
 ########################################################################
-from Gaudi.Configuration import *
-from DaVinci.Configuration import DaVinci
+from Configurables import DaVinci
 ##############################################################################
 #
 #
