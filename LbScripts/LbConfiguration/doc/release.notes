@@ -1,5 +1,6 @@
 2008-12-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* cmt/requirements: release of version v1r11
 	* scripts/LbLogin.py: added the variable LHCBSCRIPTS to point to InstallArea/scripts
 	for backward compatibilty with legacy scripts.
 
