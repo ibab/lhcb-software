@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.135 2008-11-21 09:17:27 cattanem Exp $
+! $Id: release.notes,v 1.136 2008-12-05 06:23:38 cattanem Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
+
+! 2008-12-05 - Marco Cattaneo
+ - Add missing -import=AIDA for compilation
 
 !========================== L0DU v8r11 2008-11-21 =========================
 ! 2008-10-23 - O. Deschamps

@@ -1,5 +1,5 @@
 package		L0DU
-version 	v8r11
+version 	v8r11p1
 
 # ================ structure =============================================
 branches	src cmt doc options
@@ -14,13 +14,14 @@ use DAQEvent     v*    Event
 use CaloDet      v*    Det
 use CaloUtils    v*    Calo
 use L0Interfaces v*    L0
+use AIDA         v*    LCG_Interfaces -no_auto_imports
 # the configuration database :
 use L0TCK        v*    TCK
 
 # L0Muon needed at run time by L0Sequence.opts
 use L0Muon       v*    L0    -no_auto_imports
 # ================ component library =====================================
-library		L0DU  *.cpp
+library		L0DU  *.cpp -import=AIDA
 
 apply_pattern component_library library=L0DU
 
