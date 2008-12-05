@@ -1,4 +1,4 @@
-// $Id: AParticles.h,v 1.10 2008-11-02 20:36:36 ibelyaev Exp $
+// $Id: AParticles.h,v 1.11 2008-12-05 09:39:59 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_APARTICLES_H 
 #define LOKI_APARTICLES_H 1
@@ -28,8 +28,11 @@
 #include "LoKi/AuxDesktopBase.h"
 #include "LoKi/Particles3.h"
 // ============================================================================
-class  ParticleProperty    ;
-class IParticlePropertySvc ;
+namespace LHCb 
+{
+  class  ParticleProperty    ;
+  class IParticlePropertySvc ;
+}
 // ============================================================================
 namespace LoKi 
 {
@@ -1261,33 +1264,33 @@ namespace LoKi
         : InvariantMass ( four ) , m_m0( m0 ) {}
       // ======================================================================
       /// constructor from Particle Property 
-      DeltaMass ( const ParticleProperty& pp         , 
+      DeltaMass ( const LHCb::ParticleProperty& pp , 
                   const std::size_t       index  = 0 ) 
         : InvariantMass ( index ) , m_m0 () { m_m0 = getMass ( pp ) ; }
       /// constructor from ParticleProperty 
-      DeltaMass ( const ParticleProperty& pp     , 
+      DeltaMass ( const LHCb::ParticleProperty& pp     , 
                   const std::size_t       index1 , 
                   const std::size_t       index2 ) 
         : InvariantMass ( index1 , index2 ) , m_m0 () { m_m0 = getMass ( pp ) ; }
       /// constructor from ParticleProperty 
-      DeltaMass ( const ParticleProperty& pp     , 
+      DeltaMass ( const LHCb::ParticleProperty& pp     , 
                   const std::size_t       index1 , 
                   const std::size_t       index2 , 
                   const std::size_t       index3 ) 
         : InvariantMass ( index1 , index2 , index3 ) , m_m0 () { m_m0 = getMass ( pp ) ; }
       /// constructor from ParticleProperty 
-      DeltaMass ( const ParticleProperty& pp     , 
+      DeltaMass ( const LHCb::ParticleProperty& pp     , 
                   const std::size_t       index1 , 
                   const std::size_t       index2 , 
                   const std::size_t       index3 ,
                   const std::size_t       index4 ) 
         : InvariantMass ( index1 , index2 , index3 , index4 ) , m_m0 () { m_m0 = getMass ( pp ) ; }
       /// constructor from ParticleProperty 
-      DeltaMass ( const ParticleProperty& pp      , 
+      DeltaMass ( const LHCb::ParticleProperty& pp      , 
                   const Indices&          indices ) 
         : InvariantMass ( indices ) , m_m0() { m_m0 = getMass ( pp ) ; }
       /// constructor from ParticleProperty 
-      DeltaMass ( const ParticleProperty& pp   , 
+      DeltaMass ( const LHCb::ParticleProperty& pp   , 
                   const FourMomentum&     four ) 
         : InvariantMass ( four    ) , m_m0() { m_m0 = getMass ( pp ) ; }
       // ======================================================================
@@ -1366,13 +1369,13 @@ namespace LoKi
     public:
       // ======================================================================
       /// get the mass from particle property 
-      double getMass ( const ParticleProperty& pp      ) const ;
+      double getMass ( const LHCb::ParticleProperty& pp      ) const ;
       /// get the mass from particle name 
       double getMass ( const std::string&      pp      , 
-                       IParticlePropertySvc*   svc = 0 ) const ;
+                       LHCb::IParticlePropertySvc*   svc = 0 ) const ;
       /// get the mass from particle ID  
       double getMass ( const LHCb::ParticleID& pp      , 
-                       IParticlePropertySvc*   svc = 0 ) const ;
+                       LHCb::IParticlePropertySvc*   svc = 0 ) const ;
       // ======================================================================
     public:
       // ======================================================================
@@ -1438,33 +1441,33 @@ namespace LoKi
         : DeltaMass ( m0 , four    ) {}
       // ======================================================================
       /// constructor from one index 
-      AbsDeltaMass ( const ParticleProperty&  m0 , 
+      AbsDeltaMass ( const LHCb::ParticleProperty&  m0 , 
                      const std::size_t index  = 0 ) 
         : DeltaMass ( m0 , index ) {}
       /// constructor from two indices 
-      AbsDeltaMass ( const ParticleProperty&  m0 , 
+      AbsDeltaMass ( const LHCb::ParticleProperty&  m0 , 
                      const std::size_t index1 , 
                      const std::size_t index2 ) 
         : DeltaMass ( m0 , index1 , index2 ) {}
       /// constructor from three indices
-      AbsDeltaMass ( const ParticleProperty&  m0 , 
+      AbsDeltaMass ( const LHCb::ParticleProperty&  m0 , 
                      const std::size_t index1 , 
                      const std::size_t index2 , 
                      const std::size_t index3 )
         : DeltaMass ( m0 , index1 , index2 , index3 ) {}
       /// constructor from four indices 
-      AbsDeltaMass ( const ParticleProperty&  m0 , 
+      AbsDeltaMass ( const LHCb::ParticleProperty&  m0 , 
                      const std::size_t index1 , 
                      const std::size_t index2 , 
                      const std::size_t index3 ,
                      const std::size_t index4 ) 
         : DeltaMass ( m0 , index1 , index2 , index3 , index4 ) {}
       /// constructor form the list of indices 
-      AbsDeltaMass ( const ParticleProperty&  m0 , 
+      AbsDeltaMass ( const LHCb::ParticleProperty&  m0 , 
                      const Indices& indices ) 
         : DeltaMass ( m0 , indices ) {}
       /// constructor from the four-momentum 
-      AbsDeltaMass ( const ParticleProperty&  m0 , 
+      AbsDeltaMass ( const LHCb::ParticleProperty&  m0 , 
                      const FourMomentum& four ) 
         : DeltaMass ( m0 , four    ) {}
       // ======================================================================

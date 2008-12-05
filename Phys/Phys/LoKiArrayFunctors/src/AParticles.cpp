@@ -1,4 +1,4 @@
-// $Id: AParticles.cpp,v 1.7 2008-05-04 15:28:13 ibelyaev Exp $
+// $Id: AParticles.cpp,v 1.8 2008-12-05 09:40:00 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ===========================================================================
@@ -11,8 +11,11 @@
 // GaudiKernel
 // ===========================================================================
 #include "GaudiKernel/ToStream.h"
-#include "GaudiKernel/ParticleProperty.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
+// ===========================================================================
+// PartProp
+// ===========================================================================
+#include "Kernel/ParticleProperty.h"
+#include "Kernel/IParticlePropertySvc.h"
 // ===========================================================================
 // DaVinciKernel
 // ===========================================================================
@@ -50,7 +53,8 @@ namespace
     const LoKi::Interface<LoKi::ILoKiSvc>& svc = base.lokiSvc() ;
     base.Assert( !(!svc) , "LoKi Service is not available!" ) ;
     // get DVAlgorithm 
-    DVAlgorithm* alg = Gaudi::Utils::getDVAlgorithm ( svc->contextSvc() ) ;
+    DVAlgorithm* alg = Gaudi::Utils::getDVAlgorithm 
+      ( SmartIF<IAlgContextSvc>( svc ) ) ;
     base.Assert ( 0 != alg , "DVAlgorithm is not available" ) ;
     const IDistanceCalculator* dc = alg->distanceCalculator( nick ) ;
     if ( 0 == dc ) 
@@ -1166,23 +1170,23 @@ LoKi::AParticles::DeltaMass::fillStream( std::ostream& s ) const
 // get the mass from particle property 
 // ============================================================================
 double LoKi::AParticles::DeltaMass::getMass 
-( const ParticleProperty& pp ) const
+( const LHCb::ParticleProperty& pp ) const
 { return pp.mass() ; }
 // ============================================================================
 // get the mass from particle name 
 // ============================================================================
 double LoKi::AParticles::DeltaMass::getMass 
-( const std::string&    name , 
-  IParticlePropertySvc* svc  ) const
+( const std::string&           name , 
+  LHCb::IParticlePropertySvc* svc  ) const
 {
   if ( 0 != svc ) 
   {
-    const ParticleProperty* pp = svc->find ( name ) ;
+    const LHCb::ParticleProperty* pp = svc->find ( name ) ;
     if ( 0 != pp ) { return pp -> mass() ; }
     Warning ( "ParticleProperty* points to null, try by name") ;
     return getMass ( name ) ;
   }
-  const ParticleProperty* pp = LoKi::Particles::ppFromName ( name ) ;
+  const LHCb::ParticleProperty* pp = LoKi::Particles::ppFromName ( name ) ;
   Assert ( 0 != pp , "Invalid particle name!" ) ;
   //
   return pp->mass() ; 
@@ -1192,16 +1196,16 @@ double LoKi::AParticles::DeltaMass::getMass
 // ============================================================================
 double LoKi::AParticles::DeltaMass::getMass 
 ( const LHCb::ParticleID& pid , 
-  IParticlePropertySvc*   svc  ) const
+  LHCb::IParticlePropertySvc*   svc  ) const
 {
   if ( 0 != svc ) 
   {
-    const ParticleProperty* pp = svc->findByStdHepID ( pid.pid() ) ;
+    const LHCb::ParticleProperty* pp = svc->find ( pid ) ;
     if ( 0 != pp ) { return pp -> mass() ; }
     Warning ( "ParticleProperty* points to null, try by PID") ;
     return getMass ( pid ) ;
   }
-  const ParticleProperty* pp = LoKi::Particles::ppFromPID ( pid ) ;
+  const LHCb::ParticleProperty* pp = LoKi::Particles::ppFromPID ( pid ) ;
   Assert ( 0 != pp , "Invalid particle ID!" ) ;
   //
   return pp->mass() ; 
