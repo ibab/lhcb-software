@@ -1,6 +1,9 @@
 Package: GaudiOnline
 Author:  Markus Frank
 
+! 2008-12-10- Markus Frank
+ - Add support for FileID bank
+
 ! 2008-08-09 Markus Frank
  - Fix bug in GaudiTaskFSM reported by Ulrich&Kurt for running online apps standalone.
    Options file for testing feature: options/TestOffline.opts

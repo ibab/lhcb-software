@@ -35,7 +35,7 @@ $MINITERM INPUTSender@${HOST}    -e "export UTGID=${NODENAME}/INPUTSender;    ex
 #
 #
 #$MINITERM RECWriter@${HOST}  -e "export UTGID=${NODENAME}/RECWriter;    exec -a \${UTGID} $gaudi_task -opt=$OPTS/RECWriter.opts"&
-$MINITERM RECWriter@${HOST}  -e "export UTGID=${NODENAME}/RECWriter;    exec -a \${UTGID} $gaudi_task -opt=$OPTS/WRT.opts"&
+$MINITERM RECWriter@${HOST}  -e "export UTGID=${NODENAME}/RECWriter;    exec -a \${UTGID} $gaudi_task -opt=$OPTS/RecWriterNet.opts"&
 #
 # For debugging enable this and disable any other
 # $BIGTERM MBMDump@${HOST} -e "export UTGID=${NODENAME}/MBMDump; $gaudi_run libMBMDump.so mbmdump" &
