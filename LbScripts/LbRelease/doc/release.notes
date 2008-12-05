@@ -1,3 +1,7 @@
+2008-12-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v1r5
+
 2008-11-25  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
 	* scripts/startNightlies.py: bugfix (sys.argv changed to self.args)
