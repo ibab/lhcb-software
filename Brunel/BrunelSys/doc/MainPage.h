@@ -3,7 +3,7 @@
  *
  * This reference manual documents all %LHCb and %Gaudi classes accessible from
  * the Brunel reconstruction program environment. More information on Brunel,
- * including a list of available releases, can be found in the 
+ * including a list of available releases and release notes, can be found in the 
  * <a href=" http://cern.ch/lhcb-release-area/DOC/brunel/">Brunel project Web pages</a>
  *
  * <hr>
@@ -32,9 +32,5 @@
  * \li DC06-Files.py:       example DC06 simulation files 
  * <h4>Special options for Dirac (obsolete?)</h4>
  * \li Copy.opts: To make a copy of .dst files
-
- * <hr>
- * \htmlinclude new_release.notes
-
 
  */

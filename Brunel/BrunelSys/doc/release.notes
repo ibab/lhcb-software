@@ -3,6 +3,11 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+! 2008-12-05 - Marco Cattaneo
+ - Cleanups in QMTest and updates to reference
+ - Add a file DoxyBrunel.cfg, included by DoxyFile.cfg, to allow standalone
+   documentation of current project only.
+
 ! 2008-12-01 - Marco Cattaneo
  - Start v34r1
  - In QMTest reference, follow fixes in Rich and in LHCbConfigurableUser
