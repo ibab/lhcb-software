@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.18 2008-12-02 10:24:00 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.19 2008-12-05 12:47:51 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -51,14 +51,14 @@ class HltConf(LHCbConfigurableUser):
             if hlttype.find('Velo') != -1 :   importOptions('$HLTCONFROOT/options/HltVeloAlleySequence.opts')
             importOptions( '$HLTCONFROOT/options/HltPersistentOutput.py' )
         else :
-            trans = { 'Hlt1'   : 'L0+PA+LU+VE+MU+HA+PH+EL'
-                    , 'DEFAULT': 'L0+PA+LU+VE'
+            trans = { 'Hlt1'   : 'LU+L0+VE+MU+HA+PH+EL'
+                    , 'DEFAULT': 'PA+LU+L0+VE'
                     , 'NONE'   : '' 
                     }
             for short,full in trans.iteritems() : hlttype = hlttype.replace(short,full)
-            type2conf = { 'L0' : '$HLTCONFROOT/options/HltL0Lines.py'
-                        , 'PA' : '$HLTCONFROOT/options/HltCommissioningLines.py' # PA for 'PAss-thru' (PT was considered bad)
+            type2conf = { 'PA' : '$HLTCONFROOT/options/HltCommissioningLines.py' # PA for 'PAss-thru' (PT was considered bad)
                         , 'LU' : '$HLTCONFROOT/options/HltLumiLines.py'
+                        , 'L0' : '$HLTCONFROOT/options/HltL0Lines.py'
                         , 'VE' : '$HLTCONFROOT/options/HltVeloLines.py'
                         , 'MU' : '$HLTCONFROOT/options/HltMuonLines.py' 
                         , 'HA' : '$HLTCONFROOT/options/HltHadronLines.py' 

@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.63 2008-12-02 10:24:00 graven Exp $ 
+! $Id: release.notes,v 1.64 2008-12-05 12:47:51 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2008-12-05 - Gerhard Raven
+ - remove PA from Hlt1 alias 
 
 ! 2008-12-02 - Gerhard Raven
  - add HltL0Lines: straight promotion of L0 decision, with a postscaler of 1e-6

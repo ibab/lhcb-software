@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.27 2008-10-31 11:12:01 graven Exp $ 
+# $Id: HltLine.py,v 1.28 2008-12-05 12:47:51 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.27 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.28 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt line itself 
@@ -747,10 +747,13 @@ class Hlt1Line(object):
             print "# WARNING: Line '%s' has a final output selection named '%s'"%(line,self._outputsel)
 
         # create the line configurable
+        # NOTE: even if pre/postscale = 1, we want the scaler, as we may want to clone configurations
+        #       and change them -- and not having the scaler would be problem in that case...
         mdict.update( { 'DecisionName' : decisionName ( line ) 
                       , 'Prescale'     : Scaler(     prescalerName ( line ) , AcceptFraction = self._prescale  )
                       , 'Postscale'    : Scaler(    postscalerName ( line ) , AcceptFraction = self._postscale ) 
                       , 'Seed'         : _seed } )
+        # TODO: if len(_members) = 1, we don't need a sequencer...
         if _members : mdict.update( { 'Filter1' : GaudiSequencer( filterName ( line ) , Members = _members ) })
         self._configurable = Line ( self.name() , **mdict )
 
