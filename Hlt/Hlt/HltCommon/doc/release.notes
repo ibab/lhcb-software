@@ -4,6 +4,10 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2008-12-05 - Gerhard Raven
+ - add HltL0CaloCandidates -- automatically picks up L0CaloCandidates
+   used by a specified L0 Channel
+
 ! 2008-12-03 - Gerhard Raven
  - HltTFunctionFactory: fix a one-time memory leak
 
