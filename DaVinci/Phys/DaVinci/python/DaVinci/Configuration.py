@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinciApp
 """
-__version__ = "$Id: Configuration.py,v 1.11 2008-12-04 19:12:53 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.12 2008-12-05 11:27:00 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -14,7 +14,7 @@ class DaVinci(LHCbConfigurableUser) :
         "SkipEvents"      :   0,
         "DataType"        : 'DC06', # Data type, can be ['DC06','2008']
         "Simulation"      : True,  # set to True to use SimCond
-        "MainOptions"     : '$DAVINCIROOT/options/DaVinci.py',
+        "MainOptions"     : '',
         "Input"           : [],
         "UserAlgorithms"  : []
         }
@@ -50,7 +50,11 @@ class DaVinci(LHCbConfigurableUser) :
             
     def __apply_configuration__(self):
         GaudiKernel.ProcessJobOptions.PrintOff()
-        importOptions( self.getProp( "MainOptions" ) )
+        opts = self.getProp( "MainOptions" )
+        if not (opts == '') :
+            importOptions( self.getProp( "MainOptions" ) )
+        else :
+            log.warning("No MainOptions specified. DaVinci() will import no options file!")
         self.defineEvents()
         self.defineInput()
         self.defineDB()
