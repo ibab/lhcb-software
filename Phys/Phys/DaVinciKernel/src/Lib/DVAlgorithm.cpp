@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.35 2008-09-29 16:40:41 jpalac Exp $
+// $Id: DVAlgorithm.cpp,v 1.36 2008-12-05 13:27:04 ibelyaev Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -230,14 +230,18 @@ StatusCode DVAlgorithm::loadTools()
           << " as IDistanceCalculator" << endmsg;
   distanceCalculator();
   
-  if (msgLevel(MSG::DEBUG)) debug() << ">>> Preloading CheckOverlap Tool" << endmsg;
+  if (msgLevel(MSG::DEBUG)) 
+  { debug() << ">>> Preloading CheckOverlap Tool" << endmsg; }
   checkOverlap();
   
-  if (msgLevel(MSG::DEBUG)) debug() << ">>> Preloading WriteSelResults Tool" << endmsg;
+  if (msgLevel(MSG::DEBUG))
+  { debug() << ">>> Preloading WriteSelResults Tool" << endmsg; }
+  
   writeSelResult();
-
-  if (msgLevel(MSG::DEBUG)) debug() << ">>> Preloading ParticlePropertySvc" << endmsg;
-  m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc", true);
+  
+  if (msgLevel(MSG::DEBUG)) 
+  { debug() << ">>> Preloading LHCb::ParticlePropertySvc" << endmsg; }
+  ppSvc() ;
   
   return StatusCode::SUCCESS;
 }

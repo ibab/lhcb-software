@@ -1,4 +1,4 @@
-// $Id: SpotLight.cpp,v 1.1 2008-09-30 09:17:19 pkoppenb Exp $
+// $Id: SpotLight.cpp,v 1.2 2008-12-05 13:26:37 ibelyaev Exp $
 // Include files 
 
 // from Gaudi
@@ -105,10 +105,10 @@ StatusCode SpotLight::finalize() {
 bool SpotLight::spotLight( const LHCb::Particle* p, int level) const {
   // 
   if (msgLevel(MSG::DEBUG)) {
-    const ParticleProperty* pp = ppSvc()->findByPythiaID(p->particleID().pid());
+    const LHCb::ParticleProperty* pp = ppSvc()->find(p->particleID());
     if (0!=pp) debug() << pp->particle() 
-                         << " M: " << p->measuredMass() 
-                         << " level : " << level << endmsg ;
+                       << " M: " << p->measuredMass() 
+                       << " level : " << level << endmsg ;
     else debug() << "What is " << p->particleID().pid() << endmsg ;
   }
   

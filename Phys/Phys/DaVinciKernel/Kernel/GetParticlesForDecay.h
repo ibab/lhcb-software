@@ -1,4 +1,4 @@
-// $Id: GetParticlesForDecay.h,v 1.2 2008-05-29 14:55:49 cattanem Exp $
+// $Id: GetParticlesForDecay.h,v 1.3 2008-12-05 13:27:04 ibelyaev Exp $
 // ============================================================================
 #ifndef DAVINCIKERNEL_GETPARTICLESFORDECAY_H 
 #define DAVINCIKERNEL_GETPARTICLESFORDECAY_H 1
@@ -10,12 +10,13 @@
 #include <vector>
 #include <string>
 // ============================================================================
-// LHCbKernel
+// PartProp
 // ============================================================================
 #include "Kernel/Decay.h"
 // ============================================================================
 namespace DaVinci  
 {
+  // ==========================================================================
   namespace Utils
   {
     // ========================================================================
@@ -25,7 +26,7 @@ namespace DaVinci
      *  @code
      *  
      *   const LHCb::Particle::ConstVector input = ... ;
-     *   const LHCb::Decay& decay = ... ;
+     *   const Decays::Decay& decay = ... ;
      *
      *   LHCb::Particle::ConstVector result ;
      * 
@@ -44,7 +45,7 @@ namespace DaVinci
      *  @code
      *  
      *   const LHCb::MCParticle::ConstVector input = ... ;
-     *   const LHCb::Decay& decay = ... ;
+     *   const Decays::Decay& decay = ... ;
      *
      *   LHCb::MCParticle::ConstVector result ;
      * 
@@ -73,7 +74,7 @@ namespace DaVinci
     getParticles 
     ( INPUT                       begin  , 
       INPUT                       end    ,
-      const LHCb::Decay::Item&    item   , 
+      const Decays::Decay::Item&  item   , 
       OUTPUT                      result ) 
     {
       for ( ; begin != end ; ++begin ) 
@@ -88,6 +89,7 @@ namespace DaVinci
     }
     // ========================================================================
   } // end of namespace DaVinci::Utils
+  // ==========================================================================
 } // end of namespace DaVinci
 // ============================================================================
 // The END

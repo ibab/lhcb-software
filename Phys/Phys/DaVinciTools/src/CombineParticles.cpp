@@ -1,4 +1,4 @@
-// $Id: CombineParticles.cpp,v 1.24 2008-11-11 17:00:57 jpalac Exp $
+// $Id: CombineParticles.cpp,v 1.25 2008-12-05 13:26:37 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -77,8 +77,12 @@ namespace
  *    - "# selected": total number of selected candidates 
  *
  *  The cuts, as well as the quantities plotted, are 
- *  <a href="https://twiki.cern.ch/twiki/bin/view/LHCb/MicroDST?topic=LoKiHybridFilters">LoKi::Hybrid functors</a>, more functors can be found in the 
- *  <a href="https://twiki.cern.ch/twiki/bin/view/LHCb/LoKiRefman?topic=LoKiRefMan">LoKi reference manual</a>, specifically the <a href="https://twiki.cern.ch/twiki/bin/view/LHCb/LoKiRefMan#LoKi_Particle_Functions">particle</a> section.
+ *  <a href="https://twiki.cern.ch/twiki/bin/view/LHCb/MicroDST?topic=LoKiHybridFilters">
+ *   LoKi::Hybrid functors</a>, more functors can be found in the 
+ *  <a href="https://twiki.cern.ch/twiki/bin/view/LHCb/LoKiRefman?topic=LoKiRefMan">
+ *   LoKi reference manual</a>, specifically the 
+ *  <a href="https://twiki.cern.ch/twiki/bin/view/LHCb/LoKiRefMan#LoKi_Particle_Functions">
+ *  particle</a> section.
  *
  *
  *  Example python configuration fragment (from DaVinci tutorial):
@@ -279,7 +283,7 @@ private:   // properties
 private:   // local stuff
   // ==========================================================================
   /// The actual list of decays 
-  LHCb::Decays      m_decays   ; // The actual list of decays 
+  std::vector<Decays::Decay> m_decays   ; // The actual list of decays 
   /// the vector of daughter cuts 
   MyCuts            m_cuts     ; // the vector of daughter cuts 
   /// the actual cut for combination of good daughters 
@@ -451,8 +455,7 @@ StatusCode CombineParticles::decodeAllCuts()
     if ( ic->first.empty() ) { continue ; }
     //
     { // check the correctness of particle name
-      const ParticleProperty* _pp = LoKi::Particles::ppFromName ( ic->first ) ;
-      Assert ( 0 != _pp , 
+      Assert ( 0 !=  pid ( ic->first ) , 
                " Invalid Particle Name is used as the key : '"  + (ic->first) + "'" ) ;
     }
     //
@@ -588,7 +591,8 @@ StatusCode CombineParticles::execute    ()  // standard execution
   size_t nTotal = 0 ;
   
   // loop over all decays 
-  for ( LHCb::Decays::const_iterator idecay = m_decays.begin() ; 
+  for ( std::vector<Decays::Decay>::const_iterator 
+          idecay = m_decays.begin() ; 
         m_decays.end() != idecay ; ++idecay ) 
   {
     // the counter of "good" selected decays 
@@ -602,8 +606,8 @@ StatusCode CombineParticles::execute    ()  // standard execution
     Combiner loop ;
     
     // fill it with the input data:
-    const LHCb::Decay::Items& items = idecay->children() ;
-    for ( LHCb::Decay::Items::const_iterator child = items.begin() ;
+    const Decays::Decay::Items& items = idecay->children() ;
+    for ( Decays::Decay::Items::const_iterator child = items.begin() ;
           items.end() != child ; ++child ) { loop.add ( daughters ( child->name() ) ) ; } 
     
     // here we can start the actual looping
@@ -779,7 +783,7 @@ StatusCode CombineParticles::updateMajor  ()
     IDecodeSimpleDecayString* decoder = 
       tool <IDecodeSimpleDecayString> ( "DecodeSimpleDecayString:PUBLIC" , this ) ;
     //
-    m_decays = DaVinci::decays ( m_decayDescriptors , decoder ) ;
+    m_decays = Decays::decays ( m_decayDescriptors , decoder ) ;
     if ( m_decays.empty() )
     { return Error ( "Unable to decode DecayDescriptor(s) " ) ; }    // RETURN 
     // release the tool (not needed anymore) 
@@ -789,11 +793,11 @@ StatusCode CombineParticles::updateMajor  ()
   {
     typedef std::set<std::string> PIDs ;
     PIDs pids ;
-    for ( LHCb::Decays::const_iterator idecay = m_decays.begin() ; 
+    for ( std::vector<Decays::Decay>::const_iterator idecay = m_decays.begin() ; 
           m_decays.end()  != idecay ; ++idecay ) 
     {
-      const LHCb::Decay::Items& ds= idecay->daughters () ;
-      for ( LHCb::Decay::Items::const_iterator ic = ds.begin() ; 
+      const Decays::Decay::Items& ds= idecay->daughters () ;
+      for ( Decays::Decay::Items::const_iterator ic = ds.begin() ; 
             ds.end ()  != ic ; ++ic ) { pids.insert ( ic->name()  ) ; }  
     }
     // default cut: accept all

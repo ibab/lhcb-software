@@ -1,4 +1,4 @@
-// $Id: DecodeSimpleDecayString.cpp,v 1.13 2008-05-05 11:47:09 ibelyaev Exp $
+// $Id: DecodeSimpleDecayString.cpp,v 1.14 2008-12-05 13:26:37 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -7,6 +7,7 @@
 //#include <assert.h>
 //#include <numeric>
 //#include <memory>
+// ============================================================================
 // Horrible hacks to solve a Windows compilation problem
 #define MSG __MSG
 #include "boost/regex.hpp"  // the needed file that causes all the trouble
@@ -18,20 +19,29 @@
 #undef pascal
 #define IID InterfaceID__
 // End of horrible hacks
-
-// from Gaudi
+// ============================================================================
+// GaudiKrnel
+// ============================================================================
 #include "GaudiKernel/ToolFactory.h" 
-
-// local
+// ============================================================================
+// PartProp
+// ============================================================================
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
+#include "Kernel/Decay.h"
+// ============================================================================
+// Local
+// ============================================================================
 #include "DecodeSimpleDecayString.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
+/** @file 
+ *  Implementation file for class : DecodeSimpleDecayString
+ *  @date 2004-06-30 
+ *  @author Patrick KOPPENBURG
+ */
+//-----------------------------------------------------------------------------
+typedef std::vector<int>         ints    ;
+typedef std::vector<std::string> strings ;
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : DecodeSimpleDecayString
-//
-// 2004-06-30 : Patrick KOPPENBURG
-//-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( DecodeSimpleDecayString );
@@ -68,7 +78,8 @@ StatusCode DecodeSimpleDecayString::initialize(){
   StatusCode sc = GaudiTool::initialize();
   if (!sc) return sc;
   
-  m_ppSvc = svc<IParticlePropertySvc>( "ParticlePropertySvc");
+  m_ppSvc = svc<LHCb::IParticlePropertySvc>
+    ( "LHCb::ParticlePropertySvc", true );
   if(!m_ppSvc ) {
     fatal() << "ParticlePropertySvc Not Found" << endmsg;
     return StatusCode::FAILURE;
@@ -117,40 +128,45 @@ StatusCode DecodeSimpleDecayString::reset(){
 //=============================================================================
 // Get strings
 //=============================================================================
-StatusCode DecodeSimpleDecayString::getStrings(std::string& mother,
-                                               strings& daughters) const {
+StatusCode DecodeSimpleDecayString::getStrings
+(std::string& mother,
+ std::vector<std::string>& daughters) const {
   mother = m_mother ;
   daughters = m_daughters ;
-
+  
   return StatusCode::SUCCESS ;
 }
 //=============================================================================
-StatusCode DecodeSimpleDecayString::getStrings_cc(std::string& mother,
-                                               strings& daughters) const {
-
+StatusCode DecodeSimpleDecayString::getStrings_cc
+(std::string& mother,
+ std::vector<std::string>& daughters) const {
+  
   mother = m_mother_cc ;
   daughters = m_daughters_cc ;
-
+  
   return StatusCode::SUCCESS ;
 }
 
 //=============================================================================
 // Get PIDs
 //=============================================================================
-StatusCode DecodeSimpleDecayString::getPIDs(int& mother,
-                                            ints& daughters) const {
+StatusCode DecodeSimpleDecayString::getPIDs
+(int& mother,
+ std::vector<int>& daughters) const {
   return buildPIDs( m_mother, m_daughters, mother, daughters)  ;
 }
 //=============================================================================
-StatusCode DecodeSimpleDecayString::getPIDs_cc(int& mother,
-                                            ints& daughters) const {
+StatusCode DecodeSimpleDecayString::getPIDs_cc
+(int& mother,
+ std::vector<int>& daughters) const {
   return buildPIDs( m_mother_cc, m_daughters_cc, mother, daughters)  ;
 }
 //=============================================================================
-StatusCode DecodeSimpleDecayString::buildPIDs(const std::string in_m,
-                                              const strings in_d,
-                                              int& mother,
-                                              ints& daughters) const {
+StatusCode DecodeSimpleDecayString::buildPIDs
+(const std::string& in_m,
+ const strings& in_d,
+ int& mother,
+ std::vector<int>& daughters) const {
   
   StatusCode sc = PID(in_m, mother);
   if ( ! sc.isSuccess() ) return sc ;
@@ -167,12 +183,12 @@ StatusCode DecodeSimpleDecayString::buildPIDs(const std::string in_m,
 //=============================================================================
 StatusCode DecodeSimpleDecayString::PID(const std::string& ps, int& pid) const
 {
-  ParticleProperty* part = m_ppSvc->find( ps );
+  const LHCb::ParticleProperty* part = m_ppSvc->find( ps );
   if (NULL==part){
     Error("No particle Property found for "+ps);
     return StatusCode::FAILURE ;
   }
-  pid = part->jetsetID() ;
+  pid = part->particleID().pid() ;
   return StatusCode::SUCCESS ;
 }
 //=============================================================================
@@ -219,16 +235,16 @@ const{
   strings daughters;
   StatusCode sc = splitDescriptor(descriptor, mother ,daughters);
   if (sc.isFailure()) Exception("Cannot split descriptor "+descriptor);
-  ParticleProperty* part = m_ppSvc->find( mother );
+  const LHCb::ParticleProperty* part = m_ppSvc->find( mother );
   if (NULL==part) Exception("Cannot find ParticleProperty for "+mother);
-  const ParticleProperty* cc = part->antiParticle();
+  const LHCb::ParticleProperty* cc = part->antiParticle();
   if (cc==0) Exception("Particle "+mother+" does not have an antiparticle!");
   answer += cc->particle();
   answer += " -> ";
   for (strings::iterator i = daughters.begin(); i != daughters.end(); ++i) {
-    ParticleProperty* part = m_ppSvc->find( *i );
+    const LHCb::ParticleProperty* part = m_ppSvc->find( *i );
     if (NULL==part) Exception("Cannot find ParticleProperty for "+(*i));
-    const ParticleProperty* cc = part->antiParticle();
+    const LHCb::ParticleProperty* cc = part->antiParticle();
     if (cc==0) Exception("Particle "+(*i)+" does not have an antiparticle!");
     answer += " " ;
     answer += cc->particle();
@@ -271,7 +287,7 @@ StatusCode DecodeSimpleDecayString::strip_cc(void)
  */
 // ==========================================================================
 StatusCode DecodeSimpleDecayString::getDecay    
-( LHCb::Decay& decay ) const  
+( Decays::Decay& decay ) const  
 {
   //
   decay.setMother     ( m_mother    ) ;
@@ -286,7 +302,7 @@ StatusCode DecodeSimpleDecayString::getDecay
  */
 // ==========================================================================
 StatusCode DecodeSimpleDecayString::getDecay_cc    
-( LHCb::Decay& decay ) const  
+( Decays::Decay& decay ) const  
 {
   if ( !m_iscc ) { return StatusCode::FAILURE ; }  
   //
@@ -301,17 +317,17 @@ StatusCode DecodeSimpleDecayString::getDecay_cc
  *  @return status code 
  */
 StatusCode DecodeSimpleDecayString::getDecays    
-( std::vector<LHCb::Decay>& decays ) const 
+( std::vector<Decays::Decay>& decays ) const 
 {
   decays.clear() ;
   // the main decay:
-  LHCb::Decay decay1 ( m_mother , m_daughters ) ;
+  Decays::Decay decay1 ( m_mother , m_daughters ) ;
   StatusCode sc = decay1.validate ( m_ppSvc ) ;
   if ( sc.isFailure() ) { return sc ; }
   decays.push_back ( decay1 ) ;
   if ( m_iscc ) 
   {
-    LHCb::Decay decay2 ( m_mother_cc , m_daughters_cc ) ;
+    Decays::Decay decay2 ( m_mother_cc , m_daughters_cc ) ;
     sc = decay2.validate ( m_ppSvc ) ;
     if ( sc.isFailure() ) { return sc ; }
     decays.push_back ( decay2 ) ;

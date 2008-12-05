@@ -1,8 +1,24 @@
-!$Id: release.notes,v 1.275 2008-12-04 16:39:14 ibelyaev Exp $
+!$Id: release.notes,v 1.276 2008-12-05 13:27:04 ibelyaev Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2008-12-05 - Vanya BELYAEV
+ - DVAlgorithm:
+
+   1) modify the method ppSvc to return the pointer to new particle 
+    property service 
+   2) add method "pid" which returns particleporpety by name and ID:
+
+  
+   *   const LHCb::Particle* p = ... ;
+   *
+   *   const LHCb::ParticleProperty* pp = pid ( p->particleID() ) ;
+   *   
+   *   const LHCb::ParticleProperty* pion = pid ( "pi+" ) ;
+   *   
+
 
 ! 2008-12-04 - Vanya BELYAEV
 

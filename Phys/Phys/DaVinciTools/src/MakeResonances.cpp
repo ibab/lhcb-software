@@ -1,4 +1,4 @@
-// $Id: MakeResonances.cpp,v 1.35 2008-07-10 15:03:24 pkoppenb Exp $
+// $Id: MakeResonances.cpp,v 1.36 2008-12-05 13:26:37 ibelyaev Exp $
 
 #include <algorithm>
 
@@ -166,9 +166,9 @@ StatusCode MakeResonances::createDecay(const std::string& mother,
   
   // mother
   if (msgLevel(MSG::VERBOSE)) verbose() << "Found ParticlePropertySvc " << ppSvc() << endmsg ;
-
-  ParticleProperty* pmother = ppSvc()->find(mother);
-
+  
+  const LHCb::ParticleProperty* pmother = ppSvc()->find(mother);
+  
   if (NULL==pmother){
     err() << "Cannot find particle property for mother " << mother << endmsg ;
     return StatusCode::FAILURE;
@@ -176,24 +176,26 @@ StatusCode MakeResonances::createDecay(const std::string& mother,
     if (msgLevel(MSG::VERBOSE)) verbose() << "Found ParticleProperty " << pmother->pdgID() << endmsg ;
   }
   
-  const int pid = pmother->pdgID() ;
+  const int pid = pmother->particleID().pid() ;
   if (msgLevel(MSG::VERBOSE)) verbose() << "Found pid of " << mother << " = " << pid << endmsg ;
   if (!consideredPID(pid)) m_allPids.push_back(pid) ;
   
   //daughters
   std::vector<int> daughterPIDs ;
   for (strings::const_iterator d=daughters.begin() ; d!=daughters.end() ; ++d){
-  // mother
-    ParticleProperty* pd = ppSvc()->find(*d);
+    // mother
+    const LHCb::ParticleProperty* pd = ppSvc()->find(*d);
     if (!pd){
       err() << "Cannot find particle property for daughter " << *d << endmsg ;
       return StatusCode::FAILURE;
     }
     if (msgLevel(MSG::VERBOSE)) verbose() << "Found pid of " << *d << " = " << (pd->pdgID()) << endmsg ;
-    daughterPIDs.push_back(pd->pdgID()) ;
+    daughterPIDs.push_back(pd->particleID().pid()) ;
     
     // add to list of all PIDs
-    if (!consideredPID(pd->pdgID())) m_allPids.push_back(pd->pdgID()) ;
+    if (!consideredPID(pd->particleID().pid())) 
+    { m_allPids.push_back(pd->particleID().pid()) ; }
+    
   }
   if (msgLevel(MSG::VERBOSE)) verbose() << "Pushed back " << daughterPIDs.size() << " daughters" << endmsg ;
   //  OK

@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.h,v 1.29 2008-11-29 17:18:38 ibelyaev Exp $ 
+// $Id: DVAlgorithm.h,v 1.30 2008-12-05 13:27:03 ibelyaev Exp $ 
 // ============================================================================
 #ifndef DAVINCIKERNEL_DVALGORITHM_H
 #define DAVINCIKERNEL_DVALGORITHM_H 1
@@ -6,10 +6,13 @@
 // from Gaudi
 // ============================================================================
 #include "GaudiAlg/GaudiTupleAlg.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/VectorMap.h"
+// ============================================================================
+// PartProp
+// ============================================================================
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 // ============================================================================
 // from EventSys
 // ============================================================================
@@ -291,10 +294,44 @@ public:
   inline IParticleDescendants* descendants()const{
     return getTool<IParticleDescendants>(m_descendantsName,m_descendants);
   }
-  
-  /// Accessor for ParticlePropertySvc
-  inline IParticlePropertySvc* ppSvc() const {return m_ppSvc;};
-  
+  // ==========================================================================
+  /** Accessor for ParticlePropertySvc
+   *  @see LHCb::ParticlePropertySvc 
+   *  @return pointer to Particle Property Service 
+   */
+  inline const LHCb::IParticlePropertySvc* ppSvc() const ;
+  /** helper method to get a proper ParticleProperty for the given name  
+   *
+   *  @code 
+   *  
+   *   const LHCb::ParticleProperty* pion = pid ( "pi+" ) ;
+   *   
+   *  @endcode 
+   *
+   *  @see LHCb::ParticleProperty
+   *  @see LHCb::IParticlePropertySvc
+   *  @param name the particle name 
+   *  @return pointer to particle property 
+   */
+  inline const LHCb::ParticleProperty* pid ( const std::string& name ) const ;
+  /** helper method to get a proper ParticleProperty for the given pid 
+   *
+   *  @code 
+   *
+   *   const LHCb::Particle* p = ... ;
+   *
+   *   const LHCb::ParticleProperty* pp = pid ( p->particleID() ) ;
+   *   
+   *  @endcode 
+   *
+   *  @see LHCb::ParticleProperty
+   *  @see LHCb::IParticlePropertySvc
+   *  @see LHCb::ParticleID
+   *  @param  p the particle pid 
+   *  @return pointer to particle property 
+   */
+  inline const LHCb::ParticleProperty* pid ( const LHCb::ParticleID& p ) const ;
+  // ==========================================================================  
 protected:
   
   /** helper protected function to load the tool on-demand  
@@ -464,8 +501,8 @@ protected:
   mutable IWriteSelResult* m_writeSelResult;
   
   /// Reference to ParticlePropertySvc
-  mutable IParticlePropertySvc* m_ppSvc;
-
+  mutable const LHCb::IParticlePropertySvc* m_ppSvc;
+  
 private:
   /// Decay description (Property)
   std::string m_decayDescriptor;
@@ -492,9 +529,50 @@ private:
   bool m_preloadTools;
 
 };
-// ---------------------------------------------------------------------------
-//   end of class
-// ---------------------------------------------------------------------------
-
-
+// ==========================================================================
+/*  Accessor for ParticlePropertySvc
+ *  @see LHCb::ParticlePropertySvc 
+ *  @return pointer to Particle Property Service 
+ */
+// ============================================================================
+inline 
+const LHCb::IParticlePropertySvc* 
+DVAlgorithm::ppSvc() const 
+{ 
+  if ( 0 != m_ppSvc ) { return m_ppSvc ; }
+  m_ppSvc = svc<LHCb::IParticlePropertySvc> ( "LHCb::ParticlePropertySvc" , true ) ;
+  return m_ppSvc ;
+}
+// ============================================================================
+/*  helper method to get a proper ParticleProperty for the given name  
+ *  @param name the particle name 
+ *  @return pointer to particle property 
+ */
+// ===========================================================================
+inline 
+const LHCb::ParticleProperty* 
+DVAlgorithm::pid ( const std::string& name ) const 
+{
+  const LHCb::ParticleProperty* pp = ppSvc()->find( name ) ;
+  if ( 0 == pp ) 
+  { Error ( "pid('" + name + "') : invalid LHCb::ParticleProperty!" ) ; }
+  return pp ;
+} 
+// ============================================================================
+/** helper method to get a proper ParticleProperty for the given pid 
+ *  @param  p the particle pid 
+ *  @return pointer to particle property 
+ */
+inline 
+const LHCb::ParticleProperty* 
+DVAlgorithm::pid ( const LHCb::ParticleID& id ) const 
+{
+  const LHCb::ParticleProperty* pp = ppSvc()->find ( id ) ;
+  if ( 0 == pp ) { Error ( "pid() : invalid LHCb::ParticleProperty!" ) ; }
+  return pp ;
+} 
+// ==========================================================================
+// The END 
+// ==========================================================================
 #endif // DAVINCIKERNEL_DVALGORITHM_H
+// ==========================================================================
