@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2008-12-05 M Needham
+ - Bug fix in ITTrackMonitor
+
 ! 2008-12-02 M Needham
  - Add ITTrackMonitor.h/.cpp
 

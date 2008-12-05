@@ -1,4 +1,4 @@
-// $Id: ITTrackMonitor.cpp,v 1.1 2008-12-01 16:41:04 mneedham Exp $
+// $Id: ITTrackMonitor.cpp,v 1.2 2008-12-05 15:05:48 mneedham Exp $
 // Include files 
 #include "ITTrackMonitor.h"
 
@@ -185,8 +185,11 @@ std::string ITTrackMonitor::ITCategory(const std::vector<LHCb::LHCbID>& ids) con
   
   unsigned int bestBox = 0; unsigned int nBest =0;
   BOOST_FOREACH( BoxMap::value_type  box, nBox ) {
-    if (box.second > nBest ) bestBox = box.first;
-  }  
+    if (box.second > nBest ){ 
+      bestBox = box.first;
+      nBest = box.second;
+    }
+  }   // for eachç
 
   return ITNames().BoxToString(bestBox);
 }
