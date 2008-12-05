@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.271 2008-12-05 11:39:27 pkoppenb Exp $
+! $Id: release.notes,v 1.272 2008-12-05 15:46:05 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,11 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2008-12-05 - Juan PALACIOS
+ - python/DaVinci/Configuration.py
+  . Change such that ApplicationMgr() can over-write EvtMax if it is left
+    at default value.
 
 ! 2008-12-05 - Patrick Koppenburg
  - Added DVGangaTest.py that runs a job for ganga tests.
