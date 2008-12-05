@@ -5,8 +5,10 @@
 #   gaudirun.py Boole-2008-VeloOpen.py <someDataFiles>.py
 ##############################################################################
 
-from Configurables import CondDB
+from Configurables import ( Boole, CondDB )
 CondDB().LocalTags["SIMCOND"] = ["velo-open"]
+# Have to instantiate the configurable...
+theApp = Boole()
 
 ##############################################################################
 # I/O datasets are defined in a separate file, see examples in 2008-Files.py

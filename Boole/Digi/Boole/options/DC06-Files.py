@@ -5,8 +5,7 @@
 #   gaudirun.py Boole<conf>.py DC06-Files.py
 #
 from Gaudi.Configuration import *
-from GaudiConf.Configuration import *
-from Boole.Configuration import *
+from Configurables import Boole
 
 #-- File catalogs
 FileCatalog().Catalogs = [ "xmlcatalog_file:NewCatalog.xml" ]

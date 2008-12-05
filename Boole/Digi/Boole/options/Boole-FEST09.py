@@ -5,7 +5,7 @@
 #   gaudirun.py Boole-FEST09.py <someDataFiles>.py
 ##############################################################################
 
-from Boole.Configuration import *
+from Configurables import Boole
 
 Boole().Outputs    = ["MDF"]
 Boole().NoWarnings = True

@@ -5,7 +5,7 @@
 #   gaudirun.py Boole-DC06.py <someDataFiles>.py
 ##############################################################################
 
-from Boole.Configuration import *
+from Configurables import Boole
 
 Boole().UseSpillover = True
 Boole().DataType     = "DC06"
