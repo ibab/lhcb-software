@@ -23,7 +23,7 @@ import sys, os, logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.18 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.19 $")
 
 
 def getLbLoginEnv(debug=False, 
@@ -595,6 +595,9 @@ class LbLoginScript(Script):
             plist = []
         plist.append(os.path.join(_base_dir, "scripts"))
         ev["PATH"] = os.pathsep.join(plist)
+        
+        if not ev.has_key("LHCBSCRIPTS") :
+            ev["LHCBSCRIPTS"] = os.path.join(_base_dir, "scripts")
 
         from AllProjectsSetup import AllProjectsSetupScript    
         AProj = AllProjectsSetupScript()
