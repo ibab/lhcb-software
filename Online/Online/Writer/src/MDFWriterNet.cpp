@@ -130,7 +130,7 @@ StatusCode MDFWriterNet::execute()
              << endmsg;
   } else {
       m_currFile->incEvents();
-      *m_log << MSG::INFO
+      *m_log << MSG::DEBUG
              << "no of events: "
              << m_currFile->getEvents()
              << endmsg;
