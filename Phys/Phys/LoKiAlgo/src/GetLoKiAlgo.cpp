@@ -1,10 +1,11 @@
-// $Id: GetLoKiAlgo.cpp,v 1.1 2007-12-04 17:24:49 ibelyaev Exp $
+// $Id: GetLoKiAlgo.cpp,v 1.2 2008-12-05 10:42:17 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/IAlgContextSvc.h"
+#include "GaudiKernel/SmartIF.h"
 // ============================================================================
 // GaudiAlgs 
 // ============================================================================
@@ -52,7 +53,7 @@ LoKi::Algo* Gaudi::Utils::getLoKiAlgo ( const IAlgContextSvc* svc )
  *  @date 2007-12-04 
  */ 
 // ============================================================================
-LoKi::Algo* Gaudi::Utils::getLoKiAlgo ( const LoKi::ILoKiSvc* svc ) 
+LoKi::Algo* Gaudi::Utils::getLoKiAlgo ( LoKi::ILoKiSvc* svc ) 
 {
   if ( 0 == svc ) 
   {
@@ -60,7 +61,7 @@ LoKi::Algo* Gaudi::Utils::getLoKiAlgo ( const LoKi::ILoKiSvc* svc )
     return Gaudi::Utils::getLoKiAlgo ( svcs.contextSvc() ) ;   // RETURN 
   }
   if ( 0 == svc ) { return 0 ; }                               // RETURN 
-  return Gaudi::Utils::getLoKiAlgo ( svc->contextSvc() ) ;     // RETURN 
+  return Gaudi::Utils::getLoKiAlgo ( SmartIF<IAlgContextSvc>( svc ) ) ; // RETURN 
 }
 // ============================================================================
 // The END 

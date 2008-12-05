@@ -1,4 +1,4 @@
-// $Id: LoopDecorator.h,v 1.3 2007-06-10 20:13:35 ibelyaev Exp $
+// $Id: LoopDecorator.h,v 1.4 2008-12-05 10:42:17 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOOPDICT_H 
 #define LOKI_LOOPDICT_H 1
@@ -89,7 +89,7 @@ namespace LoKi
       /// get the effective PID 
       static LHCb::ParticleID pid( const LoKi::Loop& l ) ;
       /// get PID for the effective particle of the loop
-      static const ParticleProperty* pp ( const LoKi::Loop& l ) ;
+      static const LHCb::ParticleProperty* pp ( const LoKi::Loop& l ) ;
       /// get PID for the effective particle of the loop
       static const std::string& pidName ( const LoKi::Loop& l ) ;      
       /// set the particle ID for the effective particle of the loop 
@@ -103,7 +103,7 @@ namespace LoKi
       /// set the particle ID for the effectiev particle of the loop 
       static const LoKi::Loop& setPID 
       ( const LoKi::Loop&       l   , 
-        const ParticleProperty* pid ) ;
+        const LHCb::ParticleProperty* pid ) ;
       /// set the default IParticleCombiner tool
       static const LoKi::Loop& setCombiner 
       ( const LoKi::Loop&        l , 

@@ -1,10 +1,10 @@
-// $Id: LoopObj.cpp,v 1.12 2008-04-03 09:59:23 ibelyaev Exp $
+// $Id: LoopObj.cpp,v 1.13 2008-12-05 10:42:17 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
-// GaudiKernel
+// PartProp
 // ============================================================================
-#include "GaudiKernel/ParticleProperty.h"
+#include "Kernel/ParticleProperty.h"
 // ============================================================================
 // LoKiCore 
 // ============================================================================
@@ -286,7 +286,7 @@ StatusCode LoKi::LoopObj::make ( const IParticleCombiner* comb ) const
   m_vOwner   = true ;
   // pre-fill the particle
   {
-    Assert ( 0 != m_pp , "ParticleProperty* points to NULL!" );
+    Assert ( 0 != m_pp , "LHCb::ParticleProperty* points to NULL!" );
     m_particle -> setParticleID    ( m_pid         ) ;
     m_particle -> setMeasuredMass  ( m_pp->mass () ) ;
   }
@@ -344,18 +344,18 @@ LoKi::LoopObj& LoKi::LoopObj::setPID ( const std::string&      pid )
   m_pidname = pid ;
   m_pp = LoKi::Particles::ppFromName ( pid ) ;
   Assert ( 0 != m_pp , "Invalid Particle name is set!" );
-  m_pid = LHCb::ParticleID ( m_pp->jetsetID() ) ;
+  m_pid = m_pp->particleID() ;
   return  adaptToPID() ;
 }
 // ============================================================================
 //  set the particle ID for the effectiev particle of the loop 
 // ============================================================================
-LoKi::LoopObj& LoKi::LoopObj::setPID ( const ParticleProperty* pid ) 
+LoKi::LoopObj& LoKi::LoopObj::setPID ( const LHCb::ParticleProperty* pid ) 
 {
   m_pp = pid ;
   Assert ( 0 != m_pp , "Invalid Particle ID is set!" ) ;
-  m_pid = LHCb::ParticleID( m_pp->jetsetID() ) ;
-  m_pidname = m_pp->particle() ;
+  m_pid     = m_pp -> particleID() ;
+  m_pidname = m_pp -> particle() ;
   return adaptToPID() ;
 } 
 // ============================================================================

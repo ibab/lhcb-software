@@ -1,4 +1,4 @@
-// $Id: Algo.h,v 1.17 2008-06-26 14:28:13 ibelyaev Exp $
+// $Id: Algo.h,v 1.18 2008-12-05 10:42:17 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ALGO_H 
 #define LOKI_ALGO_H 1
@@ -12,6 +12,10 @@
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/HashMap.h"
+// ============================================================================
+// PartProp
+// ============================================================================
+#include "Kernel/IParticlePropertySvc.h"
 // ============================================================================
 // DaVinciKernel
 // ============================================================================
@@ -34,7 +38,7 @@
 #include "LoKi/Loop.h"
 #include "LoKi/LoopObj.h"
 // ============================================================================
-namespace LHCb { class Decay ; }
+namespace Decays { class Decay ; }
 // ============================================================================
 /** @file
  *
@@ -635,7 +639,7 @@ namespace LoKi
      */
     LoKi::Loop loop
     ( const std::string&            formula      , 
-      const ParticleProperty*       pid      = 0 , 
+      const LHCb::ParticleProperty* pid      = 0 , 
       const IParticleCombiner*      combiner = 0 ) ;
     // ========================================================================
     /** Create loop object 
@@ -696,7 +700,7 @@ namespace LoKi
      */    
     LoKi::Loop loop 
     ( const LoKi::Types::RangeList& formula      , 
-      const ParticleProperty*       pid      = 0 , 
+      const LHCb::ParticleProperty* pid      = 0 , 
       const IParticleCombiner*      combiner = 0 ) ;
     // ========================================================================
     /** Create the loop object from "decay"
@@ -706,7 +710,7 @@ namespace LoKi
      *  @return the valid looping-object
      */
     LoKi::Loop loop 
-    ( const LHCb::Decay&       decay        , 
+    ( const Decays::Decay&       decay        , 
       const IParticleCombiner* combiner = 0 ) ;
     // ========================================================================
   public:
@@ -973,18 +977,18 @@ namespace LoKi
     // ========================================================================
   public:
     /// helper method to get a proper ParticleProperty for the given name  
-    const ParticleProperty* pid ( const std::string& name ) const 
+    const LHCb::ParticleProperty* pid ( const std::string& name ) const 
     {
-      const ParticleProperty* pp = ppSvc()->find( name ) ;
+      const LHCb::ParticleProperty* pp = _ppSvc()->find( name ) ;
       if ( 0 == pp ) 
-      { Error ( "pid('" + name + "') : invalid ParticleProperty!" ) ; }
+      { Error ( "pid('" + name + "') : invalid LHCb::ParticleProperty!" ) ; }
       return pp ;
     } 
     // ========================================================================
     /// helper method to get a proper ParticleProperty for the given pid
-    inline const ParticleProperty* pid ( const LHCb::ParticleID& pid ) const 
+    inline const LHCb::ParticleProperty* pid ( const LHCb::ParticleID& pid ) const 
     {
-      const ParticleProperty* pp = ppSvc()->findByStdHepID( pid.pid() ) ;
+      const LHCb::ParticleProperty* pp = _ppSvc()->find ( pid ) ;
       if ( 0 == pp ) 
       { Error ( "pid('" + LoKi::Print::print( pid.pid() ) 
                 + "') : invalid ParticleProperty!" ) ; }
@@ -992,6 +996,7 @@ namespace LoKi
     } 
     // ========================================================================
   public:
+    // ========================================================================
     /** get the value for cut 
      *  
      *  @code 
@@ -1147,6 +1152,15 @@ namespace LoKi
     // the static pointer to current algorithm 
     static LoKi::Algo* s_currentAlgo ;
     // ========================================================================
+  private: // temporary!!
+    // ========================================================================
+    mutable const LHCb::IParticlePropertySvc* m__ppSvc ;
+    // ========================================================================
+  public: // temporary
+    // ========================================================================
+    /// TEMPORARY
+    const LHCb::IParticlePropertySvc* _ppSvc() const ;
+    // ========================================================================    
   } ;  
 }  // end of namespace LoKi
 // ============================================================================

@@ -1,4 +1,4 @@
-// $Id: LoopDecorator.cpp,v 1.4 2007-07-23 17:41:55 ibelyaev Exp $
+// $Id: LoopDecorator.cpp,v 1.5 2008-12-05 10:42:17 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -192,7 +192,7 @@ LHCb::ParticleID LoKi::Dicts::DictsLoop::pid( const LoKi::Loop& l )
 // ============================================================================
 // get PID for the effective particle of the loop
 // ============================================================================
-const ParticleProperty* LoKi::Dicts::DictsLoop::pp ( const LoKi::Loop& l ) 
+const LHCb::ParticleProperty* LoKi::Dicts::DictsLoop::pp ( const LoKi::Loop& l ) 
 { return l ? l->pp() : 0 ; }
 // ============================================================================
 // get PID for the effective particle of the loop
@@ -223,8 +223,8 @@ const LoKi::Loop& LoKi::Dicts::DictsLoop::setPID
 // set the particle ID for the effectiev particle of the loop 
 // ============================================================================
 const LoKi::Loop& LoKi::Dicts::DictsLoop::setPID 
-( const LoKi::Loop&       l   , 
-  const ParticleProperty* pid ) 
+( const LoKi::Loop&             l   , 
+  const LHCb::ParticleProperty* pid ) 
 {
   if ( l ) { l->setPID( pid ) ; }
   return l ;
