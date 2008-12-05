@@ -4,6 +4,9 @@
 ! Purpose     : Checker for pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2008-12-05 - Mariusz Witek
+ - Add PrimaryVertexChecker
+
 !========================== PatChecker v3r3p1 2008-07-17 =====================
 ! 2008-07-17 - Marco Cattaneo for Malcolm John
  - Fix uninitialised variables, broken by previous change
