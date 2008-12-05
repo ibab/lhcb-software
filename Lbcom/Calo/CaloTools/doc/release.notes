@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.52 2008-10-01 15:08:01 cattanem Exp $
+! $Id: release.notes,v 1.53 2008-12-05 16:57:09 odescham Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+
+! 2008-12-05 - Olivier Deschamps
+ - CaloCosmicsTrackTool :: fix bug in Hcal timing 
+
 
 !========================== CaloTools v5r5 2008-10-01 =========================
 ! 2008-09-11 - Olivier Deschamps

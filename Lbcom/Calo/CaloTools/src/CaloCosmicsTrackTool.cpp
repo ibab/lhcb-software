@@ -1,4 +1,4 @@
-// $Id: CaloCosmicsTrackTool.cpp,v 1.7 2008-06-26 12:50:19 jpalac Exp $
+// $Id: CaloCosmicsTrackTool.cpp,v 1.8 2008-12-05 16:57:09 odescham Exp $
 // Include files 
 
 // From std
@@ -161,7 +161,7 @@ StatusCode CaloCosmicsTrackTool::processing() {
       m_time = ecal()->time();
       m_stime = ecal()->timeVariance();
     }else if(hcal()->timed() ){
-      m_time=hcal()->timed();
+      m_time=hcal()->time();
       m_stime = hcal()->timeVariance();
     } else m_timed = false;
   } else{
