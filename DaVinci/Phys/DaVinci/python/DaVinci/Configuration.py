@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinciApp
 """
-__version__ = "$Id: Configuration.py,v 1.12 2008-12-05 11:27:00 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.13 2008-12-05 14:51:34 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -23,12 +23,8 @@ class DaVinci(LHCbConfigurableUser) :
 
 
     def defineEvents(self):
-        evtMax = self.getProp("EvtMax")
-#        print "Re-defining EvtMax to ", evtMax
-        ApplicationMgr().EvtMax = evtMax
-        skipEvents = self.getProp("SkipEvents")
-        if skipEvents > 0 :
-            ApplicationMgr().SkipEvents = skipEvents
+        # Delegate handling to LHCbApp configurable
+        self.setOtherProps(LHCbApp(),["EvtMax","SkipEvents"])
 
     def defineInput(self):
         input = self.getProp("Input")
@@ -40,11 +36,8 @@ class DaVinci(LHCbConfigurableUser) :
 #            print "Input is\n", getattr(EventSelector(),"Input")
 
     def evtMax(self):
-        if hasattr(ApplicationMgr(),"EvtMax"):
-            return getattr(ApplicationMgr(),"EvtMax")
-        else:
-            return ApplicationMgr().getDefaultProperties()["EvtMax"]
-
+        return LHCbApp().evtMax()
+    
     def defineDB(self):
         self.setOtherProps(LHCbApp(),["DataType","Simulation"]) 
             
