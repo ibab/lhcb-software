@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.388 2008-12-05 13:26:37 ibelyaev Exp $
+! $Id: release.notes,v 1.389 2008-12-05 13:36:56 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-12-05 - Patrick Koppenburg
+ - Move SimplePlots to DaVinciMonitors
 
 ! 2008-12-05 - Vanya BELYAEV
  - make adaptation to new Particle Property Service 
