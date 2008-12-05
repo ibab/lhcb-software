@@ -1,0 +1,29 @@
+#============================================================================
+# Created    : 2008-12-03
+# Maintainer : Patrick Koppenburg
+#============================================================================
+package           DaVinciMonitors
+version           v1r0
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src options
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+use PartProp v* Kernel
+use DaVinciKernel  v*    Phys
+use  LoKiPhys              v* Phys
+use  LoKiArrayFunctors     v* Phys
+
+include_path      none
+#============================================================================
+# Component library building rule
+#============================================================================
+library          DaVinciMonitors    ../src/*.cpp 
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=DaVinciMonitors

@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : Phys/DaVinciMonitors
+! Responsible : Patrick Koppenburg
+! Purpose     : Monitoring algorithms after reconstruction
+!-----------------------------------------------------------------------------
+
+! 2008-12-03 - Patrick Koppenburg
+ - First import
+ - Requires new PartProp package
