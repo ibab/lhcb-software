@@ -2,8 +2,7 @@
 # Details of these datasets are at https://lbtwiki.cern.ch/bin/view/Computing/VeryFirstData
 
 from Gaudi.Configuration import *
-from GaudiConf.Configuration import *
-from Brunel.Configuration import *
+from Configurables import Brunel
 
 #-- File catalogs. First one is read-write
 FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml",

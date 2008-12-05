@@ -5,8 +5,7 @@
 #   gaudirun.py Brunel<conf>.py 2008-Files.py
 #
 from Gaudi.Configuration import *
-from GaudiConf.Configuration import *
-from Brunel.Configuration import *
+from Configurables import Brunel
 
 #-- File catalogs. First one is read-write
 FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml",

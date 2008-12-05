@@ -4,8 +4,7 @@
 #   gaudirun.py Brunel-Cosmics.py 2008-Cosmic-Data.py
 #
 from Gaudi.Configuration import *
-from GaudiConf.Configuration import *
-from Brunel.Configuration import *
+from Configurables import Brunel
 
 #-- File catalogs. First one is read-write
 FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml" ]

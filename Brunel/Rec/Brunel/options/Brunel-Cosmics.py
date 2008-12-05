@@ -4,7 +4,8 @@
 #   gaudirun.py Brunel-Cosmics.py 2008-Cosmic-Data.py
 ##############################################################################
 
-from Brunel.Configuration import *
+from Configurables import ( Brunel, TrackSys,
+                            RichPixelCreatorConfig, RichTools, RichRecSysConf )
 
 # Set the special data options
 Brunel().SpecialData  = ["fieldOff","cosmics"]

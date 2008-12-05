@@ -5,7 +5,7 @@
 #   gaudirun.py Brunel-DC06.py <someDataFiles>.py
 ##############################################################################
 
-from Brunel.Configuration import *
+from Configurables import Brunel
 
 Brunel().DataType     = "DC06"
 Brunel().InputType    = "DIGI"

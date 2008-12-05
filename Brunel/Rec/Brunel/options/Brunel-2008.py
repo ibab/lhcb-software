@@ -5,7 +5,7 @@
 #   gaudirun.py Brunel-2008.py <someDataFiles>.py
 ##############################################################################
 
-from Brunel.Configuration import *
+from Configurables import Brunel
 
 Brunel().SpecialData = ["fieldOff"] # All 2008 real data was taken with Magnet OFF
 ##############################################################################

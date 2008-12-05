@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.41 2008-12-04 16:36:25 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.42 2008-12-05 12:28:35 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -26,6 +26,14 @@ class Brunel(LHCbConfigurableUser):
     ## Known checking sequences, all run by default
     KnownCheckSubdets       = ["Pat","RICH","MUON"] 
     KnownExpertCheckSubdets = KnownCheckSubdets+["TT","IT","OT","Tr"]
+    ## Default main sequences for real and simulated data
+    DefaultSequence = [ "ProcessPhase/Init",
+                        "ProcessPhase/Reco",
+                        "ProcessPhase/Moni" ]
+    DefaultRealSequence = DefaultSequence + [ "ProcessPhase/Output" ]
+    DefaultMCSequence   = DefaultSequence + [ "ProcessPhase/MCLinks",
+                                              "ProcessPhase/Check",
+                                              "ProcessPhase/Output" ]
     
     # Steering options
     __slots__ = {
@@ -44,16 +52,11 @@ class Brunel(LHCbConfigurableUser):
        ,"DDDBtag":      "" # Tag for DDDB. Default as set in DDDBConf for DataType
        ,"CondDBtag":    "" # Tag for CondDB. Default as set in DDDBConf for DataType
        ,"UseOracle": False  # if False, use SQLDDDB instead
-       ,"MainSequence": [ "ProcessPhase/Init",
-                          "ProcessPhase/Reco",
-                          "ProcessPhase/Moni",
-                          "ProcessPhase/MCLinks",
-                          "ProcessPhase/Check",
-                          "ProcessPhase/Output" ]
-       ,"MCCheckSequence": [] # The default MC Check sequence
+       ,"MainSequence": []    # The default main sequence, see self.DefaultSequence
+       ,"MCCheckSequence": [] # The default MC Check sequence, see KnownCheckSubdets
        ,"MCLinksSequence": [ "L0", "Unpack", "Tr" ] # The default MC Link sequence
        ,"InitSequence": ["Reproc", "Brunel", "Calo"] # The default init sequence
-       ,"MoniSequence": []    # The default Moni sequence
+       ,"MoniSequence": []    # The default Moni sequence, see KnownMoniSubdets
        ,"Monitors": []        # list of monitors to execute, see KnownMonitors
         # Following are options forwarded to RecSys
        ,"RecoSequence"   : [] # The Sub-detector reconstruction sequencing. See RecSys for default
@@ -92,10 +95,15 @@ class Brunel(LHCbConfigurableUser):
             raise RuntimeError("Unknown Histograms option '%s'"%histOpt)
 
         withMC = self.getProp("WithMC")
-        if inputType in [ "MDF", "RDST" ]:
-            withMC = False # Force it, MDF and RDST never contain MC truth
-        if outputType == "RDST":
-            withMC = False # Force it, RDST never contains MC truth
+        if withMC:
+            if inputType in [ "MDF", "RDST" ]:
+                log.warning( "WithMC = True, but InputType = '%s'. Forcing WithMC = False"%inputType )
+                withMC = False # Force it, MDF and RDST never contain MC truth
+            if outputType == "RDST":
+                log.warning( "WithMC = True, but OutputType = '%s'. Forcing WithMC = False"%inputType )
+                withMC = False # Force it, RDST never contains MC truth
+
+        self.configureSequences( withMC )
 
         self.configureInput( inputType )
 
@@ -157,6 +165,23 @@ class Brunel(LHCbConfigurableUser):
         AuditorSvc().Auditors += [ 'TimingAuditor' ] 
         SequencerTimerTool().OutputLevel = 4
         
+    def configureSequences(self, withMC):
+        brunelSeq = GaudiSequencer("BrunelSequencer")
+        ApplicationMgr().TopAlg = [ brunelSeq ]
+        mainSeq = self.getProp("MainSequence")
+        if len( mainSeq ) == 0:
+            if withMC:
+                mainSeq = self.DefaultMCSequence
+            else:
+                mainSeq = self.DefaultRealSequence
+            self.MainSequence = mainSeq
+        brunelSeq.Members += mainSeq
+        ProcessPhase("Init").DetectorList += self.getProp("InitSequence")
+        from Configurables import RecInit
+        recInit = RecInit( name = "BrunelInit",
+                           PrintFreq = self.getProp("PrintFreq"))
+        GaudiSequencer("InitBrunelSeq").Members += [ recInit ]
+
     def configureInput(self, inputType):
         """
         Tune initialisation according to input type
@@ -256,6 +281,7 @@ class Brunel(LHCbConfigurableUser):
                 moniSeq = self.KnownExpertMoniSubdets
             else:
                 moniSeq = self.KnownMoniSubdets
+            self.MoniSequence = moniSeq
         else:
             for seq in moniSeq:
                 if expert:
@@ -264,7 +290,6 @@ class Brunel(LHCbConfigurableUser):
                 else:
                     if seq not in self.KnownMoniSubdets:
                         raise RuntimeError("Unknown subdet '%s' in MoniSequence"%seq)
-        
         ProcessPhase("Moni").DetectorList += moniSeq
         ProcessPhase('Moni').Context = 'Offline'
 
@@ -320,6 +345,7 @@ class Brunel(LHCbConfigurableUser):
                 checkSeq = self.KnownExpertCheckSubdets
             else:
                 checkSeq = self.KnownCheckSubdets
+            self.MCCheckSequence = checkSeq
         else:
             for seq in checkSeq:
                 if expert:
@@ -395,18 +421,13 @@ class Brunel(LHCbConfigurableUser):
     ## Apply the configuration
     def __apply_configuration__(self):
         
-        log.info( self )
         GaudiKernel.ProcessJobOptions.PrintOff()
         self.setOtherProp(TrackSys(),"ExpertTracking")
         self.setOtherProps(RecSysConf(),["SpecialData","RecoSequence"])
-        brunelSeq = GaudiSequencer("BrunelSequencer")
-        ApplicationMgr().TopAlg = [ brunelSeq ]
-        brunelSeq.Members += self.getProp("MainSequence")
-        ProcessPhase("Init").DetectorList += self.getProp("InitSequence")
-        GaudiSequencer("InitBrunelSeq").Members += [ "RecInit/BrunelInit" ]
         self.defineGeometry()
         self.defineEvents()
         self.defineOptions()
         self.defineMonitors()
-        from Configurables import RecInit
-        RecInit("BrunelInit").PrintFreq = self.getProp("PrintFreq")
+        GaudiKernel.ProcessJobOptions.PrintOn()
+        log.info( self )
+        GaudiKernel.ProcessJobOptions.PrintOff()

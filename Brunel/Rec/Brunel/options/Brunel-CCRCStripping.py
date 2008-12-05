@@ -7,7 +7,7 @@
 #   gaudirun.py Brunel-CCRCStripping.py <someDataFiles>.py
 ##############################################################################
 
-from Brunel.Configuration import *
+from Configurables import Brunel
 
 Brunel().InputType  = "ETC"
 Brunel().NoWarnings = True

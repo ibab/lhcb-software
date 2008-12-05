@@ -5,7 +5,7 @@
 #   gaudirun.py Brunel-2008-MC.py <someDataFiles>.py
 ##############################################################################
 
-from Brunel.Configuration import *
+from Configurables import ( Brunel, CondDB )
 
 Brunel().InputType    = "DIGI"
 Brunel().WithMC       = True
@@ -13,7 +13,6 @@ Brunel().Simulation   = True
 Brunel().SpecialData  = ["veloOpen"]
 
 #--Specify SIMCOND tag for Open VELO
-from Configurables import CondDB
 CondDB().LocalTags["SIMCOND"] = ["velo-open"]
 
 ##############################################################################

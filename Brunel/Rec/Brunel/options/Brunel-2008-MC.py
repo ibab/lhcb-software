@@ -5,7 +5,7 @@
 #   gaudirun.py Brunel-2008-MC.py <someDataFiles>.py
 ##############################################################################
 
-from Brunel.Configuration import *
+from Configurables import Brunel
 
 Brunel().InputType    = "DIGI" # implies also Brunel().Simulation = True
 Brunel().WithMC       = True   # implies also Brunel().Simulation = True

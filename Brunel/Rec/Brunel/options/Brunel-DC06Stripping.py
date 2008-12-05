@@ -4,7 +4,7 @@
 #   gaudirun.py Brunel-DC06Stripping.py <someDataFiles>.py
 ##############################################################################
 
-from Brunel.Configuration import *
+from Configurables import Brunel
 
 Brunel().DataType   = "DC06"
 Brunel().InputType  = "ETC"

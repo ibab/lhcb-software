@@ -5,7 +5,7 @@
 #   gaudirun.py Brunel-Default.py <someDataFiles>.py
 ###############################################################################
 
-from Brunel.Configuration import *
+from Configurables import Brunel
 
 ###############################################################################
 # Set here any steering options.

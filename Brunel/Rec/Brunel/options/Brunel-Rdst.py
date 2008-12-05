@@ -5,7 +5,7 @@
 #   gaudirun.py Brunel-Rdst.py <someDataFiles>.py
 ##############################################################################
 
-from Brunel.Configuration import *
+from Configurables import Brunel
 
 Brunel().OutputType = "RDST"
 Brunel().NoWarnings = True
