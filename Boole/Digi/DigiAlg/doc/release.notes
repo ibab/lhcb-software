@@ -4,6 +4,10 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+! 2008-12-06 - Marco Cattaneo
+ - Fix an array overflow in BuildMCTrackInfo
+ - Protect verbose() streams with msgLevel(MSG::VERBOSE)
+
 !========================== DigiAlg v4r12 2008-11-24 =========================
 ! 2008-10-17 - Marco Cattaneo
  - Fix BooleInit::modifyODIN to work in TAE mode

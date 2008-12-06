@@ -1,4 +1,4 @@
-// $Id: BuildMCTrackInfo.cpp,v 1.8 2008-03-31 18:07:58 janos Exp $
+// $Id: BuildMCTrackInfo.cpp,v 1.9 2008-12-06 21:48:01 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -74,7 +74,7 @@ StatusCode BuildMCTrackInfo::initialize() {
 // Main execution
 //=============================================================================
 StatusCode BuildMCTrackInfo::execute() {
-  debug() << "==> Execute" << endreq;
+  if(msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endreq;
   
   LinkedTo<LHCb::MCParticle, LHCb::VeloCluster> veloLink( eventSvc(), msgSvc(), 
                                        LHCb::VeloClusterLocation::Default );
@@ -113,12 +113,12 @@ StatusCode BuildMCTrackInfo::execute() {
   }
   unsigned int nbMcPart = highestKey;
 
-  debug() << "Highest MCParticle number " << nbMcPart << endreq;
+  if(msgLevel(MSG::DEBUG)) debug() << "Highest MCParticle number " << nbMcPart << endreq;
 
-  std::vector<int> veloR   ( nbMcPart, 0 );
-  std::vector<int> lastVelo ( nbMcPart, -1 );
-  std::vector<int> veloPhi ( nbMcPart, 0 );
-  std::vector<int> station ( nbMcPart, 0 );
+  std::vector<int> veloR   ( nbMcPart+1, 0 );
+  std::vector<int> lastVelo ( nbMcPart+1, -1 );
+  std::vector<int> veloPhi ( nbMcPart+1, 0 );
+  std::vector<int> station ( nbMcPart+1, 0 );
   
   LHCb::MCParticle* part;
   unsigned int MCNum;
@@ -139,10 +139,12 @@ StatusCode BuildMCTrackInfo::execute() {
             lastVelo[MCNum] = sensor;
             if ( sens->isR() ) {
               veloR[MCNum]++;
-              verbose() << "MC " << MCNum << " Velo R sensor " << sensor << " nbR " << veloR[MCNum] << endreq;
+              if(msgLevel(MSG::VERBOSE))
+                verbose() << "MC " << MCNum << " Velo R sensor " << sensor << " nbR " << veloR[MCNum] << endmsg;
             } else if ( sens->isPhi() ) {
               veloPhi[MCNum]++;
-              verbose() << "MC " << MCNum << " Velo Phi sensor " << sensor << " nbPhi " << veloPhi[MCNum] << endreq;
+              if(msgLevel(MSG::VERBOSE))
+                verbose() << "MC " << MCNum << " Velo Phi sensor " << sensor << " nbPhi " << veloPhi[MCNum] << endmsg;
             }
           }
         }
@@ -164,7 +166,7 @@ StatusCode BuildMCTrackInfo::execute() {
         MCNum = part->key();
         if ( station.size() > MCNum ) {
           updateBit( station[MCNum], sta, isX );
-          verbose() << "MC " << MCNum << " TT Sta " << sta << " lay " << lay << endreq;
+          if(msgLevel(MSG::VERBOSE)) verbose() << "MC " << MCNum << " TT Sta " << sta << " lay " << lay << endreq;
         }
       }
       part = ttLink.next() ;
@@ -184,7 +186,7 @@ StatusCode BuildMCTrackInfo::execute() {
         MCNum = part->key();
         if ( station.size() > MCNum ) {
           updateBit( station[MCNum], sta, isX );
-          verbose() << "MC " << MCNum << " IT Sta " << sta << " lay " << lay << endreq;
+          if(msgLevel(MSG::VERBOSE)) verbose() << "MC " << MCNum << " IT Sta " << sta << " lay " << lay << endreq;
         }
       }
       part = itLink.next() ;
@@ -217,7 +219,7 @@ StatusCode BuildMCTrackInfo::execute() {
         MCNum = part->key();
         if ( station.size() > MCNum ) {
           updateBit( station[MCNum], sta, isX );
-          verbose() << "MC " << MCNum << " OT Sta " << sta << " lay " << lay << endreq;
+          if(msgLevel(MSG::VERBOSE)) verbose() << "MC " << MCNum << " OT Sta " << sta << " lay " << lay << endreq;
         }
       }
       part = otLink.next() ;
@@ -233,8 +235,8 @@ StatusCode BuildMCTrackInfo::execute() {
 
   for ( LHCb::MCParticles::const_iterator itP = mcParts->begin();
         mcParts->end() != itP; itP++ ) {
-    MCNum = (*itP)->key();
-    int mask = station[MCNum];
+    MCNum = (*itP)->key();    
+    int mask = station[MCNum];    
     if ( 2 < veloR[MCNum] )    mask |= MCTrackInfo::maskVeloR;
     if ( 2 < veloPhi[MCNum] )  mask |= MCTrackInfo::maskVeloPhi;
     if ( 15 < veloR[MCNum]   ) veloR[MCNum]   = 15;
@@ -246,15 +248,15 @@ StatusCode BuildMCTrackInfo::execute() {
 
     if ( 0 != mask ) {
       trackInfo->setProperty( *itP, mask );
-      debug() << format( "Track %4d mask %8x nR %2d nPhi %2d ", 
+      if(msgLevel(MSG::DEBUG)) debug() << format( "Track %4d mask %8x nR %2d nPhi %2d ", 
                          MCNum, mask, veloR[MCNum], veloPhi[MCNum] );
       if ( MCTrackInfo::maskHasVelo == (mask & MCTrackInfo::maskHasVelo ) )
-        debug() << " hasVelo ";
+        if(msgLevel(MSG::DEBUG)) debug() << " hasVelo ";
       if ( MCTrackInfo::maskHasTT   == (mask & MCTrackInfo::maskHasTT ) )
-        debug() << " hasTT ";
+        if(msgLevel(MSG::DEBUG)) debug() << " hasTT ";
       if ( MCTrackInfo::maskHasT    == (mask & MCTrackInfo::maskHasT   ) )
-        debug() << " hasT ";
-      debug() << endreq;
+        if(msgLevel(MSG::DEBUG)) debug() << " hasT ";
+      if(msgLevel(MSG::DEBUG)) debug() << endreq;
     }
   }
 
