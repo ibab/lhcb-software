@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.cpp,v 1.10 2008-10-29 08:37:05 jpalac Exp $
+// $Id: TutorialAlgorithm.cpp,v 1.11 2008-12-06 16:09:37 ibelyaev Exp $
 // Include files 
 
 // from Gaudi
@@ -46,8 +46,8 @@ StatusCode TutorialAlgorithm::initialize() {
   if ( sc.isFailure() ) return sc;
 
   debug() << "==> Initialize" << endmsg;
-
-  ParticleProperty* mother = ppSvc()->find( m_motherName );
+  
+  const LHCb::ParticleProperty* mother = ppSvc()->find( m_motherName );
   if ( !mother ) { //
     err() << "Cannot find particle property for " << m_motherName << endmsg ;
     return StatusCode::FAILURE;
