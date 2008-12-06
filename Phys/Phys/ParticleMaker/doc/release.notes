@@ -1,7 +1,15 @@
-! $Id: release.notes,v 1.84 2008-11-13 08:56:16 pkoppenb Exp $ 
+! $Id: release.notes,v 1.85 2008-12-06 17:32:27 ibelyaev Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : Chris Jones, J. Palacios
 !==============================================================================
+
+! 2008-12-06 - Vanya BELYAEV
+
+ - tiny fix for new particle properties 
+ - fixes for new signature of LHCb::Track::statAt methods 
+ - cmt/requirements
+     version increment to v4r2
+
 
 ! 2008-11-13 - Patrick Koppenburg
  - Added warnings and long doxygen about excvlusiveselection in CombinedParticleMaker

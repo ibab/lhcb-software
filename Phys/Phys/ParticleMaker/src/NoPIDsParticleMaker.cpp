@@ -1,10 +1,11 @@
-// $Id: NoPIDsParticleMaker.cpp,v 1.13 2008-05-30 17:44:52 pkoppenb Exp $
+// $Id: NoPIDsParticleMaker.cpp,v 1.14 2008-12-06 17:32:27 ibelyaev Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
-#include "GaudiKernel/IParticlePropertySvc.h" 
-#include "GaudiKernel/ParticleProperty.h" 
+// PartProp
+#include "Kernel/IParticlePropertySvc.h" 
+#include "Kernel/ParticleProperty.h" 
 
 #include "Kernel/IParticle2State.h"
 // local
@@ -74,7 +75,8 @@ NoPIDsParticleMaker::~NoPIDsParticleMaker() {}
 StatusCode NoPIDsParticleMaker::initialize() {
   StatusCode sc = GaudiTool::initialize();
   if (!sc) return sc;
-  m_ppSvc = svc<IParticlePropertySvc>( "ParticlePropertySvc" , true ) ;
+  m_ppSvc = svc<LHCb::IParticlePropertySvc>
+    ( "LHCb::ParticlePropertySvc" , true ) ;
 
   std::sort( m_inputs.begin () , m_inputs.end () ) ;
   m_inputs.erase ( std::unique( m_inputs.begin () , 
@@ -135,8 +137,8 @@ StatusCode NoPIDsParticleMaker::setPPs( const std::string& pid )
   m_pp = ppSvc  () -> find( pid ) ;
   if ( 0 == m_pp    ) { return StatusCode ( 111 ) ; }
   // get the the antiparticle 
-  m_app = ppSvc () -> findByStdHepID( -1 * m_pp->jetsetID() ) ;
-  if ( 0 == m_app ) { return StatusCode   ( 112 ) ; }
+  m_app = m_pp -> antiParticle () ;
+  if ( 0 == m_app   ) { return StatusCode ( 112 ) ; }
   m_apid = m_app -> particle () ;  
   return StatusCode::SUCCESS ;
 };
@@ -168,7 +170,8 @@ StatusCode NoPIDsParticleMaker::finalize()
 //=============================================================================
 // Dispatch the making of particles 
 //=============================================================================
-StatusCode NoPIDsParticleMaker::makeParticles( LHCb::Particle::ConstVector & particles ){
+StatusCode NoPIDsParticleMaker::makeParticles
+( LHCb::Particle::ConstVector & particles ){
   
   // increase the counter 
   ++m_calls ; 
@@ -238,9 +241,11 @@ StatusCode NoPIDsParticleMaker::makeParticles( LHCb::Particle::ConstVector & par
  *  @return status code 
  */
 // ============================================================================
-StatusCode NoPIDsParticleMaker::fillParticle( const LHCb::ProtoParticle* proto    ,
-                                              const ParticleProperty* property , 
-                                              LHCb::Particle* particle ) const {
+StatusCode NoPIDsParticleMaker::fillParticle
+( const LHCb::ProtoParticle*    proto    ,
+  const LHCb::ParticleProperty* property , 
+  LHCb::Particle*               particle ) const 
+{
   if ( 0 == proto    ) 
   { return Error ( "fillParticle: ProtoParticle*    is NULL" , 120 ) ; }
   if ( 0 == property ) 
@@ -250,20 +255,26 @@ StatusCode NoPIDsParticleMaker::fillParticle( const LHCb::ProtoParticle* proto  
   
   const double mass = property -> mass() ;
   
-  particle -> setParticleID ( LHCb::ParticleID ( property -> pdgID () ) ) ;
-  particle -> setConfLevel  ( m_CL ) ;
-  particle -> setMeasuredMass( mass ) ;
+  particle -> setParticleID   ( property -> particleID () ) ;
+  particle -> setConfLevel    ( m_CL ) ;
+  particle -> setMeasuredMass ( mass ) ;
   
   particle -> setProto( proto ) ;
-  LHCb::State& state = proto->track()->firstState() ;
-  if ( proto->track()->hasStateAt( LHCb::State::ClosestToBeam )){ // default: closest to beam
-    state = proto->track()->stateAt( LHCb::State::ClosestToBeam );
-    verbose() << "Using state at " << state.position() << endmsg ;
-  } else if ( proto->track()->hasStateAt( LHCb::State::FirstMeasurement )){ // if not available: first measurement
-    state = proto->track()->stateAt( LHCb::State::FirstMeasurement );
-    verbose() << "Using state at " << state.position() << endmsg ;
-  } else Warning("No state closest to beam or at first measurement for track. Using first state instead") ;
+  //
+  const LHCb::Track* track = proto->track() ;  
+  //
+  const LHCb::State* state   = 0 ;
+  // default closest to the beam 
+  if ( 0 == state ) { state = track->stateAt ( LHCb::State::ClosestToBeam    ) ; }
+  if ( 0 == state ) { state = track->stateAt ( LHCb::State::FirstMeasurement ) ; }
+  if ( 0 == state ) 
+  {
+    Warning("No state closest to beam or at first measurement for track. Using first state instead") ;
+    state = &track->firstState() ;    
+  }
+  if ( msgLevel ( MSG::VERBOSE ) ) 
+  { verbose() << "Using state at " << state->position() << endmsg ; }
   
-  return m_p2s->state2Particle(state,*particle);
+  return m_p2s->state2Particle(*state,*particle);
 };
 // ============================================================================

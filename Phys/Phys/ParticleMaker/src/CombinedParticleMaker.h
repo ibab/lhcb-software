@@ -5,7 +5,7 @@
  * Header file for Particle maker CombinedParticleMaker
  *
  * CVS Log :-
- * $Id: CombinedParticleMaker.h,v 1.16 2008-11-13 08:56:16 pkoppenb Exp $
+ * $Id: CombinedParticleMaker.h,v 1.17 2008-12-06 17:32:27 ibelyaev Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -18,7 +18,6 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/HashMap.h"
 
 // from EventSys
@@ -31,6 +30,7 @@
 #include "Kernel/IProtoParticleFilter.h"
 #include "Kernel/IParticle2State.h"
 #include "TrackInterfaces/ITrackSelector.h"
+#include "Kernel/ParticleProperty.h"
 
 /** @class CombinedParticleMaker CombinedParticleMaker.h
  *
@@ -76,17 +76,19 @@ private:
    *  @param particle  Pointer to Particle
    *  @return StatusCode
    */
-  StatusCode fillParticle( const LHCb::ProtoParticle * proto,
-                           const ParticleProperty    * pprop,
-                           LHCb::Particle            * particle ) const;
-
+  StatusCode fillParticle
+  ( const LHCb::ProtoParticle    * proto,
+    const LHCb::ParticleProperty * pprop,
+    LHCb::Particle               * particle ) const;
+  
   /// Converts a string to a constant format
   std::string convertName( const std::string & in ) const;
 
   /// Set the Particle confidence level
-  void setConfLevel( const LHCb::ProtoParticle * proto,
-                     const ParticleProperty    * pprop,
-                     LHCb::Particle            * particle ) const;
+  void setConfLevel
+  ( const LHCb::ProtoParticle*    proto,
+    const LHCb::ParticleProperty* pprop,
+    LHCb::Particle*               particle ) const;
 
   /// Test the PID information consistency
   void checkPIDInfo( const LHCb::ProtoParticle * proto ) const;
@@ -127,7 +129,8 @@ private:
   bool m_exclusive;
 
   /// Map type that takes a particle type to a ProtoParticle filter
-  typedef std::pair< const ParticleProperty *, const IProtoParticleFilter* > ProtoPair;
+  typedef std::pair< const LHCb::ParticleProperty *, 
+                     const IProtoParticleFilter* > ProtoPair;
   typedef std::vector < ProtoPair > ProtoMap;
 
   /// Map that takes a particle type to a ProtoParticle filter

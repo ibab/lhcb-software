@@ -4,7 +4,7 @@
  * Implmentation file for Particle maker CombinedParticleMaker
  *
  * CVS Log :-
- * $Id: CombinedParticleMaker.cpp,v 1.30 2008-11-13 08:56:16 pkoppenb Exp $
+ * $Id: CombinedParticleMaker.cpp,v 1.31 2008-12-06 17:32:27 ibelyaev Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -13,12 +13,14 @@
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/GaudiException.h"
 #include "GaudiKernel/Tokenizer.h"
 #include "CaloUtils/CaloMomentum.h"
 // local
 #include "CombinedParticleMaker.h"
+
+
+#include "Kernel/IParticlePropertySvc.h"
 
 // namespaces
 using namespace LHCb;
@@ -86,10 +88,11 @@ StatusCode CombinedParticleMaker::initialize()
   {
     return Error( "A list of particles types must be specified" );
   }
-
+  
   // Particle properties service
-  IParticlePropertySvc * ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc", true);
-
+  LHCb::IParticlePropertySvc * ppSvc = 
+    svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc", true);
+  
   // get an instance of the track selector
   m_trSel = tool<ITrackSelector>( "TrackSelector", "TrackSelector", this );
 
@@ -145,7 +148,7 @@ StatusCode CombinedParticleMaker::initialize()
     }
 
     // Get particle properties
-    const ParticleProperty * partProp = ppSvc->find( ppName );
+    const LHCb::ParticleProperty * partProp = ppSvc->find( ppName );
 
     // load tool into map
     if (msgLevel(MSG::DEBUG)) debug() << "Particle type " << name << " using ProtoParticle Filter '"
@@ -319,15 +322,16 @@ void CombinedParticleMaker::checkPIDInfo( const LHCb::ProtoParticle * proto ) co
 //=========================================================================
 // Fill particles parameters
 //=========================================================================
-StatusCode CombinedParticleMaker::fillParticle( const ProtoParticle* proto,
-                                                const ParticleProperty* pprop,
-                                                Particle* particle ) const
+StatusCode CombinedParticleMaker::fillParticle
+( const ProtoParticle* proto,
+  const LHCb::ParticleProperty* pprop,
+  Particle* particle ) const
 {
   // Start filling particle with orgininating ProtoParticle
   particle->setProto(proto);
-
+  
   // ParticleID
-  const int pID = pprop->jetsetID() * (int)(proto->charge());
+  const int pID = pprop->particleID().pid() * (int)(proto->charge());
   particle->setParticleID( ParticleID( pID ) );
 
   // Confidence level
@@ -344,24 +348,29 @@ StatusCode CombinedParticleMaker::fillParticle( const ProtoParticle* proto,
     << (*s)->position() << " and has slopes " << (*s)->slopes() << endmsg  ;  
   }
   */
-
-  // get a pointer to the State& returned by the track
-  const LHCb::State* usedState = &(proto->track()->firstState()) ; // backup 
-  if ( proto->track()->hasStateAt( LHCb::State::ClosestToBeam )){ // default: closest to beam
-    usedState = &(proto->track()->stateAt( LHCb::State::ClosestToBeam ));
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Using closest state to beam at " << usedState->position() << endmsg ;
-  } else if ( proto->track()->hasStateAt( LHCb::State::FirstMeasurement )){ // if not available: first measurement
-    usedState = &(proto->track()->stateAt( LHCb::State::FirstMeasurement ));
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Using first measurement state at " << usedState->position() << endmsg ;
-  } else Warning("No state closest to beam or at first measurement for track. Using first state instead") ;
-
+  
+  const LHCb::Track* track     = proto->track() ;
+  const LHCb::State* usedState = 0 ;
+  // default: closest to the beam:
+  if ( 0 == usedState ) { usedState = track->stateAt( LHCb::State::ClosestToBeam    ) ; }
+  // if not availabel: first measurementr 
+  if ( 0 == usedState ) { usedState = track->stateAt( LHCb::State::FirstMeasurement ) ; }
+  // backup 
+  if ( 0 == usedState ) 
+  {
+    Warning("No state closest to beam or at first measurement for track. Using first state instead") ;
+    usedState = &track->firstState() ;
+  }
+  if (msgLevel(MSG::VERBOSE)) 
+  { verbose() << "Using '" << usedState->location() << "' state at " << usedState->position() << endmsg ; }
+  
   // finally, set Particle infor from State using tool
   if (msgLevel(MSG::VERBOSE)) verbose() << "Making Particle " << pprop->particle() << " from Track with P= " 
-            << usedState->momentum() << endmsg ;
+                                        << usedState->momentum() << endmsg ;
   StatusCode sc = m_p2s->state2Particle( *usedState, *particle );
   if (msgLevel(MSG::VERBOSE)) verbose() 
     << "Made   Particle " << pprop->particle() << " with            P= " << particle->momentum() << endmsg ;
-
+  
   // Add BremmStrahlung for electrons
   if (sc.isSuccess() && "e+" == pprop->particle() && m_addBremPhoton ){
     if( m_brem->addBrem( particle ) )
@@ -371,9 +380,10 @@ StatusCode CombinedParticleMaker::fillParticle( const ProtoParticle* proto,
 }
 
 void
-CombinedParticleMaker::setConfLevel( const LHCb::ProtoParticle * proto,
-                                     const ParticleProperty    * pprop,
-                                     LHCb::Particle            * particle ) const
+CombinedParticleMaker::setConfLevel
+( const LHCb::ProtoParticle * proto,
+  const LHCb::ParticleProperty    * pprop,
+  LHCb::Particle            * particle ) const
 {
   // Definition of confidence level needs to be re-assessed
   const double ve  = proto->info( ProtoParticle::CombDLLe,  -999.0 );
