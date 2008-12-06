@@ -1,4 +1,4 @@
-// $Id: PVSeedTool.cpp,v 1.2 2008-06-11 19:28:25 witekma Exp $
+// $Id: PVSeedTool.cpp,v 1.3 2008-12-06 19:44:48 witekma Exp $
 // Include files 
 
 // STL
@@ -49,8 +49,8 @@ PVSeedTool::PVSeedTool( const std::string& type,
   declareProperty( "dzCloseTracksInCluster",  m_dzCloseTracksInCluster  =   2.*Gaudi::Units::mm );
   declareProperty( "minCloseTracksInCluster", m_minCloseTracksInCluster =   5     );
   declareProperty( "highMult",                m_highMult                =  10     );
-  declareProperty( "ratioSig2HighMult",       m_ratioSig2HighMult       = 0.8     );
-  declareProperty( "ratioSig2LowMult",        m_ratioSig2LowMult        = 0.6     );
+  declareProperty( "ratioSig2HighMult",       m_ratioSig2HighMult       = 0.9     );
+  declareProperty( "ratioSig2LowMult",        m_ratioSig2LowMult        = 0.7     );
   //  declareProperty( "",      m_      =   );
 
   m_p2mstatic=5000;

@@ -1,4 +1,4 @@
-// $Id: LSAdaptPVFitter.cpp,v 1.7 2008-11-17 15:17:25 witekma Exp $
+// $Id: LSAdaptPVFitter.cpp,v 1.8 2008-12-06 19:44:48 witekma Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
@@ -23,7 +23,7 @@ LSAdaptPVFitter::LSAdaptPVFitter(const std::string& type,
   // Minimum number of tracks in vertex  
   declareProperty("MinTracks", m_minTr = 5);
   // Number of iterations
-  declareProperty("Iterations", m_Iterations = 50);
+  declareProperty("Iterations", m_Iterations = 30);
   // Chi2 of completely wrong tracks
   declareProperty("maxChi2", m_maxChi2 = 256.0);
   // Limit in R for linear extrapolation
@@ -131,6 +131,7 @@ StatusCode LSAdaptPVFitter::fit(LHCb::RecVertex& vtx,
   }
   double zPrevious = 99999.0;
   double zVtx = 0.0;
+  double maxdz = m_maxDeltaZ;
   bool converged = false;
   int nbIter = 0;
   // Iteration loop. Require at least 3 iterations to reach final weight.
@@ -141,21 +142,39 @@ StatusCode LSAdaptPVFitter::fit(LHCb::RecVertex& vtx,
     }
     zVtx = vtx.position().z();
     prepareVertex(vtx,pvTracks,hess,d0vec,nbIter);
+
+    int ntr=0;
+    for(PVTrackPtrs::iterator itrack = pvTracks.begin(); 
+         itrack != pvTracks.end(); itrack++) {
+       PVTrack* pvTrack = *itrack;
+       if (pvTrack->weight > 0.) ntr++;
+    }
+    if (ntr < 3 ) { 
+      debug() << "# tracks too low. ntr = " << ntr << endmsg;
+      break;
+    }
+
+    // low mutiplicity, could cycle over different tracks
+    if ( nbIter > m_Iterations - 10 && ntr < 8 ) {
+      maxdz = 10.*m_maxDeltaZ;
+    }
+
     StatusCode sc = outVertex(vtx,pvTracks,hess,d0vec);
     if(sc != StatusCode::SUCCESS) {
       break;
     }
     zVtx = vtx.position().z();
-    if(fabs(zVtx - zPrevious) < m_maxDeltaZ) {
+    if(fabs(zVtx - zPrevious) < maxdz) {
       converged = true;
     } else {
       zPrevious = zVtx;
     }
+
     ++nbIter;
   }
 
   if (nbIter >= m_Iterations) {
-    warning() << " Reached max # iterations without convergence " 
+    debug() << " Reached max # iterations without convergence " 
               << nbIter << endreq;
   }
 
@@ -403,7 +422,7 @@ StatusCode LSAdaptPVFitter::outVertex(LHCb::RecVertex& vtx,
   int fail;
   hess.Inverse(fail);
   if (0 != fail) {
-    Error("Error inverting hessian matrix",0);
+    debug() << "Error inverting hessian matrix" << endmsg;
     return StatusCode::FAILURE;
   } else {
     hess.Invert();

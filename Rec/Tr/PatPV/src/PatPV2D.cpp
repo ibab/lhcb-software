@@ -1,4 +1,4 @@
-// $Id: PatPV2D.cpp,v 1.4 2008-06-11 19:28:25 witekma Exp $
+// $Id: PatPV2D.cpp,v 1.5 2008-12-06 19:44:49 witekma Exp $
 // Include files
  
 // from Gaudi
@@ -30,9 +30,9 @@ PatPV2D::PatPV2D( const std::string& name,
                   ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
-  declareProperty( "maxNumPv"        , m_maxNumPv      =  3             );
+  declareProperty( "maxNumPv"        , m_maxNumPv      = 10             );
   declareProperty( "maxIter"         , m_maxIter       =  3             );
-  declareProperty( "minMult"         , m_minMult       =  7             );
+  declareProperty( "minMult"         , m_minMult       =  6             );
   declareProperty( "x0MS"            , m_x0MS          =  0.01          );
   declareProperty( "multiQualityPV"  , m_multiQualityPV   =  10         );
   declareProperty( "minBackQualityPV", m_minBackQualityPV =   2         );
@@ -59,9 +59,7 @@ StatusCode PatPV2D::initialize() {
   double X0 = m_x0MS;
   m_scatCons = (13.6*sqrt(X0)*(1.+0.038*log(X0))) / ( 0.400 * Gaudi::Units::GeV );
 
-  
- 
-  
+    
   //== Get Velo detector element, to get the R sector angle
   DeVelo* velo = getDet<DeVelo>( DeVeloLocation::Default );
 
@@ -101,16 +99,12 @@ StatusCode PatPV2D::execute() {
 
   std::vector<myTrack> myTracks;
   myTracks.reserve( m_inputTracks->size() );
-  std::vector< myVertex > myVertices;
-  myVertices.reserve( 10);
-  
   std::vector<myTrack>::iterator itMyTr;
   std::vector<myVertex>::iterator itMyPv;
 
   // to aviod edge effects
   double maxZ =  (200. -10.)*Gaudi::Units::mm;
 
-  std::vector<const LHCb::Track*> seedTracks;
 
   // select 2d tracks and fill local bookkeeping table
   for ( std::vector<LHCb::Track*>::const_iterator itT = m_inputTracks->begin();
@@ -149,307 +143,330 @@ StatusCode PatPV2D::execute() {
       tmpTrack.backward  = pTr2d->checkFlag( LHCb::Track::Backward);
       myTracks.push_back(tmpTrack);
 
-      seedTracks.push_back(pTr2d);
     }
   }
 
-  /////////////////////////////////
-  // Get seeds of PV candidates //
-  /////////////////////////////////
-
-  if ( msgLevel( MSG::DEBUG ) ) {
-    debug() << seedTracks.size() << " 2D tracks used for seeding" << endmsg;
-  }
+  std::vector< myVertex > myVertices;
+  myVertices.reserve( 10);
   
-  std::vector<Gaudi::XYZPoint> seeds;
-  m_pvSeedTool->getSeeds(seedTracks ,seeds);
-  std::vector<double> zseeds;
-  for (std::vector<Gaudi::XYZPoint>::iterator its = seeds.begin(); its != seeds.end(); its++) {
-    zseeds.push_back(its->Z());
-  }
+  int found_pvs = 0;
+  // main loop seeding and fitting
+  for ( int main_loop = 0; main_loop < 3; main_loop++) {
 
-  if ( msgLevel( MSG::DEBUG ) ) {
-    debug() << zseeds.size() << " z seeds found: " << zseeds << endmsg;
-  }
-  
-  // Monitor quality of zseeds only.
-  if(m_saveSeedsAsPV) {
-    storeDummyVertices(zseeds);
-    return StatusCode::SUCCESS;
-  }
+    int newpv = myVertices.size()-found_pvs;
+    if (  main_loop > 0 && newpv == 0 ) break; // brake, no new pv found
+    found_pvs=myVertices.size();
 
-
-  if ( msgLevel( MSG::DEBUG ) ) {
-    debug() << myTracks.size() << " input 2D tracks " << endmsg;
-  }
-
-  int pvidx;
-
-  std::vector<double>::iterator itzseed;  
-  itzseed = zseeds.begin();
-  while (myVertices.size() < m_maxNumPv && itzseed != zseeds.end() ) {
-
-    pvidx = myVertices.size()+1;
-
-    double zseed = *itzseed;
-    if ( msgLevel( MSG::DEBUG ) ) {
-      debug() << "Found seed: " << zseed << endmsg;
-    }
-
-    double zv = zseed;
-    double xv = 0.0;
-    double yv = 0.0;
-
-    double sigmazv = 0.100 * Gaudi::Units::mm;
-    double sigmaxv = 0.070 * Gaudi::Units::mm;
-    double sigmayv = 0.070 * Gaudi::Units::mm;
-
-    double sumX[4], sumY[4], sumWX[4], sumWY[4];
-    double meanX[4], meanY[4], sigma2X[4], sigma2Y[4];
-
-    for ( itMyTr = myTracks.begin(); itMyTr != myTracks.end(); itMyTr++) {
-      if(itMyTr->pvidx > 0) {
-        itMyTr->pvweight = 0.0;  // Ignore already assigned tracks
-      } else {
-        itMyTr->pvweight = 1.0;
-      }
-    }
-
-
-    for (int iter=1; iter<=m_maxIter; iter++){
-
-      double zvcut  = 7.5 * sigmazv; // from pull distribution
-      double xyvcut = 7.5 * sigmaxv;
-
-      // xy pv finding
-
-      for(int pr = 0; pr<4; pr++){
-        sumX[pr]  = 0.0;
-        sumY[pr]  = 0.0;
-        sumWX[pr] = 0.0;
-        sumWY[pr] = 0.0;
-      }
-
-      for ( itMyTr = myTracks.begin(); itMyTr != myTracks.end(); itMyTr++) {
-
-        if ( itMyTr->pvidx>0 || itMyTr->pvweight < 0.0001) continue;
-
-
-        double z0   = itMyTr->z0;
-        double tr   = itMyTr->tr;
-        double d2r0 = itMyTr->d2r0;
-        double d2tr = itMyTr->d2tr;
-
-        //check wether it is compatible with zv:
-        double cosa = itMyTr->cosPhi;
-        double sina = itMyTr->sinPhi;
-        double rvpr = xv * cosa + yv * sina; // projection of the pv point
-        double dzv  = rvpr / tr;
-        double zvpr = z0 + dzv;
-        double d2zvpr = ( d2r0 + dzv * dzv *d2tr ) / (tr*tr) +
-          (d2tr) * (zvpr/tr)*(zvpr/tr);
-
-        //if (fabs(zvpr-zv) >= zvcut+5.0*sqrt(d2zvpr)){// outside errors
-        double ddz = fabs(zvpr-zv)-zvcut; 
-        if ( ddz > 0. && ddz * ddz >= 25.*d2zvpr ) {
-          itMyTr->pvweight = 0.0;
-          continue;
+     /////////////////////////////////
+     // Get seeds of PV candidates //
+     /////////////////////////////////
+   
+     std::vector<const LHCb::Track*> seedTracks;    
+     for ( itMyTr = myTracks.begin(); itMyTr != myTracks.end(); itMyTr++) {
+        if(itMyTr->pvidx < 1) {
+          seedTracks.push_back(itMyTr->pTr2d);
         }
+     }
+   
+     if ( seedTracks.size() < (unsigned int) m_minMult ) break; // brake if no track left to fit 
+   
+     if ( msgLevel( MSG::DEBUG ) ) {
+       debug() << seedTracks.size() << " 2D tracks used for seeding" << endmsg;
+     }
+     
+     std::vector<Gaudi::XYZPoint> seeds;
+     m_pvSeedTool->getSeeds(seedTracks ,seeds);
 
-        // compatible with the previous estimation of (xv,yv)?
-        double r   = tr * (zv-z0);  //r at primary vertex position
-        double d2r = d2r0 + (zv-z0) * (zv-z0) * d2tr;
+     if (seeds.size() < 1 ) break;
 
-        double tolR = xyvcut + 5.0 * sqrt(d2r);  // Tol = 5 time computed error.
-        if ( fabs(r-rvpr) >= tolR ){
-          itMyTr->pvweight = 0.0;
-          continue;
-        }
+     std::vector<double> zseeds;
+     for (std::vector<Gaudi::XYZPoint>::iterator its = seeds.begin(); its != seeds.end(); its++) {
+       zseeds.push_back(its->Z());
+     }
+   
+     if ( msgLevel( MSG::DEBUG ) ) {
+       debug() << zseeds.size() << " z seeds found: " << zseeds << endmsg;
+     }
+     
+     // Monitor quality of zseeds only.
+     if(m_saveSeedsAsPV) {
+       storeDummyVertices(zseeds);
+       return StatusCode::SUCCESS;
+     }
+   
+   
+     if ( msgLevel( MSG::DEBUG ) ) {
+       debug() << myTracks.size() << " input 2D tracks " << endmsg;
+     }
+   
+   
+     std::vector<double>::iterator itzseed;  
+     itzseed = zseeds.begin();
+     while (myVertices.size() < m_maxNumPv && itzseed != zseeds.end() ) {
+   
+       int pvidx = myVertices.size()+1;
+   
+       double zseed = *itzseed;
+       if ( msgLevel( MSG::DEBUG ) ) {
+         debug() << "Found seed: " << zseed << endmsg;
+       }
+   
+       double zv = zseed;
+       double xv = 0.0;
+       double yv = 0.0;
+   
+       double sigmazv = 0.100 * Gaudi::Units::mm;
+       double sigmaxv = 0.070 * Gaudi::Units::mm;
+       double sigmayv = 0.070 * Gaudi::Units::mm;
+   
+       double sumX[4], sumY[4], sumWX[4], sumWY[4];
+       double meanX[4], meanY[4], sigma2X[4], sigma2Y[4];
+   
+       for ( itMyTr = myTracks.begin(); itMyTr != myTracks.end(); itMyTr++) {
+         if(itMyTr->pvidx > 0) {
+           itMyTr->pvweight = 0.0;  // Ignore already assigned tracks
+         } else {
+           itMyTr->pvweight = 1.0;
+         }
+       }
+   
+   
+       for (int iter=1; iter<=m_maxIter; iter++){
+   
+         double zvcut  = 7.5 * sigmazv; // from pull distribution
+         double xyvcut = 7.5 * sigmaxv;
+   
+         // xy pv finding
+   
+         for(int pr = 0; pr<4; pr++){
+           sumX[pr]  = 0.0;
+           sumY[pr]  = 0.0;
+           sumWX[pr] = 0.0;
+           sumWY[pr] = 0.0;
+         }
+   
+         for ( itMyTr = myTracks.begin(); itMyTr != myTracks.end(); itMyTr++) {
+   
+           if ( itMyTr->pvidx>0 || itMyTr->pvweight < 0.0001) continue;
+   
+   
+           double z0   = itMyTr->z0;
+           double tr   = itMyTr->tr;
+           double d2r0 = itMyTr->d2r0;
+           double d2tr = itMyTr->d2tr;
+   
+           //check wether it is compatible with zv:
+           double cosa = itMyTr->cosPhi;
+           double sina = itMyTr->sinPhi;
+           double rvpr = xv * cosa + yv * sina; // projection of the pv point
+           double dzv  = rvpr / tr;
+           double zvpr = z0 + dzv;
+           double d2zvpr = ( d2r0 + dzv * dzv *d2tr ) / (tr*tr) +
+             (d2tr) * (zvpr/tr)*(zvpr/tr);
+   
+           //if (fabs(zvpr-zv) >= zvcut+5.0*sqrt(d2zvpr)){// outside errors
+           double ddz = fabs(zvpr-zv)-zvcut; 
+           if ( ddz > 0. && ddz * ddz >= 25.*d2zvpr ) {
+             itMyTr->pvweight = 0.0;
+             continue;
+           }
+   
+           // compatible with the previous estimation of (xv,yv)?
+           double r   = tr * (zv-z0);  //r at primary vertex position
+           double d2r = d2r0 + (zv-z0) * (zv-z0) * d2tr;
+   
+           double tolR = xyvcut + 5.0 * sqrt(d2r);  // Tol = 5 time computed error.
+           if ( fabs(r-rvpr) >= tolR ){
+             itMyTr->pvweight = 0.0;
+             continue;
+           }
+   
+           double dist2   = ( r - rvpr ) * ( r - rvpr );
+           double xyvcut2 = tolR * tolR;
+           // bi-weight Tukey
+           double coeff   = (1.0-(dist2/xyvcut2))*(1.0-(dist2/xyvcut2));
+   
+           double x = r*cosa;
+           double y = r*sina;
+   
+           // calculate centers of gravity for each sector and then summ vectors
+   
+           int    pr  = itMyTr->sector % 4;
+           double wx  = coeff * itMyTr->pvweight / ( d2r * cosa * cosa );
+           double wy  = coeff * itMyTr->pvweight / ( d2r * sina * sina );
+   
+           itMyTr->chi2 = dist2/d2r;
+           itMyTr->pvweight = coeff; //store to select good tracks for z calc.
+   
+           sumX[pr]  += x * wx;
+           sumY[pr]  += y * wy;
+           sumWX[pr] += wx;
+           sumWY[pr] += wy;
+   
+         } // loop over tracks
+   
+         double xpoint[2], ypoint[2], sigma2xp[2], sigma2yp[2];
+         bool pointfound[2];
+         for(int proj = 0; proj < 4; proj++){
+           if (proj<2){//reset x,y,sigma2yx
+             xpoint[proj]=0.0;
+             sigma2xp[proj]=0.0;
+             ypoint[proj]=0.0;
+             sigma2yp[proj]=0.0;
+             pointfound[proj] = false;
+           }
+           meanX[proj]=0.0;
+           meanY[proj]=0.0;
+           sigma2X[proj]=0.0;
+           sigma2Y[proj]=0.0;
+           if (sumWX[proj] != 0.0){
+             meanX[proj]   = sumX[proj]/sumWX[proj];
+             sigma2X[proj] = 1.0/sumWX[proj];
+             meanY[proj]   = sumY[proj]/sumWY[proj];
+             sigma2Y[proj] = 1.0/sumWY[proj];
+             int ipoint = proj - 2*(proj/2);
+             xpoint[ipoint]   += meanX[proj];
+             sigma2xp[ipoint] += sigma2X[proj];
+             ypoint[ipoint]   += meanY[proj];
+             sigma2yp[ipoint] += sigma2Y[proj];
+             pointfound[ipoint] = true;
+           }
+         }
+   
+         xv = yv = sigmaxv = sigmayv = 0.0;
+         for (int ipoint = 0; ipoint < 2; ipoint++){
+           if (pointfound[ipoint]){
+             xv += xpoint[ipoint]/sigma2xp[ipoint];
+             yv += ypoint[ipoint]/sigma2yp[ipoint];
+             sigmaxv += 1.0/sigma2xp[ipoint];
+             sigmayv += 1.0/sigma2yp[ipoint];
+           }
+         }
+   
+         if (sigmaxv != 0.0){
+           xv /= sigmaxv; 
+           sigmaxv = sqrt(1.0/sigmaxv);
+           yv /= sigmayv; 
+           sigmayv = sqrt(1.0/sigmayv);
+         } else{
+           sigmaxv = 1000.0; sigmayv = 1000.0;
+         }
+   
+         //estimate zv position
+         double sumCenter = 0.0;
+         double sumValue  = 0.0;
+   
+         for ( itMyTr = myTracks.begin(); itMyTr != myTracks.end(); itMyTr++) {
+   
+           if(itMyTr->pvidx>0 || itMyTr->pvweight<0.0001) continue;
+   
+           double z0  = itMyTr->z0;
+           //double r0  = itMyTr->r0;
+           double tr  = itMyTr->tr;
+           double d2r0  = itMyTr->d2r0;
+           double d2tr  = itMyTr->d2tr;
+   
+           double rvpr = xv * itMyTr->cosPhi + yv * itMyTr->sinPhi;
+           double z    = z0+(rvpr/*-r0*/)/tr;
+           double d2z  = (d2r0+(z-z0)*(z-z0)*d2tr)/(tr*tr) +
+             (d2tr)*(z/tr)*(z/tr);
+   
+           double dz   = sqrt(d2z);
+           if (fabs(z-zv) >= zvcut+5.0*dz){// outside errors
+             itMyTr->pvweight = 0.0;
+             continue;
+           }
+   
+           double zvcut2 = (zvcut+5.0*dz)*(zvcut+5.0*dz);
+           double dist2 = (z-zv)*(z-zv);
+           double coeff = (1.0-(dist2/zvcut2))*(1.0-(dist2/zvcut2));
+           double w = (1.0/d2z)*coeff*itMyTr->pvweight;// bi-weight Tukey
+           sumCenter += z*w;
+           sumValue  += w;
+   
+           itMyTr->pvweight = coeff;
+   
+         }
+   
+         zv = sumCenter/sumValue;
+         sigmazv = sqrt(1.0/sumValue);
+   
+         if ( msgLevel( MSG::DEBUG ) ) {
+           debug() << format( "    iter %i X=%7.3f +-%5.3f  Y=%7.3f +-%5.3f",
+                              iter, xv, sigmaxv, yv, sigmayv)
+                   << endmsg;
+         }
+           
+         if ( msgLevel( MSG::DEBUG ) ) {
+           debug() << format( " -> ZV = %7.3f +-%5.3f", zv, sigmazv) << endmsg;
+         }
+         
+       } // end iter loop
+   
+       int multFitPv =0;
+       int multFitPvQuality =0;
+       for ( itMyTr = myTracks.begin(); itMyTr != myTracks.end(); itMyTr++) {
+         if (itMyTr->pvweight>0.01 && itMyTr->chi2 < 25. ) {
+           multFitPv++;
+           itMyTr->pvidx  = pvidx;
+         }
+         if (itMyTr->pvweight>0.01 && itMyTr->chi2 < 4. ) {
+           multFitPvQuality++;
+         }
+       }
+   
+       // check if PV is close to another PV require better quality 
+       bool isClose = false;
+       for( itMyPv = myVertices.begin(); itMyPv != myVertices.end(); itMyPv++) {
+         if ( itMyPv->multi >  multFitPv && fabs(zv - itMyPv->z) < m_dzQualityPV ) {
+           isClose = true;
+         }
+       } 
+   
+       // store PV
+       int checkMult = multFitPv;
+       int multCut = m_minMult;
+       if (isClose) {
+         checkMult = multFitPvQuality;
+         multCut = m_multiQualityPV;
+       }
+       if( checkMult >= multCut) {
+         myVertex tmpVertex;
+         tmpVertex.x = xv;
+         tmpVertex.y = yv;
+         tmpVertex.z = zv;
+         tmpVertex.sigmax = sigmaxv;
+         tmpVertex.sigmay = sigmayv;
+         tmpVertex.sigmaz = sigmazv;
+         tmpVertex.multi = multFitPv;
+         // calculate chi2
+         double chi2 = 0.;
+         for ( itMyTr = myTracks.begin(); itMyTr != myTracks.end(); itMyTr++) {
+           if ( itMyTr->pvidx == pvidx ) {
+   
+             double z0   = itMyTr->z0;
+             double tr   = itMyTr->tr;
+             double d2r0 = itMyTr->d2r0;
+             double d2tr = itMyTr->d2tr;
+   
+             //check wether it is compatible with zv:
+             double cosa = itMyTr->cosPhi;
+             double sina = itMyTr->sinPhi;
+             double rvpr = xv * cosa + yv * sina; // projection of the pv point
+             double r   = tr * (zv-z0);  //r at primary vertex position
+             double d2r = d2r0 + (zv-z0) * (zv-z0) * d2tr;
+             double dist2   = ( r - rvpr ) * ( r - rvpr );
+             chi2 += dist2/d2r;
+   
+           }
+         }
+         tmpVertex.chi2 = chi2;
+         myVertices.push_back(tmpVertex);
+       }
+       itzseed++;
+     } // end while
+  }// main_loop
 
-        double dist2   = ( r - rvpr ) * ( r - rvpr );
-        double xyvcut2 = tolR * tolR;
-        // bi-weight Tukey
-        double coeff   = (1.0-(dist2/xyvcut2))*(1.0-(dist2/xyvcut2));
-
-        double x = r*cosa;
-        double y = r*sina;
-
-        // calculate centers of gravity for each sector and then summ vectors
-
-        int    pr  = itMyTr->sector % 4;
-        double wx  = coeff * itMyTr->pvweight / ( d2r * cosa * cosa );
-        double wy  = coeff * itMyTr->pvweight / ( d2r * sina * sina );
-
-        itMyTr->chi2 = dist2/d2r;
-        itMyTr->pvweight = coeff; //store to select good tracks for z calc.
-
-        sumX[pr]  += x * wx;
-        sumY[pr]  += y * wy;
-        sumWX[pr] += wx;
-        sumWY[pr] += wy;
-
-      } // loop over tracks
-
-      double xpoint[2], ypoint[2], sigma2xp[2], sigma2yp[2];
-      bool pointfound[2];
-      for(int proj = 0; proj < 4; proj++){
-        if (proj<2){//reset x,y,sigma2yx
-          xpoint[proj]=0.0;
-          sigma2xp[proj]=0.0;
-          ypoint[proj]=0.0;
-          sigma2yp[proj]=0.0;
-          pointfound[proj] = false;
-        }
-        meanX[proj]=0.0;
-        meanY[proj]=0.0;
-        sigma2X[proj]=0.0;
-        sigma2Y[proj]=0.0;
-        if (sumWX[proj] != 0.0){
-          meanX[proj]   = sumX[proj]/sumWX[proj];
-          sigma2X[proj] = 1.0/sumWX[proj];
-          meanY[proj]   = sumY[proj]/sumWY[proj];
-          sigma2Y[proj] = 1.0/sumWY[proj];
-          int ipoint = proj - 2*(proj/2);
-          xpoint[ipoint]   += meanX[proj];
-          sigma2xp[ipoint] += sigma2X[proj];
-          ypoint[ipoint]   += meanY[proj];
-          sigma2yp[ipoint] += sigma2Y[proj];
-          pointfound[ipoint] = true;
-        }
-      }
-
-      xv = yv = sigmaxv = sigmayv = 0.0;
-      for (int ipoint = 0; ipoint < 2; ipoint++){
-        if (pointfound[ipoint]){
-          xv += xpoint[ipoint]/sigma2xp[ipoint];
-          yv += ypoint[ipoint]/sigma2yp[ipoint];
-          sigmaxv += 1.0/sigma2xp[ipoint];
-          sigmayv += 1.0/sigma2yp[ipoint];
-        }
-      }
-
-      if (sigmaxv != 0.0){
-        xv /= sigmaxv; 
-        sigmaxv = sqrt(1.0/sigmaxv);
-        yv /= sigmayv; 
-        sigmayv = sqrt(1.0/sigmayv);
-      } else{
-        sigmaxv = 1000.0; sigmayv = 1000.0;
-      }
-
-      //estimate zv position
-      double sumCenter = 0.0;
-      double sumValue  = 0.0;
-
-      for ( itMyTr = myTracks.begin(); itMyTr != myTracks.end(); itMyTr++) {
-
-        if(itMyTr->pvidx>0 || itMyTr->pvweight<0.0001) continue;
-
-        double z0  = itMyTr->z0;
-        //double r0  = itMyTr->r0;
-        double tr  = itMyTr->tr;
-        double d2r0  = itMyTr->d2r0;
-        double d2tr  = itMyTr->d2tr;
-
-        double rvpr = xv * itMyTr->cosPhi + yv * itMyTr->sinPhi;
-        double z    = z0+(rvpr/*-r0*/)/tr;
-        double d2z  = (d2r0+(z-z0)*(z-z0)*d2tr)/(tr*tr) +
-          (d2tr)*(z/tr)*(z/tr);
-
-        double dz   = sqrt(d2z);
-        if (fabs(z-zv) >= zvcut+5.0*dz){// outside errors
-          itMyTr->pvweight = 0.0;
-          continue;
-        }
-
-        double zvcut2 = (zvcut+5.0*dz)*(zvcut+5.0*dz);
-        double dist2 = (z-zv)*(z-zv);
-        double coeff = (1.0-(dist2/zvcut2))*(1.0-(dist2/zvcut2));
-        double w = (1.0/d2z)*coeff*itMyTr->pvweight;// bi-weight Tukey
-        sumCenter += z*w;
-        sumValue  += w;
-
-        itMyTr->pvweight = coeff;
-
-      }
-
-      zv = sumCenter/sumValue;
-      sigmazv = sqrt(1.0/sumValue);
-
-      if ( msgLevel( MSG::DEBUG ) ) {
-        debug() << format( "    iter %i X=%7.3f +-%5.3f  Y=%7.3f +-%5.3f",
-                           iter, xv, sigmaxv, yv, sigmayv)
-                << endmsg;
-      }
-        
-      if ( msgLevel( MSG::DEBUG ) ) {
-        debug() << format( " -> ZV = %7.3f +-%5.3f", zv, sigmazv) << endmsg;
-      }
-      
-    } // end iter loop
-
-    int multFitPv =0;
-    int multFitPvQuality =0;
-    for ( itMyTr = myTracks.begin(); itMyTr != myTracks.end(); itMyTr++) {
-      if (itMyTr->pvweight>0.01 && itMyTr->chi2 < 25. ) {
-        multFitPv++;
-        itMyTr->pvidx  = pvidx;
-      }
-      if (itMyTr->pvweight>0.01 && itMyTr->chi2 < 4. ) {
-        multFitPvQuality++;
-      }
-    }
-
-    // check if PV is close to another PV require better quality 
-    bool isClose = false;
-    for( itMyPv = myVertices.begin(); itMyPv != myVertices.end(); itMyPv++) {
-      if ( itMyPv->multi >  multFitPv && fabs(zv - itMyPv->z) < m_dzQualityPV ) {
-        isClose = true;
-      }
-    } 
-
-    // store PV
-    int checkMult = multFitPv;
-    int multCut = m_minMult;
-    if (isClose) {
-      checkMult = multFitPvQuality;
-      multCut = m_multiQualityPV;
-    }
-    if( checkMult >= multCut) {
-      myVertex tmpVertex;
-      tmpVertex.x = xv;
-      tmpVertex.y = yv;
-      tmpVertex.z = zv;
-      tmpVertex.sigmax = sigmaxv;
-      tmpVertex.sigmay = sigmayv;
-      tmpVertex.sigmaz = sigmazv;
-      tmpVertex.multi = multFitPv;
-      // calculate chi2
-      double chi2 = 0.;
-      for ( itMyTr = myTracks.begin(); itMyTr != myTracks.end(); itMyTr++) {
-        if ( itMyTr->pvidx == pvidx ) {
-
-          double z0   = itMyTr->z0;
-          double tr   = itMyTr->tr;
-          double d2r0 = itMyTr->d2r0;
-          double d2tr = itMyTr->d2tr;
-
-          //check wether it is compatible with zv:
-          double cosa = itMyTr->cosPhi;
-          double sina = itMyTr->sinPhi;
-          double rvpr = xv * cosa + yv * sina; // projection of the pv point
-          double r   = tr * (zv-z0);  //r at primary vertex position
-          double d2r = d2r0 + (zv-z0) * (zv-z0) * d2tr;
-          double dist2   = ( r - rvpr ) * ( r - rvpr );
-          chi2 += dist2/d2r;
-
-        }
-      }
-      tmpVertex.chi2 = chi2;
-      myVertices.push_back(tmpVertex);
-    }
-    itzseed++;
-  } // end while
 
   // store to PatVertexContainer
   if ( msgLevel( MSG::DEBUG ) ) debug() << " L1 PV vertices: " << endmsg;
