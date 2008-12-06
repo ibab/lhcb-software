@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+! 2008-12-06 - Vanya BELYAEV
+ - minor fix for new particle properties 
+   verison increment to v1r10
+
 ! 2008-12-01 - Vanya BELYAEV
  - src/DecayTreeTuple.cpp
    add '#include "boost/lexical_cast.hpp"' line 

@@ -1,4 +1,4 @@
-// $Id: DecayTreeTuple.cpp,v 1.4 2008-12-01 11:00:44 ibelyaev Exp $
+// $Id: DecayTreeTuple.cpp,v 1.5 2008-12-06 16:52:29 ibelyaev Exp $
 // Include files
 
 // from Gaudi
@@ -69,8 +69,7 @@ DecayTreeTuple::OnePart::OnePart( DecayTreeTuple* parent
     std::cout << "Error: parent interface not set!" << std::endl;
     return;
   }
-  int pid = me.particleID().pid();
-  m_realname = m_parent->ppSvc()->findByStdHepID( pid )->particle();
+  m_realname = m_parent->ppSvc()->find ( me.particleID() )->particle();
 }
 
 // -----------------------------------------------------
@@ -757,10 +756,9 @@ std::string DecayTreeTuple::getBranchName( const Particle* p ){
   if( m_useLabName )
     return std::string("lab") 
       + boost::lexical_cast<std::string>( m_parts.size() );
-
-  int pid = p->particleID().pid();
-  std::string realname = ppSvc()->findByStdHepID( pid )->particle();
-
+  
+  std::string realname = ppSvc()->find( p->particleID() )->particle();
+  
   std::string name = escape( realname ), buffer = name;
 
   // check that it is not yet used, if yes, append a number until not
