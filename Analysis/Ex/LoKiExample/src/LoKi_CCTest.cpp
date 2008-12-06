@@ -1,4 +1,4 @@
-// $Id: LoKi_CCTest.cpp,v 1.1 2008-08-04 11:00:59 ibelyaev Exp $
+// $Id: LoKi_CCTest.cpp,v 1.2 2008-12-06 16:31:28 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -6,13 +6,13 @@
 // ============================================================================
 #include "GaudiKernel/AlgFactory.h"
 // ============================================================================
+// PartProp
+// ============================================================================
+#include "Kernel/IParticlePropertySvc.h"
+// ============================================================================
 // GaudiAlg 
 // ============================================================================
 #include "GaudiAlg/GaudiAlgorithm.h"
-// ============================================================================
-// LoKi
-// ============================================================================
-#include "LoKi/CC.h"
 // ============================================================================
 /** @file 
  *  Implementation file for class LoKi::CCTest
@@ -57,7 +57,7 @@ namespace LoKi
       {
         always () 
           << " The decay: '" <<              ( *id ) << "'" << endreq 
-          << " CC-decay : '" << LoKi::CC::cc ( *id ) << "'" << endreq ;
+          << " CC-decay : '" << ppSvc()-> cc ( *id ) << "'" << endreq ;
       }   
       //
       return StatusCode::SUCCESS ;
@@ -72,7 +72,8 @@ namespace LoKi
     CCTest ( const std::string& name ,   // Algorithm instance name 
              ISvcLocator*       pSvc )   // Service Locator
       : GaudiAlgorithm ( name , pSvc ) 
-      , m_decays () 
+      , m_decays (   ) 
+      , m_ppSvc  ( 0 )
     {
       declareProperty ( "Decays" , 
                         m_decays , 
@@ -90,6 +91,17 @@ namespace LoKi
     /// the assigenemet operator is disabled 
     CCTest& operator=( const CCTest& ) ;     // assigement operator is disabled
     // ========================================================================
+  protected:
+    // ========================================================================
+    // get the particle property service 
+    inline const LHCb::IParticlePropertySvc* ppSvc() const 
+    {
+      if ( 0 != m_ppSvc ) { return m_ppSvc ; }
+      m_ppSvc = svc<LHCb::IParticlePropertySvc>  
+        ( "LHCb::ParticlePropertySvc" , true ) ;
+      return m_ppSvc ;                                            
+    }
+    // ========================================================================
   private:
     // ========================================================================
     /// the actual type for the list of decays 
@@ -99,6 +111,8 @@ namespace LoKi
     // ========================================================================
     /// the list of decays to be "cc-fied":
     DECAYS m_decays ; // the list of decays to be "cc-fied"
+    /// the particle properties service 
+    mutable const LHCb::IParticlePropertySvc* m_ppSvc ; // the service 
     // ========================================================================
   };
   // ==========================================================================

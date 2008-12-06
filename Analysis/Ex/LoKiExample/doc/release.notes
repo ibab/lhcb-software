@@ -1,11 +1,17 @@
-! $Id: release.notes,v 1.45 2008-11-26 08:35:38 jpalac Exp $ 
+! $Id: release.notes,v 1.46 2008-12-06 16:31:28 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.45 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.46 $
 ! -----------------------------------------------------------------------------
 ! Package     :  LoKiExamples
 ! Responsible :  Vanya BELYAEV  ibelyaev@physics.syr.edu
 ! Purpose     :  Collection of examples for LoKi package 
 ! -----------------------------------------------------------------------------
+
+! 2008-12-06 - Vanya BELYAEV
+
+ - update for new particle properties
+ - cmt/requirements 
+   version increment to v8r2 
 
 !========================== Ex/LoKiExample v8r1 2008-11-26 ===================
 
@@ -45,7 +51,7 @@
  - remove amjority of *.opts examples 
     few remaning exmaples will be removed *SOON*
  - create many checked&tested *.py exmaples 
-    (see python/LoKiExmaple directory) 
+    (see python/LoKiExample directory) 
 
  - cmt/requirements
     version increment to v8r0 

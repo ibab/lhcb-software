@@ -1,4 +1,4 @@
-// $Id: LoKi_Decay.cpp,v 1.2 2008-10-09 10:26:11 ibelyaev Exp $
+// $Id: LoKi_Decay.cpp,v 1.3 2008-12-06 16:31:28 ibelyaev Exp $
 // =============================================================================
 // Include files 
 // =============================================================================
@@ -33,21 +33,21 @@ LOKI_ALGORITHM( DecayDescriptor )
   
   log << "Number of input particles: " << b.size() << endreq ;
 
-  LoKi::Decays::Node bquark = LoKi::Decays::Nodes::HasQuark ( LHCb::ParticleID::bottom ) ;
-  LoKi::Decays::Trees::Exclusive p1 ( bquark ) ;
+  Decays::Node bquark = Decays::Nodes::HasQuark ( LHCb::ParticleID::bottom ) ;
+  Decays::Trees::Exclusive p1 ( bquark ) ;
   
-  LoKi::Decays::Trees::Exclusive p2 
-    ( LoKi::Decays::Nodes::CC ( "B_s0" ) ) ;
+  Decays::Trees::Exclusive p2 
+    ( Decays::Nodes::CC ( "B_s0" ) ) ;
   p2 += "J/psi(1S)" ;
   p2 += "phi(1020)" ;
   
 
-  LoKi::Decays::Trees::Inclusive p3 
-    ( LoKi::Decays::Nodes::CC ( "B_s0" ) ) ;
+  Decays::Trees::Inclusive p3 
+    ( Decays::Nodes::CC ( "B_s0" ) ) ;
   p3 += "J/psi(1S)" ;
   
-  LoKi::Decays::Nodes::Meson meson ;
-  LoKi::Decays::Trees::Optional p4 ( meson ) ;
+  Decays::Nodes::Meson meson ;
+  Decays::Trees::Optional p4 ( meson ) ;
   p4 += "J/psi(1S)" ;
   p4.addOptional ("phi(1020)") ;
   

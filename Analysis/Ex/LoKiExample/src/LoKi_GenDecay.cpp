@@ -1,4 +1,4 @@
-// $Id: LoKi_GenDecay.cpp,v 1.3 2008-10-09 10:26:11 ibelyaev Exp $
+// $Id: LoKi_GenDecay.cpp,v 1.4 2008-12-06 16:31:28 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -22,112 +22,112 @@ LOKI_MCALGORITHM( GenDecayDescriptor )
   using namespace LoKi::Types ;
   using namespace LoKi::Cuts  ;
   
-  typedef LoKi::Decays::Trees::Marked_<const HepMC::GenParticle*> Marked ;
-  typedef LoKi::Decays::iTree_<const HepMC::GenParticle*>         iTree  ;
+  typedef Decays::Trees::Marked_<const HepMC::GenParticle*> Marked ;
+  typedef Decays::iTree_<const HepMC::GenParticle*>         iTree  ;
   
   // get all beauty mesons 
   GRange b = gselect ( "B" , GABSID == "B_s0" ) ;
   
   MsgStream& log = info() ;
   
-  LoKi::Decays::Node bquark = LoKi::Decays::Nodes::HasQuark ( LHCb::ParticleID::bottom ) ;
-  LoKi::Decays::Trees::GenExclusive p1 ( bquark ) ;
+  Decays::Node bquark = Decays::Nodes::HasQuark ( LHCb::ParticleID::bottom ) ;
+  Decays::Trees::GenExclusive p1 ( bquark ) ;
   
-  LoKi::Decays::Trees::GenExclusive p2 ( "B_s0" ) ;
+  Decays::Trees::GenExclusive p2 ( "B_s0" ) ;
   
-  LoKi::Decays::Node any = LoKi::Decays::Nodes::Any() ;  
-  LoKi::Decays::Trees::GenExclusive p3 ( any ) ;
+  Decays::Node any = Decays::Nodes::Any() ;  
+  Decays::Trees::GenExclusive p3 ( any ) ;
   
-  LoKi::Decays::Trees::GenExclusive p4 ( "B_s0" ) ;
+  Decays::Trees::GenExclusive p4 ( "B_s0" ) ;
   p4 += "J/psi(1S)" ;
   p4 += "phi(1020)" ;
   
-  LoKi::Decays::Trees::GenExclusive p5 ( "B_s~0" ) ;
+  Decays::Trees::GenExclusive p5 ( "B_s~0" ) ;
   p5 += "J/psi(1S)" ;
   p5 += "phi(1020)" ;
   
-  LoKi::Decays::Trees::GenExclusive p6 ( LoKi::Decays::Nodes::CC ( "B_s0" ) ) ;
+  Decays::Trees::GenExclusive p6 ( Decays::Nodes::CC ( "B_s0" ) ) ;
   p6 += "J/psi(1S)" ;
   p6 += "phi(1020)" ;
   
-  LoKi::Decays::Trees::GenInclusive p7 ( LoKi::Decays::Nodes::CC ( "B_s0" ) ) ;
+  Decays::Trees::GenInclusive p7 ( Decays::Nodes::CC ( "B_s0" ) ) ;
   p7 += "J/psi(1S)" ;
   
-  LoKi::Decays::Trees::GenInclusive p8 
-    ( LoKi::Decays::Nodes::CC ( "B_s0" ) , 
-      LoKi::Decays::Trees::Sections ) ;
-  p8 += LoKi::Decays::Nodes::EllPlus  () ;
+  Decays::Trees::GenInclusive p8 
+    ( Decays::Nodes::CC ( "B_s0" ) , 
+      Decays::Trees::Sections ) ;
+  p8 += Decays::Nodes::EllPlus  () ;
 
 
-  LoKi::Decays::Trees::GenInclusive p9 
-    ( LoKi::Decays::Nodes::CC ( "B_s0" ) , 
-      LoKi::Decays::Trees::Sections ) ;
-  p9 += LoKi::Decays::Nodes::EllPlus  () ;
-  p9 += LoKi::Decays::Nodes::EllMinus () ;
+  Decays::Trees::GenInclusive p9 
+    ( Decays::Nodes::CC ( "B_s0" ) , 
+      Decays::Trees::Sections ) ;
+  p9 += Decays::Nodes::EllPlus  () ;
+  p9 += Decays::Nodes::EllMinus () ;
 
-  LoKi::Decays::Trees::GenInclusive p10
-    ( LoKi::Decays::Nodes::CC ( "B_s0" ) , 
-      LoKi::Decays::Trees::Sections ) ;
-  p10 += LoKi::Decays::Nodes::EllPlus  () ;
-  p10 += LoKi::Decays::Nodes::EllMinus () ;
+  Decays::Trees::GenInclusive p10
+    ( Decays::Nodes::CC ( "B_s0" ) , 
+      Decays::Trees::Sections ) ;
+  p10 += Decays::Nodes::EllPlus  () ;
+  p10 += Decays::Nodes::EllMinus () ;
   p10 += "K-" ;
 
-  LoKi::Decays::Trees::GenInclusive p11
-    ( LoKi::Decays::Nodes::CC ( "B_s0" ) , 
-      LoKi::Decays::Trees::Sections ) ;
-  p11 += LoKi::Decays::Nodes::EllPlus  () ;
-  p11 += LoKi::Decays::Nodes::EllMinus () ;
+  Decays::Trees::GenInclusive p11
+    ( Decays::Nodes::CC ( "B_s0" ) , 
+      Decays::Trees::Sections ) ;
+  p11 += Decays::Nodes::EllPlus  () ;
+  p11 += Decays::Nodes::EllMinus () ;
   p11 += "K-" ;
   p11 += "K+" ;
   
-  LoKi::Decays::Trees::GenInclusive p12 ( p11 ) ;
+  Decays::Trees::GenInclusive p12 ( p11 ) ;
   p12 += "gamma" ;
 
 
-  LoKi::Decays::Trees::GenPhotos p13 ( p11 ) ;
+  Decays::Trees::GenPhotos p13 ( p11 ) ;
   
-  LoKi::Decays::Trees::GenOptional p14 
-    ( LoKi::Decays::Nodes::CC ( "B_s0" ) ,
-      LoKi::Decays::Trees::GenExclusive::SubTrees() ,
-      LoKi::Decays::Nodes::Pid( "phi(1020)" ) );
+  Decays::Trees::GenOptional p14 
+    ( Decays::Nodes::CC ( "B_s0" ) ,
+      Decays::Trees::GenExclusive::SubTrees() ,
+      Decays::Nodes::Pid( "phi(1020)" ) );
   p14 += "J/psi(1S)" ;
   
   
-  LoKi::Decays::Trees::GenPhotosOptional p15 ( p14 ) ;
+  Decays::Trees::GenPhotosOptional p15 ( p14 ) ;
 
 
-  LoKi::Decays::Trees::GenExclusive p16 ( p4 ) ;
-  p16.setOscillation ( LoKi::Decays::Trees::Oscillated ) ;
+  Decays::Trees::GenExclusive p16 ( p4 ) ;
+  p16.setOscillation ( Decays::Trees::Oscillated ) ;
 
-  LoKi::Decays::Trees::GenExclusive p17 
-    ( LoKi::Decays::Nodes::Pid ( "B_s~0" ) ) ;
+  Decays::Trees::GenExclusive p17 
+    ( Decays::Nodes::Pid ( "B_s~0" ) ) ;
   p17 += "J/psi(1S)" ;
   p17 += "phi(1020)" ;
-  p17.setOscillation ( LoKi::Decays::Trees::NotOscillated ) ;
+  p17.setOscillation ( Decays::Trees::NotOscillated ) ;
   
-  LoKi::Decays::Trees::GenExclusive p18 
-    ( LoKi::Decays::Nodes::Pid ( "B_s0" ) ) ;
+  Decays::Trees::GenExclusive p18 
+    ( Decays::Nodes::Pid ( "B_s0" ) ) ;
   p18 += "J/psi(1S)" ;
   p18 += "phi(1020)" ;
-  p18.setOscillation ( LoKi::Decays::Trees::Oscillated ) ;
+  p18.setOscillation ( Decays::Trees::Oscillated ) ;
   
-  LoKi::Decays::Tree_<const HepMC::GenParticle*> p19 = p17 || p18 ;
+  Decays::Tree_<const HepMC::GenParticle*> p19 = p17 || p18 ;
 
 
-  LoKi::Decays::Trees::GenExclusive p20 
-    ( LoKi::Decays::Nodes::Pid ( "B_s0" )  || "B_s~0") ;
+  Decays::Trees::GenExclusive p20 
+    ( Decays::Nodes::Pid ( "B_s0" )  || "B_s~0") ;
   p20 += "J/psi(1S)" ;
   p20 += "phi(1020)" ;
-  p20.setOscillation ( LoKi::Decays::Trees::Oscillated ) ;
+  p20.setOscillation ( Decays::Trees::Oscillated ) ;
 
 
-  LoKi::Decays::Trees::GenExclusive p21 ( "B_s0" ) ;
+  Decays::Trees::GenExclusive p21 ( "B_s0" ) ;
   p21 += "J/psi(1S)" ;
-  p21 += Marked ( LoKi::Decays::Trees::GenExclusive ( "phi(1020)" ) ) ;
+  p21 += Marked ( Decays::Trees::GenExclusive ( "phi(1020)" ) ) ;
 
-  LoKi::Decays::Trees::GenExclusive p22 ( "B_s0" ) ;
-  p22 += Marked ( LoKi::Decays::Trees::GenExclusive ( "J/psi(1S)" ) ) ;
-  p22 += Marked ( LoKi::Decays::Trees::GenExclusive ( "phi(1020)" ) ) ;
+  Decays::Trees::GenExclusive p22 ( "B_s0" ) ;
+  p22 += Marked ( Decays::Trees::GenExclusive ( "J/psi(1S)" ) ) ;
+  p22 += Marked ( Decays::Trees::GenExclusive ( "phi(1020)" ) ) ;
   
   Assert ( p1  . validate ( ppSvc () ) . isSuccess () , "p1  is invalid!" ) ;
   Assert ( p2  . validate ( ppSvc () ) . isSuccess () , "p2  is invalid!" ) ;
