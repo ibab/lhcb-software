@@ -4,7 +4,7 @@
  *  Implementation file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.40 2008-10-20 15:16:52 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.cpp,v 1.41 2008-12-06 16:40:23 ibelyaev Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -410,7 +410,7 @@ std::string
 ParticleEffPurMoni::mcParticleName( const LHCb::MCParticle * mcPart )
 {
   // Get the particles properties for this MCParticle only
-  const ParticleProperty * mcProp = ( mcPart ? partProp(mcPart->particleID()) : NULL );
+  const LHCb::ParticleProperty * mcProp = ( mcPart ? partProp(mcPart->particleID()) : NULL );
   // return
   return ( mcProp ? mcProp->particle() : "NoMC" );
 }
@@ -425,7 +425,7 @@ std::string ParticleEffPurMoni::mcParticleNameTree( const LHCb::MCParticle * mcP
     while ( mcPart && nTree<m_maxMCTreeSize )
     {
       // Get the particles properties for this MCParticle only
-      const ParticleProperty * mcProp = partProp(mcPart->particleID());
+      const LHCb::ParticleProperty * mcProp = partProp(mcPart->particleID());
       if (mcProp)
       {
         if ( !name.empty() ) name = " -> "+name;
@@ -568,14 +568,14 @@ ParticleEffPurMoni::mcParticle( const LHCb::Particle * part ) const
   }
 }
 
-const ParticleProperty *
-ParticleEffPurMoni::partProp( const LHCb::ParticleID id ) const
+const LHCb::ParticleProperty *
+ParticleEffPurMoni::partProp( const LHCb::ParticleID& id ) const
 {
-  const ParticleProperty * prop = ppSvc()->findByStdHepID( id.pid() );
+  const LHCb::ParticleProperty * prop = ppSvc()->find ( id );
   if ( NULL == prop )
   {
     std::ostringstream mess;
-    mess << "ParticleProperty missing for ParticleID " << id;
+    mess << "LHCb::ParticleProperty missing for ParticleID " << id;
     Warning( mess.str(), StatusCode::SUCCESS, 1 );
   }
   return prop;
@@ -596,7 +596,7 @@ ParticleEffPurMoni::addParticle( const LHCb::Particle * particle,
   }
 
   // get the history for the Particle
-  const ParticleProperty * prop = partProp( particle->particleID() );
+  const LHCb::ParticleProperty * prop = partProp( particle->particleID() );
   // If not available, just abort
   if ( !prop ) { return; }
 

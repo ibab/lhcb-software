@@ -4,7 +4,7 @@
  *  Header file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.h,v 1.28 2008-07-31 16:59:12 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.h,v 1.29 2008-12-06 16:40:23 ibelyaev Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -204,10 +204,10 @@ private: // definitions
   class ParticleHistory
   {
   public:
-    ParticleHistory( const LHCb::Particle * _part,
-                     const LHCb::Particle * _prim_part,
-                     const std::string & _history,
-                     const ParticleProperty * _prop,
+    ParticleHistory( const LHCb::Particle*        _part,
+                     const LHCb::Particle*        _prim_part,
+                     const std::string&           _history,
+                     const LHCb::ParticleProperty* _prop,
                      const bool _orig )
       : particle       ( _part      ),
         firstParticle  ( _prim_part ),
@@ -218,7 +218,7 @@ private: // definitions
     const LHCb::Particle * particle;      ///< Pointer to the Particle
     const LHCb::Particle * firstParticle; ///< Pointer to the first Particle
     std::string history;                  ///< Particle history
-    const ParticleProperty * properties;  ///< Properties
+    const LHCb::ParticleProperty * properties;  ///< Properties
     bool topLevel;                        ///< Was the Particle in one of the original input locations
   public:
     typedef std::map<ParticleHistory,unsigned int> Map;
@@ -448,10 +448,10 @@ private: // methods
     // CRJ : Need to decide what to do for neutrals
     return ( NULL != proto->track() ? proto->track()->pt() : 0 );
   }
-
+  
   /// Returns the ParticleProperty object for a given ParticleID
-  const ParticleProperty * partProp( const LHCb::ParticleID id ) const;
-
+  const LHCb::ParticleProperty * partProp( const LHCb::ParticleID& id ) const;
+  
   /// Access the Particle Linker appropriate for the given Particle
   Particle2MCLinker * particleLinker( const LHCb::Particle * /* part */ ) const;
 
