@@ -1,10 +1,10 @@
-#$Id: requirements,v 1.8 2008-11-18 10:31:20 graven Exp $
+#$Id: requirements,v 1.9 2008-12-07 13:17:44 ibelyaev Exp $
 #============================================================================
 # Created    : 2008-01-21
 # Maintainer : Bruno Souza de Paula	 
 #============================================================================
 package           HltGlobalMonitor
-version           v1r6
+version           v1r6p1
 
 # Structure
 #============================================================================
@@ -28,7 +28,7 @@ use Boost        v*   LCG_Interfaces
 #============================================================================
 # Component library building rule
 #============================================================================
-library          HltGlobalMonitor    ../src/*.cpp
+library          HltGlobalMonitor ../src/*.cpp -import=LCG_Interfaces/AIDA
 
 #============================================================================
 # define component library link options

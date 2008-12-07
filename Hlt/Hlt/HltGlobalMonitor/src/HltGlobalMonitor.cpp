@@ -192,9 +192,9 @@ void HltGlobalMonitor::monitorAlleysinput() {
   }
   fill(m_histoodinentry, odin->triggerType(), 1.);
   if (odin->triggerType()==ODIN::RandomTrigger){
-    ++m_randallcall
+    ++m_randallcall ;
   } else {
-    ++m_physallcall
+    ++m_physallcall ;
   }
   if (!exist<LHCb::HltDecReports>( m_location )){
     error() << "No HltDecReport" << endreq;
