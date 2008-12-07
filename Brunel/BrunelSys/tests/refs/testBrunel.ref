@@ -32,7 +32,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v34r0
-                                          running on lxbuild120.cern.ch on Fri Dec  5 11:01:56 2008
+                                          running on lxbuild120.cern.ch on Sun Dec  7 15:11:54 2008
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -46,7 +46,7 @@ TransportSvc         INFO Recovery of geometry errors is  ENABLED
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   1.99 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.83 times the speed of a 2.8 GHz Xeon.
 BrunelSequencer      INFO Member list: ProcessPhase/Init, ProcessPhase/Reco, ProcessPhase/Moni, ProcessPhase/MCLinks, ProcessPhase/Check, ProcessPhase/Output
 Init                 INFO Member list: GaudiSequencer/InitReprocSeq, GaudiSequencer/InitBrunelSeq, GaudiSequencer/InitCaloSeq
 InitReprocSeq        INFO Member list:
@@ -572,7 +572,7 @@ MCLinksL0Seq         INFO Member list:
 MCLinksUnpackSeq     INFO Member list: UnpackMCParticle, UnpackMCVertex
 MCLinksTrSeq         INFO Member list: TrackAssociator
 Check                INFO Member list: GaudiSequencer/CheckPatSeq, GaudiSequencer/CheckRICHSeq, GaudiSequencer/CheckMUONSeq
-CheckPatSeq          INFO Member list: TrackAssociator/AssocVeloRZ, TrackAssociator/AssocVelo, TrackAssociator/AssocVeloTT, TrackAssociator/AssocForward, TrackAssociator/AssocTTrack, TrackAssociator/AssocMatch, TrackAssociator/AssocDownstream, TrackResChecker, TrackEffChecker/VeloRZ, TrackEffChecker/Velo, TrackEffChecker/VeloTT, TrackEffChecker/Forward, TrackEffChecker/TTrack, TrackEffChecker/Match, TrackEffChecker/Downstream, TrackEffChecker/BestTracks
+CheckPatSeq          INFO Member list: TrackAssociator/AssocVeloRZ, TrackAssociator/AssocVelo, TrackAssociator/AssocVeloTT, TrackAssociator/AssocForward, TrackAssociator/AssocTTrack, TrackAssociator/AssocMatch, TrackAssociator/AssocDownstream, TrackResChecker, TrackEffChecker/VeloRZ, TrackEffChecker/Velo, TrackEffChecker/VeloTT, TrackEffChecker/Forward, TrackEffChecker/TTrack, TrackEffChecker/Match, TrackEffChecker/Downstream, TrackEffChecker/BestTracks, PrimaryVertexChecker/PVOfflineCheck
 TrackResChecker...   INFO MCParticle Momentum cut     : 0 GeV/c < P < 1.79769e+308 GeV/c
 TrackResChecker...   INFO            Beta * gamma cut : 0 < beta*gamma
 TrackResChecker...   INFO            Eta cut          : -1.79769e+308 < P < 1.79769e+308
@@ -784,6 +784,41 @@ Downstream           INFO    long, p > 5 GeV  :            0 from        0 [  0.
 BestTracks           INFO              **************                       0 tracks including        0 ghosts [  0.0 %] Event average   0.0  ****
 BestTracks           INFO      all  long      :            0 from        0 [  0.0 %];   0.0 % clones;   0.0 % hit purity
 BestTracks           INFO    long, p > 5 GeV  :            0 from        0 [  0.0 %];   0.0 % clones;   0.0 % hit purity
+PVOfflineCheck       INFO  ============================================
+PVOfflineCheck       INFO  Efficiencies for reconstructible MC vertices:
+PVOfflineCheck       INFO  ============================================
+PVOfflineCheck       INFO
+PVOfflineCheck       INFO  MC PV is reconstructible if at least 5  tracks are reconstructed
+PVOfflineCheck       INFO  MC PV is isolated if dz to closest reconstructible MC PV >  10 mm
+PVOfflineCheck       INFO  REC and MC vertices matched:  by counting tracks
+PVOfflineCheck       INFO
+PVOfflineCheck       INFO All                  :   0.000 (       0 /        0 )
+PVOfflineCheck       INFO Isolated             :   0.000 (       0 /        0 )
+PVOfflineCheck       INFO Close                :   0.000 (       0 /        0 )
+PVOfflineCheck       INFO False rate           :   0.000 (       0 /        0 )
+PVOfflineCheck       INFO
+PVOfflineCheck       INFO L0 accepted PV of B  :   0.000 (       0 /        0 )
+PVOfflineCheck       INFO False PV as B        :   0.000 (       0 /        0 )
+PVOfflineCheck       INFO
+PVOfflineCheck       INFO       --------------------------------------------
+PVOfflineCheck       INFO            Substatistics:
+PVOfflineCheck       INFO       --------------------------------------------
+PVOfflineCheck       INFO       1st PV (highest multiplicity):
+PVOfflineCheck       INFO All                  :   0.000 (       0 /        0 )
+PVOfflineCheck       INFO Isolated             :   0.000 (       0 /        0 )
+PVOfflineCheck       INFO Close                :   0.000 (       0 /        0 )
+PVOfflineCheck       INFO       ---------------------------------------
+PVOfflineCheck       INFO       2nd PV:
+PVOfflineCheck       INFO All                  :   0.000 (       0 /        0 )
+PVOfflineCheck       INFO Isolated             :   0.000 (       0 /        0 )
+PVOfflineCheck       INFO Close                :   0.000 (       0 /        0 )
+PVOfflineCheck       INFO       ---------------------------------------
+PVOfflineCheck       INFO       3rd PV:
+PVOfflineCheck       INFO All                  :   0.000 (       0 /        0 )
+PVOfflineCheck       INFO Isolated             :   0.000 (       0 /        0 )
+PVOfflineCheck       INFO Close                :   0.000 (       0 /        0 )
+PVOfflineCheck       INFO
+PVOfflineCheck       INFO  ============================================
 RiCKResAll           INFO ==============================================================================
 RiCKResAll           INFO  Track Selection : [Forward, Match, Seed, VeloTT, KsTrack]
 RiCKResAll           INFO                  : beta > [0, 0, 0]
@@ -861,7 +896,7 @@ ToolSvc.Offline...WARNING Rich::Rec::PixelCreatorFromRawBuffer:: No pixels produ
 ToolSvc.Offline...SUCCESS Exceptions/Errors/Warnings Statistics : 0/0/1
 ToolSvc.Offline...SUCCESS  #WARNINGS   = 1        Message = 'No pixels produced'
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   1.99 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.83 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -1082,6 +1117,7 @@ TimingAuditor.T...   INFO     TTrack                    |     0.000 |     0.000 
 TimingAuditor.T...   INFO     Match                     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     Downstream                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     BestTracks                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO     PVOfflineCheck            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO    CheckRICHSeq               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     RichRawMoni               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      RichRawDataDBCheck       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
