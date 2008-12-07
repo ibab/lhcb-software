@@ -16,37 +16,16 @@ from Gauss.Configuration import *
 ec = EventClockSvc()
 ec.addTool(FakeEventTime(), name="EventTimeDecoder")
 ec.EventTimeDecoder.StartTime = 0
-ec.EventTimeDecoder.TimeStep  = 25*ns
+ec.EventTimeDecoder.TimeStep  = 25*SystemOfUnits.ns
 
 #--Generic Gauss options
 importOptions('$GAUSSOPTS/Gauss.opts')
 
 #--Geometry dependent options, use information from SIMCOND for positions
-importOptions('$DDDBROOT/options/DDDB.py')
-importOptions('$DDDBROOT/options/LHCb-2008.py')
-CondDBCnvSvc( CondDBReader = allConfigurables["SimulationCondDBReader"] )
+LHCbApp( DataType = "2008", Simulation = True )
+
 giGaGeo = GiGaGeo()
 giGaGeo.UseAlignment      = True
 giGaGeo.AlignAllDetectors = True
-importOptions('$GAUSSOPTS/SimVeloGeometry.opts')  # -- To misalign VELO
+importOptions('$GAUSSOPTS/SimVeloGeometry.py')  # -- To misalign VELO
 
-#--Ensure DetectorDataSvc is instantiated BEFORE GiGaGeo
-l = ApplicationMgr().ExtSvc
-new_l = []
-dds = False
-for i in l:
-    if hasattr(i,"getFullName"):
-        n = i.getFullName()
-    else:
-        n = i
-    if "DetectorDataSvc" not in n:
-        new_l.append(i)
-    elif not dds:
-        new_l.append(i)
-        dds = True
-
-ApplicationMgr().ExtSvc = new_l
-
-#--Take particle property table from DDDB instead of text file
-VFSSvc().FileAccessTools.append(CondDBEntityResolver())
-ParticlePropertySvc().ParticlePropertiesFile = 'conddb:///param/ParticleTable.txt'

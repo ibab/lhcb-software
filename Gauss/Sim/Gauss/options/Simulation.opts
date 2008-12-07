@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.89 2008-12-02 17:43:25 gcorti Exp $ 
+// $Id: Simulation.opts,v 1.90 2008-12-07 16:43:43 gcorti Exp $ 
 
 /** @file 
  * 
@@ -31,8 +31,9 @@ Simulation.Members += { "GiGaInputStream/Geo" };
 // Steering of the simulation
 //---------------------------------------------------------------------------
 // Pass the generator event to Geant4
-Simulation.Members += { "GenerationToSimulation" };
-GenerationToSimulation.LookForUnknownParticles = true;
+Simulation.Members += { "GeneratorToG4" };
+//Simulation.Members += { "GenerationToSimulation" };
+//GenerationToSimulation.LookForUnknownParticles = true;
 
 // Perform the Geant4 simulation
 Simulation.Members += { "GiGaFlushAlgorithm" };
@@ -40,8 +41,9 @@ Simulation.Members += { "GiGaFlushAlgorithm" };
 Simulation.Members += { "GiGaCheckEventStatus" };
 
 // Populate the MCParticles/MCVertices in the TES with HEPMC internally
-Simulation.Members += { "SimulationToMCTruth" };
-SimulationToMCTruth.CheckForUnknownParticle = true;
+Simulation.Members += { "G4HepMCToMCTruth" };
+//Simulation.Members += { "SimulationToMCTruth" };
+//SimulationToMCTruth.CheckForUnknownParticle = true;
 
 // Populate sensitive hits in the TES for all sub-detectors
 Simulation.Members += { "GaudiSequencer/DetectorsHits" };

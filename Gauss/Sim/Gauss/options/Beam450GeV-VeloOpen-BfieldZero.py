@@ -32,4 +32,4 @@ importOptions("$GAUSSOPTS/PilotRun.opts")
 
 #--Starting time
 ec = EventClockSvc()
-ec.EventTimeDecoder.StartTime = 111000*ns
+ec.EventTimeDecoder.StartTime = 111000*SystemOfUnits.ns

@@ -1,4 +1,4 @@
-// $Id: GaussTape.opts,v 1.28 2008-06-16 08:35:04 gcorti Exp $ 
+// $Id: GaussTape.opts,v 1.29 2008-12-07 16:43:43 gcorti Exp $ 
 
 /** @file 
  * 
@@ -16,6 +16,18 @@
  */
 
 #include "$STDOPTS/SimContent.opts"
+
+// Packing event 
+// Simulation.Members += { "PackMCParticle", "PackMCVertex" };
+// GaussTape.ItemList -= { 
+//   "/Event/MC/Particles#1"
+//  ,"/Event/MC/Vertices#1"
+// }; 
+// GaussTape.ItemList += {
+//   "/Event/pSim/MCParticles#1"
+//  ,"/Event/pSim/MCVertices#1"
+// };
+
  
 GaussTape.Preload     = false ; // ATTENTION ! it MUST be FALSE for GiGa! 
 GaussTape.OutputLevel = 3;
