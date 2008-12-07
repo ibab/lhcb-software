@@ -1,4 +1,4 @@
-// $Id: HltFunctions.cpp,v 1.6 2008-01-22 14:26:38 hernando Exp $
+// $Id: HltFunctions.cpp,v 1.7 2008-12-07 14:34:29 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -65,16 +65,16 @@ LoKi::Tracks::DeltaE::result_type
 LoKi::Tracks::DeltaE::operator() 
   ( LoKi::Tracks::DeltaE::argument t ) const 
 { 
-  if ( !t.hasStateAt(LHCb::State::MidHCal) ) 
+  // get the state:
+  const LHCb::State* s  = t.stateAt(LHCb::State::MidHCal) ;
+  if ( 0 == s ) 
   { 
     Warning("No state at MidHcal, return +inf") ;
     return LoKi::Constants::PositiveInfinity ;                // RETURN
   }  
-  // get the state:
-  const LHCb::State& s = t.stateAt(LHCb::State::MidHCal) ;
   // calculate delta E: 
-  const double p  = t . p () ;
-  const double e  = s . p () ;
+  const double p  = t .  p () ;
+  const double e  = s -> p () ;
   const double de = e * ( sqrt ( 0.60 * 0.60 + 0.70 * 0.70 / e ) ) ;
   //
   return (e-p)/de ;                                            // REUTRN   

@@ -1,4 +1,4 @@
-// $Id: LTTools.h,v 1.2 2008-11-14 12:56:03 ibelyaev Exp $
+// $Id: LTTools.h,v 1.3 2008-12-07 14:34:30 ibelyaev Exp $
 // ============================================================================
 #ifndef LTTOOLS_H 
 #define LTTOOLS_H 1
@@ -30,7 +30,7 @@ namespace LoKi { class AuxFunBase ; }
 // ============================================================================
 namespace LoKi
 {
-  // =========================================================================
+  // ==========================================================================
   namespace Hlt1
   {
     // ========================================================================
@@ -78,7 +78,7 @@ namespace LoKi
         return dynamic_cast<Hlt::TSelection<TYPE>*>( sel ) ;
       } 
       // ======================================================================
-      /// cast the seelction
+      /// cast the selection
       template <class TYPE>
       inline const Hlt::TSelection<TYPE>* cast ( const Hlt::Selection* sel ) 
       {
