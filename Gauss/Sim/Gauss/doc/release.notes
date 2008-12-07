@@ -27,7 +27,48 @@
    . python/Gauss/Configuration.py
    . Gauss-2008.py
    . Beam450GeV-VeloOpen-BfieldZero.py
+ - Rename files specifing beam/velo pos/magnet to have -Mag{Down,Off,Up} 
+   instead of Bfield{Zero,Neg} similarly to what in SIMCOND:   
+     Polarity -1 -> Down  (Default)
+              +1 -> Up
+   Introduce all options for Velo{Open,Closed}-Mag{Down,Off,Up} for 7 TeV
+   beam, and those missing for 5 TeV and 450 GeV.
+   It is possible to indentify in the data the different configurations 
+   because a different start time for the event time is set, with the following
+   convention 
+     1. beam energy E*100000*ns
+        E = 0 for   7 TeV
+            1 for 450 GeV
+            2 for   5 TeV
+     2. velo position V*10000*ns
+        V = 0 for velo closed
+            1 for velo open
+     3. magnet condition M*1000*ns
+        M = 0 for magnet down
+            1 for magnet off
+            2 for magnet up
 
+   . REMOVED                           REPLACED by                    StartTime
+     Beam450GeV-VeloOpen-BfieldNeg.py  Beam450GeV-VeloOpen-MagDown.py 110000*ns
+     Beam450GeV-VeloOpen-BfieldZero.py Beam450GeV-VeloOpen-MagOff.py  111000*ns
+     Beam5TeV-VeloClosed-BfieldNeg.py  Beam5TeV-VeloClosed-MagDown.py 200000*ns
+     Beam5TeV-VeloClosed-BfieldZero.py Beam5TeV-VeloClosed-MagOff.py  201000*ns
+     Beam5TeV-VeloOpen-BfieldNeg.py    Beam5TeV-VeloOpen-MagDown.py   210000*ns
+     Beam5TeV-VeloOpen-BfieldZero.py   Beam5TeV-VeloOpen-MagOff.py    211000*ns
+
+   . NEW                                StartTime
+     Beam450GeV-VeloClosed-MagDown.py   100000*ns
+     Beam450GeV-VeloClosed-MagOff.py    101000*ns
+     Beam450GeV-VeloClosed-MagUp.py     102000*ns
+     Beam450GeV-VeloOpen-MagUp.py       112000*ns
+     Beam5TeV-VeloClosed-MagUp.py       202000*ns
+     Beam5TeV-VeloOpen-MagUp.py         212000*ns
+     Beam7TeV-VeloClosed-MagDown.py          0*ns
+     Beam7TeV-VeloClosed-MagOff.py        1000*ns
+     Beam7TeV-VeloClosed-MagUp.py         2000*ns
+     Beam7TeV-VeloOpen-MagDown.py        10000*ns
+     Beam7TeV-VeloOpen-MagOff.py         11000*ns
+     Beam7TeV-VeloOpen-MagUp.py          12000*ns
 
 ! 2008-12-02 - Gloria CORTI
  - Replace MCtruth mechanism from/to Geant4: only particle traveling are
