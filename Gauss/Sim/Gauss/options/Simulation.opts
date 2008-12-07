@@ -1,4 +1,4 @@
-s// $Id: Simulation.opts,v 1.91 2008-12-07 16:52:02 gcorti Exp $ 
+// $Id: Simulation.opts,v 1.92 2008-12-07 16:54:13 gcorti Exp $ 
 
 /** @file 
  * 
@@ -43,7 +43,7 @@ Simulation.Members += { "GiGaCheckEventStatus" };
 // Populate the MCParticles/MCVertices in the TES with HEPMC internally
 //Simulation.Members += { "G4HepMCToMCTruth" };      // DC06 mechanism
 Simulation.Members += { "SimulationToMCTruth" };     // new mechanism
-//SimulationToMCTruth.CheckForUnknownParticle = true;
+SimulationToMCTruth.CheckForUnknownParticle = true;
 
 // Populate sensitive hits in the TES for all sub-detectors
 Simulation.Members += { "GaudiSequencer/DetectorsHits" };
