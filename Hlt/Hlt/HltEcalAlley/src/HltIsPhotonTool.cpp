@@ -1,4 +1,4 @@
-// $Id: HltIsPhotonTool.cpp,v 1.3 2008-12-03 12:30:54 graven Exp $
+// $Id: HltIsPhotonTool.cpp,v 1.4 2008-12-07 13:23:45 ibelyaev Exp $
 // Include files 
 
 // from Gaudi
@@ -81,13 +81,13 @@ double HltIsPhotonTool::function(const Track& ctrack)
   // check if has state at Calo, get xy at the state
   double xc;
   double yc;
-  if ( ctrack.hasStateAt(State::MidHCal) ) {    
-    xc = ctrack.stateAt(State::MidHCal).x();
-    yc = ctrack.stateAt(State::MidHCal).y();
-  } else {
-    return -9999999.;
+  {
+    const LHCb::State* state = ctrack.stateAt ( LHCb::State::MidHCal )  ;
+    if ( 0 == state ) { return -9999999.; }                  // RETURN 
+    xc = state -> x () ;
+    yc = state -> y () ;
   }
-
+  
   // get LHCbID of coresponding L0CaloCandidate
   std::vector< LHCb::LHCbID >  lista=   ctrack.lhcbIDs ();
   LHCb::CaloCellID *idL0 = 0;

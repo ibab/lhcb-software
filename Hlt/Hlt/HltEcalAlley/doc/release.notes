@@ -3,6 +3,10 @@
 ! Responsible : Mariusz Witek
 ! Purpose     : Ecal alley specific algorithms and tools
 !----------------------------------------------------------------------------
+
+! 2008-12-07 - Vanya BELYAEV
+ - fix for new signature of LHCb::Track:stateAt  
+
 ! 2008-12-03 - Gerhard Raven
  - fix a small (one-time only) memory leak
 
