@@ -11,6 +11,9 @@
    packing of MCParticles and MCVertices
    . Common.opts
    . Gauss.opts
+ - Removed obsolte options for setting of magnetic field maps, now taken
+   from ConfDDDB
+   . MeasuredFieldMap.opts - REMOVED
 
 ! 2008-12-02 - Gloria CORTI
  - Replace MCtruth mechanism from/to Geant4: only particle traveling are
