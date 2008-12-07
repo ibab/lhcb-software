@@ -1,16 +1,22 @@
 # File for setting SIMCOND settings from python promt for a given
 # configuration: Beam energy, Velo Status, Magnetic Field Status 
 #
-# Beam5TeV-VeloClosed-BfieldZero 
+# Beam5TeV-VeloOpen-MagOff 
 #
 # Syntax is: 
 #  gaudirun.py $GAUSSOPTS/Gauss-2008.py
-#              $GAUSSOPTS/Beam5TeV-VeloClosed-BfieldZero.py
+#              $GAUSSOPTS/Beam5TeV-VeloOpen-MagOff.py
 #              $DECFILESROOT/options/30000000.opts (ie. event type)
-#              $GAUSSOPTS/Gauss-JobExample.py (ie. job specific: random seed,
-#                                                  output file names...)
+#              $GAUSSOPTS/Gauss-Job.py (ie. job specific: random seed,
+#                                                         output file names...)
 #
 from Gauss.Configuration import *
+
+#--Tell SIMCOND tag to generate Open VELO
+from DetCond.Configuration import addCondDBLayer
+simCondVelo = allConfigurables["SIMCOND"].clone("VELOCOND")
+simCondVelo.DefaultTAG = "velo-open"
+addCondDBLayer(simCondVelo)
 
 #--Tell SIMCOND to generate Magnetic Field OFF, will be as tag "magnet-off"
 from Configurables import UpdateManagerSvc
@@ -25,4 +31,4 @@ importOptions("$GAUSSOPTS/BeamCond-5TeV.opts")
 
 #--Starting time
 ec = EventClockSvc()
-ec.EventTimeDecoder.StartTime = 201000*ns
+ec.EventTimeDecoder.StartTime = 211000*SystemOfUnits.ns

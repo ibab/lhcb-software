@@ -1,14 +1,14 @@
 # File for setting SIMCOND settings from python promt for a given
 # configuration: Beam energy, Velo Status, Magnetic Field Status 
 #
-# Beam5TeV-VeloClosed-BfieldNeg
+# Beam5TeV-VeloClosed-MagDown
 #
 # Syntax is: 
 #  gaudirun.py $GAUSSOPTS/Gauss-2008.py
-#              $GAUSSOPTS/Beam5TeV-VeloClosed-BfieldNeg.py
+#              $GAUSSOPTS/Beam5TeV-VeloClosed-MagDown.py
 #              $DECFILESROOT/options/30000000.opts (ie. event type)
-#              $GAUSSOPTS/Gauss-JobExample.py (ie. job specific: random seed,
-#                                                  output file names...)
+#              $GAUSSOPTS/Gauss-Job.py (ie. job specific: random seed,
+#                                                         output file names...)
 #
 from Gauss.Configuration import *
 
@@ -19,4 +19,4 @@ importOptions("$GAUSSOPTS/BeamCond-5TeV.opts")
 
 #--Starting time
 ec = EventClockSvc()
-ec.EventTimeDecoder.StartTime = 200000*ns
+ec.EventTimeDecoder.StartTime = 200000*SystemOfUnits.ns

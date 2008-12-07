@@ -1,11 +1,11 @@
 # File for setting SIMCOND settings from python promt for a given
 # configuration: Beam energy, Velo Status, Magnetic Field Status 
 #
-# Beam450GeV-VeloOpen-BfieldNeg 
+# Beam450GeV-VeloOpen-MagDown
 #
 # Syntax is: 
 #  gaudirun.py $GAUSSOPTS/Gauss-2008.py
-#              $GAUSSOPTS/Beam450GeV-VeloClose-BfieldNeg.py
+#              $GAUSSOPTS/Beam450GeV-VeloClose-MagDown.py
 #              $DECFILESROOT/options/30000000.opts (ie. event type)
 #              $GAUSSOPTS/Gauss-Job.py (ie. job specific: random seed,
 #                                                         output file names...)
@@ -31,4 +31,4 @@ gen.SampleGenerationTool.ProductionTool.BeamToolName.HorizontalCrossingAngle = 2
 
 #--Starting time
 ec = EventClockSvc()
-ec.EventTimeDecoder.StartTime = 110000*ns
+ec.EventTimeDecoder.StartTime = 110000*SystemOfUnits.ns
