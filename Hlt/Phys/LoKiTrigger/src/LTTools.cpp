@@ -1,4 +1,4 @@
-// $Id: LTTools.cpp,v 1.3 2008-12-07 14:34:29 ibelyaev Exp $
+// $Id: LTTools.cpp,v 1.4 2008-12-07 14:51:11 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -96,8 +96,8 @@ bool LoKi::Hlt1::Utils::CmpTrack::compare
     else if  ( key2 < key1 ) { return false ; }
   }
   // compare by LHCbIDs 
-  //if      ( trk1 -> lhcbIDs   () < trk2 -> lhcbIDs   () ) { return true  ; }
-  //else if ( trk2 -> lhcbIDs   () < trk1 -> lhcbIDs   () ) { return false ; }
+  if      ( trk1 -> lhcbIDs   () < trk2 -> lhcbIDs   () ) { return true  ; }
+  else if ( trk2 -> lhcbIDs   () < trk1 -> lhcbIDs   () ) { return false ; }
   // compare by extra info 
   if      ( trk1 -> extraInfo () < trk2 -> extraInfo () ) { return true  ; }
   else if ( trk2 -> extraInfo () < trk1 -> extraInfo () ) { return false ; }
