@@ -4,6 +4,14 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2008-12-07 - Gloria CORTI
+ - Remove setting of particle table file, that is taken from ConfDDDB.
+   . Common.opts
+ - Move GaussTape.opts to be included from Gauss.opts, in odred to put there
+   packing of MCParticles and MCVertices
+   . Common.opts
+   . Gauss.opts
+
 ! 2008-12-02 - Gloria CORTI
  - Replace MCtruth mechanism from/to Geant4: only particle traveling are
    passed to Geant4 and the resonance are made as MCParticles when passing

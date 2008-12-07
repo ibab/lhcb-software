@@ -1,4 +1,4 @@
-// $Id: Common.opts,v 1.29 2008-07-22 17:02:49 gcorti Exp $ 
+// $Id: Common.opts,v 1.30 2008-12-07 16:23:44 gcorti Exp $ 
 
 /** @file 
  * 
@@ -14,7 +14,6 @@
 
 // Configuration of various services that are used: 
 RndmGenSvc.Engine.SetSingleton   = true;
-ParticlePropertySvc.ParticlePropertiesFile = "$PARAMFILESROOT/data/ParticleTableWithCorrectPDGId.txt" ;
 
 // No events are read as input
 ApplicationMgr.EvtSel  = "NONE" ;
@@ -36,9 +35,6 @@ EventDataSvc.ForceLeaves         = true ;
 // POOL persistency 
 EventPersistencySvc.CnvServices  = [];  
 #include "$STDOPTS/SimDicts.opts"
-
-// Objects to be written to output file
-#include "$GAUSSOPTS/GaussTape.opts"        
 
 // Other outputs
 ApplicationMgr.HistogramPersistency = "NONE";

@@ -1,4 +1,4 @@
-// $Id: Gauss.opts,v 1.105 2008-06-05 09:51:55 gcorti Exp $ 
+// $Id: Gauss.opts,v 1.106 2008-12-07 16:25:51 gcorti Exp $ 
 
 /** @file 
  * 
@@ -61,7 +61,8 @@ Simulation.Members      += { "GaudiSequencer/SimMonitor" };
 //---------------------------------------------------------------------------
 // Write an output file (configuration set in GaussTape.opts, always included)
 //---------------------------------------------------------------------------
-ApplicationMgr.OutStream +=  { "GaussTape" };
+#include "$GAUSSOPTS/GaussTape.opts"
+ApplicationMgr.OutStream += { "GaussTape" };
 
 //---------------------------------------------------------------------------
 // Add here any job specific options, to over-ride previously defined options
