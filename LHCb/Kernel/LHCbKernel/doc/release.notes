@@ -4,6 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2008-12-07 - Vanya BELYAEV
+ - xmt/LHCbID.xml 
+    add the comparison "less"-operator 
+
 ! 2008-12-04 - Olivier Callot
  - Upgrade the logPacked decoder, to restore int if the value was an int, 
    this means positive and close at 10-7 of an int. 

@@ -20,7 +20,7 @@
 
        <enum
           desc   = "types of sub-detector channel ID"
-          name   = "channelIDType"
+          name   = "channelIDype"
           value  = "Velo=1, TT, IT, OT, Rich, Calo, Muon"
           access = 'PUBLIC'
        />
@@ -42,6 +42,17 @@
          desc    = 'comparison equality'>
          <code>
   return (this->lhcbID() == chanID.lhcbID());
+         </code>
+       </method>
+
+       <method
+         type    = 'bool'
+         name    = 'operator&lt;'
+         argList = 'const LHCbID chanID'
+         const   = 'TRUE'
+         desc    = 'comparison ordering'>
+         <code>
+  return  ( m_lhcbID &lt; chanID.m_lhcbID ) ;
          </code>
        </method>
 
