@@ -4,6 +4,7 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+
 ! 2008-12-07 - Gloria CORTI
  - Remove setting of particle table file, that is taken from ConfDDDB.
    . Common.opts
@@ -14,6 +15,19 @@
  - Removed obsolte options for setting of magnetic field maps, now taken
    from ConfDDDB
    . MeasuredFieldMap.opts - REMOVED
+ - Adapt main configuration to Gaudi v20r3:
+   + replace import of DDDB.py and LHCb-2008.py, and setting of SIMCOND as
+     conditions DB with LHCbApp( DataType = "2008", Simulation = True )
+   + no longer necessary to force DetectorDataSvc to be instantiated before
+     GiGa (automatically done)
+   + no longer necessary to explicitely pick particle table from DDDB, already
+     done in ConfDDDB
+   . Gauss-2008.py
+ - Import all units in SystemOfUnits 'namespace'
+   . python/Gauss/Configuration.py
+   . Gauss-2008.py
+   . Beam450GeV-VeloOpen-BfieldZero.py
+
 
 ! 2008-12-02 - Gloria CORTI
  - Replace MCtruth mechanism from/to Geant4: only particle traveling are
