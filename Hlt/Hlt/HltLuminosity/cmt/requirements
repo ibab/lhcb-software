@@ -19,18 +19,17 @@ use GaudiAlg v*
 use HltEvent            v*    Event
 use L0Event		v*    Event
 use TrackEvent          v*    Event
-
+use DAQEvent            v*    Event 
 use HltBase             v*    Hlt
 
 use TrackInterfaces     v*    Tr
-
 use Boost        v*   LCG_Interfaces
 
 include_path      none
 #============================================================================
 # Component library building rule
 #============================================================================
-library          HltLuminosity    ../src/*.cpp 
+library          HltLuminosity    ../src/*.cpp -import=LCG_Interfaces/AIDA
 #============================================================================
 # define component library link options
 #============================================================================
