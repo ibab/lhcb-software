@@ -4,6 +4,9 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2008-08-12 M Needham
+ - Update ITGenericTracking
+
 !======================= TsaAlgorithms v3r7 2008-11-17 ======================
 ! 2008-11-07 M Needham
  - Bug fix in ITGenericTracking

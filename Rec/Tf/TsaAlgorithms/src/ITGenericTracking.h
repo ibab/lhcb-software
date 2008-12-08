@@ -1,4 +1,4 @@
-// $Id: ITGenericTracking.h,v 1.5 2008-11-06 15:35:06 mneedham Exp $
+// $Id: ITGenericTracking.h,v 1.6 2008-12-08 15:36:13 mneedham Exp $
 #ifndef ITGenericTracking_H
 #define ITGenericTracking_H 1
 
@@ -61,25 +61,56 @@ private:
                     const Tf::STHit* hit1,
                     std::vector<yInfo>& selected) const;
 
-  typedef std::vector<std::vector<Tf::STHit*> > CandidateHits;
+  typedef std::vector<std::vector<yInfo> > CandidateHits;
   typedef std::vector<Tf::Tsa::Line> CandidateLines;
   void selectY(const std::vector<yInfo>& hits, CandidateHits& canhits, CandidateLines& lines ) const; 
 
   void collectIDs( std::vector<Tf::STHit*> hits , std::vector<LHCb::LHCbID>& ids)  const;
+  void collectIDs( std::vector<yInfo> hits , std::vector<LHCb::LHCbID>& ids)  const;
 
   void selectX(const std::vector<Tf::STHit*>& hits, 
                const Tf::Tsa::Line& yLine, 
                std::vector<Tf::STHit*>& selected2 );
+
+  void cleanX(const std::vector<Tf::STHit*>& hits,
+	      const Tf::STHit* hit1, const Tf::STHit* hit2,
+	      const Tf::Tsa::Line& xLine) const;
 
   bool allowedBox(const Tf::STHit* hit) const;
   bool allowedFirstStation(const Tf::STHit* hit) const;
   bool allowedLastStation(const Tf::STHit* hit) const;
   bool sameBox(const Tf::STHit* hit1, const Tf::STHit* hit2) const;
 
-  unsigned int countHigh(const std::vector<Tf::STHit*>& xhits, const std::vector<Tf::STHit*>& yhits, 
+  unsigned int countHigh(const std::vector<Tf::STHit*>& xhits, const std::vector<yInfo>& yhits, 
                          const LHCb::STClusters* clusterCont) const;
 
+
   unsigned int countSectors(const std::vector<Tf::STHit*>& xhits) const;
+  unsigned int countSectors(const std::vector<yInfo>& xhits) const;
+
+  void splitCandidates(const std::vector<Tf::STHit*>& input, 
+                       std::vector<std::vector<Tf::STHit*> > & output ) const;
+
+  
+  typedef struct {
+    double cov00; 
+    double cov11;
+    double cov01; 
+    double chisq;
+    double m;
+    double c;    
+  } LineFitResults;
+
+  LineFitResults fitX(const std::vector<Tf::STHit*> hits) const;
+  LineFitResults fitY(const std::vector<ITGenericTracking::yInfo>& hits) const;
+  LineFitResults lineFit(const std::vector<double>& x, const std::vector<double>& z, const std::vector<double>& w) const;
+
+  void splitCandidates(const std::vector<yInfo>& input, 
+		       std::vector<std::vector<yInfo> >& output ) const;
+
+
+  bool ITGenericTracking::newStereoCandidate(const std::vector<ITGenericTracking::yInfo>& testCand, 
+                                      const CandidateHits& tracks) const;
 
   IHitExpectation* m_hitExpectation;
  
@@ -107,6 +138,7 @@ private:
   double m_maxRefX;
   double m_minRefX;
   double m_maxRefY;
+  double m_fracHigh;
 
   unsigned int m_minYHits;
   unsigned int m_minXHits;
@@ -117,6 +149,28 @@ private:
   double m_minCharge;
   bool m_confirm2;
   bool m_selectBestY;
+
+
+  // functors 
+   class Less_by_Channel
+    : public std::binary_function<yInfo,yInfo,bool> 
+  {
+  public:
+
+    /** compare the channel of one object with the 
+     *  channel of another object
+     *  @param obj1   first  object 
+     *  @param obj2   second object
+     *  @return  result of the comparision
+     */
+    inline bool operator() ( const yInfo& obj1 , const yInfo& obj2 ) const 
+    { 
+      return 
+        obj1.first->channelID() < obj2.first->channelID() ; 
+    }
+    ///
+  };
+
 
 };
 
