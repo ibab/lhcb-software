@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.136 2008-12-05 06:23:38 cattanem Exp $
+! $Id: release.notes,v 1.137 2008-12-08 18:03:28 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
+
+! 2008-12-08 - Olivier Deschamps
+- new algo : FastL0Filter : get decision from L0DU rawBank and filter -> NO COMPLETE L0DU bank decoding -> NO REPORT
+                          : add the possibility to re-inforce the threshold on sumEt/SpdMult/hardon/electron/muon1
 
 ! 2008-12-05 - Marco Cattaneo
  - Add missing -import=AIDA for compilation
