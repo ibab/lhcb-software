@@ -58,6 +58,7 @@ HltANNSvc.Hlt1SelectionID = {
     "Hlt1HadronSingleTFGFwrd"               :  320,
     "Hlt1HadronSingleTUGFwd"                :  321,
     "Hlt1LumiDecision"                      :  350,
+    "Hlt1LumiExclusiveDecision"             :  351,
     "Hlt1MuTrackCompanionVUForward"         :  401,
     "Hlt1MuTrackDecision"                   :  402,
     "Hlt1MuTrackMuonTF"                     :  403,
