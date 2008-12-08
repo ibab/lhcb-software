@@ -3,7 +3,7 @@
 # Maintainer : Sajan Easo
 #============================================================================
 package GaussRICH
-version v9r1
+version v9r2
 
 # Structure, i.e. directories to process. 
 #============================================================================
