@@ -1,4 +1,4 @@
-// $Id: CheckLifeTime.h,v 1.1 2008-06-24 10:07:13 ibelyaev Exp $
+// $Id: CheckLifeTime.h,v 1.2 2008-12-08 10:11:22 ibelyaev Exp $
 // ============================================================================
 #ifndef GAUSS_CHECKLIFETIME_H 
 #define GAUSS_CHECKLIFETIME_H 1
@@ -16,7 +16,11 @@
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/PhysicalConstants.h"
-#include "GaudiKernel/ParticleProperty.h"
+// ============================================================================
+// Kernel/PartProp
+// ============================================================================
+#include "Kernel/ParticleProperty.h"
+#include "Kernel/IParticlePropertySvc.h"
 // ============================================================================
 // GaudiAlg 
 // ============================================================================

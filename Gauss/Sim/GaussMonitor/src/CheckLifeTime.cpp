@@ -1,12 +1,16 @@
-// $Id: CheckLifeTime.cpp,v 1.1 2008-06-24 10:07:13 ibelyaev Exp $
+// $Id: CheckLifeTime.cpp,v 1.2 2008-12-08 10:11:22 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
 // GaudiKernel
 // ============================================================================
-#include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/PhysicalConstants.h"
+// ============================================================================
+// Kernel/PartProp
+// ============================================================================
+#include "Kernel/ParticleProperty.h"
+#include "Kernel/IParticlePropertySvc.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -77,7 +81,7 @@ StatusCode GaussMonitor::CheckLifeTime::initialize ()
     counter ( title ) ; 
     //
     // get the particle property 
-    const ParticleProperty* pp = LoKi::Particles::ppFromName ( *ipid ) ;
+    const LHCb::ParticleProperty* pp = LoKi::Particles::ppFromName ( *ipid ) ;
     if ( 0 == pp ) { return Error ( "Invalid particle: " + (*ipid) ) ;}
     book ( title , 0 , highEdge ( *pp )  , 100 ) ;
   }
@@ -105,60 +109,60 @@ void GaussMonitor::CheckLifeTime::check ( const bool iErr ) const
     // get the cunter
     const StatEntity& cnt = counter ( cntName ( *ip ) ) ;
     // get the particle property 
-    const ParticleProperty* pp = LoKi::Particles::ppFromName ( *ip ) ;
+    const LHCb::ParticleProperty* pp = LoKi::Particles::ppFromName ( *ip ) ;
     if ( 0 == pp ) { Error ( "Invalid particle: " + (*ip)) ; continue ; }
     if ( 0 == cnt.nEntries() ) 
     { Warning ( "No '" + (*ip) + "' Particles are found!") ; continue ; }
     // get the mean lifetime (in mm) 
     const double lTime = cnt.flagMean    () ;
-    // get the error in lifetime (in mm) 
+    // get the error in ctau  (in mm) 
     const double ltErr = cnt.flagMeanErr () ;
-    // get the nominal lifetime (in mm) 
-    double nominal = ( pp->lifetime() * Gaudi::Units::c_light / Gaudi::Units::mm ) ;
+    // get the nominal  ctau  (in mm) 
+    double nominal = pp->ctau () / Gaudi::Units::mm ;
     if ( nominal < 1.e-5 * Gaudi::Units::micrometer ) { nominal = 0 ; }
     //
     const double diff =  ( lTime - nominal ) ;
     if ( std::fabs ( diff ) > 3 * ltErr ) 
     {
       fatal ()   << " >3   sigma deviation in lifetime for '" << (*ip) 
-                 << "' \tActual is "  << lTime << "+-" 
-                 <<  ltErr  << "(" << cnt.flagRMS() << ")"
-                 << "\tNominal is " << nominal   << " [mm] "
+                 << "' \tActual is "  << lTime         << "+-" 
+                 <<  ltErr  << "("    << cnt.flagRMS() << ")"
+                 << "\tNominal is "   << nominal       << " [mm] "
                  << endreq ;
       if ( iErr ) { Error   ( ">3 sigma deviation for '" +(*ip)+ "'") ; }
     }
     else if ( std::fabs ( diff ) > 2 * ltErr ) 
     {
       error ()   << " >2   sigma deviation in lifetime for '" << (*ip) 
-                 << "' \tActual is "  << lTime << "+-"           
-                 << ltErr << "("   << cnt.flagRMS() << ")"
-                 << "\tNominal is " << nominal   << " [mm] "
+                 << "' \tActual is "  << lTime         << "+-"           
+                 << ltErr << "("      << cnt.flagRMS() << ")"
+                 << "\tNominal is "   << nominal       << " [mm] "
                  << endreq ;
       if ( iErr ) { Error   ( ">2 sigma deviation for '" +(*ip)+ "'") ; }
     }
     else if ( std::fabs ( diff ) > 1 * ltErr ) 
     {
       warning () << " >1   sigma deviation in lifetime for '" << (*ip) 
-                 << "' \tActual is "  << lTime << "+-"    
-                 << ltErr << "("   << cnt.flagRMS() << ")"
-                 << "\tNominal is " << nominal   << " [mm] "
+                 << "' \tActual is "  << lTime         << "+-"    
+                 << ltErr << "("      << cnt.flagRMS() << ")"
+                 << "\tNominal is "   << nominal       << " [mm] "
                  << endreq ;
       if ( iErr ) { Warning ( ">1 sigma deviation for '" +(*ip)+ "'") ; }
     }
     else if ( std::fabs ( diff ) > 0.5 * ltErr ) 
     { 
       info ()    << " >0.5 sigma deviation in lifetime for '" << (*ip) 
-                 << "' \tActual is "    << lTime << "+-" 
+                 << "' \tActual is "    << lTime  << "+-" 
                  << ltErr << "(" << cnt.flagRMS() << ")"
-                 << "\tNominal is "   << nominal   << " [mm] "
+                 << "\tNominal is "   << nominal  << " [mm] "
                  << endreq ;
     }
     else 
     { 
       info ()    << " <0.5 sigma deviation in lifetime for '" << (*ip) 
-                 << "' \tActual is "    << lTime << "+-" 
+                 << "' \tActual is "    << lTime  << "+-" 
                  << ltErr << "(" << cnt.flagRMS() << ")"
-                 << "\tNominal is "   << nominal   << " [mm] "
+                 << "\tNominal is "   << nominal  << " [mm] "
                  << endreq ;
     }
   }

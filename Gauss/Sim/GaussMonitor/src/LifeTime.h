@@ -1,4 +1,4 @@
-// $Id: LifeTime.h,v 1.1 2008-06-24 10:07:13 ibelyaev Exp $
+// $Id: LifeTime.h,v 1.2 2008-12-08 10:11:22 ibelyaev Exp $
 // ============================================================================
 #ifndef LBHIDVALLEY_LIFETIME_H 
 #define LBHIDVALLEY_LIFETIME_H 1
@@ -11,7 +11,9 @@
 #include "GaudiKernel/Vector3DTypes.h"
 #include "GaudiKernel/Vector4DTypes.h"
 // ============================================================================
-#include "GaudiKernel/ParticleProperty.h"
+// Kernel/PartProp
+// ============================================================================
+#include "Kernel/ParticleProperty.h"
 // ============================================================================
 namespace GaussMonitor
 {
@@ -34,12 +36,12 @@ namespace GaussMonitor
   // ==========================================================================
   /// calculate the high edge for the histogram 
   inline double highEdge 
-  ( const ParticleProperty& pp                                    , 
-    const size_t            num  =  11                            , 
-    const double            unit =  50 * Gaudi::Units::micrometer ) 
+  ( const LHCb::ParticleProperty& pp                                    , 
+    const size_t                  num  =  11                            , 
+    const double                  unit =  50 * Gaudi::Units::micrometer ) 
   {
-    const double nominal = pp.lifetime() * Gaudi::Units::c_light ;
-    const double high = floor ( num * nominal / unit ) * unit ; 
+    const double nominal = pp.ctau () ;
+    const double high    = floor ( num * nominal / unit ) * unit ; 
     return std::max ( high , unit ) ; 
   }
   // ==========================================================================

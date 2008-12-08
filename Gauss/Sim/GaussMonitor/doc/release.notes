@@ -4,6 +4,9 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
+! 2008-12-08 - Vanya BELYAEV
+ - fix for the new particle properties 
+
 ! 2008-11-11 - Patrick Robbe
  - src/GeneratorFullMonitor.h/.cpp: use GaudiAlgTuple base class to be
    able to run on 64 bit machines
