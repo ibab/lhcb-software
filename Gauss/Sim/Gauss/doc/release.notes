@@ -4,6 +4,16 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!======================== Gauss v36r0 2008-10-10 =============================
+! 2008-12-08 - Gloria CORTI
+ - Pack MCParticles and MCVertices to write them out
+   . GaussTape.opts
+ - Switch off checking of unknow particles in SimulationToMCTruth: all nuclei
+   are unknown as new PDGid used by G4 not know in particle table; it will be
+   in next release of DDDB (> v5r0)
+   . Simulation.opts
+ - Adapt to new Gauss structure
+   . Gauss_Ganga.py
 
 ! 2008-12-07 - Gloria CORTI
  - Remove setting of particle table file, that is taken from ConfDDDB.
