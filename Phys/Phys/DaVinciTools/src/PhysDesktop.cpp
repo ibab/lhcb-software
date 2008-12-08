@@ -289,8 +289,8 @@ StatusCode PhysDesktop::cleanDesktop(){
   if (msgLevel(MSG::VERBOSE)) {
     verbose() << "LHCb::Particle in TES = " << iTEScount << endmsg;
     verbose() << "Removing all vertices from desktop" << endmsg;
-    verbose() << "Number of vertices before cleaning = "
-              << m_secVerts.size() + m_primVerts->size() << endmsg;
+    verbose() << "Number of secondary vertices before cleaning = "
+              << m_secVerts.size() << endmsg;
   }
   
   iTEScount = 0;
