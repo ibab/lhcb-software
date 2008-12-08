@@ -4,6 +4,10 @@
 ! Purpose     : Checker for pattern recognition
 !-----------------------------------------------------------------------------
 
+
+! 2008-12-08 - Marcin Kucharczyk
+ - Add CheatedPrimaryVertices
+
 ! 2008-12-05 - Mariusz Witek
  - Add PrimaryVertexChecker
 
