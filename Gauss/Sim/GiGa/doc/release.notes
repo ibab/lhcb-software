@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.127 2008-11-28 15:09:05 robbep Exp $
+! $Id: release.notes,v 1.128 2008-12-08 10:16:33 gcorti Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Sim/GiGa
 ! Responsible : Gloria CORTI, Vanya BELYAEV
@@ -6,6 +6,7 @@
 !               for G4 <-> Gaudi applications 
 !-----------------------------------------------------------------------------
 
+!======================= GiGa v19r4 2008-12-08 ===============================
 ! 2008-11-28 - Patrick Robbe
  - GiGa.cpp: remove update of G4 particles to do it in GaussKine (to be
    sure it is done after generator initializations)
