@@ -2,12 +2,15 @@
  *  \anchor benderdoxygenmain
  *
  * This is the code reference manual for the Bender codes
-
+ *
  * These pages have been generated directly from the code and reflect the exact 
  * state of the software for this version of the BenderSys packages. More
  * information is available from the 
- * <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">web pages</a>
- * of the Bender project
+ * <a href="http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/bender/">
+ * Bender project pages</a>, or from informal 
+ * <a href="http://cern.ch/lhcb-comp/Analysis/Bender/">Bender pages,</a> 
+ * by Lena Matatskaya or from 
+ * <a href="http://savannah.cern.ch/projects/bender">Bender Savannah portal.</a>
  *
  * <b>The classes used by Bender are documented in the following reference manuals:</b>
  *

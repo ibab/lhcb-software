@@ -1,11 +1,14 @@
-</PRE>
 <H1>
-<A NAME=v8r0>2007-09-29 Bender v8r0. New DC06 version </A>
+<A NAME=v9r0>2008-09-16 Bender v9r0 based on the DaVinci v20r2 </A>
 </H1>	
-<PRE>	
-	
-Based on DaVinci v19r5, Phys v6r6, Analysis v1r6, Rec v4r9, HLT v1r9, Lbcom v6r9, LHCb v22r9, Gaudi v19r4, LCGCMT 52a.
 
-It is the first "ONLY PYTHON" version.
+<PRE>		
+This version is very similar to the versions in v8r3 family,
+  but it is based on the most fresh version of DaVinci v20r2.
+ The updated realistic examples form Diego MARTINEZ SANTOS 
+  is a some kind of highlights for this version. 
+</PRE>
+
+
 
 </PRE>
