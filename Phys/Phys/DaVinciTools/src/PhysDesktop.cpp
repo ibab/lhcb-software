@@ -583,7 +583,9 @@ StatusCode PhysDesktop::getEventInput(){
     }
     StatusCode sc = getPrimaryVertices();
     if ( sc.isFailure() ) return sc;
-    if ( m_primVerts->empty()) {
+    if ( 0==m_primVerts) {
+      Warning( "No primary vertex container at "+primaryVertexLocation() ).ignore() ;      
+    } else if (m_primVerts->empty()) {
       Warning( "Empty primary vertex container at "+primaryVertexLocation() ).ignore() ;      
     }
   }
@@ -763,18 +765,14 @@ StatusCode PhysDesktop::getPrimaryVertices() {
   }
   
   if ( !exist<LHCb::RecVertices>( primaryVertexLocation() ) ) {
+    m_primVerts = 0 ;
     return Warning("No PV container at "+primaryVertexLocation(),
                    StatusCode::SUCCESS);
   }
 
   m_primVerts = get<LHCb::RecVertices>( primaryVertexLocation() );
 
-  if (0!= m_primVerts && msgLevel(MSG::VERBOSE)) {
-    verbose() << "Got " << m_primVerts->size() << " PVs from " 
-              << primaryVertexLocation() << endmsg;
-  }
-
-  return (0!=m_primVerts) ? StatusCode::SUCCESS : StatusCode::FAILURE;
+  return StatusCode::SUCCESS ;
 
 }
 //=============================================================================
