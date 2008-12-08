@@ -2,6 +2,9 @@
 ! Responsible : E. Polycarpo, M. Gandelman
 !----------------------------------------------------------------------------
 
+! 2008-12-08 - Marco Cattaneo
+ - Fix typo in finalize(), in case when no events processed
+
 !====================== MuonPIDChecker v2r5 2008-10-24 ====================
 ! 2008-10-24 - M. Gandelman
  - Protect when MC particle does not have a mother

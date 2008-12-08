@@ -451,7 +451,7 @@ if (m_RunningMC) {
     else {
       Ef1[ityp] = -1.;
       Ef2[ityp] = -1.;
-      Ef2[ityp] = -1.;
+      Ef3[ityp] = -1.;
     }
   }
   unsigned int sumPresel = m_cpresel[2]+m_cpresel[3];
