@@ -4,6 +4,277 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
 
+</PRE><H1><A NAME="v36r0">2008-12-08 - GaussSys v36r0</A></H1><PRE>
+<H2><A NAME="Note">FST DEVELOPEMENT version. Support SIMCOND tag head-20081002
+   </A></H2>
+<H3><A NAME="Use">This version uses:
+   <b>LHCb v26r0 (and Gaudi v20r3)</b>
+   pythia6 418.2, photos 215.2, lhapdf 5.3.1 
+   (via LCG_GeneratorsInterfaces)
+   HepMC 2.03.09 (via LCG_Interfaces)
+   Geant4 v91r2p4 (based on geant4.9.1.p02) and Geant4Files v91r0
+   DecFiles v15r*, 
+   ParamFiles v7r3, 
+   SQLDDDB v5r0, FieldMap v5r* (latest v5r1), 
+   XmlVis v1r8,
+   herwig 6.510.2, jimmy 4.31.2 (via LCG_GeneratorsInterfaces),
+   hijing 1.383bs.2 (via LCG_GeneratorsInterfaces),
+   pythia8 107.1,
+   bcvegpy (LHCb build)
+</A></H3>
+
+!======================== Gauss v36r0 2008-10-10 =============================
+! 2008-12-08 - Gloria CORTI
+ - Pack MCParticles and MCVertices to write them out
+   . GaussTape.opts
+ - Switch off checking of unknow particles in SimulationToMCTruth: all nuclei
+   are unknown as new PDGid used by G4 not know in particle table; it will be
+   in next release of DDDB (> v5r0)
+   . Simulation.opts
+ - Adapt to new Gauss structure
+   . Gauss_Ganga.py
+
+! 2008-12-07 - Gloria CORTI
+ - Remove setting of particle table file, that is taken from ConfDDDB.
+   . Common.opts
+ - Move GaussTape.opts to be included from Gauss.opts, in odred to put there
+   packing of MCParticles and MCVertices
+   . Common.opts
+   . Gauss.opts
+ - Removed obsolte options for setting of magnetic field maps, now taken
+   from ConfDDDB
+   . MeasuredFieldMap.opts - REMOVED
+ - Adapt main configuration to Gaudi v20r3:
+   + replace import of DDDB.py and LHCb-2008.py, and setting of SIMCOND as
+     conditions DB with LHCbApp( DataType = "2008", Simulation = True )
+   + no longer necessary to force DetectorDataSvc to be instantiated before
+     GiGa (automatically done)
+   + no longer necessary to explicitely pick particle table from DDDB, already
+     done in ConfDDDB
+   . Gauss-2008.py
+ - Import all units in SystemOfUnits 'namespace'
+   . python/Gauss/Configuration.py
+   . Gauss-2008.py
+   . Beam450GeV-VeloOpen-BfieldZero.py
+ - Rename files specifing beam/velo pos/magnet to have -Mag{Down,Off,Up}
+   instead of Bfield{Zero,Neg} similarly to what in SIMCOND:
+     Polarity -1 -> Down  (Default)
+              +1 -> Up
+   Introduce all options for Velo{Open,Closed}-Mag{Down,Off,Up} for 7 TeV
+   beam, and those missing for 5 TeV and 450 GeV.
+   It is possible to indentify in the data the different configurations
+   because a different start time for the event time is set, with the following
+   convention
+     1. beam energy E*100000*ns
+        E = 0 for   7 TeV
+            1 for 450 GeV
+            2 for   5 TeV
+     2. velo position V*10000*ns
+        V = 0 for velo closed
+            1 for velo open
+     3. magnet condition M*1000*ns
+        M = 0 for magnet down
+            1 for magnet off
+            2 for magnet up
+
+   . REMOVED                           REPLACED by                    StartTime
+     Beam450GeV-VeloOpen-BfieldNeg.py  Beam450GeV-VeloOpen-MagDown.py 110000*ns
+     Beam450GeV-VeloOpen-BfieldZero.py Beam450GeV-VeloOpen-MagOff.py  111000*ns
+     Beam5TeV-VeloClosed-BfieldNeg.py  Beam5TeV-VeloClosed-MagDown.py 200000*ns
+     Beam5TeV-VeloClosed-BfieldZero.py Beam5TeV-VeloClosed-MagOff.py  201000*ns
+     Beam5TeV-VeloOpen-BfieldNeg.py    Beam5TeV-VeloOpen-MagDown.py   210000*ns
+     Beam5TeV-VeloOpen-BfieldZero.py   Beam5TeV-VeloOpen-MagOff.py    211000*ns
+
+   . NEW                                StartTime
+     Beam450GeV-VeloClosed-MagDown.py   100000*ns
+     Beam450GeV-VeloClosed-MagOff.py    101000*ns
+     Beam450GeV-VeloClosed-MagUp.py     102000*ns
+     Beam450GeV-VeloOpen-MagUp.py       112000*ns
+     Beam5TeV-VeloClosed-MagUp.py       202000*ns
+     Beam5TeV-VeloOpen-MagUp.py         212000*ns
+     Beam7TeV-VeloClosed-MagDown.py          0*ns
+     Beam7TeV-VeloClosed-MagOff.py        1000*ns
+     Beam7TeV-VeloClosed-MagUp.py         2000*ns
+     Beam7TeV-VeloOpen-MagDown.py        10000*ns
+     Beam7TeV-VeloOpen-MagOff.py         11000*ns
+     Beam7TeV-VeloOpen-MagUp.py          12000*ns
+
+! 2008-12-02 - Gloria CORTI
+ - Replace MCtruth mechanism from/to Geant4: only particle traveling are
+   passed to Geant4 and the resonance are made as MCParticles when passing
+   the generator info to Geant4. Replace the two algorithm passing/retrieving
+   information.
+   . Simulation.opts
+
+! 2008-11-27 - Gloria CORTI
+ - #BUG 44666
+   Remove obsolete options for particle gun. They are no longer valid since
+   ParticleGun v6r0. Example options are now available as
+   $PARTICLEGUNSROOT/options/ParticleGun.opts as taken in Gauss.opts
+ - Remove obsolete files for doxygen documentation: this is handled since a
+   long time in GaussSys
+   . DoxyFile.cfg, Doxyfooter.html, Doxyheader.html, MainPage.doc, makedoc
+     are all removed from doc subdirectory
+
+! 2008-11-20 - Gloria CORTI
+ - Remove SimVeloGeometry.opts where one line is wrong dure to change in name
+   of a volume and replace it with SimVeloGeometry.py (by Thomas RUF).
+   This is now importeb by default in Gauss-2008.py because otherwise the
+   misalignment is not taken into account correctly for the r-sensors since
+   the modules, as assembly, are skipped into the conversion to G4 and the
+   sensores are put directly in the module's mother volume.
+   . SimVeloGeometry.opts - REMOVED
+   . SimVeloGeometry.py   - NEW
+   . Gauss-2008.py
+
+! 2008-10-30 - Gloria CORTI
+ - Adapt options to renaming of algorithms from "DumpMC" and "DumpMCDecay" to
+   "DumpHepMC" and "DumpHepMCDecay"
+
+!========================= GaussKine v3r2 2008-12-08 =========================
+! 2008-11-28 - Patrick Robbe
+ - GenerationToSimulation: update G4 particles from ppSvc (moved
+   from GiGa)
+
+! 2008-11-05 - Patrick Robbe
+ - SimulationToMCTruth: removes extra status from the list of particles
+   to convert.
+
+! 2008-11-04 - Patrick Robbe
+ - SimulationToMCTruth: gives correct vertex type to MCVertex
+
+! 2008-10-29 - Patrick Robbe
+ - SimulationToMCTruth: remove particles which are left with
+   null production vertex after Geant4, because of interactions
+   (mainly Lambda interactions) which destroyed the particle
+
+! 2008-10-23 - Patrick Robbe
+ - In SimulationToMCTruth: check if pdg code from Geant4 is unknown
+   and don't create a vertex for a particle reaching Geant4 'world'
+   volume
+
+! 2008-10-20 - Patrick Robbe
+ - Add new algorithms to send and retrieve MCTruth to/from G4
+   . GenerationToSimulation: generator HepMC -> Geant4
+   . SimulationToMCTruth: Geant4 -> MCParticles/MCVertices
+
+!======================== GaussTools v15r1 2008-12-08 ========================
+! 2008-11-04 - Patrick Robbe
+ - MCTruthManager: saves creator process before resetting the vertex barcode
+ - SpecialCuts.cpp: now sets step to StopAndKill except for LoopCuts
+
+! 2008-10-23 - Patrick Robbe
+ - GaussPostTrackAction: Simplify code
+ - MCTruthManager.cpp: bug fix (clear map of links to MCParticles
+   at beginning of new event)
+
+! 2008-10-20 - Patrick Robbe
+ - Use new algorithms to transfer MCTruth (from GaussKine)
+   All changes are backward compatible
+    . MCTruthManager: maintains a map of HepMC to MCParticle links
+    . GaussPostTrackAction: transfer link to MCParticle in GaussUserInfo
+    . GaussPostTrackActionHepMC: fill MCTruthManager informations
+
+!========================= GiGaCnv v18r6 2008-12-08 ==========================
+! 2008-10-20 - Patrick Robbe
+ - Add link to generator HepMC mother particle in
+   GiGaPrimaryParticleInformation.h
+
+!======================= GiGa v19r4 2008-12-08 ===============================
+! 2008-11-28 - Patrick Robbe
+ - GiGa.cpp: remove update of G4 particles to do it in GaussKine (to be
+   sure it is done after generator initializations)
+
+! 2008-11-04 - Patrick Robbe
+ - GiGa.cpp: update also particle lifetime from ParticlePropertySvc
+
+! 2008-10-20 - Patrick Robbe
+ - GiGa.h/cpp: add possibility via job options to update particle
+   properties (mass for the moment) of Geant4 using ParticlePropertySvc
+ - GiGaTrajectory: add link to mother generator HepMC particle via user
+   GaussTrackInformation
+
+!========================= GaussRICH v9r2 2008-12-08 =========================
+! 2008-10-24 - Sajan Easo
+   In RichSensDet fixed a bug related to storing mctracks corresponding to
+   MIPs passing through the Hpd-Silicon, in order to avoid the occurance of
+   related mc hits without mc tracks.
+
+!====================== GaussPhysics v6r1 2008-12-08 =========================
+! 2008-11-27 - Patrick Robbe for Neal Gueissaz
+ - Add G4Neutralino and G4Charginos definitions
+
+!====================== GaussMonitor v6r1 2008-12-08 =========================
+! 2008-11-11 - Patrick Robbe
+ - src/GeneratorFullMonitor.h/.cpp: use GaudiAlgTuple base class to be
+   able to run on 64 bit machines
+
+!======================= GiGaVisUI v5r1 2008-12-08 ===========================
+! 2008-12-08 - Gloria CORTI from Marco PAPPAGALLO
+ - Fix for error message:
+    GiGa.GiGaMgr.GiGaSetV...  ERROR GiGaSetVisAttributes::  process('World'):
+    invalid ILVolume  StatusCode=FAILURE
+   The LV called "World" is the root geometry in G4, and is not taken from
+   the XML DDDB. For this reason no visualization attribute can be found for
+   it when scanning the G4LogicalVolumeStore to set their visualization
+   attributes. For this reason the step of accessing the information from
+   XmlVis is skipped for LV "World".
+   . GiGaSetVisAttributes.cpp
+
+!======================= ParticleGuns v6r2 2008-12-08 =======================
+! 2008-12-02 - Gloria CORTI
+ - Put ToF based on z of vertex and direction of 'beam'/'particle gun'. By
+   default it is off (beamdirection = 0)
+   . FlatSmearVertex.{h,cpp}
+
+!========================= LbPythia v8r2 2008-12-08 ==========================
+! 2008-12-03 - Gloria CORTI
+ - PythiaProduction.cpp: chnage the directory name for LHA files to
+   'lhafiles' to adapt to change in DecFiles
+
+! 2008-11-28 - Patrick Robbe
+ - PythiaProduction.cpp: update special particles after Pythia
+   initialization.
+
+! 2008-11-27 - Patrick Robbe for Neal Gueissaz
+ - PythiaLSP: add cut tool
+
+! 2008-11-25 - Patrick Robbe
+ - PythiaProduction: add and activate in minimum bias psi(3770)
+   production
+
+! 2008-11-12 - Patrick Robbe
+ - PythiaProduction: activate extra charmonium states production by
+   default.
+
+! 2008-11-11 - Patrick Robbe
+ - PythiaProduction: add definition of new charmonium processes (color
+   singlet psi(2S), Upsilon(1S), Upsilon(2S), Upsilon(3S), Upsilon(4S)
+   Upsilon(5S)
+
+! 2008-11-05 - Patrick Robbe for Neal Gueissaz
+  - Re-introduce PyInit
+
+! 2008-10-23 - Patrick Robbe for Neal Gueissaz
+  - PythiaProduction.cpp: read LHA files
+
+! 2008-10-20 - Patrick Robbe
+ - PythiaProduction.cpp: change also units of generated mass to GeV (now
+   stored in HepMC2)
+
+!========================== GENSER v5r0 2008-12-08 ===========================
+! 2008-25-11 - Patrick Robbe
+ - Add xsection.F (Nick Brook) which computes cross section for psi(3770)
+   production.
+ - Add production of psi(3770) (Colo singlet, Nick Brook)
+
+! 2008-11-11 - Patrick Robbe
+ - Add new routines to overwrite in Pythia, to generate extra charmonium states:
+   pyscat.F, pysghf.F pysigh.F
+ - pyevwt.F: add new process numbers for extra charmonium states
+ - pyinit.F: add description of the extra charmonium processes
+
+!=============================================================================
 </PRE><H1><A NAME="v35r1">2008-10-10 - GaussSys v35r1</A></H1><PRE>
 <H2><A NAME="Note">FST DEVELOPEMENT version. Support SIMCOND tag head-2008 
    </A></H2>
