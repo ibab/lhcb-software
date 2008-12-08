@@ -1,7 +1,7 @@
 #
 # VELO specific HLT trigger lines
 #
-from Configurables import VeloClusterFilter, DecodeVeloRawBuffer
+from Configurables import VeloClusterFilter
 from Configurables import Velo__VeloHltLiteClusterMonitor
 from Configurables import Tf__PatVeloRTracking, Tf__PatVeloSpaceTracking, Tf__PatVeloGeneralTracking
 from Configurables import Tf__PatVeloSpaceTool, Tf__PatVeloTrackTool
@@ -137,8 +137,7 @@ GaudiSequencer( 'HltVeloMonitoringSequence' , IgnoreFilterPassed=True
               )
 
 GaudiSequencer( 'LiteClusterMonitorSequence'
-              , Members = [ DecodeVeloRawBuffer()
-                          , Velo__VeloHltLiteClusterMonitor( 'VeloLiteClusterMonitor'
+              , Members = [ Velo__VeloHltLiteClusterMonitor( 'VeloLiteClusterMonitor'
                                                            , HistogramByZone=True
                                                            , VeloLiteClusterLocation="Raw/Velo/LiteClusters" 
                                                            )

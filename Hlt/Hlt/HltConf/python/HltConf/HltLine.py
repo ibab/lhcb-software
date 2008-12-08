@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.28 2008-12-05 12:47:51 graven Exp $ 
+# $Id: HltLine.py,v 1.29 2008-12-08 12:30:03 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.28 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.29 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt line itself 
@@ -86,6 +86,8 @@ from Configurables import HltVertexMaker1        as VertexMaker1
 from Configurables import HltVertexMaker2        as VertexMaker2 
 from Configurables import HltVertexFilter        as VertexFilter 
 from Configurables import HltVertexUpgrade       as VertexUpgrade 
+from Configurables import HltL0MuonCandidates    as L0MuonCandidates 
+from Configurables import HltL0CaloCandidates    as L0CaloCandidates 
 from Configurables import HltL0MuonPrepare       as L0MuonPrepare 
 from Configurables import HltL0CaloPrepare       as L0CaloPrepare 
 from Configurables import HltVertexToTracks      as VertexToTracks 
@@ -265,6 +267,8 @@ _types_ = { TrackUpgrade  : 'TU'
           , VertexFilter  : 'VF'
           , VertexToTracks: 'VT'
           , VertexUpgrade : 'VU'
+          , L0CaloCandidates : 'L0Calo'
+          , L0MuonCandidates : 'L0Muon'
           , L0CaloPrepare : 'L0CaloPrepare'
           , L0MuonPrepare : 'L0MuonPrepare'
           , AddPhotonToVertex : 'AddPhotonToVertex'

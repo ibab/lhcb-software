@@ -3,7 +3,6 @@
 #-----------------------------
 from Gaudi.Configuration import *
 from Configurables import GaudiSequencer
-from Configurables import DecodeVeloRawBuffer
 from Configurables import PatPV2D, PatPV3D, PatForward, PatForwardTool
 from Configurables import Tf__PatVeloRTracking, Tf__PatVeloSpaceTracking
 from Configurables import RawBankToSTLiteClusterAlg
@@ -15,7 +14,7 @@ from Configurables import HltTrackFilter, HltVertexFilter, HltTrackUpgrade
 patVeloR = Tf__PatVeloRTracking('HltRecoRZVelo' , OutputTracksName = "Hlt/Track/RZVelo" ) 
 
 recoRZVeloTracksSequence = GaudiSequencer( 'HltRecoRZVeloTracksSequence', MeasureTime = True
-                                         , Members = [ DecodeVeloRawBuffer() , patVeloR ] 
+                                         , Members = [ patVeloR ] 
                                          )
 
 recoRZPVSequence = GaudiSequencer( 'HltRecoRZPVSequence' , MeasureTime = True, IgnoreFilterPassed = True
@@ -28,14 +27,6 @@ recoRZVeloSequence = GaudiSequencer ( 'HltRecoRZVeloSequence', MeasureTime = Tru
                                     , Members = 
                                     [  recoRZVeloTracksSequence
                                     ,  recoRZPVSequence ] )
-
-decodeTT = GaudiSequencer( 'HltDecodeTT', MeasureTime = True 
-                         , Members = 
-                         [ RawBankToSTLiteClusterAlg('createTTLiteClusters') ] )
-
-decodeT = GaudiSequencer( 'HltDecodeT', MeasureTime = True
-                        , Members = 
-                        [ RawBankToSTLiteClusterAlg('createITLiteClusters', DetType = 'IT') ] )
 
 recoVelo = Tf__PatVeloSpaceTracking('HltRecoVelo'
                                    , InputTracksName = patVeloR.OutputTracksName
@@ -66,8 +57,6 @@ trackRecoSequence = GaudiSequencer( 'HltTrackRecoSequence'
                                   ,  recoVelo
                                   ,  prepareVelo
                                   #,  recoPV3D
-                                  ,  decodeTT
-                                  ,  decodeT
                                   ,  recoForward
                                   ,  prepareForward
                                   ] )
@@ -121,8 +110,6 @@ hlt1RecoSequence = GaudiSequencer( 'Hlt1RecoSequence', MeasureTime = True
                                  , hlt1RecoRZPVSequence
                                  , reco1Velo
                                  , recoPV3D # does this not abort the remainder of the sequence if no primary??
-                                 , decodeTT
-                                 , decodeT
                                  , recoFwd ] )
 
 # Forward

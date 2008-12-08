@@ -1,9 +1,18 @@
-! $Id: release.notes,v 1.64 2008-12-05 12:47:51 graven Exp $ 
+! $Id: release.notes,v 1.65 2008-12-08 12:30:02 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2008-12-08 - Gerhard Raven
+ - in HltL0Lines, replace HltL0CaloPrepare and HltL0MuonPrepare with
+   HltL0CaloCandidates and HltL0MuonCandidates, which pick up their
+   threshold settings automatically from L0 config for the specified
+   L0 Channel
+ - everywhere rely on data-on-demand svc for decoding rawbank
+ - make sure HadronSeedTool is run with decodeCalos = False
+ - create dedicated 'lumiExclusive' decision to trigger lumiStripper
 
 ! 2008-12-05 - Gerhard Raven
  - remove PA from Hlt1 alias 

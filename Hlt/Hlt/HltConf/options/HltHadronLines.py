@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltHadronLines.py,v 1.10 2008-12-02 12:09:56 graven Exp $
+# $Id: HltHadronLines.py,v 1.11 2008-12-08 12:30:03 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hadron Lines
@@ -12,13 +12,14 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.11 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
 
 from Configurables import GaudiSequencer
 from Configurables import HltL0CaloPrepare
+from Configurables import HadronSeedTool
 from Configurables import HltTrackUpgrade
 
 from HltConf.HltLine import Hlt1Line   as Line
@@ -31,7 +32,8 @@ importOptions('$HLTCONFROOT/options/HltRecoSequence.py')
 
 
 prepMainHadron = bindMembers( 'MainHadronPrep',
-                              [ HltL0CaloPrepare('L0HadronDecision', CaloMakerTool="HadronSeedTool", CaloType = 'Hadron', MinEt = 3500.0 )
+                              [ HltL0CaloPrepare('L0HadronDecision'
+                                                , CaloMakerTool= HadronSeedTool(decodeCalos = False), CaloType = 'Hadron', MinEt = 3500.0 )
                                 , GaudiSequencer('Hlt1RecoRZVeloSequence')
                                 , Member ( 'TF' ,'RZVelo'
                                            , InputSelection = 'RZVelo'

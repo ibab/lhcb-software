@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltMuonLines.py,v 1.9 2008-10-28 14:48:49 graven Exp $
+# $Id: HltMuonLines.py,v 1.10 2008-12-08 12:30:03 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -12,7 +12,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -33,7 +33,6 @@ from HltConf.HltLine import hlt1Lines, addHlt1Prop, rmHlt1Prop
 importOptions('$HLTCONFROOT/options/TsaTool.opts')
 importOptions('$HLTCONFROOT/options/HltRecoSequence.py')
 
-decodeT = GaudiSequencer('HltDecodeT')
 RZVelo  = GaudiSequencer('Hlt1RecoRZVeloTracksSequence')
 RecoRZPV= GaudiSequencer('Hlt1RecoRZPVSequence')
 # It already Prepare the muon segments with proper error calling the tool MuonSeedTool
@@ -42,8 +41,7 @@ RecoMuonSeg = HltMuonRec('HltRecoMuonSeg'
                         , DecodingFromCoord=True )
 
 
-TConfMatchVelo = [ decodeT
-                 , Member ('TU', 'TConf' , RecoName = 'TConf' )
+TConfMatchVelo = [ Member ('TU', 'TConf' , RecoName = 'TConf' )
                  , Member ('TF', 'TConf' , FilterDescriptor = ['IsMuon,>,0.'] )
                  , RZVelo
                  , Member ('TF', 'RZVelo'
@@ -87,7 +85,6 @@ DiMuonFromL0DiMuonPrepare = bindMembers( 'DiMuonFromL0DiMuonPrepare',
                            , FilterDescriptor = [ 'SumPT,>,1500.' ]
                            )
                    , Member( 'VT', 'L0' )
-                   , decodeT
                    , Member( 'TU', 'TConf' , RecoName = 'TConf')
                    , Member( 'TF', 'TConf' , FilterDescriptor = ['IsMuon,>,0.'])
                    , RZVelo
@@ -250,8 +247,6 @@ Line( 'MuonHadron'
                , FilterDescriptor = ['IP_PV2D,||[],0.1,3.', 'DOCA_%TFMuon,<,0.2' ]
                , HistoDescriptor = { 'IP'         : ( 'IP',-1.,3.,400), 'IPBest'     : ( 'IPBest',-1.,3.,400), 'DOCA'       : ( 'DOCA',0.,1.,400), 'DOCABest'   : ( 'DOCABest',0.,1.,400) }
                )
-       , GaudiSequencer('HltDecodeT')
-       , GaudiSequencer('HltDecodeTT')
        , Member( 'TU', 'CompanionForward' # // upgrade the selected velo tracks to forward...
                , RecoName = 'Forward'
                )

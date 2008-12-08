@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1.py,v 1.23 2008-12-02 10:24:00 graven Exp $
+# $Id: Hlt1.py,v 1.24 2008-12-08 12:30:02 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of HLT1
@@ -14,13 +14,14 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.23 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.24 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
 from Configurables       import GaudiSequencer as Sequence
 from Configurables       import HltSelectionFilter, HltSelectionToTES
 from Configurables       import HltDecisionFilter
+from Configurables       import HltIncidentFilter
 from Configurables       import HltSelReportsMaker, HltSelReportsWriter
 from Configurables       import HltDecReportsMaker, HltDecReportsWriter
 from Configurables       import HltVertexReportsMaker, HltVertexReportsWriter
@@ -45,34 +46,40 @@ addHlt1Prop([ 'routingBitDefinitions', 'Accept', 'FilterDescriptor'
 importOptions('$HLTCONFROOT/options/HltInit.opts')
 importOptions('$HLTCONFROOT/options/HltLumiInit.opts')
 
+## add the 'Incident' line...
+## Line('Incident', algos = [ HltIncidentFilter() ])
+
+## add a line for 'lumi only'
+# note: NPASS = 1: Hlt1LumiDecision, as 'Global' not yet defined here ...
+# otherwise, would be NPASS==2!
+Line('LumiExclusive', HLT = "HLT_PASS('Hlt1LumiDecision') & ( HLT_NPASS==1 )" ) 
+
+## add the Hlt1Global line...
+Line('Global', HLT = 'HLT_DECISION' )
 
 # grab the names of the velo vertices...
 veloVertices = [ i for i in hlt1Selections()['All'] if i.startswith('Hlt1Velo')  and i.endswith('Decision') ]
-
-def AnyIgnoring( dec ) :
-    return '|'.join([ i for i in hlt1Decisions() if i != dec ])
 
 ## set triggerbits
 #  0-31: reserved for L0  // need to add L0DU support to routing bit writer
 # 32-63: reserved for Hlt1
 # 64-91: reserved for Hlt2
 
+#### TODO: Push this into ANN service...
 #### TODO: check that the used lines are actually in use!!!
 ### non-existant strings always evaluate to false, and are not an error (yet)
 ### empty strings always evaluate to false, and are not an error
 routingBits = { 32 : 'Hlt1Global'
               , 33 : 'Hlt1LumiDecision'
-              , 34 : AnyIgnoring('Hlt1LumiDecision')
+              , 34 : 'Hlt1LumiExclusiveDecision'
               , 35 : '|'.join(veloVertices)
               , 36 : 'Hlt1RandomDecision'
               , 37 : 'Hlt1PhysicsDecision'
               }
 
 
-## add the Hlt1Global line...
-Hlt1Global = Line('Global', HLT = 'HLT_DECISION' )
 
-## the Hlt1sequence...
+## finally, define the Hlt1 sequence!!
 #### TODO: add a setup where only one line is run, so that we can verify the independence
 ####       of the lines!!!
 Sequence('Hlt1',  ModeOR = True, ShortCircuit = False
@@ -89,7 +96,7 @@ Sequence( 'HltEndSequence', ModeOR = True, ShortCircuit = False , Members =
             , HltRoutingBitsWriter( routingBitDefinitions = routingBits )
             , HltLumiWriter()
             , Sequence( 'LumiStripper' , Members = 
-                  [ HltFilter('LumiStripperFilter' , Code = "HLT_PASS('Hlt1LumiDecision') & ( HLT_NPASS==1 )" ) 
+                  [ HltFilter('LumiStripperFilter' , Code = "HLT_PASS('Hlt1LumiExclusiveDecision') " ) 
                   , Prescale('LumiStripperPrescaler',AcceptFraction=0.999) # don't strip on 1/1000 random triggers
                   , bankKiller( BankTypes=[ 'ODIN','HltLumiSummary'],  DefaultIsKill=True )
                   ])
