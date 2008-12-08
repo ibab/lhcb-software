@@ -1,5 +1,5 @@
 ##############################################################################
-#$Id: JpsiMuonMonitor.py,v 1.1.1.1 2008-12-05 16:41:05 pkoppenb Exp $
+# $Id: JpsiMuonMonitor.py,v 1.2 2008-12-08 18:12:13 pkoppenb Exp $
 #
 # Jpsi muon monitor
 #
@@ -12,15 +12,21 @@ from Gaudi.Configuration import *
 # Make a sequence and take only events from given Hlt selections
 #
 from Configurables import GaudiSequencer
-jspiseq = GaudiSequencer("JpsiMonitorSeq")
-ApplicationMgr().TopAlg += [ jpsiseq ]
-# @todo : check for appropriate selection
+JpsiSeq = GaudiSequencer("JpsiMonitorSeq")
+ApplicationMgr().TopAlg += [ JpsiSeq ]
+##############################################################################
+#
+# Get right selection
+#
+# from Configurables import LoKi__HDRFilter   as HltDecReportsFilter
+# HltDecReportsFilter  ( 'myname', Code = "HLT_PASS('somedecisionname')" )
+#
 ##############################################################################
 #
 # Make a J/psi with only one side mu-IDed
 #
 from Configurables import CombineParticles, PhysDesktop
-jpsi = CombineParticles("Jpsi2MuPi")
+Jpsi2MuPi = CombineParticles("Jpsi2MuPi")
 Jpsi2MuPi.addTool(PhysDesktop())
 Jpsi2MuPi.PhysDesktop.InputLocations = [ "StdLooseMuons", "StdNoPIDsPions" ]
 Jpsi2MuPi.DecayDescriptor = "[J/psi(1S) -> mu+ pi-]cc"
@@ -29,8 +35,16 @@ Jpsi2MuPi.DaughtersCuts = { "pi+" : "(P>1*GeV)",
                             "mu+" : "(P>10*GeV) & (PT>1*GeV)" }
 Jpsi2MuPi.CombinationCut = "(ADAMASS('J/psi(1S)')<50*MeV)"
 Jpsi2MuPi.MotherCut = "(ALL)"
-jpsiSeq.Members += [ Jpsi2MuPi ]
+JpsiSeq.Members += [ Jpsi2MuPi ]
 ##############################################################################
 #
 # Plot quantities
 #
+from Configurables import ParticleMonitor
+plotter =  ParticleMonitor()
+plotter.PeakCut = "(ADMASS('J/psi(1S)')<5*MeV)"
+plotter.SideBandCut = "(ADMASS('J/psi(1S)')>10*MeV)"
+plotter.PlotTools = [ "PidPlotTool" ]
+plotter.OutputLevel = 1 
+
+JpsiSeq.Members += [ plotter ]

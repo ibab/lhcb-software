@@ -1,5 +1,5 @@
 ##############################################################################
-#$Id: DVMonitorDst.py,v 1.1.1.1 2008-12-05 16:41:05 pkoppenb Exp $
+# $Id: DVMonitorDst.py,v 1.2 2008-12-08 18:12:13 pkoppenb Exp $
 #
 # syntax: gaudirun.py $DAVINCIMONITORSROOT/options/DVMonitorDst.py
 #
@@ -14,15 +14,25 @@ from Gaudi.Configuration import *
 #
 ##############################################################################
 DaVinci().EvtMax = -1
+DaVinci().DataType = "2008" # Default is "DC06"
+DaVinci().Simulation = True
+DaVinci().MainOptions  = "$DAVINCIMONITORSROOT/options/JpsiMuonMonitor.py"
+
+DaVinci().Input   = [
+ "DATAFILE='/castor/cern.ch/user/t/truf/MC2008/mbias_2008.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
 ##############################################################################
 #
 # Monitoring algorithms
 #
 ##############################################################################
-importOptions( "$DAVINCIMONITORSROOT/options/JpsiMuonMonitor.py" )
+# importOptions( "$DAVINCIMONITORSROOT/options/JpsiMuonMonitor.py" )
 ##############################################################################
 #
 # Test data
 #
-##############################################################################
 
+##############################################################################
+#
+# Histograms
+#
+HistogramPersistencySvc().OutputFile = "DVMonitors.root"

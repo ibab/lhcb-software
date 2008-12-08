@@ -4,6 +4,10 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2008-12-08 - Patrick Koppenburg
+ - Split Tool into Base and implementation
+ - Full functionality is there
+
 ! 2008-12-03 - Patrick Koppenburg
  - First import
  - Requires new PartProp package

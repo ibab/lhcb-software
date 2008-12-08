@@ -1,14 +1,11 @@
-// $Id: PidPlotTool.cpp,v 1.1.1.1 2008-12-05 16:41:05 pkoppenb Exp $
+// $Id: PidPlotTool.cpp,v 1.2 2008-12-08 18:12:13 pkoppenb Exp $
 // Include files 
-
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
-#include "Kernel/ParticleProperty.h" 
-#include "Kernel/IParticlePropertySvc.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h"
 
 // local
 #include "PidPlotTool.h"
 
+using namespace Gaudi::Units;
 //-----------------------------------------------------------------------------
 // Implementation file for class : PidPlotTool
 //
@@ -16,62 +13,60 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( PidPlotTool );
-
+DECLARE_TOOL_FACTORY( PidPlotTool ) ;
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 PidPlotTool::PidPlotTool( const std::string& type,
                           const std::string& name,
                           const IInterface* parent )
-  : GaudiHistoTool ( type, name , parent )
-, m_ppSvc(0)
+  : BasePlotTool ( type, name , parent )
 {
   declareInterface<IPlotTool>(this);
-  declareProperty("MassWindow", m_massWin = 100*Gaudi::Units::MeV);
 }
 //=============================================================================
-// Destructor
+// Standard destructor
 //=============================================================================
-PidPlotTool::~PidPlotTool() {} 
-
+PidPlotTool::~PidPlotTool( ){}; 
 //=============================================================================
 // Init
 //=============================================================================
 StatusCode PidPlotTool::initialize(){
-  StatusCode sc = GaudiHistoTool::initialize();
-  if (!sc) return sc;
-  m_ppSvc = svc<LHCb::IParticlePropertySvc>( "ParticlePropertySvc", true );
+  StatusCode sc = BasePlotTool::initialize();
   return sc;
-}
-//=============================================================================
-// Fill plots using a single Particle
-//=============================================================================
-StatusCode PidPlotTool::fillPlots(const LHCb::Particle* p,const std::string trailer){
-  if ( p->isBasicParticle ()) return fillFinal(p,trailer);
-  else return fillMother(p,trailer);
-}
-//=============================================================================
-// Mother plots - just mass plots
-//=============================================================================
-StatusCode PidPlotTool::fillMother(const LHCb::Particle* p,const std::string trailer){
-  
-  const LHCb::ParticleProperty* pp = m_ppSvc->find( p->particleID() );
-  if (0==pp){
-    err() << "Unknown PID " << p->particleID() << endmsg ;
-    return StatusCode::SUCCESS ;
-  }
-  double mm = pp->mass() ;
-  double em = m_massWin ;
-
-  plot(p->measuredMass(), "Mass of "+pp->name()+"_"+trailer, mm-em, mm+em);
-
-  return StatusCode::SUCCESS ;
 }
 //=============================================================================
 // Daughter plots - just mass plots
 //=============================================================================
 StatusCode PidPlotTool::fillFinal(const LHCb::Particle* p,const std::string trailer){
   
+  const LHCb::ParticleProperty* pp = ppSvc()->find( p->particleID() );
+  plot(p->p(), histoName("P",pp,trailer), 
+       "Momentum of "+pp->name()+"_"+trailer, 0, 100*GeV);
+  const LHCb::ProtoParticle* proto = p->proto() ;
+  if ( 0==proto) return StatusCode::SUCCESS;
+  
+  fillPID(proto->info(LHCb::ProtoParticle::CombDLLe, -1000),p->p(),"e", pp,trailer);
+  fillPID(proto->info(LHCb::ProtoParticle::CombDLLmu,-1000),p->p(),"mu",pp,trailer);
+  fillPID(proto->info(LHCb::ProtoParticle::CombDLLk, -1000),p->p(),"K", pp,trailer);
+  fillPID(proto->info(LHCb::ProtoParticle::CombDLLp, -1000),p->p(),"p", pp,trailer);
+
+  profile1D(p->p(), (proto->muonPID()!=0), 
+       histoName("MuonPID_p",pp,trailer),
+       "has MuonPID vs p of "+pp->name()+"_"+trailer,-10., 10.);
+
   return StatusCode::SUCCESS ;
+}
+
+//=========================================================================
+//  
+//=========================================================================
+void PidPlotTool::fillPID ( double val, double p, std::string part, 
+                            const LHCb::ParticleProperty* pp, std::string trailer) {
+  plot(val,histoName("DLL"+part,pp,trailer),
+       part+" DLL of "+pp->name()+"_"+trailer,-10., 10.);
+  profile1D(p, val>0, histoName("DLL"+part+"_p",pp,trailer),
+       part+" DLL>0 vs p of "+pp->name()+"_"+trailer,-10., 10.);
+  return ;
+  
 }

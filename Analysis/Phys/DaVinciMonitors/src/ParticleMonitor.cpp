@@ -1,4 +1,4 @@
-// $Id: ParticleMonitor.cpp,v 1.1.1.1 2008-12-05 16:41:05 pkoppenb Exp $
+// $Id: ParticleMonitor.cpp,v 1.2 2008-12-08 18:12:13 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -34,7 +34,7 @@ ParticleMonitor::ParticleMonitor( const std::string& name,
   //      "The cut to be applied to final state particle before plotting (default all)." )  ;
   declareProperty( "PeakCut", m_peakCut = "ALL", 
                    "Selection of mass peak (default all)." )  ;
-  declareProperty( "SideBandCutCut", m_sidebandCut = "False", 
+  declareProperty( "SideBandCut", m_sidebandCut = "False", 
       "Selection of sidebands (default none)." )  ;
   m_plotToolNames.push_back("PidPlotTool"); // default
   declareProperty( "PlotTools" , m_plotToolNames, "Names of plot tools");
