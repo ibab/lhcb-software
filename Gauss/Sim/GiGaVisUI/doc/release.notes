@@ -1,8 +1,21 @@
 !-----------------------------------------------------------------------------
-! Package          : Sim/GiGaVisUI
-! Responsible	   : Vanya Belyaev, Witold Pokorski
-! Purpose          : GiGa visualisation and UI 
+! Package     : Sim/GiGaVisUI
+! Responsible	: Vanya Belyaev and Witold Pokorski original aythors
+!               Marco Pappagallo (Gloria Corti)
+! Purpose     : GiGa visualisation and UI 
 !-----------------------------------------------------------------------------
+
+!======================= GiGaVisUI v5r1 2008-12-08 ===========================
+! 2008-12-08 - Gloria CORTI from Marco PAPPAGALLO
+ - Fix for error message:
+    GiGa.GiGaMgr.GiGaSetV...  ERROR GiGaSetVisAttributes::  process('World'):
+    invalid ILVolume  StatusCode=FAILURE
+   The LV called "World" is the root geometry in G4, and is not taken from
+   the XML DDDB. For this reason no visualization attribute can be found for
+   it when scanning the G4LogicalVolumeStore to set their visualization 
+   attributes. For this reason the step of accessing the information from 
+   XmlVis is skipped for LV "World".
+   . GiGaSetVisAttributes.cpp
 
 !======================= GiGaVisUI v5r0 2008-06-26 ===========================
 ! 2008-06-17 - Gloria CORTI

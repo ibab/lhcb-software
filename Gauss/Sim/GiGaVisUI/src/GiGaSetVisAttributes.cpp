@@ -1,4 +1,4 @@
-// $Id: GiGaSetVisAttributes.cpp,v 1.3 2007-01-12 15:48:35 ranjard Exp $
+// $Id: GiGaSetVisAttributes.cpp,v 1.4 2008-12-08 10:06:18 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -178,7 +178,16 @@ StatusCode GiGaSetVisAttributes::process ( const std::string& vol ) const
   G4LogicalVolume* g4lv = g4volume ( vol ) ;
   if ( 0 == g4lv ) 
     { return Error( " process('" + vol + "'): invald G4LogicalVolume " ) ; }
+
   const ILVolume*    lv = volume   ( vol ) ;
+
+  // Marco Pappagallo - 2008-10-16, fix ERROR message in following if block
+  if( "World" == vol) {
+    debug() << "World volume exists only in Geant4 world: no xml associated!"
+            << endreq;
+    return StatusCode::SUCCESS;
+  }
+
   if( 0 == lv ) 
     { return Error( " process('" + vol + "'): invalid ILVolume "       ) ; }
   

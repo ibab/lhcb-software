@@ -6,8 +6,20 @@
 #  > GangaEnv
 # Then choose your ganga version (default version is normally the best option)
 #
-# Submit with
-#  > ganga Gauss_Ganga.py
+# NB : This file is for the ganga 5 releases
+#
+# To submit you start ganga with the command "ganga" and then
+# at the ganga prompt type
+#
+# [In] 1 : ganga Gauss_Ganga.py
+#
+# As an alternative you can also submit the job directly from
+# the Unix prompt with the line
+#
+# [user@lxplus]~% ganga Gauss_Ganga.py
+#
+# but in this way you will have the overhead of starting Ganga
+# for each job you submit.
 #
 #==============================================================================
 #
@@ -20,97 +32,92 @@
 # For Dirac jobs, you can monitor their status at
 # http://lhcb.pic.es/DIRAC/Monitoring/Analysis
 #
+# For any ganga object used below, more detailed information can be found by
+# running help(XXX) at the ganga prompt. I.e.
+#  > help(Dirac)
+# For more information on the Dirac backend
+#
 #==============================================================================
 
 #------------------------------------------------------------------------------
-# Define the version of Gauss to use
+# Make a new job object for Gauss
 #------------------------------------------------------------------------------
-GaussVersion = 'v35r0'
+j = Job( application = Gauss( version = 'v35r2' ) )
 #------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------
 # Define name for identifying the job (this name appears in the ganga job list)
 #------------------------------------------------------------------------------
-myJobName = 'MyGauss'
+j.name = 'MyGauss'
 #------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------
-# The application to run
+# The job configuration
 #------------------------------------------------------------------------------
-myApplication = Gauss()
-# Application version number
-myApplication.version = GaussVersion
-# Define the options file to use.
-# Note, if you want you can replace the PFNs in this file with LFNs directly,
-# since ganga takes care of the book-keeping for you :)
-myApplication.optsfile = File ( myApplication.cmt_user_path
-   + '/Gauss_' + GaussVersion  + '/Sim/Gauss/' + GaussVersion
-   + '/options/lhcb-2008.opts' )
+# Define the configuration file(s) to use
+myOptsPath = ( j.application.user_release_area + '/Gauss_' +
+               j.application.version + '/Sim/Gauss/' +
+               j.application.version + '/options/' )
+j.application.optsfile = [ File ( myOptsPath + 'Gauss-2008.py' ),
+                           File ( myOptsPath + 'Gauss-Job.py'  ) ]
 # Extra options
 # Appended to the end of the main options to override default settings
-#myApplication.extraopts = ''
+#j.application.extraopts = ''
 #------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------
-# Define a job splitter. The "standard" job splitter acts on input data file
-# and as such not suitable for Gauss.
-# A dedicated splitter for Gauss is available that will make n identical jobs
-# (but for random numbers) 
+# Define a job splitter (very useful to generate higher statistics)
 #------------------------------------------------------------------------------
-# No job splitting
-#mySplitter = None
-# Gauss splitter. Lauch two jobs of 5 events each
-mySplitter = GaussSplitter( numberOfJobs = 2 , eventsPerJob = 5 )
+# Use a single job, no splitting
+j.splitter = None
+
+# Split Gauss jobs by making many identical jobs with different random number
+# seed by setting a different 'GaussGen.FirstEventNumber' and will produce the
+# amount of events specified in 'eventsPerJob'.
+# The total number of generated events therefore will be
+# 'eventsPerJob*numberOfJob' 
+#j.splitter = GaussSplitter ( numberOfJobs = 2 , eventsPerJob = 5 )
 #------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------
-# Job merging
+# Job merging (merge output from sub-jobs from job splitter, if used)
 #------------------------------------------------------------------------------
 # No merging
-myMerger = None
-#
-# Root file merging. For more details run from the ganga prompt
-#  ganga > help( RootMerger )
-#myMerger = RootMerger( files = ['00001820_00000001_5.root'], ignorefailed = 1 )
-#
+j.merger = None
+
+# Root file merging. See help( RootMerger ) for more details
+#j.merger = RootMerger( files = ['histos.root'], ignorefailed = True )
+
 # SmartMerger - Able to handle various file formats (including root files)
-#               For more details run from the ganga prompt
-#  ganga > help( SmartMerger )
-#myMerger = SmartMerger( files = ['00001820_00000001_5.root'], ignorefailed = 1 )
-#
+#               See help( SmartMerger ) for more details
+#j.merger = SmartMerger( files = ['histos.root'], ignorefailed = True )
 #------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------
 # Add here any special input files. Normally not needed.
 #------------------------------------------------------------------------------
-myInputsandbox = []
+j.inputsandbox = []
 #------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------
 # Define where to run
 #------------------------------------------------------------------------------
-# Run interactively
-#myBackend    = Interactive()
+# Run interactively on the local machine
+#j.backend    = Interactive()
 # Run directly on the local machine, but in the background
-myBackend    = Local()
+j.backend    = Local()
 # Submit to an LSF batch system, using the 8nm queue
-#myBackend    = LSF( queue = '8nm' )
-# Submit to the grid. Requires a working grid certificate of course :)
-#myBackend    = Dirac()
+#j.backend    = LSF( queue = '8nm' )
 # Submit to a condor batch system
-#myBackend    = Condor()
+#j.backend    = Condor()
+# Submit to a PBS batch system
+#j.backend    = PBS()
+# Submit to the grid.
+#j.backend    = Dirac()
 #------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------
-# Finally, create a Ganga job object and submit
+# Submit the job
 #------------------------------------------------------------------------------
-j = Job (
- name         = myJobName,
- application  = myApplication,
- splitter     = mySplitter,
- merger       = myMerger,
- inputsandbox = myInputsandbox,
- backend      = myBackend
-) 
-j.submit()
+#j.submit()
 #------------------------------------------------------------------------------
