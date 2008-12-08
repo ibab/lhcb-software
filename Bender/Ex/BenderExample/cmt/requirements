@@ -1,12 +1,12 @@
 
-# $Id: requirements,v 1.46 2008-10-09 12:10:18 ibelyaev Exp $ 
+# $Id: requirements,v 1.47 2008-12-08 11:08:32 ibelyaev Exp $ 
 # ============================================================================
 # Created    : 2003-09-10
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@itep.ru
 # ============================================================================
 package          BenderExample
 author           Vanya BELYAEV
-version          v9r1
+version          v10r0
 
 # ============== structure ===================================================
 branches         cmt doc src python options 
@@ -16,6 +16,7 @@ use              Bender       v* Phys
 
 # ============== patterns =====================================================
 apply_pattern    install_python_modules 
+# apply_pattern    QMTest 
 
 # ============================================================================
 # The END 
