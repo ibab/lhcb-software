@@ -4,6 +4,7 @@
 ! Purpose     : Code to exchange kinematic information with Geant4
 !-----------------------------------------------------------------------------
 
+!========================= GaussKine v3r2 2008-12-08 ========================= 
 ! 2008-11-28 - Patrick Robbe
  - GenerationToSimulation: update G4 particles from ppSvc (moved
    from GiGa)
@@ -30,6 +31,7 @@
    . GenerationToSimulation: generator HepMC -> Geant4 
    . SimulationToMCTruth: Geant4 -> MCParticles/MCVertices
 
+!========================= GaussKine v3r1 2008-10-08 ========================= 
 ! 2008-10-08 - Gloria CORTI
  - Move printout to debug level
    . G4HepMCToMCTruth.cpp

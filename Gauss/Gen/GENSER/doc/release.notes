@@ -4,6 +4,7 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+!========================== GENSER v5r0 2008-12-08 ===========================
 ! 2008-25-11 - Patrick Robbe
  - Add xsection.F (Nick Brook) which computes cross section for psi(3770)
    production.
