@@ -1,15 +1,16 @@
 #!/usr/bin/env python
 # =============================================================================
-"""
-This a template file for the Bender-based scriopt/module
-"""
-# =============================================================================
 ## @file
 #  This a template file for the Bender-based scriopt/module
 #  @author ...
 #  @date   ...
 # =============================================================================
-__author__ = " Do not forget your name here "
+"""
+This a template file for the Bender-based scriopt/module
+"""
+# =============================================================================
+__author__  = " Do not forget your name here "
+__verison__ = "CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.3 $"
 # =============================================================================
 ## import all nesessary stuff from Bender
 from Bender.MainMC import * 
