@@ -1,4 +1,4 @@
-// $Id: HltL0CaloCandidates.cpp,v 1.1 2008-12-05 19:11:39 graven Exp $
+// $Id: HltL0CaloCandidates.cpp,v 1.2 2008-12-08 12:14:05 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -87,22 +87,21 @@ StatusCode HltL0CaloCandidates::execute() {
             error() << "could not find requested l0 channel " << m_l0Channel<< endmsg;
             return StatusCode::FAILURE;
   }
-  std::cout << "\n\ngot channel: " << m_l0Channel << std::endl;
   //@TODO: check if channel is enabled!!
 
+  typedef GaudiUtils::VectorMap<std::string,L0DUBase::CaloType::Type> map_t;
+  static map_t map;
+  if (map.empty()) {
+     map.insert("Electron(Et)", L0DUBase::CaloType::Electron);
+     map.insert("Photon(Et)",   L0DUBase::CaloType::Photon);
+     map.insert("Hadron(Et)",   L0DUBase::CaloType::Hadron);
+     map.insert("LocalPi0(Et)", L0DUBase::CaloType::Pi0Local);
+     map.insert("GlobalPi0(Et)",L0DUBase::CaloType::Pi0Global);
+  }
   std::vector<std::pair<L0DUBase::CaloType::Type,int> > cuts;
   const LHCb::L0DUElementaryCondition::Map& conditions = channel->second->elementaryConditions();
   for (LHCb::L0DUElementaryCondition::Map::const_iterator condition = conditions.begin();
        condition!=conditions.end(); ++condition) {
-         typedef GaudiUtils::VectorMap<std::string,L0DUBase::CaloType::Type> map_t;
-         static map_t map;
-         if (map.empty()) {
-            map.insert("Electron(Et)", L0DUBase::CaloType::Electron);
-            map.insert("Photon(Et)",   L0DUBase::CaloType::Photon);
-            map.insert("Hadron(Et)",   L0DUBase::CaloType::Hadron);
-            map.insert("LocalPi0(Et)", L0DUBase::CaloType::Pi0Local);
-            map.insert("GlobalPi0(Et)",L0DUBase::CaloType::Pi0Global);
-         }
          std::string data = condition->second->data()->name();
          for (map_t::const_iterator i = map.begin();i!=map.end();++i ) {
             if (data!=i->first) continue;
@@ -125,7 +124,7 @@ StatusCode HltL0CaloCandidates::execute() {
             && calo->type()!=L0DUBase::CaloType::Hadron
             && calo->type()!=L0DUBase::CaloType::Pi0Local
             && calo->type()!=L0DUBase::CaloType::Pi0Global ) {
-             error() << " got candidate with unexpected type " << calo->type() << endmsg;
+             warning() << " got candidate with unexpected type " << calo->type() << endmsg;
     }
     bool pass=true;
     for (std::vector<std::pair<L0DUBase::CaloType::Type,int> >::const_iterator i = cuts.begin();i!=cuts.end()&&pass;++i) {
@@ -133,6 +132,7 @@ StatusCode HltL0CaloCandidates::execute() {
     }
     if (!pass)  continue;
     debug() << " accepted calo cand with type = " << calo->type()  << " and et = " << calo->et() << " and etcode = " << calo->etCode() << endmsg;
+    //TODO: split creating subset of L0 candidates and conversion into track....
     std::auto_ptr<Track> tcalo( new Track() );
     if (m_caloMaker) {
         StatusCode sc = m_caloMaker->makeTrack(*calo,*tcalo);
