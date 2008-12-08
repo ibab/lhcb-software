@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2008-12-08 - Gerhard Raven
+ - remove obsolete CreateDecReportsHack
+
 ! 2008-12-08 - Vanya BELYAEV
  - fixes for new signature of LHcb::Track::stateAt 
 
