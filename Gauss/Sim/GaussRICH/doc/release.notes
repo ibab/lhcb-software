@@ -3,17 +3,22 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
+
+!========================= GaussRICH v9r2 2008-12-08 =========================
 ! 2008-10-24 - Sajan Easo
-   In RichSensDet fixed a bug related to storing mctracks corresponding to MIPs passing through the
-   Hpd-Silicon, in order to avoid the occurance of related mc hits without mc tracks. 
+   In RichSensDet fixed a bug related to storing mctracks corresponding to
+   MIPs passing through the Hpd-Silicon, in order to avoid the occurance of
+   related mc hits without mc tracks. 
+
 !========================= GaussRICH v9r1 2008-08-26 =========================
 ! 2008-08-08 - Sajan Easo
   Modified the RichG4Cerenkov to be a poststep process , similar to
   what is suggested in the recent G4.9. This needed a modification in 
   GiGaPhysConstructorOp.cpp as well.
+
 ! 2008-07-30 - Sajan Easo 
-  Updated the RichHpdProperties.cpp to be compatible with the latest RichDet when
-  accesing the HPD QE info from the DataBase.
+  Updated the RichHpdProperties.cpp to be compatible with the latest RichDet
+  when accesing the HPD QE info from the DataBase.
 
 !========================= GaussRICH v9r0 2008-06-26 =========================
 ! 2008-06-26 - Gloria CORTI
