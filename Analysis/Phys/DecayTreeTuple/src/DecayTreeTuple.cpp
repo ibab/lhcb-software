@@ -1,4 +1,4 @@
-// $Id: DecayTreeTuple.cpp,v 1.5 2008-12-06 16:52:29 ibelyaev Exp $
+// $Id: DecayTreeTuple.cpp,v 1.6 2008-12-09 07:10:56 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -6,6 +6,7 @@
 #include "GaudiKernel/SmartIF.h"
 
 #include "Kernel/IDecayFinder.h"
+#include "Kernel/Escape.h"
 
 // #include "GaudiAlg/Tuple.h"
 // #include "GaudiAlg/TupleObj.h"
@@ -19,7 +20,6 @@
 
 #include "GaudiKernel/IRegistry.h" // IOpaqueAddress
 
-#include "boost/regex.hpp" 
 #include "boost/lexical_cast.hpp" 
 
 
@@ -317,49 +317,6 @@ StatusCode DecayTreeTuple::finalize() {
 
   return DVAlgorithm::finalize(); //=== For DC04, return StatusCode::SUCCESS;
 }
-
-
-//=============================================================================
-//=============================================================================
-
-std::string DecayTreeTuple::escape( const std::string& input ) {
-
-  const int size = input.size();
-  if( size == 0 ) return "";
-
-  // all chars must be matched, or they fall in the catchall
-  const char *expr = 
-    "([[:word:]])" // 1 : allowed chars
-    "|^(~)"        // 2 : starting ~
-    "|([~])"       // 3 : then ok
-    "|(\\*)"       // 4 : star
-    "|([+])"       // 5 : +
-    "|([-])"       // 6 : -
-    "|(.)";        // 7 : default catchall.
-    
-  const char* replace =
-    "(?1$1)" 
-    "(?2anti)"
-    "(?3~)"
-    "(?4st)"
-    "(?5plus)"
-    "(?6minus)"
-    "(?7_)";
-
-  boost::regex e( expr );
-  std::string ret;
-  ret = boost::regex_replace( input, e, replace
-                              , boost::match_default | boost::format_all );
-
-  // remove double __ and trailing and leading _
-  e.assign( "(^_+)|(_+$)|(_{2,})" );
-  ret = boost::regex_replace( ret, e, "(?1)(?2)(?3_)"
-                              , boost::match_default | boost::format_all );
-
-  return ret;
-
-}
-
 //=============================================================================
 //=============================================================================
 
@@ -743,7 +700,7 @@ void DecayTreeTuple::matchSubDecays( const Particle::ConstVector& row ){
         std::string n = (*mit)->getName();
         // if there is more than one, append numerical values:
         if( size>1 ) n.append( boost::lexical_cast<std::string>(k) );
-        m_parts[off]->headName( escape(n) );
+        m_parts[off]->headName( Decays::escape(n) );
       }
       // assign the correct tools:
       initializeOnePartsStufferTools( m_parts[off], *mit );
@@ -759,7 +716,7 @@ std::string DecayTreeTuple::getBranchName( const Particle* p ){
   
   std::string realname = ppSvc()->find( p->particleID() )->particle();
   
-  std::string name = escape( realname ), buffer = name;
+  std::string name = Decays::escape( realname ), buffer = name;
 
   // check that it is not yet used, if yes, append a number until not
   // used.

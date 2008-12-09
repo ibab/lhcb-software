@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+! 2008-12-09 - Patrick Koppenburg
+ - Move escape method to a function in namesp;ace Decays in DaVinciKernel.
+
 ! 2008-12-06 - Vanya BELYAEV
  - minor fix for new particle properties 
    verison increment to v1r10
