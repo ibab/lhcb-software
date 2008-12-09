@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.cpp,v 1.54 2008-09-30 08:51:24 odescham Exp $ 
+// $Id: DeCalorimeter.cpp,v 1.55 2008-12-09 15:39:42 odescham Exp $ 
 // ============================================================================
 #define  CALODET_DECALORIMETER_CPP 1
 // STL
@@ -186,13 +186,13 @@ StatusCode DeCalorimeter::initialize()
   if ( sc.isSuccess() ) {
     m_initialized = true;
     // DEBUG
+
     msg << MSG::DEBUG << "'DeCalorimeter " << name() << " correctly initalized with : " <<endreq;
     msg << MSG::DEBUG << " - " << numberOfCells()  << " channels "    << endreq;
     msg << MSG::DEBUG << " - " << numberOfCards()  << " FE-boards "   << endreq;
     msg << MSG::DEBUG << " - " << numberOfTell1s() << " Tell1s "      << endreq;
     msg << MSG::DEBUG << " - " << numberOfPins()   << " PIN-diodes "  << endreq;
-    msg << MSG::DEBUG << " - " << numberOfLeds()   << " LEDs "        << endreq;
-
+    msg << MSG::DEBUG << " - " << numberOfLeds()   << " LEDs "        << endreq;    
 
     // VERBOSE
     msg << MSG::VERBOSE << "DDDB parameters : " 
@@ -200,7 +200,7 @@ StatusCode DeCalorimeter::initialize()
         << " zOffset   = " <<  m_zOffset
         << " zSize     = " <<  m_zSize 
         << endreq;
-
+    
 
     // LONG VERBOSE
     MsgStream msg1( msgSvc(), m_caloDet + ".Gain" );
@@ -215,13 +215,14 @@ StatusCode DeCalorimeter::initialize()
            << endreq;
       if( m_caloDet == "EcalDet" || m_caloDet == "HcalDet"){
         double ect = cellGain(id) *  m_cells[id].sine() / m_l0Et *1024;
-        double act = m_cells[id].l0Constant();
-        double ag  = cellGain(id) *  m_cells[id].sine() / (double) act * 1024;
+        double act = (double) m_cells[id].l0Constant();
+        double ag  = 0;
+        if(act > 0 )ag  = cellGain(id) *  m_cells[id].sine() / act * 1024;
         msg2 << MSG::VERBOSE << "Chan : " << id << " : nominal L0gain => " 
              << m_l0Et<< " MeV/ADC => expected L0Cte is : " << (int) ect 
              << "  | actual L0Cte : " << act << " => "  << ag << " MeV/ADC"
-               << endreq;
-      }
+             << endreq;
+      } 
     }
     // Verbosity
     msg3 << MSG::VERBOSE << " ----------- List of " << CaloCellCode::CaloNameFromNum( m_caloIndex ) 
@@ -1038,7 +1039,7 @@ StatusCode DeCalorimeter::getQuality( )  {
   
   // check array
   if ( !m_quality->exists( "data" ) || !m_quality->exists( "size") ) {
-    msg << MSG::DEBUG << "No 'data' in 'Quality condition : will assume deltaG = 1." << endreq;
+    msg << MSG::DEBUG << "No 'data' in 'Quality condition : will assume Flag = 0" << endreq;
     return StatusCode::SUCCESS;
   }
   int size = m_quality->paramAsInt( "size" );
@@ -1082,7 +1083,7 @@ StatusCode DeCalorimeter::getL0Calibration( )  {
   
   // check array
   if ( !m_l0calib->exists( "data" ) || !m_l0calib->exists( "size") ) {
-    msg << MSG::DEBUG << "No 'data' in 'L0calibration' condition : will assume deltaG = 1." << endreq;
+    msg << MSG::DEBUG << "No 'data' in 'L0calibration' condition : will assume cte = 0" << endreq;
     return StatusCode::SUCCESS;
   }
   int size = m_l0calib->paramAsInt( "size" );
